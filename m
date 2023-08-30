@@ -2,172 +2,106 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0323CC83F18
-	for <linux-hardening@archiver.kernel.org>; Wed, 30 Aug 2023 18:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6471AC83F17
+	for <linux-hardening@archiver.kernel.org>; Wed, 30 Aug 2023 19:39:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344066AbjH3S4s (ORCPT
+        id S231643AbjH3TjD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 30 Aug 2023 14:56:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54650 "EHLO
+        Wed, 30 Aug 2023 15:39:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244706AbjH3NrN (ORCPT
+        with ESMTP id S242562AbjH3Ter (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 30 Aug 2023 09:47:13 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE58F122
-        for <linux-hardening@vger.kernel.org>; Wed, 30 Aug 2023 06:46:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1693403189;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=YTYt2BSQEZut8ffX05oFQAoT2Tz1O17bKncsR4XeBIs=;
-        b=BfS0DuiV8z5gwUJjXvvmr7wSZZ9lI5xfyijCCeVaHwT+acQmf8bwBfG9bAhOqBmHhNvNUH
-        zxe9/WIYiPwxfHU4dRBWVoYjzUwPm7jOyFmmv5Mx1QLmVT+HyMF15wtsIIX22YGO9zGha/
-        nx6eNSaUHnAfAWJC/f5HSFP81lmKtI4=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-206-jIp2iOZNPxeYqlI-J4ae9A-1; Wed, 30 Aug 2023 09:46:28 -0400
-X-MC-Unique: jIp2iOZNPxeYqlI-J4ae9A-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-9a5c5f0364dso53521866b.0
-        for <linux-hardening@vger.kernel.org>; Wed, 30 Aug 2023 06:46:27 -0700 (PDT)
+        Wed, 30 Aug 2023 15:34:47 -0400
+Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29E3C4603E;
+        Wed, 30 Aug 2023 12:08:57 -0700 (PDT)
+Received: by mail-vs1-xe30.google.com with SMTP id ada2fe7eead31-44d4cef5effso71997137.1;
+        Wed, 30 Aug 2023 12:08:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1693422458; x=1694027258; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=R3QMn3OzMi5xvDWjZZaqgwh4xUyJ2cGChp6VBLI0fVo=;
+        b=H1g/c5XrkGK/E9+N8gm20LAINAtUUucQYEjTSSo4wqTdP4Uml8U9NulErCq+4xh09r
+         nxaaEXW+ktuxjLNg8jrdLrLS6YfhBCOeIexSizLXwnSHt+mojd4vCYhirfK3dbss6E7F
+         oc2uK8qd8tbBDxsM+IZC/m1mRHIvdK5RKmwPrc9puV3v90gzLqkSZ5i8mOlPoXwM0unj
+         nOOJCP4Q9aASr6lvri4UX3oQCyAoP0gS+XUQXAJt06DbXGl0GO136LkPJg2QdK8Yueb0
+         Hi2+4ddZfr3v0Kzg196EJzPazuEjuMogkusE2VDyQfNOlWlINiLpEpz1vo2ICHRsnQHx
+         umAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693403185; x=1694007985;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YTYt2BSQEZut8ffX05oFQAoT2Tz1O17bKncsR4XeBIs=;
-        b=f0+GbeV6fAnLc/pA2H76t9L+ml0PNPOcndRoO7HBP1wMrfvmzxOBDAURuiHq1GhsID
-         batbsB2XvisTcMpph6+ZmaxE4dH3QblfOvl6kdGyWDTOfnYja6K1/dbPpAcTUvgmDrCb
-         yoEuiqduoXgQIJzCZPmHwSk/RHPaDLOyzsj99E4dXCpxtCQVJL8HBsfZgN3G4gEM2epz
-         zmknN5ETxxlD8ewrvlHsJWwGRi3i/Y+qLuscVVOZY3751hrTiIaTs+QtTWLY+MB85Qto
-         hntRu0lEZ98UUZIrkXsUTd6GEOJYS2C4wJNYHj2uGEi+leocE5320PLGzQ3f8lDJ45Bd
-         I6eA==
-X-Gm-Message-State: AOJu0Yxtd0tNLOa+tU/lURKcLEvqsPW0pYFO9nJNig20RmsmCx8L36T+
-        wnJSZFRtUtDDwhzaX0Kyf8vvdloZl88nf2bsU3155P/2IyUMtTnEb8Scm0Y54Z8gMZdDTnIvOaF
-        mnbrX8RZQMewogvPQAnyxpClrMM3g
-X-Received: by 2002:a17:906:74cb:b0:9a1:eb67:c0d3 with SMTP id z11-20020a17090674cb00b009a1eb67c0d3mr1497343ejl.4.1693403185526;
-        Wed, 30 Aug 2023 06:46:25 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFs3XWD3GCd0nxchFLVqW0usUrIz+VOttxkboYOB/XHHWAwTxGY9Rlu6B7+6AhH9DbE4wdw7w==
-X-Received: by 2002:a17:906:74cb:b0:9a1:eb67:c0d3 with SMTP id z11-20020a17090674cb00b009a1eb67c0d3mr1497324ejl.4.1693403185198;
-        Wed, 30 Aug 2023 06:46:25 -0700 (PDT)
-Received: from fedorinator.fritz.box ([2001:9e8:32e4:1500:aa40:e745:b6c9:7081])
-        by smtp.gmail.com with ESMTPSA id t26-20020a1709063e5a00b009829dc0f2a0sm7174419eji.111.2023.08.30.06.46.24
+        d=1e100.net; s=20221208; t=1693422458; x=1694027258;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=R3QMn3OzMi5xvDWjZZaqgwh4xUyJ2cGChp6VBLI0fVo=;
+        b=eNL5OPzPpYmWYyymcUqB1kij06yYeydbn3XLvgZxkNwKggB0dQBATLmue1NTM3EYUb
+         IWsxQEdQGVdtqWMLWfGW3WaAVE2CSIpiOK6otWkdBdhPegw5FyIbWAyqmrSS11rVQULW
+         JkO4e8rA5zZ2h5zaf/HtIm1ApyJep0bghrVLdQ6/lBGPCq2SPpFr5SBfYF+i9C9Xi9CO
+         QHY2SQ/nx6yTFfWCCvJqecAk4migfuYiXW0o4Gmk7fWI8XQ/5e75tYcYG+aumpv5c8ds
+         Xm3c417/JivT7/f6QocQ+DJBMMiRotjwEhEpTTlEWlPuQLB2ST46Ij5NfS+E4rDX9Bjw
+         321g==
+X-Gm-Message-State: AOJu0YxN0rjP658aovOdUL0goJeTiEf1/YZ9g5IP2I2X+xLMWyGc36u8
+        t3gj9CvQOkzr9hINZuHZPCJ5GS/JyRvBLA==
+X-Google-Smtp-Source: AGHT+IFXoI/B8H4SvdOW65eHwKS7fn9fnnKb+9GG6GfCU5+IlbLZCQzdxbln6V71KXjOG2kt3Y6mXg==
+X-Received: by 2002:a05:6e02:1284:b0:345:a6c5:1ce8 with SMTP id y4-20020a056e02128400b00345a6c51ce8mr3312097ilq.14.1693421677437;
+        Wed, 30 Aug 2023 11:54:37 -0700 (PDT)
+Received: from azeems-kspp.c.googlers.com.com (161.74.123.34.bc.googleusercontent.com. [34.123.74.161])
+        by smtp.gmail.com with ESMTPSA id r23-20020a028817000000b004310d570d6dsm3921054jai.94.2023.08.30.11.54.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Aug 2023 06:46:24 -0700 (PDT)
-From:   Philipp Stanner <pstanner@redhat.com>
-To:     Kees Cook <keescook@chromium.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Christian Brauner <brauner@kernel.org>,
-        David Disseldorp <ddiss@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Siddh Raman Pant <code@siddh.me>,
-        Nick Alcock <nick.alcock@oracle.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Zack Rusin <zackr@vmware.com>
-Cc:     VMware Graphics Reviewers <linux-graphics-maintainer@vmware.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        kexec@lists.infradead.org, linux-hardening@vger.kernel.org,
-        Philipp Stanner <pstanner@redhat.com>,
-        David Airlie <airlied@redhat.com>
-Subject: [PATCH 1/5] string.h: add array-wrappers for (v)memdup_user()
-Date:   Wed, 30 Aug 2023 15:45:52 +0200
-Message-ID: <46f667e154393a930a97d2218d8e90286d93a062.1693386602.git.pstanner@redhat.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <cover.1693386602.git.pstanner@redhat.com>
-References: <cover.1693386602.git.pstanner@redhat.com>
+        Wed, 30 Aug 2023 11:54:36 -0700 (PDT)
+From:   Azeem Shaikh <azeemshaikh38@gmail.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     linux-hardening@vger.kernel.org,
+        Azeem Shaikh <azeemshaikh38@gmail.com>,
+        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] m68k/atari: Replace strlcpy with strscpy
+Date:   Wed, 30 Aug 2023 18:54:28 +0000
+Message-ID: <20230830185428.4109426-1-azeemshaikh38@gmail.com>
+X-Mailer: git-send-email 2.42.0.283.g2d96d420d3-goog
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Currently, user array duplications are sometimes done without an
-overflow check. Sometimes the checks are done manually; sometimes the
-array size is calculated with array_size() and sometimes by calculating
-n * size directly in code.
+strlcpy() reads the entire source buffer first.
+This read may exceed the destination size limit.
+This is both inefficient and can lead to linear read
+overflows if a source string is not NUL-terminated [1].
+In an effort to remove strlcpy() completely [2], replace
+strlcpy() here with strscpy().
 
-Introduce wrappers for arrays for memdup_user() and vmemdup_user() to
-provide a standardized and safe way for duplicating user arrays.
+Direct replacement is safe here since return value of -errno
+is used to check for truncation instead of sizeof(dest).
 
-This is both for new code as well as replacing usage of (v)memdup_user()
-in existing code that uses, e.g., n * size to calculate array sizes.
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+[2] https://github.com/KSPP/linux/issues/89
 
-Suggested-by: David Airlie <airlied@redhat.com>
-Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 ---
- include/linux/string.h | 42 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+ arch/m68k/emu/natfeat.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/string.h b/include/linux/string.h
-index dbfc66400050..0e8e7a40bae7 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -6,6 +6,8 @@
- #include <linux/types.h>	/* for size_t */
- #include <linux/stddef.h>	/* for NULL */
- #include <linux/errno.h>	/* for E2BIG */
-+#include <linux/overflow.h>	/* for check_mul_overflow() */
-+#include <linux/err.h>		/* for ERR_PTR() */
- #include <linux/stdarg.h>
- #include <uapi/linux/string.h>
- 
-@@ -14,6 +16,46 @@ extern void *memdup_user(const void __user *, size_t);
- extern void *vmemdup_user(const void __user *, size_t);
- extern void *memdup_user_nul(const void __user *, size_t);
- 
-+/**
-+ * memdup_array_user - duplicate array from user space
-+ *
-+ * @src: source address in user space
-+ * @n: number of array members to copy
-+ * @size: size of one array member
-+ *
-+ * Return: an ERR_PTR() on failure.  Result is physically
-+ * contiguous, to be freed by kfree().
-+ */
-+static inline void *memdup_array_user(const void __user *src, size_t n, size_t size)
-+{
-+	size_t nbytes;
-+
-+	if (unlikely(check_mul_overflow(n, size, &nbytes)))
-+		return ERR_PTR(-EINVAL);
-+
-+	return memdup_user(src, nbytes);
-+}
-+
-+/**
-+ * vmemdup_array_user - duplicate array from user space
-+ *
-+ * @src: source address in user space
-+ * @n: number of array members to copy
-+ * @size: size of one array member
-+ *
-+ * Return: an ERR_PTR() on failure.  Result may be not
-+ * physically contiguous.  Use kvfree() to free.
-+ */
-+static inline void *vmemdup_array_user(const void __user *src, size_t n, size_t size)
-+{
-+	size_t nbytes;
-+
-+	if (unlikely(check_mul_overflow(n, size, &nbytes)))
-+		return ERR_PTR(-EINVAL);
-+
-+	return vmemdup_user(src, nbytes);
-+}
-+
- /*
-  * Include machine specific inline routines
-  */
--- 
-2.41.0
+diff --git a/arch/m68k/emu/natfeat.c b/arch/m68k/emu/natfeat.c
+index b19dc00026d9..d124c62022c2 100644
+--- a/arch/m68k/emu/natfeat.c
++++ b/arch/m68k/emu/natfeat.c
+@@ -42,10 +42,10 @@ long nf_get_id(const char *feature_name)
+ {
+ 	/* feature_name may be in vmalloc()ed memory, so make a copy */
+ 	char name_copy[32];
+-	size_t n;
++	ssize_t n;
+
+-	n = strlcpy(name_copy, feature_name, sizeof(name_copy));
+-	if (n >= sizeof(name_copy))
++	n = strscpy(name_copy, feature_name, sizeof(name_copy));
++	if (n < 0)
+ 		return 0;
+
+ 	return nf_get_id_phys(virt_to_phys(name_copy));
+--
+2.42.0.283.g2d96d420d3-goog
+
 
