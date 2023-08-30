@@ -2,110 +2,135 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F50C6FA8F
-	for <linux-hardening@archiver.kernel.org>; Wed, 30 Aug 2023 21:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A91E9C6FA8F
+	for <linux-hardening@archiver.kernel.org>; Wed, 30 Aug 2023 22:03:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243538AbjH3V4o (ORCPT
+        id S244260AbjH3WDO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 30 Aug 2023 17:56:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58672 "EHLO
+        Wed, 30 Aug 2023 18:03:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243541AbjH3V4n (ORCPT
+        with ESMTP id S234731AbjH3WDN (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 30 Aug 2023 17:56:43 -0400
-Received: from mail-il1-x12f.google.com (mail-il1-x12f.google.com [IPv6:2607:f8b0:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A91895;
-        Wed, 30 Aug 2023 14:56:19 -0700 (PDT)
-Received: by mail-il1-x12f.google.com with SMTP id e9e14a558f8ab-34bae82b2ffso821355ab.1;
-        Wed, 30 Aug 2023 14:56:19 -0700 (PDT)
+        Wed, 30 Aug 2023 18:03:13 -0400
+Received: from mail-ot1-x333.google.com (mail-ot1-x333.google.com [IPv6:2607:f8b0:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CBDEE6D;
+        Wed, 30 Aug 2023 15:02:47 -0700 (PDT)
+Received: by mail-ot1-x333.google.com with SMTP id 46e09a7af769-6bf01bcb1aeso228399a34.3;
+        Wed, 30 Aug 2023 15:02:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693432517; x=1694037317; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20221208; t=1693432896; x=1694037696; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EZEwMbaCVyaLIfxuj5Unnl9VhZcfo9P9ZpGHH411u8s=;
-        b=TlqVbt9ijicRB1BZRO2riCcy3mdQaumVww2MX0SH9/1ZfrL4yh1FgNJxOZeYCjZ/Lb
-         hUmP0LkRAUV+WkTBcNrwDN+KuFQzhKjP1m696vvCqr/WJVIZKT6FMmlhlGYr5UhitcBM
-         q6L8+GePVKKhAjpFFamPK4fmFTbxlP0TTwLmaaBaftoE/mZrc/BEkwJUu4iIhyezZ1vZ
-         Fvw5UjfZ27ClzujyqP2oFakSXyMciIxBsgd2F/KhhNTYkGytPCMddmGqaBZpJPpp608w
-         hxw0qwaJZBuA9yQk/eg08a6CVI25WgyyTwdOzFQjaTibf+T7dfW6SLKa8KwfTlKaq/Ld
-         ehSQ==
+        bh=ueoe83p5TP/BX5e5mMzX6M9AVSVyHZ9ZgbLNvbyWLBk=;
+        b=ekcC95f56mj3jGoqdGBbfIUXvzrr18N6mNzXbYJlEZSZlF8GOxWYPebKPZx3V5rTW3
+         fSQDPILnq2rZzcVjgxNKEXiE22k1Pw0LlLgQkVBZb9O8I3LHBYO/zn6bAnlLlbNXB8cD
+         BI2fRy/2FDm/G7gxgtb6gLaofUsjIbbyH14OudVWt1RkUGCfyvaKV5aDA2weTzvxWWy1
+         x4qXzyTBHlFsJjF1EeheFZ0IldA/2i5RGpspjX9JhIFCPBmN/LQmjbgIqoxAwB1LYd5O
+         2rcps3zJXYN17VIXrGVmBcomsyZY87kCSEbUon0T9SLwwnbPETEVa0oc8hOim7FhQYKz
+         9I/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693432517; x=1694037317;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1693432896; x=1694037696;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=EZEwMbaCVyaLIfxuj5Unnl9VhZcfo9P9ZpGHH411u8s=;
-        b=HF+pR88CQqEs95e9UlGhQ3ay09WzOwgw+IknmLHBGanjJDmaKtacFU9sdIM3UVXo3j
-         fZRWWA0WgVjuq8SlTLDshg1s/72H9+u/U1YUrea19NRPMf8Sd5IiKIXcwcv2WvXcnXDQ
-         9ZZY/sv1HugwuQEPMpg/CGcL0OsgQEYGXTRMlWIbdx4zS/69/YNXC4w8jeCyzrjIng1N
-         Q7EAYDGcj3E9Cwm0RMhOU1SPNQwoCU9uaXeVbOYh/zz/OU7+MUdCUG7cu1U+yHMCiA8Y
-         jRPWsxyb6xRxg+0SNxR5QHkMT+bEVzMAe1phjNxobkR7vk6a/BPLCCwc1AwhLGA0Uo+/
-         xDLw==
-X-Gm-Message-State: AOJu0YwIj8JDL/fOpgcjGsVeAUnlJqNMVn4u71RlMSqnhc+liA1TUiJJ
-        /pA3ADTlqfoQb8PBGru4PU4=
-X-Google-Smtp-Source: AGHT+IEuh4ZymI9ePYmxpZ+Ps4CAcxYRzl8D4tGfNtuA8+ZCoskmH6nx/RuzghiJJQSuWfb+mrfE+w==
-X-Received: by 2002:a05:6e02:df2:b0:34d:f32c:1d8f with SMTP id m18-20020a056e020df200b0034df32c1d8fmr3693713ilj.17.1693432516637;
-        Wed, 30 Aug 2023 14:55:16 -0700 (PDT)
-Received: from azeems-kspp.c.googlers.com.com (161.74.123.34.bc.googleusercontent.com. [34.123.74.161])
-        by smtp.gmail.com with ESMTPSA id v8-20020a92c6c8000000b0034ab6f53e23sm50527ilm.28.2023.08.30.14.55.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Aug 2023 14:55:16 -0700 (PDT)
-From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-To:     Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc:     linux-hardening@vger.kernel.org,
-        Azeem Shaikh <azeemshaikh38@gmail.com>,
-        ocfs2-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
-        Christian Brauner <brauner@kernel.org>,
-        Dave Chinner <dchinner@redhat.com>,
-        Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH 2/2] ocfs2: Replace strlcpy with strscpy
-Date:   Wed, 30 Aug 2023 21:54:26 +0000
-Message-ID: <20230830215426.4181755-3-azeemshaikh38@gmail.com>
-X-Mailer: git-send-email 2.42.0.283.g2d96d420d3-goog
-In-Reply-To: <20230830215426.4181755-1-azeemshaikh38@gmail.com>
-References: <20230830215426.4181755-1-azeemshaikh38@gmail.com>
+        bh=ueoe83p5TP/BX5e5mMzX6M9AVSVyHZ9ZgbLNvbyWLBk=;
+        b=iMuljDoE4lk/USniueVC9xPIHoU31tYdSlpEGp9+DTzTP9JG6+Pl9vHGncT9V7Smpw
+         MF0elb5cLK5CrnXs3SHAYZmexbBo3Q8KLmOVMEg1k4xJq1bpA0I+7rwYGAD31q8mqvCa
+         dc8EcuIdHeo/l6k8w9IslrBctab4HRohB+D4bm6zvKDvLFVeb0RnhhJj1d4i6ZmaKKC+
+         vrlmdzt+3NkwWn0NYk2SoQGjDr9+tuMfeO0MH74SWQBltXKIVXby2qeAjD2gxYhsgmzX
+         AQbYVqG2TWw5mxyhHzXOAbJ58NBW8GuuoM/Jt8zCgaI5+SB9OxeLt1f6ix0Z1jNji5SN
+         SNCw==
+X-Gm-Message-State: AOJu0YxnCgpvgnpliLA4O/4kpmEE/YnPjj9bPo4xhbWhcXEyXovGKXrJ
+        EwgUVKwtV9ZisS0WuROVCp0c3diB+eSAhTMH/lA=
+X-Google-Smtp-Source: AGHT+IGOjrhJiurHDG9CO68WFg+Lj3uKyBzjsZmu31JRwGBSDIWI65s5f4XLYn5/36TmhNRh+UGv5SlC4Hd8+XPDAwU=
+X-Received: by 2002:a05:6358:4414:b0:12f:2573:45b4 with SMTP id
+ z20-20020a056358441400b0012f257345b4mr3002501rwc.26.1693432896229; Wed, 30
+ Aug 2023 15:01:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230830210724.4156575-1-azeemshaikh38@gmail.com> <20230830215330.6gyhpq3ohkbbtsam@google.com>
+In-Reply-To: <20230830215330.6gyhpq3ohkbbtsam@google.com>
+From:   Azeem Shaikh <azeemshaikh38@gmail.com>
+Date:   Wed, 30 Aug 2023 18:01:25 -0400
+Message-ID: <CADmuW3VbUZBRXVyZVeVuS4cbPGjfgD8fntQwMCUskR5W-CyNVQ@mail.gmail.com>
+Subject: Re: [PATCH v2] scsi: target: Replace strlcpy with strscpy
+To:     Justin Stitt <justinstitt@google.com>
+Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-hardening@vger.kernel.org, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-strlcpy() reads the entire source buffer first.
-This read may exceed the destination size limit.
-This is both inefficient and can lead to linear read
-overflows if a source string is not NUL-terminated [1].
-In an effort to remove strlcpy() completely [2], replace
-strlcpy() here with strscpy().
-
-Direct replacement is assumed to be safe here since
-it's ok for `kernel_param_ops.get()` to return -errno [3].
-This changes the behavior such that instead of silently ignoring the
-case when sizeof(@buffer) < DLMFS_CAPABILITIES, we now return error.
-
-[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-[2] https://github.com/KSPP/linux/issues/89
-[3] https://elixir.bootlin.com/linux/v6.5/source/include/linux/moduleparam.h#L52
-
-Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
----
- fs/ocfs2/dlmfs/dlmfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/ocfs2/dlmfs/dlmfs.c b/fs/ocfs2/dlmfs/dlmfs.c
-index 33e529de93b2..b001eccdd2f3 100644
---- a/fs/ocfs2/dlmfs/dlmfs.c
-+++ b/fs/ocfs2/dlmfs/dlmfs.c
-@@ -80,7 +80,7 @@ static int param_set_dlmfs_capabilities(const char *val,
- static int param_get_dlmfs_capabilities(char *buffer,
- 					const struct kernel_param *kp)
- {
--	return strlcpy(buffer, DLMFS_CAPABILITIES,
-+	return strscpy(buffer, DLMFS_CAPABILITIES,
- 		       strlen(DLMFS_CAPABILITIES) + 1);
- }
- static const struct kernel_param_ops dlmfs_capabilities_ops = {
+On Wed, Aug 30, 2023 at 5:53=E2=80=AFPM Justin Stitt <justinstitt@google.co=
+m> wrote:
+>
+> On Wed, Aug 30, 2023 at 09:07:24PM +0000, Azeem Shaikh wrote:
+> > strlcpy() reads the entire source buffer first.
+> > This read may exceed the destination size limit.
+> > This is both inefficient and can lead to linear read
+> > overflows if a source string is not NUL-terminated [1].
+> > In an effort to remove strlcpy() completely [2], replace
+> > strlcpy() here with strscpy().
+> >
+> > Direct replacement is safe here since return value of -errno
+> > is used to check for truncation instead of sizeof(dest).
+> >
+> > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strl=
+cpy
+> > [2] https://github.com/KSPP/linux/issues/89
+> >
+> > Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+> > ---
+> > v2:
+> >  * Replace all instances of strlcpy in this file instead of just 1.
+> >
+> > v1:
+> >  * https://lore.kernel.org/all/20230830200717.4129442-1-azeemshaikh38@g=
+mail.com/
+> >
+> >  drivers/target/target_core_configfs.c |   27 ++++++++++++-------------=
 --
-2.42.0.283.g2d96d420d3-goog
+> >  1 file changed, 12 insertions(+), 15 deletions(-)
+> >
+> > diff --git a/drivers/target/target_core_configfs.c b/drivers/target/tar=
+get_core_configfs.c
+> > index 936e5ff1b209..10a22a428267 100644
+> > --- a/drivers/target/target_core_configfs.c
+> > +++ b/drivers/target/target_core_configfs.c
+> > @@ -1392,16 +1392,15 @@ static ssize_t target_wwn_vendor_id_store(struc=
+t config_item *item,
+> >       /* +2 to allow for a trailing (stripped) '\n' and null-terminator=
+ */
+> >       unsigned char buf[INQUIRY_VENDOR_LEN + 2];
+> >       char *stripped =3D NULL;
+> > -     size_t len;
+> > +     ssize_t len;
+> >       ssize_t ret;
+> >
+> > -     len =3D strlcpy(buf, page, sizeof(buf));
+> > -     if (len < sizeof(buf)) {
+> > +     len =3D strscpy(buf, page, sizeof(buf));
+> > +     if (len > 0) {
+> >               /* Strip any newline added from userspace. */
+> >               stripped =3D strstrip(buf);
+> > -             len =3D strlen(stripped);
+> >       }
+> > -     if (len > INQUIRY_VENDOR_LEN) {
+> > +     if (len < 0 || strlen(stripped) > INQUIRY_VENDOR_LEN) {
+> >               pr_err("Emulated T10 Vendor Identification exceeds"
+> >                       " INQUIRY_VENDOR_LEN: " __stringify(INQUIRY_VENDO=
+R_LEN)
+> >                       "\n");
+>
+> Should we be explicitly checking for `len =3D=3D -E2BIG` instead of the m=
+ore
+> generic `len < 0`? Perhaps this is a nitpick but I prefer the former.
+>
 
+Most maintainers to whom I have sent such patches in the past have
+preferred `len < 0` since it is not "rigid" in checking for -E2BIG
+which is an implementation detail of strscpy.
