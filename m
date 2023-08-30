@@ -2,162 +2,115 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A93C83F14
-	for <linux-hardening@archiver.kernel.org>; Wed, 30 Aug 2023 21:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61539C83F14
+	for <linux-hardening@archiver.kernel.org>; Wed, 30 Aug 2023 21:18:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240655AbjH3VKa (ORCPT
+        id S241061AbjH3VSv (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 30 Aug 2023 17:10:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42774 "EHLO
+        Wed, 30 Aug 2023 17:18:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240443AbjH3VK3 (ORCPT
+        with ESMTP id S241053AbjH3VSv (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 30 Aug 2023 17:10:29 -0400
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B263DE76;
-        Wed, 30 Aug 2023 14:09:49 -0700 (PDT)
-Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-34ccedcc584so321245ab.0;
-        Wed, 30 Aug 2023 14:09:49 -0700 (PDT)
+        Wed, 30 Aug 2023 17:18:51 -0400
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8817EE57
+        for <linux-hardening@vger.kernel.org>; Wed, 30 Aug 2023 14:18:20 -0700 (PDT)
+Received: by mail-pf1-x42b.google.com with SMTP id d2e1a72fcca58-68c3b9f85b7so75872b3a.2
+        for <linux-hardening@vger.kernel.org>; Wed, 30 Aug 2023 14:18:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693429661; x=1694034461; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ofr1jYcnUdNDcThGOeqc7mheVMPv4mVGcLb0lf2Uv9c=;
-        b=Zu39t0/OcKtwC+SPf80xR1v8iapM+UGPebWTs+7k+rG2PCfBWf2bC/wy1QUTM5yDib
-         rdCb1ulPkm9vROGwEpxhExgNYSCda8tgPyTNnnVUYXnQMBhtBpflnsTzoQ4vUGkwfa1r
-         H0Tf0X1mFodej2e0vHA1AKLSqb2YZ++InHVK8YrnxMEBadCUO+27M75CvkpJhX7I+bqK
-         qxGFQTIZgb5yn2l5lSprUVVrjl3aVpWC1VrACTOcxiXFrlFW/Vg/ZNQmUNLrYe4HPe+6
-         ae2teLSBNNkx3uTRNZO3ggAkZD1WHynFmue+4FTjKsVIBISGooQlSTLDDH06JLtJJy4V
-         azIw==
+        d=chromium.org; s=google; t=1693430234; x=1694035034; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=aGe4Pd8w1XrhVdlP17guvu7l/IZfeNQ7rJWtm4eORLw=;
+        b=J683F7Y+MNn61wydBMMz9tQRIvqoLVnywNW2hhlOpKahl9qw5biPuQb7N+gwngc8OV
+         RWopjtRtnLmbP8QSGlfKqA+iaAn4mHKecyXCbU0IO+SodJ1H3+TmojsDrQ8D5xd/1AbS
+         hlRieI2Ww1zoejwIvg3RIK9tLpy3Ii0vdcqag=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693429661; x=1694034461;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ofr1jYcnUdNDcThGOeqc7mheVMPv4mVGcLb0lf2Uv9c=;
-        b=EbiE+SifZNrMYmVmjt2/QyU3C4TQnmsYOTA+fk2sAZZKlUfEG6Z50O3+hU8dcGaEOc
-         MMw/a9HRAIneS3w2lO64AXiDbIllIenqRYsMFE7gxwXvCFDcQ1sYOhpW0qC7i4bV/cYE
-         zbxqpesww+YzcAfRCdYJgTbfjrmo+DoGgfjnjd5abrkFklJbQ5US2xLRppe/3X1mpQEe
-         eq84kPLbhH6LbTp2oklP5T+Au/YZTPQctFGtH9oKnFAxbosKp60tDg5Gv+5zhEr8V3X5
-         NioxUUpEhiPzf4HM13I/fe37xxMckJX8Hbbc378URkYE/nLmz55J+EFgYuHGNmHl/06X
-         fgeg==
-X-Gm-Message-State: AOJu0YzPkMjmuLpJMjFx/8ByV2LmiEf+YQyWZWM9ZDIdeDBUnREt/CgF
-        aWj1qfZwLrCAMKpGmjEVWS7boSQz1mj3lJfb
-X-Google-Smtp-Source: AGHT+IFDTEJlxTlaQiAOqsKetI2wXncxQtVs9v69CWR7izlVYs1P7AgO0mxLpg+EsJ1yRk/Nc8Oydg==
-X-Received: by 2002:a05:6e02:17c9:b0:349:345b:6595 with SMTP id z9-20020a056e0217c900b00349345b6595mr611217ilu.11.1693429661168;
-        Wed, 30 Aug 2023 14:07:41 -0700 (PDT)
-Received: from azeems-kspp.c.googlers.com.com (161.74.123.34.bc.googleusercontent.com. [34.123.74.161])
-        by smtp.gmail.com with ESMTPSA id ee16-20020a056638293000b0042b227eb1ddsm3958497jab.55.2023.08.30.14.07.40
+        d=1e100.net; s=20221208; t=1693430234; x=1694035034;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aGe4Pd8w1XrhVdlP17guvu7l/IZfeNQ7rJWtm4eORLw=;
+        b=Cu7FQnDC2rhLmkSyhikPflNhZJRxckBJ5md/CdkhdiLOvWXTkFZPdA6fPr+zn2GAOa
+         mclFmyLFNpTRfoHTArfpNXlWIFlGyeXMJBXeITTEx9W1MfryxGzXS/5XEn+LBGC8iAi+
+         65VFuX3VfZj0jqbknXCwc2MubdobVru+/eaf1Y0OU1ExM37cPrtjgfh6DLd+mFlGJO0D
+         I7J+QvuIpzjBf/AOtAMcd22cJbSF8NguhCPY563v806Qk5gk7Kq8dI4gGc4yNTCKQRcU
+         Qe48fPPqJKFFoeNVQZ2XocbK6d7Hl1LleWAiGKP5gFsAhMYfHgifs3+YmWt0nVre8t6e
+         Vv2Q==
+X-Gm-Message-State: AOJu0YyDk/STh5SA+P2iVjAay8X+Jy0Nwh4Rlg27nhRDQwkh23NPs/Pn
+        Czus4Of/vqLV+eIfvHq706tO9g==
+X-Google-Smtp-Source: AGHT+IEhDIeNkXGeOol6NmD2a6/aKXuUj39+GPQFW3PVFsAxlOBUs8czLJdOIDe37aRlRtNO1kTfiQ==
+X-Received: by 2002:a05:6a00:1799:b0:68c:3f2:6007 with SMTP id s25-20020a056a00179900b0068c03f26007mr3677865pfg.8.1693430233873;
+        Wed, 30 Aug 2023 14:17:13 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id v6-20020aa78086000000b006889511ab14sm22956pff.37.2023.08.30.14.17.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Aug 2023 14:07:40 -0700 (PDT)
-From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-hardening@vger.kernel.org,
-        Azeem Shaikh <azeemshaikh38@gmail.com>,
-        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] scsi: target: Replace strlcpy with strscpy
-Date:   Wed, 30 Aug 2023 21:07:24 +0000
-Message-ID: <20230830210724.4156575-1-azeemshaikh38@gmail.com>
-X-Mailer: git-send-email 2.42.0.283.g2d96d420d3-goog
+        Wed, 30 Aug 2023 14:17:13 -0700 (PDT)
+Date:   Wed, 30 Aug 2023 14:17:12 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Azeem Shaikh <azeemshaikh38@gmail.com>
+Cc:     linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Subject: Re: [PATCH] init/version.c: Replace strlcpy with strscpy
+Message-ID: <202308301415.42CAF1C13B@keescook>
+References: <20230830160806.3821893-1-azeemshaikh38@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230830160806.3821893-1-azeemshaikh38@gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-strlcpy() reads the entire source buffer first.
-This read may exceed the destination size limit.
-This is both inefficient and can lead to linear read
-overflows if a source string is not NUL-terminated [1].
-In an effort to remove strlcpy() completely [2], replace
-strlcpy() here with strscpy().
+On Wed, Aug 30, 2023 at 04:08:06PM +0000, Azeem Shaikh wrote:
+> strlcpy() reads the entire source buffer first.
+> This read may exceed the destination size limit.
+> This is both inefficient and can lead to linear read
+> overflows if a source string is not NUL-terminated [1].
+> In an effort to remove strlcpy() completely [2], replace
+> strlcpy() here with strscpy().
+> 
+> Direct replacement is safe here since return value of -errno
+> is used to check for truncation instead of sizeof(dest).
+> 
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+> [2] https://github.com/KSPP/linux/issues/89
+> 
+> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+> ---
+>  init/version.c |    6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/init/version.c b/init/version.c
+> index f117921811b4..94c96f6fbfe6 100644
+> --- a/init/version.c
+> +++ b/init/version.c
+> @@ -21,10 +21,10 @@ static int __init early_hostname(char *arg)
+>  {
+>  	size_t bufsize = sizeof(init_uts_ns.name.nodename);
+>  	size_t maxlen  = bufsize - 1;
+> -	size_t arglen;
+> +	ssize_t arglen;
+> 
+> -	arglen = strlcpy(init_uts_ns.name.nodename, arg, bufsize);
+> -	if (arglen > maxlen) {
+> +	arglen = strscpy(init_uts_ns.name.nodename, arg, bufsize);
+> +	if (arglen < 0) {
 
-Direct replacement is safe here since return value of -errno
-is used to check for truncation instead of sizeof(dest).
+nitpick: this is no longer "length of arg", it's the length of the
+destination string. Regardless:
 
-[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-[2] https://github.com/KSPP/linux/issues/89
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
----
-v2:
- * Replace all instances of strlcpy in this file instead of just 1.
+>  		pr_warn("hostname parameter exceeds %zd characters and will be truncated",
+>  			maxlen);
+>  	}
+> --
+> 2.41.0.255.g8b1d071c50-goog
+> 
+> 
 
-v1:
- * https://lore.kernel.org/all/20230830200717.4129442-1-azeemshaikh38@gmail.com/
-
- drivers/target/target_core_configfs.c |   27 ++++++++++++---------------
- 1 file changed, 12 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/target/target_core_configfs.c b/drivers/target/target_core_configfs.c
-index 936e5ff1b209..10a22a428267 100644
---- a/drivers/target/target_core_configfs.c
-+++ b/drivers/target/target_core_configfs.c
-@@ -1392,16 +1392,15 @@ static ssize_t target_wwn_vendor_id_store(struct config_item *item,
- 	/* +2 to allow for a trailing (stripped) '\n' and null-terminator */
- 	unsigned char buf[INQUIRY_VENDOR_LEN + 2];
- 	char *stripped = NULL;
--	size_t len;
-+	ssize_t len;
- 	ssize_t ret;
-
--	len = strlcpy(buf, page, sizeof(buf));
--	if (len < sizeof(buf)) {
-+	len = strscpy(buf, page, sizeof(buf));
-+	if (len > 0) {
- 		/* Strip any newline added from userspace. */
- 		stripped = strstrip(buf);
--		len = strlen(stripped);
- 	}
--	if (len > INQUIRY_VENDOR_LEN) {
-+	if (len < 0 || strlen(stripped) > INQUIRY_VENDOR_LEN) {
- 		pr_err("Emulated T10 Vendor Identification exceeds"
- 			" INQUIRY_VENDOR_LEN: " __stringify(INQUIRY_VENDOR_LEN)
- 			"\n");
-@@ -1448,16 +1447,15 @@ static ssize_t target_wwn_product_id_store(struct config_item *item,
- 	/* +2 to allow for a trailing (stripped) '\n' and null-terminator */
- 	unsigned char buf[INQUIRY_MODEL_LEN + 2];
- 	char *stripped = NULL;
--	size_t len;
-+	ssize_t len;
- 	ssize_t ret;
-
--	len = strlcpy(buf, page, sizeof(buf));
--	if (len < sizeof(buf)) {
-+	len = strscpy(buf, page, sizeof(buf));
-+	if (len > 0) {
- 		/* Strip any newline added from userspace. */
- 		stripped = strstrip(buf);
--		len = strlen(stripped);
- 	}
--	if (len > INQUIRY_MODEL_LEN) {
-+	if (len < 0 || strlen(stripped) > INQUIRY_MODEL_LEN) {
- 		pr_err("Emulated T10 Vendor exceeds INQUIRY_MODEL_LEN: "
- 			 __stringify(INQUIRY_MODEL_LEN)
- 			"\n");
-@@ -1504,16 +1502,15 @@ static ssize_t target_wwn_revision_store(struct config_item *item,
- 	/* +2 to allow for a trailing (stripped) '\n' and null-terminator */
- 	unsigned char buf[INQUIRY_REVISION_LEN + 2];
- 	char *stripped = NULL;
--	size_t len;
-+	ssize_t len;
- 	ssize_t ret;
-
--	len = strlcpy(buf, page, sizeof(buf));
--	if (len < sizeof(buf)) {
-+	len = strscpy(buf, page, sizeof(buf));
-+	if (len > 0) {
- 		/* Strip any newline added from userspace. */
- 		stripped = strstrip(buf);
--		len = strlen(stripped);
- 	}
--	if (len > INQUIRY_REVISION_LEN) {
-+	if (len < 0 || strlen(stripped) > INQUIRY_REVISION_LEN) {
- 		pr_err("Emulated T10 Revision exceeds INQUIRY_REVISION_LEN: "
- 			 __stringify(INQUIRY_REVISION_LEN)
- 			"\n");
---
-2.42.0.283.g2d96d420d3-goog
-
-
+-- 
+Kees Cook
