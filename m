@@ -2,146 +2,115 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 270CBC83F2F
-	for <linux-hardening@archiver.kernel.org>; Thu, 31 Aug 2023 19:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB13C83F37
+	for <linux-hardening@archiver.kernel.org>; Thu, 31 Aug 2023 19:38:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244458AbjHaT2s (ORCPT
+        id S240647AbjHaTil (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 31 Aug 2023 15:28:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32856 "EHLO
+        Thu, 31 Aug 2023 15:38:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238027AbjHaT2q (ORCPT
+        with ESMTP id S229558AbjHaTik (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 31 Aug 2023 15:28:46 -0400
-Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0F811BF;
-        Thu, 31 Aug 2023 12:28:43 -0700 (PDT)
-Received: by mail-yb1-xb32.google.com with SMTP id 3f1490d57ef6-d7b9de8139fso916669276.1;
-        Thu, 31 Aug 2023 12:28:43 -0700 (PDT)
+        Thu, 31 Aug 2023 15:38:40 -0400
+Received: from mail-io1-xd2d.google.com (mail-io1-xd2d.google.com [IPv6:2607:f8b0:4864:20::d2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EF391BF;
+        Thu, 31 Aug 2023 12:38:38 -0700 (PDT)
+Received: by mail-io1-xd2d.google.com with SMTP id ca18e2360f4ac-792717ef3c9so43532039f.3;
+        Thu, 31 Aug 2023 12:38:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693510123; x=1694114923; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K8qDQJExdf2/MyftTvEkhS4s/WAMk52xVgwr8SGMiDE=;
-        b=fFk4gy/qXBXmOhI8uy5rjhSNuJRBwo7uBtXPnhRnfmIV2CX70b5IWcjHszSmVJ/Dxw
-         VydufYKTAP2PWvfvDsUglKuu6WojaTVsxDJs+JCMsVHBVVJzYeVIG6ETuTb2wbX3/DLH
-         fysmlvBv1hx1cy+8MboYTL1CItpa8l1K2EMRVqrDn1+2qSit6Gor1LV9uGMQW5tt4a2V
-         QvRBTL5FJY6wqDakhvDynjgbX7L9GWaXqqk3s9jzYiDh3Z4uR3yz7put5f8JrFhioF1T
-         ckz350pBObCo1Y9D/CFaxhzIzMgzB4Bb+A0gt+UcAbic9JsSX/8PweAlK1YPrXcR4EGV
-         HMiQ==
+        d=gmail.com; s=20221208; t=1693510717; x=1694115517; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1ki/OwjIU18DtuVHU8h+/teFMT7QJKmhWe1t8w4B3+I=;
+        b=GeAGRMMNGNTuk3oMQ1YPb8/QzisV2xZjEo8h/lkYfwHNEfAxFKiNFvWczvUP0xIzHp
+         UVetJc58Mxb1J9DndYsOvf7ovYWBH0/Z/uFpmrEZIS1iNqJNV40j5FGQZ0f7Gp5GPolL
+         6nzLmAUGwV4dPKZiqZ5V1jYbq1D08P9GCHpxxzM0saNCeXsMRi0EKIzg3uOCb6FkHrmH
+         xIKlzBU8vUuyIhdVJ4SkxPWxzR5s9jyH/pSf5cIV61YyJlrYYdIwcI4drcfvW+pnRxwc
+         lTvg6zAbuEtSQp44PH7lcxNNS/d7+KdePDw+R2ih1b7PkGmKyhivDnHqoFYdLBcKDjcr
+         9NGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693510123; x=1694114923;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=K8qDQJExdf2/MyftTvEkhS4s/WAMk52xVgwr8SGMiDE=;
-        b=QPaaVLlAoja4hF2UJQzzXbd9x3HHzRHdj3WcBrYtmhC+7uOgZCjsfIalYZeyB0Ipzw
-         Fdtf2wLsTEkf5ndtlMVum5K8bidf9LVEU3MkxSii3UuogQLU94j15qFuTGrbx2YvWnfz
-         1OU/86/8qqf1Xe+rKn20paVinRogbBB6yY+voAmIqKqnEXP2/vYB07HKpmtIwpdvFv3h
-         0VdVPMt/tTR2UeODVOXZ2s02Od2bsES8RIDHvsqPssO0ySS4J0ih0mRq/ll5yUDIiVfB
-         6P7pJ4CBngXK0lGhHjQ2TOjXdmuQVJ7xnu6n6QYgkeYBeIe97UTtAdhLkh6h63emPR6n
-         6X+Q==
-X-Gm-Message-State: AOJu0YxR5Z940POUJ66+6QM4eKhocB1AeEqY1GKgxnK/0rvSB8wixYOq
-        HVjurZ1bLb8UqKCYjOIfy6HJ9NwXeyETiV8DNgA=
-X-Google-Smtp-Source: AGHT+IHUk+T46JxLGqYp6rQq8hKNL4/Cn40334y926ibfAf3nZ4zAVGPqIKHXAMfPwddXw3jVUWSXX+nNgI0+RVu+F4=
-X-Received: by 2002:a25:6642:0:b0:d78:2383:4427 with SMTP id
- z2-20020a256642000000b00d7823834427mr671226ybm.9.1693510123188; Thu, 31 Aug
- 2023 12:28:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230830215426.4181755-1-azeemshaikh38@gmail.com>
- <20230830215426.4181755-3-azeemshaikh38@gmail.com> <202308301601.8A8EE6B653@keescook>
-In-Reply-To: <202308301601.8A8EE6B653@keescook>
+        d=1e100.net; s=20221208; t=1693510717; x=1694115517;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1ki/OwjIU18DtuVHU8h+/teFMT7QJKmhWe1t8w4B3+I=;
+        b=OoISb+PI9fb9PSDuZpDASpK9PJu2c58tr9YMgO0dzY/sf+YW77AczfKDL9YhkP5J8A
+         6FJjdLdcBBvfZVbyaGNxtPJ9ks23rFJuDROQwV9y9sRLrEMDwlh0KPg1vYPSZ0uGdBg3
+         bttRVgM1bG+8KeIs54ehz2908MdW+dl9AYjOK695gOli3NHoLFmvVxH9J6w0dCNghsgS
+         5A3BMAYLzUFeW/8uCvShhRSl4FAV7/FwokKDUb7c+mr71kmEqW6AWebAUtXjKyYXuZBs
+         ULDBVYU0bGV8hiHbXwFSvVYHF31Wg+WxwEwoaqT2ojr9z1Wxgx+6wzXl7vC3UIXyLlde
+         wS1g==
+X-Gm-Message-State: AOJu0YyDtOAtxR2xGldoQFXi6jjw1afbDliyYO/oBY5q1bJZ3l1TQ63z
+        8o4tW+IeTimKfza0XPHk3zM=
+X-Google-Smtp-Source: AGHT+IGvlsa8+EI3f6HZsE4SZNDJ3JjIgHosSPzt0rFM0ScC3i7qQ67POY4bnNCVUgtcIdCO4Em9Cw==
+X-Received: by 2002:a5e:c80f:0:b0:783:5209:c01 with SMTP id y15-20020a5ec80f000000b0078352090c01mr224313iol.17.1693510717430;
+        Thu, 31 Aug 2023 12:38:37 -0700 (PDT)
+Received: from azeems-kspp.c.googlers.com.com (161.74.123.34.bc.googleusercontent.com. [34.123.74.161])
+        by smtp.gmail.com with ESMTPSA id gc10-20020a056638670a00b0042b39f1c3d2sm579001jab.144.2023.08.31.12.38.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Aug 2023 12:38:37 -0700 (PDT)
 From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-Date:   Thu, 31 Aug 2023 15:28:32 -0400
-Message-ID: <CADmuW3Wc7fzoCcif7WmY4X4FWErFc4poMOqzMXu=3mf0ycju1Q@mail.gmail.com>
-Subject: Re: [PATCH 2/2] ocfs2: Replace strlcpy with strscpy
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
+To:     Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
         Joseph Qi <joseph.qi@linux.alibaba.com>,
-        linux-hardening@vger.kernel.org, ocfs2-devel@lists.linux.dev,
-        linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>
+Cc:     linux-hardening@vger.kernel.org,
+        Azeem Shaikh <azeemshaikh38@gmail.com>,
+        ocfs2-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
         Christian Brauner <brauner@kernel.org>,
-        Dave Chinner <dchinner@redhat.com>,
+        Dave Chinner <dchinner@redhat.com>, Jan Kara <jack@suse.cz>,
         Jeff Layton <jlayton@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: [PATCH v2] fs: ocfs2: Replace strlcpy with sysfs_emit
+Date:   Thu, 31 Aug 2023 19:38:27 +0000
+Message-ID: <20230831193827.1528867-1-azeemshaikh38@gmail.com>
+X-Mailer: git-send-email 2.42.0.283.g2d96d420d3-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Aug 30, 2023 at 7:06=E2=80=AFPM Kees Cook <keescook@chromium.org> w=
-rote:
->
-> On Wed, Aug 30, 2023 at 09:54:26PM +0000, Azeem Shaikh wrote:
-> > strlcpy() reads the entire source buffer first.
-> > This read may exceed the destination size limit.
-> > This is both inefficient and can lead to linear read
-> > overflows if a source string is not NUL-terminated [1].
-> > In an effort to remove strlcpy() completely [2], replace
-> > strlcpy() here with strscpy().
-> >
-> > Direct replacement is assumed to be safe here since
-> > it's ok for `kernel_param_ops.get()` to return -errno [3].
-> > This changes the behavior such that instead of silently ignoring the
-> > case when sizeof(@buffer) < DLMFS_CAPABILITIES, we now return error.
-> >
-> > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strl=
-cpy
-> > [2] https://github.com/KSPP/linux/issues/89
-> > [3] https://elixir.bootlin.com/linux/v6.5/source/include/linux/modulepa=
-ram.h#L52
-> >
-> > Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
-> > ---
-> >  fs/ocfs2/dlmfs/dlmfs.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/fs/ocfs2/dlmfs/dlmfs.c b/fs/ocfs2/dlmfs/dlmfs.c
-> > index 33e529de93b2..b001eccdd2f3 100644
-> > --- a/fs/ocfs2/dlmfs/dlmfs.c
-> > +++ b/fs/ocfs2/dlmfs/dlmfs.c
-> > @@ -80,7 +80,7 @@ static int param_set_dlmfs_capabilities(const char *v=
-al,
-> >  static int param_get_dlmfs_capabilities(char *buffer,
-> >                                       const struct kernel_param *kp)
-> >  {
-> > -     return strlcpy(buffer, DLMFS_CAPABILITIES,
-> > +     return strscpy(buffer, DLMFS_CAPABILITIES,
-> >                      strlen(DLMFS_CAPABILITIES) + 1);
-> >  }
->
-> This is another case of "accidentally correct".
->
->
-> param->get() is hooked here, in the sysfs "show" callback:
->
-> static ssize_t param_attr_show(struct module_attribute *mattr,
->                                struct module_kobject *mk, char *buf)
-> {
->         int count;
->         struct param_attribute *attribute =3D to_param_attr(mattr);
->
->         if (!attribute->param->ops->get)
->                 return -EPERM;
->
->         kernel_param_lock(mk->mod);
->         count =3D attribute->param->ops->get(buf, attribute->param);
->         kernel_param_unlock(mk->mod);
->         return count;
-> }
->
-> Meaning ultimately this will show up here, if I'm reading names right:
-> /sys/module/ocfs/parameters/dlmfs_capabilities
->
-> Anyway, the "count" being returned would be quite bad if
-> DLMFS_CAPABILITIES were dynamic and larger than PAGE_SIZE (the size of
-> the sysfs buffer).
->
-> For this case, I would say replace strlcpy with sysfs_emit:
->
->         return sysfs_emit(buffer, DLMFS_CAPABILITIES);
->
+strlcpy() reads the entire source buffer first.
+This read may exceed the destination size limit.
+This is both inefficient and can lead to linear read
+overflows if a source string is not NUL-terminated [1].
+In an effort to remove strlcpy() completely [2], replace
+strlcpy() here with sysfs_emit().
 
-Thanks, sending out a v2 for this. Out of curiosity - why sysfs_emit?
-Is it because DLMFS_CAPABILITIES is a hard-coded string?
+Direct replacement is safe here since its ok for `kernel_param_ops.get()`
+to return -errno [3].
+
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+[2] https://github.com/KSPP/linux/issues/89
+[3] https://elixir.bootlin.com/linux/v6.5/source/include/linux/moduleparam.h#L52
+
+Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+---
+v2:
+ * Removes patch [1/2] which replaced module_param_call with module_param_cb.
+ * Use sysfs_emit instead of strscpy.
+
+v1:
+ * https://lore.kernel.org/all/20230830215426.4181755-1-azeemshaikh38@gmail.com/
+
+ fs/ocfs2/dlmfs/dlmfs.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/fs/ocfs2/dlmfs/dlmfs.c b/fs/ocfs2/dlmfs/dlmfs.c
+index 81265123ce6c..b38776ba3306 100644
+--- a/fs/ocfs2/dlmfs/dlmfs.c
++++ b/fs/ocfs2/dlmfs/dlmfs.c
+@@ -80,8 +80,7 @@ static int param_set_dlmfs_capabilities(const char *val,
+ static int param_get_dlmfs_capabilities(char *buffer,
+ 					const struct kernel_param *kp)
+ {
+-	return strlcpy(buffer, DLMFS_CAPABILITIES,
+-		       strlen(DLMFS_CAPABILITIES) + 1);
++	return sysfs_emit(buffer, DLMFS_CAPABILITIES);
+ }
+ module_param_call(capabilities, param_set_dlmfs_capabilities,
+ 		  param_get_dlmfs_capabilities, NULL, 0444);
+--
+2.42.0.283.g2d96d420d3-goog
+
+
