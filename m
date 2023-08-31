@@ -2,85 +2,150 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86388C83F14
-	for <linux-hardening@archiver.kernel.org>; Thu, 31 Aug 2023 00:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A9DC83F31
+	for <linux-hardening@archiver.kernel.org>; Thu, 31 Aug 2023 05:32:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344612AbjHaAEs (ORCPT
+        id S1343906AbjHaFcv (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 30 Aug 2023 20:04:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50334 "EHLO
+        Thu, 31 Aug 2023 01:32:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237781AbjHaAEs (ORCPT
+        with ESMTP id S1346067AbjHaFc3 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 30 Aug 2023 20:04:48 -0400
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5FD5CC9
-        for <linux-hardening@vger.kernel.org>; Wed, 30 Aug 2023 17:04:45 -0700 (PDT)
-Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1bf6ea270b2so1637725ad.0
-        for <linux-hardening@vger.kernel.org>; Wed, 30 Aug 2023 17:04:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1693440285; x=1694045085; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2wclbGISi0DTsfnw2wuB5z2VMldigUtFlGGDgvrtyHY=;
-        b=i5emslwmEfx6A6P3nRttHrDbA0mNyP9zy0qnWunRqBPf/DtfXT3l30rX2T0zHYQdEH
-         yEpo5WUZDGCiaHEcSnCv5VWn+TCugNATZKKEZVmfZfz4gyVOyxfN5yendgfJzugV9cq+
-         Add8CLfWPQFY0bT8j2R2pKd9Yw186y/oC3z34=
+        Thu, 31 Aug 2023 01:32:29 -0400
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C76DEE43;
+        Wed, 30 Aug 2023 22:32:21 -0700 (PDT)
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-52a250aa012so436105a12.3;
+        Wed, 30 Aug 2023 22:32:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693440285; x=1694045085;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2wclbGISi0DTsfnw2wuB5z2VMldigUtFlGGDgvrtyHY=;
-        b=UXOQkQ7shIbdo19ggmrc/Suj5QD6KFjFX5To3uelEgO0MnNiw3zcibaIMvMnfFRL56
-         swkHhBKoWmfJAj+ydC62dUR6RD+wRlhQZ6wFa8u06N45rFlyXDCz+Z1DUPhlBd8cSaAJ
-         fwrQTx71C2JkbEgu4tg4a90hQ7V10jnZt2ocFktYAyl1+G6b6oXjtyuIdC0xHy/lBZdo
-         +1Qwjq+QkNYoLGHuBqcZSBE1NOPzR/K0ngHh3ZpYoTrdmIfSB5hg3uzV6FbofOxoiagy
-         TuuS+zjlIkArr0TXL6/2qbpoNHiXaZaNqKx+jj/xbux1u6rgjGDYopkqdaWMBIvJYCzL
-         JKJg==
-X-Gm-Message-State: AOJu0YxrKvrREdNZuMYfbdKbGO8ByFcXRc5Cz8097+hIaJOmrWqsFVzZ
-        oZ7z2R+Qk4Q74q7Y1KLH6qs8vQ==
-X-Google-Smtp-Source: AGHT+IFGMTemHoGX0sBWxi5Tew5dUP8jSwJec6Ka+YeMhrkhHDOargCzGiUpjQ6Og16mC5nefUj++g==
-X-Received: by 2002:a17:902:d34d:b0:1bf:5df2:8e97 with SMTP id l13-20020a170902d34d00b001bf5df28e97mr3592551plk.4.1693440285320;
-        Wed, 30 Aug 2023 17:04:45 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id x13-20020a170902820d00b001c0cb2aa2easm67102pln.121.2023.08.30.17.04.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Aug 2023 17:04:44 -0700 (PDT)
-Date:   Wed, 30 Aug 2023 17:04:44 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Azeem Shaikh <azeemshaikh38@gmail.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-hardening@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] m68k/atari: Replace strlcpy with strscpy
-Message-ID: <202308301704.7A3F0F9CBD@keescook>
-References: <20230830185428.4109426-1-azeemshaikh38@gmail.com>
+        d=1e100.net; s=20221208; t=1693459940; x=1694064740;
+        h=content-transfer-encoding:in-reply-to:subject:from:content-language
+         :references:cc:to:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pWVU2emzKXoGwZDt9vJyrPNkV5rPwoUzokQnAVFFcdk=;
+        b=j/bxe/J/h8og76bfu49y9jrnVxfMLzgjdmby1m6K+Jzv9QZK0FPvIvkOKK7f18FLjM
+         t9N7ax0mHh9SNEKie23PBH66iRP2aW7VFokvt/3p5Qp+gsIFwVW0GbGCS4safwqQ6OP5
+         T1yDwiw3I4yVvjE7Ct51r7GOAHp6u8wAMOH5XMv/Gd1ECMXwlDyVT0H82oeSzaj5Erci
+         4plkq9+6FggccJZOzSr5rjYbkRxmFTq8/x5JIXQmSDcWSmJSiCSu3bhvQWpeRFCu178J
+         ymltEeeSz+Q+OiNIdv5Swz9AqaRWegmi22AzAzhwcYyjB6kenXSaLMfnptwd6Pa9EnMr
+         bKHA==
+X-Gm-Message-State: AOJu0Yw2Ww5UDh5RKba6SA4K8S0sCjFBVohgvoIcMZ5VCH/mP7nWRPz+
+        LA38xudAN8+r2eVGl/OcTtwG7Q1wNn4o7g==
+X-Google-Smtp-Source: AGHT+IEerIrNC2i8KrayM6DoN13BvZp7dqB6SxVq5E6w4q5Lp4zn5tDbHt5z7LIRVBCL0epVyoHTGw==
+X-Received: by 2002:a17:906:310d:b0:9a5:b875:d76 with SMTP id 13-20020a170906310d00b009a5b8750d76mr3157954ejx.28.1693459939968;
+        Wed, 30 Aug 2023 22:32:19 -0700 (PDT)
+Received: from ?IPV6:2a0b:e7c0:0:107::aaaa:59? ([2a0b:e7c0:0:107::aaaa:59])
+        by smtp.gmail.com with ESMTPSA id l18-20020a1709066b9200b009930308425csm339562ejr.31.2023.08.30.22.32.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Aug 2023 22:32:19 -0700 (PDT)
+Message-ID: <c44d1f9f-90e0-3e83-8394-854feb449539@kernel.org>
+Date:   Thu, 31 Aug 2023 07:32:18 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230830185428.4109426-1-azeemshaikh38@gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+To:     Kees Cook <keescook@chromium.org>,
+        Azeem Shaikh <azeemshaikh38@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-serial@vger.kernel.org,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20230830160410.3820390-1-azeemshaikh38@gmail.com>
+ <2023083035-unpadded-amulet-8c7e@gregkh>
+ <CADmuW3Wbgb7s+jRm8F0hcjzreWysVdzNvv778yUbGCOxAJHwjQ@mail.gmail.com>
+ <202308301421.997C4034B5@keescook>
+Content-Language: en-US
+From:   Jiri Slaby <jirislaby@kernel.org>
+Subject: Re: [PATCH] vt: Fix potential read overflow of kernel memory
+In-Reply-To: <202308301421.997C4034B5@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Aug 30, 2023 at 06:54:28PM +0000, Azeem Shaikh wrote:
-> strlcpy() reads the entire source buffer first.
-> This read may exceed the destination size limit.
-> This is both inefficient and can lead to linear read
-> overflows if a source string is not NUL-terminated [1].
-> In an effort to remove strlcpy() completely [2], replace
-> strlcpy() here with strscpy().
+On 30. 08. 23, 23:28, Kees Cook wrote:
+> On Wed, Aug 30, 2023 at 03:25:54PM -0400, Azeem Shaikh wrote:
+>> On Wed, Aug 30, 2023 at 1:57 PM Greg Kroah-Hartman
+>> <gregkh@linuxfoundation.org> wrote:
+>>>
+>>> On Wed, Aug 30, 2023 at 04:04:10PM +0000, Azeem Shaikh wrote:
+>>>> strlcpy() reads the entire source buffer first.
+>>>> This read may exceed the destination size limit if
+>>>> a source string is not NUL-terminated [1].
+>>>
+>>> But that's not the case here, right?  So your "potential read overflow"
+>>> isn't relevant here.
+>>>
+>>>> The copy_to_user() call uses @len returned from strlcpy() directly
+>>>> without checking its value. This could potentially lead to read
+>>>> overflow.
+>>>
+>>> But can it?  How?
+>>>
+>>
+>> The case I was considering is when the null-terminated hardcoded
+>> string @func_table[kb_func] has length @new_len > @len. In this case,
+>> strlcpy() will assign @len = @new_len and copy_to_user() would read
+>> @new_len from the kmalloc-ed memory of @len. This is the potential
+>> read overflow I was referring to. Let me know if I'm mistaken.
 > 
-> Direct replacement is safe here since return value of -errno
-> is used to check for truncation instead of sizeof(dest).
+> First there is:
 > 
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-> [2] https://github.com/KSPP/linux/issues/89
+> ssize_t len = sizeof(user_kdgkb->kb_string);
 > 
-> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+> "struct user_kdgkb" is UAPI (therefore unlikely to change), and kb_string
+> is 512:
+> 
+> struct kbsentry {
+>          unsigned char kb_func;
+>          unsigned char kb_string[512];
+> };
+> 
+> Then we do:
+> 
+>                  len = strlcpy(kbs, func_table[kb_func] ? : "", len);
+> 
+> This is the anti-pattern (take the length of the _source_) we need to
+> remove.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+But len is the length of kbs, i.e. the destination. Or what am I missing?
 
+                 kbs = kmalloc(len, GFP_KERNEL);
+                 len = strlcpy(kbs, func_table[kb_func] ? : "", len);
+
+> However, func_table[] is made up of either %NUL-terminated
+> strings:
+> 
+> char func_buf[] = {
+>          '\033', '[', '[', 'A', 0,
+>          '\033', '[', '[', 'B', 0,
+> ...
+> char *func_table[MAX_NR_FUNC] = {
+>          func_buf + 0,
+>          func_buf + 5,
+> ...
+> 
+> Or a NULL address itself. The ?: operator handles the NULL case, so
+> "len" can only ever be 0 through the longest string in func_buf. So it's
+> what I'd call "accidentally correct". i.e. it's using a fragile
+> anti-pattern, but in this case everything is hard-coded and less than
+> 512.
+> 
+> Regardless, we need to swap for a sane pattern, which you've done. But
+> the commit log is misleading, so it needs some more detail. :)
+
+I am still missing what is wrong in the above code with strlcpy(). The 
+dest is deliberately made as long as the source, so the returned len is 
+never less then the passed len. No checking needed IMO. Perhaps, we 
+might switch to strcpy()?
+
+FWIW I introduced this in commit 82e61c3909db5. So if it needs fixing, 
+the patch deserves a Fixes: 82e61c3909db5 tag.
+
+thanks,
 -- 
-Kees Cook
+js
+suse labs
+
