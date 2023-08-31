@@ -2,99 +2,90 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 949E9C83F01
-	for <linux-hardening@archiver.kernel.org>; Thu, 31 Aug 2023 15:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7817DC83F2F
+	for <linux-hardening@archiver.kernel.org>; Thu, 31 Aug 2023 18:30:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233741AbjHaPps (ORCPT
+        id S1345125AbjHaSaS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 31 Aug 2023 11:45:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37644 "EHLO
+        Thu, 31 Aug 2023 14:30:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238887AbjHaPpo (ORCPT
+        with ESMTP id S244263AbjHaSaR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 31 Aug 2023 11:45:44 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45CAB1B0;
-        Thu, 31 Aug 2023 08:45:41 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id BCC67B8233A;
-        Thu, 31 Aug 2023 15:45:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76C7BC433C9;
-        Thu, 31 Aug 2023 15:45:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693496738;
-        bh=J1cZYDRnTeF8cAXMCJ0XFEKzFUSLXJ/iqg35dWO1Xlo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=m9sJMKHABnRVgyrpaiqO/6dri9ODMIQ2UYtcPw0s1RRnkYP9nAEi02nSlDcnZBfVu
-         dF8V9bQfD784m7vV8UNt3V0eIV1U7+y+3czS4NW3LOly5T1LiDbnS/3JL0HB/7QH+G
-         ND/7Xk0LhEEVbMllR2fDp+zaRReZaOmDIEpvign+dD4FG4hPedRR2Z5Hm7NrTH0lrE
-         bxnvUQxnYZZ7cB0ZeA9rzXEQV7Cls3FompIOVbhBiWmGlfwBS0wEhCgvgfaEeGSpGC
-         nKHUtgrRMu9rYOMCOMknC102ncMv0mcCI1WaN2y3pSQFFC3KCBOMjELtAYfODpFSiJ
-         Xx4MtQi7jaZZw==
-Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-1c4c7a83bcdso558059fac.0;
-        Thu, 31 Aug 2023 08:45:38 -0700 (PDT)
-X-Gm-Message-State: AOJu0Yyx3B63qh4FYrEgsBeNmgN0+kc07+oMf/x/avSQ6bMgNSzXiWEP
-        qfqAFJIUSBpbnstASOsLagSCcKIGCzlnVnXl0aI=
-X-Google-Smtp-Source: AGHT+IEUJMNylrks/fy5NvmaNAFMnHbg4XiCcdriY8ZpK4zEHo9Dox7bvKVqZcq4Wd6iiC2FHgRGNtjlem0M8nYGzko=
-X-Received: by 2002:a05:6870:392a:b0:1be:fe7c:d0a6 with SMTP id
- b42-20020a056870392a00b001befe7cd0a6mr6668317oap.2.1693496737720; Thu, 31 Aug
- 2023 08:45:37 -0700 (PDT)
+        Thu, 31 Aug 2023 14:30:17 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 931E4E65
+        for <linux-hardening@vger.kernel.org>; Thu, 31 Aug 2023 11:30:14 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-1c0c6d4d650so9381375ad.0
+        for <linux-hardening@vger.kernel.org>; Thu, 31 Aug 2023 11:30:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1693506614; x=1694111414; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=FB1kVMWEU7nPrAJJXjUVrfR6NLc1vMmftYUNizeZ0Cc=;
+        b=fMOJ32E4VIbYy5JzVF6rihdyKHh/QFE0hu6aKeDbCUHEXv5hnUP70iF+9/AFoDlSWt
+         g2fRzeHTX3Eko5JeQxqDEOqXH9WFQiEIgM7gpgUizKBQYSt8mi+12PSRInVokrAzli9k
+         r3lGu3VNCWchmm78WWRBQ9Z1sIaRH4A5T6f9Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693506614; x=1694111414;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FB1kVMWEU7nPrAJJXjUVrfR6NLc1vMmftYUNizeZ0Cc=;
+        b=bOJqqlWMXI1M3mDkPf/kT5o28XtqEXWKtSUSbEvp2okmmFeRxR6RKXdXcCV9eSL9Ft
+         9eqUJ3TIB2rCEf7vST15kgJoMqa9dC4Q+7HY0vJcVcaio6J/1k5mKm3GVZg0CdHr228a
+         /EclhLpNRmPnKrVmctUrp8KK2gdo0IC6PWxgeX8/TaOYDD/+uI9B3QN3l56xOaovaDf+
+         MmfID44S3EMkDg8WtHk3FLtZgqcBbEXzAwBE+byt1ErEva7/Bapoz3DMZjmPP1gHCe9X
+         Gge4FkmFYmFN3EC7C2mGkzu5uWiXkai6FH9jrbLXg9YToFLSsOJCXWnTtnQqKrgR5U5y
+         HOPA==
+X-Gm-Message-State: AOJu0Yy5NLxwPaS8jQs2e6fOnSW6orfsVXmD+0gbkIJxHm5jgBL4CQ2Z
+        /HdCyp0FuweEzTp8MCCRx9nOEA==
+X-Google-Smtp-Source: AGHT+IEjQ6KvhqRgqekfwUfVHPDa4H9zY0UwUrk4seishin21Jizv61gXheblqWlJAuPqaS3NuEs8A==
+X-Received: by 2002:a17:902:a5c9:b0:1bc:667b:63c6 with SMTP id t9-20020a170902a5c900b001bc667b63c6mr426242plq.41.1693506613996;
+        Thu, 31 Aug 2023 11:30:13 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id w1-20020a170902e88100b001bafd5cf769sm1548229plg.2.2023.08.31.11.30.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Aug 2023 11:30:13 -0700 (PDT)
+Date:   Thu, 31 Aug 2023 11:30:12 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jiri Slaby <jirislaby@kernel.org>
+Cc:     Azeem Shaikh <azeemshaikh38@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-serial@vger.kernel.org,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] vt: Fix potential read overflow of kernel memory
+Message-ID: <202308311123.EF07499@keescook>
+References: <20230830160410.3820390-1-azeemshaikh38@gmail.com>
+ <2023083035-unpadded-amulet-8c7e@gregkh>
+ <CADmuW3Wbgb7s+jRm8F0hcjzreWysVdzNvv778yUbGCOxAJHwjQ@mail.gmail.com>
+ <202308301421.997C4034B5@keescook>
+ <c44d1f9f-90e0-3e83-8394-854feb449539@kernel.org>
 MIME-Version: 1.0
-References: <20230825194329.gonna.911-kees@kernel.org> <CAK7LNATcTw+btQVri7SBA8gFbDNMYz7D2gMQaoZp9sQGFjCw8Q@mail.gmail.com>
- <87ttsjlmho.fsf@mail.lhotse> <ZO2NVLipjlzIh0YS@bergen.fjasle.eu>
- <CAK7LNARjsB+LTBGRfWX68Ld7oehhuBv9SY8scoC=Xk8EJc-OHw@mail.gmail.com> <202308301702.4EB6F55@keescook>
-In-Reply-To: <202308301702.4EB6F55@keescook>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 1 Sep 2023 00:45:01 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARtiS5ePpq9vsQvhQs5AC_FGbsGycM1Bn9jtKvH1rRwpA@mail.gmail.com>
-Message-ID: <CAK7LNARtiS5ePpq9vsQvhQs5AC_FGbsGycM1Bn9jtKvH1rRwpA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] kbuild: Show Kconfig fragments in "help"
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Nicolas Schier <nicolas@fjasle.eu>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c44d1f9f-90e0-3e83-8394-854feb449539@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Aug 31, 2023 at 9:03=E2=80=AFAM Kees Cook <keescook@chromium.org> w=
-rote:
->
-> On Tue, Aug 29, 2023 at 11:57:19PM +0900, Masahiro Yamada wrote:
-> > The attached patch will work too.
-> >
-> > I dropped the "in the first line" restriction
-> > because SPDX might be placed in the first line
-> > of config fragments.
->
-> Good call. Yes, this looks excellent; thank you! Do you want to send a
-> formal patch? Please consider it:
->
-> Reviewed-by: Kees Cook <keescook@chromium.org>
->
-> --
-> Kees Cook
+On Thu, Aug 31, 2023 at 07:32:18AM +0200, Jiri Slaby wrote:
+> On 30. 08. 23, 23:28, Kees Cook wrote:
+> >                  len = strlcpy(kbs, func_table[kb_func] ? : "", len);
+> > 
+> > This is the anti-pattern (take the length of the _source_) we need to
+> > remove.
+> 
+> But len is the length of kbs, i.e. the destination. Or what am I missing?
 
+strlcpy() returns the length of the _source_ string (i.e. it could be
+greater than the input argument len). But there is no current flaw here
+(since all sources are very short). We're just trying to remove strlcpy()
+since it leads to unexpected results.
 
-You can send it with
-Co-developed-by: Masahiro Yamada <masahiroy@kernel.org>
+-Kees
 
-
-You can add help messages to more *.config files if you like,
-and add SPDX tags while you are here.
-
-
---
-Best Regards
-Masahiro Yamada
+-- 
+Kees Cook
