@@ -2,90 +2,86 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7817DC83F2F
-	for <linux-hardening@archiver.kernel.org>; Thu, 31 Aug 2023 18:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8FD5C83F3B
+	for <linux-hardening@archiver.kernel.org>; Thu, 31 Aug 2023 18:33:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345125AbjHaSaS (ORCPT
+        id S1347051AbjHaSdE (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 31 Aug 2023 14:30:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59760 "EHLO
+        Thu, 31 Aug 2023 14:33:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244263AbjHaSaR (ORCPT
+        with ESMTP id S1347052AbjHaSdD (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 31 Aug 2023 14:30:17 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 931E4E65
-        for <linux-hardening@vger.kernel.org>; Thu, 31 Aug 2023 11:30:14 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-1c0c6d4d650so9381375ad.0
-        for <linux-hardening@vger.kernel.org>; Thu, 31 Aug 2023 11:30:14 -0700 (PDT)
+        Thu, 31 Aug 2023 14:33:03 -0400
+Received: from mail-oa1-x2b.google.com (mail-oa1-x2b.google.com [IPv6:2001:4860:4864:20::2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7F20E79
+        for <linux-hardening@vger.kernel.org>; Thu, 31 Aug 2023 11:32:51 -0700 (PDT)
+Received: by mail-oa1-x2b.google.com with SMTP id 586e51a60fabf-1c4dd644cf8so728727fac.0
+        for <linux-hardening@vger.kernel.org>; Thu, 31 Aug 2023 11:32:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1693506614; x=1694111414; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1693506771; x=1694111571; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FB1kVMWEU7nPrAJJXjUVrfR6NLc1vMmftYUNizeZ0Cc=;
-        b=fMOJ32E4VIbYy5JzVF6rihdyKHh/QFE0hu6aKeDbCUHEXv5hnUP70iF+9/AFoDlSWt
-         g2fRzeHTX3Eko5JeQxqDEOqXH9WFQiEIgM7gpgUizKBQYSt8mi+12PSRInVokrAzli9k
-         r3lGu3VNCWchmm78WWRBQ9Z1sIaRH4A5T6f9Q=
+        bh=QBmD6+hPqatJJamgU4HI6o0CO+57hmYKqdLd/YQCAyg=;
+        b=h/klJj9osrf1NTqIwud0azELUQPqHnVQDONIQujQvn5rET1GyX+tw/x39Y9qwAQMJt
+         /B7VUdEg6tFqzoQKeizbFRFwaFVPK94F2jJ32w3ipdUEaeAdq+KxYZDBib5JhfeqflnZ
+         JXZXj3MeqvURecy92pbzccYXbvQP4jJeFN1Iw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693506614; x=1694111414;
+        d=1e100.net; s=20221208; t=1693506771; x=1694111571;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FB1kVMWEU7nPrAJJXjUVrfR6NLc1vMmftYUNizeZ0Cc=;
-        b=bOJqqlWMXI1M3mDkPf/kT5o28XtqEXWKtSUSbEvp2okmmFeRxR6RKXdXcCV9eSL9Ft
-         9eqUJ3TIB2rCEf7vST15kgJoMqa9dC4Q+7HY0vJcVcaio6J/1k5mKm3GVZg0CdHr228a
-         /EclhLpNRmPnKrVmctUrp8KK2gdo0IC6PWxgeX8/TaOYDD/+uI9B3QN3l56xOaovaDf+
-         MmfID44S3EMkDg8WtHk3FLtZgqcBbEXzAwBE+byt1ErEva7/Bapoz3DMZjmPP1gHCe9X
-         Gge4FkmFYmFN3EC7C2mGkzu5uWiXkai6FH9jrbLXg9YToFLSsOJCXWnTtnQqKrgR5U5y
-         HOPA==
-X-Gm-Message-State: AOJu0Yy5NLxwPaS8jQs2e6fOnSW6orfsVXmD+0gbkIJxHm5jgBL4CQ2Z
-        /HdCyp0FuweEzTp8MCCRx9nOEA==
-X-Google-Smtp-Source: AGHT+IEjQ6KvhqRgqekfwUfVHPDa4H9zY0UwUrk4seishin21Jizv61gXheblqWlJAuPqaS3NuEs8A==
-X-Received: by 2002:a17:902:a5c9:b0:1bc:667b:63c6 with SMTP id t9-20020a170902a5c900b001bc667b63c6mr426242plq.41.1693506613996;
-        Thu, 31 Aug 2023 11:30:13 -0700 (PDT)
+        bh=QBmD6+hPqatJJamgU4HI6o0CO+57hmYKqdLd/YQCAyg=;
+        b=CMNQcUK7fp0umViz+pe/2egTNZvEqHbFga5xUo9VKlr5XHbWDoH0pP64r92FP0NatQ
+         T1AZCFMaaBLCzZpIGw52B2uOU/JVFwrMF3tQQeCiO3vaROc2veIvGc7j76SrXJ4zEr5t
+         WYAha82cBwpaOgT0CGojA8i6CFACLFGvWr6TWNZnOI6YTEcRXt9yFJT6z0DURS2dR81q
+         CXRLD+xPnX+9ZSIHVsdX417fUktcgZA1XAbSsaxeOGtGSu5ayJIVAm1JcmzOBxNNEetL
+         TOhhQe9zSOdyREEholm6dEanIXLhkSUe5We+zfNAk7uTKUQbZxjFxNEUgZmePlk7uL2j
+         ts5Q==
+X-Gm-Message-State: AOJu0YwjcNENttn4InxHDDI+RYgMdnNcAc/SsqpgNsrOTQ3yHFtagKmK
+        YLn70s2SSDTOWDm93BnNJxmfYIKZ89wkbCns5U8=
+X-Google-Smtp-Source: AGHT+IF5/TlF/lQHblPVjGsswwKKZAwdedPWRSeqhvKS5yw01SH3v4w/rzlvbcG4HljdDHCJ90/d7w==
+X-Received: by 2002:a05:6870:1cc:b0:1d0:f5bd:6d9 with SMTP id n12-20020a05687001cc00b001d0f5bd06d9mr281116oad.53.1693506771189;
+        Thu, 31 Aug 2023 11:32:51 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id w1-20020a170902e88100b001bafd5cf769sm1548229plg.2.2023.08.31.11.30.13
+        by smtp.gmail.com with ESMTPSA id u191-20020a6379c8000000b0056368adf5e2sm1634030pgc.87.2023.08.31.11.32.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Aug 2023 11:30:13 -0700 (PDT)
-Date:   Thu, 31 Aug 2023 11:30:12 -0700
+        Thu, 31 Aug 2023 11:32:50 -0700 (PDT)
+Date:   Thu, 31 Aug 2023 11:32:50 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Jiri Slaby <jirislaby@kernel.org>
-Cc:     Azeem Shaikh <azeemshaikh38@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-serial@vger.kernel.org,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] vt: Fix potential read overflow of kernel memory
-Message-ID: <202308311123.EF07499@keescook>
-References: <20230830160410.3820390-1-azeemshaikh38@gmail.com>
- <2023083035-unpadded-amulet-8c7e@gregkh>
- <CADmuW3Wbgb7s+jRm8F0hcjzreWysVdzNvv778yUbGCOxAJHwjQ@mail.gmail.com>
- <202308301421.997C4034B5@keescook>
- <c44d1f9f-90e0-3e83-8394-854feb449539@kernel.org>
+To:     Azeem Shaikh <azeemshaikh38@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-hardening@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] kobject: Replace strlcpy with strscpy
+Message-ID: <202308311132.246D40D2@keescook>
+References: <20230831140104.207019-1-azeemshaikh38@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c44d1f9f-90e0-3e83-8394-854feb449539@kernel.org>
+In-Reply-To: <20230831140104.207019-1-azeemshaikh38@gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Aug 31, 2023 at 07:32:18AM +0200, Jiri Slaby wrote:
-> On 30. 08. 23, 23:28, Kees Cook wrote:
-> >                  len = strlcpy(kbs, func_table[kb_func] ? : "", len);
-> > 
-> > This is the anti-pattern (take the length of the _source_) we need to
-> > remove.
+On Thu, Aug 31, 2023 at 02:01:04PM +0000, Azeem Shaikh wrote:
+> strlcpy() reads the entire source buffer first.
+> This read may exceed the destination size limit.
+> This is both inefficient and can lead to linear read
+> overflows if a source string is not NUL-terminated [1].
+> In an effort to remove strlcpy() completely [2], replace
+> strlcpy() here with strscpy().
 > 
-> But len is the length of kbs, i.e. the destination. Or what am I missing?
+> Direct replacement is safe here since return value of -errno
+> is used to check for truncation instead of sizeof(dest).
+> 
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+> [2] https://github.com/KSPP/linux/issues/89
+> 
+> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 
-strlcpy() returns the length of the _source_ string (i.e. it could be
-greater than the input argument len). But there is no current flaw here
-(since all sources are very short). We're just trying to remove strlcpy()
-since it leads to unexpected results.
-
--Kees
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -- 
 Kees Cook
