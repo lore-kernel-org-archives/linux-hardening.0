@@ -2,73 +2,78 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E9AC83F3D
-	for <linux-hardening@archiver.kernel.org>; Thu, 31 Aug 2023 19:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 270CBC83F2F
+	for <linux-hardening@archiver.kernel.org>; Thu, 31 Aug 2023 19:28:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347020AbjHaTVD (ORCPT
+        id S244458AbjHaT2s (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 31 Aug 2023 15:21:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51786 "EHLO
+        Thu, 31 Aug 2023 15:28:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230245AbjHaTVC (ORCPT
+        with ESMTP id S238027AbjHaT2q (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 31 Aug 2023 15:21:02 -0400
+        Thu, 31 Aug 2023 15:28:46 -0400
 Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8674F1BF;
-        Thu, 31 Aug 2023 12:20:59 -0700 (PDT)
-Received: by mail-yb1-xb32.google.com with SMTP id 3f1490d57ef6-d78328bc2abso898746276.2;
-        Thu, 31 Aug 2023 12:20:59 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0F811BF;
+        Thu, 31 Aug 2023 12:28:43 -0700 (PDT)
+Received: by mail-yb1-xb32.google.com with SMTP id 3f1490d57ef6-d7b9de8139fso916669276.1;
+        Thu, 31 Aug 2023 12:28:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693509658; x=1694114458; darn=vger.kernel.org;
+        d=gmail.com; s=20221208; t=1693510123; x=1694114923; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5wbzlv8disLj7A2gUnosYJ6WIjChVtdbBfyuqGrNqa0=;
-        b=fkNihbxsjFiO4Yy/ALBTB9j0MoeafVGBRDXPZqDPCGVDTjb8xwUXyTh5ym7mrHNYJB
-         u8D9H1tdrmRvRprxnS+sHBsUvnUzKKctLWt2TPGr9l4ClrbkSYjo1LGXbxSmv9XD8RmC
-         8JzZ3TEhEDAVtD2ePnXqsitwFyBBV5pDeJD9NI2e0UZGq33NO0dZ8dUiLTrxj9Do+3GA
-         zsie4gd8Nr7lgIdW08iEyRuYfjHeOEDBq3y3AfEOuu+qlJjA7ohkU5HcdVD/TO1kGXO8
-         fyqogyBWbCFN8BBUH6j/Lg64N6DQi1BIqTUMbL/wWALuGo/ewb6AX7Z6scJ2tOiWB3oI
-         h9hQ==
+        bh=K8qDQJExdf2/MyftTvEkhS4s/WAMk52xVgwr8SGMiDE=;
+        b=fFk4gy/qXBXmOhI8uy5rjhSNuJRBwo7uBtXPnhRnfmIV2CX70b5IWcjHszSmVJ/Dxw
+         VydufYKTAP2PWvfvDsUglKuu6WojaTVsxDJs+JCMsVHBVVJzYeVIG6ETuTb2wbX3/DLH
+         fysmlvBv1hx1cy+8MboYTL1CItpa8l1K2EMRVqrDn1+2qSit6Gor1LV9uGMQW5tt4a2V
+         QvRBTL5FJY6wqDakhvDynjgbX7L9GWaXqqk3s9jzYiDh3Z4uR3yz7put5f8JrFhioF1T
+         ckz350pBObCo1Y9D/CFaxhzIzMgzB4Bb+A0gt+UcAbic9JsSX/8PweAlK1YPrXcR4EGV
+         HMiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693509658; x=1694114458;
+        d=1e100.net; s=20221208; t=1693510123; x=1694114923;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5wbzlv8disLj7A2gUnosYJ6WIjChVtdbBfyuqGrNqa0=;
-        b=LN4aRJ6URBgN5ZaUszAk5CrF8o6a0VHM6KR0OwNHtpep3d7CesP3dRH3MtEtRtgpdz
-         9NE2oPac+adqv+FcQ1SsVpRLybgC3IlnbpU5a3qy1egL9yCsYgVPvhAtNaMmEqBX/GS5
-         ICYWwHP0P24NcJeBLq9ubS/eytMGrIevJ7M9UTwI/hPsr2yqB+9B4fVuYi9cSrOvddMX
-         +cMaG0tSCePZPIdCo8Sahac2Hzi9F0z35LfN+OjBg31L86XxSeSolJ5NnnoKv4JsczLF
-         mVGTYvg1HMF01aRl/nVHI76ojSjw901r5Jt/E5CsH+0Q9Iveox/Cgt42bwcZ0htYDxfG
-         Te+Q==
-X-Gm-Message-State: AOJu0Yw0HqMZB0RST83xh+pRTa1xAsZGbYHjrmPwMbe0KVQFwJe3/Ihq
-        Af6fCpJDxiE+c8oY7aySsl2T9SWTSMM8VY5bff0=
-X-Google-Smtp-Source: AGHT+IHl6H0dFLAY5n6rn7XFWLhdwzVwte2RPpdn+27DZ1cDaeeuhCKyhKciDpVZBdZt0OkaJexx5vGijFlvi9AJwM8=
-X-Received: by 2002:a25:6d89:0:b0:d10:e6a2:1947 with SMTP id
- i131-20020a256d89000000b00d10e6a21947mr587569ybc.19.1693509658624; Thu, 31
- Aug 2023 12:20:58 -0700 (PDT)
+        bh=K8qDQJExdf2/MyftTvEkhS4s/WAMk52xVgwr8SGMiDE=;
+        b=QPaaVLlAoja4hF2UJQzzXbd9x3HHzRHdj3WcBrYtmhC+7uOgZCjsfIalYZeyB0Ipzw
+         Fdtf2wLsTEkf5ndtlMVum5K8bidf9LVEU3MkxSii3UuogQLU94j15qFuTGrbx2YvWnfz
+         1OU/86/8qqf1Xe+rKn20paVinRogbBB6yY+voAmIqKqnEXP2/vYB07HKpmtIwpdvFv3h
+         0VdVPMt/tTR2UeODVOXZ2s02Od2bsES8RIDHvsqPssO0ySS4J0ih0mRq/ll5yUDIiVfB
+         6P7pJ4CBngXK0lGhHjQ2TOjXdmuQVJ7xnu6n6QYgkeYBeIe97UTtAdhLkh6h63emPR6n
+         6X+Q==
+X-Gm-Message-State: AOJu0YxR5Z940POUJ66+6QM4eKhocB1AeEqY1GKgxnK/0rvSB8wixYOq
+        HVjurZ1bLb8UqKCYjOIfy6HJ9NwXeyETiV8DNgA=
+X-Google-Smtp-Source: AGHT+IHUk+T46JxLGqYp6rQq8hKNL4/Cn40334y926ibfAf3nZ4zAVGPqIKHXAMfPwddXw3jVUWSXX+nNgI0+RVu+F4=
+X-Received: by 2002:a25:6642:0:b0:d78:2383:4427 with SMTP id
+ z2-20020a256642000000b00d7823834427mr671226ybm.9.1693510123188; Thu, 31 Aug
+ 2023 12:28:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230831143638.232596-1-azeemshaikh38@gmail.com> <202308311141.612BF8D@keescook>
-In-Reply-To: <202308311141.612BF8D@keescook>
+References: <20230830215426.4181755-1-azeemshaikh38@gmail.com>
+ <20230830215426.4181755-3-azeemshaikh38@gmail.com> <202308301601.8A8EE6B653@keescook>
+In-Reply-To: <202308301601.8A8EE6B653@keescook>
 From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-Date:   Thu, 31 Aug 2023 15:20:47 -0400
-Message-ID: <CADmuW3XpGR-jzq0SP8wVp+W3ZXZ9hgLpNrLrEox0K3Pyw5kfXg@mail.gmail.com>
-Subject: Re: [PATCH v3] scsi: target: Replace strlcpy with strscpy
+Date:   Thu, 31 Aug 2023 15:28:32 -0400
+Message-ID: <CADmuW3Wc7fzoCcif7WmY4X4FWErFc4poMOqzMXu=3mf0ycju1Q@mail.gmail.com>
+Subject: Re: [PATCH 2/2] ocfs2: Replace strlcpy with strscpy
 To:     Kees Cook <keescook@chromium.org>
-Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-hardening@vger.kernel.org, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        linux-hardening@vger.kernel.org, ocfs2-devel@lists.linux.dev,
+        linux-kernel@vger.kernel.org,
+        Christian Brauner <brauner@kernel.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        Jeff Layton <jlayton@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Aug 31, 2023 at 2:42=E2=80=AFPM Kees Cook <keescook@chromium.org> w=
+On Wed, Aug 30, 2023 at 7:06=E2=80=AFPM Kees Cook <keescook@chromium.org> w=
 rote:
 >
-> On Thu, Aug 31, 2023 at 02:36:38PM +0000, Azeem Shaikh wrote:
+> On Wed, Aug 30, 2023 at 09:54:26PM +0000, Azeem Shaikh wrote:
 > > strlcpy() reads the entire source buffer first.
 > > This read may exceed the destination size limit.
 > > This is both inefficient and can lead to linear read
@@ -76,64 +81,67 @@ rote:
 > > In an effort to remove strlcpy() completely [2], replace
 > > strlcpy() here with strscpy().
 > >
-> > Direct replacement is safe here since return value of -errno
-> > is used to check for truncation instead of sizeof(dest).
+> > Direct replacement is assumed to be safe here since
+> > it's ok for `kernel_param_ops.get()` to return -errno [3].
+> > This changes the behavior such that instead of silently ignoring the
+> > case when sizeof(@buffer) < DLMFS_CAPABILITIES, we now return error.
 > >
 > > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strl=
 cpy
 > > [2] https://github.com/KSPP/linux/issues/89
+> > [3] https://elixir.bootlin.com/linux/v6.5/source/include/linux/modulepa=
+ram.h#L52
 > >
 > > Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 > > ---
-> > v3:
-> >  * Address readability comment.
+> >  fs/ocfs2/dlmfs/dlmfs.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
 > >
-> > v2:
-> >  * Replace all instances of strlcpy in this file instead of just 1.
-> >  * https://lore.kernel.org/all/20230830210724.4156575-1-azeemshaikh38@g=
-mail.com/
-> >
-> > v1:
-> >  * https://lore.kernel.org/all/20230830200717.4129442-1-azeemshaikh38@g=
-mail.com/
-> >
-> >  drivers/target/target_core_configfs.c |   24 ++++++++++++------------
-> >  1 file changed, 12 insertions(+), 12 deletions(-)
-> >
-> > diff --git a/drivers/target/target_core_configfs.c b/drivers/target/tar=
-get_core_configfs.c
-> > index 936e5ff1b209..d5860c1c1f46 100644
-> > --- a/drivers/target/target_core_configfs.c
-> > +++ b/drivers/target/target_core_configfs.c
-> > @@ -1392,16 +1392,16 @@ static ssize_t target_wwn_vendor_id_store(struc=
-t config_item *item,
-> >       /* +2 to allow for a trailing (stripped) '\n' and null-terminator=
- */
-> >       unsigned char buf[INQUIRY_VENDOR_LEN + 2];
-> >       char *stripped =3D NULL;
-> > -     size_t len;
-> > +     ssize_t len;
-> >       ssize_t ret;
-> >
-> > -     len =3D strlcpy(buf, page, sizeof(buf));
-> > -     if (len < sizeof(buf)) {
-> > +     len =3D strscpy(buf, page, sizeof(buf));
-> > +     if (len > 0) {
-> >               /* Strip any newline added from userspace. */
-> >               stripped =3D strstrip(buf);
-> >               len =3D strlen(stripped);
-> >       }
-> > -     if (len > INQUIRY_VENDOR_LEN) {
-> > +     if (len < 0 || len > INQUIRY_VENDOR_LEN) {
+> > diff --git a/fs/ocfs2/dlmfs/dlmfs.c b/fs/ocfs2/dlmfs/dlmfs.c
+> > index 33e529de93b2..b001eccdd2f3 100644
+> > --- a/fs/ocfs2/dlmfs/dlmfs.c
+> > +++ b/fs/ocfs2/dlmfs/dlmfs.c
+> > @@ -80,7 +80,7 @@ static int param_set_dlmfs_capabilities(const char *v=
+al,
+> >  static int param_get_dlmfs_capabilities(char *buffer,
+> >                                       const struct kernel_param *kp)
+> >  {
+> > -     return strlcpy(buffer, DLMFS_CAPABILITIES,
+> > +     return strscpy(buffer, DLMFS_CAPABILITIES,
+> >                      strlen(DLMFS_CAPABILITIES) + 1);
+> >  }
 >
-> Agh, sorry I missed this before: the first "if" needs to be "len >=3D 0"
-> otherwise this:
+> This is another case of "accidentally correct".
 >
->         ret =3D target_check_inquiry_data(stripped);
 >
-> will be passing a NULL pointer...
+> param->get() is hooked here, in the sysfs "show" callback:
+>
+> static ssize_t param_attr_show(struct module_attribute *mattr,
+>                                struct module_kobject *mk, char *buf)
+> {
+>         int count;
+>         struct param_attribute *attribute =3D to_param_attr(mattr);
+>
+>         if (!attribute->param->ops->get)
+>                 return -EPERM;
+>
+>         kernel_param_lock(mk->mod);
+>         count =3D attribute->param->ops->get(buf, attribute->param);
+>         kernel_param_unlock(mk->mod);
+>         return count;
+> }
+>
+> Meaning ultimately this will show up here, if I'm reading names right:
+> /sys/module/ocfs/parameters/dlmfs_capabilities
+>
+> Anyway, the "count" being returned would be quite bad if
+> DLMFS_CAPABILITIES were dynamic and larger than PAGE_SIZE (the size of
+> the sysfs buffer).
+>
+> For this case, I would say replace strlcpy with sysfs_emit:
+>
+>         return sysfs_emit(buffer, DLMFS_CAPABILITIES);
 >
 
-Hmm, the current implementation of strscpy never returns 0. If
-sizeof(buf) is 0, it'll return -E2BIG. Do you still prefer that I
-update this to check for len >=3D 0?
+Thanks, sending out a v2 for this. Out of curiosity - why sysfs_emit?
+Is it because DLMFS_CAPABILITIES is a hard-coded string?
