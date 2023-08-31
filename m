@@ -2,59 +2,59 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B37EFC83F34
-	for <linux-hardening@archiver.kernel.org>; Thu, 31 Aug 2023 13:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B815EC83F33
+	for <linux-hardening@archiver.kernel.org>; Thu, 31 Aug 2023 13:18:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346336AbjHaNQ6 (ORCPT
+        id S230091AbjHaNSe (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 31 Aug 2023 09:16:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60888 "EHLO
+        Thu, 31 Aug 2023 09:18:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346333AbjHaNQ5 (ORCPT
+        with ESMTP id S230023AbjHaNSd (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 31 Aug 2023 09:16:57 -0400
-Received: from mail-oi1-x22a.google.com (mail-oi1-x22a.google.com [IPv6:2607:f8b0:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB3771A4;
-        Thu, 31 Aug 2023 06:16:54 -0700 (PDT)
-Received: by mail-oi1-x22a.google.com with SMTP id 5614622812f47-3a7aedc57ffso470207b6e.2;
-        Thu, 31 Aug 2023 06:16:54 -0700 (PDT)
+        Thu, 31 Aug 2023 09:18:33 -0400
+Received: from mail-oo1-xc2a.google.com (mail-oo1-xc2a.google.com [IPv6:2607:f8b0:4864:20::c2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0964DCEB;
+        Thu, 31 Aug 2023 06:18:31 -0700 (PDT)
+Received: by mail-oo1-xc2a.google.com with SMTP id 006d021491bc7-5735282d713so480811eaf.2;
+        Thu, 31 Aug 2023 06:18:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693487814; x=1694092614; darn=vger.kernel.org;
+        d=gmail.com; s=20221208; t=1693487910; x=1694092710; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rvjEwhjKTzM24zTtto0X2hNb/4jBUMlTIyxRYyU31F8=;
-        b=pf+6JIqXsDsdySQ2L9edkP89gyXurVjbkHf3KpR5UAhkoGNity/geRDKRWIcdiUmyx
-         etzuGbuSXf5gh1JHOzKn6hpZogbUOVZzZkvC2WgL7f1ntWav5qMTBgmC2J6l7BoOHuh7
-         xaF86oOz7bSOPsA+o45gqIi50DdS6b+bgA4mqxWLffxtegdTri+CzCstP1K2VPUSj1DV
-         eT5M5gM+6b+8JAwQqbBWcTbGyV37YcMqG4RmIe+J2Nlh+U9GT+OIUukKczZ5mXEJ0VY0
-         q2RCcVfq7pUgsN1S/mM8qISi3u0hiCk19/3Qwwkhp8dCpHQoX7vbMWUH+kzvGD/4onYT
-         9LzA==
+        bh=bHwmmwrGfDSkCjztvNTCgRkwWwsnvAt3/1zqnbkw4UE=;
+        b=Gfs5gUDAKnohkLuwenKHBFcc6MV9CUo3KFTYbyk3sooD+u5t9joBsLYpDwP/H0Aywp
+         RUcUao9unx5wp3Bz/jAcm7JcqO7I5XJhY8R0s4GcvBw8CGHjOle7QNWfPm+uxQo6nsVv
+         +etgkiD/f7mkU/oPtCiEp4p2bKofDVcdmJjtRwJ/wJEl8I2aEeIF8dblVW6rG78geZ2N
+         if2HWf5fnyzmS1DAYzdAjC1VWsTSxG0wZTppa5dJkY3V8BKGnqy1s9pZP9TM4RHWE1wb
+         VC08NBiXPGFSUVNQsw8vntE+H7QIDSp9+fa+2w15w9bdpp6Dtf6M5ZKLqq+SoiZJAERX
+         5tjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693487814; x=1694092614;
+        d=1e100.net; s=20221208; t=1693487910; x=1694092710;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rvjEwhjKTzM24zTtto0X2hNb/4jBUMlTIyxRYyU31F8=;
-        b=Gqr6J1cZkGUfUQRt8cHvutSQ5cK6Aezfr9f2uoCAmSk17DPG4ooKMegQXapd9H8Z1E
-         Ffpr269+uUIP0ZelpZOLg3QtMqgOXUYeQWXh+VeVaHtzkha2aj+QUHuSqhCs/bh4OZTz
-         wRJjXLdlsYrhIAIjmhcmFpLEVJD/Ols2Mij93KhofxPl1ljSQSihfXaoNxwWBtawWqLw
-         pasLfdT/4trLPqTftmUiUFRe2nCFAz1OvE5tov6StflF85+C2otCP9fOodWdSdny+n+Z
-         E2ZsLP1iOygf27aZsACgF74IxP9KTqR8WdIz+mYqGnKbUkFdeDrAPLNZ6wv31SHbM25G
-         uRiA==
-X-Gm-Message-State: AOJu0Yz0wrMun7OyXzbTecS4c6Stnqxu8gEKixK+hC0yGY+nloQsyioC
-        WwQXiB2k2BoZpOOYtrgC/4coS2bbxzLoN5tkTjxetrgaSjk=
-X-Google-Smtp-Source: AGHT+IE2FhmXyXLAGk+I6c1o0xIfxttEXs+4SdO383eHQBc9YsKQBViTBEroy3HH+mR8crJU8XS0nKNDFuN6ocnrv+8=
-X-Received: by 2002:a05:6808:b:b0:3a3:91f8:d3da with SMTP id
- u11-20020a056808000b00b003a391f8d3damr5224234oic.13.1693487814147; Thu, 31
- Aug 2023 06:16:54 -0700 (PDT)
+        bh=bHwmmwrGfDSkCjztvNTCgRkwWwsnvAt3/1zqnbkw4UE=;
+        b=aV2OrenRfa907kRxv+oBhLbRQjEuwJ/Yxwhtr6bVA8RrrHk+3Go/yPUtFv57X5Y9Ng
+         2ew+TNYVZmQgp21B7icpdmYOIpguVLgPbENHN28eIycA6/CIq/h0tzrDz7bYeySYN9pX
+         oSdhGJ4wekuUEWn3zuD8YEdMDLOcMg08UHDERn7TLbWLrJ0/D5wZrIwW0brbzYKyv1zw
+         ZNiyRCiizyNHm/7LPYvtTbfEoLNoKquh6u9Qp6RR4tUi2afzKnUZ2ek2FBRwZkPhNNxI
+         xKyN8rxyp3EhnDXrISQkSKzq2HEdFXKkTaE2Aoq1AhdHLYt19F9x+Mz0BKvmojADmqT+
+         5W6g==
+X-Gm-Message-State: AOJu0Yy8fEcWeCtSyyt5W8/RO11sldwOtGAaYGwg/EP+ohvLnpEcedHW
+        WRqD0754TtQV1I24Zp82fde9TWDbGrW4uZX2sSE=
+X-Google-Smtp-Source: AGHT+IEKwsKaxX8FN7thNvTRv4YUKZ/hXURRhwTFIgLKkuYrezXPSfhwY/Atro+sW4IO7Vj76e+t2OY3b1M7LZ7lpJE=
+X-Received: by 2002:a4a:3013:0:b0:56d:e6:21bf with SMTP id q19-20020a4a3013000000b0056d00e621bfmr5008308oof.0.1693487910302;
+ Thu, 31 Aug 2023 06:18:30 -0700 (PDT)
 MIME-Version: 1.0
 References: <cover.1693386602.git.pstanner@redhat.com> <46f667e154393a930a97d2218d8e90286d93a062.1693386602.git.pstanner@redhat.com>
- <CAHp75VfkzV-=XuEZwipYzfHNu4EXuwzbu6vfEKh1Uueseo2=wA@mail.gmail.com> <94b893ef37fe0cc0bcc52e8b54c62be3853a7bbb.camel@redhat.com>
-In-Reply-To: <94b893ef37fe0cc0bcc52e8b54c62be3853a7bbb.camel@redhat.com>
+ <CAHp75VfkzV-=XuEZwipYzfHNu4EXuwzbu6vfEKh1Uueseo2=wA@mail.gmail.com>
+ <94b893ef37fe0cc0bcc52e8b54c62be3853a7bbb.camel@redhat.com> <CAHp75VcNyE9uJu8-v2eVWRdZ3-nm2r-kdxE-naQB4VN6zxPFxg@mail.gmail.com>
+In-Reply-To: <CAHp75VcNyE9uJu8-v2eVWRdZ3-nm2r-kdxE-naQB4VN6zxPFxg@mail.gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 31 Aug 2023 16:16:17 +0300
-Message-ID: <CAHp75VcNyE9uJu8-v2eVWRdZ3-nm2r-kdxE-naQB4VN6zxPFxg@mail.gmail.com>
+Date:   Thu, 31 Aug 2023 16:17:54 +0300
+Message-ID: <CAHp75Vc6Bj87V5HVZeNXJRmN1qBYP8_eDDSj5tLnfL7d81o9+w@mail.gmail.com>
 Subject: Re: [PATCH 1/5] string.h: add array-wrappers for (v)memdup_user()
 To:     Philipp Stanner <pstanner@redhat.com>
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -81,33 +81,41 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Aug 31, 2023 at 3:22=E2=80=AFPM Philipp Stanner <pstanner@redhat.co=
-m> wrote:
-> On Wed, 2023-08-30 at 17:11 +0300, Andy Shevchenko wrote:
-> > On Wed, Aug 30, 2023 at 4:46=E2=80=AFPM Philipp Stanner <pstanner@redha=
-t.com>
-> > wrote:
+On Thu, Aug 31, 2023 at 4:16=E2=80=AFPM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Thu, Aug 31, 2023 at 3:22=E2=80=AFPM Philipp Stanner <pstanner@redhat.=
+com> wrote:
+> > On Wed, 2023-08-30 at 17:11 +0300, Andy Shevchenko wrote:
+> > > On Wed, Aug 30, 2023 at 4:46=E2=80=AFPM Philipp Stanner <pstanner@red=
+hat.com>
+> > > wrote:
 
 ...
 
-> > I'm wondering if this has no side-effects as string.h/string.c IIRC
-> > is used also for early stages where some of the APIs are not available.
+> > > I'm wondering if this has no side-effects as string.h/string.c IIRC
+> > > is used also for early stages where some of the APIs are not availabl=
+e.
+> >
+> > I forgot to address this point in my previous reply.
+> >
+> > Who's going to decide whether this is a problem or not?
+> >
+> > My personal guess is that this is unlikely to be a problem because
+> >
+> >    A. either (v)memdup_user() is available, in which case
+> >       (v)memdup_array_user() will always work =E2=80=93
+> >    B. or (v)memdup_user() is not available, which would cause the code
+> >       that currently uses (v)memdup_user() for copying arrays to fail
+> >       anyways.
 >
-> I forgot to address this point in my previous reply.
->
-> Who's going to decide whether this is a problem or not?
->
-> My personal guess is that this is unlikely to be a problem because
->
->    A. either (v)memdup_user() is available, in which case
->       (v)memdup_array_user() will always work =E2=80=93
->    B. or (v)memdup_user() is not available, which would cause the code
->       that currently uses (v)memdup_user() for copying arrays to fail
->       anyways.
+> It also uses something from overflow.h. I don't remember if that
+> header was ever been used in early stage modules (like
+> boot/decompressor).
 
-It also uses something from overflow.h. I don't remember if that
-header was ever been used in early stage modules (like
-boot/decompressor).
+Also we need to be sure UML is still buildable. Dunno if they are
+using anything from this, but it appeared to me recently that someone
+tried to optimize something using (internal) kernel headers and broke
+the build in some cases.
 
 --=20
 With Best Regards,
