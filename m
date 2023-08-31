@@ -2,108 +2,113 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90527C83F34
-	for <linux-hardening@archiver.kernel.org>; Thu, 31 Aug 2023 13:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B37EFC83F34
+	for <linux-hardening@archiver.kernel.org>; Thu, 31 Aug 2023 13:16:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244263AbjHaNKU (ORCPT
+        id S1346336AbjHaNQ6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 31 Aug 2023 09:10:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45188 "EHLO
+        Thu, 31 Aug 2023 09:16:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232913AbjHaNKU (ORCPT
+        with ESMTP id S1346333AbjHaNQ5 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 31 Aug 2023 09:10:20 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A382BC;
-        Thu, 31 Aug 2023 06:10:17 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1EC09B8229B;
-        Thu, 31 Aug 2023 13:10:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE6DAC433CA;
-        Thu, 31 Aug 2023 13:10:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693487414;
-        bh=Tx7w8FI/pLlA3uFq5GwLia/GR2hgOf2fgjsGhZzl+sk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=iGIOjWFaoc2o3+D9pAiu+tKS35mKl+S0jaHg8kypiV3yFq21+2GVITjISQhWfpAdv
-         bCcRVTXC++Bq4bS/DAS9XrufWeAlZf2Z50hk/OFSA35ImHW9DBOmxOEwrl/m/BmpkM
-         9JveujHt2tgFXJjAiqLHHXP5lvXIKa+o6txV7VcCQN8qEnP6WAMnbiUlfU9KjpZ5tr
-         YCKbxu71rqllAEenrYcz/5UKmN2n+DVJm0UHlFflCh5sIdP4j7KIOCfHFVJ+XdfFTD
-         rDByGBAUoq+TwyJkqDDPbYuC+W2PsII4MlqFItMcYoshcRexmdKL+gG55NqyXn8W1X
-         h9Ot5ry6gTl+w==
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-6bcade59b24so692956a34.0;
-        Thu, 31 Aug 2023 06:10:14 -0700 (PDT)
-X-Gm-Message-State: AOJu0YzeH3h4OxsxfGVO42ZgqsV7r0pqSmQjKzTUrghg0huT+GEbPXte
-        KfcwZtgJhGpQpE9Anlvy3btH4foE/HGW53AUzwI=
-X-Google-Smtp-Source: AGHT+IG8i3WbP148tu9tcR8zh6tpPXpF5XXUrFtO3K953V/IifgX01VT9BiDyttjPL/yAvgZZMXCRFBxgo8FSTUsb7I=
-X-Received: by 2002:a05:6830:606:b0:6bd:bba9:2d63 with SMTP id
- w6-20020a056830060600b006bdbba92d63mr5298073oti.9.1693487413878; Thu, 31 Aug
- 2023 06:10:13 -0700 (PDT)
+        Thu, 31 Aug 2023 09:16:57 -0400
+Received: from mail-oi1-x22a.google.com (mail-oi1-x22a.google.com [IPv6:2607:f8b0:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB3771A4;
+        Thu, 31 Aug 2023 06:16:54 -0700 (PDT)
+Received: by mail-oi1-x22a.google.com with SMTP id 5614622812f47-3a7aedc57ffso470207b6e.2;
+        Thu, 31 Aug 2023 06:16:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1693487814; x=1694092614; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rvjEwhjKTzM24zTtto0X2hNb/4jBUMlTIyxRYyU31F8=;
+        b=pf+6JIqXsDsdySQ2L9edkP89gyXurVjbkHf3KpR5UAhkoGNity/geRDKRWIcdiUmyx
+         etzuGbuSXf5gh1JHOzKn6hpZogbUOVZzZkvC2WgL7f1ntWav5qMTBgmC2J6l7BoOHuh7
+         xaF86oOz7bSOPsA+o45gqIi50DdS6b+bgA4mqxWLffxtegdTri+CzCstP1K2VPUSj1DV
+         eT5M5gM+6b+8JAwQqbBWcTbGyV37YcMqG4RmIe+J2Nlh+U9GT+OIUukKczZ5mXEJ0VY0
+         q2RCcVfq7pUgsN1S/mM8qISi3u0hiCk19/3Qwwkhp8dCpHQoX7vbMWUH+kzvGD/4onYT
+         9LzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693487814; x=1694092614;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rvjEwhjKTzM24zTtto0X2hNb/4jBUMlTIyxRYyU31F8=;
+        b=Gqr6J1cZkGUfUQRt8cHvutSQ5cK6Aezfr9f2uoCAmSk17DPG4ooKMegQXapd9H8Z1E
+         Ffpr269+uUIP0ZelpZOLg3QtMqgOXUYeQWXh+VeVaHtzkha2aj+QUHuSqhCs/bh4OZTz
+         wRJjXLdlsYrhIAIjmhcmFpLEVJD/Ols2Mij93KhofxPl1ljSQSihfXaoNxwWBtawWqLw
+         pasLfdT/4trLPqTftmUiUFRe2nCFAz1OvE5tov6StflF85+C2otCP9fOodWdSdny+n+Z
+         E2ZsLP1iOygf27aZsACgF74IxP9KTqR8WdIz+mYqGnKbUkFdeDrAPLNZ6wv31SHbM25G
+         uRiA==
+X-Gm-Message-State: AOJu0Yz0wrMun7OyXzbTecS4c6Stnqxu8gEKixK+hC0yGY+nloQsyioC
+        WwQXiB2k2BoZpOOYtrgC/4coS2bbxzLoN5tkTjxetrgaSjk=
+X-Google-Smtp-Source: AGHT+IE2FhmXyXLAGk+I6c1o0xIfxttEXs+4SdO383eHQBc9YsKQBViTBEroy3HH+mR8crJU8XS0nKNDFuN6ocnrv+8=
+X-Received: by 2002:a05:6808:b:b0:3a3:91f8:d3da with SMTP id
+ u11-20020a056808000b00b003a391f8d3damr5224234oic.13.1693487814147; Thu, 31
+ Aug 2023 06:16:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230825-strncpy-habanalabs-combined-v1-1-daa05a89b7e3@google.com>
- <202308251513.0F6BF9FEE6@keescook>
-In-Reply-To: <202308251513.0F6BF9FEE6@keescook>
-From:   Oded Gabbay <ogabbay@kernel.org>
-Date:   Thu, 31 Aug 2023 16:09:47 +0300
-X-Gmail-Original-Message-ID: <CAFCwf12yWnz6wP+3Th=QiTkeMhiPjn6c4sg2b3-2fE55w3pyEQ@mail.gmail.com>
-Message-ID: <CAFCwf12yWnz6wP+3Th=QiTkeMhiPjn6c4sg2b3-2fE55w3pyEQ@mail.gmail.com>
-Subject: Re: [PATCH] accel/habanalabs: refactor deprecated strncpy to strscpy_pad
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Justin Stitt <justinstitt@google.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
+References: <cover.1693386602.git.pstanner@redhat.com> <46f667e154393a930a97d2218d8e90286d93a062.1693386602.git.pstanner@redhat.com>
+ <CAHp75VfkzV-=XuEZwipYzfHNu4EXuwzbu6vfEKh1Uueseo2=wA@mail.gmail.com> <94b893ef37fe0cc0bcc52e8b54c62be3853a7bbb.camel@redhat.com>
+In-Reply-To: <94b893ef37fe0cc0bcc52e8b54c62be3853a7bbb.camel@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 31 Aug 2023 16:16:17 +0300
+Message-ID: <CAHp75VcNyE9uJu8-v2eVWRdZ3-nm2r-kdxE-naQB4VN6zxPFxg@mail.gmail.com>
+Subject: Re: [PATCH 1/5] string.h: add array-wrappers for (v)memdup_user()
+To:     Philipp Stanner <pstanner@redhat.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Christian Brauner <brauner@kernel.org>,
+        David Disseldorp <ddiss@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Siddh Raman Pant <code@siddh.me>,
+        Nick Alcock <nick.alcock@oracle.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Zack Rusin <zackr@vmware.com>,
+        VMware Graphics Reviewers 
+        <linux-graphics-maintainer@vmware.com>,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-hardening@vger.kernel.org
+        kexec@lists.infradead.org, linux-hardening@vger.kernel.org,
+        David Airlie <airlied@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Aug 26, 2023 at 1:13=E2=80=AFAM Kees Cook <keescook@chromium.org> w=
-rote:
->
-> On Fri, Aug 25, 2023 at 10:09:51PM +0000, Justin Stitt wrote:
-> > `strncpy` is deprecated for use on NUL-terminated destination strings [=
-1].
-> >
-> > We see that `prop->cpucp_info.card_name` is supposed to be
-> > NUL-terminated based on its usage within `__hwmon_device_register()`
-> > (wherein it's called "name"):
-> > |     if (name && (!strlen(name) || strpbrk(name, "-* \t\n")))
-> > |             dev_warn(dev,
-> > |                      "hwmon: '%s' is not a valid name attribute, plea=
-se fix\n",
-> > |                      name);
-> >
-> > A suitable replacement is `strscpy_pad` [2] due to the fact that it
-> > guarantees both NUL-termination and NUL-padding on its destination
-> > buffer.
-> >
-> > NUL-padding on `prop->cpucp_info.card_name` is not strictly necessary a=
-s
-> > `hdev->prop` is explicitly zero-initialized but should be used
-> > regardless as it gets copied out to userspace directly -- as per Kees' =
-suggestion.
-> >
-> > Link: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on=
--nul-terminated-strings[1]
-> > Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en=
-.html [2]
-> > Link: https://github.com/KSPP/linux/issues/90
-> > Cc: linux-hardening@vger.kernel.org
-> > Signed-off-by: Justin Stitt <justinstitt@google.com>
->
-> Thanks for the consolidation and refresh. :)
->
-> Reviewed-by: Kees Cook <keescook@chromium.org>
->
-> --
-> Kees Cook
-Pushed to habanalabs-next-6.7
+On Thu, Aug 31, 2023 at 3:22=E2=80=AFPM Philipp Stanner <pstanner@redhat.co=
+m> wrote:
+> On Wed, 2023-08-30 at 17:11 +0300, Andy Shevchenko wrote:
+> > On Wed, Aug 30, 2023 at 4:46=E2=80=AFPM Philipp Stanner <pstanner@redha=
+t.com>
+> > wrote:
 
-Thanks for the patch,
-Oded.
+...
+
+> > I'm wondering if this has no side-effects as string.h/string.c IIRC
+> > is used also for early stages where some of the APIs are not available.
+>
+> I forgot to address this point in my previous reply.
+>
+> Who's going to decide whether this is a problem or not?
+>
+> My personal guess is that this is unlikely to be a problem because
+>
+>    A. either (v)memdup_user() is available, in which case
+>       (v)memdup_array_user() will always work =E2=80=93
+>    B. or (v)memdup_user() is not available, which would cause the code
+>       that currently uses (v)memdup_user() for copying arrays to fail
+>       anyways.
+
+It also uses something from overflow.h. I don't remember if that
+header was ever been used in early stage modules (like
+boot/decompressor).
+
+--=20
+With Best Regards,
+Andy Shevchenko
