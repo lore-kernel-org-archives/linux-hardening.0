@@ -2,67 +2,64 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB13C83F37
-	for <linux-hardening@archiver.kernel.org>; Thu, 31 Aug 2023 19:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8935EC83F2F
+	for <linux-hardening@archiver.kernel.org>; Thu, 31 Aug 2023 19:42:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240647AbjHaTil (ORCPT
+        id S238482AbjHaTmZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 31 Aug 2023 15:38:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60568 "EHLO
+        Thu, 31 Aug 2023 15:42:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229558AbjHaTik (ORCPT
+        with ESMTP id S232442AbjHaTmW (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 31 Aug 2023 15:38:40 -0400
-Received: from mail-io1-xd2d.google.com (mail-io1-xd2d.google.com [IPv6:2607:f8b0:4864:20::d2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EF391BF;
-        Thu, 31 Aug 2023 12:38:38 -0700 (PDT)
-Received: by mail-io1-xd2d.google.com with SMTP id ca18e2360f4ac-792717ef3c9so43532039f.3;
-        Thu, 31 Aug 2023 12:38:38 -0700 (PDT)
+        Thu, 31 Aug 2023 15:42:22 -0400
+Received: from mail-il1-x12e.google.com (mail-il1-x12e.google.com [IPv6:2607:f8b0:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09C69E67;
+        Thu, 31 Aug 2023 12:42:20 -0700 (PDT)
+Received: by mail-il1-x12e.google.com with SMTP id e9e14a558f8ab-34df4799a62so3877405ab.1;
+        Thu, 31 Aug 2023 12:42:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693510717; x=1694115517; darn=vger.kernel.org;
+        d=gmail.com; s=20221208; t=1693510939; x=1694115739; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1ki/OwjIU18DtuVHU8h+/teFMT7QJKmhWe1t8w4B3+I=;
-        b=GeAGRMMNGNTuk3oMQ1YPb8/QzisV2xZjEo8h/lkYfwHNEfAxFKiNFvWczvUP0xIzHp
-         UVetJc58Mxb1J9DndYsOvf7ovYWBH0/Z/uFpmrEZIS1iNqJNV40j5FGQZ0f7Gp5GPolL
-         6nzLmAUGwV4dPKZiqZ5V1jYbq1D08P9GCHpxxzM0saNCeXsMRi0EKIzg3uOCb6FkHrmH
-         xIKlzBU8vUuyIhdVJ4SkxPWxzR5s9jyH/pSf5cIV61YyJlrYYdIwcI4drcfvW+pnRxwc
-         lTvg6zAbuEtSQp44PH7lcxNNS/d7+KdePDw+R2ih1b7PkGmKyhivDnHqoFYdLBcKDjcr
-         9NGA==
+        bh=4bhbRn40G8fRejY3+skmba0LjRugGKFU8ATlgbxA8nI=;
+        b=kXpH/SvFufnthqjj05E3M3tl/LUa7zBe5kyFphNB6EqnenaeEAkOCf2+XwUNbd0m5G
+         mVOyEpd67lsi5QZgjmIN2MNkLiJOVt9UzDCM9fiZk4TaT3y1d5dlECwvrR6XQ6+BdnOE
+         OVZX75s8kkdEoOh26mazP9Hr1X2Omwl9Bv9kuqCmMYw8s/8qfHCyAfiF5p6NU/GC6y2u
+         vM7E/EPgiJIkL1CPQGeZr7T+BZITlVwd1ZfctUXIi+SCdGAIxMoGZ0+aHrIWi1IJtVQR
+         UNFJ6Pi5T+I9HTQVFtQgGFXIBV4KYTfm5MULKN7P3OyMVOF5z0iTi5t9jKLb6fo2D7tD
+         qKZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693510717; x=1694115517;
+        d=1e100.net; s=20221208; t=1693510939; x=1694115739;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=1ki/OwjIU18DtuVHU8h+/teFMT7QJKmhWe1t8w4B3+I=;
-        b=OoISb+PI9fb9PSDuZpDASpK9PJu2c58tr9YMgO0dzY/sf+YW77AczfKDL9YhkP5J8A
-         6FJjdLdcBBvfZVbyaGNxtPJ9ks23rFJuDROQwV9y9sRLrEMDwlh0KPg1vYPSZ0uGdBg3
-         bttRVgM1bG+8KeIs54ehz2908MdW+dl9AYjOK695gOli3NHoLFmvVxH9J6w0dCNghsgS
-         5A3BMAYLzUFeW/8uCvShhRSl4FAV7/FwokKDUb7c+mr71kmEqW6AWebAUtXjKyYXuZBs
-         ULDBVYU0bGV8hiHbXwFSvVYHF31Wg+WxwEwoaqT2ojr9z1Wxgx+6wzXl7vC3UIXyLlde
-         wS1g==
-X-Gm-Message-State: AOJu0YyDtOAtxR2xGldoQFXi6jjw1afbDliyYO/oBY5q1bJZ3l1TQ63z
-        8o4tW+IeTimKfza0XPHk3zM=
-X-Google-Smtp-Source: AGHT+IGvlsa8+EI3f6HZsE4SZNDJ3JjIgHosSPzt0rFM0ScC3i7qQ67POY4bnNCVUgtcIdCO4Em9Cw==
-X-Received: by 2002:a5e:c80f:0:b0:783:5209:c01 with SMTP id y15-20020a5ec80f000000b0078352090c01mr224313iol.17.1693510717430;
-        Thu, 31 Aug 2023 12:38:37 -0700 (PDT)
+        bh=4bhbRn40G8fRejY3+skmba0LjRugGKFU8ATlgbxA8nI=;
+        b=lkYqCBWB849GdRdb4plfhwS+pfiJzDjzH3zm3le8JFvaq2kz04b5eF+grsk7Ha/0xa
+         l+iAWOJhvUhQ5Lk7c1W6jMLpe8kQplZwZmaVrBRA8bEFJCQUvVaH4Do14R3nV9WdMlIe
+         QiQ66VAy36D2XUhTW2cYTyNqROqnVwnjihXQzdDV6TS42Bnw2KQnYSwVeFegPOMKKtAd
+         6C6nkcoDPWEtUHRYT6pP9TNlI9rkrjY6nE9NPg+fFU+9d1XOuMBcoCrmefXfM+RX3Wu8
+         +lpOapQ0w33sLqfUuGpC5huIMT5jPgoQYmC8m/XmP2bjjSERsjCttbmsFb7uLf76wRyJ
+         cx0Q==
+X-Gm-Message-State: AOJu0YyTEl+ErywMEUJbvFz8EWFY8W4RB4qvjaX+VnoI/1ySbDqxcYNV
+        tbBglz1moQXoIs4aM48gBHJWvFK+PlaMrOEO
+X-Google-Smtp-Source: AGHT+IEqblxyuxbnA6AuhEjq3Z4T0ccLwA4x66EDYw1ywPwueiJDqLZlOX79wI6j7lDd6p4M7jrjoQ==
+X-Received: by 2002:a05:6e02:13f0:b0:32c:9c5e:900c with SMTP id w16-20020a056e0213f000b0032c9c5e900cmr444776ilj.8.1693510939369;
+        Thu, 31 Aug 2023 12:42:19 -0700 (PDT)
 Received: from azeems-kspp.c.googlers.com.com (161.74.123.34.bc.googleusercontent.com. [34.123.74.161])
-        by smtp.gmail.com with ESMTPSA id gc10-20020a056638670a00b0042b39f1c3d2sm579001jab.144.2023.08.31.12.38.36
+        by smtp.gmail.com with ESMTPSA id x5-20020a920605000000b003498cdb93dcsm569685ilg.31.2023.08.31.12.42.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Aug 2023 12:38:37 -0700 (PDT)
+        Thu, 31 Aug 2023 12:42:18 -0700 (PDT)
 From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-To:     Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Kees Cook <keescook@chromium.org>
+To:     Kees Cook <keescook@chromium.org>
 Cc:     linux-hardening@vger.kernel.org,
         Azeem Shaikh <azeemshaikh38@gmail.com>,
-        ocfs2-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
-        Christian Brauner <brauner@kernel.org>,
-        Dave Chinner <dchinner@redhat.com>, Jan Kara <jack@suse.cz>,
-        Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH v2] fs: ocfs2: Replace strlcpy with sysfs_emit
-Date:   Thu, 31 Aug 2023 19:38:27 +0000
-Message-ID: <20230831193827.1528867-1-azeemshaikh38@gmail.com>
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH] trace/events/task.h: Replace strlcpy with strscpy
+Date:   Thu, 31 Aug 2023 19:42:12 +0000
+Message-ID: <20230831194212.1529941-1-azeemshaikh38@gmail.com>
 X-Mailer: git-send-email 2.42.0.283.g2d96d420d3-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -75,41 +72,31 @@ This read may exceed the destination size limit.
 This is both inefficient and can lead to linear read
 overflows if a source string is not NUL-terminated [1].
 In an effort to remove strlcpy() completely [2], replace
-strlcpy() here with sysfs_emit().
+strlcpy() here with strscpy().
 
-Direct replacement is safe here since its ok for `kernel_param_ops.get()`
-to return -errno [3].
+No return values were used, so direct replacement is safe.
 
 [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
 [2] https://github.com/KSPP/linux/issues/89
-[3] https://elixir.bootlin.com/linux/v6.5/source/include/linux/moduleparam.h#L52
 
 Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 ---
-v2:
- * Removes patch [1/2] which replaced module_param_call with module_param_cb.
- * Use sysfs_emit instead of strscpy.
+ include/trace/events/task.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-v1:
- * https://lore.kernel.org/all/20230830215426.4181755-1-azeemshaikh38@gmail.com/
+diff --git a/include/trace/events/task.h b/include/trace/events/task.h
+index 64d160930b0d..47b527464d1a 100644
+--- a/include/trace/events/task.h
++++ b/include/trace/events/task.h
+@@ -47,7 +47,7 @@ TRACE_EVENT(task_rename,
+ 	TP_fast_assign(
+ 		__entry->pid = task->pid;
+ 		memcpy(entry->oldcomm, task->comm, TASK_COMM_LEN);
+-		strlcpy(entry->newcomm, comm, TASK_COMM_LEN);
++		strscpy(entry->newcomm, comm, TASK_COMM_LEN);
+ 		__entry->oom_score_adj = task->signal->oom_score_adj;
+ 	),
 
- fs/ocfs2/dlmfs/dlmfs.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/fs/ocfs2/dlmfs/dlmfs.c b/fs/ocfs2/dlmfs/dlmfs.c
-index 81265123ce6c..b38776ba3306 100644
---- a/fs/ocfs2/dlmfs/dlmfs.c
-+++ b/fs/ocfs2/dlmfs/dlmfs.c
-@@ -80,8 +80,7 @@ static int param_set_dlmfs_capabilities(const char *val,
- static int param_get_dlmfs_capabilities(char *buffer,
- 					const struct kernel_param *kp)
- {
--	return strlcpy(buffer, DLMFS_CAPABILITIES,
--		       strlen(DLMFS_CAPABILITIES) + 1);
-+	return sysfs_emit(buffer, DLMFS_CAPABILITIES);
- }
- module_param_call(capabilities, param_set_dlmfs_capabilities,
- 		  param_get_dlmfs_capabilities, NULL, 0444);
 --
 2.42.0.283.g2d96d420d3-goog
 
