@@ -2,76 +2,81 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60347C83F3F
-	for <linux-hardening@archiver.kernel.org>; Thu, 31 Aug 2023 21:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC4BC83F37
+	for <linux-hardening@archiver.kernel.org>; Thu, 31 Aug 2023 21:04:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345052AbjHaVCm (ORCPT
+        id S242167AbjHaVE3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 31 Aug 2023 17:02:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53714 "EHLO
+        Thu, 31 Aug 2023 17:04:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347475AbjHaVCl (ORCPT
+        with ESMTP id S240032AbjHaVE3 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 31 Aug 2023 17:02:41 -0400
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24370FF
-        for <linux-hardening@vger.kernel.org>; Thu, 31 Aug 2023 14:02:38 -0700 (PDT)
-Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1bf57366ccdso16675445ad.1
-        for <linux-hardening@vger.kernel.org>; Thu, 31 Aug 2023 14:02:38 -0700 (PDT)
+        Thu, 31 Aug 2023 17:04:29 -0400
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 289EEFF
+        for <linux-hardening@vger.kernel.org>; Thu, 31 Aug 2023 14:04:26 -0700 (PDT)
+Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-68bec3a9bdbso930267b3a.3
+        for <linux-hardening@vger.kernel.org>; Thu, 31 Aug 2023 14:04:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1693515757; x=1694120557; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1693515865; x=1694120665; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=YPjmJfrcP1DlcVvCXznbWohWnUvBbmeVedMj4uSaPwY=;
-        b=n+M30yIjH1Azx8OPIxyuNtwk7z7p3qzyAXgl9j/6QvquuUtp3tJgx5Xu9Lc78aAZhr
-         Wnm2id4V/Og91GMBzoNIZmg3X9Vhxcl5XuLmcSiyKRq21WJy55uEpOAH7PZihN+L03jX
-         0C1j8pSkemXlj+1Enxh1wck5C4laJgLzo3usQ=
+        bh=Au0jgTnYViUt48nP33xg4Wv/ENS84whOnKL1Ii65ne8=;
+        b=m7SDyVc98Hy6ESiQ5HvA1QbD2JryQ2IGfyLRfCEQKwF9Ph92R67XbWjKRjQLaDF5Nz
+         NWOhgIm42Fi9BSaf7r2MeQOwUHumv4AOS6PqftBE9umRUDYJylNfajN1JJbgK1GfotDm
+         YvdHL6E53KXsQBOh6ggSfSALK9TaNj3tGwpgM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693515757; x=1694120557;
+        d=1e100.net; s=20221208; t=1693515865; x=1694120665;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YPjmJfrcP1DlcVvCXznbWohWnUvBbmeVedMj4uSaPwY=;
-        b=jwoxW0kvi+Gg0tLtmJu66xVuW25yeqGGs3Y4n/PPCaJUobwJpSBS09UhcvKWv8FAUS
-         BD0Uq8qPemL5YYS0SyKFdvIoTWligQGflAu55G2jiR06PePZQSCOCf56Y+zJqp3BXaPP
-         Ucjg6E8QBwjb3zYeAFr1HmPccTSbrbgeDHQR8fel1pVyoCr7aHqgQ7gDgcGSmujH1eIM
-         zXv5dbXFKtOo31ryH0SpyJW37i+7up3P6PTkuyjQQxDBrY/V4zytwGenTetdqzr9KXvO
-         vkmbQf/v59uEiG5QLkM2LjJVNNehEaWrFZZ10+mtWyWWWdVTtugLyKGFvtbuwZuvio0u
-         8e2w==
-X-Gm-Message-State: AOJu0Ywj4uR0u2CLNFm5Z2s0Am+41H/gtKLghVN4ODlxjRdM1laDZ8/t
-        X76sChd8uhPoR4a+bKBv54rAkg==
-X-Google-Smtp-Source: AGHT+IFEU9mcbMzKzrjRSeo06SsVZLZJ9AMVv07T/VwIDnFU2B4i9ZLF9BEAXIcYdSLlQyBKd7/Blw==
-X-Received: by 2002:a17:903:244d:b0:1b2:676d:1143 with SMTP id l13-20020a170903244d00b001b2676d1143mr838409pls.15.1693515757554;
-        Thu, 31 Aug 2023 14:02:37 -0700 (PDT)
+        bh=Au0jgTnYViUt48nP33xg4Wv/ENS84whOnKL1Ii65ne8=;
+        b=VsdZd7O3M46ByjYzPnvIwH9TNCqwH4ulBNqpEb/xKMhSJzIeUiqAyHJYrIhr9fgh1S
+         M4EtJT/H8UsvxJNaxeF5Z5bq+oEJEx4Knyr6eEJdtv8HBfAadEVI06k+QydlGKbfxQaj
+         7POiQGhLt8SYU1VOlpxyXhCyadHYUL6xu9nEQ0QBss4VtPRL5+tHuTnCa1qmGrHdJO8V
+         dUo9DlGDRyAVWcmdXiwbyBfD1vT1oA3bXgSngg/nDrjxv2yBFORoaK6dvRIseUE8XuFo
+         /VCXlBsRQQkvAIsdVT1EPj3JXhwVSC9kIKBCne/ixvm8zrGWDJ310hCHMP+9Y6/SRb5H
+         HWqw==
+X-Gm-Message-State: AOJu0Ywttf9JbA9a/WQmqx56njGFfySkTeLPePaIhXpKqajvSgRAF6ZE
+        ONJ+TePPFgkY96Q1JGXeZ7rl/A==
+X-Google-Smtp-Source: AGHT+IE56n0HSk12PcsENSTVStpscxK4S0XAvFr+WwpnxiMN/kNJiePa06E8oRKJ3jPlRjZDRhOuTw==
+X-Received: by 2002:a05:6a20:431d:b0:12e:cbce:444a with SMTP id h29-20020a056a20431d00b0012ecbce444amr1025931pzk.37.1693515865597;
+        Thu, 31 Aug 2023 14:04:25 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id c4-20020a170902d48400b001bc18e579aesm1641989plg.101.2023.08.31.14.02.36
+        by smtp.gmail.com with ESMTPSA id q7-20020a637507000000b00570574feda0sm1686351pgc.19.2023.08.31.14.04.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Aug 2023 14:02:36 -0700 (PDT)
-Date:   Thu, 31 Aug 2023 14:02:36 -0700
+        Thu, 31 Aug 2023 14:04:25 -0700 (PDT)
+Date:   Thu, 31 Aug 2023 14:04:24 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Azeem Shaikh <azeemshaikh38@gmail.com>
-Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-hardening@vger.kernel.org, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] scsi: target: Replace strlcpy with strscpy
-Message-ID: <202308311402.8F9854D6A@keescook>
-References: <20230831143638.232596-1-azeemshaikh38@gmail.com>
- <202308311141.612BF8D@keescook>
- <CADmuW3XpGR-jzq0SP8wVp+W3ZXZ9hgLpNrLrEox0K3Pyw5kfXg@mail.gmail.com>
+Cc:     Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        linux-hardening@vger.kernel.org, ocfs2-devel@lists.linux.dev,
+        linux-kernel@vger.kernel.org,
+        Christian Brauner <brauner@kernel.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        Jeff Layton <jlayton@kernel.org>
+Subject: Re: [PATCH 2/2] ocfs2: Replace strlcpy with strscpy
+Message-ID: <202308311402.57CF455D55@keescook>
+References: <20230830215426.4181755-1-azeemshaikh38@gmail.com>
+ <20230830215426.4181755-3-azeemshaikh38@gmail.com>
+ <202308301601.8A8EE6B653@keescook>
+ <CADmuW3Wc7fzoCcif7WmY4X4FWErFc4poMOqzMXu=3mf0ycju1Q@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CADmuW3XpGR-jzq0SP8wVp+W3ZXZ9hgLpNrLrEox0K3Pyw5kfXg@mail.gmail.com>
+In-Reply-To: <CADmuW3Wc7fzoCcif7WmY4X4FWErFc4poMOqzMXu=3mf0ycju1Q@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Aug 31, 2023 at 03:20:47PM -0400, Azeem Shaikh wrote:
-> On Thu, Aug 31, 2023 at 2:42 PM Kees Cook <keescook@chromium.org> wrote:
+On Thu, Aug 31, 2023 at 03:28:32PM -0400, Azeem Shaikh wrote:
+> On Wed, Aug 30, 2023 at 7:06 PM Kees Cook <keescook@chromium.org> wrote:
 > >
-> > On Thu, Aug 31, 2023 at 02:36:38PM +0000, Azeem Shaikh wrote:
+> > On Wed, Aug 30, 2023 at 09:54:26PM +0000, Azeem Shaikh wrote:
 > > > strlcpy() reads the entire source buffer first.
 > > > This read may exceed the destination size limit.
 > > > This is both inefficient and can lead to linear read
@@ -79,65 +84,74 @@ On Thu, Aug 31, 2023 at 03:20:47PM -0400, Azeem Shaikh wrote:
 > > > In an effort to remove strlcpy() completely [2], replace
 > > > strlcpy() here with strscpy().
 > > >
-> > > Direct replacement is safe here since return value of -errno
-> > > is used to check for truncation instead of sizeof(dest).
+> > > Direct replacement is assumed to be safe here since
+> > > it's ok for `kernel_param_ops.get()` to return -errno [3].
+> > > This changes the behavior such that instead of silently ignoring the
+> > > case when sizeof(@buffer) < DLMFS_CAPABILITIES, we now return error.
 > > >
 > > > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
 > > > [2] https://github.com/KSPP/linux/issues/89
+> > > [3] https://elixir.bootlin.com/linux/v6.5/source/include/linux/moduleparam.h#L52
 > > >
 > > > Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 > > > ---
-> > > v3:
-> > >  * Address readability comment.
+> > >  fs/ocfs2/dlmfs/dlmfs.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
 > > >
-> > > v2:
-> > >  * Replace all instances of strlcpy in this file instead of just 1.
-> > >  * https://lore.kernel.org/all/20230830210724.4156575-1-azeemshaikh38@gmail.com/
-> > >
-> > > v1:
-> > >  * https://lore.kernel.org/all/20230830200717.4129442-1-azeemshaikh38@gmail.com/
-> > >
-> > >  drivers/target/target_core_configfs.c |   24 ++++++++++++------------
-> > >  1 file changed, 12 insertions(+), 12 deletions(-)
-> > >
-> > > diff --git a/drivers/target/target_core_configfs.c b/drivers/target/target_core_configfs.c
-> > > index 936e5ff1b209..d5860c1c1f46 100644
-> > > --- a/drivers/target/target_core_configfs.c
-> > > +++ b/drivers/target/target_core_configfs.c
-> > > @@ -1392,16 +1392,16 @@ static ssize_t target_wwn_vendor_id_store(struct config_item *item,
-> > >       /* +2 to allow for a trailing (stripped) '\n' and null-terminator */
-> > >       unsigned char buf[INQUIRY_VENDOR_LEN + 2];
-> > >       char *stripped = NULL;
-> > > -     size_t len;
-> > > +     ssize_t len;
-> > >       ssize_t ret;
-> > >
-> > > -     len = strlcpy(buf, page, sizeof(buf));
-> > > -     if (len < sizeof(buf)) {
-> > > +     len = strscpy(buf, page, sizeof(buf));
-> > > +     if (len > 0) {
-> > >               /* Strip any newline added from userspace. */
-> > >               stripped = strstrip(buf);
-> > >               len = strlen(stripped);
-> > >       }
-> > > -     if (len > INQUIRY_VENDOR_LEN) {
-> > > +     if (len < 0 || len > INQUIRY_VENDOR_LEN) {
+> > > diff --git a/fs/ocfs2/dlmfs/dlmfs.c b/fs/ocfs2/dlmfs/dlmfs.c
+> > > index 33e529de93b2..b001eccdd2f3 100644
+> > > --- a/fs/ocfs2/dlmfs/dlmfs.c
+> > > +++ b/fs/ocfs2/dlmfs/dlmfs.c
+> > > @@ -80,7 +80,7 @@ static int param_set_dlmfs_capabilities(const char *val,
+> > >  static int param_get_dlmfs_capabilities(char *buffer,
+> > >                                       const struct kernel_param *kp)
+> > >  {
+> > > -     return strlcpy(buffer, DLMFS_CAPABILITIES,
+> > > +     return strscpy(buffer, DLMFS_CAPABILITIES,
+> > >                      strlen(DLMFS_CAPABILITIES) + 1);
+> > >  }
 > >
-> > Agh, sorry I missed this before: the first "if" needs to be "len >= 0"
-> > otherwise this:
+> > This is another case of "accidentally correct".
 > >
-> >         ret = target_check_inquiry_data(stripped);
 > >
-> > will be passing a NULL pointer...
+> > param->get() is hooked here, in the sysfs "show" callback:
+> >
+> > static ssize_t param_attr_show(struct module_attribute *mattr,
+> >                                struct module_kobject *mk, char *buf)
+> > {
+> >         int count;
+> >         struct param_attribute *attribute = to_param_attr(mattr);
+> >
+> >         if (!attribute->param->ops->get)
+> >                 return -EPERM;
+> >
+> >         kernel_param_lock(mk->mod);
+> >         count = attribute->param->ops->get(buf, attribute->param);
+> >         kernel_param_unlock(mk->mod);
+> >         return count;
+> > }
+> >
+> > Meaning ultimately this will show up here, if I'm reading names right:
+> > /sys/module/ocfs/parameters/dlmfs_capabilities
+> >
+> > Anyway, the "count" being returned would be quite bad if
+> > DLMFS_CAPABILITIES were dynamic and larger than PAGE_SIZE (the size of
+> > the sysfs buffer).
+> >
+> > For this case, I would say replace strlcpy with sysfs_emit:
+> >
+> >         return sysfs_emit(buffer, DLMFS_CAPABILITIES);
 > >
 > 
-> Hmm, the current implementation of strscpy never returns 0. If
-> sizeof(buf) is 0, it'll return -E2BIG. Do you still prefer that I
-> update this to check for len >= 0?
+> Thanks, sending out a v2 for this. Out of curiosity - why sysfs_emit?
+> Is it because DLMFS_CAPABILITIES is a hard-coded string?
 
-Oh right! Nevermind, then. Fine as-is. :)
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
+It's basically that sysfs_emit() Does The Right Thing for these
+callbacks: it tracks the offset of the buffer and checks for buffer
+overflow. (All the sysfs callback work on a page-aligned page-sized
+buffer, and the API lacks any length info -- it's "understood" to be
+page-sized.) So, since this is doing a string copy into what is
+ultimately a sysfs buffer, it's best to use sysfs_emit().
 
 -- 
 Kees Cook
