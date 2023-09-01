@@ -2,108 +2,164 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF5B2CA0FE1
-	for <linux-hardening@archiver.kernel.org>; Thu, 31 Aug 2023 23:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 295ADCA0FE9
+	for <linux-hardening@archiver.kernel.org>; Fri,  1 Sep 2023 07:59:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230143AbjHaXUa (ORCPT
+        id S1347895AbjIAH7T (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 31 Aug 2023 19:20:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51854 "EHLO
+        Fri, 1 Sep 2023 03:59:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347852AbjHaXUa (ORCPT
+        with ESMTP id S229609AbjIAH7T (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 31 Aug 2023 19:20:30 -0400
-Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 454F210CC
-        for <linux-hardening@vger.kernel.org>; Thu, 31 Aug 2023 16:20:14 -0700 (PDT)
-Received: by mail-wm1-x335.google.com with SMTP id 5b1f17b1804b1-401f503b529so13763705e9.0
-        for <linux-hardening@vger.kernel.org>; Thu, 31 Aug 2023 16:20:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1693524013; x=1694128813; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CWZZJ4W2c1JEb6sxHZjM2rWbFiQYVpX5RM6za8+8n6s=;
-        b=2p7Rsowql8DWRf0YXiAUawrq76ymvQmb3JdU1QoYvxHQFP/NEKi1nRFPElq+99MZf0
-         Z8F+Nvvl4/ZXFtPytxZcqBTgit5m0QUTp5pSqj4A0hOOFfrbi3pL8cFSPzZ1OMTHrZ+3
-         y8FLwM2oHf+tWtfp1862AlMTngyYmqWfHenZtIbSrQmponF/BPrIwwipDPhz/W//1wsM
-         Qxqp7vXkgPeTVJuXUCxjGJhL1IZcV1NJDtZWD+AzkkMZ9uuIjT6EQf216eU5x8FwrjnF
-         fkH4NqpLyOv0oIO0VsmSqWvnpATcGmx3eLaMW1Rl2TRstS04wP3Ig9RgAH3QtLqW8/SK
-         neXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693524013; x=1694128813;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CWZZJ4W2c1JEb6sxHZjM2rWbFiQYVpX5RM6za8+8n6s=;
-        b=KeV2gfk4Vujhi9AXRZIwySkqdnyidL7Cyz7py77S5ikOkC/H8IBnAeUfZYaf5lg/uO
-         6JY56tsVGoLSPNn2IkO26RRMs0ODEIb2o5vi8P3XptpDjgvv8GrCr5Rj8i6Z2ZDZatQv
-         ZsfbFTm/aAxXJnr7BxU8K/eMqsv5SDgjhV9HL6eX+SNLa2+xZb8d05Gmgb4LtvMROGZp
-         XDhA7OlzRtN4Gvgf5RgQAf2BJc/slrxyhDw3V3Qt2QzgJaxyjDR0APblyCvxDxO7uPaH
-         YX44vsPyZqsmihiOyTpasG00EoFnD45Ui7jT8asuF0wUKWKrYHDPkRqqtDAZUE21nCqi
-         Fi3g==
-X-Gm-Message-State: AOJu0YwhmYb7BSP4oZJNvN9jedDE15AmWZB2ijGO9/UXR1W6Tor0JEvI
-        meKNW4m1LrjZUfOtcF41yDYd8Jg+PPFoDe39V/2a+w==
-X-Google-Smtp-Source: AGHT+IFY/qULbZslTUFY83I+dyYF857ayC4OzKQ7adtPZGuXyLPjh4tXVAQxgl2KHb//SBEIgqvNsv53UX8QmJLJrCY=
-X-Received: by 2002:a5d:4b51:0:b0:317:5b1b:1a40 with SMTP id
- w17-20020a5d4b51000000b003175b1b1a40mr619080wrs.49.1693524012629; Thu, 31 Aug
- 2023 16:20:12 -0700 (PDT)
+        Fri, 1 Sep 2023 03:59:19 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC36410D5;
+        Fri,  1 Sep 2023 00:59:15 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 31EE1619C0;
+        Fri,  1 Sep 2023 07:59:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 938B1C433CB;
+        Fri,  1 Sep 2023 07:59:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1693555154;
+        bh=GYFYHNBwiYIMyxXYhNMZBkYnxr8aCSZaJphpVUbR/gI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=AaRktxRVhEkyJ9abOTUx7V1990sLCQZsTcFUleQ9gIPImVoGeS5XT88pEptizfQDW
+         nHQgbPUErQ/EtGTelQCn2JhACffAb906a3fJ4in3B4pCmK6qM0io61lBIOnhXZ01m0
+         H5w1WWX4mbREPA9UDC2fe+zlPL9TSAvCy5V5R8UagFmSy8vYheYL0hPJCXf5I91b7T
+         TooNiVCUoUTRJvGRT3I4IL6EjI/AcDVnd0G4O3HqcJT1EWm5mQPzH+sLC+Ivo0edUD
+         zFOJ+InUvPaokhPEzGYCjmb5rvDpXKLESGTzYoF9j92Jto02sA1aNf4Ycj8NwKOsMP
+         OOd4SSi9NU49A==
+Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-565f2567422so1029779eaf.2;
+        Fri, 01 Sep 2023 00:59:14 -0700 (PDT)
+X-Gm-Message-State: AOJu0YxHxt8pryf/b0cpE2pc/Q6Inko8eAZKEnCyticjoXT1niukTkrK
+        Hg1jnAwhmzV2gV96VeErkN+8mvvNTzpeyzQW+Mo=
+X-Google-Smtp-Source: AGHT+IHWr1PcUpOyQTzQJYAg/TVFLv3Ywby9u7RUE31cJ6C0yBF+em+y7ml6sODmNo5t9DAFJN+2Shqq08kJwtSujfQ=
+X-Received: by 2002:a4a:919c:0:b0:56e:4921:deb0 with SMTP id
+ d28-20020a4a919c000000b0056e4921deb0mr1662294ooh.8.1693555153843; Fri, 01 Sep
+ 2023 00:59:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230831194212.1529941-1-azeemshaikh38@gmail.com>
-In-Reply-To: <20230831194212.1529941-1-azeemshaikh38@gmail.com>
-From:   Justin Stitt <justinstitt@google.com>
-Date:   Thu, 31 Aug 2023 16:20:02 -0700
-Message-ID: <CAFhGd8ruFyv=eL6XXY3FQWVAa3SAy=uBebLReGog0oSwE6XUiw@mail.gmail.com>
-Subject: Re: [PATCH] trace/events/task.h: Replace strlcpy with strscpy
-To:     Azeem Shaikh <azeemshaikh38@gmail.com>
-Cc:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
+References: <20230831191335.give.534-kees@kernel.org>
+In-Reply-To: <20230831191335.give.534-kees@kernel.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Fri, 1 Sep 2023 16:58:37 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATENQQy6LrWS10S-EXsyAvTraSj2WA=O7rFsS9Ht6a+3g@mail.gmail.com>
+Message-ID: <CAK7LNATENQQy6LrWS10S-EXsyAvTraSj2WA=O7rFsS9Ht6a+3g@mail.gmail.com>
+Subject: Re: [PATCH v3] kbuild: Show marked Kconfig fragments in "help"
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Nicolas Schier <nicolas@fjasle.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Aug 31, 2023 at 12:42=E2=80=AFPM Azeem Shaikh <azeemshaikh38@gmail.=
-com> wrote:
+On Fri, Sep 1, 2023 at 4:13=E2=80=AFAM Kees Cook <keescook@chromium.org> wr=
+ote:
 >
-> strlcpy() reads the entire source buffer first.
-> This read may exceed the destination size limit.
-> This is both inefficient and can lead to linear read
-> overflows if a source string is not NUL-terminated [1].
-> In an effort to remove strlcpy() completely [2], replace
-> strlcpy() here with strscpy().
+> Currently the Kconfig fragments in kernel/configs and arch/*/configs
+> that aren't used internally aren't discoverable through "make help",
+> which consists of hard-coded lists of config fragments. Instead, list
+> all the fragment targets that have a "# Help: " comment prefix so the
+> targets can be generated dynamically.
 >
-> No return values were used, so direct replacement is safe.
+> Add logic to the Makefile to search for and display the fragment and
+> comment. Add comments to fragments that are intended to be direct targets=
+.
 >
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcp=
-y
-> [2] https://github.com/KSPP/linux/issues/89
->
-> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
-
-Reviewed-by: Justin Stitt <justinstitt@google.com>
-
+> Cc: Nicolas Schier <nicolas@fjasle.eu>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+> Cc: Randy Dunlap <rdunlap@infradead.org>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: x86@kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: linux-riscv@lists.infradead.org
+> Cc: linux-s390@vger.kernel.org
+> Cc: linux-kbuild@vger.kernel.org
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Co-developed-by: Masahiro Yamada <masahiroy@kernel.org>
 > ---
->  include/trace/events/task.h |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> v3:
+> - Use Makefile logic from Masahiro Yamada
+> - Use "# Help: " prefix, but only on desired fragment targets
+> v2: https://lore.kernel.org/all/20230825194329.gonna.911-kees@kernel.org
+> v1: https://lore.kernel.org/all/20230824223606.never.762-kees@kernel.org
+> ---
+>  Makefile                                   |  1 -
+>  arch/arm/configs/dram_0x00000000.config    |  1 +
+>  arch/arm/configs/dram_0xc0000000.config    |  1 +
+>  arch/arm/configs/dram_0xd0000000.config    |  1 +
+>  arch/arm/configs/lpae.config               |  1 +
+>  arch/arm64/configs/virt.config             |  1 +
+>  arch/powerpc/configs/disable-werror.config |  1 +
+>  arch/powerpc/configs/security.config       |  4 +++-
+>  arch/riscv/configs/32-bit.config           |  1 +
+>  arch/riscv/configs/64-bit.config           |  1 +
+>  arch/s390/configs/btf.config               |  1 +
+>  arch/s390/configs/kasan.config             |  1 +
+>  arch/x86/Makefile                          |  4 ----
+>  kernel/configs/debug.config                |  2 ++
+>  kernel/configs/kvm_guest.config            |  1 +
+>  kernel/configs/nopm.config                 |  2 ++
+>  kernel/configs/rust.config                 |  1 +
+>  kernel/configs/tiny.config                 |  2 ++
+>  kernel/configs/x86_debug.config            |  1 +
+>  kernel/configs/xen.config                  |  2 ++
+>  scripts/kconfig/Makefile                   | 15 ++++++++++++---
+>  21 files changed, 36 insertions(+), 9 deletions(-)
 >
-> diff --git a/include/trace/events/task.h b/include/trace/events/task.h
-> index 64d160930b0d..47b527464d1a 100644
-> --- a/include/trace/events/task.h
-> +++ b/include/trace/events/task.h
-> @@ -47,7 +47,7 @@ TRACE_EVENT(task_rename,
->         TP_fast_assign(
->                 __entry->pid =3D task->pid;
->                 memcpy(entry->oldcomm, task->comm, TASK_COMM_LEN);
-> -               strlcpy(entry->newcomm, comm, TASK_COMM_LEN);
-> +               strscpy(entry->newcomm, comm, TASK_COMM_LEN);
->                 __entry->oom_score_adj =3D task->signal->oom_score_adj;
->         ),
->
-> --
-> 2.42.0.283.g2d96d420d3-goog
->
->
+
+
+Just one thing.
+
+
+
+
+
+> diff --git a/kernel/configs/tiny.config b/kernel/configs/tiny.config
+> index 00009f7d0835..60a4b6d80b36 100644
+> --- a/kernel/configs/tiny.config
+> +++ b/kernel/configs/tiny.config
+> @@ -1,3 +1,5 @@
+> +# Help: Size-optimized kernel image
+
+
+I will drop this.
+
+
+We already have a hard-coded help message.
+
+  tinyconfig   - Configure the tiniest possible kernel
+
+
+
+
+Then, some lines below, again.
+
+  tiny.config               - Size-optimized kernel image
+
+
+
+tiny.config is for internal use for tinyconfig.
+
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
