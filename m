@@ -2,92 +2,112 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C7DFC83F3F
-	for <linux-hardening@archiver.kernel.org>; Mon,  4 Sep 2023 09:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E655C71153
+	for <linux-hardening@archiver.kernel.org>; Mon,  4 Sep 2023 12:34:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351830AbjIDJ3h convert rfc822-to-8bit (ORCPT
+        id S235075AbjIDMeW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 4 Sep 2023 05:29:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34200 "EHLO
+        Mon, 4 Sep 2023 08:34:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234386AbjIDJ3g (ORCPT
+        with ESMTP id S240158AbjIDMeV (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 4 Sep 2023 05:29:36 -0400
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F399191;
-        Mon,  4 Sep 2023 02:29:33 -0700 (PDT)
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-58dfe2d5b9aso16753947b3.1;
-        Mon, 04 Sep 2023 02:29:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693819772; x=1694424572;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QhYY1jPPd4YIanKFTU2nWMCKlreWmIcOriE8C055zzM=;
-        b=l+GSf2FY2KSR2xQTgPYgPvmnm3r2UN51lXBfepe26x1cLOgLDVml/WyshZgd5+sh6b
-         uVIw697wAj8Qy0il7LQ2cXi+5dHga8E3Tf8WRV0hbf3mDeGc5AcKHMz2KuC3fLrORR8t
-         pTs4vkjrPNawWVVcX55qGDEfbmcBy4IirDXkEpOlZxMbchjMdUvTyYRgH4SJQ9bww2X1
-         3Gntpk/NRgkC03m/g8uH2kV0oGEEfxsb3hoAQUl7Rwe7XTWHbgLN4fiFn+rhkXllvjos
-         zPI2S8Mlf1eHFGh8DNFNuf5PmEg1BHZQbOJe99mvSFSnoeY/kqMgJ3atmxMUNnuAKYgZ
-         0JHw==
-X-Gm-Message-State: AOJu0YzHXJsBBQ1I3ZATnG5oohVgw0CwGdREgQuJl4bSBaHZpezIqmMi
-        YzJ6+tk15Es6MQ11w+4jIwNGqvq7bGwFOg==
-X-Google-Smtp-Source: AGHT+IGFMRDvwvBfA8KStTTP+OGp+HJDj96FgGdzcGJfNbjL7Cecds5Rl6Zh/7n+hkd7sXsoRXG9oA==
-X-Received: by 2002:a0d:cbc6:0:b0:576:87b1:ae0d with SMTP id n189-20020a0dcbc6000000b0057687b1ae0dmr13789348ywd.21.1693819772503;
-        Mon, 04 Sep 2023 02:29:32 -0700 (PDT)
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com. [209.85.219.173])
-        by smtp.gmail.com with ESMTPSA id s7-20020a81c447000000b0059935151fa1sm1450126ywj.126.2023.09.04.02.29.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Sep 2023 02:29:32 -0700 (PDT)
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-d7bae413275so2922222276.0;
-        Mon, 04 Sep 2023 02:29:32 -0700 (PDT)
-X-Received: by 2002:a25:ae57:0:b0:d72:7cb8:21a1 with SMTP id
- g23-20020a25ae57000000b00d727cb821a1mr12231769ybe.4.1693819771988; Mon, 04
- Sep 2023 02:29:31 -0700 (PDT)
+        Mon, 4 Sep 2023 08:34:21 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CE441AD;
+        Mon,  4 Sep 2023 05:34:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1693830858; x=1725366858;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=iKfzgQRKi4T83ZPeBZBBiIz3Sz7wRs1LrWoQjTTTZqo=;
+  b=JqLZPtw31kI0Al7lmcMM++5EcMDrTHM3H//rbLrkhve1n/CpailILYVq
+   Cy8VC947xG6B5d8iauT/81BBN17S+BKeKRnXmEjCN5ViJ/E0F0DPlJKDl
+   uyir+tw6bY8khjGCqkTJVZ2Qafsv6itWZYdTw7iYJ15/frk6VjcDP84WT
+   KsPuwKkFoN+5FNLjCa2wqdg5cYf3IsVGkZDvbODl0pSKVB3f3G1U5rhz/
+   X82IT79GUmHb6iMdSTebIs4IpdFApBrm+RIJ/Iud6Bl3lM3fKuOOFWl92
+   1ufvOJZ+17zPJO8NOP0vDZryK34ikWako/wIs4wWLjPqrztFy7ZdecF/J
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10822"; a="373977128"
+X-IronPort-AV: E=Sophos;i="6.02,226,1688454000"; 
+   d="scan'208";a="373977128"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2023 05:34:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10822"; a="740749728"
+X-IronPort-AV: E=Sophos;i="6.02,226,1688454000"; 
+   d="scan'208";a="740749728"
+Received: from irvmail002.ir.intel.com ([10.43.11.120])
+  by orsmga002.jf.intel.com with ESMTP; 04 Sep 2023 05:34:15 -0700
+Received: from pelor.igk.intel.com (pelor.igk.intel.com [10.123.220.13])
+        by irvmail002.ir.intel.com (Postfix) with ESMTP id 0964133BF2;
+        Mon,  4 Sep 2023 13:34:13 +0100 (IST)
+From:   Przemek Kitszel <przemyslaw.kitszel@intel.com>
+To:     netdev@vger.kernel.org
+Cc:     Kees Cook <keescook@chromium.org>,
+        Jacob Keller <jacob.e.keller@intel.com>,
+        intel-wired-lan@lists.osuosl.org,
+        Alexander Lobakin <aleksander.lobakin@intel.com>,
+        linux-hardening@vger.kernel.org, Steven Zou <steven.zou@intel.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Anthony Nguyen <anthony.l.nguyen@intel.com>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Subject: [RFC net-next v4 0/7] introduce DEFINE_FLEX() macro
+Date:   Mon,  4 Sep 2023 08:31:00 -0400
+Message-Id: <20230904123107.116381-1-przemyslaw.kitszel@intel.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-References: <20230830185428.4109426-1-azeemshaikh38@gmail.com>
-In-Reply-To: <20230830185428.4109426-1-azeemshaikh38@gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 4 Sep 2023 11:29:20 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWW81k+hzHeT-CH7B5Vm3MxvicjB7+jRQf2W8ecMbk+eg@mail.gmail.com>
-Message-ID: <CAMuHMdWW81k+hzHeT-CH7B5Vm3MxvicjB7+jRQf2W8ecMbk+eg@mail.gmail.com>
-Subject: Re: [PATCH] m68k/atari: Replace strlcpy with strscpy
-To:     Azeem Shaikh <azeemshaikh38@gmail.com>
-Cc:     linux-hardening@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Aug 30, 2023 at 8:54 PM Azeem Shaikh <azeemshaikh38@gmail.com> wrote:
-> strlcpy() reads the entire source buffer first.
-> This read may exceed the destination size limit.
-> This is both inefficient and can lead to linear read
-> overflows if a source string is not NUL-terminated [1].
-> In an effort to remove strlcpy() completely [2], replace
-> strlcpy() here with strscpy().
->
-> Direct replacement is safe here since return value of -errno
-> is used to check for truncation instead of sizeof(dest).
->
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-> [2] https://github.com/KSPP/linux/issues/89
->
-> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+Add DEFINE_FLEX() macro, that helps on-stack allocation of structures
+with trailing flex array member.
+Expose __struct_size() macro which reads size of data allocated
+by DEFINE_FLEX().
 
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
-i.e. will queue in the m68k for-v6.7 branch.
+Accompany new macros introduction with actual usage,
+in the ice driver - hence targeting for netdev tree
+- please me know if it is best approach here?
 
-Gr{oetje,eeting}s,
+Obvious benefits include simpler resulting code, less heap usage,
+less error checking. Less obvious is the fact that compiler has
+more room to optimize, and as a whole, even with more stuff on the stack,
+we end up with overall better (smaller) report from bloat-o-meter:
+add/remove: 8/6 grow/shrink: 7/18 up/down: 2211/-2270 (-59)
+(individual results in each patch).
 
-                        Geert
+v4: _Static_assert() to ensure compiletime const count param
+v3: tidy up 1st patch
+v2: Kees: reusing __struct_size() instead of doubling it as a new macro
+
+Przemek Kitszel (7):
+  overflow: add DEFINE_FLEX() for on-stack allocs
+  ice: ice_sched_remove_elems: replace 1 elem array param by u32
+  ice: drop two params of ice_aq_move_sched_elems()
+  ice: make use of DEFINE_FLEX() in ice_ddp.c
+  ice: make use of DEFINE_FLEX() for struct ice_aqc_add_tx_qgrp
+  ice: make use of DEFINE_FLEX() for struct ice_aqc_dis_txq_item
+  ice: make use of DEFINE_FLEX() in ice_switch.c
+
+ drivers/net/ethernet/intel/ice/ice_common.c | 20 ++-----
+ drivers/net/ethernet/intel/ice/ice_ddp.c    | 39 ++++---------
+ drivers/net/ethernet/intel/ice/ice_lag.c    | 48 ++++------------
+ drivers/net/ethernet/intel/ice/ice_lib.c    | 23 ++------
+ drivers/net/ethernet/intel/ice/ice_sched.c  | 56 ++++++------------
+ drivers/net/ethernet/intel/ice/ice_sched.h  |  6 +-
+ drivers/net/ethernet/intel/ice/ice_switch.c | 63 +++++----------------
+ drivers/net/ethernet/intel/ice/ice_xsk.c    | 22 +++----
+ include/linux/compiler_types.h              | 32 +++++++----
+ include/linux/fortify-string.h              |  4 --
+ include/linux/overflow.h                    | 35 ++++++++++++
+ 11 files changed, 130 insertions(+), 218 deletions(-)
 
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+base-commit: bd6c11bc43c496cddfc6cf603b5d45365606dbd5
+-- 
+2.40.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
