@@ -2,47 +2,47 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB3CC83F2C
-	for <linux-hardening@archiver.kernel.org>; Mon,  4 Sep 2023 12:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FCF9C83F3E
+	for <linux-hardening@archiver.kernel.org>; Mon,  4 Sep 2023 12:34:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352789AbjIDMeZ (ORCPT
+        id S1352795AbjIDMe0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 4 Sep 2023 08:34:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53424 "EHLO
+        Mon, 4 Sep 2023 08:34:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240158AbjIDMeY (ORCPT
+        with ESMTP id S241217AbjIDMe0 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 4 Sep 2023 08:34:24 -0400
+        Mon, 4 Sep 2023 08:34:26 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85AA61AD;
-        Mon,  4 Sep 2023 05:34:20 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6174F1AD;
+        Mon,  4 Sep 2023 05:34:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693830860; x=1725366860;
+  t=1693830863; x=1725366863;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=GLCtZy2q8d+I9Afwmb1nrr2Y95bhv3oUqLsaLvdHSI4=;
-  b=JRbzzqA4zBq0IPmd6msIp2C8+cfNgsUFTtI/lCjfePBc/0gkQWPMHQTN
-   Cspg17eOsPOXl+RbnOsn1VjKtB0F/udnx2mD69u8BxWmG/7iiYBRoNYtt
-   oaAgvThCkI8akwBgEuwHuPICbW9hNUVigsHR8sm8HA6oRlLvQJNrMQ3Zj
-   G38eTGIX8UIn8PytM6EL/smjWuia4wQO8qrzEmcPDh1ebIS9Gubyc2rh7
-   rj0euWCS3zmeZZZsRe3W4H0PNMhGBUohAED1MZIoJegk/wbi2rIhMEh50
-   L5BxF8K89Fci7H/gzB3rVHOWfchqMhT7M/SxBM5vly2GgtBwVTCV475Wr
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10822"; a="373977137"
+  bh=SeLgtUYbrOh0aByBaO5uFLDhHv+A3oGVhKqUMUqlyHQ=;
+  b=N4wvgu77qwzbJm4mUgn+nKTmIxykY1vx2PIEP3+UBbgWSgg46+ivkCnp
+   TDpHAFjrSR+L0Us46/EgpBxN3gHsbm91FoR5PCo7WD9HbCmAqRZ1RAy9W
+   zTbmbGrh3BZZ/mMncX1oDYYHp91rj/ha292FxQNXYERalSYMHOYBuQBe6
+   EeTHFtpNcJT1LVZ3JhbLa0NUzOrIcb7NF2gIYCY2ncBeo2PfdlEMPNT6y
+   D4LOlyhF1VPGipAOWqNm0BJ7M9TaLq9AC0NOwMurD3y01MK+RhOzvJGhe
+   znhud0oEiFTGEwlpZ3M8HPqYm4xMn9A2GjKTmkCv1w4ZZXNEcru+741ae
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10822"; a="373977157"
 X-IronPort-AV: E=Sophos;i="6.02,226,1688454000"; 
-   d="scan'208";a="373977137"
+   d="scan'208";a="373977157"
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2023 05:34:20 -0700
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2023 05:34:21 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10822"; a="740749744"
+X-IronPort-AV: E=McAfee;i="6600,9927,10822"; a="740749771"
 X-IronPort-AV: E=Sophos;i="6.02,226,1688454000"; 
-   d="scan'208";a="740749744"
+   d="scan'208";a="740749771"
 Received: from irvmail002.ir.intel.com ([10.43.11.120])
-  by orsmga002.jf.intel.com with ESMTP; 04 Sep 2023 05:34:16 -0700
+  by orsmga002.jf.intel.com with ESMTP; 04 Sep 2023 05:34:18 -0700
 Received: from pelor.igk.intel.com (pelor.igk.intel.com [10.123.220.13])
-        by irvmail002.ir.intel.com (Postfix) with ESMTP id B6A2A33E93;
-        Mon,  4 Sep 2023 13:34:14 +0100 (IST)
+        by irvmail002.ir.intel.com (Postfix) with ESMTP id 1266735430;
+        Mon,  4 Sep 2023 13:34:17 +0100 (IST)
 From:   Przemek Kitszel <przemyslaw.kitszel@intel.com>
 To:     netdev@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -54,9 +54,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Anthony Nguyen <anthony.l.nguyen@intel.com>,
         David Laight <David.Laight@ACULAB.COM>,
         Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Subject: [RFC net-next v4 1/7] overflow: add DEFINE_FLEX() for on-stack allocs
-Date:   Mon,  4 Sep 2023 08:31:01 -0400
-Message-Id: <20230904123107.116381-2-przemyslaw.kitszel@intel.com>
+Subject: [RFC net-next v4 4/7] ice: make use of DEFINE_FLEX() in ice_ddp.c
+Date:   Mon,  4 Sep 2023 08:31:04 -0400
+Message-Id: <20230904123107.116381-5-przemyslaw.kitszel@intel.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230904123107.116381-1-przemyslaw.kitszel@intel.com>
 References: <20230904123107.116381-1-przemyslaw.kitszel@intel.com>
@@ -66,174 +66,99 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Add DEFINE_FLEX() macro for on-stack allocations of structs with
-flexible array member.
+Use DEFINE_FLEX() macro for constant-num-of-elems (4)
+flex array members of ice_ddp.c
 
-Expose __struct_size() macro outside of fortify-string.h, as it could be
-used to read size of structs allocated by DEFINE_FLEX().
-Move __member_size() alongside it.
--Kees
-
-Using underlying array for on-stack storage lets us to declare
-known-at-compile-time structures without kzalloc().
-
-Actual usage for ice driver is in following patches of the series.
-
-Missing __has_builtin() workaround is moved up to serve also assembly
-compilation with m68k-linux-gcc, see [1].
-Error was (note the .S file extension):
-In file included from ../include/linux/linkage.h:5,
-                 from ../arch/m68k/fpsp040/skeleton.S:40:
-../include/linux/compiler_types.h:331:5: warning: "__has_builtin" is not defined, evaluates to 0 [-Wundef]
-  331 | #if __has_builtin(__builtin_dynamic_object_size)
-      |     ^~~~~~~~~~~~~
-../include/linux/compiler_types.h:331:18: error: missing binary operator before token "("
-  331 | #if __has_builtin(__builtin_dynamic_object_size)
-      |                  ^
-
-[1] https://lore.kernel.org/netdev/202308112122.OuF0YZqL-lkp@intel.com/
-Co-developed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Acked-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
 ---
-Prev versions, [v3] with Kees ACK:
-[v3] https://lore.kernel.org/netdev/202308161337.975C93F163@keescook
-
-v4: David: add _Static_assert to give better error message
-    for non-const counts; add one more lvl of macros to ease up adding
-    non-zeroing (or other) variant in the future;
-v3: remove old macro needlessly kept in v2; fix build warning;
-    reword doc comment;
-v2: Kees: reuse __struct_size() instead of adding new macro
-    (adding Kees as Co-dev here);
-v1: change macro name; add macro for size read;
-    accept struct type instead of ptr to it; change alignment;
+add/remove: 4/0 grow/shrink: 0/1 up/down: 1195/-878 (317)
 ---
- include/linux/compiler_types.h | 32 ++++++++++++++++++++-----------
- include/linux/fortify-string.h |  4 ----
- include/linux/overflow.h       | 35 ++++++++++++++++++++++++++++++++++
- 3 files changed, 56 insertions(+), 15 deletions(-)
+ drivers/net/ethernet/intel/ice/ice_ddp.c | 39 +++++++-----------------
+ 1 file changed, 11 insertions(+), 28 deletions(-)
 
-diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-index c523c6683789..6f1ca49306d2 100644
---- a/include/linux/compiler_types.h
-+++ b/include/linux/compiler_types.h
-@@ -2,6 +2,15 @@
- #ifndef __LINUX_COMPILER_TYPES_H
- #define __LINUX_COMPILER_TYPES_H
+diff --git a/drivers/net/ethernet/intel/ice/ice_ddp.c b/drivers/net/ethernet/intel/ice/ice_ddp.c
+index b27ec93638b6..78ed909745fe 100644
+--- a/drivers/net/ethernet/intel/ice/ice_ddp.c
++++ b/drivers/net/ethernet/intel/ice/ice_ddp.c
+@@ -1560,21 +1560,14 @@ static enum ice_ddp_state ice_init_pkg_info(struct ice_hw *hw,
+  */
+ static enum ice_ddp_state ice_get_pkg_info(struct ice_hw *hw)
+ {
+-	enum ice_ddp_state state = ICE_DDP_PKG_SUCCESS;
+-	struct ice_aqc_get_pkg_info_resp *pkg_info;
+-	u16 size;
++	DEFINE_FLEX(struct ice_aqc_get_pkg_info_resp, pkg_info, pkg_info,
++		    ICE_PKG_CNT);
++	u16 size = __struct_size(pkg_info);
+ 	u32 i;
  
-+/*
-+ * __has_builtin is supported on gcc >= 10, clang >= 3 and icc >= 21.
-+ * In the meantime, to support gcc < 10, we implement __has_builtin
-+ * by hand.
-+ */
-+#ifndef __has_builtin
-+#define __has_builtin(x) (0)
-+#endif
-+
- #ifndef __ASSEMBLY__
+-	size = struct_size(pkg_info, pkg_info, ICE_PKG_CNT);
+-	pkg_info = kzalloc(size, GFP_KERNEL);
+-	if (!pkg_info)
++	if (ice_aq_get_pkg_info_list(hw, pkg_info, size, NULL))
+ 		return ICE_DDP_PKG_ERR;
  
- /*
-@@ -134,17 +143,6 @@ static inline void __chk_io_ptr(const volatile void __iomem *ptr) { }
- # define __preserve_most
- #endif
- 
--/* Builtins */
+-	if (ice_aq_get_pkg_info_list(hw, pkg_info, size, NULL)) {
+-		state = ICE_DDP_PKG_ERR;
+-		goto init_pkg_free_alloc;
+-	}
 -
--/*
-- * __has_builtin is supported on gcc >= 10, clang >= 3 and icc >= 21.
-- * In the meantime, to support gcc < 10, we implement __has_builtin
-- * by hand.
-- */
--#ifndef __has_builtin
--#define __has_builtin(x) (0)
--#endif
+ 	for (i = 0; i < le32_to_cpu(pkg_info->count); i++) {
+ #define ICE_PKG_FLAG_COUNT 4
+ 		char flags[ICE_PKG_FLAG_COUNT + 1] = { 0 };
+@@ -1604,10 +1597,7 @@ static enum ice_ddp_state ice_get_pkg_info(struct ice_hw *hw)
+ 			  pkg_info->pkg_info[i].name, flags);
+ 	}
+ 
+-init_pkg_free_alloc:
+-	kfree(pkg_info);
 -
- /* Compiler specific macros. */
- #ifdef __clang__
- #include <linux/compiler-clang.h>
-@@ -352,6 +350,18 @@ struct ftrace_likely_data {
- # define __realloc_size(x, ...)
- #endif
+-	return state;
++	return ICE_DDP_PKG_SUCCESS;
+ }
  
-+/*
-+ * When the size of an allocated object is needed, use the best available
-+ * mechanism to find it. (For cases where sizeof() cannot be used.)
-+ */
-+#if __has_builtin(__builtin_dynamic_object_size)
-+#define __struct_size(p)	__builtin_dynamic_object_size(p, 0)
-+#define __member_size(p)	__builtin_dynamic_object_size(p, 1)
-+#else
-+#define __struct_size(p)	__builtin_object_size(p, 0)
-+#define __member_size(p)	__builtin_object_size(p, 1)
-+#endif
-+
- #ifndef asm_volatile_goto
- #define asm_volatile_goto(x...) asm goto(x)
- #endif
-diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
-index da51a83b2829..1e7711185ec6 100644
---- a/include/linux/fortify-string.h
-+++ b/include/linux/fortify-string.h
-@@ -93,13 +93,9 @@ extern char *__underlying_strncpy(char *p, const char *q, __kernel_size_t size)
- #if __has_builtin(__builtin_dynamic_object_size)
- #define POS			__pass_dynamic_object_size(1)
- #define POS0			__pass_dynamic_object_size(0)
--#define __struct_size(p)	__builtin_dynamic_object_size(p, 0)
--#define __member_size(p)	__builtin_dynamic_object_size(p, 1)
- #else
- #define POS			__pass_object_size(1)
- #define POS0			__pass_object_size(0)
--#define __struct_size(p)	__builtin_object_size(p, 0)
--#define __member_size(p)	__builtin_object_size(p, 1)
- #endif
+ /**
+@@ -1622,9 +1612,10 @@ static enum ice_ddp_state ice_chk_pkg_compat(struct ice_hw *hw,
+ 					     struct ice_pkg_hdr *ospkg,
+ 					     struct ice_seg **seg)
+ {
+-	struct ice_aqc_get_pkg_info_resp *pkg;
++	DEFINE_FLEX(struct ice_aqc_get_pkg_info_resp, pkg, pkg_info,
++		    ICE_PKG_CNT);
++	u16 size = __struct_size(pkg);
+ 	enum ice_ddp_state state;
+-	u16 size;
+ 	u32 i;
  
- #define __compiletime_lessthan(bounds, length)	(	\
-diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-index f9b60313eaea..7b5cf4a5cd19 100644
---- a/include/linux/overflow.h
-+++ b/include/linux/overflow.h
-@@ -309,4 +309,39 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
- #define struct_size_t(type, member, count)					\
- 	struct_size((type *)NULL, member, count)
+ 	/* Check package version compatibility */
+@@ -1643,15 +1634,8 @@ static enum ice_ddp_state ice_chk_pkg_compat(struct ice_hw *hw,
+ 	}
  
-+/**
-+ * _DEFINE_FLEX() - helper macro for DEFINE_FLEX() family.
-+ * Enables caller macro to pass (different) initializer.
-+ *
-+ * @type: structure type name, including "struct" keyword.
-+ * @name: Name for a variable to define.
-+ * @member: Name of the array member.
-+ * @count: Number of elements in the array; must be compile-time const.
-+ * @initializer: initializer expression (could be empty for no init).
-+ */
-+#define _DEFINE_FLEX(type, name, member, count, initializer)			\
-+	_Static_assert(__builtin_constant_p(count),				\
-+		       "onstack flex array members require compile-time const count"); \
-+	union {									\
-+		u8 bytes[struct_size_t(type, member, count)];			\
-+		type obj;							\
-+	} name##_u initializer;							\
-+	type *name = (type *)&name##_u
+ 	/* Check if FW is compatible with the OS package */
+-	size = struct_size(pkg, pkg_info, ICE_PKG_CNT);
+-	pkg = kzalloc(size, GFP_KERNEL);
+-	if (!pkg)
+-		return ICE_DDP_PKG_ERR;
+-
+-	if (ice_aq_get_pkg_info_list(hw, pkg, size, NULL)) {
+-		state = ICE_DDP_PKG_LOAD_ERROR;
+-		goto fw_ddp_compat_free_alloc;
+-	}
++	if (ice_aq_get_pkg_info_list(hw, pkg, size, NULL))
++		return ICE_DDP_PKG_LOAD_ERROR;
+ 
+ 	for (i = 0; i < le32_to_cpu(pkg->count); i++) {
+ 		/* loop till we find the NVM package */
+@@ -1668,8 +1652,7 @@ static enum ice_ddp_state ice_chk_pkg_compat(struct ice_hw *hw,
+ 		/* done processing NVM package so break */
+ 		break;
+ 	}
+-fw_ddp_compat_free_alloc:
+-	kfree(pkg);
 +
-+/**
-+ * DEFINE_FLEX() - Define an on-stack instance of structure with a trailing
-+ * flexible array member.
-+ *
-+ * @type: structure type name, including "struct" keyword.
-+ * @name: Name for a variable to define.
-+ * @member: Name of the array member.
-+ * @count: Number of elements in the array; must be compile-time const.
-+ *
-+ * Define a zeroed, on-stack, instance of @type structure with a trailing
-+ * flexible array member.
-+ * Use __struct_size(@name) to get compile-time size of it afterwards.
-+ */
-+#define DEFINE_FLEX(type, name, member, count)			\
-+	_DEFINE_FLEX(type, name, member, count, = {})
-+
- #endif /* __LINUX_OVERFLOW_H */
+ 	return state;
+ }
+ 
 -- 
 2.40.1
 
