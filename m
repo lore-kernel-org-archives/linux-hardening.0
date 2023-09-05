@@ -2,140 +2,109 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A4B6C83F3E
-	for <linux-hardening@archiver.kernel.org>; Tue,  5 Sep 2023 19:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D6FCA1008
+	for <linux-hardening@archiver.kernel.org>; Tue,  5 Sep 2023 19:36:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238632AbjIETPW (ORCPT
+        id S235471AbjIETgb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 5 Sep 2023 15:15:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60790 "EHLO
+        Tue, 5 Sep 2023 15:36:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229509AbjIETPV (ORCPT
+        with ESMTP id S237705AbjIETga (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 5 Sep 2023 15:15:21 -0400
-Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C8ACCC3
-        for <linux-hardening@vger.kernel.org>; Tue,  5 Sep 2023 12:14:55 -0700 (PDT)
-Received: by mail-pg1-x532.google.com with SMTP id 41be03b00d2f7-56b2e689968so1506727a12.0
-        for <linux-hardening@vger.kernel.org>; Tue, 05 Sep 2023 12:14:55 -0700 (PDT)
+        Tue, 5 Sep 2023 15:36:30 -0400
+Received: from mail-ot1-x329.google.com (mail-ot1-x329.google.com [IPv6:2607:f8b0:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9827B1B4;
+        Tue,  5 Sep 2023 12:36:13 -0700 (PDT)
+Received: by mail-ot1-x329.google.com with SMTP id 46e09a7af769-6bd0a0a6766so2144808a34.2;
+        Tue, 05 Sep 2023 12:36:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1693941221; x=1694546021; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4TXgvmJLu+K+I9kZcFR3KfNae3WSDNL4+bYanlcn9kg=;
-        b=EHnvBvBc+85KhToee5+QdAwZlObPsALVVB1emcmJfw6BLjwKbxMGDupm5kWtR48XHc
-         4m50b0JYmtEMqAk1Pe90ppixnQjGn0LEoMPICt0QagNsLA8mr3aNRYC5Yit/Q6Mt3nnN
-         PYQO55kIR5bsfJCCkMm7QXu1CNyzzTQlqi6TU=
+        d=gmail.com; s=20221208; t=1693942572; x=1694547372; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eqUQg0zMZLwgq0WsuJJKdJpvD6RBeoiu/NWcTYcjvUo=;
+        b=URL2bNo6rl4EKu8sD1Ajz2zurBQ8zmvPNeq9DmibOpAYbs0ovsHx6+hGlgjCCdfC9s
+         466Ht2DUzzHONXxynjwmDXQsp0U0NAAaTxL5t9TLgRu7rYqucyghPGG0T1djfL8frqZg
+         6dSMNGBpb6sPKpOLdOxuGFv9V0v8VtOhI3tspqc8nc7dLilecxswig7sFTXV9eWsV6rv
+         r/CfrnqRbSWLaBV3BJXQpgaPRuHvnKRmA4Ee38XLB5haL7DeAI/6gz58IlOxM3mf4dYz
+         GbywsmnAUiP9kdMiXp2ML3lXpl/GDUsQn/Zls3i8dZ85MU0caFH4dQW3OlcIigzeEjzJ
+         Yy9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693941221; x=1694546021;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4TXgvmJLu+K+I9kZcFR3KfNae3WSDNL4+bYanlcn9kg=;
-        b=E3A04z31rV1RNJ0qgu+mEEWGuZelaDgcM+wu8AWrZoeUte0OlNMYomP88T3OKWy9Rn
-         ZMhXGYOZ58o8N+GqTnXnMRnpv2Gt0RsjDTgiNh3VRaBzxCVCVlJYPNWndhZZKzensYYw
-         kHzBRRyVcz+b3/r+Vy7tiGDXXAkR7nhEVKKXqLOpEAtAcAuAZlWG02n1NsbNu5AOQ0sv
-         RHlPD28N3bSbwcW+91szmScMdBquGk6fSeY9egd3c4VyIdEnOntNoLd/2vp3g4E2JsAl
-         dqAl2T98cEu6waTKTiHuQbKSpbjADg4ISDKx7g6HnOiKgVfbyt5CcbKzeoUCQsnaI0Tr
-         hryA==
-X-Gm-Message-State: AOJu0YzpriAgiV8mrQsTNAbhaM3zkIbqs6ZwwKF7swyPbkeyAxFjk3yo
-        eSDqGdEEl3T4AL5e5gOJMxqvgA==
-X-Google-Smtp-Source: AGHT+IEUIHzj4gKawoDNkJH8MjO1eQQeCwXX59tDRQILYoHaf4f+zWYoobJ4Rh/dDipZrN1hXry2fQ==
-X-Received: by 2002:a05:6a21:3b46:b0:140:4563:2243 with SMTP id zy6-20020a056a213b4600b0014045632243mr11481977pzb.50.1693941220744;
-        Tue, 05 Sep 2023 12:13:40 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id v23-20020aa78097000000b0063f0068cf6csm9385016pff.198.2023.09.05.12.13.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Sep 2023 12:13:39 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>, Johan Hovold <johan@kernel.org>,
-        Jessica Yu <jeyu@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+        d=1e100.net; s=20221208; t=1693942572; x=1694547372;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eqUQg0zMZLwgq0WsuJJKdJpvD6RBeoiu/NWcTYcjvUo=;
+        b=DL+IeExs/0TpGIWsU2bPSsE4rISvv5za/JMLakPvcJs3qPhRRjbms56MMbmdw+2QEA
+         zIlPk+LUP8kxxn6q30dyX3xXQbkbhKIRY74sNCyWKJxzQiXcj9subo1tIfNjFB6tkUIC
+         XGL7V4rV3II4lVc0o71bVnMw9lIHm7PYZ0Pf9qzSQJwyAR8WAChoaPlg9AMRq7vx6zFc
+         DqyV737QvfA4Y3A5IjHTlid6uu92AgM9n7ErlnF+nwAd1eJl9capzCw9YZIwamU/AbqO
+         n6wqGf9Z+gW8TICRmvRG6W5Gtvjcg0VuKcMs2rt3LzZL5vnpWGMZaE5RDteybzbrOngy
+         9cKw==
+X-Gm-Message-State: AOJu0YwazJA6qhAadgG9MaNFDB4R5rns3dIOYULFBR2WsCspzVmvkHP3
+        XkvEum83wOWIe7c1BSzXkaPb9Cj6IjEOzCMzGHM=
+X-Google-Smtp-Source: AGHT+IG4KsVoswA9/HKK1dHnAhZCIdOaEBAg0DAlX4uU6o6k8YqLFhqbrFcmbyxzXPj4+CgnxAksRCSpL1RP9/6LisU=
+X-Received: by 2002:a05:6358:279e:b0:13a:bfc:8546 with SMTP id
+ l30-20020a056358279e00b0013a0bfc8546mr972132rwb.7.1693942572396; Tue, 05 Sep
+ 2023 12:36:12 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230905191333.never.707-kees@kernel.org>
+In-Reply-To: <20230905191333.never.707-kees@kernel.org>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Tue, 5 Sep 2023 21:36:01 +0200
+Message-ID: <CANiq72=B9s4+4BhezmDPWc6K9tYvhyNpw9uWnRhVdymSUAO_sA@mail.gmail.com>
+Subject: Re: [PATCH] module: Clarify documentation of module_param_call()
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Johan Hovold <johan@kernel.org>, Jessica Yu <jeyu@kernel.org>,
+        Sagi Grimberg <sagi@grimberg.me>,
         Nick Desaulniers <ndesaulniers@gooogle.com>,
         Miguel Ojeda <ojeda@kernel.org>, Joe Perches <joe@perches.com>,
         Azeem Shaikh <azeemshaikh38@gmail.com>,
         linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH] module: Clarify documentation of module_param_call()
-Date:   Tue,  5 Sep 2023 12:13:37 -0700
-Message-Id: <20230905191333.never.707-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
-MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2525; i=keescook@chromium.org;
- h=from:subject:message-id; bh=2gl+o4SRoHaQVcttgjZhYq0Is37kI1hlnwzbQN5zDGg=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBk933hZ3IhiyCBUuiGWz5YX9hla+CnKgiWgcUhX
- QCafDdP062JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZPd94QAKCRCJcvTf3G3A
- JoQpEACXWjlYTg6OiUiUpym5wEwvwnUewYnpahiHOhonlgfgSaPT8XpFDWuExVJs40vbV7V5R7Q
- RcXJBxgn/8VTQXvwk02VLL/RYODT0LWwCxJMlQGCmtoQIHzFoedX748TciV2ThFfW4+nSfg26HL
- 1vCjvpHtVYotnDFevFoC3H4WUa7BSVI7TPobreLBJ+Lx6CdNqUvjDmKf9fQlaA1TEI6oHYNEojj
- BCjhzwceuYX67/ulaePn7AaH11onT1C/B5exrHK+RaK21uYxQrf4lvadp+l7rOzfryGGSiZQJ/d
- NhafNovhIRVs3zfKSW3KJH9cKHg2qH5atIzIcnL1L2BwTcleupVO2kIFqO8Tu3xbDrXFPLc02dp
- kxUaNSajibzTD5jhRgoicMsUOnfJWgYG/EsHyAP0XtEpCkYa7gizT3WAgryhp/vio6S4u0FD0wg
- 7e8A0IRcsHUdyjawKOG0lgDZk6Mx0G7zCjYlfsr0NAhbMGL6PvA+/WXdwQhHN020W2SCpbYSqud
- uPt+95gGr7kgNAB4Xsxbw17ZWrcoplrhc/Eh5TqMNAFrox0zrGzwZgatT+nEyo8jQoFfahC7uiL
- 6q3XJQuPPl8qLfwo4ediBtsk6aloab94SotaUkjmvsb0tBgWrMQmGZd/ivfkYIxO2zDUtxOr6F3
- rVzJura wS6eE5Eg==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Commit 9bbb9e5a3310 ("param: use ops in struct kernel_param, rather than
-get and set fns directly") added the comment that module_param_call()
-was deprecated, during a large scale refactoring to bring sanity to type
-casting back then. In 2017 following more cleanups, it became useful
-against as it wraps a common pattern of creating an ops struct for a
-given get/set pair:
+On Tue, Sep 5, 2023 at 9:13=E2=80=AFPM Kees Cook <keescook@chromium.org> wr=
+ote:
+>
+> Commit 9bbb9e5a3310 ("param: use ops in struct kernel_param, rather than
+> get and set fns directly") added the comment that module_param_call()
+> was deprecated, during a large scale refactoring to bring sanity to type
+> casting back then. In 2017 following more cleanups, it became useful
+> against as it wraps a common pattern of creating an ops struct for a
 
-  b2f270e87473 ("module: Prepare to convert all module_param_call() prototypes")
-  ece1996a21ee ("module: Do not paper over type mismatches in module_param_call()")
+s/against/again/
 
-        static const struct kernel_param_ops __param_ops_##name = \
-                { .flags = 0, .set = _set, .get = _get }; \
-        __module_param_call(MODULE_PARAM_PREFIX, \
-                            name, &__param_ops_##name, arg, perm, -1, 0)
+> Many users of module_param_cb() appear to be almost universally
+> open-coding the same thing that module_param_call() does now. Don't
+> discourage[1] people from using module_param_call() but clarifying the
+> comment: module_param_cb() is useful if you repeatedly use the same pair
+> of get/set functions.
 
-        __module_param_call(MODULE_PARAM_PREFIX, name, ops, arg, perm, -1, 0)
+s/clarifying/clarify/
 
-Many users of module_param_cb() appear to be almost universally
-open-coding the same thing that module_param_call() does now. Don't
-discourage[1] people from using module_param_call() but clarifying the
-comment: module_param_cb() is useful if you repeatedly use the same pair
-of get/set functions.
+I sampled some, and indeed many define the ops struct.
 
-[1] https://lore.kernel.org/lkml/202308301546.5C789E5EC@keescook/
+> [1] https://lore.kernel.org/lkml/202308301546.5C789E5EC@keescook/
 
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Johan Hovold <johan@kernel.org>
-Cc: Jessica Yu <jeyu@kernel.org>
-Cc: Sagi Grimberg <sagi@grimberg.me>
-Cc: Nick Desaulniers <ndesaulniers@gooogle.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>
-Cc: Joe Perches <joe@perches.com>
-Cc: Azeem Shaikh <azeemshaikh38@gmail.com>
-Cc: linux-modules@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-Luis, I note that include/linux/moduleparam.h isn't in the MAINTAINERS
-file pattern. Perhaps you want to use include/linux/module*.h?
----
- include/linux/moduleparam.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Link: tag here? It is actually quite nicely explained there.
 
-diff --git a/include/linux/moduleparam.h b/include/linux/moduleparam.h
-index 962cd41a2cb5..d32450583182 100644
---- a/include/linux/moduleparam.h
-+++ b/include/linux/moduleparam.h
-@@ -293,7 +293,7 @@ struct kparam_array
- 	= { __param_str_##name, THIS_MODULE, ops,			\
- 	    VERIFY_OCTAL_PERMISSIONS(perm), level, flags, { arg } }
- 
--/* Obsolete - use module_param_cb() */
-+/* For repeated _set & _get usage use module_param_cb() */
- #define module_param_call(name, _set, _get, arg, perm)			\
- 	static const struct kernel_param_ops __param_ops_##name =	\
- 		{ .flags = 0, .set = _set, .get = _get };		\
--- 
-2.34.1
+> -/* Obsolete - use module_param_cb() */
+> +/* For repeated _set & _get usage use module_param_cb() */
 
+Perhaps add "instead"? Or perhaps add a bit more detail, something like:
+
+    Useful for describing a set/get pair used only once (i.e. for this
+parameter). For repeated set/get pairs (i.e. the same kernel_param_ops
+struct), use module_param_cb() instead.
+
+Reviewed-by: Miguel Ojeda <ojeda@kernel.org>
+
+Cheers,
+Miguel
