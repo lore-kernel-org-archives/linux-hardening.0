@@ -2,109 +2,131 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D6FCA1008
-	for <linux-hardening@archiver.kernel.org>; Tue,  5 Sep 2023 19:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 020AACA1001
+	for <linux-hardening@archiver.kernel.org>; Tue,  5 Sep 2023 20:11:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235471AbjIETgb (ORCPT
+        id S234672AbjIEULF (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 5 Sep 2023 15:36:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46688 "EHLO
+        Tue, 5 Sep 2023 16:11:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237705AbjIETga (ORCPT
+        with ESMTP id S231374AbjIEULE (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 5 Sep 2023 15:36:30 -0400
-Received: from mail-ot1-x329.google.com (mail-ot1-x329.google.com [IPv6:2607:f8b0:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9827B1B4;
-        Tue,  5 Sep 2023 12:36:13 -0700 (PDT)
-Received: by mail-ot1-x329.google.com with SMTP id 46e09a7af769-6bd0a0a6766so2144808a34.2;
-        Tue, 05 Sep 2023 12:36:13 -0700 (PDT)
+        Tue, 5 Sep 2023 16:11:04 -0400
+Received: from mail-oa1-x4a.google.com (mail-oa1-x4a.google.com [IPv6:2001:4860:4864:20::4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAD7C194
+        for <linux-hardening@vger.kernel.org>; Tue,  5 Sep 2023 13:10:31 -0700 (PDT)
+Received: by mail-oa1-x4a.google.com with SMTP id 586e51a60fabf-1cc7407e507so3311849fac.3
+        for <linux-hardening@vger.kernel.org>; Tue, 05 Sep 2023 13:10:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693942572; x=1694547372; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eqUQg0zMZLwgq0WsuJJKdJpvD6RBeoiu/NWcTYcjvUo=;
-        b=URL2bNo6rl4EKu8sD1Ajz2zurBQ8zmvPNeq9DmibOpAYbs0ovsHx6+hGlgjCCdfC9s
-         466Ht2DUzzHONXxynjwmDXQsp0U0NAAaTxL5t9TLgRu7rYqucyghPGG0T1djfL8frqZg
-         6dSMNGBpb6sPKpOLdOxuGFv9V0v8VtOhI3tspqc8nc7dLilecxswig7sFTXV9eWsV6rv
-         r/CfrnqRbSWLaBV3BJXQpgaPRuHvnKRmA4Ee38XLB5haL7DeAI/6gz58IlOxM3mf4dYz
-         GbywsmnAUiP9kdMiXp2ML3lXpl/GDUsQn/Zls3i8dZ85MU0caFH4dQW3OlcIigzeEjzJ
-         Yy9Q==
+        d=google.com; s=20221208; t=1693944623; x=1694549423; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=4pmzv+LLCuNutmWDx5XVz6vIet3weuj1okr6x6iIDqs=;
+        b=TPU6mE8hSKglsyJ4Nxkp5or/4zoZ5VLI2BO/lYaPBoQ7YKnDiXYRSojEB+RYItZQN8
+         AHBoIHmcYPUJRBKEnulPf40GcFHIC22nUzTIJjPlQyY5b52wFm51WQxVgl1tChM7Wglw
+         UBWmKRkOftMZgqVJ6pCsekrCRQgSIVFjXbEghL8FDKin5IGUR3KNDKgnIHi3dlH9QVvX
+         60CWj5JEymFV9um6Mfz73g/n8Rs8Wi5UR0buM6ohElkLFhmksKxIBOIvXFw+gO4vb66X
+         GgS9tE3CKoF0DhU+XuatGRzvztaJ5MRjwW9/Zs2W0/44BJ3s1ackmB/WdWiQcPqTZ7HE
+         harg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693942572; x=1694547372;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eqUQg0zMZLwgq0WsuJJKdJpvD6RBeoiu/NWcTYcjvUo=;
-        b=DL+IeExs/0TpGIWsU2bPSsE4rISvv5za/JMLakPvcJs3qPhRRjbms56MMbmdw+2QEA
-         zIlPk+LUP8kxxn6q30dyX3xXQbkbhKIRY74sNCyWKJxzQiXcj9subo1tIfNjFB6tkUIC
-         XGL7V4rV3II4lVc0o71bVnMw9lIHm7PYZ0Pf9qzSQJwyAR8WAChoaPlg9AMRq7vx6zFc
-         DqyV737QvfA4Y3A5IjHTlid6uu92AgM9n7ErlnF+nwAd1eJl9capzCw9YZIwamU/AbqO
-         n6wqGf9Z+gW8TICRmvRG6W5Gtvjcg0VuKcMs2rt3LzZL5vnpWGMZaE5RDteybzbrOngy
-         9cKw==
-X-Gm-Message-State: AOJu0YwazJA6qhAadgG9MaNFDB4R5rns3dIOYULFBR2WsCspzVmvkHP3
-        XkvEum83wOWIe7c1BSzXkaPb9Cj6IjEOzCMzGHM=
-X-Google-Smtp-Source: AGHT+IG4KsVoswA9/HKK1dHnAhZCIdOaEBAg0DAlX4uU6o6k8YqLFhqbrFcmbyxzXPj4+CgnxAksRCSpL1RP9/6LisU=
-X-Received: by 2002:a05:6358:279e:b0:13a:bfc:8546 with SMTP id
- l30-20020a056358279e00b0013a0bfc8546mr972132rwb.7.1693942572396; Tue, 05 Sep
- 2023 12:36:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230905191333.never.707-kees@kernel.org>
-In-Reply-To: <20230905191333.never.707-kees@kernel.org>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Tue, 5 Sep 2023 21:36:01 +0200
-Message-ID: <CANiq72=B9s4+4BhezmDPWc6K9tYvhyNpw9uWnRhVdymSUAO_sA@mail.gmail.com>
-Subject: Re: [PATCH] module: Clarify documentation of module_param_call()
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Johan Hovold <johan@kernel.org>, Jessica Yu <jeyu@kernel.org>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Nick Desaulniers <ndesaulniers@gooogle.com>,
-        Miguel Ojeda <ojeda@kernel.org>, Joe Perches <joe@perches.com>,
-        Azeem Shaikh <azeemshaikh38@gmail.com>,
-        linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        d=1e100.net; s=20221208; t=1693944623; x=1694549423;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4pmzv+LLCuNutmWDx5XVz6vIet3weuj1okr6x6iIDqs=;
+        b=KpHta2HUXDY/UKCwc6UXOEJx3zaaekLwgiQlZmara8gPeksAkLCQEMbNUc57b4fnAX
+         ww3wyqQre0YThP19fy2wvqnmDrHc+mauOAA90Z7LbpdPwSwvQeX7qdTY8+pVz0dzQKSr
+         Uv+bXlooGQVW6Nu/XJYHpEVwmzmQHCwWhQdHj9Oi2TCm2Zt3Btgxr/ylM1H+1GkqqATe
+         7ABuSutx3PmqTrzBseHrpbzBjpuzxgN7IXOAvA2V+/VXkpJWW/Ni06zgR6PQaqPAJZPP
+         4pi6WL2xAzTKV+aEnnZHuNprB/3eVjC4WCMGvnxvuN+gQcIyc3JqwYkmo5q5WavZAFz2
+         /doQ==
+X-Gm-Message-State: AOJu0YwsjKptfeiFpEfdgczDosgeLEPwFFPqMTlnzDkw7qUmAOuTVG6I
+        8OZvMCJhTa1Kj1f0AWlsiMp9mR6ErAskEFcm4A==
+X-Google-Smtp-Source: AGHT+IH0UAhU/aEXaLYwKV529bYDq2+IrLYFkojxcQXZZrpNvgRPipYWy3B0aEIwkrHJxkLEyoHB42gmo8sADZGiSQ==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a05:6870:98b3:b0:1c6:7d66:d47 with
+ SMTP id eg51-20020a05687098b300b001c67d660d47mr350044oab.3.1693944623730;
+ Tue, 05 Sep 2023 13:10:23 -0700 (PDT)
+Date:   Tue, 05 Sep 2023 20:10:21 +0000
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAC2L92QC/33NSwqDMBCA4atI1k0xDzXtqvcoXeQx0UBrJJFQE
+ e/e6MpS6WbgH5hvZhQhOIjoWswoQHLR+T4HPxVId7JvATuTG9GSslKQEscx9HqYsAy6y+NVc0w
+ sM4wKZS5KoHw4BLDuvaH3R+7OxdGHafuRyLr9yyWCCbZ1Y1ktKm1qfmu9b59w1v6FVi/RvUEOD ZoNJQUHqayVRv0YbGewY4NlQxulCDQgKyBfxrIsH3BtrsE9AQAA
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1693944622; l=2237;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=t/5OxQrRWKo7ANfBmo93SLcVLgmcGRCwdycJFf2MN74=; b=3u23MHg/jPWsU7x0jAafSrxxG4WZqrLPGQs34EinIy6nacmqUYB0HuRg2pkyCwTWc6oyA62E7
+ wNCh34KUVbPDkbS3QVngsClDPBUK9kMKubaBgFgZcoSnQY/jTofVttO
+X-Mailer: b4 0.12.3
+Message-ID: <20230905-strncpy-arch-arm64-v4-1-bc4b14ddfaef@google.com>
+Subject: [PATCH v4] arm64/sysreg: refactor deprecated strncpy
+From:   Justin Stitt <justinstitt@google.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mostafa Saleh <smostafa@google.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        linux-hardening@vger.kernel.org,
+        Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Sep 5, 2023 at 9:13=E2=80=AFPM Kees Cook <keescook@chromium.org> wr=
-ote:
->
-> Commit 9bbb9e5a3310 ("param: use ops in struct kernel_param, rather than
-> get and set fns directly") added the comment that module_param_call()
-> was deprecated, during a large scale refactoring to bring sanity to type
-> casting back then. In 2017 following more cleanups, it became useful
-> against as it wraps a common pattern of creating an ops struct for a
+strncpy is deprecated [1] and should not be used if the src string is
+not NUL-terminated.
 
-s/against/again/
+When dealing with `cmdline` we are counting the number of characters
+until a space then copying these over into `buf`. Let's not use any of
+the str*() functions since the src string is not necessarily NUL-terminated.
 
-> Many users of module_param_cb() appear to be almost universally
-> open-coding the same thing that module_param_call() does now. Don't
-> discourage[1] people from using module_param_call() but clarifying the
-> comment: module_param_cb() is useful if you repeatedly use the same pair
-> of get/set functions.
+Prefer `memcpy()` alongside a forced NUL-termination as it more
+accurately describes what is going on within this function, i.e: copying
+from non NUL-terminated buffer into a NUL-terminated buffer.
 
-s/clarifying/clarify/
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Suggested-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Changes in v4:
+- rebase onto mainline (thanks Will)
+- Link to v3: https://lore.kernel.org/r/20230831-strncpy-arch-arm64-v3-1-cdbb1e7ea5e1@google.com
 
-I sampled some, and indeed many define the ops struct.
+Changes in v3:
+- Fix faulty logic and use memcpy over strscpy (thanks Mostafa and Kees)
+- Use '\0' instead of 0 to make it abundantly clear that `buf` is a NUL-terminated string
+- Link to v2: https://lore.kernel.org/r/20230811-strncpy-arch-arm64-v2-1-ba84eabffadb@google.com
 
-> [1] https://lore.kernel.org/lkml/202308301546.5C789E5EC@keescook/
+Changes in v2:
+- Utilize return value from strscpy and check for truncation (thanks Kees)
+- Link to v1: https://lore.kernel.org/r/20230810-strncpy-arch-arm64-v1-1-f67f3685cd64@google.com
+---
+ arch/arm64/kernel/idreg-override.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Link: tag here? It is actually quite nicely explained there.
+diff --git a/arch/arm64/kernel/idreg-override.c b/arch/arm64/kernel/idreg-override.c
+index 2fe2491b692c..3addc09f8746 100644
+--- a/arch/arm64/kernel/idreg-override.c
++++ b/arch/arm64/kernel/idreg-override.c
+@@ -263,8 +263,8 @@ static __init void __parse_cmdline(const char *cmdline, bool parse_aliases)
+ 			return;
+ 
+ 		len = min(len, ARRAY_SIZE(buf) - 1);
+-		strncpy(buf, cmdline, len);
+-		buf[len] = 0;
++		memcpy(buf, cmdline, len);
++		buf[len] = '\0';
+ 
+ 		if (strcmp(buf, "--") == 0)
+ 			return;
 
-> -/* Obsolete - use module_param_cb() */
-> +/* For repeated _set & _get usage use module_param_cb() */
+---
+base-commit: 2dde18cd1d8fac735875f2e4987f11817cc0bc2c
+change-id: 20230810-strncpy-arch-arm64-1f3d328bd9b8
 
-Perhaps add "instead"? Or perhaps add a bit more detail, something like:
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
 
-    Useful for describing a set/get pair used only once (i.e. for this
-parameter). For repeated set/get pairs (i.e. the same kernel_param_ops
-struct), use module_param_cb() instead.
-
-Reviewed-by: Miguel Ojeda <ojeda@kernel.org>
-
-Cheers,
-Miguel
