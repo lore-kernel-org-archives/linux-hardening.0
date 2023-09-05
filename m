@@ -2,39 +2,39 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1A7CA0FE2
-	for <linux-hardening@archiver.kernel.org>; Tue,  5 Sep 2023 16:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 139FAC83F2C
+	for <linux-hardening@archiver.kernel.org>; Tue,  5 Sep 2023 16:23:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233249AbjIEQXn (ORCPT
+        id S242687AbjIEQXo (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 5 Sep 2023 12:23:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52776 "EHLO
+        Tue, 5 Sep 2023 12:23:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344760AbjIEDxi (ORCPT
+        with ESMTP id S1344800AbjIEDzh (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 4 Sep 2023 23:53:38 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09B49CCF
-        for <linux-hardening@vger.kernel.org>; Mon,  4 Sep 2023 20:53:31 -0700 (PDT)
+        Mon, 4 Sep 2023 23:55:37 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC85718C
+        for <linux-hardening@vger.kernel.org>; Mon,  4 Sep 2023 20:55:33 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 89A306115C
-        for <linux-hardening@vger.kernel.org>; Tue,  5 Sep 2023 03:53:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5106C433C7;
-        Tue,  5 Sep 2023 03:53:30 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4878461055
+        for <linux-hardening@vger.kernel.org>; Tue,  5 Sep 2023 03:55:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69398C433C8;
+        Tue,  5 Sep 2023 03:55:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693886011;
-        bh=2Tt27aPoIM/AL822212rYJakGr4phaOlrKxLY65dfRc=;
+        s=k20201202; t=1693886132;
+        bh=lLVUEbQlWPdqOrLlxxs6XsBseI0buyWLU4uLdO6rjow=;
         h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-        b=ZE8jq185aVpuTpfi+0B6tJcOKYA00muUdT5zw+lm6Nn3hB14/6s02yAKZ/lc6rjqi
-         ATB3gPKpaXlRhKC1d0hYGbjMZ71NJYGc7RZnLG29md81GpQHJQ0MvC6tuuN/V4FAZF
-         S9v/ngEvOzn5Kpc90pZhsc7oWpem4pK9LEWBW1pYBAGBqp6APYA2KvzV7MgHJCITrx
-         D5s17RmA9zBIUoQAwuEu3nOoLcJfv7pnq+WgYo3yYA3r8Xqi6us9LyztbH740mYcKI
-         F3AknOE6u+9xXvEIusbCD3PsQmDi2JjYgfoCHDU8XPE4/4B0PQcqqXHU2/qFf8qB62
-         L0thO6iB7hRDg==
-Date:   Mon, 04 Sep 2023 20:53:27 -0700
+        b=LDgmblXsH4okbJodYbvPlniFpqN89lQ3SXmqVe4Sou8FN9xKjLrSFjBDGFuoSKyI6
+         IOEaFE6uB3BhB3gwDFcvOp2WwwJYxrwWvCHIdNjvOx7zBWzGPyYtV4INNUW38Ows7m
+         gdTtPqDbO6Sb0BX1eZ3TXqki38Amve8jq4HFpqlV/UTCPVXncFTYPZ20TDabvSqpsF
+         48tGKtjsEjME/ZI+OxkaSBZIcyOqutkOyg6WqtgrOWemq2jkQ24TMbAG8oauYDMGig
+         E5TSxZlBEuHqoJvBReR0SjCNZCPvLClNBKhGR3+lZdFSteZT9RYnle6kdk+uV05pDL
+         2Ro3z09UFvMFw==
+Date:   Mon, 04 Sep 2023 20:55:29 -0700
 From:   Kees Cook <kees@kernel.org>
 To:     Przemek Kitszel <przemyslaw.kitszel@intel.com>,
         netdev@vger.kernel.org
@@ -46,11 +46,11 @@ CC:     Kees Cook <keescook@chromium.org>,
         Jakub Kicinski <kuba@kernel.org>,
         Anthony Nguyen <anthony.l.nguyen@intel.com>,
         David Laight <David.Laight@ACULAB.COM>
-Subject: Re: [RFC net-next v4 0/7] introduce DEFINE_FLEX() macro
+Subject: =?US-ASCII?Q?Re=3A_=5BRFC_net-next_v4_1/7=5D_overflow=3A_?= =?US-ASCII?Q?add_DEFINE=5FFLEX=28=29_for_on-stack_allocs?=
 User-Agent: K-9 Mail for Android
-In-Reply-To: <20230904123107.116381-1-przemyslaw.kitszel@intel.com>
-References: <20230904123107.116381-1-przemyslaw.kitszel@intel.com>
-Message-ID: <78830434-CCE0-4DF5-829C-F0D78AE35E79@kernel.org>
+In-Reply-To: <20230904123107.116381-2-przemyslaw.kitszel@intel.com>
+References: <20230904123107.116381-1-przemyslaw.kitszel@intel.com> <20230904123107.116381-2-przemyslaw.kitszel@intel.com>
+Message-ID: <7AB970A3-883F-49A4-BBCD-23E2CD1E869C@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain;
  charset=utf-8
@@ -59,19 +59,33 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On September 4, 2023 5:31:00 AM PDT, Przemek Kitszel <przemyslaw=2Ekitszel@=
+On September 4, 2023 5:31:01 AM PDT, Przemek Kitszel <przemyslaw=2Ekitszel@=
 intel=2Ecom> wrote:
->Add DEFINE_FLEX() macro, that helps on-stack allocation of structures
->with trailing flex array member=2E
->Expose __struct_size() macro which reads size of data allocated
->by DEFINE_FLEX()=2E
->
->Accompany new macros introduction with actual usage,
->in the ice driver - hence targeting for netdev tree
->- please me know if it is best approach here?
+> [=2E=2E=2E]
+>+/**
+>+ * _DEFINE_FLEX() - helper macro for DEFINE_FLEX() family=2E
+>+ * Enables caller macro to pass (different) initializer=2E
+>+ *
+>+ * @type: structure type name, including "struct" keyword=2E
+>+ * @name: Name for a variable to define=2E
+>+ * @member: Name of the array member=2E
+>+ * @count: Number of elements in the array; must be compile-time const=
+=2E
+>+ * @initializer: initializer expression (could be empty for no init)=2E
+>+ */
+>+#define _DEFINE_FLEX(type, name, member, count, initializer)			\
+>+	_Static_assert(__builtin_constant_p(count),				\
+>+		       "onstack flex array members require compile-time const count");=
+ \
+>+	union {									\
+>+		u8 bytes[struct_size_t(type, member, count)];			\
+>+		type obj;							\
+>+	} name##_u initializer;							\
+>+	type *name =3D (type *)&name##_u
 
-Yes, I'm fine with this=2E The changes to the string headers are relativel=
-y localized=2E
+Yeah, I like this! This will make it easy to add __counted_by initializers=
+ when we have the need in the future=2E
+
 
 
 --=20
