@@ -2,104 +2,120 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A47E1C83F33
-	for <linux-hardening@archiver.kernel.org>; Mon,  4 Sep 2023 18:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC28CA0FF3
+	for <linux-hardening@archiver.kernel.org>; Tue,  5 Sep 2023 16:23:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237538AbjIDSRG (ORCPT
+        id S233304AbjIEQX0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 4 Sep 2023 14:17:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44812 "EHLO
+        Tue, 5 Sep 2023 12:23:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237891AbjIDSRF (ORCPT
+        with ESMTP id S1347245AbjIEE1h (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 4 Sep 2023 14:17:05 -0400
-Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 383C91A7
-        for <linux-hardening@vger.kernel.org>; Mon,  4 Sep 2023 11:16:59 -0700 (PDT)
-Received: from eig-obgw-6010a.ext.cloudfilter.net ([10.0.30.248])
-        by cmsmtp with ESMTP
-        id czdPqeE8Cez0CdE7rqduze; Mon, 04 Sep 2023 18:16:39 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with ESMTPS
-        id dE89qCOYwWPjkdE89qsXAX; Mon, 04 Sep 2023 18:16:57 +0000
-X-Authority-Analysis: v=2.4 cv=ea0uwpIH c=1 sm=1 tr=0 ts=64f61f19
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=zNV7Rl7Rt7sA:10 a=wYkD_t78qR0A:10
- a=bRdHEh57seZ_zvvW85sA:9 a=QEXdDO2ut3YA:10
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=fp0gGJutDvvqPrc/IeMPV4i3FiQlzr/L5X+L2PJVi7w=; b=H6Q6IGMbDMnt49NLKY5YKcW6++
-        1ab9OGOS1JbVE/fi8YpVaRUuw3eCsKZBQuEdRZjrTlakRvNL9dmkQUuZkFhHgsSdciwPkqy85xKUI
-        prO5X2m9wutCplPjC3gW9D4hnn5ZK+n0+I9G4byNnuCkNBipgSc+SA7iOGKNM1qmY6ZOszQDXolcQ
-        2HL0Pk0lfDTeu7MNYHsJywJSvHk49XA42toIAaCePkQryejmj4/nLlUKwhLSVHaUGoVX7abThZ0Vs
-        9gsruAGt87y+SX/IkMvDM2ItzBQfrJtbwAxLHj75l9aWMhKzYR6gvTW0KUtCb0NuGBtFXIgWHcRpZ
-        t2t1jt2A==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:50842 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.96)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1qdE88-001uk4-1P;
-        Mon, 04 Sep 2023 13:16:56 -0500
-Message-ID: <16805a62-8c8d-2a83-2ea0-da0f1a33a625@embeddedor.com>
-Date:   Mon, 4 Sep 2023 12:17:51 -0600
+        Tue, 5 Sep 2023 00:27:37 -0400
+Received: from mail-oa1-x2d.google.com (mail-oa1-x2d.google.com [IPv6:2001:4860:4864:20::2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 458E91B6
+        for <linux-hardening@vger.kernel.org>; Mon,  4 Sep 2023 21:27:34 -0700 (PDT)
+Received: by mail-oa1-x2d.google.com with SMTP id 586e51a60fabf-1d0d3d40124so1777642fac.3
+        for <linux-hardening@vger.kernel.org>; Mon, 04 Sep 2023 21:27:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1693888053; x=1694492853; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=3F4jq9KwUWrcSg6FlwSKwra3Pf1UGD13i4S70FgA9Lw=;
+        b=bC5LvRiGFOuaQpY1bXD2nOL9CazAMIaoAWj4NrsfW8CpbFCkmb2v/YBLag96k42vUR
+         fwlHjmy1+duKqkO6hkiD7njggUtXIhzi/U4ZbP3OJp4WqBkUZ6qqzUo6uATGhAI03Zaq
+         V8xIkPuhLgbp2FkAelss3Y/T/Aq0/DHxMQcQdx+lqn+24vBkw1WwbISPLtZmVmfNKEWp
+         MEn6Gj798JOTKfIssgiI0l41DbVxHegEaEhUWXDAxaFRTwR+lU3mbWnTJm/Iq650HPFw
+         o3Z+0wuAzwytpx2gfcASQbmAvtZlzUVRQm23g4pDzdBNnDXfAGG67DXi5UPSQ8t7Nbog
+         axgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693888053; x=1694492853;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3F4jq9KwUWrcSg6FlwSKwra3Pf1UGD13i4S70FgA9Lw=;
+        b=b1DoJTaKjbB3b/Mksn/klfstQXoQHk9yf3/2cgfe1jyWkGfpjJvOWm5/CnfzKrSjUf
+         miSBueb/LkSbU4bY1X/WwBvBzeYXUOEIv3P79OyUwTEF/3XtzTl4ZrUXyBREizQcur+I
+         lTFdLslMS0JY2SiKJg8OXz3ki6l0rm7Cugh2t6+J7q55xHU9YwmWqnMljmFjeMklonL0
+         sRk2cRoaZuaPcU5BtKY3vxpdW0MyLzvqSEqqwlRkEL6++FtmaWkgV1ailXu3reLGV515
+         wCg3aPGtaNSvCaQ8XLZ4bQ36Qr7Z0Jp/YauY1A990ybI/drixBMtTQsZKaQmJkzP6OMP
+         krEQ==
+X-Gm-Message-State: AOJu0Yy+pvYUt1wW5tTDvsfchpPiw22bNnTVtNAjbS4RxAqFatEQOzS6
+        djjyuvHi9smDhlH9mE95p+j3wxEgFBgpUIVKxDCryBmtLwDbiw==
+X-Google-Smtp-Source: AGHT+IF3U4hHgPu/FA6vr0+e2wIG1mHSNjp1ebd64tSjKuexdq8XG4SLikKT/CAw8CCx7wybhCsB4FXU3umS3wcIwqY=
+X-Received: by 2002:a05:6870:168b:b0:1be:ec3b:3ae1 with SMTP id
+ j11-20020a056870168b00b001beec3b3ae1mr15383300oae.50.1693888053241; Mon, 04
+ Sep 2023 21:27:33 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v2 1/3] wifi: mwifiex: Fix tlv_buf_left calculation
-To:     Kalle Valo <kvalo@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Brian Norris <briannorris@chromium.org>,
-        Amitkumar Karwar <akarwar@marvell.com>,
-        Xinming Hu <huxm@marvell.com>, Dan Williams <dcbw@redhat.com>,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <06668edd68e7a26bbfeebd1201ae077a2a7a8bce.1692931954.git.gustavoars@kernel.org>
- <169384778670.3420994.16227760665746324390.kvalo@kernel.org>
-Content-Language: en-US
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <169384778670.3420994.16227760665746324390.kvalo@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1qdE88-001uk4-1P
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:50842
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org:  HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfGtOWI0qgpII2jIEGDaLn12aDQHGt4Q0yN9JLXOYxrFeucqyAuusOBX8PH4LX/ROseJLJH9ac8cEJByQ8xuuqIB+nh4xD9oNyN37BWYNG8Bq/e3qqf0m
- s5s+4jbV5BYoz11XsB5jgTYfAtxxwt3okLxaT+h1e0kjKTevt+UNSwKeYNvNK8aCzza1nUj7HPilNqtilbFlKYqf23RGyVE2re/wD2w2K1JtkJ2Ylutu5ZkZ
+From:   Dan Farrell <djfarrell@gmail.com>
+Date:   Tue, 5 Sep 2023 14:27:22 +1000
+Message-ID: <CAKO8emZtcfPk4PvFXkvV85Jx-cHh0Qq0R8bfpW1a97E+1BQXQg@mail.gmail.com>
+Subject: Software based row hammer mitigation for systems with memory error detection
+To:     linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+Hi!
 
-> 3 patches applied to wireless.git, thanks.
+As per the subject I have an idea for a software based mitigation for Row
+Hammer type attacks, in particular on systems which use ECC or have other error
+detection mechanisms.
 
-Awesome. :)
+I was just hoping to get the idea out there to see if there is any interest in
+putting it in the kernel.
 
-> 
-> eec679e4ac5f wifi: mwifiex: Fix tlv_buf_left calculation
-> c7847241de28 wifi: mwifiex: Replace one-element array with flexible-array member in struct mwifiex_ie_types_rxba_sync
-> d5a93b7d2877 wifi: mwifiex: Sanity check tlv_len and tlv_bitmap_len
-> 
+The idea is pretty simple, although I imagine implementation may be a pain.
 
-Thanks!
---
-Gustavo
+ECCploit[1] uses a method of making a single bit error present in a page, and
+then causing a read of that page and then observing that reading the page has
+higher latency (due to ECC processing).
+
+However, the kernel, upon detecting an ECC error, could copy that physical page
+to another region/page, and remap the virtual page to point to the new physical
+region/page.
+
+So, further Row Hammering will be off target.
+
+This could also be thought of like how a non-volatile drive will detect faulty
+(or nearly faulty) blocks and use the set aside space on the drive for the
+block in question.
+
+Anyway, if this is a bad idea that's fine too. Full disclosure I did a noob
+thing and initially sent this message to the security mailing list - but I did
+get a reply from Linus who I think has reservations about such a technique:
+
+On Tue, 5 Sept 2023 at 03:54, Linus Torvalds
+<torvalds@linuxfoundation.org> wrote:
+>
+> On Mon, 4 Sept 2023 at 00:39, Dan Farrell <djfarrell@gmail.com> wrote:
+> >
+> > However, the kernel, upon detecting an ECC error, could copy that physical page
+> > to another region/page, and remap the virtual page to point to the new physical
+> > region/page.
+>
+> Honestly, any hardware that makes correctable ECC errors synchronous
+> is already broken.
+>
+> ECCploit is just one example of how broken that approach is, but it's
+> just broken in general. The kernel doesn't want an immediate "you had
+> a correctable error" machine check, and in fact in many situations
+> cannot sanely deal with such a thing - very much including doing major
+> surgery like moving pages around for it.
+>
+> Realistically, what we want for rowhammer is *detection* that
+> hammering is going on. The exploit will take long enough that once you
+> can detect it, the fix is to stop the exploit, not to try to do
+> anything fancier.
+
+Please let me know if it would be useful in the kernel. I could probably
+eventually implement it (supposing it is implementable), but my only kernel
+hacking experience is with drivers so I would be facing a steep learning
+curve.
+
+Regards,
+
+Dan Farrell
+
+[1] https://www.vusec.net/projects/eccploit/
