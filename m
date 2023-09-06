@@ -2,62 +2,53 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E397EB8FD8
-	for <linux-hardening@archiver.kernel.org>; Wed,  6 Sep 2023 14:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A0A7EE14A5
+	for <linux-hardening@archiver.kernel.org>; Wed,  6 Sep 2023 15:07:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241434AbjIFOJO (ORCPT
+        id S241859AbjIFPIA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 6 Sep 2023 10:09:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56148 "EHLO
+        Wed, 6 Sep 2023 11:08:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232210AbjIFOJO (ORCPT
+        with ESMTP id S238930AbjIFPIA (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 6 Sep 2023 10:09:14 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CE0FA9;
-        Wed,  6 Sep 2023 07:09:10 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id ffacd0b85a97d-31c5cac3ae2so3183818f8f.3;
-        Wed, 06 Sep 2023 07:09:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694009349; x=1694614149; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=u9W/IcTlMNGZK9Ps/aVx0GxYtJz9nPGjUgurMbWW3dw=;
-        b=QJfHpDJnpEUBAaI/6+tZGy1fH1WDgOp3YKCz/n6ngCpUQlV8NvDwgJHuCan5vQG3dk
-         WNuS1CJ6pBxFbso16ZncRyipJ6uwHpVO9tvnicwwVSv+0cg8nraZWptPuCUz6zLj5Xuf
-         nEC0dnrmyE56BnOYwqWbmtqDWzNZJp7dsqMhr52jFR1zSwP3l09/lWD1Z6ftXSNvOtfU
-         UyD8fFFJq2eH8hmfzqom2NX2JvT+QW29clVjOJQnSbRfXjK3dTKYxg5s3++5cDYQMpDw
-         S3Rs8lTaDIlAbXrjIbUONrKXZ44NWxmSGbeBFPsUnYTizQuZ3lxy/UkfGMCUub844RkX
-         xjQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1694009349; x=1694614149;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=u9W/IcTlMNGZK9Ps/aVx0GxYtJz9nPGjUgurMbWW3dw=;
-        b=ir61yBKoico30vhFVmQQF/ZUvqCw3Ymb2p03x9ISosBMDR0K9YJGTzP+nPR5fEQTYY
-         qe3qi0+ufoJfZh8D+s7ipvHg1TiOrznpXILp5jZQBD/FUe6+f+CWZ5cz8XdOZvZRVTUe
-         nf+yFXiaD2DcaVr1tkGVpk3qXIoFlKeqTDF7It61eKWkBiWG1UkZJJM2RkjUbLmJ8Js1
-         NkjXFu7oLQN9bRVNiZyYr0oK2hKc5kiqLirROwcA+k2m5zW3oaUxJaANgSTAjcHin+3+
-         fOs8GEJ00inACiO9o6libjNK0K3Q5HxoVQa2EuVZzu65JAPcpuNd0rwMKrLg8EHsdEUb
-         TvgQ==
-X-Gm-Message-State: AOJu0Yz+rdbk0zThRXsbI6WxnGPVgPL19lC5IVOlsfnVA2sh0AC6qqx7
-        lk63kYFQEjvCg4uq04ll8uMveczg2Ps=
-X-Google-Smtp-Source: AGHT+IEyyJOYBjWMd5RqK365SmNrfFzw+bEYRaLE3YHtYnxhlNi1gTmlhpmWYimIiShBesCw0X57nQ==
-X-Received: by 2002:a05:6000:184:b0:313:f1c8:a968 with SMTP id p4-20020a056000018400b00313f1c8a968mr2423710wrx.2.1694009348590;
-        Wed, 06 Sep 2023 07:09:08 -0700 (PDT)
-Received: from gmail.com (1F2EF6A2.nat.pool.telekom.hu. [31.46.246.162])
-        by smtp.gmail.com with ESMTPSA id a3-20020a056000050300b003179d5aee67sm20483099wrf.94.2023.09.06.07.09.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Sep 2023 07:09:03 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date:   Wed, 6 Sep 2023 16:09:01 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Justin Stitt <justinstitt@google.com>,
+        Wed, 6 Sep 2023 11:08:00 -0400
+Received: from mx0b-002e3701.pphosted.com (mx0b-002e3701.pphosted.com [148.163.143.35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC1E094;
+        Wed,  6 Sep 2023 08:07:55 -0700 (PDT)
+Received: from pps.filterd (m0150245.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 386Aa5Q2028372;
+        Wed, 6 Sep 2023 15:07:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=pps0720; bh=bUaqSbvKYJBuc89xVN5Q+vh9RQ/KMwEGjBlfFXomo7o=;
+ b=EXBmq3pg58j143eDb51AkaSH8MAgUblSNoOCwZ+ySWas9VBYA2id6Pv2SQa6OBYSzAJ1
+ iikU10dbWXdH7fy3pL2T5O+F05RFerLeu1Hcj1XXyssE5vvNcSy6/0H6FsgFhQNevHfj
+ hxp1tXVpGnAbAIonGiHHjyCRsgJgSkwlji5HM1BYuWIkykYErezZwfUUZNBgDwUYuPer
+ XKcOTXFNoOjFdazXXPTkTtX+Dql6/J4AauvD9+uea0TmRS7BgabbE2/fdu6kMgPpVs36
+ 9h0fVfz58LC4jApB2S2dlNSFvaSMBa00kLRW7QnhBYLEPPIx+0Tn5yn47yXdmOqaxEML jw== 
+Received: from p1lg14880.it.hpe.com ([16.230.97.201])
+        by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3sxqtmt6gp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 06 Sep 2023 15:07:08 +0000
+Received: from p1lg14885.dc01.its.hpecorp.net (unknown [10.119.18.236])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by p1lg14880.it.hpe.com (Postfix) with ESMTPS id 5E4FE80044C;
+        Wed,  6 Sep 2023 15:07:07 +0000 (UTC)
+Received: from swahl-home.5wahls.com (unknown [16.231.227.36])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by p1lg14885.dc01.its.hpecorp.net (Postfix) with ESMTPS id 116868091C6;
+        Wed,  6 Sep 2023 15:07:05 +0000 (UTC)
+Date:   Wed, 6 Sep 2023 10:07:03 -0500
+From:   Steve Wahl <steve.wahl@hpe.com>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Justin Stitt <justinstitt@google.com>,
         Steve Wahl <steve.wahl@hpe.com>,
-        Mike Travis <mike.travis@hpe.com>,
         Dimitri Sivanich <dimitri.sivanich@hpe.com>,
         Russ Anderson <russ.anderson@hpe.com>,
         Darren Hart <dvhart@infradead.org>,
@@ -70,94 +61,124 @@ Cc:     Justin Stitt <justinstitt@google.com>,
         linux-hardening@vger.kernel.org
 Subject: Re: [PATCH v3] x86/platform/uv: refactor deprecated strcpy and
  strncpy
-Message-ID: <ZPiH/ds9oeimXDdb@gmail.com>
+Message-ID: <ZPiVhvsoUzvG6wOs@swahl-home.5wahls.com>
 References: <20230905-strncpy-arch-x86-platform-uv-uv_nmi-v3-1-3efd6798b569@google.com>
  <ZPhsSzHG6YMViOSk@gmail.com>
  <bce762af-0da7-bb5e-1580-b42803c183f6@redhat.com>
-MIME-Version: 1.0
+ <ZPiH/ds9oeimXDdb@gmail.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <bce762af-0da7-bb5e-1580-b42803c183f6@redhat.com>
+In-Reply-To: <ZPiH/ds9oeimXDdb@gmail.com>
+X-Proofpoint-ORIG-GUID: npZ9-KAuf7hrlBz-ckG1zphUc7Lm1OjF
+X-Proofpoint-GUID: npZ9-KAuf7hrlBz-ckG1zphUc7Lm1OjF
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-09-06_06,2023-09-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
+ malwarescore=0 clxscore=1011 adultscore=0 suspectscore=0 phishscore=0
+ mlxlogscore=999 bulkscore=0 priorityscore=1501 spamscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2308100000 definitions=main-2309060131
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Wed, Sep 06, 2023 at 04:09:01PM +0200, Ingo Molnar wrote:
+> 
+> * Hans de Goede <hdegoede@redhat.com> wrote:
+> 
+> > Hi Ingo,
+> > 
+> > On 9/6/23 14:10, Ingo Molnar wrote:
+> > > 
+> > > * Justin Stitt <justinstitt@google.com> wrote:
+> > > 
+> > >> Both `strncpy` and `strcpy` are deprecated for use on NUL-terminated
+> > >> destination strings [1].
+> > >>
+> > >> We can see that `arg` and `uv_nmi_action` are expected to be
+> > >> NUL-terminated strings due to their use within `strcmp()` and format
+> > >> strings respectively.
+> > >>
+> > >> With this in mind, a suitable replacement is `strscpy` [2] due to the
+> > >> fact that it guarantees NUL-termination on its destination buffer
+> > >> argument which is _not_ the case for `strncpy` or `strcpy`!
+> > >>
+> > >> In this case, we can drop both the forced NUL-termination and the `... -1` from:
+> > >> |       strncpy(arg, val, ACTION_LEN - 1);
+> > >> as `strscpy` implicitly has this behavior.
+> > >>
+> > >> Link: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings[1]
+> > >> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+> > >> Link: https://github.com/KSPP/linux/issues/90
+> > >> Cc: linux-hardening@vger.kernel.org
+> > >> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> > > 
+> > >>  arch/x86/platform/uv/uv_nmi.c | 7 +++----
+> > >>  1 file changed, 3 insertions(+), 4 deletions(-)
+> > > 
+> > > Note that this commit is already upstream:
+> > > 
+> > >   1e6f01f72855 ("x86/platform/uv: Refactor code using deprecated strcpy()/strncpy() interfaces to use strscpy()")
+> > > 
+> > > Below is the delta your v3 patch has compared to what is upstream - is it 
+> > > really necessary to open code it, instead of using strnchrnul() as your 
+> > > original patch did? Am I missing anything here?
+> > 
+> > The new version is a result of a review from my because IMHO:
+> > 
+> > 	strscpy(arg, val, strnchrnul(val, sizeof(arg)-1, '\n') - val + 1);
+> > 
+> > Is really unreadable / really hard to reason about if
+> > this is actually correct and does not contain any
+> > of by 1 bugs.
+> > 
+> > Note that the diff of v3 compared to the code before v2 landed is
+> > actually smaller now and actually matches the subject of:
+> > "refactor deprecated strcpy and strncpy"
+> > 
+> > Where as v2 actually touches more code / refactor things
+> > which fall outside of a "one change per patch" approach.
+> > The:
+> > 
+> > 	p = strchr(arg, '\n');
+> > 	if (p)
+> > 		*p = '\0';
+> > 
+> > was already there before v2 landed.
+> > 
+> > I also suggested to do a follow up patch to change things to:
+> > 
+> > 	strscpy(arg, val, sizeof(arg));
+> > 	p = strchrnul(arg, '\n');
+> > 	*p = '\0';
+> > 
+> > Which IMHO is much more readable then what has landed
+> > now. But since v2 has already landed I guess the best
+> > thing is just to stick with what we have upstream now...
+> 
+> Well, how about we do a delta patch with all the changes
+> you suggested? I'm all for readability.
 
-* Hans de Goede <hdegoede@redhat.com> wrote:
+For whatever it's worth, I vote in favor of adopting an increased
+readability version.
 
-> Hi Ingo,
-> 
-> On 9/6/23 14:10, Ingo Molnar wrote:
-> > 
-> > * Justin Stitt <justinstitt@google.com> wrote:
-> > 
-> >> Both `strncpy` and `strcpy` are deprecated for use on NUL-terminated
-> >> destination strings [1].
-> >>
-> >> We can see that `arg` and `uv_nmi_action` are expected to be
-> >> NUL-terminated strings due to their use within `strcmp()` and format
-> >> strings respectively.
-> >>
-> >> With this in mind, a suitable replacement is `strscpy` [2] due to the
-> >> fact that it guarantees NUL-termination on its destination buffer
-> >> argument which is _not_ the case for `strncpy` or `strcpy`!
-> >>
-> >> In this case, we can drop both the forced NUL-termination and the `... -1` from:
-> >> |       strncpy(arg, val, ACTION_LEN - 1);
-> >> as `strscpy` implicitly has this behavior.
-> >>
-> >> Link: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings[1]
-> >> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> >> Link: https://github.com/KSPP/linux/issues/90
-> >> Cc: linux-hardening@vger.kernel.org
-> >> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> > 
-> >>  arch/x86/platform/uv/uv_nmi.c | 7 +++----
-> >>  1 file changed, 3 insertions(+), 4 deletions(-)
-> > 
-> > Note that this commit is already upstream:
-> > 
-> >   1e6f01f72855 ("x86/platform/uv: Refactor code using deprecated strcpy()/strncpy() interfaces to use strscpy()")
-> > 
-> > Below is the delta your v3 patch has compared to what is upstream - is it 
-> > really necessary to open code it, instead of using strnchrnul() as your 
-> > original patch did? Am I missing anything here?
-> 
-> The new version is a result of a review from my because IMHO:
-> 
-> 	strscpy(arg, val, strnchrnul(val, sizeof(arg)-1, '\n') - val + 1);
-> 
-> Is really unreadable / really hard to reason about if
-> this is actually correct and does not contain any
-> of by 1 bugs.
-> 
-> Note that the diff of v3 compared to the code before v2 landed is
-> actually smaller now and actually matches the subject of:
-> "refactor deprecated strcpy and strncpy"
-> 
-> Where as v2 actually touches more code / refactor things
-> which fall outside of a "one change per patch" approach.
-> The:
-> 
-> 	p = strchr(arg, '\n');
-> 	if (p)
-> 		*p = '\0';
-> 
-> was already there before v2 landed.
-> 
-> I also suggested to do a follow up patch to change things to:
-> 
-> 	strscpy(arg, val, sizeof(arg));
-> 	p = strchrnul(arg, '\n');
-> 	*p = '\0';
-> 
-> Which IMHO is much more readable then what has landed
-> now. But since v2 has already landed I guess the best
-> thing is just to stick with what we have upstream now...
+I was on vacation when the patch came through, and by the time I
+reviewed it it was already accepted.  I still puzzled through the
+-1/+1 stuff to be sure it functioned correctly; since it worked and
+was already accepted, I let it go.
 
-Well, how about we do a delta patch with all the changes
-you suggested? I'm all for readability.
+When Hans' comments on readability later came through, I was thinking
+"Yes, he's exactly right! Why, when I worked so hard on verifying that
+the code worked properly, did it not occur to me to suggest re-writing
+this in a simpler fashion to make the intent clear?"
 
 Thanks,
 
-	Ingo
+--> Steve Wahl
+
+-- 
+Steve Wahl, Hewlett Packard Enterprise
