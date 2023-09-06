@@ -2,183 +2,100 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A0A7EE14A5
-	for <linux-hardening@archiver.kernel.org>; Wed,  6 Sep 2023 15:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 156ACEE14B9
+	for <linux-hardening@archiver.kernel.org>; Wed,  6 Sep 2023 18:06:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241859AbjIFPIA (ORCPT
+        id S243051AbjIFSGK (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 6 Sep 2023 11:08:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50082 "EHLO
+        Wed, 6 Sep 2023 14:06:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238930AbjIFPIA (ORCPT
+        with ESMTP id S237196AbjIFSGJ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 6 Sep 2023 11:08:00 -0400
-Received: from mx0b-002e3701.pphosted.com (mx0b-002e3701.pphosted.com [148.163.143.35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC1E094;
-        Wed,  6 Sep 2023 08:07:55 -0700 (PDT)
-Received: from pps.filterd (m0150245.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 386Aa5Q2028372;
-        Wed, 6 Sep 2023 15:07:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=pps0720; bh=bUaqSbvKYJBuc89xVN5Q+vh9RQ/KMwEGjBlfFXomo7o=;
- b=EXBmq3pg58j143eDb51AkaSH8MAgUblSNoOCwZ+ySWas9VBYA2id6Pv2SQa6OBYSzAJ1
- iikU10dbWXdH7fy3pL2T5O+F05RFerLeu1Hcj1XXyssE5vvNcSy6/0H6FsgFhQNevHfj
- hxp1tXVpGnAbAIonGiHHjyCRsgJgSkwlji5HM1BYuWIkykYErezZwfUUZNBgDwUYuPer
- XKcOTXFNoOjFdazXXPTkTtX+Dql6/J4AauvD9+uea0TmRS7BgabbE2/fdu6kMgPpVs36
- 9h0fVfz58LC4jApB2S2dlNSFvaSMBa00kLRW7QnhBYLEPPIx+0Tn5yn47yXdmOqaxEML jw== 
-Received: from p1lg14880.it.hpe.com ([16.230.97.201])
-        by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3sxqtmt6gp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 06 Sep 2023 15:07:08 +0000
-Received: from p1lg14885.dc01.its.hpecorp.net (unknown [10.119.18.236])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by p1lg14880.it.hpe.com (Postfix) with ESMTPS id 5E4FE80044C;
-        Wed,  6 Sep 2023 15:07:07 +0000 (UTC)
-Received: from swahl-home.5wahls.com (unknown [16.231.227.36])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by p1lg14885.dc01.its.hpecorp.net (Postfix) with ESMTPS id 116868091C6;
-        Wed,  6 Sep 2023 15:07:05 +0000 (UTC)
-Date:   Wed, 6 Sep 2023 10:07:03 -0500
-From:   Steve Wahl <steve.wahl@hpe.com>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Justin Stitt <justinstitt@google.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wed, 6 Sep 2023 14:06:09 -0400
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8D1210F7
+        for <linux-hardening@vger.kernel.org>; Wed,  6 Sep 2023 11:06:03 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-68c0d4cc3a4so116510b3a.1
+        for <linux-hardening@vger.kernel.org>; Wed, 06 Sep 2023 11:06:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1694023563; x=1694628363; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=O40bo/gxfF03whhMFXEqEedi7R6NFirN94zwY0Dca7U=;
+        b=ldH5bOXPn4zFGDFzW5RJ6cSXi53LCn7GKh/nbeYhWXeP7hvXu5WhUNCM0XmyfWo0GQ
+         z2JACE9BK5jYzyURVNCafSdVcfi/iFTDyny2gmSFPEITZTpwSgX0gWjJH0QoGIv7bjyD
+         72fDzimiSxi5I/4TSKrcfJIUjNAWBW6vO8qTw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1694023563; x=1694628363;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O40bo/gxfF03whhMFXEqEedi7R6NFirN94zwY0Dca7U=;
+        b=JEL7hAJOFK7z/RyM5hjQIBLBx7fOJLnGFK7pgfuJg32RsHgl64XQd+UGYbxRIAqYjC
+         7UNxsN7GM+l68EZQPu9EDcHI/0KUTw2NZRKlcvvzSFquidiAs8ZXoTIDkBWVR/3++hq6
+         oEhamIQulNySTRLqAbxZtvDj89zZKRc3nS7OEgA73hVnbVEE5j5fnIunJF2GCq3V6K6l
+         g8ds+tMP5atLCGQYxpBZ+YQzY7oxbM90Hk7Ybq21hdxUmFpOPNPqO96ZObRH6fo7H8vY
+         1eMC7VoGrSy056WPm7sFJzerXjngcck7v5MRz6K9V2DbkmNzM9xRGtjm00jyYnlvJ2tP
+         c9IQ==
+X-Gm-Message-State: AOJu0YyEseJv0+AmrTk2d1vahVo0ttNO8tQHqeGP11Sbwi6C1CTFnY+3
+        YyJCLjo6l0MN4gXxE7E8cZts/Q==
+X-Google-Smtp-Source: AGHT+IFVidGBv05UhqX2YIvVWb0IhPX+FPDQhL5+tVhZ0nsxBP5ZEoBlEwgCMn0DOZzFYA3QvqJ9WQ==
+X-Received: by 2002:a05:6a00:80c:b0:68a:55ff:3a02 with SMTP id m12-20020a056a00080c00b0068a55ff3a02mr17550041pfk.18.1694023563375;
+        Wed, 06 Sep 2023 11:06:03 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id fm14-20020a056a002f8e00b0068c6889e146sm11398521pfb.98.2023.09.06.11.06.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Sep 2023 11:06:02 -0700 (PDT)
+Date:   Wed, 6 Sep 2023 11:06:02 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Song Liu <song@kernel.org>, Fangrui Song <maskray@google.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@meta.com, x86@kernel.org,
+        clang-built-linux <llvm@lists.linux.dev>,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3] x86/platform/uv: refactor deprecated strcpy and
- strncpy
-Message-ID: <ZPiVhvsoUzvG6wOs@swahl-home.5wahls.com>
-References: <20230905-strncpy-arch-x86-platform-uv-uv_nmi-v3-1-3efd6798b569@google.com>
- <ZPhsSzHG6YMViOSk@gmail.com>
- <bce762af-0da7-bb5e-1580-b42803c183f6@redhat.com>
- <ZPiH/ds9oeimXDdb@gmail.com>
+Subject: Re: [PATCH] x86/vmlinux: Fix linker fill bytes for ld.lld
+Message-ID: <202309061102.DB794AD295@keescook>
+References: <20230906175215.2236033-1-song@kernel.org>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZPiH/ds9oeimXDdb@gmail.com>
-X-Proofpoint-ORIG-GUID: npZ9-KAuf7hrlBz-ckG1zphUc7Lm1OjF
-X-Proofpoint-GUID: npZ9-KAuf7hrlBz-ckG1zphUc7Lm1OjF
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
-MIME-Version: 1.0
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-09-06_06,2023-09-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
- malwarescore=0 clxscore=1011 adultscore=0 suspectscore=0 phishscore=0
- mlxlogscore=999 bulkscore=0 priorityscore=1501 spamscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2308100000 definitions=main-2309060131
+In-Reply-To: <20230906175215.2236033-1-song@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Sep 06, 2023 at 04:09:01PM +0200, Ingo Molnar wrote:
+On Wed, Sep 06, 2023 at 10:52:15AM -0700, Song Liu wrote:
+> With ":text =0xcccc", ld.lld fills unused text area with 0xcccc0000.
+> Example objdump -D output:
 > 
-> * Hans de Goede <hdegoede@redhat.com> wrote:
+> ffffffff82b04203:       00 00                   add    %al,(%rax)
+> ffffffff82b04205:       cc                      int3
+> ffffffff82b04206:       cc                      int3
+> ffffffff82b04207:       00 00                   add    %al,(%rax)
+> ffffffff82b04209:       cc                      int3
+> ffffffff82b0420a:       cc                      int3
 > 
-> > Hi Ingo,
-> > 
-> > On 9/6/23 14:10, Ingo Molnar wrote:
-> > > 
-> > > * Justin Stitt <justinstitt@google.com> wrote:
-> > > 
-> > >> Both `strncpy` and `strcpy` are deprecated for use on NUL-terminated
-> > >> destination strings [1].
-> > >>
-> > >> We can see that `arg` and `uv_nmi_action` are expected to be
-> > >> NUL-terminated strings due to their use within `strcmp()` and format
-> > >> strings respectively.
-> > >>
-> > >> With this in mind, a suitable replacement is `strscpy` [2] due to the
-> > >> fact that it guarantees NUL-termination on its destination buffer
-> > >> argument which is _not_ the case for `strncpy` or `strcpy`!
-> > >>
-> > >> In this case, we can drop both the forced NUL-termination and the `... -1` from:
-> > >> |       strncpy(arg, val, ACTION_LEN - 1);
-> > >> as `strscpy` implicitly has this behavior.
-> > >>
-> > >> Link: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings[1]
-> > >> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> > >> Link: https://github.com/KSPP/linux/issues/90
-> > >> Cc: linux-hardening@vger.kernel.org
-> > >> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> > > 
-> > >>  arch/x86/platform/uv/uv_nmi.c | 7 +++----
-> > >>  1 file changed, 3 insertions(+), 4 deletions(-)
-> > > 
-> > > Note that this commit is already upstream:
-> > > 
-> > >   1e6f01f72855 ("x86/platform/uv: Refactor code using deprecated strcpy()/strncpy() interfaces to use strscpy()")
-> > > 
-> > > Below is the delta your v3 patch has compared to what is upstream - is it 
-> > > really necessary to open code it, instead of using strnchrnul() as your 
-> > > original patch did? Am I missing anything here?
-> > 
-> > The new version is a result of a review from my because IMHO:
-> > 
-> > 	strscpy(arg, val, strnchrnul(val, sizeof(arg)-1, '\n') - val + 1);
-> > 
-> > Is really unreadable / really hard to reason about if
-> > this is actually correct and does not contain any
-> > of by 1 bugs.
-> > 
-> > Note that the diff of v3 compared to the code before v2 landed is
-> > actually smaller now and actually matches the subject of:
-> > "refactor deprecated strcpy and strncpy"
-> > 
-> > Where as v2 actually touches more code / refactor things
-> > which fall outside of a "one change per patch" approach.
-> > The:
-> > 
-> > 	p = strchr(arg, '\n');
-> > 	if (p)
-> > 		*p = '\0';
-> > 
-> > was already there before v2 landed.
-> > 
-> > I also suggested to do a follow up patch to change things to:
-> > 
-> > 	strscpy(arg, val, sizeof(arg));
-> > 	p = strchrnul(arg, '\n');
-> > 	*p = '\0';
-> > 
-> > Which IMHO is much more readable then what has landed
-> > now. But since v2 has already landed I guess the best
-> > thing is just to stick with what we have upstream now...
+> Replace it with ":text =0xcccccccc", so we get the following instead:
 > 
-> Well, how about we do a delta patch with all the changes
-> you suggested? I'm all for readability.
+> ffffffff82b04203:       cc                      int3
+> ffffffff82b04204:       cc                      int3
+> ffffffff82b04205:       cc                      int3
+> ffffffff82b04206:       cc                      int3
+> ffffffff82b04207:       cc                      int3
+> ffffffff82b04208:       cc                      int3
+> 
+> gcc/ld doesn't seem to have the same issue. The generated code stays the
+> same for gcc/ld.
+> 
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: x86@kernel.org
+> Signed-off-by: Song Liu <song@kernel.org>
 
-For whatever it's worth, I vote in favor of adopting an increased
-readability version.
+Ah! Thanks for the catch... I wonder if ld.lld should be fixed too? My
+understanding was that ":text =...." was defined as being explicitly
+u16?
 
-I was on vacation when the patch came through, and by the time I
-reviewed it it was already accepted.  I still puzzled through the
--1/+1 stuff to be sure it functioned correctly; since it worked and
-was already accepted, I let it go.
-
-When Hans' comments on readability later came through, I was thinking
-"Yes, he's exactly right! Why, when I worked so hard on verifying that
-the code worked properly, did it not occur to me to suggest re-writing
-this in a simpler fashion to make the intent clear?"
-
-Thanks,
-
---> Steve Wahl
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -- 
-Steve Wahl, Hewlett Packard Enterprise
+Kees Cook
