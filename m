@@ -2,155 +2,88 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB6EEEB56B
-	for <linux-hardening@archiver.kernel.org>; Fri,  8 Sep 2023 19:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0DA8EEB571
+	for <linux-hardening@archiver.kernel.org>; Fri,  8 Sep 2023 19:32:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344833AbjIHTcx (ORCPT
+        id S1344862AbjIHTcz (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 8 Sep 2023 15:32:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54060 "EHLO
+        Fri, 8 Sep 2023 15:32:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344885AbjIHTcv (ORCPT
+        with ESMTP id S1344903AbjIHTcy (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 8 Sep 2023 15:32:51 -0400
+        Fri, 8 Sep 2023 15:32:54 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C4DE1FEA;
-        Fri,  8 Sep 2023 12:32:22 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DE1DC43395;
-        Fri,  8 Sep 2023 19:31:30 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DF3B12B;
+        Fri,  8 Sep 2023 12:32:30 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CB8DC4160E;
+        Fri,  8 Sep 2023 19:32:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694201491;
-        bh=yegpmFKqZADs6elVAH1kxXTwTX9xDIpofYJDh7KGPhk=;
+        s=k20201202; t=1694201544;
+        bh=q+0KW2On3j2ZX2ktpHUnuZiQs8vuk1AT4XiAajs37qU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WUVwk8cGExllQlCjYaElwxp64xKMK3Kk1F3G3ndilWn2VLg0tvAFnoReSIdfSx7jD
-         oEENagaVKzoKWP9XvQQUEsZjag7gw+1KHhYBSgr5NzJsBE9dTS2cUXzJoTZuGBHMsL
-         5/jfVprQJ9+HzAqKlsHTRmYY57sHuHZJUALUwr0EyFjhmSBnPweHJU2SKSWupOlxsQ
-         qSKmqKRBAQCAsS8PlhQBCEnN2WPA9r28tiMWqv2KucQhrerTdlNwSWp2PvB/gyAGVS
-         VSkIYuIjC3OT850GeV0cSkBSai07KCKEq9OLf6Vjoa12PhmGhZl+ctoTQkd7H43ExY
-         c313dAKAEk3Kw==
+        b=fPjAQyqAptGICD2Q6KEkiQscsCdU02egVwFNU/c9BiDxzFGbNNklW8zl2I19j0NvK
+         Qw8j+ilhAwKus6thvmUIr1eea0zPFOI14oLptvLantriAL+QrLbwBZKOyXf5N+O8zR
+         4UUSVqa7OxQ+gQ6+RQ2T7wEVvT4mcXnk6bUMHARbDt5aVLWmCvFsCgczRw8T512gpW
+         XdSS4kr9/yR+qFymmAbBES23GL2jt15Wo5obIuSRKHVSTb8eWI9URq9nVeLxP+Fl68
+         NGPZlLy3kx3+QgWHmGcNsRoqq/5fNh7pWzswfGtWBPg2a7c1gooHd6fK6RgBX1szzi
+         L7jA1Xz9y3MiA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jens Axboe <axboe@kernel.dk>, Breno Leitao <leitao@debian.org>,
-        Sasha Levin <sashal@kernel.org>, keescook@chromium.org,
-        nathan@kernel.org, ndesaulniers@google.com,
-        io-uring@vger.kernel.org, linux-hardening@vger.kernel.org,
-        llvm@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.5 27/36] io_uring: annotate the struct io_kiocb slab for appropriate user copy
-Date:   Fri,  8 Sep 2023 15:28:38 -0400
-Message-Id: <20230908192848.3462476-27-sashal@kernel.org>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, agross@kernel.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, keescook@chromium.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.4 09/31] arm64: dts: qcom: sm8250-edo: correct ramoops pmsg-size
+Date:   Fri,  8 Sep 2023 15:31:38 -0400
+Message-Id: <20230908193201.3462957-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230908192848.3462476-1-sashal@kernel.org>
-References: <20230908192848.3462476-1-sashal@kernel.org>
+In-Reply-To: <20230908193201.3462957-1-sashal@kernel.org>
+References: <20230908193201.3462957-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.5.2
+X-stable-base: Linux 6.4.15
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-[ Upstream commit b97f96e22f051d59d07a527dbd7d90408b661ca8 ]
+[ Upstream commit 7dc3606f91427414d00a2fb09e6e0e32c14c2093 ]
 
-When compiling the kernel with clang and having HARDENED_USERCOPY
-enabled, the liburing openat2.t test case fails during request setup:
+There is no 'msg-size' property in ramoops, so assume intention was for
+'pmsg-size':
 
-usercopy: Kernel memory overwrite attempt detected to SLUB object 'io_kiocb' (offset 24, size 24)!
-------------[ cut here ]------------
-kernel BUG at mm/usercopy.c:102!
-invalid opcode: 0000 [#1] PREEMPT SMP DEBUG_PAGEALLOC
-CPU: 3 PID: 413 Comm: openat2.t Tainted: G                 N 6.4.3-g6995e2de6891-dirty #19
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.1-0-g3208b098f51a-prebuilt.qemu.org 04/01/2014
-RIP: 0010:usercopy_abort+0x84/0x90
-Code: ce 49 89 ce 48 c7 c3 68 48 98 82 48 0f 44 de 48 c7 c7 56 c6 94 82 4c 89 de 48 89 c1 41 52 41 56 53 e8 e0 51 c5 00 48 83 c4 18 <0f> 0b 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 55 41 57 41 56
-RSP: 0018:ffffc900016b3da0 EFLAGS: 00010296
-RAX: 0000000000000062 RBX: ffffffff82984868 RCX: 4e9b661ac6275b00
-RDX: ffff8881b90ec580 RSI: ffffffff82949a64 RDI: 00000000ffffffff
-RBP: 0000000000000018 R08: 0000000000000000 R09: 0000000000000000
-R10: ffffc900016b3c88 R11: ffffc900016b3c30 R12: 00007ffe549659e0
-R13: ffff888119014000 R14: 0000000000000018 R15: 0000000000000018
-FS:  00007f862e3ca680(0000) GS:ffff8881b90c0000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00005571483542a8 CR3: 0000000118c11000 CR4: 00000000003506e0
-Call Trace:
- <TASK>
- ? __die_body+0x63/0xb0
- ? die+0x9d/0xc0
- ? do_trap+0xa7/0x180
- ? usercopy_abort+0x84/0x90
- ? do_error_trap+0xc6/0x110
- ? usercopy_abort+0x84/0x90
- ? handle_invalid_op+0x2c/0x40
- ? usercopy_abort+0x84/0x90
- ? exc_invalid_op+0x2f/0x40
- ? asm_exc_invalid_op+0x16/0x20
- ? usercopy_abort+0x84/0x90
- __check_heap_object+0xe2/0x110
- __check_object_size+0x142/0x3d0
- io_openat2_prep+0x68/0x140
- io_submit_sqes+0x28a/0x680
- __se_sys_io_uring_enter+0x120/0x580
- do_syscall_64+0x3d/0x80
- entry_SYSCALL_64_after_hwframe+0x46/0xb0
-RIP: 0033:0x55714834de26
-Code: ca 01 0f b6 82 d0 00 00 00 8b ba cc 00 00 00 45 31 c0 31 d2 41 b9 08 00 00 00 83 e0 01 c1 e0 04 41 09 c2 b8 aa 01 00 00 0f 05 <c3> 66 0f 1f 84 00 00 00 00 00 89 30 eb 89 0f 1f 40 00 8b 00 a8 06
-RSP: 002b:00007ffe549659c8 EFLAGS: 00000246 ORIG_RAX: 00000000000001aa
-RAX: ffffffffffffffda RBX: 00007ffe54965a50 RCX: 000055714834de26
-RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000003
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000008
-R10: 0000000000000000 R11: 0000000000000246 R12: 000055714834f057
-R13: 00007ffe54965a50 R14: 0000000000000001 R15: 0000557148351dd8
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
+  sm8250-sony-xperia-edo-pdx206.dtb: ramoops@ffc00000: Unevaluated properties are not allowed ('msg-size' was unexpected)
 
-when it tries to copy struct open_how from userspace into the per-command
-space in the io_kiocb. There's nothing wrong with the copy, but we're
-missing the appropriate annotations for allowing user copies to/from the
-io_kiocb slab.
-
-Allow copies in the per-command area, which is from the 'file' pointer to
-when 'opcode' starts. We do have existing user copies there, but they are
-not all annotated like the one that openat2_prep() uses,
-copy_struct_from_user(). But in practice opcodes should be allowed to
-copy data into their per-command area in the io_kiocb.
-
-Reported-by: Breno Leitao <leitao@debian.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Link: https://lore.kernel.org/r/20230618114442.140185-7-krzysztof.kozlowski@linaro.org
+Signed-off-by: Bjorn Andersson <andersson@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- io_uring/io_uring.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/qcom/sm8250-sony-xperia-edo.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/io_uring/io_uring.c b/io_uring/io_uring.c
-index 93db3e4e7b688..5006b14f97e1e 100644
---- a/io_uring/io_uring.c
-+++ b/io_uring/io_uring.c
-@@ -4615,8 +4615,20 @@ static int __init io_uring_init(void)
- 
- 	io_uring_optable_init();
- 
--	req_cachep = KMEM_CACHE(io_kiocb, SLAB_HWCACHE_ALIGN | SLAB_PANIC |
--				SLAB_ACCOUNT | SLAB_TYPESAFE_BY_RCU);
-+	/*
-+	 * Allow user copy in the per-command field, which starts after the
-+	 * file in io_kiocb and until the opcode field. The openat2 handling
-+	 * requires copying in user memory into the io_kiocb object in that
-+	 * range, and HARDENED_USERCOPY will complain if we haven't
-+	 * correctly annotated this range.
-+	 */
-+	req_cachep = kmem_cache_create_usercopy("io_kiocb",
-+				sizeof(struct io_kiocb), 0,
-+				SLAB_HWCACHE_ALIGN | SLAB_PANIC |
-+				SLAB_ACCOUNT | SLAB_TYPESAFE_BY_RCU,
-+				offsetof(struct io_kiocb, cmd.data),
-+				sizeof_field(struct io_kiocb, cmd.data), NULL);
-+
- 	return 0;
- };
- __initcall(io_uring_init);
+diff --git a/arch/arm64/boot/dts/qcom/sm8250-sony-xperia-edo.dtsi b/arch/arm64/boot/dts/qcom/sm8250-sony-xperia-edo.dtsi
+index dcabb714f0f35..8f3ac97b91ec2 100644
+--- a/arch/arm64/boot/dts/qcom/sm8250-sony-xperia-edo.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8250-sony-xperia-edo.dtsi
+@@ -112,7 +112,7 @@ ramoops@ffc00000 {
+ 			reg = <0x0 0xffc00000 0x0 0x100000>;
+ 			record-size = <0x1000>;
+ 			console-size = <0x40000>;
+-			msg-size = <0x20000 0x20000>;
++			pmsg-size = <0x20000>;
+ 			ecc-size = <16>;
+ 			no-map;
+ 		};
 -- 
 2.40.1
 
