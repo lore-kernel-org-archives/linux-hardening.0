@@ -2,82 +2,90 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35138EE57EF
-	for <linux-hardening@archiver.kernel.org>; Fri,  8 Sep 2023 10:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E882EE57EF
+	for <linux-hardening@archiver.kernel.org>; Fri,  8 Sep 2023 10:29:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231311AbjIHKWE (ORCPT
+        id S237186AbjIHK27 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 8 Sep 2023 06:22:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43150 "EHLO
+        Fri, 8 Sep 2023 06:28:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231464AbjIHKWD (ORCPT
+        with ESMTP id S241013AbjIHK26 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 8 Sep 2023 06:22:03 -0400
+        Fri, 8 Sep 2023 06:28:58 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BFF21FDC;
-        Fri,  8 Sep 2023 03:21:31 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7D63C433C8;
-        Fri,  8 Sep 2023 10:20:26 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34A602123;
+        Fri,  8 Sep 2023 03:28:28 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ECC8C433CD;
+        Fri,  8 Sep 2023 10:18:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694168428;
-        bh=W1z1FcuoUvbcfJlaQ1NbkHr76Xrqb6ArX/tD4jLMv24=;
+        s=k20201202; t=1694168317;
+        bh=7ppBGSYE/D1DEoQwtHJNYsJokjRP5do2Yy52Rv5Uyxo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tA7OJMJz/w3RSDB8V1crqrYVCsA60kepxdSZ6gZRUMc6m6yZbp+JJ1rkxvbEkIv/G
-         V3OpEki3O0IUZo8+pvPsezPFgXGI+vlRQ7sOjIwgU+tkosDRlxJ3xdYue2yr/FPXqa
-         OOl4wS5pD005jNgLrym8+Dui8+6Vb8obrKT9Vmuig0dpRiEqCOOMDKb3VWUB+577pF
-         GC3WD7EDG3W1rRUF1ccEtJN2yZDIJPV8vpiDt8huNj5/ZAVzfhy2RToXXAgSAt9gFm
-         Np3pTdNGfmkg8cwDVcXQYlxw1fs5AL4ikllZ0+G/T7YRZD4pxvj/tOokBucC9P0mrk
-         vJf6f40QaTfQQ==
-Date:   Fri, 8 Sep 2023 11:20:23 +0100
+        b=PtpRW/1t8nNfLPqbo8IsCfPOJ0tpjyhRkcrwyjGZc1qXUr7kx+xBgWnf4qnDaq77F
+         ukvUPCQmK7go5SvzVPY9r4Lx0yyK5QoY3Fg+B7UhjyTV6JC1WeOGCIQzyRlW8iO1i0
+         leYHJP3eNUq9z+n8Ei3tikxScTyzXQuHcNomq8QtyWul2ZarX0T7Ho6WjLblQa36Qk
+         hMZxVKMkr/G1XEnGV4HHLYggegV+eqcVCz2Th4PJXzTsPv6RHXp2//ur9ztXIv3qDv
+         NUYLjzfG0afA3ziCgVdjO08R3Rsgop/ZCNgZiomsBZC1b4+aGbnkpY78ckK5c7tfM+
+         eVYu9zOdxc4Yw==
+Date:   Fri, 8 Sep 2023 11:18:32 +0100
 From:   Will Deacon <will@kernel.org>
-To:     Bjorn Andersson <andersson@kernel.org>
-Cc:     Justin Stitt <justinstitt@google.com>,
+To:     Justin Stitt <justinstitt@google.com>
+Cc:     Konrad Dybcio <konradybcio@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
+        Mostafa Saleh <smostafa@google.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org,
-        Konrad Dybcio <konradybcio@kernel.org>
-Subject: Re: [PATCH v2] arm64/sysreg: refactor deprecated strncpy
-Message-ID: <20230908102022.GB6849@willie-the-truck>
-References: <20230811-strncpy-arch-arm64-v2-1-ba84eabffadb@google.com>
- <amh6pp2mkmn22jcvz5tva7c4aaqxaq7zaz6v5u6rb7emsqp6p2@nxd7ynj524sx>
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v4] arm64/sysreg: refactor deprecated strncpy
+Message-ID: <20230908101831.GA6849@willie-the-truck>
+References: <20230905-strncpy-arch-arm64-v4-1-bc4b14ddfaef@google.com>
+ <f08f590a-df05-4d83-984f-41b4d60af971@kernel.org>
+ <CAFhGd8pMeTuvn_OqzYtRbfAM7L_-Jb_hFA4WY0hMap_eG=F7RA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <amh6pp2mkmn22jcvz5tva7c4aaqxaq7zaz6v5u6rb7emsqp6p2@nxd7ynj524sx>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAFhGd8pMeTuvn_OqzYtRbfAM7L_-Jb_hFA4WY0hMap_eG=F7RA@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Sep 07, 2023 at 02:28:05PM -0700, Bjorn Andersson wrote:
-> On Fri, Aug 11, 2023 at 04:33:51PM +0000, Justin Stitt wrote:
-> > `strncpy` is deprecated for use on NUL-terminated destination strings
-> > [1]. Which seems to be the case here due to the forceful setting of `buf`'s
-> > tail to 0.
-> > 
-> > A suitable replacement is `strscpy` [2] due to the fact that it
-> > guarantees NUL-termination on its destination buffer argument which is
-> > _not_ the case for `strncpy`!
-> > 
-> > In this case, we can simplify the logic and also check for any silent
-> > truncation by using `strscpy`'s return value.
-> > 
-> > This should have no functional change and yet uses a more robust and
-> > less ambiguous interface whilst reducing code complexity.
-> > 
+On Thu, Sep 07, 2023 at 11:17:08AM -0700, Justin Stitt wrote:
+> On Thu, Sep 7, 2023 at 10:37 AM Konrad Dybcio <konradybcio@kernel.org> wrote:
+> >
+> >
+> >
+> > On 5.09.2023 22:10, Justin Stitt wrote:
+> > > strncpy is deprecated [1] and should not be used if the src string is
+> > > not NUL-terminated.
+> > >
+> > > When dealing with `cmdline` we are counting the number of characters
+> > > until a space then copying these over into `buf`. Let's not use any of
+> > > the str*() functions since the src string is not necessarily NUL-terminated.
+> > >
+> > > Prefer `memcpy()` alongside a forced NUL-termination as it more
+> > > accurately describes what is going on within this function, i.e: copying
+> > > from non NUL-terminated buffer into a NUL-terminated buffer.
+> > >
+> > > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> > > Link: https://github.com/KSPP/linux/issues/90
+> > > Cc: linux-hardening@vger.kernel.org
+> > > Suggested-by: Kees Cook <keescook@chromium.org>
+> > > Signed-off-by: Justin Stitt <justinstitt@google.com>
+> > > ---
+> > Hi,
+> >
+> > some form of this patch [1] went into -next and it broke booting
+> > on at least the Qualcomm SC8280XP-based Lenovo Thinkpad X13S.
+> >
 > 
-> I'm sorry, but this patch is wrong.
-> 
-> __parse_cmdline() is supposed to match the command line against a set of
-> keywords, one word at a time. The new implementation ignores the
-> word-boundaries and matches the whole command line once and then breaks
-> the loop, typically without having found a match. (See below)
-> 
-> Can we please have this patch dropped, Will?
+> Thanks for the heads up! The previous versions of the patch (including
+> the one that was applied) had some errors. This patch should be good
+> and Will is looking to apply it to arm64 fixes tree.
 
-Yup, this was fixed yesterday so please take linux-next 20230908 for a
-spin and let us know how you get on.
+Yes, it should be fixed in linux-next 20230908.
 
 Cheers,
 
