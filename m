@@ -2,44 +2,44 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0100BEE801F
-	for <linux-hardening@archiver.kernel.org>; Sat,  9 Sep 2023 20:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95176EE14AA
+	for <linux-hardening@archiver.kernel.org>; Sat,  9 Sep 2023 20:21:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343854AbjIIUUM (ORCPT
+        id S240535AbjIIUVY (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 9 Sep 2023 16:20:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44078 "EHLO
+        Sat, 9 Sep 2023 16:21:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343733AbjIIUUM (ORCPT
+        with ESMTP id S230360AbjIIUVX (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 9 Sep 2023 16:20:12 -0400
+        Sat, 9 Sep 2023 16:21:23 -0400
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E84BF170C;
-        Sat,  9 Sep 2023 13:19:29 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 087D9171C;
+        Sat,  9 Sep 2023 13:20:32 -0700 (PDT)
 Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 389KI6nn002971;
-        Sat, 9 Sep 2023 20:18:06 GMT
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 389KCDEu023777;
+        Sat, 9 Sep 2023 20:18:51 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-type; s=qcppdkim1;
- bh=9liW1TWuilzZXgtFUTRnBpUJWzVSW/jI5dz27x+NbLs=;
- b=nYoq/Zn6qdWiz+NYlTM4P9x1yiufKNuPjSL6+ZMCXoAAWBOSAKmqyfylg5FhfTcpJOt9
- 9yDUEFnCeSA7w/xrR07YWNxwcpVbq0bLzxXE/6Rjrds5oZf3bj1qQTTMRbDBYrgRKqpu
- 8Wu0eNna8un4z+nfHosLndI6vL20J9xK1oszUgwOWc1MC9CIWIg4XuiIqOBVQNgh2pW1
- sFA1MEIjAvvIyEJyH+UN9guntYDljVPUJKe1xX6jibViT6bVuRGwX3GHaXqqIlx5rNLX
- L816oWY++r9kE15lB4TktI4c06w14tDo8ReC0q9B6G3hrXRLmVnCKkQhqf/Mn9+4KWI/ vw== 
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3t0h3drwkh-1
+ bh=Pu21/RzSQCP1BqGc9YFU81Va/bJ5Vvnil8MlVsGEBiU=;
+ b=WPwdHTtoSDBmHkOu4Zwb5XyKsjtewDJZU8FefQjYLQW0NNrddz1LwKj4UDA8xRjJm1+L
+ mSNSlDzU4o5Q05/38eVxDAd5SjbcnZefVz6pKUkGvGrqEpog+W0kpjc5nQa7mUugCVCC
+ kNdK8Exi0Qgh4w+wyXX8pjVMH8Y0AxKQILYLZ/QcQxSLmGVbvj7VqB+3sK4dzdIXRn7P
+ 9uY2HciTQHmfUqTQHCY0zDnfY0ABbrdgyWYKCWJz76f83rVWxU2cISApp6ocmiH99A5E
+ qM8uvxCALTrUDAAWktjXJQRkVXn62IWtMB5hShdTY1OnneDvc3g/B2FhmiOS/PKq5O4p Qg== 
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3t0h3drwmb-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 09 Sep 2023 20:18:06 +0000
+        Sat, 09 Sep 2023 20:18:51 +0000
 Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 389KI5no007335
+        by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 389KIoAK016131
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 9 Sep 2023 20:18:05 GMT
+        Sat, 9 Sep 2023 20:18:50 GMT
 Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
  nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.36; Sat, 9 Sep 2023 13:17:54 -0700
+ 15.2.1118.36; Sat, 9 Sep 2023 13:18:39 -0700
 From:   Mukesh Ojha <quic_mojha@quicinc.com>
 To:     <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
         <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
@@ -58,9 +58,9 @@ CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-gpio@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
         <linux-samsung-soc@vger.kernel.org>, <kernel@quicinc.com>,
         <quic_mojha@quicinc.com>
-Subject: [PATCH v5 09/17] pstore/ram: Use dynamic ramoops reserve resource
-Date:   Sun, 10 Sep 2023 01:46:10 +0530
-Message-ID: <1694290578-17733-10-git-send-email-quic_mojha@quicinc.com>
+Subject: [PATCH v5 14/17] pinctrl: qcom: Use qcom_scm_io_update_field()
+Date:   Sun, 10 Sep 2023 01:46:15 +0530
+Message-ID: <1694290578-17733-15-git-send-email-quic_mojha@quicinc.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1694290578-17733-1-git-send-email-quic_mojha@quicinc.com>
 References: <1694290578-17733-1-git-send-email-quic_mojha@quicinc.com>
@@ -71,13 +71,13 @@ X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nasanex01c.na.qualcomm.com (10.45.79.139)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: _5oy-0n1aHv_BMXkvk0sAYOaD4q2-PFQ
-X-Proofpoint-ORIG-GUID: _5oy-0n1aHv_BMXkvk0sAYOaD4q2-PFQ
+X-Proofpoint-GUID: 8VcFWusVAZdIaXDGDmXxhi-Yx61euFSS
+X-Proofpoint-ORIG-GUID: 8VcFWusVAZdIaXDGDmXxhi-Yx61euFSS
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
  definitions=2023-09-09_19,2023-09-05_01,2023-05-22_02
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- bulkscore=0 phishscore=0 mlxlogscore=999 adultscore=0 spamscore=0
+ bulkscore=0 phishscore=0 mlxlogscore=879 adultscore=0 spamscore=0
  suspectscore=0 impostorscore=0 malwarescore=0 mlxscore=0
  lowpriorityscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.12.0-2308100000 definitions=main-2309090187
@@ -85,40 +85,45 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-As dynamic ramoops command line parsing is now added, so
-lets add the support in ramoops driver to get the resource
-structure and add it during platform device registration.
+Use qcom_scm_io_update_field() exported function in
+pinctrl-msm driver.
 
 Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
 ---
- fs/pstore/ram.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/pinctrl/qcom/pinctrl-msm.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-index 2f625e1fa8d8..e73fbbc1b5b5 100644
---- a/fs/pstore/ram.c
-+++ b/fs/pstore/ram.c
-@@ -913,13 +913,17 @@ static void __init ramoops_register_dummy(void)
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index 115b83e2d8e6..2b9182375702 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -1078,22 +1078,20 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+ 	if (g->intr_target_width)
+ 		intr_target_mask = GENMASK(g->intr_target_width - 1, 0);
  
- 	/*
- 	 * Prepare a dummy platform data structure to carry the module
--	 * parameters. If mem_size isn't set, then there are no module
--	 * parameters, and we can skip this.
-+	 * parameters. If mem_size isn't set, check for dynamic ramoops
-+	 * size and extract the information if it is set.
- 	 */
--	if (!mem_size)
-+	if (!mem_size && !dyn_ramoops_res.end)
- 		return;
++	intr_target_mask <<= g->intr_target_bit;
+ 	if (pctrl->intr_target_use_scm) {
+ 		u32 addr = pctrl->phys_base[0] + g->intr_target_reg;
+ 		int ret;
  
- 	pr_info("using module parameters\n");
-+	if (dyn_ramoops_res.end) {
-+		mem_size = resource_size(&dyn_ramoops_res);
-+		mem_address = dyn_ramoops_res.start;
-+	}
- 
- 	memset(&pdata, 0, sizeof(pdata));
- 	pdata.mem_size = mem_size;
+-		qcom_scm_io_readl(addr, &val);
+-		val &= ~(intr_target_mask << g->intr_target_bit);
+-		val |= g->intr_target_kpss_val << g->intr_target_bit;
+-
+-		ret = qcom_scm_io_writel(addr, val);
++		val = g->intr_target_kpss_val << g->intr_target_bit;
++		ret = qcom_scm_io_update_field(addr, intr_target_mask, val);
+ 		if (ret)
+ 			dev_err(pctrl->dev,
+ 				"Failed routing %lu interrupt to Apps proc",
+ 				d->hwirq);
+ 	} else {
+ 		val = msm_readl_intr_target(pctrl, g);
+-		val &= ~(intr_target_mask << g->intr_target_bit);
++		val &= ~intr_target_mask;
+ 		val |= g->intr_target_kpss_val << g->intr_target_bit;
+ 		msm_writel_intr_target(val, pctrl, g);
+ 	}
 -- 
 2.7.4
 
