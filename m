@@ -2,253 +2,275 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 233A7CA0EC3
-	for <linux-hardening@archiver.kernel.org>; Mon, 11 Sep 2023 21:37:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FCC2CA0EC6
+	for <linux-hardening@archiver.kernel.org>; Mon, 11 Sep 2023 21:37:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348646AbjIKV3W (ORCPT
+        id S239306AbjIKV3Z (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 11 Sep 2023 17:29:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55492 "EHLO
+        Mon, 11 Sep 2023 17:29:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237854AbjIKNPV (ORCPT
+        with ESMTP id S236543AbjIKK4w (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 11 Sep 2023 09:15:21 -0400
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C268AE9;
-        Mon, 11 Sep 2023 06:15:16 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1c35ee3b0d2so28295345ad.2;
-        Mon, 11 Sep 2023 06:15:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694438116; x=1695042916; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=T2yRSNijSEry1q3t5KG0YspbSUTWaMB7q8b9zVPDgfQ=;
-        b=HVCnvGufcw2atJ/kBHS5BNiOeCCZoMiP+ih2eU8wEazPc6nGyd/581cSd/nNyKHoNw
-         EMBoLq7rH5QC0598H9O49HoJcvvZzpfeFPRciXRQRWfgrYRfbtMOgpbxPjXFRkUQKlgG
-         Fizzgd7U0sM9dO0Qlzf6sHI2ETnXPiwuRkOV+vvaXyI2eccZvD/1lZCxWILPk+9zrOan
-         JD6A5VsQOo95whgRNcO9fqyz+p9Kx3Lfn2KMH35dXu0C47m+oG2OZzrKa12kKkBsOr+r
-         F84zn/dI8gTpvjWy5BeKohSfcQGRbh+thchaq7QZ8qOXZm72r6TquGl1pgA45ykyE5av
-         CCIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694438116; x=1695042916;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=T2yRSNijSEry1q3t5KG0YspbSUTWaMB7q8b9zVPDgfQ=;
-        b=iD/YlYViUZJE9bfZVjtltOqU9WRLdNcSygQRS7/QroMy8Yo8nrhnEf4hb/SxI8d/Tv
-         He0OT7xp9HouyD3PUla0MX0Mej8xuiA5y64vyqdcgozinoze9YfGA3FfgJtbqrMRM5Qu
-         vLAyvgC9g2rzxiDTyhTrDgJh/tfii9p6jcOHPIGywaF/ASlL4sWOmrl5d+VhaMKfAE5a
-         kxaau1YGkIoVKt1GkemWyJER5rXO7Ed38NUTlAWzOHmbRPCV7Qx50Qxrp3FE95aFdDKx
-         g30QIuW7kVFgTw51vK7hlbP1yCCNWm167QIn9M95/0Vo3xswqobdUdZzsPkNc57xF3xv
-         oq/Q==
-X-Gm-Message-State: AOJu0YxNzRTCxxsPN3EsHOvlAMrj0kQ1jPl1OlIgAXGMGwD1vsC2ltcY
-        CyoPhY7FJf3dAQ8d8LS3zFM=
-X-Google-Smtp-Source: AGHT+IELjlMzUCNKicXbgrdGNOE2IUiNXf+0+gLijFTkFHG5fABBFoZEs1wFcY4YX7BmQrH9l7MLTA==
-X-Received: by 2002:a17:903:41c8:b0:1c0:c86a:5425 with SMTP id u8-20020a17090341c800b001c0c86a5425mr10229624ple.19.1694438116095;
-        Mon, 11 Sep 2023 06:15:16 -0700 (PDT)
-Received: from [192.168.0.106] ([103.124.138.83])
-        by smtp.gmail.com with ESMTPSA id c5-20020a170902d90500b001b9ecee459csm6372378plz.34.2023.09.11.06.14.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Sep 2023 06:15:15 -0700 (PDT)
-Message-ID: <d3c32833-72c3-f10c-bdb1-52de90eb90c7@gmail.com>
-Date:   Mon, 11 Sep 2023 20:14:55 +0700
+        Mon, 11 Sep 2023 06:56:52 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D915BF3;
+        Mon, 11 Sep 2023 03:56:46 -0700 (PDT)
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38BAJOiZ026737;
+        Mon, 11 Sep 2023 10:56:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=qcppdkim1;
+ bh=msfzexrhLMT2BxtHXMw5Jpj9V9JE6/kAkVTtbr3R0Kk=;
+ b=bNtLJVYLqAEM4FOG16e8LEjRWWtisuTF2KO6JOqZHfef5Twjl4E2c7qcPHGfZFM9oWeG
+ nIB6dJmA6tT024PxoYneGXqFl2r+2YcQzSraXUcv+JU2FaNDJshZlK6Bs6xgVdwnI0mv
+ 8l+wzqomr9SrsQ0jhvCILMZFBFDMSFiSZlojwTkXG8+aAbcEsIunP6/iTuP6gjfkico2
+ R8P8jIhkGgq+bykv5Ir/cAkgBEd9+k287sKANTKMD6bhSOZ1dOFztfNWEAV7jYwlpMQL
+ aTcbohMYzzblLBY5HDOtlIrXG0nKJsF0gbl3ACfB5cM57aHrW3bKorwZn1Uf+Q+jATCi lg== 
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3t0gx9uj8d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 Sep 2023 10:56:13 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+        by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 38BAuCVu006051
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 Sep 2023 10:56:13 GMT
+Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.36; Mon, 11 Sep 2023 03:55:45 -0700
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+To:     <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <keescook@chromium.org>, <tony.luck@intel.com>,
+        <gpiccoli@igalia.com>, <mathieu.poirier@linaro.org>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>,
+        <vigneshr@ti.com>, <nm@ti.com>, <matthias.bgg@gmail.com>,
+        <kgene@kernel.org>, <alim.akhtar@samsung.com>,
+        <bmasney@redhat.com>, <quic_tsoni@quicinc.com>
+CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <linux-samsung-soc@vger.kernel.org>, <kernel@quicinc.com>,
+        <quic_mojha@quicinc.com>
+Subject: [REBASE PATCH v5 11/17] qcom_minidump: Register ramoops region with minidump
+Date:   Mon, 11 Sep 2023 16:23:53 +0530
+Message-ID: <1694429639-21484-12-git-send-email-quic_mojha@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com>
+References: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.0
-Subject: Re: [PATCH v5 00/17] Add Qualcomm Minidump kernel driver related
- support
-Content-Language: en-US
-To:     Mukesh Ojha <quic_mojha@quicinc.com>, corbet@lwn.net,
-        agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, keescook@chromium.org, tony.luck@intel.com,
-        gpiccoli@igalia.com, mathieu.poirier@linaro.org,
-        catalin.marinas@arm.com, will@kernel.org, linus.walleij@linaro.org,
-        andy.shevchenko@gmail.com, vigneshr@ti.com, nm@ti.com,
-        matthias.bgg@gmail.com, kgene@kernel.org, alim.akhtar@samsung.com,
-        bmasney@redhat.com, quic_tsoni@quicinc.com
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, kernel@quicinc.com
-References: <1694290578-17733-1-git-send-email-quic_mojha@quicinc.com>
- <ZP7VPfVtvbmB5aQf@debian.me>
- <c52e90e4-cab0-13b7-9658-1f730de6cf64@quicinc.com>
-From:   Bagas Sanjaya <bagasdotme@gmail.com>
-In-Reply-To: <c52e90e4-cab0-13b7-9658-1f730de6cf64@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: sy675XrFSPHqgkW1yxA5mIuOqMWp9rE4
+X-Proofpoint-GUID: sy675XrFSPHqgkW1yxA5mIuOqMWp9rE4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-09-11_06,2023-09-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
+ mlxscore=0 lowpriorityscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0
+ suspectscore=0 adultscore=0 priorityscore=1501 impostorscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2308100000 definitions=main-2309110099
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 11/09/2023 17:39, Mukesh Ojha wrote:
-> 
-> 
-> On 9/11/2023 2:22 PM, Bagas Sanjaya wrote:
->> On Sun, Sep 10, 2023 at 01:46:01AM +0530, Mukesh Ojha wrote:
->>> Hi All,
->>>
->>> This is to continuation from the conversation happened at v4
->>>
->>> https://lore.kernel.org/lkml/632c5b97-4a91-c3e8-1e6c-33d6c4f6454f@quicinc.com/
->>>
->>> https://lore.kernel.org/lkml/695133e6-105f-de2a-5559-555cea0a0462@quicinc.com/
->>>
->>> We have put abstract on LPC on this topic as well as initiated a mail thread
->>> with other SoC vendors but did not get much traction on it.
->>>
->>> https://lore.kernel.org/lkml/0199db00-1b1d-0c63-58ff-03efae02cb21@quicinc.com/
->>>
->>> We explored most of possiblity present in kernel to address this issue[1] but
->>> solution like kdump/fadump does not seems safe/secure/performant from our
->>> perspective.
->>>
->>> Hence, with this series we tried to make the minidump kernel driver, simple
->>> and tied with pstore frontends, so that it collects the present available
->>> frontends data like dmesg, ftrace, pmsg, ftrace., Also, we will be working
->>> towards enhancing generic pstore to capture more debug data which will be
->>> helpful for first hand of debugging that can benefit both other pstore users
->>> as well as us as minidump users.
->>>
->>> One of the proposal made here,
->>> https://lore.kernel.org/lkml/1683561060-2197-1-git-send-email-quic_mojha@quicinc.com/
->>>
->>> Looking forward for your comments.
->>>
->>> Thanks,
->>> Mukesh
->>>
->>> [1]
->>> Minidump is a best effort mechanism to collect useful and predefined data
->>> for first level of debugging on end user devices running on Qualcomm SoCs.
->>> It is built on the premise that System on Chip (SoC) or subsystem part of
->>> SoC crashes, due to a range of hardware and software bugs. Hence, the
->>> ability to collect accurate data is only a best-effort. The data collected
->>> could be invalid or corrupted, data collection itself could fail, and so on.
->>>
->>> Qualcomm devices in engineering mode provides a mechanism for generating
->>> full system ramdumps for post mortem debugging. But in some cases it's
->>> however not feasible to capture the entire content of RAM. The minidump
->>> mechanism provides the means for selecting which snippets should be
->>> included in the ramdump.
->>>
->>> The core of SMEM based minidump feature is part of Qualcomm's boot
->>> firmware code. It initializes shared memory (SMEM), which is a part of
->>> DDR and allocates a small section of SMEM to minidump table i.e also
->>> called global table of content (G-ToC). Each subsystem (APSS, ADSP, ...)
->>> has their own table of segments to be included in the minidump and all
->>> get their reference from G-ToC. Each segment/region has some details
->>> like name, physical address and it's size etc. and it could be anywhere
->>> scattered in the DDR.
->>>
->>> Existing upstream Qualcomm remoteproc driver[1] already supports SMEM
->>> based minidump feature for remoteproc instances like ADSP, MODEM, ...
->>> where predefined selective segments of subsystem region can be dumped
->>> as part of coredump collection which generates smaller size artifacts
->>> compared to complete coredump of subsystem on crash.
->>>
->>> [1]
->>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/remoteproc/qcom_common.c#n142
->>>
->>> In addition to managing and querying the APSS minidump description,
->>> the Linux driver maintains a ELF header in a segment. This segment
->>> gets updated with section/program header whenever a new entry gets
->>> registered.
->>>
->>> Changes in v5:
->>>   - On suggestion from Pavan.k, to have single function call for minidump collection
->>>     from remoteproc driver, separated the logic to have separate minidump file called
->>>     qcom_rproc_minidump.c and also renamed the function from qcom_minidump() to
->>>     qcom_rproc_minidump(); however, dropped his suggestion about rework on lazy deletion
->>>     during region unregister in this series, will pursue it in next series.
->>>
->>>   - To simplify the minidump driver, removed the complication for frontend and different
->>>     backend from Greg suggestion, will pursue this once main driver gets mainlined.
->>>
->>>   - Move the dynamic ramoops region allocation from Device tree approach to command line
->>>     approch with the introduction command line parsing and memblock reservation during
->>>     early boot up; Not added documentation about it yet, will add if it gets positive
->>>     response.
->>>
->>>   - Exporting linux banner from kernel to make minidump build also as module, however,
->>>     minidump is a debug module and should be kernel built to get most debug information
->>>     from kernel.
->>>
->>>   - Tried to address comments given on dload patch series.
->>>
->>> Changes in v4: https://lore.kernel.org/lkml/1687955688-20809-1-git-send-email-quic_mojha@quicinc.com/
->>>   - Redesigned the driver and divided the driver into front end and backend (smem) so
->>>     that any new backend can be attached easily to avoid code duplication.
->>>   - Patch reordering as per the driver and subsystem to easier review of the code.
->>>   - Removed minidump specific code from remoteproc to minidump smem based driver.
->>>   - Enabled the all the driver as modules.
->>>   - Address comments made on documentation and yaml and Device tree file [Krzysztof/Konrad]
->>>   - Address comments made qcom_pstore_minidump driver and given its Device tree
->>>     same set of properties as ramoops. [Luca/Kees]
->>>   - Added patch for MAINTAINER file.
->>>   - Include defconfig change as one patch as per [Krzysztof] suggestion.
->>>   - Tried to remove the redundant file scope variables from the module as per [Krzysztof] suggestion.
->>>   - Addressed comments made on dload mode patch v6 version
->>>     https://lore.kernel.org/lkml/1680076012-10785-1-git-send-email-quic_mojha@quicinc.com/
->>>
->>> Changes in v3: https://lore.kernel.org/lkml/1683133352-10046-1-git-send-email-quic_mojha@quicinc.com/
->>>   - Addressed most of the comments by Srini on v2 and refactored the minidump driver.
->>>      - Added platform device support
->>>      - Unregister region support.
->>>   - Added update region for clients.
->>>   - Added pending region support.
->>>   - Modified the documentation guide accordingly.
->>>   - Added qcom_pstore_ramdump client driver which happen to add ramoops platform
->>>     device and also registers ramoops region with minidump.
->>>   - Added download mode patch series with this minidump series.
->>>      https://lore.kernel.org/lkml/1680076012-10785-1-git-send-email-quic_mojha@quicinc.com/
->>>
->>> Changes in v2: https://lore.kernel.org/lkml/1679491817-2498-1-git-send-email-quic_mojha@quicinc.com/
->>>   - Addressed review comment made by [quic_tsoni/bmasney] to add documentation.
->>>   - Addressed comments made by [srinivas.kandagatla]
->>>   - Dropped pstore 6/6 from the last series, till i get conclusion to get pstore
->>>     region in minidump.
->>>   - Fixed issue reported by kernel test robot.
->>>
->>> Changes in v1: https://lore.kernel.org/lkml/1676978713-7394-1-git-send-email-quic_mojha@quicinc.com/
->>>
->>> Testing of the patches has been done on sm8450 target after enabling config like
->>> CONFIG_PSTORE_RAM and CONFIG_PSTORE_CONSOLE and once the device boots up.
->>>
->>>   echo mini > /sys/module/qcom_scm/parameters/download_mode
->>>
->>> Try crashing it via devmem2 0xf11c000(this is known to create xpu violation and
->>> and put the device in download mode) on command prompt.
->>>
->>> Default storage type is set to via USB, so minidump would be downloaded with the
->>> help of x86_64 machine (running PCAT tool) attached to Qualcomm device which has
->>> backed minidump boot firmware support.
->>>
->>> This will make the device go to download mode and collect the minidump on to the
->>> attached x86 machine running the Qualcomm PCAT tool(This comes as part Qualcomm
->>> package manager kit).
->>>
->>> After that we will see a bunch of predefined registered region as binary blobs files
->>> starts with md_* downloaded on the x86 machine on given location in PCAT tool from
->>> the target device, more about this can be found in qualcomm minidump guide patch.
->>>
->>
->> I tried to apply this series on top of 535a265d7f0dd50 (as suggested by
->> `b4 am -l -g`), but it conflicts on patch [04/17]. Please specify the
->> exact base commit or another series for which this series is based on.
-> 
-> Apologies !
-> I just realized, it was 6.5-rc7, but let me rebase version of the series;
-> 
-> Sorry, for all the reviewed done so far, i will definitely take care of them or reply.
-> 
+Register all the pstore frontend with minidump, so that they can
+be dumped as default Linux minidump region to be collected on
+SoC where minidump is enabled.
 
-OK, see you in v6!
+Helper functions is written in separate file and built along with
+the minidump driver, since it is client of minidump and also call
+it at appropriate place from minidump probe so that they always
+get registered.
 
+While at it also rename the out minidump module object name during
+build as qcom_apss_minidump which basically depicts as Qualcomm
+Application processor subsystem minidump.
+
+Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+---
+ drivers/soc/qcom/Kconfig                 |  1 +
+ drivers/soc/qcom/Makefile                |  3 +-
+ drivers/soc/qcom/qcom_minidump.c         |  4 ++
+ drivers/soc/qcom/qcom_ramoops_minidump.c | 88 ++++++++++++++++++++++++++++++++
+ drivers/soc/qcom/qcom_ramoops_minidump.h | 10 ++++
+ 5 files changed, 105 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/soc/qcom/qcom_ramoops_minidump.c
+ create mode 100644 drivers/soc/qcom/qcom_ramoops_minidump.h
+
+diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+index 0ac7afc2c67d..9f1a1e128fef 100644
+--- a/drivers/soc/qcom/Kconfig
++++ b/drivers/soc/qcom/Kconfig
+@@ -306,6 +306,7 @@ config QCOM_MINIDUMP
+ 	tristate "QCOM APSS Minidump driver"
+ 	depends on ARCH_QCOM || COMPILE_TEST
+ 	depends on QCOM_SMEM
++	depends on PSTORE
+ 	help
+ 	  This config enables linux core infrastructure for Application
+ 	  processor subsystem (APSS) minidump collection i.e, it enables
+diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
+index 4b5f72f78d3c..69df41aba7a9 100644
+--- a/drivers/soc/qcom/Makefile
++++ b/drivers/soc/qcom/Makefile
+@@ -33,4 +33,5 @@ obj-$(CONFIG_QCOM_ICC_BWMON)	+= icc-bwmon.o
+ qcom_ice-objs			+= ice.o
+ obj-$(CONFIG_QCOM_INLINE_CRYPTO_ENGINE)	+= qcom_ice.o
+ obj-$(CONFIG_QCOM_RPROC_MINIDUMP)	+= qcom_rproc_minidump.o
+-obj-$(CONFIG_QCOM_MINIDUMP)		+= qcom_minidump.o
++obj-$(CONFIG_QCOM_MINIDUMP)		+= qcom_apss_minidump.o
++qcom_apss_minidump-objs			+= qcom_minidump.o qcom_ramoops_minidump.o
+diff --git a/drivers/soc/qcom/qcom_minidump.c b/drivers/soc/qcom/qcom_minidump.c
+index 4ce36f154e89..7930a80b9100 100644
+--- a/drivers/soc/qcom/qcom_minidump.c
++++ b/drivers/soc/qcom/qcom_minidump.c
+@@ -23,6 +23,7 @@
+ #include <soc/qcom/qcom_minidump.h>
+ 
+ #include "qcom_minidump_internal.h"
++#include "qcom_ramoops_minidump.h"
+ 
+ /**
+  * struct minidump_ss_data - Minidump subsystem private data
+@@ -688,6 +689,8 @@ static int qcom_apss_minidump_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	qcom_ramoops_minidump_register(md->dev);
++
+ 	mutex_lock(&md_plist.plock);
+ 	platform_set_drvdata(pdev, md);
+ 	qcom_apss_register_pending_regions(md);
+@@ -701,6 +704,7 @@ static int qcom_apss_minidump_remove(struct platform_device *pdev)
+ 	struct minidump *md = platform_get_drvdata(pdev);
+ 	struct minidump_ss_data *mdss_data;
+ 
++	qcom_ramoops_minidump_unregister();
+ 	mdss_data = md->apss_data;
+ 	memset(mdss_data->md_ss_toc, cpu_to_le32(0), sizeof(struct minidump_subsystem));
+ 	md = NULL;
+diff --git a/drivers/soc/qcom/qcom_ramoops_minidump.c b/drivers/soc/qcom/qcom_ramoops_minidump.c
+new file mode 100644
+index 000000000000..eb97310e3858
+--- /dev/null
++++ b/drivers/soc/qcom/qcom_ramoops_minidump.c
+@@ -0,0 +1,88 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
++ */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/device.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/pstore.h>
++#include <linux/slab.h>
++#include <soc/qcom/qcom_minidump.h>
++
++#include "qcom_ramoops_minidump.h"
++
++static LIST_HEAD(ramoops_region_list);
++
++struct md_region_list {
++	struct qcom_minidump_region md_region;
++	struct list_head list;
++};
++
++static int qcom_ramoops_region_register(struct device *dev, int type)
++{
++	struct qcom_minidump_region *md_region;
++	struct md_region_list *mdr_list;
++	struct pstore_record record;
++	unsigned int max_dump_cnt;
++	phys_addr_t phys;
++	const char *name;
++	void *virt;
++	size_t size;
++	int ret;
++
++	record.type = type;
++	record.id = 0;
++	max_dump_cnt = 0;
++	name = pstore_type_to_name(record.type);
++	do {
++		ret = pstore_region_defined(&record, &virt, &phys, &size, &max_dump_cnt);
++		if (ret < 0)
++			break;
++
++		mdr_list = devm_kzalloc(dev, sizeof(struct md_region_list), GFP_KERNEL);
++		if (!mdr_list)
++			return -ENOMEM;
++
++		md_region = &mdr_list->md_region;
++		scnprintf(md_region->name, sizeof(md_region->name) - 1, "K%s%llu", name, record.id);
++		md_region->virt_addr = virt;
++		md_region->phys_addr = phys;
++		md_region->size = size;
++		ret = qcom_minidump_region_register(md_region);
++		if (ret) {
++			pr_err("failed to register minidump region\n");
++			break;
++		}
++
++		list_add(&mdr_list->list, &ramoops_region_list);
++	} while (record.id < max_dump_cnt && ++record.id);
++
++	return ret;
++}
++
++void qcom_ramoops_minidump_register(struct device *dev)
++{
++	int type_arr[4] = { PSTORE_TYPE_DMESG, PSTORE_TYPE_CONSOLE,
++			    PSTORE_TYPE_FTRACE, PSTORE_TYPE_PMSG,
++			  };
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(type_arr); i++)
++		qcom_ramoops_region_register(dev, type_arr[i]);
++}
++
++void qcom_ramoops_minidump_unregister(void)
++{
++	struct md_region_list *mdr_list, *tmp;
++
++	list_for_each_entry_safe(mdr_list, tmp, &ramoops_region_list, list) {
++		struct qcom_minidump_region *region;
++
++		region = &mdr_list->md_region;
++		qcom_minidump_region_unregister(region);
++		list_del(&mdr_list->list);
++	}
++}
+diff --git a/drivers/soc/qcom/qcom_ramoops_minidump.h b/drivers/soc/qcom/qcom_ramoops_minidump.h
+new file mode 100644
+index 000000000000..6086342cd398
+--- /dev/null
++++ b/drivers/soc/qcom/qcom_ramoops_minidump.h
+@@ -0,0 +1,10 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __QCOM_RAMOOPS_MINIDUMP_H__
++#define __QCOM_RAMOOPS_MINIDUMP_H__
++
++#include <linux/types.h>
++
++void qcom_ramoops_minidump_register(struct device *dev);
++void qcom_ramoops_minidump_unregister(void);
++
++#endif
 -- 
-An old man doll... just what I always wanted! - Clara
+2.7.4
 
