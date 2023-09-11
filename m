@@ -2,120 +2,123 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B199CA0EDC
-	for <linux-hardening@archiver.kernel.org>; Mon, 11 Sep 2023 21:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E76CA0EC0
+	for <linux-hardening@archiver.kernel.org>; Mon, 11 Sep 2023 21:37:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347742AbjIKV2a (ORCPT
+        id S1347345AbjIKV21 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 11 Sep 2023 17:28:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46118 "EHLO
+        Mon, 11 Sep 2023 17:28:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243941AbjIKS1d (ORCPT
+        with ESMTP id S236535AbjIKK4u (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 11 Sep 2023 14:27:33 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B49C5198
-        for <linux-hardening@vger.kernel.org>; Mon, 11 Sep 2023 11:27:27 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-59b56dab74bso34658357b3.2
-        for <linux-hardening@vger.kernel.org>; Mon, 11 Sep 2023 11:27:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1694456847; x=1695061647; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=p4gDHjdo7g0e0VEUdde9XhYVf3BvNK1Q4R1IFhdu2EU=;
-        b=2ghIN16C+85JNtjLFbVOdwlr2kwwxPlmKzcutw6C3YmWUJCq5eLYMpzFZHlUEvgFMe
-         lPNksjrlVZDLLnbYXPTioJY2LdAnoFUFJCcKIhABtWRyUcCtMma8NN510Sfc2Zjb6iXe
-         iTN2ywHMEENOnLU1ME9Hb3XcfqVaDRxnxlw9ZnvD82PWl20TBdj9f3W5ccY8MlPsj33T
-         4SOILPiPFYdXH84tyEpk7tf7QBU93TV6ySExY/DgQ8e+w8zZETyyKOQnQr7Q1QofJ+ym
-         pz1I7g4qatqEDu+/lj/4W1FGjB3cVlzOwncrZbr0Ohu/W/9suWEDAEEG5s0RzurIwRMi
-         qFTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694456847; x=1695061647;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=p4gDHjdo7g0e0VEUdde9XhYVf3BvNK1Q4R1IFhdu2EU=;
-        b=g+hH+q8evySqTrOlPz+FWPnimhUumNqzxaK50duM2zAApTsyYyn6p9dXsUmcxJkbnb
-         aYl3nPoIWRk5AGU6uXiMBXz9bQGq+LRuSqTrqxRDBBJhJ4gTN2O2AQyngkhHkytykhph
-         ELFgBUEG7avJjtasMIgCgeQLIXxS8PVEzzZT7J04kbCwhgAnZt+qn2jR+/xaCAo5WVg9
-         q2jgpgxK0ptMwZKUlBO3TdCizVx5iONWEomzQ7nD9oZxpvGB5HqorwVxpxgpOb3utfVT
-         Kyj+hfxcjJcEz9Ai1bMiWqCQ/DkQ6yFc9HcBbRrhmjH7/vUkxdtf86ke+jZLJfO14lR9
-         /BEg==
-X-Gm-Message-State: AOJu0Yzo+PfGiBwgplloTt//jN6V5aoZi89DRSwi32g0m6xS++q1W/sv
-        Tc4LYCOP1cnoBaENY9NKfYT3GzabjpMikyvQdA==
-X-Google-Smtp-Source: AGHT+IFXwRs2WiPU1oQO41cJq/UB6Ht6s9+w8CBY9n7RHSCOA92/od6eE9lpWuVMuGg4p6bdi9Xfs61/jcv0peYObQ==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a81:cb05:0:b0:576:8cb6:62a9 with SMTP
- id q5-20020a81cb05000000b005768cb662a9mr261505ywi.6.1694456847000; Mon, 11
- Sep 2023 11:27:27 -0700 (PDT)
-Date:   Mon, 11 Sep 2023 18:27:25 +0000
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAAxc/2QC/x2NQQqDMBAAvyJ7diGxEJJ+pfRgNtu6l0Q2IhHx7
- wYPc5jLzAmVVbjCezhBeZcqJXex4wC0zPnPKKk7TGZ6mWAt1k0zrQfOSgs275AKFdxSeyAMPpo YnIvRJ+iVVfkn7Tl8vtd1A6LFs0JxAAAA
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1694456846; l=1696;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=dB+yasP8Bzxdh37I4XyOTceZ5yt48YWVpNpjD6rXby4=; b=FlV+BHOQFu2YvXN7PEVhHveROJCatNBEXKLmz3ikk6gHqPooRAghFock1yvnxmr/1xo2rxa0R
- /y9OxN0uAveB0WeynZZwEf9tY2My2NYnliox/S8LAYpzG4xaPOFDuJe
-X-Mailer: b4 0.12.3
-Message-ID: <20230911-strncpy-arch-x86-coco-tdx-tdx-c-v1-1-4b38155727f3@google.com>
-Subject: [PATCH] x86/tdx: refactor deprecated strncpy
-From:   Justin Stitt <justinstitt@google.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>
-Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+        Mon, 11 Sep 2023 06:56:50 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2857F3;
+        Mon, 11 Sep 2023 03:56:45 -0700 (PDT)
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38BAHUGk005010;
+        Mon, 11 Sep 2023 10:56:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=qcppdkim1;
+ bh=Ulb6ivCBYfJxHUM4YBEtsEJoOnSrk2SMWeoI7ndeucs=;
+ b=PMVy+DkuMntEMbC6E3AaypPc6J9MF6sKEejS5SF4eIQSNVSFrmhXAPTRcddOmNDRtS+y
+ XBwgCr78Vw0oH9FlMM2ELswZh7cIbka+q5Un9HtRgSz61u0g8J9xtSCG3Maflg4du5XG
+ QN/OQN6J0dZ5gE4stSdDACe+nNVNVC18By+VvtxgZxyGcPB2Ehq/8NhkSoMnTTADQ03A
+ H/TqrLJl25Amd8ejof0lM4LyGMqfKv/PY2D3S0UCBc+0isIpJk4tI3yGmOlOtvQeR/MU
+ oqIg5cY+vJy/WEj16vLShRAANt6ILj4pEcYIC5J3bMu0/vzx02WPiHPBXXyXx3NN0bkE 5g== 
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3t0hfqkenc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 Sep 2023 10:56:13 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+        by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 38BAuCVs006051
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 Sep 2023 10:56:12 GMT
+Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.36; Mon, 11 Sep 2023 03:55:28 -0700
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+To:     <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <keescook@chromium.org>, <tony.luck@intel.com>,
+        <gpiccoli@igalia.com>, <mathieu.poirier@linaro.org>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>,
+        <vigneshr@ti.com>, <nm@ti.com>, <matthias.bgg@gmail.com>,
+        <kgene@kernel.org>, <alim.akhtar@samsung.com>,
+        <bmasney@redhat.com>, <quic_tsoni@quicinc.com>
+CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <linux-samsung-soc@vger.kernel.org>, <kernel@quicinc.com>,
+        <quic_mojha@quicinc.com>
+Subject: [REBASE PATCH v5 09/17] pstore/ram: Use dynamic ramoops reserve resource
+Date:   Mon, 11 Sep 2023 16:23:51 +0530
+Message-ID: <1694429639-21484-10-git-send-email-quic_mojha@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com>
+References: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: VlpMUntWdgjbfQBbSQt02UT2ECOTiSRG
+X-Proofpoint-GUID: VlpMUntWdgjbfQBbSQt02UT2ECOTiSRG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-09-11_06,2023-09-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
+ suspectscore=0 phishscore=0 mlxlogscore=999 malwarescore=0
+ priorityscore=1501 lowpriorityscore=0 impostorscore=0 clxscore=1015
+ adultscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2308100000 definitions=main-2309110099
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-`strncpy` is deprecated and we should prefer more robust string apis.
+As dynamic ramoops command line parsing is now added, so
+lets add the support in ramoops driver to get the resource
+structure and add it during platform device registration.
 
-In this case, `message.str` is not expected to be NUL-terminated as it
-is simply a buffer of characters residing in a union which allows for
-named fields representing 8 bytes each. There is only one caller of
-`tdx_panic()` and they use a 59-length string for `msg`:
-|	const char *msg = "TD misconfiguration: SEPT_VE_DISABLE attribute must be set.";
-
-Given all this information, let's use `strtomem_pad` as this matches the
-functionality of `strncpy` in this instances whilst being a more robust
-and easier to understand interface.
-
-Link: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings[1]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Justin Stitt <justinstitt@google.com>
+Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
 ---
-Note: build-tested
----
- arch/x86/coco/tdx/tdx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/pstore/ram.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
-index 1d6b863c42b0..2e1be592c220 100644
---- a/arch/x86/coco/tdx/tdx.c
-+++ b/arch/x86/coco/tdx/tdx.c
-@@ -119,7 +119,7 @@ static void __noreturn tdx_panic(const char *msg)
- 	} message;
+diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+index d36702c7ab3c..ab551caa1d2a 100644
+--- a/fs/pstore/ram.c
++++ b/fs/pstore/ram.c
+@@ -914,13 +914,17 @@ static void __init ramoops_register_dummy(void)
  
- 	/* VMM assumes '\0' in byte 65, if the message took all 64 bytes */
--	strncpy(message.str, msg, 64);
-+	strtomem_pad(message.str, msg, '\0');
+ 	/*
+ 	 * Prepare a dummy platform data structure to carry the module
+-	 * parameters. If mem_size isn't set, then there are no module
+-	 * parameters, and we can skip this.
++	 * parameters. If mem_size isn't set, check for dynamic ramoops
++	 * size and extract the information if it is set.
+ 	 */
+-	if (!mem_size)
++	if (!mem_size && !dyn_ramoops_res.end)
+ 		return;
  
- 	args.r8  = message.r8;
- 	args.r9  = message.r9;
-
----
-base-commit: 2dde18cd1d8fac735875f2e4987f11817cc0bc2c
-change-id: 20230911-strncpy-arch-x86-coco-tdx-tdx-c-98b0b966bb8d
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
+ 	pr_info("using module parameters\n");
++	if (dyn_ramoops_res.end) {
++		mem_size = resource_size(&dyn_ramoops_res);
++		mem_address = dyn_ramoops_res.start;
++	}
+ 
+ 	memset(&pdata, 0, sizeof(pdata));
+ 	pdata.mem_size = mem_size;
+-- 
+2.7.4
 
