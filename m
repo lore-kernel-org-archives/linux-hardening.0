@@ -2,117 +2,103 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D375BCA0EC7
-	for <linux-hardening@archiver.kernel.org>; Tue, 12 Sep 2023 01:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEF6CA0EC7
+	for <linux-hardening@archiver.kernel.org>; Tue, 12 Sep 2023 01:49:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232591AbjILBOe (ORCPT
+        id S233634AbjILBtO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 11 Sep 2023 21:14:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57840 "EHLO
+        Mon, 11 Sep 2023 21:49:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232806AbjILBOY (ORCPT
+        with ESMTP id S234206AbjILBs5 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 11 Sep 2023 21:14:24 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6BDE6FDD1;
-        Mon, 11 Sep 2023 18:03:36 -0700 (PDT)
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38C0KXkH031847;
-        Tue, 12 Sep 2023 00:39:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=date : from : to :
- cc : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=qcppdkim1; bh=b+ZDvkvQfKietDBjdlhgqxs9r2mzT6RnU3pGyGd2BkA=;
- b=XSPS0PTtdcMZxd6ljmCdyxivBX0e0Llbz4hMM1uUnMpq90hn0OTRUTyBkH7/HydYrrMR
- YTF2AgTo5PKj+DF6euX8I6G7AgrmyuaW8NKAGrMMwUxc74XFT4AbY2FuxNl2vxp9VN5c
- msoAWjjKQXZlI3VkQa1SH2FEjUGweATifEvcE8WCBv8XicDrVmKdBNx5GyfBu2HYE1NW
- U6/oISTtd8NH4lq5xcavPb/oA8VDWBlvoAoDFJ34Gp6ZF8uufpX/wv1K+4UKRvX8xEz/
- nwSBYJebtY+chzhxl4AADpDlSnzat6fdpot3CKwZ8bMonFH8v69FJG0ExQwmaR7R9+6u Yg== 
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3t29b0gggd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Sep 2023 00:39:37 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 38C0daBH012692
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Sep 2023 00:39:36 GMT
-Received: from hu-pkondeti-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.36; Mon, 11 Sep 2023 17:39:24 -0700
-Date:   Tue, 12 Sep 2023 06:09:21 +0530
-From:   Pavan Kondeti <quic_pkondeti@quicinc.com>
-To:     Mukesh Ojha <quic_mojha@quicinc.com>
-CC:     Pavan Kondeti <quic_pkondeti@quicinc.com>, <corbet@lwn.net>,
-        <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <keescook@chromium.org>, <tony.luck@intel.com>,
-        <gpiccoli@igalia.com>, <mathieu.poirier@linaro.org>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>,
-        <vigneshr@ti.com>, <nm@ti.com>, <matthias.bgg@gmail.com>,
-        <kgene@kernel.org>, <alim.akhtar@samsung.com>,
-        <bmasney@redhat.com>, <quic_tsoni@quicinc.com>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>, <kernel@quicinc.com>
-Subject: Re: [PATCH v5 09/17] pstore/ram: Use dynamic ramoops reserve resource
-Message-ID: <d69a1822-0972-419a-ae8b-b6979733a18b@quicinc.com>
-References: <1694290578-17733-1-git-send-email-quic_mojha@quicinc.com>
- <1694290578-17733-10-git-send-email-quic_mojha@quicinc.com>
- <20425ace-3ef5-4eaf-8319-999bafa34a07@quicinc.com>
- <35c9d1b1-0f48-b873-d703-c880f3b91422@quicinc.com>
+        Mon, 11 Sep 2023 21:48:57 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 362CE130F8C;
+        Mon, 11 Sep 2023 18:22:26 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 291B4C116B2;
+        Mon, 11 Sep 2023 23:27:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1694474823;
+        bh=NJ/M71WDi1QkA4y2AsQdvINQobLZEouTyfxhdb+/rTw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=FVAUGHzTi4iB7U/MVoLNzWRQ1S+LqBGGTyw5bZj4QGTXs+BORi0OQXUm1NCwAPINf
+         mGZ9RFvUv/gcsnVU8VquXHYKJxDDffWVrURGZhKDInW8Y96hfxRSvCEdpHSVK4/ksP
+         /wnW3tLjE7lMn5bnHskEgh9Z0Wg1P26VUPOpJY4vjPQER+39aPxpeOnU1c46YVjjsY
+         Ky32ISstAItKJwyvvbWTAtzM1bW4WuWWLELZvk5w72VNSP3XMoiJiTEe2xWHW2Zq89
+         JZp4ApL1hCWo81eS8wT4ccy5i1IbNqTXxEM1CK7OPmrBofNbv069nuPDxDEEAxce2n
+         2MGSp+9qQEtWA==
+Date:   Mon, 11 Sep 2023 17:27:59 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH v2][next] RDMA/core: Use size_{add,mul}() in calls to
+ struct_size()
+Message-ID: <ZP+if342EMhModzZ@work>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <35c9d1b1-0f48-b873-d703-c880f3b91422@quicinc.com>
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: tfU2_hR73glnule_LYZ8-x9Z18vDoumI
-X-Proofpoint-ORIG-GUID: tfU2_hR73glnule_LYZ8-x9Z18vDoumI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-09-11_19,2023-09-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- adultscore=0 impostorscore=0 priorityscore=1501 mlxscore=0 mlxlogscore=719
- lowpriorityscore=0 bulkscore=0 spamscore=0 suspectscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2308100000
- definitions=main-2309120003
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Sep 11, 2023 at 04:21:44PM +0530, Mukesh Ojha wrote:
-> 
-> 
-> On 9/11/2023 11:03 AM, Pavan Kondeti wrote:
-> > On Sun, Sep 10, 2023 at 01:46:10AM +0530, Mukesh Ojha wrote:
-> > > As dynamic ramoops command line parsing is now added, so
-> > > lets add the support in ramoops driver to get the resource
-> > > structure and add it during platform device registration.
-> > > 
-> > > Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
-> > > ---
-> > >   fs/pstore/ram.c | 10 +++++++---
-> > >   1 file changed, 7 insertions(+), 3 deletions(-)
-> > > 
-> > 
-> > Documentation/admin-guide/ramoops.rst might need an update as well.
-> 
-> I have said in the cover-letter under changes in v5, it is open for
-> comment and not yet documented it yet.
-> 
-Sure.
+Harden calls to struct_size() with size_add() and size_mul().
 
-To easy on the reviewers, the under cut portion of a specific patch could be
-used to add footer notes like TODO/Testing etc. In this case, I was lazy to 
-read the loong cover letter posted in this series ;-)
+Fixes: 467f432a521a ("RDMA/core: Split port and device counter sysfs attributes")
+Fixes: a4676388e2e2 ("RDMA/core: Simplify how the gid_attrs sysfs is created")
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v2:
+ - Update changelog text: remove the part about binary differences (it
+   was added by mistake).
 
-Thanks,
-Pavan
+ drivers/infiniband/core/sysfs.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/infiniband/core/sysfs.c b/drivers/infiniband/core/sysfs.c
+index ee59d7391568..ec5efdc16660 100644
+--- a/drivers/infiniband/core/sysfs.c
++++ b/drivers/infiniband/core/sysfs.c
+@@ -903,7 +903,7 @@ alloc_hw_stats_device(struct ib_device *ibdev)
+ 	 * Two extra attribue elements here, one for the lifespan entry and
+ 	 * one to NULL terminate the list for the sysfs core code
+ 	 */
+-	data = kzalloc(struct_size(data, attrs, stats->num_counters + 1),
++	data = kzalloc(struct_size(data, attrs, size_add(stats->num_counters, 1)),
+ 		       GFP_KERNEL);
+ 	if (!data)
+ 		goto err_free_stats;
+@@ -1009,7 +1009,7 @@ alloc_hw_stats_port(struct ib_port *port, struct attribute_group *group)
+ 	 * Two extra attribue elements here, one for the lifespan entry and
+ 	 * one to NULL terminate the list for the sysfs core code
+ 	 */
+-	data = kzalloc(struct_size(data, attrs, stats->num_counters + 1),
++	data = kzalloc(struct_size(data, attrs, size_add(stats->num_counters, 1)),
+ 		       GFP_KERNEL);
+ 	if (!data)
+ 		goto err_free_stats;
+@@ -1140,7 +1140,7 @@ static int setup_gid_attrs(struct ib_port *port,
+ 	int ret;
+ 
+ 	gid_attr_group = kzalloc(struct_size(gid_attr_group, attrs_list,
+-					     attr->gid_tbl_len * 2),
++					     size_mul(attr->gid_tbl_len, 2)),
+ 				 GFP_KERNEL);
+ 	if (!gid_attr_group)
+ 		return -ENOMEM;
+@@ -1205,8 +1205,8 @@ static struct ib_port *setup_port(struct ib_core_device *coredev, int port_num,
+ 	int ret;
+ 
+ 	p = kvzalloc(struct_size(p, attrs_list,
+-				attr->gid_tbl_len + attr->pkey_tbl_len),
+-		    GFP_KERNEL);
++				size_add(attr->gid_tbl_len, attr->pkey_tbl_len)),
++		     GFP_KERNEL);
+ 	if (!p)
+ 		return ERR_PTR(-ENOMEM);
+ 	p->ibdev = device;
+-- 
+2.34.1
+
