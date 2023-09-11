@@ -2,59 +2,44 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60241EC8748
-	for <linux-hardening@archiver.kernel.org>; Sun, 10 Sep 2023 07:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DFB7C71153
+	for <linux-hardening@archiver.kernel.org>; Mon, 11 Sep 2023 00:26:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346407AbjIJHoZ (ORCPT
+        id S231334AbjIKA0w (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 10 Sep 2023 03:44:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50330 "EHLO
+        Sun, 10 Sep 2023 20:26:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234283AbjIJHoY (ORCPT
+        with ESMTP id S231332AbjIKA0v (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 10 Sep 2023 03:44:24 -0400
-Received: from mail-oa1-x2d.google.com (mail-oa1-x2d.google.com [IPv6:2001:4860:4864:20::2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3AC01A5;
-        Sun, 10 Sep 2023 00:44:20 -0700 (PDT)
-Received: by mail-oa1-x2d.google.com with SMTP id 586e51a60fabf-1ba5cda3530so2523519fac.3;
-        Sun, 10 Sep 2023 00:44:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694331859; x=1694936659; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=c50+csNixrAL652I8a2nGfpKGvkeir3Xklb+hUPR40Y=;
-        b=hM/5/CX17DTiDmOnNroBUSIfS/zneYadi4XkS6XR6Iqsg3oBrynCWt2PJzXqB6Z1j2
-         H1dy25hFbFs9inT+I5U+9xn4bnWolA3cy/LheRpADtPvKjCD2hx+8V+blg6m0k+Pa/43
-         mbhwdsQp3Vrtc0Qmbh6/vrjA3t3KXrMf4ZoTkY0mJwjzS+JOcgPrvIF7GKh3ef1dtEOC
-         U7IupbTwlgCpIo5ld9H2oEfU4solcbJH97LmZkphcrYOWe2oJNepWX3CeAvty8MoByvQ
-         6Susd9NPQjfQ1CDu9LxmgIj4IjkK2uzBGQJDpmH7GM6NejfGtbIOJ5ru8miPNskjMtGa
-         2O8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694331859; x=1694936659;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=c50+csNixrAL652I8a2nGfpKGvkeir3Xklb+hUPR40Y=;
-        b=S7rJ26LBICOgiyxrXLu4DsjF7cWm/ZA94us+mFqWOnnF/ZUaqZOvAY/p+X4AxLADJK
-         sLcmOTfxwGkIMv09GJTpb9DQp+5G2H0YPy9DufP480cK/ZvDogd4GeIKbkseD7mqw6CQ
-         da+0UBc4n9OUzzmRCixFTjim/SbFi4j8DiseR+KAxS+ebFlNKpIdUMAcQOeKoiF5HFhH
-         MldZuvB/b/JTZuy2owtys1205VzG1uv6hErqNCp+3rkm74sHYjLaaZhuFR8//JAUiErh
-         WgWSXiamCN9jJ+KFKZMeb7dnWMg5oNYjWbZBPPmYxEArvXOWCKLea60cJpqu3QO/7GY1
-         Lxmg==
-X-Gm-Message-State: AOJu0Yy/iX8YECVTr5xtVpvLsuEeRTKY3dDJ3/FC0YAvLZFt8B6gtVJD
-        cPFvSyOIbXUFfkynSnAlPIXK/CxIoA2zIP1y8Hg=
-X-Google-Smtp-Source: AGHT+IF85GxCqI1nmf/BUSpIO+3OcIzI4r8N/ZOdJLekOlOO3w6LQAX+Or4XjtalLh5iVsJQpEJiqJ/55ic8kjF6NcY=
-X-Received: by 2002:a05:6870:2155:b0:1c8:baa5:a50f with SMTP id
- g21-20020a056870215500b001c8baa5a50fmr8754232oae.27.1694331859157; Sun, 10
- Sep 2023 00:44:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1694202430.git.pstanner@redhat.com> <93001a9f3f101be0f374080090f9c32df73ca773.1694202430.git.pstanner@redhat.com>
-In-Reply-To: <93001a9f3f101be0f374080090f9c32df73ca773.1694202430.git.pstanner@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 10 Sep 2023 10:43:42 +0300
-Message-ID: <CAHp75VdAXBk2GzNX+b2-t62biuOn9JHMupaVbBuVkDn5PRTg_A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/5] string.h: add array-wrappers for (v)memdup_user()
+        Sun, 10 Sep 2023 20:26:51 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B81C6194
+        for <linux-hardening@vger.kernel.org>; Sun, 10 Sep 2023 17:26:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1694391960;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=tPpLdpG4maiTSM6PN9I1fTjgodUcBS/7pIjObaruFGQ=;
+        b=ajXX9b+5RiKl4HeWm8zeTK9rRtFymGZhUmgDLhhc/4eB896NVmMycIZpsUplIW+7pR86Ug
+        7K6R9zTqX01eo3xrl4w62PVyH9ukIbzUWePRaraLPwQjoN5MWDjaQYP+15IWyqgqDN6mXa
+        fSp1+NlBMwrXExhzgQD+R/dHHh7lBNc=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-645-X6kJb_mwOrivKjodFQX0cg-1; Sun, 10 Sep 2023 20:25:55 -0400
+X-MC-Unique: X6kJb_mwOrivKjodFQX0cg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9DCC929A9CAB;
+        Mon, 11 Sep 2023 00:25:54 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.35])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5301521D4F3D;
+        Mon, 11 Sep 2023 00:25:53 +0000 (UTC)
+Date:   Mon, 11 Sep 2023 08:25:50 +0800
+From:   Baoquan He <bhe@redhat.com>
 To:     Philipp Stanner <pstanner@redhat.com>
 Cc:     Kees Cook <keescook@chromium.org>,
         Andy Shevchenko <andy@kernel.org>,
@@ -74,29 +59,56 @@ Cc:     Kees Cook <keescook@chromium.org>,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         kexec@lists.infradead.org, linux-hardening@vger.kernel.org,
         David Airlie <airlied@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 2/5] kernel: kexec: copy user-array safely
+Message-ID: <ZP5ejovfsyEjTeg9@MiWiFi-R3L-srv>
+References: <cover.1694202430.git.pstanner@redhat.com>
+ <31313a8a1dd1baf9dd3c21fbe8dd46b9e111f20c.1694202430.git.pstanner@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <31313a8a1dd1baf9dd3c21fbe8dd46b9e111f20c.1694202430.git.pstanner@redhat.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Sep 8, 2023 at 11:02=E2=80=AFPM Philipp Stanner <pstanner@redhat.co=
-m> wrote:
->
-> Currently, user array duplications are sometimes done without an
-> overflow check. Sometimes the checks are done manually; sometimes the
-> array size is calculated with array_size() and sometimes by calculating
-> n * size directly in code.
->
-> Introduce wrappers for arrays for memdup_user() and vmemdup_user() to
-> provide a standardized and safe way for duplicating user arrays.
->
-> This is both for new code as well as replacing usage of (v)memdup_user()
-> in existing code that uses, e.g., n * size to calculate array sizes.
+On 09/08/23 at 09:59pm, Philipp Stanner wrote:
+> Currently, there is no overflow-check with memdup_user().
+> 
+> Use the new function memdup_array_user() instead of memdup_user() for
+> duplicating the user-space array safely.
+> 
+> Suggested-by: David Airlie <airlied@redhat.com>
+> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+> ---
+>  kernel/kexec.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/kexec.c b/kernel/kexec.c
+> index 107f355eac10..8f35a5a42af8 100644
+> --- a/kernel/kexec.c
+> +++ b/kernel/kexec.c
+> @@ -247,7 +247,7 @@ SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
+>  		((flags & KEXEC_ARCH_MASK) != KEXEC_ARCH_DEFAULT))
+>  		return -EINVAL;
+>  
+> -	ksegments = memdup_user(segments, nr_segments * sizeof(ksegments[0]));
+> +	ksegments = memdup_array_user(segments, nr_segments, sizeof(ksegments[0]));
 
-No objections,
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+LGTM,
 
---=20
-With Best Regards,
-Andy Shevchenko
+Acked-by: Baoquan He <bhe@redhat.com>
+
+>  	if (IS_ERR(ksegments))
+>  		return PTR_ERR(ksegments);
+>  
+> -- 
+> 2.41.0
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
+
