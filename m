@@ -2,179 +2,150 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A50CA0ECB
-	for <linux-hardening@archiver.kernel.org>; Mon, 11 Sep 2023 21:37:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D589ECA0EC4
+	for <linux-hardening@archiver.kernel.org>; Mon, 11 Sep 2023 21:37:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348589AbjIKV2z (ORCPT
+        id S1348598AbjIKV25 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 11 Sep 2023 17:28:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36784 "EHLO
+        Mon, 11 Sep 2023 17:28:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242758AbjIKQQK (ORCPT
+        with ESMTP id S236556AbjIKK5G (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 11 Sep 2023 12:16:10 -0400
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2063.outbound.protection.outlook.com [40.107.94.63])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B886B1B8;
-        Mon, 11 Sep 2023 09:16:01 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NfrQobkP+XCH/q/Rd2XsQuOEDyzDog3ckwkTZKYNDiT6dZ+cIAFDwzCuUU3EU9/Ax/1K52sKMI7KZboy0HClsqlFN5oZF3A/WjRJhMJgLtgfW8umiGtYwlXM9bmoxv/OLVn7SGvke5abyI74Rc8JN1+czk5karHyn+jYCZ+wE7rERbTHGPL+heLxgCBh9WtLf/QS/Z67z7OlBwRZird+DNCvbEX+gVYVUD//isj5CvWRTUfk57+o7qOhgRcxpVvll+cIFJG0eaSeo3nlM3MuNVjs+QQtOITyftbuQSUiXFeOnkqczKVTEpgtr+ytupKLh3JwiJnTZ/nVZ95z5JejYg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CB4qXlChKXG8c63sQi0EVUaEAq8VIJ3RRkfBH64WjqM=;
- b=eWOareB4DD3qIVxJlHkjfQNy04WoN7Mkh7rWGjhmFEb6JpURvKirRiRdXepYZH3NVhZVxo/gVJ2ZWymlE37tl9h/4zOsIPNXGH9hOxv0gCHtN5o1wseZVomlXRe2jHBH+JmqkyFOSFqgrFpGIsTD6PFJNVJlga+uH8Bzr4OOrE4DQpLD/yCk0lbl9jK3ibieoud1HJ9SPaQHchVF5hsn+xzB12uTIrAUD4GtT3g+gXUNnMW8on9HVnFKKDNZFpYAJfZcLeJRMPSxrisAGvjdicNWGve5/s8XwJaRcE8ROV7Yz9E8mxCWpjFTxD/NHh9zLIj3xZ3Kr8S+a58gu5l/cw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CB4qXlChKXG8c63sQi0EVUaEAq8VIJ3RRkfBH64WjqM=;
- b=S8B9bSacZo43Q7MwkuRtj34xuLuTs8K/qDpoLnVIDUZJXodOrs/FzTG8xVCHQ5gfc3LdX790aE2h8vKxJ4/pcgohX5a+DARsxV6rD/cz+fauotLQnaZAPxzI+3d7aN6tEhWOV+8NXyDv/0RMkTaCCAj6J7aOFEoY1xgSo8UeDyH9nqE3AeuxDUlnT33u4u0e1ZVcBqW4vKq7Hs813OAQEnTxR0O131bfUQlHAOa6+y85SiJMr7QupwlWBw+aCMJALXJ7fzMa6ReznIbWDxLAMumLGmgC0hdf/wReDp/TzY4PeHpLLp+oE2Sk0muKEHRyGlgjp06vKoCbHzrwVZ3MrQ==
-Received: from DM6PR12MB3371.namprd12.prod.outlook.com (2603:10b6:5:116::27)
- by CYXPR12MB9427.namprd12.prod.outlook.com (2603:10b6:930:d6::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6768.30; Mon, 11 Sep
- 2023 16:15:59 +0000
-Received: from DM6PR12MB3371.namprd12.prod.outlook.com
- ([fe80::ed2:99a4:2e77:89bc]) by DM6PR12MB3371.namprd12.prod.outlook.com
- ([fe80::ed2:99a4:2e77:89bc%5]) with mapi id 15.20.6768.029; Mon, 11 Sep 2023
- 16:15:59 +0000
-From:   Jeshua Smith <jeshuas@nvidia.com>
-To:     "Luck, Tony" <tony.luck@intel.com>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "gpiccoli@igalia.com" <gpiccoli@igalia.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "bp@alien8.de" <bp@alien8.de>
-CC:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Subject: RE: [PATCH V2] ACPI: APEI: Use ERST timeout for slow devices
-Thread-Topic: [PATCH V2] ACPI: APEI: Use ERST timeout for slow devices
-Thread-Index: AQHZtREytrmSwIEvT06Ibqr95x6guq/abXNggAAKnoCAAI5FkIAVd3TwgCWuaxA=
-Date:   Mon, 11 Sep 2023 16:15:58 +0000
-Message-ID: <DM6PR12MB337153EE2DDDB427096446F0DBF2A@DM6PR12MB3371.namprd12.prod.outlook.com>
-References: <20230712223448.145079-1-jeshuas@nvidia.com>
- <DM6PR12MB3371BA50E3B76D2266273901DB09A@DM6PR12MB3371.namprd12.prod.outlook.com>
- <SJ1PR11MB6083426D3C663F47E707CF1AFC09A@SJ1PR11MB6083.namprd11.prod.outlook.com>
- <DM6PR12MB3371D86F80417641B8479B28DB0EA@DM6PR12MB3371.namprd12.prod.outlook.com>
- <DM6PR12MB3371FA3AEEA4D17D94C889D5DB1BA@DM6PR12MB3371.namprd12.prod.outlook.com>
-In-Reply-To: <DM6PR12MB3371FA3AEEA4D17D94C889D5DB1BA@DM6PR12MB3371.namprd12.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM6PR12MB3371:EE_|CYXPR12MB9427:EE_
-x-ms-office365-filtering-correlation-id: cd8de1b0-0324-491d-7464-08dbb2e26292
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: bK6sFXYhxXmL976gkfn48w+VXrk3ESWqzBNu/2Tff8GURxFbikOhAvubSqMay/BdbTyxd3FVxqR7HtV1afY5GsFBWMkG6rgVUeImIwMBGcXLxQyS1DsDhLCBjiLCmdz38FYO8km7O2CPza/Ylmn1xzLMu9LtzsBJ1PV/1z1qKsYuiIXeN1ebC2avMzZCWAEV0TkhxTVV4ponL8MNUJs38zddN5dMIUBf+nyhv2efX7QpBLACG6WmEd3Uh+oNzLHFzOwBOk1PZOSYT9ZFsOQdBDOSq0PdZAGGsbH+da/nahWM4Nra09DUJhlQAaRFRRI9cE7X7mJQ9+M0zvSKp2JYXiNgjIQlW/ELkpssrkZtJq2J/mql8z/GfC457xjgfeNW8m/Zbjkw/UFo7uOgGbWUk4ty3kJK/wfdIITmXFhWvJIPUQkUWPEm252SY/8I7GDj/XV58r3F3mh6lorMbLOTRJYZAC0G+Lz9f8fLcT8GTWpMdCEf7CJquFriEDAvNMFE1N8UVGKo0VGkUzrAIeD0I+l1AOu/c1LZSHhpvDMk3R1/BgZfZlIve1kGrJxsav/mnLPh7qvhx0Nh2LI7keMykJculwKmtDqertYxusNjja1fe1UfyukhFM/q5mM9tIVeuk36Se3OXpLbG93Ev7sy3m4I/0+Iw5iG7GLi+TutkmU=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3371.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(396003)(39860400002)(376002)(346002)(366004)(1800799009)(186009)(451199024)(83380400001)(122000001)(966005)(478600001)(26005)(6506007)(107886003)(55016003)(53546011)(7696005)(86362001)(71200400001)(9686003)(8936002)(2906002)(64756008)(7416002)(52536014)(4326008)(5660300002)(8676002)(66476007)(66946007)(316002)(66556008)(54906003)(66446008)(76116006)(41300700001)(33656002)(110136005)(38070700005)(38100700002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?8szRVZlPjXrlD+1So8rcITRJWIHNGFsZOLFNZVF5qkd7Sr8zvUIC7YIisDCT?=
- =?us-ascii?Q?3NPE3OJM8PJwPr1rD72U+Na42XAI7Oduei26Kat8ng5Q8pewWjBTQITsQBaK?=
- =?us-ascii?Q?EBVohtNJTrRbe7RJfLYwWP7D4cbf3bCvDMjYMsqf4iOR63uTRwDTFhdXwoqf?=
- =?us-ascii?Q?pL8LjesTRj22xP9+eNaw1IhTx75UMG/FiGRn2boIT2nIKRt06EjtM2vgqWoN?=
- =?us-ascii?Q?Zm2LceXkz0NezGg8khyBQFU9aGZR5Lj8yw1jj0xgMTcHuCu0JLBSHgeyLsGR?=
- =?us-ascii?Q?CLdDKz+/aFQC7wecsGB3vbhlOaj0HMAH7LzuBjszBeCsWrvAAVlPCkn0kX9G?=
- =?us-ascii?Q?oE9ioLFMpCzG4qO01ayfhtpuxiWZApV4Pv9CFxtCIcRqtHeJThkkSYm+1Ln3?=
- =?us-ascii?Q?Qcczmt1nfTD42Fjec4lDTGaYhsDSryHtOvImSMRD06IZGRf3aqRrRoPnciGp?=
- =?us-ascii?Q?U2KKS7MnxnKBhDa2fRU418F+vgAL4kOOOh3kqpMXXOOJw9juARlNNjYz2Ut0?=
- =?us-ascii?Q?UYaXZVT6JmtJ5v143y8Z7JCutqak1mzjtt9538a94Nnfu8YFzPL+BrDjvsS+?=
- =?us-ascii?Q?rlykSpr7AuJl89P3qg5c5oKjIkhcfzOq/7nWQzLdQIBVxKI9DMXZbnE6KmeQ?=
- =?us-ascii?Q?vZPHja106px6BdyxZ+ROyk1TKxkOoFofuV84TJm60gMNLap5JE/sOYaINrc1?=
- =?us-ascii?Q?2amp3IW08OHe3824rc4JWcg3Zv0XLhuMAFPuKjMyU1jLcPBS8v+BDG9mMG2X?=
- =?us-ascii?Q?lQkV3iHXs3xWMFAfAMmpTZeAYn3SmiRDXJnveVzR4moqH5jQuKbC1u/uWLeZ?=
- =?us-ascii?Q?eyIXfVUdpNZkT0oEYFs1W9KJxzyPsabMm+YZZFP3gz6/8nHFmEC6vu2g6/qA?=
- =?us-ascii?Q?X+L912zvLA9/+wIBjcCXWfzh7A/S2+6UvvMhkQevFu+XBbFIFdKAbOpfWDlX?=
- =?us-ascii?Q?YsXwGaLoi42AQ/8eWoVJP1BpkjCF5tS9tpec4vQWmCy5DiVhP0SbVNLPpu4/?=
- =?us-ascii?Q?i/xuZARat2pqRl8rZjsDnbTFnJBb9PopKzEbqtxK2KQ5t1ZTahHOp8SiXGZI?=
- =?us-ascii?Q?2wIQUe3vKGH9REhSZkV/DDdQFA3B7QF8jMt8OzzxNiBfoSiW5FvHjNnqGlt0?=
- =?us-ascii?Q?n5nmpJwQ37A7Xov2bD9TX6z4KYDhkEm2pfyplRdDGeg07xiT8H0qQUdcZLhl?=
- =?us-ascii?Q?mHd/4sedw3cGCyDIiFTwwELAILVacyBDX43vmm196G9/Lh3RDozxKQA49dGE?=
- =?us-ascii?Q?x/DWaI5PiYYD7B5ssEP4Jj7HfVyOGe5kKEqs7oSRm1P8ZcTB14GdJRffAnDu?=
- =?us-ascii?Q?DuG8D0AH/4m9Htv6rRoAGjq74t4ZOxFx0Iqzs5sHE18A+R1IVGdJOjBdg8op?=
- =?us-ascii?Q?SLaIMyzxrrlYo9GNKe9nZVozkJaoPlUfNHhVsXKe6GGb7qDtrv2gArkM0bj1?=
- =?us-ascii?Q?uQfraLvUiNdYBjtr0RmNyAU+sV7+aHZHxsn4OXCD06g3MGj8FaLHStk/xHkE?=
- =?us-ascii?Q?DKXv/LkAKJZY2hQwbHh1iPeXsTHS5V5o4AS+o6sZzrl1h/XfP/42EedUzzKA?=
- =?us-ascii?Q?ekP2OD1qwkzjqtFFBuWrv/dhhR30o95N3u4R5Pzm?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 11 Sep 2023 06:57:06 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0A95F3;
+        Mon, 11 Sep 2023 03:57:01 -0700 (PDT)
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38BAov3n011117;
+        Mon, 11 Sep 2023 10:56:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=qcppdkim1;
+ bh=BciqlRm1IXuJGPGGFANUuS6+s1Ocn2xvnDLrENlUd70=;
+ b=YOtpL6iC9R4FChfnR4PXO2BcTiAkfs+JSz7WDX7bdwxDujJAOaPVpwCdzEskI2iNeE3/
+ BB/jO0srmLAimGgKHXC0C3m4ojxb2/n9WVo6XSyPHBVjcTHd6f00y/mKRRgmsDTbnCir
+ lexC1x0EK0yGaMW8do3vRBO9kLxY5Vg4AR/J5oK8RT/nf0zTbIDeNCqw93Yj/jjcN8Pp
+ k8fYTPhmq8Qtu2L+BZeU/2LDvDngm3nK8OxEVfJcuLU9sp5EzP7CiqrlBmMx78nFmrpl
+ JlWlk3PMlDgQQ5Vr326ubiX89FLXNGZwpySvgiPLru6HZm2jwKgiYTQffYDCOo2cokgj Cw== 
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3t0edmkqab-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 Sep 2023 10:56:31 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+        by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 38BAuUpG006543
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 Sep 2023 10:56:30 GMT
+Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.36; Mon, 11 Sep 2023 03:56:20 -0700
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+To:     <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <keescook@chromium.org>, <tony.luck@intel.com>,
+        <gpiccoli@igalia.com>, <mathieu.poirier@linaro.org>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>,
+        <vigneshr@ti.com>, <nm@ti.com>, <matthias.bgg@gmail.com>,
+        <kgene@kernel.org>, <alim.akhtar@samsung.com>,
+        <bmasney@redhat.com>, <quic_tsoni@quicinc.com>
+CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <linux-samsung-soc@vger.kernel.org>, <kernel@quicinc.com>,
+        <quic_mojha@quicinc.com>,
+        Poovendhan Selvaraj <quic_poovendh@quicinc.com>
+Subject: [REBASE PATCH v5 15/17] firmware: scm: Modify only the download bits in TCSR register
+Date:   Mon, 11 Sep 2023 16:23:57 +0530
+Message-ID: <1694429639-21484-16-git-send-email-quic_mojha@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com>
+References: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com>
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3371.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cd8de1b0-0324-491d-7464-08dbb2e26292
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Sep 2023 16:15:58.8926
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ioB81pA4S7GF0hZADHje6f53soflkwcHOckOor/bmoJ6fndxsnVWJDCcuj7J91v01Kqfh6lFxPn1Knj0gnH5aA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR12MB9427
+Content-Type: text/plain
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: vE-OmmTlA0fMtTl4BcpSQY1pdiC7iSC8
+X-Proofpoint-GUID: vE-OmmTlA0fMtTl4BcpSQY1pdiC7iSC8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-09-11_06,2023-09-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
+ priorityscore=1501 mlxlogscore=999 malwarescore=0 spamscore=0
+ impostorscore=0 lowpriorityscore=0 clxscore=1015 phishscore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2308100000 definitions=main-2309110099
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Any further questions? Anything else holding up this patch?
+Crashdump collection is based on the DLOAD bit of TCSR register.
+To retain other bits, we read the register and modify only the
+DLOAD bit as the other bits have their own significance.
 
------Original Message-----
-From: Jeshua Smith <jeshuas@nvidia.com>=20
-Sent: Friday, August 4, 2023 7:05 PM
-To: Luck, Tony <tony.luck@intel.com>; keescook@chromium.org; gpiccoli@igali=
-a.com; rafael@kernel.org; lenb@kernel.org; james.morse@arm.com; bp@alien8.d=
-e
-Cc: linux-acpi@vger.kernel.org; linux-kernel@vger.kernel.org; linux-hardeni=
-ng@vger.kernel.org; linux-tegra@vger.kernel.org; Thierry Reding <treding@nv=
-idia.com>; Jonathan Hunter <jonathanh@nvidia.com>
-Subject: RE: [PATCH V2] ACPI: APEI: Use ERST timeout for slow devices
+Co-developed-by: Poovendhan Selvaraj <quic_poovendh@quicinc.com>
+Signed-off-by: Poovendhan Selvaraj <quic_poovendh@quicinc.com>
+Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+Tested-by: Kathiravan Thirumoorthy <quic_kathirav@quicinc.com> # IPQ9574 and IPQ5332
+---
+ drivers/firmware/qcom_scm.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-Thanks for the reply.
+diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+index 321133f0950d..5cacae63ee2a 100644
+--- a/drivers/firmware/qcom_scm.c
++++ b/drivers/firmware/qcom_scm.c
+@@ -5,6 +5,8 @@
+ #include <linux/platform_device.h>
+ #include <linux/init.h>
+ #include <linux/interrupt.h>
++#include <linux/bitfield.h>
++#include <linux/bits.h>
+ #include <linux/completion.h>
+ #include <linux/cpumask.h>
+ #include <linux/export.h>
+@@ -26,6 +28,14 @@
+ static bool download_mode = IS_ENABLED(CONFIG_QCOM_SCM_DOWNLOAD_MODE_DEFAULT);
+ module_param(download_mode, bool, 0);
+ 
++#define SCM_HAS_CORE_CLK	BIT(0)
++#define SCM_HAS_IFACE_CLK	BIT(1)
++#define SCM_HAS_BUS_CLK		BIT(2)
++
++#define QCOM_DLOAD_MASK		GENMASK(5, 4)
++#define QCOM_DLOAD_FULLDUMP	0x1
++#define QCOM_DLOAD_NODUMP	0x0
++
+ struct qcom_scm {
+ 	struct device *dev;
+ 	struct clk *core_clk;
+@@ -440,6 +450,7 @@ static int __qcom_scm_set_dload_mode(struct device *dev, bool enable)
+ 
+ static void qcom_scm_set_download_mode(bool enable)
+ {
++	u32 val = enable ? QCOM_DLOAD_FULLDUMP : QCOM_DLOAD_NODUMP;
+ 	bool avail;
+ 	int ret = 0;
+ 
+@@ -449,8 +460,9 @@ static void qcom_scm_set_download_mode(bool enable)
+ 	if (avail) {
+ 		ret = __qcom_scm_set_dload_mode(__scm->dev, enable);
+ 	} else if (__scm->dload_mode_addr) {
+-		ret = qcom_scm_io_writel(__scm->dload_mode_addr,
+-				enable ? QCOM_SCM_BOOT_SET_DLOAD_MODE : 0);
++		ret = qcom_scm_io_update_field(__scm->dload_mode_addr,
++					       QCOM_DLOAD_MASK,
++					       FIELD_PREP(QCOM_DLOAD_MASK, val));
+ 	} else {
+ 		dev_err(__scm->dev,
+ 			"No available mechanism for setting download mode\n");
+-- 
+2.7.4
 
-It's not very easy to see. It's just a bit down from the link you sent. It'=
-s the last possible action in the Serialization Actions table:
-https://uefi.org/specs/ACPI/6.5/18_Platform_Error_Interfaces.html#serializa=
-tion-actions
-
-18.5.1.1. Serialization Actions
-
-GET_EXECUTE-_OPERATION_TIMINGS
-
-Returns an encoded QWORD:
-[63:32] value in microseconds that the platform expects would be the maximu=
-m amount of time it will take to process and complete an EXECUTE_OPERATION.
-[31:0] value in microseconds that the platform expects would be the nominal=
- amount of time it will take to process and complete an EXECUTE_OPERATION.
-
------Original Message-----
-From: Luck, Tony <tony.luck@intel.com>=20
-Sent: Friday, August 4, 2023 10:31 AM
-To: Jeshua Smith <jeshuas@nvidia.com>; keescook@chromium.org; gpiccoli@igal=
-ia.com; rafael@kernel.org; lenb@kernel.org; james.morse@arm.com; bp@alien8.=
-de
-Cc: linux-acpi@vger.kernel.org; linux-kernel@vger.kernel.org; linux-hardeni=
-ng@vger.kernel.org; linux-tegra@vger.kernel.org; Thierry Reding <treding@nv=
-idia.com>; Jonathan Hunter <jonathanh@nvidia.com>
-Subject: RE: [PATCH V2] ACPI: APEI: Use ERST timeout for slow devices
-
-External email: Use caution opening links or attachments
-
-
-> Can the maintainers please respond to my patch?
-
-Can you give a reference to the ACPI spec where this timing information is =
-documented? I'm looking at ACPI 6.5 and don't see anything about this.
-
-https://uefi.org/specs/ACPI/6.5/18_Platform_Error_Interfaces.html#error-ser=
-ialization
-
--Tony
