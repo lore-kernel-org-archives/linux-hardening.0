@@ -2,118 +2,118 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97734CA0ED1
-	for <linux-hardening@archiver.kernel.org>; Mon, 11 Sep 2023 21:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB9FCA0EC6
+	for <linux-hardening@archiver.kernel.org>; Mon, 11 Sep 2023 21:36:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235528AbjIKV1i (ORCPT
+        id S239070AbjIKV1o (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 11 Sep 2023 17:27:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44936 "EHLO
+        Mon, 11 Sep 2023 17:27:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243827AbjIKRxC (ORCPT
+        with ESMTP id S236548AbjIKK4x (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 11 Sep 2023 13:53:02 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F15FDD
-        for <linux-hardening@vger.kernel.org>; Mon, 11 Sep 2023 10:52:57 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-59204757627so48517687b3.1
-        for <linux-hardening@vger.kernel.org>; Mon, 11 Sep 2023 10:52:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1694454776; x=1695059576; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=FfX6RSRA/tErdP/6b3BPnVn+Cseh6Qa8GqkXP+/ygfU=;
-        b=XeaiYAC9+CQfh11TsC0QXPCO3rfzkOtVEeyEzdjXndeYy4ATbmwq2pqCp5djujoZ+C
-         TKF0ggE95q7zog6ODW7gOxgSBLOur9eKWQIqST1N0Cqfn4NFfGXMmjpkK5Tri7rp2ktw
-         tIvZvTLAb5XSuzgO0dzyKNHqkq2i7RPm16tkELQ1rqLFoftr7t3YoOWso0shnWGfrXZu
-         M6gEPYEUAIKp4vMu9xeGEoo76CWq4RVxns2qQThY1vcblQFDSVFi6HJi4xfnJHIR2xnh
-         ypkQEivqfgt2Yh4gwvmac68t+vgCp8jWU5etdzHFS81li7twShz4VYH4QKB8Rnn0GD+S
-         PZGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694454776; x=1695059576;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FfX6RSRA/tErdP/6b3BPnVn+Cseh6Qa8GqkXP+/ygfU=;
-        b=X3RxHGfICz5QnYqOamd84Eopb59c7ASJ6RbwzIG4Lxaf1cypqPNni4DDT65THqT3NR
-         NmdHqN6BKxmuiLjhtXPWXKLA5EwYp7oMkeTfI5g2082/TWxbU4A/Rc021opH7TD2ROst
-         VEb6nbIprIZoob9eiqLbTH+8HUO3iFQepcw0Kc+7mHoruaCjYZKPPMdxWLqhZRO9Hj8X
-         gYbL46QHcQGQj7O9Y9EDp783Km3m7CQmOgUEd5EJEXzMeAxchoU7fqF0H6LOd/E3LW9b
-         GtELMAcAj2CVM9z+nfeRnltrG+JR4au9KDxaKw8kCLhMWtWJoUeewBRTwh7bk+IHO70l
-         oWiw==
-X-Gm-Message-State: AOJu0Yw8iy852A6g+p+CCCuaebHALvfb8mFARQEjFxvYSH2mQDlnQa7F
-        gacgyA3aFEO/4aQm3Iwysl8AIH6tq0MUO/Ug1g==
-X-Google-Smtp-Source: AGHT+IEA/Fl4erMnmYdtrmI9xarwhf9E5DXlxyKwU8nOP9w68+WoAh6IzaJY9FBWx8oyGyINbpWCxI9Xum07nwJFww==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a81:b706:0:b0:58c:74ec:3397 with SMTP
- id v6-20020a81b706000000b0058c74ec3397mr248983ywh.1.1694454776558; Mon, 11
- Sep 2023 10:52:56 -0700 (PDT)
-Date:   Mon, 11 Sep 2023 17:52:44 +0000
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAOtT/2QC/x3NQQqDMBBA0avIrDuQKJamVylFJBmbgTaGmUQs4
- t0buvyb9w9QEiaFe3eA0MbKa2phLx34OKcXIYfW0Jt+MM5a1CLJ5y/O4iPWD66Kb051xyC8kSh SiSRlzlNtNHq8jc5eTbDDMjpobBZaeP8vH8/z/AG03h9UggAAAA==
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1694454775; l=1822;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=Wgwz6kVMUOE/MdaR7dFrpNbwIMGBA/OsTf12jDBzZgQ=; b=msb87huM5Q1fxVqPK+dd7EGT/+zyiEGIFJ8brAYfbNJVy1XYEB3ede05shCahtgbcub2GG4VL
- XXvEL7We+4lCTj6XZm5nuJguI+xwBOM+eD8TJpQ3x7NELmT7z7rybnE
-X-Mailer: b4 0.12.3
-Message-ID: <20230911-strncpy-arch-um-os-linux-drivers-ethertap_user-c-v1-1-d9e53f52ab32@google.com>
-Subject: [PATCH] um,ethertap: refactor deprecated strncpy
-From:   Justin Stitt <justinstitt@google.com>
-To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>
-Cc:     linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+        Mon, 11 Sep 2023 06:56:53 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AAF712A;
+        Mon, 11 Sep 2023 03:56:48 -0700 (PDT)
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38B59mU6027733;
+        Mon, 11 Sep 2023 10:56:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=qcppdkim1;
+ bh=DbnYX27WPooqna/K4n9yFhv6DuoLktOiurg8+HW7UGI=;
+ b=G5lc/d51iVzsvPmXr7CNYQykOHM5hwP78PWa00A2V5HVsZ21mRvhpjfBIeJE87HTWCXc
+ LpLD+88as51FWYpjaWAwzd2V9ubNo/8h0gFRWogr0AOJV7+fyxMa/xm4WcHJ/YygxVOH
+ NW7vFbmruU7CUB1+1xYqcRloluySgFL9GQKwMv8sIqkBzKEH/pRe4g7k2rVhNCH8TFV6
+ my0IYw/tqYm3Oj9wSNMi7WHbQvRhEuXs6e1Oa3MjJplo7YHNRcNjUDUW3JIN6SQbhWhn
+ MHpiOC8rnmXp+lPqBX0ECaQ/alyQrYihmhWUm6wGa+KzGWnL4fYNNlT3W5VmQpzpgQRl GA== 
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3t0gx9uj8e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 Sep 2023 10:56:13 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+        by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 38BAuCVv006051
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 Sep 2023 10:56:13 GMT
+Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.36; Mon, 11 Sep 2023 03:55:54 -0700
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+To:     <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <keescook@chromium.org>, <tony.luck@intel.com>,
+        <gpiccoli@igalia.com>, <mathieu.poirier@linaro.org>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>,
+        <vigneshr@ti.com>, <nm@ti.com>, <matthias.bgg@gmail.com>,
+        <kgene@kernel.org>, <alim.akhtar@samsung.com>,
+        <bmasney@redhat.com>, <quic_tsoni@quicinc.com>
+CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <linux-samsung-soc@vger.kernel.org>, <kernel@quicinc.com>,
+        <quic_mojha@quicinc.com>
+Subject: [REBASE PATCH v5 12/17] MAINTAINERS: Add entry for minidump related files
+Date:   Mon, 11 Sep 2023 16:23:54 +0530
+Message-ID: <1694429639-21484-13-git-send-email-quic_mojha@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com>
+References: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: YRrNlut77-pfb0Q7VO8KlYt01oytLrjs
+X-Proofpoint-GUID: YRrNlut77-pfb0Q7VO8KlYt01oytLrjs
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-09-11_06,2023-09-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
+ mlxscore=0 lowpriorityscore=0 bulkscore=0 mlxlogscore=896 malwarescore=0
+ suspectscore=0 adultscore=0 priorityscore=1501 impostorscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2308100000 definitions=main-2309110099
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-`strncpy` is deprecated for use on NUL-terminated destination strings [1].
+Add the entries into maintainer file for all the minidump related
+modules.
 
-`gate_buf` should always be NUL-terminated and does not require
-NUL-padding. It is used as a string arg inside an argv array given to
-`run_helper()`. Due to this, let's use `strscpy` as it guarantees
-NUL-terminated on the destination buffer preventing potential buffer
-overreads [2].
-
-This exact invocation was changed from `strcpy` to `strncpy` in commit
-7879b1d94badb ("um,ethertap: use strncpy") back in 2015. Let's continue
-hardening our `str*cpy` apis and use the newer and safer `strscpy`!
-
-Link: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings[1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Cc: Kees Cook <keescook@chromium.org>
-Signed-off-by: Justin Stitt <justinstitt@google.com>
+Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
 ---
- arch/um/os-Linux/drivers/ethertap_user.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ MAINTAINERS | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/um/os-Linux/drivers/ethertap_user.c b/arch/um/os-Linux/drivers/ethertap_user.c
-index 9483021d86dd..3363851a4ae8 100644
---- a/arch/um/os-Linux/drivers/ethertap_user.c
-+++ b/arch/um/os-Linux/drivers/ethertap_user.c
-@@ -105,7 +105,7 @@ static int etap_tramp(char *dev, char *gate, int control_me,
- 	sprintf(data_fd_buf, "%d", data_remote);
- 	sprintf(version_buf, "%d", UML_NET_VERSION);
- 	if (gate != NULL) {
--		strncpy(gate_buf, gate, 15);
-+		strscpy(gate_buf, gate, sizeof(gate_buf));
- 		args = setup_args;
- 	}
- 	else args = nosetup_args;
-
----
-base-commit: 2dde18cd1d8fac735875f2e4987f11817cc0bc2c
-change-id: 20230911-strncpy-arch-um-os-linux-drivers-ethertap_user-c-859160d13f59
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2833e2da63e0..2ec5fafe7060 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -17787,6 +17787,16 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/regulator/vqmmc-ipq4019-regulator.yaml
+ F:	drivers/regulator/vqmmc-ipq4019-regulator.c
+ 
++QUALCOMM MINIDUMP DRIVER
++M:	Mukesh Ojha <quic_mojha@quicinc.com>
++L:	linux-arm-msm@vger.kernel.org
++S:	Maintained
++F:	Documentation/admin-guide/qcom_minidump.rst
++F:	drivers/soc/qcom/qcom_rproc_minidump.c
++F:	drivers/soc/qcom/qcom_minidump.c
++F:	drivers/soc/qcom/qcom_ramoops_minidump.c
++
++
+ QUALCOMM NAND CONTROLLER DRIVER
+ M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+ L:	linux-mtd@lists.infradead.org
+-- 
+2.7.4
 
