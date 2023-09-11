@@ -2,129 +2,98 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0849DCA0EC0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC40CA0EC9
 	for <linux-hardening@archiver.kernel.org>; Mon, 11 Sep 2023 21:36:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242107AbjIKV17 (ORCPT
+        id S242439AbjIKV2B (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 11 Sep 2023 17:27:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59066 "EHLO
+        Mon, 11 Sep 2023 17:28:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236560AbjIKK5Y (ORCPT
+        with ESMTP id S244040AbjIKSvL (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 11 Sep 2023 06:57:24 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59FA4F3;
-        Mon, 11 Sep 2023 03:57:20 -0700 (PDT)
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38B8OB3K008351;
-        Mon, 11 Sep 2023 10:56:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=qcppdkim1;
- bh=9t/tuA65wT0eZs+b0FA+a9eyUdqc9XfGqsquufrPl3g=;
- b=FWWZNxG+O2+uA+DwGV1qVHrjVMFmeh9kWdfvWVPwC2fPwRF2oHYHPjsKGQQQpZFy7b50
- f2CJw4ttx2YHBLGnARyuV+ha1qqkyGL9ZVds5YFP9/sIjMUUPirEw1C4ZEA1bXzKkWMm
- YZ03/7TxwQ+XUBueCNXzjm8SjpUFmVxTOmaieUwlcXRa+Co2F3IqPPbsOClf9F9G4Ii2
- nzJ0Xx5Twl+epOq78ic7rKAYyVahUp2B9fif08KVMV1S6Oz71rpNjZ1Tbf4XEPhWImHF
- HVm04C+ICiSQJJi2HbWKipeFq5epohRw0Yx+z9ST0Z2e0OvPe/e3pv+KpxJKGyQttRBf wQ== 
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3t0edmkqaq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 Sep 2023 10:56:48 +0000
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 38BAuloX018357
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 Sep 2023 10:56:47 GMT
-Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.36; Mon, 11 Sep 2023 03:56:37 -0700
-From:   Mukesh Ojha <quic_mojha@quicinc.com>
-To:     <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <keescook@chromium.org>, <tony.luck@intel.com>,
-        <gpiccoli@igalia.com>, <mathieu.poirier@linaro.org>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>,
-        <vigneshr@ti.com>, <nm@ti.com>, <matthias.bgg@gmail.com>,
-        <kgene@kernel.org>, <alim.akhtar@samsung.com>,
-        <bmasney@redhat.com>, <quic_tsoni@quicinc.com>
-CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>, <kernel@quicinc.com>,
-        <quic_mojha@quicinc.com>
-Subject: [REBASE PATCH v5 17/17] firmware: qcom_scm: Add multiple download mode support
-Date:   Mon, 11 Sep 2023 16:23:59 +0530
-Message-ID: <1694429639-21484-18-git-send-email-quic_mojha@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com>
-References: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com>
+        Mon, 11 Sep 2023 14:51:11 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BEFCC4;
+        Mon, 11 Sep 2023 11:51:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694458266; x=1725994266;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=MrJyaTDd2hAlFLBeIlMXNYKXT1O3LLXpwKb2zoKLzg0=;
+  b=EsxrjiQIe/aCOwPo4F40FiWSQIPaie7ZeLYBjiF/dCh17qLWk2Yun743
+   tHyAaHkEIdFNIr8mmZn6kqyWGgMFpzmxySS1KZZFroHbBKGZOk+Fq69ix
+   mpsbCuYsYiCqK61W5/WQA58ww4I8UTW/uoy5aJM2VuRVftVXUnWJ8IdYm
+   oaTQal0ntm/9XUICnh82kTFhUpHzf7vO1tegOoV6boYdUIlt4KZ5fZTPz
+   DoVk+9QPQn0Wpd5LE7C3fTg0yHXYNn4g/ybx0EChtdfxMFoi8+CuENHvH
+   TxIzaJeQ7/dII7RLiKSBvlMW53a9z50zNeHu0XsdgICnQCa7bCd+fh2+e
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="464537765"
+X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
+   d="scan'208";a="464537765"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 11:51:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="990220512"
+X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
+   d="scan'208";a="990220512"
+Received: from cdaubert-mobl13.amr.corp.intel.com (HELO [10.212.203.41]) ([10.212.203.41])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 11:51:04 -0700
+Message-ID: <69643667-4564-0266-1b26-13833191842c@intel.com>
+Date:   Mon, 11 Sep 2023 11:51:03 -0700
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: YujbjpjEHNqq676eggwCrMIBo858Mw88
-X-Proofpoint-GUID: YujbjpjEHNqq676eggwCrMIBo858Mw88
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-09-11_06,2023-09-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
- priorityscore=1501 mlxlogscore=999 malwarescore=0 spamscore=0
- impostorscore=0 lowpriorityscore=0 clxscore=1015 phishscore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2308100000 definitions=main-2309110099
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.0
+Subject: Re: [PATCH] x86/tdx: refactor deprecated strncpy
+Content-Language: en-US
+To:     Justin Stitt <justinstitt@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>
+Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>
+References: <20230911-strncpy-arch-x86-coco-tdx-tdx-c-v1-1-4b38155727f3@google.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+In-Reply-To: <20230911-strncpy-arch-x86-coco-tdx-tdx-c-v1-1-4b38155727f3@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Currently, scm driver only supports full dump when download
-mode is selected. Add support to enable minidump as well as
-enable it along with fulldump.
+On 9/11/23 11:27, Justin Stitt wrote:
+> `strncpy` is deprecated and we should prefer more robust string apis.
 
-Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
----
- drivers/firmware/qcom_scm.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+I dunno.  It actually seems like a pretty good fit here.
 
-diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-index 4ecdb0d025a4..c70ab9afd3cb 100644
---- a/drivers/firmware/qcom_scm.c
-+++ b/drivers/firmware/qcom_scm.c
-@@ -34,6 +34,8 @@ static u32 download_mode;
- 
- #define QCOM_DLOAD_MASK		GENMASK(5, 4)
- #define QCOM_DLOAD_FULLDUMP	0x1
-+#define QCOM_DLOAD_MINIDUMP	0x2
-+#define QCOM_DLOAD_BOTHDUMP	(QCOM_DLOAD_FULLDUMP | QCOM_DLOAD_MINIDUMP)
- #define QCOM_DLOAD_NODUMP	0x0
- 
- struct qcom_scm {
-@@ -86,6 +88,8 @@ static const char * const qcom_scm_convention_names[] = {
- static const char * const download_mode_name[] = {
- 	[QCOM_DLOAD_NODUMP]	= "off",
- 	[QCOM_DLOAD_FULLDUMP]	= "full",
-+	[QCOM_DLOAD_MINIDUMP]	= "mini",
-+	[QCOM_DLOAD_BOTHDUMP]	= "full,mini",
- };
- 
- static struct qcom_scm *__scm;
-@@ -1470,7 +1474,7 @@ static const struct kernel_param_ops download_mode_param_ops = {
- 
- module_param_cb(download_mode, &download_mode_param_ops, NULL, 0644);
- MODULE_PARM_DESC(download_mode,
--		"download mode: off/full are acceptable values");
-+		"download mode: off/full/mini/full,mini are acceptable values");
- 
- static int qcom_scm_probe(struct platform_device *pdev)
- {
--- 
-2.7.4
+> In this case, `message.str` is not expected to be NUL-terminated as it
+> is simply a buffer of characters residing in a union which allows for
+> named fields representing 8 bytes each. There is only one caller of
+> `tdx_panic()` and they use a 59-length string for `msg`:
+> |	const char *msg = "TD misconfiguration: SEPT_VE_DISABLE attribute must be set.";
 
+I'm not really following this logic.
+
+We need to do the following:
+
+1. Make sure not to over write past the end of 'message'
+2. Make sure not to over read past the end of 'msg'
+3. Make sure not to leak stack data into the hypercall registers
+   in the case of short strings.
+
+strncpy() does #1, #2 and #3 just fine.
+
+The resulting string does *NOT* need to be NULL-terminated.  See the
+comment:
+
+    /* VMM assumes '\0' in byte 65, if the message took all 64 bytes */
+
+Are there cases where strncpy() doesn't NULL-terminate the string other
+than when the buffer is full?
+
+I actually didn't realize that strncpy() pads its output up to the full
+size.  I wonder if Kirill used it intentionally or whether he got lucky
+here. :)
