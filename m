@@ -2,124 +2,116 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCEBACA0EC3
-	for <linux-hardening@archiver.kernel.org>; Tue, 12 Sep 2023 02:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F11CECA0EC3
+	for <linux-hardening@archiver.kernel.org>; Tue, 12 Sep 2023 02:15:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232590AbjILCAg (ORCPT
+        id S235320AbjILCP3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 11 Sep 2023 22:00:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36292 "EHLO
+        Mon, 11 Sep 2023 22:15:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236346AbjILCAT (ORCPT
+        with ESMTP id S236481AbjILCPR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 11 Sep 2023 22:00:19 -0400
-Received: from mail-oa1-x49.google.com (mail-oa1-x49.google.com [IPv6:2001:4860:4864:20::49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B8DA35251
-        for <linux-hardening@vger.kernel.org>; Mon, 11 Sep 2023 15:09:13 -0700 (PDT)
-Received: by mail-oa1-x49.google.com with SMTP id 586e51a60fabf-1b728bfb372so5904889fac.2
-        for <linux-hardening@vger.kernel.org>; Mon, 11 Sep 2023 15:09:13 -0700 (PDT)
+        Mon, 11 Sep 2023 22:15:17 -0400
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C454F6AAE
+        for <linux-hardening@vger.kernel.org>; Mon, 11 Sep 2023 16:21:30 -0700 (PDT)
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-52bcd4db4c0so10799516a12.0
+        for <linux-hardening@vger.kernel.org>; Mon, 11 Sep 2023 16:21:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1694470046; x=1695074846; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=NK0s8SwuB91DWwghCh8BX+3yjh1iN5SeTvgDiCf+Aag=;
-        b=2380YvAtxV6llHsr/hxkJniMqCPa7nZi2ZQ9BEVfSPqSAWCARy7utgkkMik8z4AVDQ
-         TxebtovJJeveWJMXARHKup3L6UGxl8RLwGHhd72fxe+c6hr5+yJaVCbJAaq40TxaoHij
-         zth4mG1ZM3gJhuVyYU0Bzo/HwE7SejOCp5IUgUSHbn8O/nQtXKGnZF6YIlf76pLfiZui
-         857W9yUCL3DQtPYmoY0A4nQTKX2whsA3aGz2hkUYf5XXKb33H5tcttAq0DzXgITbDJK1
-         5M6JR4YENhSYTCLeJGn/9VWvNiPEVSCW5J0wJqIMccQI8nUxN4l9mcIPPgzTOkp93j+P
-         MkWw==
+        d=google.com; s=20230601; t=1694474359; x=1695079159; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vUI+yciS9U7o/XSp9QS87LTWNwGIJn99OxRUAsE808g=;
+        b=Kp5XgHpKv484f0cCY+Q9cEFHlX4h7XfvAuC/0CvhTXieER8VVZdhp/geg8k9BhPaVl
+         o93lK/DIwvcbtVVqOv1DuPWNrk/uw1iidnxFOKW6Lke4r/6ZUECxSaV9OItTT+eiSCXv
+         s3ssMtnC5HaIHmg3EwHrwZVx3E0QzmmHNUPWhn/BC95U3mTpCC36mVEeP5OO/pZKOEpp
+         vwn8Qdyo/YeZM/Z8/cC2Tfw/iw9spQYntfWkLwSvXoqiyz1+X8s1TLyPYoRS5Q6lG/4K
+         d3jnclq/FX0kFsFrSRa4EWvgbOyPQAq6+rFXQ5E27y6Vr0U2slPjrjxv3Gu11j2o9FB/
+         a+rA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694470046; x=1695074846;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=NK0s8SwuB91DWwghCh8BX+3yjh1iN5SeTvgDiCf+Aag=;
-        b=VaDa35YtgMFRNY/9mdklG2YdVIWs6/RIP4zbfgAZxhIj7IFNWnU/Ow6igNrTwPY90g
-         qqRLC5tVP7DHr/euEtd7aZU1JPcoA072aC8g7jB4qRsaVW1AuG4CnTM0Xwze6oTggxe7
-         smwAFkI9H0l6HPhe6evwCVBAvAA0R87bbntItDoiNKil9qrgtVj/iRE+3Mhft/N3dAiU
-         6kmN+4RgKL+h1L5vVsxlp5tNJOIxw2LgZ8CNlE/3RtL/SmNpEy2q1EL26i2Z09oiTW4h
-         kTYW5gguI7JN+P5KliR7R5ssMozJ8L5h10K6aiB+i+hrNZ/KitpODzIX4pf1WxnyDX0Z
-         6oow==
-X-Gm-Message-State: AOJu0YzhHcRxNgc2kqgwF9arLthLOE4rWlLVgpc94LQK4Rr3qU3uyble
-        LwO4CJadT8rdNrf0pWvRiF3GCOPET6yW7vyyEw==
-X-Google-Smtp-Source: AGHT+IHdZWmZVZ8nR+Gj/8vlHj4D4vBGEDW/cGZY+OvJ2Etb+PzlTbRHanhxFkmiI6dNbhpt+jQJ8D25+v7P5BuVQw==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a25:289:0:b0:d7f:4ba0:b5da with SMTP
- id 131-20020a250289000000b00d7f4ba0b5damr245965ybc.13.1694465469971; Mon, 11
- Sep 2023 13:51:09 -0700 (PDT)
-Date:   Mon, 11 Sep 2023 20:51:04 +0000
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIALd9/2QC/x3NwQqDMAyA4VeRnBewLcK2VxkeahpdQLqSOFHEd
- 7d4/C7/f4CxChu8mwOUVzH55Qr3aIC+MU+MkqrBtz60L+fQFs1UdkwqK6th/G9JrMxxxxIzz0j 4DANx58bgaYAaKsqjbPfk05/nBV1Gb0N0AAAA
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1694465469; l=2003;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=/KG5GaNcu8MUTWe6zZ15CBm9Lw6GIS3IVGxfb7J29/g=; b=qtp5rDmw7oLdi+J8HJfF79nA03GdYz27dAA6BVE2oZatoY8HvOkCZZaxvA7beHrToYCP93/pC
- b4PZP3DQzmbC/Mdobs6jOwUCw4MuZuZM6CW6uVJH6gCSEQlvi7mGD2U
-X-Mailer: b4 0.12.3
-Message-ID: <20230911-strncpy-drivers-auxdisplay-panel-c-v1-1-b60bd0ae8552@google.com>
-Subject: [PATCH] auxdisplay: panel: refactor deprecated strncpy
+        d=1e100.net; s=20230601; t=1694474359; x=1695079159;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vUI+yciS9U7o/XSp9QS87LTWNwGIJn99OxRUAsE808g=;
+        b=jnvCO9aag6LPgw0N+NqYlnGcoM6IcbrePv8rR5mRbzFfj4OPIjMukW07f+Jd7fYrXz
+         US2/CzTgY9UGMj/GGAEzIBPsBGy3GFgE+AhXQcITWellf5KbNUawEmm90nvnhiWi1JsQ
+         /62NIwenqAtFG+zZwe7EWmhKdEgj6a9hZ7/SrqpKNQupqklBLkXD3slCUIhGzYJ3yDS+
+         K9dO9Ey4f2BSWaYkqdYTRAmyTz8bL9LmlhjImvu0DbOZrvQX7n3rqYGeamqIWZy/vqU7
+         H8yR9obhefn1NS48CeLGCY5LNNeUcbqWw/lKMukZxiTHNPBN0LcTeeyPWP+vHXDW91j+
+         VzOg==
+X-Gm-Message-State: AOJu0Yy+ke/ao/CRxK2cB03DR1wZUnQSKU9lXvtjYdJSZZgkDGNRH4i8
+        AVu9R7rhAkP9AtoY/q9CIpiOd9jylOgMXnlYeu/QhyByv8wcBPwwOdE=
+X-Google-Smtp-Source: AGHT+IHaNLCNW4cCXydLmeSfIqjRZlpdje9Q9CqRKN7n2BIIz4uXg9TIClQFO/T8fGoiUiX1e8Hx8nBsO1IygogGXic=
+X-Received: by 2002:a17:906:3006:b0:9ad:7f8b:2b0a with SMTP id
+ 6-20020a170906300600b009ad7f8b2b0amr768078ejz.22.1694469689026; Mon, 11 Sep
+ 2023 15:01:29 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230911-strncpy-arch-x86-coco-tdx-tdx-c-v1-1-4b38155727f3@google.com>
+ <69643667-4564-0266-1b26-13833191842c@intel.com>
+In-Reply-To: <69643667-4564-0266-1b26-13833191842c@intel.com>
 From:   Justin Stitt <justinstitt@google.com>
-To:     Willy Tarreau <willy@haproxy.com>,
-        Ksenija Stanojevic <ksenija.stanojevic@gmail.com>,
-        Miguel Ojeda <ojeda@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>,
-        Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+Date:   Mon, 11 Sep 2023 15:01:16 -0700
+Message-ID: <CAFhGd8rohHPu+Zqr+w35=6=goUNC4ycvKk78N+7LSvNbnDnvuw@mail.gmail.com>
+Subject: Re: [PATCH] x86/tdx: refactor deprecated strncpy
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-`strncpy` is deprecated and as such we should prefer more robust and
-less ambiguous interfaces.
+On Mon, Sep 11, 2023 at 11:51=E2=80=AFAM Dave Hansen <dave.hansen@intel.com=
+> wrote:
+>
+> On 9/11/23 11:27, Justin Stitt wrote:
+> > `strncpy` is deprecated and we should prefer more robust string apis.
+>
+> I dunno.  It actually seems like a pretty good fit here.
+>
+> > In this case, `message.str` is not expected to be NUL-terminated as it
+> > is simply a buffer of characters residing in a union which allows for
+> > named fields representing 8 bytes each. There is only one caller of
+> > `tdx_panic()` and they use a 59-length string for `msg`:
+> > |     const char *msg =3D "TD misconfiguration: SEPT_VE_DISABLE attribu=
+te must be set.";
+>
+> I'm not really following this logic.
+>
+> We need to do the following:
+>
+> 1. Make sure not to over write past the end of 'message'
+> 2. Make sure not to over read past the end of 'msg'
+> 3. Make sure not to leak stack data into the hypercall registers
+>    in the case of short strings.
+>
+> strncpy() does #1, #2 and #3 just fine.
 
-In this case, all of `press_str`, `repeat_str` and `release_str` are
-explicitly marked as nonstring:
-|   struct {	/* valid when type == INPUT_TYPE_KBD */
-|           char press_str[sizeof(void *) + sizeof(int)] __nonstring;
-|           char repeat_str[sizeof(void *) + sizeof(int)] __nonstring;
-|           char release_str[sizeof(void *) + sizeof(int)] __nonstring;
-|   } kbd;
+Right, to be clear, I do not suspect a bug in the current
+implementation. Rather, let's move towards a less ambiguous interface
+for maintainability's sake
 
-... which makes `strtomem_pad` a suitable replacement as it is
-functionally the same whilst being more obvious about its behavior.
+>
+> The resulting string does *NOT* need to be NULL-terminated.  See the
+> comment:
+>
+>     /* VMM assumes '\0' in byte 65, if the message took all 64 bytes */
+>
+> Are there cases where strncpy() doesn't NULL-terminate the string other
+> than when the buffer is full?
+>
+> I actually didn't realize that strncpy() pads its output up to the full
+> size.  I wonder if Kirill used it intentionally or whether he got lucky
+> here. :)
 
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Cc: Kees Cook <keescook@chromium.org>
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Note: build-tested
----
- drivers/auxdisplay/panel.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+Big reason to use strtomem_pad as it is more obvious about what it does.
 
-diff --git a/drivers/auxdisplay/panel.c b/drivers/auxdisplay/panel.c
-index eba04c0de7eb..e20d35bdf5fe 100644
---- a/drivers/auxdisplay/panel.c
-+++ b/drivers/auxdisplay/panel.c
-@@ -1449,10 +1449,9 @@ static struct logical_input *panel_bind_key(const char *name, const char *press,
- 	key->rise_time = 1;
- 	key->fall_time = 1;
- 
--	strncpy(key->u.kbd.press_str, press, sizeof(key->u.kbd.press_str));
--	strncpy(key->u.kbd.repeat_str, repeat, sizeof(key->u.kbd.repeat_str));
--	strncpy(key->u.kbd.release_str, release,
--		sizeof(key->u.kbd.release_str));
-+	strtomem_pad(key->u.kbd.press_str, press, '\0');
-+	strtomem_pad(key->u.kbd.repeat_str, repeat, '\0');
-+	strtomem_pad(key->u.kbd.release_str, release, '\0');
- 	list_add(&key->list, &logical_inputs);
- 	return key;
- }
-
----
-base-commit: 2dde18cd1d8fac735875f2e4987f11817cc0bc2c
-change-id: 20230911-strncpy-drivers-auxdisplay-panel-c-83bce51f32cb
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
-
+I'd love more thoughts/testing here.
