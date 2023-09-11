@@ -2,123 +2,133 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E76CA0EC0
-	for <linux-hardening@archiver.kernel.org>; Mon, 11 Sep 2023 21:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD1EFCA0ECB
+	for <linux-hardening@archiver.kernel.org>; Mon, 11 Sep 2023 21:37:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347345AbjIKV21 (ORCPT
+        id S236608AbjIKV2c (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 11 Sep 2023 17:28:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51040 "EHLO
+        Mon, 11 Sep 2023 17:28:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236535AbjIKK4u (ORCPT
+        with ESMTP id S236661AbjIKLJ6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 11 Sep 2023 06:56:50 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2857F3;
-        Mon, 11 Sep 2023 03:56:45 -0700 (PDT)
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38BAHUGk005010;
-        Mon, 11 Sep 2023 10:56:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=qcppdkim1;
- bh=Ulb6ivCBYfJxHUM4YBEtsEJoOnSrk2SMWeoI7ndeucs=;
- b=PMVy+DkuMntEMbC6E3AaypPc6J9MF6sKEejS5SF4eIQSNVSFrmhXAPTRcddOmNDRtS+y
- XBwgCr78Vw0oH9FlMM2ELswZh7cIbka+q5Un9HtRgSz61u0g8J9xtSCG3Maflg4du5XG
- QN/OQN6J0dZ5gE4stSdDACe+nNVNVC18By+VvtxgZxyGcPB2Ehq/8NhkSoMnTTADQ03A
- H/TqrLJl25Amd8ejof0lM4LyGMqfKv/PY2D3S0UCBc+0isIpJk4tI3yGmOlOtvQeR/MU
- oqIg5cY+vJy/WEj16vLShRAANt6ILj4pEcYIC5J3bMu0/vzx02WPiHPBXXyXx3NN0bkE 5g== 
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3t0hfqkenc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 Sep 2023 10:56:13 +0000
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 38BAuCVs006051
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 Sep 2023 10:56:12 GMT
-Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.36; Mon, 11 Sep 2023 03:55:28 -0700
-From:   Mukesh Ojha <quic_mojha@quicinc.com>
-To:     <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <keescook@chromium.org>, <tony.luck@intel.com>,
-        <gpiccoli@igalia.com>, <mathieu.poirier@linaro.org>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>,
-        <vigneshr@ti.com>, <nm@ti.com>, <matthias.bgg@gmail.com>,
-        <kgene@kernel.org>, <alim.akhtar@samsung.com>,
-        <bmasney@redhat.com>, <quic_tsoni@quicinc.com>
-CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>, <kernel@quicinc.com>,
-        <quic_mojha@quicinc.com>
-Subject: [REBASE PATCH v5 09/17] pstore/ram: Use dynamic ramoops reserve resource
-Date:   Mon, 11 Sep 2023 16:23:51 +0530
-Message-ID: <1694429639-21484-10-git-send-email-quic_mojha@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com>
-References: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com>
+        Mon, 11 Sep 2023 07:09:58 -0400
+Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 789DECC3
+        for <linux-hardening@vger.kernel.org>; Mon, 11 Sep 2023 04:09:51 -0700 (PDT)
+Received: by mail-lj1-x235.google.com with SMTP id 38308e7fff4ca-2bcde83ce9fso71834581fa.1
+        for <linux-hardening@vger.kernel.org>; Mon, 11 Sep 2023 04:09:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1694430590; x=1695035390; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ItV/PafZYbRtZG+3EH6sRu97i9Pet4QO+NBJ8/y2iuI=;
+        b=tg4h2AL9gT7/qUV0jFTrvkPJl9a/skFZyfbwb9lpcls46kdOpKy/0zULUF05nAJKrw
+         ITd7nMPZiaS5PsZzg1uTs9LpnOIGc5IQoXbM6B0QK8XpMLmTWz7Uvoa0s4ZTgz5Jq9t4
+         v0U5o8trLtrjzW4IH2vQo4mpKEbOiin4b62jWutcLNlCqZmZsOvN5+FxgDlk21bHCJDq
+         AGy8mFU5AJj5nVJ+LxeMb8183iNYaxF1hzP/jM4wDcZfI50R1cg8CQ5wa0RSetIfcJDN
+         Epx6SgrPMDqtOePCk98hrz6ZZ1pRWPxrXpWGXqxYXtz71fRYbYppSVB44eXGFYlNXoj4
+         UTNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694430590; x=1695035390;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ItV/PafZYbRtZG+3EH6sRu97i9Pet4QO+NBJ8/y2iuI=;
+        b=nknlF/X2MSCmn4aZ+/HtAIwX3/FhMYSeQM4Afm3xTDsxb+JgYkiteTayh7XiEetr7u
+         c7vdQwHrpPyzoF0CsiQYwpdz0lhO8INqZXqRCP6TRWe30+1slPEMiQ+7HS12Awc3OPdA
+         zuFVo4pyfx3aZ7fdz55bZrI/Y3bRZzDVFOVwBlsiCO5nE1sz/DDkoF+E1Gl8gKMFdLON
+         AbLA+6AigqW5DhE5tJQXlyLj8Hh/GW4F+gZ1N7zLevrQ+G9Ws1OEOWrZwjeBk4xtT9XI
+         o84wVsAWEN4JBpDteyyjOe7bXQRUTU5aTliKFtbw+fPlgLETgmmjMmKx6ZQv0D1Fuy2I
+         3I3A==
+X-Gm-Message-State: AOJu0YwCeljxE5qAEeXAQHZXAsCu6at6s79fFPIVUfGI+kCe3budoxQG
+        KyZhhZHhD6IfxfyCzeSszEffMg==
+X-Google-Smtp-Source: AGHT+IEA9FyfM8rXa+3k+u+doQWaGigDrU1zuRRVi1v3E2XELPt5LPr2HsZJRl0XxMdT23XFarwUrQ==
+X-Received: by 2002:a2e:8543:0:b0:2bd:180d:67b7 with SMTP id u3-20020a2e8543000000b002bd180d67b7mr6601812ljj.40.1694430589764;
+        Mon, 11 Sep 2023 04:09:49 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.214.188])
+        by smtp.gmail.com with ESMTPSA id lw7-20020a170906bcc700b009a168ab6ee2sm5129780ejb.164.2023.09.11.04.09.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Sep 2023 04:09:48 -0700 (PDT)
+Message-ID: <0041a391-12ba-2e1b-0954-fbc0e00be631@linaro.org>
+Date:   Mon, 11 Sep 2023 13:09:46 +0200
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: VlpMUntWdgjbfQBbSQt02UT2ECOTiSRG
-X-Proofpoint-GUID: VlpMUntWdgjbfQBbSQt02UT2ECOTiSRG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-09-11_06,2023-09-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
- suspectscore=0 phishscore=0 mlxlogscore=999 malwarescore=0
- priorityscore=1501 lowpriorityscore=0 impostorscore=0 clxscore=1015
- adultscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2308100000 definitions=main-2309110099
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.0
+Subject: Re: [PATCH v5 11/17] qcom_minidump: Register ramoops region with
+ minidump
+Content-Language: en-US
+To:     Mukesh Ojha <quic_mojha@quicinc.com>, corbet@lwn.net,
+        agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, keescook@chromium.org, tony.luck@intel.com,
+        gpiccoli@igalia.com, mathieu.poirier@linaro.org,
+        catalin.marinas@arm.com, will@kernel.org, linus.walleij@linaro.org,
+        andy.shevchenko@gmail.com, vigneshr@ti.com, nm@ti.com,
+        matthias.bgg@gmail.com, kgene@kernel.org, alim.akhtar@samsung.com,
+        bmasney@redhat.com, quic_tsoni@quicinc.com
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, kernel@quicinc.com
+References: <1694290578-17733-1-git-send-email-quic_mojha@quicinc.com>
+ <1694290578-17733-12-git-send-email-quic_mojha@quicinc.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <1694290578-17733-12-git-send-email-quic_mojha@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-As dynamic ramoops command line parsing is now added, so
-lets add the support in ramoops driver to get the resource
-structure and add it during platform device registration.
+On 09/09/2023 22:16, Mukesh Ojha wrote:
+> Register all the pstore frontend with minidump, so that they can
+> be dumped as default Linux minidump region to be collected on
+> SoC where minidump is enabled.
+> 
 
-Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
----
- fs/pstore/ram.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+...
 
-diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-index d36702c7ab3c..ab551caa1d2a 100644
---- a/fs/pstore/ram.c
-+++ b/fs/pstore/ram.c
-@@ -914,13 +914,17 @@ static void __init ramoops_register_dummy(void)
- 
- 	/*
- 	 * Prepare a dummy platform data structure to carry the module
--	 * parameters. If mem_size isn't set, then there are no module
--	 * parameters, and we can skip this.
-+	 * parameters. If mem_size isn't set, check for dynamic ramoops
-+	 * size and extract the information if it is set.
- 	 */
--	if (!mem_size)
-+	if (!mem_size && !dyn_ramoops_res.end)
- 		return;
- 
- 	pr_info("using module parameters\n");
-+	if (dyn_ramoops_res.end) {
-+		mem_size = resource_size(&dyn_ramoops_res);
-+		mem_address = dyn_ramoops_res.start;
-+	}
- 
- 	memset(&pdata, 0, sizeof(pdata));
- 	pdata.mem_size = mem_size;
--- 
-2.7.4
+> +
+> +	record.type = type;
+> +	record.id = 0;
+> +	max_dump_cnt = 0;
+> +	name = pstore_type_to_name(record.type);
+> +	do {
+> +		ret = pstore_region_defined(&record, &virt, &phys, &size, &max_dump_cnt);
+> +		if (ret < 0)
+> +			break;
+> +
+> +		mdr_list = devm_kzalloc(dev, sizeof(struct md_region_list), GFP_KERNEL);
+
+sizeof(*)
+
+Please fix it everywhere in your code.
+
+> +		if (!mdr_list)
+> +			return -ENOMEM;
+> +
+> +		md_region = &mdr_list->md_region;
+> +		scnprintf(md_region->name, sizeof(md_region->name) - 1, "K%s%llu", name, record.id);
+> +		md_region->virt_addr = virt;
+> +		md_region->phys_addr = phys;
+> +		md_region->size = size;
+> +		ret = qcom_minidump_region_register(md_region);
+> +		if (ret) {
+> +			pr_err("failed to register minidump region\n");
+> +			break;
+> +		}
+> +
+> +		list_add(&mdr_list->list, &ramoops_region_list);
+> +	} while (record.id < max_dump_cnt && ++record.id);
+> +
+> +	return ret;
+> +}
+
+
+Best regards,
+Krzysztof
 
