@@ -2,156 +2,158 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84372CA0ECB
-	for <linux-hardening@archiver.kernel.org>; Mon, 11 Sep 2023 21:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44FCDCA0EC2
+	for <linux-hardening@archiver.kernel.org>; Mon, 11 Sep 2023 21:37:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348677AbjIKV3j (ORCPT
+        id S1348688AbjIKV3s (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 11 Sep 2023 17:29:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41490 "EHLO
+        Mon, 11 Sep 2023 17:29:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236546AbjIKK4x (ORCPT
+        with ESMTP id S236089AbjIKJuj (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 11 Sep 2023 06:56:53 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25000127;
-        Mon, 11 Sep 2023 03:56:48 -0700 (PDT)
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38BAuEgF017396;
-        Mon, 11 Sep 2023 10:56:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=qcppdkim1;
- bh=VuS5BngeDMoGs7HCNFTyrS6m+gpdRhA4rXrczTHM1kY=;
- b=EC8/+GRvaoPLT8rKSCl+rmvF4UjTXLgwaj3cd8sN2AcFuY5QU1Yl7Eo/oeJavi+TXiu0
- 9oJigAmM/kAtDJBv/8BmmSOhjKNtRnZBoIHTyw62V824olEd0slQntnM1UDmyqq1lAb+
- YFJeInJwLCxid5TP8Cok6UVA2nnWSSZ3KH4l/qSD317qxDWt5svCNeGHhUGQN13K5ixy
- RToHtIRIRHBs9I7e6EO6tQfZAlIw43lI0ExCUkN6Jk9pklXk4JaMcAvq93rM3QZ6EkIt
- mgqjwNp2edXmJfAz87VotieQfhG/BjW8uxAgPx1OKWVSBuu+SAI0TrQ7jEdmj/4yd7DI kw== 
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3t0hfqkend-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 Sep 2023 10:56:14 +0000
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 38BAuCVw006051
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 Sep 2023 10:56:13 GMT
-Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.36; Mon, 11 Sep 2023 03:56:02 -0700
-From:   Mukesh Ojha <quic_mojha@quicinc.com>
-To:     <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <keescook@chromium.org>, <tony.luck@intel.com>,
-        <gpiccoli@igalia.com>, <mathieu.poirier@linaro.org>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>,
-        <vigneshr@ti.com>, <nm@ti.com>, <matthias.bgg@gmail.com>,
-        <kgene@kernel.org>, <alim.akhtar@samsung.com>,
-        <bmasney@redhat.com>, <quic_tsoni@quicinc.com>
-CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>, <kernel@quicinc.com>,
-        <quic_mojha@quicinc.com>
-Subject: [REBASE PATCH v5 13/17] firmware: qcom_scm: provide a read-modify-write function
-Date:   Mon, 11 Sep 2023 16:23:55 +0530
-Message-ID: <1694429639-21484-14-git-send-email-quic_mojha@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com>
-References: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com>
+        Mon, 11 Sep 2023 05:50:39 -0400
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91828116
+        for <linux-hardening@vger.kernel.org>; Mon, 11 Sep 2023 02:50:34 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id 4fb4d7f45d1cf-52c96d5df86so10664a12.1
+        for <linux-hardening@vger.kernel.org>; Mon, 11 Sep 2023 02:50:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1694425833; x=1695030633; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Z7Crep/nXO31QV2GDdfwJy1xW9/XIy7CcW7VYLyAKr4=;
+        b=UVwrOyVMpJ+zem9j/ShJPV0zvkz5kAQs3Viz6usv+QKir34taXmlQCB3ArCR3kM931
+         z93smwqRjorrhgTYBR6/B4uUH33Sf2I1fJ4/bLDHg4ZHE1aBR8ZOe6CgUsXeNuL9L4/e
+         pLU3afTGX0PFFMu5+PRv19n1pvR1X3eJWeyhNjiapr8xVz8XpL6Y2tfYMrpd1ykcvG3p
+         31Ljhj4kaTYQ1VQ6C0rJiDTgIQTjiAawYy8F7unyMhLQu06l1JcDDVva+5ubBtdXIbTD
+         V9+SobZiuSmkTC5CmmUZUpVz2jq92DAATUnStODqCPcHT/2g+KOobsRZ6NtculmBeHnl
+         82lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694425833; x=1695030633;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Z7Crep/nXO31QV2GDdfwJy1xW9/XIy7CcW7VYLyAKr4=;
+        b=Cw94c39wV0Lm0+kc/ynGQ9dAW4dROKshIye2/VPGAAtw5MmrPAj3/IoBAVY12ryocn
+         fsJvhVcv1wpRMheuMmfxhYtI3bChexvq80DRVWTlvTMfIwdfNUlgyzIA+6O/l4lU3LyM
+         DVGsQSvOaJ3PiFP28LQxLVqgZq/bfsWswJpy92I67iy1cx8+ZQVPIKGvJY7SViSP8CCn
+         JAXnBXN0duqamTq/8RISup0Z/TMVUmFUPjE+95xTn5vF7Wr+jammXQV1JT5WM/mZWasB
+         +ggSkvYJOSpjbTZF1vI13WIAH9I6EmeOLdDD7peK1z4alHnAurW/SaxGSaQOQFr6SFgI
+         kEVA==
+X-Gm-Message-State: AOJu0Yz0uLiaqo6qMT3K24+cKAqmQAwesMCR3ii885cOP1i44dlvsaft
+        0vW7GhiDj4BLvQuVxI7fXegiTMeIctElPvN5/iP20g==
+X-Google-Smtp-Source: AGHT+IEnufPO9OzBEQuYnjHfCtigVlILM0MT8OrU9srZCX0K/h7wQ9Eugsdqm9Ngd6OahcB6Ilp1x+eyS5q6FsKxT1M=
+X-Received: by 2002:a50:954d:0:b0:523:193b:5587 with SMTP id
+ v13-20020a50954d000000b00523193b5587mr323171eda.6.1694425832864; Mon, 11 Sep
+ 2023 02:50:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: Vye1cCKDmzVPC6zrq9JQEZLYUW6sLD-J
-X-Proofpoint-GUID: Vye1cCKDmzVPC6zrq9JQEZLYUW6sLD-J
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-09-11_06,2023-09-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
- suspectscore=0 phishscore=0 mlxlogscore=854 malwarescore=0
- priorityscore=1501 lowpriorityscore=0 impostorscore=0 clxscore=1015
- adultscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2308100000 definitions=main-2309110099
+References: <20230825211426.3798691-1-jannh@google.com> <CACT4Y+YT6A_ZgkWTF+rxKO_mvZ3AEt+BJtcVR1sKL6LKWDC+0Q@mail.gmail.com>
+ <CAG48ez34DN_xsj7hio8epvoE8hM3F_xFoqwWYM-_LVZb39_e9A@mail.gmail.com>
+In-Reply-To: <CAG48ez34DN_xsj7hio8epvoE8hM3F_xFoqwWYM-_LVZb39_e9A@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 11 Sep 2023 11:50:19 +0200
+Message-ID: <CACT4Y+YcBeshE811w5KSyYpBqaQ3S_-aKanOGZcHCQvHWHc4Tg@mail.gmail.com>
+Subject: Re: [PATCH] slub: Introduce CONFIG_SLUB_RCU_DEBUG
+To:     Jann Horn <jannh@google.com>
+Cc:     Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@gmail.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-hardening@vger.kernel.org,
+        kernel-hardening@lists.openwall.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-It was realized by Srinivas K. that there is a need of
-read-modify-write scm exported function so that it can
-be used by multiple clients.
+On Mon, 28 Aug 2023 at 16:40, Jann Horn <jannh@google.com> wrote:
+>
+> On Sat, Aug 26, 2023 at 5:32=E2=80=AFAM Dmitry Vyukov <dvyukov@google.com=
+> wrote:
+> > On Fri, 25 Aug 2023 at 23:15, Jann Horn <jannh@google.com> wrote:
+> > > Currently, KASAN is unable to catch use-after-free in SLAB_TYPESAFE_B=
+Y_RCU
+> > > slabs because use-after-free is allowed within the RCU grace period b=
+y
+> > > design.
+> > >
+> > > Add a SLUB debugging feature which RCU-delays every individual
+> > > kmem_cache_free() before either actually freeing the object or handin=
+g it
+> > > off to KASAN, and change KASAN to poison freed objects as normal when=
+ this
+> > > option is enabled.
+> > >
+> > > Note that this creates a 16-byte unpoisoned area in the middle of the
+> > > slab metadata area, which kinda sucks but seems to be necessary in or=
+der
+> > > to be able to store an rcu_head in there without triggering an ASAN
+> > > splat during RCU callback processing.
+> >
+> > Nice!
+> >
+> > Can't we unpoision this rcu_head right before call_rcu() and repoison
+> > after receiving the callback?
+>
+> Yeah, I think that should work. It looks like currently
+> kasan_unpoison() is exposed in include/linux/kasan.h but
+> kasan_poison() is not, and its inline definition probably means I
+> can't just move it out of mm/kasan/kasan.h into include/linux/kasan.h;
+> do you have a preference for how I should handle this? Hmm, and it
+> also looks like code outside of mm/kasan/ anyway wouldn't know what
+> are valid values for the "value" argument to kasan_poison().
+> I also have another feature idea that would also benefit from having
+> something like kasan_poison() available in include/linux/kasan.h, so I
+> would prefer that over adding another special-case function inside
+> KASAN for poisoning this piece of slab metadata...
+>
+> I guess I could define a wrapper around kasan_poison() in
+> mm/kasan/generic.c that uses a new poison value for "some other part
+> of the kernel told us to poison this area", and then expose that
+> wrapper with a declaration in include/mm/kasan.h? Something like:
+>
+> void kasan_poison_outline(const void *addr, size_t size, bool init)
+> {
+>   kasan_poison(addr, size, KASAN_CUSTOM, init);
+> }
 
-Let's introduce qcom_scm_io_update_field() which masks
-out the bits and write the passed value to that
-bit-offset. Subsequent patch will use this function.
+Looks reasonable.
 
-Suggested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
-Tested-by: Kathiravan Thirumoorthy <quic_kathirav@quicinc.com> # IPQ9574 and IPQ5332
----
- drivers/firmware/qcom_scm.c            | 20 ++++++++++++++++++++
- include/linux/firmware/qcom/qcom_scm.h |  2 ++
- 2 files changed, 22 insertions(+)
+> > What happens on cache destruction?
+> > Currently we purge quarantine on cache destruction to be able to
+> > safely destroy the cache. I suspect we may need to somehow purge rcu
+> > callbacks as well, or do something else.
+>
+> Ooh, good point, I hadn't thought about that... currently
+> shutdown_cache() assumes that all the objects have already been freed,
+> then puts the kmem_cache on a list for
+> slab_caches_to_rcu_destroy_workfn(), which then waits with an
+> rcu_barrier() until the slab's pages are all gone.
 
-diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-index 06fe8aca870d..321133f0950d 100644
---- a/drivers/firmware/qcom_scm.c
-+++ b/drivers/firmware/qcom_scm.c
-@@ -74,6 +74,7 @@ static const char * const qcom_scm_convention_names[] = {
- };
- 
- static struct qcom_scm *__scm;
-+static DEFINE_SPINLOCK(lock);
- 
- static int qcom_scm_clk_enable(void)
- {
-@@ -403,6 +404,25 @@ int qcom_scm_set_remote_state(u32 state, u32 id)
- }
- EXPORT_SYMBOL_GPL(qcom_scm_set_remote_state);
- 
-+int qcom_scm_io_update_field(phys_addr_t addr, unsigned int mask, unsigned int val)
-+{
-+	unsigned int old, new;
-+	int ret;
-+
-+	spin_lock(&lock);
-+	ret = qcom_scm_io_readl(addr, &old);
-+	if (ret)
-+		goto unlock;
-+
-+	new = (old & ~mask) | (val & mask);
-+
-+	ret = qcom_scm_io_writel(addr, new);
-+unlock:
-+	spin_unlock(&lock);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(qcom_scm_io_update_field);
-+
- static int __qcom_scm_set_dload_mode(struct device *dev, bool enable)
- {
- 	struct qcom_scm_desc desc = {
-diff --git a/include/linux/firmware/qcom/qcom_scm.h b/include/linux/firmware/qcom/qcom_scm.h
-index 0c091a3f6d49..eb750286abb6 100644
---- a/include/linux/firmware/qcom/qcom_scm.h
-+++ b/include/linux/firmware/qcom/qcom_scm.h
-@@ -84,6 +84,8 @@ extern bool qcom_scm_pas_supported(u32 peripheral);
- 
- extern int qcom_scm_io_readl(phys_addr_t addr, unsigned int *val);
- extern int qcom_scm_io_writel(phys_addr_t addr, unsigned int val);
-+extern int qcom_scm_io_update_field(phys_addr_t addr, unsigned int mask,
-+				    unsigned int val);
- 
- extern bool qcom_scm_restore_sec_cfg_available(void);
- extern int qcom_scm_restore_sec_cfg(u32 device_id, u32 spare);
--- 
-2.7.4
+I guess this is what the test robot found as well.
 
+> Luckily kmem_cache_destroy() is already a sleepable operation, so
+> maybe I should just slap another rcu_barrier() in there for builds
+> with this config option enabled... I think that should be fine for an
+> option mostly intended for debugging.
+
+This is definitely the simplest option.
+I am a bit concerned about performance if massive cache destruction
+happens (e.g. maybe during destruction of a set of namespaces for a
+container). Net namespace is slow to destroy for this reason IIRC,
+there were some optimizations to batch rcu synchronization. And now we
+are adding more.
+But I don't see any reasonable faster option as well.
+So I guess let's do this now and optimize later (or not).
