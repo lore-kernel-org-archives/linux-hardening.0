@@ -2,44 +2,44 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83282CA0EC8
-	for <linux-hardening@archiver.kernel.org>; Mon, 11 Sep 2023 21:36:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8451FCA0ED8
+	for <linux-hardening@archiver.kernel.org>; Mon, 11 Sep 2023 21:37:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236597AbjIKV2T (ORCPT
+        id S238991AbjIKV2Y (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 11 Sep 2023 17:28:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60712 "EHLO
+        Mon, 11 Sep 2023 17:28:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236533AbjIKKzc (ORCPT
+        with ESMTP id S236539AbjIKK4v (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 11 Sep 2023 06:55:32 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB3EAF3;
-        Mon, 11 Sep 2023 03:55:27 -0700 (PDT)
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38B8LamS000578;
-        Mon, 11 Sep 2023 10:55:02 GMT
+        Mon, 11 Sep 2023 06:56:51 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBA09127;
+        Mon, 11 Sep 2023 03:56:46 -0700 (PDT)
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38B8eBlD007844;
+        Mon, 11 Sep 2023 10:56:14 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-type; s=qcppdkim1;
- bh=79Abphj1CKQUA2KFHY92lJArficWoTb5EsDuE5M72Ho=;
- b=ND0gyuSsJHkj27EE8/ok/c4MQCSGTzP84gF5h5aYc3BI+k1XoB5OyJ+cyDBg1SacMLZ5
- suSe8rxOkApfixM8UE4+P0a+iBmhBdh9w5GQ5fynlkax11gWorgdsbKBG5+ys0zo7WTV
- Zm/lwDvj9jSfBzJdEjaeU5gsh66PIInlMpZeup0flWJaHyT46zZoK2al99Pn2S2cPWgG
- wUR3+JTL6Y/+C3efiA4QRBuAPMSAP2KyB4W/j7QQSBx+FyxW8uxK5mU6t5AsVf0+Q8Q3
- 3yl3qOiPmaOB10s5la4Yw3ALvQ7cQIQg3ELedMzr/A4zWDNIb4igLXA58tgeXmACiROf Ww== 
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3t1yac8bns-1
+ bh=NKMHFIzgNDvTMejnjOR6kwDOnmpfUj34ZTlTQsO29Hg=;
+ b=KoVO7sdBJS0she7hPmr4/t1yUhTGgxueqxfq0T1eZxgraPLGrp0cActMnGTzUDg99Jtk
+ BxnOLzKd3EVlQ2z03YbA8feoytur2YXujEFaTdZmoal0WVWbv52OH2LbKvp+AS8KZj7a
+ rpDrftwtIr4JdSfrBdxbqz9/izdj3rzMu1bCkLJgFi+CTrFbgawnwRLWxo4mOc9EPof/
+ qB3+SfFUntkO0IRr4Sa5Pb0c2SwbwKeSjkXgtlthAAUmTXcyXj2CYP4N/WDuWJ0djdSp
+ jsmUvadwxlrd/Mj1SqEYo1oH/iN/nhl8FfpJWyl8yc4peCIScbj3FacS+f2NkoA8z0Yk ZQ== 
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3t0hvyke07-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 Sep 2023 10:55:02 +0000
+        Mon, 11 Sep 2023 10:56:13 +0000
 Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 38BAt1uM032425
+        by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 38BAuCVr006051
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 Sep 2023 10:55:01 GMT
+        Mon, 11 Sep 2023 10:56:12 GMT
 Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
  nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.36; Mon, 11 Sep 2023 03:54:27 -0700
+ 15.2.1118.36; Mon, 11 Sep 2023 03:55:19 -0700
 From:   Mukesh Ojha <quic_mojha@quicinc.com>
 To:     <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
         <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
@@ -58,9 +58,9 @@ CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-gpio@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
         <linux-samsung-soc@vger.kernel.org>, <kernel@quicinc.com>,
         <quic_mojha@quicinc.com>
-Subject: [REBASE PATCH v5 02/17] soc: qcom: Add qcom_rproc_minidump module
-Date:   Mon, 11 Sep 2023 16:23:44 +0530
-Message-ID: <1694429639-21484-3-git-send-email-quic_mojha@quicinc.com>
+Subject: [REBASE PATCH v5 08/17] arm64: mm: Add dynamic ramoops region support through command line
+Date:   Mon, 11 Sep 2023 16:23:50 +0530
+Message-ID: <1694429639-21484-9-git-send-email-quic_mojha@quicinc.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com>
 References: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com>
@@ -71,286 +71,174 @@ X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nasanex01c.na.qualcomm.com (10.45.79.139)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: aTnp-dqfQzyRqJT6j2XQugil-EU68YU2
-X-Proofpoint-GUID: aTnp-dqfQzyRqJT6j2XQugil-EU68YU2
+X-Proofpoint-ORIG-GUID: D7aQZe1nCAe-0oMdraPzGcnkv8bF0XPZ
+X-Proofpoint-GUID: D7aQZe1nCAe-0oMdraPzGcnkv8bF0XPZ
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
  definitions=2023-09-11_06,2023-09-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- spamscore=0 mlxlogscore=999 priorityscore=1501 bulkscore=0 suspectscore=0
- clxscore=1015 adultscore=0 malwarescore=0 lowpriorityscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2308100000
- definitions=main-2309110099
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
+ clxscore=1015 mlxscore=0 malwarescore=0 impostorscore=0 adultscore=0
+ priorityscore=1501 mlxlogscore=999 spamscore=0 lowpriorityscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2308100000 definitions=main-2309110099
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Add qcom_rproc_minidump module in a preparation to remove
-minidump specific code from driver/remoteproc/qcom_common.c
-and provide needed exported API, this as well helps to
-abstract minidump specific data layout from qualcomm's
-remoteproc driver.
+The reserved memory region for ramoops is assumed to be at a fixed
+and known location when read from the devicetree. This may not be
+required for something like Qualcomm's minidump which is interested
+in knowing addresses of ramoops region but it does not put hard
+requirement of address being fixed as most of it's SoC does not
+support warm reset and does not use pstorefs at all instead it has
+firmware way of collecting ramoops region if it gets to know the
+address and register it with apss minidump table which is sitting
+in shared memory region in DDR and firmware will have access to
+these table during reset and collects it on crash of SoC.
 
-It is just a copying of qcom_minidump() functionality from
-driver/remoteproc/qcom_common.c into a separate file under
-qcom_rproc_minidump().
+So, add the support of reserving ramoops region to be dynamically
+allocated early during boot if it is request through command line
+via 'dyn_ramoops_size=' and fill up reserved resource structure and
+export the structure, so that it can be read by ramoops driver.
 
 Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
 ---
- drivers/soc/qcom/Kconfig                  |  10 +++
- drivers/soc/qcom/Makefile                 |   1 +
- drivers/soc/qcom/qcom_minidump_internal.h |  64 +++++++++++++++++
- drivers/soc/qcom/qcom_rproc_minidump.c    | 111 ++++++++++++++++++++++++++++++
- include/soc/qcom/qcom_minidump.h          |  23 +++++++
- 5 files changed, 209 insertions(+)
- create mode 100644 drivers/soc/qcom/qcom_minidump_internal.h
- create mode 100644 drivers/soc/qcom/qcom_rproc_minidump.c
- create mode 100644 include/soc/qcom/qcom_minidump.h
+ arch/arm64/mm/init.c       | 94 ++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/pstore_ram.h |  2 +
+ 2 files changed, 96 insertions(+)
 
-diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-index 715348869d04..ceca58eaa445 100644
---- a/drivers/soc/qcom/Kconfig
-+++ b/drivers/soc/qcom/Kconfig
-@@ -291,4 +291,14 @@ config QCOM_INLINE_CRYPTO_ENGINE
- 	tristate
- 	select QCOM_SCM
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 8a0f8604348b..680c1ce18fbe 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -31,6 +31,7 @@
+ #include <linux/hugetlb.h>
+ #include <linux/acpi_iort.h>
+ #include <linux/kmemleak.h>
++#include <linux/pstore_ram.h>
  
-+config QCOM_RPROC_MINIDUMP
-+	tristate "QCOM Remoteproc Minidump Support"
-+	depends on ARCH_QCOM || COMPILE_TEST
-+	depends on QCOM_SMEM
-+	help
-+	  Enablement of core minidump feature is controlled from boot firmware
-+	  side, so if it is enabled from firmware, this config allow linux to
-+	  query predefined minidump segments associated with the remote processor
-+	  and check its validity and end up collecting the dump on remote processor
-+	  crash during its recovery.
- endmenu
-diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
-index bbca2e1e55bb..838528e7e30a 100644
---- a/drivers/soc/qcom/Makefile
-+++ b/drivers/soc/qcom/Makefile
-@@ -32,3 +32,4 @@ obj-$(CONFIG_QCOM_KRYO_L2_ACCESSORS) +=	kryo-l2-accessors.o
- obj-$(CONFIG_QCOM_ICC_BWMON)	+= icc-bwmon.o
- qcom_ice-objs			+= ice.o
- obj-$(CONFIG_QCOM_INLINE_CRYPTO_ENGINE)	+= qcom_ice.o
-+obj-$(CONFIG_QCOM_RPROC_MINIDUMP)	+= qcom_rproc_minidump.o
-diff --git a/drivers/soc/qcom/qcom_minidump_internal.h b/drivers/soc/qcom/qcom_minidump_internal.h
-new file mode 100644
-index 000000000000..71709235b196
---- /dev/null
-+++ b/drivers/soc/qcom/qcom_minidump_internal.h
-@@ -0,0 +1,64 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
+ #include <asm/boot.h>
+ #include <asm/fixmap.h>
+@@ -100,6 +101,93 @@ phys_addr_t __ro_after_init arm64_dma_phys_limit;
+ #define ARM64_MEMSTART_ALIGN	(1UL << ARM64_MEMSTART_SHIFT)
+ #endif
+ 
++#define RAMOOPS_ADDR_HIGH_MAX		(PHYS_MASK + 1)
 +
-+#ifndef _QCOM_MINIDUMP_INTERNAL_H_
-+#define _QCOM_MINIDUMP_INTERNAL_H_
-+
-+#define MAX_NUM_OF_SS           10
-+#define MAX_REGION_NAME_LENGTH  16
-+#define SBL_MINIDUMP_SMEM_ID	602
-+#define MINIDUMP_REGION_VALID	   ('V' << 24 | 'A' << 16 | 'L' << 8 | 'I' << 0)
-+#define MINIDUMP_SS_ENCR_DONE	   ('D' << 24 | 'O' << 16 | 'N' << 8 | 'E' << 0)
-+#define MINIDUMP_SS_ENABLED	   ('E' << 24 | 'N' << 16 | 'B' << 8 | 'L' << 0)
-+
-+/**
-+ * struct minidump_region - Minidump region
-+ * @name		: Name of the region to be dumped
-+ * @seq_num:		: Use to differentiate regions with same name.
-+ * @valid		: This entry to be dumped (if set to 1)
-+ * @address		: Physical address of region to be dumped
-+ * @size		: Size of the region
-+ */
-+struct minidump_region {
-+	char	name[MAX_REGION_NAME_LENGTH];
-+	__le32	seq_num;
-+	__le32	valid;
-+	__le64	address;
-+	__le64	size;
++/* Location of the reserved area for the dynamic ramoops */
++struct resource dyn_ramoops_res = {
++	.name  = "ramoops",
++	.start = 0,
++	.end   = 0,
++	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
++	.desc  = IORES_DESC_NONE,
 +};
++EXPORT_SYMBOL(dyn_ramoops_res);
 +
-+/**
-+ * struct minidump_subsystem - Subsystem's SMEM Table of content
-+ * @status : Subsystem toc init status
-+ * @enabled : if set to 1, this region would be copied during coredump
-+ * @encryption_status: Encryption status for this subsystem
-+ * @encryption_required : Decides to encrypt the subsystem regions or not
-+ * @region_count : Number of regions added in this subsystem toc
-+ * @regions_baseptr : regions base pointer of the subsystem
-+ */
-+struct minidump_subsystem {
-+	__le32	status;
-+	__le32	enabled;
-+	__le32	encryption_status;
-+	__le32	encryption_required;
-+	__le32	region_count;
-+	__le64	regions_baseptr;
-+};
-+
-+/**
-+ * struct minidump_global_toc - Global Table of Content
-+ * @status : Global Minidump init status
-+ * @md_revision : Minidump revision
-+ * @enabled : Minidump enable status
-+ * @subsystems : Array of subsystems toc
-+ */
-+struct minidump_global_toc {
-+	__le32				status;
-+	__le32				md_revision;
-+	__le32				enabled;
-+	struct minidump_subsystem	subsystems[MAX_NUM_OF_SS];
-+};
-+
-+#endif /* _QCOM_MINIDUMP_INTERNAL_H_ */
-diff --git a/drivers/soc/qcom/qcom_rproc_minidump.c b/drivers/soc/qcom/qcom_rproc_minidump.c
-new file mode 100644
-index 000000000000..9bc84cc2536f
---- /dev/null
-+++ b/drivers/soc/qcom/qcom_rproc_minidump.c
-@@ -0,0 +1,111 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/remoteproc.h>
-+#include <linux/soc/qcom/smem.h>
-+#include <linux/string.h>
-+#include <soc/qcom/qcom_minidump.h>
-+
-+#include "qcom_minidump_internal.h"
-+
-+static void qcom_minidump_cleanup(struct rproc *rproc)
++static int __init parse_dynamic_ramoops(char *cmdline, unsigned long long *size)
 +{
-+	struct rproc_dump_segment *entry, *tmp;
++	const char *name = "dyn_ramoops_size=";
++	char *p = NULL;
++	char *q = NULL;
++	char *tmp;
 +
-+	list_for_each_entry_safe(entry, tmp, &rproc->dump_segments, node) {
-+		list_del(&entry->node);
-+		kfree(entry->priv);
-+		kfree(entry);
-+	}
-+}
++	if (!cmdline)
++		return -ENOENT;
 +
-+static int qcom_add_minidump_segments(struct rproc *rproc, struct minidump_subsystem *subsystem,
-+			void (*rproc_dumpfn_t)(struct rproc *rproc, struct rproc_dump_segment *segment,
-+				void *dest, size_t offset, size_t size))
-+{
-+	struct minidump_region __iomem *ptr;
-+	struct minidump_region region;
-+	int seg_cnt, i;
-+	dma_addr_t da;
-+	size_t size;
-+	char *name;
++	/* Check for "dyn_ramoops_size" and use the later if there are more */
++	p = strstr(cmdline, name);
++	while (p) {
++		q = p;
++		p = strchr(p, ' ');
++		if (!p)
++			break;
 +
-+	if (WARN_ON(!list_empty(&rproc->dump_segments))) {
-+		dev_err(&rproc->dev, "dump segment list already populated\n");
-+		return -EUCLEAN;
++		p = strstr(p + 1, name);
 +	}
 +
-+	seg_cnt = le32_to_cpu(subsystem->region_count);
-+	ptr = ioremap((unsigned long)le64_to_cpu(subsystem->regions_baseptr),
-+		      seg_cnt * sizeof(struct minidump_region));
-+	if (!ptr)
-+		return -EFAULT;
-+
-+	for (i = 0; i < seg_cnt; i++) {
-+		memcpy_fromio(&region, ptr + i, sizeof(region));
-+		if (le32_to_cpu(region.valid) == MINIDUMP_REGION_VALID) {
-+			name = kstrndup(region.name, MAX_REGION_NAME_LENGTH - 1, GFP_KERNEL);
-+			if (!name) {
-+				iounmap(ptr);
-+				return -ENOMEM;
-+			}
-+			da = le64_to_cpu(region.address);
-+			size = le64_to_cpu(region.size);
-+			rproc_coredump_add_custom_segment(rproc, da, size, rproc_dumpfn_t, name);
-+		}
++	if (!q) {
++		pr_err("ramoops: No entry found for %s\n", name);
++		return -ENOENT;
 +	}
 +
-+	iounmap(ptr);
++	p = q + strlen(name);
++	*size = memparse(p, &tmp);
++	if (p == tmp) {
++		pr_err("ramoops: memory value expected\n");
++		return -EINVAL;
++	}
++
 +	return 0;
 +}
 +
-+void qcom_rproc_minidump(struct rproc *rproc, unsigned int minidump_id,
-+		void (*rproc_dumpfn_t)(struct rproc *rproc,
-+		struct rproc_dump_segment *segment, void *dest, size_t offset,
-+		size_t size))
++static int __init parse_dyn_ramoops_size_dummy(char *arg)
 +{
-+	int ret;
-+	struct minidump_subsystem *subsystem;
-+	struct minidump_global_toc *toc;
-+
-+	/* Get Global minidump ToC*/
-+	toc = qcom_smem_get(QCOM_SMEM_HOST_ANY, SBL_MINIDUMP_SMEM_ID, NULL);
-+
-+	/* check if global table pointer exists and init is set */
-+	if (IS_ERR(toc) || !toc->status) {
-+		dev_err(&rproc->dev, "Minidump TOC not found in SMEM\n");
-+		return;
-+	}
-+
-+	/* Get subsystem table of contents using the minidump id */
-+	subsystem = &toc->subsystems[minidump_id];
-+
-+	/**
-+	 * Collect minidump if SS ToC is valid and segment table
-+	 * is initialized in memory and encryption status is set.
-+	 */
-+	if (subsystem->regions_baseptr == 0 ||
-+	    le32_to_cpu(subsystem->status) != 1 ||
-+	    le32_to_cpu(subsystem->enabled) != MINIDUMP_SS_ENABLED ||
-+	    le32_to_cpu(subsystem->encryption_status) != MINIDUMP_SS_ENCR_DONE) {
-+		dev_err(&rproc->dev, "Minidump not ready, skipping\n");
-+		return;
-+	}
-+
-+	ret = qcom_add_minidump_segments(rproc, subsystem, rproc_dumpfn_t);
-+	if (ret) {
-+		dev_err(&rproc->dev, "Failed with error: %d while adding minidump entries\n", ret);
-+		goto clean_minidump;
-+	}
-+	rproc_coredump_using_sections(rproc);
-+clean_minidump:
-+	qcom_minidump_cleanup(rproc);
++	return 0;
 +}
-+EXPORT_SYMBOL_GPL(qcom_rproc_minidump);
++early_param("dyn_ramoops_size", parse_dyn_ramoops_size_dummy);
 +
-+MODULE_DESCRIPTION("Qualcomm remoteproc minidump(smem) helper module");
-+MODULE_LICENSE("GPL");
-diff --git a/include/soc/qcom/qcom_minidump.h b/include/soc/qcom/qcom_minidump.h
-new file mode 100644
-index 000000000000..cd87caef919d
---- /dev/null
-+++ b/include/soc/qcom/qcom_minidump.h
-@@ -0,0 +1,23 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
 +/*
-+ * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
++ * reserve_dynamic_ramoops() - reserves memory for dynamic ramoops
++ *
++ * This enable dynamic reserve memory support for ramoops through
++ * command line.
 + */
++static void __init reserve_dynamic_ramoops(void)
++{
++	char *cmdline = boot_command_line;
++	unsigned long long ramoops_base;
++	unsigned long long ramoops_size;
 +
-+#ifndef _QCOM_MINIDUMP_H_
-+#define _QCOM_MINIDUMP_H_
++	if (!IS_ENABLED(CONFIG_PSTORE_RAM))
++		return;
 +
-+struct rproc;
-+struct rproc_dump_segment;
++	if (parse_dynamic_ramoops(cmdline, &ramoops_size))
++		return;
 +
-+#if IS_ENABLED(CONFIG_QCOM_RPROC_MINIDUMP)
-+void qcom_rproc_minidump(struct rproc *rproc, unsigned int minidump_id,
-+		   void (*rproc_dumpfn_t)(struct rproc *rproc,
-+		   struct rproc_dump_segment *segment, void *dest, size_t offset,
-+		   size_t size));
-+#else
-+static inline void qcom_rproc_minidump(struct rproc *rproc, unsigned int minidump_id,
-+		   void (*rproc_dumpfn_t)(struct rproc *rproc,
-+		   struct rproc_dump_segment *segment, void *dest, size_t offset,
-+		   size_t size)) { }
-+#endif /* CONFIG_QCOM_RPROC_MINIDUMP */
-+#endif /* _QCOM_MINIDUMP_H_ */
++	ramoops_base = memblock_phys_alloc_range(ramoops_size, SMP_CACHE_BYTES,
++						 0, RAMOOPS_ADDR_HIGH_MAX);
++	if (!ramoops_base) {
++		pr_err("cannot allocate ramoops dynamic memory (size:0x%llx).\n",
++			ramoops_size);
++		return;
++	}
++
++	kmemleak_ignore_phys(ramoops_base);
++
++	dyn_ramoops_res.start = ramoops_base;
++	dyn_ramoops_res.end = ramoops_base + ramoops_size - 1;
++	insert_resource(&iomem_resource, &dyn_ramoops_res);
++}
++
+ static int __init reserve_crashkernel_low(unsigned long long low_size)
+ {
+ 	unsigned long long low_base;
+@@ -481,6 +569,12 @@ void __init bootmem_init(void)
+ 	 */
+ 	reserve_crashkernel();
+ 
++	/*
++	 * Reserving ramoops region resource dynamically in case it is
++	 * requested from command line.
++	 */
++	reserve_dynamic_ramoops();
++
+ 	memblock_dump_all();
+ }
+ 
+diff --git a/include/linux/pstore_ram.h b/include/linux/pstore_ram.h
+index 9d65ff94e216..07d700b7649d 100644
+--- a/include/linux/pstore_ram.h
++++ b/include/linux/pstore_ram.h
+@@ -10,6 +10,8 @@
+ 
+ #include <linux/pstore.h>
+ 
++extern struct resource dyn_ramoops_res;
++
+ struct persistent_ram_ecc_info {
+ 	int block_size;
+ 	int ecc_size;
 -- 
 2.7.4
 
