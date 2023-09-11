@@ -2,131 +2,103 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96581CA0EC1
-	for <linux-hardening@archiver.kernel.org>; Mon, 11 Sep 2023 21:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4823ECA0EC8
+	for <linux-hardening@archiver.kernel.org>; Mon, 11 Sep 2023 21:37:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348661AbjIKV3c (ORCPT
+        id S1348674AbjIKV3g (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 11 Sep 2023 17:29:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51056 "EHLO
+        Mon, 11 Sep 2023 17:29:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236541AbjIKK4v (ORCPT
+        with ESMTP id S236612AbjIKLD6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 11 Sep 2023 06:56:51 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44DC412A;
-        Mon, 11 Sep 2023 03:56:47 -0700 (PDT)
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38B9gRRU024966;
-        Mon, 11 Sep 2023 10:56:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=qcppdkim1;
- bh=VwP+Q3TJ0qt35pt6sa+rWuxsU0xvCE2mh+sXwEm+U/Y=;
- b=UpRLauktl8IP2qD15ySzKV17N2oeaTj6ki+mulBAkWRnKM0R4Pdrd5YIFpqa+lK5c+qX
- uoUHXoPRfVKFP5D1F40URa9v4uRfjudFnSB7DXKge4xyrHudIeFcYHx8coxrLeqkgM7h
- NwXh0GGluYsvntg5wnLUB14ToKGZ93Q6T2Zs3ndB5XaOWUgRFWp0Fmf1ZWkI9YJCYiHQ
- 11+vSYLcqy9W34BkVe1HwtxMRMff+NVKym6Mc6l7scppmYHueuVoX2GUSVlX1mL9V2oz
- muZ/+WJC2Z/f8CbvSBg7AV2AFpVIcSabKBnhkyo1AYcOYIol5bh8wDvzpeb1agdNO9Me cw== 
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3t0j0fkfkx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 Sep 2023 10:56:13 +0000
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 38BAuCVo006051
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 Sep 2023 10:56:12 GMT
-Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.36; Mon, 11 Sep 2023 03:54:53 -0700
-From:   Mukesh Ojha <quic_mojha@quicinc.com>
-To:     <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <keescook@chromium.org>, <tony.luck@intel.com>,
-        <gpiccoli@igalia.com>, <mathieu.poirier@linaro.org>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>,
-        <vigneshr@ti.com>, <nm@ti.com>, <matthias.bgg@gmail.com>,
-        <kgene@kernel.org>, <alim.akhtar@samsung.com>,
-        <bmasney@redhat.com>, <quic_tsoni@quicinc.com>
-CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>, <kernel@quicinc.com>,
-        <quic_mojha@quicinc.com>
-Subject: [REBASE PATCH v5 05/17] init: export linux_banner data variable
-Date:   Mon, 11 Sep 2023 16:23:47 +0530
-Message-ID: <1694429639-21484-6-git-send-email-quic_mojha@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com>
-References: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com>
+        Mon, 11 Sep 2023 07:03:58 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A987E40
+        for <linux-hardening@vger.kernel.org>; Mon, 11 Sep 2023 04:03:51 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id a640c23a62f3a-986d8332f50so571215666b.0
+        for <linux-hardening@vger.kernel.org>; Mon, 11 Sep 2023 04:03:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1694430229; x=1695035029; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+ILX0tdLmqj9AVpuvBKgqDyqNcCHFP+tGWFAoPYPQ4w=;
+        b=RozUUQafs9a/6wYc+MEj3hh8Qlu9Qi0huT+x5jj8qiem8SojZs6YSnzGsIlufp6W4f
+         O+q2jQwFJMzLDcvvPfbm1yYwt3VnOZTcT6PI5WvntCMRR7L4MbYpIETWbzixWXEP/awv
+         ZygszUnTxWHLoqIwkilI4+g2BKnSPgq8Y7ayil/xIUQ8JyHOZuJLlhEQaPqkOJF7OS9x
+         tH61SPtsO3qIvOk1UCbGa1vNoWR88obWLHl8VvE8WbVoa5MLL1sR3DD+o/7Y7HN9Sj+z
+         36oQ3cBFacIDqpvURI+laKCXFUppmRp7RWguEFYkWcy41wQQpvCBK0S/R0lDMsFv3Gt1
+         Ufmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694430229; x=1695035029;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+ILX0tdLmqj9AVpuvBKgqDyqNcCHFP+tGWFAoPYPQ4w=;
+        b=eUkeSmnS/A94BLoCuM04HXjuhp+GzlUIYfjzunqN01vJOzWjuRj03axEKYZwXGFFod
+         IeTrGprrWU2uthV45xSJFJxcWFhK0wVOd2aJy9f9pJIXC17KU+ovAR3IsrEy4vqu4B1F
+         jCMRSFoZwfVub5EIe+qn98+QSIzIjPYSqZaURLh5Gy6lNWmutaB+XHniqIjbHcKW05Ny
+         gge7zhkzCxJjJiefjBiNYhnXInVpTN82JY576e4YwudiLdwAy2rYT8tUmJv1PzkywsMy
+         0CImM/kji0UBTvAJEgFPrS5Fe7VufO1RqLWZy5i70SVIit0/Zv2GY2F/Jzx2ijQ+MuRI
+         gsrw==
+X-Gm-Message-State: AOJu0Yy+rqrz5X4Q2wgi61ZneLkqTfui4etnXuf7L5UWtQ5gmP6eg8o4
+        Omgp2i31eqjsI628Emscz2CWrQ==
+X-Google-Smtp-Source: AGHT+IHrCuHXPW5iCbHOgDTuxr0+rEQqZq3NfeZFsduvBFV7Iz1nZShwqgZZlcUjSeB2syGYDhOFVA==
+X-Received: by 2002:a17:906:8251:b0:9a5:eedb:ee2e with SMTP id f17-20020a170906825100b009a5eedbee2emr7821770ejx.19.1694430229508;
+        Mon, 11 Sep 2023 04:03:49 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.214.188])
+        by smtp.gmail.com with ESMTPSA id ov27-20020a170906fc1b00b00992c92af6f4sm5183284ejb.144.2023.09.11.04.03.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Sep 2023 04:03:48 -0700 (PDT)
+Message-ID: <f3bd88f5-7dff-871c-28d6-a7dbb1104989@linaro.org>
+Date:   Mon, 11 Sep 2023 13:03:45 +0200
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 4WpSAAikWRcnaatbg0nF3LvWQEQKlWS2
-X-Proofpoint-GUID: 4WpSAAikWRcnaatbg0nF3LvWQEQKlWS2
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-09-11_06,2023-09-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- malwarescore=0 clxscore=1015 impostorscore=0 mlxlogscore=999 bulkscore=0
- lowpriorityscore=0 adultscore=0 spamscore=0 phishscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2308100000
- definitions=main-2309110099
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.0
+Subject: Re: [REBASE PATCH v5 06/17] soc: qcom: Add Qualcomm APSS minidump
+ kernel driver
+Content-Language: en-US
+To:     Mukesh Ojha <quic_mojha@quicinc.com>, corbet@lwn.net,
+        agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, keescook@chromium.org, tony.luck@intel.com,
+        gpiccoli@igalia.com, mathieu.poirier@linaro.org,
+        catalin.marinas@arm.com, will@kernel.org, linus.walleij@linaro.org,
+        andy.shevchenko@gmail.com, vigneshr@ti.com, nm@ti.com,
+        matthias.bgg@gmail.com, kgene@kernel.org, alim.akhtar@samsung.com,
+        bmasney@redhat.com, quic_tsoni@quicinc.com
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, kernel@quicinc.com
+References: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com>
+ <1694429639-21484-7-git-send-email-quic_mojha@quicinc.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <1694429639-21484-7-git-send-email-quic_mojha@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Some debug loadable module like minidump is interested in knowing
-the kernel version against which it is being build. Let's export
-linux_banner.
+On 11/09/2023 12:53, Mukesh Ojha wrote:
 
-Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
----
- include/linux/init.h     | 3 +++
- init/version-timestamp.c | 3 +++
- 2 files changed, 6 insertions(+)
+...
 
-diff --git a/include/linux/init.h b/include/linux/init.h
-index 29e75bbe7984..7c24d3ec0ff2 100644
---- a/include/linux/init.h
-+++ b/include/linux/init.h
-@@ -149,6 +149,9 @@ extern char *saved_command_line;
- extern unsigned int saved_command_line_len;
- extern unsigned int reset_devices;
- 
-+/* Defined in init/version-timestamp.c */
-+extern const char linux_banner[];
-+
- /* used by init/main.c */
- void setup_arch(char **);
- void prepare_namespace(void);
-diff --git a/init/version-timestamp.c b/init/version-timestamp.c
-index 043cbf80a766..a48f2c19e5d7 100644
---- a/init/version-timestamp.c
-+++ b/init/version-timestamp.c
-@@ -6,6 +6,7 @@
- #include <linux/refcount.h>
- #include <linux/uts.h>
- #include <linux/utsname.h>
-+#include <linux/init.h>
- 
- struct uts_namespace init_uts_ns = {
- 	.ns.count = REFCOUNT_INIT(2),
-@@ -28,3 +29,5 @@ struct uts_namespace init_uts_ns = {
- const char linux_banner[] =
- 	"Linux version " UTS_RELEASE " (" LINUX_COMPILE_BY "@"
- 	LINUX_COMPILE_HOST ") (" LINUX_COMPILER ") " UTS_VERSION "\n";
-+
-+EXPORT_SYMBOL_GPL(linux_banner);
--- 
-2.7.4
+> +module_platform_driver(qcom_minidump_driver);
+> +
+> +MODULE_DESCRIPTION("Qualcomm APSS minidump driver");
+> +MODULE_LICENSE("GPL");
+> +MODULE_ALIAS("platform:qcom-minidump-smem");
+
+Nothing improved here and in other places. To avoid review being spread
+all over, I will just NAK this one.
+
+NAK
+
+Best regards,
+Krzysztof
 
