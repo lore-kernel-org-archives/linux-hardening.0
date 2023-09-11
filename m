@@ -2,98 +2,124 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC40CA0EC9
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8CBBCA0EC1
 	for <linux-hardening@archiver.kernel.org>; Mon, 11 Sep 2023 21:36:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242439AbjIKV2B (ORCPT
+        id S243335AbjIKV2I (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 11 Sep 2023 17:28:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54634 "EHLO
+        Mon, 11 Sep 2023 17:28:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244040AbjIKSvL (ORCPT
+        with ESMTP id S236624AbjIKLHN (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 11 Sep 2023 14:51:11 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BEFCC4;
-        Mon, 11 Sep 2023 11:51:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694458266; x=1725994266;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=MrJyaTDd2hAlFLBeIlMXNYKXT1O3LLXpwKb2zoKLzg0=;
-  b=EsxrjiQIe/aCOwPo4F40FiWSQIPaie7ZeLYBjiF/dCh17qLWk2Yun743
-   tHyAaHkEIdFNIr8mmZn6kqyWGgMFpzmxySS1KZZFroHbBKGZOk+Fq69ix
-   mpsbCuYsYiCqK61W5/WQA58ww4I8UTW/uoy5aJM2VuRVftVXUnWJ8IdYm
-   oaTQal0ntm/9XUICnh82kTFhUpHzf7vO1tegOoV6boYdUIlt4KZ5fZTPz
-   DoVk+9QPQn0Wpd5LE7C3fTg0yHXYNn4g/ybx0EChtdfxMFoi8+CuENHvH
-   TxIzaJeQ7/dII7RLiKSBvlMW53a9z50zNeHu0XsdgICnQCa7bCd+fh2+e
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="464537765"
-X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
-   d="scan'208";a="464537765"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 11:51:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="990220512"
-X-IronPort-AV: E=Sophos;i="6.02,244,1688454000"; 
-   d="scan'208";a="990220512"
-Received: from cdaubert-mobl13.amr.corp.intel.com (HELO [10.212.203.41]) ([10.212.203.41])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 11:51:04 -0700
-Message-ID: <69643667-4564-0266-1b26-13833191842c@intel.com>
-Date:   Mon, 11 Sep 2023 11:51:03 -0700
+        Mon, 11 Sep 2023 07:07:13 -0400
+Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A287ACDD
+        for <linux-hardening@vger.kernel.org>; Mon, 11 Sep 2023 04:07:07 -0700 (PDT)
+Received: by mail-lj1-x235.google.com with SMTP id 38308e7fff4ca-2b9d07a8d84so70629171fa.3
+        for <linux-hardening@vger.kernel.org>; Mon, 11 Sep 2023 04:07:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1694430426; x=1695035226; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qmyHVYJDP9hmCywHRnsdxnvZ1q0Z/z3sEq/O/fzkRmM=;
+        b=hE0UzNOildrc4RtjQlC+RP8Kk8xdx6Ya+Ekn5wJ/mahURugJQ378ozWVwxwNvye0ph
+         n92OzvajmrHal2Bn5EWHx+95chi40L9o3jccAVeRv0cWfirw9o2FReWCjrqyQDPaQsL2
+         kL35iYvgHu2HQic9ztnDQNByUaZh/NcvITlULH8CTBJRhweieQxtH23b2TLKg4Y+jM7v
+         SF3seT8EA/gqrFfcrQLBm0BZuVwjMXfKewd/h0Fbh8HIh1pgftR85XVP5n6/bFl9iWiK
+         qALytUgT8moTF5mvDYaQ6tSZXqrXDBYb7NY8KVlEXa4Az+fhGxlY1QchZMBnD5QIdm0o
+         qBFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694430426; x=1695035226;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qmyHVYJDP9hmCywHRnsdxnvZ1q0Z/z3sEq/O/fzkRmM=;
+        b=peMRTYrQStMe1qlVcX2QkhEnhOWjV4oMretaZJHgH6TwEV4gF3EoFpgrhElf941ljj
+         IIcrrffCsbEXS8Elu+hlnsAGoCvik4tnvrY8B0OBmQI9A/LggGRBPoizK15yWZHi97X8
+         7an9lGKC3Xewgow2t781is7L8PcJP8PdmWygcVGddF0pFDNLRVaQl/5sOuWFBYiq6JZ9
+         dxUcs843y72/f9RtZVLuvt3IAs0K6rbbo/hUoVp+7x7ul0JBXOf8NfZ1CPRM4acnotwh
+         6Fzmas5HN4LYpBU/mTbgQXwRf5IczGw53KfbYj3LhtbHuReEhM/hxyWZZIlOyxs07gS1
+         YT/w==
+X-Gm-Message-State: AOJu0YwrpApQWmnno7epK9FtWZdC+t45U3zkVPne2fHK+W8hBS+amf8g
+        Nic1guiG9paUYqhs1PwpdRXRCA==
+X-Google-Smtp-Source: AGHT+IFR8IFxIJ7reSkaYfAFLu1yRY1oO/AEBb0QIMYpht4GuEFk0sZxNE+qAxMWLhq3G4SDtzJ7xQ==
+X-Received: by 2002:a2e:9ed7:0:b0:2bd:124a:23d5 with SMTP id h23-20020a2e9ed7000000b002bd124a23d5mr8252127ljk.11.1694430425888;
+        Mon, 11 Sep 2023 04:07:05 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.214.188])
+        by smtp.gmail.com with ESMTPSA id qn6-20020a170907210600b0099d9b50d786sm5219726ejb.199.2023.09.11.04.07.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Sep 2023 04:07:04 -0700 (PDT)
+Message-ID: <e35a8b4f-ba1a-514e-9c59-a74442f0cb1f@linaro.org>
+Date:   Mon, 11 Sep 2023 13:07:01 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.15.0
-Subject: Re: [PATCH] x86/tdx: refactor deprecated strncpy
+Subject: Re: [PATCH v5 06/17] soc: qcom: Add Qualcomm APSS minidump kernel
+ driver
 Content-Language: en-US
-To:     Justin Stitt <justinstitt@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>
-Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
-References: <20230911-strncpy-arch-x86-coco-tdx-tdx-c-v1-1-4b38155727f3@google.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <20230911-strncpy-arch-x86-coco-tdx-tdx-c-v1-1-4b38155727f3@google.com>
+To:     Mukesh Ojha <quic_mojha@quicinc.com>, corbet@lwn.net,
+        agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, keescook@chromium.org, tony.luck@intel.com,
+        gpiccoli@igalia.com, mathieu.poirier@linaro.org,
+        catalin.marinas@arm.com, will@kernel.org, linus.walleij@linaro.org,
+        andy.shevchenko@gmail.com, vigneshr@ti.com, nm@ti.com,
+        matthias.bgg@gmail.com, kgene@kernel.org, alim.akhtar@samsung.com,
+        bmasney@redhat.com, quic_tsoni@quicinc.com
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, kernel@quicinc.com
+References: <1694290578-17733-1-git-send-email-quic_mojha@quicinc.com>
+ <1694290578-17733-7-git-send-email-quic_mojha@quicinc.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <1694290578-17733-7-git-send-email-quic_mojha@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 9/11/23 11:27, Justin Stitt wrote:
-> `strncpy` is deprecated and we should prefer more robust string apis.
+On 09/09/2023 22:16, Mukesh Ojha wrote:
+> +/**
+> + * qcom_minidump_region_register() - Register region in APSS Minidump table.
+> + * @region: minidump region.
+> + *
+> + * Return: On success, it returns 0 and negative error value on failure.
+> + */
+> +int qcom_minidump_region_register(const struct qcom_minidump_region *region)
+> +{
+> +	struct minidump *md;
+> +	int ret;
+> +
+> +	md = qcom_smem_minidump_ready();
+> +	if (!md)
+> +		return -EPROBE_DEFER;
+> +
+> +	if (!qcom_minidump_valid_region(region))
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&md->md_lock);
+> +	ret = qcom_md_region_register(md, region);
+> +	if (ret)
+> +		goto unlock;
+> +
+> +	qcom_md_update_elfheader(md, region);
+> +unlock:
+> +	mutex_unlock(&md->md_lock);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_minidump_region_register);
 
-I dunno.  It actually seems like a pretty good fit here.
+NAK, there is no user for this.
 
-> In this case, `message.str` is not expected to be NUL-terminated as it
-> is simply a buffer of characters residing in a union which allows for
-> named fields representing 8 bytes each. There is only one caller of
-> `tdx_panic()` and they use a 59-length string for `msg`:
-> |	const char *msg = "TD misconfiguration: SEPT_VE_DISABLE attribute must be set.";
+Drop all exports from minidump drivers. Your upstream driver *must not*
+expose stuff to your vendor drivers.
 
-I'm not really following this logic.
+Best regards,
+Krzysztof
 
-We need to do the following:
-
-1. Make sure not to over write past the end of 'message'
-2. Make sure not to over read past the end of 'msg'
-3. Make sure not to leak stack data into the hypercall registers
-   in the case of short strings.
-
-strncpy() does #1, #2 and #3 just fine.
-
-The resulting string does *NOT* need to be NULL-terminated.  See the
-comment:
-
-    /* VMM assumes '\0' in byte 65, if the message took all 64 bytes */
-
-Are there cases where strncpy() doesn't NULL-terminate the string other
-than when the buffer is full?
-
-I actually didn't realize that strncpy() pads its output up to the full
-size.  I wonder if Kirill used it intentionally or whether he got lucky
-here. :)
