@@ -2,47 +2,47 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE99CA0ECF
-	for <linux-hardening@archiver.kernel.org>; Tue, 12 Sep 2023 12:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01254CA0EC3
+	for <linux-hardening@archiver.kernel.org>; Tue, 12 Sep 2023 12:04:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234814AbjILMEO (ORCPT
+        id S234671AbjILMER (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 12 Sep 2023 08:04:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54408 "EHLO
+        Tue, 12 Sep 2023 08:04:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234663AbjILMEK (ORCPT
+        with ESMTP id S234493AbjILMEN (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 12 Sep 2023 08:04:10 -0400
+        Tue, 12 Sep 2023 08:04:13 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74DC510D2;
-        Tue, 12 Sep 2023 05:04:06 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72FA610D2;
+        Tue, 12 Sep 2023 05:04:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694520246; x=1726056246;
+  t=1694520249; x=1726056249;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=SeLgtUYbrOh0aByBaO5uFLDhHv+A3oGVhKqUMUqlyHQ=;
-  b=A3DO+xiOk4IfcNjjaMLM8UBxAY+pN/aULvQYxbAVY1cz6i2TBqAfgUzd
-   HjihYsENg4IkohH5F/ak7scRgL5COjfdeejIq6TMM2h3cAXXTvwiadPQi
-   6xWommhOiSHA9WvSK2nJLVowuf4GohpaI9oDLFB2iTDMnJsLpWQZ+zsLe
-   TPezplZ4cgCQWn89QOoOYTCw9psvvyZ+LBXBwtUxM4MmFGczIBx4TUSks
-   BwzBYy4aNAeWkoqTqf36s3DEIKFnqJfwHabeoV+rWWO93+9C/Ns2r5+r/
-   CFqMBg8NO8YwULZDT/eWnn7ARm9x2n2HLVU8JepEgk9IJazks3x6FZ8Df
+  bh=PCXzH8JJDaRgoFGvNdNnXQNwSzVXB7b6+V2gb/zaWHE=;
+  b=JfiLJlELO+vSbJ4JC60Z1FWQU5ZBC/ji38s0PpUhyLUxgW05KMLCwjVX
+   XIq9976xlIa4UY5touY4P+bPpR6GCZzweM0HFeTkKMEH/F4qKSQmIRqxg
+   bojaAwrLfUmOBplmgMZgFEMNhK+GqPo5bO8ntZJkZ7hSlwgUkdyd+jacA
+   etr2NHBnCB7/foDeuAJyRqbGjWkM5ZqJdKaLy8fqtgDm7xw5U0Gpo7RTL
+   U75y42J79dTf5y2/y42STNtXXkC3IgFO2zl76D21XxCarcd5pOvtRSoyv
+   UiLjFDBhZHEYqp4dMKSB7unQqzzAitTSatI24sT5bOI17LDlcP35mzUW9
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="378265435"
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="378265486"
 X-IronPort-AV: E=Sophos;i="6.02,139,1688454000"; 
-   d="scan'208";a="378265435"
+   d="scan'208";a="378265486"
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2023 05:03:01 -0700
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2023 05:03:03 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="720389769"
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="720389779"
 X-IronPort-AV: E=Sophos;i="6.02,139,1688454000"; 
-   d="scan'208";a="720389769"
+   d="scan'208";a="720389779"
 Received: from irvmail002.ir.intel.com ([10.43.11.120])
-  by orsmga006.jf.intel.com with ESMTP; 12 Sep 2023 05:02:58 -0700
+  by orsmga006.jf.intel.com with ESMTP; 12 Sep 2023 05:02:59 -0700
 Received: from pelor.igk.intel.com (pelor.igk.intel.com [10.123.220.13])
-        by irvmail002.ir.intel.com (Postfix) with ESMTP id 6BE29333D7;
-        Tue, 12 Sep 2023 13:02:56 +0100 (IST)
+        by irvmail002.ir.intel.com (Postfix) with ESMTP id 9DC2A333E6;
+        Tue, 12 Sep 2023 13:02:58 +0100 (IST)
 From:   Przemek Kitszel <przemyslaw.kitszel@intel.com>
 To:     netdev@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
         davem@davemloft.net, edumazet@google.com, pabeni@redhat.com
@@ -54,9 +54,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Anthony Nguyen <anthony.l.nguyen@intel.com>,
         David Laight <David.Laight@ACULAB.COM>,
         Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Subject: [PATCH net-next v5 4/7] ice: make use of DEFINE_FLEX() in ice_ddp.c
-Date:   Tue, 12 Sep 2023 07:59:34 -0400
-Message-Id: <20230912115937.1645707-5-przemyslaw.kitszel@intel.com>
+Subject: [PATCH net-next v5 6/7] ice: make use of DEFINE_FLEX() for struct ice_aqc_dis_txq_item
+Date:   Tue, 12 Sep 2023 07:59:36 -0400
+Message-Id: <20230912115937.1645707-7-przemyslaw.kitszel@intel.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230912115937.1645707-1-przemyslaw.kitszel@intel.com>
 References: <20230912115937.1645707-1-przemyslaw.kitszel@intel.com>
@@ -66,97 +66,85 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Use DEFINE_FLEX() macro for constant-num-of-elems (4)
-flex array members of ice_ddp.c
+Use DEFINE_FLEX() macro for 1-elem flex array use case
+of struct ice_aqc_dis_txq_item.
 
 Signed-off-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
 ---
-add/remove: 4/0 grow/shrink: 0/1 up/down: 1195/-878 (317)
+add/remove: 0/0 grow/shrink: 1/1 up/down: 9/-18 (-9)
 ---
- drivers/net/ethernet/intel/ice/ice_ddp.c | 39 +++++++-----------------
- 1 file changed, 11 insertions(+), 28 deletions(-)
+ drivers/net/ethernet/intel/ice/ice_common.c | 20 ++++----------------
+ 1 file changed, 4 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_ddp.c b/drivers/net/ethernet/intel/ice/ice_ddp.c
-index b27ec93638b6..78ed909745fe 100644
---- a/drivers/net/ethernet/intel/ice/ice_ddp.c
-+++ b/drivers/net/ethernet/intel/ice/ice_ddp.c
-@@ -1560,21 +1560,14 @@ static enum ice_ddp_state ice_init_pkg_info(struct ice_hw *hw,
-  */
- static enum ice_ddp_state ice_get_pkg_info(struct ice_hw *hw)
+diff --git a/drivers/net/ethernet/intel/ice/ice_common.c b/drivers/net/ethernet/intel/ice/ice_common.c
+index 80deca45ab59..068079ab5e23 100644
+--- a/drivers/net/ethernet/intel/ice/ice_common.c
++++ b/drivers/net/ethernet/intel/ice/ice_common.c
+@@ -4726,11 +4726,11 @@ ice_dis_vsi_txq(struct ice_port_info *pi, u16 vsi_handle, u8 tc, u8 num_queues,
+ 		enum ice_disq_rst_src rst_src, u16 vmvf_num,
+ 		struct ice_sq_cd *cd)
  {
--	enum ice_ddp_state state = ICE_DDP_PKG_SUCCESS;
--	struct ice_aqc_get_pkg_info_resp *pkg_info;
--	u16 size;
-+	DEFINE_FLEX(struct ice_aqc_get_pkg_info_resp, pkg_info, pkg_info,
-+		    ICE_PKG_CNT);
-+	u16 size = __struct_size(pkg_info);
- 	u32 i;
+-	struct ice_aqc_dis_txq_item *qg_list;
++	DEFINE_FLEX(struct ice_aqc_dis_txq_item, qg_list, q_id, 1);
++	u16 i, buf_size = __struct_size(qg_list);
+ 	struct ice_q_ctx *q_ctx;
+ 	int status = -ENOENT;
+ 	struct ice_hw *hw;
+-	u16 i, buf_size;
  
--	size = struct_size(pkg_info, pkg_info, ICE_PKG_CNT);
--	pkg_info = kzalloc(size, GFP_KERNEL);
--	if (!pkg_info)
-+	if (ice_aq_get_pkg_info_list(hw, pkg_info, size, NULL))
- 		return ICE_DDP_PKG_ERR;
- 
--	if (ice_aq_get_pkg_info_list(hw, pkg_info, size, NULL)) {
--		state = ICE_DDP_PKG_ERR;
--		goto init_pkg_free_alloc;
--	}
--
- 	for (i = 0; i < le32_to_cpu(pkg_info->count); i++) {
- #define ICE_PKG_FLAG_COUNT 4
- 		char flags[ICE_PKG_FLAG_COUNT + 1] = { 0 };
-@@ -1604,10 +1597,7 @@ static enum ice_ddp_state ice_get_pkg_info(struct ice_hw *hw)
- 			  pkg_info->pkg_info[i].name, flags);
+ 	if (!pi || pi->port_state != ICE_SCHED_PORT_STATE_READY)
+ 		return -EIO;
+@@ -4748,11 +4748,6 @@ ice_dis_vsi_txq(struct ice_port_info *pi, u16 vsi_handle, u8 tc, u8 num_queues,
+ 		return -EIO;
  	}
  
--init_pkg_free_alloc:
--	kfree(pkg_info);
+-	buf_size = struct_size(qg_list, q_id, 1);
+-	qg_list = kzalloc(buf_size, GFP_KERNEL);
+-	if (!qg_list)
+-		return -ENOMEM;
 -
--	return state;
-+	return ICE_DDP_PKG_SUCCESS;
+ 	mutex_lock(&pi->sched_lock);
+ 
+ 	for (i = 0; i < num_queues; i++) {
+@@ -4785,7 +4780,6 @@ ice_dis_vsi_txq(struct ice_port_info *pi, u16 vsi_handle, u8 tc, u8 num_queues,
+ 		q_ctx->q_teid = ICE_INVAL_TEID;
+ 	}
+ 	mutex_unlock(&pi->sched_lock);
+-	kfree(qg_list);
+ 	return status;
  }
  
- /**
-@@ -1622,9 +1612,10 @@ static enum ice_ddp_state ice_chk_pkg_compat(struct ice_hw *hw,
- 					     struct ice_pkg_hdr *ospkg,
- 					     struct ice_seg **seg)
+@@ -4954,22 +4948,17 @@ int
+ ice_dis_vsi_rdma_qset(struct ice_port_info *pi, u16 count, u32 *qset_teid,
+ 		      u16 *q_id)
  {
--	struct ice_aqc_get_pkg_info_resp *pkg;
-+	DEFINE_FLEX(struct ice_aqc_get_pkg_info_resp, pkg, pkg_info,
-+		    ICE_PKG_CNT);
-+	u16 size = __struct_size(pkg);
- 	enum ice_ddp_state state;
--	u16 size;
- 	u32 i;
+-	struct ice_aqc_dis_txq_item *qg_list;
++	DEFINE_FLEX(struct ice_aqc_dis_txq_item, qg_list, q_id, 1);
++	u16 qg_size = __struct_size(qg_list);
+ 	struct ice_hw *hw;
+ 	int status = 0;
+-	u16 qg_size;
+ 	int i;
  
- 	/* Check package version compatibility */
-@@ -1643,15 +1634,8 @@ static enum ice_ddp_state ice_chk_pkg_compat(struct ice_hw *hw,
- 	}
+ 	if (!pi || pi->port_state != ICE_SCHED_PORT_STATE_READY)
+ 		return -EIO;
  
- 	/* Check if FW is compatible with the OS package */
--	size = struct_size(pkg, pkg_info, ICE_PKG_CNT);
--	pkg = kzalloc(size, GFP_KERNEL);
--	if (!pkg)
--		return ICE_DDP_PKG_ERR;
+ 	hw = pi->hw;
+ 
+-	qg_size = struct_size(qg_list, q_id, 1);
+-	qg_list = kzalloc(qg_size, GFP_KERNEL);
+-	if (!qg_list)
+-		return -ENOMEM;
 -
--	if (ice_aq_get_pkg_info_list(hw, pkg, size, NULL)) {
--		state = ICE_DDP_PKG_LOAD_ERROR;
--		goto fw_ddp_compat_free_alloc;
--	}
-+	if (ice_aq_get_pkg_info_list(hw, pkg, size, NULL))
-+		return ICE_DDP_PKG_LOAD_ERROR;
+ 	mutex_lock(&pi->sched_lock);
  
- 	for (i = 0; i < le32_to_cpu(pkg->count); i++) {
- 		/* loop till we find the NVM package */
-@@ -1668,8 +1652,7 @@ static enum ice_ddp_state ice_chk_pkg_compat(struct ice_hw *hw,
- 		/* done processing NVM package so break */
- 		break;
+ 	for (i = 0; i < count; i++) {
+@@ -4994,7 +4983,6 @@ ice_dis_vsi_rdma_qset(struct ice_port_info *pi, u16 count, u32 *qset_teid,
  	}
--fw_ddp_compat_free_alloc:
--	kfree(pkg);
-+
- 	return state;
+ 
+ 	mutex_unlock(&pi->sched_lock);
+-	kfree(qg_list);
+ 	return status;
  }
  
 -- 
