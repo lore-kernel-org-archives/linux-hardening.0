@@ -2,211 +2,91 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F4CCCA0ED4
-	for <linux-hardening@archiver.kernel.org>; Tue, 12 Sep 2023 12:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F94DCA0EEB
+	for <linux-hardening@archiver.kernel.org>; Tue, 12 Sep 2023 15:06:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234493AbjILMES (ORCPT
+        id S236095AbjILPG6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 12 Sep 2023 08:04:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50884 "EHLO
+        Tue, 12 Sep 2023 11:06:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234813AbjILMEN (ORCPT
+        with ESMTP id S236139AbjILPG6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 12 Sep 2023 08:04:13 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3AED10D5;
-        Tue, 12 Sep 2023 05:04:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694520249; x=1726056249;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=vP/fCTIR9KvIL0oWNZP+5MEI2P81yeMIZzvNhvrA4C8=;
-  b=R22/aZ9SDlNyLWFKxyq8AGAfVeKF72ppijN467CJBdYqcmCUcJMdZTbs
-   chqdKprf7tn3G5HC9ZazUPj4hIAxqtemmY+XTxjB/c+nGWqZ94h/gkeyS
-   Tmj/iVEaApXjGP6MEp8WcGO716r5I34f/ReDsPYoevleczqfVz7yOwU7X
-   G2YPk1oXNG8WzNaOlCNd803YqPn36UDVjLFSZqmHCV8LwUhd86U9PxYAw
-   xk33zLZ0jB++LQO/mv9Ydp4GAUVc5VQyDgP6we4/PM8vxcH8nGz4Y6NC/
-   gOhbOyOSZj8/5cAn2UxRlEPsW9/oVykmIekaBk6NKFW5jB67b61khylzk
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="378265487"
-X-IronPort-AV: E=Sophos;i="6.02,139,1688454000"; 
-   d="scan'208";a="378265487"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2023 05:03:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="720389781"
-X-IronPort-AV: E=Sophos;i="6.02,139,1688454000"; 
-   d="scan'208";a="720389781"
-Received: from irvmail002.ir.intel.com ([10.43.11.120])
-  by orsmga006.jf.intel.com with ESMTP; 12 Sep 2023 05:02:58 -0700
-Received: from pelor.igk.intel.com (pelor.igk.intel.com [10.123.220.13])
-        by irvmail002.ir.intel.com (Postfix) with ESMTP id B2E76333D9;
-        Tue, 12 Sep 2023 13:02:57 +0100 (IST)
-From:   Przemek Kitszel <przemyslaw.kitszel@intel.com>
-To:     netdev@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        davem@davemloft.net, edumazet@google.com, pabeni@redhat.com
-Cc:     Kees Cook <keescook@chromium.org>,
-        Jacob Keller <jacob.e.keller@intel.com>,
-        intel-wired-lan@lists.osuosl.org,
-        Alexander Lobakin <aleksander.lobakin@intel.com>,
-        linux-hardening@vger.kernel.org, Steven Zou <steven.zou@intel.com>,
-        Anthony Nguyen <anthony.l.nguyen@intel.com>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Subject: [PATCH net-next v5 5/7] ice: make use of DEFINE_FLEX() for struct ice_aqc_add_tx_qgrp
-Date:   Tue, 12 Sep 2023 07:59:35 -0400
-Message-Id: <20230912115937.1645707-6-przemyslaw.kitszel@intel.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230912115937.1645707-1-przemyslaw.kitszel@intel.com>
-References: <20230912115937.1645707-1-przemyslaw.kitszel@intel.com>
+        Tue, 12 Sep 2023 11:06:58 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 146EC12E;
+        Tue, 12 Sep 2023 08:06:54 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id a640c23a62f3a-99de884ad25so751668466b.3;
+        Tue, 12 Sep 2023 08:06:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1694531212; x=1695136012; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8SVEaXl6seBdw5lXAfYjpnfIky9vuZwXvZJhUk0v854=;
+        b=cVTwKjUP91g7peGOFwKHi7hqYgdn0xOnQha6lNRMgS5qk4JuN6PNXD7PcqYyIHq+0a
+         hCUk1uI70o+rRIDyBK+KEJft9/CmYG045LUEZ3jTCjvxLJWYiRRtEmMX+zYDedIJu4TZ
+         GzXiNUcLAXiPpCa4ZNd6mactY61PsOpZDCHBca6JdZ+k73XJV7fYilg/xxjLlnX0BlMp
+         f2EuveSPcN+hQiKRdnt5Ry54K23ECSFyPm86t9ESM4z/iCT31axMpyY1dzIj1TUfmsRA
+         3MCmwho7LtttmY2jCp8JaSJWw+iRp0zcZU1UoHXVLFzirrYT9AqT42kXbnPyk7rQ6giH
+         1wvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694531212; x=1695136012;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8SVEaXl6seBdw5lXAfYjpnfIky9vuZwXvZJhUk0v854=;
+        b=Mdk6X8Qf3hMZxS07E/SkbqrlkW115NlrxmpArwM6l5cUZDJYUPaYe/DOfowAAbI/4L
+         JeVhmGrqG/ye/A4Ry5hOHM8LTgr/aBfUJrAYGNkR5ezx7GtgSmwjcNkEvRQZtJGLpq6T
+         CAivPAkVgl3KUFKsGtQzoZWhdvQ+6RtB6w/ce9ZVdAOZ1Biv8K3C9JmpTHkmJqX9mOjG
+         G110YsllUsfLe1z8BhjAi5D47816T0sUKJledCeVU/p9ICAc3JXx7II39CY7GXvkwixU
+         pMkFy+w9tOjTukJqbhhrs8anuo0YHR5FKKSuR9DqK7qCd4/VdntMjhdvWh64Be8f22dd
+         jXZA==
+X-Gm-Message-State: AOJu0YxV6W1uyMgCnVtaMZTBz/nfBCxYu9jmi3bZl0dampSIwU4KRjzy
+        6owHkPzSuFloGHD6Wnty2A==
+X-Google-Smtp-Source: AGHT+IHLpX4KdagfPcshrLUeAqL4UuqhZ/o9aLBP5uIBEM0SWLAfZOUWaE/wLimyaP4MKgywB21+SQ==
+X-Received: by 2002:a17:906:9e:b0:9a1:ddb9:6547 with SMTP id 30-20020a170906009e00b009a1ddb96547mr11268179ejc.57.1694531212074;
+        Tue, 12 Sep 2023 08:06:52 -0700 (PDT)
+Received: from p183 ([46.53.254.179])
+        by smtp.gmail.com with ESMTPSA id s3-20020a170906060300b0099ce188be7fsm6962955ejb.3.2023.09.12.08.06.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Sep 2023 08:06:51 -0700 (PDT)
+Date:   Tue, 12 Sep 2023 18:06:49 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     David Laight <David.Laight@aculab.com>
+Cc:     'Kees Cook' <keescook@chromium.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH v2] uapi: fix __DECLARE_FLEX_ARRAY for C++
+Message-ID: <683d7b5f-48b5-492d-8577-0be85bff8d89@p183>
+References: <930c3ee5-1282-40f4-93e0-8ff894aabf3a@p183>
+ <a0c3a352-89c6-4764-b377-f55a68a1b2cb@p183>
+ <202309080848.60319AF@keescook>
+ <f1819874-2b91-4983-9ebe-6cd83d5d3bc3@p183>
+ <202309080910.44BB7CEF@keescook>
+ <e364b36eefa049d8863c1c1001018636@AcuMS.aculab.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <e364b36eefa049d8863c1c1001018636@AcuMS.aculab.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Use DEFINE_FLEX() macro for 1-elem flex array use case
-of struct ice_aqc_add_tx_qgrp.
+On Mon, Sep 11, 2023 at 08:19:20AM +0000, David Laight wrote:
+> ...
+> > Okay, can you please split the patch so they can be backported
+> > separately? Then I'll get them landed, etc.
+> 
+> Since the header with just the extra #endif is badly broken on C++
+> isn't it best to ensure they get back-ported together?
+> So one patch is probably better.
 
-Signed-off-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
----
-add/remove: 0/2 grow/shrink: 2/2 up/down: 220/-255 (-35)
----
- drivers/net/ethernet/intel/ice/ice_lib.c | 23 +++++------------------
- drivers/net/ethernet/intel/ice/ice_xsk.c | 22 ++++++++--------------
- 2 files changed, 13 insertions(+), 32 deletions(-)
+Header guard misplacement is not a bug, file ends with:
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_lib.c b/drivers/net/ethernet/intel/ice/ice_lib.c
-index 201570cd2e0b..b47d1055802e 100644
---- a/drivers/net/ethernet/intel/ice/ice_lib.c
-+++ b/drivers/net/ethernet/intel/ice/ice_lib.c
-@@ -1832,21 +1832,14 @@ int ice_vsi_cfg_single_rxq(struct ice_vsi *vsi, u16 q_idx)
- 
- int ice_vsi_cfg_single_txq(struct ice_vsi *vsi, struct ice_tx_ring **tx_rings, u16 q_idx)
- {
--	struct ice_aqc_add_tx_qgrp *qg_buf;
--	int err;
-+	DEFINE_FLEX(struct ice_aqc_add_tx_qgrp, qg_buf, txqs, 1);
- 
- 	if (q_idx >= vsi->alloc_txq || !tx_rings || !tx_rings[q_idx])
- 		return -EINVAL;
- 
--	qg_buf = kzalloc(struct_size(qg_buf, txqs, 1), GFP_KERNEL);
--	if (!qg_buf)
--		return -ENOMEM;
--
- 	qg_buf->num_txqs = 1;
- 
--	err = ice_vsi_cfg_txq(vsi, tx_rings[q_idx], qg_buf);
--	kfree(qg_buf);
--	return err;
-+	return ice_vsi_cfg_txq(vsi, tx_rings[q_idx], qg_buf);
- }
- 
- /**
-@@ -1888,24 +1881,18 @@ int ice_vsi_cfg_rxqs(struct ice_vsi *vsi)
- static int
- ice_vsi_cfg_txqs(struct ice_vsi *vsi, struct ice_tx_ring **rings, u16 count)
- {
--	struct ice_aqc_add_tx_qgrp *qg_buf;
--	u16 q_idx = 0;
-+	DEFINE_FLEX(struct ice_aqc_add_tx_qgrp, qg_buf, txqs, 1);
- 	int err = 0;
--
--	qg_buf = kzalloc(struct_size(qg_buf, txqs, 1), GFP_KERNEL);
--	if (!qg_buf)
--		return -ENOMEM;
-+	u16 q_idx;
- 
- 	qg_buf->num_txqs = 1;
- 
- 	for (q_idx = 0; q_idx < count; q_idx++) {
- 		err = ice_vsi_cfg_txq(vsi, rings[q_idx], qg_buf);
- 		if (err)
--			goto err_cfg_txqs;
-+			break;
- 	}
- 
--err_cfg_txqs:
--	kfree(qg_buf);
- 	return err;
- }
- 
-diff --git a/drivers/net/ethernet/intel/ice/ice_xsk.c b/drivers/net/ethernet/intel/ice/ice_xsk.c
-index 2a3f0834e139..99954508184f 100644
---- a/drivers/net/ethernet/intel/ice/ice_xsk.c
-+++ b/drivers/net/ethernet/intel/ice/ice_xsk.c
-@@ -217,61 +217,55 @@ static int ice_qp_dis(struct ice_vsi *vsi, u16 q_idx)
-  */
- static int ice_qp_ena(struct ice_vsi *vsi, u16 q_idx)
- {
--	struct ice_aqc_add_tx_qgrp *qg_buf;
-+	DEFINE_FLEX(struct ice_aqc_add_tx_qgrp, qg_buf, txqs, 1);
-+	u16 size = __struct_size(qg_buf);
- 	struct ice_q_vector *q_vector;
- 	struct ice_tx_ring *tx_ring;
- 	struct ice_rx_ring *rx_ring;
--	u16 size;
- 	int err;
- 
- 	if (q_idx >= vsi->num_rxq || q_idx >= vsi->num_txq)
- 		return -EINVAL;
- 
--	size = struct_size(qg_buf, txqs, 1);
--	qg_buf = kzalloc(size, GFP_KERNEL);
--	if (!qg_buf)
--		return -ENOMEM;
--
- 	qg_buf->num_txqs = 1;
- 
- 	tx_ring = vsi->tx_rings[q_idx];
- 	rx_ring = vsi->rx_rings[q_idx];
- 	q_vector = rx_ring->q_vector;
- 
- 	err = ice_vsi_cfg_txq(vsi, tx_ring, qg_buf);
- 	if (err)
--		goto free_buf;
-+		return err;
- 
- 	if (ice_is_xdp_ena_vsi(vsi)) {
- 		struct ice_tx_ring *xdp_ring = vsi->xdp_rings[q_idx];
- 
- 		memset(qg_buf, 0, size);
- 		qg_buf->num_txqs = 1;
- 		err = ice_vsi_cfg_txq(vsi, xdp_ring, qg_buf);
- 		if (err)
--			goto free_buf;
-+			return err;
- 		ice_set_ring_xdp(xdp_ring);
- 		ice_tx_xsk_pool(vsi, q_idx);
- 	}
- 
- 	err = ice_vsi_cfg_rxq(rx_ring);
- 	if (err)
--		goto free_buf;
-+		return err;
- 
- 	ice_qvec_cfg_msix(vsi, q_vector);
- 
- 	err = ice_vsi_ctrl_one_rx_ring(vsi, true, q_idx, true);
- 	if (err)
--		goto free_buf;
-+		return err;
- 
- 	clear_bit(ICE_CFG_BUSY, vsi->state);
- 	ice_qvec_toggle_napi(vsi, q_vector, true);
- 	ice_qvec_ena_irq(vsi, q_vector);
- 
- 	netif_tx_start_queue(netdev_get_tx_queue(vsi->netdev, q_idx));
--free_buf:
--	kfree(qg_buf);
--	return err;
-+
-+	return 0;
- }
- 
- /**
--- 
-2.40.1
+	#ifndef __counted_by
+	#define __counted_by(m)
+	#endif
 
+it is just looks confusing in the diff.
