@@ -2,103 +2,120 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEF6CA0EC7
-	for <linux-hardening@archiver.kernel.org>; Tue, 12 Sep 2023 01:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7771CA0EC8
+	for <linux-hardening@archiver.kernel.org>; Tue, 12 Sep 2023 01:57:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233634AbjILBtO (ORCPT
+        id S235222AbjILB54 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 11 Sep 2023 21:49:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38638 "EHLO
+        Mon, 11 Sep 2023 21:57:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234206AbjILBs5 (ORCPT
+        with ESMTP id S235312AbjILB5o (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 11 Sep 2023 21:48:57 -0400
+        Mon, 11 Sep 2023 21:57:44 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 362CE130F8C;
-        Mon, 11 Sep 2023 18:22:26 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 291B4C116B2;
-        Mon, 11 Sep 2023 23:27:03 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBD511C61B2;
+        Mon, 11 Sep 2023 18:27:53 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1135AC116A1;
+        Tue, 12 Sep 2023 01:27:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694474823;
-        bh=NJ/M71WDi1QkA4y2AsQdvINQobLZEouTyfxhdb+/rTw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=FVAUGHzTi4iB7U/MVoLNzWRQ1S+LqBGGTyw5bZj4QGTXs+BORi0OQXUm1NCwAPINf
-         mGZ9RFvUv/gcsnVU8VquXHYKJxDDffWVrURGZhKDInW8Y96hfxRSvCEdpHSVK4/ksP
-         /wnW3tLjE7lMn5bnHskEgh9Z0Wg1P26VUPOpJY4vjPQER+39aPxpeOnU1c46YVjjsY
-         Ky32ISstAItKJwyvvbWTAtzM1bW4WuWWLELZvk5w72VNSP3XMoiJiTEe2xWHW2Zq89
-         JZp4ApL1hCWo81eS8wT4ccy5i1IbNqTXxEM1CK7OPmrBofNbv069nuPDxDEEAxce2n
-         2MGSp+9qQEtWA==
-Date:   Mon, 11 Sep 2023 17:27:59 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH v2][next] RDMA/core: Use size_{add,mul}() in calls to
- struct_size()
-Message-ID: <ZP+if342EMhModzZ@work>
+        s=k20201202; t=1694482073;
+        bh=i1OpMkK8nN3ugs7HSsHaoziL6+KbW09I3yNP+41/i54=;
+        h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+        b=coMndRYw55qf5oJQ4mYnWLWjpikXmT0btw0FXm928IRMwJjHPrV8RIjVgNnO6qoCw
+         JT3hvN9kCotKz/cGKyE+wS3Ei9Zwjbvbh5paGnFIT241HNCrBV6JwSsk7sgvWZdwrx
+         g6bohU08+jLacNfIRcHXNR05VIr4EviYjWIB+srXf1V5bplTmm9u/boTLm9f/LeY+/
+         vFcP4Qo/XhwDVgHhlC2oOKiXiBTfmI2kb/I83qwCxA7xUwacibfht0JwFwA/cLJh99
+         QVXYNV//NiaIcTvCjAhHRKRlnSyY34LnNunLnYVl07pdDJgFbAvpgncKRlFndex/0O
+         MsTnACCDqW6Sw==
+Date:   Mon, 11 Sep 2023 18:27:50 -0700
+From:   Kees Cook <kees@kernel.org>
+To:     Philipp Stanner <pstanner@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Christian Brauner <brauner@kernel.org>,
+        David Disseldorp <ddiss@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Siddh Raman Pant <code@siddh.me>,
+        Nick Alcock <nick.alcock@oracle.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Zack Rusin <zackr@vmware.com>
+CC:     VMware Graphics Reviewers <linux-graphics-maintainer@vmware.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        kexec@lists.infradead.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 0/5] Introduce new wrappers to copy user-arrays
+User-Agent: K-9 Mail for Android
+In-Reply-To: <cover.1694202430.git.pstanner@redhat.com>
+References: <cover.1694202430.git.pstanner@redhat.com>
+Message-ID: <CA1AA415-FDF0-4A7A-9BB0-FFF055803F77@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Harden calls to struct_size() with size_add() and size_mul().
+On September 8, 2023 12:59:39 PM PDT, Philipp Stanner <pstanner@redhat=2Eco=
+m> wrote:
+>Hi!
+>
+>David Airlie suggested that we could implement new wrappers around
+>(v)memdup_user() for duplicating user arrays=2E
+>
+>This small patch series first implements the two new wrapper functions
+>memdup_array_user() and vmemdup_array_user()=2E They calculate the
+>array-sizes safely, i=2Ee=2E, they return an error in case of an overflow=
+=2E
+>
+>It then implements the new wrappers in two components in kernel/ and two
+>in the drm-subsystem=2E
+>
+>In total, there are 18 files in the kernel that use (v)memdup_user() to
+>duplicate arrays=2E My plan is to provide patches for the other 14
+>successively once this series has been merged=2E
+>
+>
+>Changes since v1:
+>- Insert new headers alphabetically ordered
+>- Remove empty lines in functions' docstrings
+>- Return -EOVERFLOW instead of -EINVAL from wrapper functions
+>
+>
+>@Andy:
+>I test-build it for UM on my x86_64=2E Builds successfully=2E
+>A kernel build (localmodconfig) for my Fedora38 @ x86_64 does also boot
+>fine=2E
+>
+>If there is more I can do to verify the early boot stages are fine,
+>please let me know!
+>
+>P=2E
+>
+>Philipp Stanner (5):
+>  string=2Eh: add array-wrappers for (v)memdup_user()
+>  kernel: kexec: copy user-array safely
+>  kernel: watch_queue: copy user-array safely
+>  drm_lease=2Ec: copy user-array safely
+>  drm: vmgfx_surface=2Ec: copy user-array safely
+>
+> drivers/gpu/drm/drm_lease=2Ec             |  4 +--
+> drivers/gpu/drm/vmwgfx/vmwgfx_surface=2Ec |  4 +--
+> include/linux/string=2Eh                  | 40 +++++++++++++++++++++++++
+> kernel/kexec=2Ec                          |  2 +-
+> kernel/watch_queue=2Ec                    |  2 +-
+> 5 files changed, 46 insertions(+), 6 deletions(-)
+>
 
-Fixes: 467f432a521a ("RDMA/core: Split port and device counter sysfs attributes")
-Fixes: a4676388e2e2 ("RDMA/core: Simplify how the gid_attrs sysfs is created")
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v2:
- - Update changelog text: remove the part about binary differences (it
-   was added by mistake).
+Nice=2E For the series:
 
- drivers/infiniband/core/sysfs.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Reviewed-by: Kees Cook <keescook@chromium=2Eorg>
 
-diff --git a/drivers/infiniband/core/sysfs.c b/drivers/infiniband/core/sysfs.c
-index ee59d7391568..ec5efdc16660 100644
---- a/drivers/infiniband/core/sysfs.c
-+++ b/drivers/infiniband/core/sysfs.c
-@@ -903,7 +903,7 @@ alloc_hw_stats_device(struct ib_device *ibdev)
- 	 * Two extra attribue elements here, one for the lifespan entry and
- 	 * one to NULL terminate the list for the sysfs core code
- 	 */
--	data = kzalloc(struct_size(data, attrs, stats->num_counters + 1),
-+	data = kzalloc(struct_size(data, attrs, size_add(stats->num_counters, 1)),
- 		       GFP_KERNEL);
- 	if (!data)
- 		goto err_free_stats;
-@@ -1009,7 +1009,7 @@ alloc_hw_stats_port(struct ib_port *port, struct attribute_group *group)
- 	 * Two extra attribue elements here, one for the lifespan entry and
- 	 * one to NULL terminate the list for the sysfs core code
- 	 */
--	data = kzalloc(struct_size(data, attrs, stats->num_counters + 1),
-+	data = kzalloc(struct_size(data, attrs, size_add(stats->num_counters, 1)),
- 		       GFP_KERNEL);
- 	if (!data)
- 		goto err_free_stats;
-@@ -1140,7 +1140,7 @@ static int setup_gid_attrs(struct ib_port *port,
- 	int ret;
- 
- 	gid_attr_group = kzalloc(struct_size(gid_attr_group, attrs_list,
--					     attr->gid_tbl_len * 2),
-+					     size_mul(attr->gid_tbl_len, 2)),
- 				 GFP_KERNEL);
- 	if (!gid_attr_group)
- 		return -ENOMEM;
-@@ -1205,8 +1205,8 @@ static struct ib_port *setup_port(struct ib_core_device *coredev, int port_num,
- 	int ret;
- 
- 	p = kvzalloc(struct_size(p, attrs_list,
--				attr->gid_tbl_len + attr->pkey_tbl_len),
--		    GFP_KERNEL);
-+				size_add(attr->gid_tbl_len, attr->pkey_tbl_len)),
-+		     GFP_KERNEL);
- 	if (!p)
- 		return ERR_PTR(-ENOMEM);
- 	p->ibdev = device;
--- 
-2.34.1
 
+
+--=20
+Kees Cook
