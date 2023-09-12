@@ -2,91 +2,106 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F94DCA0EEB
-	for <linux-hardening@archiver.kernel.org>; Tue, 12 Sep 2023 15:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F34CA0EF1
+	for <linux-hardening@archiver.kernel.org>; Tue, 12 Sep 2023 16:17:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236095AbjILPG6 (ORCPT
+        id S230017AbjILQRF (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 12 Sep 2023 11:06:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43566 "EHLO
+        Tue, 12 Sep 2023 12:17:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236139AbjILPG6 (ORCPT
+        with ESMTP id S236631AbjILQRE (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 12 Sep 2023 11:06:58 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 146EC12E;
-        Tue, 12 Sep 2023 08:06:54 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id a640c23a62f3a-99de884ad25so751668466b.3;
-        Tue, 12 Sep 2023 08:06:54 -0700 (PDT)
+        Tue, 12 Sep 2023 12:17:04 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BD1F170B
+        for <linux-hardening@vger.kernel.org>; Tue, 12 Sep 2023 09:16:51 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1c0ecb9a075so42329965ad.2
+        for <linux-hardening@vger.kernel.org>; Tue, 12 Sep 2023 09:16:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694531212; x=1695136012; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1694535410; x=1695140210; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8SVEaXl6seBdw5lXAfYjpnfIky9vuZwXvZJhUk0v854=;
-        b=cVTwKjUP91g7peGOFwKHi7hqYgdn0xOnQha6lNRMgS5qk4JuN6PNXD7PcqYyIHq+0a
-         hCUk1uI70o+rRIDyBK+KEJft9/CmYG045LUEZ3jTCjvxLJWYiRRtEmMX+zYDedIJu4TZ
-         GzXiNUcLAXiPpCa4ZNd6mactY61PsOpZDCHBca6JdZ+k73XJV7fYilg/xxjLlnX0BlMp
-         f2EuveSPcN+hQiKRdnt5Ry54K23ECSFyPm86t9ESM4z/iCT31axMpyY1dzIj1TUfmsRA
-         3MCmwho7LtttmY2jCp8JaSJWw+iRp0zcZU1UoHXVLFzirrYT9AqT42kXbnPyk7rQ6giH
-         1wvw==
+        bh=3MwTmVCnTEtep42XfZ4TFNmY2WBZrbi61crWobHgN3g=;
+        b=Di/pYOvOx6BrbKT0ulFIXzTSJzyRgbbkdiDf9xJFVT9xuSQXHImOAp/YOPRBHuaPWj
+         b9t2ACtmrjG+EamXtXVYG+7nUqs7FkicicnvgjFLlBe7IKpLXRvAcK/U4Y1dElJOS9cv
+         L3/m+oTetympjCxqiqG4OVaEsP1myv+vC9KlU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694531212; x=1695136012;
+        d=1e100.net; s=20230601; t=1694535410; x=1695140210;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8SVEaXl6seBdw5lXAfYjpnfIky9vuZwXvZJhUk0v854=;
-        b=Mdk6X8Qf3hMZxS07E/SkbqrlkW115NlrxmpArwM6l5cUZDJYUPaYe/DOfowAAbI/4L
-         JeVhmGrqG/ye/A4Ry5hOHM8LTgr/aBfUJrAYGNkR5ezx7GtgSmwjcNkEvRQZtJGLpq6T
-         CAivPAkVgl3KUFKsGtQzoZWhdvQ+6RtB6w/ce9ZVdAOZ1Biv8K3C9JmpTHkmJqX9mOjG
-         G110YsllUsfLe1z8BhjAi5D47816T0sUKJledCeVU/p9ICAc3JXx7II39CY7GXvkwixU
-         pMkFy+w9tOjTukJqbhhrs8anuo0YHR5FKKSuR9DqK7qCd4/VdntMjhdvWh64Be8f22dd
-         jXZA==
-X-Gm-Message-State: AOJu0YxV6W1uyMgCnVtaMZTBz/nfBCxYu9jmi3bZl0dampSIwU4KRjzy
-        6owHkPzSuFloGHD6Wnty2A==
-X-Google-Smtp-Source: AGHT+IHLpX4KdagfPcshrLUeAqL4UuqhZ/o9aLBP5uIBEM0SWLAfZOUWaE/wLimyaP4MKgywB21+SQ==
-X-Received: by 2002:a17:906:9e:b0:9a1:ddb9:6547 with SMTP id 30-20020a170906009e00b009a1ddb96547mr11268179ejc.57.1694531212074;
-        Tue, 12 Sep 2023 08:06:52 -0700 (PDT)
-Received: from p183 ([46.53.254.179])
-        by smtp.gmail.com with ESMTPSA id s3-20020a170906060300b0099ce188be7fsm6962955ejb.3.2023.09.12.08.06.51
+        bh=3MwTmVCnTEtep42XfZ4TFNmY2WBZrbi61crWobHgN3g=;
+        b=RGK8+jbn2/XUhdgg20ZxEONshm+CrOHDFpTYYu7uCf8rgrlpM08pRvoo87+KqIa01B
+         K+xYeHahEY77wYD5D3ytZAD2VFcJcjqb2/GogfuFhEiN15csAlfdiE10PCA1gNP0YgO+
+         Gv+FTDp4BxUKTXaBXBMvl0heyXFlJQ20iS+RlA1ecXndhvRBNs+i376jxFdBMfh3DFB+
+         1xcU3jaLozA4KVE9NPSDMtgadRsCIHjtJruPePBApkqaPV6sxOFROLFAPaDRiYyo0oBH
+         qVSa5Ju9VFQ86uVotLLTXu2VV7islXtaoW/X7cOCRswjwfAfGqgfgiXoEKQPaUbXN0RE
+         umMA==
+X-Gm-Message-State: AOJu0Yx4hClYmxvPCQl82YoIn9Exlb7M2YVxwHDwhifA9X5tGIfrADDU
+        RgYdwaey/z7VBZvPls6xr01llg==
+X-Google-Smtp-Source: AGHT+IEl/c3bl7m/pr2Ark1A+7Rka01Cb400iuEhzUjlRm3MNTOq7Gn0sjiWvD3rr/lJGDYA1zlGiQ==
+X-Received: by 2002:a17:902:ab15:b0:1c1:de3a:d3d7 with SMTP id ik21-20020a170902ab1500b001c1de3ad3d7mr186339plb.68.1694535410652;
+        Tue, 12 Sep 2023 09:16:50 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id 5-20020a170902e9c500b001bb04755212sm8608895plk.228.2023.09.12.09.16.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Sep 2023 08:06:51 -0700 (PDT)
-Date:   Tue, 12 Sep 2023 18:06:49 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     David Laight <David.Laight@aculab.com>
-Cc:     'Kees Cook' <keescook@chromium.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH v2] uapi: fix __DECLARE_FLEX_ARRAY for C++
-Message-ID: <683d7b5f-48b5-492d-8577-0be85bff8d89@p183>
-References: <930c3ee5-1282-40f4-93e0-8ff894aabf3a@p183>
- <a0c3a352-89c6-4764-b377-f55a68a1b2cb@p183>
- <202309080848.60319AF@keescook>
- <f1819874-2b91-4983-9ebe-6cd83d5d3bc3@p183>
- <202309080910.44BB7CEF@keescook>
- <e364b36eefa049d8863c1c1001018636@AcuMS.aculab.com>
+        Tue, 12 Sep 2023 09:16:50 -0700 (PDT)
+Date:   Tue, 12 Sep 2023 09:16:49 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Cc:     netdev@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+        Jacob Keller <jacob.e.keller@intel.com>,
+        intel-wired-lan@lists.osuosl.org,
+        Alexander Lobakin <aleksander.lobakin@intel.com>,
+        linux-hardening@vger.kernel.org, Steven Zou <steven.zou@intel.com>,
+        Anthony Nguyen <anthony.l.nguyen@intel.com>,
+        David Laight <David.Laight@aculab.com>
+Subject: Re: [PATCH net-next v5 0/7] introduce DEFINE_FLEX() macro
+Message-ID: <202309120916.5313AE37C5@keescook>
+References: <20230912115937.1645707-1-przemyslaw.kitszel@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e364b36eefa049d8863c1c1001018636@AcuMS.aculab.com>
+In-Reply-To: <20230912115937.1645707-1-przemyslaw.kitszel@intel.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Sep 11, 2023 at 08:19:20AM +0000, David Laight wrote:
-> ...
-> > Okay, can you please split the patch so they can be backported
-> > separately? Then I'll get them landed, etc.
+On Tue, Sep 12, 2023 at 07:59:30AM -0400, Przemek Kitszel wrote:
+> Add DEFINE_FLEX() macro, that helps on-stack allocation of structures
+> with trailing flex array member.
+> Expose __struct_size() macro which reads size of data allocated
+> by DEFINE_FLEX().
 > 
-> Since the header with just the extra #endif is badly broken on C++
-> isn't it best to ensure they get back-ported together?
-> So one patch is probably better.
+> Accompany new macros introduction with actual usage,
+> in the ice driver - hence targeting for netdev tree.
+> 
+> Obvious benefits include simpler resulting code, less heap usage,
+> less error checking. Less obvious is the fact that compiler has
+> more room to optimize, and as a whole, even with more stuff on the stack,
+> we end up with overall better (smaller) report from bloat-o-meter:
+> add/remove: 8/6 grow/shrink: 7/18 up/down: 2211/-2270 (-59)
+> (individual results in each patch).
+> 
+> v5: same as v4, just not RFC
+> v4: _Static_assert() to ensure compiletime const count param
+> v3: tidy up 1st patch
+> v2: Kees: reusing __struct_size() instead of doubling it as a new macro
+> 
+> Przemek Kitszel (7):
+>   overflow: add DEFINE_FLEX() for on-stack allocs
+>   ice: ice_sched_remove_elems: replace 1 elem array param by u32
+>   ice: drop two params of ice_aq_move_sched_elems()
+>   ice: make use of DEFINE_FLEX() in ice_ddp.c
+>   ice: make use of DEFINE_FLEX() for struct ice_aqc_add_tx_qgrp
+>   ice: make use of DEFINE_FLEX() for struct ice_aqc_dis_txq_item
+>   ice: make use of DEFINE_FLEX() in ice_switch.c
 
-Header guard misplacement is not a bug, file ends with:
+Looks good to me! Feel free to pick up via netdev.
 
-	#ifndef __counted_by
-	#define __counted_by(m)
-	#endif
+-Kees
 
-it is just looks confusing in the diff.
+-- 
+Kees Cook
