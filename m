@@ -2,116 +2,140 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F11CECA0EC3
-	for <linux-hardening@archiver.kernel.org>; Tue, 12 Sep 2023 02:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F7BCA0EC8
+	for <linux-hardening@archiver.kernel.org>; Tue, 12 Sep 2023 02:31:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235320AbjILCP3 (ORCPT
+        id S235950AbjILCbd (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 11 Sep 2023 22:15:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52388 "EHLO
+        Mon, 11 Sep 2023 22:31:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236481AbjILCPR (ORCPT
+        with ESMTP id S238855AbjILCbP (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 11 Sep 2023 22:15:17 -0400
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C454F6AAE
-        for <linux-hardening@vger.kernel.org>; Mon, 11 Sep 2023 16:21:30 -0700 (PDT)
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-52bcd4db4c0so10799516a12.0
-        for <linux-hardening@vger.kernel.org>; Mon, 11 Sep 2023 16:21:30 -0700 (PDT)
+        Mon, 11 Sep 2023 22:31:15 -0400
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D67581018BC;
+        Mon, 11 Sep 2023 18:55:46 -0700 (PDT)
+Received: by mail-lf1-x132.google.com with SMTP id 2adb3069b0e04-502b1bbe5c3so3506401e87.1;
+        Mon, 11 Sep 2023 18:55:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1694474359; x=1695079159; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vUI+yciS9U7o/XSp9QS87LTWNwGIJn99OxRUAsE808g=;
-        b=Kp5XgHpKv484f0cCY+Q9cEFHlX4h7XfvAuC/0CvhTXieER8VVZdhp/geg8k9BhPaVl
-         o93lK/DIwvcbtVVqOv1DuPWNrk/uw1iidnxFOKW6Lke4r/6ZUECxSaV9OItTT+eiSCXv
-         s3ssMtnC5HaIHmg3EwHrwZVx3E0QzmmHNUPWhn/BC95U3mTpCC36mVEeP5OO/pZKOEpp
-         vwn8Qdyo/YeZM/Z8/cC2Tfw/iw9spQYntfWkLwSvXoqiyz1+X8s1TLyPYoRS5Q6lG/4K
-         d3jnclq/FX0kFsFrSRa4EWvgbOyPQAq6+rFXQ5E27y6Vr0U2slPjrjxv3Gu11j2o9FB/
-         a+rA==
+        d=gmail.com; s=20221208; t=1694483745; x=1695088545; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Dfh8/mDNgK8vxrADw9UDg9zBqSEE3ndEwyQtmVmeyWM=;
+        b=dGkwDdBCX3cXrz8Ue9ZL6uoO1ie1TIMpf4wzbZ3qWw+Mhd7e2Fz/55RqjyRfhcmVkr
+         lrOKLz9frG/wJbmma7JNaunjK9me9ZOvrdS2i6BB6HXeNq9SYBrDdeq0IBp3oOeLDKEA
+         g8RojhzRXq/mY6d0+kR9JnGOlrP0e0wSCh0dJphcO7yfTozuZV3MGepDjXi7aR2lZRgI
+         vZRIzAtxRVc056brgE5gS0RUByIlyCNYaYDsJg0g9AuY4eUbmhROaSItRGRjoowD1674
+         TNEeJ/KunB7/8Z3ko9Cx8K1jB4mOOydKnvpq011PT/xyQUr5s9jZzuigCnLGs+mc3L62
+         m1Tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694474359; x=1695079159;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vUI+yciS9U7o/XSp9QS87LTWNwGIJn99OxRUAsE808g=;
-        b=jnvCO9aag6LPgw0N+NqYlnGcoM6IcbrePv8rR5mRbzFfj4OPIjMukW07f+Jd7fYrXz
-         US2/CzTgY9UGMj/GGAEzIBPsBGy3GFgE+AhXQcITWellf5KbNUawEmm90nvnhiWi1JsQ
-         /62NIwenqAtFG+zZwe7EWmhKdEgj6a9hZ7/SrqpKNQupqklBLkXD3slCUIhGzYJ3yDS+
-         K9dO9Ey4f2BSWaYkqdYTRAmyTz8bL9LmlhjImvu0DbOZrvQX7n3rqYGeamqIWZy/vqU7
-         H8yR9obhefn1NS48CeLGCY5LNNeUcbqWw/lKMukZxiTHNPBN0LcTeeyPWP+vHXDW91j+
-         VzOg==
-X-Gm-Message-State: AOJu0Yy+ke/ao/CRxK2cB03DR1wZUnQSKU9lXvtjYdJSZZgkDGNRH4i8
-        AVu9R7rhAkP9AtoY/q9CIpiOd9jylOgMXnlYeu/QhyByv8wcBPwwOdE=
-X-Google-Smtp-Source: AGHT+IHaNLCNW4cCXydLmeSfIqjRZlpdje9Q9CqRKN7n2BIIz4uXg9TIClQFO/T8fGoiUiX1e8Hx8nBsO1IygogGXic=
-X-Received: by 2002:a17:906:3006:b0:9ad:7f8b:2b0a with SMTP id
- 6-20020a170906300600b009ad7f8b2b0amr768078ejz.22.1694469689026; Mon, 11 Sep
- 2023 15:01:29 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1694483745; x=1695088545;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Dfh8/mDNgK8vxrADw9UDg9zBqSEE3ndEwyQtmVmeyWM=;
+        b=qggRUVVBuUo7Jvg54FguPz7NPP1vRM09CvPkqL0OpOGcoEhXor6HKtVZPCP5vhOqTc
+         A7M5C/G9IqgHJdJg8NXmRB0LEetR1LiQACgkSwLQuK9Fo7zv0IfpA7CGXvY8MSat999Z
+         i2mbCnTzcFnMeqbcW8A4h8M+rtxGwiC5JADv8KLBQNh0xyo6TotknSC9y3FuG/UA9LS/
+         oO0RZ7Z3j4stWAiDUd/FkzqJjUdTcdGWC2rIqfLTssPwMlPUUDYksttJy7W+orGZmWed
+         mMihkDPfmCwIIA+xz+E1QS6wg2aGnEw1IlsY3CXtqMGdXEj/HPE/eqC9xtEhYSQZahv2
+         3D6Q==
+X-Gm-Message-State: AOJu0YzV9GoBDfg34LzcldVfnE2Yxym6BNvj8/rKQhNYVGF6tOf0xI99
+        2Q+ZdopxGyNoZZbQ+ma1NTojBX2tzzDR+3bd1Eo=
+X-Google-Smtp-Source: AGHT+IHCiNJcSbNJ7RSxRhN3Yzlcqa52uNMH/Uq5EU5bd/OleEn/UkclTnAiq3uWYeQwY9zvyocqW9aSvAzI8CUXWrA=
+X-Received: by 2002:a05:6512:2038:b0:500:75f1:c22e with SMTP id
+ s24-20020a056512203800b0050075f1c22emr7814227lfs.40.1694483744716; Mon, 11
+ Sep 2023 18:55:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230911-strncpy-arch-x86-coco-tdx-tdx-c-v1-1-4b38155727f3@google.com>
- <69643667-4564-0266-1b26-13833191842c@intel.com>
-In-Reply-To: <69643667-4564-0266-1b26-13833191842c@intel.com>
-From:   Justin Stitt <justinstitt@google.com>
-Date:   Mon, 11 Sep 2023 15:01:16 -0700
-Message-ID: <CAFhGd8rohHPu+Zqr+w35=6=goUNC4ycvKk78N+7LSvNbnDnvuw@mail.gmail.com>
-Subject: Re: [PATCH] x86/tdx: refactor deprecated strncpy
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>
+References: <cover.1694202430.git.pstanner@redhat.com> <CA1AA415-FDF0-4A7A-9BB0-FFF055803F77@kernel.org>
+In-Reply-To: <CA1AA415-FDF0-4A7A-9BB0-FFF055803F77@kernel.org>
+From:   Dave Airlie <airlied@gmail.com>
+Date:   Tue, 12 Sep 2023 11:55:32 +1000
+Message-ID: <CAPM=9txUQ64PMmN-KSXC6PG5ozhSB4eLQN8iAUMrv1R9F6Sm6Q@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] Introduce new wrappers to copy user-arrays
+To:     Kees Cook <kees@kernel.org>
+Cc:     Philipp Stanner <pstanner@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Christian Brauner <brauner@kernel.org>,
+        David Disseldorp <ddiss@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Siddh Raman Pant <code@siddh.me>,
+        Nick Alcock <nick.alcock@oracle.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Daniel Vetter <daniel@ffwll.ch>, Zack Rusin <zackr@vmware.com>,
+        VMware Graphics Reviewers 
+        <linux-graphics-maintainer@vmware.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        kexec@lists.infradead.org, linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Sep 11, 2023 at 11:51=E2=80=AFAM Dave Hansen <dave.hansen@intel.com=
-> wrote:
+On Tue, 12 Sept 2023 at 11:27, Kees Cook <kees@kernel.org> wrote:
 >
-> On 9/11/23 11:27, Justin Stitt wrote:
-> > `strncpy` is deprecated and we should prefer more robust string apis.
+> On September 8, 2023 12:59:39 PM PDT, Philipp Stanner <pstanner@redhat.com> wrote:
+> >Hi!
+> >
+> >David Airlie suggested that we could implement new wrappers around
+> >(v)memdup_user() for duplicating user arrays.
+> >
+> >This small patch series first implements the two new wrapper functions
+> >memdup_array_user() and vmemdup_array_user(). They calculate the
+> >array-sizes safely, i.e., they return an error in case of an overflow.
+> >
+> >It then implements the new wrappers in two components in kernel/ and two
+> >in the drm-subsystem.
+> >
+> >In total, there are 18 files in the kernel that use (v)memdup_user() to
+> >duplicate arrays. My plan is to provide patches for the other 14
+> >successively once this series has been merged.
+> >
+> >
+> >Changes since v1:
+> >- Insert new headers alphabetically ordered
+> >- Remove empty lines in functions' docstrings
+> >- Return -EOVERFLOW instead of -EINVAL from wrapper functions
+> >
+> >
+> >@Andy:
+> >I test-build it for UM on my x86_64. Builds successfully.
+> >A kernel build (localmodconfig) for my Fedora38 @ x86_64 does also boot
+> >fine.
+> >
+> >If there is more I can do to verify the early boot stages are fine,
+> >please let me know!
+> >
+> >P.
+> >
+> >Philipp Stanner (5):
+> >  string.h: add array-wrappers for (v)memdup_user()
+> >  kernel: kexec: copy user-array safely
+> >  kernel: watch_queue: copy user-array safely
+> >  drm_lease.c: copy user-array safely
+> >  drm: vmgfx_surface.c: copy user-array safely
+> >
+> > drivers/gpu/drm/drm_lease.c             |  4 +--
+> > drivers/gpu/drm/vmwgfx/vmwgfx_surface.c |  4 +--
+> > include/linux/string.h                  | 40 +++++++++++++++++++++++++
+> > kernel/kexec.c                          |  2 +-
+> > kernel/watch_queue.c                    |  2 +-
+> > 5 files changed, 46 insertions(+), 6 deletions(-)
+> >
 >
-> I dunno.  It actually seems like a pretty good fit here.
+> Nice. For the series:
 >
-> > In this case, `message.str` is not expected to be NUL-terminated as it
-> > is simply a buffer of characters residing in a union which allows for
-> > named fields representing 8 bytes each. There is only one caller of
-> > `tdx_panic()` and they use a 59-length string for `msg`:
-> > |     const char *msg =3D "TD misconfiguration: SEPT_VE_DISABLE attribu=
-te must be set.";
->
-> I'm not really following this logic.
->
-> We need to do the following:
->
-> 1. Make sure not to over write past the end of 'message'
-> 2. Make sure not to over read past the end of 'msg'
-> 3. Make sure not to leak stack data into the hypercall registers
->    in the case of short strings.
->
-> strncpy() does #1, #2 and #3 just fine.
+> Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Right, to be clear, I do not suspect a bug in the current
-implementation. Rather, let's move towards a less ambiguous interface
-for maintainability's sake
+Hey Kees,
 
->
-> The resulting string does *NOT* need to be NULL-terminated.  See the
-> comment:
->
->     /* VMM assumes '\0' in byte 65, if the message took all 64 bytes */
->
-> Are there cases where strncpy() doesn't NULL-terminate the string other
-> than when the buffer is full?
->
-> I actually didn't realize that strncpy() pads its output up to the full
-> size.  I wonder if Kirill used it intentionally or whether he got lucky
-> here. :)
+what tree do you think it would best to land this through? I'm happy
+to send the initial set from a drm branch, but also happy to have it
+land via someone with a better process.
 
-Big reason to use strtomem_pad as it is more obvious about what it does.
-
-I'd love more thoughts/testing here.
+Dave.
