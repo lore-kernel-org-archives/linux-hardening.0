@@ -2,92 +2,96 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA21CA0EF2
-	for <linux-hardening@archiver.kernel.org>; Tue, 12 Sep 2023 16:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E22DCA0EF1
+	for <linux-hardening@archiver.kernel.org>; Tue, 12 Sep 2023 17:04:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236291AbjILQXa (ORCPT
+        id S232660AbjILREJ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 12 Sep 2023 12:23:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33132 "EHLO
+        Tue, 12 Sep 2023 13:04:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231518AbjILQX3 (ORCPT
+        with ESMTP id S234031AbjILREI (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 12 Sep 2023 12:23:29 -0400
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0792310D;
-        Tue, 12 Sep 2023 09:23:25 -0700 (PDT)
-Received: by mail-ej1-x630.google.com with SMTP id a640c23a62f3a-99c1d03e124so722697366b.2;
-        Tue, 12 Sep 2023 09:23:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694535803; x=1695140603; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XWvMWZ3PfPL63wEwHZjDGh9ALUEehxR7vNe39ic1Lp4=;
-        b=mTAJYC2EkCktF4zTiAVFwbXlMCK8Wqmvh33J2hK1eblyM3eKt9u36SKJxOK42lpXjS
-         XJ6qbkTTpgS/CMKlrjGQE02jy5ClVGKeEnZQACv62r4bPh5y+NB26fWbwAmYpL+exyq+
-         vDlKyFIzqmj78H1tLoVYo/0jQUBVLMHStJmgnQNAXr2Rr/tCvcSi9+yOmH7cjvYx4N21
-         LMYGTanzkj08LRe7fP7x4ZN2OCmYEjO7frtMl4CXTNxHBLjpnzx61ulGLvXgDrinSBr4
-         1BD3Ge/lcIAWVHzlsBJB0k/hzgDM3c5lU/Rk3Dg2R2BEzuqTx6iTbY2KCJJ8YkOIKg8k
-         6z/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694535803; x=1695140603;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XWvMWZ3PfPL63wEwHZjDGh9ALUEehxR7vNe39ic1Lp4=;
-        b=G+T94wI4sI7cABR8T9V5W/GtRPpITQPQNEZaFsSZ4Ihiv9c0sdW+HNIYUb9z8Cm1eQ
-         U95zn8N5erBKiMBPUcG4poLRHYD1FQOejgp9d4fic/lcoYOgV+YZVH8J13z8aDqUe26d
-         d7w7fq+o1qPeYEwxB2CYORLTT6eJ4OuhRqh1kfewmHbBwqbJ3T9bMm14docak3wKgg3i
-         g0zoGBn8kwyww77jwd2ZZ1QgMSdteAq5eYKCrHhtH7/wY0sOTGAJpu5SVw/Ep1ahvbqI
-         4tbZik/CBG2oPhq54NDyCqqN2ESctmY3PT1ZYIFDRnPS8dzmgZomkItflu5tvm2XMMUY
-         58iw==
-X-Gm-Message-State: AOJu0YzXOS9NT8KXICjFHsbJSHO3EjtWOAGO31PdjnlEhuzppnaHfKOb
-        EHnDIltPwe0MAV8zAC24S/cEmlHy+w==
-X-Google-Smtp-Source: AGHT+IGak6rYUKE4vzjvzo3nJZ/TMMEDCk8Vge6/xb70yEOlEamgl0yAG9yioVpJYJW0c9XWwDNIUQ==
-X-Received: by 2002:a17:906:7687:b0:9a5:e441:4cf2 with SMTP id o7-20020a170906768700b009a5e4414cf2mr9904342ejm.58.1694535803184;
-        Tue, 12 Sep 2023 09:23:23 -0700 (PDT)
-Received: from p183 ([46.53.254.179])
-        by smtp.gmail.com with ESMTPSA id g21-20020a170906349500b00997e00e78e6sm7119522ejb.112.2023.09.12.09.23.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Sep 2023 09:23:22 -0700 (PDT)
-Date:   Tue, 12 Sep 2023 19:23:21 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     akpm@linux-foundation.org, keescook@chromium.org
-Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-hardening@vger.kernel.org, David.Laight@aculab.com
-Subject: [PATCH v3 2/2] uapi: fix header guard in include/uapi/linux/stddef.h
-Message-ID: <b1f5081e-339d-421d-81b2-cbb94e1f6f5f@p183>
-References: <930c3ee5-1282-40f4-93e0-8ff894aabf3a@p183>
- <a0c3a352-89c6-4764-b377-f55a68a1b2cb@p183>
- <202309080848.60319AF@keescook>
- <f1819874-2b91-4983-9ebe-6cd83d5d3bc3@p183>
- <202309080910.44BB7CEF@keescook>
- <e364b36eefa049d8863c1c1001018636@AcuMS.aculab.com>
- <97242381-f1ec-4a4a-9472-1a464f575657@p183>
+        Tue, 12 Sep 2023 13:04:08 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84060110;
+        Tue, 12 Sep 2023 10:04:04 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72235C433C7;
+        Tue, 12 Sep 2023 17:04:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1694538244;
+        bh=TlF+LlVr0+p7G1whWSyXl90KqhYFGDWhgyj2gIcU/UA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=mhyHO6vYRr7rhv+o8basUZBhSTzBB4vdH6hmy+KBgxrmwlYgAjUCSw35UYWqItxqp
+         6SlXtJLx0HLyia+1rx/xqSRi8StgbgCULhVSCctmqlPsgho4RWgFJLr9bmDgEd2jwi
+         aZn7VbUvKMA6FuO8/8Tpg2xWOT6wSlvFoq1CR2kPROwfzZJ1mtqVoMxlYUPJXrWC8M
+         f6+ThE0PycZMlMFCxqRBspH1cyR4CGAmzfEJPQlH9Fr+DEReN4rIf7Q/XVPImt3QdC
+         me4bRCbcwp3g3/R/99U2OK7Srf/f1+hhSMTJZBo3RsyVNJcm4/G2gmLia5eMXx6bdt
+         +a/1AVA+kiCBQ==
+Date:   Tue, 12 Sep 2023 11:04:59 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
+        Dwaipayan Ray <dwaipayanray1@gmail.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] checkpatch: add a couple new alloc functions to alloc
+ with multiplies check
+Message-ID: <ZQCaO+tYycDxVLy7@work>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <97242381-f1ec-4a4a-9472-1a464f575657@p183>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+vmalloc() and vzalloc() functions have now 2-factor multiplication
+argument forms vmalloc_array() and vcalloc(), correspondingly.
+
+Add alloc-with-multiplies checks for these new functions.
+
+Link: https://github.com/KSPP/linux/issues/342
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
+ scripts/checkpatch.pl | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
- include/uapi/linux/stddef.h |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
---- a/include/uapi/linux/stddef.h
-+++ b/include/uapi/linux/stddef.h
-@@ -50,8 +50,9 @@
- 		TYPE NAME[]; \
- 	}
- #endif
--#endif
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 7d16f863edf1..45265d0eee1b 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -7207,17 +7207,19 @@ sub process {
+ 			    "Prefer $3(sizeof(*$1)...) over $3($4...)\n" . $herecurr);
+ 		}
  
- #ifndef __counted_by
- #define __counted_by(m)
- #endif
-+
-+#endif
+-# check for (kv|k)[mz]alloc with multiplies that could be kmalloc_array/kvmalloc_array/kvcalloc/kcalloc
++# check for (kv|k|v)[mz]alloc with multiplies that could be kmalloc_array/kvmalloc_array/vmalloc_array/kvcalloc/kcalloc/vcalloc
+ 		if ($perl_version_ok &&
+ 		    defined $stat &&
+-		    $stat =~ /^\+\s*($Lval)\s*\=\s*(?:$balanced_parens)?\s*((?:kv|k)[mz]alloc)\s*\(\s*($FuncArg)\s*\*\s*($FuncArg)\s*,/) {
++		    $stat =~ /^\+\s*($Lval)\s*\=\s*(?:$balanced_parens)?\s*((?:kv|k|v)[mz]alloc)\s*\(\s*($FuncArg)\s*\*\s*($FuncArg)\s*,?/) {
+ 			my $oldfunc = $3;
+ 			my $a1 = $4;
+ 			my $a2 = $10;
+ 			my $newfunc = "kmalloc_array";
+ 			$newfunc = "kvmalloc_array" if ($oldfunc eq "kvmalloc");
++			$newfunc = "vmalloc_array" if ($oldfunc eq "vmalloc");
+ 			$newfunc = "kvcalloc" if ($oldfunc eq "kvzalloc");
+ 			$newfunc = "kcalloc" if ($oldfunc eq "kzalloc");
++			$newfunc = "vcalloc" if ($oldfunc eq "vzalloc");
+ 			my $r1 = $a1;
+ 			my $r2 = $a2;
+ 			if ($a1 =~ /^sizeof\s*\S/) {
+@@ -7233,7 +7235,7 @@ sub process {
+ 					 "Prefer $newfunc over $oldfunc with multiply\n" . $herectx) &&
+ 				    $cnt == 1 &&
+ 				    $fix) {
+-					$fixed[$fixlinenr] =~ s/\b($Lval)\s*\=\s*(?:$balanced_parens)?\s*((?:kv|k)[mz]alloc)\s*\(\s*($FuncArg)\s*\*\s*($FuncArg)/$1 . ' = ' . "$newfunc(" . trim($r1) . ', ' . trim($r2)/e;
++					$fixed[$fixlinenr] =~ s/\b($Lval)\s*\=\s*(?:$balanced_parens)?\s*((?:kv|k|v)[mz]alloc)\s*\(\s*($FuncArg)\s*\*\s*($FuncArg)/$1 . ' = ' . "$newfunc(" . trim($r1) . ', ' . trim($r2)/e;
+ 				}
+ 			}
+ 		}
+-- 
+2.34.1
+
