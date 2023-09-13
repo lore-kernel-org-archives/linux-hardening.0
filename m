@@ -2,89 +2,231 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6DBEE0212
-	for <linux-hardening@archiver.kernel.org>; Wed, 13 Sep 2023 23:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDFCEE0214
+	for <linux-hardening@archiver.kernel.org>; Wed, 13 Sep 2023 23:30:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233068AbjIMX1o (ORCPT
+        id S233162AbjIMXaM (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 13 Sep 2023 19:27:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60526 "EHLO
+        Wed, 13 Sep 2023 19:30:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231515AbjIMX1o (ORCPT
+        with ESMTP id S233068AbjIMXaK (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 13 Sep 2023 19:27:44 -0400
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDEDC1BCB;
-        Wed, 13 Sep 2023 16:27:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=pRKVep8tw/s8sIQ3F3dLcxRmfmkpqBcJ/0UUTodWZc8=; b=FSfwnimiuTJG9Nm4GWjPkE+/Wl
-        tdV1zvdS6cLMU1eSiUbY8aNFgyY7VQe+ltAjMNDv/dFOBn2zXb2GJmoM0Q+HqNaldcCxZJd/HHbLS
-        BS2Utl/AQSnkp62Hq1Ba8VSl5CAjDs4/vWgUYs7tXto9ItzMznllk1eotmCw7YFN4Yb//dDV7CVvc
-        54SMFgAY1WobfE2n6xKuFEMcX8ZzeTOuD9dnL52KitAk8ad/sVhORTWorrkMhkBDt+Q0w1pZFo2rk
-        hA7/Xa6WGJW4FOIuxYkjT6WFQJl2lC/Rrm2ri36l78qEwhTEW/mywJIOwB8jeGiEic5YnFO/2b7PA
-        fXYiSf1A==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1qgZGK-005rzK-1u;
-        Wed, 13 Sep 2023 23:27:12 +0000
-Date:   Thu, 14 Sep 2023 00:27:12 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Christian Brauner <brauner@kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Tejun Heo <tj@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-hardening@vger.kernel.org,
-        cgroups@vger.kernel.org
-Subject: Re: [PATCH 03/19] fs: release anon dev_t in deactivate_locked_super
-Message-ID: <20230913232712.GC800259@ZenIV>
-References: <20230913111013.77623-1-hch@lst.de>
- <20230913111013.77623-4-hch@lst.de>
+        Wed, 13 Sep 2023 19:30:10 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9C151BCF
+        for <linux-hardening@vger.kernel.org>; Wed, 13 Sep 2023 16:30:06 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1c1f8aaab9aso2799515ad.1
+        for <linux-hardening@vger.kernel.org>; Wed, 13 Sep 2023 16:30:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1694647806; x=1695252606; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=D8BEuyRIkqA0kbODSrFEJ9LM8ANlZ5MuwmNVEnUG8nE=;
+        b=I4RzppyNU7YncV55OkMU8+X7/vBgwDYhwMxCBR4uY4skKChXESvRr+7E+KlXzjFx4B
+         GiF6oG6O3ISAtK24b99DyXtYHSwHIjVWf54C8Is5hE+yI2PLfEAjTwZraqo/yI8bEQmt
+         c+IxHuUrPaEZu7du/wbjChuhUgZamRR80fvL4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694647806; x=1695252606;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=D8BEuyRIkqA0kbODSrFEJ9LM8ANlZ5MuwmNVEnUG8nE=;
+        b=Y/5q0pA/ObFtwzEAhi6RCmgKoyvA2178DFD6Y0cpnztWER1qbNTr5l2jC7B4VH+ZbO
+         bKTfYkvwstb8ILPp19zKOvXUiBhxPKCbeTh+iMhHyWUUNXGajsydaaW/9yE4O5VoS4uD
+         V913I2hnSdBJfac8gsy8E3QBCSwg4QjI/JT/Xx5krz1brUM2yO8CrRua7U/cuhZz12oF
+         5z5pLWAfk9s7RmcR0LvnhJpIUNA1xjbpvyx58nXONoVVgZAvwYcwf4tK0OjNJdFkzHl0
+         cNjdKYLqRiRiHYd+aQB/ncdAbHOjpwCnTndtHyRLM8fVGRUhdr16e2UHZs7eghjlSVZc
+         bKNg==
+X-Gm-Message-State: AOJu0YxvApsQSJgQodUjYvnCUhxNzTJ/NOMr8iuaIekOIetdS7Q+0S7U
+        JspiVhiq1wfuJjAFqC1hMBWqDw==
+X-Google-Smtp-Source: AGHT+IG6+9IB6uFxWZM3GIOXMU3BPqs4EX0RKLfedlqEvbvt0BgIgu7ki0WNkT/tohlFIibQd5bGSA==
+X-Received: by 2002:a17:902:db11:b0:1bc:9651:57c6 with SMTP id m17-20020a170902db1100b001bc965157c6mr5121186plx.57.1694647806167;
+        Wed, 13 Sep 2023 16:30:06 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id u15-20020a170902e5cf00b001b3bf8001a9sm167730plf.48.2023.09.13.16.30.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Sep 2023 16:30:05 -0700 (PDT)
+Date:   Wed, 13 Sep 2023 16:30:04 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Mukesh Ojha <quic_mojha@quicinc.com>
+Cc:     corbet@lwn.net, agross@kernel.org, andersson@kernel.org,
+        konrad.dybcio@linaro.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        tony.luck@intel.com, gpiccoli@igalia.com,
+        mathieu.poirier@linaro.org, catalin.marinas@arm.com,
+        will@kernel.org, linus.walleij@linaro.org,
+        andy.shevchenko@gmail.com, vigneshr@ti.com, nm@ti.com,
+        matthias.bgg@gmail.com, kgene@kernel.org, alim.akhtar@samsung.com,
+        bmasney@redhat.com, quic_tsoni@quicinc.com,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, kernel@quicinc.com
+Subject: Re: [REBASE PATCH v5 11/17] qcom_minidump: Register ramoops region
+ with minidump
+Message-ID: <202309131624.0371D7E@keescook>
+References: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com>
+ <1694429639-21484-12-git-send-email-quic_mojha@quicinc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230913111013.77623-4-hch@lst.de>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+In-Reply-To: <1694429639-21484-12-git-send-email-quic_mojha@quicinc.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Sep 13, 2023 at 08:09:57AM -0300, Christoph Hellwig wrote:
-> Releasing an anon dev_t is a very common thing when freeing a
-> super_block, as that's done for basically any not block based file
-> system (modulo the odd mtd special case).  So instead of requiring
-> a special ->kill_sb helper and a lot of boilerplate in more complicated
-> file systems, just release the anon dev_t in deactivate_locked_super if
-> the super_block was using one.
+On Mon, Sep 11, 2023 at 04:23:53PM +0530, Mukesh Ojha wrote:
+> Register all the pstore frontend with minidump, so that they can
+> be dumped as default Linux minidump region to be collected on
+> SoC where minidump is enabled.
 > 
-> As the freeing is done after the main call to kill_super_notify, this
-> removes the need for having two slightly different call sites for it.
+> Helper functions is written in separate file and built along with
+> the minidump driver, since it is client of minidump and also call
+> it at appropriate place from minidump probe so that they always
+> get registered.
+> 
+> While at it also rename the out minidump module object name during
+> build as qcom_apss_minidump which basically depicts as Qualcomm
+> Application processor subsystem minidump.
+> 
+> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+> ---
+>  drivers/soc/qcom/Kconfig                 |  1 +
+>  drivers/soc/qcom/Makefile                |  3 +-
+>  drivers/soc/qcom/qcom_minidump.c         |  4 ++
+>  drivers/soc/qcom/qcom_ramoops_minidump.c | 88 ++++++++++++++++++++++++++++++++
+>  drivers/soc/qcom/qcom_ramoops_minidump.h | 10 ++++
+>  5 files changed, 105 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/soc/qcom/qcom_ramoops_minidump.c
+>  create mode 100644 drivers/soc/qcom/qcom_ramoops_minidump.h
+> 
+> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+> index 0ac7afc2c67d..9f1a1e128fef 100644
+> --- a/drivers/soc/qcom/Kconfig
+> +++ b/drivers/soc/qcom/Kconfig
+> @@ -306,6 +306,7 @@ config QCOM_MINIDUMP
+>  	tristate "QCOM APSS Minidump driver"
+>  	depends on ARCH_QCOM || COMPILE_TEST
+>  	depends on QCOM_SMEM
+> +	depends on PSTORE
+>  	help
+>  	  This config enables linux core infrastructure for Application
+>  	  processor subsystem (APSS) minidump collection i.e, it enables
+> diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
+> index 4b5f72f78d3c..69df41aba7a9 100644
+> --- a/drivers/soc/qcom/Makefile
+> +++ b/drivers/soc/qcom/Makefile
+> @@ -33,4 +33,5 @@ obj-$(CONFIG_QCOM_ICC_BWMON)	+= icc-bwmon.o
+>  qcom_ice-objs			+= ice.o
+>  obj-$(CONFIG_QCOM_INLINE_CRYPTO_ENGINE)	+= qcom_ice.o
+>  obj-$(CONFIG_QCOM_RPROC_MINIDUMP)	+= qcom_rproc_minidump.o
+> -obj-$(CONFIG_QCOM_MINIDUMP)		+= qcom_minidump.o
+> +obj-$(CONFIG_QCOM_MINIDUMP)		+= qcom_apss_minidump.o
+> +qcom_apss_minidump-objs			+= qcom_minidump.o qcom_ramoops_minidump.o
+> diff --git a/drivers/soc/qcom/qcom_minidump.c b/drivers/soc/qcom/qcom_minidump.c
+> index 4ce36f154e89..7930a80b9100 100644
+> --- a/drivers/soc/qcom/qcom_minidump.c
+> +++ b/drivers/soc/qcom/qcom_minidump.c
+> @@ -23,6 +23,7 @@
+>  #include <soc/qcom/qcom_minidump.h>
+>  
+>  #include "qcom_minidump_internal.h"
+> +#include "qcom_ramoops_minidump.h"
+>  
+>  /**
+>   * struct minidump_ss_data - Minidump subsystem private data
+> @@ -688,6 +689,8 @@ static int qcom_apss_minidump_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> +	qcom_ramoops_minidump_register(md->dev);
+> +
+>  	mutex_lock(&md_plist.plock);
+>  	platform_set_drvdata(pdev, md);
+>  	qcom_apss_register_pending_regions(md);
+> @@ -701,6 +704,7 @@ static int qcom_apss_minidump_remove(struct platform_device *pdev)
+>  	struct minidump *md = platform_get_drvdata(pdev);
+>  	struct minidump_ss_data *mdss_data;
+>  
+> +	qcom_ramoops_minidump_unregister();
+>  	mdss_data = md->apss_data;
+>  	memset(mdss_data->md_ss_toc, cpu_to_le32(0), sizeof(struct minidump_subsystem));
+>  	md = NULL;
+> diff --git a/drivers/soc/qcom/qcom_ramoops_minidump.c b/drivers/soc/qcom/qcom_ramoops_minidump.c
+> new file mode 100644
+> index 000000000000..eb97310e3858
+> --- /dev/null
+> +++ b/drivers/soc/qcom/qcom_ramoops_minidump.c
+> @@ -0,0 +1,88 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+> + */
+> +
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +
+> +#include <linux/device.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/pstore.h>
+> +#include <linux/slab.h>
+> +#include <soc/qcom/qcom_minidump.h>
+> +
+> +#include "qcom_ramoops_minidump.h"
+> +
+> +static LIST_HEAD(ramoops_region_list);
+> +
+> +struct md_region_list {
+> +	struct qcom_minidump_region md_region;
+> +	struct list_head list;
+> +};
+> +
+> +static int qcom_ramoops_region_register(struct device *dev, int type)
+> +{
+> +	struct qcom_minidump_region *md_region;
+> +	struct md_region_list *mdr_list;
+> +	struct pstore_record record;
+> +	unsigned int max_dump_cnt;
+> +	phys_addr_t phys;
+> +	const char *name;
+> +	void *virt;
+> +	size_t size;
+> +	int ret;
+> +
+> +	record.type = type;
+> +	record.id = 0;
+> +	max_dump_cnt = 0;
+> +	name = pstore_type_to_name(record.type);
+> +	do {
+> +		ret = pstore_region_defined(&record, &virt, &phys, &size, &max_dump_cnt);
 
-Huh?  At this stage in your series freeing is still in ->kill_sb()
-instances, after the calls of kill_anon_super() you've turned into
-the calls of generic_shutdown_super().
+I really don't want this happening: you're building your own pstore_record
+(which has a common initializer that isn't used here) and manually
+scraping the ramoops regions.
 
-You do split it off into a separate method later in the series, but
-at this point you are reopening the same UAF that had been dealt with
-in dc3216b14160 "super: ensure valid info".
+It looks to me like you just want a way to talk all the records in
+pstore and then export their location to minidump. The record walker
+needs to be in the pstore core, and likely should be shared with
+fs/pstore/inode.c which does the same thing.
 
-Either move the introduction of ->free_sb() before that one, or
-split it into lifting put_anon_bdev() (left here) and getting rid
-of kill_anon_super() (after ->free_sb() introduction).
+Then, in this code, you can just do something like:
+
+	for (record = pstore_get_record(NULL); record; record = pstore_get_record(record)) {
+		if (ramoops_get_record_details(record, &virt, &phys) < 0)
+			continue
+		...
+		md_region->virt_addr = virt;
+		md_region->phys_addr = phys;
+		md_region->size = record->size;
+
+		ret = qcom_minidump_region_register(md_region);
+		...
+	}
+
+Probably some way to check the backend is ramoops is needed too.
+
+-- 
+Kees Cook
