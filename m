@@ -2,154 +2,142 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66900EE01E0
-	for <linux-hardening@archiver.kernel.org>; Wed, 13 Sep 2023 17:13:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19B66EE01F1
+	for <linux-hardening@archiver.kernel.org>; Wed, 13 Sep 2023 17:18:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229926AbjIMRNM (ORCPT
+        id S231817AbjIMRSk (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 13 Sep 2023 13:13:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54810 "EHLO
+        Wed, 13 Sep 2023 13:18:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229660AbjIMRNL (ORCPT
+        with ESMTP id S231843AbjIMRS1 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 13 Sep 2023 13:13:11 -0400
-Received: from mail-oi1-x24a.google.com (mail-oi1-x24a.google.com [IPv6:2607:f8b0:4864:20::24a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A8C79B
-        for <linux-hardening@vger.kernel.org>; Wed, 13 Sep 2023 10:13:07 -0700 (PDT)
-Received: by mail-oi1-x24a.google.com with SMTP id 5614622812f47-3a9e0160cdbso16217b6e.2
-        for <linux-hardening@vger.kernel.org>; Wed, 13 Sep 2023 10:13:07 -0700 (PDT)
+        Wed, 13 Sep 2023 13:18:27 -0400
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF28C1BE8
+        for <linux-hardening@vger.kernel.org>; Wed, 13 Sep 2023 10:17:56 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-52f33659d09so5550081a12.1
+        for <linux-hardening@vger.kernel.org>; Wed, 13 Sep 2023 10:17:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1694625187; x=1695229987; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=TycX59E5b3dlFgGY1L+jzKDgDIrRQ3+jS2g/Ms9VN9A=;
-        b=aTJ69jXNunqkfhvzcfdypL8zLLwX28MbgYnrm1Ky66WzsuYqRju/86npjIUDKZxOaU
-         cp/ryRqGV0GkTTGfxHi5TNmTqNK7B9Uvng3VjAKmeyI/sCrObopn+DllRyYiZ4+MzBpS
-         yavsfqeuLoSRhmWupYZeS90dVySONaH5Ao3xC+8QsTmAUedLp68QlCytQmV1CI4mmYrB
-         X1o5LIFv7hoVmbhly0wBguzB8vSDYfjBT5TybK+jKnAKRYyiWtAl4JcQ4lCoLX2vFmvw
-         sPP5igotMX3vZMNsupqBIavg7c7yHJNoWWZd03qyEo0R1VO6oMhI4G5oe9Uu00JM/sbo
-         se8Q==
+        d=google.com; s=20230601; t=1694625475; x=1695230275; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5pAP4KF+8eSt4DS+aDaiAbwkQFXc4IntKwjogbQWvkE=;
+        b=Zkizt3K/6JQhbNbiAQSCK4oPKwYNqHSmLhPylAGwL2oX0qAUlhRt3jiUWzBi4Tw6mH
+         ji3Avi8ct1iybwrg7L+RJfHyOb130/ppqJtkbk/t12LPcrAXUZ1TenPOnIzPmF5i2e6x
+         n4/ttav8vVvTfn/vDFMvLzxRJSMU/4nKU4HktGcwYw/v9kz6KWA7VNa5Xu+G2UI82WAn
+         R1fiQ8dYMAjfzocejtWQtomzdcrzs64q42C4+5XbY1ewS/jAyXCcNVPYZU5r9Aw/48NA
+         qQ2aLTaUnhq02jxuSJkNpoZ3zMjO477ywKFUfZWlEXO3kQOn9V1sEyH4dwP6+8WvxP6R
+         iK1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694625187; x=1695229987;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TycX59E5b3dlFgGY1L+jzKDgDIrRQ3+jS2g/Ms9VN9A=;
-        b=dGvIAaEQZRUBn2KMA0e3INZUm1zOk8qUtQduqknDBUskoNrPi4RXN4IC6bdmVwarOG
-         a//dCCkRgjDpF9Ric/KfJx0vIUhyxazjdqKhl+ueCGmV6FqW9ODuiNsWqNn9BhtVV8g3
-         PAqrsRqHcYi/ubH41T+dh4mYVbdIYRDXos+PS/EvrARAWosVSPeN1xP91RJgnAJY3vQj
-         AR0jvR5J4t4Hgj6PS4/VTIm0KYubAvIgTHwjvaTmzVbSENJH9f7vRJHZ4xBUxAeBTDzk
-         PTNcl32D4rc6JaxN3tXoUe6fSKduGqjqIyoDlOJlonGHTE+2QFKhhjmJFT6Hef4HLHUK
-         niDg==
-X-Gm-Message-State: AOJu0YzwrfSe2b+j/ASPXf710+FaFKQCHFp4e2pdf5K7xTKajV51u7TS
-        p0J+UuFBunEMgZVi6jVyERnHMN5qN8YSJnj9WA==
-X-Google-Smtp-Source: AGHT+IGpv77TMcvUEUVSFcCbF4UPPntDMLB3+Kcq3GEi15wPVZGQhJZUau9yW/l4BvE2Ks/L2ADHNSyMWbN06O58bw==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6808:1443:b0:397:f54a:22d6 with
- SMTP id x3-20020a056808144300b00397f54a22d6mr1310455oiv.9.1694625186953; Wed,
- 13 Sep 2023 10:13:06 -0700 (PDT)
-Date:   Wed, 13 Sep 2023 17:13:04 +0000
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAJ/tAWUC/42NQQqDMBBFryKz7hSTSEO76j2KC5uMcaAamUioi
- Hdvai/QzYf3+by/QSJhSnCrNhDKnDhOBfSpAjd0UyBkXxh0rU19VRrTIpObV/TCmSRhWQnyPPI
- vvO8a+zTWmt5DkcxCPb+Pg0dbeOC0RFmPv6y+7d/qrFChc42h2ivX0eUeYgwvOrs4Qrvv+wdjT 2SwzQAAAA==
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1694625185; l=2941;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=FDmfRrAoS66Rbbc25XcYmCZjZlwmE2RZWNS4Ok/5S0k=; b=E2uwLU3YiJUf5HxNMMXdX8SkcKNpi07uqk0WHe0v9DIfto0Upi/ltttoRVU6rUSIFiESIwDYh
- nM6tsROJ+DDDhGrrDYB1vZqhyjHrUVXazVor5thhRkpcNSlrEop/x7D
-X-Mailer: b4 0.12.3
-Message-ID: <20230913-strncpy-drivers-char-ipmi-ipmi-v2-1-e3bc0f6e599f@google.com>
-Subject: [PATCH v2] ipmi: refactor deprecated strncpy
+        d=1e100.net; s=20230601; t=1694625475; x=1695230275;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5pAP4KF+8eSt4DS+aDaiAbwkQFXc4IntKwjogbQWvkE=;
+        b=di4pN+tZi6AlHD7OEgp/0OUgkgFKiQQ+ZrH9MEwWibnCB1mUBs/BqYSttSkMiQtBzq
+         2blllcPB1wvLHMSqPBKQFqPxam0EvBKb2viG3/j2R3zNfNiHc+jYgTk6CAzFUn2st8ed
+         xeMiTXVLYnDvvTV3OTgp3aud8uQGz4dcXTCzH+/gWeEFytszdP73qi456/EqaVXE/e6p
+         ffTysueyurvXE/nfDV8N2ihV/4dJGEmjktFvdWx/HyVjoznzEfGy56QSNlTTQTcMzsyq
+         e3J74U94jv+NW7zljIgbM0Mh7D0Llfbn8ZAm2FjOE2zNvpxEq9GaMXIAhshJJhMVF5X6
+         tJRQ==
+X-Gm-Message-State: AOJu0YxDyUau6w3pRnewhq9ysa50MIMgRwA8oQdB9pjw+i7t5Re/JMgU
+        O6RPiiS9duf0ENfaHeVViypfWmRql2PKjIUTDaDAww==
+X-Google-Smtp-Source: AGHT+IFqxcXMoA6E1GUkSWls1FWKy8HwJzuDU4KTCHVS+I4u5BDYFDfxxCW1WjC6TToCE7Uzc7DOgsV532Bh4nDloHk=
+X-Received: by 2002:a05:6402:3708:b0:52f:f696:197b with SMTP id
+ ek8-20020a056402370800b0052ff696197bmr1293082edb.1.1694625475236; Wed, 13 Sep
+ 2023 10:17:55 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230913-strncpy-drivers-edac-edac_mc_sysfs-c-v1-1-d232891b05b0@google.com>
+ <CAFhGd8pGikrizmQPF7qD6C4NcYqBVqECEUqb0j_4fuS3rqeeXA@mail.gmail.com> <SJ1PR11MB6083BEE91F07BC4077FE38F5FCF0A@SJ1PR11MB6083.namprd11.prod.outlook.com>
+In-Reply-To: <SJ1PR11MB6083BEE91F07BC4077FE38F5FCF0A@SJ1PR11MB6083.namprd11.prod.outlook.com>
 From:   Justin Stitt <justinstitt@google.com>
-To:     Corey Minyard <minyard@acm.org>
-Cc:     openipmi-developer@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>,
-        Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+Date:   Wed, 13 Sep 2023 10:17:43 -0700
+Message-ID: <CAFhGd8r1u+u-6j0eLSSy-dB5SuQdJr4_0faOeAFiTk_P4kXg5g@mail.gmail.com>
+Subject: Re: [PATCH] EDAC/mc_sysfs: refactor deprecated strncpy
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     Borislav Petkov <bp@alien8.de>, James Morse <james.morse@arm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Robert Richter <rric@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-`strncpy` is deprecated for use on NUL-terminated destination strings [1].
+On Wed, Sep 13, 2023 at 8:13=E2=80=AFAM Luck, Tony <tony.luck@intel.com> wr=
+ote:
+>
+> > `strncpy` is deprecated for use on NUL-terminated destination strings [=
+1].
+> >
+> > We should prefer more robust and less ambiguous string interfaces.
+> >
+> > A suitable replacement is `strscpy_pad` [2] due to the fact that it gua=
+rantees
+> > NUL-termination on the destination buffer whilst maintaining the
+> > NUL-padding behavior that `strncpy` provides. This may not be strictly
+> > necessary but as I couldn't understand what this code does I wanted to
+> > ensure that the functionality is the same.
+> >
+> > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#st=
+rncpy-on-nul-terminated-strings [1]
+> > Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en=
+.html [2]
+> > Link: https://github.com/KSPP/linux/issues/90
+> > Cc: linux-hardening@vger.kernel.org
+> > Signed-off-by: Justin Stitt <justinstitt@google.com>
+> > ---
+> > Note: build-tested only.
+> > ---
+> >  drivers/edac/edac_mc_sysfs.c | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/edac/edac_mc_sysfs.c b/drivers/edac/edac_mc_sysfs.=
+c
+> > index 15f63452a9be..b303309a63cf 100644
+> > --- a/drivers/edac/edac_mc_sysfs.c
+> > +++ b/drivers/edac/edac_mc_sysfs.c
+> > @@ -229,8 +229,7 @@ static ssize_t channel_dimm_label_store(struct devi=
+ce *dev,
+> >         if (copy_count =3D=3D 0 || copy_count >=3D sizeof(rank->dimm->l=
+abel))
+> >                 return -EINVAL;
+> >
+> > -       strncpy(rank->dimm->label, data, copy_count);
+> > -       rank->dimm->label[copy_count] =3D '\0';
+> > +       strscpy_pad(rank->dimm->label, data, copy_count);
+>
+> That doc page says the problem with strncpy() is that it doesn't guarante=
+e to
+> NUL terminate the target string. But this code is aware of that limitatio=
+n and
+> zaps a '\0' at the end to be sure.
+>
+> So this code doesn't suffer from the potential problems.
 
-In this case, strncpy is being used specifically for its NUL-padding
-behavior (and has been commented as such). Moreover, the destination
-string is not required to be NUL-terminated [2].
+Right, the original code did not have an existing bug due to the
+reason you mentioned. However, I'm pretty keen on eliminating uses of
+this interface treewide as there is always a more robust and less
+ambiguous option.
 
-We can use a more robust and less ambiguous interface in
-`memcpy_and_pad` which makes the code more readable and even eliminates
-the need for that comment.
 
-Let's also use `strnlen` instead of `strlen()` with an upper-bounds
-check as this is intrinsically a part of `strnlen`.
+>
+> If it is going to be fixed, then some further analysis of the original co=
+de
+> would be wise. Just replacing with strscpy_pad() means the code probably
+> still suffers from the "needless performance penalty" also mentioned in
+> the deprecation document.
+Got it, sending a v2 that prefers `strscpy` to `strscpy_pad` resolving
+the performance issue.
 
-Also included in this patch is a simple 1:1 change of `strncpy` to
-`strscpy` for ipmi_ssif.c. If NUL-padding is wanted here as well then we
-should opt again for `strscpy_pad`.
+>
+> -Tony
+>
 
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://lore.kernel.org/all/ZQEADYBl0uZ1nX60@mail.minyard.net/ [2]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Cc: Kees Cook <keescook@chromium.org>
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Changes in v2:
-- use memcpy_and_pad (thanks Corey)
-- Link to v1: https://lore.kernel.org/r/20230912-strncpy-drivers-char-ipmi-ipmi-v1-1-cc43e0d1cae6@google.com
----
- drivers/char/ipmi/ipmi_msghandler.c | 11 +++--------
- drivers/char/ipmi/ipmi_ssif.c       |  2 +-
- 2 files changed, 4 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
-index 186f1fee7534..d6f14279684d 100644
---- a/drivers/char/ipmi/ipmi_msghandler.c
-+++ b/drivers/char/ipmi/ipmi_msghandler.c
-@@ -5377,20 +5377,15 @@ static void send_panic_events(struct ipmi_smi *intf, char *str)
- 
- 	j = 0;
- 	while (*p) {
--		int size = strlen(p);
-+		int size = strnlen(p, 11);
- 
--		if (size > 11)
--			size = 11;
- 		data[0] = 0;
- 		data[1] = 0;
- 		data[2] = 0xf0; /* OEM event without timestamp. */
- 		data[3] = intf->addrinfo[0].address;
- 		data[4] = j++; /* sequence # */
--		/*
--		 * Always give 11 bytes, so strncpy will fill
--		 * it with zeroes for me.
--		 */
--		strncpy(data+5, p, 11);
-+
-+		memcpy_and_pad(data+5, 11, p, size, '\0');
- 		p += size;
- 
- 		ipmi_panic_request_and_wait(intf, &addr, &msg);
-diff --git a/drivers/char/ipmi/ipmi_ssif.c b/drivers/char/ipmi/ipmi_ssif.c
-index 3b921c78ba08..edcb83765dce 100644
---- a/drivers/char/ipmi/ipmi_ssif.c
-+++ b/drivers/char/ipmi/ipmi_ssif.c
-@@ -1940,7 +1940,7 @@ static int new_ssif_client(int addr, char *adapter_name,
- 		}
- 	}
- 
--	strncpy(addr_info->binfo.type, DEVICE_NAME,
-+	strscpy(addr_info->binfo.type, DEVICE_NAME,
- 		sizeof(addr_info->binfo.type));
- 	addr_info->binfo.addr = addr;
- 	addr_info->binfo.platform_data = addr_info;
-
----
-base-commit: 2dde18cd1d8fac735875f2e4987f11817cc0bc2c
-change-id: 20230912-strncpy-drivers-char-ipmi-ipmi-dda47b3773fd
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
-
+Thanks for the timely review!
+Justin
