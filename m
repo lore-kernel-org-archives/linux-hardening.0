@@ -2,248 +2,143 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E3FEE0214
-	for <linux-hardening@archiver.kernel.org>; Wed, 13 Sep 2023 23:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACCDEEE0214
+	for <linux-hardening@archiver.kernel.org>; Wed, 13 Sep 2023 23:54:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233269AbjIMXmO (ORCPT
+        id S233172AbjIMXyW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 13 Sep 2023 19:42:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60834 "EHLO
+        Wed, 13 Sep 2023 19:54:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233252AbjIMXmO (ORCPT
+        with ESMTP id S233145AbjIMXyV (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 13 Sep 2023 19:42:14 -0400
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6554CFF
-        for <linux-hardening@vger.kernel.org>; Wed, 13 Sep 2023 16:42:09 -0700 (PDT)
-Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-68fbd5cd0ceso274418b3a.1
-        for <linux-hardening@vger.kernel.org>; Wed, 13 Sep 2023 16:42:09 -0700 (PDT)
+        Wed, 13 Sep 2023 19:54:21 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A404E64
+        for <linux-hardening@vger.kernel.org>; Wed, 13 Sep 2023 16:54:18 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-1c1e780aa95so2584665ad.3
+        for <linux-hardening@vger.kernel.org>; Wed, 13 Sep 2023 16:54:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1694648529; x=1695253329; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qhJToYTNQgE0Hp2zNwcVoJ6UineNQbf397W3Yx/XnQM=;
-        b=XIvDZc7Bh8u1mm86VX/zcCV1n59N+zXmBuqf7vjj7a78yLHYUYSX4TeWRaA0MjHIRG
-         VDiGpBU6iNP9zw5ffRYsww/Vld1qCoDx4lymkPqhJvpzhKfDf0vBkRgSBFjCu3Sn8uL1
-         WrsK/hnCW7NLTlD1ZquHIZY8xtVxg4bRE6WHs=
+        d=chromium.org; s=google; t=1694649257; x=1695254057; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TmQ1vlrBfUMvjYgfJYVMsqlQZ4GMxfIJbcG1jqAE/6c=;
+        b=KYGwYidmtfdn/dlj8oYuvfxjws2xHrEMd1iOLoC73SvwTPuBPVk/NAVOoZucY9ON2W
+         pVP7B0D8lORNTfDupoplEYpU+aNS0d75NfcbJHeVO7n7ViWQgLVu2W2Dvp0ioDx2MUw4
+         zUS+XOy3nJ0xTf+v3jtCiX2uAuA2VX1mgIIsE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694648529; x=1695253329;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qhJToYTNQgE0Hp2zNwcVoJ6UineNQbf397W3Yx/XnQM=;
-        b=Gbo/5866XIDiGu5u6ioWapAG10YBG9fnlCpNuhckF/NBpfHfuctrXx7s3hToDgva0F
-         dUZcDbhWK0akNAMYbDghozuk1wKoicXWKBT6eKca5Lok//PHvVyuLFhSVaKrRdMzcJto
-         tBHfEX8bOwP2UtKsgjxJodxhsVOwLfrjx00SBHYnymBG5m6JGvx76kcX4RrrWPB4rAWb
-         8wihrV5KyNVUcxrlG1RUl39iiw7LHXxXSiz8bmtf7wJTdZy8nkfGgyekHK+kqdPpcckT
-         pmOEzLG0oGkFIBQmFRxyG6EJJdko142jbN4TJm+Exra8WdxgDeNL+JHO9m6rIq2n4PZC
-         jeOg==
-X-Gm-Message-State: AOJu0YyFtShJAl3IFgBAYCgCWMzZMPz+8J2bqyovm93oOSbwVrlzDu58
-        pwLU9XIhEepXYjqKhQmYNWYdUw==
-X-Google-Smtp-Source: AGHT+IEb+U0u0xKyw5shUYDu9+LXf06vqwRCVkTois8kAxcLarz4lxMuR+oS1Pa4m67fU85hFGCeBQ==
-X-Received: by 2002:a05:6a20:4403:b0:14c:512c:60d9 with SMTP id ce3-20020a056a20440300b0014c512c60d9mr4576906pzb.27.1694648529242;
-        Wed, 13 Sep 2023 16:42:09 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1694649257; x=1695254057;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TmQ1vlrBfUMvjYgfJYVMsqlQZ4GMxfIJbcG1jqAE/6c=;
+        b=i3lXm9tyYj7S/dMdbBDOXltiejnA5rTCQj8lvp8nEsZ6M+6dn6jkGnK06dzx+YUxST
+         OBd0z3m92McemLd6IClW2+iLf0GOV0eFoBdp+n2P/mCgT/pY6cWCMKBPYi18M1isADLJ
+         gjhECvYmLSPYhSJqRM0slTTLup0t7fYJ21zYdu4SDfFuqzH+xX6VeS7g8lOVgGQVQSwY
+         TxbZILOpVfWziWTxyWxj6p7Vc3cWDBFAV52QWfgBt3F/mFRAm6sMJHMD8/01fk3Gz0Ic
+         oVUefmDcTD5tbYnqu/m3AcfeAFH3Y/ycFng+xHc1apbRRsrCVCScpxEqB9Nj6rqtuOJu
+         wH9g==
+X-Gm-Message-State: AOJu0YyIkojLlfckbXmFZUPMbYi+lSHN0xA99K8mRV0ARZlX4BIRML27
+        DWsUzmV70SlxpUhmI1jv6aRRzg==
+X-Google-Smtp-Source: AGHT+IHHGiBglQQYGl+V0dzdJ7yOnXC6bJL5bkPKwBmwTtLt+2HI3ODYI/P87KBasDHTHHpBjUAVCA==
+X-Received: by 2002:a17:903:32cf:b0:1bc:6c00:a2cf with SMTP id i15-20020a17090332cf00b001bc6c00a2cfmr5268838plr.53.1694649257342;
+        Wed, 13 Sep 2023 16:54:17 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id j12-20020a170902c3cc00b001b9e9edbf43sm169157plj.171.2023.09.13.16.42.08
+        by smtp.gmail.com with ESMTPSA id 19-20020a170902c11300b001b9d7c8f44dsm175831pli.182.2023.09.13.16.54.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Sep 2023 16:42:08 -0700 (PDT)
-Date:   Wed, 13 Sep 2023 16:42:07 -0700
+        Wed, 13 Sep 2023 16:54:16 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Mukesh Ojha <quic_mojha@quicinc.com>
-Cc:     corbet@lwn.net, agross@kernel.org, andersson@kernel.org,
-        konrad.dybcio@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        tony.luck@intel.com, gpiccoli@igalia.com,
-        mathieu.poirier@linaro.org, catalin.marinas@arm.com,
-        will@kernel.org, linus.walleij@linaro.org,
-        andy.shevchenko@gmail.com, vigneshr@ti.com, nm@ti.com,
-        matthias.bgg@gmail.com, kgene@kernel.org, alim.akhtar@samsung.com,
-        bmasney@redhat.com, quic_tsoni@quicinc.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, kernel@quicinc.com
-Subject: Re: [REBASE PATCH v5 11/17] qcom_minidump: Register ramoops region
- with minidump
-Message-ID: <202309131632.736914C0A3@keescook>
-References: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com>
- <1694429639-21484-12-git-send-email-quic_mojha@quicinc.com>
- <202309131624.0371D7E@keescook>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>, Johan Hovold <johan@kernel.org>,
+        Jessica Yu <jeyu@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+        Nick Desaulniers <ndesaulniers@gooogle.com>,
+        Miguel Ojeda <ojeda@kernel.org>, Joe Perches <joe@perches.com>,
+        linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH v2] module: Clarify documentation of module_param_call()
+Date:   Wed, 13 Sep 2023 16:54:14 -0700
+Message-Id: <20230913235407.gonna.817-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202309131624.0371D7E@keescook>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2680; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=pNcngmHYrvDvUxoczJLnyZVd+nVJiePsfxEYP+mQ0xQ=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlAkuma27fQb+IVRynpM5+rd9HXGa5bQURQdPIS
+ Wt4kC4XqSeJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQJLpgAKCRCJcvTf3G3A
+ JqnbD/42vpNafZEmP4ggRIZjSYnTNljv/5iB7eQ3O5HsbD5EckktJlskTx4nh5U8W6Aq19QK2ud
+ cpUdzg+pXwtgB6Cc8dE/tSxo48uWZInMrTT2ImA75OAgvHUoTukoDigzVuGNfNSrj8wwOCRNOgp
+ 5Z9CVTPYynY4j4HAk0gix5Vb7hKvTofXGIvDZxeKISf6PHd9GQaF+u90y3eC5GXv7jbXG2nUWMd
+ 4NXLlFB0iZ5C+DHn4YK8I3agbJcRGR8AQlUunhBMMCJxeU3HUju5BiP3kEbx4DBIYjBrSA/QU1O
+ 8/tjv6OGGs3fYvAQ3xMFWvy2TbCupCo1lfgi3O6BiRNEv50X+1mcQkXNI54EXvhubFgNuxReHZH
+ 2fm2UDFT/B5IPWfve0GeE0NEa0xOIb917g8ValpzTBbn1wwa4Cb37YnEqKyRG22SBqa0NqTjB0S
+ iHnXFAqAXLpyx//pUD7Ks9PGgleLZaU8eJRa/nFsbK56NHu5jc7aUphIaQMXjJqqPskKe0Nh2cp
+ a9nfclOGfgol2VuYRRce2AEQ7ntXiAMeFWHx2QThOLBUaiUJmwsZgGsG00gYWZtg80rEv3BEcAB
+ Wn7nkaHEBmeBdG64VcXqh1BpeLkTj3RmG8xmxghATmcI4X+1ERuTGdwGWV+cPvnJFVQAOrI4S6w
+ a+qnLUI SM27XxvQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Sep 13, 2023 at 04:30:04PM -0700, Kees Cook wrote:
-> On Mon, Sep 11, 2023 at 04:23:53PM +0530, Mukesh Ojha wrote:
-> > Register all the pstore frontend with minidump, so that they can
-> > be dumped as default Linux minidump region to be collected on
-> > SoC where minidump is enabled.
-> > 
-> > Helper functions is written in separate file and built along with
-> > the minidump driver, since it is client of minidump and also call
-> > it at appropriate place from minidump probe so that they always
-> > get registered.
-> > 
-> > While at it also rename the out minidump module object name during
-> > build as qcom_apss_minidump which basically depicts as Qualcomm
-> > Application processor subsystem minidump.
-> > 
-> > Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
-> > ---
-> >  drivers/soc/qcom/Kconfig                 |  1 +
-> >  drivers/soc/qcom/Makefile                |  3 +-
-> >  drivers/soc/qcom/qcom_minidump.c         |  4 ++
-> >  drivers/soc/qcom/qcom_ramoops_minidump.c | 88 ++++++++++++++++++++++++++++++++
-> >  drivers/soc/qcom/qcom_ramoops_minidump.h | 10 ++++
-> >  5 files changed, 105 insertions(+), 1 deletion(-)
-> >  create mode 100644 drivers/soc/qcom/qcom_ramoops_minidump.c
-> >  create mode 100644 drivers/soc/qcom/qcom_ramoops_minidump.h
-> > 
-> > diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-> > index 0ac7afc2c67d..9f1a1e128fef 100644
-> > --- a/drivers/soc/qcom/Kconfig
-> > +++ b/drivers/soc/qcom/Kconfig
-> > @@ -306,6 +306,7 @@ config QCOM_MINIDUMP
-> >  	tristate "QCOM APSS Minidump driver"
-> >  	depends on ARCH_QCOM || COMPILE_TEST
-> >  	depends on QCOM_SMEM
-> > +	depends on PSTORE
-> >  	help
-> >  	  This config enables linux core infrastructure for Application
-> >  	  processor subsystem (APSS) minidump collection i.e, it enables
-> > diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
-> > index 4b5f72f78d3c..69df41aba7a9 100644
-> > --- a/drivers/soc/qcom/Makefile
-> > +++ b/drivers/soc/qcom/Makefile
-> > @@ -33,4 +33,5 @@ obj-$(CONFIG_QCOM_ICC_BWMON)	+= icc-bwmon.o
-> >  qcom_ice-objs			+= ice.o
-> >  obj-$(CONFIG_QCOM_INLINE_CRYPTO_ENGINE)	+= qcom_ice.o
-> >  obj-$(CONFIG_QCOM_RPROC_MINIDUMP)	+= qcom_rproc_minidump.o
-> > -obj-$(CONFIG_QCOM_MINIDUMP)		+= qcom_minidump.o
-> > +obj-$(CONFIG_QCOM_MINIDUMP)		+= qcom_apss_minidump.o
-> > +qcom_apss_minidump-objs			+= qcom_minidump.o qcom_ramoops_minidump.o
-> > diff --git a/drivers/soc/qcom/qcom_minidump.c b/drivers/soc/qcom/qcom_minidump.c
-> > index 4ce36f154e89..7930a80b9100 100644
-> > --- a/drivers/soc/qcom/qcom_minidump.c
-> > +++ b/drivers/soc/qcom/qcom_minidump.c
-> > @@ -23,6 +23,7 @@
-> >  #include <soc/qcom/qcom_minidump.h>
-> >  
-> >  #include "qcom_minidump_internal.h"
-> > +#include "qcom_ramoops_minidump.h"
-> >  
-> >  /**
-> >   * struct minidump_ss_data - Minidump subsystem private data
-> > @@ -688,6 +689,8 @@ static int qcom_apss_minidump_probe(struct platform_device *pdev)
-> >  		return ret;
-> >  	}
-> >  
-> > +	qcom_ramoops_minidump_register(md->dev);
-> > +
-> >  	mutex_lock(&md_plist.plock);
-> >  	platform_set_drvdata(pdev, md);
-> >  	qcom_apss_register_pending_regions(md);
-> > @@ -701,6 +704,7 @@ static int qcom_apss_minidump_remove(struct platform_device *pdev)
-> >  	struct minidump *md = platform_get_drvdata(pdev);
-> >  	struct minidump_ss_data *mdss_data;
-> >  
-> > +	qcom_ramoops_minidump_unregister();
-> >  	mdss_data = md->apss_data;
-> >  	memset(mdss_data->md_ss_toc, cpu_to_le32(0), sizeof(struct minidump_subsystem));
-> >  	md = NULL;
-> > diff --git a/drivers/soc/qcom/qcom_ramoops_minidump.c b/drivers/soc/qcom/qcom_ramoops_minidump.c
-> > new file mode 100644
-> > index 000000000000..eb97310e3858
-> > --- /dev/null
-> > +++ b/drivers/soc/qcom/qcom_ramoops_minidump.c
-> > @@ -0,0 +1,88 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
-> > + */
-> > +
-> > +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> > +
-> > +#include <linux/device.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/pstore.h>
-> > +#include <linux/slab.h>
-> > +#include <soc/qcom/qcom_minidump.h>
-> > +
-> > +#include "qcom_ramoops_minidump.h"
-> > +
-> > +static LIST_HEAD(ramoops_region_list);
-> > +
-> > +struct md_region_list {
-> > +	struct qcom_minidump_region md_region;
-> > +	struct list_head list;
-> > +};
-> > +
-> > +static int qcom_ramoops_region_register(struct device *dev, int type)
-> > +{
-> > +	struct qcom_minidump_region *md_region;
-> > +	struct md_region_list *mdr_list;
-> > +	struct pstore_record record;
-> > +	unsigned int max_dump_cnt;
-> > +	phys_addr_t phys;
-> > +	const char *name;
-> > +	void *virt;
-> > +	size_t size;
-> > +	int ret;
-> > +
-> > +	record.type = type;
-> > +	record.id = 0;
-> > +	max_dump_cnt = 0;
-> > +	name = pstore_type_to_name(record.type);
-> > +	do {
-> > +		ret = pstore_region_defined(&record, &virt, &phys, &size, &max_dump_cnt);
-> 
-> I really don't want this happening: you're building your own pstore_record
-> (which has a common initializer that isn't used here) and manually
-> scraping the ramoops regions.
-> 
-> It looks to me like you just want a way to talk all the records in
-> pstore and then export their location to minidump. The record walker
-> needs to be in the pstore core, and likely should be shared with
-> fs/pstore/inode.c which does the same thing.
-> 
-> Then, in this code, you can just do something like:
-> 
-> 	for (record = pstore_get_record(NULL); record; record = pstore_get_record(record)) {
+Commit 9bbb9e5a3310 ("param: use ops in struct kernel_param, rather than
+get and set fns directly") added the comment that module_param_call()
+was deprecated, during a large scale refactoring to bring sanity to type
+casting back then. In 2017 following more cleanups, it became useful
+again as it wraps a common pattern of creating an ops struct for a
+given get/set pair:
 
-I just took another look at how records are stored, and I think the best
-API here is going to be something like registering a callback so that
-pstore can call into minidump for each record. (i.e. it can do this when
-reading the records into the pstore filesystem);
+  b2f270e87473 ("module: Prepare to convert all module_param_call() prototypes")
+  ece1996a21ee ("module: Do not paper over type mismatches in module_param_call()")
 
-	pstore_register_record_watcher(minidump_pstore_record)
+        static const struct kernel_param_ops __param_ops_##name = \
+                { .flags = 0, .set = _set, .get = _get }; \
+        __module_param_call(MODULE_PARAM_PREFIX, \
+                            name, &__param_ops_##name, arg, perm, -1, 0)
 
-Then pstore can make the calls if one is registered, in the middle of
-pstore_mkfile(), with all the correct locks held, etc:
+        __module_param_call(MODULE_PARAM_PREFIX, name, ops, arg, perm, -1, 0)
 
-	if (psi->record_watcher)
-		psi->record_watcher(record);
+Many users of module_param_cb() appear to be almost universally
+open-coding the same thing that module_param_call() does now. Don't
+discourage[1] people from using module_param_call(): clarify the comment
+to show that module_param_cb() is useful if you repeatedly use the same
+pair of get/set functions.
 
-And then minidump_pstore_record() can do this part:
+[1] https://lore.kernel.org/lkml/202308301546.5C789E5EC@keescook/
 
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Johan Hovold <johan@kernel.org>
+Cc: Jessica Yu <jeyu@kernel.org>
+Cc: Sagi Grimberg <sagi@grimberg.me>
+Cc: Nick Desaulniers <ndesaulniers@gooogle.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>
+Cc: Joe Perches <joe@perches.com>
+Cc: linux-modules@vger.kernel.org
+Reviewed-by: Miguel Ojeda <ojeda@kernel.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+Luis, I note that include/linux/moduleparam.h isn't in the MAINTAINERS
+file pattern. Perhaps you want to use include/linux/module*.h?
+---
+ include/linux/moduleparam.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-> 		if (ramoops_get_record_details(record, &virt, &phys) < 0)
-> 			continue
-> 		...
-> 		md_region->virt_addr = virt;
-> 		md_region->phys_addr = phys;
-> 		md_region->size = record->size;
-> 
-> 		ret = qcom_minidump_region_register(md_region);
-
--Kees
-
+diff --git a/include/linux/moduleparam.h b/include/linux/moduleparam.h
+index 962cd41a2cb5..d4452f93d060 100644
+--- a/include/linux/moduleparam.h
++++ b/include/linux/moduleparam.h
+@@ -293,7 +293,11 @@ struct kparam_array
+ 	= { __param_str_##name, THIS_MODULE, ops,			\
+ 	    VERIFY_OCTAL_PERMISSIONS(perm), level, flags, { arg } }
+ 
+-/* Obsolete - use module_param_cb() */
++/*
++ * Useful for describing a set/get pair used only once (i.e. for this
++ * parameter). For repeated set/get pairs (i.e. the same struct
++ * kernel_param_ops), use module_param_cb() instead.
++ */
+ #define module_param_call(name, _set, _get, arg, perm)			\
+ 	static const struct kernel_param_ops __param_ops_##name =	\
+ 		{ .flags = 0, .set = _set, .get = _get };		\
 -- 
-Kees Cook
+2.34.1
+
