@@ -2,161 +2,114 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37930EE3F3F
-	for <linux-hardening@archiver.kernel.org>; Wed, 13 Sep 2023 00:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0FD3EE3F3F
+	for <linux-hardening@archiver.kernel.org>; Wed, 13 Sep 2023 00:23:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237940AbjIMATd (ORCPT
+        id S237956AbjIMAXZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 12 Sep 2023 20:19:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33842 "EHLO
+        Tue, 12 Sep 2023 20:23:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237899AbjIMATc (ORCPT
+        with ESMTP id S237899AbjIMAXZ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 12 Sep 2023 20:19:32 -0400
-Received: from mail-oo1-xc34.google.com (mail-oo1-xc34.google.com [IPv6:2607:f8b0:4864:20::c34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1F5518D;
-        Tue, 12 Sep 2023 17:19:28 -0700 (PDT)
-Received: by mail-oo1-xc34.google.com with SMTP id 006d021491bc7-57355a16941so3954365eaf.2;
-        Tue, 12 Sep 2023 17:19:28 -0700 (PDT)
+        Tue, 12 Sep 2023 20:23:25 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F92C1706
+        for <linux-hardening@vger.kernel.org>; Tue, 12 Sep 2023 17:23:21 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d7b957fd276so5726275276.0
+        for <linux-hardening@vger.kernel.org>; Tue, 12 Sep 2023 17:23:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694564368; x=1695169168; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PfghF8uM8XDGpkVqp5zNnFzbHxUr4fq3CDSPLr1OUm4=;
-        b=m88zUcd8670VEgvBbw32sDZZTG0H/RcXPgEiMx9JujO/Pacc7PSxSwS7InXuGIQ5E2
-         WuW8YW90fdTNqNFZf/idI2STRXvzjMzlsbBQhmd5gp/gpiWI/bTYNRfnkO2qus6w8Gwf
-         nccT8BxUQc9RO3YfeG987K5NUqOEpxfS/5xPn2akxmFV2gpSbX9+Atenfziq9C8TTakS
-         49ECIDps5y24yuOhmnMNE/OO69K1dviscVgnvtw/JkcILHoDTK2lmUWcM9qu7hD0UGTA
-         K6nvcP37ZXirXaq+QauzUFy5J2VYNFzZ8e+n2iC7f9qQig0epxtLJ1kb2BCdSPzjy3kM
-         /aYQ==
+        d=google.com; s=20230601; t=1694564600; x=1695169400; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=NbuxA4XotXcYUZUFiaKPRN05lv4PRo8Np/CcjXc+17o=;
+        b=NIpsiQKOWS/7MY+TEzU2kDVaJo30KGmVInPyhmPnwRTniIrWT63z7KNPEaBAyRBNhc
+         rYnl0XbscgLNV5DETlXcARxZcR54xdlbEHpRQuAhtxl2bjoic3f68fj0xzsgmYz5YYZv
+         gHzhd1l0vNIIh0K59kmI7KBLa0ART1lCiXzcblCBPau0GCuT47j+jC3yDhA+gwXqGYdB
+         ZRqV1V6W6hvyqr06i0utmr2v3NFuUqqJUfA0RPreCEpwN1b1cv+5m62KAyMNLjmxQ5xo
+         c3AAwJl0ughmVIs982XSPGF8nVTIDdyR/gJh8yJpKlg8dyY2xqXMlYf5KRpa/XLRAJFE
+         9zYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694564368; x=1695169168;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=PfghF8uM8XDGpkVqp5zNnFzbHxUr4fq3CDSPLr1OUm4=;
-        b=p6CWeufUy4TGJ1oyPdJ5wgiU1CC6Sb3rau3KLq9iEjJhCvKqHXBB4cWoJ8tE5YBRo8
-         gZQCBqvQYGTff5JaaLAplLZDxIykhBxmS3FkpmR7UCUylVhM3sSlgcsW/7wz3orzjjM2
-         jh1Uk64HUCxxo9nY0EmE50QnCgy7tGq+eL2HsQt//2h5HYKT28oeu0Pz6S+/5FSNYC7V
-         U5eUV4ObqdwjCEUeWZZIjakj6vumLKcarrMKcQgH5vR+EqI5b5utK5x55ZTlpTusO2Hy
-         CPzGjljMFfQhMwGvxCBJmGEiV3FlJlGDl3rHlrRRiknwt1vnFdIeKyul1zME+Dz4fA2B
-         BuwA==
-X-Gm-Message-State: AOJu0YxNIznxftCi4TeLMirYPy6nW4s6h9DK73suWiNTX4t7DVJjSbSi
-        VorfHhSCq4Tl3jmrIKwQGyp8eGNPCA==
-X-Google-Smtp-Source: AGHT+IEBrNjwofXj6G2wwq3+fhWd4+Zn4fUTHi6Gsb1GQmmfdRCAV8o1YXWULOlI5YyVG6stpJilMQ==
-X-Received: by 2002:a4a:9cd6:0:b0:56e:4dea:bc5c with SMTP id d22-20020a4a9cd6000000b0056e4deabc5cmr1246154ook.8.1694564368168;
-        Tue, 12 Sep 2023 17:19:28 -0700 (PDT)
-Received: from serve.minyard.net (serve.minyard.net. [2001:470:b8f6:1b::1])
-        by smtp.gmail.com with ESMTPSA id a42-20020a4a98ad000000b0057327cecdd8sm4871916ooj.10.2023.09.12.17.19.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Sep 2023 17:19:27 -0700 (PDT)
-Sender: Corey Minyard <tcminyard@gmail.com>
-Received: from mail.minyard.net (unknown [IPv6:2001:470:b8f6:1b:be75:f593:c65b:4578])
-        by serve.minyard.net (Postfix) with ESMTPSA id EB8A41800E8;
-        Wed, 13 Sep 2023 00:19:26 +0000 (UTC)
-Date:   Tue, 12 Sep 2023 19:19:25 -0500
-From:   Corey Minyard <minyard@acm.org>
-To:     Justin Stitt <justinstitt@google.com>
-Cc:     openipmi-developer@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH] ipmi: refactor deprecated strncpy
-Message-ID: <ZQEADYBl0uZ1nX60@mail.minyard.net>
-Reply-To: minyard@acm.org
-References: <20230912-strncpy-drivers-char-ipmi-ipmi-v1-1-cc43e0d1cae6@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230912-strncpy-drivers-char-ipmi-ipmi-v1-1-cc43e0d1cae6@google.com>
+        d=1e100.net; s=20230601; t=1694564600; x=1695169400;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NbuxA4XotXcYUZUFiaKPRN05lv4PRo8Np/CcjXc+17o=;
+        b=Pk9pbIo2RdNzOwOad4fi5xS4TOsdpsmS58FCj8qevQ7hT0Liza2evKfN8CoTMXdMw4
+         5gRE12Qn9ZgG09qqNc7wFzRbYLJhgCywcF6kMsfL5uTREYbNXErdyKsVTwU0X6Yo3Edo
+         nIFD6EHDZ9iBDzH4ecovo8Fbo4xDKMYg9lW4ah9agO3mSVuQgprTa7dfqTGeVfHcsK2M
+         AeDDzzt3EDYzT0vZOj8KJIt1qrLsGrk3W7ov9ivxhSlSQ+yf59vslVvD1Y9HuFrtOW2M
+         1jsKRBuyFCBOHGQ7WiA7qdLzm4uoF3oSSOeDQbWbg++WhHq/D8gJ3GcDZZxcuXpsH/yf
+         59Qw==
+X-Gm-Message-State: AOJu0Yx3RpmoExkb37bQ3xnsIW+ELxWKDuX1gTsgG3uJy+ckDPZ3xXld
+        OHG0+V0L7tEGKWCgpzu8Dlism+ctTX65+VkStg==
+X-Google-Smtp-Source: AGHT+IEzZzx9zberWBT2WY6cLncjVWsBsFYEEHKmtQQiBe+cTrmgacI7YcfAfYsak67GLJNDGCXXcHpsKQ9WG8UEFw==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a25:cb06:0:b0:d7b:9830:c172 with SMTP
+ id b6-20020a25cb06000000b00d7b9830c172mr25636ybg.0.1694564600368; Tue, 12 Sep
+ 2023 17:23:20 -0700 (PDT)
+Date:   Wed, 13 Sep 2023 00:23:19 +0000
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAPYAAWUC/x2N0QrCMAxFf2Xk2UC7Cm7+isgoadwCo5akDmXs3
+ 60+Hc55uHcHYxU2uHY7KG9i8sxN/KkDWmKeGSU1h971wY0+oFXNVD6YVDZWQyovSStjqtOPk9V YuWWk4czRBfLhMkKbK8oPef+vbvfj+ALjgG25egAAAA==
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1694564599; l=1669;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=yxpoef4ix/G3dD6wBzM61GengyvUb1aXznzke49i5fE=; b=LK6YDxuF8xDLxBpgPtV7B8eVUfdzUg74U1QxP4sW23wn7GlIHROJup6YXorT5R5KwEtMdtf7a
+ xvX/rN434SgC4Z4otmwC393s8l2VT12r1xLY05lp472xukUzvPsqb8+
+X-Mailer: b4 0.12.3
+Message-ID: <20230913-strncpy-drivers-cpuidle-dt_idle_states-c-v1-1-d16a0dbe5658@google.com>
+Subject: [PATCH] cpuidle: dt: refactor deprecated strncpy
+From:   Justin Stitt <justinstitt@google.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Sep 12, 2023 at 11:43:05PM +0000, Justin Stitt wrote:
-> `strncpy` is deprecated for use on NUL-terminated destination strings [1].
-> 
-> In this case, strncpy is being used specifically for its NUL-padding
-> behavior (and has been commented as such). We can use a more robust and
-> less ambiguous interface in `strscpy_pad` which makes the code more
-> readable and even eliminates the need for that comment.
-> 
-> Let's also use `strnlen` instead of `strlen()` with an upper-bounds
-> check as this is intrinsically a part of `strnlen`.
-> 
-> Also included in this patch is a simple 1:1 change of `strncpy` to
-> `strscpy` for ipmi_ssif.c. If NUL-padding is wanted here as well then we
-> should opt again for `strscpy_pad`.
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Cc: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
->  drivers/char/ipmi/ipmi_msghandler.c | 11 +++--------
->  drivers/char/ipmi/ipmi_ssif.c       |  2 +-
->  2 files changed, 4 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
-> index 186f1fee7534..04f7622cb703 100644
-> --- a/drivers/char/ipmi/ipmi_msghandler.c
-> +++ b/drivers/char/ipmi/ipmi_msghandler.c
-> @@ -5377,20 +5377,15 @@ static void send_panic_events(struct ipmi_smi *intf, char *str)
->  
->  	j = 0;
->  	while (*p) {
-> -		int size = strlen(p);
-> +		int size = strnlen(p, 11);
->  
-> -		if (size > 11)
-> -			size = 11;
->  		data[0] = 0;
->  		data[1] = 0;
->  		data[2] = 0xf0; /* OEM event without timestamp. */
->  		data[3] = intf->addrinfo[0].address;
->  		data[4] = j++; /* sequence # */
-> -		/*
-> -		 * Always give 11 bytes, so strncpy will fill
-> -		 * it with zeroes for me.
-> -		 */
-> -		strncpy(data+5, p, 11);
-> +
-> +		strscpy_pad(data+5, p, 11);
+`strncpy` is deprecated for use on NUL-terminated destination strings [1].
 
-This is incorrect, the destination should *not* be nil terminated if the
-destination is full.  strncpy does exactly what is needed here.
+We should prefer more robust and less ambiguous string interfaces.
 
-A comment should be added here, this is not the first time this has been
-brought up.
+A suitable replacement is `strscpy` [2] due to the fact that it guarantees
+NUL-termination on the destination buffer. With this, we can also drop
+the now unnecessary `CPUIDLE_(NAME|DESC)_LEN - 1` pieces.
 
->  		p += size;
->  
->  		ipmi_panic_request_and_wait(intf, &addr, &msg);
-> diff --git a/drivers/char/ipmi/ipmi_ssif.c b/drivers/char/ipmi/ipmi_ssif.c
-> index 3b921c78ba08..edcb83765dce 100644
-> --- a/drivers/char/ipmi/ipmi_ssif.c
-> +++ b/drivers/char/ipmi/ipmi_ssif.c
-> @@ -1940,7 +1940,7 @@ static int new_ssif_client(int addr, char *adapter_name,
->  		}
->  	}
->  
-> -	strncpy(addr_info->binfo.type, DEVICE_NAME,
-> +	strscpy(addr_info->binfo.type, DEVICE_NAME,
->  		sizeof(addr_info->binfo.type));
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Note: build-tested only
+---
+ drivers/cpuidle/dt_idle_states.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-This one is good.
+diff --git a/drivers/cpuidle/dt_idle_states.c b/drivers/cpuidle/dt_idle_states.c
+index 12fec92a85fd..97feb7d8fb23 100644
+--- a/drivers/cpuidle/dt_idle_states.c
++++ b/drivers/cpuidle/dt_idle_states.c
+@@ -84,8 +84,8 @@ static int init_state_node(struct cpuidle_state *idle_state,
+ 	 *	replace with kstrdup and pointer assignment when name
+ 	 *	and desc become string pointers
+ 	 */
+-	strncpy(idle_state->name, state_node->name, CPUIDLE_NAME_LEN - 1);
+-	strncpy(idle_state->desc, desc, CPUIDLE_DESC_LEN - 1);
++	strscpy(idle_state->name, state_node->name, CPUIDLE_NAME_LEN);
++	strscpy(idle_state->desc, desc, CPUIDLE_DESC_LEN);
+ 	return 0;
+ }
+ 
 
--corey
+---
+base-commit: 2dde18cd1d8fac735875f2e4987f11817cc0bc2c
+change-id: 20230913-strncpy-drivers-cpuidle-dt_idle_states-c-c84ea03c1379
 
->  	addr_info->binfo.addr = addr;
->  	addr_info->binfo.platform_data = addr_info;
-> 
-> ---
-> base-commit: 2dde18cd1d8fac735875f2e4987f11817cc0bc2c
-> change-id: 20230912-strncpy-drivers-char-ipmi-ipmi-dda47b3773fd
-> 
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
-> 
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
+
