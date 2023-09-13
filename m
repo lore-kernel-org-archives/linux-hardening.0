@@ -2,153 +2,89 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 119EAEE0217
-	for <linux-hardening@archiver.kernel.org>; Wed, 13 Sep 2023 23:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6DBEE0212
+	for <linux-hardening@archiver.kernel.org>; Wed, 13 Sep 2023 23:27:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231515AbjIMXYJ (ORCPT
+        id S233068AbjIMX1o (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 13 Sep 2023 19:24:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48882 "EHLO
+        Wed, 13 Sep 2023 19:27:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233143AbjIMXYI (ORCPT
+        with ESMTP id S231515AbjIMX1o (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 13 Sep 2023 19:24:08 -0400
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2B7A1BD1
-        for <linux-hardening@vger.kernel.org>; Wed, 13 Sep 2023 16:24:04 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1c0d5b16aacso2842745ad.1
-        for <linux-hardening@vger.kernel.org>; Wed, 13 Sep 2023 16:24:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1694647444; x=1695252244; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=McEVX1hx5k8f+NcqiKTD/lVS9HGO2QYi1j8mbG944+c=;
-        b=nfSprJwJVGxMYiZX6YXuG9lWVv8JSryTkdx3gsOj8IG+vs8bj+7g7pgu9PHCjJda+B
-         /wut+R4zuX/TFDfRj6ed7mWP8vIdHsqE0u3CeFH2Djx71QM80nBglEwaLiEHPKfmfx/0
-         Qu45pTW7IOEdyVCNXH+oFD+1Q7kojdqfovvs0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694647444; x=1695252244;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=McEVX1hx5k8f+NcqiKTD/lVS9HGO2QYi1j8mbG944+c=;
-        b=oqnjWjdY5kjRTTzqTqKvOtleVjUCmUeJ4Nqt0R03y+QC5QdxuQuCQR8GzKYpcUe+2c
-         QZVPvznZt407oCYa13Jh+LzmQK0rgoXKNAEHUgF5B06Bd79hmYZPzDWULdJlk2kFruju
-         I9tHGXc4FgWaqC+bqDQa57LWDw86OEnyogW+GYMu0mZKCMI+GlklEYT1+FuLVFyEKCK9
-         D7c/lAurf12ukORDzLEhIDYsW7ixCMDBzg1kxbJRo1GZbfaNWdmEqCjhEEpGoz0vs9kp
-         AMjf4yoajFagB9QlexblZI2tkEFt3olHv0ajvl0NlVFmKA3xFAS2kbt9H6DKNcFO2LVe
-         57YQ==
-X-Gm-Message-State: AOJu0Yy6Te5BpvbvAdOa8oJiYDJab5UenMgOt/0xNrqXXZVaFVRSDOsQ
-        z/HxAI4t3Z9t8916Qm7Nf/3btQ==
-X-Google-Smtp-Source: AGHT+IEhoRu0Lao0AX88usO4EFB8BidZ06eLDfk+p1OxG1nODfcmpktTieCBSCEMoiWnY1czPMaLqw==
-X-Received: by 2002:a17:902:d2c4:b0:1c0:d575:d28 with SMTP id n4-20020a170902d2c400b001c0d5750d28mr4287074plc.50.1694647444198;
-        Wed, 13 Sep 2023 16:24:04 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id j21-20020a170902c3d500b001bb8895848bsm163538plj.71.2023.09.13.16.24.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Sep 2023 16:24:03 -0700 (PDT)
-Date:   Wed, 13 Sep 2023 16:24:02 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Mukesh Ojha <quic_mojha@quicinc.com>
-Cc:     corbet@lwn.net, agross@kernel.org, andersson@kernel.org,
-        konrad.dybcio@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        tony.luck@intel.com, gpiccoli@igalia.com,
-        mathieu.poirier@linaro.org, catalin.marinas@arm.com,
-        will@kernel.org, linus.walleij@linaro.org,
-        andy.shevchenko@gmail.com, vigneshr@ti.com, nm@ti.com,
-        matthias.bgg@gmail.com, kgene@kernel.org, alim.akhtar@samsung.com,
-        bmasney@redhat.com, quic_tsoni@quicinc.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, kernel@quicinc.com
-Subject: Re: [REBASE PATCH v5 10/17] pstore: Add pstore_region_defined()
- helper and export it
-Message-ID: <202309131620.34EB0F6972@keescook>
-References: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com>
- <1694429639-21484-11-git-send-email-quic_mojha@quicinc.com>
+        Wed, 13 Sep 2023 19:27:44 -0400
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDEDC1BCB;
+        Wed, 13 Sep 2023 16:27:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=pRKVep8tw/s8sIQ3F3dLcxRmfmkpqBcJ/0UUTodWZc8=; b=FSfwnimiuTJG9Nm4GWjPkE+/Wl
+        tdV1zvdS6cLMU1eSiUbY8aNFgyY7VQe+ltAjMNDv/dFOBn2zXb2GJmoM0Q+HqNaldcCxZJd/HHbLS
+        BS2Utl/AQSnkp62Hq1Ba8VSl5CAjDs4/vWgUYs7tXto9ItzMznllk1eotmCw7YFN4Yb//dDV7CVvc
+        54SMFgAY1WobfE2n6xKuFEMcX8ZzeTOuD9dnL52KitAk8ad/sVhORTWorrkMhkBDt+Q0w1pZFo2rk
+        hA7/Xa6WGJW4FOIuxYkjT6WFQJl2lC/Rrm2ri36l78qEwhTEW/mywJIOwB8jeGiEic5YnFO/2b7PA
+        fXYiSf1A==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+        id 1qgZGK-005rzK-1u;
+        Wed, 13 Sep 2023 23:27:12 +0000
+Date:   Thu, 14 Sep 2023 00:27:12 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Christian Brauner <brauner@kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Tejun Heo <tj@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-hardening@vger.kernel.org,
+        cgroups@vger.kernel.org
+Subject: Re: [PATCH 03/19] fs: release anon dev_t in deactivate_locked_super
+Message-ID: <20230913232712.GC800259@ZenIV>
+References: <20230913111013.77623-1-hch@lst.de>
+ <20230913111013.77623-4-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1694429639-21484-11-git-send-email-quic_mojha@quicinc.com>
+In-Reply-To: <20230913111013.77623-4-hch@lst.de>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Sep 11, 2023 at 04:23:52PM +0530, Mukesh Ojha wrote:
-> There are users like Qualcomm minidump which is interested in
-> knowing the pstore frontend addresses and sizes from the backend
-> (ram) to be able to register it with firmware to finally collect
-> them during crash for debugging.
+On Wed, Sep 13, 2023 at 08:09:57AM -0300, Christoph Hellwig wrote:
+> Releasing an anon dev_t is a very common thing when freeing a
+> super_block, as that's done for basically any not block based file
+> system (modulo the odd mtd special case).  So instead of requiring
+> a special ->kill_sb helper and a lot of boilerplate in more complicated
+> file systems, just release the anon dev_t in deactivate_locked_super if
+> the super_block was using one.
 > 
-> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
-> ---
->  fs/pstore/platform.c   | 15 +++++++++++++++
->  fs/pstore/ram.c        | 42 ++++++++++++++++++++++++++++++++++++++++++
->  include/linux/pstore.h |  6 ++++++
->  3 files changed, 63 insertions(+)
-> 
-> diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
-> index e5bca9a004cc..fdac951059c1 100644
-> --- a/fs/pstore/platform.c
-> +++ b/fs/pstore/platform.c
-> @@ -139,6 +139,21 @@ enum pstore_type_id pstore_name_to_type(const char *name)
->  }
->  EXPORT_SYMBOL_GPL(pstore_name_to_type);
->  
-> +int pstore_region_defined(struct pstore_record *record,
-> +			  void **virt, phys_addr_t *phys,
-> +			  size_t *size, unsigned int *max_dump_cnt)
-> +{
-> +	if (!psinfo)
-> +		return -EINVAL;
-> +
-> +	record->psi = psinfo;
+> As the freeing is done after the main call to kill_super_notify, this
+> removes the need for having two slightly different call sites for it.
 
-Uh, this makes no sense to me. If this is a real pstore_record, you
-cannot just assign psi here.
+Huh?  At this stage in your series freeing is still in ->kill_sb()
+instances, after the calls of kill_anon_super() you've turned into
+the calls of generic_shutdown_super().
 
-> +
-> +	return psinfo->region_info ?
-> +	       psinfo->region_info(record, virt, phys, size, max_dump_cnt) :
-> +	       -EINVAL;
+You do split it off into a separate method later in the series, but
+at this point you are reopening the same UAF that had been dealt with
+in dc3216b14160 "super: ensure valid info".
 
-Common code style for this kind of thing is usually like this:
-
-	if (!psinfo->region_info)
-		return -EINVAL;
-
-	return psinfo->region_info(...)
-
-> +}
-> +EXPORT_SYMBOL_GPL(pstore_region_defined);
-> +
->  static void pstore_timer_kick(void)
->  {
->  	if (pstore_update_ms < 0)
-> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-> index ab551caa1d2a..62202f3ddf63 100644
-> --- a/fs/pstore/ram.c
-> +++ b/fs/pstore/ram.c
-> @@ -437,6 +437,47 @@ static int ramoops_pstore_erase(struct pstore_record *record)
->  	return 0;
->  }
->  
-> +static int ramoops_region_info(struct pstore_record *record,
-> +			       void **virt, phys_addr_t *phys,
-> +			       size_t *size, unsigned int *max_dump_cnt)
-
-But there's a larger problem here -- "virt", "phys" and likely
-"max_dump_cnt" are aspects _specific to the ram backend_. This can't be
-a generic pstore interface.
-
-I'm not opposed to it being exposed only from ramoops, though.
-
-But I think you'll want a pstore generic way to iterate over the
-records...
-
--- 
-Kees Cook
+Either move the introduction of ->free_sb() before that one, or
+split it into lifting put_anon_bdev() (left here) and getting rid
+of kill_anon_super() (after ->free_sb() introduction).
