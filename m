@@ -2,63 +2,64 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C260EE3F39
-	for <linux-hardening@archiver.kernel.org>; Wed, 13 Sep 2023 01:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E8B9EE3F3F
+	for <linux-hardening@archiver.kernel.org>; Wed, 13 Sep 2023 01:28:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229805AbjIMB03 (ORCPT
+        id S234247AbjIMB2U (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 12 Sep 2023 21:26:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34236 "EHLO
+        Tue, 12 Sep 2023 21:28:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231414AbjIMB03 (ORCPT
+        with ESMTP id S232749AbjIMB2T (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 12 Sep 2023 21:26:29 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 168D510F6
-        for <linux-hardening@vger.kernel.org>; Tue, 12 Sep 2023 18:26:25 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d7e7e70fa52so5960204276.0
-        for <linux-hardening@vger.kernel.org>; Tue, 12 Sep 2023 18:26:25 -0700 (PDT)
+        Tue, 12 Sep 2023 21:28:19 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 891B71706
+        for <linux-hardening@vger.kernel.org>; Tue, 12 Sep 2023 18:28:15 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d8109d3a3bbso1606181276.2
+        for <linux-hardening@vger.kernel.org>; Tue, 12 Sep 2023 18:28:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1694568384; x=1695173184; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1694568495; x=1695173295; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=42nX+Yobaw2ArjAJMtixTW6UpiTmF6+i2Dxfn02Z0cM=;
-        b=dDCdEz1fpnSHxepx83WCRH6TxueF2PrFTF8xE0PqV8lD6CcSnXFvBRYsERpkl0g+y5
-         ngWQ206tiRUPlkWT6ZwYSbOmXdgOuvzWugM8Xry8WnxI0OKyrfNBbY3BGucBKp4cG9Dc
-         vhGa9/3ftdtsBH9IitvEk9II2x7gErFUE7ZKtqPU0Hx/sNCLKy8o/dmKYqrAPJXLDkZO
-         iVEy/2RIkNQjSCpBBioGYNKsch5/23HLA8uWPcwJxnP/XJ5G6Ki+hAjyrSPmEE8JnEKZ
-         qYzfF6ZtOh/sfllSFOSchfsW7gevP10aoUfxI/6rXENV6Pjl/EbQR8oNml9s9xtCnW+X
-         TiNg==
+        bh=yCqiEa2a8nIymMx7rh7S0DSXU/QWPryO0phU6kWLCVE=;
+        b=zlprAgTJgIJXT3nwJ+MFsq/tmMuG7AWBvhAwOnHZIaNdVJbYgtXHaItMdKbs5olMkJ
+         Mbj1dAa/XLxLtxrO+sVATMuPUpD054zxfY36pwN8gXyktkP1fhl2IxGrU6EN65fz4/xr
+         jQZ0wEyajq4MYHAy2gm5q/4K5xtFd/28tjcCfYSEOjCWchvgAEZ/oH8AIQmiW+azGGfe
+         c/rY8WHoEM/L4R/i8FHuxm1brrBZLKzHmgoNpSplPm8ycpSISO8/SFYPFmbhHcr+soHa
+         BUPeJnjAmE/vSEbv6vSuxTA7wvw4nWP8z5MNsBhVpHezIQnFQv540xofb19awUmij5n2
+         Nrew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694568384; x=1695173184;
+        d=1e100.net; s=20230601; t=1694568495; x=1695173295;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=42nX+Yobaw2ArjAJMtixTW6UpiTmF6+i2Dxfn02Z0cM=;
-        b=SRM3FjbfvnlnDknq3gkGzXLb+VjZtPB18EKb0SEzNdsXZi3c/hS/mGqKfyWftk1mpH
-         QRhUgrr33TQP8WlgVticvWhmIRzWu6RX1WwhvRD2L+3zd14raIxt0PmyhcwlHm/rUU/S
-         IKvEBzBC2Jjq8slpVSrm6wTLpzJYuNOsiSRV3CZMuKGw+9UDmGY+0QajWuuIGFTejJBj
-         2gYPbbxRu/OGMHHisJ0Ig5SCZMxDjP+SMxJ4aUu2RP+YFstC/gvVd6sL78+D4GTpe+RA
-         Cx+6Sz/rD2hFrGij1phYSg2uI+o+R8DOKT39k29lq2rWrqVCJTQFYU/9R7WNi8PMcxNU
-         wnVQ==
-X-Gm-Message-State: AOJu0YyYSfsLFI5RdgdPH99HiKcqCzf+BdEGMvkSkLRd4NzwyMke4iLm
-        nx34XLwRFXXAAbkgWoJ5NWw5QstJXSAYRM0ihw==
-X-Google-Smtp-Source: AGHT+IGkNiQddAhnPvwHE7ghwj6ge/1myo/zEeDIjB62oFApi1y/kkndrD8b9r+BvlQVjbD8aZXgt4KvvKpLUB/nyA==
+        bh=yCqiEa2a8nIymMx7rh7S0DSXU/QWPryO0phU6kWLCVE=;
+        b=gx4TDxAmcGiKvS0fa9yOOcTusFUcKukv70YST05tuVL1AdJaw9WQ5uPghmAr1klMiX
+         rFPYc4Od7+7VkhGOG0pbQqhFs97u3fwwEIkcgNHQISZx72YlhjSCEgW6kxZ548MVcFVM
+         5v9Tr2wiqTvbLp07vbuhvSA2PbkZ5bqjfhYew0U1BHft6mke1BDMAHenmznFA1ZEAUag
+         4r/RBbPeEqXft5yyqlvEMJB4+hJwMpVgbewIlvTueWC4GikLaHfRQbetIuHMksM8ftVc
+         QHVLCkchrLcUUMEJvsZXu81N3NEG6nE8fdjbacmZKmQXa1Yr0KsGE6SOUm0ugbQr8QDE
+         5ocw==
+X-Gm-Message-State: AOJu0Ywx04An8kMqWCAB1xfZzhRTkMkdFl5va0V2FgH2Jow66L0iCFtd
+        TdyhHKTZGrEC+1ja6uBknU5QtEDpEGWYPomvLg==
+X-Google-Smtp-Source: AGHT+IG9jYbXDqQ2MGuyWeWiHc67c8YoVJvzpuJFxXoAyAEbmuLzIAXquE4h9Krg0Xej9il/nyHwcSf19MDOQxwo5w==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6902:a06:b0:d80:bea:cbb4 with SMTP
- id cb6-20020a0569020a0600b00d800beacbb4mr23981ybb.5.1694568384316; Tue, 12
- Sep 2023 18:26:24 -0700 (PDT)
-Date:   Wed, 13 Sep 2023 01:26:23 +0000
+ (user=justinstitt job=sendgmr) by 2002:a25:cf57:0:b0:d7f:809a:9787 with SMTP
+ id f84-20020a25cf57000000b00d7f809a9787mr25547ybg.1.1694568494833; Tue, 12
+ Sep 2023 18:28:14 -0700 (PDT)
+Date:   Wed, 13 Sep 2023 01:28:13 +0000
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAL4PAWUC/x3NywqDMBCF4VeRWTuQixT0VUqRNJm0s2iUGZGK+
- O6GbA58m/OfoCRMClN3gtDOykupsH0H8RvKh5BTNTjjvBmtR92kxPXAJLyTKFIKsc38i7MemhW rH3Z8G2PdEDzUq1Uo879lnq/rugHkG0Y5dgAAAA==
+X-B4-Tracking: v=1; b=H4sIAC0QAWUC/5XNTQqDQAyG4avIrJsyP22pXfUeRURnogaqI4kMF
+ fHunXqDbgJPFt+7KUEmFPUoNsWYSChOGfZUKD80U49AIVtZbZ0ujQNZePLzCoEpIQtgaPxx6tH
+ XskonkH0zZau1sZfGqTw1M3b0OTKvKnsgWSKvRzWZ3/fPQDJgIFhn76Vp9bXVzz7G/o1nH0dV7 fv+BZMFMzjZAAAA
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1694568383; l=1656;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1694568493; l=2154;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=a+gdXE2iWidU2yJZiH3fOKoz8Q6mDOLlN7Uv1qN4FVM=; b=Mv8MVJCcN9KBnoTF4HQ0BVotYpkN2Wjo4juaPRuNp8uPo5pEqbChN82bq4BeMkgADnBRqtVFK
- +R9SEb26aU+CM1gp5LAYEhYqCmLFurfQbnjWO9fMyFQtOFccAepTpld
+ bh=AWBmh6vqolUPI9k2kK+RgtaYzFJyIqpMGxFIUsXlqtc=; b=tWhd4sSBGUjk/dE42wrncFzUu7cnY4UMj6bzWSGfWi6sJHP3XzmxBhPfWjRmkJV1Tc9sl1ZbT
+ 5p8B0BuhMpbCce1oKqePnqhzhsgZFViKPd7ZcDNAU+onynxh1UMJKYl
 X-Mailer: b4 0.12.3
-Message-ID: <20230913-strncpy-drivers-edac-edac_mc_sysfs-c-v1-1-d232891b05b0@google.com>
-Subject: [PATCH] EDAC/mc_sysfs: refactor deprecated strncpy
+Message-ID: <20230913-strncpy-drivers-edac-edac_mc_sysfs-c-v2-1-2d2e6bd43642@google.com>
+Subject: [PATCH v2] EDAC/mc_sysfs: refactor deprecated strncpy
 From:   Justin Stitt <justinstitt@google.com>
 To:     Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
         James Morse <james.morse@arm.com>,
@@ -88,13 +89,17 @@ Link: https://github.com/KSPP/linux/issues/90
 Cc: linux-hardening@vger.kernel.org
 Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
+Changes in v2:
+- included refactor of another strncpy in same file
+- Link to v1: https://lore.kernel.org/r/20230913-strncpy-drivers-edac-edac_mc_sysfs-c-v1-1-d232891b05b0@google.com
+---
 Note: build-tested only.
 ---
- drivers/edac/edac_mc_sysfs.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/edac/edac_mc_sysfs.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/edac/edac_mc_sysfs.c b/drivers/edac/edac_mc_sysfs.c
-index 15f63452a9be..b303309a63cf 100644
+index 15f63452a9be..ce025a20288c 100644
 --- a/drivers/edac/edac_mc_sysfs.c
 +++ b/drivers/edac/edac_mc_sysfs.c
 @@ -229,8 +229,7 @@ static ssize_t channel_dimm_label_store(struct device *dev,
@@ -107,6 +112,15 @@ index 15f63452a9be..b303309a63cf 100644
  
  	return count;
  }
+@@ -535,7 +534,7 @@ static ssize_t dimmdev_label_store(struct device *dev,
+ 	if (copy_count == 0 || copy_count >= sizeof(dimm->label))
+ 		return -EINVAL;
+ 
+-	strncpy(dimm->label, data, copy_count);
++	strscpy_pad(dimm->label, data, copy_count);
+ 	dimm->label[copy_count] = '\0';
+ 
+ 	return count;
 
 ---
 base-commit: 2dde18cd1d8fac735875f2e4987f11817cc0bc2c
