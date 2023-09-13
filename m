@@ -2,127 +2,96 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9502EE49B7
-	for <linux-hardening@archiver.kernel.org>; Wed, 13 Sep 2023 01:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A23CA0ED1
+	for <linux-hardening@archiver.kernel.org>; Wed, 13 Sep 2023 03:47:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238038AbjIMBa3 (ORCPT
+        id S232367AbjIMDru (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 12 Sep 2023 21:30:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50188 "EHLO
+        Tue, 12 Sep 2023 23:47:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238050AbjIMBa2 (ORCPT
+        with ESMTP id S230052AbjIMDrt (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 12 Sep 2023 21:30:28 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CEFB1716
-        for <linux-hardening@vger.kernel.org>; Tue, 12 Sep 2023 18:30:24 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id 4fb4d7f45d1cf-52a23227567so8087132a12.0
-        for <linux-hardening@vger.kernel.org>; Tue, 12 Sep 2023 18:30:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1694568623; x=1695173423; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NS8SEj+1zaeA13vnr/L8JD68DOc4KH8YhBKHOXjjHQI=;
-        b=0CKsJXsxQ8TswVwNwUNdDH7eLV67PcFnQSsd6nrwoVNNT/T5txHT+CSsm5tFWRHcaI
-         vei6NMkoP25iFoBCh23Rv5/tnX0iZsy7eI2ZOnq7lMVA+vqeowkFUhpVohO1rrwPmRng
-         vpb5jmF9eH/RqDAn6IfJYFBbAdjL2SLMEfNeTxEqVy3iLJ1X1o80qP+5N+q1uJ5Gz1oX
-         YOkx0BdbtO9Q+hwnOc+/lP1UlYejo2pCEob92QWEfFsZ+MozWpS2d7iRp+VyXKSQkNnn
-         tG3S9KEmddNSRVgYJIoo/naXGPQ9l0ztchsQLRwrt0xyDzjTM0yqMNwNqbhgv9+ZqwL6
-         DkGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694568623; x=1695173423;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NS8SEj+1zaeA13vnr/L8JD68DOc4KH8YhBKHOXjjHQI=;
-        b=i8N2CppXykzsI71M4Z6fZdHIPDI0jRCRZYb7dTgaLw5m6+zYVLeO4k/3IRixpviJNx
-         656HRmEmBLgwA7oGH689SgjbrDWTdsQrxHVV9kNg+WReeEyfv2M3wcEtrrL2qTw3aseM
-         GLew+Uj778pIKTjAso/ua5B82FS0CpAQcZdgv+X9opWp2lfItdBZRsOkeR7C09pJHYmT
-         JVsFjYQ7Zrvm0XTmnx1gaBx+ZQ2n1cuVXEvepcqcykeJW71Y0KlWYU9+6CO6/G0ANFAa
-         ye92Fsrw4HjXCwjtcyLlB4ETBMd870bmyGyIkMqnrzNzNNTbL8cHE9xtuyM5XlcDQHnL
-         QK7Q==
-X-Gm-Message-State: AOJu0YypqRblbyHNT4K9LGOXEcbzzzdIWpXmz93uNmMIqJTjsjDWf3QT
-        mFdaztcc//g3pyM7dIFjXRq8hb3zJyUrYNzFFi29pw==
-X-Google-Smtp-Source: AGHT+IF+8PrFLp3wpewuEVn+bHYYKVvRzHZnMOswySbpEt5vKlsjn5f/ngk42dnNqgqMGcsc86hGujDbw+1tV3NCYD8=
-X-Received: by 2002:a17:907:762f:b0:9a9:fb1c:34ff with SMTP id
- jy15-20020a170907762f00b009a9fb1c34ffmr682229ejc.73.1694568622990; Tue, 12
- Sep 2023 18:30:22 -0700 (PDT)
+        Tue, 12 Sep 2023 23:47:49 -0400
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D791F1722;
+        Tue, 12 Sep 2023 20:47:44 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R831e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=joseph.qi@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0Vrz42ty_1694576860;
+Received: from 30.221.128.188(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0Vrz42ty_1694576860)
+          by smtp.aliyun-inc.com;
+          Wed, 13 Sep 2023 11:47:41 +0800
+Message-ID: <923f3dd1-c264-9d5f-3f17-1212493a7daa@linux.alibaba.com>
+Date:   Wed, 13 Sep 2023 11:47:39 +0800
 MIME-Version: 1.0
-References: <20230913-strncpy-drivers-edac-edac_mc_sysfs-c-v1-1-d232891b05b0@google.com>
-In-Reply-To: <20230913-strncpy-drivers-edac-edac_mc_sysfs-c-v1-1-d232891b05b0@google.com>
-From:   Justin Stitt <justinstitt@google.com>
-Date:   Tue, 12 Sep 2023 18:30:12 -0700
-Message-ID: <CAFhGd8pGikrizmQPF7qD6C4NcYqBVqECEUqb0j_4fuS3rqeeXA@mail.gmail.com>
-Subject: Re: [PATCH] EDAC/mc_sysfs: refactor deprecated strncpy
-To:     Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Robert Richter <rric@kernel.org>
-Cc:     linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.15.0
+Subject: Re: [PATCH v2] fs: ocfs2: Replace strlcpy with sysfs_emit
+Content-Language: en-US
+To:     Azeem Shaikh <azeemshaikh38@gmail.com>,
+        akpm <akpm@linux-foundation.org>
+Cc:     linux-hardening@vger.kernel.org, ocfs2-devel@lists.linux.dev,
+        linux-kernel@vger.kernel.org,
+        Christian Brauner <brauner@kernel.org>,
+        Dave Chinner <dchinner@redhat.com>, Jan Kara <jack@suse.cz>,
+        Jeff Layton <jlayton@kernel.org>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Kees Cook <keescook@chromium.org>
+References: <20230831193827.1528867-1-azeemshaikh38@gmail.com>
+From:   Joseph Qi <joseph.qi@linux.alibaba.com>
+In-Reply-To: <20230831193827.1528867-1-azeemshaikh38@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Sep 12, 2023 at 6:26=E2=80=AFPM Justin Stitt <justinstitt@google.co=
-m> wrote:
->
-> `strncpy` is deprecated for use on NUL-terminated destination strings [1]=
-.
->
-> We should prefer more robust and less ambiguous string interfaces.
->
-> A suitable replacement is `strscpy_pad` [2] due to the fact that it guara=
-ntees
-> NUL-termination on the destination buffer whilst maintaining the
-> NUL-padding behavior that `strncpy` provides. This may not be strictly
-> necessary but as I couldn't understand what this code does I wanted to
-> ensure that the functionality is the same.
->
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strn=
-cpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.h=
-tml [2]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+
+
+On 9/1/23 3:38 AM, Azeem Shaikh wrote:
+> strlcpy() reads the entire source buffer first.
+> This read may exceed the destination size limit.
+> This is both inefficient and can lead to linear read
+> overflows if a source string is not NUL-terminated [1].
+> In an effort to remove strlcpy() completely [2], replace
+> strlcpy() here with sysfs_emit().
+> 
+> Direct replacement is safe here since its ok for `kernel_param_ops.get()`
+> to return -errno [3].
+> 
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+> [2] https://github.com/KSPP/linux/issues/89
+> [3] https://elixir.bootlin.com/linux/v6.5/source/include/linux/moduleparam.h#L52
+> 
+> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+
 > ---
-> Note: build-tested only.
-> ---
->  drivers/edac/edac_mc_sysfs.c | 3 +--
+> v2:
+>  * Removes patch [1/2] which replaced module_param_call with module_param_cb.
+>  * Use sysfs_emit instead of strscpy.
+> 
+> v1:
+>  * https://lore.kernel.org/all/20230830215426.4181755-1-azeemshaikh38@gmail.com/
+> 
+>  fs/ocfs2/dlmfs/dlmfs.c |    3 +--
 >  1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/drivers/edac/edac_mc_sysfs.c b/drivers/edac/edac_mc_sysfs.c
-> index 15f63452a9be..b303309a63cf 100644
-> --- a/drivers/edac/edac_mc_sysfs.c
-> +++ b/drivers/edac/edac_mc_sysfs.c
-> @@ -229,8 +229,7 @@ static ssize_t channel_dimm_label_store(struct device=
- *dev,
->         if (copy_count =3D=3D 0 || copy_count >=3D sizeof(rank->dimm->lab=
-el))
->                 return -EINVAL;
->
-> -       strncpy(rank->dimm->label, data, copy_count);
-> -       rank->dimm->label[copy_count] =3D '\0';
-> +       strscpy_pad(rank->dimm->label, data, copy_count);
->
->         return count;
+> 
+> diff --git a/fs/ocfs2/dlmfs/dlmfs.c b/fs/ocfs2/dlmfs/dlmfs.c
+> index 81265123ce6c..b38776ba3306 100644
+> --- a/fs/ocfs2/dlmfs/dlmfs.c
+> +++ b/fs/ocfs2/dlmfs/dlmfs.c
+> @@ -80,8 +80,7 @@ static int param_set_dlmfs_capabilities(const char *val,
+>  static int param_get_dlmfs_capabilities(char *buffer,
+>  					const struct kernel_param *kp)
+>  {
+> -	return strlcpy(buffer, DLMFS_CAPABILITIES,
+> -		       strlen(DLMFS_CAPABILITIES) + 1);
+> +	return sysfs_emit(buffer, DLMFS_CAPABILITIES);
 >  }
->
-> ---
-> base-commit: 2dde18cd1d8fac735875f2e4987f11817cc0bc2c
-> change-id: 20230913-strncpy-drivers-edac-edac_mc_sysfs-c-e619b00124a3
->
-> Best regards,
+>  module_param_call(capabilities, param_set_dlmfs_capabilities,
+>  		  param_get_dlmfs_capabilities, NULL, 0444);
 > --
-> Justin Stitt <justinstitt@google.com>
->
-
-I typo'd my grep and initially missed refactoring another instance of
-strncpy in this same file. v2 [1] resolves this.
-
-[1]: https://lore.kernel.org/r/20230913-strncpy-drivers-edac-edac_mc_sysfs-=
-c-v2-1-2d2e6bd43642@google.com
+> 2.42.0.283.g2d96d420d3-goog
+> 
