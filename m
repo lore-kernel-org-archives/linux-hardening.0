@@ -2,67 +2,67 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0FD3EE3F3F
-	for <linux-hardening@archiver.kernel.org>; Wed, 13 Sep 2023 00:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02100EE3F39
+	for <linux-hardening@archiver.kernel.org>; Wed, 13 Sep 2023 00:32:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237956AbjIMAXZ (ORCPT
+        id S230105AbjIMAch (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 12 Sep 2023 20:23:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36828 "EHLO
+        Tue, 12 Sep 2023 20:32:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237899AbjIMAXZ (ORCPT
+        with ESMTP id S231393AbjIMAcg (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 12 Sep 2023 20:23:25 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F92C1706
-        for <linux-hardening@vger.kernel.org>; Tue, 12 Sep 2023 17:23:21 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d7b957fd276so5726275276.0
-        for <linux-hardening@vger.kernel.org>; Tue, 12 Sep 2023 17:23:21 -0700 (PDT)
+        Tue, 12 Sep 2023 20:32:36 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77D801706
+        for <linux-hardening@vger.kernel.org>; Tue, 12 Sep 2023 17:32:32 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-59b6083fa00so50243527b3.0
+        for <linux-hardening@vger.kernel.org>; Tue, 12 Sep 2023 17:32:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1694564600; x=1695169400; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1694565151; x=1695169951; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=NbuxA4XotXcYUZUFiaKPRN05lv4PRo8Np/CcjXc+17o=;
-        b=NIpsiQKOWS/7MY+TEzU2kDVaJo30KGmVInPyhmPnwRTniIrWT63z7KNPEaBAyRBNhc
-         rYnl0XbscgLNV5DETlXcARxZcR54xdlbEHpRQuAhtxl2bjoic3f68fj0xzsgmYz5YYZv
-         gHzhd1l0vNIIh0K59kmI7KBLa0ART1lCiXzcblCBPau0GCuT47j+jC3yDhA+gwXqGYdB
-         ZRqV1V6W6hvyqr06i0utmr2v3NFuUqqJUfA0RPreCEpwN1b1cv+5m62KAyMNLjmxQ5xo
-         c3AAwJl0ughmVIs982XSPGF8nVTIDdyR/gJh8yJpKlg8dyY2xqXMlYf5KRpa/XLRAJFE
-         9zYw==
+        bh=cQl22gfvlENoqC9ZXlr6AUA6g9l8rOoYr5Ou8EedNjo=;
+        b=TOXMPhmVpM30/v3Ym1W6cdGCRVibsfIJLOLJuMfjfT6sEFT//4WtFgtG0UXWa2OCLk
+         LsRtjpUG44wbUYYb32scmeJuItVfmjfQ5tKIfYEas9kLtcT6UT9QYUxZJsYj/xR7+PZp
+         ELZcwn/CSvBcmo577/p3DQs6bXyZaB5WzETWa9Bt0/C0hQn4s74CTxQol/z8jkew+5t0
+         6mCxABgWwFN1QvGhaqa/Sj+N7WheRzwJG0cDjoq1/bG8oWdVRnDOGsxpijrD4P0dJYhV
+         EHNogQoppCtbXx1YyfUruvexHA5ML5DUoEVwM9e5RkF2ZLF+VEI9QMpMaZQhqDc9RlG4
+         /raQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694564600; x=1695169400;
+        d=1e100.net; s=20230601; t=1694565151; x=1695169951;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=NbuxA4XotXcYUZUFiaKPRN05lv4PRo8Np/CcjXc+17o=;
-        b=Pk9pbIo2RdNzOwOad4fi5xS4TOsdpsmS58FCj8qevQ7hT0Liza2evKfN8CoTMXdMw4
-         5gRE12Qn9ZgG09qqNc7wFzRbYLJhgCywcF6kMsfL5uTREYbNXErdyKsVTwU0X6Yo3Edo
-         nIFD6EHDZ9iBDzH4ecovo8Fbo4xDKMYg9lW4ah9agO3mSVuQgprTa7dfqTGeVfHcsK2M
-         AeDDzzt3EDYzT0vZOj8KJIt1qrLsGrk3W7ov9ivxhSlSQ+yf59vslVvD1Y9HuFrtOW2M
-         1jsKRBuyFCBOHGQ7WiA7qdLzm4uoF3oSSOeDQbWbg++WhHq/D8gJ3GcDZZxcuXpsH/yf
-         59Qw==
-X-Gm-Message-State: AOJu0Yx3RpmoExkb37bQ3xnsIW+ELxWKDuX1gTsgG3uJy+ckDPZ3xXld
-        OHG0+V0L7tEGKWCgpzu8Dlism+ctTX65+VkStg==
-X-Google-Smtp-Source: AGHT+IEzZzx9zberWBT2WY6cLncjVWsBsFYEEHKmtQQiBe+cTrmgacI7YcfAfYsak67GLJNDGCXXcHpsKQ9WG8UEFw==
+        bh=cQl22gfvlENoqC9ZXlr6AUA6g9l8rOoYr5Ou8EedNjo=;
+        b=em7Lot+XvdWPiZuDXNHCNR5IuTg0S52rTQxFYiQT2rf7NqzGTgm9zQbc4vALNEWKsY
+         /TBA7CbYheHrEmOv3CRg5wf6w48RpfZgh8JxV621FxMeAy47zdwQ9dI3XxpHi1KTt3RJ
+         P2Vj2xreKUlRlnLtgTxZa7eEc2wlC0eRmIo1QvM8QyFR0M6jaQv/MRYh6omQkEurES6V
+         Rfm09GCaiN2uu0Zbp/Y2FVP8JVgLHdYHovoYtGNr6AQHOhPUROIdF9OJY3+XBZ2KAM4B
+         joisQrsXekpBbYkqWTJLOwDRi1lrpCmSRQsC1ceMcLEn+WHTelaUc2N/LUTEBWcrGMKC
+         aQWg==
+X-Gm-Message-State: AOJu0Yyw5EjlbGK8p0mJQE9JRwYUlnPI97/7XgMs1uZ88+KKCxjV0IFX
+        J+vgieUBXr9u0OloK0KmA+KxrIZ9+jLZyT5KIA==
+X-Google-Smtp-Source: AGHT+IHoVWkYS1QIi63uxbOLxBnLNCBYs5NDQ+6C3gkVkJrVL7u/DLT38IB8YsEgrz4fMCxjhNeLFvbuEF8Pyu7LvA==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a25:cb06:0:b0:d7b:9830:c172 with SMTP
- id b6-20020a25cb06000000b00d7b9830c172mr25636ybg.0.1694564600368; Tue, 12 Sep
- 2023 17:23:20 -0700 (PDT)
-Date:   Wed, 13 Sep 2023 00:23:19 +0000
+ (user=justinstitt job=sendgmr) by 2002:a25:f824:0:b0:d07:7001:495b with SMTP
+ id u36-20020a25f824000000b00d077001495bmr23740ybd.11.1694565151782; Tue, 12
+ Sep 2023 17:32:31 -0700 (PDT)
+Date:   Wed, 13 Sep 2023 00:32:31 +0000
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAPYAAWUC/x2N0QrCMAxFf2Xk2UC7Cm7+isgoadwCo5akDmXs3
- 60+Hc55uHcHYxU2uHY7KG9i8sxN/KkDWmKeGSU1h971wY0+oFXNVD6YVDZWQyovSStjqtOPk9V YuWWk4czRBfLhMkKbK8oPef+vbvfj+ALjgG25egAAAA==
+X-B4-Tracking: v=1; b=H4sIAB4DAWUC/y2NQQrCMBAAv1L27ELaiqV+RaTE7cYuaBI2MbSU/
+ t0gnoa5zOyQWIUTXJsdlIskCb5Ke2qAFuufjDJXh850vRnbHlNWT3HDWaWwJiTdYg5ItsjnjV6 yhvWPabEvJHQXGgcarDOPM9RuVHay/p63+3F8ARydvrWDAAAA
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1694564599; l=1669;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1694565150; l=1681;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=yxpoef4ix/G3dD6wBzM61GengyvUb1aXznzke49i5fE=; b=LK6YDxuF8xDLxBpgPtV7B8eVUfdzUg74U1QxP4sW23wn7GlIHROJup6YXorT5R5KwEtMdtf7a
- xvX/rN434SgC4Z4otmwC393s8l2VT12r1xLY05lp472xukUzvPsqb8+
+ bh=bOgFzN8SV0Qi4vEgDu2BIfI1a2yF4o5ibhxUCjl2z5s=; b=WToZdgDM5Ly/+mHpiu1w7j8NAZvAWbO/Dnsor3phmGalGk7ChrcEfY8n208HdrWqz2DC/h2HV
+ 5U4mxlaEIuxD9LgvsFARKZ9O2ZBhpeaKhEsFEFYxbz+EAERaz0Gnbto
 X-Mailer: b4 0.12.3
-Message-ID: <20230913-strncpy-drivers-cpuidle-dt_idle_states-c-v1-1-d16a0dbe5658@google.com>
-Subject: [PATCH] cpuidle: dt: refactor deprecated strncpy
+Message-ID: <20230913-strncpy-drivers-crypto-cavium-nitrox-nitrox_hal-c-v1-1-937411a7bc7d@google.com>
+Subject: [PATCH] crypto: cavium/nitrox - refactor deprecated strncpy
 From:   Justin Stitt <justinstitt@google.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org,
         Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
@@ -72,11 +72,14 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 `strncpy` is deprecated for use on NUL-terminated destination strings [1].
 
-We should prefer more robust and less ambiguous string interfaces.
+We know `hw.partname` is supposed to be NUL-terminated by its later use with seq_printf:
+| nitrox_debugfs.c +25
+|      seq_printf(s, "  Part Name: %s\n", ndev->hw.partname);
+
+Let's prefer a more robust and less ambiguous string interface.
 
 A suitable replacement is `strscpy` [2] due to the fact that it guarantees
-NUL-termination on the destination buffer. With this, we can also drop
-the now unnecessary `CPUIDLE_(NAME|DESC)_LEN - 1` pieces.
+NUL-termination on the destination buffer.
 
 Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
 Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
@@ -84,30 +87,28 @@ Link: https://github.com/KSPP/linux/issues/90
 Cc: linux-hardening@vger.kernel.org
 Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
-Note: build-tested only
+Note: build-tested only.
 ---
- drivers/cpuidle/dt_idle_states.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/crypto/cavium/nitrox/nitrox_hal.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/cpuidle/dt_idle_states.c b/drivers/cpuidle/dt_idle_states.c
-index 12fec92a85fd..97feb7d8fb23 100644
---- a/drivers/cpuidle/dt_idle_states.c
-+++ b/drivers/cpuidle/dt_idle_states.c
-@@ -84,8 +84,8 @@ static int init_state_node(struct cpuidle_state *idle_state,
- 	 *	replace with kstrdup and pointer assignment when name
- 	 *	and desc become string pointers
- 	 */
--	strncpy(idle_state->name, state_node->name, CPUIDLE_NAME_LEN - 1);
--	strncpy(idle_state->desc, desc, CPUIDLE_DESC_LEN - 1);
-+	strscpy(idle_state->name, state_node->name, CPUIDLE_NAME_LEN);
-+	strscpy(idle_state->desc, desc, CPUIDLE_DESC_LEN);
- 	return 0;
+diff --git a/drivers/crypto/cavium/nitrox/nitrox_hal.c b/drivers/crypto/cavium/nitrox/nitrox_hal.c
+index 13b137410b75..1b5abdb6cc5e 100644
+--- a/drivers/crypto/cavium/nitrox/nitrox_hal.c
++++ b/drivers/crypto/cavium/nitrox/nitrox_hal.c
+@@ -647,7 +647,7 @@ void nitrox_get_hwinfo(struct nitrox_device *ndev)
+ 		 ndev->hw.revision_id);
+ 
+ 	/* copy partname */
+-	strncpy(ndev->hw.partname, name, sizeof(ndev->hw.partname));
++	strscpy(ndev->hw.partname, name, sizeof(ndev->hw.partname));
  }
  
+ void enable_pf2vf_mbox_interrupts(struct nitrox_device *ndev)
 
 ---
 base-commit: 2dde18cd1d8fac735875f2e4987f11817cc0bc2c
-change-id: 20230913-strncpy-drivers-cpuidle-dt_idle_states-c-c84ea03c1379
+change-id: 20230913-strncpy-drivers-crypto-cavium-nitrox-nitrox_hal-c-f6c97c7af0b4
 
 Best regards,
 --
