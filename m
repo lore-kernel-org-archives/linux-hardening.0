@@ -2,179 +2,188 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 165FEEDEC49
-	for <linux-hardening@archiver.kernel.org>; Wed, 13 Sep 2023 12:12:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD5FEDEC70
+	for <linux-hardening@archiver.kernel.org>; Wed, 13 Sep 2023 15:13:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231615AbjIMMMY (ORCPT
+        id S236367AbjIMPNS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 13 Sep 2023 08:12:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59314 "EHLO
+        Wed, 13 Sep 2023 11:13:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230351AbjIMMMY (ORCPT
+        with ESMTP id S229854AbjIMPNR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 13 Sep 2023 08:12:24 -0400
-Received: from mail-yw1-x112a.google.com (mail-yw1-x112a.google.com [IPv6:2607:f8b0:4864:20::112a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B80F19A8;
-        Wed, 13 Sep 2023 05:12:20 -0700 (PDT)
-Received: by mail-yw1-x112a.google.com with SMTP id 00721157ae682-59bdad64411so3015367b3.3;
-        Wed, 13 Sep 2023 05:12:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694607139; x=1695211939; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:reply-to:message-id:subject:cc:to:from:date
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=VMfUWi7uEiikg8h+TQM4VgISRlAro9zeV1dQSMavJsQ=;
-        b=Vl0Bi4i6H2xAU0Ry1Xsn8cTN2TgDD0Q2hJ4qFcSLKqEBZ0qiw0ium3Ks2QWIk03+vC
-         pJWDS2v1FqjIJf03km6+EOM1KqHkN28KYl5B3o8avZx/6b3p06VITrEMZao64EqwREmu
-         +Y/Xl4UlDMLDgjzG9wEAeTUmLBtT5gxzB/67mr1KEKfrm0gXTBsaDYzs05SJ015vvK4I
-         sX4QkSDrIkhRGfWSDqNsUjF8cs5yggeTESmI3IrN2avKxOjHG2HvXwEd/1eAO5v4cDMm
-         yu54oNCbkWDpv/g4/26oBBoWRnSPS25MrqR6MtcxuJpFtrhkLxJR/Eh/509tjV+oIaZH
-         kk6g==
+        Wed, 13 Sep 2023 11:13:17 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 74393C1
+        for <linux-hardening@vger.kernel.org>; Wed, 13 Sep 2023 08:12:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1694617952;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Uje044vKCrnPM/zlrRSYe7sHyJsaq71H01/FgvMXUZI=;
+        b=IkYW2CX2lngfd15Q7LWn7hbrGk+JPTFWxfBiS9EJd0QfQ1q+2M8BgbFdlJAYVy0b+Kh9ol
+        8H+F1O0H57PBOdKPNEIv3Pi3uV16OoDdgbLkDxIrmvY821wrk9hi5wl8EOA8eo4XSLLztp
+        5e/SqcXHKy1xMgqZCwbtROnODmgnW3Q=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-567-2YKXu30vPnqha4tzHj0RHQ-1; Wed, 13 Sep 2023 11:12:31 -0400
+X-MC-Unique: 2YKXu30vPnqha4tzHj0RHQ-1
+Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-52c86e441d4so4682603a12.0
+        for <linux-hardening@vger.kernel.org>; Wed, 13 Sep 2023 08:12:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694607139; x=1695211939;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:reply-to:message-id:subject:cc:to:from:date
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VMfUWi7uEiikg8h+TQM4VgISRlAro9zeV1dQSMavJsQ=;
-        b=WRxgbo1LdJP8hV+42ZEf5T5WF+0qgxcBM4gRfWSOJD6ZNY9VYaonU8EumNqR33/z9a
-         q9vgBmDNPQ6/Jr58c9HJgvUTBDKKdEXjQjYQ3oVz4aMJXIULj6sgKG+jTBvagTP7shKV
-         IU8mr5ZY08dIgJD3D6spo67/CtUsbE/5P7i2xIPRBSg2lyjexkDAIilbfrreXC2YzXUp
-         s1T6a2lEbRhEIyYOT4CxAh6gcFpxVzycpF6WEpvNJjI6uRFKu4zxLIVD/JON2qQHMu5B
-         373BLFA/zcBjauLAG5b6A2Q5/eaXnVwhU7bd0Q7zU+IwdoVjGWALT3IuJU2V31u9sc4E
-         VNTw==
-X-Gm-Message-State: AOJu0YzH1qIYhVrp/a0G7Cx188rls9mnD9SSq+kHfjzUkqEdNHZ7pKhe
-        WedGRZoLsTLR64+zydLDfA==
-X-Google-Smtp-Source: AGHT+IGGq79qc4DvxFGR46q/Y+a7KFcQ0u7ESGCv/o288lPSFM8VvWWrL6gQHQNsUU70Vg4I1LgdOA==
-X-Received: by 2002:a0d:d78b:0:b0:576:98e0:32a6 with SMTP id z133-20020a0dd78b000000b0057698e032a6mr2153641ywd.14.1694607139304;
-        Wed, 13 Sep 2023 05:12:19 -0700 (PDT)
-Received: from serve.minyard.net (serve.minyard.net. [2001:470:b8f6:1b::1])
-        by smtp.gmail.com with ESMTPSA id i123-20020a0df881000000b0059935151fa1sm3069110ywf.126.2023.09.13.05.12.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Sep 2023 05:12:18 -0700 (PDT)
-Sender: Corey Minyard <tcminyard@gmail.com>
-Received: from mail.minyard.net (unknown [IPv6:2001:470:b8f6:1b:be75:f593:c65b:4578])
-        by serve.minyard.net (Postfix) with ESMTPSA id CD9621800E8;
-        Wed, 13 Sep 2023 12:12:17 +0000 (UTC)
-Date:   Wed, 13 Sep 2023 07:12:16 -0500
-From:   Corey Minyard <minyard@acm.org>
-To:     Justin Stitt <justinstitt@google.com>
-Cc:     openipmi-developer@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH] ipmi: refactor deprecated strncpy
-Message-ID: <ZQGnIHgYigD4K9jo@mail.minyard.net>
-Reply-To: minyard@acm.org
-References: <20230912-strncpy-drivers-char-ipmi-ipmi-v1-1-cc43e0d1cae6@google.com>
- <ZQEADYBl0uZ1nX60@mail.minyard.net>
- <CAFhGd8rst8gyJ1FVSsbOADt+h2ECwv7fqh_YNHmn6anV_zGC1A@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1694617950; x=1695222750;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Uje044vKCrnPM/zlrRSYe7sHyJsaq71H01/FgvMXUZI=;
+        b=YlOXSruYDt7TkoIQRRKURcG8tcN8ZeqoOuiW7MgWczgimgV17w40vINySfqrvaM8i9
+         5WpwpASUjm4HltUTFT/X/xlA+d/peQkAdI5NZxlrep/8alXW9A+9I2cMqh4ee2T1o5h9
+         fjy2ETw2P76mmfB71FUF4OuBqg55ck9XEFdhIUGlWRDph/BCWHfTrd5xannRZgkIWVgX
+         vlYi5jGn7d2GL8c+MonxGIs3fTIzcwyC3L8QZgd/AKsz4BdOW+MziSVhyt+40O8flLuT
+         xWUkbfemVtoYlz+XChPMpFynSGoqTNWyJ11GANvrxujfLLQSMMpSJLO/Q76+vMnqRHsr
+         ELiA==
+X-Gm-Message-State: AOJu0Yyja+B8YtuSwWyqYP+4Dfo8jIq0nkWxQXeXtuSanD7uUm4XUXsy
+        IRoyVki8Mh3w1z7JuOKnvQ0IXqv1UwKvchvyS7fvJVTkyLKbNb0ko/Btv7mvD4l5/Bw420pdh+/
+        032W/rd0n8Scl69KuVOvxKzkLDG3Y
+X-Received: by 2002:aa7:d84f:0:b0:52e:8973:6482 with SMTP id f15-20020aa7d84f000000b0052e89736482mr2590396eds.6.1694617950040;
+        Wed, 13 Sep 2023 08:12:30 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF9W94WOA+QNkki6iu4CpuHL6ub+g/xneEY+b2v79vj2GRXp0yOurmJtg+W9pf3JYjgWYoRRg==
+X-Received: by 2002:aa7:d84f:0:b0:52e:8973:6482 with SMTP id f15-20020aa7d84f000000b0052e89736482mr2590367eds.6.1694617949672;
+        Wed, 13 Sep 2023 08:12:29 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id b8-20020aa7cd08000000b0052595b17fd4sm7366564edw.26.2023.09.13.08.12.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 Sep 2023 08:12:29 -0700 (PDT)
+Message-ID: <953f2e40-7b0e-27b5-b017-a1ac2175bb47@redhat.com>
+Date:   Wed, 13 Sep 2023 17:12:28 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFhGd8rst8gyJ1FVSsbOADt+h2ECwv7fqh_YNHmn6anV_zGC1A@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v3] x86/platform/uv: refactor deprecated strcpy and
+ strncpy
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Justin Stitt <justinstitt@google.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Mike Travis <mike.travis@hpe.com>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+References: <20230905-strncpy-arch-x86-platform-uv-uv_nmi-v3-1-3efd6798b569@google.com>
+ <ZPhsSzHG6YMViOSk@gmail.com>
+ <bce762af-0da7-bb5e-1580-b42803c183f6@redhat.com>
+ <ZPiH/ds9oeimXDdb@gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <ZPiH/ds9oeimXDdb@gmail.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US, nl
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Sep 12, 2023 at 05:55:02PM -0700, Justin Stitt wrote:
-> On Tue, Sep 12, 2023 at 5:19 PM Corey Minyard <minyard@acm.org> wrote:
-> >
-> > On Tue, Sep 12, 2023 at 11:43:05PM +0000, Justin Stitt wrote:
-> > > `strncpy` is deprecated for use on NUL-terminated destination strings [1].
-> > >
-> > > In this case, strncpy is being used specifically for its NUL-padding
-> > > behavior (and has been commented as such). We can use a more robust and
-> > > less ambiguous interface in `strscpy_pad` which makes the code more
-> > > readable and even eliminates the need for that comment.
-> > >
-> > > Let's also use `strnlen` instead of `strlen()` with an upper-bounds
-> > > check as this is intrinsically a part of `strnlen`.
-> > >
-> > > Also included in this patch is a simple 1:1 change of `strncpy` to
-> > > `strscpy` for ipmi_ssif.c. If NUL-padding is wanted here as well then we
-> > > should opt again for `strscpy_pad`.
-> > >
-> > > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> > > Link: https://github.com/KSPP/linux/issues/90
-> > > Cc: linux-hardening@vger.kernel.org
-> > > Cc: Kees Cook <keescook@chromium.org>
-> > > Signed-off-by: Justin Stitt <justinstitt@google.com>
-> > > ---
-> > >  drivers/char/ipmi/ipmi_msghandler.c | 11 +++--------
-> > >  drivers/char/ipmi/ipmi_ssif.c       |  2 +-
-> > >  2 files changed, 4 insertions(+), 9 deletions(-)
-> > >
-> > > diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
-> > > index 186f1fee7534..04f7622cb703 100644
-> > > --- a/drivers/char/ipmi/ipmi_msghandler.c
-> > > +++ b/drivers/char/ipmi/ipmi_msghandler.c
-> > > @@ -5377,20 +5377,15 @@ static void send_panic_events(struct ipmi_smi *intf, char *str)
-> > >
-> > >       j = 0;
-> > >       while (*p) {
-> > > -             int size = strlen(p);
-> > > +             int size = strnlen(p, 11);
-> > >
-> > > -             if (size > 11)
-> > > -                     size = 11;
-> > >               data[0] = 0;
-> > >               data[1] = 0;
-> > >               data[2] = 0xf0; /* OEM event without timestamp. */
-> > >               data[3] = intf->addrinfo[0].address;
-> > >               data[4] = j++; /* sequence # */
-> > > -             /*
-> > > -              * Always give 11 bytes, so strncpy will fill
-> > > -              * it with zeroes for me.
-> > > -              */
-> > > -             strncpy(data+5, p, 11);
-> > > +
-> > > +             strscpy_pad(data+5, p, 11);
-> >
-> > This is incorrect, the destination should *not* be nil terminated if the
-> > destination is full.  strncpy does exactly what is needed here.
+Hi,
+
+On 9/6/23 16:09, Ingo Molnar wrote:
 > 
-> Could we use `memcpy_and_pad()` as this matches the behavior of
-> strncpy in this case? I understand strncpy works here but I'm really
-> keen on snuffing out all its uses -- treewide.
-
-Sure, I think "memcpy_and_pad(data + 5, 11, p, size, 0);" should work.
-And that's self-documenting.
-
--corey
-
+> * Hans de Goede <hdegoede@redhat.com> wrote:
 > 
-> >
-> > A comment should be added here, this is not the first time this has been
-> > brought up.
-> >
-> > >               p += size;
-> > >
-> > >               ipmi_panic_request_and_wait(intf, &addr, &msg);
-> > > diff --git a/drivers/char/ipmi/ipmi_ssif.c b/drivers/char/ipmi/ipmi_ssif.c
-> > > index 3b921c78ba08..edcb83765dce 100644
-> > > --- a/drivers/char/ipmi/ipmi_ssif.c
-> > > +++ b/drivers/char/ipmi/ipmi_ssif.c
-> > > @@ -1940,7 +1940,7 @@ static int new_ssif_client(int addr, char *adapter_name,
-> > >               }
-> > >       }
-> > >
-> > > -     strncpy(addr_info->binfo.type, DEVICE_NAME,
-> > > +     strscpy(addr_info->binfo.type, DEVICE_NAME,
-> > >               sizeof(addr_info->binfo.type));
-> >
-> > This one is good.
-> >
-> > -corey
-> >
-> > >       addr_info->binfo.addr = addr;
-> > >       addr_info->binfo.platform_data = addr_info;
-> > >
-> > > ---
-> > > base-commit: 2dde18cd1d8fac735875f2e4987f11817cc0bc2c
-> > > change-id: 20230912-strncpy-drivers-char-ipmi-ipmi-dda47b3773fd
-> > >
-> > > Best regards,
-> > > --
-> > > Justin Stitt <justinstitt@google.com>
-> > >
+>> Hi Ingo,
+>>
+>> On 9/6/23 14:10, Ingo Molnar wrote:
+>>>
+>>> * Justin Stitt <justinstitt@google.com> wrote:
+>>>
+>>>> Both `strncpy` and `strcpy` are deprecated for use on NUL-terminated
+>>>> destination strings [1].
+>>>>
+>>>> We can see that `arg` and `uv_nmi_action` are expected to be
+>>>> NUL-terminated strings due to their use within `strcmp()` and format
+>>>> strings respectively.
+>>>>
+>>>> With this in mind, a suitable replacement is `strscpy` [2] due to the
+>>>> fact that it guarantees NUL-termination on its destination buffer
+>>>> argument which is _not_ the case for `strncpy` or `strcpy`!
+>>>>
+>>>> In this case, we can drop both the forced NUL-termination and the `... -1` from:
+>>>> |       strncpy(arg, val, ACTION_LEN - 1);
+>>>> as `strscpy` implicitly has this behavior.
+>>>>
+>>>> Link: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings[1]
+>>>> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+>>>> Link: https://github.com/KSPP/linux/issues/90
+>>>> Cc: linux-hardening@vger.kernel.org
+>>>> Signed-off-by: Justin Stitt <justinstitt@google.com>
+>>>
+>>>>  arch/x86/platform/uv/uv_nmi.c | 7 +++----
+>>>>  1 file changed, 3 insertions(+), 4 deletions(-)
+>>>
+>>> Note that this commit is already upstream:
+>>>
+>>>   1e6f01f72855 ("x86/platform/uv: Refactor code using deprecated strcpy()/strncpy() interfaces to use strscpy()")
+>>>
+>>> Below is the delta your v3 patch has compared to what is upstream - is it 
+>>> really necessary to open code it, instead of using strnchrnul() as your 
+>>> original patch did? Am I missing anything here?
+>>
+>> The new version is a result of a review from my because IMHO:
+>>
+>> 	strscpy(arg, val, strnchrnul(val, sizeof(arg)-1, '\n') - val + 1);
+>>
+>> Is really unreadable / really hard to reason about if
+>> this is actually correct and does not contain any
+>> of by 1 bugs.
+>>
+>> Note that the diff of v3 compared to the code before v2 landed is
+>> actually smaller now and actually matches the subject of:
+>> "refactor deprecated strcpy and strncpy"
+>>
+>> Where as v2 actually touches more code / refactor things
+>> which fall outside of a "one change per patch" approach.
+>> The:
+>>
+>> 	p = strchr(arg, '\n');
+>> 	if (p)
+>> 		*p = '\0';
+>>
+>> was already there before v2 landed.
+>>
+>> I also suggested to do a follow up patch to change things to:
+>>
+>> 	strscpy(arg, val, sizeof(arg));
+>> 	p = strchrnul(arg, '\n');
+>> 	*p = '\0';
+>>
+>> Which IMHO is much more readable then what has landed
+>> now. But since v2 has already landed I guess the best
+>> thing is just to stick with what we have upstream now...
+> 
+> Well, how about we do a delta patch with all the changes
+> you suggested? I'm all for readability.
+
+So I started doing this and notices that all the string
+manipulation + parsing done here is really just a DYI
+implementation of sysfs_match_string().
+
+So I have prepared a patch to switch to sysfs_match_string(),
+which completely removes the need to make a copy of the val
+string.
+
+I'll submit the patch right after this email.
+
+Regards,
+
+Hans
+
+
