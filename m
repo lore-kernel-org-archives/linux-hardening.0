@@ -2,100 +2,98 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF354CA5534
-	for <linux-hardening@archiver.kernel.org>; Wed, 13 Sep 2023 09:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D133ECA5536
+	for <linux-hardening@archiver.kernel.org>; Wed, 13 Sep 2023 10:25:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239017AbjIMJqJ (ORCPT
+        id S239669AbjIMK0A (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 13 Sep 2023 05:46:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41976 "EHLO
+        Wed, 13 Sep 2023 06:26:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229644AbjIMJqI (ORCPT
+        with ESMTP id S236362AbjIMKZ7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 13 Sep 2023 05:46:08 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFD10198C;
-        Wed, 13 Sep 2023 02:46:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694598364; x=1726134364;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=3buEeqBxdUMtlGYl0/iS7ECl7NUmPipZ2waf6U7e+oE=;
-  b=ZMqOhcNP2VnuwFA7KYFA3goLKRdU2CKRJPD0lcUPfztkHRvk8TLicXG6
-   NxRcY3nQOQifpmZXBNIHzwH61ktIkSYgYk0aF7ExGlfTxakH00NC1SuYw
-   GOk0xZWg3tIe5YyPvYsqKop//1deoFDRggFBUCN4mYf4mWkArTXgMWdAt
-   B54yfegAjyEjpf7Atja+r8wIRiooo49kgpMlagT6IXHaXcbKyrx94daqF
-   BjO/JKW+NI/ygvZ1VUIiIoWFccfF96YdTTelj6TajSXylJvcwJFdYayZM
-   UQ8MgqH/jraGOwbBeY+8ojHg02mwgc5aKHPxta8LSJWeDl5CHX7NtY2Qm
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10831"; a="377524885"
-X-IronPort-AV: E=Sophos;i="6.02,142,1688454000"; 
-   d="scan'208";a="377524885"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 02:46:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10831"; a="1074890994"
-X-IronPort-AV: E=Sophos;i="6.02,142,1688454000"; 
-   d="scan'208";a="1074890994"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga005.fm.intel.com with ESMTP; 13 Sep 2023 02:46:02 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 38FCD8C9; Wed, 13 Sep 2023 12:46:00 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Andy Shevchenko <andy@kernel.org>
-Subject: [PATCH v1 1/1] lib/string_helpers: Don't copy a tail in kstrdup_and_replace() if 'new' is \0
-Date:   Wed, 13 Sep 2023 12:45:57 +0300
-Message-Id: <20230913094557.451463-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
+        Wed, 13 Sep 2023 06:25:59 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF223D3;
+        Wed, 13 Sep 2023 03:25:55 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 040C1C433C8;
+        Wed, 13 Sep 2023 10:25:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1694600755;
+        bh=4k2IeW5H9cEqbLtJFKkr6gJFeGtpZv+ntg6InyehTu4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MsMiX7Bq3wu/ubrt9go4Zl2qtpZZZdKThoIZMlsHjdv+fHu2fusSjJfXcdrTL0+1h
+         7c1jVIQcD03WR5z9RerPkcDNylNLW5Wq3XcKZ5bQYWy1wXrd9cTvRWfIPl3MwXFskV
+         XPH3kH0v1uj9MuRwolV+w+vLF0LjVfOEoRv4JRCNrGQpP+Jxjf6cG7TlggmqUuLepJ
+         Vat7PzDJUQrphDZ733Kkrcn9wU4VLMBBeNki+N7/G53aZI9TMUHiPzXSVDuhsMMjz9
+         Dmy5ALThLPMKpNRjZyQfJhkygiiY63lqSxswU6AkAvbbdNCesDQtNF2bRM3DaEuEmo
+         sHH75LxTD4r6w==
+Date:   Wed, 13 Sep 2023 11:25:46 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Mukesh Ojha <quic_mojha@quicinc.com>
+Cc:     corbet@lwn.net, agross@kernel.org, andersson@kernel.org,
+        konrad.dybcio@linaro.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
+        mathieu.poirier@linaro.org, catalin.marinas@arm.com,
+        linus.walleij@linaro.org, andy.shevchenko@gmail.com,
+        vigneshr@ti.com, nm@ti.com, matthias.bgg@gmail.com,
+        kgene@kernel.org, alim.akhtar@samsung.com, bmasney@redhat.com,
+        quic_tsoni@quicinc.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, kernel@quicinc.com
+Subject: Re: [REBASE PATCH v5 08/17] arm64: mm: Add dynamic ramoops region
+ support through command line
+Message-ID: <20230913102545.GA12021@willie-the-truck>
+References: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com>
+ <1694429639-21484-9-git-send-email-quic_mojha@quicinc.com>
+ <20230912101820.GA10884@willie-the-truck>
+ <14bf3fca-f031-d000-6fd6-d82f4de9b255@quicinc.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <14bf3fca-f031-d000-6fd6-d82f4de9b255@quicinc.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The kstrdup_and_replace() takes two characters, old and new, to replace
-former with latter after the copying of the original string. But in case
-when new is a NUL, there is no point to copy the rest of the string,
-the contract with the callers is that that the function returns a
-NUL-terminated string and not a buffer of the size filled with a given
-data. With this we can optimize the memory consumption by copying only
-meaningful part of the original string and drop the rest.
+On Wed, Sep 13, 2023 at 12:32:54PM +0530, Mukesh Ojha wrote:
+> Thanks for the response.
+> 
+> On 9/12/2023 3:48 PM, Will Deacon wrote:
+> > On Mon, Sep 11, 2023 at 04:23:50PM +0530, Mukesh Ojha wrote:
+> > > The reserved memory region for ramoops is assumed to be at a fixed
+> > > and known location when read from the devicetree. This may not be
+> > > required for something like Qualcomm's minidump which is interested
+> > > in knowing addresses of ramoops region but it does not put hard
+> > > requirement of address being fixed as most of it's SoC does not
+> > > support warm reset and does not use pstorefs at all instead it has
+> > > firmware way of collecting ramoops region if it gets to know the
+> > > address and register it with apss minidump table which is sitting
+> > > in shared memory region in DDR and firmware will have access to
+> > > these table during reset and collects it on crash of SoC.
+> > > 
+> > > So, add the support of reserving ramoops region to be dynamically
+> > > allocated early during boot if it is request through command line
+> > > via 'dyn_ramoops_size=' and fill up reserved resource structure and
+> > > export the structure, so that it can be read by ramoops driver.
+> > > 
+> > > Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+> > > ---
+> > >   arch/arm64/mm/init.c       | 94 ++++++++++++++++++++++++++++++++++++++++++++++
+> > 
+> > Why does this need to be in the arch code? There's absolutely nothing
+> > arm64-specific here.
+> 
+> Current clients of this cmdline would be only arm64, and that is the
+> reason of putting this here.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
+I don't think that's a strong enough justification, tbh. We should at
+least be able to compile this for other architectures using TEST_COMPILE
+and so somewhere under drivers/ makes more sense to me.
 
-The first user of this is pending:
-https://lore.kernel.org/platform-driver-x86/20230913092701.440959-1-andriy.shevchenko@linux.intel.com/
-
- lib/string_helpers.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/lib/string_helpers.c b/lib/string_helpers.c
-index 7713f73e66b0..e385bf3cc2de 100644
---- a/lib/string_helpers.c
-+++ b/lib/string_helpers.c
-@@ -723,11 +723,17 @@ EXPORT_SYMBOL_GPL(kstrdup_quotable_file);
- 
- /*
-  * Returns duplicate string in which the @old characters are replaced by @new.
-+ *
-+ * If @new is NUL, copy the string up to the first occurrence of @old, which
-+ * will be replaced by a NUL.
-  */
- char *kstrdup_and_replace(const char *src, char old, char new, gfp_t gfp)
- {
- 	char *dst;
- 
-+	if (new == '\0')
-+		return kmemdup_nul(src, strchrnul(src, old) - src, gfp);
-+
- 	dst = kstrdup(src, gfp);
- 	if (!dst)
- 		return NULL;
--- 
-2.40.0.1.gaa8946217a0b
-
+Will
