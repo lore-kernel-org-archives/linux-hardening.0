@@ -2,162 +2,123 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA1EEE01FE
-	for <linux-hardening@archiver.kernel.org>; Wed, 13 Sep 2023 17:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AAEBEE020B
+	for <linux-hardening@archiver.kernel.org>; Wed, 13 Sep 2023 19:38:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230205AbjIMR4f (ORCPT
+        id S232488AbjIMTit (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 13 Sep 2023 13:56:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48164 "EHLO
+        Wed, 13 Sep 2023 15:38:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229468AbjIMR4e (ORCPT
+        with ESMTP id S232334AbjIMTit (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 13 Sep 2023 13:56:34 -0400
-Received: from mail-ot1-x32a.google.com (mail-ot1-x32a.google.com [IPv6:2607:f8b0:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0237F19AE;
-        Wed, 13 Sep 2023 10:56:31 -0700 (PDT)
-Received: by mail-ot1-x32a.google.com with SMTP id 46e09a7af769-6bf04263dc8so48410a34.3;
-        Wed, 13 Sep 2023 10:56:30 -0700 (PDT)
+        Wed, 13 Sep 2023 15:38:49 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48DF41998
+        for <linux-hardening@vger.kernel.org>; Wed, 13 Sep 2023 12:38:45 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d7b957fd276so256762276.0
+        for <linux-hardening@vger.kernel.org>; Wed, 13 Sep 2023 12:38:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694627790; x=1695232590; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uGDdpFKCDnpc+ssHlTq66FORxZksxKD5gAg2WZYxqbQ=;
-        b=lN5kZpfBpIM8u7hTHxukHolA+RRGI6UzT1xTE2jBtQsS3spMTX6Ax8MM4Y2GFbNS/B
-         v0Nwa6hmFrqDZ9XxMqizQLqL5BnBBRH8HhZ2VIZqZuafOD7v67Dm+inZtjffkBUtbxL5
-         auaibzIYu3EVSk3WUJ18xFaf9A+wTJJeEo3/0jS3kKn0dfXqLKLUCspFY8GFLmY9TR1Y
-         czxIpTObVnUJu3mSNbzhvVlIqfELA5qmqAYtBebmfHABCV4PUjhkd6Vr/ahdfE5py0ZQ
-         dJIRSdvMs/dnJR+X36suVgJYV1J+V7Vi9dG1fqbovirU/fXY35FRbSaojQwvoROBHeeg
-         pkdg==
+        d=google.com; s=20230601; t=1694633924; x=1695238724; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=5D9cmGNnxZclEaUPRp7dDRkIa3NaBWA/5YbPgcSOdlU=;
+        b=FLlzdeFavhqlzy4MC1JUgkhtQCIAqORJqP4YlKTbXRHHW4SDPUKHATV5MG7sWtoqyw
+         JlOk3w3zl5eiGAfXS3M3FGmu4NefugskyB0wyPlnHqKdpRKDM9trNLQkOF5sP1b9JFfp
+         KwMvVJWqug/Q7aEmu8arEKEGdzhl2pRpVZ/twXErX9CSaUC7i1cx9nhoJvZanZM8Vb4E
+         eWt8veY6YDfVS8EGtK3LT0OLIddNGlWCJBnW8Y1DF/dCIe0tIpMHRgOLRj//eQCr55jy
+         yrEW/Qadkl2zT1V/439SdGxhci5KOcuulo7OIwwAgw0Bb6+75oyxGOXn6GjYg6FPqhlc
+         Nd5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694627790; x=1695232590;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=uGDdpFKCDnpc+ssHlTq66FORxZksxKD5gAg2WZYxqbQ=;
-        b=mrvUXLQdnWxDA13LEX5eqo9Qk468FF52e7SkGydWpwKfhshNucUwJN5W/+eUGYov3p
-         4GiIZQp63grgHJUUl5AB07ZxfzjpPicOrCmht+koQKyK7Dff8YajiNdQmaOt98YiCSav
-         LFJ/DI5ejscRMJiAe83Fw22mkCbrghtusqrY3KJ5zlFqvELRpfcqtC09yDUKLL/kOE0K
-         kSO9obD0A1x67uaW05AmXY335RzBr9qiA9UYoU3eoFxvqdV03p13sDMsG30Wg0jj6d8/
-         ZU+RKEdkKvC62VoqR7+WDjZjj32kKh7St/QnM8Gs6FliCRU3qbtNUUpd/Y3xrbRPmjhd
-         R3eA==
-X-Gm-Message-State: AOJu0YzFWFwB2ZTwX8ipT60Lr43SGvl5QtuxZdABwNnBaJ8q2UlSQm4m
-        g3fYFZ49qdS3Y/AAZnGBNcXfjdSDWg==
-X-Google-Smtp-Source: AGHT+IG2h57eZ3z8FOxRhv0xL7TnrcTAAlOuEhAzkitkrKR8R0PBIDXC4CmKXEitdu5knxbKM1n2Iw==
-X-Received: by 2002:a9d:4f08:0:b0:6be:fc8b:40fc with SMTP id d8-20020a9d4f08000000b006befc8b40fcmr3489799otl.36.1694627790195;
-        Wed, 13 Sep 2023 10:56:30 -0700 (PDT)
-Received: from serve.minyard.net (serve.minyard.net. [2001:470:b8f6:1b::1])
-        by smtp.gmail.com with ESMTPSA id v25-20020a056830141900b006b89dafb721sm5148382otp.78.2023.09.13.10.56.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Sep 2023 10:56:29 -0700 (PDT)
-Sender: Corey Minyard <tcminyard@gmail.com>
-Received: from mail.minyard.net (unknown [IPv6:2001:470:b8f6:1b:cad6:f0ef:2bda:cb78])
-        by serve.minyard.net (Postfix) with ESMTPSA id CDAA5180108;
-        Wed, 13 Sep 2023 17:56:28 +0000 (UTC)
-Date:   Wed, 13 Sep 2023 12:56:27 -0500
-From:   Corey Minyard <minyard@acm.org>
-To:     Justin Stitt <justinstitt@google.com>
-Cc:     openipmi-developer@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH v2] ipmi: refactor deprecated strncpy
-Message-ID: <ZQH3y2ONi90A2e8k@mail.minyard.net>
-Reply-To: minyard@acm.org
-References: <20230913-strncpy-drivers-char-ipmi-ipmi-v2-1-e3bc0f6e599f@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230913-strncpy-drivers-char-ipmi-ipmi-v2-1-e3bc0f6e599f@google.com>
+        d=1e100.net; s=20230601; t=1694633924; x=1695238724;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5D9cmGNnxZclEaUPRp7dDRkIa3NaBWA/5YbPgcSOdlU=;
+        b=JkFvuWx6V93L2SqNlEZ7E+Vmw46m/H9OUfs2ILgX0v6BbUSXDU5J+6JPzBQIt7OJ9A
+         Ez6qocJ4Q+Ph9VSFsa1tSD7sYADQWjOpIfPlG5SANdOM/GwO9fURRGH+33hpuspetm/2
+         8H/yMK27T0gYS6AuFejB+bqyCoMjZnGeMCGuFP3THtnGCLv76UklE6sUmcQCxno5oDYo
+         JVx+KqjBZrxSj1HQy9ljYS1uN7jNKCkHib/YGB6WHRp6rwrJzG9I41z0iMcRCwqN6vCW
+         t0EQH50z8gwnffITZXXlFD0P+EhAqxnUrmCwKmZ6+h2eXaMYGA0I/LrNKxuLd8YWuZ0j
+         h52w==
+X-Gm-Message-State: AOJu0YyaJ3WK71ZS8NhiWlPmqNoVPtpmXxjSe1UiCGxHUNpZ/OJlmiv7
+        4XG9HMdwzqbqcVJPolAVSkEGn77JN5wOeRyzCA==
+X-Google-Smtp-Source: AGHT+IH31Zv0S2pEtOg8E5M6+3MG2ReqXhMlUlaKfNdDCbhIRCrg8Sj/H6HMaMvc1v62WHB41McV9U9S28iHMvwAYA==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a25:41ca:0:b0:d77:f6f9:159 with SMTP
+ id o193-20020a2541ca000000b00d77f6f90159mr78122yba.9.1694633924538; Wed, 13
+ Sep 2023 12:38:44 -0700 (PDT)
+Date:   Wed, 13 Sep 2023 19:38:44 +0000
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAMMPAmUC/x3NPQ7CMAxA4atUnrGUJkUIroIY8uMEDw2RXQqo6
+ t0bMX7LexsoCZPCbdhAaGXlV+0YTwPEp6+FkFM3WGOduY4OdZEa2w+T8EqimFnmjxfChYp4DG1 umCi8S1aMeJ7yJXifnY0GerMJZf7+f/fHvh9c242qfwAAAA==
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1694633923; l=1807;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=tFl2PNzqL8STywNv0UTNztdqinU7Ek8sPp6wO3F9Txw=; b=Qx9x2TQmkLa2oDNyG2+vl9LZXozyDkyNECZv70nQl8TbYysev2y1AlZud6Hv+kgnjZSkpklKS
+ SwXrDu/ddO6AXv7TOSpT/PXQeIdImLO9VBF1J2iLFHssovmlcAAlMxf
+X-Mailer: b4 0.12.3
+Message-ID: <20230913-strncpy-drivers-firmware-tegra-bpmp-debugfs-c-v1-1-828b0a8914b5@google.com>
+Subject: [PATCH] firmware: tegra: bpmp: refactor deprecated strncpy
+From:   Justin Stitt <justinstitt@google.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Sep 13, 2023 at 05:13:04PM +0000, Justin Stitt wrote:
-> `strncpy` is deprecated for use on NUL-terminated destination strings [1].
+`strncpy` is deprecated for use on NUL-terminated destination strings [1].
 
-Thanks, applied to my next tree.
+We should prefer more robust and less ambiguous string interfaces.
 
--corey
+It seems like the filename stored at `namevirt` is expected to be
+NUL-terminated.
 
-> 
-> In this case, strncpy is being used specifically for its NUL-padding
-> behavior (and has been commented as such). Moreover, the destination
-> string is not required to be NUL-terminated [2].
-> 
-> We can use a more robust and less ambiguous interface in
-> `memcpy_and_pad` which makes the code more readable and even eliminates
-> the need for that comment.
-> 
-> Let's also use `strnlen` instead of `strlen()` with an upper-bounds
-> check as this is intrinsically a part of `strnlen`.
-> 
-> Also included in this patch is a simple 1:1 change of `strncpy` to
-> `strscpy` for ipmi_ssif.c. If NUL-padding is wanted here as well then we
-> should opt again for `strscpy_pad`.
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://lore.kernel.org/all/ZQEADYBl0uZ1nX60@mail.minyard.net/ [2]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Cc: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
-> Changes in v2:
-> - use memcpy_and_pad (thanks Corey)
-> - Link to v1: https://lore.kernel.org/r/20230912-strncpy-drivers-char-ipmi-ipmi-v1-1-cc43e0d1cae6@google.com
-> ---
->  drivers/char/ipmi/ipmi_msghandler.c | 11 +++--------
->  drivers/char/ipmi/ipmi_ssif.c       |  2 +-
->  2 files changed, 4 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
-> index 186f1fee7534..d6f14279684d 100644
-> --- a/drivers/char/ipmi/ipmi_msghandler.c
-> +++ b/drivers/char/ipmi/ipmi_msghandler.c
-> @@ -5377,20 +5377,15 @@ static void send_panic_events(struct ipmi_smi *intf, char *str)
->  
->  	j = 0;
->  	while (*p) {
-> -		int size = strlen(p);
-> +		int size = strnlen(p, 11);
->  
-> -		if (size > 11)
-> -			size = 11;
->  		data[0] = 0;
->  		data[1] = 0;
->  		data[2] = 0xf0; /* OEM event without timestamp. */
->  		data[3] = intf->addrinfo[0].address;
->  		data[4] = j++; /* sequence # */
-> -		/*
-> -		 * Always give 11 bytes, so strncpy will fill
-> -		 * it with zeroes for me.
-> -		 */
-> -		strncpy(data+5, p, 11);
-> +
-> +		memcpy_and_pad(data+5, 11, p, size, '\0');
->  		p += size;
->  
->  		ipmi_panic_request_and_wait(intf, &addr, &msg);
-> diff --git a/drivers/char/ipmi/ipmi_ssif.c b/drivers/char/ipmi/ipmi_ssif.c
-> index 3b921c78ba08..edcb83765dce 100644
-> --- a/drivers/char/ipmi/ipmi_ssif.c
-> +++ b/drivers/char/ipmi/ipmi_ssif.c
-> @@ -1940,7 +1940,7 @@ static int new_ssif_client(int addr, char *adapter_name,
->  		}
->  	}
->  
-> -	strncpy(addr_info->binfo.type, DEVICE_NAME,
-> +	strscpy(addr_info->binfo.type, DEVICE_NAME,
->  		sizeof(addr_info->binfo.type));
->  	addr_info->binfo.addr = addr;
->  	addr_info->binfo.platform_data = addr_info;
-> 
-> ---
-> base-commit: 2dde18cd1d8fac735875f2e4987f11817cc0bc2c
-> change-id: 20230912-strncpy-drivers-char-ipmi-ipmi-dda47b3773fd
-> 
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
-> 
+A suitable replacement is `strscpy_pad` due to the fact that it
+guarantees NUL-termination on the destination buffer whilst maintaining
+the NUL-padding behavior that strncpy provides.
+
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Note: compile tested only.
+---
+ drivers/firmware/tegra/bpmp-debugfs.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/firmware/tegra/bpmp-debugfs.c b/drivers/firmware/tegra/bpmp-debugfs.c
+index 6dfe3d34109e..bbcdd9fed3fb 100644
+--- a/drivers/firmware/tegra/bpmp-debugfs.c
++++ b/drivers/firmware/tegra/bpmp-debugfs.c
+@@ -610,7 +610,7 @@ static int debugfs_show(struct seq_file *m, void *p)
+ 	}
+ 
+ 	len = strlen(filename);
+-	strncpy(namevirt, filename, namesize);
++	strscpy_pad(namevirt, filename, namesize);
+ 
+ 	err = mrq_debugfs_read(bpmp, namephys, len, dataphys, datasize,
+ 			       &nbytes);
+@@ -661,7 +661,7 @@ static ssize_t debugfs_store(struct file *file, const char __user *buf,
+ 	}
+ 
+ 	len = strlen(filename);
+-	strncpy(namevirt, filename, namesize);
++	strscpy_pad(namevirt, filename, namesize);
+ 
+ 	if (copy_from_user(datavirt, buf, count)) {
+ 		err = -EFAULT;
+
+---
+base-commit: 3669558bdf354cd352be955ef2764cde6a9bf5ec
+change-id: 20230913-strncpy-drivers-firmware-tegra-bpmp-debugfs-c-54f7baaf32c0
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
+
