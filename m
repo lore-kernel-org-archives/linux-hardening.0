@@ -2,151 +2,100 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2396BCA5512
-	for <linux-hardening@archiver.kernel.org>; Wed, 13 Sep 2023 09:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF354CA5534
+	for <linux-hardening@archiver.kernel.org>; Wed, 13 Sep 2023 09:46:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239306AbjIMJZU (ORCPT
+        id S239017AbjIMJqJ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 13 Sep 2023 05:25:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52168 "EHLO
+        Wed, 13 Sep 2023 05:46:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239264AbjIMJZT (ORCPT
+        with ESMTP id S229644AbjIMJqI (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 13 Sep 2023 05:25:19 -0400
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 063A21999;
-        Wed, 13 Sep 2023 02:25:16 -0700 (PDT)
-Received: by mail-pf1-x434.google.com with SMTP id d2e1a72fcca58-68fb70fca9fso2843405b3a.2;
-        Wed, 13 Sep 2023 02:25:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694597115; x=1695201915; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NpFYAXnOqxjLWxlwZ45c7Msf6OlbS0bhBMJrCMsl3zg=;
-        b=nSnCf0cK4xpn5q4uEWbi4jgNyj0YzEsrtBBZ271rYq2sgh5We1k0YxkCtQ4fazBZos
-         ePABUdjDWp3xK7NGi+9pyFeYQ+QTnstMkVdat7uZJ5NbLR9n8dbjmW8xRKh/+ntPtm/t
-         oUGiR4lOAqjyCbO8F7DNfmFHHourggWUIRInKRKcg5U2dqbbjcVD+ZqM93L6n0T8nLsO
-         XMX8CsWd79cvTgVmZ7TgOcknUcS0XNVwiJ7feFCfM3xcVou08AeFHBLCddNMP+i935Bc
-         yKIfxiEyRC8B60TNfKYiBx4wnKx+/K3gLTEHH2+Q7etVfYAqgw/G544/zGAdvKpsDqwO
-         JXHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694597115; x=1695201915;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NpFYAXnOqxjLWxlwZ45c7Msf6OlbS0bhBMJrCMsl3zg=;
-        b=AIAkg9YnxQsQyiVbRqg5n1xUNLOyholxgx3Vu+bHGBI9x+wTDYBDKenAOFvotQJ90E
-         q34z4mzNhzLFtBFErH5UcizFWYzfXw+xv6MUoLPqzEruIez3z24qfkhmW8uBPfVuUsrI
-         Ic/yC2lctMPuDp9R6Wk0bwq61Qt8WTN/9oGEzmzja0XYalSglKYQ/sOcB+Az2gj7sVpi
-         fos8mUV+SRAe0qQU0nH7bktWS1CSAo44sPTvLXKvSunJkU6xAG4OQT3/Bg8Vq1xLxldA
-         wEbbVS5qx8lADAwmvchVdn9TQwnc7dpENfJIgR2yAz1NeB/n/vm1SMbnaw2zy6Gx6WRG
-         vVVg==
-X-Gm-Message-State: AOJu0Yxf/9b3naYXtLDUcMuj/0suPI5XXpl4TQQ0+GUKlt1Q+W2d3eQ0
-        SYGJeyE5PeKBdTZM1oZ3SXI=
-X-Google-Smtp-Source: AGHT+IG/3WIzQMbIKyGZtuuCHIWrLbl2lrCKitCBZEZyOjDkgyQfkCiMeKwYbJrLvyEtH8At6O8gvQ==
-X-Received: by 2002:a05:6a20:8f1f:b0:13f:c40c:379 with SMTP id b31-20020a056a208f1f00b0013fc40c0379mr2117577pzk.13.1694597115404;
-        Wed, 13 Sep 2023 02:25:15 -0700 (PDT)
-Received: from debian.me ([103.124.138.83])
-        by smtp.gmail.com with ESMTPSA id i4-20020a170902eb4400b001b8b26fa6c1sm9914334pli.115.2023.09.13.02.25.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Sep 2023 02:25:14 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-        id 9D86780666AA; Wed, 13 Sep 2023 16:25:11 +0700 (WIB)
-Date:   Wed, 13 Sep 2023 16:25:11 +0700
-From:   Bagas Sanjaya <bagasdotme@gmail.com>
-To:     Mukesh Ojha <quic_mojha@quicinc.com>, <corbet@lwn.net>,
-        <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <keescook@chromium.org>, <tony.luck@intel.com>,
-        <gpiccoli@igalia.com>, <mathieu.poirier@linaro.org>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>,
-        <vigneshr@ti.com>, <nm@ti.com>, <matthias.bgg@gmail.com>,
-        <kgene@kernel.org>, <alim.akhtar@samsung.com>,
-        <bmasney@redhat.com>, <quic_tsoni@quicinc.com>
-Cc:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>, <kernel@quicinc.com>
-Subject: Re: [REBASE PATCH v5 01/17] docs: qcom: Add qualcomm minidump guide
-Message-ID: <ZQF_9-nX47QUCycO@debian.me>
-References: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com>
- <1694429639-21484-2-git-send-email-quic_mojha@quicinc.com>
+        Wed, 13 Sep 2023 05:46:08 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFD10198C;
+        Wed, 13 Sep 2023 02:46:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694598364; x=1726134364;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=3buEeqBxdUMtlGYl0/iS7ECl7NUmPipZ2waf6U7e+oE=;
+  b=ZMqOhcNP2VnuwFA7KYFA3goLKRdU2CKRJPD0lcUPfztkHRvk8TLicXG6
+   NxRcY3nQOQifpmZXBNIHzwH61ktIkSYgYk0aF7ExGlfTxakH00NC1SuYw
+   GOk0xZWg3tIe5YyPvYsqKop//1deoFDRggFBUCN4mYf4mWkArTXgMWdAt
+   B54yfegAjyEjpf7Atja+r8wIRiooo49kgpMlagT6IXHaXcbKyrx94daqF
+   BjO/JKW+NI/ygvZ1VUIiIoWFccfF96YdTTelj6TajSXylJvcwJFdYayZM
+   UQ8MgqH/jraGOwbBeY+8ojHg02mwgc5aKHPxta8LSJWeDl5CHX7NtY2Qm
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10831"; a="377524885"
+X-IronPort-AV: E=Sophos;i="6.02,142,1688454000"; 
+   d="scan'208";a="377524885"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 02:46:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10831"; a="1074890994"
+X-IronPort-AV: E=Sophos;i="6.02,142,1688454000"; 
+   d="scan'208";a="1074890994"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga005.fm.intel.com with ESMTP; 13 Sep 2023 02:46:02 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 38FCD8C9; Wed, 13 Sep 2023 12:46:00 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Kees Cook <keescook@chromium.org>,
+        Andy Shevchenko <andy@kernel.org>
+Subject: [PATCH v1 1/1] lib/string_helpers: Don't copy a tail in kstrdup_and_replace() if 'new' is \0
+Date:   Wed, 13 Sep 2023 12:45:57 +0300
+Message-Id: <20230913094557.451463-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1694429639-21484-2-git-send-email-quic_mojha@quicinc.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Sep 11, 2023 at 04:23:43PM +0530, Mukesh Ojha wrote:
-> +Qualcomm APSS Minidump kernel driver concept
-> +--------------------------------------------
-> +::
-> +
-> <snipped>...
-> +Dump collection
-> +---------------
-> +
-> +	+-----------+
-> +	|           |
-> +	|           |         +------+
-> +	|           |         |      |
-> +	|           |         +--+---+ Product(Qualcomm SoC)
-> +	+-----------+             |
-> +	|+++++++++++|<------------+
-> +	|+++++++++++|    usb cable
-> +	+-----------+
-> +            x86_64 PC
-> +
+The kstrdup_and_replace() takes two characters, old and new, to replace
+former with latter after the copying of the original string. But in case
+when new is a NUL, there is no point to copy the rest of the string,
+the contract with the callers is that that the function returns a
+NUL-terminated string and not a buffer of the size filled with a given
+data. With this we can optimize the memory consumption by copying only
+meaningful part of the original string and drop the rest.
 
-Sphinx reports htmldocs warnings:
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
 
-/home/bagas/repo/linux-kernel/Documentation/admin-guide/qcom_minidump.rst:100: WARNING: Literal block expected; none found.
-/home/bagas/repo/linux-kernel/Documentation/admin-guide/qcom_minidump.rst:243: WARNING: Unexpected indentation.
-/home/bagas/repo/linux-kernel/Documentation/admin-guide/qcom_minidump.rst:234: WARNING: Malformed table.
+The first user of this is pending:
+https://lore.kernel.org/platform-driver-x86/20230913092701.440959-1-andriy.shevchenko@linux.intel.com/
 
-+-----------+
-|           |
-|           |         +------+
-|           |         |      |
-|           |         +--+---+ Product(Qualcomm SoC)
-+-----------+             |
-|+++++++++++|<------------+
-|+++++++++++|    usb cable
-+-----------+
-/home/bagas/repo/linux-kernel/Documentation/admin-guide/qcom_minidump.rst:243: WARNING: Blank line required after table.
+ lib/string_helpers.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-I have to apply the fixup:
-
----- >8 ----
-diff --git a/Documentation/admin-guide/qcom_minidump.rst b/Documentation/admin-guide/qcom_minidump.rst
-index 20202da8ca40b9..5709a3853ae7ea 100644
---- a/Documentation/admin-guide/qcom_minidump.rst
-+++ b/Documentation/admin-guide/qcom_minidump.rst
-@@ -95,7 +95,6 @@ could be anywhere scattered in the DDR.
+diff --git a/lib/string_helpers.c b/lib/string_helpers.c
+index 7713f73e66b0..e385bf3cc2de 100644
+--- a/lib/string_helpers.c
++++ b/lib/string_helpers.c
+@@ -723,11 +723,17 @@ EXPORT_SYMBOL_GPL(kstrdup_quotable_file);
  
- Qualcomm APSS Minidump kernel driver concept
- --------------------------------------------
--::
+ /*
+  * Returns duplicate string in which the @old characters are replaced by @new.
++ *
++ * If @new is NUL, copy the string up to the first occurrence of @old, which
++ * will be replaced by a NUL.
+  */
+ char *kstrdup_and_replace(const char *src, char old, char new, gfp_t gfp)
+ {
+ 	char *dst;
  
- Qualcomm APSS minidump kernel driver adds the capability to add Linux
- region to be dumped as part of RAM dump collection. At the moment,
-@@ -231,6 +230,8 @@ respective dump as per set download mode.
- Dump collection
- ---------------
- 
-+::
++	if (new == '\0')
++		return kmemdup_nul(src, strchrnul(src, old) - src, gfp);
 +
- 	+-----------+
- 	|           |
- 	|           |         +------+
-
-Thanks.
-
+ 	dst = kstrdup(src, gfp);
+ 	if (!dst)
+ 		return NULL;
 -- 
-An old man doll... just what I always wanted! - Clara
+2.40.0.1.gaa8946217a0b
+
