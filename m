@@ -2,69 +2,72 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BEA8EEAA71
-	for <linux-hardening@archiver.kernel.org>; Thu, 14 Sep 2023 20:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F771EEAA77
+	for <linux-hardening@archiver.kernel.org>; Thu, 14 Sep 2023 21:14:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229805AbjINUw1 (ORCPT
+        id S229593AbjINVOP (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 14 Sep 2023 16:52:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43700 "EHLO
+        Thu, 14 Sep 2023 17:14:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229670AbjINUw1 (ORCPT
+        with ESMTP id S229518AbjINVOO (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 14 Sep 2023 16:52:27 -0400
+        Thu, 14 Sep 2023 17:14:14 -0400
 Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3022E2698
-        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 13:52:23 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-59bcabc69easo19800897b3.1
-        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 13:52:23 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9068626BE
+        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 14:14:10 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5925fb6087bso18361937b3.2
+        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 14:14:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1694724742; x=1695329542; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1694726050; x=1695330850; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=y1bfYCZeoEdKY0xCX07ePzY5ryWaYVbqIYptARC7NJg=;
-        b=NvPAN8vmZH8DfMmys9TDmLInWpPq9YbkZCLXR6RLNMVSrtBW/FzkjXrkR+VJNe0Dk/
-         FviCs/pFWGDPVZGFlQPpspZLWWGo2yP+Emun8VHb1tdvrjDrluv91O5Zknvw7yyTymmd
-         9V3wVViLLN4reoAYmNS3vX2rGdOr0Ppefq8w7bwPhuBQXeApw8dH9137o0StaDePj2Wt
-         d2O0i1CWBZPyj5Cf89PtqTuWbinqvV+bVIV8ow5sd1LobS1AreXnJ+mRete+ZUBng0Un
-         tWfRpTtSIXNVSy96Caecylmey7Wy8b3ioYGo05AO0Ko8L7l6tl4xteD2qJdjZzjiRpp3
-         f+0w==
+        bh=Utwbn05dq1P3cRtHOia0ZZtBcmsSMx5ruKCs/P2Bvow=;
+        b=gRTzGf5Wgw2/H/KNWTK1j/bD4V/KwuvMUyaza2R89tJgLBrYSUdgJMAxc7V9ImBd0Q
+         yzFczZDEXLMiJbifoR6wn16NA1LpgqL1WSn2xcee/1ap5qFgYeahbgzukzZ4D2aF6+Y/
+         9V2wR4g9vgj8JF29uEzAnenVLypQTi48j/Y2j96/Uvif6V2mIrqQh/P7ffNmzX81UiTS
+         5uY/pah0U+yLnXd+fCdi533XFm1k3WIKZVoSqxxvy4IcEV7qhjWvDEBw+JmfbzsflEMr
+         KT6dfc1SZApAvBJSxtihtVpHgCvluI1Vtk+scr8JvHrHc0CGXDJO8qvAFG6KDOmVS+HF
+         V2QQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694724742; x=1695329542;
+        d=1e100.net; s=20230601; t=1694726050; x=1695330850;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=y1bfYCZeoEdKY0xCX07ePzY5ryWaYVbqIYptARC7NJg=;
-        b=lE5X0rPcfvZzaCcC7LfMtOoJyhAQgDtcFP4mUVLhciZEambE3Fh8LuuUnQvaQL6+Wm
-         O7q+QqKZNZw2XL1+2I94GPt/qYn0s1aWuVf6F/eEy/oGILoj6YOwCC9celOisYIgtfCF
-         x6lfjQhDA2hqfBCfVkAb2VkNt9FzvBKz5wQmd78VpJu6pLXm3dvp3i7zdI135bChNK2R
-         BmVTDyu96YGbS7B5mVvkPO3eqfTqMSXVq3b2ZB+vYdRA3auCz4EBwzijrQA3b+NbeRhn
-         018mzkdJQkKTnIRYVNabU1jcuJGayNOYdMQBcY8mDJEp25Td8bIyr07RSKAURF3kQKNW
-         1mHA==
-X-Gm-Message-State: AOJu0YxEpAZM4vHUYRCJ06+7XqRUZUAHIlpj7KHS4EgCTKaPWKOebHUK
-        S98nKDUeotN2mAP0aj/rOOAl29zb5jyEYG1syQ==
-X-Google-Smtp-Source: AGHT+IFttkDgh3STEULt9nazdb9L/1U62+xkGrM5KSilaIH+f9BeV8ytqjsC9zn8dQK4VotAls06A/tr0JmiYNXTAA==
+        bh=Utwbn05dq1P3cRtHOia0ZZtBcmsSMx5ruKCs/P2Bvow=;
+        b=AACZXUmtJoJ2/jwBXi5GOzY+OT/3U1jo8ANIhrtTAmc0CLGG68PmesM5En29LtZwAM
+         bI3j0yuxanhK1kXjpuquSXwWaCu6NpswoxeQoT/6enw4EYJazVvubbUjB3ITeFw/ZTG5
+         LGHTZaITgUSnvoEKBQ//dCdu1xf899Wg2Ydsjl1B+ZSHZs5gizRPyJf+ECHLVOjpRIKw
+         14QcwfAMJV0tzqOTy/U0xOoTCEgVmEMzPeeLekyX0lragmFQFoRTv4RyOXXZ6cF+1SE9
+         aZlBzZZXv7CS/RlIwQVvFsVFgry6pzY5vN9Tlc4Ty83Lz/B8YOgyp5iG8bqYvLD49nk9
+         FpDA==
+X-Gm-Message-State: AOJu0Yz1xdv9VJUgO1AZq3mQIQvQtWjR3fZQlNdpjMWMvejnRvG6NsWn
+        H/DrYBuNODfrdm25beM/35FWzCutlUgxdBNNww==
+X-Google-Smtp-Source: AGHT+IER36kioS8OEQ6mW1MX0UaEyRGxkscXFet8xuTfWHv4C/xW3RLVWiv7TxQnUUbCzU6IzHZhFSDlYovg3BK4jA==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6902:1816:b0:d0e:e780:81b3 with
- SMTP id cf22-20020a056902181600b00d0ee78081b3mr162906ybb.2.1694724742466;
- Thu, 14 Sep 2023 13:52:22 -0700 (PDT)
-Date:   Thu, 14 Sep 2023 20:52:21 +0000
+ (user=justinstitt job=sendgmr) by 2002:a25:385:0:b0:d81:bb31:d2fa with SMTP
+ id 127-20020a250385000000b00d81bb31d2famr27447ybd.3.1694726049875; Thu, 14
+ Sep 2023 14:14:09 -0700 (PDT)
+Date:   Thu, 14 Sep 2023 21:14:07 +0000
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAIVyA2UC/x2NywrCMBAAf6Xs2YU0tUX9FSklZrdxsS92NQil/
- 27wNnOZ2cFYhQ1u1Q7KWUzWpUh9qiA+w5IYhYqDd75x1/qMpJJZDdP2KTxjmkPrHK7h9dYg0zB lskF8xIihbWJHlwd1foQS3JRH+f5n9/44fp7rBQF8AAAA
+X-B4-Tracking: v=1; b=H4sIAJ93A2UC/x2NywrCMBAAf6Xk7EISFRp/RURku42L5sFuLJXSf
+ zd4m7nMbEZJmNRchs0ILaxcchd3GAw+HzkS8NTdeOuPNrgTaJOM9QuT8EKiEOuncwIO7gyREii 950baFFLB1x1LbrQ2QAijxZEQe8Wb3q9CM6//9/W27z+CzKY7iwAAAA==
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1694724741; l=1689;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1694726048; l=1748;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=ypZuHuWedw2GdaZjNukTcmFpVtl2zdn1sIH4RGMXcEM=; b=a3tnv1zYiSyHEe2n2OO9Vj2FcOGK7a0XpbAyi3Lxqx4nnbv89EszV7CesMgdUuN+kDtlRMpFC
- pVAkhV0uNoXDTUPACgysTkT/3J06KPMo1mFrHQQCpMGJzRWbEQYIu7h
+ bh=rUGaAKYDAI4tRkXj4vLoGXXH5bgLIpzt3gFa14KFRqo=; b=UKJjqLcZ98/YSLUUQU9h/fX9EPUL6MGCgnZQv0LIXvqtcWCkalUmCEO2+q3xYXDVzZmuDBhh3
+ 5Vr6lYASBMSBjn/LjbYtIm2jODAgQdE0C1Pnma6HaMChyGag60U+ITo
 X-Mailer: b4 0.12.3
-Message-ID: <20230914-drivers-gpu-drm-gma500-oaktrail_lvds_i2c-c-v1-1-0a53a076ce20@google.com>
-Subject: [PATCH] drm/gma500: refactor deprecated strncpy
+Message-ID: <20230914-strncpy-drivers-gpu-drm-i915-gem-selftests-mock_context-c-v1-1-c3f92df942e0@google.com>
+Subject: [PATCH] drm/i915: refactor deprecated strncpy
 From:   Justin Stitt <justinstitt@google.com>
-To:     Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+To:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
         David Airlie <airlied@gmail.com>,
         Daniel Vetter <daniel@ffwll.ch>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
+Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
         Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -75,10 +78,13 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 We should prefer more robust and less ambiguous string interfaces.
 
-Since `chan->base.name` is expected to be NUL-terminated, a suitable
-replacement is `strscpy` [2] due to the fact that it guarantees
-NUL-termination on the destination buffer without also unnecessarily
-NUL-padding.
+A suitable replacement is `strscpy` [2] due to the fact that it guarantees
+NUL-termination on the destination buffer without unnecessarily NUL-padding.
+
+`ctx` is zero allocated and as such strncpy's NUL-padding behavior was
+strictly a performance hit which should now be resolved. It should be
+noted, however, that performance is not critical in these selftests,
+especially by these margins.
 
 Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
 Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
@@ -86,30 +92,26 @@ Link: https://github.com/KSPP/linux/issues/90
 Cc: linux-hardening@vger.kernel.org
 Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
-
-
-drm/gma500: refactor deprecated strncpy
----
- drivers/gpu/drm/gma500/oaktrail_lvds_i2c.c | 2 +-
+ drivers/gpu/drm/i915/gem/selftests/mock_context.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/gma500/oaktrail_lvds_i2c.c b/drivers/gpu/drm/gma500/oaktrail_lvds_i2c.c
-index 06b5b2d70d48..68458cbdd6d5 100644
---- a/drivers/gpu/drm/gma500/oaktrail_lvds_i2c.c
-+++ b/drivers/gpu/drm/gma500/oaktrail_lvds_i2c.c
-@@ -141,7 +141,7 @@ struct gma_i2c_chan *oaktrail_lvds_i2c_init(struct drm_device *dev)
+diff --git a/drivers/gpu/drm/i915/gem/selftests/mock_context.c b/drivers/gpu/drm/i915/gem/selftests/mock_context.c
+index 8ac6726ec16b..025b9c773b93 100644
+--- a/drivers/gpu/drm/i915/gem/selftests/mock_context.c
++++ b/drivers/gpu/drm/i915/gem/selftests/mock_context.c
+@@ -36,7 +36,7 @@ mock_context(struct drm_i915_private *i915,
+ 	if (name) {
+ 		struct i915_ppgtt *ppgtt;
  
- 	chan->drm_dev = dev;
- 	chan->reg = dev_priv->lpc_gpio_base;
--	strncpy(chan->base.name, "gma500 LPC",  I2C_NAME_SIZE - 1);
-+	strscpy(chan->base.name, "gma500 LPC",  I2C_NAME_SIZE - 1);
- 	chan->base.owner = THIS_MODULE;
- 	chan->base.algo_data = &chan->algo;
- 	chan->base.dev.parent = dev->dev;
+-		strncpy(ctx->name, name, sizeof(ctx->name) - 1);
++		strscpy(ctx->name, name, sizeof(ctx->name) - 1);
+ 
+ 		ppgtt = mock_ppgtt(i915, name);
+ 		if (!ppgtt)
 
 ---
 base-commit: 3669558bdf354cd352be955ef2764cde6a9bf5ec
-change-id: 20230914-drivers-gpu-drm-gma500-oaktrail_lvds_i2c-c-a53c6d8bd62f
+change-id: 20230914-strncpy-drivers-gpu-drm-i915-gem-selftests-mock_context-c-980c8ecc9142
 
 Best regards,
 --
