@@ -2,70 +2,68 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BADBEEAA7B
-	for <linux-hardening@archiver.kernel.org>; Thu, 14 Sep 2023 22:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D87EEAA7A
+	for <linux-hardening@archiver.kernel.org>; Thu, 14 Sep 2023 22:20:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230104AbjINWRX (ORCPT
+        id S229867AbjINWVC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 14 Sep 2023 18:17:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43268 "EHLO
+        Thu, 14 Sep 2023 18:21:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230127AbjINWRO (ORCPT
+        with ESMTP id S229702AbjINWVB (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 14 Sep 2023 18:17:14 -0400
-Received: from mail-oa1-x49.google.com (mail-oa1-x49.google.com [IPv6:2001:4860:4864:20::49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CA382724
-        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 15:17:10 -0700 (PDT)
-Received: by mail-oa1-x49.google.com with SMTP id 586e51a60fabf-1d64d665e38so982569fac.1
-        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 15:17:10 -0700 (PDT)
+        Thu, 14 Sep 2023 18:21:01 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E515026B7
+        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 15:20:56 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-59bdac026f7so20276227b3.0
+        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 15:20:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1694729829; x=1695334629; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1694730056; x=1695334856; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=NmiSL1hPoXorfA2q6qNOq7ioFso4QUSjYQj36GecrTE=;
-        b=xkngvD2Ibfn8w03jxth/IdNDuHUov2S9wEE3mKAgK6Q1mChzRVyw499SXq0AUo289Y
-         +JKqJd5TxrL2PO0QKNR23nWlvl+MrmwriQSqIDEvCUnQd7Uo1p0lI6XDj9OYqGoIkXck
-         J52jeUoyaC9rVgZDVdETfWrEwEszVZ7TSIDG2h37hl9k13Tq+YmW9EiDJUA51/nf10WK
-         BZVMls7AVpXNkoY3o0KpqXGp6n2kd1H6koJZTJ4EMOE2GfZ8txQDffzrlTUlK6yqOwur
-         qV+YJoBcWV7/tAxy6NAzSig4O+Rx095bL6zYNVPjmsp0kcIPm3buw0KK2lkdTG32viMt
-         KB+g==
+        bh=L6wxH6wI0CxNppihK8yyqaPuo2ed2yk6gacxAzZ/YyQ=;
+        b=BM0YwBiwVFb8TzWvXVSas5oaWU302JRAzBkTRI+IJcHdIVkdRsJF3FFMuhyJ2HaWFu
+         18Ytjyc9eeDM8lYwHh1jc4D+h8FLxClwupHBsThQW0v81wsybwsoNl4RsebOtcNs56u8
+         tDN9p/BUNZJx5F7KgWEjMHUmaGHQV2xCFQIvl+3oqHn2bo/YqvmjZ77LqclnkTtwb/pO
+         lzHCFI4KMm4QIF2yKkrvYr/+CPP7BJnzBiA1v+0fppHAFh1Pyv2XZWmOkxccDYAiSuKV
+         Xjc56ChPLmrh7sM8kleY6eAR4hhoUR5oPqq+EfVXqHIyzzzg+PBvucRKGuTm6Hk5RpdZ
+         ahfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694729829; x=1695334629;
+        d=1e100.net; s=20230601; t=1694730056; x=1695334856;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=NmiSL1hPoXorfA2q6qNOq7ioFso4QUSjYQj36GecrTE=;
-        b=DpeFktzoq1GvgWLFZY0hHo9mAbRfpAr89CGXAWCLKcbS7AeUeEzYJEVkwQrItVkoRe
-         zm+U8MLFkq45bRzB9NIzTYIbPSe1SL1PExi7fWqEimSOLzFX1faXqpoPLd20KK02cQVn
-         C4fgO+gaxIGKXtevNV8ANQUDYVJRzbLh2Mn1ND5h9bIYJ1ihdcaAHg6zCbX83ukwBgK0
-         h/J2iX6CkrFDiJU1JpOOg33qnFFhRj6mCqVgCXsnK1LI3TlESuPo1Ns/xkNormgZfzib
-         87tbIAooSDcasW1woplLd9mRFji+YxAhggfSI5dCQlIIm0EPLgrW9PoSldygtIjTsekb
-         SVWA==
-X-Gm-Message-State: AOJu0YyQA8eDzfusprBYygw8Fjp5c9p87Cnd3q0tT+iSFFrXxsffZqx3
-        7JSNC+F1vKdYgZ+aLRQ3sayrAGQbWS/fraP8DQ==
-X-Google-Smtp-Source: AGHT+IFwcROu4zar64CAvXwI9J0nMFhba4+cLsta+BCeiKNlxnKo7O4A0MBXBGcuyAHHg0RNV0zPR7a2HtcCyI3FeQ==
+        bh=L6wxH6wI0CxNppihK8yyqaPuo2ed2yk6gacxAzZ/YyQ=;
+        b=T/f66hmG0her8tXJnLulBABeCG/3uzzz9ET/5abS50ijGuchtd9Id+J+rJo0vyH0R6
+         6oO91Wy2pYjfrdBDtAd0cKUEx3jk3SB356rKtxwXUDYmMSayBnM0e2MMmMy2fgx5KoGI
+         hut0b5jsb1TsrKeHs6HT9jdZNy9+gipDy4LQ5CpCRRRisBFDd5QNd8tEoubOiQItcmyn
+         g5etssKQ6NeiBhiAoHDyLRxKTh6myxwqg171VkkMx+D1m7oiVnrODky4wOJK4E4g3DNd
+         SNfns1j8EyAOJZjb3JrFSCA+Oq6ct0xDuQ4AmayhWDv1glsacPYnsAjA9r90Xf60r2CV
+         gYuA==
+X-Gm-Message-State: AOJu0YxS6BTDNaaZdGiZk1WlQpufDjW/Mz04pT1lsTvTzDw+UkS4YXtW
+        NsUze6tY3lwc88zxf67+LJe3u0sRkdgkQ+7iBQ==
+X-Google-Smtp-Source: AGHT+IEpoemOyU/gCfEy83llw70WSxP7zEz3SBbvICVjbWMxxJfMiydQwtaNCRNpaXfr7o3vwcXiY9NfsRvm3iC3KQ==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6870:5b17:b0:1d6:6175:e8b7 with
- SMTP id ds23-20020a0568705b1700b001d66175e8b7mr704oab.4.1694729829605; Thu,
- 14 Sep 2023 15:17:09 -0700 (PDT)
-Date:   Thu, 14 Sep 2023 22:17:08 +0000
+ (user=justinstitt job=sendgmr) by 2002:a05:690c:710:b0:59b:f138:c83b with
+ SMTP id bs16-20020a05690c071000b0059bf138c83bmr548ywb.3.1694730056164; Thu,
+ 14 Sep 2023 15:20:56 -0700 (PDT)
+Date:   Thu, 14 Sep 2023 22:20:55 +0000
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAGOGA2UC/x2NQQqDMBAAvyI5dyFqodqvlB6SuEmXkjXsamgR/
- 97Q28xl5jCKQqjm3h1GsJLSyk36S2fCy3FCoKW5Geww2rm/gm7CoXxhEaooCqnsjTPwuld0O3B 9Z0BOxAglg3eKEGCcfJzDbfLBRtPaRTDS5/99PM/zB65MP5KHAAAA
+X-B4-Tracking: v=1; b=H4sIAEaHA2UC/x2NMQrDMAwAvxI0RxC7JtB+pXQIlhyLgmOkEhJM/
+ l6T4YZb7hoYq7DBa2igvIvJVrq4cYCYl7IyCnUHP/nH9HQB7acl1hNJZWc1zEI3VTeSL5+GEWM KfnZh8Y4C9FJVTnLcl/fnuv40LAw+dQAAAA==
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1694729828; l=2319;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1694730055; l=2074;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=RxOj2KRPJoHaPbd44NSfvp7xlYOfBBUfmUGMt4NplWM=; b=DjqYwwhRW21CQ5QMz9Kq/kMZK/2XQMBC1ojIhEn54/lvBB1ZMdiXQOPyCP7EYWc+wzaWYIxZw
- urNwQ6OfNmeAjWVrv9S1uYW4YBYQvugcZXBlGnwgHVmMTJgXi8klaNc
+ bh=+74GC7rHw1mTn7nixljv5X0qMRleq8S1K0Ou7Xb7zvw=; b=Kpg/iXSQK/dWh3bjDyW1nCyXP9t2hxjS3t8Kvy+Gk83wwymskJL9AwoLZSuYt0s95O1vww4sD
+ edk9W7p0v+tDvqTc6FRuqWSc/e+ou1C/82uv+xmTsAPYQKfeT++S8J4
 X-Mailer: b4 0.12.3
-Message-ID: <20230914-strncpy-drivers-gpu-drm-nouveau-nvkm-engine-pm-base-c-v1-1-4b09ed453f84@google.com>
-Subject: [PATCH] drm/nouveau/pm: refactor deprecated strncpy
+Message-ID: <20230914-strncpy-drivers-hid-hid-prodikeys-c-v1-1-10c00550f2c2@google.com>
+Subject: [PATCH] HID: prodikeys: refactor deprecated strncpy
 From:   Justin Stitt <justinstitt@google.com>
-To:     Ben Skeggs <bskeggs@redhat.com>, Karol Herbst <kherbst@redhat.com>,
-        Lyude Paul <lyude@redhat.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+To:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
         Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -85,45 +83,41 @@ Link: https://github.com/KSPP/linux/issues/90
 Cc: linux-hardening@vger.kernel.org
 Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
- drivers/gpu/drm/nouveau/nvkm/engine/pm/base.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+Note: for some reason if NUL-padding is needed let's opt for `strscpy_pad()`
+---
+ drivers/hid/hid-prodikeys.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/pm/base.c b/drivers/gpu/drm/nouveau/nvkm/engine/pm/base.c
-index 8fe0444f761e..131db2645f84 100644
---- a/drivers/gpu/drm/nouveau/nvkm/engine/pm/base.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/engine/pm/base.c
-@@ -462,7 +462,7 @@ nvkm_perfmon_mthd_query_domain(struct nvkm_perfmon *perfmon,
- 
- 		args->v0.id         = di;
- 		args->v0.signal_nr  = nvkm_perfdom_count_perfsig(dom);
--		strncpy(args->v0.name, dom->name, sizeof(args->v0.name) - 1);
-+		strscpy(args->v0.name, dom->name, sizeof(args->v0.name));
- 
- 		/* Currently only global counters (PCOUNTER) are implemented
- 		 * but this will be different for local counters (MP). */
-@@ -513,8 +513,7 @@ nvkm_perfmon_mthd_query_signal(struct nvkm_perfmon *perfmon,
- 			snprintf(args->v0.name, sizeof(args->v0.name),
- 				 "/%s/%02x", dom->name, si);
- 		} else {
--			strncpy(args->v0.name, sig->name,
--				sizeof(args->v0.name) - 1);
-+			strscpy(args->v0.name, sig->name, sizeof(args->v0.name));
- 		}
- 
- 		args->v0.signal = si;
-@@ -572,7 +571,7 @@ nvkm_perfmon_mthd_query_source(struct nvkm_perfmon *perfmon,
- 
- 		args->v0.source = sig->source[si];
- 		args->v0.mask   = src->mask;
--		strncpy(args->v0.name, src->name, sizeof(args->v0.name) - 1);
-+		strscpy(args->v0.name, src->name, sizeof(args->v0.name));
+diff --git a/drivers/hid/hid-prodikeys.c b/drivers/hid/hid-prodikeys.c
+index e4e9471d0f1e..c16d2ba6ea16 100644
+--- a/drivers/hid/hid-prodikeys.c
++++ b/drivers/hid/hid-prodikeys.c
+@@ -639,9 +639,9 @@ static int pcmidi_snd_initialise(struct pcmidi_snd *pm)
+ 		goto fail;
  	}
  
- 	if (++si < source_nr) {
+-	strncpy(card->driver, shortname, sizeof(card->driver));
+-	strncpy(card->shortname, shortname, sizeof(card->shortname));
+-	strncpy(card->longname, longname, sizeof(card->longname));
++	strscpy(card->driver, shortname, sizeof(card->driver));
++	strscpy(card->shortname, shortname, sizeof(card->shortname));
++	strscpy(card->longname, longname, sizeof(card->longname));
+ 
+ 	/* Set up rawmidi */
+ 	err = snd_rawmidi_new(card, card->shortname, 0,
+@@ -652,7 +652,7 @@ static int pcmidi_snd_initialise(struct pcmidi_snd *pm)
+ 		goto fail;
+ 	}
+ 	pm->rwmidi = rwmidi;
+-	strncpy(rwmidi->name, card->shortname, sizeof(rwmidi->name));
++	strscpy(rwmidi->name, card->shortname, sizeof(rwmidi->name));
+ 	rwmidi->info_flags = SNDRV_RAWMIDI_INFO_INPUT;
+ 	rwmidi->private_data = pm;
+ 
 
 ---
 base-commit: 3669558bdf354cd352be955ef2764cde6a9bf5ec
-change-id: 20230914-strncpy-drivers-gpu-drm-nouveau-nvkm-engine-pm-base-c-38bf9c78bc0f
+change-id: 20230914-strncpy-drivers-hid-hid-prodikeys-c-cf42614a21d4
 
 Best regards,
 --
