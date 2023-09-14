@@ -2,117 +2,120 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 794DAEEAA41
-	for <linux-hardening@archiver.kernel.org>; Thu, 14 Sep 2023 13:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A11EEAA40
+	for <linux-hardening@archiver.kernel.org>; Thu, 14 Sep 2023 14:02:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239329AbjINNqD (ORCPT
+        id S239301AbjINOCi (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 14 Sep 2023 09:46:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49484 "EHLO
+        Thu, 14 Sep 2023 10:02:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239339AbjINNpt (ORCPT
+        with ESMTP id S231720AbjINOCh (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 14 Sep 2023 09:45:49 -0400
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55C702706
-        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 06:37:34 -0700 (PDT)
-Received: by mail-wm1-x329.google.com with SMTP id 5b1f17b1804b1-3ff7d73a6feso10694875e9.1
-        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 06:37:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1694698653; x=1695303453; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=UtEDLGrLEJ6Yf0BlzG31NFuV4f9+Z2ng7sP9jomSPgM=;
-        b=pIWuhaNBIDi7szqefVU+F+ne+2YflreFExbq95b6zRS+uaqcP4l34xMBi/0klcbhCB
-         drE1R1fPaeDqJ4zEZee3kcb1AgWtzKOW8jQwvF1+ygUmSldOVPf+N637rurUd5srFVkl
-         dX5DY9RN9cjdPC5UxVTjgaM4wml9o6eRuLvptAoI82UZf6uWOWgFR9dVsQaZtVvsBBtg
-         fSbF1IjHsHwOI1NY1NJYBFunLf8fCcFvERtkgOeMgKR2O2xOOHZC+lailtlbkL7zlfdn
-         kWLq3enmIUZcfGhQEWUf26by9KhBzn6CfoWDASWVcJCdLpvVqGhMLdvPozOnqY1Gz/zu
-         AunA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694698653; x=1695303453;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UtEDLGrLEJ6Yf0BlzG31NFuV4f9+Z2ng7sP9jomSPgM=;
-        b=fe2Dmpf7fCwFjdIg3a/f4cGQsPH1+Z+O+jfA2TC78dLLumrbSMbpVKV0b9QrfljqPl
-         PmuvC6RdwPWY0DJ5gj2L4JtBAY6/6vtCvPRQfDutG6L5ojl+3WBCvpBQSl3PQ0OzlA44
-         tqbZeGHEcp+UuK0OieV+Wj7krfQ779QXyl9Eeoc7mgb4ab8J47D7r5+OyqFMXoCox929
-         Ov8mgyQyUJODZNRaGJpJmFKc3YSqZHP0EVQ/sAha2/V2qixMHqrJ9+r/3trL0+A5b41E
-         g1zviK9uvEMkh2TDSnqm1JAIflL086rZSzsa1Lz0DO2BesXqdJtw8Xev4w2niIULpjLz
-         oycQ==
-X-Gm-Message-State: AOJu0Yx8Nh5wHI6QKBCc3sKinCUo4N4kRxsYRE+LfXbmTvwQRj5MUK3d
-        pY2g1oriu5KQ2gH9ISAmTTUqFQ==
-X-Google-Smtp-Source: AGHT+IEpMsWeTM1Aa8jmxIP5P65K/mbegu/VOKs43KIrqswYDTztiwkAzB/UX/3KB10SAajS1EkwbA==
-X-Received: by 2002:a7b:c44b:0:b0:3f7:f2d0:b904 with SMTP id l11-20020a7bc44b000000b003f7f2d0b904mr4478679wmi.8.1694698652704;
-        Thu, 14 Sep 2023 06:37:32 -0700 (PDT)
-Received: from ta2.c.googlers.com.com (206.39.187.35.bc.googleusercontent.com. [35.187.39.206])
-        by smtp.gmail.com with ESMTPSA id y14-20020a5d4ace000000b0031c5dda3aedsm1824865wrs.95.2023.09.14.06.37.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Sep 2023 06:37:32 -0700 (PDT)
-From:   Tudor Ambarus <tudor.ambarus@linaro.org>
-To:     keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
-        corbet@lwn.net
-Cc:     linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Tudor Ambarus <tudor.ambarus@linaro.org>
-Subject: [PATCH 1/2] docs: pstore-blk.rst: use "about" as a preposition after "care"
-Date:   Thu, 14 Sep 2023 13:37:28 +0000
-Message-ID: <20230914133729.1956907-1-tudor.ambarus@linaro.org>
-X-Mailer: git-send-email 2.42.0.459.ge4e396fd5e-goog
+        Thu, 14 Sep 2023 10:02:37 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5AA2DF;
+        Thu, 14 Sep 2023 07:02:33 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BC42C433C7;
+        Thu, 14 Sep 2023 14:02:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1694700153;
+        bh=UbILtaDX6YaX9dgq96QTqXtymCmpeldgjR+T2oK3xaM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PNO+aHUgNDxHMtKVOjlzcOL7tLf+z9y1Iq9XnBkmWBc2p/Apxp3ZmIFvKQ7+UYpIj
+         vGqVGuRuqwz0WOI8F1gzCKpdQPNfFHmxOHmz3dSp8GqSj3cE46pwgm94yOyHfEGDiv
+         t9y7eUZSydl/+7e2w+r2yGmTZg5C3zcJTsLzrZROns45s7RhKOT5/mOoOYhEY9tIY0
+         aW5X29QrkwlJ6PisxRbW4j8ftjNKzQ2NS5JZkV/8+DbW86yP6ME2DQBOHUELgyT2nn
+         rGGSMchIIOuzQfCiLakKwcTxGR0UeiFBwERYJSLsssW7J/ySM61igFF7UL6hlSMHj2
+         OLKep8D3SXHCA==
+Date:   Thu, 14 Sep 2023 16:02:25 +0200
+From:   Christian Brauner <brauner@kernel.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Christoph Hellwig <hch@lst.de>, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Tejun Heo <tj@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-hardening@vger.kernel.org,
+        cgroups@vger.kernel.org, Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH 03/19] fs: release anon dev_t in deactivate_locked_super
+Message-ID: <20230914-munkeln-pelzmantel-3e3a761acb72@brauner>
+References: <20230913111013.77623-1-hch@lst.de>
+ <20230913111013.77623-4-hch@lst.de>
+ <20230913232712.GC800259@ZenIV>
+ <20230914023705.GH800259@ZenIV>
+ <20230914053843.GI800259@ZenIV>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20230914053843.GI800259@ZenIV>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Reword the sentence to "care about the {oops/panic, pmsg, console} log."
+> Christoph, could you explain what the hell do we need that for?  It does
+> create the race in question and AFAICS 2c18a63b760a (and followups trying
+> to plug holes in it) had been nothing but headache.
+> 
+> Old logics: if mount attempt with a different fs type happens, -EBUSY
+> is precisely corrent - we would've gotten just that if mount() came
+> before umount().  If the type matches, we might
+> 	1) come before deactivate_locked_super() by umount(2).
+> No problem, we succeed.
+> 	2) come after the beginning of shutdown, but before the
+> removal from the list; fine, we'll wait for the sucker to be
+> unlocked (which happens in the end of generic_shutdown_super()),
+> notice it's dead and create a new superblock.  Since the only
+> part left on the umount side is closing the device, we are
+> just fine.
+> 	3) come after the removal from the list.  So we won't
+> wait for the old superblock to be unlocked, other than that
+> it's exactly the same as (2).  It doesn't matter whether we
+> open the device before or after close by umount - same owner
+> anyway, no -EBUSY.
+> 
+> Your "owner shall be the superblock" breaks that...
+> 
+> If you want to mess with _three_-way split of ->kill_sb(),
+> please start with writing down the rules re what should
+> go into each of those parts; such writeup should go into
+> Documentation/filesystems/porting anyway, even if the
+> split is a two-way one, BTW.
 
-Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
----
- Documentation/admin-guide/pstore-blk.rst | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Hm, I think that characterization of Christoph's changes is a bit harsh.
 
-diff --git a/Documentation/admin-guide/pstore-blk.rst b/Documentation/admin-guide/pstore-blk.rst
-index 2d22ead9520e..1df5d4f93219 100644
---- a/Documentation/admin-guide/pstore-blk.rst
-+++ b/Documentation/admin-guide/pstore-blk.rst
-@@ -76,7 +76,7 @@ kmsg_size
- ~~~~~~~~~
- 
- The chunk size in KB for oops/panic front-end. It **MUST** be a multiple of 4.
--It's optional if you do not care oops/panic log.
-+It's optional if you do not care about the oops/panic log.
- 
- There are multiple chunks for oops/panic front-end depending on the remaining
- space except other pstore front-ends.
-@@ -88,7 +88,7 @@ pmsg_size
- ~~~~~~~~~
- 
- The chunk size in KB for pmsg front-end. It **MUST** be a multiple of 4.
--It's optional if you do not care pmsg log.
-+It's optional if you do not care about the pmsg log.
- 
- Unlike oops/panic front-end, there is only one chunk for pmsg front-end.
- 
-@@ -100,7 +100,7 @@ console_size
- ~~~~~~~~~~~~
- 
- The chunk size in KB for console front-end.  It **MUST** be a multiple of 4.
--It's optional if you do not care console log.
-+It's optional if you do not care about the console log.
- 
- Similar to pmsg front-end, there is only one chunk for console front-end.
- 
-@@ -111,7 +111,7 @@ ftrace_size
- ~~~~~~~~~~~
- 
- The chunk size in KB for ftrace front-end. It **MUST** be a multiple of 4.
--It's optional if you do not care console log.
-+It's optional if you do not care about the console log.
- 
- Similar to oops front-end, there are multiple chunks for ftrace front-end
- depending on the count of cpu processors. Each chunk size is equal to
--- 
-2.42.0.459.ge4e396fd5e-goog
+Yes, you're right that making the superblock and not the filesytem type
+the bd_holder changes the logic and we are aware of that of course. And
+it requires changes such as moving additional block device closing from
+where some callers currently do it.
 
+But the filesytem type is not a very useful holder itself and has other
+drawbacks. The obvious one being that it requires us to wade through all
+superblocks on the system trying to find the superblock associated with
+a given block device continously grabbing and dropping sb_lock and
+s_umount. None of that is very pleasant nor elegant and it is for sure
+not very easy to understand (Plus, it's broken for btrfs freezing and
+syncing via block level ioctls.).
+
+Using the superblock as holder makes this go away and is overall a lot
+more useful and intuitive and can be extended to filesystems with
+multiple devices (Of which we apparently are bound to get more.).
+
+So I think this change is worth the pain.
+
+It's a fair point that these lifetime rules should be documented in
+Documentation/filesystems/. The old lifetime documentation is too sparse
+to be useful though.
