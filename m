@@ -2,92 +2,139 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC1B7EE021C
-	for <linux-hardening@archiver.kernel.org>; Thu, 14 Sep 2023 01:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F87EE0217
+	for <linux-hardening@archiver.kernel.org>; Thu, 14 Sep 2023 02:09:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233741AbjINBk5 (ORCPT
+        id S234328AbjINCJ0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 13 Sep 2023 21:40:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60126 "EHLO
+        Wed, 13 Sep 2023 22:09:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233625AbjINBk4 (ORCPT
+        with ESMTP id S233909AbjINCJM (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 13 Sep 2023 21:40:56 -0400
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CA3B1BD3;
-        Wed, 13 Sep 2023 18:40:52 -0700 (PDT)
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38DKbOIb005535;
-        Thu, 14 Sep 2023 01:40:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2023-03-30;
- bh=bYGqFxi1OHfFB/skcVZcSNk2thtjUMw9RD2mRaKfX10=;
- b=wYRgWChSINdnbpKSsFZ4P28BgOyIW6W8w/TfqRyJ3QZiSqd0ZV3DmX+dgXyFN6yLFwqU
- 6Ei0F9Ptwng7uPc9GG+B8XExq+V0WAZ4SMSVPnkotZQm7TbG/4rgg+UFxCSDmhbKzQb3
- cSjQIzLGKwmjuhXR7eJ0UPXlOZ0J/CgLYYv7SioS5bZapuWVaxSIfxiYbdcVxluYiJHX
- lUBZwtBjIIfPH5H3OsgiGPy5+dvjaGcUuX855ZHpRDv2f5xMsXwhMRuX92G/suzxYc5K
- mXWJwowCLYHNCHAzVpdzWcMl9MBpm2m23jwbqd4cMLnLPDWodtYOwEnzKKdVgh/XpWau Gg== 
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3t2y9kujut-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 14 Sep 2023 01:40:44 +0000
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 38E15njl007764;
-        Thu, 14 Sep 2023 01:40:43 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3t0f581r12-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 14 Sep 2023 01:40:43 +0000
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 38E1efpP038417;
-        Thu, 14 Sep 2023 01:40:42 GMT
-Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3t0f581qyy-2;
-        Thu, 14 Sep 2023 01:40:42 +0000
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-To:     Kees Cook <keescook@chromium.org>,
-        Azeem Shaikh <azeemshaikh38@gmail.com>
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-hardening@vger.kernel.org, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] scsi: target: Replace strlcpy with strscpy
-Date:   Wed, 13 Sep 2023 21:40:25 -0400
-Message-Id: <169465549434.730690.14253964357330620522.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230831143638.232596-1-azeemshaikh38@gmail.com>
-References: <20230831143638.232596-1-azeemshaikh38@gmail.com>
+        Wed, 13 Sep 2023 22:09:12 -0400
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AB792709;
+        Wed, 13 Sep 2023 19:07:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=zukjnbI0ncupAzDuzJlDSnQOCr1VCHsYHxFZu9nHeVo=; b=TMwdwl4gsfFqIQ2Hr49QNfqGNw
+        H0N2CpxgS8iu2zTuvH1gYOE/Aelnyu6DKJr/WIH/H8WywHdkpZtIK/6qkmYkAyGBl6A9wXgV8T7Hx
+        F4R28vv9+Mr1bcGPPgBjvg3RLPP2CAaYJXGfz3qdr49MpFrVSdt4ee2yS4kxJze4s4kg5Tx6hCkSs
+        iYY8Hrj3pSUx121HWeGVaX6tW4g52qOyRMw3/rqJItAIWRJXkFLku/61pna1AC+a2u6HwxHv5llpA
+        V02VS6bWXBIAn6AjiLfGFx4WsKED6hEtdOasjzUyHrM0rqnWh6KuSDARvsYQSe7TsNT/MVtxFgbix
+        yshJCcGA==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+        id 1qgblQ-005tcd-36;
+        Thu, 14 Sep 2023 02:07:29 +0000
+Date:   Thu, 14 Sep 2023 03:07:28 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Christian Brauner <brauner@kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Tejun Heo <tj@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-hardening@vger.kernel.org,
+        cgroups@vger.kernel.org
+Subject: Re: [PATCH 11/19] fs: add new shutdown_sb and free_sb methods
+Message-ID: <20230914020728.GF800259@ZenIV>
+References: <20230913111013.77623-1-hch@lst.de>
+ <20230913111013.77623-12-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-09-13_19,2023-09-13_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
- spamscore=0 mlxscore=0 mlxlogscore=717 adultscore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2308100000 definitions=main-2309140013
-X-Proofpoint-GUID: OL_8MbQxqPqPazGAf-Yn2ihlsF1JXjHb
-X-Proofpoint-ORIG-GUID: OL_8MbQxqPqPazGAf-Yn2ihlsF1JXjHb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230913111013.77623-12-hch@lst.de>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, 31 Aug 2023 14:36:38 +0000, Azeem Shaikh wrote:
-
-> strlcpy() reads the entire source buffer first.
-> This read may exceed the destination size limit.
-> This is both inefficient and can lead to linear read
-> overflows if a source string is not NUL-terminated [1].
-> In an effort to remove strlcpy() completely [2], replace
-> strlcpy() here with strscpy().
+On Wed, Sep 13, 2023 at 08:10:05AM -0300, Christoph Hellwig wrote:
+> Currently super_blocks are shut down using the ->kill_sb method, which
+> must call generic_shutdown_super, but allows the file system to
+> add extra work before or after the call to generic_shutdown_super.
 > 
-> [...]
+> File systems tend to get rather confused by this, so add an alternative
+> shutdown sequence where generic_shutdown_super is called by the core
+> code, and there are extra ->shutdown_sb and ->free_sb hooks before and
+> after it.  To remove the amount of boilerplate code ->shutdown_sb is only
+> called if the super has finished initialization and ->d_root is set.
 
-Applied to 6.6/scsi-fixes, thanks!
+The last sentence doesn't match the patchset.  That aside, there
+is an issue with method names.
 
-[1/1] scsi: target: Replace strlcpy with strscpy
-      https://git.kernel.org/mkp/scsi/c/5c584fe6098a
+->shutdown_sb() is... odd.  ->begin_shutdown_sb(), perhaps?  For the
+majority of filesystems it's NULL, after all...
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+Worse, ->free_sb() is seriously misguiding - the name implies that
+we are, well, freeing a superblock passed to it.  Which is not what is
+happening here - superblock itself is freed only when all passive
+references go away.  It's asking for trouble down the road.
+
+We already have more than enough confusion in the area.  Note, BTW,
+that there's a delicate issue around RCU accesses and freeing stuff -
+->d_compare() can bloody well be called when superblock is getting
+shut down.  For anything that might be needed by it (or by other
+RCU'd methods) we must arrange for RCU-delayed destruction.
+E.g. in case of fatfs we have sbi freeing done via call_rcu() (from
+fat_put_super(), called by generic_shutdown_super()).
+
+<checks the current tree>
+
+Oh, bugger...  AFAICS, exfat has a problem - exfat_free_sbi() is called
+directly from exfat_kill_sb(), without any concern for this:
+static int exfat_utf8_d_cmp(const struct dentry *dentry, unsigned int len,
+                const char *str, const struct qstr *name)
+{
+        struct super_block *sb = dentry->d_sb;
+        unsigned int alen = exfat_striptail_len(name->len, name->name,
+                                EXFAT_SB(sb)->options.keep_last_dots);
+
+That kfree() needs to be RCU-delayed...  While we are at it, there's
+this:
+static int exfat_d_hash(const struct dentry *dentry, struct qstr *qstr)
+{
+        struct super_block *sb = dentry->d_sb;
+        struct nls_table *t = EXFAT_SB(sb)->nls_io;
+and we need this
+        unload_nls(sbi->nls_io);
+in exfat_put_super() RCU-delayed as well.  And I suspect that
+        exfat_free_upcase_table(sbi);
+right after it needs the same treatment.
+
+AFFS: similar problem, wants ->s_fs_info freeing RCU-delayed.
+
+hfsplus: similar, including non-delayed unlock_nls() calls.
+
+ntfs3:
+        /*
+         * Try slow way with current upcase table
+         */
+        sbi = dentry->d_sb->s_fs_info;
+        uni1 = __getname();
+        if (!uni1)
+                return -ENOMEM;
+__getname().  "Give me a page and you might block, while you are
+at it".  Done from ->d_compare().  Called under dentry->d_lock
+and rcu_read_lock().  OK, any further investigation of that
+one is... probably not worth bothering with at that point.
+
+Other in-tree instances appear to be correct.  I'll push fixes for
+those (well, ntfs3 aside) out tomorrow.
