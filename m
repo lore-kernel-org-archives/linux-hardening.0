@@ -2,71 +2,72 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8460CEEAA5F
-	for <linux-hardening@archiver.kernel.org>; Thu, 14 Sep 2023 18:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA845EEAA5D
+	for <linux-hardening@archiver.kernel.org>; Thu, 14 Sep 2023 18:20:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229993AbjINSIv (ORCPT
+        id S231720AbjINSUK (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 14 Sep 2023 14:08:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45014 "EHLO
+        Thu, 14 Sep 2023 14:20:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237398AbjINSIv (ORCPT
+        with ESMTP id S240632AbjINSUH (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 14 Sep 2023 14:08:51 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E13DE1FFB
-        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 11:08:46 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-59b50b45481so16746847b3.1
-        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 11:08:46 -0700 (PDT)
+        Thu, 14 Sep 2023 14:20:07 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A1C61FF9
+        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 11:20:02 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d802ecb5883so1574107276.3
+        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 11:20:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1694714926; x=1695319726; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1694715602; x=1695320402; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=643G47GETNhqNdCuDURH7WS6HlitohpBl/WopZi3siE=;
-        b=Bxn5R+b1g8a0Kv4v/3SKs/7FFXxscduq0iIX7Dzlo0z4z7rBdjOjT4gbYnbmml8vTN
-         w/V2CSL7dfvSYIk147DnulaRMg+rT9rL+isOFLTOSRhLYzKj/99zEpfGcjynpsoluoxD
-         YiqDFQd6dICw1tIkm4rOLf5N2eLZ2LGQqOlKn/R+HuHuFkcywX43vATzf3TmCyynz5F6
-         17B4PCjMy3s737/YDdvP4J+3kHPOdn8+LMupU1RP7aIzYG8MfD+NG+dBVvKUQpoQbczM
-         yasecrIqIBpIWGgV+MsCWVSbgYglFveSoRRFJexgbaRGqXty790O5Adflv2qJpL5Su9H
-         j74g==
+        bh=+tDCVePA3H/Y86jExEhecx21ZlR+zsTby9yjOcJea7c=;
+        b=y4bVZvSQiOReVX7uln3vq6mtDU0S/N5cg/O+gj6aClRcmHGVMj/49ZoNvIBZq8Y7u6
+         JgPVVLqLKWeGntJG60jwo0SFhhP52nQG+n9NnViawtaX9cfJPdgMvLZqcUUzXxhNexsX
+         VATAVd5F+XkOFQ6acORyK95BclERXTGl3vU//U1JSGkIM1pdSsxCDDoNeCSonHhmzePd
+         XaYAIaW9Hknsel04Sga/Qf6G+hFQ1q/MeLSrpBOQaKV8ZimNHYerf6GqwWMR3Sq180sH
+         eu4xq9nD5u+S2j1LPZvWDb7iEqrxT2ovJfxbPLbPVRjeCpn/UIM7p6G6eNqqpYgZbqvd
+         RC2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694714926; x=1695319726;
+        d=1e100.net; s=20230601; t=1694715602; x=1695320402;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=643G47GETNhqNdCuDURH7WS6HlitohpBl/WopZi3siE=;
-        b=ZEkQodEK8vdXM6dtvXnBT4hz51T3Q2rHofr0NnNaxMp58CIE1q0jnEtE8BR6f3siwj
-         F4ATvVvZNng79B5xiDKwZ/6H49GGmn8TsU1NlJ770G8Ft408HpknK7txkJS7vAw0UFZm
-         h97Bguj2PSrWZcaANrVMJzAVt53ViZZkAxAiIZLX+MjDByC/g6v41Ukk7bOeQHZ0EOy+
-         5CQ1prQ2pmSu589A30RfGAgHvGdqKTjOUoWiknljZizth7IQ7/ZXv68eVI0El+gkiAcH
-         GGWGzGjkitWrKk/Uvw31e0Tyz9Y8EuChg61OkSUVllfuXmAABtyMsE0ISHe75GDfyfz/
-         otYw==
-X-Gm-Message-State: AOJu0Yw0NSmowg1kZwWuGwe0cmd27ftlogpQLWkPnC2PAqTTghxUKT6X
-        WHI1FbszexzfNPYHlJCVvde7MnfrSkfQl+Qdaw==
-X-Google-Smtp-Source: AGHT+IHNWB0qP5meAQB51iaCUK7XP1sqn9eMFG8FkOmWjyLp7Z/2qgzDTOAe33XQ2hHF6E3jXIVHS2ObMzFQCFbozQ==
+        bh=+tDCVePA3H/Y86jExEhecx21ZlR+zsTby9yjOcJea7c=;
+        b=cThamIAYffQ91iEwEfzdZ8DHzRhNQc6nnrbJR7VXlUN6SE4P6boQp2rRk4pgC3qcWK
+         zBdVyE4kYJIQ8M4agKdTkY+dBzX26GjnwLu+BKO0HH1M+C+WFsmCYrEbgwy8XCXpeoFB
+         RXu0cGKCp/OOr0ZZivE8zHNCazGAdtohdukA7gYyJeAJOQwyMiY26cQP9uaYzxgZr1qB
+         IQQ7+fZD6CwpcebH4Dg2fhYTDb5vR8yq7Jjk2dHJtF/SaJRabv0i9y08P0KPMQ2Vqger
+         dUDjApVPCv46RpNq/2YJW3YpfWa6DdOqHTQJkh5H7Ey4zd3xR6hYpl8hpKyUuQTXfqKS
+         k5nw==
+X-Gm-Message-State: AOJu0YxwEnoVtkorRwgcpMNJwQC9NUdmi/EFOgENvGlb3yb9h+Oiuk5i
+        nz+1UfiP/ywyRSkRgCBw1HE+L6PekwaI3WpGvA==
+X-Google-Smtp-Source: AGHT+IGfxVOd75Rdpx2cardrEaNX99DCozdAd+Y1ohWSOUbn/k74RQ3w7NoBhkr2+YnX8BQUjGQoK7m2XXfE0ndaVg==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a81:78d6:0:b0:59b:d33b:5ddc with SMTP
- id t205-20020a8178d6000000b0059bd33b5ddcmr133238ywc.4.1694714926173; Thu, 14
- Sep 2023 11:08:46 -0700 (PDT)
-Date:   Thu, 14 Sep 2023 18:08:44 +0000
+ (user=justinstitt job=sendgmr) by 2002:a25:abaf:0:b0:d77:bcce:eb11 with SMTP
+ id v44-20020a25abaf000000b00d77bcceeb11mr135467ybi.10.1694715601838; Thu, 14
+ Sep 2023 11:20:01 -0700 (PDT)
+Date:   Thu, 14 Sep 2023 18:20:01 +0000
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIACtMA2UC/x2NSwrDMAwFrxK0rsB2Wvq5SinFWGqqRRwjpaYh5
- O5xuxh4s3mzgrEKG9y6FZSrmEy5iT90kN4xD4xCzSG40LurP6LNmlNZkFQqq+FQPm2PP57jRGy YMPYnOl9CiuQ8tKei/JLvv3J/bNsOrmjEmXUAAAA=
+X-B4-Tracking: v=1; b=H4sIANBOA2UC/zWNQQrDMAwEvxJ0rsBO0oP7lVJKsORUhyhGTk1Ly
+ N9jCj3NzmVnh8ImXODW7WBcpciqTfylg/iadGYUag696wcX/IhlM435i2RS2QrO+d32grzpVKX ++cxsaVkVIxK5cB2Dp0QM7TcbJ/n8mvfHcZxWgPpkgwAAAA==
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1694714925; l=2160;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1694715600; l=1992;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=/VCD7DX1eCwVY46g4u81ZzjWo56f8DBPp1HX5L6qls8=; b=MSSj1xqOuKPodBgV3hCbCUvST05NmhGqT2NoNhh2CgiIOwHCP9o4MvQZLtDioILfwHV7oAWOC
- NasnjoSdir4BVmDVA/kDQPWT/uy8cxs5U1km0orFGKX5eaHoO0od7O3
+ bh=SeuSKp981fs1thsOAOeS7EP9Ar4X1zn644iwNj5mbW0=; b=BWw2xpB4+Q0ImJXqA281cKFhurR2PsXPzdhCXMjsCWc7SsHnWYgeKtLVUn9zKZtXCCIxlq54x
+ Lllt8bVOVZ2DwqP3B3RwgpiECJ3K+prluKT70wJhl50BC6TEYxoRCPO
 X-Mailer: b4 0.12.3
-Message-ID: <20230914-strncpy-drivers-gpu-drm-drm_modes-c-v1-1-079b532553a3@google.com>
-Subject: [PATCH] drm/modes: refactor deprecated strncpy
+Message-ID: <20230914-strncpy-drivers-gpu-drm-etnaviv-etnaviv_perfmon-c-v1-1-3adc2d9bfc52@google.com>
+Subject: [PATCH] drm/etnaviv: refactor deprecated strncpy
 From:   Justin Stitt <justinstitt@google.com>
-To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
+To:     Lucas Stach <l.stach@pengutronix.de>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
         David Airlie <airlied@gmail.com>,
         Daniel Vetter <daniel@ffwll.ch>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, Xu Panda <xu.panda@zte.com.cn>,
+Cc:     etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Bo YU <tsu.yubo@gmail.com>,
         Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -78,54 +79,48 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 We should prefer more robust and less ambiguous string interfaces.
 
 A suitable replacement is `strscpy` [2] due to the fact that it guarantees
-NUL-termination on the destination buffer and doesn't incur the
-performance loss of unnecessarily NUL-padding.
+NUL-termination on the destination buffer.
 
 Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
 Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
 Link: https://github.com/KSPP/linux/issues/90
 Cc: linux-hardening@vger.kernel.org
-Cc: Xu Panda <xu.panda@zte.com.cn>
+Cc: Bo YU <tsu.yubo@gmail.com>
 Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
-This patch is basically a resend of [1] by Xu but rebased onto mainline.
+Similar to [1] which was never picked up. Let's prefer strscpy to strlcpy, though
 
-This patch is also similar to:
-commit 0f9aa074c92dd ("drm/modes: Use strscpy() to copy command-line mode name")
-
-[1]: https://lore.kernel.org/all/202212051935289159302@zte.com.cn/
+[1]: https://lore.kernel.org/all/20190328080918.9290-1-tsu.yubo@gmail.com/
 ---
- drivers/gpu/drm/drm_modes.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/etnaviv/etnaviv_perfmon.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_modes.c b/drivers/gpu/drm/drm_modes.c
-index ac9a406250c5..c702a8b866cf 100644
---- a/drivers/gpu/drm/drm_modes.c
-+++ b/drivers/gpu/drm/drm_modes.c
-@@ -2617,8 +2617,7 @@ void drm_mode_convert_to_umode(struct drm_mode_modeinfo *out,
- 		break;
- 	}
+diff --git a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
+index bafdfe49c1d8..9e7bebcf24eb 100644
+--- a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
+@@ -511,7 +511,7 @@ int etnaviv_pm_query_dom(struct etnaviv_gpu *gpu,
  
--	strncpy(out->name, in->name, DRM_DISPLAY_MODE_LEN);
--	out->name[DRM_DISPLAY_MODE_LEN-1] = 0;
-+	strscpy(out->name, in->name, DRM_DISPLAY_MODE_LEN);
- }
+ 	domain->id = domain->iter;
+ 	domain->nr_signals = dom->nr_signals;
+-	strncpy(domain->name, dom->name, sizeof(domain->name));
++	strscpy(domain->name, dom->name, sizeof(domain->name));
  
- /**
-@@ -2659,8 +2658,7 @@ int drm_mode_convert_umode(struct drm_device *dev,
- 	 * useful for the kernel->userspace direction anyway.
- 	 */
- 	out->type = in->type & DRM_MODE_TYPE_ALL;
--	strncpy(out->name, in->name, DRM_DISPLAY_MODE_LEN);
--	out->name[DRM_DISPLAY_MODE_LEN-1] = 0;
-+	strscpy(out->name, in->name, DRM_DISPLAY_MODE_LEN);
+ 	domain->iter++;
+ 	if (domain->iter == nr_domains)
+@@ -540,7 +540,7 @@ int etnaviv_pm_query_sig(struct etnaviv_gpu *gpu,
+ 	sig = &dom->signal[signal->iter];
  
- 	/* Clearing picture aspect ratio bits from out flags,
- 	 * as the aspect-ratio information is not stored in
+ 	signal->id = signal->iter;
+-	strncpy(signal->name, sig->name, sizeof(signal->name));
++	strscpy(signal->name, sig->name, sizeof(signal->name));
+ 
+ 	signal->iter++;
+ 	if (signal->iter == dom->nr_signals)
 
 ---
 base-commit: 3669558bdf354cd352be955ef2764cde6a9bf5ec
-change-id: 20230914-strncpy-drivers-gpu-drm-drm_modes-c-a35d782cad01
+change-id: 20230914-strncpy-drivers-gpu-drm-etnaviv-etnaviv_perfmon-c-dd095491dfde
 
 Best regards,
 --
