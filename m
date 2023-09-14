@@ -2,143 +2,142 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACCDEEE0214
-	for <linux-hardening@archiver.kernel.org>; Wed, 13 Sep 2023 23:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 266DDEE0213
+	for <linux-hardening@archiver.kernel.org>; Thu, 14 Sep 2023 00:33:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233172AbjIMXyW (ORCPT
+        id S233172AbjINAdM (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 13 Sep 2023 19:54:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45622 "EHLO
+        Wed, 13 Sep 2023 20:33:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233145AbjIMXyV (ORCPT
+        with ESMTP id S231223AbjINAdL (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 13 Sep 2023 19:54:21 -0400
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A404E64
-        for <linux-hardening@vger.kernel.org>; Wed, 13 Sep 2023 16:54:18 -0700 (PDT)
-Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-1c1e780aa95so2584665ad.3
-        for <linux-hardening@vger.kernel.org>; Wed, 13 Sep 2023 16:54:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1694649257; x=1695254057; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=TmQ1vlrBfUMvjYgfJYVMsqlQZ4GMxfIJbcG1jqAE/6c=;
-        b=KYGwYidmtfdn/dlj8oYuvfxjws2xHrEMd1iOLoC73SvwTPuBPVk/NAVOoZucY9ON2W
-         pVP7B0D8lORNTfDupoplEYpU+aNS0d75NfcbJHeVO7n7ViWQgLVu2W2Dvp0ioDx2MUw4
-         zUS+XOy3nJ0xTf+v3jtCiX2uAuA2VX1mgIIsE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694649257; x=1695254057;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TmQ1vlrBfUMvjYgfJYVMsqlQZ4GMxfIJbcG1jqAE/6c=;
-        b=i3lXm9tyYj7S/dMdbBDOXltiejnA5rTCQj8lvp8nEsZ6M+6dn6jkGnK06dzx+YUxST
-         OBd0z3m92McemLd6IClW2+iLf0GOV0eFoBdp+n2P/mCgT/pY6cWCMKBPYi18M1isADLJ
-         gjhECvYmLSPYhSJqRM0slTTLup0t7fYJ21zYdu4SDfFuqzH+xX6VeS7g8lOVgGQVQSwY
-         TxbZILOpVfWziWTxyWxj6p7Vc3cWDBFAV52QWfgBt3F/mFRAm6sMJHMD8/01fk3Gz0Ic
-         oVUefmDcTD5tbYnqu/m3AcfeAFH3Y/ycFng+xHc1apbRRsrCVCScpxEqB9Nj6rqtuOJu
-         wH9g==
-X-Gm-Message-State: AOJu0YyIkojLlfckbXmFZUPMbYi+lSHN0xA99K8mRV0ARZlX4BIRML27
-        DWsUzmV70SlxpUhmI1jv6aRRzg==
-X-Google-Smtp-Source: AGHT+IHHGiBglQQYGl+V0dzdJ7yOnXC6bJL5bkPKwBmwTtLt+2HI3ODYI/P87KBasDHTHHpBjUAVCA==
-X-Received: by 2002:a17:903:32cf:b0:1bc:6c00:a2cf with SMTP id i15-20020a17090332cf00b001bc6c00a2cfmr5268838plr.53.1694649257342;
-        Wed, 13 Sep 2023 16:54:17 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id 19-20020a170902c11300b001b9d7c8f44dsm175831pli.182.2023.09.13.16.54.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Sep 2023 16:54:16 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>, Johan Hovold <johan@kernel.org>,
-        Jessica Yu <jeyu@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-        Nick Desaulniers <ndesaulniers@gooogle.com>,
-        Miguel Ojeda <ojeda@kernel.org>, Joe Perches <joe@perches.com>,
-        linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH v2] module: Clarify documentation of module_param_call()
-Date:   Wed, 13 Sep 2023 16:54:14 -0700
-Message-Id: <20230913235407.gonna.817-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+        Wed, 13 Sep 2023 20:33:11 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF2391724;
+        Wed, 13 Sep 2023 17:33:07 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6ADC5C433C7;
+        Thu, 14 Sep 2023 00:33:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1694651587;
+        bh=78IdMo52kj5+6bJlcewfwBX0rNPqip7T68o37Qx9Yr4=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=fsjRpDYSulA9367EFdFAGLUTu0c9nlbpmTLnmUNUWF/Ujr/W3vhKnAVWmlRosElKt
+         i4pEY8n18Q45chLu8k2MsnLto7mITLe3+uU4+oOGe0HUptveFjgJddRHFVT2qBJghq
+         OW8Jj0CdSixK2KBDNQEO9ypNb/74gOs9KJjTtal3fzi9F0XVeh7th4ycIuM74sgwi/
+         zWy5vQt73rtL1m+kY5KAtchyeuTeCH6tQl9STxRRsALiOOAGTLQxoEOjCnbVdYKWKs
+         NdpKSg+jPtGvbF6+MTJVGOypSsPATnvfVPeTuwDr0uPOGJocHhU7pykTWe9IyJ0i6G
+         WFTiSHoplUEVQ==
+Message-ID: <36a333bf-4cc5-e3a6-90fd-34b362f96f83@kernel.org>
+Date:   Thu, 14 Sep 2023 09:33:03 +0900
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2680; i=keescook@chromium.org;
- h=from:subject:message-id; bh=pNcngmHYrvDvUxoczJLnyZVd+nVJiePsfxEYP+mQ0xQ=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlAkuma27fQb+IVRynpM5+rd9HXGa5bQURQdPIS
- Wt4kC4XqSeJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQJLpgAKCRCJcvTf3G3A
- JqnbD/42vpNafZEmP4ggRIZjSYnTNljv/5iB7eQ3O5HsbD5EckktJlskTx4nh5U8W6Aq19QK2ud
- cpUdzg+pXwtgB6Cc8dE/tSxo48uWZInMrTT2ImA75OAgvHUoTukoDigzVuGNfNSrj8wwOCRNOgp
- 5Z9CVTPYynY4j4HAk0gix5Vb7hKvTofXGIvDZxeKISf6PHd9GQaF+u90y3eC5GXv7jbXG2nUWMd
- 4NXLlFB0iZ5C+DHn4YK8I3agbJcRGR8AQlUunhBMMCJxeU3HUju5BiP3kEbx4DBIYjBrSA/QU1O
- 8/tjv6OGGs3fYvAQ3xMFWvy2TbCupCo1lfgi3O6BiRNEv50X+1mcQkXNI54EXvhubFgNuxReHZH
- 2fm2UDFT/B5IPWfve0GeE0NEa0xOIb917g8ValpzTBbn1wwa4Cb37YnEqKyRG22SBqa0NqTjB0S
- iHnXFAqAXLpyx//pUD7Ks9PGgleLZaU8eJRa/nFsbK56NHu5jc7aUphIaQMXjJqqPskKe0Nh2cp
- a9nfclOGfgol2VuYRRce2AEQ7ntXiAMeFWHx2QThOLBUaiUJmwsZgGsG00gYWZtg80rEv3BEcAB
- Wn7nkaHEBmeBdG64VcXqh1BpeLkTj3RmG8xmxghATmcI4X+1ERuTGdwGWV+cPvnJFVQAOrI4S6w
- a+qnLUI SM27XxvQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH 09/19] zonefs: remove duplicate cleanup in
+ zonefs_fill_super
+Content-Language: en-US
+To:     Christoph Hellwig <hch@lst.de>,
+        Christian Brauner <brauner@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Tejun Heo <tj@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-hardening@vger.kernel.org,
+        cgroups@vger.kernel.org
+References: <20230913111013.77623-1-hch@lst.de>
+ <20230913111013.77623-10-hch@lst.de>
+From:   Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <20230913111013.77623-10-hch@lst.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Commit 9bbb9e5a3310 ("param: use ops in struct kernel_param, rather than
-get and set fns directly") added the comment that module_param_call()
-was deprecated, during a large scale refactoring to bring sanity to type
-casting back then. In 2017 following more cleanups, it became useful
-again as it wraps a common pattern of creating an ops struct for a
-given get/set pair:
+On 9/13/23 20:10, Christoph Hellwig wrote:
+> When ->fill_super fails, ->kill_sb is called which already cleans up
+> the inodes and zgroups.
+> 
+> Drop the extra cleanup code in zonefs_fill_super.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-  b2f270e87473 ("module: Prepare to convert all module_param_call() prototypes")
-  ece1996a21ee ("module: Do not paper over type mismatches in module_param_call()")
+Looks good to me.
 
-        static const struct kernel_param_ops __param_ops_##name = \
-                { .flags = 0, .set = _set, .get = _get }; \
-        __module_param_call(MODULE_PARAM_PREFIX, \
-                            name, &__param_ops_##name, arg, perm, -1, 0)
+Acked-by: Damien Le Moal <dlemoal@kernel.org>
 
-        __module_param_call(MODULE_PARAM_PREFIX, name, ops, arg, perm, -1, 0)
+> ---
+>  fs/zonefs/super.c | 21 +++++----------------
+>  1 file changed, 5 insertions(+), 16 deletions(-)
+> 
+> diff --git a/fs/zonefs/super.c b/fs/zonefs/super.c
+> index 9d1a9808fbbba6..35b2554ce2ac2e 100644
+> --- a/fs/zonefs/super.c
+> +++ b/fs/zonefs/super.c
+> @@ -1309,13 +1309,12 @@ static int zonefs_fill_super(struct super_block *sb, void *data, int silent)
+>  	/* Initialize the zone groups */
+>  	ret = zonefs_init_zgroups(sb);
+>  	if (ret)
+> -		goto cleanup;
+> +		return ret;
+>  
+>  	/* Create the root directory inode */
+> -	ret = -ENOMEM;
+>  	inode = new_inode(sb);
+>  	if (!inode)
+> -		goto cleanup;
+> +		return -ENOMEM;
+>  
+>  	inode->i_ino = bdev_nr_zones(sb->s_bdev);
+>  	inode->i_mode = S_IFDIR | 0555;
+> @@ -1333,7 +1332,7 @@ static int zonefs_fill_super(struct super_block *sb, void *data, int silent)
+>  
+>  	sb->s_root = d_make_root(inode);
+>  	if (!sb->s_root)
+> -		goto cleanup;
+> +		return -ENOMEM;
+>  
+>  	/*
+>  	 * Take a reference on the zone groups directory inodes
+> @@ -1341,19 +1340,9 @@ static int zonefs_fill_super(struct super_block *sb, void *data, int silent)
+>  	 */
+>  	ret = zonefs_get_zgroup_inodes(sb);
+>  	if (ret)
+> -		goto cleanup;
+> -
+> -	ret = zonefs_sysfs_register(sb);
+> -	if (ret)
+> -		goto cleanup;
+> -
+> -	return 0;
+> -
+> -cleanup:
+> -	zonefs_release_zgroup_inodes(sb);
+> -	zonefs_free_zgroups(sb);
+> +		return ret;
+>  
+> -	return ret;
+> +	return zonefs_sysfs_register(sb);
+>  }
+>  
+>  static struct dentry *zonefs_mount(struct file_system_type *fs_type,
 
-Many users of module_param_cb() appear to be almost universally
-open-coding the same thing that module_param_call() does now. Don't
-discourage[1] people from using module_param_call(): clarify the comment
-to show that module_param_cb() is useful if you repeatedly use the same
-pair of get/set functions.
-
-[1] https://lore.kernel.org/lkml/202308301546.5C789E5EC@keescook/
-
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Johan Hovold <johan@kernel.org>
-Cc: Jessica Yu <jeyu@kernel.org>
-Cc: Sagi Grimberg <sagi@grimberg.me>
-Cc: Nick Desaulniers <ndesaulniers@gooogle.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>
-Cc: Joe Perches <joe@perches.com>
-Cc: linux-modules@vger.kernel.org
-Reviewed-by: Miguel Ojeda <ojeda@kernel.org>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-Luis, I note that include/linux/moduleparam.h isn't in the MAINTAINERS
-file pattern. Perhaps you want to use include/linux/module*.h?
----
- include/linux/moduleparam.h | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/include/linux/moduleparam.h b/include/linux/moduleparam.h
-index 962cd41a2cb5..d4452f93d060 100644
---- a/include/linux/moduleparam.h
-+++ b/include/linux/moduleparam.h
-@@ -293,7 +293,11 @@ struct kparam_array
- 	= { __param_str_##name, THIS_MODULE, ops,			\
- 	    VERIFY_OCTAL_PERMISSIONS(perm), level, flags, { arg } }
- 
--/* Obsolete - use module_param_cb() */
-+/*
-+ * Useful for describing a set/get pair used only once (i.e. for this
-+ * parameter). For repeated set/get pairs (i.e. the same struct
-+ * kernel_param_ops), use module_param_cb() instead.
-+ */
- #define module_param_call(name, _set, _get, arg, perm)			\
- 	static const struct kernel_param_ops __param_ops_##name =	\
- 		{ .flags = 0, .set = _set, .get = _get };		\
 -- 
-2.34.1
+Damien Le Moal
+Western Digital Research
 
