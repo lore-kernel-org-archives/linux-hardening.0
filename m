@@ -2,69 +2,68 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C4B9EEAA7A
-	for <linux-hardening@archiver.kernel.org>; Thu, 14 Sep 2023 22:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C9CEEAA7C
+	for <linux-hardening@archiver.kernel.org>; Thu, 14 Sep 2023 22:50:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229499AbjINWra (ORCPT
+        id S230133AbjINWu0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 14 Sep 2023 18:47:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34304 "EHLO
+        Thu, 14 Sep 2023 18:50:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230149AbjINWra (ORCPT
+        with ESMTP id S229499AbjINWuZ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 14 Sep 2023 18:47:30 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8722270E
-        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 15:47:25 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d81c39acfd9so269577276.0
-        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 15:47:25 -0700 (PDT)
+        Thu, 14 Sep 2023 18:50:25 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 856F826B7
+        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 15:50:21 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-59285f1e267so47696197b3.0
+        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 15:50:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1694731645; x=1695336445; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1694731820; x=1695336620; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=WlEmBKsST15BXxXfgVar1XzghXpy2BhN9U0IxRoXCQE=;
-        b=PaYMZoQzQ6DiCCY1Khy+ts0DFKWlN5CH+6GQOuWvaoucwuopd5LO7fmc/OKtZF/QXO
-         pU0r607zjhM8We2E93VejyCu2XgYzY7tBCNVI1Ke5rWM8K7bRchg/YkqSF2IJTDo9kw+
-         eX4MKOxy9CPsHqdARDzdGFQhSi/9mVpdVfugsaSO1JhZmmGtpaSKaxh+uJoABzAlnHwX
-         cD+fJZnheQHSG+L06RZeNlh9B2dSEKcM1nl/Ur7e+prSSeTexZlegtuXAeKU0KzLKUWq
-         cVbwpnyiPj2yGXD5Acjy80DAiVBKnagdVBs3m4qWbrS766Be+JYUpF5SDRcfWBWv5VLh
-         VSnA==
+        bh=wrenr5WHs2dK5hnlbbyL0EycRKjoEDbDNwq7CnxxIaU=;
+        b=BxugndSsenTM9NF1aOCW4ZO/a1jXQgUDDQ9ubb3sKS1Ev0pBTHSqm//oPKCUZG33dn
+         +IDUP66N300o9+XksnMg5cDPIFDFxkcsPwO2j+tzjfvqooIFtT61kpn2waKHY164Bgsg
+         dFgkaZzbCbvTJsGmT2sQ79BXa4Ns1A/gSs1VZFHipi7fzgvaCLBeDxDKFjY4FY1EPqsy
+         3dEmTXoLOBlv6XJVimtn6xD6xix+mSWXcbD3goZCRcw0ftb6DoPrqdngHUk+j+NeqbsL
+         rPFs63g3CQlzsY9Gx+TF9cQ+wqvv6x/G3jgAmhXDbhyiFrH3SbMi17bZxVurW/BLWAAS
+         81eA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694731645; x=1695336445;
+        d=1e100.net; s=20230601; t=1694731821; x=1695336621;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=WlEmBKsST15BXxXfgVar1XzghXpy2BhN9U0IxRoXCQE=;
-        b=sU4Gm3EgPFqMRgelvI4qw+yTiLkcrOOG/d3v/EkteqGEI7tTPREifhSViZlyFzV+Iu
-         zYJzQM1/ii212nvo9un/679jjn0admN9gHIynU/+9HGtNAfUwpYOMZhKPKjZDPJ0Wxel
-         lIaAV45EEccmGjFHkfjG8NGQQ+RX7FxSVSKNDxRPgoumY5HLK/hLzH/lff06CFDfmIso
-         8eq6hVBp5iktyoXqHvHCnUngrGITmg8gqR+duo2hA/uQmFHRtk/3WTCx8D1jVivDN76x
-         8Mq96UVUK1iQGrMEvGh06daKcZSVyivbzcpcAU75P50HLfY/k3JgKD8BNS5nGwlNeZZU
-         H+JA==
-X-Gm-Message-State: AOJu0Yyo4qzZkq8C5Od+SV5nIba03hIVDZwv29Y1PslY4hQA483+cOw0
-        yp/mwcgNI3d0Ewh2PQZd/Tlqt66/pNdg3S1lYw==
-X-Google-Smtp-Source: AGHT+IGkdKJsDoRPj6iOAbB6G6mb6EbzU9PdlEfuupjk+OmoelGiAAQezQx06Su0QGHeD/GXGFFXlSq//vqRnmROdQ==
+        bh=wrenr5WHs2dK5hnlbbyL0EycRKjoEDbDNwq7CnxxIaU=;
+        b=adXXmMW4yrwQ88nWPMfGqNFjdJ9fUrz/ZU9PB8d0E9TdXox7A2DWEH4c7mNoDYSX3+
+         Wi0G7kIsN5C7MSLrO93ptEbeD/5qdr6V0vnsWPXQkd/yZoG3BUX6wnsPldGI46pXEk+c
+         6ErPI43Q5SRqTEovqaG//LnzhllwOAyatKeXQzBUpJAYUNZBTlxvdUryNAU6LOZr/9xc
+         Pp6vbxTO7poYAUEWKomgbAx507hM2mKGbhs6Xpo1tcxV4RQseffmxvMBrbah4MB37mgz
+         OlG6eEEJ6xSIZKP3ZBYw9FrjwIc/vjUftMhgXd/Bn/7g+IDIyNLZd+eXNsSlZlfV0fFp
+         9dAg==
+X-Gm-Message-State: AOJu0YwSw6VF4TfTi393uj1cvc+58GWhN90h2Aj99+7XYN8liG7DQny2
+        hwHD92h8dyaNaQMy7ZYxhX46n3kqeNd881U5MA==
+X-Google-Smtp-Source: AGHT+IFqrDocdDDYwMpT4qE4iWOo5ZoiN4++kHE+CY4yKvqynUceKA1T5/Jq8WXi8hvg81Z+gTnwNQ1IpfMPouoe0w==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a5b:481:0:b0:d80:bea:ca87 with SMTP id
- n1-20020a5b0481000000b00d800beaca87mr170215ybp.1.1694731645064; Thu, 14 Sep
- 2023 15:47:25 -0700 (PDT)
-Date:   Thu, 14 Sep 2023 22:47:21 +0000
+ (user=justinstitt job=sendgmr) by 2002:a25:c748:0:b0:d15:53b5:509f with SMTP
+ id w69-20020a25c748000000b00d1553b5509fmr85146ybe.2.1694731820834; Thu, 14
+ Sep 2023 15:50:20 -0700 (PDT)
+Date:   Thu, 14 Sep 2023 22:50:15 +0000
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAHmNA2UC/x3MPQqEQAxA4atIagP+jLrrVRYLmURNM0riiiLe3
- dHmwde8E4xV2KBNTlDexGQOEXmagJ/6MDIKRUORFWX2zR3aqsEvB5LKxmo4CeH/icfe1dVQcvN xRBAHi/Ig+zv/ddd1A6Gwul9sAAAA
+X-B4-Tracking: v=1; b=H4sIACaOA2UC/x3NwQqDMAyA4VeRnBeodYO5VxlDXJrOHGxLIuoQ3
+ 31lx+/y/wcYq7DBozlAeRWTnCraSwM0jenDKKEavPOd69sr2qKJyheDyspqOG1zTjhSkaHkjXW YeWFFQuqjD3d3694coeaKcpT9v3q+zvMHDxSl8XoAAAA=
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1694731644; l=2748;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1694731820; l=1404;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=Ro3W2l30+BkUgaszKfSJpsko0I3zSOwBNarLcip1Cv0=; b=+Ja/3VwcQv8Olj4st1v7gaQMddtIhh5AF/TwEtWpW6owvTXLz0/I8erXLOUpXoFmb5Z9njm4T
- vZydOgdhr/SDE99w0xuyh/SH2rl1X/0la8SdmEemgGQah5zf2h7fMX+
+ bh=K3iZ/hNNCktU+LFT+e2eCRR8wtHujlZPGvgREL3k5N0=; b=AMgFe1H+bSBII/rO5u6ibPsdFEANAgzsVzlwm/0r26kBLn7wO36XET/m1sJz644C8oxgiiZ7R
+ YlZOH5dfwGzCrRlgTODJ7YveNEm/+t8Y38//F6Nts1+INz+B7Gxxjzc
 X-Mailer: b4 0.12.3
-Message-ID: <20230914-strncpy-drivers-hid-uhid-c-v1-1-18a190060d8d@google.com>
-Subject: [PATCH] HID: uhid: refactor deprecated strncpy
+Message-ID: <20230914-strncpy-drivers-hwmon-acpi_power_meter-c-v1-1-905297479fe8@google.com>
+Subject: [PATCH] hwmon: refactor deprecated strncpy
 From:   Justin Stitt <justinstitt@google.com>
-To:     David Rheinsberg <david@readahead.eu>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+To:     Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
         Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -75,66 +74,35 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 We should prefer more robust and less ambiguous string interfaces.
 
-A suitable replacement is `strscpy` [2] due to the fact that it
-guarantees NUL-termination on the destination buffer without
-unnecessarily NUL-padding.
-
-Looking at: Commit 4d26d1d1e806 ("Revert "HID: uhid: use strlcpy() instead of strncpy()"")
-we see referenced the fact that many attempts have been made to change
-these strncpy's into strlcpy to no success. I think strscpy is an
-objectively better interface here as it doesn't unnecessarily NUL-pad
-the destination buffer whilst allowing us to drop the `len = min(...)`
-pattern as strscpy will implicitly limit the number of bytes copied by
-the smaller of its dest and src arguments.
-
-So while the existing code may not have a bug (i.e: overread problems)
-we should still favor strscpy due to readability (plus a very slight
-performance boost).
+A suitable replacement is `strscpy` [2] due to the fact that it guarantees
+NUL-termination on the destination buffer without unnecessarily NUL-padding.
 
 Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
 Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
 Link: https://github.com/KSPP/linux/issues/90
 Cc: linux-hardening@vger.kernel.org
-Cc: Kees Cook <keescook@chromium.org>
 Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
- drivers/hid/uhid.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+ drivers/hwmon/acpi_power_meter.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hid/uhid.c b/drivers/hid/uhid.c
-index 4588d2cd4ea4..00e1566ad37b 100644
---- a/drivers/hid/uhid.c
-+++ b/drivers/hid/uhid.c
-@@ -490,7 +490,7 @@ static int uhid_dev_create2(struct uhid_device *uhid,
- 			    const struct uhid_event *ev)
- {
- 	struct hid_device *hid;
--	size_t rd_size, len;
-+	size_t rd_size;
- 	void *rd_data;
- 	int ret;
+diff --git a/drivers/hwmon/acpi_power_meter.c b/drivers/hwmon/acpi_power_meter.c
+index fa28d447f0df..9bafe7c85ff7 100644
+--- a/drivers/hwmon/acpi_power_meter.c
++++ b/drivers/hwmon/acpi_power_meter.c
+@@ -803,7 +803,7 @@ static int read_capabilities(struct acpi_power_meter_resource *resource)
+ 			goto error;
+ 		}
  
-@@ -514,13 +514,9 @@ static int uhid_dev_create2(struct uhid_device *uhid,
- 		goto err_free;
+-		strncpy(*str, element->string.pointer, element->string.length);
++		strscpy(*str, element->string.pointer, element->string.length);
+ 		str++;
  	}
  
--	/* @hid is zero-initialized, strncpy() is correct, strlcpy() not */
--	len = min(sizeof(hid->name), sizeof(ev->u.create2.name)) - 1;
--	strncpy(hid->name, ev->u.create2.name, len);
--	len = min(sizeof(hid->phys), sizeof(ev->u.create2.phys)) - 1;
--	strncpy(hid->phys, ev->u.create2.phys, len);
--	len = min(sizeof(hid->uniq), sizeof(ev->u.create2.uniq)) - 1;
--	strncpy(hid->uniq, ev->u.create2.uniq, len);
-+	strscpy(hid->name, ev->u.create2.name, sizeof(hid->name));
-+	strscpy(hid->phys, ev->u.create2.phys, sizeof(hid->phys));
-+	strscpy(hid->uniq, ev->u.create2.uniq, sizeof(hid->uniq));
- 
- 	hid->ll_driver = &uhid_hid_driver;
- 	hid->bus = ev->u.create2.bus;
 
 ---
 base-commit: 3669558bdf354cd352be955ef2764cde6a9bf5ec
-change-id: 20230914-strncpy-drivers-hid-uhid-c-a465f3e784dd
+change-id: 20230914-strncpy-drivers-hwmon-acpi_power_meter-c-c9f2d8053bef
 
 Best regards,
 --
