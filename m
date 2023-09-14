@@ -2,135 +2,161 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69BE7EEAA59
-	for <linux-hardening@archiver.kernel.org>; Thu, 14 Sep 2023 16:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAAFAEEAA5B
+	for <linux-hardening@archiver.kernel.org>; Thu, 14 Sep 2023 17:18:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234082AbjINQ6l (ORCPT
+        id S239208AbjINRSy (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 14 Sep 2023 12:58:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47522 "EHLO
+        Thu, 14 Sep 2023 13:18:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231243AbjINQ6l (ORCPT
+        with ESMTP id S239182AbjINRSy (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 14 Sep 2023 12:58:41 -0400
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 270858E;
-        Thu, 14 Sep 2023 09:58:37 -0700 (PDT)
+        Thu, 14 Sep 2023 13:18:54 -0400
+Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5719CF
+        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 10:18:49 -0700 (PDT)
+Received: from eig-obgw-6009a.ext.cloudfilter.net ([10.0.30.184])
+        by cmsmtp with ESMTP
+        id gZm7qB8AkEoVsgpzNq6nJY; Thu, 14 Sep 2023 17:18:49 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with ESMTPS
+        id gpzMqTv4pwbafgpzNqrdEx; Thu, 14 Sep 2023 17:18:49 +0000
+X-Authority-Analysis: v=2.4 cv=e/0V9Il/ c=1 sm=1 tr=0 ts=65034079
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=zNV7Rl7Rt7sA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
+ a=DfNHnWVPAAAA:8 a=anKBZ9voxICiHcaguvcA:9 a=QEXdDO2ut3YA:10
+ a=AjGcO6oz07-iQ99wixmX:22 a=rjTVMONInIDnV1a_A2c_:22
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=OegaqNYe7r/8g+jxupTPdfeZq9KJj2OTDDvHBPIaVRM=; b=RaDan93BbmgqvP/klzEFdds2eX
-        b7IkvPoHF6e1c3Qwa5SEuXQNKpqse3rk12yT18ICKdfI7a3VckJMEILdWLlbPuVYu2ikn++I4wXvt
-        w+i7SX8a1a6dW7cMTedrWSnk40HFt49t9T/tHHEsDSZTulc9VAD6mfnRu95MdKXU6o+4gx8ccOYCl
-        tzR3nVCHyShKKJCvDGpl2tGT/4EnlVLt+glK08TUPmS5nCJyZcU67evdh1flfJb6C4+28BCONKdlH
-        o2QcR8W9m9qZ3e3/lEoYnSGID6WJVx2XavJ6wJ2qDN3BMDjs3iQqHL/hIjEVtRJN3bEfYNC532EZP
-        98mkJSUw==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1qgpfJ-0064a2-0E;
-        Thu, 14 Sep 2023 16:58:05 +0000
-Date:   Thu, 14 Sep 2023 17:58:05 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Christian Brauner <brauner@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>, Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Tejun Heo <tj@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-hardening@vger.kernel.org,
-        cgroups@vger.kernel.org, Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH 03/19] fs: release anon dev_t in deactivate_locked_super
-Message-ID: <20230914165805.GJ800259@ZenIV>
-References: <20230913111013.77623-1-hch@lst.de>
- <20230913111013.77623-4-hch@lst.de>
- <20230913232712.GC800259@ZenIV>
- <20230914023705.GH800259@ZenIV>
- <20230914053843.GI800259@ZenIV>
- <20230914-munkeln-pelzmantel-3e3a761acb72@brauner>
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=SpbGtZlfHa2aXlFwM4Mq2v6Rd5H4+ybNfEh7tydENP4=; b=VhI8S/jFowxp/xikWbla/xBwMp
+        GEBcsFwpAF/ud20r9OjWu9cFvPetEksfHRHjktrenp9DMvsmTPBBiIxQm1Ol8T8RbbfCLQPW/pfhq
+        fobo49xMhL0R2LagynwPdiLOdUJfJRyPObeawcWbs+8iSs2zJ6yKEI/dxdbYrV++e6qoXJjr3fGDA
+        WHtkOCkg1SGQdqDhBiL4vwB+Az7UObqN0loSCA4QW1fwOmI7fBIMMkNuOeMZdR6jJWK0ub+9YOQTR
+        yEE54WxFJaSNGfG3Iww2nPqSH6LbHd+9WzjRb+x1BvzvX84LfjJabOKS0q68WGTN8R4/wvO5vaJ/A
+        u1DSwA2Q==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:48748 helo=[192.168.15.8])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.96)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1qgpzK-000Vfy-0q;
+        Thu, 14 Sep 2023 12:18:46 -0500
+Message-ID: <60903bfb-fe91-ed19-1d77-8fb44cef858c@embeddedor.com>
+Date:   Thu, 14 Sep 2023 11:19:07 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230914-munkeln-pelzmantel-3e3a761acb72@brauner>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v2] wifi: brcmfmac: Replace 1-element arrays with flexible
+ arrays
+To:     Juerg Haefliger <juerg.haefliger@canonical.com>
+Cc:     SHA-cyfmac-dev-list@infineon.com, aspriel@gmail.com,
+        brcm80211-dev-list.pdl@broadcom.com, franky.lin@broadcom.com,
+        gustavoars@kernel.org, hante.meuleman@broadcom.com,
+        hdegoede@redhat.com, keescook@chromium.org, kvalo@kernel.org,
+        linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
+        linux-wireless@vger.kernel.org, marcan@marcan.st,
+        ryohei.kondo@cypress.com, stable@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+References: <20230913065421.12615-1-juerg.haefliger@canonical.com>
+ <20230914070227.12028-1-juerg.haefliger@canonical.com>
+Content-Language: en-US
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20230914070227.12028-1-juerg.haefliger@canonical.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.21.192
+X-Source-L: No
+X-Exim-ID: 1qgpzK-000Vfy-0q
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:48748
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org:  HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfNt/tHyrIVVCH8lVSLJpYp1mMVO2FfL8vl0FCpnhfCk8W4Ip5ClgDssiG0ani+Zeon9Q57xSDFA3xejvFyiDNLKwu3X9HaII4FYfZqIQswBcHz3ncR38
+ Yt22A5+a7bpJQU+QGxZFTFmVwO+9MHgfQsjNvWghmGkO5LeEo4U66yp2imEJRne1zitKlC42XY55r4+tnBKymtxhFTQIWfwN8JZ9dyiwg06GQagmGmphdjRi
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Sep 14, 2023 at 04:02:25PM +0200, Christian Brauner wrote:
 
-> Yes, you're right that making the superblock and not the filesytem type
-> the bd_holder changes the logic and we are aware of that of course. And
-> it requires changes such as moving additional block device closing from
-> where some callers currently do it.
 
-Details, please?
-
-> But the filesytem type is not a very useful holder itself and has other
-> drawbacks. The obvious one being that it requires us to wade through all
-> superblocks on the system trying to find the superblock associated with
-> a given block device continously grabbing and dropping sb_lock and
-> s_umount. None of that is very pleasant nor elegant and it is for sure
-> not very easy to understand (Plus, it's broken for btrfs freezing and
-> syncing via block level ioctls.).
-
-"Constantly" is a bit of a stretch - IIRC, we grabbed sb_lock once, then
-went through the list comparing ->s_bdev (without any extra locking),
-then bumped ->s_count on the found superblock, dropped sb_lock,
-grabbed ->s_umount on the sucker and verified it's still alive.
-
-Repeated grabbing of any lock happened only on a race with fs shutdown;
-normal case is one spin_lock, one spin_unlock, one down_read().
-
-Oh, well...
-
-> Using the superblock as holder makes this go away and is overall a lot
-> more useful and intuitive and can be extended to filesystems with
-> multiple devices (Of which we apparently are bound to get more.).
->
-> So I think this change is worth the pain.
+On 9/14/23 01:02, Juerg Haefliger wrote:
+> Since commit 2d47c6956ab3 ("ubsan: Tighten UBSAN_BOUNDS on GCC"),
+> UBSAN_BOUNDS no longer pretends 1-element arrays are unbounded. Walking
+> 'element' and 'channel_list' will trigger warnings, so make them proper
+> flexible arrays.
 > 
-> It's a fair point that these lifetime rules should be documented in
-> Documentation/filesystems/. The old lifetime documentation is too sparse
-> to be useful though.
+> False positive warnings were:
+> 
+>    UBSAN: array-index-out-of-bounds in drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c:6984:20
+>    index 1 is out of range for type '__le32 [1]'
+> 
+>    UBSAN: array-index-out-of-bounds in drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c:1126:27
+>    index 1 is out of range for type '__le16 [1]'
+> 
+> for these lines of code:
+> 
+>    6884  ch.chspec = (u16)le32_to_cpu(list->element[i]);
+> 
+>    1126  params_le->channel_list[i] = cpu_to_le16(chanspec);
+> 
+> Cc: stable@vger.kernel.org # 6.5+
+> Signed-off-by: Juerg Haefliger <juerg.haefliger@canonical.com>
 
-What *are* these lifetime rules?  Seriously, you have 3 chunks of
-fs-dependent actions at the moment:
-	* the things needed to get rid of internal references pinning
-inodes/dentries + whatever else we need done before generic_shutdown_super()
-	* the stuff to be done between generic_shutdown_super() and
-making the sucker invisible to sget()/sget_fc()
-	* the stuff that must be done after we are sure that sget
-callbacks won't be looking at this instance.
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Note that Christoph's series has mashed (2) and (3) together, resulting
-in UAF in a bunch of places.  And I'm dead serious about
-Documentation/filesystems/porting being the right place; any development
-tree of any filesystem (in-tree one or not) will have to go through the
-changes and figure out WTF to do with their existing code.  We are
-going to play whack-a-mole for at least several years as development
-branches get rebased and merged.
+Thanks
+--
+Gustavo
 
-Incidentally, I'm going to add a (belated by 10 years) chunk in porting.rst
-re making sure that anything in superblock that might be needed by methods
-called in RCU mode should *not* be freed without an RCU delay...  Should've
-done that back in 3.12 merge window when RCU'd vfsmounts went in; as it
-is, today we have several filesystems with exact same kind of breakage.
-hfsplus and affs breakage had been there in 3.13 (missed those two), exfat
-and ntfs3 - introduced later, by initial merges of filesystems in question.
-Missed on review...
-
-Hell knows - perhaps Documentation/filesystems/whack-a-mole might be a good
-idea...
+> 
+> ---
+> v2:
+>    - Use element[] instead of DFA() in brcmf_chanspec_list.
+>    - Add Cc: stable tag
+> ---
+>   .../wireless/broadcom/brcm80211/brcmfmac/fwil_types.h    | 9 +++++++--
+>   1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h
+> index bece26741d3a..611d1a6aabb9 100644
+> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h
+> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h
+> @@ -442,7 +442,12 @@ struct brcmf_scan_params_v2_le {
+>   				 * fixed parameter portion is assumed, otherwise
+>   				 * ssid in the fixed portion is ignored
+>   				 */
+> -	__le16 channel_list[1];	/* list of chanspecs */
+> +	union {
+> +		__le16 padding;	/* Reserve space for at least 1 entry for abort
+> +				 * which uses an on stack brcmf_scan_params_v2_le
+> +				 */
+> +		DECLARE_FLEX_ARRAY(__le16, channel_list);	/* chanspecs */
+> +	};
+>   };
+>   
+>   struct brcmf_scan_results {
+> @@ -702,7 +707,7 @@ struct brcmf_sta_info_le {
+>   
+>   struct brcmf_chanspec_list {
+>   	__le32	count;		/* # of entries */
+> -	__le32	element[1];	/* variable length uint32 list */
+> +	__le32  element[];	/* variable length uint32 list */
+>   };
+>   
+>   /*
