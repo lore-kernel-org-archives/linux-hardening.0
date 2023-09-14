@@ -2,81 +2,87 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEF1EEAA5D
-	for <linux-hardening@archiver.kernel.org>; Thu, 14 Sep 2023 18:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93371EEAA62
+	for <linux-hardening@archiver.kernel.org>; Thu, 14 Sep 2023 19:23:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237837AbjINShQ (ORCPT
+        id S230311AbjINTX5 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 14 Sep 2023 14:37:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42020 "EHLO
+        Thu, 14 Sep 2023 15:23:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231881AbjINShP (ORCPT
+        with ESMTP id S241221AbjINTX5 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 14 Sep 2023 14:37:15 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ED3C1FD7;
-        Thu, 14 Sep 2023 11:37:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694716631; x=1726252631;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=lE/AQEBUOLaO32yy15qBqA273NUv+ScDqbpAk7foBXU=;
-  b=c/ua3s3H63jKI6FollYNeNfTat1li97ClLbMLgPah+m7hWLnlStgR5mL
-   0x9nZr2MVz3OMLoXvhHtySkNrLzM5SBUHaodJcDgBVpvFJLidckIOgA+w
-   HEL1jo+S6VzaO6JDwiIdCp3zVWfcXiKHpNoR1JalTiXCIAhu3+xQXB8lA
-   ismPmXTjE5witLPDMuV2I6sdAXD0UPaFpTeuZ5spvgulLNSyDpD+I04u8
-   1FeU/HTb+mpSYI1gSWuAsSQv7hC0RK9fc3cWeLLiMWc69wqJ9Fdb5hFaA
-   6D23NFaNUDMueMqBrYrV8wFgxxokBP6BGlVvt44FGUuE7jQBxSvE+U6GN
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10833"; a="359299906"
-X-IronPort-AV: E=Sophos;i="6.02,146,1688454000"; 
-   d="scan'208";a="359299906"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2023 11:37:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10833"; a="834841504"
-X-IronPort-AV: E=Sophos;i="6.02,146,1688454000"; 
-   d="scan'208";a="834841504"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by FMSMGA003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2023 11:37:09 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC0)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qgrD9-000000080uK-1QDB;
-        Thu, 14 Sep 2023 21:37:07 +0300
-Date:   Thu, 14 Sep 2023 21:37:07 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH v1 1/1] lib/string_helpers: Don't copy a tail in
- kstrdup_and_replace() if 'new' is \0
-Message-ID: <ZQNS0qzJVrRRgNLO@smile.fi.intel.com>
-References: <20230913094557.451463-1-andriy.shevchenko@linux.intel.com>
+        Thu, 14 Sep 2023 15:23:57 -0400
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17E2026B3;
+        Thu, 14 Sep 2023 12:23:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=4hr36i5Cv0yOjN7Qm9aK+O+t73F0SaG9UQf71oo3coc=; b=TUQ6R0vfZi/dderGJyPUNMNW1S
+        bGBX6G1t2V5wN0IJDFy3lSyvNLxteUnMS7i8LrmlKHnBX7D/46D3VL1LLp3PmhIcrV8xp75QBNrph
+        uhKRrW8158NAtE6Nld12BbWmWTk6GDXfhxGjKJ9K5AQbTyVr5vCqN6iZU3CFmXLSa9W49CQKDf8JC
+        uvti6ZvkSk3v9U6tCGhbhjUC3u1Cko0dd2WrfufnlEMkfYxRNpLRW3s38xAwwJL3hK3fj7qLAGb4y
+        tqzNWInzV2Fz4nBN2aLW1MikDwXWL39jXoxSvpcwL0QBKsfKL2xUZIlLl6IopWufWXsm7kdFdP6cK
+        o/GMz/RA==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+        id 1qgrw3-0066QM-1t;
+        Thu, 14 Sep 2023 19:23:31 +0000
+Date:   Thu, 14 Sep 2023 20:23:31 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Christian Brauner <brauner@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Tejun Heo <tj@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-hardening@vger.kernel.org,
+        cgroups@vger.kernel.org, Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH 03/19] fs: release anon dev_t in deactivate_locked_super
+Message-ID: <20230914192331.GK800259@ZenIV>
+References: <20230913111013.77623-1-hch@lst.de>
+ <20230913111013.77623-4-hch@lst.de>
+ <20230913232712.GC800259@ZenIV>
+ <20230914023705.GH800259@ZenIV>
+ <20230914053843.GI800259@ZenIV>
+ <20230914-munkeln-pelzmantel-3e3a761acb72@brauner>
+ <20230914165805.GJ800259@ZenIV>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230913094557.451463-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20230914165805.GJ800259@ZenIV>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Sep 13, 2023 at 12:45:57PM +0300, Andy Shevchenko wrote:
-> The kstrdup_and_replace() takes two characters, old and new, to replace
-> former with latter after the copying of the original string. But in case
-> when new is a NUL, there is no point to copy the rest of the string,
-> the contract with the callers is that that the function returns a
-> NUL-terminated string and not a buffer of the size filled with a given
-> data. With this we can optimize the memory consumption by copying only
-> meaningful part of the original string and drop the rest.
+On Thu, Sep 14, 2023 at 05:58:05PM +0100, Al Viro wrote:
 
-Thinking about this more, I self NAK this.
-If the caller knows the size of the original message it can be handy to make
-a copy and replace all occurrences of old by NUL. This will be an optimized
-implementation of strsep(str, "$OLD").
+> Incidentally, I'm going to add a (belated by 10 years) chunk in porting.rst
+> re making sure that anything in superblock that might be needed by methods
+> called in RCU mode should *not* be freed without an RCU delay...  Should've
+> done that back in 3.12 merge window when RCU'd vfsmounts went in; as it
+> is, today we have several filesystems with exact same kind of breakage.
+> hfsplus and affs breakage had been there in 3.13 (missed those two), exfat
+> and ntfs3 - introduced later, by initial merges of filesystems in question.
+> Missed on review...
+> 
+> Hell knows - perhaps Documentation/filesystems/whack-a-mole might be a good
+> idea...
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Actually, utf8 casefolding stuff also has the same problem, so ext4 and f2fs
+with casefolding are also affected ;-/
