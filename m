@@ -2,178 +2,116 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B204EEAA6E
-	for <linux-hardening@archiver.kernel.org>; Thu, 14 Sep 2023 20:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BEA8EEAA71
+	for <linux-hardening@archiver.kernel.org>; Thu, 14 Sep 2023 20:52:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229462AbjINUMw (ORCPT
+        id S229805AbjINUw1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 14 Sep 2023 16:12:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45078 "EHLO
+        Thu, 14 Sep 2023 16:52:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229477AbjINUMw (ORCPT
+        with ESMTP id S229670AbjINUw1 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 14 Sep 2023 16:12:52 -0400
-Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 395572700
-        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 13:12:47 -0700 (PDT)
-Received: from eig-obgw-5008a.ext.cloudfilter.net ([10.0.29.246])
-        by cmsmtp with ESMTP
-        id ghjhq0xEMOzKlgshjq8jzH; Thu, 14 Sep 2023 20:12:47 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with ESMTPS
-        id gshiq7b0L79vMgshiqYCkV; Thu, 14 Sep 2023 20:12:46 +0000
-X-Authority-Analysis: v=2.4 cv=W7Ar6Dak c=1 sm=1 tr=0 ts=6503693e
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=zNV7Rl7Rt7sA:10 a=wYkD_t78qR0A:10
- a=pywrRr8RVoJqelg4EO4A:9 a=QEXdDO2ut3YA:10
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=zWVonpaXdZXHPWvZADwVu4cRo39wCBa6QoaBz1rxDyg=; b=WL/9gyZZ2krLnh7BcBIDVpIcAH
-        iyJRAFnQzZE2sG7lnfqsAQ/+Fs1M9vxksuTTzxDgWnvMrMRmZERsu/xMDQ+TDqbC/hKZIUl7Pop2r
-        9cqO4Bow9cbk8OdW/MVt6B39GK1Vs5STsIZ2Dsh3smnuy/ivj2i13e+ZIURuV+LvRsgDBOT1EcnwU
-        xCZAV/pamPJw/JIHmx90193Y4NbVn1Y2DNtO78QfhKoQqMPA110raaJck5o/5lX+g/xYSmzixtu/c
-        3JPGsC2KtFV24Cf2dExmLjB+8JIGqgKr2RPZyCQFO3NzujrPTfnV0YXFfWyfqWl2hpab/4kCxjtZ8
-        2mv72oDw==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:48968 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.96)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1qgshh-0037CU-1w;
-        Thu, 14 Sep 2023 15:12:45 -0500
-Message-ID: <42d67413-f11d-f626-ee51-a6e6a74c0651@embeddedor.com>
-Date:   Thu, 14 Sep 2023 14:13:41 -0600
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: linux-next: Tree for Sep 12 (bcachefs)
-Content-Language: en-US
-To:     Kent Overstreet <kent.overstreet@linux.dev>,
-        Kees Cook <keescook@chromium.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org
-References: <20230912152645.0868a96a@canb.auug.org.au>
- <202309131803.6A3C1D05A@keescook>
- <20230914193807.ozcmylp6n6dsqkbi@moria.home.lan>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20230914193807.ozcmylp6n6dsqkbi@moria.home.lan>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1qgshh-0037CU-1w
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:48968
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org:  HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfLOEk6z6KywMwodql7oiaadbALycjr5U2kT53JrODeVtXWneZLQJJCYf8XS8VEA/Vr8jbpGtQiv9U2qZQsLtDicAin+qB+qgxc17UH9HbyUGziqyMKkZ
- QgNkaEBUgJaMeeUwMMDyBXRvTGBI5sxxpfqAzLS28Gk4cH+8Bp4FxHHMaL8ygnDlD8IO+YexjjwFBM8+BpQpj0xDT1xLwfOh6nGm2hwxsBLIrTf16m+c+eex
+        Thu, 14 Sep 2023 16:52:27 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3022E2698
+        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 13:52:23 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-59bcabc69easo19800897b3.1
+        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 13:52:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1694724742; x=1695329542; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=y1bfYCZeoEdKY0xCX07ePzY5ryWaYVbqIYptARC7NJg=;
+        b=NvPAN8vmZH8DfMmys9TDmLInWpPq9YbkZCLXR6RLNMVSrtBW/FzkjXrkR+VJNe0Dk/
+         FviCs/pFWGDPVZGFlQPpspZLWWGo2yP+Emun8VHb1tdvrjDrluv91O5Zknvw7yyTymmd
+         9V3wVViLLN4reoAYmNS3vX2rGdOr0Ppefq8w7bwPhuBQXeApw8dH9137o0StaDePj2Wt
+         d2O0i1CWBZPyj5Cf89PtqTuWbinqvV+bVIV8ow5sd1LobS1AreXnJ+mRete+ZUBng0Un
+         tWfRpTtSIXNVSy96Caecylmey7Wy8b3ioYGo05AO0Ko8L7l6tl4xteD2qJdjZzjiRpp3
+         f+0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694724742; x=1695329542;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=y1bfYCZeoEdKY0xCX07ePzY5ryWaYVbqIYptARC7NJg=;
+        b=lE5X0rPcfvZzaCcC7LfMtOoJyhAQgDtcFP4mUVLhciZEambE3Fh8LuuUnQvaQL6+Wm
+         O7q+QqKZNZw2XL1+2I94GPt/qYn0s1aWuVf6F/eEy/oGILoj6YOwCC9celOisYIgtfCF
+         x6lfjQhDA2hqfBCfVkAb2VkNt9FzvBKz5wQmd78VpJu6pLXm3dvp3i7zdI135bChNK2R
+         BmVTDyu96YGbS7B5mVvkPO3eqfTqMSXVq3b2ZB+vYdRA3auCz4EBwzijrQA3b+NbeRhn
+         018mzkdJQkKTnIRYVNabU1jcuJGayNOYdMQBcY8mDJEp25Td8bIyr07RSKAURF3kQKNW
+         1mHA==
+X-Gm-Message-State: AOJu0YxEpAZM4vHUYRCJ06+7XqRUZUAHIlpj7KHS4EgCTKaPWKOebHUK
+        S98nKDUeotN2mAP0aj/rOOAl29zb5jyEYG1syQ==
+X-Google-Smtp-Source: AGHT+IFttkDgh3STEULt9nazdb9L/1U62+xkGrM5KSilaIH+f9BeV8ytqjsC9zn8dQK4VotAls06A/tr0JmiYNXTAA==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a05:6902:1816:b0:d0e:e780:81b3 with
+ SMTP id cf22-20020a056902181600b00d0ee78081b3mr162906ybb.2.1694724742466;
+ Thu, 14 Sep 2023 13:52:22 -0700 (PDT)
+Date:   Thu, 14 Sep 2023 20:52:21 +0000
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAIVyA2UC/x2NywrCMBAAf6Xs2YU0tUX9FSklZrdxsS92NQil/
+ 27wNnOZ2cFYhQ1u1Q7KWUzWpUh9qiA+w5IYhYqDd75x1/qMpJJZDdP2KTxjmkPrHK7h9dYg0zB lskF8xIihbWJHlwd1foQS3JRH+f5n9/44fp7rBQF8AAAA
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1694724741; l=1689;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=ypZuHuWedw2GdaZjNukTcmFpVtl2zdn1sIH4RGMXcEM=; b=a3tnv1zYiSyHEe2n2OO9Vj2FcOGK7a0XpbAyi3Lxqx4nnbv89EszV7CesMgdUuN+kDtlRMpFC
+ pVAkhV0uNoXDTUPACgysTkT/3J06KPMo1mFrHQQCpMGJzRWbEQYIu7h
+X-Mailer: b4 0.12.3
+Message-ID: <20230914-drivers-gpu-drm-gma500-oaktrail_lvds_i2c-c-v1-1-0a53a076ce20@google.com>
+Subject: [PATCH] drm/gma500: refactor deprecated strncpy
+From:   Justin Stitt <justinstitt@google.com>
+To:     Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+`strncpy` is deprecated for use on NUL-terminated destination strings [1].
+
+We should prefer more robust and less ambiguous string interfaces.
+
+Since `chan->base.name` is expected to be NUL-terminated, a suitable
+replacement is `strscpy` [2] due to the fact that it guarantees
+NUL-termination on the destination buffer without also unnecessarily
+NUL-padding.
+
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
 
 
-On 9/14/23 13:38, Kent Overstreet wrote:
-> On Wed, Sep 13, 2023 at 06:17:00PM -0700, Kees Cook wrote:
->> On Tue, Sep 12, 2023 at 03:26:45PM +1000, Stephen Rothwell wrote:
->>> New tree: bcachefs
->>
->> Thanks for going through and fixing all the fake flexible array members.
->> It looks much nicer. :)
->>
->> I have some questions about the remaining "markers", for example:
->>
->> $ git grep -A8 '\bkey_start\b' -- fs/bcachefs
->> fs/bcachefs/bcachefs_format.h:  __u8            key_start[0];
->> ...
->> fs/bcachefs/bcachefs_format.h-  __u8            pad[sizeof(struct bkey) - 3];
->> --
->> fs/bcachefs/bkey.c:     u8 *l = k->key_start;
->>
->> Why isn't this just:
->>
->> 			u8 *l = k->pad
->>
->> and you can drop the marker?
-> 
-> In this case, it's documentation. &k->pad tells us nothing; why is pad
-> significant? k->key_start documents the intent better.
-> 
->> And some seem entirely unused, like all of "struct bch_reflink_v".
-> 
-> No, those aren't unused :)
-> 
-> bcachefs does the "list of variable size items" a lot - see vstructs.h.
-> start[] is the type of the item being stored, _data is what we use for
-> pointer arithmetic - because we always store sizes in units of u64s, for
-> alignment.
-> 
->>
->> And some are going to fail at runtime, since they're still zero-sized
->> and being used as an actual array:
->>
->> struct bch_sb_field_journal_seq_blacklist {
->>          struct bch_sb_field     field;
->>
->>          struct journal_seq_blacklist_entry start[0];
->>          __u64                   _data[];
->> };
->> ...
->>                  memmove(&bl->start[i],
->>                          &bl->start[i + 1],
->>                          sizeof(bl->start[0]) * (nr - i));
->>
->> It looks like you just want a type union for the flexible array.
->> This can be done like this:
->>
->> struct bch_sb_field_journal_seq_blacklist {
->>          struct bch_sb_field     field;
->>
->> 	union {
->> 		DECLARE_FLEX_ARRAY(struct journal_seq_blacklist_entry, start);
->> 		DECLARE_FLEX_ARRAY(__u64, _data);
->> 	};
->> };
-> 
-> Eesh, why though?
-> 
-> Honestly, I'm not a fan of the change to get rid of zero size arrays,
-> this seems to be adding a whole lot of macro layering and indirection
-> for nothing.
-> 
-> The only thing a zero size array could possibly be is a flexible array
-> member or a marker, why couldn't we have just kept treating zero size
-> arrays like flexible array members?
+drm/gma500: refactor deprecated strncpy
+---
+ drivers/gpu/drm/gma500/oaktrail_lvds_i2c.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Because zero-length arrays, when used as fake flexible arrays, make
-things like -Warray-bounds (we've been trying to enable this compiler
-option, globally) trip; among other things like being prone to result in
-undefined behavior bugs when people introduce new members that make the
-array end up in the middle of its containing structure.
+diff --git a/drivers/gpu/drm/gma500/oaktrail_lvds_i2c.c b/drivers/gpu/drm/gma500/oaktrail_lvds_i2c.c
+index 06b5b2d70d48..68458cbdd6d5 100644
+--- a/drivers/gpu/drm/gma500/oaktrail_lvds_i2c.c
++++ b/drivers/gpu/drm/gma500/oaktrail_lvds_i2c.c
+@@ -141,7 +141,7 @@ struct gma_i2c_chan *oaktrail_lvds_i2c_init(struct drm_device *dev)
+ 
+ 	chan->drm_dev = dev;
+ 	chan->reg = dev_priv->lpc_gpio_base;
+-	strncpy(chan->base.name, "gma500 LPC",  I2C_NAME_SIZE - 1);
++	strscpy(chan->base.name, "gma500 LPC",  I2C_NAME_SIZE - 1);
+ 	chan->base.owner = THIS_MODULE;
+ 	chan->base.algo_data = &chan->algo;
+ 	chan->base.dev.parent = dev->dev;
 
-With C99 flexible-array members, the compiler emits a warning when the
-arrays are not at the end of the structure.
+---
+base-commit: 3669558bdf354cd352be955ef2764cde6a9bf5ec
+change-id: 20230914-drivers-gpu-drm-gma500-oaktrail_lvds_i2c-c-a53c6d8bd62f
 
-The DECLARE_FLEX_ARRAY() (in a union) helper allows for multiple C99
-flexible-array members together at the end of a struct.
-
+Best regards,
 --
-Gustavo
+Justin Stitt <justinstitt@google.com>
+
