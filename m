@@ -2,161 +2,132 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAAFAEEAA5B
-	for <linux-hardening@archiver.kernel.org>; Thu, 14 Sep 2023 17:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8460CEEAA5F
+	for <linux-hardening@archiver.kernel.org>; Thu, 14 Sep 2023 18:08:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239208AbjINRSy (ORCPT
+        id S229993AbjINSIv (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 14 Sep 2023 13:18:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33240 "EHLO
+        Thu, 14 Sep 2023 14:08:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239182AbjINRSy (ORCPT
+        with ESMTP id S237398AbjINSIv (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 14 Sep 2023 13:18:54 -0400
-Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5719CF
-        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 10:18:49 -0700 (PDT)
-Received: from eig-obgw-6009a.ext.cloudfilter.net ([10.0.30.184])
-        by cmsmtp with ESMTP
-        id gZm7qB8AkEoVsgpzNq6nJY; Thu, 14 Sep 2023 17:18:49 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with ESMTPS
-        id gpzMqTv4pwbafgpzNqrdEx; Thu, 14 Sep 2023 17:18:49 +0000
-X-Authority-Analysis: v=2.4 cv=e/0V9Il/ c=1 sm=1 tr=0 ts=65034079
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=zNV7Rl7Rt7sA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=DfNHnWVPAAAA:8 a=anKBZ9voxICiHcaguvcA:9 a=QEXdDO2ut3YA:10
- a=AjGcO6oz07-iQ99wixmX:22 a=rjTVMONInIDnV1a_A2c_:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=SpbGtZlfHa2aXlFwM4Mq2v6Rd5H4+ybNfEh7tydENP4=; b=VhI8S/jFowxp/xikWbla/xBwMp
-        GEBcsFwpAF/ud20r9OjWu9cFvPetEksfHRHjktrenp9DMvsmTPBBiIxQm1Ol8T8RbbfCLQPW/pfhq
-        fobo49xMhL0R2LagynwPdiLOdUJfJRyPObeawcWbs+8iSs2zJ6yKEI/dxdbYrV++e6qoXJjr3fGDA
-        WHtkOCkg1SGQdqDhBiL4vwB+Az7UObqN0loSCA4QW1fwOmI7fBIMMkNuOeMZdR6jJWK0ub+9YOQTR
-        yEE54WxFJaSNGfG3Iww2nPqSH6LbHd+9WzjRb+x1BvzvX84LfjJabOKS0q68WGTN8R4/wvO5vaJ/A
-        u1DSwA2Q==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:48748 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.96)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1qgpzK-000Vfy-0q;
-        Thu, 14 Sep 2023 12:18:46 -0500
-Message-ID: <60903bfb-fe91-ed19-1d77-8fb44cef858c@embeddedor.com>
-Date:   Thu, 14 Sep 2023 11:19:07 -0600
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v2] wifi: brcmfmac: Replace 1-element arrays with flexible
- arrays
-To:     Juerg Haefliger <juerg.haefliger@canonical.com>
-Cc:     SHA-cyfmac-dev-list@infineon.com, aspriel@gmail.com,
-        brcm80211-dev-list.pdl@broadcom.com, franky.lin@broadcom.com,
-        gustavoars@kernel.org, hante.meuleman@broadcom.com,
-        hdegoede@redhat.com, keescook@chromium.org, kvalo@kernel.org,
-        linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org, marcan@marcan.st,
-        ryohei.kondo@cypress.com, stable@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <20230913065421.12615-1-juerg.haefliger@canonical.com>
- <20230914070227.12028-1-juerg.haefliger@canonical.com>
-Content-Language: en-US
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20230914070227.12028-1-juerg.haefliger@canonical.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1qgpzK-000Vfy-0q
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:48748
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org:  HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfNt/tHyrIVVCH8lVSLJpYp1mMVO2FfL8vl0FCpnhfCk8W4Ip5ClgDssiG0ani+Zeon9Q57xSDFA3xejvFyiDNLKwu3X9HaII4FYfZqIQswBcHz3ncR38
- Yt22A5+a7bpJQU+QGxZFTFmVwO+9MHgfQsjNvWghmGkO5LeEo4U66yp2imEJRne1zitKlC42XY55r4+tnBKymtxhFTQIWfwN8JZ9dyiwg06GQagmGmphdjRi
+        Thu, 14 Sep 2023 14:08:51 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E13DE1FFB
+        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 11:08:46 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-59b50b45481so16746847b3.1
+        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 11:08:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1694714926; x=1695319726; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=643G47GETNhqNdCuDURH7WS6HlitohpBl/WopZi3siE=;
+        b=Bxn5R+b1g8a0Kv4v/3SKs/7FFXxscduq0iIX7Dzlo0z4z7rBdjOjT4gbYnbmml8vTN
+         w/V2CSL7dfvSYIk147DnulaRMg+rT9rL+isOFLTOSRhLYzKj/99zEpfGcjynpsoluoxD
+         YiqDFQd6dICw1tIkm4rOLf5N2eLZ2LGQqOlKn/R+HuHuFkcywX43vATzf3TmCyynz5F6
+         17B4PCjMy3s737/YDdvP4J+3kHPOdn8+LMupU1RP7aIzYG8MfD+NG+dBVvKUQpoQbczM
+         yasecrIqIBpIWGgV+MsCWVSbgYglFveSoRRFJexgbaRGqXty790O5Adflv2qJpL5Su9H
+         j74g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694714926; x=1695319726;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=643G47GETNhqNdCuDURH7WS6HlitohpBl/WopZi3siE=;
+        b=ZEkQodEK8vdXM6dtvXnBT4hz51T3Q2rHofr0NnNaxMp58CIE1q0jnEtE8BR6f3siwj
+         F4ATvVvZNng79B5xiDKwZ/6H49GGmn8TsU1NlJ770G8Ft408HpknK7txkJS7vAw0UFZm
+         h97Bguj2PSrWZcaANrVMJzAVt53ViZZkAxAiIZLX+MjDByC/g6v41Ukk7bOeQHZ0EOy+
+         5CQ1prQ2pmSu589A30RfGAgHvGdqKTjOUoWiknljZizth7IQ7/ZXv68eVI0El+gkiAcH
+         GGWGzGjkitWrKk/Uvw31e0Tyz9Y8EuChg61OkSUVllfuXmAABtyMsE0ISHe75GDfyfz/
+         otYw==
+X-Gm-Message-State: AOJu0Yw0NSmowg1kZwWuGwe0cmd27ftlogpQLWkPnC2PAqTTghxUKT6X
+        WHI1FbszexzfNPYHlJCVvde7MnfrSkfQl+Qdaw==
+X-Google-Smtp-Source: AGHT+IHNWB0qP5meAQB51iaCUK7XP1sqn9eMFG8FkOmWjyLp7Z/2qgzDTOAe33XQ2hHF6E3jXIVHS2ObMzFQCFbozQ==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a81:78d6:0:b0:59b:d33b:5ddc with SMTP
+ id t205-20020a8178d6000000b0059bd33b5ddcmr133238ywc.4.1694714926173; Thu, 14
+ Sep 2023 11:08:46 -0700 (PDT)
+Date:   Thu, 14 Sep 2023 18:08:44 +0000
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIACtMA2UC/x2NSwrDMAwFrxK0rsB2Wvq5SinFWGqqRRwjpaYh5
+ O5xuxh4s3mzgrEKG9y6FZSrmEy5iT90kN4xD4xCzSG40LurP6LNmlNZkFQqq+FQPm2PP57jRGy YMPYnOl9CiuQ8tKei/JLvv3J/bNsOrmjEmXUAAAA=
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1694714925; l=2160;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=/VCD7DX1eCwVY46g4u81ZzjWo56f8DBPp1HX5L6qls8=; b=MSSj1xqOuKPodBgV3hCbCUvST05NmhGqT2NoNhh2CgiIOwHCP9o4MvQZLtDioILfwHV7oAWOC
+ NasnjoSdir4BVmDVA/kDQPWT/uy8cxs5U1km0orFGKX5eaHoO0od7O3
+X-Mailer: b4 0.12.3
+Message-ID: <20230914-strncpy-drivers-gpu-drm-drm_modes-c-v1-1-079b532553a3@google.com>
+Subject: [PATCH] drm/modes: refactor deprecated strncpy
+From:   Justin Stitt <justinstitt@google.com>
+To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, Xu Panda <xu.panda@zte.com.cn>,
+        Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+`strncpy` is deprecated for use on NUL-terminated destination strings [1].
 
+We should prefer more robust and less ambiguous string interfaces.
 
-On 9/14/23 01:02, Juerg Haefliger wrote:
-> Since commit 2d47c6956ab3 ("ubsan: Tighten UBSAN_BOUNDS on GCC"),
-> UBSAN_BOUNDS no longer pretends 1-element arrays are unbounded. Walking
-> 'element' and 'channel_list' will trigger warnings, so make them proper
-> flexible arrays.
-> 
-> False positive warnings were:
-> 
->    UBSAN: array-index-out-of-bounds in drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c:6984:20
->    index 1 is out of range for type '__le32 [1]'
-> 
->    UBSAN: array-index-out-of-bounds in drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c:1126:27
->    index 1 is out of range for type '__le16 [1]'
-> 
-> for these lines of code:
-> 
->    6884  ch.chspec = (u16)le32_to_cpu(list->element[i]);
-> 
->    1126  params_le->channel_list[i] = cpu_to_le16(chanspec);
-> 
-> Cc: stable@vger.kernel.org # 6.5+
-> Signed-off-by: Juerg Haefliger <juerg.haefliger@canonical.com>
+A suitable replacement is `strscpy` [2] due to the fact that it guarantees
+NUL-termination on the destination buffer and doesn't incur the
+performance loss of unnecessarily NUL-padding.
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Cc: Xu Panda <xu.panda@zte.com.cn>
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+This patch is basically a resend of [1] by Xu but rebased onto mainline.
 
-Thanks
+This patch is also similar to:
+commit 0f9aa074c92dd ("drm/modes: Use strscpy() to copy command-line mode name")
+
+[1]: https://lore.kernel.org/all/202212051935289159302@zte.com.cn/
+---
+ drivers/gpu/drm/drm_modes.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/gpu/drm/drm_modes.c b/drivers/gpu/drm/drm_modes.c
+index ac9a406250c5..c702a8b866cf 100644
+--- a/drivers/gpu/drm/drm_modes.c
++++ b/drivers/gpu/drm/drm_modes.c
+@@ -2617,8 +2617,7 @@ void drm_mode_convert_to_umode(struct drm_mode_modeinfo *out,
+ 		break;
+ 	}
+ 
+-	strncpy(out->name, in->name, DRM_DISPLAY_MODE_LEN);
+-	out->name[DRM_DISPLAY_MODE_LEN-1] = 0;
++	strscpy(out->name, in->name, DRM_DISPLAY_MODE_LEN);
+ }
+ 
+ /**
+@@ -2659,8 +2658,7 @@ int drm_mode_convert_umode(struct drm_device *dev,
+ 	 * useful for the kernel->userspace direction anyway.
+ 	 */
+ 	out->type = in->type & DRM_MODE_TYPE_ALL;
+-	strncpy(out->name, in->name, DRM_DISPLAY_MODE_LEN);
+-	out->name[DRM_DISPLAY_MODE_LEN-1] = 0;
++	strscpy(out->name, in->name, DRM_DISPLAY_MODE_LEN);
+ 
+ 	/* Clearing picture aspect ratio bits from out flags,
+ 	 * as the aspect-ratio information is not stored in
+
+---
+base-commit: 3669558bdf354cd352be955ef2764cde6a9bf5ec
+change-id: 20230914-strncpy-drivers-gpu-drm-drm_modes-c-a35d782cad01
+
+Best regards,
 --
-Gustavo
+Justin Stitt <justinstitt@google.com>
 
-> 
-> ---
-> v2:
->    - Use element[] instead of DFA() in brcmf_chanspec_list.
->    - Add Cc: stable tag
-> ---
->   .../wireless/broadcom/brcm80211/brcmfmac/fwil_types.h    | 9 +++++++--
->   1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h
-> index bece26741d3a..611d1a6aabb9 100644
-> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h
-> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h
-> @@ -442,7 +442,12 @@ struct brcmf_scan_params_v2_le {
->   				 * fixed parameter portion is assumed, otherwise
->   				 * ssid in the fixed portion is ignored
->   				 */
-> -	__le16 channel_list[1];	/* list of chanspecs */
-> +	union {
-> +		__le16 padding;	/* Reserve space for at least 1 entry for abort
-> +				 * which uses an on stack brcmf_scan_params_v2_le
-> +				 */
-> +		DECLARE_FLEX_ARRAY(__le16, channel_list);	/* chanspecs */
-> +	};
->   };
->   
->   struct brcmf_scan_results {
-> @@ -702,7 +707,7 @@ struct brcmf_sta_info_le {
->   
->   struct brcmf_chanspec_list {
->   	__le32	count;		/* # of entries */
-> -	__le32	element[1];	/* variable length uint32 list */
-> +	__le32  element[];	/* variable length uint32 list */
->   };
->   
->   /*
