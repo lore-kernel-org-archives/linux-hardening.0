@@ -2,87 +2,118 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93371EEAA62
-	for <linux-hardening@archiver.kernel.org>; Thu, 14 Sep 2023 19:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A66EEAA6A
+	for <linux-hardening@archiver.kernel.org>; Thu, 14 Sep 2023 19:48:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230311AbjINTX5 (ORCPT
+        id S230311AbjINTsh (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 14 Sep 2023 15:23:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45546 "EHLO
+        Thu, 14 Sep 2023 15:48:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241221AbjINTX5 (ORCPT
+        with ESMTP id S229462AbjINTsg (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 14 Sep 2023 15:23:57 -0400
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17E2026B3;
-        Thu, 14 Sep 2023 12:23:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=4hr36i5Cv0yOjN7Qm9aK+O+t73F0SaG9UQf71oo3coc=; b=TUQ6R0vfZi/dderGJyPUNMNW1S
-        bGBX6G1t2V5wN0IJDFy3lSyvNLxteUnMS7i8LrmlKHnBX7D/46D3VL1LLp3PmhIcrV8xp75QBNrph
-        uhKRrW8158NAtE6Nld12BbWmWTk6GDXfhxGjKJ9K5AQbTyVr5vCqN6iZU3CFmXLSa9W49CQKDf8JC
-        uvti6ZvkSk3v9U6tCGhbhjUC3u1Cko0dd2WrfufnlEMkfYxRNpLRW3s38xAwwJL3hK3fj7qLAGb4y
-        tqzNWInzV2Fz4nBN2aLW1MikDwXWL39jXoxSvpcwL0QBKsfKL2xUZIlLl6IopWufWXsm7kdFdP6cK
-        o/GMz/RA==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1qgrw3-0066QM-1t;
-        Thu, 14 Sep 2023 19:23:31 +0000
-Date:   Thu, 14 Sep 2023 20:23:31 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Christian Brauner <brauner@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>, Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Tejun Heo <tj@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-hardening@vger.kernel.org,
-        cgroups@vger.kernel.org, Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH 03/19] fs: release anon dev_t in deactivate_locked_super
-Message-ID: <20230914192331.GK800259@ZenIV>
-References: <20230913111013.77623-1-hch@lst.de>
- <20230913111013.77623-4-hch@lst.de>
- <20230913232712.GC800259@ZenIV>
- <20230914023705.GH800259@ZenIV>
- <20230914053843.GI800259@ZenIV>
- <20230914-munkeln-pelzmantel-3e3a761acb72@brauner>
- <20230914165805.GJ800259@ZenIV>
+        Thu, 14 Sep 2023 15:48:36 -0400
+X-Greylist: delayed 619 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 14 Sep 2023 12:48:32 PDT
+Received: from out-229.mta1.migadu.com (out-229.mta1.migadu.com [95.215.58.229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82CCD2698
+        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 12:48:32 -0700 (PDT)
+Date:   Thu, 14 Sep 2023 15:38:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1694720290;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=N0uPCiRAY/wk+OsCSsV4Qn54HTT3/j5koYS/Evo6weg=;
+        b=ndegDqVm/nPasw22OjMVjwca9VMr7jNbEtOPasd7L1k/zvw0P5Q9WzzRcZtq9GAp8lIiph
+        gLp+PIslF+6Mbcp6vptFAp7HyV031HzaJcAZ78wtqC2j8fPAuMbHyoYp6onFOSpnpD8Qqv
+        spmgHAiUf+blNDZy9JcwX+tQRqPhl2A=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From:   Kent Overstreet <kent.overstreet@linux.dev>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: Re: linux-next: Tree for Sep 12 (bcachefs)
+Message-ID: <20230914193807.ozcmylp6n6dsqkbi@moria.home.lan>
+References: <20230912152645.0868a96a@canb.auug.org.au>
+ <202309131803.6A3C1D05A@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230914165805.GJ800259@ZenIV>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+In-Reply-To: <202309131803.6A3C1D05A@keescook>
+X-Migadu-Flow: FLOW_OUT
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Sep 14, 2023 at 05:58:05PM +0100, Al Viro wrote:
-
-> Incidentally, I'm going to add a (belated by 10 years) chunk in porting.rst
-> re making sure that anything in superblock that might be needed by methods
-> called in RCU mode should *not* be freed without an RCU delay...  Should've
-> done that back in 3.12 merge window when RCU'd vfsmounts went in; as it
-> is, today we have several filesystems with exact same kind of breakage.
-> hfsplus and affs breakage had been there in 3.13 (missed those two), exfat
-> and ntfs3 - introduced later, by initial merges of filesystems in question.
-> Missed on review...
+On Wed, Sep 13, 2023 at 06:17:00PM -0700, Kees Cook wrote:
+> On Tue, Sep 12, 2023 at 03:26:45PM +1000, Stephen Rothwell wrote:
+> > New tree: bcachefs
 > 
-> Hell knows - perhaps Documentation/filesystems/whack-a-mole might be a good
-> idea...
+> Thanks for going through and fixing all the fake flexible array members.
+> It looks much nicer. :)
+> 
+> I have some questions about the remaining "markers", for example:
+> 
+> $ git grep -A8 '\bkey_start\b' -- fs/bcachefs
+> fs/bcachefs/bcachefs_format.h:  __u8            key_start[0];
+> ...
+> fs/bcachefs/bcachefs_format.h-  __u8            pad[sizeof(struct bkey) - 3];
+> --
+> fs/bcachefs/bkey.c:     u8 *l = k->key_start;
+> 
+> Why isn't this just:
+> 
+> 			u8 *l = k->pad
+> 
+> and you can drop the marker?
 
-Actually, utf8 casefolding stuff also has the same problem, so ext4 and f2fs
-with casefolding are also affected ;-/
+In this case, it's documentation. &k->pad tells us nothing; why is pad
+significant? k->key_start documents the intent better.
+
+> And some seem entirely unused, like all of "struct bch_reflink_v".
+
+No, those aren't unused :)
+
+bcachefs does the "list of variable size items" a lot - see vstructs.h.
+start[] is the type of the item being stored, _data is what we use for
+pointer arithmetic - because we always store sizes in units of u64s, for
+alignment.
+
+> 
+> And some are going to fail at runtime, since they're still zero-sized
+> and being used as an actual array:
+> 
+> struct bch_sb_field_journal_seq_blacklist {
+>         struct bch_sb_field     field;
+> 
+>         struct journal_seq_blacklist_entry start[0];
+>         __u64                   _data[];
+> };
+> ...
+>                 memmove(&bl->start[i],
+>                         &bl->start[i + 1],
+>                         sizeof(bl->start[0]) * (nr - i));
+> 
+> It looks like you just want a type union for the flexible array.
+> This can be done like this:
+> 
+> struct bch_sb_field_journal_seq_blacklist {
+>         struct bch_sb_field     field;
+> 
+> 	union {
+> 		DECLARE_FLEX_ARRAY(struct journal_seq_blacklist_entry, start);
+> 		DECLARE_FLEX_ARRAY(__u64, _data);
+> 	};
+> };
+
+Eesh, why though?
+
+Honestly, I'm not a fan of the change to get rid of zero size arrays,
+this seems to be adding a whole lot of macro layering and indirection
+for nothing.
+
+The only thing a zero size array could possibly be is a flexible array
+member or a marker, why couldn't we have just kept treating zero size
+arrays like flexible array members?
