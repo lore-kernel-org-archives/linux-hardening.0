@@ -2,161 +2,172 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF3CEED61A
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 17:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9242DEED61F
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 18:06:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236156AbjIORho (ORCPT
+        id S230208AbjIOSGF (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Sep 2023 13:37:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49880 "EHLO
+        Fri, 15 Sep 2023 14:06:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236369AbjIORh0 (ORCPT
+        with ESMTP id S234857AbjIOSFn (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Sep 2023 13:37:26 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8F19130EC
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 10:34:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1694799285;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8ADserGfGNqzJMHzEpo3paKGXY72Phfqf685UnddVgE=;
-        b=KfYsyAtwQVlYIu5VsoSe5l7BGpLYhGw3i1W7LczR/Lum7jMgDJZyhv/oLITAFMkoPhtSyp
-        mmOIYegIOU/bGrPFhqBEleWZpIlVjbVvlw4Nl0Z39ONLhTXVSBhvnbYdGfEXB5mwuIxHdc
-        GpCiVPt5sNDzl/5M4dwBK2rW1quUy3Q=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-441-s1XEvPsYMCKIlPhDWtVsqg-1; Fri, 15 Sep 2023 13:34:43 -0400
-X-MC-Unique: s1XEvPsYMCKIlPhDWtVsqg-1
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-41219864601so25668821cf.0
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 10:34:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694799283; x=1695404083;
-        h=mime-version:user-agent:content-transfer-encoding:organization
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=I8Q7NvhKrNUpZ1wyEQLmlUvhyw6KnFkbyTR3LCH8q2k=;
-        b=G3EgqSxAfxbO6vrcLmMOHalMb5+5Zocg442w5wJ9HUtroFJLoIkmVftVIUmDAASpaI
-         kg8TR1wij2iqMmk78qJG7oTk93CnmFUHz3r8NL33oE9RmL/FKeBuw/YYMDQDlwB3VD0E
-         IuqC1IWMJ+qUTBCKdFGQQ6z/bsP2pNEGFtedBeIhcsWmp/EhIw4VqMSHS3URsfy36KtA
-         BhZglZQhRGTLbkzpT3dCgftvHtrZSi3zKkDeDwKWHoZTsGiWydbPAH+GGEtnHqxuxOss
-         QU8qrfHXDJjL77xQyGh18yImcEScE1dSIcAqPbGIkuRqWw8u7EXULa/W7nim0nbwFsca
-         L13w==
-X-Gm-Message-State: AOJu0YzJ+XMiXRulxMg1I9vjTv/OvuAfvkgEaXBYjDVCAP7bz6sPbsSW
-        Jmb/7Bb8aI+2drvW8PJ+vXGRvxQqZvn+ZcHKXa4iXHb6IzCzD2ohuQFAr6wG1FWKMrcNigrdVSn
-        kT0Y7m6sSsG3x/U79cDBGcCBY+DPz
-X-Received: by 2002:ac8:5701:0:b0:403:cecf:4ade with SMTP id 1-20020ac85701000000b00403cecf4ademr3237065qtw.32.1694799283263;
-        Fri, 15 Sep 2023 10:34:43 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH23IQ3dxGhZ9gN1USPsCNMq0X92TLWKItrONedXesd3PQqAjirC0kn2Zv9fgi5UN/hQwH9sw==
-X-Received: by 2002:ac8:5701:0:b0:403:cecf:4ade with SMTP id 1-20020ac85701000000b00403cecf4ademr3237049qtw.32.1694799283049;
-        Fri, 15 Sep 2023 10:34:43 -0700 (PDT)
-Received: from ?IPv6:2600:4040:5c6c:a300::feb? ([2600:4040:5c6c:a300::feb])
-        by smtp.gmail.com with ESMTPSA id b6-20020a05620a126600b007675c4b530fsm1370418qkl.28.2023.09.15.10.34.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Sep 2023 10:34:42 -0700 (PDT)
-Message-ID: <cf0f001fe5688d956c6a8521af494694377efb5b.camel@redhat.com>
-Subject: Re: [PATCH] drm/nouveau/pm: refactor deprecated strncpy
-From:   Lyude Paul <lyude@redhat.com>
-To:     Justin Stitt <justinstitt@google.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Karol Herbst <kherbst@redhat.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Date:   Fri, 15 Sep 2023 13:34:41 -0400
-In-Reply-To: <20230914-strncpy-drivers-gpu-drm-nouveau-nvkm-engine-pm-base-c-v1-1-4b09ed453f84@google.com>
-References: <20230914-strncpy-drivers-gpu-drm-nouveau-nvkm-engine-pm-base-c-v1-1-4b09ed453f84@google.com>
-Organization: Red Hat Inc.
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38)
+        Fri, 15 Sep 2023 14:05:43 -0400
+Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46CEF1BF2
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 11:05:38 -0700 (PDT)
+Received: from eig-obgw-6010a.ext.cloudfilter.net ([10.0.30.248])
+        by cmsmtp with ESMTP
+        id h8dUqKF5PEoVshDCDqGhoQ; Fri, 15 Sep 2023 18:05:37 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with ESMTPS
+        id hDCCqYaX2KPGkhDCDquSNV; Fri, 15 Sep 2023 18:05:37 +0000
+X-Authority-Analysis: v=2.4 cv=Aur9YcxP c=1 sm=1 tr=0 ts=65049cf1
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=zNV7Rl7Rt7sA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
+ a=cm27Pg_UAAAA:8 a=Wrtf5UCP7LI77WHjMVIA:9 a=QEXdDO2ut3YA:10
+ a=AjGcO6oz07-iQ99wixmX:22 a=xmb-EsYY8bH0VWELuYED:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=kIh9h+51ldocBU9TG/FuWYO4jPEoPniNky9hvQTOqbg=; b=G8Bu3gEKJrGszhS5XS0/ZMRosW
+        6d/T9j7UU7MxDZvrj/IlDqRPPFsGp90IoU237SeEO0psbm25zc7Va9ThSAdrHHpqAiFoMoP0KCCyJ
+        kDRMsHJUe+NECRuDeUDxLLg18Ba5VqJY5EvmcjWtbSt429z7ohaftrqg9+sNpYv+JFoOUcE6CvZqe
+        lMXFl8qcPLkpGLjw4xrn69xiKliAlk7B1ltV0RPj6E2j2Lus4REHF8XpS1YIkR4MKnERzLEoqDPWH
+        H6cz//NAWXwnOxEFSUGFNon2vw+oR6wX7q21DMzGsKbgR2L2/t5F7moJapvtTqAO0X4HA/uCnl8ao
+        28ARowYw==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:41712 helo=[192.168.15.8])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.96)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1qhDCC-000DpQ-05;
+        Fri, 15 Sep 2023 13:05:36 -0500
+Message-ID: <2594c7ff-0301-90aa-d48c-6b4d674f850e@embeddedor.com>
+Date:   Fri, 15 Sep 2023 12:06:21 -0600
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v2][next] RDMA/core: Use size_{add,mul}() in calls to
+ struct_size()
+To:     Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+References: <ZP+if342EMhModzZ@work> <202309142029.D432EEB8C@keescook>
+Content-Language: en-US
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <202309142029.D432EEB8C@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.21.192
+X-Source-L: No
+X-Exim-ID: 1qhDCC-000DpQ-05
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:41712
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org:  HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfBHmQkt5fUT5JnyAF7i4e2YjQ+e4Soogr4f2Fzafu8OJp0GP1ehAGkQj5KsZFJzXaq+q1qHrrzQXPQ52gAOE3/r/otujDBXA4AJa+Gp7NDlcpj7LeYkM
+ xae6OG6/i3TFU5U5cfPCGkMD9WlhbN0MDqep7Rt2is3hsrcV6iG8GRCuMr/nDQ6tfMFGsLObTpVe9VzRIXueHq4eFrZtA+DrBVdz9oCOykWFJ8jn25sWV5M0
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-...oops, responded to the wrong email :P
-
-Reviewed-by: Lyude Paul <lyude@redhat.com>
 
 
-On Thu, 2023-09-14 at 22:17 +0000, Justin Stitt wrote:
-> `strncpy` is deprecated for use on NUL-terminated destination strings [1]=
-.
->=20
-> We should prefer more robust and less ambiguous string interfaces.
->=20
-> A suitable replacement is `strscpy` [2] due to the fact that it guarantee=
-s
-> NUL-termination on the destination buffer without unnecessarily NUL-paddi=
-ng.
->=20
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strn=
-cpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.h=
-tml [2]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
->  drivers/gpu/drm/nouveau/nvkm/engine/pm/base.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/pm/base.c b/drivers/gpu/=
-drm/nouveau/nvkm/engine/pm/base.c
-> index 8fe0444f761e..131db2645f84 100644
-> --- a/drivers/gpu/drm/nouveau/nvkm/engine/pm/base.c
-> +++ b/drivers/gpu/drm/nouveau/nvkm/engine/pm/base.c
-> @@ -462,7 +462,7 @@ nvkm_perfmon_mthd_query_domain(struct nvkm_perfmon *p=
-erfmon,
-> =20
->  =09=09args->v0.id         =3D di;
->  =09=09args->v0.signal_nr  =3D nvkm_perfdom_count_perfsig(dom);
-> -=09=09strncpy(args->v0.name, dom->name, sizeof(args->v0.name) - 1);
-> +=09=09strscpy(args->v0.name, dom->name, sizeof(args->v0.name));
-> =20
->  =09=09/* Currently only global counters (PCOUNTER) are implemented
->  =09=09 * but this will be different for local counters (MP). */
-> @@ -513,8 +513,7 @@ nvkm_perfmon_mthd_query_signal(struct nvkm_perfmon *p=
-erfmon,
->  =09=09=09snprintf(args->v0.name, sizeof(args->v0.name),
->  =09=09=09=09 "/%s/%02x", dom->name, si);
->  =09=09} else {
-> -=09=09=09strncpy(args->v0.name, sig->name,
-> -=09=09=09=09sizeof(args->v0.name) - 1);
-> +=09=09=09strscpy(args->v0.name, sig->name, sizeof(args->v0.name));
->  =09=09}
-> =20
->  =09=09args->v0.signal =3D si;
-> @@ -572,7 +571,7 @@ nvkm_perfmon_mthd_query_source(struct nvkm_perfmon *p=
-erfmon,
-> =20
->  =09=09args->v0.source =3D sig->source[si];
->  =09=09args->v0.mask   =3D src->mask;
-> -=09=09strncpy(args->v0.name, src->name, sizeof(args->v0.name) - 1);
-> +=09=09strscpy(args->v0.name, src->name, sizeof(args->v0.name));
->  =09}
-> =20
->  =09if (++si < source_nr) {
->=20
-> ---
-> base-commit: 3669558bdf354cd352be955ef2764cde6a9bf5ec
-> change-id: 20230914-strncpy-drivers-gpu-drm-nouveau-nvkm-engine-pm-base-c=
--38bf9c78bc0f
->=20
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
->=20
+On 9/14/23 21:29, Kees Cook wrote:
+> On Mon, Sep 11, 2023 at 05:27:59PM -0600, Gustavo A. R. Silva wrote:
+>> Harden calls to struct_size() with size_add() and size_mul().
+> 
+> Specifically, make sure that open-coded arithmetic cannot cause an
+> overflow/wraparound. (i.e. it will stay saturated at SIZE_MAX.)
 
---=20
-Cheers,
- Lyude Paul (she/her)
- Software Engineer at Red Hat
+Yep; I have another patch where I explain this in similar terms.
 
+I'll send it, shortly.
+
+> 
+>>
+>> Fixes: 467f432a521a ("RDMA/core: Split port and device counter sysfs attributes")
+>> Fixes: a4676388e2e2 ("RDMA/core: Simplify how the gid_attrs sysfs is created")
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> 
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+
+Thanks!
+
+--
+Gustavo
+
+> 
+> -Kees
+> 
+>> ---
+>> Changes in v2:
+>>   - Update changelog text: remove the part about binary differences (it
+>>     was added by mistake).
+>>
+>>   drivers/infiniband/core/sysfs.c | 10 +++++-----
+>>   1 file changed, 5 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/infiniband/core/sysfs.c b/drivers/infiniband/core/sysfs.c
+>> index ee59d7391568..ec5efdc16660 100644
+>> --- a/drivers/infiniband/core/sysfs.c
+>> +++ b/drivers/infiniband/core/sysfs.c
+>> @@ -903,7 +903,7 @@ alloc_hw_stats_device(struct ib_device *ibdev)
+>>   	 * Two extra attribue elements here, one for the lifespan entry and
+>>   	 * one to NULL terminate the list for the sysfs core code
+>>   	 */
+>> -	data = kzalloc(struct_size(data, attrs, stats->num_counters + 1),
+>> +	data = kzalloc(struct_size(data, attrs, size_add(stats->num_counters, 1)),
+>>   		       GFP_KERNEL);
+>>   	if (!data)
+>>   		goto err_free_stats;
+>> @@ -1009,7 +1009,7 @@ alloc_hw_stats_port(struct ib_port *port, struct attribute_group *group)
+>>   	 * Two extra attribue elements here, one for the lifespan entry and
+>>   	 * one to NULL terminate the list for the sysfs core code
+>>   	 */
+>> -	data = kzalloc(struct_size(data, attrs, stats->num_counters + 1),
+>> +	data = kzalloc(struct_size(data, attrs, size_add(stats->num_counters, 1)),
+>>   		       GFP_KERNEL);
+>>   	if (!data)
+>>   		goto err_free_stats;
+>> @@ -1140,7 +1140,7 @@ static int setup_gid_attrs(struct ib_port *port,
+>>   	int ret;
+>>   
+>>   	gid_attr_group = kzalloc(struct_size(gid_attr_group, attrs_list,
+>> -					     attr->gid_tbl_len * 2),
+>> +					     size_mul(attr->gid_tbl_len, 2)),
+>>   				 GFP_KERNEL);
+>>   	if (!gid_attr_group)
+>>   		return -ENOMEM;
+>> @@ -1205,8 +1205,8 @@ static struct ib_port *setup_port(struct ib_core_device *coredev, int port_num,
+>>   	int ret;
+>>   
+>>   	p = kvzalloc(struct_size(p, attrs_list,
+>> -				attr->gid_tbl_len + attr->pkey_tbl_len),
+>> -		    GFP_KERNEL);
+>> +				size_add(attr->gid_tbl_len, attr->pkey_tbl_len)),
+>> +		     GFP_KERNEL);
+>>   	if (!p)
+>>   		return ERR_PTR(-ENOMEM);
+>>   	p->ibdev = device;
+>> -- 
+>> 2.34.1
+>>
+> 
