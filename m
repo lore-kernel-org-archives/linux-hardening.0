@@ -2,84 +2,122 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB8EEEB596
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 06:39:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EBF5EE642F
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 07:36:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232195AbjIOGjS (ORCPT
+        id S232315AbjIOHg4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Sep 2023 02:39:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60268 "EHLO
+        Fri, 15 Sep 2023 03:36:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232231AbjIOGjR (ORCPT
+        with ESMTP id S232125AbjIOHgy (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Sep 2023 02:39:17 -0400
-Received: from mail-oo1-xc34.google.com (mail-oo1-xc34.google.com [IPv6:2607:f8b0:4864:20::c34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DAFB270E
-        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 23:39:09 -0700 (PDT)
-Received: by mail-oo1-xc34.google.com with SMTP id 006d021491bc7-575f45e255dso995924eaf.2
-        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 23:39:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1694759948; x=1695364748; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=y9krPXP60RvOc/Jly4MzMbTGFZqB63oEeqar0n+mZto=;
-        b=QT/d3nz7Sh9jd+cGn9PMO+4DvHv00XPDk4LeIdzv10MGU4lMBGxTmvbTIvwsQCLHHW
-         HP/YbcQKBNAW+HgGGd1ivovHUUzc5vhDRUZ4BwVZfEhthqQYThlze8O1vS4rPl7Lua95
-         L59/KeLLLWsyWWu61tmxP5B8yVVGGoHG2dNTU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694759948; x=1695364748;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=y9krPXP60RvOc/Jly4MzMbTGFZqB63oEeqar0n+mZto=;
-        b=jsFR0oTiSasDIyZ4wqro001qbQzpQ1ZiTSslauv1j3UC+47SNPuGp+BwSd64Lnrt5p
-         TlcuGaMYh8XVIYO2Sc0qu+9bl+96Tz3kyIuP5/BWeWGbLouSnqTmzKwY+iVOLVwA91W8
-         cO8PnCbzDfHF1E2dneEJp6NpP6HR2XIpafW6GQwGWfmXpdoWgf7x2W5xYXGs7hHo0OJl
-         W1U+SqfX78yePBUla5dlaxSsVgZd00EQEXuR2NIb9f/GGs//0l1GDAwP1DKTAG3etnG5
-         nwL1kjImq5i0t+7urihM9bm0h++sJLMUzJLgSLKAt8OMmsJsV5KmNUsVA8vtWIDlEvob
-         DXZQ==
-X-Gm-Message-State: AOJu0YwcT3g6Xl9MeoRko6gO08h9PnYKNjeJgTz56YHNwDP00dgTsHdu
-        ThoURreT+paMelR/luHUD77AAQ==
-X-Google-Smtp-Source: AGHT+IFDmhw7ZRBNGNOL6ig8k8GdAMIkgXC0ino4cM4yA0zOj4mNkUi7jC3Ss/34A3XxvP1tmTpnBg==
-X-Received: by 2002:a05:6870:64a2:b0:1d6:3f77:c214 with SMTP id cz34-20020a05687064a200b001d63f77c214mr725392oab.55.1694759948598;
-        Thu, 14 Sep 2023 23:39:08 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id n19-20020a637213000000b0056c52d25771sm2114306pgc.69.2023.09.14.23.39.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Sep 2023 23:39:07 -0700 (PDT)
-Date:   Thu, 14 Sep 2023 23:39:07 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Justin Stitt <justinstitt@google.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        linux-hwmon@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] hwmon: (ibmpowernv) refactor deprecated strncpy
-Message-ID: <202309142334.0F81E0EA2D@keescook>
-References: <20230914-strncpy-drivers-hwmon-ibmpowernv-c-v1-1-ba6b7f42c98c@google.com>
- <202309142223.D16446A30D@keescook>
- <4b490305-0ab7-403f-7bec-a08fb8f20b56@roeck-us.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4b490305-0ab7-403f-7bec-a08fb8f20b56@roeck-us.net>
+        Fri, 15 Sep 2023 03:36:54 -0400
+Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 843C898;
+        Fri, 15 Sep 2023 00:36:47 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.nyi.internal (Postfix) with ESMTP id 1E6F25C018C;
+        Fri, 15 Sep 2023 03:36:45 -0400 (EDT)
+Received: from imap50 ([10.202.2.100])
+  by compute6.internal (MEProxy); Fri, 15 Sep 2023 03:36:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=readahead.eu; h=
+        cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm1; t=1694763405; x=1694849805; bh=7S
+        H3zYoN2Ax+klrjdlOOfj5svSwICPVNWO4zsQhoym4=; b=ET1TBQajKbzDSQjROa
+        XtMz+qtASe0uqJMMVLsRm6SX79KvWZ5sS09WJUdRrmorMzlVv0bSNhITjA6Ed354
+        ILlm99jH91nVBKq5fo4SEcXqDH0Do8NUzp3I6aIj52/pi08yayBmigYon7wq2oT7
+        jMGlki0Pd8OlDTN5KUEKFqVjYsv2NZ/LZ/jr23rqfTlW5Amcut9316BIT6Zsnz+a
+        VUiW0oLzUhWSggL3JUqglOjOXJn55GuNRGztZIEjt0Ur4AAEiy9qpPcBjCe6AYeN
+        lAxVnWXqNU0CLsQyx6zjd0H+dUgEE0cMN5fAMz+xq+NhpW7SPP89CJVY7lXItUr4
+        tniQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; t=1694763405; x=1694849805; bh=7SH3zYoN2Ax+k
+        lrjdlOOfj5svSwICPVNWO4zsQhoym4=; b=dS2Ekw7GSf3E+vDw8IdsLeH/B7VBf
+        4R8qJaBw0xsKoHBTtKsftRTDgBJ1ehXTzJ39sJzuIHBDfR7S7PeoOdQSO0F8g5UH
+        o67Yv2w/4y6pWiWgHcvBws1vMGaR+4q4+WjIH7OOYVBZOq4ILxFbGMMLRHYklPTx
+        dQvpmPsMQyVxnJRn0zV7pcOoYcDZXh6jbFT5CeTVX3Fd9QDcfw/nY1GoB8ja3QLb
+        j9eMOXh9bH/9jMCuHWFRufzeSXEBxbPQjetdiq4QgOCYFQiEh+CY3cYKTmsCeIes
+        PDgkFaT9BdEqtnWA4BTOYoQm2A2SkE/CwdPegAckU1uxJFWkQvsyWpXfw==
+X-ME-Sender: <xms:jAkEZe6AFuEV2ECKsypVBmJKgtvXOEjcNPEKaiCb551jUenpQbm-WQ>
+    <xme:jAkEZX7VyJXl31I7-PgxFKtZ9JuTbAfRTs4PRaR4wFNpHrShEGzC7V8McfTsODtpm
+    9mZ7iwLF2MXJcrL_aI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrudejuddguddulecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdff
+    rghvihguucfthhgvihhnshgsvghrghdfuceouggrvhhiugesrhgvrggurghhvggrugdrvg
+    huqeenucggtffrrghtthgvrhhnpeekkedvffetudduhffhfeefveethfejjeevuefhleef
+    ieeigfefieekgeegvdekgeenucffohhmrghinheptghrvggrthgvvddrnhgrmhgvnecuve
+    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepuggrvhhiuges
+    rhgvrggurghhvggrugdrvghu
+X-ME-Proxy: <xmx:jAkEZddy2kGyxQxeEf-hdOyG2IiJX4vtWuaUch-h5ClZZgddZVJOpw>
+    <xmx:jAkEZbJ7R-I_y3HUaD8jVix-vamR3paeDac4oaG3T_PXNcGweqJ9WQ>
+    <xmx:jAkEZSJb7TGhQetpeqlXgYKD8em4bevOcGF2N-rfrGiOUD8RgFkDAg>
+    <xmx:jQkEZUi-tlwerD1z0yYvvgE5rf1tAxq7YJIK2v8sK2Ar3v5EvAbYsw>
+Feedback-ID: id2994666:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 76E641700089; Fri, 15 Sep 2023 03:36:44 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-745-g95dd7bea33-fm-20230905.001-g95dd7bea
+Mime-Version: 1.0
+Message-Id: <98d981a1-4e4c-4173-b8eb-09b4245bca60@app.fastmail.com>
+In-Reply-To: <202309142206.60836CE@keescook>
+References: <20230914-strncpy-drivers-hid-uhid-c-v1-1-18a190060d8d@google.com>
+ <202309142206.60836CE@keescook>
+Date:   Fri, 15 Sep 2023 09:36:23 +0200
+From:   "David Rheinsberg" <david@readahead.eu>
+To:     "Kees Cook" <keescook@chromium.org>,
+        "Justin Stitt" <justinstitt@google.com>
+Cc:     "Jiri Kosina" <jikos@kernel.org>,
+        "Benjamin Tissoires" <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        "David Herrmann" <dh.herrmann@gmail.com>
+Subject: Re: [PATCH] HID: uhid: refactor deprecated strncpy
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Sep 14, 2023 at 10:40:37PM -0700, Guenter Roeck wrote:
-> It is really sad that the submitters of such "cleanup" patches can't be bothered
-> to check what they are doing. They can't even be bothered to write a coccinelle
-> script that would avoid pitfalls like this one, and they expect others to do their
-> homework for them.
+Hi
 
-Well I'm not sure that's entirely fair to Justin's efforts (I know he's
-been studying these changes and everyone makes mistakes), but that's why
-I'm helping review his findings -- some code behaviors are more obvious
-than others. :)
+On Fri, Sep 15, 2023, at 7:13 AM, Kees Cook wrote:
+>> -	/* @hid is zero-initialized, strncpy() is correct, strlcpy() not */
+>> -	len = min(sizeof(hid->name), sizeof(ev->u.create2.name)) - 1;
+>> -	strncpy(hid->name, ev->u.create2.name, len);
+>> -	len = min(sizeof(hid->phys), sizeof(ev->u.create2.phys)) - 1;
+>> -	strncpy(hid->phys, ev->u.create2.phys, len);
+>> -	len = min(sizeof(hid->uniq), sizeof(ev->u.create2.uniq)) - 1;
+>> -	strncpy(hid->uniq, ev->u.create2.uniq, len);
+>
+> ev->u.create2 is:
+> struct uhid_create2_req {
+>         __u8 name[128];
+>         __u8 phys[64];
+>         __u8 uniq[64];
+> 	...
+>
+> hid is:
+> struct hid_device { /* device report descriptor */
+> 	...
+>         char name[128]; /* Device name */
+>         char phys[64]; /* Device physical location */
+>         char uniq[64]; /* Device unique identifier (serial #) */
+>
+> So these "min" calls are redundant -- it wants to copy at most 1 less so
+> it can be %NUL terminated. Which is what strscpy() already does. And
+> source and dest are the same size, so we can't over-read source if it
+> weren't terminated (since strscpy won't overread like strlcpy).
 
--- 
-Kees Cook
+I *really* think we should keep the `min` calls. The compiler should already optimize them away, as both arguments are compile-time constants. There is no inherent reason why source and target are equal in size. Yes, it is unlikely to change, but I don't understand why we would want to implicitly rely on it, rather than make the compiler verify it for us. And `struct hid_device` is very much allowed to change in the future.
+
+As an alternative, you can use BUILD_BUG_ON() and verify both are equal in length.
+
+Thanks
+David
