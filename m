@@ -2,78 +2,78 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD7DCD37AC
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 20:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C53ECD37A7
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 20:07:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237087AbjIOUE1 (ORCPT
+        id S237115AbjIOUHG (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Sep 2023 16:04:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37768 "EHLO
+        Fri, 15 Sep 2023 16:07:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237098AbjIOUEI (ORCPT
+        with ESMTP id S237258AbjIOUHB (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Sep 2023 16:04:08 -0400
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41A072120
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:04:03 -0700 (PDT)
-Received: by mail-pf1-x42b.google.com with SMTP id d2e1a72fcca58-68fb79ef55eso2328261b3a.0
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:04:03 -0700 (PDT)
+        Fri, 15 Sep 2023 16:07:01 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9341B2723
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:06:29 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1c328b53aeaso21910285ad.2
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:06:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1694808243; x=1695413043; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1694808389; x=1695413189; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=WBuZz+BdckpJHOm1ZISAhTef4sCi4HSxGN+vf0MxAr8=;
-        b=lMqXZr9zTLxsy5KQL5G498j4MM23oTudzH5Bwlq5wwkOAbVDRL/RGT4JJxIYIko/gG
-         7drOLMhs7FKyly+iCDy92tYvrgHYidKzvNeskOffC/7GJDLaL5ok2aGnYzJmd6qViPXz
-         6S3oIX4Tf1Ht2ZjC00eRsxvIofGY5lv3KlJ1M=
+        bh=dB1pwLSw3TfsJDfFAPemy9b5TtNPX4UXkiSYwc3PxLw=;
+        b=j6TqJJdlR2DW/SYrp7PPvx3W7j1C+SV0WzE/ji76VnUlPlwTCuzFeRDvtlzOB24Vgl
+         XwdTT24f6aK2+sby0LpgXYyYVxWaXIH5o7gCqBgK4hKit/wKZtufvy9dI0SFdrEgX2pa
+         kVIA00KXA9JvJnIbKd+bAlVGlzTI0E+UMpJEA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694808243; x=1695413043;
+        d=1e100.net; s=20230601; t=1694808389; x=1695413189;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=WBuZz+BdckpJHOm1ZISAhTef4sCi4HSxGN+vf0MxAr8=;
-        b=MvreeRCkyzDE0DBShB6vWRoiuTJKet2e3Ty3DNV3xD8X4ejKdLvG/hHrd8gAbFbS7O
-         xt8ovyMi/xfB7XidlvIV2SqU8GlgRP1GIYOR3yFJUue2pr24YMlqTmLesxQZ67l2h3lO
-         Pz/iF3RJZEfR+1AccwZgGYp5O42toERcucFU8Dc/9x7c/bv27XBEiif8c0l5+EmgVQb+
-         22stlB+3xUtz5drtZWb6e7k6ujAEnJ7ruOx2i34Pp5YHN/sny7vuj0e1qU1wx94bMJmK
-         9dPAbT9H0dtBP7Zxnf3AcoAWnutovoeTCfccDWhc73B0EAnLalayPk8gE1QjrDwN6+LV
-         wB6A==
-X-Gm-Message-State: AOJu0YxGcImTIE78Zme4QYltDVVYot07Fkg3eb+eNCxgqegAmMJT4cTs
-        h+CPSVpq6V6/FE8EJOhJeGFMmw==
-X-Google-Smtp-Source: AGHT+IHRUYTJjIKllYHBewMbpKQsYsoD6C28ob0Nn4eDxpBQYKIGmGp4tJnxthVcYLQpU9tsohhP2w==
-X-Received: by 2002:aa7:88c8:0:b0:690:15c7:60d8 with SMTP id k8-20020aa788c8000000b0069015c760d8mr3508557pff.22.1694808242750;
-        Fri, 15 Sep 2023 13:04:02 -0700 (PDT)
+        bh=dB1pwLSw3TfsJDfFAPemy9b5TtNPX4UXkiSYwc3PxLw=;
+        b=MmL9nRbzRaYWvdwBwp++0fiT6dKliYCn96BGXvNk2b+t/XhXQD9erBRPAmAREetD7N
+         wlJ8GmV970zpq4ED+Kh6PiOHAeKa31kP66ec3n/3Yi14gtSFJgzNi3O3ZC9IDctUOeIm
+         gVD3MP5UOLMzpc5KiX6z/moUHLsREk8s4LwVbfie+kn/AXr6I8NgnvnPXPTpOnrK7YXH
+         lpMuwxkf6wMoo16uT1lF7bG2WCJW2ASvfnOJa3xRv0uUNfF6QFfAfe5SHQCO9spg7TUc
+         a91kqSv+PPCjd8U3+rtUBKBiWEDJsr9ow35AhEhW1i9Fmb+Q2xjCrt2+NonksTZQJlQz
+         jZPA==
+X-Gm-Message-State: AOJu0YxM69FxqrEgn2PMiqOADDKEgLZBr4cWP/obQMzuQpneS5ucKxwB
+        UwrMAuxN+zpsrCct1qZP/zMdsQ==
+X-Google-Smtp-Source: AGHT+IFSEywbcZOC5XShL0oLvSifwuso6NQoEWHYLsrVN3EG8OWtaO4bmtwSMFub6Nj8jMAXdfGJXA==
+X-Received: by 2002:a17:902:c94c:b0:1c3:cee1:cc8e with SMTP id i12-20020a170902c94c00b001c3cee1cc8emr2842576pla.68.1694808389168;
+        Fri, 15 Sep 2023 13:06:29 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id k15-20020aa792cf000000b0068a3f861b24sm3312716pfa.195.2023.09.15.13.04.02
+        by smtp.gmail.com with ESMTPSA id b7-20020a170902d50700b001a80ad9c599sm3857764plg.294.2023.09.15.13.06.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Sep 2023 13:04:02 -0700 (PDT)
+        Fri, 15 Sep 2023 13:06:28 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Alasdair Kergon <agk@redhat.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Mike Snitzer <snitzer@kernel.org>, dm-devel@redhat.com,
+To:     Loic Poulain <loic.poulain@linaro.org>
+Cc:     Kees Cook <keescook@chromium.org>, Kalle Valo <kvalo@kernel.org>,
+        wcn36xx@lists.infradead.org, linux-wireless@vger.kernel.org,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
         llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Subject: [PATCH] dm: Annotate struct dm_stat with __counted_by
-Date:   Fri, 15 Sep 2023 13:04:01 -0700
-Message-Id: <20230915200400.never.585-kees@kernel.org>
+Subject: [PATCH] wifi: wcn36xx: Annotate struct wcn36xx_hal_ind_msg with __counted_by
+Date:   Fri, 15 Sep 2023 13:06:27 -0700
+Message-Id: <20230915200622.never.820-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1178; i=keescook@chromium.org;
- h=from:subject:message-id; bh=hh6/l0ERrceykgj05rTGEqoGv9O3N3l11v+m7r5kK6w=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlBLiwjAee1aCYWRgESmBPvaP+ZPywLMQavQYy6
- K1opOJdk7yJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQS4sAAKCRCJcvTf3G3A
- JmEyD/9Nw4qdkEPs0CMpZYH9PJm4rFd+PH9nRC+v78Gfq/aOca9MZMGgAsVTNZVVLy3P6KBjD2m
- mtmN77g1YZHJHCVzbdUI0UvlIfsuR086YpqaUWYp7+Q7hZfHkyCcKKrUFceRRDruDxkNaUOsNN2
- IzNy4s/CR4vogKkDt+GZ1M4KjWCNednV7pIbc7OTZ7oDfmLZSemK//MribH6UwbwstZZ/IbuMuy
- aeNZcS/1An4v4h1P+RuIKViYXbrMbIVTWpvGjOIbLasIYjcKoW9pSlewMy33Z139w9b2WMNcLGN
- 01cMC9t6y0j1p4xe4bkCrA0JEvmLH5zv+rMOGyLuvyeaG6u2Y41oqm+FNy5fEZOI3Neo6HIqjrW
- 8dQ4XaWrwKCWR6rc2vzr2N6EFCxh7FMrjtAvMQo4HoYMuzYpp+4owygZiP1XptuqamDfXDnhjTf
- d79h5FKJzmmzKtPa7y41OC7rFq2Hk7JciHa8JTHI3cw1D4J5VvcDE1ZlMq+Cxpi9QK4ImW7tWhS
- DrKAuYb0nA6Npm4thazac1wWwsCnAmJf6MLJqBrJfE1yYX4s3Tr2XuB22ABIm6T4hfpag6YFrbQ
- NiOsSHMZ6+N3PeHEo1lrusu22nve1JOWkpcUnxD7lJ3kW3pdEnfUXewlmUjhQFSa9tdp54xnhT6
- 5iS4QDJ ir8mttuw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1231; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=Tx0rD4QGaivxM7sy4gGEy8kvfFVy4mGnM/BvvbkoZzI=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlBLlD6p2BXFHtSwKtnpPyeTLWDyraFgZ0S036T
+ HLIIfFDiyOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQS5QwAKCRCJcvTf3G3A
+ JjD6D/93UiQLOjttIT0EbU7ldsmyJjtmhfaLaIneAYcFlDcgnsftgejYn1pA9AYok+xUnAnpfkp
+ 9bViv791IaDIYWP4k7xICVG5IYyfS7++UJmcABftzpgHlbVMGImJjEYazHI67tLbGcbQBXYWc5e
+ Ym8BsbfK9qPbjraHzs2LjoOO8CZdHH3Z7qhqffj8zZTZKVqCg8gM6YHRbOu6lgrYuhljGdvKfgC
+ o4TcAE7B6pIhNsxLKFjTxXX/EtlJcjU1u3qaxXTsygt0vg5e75SLyTRlTJoAFpC3ZPoMMKV+QXd
+ HwxRtLb42r+4RdH113rVtXOVQvJPUMZ/7bUzRZj1WmQpbBaFAvGX8jLI2bfRfOzlHu3oe9KTsNP
+ 3UJlPIOac29tVYOWVc3GyU7CbYrfzr7/FV9O2uK2yUJUvQVeEk6JdHh6yadyhRzeNTD1LySHwzo
+ Y98YLn7hXO3WHcUw7IiF4gVyRuAHC8Zjb2a92QpqBQtCCnJ4s6aNi5wEnzycdmdpdi/epGSvsBS
+ xj5tHVSwsuKT1ul56Q2o7/B/c9m+1DbhxZG7Wv9C+qJeHHb9ZHz6mWI55QkZMz/yPk1gIq27ZZ+
+ HaaAk8OznFr0MKtZtid95deMwVBswNBl95zDNuIdr+z8YaicpZBr4ol4fxLSmGuiQZ+zIBRI3B7
+ QNnIVu0 Rm0JoYKQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -86,31 +86,32 @@ their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 functions).
 
-As found with Coccinelle[1], add __counted_by for struct dm_stat.
+As found with Coccinelle[1], add __counted_by for struct wcn36xx_hal_ind_msg.
 
 [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 
-Cc: Alasdair Kergon <agk@redhat.com>
-Cc: Mike Snitzer <snitzer@kernel.org>
-Cc: dm-devel@redhat.com
+Cc: Loic Poulain <loic.poulain@linaro.org>
+Cc: Kalle Valo <kvalo@kernel.org>
+Cc: wcn36xx@lists.infradead.org
+Cc: linux-wireless@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/md/dm-stats.c | 2 +-
+ drivers/net/wireless/ath/wcn36xx/smd.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/md/dm-stats.c b/drivers/md/dm-stats.c
-index db2d997a6c18..bdc14ec99814 100644
---- a/drivers/md/dm-stats.c
-+++ b/drivers/md/dm-stats.c
-@@ -56,7 +56,7 @@ struct dm_stat {
- 	size_t percpu_alloc_size;
- 	size_t histogram_alloc_size;
- 	struct dm_stat_percpu *stat_percpu[NR_CPUS];
--	struct dm_stat_shared stat_shared[];
-+	struct dm_stat_shared stat_shared[] __counted_by(n_entries);
+diff --git a/drivers/net/wireless/ath/wcn36xx/smd.h b/drivers/net/wireless/ath/wcn36xx/smd.h
+index cf15cde2a364..2c1ed9e570bf 100644
+--- a/drivers/net/wireless/ath/wcn36xx/smd.h
++++ b/drivers/net/wireless/ath/wcn36xx/smd.h
+@@ -47,7 +47,7 @@ struct wcn36xx_fw_msg_status_rsp {
+ struct wcn36xx_hal_ind_msg {
+ 	struct list_head list;
+ 	size_t msg_len;
+-	u8 msg[];
++	u8 msg[] __counted_by(msg_len);
  };
  
- #define STAT_PRECISE_TIMESTAMPS		1
+ struct wcn36xx;
 -- 
 2.34.1
 
