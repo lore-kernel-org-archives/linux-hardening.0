@@ -2,52 +2,52 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C635CD37AA
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 21:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA72CD37AA
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 21:09:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237374AbjIOVHr (ORCPT
+        id S237432AbjIOVJX (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Sep 2023 17:07:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52948 "EHLO
+        Fri, 15 Sep 2023 17:09:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237587AbjIOVHR (ORCPT
+        with ESMTP id S237587AbjIOVIx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Sep 2023 17:07:17 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70D74C1
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 14:07:11 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-1c0db66af1bso20394015ad.2
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 14:07:11 -0700 (PDT)
+        Fri, 15 Sep 2023 17:08:53 -0400
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D6ACB8
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 14:08:48 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-68bed2c786eso2428917b3a.0
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 14:08:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1694812031; x=1695416831; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1694812127; x=1695416927; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Gpm6l2zbYEP+V6IdYZx55UZQF+is/o4lwglBKgVrZz0=;
-        b=fDH01NjiO2bMTMbSUOKhTrBeyBJCZ+IXCSijkAE3a+rPlYYAQZOjn19HId8V+9B6BY
-         ITxKj9wmAvlb70AWIhoHExt0c6VfPpV5FGlL0LS29ZHhsTeeTS5aRXmvN8QvL95PsgKI
-         D3YQgn5y497iv/wxpNZLrA9sNKsj8C2qj1jdE=
+        bh=1USzWYUGvvuIEVJkYh5wRYXrAoKFGs+D9zdSuXXuGko=;
+        b=CHZ4Br4anGAQsDYK2xv2w0WNa+PxFhcQ03z08OEERDJPkjtUDddOwcXa1qvUcwyiBd
+         vg6LTimDbaww50419WFegtYr+cH89uLG+2DsIMGnLgGIDaoTfUZYqjShLLNstUNTGueZ
+         RpBQk1jHcBV8J7e/EI8PRgWu0Ux513cCOiAYU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694812031; x=1695416831;
+        d=1e100.net; s=20230601; t=1694812127; x=1695416927;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Gpm6l2zbYEP+V6IdYZx55UZQF+is/o4lwglBKgVrZz0=;
-        b=dmzVGFL0UkEjTKX/6YiIUUT/CApNkZqFVErSAdon9mXAA18NAKf1p7HYGoooWl3nT7
-         p62wcCDv6EImbCWe3oubgDl4WvlFxyxRHmBnmuVa3Tdnn6dquWty2uiyPGF8GP/WR/P9
-         59Gzm82dvl48vqYvu7o+calj3Fd5UzxlUF6EEG6JSggAsAUB5NbnQFzIb4zhslCCFJ7V
-         sIgDGeCWqV7+eMKiNCbfjeG4FsAKtPA1h980zC9VKuKSR4QAGJs4oReI9sju5kTq3KlZ
-         zG47V1xxjSNePCgb5iIz3QTlE0r1gNmcRdmtTLpgOmAFjGwHXxyUsyJ95rE8NPeqwWze
-         yxzQ==
-X-Gm-Message-State: AOJu0Yy4WFRLov4bm/d5rkclWN8oPcRY/8M0q7KwF2CmRC67FYeEKFKw
-        ax1g5prPIbHbRqmVjGc1KV8log==
-X-Google-Smtp-Source: AGHT+IEG2bCBbADESOrcfwhEKDiH90vpRH4uBGBmGx+GTX8gOEqkcnRXiWFTKwkpE3Lhi3WQISqwLg==
-X-Received: by 2002:a17:903:2783:b0:1b8:b382:f6c3 with SMTP id jw3-20020a170903278300b001b8b382f6c3mr2890153plb.13.1694812030972;
-        Fri, 15 Sep 2023 14:07:10 -0700 (PDT)
+        bh=1USzWYUGvvuIEVJkYh5wRYXrAoKFGs+D9zdSuXXuGko=;
+        b=neLZjW4JrrslKkmPqWRQ2xeZG3HJylu75cPmWzPzggjAx6960PfhsDa1AqxZv5Eqm+
+         iVvK+QD++wLEWu4ROAI1J/ZAD9X6B9IVzNQkft6jCaFg4OhdKlpjLcmk0nr67H8fNNnk
+         9PAkaVEHuhUynY0INuwI+0jjqb3lOPX2lUx8SPIr9f5J5NkLz/Dge+JmTjZ3kQ0wC72M
+         Qmq/CNxcELuXaxcZvxk6avqQzNt3eTjyKtGy2VToCfyhurkQdI87jGbzCGsTbqc9HiSa
+         NXBwY0kfJpiV81ptdQMI249aV7Gn+XuS2gqmA4Y4NwrXO/4pLAKIEliy7SvufGVrIzFw
+         vsNg==
+X-Gm-Message-State: AOJu0YwJFXu0zqWUIRVxNgZkaaMbvJgdB9VJRIhzAJdmGhaCjDeQLSNL
+        fCSO4iIopGzga69gH6S97sP9lQ==
+X-Google-Smtp-Source: AGHT+IGdp49LjyrMmSykt/SWt4KND8jRB/On6dOS8iyiloyE00YR/5G95sS67INYP4RtGEqyBEYS7w==
+X-Received: by 2002:a17:902:64d6:b0:1c1:fc5c:b330 with SMTP id y22-20020a17090264d600b001c1fc5cb330mr2308796pli.12.1694812127548;
+        Fri, 15 Sep 2023 14:08:47 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id 5-20020a170902c24500b001bdc208ab82sm3788343plg.97.2023.09.15.14.07.10
+        by smtp.gmail.com with ESMTPSA id y11-20020a1709029b8b00b001b9e86e05b7sm3916537plp.0.2023.09.15.14.08.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Sep 2023 14:07:10 -0700 (PDT)
-Date:   Fri, 15 Sep 2023 14:07:10 -0700
+        Fri, 15 Sep 2023 14:08:47 -0700 (PDT)
+Date:   Fri, 15 Sep 2023 14:08:46 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Matteo Rizzo <matteorizzo@google.com>
 Cc:     cl@linux.com, penberg@kernel.org, rientjes@google.com,
@@ -60,39 +60,28 @@ Cc:     cl@linux.com, penberg@kernel.org, rientjes@google.com,
         corbet@lwn.net, luto@kernel.org, peterz@infradead.org,
         jannh@google.com, evn@google.com, poprdi@google.com,
         jordyzomer@google.com
-Subject: Re: [RFC PATCH 08/14] security: introduce CONFIG_SLAB_VIRTUAL
-Message-ID: <202309151407.2FD7F80B@keescook>
+Subject: Re: [RFC PATCH 09/14] mm/slub: add the slab freelists to kmem_cache
+Message-ID: <202309151408.A419BEAD15@keescook>
 References: <20230915105933.495735-1-matteorizzo@google.com>
- <20230915105933.495735-9-matteorizzo@google.com>
+ <20230915105933.495735-10-matteorizzo@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230915105933.495735-9-matteorizzo@google.com>
+In-Reply-To: <20230915105933.495735-10-matteorizzo@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Sep 15, 2023 at 10:59:27AM +0000, Matteo Rizzo wrote:
+On Fri, Sep 15, 2023 at 10:59:28AM +0000, Matteo Rizzo wrote:
 > From: Jann Horn <jannh@google.com>
 > 
-> SLAB_VIRTUAL is a mitigation for the SLUB allocator which prevents reuse
-> of virtual addresses across different slab caches and therefore makes
-> some types of use-after-free bugs unexploitable.
-> 
-> SLAB_VIRTUAL is incompatible with KASAN and we believe it's not worth
-> adding support for it. This is because SLAB_VIRTUAL and KASAN are aimed
-> at two different use cases: KASAN is meant for catching bugs as early as
-> possible in debug/fuzz/testing builds, and it's not meant to be used in
-> production. SLAB_VIRTUAL on the other hand is an exploit mitigation that
-> doesn't attempt to highlight bugs but instead tries to make them
-> unexploitable. It doesn't make sense to enable it in debugging builds or
-> during fuzzing, and instead we expect that it will be enabled in
-> production kernels.
-> 
-> SLAB_VIRTUAL is not currently compatible with KFENCE, removing this
-> limitation is future work.
+> With SLAB_VIRTUAL enabled, unused slabs which still have virtual memory
+> allocated to them but no physical memory are kept in a per-cache list so
+> that they can be reused later if the cache needs to grow again.
 > 
 > Signed-off-by: Jann Horn <jannh@google.com>
+
+Looks appropriately #ifdef'ed...
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
 
