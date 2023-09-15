@@ -2,78 +2,82 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6571AC46CA1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44584CD37A9
 	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 20:04:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236780AbjIOUDx (ORCPT
+        id S236771AbjIOUDw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Sep 2023 16:03:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40844 "EHLO
+        Fri, 15 Sep 2023 16:03:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237034AbjIOUDn (ORCPT
+        with ESMTP id S236723AbjIOUDY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Sep 2023 16:03:43 -0400
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 806D02120
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:03:38 -0700 (PDT)
-Received: by mail-pf1-x434.google.com with SMTP id d2e1a72fcca58-68fbbea0dfeso2136593b3a.0
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:03:38 -0700 (PDT)
+        Fri, 15 Sep 2023 16:03:24 -0400
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 263422121
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:03:19 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-68fcb4dc8a9so2445841b3a.2
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:03:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1694808218; x=1695413018; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1694808198; x=1695412998; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=3EcXc4p/OZvjhpZjniZGrlHnagHBjkD/G1KmRx4RQEY=;
-        b=jT8lZjJCcZqVhHUwizdtyoVnVc78HbfOU9IVFwERDHo5TXyehvzwP7RJaSGox5v+eE
-         d4FiIH+hc+uml8FJ5B056JSEv6oCg0ph0qV8cjjnHWl5BE5+bmWGbGLBIesYITE3mzaQ
-         1w0D0btWIfx/+JorE7BAawMZK//2uwXUkVvWM=
+        bh=vqU6w0o7wis7lXYiV/PtYRUS9jkyqSgo8jH+nv7z2lQ=;
+        b=Te06Ig6yNLnKo+W5QXpfQ3zaH+vcXPDIKySu+D0whY4WIV1UeT8xtsBEYrVekWnXqH
+         JIZzAOcFg4WzkXLSCD0rUvE4HgEnstk4MPd+iAVc9CfRWQPyxAqFrkWgQt6sILxaRGBU
+         7gWmfwAU/AHDovfFDnbFcqVq5XXabFHUAdeWQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694808218; x=1695413018;
+        d=1e100.net; s=20230601; t=1694808198; x=1695412998;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=3EcXc4p/OZvjhpZjniZGrlHnagHBjkD/G1KmRx4RQEY=;
-        b=vAmUG06cylXK/HTh6w7nBe4kdMap8VWESt2vSRb4Xt04WG1rCj//+b/DBRe/OZ0IEN
-         C/I6pyqVoGGOes1CRMc4TuONFZQI1BVgPisQl6CTKtGiBpdnXmz+F8c/o0jKwsVOzDAa
-         HaWb2vK1ncVEm5QGH0PzYkzXo9I/nb8vC+GcEiIZkApeJ5xYkB9VzArsC/OZy73ZlnWI
-         h9Ud4pl2jXg5MOv4olNmqPzSOpPiBEMIQ2Xj3C3M5mH36IrXd/+oJdFx7VY8S8ZjYH5O
-         Ai6TpOv4V4+Z2mWRtePGXVykfyqQkGiULikFCueO/aUH2XzTxxut3buU6N6nNzk7fgag
-         SB9A==
-X-Gm-Message-State: AOJu0YxdaHKS9hntEHTbW16TGe1B2+C2yx76H/5vAvqFR5+N8fo6otrH
-        y8aFXqiBQoBjbrpv7nBRBImvXQ==
-X-Google-Smtp-Source: AGHT+IHzIIRXAsC49F/G94cgVOd9c2WBf+CMYStzd0rWb8+BhqsZLM2DtQPyl2+9IiDNZBy2vC9pbA==
-X-Received: by 2002:a05:6a00:c90:b0:68f:e0f0:85f4 with SMTP id a16-20020a056a000c9000b0068fe0f085f4mr2391932pfv.25.1694808218030;
-        Fri, 15 Sep 2023 13:03:38 -0700 (PDT)
+        bh=vqU6w0o7wis7lXYiV/PtYRUS9jkyqSgo8jH+nv7z2lQ=;
+        b=Tknx2m2c8SFLN2qoZqky2EHDjfeAj90LwxFpip49wNGhgKR+EoQKN+1U1IlwwzJiJM
+         QaM/dMv0VeNZH76zxmXh8MpZWoE+Qss7heXeP2qoLKgpNLpbefF8leaZHDrtzmDunnDW
+         kFC4QR4HjepIh1zaR67MUXhUhF94WAcnuMT3OdyAkvhMVSV9RbZr7/aUx+4CRTxW5sHm
+         L/KtH6Hqg8k5ABNTqC4fHI6JS5cfFjtf6j069E+QDmVLOAQNqoRwhpFr7ewkZLCjD5lW
+         Ep2BpR/iy3iAJdqRAzNrNdE8wzN00nYQpQCnDzGaVpTqvcJbgUv9F8koeoCdqhZD8ABT
+         FV0Q==
+X-Gm-Message-State: AOJu0Yy1+DZC74VamdMFJyrfgtS9VFeqmiXcH6q0lrYTqdXJBhdrUigv
+        R5p4otz2NWXLnKKiQ/tt7lEcUg==
+X-Google-Smtp-Source: AGHT+IH3OWyboutDfOfAciFvlgHKuWSpCyEFwnnry4+ZcBINS25y0aQgfc+F80nwPUf47he0MSKCZg==
+X-Received: by 2002:a05:6a21:3d82:b0:155:bff3:ea1d with SMTP id bj2-20020a056a213d8200b00155bff3ea1dmr2858114pzc.58.1694808198682;
+        Fri, 15 Sep 2023 13:03:18 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id q15-20020a62e10f000000b00682c1db7551sm3307074pfh.49.2023.09.15.13.03.37
+        by smtp.gmail.com with ESMTPSA id s24-20020aa78298000000b0068be348e35fsm3327629pfm.166.2023.09.15.13.03.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Sep 2023 13:03:37 -0700 (PDT)
+        Fri, 15 Sep 2023 13:03:18 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Alasdair Kergon <agk@redhat.com>
+To:     Philipp Reisner <philipp.reisner@linbit.com>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Mike Snitzer <snitzer@kernel.org>, dm-devel@redhat.com,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        =?UTF-8?q?Christoph=20B=C3=B6hmwalder?= 
+        <christoph.boehmwalder@linbit.com>, Jens Axboe <axboe@kernel.dk>,
+        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
         llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Subject: [PATCH] dm raid: Annotate struct raid_set with __counted_by
-Date:   Fri, 15 Sep 2023 13:03:36 -0700
-Message-Id: <20230915200335.never.098-kees@kernel.org>
+Subject: [PATCH] drbd: Annotate struct fifo_buffer with __counted_by
+Date:   Fri, 15 Sep 2023 13:03:16 -0700
+Message-Id: <20230915200316.never.707-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1112; i=keescook@chromium.org;
- h=from:subject:message-id; bh=3ZvYiEsZZa56aKWu6y0PnTbRMpo38Aw/L94IEjhb4Tc=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlBLiYTyy1xh5VON0ySJo9kFErTAbQFWQI95vz1
- 9vW2hZ7e5yJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQS4mAAKCRCJcvTf3G3A
- JplJD/9wyOg+Xy09KCd38SWSRoERMIlg+91bNOk9bfpY2aBh3lv91ulrX53nyRunUA02GCG0EfT
- KAEZKI/2vR7K3DBBGzndXE8/eZki/GOdVUVAeIotscDIQCswSFeVrPWcOV3gTKNHmwDOJNqOhae
- PXNwG5Fgv7FNEY68jEyyJq4BJdATKz4lEL2woZ62IGNRNGGyUT3Q6evSPpB9naGIxdq7i7gJLHa
- gmgONPB6bRaS7U+Q5O3fAbI/UjYhNV6MUMaAZ/6yxpkewG6Hb5yTuQ2/YXGsq+XrBOs39PS5vNe
- CQHDFiZIzLg+vEWzFlW91THnSxrlYY2q6TLb0Me7nkxnaPKsKFuFzwL9rq25nET6JP8hINETJqP
- sKfWeuhy321LLzTGS0XNBrP4VFsDkLPcCtHrp7CfWyeiXBKQrr42xZF+wKEuBTjbW0PEgo7bQjl
- bT6fQJjM95fDf2EJQOHoz5ttA5z/PHK5QF973oyfgK6eq7AzwKyj9oFFf4Y4GF9wu+Z/PNq04hS
- D2n58sWCRuH4/7eJMNIl5O5bAZATtf3lObXLRtL5OJXZq58zG/uMp1o40da7W/RtbTMPq3Hc2uT
- XGJPSvkjpqXA3X/A86g6vAHjsFuoJZce8yvX4diqSLCWDA+NivlRwzcXDgEyaPnbMxxonfsAsaT
- K5u/Ioo p9oiGWzQ==
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1342; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=ZUSAvLi9vR+UNAa6nUlqpsYdl2ki5xpNFUW+QWpv+Gs=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlBLiE6lCzis0gsISR4JNPawG7ZHd60KeU/nnbd
+ V8maTMUfi2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQS4hAAKCRCJcvTf3G3A
+ JkJlD/9l0pF1aFUgbVK4svrSUi+5O9iGRCXOXyoA8gV9689PopMTI0ye6wlfzm8Md0iYuPfhPXN
+ PiDaHZayfKusmZu960KmvoYn86R3PC7vusckxDFxIgZLKpHbUlrnIEvHyffN6rhQz/U0x3f3FOZ
+ Zo/+lHw5TwwltaJ0UuG4XxTzBmorhPU5VRUUvs8vN9MbJh+Zemw3EIECqisOwSLvIb44xn2EhsQ
+ ik9K5alDkuinwcoxqirtInCYXfVkatpA9hycu0y4BxSbpaHfeLZ8bD7qFGFWPWuSPEkoRqag+5a
+ I/lOP+ADDanjP1tHpdyL++/bWKhxpdzJQ/V4i6+OwO4240bpcoULvIZat0qzQ/Kc4O6E6V2FYEQ
+ If+FqC7XhZfU4OxTEaOECJUi4i1ziEZcD2gyrR4ZOLOD6WhZr7lqtDXhRDtGvCD1vl+/3u/frmE
+ 5DpKvhGaM0oE+x4HjT7CKuptyzLPaNpdjfbLBI26/9nHIWMorznDsuAigef1YyWMjfRg7mDsWyv
+ Wyf2UTzCBZPa4ezkhWjsFB9DAllI18T+IPzhY3S0g70qdnZvZDlJ3fDhraSbUyCE/e2jVgPbvJW
+ 6Tc6rXSm54n7WhP2cU6JIa/9pPv2J0rVcbUYyOqICMjEek0DhJ2EUyUa2umQjR49gGfT1cnVha9
+ e44QrY/ OHYIMW1Q==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -86,31 +90,34 @@ their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 functions).
 
-As found with Coccinelle[1], add __counted_by for struct raid_set.
+As found with Coccinelle[1], add __counted_by for struct fifo_buffer.
 
 [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 
-Cc: Alasdair Kergon <agk@redhat.com>
-Cc: Mike Snitzer <snitzer@kernel.org>
-Cc: dm-devel@redhat.com
+Cc: Philipp Reisner <philipp.reisner@linbit.com>
+Cc: Lars Ellenberg <lars.ellenberg@linbit.com>
+Cc: "Christoph Böhmwalder" <christoph.boehmwalder@linbit.com>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: drbd-dev@lists.linbit.com
+Cc: linux-block@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/md/dm-raid.c | 2 +-
+ drivers/block/drbd/drbd_int.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/md/dm-raid.c b/drivers/md/dm-raid.c
-index 5f9991765f27..9755788e8b78 100644
---- a/drivers/md/dm-raid.c
-+++ b/drivers/md/dm-raid.c
-@@ -254,7 +254,7 @@ struct raid_set {
- 		int mode;
- 	} journal_dev;
- 
--	struct raid_dev dev[];
-+	struct raid_dev dev[] __counted_by(raid_disks);
+diff --git a/drivers/block/drbd/drbd_int.h b/drivers/block/drbd/drbd_int.h
+index a30a5ed811be..7eecc53fae3d 100644
+--- a/drivers/block/drbd/drbd_int.h
++++ b/drivers/block/drbd/drbd_int.h
+@@ -553,7 +553,7 @@ struct fifo_buffer {
+ 	unsigned int head_index;
+ 	unsigned int size;
+ 	int total; /* sum of all values */
+-	int values[];
++	int values[] __counted_by(size);
  };
+ extern struct fifo_buffer *fifo_alloc(unsigned int fifo_size);
  
- static void rs_config_backup(struct raid_set *rs, struct rs_layout *l)
 -- 
 2.34.1
 
