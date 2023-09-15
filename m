@@ -2,79 +2,79 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C5ECD379F
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 19:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C67CD37A7
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 19:43:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236532AbjIOTm3 (ORCPT
+        id S237001AbjIOTnD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Sep 2023 15:42:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58298 "EHLO
+        Fri, 15 Sep 2023 15:43:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236643AbjIOTmU (ORCPT
+        with ESMTP id S236638AbjIOTmo (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Sep 2023 15:42:20 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89A9019A9
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 12:42:15 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-68bed2c786eso2356263b3a.0
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 12:42:15 -0700 (PDT)
+        Fri, 15 Sep 2023 15:42:44 -0400
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 018351BF2
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 12:42:39 -0700 (PDT)
+Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1bf57366ccdso26214645ad.1
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 12:42:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1694806935; x=1695411735; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1694806958; x=1695411758; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gFE1F3+kydQTQojTUb7prmfEOCJq3WLONO+sPWEJMCo=;
-        b=h38ZcxOqWwCMHk2cL65uE60F0C0YUQdFXGSjn5YM4z/sbkkqRAKpN7N8C0XpegO6cw
-         c2UagfzmMXtWz3MuMZ9O3TEYaEWJfvjaI6qniL9tuqrfhXZampXd7WTX72bjb4h1LLPI
-         1u4LWhkpW4LmoBf7pprnlw6+1Zq1wWhGXTfeo=
+        bh=eIj8OzGJrhv2lGM2biZWis6A17RAWnGoSZFCbIwFvuM=;
+        b=WaD0aTyDH/uutpVV8adNXlYXUhfqEf+U/H86LF52FutN6nw4UgSWcRY+/j7ENhjbgB
+         VZKLGelUiNKYNJF8jZ9sfR2Apk6zSj4CWlFuxMeqBbV8lWkuyrkE1LAK8gEaaraW8g5a
+         YitWmqcEfS43fv1RxMxGnBWFAoFAIYXmX+Do8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694806935; x=1695411735;
+        d=1e100.net; s=20230601; t=1694806958; x=1695411758;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gFE1F3+kydQTQojTUb7prmfEOCJq3WLONO+sPWEJMCo=;
-        b=GZyO2f2mUD7kVdaeDNi7X27j0Krd8YFt3zz57j6NWgrjVeo6wuJhCjhdnIcy5wtC6u
-         /cJyb7ss86+AZ5rbCcV1b5Nid/3Ke483d7MnLiZvbi4KNPzEaYdkRFvBu9o5F/ws5o55
-         y3CuHoPpuZZq1Dr7Rp0k2RhuY+F0aeznAklJe1M+g9dn5JN3xl6KbvDJ52+fmPB9PwZi
-         tfy+XYzmxYUMSZG1bu9i7JB5thJ1WRyFw0/f+iGf/d9ohEK8yOcIeShS/34BwAGyx/LM
-         XjkGko8g7muNkJnFNxBmwJKr4Heop1ChaGB7kdMuXqRV3fclPHrUnKjEX6jkMNcqq1Y7
-         DGhQ==
-X-Gm-Message-State: AOJu0Yw6+bysBvcSjDwPtm3uZxtrWcZ8Sd6pjxbt/ISpy78OaqZN0xp8
-        EAdQJnY04x8kwr1369ygzp5z8A==
-X-Google-Smtp-Source: AGHT+IGpdxeoMFg927wqPjDXncgi6Ri3SO4sv6EPXygbD0EnqTl0JEaVe8KWeIG5/O1y9sFbXRwVKA==
-X-Received: by 2002:a05:6a21:7189:b0:153:39d9:56fe with SMTP id wq9-20020a056a21718900b0015339d956femr2593392pzb.47.1694806934963;
-        Fri, 15 Sep 2023 12:42:14 -0700 (PDT)
+        bh=eIj8OzGJrhv2lGM2biZWis6A17RAWnGoSZFCbIwFvuM=;
+        b=RrurYcRDO8C+SJCZ5X57IJbLZOgE5T+wWjS8ytSBz4aCIp3RRmdUdtJ4YhMuTmlFoa
+         IeqYk/l81JY5PrBQNF2EfygUmptK2NwojvNdR1R+sqUXqjctEartWOY7N2CmddRNoFXr
+         yGHJDVdLzcjkSzxpBNaTgFCcDi5MFC0XFV4JoxvJrJIwSqqdgmVkJxOe0F10X9zGpZ09
+         GuSTkIU4w+HkdHOhl8D/6gv9fww1hV8HNbWT47/wDYmOJ2AdPndd2ICzwB3HV0Lug3Xw
+         1d3FhLMMJ1fPfmLeXYNN3GTOc+BWnVFM/xFJC0BXNvhyZ49shNtPH+IQQ7xP9xwcshx+
+         qMMw==
+X-Gm-Message-State: AOJu0Ywj+joDig4c+USbI8He9pHchbgdCtc9G9x4abZV2Z7pO+3Kxv3e
+        pfMh/ViPWhT2HsneH/l2+Eh/YA==
+X-Google-Smtp-Source: AGHT+IERfok0jFzZlZtdhSIeue7UAgumLdb8qFaPg7HdEwWvabfB1YwxclxmfbPVjycC8GbPAfm1aw==
+X-Received: by 2002:a17:903:110e:b0:1b8:8682:62fb with SMTP id n14-20020a170903110e00b001b8868262fbmr7918269plh.4.1694806958504;
+        Fri, 15 Sep 2023 12:42:38 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id m22-20020aa78a16000000b0068fba0f5f32sm3417615pfa.90.2023.09.15.12.42.14
+        by smtp.gmail.com with ESMTPSA id q22-20020a170902bd9600b001bb9f104328sm3831900pls.146.2023.09.15.12.42.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Sep 2023 12:42:14 -0700 (PDT)
-Date:   Fri, 15 Sep 2023 12:42:13 -0700
+        Fri, 15 Sep 2023 12:42:37 -0700 (PDT)
+Date:   Fri, 15 Sep 2023 12:42:37 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Ido Schimmel <idosch@nvidia.com>, Petr Machata <petrm@nvidia.com>,
+Cc:     Boris Pismenny <borisp@nvidia.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] mlxsw: Use size_mul() in call to struct_size()
-Message-ID: <202309151242.E732735FA@keescook>
-References: <ZQSqA80YyLQsnd1L@work>
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] tls: Use size_add() in call to struct_size()
+Message-ID: <202309151242.BC470261F@keescook>
+References: <ZQSspmE8Ww8/UNkH@work>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZQSqA80YyLQsnd1L@work>
+In-Reply-To: <ZQSspmE8Ww8/UNkH@work>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Sep 15, 2023 at 01:01:23PM -0600, Gustavo A. R. Silva wrote:
-> If, for any reason, the open-coded arithmetic causes a wraparound, the
-> protection that `struct_size()` adds against potential integer overflows
-> is defeated. Fix this by hardening call to `struct_size()` with `size_mul()`.
+On Fri, Sep 15, 2023 at 01:12:38PM -0600, Gustavo A. R. Silva wrote:
+> If, for any reason, the open-coded arithmetic causes a wraparound,
+> the protection that `struct_size()` adds against potential integer
+> overflows is defeated. Fix this by hardening call to `struct_size()`
+> with `size_add()`.
 > 
-> Fixes: 2285ec872d9d ("mlxsw: spectrum_acl_bloom_filter: use struct_size() in kzalloc()")
+> Fixes: b89fec54fd61 ("tls: rx: wrap decrypt params in a struct")
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
