@@ -2,52 +2,52 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35971CD37AD
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 21:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 386C6CD37AA
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 21:35:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234513AbjIOV1f (ORCPT
+        id S237464AbjIOVfD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Sep 2023 17:27:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55746 "EHLO
+        Fri, 15 Sep 2023 17:35:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232692AbjIOV1D (ORCPT
+        with ESMTP id S237874AbjIOVeo (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Sep 2023 17:27:03 -0400
-Received: from mail-ot1-x32a.google.com (mail-ot1-x32a.google.com [IPv6:2607:f8b0:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4475186
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 14:26:57 -0700 (PDT)
-Received: by mail-ot1-x32a.google.com with SMTP id 46e09a7af769-6c07e122a78so1533174a34.2
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 14:26:57 -0700 (PDT)
+        Fri, 15 Sep 2023 17:34:44 -0400
+Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86EB61A5
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 14:34:34 -0700 (PDT)
+Received: by mail-pg1-x529.google.com with SMTP id 41be03b00d2f7-5778fe9d183so2100866a12.3
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 14:34:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1694813217; x=1695418017; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1694813674; x=1695418474; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=N73xDGDYMf25E5+wcFhTff+1YHHWKUrOFYtp7lI/Z2E=;
-        b=c9Aai8KtgmQWvLs8+Vlif9HSMRy86gIWb3iMsG09SMBWa25sEut3eU0Cn6HPUgxMNJ
-         PQ3Dbx49IxdOxPMZZVed6ZM9sPlhDY+gy4sy1zA2IyBdV8Pd7hdwnJCLP4ishz/6g7YV
-         kKPnBavYN/j3lRvxTFUUHwz/oottS+dbJAa1g=
+        bh=DMNKJbaDoh2XeIMNATULLDefE0skDJfasuAN0WXdJAM=;
+        b=JlCRevrU/xIO1G9EorKGAD34IwEnbiYhjjZW3xv8l9pB7zzAPW91x5S+/RU+xdCcll
+         0Jdt2dxdJNQaLiz4R8EgYXqvMValpdMblU3+vqTzALyMEFOkJl+iO8f1okjK123K5Oi2
+         fUyXyluoPA3fecCwNYPyzrLkPGle5k2IAhR/Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694813217; x=1695418017;
+        d=1e100.net; s=20230601; t=1694813674; x=1695418474;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=N73xDGDYMf25E5+wcFhTff+1YHHWKUrOFYtp7lI/Z2E=;
-        b=LeZ7R5Rz/E6uT98DKiQFf5pXdKIh5w2t5UBk6MVc+ETLwbrnOK/ZYeKbXylmW48vYE
-         y7UPXDENSBJ+1siTGxByoo6pciaevPT1a4IbyjvAU/0HiihD12bLRUE7NfDifRW0Y+7A
-         wnBzw2VS7Zi1ewT0ON3wPUX1znW9RyJN9dcfoshTfuVHCieDj08BoWR4oFf9oxef7MnT
-         WR3RqKDrrGqOCqrx9eY1Ue3duLW8UoFHNfqbztBn39KPrr93IaqNmh1fDUt1LNzBPa+U
-         dm0vUqyhMQh8bnD083Lq6NgA0BiejBOLMvRG1CQ4ia8VzoKNlJ4Sk26coId+Sn826XKK
-         eUOA==
-X-Gm-Message-State: AOJu0YzryATziwC2Q0aZFmce46TqlJIJEGsv2EvAH+QyhOcAkX3GcRG2
-        NZA6Fx0oAjN0rWQsj2/aM5vrbg==
-X-Google-Smtp-Source: AGHT+IHGfEL6UEpI1fhXq1GH6s3XjXanXM4RZV6BwTnJBBNVpqZXF/AagkdBc6hDr45b/FAuDOtwSA==
-X-Received: by 2002:a05:6358:3412:b0:135:a10e:1ed0 with SMTP id h18-20020a056358341200b00135a10e1ed0mr2576032rwd.23.1694813216900;
-        Fri, 15 Sep 2023 14:26:56 -0700 (PDT)
+        bh=DMNKJbaDoh2XeIMNATULLDefE0skDJfasuAN0WXdJAM=;
+        b=BdMPi4dLgziwjj1X9+lOSMjqXLsNFuTwZR/qpxsJZU8igN0eUvZuIYTmVzhfPlQvYf
+         ogWvRSCIzNkTT5kVKQj6XXgbGdEXAN1QmLL49VZDdXLrR+ZKLX9MHs9bunLxNGbgtDiJ
+         OuRT+eokKWZD40y8TeWwRJUe+9fQceLQxVUARPeZlNQ+wgEjqmNqAzW/Ea9oFvYhSayu
+         KEVJv5Lr7jslp4YlENuXD7mK8O9GoOgpP2Q9A3W3gtl0b+eBlZ0XxDk3VhmYeoxcs0T1
+         ZGuFJy6ds3fYdzgZnce/DnpiNY9vHJyQD+F7GXLlg43hvDLm18JuEnVPnrQT1byl8WLv
+         WzcQ==
+X-Gm-Message-State: AOJu0YylTSVwZZD9qWP/7ylPCtfBtM+uKryYxrPV5lW6tBzXoBcBDOeK
+        RdW3Ew1nNl41DLDK1B8IYa5eHw==
+X-Google-Smtp-Source: AGHT+IHMHssMNnreMLJqTuCVGlIvTdvgjcemSHWehzPcVZV916K3MiLdrfG5XxR45MOqXavrLdyosg==
+X-Received: by 2002:a17:90b:128a:b0:26b:698f:dda7 with SMTP id fw10-20020a17090b128a00b0026b698fdda7mr2636429pjb.32.1694813673889;
+        Fri, 15 Sep 2023 14:34:33 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id p17-20020a639511000000b005740aa41237sm1889280pgd.74.2023.09.15.14.26.56
+        by smtp.gmail.com with ESMTPSA id ga9-20020a17090b038900b0026094c23d0asm3481238pjb.17.2023.09.15.14.34.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Sep 2023 14:26:56 -0700 (PDT)
-Date:   Fri, 15 Sep 2023 14:26:55 -0700
+        Fri, 15 Sep 2023 14:34:33 -0700 (PDT)
+Date:   Fri, 15 Sep 2023 14:34:32 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Matteo Rizzo <matteorizzo@google.com>
 Cc:     cl@linux.com, penberg@kernel.org, rientjes@google.com,
@@ -60,160 +60,156 @@ Cc:     cl@linux.com, penberg@kernel.org, rientjes@google.com,
         corbet@lwn.net, luto@kernel.org, peterz@infradead.org,
         jannh@google.com, evn@google.com, poprdi@google.com,
         jordyzomer@google.com
-Subject: Re: [RFC PATCH 13/14] mm/slub: sanity-check freepointers
-Message-ID: <202309151425.2BE59091@keescook>
+Subject: Re: [RFC PATCH 14/14] security: add documentation for SLAB_VIRTUAL
+Message-ID: <202309151428.C04391065F@keescook>
 References: <20230915105933.495735-1-matteorizzo@google.com>
- <20230915105933.495735-14-matteorizzo@google.com>
+ <20230915105933.495735-15-matteorizzo@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230915105933.495735-14-matteorizzo@google.com>
+In-Reply-To: <20230915105933.495735-15-matteorizzo@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Sep 15, 2023 at 10:59:32AM +0000, Matteo Rizzo wrote:
+On Fri, Sep 15, 2023 at 10:59:33AM +0000, Matteo Rizzo wrote:
 > From: Jann Horn <jannh@google.com>
 > 
-> Sanity-check that:
->  - non-NULL freepointers point into the slab
->  - freepointers look plausibly aligned
+> Document what SLAB_VIRTUAL is trying to do, how it's implemented, and
+> why.
 > 
 > Signed-off-by: Jann Horn <jannh@google.com>
 > Co-developed-by: Matteo Rizzo <matteorizzo@google.com>
 > Signed-off-by: Matteo Rizzo <matteorizzo@google.com>
 > ---
->  lib/slub_kunit.c |  4 ++++
->  mm/slab.h        |  8 +++++++
->  mm/slub.c        | 57 ++++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 69 insertions(+)
+>  Documentation/security/self-protection.rst | 102 +++++++++++++++++++++
+>  1 file changed, 102 insertions(+)
 > 
-> diff --git a/lib/slub_kunit.c b/lib/slub_kunit.c
-> index d4a3730b08fa..acf8600bd1fd 100644
-> --- a/lib/slub_kunit.c
-> +++ b/lib/slub_kunit.c
-> @@ -45,6 +45,10 @@ static void test_clobber_zone(struct kunit *test)
->  #ifndef CONFIG_KASAN
->  static void test_next_pointer(struct kunit *test)
->  {
-> +	if (IS_ENABLED(CONFIG_SLAB_VIRTUAL))
-> +		kunit_skip(test,
-> +			"incompatible with freepointer corruption detection in CONFIG_SLAB_VIRTUAL");
+> diff --git a/Documentation/security/self-protection.rst b/Documentation/security/self-protection.rst
+> index 910668e665cb..5a5e99e3f244 100644
+> --- a/Documentation/security/self-protection.rst
+> +++ b/Documentation/security/self-protection.rst
+> @@ -314,3 +314,105 @@ To help kill classes of bugs that result in kernel addresses being
+>  written to userspace, the destination of writes needs to be tracked. If
+>  the buffer is destined for userspace (e.g. seq_file backed ``/proc`` files),
+>  it should automatically censor sensitive values.
 > +
->  	struct kmem_cache *s = test_kmem_cache_create("TestSlub_next_ptr_free",
->  							64, SLAB_POISON);
->  	u8 *p = kmem_cache_alloc(s, GFP_KERNEL);
-> diff --git a/mm/slab.h b/mm/slab.h
-> index 460c802924bd..8d10a011bdf0 100644
-> --- a/mm/slab.h
-> +++ b/mm/slab.h
-> @@ -79,6 +79,14 @@ struct slab {
->  
->  	struct list_head flush_list_elem;
->  
-> +	/*
-> +	 * Not in kmem_cache because it depends on whether the allocation is
-> +	 * normal order or fallback order.
-> +	 * an alternative might be to over-allocate virtual memory for
-> +	 * fallback-order pages.
-> +	 */
-> +	unsigned long align_mask;
 > +
->  	/* Replaces the page lock */
->  	spinlock_t slab_lock;
->  
-> diff --git a/mm/slub.c b/mm/slub.c
-> index 0f7f5bf0b174..57474c8a6569 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -392,6 +392,44 @@ static inline freeptr_t freelist_ptr_encode(const struct kmem_cache *s,
->  	return (freeptr_t){.v = encoded};
->  }
->  
-> +/*
-> + * Does some validation of freelist pointers. Without SLAB_VIRTUAL this is
-> + * currently a no-op.
-> + */
-> +static inline bool freelist_pointer_corrupted(struct slab *slab, freeptr_t ptr,
-> +	void *decoded)
-> +{
-> +#ifdef CONFIG_SLAB_VIRTUAL
-> +	/*
-> +	 * If the freepointer decodes to 0, use 0 as the slab_base so that
-> +	 * the check below always passes (0 & slab->align_mask == 0).
-> +	 */
-> +	unsigned long slab_base = decoded ? (unsigned long)slab_to_virt(slab)
-> +		: 0;
+> +Memory Allocator Mitigations
+> +============================
 > +
-> +	/*
-> +	 * This verifies that the SLUB freepointer does not point outside the
-> +	 * slab. Since at that point we can basically do it for free, it also
-> +	 * checks that the pointer alignment looks vaguely sane.
-> +	 * However, we probably don't want the cost of a proper division here,
-> +	 * so instead we just do a cheap check whether the bottom bits that are
-> +	 * clear in the size are also clear in the pointer.
-> +	 * So for kmalloc-32, it does a perfect alignment check, but for
-> +	 * kmalloc-192, it just checks that the pointer is a multiple of 32.
-> +	 * This should probably be reconsidered - is this a good tradeoff, or
-> +	 * should that part be thrown out, or do we want a proper accurate
-> +	 * alignment check (and can we make it work with acceptable performance
-> +	 * cost compared to the security improvement - probably not)?
+> +Protection against cross-cache attacks (SLAB_VIRTUAL)
+> +-----------------------------------------------------
+> +
+> +SLAB_VIRTUAL is a mitigation that deterministically prevents cross-cache
+> +attacks.
+> +
+> +Linux Kernel use-after-free vulnerabilities are commonly exploited by turning
+> +them into an object type confusion (having two active pointers of different
+> +types to the same memory location) using one of the following techniques:
+> +
+> +1. Direct object reuse: make the kernel give the victim object back to the slab
+> +   allocator, then allocate the object again from the same slab cache as a
+> +   different type. This is only possible if the victim object resides in a slab
+> +   cache which can contain objects of different types - for example one of the
+> +   kmalloc caches.
+> +2. "Cross-cache attack": make the kernel give the victim object back to the slab
+> +   allocator, then make the slab allocator give the page containing the object
+> +   back to the page allocator, then either allocate the page directly as some
+> +   other type of page or make the slab allocator allocate it again for a
+> +   different slab cache and allocate an object from there.
 
-Is it really that much more expensive to check the alignment exactly?
+I feel like adding a link to
+https://googleprojectzero.blogspot.com/2021/10/how-simple-linux-kernel-memory.html
+would be nice here, as some folks reading this may not understand how
+plausible the second attack can be. :)
 
-> +	 */
-> +	return CHECK_DATA_CORRUPTION(
-> +		((unsigned long)decoded & slab->align_mask) != slab_base,
-> +		"bad freeptr (encoded %lx, ptr %p, base %lx, mask %lx",
-> +		ptr.v, decoded, slab_base, slab->align_mask);
-> +#else
-> +	return false;
-> +#endif
-> +}
 > +
->  static inline void *freelist_ptr_decode(const struct kmem_cache *s,
->  					freeptr_t ptr, unsigned long ptr_addr,
->  					struct slab *slab)
-> @@ -403,6 +441,10 @@ static inline void *freelist_ptr_decode(const struct kmem_cache *s,
->  #else
->  	decoded = (void *)ptr.v;
->  #endif
+> +In either case, the important part is that the same virtual address is reused
+> +for two objects of different types.
 > +
-> +	if (unlikely(freelist_pointer_corrupted(slab, ptr, decoded)))
-> +		return NULL;
-> +
->  	return decoded;
->  }
->  
-> @@ -2122,6 +2164,21 @@ static struct slab *get_free_slab(struct kmem_cache *s,
->  	if (slab == NULL)
->  		return NULL;
->  
-> +	/*
-> +	 * Bits that must be equal to start-of-slab address for all
-> +	 * objects inside the slab.
-> +	 * For compatibility with pointer tagging (like in HWASAN), this would
-> +	 * need to clear the pointer tag bits from the mask.
-> +	 */
-> +	slab->align_mask = ~((PAGE_SIZE << oo_order(oo)) - 1);
-> +
-> +	/*
-> +	 * Object alignment bits (must be zero, which is equal to the bits in
-> +	 * the start-of-slab address)
-> +	 */
-> +	if (s->red_left_pad == 0)
-> +		slab->align_mask |= (1 << (ffs(s->size) - 1)) - 1;
-> +
->  	return slab;
->  }
->  
-> -- 
-> 2.42.0.459.ge4e396fd5e-goog
-> 
+> +The first case can be addressed by separating objects of different types
+> +into different slab caches. If a slab cache only contains objects of the
+> +same type then directly turning an use-after-free into a type confusion is
+> +impossible as long as the slab page that contains the victim object remains
+> +assigned to that slab cache. This type of mitigation is easily bypassable
+> +by cross-cache attacks: if the attacker can make the slab allocator return
+> +the page containing the victim object to the page allocator and then make
+> +it use the same page for a different slab cache, type confusion becomes
+> +possible again. Addressing the first case is therefore only worthwhile if
+> +cross-cache attacks are also addressed. AUTOSLAB uses a combination of
 
-We can improve the sanity checking in the future, so as-is, sure:
+I think you mean CONFIG_RANDOM_KMALLOC_CACHES, not AUTOSLAB which isn't
+upstream.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+> +probabilistic mitigations for this. SLAB_VIRTUAL addresses the second case
+> +deterministically by changing the way the slab allocator allocates memory.
+> +
+> +Preventing slab virtual address reuse
+> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> +
+> +In theory there is an easy fix against cross-cache attacks: modify the slab
+> +allocator so that it never gives memory back to the page allocator. In practice
+> +this would be problematic because physical memory remains permanently assigned
+> +to a slab cache even if it doesn't contain any active objects. A viable
+> +cross-cache mitigation must allow the system to reclaim unused physical memory.
+> +In the current design of the slab allocator there is no way
+> +to keep a region of virtual memory permanently assigned to a slab cache without
+> +also permanently reserving physical memory. That is because the virtual
+> +addresses that the slab allocator uses come from the linear map region, where
+> +there is a 1:1 correspondence between virtual and physical addresses.
+> +
+> +SLAB_VIRTUAL's solution is to create a dedicated virtual memory region that is
+> +only used for slab memory, and to enforce that once a range of virtual addresses
+> +is used for a slab cache, it is never reused for any other caches. Using a
+> +dedicated region of virtual memory lets us reserve ranges of virtual addresses
+> +to prevent cross-cache attacks and at the same time release physical memory back
+> +to the system when it's no longer needed. This is what Chromium's PartitionAlloc
+> +does in userspace
+> +(https://chromium.googlesource.com/chromium/src/+/354da2514b31df2aa14291199a567e10a7671621/base/allocator/partition_allocator/PartitionAlloc.md).
+> +
+> +Implementation
+> +~~~~~~~~~~~~~~
+> +
+> +SLAB_VIRTUAL reserves a region of virtual memory for the slab allocator. All
+> +pointers returned by the slab allocator point to this region. The region is
+> +statically partitioned in two sub-regions: the metadata region and the data
+> +region. The data region is where the actual objects are allocated from. The
+> +metadata region is an array of struct slab objects, one for each PAGE_SIZE bytes
+> +in the data region.
+> +Without SLAB_VIRTUAL, struct slab is overlaid on top of the struct page/struct
+> +folio that corresponds to the physical memory page backing the slab instead of
+> +using a dedicated memory region. This doesn't work for SLAB_VIRTUAL, which needs
+> +to store metadata for slabs even when no physical memory is allocated to them.
+> +Having an array of struct slab lets us implement virt_to_slab efficiently purely
+> +with arithmetic. In order to support high-order slabs, the struct slabs
+> +corresponding to tail pages contain a pointer to the head slab, which
+> +corresponds to the slab's head page.
+> +
+> +TLB flushing
+> +~~~~~~~~~~~~
+> +
+> +Before it can release a page of physical memory back to the page allocator, the
+> +slab allocator must flush the TLB entries for that page on all CPUs. This is not
+> +only necessary for the mitigation to work reliably but it's also required for
+> +correctness. Without a TLB flush some CPUs might continue using the old mapping
+> +if the virtual address range is reused for a new slab and cause memory
+> +corruption even in the absence of other bugs. The slab allocator can release
+> +pages in contexts where TLB flushes can't be performed (e.g. in hardware
+> +interrupt handlers). Pages to free are not freed directly, and instead they are
+> +put on a queue and freed from a workqueue context which also flushes the TLB.
+> +
+> +Performance
+> +~~~~~~~~~~~
+> +
+> +SLAB_VIRTUAL's performance impact depends on the workload. On kernel compilation
+> +(kernbench) the slowdown is about 1-2% depending on the machine type and is
+> +slightly worse on machines with more cores.
+
+Is there anything that can be added to the docs about future work, areas
+of improvement, etc?
+
+-Kees
 
 -- 
 Kees Cook
