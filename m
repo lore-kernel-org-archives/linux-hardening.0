@@ -2,27 +2,27 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64847CD37AC
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 20:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E35CD37AC
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 20:47:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233834AbjIOUqL (ORCPT
+        id S235181AbjIOUqo (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Sep 2023 16:46:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40982 "EHLO
+        Fri, 15 Sep 2023 16:46:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237403AbjIOUpo (ORCPT
+        with ESMTP id S237524AbjIOUqW (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Sep 2023 16:45:44 -0400
-Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80FB6199
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:45:39 -0700 (PDT)
-Received: from eig-obgw-6008a.ext.cloudfilter.net ([10.0.30.227])
+        Fri, 15 Sep 2023 16:46:22 -0400
+Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB5842710
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:46:14 -0700 (PDT)
+Received: from eig-obgw-6006a.ext.cloudfilter.net ([10.0.30.182])
         by cmsmtp with ESMTP
-        id hALzq8dmKOzKlhFh5qIG8s; Fri, 15 Sep 2023 20:45:39 +0000
+        id hCX9qLRyvEoVshFheqHx8I; Fri, 15 Sep 2023 20:46:14 +0000
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with ESMTPS
-        id hFh4qzj5ktHuqhFh5qc9AF; Fri, 15 Sep 2023 20:45:39 +0000
-X-Authority-Analysis: v=2.4 cv=OcCLszfY c=1 sm=1 tr=0 ts=6504c273
+        id hFhdqZWiNnxNghFhdq3JOX; Fri, 15 Sep 2023 20:46:13 +0000
+X-Authority-Analysis: v=2.4 cv=PrSA0iA3 c=1 sm=1 tr=0 ts=6504c295
  a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
  a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
  a=IkcTkHD0fZMA:10 a=zNV7Rl7Rt7sA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
@@ -34,24 +34,24 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=THcbAJFdx33gBO1MOq6Px2lR54qlr2l+Ip9xfdyyl3E=; b=tYRc1rc6gSEdsGWkdPGjQcdL+u
-        4GBJQuUoziMuoygvT/hYgpkE64TlGr5i5iepg9F2+gHo3kkGZGqeD/bjcEYxD644JcLXUJ/hZBPh2
-        jLv+QB/6nPeMM0pPvbE6iXZ1PLN+3GwMOJUTKCUtm6filW+HXlO19mpwyRH0SqvUyOtR1XzBISg8h
-        f4u4UkpbgFkQcw+toJhP9X0YWb+8DBGn23xVvvVLZd9iOz3lS2oXQoTZXO26ECr8JRvuigv/RFElD
-        1sRKzARtP2uNl/ZJRKgnrgTPkQpST24I/NsU7XdDUQYD9c+dg5pJt+0enAx+zrKrUKxaQNCxe2PIj
-        dcW/1dsg==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:60304 helo=[192.168.15.8])
+        bh=LkG8D8jTw8pUKt1gT83+1j6DzXIAZ3iWRsRfmknyF7U=; b=a0SKl1x5wk5rkSLI0hQABwndC9
+        tffQ1zHbUshzGDlqIznEe4MbIxKn3Od5JeSCGKez4ffxcpIIAmO6FmdFlABNx04mZea7yAONebfgI
+        6dnhy9V7SjZzDtduk9+zVEyMAXVaLY6xrx3NmqLCkdv2HMaOxvqw0LXAus8NMpqwLZHazkt6MiaRJ
+        myKD+YwyuDGP9+5tI6lp5PXi/zsbVW7FcDEC95V4OUnyFPFIWMs3cHE8LyI6NlBgUZeDycd5aOETI
+        FFLsnXV6vSc4fiIPbhheqRAib3saB54DkSY3HuwnwEH5SNvqOifg4dthZsrbu/ZmVGD2RyvWxEzbX
+        HmVqkWzQ==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:53288 helo=[192.168.15.8])
         by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         (Exim 4.96)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1qhFh3-002a1b-2a;
-        Fri, 15 Sep 2023 15:45:37 -0500
-Message-ID: <59945a80-0d50-1df0-43cb-eda68b07f93d@embeddedor.com>
-Date:   Fri, 15 Sep 2023 14:46:33 -0600
+        id 1qhFhc-002aaD-1W;
+        Fri, 15 Sep 2023 15:46:12 -0500
+Message-ID: <e6c4f5c4-c33a-0196-0edb-e9002bfc1596@embeddedor.com>
+Date:   Fri, 15 Sep 2023 14:47:08 -0600
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH] leds: cr0014114: Annotate struct cr0014114 with
+Subject: Re: [PATCH] leds: gpio: Annotate struct gpio_leds_priv with
  __counted_by
 Content-Language: en-US
 To:     Kees Cook <keescook@chromium.org>, Pavel Machek <pavel@ucw.cz>
@@ -60,9 +60,9 @@ Cc:     Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org,
         Nick Desaulniers <ndesaulniers@google.com>,
         Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
         llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-References: <20230915200948.never.728-kees@kernel.org>
+References: <20230915201003.never.148-kees@kernel.org>
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20230915200948.never.728-kees@kernel.org>
+In-Reply-To: <20230915201003.never.148-kees@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
@@ -73,32 +73,32 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 187.162.21.192
 X-Source-L: No
-X-Exim-ID: 1qhFh3-002a1b-2a
+X-Exim-ID: 1qhFhc-002aaD-1W
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:60304
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:53288
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 193
+X-Email-Count: 213
 X-Org:  HG=hgshared;ORG=hostgator;
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfE6ADU6luLjBbk25cCmKgm7Q+MxE8gGClaMuFWcmElGVUhP6BILPSQfV6MzwOYOk5ZLFXhqdpftcTw7sqjuvQMpFoSXjVNtYEsNPlRWmrHhqKTtUU2wR
- O/2iYTzrLxd1Dh+HCyt9fD42WreOy+ah0nk6m2wVafMuPPNtwz8VlZO5g+L1kowKtOEB7EwjOJ7PBW//+LE5XSj0eFeg2eq41fU0fw0Y93w9lBW8z/7gEGuq
+X-CMAE-Envelope: MS4xfPzqWaeKEUqh7mpDxCegGrDRT62yBWFyHJJ1MjYFc1RpXEzb3O5RAOMy6cTgsbPeshQWFUSfn9lZOmDjr4gLaLYRSluueCnF1u9ANq/gdyzosG5MF+U2
+ yUPx9NWjKqoiLjN+pKUl2pH5+WWeqEP8X0xg62XJQNbinIedBb2ne05TWIb1mZwd6fUxX1fNehvAaxjl0vAR6fJmr6GBojcbDT9W1n2DbUmPjCBvxWm/ex9g
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 
 
-On 9/15/23 14:09, Kees Cook wrote:
+On 9/15/23 14:10, Kees Cook wrote:
 > Prepare for the coming implementation by GCC and Clang of the __counted_by
 > attribute. Flexible array members annotated with __counted_by can have
 > their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
 > 
-> As found with Coccinelle[1], add __counted_by for struct cr0014114.
+> As found with Coccinelle[1], add __counted_by for struct gpio_leds_priv.
 > 
 > [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 > 
@@ -114,19 +114,19 @@ Thanks
 Gustavo
 
 > ---
->   drivers/leds/leds-cr0014114.c | 2 +-
+>   drivers/leds/leds-gpio.c | 2 +-
 >   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/leds/leds-cr0014114.c b/drivers/leds/leds-cr0014114.c
-> index b33bca397ea6..c9914fc51f20 100644
-> --- a/drivers/leds/leds-cr0014114.c
-> +++ b/drivers/leds/leds-cr0014114.c
-> @@ -56,7 +56,7 @@ struct cr0014114 {
->   	struct spi_device	*spi;
->   	u8			*buf;
->   	unsigned long		delay;
-> -	struct cr0014114_led	leds[];
-> +	struct cr0014114_led	leds[] __counted_by(count);
+> diff --git a/drivers/leds/leds-gpio.c b/drivers/leds/leds-gpio.c
+> index 7bfe40a6bfdd..a6597f0f3eb4 100644
+> --- a/drivers/leds/leds-gpio.c
+> +++ b/drivers/leds/leds-gpio.c
+> @@ -142,7 +142,7 @@ static int create_gpio_led(const struct gpio_led *template,
+>   
+>   struct gpio_leds_priv {
+>   	int num_leds;
+> -	struct gpio_led_data leds[];
+> +	struct gpio_led_data leds[] __counted_by(num_leds);
 >   };
 >   
->   static void cr0014114_calc_crc(u8 *buf, const size_t len)
+>   static struct gpio_leds_priv *gpio_leds_create(struct platform_device *pdev)
