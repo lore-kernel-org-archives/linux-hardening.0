@@ -2,109 +2,133 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 340BDCD37AA
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 20:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB78CD37AA
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 20:53:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237487AbjIOUwf (ORCPT
+        id S233313AbjIOUxH (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Sep 2023 16:52:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57662 "EHLO
+        Fri, 15 Sep 2023 16:53:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237756AbjIOUwV (ORCPT
+        with ESMTP id S237708AbjIOUwq (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Sep 2023 16:52:21 -0400
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0F3035AE
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:50:01 -0700 (PDT)
-Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-1c35ee3b0d2so20637295ad.2
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:50:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1694811001; x=1695415801; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pixcN5Y1AubjMBamu4r0/OjVDhrvJd2jJgNFr0zPGBA=;
-        b=HuODhYelyacRY9HlytTsIm4B7wz8OazwsD1/3T8eipUeYOw7pRmK87nYD+La4M2ERL
-         c+7i0KKd0WStxwghrx1gk/tXpFGLX6oCJQ8XsXYFkD4z/28YqyucPyx/EH8c5tVvxeQ4
-         l6Cr7hN2AKgTyDnzeP4hXi1kaJYFNVGjzbZTA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694811001; x=1695415801;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pixcN5Y1AubjMBamu4r0/OjVDhrvJd2jJgNFr0zPGBA=;
-        b=fDkWcongBnZZcxjPFmlwa0unJf6wxpi91Oj+Dr56blG7T6LYGqXx7WJWBys0q9HOGX
-         ZaCXS2o0VId3/nm4q4Qooin4KewkyjE4ozBb5FlIRSbGm2/A0doGpSwqdu6hqMitf1Ll
-         PNxO1M68I27D7HaITxCKCFU+aO4RNdJSsmm9PSe3meqc1FKjehAklDvmMO2+pW2gNYD/
-         n9jgwAu/4/dohs/Sv+YO6F43Xf9/TgxiuBaJOlbVSSthQHM84chLiEjyHynDcN5TBFhj
-         utMuU9GrCT6uA2vmXwe3/Ifs62kdRWqOAInVrN/QCmz/xKu22WaS4Jk6aXW56jNdVyUR
-         pRHg==
-X-Gm-Message-State: AOJu0YyEs1uekx5l4Xh3sbpR3LXLQ0Nag5t9k7xFG3EbH5rTOkcOmm1+
-        I/hWeYPcPLyaIDvRtYQBbvLP3w==
-X-Google-Smtp-Source: AGHT+IFG5RbkUmAUyhtbRZ65uLoK2tgVIeCtTHS/dvTIeIuGjUg4Cs9dHFp2ggbnq+0cI4RujnJy7g==
-X-Received: by 2002:a17:902:d4c7:b0:1c1:e52e:49e3 with SMTP id o7-20020a170902d4c700b001c1e52e49e3mr2611409plg.36.1694811001209;
-        Fri, 15 Sep 2023 13:50:01 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id q22-20020a170902bd9600b001bb9f104328sm3876566pls.146.2023.09.15.13.50.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Sep 2023 13:50:00 -0700 (PDT)
-Date:   Fri, 15 Sep 2023 13:50:00 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Matteo Rizzo <matteorizzo@google.com>
-Cc:     cl@linux.com, penberg@kernel.org, rientjes@google.com,
-        iamjoonsoo.kim@lge.com, akpm@linux-foundation.org, vbabka@suse.cz,
-        roman.gushchin@linux.dev, 42.hyeyoo@gmail.com,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-mm@kvack.org, linux-hardening@vger.kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        corbet@lwn.net, luto@kernel.org, peterz@infradead.org,
-        jannh@google.com, evn@google.com, poprdi@google.com,
-        jordyzomer@google.com
-Subject: Re: [RFC PATCH 01/14] mm/slub: don't try to dereference invalid
- freepointers
-Message-ID: <202309151349.BEBA203D@keescook>
-References: <20230915105933.495735-1-matteorizzo@google.com>
- <20230915105933.495735-2-matteorizzo@google.com>
+        Fri, 15 Sep 2023 16:52:46 -0400
+Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 918884692
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:50:37 -0700 (PDT)
+Received: from eig-obgw-6003a.ext.cloudfilter.net ([10.0.30.151])
+        by cmsmtp with ESMTP
+        id hFjkq1OAbDKaKhFlsqIewe; Fri, 15 Sep 2023 20:50:36 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with ESMTPS
+        id hFlsq6JgslWQAhFlsqzWZr; Fri, 15 Sep 2023 20:50:36 +0000
+X-Authority-Analysis: v=2.4 cv=INMRtyjG c=1 sm=1 tr=0 ts=6504c39c
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=zNV7Rl7Rt7sA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
+ a=pGLkceISAAAA:8 a=20KFwNOVAAAA:8 a=VwQbUJbxAAAA:8 a=cm27Pg_UAAAA:8
+ a=HvF037n1xESchLcPDVoA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
+ a=xmb-EsYY8bH0VWELuYED:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=bGxhVUtgvEtIdv5fdJaFlvXT8/mXEEnYVeDX80O0mX8=; b=pVxo90MtuiavN6bEoVO6DwiSj9
+        X7B/rqqGQsao/orbkh4UlEIIVyIl98hLd2mWBwQaUK9Z1mbR2G37nYMFvWZL3F71qEv7OY+oXglG5
+        rA+J0kWnfqnIdkAItqbXTEPpBsqGmHPP5Jc8M77613D98okLcnMdKj9srH8sRAqY+w0eCAG/wwCqK
+        zzFKVAe6wXu3WOabWWzdEVeTMvajCqeObw3OY84OAOeHiDP42lWwDkFvOadx5Msp39voUnAbjSrLe
+        sX3emfdNDgH5fvEh52X9LkYtobJrqPOUnOge6pDGCUEteStwQgtX0V0q8LqC5G2yfWSjXHW6ixTQ3
+        My8YkabQ==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:54838 helo=[192.168.15.8])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.96)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1qhFlq-002fvY-1O;
+        Fri, 15 Sep 2023 15:50:34 -0500
+Message-ID: <631103a7-6119-145d-8230-5a97e1362785@embeddedor.com>
+Date:   Fri, 15 Sep 2023 14:51:30 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230915105933.495735-2-matteorizzo@google.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH] ceph: Annotate struct ceph_osd_request with __counted_by
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>,
+        Ilya Dryomov <idryomov@gmail.com>
+Cc:     Xiubo Li <xiubli@redhat.com>, Jeff Layton <jlayton@kernel.org>,
+        ceph-devel@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+References: <20230915201517.never.373-kees@kernel.org>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20230915201517.never.373-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.21.192
+X-Source-L: No
+X-Exim-ID: 1qhFlq-002fvY-1O
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:54838
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 480
+X-Org:  HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfOgQj8l9ScEwAaE95Nl1d/VmYBf60UGO+AUbDgllgulmvitZaF7EaDB2/KiaUl1qLFbOnQIHl+FHwpVuIXNBVVeDFN327L6XoNJ71RqBCjtsj87gzxoV
+ rvCB8vWBYD9I+tQZNWf/Hmo9QmcF3wzTyCaWi7MrKw0D8ZEviRS0iSVv9jHbU1uwMtB2AGpR4MXAhYWU5209XvBfzHeT579wsVgZY2jzfpxqLiWKcdL/9MoK
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Sep 15, 2023 at 10:59:20AM +0000, Matteo Rizzo wrote:
-> slab_free_freelist_hook tries to read a freelist pointer from the
-> current object even when freeing a single object. This is invalid
-> because single objects don't actually contain a freelist pointer when
-> they're freed and the memory contains other data. This causes problems
-> for checking the integrity of freelist in get_freepointer.
+
+
+On 9/15/23 14:15, Kees Cook wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
 > 
-> Signed-off-by: Matteo Rizzo <matteorizzo@google.com>
-> ---
->  mm/slub.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> As found with Coccinelle[1], add __counted_by for struct ceph_osd_request.
 > 
-> diff --git a/mm/slub.c b/mm/slub.c
-> index f7940048138c..a7dae207c2d2 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -1820,7 +1820,9 @@ static inline bool slab_free_freelist_hook(struct kmem_cache *s,
->  
->  	do {
->  		object = next;
-> -		next = get_freepointer(s, object);
-> +		/* Single objects don't actually contain a freepointer */
-> +		if (object != old_tail)
-> +			next = get_freepointer(s, object);
->  
->  		/* If object's reuse doesn't have to be delayed */
->  		if (!slab_free_hook(s, object, slab_want_init_on_free(s))) {
+> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+> 
+> Cc: Ilya Dryomov <idryomov@gmail.com>
+> Cc: Xiubo Li <xiubli@redhat.com>
+> Cc: Jeff Layton <jlayton@kernel.org>
+> Cc: ceph-devel@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-I find this loop's logic a bit weird, but, yes, this ends up being
-correct and avoids needless work.
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
+Thanks
 -- 
-Kees Cook
+Gustavo
+
+> ---
+>   include/linux/ceph/osd_client.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/ceph/osd_client.h b/include/linux/ceph/osd_client.h
+> index bf9823956758..b8610e9d2471 100644
+> --- a/include/linux/ceph/osd_client.h
+> +++ b/include/linux/ceph/osd_client.h
+> @@ -278,7 +278,7 @@ struct ceph_osd_request {
+>   	int r_attempts;
+>   	u32 r_map_dne_bound;
+>   
+> -	struct ceph_osd_req_op r_ops[];
+> +	struct ceph_osd_req_op r_ops[] __counted_by(r_num_ops);
+>   };
+>   
+>   struct ceph_request_redirect {
