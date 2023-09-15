@@ -2,32 +2,32 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2AFECD37AA
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 20:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A10CD37AC
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 20:48:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237350AbjIOUrs (ORCPT
+        id S237405AbjIOUsU (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Sep 2023 16:47:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39190 "EHLO
+        Fri, 15 Sep 2023 16:48:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237697AbjIOUro (ORCPT
+        with ESMTP id S237587AbjIOUsC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Sep 2023 16:47:44 -0400
-Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DA042D42
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:47:15 -0700 (PDT)
-Received: from eig-obgw-5010a.ext.cloudfilter.net ([10.0.29.199])
+        Fri, 15 Sep 2023 16:48:02 -0400
+Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DD28271C
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:47:30 -0700 (PDT)
+Received: from eig-obgw-5002a.ext.cloudfilter.net ([10.0.29.215])
         by cmsmtp with ESMTP
-        id hALyqixHubK1VhFicqlLPz; Fri, 15 Sep 2023 20:47:14 +0000
+        id hFD6qA6K2OzKlhFisqIGqc; Fri, 15 Sep 2023 20:47:30 +0000
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with ESMTPS
-        id hFibqyoPDYg1hhFicqQYvM; Fri, 15 Sep 2023 20:47:14 +0000
-X-Authority-Analysis: v=2.4 cv=KsReZEaN c=1 sm=1 tr=0 ts=6504c2d2
+        id hFirqZn7Cn5VDhFirqR8NM; Fri, 15 Sep 2023 20:47:29 +0000
+X-Authority-Analysis: v=2.4 cv=bOkFndyZ c=1 sm=1 tr=0 ts=6504c2e1
  a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
  a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
  a=IkcTkHD0fZMA:10 a=zNV7Rl7Rt7sA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
  a=P-IC7800AAAA:8 a=sozttTNsAAAA:8 a=JfrnYn6hAAAA:8 a=cm27Pg_UAAAA:8
- a=VwQbUJbxAAAA:8 a=HvF037n1xESchLcPDVoA:9 a=QEXdDO2ut3YA:10
+ a=VwQbUJbxAAAA:8 a=7iih_Mw5sYxBUvFKUpMA:9 a=QEXdDO2ut3YA:10
  a=d3PnA9EDa4IxuAV0gXij:22 a=aeg5Gbbo78KNqacMgKqU:22 a=1CNFftbPRP8L7MoqJWF3:22
  a=xmb-EsYY8bH0VWELuYED:22 a=AjGcO6oz07-iQ99wixmX:22
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -36,24 +36,24 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=OJCQwVBr4oMmx1OajRhUTQW8+WMKMrIsQ1SjzAZI0kw=; b=iLVLOqm/ucWxBdREakyaAZKEZW
-        VyWAV4xwP/gdKvpIXbyLjtyVtj5G0qiLMdtI4MpK0B5MXMoOWm7vPCfqLm+lIder34rh2kjBdSHKJ
-        0X/kumYodifIFYehekFVjfFKsu52UTk+0r6JCGI0KOOUTnVNtYrwrmfSosWHhp3t/KY85qxKHA8X7
-        zBmvAp3bJ7jD559M/SrLjKmDAPk6hTJMjSf0xIre7zJ95KVwm5O9yBMgK1DSpM0CNEUItK+PZoAbL
-        jY8Hjw6tc+GS39Ce0FFc2/+MXHg/EmtSAprs+nLPyG+P7TzzuRnzuse4EeJq6i2aYMgLAgF4HiEGJ
-        gXlqB6Jw==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:49856 helo=[192.168.15.8])
+        bh=sq+6+p57AmLbcxPtBEdqC/wNkATEpxAVKzlTJvsl6VE=; b=tmUMQ38WOswcSz2bnRSH1833Ic
+        TwxU3WoxQJ/IsEXHnWck8PSXYl6rl5jl/RkthCZ1P/Ftc17HT39XOayrGaYxs5qpoaBta3SstWrBi
+        wLVP0n0NreXc4ISJ92Q/tGSBShxwILyYdpvOiX2489j+j4w2dNoSD8DEuQb6S6J8TKnKEJJAv9pRd
+        OtQW3Tdi4Qs4Q7Eb8S6rrlBTqvrPItYBrHkAMjbD4BdgmR9IG9BtFqZl3gqoJ8/DZpXOzzEwh2VWQ
+        /QCk5nu0K9NCwJoAT4ZJvyV43+ToVA9UvnjRhpeRvgZ7K8t/eaQyCOgfCOKvwryKmYfiLj/4Qujve
+        BUTkOAFg==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:38810 helo=[192.168.15.8])
         by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         (Exim 4.96)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1qhFiZ-002c5c-3D;
-        Fri, 15 Sep 2023 15:47:12 -0500
-Message-ID: <e0fba1f9-fc9d-81eb-4bd9-9f6db9d75df8@embeddedor.com>
-Date:   Fri, 15 Sep 2023 14:48:07 -0600
+        id 1qhFip-002cMH-1v;
+        Fri, 15 Sep 2023 15:47:27 -0500
+Message-ID: <04aea2c0-8dae-8f45-211c-51304f3a88ca@embeddedor.com>
+Date:   Fri, 15 Sep 2023 14:48:23 -0600
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH] mtd: Annotate struct lpddr_private with __counted_by
+Subject: Re: [PATCH] mtd: cfi: Annotate struct cfi_private with __counted_by
 Content-Language: en-US
 To:     Kees Cook <keescook@chromium.org>,
         Miquel Raynal <miquel.raynal@bootlin.com>
@@ -64,9 +64,9 @@ Cc:     Richard Weinberger <richard@nod.at>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
         llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-References: <20230915201159.never.112-kees@kernel.org>
+References: <20230915201206.never.107-kees@kernel.org>
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20230915201159.never.112-kees@kernel.org>
+In-Reply-To: <20230915201206.never.107-kees@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
@@ -77,18 +77,18 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 187.162.21.192
 X-Source-L: No
-X-Exim-ID: 1qhFiZ-002c5c-3D
+X-Exim-ID: 1qhFip-002cMH-1v
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:49856
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:38810
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 287
+X-Email-Count: 298
 X-Org:  HG=hgshared;ORG=hostgator;
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfE71MSVVGo92tFLoVT9jDjWMgWsQ4uARxNkw4k75vY49ordq4mOzSRTFG+3L7TCCWgW+u6DnjajdCZpcfXSQbuyF/j26m1H4Oez+xy+mCGdgYR69KOzp
- FidmpaZmYwbh79RKeOwrqYOUHIiErgXRn1Zs3a6uLrQ7NpvokGthDdC6915WLugVqvXxsrzdLI26pHHmS5lVAxMQBjk0KahKsz0I0w7enMPtCZN3u2a4Fn1F
+X-CMAE-Envelope: MS4xfJp3YG08av8UsgwruzqDXGRSgVsdMrXTW+DFh6GoE+SmaXw283HqpteRZ0GiixKJSLxq7sjNHHE3yEdqPI9dy/XmjEQUj5lwo4Ulk0KEYHA7uSDgIUyK
+ gGsswtQHYepW0DT/kBJQHkRDJ0DBB/FXJQwcryPjbUkuAiFNxRNMrKpRiGgjtYECAT1+VRauJEHGg1OTMzTvZs4Jg2+Mnys8Yww8vPcW3FD2UuHbnXIchfYr
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -102,7 +102,7 @@ On 9/15/23 14:12, Kees Cook wrote:
 > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
 > 
-> As found with Coccinelle[1], add __counted_by for struct lpddr_private.
+> As found with Coccinelle[1], add __counted_by for struct cfi_private.
 > 
 > [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 > 
@@ -119,19 +119,19 @@ Thanks
 Gustavo
 
 > ---
->   include/linux/mtd/qinfo.h | 2 +-
+>   include/linux/mtd/cfi.h | 2 +-
 >   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/include/linux/mtd/qinfo.h b/include/linux/mtd/qinfo.h
-> index 2e3f43788d48..0421f12156b5 100644
-> --- a/include/linux/mtd/qinfo.h
-> +++ b/include/linux/mtd/qinfo.h
-> @@ -24,7 +24,7 @@ struct lpddr_private {
->   	struct qinfo_chip *qinfo;
->   	int numchips;
->   	unsigned long chipshift;
-> -	struct flchip chips[];
-> +	struct flchip chips[] __counted_by(numchips);
+> diff --git a/include/linux/mtd/cfi.h b/include/linux/mtd/cfi.h
+> index d88bb56c18e2..947410faf9e2 100644
+> --- a/include/linux/mtd/cfi.h
+> +++ b/include/linux/mtd/cfi.h
+> @@ -287,7 +287,7 @@ struct cfi_private {
+>   	unsigned long chipshift; /* Because they're of the same type */
+>   	const char *im_name;	 /* inter_module name for cmdset_setup */
+>   	unsigned long quirks;
+> -	struct flchip chips[];  /* per-chip data structure for each chip */
+> +	struct flchip chips[] __counted_by(numchips);  /* per-chip data structure for each chip */
 >   };
 >   
->   /* qinfo_query_info structure contains request information for
+>   uint32_t cfi_build_cmd_addr(uint32_t cmd_ofs,
