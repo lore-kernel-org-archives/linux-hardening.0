@@ -2,50 +2,45 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB88EEEC01
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 19:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60916EEEC01
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 19:12:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235480AbjIOTIt (ORCPT
+        id S235480AbjIOTMB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Sep 2023 15:08:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46458 "EHLO
+        Fri, 15 Sep 2023 15:12:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236990AbjIOTIW (ORCPT
+        with ESMTP id S237084AbjIOTLt (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Sep 2023 15:08:22 -0400
+        Fri, 15 Sep 2023 15:11:49 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFE7BB2;
-        Fri, 15 Sep 2023 12:08:17 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E4FFC433C9;
-        Fri, 15 Sep 2023 19:08:15 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B62EFFB;
+        Fri, 15 Sep 2023 12:11:44 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58F84C433C7;
+        Fri, 15 Sep 2023 19:11:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694804897;
-        bh=MyIJinpQ9MRMn81ExQ9ajAd6WI7sU/Hkeyd+BcDwjgM=;
+        s=k20201202; t=1694805104;
+        bh=IIDXBilgYAneCN/K2/MuOtg+9tUcnGL2d4QYXB9Cw5E=;
         h=Date:From:To:Cc:Subject:From;
-        b=gYy38NgDEaxdxsygoAP+2/quW8rTNMyRpJP9ZV8TtK+g5Y5u0QXK1UTwRMjbwk8Gz
-         XANgzlbvILid7tntD8XrkILDhzG8La55yDL8I9VW2nMh0CAvBxKoCC72EJZlWuDfbS
-         R6P/JlkAL+PZbhxiQFlm3lBN/9NXAGye5UD+DJ1n0hdLE/CPGjDxAl6I1wNBmYwraW
-         Knm0vmboBjTLurGoatMl48Nr1+bWEfcPBBUw5Y5D6rLzt+U4fWGs8HzKHBzyvbUhU2
-         5IlYhZPOSckqWgsP3grA4OJE/G+1aO6xdYnq+rrEzHBEd/6WqK0AU5zPhLHxgr/8TJ
-         RNEs8sBPAwZGg==
-Date:   Fri, 15 Sep 2023 13:09:11 -0600
+        b=ROjc3G6vf0mbKgyCUv2ffJE3OCLUUI8UgG1FpZlN7sUBj3U60h82ohjf+dQwDwIr5
+         mjY3eC4WjOluKDZUZWZ/s+prYh1hQe/ABLGpmi87IQttMOGklRePtm11Jplsi7WdOO
+         sgbXBJ4cZfXfMyhRk/ByV8r7qJWs3Z+h7yOwIiy+Cfjro97ozQLM71Z7G58QLqHcnD
+         hrRfPRja3Lp2hBof2+z43xZ2PDB0aweG3K/ab3U5qd7WHrIjZbr8R6OQTFdcn5uq22
+         do8ziQM5OrWT97WPF/CWRyYMAtOjvVT907dQSdZ0ltR3AZV8zj8+lHi2I7q+1q+91d
+         yazLwwwgtzFdA==
+Date:   Fri, 15 Sep 2023 13:12:38 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc:     sound-open-firmware@alsa-project.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org,
+To:     Boris Pismenny <borisp@nvidia.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Paolo Abeni <pabeni@redhat.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] ASoC: SOF: ipc4-topology: Use size_add() in call to
- struct_size()
-Message-ID: <ZQSr15AYJpDpipg6@work>
+Subject: [PATCH][next] tls: Use size_add() in call to struct_size()
+Message-ID: <ZQSspmE8Ww8/UNkH@work>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -58,26 +53,25 @@ the protection that `struct_size()` adds against potential integer
 overflows is defeated. Fix this by hardening call to `struct_size()`
 with `size_add()`.
 
-Fixes: f9efae954905 ("ASoC: SOF: ipc4-topology: Add support for base config extension")
+Fixes: b89fec54fd61 ("tls: rx: wrap decrypt params in a struct")
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- sound/soc/sof/ipc4-topology.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/tls/tls_sw.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/sof/ipc4-topology.c b/sound/soc/sof/ipc4-topology.c
-index f2a30cd31378..2a19dd022aaf 100644
---- a/sound/soc/sof/ipc4-topology.c
-+++ b/sound/soc/sof/ipc4-topology.c
-@@ -895,7 +895,8 @@ static int sof_ipc4_widget_setup_comp_process(struct snd_sof_widget *swidget)
- 	if (process->init_config == SOF_IPC4_MODULE_INIT_CONFIG_TYPE_BASE_CFG_WITH_EXT) {
- 		struct sof_ipc4_base_module_cfg_ext *base_cfg_ext;
- 		u32 ext_size = struct_size(base_cfg_ext, pin_formats,
--						swidget->num_input_pins + swidget->num_output_pins);
-+					   size_add(swidget->num_input_pins,
-+						    swidget->num_output_pins));
- 
- 		base_cfg_ext = kzalloc(ext_size, GFP_KERNEL);
- 		if (!base_cfg_ext) {
+diff --git a/net/tls/tls_sw.c b/net/tls/tls_sw.c
+index d1fc295b83b5..270712b8d391 100644
+--- a/net/tls/tls_sw.c
++++ b/net/tls/tls_sw.c
+@@ -1487,7 +1487,7 @@ static int tls_decrypt_sg(struct sock *sk, struct iov_iter *out_iov,
+ 	 */
+ 	aead_size = sizeof(*aead_req) + crypto_aead_reqsize(ctx->aead_recv);
+ 	aead_size = ALIGN(aead_size, __alignof__(*dctx));
+-	mem = kmalloc(aead_size + struct_size(dctx, sg, n_sgin + n_sgout),
++	mem = kmalloc(aead_size + struct_size(dctx, sg, size_add(n_sgin, n_sgout)),
+ 		      sk->sk_allocation);
+ 	if (!mem) {
+ 		err = -ENOMEM;
 -- 
 2.34.1
 
