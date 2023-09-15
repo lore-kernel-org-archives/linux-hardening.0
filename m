@@ -2,88 +2,79 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBC9CD37AF
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 20:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D474CD37A9
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 20:08:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237141AbjIOUHI (ORCPT
+        id S237058AbjIOUHh (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Sep 2023 16:07:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44868 "EHLO
+        Fri, 15 Sep 2023 16:07:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237210AbjIOUG5 (ORCPT
+        with ESMTP id S237133AbjIOUHI (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Sep 2023 16:06:57 -0400
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9F622D7F
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:06:14 -0700 (PDT)
-Received: by mail-pf1-x435.google.com with SMTP id d2e1a72fcca58-68fdd6011f2so2114904b3a.3
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:06:14 -0700 (PDT)
+        Fri, 15 Sep 2023 16:07:08 -0400
+Received: from mail-ot1-x329.google.com (mail-ot1-x329.google.com [IPv6:2607:f8b0:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DC362D4C
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:06:39 -0700 (PDT)
+Received: by mail-ot1-x329.google.com with SMTP id 46e09a7af769-6b9e478e122so1458271a34.1
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:06:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1694808374; x=1695413174; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1694808398; x=1695413198; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NA1Kdxb7daymV0YxfPouFeomYl6O2u2EVjnI/tmIwsA=;
-        b=Q1ojVrp61o1NMmfOUHB+383ZE0NJvaWN03BIYigZnGyB+tP6ep+s95LNYiJ6OnYwLT
-         2uboiFQTTSsqWfKUsiYscjMumY5ln1U76vmX+JcRqxT0UMnOFI9wMoLglX+jHx0tNzQT
-         ylyfblLl8ZTnyNnFjb6eeg2b5gL7qCEEPgaEo=
+        bh=jatWasS204QwZuZ1cmt7SDqxcoxRSBD/dVPK2mjyGCY=;
+        b=DtiS/q9QD7Bu9ldNxfYjldKjFGNjvcVc/fz5/RfSEIqbbfr+obLCqFTu7691R8IBvZ
+         +4ju+MQ3V7Ahyx/K56Ph/8Eo5P/PZzsOzeLQj98S//Pql5uwoC69jiU8/5ZczX19tFVM
+         4aBgjzBoQ8p5sNwmOxFH26Z3pe0YlGlUTGuow=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694808374; x=1695413174;
+        d=1e100.net; s=20230601; t=1694808398; x=1695413198;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=NA1Kdxb7daymV0YxfPouFeomYl6O2u2EVjnI/tmIwsA=;
-        b=LzVihfZ+p0OYmxihEIB5mQyE2qb/w5mRvKk1IjcNpTVXw6RUrhf6V5zwqYpxZ6cXDv
-         DjmbL5azdwIWzM6kFcFLsMLTpGheLNvrrbZ2ShDf2Tde0ZwnIPz6ZodOdoIidZpmGO6d
-         GM7aXRRJUm7Ik0hCGvJgBXjhGp7Ih9L68kjzL/ZpoKg6VbDaKHAyRVP+h0NnIVeKiN72
-         ENKD91TgGWWmVQ084oacMioNMOZxL8op+PPX7i00XK+otT31O1w9hh5XOGGI2swPG1Ym
-         XI35zEP+8ygub2+cZQASnM3NYtcQjT5Ndj1tGwFvi6Abopn+N2xZ3XMmdB2yeHCEb3mC
-         eWqg==
-X-Gm-Message-State: AOJu0YzgOjVAOF1Ehma79IssK55C03cw9O5SK3IPVGytuCmAUXvOItfG
-        6262XFjDjfUjiidXOXOW2FrRv/Sp4ZRxJ6FlTc0=
-X-Google-Smtp-Source: AGHT+IFke9xOUg8o+dOHQMGmNXaiNCKQ4Q7uIE2umqN8LSN8Mp8jp4PO0FBx8ts/vz9hu+v/WYKIrg==
-X-Received: by 2002:a05:6a00:148c:b0:68e:2c3a:8775 with SMTP id v12-20020a056a00148c00b0068e2c3a8775mr2968885pfu.33.1694808374440;
-        Fri, 15 Sep 2023 13:06:14 -0700 (PDT)
+        bh=jatWasS204QwZuZ1cmt7SDqxcoxRSBD/dVPK2mjyGCY=;
+        b=KYx98kWWMEt+ElTH0Nx3K94iF7tGW7q6OvV73wTT+58sgtxmSrZMCTNrOtwDIiszoD
+         dhmYHfg24R+LLmRVxkZCiS2rCmZrVs2cHvOj20d95d7vskwwY1mLLC6mH6fmsCcTwC2J
+         CY7a1iElzGuObgg+fGKzc9pCBi6vNNvX7j2ghm216F+MymjogE3GdNhfuyi+qLZ45vaY
+         Z037YMlIPgLLc+3UzoRN3mq/EQqpwIRmrYMHxTPCdT7rXRyAz2U3WZBMDwsh/K3syrd6
+         7MWd5WnYNdiJhNtdJRNQU5bktDt9I/Mfmyhe4OAoJ7BJzflfy1gfQesYAbZwXrGoqfeo
+         DyRQ==
+X-Gm-Message-State: AOJu0Yy+Bh5ErbCA/8JWb5iEIArBhoUSL2Vd+PBpglir5G7XDwijUYf5
+        XpjwWp7VtY4b7igEcd/ycVB4HA==
+X-Google-Smtp-Source: AGHT+IGXQqiIq6S4bgOC/rczT8CEqgDpEzDp+av8eoitgJQpUO9EnGhGdKEsv8TA7BWoVjF1DIS9yQ==
+X-Received: by 2002:a05:6358:2910:b0:134:c37f:4b64 with SMTP id y16-20020a056358291000b00134c37f4b64mr3429872rwb.30.1694808398331;
+        Fri, 15 Sep 2023 13:06:38 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id x42-20020a056a000bea00b0068fcb70ccafsm3331958pfu.129.2023.09.15.13.06.13
+        by smtp.gmail.com with ESMTPSA id b127-20020a633485000000b005709b5aea02sm3039409pga.63.2023.09.15.13.06.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Sep 2023 13:06:13 -0700 (PDT)
+        Fri, 15 Sep 2023 13:06:37 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Felix Fietkau <nbd@nbd.name>
+To:     Kalle Valo <kvalo@kernel.org>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Lorenzo Bianconi <lorenzo@kernel.org>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Shayne Chen <shayne.chen@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Kalle Valo <kvalo@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        linux-wireless@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
+        Jeff Johnson <quic_jjohnson@quicinc.com>,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
         llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Subject: [PATCH] wifi: mt76: Annotate struct mt76_rx_tid with __counted_by
-Date:   Fri, 15 Sep 2023 13:06:12 -0700
-Message-Id: <20230915200612.never.786-kees@kernel.org>
+Subject: [PATCH] wifi: ath10k: Annotate struct ath10k_ce_ring with __counted_by
+Date:   Fri, 15 Sep 2023 13:06:36 -0700
+Message-Id: <20230915200636.never.762-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1585; i=keescook@chromium.org;
- h=from:subject:message-id; bh=F+6DHSa+ER+x+MQqlg0EvaQeoh8qJvI3pA3g8dGL8RY=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlBLk0Jorek+I1OQBAgJduc/L4Xg3jOs5WnEWt9
- MGRZATCBjSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQS5NAAKCRCJcvTf3G3A
- JjWhD/9tOUC/st1EceKH0gvMzRBD27QO4Nk+fG6Y9rJZUv16gV9EFMsoYqUSuRwgZy8/P9I+BVc
- mkHZtoGs6fWhEJtny0ZlAMmZdUHnicF2M7xIxIb7tZFMp8ryHV7g7tiV44qtuz3uQN5OR5/G52S
- Bn/tXp6kou8NrfLsJt1aauJtm7CgcykOJt93RH8I49CjsLVQ0mYrF78RZc+bromdT1TGY3lCbYu
- YDSjb1YGbcNcpayfbzfJ5jPwJU1gQAn2ZxQWEyrqc2J7py+yj914/HyikOMrYaVlgUrqBoOQpYm
- l5vhqamxGJPeuQpBh4WtZukLo3z/zlEjghImla5afiElmNqimHsGWRI55luMz6VjGivM2ekVN/S
- OzaBZMte8ZaHt365A6WesjhOeByhDLffpDTS5K13NGnlNJQZchkZYpeoPEx5OT0frP4OOB9o8vr
- C3RTak4zrGO4iFO1qPK1oI0qgvYa6AsmHUgus5elElfv5xavrh7yAAOJsGsbDmCh3TmV8te0Zb1
- 0/wQs/l4sO4COIHIOrBNqNqVd8eilEgy2mRzPiEdVkwor2g0GCSU0wZbw2TABQ0flcoKda5qOjB
- PpNql+uzB7LJjZUtMa8HdL83infm7t7Kex3RaoAOWdRDfWmcI7i1ap4tETW5nwk4KrP0kRt2sxt
- gysLmbT Unzq0a5g==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1238; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=W0Z7FKEp2ozBJ5/t2fUugzUzm+3pU7NY9bmGkgl9TaQ=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlBLlMujYCGGfE+LkiGsu88vAuQpO/bsLI9ODrg
+ 7qJQcqRlzGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQS5TAAKCRCJcvTf3G3A
+ Jjo0D/0ZhZjM3umwDd4cScp/pX69G3PAuyE5MgO0WMxQPUuULMPhwefs2sxa4V3f11IiNVJnHtW
+ soi02X7jMpU81gA0gZljCei7qMNuZza5nCUsLw/tZFEvOS7by/LWH8N8eKeC1HM/gX5nJzk87sJ
+ 524wLuAgNxeE0ZKs0kE17vg/QAtRZ6AlhVxJHN7W7oZ9vFiabMcnvDOvUvhnIuCmf8H3yyepMSJ
+ d6PSUEAVtDnmd2z/r+XAp2jILEyXzM6oLz4v5N01BYz3qvzxRPyleV3r9ohrfGd6QO72+Mhqytj
+ XRd8Uq2Ltx/5ewjaD0vkDWzbroV8Tqj72dqgpBMXz4328EyeVueyo6mlXGorpgbPwNZSpdZP3a1
+ 0454XWq12ei33x2sH7xkEJxQLtIOT2zKBbsHKbRwvZce2PQ8CJ4LxhI3H3epIf+UrS+uNI0uWhk
+ jfhiAhauj9nXhsBYt0O13AerPQdVoH4ctqLYVVemaRiw/5hjYV4KGHuBBJDVUn764lRWVLTVrn9
+ I1XmUF7VjpYkMj69QmvuVWq2SH9J86c7DoBPTsvhm+jnuIpGgHXpSAv4Lxn1jCzcqAnQtT1Wtsj
+ nHP3/4jYzPx4uftHyuLbcVY2hdrDEZmCqB1MR+NSI/12asuT8+6iz3aZ1CejZmkYpC3UTRBOnfT
+ uRisExq MWP+8iwA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -96,39 +87,32 @@ their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 functions).
 
-As found with Coccinelle[1], add __counted_by for struct mt76_rx_tid.
+As found with Coccinelle[1], add __counted_by for struct ath10k_ce_ring.
 
 [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 
-Cc: Felix Fietkau <nbd@nbd.name>
-Cc: Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: Ryder Lee <ryder.lee@mediatek.com>
-Cc: Shayne Chen <shayne.chen@mediatek.com>
-Cc: Sean Wang <sean.wang@mediatek.com>
 Cc: Kalle Valo <kvalo@kernel.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: ath10k@lists.infradead.org
 Cc: linux-wireless@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-mediatek@lists.infradead.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/net/wireless/mediatek/mt76/mt76.h | 2 +-
+ drivers/net/wireless/ath/ath10k/ce.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76.h b/drivers/net/wireless/mediatek/mt76/mt76.h
-index e8757865a3d0..03ef617b1527 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76.h
-+++ b/drivers/net/wireless/mediatek/mt76/mt76.h
-@@ -376,7 +376,7 @@ struct mt76_rx_tid {
+diff --git a/drivers/net/wireless/ath/ath10k/ce.h b/drivers/net/wireless/ath/ath10k/ce.h
+index 666ce384a1d8..27367bd64e95 100644
+--- a/drivers/net/wireless/ath/ath10k/ce.h
++++ b/drivers/net/wireless/ath/ath10k/ce.h
+@@ -110,7 +110,7 @@ struct ath10k_ce_ring {
+ 	struct ce_desc_64 *shadow_base;
  
- 	u8 started:1, stopped:1, timer_pending:1;
- 
--	struct sk_buff *reorder_buf[];
-+	struct sk_buff *reorder_buf[] __counted_by(size);
+ 	/* keep last */
+-	void *per_transfer_context[];
++	void *per_transfer_context[] __counted_by(nentries);
  };
  
- #define MT_TX_CB_DMA_DONE		BIT(0)
+ struct ath10k_ce_pipe {
 -- 
 2.34.1
 
