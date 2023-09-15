@@ -2,112 +2,109 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74487EED61F
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 18:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 988D2EED61F
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 18:36:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236346AbjIOS3p (ORCPT
+        id S236368AbjIOSgJ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Sep 2023 14:29:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50142 "EHLO
+        Fri, 15 Sep 2023 14:36:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234978AbjIOS3N (ORCPT
+        with ESMTP id S236447AbjIOSfm (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Sep 2023 14:29:13 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80EA92D48
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 11:28:49 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-594e1154756so31789407b3.2
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 11:28:49 -0700 (PDT)
+        Fri, 15 Sep 2023 14:35:42 -0400
+Received: from mail-il1-x136.google.com (mail-il1-x136.google.com [IPv6:2607:f8b0:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8B752105;
+        Fri, 15 Sep 2023 11:35:35 -0700 (PDT)
+Received: by mail-il1-x136.google.com with SMTP id e9e14a558f8ab-34fcbb4a097so1568185ab.1;
+        Fri, 15 Sep 2023 11:35:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1694802528; x=1695407328; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Y1TNhbabomfqxi0sSxeEOnLpESqLvSHW6eZcfpfNAeo=;
-        b=shsz4NxqypQhdtRZb+2ArAjNbNsbC9gJdHgjUlcjlN6hQ2Y5Gs7VC+jF9I4AI2ZtaO
-         rU+24rkLSE7ZJCtKfNaIMfzJ+nPRThW2Tne8lLZrK0Tkj3A+gLVzkNyv0GoCKFSI0q86
-         kl8c2XpNYCi6dR+LYezrVhxnCSEJb4882hnyfBUNKNL63neV3yzar/YX+b92IHhg1WOO
-         ZoKrT759x7DqOQl90FhdqMywSRu9nOf3284JDr0bGFMhIHi+pj3Z0hfXg6uLeiemqFv/
-         NAdoQgtJ/gDIFb/qJNnph4CUzV/zomN8AG2PKnlvN86GP0uTF/TTjjCceEV5+0UGsPIa
-         9VQw==
+        d=gmail.com; s=20230601; t=1694802935; x=1695407735; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rhh/wBpFLk2YxTCyHBvIz67adRAxBtDWaMESKiiC4/U=;
+        b=UIlTjq+Sz8pRYbeKRw0Y2zmhMjlIavv5FOl2IK22e7bfA4m8cVrZb1WfhH/jmFiI06
+         U9O8zR7PY0cCvavCbBx90MeAHu+YTb/tR5Bx+GHKr9IK377mSMbmkcr/FWl10bAo2VG7
+         bV2Vt/X6z4B8YQr+J6/FIt+TREZzum/Q41Xi0clUzI2+tklFJwJuxvmz3CP7hvyCDmWk
+         2yhnYaj4NYm9JDUsJeMwkyMSmr0mThI152W77Ptk7Vas5JB0+VIT+bUWMZdIg8NmCV1r
+         n01XO1quE5OlE7dmic56cl4W/vvA0nqo5NTvtwViQJXe69Crskom9Lv7yN04XqSEo/7L
+         c75g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694802528; x=1695407328;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Y1TNhbabomfqxi0sSxeEOnLpESqLvSHW6eZcfpfNAeo=;
-        b=CRVkzSdacm3Dw8JLgBBewMPhNe3l3aeSwid405wjcUJ5JD0pZnyw/IB+a8/p0zyFcg
-         ZDa7yd/R9gMHRCeWgn/tRQqJ14PL8VeNABakpWh+g16JZKVebN8Z1PCFYQv2c8a2688K
-         sDNn/mUKcnW8AGBDiagiEeoqE/C8JpK3PEu9BxZ1yova7Ah/KS5BxCsnMh9nmnCulzqV
-         C0qi6Y7D+7q+U/sV2nKPNmdEuWjoTUygff1wqiqUvBbs1NeztZHyvOnE+4PU730fLNx4
-         Z7b6DX5ujoPP3INmuoqXHRk9jBf1uphk6skDWY2oEtRxkrC3Do3l7hGoDhv4Kwn1sUvv
-         0SKQ==
-X-Gm-Message-State: AOJu0Yxf42Pvfs1O60u08hPN/0AUUXkCsjWWATN7GPGeJdQ/Ixh/1OpY
-        VM2V6gawWljdM17Km3sAhhBerKDPTw0tshK0Jg==
-X-Google-Smtp-Source: AGHT+IFXBdLYQW32vcCTfWMAvUyIlKvbL2zlS6Bcu0Nz89AKvbH33GJOMchNCk+p0KBjGmIFKVbMepWC7FREJ4WeAw==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6902:4cf:b0:d7b:92d7:5629 with
- SMTP id v15-20020a05690204cf00b00d7b92d75629mr61024ybs.8.1694802528783; Fri,
- 15 Sep 2023 11:28:48 -0700 (PDT)
-Date:   Fri, 15 Sep 2023 18:28:41 +0000
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAFiiBGUC/yWNQQrCMBAAv1L27EKaYGr8iojUdG330CTs1qqU/
- t2gl4G5zGygJEwK52YDoZWVc6rSHhqIU59GQh6qgzXWmdAeURdJsXxwEF5JFKfXnBOW+f7UP28 xC2HEk+2C9y540zuouSL04Pdvdbnu+xfaojGoegAAAA==
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1694802527; l=1589;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=ipgUK5swse4talncYcp6ZaLyjV9MF6ZXeEtQq4t0z+U=; b=yh6ji8oppxJbHWrSSNWzb+891+/79MW/r+6+gbkV96zGC/G3BpGuzOqrL/9EaMbaa54XhF4HE
- AIU7cylhy+6BOoljr90F/91Mh0SiWTLQa1nb8q+u8TQGrMeqSEQFENN
-X-Mailer: b4 0.12.3
-Message-ID: <20230915-strncpy-drivers-hwmon-pmbus-pmbus_core-c-v1-1-fca2cbca41ea@google.com>
-Subject: [PATCH] hwmon: pmbus: refactor deprecated strncpy
-From:   Justin Stitt <justinstitt@google.com>
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Jean Delvare <jdelvare@suse.com>
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+        d=1e100.net; s=20230601; t=1694802935; x=1695407735;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rhh/wBpFLk2YxTCyHBvIz67adRAxBtDWaMESKiiC4/U=;
+        b=dBHlhiGEICAmJLKGXRXap2bGMnL6QXZD6+zyJIcvSoT47aDkEPBjoWRmCVz/+r/unQ
+         VESbmHoPZRLayCz1zqIOjvIxWnUZ0s5TGprd76ivCYdnl8Tp0wGhLfEpVxjmhdyvH9aS
+         iK5KfJSVSFmsOyZ+ww10DcTe7SATdozlLsJPHuhJISF7qLS7BfIirUuviA/DVTgY6Ksv
+         nRf5tUZFxiqHoKRzh0dN2ddmXdzpZ5CU8Fhmf5SR+v+M99AIHY+avk+K6jId0Q6e5FFh
+         Ablg6lOq534GmS0jfi+D/ERE2l0lonH6SBylr+lDGcJ6p5372sOLHvUVQHyObMoswGO7
+         QXXQ==
+X-Gm-Message-State: AOJu0YxZ4HhwkJs46Z5SnLj+io2Z0c46VdVGkv+aegBf3R236OaHbpJI
+        akj2PmcMWVCa/3sHghRk/vQ=
+X-Google-Smtp-Source: AGHT+IFdWJGEojY/3icYzoleS4JW9eTiHbqoewNZRCdZVj1F67Fil/HcDOWYBfT/p+U99GmpGJEf1w==
+X-Received: by 2002:a05:6e02:13d3:b0:34f:8039:a3b5 with SMTP id v19-20020a056e0213d300b0034f8039a3b5mr3136303ilj.26.1694802935093;
+        Fri, 15 Sep 2023 11:35:35 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id e24-20020a02a518000000b0042bae96eba7sm1199696jam.7.2023.09.15.11.35.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Sep 2023 11:35:34 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date:   Fri, 15 Sep 2023 11:35:32 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Justin Stitt <justinstitt@google.com>
+Cc:     Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] hwmon: pmbus: refactor deprecated strncpy
+Message-ID: <0b5ddd1e-2f78-4ef6-aadd-88ea53bbb9b2@roeck-us.net>
+References: <20230915-strncpy-drivers-hwmon-pmbus-pmbus_core-c-v1-1-fca2cbca41ea@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230915-strncpy-drivers-hwmon-pmbus-pmbus_core-c-v1-1-fca2cbca41ea@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-`strncpy` is deprecated for use on NUL-terminated destination strings [1].
+On Fri, Sep 15, 2023 at 06:28:41PM +0000, Justin Stitt wrote:
+> `strncpy` is deprecated for use on NUL-terminated destination strings [1].
+> 
+> We should prefer more robust and less ambiguous string interfaces.
+> 
+> A suitable replacement is `strscpy` [2] due to the fact that it guarantees
+> NUL-termination on the destination buffer without unnecessarily NUL-padding.
+> 
+> `label` is zero-allocated and as such the NUL-padding behavior of
+> strncpy is not required here.
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+>  drivers/hwmon/pmbus/pmbus_core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hwmon/pmbus/pmbus_core.c b/drivers/hwmon/pmbus/pmbus_core.c
+> index 1363d9f89181..dcc8b12387cc 100644
+> --- a/drivers/hwmon/pmbus/pmbus_core.c
+> +++ b/drivers/hwmon/pmbus/pmbus_core.c
+> @@ -1394,7 +1394,7 @@ static int pmbus_add_label(struct pmbus_data *data,
+>  	snprintf(label->name, sizeof(label->name), "%s%d_label", name, seq);
+>  	if (!index) {
+>  		if (phase == 0xff)
+> -			strncpy(label->label, lstring,
+> +			strscpy(label->label, lstring,
+>  				sizeof(label->label) - 1);
 
-We should prefer more robust and less ambiguous string interfaces.
+'label' is allocated with kzalloc(), and, by copying one byte less
+than the size of the field into label->label, it is guaranteed to be
+terminated. Using strscpy() instead of strncpy() results in dropping
+the last character of lstring if its length is sizeof(label->label) - 1.
 
-A suitable replacement is `strscpy` [2] due to the fact that it guarantees
-NUL-termination on the destination buffer without unnecessarily NUL-padding.
+Really, I am not going to accept any of your patches, sorry.
 
-`label` is zero-allocated and as such the NUL-padding behavior of
-strncpy is not required here.
-
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
- drivers/hwmon/pmbus/pmbus_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/hwmon/pmbus/pmbus_core.c b/drivers/hwmon/pmbus/pmbus_core.c
-index 1363d9f89181..dcc8b12387cc 100644
---- a/drivers/hwmon/pmbus/pmbus_core.c
-+++ b/drivers/hwmon/pmbus/pmbus_core.c
-@@ -1394,7 +1394,7 @@ static int pmbus_add_label(struct pmbus_data *data,
- 	snprintf(label->name, sizeof(label->name), "%s%d_label", name, seq);
- 	if (!index) {
- 		if (phase == 0xff)
--			strncpy(label->label, lstring,
-+			strscpy(label->label, lstring,
- 				sizeof(label->label) - 1);
- 		else
- 			snprintf(label->label, sizeof(label->label), "%s.%d",
-
----
-base-commit: 3669558bdf354cd352be955ef2764cde6a9bf5ec
-change-id: 20230915-strncpy-drivers-hwmon-pmbus-pmbus_core-c-8279663960a3
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
-
+Guenter
