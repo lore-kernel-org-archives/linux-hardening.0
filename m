@@ -2,134 +2,132 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6990C46CA1
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 21:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F154CD37AA
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 21:23:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237480AbjIOVTE (ORCPT
+        id S236551AbjIOVWr (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Sep 2023 17:19:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40776 "EHLO
+        Fri, 15 Sep 2023 17:22:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237514AbjIOVSs (ORCPT
+        with ESMTP id S237338AbjIOVW1 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Sep 2023 17:18:48 -0400
-Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6975AB8
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 14:18:43 -0700 (PDT)
-Received: from eig-obgw-6004a.ext.cloudfilter.net ([10.0.30.197])
-        by cmsmtp with ESMTP
-        id hFjnqMNlVEoVshGD2qI9wH; Fri, 15 Sep 2023 21:18:40 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with ESMTPS
-        id hGD2qiBpaaxkBhGD2qmSCU; Fri, 15 Sep 2023 21:18:40 +0000
-X-Authority-Analysis: v=2.4 cv=BumOfKb5 c=1 sm=1 tr=0 ts=6504ca30
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=zNV7Rl7Rt7sA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
- a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=JfrnYn6hAAAA:8 a=cm27Pg_UAAAA:8
- a=HvF037n1xESchLcPDVoA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
- a=TjNXssC_j7lpFel5tvFf:22 a=1CNFftbPRP8L7MoqJWF3:22 a=xmb-EsYY8bH0VWELuYED:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=CXlqlVJ2RnzYBwdo5oCwVhnF8JLWfHkjHPjJ0VvcV1w=; b=aLBYatBt5iYb4xj6Pn/c9wMvEZ
-        /HxBtzx6jwiRBqbGYYsX564tIlBz3kFBagXbWnwtSt0IMy0XyKmg6JCK7yy5JFg95QXK8lpYxN9kE
-        kKt7WNA7o017D0OxRYiHftQI4wuvKmZwiM1xAAu5RyA0Wn4S+Ylfe+PKdV8c4HCU8QOT9FfA03z5z
-        JloX3i4mtdWE9Uo6cS6ltEWPptP2YxEIn3eaizObNk8UhsXJGAVbXUfOF6xae85EQSf6tmByY8the
-        TO9ac7JDzVtioDfII4XGBo1vFx7oq+Xf3M0ztckuLxEsBEk0XijlzQO6D08Am8FXQeoG3MKboqV5t
-        Yg7IrYbg==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:55304 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.96)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1qhGD0-0036gT-12;
-        Fri, 15 Sep 2023 16:18:38 -0500
-Message-ID: <8d28f285-1a92-2635-f0f3-8a46b8f0c8d0@embeddedor.com>
-Date:   Fri, 15 Sep 2023 15:19:34 -0600
+        Fri, 15 Sep 2023 17:22:27 -0400
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F41FCDD
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 14:22:21 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-68fb2e9ebcdso2166668b3a.2
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 14:22:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1694812941; x=1695417741; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=D0kMZ8d93qRdQCVI6CVDzaa2b8htk/6nsTOwdqxIFLQ=;
+        b=b6lXrWlps4mn56h2ROI/iAVf6IvmDLttDzn4BAlLtmgM9hu12XZTKM4SGLqFvqsK76
+         s9yZsIVFRRPcuDxFf3qfCvERivDJyiV68mUkpDWLEJPgHtdyi7JCvYKmuB7ooiGJhVBt
+         fV9yzcTudsN9MmLfVvN21kXU3fA0MXp+qID8c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694812941; x=1695417741;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=D0kMZ8d93qRdQCVI6CVDzaa2b8htk/6nsTOwdqxIFLQ=;
+        b=GIwEDIQ9Luf2wWvr8iOn6Venvzj0o7d47jKYEW3ubupVS1v+ZR7O3lL7/5mI5m3xSO
+         LF1l3mxiTB/PZhqkDl12952W0lcWg04Lz3ZKbNsIej1irPW4HgeCttIjBabZFtV8CRtj
+         QhY9Hk4WiTrnR0YZRYNuVJw1HNZDRiYR+L0XaLxtxF8m/obt6d+MHCNNHBqwuOx+M65J
+         DD9cdSJYAbGd2DQznUgyWwUMCmABLPLrQU00Gxi0p6jlNn+DBxHfB4cdU2zq+H3HofcL
+         5SKiIAC3nYspHya5bc1a0wK45/s/BtErIKlPEhMJQnHRLr1G+iPsmPR3xm8eUlSvW4bf
+         5xxA==
+X-Gm-Message-State: AOJu0YzbZsA/sewF/uQo27kZQfHkdMvxe7RwCTo/4cNhJijuuRsJYMSI
+        EcgyIXqBrLmmGL/P33kaKNWl0g==
+X-Google-Smtp-Source: AGHT+IFXhYnUgA00/Q6g5wBduIWHI2eXNBUpE7oWPl1Z19J8jTpjt+T/QZNudB9t3IWA9FQ6aC/fsg==
+X-Received: by 2002:a05:6a00:2344:b0:68e:43ed:d30b with SMTP id j4-20020a056a00234400b0068e43edd30bmr2745959pfj.21.1694812941429;
+        Fri, 15 Sep 2023 14:22:21 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id 15-20020aa7910f000000b006877b0b31c2sm3486022pfh.147.2023.09.15.14.22.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Sep 2023 14:22:20 -0700 (PDT)
+Date:   Fri, 15 Sep 2023 14:22:20 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Matteo Rizzo <matteorizzo@google.com>
+Cc:     cl@linux.com, penberg@kernel.org, rientjes@google.com,
+        iamjoonsoo.kim@lge.com, akpm@linux-foundation.org, vbabka@suse.cz,
+        roman.gushchin@linux.dev, 42.hyeyoo@gmail.com,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-mm@kvack.org, linux-hardening@vger.kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        corbet@lwn.net, luto@kernel.org, peterz@infradead.org,
+        jannh@google.com, evn@google.com, poprdi@google.com,
+        jordyzomer@google.com
+Subject: Re: [RFC PATCH 11/14] mm/slub: allocate slabs from virtual memory
+Message-ID: <202309151413.A1166F314A@keescook>
+References: <20230915105933.495735-1-matteorizzo@google.com>
+ <20230915105933.495735-12-matteorizzo@google.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] wifi: ath10k: Annotate struct ath10k_ce_ring with
- __counted_by
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>, Kalle Valo <kvalo@kernel.org>
-Cc:     Jeff Johnson <quic_jjohnson@quicinc.com>,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-References: <20230915200636.never.762-kees@kernel.org>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20230915200636.never.762-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1qhGD0-0036gT-12
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:55304
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org:  HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfDnTD6GLAyuqyYeRDGCkSb8c9Q/ntN8APBpJUhVmeAD88XQVmCH+oPW0+Xd92CrVb4q/sb0EFgCmADWDs8g30+bZ1m9lqTDzjv4hQFIPiWJt4GNHpC8T
- 57tqlmyWvlht31njrjhFJ73A5ysF8jHohGxkJV+jOcM60Eh6pE0N5OmHBbF21ucfszI/vnzsmIFhKdaliR+Ty1z9W5kj53STuaF7N5sElsQpFXK6cBVpXaSu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230915105933.495735-12-matteorizzo@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
-
-On 9/15/23 14:06, Kees Cook wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
+On Fri, Sep 15, 2023 at 10:59:30AM +0000, Matteo Rizzo wrote:
+> From: Jann Horn <jannh@google.com>
 > 
-> As found with Coccinelle[1], add __counted_by for struct ath10k_ce_ring.
+> This is the main implementation of SLAB_VIRTUAL. With SLAB_VIRTUAL
+> enabled, slab memory is not allocated from the linear map but from a
+> dedicated region of virtual memory. The code ensures that once a range
+> of virtual addresses is assigned to a slab cache, that virtual memory is
+> never reused again except for other slabs in that same cache. This lets
+> us mitigate some exploits for use-after-free vulnerabilities where the
+> attacker makes SLUB release a slab page to the page allocator and then
+> makes it reuse that same page for a different slab cache ("cross-cache
+> attacks").
 > 
-> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+> With SLAB_VIRTUAL enabled struct slab no longer overlaps struct page but
+> instead it is allocated from a dedicated region of virtual memory. This
+> makes it possible to have references to slabs whose physical memory has
+> been freed.
 > 
-> Cc: Kalle Valo <kvalo@kernel.org>
-> Cc: Jeff Johnson <quic_jjohnson@quicinc.com>
-> Cc: ath10k@lists.infradead.org
-> Cc: linux-wireless@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> SLAB_VIRTUAL has a small performance overhead, about 1-2% on kernel
+> compilation time. We are using 4 KiB pages to map slab pages and slab
+> metadata area, instead of the 2 MiB pages that the kernel uses to map
+> the physmap. We experimented with a version of the patch that uses 2 MiB
+> pages and we did see some performance improvement but the code also
+> became much more complicated and ugly because we would need to allocate
+> and free multiple slabs at once.
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+I think these hints about performance should be also noted in the
+Kconfig help.
 
-Thanks
--- 
-Gustavo
-
+> In addition to the TLB contention, SLAB_VIRTUAL also adds new locks to
+> the slow path of the allocator. Lock contention also contributes to the
+> performance penalty to some extent, and this is more visible on machines
+> with many CPUs.
+> 
+> Signed-off-by: Jann Horn <jannh@google.com>
+> Co-developed-by: Matteo Rizzo <matteorizzo@google.com>
+> Signed-off-by: Matteo Rizzo <matteorizzo@google.com>
 > ---
->   drivers/net/wireless/ath/ath10k/ce.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/wireless/ath/ath10k/ce.h b/drivers/net/wireless/ath/ath10k/ce.h
-> index 666ce384a1d8..27367bd64e95 100644
-> --- a/drivers/net/wireless/ath/ath10k/ce.h
-> +++ b/drivers/net/wireless/ath/ath10k/ce.h
-> @@ -110,7 +110,7 @@ struct ath10k_ce_ring {
->   	struct ce_desc_64 *shadow_base;
->   
->   	/* keep last */
-> -	void *per_transfer_context[];
-> +	void *per_transfer_context[] __counted_by(nentries);
->   };
->   
->   struct ath10k_ce_pipe {
+>  arch/x86/include/asm/page_64.h          |  10 +
+>  arch/x86/include/asm/pgtable_64_types.h |   5 +
+>  arch/x86/mm/physaddr.c                  |  10 +
+>  include/linux/slab.h                    |   7 +
+>  init/main.c                             |   1 +
+>  mm/slab.h                               | 106 ++++++
+>  mm/slab_common.c                        |   4 +
+>  mm/slub.c                               | 439 +++++++++++++++++++++++-
+>  mm/usercopy.c                           |  12 +-
+>  9 files changed, 587 insertions(+), 7 deletions(-)
+
+Much of this needs review by MM people -- I can't speak well to the
+specifics of the implementation. On coding style, I wonder if we can get
+away with reducing the amount of #ifdef code by either using "if
+(IS_ENABLED(...)) { ... }" style code, or, in the case of the allocation
+function, splitting it out into two separate files, one for standard
+page allocator, and one for the new virt allocator. But, again, MM
+preferences reign. :)
+
+-- 
+Kees Cook
