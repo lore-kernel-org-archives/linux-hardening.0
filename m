@@ -2,127 +2,128 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE6DCEEAA42
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 03:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C74EDE989
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 03:10:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231792AbjIODHV (ORCPT
+        id S231680AbjIODK0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 14 Sep 2023 23:07:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33624 "EHLO
+        Thu, 14 Sep 2023 23:10:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229767AbjIODHU (ORCPT
+        with ESMTP id S229767AbjIODKZ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 14 Sep 2023 23:07:20 -0400
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E26A270A
-        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 20:07:16 -0700 (PDT)
-Received: by mail-pg1-x535.google.com with SMTP id 41be03b00d2f7-577a98f78b2so1243031a12.3
-        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 20:07:16 -0700 (PDT)
+        Thu, 14 Sep 2023 23:10:25 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CE2E270A
+        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 20:10:21 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1c0c6d4d650so15165655ad.0
+        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 20:10:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1694747236; x=1695352036; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=wKY3Aoi2PgZpKhtcgI0Xd+Aoh/mwMt/O7YmEKabdQBo=;
-        b=jjYJI6QSwok/R2RrtVlfAWCU+YRPon6KopfIQ2uV3H67E/1fzB6sFQ1ARA6hQnummd
-         BXuC/PxWd6r6YffprK8wzBvOm5mel//na9qnUDbOIsv/4heI0L6AaNdoWHKBejVHr0+2
-         pxNPFla946/Db/EqNsrUJMPh6QdUvKPM+gYLg=
+        d=chromium.org; s=google; t=1694747420; x=1695352220; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=s66uVsXieXZEwrz2tGtxEkm4KD1eEh+8pBHuZBZ6AXU=;
+        b=P2w+CZR3beoD5p/U38+1uhux+DgXnGntEWHLtjl+CMCIwWyBqnc7aYA6/SfpkZvWBG
+         jal7TD6wp+GWlM/LpHSoGye9x+OvljaXjBFPglv+yybcQQovvexv/4OTYKcKOJkim9Lt
+         kyZdd/M5d5G3Zxir4hZLiu4c9ur80vlctnZ+A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694747236; x=1695352036;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wKY3Aoi2PgZpKhtcgI0Xd+Aoh/mwMt/O7YmEKabdQBo=;
-        b=JQRXfP8hNxsCD7vEr+KXm7xzOJQvf4jApspx2CXZxUsBY7rE9z5nxHwMZzddjLp2uu
-         HXbYN5OoXghru90AYOcocmZ+dGYoJwV286A5R7CRZIa7x1ot4euGmGHYV0lP/U+6GEfV
-         lW49fShFP5+SDAkVuRgdBKnh239pKrikpXHhNLNwyRsPSEgr3ESjnQX9NtRCdjrc66ld
-         S5DETXMVDAkTOctG/NVtogSujVLe9bi5P0vwsaqbS0X06gbDVvxmbEyltv4s2SiXV8pC
-         PzrULC7cbufZViwqBUt8CJ+xMy+GEG6cLfdQwCzgz6EbNvq4uRVA0UQEHmyYrVyhaXD2
-         O60Q==
-X-Gm-Message-State: AOJu0Yw3X5DYcmlJxL8i6JN43xjtOlwcWzURVb1klj0lUEo1cqEunqPi
-        c6e2/LK15UxbPiuGA5YmlrlHHfhNE2W+HY3853g=
-X-Google-Smtp-Source: AGHT+IHQ6bTYwQNjNKHv9wGc1xPEjyCRDqtscmHhZudz5CaRSthftSYDLFeug+NbG7cw29X1OwLAzA==
-X-Received: by 2002:a05:6a20:9192:b0:157:e67c:6f with SMTP id v18-20020a056a20919200b00157e67c006fmr509458pzd.55.1694747235834;
-        Thu, 14 Sep 2023 20:07:15 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1694747420; x=1695352220;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s66uVsXieXZEwrz2tGtxEkm4KD1eEh+8pBHuZBZ6AXU=;
+        b=NFeCZaDrXWdfo7O7NbHMgdEKFEiHiI4VddXianK8gldWjXYbocxUWtq5zclV9ezLjz
+         arOEew4lQtI0uTeWXaTj1czHjpDeNMOYgp7eUGvJRZYN2jrF7FLOObjinAtSnNzWcayF
+         6gBkEEIZLrBEO4MERq8yi6v1Mv36yxrXDKcq3nrtOdiUGElckWabsfSwCPXcwtoj75ei
+         5EKV3ifhSiQZNKQXynxhyohu7My6Q3xuCpf3PU7YOC5ojLYVTh/mNNDtcN/ommlyzpzm
+         rCqZ5s18quP+jEbVIxho27WuY5KB5QcPSfBW9OHWSqsELC6dqjHFuhJemMfeGjxVoB1X
+         Q80Q==
+X-Gm-Message-State: AOJu0Yynm0HPxiw1LZib50hrxGAExBWQG9ctuOJ5NY2rT5yHpQo3UMDR
+        it7Pk5zJi3+SXvKMpchmslhN5A==
+X-Google-Smtp-Source: AGHT+IHiPr6yjry1eOi32qemWdUt8KSs5Y4FRrVUY+L6LPMW/8uikqG4J6/IPV1vKIwXV6zuvnYF/Q==
+X-Received: by 2002:a17:902:76c5:b0:1bb:c06e:647a with SMTP id j5-20020a17090276c500b001bbc06e647amr443590plt.53.1694747420577;
+        Thu, 14 Sep 2023 20:10:20 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id jo13-20020a170903054d00b001bc68602e54sm2298693plb.142.2023.09.14.20.07.15
+        by smtp.gmail.com with ESMTPSA id y7-20020a17090322c700b001c0a414695dsm2285725plg.62.2023.09.14.20.10.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Sep 2023 20:07:15 -0700 (PDT)
-Date:   Thu, 14 Sep 2023 20:07:14 -0700
+        Thu, 14 Sep 2023 20:10:20 -0700 (PDT)
+Date:   Thu, 14 Sep 2023 20:10:19 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Justin Stitt <justinstitt@google.com>
-Cc:     Dave Hansen <dave.hansen@intel.com>,
+Cc:     Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [PATCH] x86/tdx: refactor deprecated strncpy
-Message-ID: <202309142006.EB4DE641A@keescook>
-References: <20230911-strncpy-arch-x86-coco-tdx-tdx-c-v1-1-4b38155727f3@google.com>
- <69643667-4564-0266-1b26-13833191842c@intel.com>
- <CAFhGd8rohHPu+Zqr+w35=6=goUNC4ycvKk78N+7LSvNbnDnvuw@mail.gmail.com>
+        "H. Peter Anvin" <hpa@zytor.com>, xen-devel@lists.xenproject.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] xen/efi: refactor deprecated strncpy
+Message-ID: <202309142009.DD5AE193@keescook>
+References: <20230911-strncpy-arch-x86-xen-efi-c-v1-1-96ab2bba2feb@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFhGd8rohHPu+Zqr+w35=6=goUNC4ycvKk78N+7LSvNbnDnvuw@mail.gmail.com>
+In-Reply-To: <20230911-strncpy-arch-x86-xen-efi-c-v1-1-96ab2bba2feb@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Sep 11, 2023 at 03:01:16PM -0700, Justin Stitt wrote:
-> On Mon, Sep 11, 2023 at 11:51 AM Dave Hansen <dave.hansen@intel.com> wrote:
-> >
-> > On 9/11/23 11:27, Justin Stitt wrote:
-> > > `strncpy` is deprecated and we should prefer more robust string apis.
-> >
-> > I dunno.  It actually seems like a pretty good fit here.
-> >
-> > > In this case, `message.str` is not expected to be NUL-terminated as it
-> > > is simply a buffer of characters residing in a union which allows for
-> > > named fields representing 8 bytes each. There is only one caller of
-> > > `tdx_panic()` and they use a 59-length string for `msg`:
-> > > |     const char *msg = "TD misconfiguration: SEPT_VE_DISABLE attribute must be set.";
-> >
-> > I'm not really following this logic.
-> >
-> > We need to do the following:
-> >
-> > 1. Make sure not to over write past the end of 'message'
-> > 2. Make sure not to over read past the end of 'msg'
-> > 3. Make sure not to leak stack data into the hypercall registers
-> >    in the case of short strings.
-> >
-> > strncpy() does #1, #2 and #3 just fine.
+On Mon, Sep 11, 2023 at 06:59:31PM +0000, Justin Stitt wrote:
+> `strncpy` is deprecated for use on NUL-terminated destination strings [1].
 > 
-> Right, to be clear, I do not suspect a bug in the current
-> implementation. Rather, let's move towards a less ambiguous interface
-> for maintainability's sake
-> 
-> >
-> > The resulting string does *NOT* need to be NULL-terminated.  See the
-> > comment:
-> >
-> >     /* VMM assumes '\0' in byte 65, if the message took all 64 bytes */
-> >
-> > Are there cases where strncpy() doesn't NULL-terminate the string other
-> > than when the buffer is full?
-> >
-> > I actually didn't realize that strncpy() pads its output up to the full
-> > size.  I wonder if Kirill used it intentionally or whether he got lucky
-> > here. :)
-> 
-> Big reason to use strtomem_pad as it is more obvious about what it does.
-> 
-> I'd love more thoughts/testing here.
+> `efi_loader_signature` has space for 4 bytes. We are copying "Xen" (3 bytes)
+> plus a NUL-byte which makes 4 total bytes. With that being said, there is
+> currently not a bug with the current `strncpy()` implementation in terms of
+> buffer overreads but we should favor a more robust string interface
+> either way.
 
-This looks like exactly the right conversion: strtomem_pad() will do 1,
-2, and 3 (and does it unambiguously and without allowing for a
-possible-wrong "size" parameter for the destination buffer).
+Yeah, this will work. Since this is a u32 destination, I do wonder if
+strtomem_pad() would be better since we're not really writing a string?
+But since this is all hard-coded, it doesn't matter. :)
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-Kees
+
+> 
+> A suitable replacement is `strscpy` [2] due to the fact that it guarantees
+> NUL-termination on the destination buffer while being functionally the
+> same in this case.
+> 
+> Link: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings[1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Cc: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+> Note: build-tested
+> ---
+>  arch/x86/xen/efi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/xen/efi.c b/arch/x86/xen/efi.c
+> index 863d0d6b3edc..7250d0e0e1a9 100644
+> --- a/arch/x86/xen/efi.c
+> +++ b/arch/x86/xen/efi.c
+> @@ -138,7 +138,7 @@ void __init xen_efi_init(struct boot_params *boot_params)
+>  	if (efi_systab_xen == NULL)
+>  		return;
+>  
+> -	strncpy((char *)&boot_params->efi_info.efi_loader_signature, "Xen",
+> +	strscpy((char *)&boot_params->efi_info.efi_loader_signature, "Xen",
+>  			sizeof(boot_params->efi_info.efi_loader_signature));
+>  	boot_params->efi_info.efi_systab = (__u32)__pa(efi_systab_xen);
+>  	boot_params->efi_info.efi_systab_hi = (__u32)(__pa(efi_systab_xen) >> 32);
+> 
+> ---
+> base-commit: 2dde18cd1d8fac735875f2e4987f11817cc0bc2c
+> change-id: 20230911-strncpy-arch-x86-xen-efi-c-14292f5a79ee
+> 
+> Best regards,
+> --
+> Justin Stitt <justinstitt@google.com>
+> 
 
 -- 
 Kees Cook
