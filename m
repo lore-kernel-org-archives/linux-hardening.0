@@ -2,80 +2,80 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E88CD37A9
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 20:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB86CD37AC
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 20:14:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237086AbjIOUOG (ORCPT
+        id S237214AbjIOUOI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Sep 2023 16:14:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47384 "EHLO
+        Fri, 15 Sep 2023 16:14:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237294AbjIOUNq (ORCPT
+        with ESMTP id S237273AbjIOUNo (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Sep 2023 16:13:46 -0400
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB27D2707
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:12:45 -0700 (PDT)
-Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1c337aeefbdso23570055ad.0
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:12:45 -0700 (PDT)
+        Fri, 15 Sep 2023 16:13:44 -0400
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 788F72D58
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:12:56 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-68fba57030fso2410146b3a.3
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:12:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1694808765; x=1695413565; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1694808776; x=1695413576; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/9ednYaRcJqbNHBCr/S6Xdi9dFFsTXXFXM7WGc+jfHE=;
-        b=oOA4U0z+DKedymQeLiefny2YObaElqYQGxh67bWSu9jBgBPOnJRbq9fIZ6sq1A6/Gj
-         yTycAn7CI8BsSTWI7LBiPRYkMBc6NYlH0TL1uJKtsF0/F9PZBke5Q52BoIniNU3qpbJQ
-         yQunBfllkbyynBcosU1KHqvfFi3s1IU73FTaE=
+        bh=5BZJf9s84lU3CfTi9HxKXU6WVEhOLwpzo38ws2QVZ2w=;
+        b=d1zi4gb7iZeE22DJcrfkwDtgaqpetFjzj59ItBO1A3Se0Is8x2VsDnSC/hkMPrLPw3
+         OnyloemvgZOJ1PR6LBL2RQiAQBsvY2uOlh9W+jNTBGsejl46qYFqK+zkwDVIXfVsK/hF
+         pwKR5ySPBttayWOkqcdl+5xusvFtWDxOjarzc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694808765; x=1695413565;
+        d=1e100.net; s=20230601; t=1694808776; x=1695413576;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=/9ednYaRcJqbNHBCr/S6Xdi9dFFsTXXFXM7WGc+jfHE=;
-        b=Kb9hjTTPd1EeqjoVnHZyKOKG4kqRxfx4kwYtzLSQitJV4zp9hXSnUsJa29MKw3xJjW
-         MN7C+65wvr6Zd9GqFHRA1ByWVtN7mk9SWeKraqgy0UnWwjAitySFMQfnJ/al/PgmIy4e
-         o97StnFqgzSUkDmDXtujBj3cPPAG2p+6XG1bfW1cvD2ImDv14kWI4UUvXH9JAOgs0pLU
-         msxXluhS+lMxnjTGq9n1meQFQTsvyloLJ4Bq+yIS6CROXeg88/721iijc94HphJEWrhG
-         ybf21Rwvp1LSmbUYa1i9hTDXITJY7xBjdmWwOrVjAIaa6yJrDzDOD17FFWDPDZDnSt0v
-         deOw==
-X-Gm-Message-State: AOJu0Ywb3wq2P7tj2QSvEcxJ2ed7cpiOP0ing1Kd6zylGbs+YflshHw0
-        NY+Itdw6MkJR+htSZv2A7rivIw==
-X-Google-Smtp-Source: AGHT+IF26agxIuVbx2bzTaD9bnr+Fu0VoE03C3/1yq+KoExa8nJ3wdcTmCK/3DSQQpd1lF7ovsqncw==
-X-Received: by 2002:a17:902:b494:b0:1bc:6c8:cded with SMTP id y20-20020a170902b49400b001bc06c8cdedmr2417137plr.67.1694808765369;
-        Fri, 15 Sep 2023 13:12:45 -0700 (PDT)
+        bh=5BZJf9s84lU3CfTi9HxKXU6WVEhOLwpzo38ws2QVZ2w=;
+        b=gTsW2+5KQ5diYCcEw49LMaZF0PJf+aFwSKM5DvFIHv+auWKE8glHPDj0wYxSSYFojw
+         wvQ5bJDgyWsdr61wgyavq7VK5Wih0Ha4w5IjUoSKdx5mlw+Lmzq5m6/ZGUvPCoWMo+M6
+         yffKxLS/bXIHFdmMLTXESSViqgLn/40MAtw/JgN4MUngeNhGJRqy/hHHB+ieimb90hoM
+         S9MWwA4zEFBO0kCQQ6zNKmlg6e8JNdjbErwTKShRieozmwJtnRfRUeq4JWnC2dM1wQyG
+         A9JG5mc3/EmeHaBEscTH1k2k9FqH73fSTUzkWeaJnfKYf1BObZSMqL7DrMGzns+QckuJ
+         8qAg==
+X-Gm-Message-State: AOJu0YyhvQAYykN5xIMlJzt2f/m7vWQsDUi5+LtMecYepgFBw/HSDWLo
+        36DXqaERrUPChr+nNM//rZBdQg==
+X-Google-Smtp-Source: AGHT+IHmQbOxLY0L8bXhn+zKOM/BnwaC8qXFTLFQ0kYWZVSH2PXuzlce8g/QsH9C+n/HCzeTj7zpsw==
+X-Received: by 2002:a05:6a20:320d:b0:14b:8023:33c8 with SMTP id hl13-20020a056a20320d00b0014b802333c8mr2750657pzc.2.1694808776017;
+        Fri, 15 Sep 2023 13:12:56 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id j10-20020a170902c3ca00b001c3cbedbc47sm3859508plj.6.2023.09.15.13.12.44
+        by smtp.gmail.com with ESMTPSA id z16-20020a656650000000b00565dd935938sm2758499pgv.85.2023.09.15.13.12.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Sep 2023 13:12:44 -0700 (PDT)
+        Fri, 15 Sep 2023 13:12:55 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Miquel Raynal <miquel.raynal@bootlin.com>
 Cc:     Kees Cook <keescook@chromium.org>,
         Richard Weinberger <richard@nod.at>,
         Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd@lists.infradead.org,
+        linux-mtd@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
         llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Subject: [PATCH] mtd: rawnand: marvell: Annotate struct marvell_nand_chip with __counted_by
-Date:   Fri, 15 Sep 2023 13:12:43 -0700
-Message-Id: <20230915201243.never.235-kees@kernel.org>
+Subject: [PATCH] mtd: rawnand: renesas: Annotate struct rnand_chip with __counted_by
+Date:   Fri, 15 Sep 2023 13:12:54 -0700
+Message-Id: <20230915201254.never.511-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1327; i=keescook@chromium.org;
- h=from:subject:message-id; bh=TQ33NzB9u1hD2EeLpj7Zf3S9y0fIk3egTEL+4CNIaZM=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlBLq7Uo+K8oyZTYA57xeasyFe+Qr+U0ga005PU
- otIx9G3DgCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQS6uwAKCRCJcvTf3G3A
- JsKoD/4pERGmBwMG1bnu0pOlCoKD7XbCGlqkd/EhEKPpQocWXRVqfmHIwKg9nm+oRxEEY/fQgRJ
- HPDNMYrW4NCVpCfktLjVuNqULEYV1xQhPXiRPbtPoctSpCffUAcDGeSdxZ+ADTtOMCf9YMxZ86M
- XeE5QMBNAWO10BnFaiCeF+DVmCbhIPN3voMjzZNhZrbp+4ZZHnkStN1CWXoqUdEFxmjTfye2xEo
- 6GSoFfDAUz4lsOp4p23NBSGDoXS+hoVMhk5NCWJ5o2m1Tg3GM58ZAevy+KZG+bCZy68wh4S7FQQ
- QX6fTuhdxeEsnWoOJeYfaHXkjDTJNn+kizzywtJNe5YfkZ6Sfc/NeMytmeOyQl/MskHmZDM30j8
- naA4EfZc8RPme4ulzyVc2SWSMilvBlKUGF/rWF40drwKmQVBJN3ppGzcxkvvYuLlswVxmMnufHb
- Veidh2Y/zUi/crLXAwAyph5HkKkLM3ugeU+mHQP/jsi1T4ckqzw0U9EHXgkUVm03oZ1pnzc86v9
- 0ztGQr/8O+Sgok15/8FkWTTeS4qXajh/GTDLetIc4wxK21KZzQNRlQuTIXTCJUL3M9ZHuV3Wm0z
- EfwVgQMW9MD9gPWZdJUzuZuFMYiEzHmKD0j52m0w7qb8t4STrDA6+OKfBN50dsM0Pivr2OSq6hz
- afLGe7T gFR43eRA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1331; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=0FPGmCgvWt7RjvkdTmKw5gfdGmdouZ3tE6ulzomUB2U=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlBLrGeRmtf7v7PuHT27LUye5Sm4GLfRpWtonSx
+ p2dIfmBTvuJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQS6xgAKCRCJcvTf3G3A
+ Jm5IEAC1QGXYJ9yOV0x64S8RCZrHbM5hI5qcR13CwhzHoqjMh2ZYHbyfI3r1NJdJai/+Lz6k2Qy
+ mEzqHCjkI/Mub7jmWbQpzrff0loovqVfED8gwE3LDnt21UZALC2CHMhkeynTeqfx3blquFl/4/S
+ 2xcPtvU8OQdr4PA1CDlZv4sIuMDjCztn2Z379LJlimR60iSZgkxcdJGE81pVkF5tD8CRvh5ckn/
+ JnHJ6MpjFjETsFnCbayrzEsvZTQXAA065p7EpTafPz7trWTN7hjj9nKUDG6aT8lnlALZDWgWf4v
+ BWN3h57Y4cSYBG8z29PniByDsPlVzYfW3J9Lxd1C8430W9VDbH3xu/q957gWp4Bl5U7aQK8QsIJ
+ dAf3OzpoL/ONx8PDuObWUgww//y8mHbjqvRqowuTA+VlchilOGBE0+qz4C6cxLvbBjTSm/XOW4W
+ Q1R+0c+bJtRPYdANjaXw2lFzNTlXg+iHDbwsQsN/6BeNu06htsCNR+N9BpRebycxfmHrIqO86hb
+ oluyC6avf43e1QhfZDl7ViR+6olmcuXajW1hbv4PdUXKzeEqvPZwfbcZzp4kFfYDCyMAV9oifxd
+ yG29Z874XY7Xo5PDqIiflaj4hU2414puFaXtfq8yfQFSglCTM0E+X5RDD2qWfvNo2QdF212WR4F
+ x/g2isV w/p8A3kA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -88,7 +88,7 @@ their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 functions).
 
-As found with Coccinelle[1], add __counted_by for struct marvell_nand_chip.
+As found with Coccinelle[1], add __counted_by for struct rnand_chip.
 
 [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 
@@ -96,24 +96,25 @@ Cc: Miquel Raynal <miquel.raynal@bootlin.com>
 Cc: Richard Weinberger <richard@nod.at>
 Cc: Vignesh Raghavendra <vigneshr@ti.com>
 Cc: linux-mtd@lists.infradead.org
+Cc: linux-renesas-soc@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/mtd/nand/raw/marvell_nand.c | 2 +-
+ drivers/mtd/nand/raw/renesas-nand-controller.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mtd/nand/raw/marvell_nand.c b/drivers/mtd/nand/raw/marvell_nand.c
-index b841a81cb128..a46698744850 100644
---- a/drivers/mtd/nand/raw/marvell_nand.c
-+++ b/drivers/mtd/nand/raw/marvell_nand.c
-@@ -348,7 +348,7 @@ struct marvell_nand_chip {
- 	int addr_cyc;
- 	int selected_die;
- 	unsigned int nsels;
--	struct marvell_nand_chip_sel sels[];
-+	struct marvell_nand_chip_sel sels[] __counted_by(nsels);
+diff --git a/drivers/mtd/nand/raw/renesas-nand-controller.c b/drivers/mtd/nand/raw/renesas-nand-controller.c
+index 589021ea9eb2..c9a01feff8df 100644
+--- a/drivers/mtd/nand/raw/renesas-nand-controller.c
++++ b/drivers/mtd/nand/raw/renesas-nand-controller.c
+@@ -210,7 +210,7 @@ struct rnand_chip {
+ 	u32 tim_gen_seq1;
+ 	u32 tim_gen_seq2;
+ 	u32 tim_gen_seq3;
+-	struct rnand_chip_sel sels[];
++	struct rnand_chip_sel sels[] __counted_by(nsels);
  };
  
- static inline struct marvell_nand_chip *to_marvell_nand(struct nand_chip *chip)
+ struct rnandc {
 -- 
 2.34.1
 
