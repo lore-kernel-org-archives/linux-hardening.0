@@ -2,98 +2,88 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 834A8EEEC03
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 19:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7053CEEEC00
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 19:15:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236643AbjIOTOl (ORCPT
+        id S236509AbjIOTPN (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Sep 2023 15:14:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56122 "EHLO
+        Fri, 15 Sep 2023 15:15:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236447AbjIOTOM (ORCPT
+        with ESMTP id S237133AbjIOTPE (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Sep 2023 15:14:12 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C03B798
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 12:14:07 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-68fe2470d81so2260235b3a.1
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 12:14:07 -0700 (PDT)
+        Fri, 15 Sep 2023 15:15:04 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 573E12721
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 12:14:52 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-1c336f5b1ffso22325365ad.2
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 12:14:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1694805247; x=1695410047; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1694805292; x=1695410092; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lby7bcU4IiDJPbswGbt51Rx3r6E0Va+DV7kPCr0AFVc=;
-        b=NCO2Fwcj5RefxgPM6ykLYnU28dL9YATr1OObZGZK37U4RvtavfFdWlVDY/IyFUvrRy
-         ahUqN7nqWvBU5fEXYt+Ir1mFrB405GwDk6wGLgPPKwrsXDTmwvVHja/i0t5rV0OXBh7u
-         uY0MgyjKXVwBgZX0WZRQlWVPs/zKKYISmBOBw=
+        bh=Ulb4D/RfTw95NwPXZDQfJ0u+pE9nYsbQ05jt6iMwqE4=;
+        b=nnJtlrrDiyLsUxqQcwXwtRhveq6PvNH2tZ+N3khizB4MYoCeT0zAjDdFRIk+hQKUAX
+         IdnSxYtqQc25BLxyJrkt+2ieZVReQGSfhLKwuoSKmKIIAMxVu/E7zx1JL+QeWOxNgDwv
+         iHp58KuVYRoW4bCLj4pPEnIMUzSweKV5UzGac=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694805247; x=1695410047;
+        d=1e100.net; s=20230601; t=1694805292; x=1695410092;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lby7bcU4IiDJPbswGbt51Rx3r6E0Va+DV7kPCr0AFVc=;
-        b=mbLIYYj68n1XMN1uwqFUUGYWAx3NigUHKmp/SPIB611b9KvgnK/jJn/y8bcYJCHCvJ
-         xfPGCJK/xm/VnsXBFvAvJ6FRxgwlw/PGMTM7Mi96ogRh1sAVpD6Eqyo5WWUMJIXt3CYS
-         SlmbMapO26q+q9DRSx//wjsD4KvjMcyU6o9y9fNJ4F3lEfjyF4fGNYpAJh3DoYDrMvVT
-         QGu+nWc/qlSbIdZxjvhd52hy/hmp9GxvZbqXZKmrXhKzLFh8vIs2/woF9lfEfWkjdI8i
-         FAeO7pxzK/wYyOS7kVh77L8kKeWF490sVplWhxRstDksXYLhzCkF+tQNBvhMBj6JJmmP
-         dv7g==
-X-Gm-Message-State: AOJu0Yyt1Bmi8Z7jZAkSy6xgDgrNQR638WvN/mqdAUTIhuWnvjDiDcVX
-        z4OIL1NEqDX2kH2dfaylFWQL0g==
-X-Google-Smtp-Source: AGHT+IHzne5BPrKqqMK9vSWnM8qiv/HC0MwPc6ICuMal3CSjeyFfEn+e32ycO+mQzJEbXbkLVs4WLQ==
-X-Received: by 2002:a05:6a20:f384:b0:148:d5d9:aaa9 with SMTP id qr4-20020a056a20f38400b00148d5d9aaa9mr2596138pzb.33.1694805247318;
-        Fri, 15 Sep 2023 12:14:07 -0700 (PDT)
+        bh=Ulb4D/RfTw95NwPXZDQfJ0u+pE9nYsbQ05jt6iMwqE4=;
+        b=tMQE/dXOKpJnSxSLmzf2bjWCyJpZ2smhNgMPJj5KZsimx5NLA0oUpejeE8RHwVMOFC
+         P+Pi1LIiQEodffXif9I+WlHbidwTGJ5DyWQhyf1MQxvCi8KywSkMUD13K8AOYkZzcDrs
+         lPy5/uAz5N5C/MNw9jNz6iUyR7LJm+E2EVbGdwOHR/nPzokDBeWZgkArn6sr3SWD6QmW
+         tyqbkf4ZjFE4Vr3hHwOJDKXbt/glCOys1eiYjSpblKcr8NSuj7LYQnkcTQkZoHjx1DDt
+         rWYX+mJUlXlialSMaJ3XOmnTy1u2v1wftQWvcabeX8sCmca/zG0Pluq4GRMuHg0vE0J1
+         3nIw==
+X-Gm-Message-State: AOJu0YxOePPuOCUVv0uzLPb/5VmPou+5DrQLbA6cEqogRNBdX/oE1HY3
+        YPu9MLjz/Qp6sdcmG0FtVdFBTQ==
+X-Google-Smtp-Source: AGHT+IH4N3+Xu1Uefg79mNbOwJYMqeiP7kEfkNp2+6B8KJWA9QuKAybdahEdCuad1CgiTtfKTAJcsQ==
+X-Received: by 2002:a17:902:cec2:b0:1bc:7001:6e5e with SMTP id d2-20020a170902cec200b001bc70016e5emr2944191plg.32.1694805291925;
+        Fri, 15 Sep 2023 12:14:51 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id s187-20020a6377c4000000b00577f55e4a4esm3121300pgc.20.2023.09.15.12.14.06
+        by smtp.gmail.com with ESMTPSA id c9-20020a170903234900b001a5260a6e6csm3824381plh.206.2023.09.15.12.14.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Sep 2023 12:14:06 -0700 (PDT)
-Date:   Fri, 15 Sep 2023 12:14:06 -0700
+        Fri, 15 Sep 2023 12:14:51 -0700 (PDT)
+Date:   Fri, 15 Sep 2023 12:14:50 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Alexey Dobriyan <adobriyan@gmail.com>
-Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-hardening@vger.kernel.org,
-        David.Laight@aculab.com
-Subject: Re: [PATCH v3 1/2] uapi: fix __DECLARE_FLEX_ARRAY for C++
-Message-ID: <202309151208.C99747375@keescook>
-References: <930c3ee5-1282-40f4-93e0-8ff894aabf3a@p183>
- <a0c3a352-89c6-4764-b377-f55a68a1b2cb@p183>
- <202309080848.60319AF@keescook>
- <f1819874-2b91-4983-9ebe-6cd83d5d3bc3@p183>
- <202309080910.44BB7CEF@keescook>
- <e364b36eefa049d8863c1c1001018636@AcuMS.aculab.com>
- <97242381-f1ec-4a4a-9472-1a464f575657@p183>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        sound-open-firmware@alsa-project.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] ASoC: SOF: ipc4-topology: Use size_add() in call
+ to struct_size()
+Message-ID: <202309151214.0A0D6AA1F5@keescook>
+References: <ZQSr15AYJpDpipg6@work>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <97242381-f1ec-4a4a-9472-1a464f575657@p183>
+In-Reply-To: <ZQSr15AYJpDpipg6@work>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Sep 12, 2023 at 07:22:24PM +0300, Alexey Dobriyan wrote:
-> __DECLARE_FLEX_ARRAY(T, member) macro expands to
+On Fri, Sep 15, 2023 at 01:09:11PM -0600, Gustavo A. R. Silva wrote:
+> If, for any reason, the open-coded arithmetic causes a wraparound,
+> the protection that `struct_size()` adds against potential integer
+> overflows is defeated. Fix this by hardening call to `struct_size()`
+> with `size_add()`.
 > 
-> 	struct {
-> 		struct {} __empty_member;
-> 		T member[];
-> 	};
-> 
-> which is subtly wrong in C++ because sizeof(struct{}) is 1 not 0,
-> changing UAPI structures layouts.
+> Fixes: f9efae954905 ("ASoC: SOF: ipc4-topology: Add support for base config extension")
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Looking at this again just now, what about using a 0-length array
-instead of an anonymous struct?
-
-https://godbolt.org/z/rGaxPWjef
-
-Then we don't need an #ifdef at all...
-
- 	struct {
- 		int __empty_member[0];
- 		T member[];
- 	};
-
--Kees
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -- 
 Kees Cook
