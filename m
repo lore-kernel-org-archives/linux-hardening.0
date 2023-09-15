@@ -2,99 +2,134 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF1ECD37AE
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 21:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6990C46CA1
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 21:19:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237514AbjIOVOL (ORCPT
+        id S237480AbjIOVTE (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Sep 2023 17:14:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37894 "EHLO
+        Fri, 15 Sep 2023 17:19:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238078AbjIOVNg (ORCPT
+        with ESMTP id S237514AbjIOVSs (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Sep 2023 17:13:36 -0400
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D762CCF
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 14:13:05 -0700 (PDT)
-Received: by mail-pg1-x534.google.com with SMTP id 41be03b00d2f7-573ccec985dso2048537a12.2
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 14:13:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1694812385; x=1695417185; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=AZHk7vThpLpskZtqajJEmCcHKvsPyXWDUd5X6GjbEhM=;
-        b=oc7I+p+6FvfuU9el2G07pmZZeSF2QT32N24IMQTgseIYtZ+zm+hxwT+p5D7B239YdE
-         JgNQ6SKWIt1wCWtz2CjTxBLR7cOFgHfhDt97dVKoIwWoohYv6zLWXU0Jb1UZV8uCrnMb
-         qMRhQEU3J+aoYsqOLIesAlKpcVBPW9rqGgMRo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694812385; x=1695417185;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AZHk7vThpLpskZtqajJEmCcHKvsPyXWDUd5X6GjbEhM=;
-        b=WWbOg/5o9OZgsFaT1Ov8ZUbAP4CWu5ux8key6Q0duVo9KyBEdw9T3+xMyBqRoRc85F
-         +RZGm8vJKs0RAQCMxBd2kwImvIgAE4cvgcNyWmlz7Aqwo1FI2U46DCB8O4NGOptDE2hR
-         T/zV1jrkoGrlJqPFfPJXfUHaRadHmVx5tXND4+O4S8trMGrsJD9iXAihhD8MX2MQ7foZ
-         PJ9nDwQYu1SaJBDYI3KiE6CGBbkzkwsMJsabA4PMxZnYU7JL9QTBp8PuHJqxVAYsoNcL
-         T8cRjGmg7gzNcWkZwuKKCB19faaXN3JImVNIgtY96JRx5XTrarXwODrC4wWTyONCPNCF
-         iVgw==
-X-Gm-Message-State: AOJu0YxrEoVbVxTSpoyudcdvKkXTQD7SiYVi0zGyPXnOcrkdoNiyPYHr
-        UXvCOFUs2STMCK3w672phHYBqw==
-X-Google-Smtp-Source: AGHT+IHm6HySe6IHe1hP6qL3CE05/JQnD5U2WP+Yncfwbd9pJNQNoXCcc43i0dypm9WA1Axo89FeCA==
-X-Received: by 2002:a17:90b:1952:b0:268:14a0:f8a with SMTP id nk18-20020a17090b195200b0026814a00f8amr2739464pjb.39.1694812384792;
-        Fri, 15 Sep 2023 14:13:04 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id ie18-20020a17090b401200b0026971450601sm3428843pjb.7.2023.09.15.14.13.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Sep 2023 14:13:04 -0700 (PDT)
-Date:   Fri, 15 Sep 2023 14:13:03 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Matteo Rizzo <matteorizzo@google.com>
-Cc:     cl@linux.com, penberg@kernel.org, rientjes@google.com,
-        iamjoonsoo.kim@lge.com, akpm@linux-foundation.org, vbabka@suse.cz,
-        roman.gushchin@linux.dev, 42.hyeyoo@gmail.com,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-mm@kvack.org, linux-hardening@vger.kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        corbet@lwn.net, luto@kernel.org, peterz@infradead.org,
-        jannh@google.com, evn@google.com, poprdi@google.com,
-        jordyzomer@google.com, ardb@google.com
-Subject: Re: [RFC PATCH 10/14] x86: Create virtual memory region for SLUB
-Message-ID: <202309151410.E65B8300F@keescook>
-References: <20230915105933.495735-1-matteorizzo@google.com>
- <20230915105933.495735-11-matteorizzo@google.com>
+        Fri, 15 Sep 2023 17:18:48 -0400
+Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6975AB8
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 14:18:43 -0700 (PDT)
+Received: from eig-obgw-6004a.ext.cloudfilter.net ([10.0.30.197])
+        by cmsmtp with ESMTP
+        id hFjnqMNlVEoVshGD2qI9wH; Fri, 15 Sep 2023 21:18:40 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with ESMTPS
+        id hGD2qiBpaaxkBhGD2qmSCU; Fri, 15 Sep 2023 21:18:40 +0000
+X-Authority-Analysis: v=2.4 cv=BumOfKb5 c=1 sm=1 tr=0 ts=6504ca30
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=zNV7Rl7Rt7sA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
+ a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=JfrnYn6hAAAA:8 a=cm27Pg_UAAAA:8
+ a=HvF037n1xESchLcPDVoA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
+ a=TjNXssC_j7lpFel5tvFf:22 a=1CNFftbPRP8L7MoqJWF3:22 a=xmb-EsYY8bH0VWELuYED:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=CXlqlVJ2RnzYBwdo5oCwVhnF8JLWfHkjHPjJ0VvcV1w=; b=aLBYatBt5iYb4xj6Pn/c9wMvEZ
+        /HxBtzx6jwiRBqbGYYsX564tIlBz3kFBagXbWnwtSt0IMy0XyKmg6JCK7yy5JFg95QXK8lpYxN9kE
+        kKt7WNA7o017D0OxRYiHftQI4wuvKmZwiM1xAAu5RyA0Wn4S+Ylfe+PKdV8c4HCU8QOT9FfA03z5z
+        JloX3i4mtdWE9Uo6cS6ltEWPptP2YxEIn3eaizObNk8UhsXJGAVbXUfOF6xae85EQSf6tmByY8the
+        TO9ac7JDzVtioDfII4XGBo1vFx7oq+Xf3M0ztckuLxEsBEk0XijlzQO6D08Am8FXQeoG3MKboqV5t
+        Yg7IrYbg==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:55304 helo=[192.168.15.8])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.96)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1qhGD0-0036gT-12;
+        Fri, 15 Sep 2023 16:18:38 -0500
+Message-ID: <8d28f285-1a92-2635-f0f3-8a46b8f0c8d0@embeddedor.com>
+Date:   Fri, 15 Sep 2023 15:19:34 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230915105933.495735-11-matteorizzo@google.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH] wifi: ath10k: Annotate struct ath10k_ce_ring with
+ __counted_by
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>, Kalle Valo <kvalo@kernel.org>
+Cc:     Jeff Johnson <quic_jjohnson@quicinc.com>,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+References: <20230915200636.never.762-kees@kernel.org>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20230915200636.never.762-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.21.192
+X-Source-L: No
+X-Exim-ID: 1qhGD0-0036gT-12
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:55304
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org:  HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfDnTD6GLAyuqyYeRDGCkSb8c9Q/ntN8APBpJUhVmeAD88XQVmCH+oPW0+Xd92CrVb4q/sb0EFgCmADWDs8g30+bZ1m9lqTDzjv4hQFIPiWJt4GNHpC8T
+ 57tqlmyWvlht31njrjhFJ73A5ysF8jHohGxkJV+jOcM60Eh6pE0N5OmHBbF21ucfszI/vnzsmIFhKdaliR+Ty1z9W5kj53STuaF7N5sElsQpFXK6cBVpXaSu
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Sep 15, 2023 at 10:59:29AM +0000, Matteo Rizzo wrote:
-> From: Jann Horn <jannh@google.com>
+
+
+On 9/15/23 14:06, Kees Cook wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
 > 
-> SLAB_VIRTUAL reserves 512 GiB of virtual memory and uses them for both
-> struct slab and the actual slab memory. The pointers returned by
-> kmem_cache_alloc will point to this range of memory.
-
-I think the 512 GiB limit may be worth mentioning in the Kconfig help
-text.
-
-And in the "640K is enough for everything" devil's advocacy, why is 512
-GiB enough here? Is there any greater risk of a pathological allocation
-pattern breaking a system any more (or less) than is currently possible?
+> As found with Coccinelle[1], add __counted_by for struct ath10k_ce_ring.
 > 
-> Signed-off-by: Jann Horn <jannh@google.com>
+> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+> 
+> Cc: Kalle Valo <kvalo@kernel.org>
+> Cc: Jeff Johnson <quic_jjohnson@quicinc.com>
+> Cc: ath10k@lists.infradead.org
+> Cc: linux-wireless@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-But, yes, I'm still a fan, and I think it interacts well here with the
-rest of the KASLR initialization:
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
-Have you tried to make this work on arm64? I imagine it should be
-roughly as easy?
-
+Thanks
 -- 
-Kees Cook
+Gustavo
+
+> ---
+>   drivers/net/wireless/ath/ath10k/ce.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/wireless/ath/ath10k/ce.h b/drivers/net/wireless/ath/ath10k/ce.h
+> index 666ce384a1d8..27367bd64e95 100644
+> --- a/drivers/net/wireless/ath/ath10k/ce.h
+> +++ b/drivers/net/wireless/ath/ath10k/ce.h
+> @@ -110,7 +110,7 @@ struct ath10k_ce_ring {
+>   	struct ce_desc_64 *shadow_base;
+>   
+>   	/* keep last */
+> -	void *per_transfer_context[];
+> +	void *per_transfer_context[] __counted_by(nentries);
+>   };
+>   
+>   struct ath10k_ce_pipe {
