@@ -2,105 +2,98 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D82DEC46CA1
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 21:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF76CD37AA
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 21:58:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229776AbjIOVuG (ORCPT
+        id S235329AbjIOV5f (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Sep 2023 17:50:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57250 "EHLO
+        Fri, 15 Sep 2023 17:57:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235490AbjIOVt7 (ORCPT
+        with ESMTP id S236460AbjIOV51 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Sep 2023 17:49:59 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A3B4C6;
-        Fri, 15 Sep 2023 14:49:54 -0700 (PDT)
+        Fri, 15 Sep 2023 17:57:27 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69820118;
+        Fri, 15 Sep 2023 14:57:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694814594; x=1726350594;
+  t=1694815042; x=1726351042;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=Q2f++CQ4YvVjqHtWEWqnDjoY5zgYMBznv/GocztfsC4=;
-  b=GCISf/hKlXOOhb0nFREYhUo1qSG8cygUXHftBeuKT230LF4Bc/sTvVKD
-   P7XmCXCbiLOQeqAoDbfBRf0cG9YKr08Di1GhqaEMAQma+ep2K3KONHgaS
-   8bTnY2R60RTMN+wjmOR1z+ip1CXRaxtBpjtwNeM6GVztedRAg/mg9Swjt
-   xTM2JOBGWxahhKbwMCsBmzwAR3Shctdn5mGUVfLc2v1BIX8uMuGKfGRym
-   ZOoAKXYyB8Rgp177nOLr0LXw1lTRVhxLqk9iJ84KmaRiDL6dbNywAMrhz
-   cARwbFGIfCphyKZnJnTB70FE96Pjde/cOrxxF7AVO+mYMaZBbioXqgTFo
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10834"; a="358766847"
+  bh=6hO70gqgOmSzHdBwhYaT2sixpZXe4bhY694b9GTBrYY=;
+  b=mX2jt0XpfjEYDIl+1oxhJr5aEXH/H5i1k6Cfrsl2dn1OmAYEqm7Lmun6
+   2woBwG0ZbaBlJso8lJe9+miffp154BANZzQlZrysqe8kaEDzUj5m/YsRH
+   haiA1eo+9QuIcNGXj1K7CZDuGkKWPHPmMKrmO1L6mHORQlcyjMojn13wT
+   PbJDXItvrrhQZBp5H6ZGs3oaoRptriCoTHk/b8YbhonMWCnkB2FsbgsrN
+   ZbYbR0Frvpi0IOwXsYBXzuvtQM9envBf5tFrgcFHP5s6iDAIqSzvA52Bj
+   Pa48Kx9pz7UNF0zr8nGnPE5D01G+oyAbTuQ9jU18A04CDh2NgLHTgQLAU
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10834"; a="376680817"
 X-IronPort-AV: E=Sophos;i="6.02,150,1688454000"; 
-   d="scan'208";a="358766847"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2023 14:49:53 -0700
+   d="scan'208";a="376680817"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2023 14:57:22 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10834"; a="1075917495"
+X-IronPort-AV: E=McAfee;i="6600,9927,10834"; a="810663939"
 X-IronPort-AV: E=Sophos;i="6.02,150,1688454000"; 
-   d="scan'208";a="1075917495"
+   d="scan'208";a="810663939"
 Received: from spswartz-mobl.amr.corp.intel.com (HELO [10.209.21.97]) ([10.209.21.97])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2023 14:49:52 -0700
-Message-ID: <64e62982-6d0e-f742-be5c-15390d8e7c2b@intel.com>
-Date:   Fri, 15 Sep 2023 14:49:52 -0700
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2023 14:57:20 -0700
+Message-ID: <386c175e-bd10-2d5d-6051-4065f6f9b84a@intel.com>
+Date:   Fri, 15 Sep 2023 14:57:20 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.15.1
-Subject: Re: [RFC PATCH 10/14] x86: Create virtual memory region for SLUB
+Subject: Re: [RFC PATCH 11/14] mm/slub: allocate slabs from virtual memory
 Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>,
-        Matteo Rizzo <matteorizzo@google.com>
-Cc:     cl@linux.com, penberg@kernel.org, rientjes@google.com,
-        iamjoonsoo.kim@lge.com, akpm@linux-foundation.org, vbabka@suse.cz,
+To:     Matteo Rizzo <matteorizzo@google.com>, cl@linux.com,
+        penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com,
+        akpm@linux-foundation.org, vbabka@suse.cz,
         roman.gushchin@linux.dev, 42.hyeyoo@gmail.com,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-mm@kvack.org, linux-hardening@vger.kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        corbet@lwn.net, luto@kernel.org, peterz@infradead.org,
-        jannh@google.com, evn@google.com, poprdi@google.com,
-        jordyzomer@google.com, ardb@google.com
+        keescook@chromium.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-hardening@vger.kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        x86@kernel.org, hpa@zytor.com, corbet@lwn.net, luto@kernel.org,
+        peterz@infradead.org
+Cc:     jannh@google.com, evn@google.com, poprdi@google.com,
+        jordyzomer@google.com
 References: <20230915105933.495735-1-matteorizzo@google.com>
- <20230915105933.495735-11-matteorizzo@google.com>
- <202309151410.E65B8300F@keescook>
+ <20230915105933.495735-12-matteorizzo@google.com>
 From:   Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <202309151410.E65B8300F@keescook>
+In-Reply-To: <20230915105933.495735-12-matteorizzo@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 9/15/23 14:13, Kees Cook wrote:
-> On Fri, Sep 15, 2023 at 10:59:29AM +0000, Matteo Rizzo wrote:
->> From: Jann Horn <jannh@google.com>
->>
->> SLAB_VIRTUAL reserves 512 GiB of virtual memory and uses them for both
->> struct slab and the actual slab memory. The pointers returned by
->> kmem_cache_alloc will point to this range of memory.
-> 
-> I think the 512 GiB limit may be worth mentioning in the Kconfig help
-> text.
+On 9/15/23 03:59, Matteo Rizzo wrote:
+> +	spin_lock_irqsave(&slub_kworker_lock, irq_flags);
+> +	list_splice_init(&slub_tlbflush_queue, &local_queue);
+> +	list_for_each_entry(slab, &local_queue, flush_list_elem) {
+> +		unsigned long start = (unsigned long)slab_to_virt(slab);
+> +		unsigned long end = start + PAGE_SIZE *
+> +			(1UL << oo_order(slab->oo));
+> +
+> +		if (start < addr_start)
+> +			addr_start = start;
+> +		if (end > addr_end)
+> +			addr_end = end;
+> +	}
+> +	spin_unlock_irqrestore(&slub_kworker_lock, irq_flags);
+> +
+> +	if (addr_start < addr_end)
+> +		flush_tlb_kernel_range(addr_start, addr_end);
 
-Yes, please.
+I assume that the TLB flushes in the queue are going to be pretty sparse
+on average.
 
-> And in the "640K is enough for everything" devil's advocacy, why is 512
-> GiB enough here? Is there any greater risk of a pathological allocation
-> pattern breaking a system any more (or less) than is currently possible?
+At least on x86, flush_tlb_kernel_range() falls back pretty quickly from
+individual address invalidation to just doing a full flush.  It might
+not even be worth tracking the address ranges, and just do a full flush
+every time.
 
-I have the feeling folks just grabbed the first big-ish chunk they saw
-free in the memory map and stole that one.  Not a horrible approach,
-mind you, but I have the feeling it didn't go through the most rigorous
-sizing procedure. :)
-
-My laptop memory is ~6% consumed by slab, 90% of which is reclaimable.
-If a 64TB system had the same ratio, it would bump into this 512GB
-limit.  But it _should_ just reclaim thing earlier rather than falling over.
-
-That said, we still have gobs of actual vmalloc() space.  It's ~30TiB in
-size and I'm not aware of anyone consuming anywhere near that much.  If
-the 512GB fills up somehow, there are other places to steal the space.
-
-One minor concern is that the virtual area is the same size on 4 and
-5-level paging systems.  It might be a good idea to pick one of the
-holes that actually gets bigger on 5-level systems.
-
+I'd be really curious to see how often actual ranged flushes are
+triggered from this code.  I expect it would be very near zero.
