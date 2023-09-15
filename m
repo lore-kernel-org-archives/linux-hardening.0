@@ -2,100 +2,148 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60753EED61A
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 17:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABCCCEED61E
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 17:36:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234857AbjIOROL (ORCPT
+        id S231899AbjIORgJ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Sep 2023 13:14:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53396 "EHLO
+        Fri, 15 Sep 2023 13:36:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235407AbjIORNk (ORCPT
+        with ESMTP id S236350AbjIORf6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Sep 2023 13:13:40 -0400
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF73410C7
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 10:13:34 -0700 (PDT)
-Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-68fc081cd46so2283010b3a.0
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 10:13:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1694798014; x=1695402814; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fRHJ/RTdkjV1T7VQMz3Gh8DiS1ERKAhw13PCyOr4quI=;
-        b=d/BpGzO4zmNEoey5wzbS5IJHtoYqCwjle7N4blNvGqGh84uci5bxH0GnllApNKPD4n
-         0NjFVClcVCLCNgigXho/sFdE3zOGCm7Bc0SuAL14ImPszCtaSMX6vZVLIw9Pk4e/yood
-         pzSXn/fgHkaEc1ccSzgxO0c/ZXDIEvyVB7OeA=
+        Fri, 15 Sep 2023 13:35:58 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7783E30D5
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 10:33:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1694799215;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=yPAyXhOaA41zZ3tS5JgFFk5Y6a/39udK996Avz6gN9M=;
+        b=CcwfRdn4h/Y3+90u1Ujl07bBQ85v/mj/tMl5M8b3b86xFbG93AU2x+KaD7UAB3TG4PNOPw
+        qqtRGDYHnJBZXpJEh/eUEwEk6qQRxrSEeIcssr+eqfMQgzuk7Yqff3wKom6p023qttbugR
+        76H0RwLEQJnkw6AZxjzkP/xtl5EECc4=
+Received: from mail-vs1-f72.google.com (mail-vs1-f72.google.com
+ [209.85.217.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-541-NAcTFuO_PtyXdjVwYa-rOg-1; Fri, 15 Sep 2023 13:33:34 -0400
+X-MC-Unique: NAcTFuO_PtyXdjVwYa-rOg-1
+Received: by mail-vs1-f72.google.com with SMTP id ada2fe7eead31-4510239e1caso919276137.1
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 10:33:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694798014; x=1695402814;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fRHJ/RTdkjV1T7VQMz3Gh8DiS1ERKAhw13PCyOr4quI=;
-        b=xOgc2U9OI4G7dkhQZf5pgxLC1Z/wZyzNZQafxqS5xrIxCoUPkTQTuROG444tS6G1Xx
-         d2kehzvUz/fWNad1kUFeTLPOziz6vzCzGkzeGLNHRKWUa1rJ8uyScX7ES1LLBNlmzH5O
-         hJ697NEyjLMCAgpsqBC8QEWO/jYYRhUfU7XsnGg+lfBydLWKaG+ZalRmFtNNP7oBQwPK
-         Os94jL2ee+qvVFpzgHA7DrMq4LbK0L5ndcP/I7uy/cke1FXiP27bTdeZpu4kHZHY7VGi
-         6AfnT6XunJrEdV0cBmyzSg+INrTDBnmtnq3ynykvvFAFRucKYfMLJSi+Bp9LfTRb6JPQ
-         T+Kg==
-X-Gm-Message-State: AOJu0YyT3XIf1YocAcg31UtU6NzTDzUHgSyKeRJWJuWJCx0ra30+exf0
-        9MAjycOmNBJRAjyO7lauUpyZ8Q==
-X-Google-Smtp-Source: AGHT+IEJoJES88+Guv1IYodwJB+0lLZf+yalUNfYiexFIPINgKTeK/Z0sDBr642L1qn2LfQeqyMcvQ==
-X-Received: by 2002:a05:6a20:8f0c:b0:159:e0b9:bd02 with SMTP id b12-20020a056a208f0c00b00159e0b9bd02mr3278129pzk.40.1694798014413;
-        Fri, 15 Sep 2023 10:13:34 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id j15-20020a633c0f000000b00565009a97f0sm2965476pga.17.2023.09.15.10.13.33
+        d=1e100.net; s=20230601; t=1694799213; x=1695404013;
+        h=mime-version:user-agent:content-transfer-encoding:organization
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WlpIc4DwS1d7tWoYWtATBVAp1YG/9Jib85DcTdMBUWQ=;
+        b=ooAz51tYl1s5RwUQWyM5zHyAeyQ7xmEDK26SIDitbDjMMTz+ZlEboQOzfWvKZQuYhb
+         35GjO+cfGZ2srBXdpu9rHmaoU4N2n4zij8D/OMFmh0e1EKb4wxL2T0plnRSacCoicory
+         WezDLTO8nM3q0NXEhqSXHvU/mXTgaW6YfEwjdoTD6LRUQHqgVZyapMYaD20MCt+VNCGe
+         fimFW6w3CRfZi2ub3/2JfGrBDvNPlrb+K2NYUxHUo0YvgRgq1df+s+qRt9ydj0UZAqJi
+         GJQGhw64IkyqwTx015Oi23UDq+nu4Nv1zCQEycXjpGe8NR4NbXlm956OKerE0hZVgwnP
+         /SQg==
+X-Gm-Message-State: AOJu0YwQmGGz8DJ2QQUc99NFsN4GprCW6RLeK/KjRBgtQxEFwB+DgNed
+        O3DUCsflz6uQntULSzJhRvkP9Wl3RyzPm0zR3lK1MwCJFAgd8mEpjqHEY9ZVNq7FFLU/IyxbDDb
+        yx1/jGi91OWrhNkrJsS0tEZ4yfyev
+X-Received: by 2002:a05:6102:445:b0:44e:b11a:8b16 with SMTP id e5-20020a056102044500b0044eb11a8b16mr2136898vsq.13.1694799213550;
+        Fri, 15 Sep 2023 10:33:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHxMg9innJnBPyO40JOwexxh/opPl5r7RbWdfIe2XJJW9pyDk9tqNYJKPoYihmT01Z0kPQWww==
+X-Received: by 2002:a05:6102:445:b0:44e:b11a:8b16 with SMTP id e5-20020a056102044500b0044eb11a8b16mr2136872vsq.13.1694799213203;
+        Fri, 15 Sep 2023 10:33:33 -0700 (PDT)
+Received: from ?IPv6:2600:4040:5c6c:a300::feb? ([2600:4040:5c6c:a300::feb])
+        by smtp.gmail.com with ESMTPSA id r19-20020a0ccc13000000b0064f91d410b9sm1409818qvk.128.2023.09.15.10.33.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Sep 2023 10:13:33 -0700 (PDT)
-Date:   Fri, 15 Sep 2023 10:13:32 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Nishanth Menon <nm@ti.com>
-Cc:     Justin Stitt <justinstitt@google.com>,
-        Tero Kristo <kristo@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] firmware: ti_sci: refactor deprecated strncpy
-Message-ID: <202309151012.446CC82E2@keescook>
-References: <20230913-strncpy-drivers-firmware-ti_sci-c-v1-1-740db471110d@google.com>
- <202309142103.6DFFDEB@keescook>
- <20230915124038.vmj3gzthboypzp3v@parsnip>
+        Fri, 15 Sep 2023 10:33:32 -0700 (PDT)
+Message-ID: <00fba033910961bac96dabe9d7e0435342fd021d.camel@redhat.com>
+Subject: Re: [PATCH] drm/nouveau/core: refactor deprecated strncpy
+From:   Lyude Paul <lyude@redhat.com>
+To:     Justin Stitt <justinstitt@google.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Karol Herbst <kherbst@redhat.com>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Date:   Fri, 15 Sep 2023 13:33:32 -0400
+In-Reply-To: <20230914-strncpy-drivers-gpu-drm-nouveau-nvkm-core-firmware-c-v1-1-3aeae46c032f@google.com>
+References: <20230914-strncpy-drivers-gpu-drm-nouveau-nvkm-core-firmware-c-v1-1-3aeae46c032f@google.com>
+Organization: Red Hat Inc.
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230915124038.vmj3gzthboypzp3v@parsnip>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Sep 15, 2023 at 07:40:38AM -0500, Nishanth Menon wrote:
-> On 21:03-20230914, Kees Cook wrote:
-> > On Wed, Sep 13, 2023 at 08:23:02PM +0000, Justin Stitt wrote:
-> > > `strncpy` is deprecated for use on NUL-terminated destination strings [1].
-> > > 
-> > > We should prefer more robust and less ambiguous string interfaces.
-> > > 
-> > > A suitable replacement is `strscpy` [2] due to the fact that it guarantees
-> > > NUL-termination on the destination buffer.
-> > > 
-> > > It does not seem like `ver->firmware_description` requires NUL-padding
-> > > (which is a behavior that strncpy provides) but if it does let's opt for
-> > > `strscpy_pad()`.
-> > > 
-> > > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> > > Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> > > Link: https://github.com/KSPP/linux/issues/90
-> > > Cc: linux-hardening@vger.kernel.org
-> > > Signed-off-by: Justin Stitt <justinstitt@google.com>
-> > 
-> > Looks right to me.
-> > 
-> > Reviewed-by: Kees Cook <keescook@chromium.org>
-> 
-> Does this belong to stable as well? If so, please add appropriate stable
-> process.
+Eek, I didn't realize how many instances of this we had. Thanks for doing t=
+his
+:)
 
-No need. This is a refactoring only. :)
+Reviewed-by: Lyude Paul <lyude@redhat.com>
 
--- 
-Kees Cook
+On Thu, 2023-09-14 at 21:40 +0000, Justin Stitt wrote:
+> `strncpy` is deprecated for use on NUL-terminated destination strings [1]=
+.
+>=20
+> We should prefer more robust and less ambiguous string interfaces.
+>=20
+> A suitable replacement is `strscpy` [2] due to the fact that it guarantee=
+s
+> NUL-termination on the destination buffer without unnecessarily NUL-paddi=
+ng.
+>=20
+> There is likely no bug in the current implementation due to the safeguard=
+:
+> > =09cname[sizeof(cname) - 1] =3D '\0';
+> ... however we can provide simpler and easier to understand code using
+> the newer (and recommended) `strscpy` api.
+>=20
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strn=
+cpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.h=
+tml [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+>  drivers/gpu/drm/nouveau/nvkm/core/firmware.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/nouveau/nvkm/core/firmware.c b/drivers/gpu/d=
+rm/nouveau/nvkm/core/firmware.c
+> index 91fb494d4009..374212da9e95 100644
+> --- a/drivers/gpu/drm/nouveau/nvkm/core/firmware.c
+> +++ b/drivers/gpu/drm/nouveau/nvkm/core/firmware.c
+> @@ -79,8 +79,7 @@ nvkm_firmware_get(const struct nvkm_subdev *subdev, con=
+st char *fwname, int ver,
+>  =09int i;
+> =20
+>  =09/* Convert device name to lowercase */
+> -=09strncpy(cname, device->chip->name, sizeof(cname));
+> -=09cname[sizeof(cname) - 1] =3D '\0';
+> +=09strscpy(cname, device->chip->name, sizeof(cname));
+>  =09i =3D strlen(cname);
+>  =09while (i) {
+>  =09=09--i;
+>=20
+> ---
+> base-commit: 3669558bdf354cd352be955ef2764cde6a9bf5ec
+> change-id: 20230914-strncpy-drivers-gpu-drm-nouveau-nvkm-core-firmware-c-=
+791223838b72
+>=20
+> Best regards,
+> --
+> Justin Stitt <justinstitt@google.com>
+>=20
+
+--=20
+Cheers,
+ Lyude Paul (she/her)
+ Software Engineer at Red Hat
+
