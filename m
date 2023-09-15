@@ -2,86 +2,105 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B619EE0205
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 02:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B61F6EDE989
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 03:04:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231646AbjIOC4J (ORCPT
+        id S231681AbjIODEa (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 14 Sep 2023 22:56:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36378 "EHLO
+        Thu, 14 Sep 2023 23:04:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229548AbjIOC4J (ORCPT
+        with ESMTP id S231680AbjIODEa (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 14 Sep 2023 22:56:09 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32FC426B7
-        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 19:56:05 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1c34c9cc9b9so13512535ad.3
-        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 19:56:05 -0700 (PDT)
+        Thu, 14 Sep 2023 23:04:30 -0400
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 325B4270A
+        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 20:04:26 -0700 (PDT)
+Received: by mail-pf1-x434.google.com with SMTP id d2e1a72fcca58-69042d398b1so372075b3a.0
+        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 20:04:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1694746564; x=1695351364; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ML86qDe0AhWIXXN0KvUZJFVRWAhXeILzO6P0niCYCTo=;
-        b=U1TzDyvFf0+opYyl3sbOS3MxL6aZ0NB3t73YWQAH1xdZer+SO1IfpMX0p5p1ZhCUbA
-         I2YV4/4oVJQIQ9LXJbGFKE+KnkZZ9OLothOb1DGLyvCRPd8F+bwNdbrQ6kBs+h0EHnao
-         zzPhz1V/ohGCpEaC8klxfjgs2tjfOmEoA7MNU=
+        d=chromium.org; s=google; t=1694747065; x=1695351865; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=oGCU+XO9lmHPleHOolcpXGUsBUX+De3p5Ob7hsvn5gU=;
+        b=bOdxjYVmZFExLQqE6s04p5bhi6dKZXSETT/LUwxFif98o31Wn69f9ST0qoGPyI2U9O
+         jRB+Jg3PGWFMIt1LKCK/8opG6eI9qaO6BOb0dikQ3e2q0C6o9CcZKo8YvdVSn8v0AbgN
+         Toco2CmdGK7zbAmuk0HCdars+SEYJ1Kf6RvJE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694746564; x=1695351364;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ML86qDe0AhWIXXN0KvUZJFVRWAhXeILzO6P0niCYCTo=;
-        b=P4NWsJctu524HNmsBul3jngbLhsJLz06BEPHXjF0QBnJTEe+Lsi0Y1isXIC//heCVX
-         OglVJFfCMApdQqQYhU++1tTzXieYtAymD9viWqVcabFwPd5LMPPqfANOcEf2cfzVLnQI
-         UV5P18mBJmT06cJb5ZDFQ/caerf6No3Sc0eO34x3WuFQ/OJR3Q0P+3OllMNw/vY4l9y9
-         aj2L1Daoox6YwhrCW6i3QHDKOJlqKPPhs3mXx/u8xNY9dL68aYQSIO1tVijKly90bI3L
-         Wo8gCX9eIapww1wifjw6i76DOzKg9MKqPswmlGP8V7EDUvLl0m1TMDWyjSAhEmoqRQda
-         z0jw==
-X-Gm-Message-State: AOJu0Yyhjr1wGst+nZrWLSJq6vItPNF3wZ4hWdnMDenjFGiA/kZBd8w0
-        mm5nCSVt+aCFiuqM9ayx0V40aA==
-X-Google-Smtp-Source: AGHT+IFXm1klVklCUGHFSnCwQsYSebuPaqWAY+e0BAhgxh9FHeHRtyNY0vSeXflj4fvQ+FAzcR560A==
-X-Received: by 2002:a17:902:d2ce:b0:1bc:224a:45c1 with SMTP id n14-20020a170902d2ce00b001bc224a45c1mr460931plc.55.1694746564579;
-        Thu, 14 Sep 2023 19:56:04 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1694747065; x=1695351865;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oGCU+XO9lmHPleHOolcpXGUsBUX+De3p5Ob7hsvn5gU=;
+        b=Nfj+AnQQkXhxMBu1kSb8jjjWyz9uWYfk6YljsNUdo5o6A5DjXZY5Ma7EfRZi0/MLhW
+         r33TqphSL06/VXA2e0uWTHPUCoAVy04C9vdNIUSoLDDPaZwKiyQxanjs6fcV5fXcGm/I
+         67PVP1EqowpNAFoeFHO2nLhUevsRJUKdL1m3KvYLt3qdGLYTBRQTPRPpQnsp91F0aQWK
+         7XpjmqoHLrYUrc4XdOEkfDTP3iQKyyJEPYjPRfk3bf4SUHsKny1tj1nZ80zSkCWG5laD
+         9ujkZhzG/Y3WjAkjrlMg8dJO4OmkPlPlFF6TFjj4+kkR5puTDCXgcQFRglV3JjFoWdQH
+         9BYQ==
+X-Gm-Message-State: AOJu0YwpAtYnqkz2Um6O24YQnN73dD46jfMAFrFE6Nr9tuCKE9tEyg/P
+        TM+deFAtmuqMvPfB2FECMmoigQ==
+X-Google-Smtp-Source: AGHT+IHpVAX3ysYHUhi4mt+g7HzKFEpt+mObL2VXXl0TVoEcBzg8qVGdqPoLpuTo5z335w514/jdUg==
+X-Received: by 2002:a05:6a21:3e0c:b0:14c:3218:c1bd with SMTP id bk12-20020a056a213e0c00b0014c3218c1bdmr621008pzc.11.1694747065687;
+        Thu, 14 Sep 2023 20:04:25 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id p10-20020a170902eaca00b001b89f6550d1sm124165pld.16.2023.09.14.19.56.03
+        by smtp.gmail.com with ESMTPSA id 9-20020a17090a190900b0026b45fb4443sm4209388pjg.4.2023.09.14.20.04.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Sep 2023 19:56:03 -0700 (PDT)
-Date:   Thu, 14 Sep 2023 19:56:02 -0700
+        Thu, 14 Sep 2023 20:04:24 -0700 (PDT)
+Date:   Thu, 14 Sep 2023 20:04:24 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Azeem Shaikh <azeemshaikh38@gmail.com>
-Cc:     Dan Raymond <draymond@foxvalley.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-serial@vger.kernel.org,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] vt: Fix potential read overflow of kernel memory
-Message-ID: <202309141955.12923F85B8@keescook>
-References: <20230830160410.3820390-1-azeemshaikh38@gmail.com>
- <2023083035-unpadded-amulet-8c7e@gregkh>
- <CADmuW3Wbgb7s+jRm8F0hcjzreWysVdzNvv778yUbGCOxAJHwjQ@mail.gmail.com>
- <202308301421.997C4034B5@keescook>
- <aa488b1d-51b2-7b55-7a8d-552306ca16dd@foxvalley.net>
- <202308301646.8397A6A11@keescook>
- <82b80554-2042-7dcb-83c5-6a6b640c71be@foxvalley.net>
- <CADmuW3UUGc_1m+Bcs7YUnp40S+8vN-W8nUQv2-nmj_oTb360QQ@mail.gmail.com>
+To:     Justin Stitt <justinstitt@google.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] um,ethertap: refactor deprecated strncpy
+Message-ID: <202309142001.9C351F8D2B@keescook>
+References: <20230911-strncpy-arch-um-os-linux-drivers-ethertap_user-c-v1-1-d9e53f52ab32@google.com>
+ <CAMuHMdXJMZ6FebNn01C9EPsZAiJs-n5tp4j2hufAAr=zXOsSOQ@mail.gmail.com>
+ <CAFhGd8r9Ow2xmJ++apef0rn2DHBhKm9BvfLooMTqzyaOhqbEgQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CADmuW3UUGc_1m+Bcs7YUnp40S+8vN-W8nUQv2-nmj_oTb360QQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAFhGd8r9Ow2xmJ++apef0rn2DHBhKm9BvfLooMTqzyaOhqbEgQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Aug 31, 2023 at 10:23:10AM -0400, Azeem Shaikh wrote:
-> Are folks ok with me sending out a v2 for this with a better commit
-> log that explains the issue?
+On Tue, Sep 12, 2023 at 01:12:35PM -0700, Justin Stitt wrote:
+> On Tue, Sep 12, 2023 at 12:36 AM Geert Uytterhoeven
+> <geert@linux-m68k.org> wrote:
+> >
+> > Hi Justin,
+> >
+> > Thanks for your patch!
+> >
+> > On Mon, Sep 11, 2023 at 7:53 PM Justin Stitt <justinstitt@google.com> wrote:
+> > > `strncpy` is deprecated for use on NUL-terminated destination strings [1].
+> > >
+> > > `gate_buf` should always be NUL-terminated and does not require
+> > > NUL-padding. It is used as a string arg inside an argv array given to
+> >
+> > Can you please explain why it does not require NUL-padding?
+> > It looks like this buffer is passed eventually to a user space
+> > application, thus possibly leaking uninitialized stack data.
+> 
+> It looks like it's being passed as a list of command-line arguments in
+> `run_helper()`. Should this be NUL-padded due to its eventual use in
+> user space? If we think yes I can send a v2. Thanks for pointing this
+> out.
 
-Yes, please do. It should clear up the questions from this thread. :)
+No, it's passed as a pointer to a string, and the clone call will
+ultimately make a copy-until-%NUL when building the new process. This
+doesn't need padding.
 
-Thanks!
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -Kees
 
