@@ -2,79 +2,84 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6607CD379F
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 19:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE09CD37A7
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 19:59:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231650AbjIOT6c (ORCPT
+        id S236753AbjIOT7F (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Sep 2023 15:58:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52158 "EHLO
+        Fri, 15 Sep 2023 15:59:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236780AbjIOT6Z (ORCPT
+        with ESMTP id S236723AbjIOT7A (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Sep 2023 15:58:25 -0400
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5EA8211E
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 12:58:19 -0700 (PDT)
-Received: by mail-pf1-x436.google.com with SMTP id d2e1a72fcca58-68fcb4dc8a9so2440788b3a.2
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 12:58:19 -0700 (PDT)
+        Fri, 15 Sep 2023 15:59:00 -0400
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAD982126
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 12:58:52 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id 98e67ed59e1d1-2746889aa89so1810082a91.2
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 12:58:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1694807899; x=1695412699; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1694807932; x=1695412732; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zmHM4psXavgvDfuezLrO35so+CBMe74SVmqgDqqj+X4=;
-        b=XeTzfUDcCXCFkZBfDf1AQF1x3mA8sIj7CHRxo04V9HYErUCdABgWjOXgMTIJq8NWoY
-         7wFuMr9NS1ajAdoiegiAhtKqDxNzhZuOk+Gzbhm6eNS6sVhiQ0NVGQSAMQtOaxDyseNS
-         C0t2IrM0pFi6lb3yQ8JB4dE73FqdW8j7RUNkU=
+        bh=9mvaVHg0XEhOTsWroaSMJTNrbWXg2FfhIFu4j+H929s=;
+        b=Vtv+ys7CSH5x+Fx8NA0tTY3M4pshhDlJLJ6H1d6VhObM1m5b5wih07gMVvQ8Z1V43K
+         5XD3+FYI2r8B+Bx/vJfe/t4YE9WqMPYmFPF1mU8QUdskUo/nN+TfRXWtNkO4A3Gi4AeU
+         JYf1GvJkpArnU3S4DBnW5KUjUrNXjfJ1vawZU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694807899; x=1695412699;
+        d=1e100.net; s=20230601; t=1694807932; x=1695412732;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=zmHM4psXavgvDfuezLrO35so+CBMe74SVmqgDqqj+X4=;
-        b=HYF7Hj7mSJ1+8kJMO6nunwi24oW0eMGIFYdHtQlVlrKOB/gsmEKvXQOv15O0MlOBTm
-         Ol/QQl7stBsMQuh3xmBJgf3qdHWlzmwOaGBftsGdHh9LExbIk182ktuRuxzYu/xgEaM3
-         +h5/GnR8sLrE8J0MyBBh6K0Ql35NUn4c0HyrO72ljEsNUiyOdYx2WnP1PgyX5oezJVDp
-         ssB+rHNe64zlUGqaVDtXvBZD0VPEFxknWtgLVi6fTZvyddC5Yke/81pXWcm6mAq4eWRi
-         /cXbVAYUzkjaSLSqkGZVl7T7R5ftX/Odgf///htCa0qdv2bnNSq1nfQfD/3nFaq0ZW97
-         TY0Q==
-X-Gm-Message-State: AOJu0Yxf16jvMRML+Uh0Ecr1Ruz6JXUK2nkksDwbQsoLetg87VM8Dh42
-        f1dvR0mI8AxqwVXOQUqy3ysdZQ==
-X-Google-Smtp-Source: AGHT+IHxg8lMUhQbD1ACheTV/Mn8ZmyK6E+Zn7O25oxU88CnFr5Q2FqS0QAIFWE5fO7vBsi6A8ggvA==
-X-Received: by 2002:a05:6a21:819e:b0:156:dc22:96a6 with SMTP id pd30-20020a056a21819e00b00156dc2296a6mr2747617pzb.55.1694807899302;
-        Fri, 15 Sep 2023 12:58:19 -0700 (PDT)
+        bh=9mvaVHg0XEhOTsWroaSMJTNrbWXg2FfhIFu4j+H929s=;
+        b=F63HmfUkHtKocrY+kn73GqEFgrKEBcUFqxsQ98EhTYd9EnhalDEGNIm2FqFtpXyKR0
+         HryjpLraVC9QGSqppCQnjldsVVsC1ufAVRw4c53cOMNWK/hYwa5G5APiRRGtCKXpHxaw
+         PsN7ASPbEid4jUpgpDa5rf1VjgL7g74tBqERkLre6UWaKVGCXPIhogC3ozeWOG/Z2vcX
+         OhocoJhFQSQQc4EncPm1OciyPeVLnifjFm/9cT7bp/A8SYCQF40eUk9pHGwjAU+zRrb+
+         NCoOZnvcGUEjyDq7o51hirUW+RluQHoe8jWewoFvh3QBzLf8bitxmMlCigcSlLV6+kGK
+         gtjA==
+X-Gm-Message-State: AOJu0YxbhH6IujHzxhXZMVaEoFyiezknGgPi3dWzT1Og+t85HenCmyt0
+        IVcJZiGKkGSzgeYrP9ddENPXNA==
+X-Google-Smtp-Source: AGHT+IF2fjZ/d33YdQNZ9Gnglfod4PZB1quLAoKZUVOZBf+nOkF+bnd0n+ISyIgWlIgPt6WDxryOvw==
+X-Received: by 2002:a17:90b:118e:b0:273:4c57:a7a8 with SMTP id gk14-20020a17090b118e00b002734c57a7a8mr2448516pjb.16.1694807932473;
+        Fri, 15 Sep 2023 12:58:52 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id s12-20020a62e70c000000b0068e4c5a4f3esm3314766pfh.71.2023.09.15.12.58.18
+        by smtp.gmail.com with ESMTPSA id iq15-20020a17090afb4f00b002636e5c224asm3359563pjb.56.2023.09.15.12.58.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Sep 2023 12:58:18 -0700 (PDT)
+        Fri, 15 Sep 2023 12:58:51 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Alan Stern <stern@rowland.harvard.edu>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
+        John Keeping <john@keeping.me.uk>,
+        Udipto Goswami <quic_ugoswami@quicinc.com>,
+        Linyu Yuan <quic_linyyuan@quicinc.com>,
         linux-usb@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        Tom Rix <trix@redhat.com>,
+        Krishna Kurapati <quic_kriskura@quicinc.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Uttkarsh Aggarwal <quic_uaggarwa@quicinc.com>,
+        Yuta Hayama <hayama@lineo.co.jp>, linux-kernel@vger.kernel.org,
         llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Subject: [PATCH] usb: Annotate struct urb_priv with __counted_by
-Date:   Fri, 15 Sep 2023 12:58:16 -0700
-Message-Id: <20230915195812.never.371-kees@kernel.org>
+Subject: [PATCH] usb: gadget: f_fs: Annotate struct ffs_buffer with __counted_by
+Date:   Fri, 15 Sep 2023 12:58:49 -0700
+Message-Id: <20230915195849.never.275-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1658; i=keescook@chromium.org;
- h=from:subject:message-id; bh=/nlnwk1swWCmCy2+Sv6muF6tU55a2t3bsLZzpmMZ7jA=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlBLdYB58rdkB52xPa44fGOBHqVRz7lxkY6R3VI
- m+mHExbT+qJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQS3WAAKCRCJcvTf3G3A
- JmBcEACKNUOge0/I+8iiOTctI4cFdZB/+rB9Ls9SMAQ3HTYKIXbFV6eJFbPrC5AAdAGdsGyVCJH
- 8DDCbKRazcLtk/2vGPm6G5nR2FlXm/Rc/JndCygWsLpIsgWs9NMtm1QZlN2rag2TywAY5O66Pdn
- e6RWMDqHtBpjC8irzQ0bHTjkCF4IFlDefPhNEJFeuB9xZVfCsjs45uuDLMM2DL9DmxDIR9TztgP
- aEEPH9ULbxtxiUGrldBOLZpYAS6RnlApwMLXomqII99vwWZEXdECUAWH/AMjYlGDmeuuZdeCGM2
- zfYbE44jcYqSKf2LHciFpDQOTXbr9CLIIUlc7UbO+S45hQONplJEJIPy8E/l2vq+7tCcVJTcslf
- vI7T7sGBuhZljTfaxI4E5EuKBMRLeO9Rna/e/MMp7lHnVerLm8cGrFa5+l+bcvTBsjFSozCuqsU
- Xqan6V+WOLZxOz96eqfXe/e7Il1H1AgAhJy+btd3mtJMRKNEm1TzihpBWwcJ7SESPCQYwGFkeIg
- iAws1DwbSOAIMRq0+yQ3wKSzcD+s2STzCWxnT71yFB1hSthlwFilQIvNlAkhUoEU5HNoO7arF5q
- mB6ZLScLXIEtDto8BDzvd/u7lfKIBnlFXEvMEkB46kXMRcjHBaNclSDin1SO3xY9Mo0CchESmZP
- 15qunaB jCdEo3fQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1309; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=eL0i+HiP/slkBuDdJazClpDx64qWyMAqWkmawhHng5g=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlBLd56MZVta8tY42c7tMTyLS7qSe+Nf0e7Zm7F
+ jrnBGfx5vSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQS3eQAKCRCJcvTf3G3A
+ JhSpD/4t0mJx7TYSiK5olhOCEucRjN/ZNuGdpy6IFT4GH/acg9kkJAPfX0JpIje/rvn3j+DhuUO
+ fH3CWGN0o10V3xd2ciL59u04ho6iF0mG1MOSp+OnsE9xfVBCAQfNruRlDVyRENhS+/z4Io+1SvP
+ l0TP8hpU+5TUl7Zy0oGfiNJL0Z415u5Lqu+7FOgJiua6S49DwtklzXaFwComGg0e1bH9wEYoB1s
+ +D6tRCDcPTRz0dkDuplAjTdXsCsQJRvaCDJ+qqxYqRO+VwF8SLOujWl0bcoIhT4GWwGEtZzpNqT
+ OiUmymTkI0NpNmkS7xjdt4Wn3lK2fPoItkkaPz5oxOCct/iq2bHeN9+B+RSw5eyAYKWawvfI1iB
+ mIDM12iCWpXLeMvUPGYaWClXNr5lxPjTb673viG2rg+Tsgo9AsGJh6pO5RKnDRT/vBAFflO8ckx
+ AYLYWXK4wF+w7D4nArHPe+HaIeJT8sCO+GM18mbUx/fTmZl50UNKGE4W+UskJOI4KrpC8TYYQF/
+ 3v2LCC1qbkZbU0liGXGzC0DIDXNrwAcQPOxVRCMl1SEAslksgXA3pg/68lhepMyisRqewRUMYYJ
+ UrajslA5m5q33PN0H5nC/LgV5zSGrqxYSXzv2Zr6QHzW66SKBVUhKJbXaOqDfH97IlGaI8ghjG2
+ TTC4EPR H5+sovXA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -87,46 +92,33 @@ their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 functions).
 
-As found with Coccinelle[1], add __counted_by for struct urb_priv.
+As found with Coccinelle[1], add __counted_by for struct ffs_buffer.
 
 [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 
-Cc: Alan Stern <stern@rowland.harvard.edu>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Mathias Nyman <mathias.nyman@intel.com>
+Cc: John Keeping <john@keeping.me.uk>
+Cc: Udipto Goswami <quic_ugoswami@quicinc.com>
+Cc: Linyu Yuan <quic_linyyuan@quicinc.com>
 Cc: linux-usb@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/usb/host/ohci.h | 2 +-
- drivers/usb/host/xhci.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/gadget/function/f_fs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/host/ohci.h b/drivers/usb/host/ohci.h
-index aac6285b37f8..1aba22784e05 100644
---- a/drivers/usb/host/ohci.h
-+++ b/drivers/usb/host/ohci.h
-@@ -337,7 +337,7 @@ typedef struct urb_priv {
- 	u16			length;		// # tds in this request
- 	u16			td_cnt;		// tds already serviced
- 	struct list_head	pending;
--	struct td		*td[];		// all TDs in this request
-+	struct td		*td[] __counted_by(length); // all TDs in this request
- 
- } urb_priv_t;
- 
-diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-index 7e282b4522c0..2f21c3a8565c 100644
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -1666,7 +1666,7 @@ struct xhci_scratchpad {
- struct urb_priv {
- 	int	num_tds;
- 	int	num_tds_done;
--	struct	xhci_td	td[];
-+	struct	xhci_td	td[] __counted_by(num_tds);
+diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
+index 6e9ef35a43a7..af400d083777 100644
+--- a/drivers/usb/gadget/function/f_fs.c
++++ b/drivers/usb/gadget/function/f_fs.c
+@@ -202,7 +202,7 @@ struct ffs_epfile {
+ struct ffs_buffer {
+ 	size_t length;
+ 	char *data;
+-	char storage[];
++	char storage[] __counted_by(length);
  };
  
- /*
+ /*  ffs_io_data structure ***************************************************/
 -- 
 2.34.1
 
