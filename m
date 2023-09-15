@@ -2,94 +2,74 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61472EE6431
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 07:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86191EE6446
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 08:34:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232315AbjIOHlS (ORCPT
+        id S232109AbjIOIeP (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Sep 2023 03:41:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57244 "EHLO
+        Fri, 15 Sep 2023 04:34:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232698AbjIOHlP (ORCPT
+        with ESMTP id S230454AbjIOIeO (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Sep 2023 03:41:15 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4664CA1;
-        Fri, 15 Sep 2023 00:41:10 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB267C433C9;
-        Fri, 15 Sep 2023 07:41:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694763669;
-        bh=dVfu4w2NiWvgQSrc/fseHwlP/NzWq4M7GMOTKHDsJZQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KXYk3ApLn9hfsQ83Z/yA6JxgIS4oIbIBX57XuMRQSgST503VKG5H48dhCgKwIcbyR
-         OK9J7rZgn6k47BvOuP6sTlgz2Ev5NIXDDt2xIT3tdRt9Sf/+A3ItmVyFs4Y3n5KRWc
-         RB1nL5Hr9+90KR12bQJaTW2uw+9tjzNcHO+akP2BPrvzI/FAReCs9pbsxATiEHEnYu
-         StTeTqQ7By5inCTKASjqvskqPfUL4X4ab1Ru90yUuajA5gmiERdJiMXi/MHler+Zts
-         x9GS0+nYSSjg0n7UbZNR+ipQT4+5rOnSP8BaeZLWKwj4bpm7PylJg0p7v18IHTEtPP
-         y4y7LwClq8iew==
-Date:   Fri, 15 Sep 2023 09:40:57 +0200
-From:   Christian Brauner <brauner@kernel.org>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Christoph Hellwig <hch@lst.de>, Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Tejun Heo <tj@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-hardening@vger.kernel.org,
-        cgroups@vger.kernel.org, Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH 03/19] fs: release anon dev_t in deactivate_locked_super
-Message-ID: <20230915-nieren-bebauen-f5e2e23ac914@brauner>
-References: <20230913111013.77623-1-hch@lst.de>
- <20230913111013.77623-4-hch@lst.de>
- <20230913232712.GC800259@ZenIV>
- <20230914023705.GH800259@ZenIV>
- <20230914053843.GI800259@ZenIV>
- <20230914-munkeln-pelzmantel-3e3a761acb72@brauner>
- <20230914165805.GJ800259@ZenIV>
- <20230914192331.GK800259@ZenIV>
+        Fri, 15 Sep 2023 04:34:14 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7BB9E6;
+        Fri, 15 Sep 2023 01:34:09 -0700 (PDT)
+From:   John Ogness <john.ogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1694766848;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=+PrVXAjSakOMQW1FarSUl/Pr6tS8YcjazDcdX87cHIM=;
+        b=NnfLyMkEFotgLsXyA15QLmtt7y/gWInRZ/a1ogANjuQ3Fwkl8j9nNNpzhUKttLcmrnZSth
+        CAL1PwpczWB+TH1Ibl6zTzwWD2EGo7gGKGXGguLpQ6oyUZOlNdQ/EM16Ij3r8p1UuF9mXF
+        YqtCXRHPc+DIdirN9Nphnn4P2rQUGIMPoTQ8UpKkmr9AA9dqtDnVgvMTameWQDt4A9Guy7
+        wfCZ2YIg3KOAf8HsmM6BzMjJG44uXI3Gd5xJDmDCNAEXBi9Z/Vw/bQCQi8GSX57jaC3dYa
+        mS8X3FghBkVsqZWbDAnPL2SETjfzxMwocgc6m7w9OP0Fkg1qxwHb6sQeM8UvYw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1694766848;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=+PrVXAjSakOMQW1FarSUl/Pr6tS8YcjazDcdX87cHIM=;
+        b=BXcq5/WlhxM9wInIlFk8dlJlwM1o8FtvZ9wkfHMb7Hs6q8Kb7nOBP0K/mcwOkolQkysqIG
+        B/XvYvyDf3AXSKDA==
+To:     Enlin Mu <enlin.mu@outlook.com>, pmladek@suse.com,
+        rostedt@goodmis.org, senozhatsky@chromium.org,
+        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
+        enlin.mu@unisoc.com, enlinmu@gmail.com
+Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] printk: add cpu id information to printk() output
+In-Reply-To: <JH0PR04MB7072A4B6946EAEEB1EB8B0BE8AF6A@JH0PR04MB7072.apcprd04.prod.outlook.com>
+References: <JH0PR04MB7072A4B6946EAEEB1EB8B0BE8AF6A@JH0PR04MB7072.apcprd04.prod.outlook.com>
+Date:   Fri, 15 Sep 2023 10:40:03 +0206
+Message-ID: <8734zfx2bo.fsf@jogness.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20230914192331.GK800259@ZenIV>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Sep 14, 2023 at 08:23:31PM +0100, Al Viro wrote:
-> On Thu, Sep 14, 2023 at 05:58:05PM +0100, Al Viro wrote:
-> 
-> > Incidentally, I'm going to add a (belated by 10 years) chunk in porting.rst
-> > re making sure that anything in superblock that might be needed by methods
-> > called in RCU mode should *not* be freed without an RCU delay...  Should've
-> > done that back in 3.12 merge window when RCU'd vfsmounts went in; as it
-> > is, today we have several filesystems with exact same kind of breakage.
-> > hfsplus and affs breakage had been there in 3.13 (missed those two), exfat
-> > and ntfs3 - introduced later, by initial merges of filesystems in question.
-> > Missed on review...
-> > 
-> > Hell knows - perhaps Documentation/filesystems/whack-a-mole might be a good
-> > idea...
+On 2023-09-15, Enlin Mu <enlin.mu@outlook.com> wrote:
+> Sometimes we want to print cpu id of printk() messages to consoles
+>
+> diff --git a/include/linux/threads.h b/include/linux/threads.h
+> index c34173e6c5f1..6700bd9a174f 100644
+> --- a/include/linux/threads.h
+> +++ b/include/linux/threads.h
+> @@ -34,6 +34,9 @@
+>  #define PID_MAX_LIMIT (CONFIG_BASE_SMALL ? PAGE_SIZE * 8 : \
+>  	(sizeof(long) > 4 ? 4 * 1024 * 1024 : PID_MAX_DEFAULT))
+>  
+> +#define CPU_ID_SHIFT 23
+> +#define CPU_ID_MASK  0xff800000
 
-pitfalls.rst or common-bugs.rst
+This only supports 256 CPUs. I think it doesn't make sense to try to
+squish CPU and Task IDs into 32 bits.
 
-or something like that.
+What about introducing a caller_id option to always only print the CPU
+ID? Or do you really need Task _and_ CPU?
 
-> 
-> Actually, utf8 casefolding stuff also has the same problem, so ext4 and f2fs
-> with casefolding are also affected ;-/
-
-
+John Ogness
