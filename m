@@ -2,117 +2,137 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A63CD37AD
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 670ACC46CA1
 	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 20:49:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237486AbjIOUsx (ORCPT
+        id S233313AbjIOUsv (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Sep 2023 16:48:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60514 "EHLO
+        Fri, 15 Sep 2023 16:48:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237672AbjIOUso (ORCPT
+        with ESMTP id S237402AbjIOUsU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Sep 2023 16:48:44 -0400
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44B5F2708
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:48:25 -0700 (PDT)
-Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-68fba57030fso2439705b3a.3
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:48:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1694810905; x=1695415705; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=p+PPJ/AQSOJ+ikTUxwaFbNmWB98quGmGcGYVc1MYqo4=;
-        b=jPZozsT2o/pJmTgFxnggifmMGrjbs5MuLtv7waWc89P3K+bPqQH/p7vjLcadQK+MU7
-         vxqjrmlBtCmHuw90Q82F0o8yao4Yn3GWTgAs2C31YgChWxjAAUiBiSoMPRoyTcy8lc6m
-         pFCe+p5RaVU7seSH2iTU7EpjQcaH9h4zhxzr8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694810905; x=1695415705;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p+PPJ/AQSOJ+ikTUxwaFbNmWB98quGmGcGYVc1MYqo4=;
-        b=CQK1+qL/TKXui+xLhWdneQtVuF/+nuNjwnN/BiSXWV0klmO5c51p981JXz85WQWAef
-         eZry+pgSSAjGoEgacptWJFDft2ILYRRigNvkl7a423D0bI1WXmKCuui1UJA3cyNefnvi
-         DwyslivmLBjkki8nXw4Cg+6V0EaXVYo5xMBq2dB8JKv2HXysdi2hH4x74IoeKKZZVMLX
-         UwqPmnGlmQ8cLB5D0MscjISHPPaU88aHyUgrRiqaEfT9uClz9oToeC5MOY36517zWFu+
-         AGxmDbbUHzEopAsqaLsr9/fW0WqZsYGQ1y0yKtVzr3rUjjTrPwEXFl2oUorquxTmGScZ
-         77Rw==
-X-Gm-Message-State: AOJu0YwyMviEx/TB0DbA84BGMojyIdoBZhXU0a5xK403+QSnxtRd8LA4
-        Qv9udvqZwLs2o+y391iXNGpnUw==
-X-Google-Smtp-Source: AGHT+IFOxKRcwk4qHKzzxE6vlTeEqFbIORzQ9ufHcf3GvQ/kLYWfVDwqBjcVYUd19W39PY4imGNNKA==
-X-Received: by 2002:a05:6a00:2d0b:b0:68f:ca4a:efd with SMTP id fa11-20020a056a002d0b00b0068fca4a0efdmr3093829pfb.9.1694810904753;
-        Fri, 15 Sep 2023 13:48:24 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id a6-20020aa78646000000b0069026841829sm3319396pfo.113.2023.09.15.13.48.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Sep 2023 13:48:24 -0700 (PDT)
-Date:   Fri, 15 Sep 2023 13:48:23 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     David Rheinsberg <david@readahead.eu>
-Cc:     Justin Stitt <justinstitt@google.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        David Herrmann <dh.herrmann@gmail.com>
-Subject: Re: [PATCH] HID: uhid: refactor deprecated strncpy
-Message-ID: <202309151342.DFA6CA5C7@keescook>
-References: <20230914-strncpy-drivers-hid-uhid-c-v1-1-18a190060d8d@google.com>
- <202309142206.60836CE@keescook>
- <98d981a1-4e4c-4173-b8eb-09b4245bca60@app.fastmail.com>
+        Fri, 15 Sep 2023 16:48:20 -0400
+Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04DFA2708
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:47:55 -0700 (PDT)
+Received: from eig-obgw-5007a.ext.cloudfilter.net ([10.0.29.141])
+        by cmsmtp with ESMTP
+        id hFCnqdFmzez0ChFivqBwk2; Fri, 15 Sep 2023 20:47:33 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with ESMTPS
+        id hFjGqJ92MHoqXhFjHqe7aZ; Fri, 15 Sep 2023 20:47:55 +0000
+X-Authority-Analysis: v=2.4 cv=VP7OIvDX c=1 sm=1 tr=0 ts=6504c2fb
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=zNV7Rl7Rt7sA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
+ a=P-IC7800AAAA:8 a=sozttTNsAAAA:8 a=JfrnYn6hAAAA:8 a=cm27Pg_UAAAA:8
+ a=VwQbUJbxAAAA:8 a=HvF037n1xESchLcPDVoA:9 a=QEXdDO2ut3YA:10
+ a=d3PnA9EDa4IxuAV0gXij:22 a=aeg5Gbbo78KNqacMgKqU:22 a=1CNFftbPRP8L7MoqJWF3:22
+ a=xmb-EsYY8bH0VWELuYED:22 a=AjGcO6oz07-iQ99wixmX:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=RqOUINYtZnX/Of+yTyHFYCaBJKqXskU5mxpeljwMPIY=; b=pukAyExiqsVBM3/174lVjFczXB
+        /UHmgwxH7KQ2j2h4GHZJGw9tIHJnaQDVLbjQRbmuXfaN8lZfwmtiONe5yIoy9P3xX5khIAW3XtS17
+        MZ2PvbJukE8IAzmob31EM7COq2n96cppK+HOfyWSMEWGsBsLdGF4/VlN4C31aRYgtUHaLFtNN+dFw
+        SM+wu4aPhH7cGUL1WTeGhibVpcAmXnOFzg3zNyRPiukNsQLItREk4Hl7V0kZAPRBxPMJNl28HgmGN
+        1SlqZwHmbJBumiwpfz/n7wuanPtvNyDtEwzNRgYgGd8oZg8Iz5MKPiwDfkADArNozU4k41ARn4taK
+        KrcrLKmQ==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:49250 helo=[192.168.15.8])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.96)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1qhFjF-002cqE-0c;
+        Fri, 15 Sep 2023 15:47:53 -0500
+Message-ID: <14906ef8-63e4-046b-1e18-8d02e1e77eb9@embeddedor.com>
+Date:   Fri, 15 Sep 2023 14:48:48 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <98d981a1-4e4c-4173-b8eb-09b4245bca60@app.fastmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH] mtd: rawnand: denali: Annotate struct denali_chip with
+ __counted_by
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-mtd@lists.infradead.org,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+References: <20230915201227.never.483-kees@kernel.org>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20230915201227.never.483-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.21.192
+X-Source-L: No
+X-Exim-ID: 1qhFjF-002cqE-0c
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:49250
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 325
+X-Org:  HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfDaUuU1anYTLxRQviblEBPkpfSgnbhMhddFDbhM9CuQFL/GiZB3HrVpxVe7NxcQ9GVq/5oH/Fg741/I0KOVlN+L7YZoSRCnHBCV+/xxE+QI7Pp/JO+6L
+ BtnMsFtm3PGcncadGowAezPZhM47vkWUVUfO7IBuhkSIr4Vra/W6lAe1yPh4tpCwkfMCWnW2fuDjaECrapeOS2zjJf4RnNWSBi/vb0ZsKnGtF961VU5zLYpZ
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Sep 15, 2023 at 09:36:23AM +0200, David Rheinsberg wrote:
-> Hi
-> 
-> On Fri, Sep 15, 2023, at 7:13 AM, Kees Cook wrote:
-> >> -	/* @hid is zero-initialized, strncpy() is correct, strlcpy() not */
-> >> -	len = min(sizeof(hid->name), sizeof(ev->u.create2.name)) - 1;
-> >> -	strncpy(hid->name, ev->u.create2.name, len);
-> >> -	len = min(sizeof(hid->phys), sizeof(ev->u.create2.phys)) - 1;
-> >> -	strncpy(hid->phys, ev->u.create2.phys, len);
-> >> -	len = min(sizeof(hid->uniq), sizeof(ev->u.create2.uniq)) - 1;
-> >> -	strncpy(hid->uniq, ev->u.create2.uniq, len);
-> >
-> > ev->u.create2 is:
-> > struct uhid_create2_req {
-> >         __u8 name[128];
-> >         __u8 phys[64];
-> >         __u8 uniq[64];
-> > 	...
-> >
-> > hid is:
-> > struct hid_device { /* device report descriptor */
-> > 	...
-> >         char name[128]; /* Device name */
-> >         char phys[64]; /* Device physical location */
-> >         char uniq[64]; /* Device unique identifier (serial #) */
-> >
-> > So these "min" calls are redundant -- it wants to copy at most 1 less so
-> > it can be %NUL terminated. Which is what strscpy() already does. And
-> > source and dest are the same size, so we can't over-read source if it
-> > weren't terminated (since strscpy won't overread like strlcpy).
-> 
-> I *really* think we should keep the `min` calls. The compiler
-> should already optimize them away, as both arguments are compile-time
-> constants. There is no inherent reason why source and target are equal in
-> size. Yes, it is unlikely to change, but I don't understand why we would
-> want to implicitly rely on it, rather than make the compiler verify it for
-> us. And `struct hid_device` is very much allowed to change in the future.
-> 
-> As an alternative, you can use BUILD_BUG_ON() and verify both are equal in length.
 
-If we can't depend on ev->u.create2.name/phys/uniq being %NUL-terminated,
-we've already done the "min" calculations, and we've already got the
-dest zeroed, then I suspect the thing to do is just use memcpy instead
-of strncpy (or strscpy).
 
+On 9/15/23 14:12, Kees Cook wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
+> 
+> As found with Coccinelle[1], add __counted_by for struct denali_chip.
+> 
+> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+> 
+> Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+> Cc: Richard Weinberger <richard@nod.at>
+> Cc: Vignesh Raghavendra <vigneshr@ti.com>
+> Cc: linux-mtd@lists.infradead.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Thanks
 -- 
-Kees Cook
+Gustavo
+
+> ---
+>   drivers/mtd/nand/raw/denali.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mtd/nand/raw/denali.h b/drivers/mtd/nand/raw/denali.h
+> index ac46eb7956ce..5f2fab022fc5 100644
+> --- a/drivers/mtd/nand/raw/denali.h
+> +++ b/drivers/mtd/nand/raw/denali.h
+> @@ -328,7 +328,7 @@ struct denali_chip {
+>   	struct nand_chip chip;
+>   	struct list_head node;
+>   	unsigned int nsels;
+> -	struct denali_chip_sel sels[];
+> +	struct denali_chip_sel sels[] __counted_by(nsels);
+>   };
+>   
+>   /**
