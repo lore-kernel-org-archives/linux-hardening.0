@@ -2,74 +2,75 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABCCCEED61E
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF76EED61A
 	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 17:36:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231899AbjIORgJ (ORCPT
+        id S235246AbjIORgJ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
         Fri, 15 Sep 2023 13:36:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39892 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236350AbjIORf6 (ORCPT
+        with ESMTP id S236197AbjIORfv (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Sep 2023 13:35:58 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7783E30D5
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 10:33:36 -0700 (PDT)
+        Fri, 15 Sep 2023 13:35:51 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 215793596
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 10:32:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1694799215;
+        s=mimecast20190719; t=1694799173;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=yPAyXhOaA41zZ3tS5JgFFk5Y6a/39udK996Avz6gN9M=;
-        b=CcwfRdn4h/Y3+90u1Ujl07bBQ85v/mj/tMl5M8b3b86xFbG93AU2x+KaD7UAB3TG4PNOPw
-        qqtRGDYHnJBZXpJEh/eUEwEk6qQRxrSEeIcssr+eqfMQgzuk7Yqff3wKom6p023qttbugR
-        76H0RwLEQJnkw6AZxjzkP/xtl5EECc4=
-Received: from mail-vs1-f72.google.com (mail-vs1-f72.google.com
- [209.85.217.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=3iRbWt1YTt0h4sdUmK03Vi+q52/EZN5SzHkBsDxopwQ=;
+        b=YKTQBk0/66u2MJHUd6wXkGX/l1O9sxjZnzqGsKoeT7ykN+G6aZT75g1yxFr7MYzb+eKq/T
+        AmBx7unClSymt+/2PoVfeuYV6HP9u+oFU3lPgHM2X4Bf9NwgfoJbvXXk/TH5t0ddolMjzK
+        xocFfdYZ1LoDKWqOrGVFSFw3wu2ZsmI=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-541-NAcTFuO_PtyXdjVwYa-rOg-1; Fri, 15 Sep 2023 13:33:34 -0400
-X-MC-Unique: NAcTFuO_PtyXdjVwYa-rOg-1
-Received: by mail-vs1-f72.google.com with SMTP id ada2fe7eead31-4510239e1caso919276137.1
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 10:33:34 -0700 (PDT)
+ us-mta-32-LTJXDZi9PEiyi0EEObyIpA-1; Fri, 15 Sep 2023 13:32:52 -0400
+X-MC-Unique: LTJXDZi9PEiyi0EEObyIpA-1
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-770538a2946so326811385a.0
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 10:32:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694799213; x=1695404013;
+        d=1e100.net; s=20230601; t=1694799172; x=1695403972;
         h=mime-version:user-agent:content-transfer-encoding:organization
          :references:in-reply-to:date:cc:to:from:subject:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WlpIc4DwS1d7tWoYWtATBVAp1YG/9Jib85DcTdMBUWQ=;
-        b=ooAz51tYl1s5RwUQWyM5zHyAeyQ7xmEDK26SIDitbDjMMTz+ZlEboQOzfWvKZQuYhb
-         35GjO+cfGZ2srBXdpu9rHmaoU4N2n4zij8D/OMFmh0e1EKb4wxL2T0plnRSacCoicory
-         WezDLTO8nM3q0NXEhqSXHvU/mXTgaW6YfEwjdoTD6LRUQHqgVZyapMYaD20MCt+VNCGe
-         fimFW6w3CRfZi2ub3/2JfGrBDvNPlrb+K2NYUxHUo0YvgRgq1df+s+qRt9ydj0UZAqJi
-         GJQGhw64IkyqwTx015Oi23UDq+nu4Nv1zCQEycXjpGe8NR4NbXlm956OKerE0hZVgwnP
-         /SQg==
-X-Gm-Message-State: AOJu0YwQmGGz8DJ2QQUc99NFsN4GprCW6RLeK/KjRBgtQxEFwB+DgNed
-        O3DUCsflz6uQntULSzJhRvkP9Wl3RyzPm0zR3lK1MwCJFAgd8mEpjqHEY9ZVNq7FFLU/IyxbDDb
-        yx1/jGi91OWrhNkrJsS0tEZ4yfyev
-X-Received: by 2002:a05:6102:445:b0:44e:b11a:8b16 with SMTP id e5-20020a056102044500b0044eb11a8b16mr2136898vsq.13.1694799213550;
-        Fri, 15 Sep 2023 10:33:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHxMg9innJnBPyO40JOwexxh/opPl5r7RbWdfIe2XJJW9pyDk9tqNYJKPoYihmT01Z0kPQWww==
-X-Received: by 2002:a05:6102:445:b0:44e:b11a:8b16 with SMTP id e5-20020a056102044500b0044eb11a8b16mr2136872vsq.13.1694799213203;
-        Fri, 15 Sep 2023 10:33:33 -0700 (PDT)
+        bh=3iRbWt1YTt0h4sdUmK03Vi+q52/EZN5SzHkBsDxopwQ=;
+        b=mdusoZaAAAOn6QS+2iEEd/8SWvUrM8vMyYxqZr1/Owm6Sj3GVeVSEcQ9fe+vKY0JkF
+         mq7m0pQYw3m0M1MLNdnYu0mXiO/OmFSnbS14ne65+blGRO40XemOz6g/0lJvQ5JGuLDF
+         aE3TnPhBLjCU0B0tPI9lGXd9Xl/YAI4vRGwhN10GXtK7YdIOrCcCM4HrVvKmPpKntHiH
+         ZMXXuz2xI7YRl3sXui5EQS65htTEMLKdvQJHVL6GIyuBug9+J3lVa4qKDs0FFkCQiiwd
+         peMy+j4KubgS1c4kfUdSXrTO3QjPHR5pMQDgyscn4eyvyrIoWuBMR09Evl/ow/x21s98
+         xrQQ==
+X-Gm-Message-State: AOJu0YwdXgKpc0xBRdaCTiQe06yXk7JUdC7rI4oQqE+6MzzBGays8K9v
+        ZnvSpLoP31QTIEz1uBTSLdXEPv8LZqvaYiWpSUm80I9FNGvjmfOjnoRa+3a6Lt16b4pZx+Yzt0o
+        8hv/FcPd5c72Qs6wUqkN2t4D3JmC01CxLcQpL
+X-Received: by 2002:a05:620a:450b:b0:76c:a9fb:6d07 with SMTP id t11-20020a05620a450b00b0076ca9fb6d07mr2820428qkp.2.1694799171849;
+        Fri, 15 Sep 2023 10:32:51 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IETBX46w8bl1e85ceIF07jVSYpOO67r7UYVTVMH7Dqpa2+cz1AIiLu9iLVGSZRmJCWMnZIaqw==
+X-Received: by 2002:a05:620a:450b:b0:76c:a9fb:6d07 with SMTP id t11-20020a05620a450b00b0076ca9fb6d07mr2820408qkp.2.1694799171623;
+        Fri, 15 Sep 2023 10:32:51 -0700 (PDT)
 Received: from ?IPv6:2600:4040:5c6c:a300::feb? ([2600:4040:5c6c:a300::feb])
-        by smtp.gmail.com with ESMTPSA id r19-20020a0ccc13000000b0064f91d410b9sm1409818qvk.128.2023.09.15.10.33.32
+        by smtp.gmail.com with ESMTPSA id pa9-20020a05620a830900b00767d572d651sm1364433qkn.87.2023.09.15.10.32.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Sep 2023 10:33:32 -0700 (PDT)
-Message-ID: <00fba033910961bac96dabe9d7e0435342fd021d.camel@redhat.com>
-Subject: Re: [PATCH] drm/nouveau/core: refactor deprecated strncpy
+        Fri, 15 Sep 2023 10:32:51 -0700 (PDT)
+Message-ID: <43da274f22acaae8b917f51f6e62376928163e8f.camel@redhat.com>
+Subject: Re: [PATCH] drm/nouveau/pm: refactor deprecated strncpy
 From:   Lyude Paul <lyude@redhat.com>
-To:     Justin Stitt <justinstitt@google.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Karol Herbst <kherbst@redhat.com>,
+To:     Kees Cook <keescook@chromium.org>,
+        Justin Stitt <justinstitt@google.com>
+Cc:     Ben Skeggs <bskeggs@redhat.com>, Karol Herbst <kherbst@redhat.com>,
         David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Date:   Fri, 15 Sep 2023 13:33:32 -0400
-In-Reply-To: <20230914-strncpy-drivers-gpu-drm-nouveau-nvkm-core-firmware-c-v1-1-3aeae46c032f@google.com>
-References: <20230914-strncpy-drivers-gpu-drm-nouveau-nvkm-core-firmware-c-v1-1-3aeae46c032f@google.com>
+Date:   Fri, 15 Sep 2023 13:32:50 -0400
+In-Reply-To: <202309142158.59A6C62F@keescook>
+References: <20230914-strncpy-drivers-gpu-drm-nouveau-nvkm-engine-pm-base-c-v1-1-4b09ed453f84@google.com>
+         <202309142158.59A6C62F@keescook>
 Organization: Red Hat Inc.
 User-Agent: Evolution 3.48.4 (3.48.4-1.fc38)
 MIME-Version: 1.0
@@ -81,65 +82,36 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Eek, I didn't realize how many instances of this we had. Thanks for doing t=
-his
-:)
+Nice catch!
 
 Reviewed-by: Lyude Paul <lyude@redhat.com>
 
-On Thu, 2023-09-14 at 21:40 +0000, Justin Stitt wrote:
-> `strncpy` is deprecated for use on NUL-terminated destination strings [1]=
-.
+Will push in just a moment
+
+On Thu, 2023-09-14 at 21:59 -0700, Kees Cook wrote:
+> On Thu, Sep 14, 2023 at 10:17:08PM +0000, Justin Stitt wrote:
+> > `strncpy` is deprecated for use on NUL-terminated destination strings [=
+1].
+> >=20
+> > We should prefer more robust and less ambiguous string interfaces.
+> >=20
+> > A suitable replacement is `strscpy` [2] due to the fact that it guarant=
+ees
+> > NUL-termination on the destination buffer without unnecessarily NUL-pad=
+ding.
+> >=20
+> > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#st=
+rncpy-on-nul-terminated-strings [1]
+> > Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en=
+.html [2]
+> > Link: https://github.com/KSPP/linux/issues/90
+> > Cc: linux-hardening@vger.kernel.org
+> > Signed-off-by: Justin Stitt <justinstitt@google.com>
 >=20
-> We should prefer more robust and less ambiguous string interfaces.
+> The "- 1" use in the original code is strong evidence for this being a
+> sane conversion. :)
 >=20
-> A suitable replacement is `strscpy` [2] due to the fact that it guarantee=
-s
-> NUL-termination on the destination buffer without unnecessarily NUL-paddi=
-ng.
->=20
-> There is likely no bug in the current implementation due to the safeguard=
-:
-> > =09cname[sizeof(cname) - 1] =3D '\0';
-> ... however we can provide simpler and easier to understand code using
-> the newer (and recommended) `strscpy` api.
->=20
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strn=
-cpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.h=
-tml [2]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
->  drivers/gpu/drm/nouveau/nvkm/core/firmware.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/nouveau/nvkm/core/firmware.c b/drivers/gpu/d=
-rm/nouveau/nvkm/core/firmware.c
-> index 91fb494d4009..374212da9e95 100644
-> --- a/drivers/gpu/drm/nouveau/nvkm/core/firmware.c
-> +++ b/drivers/gpu/drm/nouveau/nvkm/core/firmware.c
-> @@ -79,8 +79,7 @@ nvkm_firmware_get(const struct nvkm_subdev *subdev, con=
-st char *fwname, int ver,
->  =09int i;
-> =20
->  =09/* Convert device name to lowercase */
-> -=09strncpy(cname, device->chip->name, sizeof(cname));
-> -=09cname[sizeof(cname) - 1] =3D '\0';
-> +=09strscpy(cname, device->chip->name, sizeof(cname));
->  =09i =3D strlen(cname);
->  =09while (i) {
->  =09=09--i;
->=20
-> ---
-> base-commit: 3669558bdf354cd352be955ef2764cde6a9bf5ec
-> change-id: 20230914-strncpy-drivers-gpu-drm-nouveau-nvkm-core-firmware-c-=
-791223838b72
->=20
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
 >=20
 
 --=20
