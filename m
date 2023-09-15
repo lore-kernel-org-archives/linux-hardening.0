@@ -2,134 +2,210 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE5BC46CA1
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 20:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C4BCD37AA
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 20:58:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237290AbjIOU5A (ORCPT
+        id S237595AbjIOU5e (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Sep 2023 16:57:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44814 "EHLO
+        Fri, 15 Sep 2023 16:57:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237788AbjIOU4b (ORCPT
+        with ESMTP id S237742AbjIOU5R (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Sep 2023 16:56:31 -0400
-Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29F96270B
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:50:47 -0700 (PDT)
-Received: from eig-obgw-5001a.ext.cloudfilter.net ([10.0.29.139])
-        by cmsmtp with ESMTP
-        id hCdsqYSeKyYOwhFm2q0wNx; Fri, 15 Sep 2023 20:50:46 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with ESMTPS
-        id hFm1q9yRdqs1vhFm1qU9rU; Fri, 15 Sep 2023 20:50:45 +0000
-X-Authority-Analysis: v=2.4 cv=OO40YAWB c=1 sm=1 tr=0 ts=6504c3a5
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=zNV7Rl7Rt7sA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
- a=x_RLF880AAAA:8 a=IXr_WNlcAAAA:8 a=SRrdq9N9AAAA:8 a=cm27Pg_UAAAA:8
- a=VwQbUJbxAAAA:8 a=G5nsRgLVucSo8_3d1RoA:9 a=QEXdDO2ut3YA:10
- a=jCPSC2jcP07J4OBJNHyf:22 a=K24ECnMRWNUKRqF_MnsZ:22 a=xmb-EsYY8bH0VWELuYED:22
- a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=nxvRp4DGgI/6MixR2WlqcSPhzQJquVqoPBvbY8UncWM=; b=nXds5WHz6Ptbe2/HB9I9kDCSE9
-        Lq4v3BlLXWKNpglWH8WUCFTaLFxUEvQTDIZ3Eu2EGfcCwxqhOh1rIKXB2uGfM96xUhyDGSTrWacb1
-        g27LYfvYcH/4en27z4xPrxykTLgF4Oqg+Yqy6Vqkr0ULxChC9vn7I9zzj4kbSDAN1Hlq3Z+O6Ws7i
-        C43pWD3m5jpbWgcLIQHLdjnDNkhMQHWxGJmdvd6t7fcUhqIbkxYch72CIMi9ovmzD53wlA6jKMHY5
-        dJpyYCIBHkPyVzJtyAHHhfrbsmsFqJ0le+cK81Jx/TUktXiZekpMflwTbs71bACupN1FMo7MBQKDB
-        P4bScZ+w==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:35644 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.96)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1qhFm0-002g5A-0y;
-        Fri, 15 Sep 2023 15:50:44 -0500
-Message-ID: <ae45f6a6-8870-d2c8-8c98-a9e7d9d1ba2f@embeddedor.com>
-Date:   Fri, 15 Sep 2023 14:51:40 -0600
+        Fri, 15 Sep 2023 16:57:17 -0400
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEC1A421E
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:55:48 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-68fe39555a0so2333151b3a.3
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:55:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1694811344; x=1695416144; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=FkxHnFcmMcOMVwxYBLP2mYBTJKUa1NHaUTZS5wLWw3k=;
+        b=a+/gfJngVdry1Be16KTvMeO7mVaGXI4sKn86YgZm607cYAUesifA4/kfIf6SBIJB3w
+         Elr5VH7IesYXY1R7eYiOr0vuc0ULiZbuSDHKuPjc/2GliQRYGDS/Ck6lTauCuUfHcnJf
+         QQzS6XIeZyzel4v2IDmm0VVXZ7FiRf0vlKQaQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694811344; x=1695416144;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FkxHnFcmMcOMVwxYBLP2mYBTJKUa1NHaUTZS5wLWw3k=;
+        b=aNB/ByIC6tnfuDhsis0FTlIGzMSEkHrLLZtTn3s1tTIV9Gt6/n3awN7BRZspM5MFfo
+         3xGNqt5w/vjTT3/fw8+Pvdxyu+0MI2/5Bm6joFXp+gnyTq7c8h9iews5XOIkP2a7TLEc
+         dLQRf8RIpv7FHXgOybVVJ6hQ7N5c/1rFFI+NaXDOU1ur1ajov5/B4R5Y4y4GXF0BNVrv
+         iSoK6WOFeAG1vhJFjsLpiIcMqHOt89cL0cg3nsJUl9JS6kwMrCWj+509eL3Ez2F6jrLE
+         GQkhJyBxd+i0RCK+ZgixHowvQEbDdh7U/iEKziiFkAQzde4Fvo9UqHhlJ4MVEFotQeCV
+         ejEQ==
+X-Gm-Message-State: AOJu0Yy0BlukOdIdFCLVGgnrHoviQkZ5cPmf9kA0M+dmwOADmfKUabWM
+        m8mrIfBDKpnMdCGExwzrlEpJ4g==
+X-Google-Smtp-Source: AGHT+IEWf+tiuaN2sB9BwwhWDVl5qRolxLbhhN34fVp1i+GI+ZpJ7Ao1dY1bFuryOX1Ec+j32p2RgQ==
+X-Received: by 2002:a05:6a00:1996:b0:68f:dfea:9100 with SMTP id d22-20020a056a00199600b0068fdfea9100mr3137209pfl.21.1694811344659;
+        Fri, 15 Sep 2023 13:55:44 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id i2-20020a63bf42000000b0056368adf5e2sm2768520pgo.87.2023.09.15.13.55.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Sep 2023 13:55:44 -0700 (PDT)
+Date:   Fri, 15 Sep 2023 13:55:43 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Matteo Rizzo <matteorizzo@google.com>
+Cc:     cl@linux.com, penberg@kernel.org, rientjes@google.com,
+        iamjoonsoo.kim@lge.com, akpm@linux-foundation.org, vbabka@suse.cz,
+        roman.gushchin@linux.dev, 42.hyeyoo@gmail.com,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-mm@kvack.org, linux-hardening@vger.kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        corbet@lwn.net, luto@kernel.org, peterz@infradead.org,
+        jannh@google.com, evn@google.com, poprdi@google.com,
+        jordyzomer@google.com
+Subject: Re: [RFC PATCH 02/14] mm/slub: add is_slab_addr/is_slab_page helpers
+Message-ID: <202309151352.9803BA1@keescook>
+References: <20230915105933.495735-1-matteorizzo@google.com>
+ <20230915105933.495735-3-matteorizzo@google.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] ocfs2: Annotate struct ocfs2_slot_info with __counted_by
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>, Mark Fasheh <mark@fasheh.com>
-Cc:     Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        ocfs2-devel@lists.linux.dev, Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-References: <20230915201522.never.979-kees@kernel.org>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20230915201522.never.979-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1qhFm0-002g5A-0y
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:35644
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 491
-X-Org:  HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfHR1vvWsoogm58LuUB3Zn3aG2675EvEYdKE3BI6wehIVf3eLCemlcChpYF1ylTMyk+X1m2vlKX2bwAVQ83ZwLavkCg0gYxUi4Sp9y0O+Pl+7XjWtMb40
- Cw3o0DVuI2afzb8W9Lq+mGkvD0Ly4KqPW29bJMVfH5YqqptrXzP5Pga0zCYqTuP/B9vt24Gx047HZKU/FTVuRL/j/SurW56JorQctORI/mdujA1++k6g6kma
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230915105933.495735-3-matteorizzo@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
-
-On 9/15/23 14:15, Kees Cook wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
+On Fri, Sep 15, 2023 at 10:59:21AM +0000, Matteo Rizzo wrote:
+> From: Jann Horn <jannh@google.com>
 > 
-> As found with Coccinelle[1], add __counted_by for struct ocfs2_slot_info.
+> This is refactoring in preparation for adding two different
+> implementations (for SLAB_VIRTUAL enabled and disabled).
 > 
-> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+> virt_to_folio(x) expands to _compound_head(virt_to_page(x)) and
+> virt_to_head_page(x) also expands to _compound_head(virt_to_page(x))
 > 
-> Cc: Mark Fasheh <mark@fasheh.com>
-> Cc: Joel Becker <jlbec@evilplan.org>
-> Cc: Joseph Qi <joseph.qi@linux.alibaba.com>
-> Cc: ocfs2-devel@lists.linux.dev
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> so PageSlab(virt_to_head_page(res)) should be equivalent to
+> is_slab_addr(res).
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Perhaps add a note that redundant calls to virt_to_folio() will be
+removed in following patches?
 
-Thanks
--- 
-Gustavo
-
+> 
+> Signed-off-by: Jann Horn <jannh@google.com>
+> Co-developed-by: Matteo Rizzo <matteorizzo@google.com>
+> Signed-off-by: Matteo Rizzo <matteorizzo@google.com>
 > ---
->   fs/ocfs2/slot_map.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>  include/linux/slab.h | 1 +
+>  kernel/resource.c    | 2 +-
+>  mm/slab.h            | 9 +++++++++
+>  mm/slab_common.c     | 5 ++---
+>  mm/slub.c            | 6 +++---
+>  5 files changed, 16 insertions(+), 7 deletions(-)
 > 
-> diff --git a/fs/ocfs2/slot_map.c b/fs/ocfs2/slot_map.c
-> index da7718cef735..e544c704b583 100644
-> --- a/fs/ocfs2/slot_map.c
-> +++ b/fs/ocfs2/slot_map.c
-> @@ -37,7 +37,7 @@ struct ocfs2_slot_info {
->   	unsigned int si_blocks;
->   	struct buffer_head **si_bh;
->   	unsigned int si_num_slots;
-> -	struct ocfs2_slot si_slots[];
-> +	struct ocfs2_slot si_slots[] __counted_by(si_num_slots);
->   };
->   
->   
+> diff --git a/include/linux/slab.h b/include/linux/slab.h
+> index 8228d1276a2f..a2d82010d269 100644
+> --- a/include/linux/slab.h
+> +++ b/include/linux/slab.h
+> @@ -793,4 +793,5 @@ int slab_dead_cpu(unsigned int cpu);
+>  #define slab_dead_cpu		NULL
+>  #endif
+>  
+> +#define is_slab_addr(addr) folio_test_slab(virt_to_folio(addr))
+>  #endif	/* _LINUX_SLAB_H */
+> diff --git a/kernel/resource.c b/kernel/resource.c
+> index b1763b2fd7ef..c829e5f97292 100644
+> --- a/kernel/resource.c
+> +++ b/kernel/resource.c
+> @@ -158,7 +158,7 @@ static void free_resource(struct resource *res)
+>  	 * buddy and trying to be smart and reusing them eventually in
+>  	 * alloc_resource() overcomplicates resource handling.
+>  	 */
+> -	if (res && PageSlab(virt_to_head_page(res)))
+> +	if (res && is_slab_addr(res))
+>  		kfree(res);
+>  }
+>  
+> diff --git a/mm/slab.h b/mm/slab.h
+> index 799a315695c6..25e41dd6087e 100644
+> --- a/mm/slab.h
+> +++ b/mm/slab.h
+> @@ -169,6 +169,15 @@ static_assert(IS_ALIGNED(offsetof(struct slab, freelist), sizeof(freelist_aba_t)
+>   */
+>  #define slab_page(s) folio_page(slab_folio(s), 0)
+>  
+> +/**
+> + * is_slab_page - Checks if a page is really a slab page
+> + * @s: The slab
+> + *
+> + * Checks if s points to a slab page.
+> + *
+> + * Return: true if s points to a slab and false otherwise.
+> + */
+> +#define is_slab_page(s) folio_test_slab(slab_folio(s))
+>  /*
+>   * If network-based swap is enabled, sl*b must keep track of whether pages
+>   * were allocated from pfmemalloc reserves.
+> diff --git a/mm/slab_common.c b/mm/slab_common.c
+> index e99e821065c3..79102d24f099 100644
+> --- a/mm/slab_common.c
+> +++ b/mm/slab_common.c
+> @@ -1063,7 +1063,7 @@ void kfree(const void *object)
+>  		return;
+>  
+>  	folio = virt_to_folio(object);
+> -	if (unlikely(!folio_test_slab(folio))) {
+> +	if (unlikely(!is_slab_addr(object))) {
+>  		free_large_kmalloc(folio, (void *)object);
+>  		return;
+>  	}
+> @@ -1094,8 +1094,7 @@ size_t __ksize(const void *object)
+>  		return 0;
+>  
+>  	folio = virt_to_folio(object);
+> -
+> -	if (unlikely(!folio_test_slab(folio))) {
+> +	if (unlikely(!is_slab_addr(object))) {
+>  		if (WARN_ON(folio_size(folio) <= KMALLOC_MAX_CACHE_SIZE))
+>  			return 0;
+>  		if (WARN_ON(object != folio_address(folio)))
+
+In the above 2 hunks we're doing virt_to_folio() twice, but I see in
+patch 4 that these go away.
+
+> diff --git a/mm/slub.c b/mm/slub.c
+> index a7dae207c2d2..b69916ab7aa8 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -1259,7 +1259,7 @@ static int check_slab(struct kmem_cache *s, struct slab *slab)
+>  {
+>  	int maxobj;
+>  
+> -	if (!folio_test_slab(slab_folio(slab))) {
+> +	if (!is_slab_page(slab)) {
+>  		slab_err(s, slab, "Not a valid slab page");
+>  		return 0;
+>  	}
+> @@ -1454,7 +1454,7 @@ static noinline bool alloc_debug_processing(struct kmem_cache *s,
+>  	return true;
+>  
+>  bad:
+> -	if (folio_test_slab(slab_folio(slab))) {
+> +	if (is_slab_page(slab)) {
+>  		/*
+>  		 * If this is a slab page then lets do the best we can
+>  		 * to avoid issues in the future. Marking all objects
+> @@ -1484,7 +1484,7 @@ static inline int free_consistency_checks(struct kmem_cache *s,
+>  		return 0;
+>  
+>  	if (unlikely(s != slab->slab_cache)) {
+> -		if (!folio_test_slab(slab_folio(slab))) {
+> +		if (!is_slab_page(slab)) {
+>  			slab_err(s, slab, "Attempt to free object(0x%p) outside of slab",
+>  				 object);
+>  		} else if (!slab->slab_cache) {
+> -- 
+> 2.42.0.459.ge4e396fd5e-goog
+
+This all looks nice and mechanical. :P
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-- 
+Kees Cook
