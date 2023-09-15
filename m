@@ -2,77 +2,78 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73FE1CD37AC
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 20:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E636CD37A7
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 20:04:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236723AbjIOUDx (ORCPT
+        id S237115AbjIOUEZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Sep 2023 16:03:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58732 "EHLO
+        Fri, 15 Sep 2023 16:04:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236780AbjIOUDg (ORCPT
+        with ESMTP id S237056AbjIOUDw (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Sep 2023 16:03:36 -0400
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62726211E
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:03:31 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-1c09673b006so20328415ad.1
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:03:31 -0700 (PDT)
+        Fri, 15 Sep 2023 16:03:52 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F599211E
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:03:48 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1bf57366ccdso26330305ad.1
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:03:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1694808211; x=1695413011; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1694808227; x=1695413027; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SosbTcKl/5I1PV+lrT9yDJJKNex4T51jnpPA720MDZU=;
-        b=gsFImH+r6qpHa8+zQQueIhNnrEQEVEyc9VFY1BOVXHdgRbYXMffG38RWM2I1dbbeod
-         hsO1T6Y5NU82OWCtB3D6eY4G8JQ/202RlnOtCm88worl6zVvjJPpNxkVdcAbTD9EaztD
-         5cedbI9qOTxeNqrSQU8C8dFFwG4YO2tnvO7Q4=
+        bh=585ELGKH6mcU0nuyAJeZCpFUeKhNPgDgSqqVI53K3fs=;
+        b=H/toPEu6GpGPDI/SfYB5S5T6q6DbHy789mftoN2S2PbUP3xd6W8InOwXbirIVwkF6G
+         yCfw8xBQ7fnSb7cof0cLEL+N0EbIjlzlUsN9qAugrhwufHTp8kcdiWKqrM37Jx+ZoXPE
+         Vhd4W6fOZd8Hkv3Wr477UVv7501cKTX9XwkjU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694808211; x=1695413011;
+        d=1e100.net; s=20230601; t=1694808227; x=1695413027;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=SosbTcKl/5I1PV+lrT9yDJJKNex4T51jnpPA720MDZU=;
-        b=Z/Byruk8utwmrunz9vPfUbfNoff/gdVEqPZ+2pe5aPzvS3Bj+Y7mRucLTaKFG6LWX+
-         1y4cuzgY5sD29GNN+sdEjQ1h/KaIyFyVrJJz4KKhx4XxDU3eBXojnb2cUIraGIZF+YPg
-         o10D2AbCCZkkpeTQRBUN2lMTEEEFp48xYoHnvVp+q57DUDrrQZJVNG4AN5WR3MUFzBGc
-         6PGvAaFJCDgyLiP+nVPU6yafhcRvW6X15SjPJ1Fw6s0WaMiBT8ccMlVdL5eAnuHAp6bX
-         jTceAlDbHtjUGfBHqrorCKOY65sd1zm2MdCZh4Np/2dQjI98fsb81GiOgZVH9yo416HV
-         dRGQ==
-X-Gm-Message-State: AOJu0YxHoC0+HEFTKbrQKR3pkEuUKG7XrhmuL0JvBqRzuNjIqqm17Dmc
-        XJyoGe7CkBrWe7IT1NvBq2nLtg==
-X-Google-Smtp-Source: AGHT+IEOQ2lcwtuhw63TPr12BTkAZ2vOLMAc0/d5J0bOWzH8ffo1YR777tngzNTZgKuRYw8HWobCKw==
-X-Received: by 2002:a17:902:e5d2:b0:1c2:5db:7f16 with SMTP id u18-20020a170902e5d200b001c205db7f16mr2968709plf.67.1694808210853;
-        Fri, 15 Sep 2023 13:03:30 -0700 (PDT)
+        bh=585ELGKH6mcU0nuyAJeZCpFUeKhNPgDgSqqVI53K3fs=;
+        b=FnYZviXaDEb/yCQnABMZxUqRUEP0WxQNwmHtVui4v1arOp9xI4Rid0F2dGYg+BTYzQ
+         9XLy1kn9Lrzw1K3fAdxU7jT7jUQPObLb6v+AoI1VZ/weP3pTex3VdzhYno7pJLaZX+G5
+         vaVlsyDrgQLLSDHAuLyq2nvoN5blr8DTK2zd+RI9oYGS3tp+DBbdkFm1gDKXYJVViAkC
+         5GAq34woFN2Gq423DD3DJjKgNNxFgUUWS/9XOOcxGmsw7taAz2zDZBnlSwTD6QlWJkK9
+         PBNGRsQaGG7QeNrrWZrcsATgDn12xZMXDQreAIhhTiUKzzFwEYzKOz0vrQa2sk3FBuE8
+         5meA==
+X-Gm-Message-State: AOJu0YyGnKol/Ja2qEVQAqi+EKEekCL49iSzUsYS3FXaiC5tbOgPdtDZ
+        tjHNZ34D+y15rZzaY2F6TcK81A==
+X-Google-Smtp-Source: AGHT+IGxirG4c1+wNpjD+C0ivacitJE7me+i97dg7mLg1+2Am2AXQTOZsLaZMKFyejKoHm2lSiLWUg==
+X-Received: by 2002:a17:903:2311:b0:1c3:81b7:2385 with SMTP id d17-20020a170903231100b001c381b72385mr4018353plh.11.1694808227690;
+        Fri, 15 Sep 2023 13:03:47 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id z14-20020a170902d54e00b001bd28b9c3ddsm3856917plf.299.2023.09.15.13.03.30
+        by smtp.gmail.com with ESMTPSA id je20-20020a170903265400b001bf044dc1a6sm3488624plb.39.2023.09.15.13.03.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Sep 2023 13:03:30 -0700 (PDT)
+        Fri, 15 Sep 2023 13:03:47 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Song Liu <song@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>, linux-raid@vger.kernel.org,
+To:     Alasdair Kergon <agk@redhat.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Mike Snitzer <snitzer@kernel.org>, dm-devel@redhat.com,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
         llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Subject: [PATCH] md/md-linear: Annotate struct linear_conf with __counted_by
-Date:   Fri, 15 Sep 2023 13:03:28 -0700
-Message-Id: <20230915200328.never.064-kees@kernel.org>
+Subject: [PATCH] dm crypt: Annotate struct crypt_config with __counted_by
+Date:   Fri, 15 Sep 2023 13:03:45 -0700
+Message-Id: <20230915200344.never.272-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3030; i=keescook@chromium.org;
- h=from:subject:message-id; bh=mHf9KJ3h9Dhk5paRlWrtgrLWQTsMLrfhnSPVfMSBb64=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlBLiQXfFuDkTYwAb1eIwKAUqGWKpMaXqd9cGQi
- R5dxa9UYAaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQS4kAAKCRCJcvTf3G3A
- JsXqD/wKUnbZHahdgumMZjjArgJmZqnGpwPIzL69Kn3lUZnQrQMt0KfRSnb02kD5OXo3wi9ZEUP
- P3uqJLz4U7jqO1SZzIxMjmYvmepGzlUnahBVWXbXtLqiPQx9u4wdLNaIwSEW4P3WS4POsuFWxYB
- Mrm00qIj8a6q6L+9US0fRnFGnam7yYUyGDRoLMkzVuJvxSe0sh19+nzhn27QC/r4ju6pgMsM2o4
- ewYYPkzumFt/tguEdxFax1AGz3aPpee/LWIUcfYNAZ8oefAQeBDBM8fK3M06zvNPxqThyC5JpNr
- ZF15n2uj89sAv8ZsjayB1c0LwqG4giEz3UEdB0Qxle/Im7aEYQmEPApO6meGHwlmfKravrNj7IS
- 8WlL+OBZM5Rby6CcdruSt/mmPOSMIslGI0c/OL+lCtgsBZcs1EfrVAonbI5vqNix3bA9Ojj6Ryb
- N6WVanstIBM6/XABftYGqZw50OF7zw5DBLLlS62L3kGdqCXYB8exgRBmmdINZ3mh/gdCixMmXB/
- pBbWqhBkitswbnGXCwM49Xfo53Bg/dgi9ycKh95Fz2c1hojweBdm5vbOuF4EvzumIeDv/xRGiC1
- GFGKEFccMyCtOyBHGZEyobz1DMg2AHQemK7clDpXKY/tkidK/YsKqf0iy8GJGuxNAmT8HkLMEba
- Lv/anPt ijBf0Fzw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1117; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=2J6fBiPdZIR8mGnEk0bNvAHhXLvKbIZhyM289hn91M0=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlBLihfwsK6T3HOV1j4wnd25zaVLF5WQpYGwyS+
+ 5kE88zkP0eJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQS4oQAKCRCJcvTf3G3A
+ JtSpD/9zzSwBgu0DciTVR5Kuff9eIrmBXAQb1lB9CqCovFopZkSEQY5tNgaZ78xwjchx+SUL0+w
+ U596UPQfpyHBDuBCDdrWmn59UUrEv7daZ8bnNYszDjqEEloDL9evqkm1heUI+1NZHp3hBGJMY1I
+ EPN/1/SnJZemS9I2Ehsn50giqtGvagxkRx4RTYc43lLCi8lyzkQpyy4aWuunQZ9b/jooQ29YCRu
+ 0qTTTLUZM2YFI0C6XmnedeWXMaxGCHs/UC/+f2Pa/lnMg3D8cahgzy1Meee+78H4cJCjFKRM8e8
+ WfB0QQeYwFx3HGHCcMgtArJ8KYAFzMHtm7MqCvqz8smhDz+Tt6gYqVOgFvC1LUHK9dwlsPEVjg1
+ mGDPElivAoJ2+o2BHgDTbzDcWqqQLoENNm2VzQWQfKmprPY/mlLkzPP8x1RWz72qpmm0qWLp/ep
+ 1Gf+h0kU5Mxb/1lfNNO7kryPvP1ucJ42ibtEOAszDV/9sy4qkmCInNjCBni+HPeRYChSAwjwQV5
+ Giq8/cHs+mSSMRPvoBCFcwfHVqQY+zPw8VuhEnjXYnAGtAHiW6nz91S5ysEHuXjmdIZbWNmHbLT
+ h55IMoKtjCzJ3T/HKqcJCJ61XbHGSK92I6vRuEyJip7zWe6rUlExh+M8SUVR6nsQ5lM9wIdus/R
+ Dbhko43 8ezYT+5g==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -85,76 +86,31 @@ their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 functions).
 
-As found with Coccinelle[1], add __counted_by for struct linear_conf.
-Additionally, since the element count member must be set before accessing
-the annotated flexible array member, move its initialization earlier.
+As found with Coccinelle[1], add __counted_by for struct crypt_config.
 
 [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 
-Cc: Song Liu <song@kernel.org>
-Cc: linux-raid@vger.kernel.org
+Cc: Alasdair Kergon <agk@redhat.com>
+Cc: Mike Snitzer <snitzer@kernel.org>
+Cc: dm-devel@redhat.com
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/md/md-linear.c | 26 +++++++++++++-------------
- drivers/md/md-linear.h |  2 +-
- 2 files changed, 14 insertions(+), 14 deletions(-)
+ drivers/md/dm-crypt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/md/md-linear.c b/drivers/md/md-linear.c
-index 71ac99646827..ae2826e9645b 100644
---- a/drivers/md/md-linear.c
-+++ b/drivers/md/md-linear.c
-@@ -69,6 +69,19 @@ static struct linear_conf *linear_conf(struct mddev *mddev, int raid_disks)
- 	if (!conf)
- 		return NULL;
+diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
+index f2662c21a6df..f276e9460feb 100644
+--- a/drivers/md/dm-crypt.c
++++ b/drivers/md/dm-crypt.c
+@@ -224,7 +224,7 @@ struct crypt_config {
+ 	struct mutex bio_alloc_lock;
  
-+	/*
-+	 * conf->raid_disks is copy of mddev->raid_disks. The reason to
-+	 * keep a copy of mddev->raid_disks in struct linear_conf is,
-+	 * mddev->raid_disks may not be consistent with pointers number of
-+	 * conf->disks[] when it is updated in linear_add() and used to
-+	 * iterate old conf->disks[] earray in linear_congested().
-+	 * Here conf->raid_disks is always consitent with number of
-+	 * pointers in conf->disks[] array, and mddev->private is updated
-+	 * with rcu_assign_pointer() in linear_addr(), such race can be
-+	 * avoided.
-+	 */
-+	conf->raid_disks = raid_disks;
-+
- 	cnt = 0;
- 	conf->array_sectors = 0;
- 
-@@ -112,19 +125,6 @@ static struct linear_conf *linear_conf(struct mddev *mddev, int raid_disks)
- 			conf->disks[i-1].end_sector +
- 			conf->disks[i].rdev->sectors;
- 
--	/*
--	 * conf->raid_disks is copy of mddev->raid_disks. The reason to
--	 * keep a copy of mddev->raid_disks in struct linear_conf is,
--	 * mddev->raid_disks may not be consistent with pointers number of
--	 * conf->disks[] when it is updated in linear_add() and used to
--	 * iterate old conf->disks[] earray in linear_congested().
--	 * Here conf->raid_disks is always consitent with number of
--	 * pointers in conf->disks[] array, and mddev->private is updated
--	 * with rcu_assign_pointer() in linear_addr(), such race can be
--	 * avoided.
--	 */
--	conf->raid_disks = raid_disks;
--
- 	return conf;
- 
- out:
-diff --git a/drivers/md/md-linear.h b/drivers/md/md-linear.h
-index 24e97db50ebb..5587eeedb882 100644
---- a/drivers/md/md-linear.h
-+++ b/drivers/md/md-linear.h
-@@ -12,6 +12,6 @@ struct linear_conf
- 	struct rcu_head		rcu;
- 	sector_t		array_sectors;
- 	int			raid_disks; /* a copy of mddev->raid_disks */
--	struct dev_info		disks[];
-+	struct dev_info		disks[] __counted_by(raid_disks);
+ 	u8 *authenc_key; /* space for keys in authenc() format (if used) */
+-	u8 key[];
++	u8 key[] __counted_by(key_size);
  };
- #endif
+ 
+ #define MIN_IOS		64
 -- 
 2.34.1
 
