@@ -2,166 +2,90 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA8FEE021A
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 03:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD2AEE021A
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 03:37:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231478AbjIODgW (ORCPT
+        id S231506AbjIODhT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 14 Sep 2023 23:36:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57950 "EHLO
+        Thu, 14 Sep 2023 23:37:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231351AbjIODgV (ORCPT
+        with ESMTP id S231383AbjIODhS (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 14 Sep 2023 23:36:21 -0400
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78679270C
-        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 20:36:17 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-68fdd6011f2so1372838b3a.3
-        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 20:36:17 -0700 (PDT)
+        Thu, 14 Sep 2023 23:37:18 -0400
+Received: from mail-qk1-x72e.google.com (mail-qk1-x72e.google.com [IPv6:2607:f8b0:4864:20::72e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE130270C
+        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 20:37:14 -0700 (PDT)
+Received: by mail-qk1-x72e.google.com with SMTP id af79cd13be357-76ef935abaeso112185185a.2
+        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 20:37:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1694748977; x=1695353777; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1694749034; x=1695353834; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pDCW9QY50E84DgY19QOwTRVYm400Nkn5gM2+Uo9YUF4=;
-        b=Jp4S0f2dpXWjYdmG5iW4tCPEW1M09RATpNkLgUAq5AS2BtnFBH9sU2nkZbl8K2qwn7
-         MeTLztD+1apzev+6p9fvIQ2i2DWVlKWBrypLOYRCtGmtMJsQXY6jhVnOLhZpUZK/J1mG
-         /h2KNda4pGuHxAxhnDHAW7BwB/+a0EgapMm1A=
+        bh=TIubZOhXnC08Ym5gC3EaH+E8b/9Z9IetgzoFovfcROQ=;
+        b=hwG/VQhcFQEMzWhn5tv3Eg48tS092BPFcXsMmKbzySblC9Xl3brLHcED0PmNHfoHzw
+         FyZw2C0pN0kcEIfEla++mG3MrkM3swRylt+gap3gmvHcDm2baoQtsa2+YI4dw6Yobpzg
+         FfVx8fieSGW07jjyHYnV4snYlYBNQLRphbpco=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694748977; x=1695353777;
+        d=1e100.net; s=20230601; t=1694749034; x=1695353834;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pDCW9QY50E84DgY19QOwTRVYm400Nkn5gM2+Uo9YUF4=;
-        b=dl2sevrLIjpgp0D+g1IFnbni/dl+CHiOjB0kWBB9PI6GGbJN/H1pCJkSBv/A8ZITaF
-         8TZgkBqEcaDnW8GW1wA10texTwRTCKG3c9qlKLE3Ih0YHGjV0Dvel61mztPhooMYipiq
-         zfXOpvcMn6RsynS0Nmh85nyaVFXyiDLrKbiNpSS0aEGip82hErP6q7OxVvFC4IRM/NzH
-         8UJCc3Kn4q35/kgmkVvCeEIhPGSWbmHXyn+jUJTgu83tEJ91RsELKAxf7mT+0heiuHWo
-         LUY7S/9xuiEc54uJTn7VTnCTVl7TKZi6mKHPxqQPpGh63ufT3ZgE9XWJ+3y6emog06DD
-         ZiNA==
-X-Gm-Message-State: AOJu0YwyK6DBgra6vDEiKZtsTCfbKlowChSe9Db/9jOYW+e45DEemX/1
-        Wq/P0QSbsOKRGjbsurjYiGKSuw==
-X-Google-Smtp-Source: AGHT+IETCwyaUHOy0Dso27B6lcA82SsUmHFq0Ep0JwCtQNJHBgNgHiBlml3qfkH7mh2dS3MtYv58Eg==
-X-Received: by 2002:a05:6a20:3cac:b0:15a:478f:9f2e with SMTP id b44-20020a056a203cac00b0015a478f9f2emr761496pzj.1.1694748976964;
-        Thu, 14 Sep 2023 20:36:16 -0700 (PDT)
+        bh=TIubZOhXnC08Ym5gC3EaH+E8b/9Z9IetgzoFovfcROQ=;
+        b=u71No1L2MgZ4ftrkCt0vwLUSaPRGsGRcyQZ1gJtz6a2ggzEfhTCFebfcrdBn4CVW8g
+         sRx3nqU2MAsZAzzQ3TrFpMTXCwk21199PuTDUYs2Gctp1TNZaHAiyUw78cCcNX4O+/yt
+         SELzFYaPbL+XkXyuWrgfv3YOr8VkQazcTadZ6HfSBiJcG7HGTZ+5/1iicIv8fzxrkrxV
+         xwCp/y3eelyPg6uP9TFb/aVH8qHmjS6x57qwYYTDvGr3Vuy578T2wvq1FzExpf7oenKi
+         LpLmvLIYvcGZZ5SopAI67VCAnpDHvZ8ljO7E3K1OTeroGY3La0wqAvzTQrAhJeutDvwn
+         VbJg==
+X-Gm-Message-State: AOJu0Yw+n4jC6YXnNfR+YyDvW2OqrcwsUyyr/OLnEXS2oTSlj2HXwoZP
+        fIzbsEEkt1SOqx/sud6qjRejsA==
+X-Google-Smtp-Source: AGHT+IHNdsenkQuTc4rELGiZbigK/KFy8HJv9f8XOH9URiKwnYv/ZvSBXS2eE9iNS+cof6JoKwYupw==
+X-Received: by 2002:a05:620a:29d3:b0:76f:1eac:e72d with SMTP id s19-20020a05620a29d300b0076f1eace72dmr477359qkp.38.1694749033852;
+        Thu, 14 Sep 2023 20:37:13 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id i2-20020a170902c94200b001b81a97860asm2340421pla.27.2023.09.14.20.36.16
+        by smtp.gmail.com with ESMTPSA id ff16-20020a056a002f5000b0068fedfe01fesm2011980pfb.161.2023.09.14.20.37.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Sep 2023 20:36:16 -0700 (PDT)
-Date:   Thu, 14 Sep 2023 20:36:15 -0700
+        Thu, 14 Sep 2023 20:37:13 -0700 (PDT)
+Date:   Thu, 14 Sep 2023 20:37:13 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Justin Stitt <justinstitt@google.com>
-Cc:     Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] bus: fsl-mc: refactor deprecated strncpy
-Message-ID: <202309142034.2B1DC7DE51@keescook>
-References: <20230912-strncpy-drivers-bus-fsl-mc-dprc-c-v1-1-cdb56aa3f4f4@google.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] cpufreq: refactor deprecated strncpy
+Message-ID: <202309142037.DAF02CD00@keescook>
+References: <20230913-strncpy-drivers-cpufreq-cpufreq-c-v1-1-f1608bfeff63@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230912-strncpy-drivers-bus-fsl-mc-dprc-c-v1-1-cdb56aa3f4f4@google.com>
+In-Reply-To: <20230913-strncpy-drivers-cpufreq-cpufreq-c-v1-1-f1608bfeff63@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Sep 12, 2023 at 10:52:04PM +0000, Justin Stitt wrote:
+On Wed, Sep 13, 2023 at 12:07:21AM +0000, Justin Stitt wrote:
 > `strncpy` is deprecated for use on NUL-terminated destination strings [1].
 > 
-> We need to prefer more robust and less ambiguous string interfaces.
+> We should prefer more robust and less ambiguous string interfaces.
 > 
-> `obj_desc->(type|label)` are expected to be NUL-terminated strings as
-> per "include/linux/fsl/mc.h +143"
-> | ...
-> |  * struct fsl_mc_obj_desc - Object descriptor
-> |  * @type: Type of object: NULL terminated string
-> | ...
+> Both `policy->last_governor` and `default_governor` are expected to be
+> NUL-terminated which is shown by their heavy usage with other string
+> apis like `strcmp`.
 > 
-> It seems `cmd_params->obj_type` is also expected to be a NUL-terminated string.
-> 
-> A suitable replacement is `strscpy_pad` due to the fact that it
-> guarantees NUL-termination on the destination buffer whilst keeping the
-> NUL-padding behavior that `strncpy` provides.
-
-I see evidence that %NUL padding isn't needed, like this:
-
-                      /*
-                       * Mark the obj entry as "invalid", by using the
-                       * empty string as obj type:
-                       */
-                      obj_desc->type[0] = '\0';
-
-but there's little harm in being conservative and leaving the padding
-in.
-
-> 
-> Padding may not strictly be necessary but let's opt to keep it as this
-> ensures no functional change.
+> A suitable replacement is `strscpy` [2] due to the fact that it guarantees
+> NUL-termination on the destination buffer.
 > 
 > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
 > Link: https://github.com/KSPP/linux/issues/90
 > Cc: linux-hardening@vger.kernel.org
-> Cc: Kees Cook <keescook@chromium.org>
 > Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
-> Note: build-tested
-> ---
->  drivers/bus/fsl-mc/dprc.c | 12 ++++--------
->  1 file changed, 4 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/bus/fsl-mc/dprc.c b/drivers/bus/fsl-mc/dprc.c
-> index d129338b8bc0..dd1b5c0fb7e2 100644
-> --- a/drivers/bus/fsl-mc/dprc.c
-> +++ b/drivers/bus/fsl-mc/dprc.c
-> @@ -450,10 +450,8 @@ int dprc_get_obj(struct fsl_mc_io *mc_io,
->  	obj_desc->ver_major = le16_to_cpu(rsp_params->version_major);
->  	obj_desc->ver_minor = le16_to_cpu(rsp_params->version_minor);
->  	obj_desc->flags = le16_to_cpu(rsp_params->flags);
-> -	strncpy(obj_desc->type, rsp_params->type, 16);
-> -	obj_desc->type[15] = '\0';
-> -	strncpy(obj_desc->label, rsp_params->label, 16);
-> -	obj_desc->label[15] = '\0';
-> +	strscpy_pad(obj_desc->type, rsp_params->type, 16);
-> +	strscpy_pad(obj_desc->label, rsp_params->label, 16);
 
-I really don't like all the open-coded sizes, but yeah, okay, it's not
-technically wrong. :)
+All looks sensible to me.
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
-
--Kees
-
->  	return 0;
->  }
->  EXPORT_SYMBOL_GPL(dprc_get_obj);
-> @@ -491,8 +489,7 @@ int dprc_set_obj_irq(struct fsl_mc_io *mc_io,
->  	cmd_params->irq_addr = cpu_to_le64(irq_cfg->paddr);
->  	cmd_params->irq_num = cpu_to_le32(irq_cfg->irq_num);
->  	cmd_params->obj_id = cpu_to_le32(obj_id);
-> -	strncpy(cmd_params->obj_type, obj_type, 16);
-> -	cmd_params->obj_type[15] = '\0';
-> +	strscpy_pad(cmd_params->obj_type, obj_type, 16);
->  
->  	/* send command to mc*/
->  	return mc_send_command(mc_io, &cmd);
-> @@ -564,8 +561,7 @@ int dprc_get_obj_region(struct fsl_mc_io *mc_io,
->  	cmd_params = (struct dprc_cmd_get_obj_region *)cmd.params;
->  	cmd_params->obj_id = cpu_to_le32(obj_id);
->  	cmd_params->region_index = region_index;
-> -	strncpy(cmd_params->obj_type, obj_type, 16);
-> -	cmd_params->obj_type[15] = '\0';
-> +	strscpy_pad(cmd_params->obj_type, obj_type, 16);
->  
->  	/* send command to mc*/
->  	err = mc_send_command(mc_io, &cmd);
-> 
-> ---
-> base-commit: 2dde18cd1d8fac735875f2e4987f11817cc0bc2c
-> change-id: 20230912-strncpy-drivers-bus-fsl-mc-dprc-c-bc7d818386ec
-> 
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
-> 
 
 -- 
 Kees Cook
