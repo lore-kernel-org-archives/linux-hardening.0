@@ -2,57 +2,81 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE8DEE644B
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 09:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 489AEEE644D
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 09:54:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231307AbjIOJxi (ORCPT
+        id S234134AbjIOJyr (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Sep 2023 05:53:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58444 "EHLO
+        Fri, 15 Sep 2023 05:54:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233197AbjIOJxi (ORCPT
+        with ESMTP id S234172AbjIOJyd (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Sep 2023 05:53:38 -0400
+        Fri, 15 Sep 2023 05:54:33 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D5E82727;
-        Fri, 15 Sep 2023 02:51:57 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF018C433C8;
-        Fri, 15 Sep 2023 09:51:56 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A955B2D43;
+        Fri, 15 Sep 2023 02:53:16 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3F8FC433C9;
+        Fri, 15 Sep 2023 09:53:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1694771517;
-        bh=HzrhYbMbX0nF6Txa78jKopQDXazvQhqkMOm3sDgFktM=;
+        s=korg; t=1694771596;
+        bh=tRSYOs1YIvUKupCh/zQxAhrE6h+c8c1LmgwSRnPmf2Q=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IBLp35uVAIAxNF1SYKjADENGMkUkn5QlTgZaep6pr76zQl4XUIhLgg6ihK9NuytGg
-         o18NLvmIAa+WeK5RL7n66x4TUwxorUbyU4qTLZf1O0oAwEvdjQ8k/zfWtib8ajOB4W
-         sQoEINJYOdo8PAs43ElcmPXF6jLlApsczCelFtu4=
-Date:   Fri, 15 Sep 2023 11:51:54 +0200
+        b=wce7jhmQefHvj4g2gcdB7vKdStzRg+v2LwFNwb4XqndNtPwoXtE90+SfTNIVjGsYv
+         emjnT1EQPpXXvLaa9x3OoaHBlBz+ChsMZm2S5H7wQJWLDVkBmpk5MFJLUBkbuo/naW
+         s7iXS+iEzDYwitQbSjAv58wsvN+Qkz56QpickoaY=
+Date:   Fri, 15 Sep 2023 11:53:13 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Enlin Mu <enlin.mu@outlook.com>
-Cc:     pmladek@suse.com, rostedt@goodmis.org, john.ogness@linutronix.de,
-        senozhatsky@chromium.org, keescook@chromium.org,
-        tony.luck@intel.com, gpiccoli@igalia.com, enlin.mu@unisoc.com,
-        enlinmu@gmail.com, linux-kernel@vger.kernel.org,
+To:     Enlin Mu <enlinmu@gmail.com>
+Cc:     John Ogness <john.ogness@linutronix.de>,
+        Enlin Mu <enlin.mu@outlook.com>, pmladek@suse.com,
+        rostedt@goodmis.org, senozhatsky@chromium.org,
+        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
+        enlin.mu@unisoc.com, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
 Subject: Re: [PATCH] printk: add cpu id information to printk() output
-Message-ID: <2023091552-sanitizer-vertigo-8a75@gregkh>
+Message-ID: <2023091547-mug-unlikable-571f@gregkh>
 References: <JH0PR04MB7072A4B6946EAEEB1EB8B0BE8AF6A@JH0PR04MB7072.apcprd04.prod.outlook.com>
+ <8734zfx2bo.fsf@jogness.linutronix.de>
+ <CAAfh-jPc+UWMcLPFbYy6rYUh4OU36frkVYVbkhNPNX4L6RG5sA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <JH0PR04MB7072A4B6946EAEEB1EB8B0BE8AF6A@JH0PR04MB7072.apcprd04.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAfh-jPc+UWMcLPFbYy6rYUh4OU36frkVYVbkhNPNX4L6RG5sA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Sep 15, 2023 at 03:40:34PM +0800, Enlin Mu wrote:
-> From: Enlin Mu <enlin.mu@unisoc.com>
-> 
-> Sometimes we want to print cpu id of printk() messages to consoles
+On Fri, Sep 15, 2023 at 04:46:02PM +0800, Enlin Mu wrote:
+> John Ogness <john.ogness@linutronix.de> 于2023年9月15日周五 16:34写道：
+> >
+> > On 2023-09-15, Enlin Mu <enlin.mu@outlook.com> wrote:
+> > > Sometimes we want to print cpu id of printk() messages to consoles
+> > >
+> > > diff --git a/include/linux/threads.h b/include/linux/threads.h
+> > > index c34173e6c5f1..6700bd9a174f 100644
+> > > --- a/include/linux/threads.h
+> > > +++ b/include/linux/threads.h
+> > > @@ -34,6 +34,9 @@
+> > >  #define PID_MAX_LIMIT (CONFIG_BASE_SMALL ? PAGE_SIZE * 8 : \
+> > >       (sizeof(long) > 4 ? 4 * 1024 * 1024 : PID_MAX_DEFAULT))
+> > >
+> > > +#define CPU_ID_SHIFT 23
+> > > +#define CPU_ID_MASK  0xff800000
+> >
+> > This only supports 256 CPUs. I think it doesn't make sense to try to
+> > squish CPU and Task IDs into 32 bits.
+> Yes, it is not good way,
+> >
+> > What about introducing a caller_id option to always only print the CPU
+> > ID? Or do you really need Task _and_ CPU?
+>    Yes, I need it.Because I need to know which CPU is printing the
+> log, so that I can identify the current system operation, such as load
+> situation and CPU busy/idle status
 
-This is rejected every few years.  What has changes from the previous
-times this was sent?
-
-And why can't you use trace_printk()?
+The cpu that is printing the log isn't the one that added the log
+message, so I think you will have incorrect data here, right?
 
 thanks,
 
