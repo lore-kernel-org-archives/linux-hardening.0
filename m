@@ -2,124 +2,130 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 475BEEEAA42
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 03:18:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B21EEEAA42
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 03:21:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231758AbjIODSv (ORCPT
+        id S231681AbjIODVL (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 14 Sep 2023 23:18:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48634 "EHLO
+        Thu, 14 Sep 2023 23:21:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230497AbjIODSu (ORCPT
+        with ESMTP id S230497AbjIODVL (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 14 Sep 2023 23:18:50 -0400
-Received: from mail-ot1-x32b.google.com (mail-ot1-x32b.google.com [IPv6:2607:f8b0:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 867E7270C
-        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 20:18:46 -0700 (PDT)
-Received: by mail-ot1-x32b.google.com with SMTP id 46e09a7af769-6bb07d274feso942375a34.0
-        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 20:18:46 -0700 (PDT)
+        Thu, 14 Sep 2023 23:21:11 -0400
+Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A11C270E
+        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 20:21:07 -0700 (PDT)
+Received: by mail-pg1-x530.google.com with SMTP id 41be03b00d2f7-53482b44007so1273148a12.2
+        for <linux-hardening@vger.kernel.org>; Thu, 14 Sep 2023 20:21:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1694747925; x=1695352725; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1694748067; x=1695352867; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tIUnQqFZgZoW5zFDnou379D0ZMOfFB2pLkMih4DagjA=;
-        b=I6UVjJtTHx0WZEKI34bFsUf6qQ3566kdSaiS1HB5SQmWHD8ayAPV5L6J71Uw0Dl2EF
-         U0uX2srehKYPqwzTssY0lhOiyb9i5zFtj1bTCwoqszK33/72hdJkpVUcZkVoe4xed8tI
-         CkkXJ8J4n/WqTebBT+G3D9EqbdSxx8MJVSACM=
+        bh=oNCca9HAWNyt4gE3OVRVGxMtbFHTAjcpvCI+K2BMyeI=;
+        b=YKwoe7hgo+y3wpmuoJ+EXfuBQcnXtrQZvz32it2fv3IOXLkfa4wN/tNADcU/+CCxg6
+         tKwRpiAyYEhnuA+cWxyn1FF0ubhILvv/qQUTwNbk6F1E5wqZoHDQf2iYbYzhanwVuOp7
+         GLfLINbXHQMPcugNoOvRFyVK89UvWsg/bWtEo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694747925; x=1695352725;
+        d=1e100.net; s=20230601; t=1694748067; x=1695352867;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tIUnQqFZgZoW5zFDnou379D0ZMOfFB2pLkMih4DagjA=;
-        b=r/9Ezf7+3TbdMh86GPpZBm4N/Hq/YO/+q7vyzEao5MfbwjGCoUo+KoFKKkbS+Z3yjq
-         9j7tGkfgm0DNuZC+dkKprmDuymeLU3S8XEuns4tNPfwlPeaW23dVmZLrKc6TJ2rDLykE
-         co4vhXVHKccasquwuY+1gwU7eJoNZZdqRI6IaYt0FiBA7DD3lsAQjf3iyK8fe+gdSSDz
-         6WqCCRetzLqEFXkc3wfzZb7oD9eREfHxZBQK2k1R+YKw566zxVqrBNEEfvRvkI3fwCe5
-         C4tSAcwmddAAZ8kR8RzWZD/W0bzM8RnQqKB/KPuHdh5g4gTgN0OLQNUoK7kYqlGhai9j
-         eL/w==
-X-Gm-Message-State: AOJu0Yxag4VrBukrzAIRO/sRvSMPJv/D7NGErT461fd+dHwb/ikegvix
-        Rl8HtaNEyvXYTIF8tVFJapJNuA==
-X-Google-Smtp-Source: AGHT+IFPtc4pwEwkZXzgRLfUOF1sf36Tbrcod+lMLus/e74ANEGchjwRem592DQm9lbwuMINKWzpvA==
-X-Received: by 2002:a05:6358:7212:b0:142:e357:e777 with SMTP id h18-20020a056358721200b00142e357e777mr950454rwa.25.1694747925657;
-        Thu, 14 Sep 2023 20:18:45 -0700 (PDT)
+        bh=oNCca9HAWNyt4gE3OVRVGxMtbFHTAjcpvCI+K2BMyeI=;
+        b=rdbLfCpCcIC7f05traAp7YfO9jV4FdpuPvn3pSioUR9ziHvk8lgdQVXz/mbMVgU11L
+         Awq4EOrwh4biDkVSOMaA5SnCWnt1wiIlLuqczG8YXEkFb34cTzHp4U2OAi8/VqoFC9n8
+         WiUpYWrdVKaxhAlXIVKub89xYvqjogmDhPwFKvqTOAmsoHCaFvVArzc6887/xyku40gU
+         MZWT7wAm8l5ibzvjtzc030rRWMTBjqgAiZzpmsRpvTLGhMkdWIJHh0pS1pkwrFaK4htn
+         3Rclw4XFPwP/iXhrLP8Ac7JHPSflYc7OGubtF8mPEhM96xkAwkjw949UT+k6hxpgVsuF
+         Jcrg==
+X-Gm-Message-State: AOJu0YyHWg+cZU1kkuLIMu6rLY/EVYRCdI540hvbK3zj+ARckEJcvOCM
+        fp6TKHSPLfYcfcp3STvLnwOl9w==
+X-Google-Smtp-Source: AGHT+IGLlrv1Bl6tT5S/FeoOxy9wYOBPYcVHJ81JTaECm9y21+rjB8sm1Ztcd+jc0+kI49Q66NcUng==
+X-Received: by 2002:a05:6a20:5611:b0:13d:5b70:17da with SMTP id ir17-20020a056a20561100b0013d5b7017damr622812pzc.26.1694748066782;
+        Thu, 14 Sep 2023 20:21:06 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id v5-20020a63bf05000000b00563826c66eesm1564290pgf.61.2023.09.14.20.18.44
+        by smtp.gmail.com with ESMTPSA id i6-20020a17090332c600b001a183ade911sm2321702plr.56.2023.09.14.20.21.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Sep 2023 20:18:44 -0700 (PDT)
-Date:   Thu, 14 Sep 2023 20:18:44 -0700
+        Thu, 14 Sep 2023 20:21:06 -0700 (PDT)
+Date:   Thu, 14 Sep 2023 20:21:05 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Justin Stitt <justinstitt@google.com>
-Cc:     Willy Tarreau <willy@haproxy.com>,
-        Ksenija Stanojevic <ksenija.stanojevic@gmail.com>,
-        Miguel Ojeda <ojeda@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] auxdisplay: panel: refactor deprecated strncpy
-Message-ID: <202309142018.CAD22C6D@keescook>
-References: <20230911-strncpy-drivers-auxdisplay-panel-c-v1-1-b60bd0ae8552@google.com>
+Cc:     Justin Sanders <justin@coraid.com>, Jens Axboe <axboe@kernel.dk>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, Xu Panda <xu.panda@zte.com.cn>,
+        Yang Yang <yang.yang29@zte.com>
+Subject: Re: [PATCH] aoe: refactor deprecated strncpy
+Message-ID: <202309142019.23A7D80A@keescook>
+References: <20230911-strncpy-drivers-block-aoe-aoenet-c-v1-1-9643d6137ff9@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230911-strncpy-drivers-auxdisplay-panel-c-v1-1-b60bd0ae8552@google.com>
+In-Reply-To: <20230911-strncpy-drivers-block-aoe-aoenet-c-v1-1-9643d6137ff9@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Sep 11, 2023 at 08:51:04PM +0000, Justin Stitt wrote:
-> `strncpy` is deprecated and as such we should prefer more robust and
-> less ambiguous interfaces.
+On Mon, Sep 11, 2023 at 09:09:07PM +0000, Justin Stitt wrote:
+> `strncpy` is deprecated for use on NUL-terminated destination strings [1].
 > 
-> In this case, all of `press_str`, `repeat_str` and `release_str` are
-> explicitly marked as nonstring:
-> |   struct {	/* valid when type == INPUT_TYPE_KBD */
-> |           char press_str[sizeof(void *) + sizeof(int)] __nonstring;
-> |           char repeat_str[sizeof(void *) + sizeof(int)] __nonstring;
-> |           char release_str[sizeof(void *) + sizeof(int)] __nonstring;
-> |   } kbd;
+> `aoe_iflist` is expected to be NUL-terminated which is evident by its
+> use with string apis later on like `strspn`:
+> | 	p = aoe_iflist + strspn(aoe_iflist, WHITESPACE);
 > 
-> ... which makes `strtomem_pad` a suitable replacement as it is
-> functionally the same whilst being more obvious about its behavior.
-
-Yup, this is exactly what strtomem_pad() was made for. :)
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--Kees
-
+> It also seems `aoe_iflist` does not need to be NUL-padded which means
+> `strscpy` [2] is a suitable replacement due to the fact that it
+> guarantees NUL-termination on the destination buffer while not
+> unnecessarily NUL-padding.
 > 
 > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
 > Link: https://github.com/KSPP/linux/issues/90
 > Cc: linux-hardening@vger.kernel.org
 > Cc: Kees Cook <keescook@chromium.org>
+> Cc: Xu Panda <xu.panda@zte.com.cn>
+> Cc: Yang Yang <yang.yang29@zte.com>
 > Signed-off-by: Justin Stitt <justinstitt@google.com>
+
+Agreed, truncation is the current behavior, and padding isn't needed.
+(Or more precisely, it's already zeroed and this function is called
+once.)
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
 > ---
-> Note: build-tested
-> ---
->  drivers/auxdisplay/panel.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
+> Note: This exact same patch exists [3] but seemed to die so I'm
+> resending. If it was actually picked-up somewhere then we can ignore
+> this patch.
 > 
-> diff --git a/drivers/auxdisplay/panel.c b/drivers/auxdisplay/panel.c
-> index eba04c0de7eb..e20d35bdf5fe 100644
-> --- a/drivers/auxdisplay/panel.c
-> +++ b/drivers/auxdisplay/panel.c
-> @@ -1449,10 +1449,9 @@ static struct logical_input *panel_bind_key(const char *name, const char *press,
->  	key->rise_time = 1;
->  	key->fall_time = 1;
->  
-> -	strncpy(key->u.kbd.press_str, press, sizeof(key->u.kbd.press_str));
-> -	strncpy(key->u.kbd.repeat_str, repeat, sizeof(key->u.kbd.repeat_str));
-> -	strncpy(key->u.kbd.release_str, release,
-> -		sizeof(key->u.kbd.release_str));
-> +	strtomem_pad(key->u.kbd.press_str, press, '\0');
-> +	strtomem_pad(key->u.kbd.repeat_str, repeat, '\0');
-> +	strtomem_pad(key->u.kbd.release_str, release, '\0');
->  	list_add(&key->list, &logical_inputs);
->  	return key;
+> [3]: https://lore.kernel.org/all/202212051930256039214@zte.com.cn/
+
+Ah, weird. Well, I think this current one has a more complete commit
+log, so let's use this one.
+
+-Kees
+
+> ---
+>  drivers/block/aoe/aoenet.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/block/aoe/aoenet.c b/drivers/block/aoe/aoenet.c
+> index 63773a90581d..c51ea95bc2ce 100644
+> --- a/drivers/block/aoe/aoenet.c
+> +++ b/drivers/block/aoe/aoenet.c
+> @@ -39,8 +39,7 @@ static struct ktstate kts;
+>  #ifndef MODULE
+>  static int __init aoe_iflist_setup(char *str)
+>  {
+> -	strncpy(aoe_iflist, str, IFLISTSZ);
+> -	aoe_iflist[IFLISTSZ - 1] = '\0';
+> +	strscpy(aoe_iflist, str, IFLISTSZ);
+>  	return 1;
 >  }
+>  
 > 
 > ---
 > base-commit: 2dde18cd1d8fac735875f2e4987f11817cc0bc2c
-> change-id: 20230911-strncpy-drivers-auxdisplay-panel-c-83bce51f32cb
+> change-id: 20230911-strncpy-drivers-block-aoe-aoenet-c-024debad6105
 > 
 > Best regards,
 > --
