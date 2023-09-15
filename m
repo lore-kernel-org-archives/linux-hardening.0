@@ -2,52 +2,52 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA72CD37AA
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 21:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF1ECD37AE
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 21:14:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237432AbjIOVJX (ORCPT
+        id S237514AbjIOVOL (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Sep 2023 17:09:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58040 "EHLO
+        Fri, 15 Sep 2023 17:14:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237587AbjIOVIx (ORCPT
+        with ESMTP id S238078AbjIOVNg (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Sep 2023 17:08:53 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D6ACB8
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 14:08:48 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-68bed2c786eso2428917b3a.0
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 14:08:48 -0700 (PDT)
+        Fri, 15 Sep 2023 17:13:36 -0400
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D762CCF
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 14:13:05 -0700 (PDT)
+Received: by mail-pg1-x534.google.com with SMTP id 41be03b00d2f7-573ccec985dso2048537a12.2
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 14:13:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1694812127; x=1695416927; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1694812385; x=1695417185; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1USzWYUGvvuIEVJkYh5wRYXrAoKFGs+D9zdSuXXuGko=;
-        b=CHZ4Br4anGAQsDYK2xv2w0WNa+PxFhcQ03z08OEERDJPkjtUDddOwcXa1qvUcwyiBd
-         vg6LTimDbaww50419WFegtYr+cH89uLG+2DsIMGnLgGIDaoTfUZYqjShLLNstUNTGueZ
-         RpBQk1jHcBV8J7e/EI8PRgWu0Ux513cCOiAYU=
+        bh=AZHk7vThpLpskZtqajJEmCcHKvsPyXWDUd5X6GjbEhM=;
+        b=oc7I+p+6FvfuU9el2G07pmZZeSF2QT32N24IMQTgseIYtZ+zm+hxwT+p5D7B239YdE
+         JgNQ6SKWIt1wCWtz2CjTxBLR7cOFgHfhDt97dVKoIwWoohYv6zLWXU0Jb1UZV8uCrnMb
+         qMRhQEU3J+aoYsqOLIesAlKpcVBPW9rqGgMRo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694812127; x=1695416927;
+        d=1e100.net; s=20230601; t=1694812385; x=1695417185;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1USzWYUGvvuIEVJkYh5wRYXrAoKFGs+D9zdSuXXuGko=;
-        b=neLZjW4JrrslKkmPqWRQ2xeZG3HJylu75cPmWzPzggjAx6960PfhsDa1AqxZv5Eqm+
-         iVvK+QD++wLEWu4ROAI1J/ZAD9X6B9IVzNQkft6jCaFg4OhdKlpjLcmk0nr67H8fNNnk
-         9PAkaVEHuhUynY0INuwI+0jjqb3lOPX2lUx8SPIr9f5J5NkLz/Dge+JmTjZ3kQ0wC72M
-         Qmq/CNxcELuXaxcZvxk6avqQzNt3eTjyKtGy2VToCfyhurkQdI87jGbzCGsTbqc9HiSa
-         NXBwY0kfJpiV81ptdQMI249aV7Gn+XuS2gqmA4Y4NwrXO/4pLAKIEliy7SvufGVrIzFw
-         vsNg==
-X-Gm-Message-State: AOJu0YwJFXu0zqWUIRVxNgZkaaMbvJgdB9VJRIhzAJdmGhaCjDeQLSNL
-        fCSO4iIopGzga69gH6S97sP9lQ==
-X-Google-Smtp-Source: AGHT+IGdp49LjyrMmSykt/SWt4KND8jRB/On6dOS8iyiloyE00YR/5G95sS67INYP4RtGEqyBEYS7w==
-X-Received: by 2002:a17:902:64d6:b0:1c1:fc5c:b330 with SMTP id y22-20020a17090264d600b001c1fc5cb330mr2308796pli.12.1694812127548;
-        Fri, 15 Sep 2023 14:08:47 -0700 (PDT)
+        bh=AZHk7vThpLpskZtqajJEmCcHKvsPyXWDUd5X6GjbEhM=;
+        b=WWbOg/5o9OZgsFaT1Ov8ZUbAP4CWu5ux8key6Q0duVo9KyBEdw9T3+xMyBqRoRc85F
+         +RZGm8vJKs0RAQCMxBd2kwImvIgAE4cvgcNyWmlz7Aqwo1FI2U46DCB8O4NGOptDE2hR
+         T/zV1jrkoGrlJqPFfPJXfUHaRadHmVx5tXND4+O4S8trMGrsJD9iXAihhD8MX2MQ7foZ
+         PJ9nDwQYu1SaJBDYI3KiE6CGBbkzkwsMJsabA4PMxZnYU7JL9QTBp8PuHJqxVAYsoNcL
+         T8cRjGmg7gzNcWkZwuKKCB19faaXN3JImVNIgtY96JRx5XTrarXwODrC4wWTyONCPNCF
+         iVgw==
+X-Gm-Message-State: AOJu0YxrEoVbVxTSpoyudcdvKkXTQD7SiYVi0zGyPXnOcrkdoNiyPYHr
+        UXvCOFUs2STMCK3w672phHYBqw==
+X-Google-Smtp-Source: AGHT+IHm6HySe6IHe1hP6qL3CE05/JQnD5U2WP+Yncfwbd9pJNQNoXCcc43i0dypm9WA1Axo89FeCA==
+X-Received: by 2002:a17:90b:1952:b0:268:14a0:f8a with SMTP id nk18-20020a17090b195200b0026814a00f8amr2739464pjb.39.1694812384792;
+        Fri, 15 Sep 2023 14:13:04 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id y11-20020a1709029b8b00b001b9e86e05b7sm3916537plp.0.2023.09.15.14.08.47
+        by smtp.gmail.com with ESMTPSA id ie18-20020a17090b401200b0026971450601sm3428843pjb.7.2023.09.15.14.13.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Sep 2023 14:08:47 -0700 (PDT)
-Date:   Fri, 15 Sep 2023 14:08:46 -0700
+        Fri, 15 Sep 2023 14:13:04 -0700 (PDT)
+Date:   Fri, 15 Sep 2023 14:13:03 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Matteo Rizzo <matteorizzo@google.com>
 Cc:     cl@linux.com, penberg@kernel.org, rientjes@google.com,
@@ -59,31 +59,42 @@ Cc:     cl@linux.com, penberg@kernel.org, rientjes@google.com,
         dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
         corbet@lwn.net, luto@kernel.org, peterz@infradead.org,
         jannh@google.com, evn@google.com, poprdi@google.com,
-        jordyzomer@google.com
-Subject: Re: [RFC PATCH 09/14] mm/slub: add the slab freelists to kmem_cache
-Message-ID: <202309151408.A419BEAD15@keescook>
+        jordyzomer@google.com, ardb@google.com
+Subject: Re: [RFC PATCH 10/14] x86: Create virtual memory region for SLUB
+Message-ID: <202309151410.E65B8300F@keescook>
 References: <20230915105933.495735-1-matteorizzo@google.com>
- <20230915105933.495735-10-matteorizzo@google.com>
+ <20230915105933.495735-11-matteorizzo@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230915105933.495735-10-matteorizzo@google.com>
+In-Reply-To: <20230915105933.495735-11-matteorizzo@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Sep 15, 2023 at 10:59:28AM +0000, Matteo Rizzo wrote:
+On Fri, Sep 15, 2023 at 10:59:29AM +0000, Matteo Rizzo wrote:
 > From: Jann Horn <jannh@google.com>
 > 
-> With SLAB_VIRTUAL enabled, unused slabs which still have virtual memory
-> allocated to them but no physical memory are kept in a per-cache list so
-> that they can be reused later if the cache needs to grow again.
+> SLAB_VIRTUAL reserves 512 GiB of virtual memory and uses them for both
+> struct slab and the actual slab memory. The pointers returned by
+> kmem_cache_alloc will point to this range of memory.
+
+I think the 512 GiB limit may be worth mentioning in the Kconfig help
+text.
+
+And in the "640K is enough for everything" devil's advocacy, why is 512
+GiB enough here? Is there any greater risk of a pathological allocation
+pattern breaking a system any more (or less) than is currently possible?
 > 
 > Signed-off-by: Jann Horn <jannh@google.com>
 
-Looks appropriately #ifdef'ed...
+But, yes, I'm still a fan, and I think it interacts well here with the
+rest of the KASLR initialization:
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
+
+Have you tried to make this work on arm64? I imagine it should be
+roughly as easy?
 
 -- 
 Kees Cook
