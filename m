@@ -2,83 +2,66 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4927CD37B0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA867CD37B2
 	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 20:50:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237390AbjIOUt4 (ORCPT
+        id S237587AbjIOUt6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Sep 2023 16:49:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35504 "EHLO
+        Fri, 15 Sep 2023 16:49:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237690AbjIOUtm (ORCPT
+        with ESMTP id S237769AbjIOUts (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Sep 2023 16:49:42 -0400
-Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 763752707
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:49:12 -0700 (PDT)
-Received: from eig-obgw-5007a.ext.cloudfilter.net ([10.0.29.141])
+        Fri, 15 Sep 2023 16:49:48 -0400
+Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55D6E272D
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:49:21 -0700 (PDT)
+Received: from eig-obgw-6009a.ext.cloudfilter.net ([10.0.30.184])
         by cmsmtp with ESMTP
-        id hFDAqA6LSOzKlhFkWqIHkQ; Fri, 15 Sep 2023 20:49:12 +0000
+        id hAJfqzmWIDKaKhFkeqIeOS; Fri, 15 Sep 2023 20:49:20 +0000
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with ESMTPS
-        id hFkVqJA2EHoqXhFkVqe8Ik; Fri, 15 Sep 2023 20:49:11 +0000
-X-Authority-Analysis: v=2.4 cv=VP7OIvDX c=1 sm=1 tr=0 ts=6504c347
+        id hFkdq2CSHOCehhFkeqYGkG; Fri, 15 Sep 2023 20:49:20 +0000
+X-Authority-Analysis: v=2.4 cv=feK+dmcF c=1 sm=1 tr=0 ts=6504c350
  a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
  a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
  a=IkcTkHD0fZMA:10 a=zNV7Rl7Rt7sA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
- a=P-IC7800AAAA:8 a=sozttTNsAAAA:8 a=zu6OG0ZhAAAA:8 a=pGLkceISAAAA:8
- a=FlkJ-zHRAAAA:8 a=JfrnYn6hAAAA:8 a=cm27Pg_UAAAA:8 a=VwQbUJbxAAAA:8
- a=6jf_rtzPGzjKtfs0wCQA:9 a=QEXdDO2ut3YA:10 a=d3PnA9EDa4IxuAV0gXij:22
- a=aeg5Gbbo78KNqacMgKqU:22 a=pAN39diAhXWuPx0-Vjn3:22 a=rcJ5IfC3ewqtVv14NVGK:22
- a=1CNFftbPRP8L7MoqJWF3:22 a=xmb-EsYY8bH0VWELuYED:22 a=AjGcO6oz07-iQ99wixmX:22
+ a=iox4zFpeAAAA:8 a=cm27Pg_UAAAA:8 a=VwQbUJbxAAAA:8 a=PN5XkUvCLqoqEaR2be0A:9
+ a=QEXdDO2ut3YA:10 a=WzC6qhA0u3u7Ye7llzcV:22 a=xmb-EsYY8bH0VWELuYED:22
+ a=AjGcO6oz07-iQ99wixmX:22
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
         In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=CclFJTPt/kQYr7DtGTorOj0xv3gEfRWPWq0sGa9nXxU=; b=JfYzhAMbESaXEFIgyujVndTe2G
-        bR6japwiVCeKiPhHmpOiFA161I2Os9qCf5XyhjoKFsx6xN6vkJraT/QSZnk760duUDC9J8TSNSveU
-        yyxCw5AfmC4XiILekTv91ydYFlQI9uvYbNIIynvhjQ9UoftRO1LevL6OqeMZMUp9vMksQNaGm2AdB
-        WQxjTc7MST2NriLbt7fim+9tU7AsHPFLgOUzD/JZaQF96yYPX1vPw+FlvalvrtwhF8Le4Vq4KXEq6
-        qd1K6WeAu284dVHzFyAquroAqf6RBdnfZ7hsbAxhY6lGly7Yix580DQCw7KI79PFmlIbNg+vorlvQ
-        R/xSmPcQ==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:42002 helo=[192.168.15.8])
+        bh=hYpEA/a0nYCN+dxDO1fQXq4rAKGRzZrtl0k6uVZ1AeE=; b=UJ7yPfFOpUGx5kNv0igW/tIhQw
+        kvDXUQFzpxc08aTS6P2Nno6ei1reKQtKw6uwz1egbDBXKKN10ljPPUwKNvzARMtqJoPvH3hDuIRVn
+        upa0AueL7k3DOOtzQp484XDfw9AcwQ8H4T0ZehYEka92VzQZ8LuVVLBI6wYtbk0+XVcbk1pYpmaa0
+        6ZWXNxyUCluOi/nrBmXJ2ThheKh+2cnsclffbKB+qbxKViQH+8iSk4zXQPPb0px7WWtZQxE4YJpGG
+        lftn0SvUU+2H0Fm2ue+vjbs16sYJcOSBwoRztW26UBuN5sm0pBVhDdAnE3AUO+aF7WjqGCXMZnha5
+        EebIj/7g==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:46604 helo=[192.168.15.8])
         by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         (Exim 4.96)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1qhFkR-002eMw-2X;
-        Fri, 15 Sep 2023 15:49:07 -0500
-Message-ID: <4f318e62-b0e1-a1d2-9850-890b93a97bb3@embeddedor.com>
-Date:   Fri, 15 Sep 2023 14:50:02 -0600
+        id 1qhFkc-002ebv-0A;
+        Fri, 15 Sep 2023 15:49:18 -0500
+Message-ID: <118576aa-a667-8c91-821a-351562dc4c61@embeddedor.com>
+Date:   Fri, 15 Sep 2023 14:50:14 -0600
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH] mtd: rawnand: sunxi: Annotate struct sunxi_nand_chip with
- __counted_by
+Subject: Re: [PATCH] udf: Annotate struct udf_bitmap with __counted_by
 Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Manuel Dipolt <mdipolt@robart.cc>,
-        linux-mtd@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-        Nathan Chancellor <nathan@kernel.org>,
+To:     Kees Cook <keescook@chromium.org>, Jan Kara <jack@suse.com>
+Cc:     Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, Heiko Stuebner <heiko@sntech.de>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Yangtao Li <frank.li@vivo.com>, Li Zetao <lizetao1@huawei.com>,
-        linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-        linux-hardening@vger.kernel.org
-References: <20230915201300.never.057-kees@kernel.org>
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+References: <20230915201404.never.574-kees@kernel.org>
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20230915201300.never.057-kees@kernel.org>
+In-Reply-To: <20230915201404.never.574-kees@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
@@ -89,45 +72,36 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 187.162.21.192
 X-Source-L: No
-X-Exim-ID: 1qhFkR-002eMw-2X
+X-Exim-ID: 1qhFkc-002ebv-0A
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:42002
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:46604
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 391
+X-Email-Count: 414
 X-Org:  HG=hgshared;ORG=hostgator;
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfKvvHQ6XU2/8UEPmkamMyEn1Ww7pcivPCHVR+RO1eAw9RwqTc3+u0QCLSdI5qezbvEyfydRCmy/aX989RDbVXidnzLQbD7Q4EokhEmQxGNT0XpeOrNWD
- 2GspsNaT0sboPpP70EQ09YNuc0U25I2L1KmIj+O9EoFm9CQwEcuMiMvTg92FcyhgbJJkz0WJSb6/iLuQJYDxldBtzjTVYvxW53yYUIJDCUJMit0fgdWcji+V
+X-CMAE-Envelope: MS4xfNdR816SzLj7QqIfDsgsjtOFzT2xpNBcAS0hS5IeEl+W4GOtLc+z+lvC3VRNHxAu7hhqPi+Aa0nnc8N3ll5wLaH0fGDiBqPIy9CMC00tuojm2aBbyABt
+ AGtWlogOj2gWS+WY1ktF78bov9ZhLAQPY75CsuJgmfrd2uefu959Jf3V/liPd+39wX/FmKndks2o501M7vWVMBub8HRZ6fkL2cbUI+mItiP2LGlZn4hpreKl
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 
 
-On 9/15/23 14:13, Kees Cook wrote:
+On 9/15/23 14:14, Kees Cook wrote:
 > Prepare for the coming implementation by GCC and Clang of the __counted_by
 > attribute. Flexible array members annotated with __counted_by can have
 > their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
 > 
-> As found with Coccinelle[1], add __counted_by for struct sunxi_nand_chip.
+> As found with Coccinelle[1], add __counted_by for struct udf_bitmap.
 > 
 > [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 > 
-> Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-> Cc: Richard Weinberger <richard@nod.at>
-> Cc: Vignesh Raghavendra <vigneshr@ti.com>
-> Cc: Chen-Yu Tsai <wens@csie.org>
-> Cc: Jernej Skrabec <jernej.skrabec@gmail.com>
-> Cc: Samuel Holland <samuel@sholland.org>
-> Cc: Manuel Dipolt <mdipolt@robart.cc>
-> Cc: linux-mtd@lists.infradead.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-sunxi@lists.linux.dev
+> Cc: Jan Kara <jack@suse.com>
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 
 Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
@@ -137,19 +111,19 @@ Thanks
 Gustavo
 
 > ---
->   drivers/mtd/nand/raw/sunxi_nand.c | 2 +-
+>   fs/udf/udf_sb.h | 2 +-
 >   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/mtd/nand/raw/sunxi_nand.c b/drivers/mtd/nand/raw/sunxi_nand.c
-> index 9abf38049d35..4ec17c8bce5a 100644
-> --- a/drivers/mtd/nand/raw/sunxi_nand.c
-> +++ b/drivers/mtd/nand/raw/sunxi_nand.c
-> @@ -197,7 +197,7 @@ struct sunxi_nand_chip {
->   	u32 timing_cfg;
->   	u32 timing_ctl;
->   	int nsels;
-> -	struct sunxi_nand_chip_sel sels[];
-> +	struct sunxi_nand_chip_sel sels[] __counted_by(nsels);
+> diff --git a/fs/udf/udf_sb.h b/fs/udf/udf_sb.h
+> index 9af6ff7f9747..f9a60bc1abcf 100644
+> --- a/fs/udf/udf_sb.h
+> +++ b/fs/udf/udf_sb.h
+> @@ -86,7 +86,7 @@ struct udf_virtual_data {
+>   struct udf_bitmap {
+>   	__u32			s_extPosition;
+>   	int			s_nr_groups;
+> -	struct buffer_head	*s_block_bitmap[];
+> +	struct buffer_head	*s_block_bitmap[] __counted_by(s_nr_groups);
 >   };
 >   
->   static inline struct sunxi_nand_chip *to_sunxi_nand(struct nand_chip *nand)
+>   struct udf_part_map {
