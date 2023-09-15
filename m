@@ -2,78 +2,90 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C53ECD37A7
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9EF6CD37AA
 	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 20:07:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237115AbjIOUHG (ORCPT
+        id S237124AbjIOUHH (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Sep 2023 16:07:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45084 "EHLO
+        Fri, 15 Sep 2023 16:07:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237258AbjIOUHB (ORCPT
+        with ESMTP id S237190AbjIOUGr (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Sep 2023 16:07:01 -0400
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9341B2723
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:06:29 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1c328b53aeaso21910285ad.2
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:06:29 -0700 (PDT)
+        Fri, 15 Sep 2023 16:06:47 -0400
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CAED2D70
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:05:55 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id d9443c01a7336-1c39a4f14bcso23347205ad.3
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:05:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1694808389; x=1695413189; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1694808354; x=1695413154; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dB1pwLSw3TfsJDfFAPemy9b5TtNPX4UXkiSYwc3PxLw=;
-        b=j6TqJJdlR2DW/SYrp7PPvx3W7j1C+SV0WzE/ji76VnUlPlwTCuzFeRDvtlzOB24Vgl
-         XwdTT24f6aK2+sby0LpgXYyYVxWaXIH5o7gCqBgK4hKit/wKZtufvy9dI0SFdrEgX2pa
-         kVIA00KXA9JvJnIbKd+bAlVGlzTI0E+UMpJEA=
+        bh=n0Hengu6K84ftLWMR961tNpe8ygiAngUSieA27Tmw8o=;
+        b=mTjofa0WWeMwSESHvEFPRZkSP8Ukosg8qDpGwK3km7Yy3O/LY0Mn8iuGPbwmE74reh
+         kNstE0TluSB/7eU1th5eB4f1KugMlV3c9MVYincmV0APD2yU6wUtATpQ1ucIr/wrJ++R
+         RuyGUqprZY3Voe1hgkbOAizgJ2/D6R9Y6MwBI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694808389; x=1695413189;
+        d=1e100.net; s=20230601; t=1694808354; x=1695413154;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=dB1pwLSw3TfsJDfFAPemy9b5TtNPX4UXkiSYwc3PxLw=;
-        b=MmL9nRbzRaYWvdwBwp++0fiT6dKliYCn96BGXvNk2b+t/XhXQD9erBRPAmAREetD7N
-         wlJ8GmV970zpq4ED+Kh6PiOHAeKa31kP66ec3n/3Yi14gtSFJgzNi3O3ZC9IDctUOeIm
-         gVD3MP5UOLMzpc5KiX6z/moUHLsREk8s4LwVbfie+kn/AXr6I8NgnvnPXPTpOnrK7YXH
-         lpMuwxkf6wMoo16uT1lF7bG2WCJW2ASvfnOJa3xRv0uUNfF6QFfAfe5SHQCO9spg7TUc
-         a91kqSv+PPCjd8U3+rtUBKBiWEDJsr9ow35AhEhW1i9Fmb+Q2xjCrt2+NonksTZQJlQz
-         jZPA==
-X-Gm-Message-State: AOJu0YxM69FxqrEgn2PMiqOADDKEgLZBr4cWP/obQMzuQpneS5ucKxwB
-        UwrMAuxN+zpsrCct1qZP/zMdsQ==
-X-Google-Smtp-Source: AGHT+IFSEywbcZOC5XShL0oLvSifwuso6NQoEWHYLsrVN3EG8OWtaO4bmtwSMFub6Nj8jMAXdfGJXA==
-X-Received: by 2002:a17:902:c94c:b0:1c3:cee1:cc8e with SMTP id i12-20020a170902c94c00b001c3cee1cc8emr2842576pla.68.1694808389168;
-        Fri, 15 Sep 2023 13:06:29 -0700 (PDT)
+        bh=n0Hengu6K84ftLWMR961tNpe8ygiAngUSieA27Tmw8o=;
+        b=jh+SurCFPrGp+xuu/RQds/ZKU61UCT1E+VfSjRk0Z7UNNn6a8Y4vzNTpUC2C8CWG+c
+         Ay2kJEUwXFqziJZZaEpNR1S6qgH3HhuAZqKGwUzDvKwtXhYCLCkZpDnpn06lGaemKP0C
+         hBYYszZ/Pqlohzy5nC07tDoy4wQr39Rja5tGbvgWcCppanpH68h7cw5jb/r2hIW55v/4
+         dt+bt/XTYK7IWdboZu5l2VGbOtwMTe24IFI4P0b3IUnEnq2sIdzXUY062gxfYcatlo6T
+         J6rnulofScPQeKrIBOXcBmIYoWjY7hbFKxaaor+0IBIgKCkrH3a++lUzprbNIWR0yjR6
+         ReRQ==
+X-Gm-Message-State: AOJu0YyWIsRSFR36ajdDhliRFfhBgemREvuKF+XR85TJ3WxCdzctwHhH
+        tTAGyescSSsVfdv9f+toeA/8Aw==
+X-Google-Smtp-Source: AGHT+IGq24vrcLOcjpvOgH5ob0qEzwfV+/Rp+So43tNxmidLFVOV8uEa8SaUdpJsq+YRIrMWJWaR2w==
+X-Received: by 2002:a17:902:eccd:b0:1c0:ceab:e9bd with SMTP id a13-20020a170902eccd00b001c0ceabe9bdmr2471233plh.25.1694808354539;
+        Fri, 15 Sep 2023 13:05:54 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id b7-20020a170902d50700b001a80ad9c599sm3857764plg.294.2023.09.15.13.06.28
+        by smtp.gmail.com with ESMTPSA id j12-20020a170902c3cc00b001b9e9edbf43sm3884947plj.171.2023.09.15.13.05.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Sep 2023 13:06:28 -0700 (PDT)
+        Fri, 15 Sep 2023 13:05:54 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Loic Poulain <loic.poulain@linaro.org>
-Cc:     Kees Cook <keescook@chromium.org>, Kalle Valo <kvalo@kernel.org>,
-        wcn36xx@lists.infradead.org, linux-wireless@vger.kernel.org,
+To:     Arend van Spriel <aspriel@gmail.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Kalle Valo <kvalo@kernel.org>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Hector Martin <marcan@marcan.st>,
+        =?UTF-8?q?Alvin=20=C5=A0ipraga?= <alsi@bang-olufsen.dk>,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        SHA-cyfmac-dev-list@infineon.com,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Subject: [PATCH] wifi: wcn36xx: Annotate struct wcn36xx_hal_ind_msg with __counted_by
-Date:   Fri, 15 Sep 2023 13:06:27 -0700
-Message-Id: <20230915200622.never.820-kees@kernel.org>
+        Tom Rix <trix@redhat.com>,
+        "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH] wifi: brcmfmac: firmware: Annotate struct brcmf_fw_request with __counted_by
+Date:   Fri, 15 Sep 2023 13:05:52 -0700
+Message-Id: <20230915200552.never.642-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1231; i=keescook@chromium.org;
- h=from:subject:message-id; bh=Tx0rD4QGaivxM7sy4gGEy8kvfFVy4mGnM/BvvbkoZzI=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlBLlD6p2BXFHtSwKtnpPyeTLWDyraFgZ0S036T
- HLIIfFDiyOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQS5QwAKCRCJcvTf3G3A
- JjD6D/93UiQLOjttIT0EbU7ldsmyJjtmhfaLaIneAYcFlDcgnsftgejYn1pA9AYok+xUnAnpfkp
- 9bViv791IaDIYWP4k7xICVG5IYyfS7++UJmcABftzpgHlbVMGImJjEYazHI67tLbGcbQBXYWc5e
- Ym8BsbfK9qPbjraHzs2LjoOO8CZdHH3Z7qhqffj8zZTZKVqCg8gM6YHRbOu6lgrYuhljGdvKfgC
- o4TcAE7B6pIhNsxLKFjTxXX/EtlJcjU1u3qaxXTsygt0vg5e75SLyTRlTJoAFpC3ZPoMMKV+QXd
- HwxRtLb42r+4RdH113rVtXOVQvJPUMZ/7bUzRZj1WmQpbBaFAvGX8jLI2bfRfOzlHu3oe9KTsNP
- 3UJlPIOac29tVYOWVc3GyU7CbYrfzr7/FV9O2uK2yUJUvQVeEk6JdHh6yadyhRzeNTD1LySHwzo
- Y98YLn7hXO3WHcUw7IiF4gVyRuAHC8Zjb2a92QpqBQtCCnJ4s6aNi5wEnzycdmdpdi/epGSvsBS
- xj5tHVSwsuKT1ul56Q2o7/B/c9m+1DbhxZG7Wv9C+qJeHHb9ZHz6mWI55QkZMz/yPk1gIq27ZZ+
- HaaAk8OznFr0MKtZtid95deMwVBswNBl95zDNuIdr+z8YaicpZBr4ol4fxLSmGuiQZ+zIBRI3B7
- QNnIVu0 Rm0JoYKQ==
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1682; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=weqFhcMmCNEK0MsxB/YQXMpH/1sEF3VWxqr/sIkwvFs=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlBLkgJxO209fAiikOP4NOLZvvkl0taCniJgeTe
+ BfOIErtc2+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQS5IAAKCRCJcvTf3G3A
+ JuUUEACZ2zaEA8T4Cn+MXQTZsiQW6ccYb+T67EABtpHMJ4cpCBYnDUFObSJdhqyNgTMRDPYL07d
+ 6fCfLAJQEBKhzzlKriudyRK7RKpMLFXL1/VZ2VshpPpr1+nih8BvG6G95958M/2KzzNfBnJW1K2
+ r8ll18pOYxr53JHtE0afMIbVijjDcCmJ1YBnSdSWF4F0qdJSLYxI7tWXmOcanyNTMgVktHRikWK
+ lvUS2q72eqNEAM8NTOBfg8watlPpbDk7Dvooq+jYCZe5qCV7FFQOohK4NFaje1Y/AbRCAYw6ItN
+ saFM0iOJNyUWDpt0hsG710nZFYvpoGsFkhHBbzqFoySbVFfqhQD5ubDa48yoN0AD0hWntF5IJrk
+ VUiGrKP8rXAHmTO0gqMAKbjlDJr2pZez8QZtkVa2K7hgHpabCN7d60rbWvAyjMaba+QZaMY1oBB
+ 7tHL/Avo/6NdspsNpPVeiFpRU3mDEhjiB6i7fJqblMFndNBs5gywqAYyLtbmMqGKijzhbW3qC+j
+ JYb4HUVvToJO7FD3EzJMQQjuNcxjoc5CmlwNJxMYW1gfIwr/Fv/vSnFOMzB9R0yV8fh2xUHjGeD
+ sEHOO1E+G+Le0NLFJBX6tKqb451jPjxpTyT3+IpcOopCKnL60hv8UlEjI2U93m+xzsWhbrL2F94
+ WI39utA MSfdKWew==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -86,32 +98,39 @@ their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 functions).
 
-As found with Coccinelle[1], add __counted_by for struct wcn36xx_hal_ind_msg.
+As found with Coccinelle[1], add __counted_by for struct brcmf_fw_request.
 
 [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 
-Cc: Loic Poulain <loic.poulain@linaro.org>
+Cc: Arend van Spriel <aspriel@gmail.com>
+Cc: Franky Lin <franky.lin@broadcom.com>
+Cc: Hante Meuleman <hante.meuleman@broadcom.com>
 Cc: Kalle Valo <kvalo@kernel.org>
-Cc: wcn36xx@lists.infradead.org
+Cc: Matthias Brugger <mbrugger@suse.com>
+Cc: Hector Martin <marcan@marcan.st>
+Cc: "Alvin Šipraga" <alsi@bang-olufsen.dk>
+Cc: Hans de Goede <hdegoede@redhat.com>
 Cc: linux-wireless@vger.kernel.org
+Cc: brcm80211-dev-list.pdl@broadcom.com
+Cc: SHA-cyfmac-dev-list@infineon.com
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/net/wireless/ath/wcn36xx/smd.h | 2 +-
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/firmware.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/wcn36xx/smd.h b/drivers/net/wireless/ath/wcn36xx/smd.h
-index cf15cde2a364..2c1ed9e570bf 100644
---- a/drivers/net/wireless/ath/wcn36xx/smd.h
-+++ b/drivers/net/wireless/ath/wcn36xx/smd.h
-@@ -47,7 +47,7 @@ struct wcn36xx_fw_msg_status_rsp {
- struct wcn36xx_hal_ind_msg {
- 	struct list_head list;
- 	size_t msg_len;
--	u8 msg[];
-+	u8 msg[] __counted_by(msg_len);
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/firmware.h b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/firmware.h
+index 1266cbaee072..4002d326fd21 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/firmware.h
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/firmware.h
+@@ -69,7 +69,7 @@ struct brcmf_fw_request {
+ 	u16 bus_nr;
+ 	u32 n_items;
+ 	const char *board_types[BRCMF_FW_MAX_BOARD_TYPES];
+-	struct brcmf_fw_item items[];
++	struct brcmf_fw_item items[] __counted_by(n_items);
  };
  
- struct wcn36xx;
+ struct brcmf_fw_name {
 -- 
 2.34.1
 
