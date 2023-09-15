@@ -2,27 +2,27 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA72CD379F
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 20:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 329EECD379F
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 20:32:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236565AbjIOUbM (ORCPT
+        id S237309AbjIOUbq (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Sep 2023 16:31:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60442 "EHLO
+        Fri, 15 Sep 2023 16:31:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236616AbjIOUa6 (ORCPT
+        with ESMTP id S237300AbjIOUba (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Sep 2023 16:30:58 -0400
-Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 245BBFB
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:30:52 -0700 (PDT)
-Received: from eig-obgw-5002a.ext.cloudfilter.net ([10.0.29.215])
+        Fri, 15 Sep 2023 16:31:30 -0400
+Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C839F9
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:31:23 -0700 (PDT)
+Received: from eig-obgw-6010a.ext.cloudfilter.net ([10.0.30.248])
         by cmsmtp with ESMTP
-        id hFCiqdFlMez0ChFSPqBq1V; Fri, 15 Sep 2023 20:30:29 +0000
+        id hCxBqjkqzbK1VhFTHqlFLh; Fri, 15 Sep 2023 20:31:23 +0000
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with ESMTPS
-        id hFSlqZbZmn5VDhFSlqQxtf; Fri, 15 Sep 2023 20:30:52 +0000
-X-Authority-Analysis: v=2.4 cv=bOkFndyZ c=1 sm=1 tr=0 ts=6504befc
+        id hFTHqaU1vKPGkhFTHqw46c; Fri, 15 Sep 2023 20:31:23 +0000
+X-Authority-Analysis: v=2.4 cv=Aur9YcxP c=1 sm=1 tr=0 ts=6504bf1b
  a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
  a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
  a=IkcTkHD0fZMA:10 a=zNV7Rl7Rt7sA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
@@ -34,24 +34,24 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=kqpFc+6WUDnssAblCEJx9AOlPnNTHAR7+vmbVqfjYCw=; b=A2cpeTa8LyHMnqW5epBJVnKoth
-        Gp+/9Lk7FQ8D4FVKxWi19O6M0d540ICzsDM6YBsqCbUCi7s20XnaGCi+/D/+JibzAtaovUMhmnZcd
-        y9gRyf1xEK+AUUL6SV2MGxXLXZl3ML0Vhw2saf+47hulOKzMUguUBo+6jp5BH+TgRN+T6h52kDC28
-        s1KQozrbTsdOZf6T55kAM5Sifb1Sc7nQZ2ezhlIW19I8CVE+UfhFDsbQifQrOSWKp9Z7XN/ptLti/
-        Wm7iG927k61ueZAb4IXu2rVFrAZpDAB0jN4tvLXdMu3lUy2dwyzEBqNui9V5YqFGPPKPnluo+Lgin
-        IURVOC6A==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:55922 helo=[192.168.15.8])
+        bh=sEj9TaLmgQVbeOxveAR1hIt1TkUwVYJDz01Bb1bSBRI=; b=sGZg0wpXweHx+Ci3tEobbCu++o
+        TJxHYYeWbbDR+4vJ1ry4LXCe9pmORLbWxGluCBTLgnAqDKRLaEMGfcV2sJYDL8MJIy+pV/34zkg3t
+        TxnokqGg05Ba//0kZhDNu4kMTJKAktOmCENX0LM8Da/sSsBUN50YLFzM8vN5SwGZp8XPIwhaxffKB
+        s5RTmiyBy57t3BbizWHW3ZP9Y49LJKlAwhfPuYf6C9rJ+2b1BXBL1P2cpFSew9UGmLZmBMDmJdBvV
+        tRxZHg9cNULumjc3e4ACJ8djb+2Pn5eTX8KYI8Ey1f5q8/hBTkQgkq2O88BjWXWgLprv8/XOdwLpE
+        arkl8sbQ==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:54882 helo=[192.168.15.8])
         by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         (Exim 4.96)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1qhFSk-002MlD-1G;
-        Fri, 15 Sep 2023 15:30:50 -0500
-Message-ID: <030807ff-5fc0-3461-565e-be06bf0906dd@embeddedor.com>
-Date:   Fri, 15 Sep 2023 14:31:46 -0600
+        id 1qhFTG-002NAG-0E;
+        Fri, 15 Sep 2023 15:31:22 -0500
+Message-ID: <13649f74-874c-c2bd-769a-87b6b4559ff4@embeddedor.com>
+Date:   Fri, 15 Sep 2023 14:32:17 -0600
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH] dm crypt: Annotate struct crypt_config with __counted_by
+Subject: Re: [PATCH] dm: Annotate struct dm_stat with __counted_by
 Content-Language: en-US
 To:     Kees Cook <keescook@chromium.org>, Alasdair Kergon <agk@redhat.com>
 Cc:     Mike Snitzer <snitzer@kernel.org>, dm-devel@redhat.com,
@@ -59,9 +59,9 @@ Cc:     Mike Snitzer <snitzer@kernel.org>, dm-devel@redhat.com,
         Nick Desaulniers <ndesaulniers@google.com>,
         Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
         llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-References: <20230915200344.never.272-kees@kernel.org>
+References: <20230915200400.never.585-kees@kernel.org>
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20230915200344.never.272-kees@kernel.org>
+In-Reply-To: <20230915200400.never.585-kees@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
@@ -72,32 +72,32 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 187.162.21.192
 X-Source-L: No
-X-Exim-ID: 1qhFSk-002MlD-1G
+X-Exim-ID: 1qhFTG-002NAG-0E
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:55922
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:54882
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 85
+X-Email-Count: 105
 X-Org:  HG=hgshared;ORG=hostgator;
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfLFUcfdwjipmyBCTFlZuzuPry+e6x7wHdpEPu1idCc1QMgOgh8NbElJFpzKVyuKryfdhJpvv1zlHuAAyEiJZLO5gCRbIBLnCYnchdx/YF8FH/M3UZ8s6
- BLMMDGW+GdyqdbxJ6/DNt8bI3qyBuVynWYr1mgUm8nefZVoQmyPoZjEA80pMGss353K4d0wmaCFCpvkeNkaeUqJseJIpP005INHlj+XAwQtsnRp8wUOXKslh
+X-CMAE-Envelope: MS4xfIX1Nvlq9wQIWsXPU7oys9mVdf7ePwZiLtmWaRo7JiPseu0QXIztR6WWdMoUb4r4dObclxKWMc5zMZbleIuOEiKYmk5NjWYWfrXrfOCfJDnWuqpOykXo
+ VKPrKM75LVzCo7d/iD1GF2nQoPoL4DW3N/dLTSnV8n+OTlOfIMX70bK8kQp5kj6A1egTkoBbiqllINb3vDaQl38oRTLIb+yfkWtrx75noFf11MTUCXafOUXa
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 
 
-On 9/15/23 14:03, Kees Cook wrote:
+On 9/15/23 14:04, Kees Cook wrote:
 > Prepare for the coming implementation by GCC and Clang of the __counted_by
 > attribute. Flexible array members annotated with __counted_by can have
 > their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
 > 
-> As found with Coccinelle[1], add __counted_by for struct crypt_config.
+> As found with Coccinelle[1], add __counted_by for struct dm_stat.
 > 
 > [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 > 
@@ -113,19 +113,19 @@ Thanks
 Gustavo
 
 > ---
->   drivers/md/dm-crypt.c | 2 +-
+>   drivers/md/dm-stats.c | 2 +-
 >   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
-> index f2662c21a6df..f276e9460feb 100644
-> --- a/drivers/md/dm-crypt.c
-> +++ b/drivers/md/dm-crypt.c
-> @@ -224,7 +224,7 @@ struct crypt_config {
->   	struct mutex bio_alloc_lock;
->   
->   	u8 *authenc_key; /* space for keys in authenc() format (if used) */
-> -	u8 key[];
-> +	u8 key[] __counted_by(key_size);
+> diff --git a/drivers/md/dm-stats.c b/drivers/md/dm-stats.c
+> index db2d997a6c18..bdc14ec99814 100644
+> --- a/drivers/md/dm-stats.c
+> +++ b/drivers/md/dm-stats.c
+> @@ -56,7 +56,7 @@ struct dm_stat {
+>   	size_t percpu_alloc_size;
+>   	size_t histogram_alloc_size;
+>   	struct dm_stat_percpu *stat_percpu[NR_CPUS];
+> -	struct dm_stat_shared stat_shared[];
+> +	struct dm_stat_shared stat_shared[] __counted_by(n_entries);
 >   };
 >   
->   #define MIN_IOS		64
+>   #define STAT_PRECISE_TIMESTAMPS		1
