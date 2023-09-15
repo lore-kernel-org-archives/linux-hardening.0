@@ -2,82 +2,77 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33AAECD379F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9EFCCD37AC
 	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 20:15:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237108AbjIOUOi (ORCPT
+        id S237174AbjIOUOj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Sep 2023 16:14:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49444 "EHLO
+        Fri, 15 Sep 2023 16:14:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237160AbjIOUOH (ORCPT
+        with ESMTP id S237386AbjIOUOW (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Sep 2023 16:14:07 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7928F2D43
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:12:37 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-68fb79ef55eso2335589b3a.0
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:12:37 -0700 (PDT)
+        Fri, 15 Sep 2023 16:14:22 -0400
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A14D2D45
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:14:07 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-68fbb10dec7so2355499b3a.3
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:14:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1694808757; x=1695413557; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1694808847; x=1695413647; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PrBmIK/7ZBFkfIJ+GoT9lofYoxjkLNz9RY+nH/vRJ5g=;
-        b=Hyr26EoDc/3IqnsEj1f949dN52APUFRos05grk0rf4AGJZyPtHznjIR0CTCS/4+cRq
-         VojOdZpad9u5YDfvohFTxfkmMdvB2fKfgH5WjVYcHZg4mHkXTFDj1JJ2uPBcf8fpK1Ur
-         4hW9SjKDO9ijB/O5yVg825VstCzoqYWSOmFyc=
+        bh=oicgvy8ZQsJ/H+s8ny1gZL4bTkfKVCg2IoVNijyvIg8=;
+        b=EjpTVTvrhMrBfI4a4z7FGR0J0I3Gf/GoYG5NMdl2JpAlkx45McjW0i2i/cbzPRaka5
+         kwMe1NrUmxalrYLY0VH64DYVRsPbbLLdYPPPisUGlDhjVB7Iiv6UiCuWMsCmqruwsAim
+         Pm3sH/BaPeAXp4WO/11ew+E/kQgxui6Zme3z0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694808757; x=1695413557;
+        d=1e100.net; s=20230601; t=1694808847; x=1695413647;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=PrBmIK/7ZBFkfIJ+GoT9lofYoxjkLNz9RY+nH/vRJ5g=;
-        b=UAxA6zxZnAqkCvPhhy5CxfMkcFdlu581cdxZmcalLEbnBluRhZQsuFdMARse8bMrpa
-         iCkj0d50aNiNCyBji0KT6e5dmY/9uvMC9PBftp0BDP9F8gwHxlQaxn1IA/IAh09bj8Zm
-         pNya6PEcXu7HRUi1LWKMDyEUrIpJOO5ljPSqIY18B91djgLY4SoH2q47e3XQ2v5X+uHU
-         Q7XmN7Dfp7/vb2bpsft4FmcRut/y58PfXTKuLgZoGToJZQwJloeTCNal/nt++1Q8b7HN
-         yZFUkyvGV8onO9lnBIK2LEukH9PlLOEJ7HkMPhJViDaKIPqIDs5Mo91mKUrUF9AocPCJ
-         usLQ==
-X-Gm-Message-State: AOJu0Yx2ZADjPczxNqSzGBkXW8nsc5XLT2tbxl+Yt0W6D2C7tQdgylW1
-        blIBBa9SUC/ouG0DZWf+lSI5BQ==
-X-Google-Smtp-Source: AGHT+IHaSepHftYvn6j1J/8NjB2sQp1S0SXdFatkZesmqR96Dm0a8qXQYyp/030E766wL+sQ438gNQ==
-X-Received: by 2002:a05:6a00:1490:b0:690:454a:dc7b with SMTP id v16-20020a056a00149000b00690454adc7bmr3035526pfu.28.1694808757000;
-        Fri, 15 Sep 2023 13:12:37 -0700 (PDT)
+        bh=oicgvy8ZQsJ/H+s8ny1gZL4bTkfKVCg2IoVNijyvIg8=;
+        b=f7xbak3FqSYdRGXTAhyC7uMFtqkoGOesfjObg02tkgnut7WDOqilFMkZBLv/mH8kTY
+         mj/xrPFGcgp5FV72+naw7ZSUJa3UOCaAg4/0eV1+cuBkQRSwS5y96QNJ0MUUB7sicuHS
+         JvnjXfkJiy6zFRSgfAYXy/U6PuEQ/iFbauipAqoQ6Xlbo62MwSGsPCrTUGRArvzO6Rq5
+         TEq9yipTNcG9k220lqftTw8C2v50o1pLMCR92vU4QiBkQkbyJr2eKDxbG+BpTbfKeKWz
+         hBe6OUPEEp3bBsxgYa3JvzUm84uNkQUjB1URSfJPRKvkL7Yc5HMYOQkOkbfoOgpulHRi
+         xIFA==
+X-Gm-Message-State: AOJu0YwBW/3f2HM2qo5rsOoenw1RGd+h2JTefG0HDHVqohAkRwBjWpT5
+        M6zw4Kg9jQpZtTdcYGHgl4JCtg==
+X-Google-Smtp-Source: AGHT+IEfYZ/UgYfdCyr2ODsTNvO+DYWeLrEHu+ivgaehYmkWlq+ooFcHoKRvAx82GGQF2u3fKgu+EA==
+X-Received: by 2002:a17:90a:5305:b0:268:81c6:a01f with SMTP id x5-20020a17090a530500b0026881c6a01fmr2702511pjh.26.1694808847113;
+        Fri, 15 Sep 2023 13:14:07 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id k192-20020a636fc9000000b0055bf13811f5sm2994033pgc.15.2023.09.15.13.12.36
+        by smtp.gmail.com with ESMTPSA id fu17-20020a17090ad19100b0027498485107sm1706587pjb.12.2023.09.15.13.14.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Sep 2023 13:12:36 -0700 (PDT)
+        Fri, 15 Sep 2023 13:14:06 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Paul Cercueil <paul@crapouillou.net>
+To:     Jan Kara <jack@suse.com>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Harvey Hunt <harveyhuntnexus@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mips@vger.kernel.org, linux-mtd@lists.infradead.org,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
         llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Subject: [PATCH] mtd: rawnand: ingenic: Annotate struct ingenic_nfc with __counted_by
-Date:   Fri, 15 Sep 2023 13:12:35 -0700
-Message-Id: <20230915201234.never.868-kees@kernel.org>
+Subject: [PATCH] udf: Annotate struct udf_bitmap with __counted_by
+Date:   Fri, 15 Sep 2023 13:14:05 -0700
+Message-Id: <20230915201404.never.574-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1453; i=keescook@chromium.org;
- h=from:subject:message-id; bh=u7N1dQwnfrzLeR4rYuLcrvgfoIzHpMlv8osLJuSY2+Y=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlBLqzjowlIzJmYXlgsM3m8LT0SCSdfQTsxoB/i
- acbRSZ+5eeJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQS6swAKCRCJcvTf3G3A
- JsI5EACJLga/jCgx7S0K+M8EI9/HpJJsQ4twNYBlge15BlTjzWL6+s3zgE5f7UOcVRpkq67GHb+
- FeToD49bp07c9OF4Y2xbpjHB/lYhHing/bv51pliDDUlQLsWicGBOoaC2GT6lwt4fwpqSDtOa9A
- TA8a1qAJT9wj2WwiEU0Zj8IG49xkuILQt2a6r/pd5AgQQa/FUwVr15kSK7RmRRBejWggW+3rhCa
- rSgdqJU36g/RBkZcBEQHdRUimIo0VAeZ9ksIsMsxNhv3mxG4m9PXWkwjhDvGrmx+oK7OKRoTu2k
- 2b37q/dOck12rVK7Zp7OSOXKN09n1QsFSsw20fa4OPreJeAcpFZMJIJPaMZoNvIrcK6RFg0WJQ1
- pDaE7yH8U+FQPEIKFguHdPM1dKoDzLxtbmLgyIguyoTQr5el7bk3wxn8X53JOGpA24BQxsHR8nL
- WygbnLNvYhmDscT7wuWQ8ROnjn25sZUe5TZsLWij0dZdYprGIOy7I5CNhKmP0M3znYsHEJG4/Fh
- kk175ctq9KqoZmyeJFNBddnk+nbM0Cve21DvPxLyd2Al1nEp8yF9gZzqm6fHeT560E3Vg88ih4b
- YvODs23KDa5lanCSm99HJ7GXcQAXIj3w2WYkXFMQXl7bUZ+xamamKcWJeD14/oVwjqAkI2rGARw
- G1gmn7q 2KMQ5WVQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1040; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=BUpk+NqQMMN0qmYWwrmO8FxGwWxEGEYVaPG+zJ06MRo=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlBLsMQJt2qp7TQ1LA96Hxy7q1jthVYf/zpnN+m
+ 6CUfAwnwb6JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQS7DAAKCRCJcvTf3G3A
+ Jr7/D/9yErTRxAzHaDFDOzE/kRrbYmZ7UQLL6OxblKmIJk2ZNjhDFMvjmBuH9qGGUyuKFVZVNty
+ jkmndMLGM7tb6dm0iw8UMVFvNrkZFV0EiHGODAYvPBU7d1oHnykVINhpUzNaHe2LWH0zwnZDAcS
+ zzBQJCty+384+FztuKlLv1hAopQ2XSb88RAjjuL6wRs4oVX29cxtUqK6JkdH0e2KjD3Z0RIIZsb
+ 8lEhJvCrXURb2xbk7wdfEZeYsoWtd2kVxRttuQHckbzpEUrm/MqdGT37LjfEpy74ca3xowvkNwV
+ th0vm7VJkATIKsol5ZUnOlFiFNB4V7ebcoUB9Hh+XDdhVYK+eViNiim52AkJC41M069BDtSOENy
+ QcyBtVXwG3dmdYqNt0vrYsFo2S2zC/qYY9c9HteiiwN44m8KcoB5XNojWp71FcecOT94VokbyWe
+ mY3azzMBACSTYM4iIRfqBG7n5R3/R0OPwzoCQ3O963ohrgUMyl7/pwO9JV0nDDbAUCz9eFwG8h7
+ zDVEbAMoYP1fqBqOaTvjGufri6IfzxzoFPUeRgqAgI2CWN226XpMfy6f8cGM6TqN5GkoRqJuHZU
+ oTojGtvqPoo8XXIMtTfHBugsyIejsxCebBBoBonJ0yApGKcfrj4Q4zKG+6oXquYnMXA2yRrXosN
+ eJT3+x/ OJ9Ye6Jg==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -90,35 +85,29 @@ their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 functions).
 
-As found with Coccinelle[1], add __counted_by for struct ingenic_nfc.
+As found with Coccinelle[1], add __counted_by for struct udf_bitmap.
 
 [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 
-Cc: Paul Cercueil <paul@crapouillou.net>
-Cc: Harvey Hunt <harveyhuntnexus@gmail.com>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Richard Weinberger <richard@nod.at>
-Cc: Vignesh Raghavendra <vigneshr@ti.com>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-mtd@lists.infradead.org
+Cc: Jan Kara <jack@suse.com>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c | 2 +-
+ fs/udf/udf_sb.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c b/drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c
-index 6748226b8bd1..ce9ef4e65597 100644
---- a/drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c
-+++ b/drivers/mtd/nand/raw/ingenic/ingenic_nand_drv.c
-@@ -46,7 +46,7 @@ struct ingenic_nfc {
- 	struct nand_controller controller;
- 	unsigned int num_banks;
- 	struct list_head chips;
--	struct ingenic_nand_cs cs[];
-+	struct ingenic_nand_cs cs[] __counted_by(num_banks);
+diff --git a/fs/udf/udf_sb.h b/fs/udf/udf_sb.h
+index 9af6ff7f9747..f9a60bc1abcf 100644
+--- a/fs/udf/udf_sb.h
++++ b/fs/udf/udf_sb.h
+@@ -86,7 +86,7 @@ struct udf_virtual_data {
+ struct udf_bitmap {
+ 	__u32			s_extPosition;
+ 	int			s_nr_groups;
+-	struct buffer_head	*s_block_bitmap[];
++	struct buffer_head	*s_block_bitmap[] __counted_by(s_nr_groups);
  };
  
- struct ingenic_nand {
+ struct udf_part_map {
 -- 
 2.34.1
 
