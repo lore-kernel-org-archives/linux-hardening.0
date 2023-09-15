@@ -2,86 +2,78 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F984CD37A7
-	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 20:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6571AC46CA1
+	for <linux-hardening@archiver.kernel.org>; Fri, 15 Sep 2023 20:04:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230424AbjIOUAI (ORCPT
+        id S236780AbjIOUDx (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Sep 2023 16:00:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53330 "EHLO
+        Fri, 15 Sep 2023 16:03:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237089AbjIOT7u (ORCPT
+        with ESMTP id S237034AbjIOUDn (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Sep 2023 15:59:50 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCBEB2707
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 12:59:41 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-1bf1935f6c2so18692575ad.1
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 12:59:41 -0700 (PDT)
+        Fri, 15 Sep 2023 16:03:43 -0400
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 806D02120
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:03:38 -0700 (PDT)
+Received: by mail-pf1-x434.google.com with SMTP id d2e1a72fcca58-68fbbea0dfeso2136593b3a.0
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 13:03:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1694807981; x=1695412781; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1694808218; x=1695413018; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/QTAaYbGChQLUY+Gq2za7n5ZQvKf3nOru5ieThOaDQg=;
-        b=isc2Uoq/XYyn9PkkBGKy5qP6NPWyEYQbN8EYstt+PwKCqEUdunW6rNMEvxBUyI5e4S
-         UYMM/jbKgUGyDFZp2hAlfnPFaOn/6Tltpq3FIeNJiYC7woXA1qOyib9CzjWAVQ1BY8pp
-         7wh3TXjiLcnXBOcg6LKtDHfqbRwqFrp3U2A6U=
+        bh=3EcXc4p/OZvjhpZjniZGrlHnagHBjkD/G1KmRx4RQEY=;
+        b=jT8lZjJCcZqVhHUwizdtyoVnVc78HbfOU9IVFwERDHo5TXyehvzwP7RJaSGox5v+eE
+         d4FiIH+hc+uml8FJ5B056JSEv6oCg0ph0qV8cjjnHWl5BE5+bmWGbGLBIesYITE3mzaQ
+         1w0D0btWIfx/+JorE7BAawMZK//2uwXUkVvWM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694807981; x=1695412781;
+        d=1e100.net; s=20230601; t=1694808218; x=1695413018;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=/QTAaYbGChQLUY+Gq2za7n5ZQvKf3nOru5ieThOaDQg=;
-        b=qZ4Apvs22RgsXUsCeS86kHuDT89xX35zfHgUuZSdlHNuEI5ihrfb2DWV8g0K5GlsK0
-         t+7SyqFiEgxepO/dWXfp4clgezr8OnhfZiUeW2tePHURK6GO9cK3yHvPBJzRkgMzhVeU
-         q6Cnykug/ifEfYHaPj1a+TQqnsbMsOzjxHUOjpz7jZIcW4NhtmIUkNj3mv1eaa8kXtHk
-         LDowHnYRrMdnl99xJ+LrK2s1npyqC0pJxU6+EHpn576fB5GB3tpUgI6X8d/1jkPS4egW
-         HLGgXfb9J21G2lMeY9BMOR86rKWlXNAPoU/HiW+rbK8mi1+8gVCo6QqTFrnMn0R7krUy
-         hiKQ==
-X-Gm-Message-State: AOJu0YzylxMPigDrxtg2vmL8jeVHlPAFmQrGwzl7Op+V69Yw6qzM6o0x
-        majQJM/9/G+C2QXaW5ZnOt0WTg==
-X-Google-Smtp-Source: AGHT+IGYK7Py8XcBgcsBTxZTMvjHQKfVzB5OmfXsKXYmjNSdHYAcwM38OH4ue55Hb1gXlpvUJ8KkHA==
-X-Received: by 2002:a17:902:684d:b0:1bc:224a:45c2 with SMTP id f13-20020a170902684d00b001bc224a45c2mr6041713pln.15.1694807981241;
-        Fri, 15 Sep 2023 12:59:41 -0700 (PDT)
+        bh=3EcXc4p/OZvjhpZjniZGrlHnagHBjkD/G1KmRx4RQEY=;
+        b=vAmUG06cylXK/HTh6w7nBe4kdMap8VWESt2vSRb4Xt04WG1rCj//+b/DBRe/OZ0IEN
+         C/I6pyqVoGGOes1CRMc4TuONFZQI1BVgPisQl6CTKtGiBpdnXmz+F8c/o0jKwsVOzDAa
+         HaWb2vK1ncVEm5QGH0PzYkzXo9I/nb8vC+GcEiIZkApeJ5xYkB9VzArsC/OZy73ZlnWI
+         h9Ud4pl2jXg5MOv4olNmqPzSOpPiBEMIQ2Xj3C3M5mH36IrXd/+oJdFx7VY8S8ZjYH5O
+         Ai6TpOv4V4+Z2mWRtePGXVykfyqQkGiULikFCueO/aUH2XzTxxut3buU6N6nNzk7fgag
+         SB9A==
+X-Gm-Message-State: AOJu0YxdaHKS9hntEHTbW16TGe1B2+C2yx76H/5vAvqFR5+N8fo6otrH
+        y8aFXqiBQoBjbrpv7nBRBImvXQ==
+X-Google-Smtp-Source: AGHT+IHzIIRXAsC49F/G94cgVOd9c2WBf+CMYStzd0rWb8+BhqsZLM2DtQPyl2+9IiDNZBy2vC9pbA==
+X-Received: by 2002:a05:6a00:c90:b0:68f:e0f0:85f4 with SMTP id a16-20020a056a000c9000b0068fe0f085f4mr2391932pfv.25.1694808218030;
+        Fri, 15 Sep 2023 13:03:38 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id p4-20020a170902a40400b001c407fac227sm3855508plq.41.2023.09.15.12.59.40
+        by smtp.gmail.com with ESMTPSA id q15-20020a62e10f000000b00682c1db7551sm3307074pfh.49.2023.09.15.13.03.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Sep 2023 12:59:40 -0700 (PDT)
+        Fri, 15 Sep 2023 13:03:37 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Alasdair Kergon <agk@redhat.com>
 Cc:     Kees Cook <keescook@chromium.org>,
-        John Keeping <john@keeping.me.uk>,
-        Peter Chen <peter.chen@nxp.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Allen Pais <allen.lkml@gmail.com>,
-        Will McVicker <willmcvicker@google.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Zhang Qilong <zhangqilong3@huawei.com>,
-        linux-usb@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>,
+        Mike Snitzer <snitzer@kernel.org>, dm-devel@redhat.com,
+        Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>,
-        Linyu Yuan <quic_linyyuan@quicinc.com>,
-        linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH] usb: gadget: f_midi: Annotate struct f_midi with __counted_by
-Date:   Fri, 15 Sep 2023 12:59:39 -0700
-Message-Id: <20230915195938.never.611-kees@kernel.org>
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+Subject: [PATCH] dm raid: Annotate struct raid_set with __counted_by
+Date:   Fri, 15 Sep 2023 13:03:36 -0700
+Message-Id: <20230915200335.never.098-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2208; i=keescook@chromium.org;
- h=from:subject:message-id; bh=7ll080Ip8+xgpFyr1ptkCSq6rEkEIYaf1ZtwJzLxEFA=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlBLeqiItMEXLkRQ6I0AgJamBwTNeEi20eegnZt
- l84WwSJaiuJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQS3qgAKCRCJcvTf3G3A
- Jt0FD/4xkc6NwN+7lXbDMSm4p836lNJxBBL+/SGvtbx8Eh9D5gW27FBIx1e3Y+W0R7/CiQnJdvC
- Q0numJF5+tgUVzR5ef5AIRZRrSuQC1OovDPs0lOar9jswym6HioJEY29phkpX8u8B/dQJiazIP4
- OgoHGhaj8mVg/fbTbFi0RfyeScciuvBKdwKTrcL+u2O9Tjbaquwjg0L4J2t+Ka0fFW0yDuzyI4M
- WtPAW1i5V9KEz0XTxGtMfAb966wgcc1cOszoqiNMSb4qro2RjomQLIBffiFL2UVCAHhDvlI0aRU
- RrduhXmOJx0e+KPtPV9mgpJPinw8+MTo55974325aOLst/tii0/RrCvsEnedJK2bqy7COveWb00
- VjG2aP6iHIx2TJ1slgBO+TecF1NeAe9eCOz/s/TkFOSaYfmUVVs3ZJ/5tmjoYzHXQfifjId8O8k
- uxMMrDXmPYIBDXNP8sHd4zMHzHvRdAiL3T7Fh8kI7mPFYdfobFOfVqNA0hYZVf8TxBRv/egZR7t
- k+NrSD3agAofKIDkcP9tEe/EqkDU0PgsMMCOEXysbZlXE87+k/nwnpGzH6hQr55vHTCKUL9L8SE
- zBX5jFgLgc7kB2SpvHWvj9WL1+Kg1t7LcDQvmyAeh4rZkXnSkvDtNhlJUP5LZPS/Bcm29gzBplo
- V2HLJoI /9JPsM2g==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1112; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=3ZvYiEsZZa56aKWu6y0PnTbRMpo38Aw/L94IEjhb4Tc=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlBLiYTyy1xh5VON0ySJo9kFErTAbQFWQI95vz1
+ 9vW2hZ7e5yJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQS4mAAKCRCJcvTf3G3A
+ JplJD/9wyOg+Xy09KCd38SWSRoERMIlg+91bNOk9bfpY2aBh3lv91ulrX53nyRunUA02GCG0EfT
+ KAEZKI/2vR7K3DBBGzndXE8/eZki/GOdVUVAeIotscDIQCswSFeVrPWcOV3gTKNHmwDOJNqOhae
+ PXNwG5Fgv7FNEY68jEyyJq4BJdATKz4lEL2woZ62IGNRNGGyUT3Q6evSPpB9naGIxdq7i7gJLHa
+ gmgONPB6bRaS7U+Q5O3fAbI/UjYhNV6MUMaAZ/6yxpkewG6Hb5yTuQ2/YXGsq+XrBOs39PS5vNe
+ CQHDFiZIzLg+vEWzFlW91THnSxrlYY2q6TLb0Me7nkxnaPKsKFuFzwL9rq25nET6JP8hINETJqP
+ sKfWeuhy321LLzTGS0XNBrP4VFsDkLPcCtHrp7CfWyeiXBKQrr42xZF+wKEuBTjbW0PEgo7bQjl
+ bT6fQJjM95fDf2EJQOHoz5ttA5z/PHK5QF973oyfgK6eq7AzwKyj9oFFf4Y4GF9wu+Z/PNq04hS
+ D2n58sWCRuH4/7eJMNIl5O5bAZATtf3lObXLRtL5OJXZq58zG/uMp1o40da7W/RtbTMPq3Hc2uT
+ XGJPSvkjpqXA3X/A86g6vAHjsFuoJZce8yvX4diqSLCWDA+NivlRwzcXDgEyaPnbMxxonfsAsaT
+ K5u/Ioo p9oiGWzQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -94,55 +86,31 @@ their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 functions).
 
-As found with Coccinelle[1], add __counted_by for struct f_midi.
-Additionally, since the element count member must be set before accessing
-the annotated flexible array member, move its initialization earlier.
+As found with Coccinelle[1], add __counted_by for struct raid_set.
 
 [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: John Keeping <john@keeping.me.uk>
-Cc: Peter Chen <peter.chen@nxp.com>
-Cc: Hulk Robot <hulkci@huawei.com>
-Cc: Allen Pais <allen.lkml@gmail.com>
-Cc: Will McVicker <willmcvicker@google.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Zhang Qilong <zhangqilong3@huawei.com>
-Cc: linux-usb@vger.kernel.org
+Cc: Alasdair Kergon <agk@redhat.com>
+Cc: Mike Snitzer <snitzer@kernel.org>
+Cc: dm-devel@redhat.com
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/usb/gadget/function/f_midi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/md/dm-raid.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/gadget/function/f_midi.c b/drivers/usb/gadget/function/f_midi.c
-index 2d02f25f9597..033e347554db 100644
---- a/drivers/usb/gadget/function/f_midi.c
-+++ b/drivers/usb/gadget/function/f_midi.c
-@@ -99,7 +99,7 @@ struct f_midi {
- 	unsigned int in_last_port;
- 	unsigned char free_ref;
+diff --git a/drivers/md/dm-raid.c b/drivers/md/dm-raid.c
+index 5f9991765f27..9755788e8b78 100644
+--- a/drivers/md/dm-raid.c
++++ b/drivers/md/dm-raid.c
+@@ -254,7 +254,7 @@ struct raid_set {
+ 		int mode;
+ 	} journal_dev;
  
--	struct gmidi_in_port	in_ports_array[/* in_ports */];
-+	struct gmidi_in_port	in_ports_array[] __counted_by(in_ports);
+-	struct raid_dev dev[];
++	struct raid_dev dev[] __counted_by(raid_disks);
  };
  
- static inline struct f_midi *func_to_midi(struct usb_function *f)
-@@ -1349,6 +1349,7 @@ static struct usb_function *f_midi_alloc(struct usb_function_instance *fi)
- 		status = -ENOMEM;
- 		goto setup_fail;
- 	}
-+	midi->in_ports = opts->in_ports;
- 
- 	for (i = 0; i < opts->in_ports; i++)
- 		midi->in_ports_array[i].cable = i;
-@@ -1359,7 +1360,6 @@ static struct usb_function *f_midi_alloc(struct usb_function_instance *fi)
- 		status = -ENOMEM;
- 		goto midi_free;
- 	}
--	midi->in_ports = opts->in_ports;
- 	midi->out_ports = opts->out_ports;
- 	midi->index = opts->index;
- 	midi->buflen = opts->buflen;
+ static void rs_config_backup(struct raid_set *rs, struct rs_layout *l)
 -- 
 2.34.1
 
