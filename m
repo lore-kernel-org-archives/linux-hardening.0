@@ -2,145 +2,127 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D66CD37B2
-	for <linux-hardening@archiver.kernel.org>; Sat, 16 Sep 2023 02:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A1ACD37BB
+	for <linux-hardening@archiver.kernel.org>; Sat, 16 Sep 2023 13:04:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236419AbjIPCTS (ORCPT
+        id S239141AbjIPNDu (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Sep 2023 22:19:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43864 "EHLO
+        Sat, 16 Sep 2023 09:03:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231585AbjIPCSs (ORCPT
+        with ESMTP id S231487AbjIPNDd (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Sep 2023 22:18:48 -0400
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25FD2173C
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 19:18:43 -0700 (PDT)
-Received: by mail-pg1-x534.google.com with SMTP id 41be03b00d2f7-577fb90bb76so1508409a12.2
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 19:18:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1694830722; x=1695435522; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=lNAcEM45JnuCfTSJI3E/dx3IgazeK//Dr+dUsENW/9I=;
-        b=dErwtPH2G7abDL5kB5qiGhpulzgA5oK2y0zkfp9GNJk4LH2sASgp46k9IgrS/USCvW
-         o314qKE6fVK4/+0TrC7RogNKAno77k86WiE1r30sveWDMrNlrsYdbWQ7FGvXKTdhJ7pq
-         9WqeFwo3BBWBE6YLyYcn3/2H4u8e8GWwI9LL8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694830722; x=1695435522;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lNAcEM45JnuCfTSJI3E/dx3IgazeK//Dr+dUsENW/9I=;
-        b=Sg04Gb7UPQWTUTnKIQfYf24enlDoDCg8RNsl9Vb8FmpdGTZODvbUIWZN5ilhYebTyS
-         QZNIH6RpVrYYbzR5gBc22F95YcUb7/FQcEAilad/+iDriruNaBwxALJRf5cUeCSKOXvq
-         DEtlWeA7nXcs1OSmI/9CIdwUmQaFEt0evx9FtD6ZGOA0EqEKGd7NlLJRPZ6oRxS5hUOc
-         CkMZM7w+IZeFR+s/TOtUtyp0V08LaVGT8lxqJ+KYKvr5lY9pgfKvC16F1NLgZvaUwXuw
-         9ZEx4ssBMWdpjeHh4yZqD3o+8dO5DQtrHm+jmZJbyjECYCyVhZinKnifTxffWuqtoJpt
-         z24A==
-X-Gm-Message-State: AOJu0Ywuksqu3FDmGAB6fZ3bGNxZIntDazOfoDo7sKorovD5/ftZ9OXe
-        oB6+lULQwqJG8MoYZRdX/28NGw==
-X-Google-Smtp-Source: AGHT+IHGflPojIWFVtfNOoBI/mmU5yo4NTnIHWbhbq4XOzjG2hmoFQfv/CUSUlzb4Q2BjUy9ltgeBw==
-X-Received: by 2002:a05:6a20:3206:b0:15a:58c8:b10f with SMTP id hl6-20020a056a20320600b0015a58c8b10fmr2994151pzc.43.1694830722637;
-        Fri, 15 Sep 2023 19:18:42 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id p4-20020a170902a40400b001b03a1a3151sm4116061plq.70.2023.09.15.19.18.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Sep 2023 19:18:41 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Matteo Rizzo <matteorizzo@google.com>
-Cc:     Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] x86/mm/dump_pagetables: Add SLAB_VIRTUAL knowledge
-Date:   Fri, 15 Sep 2023 19:18:39 -0700
-Message-Id: <20230916021835.never.147-kees@kernel.org>
+        Sat, 16 Sep 2023 09:03:33 -0400
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ACA4DD;
+        Sat, 16 Sep 2023 06:03:26 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=22;SR=0;TI=SMTPD_---0VsA36tW_1694869400;
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0VsA36tW_1694869400)
+          by smtp.aliyun-inc.com;
+          Sat, 16 Sep 2023 21:03:21 +0800
+From:   Shuai Xue <xueshuai@linux.alibaba.com>
+To:     keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
+        rafael@kernel.org, lenb@kernel.org, james.morse@arm.com,
+        bp@alien8.de, tglx@linutronix.de, mingo@redhat.com,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        ardb@kernel.org, robert.moore@intel.com
+Cc:     linux-hardening@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-efi@vger.kernel.org, acpica-devel@lists.linuxfoundation.org,
+        xueshuai@linux.alibaba.com, baolin.wang@linux.alibaba.com
+Subject: [RFC PATCH 1/9] pstore: move pstore creator id, section type and record struct to common header
+Date:   Sat, 16 Sep 2023 21:03:08 +0800
+Message-Id: <20230916130316.65815-2-xueshuai@linux.alibaba.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230916130316.65815-1-xueshuai@linux.alibaba.com>
+References: <20230916130316.65815-1-xueshuai@linux.alibaba.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1869; i=keescook@chromium.org;
- h=from:subject:message-id; bh=HmsovkvkpuwppfIJaKsY4lAxAF0+pyYONDwvgfgBOPE=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlBRB/T8jhFzJbx6o5pyHiafrDVYrG9hl2ENXaj
- 1vL0IdviLGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQUQfwAKCRCJcvTf3G3A
- JmvID/9kiQNsFcjzH+6NwX2OKRtQtlFTPX4yZBTLdnCSlSxoiZOn1Um7n4ushYsTSH9QPZ2ddwb
- ZO0VP2CD4+wb17Lra8vU4oBGVa7Qou3CMDgsmY29UzQAgJMybMY2IA7PK6tsbotWnW9A0fD50ux
- yzmULaSqemZOWBFAe7ahP5HoWMdrmi45KP/vnhSAJbiTrIYUBueQQectsRg2UEufA3kpMGFpyRc
- vuRQVGyTzX6c/w7jLd9IP06ww2nvV9deNlrTD0khFfDrR40jbKZ4YkHRuiS7DD9fDvuRKMAU0QX
- FkOWDs7Mvx/UO44vjmmLT6g9/T/temLWY4ud/DGWD2mZm7FD6wmCKCxFTgzKQSD/P90lhr9o217
- rOulVz8VirrktInFxsA3t0ODzZpdyyMk3w48IOt+uXWi/Z3Ql8D3303wxw5XbNpSiFk9AwGhagg
- vx238fBXuPczyRGAzINKeLr/5u5vt8ErQmw1Tzij2Ph1UOVzGUwyDTTFTd9FP0HMDN+XqFG8T3B
- kE4REF5HqLOMJLVDOJjHJLpRnDkuO6gOMeLnoX+JEpJByYJex8wltdRkjYGRjh14psEpBsZaAU5
- MCc6f8enuWqjL04mNW/SYQfAfq8gqQ/h/i1Pz8/vZB3hAMqTbLsopoZ2D7u1Mx7xr2jlhk/qqJh
- lchwYnO C2pRB0MQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Add the markings for the SLAB_VIRTUAL area.
+Move pstore creator id, section type and record struct to the common
+header, so that it can be use by MCE and GHES driver.
 
-Cc: Matteo Rizzo <matteorizzo@google.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: x86@kernel.org
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
 ---
-This is on top of the SLAB_VIRTUAL series:
-https://lore.kernel.org/all/20230915105933.495735-11-matteorizzo@google.com/
+ drivers/acpi/apei/erst.c | 19 -------------------
+ include/linux/pstore.h   | 24 ++++++++++++++++++++++++
+ 2 files changed, 24 insertions(+), 19 deletions(-)
 
-Feel free to collapse this into the x86 patch from the above series.
-
-FYI, as expected, the kernel page table entries get way longer with
-SLAB_VIRTUAL. :)
-
-Without SLAB_VIRTUAL:
-
-# wc -l /sys/kernel/debug/page_tables/kernel
-1501 /sys/kernel/debug/page_tables/kernel
-
-With SLAB_VIRTUAL:
-
-# wc -l /sys/kernel/debug/page_tables/kernel
-7549 /sys/kernel/debug/page_tables/kernel
----
- arch/x86/mm/dump_pagetables.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/x86/mm/dump_pagetables.c b/arch/x86/mm/dump_pagetables.c
-index e1b599ecbbc2..b1fa68669e61 100644
---- a/arch/x86/mm/dump_pagetables.c
-+++ b/arch/x86/mm/dump_pagetables.c
-@@ -64,6 +64,9 @@ enum address_markers_idx {
- 	KASAN_SHADOW_END_NR,
- #endif
- 	CPU_ENTRY_AREA_NR,
-+#ifdef CONFIG_SLAB_VIRTUAL
-+	SLAB_AREA_NR,
-+#endif
- #ifdef CONFIG_X86_ESPFIX64
- 	ESPFIX_START_NR,
- #endif
-@@ -95,6 +98,9 @@ static struct addr_marker address_markers[] = {
- 	[LDT_NR]		= { 0UL,		"LDT remap" },
- #endif
- 	[CPU_ENTRY_AREA_NR]	= { CPU_ENTRY_AREA_BASE,"CPU entry Area" },
-+#ifdef CONFIG_SLAB_VIRTUAL
-+	[SLAB_AREA_NR]		= { SLAB_BASE_ADDR,	"Slab Area" },
-+#endif
- #ifdef CONFIG_X86_ESPFIX64
- 	[ESPFIX_START_NR]	= { ESPFIX_BASE_ADDR,	"ESPfix Area", 16 },
- #endif
+diff --git a/drivers/acpi/apei/erst.c b/drivers/acpi/apei/erst.c
+index 247989060e29..528ac5eb4871 100644
+--- a/drivers/acpi/apei/erst.c
++++ b/drivers/acpi/apei/erst.c
+@@ -997,25 +997,6 @@ static struct pstore_info erst_info = {
+ 	.erase		= erst_clearer
+ };
+ 
+-#define CPER_CREATOR_PSTORE						\
+-	GUID_INIT(0x75a574e3, 0x5052, 0x4b29, 0x8a, 0x8e, 0xbe, 0x2c,	\
+-		  0x64, 0x90, 0xb8, 0x9d)
+-#define CPER_SECTION_TYPE_DMESG						\
+-	GUID_INIT(0xc197e04e, 0xd545, 0x4a70, 0x9c, 0x17, 0xa5, 0x54,	\
+-		  0x94, 0x19, 0xeb, 0x12)
+-#define CPER_SECTION_TYPE_DMESG_Z					\
+-	GUID_INIT(0x4f118707, 0x04dd, 0x4055, 0xb5, 0xdd, 0x95, 0x6d,	\
+-		  0x34, 0xdd, 0xfa, 0xc6)
+-#define CPER_SECTION_TYPE_MCE						\
+-	GUID_INIT(0xfe08ffbe, 0x95e4, 0x4be7, 0xbc, 0x73, 0x40, 0x96,	\
+-		  0x04, 0x4a, 0x38, 0xfc)
+-
+-struct cper_pstore_record {
+-	struct cper_record_header hdr;
+-	struct cper_section_descriptor sec_hdr;
+-	char data[];
+-} __packed;
+-
+ static int reader_pos;
+ 
+ static int erst_open_pstore(struct pstore_info *psi)
+diff --git a/include/linux/pstore.h b/include/linux/pstore.h
+index 638507a3c8ff..ad44b3baf10e 100644
+--- a/include/linux/pstore.h
++++ b/include/linux/pstore.h
+@@ -17,6 +17,7 @@
+ #include <linux/spinlock.h>
+ #include <linux/time.h>
+ #include <linux/types.h>
++#include <linux/cper.h>
+ 
+ struct module;
+ 
+@@ -210,6 +211,29 @@ struct pstore_info {
+ extern int pstore_register(struct pstore_info *);
+ extern void pstore_unregister(struct pstore_info *);
+ 
++#define CPER_CREATOR_PSTORE						\
++	GUID_INIT(0x75a574e3, 0x5052, 0x4b29, 0x8a, 0x8e, 0xbe, 0x2c,	\
++		  0x64, 0x90, 0xb8, 0x9d)
++#define CPER_SECTION_TYPE_DMESG						\
++	GUID_INIT(0xc197e04e, 0xd545, 0x4a70, 0x9c, 0x17, 0xa5, 0x54,	\
++		  0x94, 0x19, 0xeb, 0x12)
++#define CPER_SECTION_TYPE_DMESG_Z					\
++	GUID_INIT(0x4f118707, 0x04dd, 0x4055, 0xb5, 0xdd, 0x95, 0x6d,	\
++		  0x34, 0xdd, 0xfa, 0xc6)
++#define CPER_SECTION_TYPE_MCE						\
++	GUID_INIT(0xfe08ffbe, 0x95e4, 0x4be7, 0xbc, 0x73, 0x40, 0x96,	\
++		  0x04, 0x4a, 0x38, 0xfc)
++
++/*
++ * CPER specification (in UEFI specification 2.3 appendix N) requires
++ * byte-packed.
++ */
++struct cper_pstore_record {
++	struct cper_record_header hdr;
++	struct cper_section_descriptor sec_hdr;
++	char data[];
++} __packed;
++
+ struct pstore_ftrace_record {
+ 	unsigned long ip;
+ 	unsigned long parent_ip;
 -- 
-2.34.1
+2.41.0
 
