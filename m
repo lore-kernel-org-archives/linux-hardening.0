@@ -2,102 +2,107 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3EE4CD37BB
-	for <linux-hardening@archiver.kernel.org>; Sat, 16 Sep 2023 14:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5898CD37BF
+	for <linux-hardening@archiver.kernel.org>; Sat, 16 Sep 2023 16:19:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235345AbjIPOdT (ORCPT
+        id S230396AbjIPQTN (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 16 Sep 2023 10:33:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37768 "EHLO
+        Sat, 16 Sep 2023 12:19:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233817AbjIPOcx (ORCPT
+        with ESMTP id S239410AbjIPQTK (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 16 Sep 2023 10:32:53 -0400
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81639CE9
-        for <linux-hardening@vger.kernel.org>; Sat, 16 Sep 2023 07:32:47 -0700 (PDT)
-Received: by mail-wr1-x434.google.com with SMTP id ffacd0b85a97d-307d58b3efbso2872423f8f.0
-        for <linux-hardening@vger.kernel.org>; Sat, 16 Sep 2023 07:32:47 -0700 (PDT)
+        Sat, 16 Sep 2023 12:19:10 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B95F1CC0;
+        Sat, 16 Sep 2023 09:19:05 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id 98e67ed59e1d1-2749b003363so1157573a91.2;
+        Sat, 16 Sep 2023 09:19:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1694874766; x=1695479566; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RuCMRYRUI5pE2pACmrLEmespxY+dxj38Ol7yGsVBHSU=;
-        b=PuqGDe6CZBYIFMsaW2bIwkwwRy+umt+pbvUsZgYaxXTsxpY1MY6UcdFcZ32Xbzhh7N
-         MPtR9SDdRpoYnQ0CJWuUAl5Zwuu2iXIwQSB45yIEHNI6QN0qkpOWvtr38c5rMBi7UW+1
-         kB0Dg/gHWlFRM3RvaEZd3pEYv/vyuwqBb+TTigDXkYC8Dww5Y43o8X7CF8ebSVexZmyU
-         6mxVceBfza4WEp8kmD+9IZjzi65t87Cw1Ro47uIq72+4iovstqZ+Oqtk31ztOpUy8PK+
-         KNDiPibdXcAckXdAguzGwFnZOMa54ovBINgtgM8kNgG7HoETDk3KvXVCv+iIedCWkTqk
-         mXyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694874766; x=1695479566;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1694881145; x=1695485945; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RuCMRYRUI5pE2pACmrLEmespxY+dxj38Ol7yGsVBHSU=;
-        b=nOSWDSmBKCiyk9Xp3ijxe4g+Gd8GX0kQ4Vmzt+2MbsHLvZst8FDPNwrK9XD0E4DNLl
-         /XKMNvX+NW3Cf++Dt04IjqT+ha4FBrJunqW7EIZs4RhOp3KrkDzN8Hfi6NZnqGk7GMBl
-         7GUpJYAjS57Pjr0KPMmkIQjS/OeSBJw9IGxGThx4MVueEULkd7QpNjAZpP6iVWNUpK07
-         Op9BMCRD5wKw4nFRrlqhJAdqh7ZkQpZ9ja96yq/bf0/Su2dYuU+JO4huT3n99+z+k1+K
-         xXy7sXXSHc6Ccjr8hwnkdxrmXFliCiADnRhANpn5fiz3VPdz/Z6KvGbUQSXpdxSOQFdZ
-         JT7w==
-X-Gm-Message-State: AOJu0Yw8Gjxat8+jTgGMzUgcePKToz7wnlxXfz9Q2ROtVwO80GMd9704
-        DFAlWNG90mP7HVmNrEw3ediYmA==
-X-Google-Smtp-Source: AGHT+IFo2cGGQRjJb8BtVCZ+zzLXMvuJine6w6l4fG9U93EB+rQqIuIbo58+ykYvKJeUmr2pjBhAfA==
-X-Received: by 2002:a05:6000:a1a:b0:31f:facb:e1ba with SMTP id co26-20020a0560000a1a00b0031ffacbe1bamr2807958wrb.70.1694874765714;
-        Sat, 16 Sep 2023 07:32:45 -0700 (PDT)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id j15-20020a5d604f000000b0031779a6b451sm7270032wrt.83.2023.09.16.07.32.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 Sep 2023 07:32:45 -0700 (PDT)
-Date:   Sat, 16 Sep 2023 17:32:42 +0300
-From:   Dan Carpenter <dan.carpenter@linaro.org>
-To:     Philipp Stanner <pstanner@redhat.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Christian Brauner <brauner@kernel.org>,
-        David Disseldorp <ddiss@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Siddh Raman Pant <code@siddh.me>,
-        Nick Alcock <nick.alcock@oracle.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Zack Rusin <zackr@vmware.com>,
-        VMware Graphics Reviewers 
-        <linux-graphics-maintainer@vmware.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        kexec@lists.infradead.org, linux-hardening@vger.kernel.org,
-        David Airlie <airlied@redhat.com>
-Subject: Re: [PATCH v2 1/5] string.h: add array-wrappers for (v)memdup_user()
-Message-ID: <b219788a-69e6-44cf-a609-91f9640967f5@moroto.mountain>
-References: <cover.1694202430.git.pstanner@redhat.com>
- <93001a9f3f101be0f374080090f9c32df73ca773.1694202430.git.pstanner@redhat.com>
+        bh=h8L+TF2NB2bKIXmFBrFsqsaXp12HgxVOtYytgv3Hfus=;
+        b=TBFmjM19TM6nQu/cgfGiKrQDkI6Nks80mvqoOwu8/aJE7ZC17krc00TQ3nOHmk2eEs
+         JovdSYhGf0VCqeJmLW8OyDLtvjSf/DCwxb966106K/6ba6Z6Uj0c2D+jdapIC+5DhMfk
+         yruD+HQCBZWdkyIZ4+M7fylsQ+4rOz6b7rLhCUL6JWKcLR7v3tWff0z8WX6UXBMwihYw
+         OZDkZemR9fPSU7jRptS8MvfYbBZKE5es/9x1GufITk2k0N9JX10vdZ5gkamloLN9nmU9
+         +2xJPNOXVH/+6JTfM0reLWamXFRj28W7xqNOd4lJ5aCA40qU1/jHtRclgwE+2JpPmsRP
+         Xq2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694881145; x=1695485945;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=h8L+TF2NB2bKIXmFBrFsqsaXp12HgxVOtYytgv3Hfus=;
+        b=mMtmo3eD7/DikB12dKlagNeMqCq5G3AuD7ReUBTD49AI2tl8qayVEOjFrDhJGNQFE1
+         itBeFnyXQP6j+wKVS0dK2wGReU/0cZ2Op91AG0nAzybkD4t0nTq6dBTSssyXA20TApFw
+         hjjGywEvQ1DCNMXjR8rl9xOlXsAOuEgNTGBAFhVnxW0CVIzQlxYjRKl6PgpwEgYGA+g3
+         0umfwTWzq/5mZmXEvhrui8VPJcgxhTJ05/1ITuhtEWaLDODzOdO8fd7t4cUpzKyYmamu
+         5LUN/W5Yx3Xa5K7NLDLWP7Pz9RrhNF3Yp66XOjbA/UDyjoN4gjv1HYCAiw27RfLNlMrX
+         DJTw==
+X-Gm-Message-State: AOJu0YyVNJE/uoy1hCAcmdVXdNDOVzXbxKRudSKFVTvDosbzcRVooJyS
+        +X3hSRXVKO/vbRFduagmgTZ+KYRiwHJm3H2F6PQ=
+X-Google-Smtp-Source: AGHT+IE6gvIqWBAlwxxGiQzAX1gu/T0BW4IYuGOri4BCq3hbNBUJcdmd2cR5j04KoGOSIbaFxEkMbAA5/MG01mn7ung=
+X-Received: by 2002:a17:90a:ad92:b0:274:8363:c679 with SMTP id
+ s18-20020a17090aad9200b002748363c679mr3795739pjq.19.1694881145079; Sat, 16
+ Sep 2023 09:19:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <93001a9f3f101be0f374080090f9c32df73ca773.1694202430.git.pstanner@redhat.com>
+References: <20230825211426.3798691-1-jannh@google.com> <CACT4Y+YT6A_ZgkWTF+rxKO_mvZ3AEt+BJtcVR1sKL6LKWDC+0Q@mail.gmail.com>
+ <CAG48ez34DN_xsj7hio8epvoE8hM3F_xFoqwWYM-_LVZb39_e9A@mail.gmail.com>
+In-Reply-To: <CAG48ez34DN_xsj7hio8epvoE8hM3F_xFoqwWYM-_LVZb39_e9A@mail.gmail.com>
+From:   Andrey Konovalov <andreyknvl@gmail.com>
+Date:   Sat, 16 Sep 2023 18:18:54 +0200
+Message-ID: <CA+fCnZeyS=wr-u4FgJmGLXujcat=oQ+jo-NAt1TtSa_tLEstSg@mail.gmail.com>
+Subject: Re: [PATCH] slub: Introduce CONFIG_SLUB_RCU_DEBUG
+To:     Jann Horn <jannh@google.com>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Alexander Potapenko <glider@google.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-hardening@vger.kernel.org,
+        kernel-hardening@lists.openwall.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Sep 08, 2023 at 09:59:40PM +0200, Philipp Stanner wrote:
-> +static inline void *memdup_array_user(const void __user *src, size_t n, size_t size)
-> +{
-> +	size_t nbytes;
-> +
-> +	if (unlikely(check_mul_overflow(n, size, &nbytes)))
-> +		return ERR_PTR(-EOVERFLOW);
+On Mon, Aug 28, 2023 at 4:40=E2=80=AFPM Jann Horn <jannh@google.com> wrote:
+>
+> > Can't we unpoision this rcu_head right before call_rcu() and repoison
+> > after receiving the callback?
+>
+> Yeah, I think that should work. It looks like currently
+> kasan_unpoison() is exposed in include/linux/kasan.h but
+> kasan_poison() is not, and its inline definition probably means I
+> can't just move it out of mm/kasan/kasan.h into include/linux/kasan.h;
+> do you have a preference for how I should handle this? Hmm, and it
+> also looks like code outside of mm/kasan/ anyway wouldn't know what
+> are valid values for the "value" argument to kasan_poison().
+> I also have another feature idea that would also benefit from having
+> something like kasan_poison() available in include/linux/kasan.h, so I
+> would prefer that over adding another special-case function inside
+> KASAN for poisoning this piece of slab metadata...
 
-No need for an unlikely() because check_mul_overflow() already has one
-inside.  I feel like -ENOMEM is more traditional but I doubt anyone/userspace
-cares.
+This is a problem only for the Generic mode, right? You already call
+kasan_reset_tag on the rcu_head, which should suppress the reporting
+for the tag-based modes.
 
-> +
-> +	return memdup_user(src, nbytes);
-> +}
+If so, would it be possible to reuse metadata_access_enable/disable?
+They are used for accessing slub_debug metadata and seem to fit nicely
+with this case as well.
 
-regards,
-dan carpenter
+I also second Macro's comment to add a test for the new functionality.
+
+Thanks for working on this!
