@@ -2,24 +2,24 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59085CD3421
-	for <linux-hardening@archiver.kernel.org>; Sat, 16 Sep 2023 13:04:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B864CD342A
+	for <linux-hardening@archiver.kernel.org>; Sat, 16 Sep 2023 13:04:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239245AbjIPNDv (ORCPT
+        id S239299AbjIPNDx (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 16 Sep 2023 09:03:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38204 "EHLO
+        Sat, 16 Sep 2023 09:03:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233025AbjIPNDj (ORCPT
+        with ESMTP id S236560AbjIPNDo (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 16 Sep 2023 09:03:39 -0400
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95FC1CC2;
-        Sat, 16 Sep 2023 06:03:31 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=22;SR=0;TI=SMTPD_---0VsA36vM_1694869406;
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0VsA36vM_1694869406)
+        Sat, 16 Sep 2023 09:03:44 -0400
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62208DD;
+        Sat, 16 Sep 2023 06:03:38 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=22;SR=0;TI=SMTPD_---0VsA36xg_1694869413;
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0VsA36xg_1694869413)
           by smtp.aliyun-inc.com;
-          Sat, 16 Sep 2023 21:03:28 +0800
+          Sat, 16 Sep 2023 21:03:34 +0800
 From:   Shuai Xue <xueshuai@linux.alibaba.com>
 To:     keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
         rafael@kernel.org, lenb@kernel.org, james.morse@arm.com,
@@ -30,9 +30,9 @@ Cc:     linux-hardening@vger.kernel.org, linux-acpi@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
         linux-efi@vger.kernel.org, acpica-devel@lists.linuxfoundation.org,
         xueshuai@linux.alibaba.com, baolin.wang@linux.alibaba.com
-Subject: [RFC PATCH 5/9] ACPI: APEI: GHES: Use ERST to serialize APEI generic error before panic
-Date:   Sat, 16 Sep 2023 21:03:12 +0800
-Message-Id: <20230916130316.65815-6-xueshuai@linux.alibaba.com>
+Subject: [RFC PATCH 9/9] ACPI: APEI: ESRT: log ARM processor error
+Date:   Sat, 16 Sep 2023 21:03:16 +0800
+Message-Id: <20230916130316.65815-10-xueshuai@linux.alibaba.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230916130316.65815-1-xueshuai@linux.alibaba.com>
 References: <20230916130316.65815-1-xueshuai@linux.alibaba.com>
@@ -42,93 +42,66 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In certain scenarios (ie. hosts/guests with root filesystems on
-NFS/iSCSI where networking software and/or hardware fails, and thus
-kdump fails), it is necessary to serialize hardware error information
-available for post-mortem debugging.
-
-Save the hardware error log into flash via ERST before go panic, the
-hardware error log can be gotten from the flash after system boot
-successful again, which is very useful in production.
+Introduce a new pstore_record type, PSTORE_TYPE_CPER_PROC_ARM, so that
+serialized ARM processor errors can be retrieved and saved as a file in
+pstore file system. While the serialized errors is retrieved from ERST
+backend, log it.
 
 Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
 ---
- drivers/acpi/apei/ghes.c | 44 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+ drivers/acpi/apei/erst.c | 6 ++++++
+ fs/pstore/platform.c     | 1 +
+ include/linux/pstore.h   | 1 +
+ 3 files changed, 8 insertions(+)
 
-diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index d14e00751161..16701f889b73 100644
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -41,6 +41,7 @@
- #include <linux/uuid.h>
- #include <linux/ras.h>
- #include <linux/task_work.h>
-+#include <linux/pstore.h>
- 
- #include <acpi/actbl1.h>
+diff --git a/drivers/acpi/apei/erst.c b/drivers/acpi/apei/erst.c
+index 4f000cb1433a..c92d977d15cd 100644
+--- a/drivers/acpi/apei/erst.c
++++ b/drivers/acpi/apei/erst.c
+@@ -29,6 +29,7 @@
  #include <acpi/ghes.h>
-@@ -636,6 +637,43 @@ static void ghes_defer_non_standard_event(struct acpi_hest_generic_data *gdata,
- 	schedule_work(&entry->work);
- }
+ #include <linux/aer.h>
+ #include <linux/pci.h>
++#include <linux/ras.h>
+ /* only define CREATE_TRACE_POINTS once */
+ #include <trace/events/mce.h>
  
-+static int ghes_serialize_estatus(struct acpi_hest_generic_data *gdata, u8 notify_type)
-+{
-+	void *err = acpi_hest_get_payload(gdata);
-+	int data_len = gdata->error_data_length;
-+	struct cper_pstore_record *rcd;
-+	int record_len = data_len + sizeof(*rcd);
+@@ -1088,6 +1089,11 @@ static ssize_t erst_reader(struct pstore_record *record)
+ 		cper_print_aer(
+ 			pdev, AER_FATAL,
+ 			(struct aer_capability_regs *)pcie_err->aer_info);
++	} else if (guid_equal(&rcd->sec_hdr.section_type, &CPER_SEC_PROC_ARM)) {
++		struct cper_sec_proc_arm *err = (struct cper_sec_proc_arm *)rcd->data;
 +
-+	rcd = kmalloc(record_len, GFP_KERNEL);
-+	memset(rcd, 0, sizeof(rcd));
-+
-+	memcpy(rcd->hdr.signature, CPER_SIG_RECORD, CPER_SIG_SIZE);
-+	rcd->hdr.revision = CPER_RECORD_REV;
-+	rcd->hdr.signature_end = CPER_SIG_END;
-+	rcd->hdr.section_count = 1;
-+	rcd->hdr.error_severity = CPER_SEV_FATAL;
-+	/* timestamp, platform_id, partition_id are all invalid */
-+	rcd->hdr.validation_bits = 0;
-+	rcd->hdr.record_length = record_len;
-+	rcd->hdr.creator_id = CPER_CREATOR_PSTORE;
-+	rcd->hdr.notification_type = CPER_NOTIFY_MCE;
-+	rcd->hdr.record_id = cper_next_record_id();
-+	rcd->hdr.flags = CPER_HW_ERROR_FLAGS_PREVERR;
-+
-+	rcd->sec_hdr.section_offset = (void *)&rcd->data - (void *)&rcd;
-+	rcd->sec_hdr.section_length = data_len;
-+	rcd->sec_hdr.revision = CPER_SEC_REV;
-+	/* ->ru_id and fru_text is invalid */
-+	rcd->sec_hdr.validation_bits = 0;
-+	rcd->sec_hdr.flags = CPER_SEC_PRIMARY;
-+	rcd->sec_hdr.section_type = gdata->section_type;
-+	rcd->sec_hdr.section_severity = gdata->error_severity;
-+
-+	memcpy(&rcd->data, err, data_len);
-+
-+	return erst_write(&rcd->hdr);
-+}
-+
- static bool ghes_do_proc(struct ghes *ghes,
- 			 const struct acpi_hest_generic_status *estatus)
- {
-@@ -861,10 +899,16 @@ static void __ghes_panic(struct ghes *ghes,
- 			 struct acpi_hest_generic_status *estatus,
- 			 u64 buf_paddr, enum fixed_addresses fixmap_idx)
- {
-+	struct acpi_hest_generic_data *gdata;
-+	u8 notify_type = ghes->generic->notify.type;
-+
- 	__ghes_print_estatus(KERN_EMERG, ghes->generic, estatus);
++		record->type = PSTORE_TYPE_CPER_PROC_ARM;
++		log_arm_hw_error(err);
+ 	}
+ 	else
+ 		record->type = PSTORE_TYPE_MAX;
+diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
+index 40a062546fe4..48ad3202284c 100644
+--- a/fs/pstore/platform.c
++++ b/fs/pstore/platform.c
+@@ -53,6 +53,7 @@ static const char * const pstore_type_names[] = {
+ 	"powerpc-opal",
+ 	"cper-mem",
+ 	"cper-pcie",
++	"cper-proc-arm",
+ };
  
- 	ghes_clear_estatus(ghes, estatus, buf_paddr, fixmap_idx);
+ static int pstore_new_entry;
+diff --git a/include/linux/pstore.h b/include/linux/pstore.h
+index e63f51e9c22e..83edff5aab0b 100644
+--- a/include/linux/pstore.h
++++ b/include/linux/pstore.h
+@@ -43,6 +43,7 @@ enum pstore_type_id {
+ 	/* APEI section */
+ 	PSTORE_TYPE_CPER_MEM		= 9,
+ 	PSTORE_TYPE_CPER_PCIE		= 10,
++	PSTORE_TYPE_CPER_PROC_ARM	= 11,
  
-+	apei_estatus_for_each_section(estatus, gdata)
-+		ghes_serialize_estatus(gdata, notify_type);
-+
- 	/* reboot to log the error! */
- 	if (!panic_timeout)
- 		panic_timeout = ghes_panic_timeout;
+ 	/* End of the list */
+ 	PSTORE_TYPE_MAX
 -- 
 2.41.0
 
