@@ -2,88 +2,145 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1130CD37B0
-	for <linux-hardening@archiver.kernel.org>; Sat, 16 Sep 2023 00:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D66CD37B2
+	for <linux-hardening@archiver.kernel.org>; Sat, 16 Sep 2023 02:19:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232867AbjIPA0Y (ORCPT
+        id S236419AbjIPCTS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 15 Sep 2023 20:26:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56208 "EHLO
+        Fri, 15 Sep 2023 22:19:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238294AbjIPA0S (ORCPT
+        with ESMTP id S231585AbjIPCSs (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 15 Sep 2023 20:26:18 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B33F49E5;
-        Fri, 15 Sep 2023 17:22:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-        :In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=seiFPh/RNGfAZ+in9FMjht9cWbGAXZLBZhZdj4gxOGQ=; b=fG0g2Lv6luE70akUAjd7jkjBIh
-        XVu67BwfKuccykyAV6sF/lUJ8QIKXwajn+C+RNrIoFHJX6e9DqpWxbDt9SAssBLFwLFGxLSz5gC5h
-        /6heev58te1YmC2dv5COPf0vvoVpr824Mj/q89F+5BlNaKoYKTWSyiUbIiwKxlSdOFxC7Z3NUHhwx
-        C5Le8oUXd0VAelGoLhbWdrS3Vq9c/vG56yLBBRyigxhFVBR78bPYiR06R6ZzElZmfsSuZObp2LkyV
-        3gEd/e+QLE+pjq8ke9bNW85t/2wbtDnlWXclNv3rjy/VU0PDiwwFT8SCQFXP4BAMzI/EAws8Un4ux
-        9ea/7qYQ==;
-Received: from [172.59.186.83] (helo=[192.168.12.170])
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1qhJ4H-009iKn-1X;
-        Sat, 16 Sep 2023 00:21:52 +0000
-Message-ID: <e0ed4f6b-3db0-9729-6582-8a5e3b4e2064@infradead.org>
-Date:   Fri, 15 Sep 2023 19:21:43 -0500
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH][next] net: spider_net: Use size_add() in call to
- struct_size()
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Ishizaki Kou <kou.ishizaki@toshiba.co.jp>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     netdev@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Fri, 15 Sep 2023 22:18:48 -0400
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25FD2173C
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 19:18:43 -0700 (PDT)
+Received: by mail-pg1-x534.google.com with SMTP id 41be03b00d2f7-577fb90bb76so1508409a12.2
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Sep 2023 19:18:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1694830722; x=1695435522; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lNAcEM45JnuCfTSJI3E/dx3IgazeK//Dr+dUsENW/9I=;
+        b=dErwtPH2G7abDL5kB5qiGhpulzgA5oK2y0zkfp9GNJk4LH2sASgp46k9IgrS/USCvW
+         o314qKE6fVK4/+0TrC7RogNKAno77k86WiE1r30sveWDMrNlrsYdbWQ7FGvXKTdhJ7pq
+         9WqeFwo3BBWBE6YLyYcn3/2H4u8e8GWwI9LL8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694830722; x=1695435522;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lNAcEM45JnuCfTSJI3E/dx3IgazeK//Dr+dUsENW/9I=;
+        b=Sg04Gb7UPQWTUTnKIQfYf24enlDoDCg8RNsl9Vb8FmpdGTZODvbUIWZN5ilhYebTyS
+         QZNIH6RpVrYYbzR5gBc22F95YcUb7/FQcEAilad/+iDriruNaBwxALJRf5cUeCSKOXvq
+         DEtlWeA7nXcs1OSmI/9CIdwUmQaFEt0evx9FtD6ZGOA0EqEKGd7NlLJRPZ6oRxS5hUOc
+         CkMZM7w+IZeFR+s/TOtUtyp0V08LaVGT8lxqJ+KYKvr5lY9pgfKvC16F1NLgZvaUwXuw
+         9ZEx4ssBMWdpjeHh4yZqD3o+8dO5DQtrHm+jmZJbyjECYCyVhZinKnifTxffWuqtoJpt
+         z24A==
+X-Gm-Message-State: AOJu0Ywuksqu3FDmGAB6fZ3bGNxZIntDazOfoDo7sKorovD5/ftZ9OXe
+        oB6+lULQwqJG8MoYZRdX/28NGw==
+X-Google-Smtp-Source: AGHT+IHGflPojIWFVtfNOoBI/mmU5yo4NTnIHWbhbq4XOzjG2hmoFQfv/CUSUlzb4Q2BjUy9ltgeBw==
+X-Received: by 2002:a05:6a20:3206:b0:15a:58c8:b10f with SMTP id hl6-20020a056a20320600b0015a58c8b10fmr2994151pzc.43.1694830722637;
+        Fri, 15 Sep 2023 19:18:42 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id p4-20020a170902a40400b001b03a1a3151sm4116061plq.70.2023.09.15.19.18.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Sep 2023 19:18:41 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Matteo Rizzo <matteorizzo@google.com>
+Cc:     Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <ZQSvsLmJrDsKtLCa@work>
-Content-Language: en-US
-From:   Geoff Levand <geoff@infradead.org>
-In-Reply-To: <ZQSvsLmJrDsKtLCa@work>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH] x86/mm/dump_pagetables: Add SLAB_VIRTUAL knowledge
+Date:   Fri, 15 Sep 2023 19:18:39 -0700
+Message-Id: <20230916021835.never.147-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1869; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=HmsovkvkpuwppfIJaKsY4lAxAF0+pyYONDwvgfgBOPE=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlBRB/T8jhFzJbx6o5pyHiafrDVYrG9hl2ENXaj
+ 1vL0IdviLGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQUQfwAKCRCJcvTf3G3A
+ JmvID/9kiQNsFcjzH+6NwX2OKRtQtlFTPX4yZBTLdnCSlSxoiZOn1Um7n4ushYsTSH9QPZ2ddwb
+ ZO0VP2CD4+wb17Lra8vU4oBGVa7Qou3CMDgsmY29UzQAgJMybMY2IA7PK6tsbotWnW9A0fD50ux
+ yzmULaSqemZOWBFAe7ahP5HoWMdrmi45KP/vnhSAJbiTrIYUBueQQectsRg2UEufA3kpMGFpyRc
+ vuRQVGyTzX6c/w7jLd9IP06ww2nvV9deNlrTD0khFfDrR40jbKZ4YkHRuiS7DD9fDvuRKMAU0QX
+ FkOWDs7Mvx/UO44vjmmLT6g9/T/temLWY4ud/DGWD2mZm7FD6wmCKCxFTgzKQSD/P90lhr9o217
+ rOulVz8VirrktInFxsA3t0ODzZpdyyMk3w48IOt+uXWi/Z3Ql8D3303wxw5XbNpSiFk9AwGhagg
+ vx238fBXuPczyRGAzINKeLr/5u5vt8ErQmw1Tzij2Ph1UOVzGUwyDTTFTd9FP0HMDN+XqFG8T3B
+ kE4REF5HqLOMJLVDOJjHJLpRnDkuO6gOMeLnoX+JEpJByYJex8wltdRkjYGRjh14psEpBsZaAU5
+ MCc6f8enuWqjL04mNW/SYQfAfq8gqQ/h/i1Pz8/vZB3hAMqTbLsopoZ2D7u1Mx7xr2jlhk/qqJh
+ lchwYnO C2pRB0MQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 9/15/23 14:25, Gustavo A. R. Silva wrote:
-> If, for any reason, the open-coded arithmetic causes a wraparound,
-> the protection that `struct_size()` adds against potential integer
-> overflows is defeated. Fix this by hardening call to `struct_size()`
-> with `size_add()`.
-> 
-> Fixes: 3f1071ec39f7 ("net: spider_net: Use struct_size() helper")
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  drivers/net/ethernet/toshiba/spider_net.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/toshiba/spider_net.c b/drivers/net/ethernet/toshiba/spider_net.c
-> index 50d7eacfec58..87e67121477c 100644
-> --- a/drivers/net/ethernet/toshiba/spider_net.c
-> +++ b/drivers/net/ethernet/toshiba/spider_net.c
-> @@ -2332,7 +2332,7 @@ spider_net_alloc_card(void)
->  	struct spider_net_card *card;
->  
->  	netdev = alloc_etherdev(struct_size(card, darray,
-> -					    tx_descriptors + rx_descriptors));
-> +					    size_add(tx_descriptors, rx_descriptors)));
->  	if (!netdev)
->  		return NULL;
->  
+Add the markings for the SLAB_VIRTUAL area.
 
-Looks good to me.  Thanks for your fix-up.
+Cc: Matteo Rizzo <matteorizzo@google.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: x86@kernel.org
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+This is on top of the SLAB_VIRTUAL series:
+https://lore.kernel.org/all/20230915105933.495735-11-matteorizzo@google.com/
 
-Signed-off-by: Geoff Levand <geoff@infradead.org>
+Feel free to collapse this into the x86 patch from the above series.
 
+FYI, as expected, the kernel page table entries get way longer with
+SLAB_VIRTUAL. :)
+
+Without SLAB_VIRTUAL:
+
+# wc -l /sys/kernel/debug/page_tables/kernel
+1501 /sys/kernel/debug/page_tables/kernel
+
+With SLAB_VIRTUAL:
+
+# wc -l /sys/kernel/debug/page_tables/kernel
+7549 /sys/kernel/debug/page_tables/kernel
+---
+ arch/x86/mm/dump_pagetables.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/x86/mm/dump_pagetables.c b/arch/x86/mm/dump_pagetables.c
+index e1b599ecbbc2..b1fa68669e61 100644
+--- a/arch/x86/mm/dump_pagetables.c
++++ b/arch/x86/mm/dump_pagetables.c
+@@ -64,6 +64,9 @@ enum address_markers_idx {
+ 	KASAN_SHADOW_END_NR,
+ #endif
+ 	CPU_ENTRY_AREA_NR,
++#ifdef CONFIG_SLAB_VIRTUAL
++	SLAB_AREA_NR,
++#endif
+ #ifdef CONFIG_X86_ESPFIX64
+ 	ESPFIX_START_NR,
+ #endif
+@@ -95,6 +98,9 @@ static struct addr_marker address_markers[] = {
+ 	[LDT_NR]		= { 0UL,		"LDT remap" },
+ #endif
+ 	[CPU_ENTRY_AREA_NR]	= { CPU_ENTRY_AREA_BASE,"CPU entry Area" },
++#ifdef CONFIG_SLAB_VIRTUAL
++	[SLAB_AREA_NR]		= { SLAB_BASE_ADDR,	"Slab Area" },
++#endif
+ #ifdef CONFIG_X86_ESPFIX64
+ 	[ESPFIX_START_NR]	= { ESPFIX_BASE_ADDR,	"ESPfix Area", 16 },
+ #endif
+-- 
+2.34.1
 
