@@ -2,107 +2,150 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5898CD37BF
-	for <linux-hardening@archiver.kernel.org>; Sat, 16 Sep 2023 16:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF189C2BA2B
+	for <linux-hardening@archiver.kernel.org>; Sat, 16 Sep 2023 23:13:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230396AbjIPQTN (ORCPT
+        id S231605AbjIPXJC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 16 Sep 2023 12:19:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44674 "EHLO
+        Sat, 16 Sep 2023 19:09:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239410AbjIPQTK (ORCPT
+        with ESMTP id S229713AbjIPXIb (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 16 Sep 2023 12:19:10 -0400
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B95F1CC0;
-        Sat, 16 Sep 2023 09:19:05 -0700 (PDT)
-Received: by mail-pj1-x1031.google.com with SMTP id 98e67ed59e1d1-2749b003363so1157573a91.2;
-        Sat, 16 Sep 2023 09:19:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1694881145; x=1695485945; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h8L+TF2NB2bKIXmFBrFsqsaXp12HgxVOtYytgv3Hfus=;
-        b=TBFmjM19TM6nQu/cgfGiKrQDkI6Nks80mvqoOwu8/aJE7ZC17krc00TQ3nOHmk2eEs
-         JovdSYhGf0VCqeJmLW8OyDLtvjSf/DCwxb966106K/6ba6Z6Uj0c2D+jdapIC+5DhMfk
-         yruD+HQCBZWdkyIZ4+M7fylsQ+4rOz6b7rLhCUL6JWKcLR7v3tWff0z8WX6UXBMwihYw
-         OZDkZemR9fPSU7jRptS8MvfYbBZKE5es/9x1GufITk2k0N9JX10vdZ5gkamloLN9nmU9
-         +2xJPNOXVH/+6JTfM0reLWamXFRj28W7xqNOd4lJ5aCA40qU1/jHtRclgwE+2JpPmsRP
-         Xq2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694881145; x=1695485945;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=h8L+TF2NB2bKIXmFBrFsqsaXp12HgxVOtYytgv3Hfus=;
-        b=mMtmo3eD7/DikB12dKlagNeMqCq5G3AuD7ReUBTD49AI2tl8qayVEOjFrDhJGNQFE1
-         itBeFnyXQP6j+wKVS0dK2wGReU/0cZ2Op91AG0nAzybkD4t0nTq6dBTSssyXA20TApFw
-         hjjGywEvQ1DCNMXjR8rl9xOlXsAOuEgNTGBAFhVnxW0CVIzQlxYjRKl6PgpwEgYGA+g3
-         0umfwTWzq/5mZmXEvhrui8VPJcgxhTJ05/1ITuhtEWaLDODzOdO8fd7t4cUpzKyYmamu
-         5LUN/W5Yx3Xa5K7NLDLWP7Pz9RrhNF3Yp66XOjbA/UDyjoN4gjv1HYCAiw27RfLNlMrX
-         DJTw==
-X-Gm-Message-State: AOJu0YyVNJE/uoy1hCAcmdVXdNDOVzXbxKRudSKFVTvDosbzcRVooJyS
-        +X3hSRXVKO/vbRFduagmgTZ+KYRiwHJm3H2F6PQ=
-X-Google-Smtp-Source: AGHT+IE6gvIqWBAlwxxGiQzAX1gu/T0BW4IYuGOri4BCq3hbNBUJcdmd2cR5j04KoGOSIbaFxEkMbAA5/MG01mn7ung=
-X-Received: by 2002:a17:90a:ad92:b0:274:8363:c679 with SMTP id
- s18-20020a17090aad9200b002748363c679mr3795739pjq.19.1694881145079; Sat, 16
- Sep 2023 09:19:05 -0700 (PDT)
+        Sat, 16 Sep 2023 19:08:31 -0400
+Received: from sonata.ens-lyon.org (sonata.ens-lyon.org [140.77.166.138])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DC42CD5;
+        Sat, 16 Sep 2023 16:08:25 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by sonata.ens-lyon.org (Postfix) with ESMTP id D89D32013C;
+        Sun, 17 Sep 2023 01:08:09 +0200 (CEST)
+Received: from sonata.ens-lyon.org ([127.0.0.1])
+        by localhost (sonata.ens-lyon.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id o1eLfS2tQsgw; Sun, 17 Sep 2023 01:08:09 +0200 (CEST)
+Received: from begin (lfbn-bor-1-1163-184.w92-158.abo.wanadoo.fr [92.158.138.184])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by sonata.ens-lyon.org (Postfix) with ESMTPSA id 7FDB520137;
+        Sun, 17 Sep 2023 01:08:08 +0200 (CEST)
+Received: from samy by begin with local (Exim 4.96)
+        (envelope-from <samuel.thibault@ens-lyon.org>)
+        id 1qheOW-007HHT-04;
+        Sun, 17 Sep 2023 01:08:08 +0200
+Date:   Sun, 17 Sep 2023 01:08:07 +0200
+From:   Samuel Thibault <samuel.thibault@ens-lyon.org>
+To:     Justin Stitt <justinstitt@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        William Hubbs <w.d.hubbs@gmail.com>,
+        Chris Brannon <chris@the-brannons.com>,
+        Kirk Reiser <kirk@reisers.ca>, speakup@linux-speakup.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] accessibility: speakup: refactor deprecated strncpy
+Message-ID: <20230916230807.motaqyb5gqzqjvub@begin>
+Mail-Followup-To: Samuel Thibault <samuel.thibault@ens-lyon.org>,
+        Justin Stitt <justinstitt@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        William Hubbs <w.d.hubbs@gmail.com>,
+        Chris Brannon <chris@the-brannons.com>,
+        Kirk Reiser <kirk@reisers.ca>, speakup@linux-speakup.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20230824-strncpy-drivers-accessibility-speakup-kobjects-c-v1-1-3a1ef1221e90@google.com>
+ <202308251439.36BC33ADB2@keescook>
+ <CAFhGd8r6A4VH5C=yF1WHKEPY86oh6PEzt6wuxPxsJAD0XKfrsQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20230825211426.3798691-1-jannh@google.com> <CACT4Y+YT6A_ZgkWTF+rxKO_mvZ3AEt+BJtcVR1sKL6LKWDC+0Q@mail.gmail.com>
- <CAG48ez34DN_xsj7hio8epvoE8hM3F_xFoqwWYM-_LVZb39_e9A@mail.gmail.com>
-In-Reply-To: <CAG48ez34DN_xsj7hio8epvoE8hM3F_xFoqwWYM-_LVZb39_e9A@mail.gmail.com>
-From:   Andrey Konovalov <andreyknvl@gmail.com>
-Date:   Sat, 16 Sep 2023 18:18:54 +0200
-Message-ID: <CA+fCnZeyS=wr-u4FgJmGLXujcat=oQ+jo-NAt1TtSa_tLEstSg@mail.gmail.com>
-Subject: Re: [PATCH] slub: Introduce CONFIG_SLUB_RCU_DEBUG
-To:     Jann Horn <jannh@google.com>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Alexander Potapenko <glider@google.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-hardening@vger.kernel.org,
-        kernel-hardening@lists.openwall.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAFhGd8r6A4VH5C=yF1WHKEPY86oh6PEzt6wuxPxsJAD0XKfrsQ@mail.gmail.com>
+Organization: I am not organized
+User-Agent: NeoMutt/20170609 (1.8.3)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Aug 28, 2023 at 4:40=E2=80=AFPM Jann Horn <jannh@google.com> wrote:
->
-> > Can't we unpoision this rcu_head right before call_rcu() and repoison
-> > after receiving the callback?
->
-> Yeah, I think that should work. It looks like currently
-> kasan_unpoison() is exposed in include/linux/kasan.h but
-> kasan_poison() is not, and its inline definition probably means I
-> can't just move it out of mm/kasan/kasan.h into include/linux/kasan.h;
-> do you have a preference for how I should handle this? Hmm, and it
-> also looks like code outside of mm/kasan/ anyway wouldn't know what
-> are valid values for the "value" argument to kasan_poison().
-> I also have another feature idea that would also benefit from having
-> something like kasan_poison() available in include/linux/kasan.h, so I
-> would prefer that over adding another special-case function inside
-> KASAN for poisoning this piece of slab metadata...
+Hello,
 
-This is a problem only for the Generic mode, right? You already call
-kasan_reset_tag on the rcu_head, which should suppress the reporting
-for the tag-based modes.
+Justin Stitt, le ven. 25 août 2023 15:41:03 -0700, a ecrit:
+> Thanks for the review Kees and Samuel. Hoping to get this picked-up soon :)
+> 
+> FWIW, I've quickly copy/pasted Kees' suggested refactor of
+> synth_direct_store and rebased against v6.5-rc7 if anyone has the
+> means by which to test it.
+> 
+> TEST PATCH BELOW
+> ---
+> From e7216bca30673a162660c51f8bad3b463d283041 Mon Sep 17 00:00:00 2001
+> From: Justin Stitt <justinstitt@google.com>
+> Date: Fri, 25 Aug 2023 22:32:03 +0000
+> Subject: [PATCH NEEDS TEST] synth_direct_store refactor to use synth_write
+> 
+> I've just copy/pasted Kees' suggestion here [1] and rebased it against
+> 6.5-rc7.
+> 
+> This patch needs testing as it refactors behavior in synth_direct_store.
+> 
+> [1]: https://lore.kernel.org/all/202308251439.36BC33ADB2@keescook/
+> 
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-If so, would it be possible to reuse metadata_access_enable/disable?
-They are used for accessing slub_debug metadata and seem to fit nicely
-with this case as well.
+Tested-by: Samuel Thibault <samuel.thibault@ens-lyon.org>
 
-I also second Macro's comment to add a test for the new functionality.
+but please submit it properly :) It was completely mangled in the mail.
 
-Thanks for working on this!
+> ---
+>  drivers/accessibility/speakup/kobjects.c | 25 +++++++++++-------------
+>  1 file changed, 11 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/accessibility/speakup/kobjects.c
+> b/drivers/accessibility/speakup/kobjects.c
+> index a7522d409802..0dfdb6608e02 100644
+> --- a/drivers/accessibility/speakup/kobjects.c
+> +++ b/drivers/accessibility/speakup/kobjects.c
+> @@ -413,27 +413,24 @@ static ssize_t synth_direct_store(struct kobject *kobj,
+>     struct kobj_attribute *attr,
+>     const char *buf, size_t count)
+>  {
+> - u_char tmp[256];
+> - int len;
+> - int bytes;
+> - const char *ptr = buf;
+> + char *unescaped;
+>   unsigned long flags;
+> 
+>   if (!synth)
+>   return -EPERM;
+> 
+> - len = strlen(buf);
+> + unescaped = kstrdup(buf, GFP_KERNEL);
+> + if (!unescaped)
+> + return -ENOMEM;
+> +
+> + string_unescape_any_inplace(unescaped);
+> +
+>   spin_lock_irqsave(&speakup_info.spinlock, flags);
+> - while (len > 0) {
+> - bytes = min_t(size_t, len, 250);
+> - strncpy(tmp, ptr, bytes);
+> - tmp[bytes] = '\0';
+> - string_unescape_any_inplace(tmp);
+> - synth_printf("%s", tmp);
+> - ptr += bytes;
+> - len -= bytes;
+> - }
+> + synth_write(unescaped, strlen(unescaped));
+>   spin_unlock_irqrestore(&speakup_info.spinlock, flags);
+> +
+> + kfree(unescaped);
+> +
+>   return count;
+>  }
+> 
+> --
+> 2.42.0.rc1.204.g551eb34607-goog
+> 
+
+-- 
+Samuel
+---
+Pour une évaluation indépendante, transparente et rigoureuse !
+Je soutiens la Commission d'Évaluation de l'Inria.
