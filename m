@@ -2,150 +2,81 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF189C2BA2B
-	for <linux-hardening@archiver.kernel.org>; Sat, 16 Sep 2023 23:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 771E0CD37B3
+	for <linux-hardening@archiver.kernel.org>; Sun, 17 Sep 2023 15:04:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231605AbjIPXJC (ORCPT
+        id S235658AbjIQPDr (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 16 Sep 2023 19:09:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37448 "EHLO
+        Sun, 17 Sep 2023 11:03:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229713AbjIPXIb (ORCPT
+        with ESMTP id S235063AbjIQPDP (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 16 Sep 2023 19:08:31 -0400
-Received: from sonata.ens-lyon.org (sonata.ens-lyon.org [140.77.166.138])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DC42CD5;
-        Sat, 16 Sep 2023 16:08:25 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by sonata.ens-lyon.org (Postfix) with ESMTP id D89D32013C;
-        Sun, 17 Sep 2023 01:08:09 +0200 (CEST)
-Received: from sonata.ens-lyon.org ([127.0.0.1])
-        by localhost (sonata.ens-lyon.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id o1eLfS2tQsgw; Sun, 17 Sep 2023 01:08:09 +0200 (CEST)
-Received: from begin (lfbn-bor-1-1163-184.w92-158.abo.wanadoo.fr [92.158.138.184])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by sonata.ens-lyon.org (Postfix) with ESMTPSA id 7FDB520137;
-        Sun, 17 Sep 2023 01:08:08 +0200 (CEST)
-Received: from samy by begin with local (Exim 4.96)
-        (envelope-from <samuel.thibault@ens-lyon.org>)
-        id 1qheOW-007HHT-04;
-        Sun, 17 Sep 2023 01:08:08 +0200
-Date:   Sun, 17 Sep 2023 01:08:07 +0200
-From:   Samuel Thibault <samuel.thibault@ens-lyon.org>
-To:     Justin Stitt <justinstitt@google.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        William Hubbs <w.d.hubbs@gmail.com>,
-        Chris Brannon <chris@the-brannons.com>,
-        Kirk Reiser <kirk@reisers.ca>, speakup@linux-speakup.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] accessibility: speakup: refactor deprecated strncpy
-Message-ID: <20230916230807.motaqyb5gqzqjvub@begin>
-Mail-Followup-To: Samuel Thibault <samuel.thibault@ens-lyon.org>,
-        Justin Stitt <justinstitt@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        William Hubbs <w.d.hubbs@gmail.com>,
-        Chris Brannon <chris@the-brannons.com>,
-        Kirk Reiser <kirk@reisers.ca>, speakup@linux-speakup.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20230824-strncpy-drivers-accessibility-speakup-kobjects-c-v1-1-3a1ef1221e90@google.com>
- <202308251439.36BC33ADB2@keescook>
- <CAFhGd8r6A4VH5C=yF1WHKEPY86oh6PEzt6wuxPxsJAD0XKfrsQ@mail.gmail.com>
+        Sun, 17 Sep 2023 11:03:15 -0400
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CAD8138;
+        Sun, 17 Sep 2023 08:03:08 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=joseph.qi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0VsCgFuq_1694962983;
+Received: from 30.32.84.199(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0VsCgFuq_1694962983)
+          by smtp.aliyun-inc.com;
+          Sun, 17 Sep 2023 23:03:04 +0800
+Message-ID: <30e6453f-95cc-05fa-9582-6b7447d8e2e6@linux.alibaba.com>
+Date:   Sun, 17 Sep 2023 23:03:03 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFhGd8r6A4VH5C=yF1WHKEPY86oh6PEzt6wuxPxsJAD0XKfrsQ@mail.gmail.com>
-Organization: I am not organized
-User-Agent: NeoMutt/20170609 (1.8.3)
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.15.1
+Subject: Re: [PATCH] ocfs2: Annotate struct ocfs2_slot_info with __counted_by
+To:     Kees Cook <keescook@chromium.org>, Mark Fasheh <mark@fasheh.com>,
+        akpm <akpm@linux-foundation.org>
+Cc:     Joel Becker <jlbec@evilplan.org>, ocfs2-devel@lists.linux.dev,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+References: <20230915201522.never.979-kees@kernel.org>
+Content-Language: en-US
+From:   Joseph Qi <joseph.qi@linux.alibaba.com>
+In-Reply-To: <20230915201522.never.979-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello,
 
-Justin Stitt, le ven. 25 août 2023 15:41:03 -0700, a ecrit:
-> Thanks for the review Kees and Samuel. Hoping to get this picked-up soon :)
+
+On 9/16/23 4:15 AM, Kees Cook wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
 > 
-> FWIW, I've quickly copy/pasted Kees' suggested refactor of
-> synth_direct_store and rebased against v6.5-rc7 if anyone has the
-> means by which to test it.
+> As found with Coccinelle[1], add __counted_by for struct ocfs2_slot_info.
 > 
-> TEST PATCH BELOW
+> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+> 
+> Cc: Mark Fasheh <mark@fasheh.com>
+> Cc: Joel Becker <jlbec@evilplan.org>
+> Cc: Joseph Qi <joseph.qi@linux.alibaba.com>
+> Cc: ocfs2-devel@lists.linux.dev
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
 > ---
-> From e7216bca30673a162660c51f8bad3b463d283041 Mon Sep 17 00:00:00 2001
-> From: Justin Stitt <justinstitt@google.com>
-> Date: Fri, 25 Aug 2023 22:32:03 +0000
-> Subject: [PATCH NEEDS TEST] synth_direct_store refactor to use synth_write
+>  fs/ocfs2/slot_map.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> I've just copy/pasted Kees' suggestion here [1] and rebased it against
-> 6.5-rc7.
-> 
-> This patch needs testing as it refactors behavior in synth_direct_store.
-> 
-> [1]: https://lore.kernel.org/all/202308251439.36BC33ADB2@keescook/
-> 
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-
-Tested-by: Samuel Thibault <samuel.thibault@ens-lyon.org>
-
-but please submit it properly :) It was completely mangled in the mail.
-
-> ---
->  drivers/accessibility/speakup/kobjects.c | 25 +++++++++++-------------
->  1 file changed, 11 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/accessibility/speakup/kobjects.c
-> b/drivers/accessibility/speakup/kobjects.c
-> index a7522d409802..0dfdb6608e02 100644
-> --- a/drivers/accessibility/speakup/kobjects.c
-> +++ b/drivers/accessibility/speakup/kobjects.c
-> @@ -413,27 +413,24 @@ static ssize_t synth_direct_store(struct kobject *kobj,
->     struct kobj_attribute *attr,
->     const char *buf, size_t count)
->  {
-> - u_char tmp[256];
-> - int len;
-> - int bytes;
-> - const char *ptr = buf;
-> + char *unescaped;
->   unsigned long flags;
-> 
->   if (!synth)
->   return -EPERM;
-> 
-> - len = strlen(buf);
-> + unescaped = kstrdup(buf, GFP_KERNEL);
-> + if (!unescaped)
-> + return -ENOMEM;
-> +
-> + string_unescape_any_inplace(unescaped);
-> +
->   spin_lock_irqsave(&speakup_info.spinlock, flags);
-> - while (len > 0) {
-> - bytes = min_t(size_t, len, 250);
-> - strncpy(tmp, ptr, bytes);
-> - tmp[bytes] = '\0';
-> - string_unescape_any_inplace(tmp);
-> - synth_printf("%s", tmp);
-> - ptr += bytes;
-> - len -= bytes;
-> - }
-> + synth_write(unescaped, strlen(unescaped));
->   spin_unlock_irqrestore(&speakup_info.spinlock, flags);
-> +
-> + kfree(unescaped);
-> +
->   return count;
->  }
-> 
-> --
-> 2.42.0.rc1.204.g551eb34607-goog
-> 
-
--- 
-Samuel
----
-Pour une évaluation indépendante, transparente et rigoureuse !
-Je soutiens la Commission d'Évaluation de l'Inria.
+> diff --git a/fs/ocfs2/slot_map.c b/fs/ocfs2/slot_map.c
+> index da7718cef735..e544c704b583 100644
+> --- a/fs/ocfs2/slot_map.c
+> +++ b/fs/ocfs2/slot_map.c
+> @@ -37,7 +37,7 @@ struct ocfs2_slot_info {
+>  	unsigned int si_blocks;
+>  	struct buffer_head **si_bh;
+>  	unsigned int si_num_slots;
+> -	struct ocfs2_slot si_slots[];
+> +	struct ocfs2_slot si_slots[] __counted_by(si_num_slots);
+>  };
+>  
+>  
