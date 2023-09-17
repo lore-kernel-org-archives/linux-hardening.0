@@ -2,81 +2,108 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 771E0CD37B3
-	for <linux-hardening@archiver.kernel.org>; Sun, 17 Sep 2023 15:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED39CD13D3
+	for <linux-hardening@archiver.kernel.org>; Sun, 17 Sep 2023 19:50:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235658AbjIQPDr (ORCPT
+        id S239124AbjIQTtw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 17 Sep 2023 11:03:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46946 "EHLO
+        Sun, 17 Sep 2023 15:49:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235063AbjIQPDP (ORCPT
+        with ESMTP id S240066AbjIQTtY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 17 Sep 2023 11:03:15 -0400
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CAD8138;
-        Sun, 17 Sep 2023 08:03:08 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=joseph.qi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0VsCgFuq_1694962983;
-Received: from 30.32.84.199(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0VsCgFuq_1694962983)
-          by smtp.aliyun-inc.com;
-          Sun, 17 Sep 2023 23:03:04 +0800
-Message-ID: <30e6453f-95cc-05fa-9582-6b7447d8e2e6@linux.alibaba.com>
-Date:   Sun, 17 Sep 2023 23:03:03 +0800
+        Sun, 17 Sep 2023 15:49:24 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 850729F;
+        Sun, 17 Sep 2023 12:49:19 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B549DC433CD;
+        Sun, 17 Sep 2023 19:49:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1694980159;
+        bh=B5DqDUM2XbeQIDrH47tq2TTQ3eVn0cfDgVEFaUw2H6Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cjGOI4RMqCPQ8zkmJDgh2WTbiOMp2kNuTEjnwDsZML6g39ylcsdHH14JDbPPspXQY
+         EYkhv8IkkhqZK1EftwkV+vcSFBzpkwc8MzyGO7FuBQppC6vzS0DPpbcZnocfvJX5Dc
+         5q4QuEptukkuaHu1UwQpRaiaHEEdE36Lc7Wzlq8g=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     stable@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        patches@lists.linux.dev, linux-hardening@vger.kernel.org,
+        Justin Stitt <justinstitt@google.com>,
+        Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.5 094/285] accel/ivpu: refactor deprecated strncpy
+Date:   Sun, 17 Sep 2023 21:11:34 +0200
+Message-ID: <20230917191054.946681501@linuxfoundation.org>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20230917191051.639202302@linuxfoundation.org>
+References: <20230917191051.639202302@linuxfoundation.org>
+User-Agent: quilt/0.67
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.15.1
-Subject: Re: [PATCH] ocfs2: Annotate struct ocfs2_slot_info with __counted_by
-To:     Kees Cook <keescook@chromium.org>, Mark Fasheh <mark@fasheh.com>,
-        akpm <akpm@linux-foundation.org>
-Cc:     Joel Becker <jlbec@evilplan.org>, ocfs2-devel@lists.linux.dev,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-References: <20230915201522.never.979-kees@kernel.org>
-Content-Language: en-US
-From:   Joseph Qi <joseph.qi@linux.alibaba.com>
-In-Reply-To: <20230915201522.never.979-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+6.5-stable review patch.  If anyone has any objections, please let me know.
+
+------------------
+
+From: Justin Stitt <justinstitt@google.com>
+
+[ Upstream commit 4b2fd81f2af7147e844ecec0c5c07a16bca6b86e ]
+
+`strncpy` is deprecated for use on NUL-terminated destination strings [1].
+
+A suitable replacement is `strscpy` [2] due to the fact that it
+guarantees NUL-termination on its destination buffer argument which is
+_not_ the case for `strncpy`!
+
+Also remove extraneous if-statement as it can never be entered. The
+return value from `strncpy` is it's first argument. In this case,
+`...dyndbg_cmd` is an array:
+| 	char dyndbg_cmd[VPU_DYNDBG_CMD_MAX_LEN];
+             ^^^^^^^^^^
+This can never be NULL which means `strncpy`'s return value cannot be
+NULL here. Just use `strscpy` which is more robust and results in
+simpler and less ambiguous code.
+
+Moreover, remove needless `... - 1` as `strscpy`'s implementation
+ensures NUL-termination and we do not need to carefully dance around
+ending boundaries with a "- 1" anymore.
+
+Fixes: 5d7422cfb498 ("accel/ivpu: Add IPC driver and JSM messages")
+Link: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+Reviewed-by: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
+Signed-off-by: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20230824-strncpy-drivers-accel-ivpu-ivpu_jsm_msg-c-v1-1-12d9b52d2dff@google.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/accel/ivpu/ivpu_jsm_msg.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/accel/ivpu/ivpu_jsm_msg.c b/drivers/accel/ivpu/ivpu_jsm_msg.c
+index 831bfd2b2d39d..bdddef2c59eec 100644
+--- a/drivers/accel/ivpu/ivpu_jsm_msg.c
++++ b/drivers/accel/ivpu/ivpu_jsm_msg.c
+@@ -118,8 +118,7 @@ int ivpu_jsm_dyndbg_control(struct ivpu_device *vdev, char *command, size_t size
+ 	struct vpu_jsm_msg resp;
+ 	int ret;
+ 
+-	if (!strncpy(req.payload.dyndbg_control.dyndbg_cmd, command, VPU_DYNDBG_CMD_MAX_LEN - 1))
+-		return -ENOMEM;
++	strscpy(req.payload.dyndbg_control.dyndbg_cmd, command, VPU_DYNDBG_CMD_MAX_LEN);
+ 
+ 	ret = ivpu_ipc_send_receive(vdev, &req, VPU_JSM_MSG_DYNDBG_CONTROL_RSP, &resp,
+ 				    VPU_IPC_CHAN_ASYNC_CMD, vdev->timeout.jsm);
+-- 
+2.40.1
 
 
-On 9/16/23 4:15 AM, Kees Cook wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
-> 
-> As found with Coccinelle[1], add __counted_by for struct ocfs2_slot_info.
-> 
-> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
-> 
-> Cc: Mark Fasheh <mark@fasheh.com>
-> Cc: Joel Becker <jlbec@evilplan.org>
-> Cc: Joseph Qi <joseph.qi@linux.alibaba.com>
-> Cc: ocfs2-devel@lists.linux.dev
-> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-> ---
->  fs/ocfs2/slot_map.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/ocfs2/slot_map.c b/fs/ocfs2/slot_map.c
-> index da7718cef735..e544c704b583 100644
-> --- a/fs/ocfs2/slot_map.c
-> +++ b/fs/ocfs2/slot_map.c
-> @@ -37,7 +37,7 @@ struct ocfs2_slot_info {
->  	unsigned int si_blocks;
->  	struct buffer_head **si_bh;
->  	unsigned int si_num_slots;
-> -	struct ocfs2_slot si_slots[];
-> +	struct ocfs2_slot si_slots[] __counted_by(si_num_slots);
->  };
->  
->  
