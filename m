@@ -2,132 +2,168 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 135ABC46CA1
-	for <linux-hardening@archiver.kernel.org>; Mon, 18 Sep 2023 16:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D8BCD3422
+	for <linux-hardening@archiver.kernel.org>; Mon, 18 Sep 2023 17:02:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229518AbjIRQaZ (ORCPT
+        id S231356AbjIRRCk (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 18 Sep 2023 12:30:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52538 "EHLO
+        Mon, 18 Sep 2023 13:02:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58748 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229709AbjIRQaH (ORCPT
+        with ESMTP id S231222AbjIRRCi (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 18 Sep 2023 12:30:07 -0400
-Received: from mail-il1-x149.google.com (mail-il1-x149.google.com [IPv6:2607:f8b0:4864:20::149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8351524992
-        for <linux-hardening@vger.kernel.org>; Mon, 18 Sep 2023 09:27:13 -0700 (PDT)
-Received: by mail-il1-x149.google.com with SMTP id e9e14a558f8ab-34feb260e6eso6660145ab.0
-        for <linux-hardening@vger.kernel.org>; Mon, 18 Sep 2023 09:27:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1695054432; x=1695659232; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=F+MBClngMcUOr7b7qdytwU8fTtdqU1XKfB8/O+XIG6U=;
-        b=XwibxdEzYI2fscRPj6Rg/gC/YLteohzqYdnEF6lghpTY1iLOAjWVKlBBbLsXV0sCTJ
-         28Xwe+aV8ixdzZtLCXVF1NHQQwFDzVNtofBfFeHNyrr0Wch1FqEkrJakSSmBXTIbauw2
-         0d4G83YLvrxFgDe8xlWmGVbQn9XWCqVBEdqaM9HzHTK7QdEZGk+qjRHPBZ1QzExYvg+R
-         avjYz834WruMRUZxOUBLxtEHijfPFDtVD2h5xbypgJxPG78DuZnaF8SyZqo5wQYw1H+K
-         CzQEQlydtaOEIhVRfNYzu6nPIUO1Caabd3xc5zluQKo/cpuTdxoWJVrF8B9kzxORQvCb
-         kcfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695054432; x=1695659232;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=F+MBClngMcUOr7b7qdytwU8fTtdqU1XKfB8/O+XIG6U=;
-        b=fEDzuoZSSrF/8vUq9YoBOTO74Yio7pDedEFz+Ky0UZJaPxh7hViZ2MR2t8dURj4LxC
-         0vm8dzKZ2m/2GHPSlNBlNBz4u5OiEA0r5qapeUvh1k/ij/keQEOXyCDu1s5YidZUifkw
-         Ow1VfYIygB8RlRypuuOx4XtqHGiZnpG63hERU0+139d3YgBiBUd9OfSzQM9ZQkA14Go4
-         LdZ9f/OtSZhh2M+JTbOG2MUBqzlI6cqIxKykWxKksSvMoSNs4eUkXAMbLC4GvosW8RLZ
-         7+A7pO67JPo1dtI0gqZE1dQUNLgLiSx0TvjkGRKDKw56OUxw10CY4LySYdq4l+zsJK/9
-         jAsg==
-X-Gm-Message-State: AOJu0YwGD66tkyL/ZpaH/WBTmqPwRbPLazflVlBgQONnXx6+hyFPkQAu
-        Vywq/YxbQXuRFQthcfVL8NMKssHz0pIW5Oy4aA==
-X-Google-Smtp-Source: AGHT+IFx+dhs1ghSv6J0x7wA6J8v7WrrS+S5R+5vJdKZOMsman1WY1Cvst7HgY5gcbhc6ib4nHGqzP6AJ94fFa9fOg==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a92:cc08:0:b0:34f:3625:1f7c with SMTP
- id s8-20020a92cc08000000b0034f36251f7cmr313453ilp.6.1695044049344; Mon, 18
- Sep 2023 06:34:09 -0700 (PDT)
-Date:   Mon, 18 Sep 2023 13:34:08 +0000
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAM9RCGUC/6WOQQ6CMBREr0K69htaYFFX3sMQg/2/5SfSkhYbC
- eHuVhJP4GrmzWJmNpEoMiVxqTYRKXPi4AuoUyXMOHhHwFhYqFo1tZYtpCV6M6+AkTPFBG5+FT8
- BLX7InH96nynaKXgwgFjrrtUSLZIovXMky+9j89YXHjktIa7HhSy/6T9rWYKEZkCjUD+s6dTVh eCedDZhEv2+7x/V2XQM8wAAAA==
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1695044048; l=2172;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=BYAYvIXxKCiuJsxwGROrIkadcvOKOHta7W0JbQ3yjqg=; b=I3ANWTTsDplq5xjROtlm2F8vtEaDSVUD2T6JSL9ds4y15JqL/K+3vCvuA291BuccAqEoa9+qe
- L0x+yCghW0/DGmMteuN7B/YPtb8+LCHeWHitjIQFLRm4jUKQapdjdAe
-X-Mailer: b4 0.12.3
-Message-ID: <20230918-strncpy-drivers-gpu-drm-etnaviv-etnaviv_perfmon-c-v2-1-8ae12071c138@google.com>
-Subject: [PATCH v2] drm/etnaviv: refactor deprecated strncpy
-From:   Justin Stitt <justinstitt@google.com>
-To:     Lucas Stach <l.stach@pengutronix.de>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Bo YU <tsu.yubo@gmail.com>,
-        Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+        Mon, 18 Sep 2023 13:02:38 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EEBC94;
+        Mon, 18 Sep 2023 10:02:32 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64DE8C433CC;
+        Mon, 18 Sep 2023 13:20:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1695043232;
+        bh=ShkpHFl+RnjUu34j0dVPCyZMpLLk1xaSBrq///1jfv4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Bv9vTdNNfsdCaguRGpM/oEQNdxFOSrxqi3Gh7tsGNqMepcLICp1RrGGF0o0jgkzCF
+         Y5+qOUUX+8PcauW0H0WaeVXGB0043zzAW2fwGIE+8BlWsG/wAOWbG1G3egTlydbBHN
+         HxjIZjqwPLfFBVuV6fIX5nZ8GYFitAf0M7w1nEHegy0nTdbf2UFf5Y9Zmx6otJ2oeD
+         LH3HcQpfzw2fTKRfeN65S85E1G6dFGk+HiWcaexB24UoTFXC9clYxCIrQ+bOIhHbrv
+         5Mqxbuey0RjBeS+62gUUvKE4R3w6JzLW1WKs7cczxEl+j9DfK0l4F75O7efwyoyz6Z
+         YmhrRIquvurVg==
+Date:   Sun, 17 Sep 2023 15:21:36 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+        Parav Pandit <parav@mellanox.com>,
+        Jack Morgenstein <jackm@mellanox.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH v3][next] RDMA/core: Use size_{add,sub,mul}() in calls to
+ struct_size()
+Message-ID: <ZQdt4NsJFwwOYxUR@work>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-`strncpy` is deprecated for use on NUL-terminated destination strings [1].
+If, for any reason, the open-coded arithmetic causes a wraparound,
+the protection that `struct_size()` provides against potential integer
+overflows is defeated. Fix this by hardening calls to `struct_size()`
+with `size_add()`, `size_sub()` and `size_mul()`.
 
-We should prefer more robust and less ambiguous string interfaces.
-
-A suitable replacement is `strscpy_pad` due to the fact that it
-guarantees NUL-termination on the destination buffer whilst maintaining
-the NUL-padding behavior that strncpy provides.
-
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Cc: Bo YU <tsu.yubo@gmail.com>
-Signed-off-by: Justin Stitt <justinstitt@google.com>
+Fixes: 467f432a521a ("RDMA/core: Split port and device counter sysfs attributes")
+Fixes: a4676388e2e2 ("RDMA/core: Simplify how the gid_attrs sysfs is created")
+Fixes: e9dd5daf884c ("IB/umad: Refactor code to use cdev_device_add()")
+Fixes: 324e227ea7c9 ("RDMA/device: Add ib_device_get_by_netdev()")
+Fixes: 5aad26a7eac5 ("IB/core: Use struct_size() in kzalloc()")
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
+Changes in v3:
+ - Include changes to other files in drivers/infiniband/core/
+ - Update changelog text with a more descriptive argument for the
+   changes.
+ - Add more `Fixes:` tags.
+
 Changes in v2:
-- use strscpy_pad (thanks Kees)
-- Link to v1: https://lore.kernel.org/r/20230914-strncpy-drivers-gpu-drm-etnaviv-etnaviv_perfmon-c-v1-1-3adc2d9bfc52@google.com
----
-Similar to [2] which was never picked up. Let's prefer strscpy_pad to strlcpy, though
+ - Update changelog text: remove the part about binary differences (it
+   was added by mistake).
+   Link: https://lore.kernel.org/linux-hardening/ZP+if342EMhModzZ@work/
 
-[2]: https://lore.kernel.org/all/20190328080918.9290-1-tsu.yubo@gmail.com/
----
- drivers/gpu/drm/etnaviv/etnaviv_perfmon.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+v1:
+ - Link: https://lore.kernel.org/linux-hardening/ZP+g+KfsEmEBAHmk@work/
 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-index bafdfe49c1d8..dc9dea664a28 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-@@ -511,7 +511,7 @@ int etnaviv_pm_query_dom(struct etnaviv_gpu *gpu,
- 
- 	domain->id = domain->iter;
- 	domain->nr_signals = dom->nr_signals;
--	strncpy(domain->name, dom->name, sizeof(domain->name));
-+	strscpy_pad(domain->name, dom->name, sizeof(domain->name));
- 
- 	domain->iter++;
- 	if (domain->iter == nr_domains)
-@@ -540,7 +540,7 @@ int etnaviv_pm_query_sig(struct etnaviv_gpu *gpu,
- 	sig = &dom->signal[signal->iter];
- 
- 	signal->id = signal->iter;
--	strncpy(signal->name, sig->name, sizeof(signal->name));
-+	strscpy_pad(signal->name, sig->name, sizeof(signal->name));
- 
- 	signal->iter++;
- 	if (signal->iter == dom->nr_signals)
+ drivers/infiniband/core/device.c   |  2 +-
+ drivers/infiniband/core/sa_query.c |  4 +++-
+ drivers/infiniband/core/sysfs.c    | 10 +++++-----
+ drivers/infiniband/core/user_mad.c |  4 +++-
+ 4 files changed, 12 insertions(+), 8 deletions(-)
 
----
-base-commit: 3669558bdf354cd352be955ef2764cde6a9bf5ec
-change-id: 20230914-strncpy-drivers-gpu-drm-etnaviv-etnaviv_perfmon-c-dd095491dfde
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
+diff --git a/drivers/infiniband/core/device.c b/drivers/infiniband/core/device.c
+index a666847bd714..010718738d04 100644
+--- a/drivers/infiniband/core/device.c
++++ b/drivers/infiniband/core/device.c
+@@ -804,7 +804,7 @@ static int alloc_port_data(struct ib_device *device)
+ 	 * empty slots at the beginning.
+ 	 */
+ 	pdata_rcu = kzalloc(struct_size(pdata_rcu, pdata,
+-					rdma_end_port(device) + 1),
++					size_add(rdma_end_port(device), 1)),
+ 			    GFP_KERNEL);
+ 	if (!pdata_rcu)
+ 		return -ENOMEM;
+diff --git a/drivers/infiniband/core/sa_query.c b/drivers/infiniband/core/sa_query.c
+index 59179cfc20ef..8175dde60b0a 100644
+--- a/drivers/infiniband/core/sa_query.c
++++ b/drivers/infiniband/core/sa_query.c
+@@ -2159,7 +2159,9 @@ static int ib_sa_add_one(struct ib_device *device)
+ 	s = rdma_start_port(device);
+ 	e = rdma_end_port(device);
+ 
+-	sa_dev = kzalloc(struct_size(sa_dev, port, e - s + 1), GFP_KERNEL);
++	sa_dev = kzalloc(struct_size(sa_dev, port,
++				     size_add(size_sub(e, s), 1)),
++			 GFP_KERNEL);
+ 	if (!sa_dev)
+ 		return -ENOMEM;
+ 
+diff --git a/drivers/infiniband/core/sysfs.c b/drivers/infiniband/core/sysfs.c
+index ee59d7391568..ec5efdc16660 100644
+--- a/drivers/infiniband/core/sysfs.c
++++ b/drivers/infiniband/core/sysfs.c
+@@ -903,7 +903,7 @@ alloc_hw_stats_device(struct ib_device *ibdev)
+ 	 * Two extra attribue elements here, one for the lifespan entry and
+ 	 * one to NULL terminate the list for the sysfs core code
+ 	 */
+-	data = kzalloc(struct_size(data, attrs, stats->num_counters + 1),
++	data = kzalloc(struct_size(data, attrs, size_add(stats->num_counters, 1)),
+ 		       GFP_KERNEL);
+ 	if (!data)
+ 		goto err_free_stats;
+@@ -1009,7 +1009,7 @@ alloc_hw_stats_port(struct ib_port *port, struct attribute_group *group)
+ 	 * Two extra attribue elements here, one for the lifespan entry and
+ 	 * one to NULL terminate the list for the sysfs core code
+ 	 */
+-	data = kzalloc(struct_size(data, attrs, stats->num_counters + 1),
++	data = kzalloc(struct_size(data, attrs, size_add(stats->num_counters, 1)),
+ 		       GFP_KERNEL);
+ 	if (!data)
+ 		goto err_free_stats;
+@@ -1140,7 +1140,7 @@ static int setup_gid_attrs(struct ib_port *port,
+ 	int ret;
+ 
+ 	gid_attr_group = kzalloc(struct_size(gid_attr_group, attrs_list,
+-					     attr->gid_tbl_len * 2),
++					     size_mul(attr->gid_tbl_len, 2)),
+ 				 GFP_KERNEL);
+ 	if (!gid_attr_group)
+ 		return -ENOMEM;
+@@ -1205,8 +1205,8 @@ static struct ib_port *setup_port(struct ib_core_device *coredev, int port_num,
+ 	int ret;
+ 
+ 	p = kvzalloc(struct_size(p, attrs_list,
+-				attr->gid_tbl_len + attr->pkey_tbl_len),
+-		    GFP_KERNEL);
++				size_add(attr->gid_tbl_len, attr->pkey_tbl_len)),
++		     GFP_KERNEL);
+ 	if (!p)
+ 		return ERR_PTR(-ENOMEM);
+ 	p->ibdev = device;
+diff --git a/drivers/infiniband/core/user_mad.c b/drivers/infiniband/core/user_mad.c
+index 7e5c33aad161..f5feca7fa9b9 100644
+--- a/drivers/infiniband/core/user_mad.c
++++ b/drivers/infiniband/core/user_mad.c
+@@ -1378,7 +1378,9 @@ static int ib_umad_add_one(struct ib_device *device)
+ 	s = rdma_start_port(device);
+ 	e = rdma_end_port(device);
+ 
+-	umad_dev = kzalloc(struct_size(umad_dev, ports, e - s + 1), GFP_KERNEL);
++	umad_dev = kzalloc(struct_size(umad_dev, ports,
++				       size_add(size_sub(e, s), 1)),
++			   GFP_KERNEL);
+ 	if (!umad_dev)
+ 		return -ENOMEM;
+ 
+-- 
+2.34.1
 
