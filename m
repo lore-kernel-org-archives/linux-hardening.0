@@ -2,168 +2,136 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D8BCD3422
-	for <linux-hardening@archiver.kernel.org>; Mon, 18 Sep 2023 17:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44AFACD13D2
+	for <linux-hardening@archiver.kernel.org>; Mon, 18 Sep 2023 17:39:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231356AbjIRRCk (ORCPT
+        id S230081AbjIRRj4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 18 Sep 2023 13:02:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58748 "EHLO
+        Mon, 18 Sep 2023 13:39:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231222AbjIRRCi (ORCPT
+        with ESMTP id S229916AbjIRRjz (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 18 Sep 2023 13:02:38 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EEBC94;
-        Mon, 18 Sep 2023 10:02:32 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64DE8C433CC;
-        Mon, 18 Sep 2023 13:20:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695043232;
-        bh=ShkpHFl+RnjUu34j0dVPCyZMpLLk1xaSBrq///1jfv4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Bv9vTdNNfsdCaguRGpM/oEQNdxFOSrxqi3Gh7tsGNqMepcLICp1RrGGF0o0jgkzCF
-         Y5+qOUUX+8PcauW0H0WaeVXGB0043zzAW2fwGIE+8BlWsG/wAOWbG1G3egTlydbBHN
-         HxjIZjqwPLfFBVuV6fIX5nZ8GYFitAf0M7w1nEHegy0nTdbf2UFf5Y9Zmx6otJ2oeD
-         LH3HcQpfzw2fTKRfeN65S85E1G6dFGk+HiWcaexB24UoTFXC9clYxCIrQ+bOIhHbrv
-         5Mqxbuey0RjBeS+62gUUvKE4R3w6JzLW1WKs7cczxEl+j9DfK0l4F75O7efwyoyz6Z
-         YmhrRIquvurVg==
-Date:   Sun, 17 Sep 2023 15:21:36 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-        Parav Pandit <parav@mellanox.com>,
-        Jack Morgenstein <jackm@mellanox.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH v3][next] RDMA/core: Use size_{add,sub,mul}() in calls to
- struct_size()
-Message-ID: <ZQdt4NsJFwwOYxUR@work>
+        Mon, 18 Sep 2023 13:39:55 -0400
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F871FB;
+        Mon, 18 Sep 2023 10:39:49 -0700 (PDT)
+Received: by mail-wm1-x334.google.com with SMTP id 5b1f17b1804b1-403012f276dso51795025e9.0;
+        Mon, 18 Sep 2023 10:39:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1695058787; x=1695663587; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Y1/lgZVflqyyt3jw5+T2bDLyWXYZmvdRzCSXLWVSuYA=;
+        b=IHpu5u0eF6S17A6mQotrBp0DJ48IH9du+vf5GRu3S8foEQi0e0xkL5fFf+g3dm5AgT
+         rdBaEkXTvGD9Hofhrc0l6tdKQ6xVe9M3jkTfHIq6VcUqXEzTXHgi8mbLD/3KpF+n1JX0
+         TXh/AmM0aoBPOKrXXcECvq9zNEc/Si11xiBp0vmatAHVSxdW71zbkJUZVBv9YVWAMnS6
+         PTwY1XhkHPJOq7KL2uDIzNGMBVKGVZQSSEMP1tzDXGgxZR6vWwA0+KRHrZIll34rpP5x
+         C5QVYtRmtnm3DLdi/fnz5d7xv8ST2w5yYbGhTxvQ2Xe2ZH+uXUylH6IU8WW3JW3qIYnx
+         B/wQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695058787; x=1695663587;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Y1/lgZVflqyyt3jw5+T2bDLyWXYZmvdRzCSXLWVSuYA=;
+        b=doeRMNkGPN+PVh5haatu1g90mH3+VTmhg9z+xHq6+cw/WT7k49marKg/Bf3ceswszM
+         wG+6T1e5t4Nnv30xxEF7n+pdyAwxqJl2HJVa0CF2Zd+ZJNcUXLxu/FAdsvoZsi+UinZQ
+         49+pH+cryayCDgxdNCjAGrgQSOXNuwUCYyKvJ0r2XcopawoMMEY1MVJeW6yvv0xFMOSC
+         9PIgcPOdz1hla14vzmkUbT2TlGgPa21ZS7p38iGYjlGdEc2xvKW6A3XyND3+UXFWVRBm
+         Zav2RRXs+rkWUZuVwsqEcQ4aeCLby8KX3q5WRdlCUhKDcn4ruCMNXhO8FaUHzXZ7P4hk
+         mJaA==
+X-Gm-Message-State: AOJu0YwSy1cTTRBAIZPcXkDaeIbB8oJVpl5128c2lkgeAxvhhQ4QUnVG
+        UAXTDScupc5+nV1P+Z2+2lc=
+X-Google-Smtp-Source: AGHT+IFrFTFR1xyoFqyL58si/yxpKchP5xcdqD8vMS6vIA5LBpyvQftnW10N0ehIERFDMNXGwC/i3w==
+X-Received: by 2002:a05:600c:2209:b0:404:746e:c601 with SMTP id z9-20020a05600c220900b00404746ec601mr8928944wml.9.1695058787287;
+        Mon, 18 Sep 2023 10:39:47 -0700 (PDT)
+Received: from gmail.com (1F2EF265.nat.pool.telekom.hu. [31.46.242.101])
+        by smtp.gmail.com with ESMTPSA id m6-20020a7bca46000000b003fefb94ccc9sm12968401wml.11.2023.09.18.10.39.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Sep 2023 10:39:46 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date:   Mon, 18 Sep 2023 19:39:43 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Matteo Rizzo <matteorizzo@google.com>
+Cc:     "Lameter, Christopher" <cl@os.amperecomputing.com>,
+        Dave Hansen <dave.hansen@intel.com>, penberg@kernel.org,
+        rientjes@google.com, iamjoonsoo.kim@lge.com,
+        akpm@linux-foundation.org, vbabka@suse.cz,
+        roman.gushchin@linux.dev, 42.hyeyoo@gmail.com,
+        keescook@chromium.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-hardening@vger.kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        x86@kernel.org, hpa@zytor.com, corbet@lwn.net, luto@kernel.org,
+        peterz@infradead.org, jannh@google.com, evn@google.com,
+        poprdi@google.com, jordyzomer@google.com,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [RFC PATCH 00/14] Prevent cross-cache attacks in the SLUB
+ allocator
+Message-ID: <ZQiLX0W2Tcr+wdJT@gmail.com>
+References: <20230915105933.495735-1-matteorizzo@google.com>
+ <7a4f5128-28fd-3c5f-34c2-1c34f4448174@intel.com>
+ <1d7573c0-ebbc-6ed2-f152-1045eb0542f9@os.amperecomputing.com>
+ <CAHKB1w+rVyww0UrHhzeGfPA7FM482Z-7ApzXvekVqLHvTDAV3Q@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <CAHKB1w+rVyww0UrHhzeGfPA7FM482Z-7ApzXvekVqLHvTDAV3Q@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-If, for any reason, the open-coded arithmetic causes a wraparound,
-the protection that `struct_size()` provides against potential integer
-overflows is defeated. Fix this by hardening calls to `struct_size()`
-with `size_add()`, `size_sub()` and `size_mul()`.
 
-Fixes: 467f432a521a ("RDMA/core: Split port and device counter sysfs attributes")
-Fixes: a4676388e2e2 ("RDMA/core: Simplify how the gid_attrs sysfs is created")
-Fixes: e9dd5daf884c ("IB/umad: Refactor code to use cdev_device_add()")
-Fixes: 324e227ea7c9 ("RDMA/device: Add ib_device_get_by_netdev()")
-Fixes: 5aad26a7eac5 ("IB/core: Use struct_size() in kzalloc()")
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v3:
- - Include changes to other files in drivers/infiniband/core/
- - Update changelog text with a more descriptive argument for the
-   changes.
- - Add more `Fixes:` tags.
+* Matteo Rizzo <matteorizzo@google.com> wrote:
 
-Changes in v2:
- - Update changelog text: remove the part about binary differences (it
-   was added by mistake).
-   Link: https://lore.kernel.org/linux-hardening/ZP+if342EMhModzZ@work/
+> On Fri, 15 Sept 2023 at 18:30, Lameter, Christopher
+> <cl@os.amperecomputing.com> wrote:
+> >
+> > On Fri, 15 Sep 2023, Dave Hansen wrote:
+> >
+> > > What's the cost?
+> >
+> > The only thing that I see is 1-2% on kernel compilations (and "more on
+> > machines with lots of cores")?
+> 
+> I used kernel compilation time (wall clock time) as a benchmark while
+> preparing the series. Lower is better.
+> 
+> Intel Skylake, 112 cores:
+> 
+>       LABEL    | COUNT |   MIN   |   MAX   |   MEAN  |  MEDIAN | STDDEV
+> ---------------+-------+---------+---------+---------+---------+--------
+> SLAB_VIRTUAL=n | 150   | 49.700s | 51.320s | 50.449s | 50.430s | 0.29959
+> SLAB_VIRTUAL=y | 150   | 50.020s | 51.660s | 50.880s | 50.880s | 0.30495
+>                |       | +0.64%  | +0.66%  | +0.85%  | +0.89%  | +1.79%
+> 
+> AMD Milan, 256 cores:
+> 
+>     LABEL      | COUNT |   MIN   |   MAX   |   MEAN  |  MEDIAN | STDDEV
+> ---------------+-------+---------+---------+---------+---------+--------
+> SLAB_VIRTUAL=n | 150   | 25.480s | 26.550s | 26.065s | 26.055s | 0.23495
+> SLAB_VIRTUAL=y | 150   | 25.820s | 27.080s | 26.531s | 26.540s | 0.25974
+>                |       | +1.33%  | +2.00%  | +1.79%  | +1.86%  | +10.55%
 
-v1:
- - Link: https://lore.kernel.org/linux-hardening/ZP+g+KfsEmEBAHmk@work/
+That's sadly a rather substantial overhead for a compiler/linker workload 
+that is dominantly user-space: a kernel build is about 90% user-time and 
+10% system-time:
 
- drivers/infiniband/core/device.c   |  2 +-
- drivers/infiniband/core/sa_query.c |  4 +++-
- drivers/infiniband/core/sysfs.c    | 10 +++++-----
- drivers/infiniband/core/user_mad.c |  4 +++-
- 4 files changed, 12 insertions(+), 8 deletions(-)
+   $ perf stat --null make -j64 vmlinux
+   ...
 
-diff --git a/drivers/infiniband/core/device.c b/drivers/infiniband/core/device.c
-index a666847bd714..010718738d04 100644
---- a/drivers/infiniband/core/device.c
-+++ b/drivers/infiniband/core/device.c
-@@ -804,7 +804,7 @@ static int alloc_port_data(struct ib_device *device)
- 	 * empty slots at the beginning.
- 	 */
- 	pdata_rcu = kzalloc(struct_size(pdata_rcu, pdata,
--					rdma_end_port(device) + 1),
-+					size_add(rdma_end_port(device), 1)),
- 			    GFP_KERNEL);
- 	if (!pdata_rcu)
- 		return -ENOMEM;
-diff --git a/drivers/infiniband/core/sa_query.c b/drivers/infiniband/core/sa_query.c
-index 59179cfc20ef..8175dde60b0a 100644
---- a/drivers/infiniband/core/sa_query.c
-+++ b/drivers/infiniband/core/sa_query.c
-@@ -2159,7 +2159,9 @@ static int ib_sa_add_one(struct ib_device *device)
- 	s = rdma_start_port(device);
- 	e = rdma_end_port(device);
- 
--	sa_dev = kzalloc(struct_size(sa_dev, port, e - s + 1), GFP_KERNEL);
-+	sa_dev = kzalloc(struct_size(sa_dev, port,
-+				     size_add(size_sub(e, s), 1)),
-+			 GFP_KERNEL);
- 	if (!sa_dev)
- 		return -ENOMEM;
- 
-diff --git a/drivers/infiniband/core/sysfs.c b/drivers/infiniband/core/sysfs.c
-index ee59d7391568..ec5efdc16660 100644
---- a/drivers/infiniband/core/sysfs.c
-+++ b/drivers/infiniband/core/sysfs.c
-@@ -903,7 +903,7 @@ alloc_hw_stats_device(struct ib_device *ibdev)
- 	 * Two extra attribue elements here, one for the lifespan entry and
- 	 * one to NULL terminate the list for the sysfs core code
- 	 */
--	data = kzalloc(struct_size(data, attrs, stats->num_counters + 1),
-+	data = kzalloc(struct_size(data, attrs, size_add(stats->num_counters, 1)),
- 		       GFP_KERNEL);
- 	if (!data)
- 		goto err_free_stats;
-@@ -1009,7 +1009,7 @@ alloc_hw_stats_port(struct ib_port *port, struct attribute_group *group)
- 	 * Two extra attribue elements here, one for the lifespan entry and
- 	 * one to NULL terminate the list for the sysfs core code
- 	 */
--	data = kzalloc(struct_size(data, attrs, stats->num_counters + 1),
-+	data = kzalloc(struct_size(data, attrs, size_add(stats->num_counters, 1)),
- 		       GFP_KERNEL);
- 	if (!data)
- 		goto err_free_stats;
-@@ -1140,7 +1140,7 @@ static int setup_gid_attrs(struct ib_port *port,
- 	int ret;
- 
- 	gid_attr_group = kzalloc(struct_size(gid_attr_group, attrs_list,
--					     attr->gid_tbl_len * 2),
-+					     size_mul(attr->gid_tbl_len, 2)),
- 				 GFP_KERNEL);
- 	if (!gid_attr_group)
- 		return -ENOMEM;
-@@ -1205,8 +1205,8 @@ static struct ib_port *setup_port(struct ib_core_device *coredev, int port_num,
- 	int ret;
- 
- 	p = kvzalloc(struct_size(p, attrs_list,
--				attr->gid_tbl_len + attr->pkey_tbl_len),
--		    GFP_KERNEL);
-+				size_add(attr->gid_tbl_len, attr->pkey_tbl_len)),
-+		     GFP_KERNEL);
- 	if (!p)
- 		return ERR_PTR(-ENOMEM);
- 	p->ibdev = device;
-diff --git a/drivers/infiniband/core/user_mad.c b/drivers/infiniband/core/user_mad.c
-index 7e5c33aad161..f5feca7fa9b9 100644
---- a/drivers/infiniband/core/user_mad.c
-+++ b/drivers/infiniband/core/user_mad.c
-@@ -1378,7 +1378,9 @@ static int ib_umad_add_one(struct ib_device *device)
- 	s = rdma_start_port(device);
- 	e = rdma_end_port(device);
- 
--	umad_dev = kzalloc(struct_size(umad_dev, ports, e - s + 1), GFP_KERNEL);
-+	umad_dev = kzalloc(struct_size(umad_dev, ports,
-+				       size_add(size_sub(e, s), 1)),
-+			   GFP_KERNEL);
- 	if (!umad_dev)
- 		return -ENOMEM;
- 
--- 
-2.34.1
+   Performance counter stats for 'make -j64 vmlinux':
 
+        59.840704481 seconds time elapsed
+
+      2000.774537000 seconds user
+       219.138280000 seconds sys
+
+What's the split of the increase in overhead due to SLAB_VIRTUAL=y, between 
+user-space execution and kernel-space execution?
+
+Thanks,
+
+	Ingo
