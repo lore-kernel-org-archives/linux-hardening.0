@@ -2,80 +2,143 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9CE2CD37B0
-	for <linux-hardening@archiver.kernel.org>; Mon, 18 Sep 2023 09:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71124CD37B0
+	for <linux-hardening@archiver.kernel.org>; Mon, 18 Sep 2023 10:51:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233492AbjIRJmh (ORCPT
+        id S232174AbjIRKun (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 18 Sep 2023 05:42:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56780 "EHLO
+        Mon, 18 Sep 2023 06:50:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240912AbjIRJmJ (ORCPT
+        with ESMTP id S241232AbjIRKuV (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 18 Sep 2023 05:42:09 -0400
+        Mon, 18 Sep 2023 06:50:21 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57CDDE56;
-        Mon, 18 Sep 2023 02:40:22 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E1BCBC433CA;
-        Mon, 18 Sep 2023 09:40:21 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70B381AD;
+        Mon, 18 Sep 2023 03:49:42 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8891BC433C8;
+        Mon, 18 Sep 2023 10:49:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695030022;
-        bh=uRfOQOB0II5sP8GPpDWkYX/vEwWZ4Q9wf7azPLUxnI8=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=W+/CFp1VkUNvrkW4WOXwUNjeLGGda4LOtdSOhfnYStHDdLVlHuZgUtGJ6PmPrATSn
-         s28+YAtvisNIxRfYRakr/TdDBQfPOITm9eY2KLuKlhFf7fRLLzxAzCpIU8BVq4gMlA
-         2m5g/NqQxmPK2TaBf3uef6ajyji2hvUJpAgnrzw42gtp6JqVnPPfl/n6qfFIe1v+z/
-         rOdSMU1EGbXcYtaU2Arp8vi41mRQEEuUBclAnxxeff6oAvSXhlA1PyrTDKyEWfLYBV
-         IvBBO6M0C/3vulS+/41rNhmTpdXm3y0oi6nheA43JyCMotdTmfRmL0g+5Rzr/Mhuus
-         +MIjX3Y5F4oiQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C78EBE11F41;
-        Mon, 18 Sep 2023 09:40:21 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        s=k20201202; t=1695034182;
+        bh=omo90vbvxu9QZeYX3a8b8+CNEeUkpugaGhRbaHCeEXY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Z1bCkFvlusnmPxZevHaIZtLiKEome6S8kM4zv3NxRgOlDve22ZBtp24/xi4dhRjcl
+         M/vR3jCvbo5htzp1FZ6Wn6rbTKybliUmiMkVMyREJk7z5dPh43hWt4AbEiz2xmnTOW
+         nvlsMz1OfygnA/tBqGzDEoqWMAB01qjY8eK00F5d883NScpoFFgNqgbWxuuxIuoDVW
+         xDPJ+rBrf3z5J2MIkcmYYYq4kvtUfKQiYQhGwv9wSBw5PnqaWkrCboPA04TbefGCY4
+         E5WLZciSchHgX76DEMN75L0agdixnFEaDyQ5VnDPmoYgp8v0kcWdaxJVQPdAuLU7Ds
+         bw1NfRnnoggxg==
+Date:   Mon, 18 Sep 2023 13:49:38 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2][next] RDMA/core: Use size_{add,mul}() in calls to
+ struct_size()
+Message-ID: <20230918104938.GD13757@unreal>
+References: <ZP+if342EMhModzZ@work>
+ <202309142029.D432EEB8C@keescook>
+ <2594c7ff-0301-90aa-d48c-6b4d674f850e@embeddedor.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] ceph: Annotate struct ceph_monmap with __counted_by
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <169503002181.24344.5873701629214587241.git-patchwork-notify@kernel.org>
-Date:   Mon, 18 Sep 2023 09:40:21 +0000
-References: <20230915201510.never.365-kees@kernel.org>
-In-Reply-To: <20230915201510.never.365-kees@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     idryomov@gmail.com, xiubli@redhat.com, jlayton@kernel.org,
-        davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-        pabeni@redhat.com, ceph-devel@vger.kernel.org,
-        netdev@vger.kernel.org, nathan@kernel.org, ndesaulniers@google.com,
-        trix@redhat.com, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2594c7ff-0301-90aa-d48c-6b4d674f850e@embeddedor.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello:
-
-This patch was applied to netdev/net-next.git (main)
-by David S. Miller <davem@davemloft.net>:
-
-On Fri, 15 Sep 2023 13:15:10 -0700 you wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
+On Fri, Sep 15, 2023 at 12:06:21PM -0600, Gustavo A. R. Silva wrote:
 > 
-> As found with Coccinelle[1], add __counted_by for struct ceph_monmap.
-> Additionally, since the element count member must be set before accessing
-> the annotated flexible array member, move its initialization earlier.
 > 
-> [...]
+> On 9/14/23 21:29, Kees Cook wrote:
+> > On Mon, Sep 11, 2023 at 05:27:59PM -0600, Gustavo A. R. Silva wrote:
+> > > Harden calls to struct_size() with size_add() and size_mul().
+> > 
+> > Specifically, make sure that open-coded arithmetic cannot cause an
+> > overflow/wraparound. (i.e. it will stay saturated at SIZE_MAX.)
+> 
+> Yep; I have another patch where I explain this in similar terms.
+> 
+> I'll send it, shortly.
 
-Here is the summary with links:
-  - ceph: Annotate struct ceph_monmap with __counted_by
-    https://git.kernel.org/netdev/net-next/c/1cb6422ecac8
+You missed other places with similar arithmetic.
+drivers/infiniband/core/device.c:       pdata_rcu = kzalloc(struct_size(pdata_rcu, pdata,
+drivers/infiniband/core/device.c-                                       rdma_end_port(device) + 1),
+drivers/infiniband/core/device.c-                           GFP_KERNEL);
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+drivers/infiniband/core/sa_query.c:     sa_dev = kzalloc(struct_size(sa_dev, port, e - s + 1), GFP_KERNEL);
+drivers/infiniband/core/user_mad.c:     umad_dev = kzalloc(struct_size(umad_dev, ports, e - s + 1), GFP_KERNEL);
 
+Thanks
 
+> 
+> > 
+> > > 
+> > > Fixes: 467f432a521a ("RDMA/core: Split port and device counter sysfs attributes")
+> > > Fixes: a4676388e2e2 ("RDMA/core: Simplify how the gid_attrs sysfs is created")
+> > > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > 
+> > Reviewed-by: Kees Cook <keescook@chromium.org>
+> 
+> Thanks!
+> 
+> --
+> Gustavo
+> 
+> > 
+> > -Kees
+> > 
+> > > ---
+> > > Changes in v2:
+> > >   - Update changelog text: remove the part about binary differences (it
+> > >     was added by mistake).
+> > > 
+> > >   drivers/infiniband/core/sysfs.c | 10 +++++-----
+> > >   1 file changed, 5 insertions(+), 5 deletions(-)
+> > > 
+> > > diff --git a/drivers/infiniband/core/sysfs.c b/drivers/infiniband/core/sysfs.c
+> > > index ee59d7391568..ec5efdc16660 100644
+> > > --- a/drivers/infiniband/core/sysfs.c
+> > > +++ b/drivers/infiniband/core/sysfs.c
+> > > @@ -903,7 +903,7 @@ alloc_hw_stats_device(struct ib_device *ibdev)
+> > >   	 * Two extra attribue elements here, one for the lifespan entry and
+> > >   	 * one to NULL terminate the list for the sysfs core code
+> > >   	 */
+> > > -	data = kzalloc(struct_size(data, attrs, stats->num_counters + 1),
+> > > +	data = kzalloc(struct_size(data, attrs, size_add(stats->num_counters, 1)),
+> > >   		       GFP_KERNEL);
+> > >   	if (!data)
+> > >   		goto err_free_stats;
+> > > @@ -1009,7 +1009,7 @@ alloc_hw_stats_port(struct ib_port *port, struct attribute_group *group)
+> > >   	 * Two extra attribue elements here, one for the lifespan entry and
+> > >   	 * one to NULL terminate the list for the sysfs core code
+> > >   	 */
+> > > -	data = kzalloc(struct_size(data, attrs, stats->num_counters + 1),
+> > > +	data = kzalloc(struct_size(data, attrs, size_add(stats->num_counters, 1)),
+> > >   		       GFP_KERNEL);
+> > >   	if (!data)
+> > >   		goto err_free_stats;
+> > > @@ -1140,7 +1140,7 @@ static int setup_gid_attrs(struct ib_port *port,
+> > >   	int ret;
+> > >   	gid_attr_group = kzalloc(struct_size(gid_attr_group, attrs_list,
+> > > -					     attr->gid_tbl_len * 2),
+> > > +					     size_mul(attr->gid_tbl_len, 2)),
+> > >   				 GFP_KERNEL);
+> > >   	if (!gid_attr_group)
+> > >   		return -ENOMEM;
+> > > @@ -1205,8 +1205,8 @@ static struct ib_port *setup_port(struct ib_core_device *coredev, int port_num,
+> > >   	int ret;
+> > >   	p = kvzalloc(struct_size(p, attrs_list,
+> > > -				attr->gid_tbl_len + attr->pkey_tbl_len),
+> > > -		    GFP_KERNEL);
+> > > +				size_add(attr->gid_tbl_len, attr->pkey_tbl_len)),
+> > > +		     GFP_KERNEL);
+> > >   	if (!p)
+> > >   		return ERR_PTR(-ENOMEM);
+> > >   	p->ibdev = device;
+> > > -- 
+> > > 2.34.1
+> > > 
+> > 
