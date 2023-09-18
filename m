@@ -2,119 +2,131 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 098C2CD37B0
-	for <linux-hardening@archiver.kernel.org>; Mon, 18 Sep 2023 12:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF9E6CD37B0
+	for <linux-hardening@archiver.kernel.org>; Mon, 18 Sep 2023 12:09:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241647AbjIRMAE (ORCPT
+        id S241862AbjIRMJJ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 18 Sep 2023 08:00:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37058 "EHLO
+        Mon, 18 Sep 2023 08:09:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241889AbjIRL7u (ORCPT
+        with ESMTP id S241986AbjIRMJB (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 18 Sep 2023 07:59:50 -0400
-Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31251188
-        for <linux-hardening@vger.kernel.org>; Mon, 18 Sep 2023 04:58:23 -0700 (PDT)
-Received: from eig-obgw-5004a.ext.cloudfilter.net ([10.0.29.221])
-        by cmsmtp with ESMTP
-        id hwP5qT5AAEoVsiCtSqV9JM; Mon, 18 Sep 2023 11:58:22 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with ESMTPS
-        id iCtRqndED10Y1iCtRqFHvK; Mon, 18 Sep 2023 11:58:22 +0000
-X-Authority-Analysis: v=2.4 cv=JeSvEGGV c=1 sm=1 tr=0 ts=65083b5e
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=P7XfKmiOJ4/qXqHZrN7ymg==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=zNV7Rl7Rt7sA:10 a=wYkD_t78qR0A:10
- a=x2q-Q_5hSYYoW0-ZbgkA:9 a=QEXdDO2ut3YA:10
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=nvWwqffCij7ZgOtkwNJMjICe7Ibafj2Zgck2ZKCHj+I=; b=OROfyzdbVncz6GG+pMxherI3YC
-        FyXaNi6UWptY28NKBaUVsZanCENsl4ntuarg9A9QIckfzZ2eCBd5YWjSAVU/VM8MYiXDtktf27SiG
-        G2StZZy6FlJZ/VEn/oY2pw+ezmtuvTlHfiF3DjoIwcWZxLVJHg0vWJmsaTqwuz+yr2N+l7GIa4Nv2
-        G56JmDNlXdYMakbrUC3DEuM+53x/gT3AziUxQmAHxq8b7LMtPGmgOx4FzYy9HlqltXrjtNcfvHMdx
-        vw03KcKY1GRfi0E69YfEpMMz7iOLLpY4yPCyahC3Pakfy9xgXGq/+dAHuaSYZYoumwOk7Zl6B/+58
-        Zc86hBAg==;
-Received: from [94.239.20.48] (port=44006 helo=[192.168.1.98])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.96)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1qiCtQ-000JKv-2L;
-        Mon, 18 Sep 2023 06:58:20 -0500
-Message-ID: <4067fb33-2172-b132-e8c4-0ba21c31b42a@embeddedor.com>
-Date:   Sun, 17 Sep 2023 13:59:26 -0600
+        Mon, 18 Sep 2023 08:09:01 -0400
+Received: from mail-qv1-xf2a.google.com (mail-qv1-xf2a.google.com [IPv6:2607:f8b0:4864:20::f2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 821D5A9
+        for <linux-hardening@vger.kernel.org>; Mon, 18 Sep 2023 05:08:55 -0700 (PDT)
+Received: by mail-qv1-xf2a.google.com with SMTP id 6a1803df08f44-6515d44b562so25704616d6.3
+        for <linux-hardening@vger.kernel.org>; Mon, 18 Sep 2023 05:08:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1695038934; x=1695643734; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ziZvMGLK6JgmUUboWqZiWtfE7gVK2DDQAWWdwk2gDB8=;
+        b=p61uxtX0s6QXhc4OmvJvspTqCcs2jz3xrCH+J4noLOoD1mjKzM0525uRVmVJyeilS4
+         hITA3Njo9vEato1lC05/6upCAPiyHpNEzm6+vkejZDLfpWZ6Uq06/XKDJO3TGRZEA4x3
+         Li+i7BI+ooan++z/FQ3wS/cQEFl7WbpG2KWcv4tMOcFu2VlGfcWsC+8Ag5Ragp5O6xcn
+         X8dJ/T4Fn6/bakka1UpaJFJIn0TTf9o/MOx1bsZOPfs/9CSHOSD4wjPBOBqMRyAE2ywV
+         QJfivMQjREm23VomDYxMjvNdlh3+lTK+F8rX2XcD0/bMlTtHu2D0t6vAsuN0Lwt53HK5
+         ZBUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695038934; x=1695643734;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ziZvMGLK6JgmUUboWqZiWtfE7gVK2DDQAWWdwk2gDB8=;
+        b=njPEighPmvEx9stbVbvtfameoZDym3KfYDQo1QMHMXl2oS/asHJvEZEdVuSIofY58a
+         nge7tmq8C2tCHgRIxBSKJINClsixqyp0dEh46//OUgaYsa3WvpzVL5+RXtLL3fz94GB2
+         RRdu8/ib+BNdoCB65Hq6mPIpoS39M3NmpZx5VAdQJBoMFFiRMUS7VmylQh53d22BuTpZ
+         tNU6jj/olxZPsmHwz2CEmPSY1Npd9AwcGWrdpsob7IqsdHUjhqyca0D/8SUth7ajZEuG
+         q8ufJIULAFFAUVqWdm2yK+hm3sPOuy6lq3LPD8AvU7v2mKGv/seIrFO0aPofX7PYk1pE
+         ot5Q==
+X-Gm-Message-State: AOJu0YzwqwcOXUqD124PI2hRahtxJixdjkYR/ou2XiAl58RQLbw3+QhM
+        jMZN5PP5ccJmoidFWdOWJcKVcu/YUKeTfGTeRJdCRw==
+X-Google-Smtp-Source: AGHT+IGe6eycPkCnJorto9OJHO+hQCundE/h1zKNUGuoGj4gpWrDhAWQ0sCOlXxSU9kbzdmJ9bi8fQ6B0MF4HXGsu54=
+X-Received: by 2002:a0c:cc82:0:b0:656:5337:e7bd with SMTP id
+ f2-20020a0ccc82000000b006565337e7bdmr4263366qvl.3.1695038934426; Mon, 18 Sep
+ 2023 05:08:54 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v2][next] RDMA/core: Use size_{add,mul}() in calls to
- struct_size()
-Content-Language: en-US
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <ZP+if342EMhModzZ@work> <202309142029.D432EEB8C@keescook>
- <2594c7ff-0301-90aa-d48c-6b4d674f850e@embeddedor.com>
- <20230918104938.GD13757@unreal>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20230918104938.GD13757@unreal>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 94.239.20.48
-X-Source-L: No
-X-Exim-ID: 1qiCtQ-000JKv-2L
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.98]) [94.239.20.48]:44006
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org:  HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfJQ/iw2hrWJhP0NFGBMIKedWFDXj0cvmUHlVKHRKKU1ra/HLG7+B5evHJwNGMH1exm6SGYm/DuG68K5IFGwBja1q+Eye1mxt9BE162lwIB+v/fmYeDse
- L7UR88azT2w4NEtkCidZZBV77zcC3uIXKB9Z+jl7vox06pXOTf3ywE1Mhcyi5IYXvZk71KIWNEv+crnK7VVURuaO38zfIqJ+OoyMxO3bY2nelTHn2CsvEXHF
+References: <20230915105933.495735-1-matteorizzo@google.com>
+ <7a4f5128-28fd-3c5f-34c2-1c34f4448174@intel.com> <1d7573c0-ebbc-6ed2-f152-1045eb0542f9@os.amperecomputing.com>
+In-Reply-To: <1d7573c0-ebbc-6ed2-f152-1045eb0542f9@os.amperecomputing.com>
+From:   Matteo Rizzo <matteorizzo@google.com>
+Date:   Mon, 18 Sep 2023 14:08:43 +0200
+Message-ID: <CAHKB1w+rVyww0UrHhzeGfPA7FM482Z-7ApzXvekVqLHvTDAV3Q@mail.gmail.com>
+Subject: Re: [RFC PATCH 00/14] Prevent cross-cache attacks in the SLUB allocator
+To:     "Lameter, Christopher" <cl@os.amperecomputing.com>
+Cc:     Dave Hansen <dave.hansen@intel.com>, penberg@kernel.org,
+        rientjes@google.com, iamjoonsoo.kim@lge.com,
+        akpm@linux-foundation.org, vbabka@suse.cz,
+        roman.gushchin@linux.dev, 42.hyeyoo@gmail.com,
+        keescook@chromium.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-hardening@vger.kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        x86@kernel.org, hpa@zytor.com, corbet@lwn.net, luto@kernel.org,
+        peterz@infradead.org, jannh@google.com, evn@google.com,
+        poprdi@google.com, jordyzomer@google.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Fri, 15 Sept 2023 at 18:30, Lameter, Christopher
+<cl@os.amperecomputing.com> wrote:
+>
+> On Fri, 15 Sep 2023, Dave Hansen wrote:
+>
+> > What's the cost?
+>
+> The only thing that I see is 1-2% on kernel compilations (and "more on
+> machines with lots of cores")?
 
+I used kernel compilation time (wall clock time) as a benchmark while
+preparing the series. Lower is better.
 
-On 9/18/23 04:49, Leon Romanovsky wrote:
-> On Fri, Sep 15, 2023 at 12:06:21PM -0600, Gustavo A. R. Silva wrote:
->>
->>
->> On 9/14/23 21:29, Kees Cook wrote:
->>> On Mon, Sep 11, 2023 at 05:27:59PM -0600, Gustavo A. R. Silva wrote:
->>>> Harden calls to struct_size() with size_add() and size_mul().
->>>
->>> Specifically, make sure that open-coded arithmetic cannot cause an
->>> overflow/wraparound. (i.e. it will stay saturated at SIZE_MAX.)
->>
->> Yep; I have another patch where I explain this in similar terms.
->>
->> I'll send it, shortly.
-> 
-> You missed other places with similar arithmetic.
-> drivers/infiniband/core/device.c:       pdata_rcu = kzalloc(struct_size(pdata_rcu, pdata,
-> drivers/infiniband/core/device.c-                                       rdma_end_port(device) + 1),
-> drivers/infiniband/core/device.c-                           GFP_KERNEL);
-> 
-> drivers/infiniband/core/sa_query.c:     sa_dev = kzalloc(struct_size(sa_dev, port, e - s + 1), GFP_KERNEL);
-> drivers/infiniband/core/user_mad.c:     umad_dev = kzalloc(struct_size(umad_dev, ports, e - s + 1), GFP_KERNEL);
+Intel Skylake, 112 cores:
 
-I haven't sent all my patches.
+      LABEL    | COUNT |   MIN   |   MAX   |   MEAN  |  MEDIAN | STDDEV
+---------------+-------+---------+---------+---------+---------+--------
+SLAB_VIRTUAL=n | 150   | 49.700s | 51.320s | 50.449s | 50.430s | 0.29959
+SLAB_VIRTUAL=y | 150   | 50.020s | 51.660s | 50.880s | 50.880s | 0.30495
+               |       | +0.64%  | +0.66%  | +0.85%  | +0.89%  | +1.79%
+
+AMD Milan, 256 cores:
+
+    LABEL      | COUNT |   MIN   |   MAX   |   MEAN  |  MEDIAN | STDDEV
+---------------+-------+---------+---------+---------+---------+--------
+SLAB_VIRTUAL=n | 150   | 25.480s | 26.550s | 26.065s | 26.055s | 0.23495
+SLAB_VIRTUAL=y | 150   | 25.820s | 27.080s | 26.531s | 26.540s | 0.25974
+               |       | +1.33%  | +2.00%  | +1.79%  | +1.86%  | +10.55%
+
+Are there any specific benchmarks that you would be interested in seeing or
+that are usually used for SLUB?
+
+> Problems:
+>
+> - Overhead due to more TLB lookups
+>
+> - Larger amounts of TLBs are used for the OS. Currently we are trying to
+> use the maximum mappable TLBs to reduce their numbers. This presumably
+> means using 4K TLBs for all slab access.
+
+Yes, we are using 4K pages for the slab mappings which is going to increase
+TLB pressure. I also tried writing a version of the patch that uses 2M
+pages which had slightly better performance, but that had its own problems.
+For example most slabs are much smaller than 2M, so we would need to create
+and map multiple slabs at once and we wouldn't be able to release the
+physical memory until all slabs in the 2M page are unused which increases
+fragmentation.
+
+> - Memory may not be physically contiguous which may be required by some
+> drivers doing DMA.
+
+In the current implementation each slab is backed by physically contiguous
+memory, but different slabs that are adjacent in virtual memory might not
+be physically contiguous. Treating objects allocated from two different
+slabs as one contiguous chunk of memory is probably wrong anyway, right?
 
 --
-Gustavo
+Matteo
