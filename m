@@ -2,72 +2,134 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31588CD37B0
-	for <linux-hardening@archiver.kernel.org>; Mon, 18 Sep 2023 08:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC21CD37B0
+	for <linux-hardening@archiver.kernel.org>; Mon, 18 Sep 2023 09:15:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240569AbjIRIzQ (ORCPT
+        id S233174AbjIRJPO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 18 Sep 2023 04:55:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44650 "EHLO
+        Mon, 18 Sep 2023 05:15:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240837AbjIRIzD (ORCPT
+        with ESMTP id S231237AbjIRJOr (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 18 Sep 2023 04:55:03 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A4EDD1;
-        Mon, 18 Sep 2023 01:54:58 -0700 (PDT)
-From:   John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1695027296;
+        Mon, 18 Sep 2023 05:14:47 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E642D10E
+        for <linux-hardening@vger.kernel.org>; Mon, 18 Sep 2023 02:13:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1695028434;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=7SaupYWhDkXFaEEUUd3eBV7dIU5O04Mi5eNGHFaaIGY=;
-        b=xHYrdQl9Fyoq2TE360zSXtB4EpAvVmpUsqJQpJCnBTY1s7EdBTSxJ0kILkRn3qXRxXgtp0
-        nfxfbDMQ0ZG4N7C+KkJrrwtXxEWWHEny4xgOcwRFjBAAttlvZkXW3jGJBTwdpzVorw4OrS
-        luXaqlQEd42Bsv/YmV0AB2ouM4q+mcctSLE86o8iO4baw2eKCUkhYo6sLZyQbhg2xuqobe
-        +NKagOTTe5hfBorbaO4q+/uEx3sgaJuNf6rdXaubMoL8KyKN7TdaI5H+9YKEa6wLUKaq68
-        wEg7wefJe9mJ8IR3fEk8PV3hN6mT1KemifGFaN1TJklEMLeKGac0hGSHc6gh7A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1695027296;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=7SaupYWhDkXFaEEUUd3eBV7dIU5O04Mi5eNGHFaaIGY=;
-        b=3ZW1E3MWTMz7DFU1FAMoJ/GG7soyRLlrVp1Vn4DtvHHcTlA7fK4xv+J7kmUdsWGqizQAF8
-        C2XhGyt13zv7ZyAA==
-To:     Petr Mladek <pmladek@suse.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-Cc:     Enlin Mu <enlinmu@gmail.com>, Enlin Mu <enlin.mu@outlook.com>,
-        rostedt@goodmis.org, senozhatsky@chromium.org,
-        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
-        enlin.mu@unisoc.com, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] printk: add cpu id information to printk() output
-In-Reply-To: <ZQSHJ_786kZNjEDX@alley>
-References: <JH0PR04MB7072A4B6946EAEEB1EB8B0BE8AF6A@JH0PR04MB7072.apcprd04.prod.outlook.com>
- <8734zfx2bo.fsf@jogness.linutronix.de>
- <CAAfh-jPc+UWMcLPFbYy6rYUh4OU36frkVYVbkhNPNX4L6RG5sA@mail.gmail.com>
- <2023091547-mug-unlikable-571f@gregkh> <ZQSHJ_786kZNjEDX@alley>
-Date:   Mon, 18 Sep 2023 11:00:48 +0206
-Message-ID: <87ttrrlv3b.fsf@jogness.linutronix.de>
+        bh=ySETEWMBBYemMdp3jyvFHrMDlDasjAvK3U0xoCA3NQU=;
+        b=cd42VR+RzlMdxl2zq5h68JxAWA8yz9ZBAJOKiUVT3dhi3Lh3XLe7PsYjrzdRkGYwBOj9Zg
+        RQ5B9x9uDHJvs+J7Ose05SKJ2WJjpmWVxfvQlBQ2QwXTknFhm9r27dysILszFa1kVglnSs
+        Lg2Q1OKi5RFTi1boQdgEFkBDB2qbXMY=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-656-j4xzdZEuP72jSBTd_grxlA-1; Mon, 18 Sep 2023 05:13:51 -0400
+X-MC-Unique: j4xzdZEuP72jSBTd_grxlA-1
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-404fc59b8acso5768565e9.0
+        for <linux-hardening@vger.kernel.org>; Mon, 18 Sep 2023 02:13:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695028430; x=1695633230;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ySETEWMBBYemMdp3jyvFHrMDlDasjAvK3U0xoCA3NQU=;
+        b=TJuoDSJfvnXc+giCGU88Tq639RANQjQGB0qJznI8512jP/MZ0IdxDH5WZ1YNIgbgGZ
+         j3ypx8QvrVbX3B8nUsX8KeQ/iSKosj1r6HIuzUUaZu74ncPFjdVke7LAwfeyfby/gyuj
+         41BtbaTS9qYADU0NNF8CKXFPANDEx75vOWfXU7jJGTHnyMtTgspN59aEO5cblH+fsZ3m
+         z9B6/zr5Hx1zLYzg3qsFMMK4C0nVD8RLQ4BYKXzg9U718FLd303Fv7bMBICLEVfrJSvD
+         KmRCxjo3GfkdHtK5hHHml0zKE3OmXw2iCFuRbcwzxHfN7I6j9dND0pY10QyNznISVZMw
+         R6PA==
+X-Gm-Message-State: AOJu0YzfJM5cIhlKkJLc32vLVF20TuxG858ynBPSRTCVidL0ZCE08ue1
+        KNdtaugxRW2MhugagPktTCqPWRZG9U2Puer4H8OaOdF6H4O5V4lFr/amFrhE0AqexFhB3pytYLG
+        B1EfrYrYHTI84WK2JRcXnEmAIx2J3
+X-Received: by 2002:a5d:508e:0:b0:317:73e3:cf41 with SMTP id a14-20020a5d508e000000b0031773e3cf41mr6416379wrt.1.1695028430599;
+        Mon, 18 Sep 2023 02:13:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGB8VnbhuBBqYU4diZ/ky5juLhWgDDI8ddqsgXauCCvjjTxBkK6OXa7bUUeWyDSF9cThUqM3g==
+X-Received: by 2002:a5d:508e:0:b0:317:73e3:cf41 with SMTP id a14-20020a5d508e000000b0031773e3cf41mr6416363wrt.1.1695028430263;
+        Mon, 18 Sep 2023 02:13:50 -0700 (PDT)
+Received: from [10.32.64.2] (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id b16-20020a05600010d000b0031aef72a021sm11830334wrx.86.2023.09.18.02.13.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Sep 2023 02:13:49 -0700 (PDT)
+Message-ID: <72a444cd42629f5bdd56647e7aa24588d6964bec.camel@redhat.com>
+Subject: Re: [PATCH v2 1/5] string.h: add array-wrappers for (v)memdup_user()
+From:   Philipp Stanner <pstanner@redhat.com>
+To:     Dan Carpenter <dan.carpenter@linaro.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Christian Brauner <brauner@kernel.org>,
+        David Disseldorp <ddiss@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Siddh Raman Pant <code@siddh.me>,
+        Nick Alcock <nick.alcock@oracle.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Zack Rusin <zackr@vmware.com>,
+        VMware Graphics Reviewers 
+        <linux-graphics-maintainer@vmware.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        kexec@lists.infradead.org, linux-hardening@vger.kernel.org,
+        David Airlie <airlied@redhat.com>
+Date:   Mon, 18 Sep 2023 11:13:48 +0200
+In-Reply-To: <b219788a-69e6-44cf-a609-91f9640967f5@moroto.mountain>
+References: <cover.1694202430.git.pstanner@redhat.com>
+         <93001a9f3f101be0f374080090f9c32df73ca773.1694202430.git.pstanner@redhat.com>
+         <b219788a-69e6-44cf-a609-91f9640967f5@moroto.mountain>
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38)
 MIME-Version: 1.0
-Content-Type: text/plain
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 2023-09-15, Petr Mladek <pmladek@suse.com> wrote:
-> The biggest problem is that it would change the format of the
-> ringbuffer so that it would require updating external tools,
-> working with crashdump, especially crash but there are also
-> alternative python extensions for gdb.
+On Sat, 2023-09-16 at 17:32 +0300, Dan Carpenter wrote:
+> On Fri, Sep 08, 2023 at 09:59:40PM +0200, Philipp Stanner wrote:
+> > +static inline void *memdup_array_user(const void __user *src,
+> > size_t n, size_t size)
+> > +{
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0size_t nbytes;
+> > +
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (unlikely(check_mul_overf=
+low(n, size, &nbytes)))
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0return ERR_PTR(-EOVERFLOW);
+>=20
+> No need for an unlikely() because check_mul_overflow() already has
+> one
+> inside.
 
-I already have experience updating these external tools. It is
-manageable. But I would prefer we had bigger changes to make. Let us not
-forget your RFC [0] where you wanted to add similar metadata and
-more. We should put all these changes into a single release.
+ACK. I overlooked that as it was hidden in the callstack.
 
-John Ogness
 
-[0] https://lore.kernel.org/lkml/20200923135617.27149-1-pmladek@suse.com
+> =C2=A0 I feel like -ENOMEM is more traditional but I doubt
+> anyone/userspace
+> cares.
+
+I agree with Andy here. We're not allocating, so -ENOMEM makes no sense
+IMO.
+
+
+P.
+
+>=20
+> > +
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return memdup_user(src, nbyt=
+es);
+> > +}
+>=20
+> regards,
+> dan carpenter
+>=20
+
