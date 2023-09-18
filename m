@@ -2,136 +2,133 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44AFACD13D2
-	for <linux-hardening@archiver.kernel.org>; Mon, 18 Sep 2023 17:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50248CD37B0
+	for <linux-hardening@archiver.kernel.org>; Mon, 18 Sep 2023 17:57:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230081AbjIRRj4 (ORCPT
+        id S229918AbjIRR5c (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 18 Sep 2023 13:39:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59656 "EHLO
+        Mon, 18 Sep 2023 13:57:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229916AbjIRRjz (ORCPT
+        with ESMTP id S229518AbjIRR5a (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 18 Sep 2023 13:39:55 -0400
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F871FB;
-        Mon, 18 Sep 2023 10:39:49 -0700 (PDT)
-Received: by mail-wm1-x334.google.com with SMTP id 5b1f17b1804b1-403012f276dso51795025e9.0;
-        Mon, 18 Sep 2023 10:39:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695058787; x=1695663587; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Y1/lgZVflqyyt3jw5+T2bDLyWXYZmvdRzCSXLWVSuYA=;
-        b=IHpu5u0eF6S17A6mQotrBp0DJ48IH9du+vf5GRu3S8foEQi0e0xkL5fFf+g3dm5AgT
-         rdBaEkXTvGD9Hofhrc0l6tdKQ6xVe9M3jkTfHIq6VcUqXEzTXHgi8mbLD/3KpF+n1JX0
-         TXh/AmM0aoBPOKrXXcECvq9zNEc/Si11xiBp0vmatAHVSxdW71zbkJUZVBv9YVWAMnS6
-         PTwY1XhkHPJOq7KL2uDIzNGMBVKGVZQSSEMP1tzDXGgxZR6vWwA0+KRHrZIll34rpP5x
-         C5QVYtRmtnm3DLdi/fnz5d7xv8ST2w5yYbGhTxvQ2Xe2ZH+uXUylH6IU8WW3JW3qIYnx
-         B/wQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695058787; x=1695663587;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Y1/lgZVflqyyt3jw5+T2bDLyWXYZmvdRzCSXLWVSuYA=;
-        b=doeRMNkGPN+PVh5haatu1g90mH3+VTmhg9z+xHq6+cw/WT7k49marKg/Bf3ceswszM
-         wG+6T1e5t4Nnv30xxEF7n+pdyAwxqJl2HJVa0CF2Zd+ZJNcUXLxu/FAdsvoZsi+UinZQ
-         49+pH+cryayCDgxdNCjAGrgQSOXNuwUCYyKvJ0r2XcopawoMMEY1MVJeW6yvv0xFMOSC
-         9PIgcPOdz1hla14vzmkUbT2TlGgPa21ZS7p38iGYjlGdEc2xvKW6A3XyND3+UXFWVRBm
-         Zav2RRXs+rkWUZuVwsqEcQ4aeCLby8KX3q5WRdlCUhKDcn4ruCMNXhO8FaUHzXZ7P4hk
-         mJaA==
-X-Gm-Message-State: AOJu0YwSy1cTTRBAIZPcXkDaeIbB8oJVpl5128c2lkgeAxvhhQ4QUnVG
-        UAXTDScupc5+nV1P+Z2+2lc=
-X-Google-Smtp-Source: AGHT+IFrFTFR1xyoFqyL58si/yxpKchP5xcdqD8vMS6vIA5LBpyvQftnW10N0ehIERFDMNXGwC/i3w==
-X-Received: by 2002:a05:600c:2209:b0:404:746e:c601 with SMTP id z9-20020a05600c220900b00404746ec601mr8928944wml.9.1695058787287;
-        Mon, 18 Sep 2023 10:39:47 -0700 (PDT)
-Received: from gmail.com (1F2EF265.nat.pool.telekom.hu. [31.46.242.101])
-        by smtp.gmail.com with ESMTPSA id m6-20020a7bca46000000b003fefb94ccc9sm12968401wml.11.2023.09.18.10.39.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Sep 2023 10:39:46 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date:   Mon, 18 Sep 2023 19:39:43 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Matteo Rizzo <matteorizzo@google.com>
-Cc:     "Lameter, Christopher" <cl@os.amperecomputing.com>,
-        Dave Hansen <dave.hansen@intel.com>, penberg@kernel.org,
-        rientjes@google.com, iamjoonsoo.kim@lge.com,
-        akpm@linux-foundation.org, vbabka@suse.cz,
-        roman.gushchin@linux.dev, 42.hyeyoo@gmail.com,
-        keescook@chromium.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-hardening@vger.kernel.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        x86@kernel.org, hpa@zytor.com, corbet@lwn.net, luto@kernel.org,
-        peterz@infradead.org, jannh@google.com, evn@google.com,
-        poprdi@google.com, jordyzomer@google.com,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [RFC PATCH 00/14] Prevent cross-cache attacks in the SLUB
- allocator
-Message-ID: <ZQiLX0W2Tcr+wdJT@gmail.com>
-References: <20230915105933.495735-1-matteorizzo@google.com>
- <7a4f5128-28fd-3c5f-34c2-1c34f4448174@intel.com>
- <1d7573c0-ebbc-6ed2-f152-1045eb0542f9@os.amperecomputing.com>
- <CAHKB1w+rVyww0UrHhzeGfPA7FM482Z-7ApzXvekVqLHvTDAV3Q@mail.gmail.com>
+        Mon, 18 Sep 2023 13:57:30 -0400
+Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10280FA
+        for <linux-hardening@vger.kernel.org>; Mon, 18 Sep 2023 10:57:24 -0700 (PDT)
+Received: from eig-obgw-6004a.ext.cloudfilter.net ([10.0.30.197])
+        by cmsmtp with ESMTP
+        id iH7Lqvfw0QFHRiIUsqCSCG; Mon, 18 Sep 2023 17:57:22 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with ESMTPS
+        id iIUrqwrty3ZT9iIUrqFbv7; Mon, 18 Sep 2023 17:57:21 +0000
+X-Authority-Analysis: v=2.4 cv=L5oO/sf8 c=1 sm=1 tr=0 ts=65088f81
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=P7XfKmiOJ4/qXqHZrN7ymg==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=zNV7Rl7Rt7sA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
+ a=x2q-Q_5hSYYoW0-ZbgkA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=cNTm+n0prBabhDiuzBL/lY2C7Js3MHb27iGHM7ixly0=; b=LK0LfAMnALG/1sjjcruihPHoEZ
+        OTtfwOPkW6PUJGAWj2eXVP3UjJmv7lDTtICahD2p7cthn3tjspNMk9k5Pzgq9IWSzoD2Xo+Qg+BtQ
+        lehOsScxQXPCaf+vbHtHOlImY4Ldkm2ug2CHM1o80BPt1u54UMyaudk2EjMDBEW87B1egQrrJ0wrs
+        IV+W7WrVmn+M9J/f4j3YL1vzDARkCBHUynsPaWBc+L44UTXBhYFuNgoVRDzkaL+tJ4j4efn2hAbCS
+        MmF0FJ2+Xd9NK92h8XxjCP1Hpfw+nCFSTkWUu7KJhJnbjNpQe1sqDvlI89GdiF6bIU48NsAzt8e1j
+        2l0mLBiw==;
+Received: from [94.239.20.48] (port=59520 helo=[192.168.1.98])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.96)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1qiIUq-002041-0k;
+        Mon, 18 Sep 2023 12:57:20 -0500
+Message-ID: <93f70187-3992-ee22-843e-e3912d169875@embeddedor.com>
+Date:   Sun, 17 Sep 2023 19:58:26 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHKB1w+rVyww0UrHhzeGfPA7FM482Z-7ApzXvekVqLHvTDAV3Q@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v2][next] RDMA/core: Use size_{add,mul}() in calls to
+ struct_size()
+Content-Language: en-US
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <ZP+if342EMhModzZ@work> <202309142029.D432EEB8C@keescook>
+ <2594c7ff-0301-90aa-d48c-6b4d674f850e@embeddedor.com>
+ <20230918104938.GD13757@unreal>
+ <4067fb33-2172-b132-e8c4-0ba21c31b42a@embeddedor.com>
+ <20230918124120.GE103601@unreal>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20230918124120.GE103601@unreal>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 94.239.20.48
+X-Source-L: No
+X-Exim-ID: 1qiIUq-002041-0k
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.98]) [94.239.20.48]:59520
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org:  HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfMwHfZYGcaM0yyNz3ml17wSloaHad7mlnPCNPhGpduKMwVy2RdF8iLT31tf8ok334SEnF00csmFmKrKqWMRscWiicRcGnv6wWCz1CWBpM7KE1NFf6jp4
+ VBftN3PZKy7nD+RkhtPynUv16URyV1/WnQdQb02dvizflG9rbrMNVLu2sXMDf7rDl1Xu6Zs3qCf5WIgdv4VE7Xdw1ACfQMVglS7KEL9f3cAa+NQFcO0TDY9c
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 
-* Matteo Rizzo <matteorizzo@google.com> wrote:
 
-> On Fri, 15 Sept 2023 at 18:30, Lameter, Christopher
-> <cl@os.amperecomputing.com> wrote:
-> >
-> > On Fri, 15 Sep 2023, Dave Hansen wrote:
-> >
-> > > What's the cost?
-> >
-> > The only thing that I see is 1-2% on kernel compilations (and "more on
-> > machines with lots of cores")?
+On 9/18/23 06:41, Leon Romanovsky wrote:
+> On Sun, Sep 17, 2023 at 01:59:26PM -0600, Gustavo A. R. Silva wrote:
+>>
+>>
+>> On 9/18/23 04:49, Leon Romanovsky wrote:
+>>> On Fri, Sep 15, 2023 at 12:06:21PM -0600, Gustavo A. R. Silva wrote:
+>>>>
+>>>>
+>>>> On 9/14/23 21:29, Kees Cook wrote:
+>>>>> On Mon, Sep 11, 2023 at 05:27:59PM -0600, Gustavo A. R. Silva wrote:
+>>>>>> Harden calls to struct_size() with size_add() and size_mul().
+>>>>>
+>>>>> Specifically, make sure that open-coded arithmetic cannot cause an
+>>>>> overflow/wraparound. (i.e. it will stay saturated at SIZE_MAX.)
+>>>>
+>>>> Yep; I have another patch where I explain this in similar terms.
+>>>>
+>>>> I'll send it, shortly.
+>>>
+>>> You missed other places with similar arithmetic.
+>>> drivers/infiniband/core/device.c:       pdata_rcu = kzalloc(struct_size(pdata_rcu, pdata,
+>>> drivers/infiniband/core/device.c-                                       rdma_end_port(device) + 1),
+>>> drivers/infiniband/core/device.c-                           GFP_KERNEL);
+>>>
+>>> drivers/infiniband/core/sa_query.c:     sa_dev = kzalloc(struct_size(sa_dev, port, e - s + 1), GFP_KERNEL);
+>>> drivers/infiniband/core/user_mad.c:     umad_dev = kzalloc(struct_size(umad_dev, ports, e - s + 1), GFP_KERNEL);
+>>
+>> I haven't sent all my patches.
 > 
-> I used kernel compilation time (wall clock time) as a benchmark while
-> preparing the series. Lower is better.
-> 
-> Intel Skylake, 112 cores:
-> 
->       LABEL    | COUNT |   MIN   |   MAX   |   MEAN  |  MEDIAN | STDDEV
-> ---------------+-------+---------+---------+---------+---------+--------
-> SLAB_VIRTUAL=n | 150   | 49.700s | 51.320s | 50.449s | 50.430s | 0.29959
-> SLAB_VIRTUAL=y | 150   | 50.020s | 51.660s | 50.880s | 50.880s | 0.30495
->                |       | +0.64%  | +0.66%  | +0.85%  | +0.89%  | +1.79%
-> 
-> AMD Milan, 256 cores:
-> 
->     LABEL      | COUNT |   MIN   |   MAX   |   MEAN  |  MEDIAN | STDDEV
-> ---------------+-------+---------+---------+---------+---------+--------
-> SLAB_VIRTUAL=n | 150   | 25.480s | 26.550s | 26.065s | 26.055s | 0.23495
-> SLAB_VIRTUAL=y | 150   | 25.820s | 27.080s | 26.531s | 26.540s | 0.25974
->                |       | +1.33%  | +2.00%  | +1.79%  | +1.86%  | +10.55%
+> Please sent one patch for whole drivers/infiniband/core/ folder as your
+> title: "RDMA/core ..." suggests.
 
-That's sadly a rather substantial overhead for a compiler/linker workload 
-that is dominantly user-space: a kernel build is about 90% user-time and 
-10% system-time:
+OK. Done:
 
-   $ perf stat --null make -j64 vmlinux
-   ...
+https://lore.kernel.org/linux-hardening/ZQdt4NsJFwwOYxUR@work/
 
-   Performance counter stats for 'make -j64 vmlinux':
-
-        59.840704481 seconds time elapsed
-
-      2000.774537000 seconds user
-       219.138280000 seconds sys
-
-What's the split of the increase in overhead due to SLAB_VIRTUAL=y, between 
-user-space execution and kernel-space execution?
-
-Thanks,
-
-	Ingo
+Thanks
+--
+Gustavo
