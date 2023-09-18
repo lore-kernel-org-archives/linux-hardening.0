@@ -2,169 +2,100 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F201C46CA1
-	for <linux-hardening@archiver.kernel.org>; Mon, 18 Sep 2023 05:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 070AFCD13D1
+	for <linux-hardening@archiver.kernel.org>; Mon, 18 Sep 2023 06:56:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239654AbjIRFbu (ORCPT
+        id S236553AbjIRG4J (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 18 Sep 2023 01:31:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43684 "EHLO
+        Mon, 18 Sep 2023 02:56:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239694AbjIRFbk (ORCPT
+        with ESMTP id S239854AbjIRGzz (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 18 Sep 2023 01:31:40 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BD5B122
-        for <linux-hardening@vger.kernel.org>; Sun, 17 Sep 2023 22:31:34 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id a640c23a62f3a-9a58dbd5daeso538706566b.2
-        for <linux-hardening@vger.kernel.org>; Sun, 17 Sep 2023 22:31:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1695015093; x=1695619893; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7N4oxaoXR8OLM30Gi2Xbyz8uOSGQciA9cghxlboWMQY=;
-        b=NT07OjnxtjYejDQJR3Lko+DNz6kAWwEwNj/ICyCsgDy3yy7DroOFMtdOv3KKfy41dV
-         pzbu1ztm3L8F2AlviXymq0aKqLR6/8gmaWCE4Hu/sLTurUHXh/NwCKKnd5hVqA01ep0K
-         XePqNvc+hhGXRr9SK9cqmEW/1b+XOl7+E13KuINd2IrdKUkpaiq+EjvlZ6qMAcKRMOZE
-         iTSZ/SuoZLYiOuqNuekqtxR9RDs+4SdpsKDyhcHBX86j76JX9LC7nwEi7jWtPecuwYdq
-         QSNikWYX0HkkpFvbSclDgoKBVqVgqWPvQaemmcwEbkc1Y7y4lPbO3TldgSAeADZNQHGc
-         xWeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695015093; x=1695619893;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7N4oxaoXR8OLM30Gi2Xbyz8uOSGQciA9cghxlboWMQY=;
-        b=Ssu9MXDtbxcbEJSrQHGbuOS2xyDtiB0o69nC0rycvF8JjgulGkl72ajBfPlpdHU8zz
-         kC1mpAUaYjuXNa/ufKccKNhV59zeeqVOc1TuJnFOuHL7qmK7fMLAXcOFvgIXptIh6v4N
-         LPP6F8X6D0dxxqtpGAx1vVbsAw643AmMId6vlO7nD7mpfQXPqboVT4haa4lj6zqNML/O
-         ezpSldn6EcP4RsWFm8eOx7Ov6F5RmLBWqLIyZQSghl2/+9rikGPI6oRgmPYBC+LCmdHL
-         IGlAewoFePSfwTGUtQXKLgU4YxfbexeBPYzqYnrmaT1W5WKxYspPfkAm6cI2YhWrVLha
-         7+2Q==
-X-Gm-Message-State: AOJu0YwRXv++oV+zBZYaGs9pf6rzvLwk+WyMx5gbmsVpkF6zp7D/UPLL
-        GTX8DICV5ryTfDSu/h1eGqpY5W5M08hhUrZq/y7tDQ==
-X-Google-Smtp-Source: AGHT+IHO/HLdvDCUNraq64Xji78XSyEnw6LFpBJZaR+ge9nW+ZQpcaVANqNFXDdUcfxdNuAUr/nDQPkAGcnk2kRbb4g=
-X-Received: by 2002:a17:906:7398:b0:9ad:aa7d:946b with SMTP id
- f24-20020a170906739800b009adaa7d946bmr6494138ejl.8.1695015092846; Sun, 17 Sep
- 2023 22:31:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230824-strncpy-drivers-accessibility-speakup-kobjects-c-v1-1-3a1ef1221e90@google.com>
- <202308251439.36BC33ADB2@keescook> <CAFhGd8r6A4VH5C=yF1WHKEPY86oh6PEzt6wuxPxsJAD0XKfrsQ@mail.gmail.com>
- <20230916230807.motaqyb5gqzqjvub@begin>
-In-Reply-To: <20230916230807.motaqyb5gqzqjvub@begin>
-From:   Justin Stitt <justinstitt@google.com>
-Date:   Sun, 17 Sep 2023 22:31:20 -0700
-Message-ID: <CAFhGd8rrHUGO424S54DN6yTH4YnOwo9UGhgffgoHfsANza8YHA@mail.gmail.com>
-Subject: Re: [PATCH] accessibility: speakup: refactor deprecated strncpy
-To:     Samuel Thibault <samuel.thibault@ens-lyon.org>,
-        Justin Stitt <justinstitt@google.com>,
+        Mon, 18 Sep 2023 02:55:55 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4544EC6;
+        Sun, 17 Sep 2023 23:55:49 -0700 (PDT)
+X-IronPort-AV: E=McAfee;i="6600,9927,10836"; a="382323755"
+X-IronPort-AV: E=Sophos;i="6.02,156,1688454000"; 
+   d="scan'208";a="382323755"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2023 23:55:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10836"; a="695417720"
+X-IronPort-AV: E=Sophos;i="6.02,156,1688454000"; 
+   d="scan'208";a="695417720"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2023 23:55:30 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC0)
+        (envelope-from <andy@kernel.org>)
+        id 1qi8AI-0000000DVlr-18aJ;
+        Mon, 18 Sep 2023 09:55:26 +0300
+Date:   Mon, 18 Sep 2023 09:55:25 +0300
+From:   Andy Shevchenko <andy@kernel.org>
+To:     Dan Carpenter <dan.carpenter@linaro.org>
+Cc:     Philipp Stanner <pstanner@redhat.com>,
         Kees Cook <keescook@chromium.org>,
-        William Hubbs <w.d.hubbs@gmail.com>,
-        Chris Brannon <chris@the-brannons.com>,
-        Kirk Reiser <kirk@reisers.ca>, speakup@linux-speakup.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Eric Biederman <ebiederm@xmission.com>,
+        Christian Brauner <brauner@kernel.org>,
+        David Disseldorp <ddiss@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Siddh Raman Pant <code@siddh.me>,
+        Nick Alcock <nick.alcock@oracle.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Zack Rusin <zackr@vmware.com>,
+        VMware Graphics Reviewers 
+        <linux-graphics-maintainer@vmware.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        kexec@lists.infradead.org, linux-hardening@vger.kernel.org,
+        David Airlie <airlied@redhat.com>
+Subject: Re: [PATCH v2 1/5] string.h: add array-wrappers for (v)memdup_user()
+Message-ID: <ZQf0XfrKiwhvkxum@smile.fi.intel.com>
+References: <cover.1694202430.git.pstanner@redhat.com>
+ <93001a9f3f101be0f374080090f9c32df73ca773.1694202430.git.pstanner@redhat.com>
+ <b219788a-69e6-44cf-a609-91f9640967f5@moroto.mountain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b219788a-69e6-44cf-a609-91f9640967f5@moroto.mountain>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Sep 16, 2023 at 4:08=E2=80=AFPM Samuel Thibault
-<samuel.thibault@ens-lyon.org> wrote:
->
-> Hello,
->
-> Justin Stitt, le ven. 25 ao=C3=BBt 2023 15:41:03 -0700, a ecrit:
-> > Thanks for the review Kees and Samuel. Hoping to get this picked-up soo=
-n :)
-> >
-> > FWIW, I've quickly copy/pasted Kees' suggested refactor of
-> > synth_direct_store and rebased against v6.5-rc7 if anyone has the
-> > means by which to test it.
-> >
-> > TEST PATCH BELOW
-> > ---
-> > From e7216bca30673a162660c51f8bad3b463d283041 Mon Sep 17 00:00:00 2001
-> > From: Justin Stitt <justinstitt@google.com>
-> > Date: Fri, 25 Aug 2023 22:32:03 +0000
-> > Subject: [PATCH NEEDS TEST] synth_direct_store refactor to use synth_wr=
-ite
-> >
-> > I've just copy/pasted Kees' suggestion here [1] and rebased it against
-> > 6.5-rc7.
-> >
-> > This patch needs testing as it refactors behavior in synth_direct_store=
-.
-> >
-> > [1]: https://lore.kernel.org/all/202308251439.36BC33ADB2@keescook/
-> >
-> > Signed-off-by: Justin Stitt <justinstitt@google.com>
->
-> Tested-by: Samuel Thibault <samuel.thibault@ens-lyon.org>
->
-> but please submit it properly :) It was completely mangled in the mail.
+On Sat, Sep 16, 2023 at 05:32:42PM +0300, Dan Carpenter wrote:
+> On Fri, Sep 08, 2023 at 09:59:40PM +0200, Philipp Stanner wrote:
 
-Got it, here's a v2:
-https://lore.kernel.org/all/20230918-strncpy-drivers-accessibility-speakup-=
-kobjects-c-v2-1-d5b1976c5dbf@google.com/
+...
 
->
-> > ---
-> >  drivers/accessibility/speakup/kobjects.c | 25 +++++++++++-------------
-> >  1 file changed, 11 insertions(+), 14 deletions(-)
-> >
-> > diff --git a/drivers/accessibility/speakup/kobjects.c
-> > b/drivers/accessibility/speakup/kobjects.c
-> > index a7522d409802..0dfdb6608e02 100644
-> > --- a/drivers/accessibility/speakup/kobjects.c
-> > +++ b/drivers/accessibility/speakup/kobjects.c
-> > @@ -413,27 +413,24 @@ static ssize_t synth_direct_store(struct kobject =
-*kobj,
-> >     struct kobj_attribute *attr,
-> >     const char *buf, size_t count)
-> >  {
-> > - u_char tmp[256];
-> > - int len;
-> > - int bytes;
-> > - const char *ptr =3D buf;
-> > + char *unescaped;
-> >   unsigned long flags;
-> >
-> >   if (!synth)
-> >   return -EPERM;
-> >
-> > - len =3D strlen(buf);
-> > + unescaped =3D kstrdup(buf, GFP_KERNEL);
-> > + if (!unescaped)
-> > + return -ENOMEM;
+> > +static inline void *memdup_array_user(const void __user *src, size_t n, size_t size)
+> > +{
+> > +	size_t nbytes;
 > > +
-> > + string_unescape_any_inplace(unescaped);
-> > +
-> >   spin_lock_irqsave(&speakup_info.spinlock, flags);
-> > - while (len > 0) {
-> > - bytes =3D min_t(size_t, len, 250);
-> > - strncpy(tmp, ptr, bytes);
-> > - tmp[bytes] =3D '\0';
-> > - string_unescape_any_inplace(tmp);
-> > - synth_printf("%s", tmp);
-> > - ptr +=3D bytes;
-> > - len -=3D bytes;
-> > - }
-> > + synth_write(unescaped, strlen(unescaped));
-> >   spin_unlock_irqrestore(&speakup_info.spinlock, flags);
-> > +
-> > + kfree(unescaped);
-> > +
-> >   return count;
-> >  }
-> >
-> > --
-> > 2.42.0.rc1.204.g551eb34607-goog
-> >
->
-> --
-> Samuel
-> ---
-> Pour une =C3=A9valuation ind=C3=A9pendante, transparente et rigoureuse !
-> Je soutiens la Commission d'=C3=89valuation de l'Inria.
+> > +	if (unlikely(check_mul_overflow(n, size, &nbytes)))
+> > +		return ERR_PTR(-EOVERFLOW);
+> 
+> No need for an unlikely() because check_mul_overflow() already has one
+> inside.
+
+Makes sense.
+
+> I feel like -ENOMEM is more traditional but I doubt anyone/userspace
+> cares.
+
+ENOMEM is good for the real allocation calls, here is not the one (the one is
+below). Hence ENOMEM is not good candidate above. And whenever functions returns
+an error pointer the caller must not assume that it will be only ENOMEM for
+allocators.
+
+> > +	return memdup_user(src, nbytes);
+> > +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
