@@ -2,131 +2,79 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF9E6CD37B0
-	for <linux-hardening@archiver.kernel.org>; Mon, 18 Sep 2023 12:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D371EC46CA1
+	for <linux-hardening@archiver.kernel.org>; Mon, 18 Sep 2023 12:20:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241862AbjIRMJJ (ORCPT
+        id S240402AbjIRMUa (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 18 Sep 2023 08:09:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46830 "EHLO
+        Mon, 18 Sep 2023 08:20:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241986AbjIRMJB (ORCPT
+        with ESMTP id S242007AbjIRMU1 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 18 Sep 2023 08:09:01 -0400
-Received: from mail-qv1-xf2a.google.com (mail-qv1-xf2a.google.com [IPv6:2607:f8b0:4864:20::f2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 821D5A9
-        for <linux-hardening@vger.kernel.org>; Mon, 18 Sep 2023 05:08:55 -0700 (PDT)
-Received: by mail-qv1-xf2a.google.com with SMTP id 6a1803df08f44-6515d44b562so25704616d6.3
-        for <linux-hardening@vger.kernel.org>; Mon, 18 Sep 2023 05:08:55 -0700 (PDT)
+        Mon, 18 Sep 2023 08:20:27 -0400
+Received: from mail-oi1-x22c.google.com (mail-oi1-x22c.google.com [IPv6:2607:f8b0:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA00E102
+        for <linux-hardening@vger.kernel.org>; Mon, 18 Sep 2023 05:20:08 -0700 (PDT)
+Received: by mail-oi1-x22c.google.com with SMTP id 5614622812f47-3a9ee3c7dbbso2923895b6e.1
+        for <linux-hardening@vger.kernel.org>; Mon, 18 Sep 2023 05:20:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1695038934; x=1695643734; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1695039608; x=1695644408; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ziZvMGLK6JgmUUboWqZiWtfE7gVK2DDQAWWdwk2gDB8=;
-        b=p61uxtX0s6QXhc4OmvJvspTqCcs2jz3xrCH+J4noLOoD1mjKzM0525uRVmVJyeilS4
-         hITA3Njo9vEato1lC05/6upCAPiyHpNEzm6+vkejZDLfpWZ6Uq06/XKDJO3TGRZEA4x3
-         Li+i7BI+ooan++z/FQ3wS/cQEFl7WbpG2KWcv4tMOcFu2VlGfcWsC+8Ag5Ragp5O6xcn
-         X8dJ/T4Fn6/bakka1UpaJFJIn0TTf9o/MOx1bsZOPfs/9CSHOSD4wjPBOBqMRyAE2ywV
-         QJfivMQjREm23VomDYxMjvNdlh3+lTK+F8rX2XcD0/bMlTtHu2D0t6vAsuN0Lwt53HK5
-         ZBUw==
+        bh=wJ/RnGWVlYXjsYT2wHH8A/bPUFSgIF9iFkS7fZpZUgg=;
+        b=YYqUufJuc0c2gUq3T4K/nNaVOlESAu+hSXbRk1FKOvjnEqS6+J1RcTPzhk9A0CsLEJ
+         XjgM+Yx9yWe4c7w+dHUwa0hVcK5J+xTtfDqJArIYmIorjZU3YaXEg68IA6JWauofuApR
+         Kb9Sl/nxMGDhzcKxMYF0n2KHvPuWcYOMmFIABPKpSmbJpFtUTPQT07dXIGvR2YT+6kZO
+         4ezB9/kxW/qQc84ANG+kQuTR+v3UbY82jLHJ5PYpw/+0wj9xmoLTF9Tb6jH8sZR8rV3E
+         OsE08NXE1ZdkmV+YdzRJ1wq5tvlcVoRYfoTsZycwpStjT0QQ81cGuUmHEsGg+yzrAgw9
+         mLyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695038934; x=1695643734;
+        d=1e100.net; s=20230601; t=1695039608; x=1695644408;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ziZvMGLK6JgmUUboWqZiWtfE7gVK2DDQAWWdwk2gDB8=;
-        b=njPEighPmvEx9stbVbvtfameoZDym3KfYDQo1QMHMXl2oS/asHJvEZEdVuSIofY58a
-         nge7tmq8C2tCHgRIxBSKJINClsixqyp0dEh46//OUgaYsa3WvpzVL5+RXtLL3fz94GB2
-         RRdu8/ib+BNdoCB65Hq6mPIpoS39M3NmpZx5VAdQJBoMFFiRMUS7VmylQh53d22BuTpZ
-         tNU6jj/olxZPsmHwz2CEmPSY1Npd9AwcGWrdpsob7IqsdHUjhqyca0D/8SUth7ajZEuG
-         q8ufJIULAFFAUVqWdm2yK+hm3sPOuy6lq3LPD8AvU7v2mKGv/seIrFO0aPofX7PYk1pE
-         ot5Q==
-X-Gm-Message-State: AOJu0YzwqwcOXUqD124PI2hRahtxJixdjkYR/ou2XiAl58RQLbw3+QhM
-        jMZN5PP5ccJmoidFWdOWJcKVcu/YUKeTfGTeRJdCRw==
-X-Google-Smtp-Source: AGHT+IGe6eycPkCnJorto9OJHO+hQCundE/h1zKNUGuoGj4gpWrDhAWQ0sCOlXxSU9kbzdmJ9bi8fQ6B0MF4HXGsu54=
-X-Received: by 2002:a0c:cc82:0:b0:656:5337:e7bd with SMTP id
- f2-20020a0ccc82000000b006565337e7bdmr4263366qvl.3.1695038934426; Mon, 18 Sep
- 2023 05:08:54 -0700 (PDT)
+        bh=wJ/RnGWVlYXjsYT2wHH8A/bPUFSgIF9iFkS7fZpZUgg=;
+        b=lLryr+BSR0X+XW7JF+zvHV/MoeP0xVl1aN5PV3mBJvMTW2Bz9OmURMd/RLjWqnAANU
+         P3zpOlCRReIS99/6MXERuq9YiR61ef/bpr+fii24CAIP0U0XakEuvmujdAt0JLOqkHUl
+         Nrjst+2rIbqXWA0z170tOLuBoYJBc0YRWY7gm/I51Q9XkxE6Sq2UzPcIcx8BmzTjqBiu
+         4Fjxo8sxOQyirrIF15yzioAxKkN8xXpAqDq5PX4Y2P1KSopSsdi9izwjflI5KMui26XD
+         RA0cy8vV/uvYC62jITk2SQB2n6TqcGwJpGJrxrN1NZyAQTFpPfI3q2ckBhPZn8ezTF3B
+         8EfQ==
+X-Gm-Message-State: AOJu0YwCY2pwi3DlC0KI4qQwigUWp2RS+/6S4f+B4hisM5+cEQNXq8kP
+        VfJZKzvyID0+QV0qiN0TXVoi4S4bSywFNTL+VASVxQ6ss20NXK0gjNg=
+X-Google-Smtp-Source: AGHT+IH4QInl/j5+gGf/Cu4Jd0o/JiZS8iO20fPzFtf4EWnwwCOCLo+sv7ujZymbloG1cGj+fly8h6Plt0tgKbwj9Mg=
+X-Received: by 2002:a05:6870:d784:b0:1d6:5e41:a8a1 with SMTP id
+ bd4-20020a056870d78400b001d65e41a8a1mr10689149oab.27.1695039607944; Mon, 18
+ Sep 2023 05:20:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230915105933.495735-1-matteorizzo@google.com>
- <7a4f5128-28fd-3c5f-34c2-1c34f4448174@intel.com> <1d7573c0-ebbc-6ed2-f152-1045eb0542f9@os.amperecomputing.com>
-In-Reply-To: <1d7573c0-ebbc-6ed2-f152-1045eb0542f9@os.amperecomputing.com>
+References: <20230916021835.never.147-kees@kernel.org>
+In-Reply-To: <20230916021835.never.147-kees@kernel.org>
 From:   Matteo Rizzo <matteorizzo@google.com>
-Date:   Mon, 18 Sep 2023 14:08:43 +0200
-Message-ID: <CAHKB1w+rVyww0UrHhzeGfPA7FM482Z-7ApzXvekVqLHvTDAV3Q@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/14] Prevent cross-cache attacks in the SLUB allocator
-To:     "Lameter, Christopher" <cl@os.amperecomputing.com>
-Cc:     Dave Hansen <dave.hansen@intel.com>, penberg@kernel.org,
-        rientjes@google.com, iamjoonsoo.kim@lge.com,
-        akpm@linux-foundation.org, vbabka@suse.cz,
-        roman.gushchin@linux.dev, 42.hyeyoo@gmail.com,
-        keescook@chromium.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-hardening@vger.kernel.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        x86@kernel.org, hpa@zytor.com, corbet@lwn.net, luto@kernel.org,
-        peterz@infradead.org, jannh@google.com, evn@google.com,
-        poprdi@google.com, jordyzomer@google.com
+Date:   Mon, 18 Sep 2023 14:19:57 +0200
+Message-ID: <CAHKB1wK5MPG8k2ij-bQLwES7Ytp0h2wE2jp5Cs6CJ3o_sOKDTg@mail.gmail.com>
+Subject: Re: [PATCH] x86/mm/dump_pagetables: Add SLAB_VIRTUAL knowledge
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Jann Horn <jannh@google.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, 15 Sept 2023 at 18:30, Lameter, Christopher
-<cl@os.amperecomputing.com> wrote:
+On Sat, 16 Sept 2023 at 04:18, Kees Cook <keescook@chromium.org> wrote:
 >
-> On Fri, 15 Sep 2023, Dave Hansen wrote:
+> Add the markings for the SLAB_VIRTUAL area.
 >
-> > What's the cost?
->
-> The only thing that I see is 1-2% on kernel compilations (and "more on
-> machines with lots of cores")?
+> Feel free to collapse this into the x86 patch from the above series.
 
-I used kernel compilation time (wall clock time) as a benchmark while
-preparing the series. Lower is better.
-
-Intel Skylake, 112 cores:
-
-      LABEL    | COUNT |   MIN   |   MAX   |   MEAN  |  MEDIAN | STDDEV
----------------+-------+---------+---------+---------+---------+--------
-SLAB_VIRTUAL=n | 150   | 49.700s | 51.320s | 50.449s | 50.430s | 0.29959
-SLAB_VIRTUAL=y | 150   | 50.020s | 51.660s | 50.880s | 50.880s | 0.30495
-               |       | +0.64%  | +0.66%  | +0.85%  | +0.89%  | +1.79%
-
-AMD Milan, 256 cores:
-
-    LABEL      | COUNT |   MIN   |   MAX   |   MEAN  |  MEDIAN | STDDEV
----------------+-------+---------+---------+---------+---------+--------
-SLAB_VIRTUAL=n | 150   | 25.480s | 26.550s | 26.065s | 26.055s | 0.23495
-SLAB_VIRTUAL=y | 150   | 25.820s | 27.080s | 26.531s | 26.540s | 0.25974
-               |       | +1.33%  | +2.00%  | +1.79%  | +1.86%  | +10.55%
-
-Are there any specific benchmarks that you would be interested in seeing or
-that are usually used for SLUB?
-
-> Problems:
->
-> - Overhead due to more TLB lookups
->
-> - Larger amounts of TLBs are used for the OS. Currently we are trying to
-> use the maximum mappable TLBs to reduce their numbers. This presumably
-> means using 4K TLBs for all slab access.
-
-Yes, we are using 4K pages for the slab mappings which is going to increase
-TLB pressure. I also tried writing a version of the patch that uses 2M
-pages which had slightly better performance, but that had its own problems.
-For example most slabs are much smaller than 2M, so we would need to create
-and map multiple slabs at once and we wouldn't be able to release the
-physical memory until all slabs in the 2M page are unused which increases
-fragmentation.
-
-> - Memory may not be physically contiguous which may be required by some
-> drivers doing DMA.
-
-In the current implementation each slab is backed by physically contiguous
-memory, but different slabs that are adjacent in virtual memory might not
-be physically contiguous. Treating objects allocated from two different
-slabs as one contiguous chunk of memory is probably wrong anyway, right?
+Thanks! I will add it to the next revision of the series.
 
 --
 Matteo
