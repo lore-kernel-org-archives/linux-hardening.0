@@ -2,88 +2,94 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0021EC46CA1
-	for <linux-hardening@archiver.kernel.org>; Mon, 18 Sep 2023 07:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E412DCD37B0
+	for <linux-hardening@archiver.kernel.org>; Mon, 18 Sep 2023 08:28:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240129AbjIRHzG (ORCPT
+        id S240670AbjIRI2V (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 18 Sep 2023 03:55:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38234 "EHLO
+        Mon, 18 Sep 2023 04:28:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240568AbjIRHyu (ORCPT
+        with ESMTP id S240690AbjIRI17 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 18 Sep 2023 03:54:50 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97DAC1FF5;
-        Mon, 18 Sep 2023 00:52:29 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C9DBC433CA;
-        Mon, 18 Sep 2023 07:52:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695023549;
-        bh=JpRQj+CS1LIqG6RxrH0LFqYOg4M7sfDK2bw5TGAmPjk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=DiCFZttO/1LGzwn/74BSriJkG66LPqKOPVJlGdd2jcUCLPb9ACaJG06N8MW6eI/5R
-         m0sg957uKn9KsPzp+hc2vD1Hfx6g9NP0uJA3AFnW5mr3GR2MSgGycPzP7p3J0L9z1H
-         IDitOlkeQw4eopY6eX6/w3itdWMUZgZo2NzO/a0rAJcT6COpD2pPUKLA1oElFctQ3J
-         UUbg89tpOyizK4zliUygfwEu7WDTar24Rijg8qdrxdUexrVBGtLar2F/AeRh3qrDMu
-         F18cYooFM1Q/3lVdNCBLeJbLdXDxydYuphSblAAgW45AwKJJ49usmzr1PiAcSATn5y
-         1aDtgboA73DmQ==
-Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-450f977a2eeso1486647137.3;
-        Mon, 18 Sep 2023 00:52:29 -0700 (PDT)
-X-Gm-Message-State: AOJu0YzKqLPU+RYAz+WfhwWyAfhdR2rvdpNngWLmg49zXv44Qtkha22c
-        ZGvkUKzRXSryu6KBXE/0mfgsJXIr5mb8tmCmA74=
-X-Google-Smtp-Source: AGHT+IG9StBg3ebnKnehHNUgY0wdwNcbSqnJu80Bw9fzTMW636VcC+o0IvC9AC/K8X4Jubw7Cog0n7XUMSPqoHVe+t8=
-X-Received: by 2002:a05:6102:668d:b0:452:67b7:42be with SMTP id
- gw13-20020a056102668d00b0045267b742bemr1977559vsb.4.1695023548157; Mon, 18
- Sep 2023 00:52:28 -0700 (PDT)
+        Mon, 18 Sep 2023 04:27:59 -0400
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EBF291;
+        Mon, 18 Sep 2023 01:27:51 -0700 (PDT)
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (No client certificate requested)
+        (Authenticated sender: kholk11)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id 0FBA066072F2;
+        Mon, 18 Sep 2023 09:27:49 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1695025670;
+        bh=q/RnJBMS2Bz4pnBRsyhr6AWWkU5fbRLwj6dY2Bv2yJ4=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=ckplOVZBWtmlF6AlYh711gtncHl8omA0WfIROZXv1zTmLyRfS7OCcC7Jg7tRHp1ls
+         TofKCZZYZKOZMMe97UmjvxcUxA7/tLUk9wtOWRgiaILyqDeRwa5yUAFzOvfSL5qfRI
+         QEZQlKkIuoGJ3EBqFwT7cXGswWtaAXWzzSNLejr7sdEGK5rCbpyFJDxyKHlrwJj0F1
+         a2tFQ5YGVOuM7NyLmA7CfOqVxnJ3RaNnOPoR+k8+krJl6urqU3wHhhLehm76WN1q7F
+         NI/XdpDD2VVPJXMTb/eChBEE2b6MQiDPtr7LXSOJb/qkzX1idE/gqcHiqZTD4seIi8
+         fwgJ+BgXjamsg==
+Message-ID: <77d5d2d2-5939-e43c-9f1c-d115274ad1ef@collabora.com>
+Date:   Mon, 18 Sep 2023 10:27:46 +0200
 MIME-Version: 1.0
-References: <20230823-strncpy-drivers-accel-habanalabs-common-habanalabs_drv-v1-1-147656947586@google.com>
- <20230825091856.GB3748525@linux.intel.com>
-In-Reply-To: <20230825091856.GB3748525@linux.intel.com>
-From:   Oded Gabbay <ogabbay@kernel.org>
-Date:   Mon, 18 Sep 2023 10:52:01 +0300
-X-Gmail-Original-Message-ID: <CAFCwf11afiokfGubENdOggb6VvmWAyakeAqJAR-JQN66QHOpAA@mail.gmail.com>
-Message-ID: <CAFCwf11afiokfGubENdOggb6VvmWAyakeAqJAR-JQN66QHOpAA@mail.gmail.com>
-Subject: Re: [PATCH] accel/habanalabs: refactor deprecated strncpy
-To:     Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
-Cc:     Justin Stitt <justinstitt@google.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.0
+Subject: Re: [PATCH] leds: mt6370: Annotate struct mt6370_priv with
+ __counted_by
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>, Pavel Machek <pavel@ucw.cz>
+Cc:     Lee Jones <lee@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alice Chen <alice_chen@richtek.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        ChiYuan Huang <cy_huang@richtek.com>,
+        ChiaEn Wu <chiaen_wu@richtek.com>,
+        kernel test robot <lkp@intel.com>,
+        linux-leds@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+References: <20230915201051.never.429-kees@kernel.org>
+From:   AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20230915201051.never.429-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Aug 25, 2023 at 12:19=E2=80=AFPM Stanislaw Gruszka
-<stanislaw.gruszka@linux.intel.com> wrote:
->
-> On Wed, Aug 23, 2023 at 12:23:08AM +0000, Justin Stitt wrote:
-> > `strncpy` is deprecated for use on NUL-terminated destination strings [=
-1].
-> >
-> > A suitable replacement is `strscpy` [2] due to the fact that it
-> > guarantees NUL-termination on its destination buffer argument which is
-> > _not_ the case for `strncpy`!
-> >
-> > There is likely no bug happening in this case since HL_STR_MAX is
-> > strictly larger than all source strings. Nonetheless, prefer a safer an=
-d
-> > more robust interface.
-> >
-> > It should also be noted that `strscpy` will not pad like `strncpy`. If
-> > this NUL-padding behavior is _required_ we should use `strscpy_pad`
-> > instead of `strscpy`.
-> >
-> > Link: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on=
--nul-terminated-strings[1]
-> > Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en=
-.html [2]
-> > Link: https://github.com/KSPP/linux/issues/90
-> > Cc: linux-hardening@vger.kernel.org
-> > Signed-off-by: Justin Stitt <justinstitt@google.com>
-> Reviewed-by: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
->
-Applied to -next
-Thanks,
-Oded
+Il 15/09/23 22:10, Kees Cook ha scritto:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
+> 
+> As found with Coccinelle[1], add __counted_by for struct mt6370_priv.
+> 
+> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+> 
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Lee Jones <lee@kernel.org>
+> Cc: Matthias Brugger <matthias.bgg@gmail.com>
+> Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> Cc: Alice Chen <alice_chen@richtek.com>
+> Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Cc: ChiYuan Huang <cy_huang@richtek.com>
+> Cc: ChiaEn Wu <chiaen_wu@richtek.com>
+> Cc: kernel test robot <lkp@intel.com>
+> Cc: linux-leds@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-mediatek@lists.infradead.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+
+
