@@ -2,100 +2,114 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 070AFCD13D1
-	for <linux-hardening@archiver.kernel.org>; Mon, 18 Sep 2023 06:56:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4453BCD13D1
+	for <linux-hardening@archiver.kernel.org>; Mon, 18 Sep 2023 07:05:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236553AbjIRG4J (ORCPT
+        id S239315AbjIRHEm (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 18 Sep 2023 02:56:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40060 "EHLO
+        Mon, 18 Sep 2023 03:04:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239854AbjIRGzz (ORCPT
+        with ESMTP id S240033AbjIRHEU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 18 Sep 2023 02:55:55 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4544EC6;
-        Sun, 17 Sep 2023 23:55:49 -0700 (PDT)
-X-IronPort-AV: E=McAfee;i="6600,9927,10836"; a="382323755"
-X-IronPort-AV: E=Sophos;i="6.02,156,1688454000"; 
-   d="scan'208";a="382323755"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2023 23:55:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10836"; a="695417720"
-X-IronPort-AV: E=Sophos;i="6.02,156,1688454000"; 
-   d="scan'208";a="695417720"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2023 23:55:30 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC0)
-        (envelope-from <andy@kernel.org>)
-        id 1qi8AI-0000000DVlr-18aJ;
-        Mon, 18 Sep 2023 09:55:26 +0300
-Date:   Mon, 18 Sep 2023 09:55:25 +0300
-From:   Andy Shevchenko <andy@kernel.org>
-To:     Dan Carpenter <dan.carpenter@linaro.org>
-Cc:     Philipp Stanner <pstanner@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Christian Brauner <brauner@kernel.org>,
-        David Disseldorp <ddiss@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Siddh Raman Pant <code@siddh.me>,
-        Nick Alcock <nick.alcock@oracle.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Zack Rusin <zackr@vmware.com>,
-        VMware Graphics Reviewers 
-        <linux-graphics-maintainer@vmware.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        kexec@lists.infradead.org, linux-hardening@vger.kernel.org,
-        David Airlie <airlied@redhat.com>
-Subject: Re: [PATCH v2 1/5] string.h: add array-wrappers for (v)memdup_user()
-Message-ID: <ZQf0XfrKiwhvkxum@smile.fi.intel.com>
-References: <cover.1694202430.git.pstanner@redhat.com>
- <93001a9f3f101be0f374080090f9c32df73ca773.1694202430.git.pstanner@redhat.com>
- <b219788a-69e6-44cf-a609-91f9640967f5@moroto.mountain>
+        Mon, 18 Sep 2023 03:04:20 -0400
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F5A5100
+        for <linux-hardening@vger.kernel.org>; Mon, 18 Sep 2023 00:04:12 -0700 (PDT)
+Received: by mail-ed1-x52f.google.com with SMTP id 4fb4d7f45d1cf-530ab2d9e89so2516792a12.2
+        for <linux-hardening@vger.kernel.org>; Mon, 18 Sep 2023 00:04:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1695020650; x=1695625450; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mxanxzBzBYAY+nwMQabQhY93f4nqr/QEo3/ykSA6yhc=;
+        b=txTzqw05xgM4j5/K/Sxp4qY+OpBZrKBE/DLmTuPbkxbZmyRqiyzF1eDl6CqxVHmLel
+         ic+TBlqfy1Rd4LDqHuJJEsmEo27O/FFpjCI8l83zOsWBEmQfvdHxbm9OD8QV2lf/ABO4
+         EjB1icaqdYX+dLgUMjxbGPNoE2at0c41UPQkSF3+TXVlrHAd3r/nB6dfz99/cRyJMsSr
+         hn15RoVSpHmYh1hhahA9WU7CtbJtzp9qRl6k6iE1vd+CWXTyWnddOQI3Wt7ejqs/nhR6
+         DQyTW4hfmIWg8Rm4AAUpSRWnerWOTELLeRpSm+g8ZZ1Nn9xJ4lnuDL293hvkh+b54960
+         ycEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695020650; x=1695625450;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mxanxzBzBYAY+nwMQabQhY93f4nqr/QEo3/ykSA6yhc=;
+        b=kRJB4u6ly13KibkS98FwWcdvk3SruxKWyBZdP1fZMLONSxaSnCjO5y+AqlQNBjkXuB
+         QnnRpsZvpB4foL2nFP34t3wgy5E8372ll+aEdOJ4qDMPRq+PpAwU/4wPonIhvk2jxM3s
+         V2xvHcVtm9XMbx5FHVvsnfa84oi8XDnRu967EocxtZFtiETzZSmuzrleOcqVugmopTgd
+         g/MxxWrWj2Df3U25sb5Dm0DoWe58dJuO1wyLHz5Oig4PvZzQWkAuKBGXFcv8quAILn4o
+         Mo5Lotp5LmZubYEHz3gHdoo/vAbtoUo18FosApyUZwZQlnI5ZoUcInL0A72ZQcgjfJzG
+         xr4w==
+X-Gm-Message-State: AOJu0YwYl2ITeoDPfoOqXdl/fgXPHyM+/UMmgaa/RJsXbvIQ1FEmN6G5
+        a1/bgLkA+Crtohx56RlDnxO6+sXVKvbh3J2TQGX/Dg==
+X-Google-Smtp-Source: AGHT+IHqikerTXA3+6J11m6jsjTlogmeIfrd2oscuOGRKrp9MkDG9Hp5jziyJnV6mEtXOrlAXSe7OBc2GyeiW4QrMsg=
+X-Received: by 2002:a05:6402:3207:b0:530:c3ac:b684 with SMTP id
+ g7-20020a056402320700b00530c3acb684mr6094984eda.23.1695020650534; Mon, 18 Sep
+ 2023 00:04:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b219788a-69e6-44cf-a609-91f9640967f5@moroto.mountain>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20230911-strncpy-drivers-block-aoe-aoenet-c-v1-1-9643d6137ff9@google.com>
+ <202309142019.23A7D80A@keescook> <6338fbac-0177-43eb-be4f-7c586956953f@kernel.dk>
+In-Reply-To: <6338fbac-0177-43eb-be4f-7c586956953f@kernel.dk>
+From:   Justin Stitt <justinstitt@google.com>
+Date:   Mon, 18 Sep 2023 00:03:56 -0700
+Message-ID: <CAFhGd8pwtUSJBzepe=GBeyKuhD6ND6aWjeeT477Sdb4YTYDL_Q@mail.gmail.com>
+Subject: Re: [PATCH] aoe: refactor deprecated strncpy
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Justin Sanders <justin@coraid.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, Xu Panda <xu.panda@zte.com.cn>,
+        Yang Yang <yang.yang29@zte.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Sep 16, 2023 at 05:32:42PM +0300, Dan Carpenter wrote:
-> On Fri, Sep 08, 2023 at 09:59:40PM +0200, Philipp Stanner wrote:
+On Fri, Sep 15, 2023 at 6:36=E2=80=AFAM Jens Axboe <axboe@kernel.dk> wrote:
+>
+> On 9/14/23 9:21 PM, Kees Cook wrote:
+> > On Mon, Sep 11, 2023 at 09:09:07PM +0000, Justin Stitt wrote:
+> >> `strncpy` is deprecated for use on NUL-terminated destination strings =
+[1].
+> >>
+> >> `aoe_iflist` is expected to be NUL-terminated which is evident by its
+> >> use with string apis later on like `strspn`:
+> >> |    p =3D aoe_iflist + strspn(aoe_iflist, WHITESPACE);
+> >>
+> >> It also seems `aoe_iflist` does not need to be NUL-padded which means
+> >> `strscpy` [2] is a suitable replacement due to the fact that it
+> >> guarantees NUL-termination on the destination buffer while not
+> >> unnecessarily NUL-padding.
+> >>
+> >> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#s=
+trncpy-on-nul-terminated-strings [1]
+> >> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.e=
+n.html [2]
+> >> Link: https://github.com/KSPP/linux/issues/90
+> >> Cc: linux-hardening@vger.kernel.org
+> >> Cc: Kees Cook <keescook@chromium.org>
+> >> Cc: Xu Panda <xu.panda@zte.com.cn>
+> >> Cc: Yang Yang <yang.yang29@zte.com>
+> >> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> >
+> > Agreed, truncation is the current behavior, and padding isn't needed.
+> > (Or more precisely, it's already zeroed and this function is called
+> > once.)
+> >
+> > Reviewed-by: Kees Cook <keescook@chromium.org>
+>
+> Change looks fine to me too, but for the love of $deity, please use
+> a proper subject line for these kinds of patches. It's not refactoring
+> anything.
+>
 
-...
+Fair.
 
-> > +static inline void *memdup_array_user(const void __user *src, size_t n, size_t size)
-> > +{
-> > +	size_t nbytes;
-> > +
-> > +	if (unlikely(check_mul_overflow(n, size, &nbytes)))
-> > +		return ERR_PTR(-EOVERFLOW);
-> 
-> No need for an unlikely() because check_mul_overflow() already has one
-> inside.
+Perhaps "xyz: replace strncpy with strscpy"?
 
-Makes sense.
-
-> I feel like -ENOMEM is more traditional but I doubt anyone/userspace
-> cares.
-
-ENOMEM is good for the real allocation calls, here is not the one (the one is
-below). Hence ENOMEM is not good candidate above. And whenever functions returns
-an error pointer the caller must not assume that it will be only ENOMEM for
-allocators.
-
-> > +	return memdup_user(src, nbytes);
-> > +}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> --
+> Jens Axboe
+>
