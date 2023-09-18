@@ -2,148 +2,152 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1C8CD13D1
-	for <linux-hardening@archiver.kernel.org>; Mon, 18 Sep 2023 07:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 825CBC46CA1
+	for <linux-hardening@archiver.kernel.org>; Mon, 18 Sep 2023 07:26:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230440AbjIRHRS (ORCPT
+        id S238398AbjIRHZu (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 18 Sep 2023 03:17:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50872 "EHLO
+        Mon, 18 Sep 2023 03:25:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230288AbjIRHQu (ORCPT
+        with ESMTP id S240073AbjIRHZo (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 18 Sep 2023 03:16:50 -0400
-Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F344AA;
-        Mon, 18 Sep 2023 00:16:44 -0700 (PDT)
-Received: by mail-lj1-x235.google.com with SMTP id 38308e7fff4ca-2c00e1d4c08so8229021fa.3;
-        Mon, 18 Sep 2023 00:16:44 -0700 (PDT)
+        Mon, 18 Sep 2023 03:25:44 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16E6AAA
+        for <linux-hardening@vger.kernel.org>; Mon, 18 Sep 2023 00:25:37 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d8109d3a3bbso4708668276.2
+        for <linux-hardening@vger.kernel.org>; Mon, 18 Sep 2023 00:25:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695021402; x=1695626202; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HtYLAbUkW1EE5YSKH4JQuk4HIHGauzB0S/KhIJUqMLY=;
-        b=DCsccc3AjycbMZut9Z42XNMVxf/CChADAylXGlOPclg+AgB6qCMCBxM528rh02Ac1G
-         PfyE4CWXSk+NdxiOUw/NsReFHkbvq0HMKOHNBzX9QsyJwg6Nra94+gUlIPB9CH/VDtl4
-         9/Rw4V1jMq32DGltOwvMrdAs158Z5vOxnZVZylZ7O301qQ1bg+v8aUJ1G2CeRrgwYS3c
-         FbTbVA9TLqX5pHpzRSeGTjQENP1+BO9jzSnfixGGW/s+9QPN6993zt5uydBnZrH4Tb0h
-         iLpdMszP94UmWQVvoGRB5hAShF25VL9xk5DTNrLyqHJ2YB7InnLLpqHLbGUxC3zwX8RQ
-         kasQ==
+        d=google.com; s=20230601; t=1695021936; x=1695626736; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=3WAQv+e8xIAvvalEvufZpQYuwaoIOUMyrU9FgMi+IEc=;
+        b=EtyU2DbHd+QkWP+a3Q3tat9zKgLFOiG/nb2tEIg/mdwcz3HmlhiGK7W5+O8j4P+YRE
+         ZhdYqE01irlOcZjQI/ES1XpbgT+IvAqTpVAUaNBvA4zezOywrWykpdrOVd0RP+VznTrq
+         uoEylyNjjddfu+tnguLsaA9b+5ZpiJj3HQYceBR+/cvYHRFpLPpsgRvv5o+Ll4Yxx2fI
+         eUN1bYIwAYjLEYIM6Sp6bcqZe9N93VNAWd+KLKXPz9ZYzgvYQGkgcBEMJljddTxgeraF
+         1dRa8mAxvnc07c63JcjWE3WSD3RFzPAslgj9gWCnmVBsPTOkM/HUR9JukV9Ohxu6985q
+         DLVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695021402; x=1695626202;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HtYLAbUkW1EE5YSKH4JQuk4HIHGauzB0S/KhIJUqMLY=;
-        b=r8rGpPCgq0VqHbMbnTEXrW4j9onXpxHmN4qHbUautk2BwN5YJuNUvZvjPQCK7TYbc7
-         evohlBYUvIFgHnVeUeRxkjxawAW6TQuRJV+fNd4bb+g2aJlzWEfSS4/AiD5JAji3LnYC
-         3n2K9WxnncBpWPvnBC8iDB64+dkZ5xnMoiHBTkopk3jTPEAUBuIcvnN1Iu4e6/LE7BFu
-         gqhSWftyvdKKrKrnNCyBMv7jtuFPI278OwJ4se9ten4RocjeQLlfIyy7GzIMP/3v+YKr
-         5S1m+cZ7UrMr/wDHdunb4SEJdVbhOPK1dGEAVnwYmkgQKM+5es5jQ1lsExiC9ssc5cAV
-         meCg==
-X-Gm-Message-State: AOJu0YxXBxHVagXLzXFVlppzj9EC6/AiWQ/aga8g6iqBHjk72q1QeJbU
-        oZNZCyQC1Q39YNYi6wAGR0I=
-X-Google-Smtp-Source: AGHT+IG38LcxzwKXLpAT//j7BucjbiMzO8rRJFcNYXDrwkHSK8FMz6yosThkN68Vrff6++hYDjGT3g==
-X-Received: by 2002:a05:651c:610:b0:2c0:18e0:708a with SMTP id k16-20020a05651c061000b002c018e0708amr408980lje.46.1695021402207;
-        Mon, 18 Sep 2023 00:16:42 -0700 (PDT)
-Received: from localhost (81-226-149-122-no518.tbcn.telia.com. [81.226.149.122])
-        by smtp.gmail.com with ESMTPSA id n6-20020a2e8786000000b002bcc866ec9esm1980739lji.119.2023.09.18.00.16.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Sep 2023 00:16:41 -0700 (PDT)
-Date:   Mon, 18 Sep 2023 09:16:39 +0200
-From:   Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Justin Stitt <justinstitt@google.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] drm/gma500: refactor deprecated strncpy
-Message-ID: <7rldvf22zvtvvqpqsoeidg57sqwnuz6pfclve7igw6kuxp5jfp@vkt3z7br5hll>
-Mail-Followup-To: Kees Cook <keescook@chromium.org>, 
-        Justin Stitt <justinstitt@google.com>, David Airlie <airlied@gmail.com>, 
-        Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-        linux-hardening@vger.kernel.org
-References: <20230914-drivers-gpu-drm-gma500-oaktrail_lvds_i2c-c-v1-1-0a53a076ce20@google.com>
- <202309142135.16032DEA8@keescook>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202309142135.16032DEA8@keescook>
+        d=1e100.net; s=20230601; t=1695021936; x=1695626736;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3WAQv+e8xIAvvalEvufZpQYuwaoIOUMyrU9FgMi+IEc=;
+        b=OwpRqgOYqMS3jfB5LQ8FdzmgKN5b4DdjJ57YfOURU4NN9CCjwC4iKgxS5pRsgn/bYo
+         5A/RFa+XqItWHkht29mWsYVLayd56UyZ7ZLrdOHAUOUTbYm/4ZWSA6ewOW+dAeOhhl9h
+         f6tQYXNnvBLMzpoUsEshFX5XcE1qT+s/1ZddrVJZgm45N9o0lCZ1pQE55vHf10jz1URP
+         Zp/NO9NAM4wAj+OhQ52liEqvAGAH1A1fTkT8qKVSRy503aQjNeChBTHvk7iLbb+WZrEw
+         eQoGYHHqG/F+7tJ/8ZTXr6Vvd5E004sBJnXOIw2MnZEvk8bOLoMNaduxab1aIgUuYScy
+         8WnQ==
+X-Gm-Message-State: AOJu0YyQgiRWN9WpIyh51PcbYeDn4OZZn6cA7NQYehYW5EA1LzrDmN/w
+        EmKLss/zMLqHhAqeF9+X98hdXt3HueIYiRPdYQ==
+X-Google-Smtp-Source: AGHT+IF+jX5dUSIkSB8RfzXLXxoPZwR9qlzLXtJHnwCjwBp0eZD0RK+hmfw8QP+439CpeHYVFT/vO68h56dKzlzm3w==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a25:ad5c:0:b0:d7b:9830:c172 with SMTP
+ id l28-20020a25ad5c000000b00d7b9830c172mr172732ybe.0.1695021936336; Mon, 18
+ Sep 2023 00:25:36 -0700 (PDT)
+Date:   Mon, 18 Sep 2023 07:25:35 +0000
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAG77B2UC/5XNQQ6CMBCF4auQrh3DUBR05T0MMVAGmFBa0mIjI
+ dzdyg1c/m/xvk14ckxe3JNNOArs2ZoY2SkRaqhNT8BtbJGlmUxviOAXZ9S8Qus4kPPQaKtGMG+
+ tX40eYarZgIJC5je8SEJ1rUX8mh11/DmcZxV7YL9Ytx5swN/6rxAQEGQjy7Kgomspf/TW9prOy k6i2vf9C+KPcjnbAAAA
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1695021935; l=2744;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=swPV5XpUlRXB66oR7Qh/nSFtVd/YWWRwyK5xLI6b/UY=; b=lQh9KvxNeNw90KFaN+C0AaSOn2MGPv/wnngx73fGHOn+3LvNHoRUpaTOi1Y57TwXuu3uuw7Uf
+ QFw1u2PR0KpBJ0fpN3sNNORHsXBuqSeRuRmZLY1W53HrYOVatw/bPjw
+X-Mailer: b4 0.12.3
+Message-ID: <20230918-strncpy-drivers-block-null_blk-main-c-v2-1-cd9b109edfdf@google.com>
+Subject: [PATCH v2] null_blk: refactor deprecated strncpy
+From:   Justin Stitt <justinstitt@google.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Sep 14, 2023 at 09:37:31PM -0700, Kees Cook wrote:
-> On Thu, Sep 14, 2023 at 08:52:21PM +0000, Justin Stitt wrote:
-> > `strncpy` is deprecated for use on NUL-terminated destination strings [1].
-> > 
-> > We should prefer more robust and less ambiguous string interfaces.
-> > 
-> > Since `chan->base.name` is expected to be NUL-terminated, a suitable
-> > replacement is `strscpy` [2] due to the fact that it guarantees
-> > NUL-termination on the destination buffer without also unnecessarily
-> > NUL-padding.
-> 
-> How did you decide about %NUL padding? (I see it is kzalloc'd, so it
-> doesn't matter.)
-> 
-> > 
-> > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> > Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> > Link: https://github.com/KSPP/linux/issues/90
-> > Cc: linux-hardening@vger.kernel.org
-> > Signed-off-by: Justin Stitt <justinstitt@google.com>
-> > ---
-> > 
-> > 
-> > drm/gma500: refactor deprecated strncpy
-> > ---
-> >  drivers/gpu/drm/gma500/oaktrail_lvds_i2c.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/gpu/drm/gma500/oaktrail_lvds_i2c.c b/drivers/gpu/drm/gma500/oaktrail_lvds_i2c.c
-> > index 06b5b2d70d48..68458cbdd6d5 100644
-> > --- a/drivers/gpu/drm/gma500/oaktrail_lvds_i2c.c
-> > +++ b/drivers/gpu/drm/gma500/oaktrail_lvds_i2c.c
-> > @@ -141,7 +141,7 @@ struct gma_i2c_chan *oaktrail_lvds_i2c_init(struct drm_device *dev)
-> >  
-> >  	chan->drm_dev = dev;
-> >  	chan->reg = dev_priv->lpc_gpio_base;
-> > -	strncpy(chan->base.name, "gma500 LPC",  I2C_NAME_SIZE - 1);
-> > +	strscpy(chan->base.name, "gma500 LPC",  I2C_NAME_SIZE - 1);
-> 
-> What's going on here with the destination buffer size? chan->base.name
-> is 48 bytes. I2C_NAME_SIZE is 20.
+`strncpy` is deprecated for use on NUL-terminated destination strings [1].
 
-It seems I2C_NAME_SIZE is used for i2c_client.name but is abused here
-for i2c_adapter.name as well. Using sizeof() would be better. Justin,
-would you mind changing that as well?
+We should favor a more robust and less ambiguous interface.
 
-Thanks
-Patrik
+We expect that both `nullb->disk_name` and `disk->disk_name` be
+NUL-terminated:
+|     snprintf(nullb->disk_name, sizeof(nullb->disk_name),
+|              "%s", config_item_name(&dev->group.cg_item));
+...
+|       pr_info("disk %s created\n", nullb->disk_name);
 
-> 
-> Ultimately it doesn't matter since the source is a const char string,
-> but it's still weird. Therefore:
-> 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> 
-> -Kees
-> 
-> >  	chan->base.owner = THIS_MODULE;
-> >  	chan->base.algo_data = &chan->algo;
-> >  	chan->base.dev.parent = dev->dev;
-> > 
-> > ---
-> > base-commit: 3669558bdf354cd352be955ef2764cde6a9bf5ec
-> > change-id: 20230914-drivers-gpu-drm-gma500-oaktrail_lvds_i2c-c-a53c6d8bd62f
-> > 
-> > Best regards,
-> > --
-> > Justin Stitt <justinstitt@google.com>
-> > 
-> 
-> -- 
-> Kees Cook
+It seems like NUL-padding may be required due to __assign_disk_name()
+utilizing a memcpy as opposed to a `str*cpy` api.
+| static inline void __assign_disk_name(char *name, struct gendisk *disk)
+| {
+| 	if (disk)
+| 		memcpy(name, disk->disk_name, DISK_NAME_LEN);
+| 	else
+| 		memset(name, 0, DISK_NAME_LEN);
+| }
+
+Then we go and print it with `__print_disk_name` which wraps `nullb_trace_disk_name()`.
+| #define __print_disk_name(name) nullb_trace_disk_name(p, name)
+
+This function obviously expects a NUL-terminated string.
+| const char *nullb_trace_disk_name(struct trace_seq *p, char *name)
+| {
+| 	const char *ret = trace_seq_buffer_ptr(p);
+|
+| 	if (name && *name)
+| 		trace_seq_printf(p, "disk=%s, ", name);
+| 	trace_seq_putc(p, 0);
+|
+| 	return ret;
+| }
+
+From the above, we need both 1) a NUL-terminated string and 2) a
+NUL-padded string. So, let's use strscpy_pad() as per Kees' suggestion
+from v1.
+
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Changes in v2:
+- use strscpy_pad (thanks Kees)
+- Link to v1: https://lore.kernel.org/r/20230911-strncpy-drivers-block-null_blk-main-c-v1-1-3b3887e7fde4@google.com
+---
+Note: build-tested
+---
+ drivers/block/null_blk/main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/block/null_blk/main.c b/drivers/block/null_blk/main.c
+index 864013019d6b..d83e65525e18 100644
+--- a/drivers/block/null_blk/main.c
++++ b/drivers/block/null_blk/main.c
+@@ -1938,7 +1938,7 @@ static int null_gendisk_register(struct nullb *nullb)
+ 	else
+ 		disk->fops		= &null_bio_ops;
+ 	disk->private_data	= nullb;
+-	strncpy(disk->disk_name, nullb->disk_name, DISK_NAME_LEN);
++	strscpy_pad(disk->disk_name, nullb->disk_name, DISK_NAME_LEN);
+ 
+ 	if (nullb->dev->zoned) {
+ 		int ret = null_register_zoned_dev(nullb);
+
+---
+base-commit: 2dde18cd1d8fac735875f2e4987f11817cc0bc2c
+change-id: 20230911-strncpy-drivers-block-null_blk-main-c-7349153e1c6a
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
+
