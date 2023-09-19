@@ -2,66 +2,56 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CA1CE79A8
-	for <linux-hardening@archiver.kernel.org>; Tue, 19 Sep 2023 15:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD460CE79AA
+	for <linux-hardening@archiver.kernel.org>; Tue, 19 Sep 2023 15:56:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232566AbjISPtD (ORCPT
+        id S231608AbjISP4l (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 19 Sep 2023 11:49:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59870 "EHLO
+        Tue, 19 Sep 2023 11:56:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233189AbjISPtC (ORCPT
+        with ESMTP id S232566AbjISP4l (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 19 Sep 2023 11:49:02 -0400
-Received: from mail-qk1-x72f.google.com (mail-qk1-x72f.google.com [IPv6:2607:f8b0:4864:20::72f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4404C93
-        for <linux-hardening@vger.kernel.org>; Tue, 19 Sep 2023 08:48:56 -0700 (PDT)
-Received: by mail-qk1-x72f.google.com with SMTP id af79cd13be357-76e09202322so395096785a.3
-        for <linux-hardening@vger.kernel.org>; Tue, 19 Sep 2023 08:48:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1695138535; x=1695743335; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=FUFBX34Vi8T0jyulMhlIaJzOiGzxRBHm/K7XuTUIix8=;
-        b=2C5Kk5jBdwO+wUlff1qDFpyRMIcxfsXG0zhn/m974GNZGjX0pAGZ6eSmSFEL0OW4bt
-         +8T3IDEao5L9LIn8uOR2xPdvTjkQgjJaPrIXIPdO1SxL/wjgm8xAs0Ooydb03PEG5sF6
-         dI43xBKUG72kujk/cfWdrPhLq3azvQM5I6g0zJFNtxJzUVD+QbsR8Zwe7lLQOKUZ7DEd
-         KKsqvH6IBzbttJHVieNhDfxhqZHTpzVmEtQ/yKALHmq659qZNdJX8ZA2AU9SfO0lta+1
-         fYwoN8+tVm+97N72m2yF+c3z67fWIF6fa+VxKaZmNbzHHdCeNuaM46rHrk0m0I5aQEvZ
-         98EQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695138535; x=1695743335;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FUFBX34Vi8T0jyulMhlIaJzOiGzxRBHm/K7XuTUIix8=;
-        b=eaXfPXW0iPwKK5sgsmmFBFuSJYTOugoMVmDMRQ7ueUJk+e7BbG0GmiDHtx14Xt3FIe
-         r1dRtLz5ICTm8Os6wWJ5u2BU5HiOnv97PWPqmYpOjWNi3wbSI1D9NNsYdbPfrBgIoJ+4
-         3m0l26c5FmfDx2ZHPCpECa4AMGcApcXT+DbiD43ieSOtRy1rWn6WS+pYUneLGxot1o5C
-         0No80PnHFYw+NTYjQS1KBkH3uTYj61EBhlxRq/1wc8zWRDf5/HQXlTMaIbulGAagpV5r
-         s2NThEGsm1ejnJ8rn4UEwywUZBHQxKUhgETgQYtd8VdRb9+/M+j6sB1f5RtNfraY8aH8
-         6U4w==
-X-Gm-Message-State: AOJu0YxCu12lvhh6Tx/qAMvLuKcpHw1JwPrXmKTROhfXi/EZSDslY5C2
-        aGaHfoGdpgSXDSZJE+yPrj3IIRxtteNZ7kppavu6B6+F5loD9BJrsdG2MJlK
-X-Google-Smtp-Source: AGHT+IE3bOOMkBS+atNtSPIXMOTa2Ld22Qs9HTCkKcTaipggWake8IjLOlnyddu6BbylehDROBRn01dZ36CiD5ewpnY=
-X-Received: by 2002:a05:6214:5d0e:b0:658:2d42:75e4 with SMTP id
- me14-20020a0562145d0e00b006582d4275e4mr4698272qvb.47.1695138535174; Tue, 19
- Sep 2023 08:48:55 -0700 (PDT)
+        Tue, 19 Sep 2023 11:56:41 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BF3D91;
+        Tue, 19 Sep 2023 08:56:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1695138995; x=1726674995;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=MTfiqiF4/0w5l1l9tVfSC4owCNKEdyk4op+fHK4J8/c=;
+  b=YgdFHXqZ6KV0as4AbU2ESzYzLn8scrzRmLs47zqtA1kRK7KS/CnIEs7k
+   Wymc60YxzwniLYAzytgSRjAP+bRZdJ2LSRx2rKr9JusPPuzRfmNy5DgcO
+   2Nxq24zC3jDJuky7mfpAoP2dWMA8SrtTlbP0q1rVBwboEzWVU8kZjiKPl
+   sb/7ZxRU1XVXt3rmLHwWjwZW53kXuhmISOQn4EK/UDp81bzzA+2IxT4Dw
+   Kwm+PwSTm2ZpHa2f8A8C/oYWU3k0H9hNkKkGAQfsIZO5d0cDSkDtjzklU
+   6RkqO8jkxA617klxXS0nJoT4EDJTN2DlJNWBCG96Tczh49peHFFashuA/
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10838"; a="410906320"
+X-IronPort-AV: E=Sophos;i="6.02,160,1688454000"; 
+   d="scan'208";a="410906320"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2023 08:56:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10838"; a="816486416"
+X-IronPort-AV: E=Sophos;i="6.02,160,1688454000"; 
+   d="scan'208";a="816486416"
+Received: from rdromms-mobl4.amr.corp.intel.com (HELO [10.212.158.204]) ([10.212.158.204])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2023 08:56:31 -0700
+Message-ID: <d04f77ff-e95b-6012-9be6-daf20ba9e272@intel.com>
+Date:   Tue, 19 Sep 2023 08:56:30 -0700
 MIME-Version: 1.0
-References: <20230915105933.495735-1-matteorizzo@google.com>
- <7a4f5128-28fd-3c5f-34c2-1c34f4448174@intel.com> <1d7573c0-ebbc-6ed2-f152-1045eb0542f9@os.amperecomputing.com>
- <CAHKB1w+rVyww0UrHhzeGfPA7FM482Z-7ApzXvekVqLHvTDAV3Q@mail.gmail.com>
- <ZQiLX0W2Tcr+wdJT@gmail.com> <CAHk-=wgGzB4u-WZsDpdgjwX1w5=9CLE0gorhaNFD09P1FUGeuQ@mail.gmail.com>
-In-Reply-To: <CAHk-=wgGzB4u-WZsDpdgjwX1w5=9CLE0gorhaNFD09P1FUGeuQ@mail.gmail.com>
-From:   Matteo Rizzo <matteorizzo@google.com>
-Date:   Tue, 19 Sep 2023 17:48:42 +0200
-Message-ID: <CAHKB1w+9GgY_e6J+rZ4zDaXrPZab5xteTuDEH0Z2hWe6x-pT5g@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/14] Prevent cross-cache attacks in the SLUB allocator
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        "Lameter, Christopher" <cl@os.amperecomputing.com>,
-        Dave Hansen <dave.hansen@intel.com>, penberg@kernel.org,
-        rientjes@google.com, iamjoonsoo.kim@lge.com,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [RFC PATCH 00/14] Prevent cross-cache attacks in the SLUB
+ allocator
+Content-Language: en-US
+To:     Matteo Rizzo <matteorizzo@google.com>,
+        Ingo Molnar <mingo@kernel.org>
+Cc:     "Lameter, Christopher" <cl@os.amperecomputing.com>,
+        penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com,
         akpm@linux-foundation.org, vbabka@suse.cz,
         roman.gushchin@linux.dev, 42.hyeyoo@gmail.com,
         keescook@chromium.org, linux-kernel@vger.kernel.org,
@@ -70,44 +60,47 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
         x86@kernel.org, hpa@zytor.com, corbet@lwn.net, luto@kernel.org,
         peterz@infradead.org, jannh@google.com, evn@google.com,
-        poprdi@google.com, jordyzomer@google.com
-Content-Type: text/plain; charset="UTF-8"
+        poprdi@google.com, jordyzomer@google.com,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <20230915105933.495735-1-matteorizzo@google.com>
+ <7a4f5128-28fd-3c5f-34c2-1c34f4448174@intel.com>
+ <1d7573c0-ebbc-6ed2-f152-1045eb0542f9@os.amperecomputing.com>
+ <CAHKB1w+rVyww0UrHhzeGfPA7FM482Z-7ApzXvekVqLHvTDAV3Q@mail.gmail.com>
+ <ZQiLX0W2Tcr+wdJT@gmail.com>
+ <CAHKB1wKneke-dyvMY0JtW-xwW8m=GaUdafoAqdCE0B9csY7_bw@mail.gmail.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+In-Reply-To: <CAHKB1wKneke-dyvMY0JtW-xwW8m=GaUdafoAqdCE0B9csY7_bw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, 18 Sept 2023 at 20:05, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> ... and equally importantly, what about DMA?
+On 9/19/23 06:42, Matteo Rizzo wrote:
+> On Mon, 18 Sept 2023 at 19:39, Ingo Molnar <mingo@kernel.org> wrote:
+>> What's the split of the increase in overhead due to SLAB_VIRTUAL=y, between
+>> user-space execution and kernel-space execution?
+>>
+> Same benchmark as before (compiling a kernel on a system running the patched
+> kernel):
 
-I'm not exactly sure what you mean by this, I don't think this should
-affect the performance of DMA.
+Thanks for running those.  One more situation that comes to mind is how
+this will act under memory pressure.  Will some memory pressure make
+contention on 'slub_kworker_lock' visible or make the global TLB flushes
+less bearable?
 
-> Or what about the fixed-size slabs (aka kmalloc?) What's the point of
-> "never re-use the same address for a different slab", when the *same*
-> slab will contain different kinds of allocations anyway?
+In any case, none of this looks _catastrophic_.  It's surely a cost that
+some folks will pay.
 
-There are a number of patches out there (for example the random_kmalloc
-series which recently got merged into v6.6) which attempt to segregate
-kmalloc'd objects into different caches to make exploitation harder.
-Another thing that we would like to have in the future is to segregate
-objects by type (like XNU's kalloc_type
-https://security.apple.com/blog/towards-the-next-generation-of-xnu-memory-safety/)
-which makes exploiting use-after-free by type confusion much harder or
-impossible.
+But I really do think it needs to be more dynamic.  There are a _couple_
+of reasons for this.  If it's only a compile-time option, it's never
+going to get turned on except for maybe ChromeOS and the datacenter
+folks that are paranoid.  I suspect the distros will never turn it on.
 
-All of these mitigations can be bypassed very easily if the attacker can
-mount a cross-cache attack, which is what this series attempts to prevent.
-This is not only theoretical, we've seen attackers use this all the time in
-kCTF/kernelCTF submissions (for example
-https://ruia-ruia.github.io/2022/08/05/CVE-2022-29582-io-uring/).
+A lot of questions get easier if you can disable/enable it at runtime.
+For instance, what do you do if the virtual area fills up?  You _could_
+just go back to handing out direct map addresses.  Less secure?  Yep.
+But better than crashing (for some folks).
 
-> I think the whole "make it one single compile-time option" model is
-> completely and fundamentally broken.
-
-Wouldn't making this toggleable at boot time or runtime make performance
-even worse?
-
---
-Matteo
+It also opens up the door to do this per-slab.  That alone would be a
+handy debugging option.
