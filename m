@@ -2,85 +2,75 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5449CD3445
-	for <linux-hardening@archiver.kernel.org>; Tue, 19 Sep 2023 07:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12294CD5484
+	for <linux-hardening@archiver.kernel.org>; Tue, 19 Sep 2023 07:37:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231558AbjISHDJ (ORCPT
+        id S231712AbjISHh1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 19 Sep 2023 03:03:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55252 "EHLO
+        Tue, 19 Sep 2023 03:37:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229803AbjISHDJ (ORCPT
+        with ESMTP id S231678AbjISHh0 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 19 Sep 2023 03:03:09 -0400
-Received: from todd.t-8ch.de (todd.t-8ch.de [IPv6:2a01:4f8:c010:41de::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25F1F100;
-        Tue, 19 Sep 2023 00:03:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=t-8ch.de; s=mail;
-        t=1695106970; bh=UaVoSUP+GmU9uEDaDrAjnF2PtCRtnQJ7nj017va/XkU=;
+        Tue, 19 Sep 2023 03:37:26 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3A0EFC;
+        Tue, 19 Sep 2023 00:37:20 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38D3BC433C8;
+        Tue, 19 Sep 2023 07:37:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1695109039;
+        bh=hw/PLJo9AvSjPNxvgMGEVejD6C36fUyBhR/MMoCVeHg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kKwISfgwXmbn1gUQGj4NP6Zq45Iw/o0RMKYXWtvlYaQHmFyj9QaO+waiUEo3TFNR+
-         pjQnf+bgwsX985INWTlKmv8jDoIrm0+SCK0RQgZ0xml3AoVX6pXKb4mfuFZPaR994Y
-         RJHk+lD4koPprUjkygu8sNaUYYxSxXPOYBPz5O0A=
-Date:   Tue, 19 Sep 2023 09:02:49 +0200
-From:   Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-To:     Justin Stitt <justinstitt@google.com>
-Cc:     Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        b=k5fvtEl9ChBlrZltiFvYSvVqhoV5N98VV0GUTqYhl+AvKTkhh9KoDS08YDijtbFRo
+         R7klitQxOPsdjFS3p7TDe+AuRrQDBYCb2bjnGzqQcRqtnZVF1JorofaSBXPGXW0/Fx
+         wG7+KT858xTqrOWxUTPJxozZRehPW+XZHoLC10WY+nGVrMePO6gMWSjK33UuuXFOdy
+         7DsVD2ijZqFZcUztIvCkUM/a71HrKdTUjqKv7TBpJoho6Usgx2kUh9KlN76/Nbsz1S
+         vB40mIhP75HgoRahA4G++ii8Bg5XgRRvln6WOUfn6nU4XmjSviq+yqIuYOJ+/ACTBP
+         CJhv9SdytzvyA==
+Date:   Tue, 19 Sep 2023 10:37:15 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Parav Pandit <parav@mellanox.com>,
+        Jack Morgenstein <jackm@mellanox.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] hwmon: refactor deprecated strncpy
-Message-ID: <987d843b-d451-4f85-85b2-00ec18c75cca@t-8ch.de>
-References: <20230919-strncpy-drivers-hwmon-acpi_power_meter-c-v2-1-8348432d6442@google.com>
+Subject: Re: [PATCH v3][next] RDMA/core: Use size_{add,sub,mul}() in calls to
+ struct_size()
+Message-ID: <20230919073715.GC4494@unreal>
+References: <ZQdt4NsJFwwOYxUR@work>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230919-strncpy-drivers-hwmon-acpi_power_meter-c-v2-1-8348432d6442@google.com>
+In-Reply-To: <ZQdt4NsJFwwOYxUR@work>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 2023-09-19 05:07:55+0000, Justin Stitt wrote:
-> `strncpy` is deprecated for use on NUL-terminated destination strings [1].
-> 
-> A trailing zero is already handled by the kcalloc
-> |	*str = kcalloc(element->string.length + 1, sizeof(u8), GFP_KERNEL);
-> ... which makes memcpy() a suitable replacement to strncpy.
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
-> Changes in v2:
-> - use memcpy over strscpy (thanks Kees)
-> - Link to v1: https://lore.kernel.org/r/20230914-strncpy-drivers-hwmon-acpi_power_meter-c-v1-1-905297479fe8@google.com
-> ---
->  drivers/hwmon/acpi_power_meter.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/hwmon/acpi_power_meter.c b/drivers/hwmon/acpi_power_meter.c
-> index fa28d447f0df..82e99aec4a33 100644
-> --- a/drivers/hwmon/acpi_power_meter.c
-> +++ b/drivers/hwmon/acpi_power_meter.c
-> @@ -803,7 +803,7 @@ static int read_capabilities(struct acpi_power_meter_resource *resource)
->  			goto error;
->  		}
->  
-> -		strncpy(*str, element->string.pointer, element->string.length);
-> +		memcpy(*str, element->string.pointer, element->string.length);
+On Sun, Sep 17, 2023 at 03:21:36PM -0600, Gustavo A. R. Silva wrote:
+> If, for any reason, the open-coded arithmetic causes a wraparound,
 
-Isn't this now essentially the same as kmemdup_nul()?
+The thing is that it doesn't.
 
->  		str++;
->  	}
->  
+> the protection that `struct_size()` provides against potential integer
+> overflows is defeated. Fix this by hardening calls to `struct_size()`
+> with `size_add()`, `size_sub()` and `size_mul()`.
 > 
+> Fixes: 467f432a521a ("RDMA/core: Split port and device counter sysfs attributes")
+> Fixes: a4676388e2e2 ("RDMA/core: Simplify how the gid_attrs sysfs is created")
+> Fixes: e9dd5daf884c ("IB/umad: Refactor code to use cdev_device_add()")
+> Fixes: 324e227ea7c9 ("RDMA/device: Add ib_device_get_by_netdev()")
+> Fixes: 5aad26a7eac5 ("IB/core: Use struct_size() in kzalloc()")
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > ---
-> base-commit: 3669558bdf354cd352be955ef2764cde6a9bf5ec
-> change-id: 20230914-strncpy-drivers-hwmon-acpi_power_meter-c-c9f2d8053bef
-> 
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
-> 
+> Changes in v3:
+>  - Include changes to other files in drivers/infiniband/core/
+>  - Update changelog text with a more descriptive argument for the
+>    changes.
+>  - Add more `Fixes:` tags.
+
+I don't think that any of these Fixes are necessary, as nothing wrong
+in the code you changed.
+
+Thanks
