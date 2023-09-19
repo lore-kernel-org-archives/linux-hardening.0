@@ -2,72 +2,70 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB99CD343B
-	for <linux-hardening@archiver.kernel.org>; Tue, 19 Sep 2023 05:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1EEECD343C
+	for <linux-hardening@archiver.kernel.org>; Tue, 19 Sep 2023 05:27:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229960AbjISFXF (ORCPT
+        id S230467AbjISF17 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 19 Sep 2023 01:23:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57700 "EHLO
+        Tue, 19 Sep 2023 01:27:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230371AbjISFXE (ORCPT
+        with ESMTP id S229960AbjISF15 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 19 Sep 2023 01:23:04 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18E85FC
-        for <linux-hardening@vger.kernel.org>; Mon, 18 Sep 2023 22:22:58 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-59c240e637aso40058427b3.3
-        for <linux-hardening@vger.kernel.org>; Mon, 18 Sep 2023 22:22:58 -0700 (PDT)
+        Tue, 19 Sep 2023 01:27:57 -0400
+Received: from mail-oa1-x4a.google.com (mail-oa1-x4a.google.com [IPv6:2001:4860:4864:20::4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23B5610E
+        for <linux-hardening@vger.kernel.org>; Mon, 18 Sep 2023 22:27:52 -0700 (PDT)
+Received: by mail-oa1-x4a.google.com with SMTP id 586e51a60fabf-1b728bfb372so8758515fac.2
+        for <linux-hardening@vger.kernel.org>; Mon, 18 Sep 2023 22:27:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1695100977; x=1695705777; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1695101271; x=1695706071; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=oNNrBnYfOYV0KaxSsoYAY7HFcM1nxRdVcxEdAxuQSek=;
-        b=X+qwkmjrE/m6Y3db1xSgyl7S3kPbEGcalxftA7fkNKww/+j3oG2nC+qCVDMT6/mseQ
-         Wi6AhHSmeLIMc7GR9I4i2vlQAXVIksyrOvifL5k+byDfZcshn2JyFVtBTXdRy48tEyJm
-         HpS/om+iLyrB18/P3Gwhpj3FZhNipILnVPUu/mkVvP5hOxdMuZJIRlYt7uC45Pf9AKtN
-         zXHd64CMMOlzHC9kUzeupQCAeZDi2Cqqa5uN0Uy5ZH50Jgu8LNlXXcFVSAuHqgJOiNRe
-         ZuD0NXROCCVTiXMWmaZ5+tbUuJJxrdtnfzWX7FGV7pSMM+PWpQgzaN3Ea2rgi026lxA1
-         930w==
+        bh=fLBIayzA2t/uL9eztp+Xlm1iGqaTM0uD/xEsY5Jfenk=;
+        b=Jf5i8a8Dx0Tli6Gwz+CG1YZxBeckVR0mOyf5pzrHj8j/8+WXVuBiIfNRdr36Wvhlkm
+         N3q0BiEKUmQLMa2JJxCqHMhytzWLgtlWSO42dppOO1+4dpnMTrYCtVBIofSeTaj0VYIM
+         w/OIE8Jygl6IWAJPjY23FcJSWV/U9r4qieP8Fh2+QAG3bYTTkH9G5YAYc+Atcd56Jxlq
+         JBjl1WP6mwp7DoaKir8OiliSGgRx+mMRvGbfvpgDqU8P+1vH8r+x2DPBBbb/MoBu6rPA
+         Diu2F5zNlSDVWdHYXTIVjdjA1vRPycewP0e4Nm7+UTW5TPqlnv2w1+glf1H8bJCQPy6s
+         t/GQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695100977; x=1695705777;
+        d=1e100.net; s=20230601; t=1695101271; x=1695706071;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=oNNrBnYfOYV0KaxSsoYAY7HFcM1nxRdVcxEdAxuQSek=;
-        b=SoOA0wP+D/AP1JnLWBAot7Eq3x4fJ3cIHeCIfd7aZ4SSK9YNBdX6MxjkAK0Nn2nZDu
-         VkDydlerkv4HF7anf/MI+CA3B1bQjbGmRmB2ZHQXoNRS8WuQ6h5DVqrZW/oZUMu/JOYe
-         r2Qy1H2CTvkfXnRb9ITAEwN+8IF7GLBUhMmEVkK4yR0GwP5YcTONVAnHDtS9eln0M6dI
-         f6rl3a+aw4DZp7pNya1pv8ZeVHrbUpw7rMRu1edOUID81OiClOgartSqDKbzKHF2mocs
-         UTIUcE848anD/M0qt3px1q5f3qfK2TXcPMZitd2RyUF7rJcJVykqnP+f93gjEBCR+W3F
-         hIDA==
-X-Gm-Message-State: AOJu0YwHQztrQ+TyrNCPN12ja+8okkDcfzZNoQyIR/yVRj8oVIsAidfK
-        cVNUKPlaomPbQ+/NQgiaV954n0DI1JVHVEHNjg==
-X-Google-Smtp-Source: AGHT+IG9VOZ8zzSUvNNcCsXcq/7ZmSP6vcfwDpombAcNa9QU+2UY0m040xo/bdOp7q8pB9p79XxGurEYq/YEnQlOsw==
+        bh=fLBIayzA2t/uL9eztp+Xlm1iGqaTM0uD/xEsY5Jfenk=;
+        b=TzGveOzfQFOpwE/MLTgCNMThWa8fn6rHh4YghkIVVj4pwvkQahvZkpKu03BuILrY7J
+         De1rIA6sLeRSxunI5CwxAFvpQMpIvw8dSaqgcLIe+pqwmFyv06AKtYiWC5D85ww8HVh1
+         6eYA/JCKqsrAvwYyaz2axqdIzengMcP8m3pV5zYgLblrnoOpiu+53DO+q/bVVfxO956a
+         fF+dtf1nkli4fWbPhypJYC0XeKfDQqy6ZrWlowbW+mChvIBRIeQY7pk2AJ0C+lCCE4fS
+         8PkJ5Yiy3eTMGiAmU4gEGrDSmNsUUtEnqvqB755mZG2tRQqL6XtTxeyP80Jehkygp5AA
+         kP/Q==
+X-Gm-Message-State: AOJu0Yw0dqfZAIo0eGUWyVYlUM1FYsxYZ51Ijsj4DNnAC9cKoiCS3qpC
+        4+giY5S69COQTxxLhgTSvZBU3zIyVXcGXQf+Jg==
+X-Google-Smtp-Source: AGHT+IH6FpsfoY3LuGAbwkojpyhbI3p0GHH+ej7UU/GDy6SV4M5mdYIoFu6DkhWFv8/jaKo1TCVzKirWO0cB9kmxqQ==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a25:cbc3:0:b0:d07:7001:495b with SMTP
- id b186-20020a25cbc3000000b00d077001495bmr246617ybg.11.1695100977385; Mon, 18
- Sep 2023 22:22:57 -0700 (PDT)
-Date:   Tue, 19 Sep 2023 05:22:51 +0000
+ (user=justinstitt job=sendgmr) by 2002:a05:6870:9575:b0:1d1:3ff8:9f80 with
+ SMTP id v53-20020a056870957500b001d13ff89f80mr4312600oal.8.1695101271550;
+ Mon, 18 Sep 2023 22:27:51 -0700 (PDT)
+Date:   Tue, 19 Sep 2023 05:27:45 +0000
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIACowCWUC/5WNQQ6DIBAAv2I4dxtAY7Un/9F4QFx1kwpmMVhj/
- HupP+hx5jBziIBMGMQzOwRjpEDeJdC3TNjJuBGB+sRCS53LWhUQVnZ22aFnisgBpm32DqibF78
- huwgWKmlkPqiyr3MjUmhhHOhzTV5t4onC6nm/nlH97F/5qEBBZ8ruMRTa1pVtRu/HN96tn0V7n ucXgTQnLdUAAAA=
+X-B4-Tracking: v=1; b=H4sIAFAxCWUC/5WNQQ6CMBBFr0K6dkxbEIMr72FYQDvARGzJtGkkh
+ LtbuIGLv3h/8d4mAjJhEI9iE4yJAnmXQV8KYabOjQhkMwstdSkbpSBEdmZZwTIl5AD97M0bOo/
+ HHEYwIHVlse9sreRNZNHCOND3jLzazBOF6Hk9m0kd71/6pEBBU1dlDpT3YWieo/fjjFfjP6Ld9 /0HIat21tUAAAA=
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1695100976; l=1508;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1695101270; l=1984;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=OAz/JRiRID2OTRUyttHDX/ZpXIkZrNearv6uLWj/7bU=; b=x26VBNt6hCJK6tE9iCypOq5ZUv1fkpkRwGDtfS8IE17RETDDR0O83LqmzEj+caTfyJBrLb4x5
- WBI5kzz6P7aCpbLgI0Es1r5kYhqhQdKrtYkMYnrEgathKQdL8i+TK6m
+ bh=ZndI1+kSvT/7BAM/nwag5C32Mjt5X/Kd4DJZMaoDm0g=; b=dM86F3nCqYDe2T1msZGhGTmrC9w3vUBE6ZHr8wc0bQG7jDB3HysLi73A5xGbYEIqQopS13Kzo
+ uot33iH+WZsBGL/ZHL7MXAOYhi7cq689F5nLZ3HtUR0dJROXMV+mlET
 X-Mailer: b4 0.12.3
-Message-ID: <20230919-strncpy-drivers-hwmon-ibmpowernv-c-v2-1-37d3e64172bc@google.com>
-Subject: [PATCH v2] hwmon: (ibmpowernv) refactor deprecated strncpy
+Message-ID: <20230919-strncpy-drivers-block-aoe-aoenet-c-v2-1-3d5d158410e9@google.com>
+Subject: [PATCH v2] aoe: replace strncpy with strscpy
 From:   Justin Stitt <justinstitt@google.com>
-To:     Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     linux-hwmon@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+To:     Justin Sanders <justin@coraid.com>, Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Xu Panda <xu.panda@zte.com.cn>,
+        Yang Yang <yang.yang29@zte.com>,
         Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -76,41 +74,55 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 `strncpy` is deprecated for use on NUL-terminated destination strings [1].
 
-A suitable replacement is `memcpy` as we've already precisely calculated
-the number of bytes to copy while `buf` has been explicitly
-zero-initialized:
-| 	char buf[8] = { 0 };
+`aoe_iflist` is expected to be NUL-terminated which is evident by its
+use with string apis later on like `strspn`:
+| 	p = aoe_iflist + strspn(aoe_iflist, WHITESPACE);
+
+It also seems `aoe_iflist` does not need to be NUL-padded which means
+`strscpy` [2] is a suitable replacement due to the fact that it
+guarantees NUL-termination on the destination buffer while not
+unnecessarily NUL-padding.
 
 Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
 Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
 Link: https://github.com/KSPP/linux/issues/90
 Cc: linux-hardening@vger.kernel.org
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Xu Panda <xu.panda@zte.com.cn>
+Cc: Yang Yang <yang.yang29@zte.com>
 Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
 Changes in v2:
-- prefer memcpy to strscpy (thanks Kees)
-- Link to v1: https://lore.kernel.org/r/20230914-strncpy-drivers-hwmon-ibmpowernv-c-v1-1-ba6b7f42c98c@google.com
+- reword subject line (thanks Jens)
+- rebase onto 3669558bdf35
+- Link to v1: https://lore.kernel.org/r/20230911-strncpy-drivers-block-aoe-aoenet-c-v1-1-9643d6137ff9@google.com
 ---
- drivers/hwmon/ibmpowernv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Note: This exact same patch exists [3] but seemed to die so I'm
+resending.
 
-diff --git a/drivers/hwmon/ibmpowernv.c b/drivers/hwmon/ibmpowernv.c
-index 594254d6a72d..70ca833259ab 100644
---- a/drivers/hwmon/ibmpowernv.c
-+++ b/drivers/hwmon/ibmpowernv.c
-@@ -234,7 +234,7 @@ static int get_sensor_index_attr(const char *name, u32 *index, char *attr)
- 	if (copy_len >= sizeof(buf))
- 		return -EINVAL;
+[3]: https://lore.kernel.org/all/202212051930256039214@zte.com.cn/
+---
+ drivers/block/aoe/aoenet.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/block/aoe/aoenet.c b/drivers/block/aoe/aoenet.c
+index 63773a90581d..c51ea95bc2ce 100644
+--- a/drivers/block/aoe/aoenet.c
++++ b/drivers/block/aoe/aoenet.c
+@@ -39,8 +39,7 @@ static struct ktstate kts;
+ #ifndef MODULE
+ static int __init aoe_iflist_setup(char *str)
+ {
+-	strncpy(aoe_iflist, str, IFLISTSZ);
+-	aoe_iflist[IFLISTSZ - 1] = '\0';
++	strscpy(aoe_iflist, str, IFLISTSZ);
+ 	return 1;
+ }
  
--	strncpy(buf, hash_pos + 1, copy_len);
-+	memcpy(buf, hash_pos + 1, copy_len);
- 
- 	err = kstrtou32(buf, 10, index);
- 	if (err)
 
 ---
 base-commit: 3669558bdf354cd352be955ef2764cde6a9bf5ec
-change-id: 20230914-strncpy-drivers-hwmon-ibmpowernv-c-80a03f16d93a
+change-id: 20230911-strncpy-drivers-block-aoe-aoenet-c-024debad6105
 
 Best regards,
 --
