@@ -2,129 +2,95 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 164B1C00E86
-	for <linux-hardening@archiver.kernel.org>; Wed, 20 Sep 2023 15:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD09C00523
+	for <linux-hardening@archiver.kernel.org>; Wed, 20 Sep 2023 15:23:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236532AbjITPVh (ORCPT
+        id S235375AbjITPX0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 20 Sep 2023 11:21:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33164 "EHLO
+        Wed, 20 Sep 2023 11:23:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235437AbjITPV3 (ORCPT
+        with ESMTP id S235077AbjITPXY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 20 Sep 2023 11:21:29 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 422E4F3
-        for <linux-hardening@vger.kernel.org>; Wed, 20 Sep 2023 08:21:23 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-690b8859c46so2467681b3a.3
-        for <linux-hardening@vger.kernel.org>; Wed, 20 Sep 2023 08:21:23 -0700 (PDT)
+        Wed, 20 Sep 2023 11:23:24 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB076CE
+        for <linux-hardening@vger.kernel.org>; Wed, 20 Sep 2023 08:23:17 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-1c46b30a1ceso34759525ad.3
+        for <linux-hardening@vger.kernel.org>; Wed, 20 Sep 2023 08:23:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695223283; x=1695828083; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1695223397; x=1695828197; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nj0Up56e4jhyRDntXlBwHRnq4btg0+rUisOZhPGaioQ=;
-        b=eVq/TQgqDWMwpKTtSeeBiYrtFXHOxoHP9JubB1pnvBM2OgptkcusNt/OnWIN/VTAua
-         MSY7Cg3/G1rQ5KMGxeNPIlEXyZgHIpUS67A4QJ04hP0rrcNq4k8vKdF8eTLOoSIhtY3F
-         5x65Z3FyQj7WRTTmgcrOmXCIp6GQsEcxOBOOA=
+        bh=TkhkA2wta3b3NnYgpjyzB6TnKV7qIEnsiYZxlZsQF+0=;
+        b=MBdva0ezy4aH5hxL1+DeYTAUe3ISol840sUrBUofMMQKIdLvYFAC5Un/VEDjht7Si+
+         zJvRYYRG/9XGGGO36A78OwUoHuUHiYuuEi/7PuVznt0Kxw6bmEdcEPpElwwkG0M5gq7w
+         f3I+ry/f75MNL8IuoHJnNta5pU420+/ZZdP7U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695223283; x=1695828083;
+        d=1e100.net; s=20230601; t=1695223397; x=1695828197;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nj0Up56e4jhyRDntXlBwHRnq4btg0+rUisOZhPGaioQ=;
-        b=fQYmOIaVWmlOmJT4eOvm3kkoo9vBJesEyWuseTeyO7454CwWlOQJRkJM6vzXGpv89w
-         r9LxcTVvXaCJkEOSMQFO6GaMbg3tT4bRYCAU8cbnztDswqTBmosGa/XYZ155DSAI3VWO
-         QuahZGujMvmeMXRfRCatgQGrpcRuh6a4Q9MDuo4FDFJnw0UlDiV5XzGqbIQ93itTPA5w
-         Q4amK3FwtKxHGGhmcN3cNw3Br9Q6qzeN3Z/Fg5Ygioa5Tr1VpTWm3Yt0VHOddkgUo3Pt
-         AnLGU0ttjbofN35hM1s3Lh7ZejYLDFCwWuy1kd4XdvjdLCXOXWAIk2XtXWni+jj3MexL
-         rY0Q==
-X-Gm-Message-State: AOJu0Yz8TYIZ9OW/uV7npk67FbemFaFi6H6D8jpuChWg1J68DNJLigp6
-        w99AgcpUZDZVLtg0Kr21LmbUAg==
-X-Google-Smtp-Source: AGHT+IFPYnfY4ZnT4mS9lyLDNarWzh8z6aSCWPIWyTeIFEaiQYdFrwRvYO2C7rT3RNjJEk08REBh2Q==
-X-Received: by 2002:a05:6300:8002:b0:157:877a:5f5e with SMTP id an2-20020a056300800200b00157877a5f5emr2137943pzc.61.1695223282582;
-        Wed, 20 Sep 2023 08:21:22 -0700 (PDT)
+        bh=TkhkA2wta3b3NnYgpjyzB6TnKV7qIEnsiYZxlZsQF+0=;
+        b=AS/+MXnsQ2+Sg327z/E+ck3yqw1Onc5mtq17yZ5MsbwNs9rWyVI2KZ4AzvUNFqGhPG
+         cIZFwG2JHeZDrq+oZ1tYtMpDebEwErE2X0B83vCP0wzwsLGXB2BZEjnL5HqPQEHMobxe
+         5LkVo3ceFAUmOlzAffof7bb0XllVqg1Dv8wzfg16o7Yq7nJDFK3GBYQCyp70EVao6apM
+         RBH8dqbJWhFhO/NO7e56r4l8nlwwodPDnLzc+BAl/HFHsigGAmQiUkP8d1KrP14ZkDeg
+         INVqUF1etIvhV3cj0GXSRn7uRazsxPDlSnvXhyZfmsDPVkAnOh02I4vx22FddI/1cdra
+         bQAg==
+X-Gm-Message-State: AOJu0Yx7EuWVkxv2RSSdKwgx3uol+FQCCwxmunUkotks/IH7nALm/XyN
+        WRo/IiH+j2IfZIfn9195b012BA==
+X-Google-Smtp-Source: AGHT+IFkoVeBrAYW9kDPx/eSuBBIV9Z60OhCxMdcWJPZ8x/3m5ZPdDQ6YrHAXpAAtVgrL1if+0Xfnw==
+X-Received: by 2002:a17:902:ea04:b0:1bf:4a1f:2b57 with SMTP id s4-20020a170902ea0400b001bf4a1f2b57mr3039215plg.13.1695223397249;
+        Wed, 20 Sep 2023 08:23:17 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id s22-20020aa78d56000000b0068fc48fcaa8sm10279190pfe.155.2023.09.20.08.21.21
+        by smtp.gmail.com with ESMTPSA id iz17-20020a170902ef9100b001bbf7fd354csm998170plb.213.2023.09.20.08.23.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Sep 2023 08:21:21 -0700 (PDT)
-Date:   Wed, 20 Sep 2023 08:21:21 -0700
+        Wed, 20 Sep 2023 08:23:16 -0700 (PDT)
+Date:   Wed, 20 Sep 2023 08:23:16 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Kent Overstreet <kent.overstreet@linux.dev>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: Re: linux-next: Tree for Sep 12 (bcachefs)
-Message-ID: <202309200813.C46E52F4@keescook>
-References: <20230912152645.0868a96a@canb.auug.org.au>
- <202309131803.6A3C1D05A@keescook>
- <20230914193807.ozcmylp6n6dsqkbi@moria.home.lan>
- <202309141708.C8B61D4D@keescook>
- <20230919212318.6kr772hz3m5dsyck@moria.home.lan>
+To:     Justin Stitt <justinstitt@google.com>
+Cc:     Bence =?iso-8859-1?B?Q3Pza+Fz?= <bence98@sch.bme.hu>,
+        Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] i2c: cp2615: replace deprecated strncpy with strscpy
+Message-ID: <202309200822.67A5B4B61@keescook>
+References: <20230920-strncpy-drivers-i2c-busses-i2c-cp2615-c-v1-1-11406a996794@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230919212318.6kr772hz3m5dsyck@moria.home.lan>
+In-Reply-To: <20230920-strncpy-drivers-i2c-busses-i2c-cp2615-c-v1-1-11406a996794@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Sep 19, 2023 at 05:23:18PM -0400, Kent Overstreet wrote:
-> On Thu, Sep 14, 2023 at 05:20:41PM -0700, Kees Cook wrote:
-> > Because they're ambiguous and then the compiler can't do appropriate
-> > bounds checking, compile-time diagnostics, etc. Maybe it's actually zero
-> > sized, maybe it's not. Nothing stops them from being in the middle of
-> > the structure so if someone accidentally tries to put members after it
-> > (which has happened before), we end up with bizarre corruptions, etc,
-> > etc. Flexible arrays are unambiguous, and that's why we committed to
-> > converting all the fake flex arrays. The compiler does not have to guess
-> > (or as has been the case: give up on) figuring out what was intended.
+On Wed, Sep 20, 2023 at 08:08:52AM +0000, Justin Stitt wrote:
+> `strncpy` is deprecated for use on NUL-terminated destination strings [1].
 > 
-> So it does seem like we need to be able to distinguish between normal
-> flex arrays that go at the end of a struct vs. - what should we call
-> them, markers? that go in the middle.
-
-As long as markers are just treated as address offsets in an struct, I
-don't see a problem with them being 0-length arrays. I personally find
-them confusing since whatever follows the marker is usually what I'm
-trying to address, so the marker serves no purpose.
-
-In the case of finding the offset to a subset of struct members, we
-moved all of those in the kernel to using struct_group() instead. But
-again, this was just for removing ambiguity for the compiler's ability
-to enforce bounds checking (in this case on the memcpy()-family of
-functions).
-
+> We should prefer more robust and less ambiguous string interfaces.
 > 
-> > Regardless, I'm just trying to help make sure folks that run with
-> > CONFIG_UBSAN_BOUNDS=y (as done in Android, Ubuntu, etc) will be able to
-> > use bcachefs without runtime warnings, etc. Indexing through a 0-sized
-> > array is going to trip the diagnostic either at runtime or when building
-> > with -Warray-bounds.
+> We expect name to be NUL-terminated based on its numerous uses with
+> functions that expect NUL-terminated strings.
 > 
-> I do have CONFIG_UBSAN_BOUNDS=y testing in my own CI, so all the runtime
-> errors should be fixed now (some of them with casts, but the casts are
-> in helpers that know what they're doing, not scattered around at
-> random).
-
-Great! Thank you for chasing them all down. If you also have
-CONFIG_FORTIFY_SOURCE=y then that should also be checking all the
-strcpy()/memcpy() families too. The only thing that may be a problem in
-the future is our effort to enable -Warray-bounds at build time. GCC
-still has one false positive[1] remaining, but once that's fixed
-(hopefully for GCC 14) the rest of the kernel is (was?) warning-free
-(in our local testing where CONFIG_CC_NO_ARRAY_BOUNDS has been disabled).
-
+> For example in i2c-core-base.c +1533:
+> | dev_dbg(&adap->dev, "adapter [%s] registered\n", adap->name);
 > 
-> So I think we're good for now - I'm going to hold off on more cleanup
-> for now unless reports of actual ubsan splats turn up, since I'm getting
-> a bit bombarded at the moment :)
+> NUL-padding is not required as `adap` is already zero-alloacted with:
+> | adap = devm_kzalloc(&usbif->dev, sizeof(struct i2c_adapter), GFP_KERNEL);
+> 
+> With the above in mind, a suitable replacement is `strscpy` [2] due to
+> the fact that it guarantees NUL-termination on the destination buffer
+> without unnecessarily NUL-padding.
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-Understood! :)
+Thanks for the clear commit log! Looks good to me.
 
--Kees
-
-[1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=109071
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -- 
 Kees Cook
