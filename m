@@ -1,139 +1,196 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBB4C41A9B
-	for <linux-hardening@vger.kernel.org>; Wed, 20 Sep 2023 20:25:18 +0000 (UTC)
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 298CCAB
-	for <linux-hardening@vger.kernel.org>; Wed, 20 Sep 2023 13:25:16 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-1c328b53aeaso1560005ad.2
-        for <linux-hardening@vger.kernel.org>; Wed, 20 Sep 2023 13:25:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695241515; x=1695846315; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=HLsolMbfTcky/mq0N2Sjy3jKMIZ0cn6Kt8D7kr3ZLbA=;
-        b=idg9mn+pOz1RB/T+DWxbU9bLb2yBZCtQZxGRJ1Cw2wgSnhbr2N7FHauU1DCHoSI2wL
-         sp5tC5uAkPUdo0qbN0uC9hvwI7NhQp7qyuF3nA6LLOn3yko5ABoBw1mM1BD/yBtMb2Bs
-         B/+V8t20M/fxY6Q6s1BjXDZx7NQjZe6xD161Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695241515; x=1695846315;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HLsolMbfTcky/mq0N2Sjy3jKMIZ0cn6Kt8D7kr3ZLbA=;
-        b=ulqxErHj/pHUMi4oPtVkwnzSLDlVst/NVh8YslZebHUt/P9dydflMCZQAkuLtg6w4M
-         z/lAUX7WWN3R+YWigRz46f04dlMAXuHZrABB/b57BDxyjV6gUjmWBi+r/dQdLPU0Rmq8
-         7NkbCvfTx4hFt+MPRvXgDgGMJUq+xLxRTDFnrP7CHX575MGz1p1dGD3iqA779hipbR/P
-         eysnE9rmMMbtbStWLIfHVY82up7CWP6STfO74gH1D7eFpDYGXbwgIpyegH92wWIff26e
-         H2t8p7MRSlf4aI/z8A82Zmkl7LB8xoUFSxc2YbWBvmEAcDUfe/UtF+SI8bDODzjJZQDO
-         6hHA==
-X-Gm-Message-State: AOJu0Yz5VPKf6p5KqRlvclgqaTMEUAu+IsBDVI8DMi4bfMYje8dtXbR9
-	Dv0OnT2EVGO4i3TYugQmfulr2w==
-X-Google-Smtp-Source: AGHT+IFVHKDUobBqcyI0UFeJiGt0IUFOy3z689StXms06Ozhtc0Cb2cP58rRolqky6OedGm55dlwgw==
-X-Received: by 2002:a17:902:e5cc:b0:1b9:e241:ad26 with SMTP id u12-20020a170902e5cc00b001b9e241ad26mr4977033plf.9.1695241515558;
-        Wed, 20 Sep 2023 13:25:15 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id v7-20020a1709029a0700b001bdeedd8579sm12158496plp.252.2023.09.20.13.25.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Sep 2023 13:25:15 -0700 (PDT)
-From: Kees Cook <keescook@chromium.org>
-To: Mirko Lindner <mlindner@marvell.com>
-Cc: Kees Cook <keescook@chromium.org>,
-	Stephen Hemminger <stephen@networkplumber.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org,
-	kernel test robot <lkp@intel.com>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] sky2: Make sure there is at least one frag_addr available
-Date: Wed, 20 Sep 2023 13:25:13 -0700
-Message-Id: <20230920202509.never.299-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C763D1A58F
+	for <linux-hardening@vger.kernel.org>; Wed, 20 Sep 2023 21:09:44 +0000 (UTC)
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A65B8B9;
+	Wed, 20 Sep 2023 14:09:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1695244182; x=1726780182;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=/OLf6yVcUQv1IBXzI1oglS9PMmE7XdbBrH0xNUQIKvY=;
+  b=CIEe39ivbE+AVrF4QQ5gMOX7BALFBVfsYrhX0HoAOsqDKAR1h/23U1va
+   mtaVGbI3RIxtKNq0i6rLTDbMYJsjiyi/lA+Ocr0co65VR54iBhfkWV8Jr
+   m9NxgEbuflcVzBRslrza955CKHHcc38jRl1T+veqaC4T0rHTyOXShPaQS
+   RO/b84V4eGJnVVBt2XCwlGL+RgAKjBTNy3ZaBVA3rEntFZdgUWzQIK3k+
+   cLxju3hu3wxFPXi2c+eriXC4rlYkbu3Hxja6nok4gHF9yKwWtESgLKVPz
+   kMaPo4JhndMhzh/htStFftDs9B/zSkLp3fafw1pPSqD8J7ylpWQ7BeVWh
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10839"; a="411286739"
+X-IronPort-AV: E=Sophos;i="6.03,162,1694761200"; 
+   d="scan'208";a="411286739"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2023 13:54:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10839"; a="746792263"
+X-IronPort-AV: E=Sophos;i="6.03,162,1694761200"; 
+   d="scan'208";a="746792263"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by orsmga002.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 20 Sep 2023 13:54:53 -0700
+Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32; Wed, 20 Sep 2023 13:54:53 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32 via Frontend Transport; Wed, 20 Sep 2023 13:54:53 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.173)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.32; Wed, 20 Sep 2023 13:54:52 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=V/AWkzV+aZZQf+ffzwSdOveGbLaRfF58/PkWQxRUa9OufKKx8e5Yc4Tozl/8ScnZulzzNpifiLKNunYjMdjtOCakpZhT5T3hSbjlkbeOID13/kOjulsTV2NVjXGuNY8DpPlrQBu0rDMpLltnUVguBGMCFoSvO201ZiNb+wVzZyEXvrMHxsvQeveHAf2QqOiNB0PcGzL9/yPNCn4YOaqAZjV3hlPeL6xTxTwitfpMdwHSjasDDj6TgoCjcfASq2uwCjfoWNWE8NH2Yvq7d0ClXCOGLjKFtjiYYtCPPEtowMOqGSt6mSl6VR9kUCDzzTXD+StPykiLAqeU0tk685ooHw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WjgYLdlVs0MPJfq1xQeQr+NYMfouSIqU8dThORsWixE=;
+ b=OnjF+uRin38rIGf5ZUcWFzg3fe8VzJIpGxTLPvIPbn2dy0WWNWMrXW87Jukj7JwCiE7EcXWqz0tODLg8oOyuH+u5mfdR8TxS9v9firmQjliLrGnFiLA9Fiv7V4sWMwmkDZl+QZY2AjMn+XZYiI+N3DkZYfWsB3kvGKphh9O2EhaZw8vlxHIXgvTKZsaXS8kGDslRFjXVdKdCE2yiWpMGi5Gz0f8oSdqnxDVmYXgu4sNc/mPyl6eZy3GtzBcHAwD1uXar/PKHq03o5vc2FT0MxjzSPoAsL9IwH1vjcBMIdfEDCYjLclswCuTFc3BCOPbt738NN/9/PxjoonurlzOqgA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MN0PR11MB6059.namprd11.prod.outlook.com (2603:10b6:208:377::9)
+ by SN7PR11MB7491.namprd11.prod.outlook.com (2603:10b6:806:349::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.28; Wed, 20 Sep
+ 2023 20:54:51 +0000
+Received: from MN0PR11MB6059.namprd11.prod.outlook.com
+ ([fe80::6d0b:5bc6:8723:593]) by MN0PR11MB6059.namprd11.prod.outlook.com
+ ([fe80::6d0b:5bc6:8723:593%6]) with mapi id 15.20.6792.022; Wed, 20 Sep 2023
+ 20:54:50 +0000
+Date: Wed, 20 Sep 2023 16:54:45 -0400
+From: Rodrigo Vivi <rodrigo.vivi@intel.com>
+To: Justin Stitt <justinstitt@google.com>
+CC: Jani Nikula <jani.nikula@linux.intel.com>, Joonas Lahtinen
+	<joonas.lahtinen@linux.intel.com>, Tvrtko Ursulin
+	<tvrtko.ursulin@linux.intel.com>, David Airlie <airlied@gmail.com>, "Daniel
+ Vetter" <daniel@ffwll.ch>, <intel-gfx@lists.freedesktop.org>,
+	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+	<linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH v2] drm/i915: refactor deprecated strncpy
+Message-ID: <ZQtcFQuPkiO6aS3O@intel.com>
+References: <20230919-strncpy-drivers-gpu-drm-i915-gem-selftests-mock_context-c-v2-1-0b5778423bd7@google.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20230919-strncpy-drivers-gpu-drm-i915-gem-selftests-mock_context-c-v2-1-0b5778423bd7@google.com>
+X-ClientProxiedBy: SJ0PR03CA0120.namprd03.prod.outlook.com
+ (2603:10b6:a03:333::35) To MN0PR11MB6059.namprd11.prod.outlook.com
+ (2603:10b6:208:377::9)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2499; i=keescook@chromium.org;
- h=from:subject:message-id; bh=JtH8ia5EUsvZeslNPbo/pPdiDtP1l/CRreh41gNliXg=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlC1UoGsWV9fc6bHQBBJ+xGp+iDZyM6HX8oY2U/
- 7oUvq+Eav6JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQtVKAAKCRCJcvTf3G3A
- Ju/SEACudjOkVLTvJcBjQsP/GB0DAs//hFk1Mv5SsqVjgogKa7NqyjdUkhGjwraS7pnMoKSmMtY
- 1qi2Td/0KKg3cmzOZ2zPxkUjWETKIssoW/64DkYz+ekmrmc3kkg+WghfuQY0+aktxibzaFXs0aw
- XVBUVCBT94OGiTVkqdWtZQ3NXmiHgvHWC9uXl14uP/oQzJ5dzXz4dSDwx1F1pbHrR7C6f66Ynv2
- sILy3iI9t7TvCevoTMXwFu+cqa5KZbSDAIlTFn+M3cioJnoxQvpDqiKDaePd0XiWmg/qEedTGGH
- EJ+kxoPKwpkL1d3GWzeuNd0aHBjX+i/1f9XZMd1QSyQZIjvC0uzkGOg752KC8pZM/3FJqQlDRpS
- FP3CrKVbZ6JXuy2Hcb927WqGT1mJlToCFu+mU0A3ZVaUZj9+whX++YJ96OZV0iyhHV6T/Rt7FAP
- L1CAt/aT8tzMNZwe9aUnKJqwfyHUzLLE7kcfBSQLQeYzT5GfnBI722wQ8VDtXgrMPcMRwMtN2lJ
- FTYYUITeBItngwczBOaYkEHvvDODeOuMVybmSCP9sMz4FXsGE9beFINqzgfNh/3atKbW8oWdqdK
- 412f+GPtp4S7BmvYpBfUOt28dt4t1ALZqpjtOBL5vDcLEy7v/vXdX+kZwsOmuOqGh9i08WhLNh8
- ihyi2/f ePgf7i1Q==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR11MB6059:EE_|SN7PR11MB7491:EE_
+X-MS-Office365-Filtering-Correlation-Id: ba73884b-9608-47e8-1c45-08dbba1bd50b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 4aw1Jl0LWnXQhMYd5kwGtkzZYKYlD2Vfe7WHEVA5dpypHPoQUl2Ll+yBtFwZBRAtMPjCXgfIQWLm+Bd7CshmP39eCFeKxDfVK/KOXeCuxacz0HHv86QDPIAxOykE+qTZpzaxAwsrL6HEfi8cYpqh2XT1201SBUab6UrqrkGZM3PmOeEfe8Z+NH0w+fsaYp2z94osbdAEDOPh63mL645xm5Py1bHfu2g29N96uVJYaGCykDUxqF1hqRMjSUzRJwza0Q+WHZ9v1Rv1Oo6Fpk5FNj7JuybJdaTJISDZhZUkkBIjJ8wUNu7yQWP1Ktq130M+ii/jTLFeTZMKU3SG1bPOBeZ946Be94GVvFCZPzO0uHvtqb4Ys8od25dW0r+oFIxo2x+d7DnVF3zh2dSRHu5NLUPl6NIQISOZz8PrvVEYjs7fs/wutmkZvdoQOk4262WugTTVHmZbAIkM5vsuBo9LKGYN17B/QZV4gyHxDdpEBBZBdlAC8I0ZVV0sdEJwIeCL+Q9F1npW7D5DPOa5hA2BtLLRyaAbGxmammKNCodRUgO7Js/9ANX1+7IP73JxR6oFLKczbxXA9QGpYbI1Tugn63IY78nFsSwrOf6LoJLPilkKdiT0Wr25dC5c0v2Wc9vDx4eBgB/ut5Bg1XTwemtekA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB6059.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(376002)(39860400002)(366004)(396003)(346002)(186009)(1800799009)(451199024)(6486002)(6666004)(6506007)(82960400001)(36756003)(86362001)(38100700002)(2906002)(44832011)(26005)(8936002)(2616005)(8676002)(6512007)(478600001)(83380400001)(41300700001)(5660300002)(966005)(66556008)(4326008)(316002)(54906003)(7416002)(66946007)(6916009)(66476007)(156123004);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?5z0jZ7gI3FWlNBieUXjc4OmvSqfin59zpZndfhNcJ3/iplE0twvWoFT34qXk?=
+ =?us-ascii?Q?0SjHkgMcLOjZyYxy9lJVeGhZkGGoUoMj+GUi9OHomltKkU7Aw9lrraiTAOGZ?=
+ =?us-ascii?Q?dSy5PxqAciXFaAtVyAYbAz1bXWyO6la5PCwOPEyGMIa4G0KykhzFIBSsJr0g?=
+ =?us-ascii?Q?wDVvaicDwLEKwVPW6NegTEpcS0zIJqoLEECwciZrMWONkHRIaNgcmszRBTxW?=
+ =?us-ascii?Q?L/+BDWsND/QJOZxiVCTNE+Y9c/h9CGgosr+H9FRey4pAaaU0W/z3kAl1N9o/?=
+ =?us-ascii?Q?0M0t3x85sMvuzwMt6ZmnB5FLMlJs6WfTfpJCxkhi2Yux9AMjNElLMAHU5sUU?=
+ =?us-ascii?Q?Fp7/YNdLrRvIfPN0eZyQdnKyUENHu7+K1E1i5Kus9wnpFa9iPKEFumn7txcB?=
+ =?us-ascii?Q?4JmgyIQ5XrMCupDF9LzSHiOu5uG+1oKOtpBWQEvUzyG3OqK6roqkK+Se+dVR?=
+ =?us-ascii?Q?FpUcy7goBv1vE7INcbJIJ08RdgNwGGoRQFZDolO1Q0wrwuSs7NG/gbdQWN4g?=
+ =?us-ascii?Q?WUpmkeHqlpfJU6VxhWqAJ7Mwz7ebiyZ9+Yae1mJo9h9DtkRSuwZGGZbZieux?=
+ =?us-ascii?Q?w8ftneVsJxs+/VwTsxTcV04hWG+aLVI8/EH0yRShGPpOpEuFhTt+lzbcvrtk?=
+ =?us-ascii?Q?tR7yqD4Cv1/Bid2oSAwbFoC8u6J/Nj3oFOoeLiL1+h1P2Z2nGnzYdubmaoex?=
+ =?us-ascii?Q?NU9te6l2SgmwhEepYOZJwpWbMif8bqUNjZPWjbUS4SOeWb8SF0nagRPcdYYb?=
+ =?us-ascii?Q?T/K6cRVm60GUC/YMaIxFmkK8HKQGcez6c2XgxfVu+NX9DKAh4sK27wMHIzrZ?=
+ =?us-ascii?Q?wMpGxl6hz3FrXf046lj9mmsxovcCKU4+x0dxdN2l0Ec8jFYon38RDxzSHOCs?=
+ =?us-ascii?Q?SRdyZXLxfhHTImChcogaap7m/0n9R6mTQlejZCZbrZJnlt3vnbKKoWSN5UO1?=
+ =?us-ascii?Q?bHb9hU3vX8hU2F45e0owdeyLu1PVsMoD5Z5YaDlnQyai1I3u7osgidywhXNw?=
+ =?us-ascii?Q?X1KgRnzdhs7KSJj+zbn+xOgwxCJmj6aqQKOUQtLx3REJVIvMQ0w0tKcrbLnB?=
+ =?us-ascii?Q?SPJA47rhQs4o+Q6zh5KWimzwZ7ilk8EyiphdFYBnkeqyNMijDuNlnDJFaomQ?=
+ =?us-ascii?Q?kVo4o/AJpMu1tenMKpyAoxVyEW2T90iYSJNpaTl9R7pqE7PVBIcTXB5+kg2O?=
+ =?us-ascii?Q?BxMcoMnDm3CXKlkNX0GBVsVqk4TVOknzSlsavIKF4tvrBSFj9WMZO6GzZBwf?=
+ =?us-ascii?Q?XMZylPDveEme+ui2B8nxtlkrdrKpfPi3BupouB12waZZ1n/jk8o25fjBJ+Gn?=
+ =?us-ascii?Q?SDZnYdJkeBXdpVyvuHAk0ISwtww3R3h3Rv1DcEfikrJSzDKL0GAcI9OD44VU?=
+ =?us-ascii?Q?4L5Wn+QaMLgWMx7dlmuauObSOHyVsV8rY/FTQNM9eGil7oUErD0N19Hx9z+E?=
+ =?us-ascii?Q?JpktTPKWQ/asMXE7aGC98NpWJRVKEEw8LW0efRnoMin53PqDCBgjWYVz4TMx?=
+ =?us-ascii?Q?dlwnsqk/I6TtpHvFrK7benzz8nImQcr0yVP1AGsdLlDyCHN9MQ8b1smCQbtD?=
+ =?us-ascii?Q?lCJAQCXMzGblJzwD5YqlsLryK/J5JUpK1iqH99hQX9JtjLqMWlAvxEBD7b0Q?=
+ =?us-ascii?Q?Tw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: ba73884b-9608-47e8-1c45-08dbba1bd50b
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB6059.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Sep 2023 20:54:50.6406
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gGl9zqIFsWnG1qNAXPonUfbdEttP+uuTy9BbKlpz2yKA+5Alo82W1H8RVrG1PmS743AOIW54lnw0w3nnskKWpg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB7491
+X-OriginatorOrg: intel.com
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.6
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-In the likely pathological case of building sky2 with 16k PAGE_SIZE,
-make sure there is at least 1 frag_addr in struct rx_ring_info:
+On Tue, Sep 19, 2023 at 04:45:31AM +0000, Justin Stitt wrote:
+> `strncpy` is deprecated for use on NUL-terminated destination strings [1].
+> 
+> We should prefer more robust and less ambiguous string interfaces.
+> 
+> A suitable replacement is `strscpy` [2] due to the fact that it
+> guarantees NUL-termination on the destination buffer without
+> unnecessarily NUL-padding. `ctx` is zero allocated and as such strncpy's
+> NUL-padding behavior was strictly a performance hit which is now
+> resolved.
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+> Changes in v2:
+> - drop the `... - 1` (thanks Kees)
+> - Link to v1: https://lore.kernel.org/r/20230914-strncpy-drivers-gpu-drm-i915-gem-selftests-mock_context-c-v1-1-c3f92df942e0@google.com
+> ---
 
-   In file included from include/linux/skbuff.h:28,
-                    from include/net/net_namespace.h:43,
-                    from include/linux/netdevice.h:38,
-                    from drivers/net/ethernet/marvell/sky2.c:18:
-   drivers/net/ethernet/marvell/sky2.c: In function 'sky2_rx_unmap_skb':
-   include/linux/dma-mapping.h:416:36: warning: array subscript i is outside array bounds of 'dma_addr_t[0]' {aka 'long long unsigned int[]'} [-Warray-bounds=]
-     416 | #define dma_unmap_page(d, a, s, r) dma_unmap_page_attrs(d, a, s, r, 0)
-         |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/net/ethernet/marvell/sky2.c:1257:17: note: in expansion of macro 'dma_unmap_page'
-    1257 |                 dma_unmap_page(&pdev->dev, re->frag_addr[i],
-         |                 ^~~~~~~~~~~~~~
-   In file included from drivers/net/ethernet/marvell/sky2.c:41:
-   drivers/net/ethernet/marvell/sky2.h:2198:25: note: while referencing 'frag_addr'
-    2198 |         dma_addr_t      frag_addr[ETH_JUMBO_MTU >> PAGE_SHIFT];
-         |                         ^~~~~~~~~
 
-With CONFIG_PAGE_SIZE_16KB=y, PAGE_SHIFT == 14, so:
+Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
 
-  #define ETH_JUMBO_MTU   9000
+and pushing it right now to drm-intel-gt-next
 
-causes "ETH_JUMBO_MTU >> PAGE_SHIFT" to be 0. Use "?: 1" to solve this build warning.
-
-Cc: Mirko Lindner <mlindner@marvell.com>
-Cc: Stephen Hemminger <stephen@networkplumber.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202309191958.UBw1cjXk-lkp@intel.com/
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/net/ethernet/marvell/sky2.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/marvell/sky2.h b/drivers/net/ethernet/marvell/sky2.h
-index ddec1627f1a7..8d0bacf4e49c 100644
---- a/drivers/net/ethernet/marvell/sky2.h
-+++ b/drivers/net/ethernet/marvell/sky2.h
-@@ -2195,7 +2195,7 @@ struct rx_ring_info {
- 	struct sk_buff	*skb;
- 	dma_addr_t	data_addr;
- 	DEFINE_DMA_UNMAP_LEN(data_size);
--	dma_addr_t	frag_addr[ETH_JUMBO_MTU >> PAGE_SHIFT];
-+	dma_addr_t	frag_addr[ETH_JUMBO_MTU >> PAGE_SHIFT ?: 1];
- };
- 
- enum flow_control {
--- 
-2.34.1
-
+>  drivers/gpu/drm/i915/gem/selftests/mock_context.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/i915/gem/selftests/mock_context.c b/drivers/gpu/drm/i915/gem/selftests/mock_context.c
+> index 8ac6726ec16b..e199d7dbb876 100644
+> --- a/drivers/gpu/drm/i915/gem/selftests/mock_context.c
+> +++ b/drivers/gpu/drm/i915/gem/selftests/mock_context.c
+> @@ -36,7 +36,7 @@ mock_context(struct drm_i915_private *i915,
+>  	if (name) {
+>  		struct i915_ppgtt *ppgtt;
+>  
+> -		strncpy(ctx->name, name, sizeof(ctx->name) - 1);
+> +		strscpy(ctx->name, name, sizeof(ctx->name));
+>  
+>  		ppgtt = mock_ppgtt(i915, name);
+>  		if (!ppgtt)
+> 
+> ---
+> base-commit: 3669558bdf354cd352be955ef2764cde6a9bf5ec
+> change-id: 20230914-strncpy-drivers-gpu-drm-i915-gem-selftests-mock_context-c-980c8ecc9142
+> 
+> Best regards,
+> --
+> Justin Stitt <justinstitt@google.com>
+> 
