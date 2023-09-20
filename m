@@ -2,119 +2,108 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FABCE79AB
-	for <linux-hardening@archiver.kernel.org>; Wed, 20 Sep 2023 08:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43AC1CE79AE
+	for <linux-hardening@archiver.kernel.org>; Wed, 20 Sep 2023 08:49:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233473AbjITIJF (ORCPT
+        id S231269AbjITIuA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 20 Sep 2023 04:09:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52334 "EHLO
+        Wed, 20 Sep 2023 04:50:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233641AbjITIJB (ORCPT
+        with ESMTP id S233853AbjITIt7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 20 Sep 2023 04:09:01 -0400
-Received: from mail-oa1-x49.google.com (mail-oa1-x49.google.com [IPv6:2001:4860:4864:20::49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E83B097
-        for <linux-hardening@vger.kernel.org>; Wed, 20 Sep 2023 01:08:54 -0700 (PDT)
-Received: by mail-oa1-x49.google.com with SMTP id 586e51a60fabf-1bf00f8cf77so10275174fac.0
-        for <linux-hardening@vger.kernel.org>; Wed, 20 Sep 2023 01:08:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1695197334; x=1695802134; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=REAWAikAYJXQC/q1dB6BWiV4dg8+qBHJA6pZo9MKtrQ=;
-        b=d4stG3mmwMKvayPoqNJywOfduTCqejfe/ff/r2PSb9wIzh5m3uYpvcOLm352qPmUbs
-         TA0voN4bBdkzl5U0ihgFuC3TGrC8ghqplRUA+PL5PXRX0rwUuyaXhHfs703Y7qW7oJOJ
-         K+H0pEhMVGdIRWLPDfOmhsQe9sr4DCZuJSXvCefYKTG/qatI9Rszfr43o0hbxHkypZ4s
-         UdE9pjtU31ax5EFJ5Qf00o//vh+vQKZvRUEYdoCYbkAhCE2DJbLnSI49aR59aA7yxz0i
-         oRAfugO+2HFEobV7eO6BA8k2mqZ0Pd6f8xIowXuKZRNDXH0q92NuIIRHBJ7FyFE6/VYc
-         GwzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695197334; x=1695802134;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=REAWAikAYJXQC/q1dB6BWiV4dg8+qBHJA6pZo9MKtrQ=;
-        b=OW0Yu7FuDWvbYzAmefOR06H2e+OPG6OhX5BRTqLON6HQCOR5v8Lj3v6zlMvYJRAS/E
-         AfPVueMNSpidcazSQkZa4mqVTXjyJKFhhIclIm2QED5mhvNyUgdChSlvSEl3L+aptaCW
-         N5GjWuAsbYPpMYALddc3qDBbEbjUetNnZlIBbhb/TSDRcEmIySCXB/ujhWV+8dmpx16t
-         LfR/KpD8iq7gCGqswRw5YOxgKLVWEYkinyXrgrup4pp2djvksLZPdXf7IgEfYv7+verc
-         eYDVUfW6LZyzMBrdskXnUDUgwRTA8uQmcR0jJqX0u50eISx3R/Xnt9CUoe1wNVC6XVT3
-         guag==
-X-Gm-Message-State: AOJu0Ywkm1yyWu1/HWU3XBxhARSbwzt6wL+von3UNIZAssHLeoTeEc4O
-        wqgIg+HSdkIFNqcJ8+Ti5qYpwsI6xydMyvC/Kg==
-X-Google-Smtp-Source: AGHT+IEprTy2S7DDywHlMknBrYSwbbE1mFZmKv4PQM+CHnVjbh7wziEtHIiWVjrM4IRkiEMalxvMkv2HUNQB8D7/PQ==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6870:76ae:b0:1d6:aa05:c733 with
- SMTP id dx46-20020a05687076ae00b001d6aa05c733mr683064oab.5.1695197334295;
- Wed, 20 Sep 2023 01:08:54 -0700 (PDT)
-Date:   Wed, 20 Sep 2023 08:08:52 +0000
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAJOoCmUC/yWNMQ7CMAwAv1J5xlJiVBB8BTEYxwUvIbKhAlX9O
- 1HZ7pa7BULdNOA8LOA6W9izdsm7AeTB9a5opTtQon06UcJ4eZX2xeI2qwcaCd7eEfpHaXTIIwo yF06TEvMxQ68118k+2+lyXdcfp11yS3kAAAA=
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1695197333; l=1890;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=peY/eB5hS5lFuPdGG7LKSdDML84Nket0C8FattpjfI8=; b=sgpIFQ7oSn1XZ9OMjko5WEhP6Q5ktCLe0KgZ/OEqR0rGjxM+3HnxdRCXnTgkCRJYoMtT4Lgoj
- TqIRI/KQxrPBTsdjEtbmnlrYumsTKSf/bIFwMnGkJPmXrDcEd5SfvOX
-X-Mailer: b4 0.12.3
-Message-ID: <20230920-strncpy-drivers-i2c-busses-i2c-cp2615-c-v1-1-11406a996794@google.com>
-Subject: [PATCH] i2c: cp2615: replace deprecated strncpy with strscpy
-From:   Justin Stitt <justinstitt@google.com>
-To:     "=?utf-8?q?Bence_Cs=C3=B3k=C3=A1s?=" <bence98@sch.bme.hu>,
-        Andi Shyti <andi.shyti@kernel.org>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+        Wed, 20 Sep 2023 04:49:59 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35D7BDC;
+        Wed, 20 Sep 2023 01:49:52 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 419801FE0A;
+        Wed, 20 Sep 2023 08:49:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1695199791; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HX5pPg3EIgB5tnraIeoBZTHS0SCTNA9W4l/mVV5w2no=;
+        b=LHVFHkXQ55/j0xSp+zPQLMOZ3OlKzq82cbMsy3h/grCDs2mXdcylirJP/DxG52b++qCDfG
+        fI5JcmZV4PWWa+4eARqDxPaBl37nm9P76+W/o166WPruHNXqO1Ah+UKqIJ4Ka41VbbsgLl
+        oq7pJ0qfkb0s2fwF4g5ljtQA0ePPK4s=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1695199791;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HX5pPg3EIgB5tnraIeoBZTHS0SCTNA9W4l/mVV5w2no=;
+        b=t468LGTetz8kGMyaGPGD279qVaYSRjdOcZU+YgTSUTf4EincTWPBRpxxEq7xwQqDQiYU2z
+        BdCfOFI9FPXSBZCw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id CF004132C7;
+        Wed, 20 Sep 2023 08:49:50 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id 4e28MS6yCmXeYAAAMHmgww
+        (envelope-from <vbabka@suse.cz>); Wed, 20 Sep 2023 08:49:50 +0000
+Message-ID: <40bc28e5-c971-055f-eff4-b9d67fe768cc@suse.cz>
+Date:   Wed, 20 Sep 2023 10:49:50 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [RFC PATCH 00/14] Prevent cross-cache attacks in the SLUB
+ allocator
+Content-Language: en-US
+To:     Matteo Rizzo <matteorizzo@google.com>,
+        "Lameter, Christopher" <cl@os.amperecomputing.com>
+Cc:     Dave Hansen <dave.hansen@intel.com>, penberg@kernel.org,
+        rientjes@google.com, iamjoonsoo.kim@lge.com,
+        akpm@linux-foundation.org, roman.gushchin@linux.dev,
+        42.hyeyoo@gmail.com, keescook@chromium.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-mm@kvack.org, linux-hardening@vger.kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        corbet@lwn.net, luto@kernel.org, peterz@infradead.org,
+        jannh@google.com, evn@google.com, poprdi@google.com,
+        jordyzomer@google.com, Mike Rapoport <rppt@kernel.org>
+References: <20230915105933.495735-1-matteorizzo@google.com>
+ <7a4f5128-28fd-3c5f-34c2-1c34f4448174@intel.com>
+ <1d7573c0-ebbc-6ed2-f152-1045eb0542f9@os.amperecomputing.com>
+ <CAHKB1w+rVyww0UrHhzeGfPA7FM482Z-7ApzXvekVqLHvTDAV3Q@mail.gmail.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <CAHKB1w+rVyww0UrHhzeGfPA7FM482Z-7ApzXvekVqLHvTDAV3Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-`strncpy` is deprecated for use on NUL-terminated destination strings [1].
+On 9/18/23 14:08, Matteo Rizzo wrote:
+> On Fri, 15 Sept 2023 at 18:30, Lameter, Christopher
+>> Problems:
+>>
+>> - Overhead due to more TLB lookups
+>>
+>> - Larger amounts of TLBs are used for the OS. Currently we are trying to
+>> use the maximum mappable TLBs to reduce their numbers. This presumably
+>> means using 4K TLBs for all slab access.
+> 
+> Yes, we are using 4K pages for the slab mappings which is going to increase
+> TLB pressure. I also tried writing a version of the patch that uses 2M
+> pages which had slightly better performance, but that had its own problems.
+> For example most slabs are much smaller than 2M, so we would need to create
+> and map multiple slabs at once and we wouldn't be able to release the
+> physical memory until all slabs in the 2M page are unused which increases
+> fragmentation.
+ At last LSF/MM [1] we basically discarded direct map fragmentation
+avoidance as solving something that turns out to be insignificant, with the
+exception of kernel code. As kernel code is unlikely to be allocated from
+kmem caches due to W^X, we can hopefully assume it's also insignificant for
+the virtual slab area.
 
-We should prefer more robust and less ambiguous string interfaces.
-
-We expect name to be NUL-terminated based on its numerous uses with
-functions that expect NUL-terminated strings.
-
-For example in i2c-core-base.c +1533:
-| dev_dbg(&adap->dev, "adapter [%s] registered\n", adap->name);
-
-NUL-padding is not required as `adap` is already zero-alloacted with:
-| adap = devm_kzalloc(&usbif->dev, sizeof(struct i2c_adapter), GFP_KERNEL);
-
-With the above in mind, a suitable replacement is `strscpy` [2] due to
-the fact that it guarantees NUL-termination on the destination buffer
-without unnecessarily NUL-padding.
-
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
- drivers/i2c/busses/i2c-cp2615.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/i2c/busses/i2c-cp2615.c b/drivers/i2c/busses/i2c-cp2615.c
-index 3ded28632e4c..20f8f7c9a8cd 100644
---- a/drivers/i2c/busses/i2c-cp2615.c
-+++ b/drivers/i2c/busses/i2c-cp2615.c
-@@ -298,7 +298,7 @@ cp2615_i2c_probe(struct usb_interface *usbif, const struct usb_device_id *id)
- 	if (!adap)
- 		return -ENOMEM;
- 
--	strncpy(adap->name, usbdev->serial, sizeof(adap->name) - 1);
-+	strscpy(adap->name, usbdev->serial, sizeof(adap->name));
- 	adap->owner = THIS_MODULE;
- 	adap->dev.parent = &usbif->dev;
- 	adap->dev.of_node = usbif->dev.of_node;
-
----
-base-commit: 2cf0f715623872823a72e451243bbf555d10d032
-change-id: 20230920-strncpy-drivers-i2c-busses-i2c-cp2615-c-aada0fe2aa71
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
-
+[1] https://lwn.net/Articles/931406/
