@@ -2,66 +2,63 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43AC1CE79AE
-	for <linux-hardening@archiver.kernel.org>; Wed, 20 Sep 2023 08:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A02CE79AD
+	for <linux-hardening@archiver.kernel.org>; Wed, 20 Sep 2023 09:04:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231269AbjITIuA (ORCPT
+        id S233857AbjITJE2 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 20 Sep 2023 04:50:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57524 "EHLO
+        Wed, 20 Sep 2023 05:04:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233853AbjITIt7 (ORCPT
+        with ESMTP id S234094AbjITJEQ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 20 Sep 2023 04:49:59 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35D7BDC;
-        Wed, 20 Sep 2023 01:49:52 -0700 (PDT)
+        Wed, 20 Sep 2023 05:04:16 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFD66CFC;
+        Wed, 20 Sep 2023 02:04:05 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 419801FE0A;
-        Wed, 20 Sep 2023 08:49:51 +0000 (UTC)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 57E721FE31;
+        Wed, 20 Sep 2023 09:04:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1695199791; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1695200644; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=HX5pPg3EIgB5tnraIeoBZTHS0SCTNA9W4l/mVV5w2no=;
-        b=LHVFHkXQ55/j0xSp+zPQLMOZ3OlKzq82cbMsy3h/grCDs2mXdcylirJP/DxG52b++qCDfG
-        fI5JcmZV4PWWa+4eARqDxPaBl37nm9P76+W/o166WPruHNXqO1Ah+UKqIJ4Ka41VbbsgLl
-        oq7pJ0qfkb0s2fwF4g5ljtQA0ePPK4s=
+        bh=X2lVHakLrQt1LUndbWfEXURHJ3ClBXtmgdVVnOA5KNo=;
+        b=jV/gQkwgMh2kRtzTDIwbuXmRVY0O2qCrkRSR+x02tdW527P6xmwZwfQr4I0ei+QUwPu+LW
+        Kq+dGT1E7wuwaPQRcjZGXkGbB7skWtECTIMZGEB6kfTmtCNjt/q9+iWmKEtGEbzlZmF2a+
+        3gWWmd0llOJ6hTal/rU1VAEHfwurvUU=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1695199791;
+        s=susede2_ed25519; t=1695200644;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=HX5pPg3EIgB5tnraIeoBZTHS0SCTNA9W4l/mVV5w2no=;
-        b=t468LGTetz8kGMyaGPGD279qVaYSRjdOcZU+YgTSUTf4EincTWPBRpxxEq7xwQqDQiYU2z
-        BdCfOFI9FPXSBZCw==
+        bh=X2lVHakLrQt1LUndbWfEXURHJ3ClBXtmgdVVnOA5KNo=;
+        b=FDbsCmRdWTY5IV1syw1j52bD8UgkMJB1UbBbFf3P7m/3Us6sriCdp15hDDiNkDw6vY+Srk
+        7Co1IiGh4OX3zzCg==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id CF004132C7;
-        Wed, 20 Sep 2023 08:49:50 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id E44D11333E;
+        Wed, 20 Sep 2023 09:04:03 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id 4e28MS6yCmXeYAAAMHmgww
-        (envelope-from <vbabka@suse.cz>); Wed, 20 Sep 2023 08:49:50 +0000
-Message-ID: <40bc28e5-c971-055f-eff4-b9d67fe768cc@suse.cz>
-Date:   Wed, 20 Sep 2023 10:49:50 +0200
+        id l2ARN4O1CmUqaQAAMHmgww
+        (envelope-from <vbabka@suse.cz>); Wed, 20 Sep 2023 09:04:03 +0000
+Message-ID: <059cdca4-6dc7-3928-c6f7-54e4816cf728@suse.cz>
+Date:   Wed, 20 Sep 2023 11:04:03 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.15.1
-Subject: Re: [RFC PATCH 00/14] Prevent cross-cache attacks in the SLUB
- allocator
+Subject: Re: [RFC PATCH 14/14] security: add documentation for SLAB_VIRTUAL
 Content-Language: en-US
-To:     Matteo Rizzo <matteorizzo@google.com>,
-        "Lameter, Christopher" <cl@os.amperecomputing.com>
-Cc:     Dave Hansen <dave.hansen@intel.com>, penberg@kernel.org,
-        rientjes@google.com, iamjoonsoo.kim@lge.com,
+To:     Matteo Rizzo <matteorizzo@google.com>, cl@linux.com,
+        penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com,
         akpm@linux-foundation.org, roman.gushchin@linux.dev,
         42.hyeyoo@gmail.com, keescook@chromium.org,
         linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
@@ -69,41 +66,160 @@ Cc:     Dave Hansen <dave.hansen@intel.com>, penberg@kernel.org,
         tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
         corbet@lwn.net, luto@kernel.org, peterz@infradead.org,
-        jannh@google.com, evn@google.com, poprdi@google.com,
-        jordyzomer@google.com, Mike Rapoport <rppt@kernel.org>
+        Matthew Wilcox <willy@infradead.org>
+Cc:     jannh@google.com, evn@google.com, poprdi@google.com,
+        jordyzomer@google.com
 References: <20230915105933.495735-1-matteorizzo@google.com>
- <7a4f5128-28fd-3c5f-34c2-1c34f4448174@intel.com>
- <1d7573c0-ebbc-6ed2-f152-1045eb0542f9@os.amperecomputing.com>
- <CAHKB1w+rVyww0UrHhzeGfPA7FM482Z-7ApzXvekVqLHvTDAV3Q@mail.gmail.com>
+ <20230915105933.495735-15-matteorizzo@google.com>
 From:   Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <CAHKB1w+rVyww0UrHhzeGfPA7FM482Z-7ApzXvekVqLHvTDAV3Q@mail.gmail.com>
+In-Reply-To: <20230915105933.495735-15-matteorizzo@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 9/18/23 14:08, Matteo Rizzo wrote:
-> On Fri, 15 Sept 2023 at 18:30, Lameter, Christopher
->> Problems:
->>
->> - Overhead due to more TLB lookups
->>
->> - Larger amounts of TLBs are used for the OS. Currently we are trying to
->> use the maximum mappable TLBs to reduce their numbers. This presumably
->> means using 4K TLBs for all slab access.
+On 9/15/23 12:59, Matteo Rizzo wrote:
+> From: Jann Horn <jannh@google.com>
 > 
-> Yes, we are using 4K pages for the slab mappings which is going to increase
-> TLB pressure. I also tried writing a version of the patch that uses 2M
-> pages which had slightly better performance, but that had its own problems.
-> For example most slabs are much smaller than 2M, so we would need to create
-> and map multiple slabs at once and we wouldn't be able to release the
-> physical memory until all slabs in the 2M page are unused which increases
-> fragmentation.
- At last LSF/MM [1] we basically discarded direct map fragmentation
-avoidance as solving something that turns out to be insignificant, with the
-exception of kernel code. As kernel code is unlikely to be allocated from
-kmem caches due to W^X, we can hopefully assume it's also insignificant for
-the virtual slab area.
+> Document what SLAB_VIRTUAL is trying to do, how it's implemented, and
+> why.
+> 
+> Signed-off-by: Jann Horn <jannh@google.com>
+> Co-developed-by: Matteo Rizzo <matteorizzo@google.com>
+> Signed-off-by: Matteo Rizzo <matteorizzo@google.com>
+> ---
+>  Documentation/security/self-protection.rst | 102 +++++++++++++++++++++
+>  1 file changed, 102 insertions(+)
+> 
+> diff --git a/Documentation/security/self-protection.rst b/Documentation/security/self-protection.rst
+> index 910668e665cb..5a5e99e3f244 100644
+> --- a/Documentation/security/self-protection.rst
+> +++ b/Documentation/security/self-protection.rst
+> @@ -314,3 +314,105 @@ To help kill classes of bugs that result in kernel addresses being
+>  written to userspace, the destination of writes needs to be tracked. If
+>  the buffer is destined for userspace (e.g. seq_file backed ``/proc`` files),
+>  it should automatically censor sensitive values.
+> +
+> +
+> +Memory Allocator Mitigations
+> +============================
+> +
+> +Protection against cross-cache attacks (SLAB_VIRTUAL)
+> +-----------------------------------------------------
+> +
+> +SLAB_VIRTUAL is a mitigation that deterministically prevents cross-cache
+> +attacks.
+> +
+> +Linux Kernel use-after-free vulnerabilities are commonly exploited by turning
+> +them into an object type confusion (having two active pointers of different
+> +types to the same memory location) using one of the following techniques:
+> +
+> +1. Direct object reuse: make the kernel give the victim object back to the slab
+> +   allocator, then allocate the object again from the same slab cache as a
+> +   different type. This is only possible if the victim object resides in a slab
+> +   cache which can contain objects of different types - for example one of the
+> +   kmalloc caches.
+> +2. "Cross-cache attack": make the kernel give the victim object back to the slab
+> +   allocator, then make the slab allocator give the page containing the object
+> +   back to the page allocator, then either allocate the page directly as some
+> +   other type of page or make the slab allocator allocate it again for a
+> +   different slab cache and allocate an object from there.
+> +
+> +In either case, the important part is that the same virtual address is reused
+> +for two objects of different types.
 
-[1] https://lwn.net/Articles/931406/
+Hmm but in the 2. technique and "either allocate the page directly" case,
+it's not just the virtual address, right? So we should be saying that
+SLAB_VIRTUAL won't help with that case, but hopefully it's also less
+common/harder to exploit? I'm not sure though - kmalloc() in SLUB will pass
+anything larger than order-1 (8kB) directly to the page allocator via
+kmalloc_large() so it will bypass both CONFIG_RANDOM_KMALLOC_CACHES and
+SLAB_VIRTUAL, AFAICS?
+
+> +The first case can be addressed by separating objects of different types
+> +into different slab caches. If a slab cache only contains objects of the
+> +same type then directly turning an use-after-free into a type confusion is
+> +impossible as long as the slab page that contains the victim object remains
+> +assigned to that slab cache. This type of mitigation is easily bypassable
+> +by cross-cache attacks: if the attacker can make the slab allocator return
+> +the page containing the victim object to the page allocator and then make
+> +it use the same page for a different slab cache, type confusion becomes
+> +possible again. Addressing the first case is therefore only worthwhile if
+> +cross-cache attacks are also addressed. AUTOSLAB uses a combination of
+> +probabilistic mitigations for this. SLAB_VIRTUAL addresses the second case
+
+As Kees mentioned - I don't think you're talking about
+CONFIG_RANDOM_KMALLOC_CACHES here, but it should be mentioned. Comparison of
+the combination of both with AUTOSLAB could be also interesting, if
+clarified it's not mainline, so unaware readers are not confused.
+
+> +deterministically by changing the way the slab allocator allocates memory.
+> +
+> +Preventing slab virtual address reuse
+> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> +
+> +In theory there is an easy fix against cross-cache attacks: modify the slab
+> +allocator so that it never gives memory back to the page allocator. In practice
+> +this would be problematic because physical memory remains permanently assigned
+> +to a slab cache even if it doesn't contain any active objects. A viable
+> +cross-cache mitigation must allow the system to reclaim unused physical memory.
+> +In the current design of the slab allocator there is no way
+> +to keep a region of virtual memory permanently assigned to a slab cache without
+> +also permanently reserving physical memory. That is because the virtual
+> +addresses that the slab allocator uses come from the linear map region, where
+> +there is a 1:1 correspondence between virtual and physical addresses.
+> +
+> +SLAB_VIRTUAL's solution is to create a dedicated virtual memory region that is
+> +only used for slab memory, and to enforce that once a range of virtual addresses
+> +is used for a slab cache, it is never reused for any other caches. Using a
+> +dedicated region of virtual memory lets us reserve ranges of virtual addresses
+> +to prevent cross-cache attacks and at the same time release physical memory back
+> +to the system when it's no longer needed. This is what Chromium's PartitionAlloc
+> +does in userspace
+> +(https://chromium.googlesource.com/chromium/src/+/354da2514b31df2aa14291199a567e10a7671621/base/allocator/partition_allocator/PartitionAlloc.md).
+> +
+> +Implementation
+> +~~~~~~~~~~~~~~
+> +
+> +SLAB_VIRTUAL reserves a region of virtual memory for the slab allocator. All
+> +pointers returned by the slab allocator point to this region. The region is
+> +statically partitioned in two sub-regions: the metadata region and the data
+> +region. The data region is where the actual objects are allocated from. The
+> +metadata region is an array of struct slab objects, one for each PAGE_SIZE bytes
+> +in the data region.
+> +Without SLAB_VIRTUAL, struct slab is overlaid on top of the struct page/struct
+> +folio that corresponds to the physical memory page backing the slab instead of
+> +using a dedicated memory region. This doesn't work for SLAB_VIRTUAL, which needs
+> +to store metadata for slabs even when no physical memory is allocated to them.
+> +Having an array of struct slab lets us implement virt_to_slab efficiently purely
+> +with arithmetic. In order to support high-order slabs, the struct slabs
+> +corresponding to tail pages contain a pointer to the head slab, which
+> +corresponds to the slab's head page.
+
+I think ideally we should be using the folio code to get from tail pages to
+a folio and then a single struct slab - it would be more in line how Matthew
+envisions future of struct page array AFAIK. Unless it's significantly
+slower, which would be a shame :/
+
+> +
+> +TLB flushing
+> +~~~~~~~~~~~~
+> +
+> +Before it can release a page of physical memory back to the page allocator, the
+> +slab allocator must flush the TLB entries for that page on all CPUs. This is not
+> +only necessary for the mitigation to work reliably but it's also required for
+> +correctness. Without a TLB flush some CPUs might continue using the old mapping
+> +if the virtual address range is reused for a new slab and cause memory
+> +corruption even in the absence of other bugs. The slab allocator can release
+> +pages in contexts where TLB flushes can't be performed (e.g. in hardware
+> +interrupt handlers). Pages to free are not freed directly, and instead they are
+> +put on a queue and freed from a workqueue context which also flushes the TLB.
+> +
+> +Performance
+> +~~~~~~~~~~~
+> +
+> +SLAB_VIRTUAL's performance impact depends on the workload. On kernel compilation
+> +(kernbench) the slowdown is about 1-2% depending on the machine type and is
+> +slightly worse on machines with more cores.
+
