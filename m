@@ -2,119 +2,97 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45CCECE79CC
-	for <linux-hardening@archiver.kernel.org>; Wed, 20 Sep 2023 11:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE6BCE79CB
+	for <linux-hardening@archiver.kernel.org>; Wed, 20 Sep 2023 11:14:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234430AbjITLHn (ORCPT
+        id S234271AbjITLOf (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 20 Sep 2023 07:07:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36570 "EHLO
+        Wed, 20 Sep 2023 07:14:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231593AbjITLHn (ORCPT
+        with ESMTP id S233970AbjITLOe (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 20 Sep 2023 07:07:43 -0400
-Received: from mail-oi1-x24a.google.com (mail-oi1-x24a.google.com [IPv6:2607:f8b0:4864:20::24a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A213ACF
-        for <linux-hardening@vger.kernel.org>; Wed, 20 Sep 2023 04:07:36 -0700 (PDT)
-Received: by mail-oi1-x24a.google.com with SMTP id 5614622812f47-3a9f2f6d356so10390249b6e.2
-        for <linux-hardening@vger.kernel.org>; Wed, 20 Sep 2023 04:07:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1695208056; x=1695812856; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=u02BBGPGfX0yPbijfRs1PCNnIlPGBgpzZObvNQnBP78=;
-        b=RagfjL065TwaUxB9dZe+bGjXa6J93nA+UGkrkn86LVHZ/VXYUm9+UdT0Fqt+xTjCLK
-         7ASs3TDnYc4r87Sbsa5/vX7PcH6brxFrleTUloyOnaFTYeW17oXQqjtKFBfrbkCKH4vb
-         DWiv5m25KppF71ndrg48hy/9+2sqVuseLovaXqw2l246du178d9hz38PhlGy0HnlqdDG
-         HCFlcAQ+0MkXoecyURbvIYjvq6UE2xrN+MYYsrMHraQqOo+9GfHBNBBoNRVxCrZt0Fc9
-         dZNWKKsuTkXJMONmCnxQmMiA1Tdd2Ma4KTMbMBqHj0twv39bN8mihKUInDQYQVYCL4/a
-         VTdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695208056; x=1695812856;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=u02BBGPGfX0yPbijfRs1PCNnIlPGBgpzZObvNQnBP78=;
-        b=dW5mckrH5rZe7EnJimNoO6Mp65T40UJRyzIeSToFiJTkx7B+uXIvlR5nI6NfDU3ZlY
-         XVOEPkgU9WVTgBaqw9HHOki19uvaGtNggq8cproD5WvWx+O+RgirdzSYr+96Hgzxbc2m
-         Fd3346S5NpUfxqysT23SYUvq+Itum+RDgVDYDqa6JI3HYsohBWHItDi/xlYE5Es0NGc3
-         ezRgLZT+oDk2gM9BPJ9sAnwtM5G4lPeIUVzWVShBLNtFVcxJxEw/OGjHu4++CSPq7JiF
-         K94t/n/MaIydO5V/db8zF/uRHzhlx0F4NRn2RgIW9y6kTYp2te9qR53XNgPmsV8/WYg8
-         b5Xw==
-X-Gm-Message-State: AOJu0YxKTG1Adyi/+rme10HGBUTNkv2EFX3WpkY6YU4Uba4hzcUsn17z
-        EjaFvptOSIojseZwqUuD3cj1g3JYZ53IkV173w==
-X-Google-Smtp-Source: AGHT+IE115b88HcBODPWahXYHJ0j40viadxpeRWbQ4t1GGOfk/djKEXImG98c+ybEVTBRw5IQmhnWJpaXy8orLNGFQ==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6808:19a8:b0:3a7:7e66:2197 with
- SMTP id bj40-20020a05680819a800b003a77e662197mr1072227oib.2.1695208055987;
- Wed, 20 Sep 2023 04:07:35 -0700 (PDT)
-Date:   Wed, 20 Sep 2023 11:07:35 +0000
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAHbSCmUC/yWNuw7CMAwAf6XyjKUkCKrwK4ghdQ310DSy6QNV/
- Xci2O6Wux2MVdjg1uygvIjJlKv4UwM0pPxilL46BBfOLgaH9tZM5YO9ysJqKIGwm834j2VaWcd ESJjixfm2u8bWe6i9ovyU7fe6P47jC9mtn657AAAA
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1695208054; l=1809;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=43KHe364FJHinbfAf5b51PqpKyrOTl6pEsGjXdoYGGk=; b=eHtC0NjEj+DC+VenI5onyQtBNvqXdaXL9USn7KK2KyrqhUYYw7P14M/xRG/+v1dI6/SLaffNx
- BstvDQQ+GdLAUG418aw8Fsrorxtz2WZN/2c296ApqokqUhaW/aQjr8p
-X-Mailer: b4 0.12.3
-Message-ID: <20230920-strncpy-drivers-i2c-busses-i2c-powermac-c-v1-1-0a3e9a107f8a@google.com>
-Subject: [PATCH] i2c: replace deprecated strncpy
-From:   Justin Stitt <justinstitt@google.com>
-To:     Andi Shyti <andi.shyti@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     linux-i2c@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Justin Stitt <justinstitt@google.com>
+        Wed, 20 Sep 2023 07:14:34 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8CB7B4;
+        Wed, 20 Sep 2023 04:14:28 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B11D0C433C8;
+        Wed, 20 Sep 2023 11:14:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1695208468;
+        bh=4ohIM+PR0LkQKum0byuzz3ycyYgyXeMylliHgM3EBoQ=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=ijaRBULS666AbH3P/pJ1eLSNRJVlcFLP2EhIlkqKmf67PK3VEk0FGPCGvEuEQDmS7
+         j1aCPJ66Nitqle4/qWtja+jVqxH2qBTrvVvTWPAMlK74IvnTkUNAzuSIhvdakto8VV
+         7NNJCtv0QZLkosnal/BdrOVmbQAIvb2TGVVOUd3E6oZbxU8+oSwwktwz/Io2brXEQE
+         e1vd39tAiQkcBu2zMneGhhamjGIlwU57BCfvYreadbW3zg6RkfMXtR5oQSzsh/ikRx
+         bLfGnluPZKjQ2kpMKSOdr4HuUgpvLexkddvsXwOf5eIQsaHg4WOa2UXIUHSAdebaxJ
+         IojSj22oBbFBw==
 Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] wifi: brcmfmac: Annotate struct brcmf_gscan_config with
+ __counted_by
+From:   Kalle Valo <kvalo@kernel.org>
+In-Reply-To: <20230915200542.never.417-kees@kernel.org>
+References: <20230915200542.never.417-kees@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Arend van Spriel <aspriel@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Hector Martin <marcan@marcan.st>,
+        Ryohei Kondo <ryohei.kondo@cypress.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        SHA-cyfmac-dev-list@infineon.com,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+        linux-hardening@vger.kernel.org
+User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
+Message-ID: <169520846255.991705.4120611293307630241.kvalo@kernel.org>
+Date:   Wed, 20 Sep 2023 11:14:24 +0000 (UTC)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-`strncpy` is deprecated for use on NUL-terminated destination strings [1].
+Kees Cook <keescook@chromium.org> wrote:
 
-We should prefer more robust and less ambiguous string interfaces.
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
+> 
+> As found with Coccinelle[1], add __counted_by for struct brcmf_gscan_config.
+> 
+> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+> 
+> Cc: Arend van Spriel <aspriel@gmail.com>
+> Cc: Franky Lin <franky.lin@broadcom.com>
+> Cc: Hante Meuleman <hante.meuleman@broadcom.com>
+> Cc: Kalle Valo <kvalo@kernel.org>
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: Hector Martin <marcan@marcan.st>
+> Cc: Ryohei Kondo <ryohei.kondo@cypress.com>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: linux-wireless@vger.kernel.org
+> Cc: brcm80211-dev-list.pdl@broadcom.com
+> Cc: SHA-cyfmac-dev-list@infineon.com
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-`info.type` is expected to be NUL-terminated judging by its use in
-`i2c_new_client_device()` wherein it is used to populate `client->name`:
-|	strscpy(client->name, info->type, sizeof(client->name));
+Patch applied to wireless-next.git, thanks.
 
-NUL-padding is not required and even if it was, `client` is already
-zero-initialized.
+cf74cdc6e581 wifi: brcmfmac: Annotate struct brcmf_gscan_config with __counted_by
 
-Considering the two points from above, a suitable replacement is
-`strscpy` [2] due to the fact that it guarantees NUL-termination on the
-destination buffer without unnecessarily NUL-padding.
+-- 
+https://patchwork.kernel.org/project/linux-wireless/patch/20230915200542.never.417-kees@kernel.org/
 
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
- drivers/i2c/busses/i2c-powermac.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/i2c/busses/i2c-powermac.c b/drivers/i2c/busses/i2c-powermac.c
-index 4996a628fdae..8e57ebe595be 100644
---- a/drivers/i2c/busses/i2c-powermac.c
-+++ b/drivers/i2c/busses/i2c-powermac.c
-@@ -231,7 +231,7 @@ static void i2c_powermac_create_one(struct i2c_adapter *adap,
- 	struct i2c_board_info info = {};
- 	struct i2c_client *newdev;
- 
--	strncpy(info.type, type, sizeof(info.type));
-+	strscpy(info.type, type, sizeof(info.type));
- 	info.addr = addr;
- 	newdev = i2c_new_client_device(adap, &info);
- 	if (IS_ERR(newdev))
-
----
-base-commit: 2cf0f715623872823a72e451243bbf555d10d032
-change-id: 20230920-strncpy-drivers-i2c-busses-i2c-powermac-c-a95017b69711
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
