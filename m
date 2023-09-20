@@ -2,102 +2,69 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 720DCCE79CE
-	for <linux-hardening@archiver.kernel.org>; Wed, 20 Sep 2023 12:55:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE84FCE79CE
+	for <linux-hardening@archiver.kernel.org>; Wed, 20 Sep 2023 13:35:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233727AbjITMzI (ORCPT
+        id S235936AbjITNff (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 20 Sep 2023 08:55:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51592 "EHLO
+        Wed, 20 Sep 2023 09:35:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234620AbjITMzI (ORCPT
+        with ESMTP id S234686AbjITNff (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 20 Sep 2023 08:55:08 -0400
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB90E83;
-        Wed, 20 Sep 2023 05:54:58 -0700 (PDT)
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 38KCspnT129861;
-        Wed, 20 Sep 2023 07:54:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1695214491;
-        bh=1OJjSOe0c5+VBsdczdvcQDiaodpJJ0J8iHVT39RkH7Q=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=F1enXJ2sCqS6L13VGxOMzufLPygaMC6jtpZNxfLZxd2eB7+jx+3z+zR4H8968nYNY
-         huYzO48NMbO7gTRPJwFqDw4mn326BE4iBI2SlJJFFlWfhV5gWcZVrw+o04fkav1r6c
-         5XVkWWsMaxJfCP50GbDdih6OCMh8trGfmCtnspzQ=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 38KCspWn009848
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 20 Sep 2023 07:54:51 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 20
- Sep 2023 07:54:50 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 20 Sep 2023 07:54:50 -0500
-Received: from localhost (ileaxei01-snat.itg.ti.com [10.180.69.5])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 38KCsoLU103555;
-        Wed, 20 Sep 2023 07:54:50 -0500
-From:   Nishanth Menon <nm@ti.com>
-To:     Tero Kristo <kristo@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Justin Stitt <justinstitt@google.com>
-CC:     Nishanth Menon <nm@ti.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH] firmware: ti_sci: refactor deprecated strncpy
-Date:   Wed, 20 Sep 2023 07:54:49 -0500
-Message-ID: <169521447378.1522316.16321283816653435515.b4-ty@ti.com>
-X-Mailer: git-send-email 2.40.0
-In-Reply-To: <20230913-strncpy-drivers-firmware-ti_sci-c-v1-1-740db471110d@google.com>
-References: <20230913-strncpy-drivers-firmware-ti_sci-c-v1-1-740db471110d@google.com>
+        Wed, 20 Sep 2023 09:35:35 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49508D8;
+        Wed, 20 Sep 2023 06:35:28 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC8AFC433C8;
+        Wed, 20 Sep 2023 13:35:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1695216927;
+        bh=XOJB4ugM+cR3vGS6Flq4w3KzGhy52BGvvhYoUHMdbyM=;
+        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+        b=NfoV8bItEvkFAnHF36MmLxcTVuQ7VSCT0le95ZO6wKefQMHFv21hTn/OMS78IWTW9
+         w3I76Et9G7W9nuLdS5+vzeeDvZSZuAOoY5yFUf8hILIHyFA9ycDvFIEWzOiCWQ0dPX
+         0VhSikuiP3Vi2PvG0hCRdI5dRWGr+s0oD5boWN5NuRBSF7vlBWxWBKYeqkvbvm1vV4
+         wN9ZpTulGECoSzN8S3DEKBWJ1QDDu/z6dvg4xM4b5Ns84Cou+2XXlTT0ecYrpndSCz
+         sSEv84NiZuHhWv6W1NAazJ3AfEtH08IawA7UTW7P+MLfyj26CPY18NSt7svJ7frUGC
+         7ChsKz5qVI0Hw==
+From:   Lee Jones <lee@kernel.org>
+To:     Pavel Machek <pavel@ucw.cz>, Kees Cook <keescook@chromium.org>
+Cc:     Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+In-Reply-To: <20230915200938.never.767-kees@kernel.org>
+References: <20230915200938.never.767-kees@kernel.org>
+Subject: Re: (subset) [PATCH] leds: aw200xx: Annotate struct aw200xx with
+ __counted_by
+Message-Id: <169521692572.3439618.17540674957048720159.b4-ty@kernel.org>
+Date:   Wed, 20 Sep 2023 14:35:25 +0100
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Mailer: b4 0.12.2
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Justin Stitt,
-
-On Wed, 13 Sep 2023 20:23:02 +0000, Justin Stitt wrote:
-> `strncpy` is deprecated for use on NUL-terminated destination strings [1].
+On Fri, 15 Sep 2023 13:09:39 -0700, Kees Cook wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
 > 
-> We should prefer more robust and less ambiguous string interfaces.
-> 
-> A suitable replacement is `strscpy` [2] due to the fact that it guarantees
-> NUL-termination on the destination buffer.
+> As found with Coccinelle[1], add __counted_by for struct aw200xx.
 > 
 > [...]
 
-I have applied the following to branch ti-drivers-soc-next on [1].
-Thank you!
+Applied, thanks!
 
-[1/1] firmware: ti_sci: refactor deprecated strncpy
-      commit: d8cce0d5ba4a3157a7a549b9623d1ffc5820ef92
+[1/1] leds: aw200xx: Annotate struct aw200xx with __counted_by
+      commit: e43d6b679091d196d9ac7664035155ed4c9637cc
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent up the chain during
-the next merge window (or sooner if it is a relevant bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
--- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+--
+Lee Jones [李琼斯]
 
