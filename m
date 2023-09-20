@@ -2,158 +2,119 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2EE7CE79B1
-	for <linux-hardening@archiver.kernel.org>; Wed, 20 Sep 2023 07:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FABCE79AB
+	for <linux-hardening@archiver.kernel.org>; Wed, 20 Sep 2023 08:09:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233893AbjITHoz (ORCPT
+        id S233473AbjITIJF (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 20 Sep 2023 03:44:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45544 "EHLO
+        Wed, 20 Sep 2023 04:09:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233983AbjITHop (ORCPT
+        with ESMTP id S233641AbjITIJB (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 20 Sep 2023 03:44:45 -0400
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAFC1E8;
-        Wed, 20 Sep 2023 00:44:38 -0700 (PDT)
-Received: by mail-wm1-x32c.google.com with SMTP id 5b1f17b1804b1-400a087b0bfso68845785e9.2;
-        Wed, 20 Sep 2023 00:44:38 -0700 (PDT)
+        Wed, 20 Sep 2023 04:09:01 -0400
+Received: from mail-oa1-x49.google.com (mail-oa1-x49.google.com [IPv6:2001:4860:4864:20::49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E83B097
+        for <linux-hardening@vger.kernel.org>; Wed, 20 Sep 2023 01:08:54 -0700 (PDT)
+Received: by mail-oa1-x49.google.com with SMTP id 586e51a60fabf-1bf00f8cf77so10275174fac.0
+        for <linux-hardening@vger.kernel.org>; Wed, 20 Sep 2023 01:08:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695195877; x=1695800677; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XzT+Xiw8JySJKyD7hHrg/jFpbzpL9ozxt4Lqd8Kjts4=;
-        b=bA3jdgYNN8fGAyxxIZrFC+df4Ag5Sr/1FxNbfFI3uDzU6DdyR/Jk2aFVWECaP7+f2Z
-         7iMoRrG2xe10GRY3OoU8+m9jFnU5Yj3iUaJsunTJmsMF2mIEQybQBbxnfomKOgrOZ9LL
-         c9dbc7fU6yC93Bjcpikgf6lIu416z+KPrxLWAjPd2xMCopd8FNnqS4dljakybQT2qlS6
-         3UdG2gZ7MpCd36zg9o4NBOAK3uoVDHb5kDTrjjZ430Hl+KQUatUI462JmhZnoRaI4zsm
-         Sv74pe7Wy3ocyfkUSWS8cayXfmna/N7Xp47zbSOj+n+5erfy8MDC9WnM/jIZNmrawxdU
-         fnbA==
+        d=google.com; s=20230601; t=1695197334; x=1695802134; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=REAWAikAYJXQC/q1dB6BWiV4dg8+qBHJA6pZo9MKtrQ=;
+        b=d4stG3mmwMKvayPoqNJywOfduTCqejfe/ff/r2PSb9wIzh5m3uYpvcOLm352qPmUbs
+         TA0voN4bBdkzl5U0ihgFuC3TGrC8ghqplRUA+PL5PXRX0rwUuyaXhHfs703Y7qW7oJOJ
+         K+H0pEhMVGdIRWLPDfOmhsQe9sr4DCZuJSXvCefYKTG/qatI9Rszfr43o0hbxHkypZ4s
+         UdE9pjtU31ax5EFJ5Qf00o//vh+vQKZvRUEYdoCYbkAhCE2DJbLnSI49aR59aA7yxz0i
+         oRAfugO+2HFEobV7eO6BA8k2mqZ0Pd6f8xIowXuKZRNDXH0q92NuIIRHBJ7FyFE6/VYc
+         GwzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695195877; x=1695800677;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XzT+Xiw8JySJKyD7hHrg/jFpbzpL9ozxt4Lqd8Kjts4=;
-        b=dTtAs54f2DXqdZB1OPFHNV9HPzAfsA6J6MTsOAzpNvCgW5MzsK0H7x+3R1hO9OnQ7o
-         ZTkk/GJwzDSdfJ9YtkryTS0H8k1ObSaTeR+mbOFe7xO+9VQCmIRmPYxDgI0dO0aOVyXW
-         hHoIXK+c5euNP96MjAo8G6mmJzKR4NT4YUp+sZFbHQ27OAdUqB5vaMb0tp0vMX3Tu0ev
-         5Dc1mLJ9msgI4BjZ07asgEvDNq/UiaP/cn4VhEwEW2mNP/ry78/jqp1Bz4HjBs6vmR48
-         MiwgRhWk7afCzjjBmK/8RMTRvZiHmAZQscUY8CA0NqY/B7qyKMgJM5Z13gICd0vAT6F2
-         J4Mg==
-X-Gm-Message-State: AOJu0YwESKQvDZULTVJ78e36dSQl5+lHSnTCk1rKTGMhiD+cPLVMfM6r
-        hcvyUaBojimXdexpfXzCrXs=
-X-Google-Smtp-Source: AGHT+IGGJqNN92cz5c7adAH7+BYpcEYHIa0hDUrWov+ACoikEcq6k5usOPuqM5OZepDWyc7c5KEP/w==
-X-Received: by 2002:a1c:ed08:0:b0:405:1bbd:aa9c with SMTP id l8-20020a1ced08000000b004051bbdaa9cmr1709320wmh.34.1695195876972;
-        Wed, 20 Sep 2023 00:44:36 -0700 (PDT)
-Received: from gmail.com (1F2EF265.nat.pool.telekom.hu. [31.46.242.101])
-        by smtp.gmail.com with ESMTPSA id f7-20020adff987000000b0031c8a43712asm17606651wrr.69.2023.09.20.00.44.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Sep 2023 00:44:36 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date:   Wed, 20 Sep 2023 09:44:33 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Matteo Rizzo <matteorizzo@google.com>
-Cc:     "Lameter, Christopher" <cl@os.amperecomputing.com>,
-        Dave Hansen <dave.hansen@intel.com>, penberg@kernel.org,
-        rientjes@google.com, iamjoonsoo.kim@lge.com,
-        akpm@linux-foundation.org, vbabka@suse.cz,
-        roman.gushchin@linux.dev, 42.hyeyoo@gmail.com,
-        keescook@chromium.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-hardening@vger.kernel.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        x86@kernel.org, hpa@zytor.com, corbet@lwn.net, luto@kernel.org,
-        peterz@infradead.org, jannh@google.com, evn@google.com,
-        poprdi@google.com, jordyzomer@google.com,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [RFC PATCH 00/14] Prevent cross-cache attacks in the SLUB
- allocator
-Message-ID: <ZQqi4RqpEM7PRGkF@gmail.com>
-References: <20230915105933.495735-1-matteorizzo@google.com>
- <7a4f5128-28fd-3c5f-34c2-1c34f4448174@intel.com>
- <1d7573c0-ebbc-6ed2-f152-1045eb0542f9@os.amperecomputing.com>
- <CAHKB1w+rVyww0UrHhzeGfPA7FM482Z-7ApzXvekVqLHvTDAV3Q@mail.gmail.com>
- <ZQiLX0W2Tcr+wdJT@gmail.com>
- <CAHKB1wKneke-dyvMY0JtW-xwW8m=GaUdafoAqdCE0B9csY7_bw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHKB1wKneke-dyvMY0JtW-xwW8m=GaUdafoAqdCE0B9csY7_bw@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1695197334; x=1695802134;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=REAWAikAYJXQC/q1dB6BWiV4dg8+qBHJA6pZo9MKtrQ=;
+        b=OW0Yu7FuDWvbYzAmefOR06H2e+OPG6OhX5BRTqLON6HQCOR5v8Lj3v6zlMvYJRAS/E
+         AfPVueMNSpidcazSQkZa4mqVTXjyJKFhhIclIm2QED5mhvNyUgdChSlvSEl3L+aptaCW
+         N5GjWuAsbYPpMYALddc3qDBbEbjUetNnZlIBbhb/TSDRcEmIySCXB/ujhWV+8dmpx16t
+         LfR/KpD8iq7gCGqswRw5YOxgKLVWEYkinyXrgrup4pp2djvksLZPdXf7IgEfYv7+verc
+         eYDVUfW6LZyzMBrdskXnUDUgwRTA8uQmcR0jJqX0u50eISx3R/Xnt9CUoe1wNVC6XVT3
+         guag==
+X-Gm-Message-State: AOJu0Ywkm1yyWu1/HWU3XBxhARSbwzt6wL+von3UNIZAssHLeoTeEc4O
+        wqgIg+HSdkIFNqcJ8+Ti5qYpwsI6xydMyvC/Kg==
+X-Google-Smtp-Source: AGHT+IEprTy2S7DDywHlMknBrYSwbbE1mFZmKv4PQM+CHnVjbh7wziEtHIiWVjrM4IRkiEMalxvMkv2HUNQB8D7/PQ==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a05:6870:76ae:b0:1d6:aa05:c733 with
+ SMTP id dx46-20020a05687076ae00b001d6aa05c733mr683064oab.5.1695197334295;
+ Wed, 20 Sep 2023 01:08:54 -0700 (PDT)
+Date:   Wed, 20 Sep 2023 08:08:52 +0000
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAJOoCmUC/yWNMQ7CMAwAv1J5xlJiVBB8BTEYxwUvIbKhAlX9O
+ 1HZ7pa7BULdNOA8LOA6W9izdsm7AeTB9a5opTtQon06UcJ4eZX2xeI2qwcaCd7eEfpHaXTIIwo yF06TEvMxQ68118k+2+lyXdcfp11yS3kAAAA=
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1695197333; l=1890;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=peY/eB5hS5lFuPdGG7LKSdDML84Nket0C8FattpjfI8=; b=sgpIFQ7oSn1XZ9OMjko5WEhP6Q5ktCLe0KgZ/OEqR0rGjxM+3HnxdRCXnTgkCRJYoMtT4Lgoj
+ TqIRI/KQxrPBTsdjEtbmnlrYumsTKSf/bIFwMnGkJPmXrDcEd5SfvOX
+X-Mailer: b4 0.12.3
+Message-ID: <20230920-strncpy-drivers-i2c-busses-i2c-cp2615-c-v1-1-11406a996794@google.com>
+Subject: [PATCH] i2c: cp2615: replace deprecated strncpy with strscpy
+From:   Justin Stitt <justinstitt@google.com>
+To:     "=?utf-8?q?Bence_Cs=C3=B3k=C3=A1s?=" <bence98@sch.bme.hu>,
+        Andi Shyti <andi.shyti@kernel.org>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+`strncpy` is deprecated for use on NUL-terminated destination strings [1].
 
-* Matteo Rizzo <matteorizzo@google.com> wrote:
+We should prefer more robust and less ambiguous string interfaces.
 
-> On Mon, 18 Sept 2023 at 19:39, Ingo Molnar <mingo@kernel.org> wrote:
-> >
-> > What's the split of the increase in overhead due to SLAB_VIRTUAL=y, between
-> > user-space execution and kernel-space execution?
-> >
-> 
-> Same benchmark as before (compiling a kernel on a system running the patched
-> kernel):
-> 
-> Intel Skylake:
-> 
->       LABEL    | COUNT |   MIN    |   MAX    |   MEAN   |  MEDIAN  | STDDEV
-> ---------------+-------+----------+----------+----------+----------+--------
-> wall clock     |       |          |          |          |          |
-> SLAB_VIRTUAL=n | 150   | 49.700   | 51.320   | 50.449   | 50.430   | 0.29959
-> SLAB_VIRTUAL=y | 150   | 50.020   | 51.660   | 50.880   | 50.880   | 0.30495
->                |       | +0.64%   | +0.66%   | +0.85%   | +0.89%   | +1.79%
-> system time    |       |          |          |          |          |
-> SLAB_VIRTUAL=n | 150   | 358.560  | 362.900  | 360.922  | 360.985  | 0.91761
-> SLAB_VIRTUAL=y | 150   | 362.970  | 367.970  | 366.062  | 366.115  | 1.015
->                |       | +1.23%   | +1.40%   | +1.42%   | +1.42%   | +10.60%
-> user time      |       |          |          |          |          |
-> SLAB_VIRTUAL=n | 150   | 3110.000 | 3124.520 | 3118.143 | 3118.120 | 2.466
-> SLAB_VIRTUAL=y | 150   | 3115.070 | 3127.070 | 3120.762 | 3120.925 | 2.654
->                |       | +0.16%   | +0.08%   | +0.08%   | +0.09%   | +7.63%
+We expect name to be NUL-terminated based on its numerous uses with
+functions that expect NUL-terminated strings.
 
-These Skylake figures are a bit counter-intuitive: how does an increase of 
-only +0.08% user-time - which dominates 89.5% of execution, combined with a 
-+1.42% increase in system time that consumes only 10.5% of CPU capacity, 
-result in a +0.85% increase in wall-clock time?
+For example in i2c-core-base.c +1533:
+| dev_dbg(&adap->dev, "adapter [%s] registered\n", adap->name);
 
-There might be hidden factors at work in the DMA space, as Linus suggested?
+NUL-padding is not required as `adap` is already zero-alloacted with:
+| adap = devm_kzalloc(&usbif->dev, sizeof(struct i2c_adapter), GFP_KERNEL);
 
-Or perhaps wall-clock time is dominated by the single-threaded final link 
-time of the kernel, which phase might be disproportionately hurt by these 
-changes?
+With the above in mind, a suitable replacement is `strscpy` [2] due to
+the fact that it guarantees NUL-termination on the destination buffer
+without unnecessarily NUL-padding.
 
-(Stddev seems low enough for this not to be a measurement artifact.)
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+ drivers/i2c/busses/i2c-cp2615.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The AMD Milan figures are more intuitive:
+diff --git a/drivers/i2c/busses/i2c-cp2615.c b/drivers/i2c/busses/i2c-cp2615.c
+index 3ded28632e4c..20f8f7c9a8cd 100644
+--- a/drivers/i2c/busses/i2c-cp2615.c
++++ b/drivers/i2c/busses/i2c-cp2615.c
+@@ -298,7 +298,7 @@ cp2615_i2c_probe(struct usb_interface *usbif, const struct usb_device_id *id)
+ 	if (!adap)
+ 		return -ENOMEM;
+ 
+-	strncpy(adap->name, usbdev->serial, sizeof(adap->name) - 1);
++	strscpy(adap->name, usbdev->serial, sizeof(adap->name));
+ 	adap->owner = THIS_MODULE;
+ 	adap->dev.parent = &usbif->dev;
+ 	adap->dev.of_node = usbif->dev.of_node;
 
-> AMD Milan:
-> 
->       LABEL    | COUNT |   MIN    |   MAX    |   MEAN   |  MEDIAN  | STDDEV
-> ---------------+-------+----------+----------+----------+----------+--------
-> wall clock     |       |          |          |          |          |
-> SLAB_VIRTUAL=n | 150   | 25.480   | 26.550   | 26.065   | 26.055   | 0.23495
-> SLAB_VIRTUAL=y | 150   | 25.820   | 27.080   | 26.531   | 26.540   | 0.25974
->                |       | +1.33%   | +2.00%   | +1.79%   | +1.86%   | +10.55%
-> system time    |       |          |          |          |          |
-> SLAB_VIRTUAL=n | 150   | 478.530  | 540.420  | 520.803  | 521.485  | 9.166
-> SLAB_VIRTUAL=y | 150   | 530.520  | 572.460  | 552.825  | 552.985  | 7.161
->                |       | +10.86%  | +5.93%   | +6.15%   | +6.04%   | -21.88%
-> user time      |       |          |          |          |          |
-> SLAB_VIRTUAL=n | 150   | 2373.540 | 2403.800 | 2386.343 | 2385.840 | 5.325
-> SLAB_VIRTUAL=y | 150   | 2388.690 | 2426.290 | 2408.325 | 2408.895 | 6.667
->                |       | +0.64%   | +0.94%   | +0.92%   | +0.97%   | +25.20%
->
-> 
-> I'm not exactly sure why user time increases by almost 1% on Milan, it 
-> could be TLB contention.
+---
+base-commit: 2cf0f715623872823a72e451243bbf555d10d032
+change-id: 20230920-strncpy-drivers-i2c-busses-i2c-cp2615-c-aada0fe2aa71
 
-The other worrying aspect is the increase of +6.15% of system time ... 
-which is roughly in line with what we'd expect from a +1.79% increase in 
-wall-clock time.
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
 
-Thanks,
-
-	Ingo
