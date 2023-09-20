@@ -2,94 +2,97 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E30CE79DC
-	for <linux-hardening@archiver.kernel.org>; Wed, 20 Sep 2023 14:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A064C004D6
+	for <linux-hardening@archiver.kernel.org>; Wed, 20 Sep 2023 15:13:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232318AbjITOdT (ORCPT
+        id S235270AbjITPNg (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 20 Sep 2023 10:33:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52204 "EHLO
+        Wed, 20 Sep 2023 11:13:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234524AbjITOdS (ORCPT
+        with ESMTP id S234874AbjITPNf (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 20 Sep 2023 10:33:18 -0400
-Received: from mail-oa1-x30.google.com (mail-oa1-x30.google.com [IPv6:2001:4860:4864:20::30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66905D7
-        for <linux-hardening@vger.kernel.org>; Wed, 20 Sep 2023 07:33:13 -0700 (PDT)
-Received: by mail-oa1-x30.google.com with SMTP id 586e51a60fabf-1c504386374so4493363fac.3
-        for <linux-hardening@vger.kernel.org>; Wed, 20 Sep 2023 07:33:13 -0700 (PDT)
+        Wed, 20 Sep 2023 11:13:35 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C7E7C6
+        for <linux-hardening@vger.kernel.org>; Wed, 20 Sep 2023 08:13:30 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-1c44a25bd0bso7211975ad.0
+        for <linux-hardening@vger.kernel.org>; Wed, 20 Sep 2023 08:13:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695220392; x=1695825192; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1695222809; x=1695827609; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=R0M1U7qooz1MSsev8bUf20ajQA/cHs54guIocLK69iQ=;
-        b=NH7fwnRZnVpv3Tszg+nBTlfR42h6U3MBPKyVFbN5w7ehPfhDznLe/fjfplxJxpYw87
-         PEz1d+xcJe0BxqjmLrbeGAT3t5wq/CImZ0reqXVVP64sz/sInoy32plBOFPHPImNSp2R
-         hHHkhjPE2EmJpNn0SIRfnt/68xtraFyj7cR18=
+        bh=/hyiPJzwLyvz53eOPwWn5KTS3ATXYJRveFNMbAiYRwk=;
+        b=P3YvM4YLE5mdSNDQP8M83pygwFAlb3uI5G0LrtEMOn+sJK3er3zTqU/QyIncSs7RoK
+         JTMEpFCaTV+ADa9cf4nqwf4nXcWkg8LOHtpidLsiri2q4GtYqUjSghXbS5d5y9lvRvBh
+         FJJHr/rKVG9xIiHK/lVpHNeOzMRRTPPAWtpVE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695220392; x=1695825192;
+        d=1e100.net; s=20230601; t=1695222809; x=1695827609;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=R0M1U7qooz1MSsev8bUf20ajQA/cHs54guIocLK69iQ=;
-        b=od53v0nXxv6ND+LJsTzyDF2Mu+CSFT+Rdw9xU0/4Xw8C+/ranr+xYF0HWAKvsJKzLP
-         Rayo+/cc1V5wceec48wlZTCBLAncyMRV+fG7T5tu1yhmf440LD3gotW4pt2QtWohE4kP
-         mAoWP8XjZNOxLRic97xgBobKPuuad4fWuDbDkHwZcQJII/P8F4nAwZJhqjB2WUeLen/3
-         BUUHCf9kGnHu5KD7TBhF3yj3mHtHGZpzisN3PMrsESSLPra2YZDpx6JTrtu6zwoFp9LV
-         5yF0SVF2Ryqq+vZzczABG/oPkHNEV2O4zVm5r+oj9n4xkr/i3KoFQTBtoRtBPhRPz+Km
-         hraA==
-X-Gm-Message-State: AOJu0YxA73iLoLaHFRWDOl6QSdlwgemO4RespoQmE0XH8RHG+QtB1ZFJ
-        ct3wzt8t7DBl7daG5LNHbBMOuQ==
-X-Google-Smtp-Source: AGHT+IHnG2fdejIvfQiUN3o+flnl539Mq0RwoAuzUXucWVFbeZV6npGQfTNnuQS5wk243vtr8CwbVA==
-X-Received: by 2002:a05:6870:8926:b0:1be:f4b3:7f49 with SMTP id i38-20020a056870892600b001bef4b37f49mr2879591oao.23.1695220392694;
-        Wed, 20 Sep 2023 07:33:12 -0700 (PDT)
+        bh=/hyiPJzwLyvz53eOPwWn5KTS3ATXYJRveFNMbAiYRwk=;
+        b=aYItFrlGfMXhFQZkLbp3juV8Rfitj7DMKgzLAMRsxQRLMLOqfDSp2fEX+CegR88wY/
+         o9er7bygfyfR4DjncuSCOJDJCQiFhLI611HclG5zcAH3MVSGjqmxq6skQ9077Lb7cTL2
+         7dbSg7jo18BBVeuvX/Os3FIZ/oDAb9wOh+X85HqWTlNad5252j2+URVsDPA3OIv3zCbY
+         2eWf+O+v4iBcppzDFjntnQrVc2G8TMeIr2T+/RqPY9TxJgC2enGW+RgHRILhaKGv6jQx
+         xi2NCMFXWLhXpzn/3Il7iPMWZBthGTGi29jitzXF3ngT0ogNwwh0+bwQADnIS8S/lpgv
+         ZlyA==
+X-Gm-Message-State: AOJu0YyeZWT2CzcrguXsArzWastCvKmm2+A5K/mWmG2KdzeHjl9KkIi4
+        mAywAEFMbiLuriGN/4fFC2Eu9Q==
+X-Google-Smtp-Source: AGHT+IHjY/EA4Uaz2uN8Hf+rV5YjM1d2ccJFzhZB2yI5nZQzuRgpHsCOPdzZTHTUX2L8rGpX2Z27SA==
+X-Received: by 2002:a17:902:d2cd:b0:1c5:6f43:9502 with SMTP id n13-20020a170902d2cd00b001c56f439502mr4352961plc.14.1695222809493;
+        Wed, 20 Sep 2023 08:13:29 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id t13-20020a63954d000000b00564be149a15sm9614073pgn.65.2023.09.20.07.33.12
+        by smtp.gmail.com with ESMTPSA id u7-20020a170903124700b001bb0eebd90asm11948601plh.245.2023.09.20.08.13.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Sep 2023 07:33:12 -0700 (PDT)
-Date:   Wed, 20 Sep 2023 07:33:11 -0700
+        Wed, 20 Sep 2023 08:13:28 -0700 (PDT)
+Date:   Wed, 20 Sep 2023 08:13:28 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Justin Stitt <justinstitt@google.com>
-Cc:     Andi Shyti <andi.shyti@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        linux-i2c@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] i2c: replace deprecated strncpy
-Message-ID: <202309200732.29C44010F6@keescook>
-References: <20230920-strncpy-drivers-i2c-busses-i2c-powermac-c-v1-1-0a3e9a107f8a@google.com>
+To:     Azeem Shaikh <azeems@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-serial@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>
+Subject: Re: [PATCH v2] vt: Replace strlcpy with strscpy
+Message-ID: <202309200813.1B0C125@keescook>
+References: <20230919192156.121503-1-azeems@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230920-strncpy-drivers-i2c-busses-i2c-powermac-c-v1-1-0a3e9a107f8a@google.com>
+In-Reply-To: <20230919192156.121503-1-azeems@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Sep 20, 2023 at 11:07:35AM +0000, Justin Stitt wrote:
-> `strncpy` is deprecated for use on NUL-terminated destination strings [1].
+On Tue, Sep 19, 2023 at 07:21:56PM +0000, Azeem Shaikh wrote:
+> strlcpy() reads the entire source buffer first and returns the size of
+> the source string, not the destination string, which can be accidentally
+> misused [1].
 > 
-> We should prefer more robust and less ambiguous string interfaces.
+> The copy_to_user() call uses @len returned from strlcpy() directly
+> without checking its value. This could potentially lead to read
+> overflow. There is no existing bug since @len is always guaranteed to be
+> greater than hardcoded strings in @func_table[kb_func]. But as written
+> it is very fragile and specifically uses a strlcpy() result without sanity
+> checking and using it to copy to userspace.
 > 
-> `info.type` is expected to be NUL-terminated judging by its use in
-> `i2c_new_client_device()` wherein it is used to populate `client->name`:
-> |	strscpy(client->name, info->type, sizeof(client->name));
+> In an effort to remove strlcpy() completely [2], replace
+> strlcpy() here with strscpy().
 > 
-> NUL-padding is not required and even if it was, `client` is already
-> zero-initialized.
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+> [2] https://github.com/KSPP/linux/issues/89
 > 
-> Considering the two points from above, a suitable replacement is
-> `strscpy` [2] due to the fact that it guarantees NUL-termination on the
-> destination buffer without unnecessarily NUL-padding.
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> Signed-off-by: Azeem Shaikh <azeems@google.com>
+> ---
+> v2:
+>  * Return -ENOSPC instead of -EFAULT in case of truncation.
+>  * Update commit log to clarify that there is no exploitable bug but instead the code uses a fragile anti-pattern.
 
-Looks like a straight replacement. Thanks!
+Changes look good. Thanks!
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
 
