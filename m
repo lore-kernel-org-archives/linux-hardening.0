@@ -1,164 +1,139 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221684122D
-	for <linux-hardening@vger.kernel.org>; Wed, 20 Sep 2023 20:16:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBB4C41A9B
+	for <linux-hardening@vger.kernel.org>; Wed, 20 Sep 2023 20:25:18 +0000 (UTC)
 Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1266D3
-	for <linux-hardening@vger.kernel.org>; Wed, 20 Sep 2023 13:16:33 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-1c59c40b840so1554795ad.3
-        for <linux-hardening@vger.kernel.org>; Wed, 20 Sep 2023 13:16:33 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 298CCAB
+	for <linux-hardening@vger.kernel.org>; Wed, 20 Sep 2023 13:25:16 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-1c328b53aeaso1560005ad.2
+        for <linux-hardening@vger.kernel.org>; Wed, 20 Sep 2023 13:25:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695240993; x=1695845793; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hZNTVebEDl/TB/efWujh7uyYjDL/PWAYwl5qIIXPhMU=;
-        b=XKunYVz3XOMyYAI7cafyzDorI5bKXyUn/PgTbwRVDc3cgiQSZX3QITr/ifbgBUU8Yx
-         en9ngF0Q00WUWYLc21UQ//AOeJUAPZ7bDYAs1/DWh0f5hvjVk0f1dFmBBpxGpoEuyGKF
-         5W21PDJlNkEwlfd+1RyHIzPQ1BCbmwBhwu3wQ=
+        d=chromium.org; s=google; t=1695241515; x=1695846315; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HLsolMbfTcky/mq0N2Sjy3jKMIZ0cn6Kt8D7kr3ZLbA=;
+        b=idg9mn+pOz1RB/T+DWxbU9bLb2yBZCtQZxGRJ1Cw2wgSnhbr2N7FHauU1DCHoSI2wL
+         sp5tC5uAkPUdo0qbN0uC9hvwI7NhQp7qyuF3nA6LLOn3yko5ABoBw1mM1BD/yBtMb2Bs
+         B/+V8t20M/fxY6Q6s1BjXDZx7NQjZe6xD161Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695240993; x=1695845793;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hZNTVebEDl/TB/efWujh7uyYjDL/PWAYwl5qIIXPhMU=;
-        b=uYEIQLxZmN9ciRaxdwa3AF4wIz6BGE07I1l6Tr8AvVb0JG2EsiGPCvhuWkxQyW/Ahq
-         yofQHzXQHf/kE4odKuTs6t0G/HlhCFTi9aPBCHUaja8YZ1wQHoX8hPt58DAMPTqodwBw
-         JD9NmS9UvWAW4m8WbFHLYMFNU36ZYfOfRNi/QG7SYQhNI9wioF+IrcslZrnA0a3ZQg4D
-         qVhK0Uaa07e17bhDp8PL3g6idX+8qqSABjhj+NkJZ1g78tgeis4VA0F1cs9w+NWKC/Vv
-         hbqBVxo47NNQPmVIRX0stagp0y7YYQo6H/tWr8vWCCMNahUVwDoasCmqS+mTNixXXKsS
-         ODUQ==
-X-Gm-Message-State: AOJu0YyYo0Cm2bh+jgUpabTeQhOAsgx+oZEO6mVSdMboxdoiK4piuiRI
-	Gk4HMell4Cag4jWjryW2bqgDjw==
-X-Google-Smtp-Source: AGHT+IFUEirLE2h/qwt8Nm+SaBIaePeE70ZXdji1RcrHm2EwifpvouM0T3zXNtCRduYsYxp7j6Yu8A==
-X-Received: by 2002:a17:902:ec87:b0:1c3:3dae:5869 with SMTP id x7-20020a170902ec8700b001c33dae5869mr4237183plg.63.1695240993177;
-        Wed, 20 Sep 2023 13:16:33 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1695241515; x=1695846315;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HLsolMbfTcky/mq0N2Sjy3jKMIZ0cn6Kt8D7kr3ZLbA=;
+        b=ulqxErHj/pHUMi4oPtVkwnzSLDlVst/NVh8YslZebHUt/P9dydflMCZQAkuLtg6w4M
+         z/lAUX7WWN3R+YWigRz46f04dlMAXuHZrABB/b57BDxyjV6gUjmWBi+r/dQdLPU0Rmq8
+         7NkbCvfTx4hFt+MPRvXgDgGMJUq+xLxRTDFnrP7CHX575MGz1p1dGD3iqA779hipbR/P
+         eysnE9rmMMbtbStWLIfHVY82up7CWP6STfO74gH1D7eFpDYGXbwgIpyegH92wWIff26e
+         H2t8p7MRSlf4aI/z8A82Zmkl7LB8xoUFSxc2YbWBvmEAcDUfe/UtF+SI8bDODzjJZQDO
+         6hHA==
+X-Gm-Message-State: AOJu0Yz5VPKf6p5KqRlvclgqaTMEUAu+IsBDVI8DMi4bfMYje8dtXbR9
+	Dv0OnT2EVGO4i3TYugQmfulr2w==
+X-Google-Smtp-Source: AGHT+IFVHKDUobBqcyI0UFeJiGt0IUFOy3z689StXms06Ozhtc0Cb2cP58rRolqky6OedGm55dlwgw==
+X-Received: by 2002:a17:902:e5cc:b0:1b9:e241:ad26 with SMTP id u12-20020a170902e5cc00b001b9e241ad26mr4977033plf.9.1695241515558;
+        Wed, 20 Sep 2023 13:25:15 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id u5-20020a170902b28500b001c07110f3ccsm12241844plr.247.2023.09.20.13.16.32
+        by smtp.gmail.com with ESMTPSA id v7-20020a1709029a0700b001bdeedd8579sm12158496plp.252.2023.09.20.13.25.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Sep 2023 13:16:32 -0700 (PDT)
-Date: Wed, 20 Sep 2023 13:16:32 -0700
+        Wed, 20 Sep 2023 13:25:15 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
-To: Stephen Hemminger <stephen@networkplumber.org>
-Cc: kernel test robot <lkp@intel.com>, Mirko Lindner <mlindner@marvell.com>,
-	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+To: Mirko Lindner <mlindner@marvell.com>
+Cc: Kees Cook <keescook@chromium.org>,
+	Stephen Hemminger <stephen@networkplumber.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org,
+	kernel test robot <lkp@intel.com>,
+	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: include/linux/dma-mapping.h:416:36: warning: array subscript i
- is outside array bounds of 'dma_addr_t[0]' {aka 'long long unsigned int[]'}
-Message-ID: <202309201315.7208E4C@keescook>
-References: <202309191958.UBw1cjXk-lkp@intel.com>
- <202309200904.CEED70DA33@keescook>
- <20230920102934.595b755f@hermes.local>
+Subject: [PATCH] sky2: Make sure there is at least one frag_addr available
+Date: Wed, 20 Sep 2023 13:25:13 -0700
+Message-Id: <20230920202509.never.299-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230920102934.595b755f@hermes.local>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2499; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=JtH8ia5EUsvZeslNPbo/pPdiDtP1l/CRreh41gNliXg=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlC1UoGsWV9fc6bHQBBJ+xGp+iDZyM6HX8oY2U/
+ 7oUvq+Eav6JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQtVKAAKCRCJcvTf3G3A
+ Ju/SEACudjOkVLTvJcBjQsP/GB0DAs//hFk1Mv5SsqVjgogKa7NqyjdUkhGjwraS7pnMoKSmMtY
+ 1qi2Td/0KKg3cmzOZ2zPxkUjWETKIssoW/64DkYz+ekmrmc3kkg+WghfuQY0+aktxibzaFXs0aw
+ XVBUVCBT94OGiTVkqdWtZQ3NXmiHgvHWC9uXl14uP/oQzJ5dzXz4dSDwx1F1pbHrR7C6f66Ynv2
+ sILy3iI9t7TvCevoTMXwFu+cqa5KZbSDAIlTFn+M3cioJnoxQvpDqiKDaePd0XiWmg/qEedTGGH
+ EJ+kxoPKwpkL1d3GWzeuNd0aHBjX+i/1f9XZMd1QSyQZIjvC0uzkGOg752KC8pZM/3FJqQlDRpS
+ FP3CrKVbZ6JXuy2Hcb927WqGT1mJlToCFu+mU0A3ZVaUZj9+whX++YJ96OZV0iyhHV6T/Rt7FAP
+ L1CAt/aT8tzMNZwe9aUnKJqwfyHUzLLE7kcfBSQLQeYzT5GfnBI722wQ8VDtXgrMPcMRwMtN2lJ
+ FTYYUITeBItngwczBOaYkEHvvDODeOuMVybmSCP9sMz4FXsGE9beFINqzgfNh/3atKbW8oWdqdK
+ 412f+GPtp4S7BmvYpBfUOt28dt4t1ALZqpjtOBL5vDcLEy7v/vXdX+kZwsOmuOqGh9i08WhLNh8
+ ihyi2/f ePgf7i1Q==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Wed, Sep 20, 2023 at 10:29:34AM -0700, Stephen Hemminger wrote:
-> On Wed, 20 Sep 2023 09:09:33 -0700
-> Kees Cook <keescook@chromium.org> wrote:
-> 
-> > On Tue, Sep 19, 2023 at 07:27:26PM +0800, kernel test robot wrote:
-> > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> > > head:   2cf0f715623872823a72e451243bbf555d10d032
-> > > commit: df8fc4e934c12b906d08050d7779f292b9c5c6b5 kbuild: Enable -fstrict-flex-arrays=3
-> > > date:   4 months ago
-> > > config: loongarch-allmodconfig (https://download.01.org/0day-ci/archive/20230919/202309191958.UBw1cjXk-lkp@intel.com/config)
-> > > compiler: loongarch64-linux-gcc (GCC) 13.2.0
-> > > reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230919/202309191958.UBw1cjXk-lkp@intel.com/reproduce)
-> > > 
-> > > If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> > > the same patch/commit), kindly add following tags
-> > > | Reported-by: kernel test robot <lkp@intel.com>
-> > > | Closes: https://lore.kernel.org/oe-kbuild-all/202309191958.UBw1cjXk-lkp@intel.com/
-> > > 
-> > > All warnings (new ones prefixed by >>):
-> > > 
-> > >    In file included from include/linux/skbuff.h:28,
-> > >                     from include/net/net_namespace.h:43,
-> > >                     from include/linux/netdevice.h:38,
-> > >                     from drivers/net/ethernet/marvell/sky2.c:18:
-> > >    drivers/net/ethernet/marvell/sky2.c: In function 'sky2_rx_unmap_skb':  
-> > > >> include/linux/dma-mapping.h:416:36: warning: array subscript i is outside array bounds of 'dma_addr_t[0]' {aka 'long long unsigned int[]'} [-Warray-bounds=]  
-> > >      416 | #define dma_unmap_page(d, a, s, r) dma_unmap_page_attrs(d, a, s, r, 0)
-> > >          |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > >    drivers/net/ethernet/marvell/sky2.c:1257:17: note: in expansion of macro 'dma_unmap_page'
-> > >     1257 |                 dma_unmap_page(&pdev->dev, re->frag_addr[i],
-> > >          |                 ^~~~~~~~~~~~~~
-> > >    In file included from drivers/net/ethernet/marvell/sky2.c:41:
-> > >    drivers/net/ethernet/marvell/sky2.h:2198:25: note: while referencing 'frag_addr'
-> > >     2198 |         dma_addr_t      frag_addr[ETH_JUMBO_MTU >> PAGE_SHIFT];
-> > >          |                         ^~~~~~~~~  
-> > 
-> > The .config has:
-> > CONFIG_PAGE_SIZE_16KB=y
-> > which makes PAGE_SHIFT == 14
-> > 
-> > #ifdef CONFIG_PAGE_SIZE_16KB
-> > #define PAGE_SHIFT      14
-> > 
-> > ETH_JUMBO_MTU is:
-> > 
-> > #define ETH_JUMBO_MTU	9000
-> > 
-> > which forces "ETH_JUMBO_MTU >> PAGE_SHIFT" to be 0.
-> > 
-> > I think the right fix would be:
-> > 
-> > dma_addr_t      frag_addr[ETH_JUMBO_MTU >> PAGE_SHIFT ?: 1]
-> > 
-> > Thoughts?
-> > 
-> > -Kees
-> > 
-> 
-> This is old driver, I don't have the HW anymore, it went to Free Geek.
-> Most of this code was based off of code in other drivers.
-> 
-> The assumption is that the first part of the data will be received in the
-> skb itself, then pages are used for overflow.
-> 
-> static unsigned sky2_get_rx_data_size(struct sky2_port *sky2)
-> {
-> 	struct rx_ring_info *re;
-> 	unsigned size;
-> 
-> 	/* Space needed for frame data + headers rounded up */
-> 	size = roundup(sky2->netdev->mtu + ETH_HLEN + VLAN_HLEN, 8);
-> 
-> 	sky2->rx_nfrags = size >> PAGE_SHIFT;
-> 	BUG_ON(sky2->rx_nfrags > ARRAY_SIZE(re->frag_addr));
-> 
-> Assuming PAGE_SIZE of 16k and MTU of 9000.
-> 
-> 	size = roundup(9000 + 14 + 4, 8) => 9024
-> 	sky2->rx_nfrags = 9024 >> 14 = 0
-> 
-> Which means no skb frags will be used.
-> 
-> This is probably suboptimal since it will endup calling alloc_skb()
-> to get a 9024 skb. Which in turn causes a call to kmalloc() of 9024.
-> 
-> Not really worth fixing if not testable.
+In the likely pathological case of building sky2 with 16k PAGE_SIZE,
+make sure there is at least 1 frag_addr in struct rx_ring_info:
 
-Should we drop the driver? Getting "allmodconfig" to build again
-with 16k pages is an easy fix here, though. I could just use
+   In file included from include/linux/skbuff.h:28,
+                    from include/net/net_namespace.h:43,
+                    from include/linux/netdevice.h:38,
+                    from drivers/net/ethernet/marvell/sky2.c:18:
+   drivers/net/ethernet/marvell/sky2.c: In function 'sky2_rx_unmap_skb':
+   include/linux/dma-mapping.h:416:36: warning: array subscript i is outside array bounds of 'dma_addr_t[0]' {aka 'long long unsigned int[]'} [-Warray-bounds=]
+     416 | #define dma_unmap_page(d, a, s, r) dma_unmap_page_attrs(d, a, s, r, 0)
+         |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/net/ethernet/marvell/sky2.c:1257:17: note: in expansion of macro 'dma_unmap_page'
+    1257 |                 dma_unmap_page(&pdev->dev, re->frag_addr[i],
+         |                 ^~~~~~~~~~~~~~
+   In file included from drivers/net/ethernet/marvell/sky2.c:41:
+   drivers/net/ethernet/marvell/sky2.h:2198:25: note: while referencing 'frag_addr'
+    2198 |         dma_addr_t      frag_addr[ETH_JUMBO_MTU >> PAGE_SHIFT];
+         |                         ^~~~~~~~~
 
-	min(1, ETH_JUMBO_MTU >> PAGE_SHIFT)
+With CONFIG_PAGE_SIZE_16KB=y, PAGE_SHIFT == 14, so:
 
-too...
+  #define ETH_JUMBO_MTU   9000
 
+causes "ETH_JUMBO_MTU >> PAGE_SHIFT" to be 0. Use "?: 1" to solve this build warning.
+
+Cc: Mirko Lindner <mlindner@marvell.com>
+Cc: Stephen Hemminger <stephen@networkplumber.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202309191958.UBw1cjXk-lkp@intel.com/
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/net/ethernet/marvell/sky2.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/marvell/sky2.h b/drivers/net/ethernet/marvell/sky2.h
+index ddec1627f1a7..8d0bacf4e49c 100644
+--- a/drivers/net/ethernet/marvell/sky2.h
++++ b/drivers/net/ethernet/marvell/sky2.h
+@@ -2195,7 +2195,7 @@ struct rx_ring_info {
+ 	struct sk_buff	*skb;
+ 	dma_addr_t	data_addr;
+ 	DEFINE_DMA_UNMAP_LEN(data_size);
+-	dma_addr_t	frag_addr[ETH_JUMBO_MTU >> PAGE_SHIFT];
++	dma_addr_t	frag_addr[ETH_JUMBO_MTU >> PAGE_SHIFT ?: 1];
+ };
+ 
+ enum flow_control {
 -- 
-Kees Cook
+2.34.1
+
