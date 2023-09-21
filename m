@@ -1,20 +1,20 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCC8A64F;
-	Thu, 21 Sep 2023 06:30:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15B06C433D9;
-	Thu, 21 Sep 2023 06:30:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E52BE8C1A;
+	Thu, 21 Sep 2023 08:09:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 288E2C116AF;
+	Thu, 21 Sep 2023 08:09:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1695277858;
-	bh=T+AarZU1OTWE4tfG5KCNEN7xu+9uCv63xpcrlLBPzs4=;
+	s=k20201202; t=1695283781;
+	bh=CRChqGGo4RR2euNwhsDyCD/AoeyKktzzjOKjh37j308=;
 	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-	b=F8spp6f20lSgSPHJDALIiU808mf39UoqBTNdF7qImjbNCJwTFAC3eIT2dM1d9jnJx
-	 Hz7Ek/XGl4FJw8IyEj87AlnDMKzuVWv2Jyn50UdvQz54g8Pda4wteEZiOpW/e606MW
-	 aiQ+wR1I9Zzr5RI1fXHVsD6oki6FitbWIfn8AMbAIz0iwUpoQh+fREph4mexqnHQm+
-	 CDt8pTl83zrSp3k8q50qdg3OsV+ag3dJcCuF0cxmfBx6cbMdcYsav3J3rKJrbW62TD
-	 ucDYT+V8I9UpkPPQPbR3w1onrFv9hIr47UeFE3OL8c05hPDHSDmJ+be9gmwtjb4mH/
-	 0Tlelv86F33bQ==
+	b=U6NPZ+8WyNsZOrY2Ac+ioT6/gPDw2ATD5O9tV01TxCmDZ6+hXu1KPDEIz3a3Gtwqx
+	 tKsvCJSSNEHimX8QPbVZQJ4UTZG4trO9kwulY4CGG1iwMP3qdSH0L3z5X/N9NfDFTs
+	 2lCfQEvwcgBc8JcV3rpcBvh779jTDhW9ZYVktRfLINCxVbeWSUqjqeqr1H7Y3KaCi9
+	 5FHGysRq9RRBkxkT+7NXxvkZBnHbVe7pX4kVgVqaQ4ADoRTodYgJTD/8oPWCJZVggu
+	 hFQIs+fghTAVHf54bge5tZrM34SrNJyWsXFComQWwYojGcRYn9khtN5vaM4m88eMX0
+	 /wYF0Fl26L6Og==
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -23,21 +23,21 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] wifi: ipw2x00: Annotate struct libipw_txb with
+Subject: Re: [PATCH] wifi: wcn36xx: Annotate struct wcn36xx_hal_ind_msg with
  __counted_by
 From: Kalle Valo <kvalo@kernel.org>
-In-Reply-To: <20230915200602.never.582-kees@kernel.org>
-References: <20230915200602.never.582-kees@kernel.org>
+In-Reply-To: <20230915200622.never.820-kees@kernel.org>
+References: <20230915200622.never.820-kees@kernel.org>
 To: Kees Cook <keescook@chromium.org>
-Cc: Stanislav Yakovlev <stas.yakovlev@gmail.com>,
- Kees Cook <keescook@chromium.org>, linux-wireless@vger.kernel.org,
+Cc: Loic Poulain <loic.poulain@linaro.org>, Kees Cook <keescook@chromium.org>,
+ wcn36xx@lists.infradead.org, linux-wireless@vger.kernel.org,
  Nathan Chancellor <nathan@kernel.org>,
  Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
  linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
  linux-hardening@vger.kernel.org
 User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
-Message-ID: <169527785383.1469888.6111719451945571724.kvalo@kernel.org>
-Date: Thu, 21 Sep 2023 06:30:55 +0000 (UTC)
+Message-ID: <169528377712.1539628.6973937251769266180.kvalo@kernel.org>
+Date: Thu, 21 Sep 2023 08:09:38 +0000 (UTC)
 
 Kees Cook <keescook@chromium.org> wrote:
 
@@ -47,22 +47,24 @@ Kees Cook <keescook@chromium.org> wrote:
 > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
 > 
-> As found with Coccinelle[1], add __counted_by for struct libipw_txb.
+> As found with Coccinelle[1], add __counted_by for struct wcn36xx_hal_ind_msg.
 > 
 > [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 > 
-> Cc: Stanislav Yakovlev <stas.yakovlev@gmail.com>
+> Cc: Loic Poulain <loic.poulain@linaro.org>
 > Cc: Kalle Valo <kvalo@kernel.org>
+> Cc: wcn36xx@lists.infradead.org
 > Cc: linux-wireless@vger.kernel.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 > Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
 
-Patch applied to wireless-next.git, thanks.
+Patch applied to ath-next branch of ath.git, thanks.
 
-357be7ebba38 wifi: ipw2x00: Annotate struct libipw_txb with __counted_by
+f8cbbb224b11 wifi: wcn36xx: Annotate struct wcn36xx_hal_ind_msg with __counted_by
 
 -- 
-https://patchwork.kernel.org/project/linux-wireless/patch/20230915200602.never.582-kees@kernel.org/
+https://patchwork.kernel.org/project/linux-wireless/patch/20230915200622.never.820-kees@kernel.org/
 
 https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
