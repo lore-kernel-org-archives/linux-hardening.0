@@ -1,124 +1,128 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70AE91642D
-	for <linux-hardening@vger.kernel.org>; Thu, 21 Sep 2023 17:22:25 +0000 (UTC)
-Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0AD5400D0
-	for <linux-hardening@vger.kernel.org>; Thu, 21 Sep 2023 10:15:02 -0700 (PDT)
-Received: by mail-qv1-xf49.google.com with SMTP id 6a1803df08f44-658404cf654so10851006d6.2
-        for <linux-hardening@vger.kernel.org>; Thu, 21 Sep 2023 10:15:02 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB0C45F6F
+	for <linux-hardening@vger.kernel.org>; Thu, 21 Sep 2023 17:24:47 +0000 (UTC)
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31C5C311D1
+	for <linux-hardening@vger.kernel.org>; Thu, 21 Sep 2023 10:24:19 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d85fc108f0eso794549276.2
+        for <linux-hardening@vger.kernel.org>; Thu, 21 Sep 2023 10:24:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1695316501; x=1695921301; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1695317058; x=1695921858; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=KBlJtLtsdI3hK0QdaI1JvF2kBovJQMFIeF0KITJB/xY=;
-        b=cXJKvEkGImfSAhRKRVAq1qNTWPN+3hMLoWUevQyig0hi3OfptqdC+nu4mT0nQdRTEZ
-         FKbT4Hq6fWrqjEoiTIwzdj6XGxosf+K+4GCvQHbPVMwv1FhWamlPCshcsvsC4rX4O94a
-         2HR2l8nyJnZWsmuzzxo0CnbamCeiJZRoVXK4NdVjCJHpZkTXr2h4p/8cJAFuWshZdbYR
-         N8dLQgL4wySKLxGuYyt3KPhCpzrQ67OMxpW0kLmOnxlWIho7KnkQGdhwnYgHAOiMxJe5
-         Gr82l6OsW03i4hx7ga6cLEW6jVr8C+KsfCcRUPA15vABp98Yh02HMr1KO+ahiMbXAFvW
-         hAog==
+        bh=YIjCOkiBe6G45aEBYQSULZ5zzwzapCnaNAVKzWT/a/I=;
+        b=WTKoh7H2fGarNFbKOR9/u+lvCaFx4PM8bXiZz6/brEuQx7ClUrH0xFeNlK93CCZgjH
+         GYpAmxHGpZ4hFEoToUt6NTG9UoOxW9ShaFwu7GxIC23T5NbTWpNtzqIPNaUfqF8mw6xE
+         PDC20ISPSp5jxstM81n6Lug1Ias1+dIixkv4t4vPzTF/33rdSmljyfUj9Mi5uuuCfh9C
+         MtEA6wLpmiaMTMWM/Tf3Vrr4GHuKTvThY7w5Ymu2CsChVutivlHh8LMJk/HNUEgeVHK9
+         5KZJhPl+eu1hDYAJ1trlZEfx+tpNotMMXxofes+Zu8QCX5FS6hM4uflJe0yygVCop8/D
+         Qnlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695316501; x=1695921301;
+        d=1e100.net; s=20230601; t=1695317058; x=1695921858;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=KBlJtLtsdI3hK0QdaI1JvF2kBovJQMFIeF0KITJB/xY=;
-        b=BckJtPDy5M9wvaA7/gReMa/gRV/lhqM8acAkt7QL4lzXFMztrnjYX1w0+4aqyqM3Tu
-         MngmXvjwnw5a9sCoE71BQ74HC5C6MsruskVXWUivcvt4R90p1T6FZpp/UlEsmQOr024V
-         royB1mqcpbQaxoC1hkM/ngpIzSaBPk3Ra9vtcMHjG2do+3vvLzzO9fXvrYib3KM3lh2I
-         mhrAzxbah5ou1vg/gElHCEzDVyQKuS4/Hdf5Sa06sTXNf+d3CeR1qtQA/eiH52SUPPjx
-         c8zVT3Di4294TTDVgO6lua21yHc3OZUdMyuy0U1qHcIHhUD1nLbODxWXq/mZfapoRZ/E
-         jrjw==
-X-Gm-Message-State: AOJu0Ywv+AZVTjkziL1dc9j0mQcASnRBj9F8Ulh66d5tiKlA1uMAdhdN
-	Njb1eRE/coz4IhzxREN+fUpnSby1yq8kWTzgBQ==
-X-Google-Smtp-Source: AGHT+IHI098EEpqO6htZ6MTc85xWWh3YpKsnqENPUYf7F/xvLGI92lITJbHV0USw1ADPIZbp1s0JkljinpuKkIaDuQ==
+        bh=YIjCOkiBe6G45aEBYQSULZ5zzwzapCnaNAVKzWT/a/I=;
+        b=I8taOB+d5a9pOYu6mxnO4P7xvzE6DK8nURU2hMEIbArSiBIGrtJ6Z54knYu+3LQ+ti
+         yg9Iaoukblsbs1NNWlQKO2Vp8y5C4w2i3Uz7LOJlW/TD6rMx4La2D9opwtIXQXVpZlin
+         C379wYgMxX7+E0KF/FE6Bbq7525YVeYY1vS73kLt3Kt2DxYdD2euNcLjklrKmgBNa3Fa
+         rq5bxrU9+TwRvZpBhzHY5T0ox5ImdotELC75EQHYnU6r7nL0AnT/LoBukS4keEaNA5Z0
+         gwYmgFhMihxiIqyFpaUoS/NHXzupeRKmaas+v7+soq4yTmNHyGJGGqukr6BBW/aOcysV
+         hX4A==
+X-Gm-Message-State: AOJu0YxhsBBdTu0iBcN7X6YH82OOL9Dcpk183cSgoJcfd0cpz5xS4TWM
+	5UlLevf4Yps3oOvuYvgosbCbwwUQqxQn8J3OZw==
+X-Google-Smtp-Source: AGHT+IH0fcnvvWbCy3tA1NPToTyzyqCok+/lRZ+hyvZgNHTbvdwmOOhSJ8DZQCY6OR97NUJ1S9CgcsEA9JZ3kY2F6A==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a25:4082:0:b0:d80:1391:1f1 with SMTP
- id n124-20020a254082000000b00d80139101f1mr63208yba.1.1695272040719; Wed, 20
- Sep 2023 21:54:00 -0700 (PDT)
-Date: Thu, 21 Sep 2023 04:54:00 +0000
+ (user=justinstitt job=sendgmr) by 2002:a25:848e:0:b0:d82:9342:8627 with SMTP
+ id v14-20020a25848e000000b00d8293428627mr65500ybk.6.1695274907625; Wed, 20
+ Sep 2023 22:41:47 -0700 (PDT)
+Date: Thu, 21 Sep 2023 05:41:46 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAGfMC2UC/x2NSwqEMBAFryK9tsEkw4BeRVzk05nphVG6RRTx7
- gZ3VbV47wIlYVIYmguEdlZeShXTNhD/vvwIOVUH21nX9dagblLiemIS3kkUmRf0KdY+O/tSRBN y777+k3MIUJdWoczH+zJO9/0A10IdAXUAAAA=
+X-B4-Tracking: v=1; b=H4sIAJnXC2UC/53NQQ6CMBCF4auYrh0DbRHqynsYQ7AM0ERaMiVFQ
+ ri7hZUudfne4vsX5pEMenY5LIwwGG+cjUMcD0x3lW0RTB034wkXiUol+JGsHmaoyQQkD93UOwu
+ VHkw5uAmp7HFEAg1aNbwukkw8sGGRGwgb89pTt3vcnfGjo3kvh3R7/4iEFFJQScZVLnPVYHFtn WufeNKuZ1sl8E9Z/SDzKBdCFlLw+iwl/5LXdX0D8+S7ATsBAAA=
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1695272040; l=2097;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1695274906; l=2206;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=wxLohCJ8OZyT4ckFvNL/ySlACAagL4RRycYgRdRDcQE=; b=FJozEDATUZfUMAdvAUx5oyW6ZiVUThemIA/jnMSx8yNUj5AxeA4RjStYDSxol7J7+D4rXF5CQ
- KDXN5IlUqusC1qJ5YHBdUIOWRiGU0IIeYHvhB5gxVpdkMBQYmxwb0L3
+ bh=KXXNR06fDm8CjylUce2un2Htp6ByU6W92dU8RA1crQ0=; b=tRLI7Wgpm3CdsY5jEJd3FjvprLZLD8Phcapc19BeFcZk7gq7oTTv/7ibAxYIwzP3dYb+qpKyy
+ lrJy6DcBeL0CVRcBMo3/zxp4L1fKyeXVokEzzyyqcYvL35mdA/5lfZC
 X-Mailer: b4 0.12.3
-Message-ID: <20230921-strncpy-drivers-iio-adc-stm32-adc-c-v1-1-c50eca098597@google.com>
-Subject: [PATCH] iio: adc: stm32-adc: replace deprecated strncpy
+Message-ID: <20230921-strncpy-drivers-hwmon-acpi_power_meter-c-v3-1-307552c6ec3f@google.com>
+Subject: [PATCH v3] hwmon: refactor deprecated strncpy
 From: Justin Stitt <justinstitt@google.com>
-To: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc: linux-iio@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>
+Cc: linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
-X-Spam-Status: No, score=-8.6 required=5.0 tests=BAYES_00,DATE_IN_PAST_12_24,
+X-Spam-Status: No, score=-8.1 required=5.0 tests=BAYES_00,DATE_IN_PAST_06_12,
 	DKIMWL_WL_MED,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
 	autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
 `strncpy` is deprecated for use on NUL-terminated destination strings [1].
 
-We should prefer more robust and less ambiguous string interfaces.
+Let's refactor this kcalloc() + strncpy() into a kmemdup_nul() which has
+more obvious behavior and is less error prone.
 
-We expect adc->chan_name[val] to be NUL-terminated based on ch_name's
-use within functions that expect NUL-terminated strings like strncmp and
-printf-likes:
-| 	if (!strncmp(stm32_adc_ic[i].name, ch_name, STM32_ADC_CH_SZ)) {
-| 		/* Check internal channel availability */
-| 		switch (i) {
-| 		case STM32_ADC_INT_CH_VDDCORE:
-| 			if (!adc->cfg->regs->or_vddcore.reg)
-| 				dev_warn(&indio_dev->dev,
-| 					 "%s channel not available\n", ch_name);
-...
+To avoid truncating the last byte supply `...length + 1` to
+kmemdup_nul() as `element->string.length` does not account for the
+trailing null as made obvious from it's definition (and associated
+comment):
+|       u32 length;	/* # of bytes in string, excluding trailing null */
 
-There is no evidence that NUL-padding is needed either.
-
-Considering the above, a suitable replacement is `strscpy` [2] due to
-the fact that it guarantees NUL-termination on the destination buffer
-without unnecessarily NUL-padding. If, for any reason, NUL-padding _is_
-required we should go for `strscpy_pad`.
+... this is precisely what the original kcalloc invocation did as well.
 
 Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
 Link: https://github.com/KSPP/linux/issues/90
 Cc: linux-hardening@vger.kernel.org
 Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
-Note: build-tested
----
- drivers/iio/adc/stm32-adc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes in v3:
+- refactor to use kmemdup_nul() (thanks Thomas and Kees)
+- change commit msg to reflect ^
+- rebase onto 2cf0f71562387282
+- Link to v2: https://lore.kernel.org/r/20230919-strncpy-drivers-hwmon-acpi_power_meter-c-v2-1-8348432d6442@google.com
 
-diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
-index f7613efb870d..9cdcf396d901 100644
---- a/drivers/iio/adc/stm32-adc.c
-+++ b/drivers/iio/adc/stm32-adc.c
-@@ -2209,7 +2209,7 @@ static int stm32_adc_generic_chan_init(struct iio_dev *indio_dev,
- 				ret = -EINVAL;
- 				goto err;
- 			}
--			strncpy(adc->chan_name[val], name, STM32_ADC_CH_SZ);
-+			strscpy(adc->chan_name[val], name, STM32_ADC_CH_SZ);
- 			ret = stm32_adc_populate_int_ch(indio_dev, name, val);
- 			if (ret == -ENOENT)
- 				continue;
+Changes in v2:
+- use memcpy over strscpy (thanks Kees)
+- Link to v1: https://lore.kernel.org/r/20230914-strncpy-drivers-hwmon-acpi_power_meter-c-v1-1-905297479fe8@google.com
+---
+ drivers/hwmon/acpi_power_meter.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/hwmon/acpi_power_meter.c b/drivers/hwmon/acpi_power_meter.c
+index fa28d447f0df..146c4f09c897 100644
+--- a/drivers/hwmon/acpi_power_meter.c
++++ b/drivers/hwmon/acpi_power_meter.c
+@@ -796,14 +796,13 @@ static int read_capabilities(struct acpi_power_meter_resource *resource)
+ 			goto error;
+ 		}
+ 
+-		*str = kcalloc(element->string.length + 1, sizeof(u8),
+-			       GFP_KERNEL);
++		*str = kmemdup_nul(element->string.pointer, element->string.length + 1,
++						 GFP_KERNEL);
+ 		if (!*str) {
+ 			res = -ENOMEM;
+ 			goto error;
+ 		}
+ 
+-		strncpy(*str, element->string.pointer, element->string.length);
+ 		str++;
+ 	}
+ 
 
 ---
 base-commit: 2cf0f715623872823a72e451243bbf555d10d032
-change-id: 20230921-strncpy-drivers-iio-adc-stm32-adc-c-1bf936a4ffbb
+change-id: 20230914-strncpy-drivers-hwmon-acpi_power_meter-c-c9f2d8053bef
 
 Best regards,
 --
