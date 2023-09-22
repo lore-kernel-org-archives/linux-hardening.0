@@ -1,46 +1,48 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8F7642C1B
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 17:29:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 513514368D
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 17:29:07 +0000 (UTC)
 Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F0D21A5
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:29:00 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1c364fb8a4cso22759495ad.1
-        for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:29:00 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F2CB1B0
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:29:02 -0700 (PDT)
+Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1bf5c314a57so20108515ad.1
+        for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:29:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695403740; x=1696008540; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1695403741; x=1696008541; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gnbuNOS48ZNXGx3qE7i6qDaIIscfCr6TPOESNc92Xe4=;
-        b=EQTEiUEhu4mw8Yllk6I8iSDL00rrpzzbjxGgHTm48P94Bsy8w9FIcAi0/YNwy/HEiP
-         6pkON2YkTTKs/Gz7lVq1+Go/ui3PGl79b/dT3o3wQ5+t1t62piERSDUHsAXph1u7AoDD
-         fRH+c1YILqSDofLactDVzr683oaR2NjaiPTVk=
+        bh=6Vq50cO/AnizqX6/47UHK+JR2ZlGTPocZM47T7rf36c=;
+        b=X3Z5KANWvxS+2EiRKfgJM7+MZxtACYSo3V6zJ7E3dMI4fEx7GrcUwmJz0u6hM3Z5SL
+         bJfIxBgdKE0PxdvrvnpzjvMCA+CLJfLoNplE0b+p/NLiTxsaQksasV5Yzy1/frz4sRFu
+         R6CCLxm9CupFyFKRlANs6grhAYCZNKdlzBfs8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695403740; x=1696008540;
+        d=1e100.net; s=20230601; t=1695403741; x=1696008541;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gnbuNOS48ZNXGx3qE7i6qDaIIscfCr6TPOESNc92Xe4=;
-        b=GFty0Gq71Zqp7cRJ1XdCcVl6ANNmHjiAsgveejcHQ3deLjDUla6f/zdSkuWvK7GdA7
-         Zm0bnsTPg5fP7YlQKv6u56QuRF+wNDymzHS8p8lnoR0EDBtgdgJm7dwkv/8robVmdh3+
-         p1tzLW333qyqJN5spsJVQnh2GVslKEYMW+VnIEoKsh6dX3MM4dvnoZIZkScbDVfGWSd8
-         34nWEOZR+v0xUvc2C6vxeO+AA/wTXlSz9Rp+hmIT32gXf/HPdEALwmRWcOkR1ABSqvUm
-         EY3uV694qUxrRyIz4Biinej+tlT4VaN0OyvuUsMoNDg5BwYQtlXT2sUnXZnTkNAyThiD
-         HRng==
-X-Gm-Message-State: AOJu0YzJdm9a2EHNr8wx+XqyV/v3MBC0sbuwAf8Z0o1zjah2nWYl/irg
-	/LPWlqxsUCENNQ8J0U/bRUdNPA==
-X-Google-Smtp-Source: AGHT+IFPAYsS+3Q90NdkawUry/4+VPXvQMzxK9xLwfsFu8FD0fPVJMXOGVG1TtOJ8nXpO/v7IB8/lg==
-X-Received: by 2002:a17:902:c950:b0:1c5:db4e:bb2c with SMTP id i16-20020a170902c95000b001c5db4ebb2cmr107551pla.64.1695403740357;
-        Fri, 22 Sep 2023 10:29:00 -0700 (PDT)
+        bh=6Vq50cO/AnizqX6/47UHK+JR2ZlGTPocZM47T7rf36c=;
+        b=FS3mac0cjmwqCE1RUl/GFZ/bhb2MBbKN+7Oc9BMv00vAi35OBcDH962nekfk5s8cFp
+         6c7l6u0XiMi2TdGSgLUWxGnoOefgbihfuhtnRrGF3+RUi87dIIIxyeD4CtPE7blt0tLP
+         zwnTwRSATpZ6ojBlqGUxnKqM/JV8uBkb4SGRLnaLUiK2FfzdTx4fd6strXIW4OYzaSC7
+         ZO4uFskF4ltjjGJSnto0VAc53uMTLMo1jzSID3+59hwCL9/Iy7RXXdeC/4d+Ak7xitcn
+         cMPd5OsPMMAR30KhU1+K3Mb1axhplgVl07qO+1JIQTBOyMABWAzK9rFLF3DpqM2AiQ6N
+         ktJw==
+X-Gm-Message-State: AOJu0YzCkRrxJoCkR2juGbtK8VkIYKEdF1VSsWEDiV5ddNABc06WKc6I
+	J5MBD2N3OO6AVv920X0zhwJ2Bw==
+X-Google-Smtp-Source: AGHT+IGfIEU2v7UoVK/0pveDwyLLNq/5vlYcu3slD85oe8s/AbnLImt7+ex2Q5RiEHhneFAOOeymow==
+X-Received: by 2002:a17:902:ce92:b0:1c5:be64:2c71 with SMTP id f18-20020a170902ce9200b001c5be642c71mr152987plg.8.1695403741464;
+        Fri, 22 Sep 2023 10:29:01 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id s4-20020a170902a50400b001bc676df6a9sm3728000plq.132.2023.09.22.10.28.59
+        by smtp.gmail.com with ESMTPSA id iz19-20020a170902ef9300b001bc35b14c99sm3751035plb.212.2023.09.22.10.28.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 22 Sep 2023 10:28:59 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
 To: Jakub Kicinski <kuba@kernel.org>
 Cc: Kees Cook <keescook@chromium.org>,
+	Yisen Zhuang <yisen.zhuang@huawei.com>,
+	Salil Mehta <salil.mehta@huawei.com>,
 	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
 	Paolo Abeni <pabeni@redhat.com>,
@@ -50,8 +52,6 @@ Cc: Kees Cook <keescook@chromium.org>,
 	Martin KaFai Lau <martin.lau@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Alexei Starovoitov <ast@kernel.org>,
-	Yisen Zhuang <yisen.zhuang@huawei.com>,
-	Salil Mehta <salil.mehta@huawei.com>,
 	Claudiu Manoil <claudiu.manoil@nxp.com>,
 	Vladimir Oltean <vladimir.oltean@nxp.com>,
 	"K. Y. Srinivasan" <kys@microsoft.com>,
@@ -76,9 +76,9 @@ Cc: Kees Cook <keescook@chromium.org>,
 	linux-parisc@vger.kernel.org,
 	llvm@lists.linux.dev,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH 03/14] ipv6: Annotate struct ip6_sf_socklist with __counted_by
-Date: Fri, 22 Sep 2023 10:28:45 -0700
-Message-Id: <20230922172858.3822653-3-keescook@chromium.org>
+Subject: [PATCH 04/14] net: hns: Annotate struct ppe_common_cb with __counted_by
+Date: Fri, 22 Sep 2023 10:28:46 -0700
+Message-Id: <20230922172858.3822653-4-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230922172449.work.906-kees@kernel.org>
 References: <20230922172449.work.906-kees@kernel.org>
@@ -88,25 +88,25 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1253; i=keescook@chromium.org;
- h=from:subject; bh=2ca9VJgIAhIuAJFgWJCeV9xORJcl3qwKnOZDA8bb15U=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlDc7W7yeFnrNv8DYkf6K4e0eMtWV9Ow6AlOLTo
- oQ0W7nV+tuJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQ3O1gAKCRCJcvTf3G3A
- JuwVD/99skLCWI618iB8ZWCJjHBr86wQXUIEC3QazU9r6E9O7WmV0Ca/Lf4PWUdmKTLzg/NbH/u
- PxF+kuGXZ27LalW2q5dPBeBElEVHRSJvFP2s41TixGzuoc5Xdrd2dEXv1qSLw/Rjy4Xd2e8J+Qz
- buwXxllOFRxP4mw4JWs4lNcQsjzWCGDuY2kxs9HEPNcCaYeWz7/iHab5eXWQPMJa+FdS9adHHsl
- wpkVBE9c0Gr5oR1ONhxCz3l7LLoQvKYOrRcpV3r5cQY2UEhswD9cwAzi1ZMkGsyUi4Afuw9CR1z
- /5Jvu4yVaonNtxPE6LiYgQJA51cSvzH5xESn+y35kK8kyTade6JnWBm5Q4rXdyWk+ugx65LbkwS
- fx9jcKY7HamgjyBzwEkaX9uhOGaXzINDTENvp1r/aTCWmR9YmiE/jDI8aRFXiQljqz29BmXk5k/
- +T4OSX+S7Zp+e3WWMAmyMtg+a07jEi02oypRoZQdmGu7CcKNueojV959YMXDu2dTRVV4M4y1lX0
- WYVzplIFKHsZsjYKtUu9Qd/EBvBXrRNdvkL+Ecy6CzUv47Xmv1U24pUA6t/OG52eSB0WL2c301l
- NVQbrUOCSH9rcq6GuhVo/p+W/5eVeCs+cRKjQFm/pVPZguH2LfFggOeb0jA1vRwuZcXv12dUNlk tsNd0bZ4UfjHBvg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1399; i=keescook@chromium.org;
+ h=from:subject; bh=cTl8c1Nsj5H86YDYuCjzIM6AfXRPvipiHH9wexbSTFs=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlDc7W7T7fWYQIhp0VWwCK4vkC2/gAT7GYx0S2a
+ rDc3obMtJuJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQ3O1gAKCRCJcvTf3G3A
+ JlguD/43W9S3RVXTT12fwP5xKbgPceVLaoFjLypFqCmF90EoMP0tlys43BbYW9AL/UdsBC/AzDA
+ daZjg3W0qJcSKHCfa/fw0KI5T7Ys1zC/WuM6VgF/PnFd90CnKJyFqT9w8APuL7jJuLkioTLXFNm
+ KKr/xM/Q6RpBeeCmnOPPla1PC1J7fITAPWboovdEmWaNXJDeaA/cqkuc0O/fl2bK34A2E+YRSX1
+ Ga/1u7Et9/vZoGrMjL48CarwhFBgZ/07BX1Vi1ck2cFt3Vgf9vNaMYswfMP2jTL88g1pO9tP+iH
+ +PtCE2i0idGsQeCIQpAEjzfUjgiVq6LSuzhhFhZxO+CZpG+ddA6MhWJBLB+OALoPI0/HszPfbQP
+ tjDdztTV0Y1ijsgDX5Fo/YENa2cUZXIOSoNxqs3q7ZVixjjXKrjYgplwnqm5Nor2mYpInDP+gRr
+ 3Y1KSMXIduKLLeC6nxgv7sdqWJffKmjhvFAbpJi86vpkRq8IZ0BFFxHvafq4MKH3bKaPgpR4HJN
+ HpHjwpAnZ22Cavskf4a41Tuxb6Vpf/edTeJBdNMHPAAUyCfy1fuc9k9ywm7blE1SvkPrxqwwiHx
+ Mm3miLrMAtDE7GIEY1Cp+8oAIBA9+hZbl0or6VFDsIQkuczyrghQ+29chyaUqnLYAEIV2DL78yK qSGI6K6tMv6mcjw==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.6
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
@@ -116,10 +116,12 @@ their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 functions).
 
-As found with Coccinelle[1], add __counted_by for struct ip6_sf_socklist.
+As found with Coccinelle[1], add __counted_by for struct ppe_common_cb.
 
 [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 
+Cc: Yisen Zhuang <yisen.zhuang@huawei.com>
+Cc: Salil Mehta <salil.mehta@huawei.com>
 Cc: "David S. Miller" <davem@davemloft.net>
 Cc: Eric Dumazet <edumazet@google.com>
 Cc: Jakub Kicinski <kuba@kernel.org>
@@ -127,22 +129,22 @@ Cc: Paolo Abeni <pabeni@redhat.com>
 Cc: netdev@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- include/net/if_inet6.h | 2 +-
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/net/if_inet6.h b/include/net/if_inet6.h
-index c8490729b4ae..3e454c4d7ba6 100644
---- a/include/net/if_inet6.h
-+++ b/include/net/if_inet6.h
-@@ -89,7 +89,7 @@ struct ip6_sf_socklist {
- 	unsigned int		sl_max;
- 	unsigned int		sl_count;
- 	struct rcu_head		rcu;
--	struct in6_addr		sl_addr[];
-+	struct in6_addr		sl_addr[] __counted_by(sl_max);
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.h b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.h
+index 0f0e16f9afc0..7e00231c1acf 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.h
++++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.h
+@@ -92,7 +92,7 @@ struct ppe_common_cb {
+ 	u8 comm_index;   /*ppe_common index*/
+ 
+ 	u32 ppe_num;
+-	struct hns_ppe_cb ppe_cb[];
++	struct hns_ppe_cb ppe_cb[] __counted_by(ppe_num);
+ 
  };
  
- #define IP6_SFBLOCK	10	/* allocate this many at once */
 -- 
 2.34.1
 
