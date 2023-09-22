@@ -1,57 +1,55 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF1CE44460
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 17:52:18 +0000 (UTC)
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10F6ACF8
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:51:58 -0700 (PDT)
-Received: by mail-pf1-x435.google.com with SMTP id d2e1a72fcca58-690fa0eea3cso2266184b3a.0
-        for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:51:58 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CE0B44460
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 17:52:22 +0000 (UTC)
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DBF31F08
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:52:02 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-1c3d6d88231so21249245ad.0
+        for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:52:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695405117; x=1696009917; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1695405122; x=1696009922; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LMP6Eo/vaMIazZNY5B2EIxzC5JUt58mRyjJ2WHITWvc=;
-        b=EXVamoRZkEedTX2JhbRhHnxZSe33ND2+9sr7vmkR1nGNQOrqxgczFuEN27qT3RV9n+
-         m1QtmBForVG0oajKGziFwhY7vAGLcEj6V4VY0DE0FwbDpAVQEGlr5Q97EHf9oarW7uFl
-         Ymp7T6gkdlHZ150KOvoltstzse+coUk5b5t8o=
+        bh=RWuKWOMrUoMzQOCKPflMbS6ITer2hgabTUg3ReQt9No=;
+        b=CQcsYKffp4HrOBiIYLoQNbFd3ft+zzFGwKKnovcP+rTEpmiYh8Rb1xRbn4cHkE2+kW
+         nrQ95I1NRrGhJSNKwxdYuCx+/R/sNZh6jvV0Bt7xedXgwJwCy9gzrvulIKFwlksZEpDe
+         aNJ9jHv6YnOnGJK+c3ABuieE7le64IDA3zfJw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695405117; x=1696009917;
+        d=1e100.net; s=20230601; t=1695405122; x=1696009922;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=LMP6Eo/vaMIazZNY5B2EIxzC5JUt58mRyjJ2WHITWvc=;
-        b=trCoI0qGlh86izebw4uOenTTmP0zEGjaq0vXzZH95WSz+xdyB8RNebg39ErNUVXNfn
-         aGvtNPedkq0v8MgyytVbjHajjWJt/JWU8N9TbrhDrTqYDdmfysqMEC+U2MKXPs/IoRRp
-         OQIBpOzpT52e5TYykr2mOC5ZdvlQC2t8TT3Tvu0qJs3snWXgnNpDExueM1LPRrw/pnB3
-         bhF+FXOd44TGTXzie5zD9TXuKFyFsiZaAGsdcEq7B+v5TPXcS71cO6a6cPs7SY6PSy0f
-         TLKHQBMpzbteApQZceu2RbmkjMk0Rk9LpF47SFrRP7qEfr4/ZpTYZNOQc0Vs1qQ0t6hX
-         APDQ==
-X-Gm-Message-State: AOJu0YwRF2Pj5r4ihWTOFlExLgx2LREIzZGU2/Qq7bRSaQFCuowlGGOC
-	vjsYy6SFEpMbu3+TWxpgCQAzDw==
-X-Google-Smtp-Source: AGHT+IFPV6bCMgdrADQ4gtFCdwV9MgXVLuYaes6w0ZZJOH08TXJJuxiCpV6lhgi5HCH4XD7ka4TMrw==
-X-Received: by 2002:a05:6a21:a586:b0:159:fe1d:2f09 with SMTP id gd6-20020a056a21a58600b00159fe1d2f09mr307564pzc.6.1695405117494;
-        Fri, 22 Sep 2023 10:51:57 -0700 (PDT)
+        bh=RWuKWOMrUoMzQOCKPflMbS6ITer2hgabTUg3ReQt9No=;
+        b=twgTHxXHiq05ZDK5C7CeOMGbKnLdygqakAzLJyfbGjjarzdfsyqWRgOSC72JvxvZyt
+         5zmhwAEvwxGqELqccmBO4le/lL98yyERQ/encXVZu02QOyP1k+tjCUZqnvnQTXf/pJVG
+         fmt1GMJTbr5OYdXuVPxrX5XhekYh2F0L5gL42HVfnANBG3ZCtjO7asc39BFfnIqoMwDO
+         FtPECbL2Q1gv8/kJIOiNrSiCMDixy59JEzwXa0q2JdoC8l/MJ7k1I5/NUTULSE/KmF7a
+         jewf3Rb4+gHYxkzs+vOExhpZm7OSmeqAotn+wB/FLgXVRVATUBlzinJbMUArUDcIavL+
+         rDGg==
+X-Gm-Message-State: AOJu0YwvulvvAc8EHt57Khe+SKj32rA5ewTVo9NDlUL2hCkqRisWXWKG
+	jGonKU5CuNfUjxuL+DduR9cMkg==
+X-Google-Smtp-Source: AGHT+IEEYqGk+GvFAAFqlU+6AHitWBEIi3aarNhM7dp2OV5ey+MRAhoWBJPSVmg4F4cknSaQafnbmA==
+X-Received: by 2002:a17:902:7449:b0:1bd:d141:f02d with SMTP id e9-20020a170902744900b001bdd141f02dmr149532plt.68.1695405121759;
+        Fri, 22 Sep 2023 10:52:01 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id e5-20020a62ee05000000b0069069ca9814sm3463168pfi.219.2023.09.22.10.51.57
+        by smtp.gmail.com with ESMTPSA id h11-20020a170902f7cb00b001bf2dcfe352sm3765524plw.234.2023.09.22.10.52.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Sep 2023 10:51:57 -0700 (PDT)
+        Fri, 22 Sep 2023 10:52:01 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
+To: "David S. Miller" <davem@davemloft.net>
 Cc: Kees Cook <keescook@chromium.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-i2c@vger.kernel.org,
+	sparclinux@vger.kernel.org,
 	Nathan Chancellor <nathan@kernel.org>,
 	Nick Desaulniers <ndesaulniers@google.com>,
 	Tom Rix <trix@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	llvm@lists.linux.dev,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] eeprom: at24: Annotate struct at24_data with __counted_by
-Date: Fri, 22 Sep 2023 10:51:55 -0700
-Message-Id: <20230922175155.work.872-kees@kernel.org>
+Subject: [PATCH] sparc: Annotate struct cpuinfo_tree with __counted_by
+Date: Fri, 22 Sep 2023 10:52:00 -0700
+Message-Id: <20230922175159.work.357-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -59,26 +57,26 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1169; i=keescook@chromium.org;
- h=from:subject:message-id; bh=DIpsB/ou/Bn4dXxGISBN9wBhUC+HRqEPU3gJ+srAuCA=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlDdQ77Iev/RbO+fPKpsBUGVaL7crbXoZB/KWdF
- Xqifi3aarSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQ3UOwAKCRCJcvTf3G3A
- Juo/EACZ6Od5Kn99qc5leb8EtaCoZDT1wKVq+FCHfwf1oDM9tMGvk0gt7nu+QQmrcgu/+nCNpy5
- pGVC8+lAd7xQZlw+YzjGV/ogHKK/cKbtCpl2xoPrs4RUzNEqCbNm3VIjRII1D7Wr9wg5A+mg//0
- 10ZhtU7LlSGXqp9TM97DojKy2hS7JFzb/WRCX6Ns6a/XahbuncnM9zNLz5fjqkg0d76a88Ys6Sj
- reiGEku7RQWZQSp0sBw8CGdD/gJOcEaS5FXe4dJ+1pXWmH+0q0sfXCZWBBxItKOU8wZpNxlRVtB
- HLlbLc1cz3FMEielQXectGA4SXvdNa4WObULLyPwpdiH8m18LkVNGjuGSGgsgJoWOdhy0BNs7Yy
- Ptb9Xg1aLq6fzqnS6Be7NqOFofukMU6arKsgvWxJZOmL4atQ8ja//EHhssObOi9A3aUBXbihMrp
- czGAc27Qc37LZP7iXq76h462Rv6uRlhIdUUusZUFRF0ooHmsnxXRcVUI8WFRAAsN3xEVxyAVFA0
- OfXe9C6EV2sAmkapNTAc8VU7lzH2iqwTAklmAsqle3aYC7GbJZ5xcpixKadpgxbwlV4my4kJw5f
- blbAi1WprMuKKNiUqZ3bg0MlZ8Yb5NBJxLJqwSwL3kvhUVTUSOrCXvmv8zDkJqxcgUQigoBq/U7
- 8ekvNsl G0KklGmw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1141; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=n9z5FmRNgXALjcjtTQwP0uj0mQ0tiOVTP5YW9P7FSeE=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlDdRANuxw/YOVkfMe7fQoYeuhYtypfWJE9rimR
+ 0W611Y2NtaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQ3UQAAKCRCJcvTf3G3A
+ JvZfEACAwkw3Hbs4govxC3WH2lH4Hlpz7sGJadYiUoHt+PpNm1GGCy0X2+FNwHI0OvGsu9RRnW5
+ H77B+r/0dOLQy/7GkbzM71I5kXTTFiqUZQHDQhHHLefLxR/GjWfuvRNSjlzzAwWeritamzNkyyG
+ 2sdXgT4uvBxosTfIDag0gWNP3IBDh09NIcjHzu+6Xfmkbc+aL+LPFixecuNOXi3K/GDnL7w5iKs
+ RLmHm8t9Ur1Q36dEIiG8mEJcb1lzjJcv+c6vJKDy5y1yCo4Blhl4eF8gdv85j4DbzYDgVVTTWR+
+ 504vVs9PwUPQe+iNm7jTefR4LBq7wY9RFg5p5URg0LrGQcth+pgkgF/pkolKbjorxKOgfU+Xbc0
+ QHT0O6eCUce78B9Owa/I7lfPPginZXq+T3ZyVdbsEwMEoE0FMX3j3eokoiCmVdTtPspH0qxP4Yu
+ mrfqBcFSb2TKL7W53hxYUQLOu2/YQs9fY6YKKSrk+soHZD3RtJnhNyfWN1ThpQsZK033DO89J33
+ jgTZd1Mni09sKB4DZIr5s5a8Ughcn20T1kEtDI+iM6E5ih0ViruyRUWmYME5ZWuwJ4jHHsaQC+9
+ vq3QlCxhToa/GF2Tv1tc7yvQFuCHpBmU7ztDcVockhlYwa1vlLWAVr0KA6FPi0Yuv+hOq0tBOnN
+ ig4Tr54 MXlUMSWw==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.6
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
@@ -88,32 +86,30 @@ their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 functions).
 
-As found with Coccinelle[1], add __counted_by for struct at24_data.
+As found with Coccinelle[1], add __counted_by for struct cpuinfo_tree.
 
 [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-i2c@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: sparclinux@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/misc/eeprom/at24.c | 2 +-
+ arch/sparc/kernel/cpumap.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
-index af83aca452b7..7dfd7fdb423e 100644
---- a/drivers/misc/eeprom/at24.c
-+++ b/drivers/misc/eeprom/at24.c
-@@ -92,7 +92,7 @@ struct at24_data {
- 	 * them for us.
- 	 */
- 	u8 bank_addr_shift;
--	struct regmap *client_regmaps[];
-+	struct regmap *client_regmaps[] __counted_by(num_addresses);
+diff --git a/arch/sparc/kernel/cpumap.c b/arch/sparc/kernel/cpumap.c
+index f07ea88a83af..8fcf2d8c6bd2 100644
+--- a/arch/sparc/kernel/cpumap.c
++++ b/arch/sparc/kernel/cpumap.c
+@@ -50,7 +50,7 @@ struct cpuinfo_tree {
+ 
+ 	/* Offsets into nodes[] for each level of the tree */
+ 	struct cpuinfo_level level[CPUINFO_LVL_MAX];
+-	struct cpuinfo_node  nodes[];
++	struct cpuinfo_node  nodes[] __counted_by(total_nodes);
  };
  
- /*
+ 
 -- 
 2.34.1
 
