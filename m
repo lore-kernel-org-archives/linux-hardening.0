@@ -1,57 +1,56 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A34A4447F
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 17:54:38 +0000 (UTC)
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCD5A10CA
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:54:19 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-690d8c05784so2028990b3a.2
-        for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:54:19 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4570844496
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 17:54:39 +0000 (UTC)
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D22630E9
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:53:58 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1c59c40b840so23230385ad.3
+        for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:53:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695405259; x=1696010059; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1695405237; x=1696010037; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YRKN2/xBrWvsqRPQDODOVPiV3fGRN8WGAkKDB21KTao=;
-        b=nX7UWr7FMEWywGKAmjsGAMAQH6cAAPkQZvU6BekvdN83y7G05XScdHR49JeajRAopQ
-         dKTO3LwdiyN97AwonrXZHUXjI4Hc5uOI+RudlBVsz9qQ1cRe4YOKiQZp0FMpcaZ9yfT4
-         25uEYudk2Ov842i2inmRxlXmUnXSe6HVssYSQ=
+        bh=WLImW1IzePGbN+/EKPq+ioMvgiAmC6mEu6v1g8YfVEg=;
+        b=CHQAliV2GLtAhRmw3Y9M6mVpiwxNovQ431EasJv73jASKw0ywvHAvVrJ/ZsZ8sAACA
+         xtM1xORYY6eaEf1OHoCWY2TNUlEQcxlRXNx9cHcpaiNKh5BFj8n/tuUiZBrneFrhXWLC
+         IDnHSPOLChGXvPlXRq4AlJJ5YgRWLoNpLSxck=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695405259; x=1696010059;
+        d=1e100.net; s=20230601; t=1695405237; x=1696010037;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=YRKN2/xBrWvsqRPQDODOVPiV3fGRN8WGAkKDB21KTao=;
-        b=kE1jHg2b+ZsrlT8W5CIZ2n2G16EtfhT6j6ojTFSyyMX2BhNsEPTAuMmv8y118W6jEE
-         /iwhFP6j0xToJciTNCSSC0J9VNyYYuyc6upaN1Vg7WL5T2MH971JOL0oNz3hv27pAFcn
-         vjNxwTHGnyZ3rq3itYLMib1nYcWcVOPy3NZPilVJ/c88uE4v/3JPh7ZrVjhhCiGo584K
-         +gul16iQ5Obb/gKhyG82MPCmZtNmGyU858guP+dT5aYZDVgCS+80OuaL0caKfO+vbYaS
-         xz5gKtCtkqa7euq9Okbz4fj3VN4nlaPkmiUAO1x2tKu8FDAoCMsUgMFI3aulT2EVZEtI
-         sIzQ==
-X-Gm-Message-State: AOJu0Yyseg8EB7icfyyHy5rFGDKeHwLcd9xKtspdIRymWkPJmbPF4AtB
-	oIcfVE7c5TCQxQZnDS3xVIEU3g==
-X-Google-Smtp-Source: AGHT+IHaCKf2H2xl/vEMZDs+B2JWCIWeEjv/kL2lXURkoNqtvf0o9Oh8l386aSVv3+k7z5cEewn2EQ==
-X-Received: by 2002:a05:6a20:7f91:b0:135:38b5:7e58 with SMTP id d17-20020a056a207f9100b0013538b57e58mr339189pzj.37.1695405258962;
-        Fri, 22 Sep 2023 10:54:18 -0700 (PDT)
+        bh=WLImW1IzePGbN+/EKPq+ioMvgiAmC6mEu6v1g8YfVEg=;
+        b=CKxTFLmXamBAE7jlBy4lknHNuZDzVqzfFzIz7LrDKDiGlXD2WtjJvFE6K1lbBQOeZS
+         ZZG7G+ZI2f/Y2jQA5OQT7OObWK6WzOutYdVpjkA1rE8AABJjqeI/QUWxARSD1KswzJ1K
+         dFt5CQNeeNfOZwVR8rCet15PwPv58YA4DtMignPh8lKnsYH0yXPZ1OpYgJ5xfuPEROZS
+         +G7yX/Lqqv6qF5fYil7yrQNBoz20Lzy+uw4O4k7ppdgRS1Fm5L5gQYDFnL4w2X2lcrlG
+         X7NPUCcf9CHIdde5o5bRENzHCAzgh/Dpib9uoNFh37MYEL/KCIQ3V38j6naOG1EhSzkS
+         avUg==
+X-Gm-Message-State: AOJu0YzFyzSQH7XBlahc1p0Iq0T9P0m5EhTwCbZ0yBKQ9J2QkaTFqknN
+	IbDIM4zo/CXAIflmT/ooyZ2Hlw==
+X-Google-Smtp-Source: AGHT+IGF3fNGmUjC4okiXR6Ev3mOPUrKRgaxVlLdi8Plb8MDgj/4DVzkWP898nuYl3TJbEm6TJyfFw==
+X-Received: by 2002:a17:902:f687:b0:1c5:f4c7:b4de with SMTP id l7-20020a170902f68700b001c5f4c7b4demr167642plg.2.1695405236901;
+        Fri, 22 Sep 2023 10:53:56 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id kb14-20020a170903338e00b001bb3beb2bc6sm3779500plb.65.2023.09.22.10.54.18
+        by smtp.gmail.com with ESMTPSA id s18-20020a17090330d200b001ba066c589dsm3759352plc.137.2023.09.22.10.53.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Sep 2023 10:54:18 -0700 (PDT)
+        Fri, 22 Sep 2023 10:53:56 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
-To: Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>
+To: Sebastian Reichel <sre@kernel.org>
 Cc: Kees Cook <keescook@chromium.org>,
-	Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
-	Oded Gabbay <ogabbay@kernel.org>,
+	Chen-Yu Tsai <wens@csie.org>,
+	linux-pm@vger.kernel.org,
 	Nathan Chancellor <nathan@kernel.org>,
 	Nick Desaulniers <ndesaulniers@google.com>,
 	Tom Rix <trix@redhat.com>,
-	dri-devel@lists.freedesktop.org,
-	llvm@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] accel/ivpu: Annotate struct ivpu_job with __counted_by
-Date: Fri, 22 Sep 2023 10:54:17 -0700
-Message-Id: <20230922175416.work.272-kees@kernel.org>
+Subject: [PATCH] power: supply: axp20x_ac_power: Annotate struct axp20x_ac_power with __counted_by
+Date: Fri, 22 Sep 2023 10:53:55 -0700
+Message-Id: <20230922175355.work.006-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -59,26 +58,26 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1422; i=keescook@chromium.org;
- h=from:subject:message-id; bh=m5lQ9Sc4/fHR/XZEOUiHgj1+UhlsVXVLOdUWy7uMxzY=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlDdTJ38ytmDtxaYz7ESHW4iJMEWaDISXcxNUPY
- fkE4hcFocOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQ3UyQAKCRCJcvTf3G3A
- JvleD/4vxM9D+I+pVT/pVESSzmlw2BdKA8ww1Ze0HR9ifWWboneaUfZDM7gMmUqspaDaCL7H+g1
- Rn59P2QOYB61Ua67yMFGDFiUuQBLWULgd1+hbwV4iCPXLeeDtKF6KS2H13CtmCKui3/sfLZm2bb
- AkHVoh2LqFCxR8NejyT0txBBbE98UFkfbNFQQNg7vzNgFDdDP1XOzXL/ujf5ZQ3FZoryHa4Py53
- Ys46mRjWXc4AuqPpqMfIYAZDVvki6i5Rbox2zSFtRUDpkPf8cI63lIvws23RphDJutzGtV32jma
- ZtVA96fnHaAjIGOyC8Z8x3p06lYhtpUKpIUGHdb35Tc9T6j2oGdfHyvgeUXdNV8FfBvOsUs6Zvs
- xAHKumyqUUKvgP+MrI7ENxu/s4pST3zlfSU82orWyLgvis4FaeD7IZ7h7iIr/7L1CtowukN62UL
- YKBMNCIKulmCuOS2YmNefWgVp3lrwxBZPdkwOrrVwMtfjnyqRB+9jqt3BgtIgxEMhtJAyyHcrzi
- Nh9MKqcBUV0Mkc39kL+ed9pk7kHv67HEmvOPUeUSPr5hnKPfXCyzgJ6Dm8lrt3w6X6yQfhj7Z7F
- FZgjOe1Xd6JGHlvkbLkNyp+RHwdyr4ovCQzLTrPvdrWX49N4f2ID9UdrVZnPwPFQlD6cFKQ9lqg
- CfmV4zY GUVf7B9A==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1249; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=xHCdB+Bm90QD3l3umM0GSzvzHSQIr+R2KIoMY7RnKys=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlDdSze1eY/sp2o8MEriIqwEc63bQLWGuZ7Mxjn
+ XsSXzjxXROJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQ3UswAKCRCJcvTf3G3A
+ JkmYD/0S5o/H/m1efZ3VLfgKqfWqJMlk1UnalQCznqLB523UsBWOyBFnCxJpx5xAQd2EAH91j5a
+ gBDwJWO155sAMdKYBg421/d0lTM+zYXSDZpyICyA1G2Opkka9dhfzlrpNYhCFam98UFxOO9O49t
+ djX5PdSHYcJ1C95HbfPuiC1JdN8pDwl7McJKCDJgDQCAqxcVdrRWht/CoTG5zNPGwko91JVvOxE
+ K49WJK+FSKVOEG9SKA4ODQDXPrnsr/KXWm19/7Kwtt3/Jt8NOE1k9nY20k90czIRxVH6yn40dw9
+ XwA32R13GtGujQRdKcKtYiXvrS3LX9CBP/QL7jK8WW4SSWLrf9AOKgrdpCMOiQybtrE5TFZKxUD
+ c01ygdxfBJM+Z9T2vzaWMkVQhSmDloymBckp6Aw4+QxTX2XIpx7Mx6gByTBv/z29kKQTkhctofD
+ RjuvWxEJXSBIVdGYVxHEVnejxUNCCPKXMAwYqN41lz81sUypVwcjk0xUl0lL8YdKf7IEP1XHsAq
+ cDbRHp3BuasSrnfhdQc4jdnagoA0jZG7RV/C4cA3Lzkcgl4ewRvm5SZvBR5ZrphbGBWdROQqsBu
+ cddUfhNcPlDhPH5xrMR4f0qDMI6HV3aebr04+HBX8WrelhuleyrQfVXsc8068m2IVu6OqB5CbUp
+ xb8XFZi TX0C2BjQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.6
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
@@ -88,36 +87,31 @@ their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 functions).
 
-As found with Coccinelle[1], add __counted_by for struct ivpu_job.
+As found with Coccinelle[1], add __counted_by for struct axp20x_ac_power.
 
 [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 
-Cc: Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>
-Cc: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
-Cc: Oded Gabbay <ogabbay@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Tom Rix <trix@redhat.com>
-Cc: dri-devel@lists.freedesktop.org
-Cc: llvm@lists.linux.dev
+Cc: Sebastian Reichel <sre@kernel.org>
+Cc: Chen-Yu Tsai <wens@csie.org>
+Cc: linux-pm@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/accel/ivpu/ivpu_job.h | 2 +-
+ drivers/power/supply/axp20x_ac_power.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/accel/ivpu/ivpu_job.h b/drivers/accel/ivpu/ivpu_job.h
-index aa1f0b9479b0..5514c2d8a609 100644
---- a/drivers/accel/ivpu/ivpu_job.h
-+++ b/drivers/accel/ivpu/ivpu_job.h
-@@ -51,7 +51,7 @@ struct ivpu_job {
- 	u32 job_id;
- 	u32 engine_idx;
- 	size_t bo_count;
--	struct ivpu_bo *bos[];
-+	struct ivpu_bo *bos[] __counted_by(bo_count);
+diff --git a/drivers/power/supply/axp20x_ac_power.c b/drivers/power/supply/axp20x_ac_power.c
+index 19a118633115..e5733cb9e19e 100644
+--- a/drivers/power/supply/axp20x_ac_power.c
++++ b/drivers/power/supply/axp20x_ac_power.c
+@@ -45,7 +45,7 @@ struct axp20x_ac_power {
+ 	struct iio_channel *acin_i;
+ 	bool has_acin_path_sel;
+ 	unsigned int num_irqs;
+-	unsigned int irqs[];
++	unsigned int irqs[] __counted_by(num_irqs);
  };
  
- int ivpu_submit_ioctl(struct drm_device *dev, void *data, struct drm_file *file);
+ static irqreturn_t axp20x_ac_power_irq(int irq, void *devid)
 -- 
 2.34.1
 
