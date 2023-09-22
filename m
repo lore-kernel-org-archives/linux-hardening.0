@@ -1,61 +1,55 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D07A44487
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 17:53:42 +0000 (UTC)
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7321426BB
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:53:21 -0700 (PDT)
-Received: by mail-pg1-x52b.google.com with SMTP id 41be03b00d2f7-5780040cb81so1848022a12.1
-        for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:53:21 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37E5B44487
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 17:53:44 +0000 (UTC)
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51FBC2728
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:53:25 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id 98e67ed59e1d1-276c68e6279so1666818a91.2
+        for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:53:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695405201; x=1696010001; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1695405204; x=1696010004; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zj4SpSBariL7w5PfW6Ds6GNC0+0okk3XV9I1LLkTyug=;
-        b=bqBFSDme0elkUaFcgTvhd0/pw2zG1uvcMkyZvBH4FO+Rq0gD26bmikngEzK3fNcQNL
-         /cNOmHR+tuR0lnQ/+cL4P5dHOf6IOCo9W/YsmVD9URm98dmhSQHwQ6CaDrtoQdt7ckVK
-         Otq91qmV+5PW528xXwQaG4q5GsATQyGPWqUBk=
+        bh=IKU0OOROZX8GtXmlmWtOSoc3m5tAbejEF8ueJbXNfc4=;
+        b=F58ptNvBVKPGVaAMka8B0iZ/kGkA3NLoJFen4r6FZYlwVinh261WVZhVNwNNOciVny
+         4DcqwtxzJHW1bv6vFwI/MR920QoJP15/trvKvGxJsVx96ij95Z1Aks9iOS8+gGq523HI
+         cOfOqNse7sm2a4Gnr26nKCWAqoRuwkrzH8yPE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695405201; x=1696010001;
+        d=1e100.net; s=20230601; t=1695405204; x=1696010004;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=zj4SpSBariL7w5PfW6Ds6GNC0+0okk3XV9I1LLkTyug=;
-        b=nt7CygEWKeWQCUyKkA3ZYNzv0+Ka7ZjLlajUhHYzEz6kSdrW1Fqp0g46SpKACBvXGq
-         nkb1XU5sosrVUurQmlpL4PXNE1sKWnLaioIRrtqaad8xHsLYsyKUpWK8xAr19rjL+3NK
-         gTx24/W2sdTZSzajl34dZjcNwsiDrfOzXB3BTbOo3stPlsiK9bF2FNkBVrMIuOL9wnx3
-         GMm1ZCzbd1TkPxW8VKFJe3XBc90rPhUDuUunXD4Drhn7EmOdT4iWGK6pfkNu9H8p9jGz
-         0d9IGnPzL2KF+Wg5JDzrp/txQol/AreUjPPrG+/Tk3PyaVpPTVBZAZ2metfbiVX6aY05
-         eVTg==
-X-Gm-Message-State: AOJu0Yz6HWGJe7UD3ghpWZjJmMhWvUm8lSJsJ0SrhCNAKzLIhk5fNCEa
-	ihR7XB838vd9fH55a3+wcALijA==
-X-Google-Smtp-Source: AGHT+IEcv6I2y2Tg2Odj/iWaOxh5mW66mAjC4xYL0PIzz5E6E4vYoNBJ5eGmBuobJlur8IK3kU6bxA==
-X-Received: by 2002:a05:6a21:81aa:b0:152:cb38:5b47 with SMTP id pd42-20020a056a2181aa00b00152cb385b47mr257623pzb.55.1695405200892;
-        Fri, 22 Sep 2023 10:53:20 -0700 (PDT)
+        bh=IKU0OOROZX8GtXmlmWtOSoc3m5tAbejEF8ueJbXNfc4=;
+        b=qdhxy2GNO0LWxO6Zux2BRFz4z2gjQ4+sWQ8m41xQt46SlUqoWJHSuXPiGHX1AOZR5Z
+         R/E4zbYI/jPYgKk7l3nZA34erZ9LliPEBb+kzEUIDdJBdkr80qawLZMmebdNCTV5rGBT
+         nwCPqWteNhelJBQvcoZg6ptY8W6G2QfgGaQz2feF1zFq/Wtv845IVOfyjYmPeVjCAMUn
+         p8kmfqYm1Gj5jxA7XeTBDX3ZEUhLRAe7Ae8MninQ6J25UK0Ptr5HsyN3mxQnNA7FdZ4M
+         MOz9x6s87IKEy/FZgVJXxmFgZBdh+08hG+muUWdJ13x/RuBgjdAgG4Gq8vZMeYjJAwFN
+         uw+Q==
+X-Gm-Message-State: AOJu0YxokGKPcEB+dJbGs5V4ad8WAfKZJF2yJ/rze8RiusWkYvvuoP5n
+	VqQAYGS8AbomZcsCKR3UkPazhQU/1b0G/o/FTcU=
+X-Google-Smtp-Source: AGHT+IH/7MhTV633GUCdb/yWyD942bovfP7gG5TgqmAQGp2zBjX1j6I8VUXAYvte8NevDqdv1szPDw==
+X-Received: by 2002:a17:90b:1010:b0:274:6839:6a8c with SMTP id gm16-20020a17090b101000b0027468396a8cmr417452pjb.6.1695405204678;
+        Fri, 22 Sep 2023 10:53:24 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id f15-20020aa782cf000000b0068e34f07eb5sm3477790pfn.165.2023.09.22.10.53.20
+        by smtp.gmail.com with ESMTPSA id gp24-20020a17090adf1800b00268032f6a64sm5263304pjb.25.2023.09.22.10.53.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Sep 2023 10:53:20 -0700 (PDT)
+        Fri, 22 Sep 2023 10:53:24 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
-To: Davidlohr Bueso <dave@stgolabs.net>
+To: Mark Brown <broonie@kernel.org>
 Cc: Kees Cook <keescook@chromium.org>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	linux-cxl@vger.kernel.org,
+	linux-spi@vger.kernel.org,
 	Nathan Chancellor <nathan@kernel.org>,
 	Nick Desaulniers <ndesaulniers@google.com>,
 	Tom Rix <trix@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	llvm@lists.linux.dev,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] cxl/acpi: Annotate struct cxl_cxims_data with __counted_by
-Date: Fri, 22 Sep 2023 10:53:19 -0700
-Message-Id: <20230922175319.work.096-kees@kernel.org>
+Subject: [PATCH] spi: mchp-pci1xxxx: Annotate struct pci1xxxx_spi with __counted_by
+Date: Fri, 22 Sep 2023 10:53:23 -0700
+Message-Id: <20230922175322.work.170-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -63,20 +57,20 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1760; i=keescook@chromium.org;
- h=from:subject:message-id; bh=tNrG8i/0a9DiFVHoyS+eyi+j3sakENn22yKf1szb4r4=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlDdSP1E3HqMf03zOoxsrwZjK7Qj8qQ3rlmWuIg
- hEVQLTNG5CJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQ3UjwAKCRCJcvTf3G3A
- JnXID/98/PX44Zti8qld555xxdRdu0RXKFI86bNon1If3/8TVm7WOjQiSGTHR4YdW90Zydlsl1L
- rNagT5wfhg6OP6bRi+uGJKlbSoUnfx5qQ9GZ9Fcyw8JHzZH0Mfzq2Tf6ypcRx3xsNEgtTme7et4
- uJ73qmrN0bMFT1ElebQMq3B8nvbYg62SMzuY/eGktx4SAwAnowdulA12IM4R0/0l2myEQMDWTMd
- crMzjlGE2AjP6rul7CiexgkQ3PBNTgsiq5WnTCb2J4SybdDTqsDut/Xr30sx9nGvX+GpP5HHr7o
- 3Hc/EXEqI4dNa0I6b7zyPdDG0BqkPTIqaT1Lx4QJ+tAd+cUJqbnSYTciLrz0C5IfnjtiaTnYQNV
- sW5R9U0FqdeMnQz032u7VHBRj1dhXI8zNDhsfqDrCWDlUIsMMYF12Irr51DaG5U+PY8I/rWp18c
- pFukvnGCSCGfLrrGFt+QEZ7afQ3TGSTfyKuimDFBzz04G9A3LbtceghPaC8NWmOjzmP0KJUgbOw
- P2LIqnJmGvBQcI5hHrrAgYoxfcCR1A6Py9/A1392H0jxu6sdOPqSCQnhseIaoNcSR5+zW66AGln
- ycylr/yU55fASbpmOf4NWe9HCHyVHQFLkGFyWqd438Y5QydCReDiyKra63cn9iGAagCk8fHwZo/
- PgOkiO0 +z27dRqg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1195; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=e8Sf0qGa4GnkduLkbR5QVFirRy5SjwftZRC9XwaCaCY=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlDdSTbzRFK4+Or9MsQ5t6WkcBxx10MfOAmUZo3
+ pFRqrY3QsqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQ3UkwAKCRCJcvTf3G3A
+ JtW1D/0Z2xHXPyQGLIdKy1N7E/opbora00YtESYD+ty6cAdcM4pNdrtP+Jq3IH5IOOGBWn9n1eS
+ 8uG7hhmdw03xWE2evg0UZh3CgNCbhMBtcmy8MK8iPe3+gN/eTFfXr2sJrgUB2Qw749p3CWg2iew
+ IfNsRu1jQAo6Aa77Jkp3bwvCKP0d3k196ICBYnePUOrosEyIETz+XId1BgfUFQIYfsN2oK8h875
+ Tsu5WRENvEW1sI7BcjEk4hdYF6bLypg4kZpU+T9Ss5majLz4bYsG60uxFt77nH92rr5Qm78V+LR
+ z8XII87IrDNiXgFrE7X6V/wyLDQ7feSQq5Y51LZIyQM9NQcH1humoQ2mCYrabvaWFaqEF3cEsF7
+ 275CdvQYgQXmatoG6GDm/mM5aeAU/5i/vvkAI35lEmW/Vf4VMbtcuB335o2K5v4R4kwZLkTf3Qg
+ VQ62z2h9jSMFmNhCX/nL0h4aWZYOo6j0zjy42/nyQT+7jTvC2a4c6bmcOnwBiX/bI58sPtDBgnA
+ Ick8nKcuJTVRD+DFYmPiAExYWBqzEfcggr7Ex5akn7SYwglRZ4bC84R8lksWvp19CN9VOaJy5mp
+ vI5eTc1MJxnXmy6bVagZocn/17k/A1thqk5TU7ysuKVlx6nGUCcIR9AEhvvJ/KJEnGWV3I9wErM
+ Uo/pDz6 SkGkVu0g==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -92,49 +86,30 @@ their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 functions).
 
-As found with Coccinelle[1], add __counted_by for struct cxl_cxims_data.
-Additionally, since the element count member must be set before accessing
-the annotated flexible array member, move its initialization earlier.
+As found with Coccinelle[1], add __counted_by for struct pci1xxxx_spi.
 
 [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: linux-cxl@vger.kernel.org
+Cc: Mark Brown <broonie@kernel.org>
+Cc: linux-spi@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/cxl/acpi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/spi/spi-pci1xxxx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index d1c559879dcc..40d055560e52 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -14,7 +14,7 @@
- 
- struct cxl_cxims_data {
- 	int nr_maps;
--	u64 xormaps[];
-+	u64 xormaps[] __counted_by(nr_maps);
+diff --git a/drivers/spi/spi-pci1xxxx.c b/drivers/spi/spi-pci1xxxx.c
+index 3638e974f5d4..5b2d3e4e21b7 100644
+--- a/drivers/spi/spi-pci1xxxx.c
++++ b/drivers/spi/spi-pci1xxxx.c
+@@ -77,7 +77,7 @@ struct pci1xxxx_spi {
+ 	struct pci_dev *dev;
+ 	u8 total_hw_instances;
+ 	void __iomem *reg_base;
+-	struct pci1xxxx_spi_internal *spi_int[];
++	struct pci1xxxx_spi_internal *spi_int[] __counted_by(total_hw_instances);
  };
  
- /*
-@@ -112,9 +112,9 @@ static int cxl_parse_cxims(union acpi_subtable_headers *header, void *arg,
- 			      GFP_KERNEL);
- 	if (!cximsd)
- 		return -ENOMEM;
-+	cximsd->nr_maps = nr_maps;
- 	memcpy(cximsd->xormaps, cxims->xormap_list,
- 	       nr_maps * sizeof(*cximsd->xormaps));
--	cximsd->nr_maps = nr_maps;
- 	cxlrd->platform_data = cximsd;
- 
- 	return 0;
+ static const struct pci_device_id pci1xxxx_spi_pci_id_table[] = {
 -- 
 2.34.1
 
