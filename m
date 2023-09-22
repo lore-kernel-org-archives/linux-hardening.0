@@ -1,43 +1,43 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51E3045F50
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 18:18:11 +0000 (UTC)
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0964B7
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 11:18:08 -0700 (PDT)
-Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-1c46b30a1ceso22433915ad.3
-        for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 11:18:08 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E0645F54
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 18:23:33 +0000 (UTC)
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61899C1
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 11:23:31 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1bf6ea270b2so21946705ad.0
+        for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 11:23:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695406688; x=1696011488; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1695407011; x=1696011811; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=l4T/fTfBwkAD/muqS7Lm7m+/C+nhl1XGVqC9ttPy9eA=;
-        b=MGEnSZ5DvLoOIcKKMbU6bsWVx1QGxFDEfjRso+SeDZ1c0ST9rD35Hw1u3cdnEFlO95
-         a85vrPMSDS90VVCy7DbU/JrVvf5SLAfy4IEpnG7XOJfrl5j2yDPYOhSUrOa/pfA2WQJ4
-         C4WQbFy+bg3FkEs/NOyLd8UBmheBFHOE7j/qU=
+        bh=yr61q+Y7qYRmoBTJuHgU+TYxnPKaIi9OdQT3qJe9OKQ=;
+        b=iCmOCMPCCL9WxWQPipTKjiZkcJbnyvLx9UAPFJ3jfhYVo/UdCh0+xaVLO4N9WYho8k
+         kwoYiIC6rCezw41K9BZ5BxuzU58U2S9lh0QTPIiFfbUnsxxQWWZ7K35huxRzNJ/XR+1R
+         tR5rhVSDtJqtpZRXG+d9pwjq4V4cuAJtk6ZWk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695406688; x=1696011488;
+        d=1e100.net; s=20230601; t=1695407011; x=1696011811;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=l4T/fTfBwkAD/muqS7Lm7m+/C+nhl1XGVqC9ttPy9eA=;
-        b=duquKIpCZEXB1eyqWRtSTRXwRHeVMzG6m16SbZJR7gyG8yvPaEsUnq4S3kHvvkmFco
-         cuvOKm7jtl/qLTHsbrGMIkbhi+lhcgheJ7KI2Ixx7WWwvqWnsY4vlZ44650WpsdPX5fg
-         Tv/1ZWnYD49MLwa7Kj6LeiQtVgrGCEw6aw7HrlqWXjJiDFdzgWmolFGTbYznkZ3i1rxB
-         XqiKN06Qhl3FPN2dShussA8OBgQGl93cJlo782j6cIQQ+6Rs80VmCCV2Ys+FDFBnG0a8
-         QUIvDHei063oE0BqsoyNclJm4MxbRvLuxn/uQZ6EyGERIJNRz68j8H9goMc3lBRn/IfH
-         pO7g==
-X-Gm-Message-State: AOJu0YzzXIee07Vye5Em9M/wJ139PIK2h0+UdzYzVggz5Pl8y9rDQcR7
-	xnC+RkXIJNdVwDi1URy1Ip7NLQ==
-X-Google-Smtp-Source: AGHT+IH5/bxePU0F2RoHuDHcwpnFv3qhRHMIDj1hzz6KjFthqubQPCi6uc81wCdHv55oKzyGphjbaA==
-X-Received: by 2002:a17:902:d48f:b0:1c3:6d97:e89e with SMTP id c15-20020a170902d48f00b001c36d97e89emr297047plg.58.1695406688329;
-        Fri, 22 Sep 2023 11:18:08 -0700 (PDT)
+        bh=yr61q+Y7qYRmoBTJuHgU+TYxnPKaIi9OdQT3qJe9OKQ=;
+        b=cNvrtutTVZrp//00t+XAMzBY0kl+2gFzwl6XFZ8PkuFq7LR1SL7bjmk7Uv6biRalRc
+         ERhEOsSmwqNJCBRJhkus7ozBJrTKlu4NHtxWnfEhVDRUwdnCpgmA7ljQwgd5sRoIp3k2
+         ds+DB16H0LnyNRDQSHEpNiv98xRrtHjCTJ4TM6/R2bhXM9TQuybuWe24IFE2zm5AjJZA
+         pQ5qnG2mcHP4WDlgDmcFQC3+rURPxiHb7wWGxvO4VHh3Q9YZLKTRxJQDnv90W4pcK6f4
+         gv/gdQ+b1AxYHccoHGWKuyXt0PWrk/3tBW/AaV213RIOIsck6dfsOu6IVG/TrwTgnwMD
+         sa3g==
+X-Gm-Message-State: AOJu0Yy+gRc5A76vG/13La2CG3fkK0p+rix+WPhrpw+GBTP6ecu71eAt
+	+tvDZtmTHJaHYKA9OojXnGd8JA==
+X-Google-Smtp-Source: AGHT+IEPfMe5MVG2BsIHv/EtqHgJb805J/3mFScd6v8b4SEGGTa1wBOOaNI8zST/3Yhw8KfpVcqPdA==
+X-Received: by 2002:a17:902:b7c9:b0:1c5:cbfb:c16f with SMTP id v9-20020a170902b7c900b001c5cbfbc16fmr265044plz.25.1695407010837;
+        Fri, 22 Sep 2023 11:23:30 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id e3-20020a17090301c300b001b531e8a000sm3797390plh.157.2023.09.22.11.18.07
+        by smtp.gmail.com with ESMTPSA id f8-20020a17090274c800b001bdc9daadc9sm3775058plt.89.2023.09.22.11.23.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Sep 2023 11:18:07 -0700 (PDT)
-Date: Fri, 22 Sep 2023 11:18:07 -0700
+        Fri, 22 Sep 2023 11:23:30 -0700 (PDT)
+Date: Fri, 22 Sep 2023 11:23:29 -0700
 From: Kees Cook <keescook@chromium.org>
 To: Jakub Kicinski <kuba@kernel.org>
 Cc: Jamal Hadi Salim <jhs@mojatatu.com>,
@@ -68,7 +68,7 @@ Cc: Jamal Hadi Salim <jhs@mojatatu.com>,
 	linux-hardening@vger.kernel.org
 Subject: Re: [PATCH 14/14] net: sched: Annotate struct tc_pedit with
  __counted_by
-Message-ID: <202309221117.160257BAB@keescook>
+Message-ID: <202309221122.74FA902A@keescook>
 References: <20230922172449.work.906-kees@kernel.org>
  <20230922172858.3822653-14-keescook@chromium.org>
 Precedence: bulk
@@ -132,10 +132,20 @@ On Fri, Sep 22, 2023 at 10:28:56AM -0700, Kees Cook wrote:
 >  	opt->refcnt = refcount_read(&p->tcf_refcnt) - ref;
 > -- 
 > 2.34.1
+> 
 
-Gustavo pointed out that the annotation half of this patch in missing.
-My mistake! I will figure out where it went. :P Ah, the joys of
-splitting up a treewide patch series...
+Coccinelle was not happy about the #define ...
+
+struct tc_pedit_sel {
+	tc_gen;
+	unsigned char           nkeys;
+	unsigned char           flags;
+	struct tc_pedit_key     keys[0];
+};
+
+#define tc_pedit tc_pedit_sel
+
+Also, it's not been converted to a proper flexible array...
 
 -- 
 Kees Cook
