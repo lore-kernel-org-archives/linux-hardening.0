@@ -1,54 +1,59 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E6DC44460
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 17:52:50 +0000 (UTC)
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D70BCDF
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:52:32 -0700 (PDT)
-Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-690d8c05784so2024643b3a.2
-        for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:52:32 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 341054446E
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 17:52:54 +0000 (UTC)
+Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F36A910F6
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:52:36 -0700 (PDT)
+Received: by mail-pf1-x435.google.com with SMTP id d2e1a72fcca58-690fe10b6a4so2262943b3a.3
+        for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:52:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695405152; x=1696009952; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1695405156; x=1696009956; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Pl35WLgGJCM37J4d+X10Oeina5d9DkaQtxX58zLwSlM=;
-        b=EXY7HNbgd/I83aRTxiEzojpDZ8gH+L8V6h9re4yNRVcoWaS6p59GnOOXihNY3qS9+2
-         wOPGPLHiwU1ncmrWiTA55WICiRmidITiZATzPV0JnjNOtSNrnU1kFCLTCgfW+H4VG9dW
-         /0CA87Rc6pMnhxU83CtWwlQePrKVdqzu5oFbg=
+        bh=ZJdLYVSWRxq3AIlS4Kyz9YBlE5nYYkWXarwNDO1ghNY=;
+        b=mF6qe9PA5R5otO9zQnKcKj5oC+4+CP4hBXkWIjBl2HDYJBPTRln4UaDH48DkP5TPat
+         Ol/LoLZhF1VQRtz6drK/5zIwBNaCeeynVqn0LBW67vUzK3bL6d2b0KFoHFVGyHbMI0I7
+         mKBZDl8igK8nLzRodV/DhXyPirWDfOYHCVzHE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695405152; x=1696009952;
+        d=1e100.net; s=20230601; t=1695405156; x=1696009956;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Pl35WLgGJCM37J4d+X10Oeina5d9DkaQtxX58zLwSlM=;
-        b=UlKg/7tOEOx4cxt/LkEhogBcsMUx/q+4h6Y71qpA7lv3PmcyuCJwzL/BWGggGfPEdj
-         CYFIhtN+w65gQOyx7UgWBYBPnV8HvQNahlQbzc5/4DLTbsw9eqIa32OoqsGaQxeFkgja
-         Mb28UPh1YbAgogEyR+mC2nAzWvOoEMGCQkkCrG67V33z88+fiBI++zvC9Ma8BR0XNI8w
-         Mr/n1BXtNJQSjnEeWRvHWstY3nK4/BLZ3Nm0xD2Rf7aEPf35Af8BjyA6GYGqUOAQAY1k
-         qFRtq7+qcU96OAPLGr6di4SuzaiTjIM0upsRq/DB9/0pJvulYDtK9gZZcxVP6bVet2PO
-         C9aQ==
-X-Gm-Message-State: AOJu0Ywvm2GiWs/JMoumZ0tur59562LI8yFIZFvV5v5JALbtNR0iyDZQ
-	s5BlPzfhNku1FWv1GJfSw/CJHg==
-X-Google-Smtp-Source: AGHT+IH/BDsjyOwNnnB/vf6GkI+p/S/HBCalaSB8F8C8ics2Sk/hCAm4LC82tljGOQEyC/JYDiPGYA==
-X-Received: by 2002:a05:6a20:d41b:b0:14b:f9e2:e16c with SMTP id il27-20020a056a20d41b00b0014bf9e2e16cmr173591pzb.62.1695405152277;
-        Fri, 22 Sep 2023 10:52:32 -0700 (PDT)
+        bh=ZJdLYVSWRxq3AIlS4Kyz9YBlE5nYYkWXarwNDO1ghNY=;
+        b=YWdGc/Ir3B/zoldIdNAFfgwxP4bkzl8Dztn6Cds7kfFGCoHpKh9qxgNIJYH7JZ5aPv
+         +wk4mz5gY5JbsEivoVRGCK1lT3IpTDjIQM0/0OzFjyOjSyEmD9ip7v/IsUSiPkWUVEAi
+         +ZfT7ihSoOtYFx0NztpcqHZz/R42RmRtOLzuhJKwji98Dpoj3ta44qmTfHGDXxhblDrl
+         t3I7xeXREFK1jli0oS+VOfGYCByDIvHfqGw3iCBLnYJCMaWsyvZcFitp0Ds7I2kKUSqZ
+         plh8D1c2CRHIsrukBhylun14du+KY3tgbf1szfKGTsWmiJjbIvzjjs+99vb4+l10y/uF
+         yFIA==
+X-Gm-Message-State: AOJu0YypUpG34Go6nPJfPGZfOFc4IQTdaaJG12N0ip8WUDuZFqoV0V2s
+	7PPWpbbBzoL5KnkmMgksrp9/6Q==
+X-Google-Smtp-Source: AGHT+IFoQrSp0SiFF6qLCBvHgOfTOrpApeeY7D6DEhe0wY4aS5rS++y/hvFvRE1hRHq+xbkNHBtrKg==
+X-Received: by 2002:a05:6a21:3392:b0:15d:6ea0:82da with SMTP id yy18-20020a056a21339200b0015d6ea082damr339756pzb.33.1695405156459;
+        Fri, 22 Sep 2023 10:52:36 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id e14-20020a62ee0e000000b00690d9901ce5sm3463268pfi.102.2023.09.22.10.52.31
+        by smtp.gmail.com with ESMTPSA id s24-20020aa78298000000b00687a4b70d1esm3453975pfm.218.2023.09.22.10.52.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Sep 2023 10:52:31 -0700 (PDT)
+        Fri, 22 Sep 2023 10:52:36 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
+To: Liviu Dudau <liviu.dudau@arm.com>
 Cc: Kees Cook <keescook@chromium.org>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Yangtao Li <frank.li@vivo.com>,
+	linux-arm-kernel@lists.infradead.org,
 	Nathan Chancellor <nathan@kernel.org>,
 	Nick Desaulniers <ndesaulniers@google.com>,
 	Tom Rix <trix@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	llvm@lists.linux.dev,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] reset: Annotate struct reset_control_array with __counted_by
-Date: Fri, 22 Sep 2023 10:52:29 -0700
-Message-Id: <20230922175229.work.838-kees@kernel.org>
+Subject: [PATCH] bus: vexpress-config: Annotate struct vexpress_syscfg_func with __counted_by
+Date: Fri, 22 Sep 2023 10:52:35 -0700
+Message-Id: <20230922175234.work.134-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -56,26 +61,26 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1858; i=keescook@chromium.org;
- h=from:subject:message-id; bh=zVFGOtqG+KacYumKbB4wtYyfvREXmMdZtLrfDhG/4qk=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlDdRdFctFcnxvk85JokSXmLjz7++yZhNkrwiyb
- dphp4EydX+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQ3UXQAKCRCJcvTf3G3A
- JuJMEACXeQkr31kziRM725dFIKq9wmwrmq6V5N4omADvfekK5/8iU9lpaMiZf8iOy9qf/Bg7PK2
- mWIxyUbqQ/S9r5JGIeolWgqkORbkYkeSP9+HwFAEJLBYin7MutM591cCTTXPcOVEFg5hGbI2EbP
- fI/7TKde7BDVAT2cnicNgpiW56Qkh+8yj3i+5WKqiprSzM/Hp21l0VaufBiaZH9AEr3qIXBaMHN
- Md49gWgF1Ettd/WSDi0O17J2JAmIHJrw25BgVYqVlQn/VyT70U62+pnBy38cKmomHdESuaQlDXB
- 4djLkKZ+6i4XbV5nFGFXkdfEYAQoRntXxhgUJh2fD6bLXE7wPMZnpeaYLS5BLZ+D/2qZDdv48MS
- Uevp63fIw8z2l+7rig5+LHK+LY2HOEjBC0VI/asXjuGTj9+Ilg+Gz63bW3UsoqLRSAL58LGohJZ
- aephoxoMcu2IEWKGggFxb+YL+64Fz4zRpIwLXplONOgxKxw+MnIFCEBslxDrTbhsCtvT4y/pu78
- oRHU2ogHvbU2khR/zEmsS4O0a65Tc7yXsccydS/J14CzdnebtFJY2ZpKjVY+dq/24V55R9BaNwU
- lkpWsIPIoWjyZnsjF7AQhdEMkmkZto+l4x3SxayKSRKFsg0VK3ZrMSUH0+Ag/jzss1hqhq4710o
- UDDEkJ7 4SwPXvhw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1359; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=3PVI9STddT1UYeIAqa7UhvgteCrsOUq0jUn/ld5S1vw=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlDdRiLsX/0CwUbyt/VlYPcyGDAI+9ukcXqigL5
+ VN0fQ0VpkqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQ3UYgAKCRCJcvTf3G3A
+ JkGEEACWR8ueSvd6K6fybEhvi0LAyEorYYtD45WON1Xxm4nFzcoie++vcc65U3s2vBo2Q+Ca6Hv
+ 3ZlC4gOLONusN/ab1KT6HRYpnvJ3kav1cG92LF06cpQ1sJM6wmecTH9Z/tS/SycFLTUsIiR+fRx
+ VYnTm5uuM8vTCvMMXoiJkxhwIWd5huI93hNq/4b/1hrZiKkAFxT9fQV1bTpNpzze1+0V6hrdHbX
+ pZHHEP4xCGvwBY1r50vXi5jevgIbjCNQ9ZDO3HM2o4FOVVmsudLOzt0DO4EQZYPBeGfKzRA1dDm
+ 46X09cXsawNxRUH9HeOn8+g+A1+QGMy4embVLeal2qjyAve/vCfwlr9PUlRYdcgVDsuPD1SLK8O
+ YNO4CerpAmMXWOQqCxOnk98lIz6diCC7o25PAmFbqg9O/7GMYymae6IbxT92aTG9xxtmFs+NL0P
+ 67f6B8yIoj4ViQNWe4c6XqTiMxlAsWuELYoSodTUiuA7yqXjwvFOtw1iOpyPogRQ7mAxjVMxYlN
+ Wkmhjs3gY00bdzo7/b6dZ9vCmHH8xxnvDWNqtcr8TOt0bJUNv0ZtzRK2F0DrgUrtcfY1cv92fAe
+ j28xJqCPhn9eeB0YArMpn7Z8rk6viQHx2tOeW59Cc8rUZc5r+NplUk4pxad20p/nYkd8v4n93u7
+ rwdVR3q sgzoqcAQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.6
+	autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
@@ -85,47 +90,34 @@ their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 functions).
 
-As found with Coccinelle[1], add __counted_by for struct reset_control_array.
-Additionally, since the element count member must be set before accessing
-the annotated flexible array member, move its initialization earlier.
+As found with Coccinelle[1], add __counted_by for struct vexpress_syscfg_func.
 
 [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Liviu Dudau <liviu.dudau@arm.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Yangtao Li <frank.li@vivo.com>
+Cc: linux-arm-kernel@lists.infradead.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/reset/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/bus/vexpress-config.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/reset/core.c b/drivers/reset/core.c
-index f0a076e94118..7ece6a8e9858 100644
---- a/drivers/reset/core.c
-+++ b/drivers/reset/core.c
-@@ -60,7 +60,7 @@ struct reset_control {
- struct reset_control_array {
- 	struct reset_control base;
- 	unsigned int num_rstcs;
--	struct reset_control *rstc[];
-+	struct reset_control *rstc[] __counted_by(num_rstcs);
+diff --git a/drivers/bus/vexpress-config.c b/drivers/bus/vexpress-config.c
+index c4e1becbb2d2..d2c7ada90186 100644
+--- a/drivers/bus/vexpress-config.c
++++ b/drivers/bus/vexpress-config.c
+@@ -54,7 +54,7 @@ struct vexpress_syscfg_func {
+ 	struct vexpress_syscfg *syscfg;
+ 	struct regmap *regmap;
+ 	int num_templates;
+-	u32 template[]; /* Keep it last! */
++	u32 template[] __counted_by(num_templates); /* Keep it last! */
  };
  
- static const char *rcdev_name(struct reset_controller_dev *rcdev)
-@@ -1185,6 +1185,7 @@ of_reset_control_array_get(struct device_node *np, bool shared, bool optional,
- 	resets = kzalloc(struct_size(resets, rstc, num), GFP_KERNEL);
- 	if (!resets)
- 		return ERR_PTR(-ENOMEM);
-+	resets->num_rstcs = num;
- 
- 	for (i = 0; i < num; i++) {
- 		rstc = __of_reset_control_get(np, NULL, i, shared, optional,
-@@ -1193,7 +1194,6 @@ of_reset_control_array_get(struct device_node *np, bool shared, bool optional,
- 			goto err_rst;
- 		resets->rstc[i] = rstc;
- 	}
--	resets->num_rstcs = num;
- 	resets->base.array = true;
- 
- 	return &resets->base;
+ struct vexpress_config_bridge_ops {
 -- 
 2.34.1
 
