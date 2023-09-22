@@ -1,57 +1,55 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E96C243AB3
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 17:51:33 +0000 (UTC)
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 844611999
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:51:18 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1c39f2b4f5aso20496035ad.0
-        for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:51:18 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4929E43AB5
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 17:51:46 +0000 (UTC)
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D60F10FA
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:51:24 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1c453379020so21091105ad.1
+        for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:51:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695405077; x=1696009877; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1695405084; x=1696009884; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6FhFEbneXxxaBPpeUpxOqm5me+1wuH+iOEgRRKvJoLs=;
-        b=B9ZjAfzVQZaHVrlciIR3H4q/zXJyYPCqaJBM2fVayL9nrchrdpkhrAGndqF08888Jr
-         etFm/Le8FHSMmf4iTFfCJOwwljwvGy9977QUvcHKPOLfngnoqS530fLS1gBSHHqODAd7
-         gqOm8xmUlS3hLmDY3/NQiLvEoGdP5MCjLFYzQ=
+        bh=eXc3WVm2d9wXGVJuKAtiopcDcMVBwoquCz7AlsYwD+o=;
+        b=nhRAHBCabqS+f19t4DDPSMSTtrRJlhPkHZrAKOo/KyUq5+5zwQiUNJfUV8V5L8sar1
+         ZiB1Vf1cJ6MCQm7WZfN+8Ssm/frqqObMGLM9yKzfuQpqJa72d+E5Lbup4niAcx4ZcDEw
+         mICMjFxWchuOC080S+QLbXcsQq1xIEJRoKrhI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695405077; x=1696009877;
+        d=1e100.net; s=20230601; t=1695405084; x=1696009884;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=6FhFEbneXxxaBPpeUpxOqm5me+1wuH+iOEgRRKvJoLs=;
-        b=mKbpMwuGSfytYUz2DXHdk+7hKqZDTJjBupKtSSrHw37eMVBEktx+sC9gz7mbluDMI7
-         EBvshlyztLz7BDFeuA6Wi6pXfgjscqc2q3ftCXY7OyGPczvxtT9Sh8rlUFsaoYQ5sg1Y
-         PIKLksfFDnlr9IkcdR/MqBFgko8797AER6yX766bnzL/jzqFqMX8bnD8JQ0SOIuYrtm7
-         XvjVAldjZQ99uhEfGRdUkwI1+zwvv252bb6yGIeFe43WxZVh/VGSmCGoOFGAnd3uzWCO
-         GYaRbCkUSNEhWlCKSjtxduJ4WFhViMRRWCERXQkK4n2ZzNl+MKK8KNG9O9WWb6k2QcJA
-         JzRQ==
-X-Gm-Message-State: AOJu0YzNkJOVrceym4fbFgJZawvTN/G8O9adCpb+xtNLa5ZXSGh4VPz9
-	XN+aW5PWxwB87G5bt/mB+qEGhQ==
-X-Google-Smtp-Source: AGHT+IGbdv9VwbwNAFjuBeDTZqWEmq6Cgd7EZVO0zimsbEWBFdYx8gilTv66w2ACi0U7EPXn8wEnXg==
-X-Received: by 2002:a17:903:11c9:b0:1bc:844:5831 with SMTP id q9-20020a17090311c900b001bc08445831mr94508plh.57.1695405077190;
-        Fri, 22 Sep 2023 10:51:17 -0700 (PDT)
+        bh=eXc3WVm2d9wXGVJuKAtiopcDcMVBwoquCz7AlsYwD+o=;
+        b=fu8LcgU5lfjxG+NllTWZ+5KBQbl2xRrzARlooh4TzkLzwk7qFayuHjxr7NJWiRA17/
+         vjVB+2kDjmim79niz1vXSbxj4cUhDMqSAyzC8k7+l3lUGmyM48Svw5D8Txk7R7e+/vp6
+         1Io6tshFFTWlzP1aZ5GcbDd8q3d/cL++erCtgYBuuZto1WRUgpyXwLsWmSeZiRWO7STO
+         oLwH28ZgU/lLULGGaj01dOaCO5+pBUxN6SEqb7dN1MTA2B5CTeMNzWDy6q2sckXBXMSx
+         b30nFj9aZZWD+dWC53WxVTS+zKQx1D+XFGQTLqd9z7O0CqZb4cqk542N/+Cowg2OjrTo
+         3Jiw==
+X-Gm-Message-State: AOJu0YyO/qhfniN/EdhQ7hCyiL7xP1iV70eo2KSnKsGyP2N1PTm2q4sm
+	/LU/G64B3EK0DuOzC5DVaWoBDQ==
+X-Google-Smtp-Source: AGHT+IH/Kn1OJkUrFMU9jg+TEckOUQCVzn3MG2/uzWrH8DEVzrtRq6GXOgkadVLCZAFxwqsvTYCVvQ==
+X-Received: by 2002:a17:902:7798:b0:1c0:aca0:8c44 with SMTP id o24-20020a170902779800b001c0aca08c44mr195510pll.19.1695405083834;
+        Fri, 22 Sep 2023 10:51:23 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id jf11-20020a170903268b00b001c0a4146961sm3792429plb.19.2023.09.22.10.51.16
+        by smtp.gmail.com with ESMTPSA id b19-20020a170902ed1300b001bde12178b4sm3771970pld.33.2023.09.22.10.51.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Sep 2023 10:51:16 -0700 (PDT)
+        Fri, 22 Sep 2023 10:51:23 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
-To: Amit Shah <amit@kernel.org>
+To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Kees Cook <keescook@chromium.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	virtualization@lists.linux-foundation.org,
+	kvm@vger.kernel.org,
 	Nathan Chancellor <nathan@kernel.org>,
 	Nick Desaulniers <ndesaulniers@google.com>,
 	Tom Rix <trix@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	llvm@lists.linux.dev,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] virtio_console: Annotate struct port_buffer with __counted_by
-Date: Fri, 22 Sep 2023 10:51:15 -0700
-Message-Id: <20230922175115.work.059-kees@kernel.org>
+Subject: [PATCH] KVM: Annotate struct kvm_irq_routing_table with __counted_by
+Date: Fri, 22 Sep 2023 10:51:21 -0700
+Message-Id: <20230922175121.work.660-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -59,20 +57,20 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1223; i=keescook@chromium.org;
- h=from:subject:message-id; bh=hLc6EjIakpzsaX2PmH9KGXcoCU7k7VxuxAddnu5wvP4=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlDdQT7dSBQHc/s6zgQ1bG9pZSaUdLcPzEWU5q+
- UW8H+WTeDCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQ3UEwAKCRCJcvTf3G3A
- JvOmEACk0QTdWB4H9s0DTbpqXHzvscY+UZub5Qt5LP0HSsv4VUHS2VqKK302oSkpmjRd6PnScRR
- CgD59KxXDfrn0HXWKbgYGs9RBY9LB/BYhtrPIB+oA4X2l2bejqg//JPkCS5c3YQqgZslnuhfY+K
- 2qWoHc1d1Q51y6JIDeheahZwH2BAv/dhFLmVYKUtR2CMk6muErN/cf6KqtBMdaqmPZ3PDtnHnnG
- M4+CHKXrUvsM99Lcvi6rtZ+r4n5q6CcSns7LnRTpajJJesE0zXK5GHp36jbRQ06nZzMWRztHxt8
- bNaRpaV55BWkecXEOURmiGWFxtqwNgaUeY/uBYqsl2ND5izgFB8mnE7jPdvkQNUPaQbbBSsyXc2
- xm0/NYMUo+aUXRSqxSptEQhc1ANGAwMUx8tt+8y9JpsZP/2691w3VuXNzp/pCtK4j8a4sJrJ/on
- XMA/XKEbifZ3ep9LXPAHWWlwjSVSvw0jzJ8ZgeKWjQTvb09AawkDpXmhUr8r1bSCoKQksybOR6S
- sRo2x2Xc4LL44AKxKWTZ9HhOzAn/iScJowWZki3dOZrMvsN5Gved36lKyWWuFQifTANbzNIPFvR
- 1K35LT2O+9RZkieJErqb3GdNTuAQLgzFnrq4CtpzXoKu/Tst3IylFRzlkloZnU+cgGX1uqfgtv1
- OWDskmG st82qa8Q==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1134; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=+kioWiTjqV6jdbFZylWekeUu834dva3bEE4RuM/bKRQ=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlDdQZLetVqJUV8ZSLYv/hoDK79//fc87OG48iZ
+ kOU8Wrigv+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQ3UGQAKCRCJcvTf3G3A
+ JqBnD/wN4+TtgPpWSDb0l1F32tdGJLNbEHEnVEr8OVv6j14PQUeCh5nUABKY7BTC2yJIGP4VKbX
+ ousJT6tKEKoNsuwfJp0Z/Pv2ssKKbABc1busJSGB1V081CNDuOKPy/MN3pCqlTLtxk7yrwMkTWl
+ 1G+C2YKMD4fKZU1EII3XT6kYdk2j9t487W/CfBBGmWZKuOEeoR0x22SWdrW2QPufcHf9bQLTj/n
+ 9nygC679juYza9RWkF3u1hGYey8QGjP3SR1pusnTKAHd3oJBBhoLRsbmG9F+PNC3OjXCc5PdK64
+ xD+7Inl2rGuMnRumnfsWJ4kBQgBr+Q/EbflYNsf0Aj/e3LVac/HEheuy8BxWasrtWNZ7IF9UgUf
+ 7IrIqRGQVzygQPskeMPE7NgBtlZdj5C/Mlev/Gh/cuTufDy6RE2lknosD3OI4zzOvD79MZHW8R0
+ qV1/TmW7guNS5XqgK1XfYNZcEqCI8PbL8kaClfUCgLYe52QO85Han1E7cH1wZZJBV3/OVQej3RL
+ sUUTxwb5vl6n8FNbO+mtp7p2khlg2yyNgo3aaAWsGVmU3pWHubzzRGuIFyQUy6z05n5UEEEXXe2
+ kEisjaAvIWB0BwiuIctaz7/4aQuV2TCNVjylB02PM+c77Jzzec7B/M9A+QFaHowdXUCPyiFjaY3
+ QET+wYw MOtez24g==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -88,32 +86,30 @@ their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 functions).
 
-As found with Coccinelle[1], add __counted_by for struct port_buffer.
+As found with Coccinelle[1], add __counted_by for struct kvm_irq_routing_table.
 
 [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 
-Cc: Amit Shah <amit@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: virtualization@lists.linux-foundation.org
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/char/virtio_console.c | 2 +-
+ include/linux/kvm_host.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/char/virtio_console.c b/drivers/char/virtio_console.c
-index 680d1ef2a217..431e9e5bf9c1 100644
---- a/drivers/char/virtio_console.c
-+++ b/drivers/char/virtio_console.c
-@@ -106,7 +106,7 @@ struct port_buffer {
- 	unsigned int sgpages;
- 
- 	/* sg is used if spages > 0. sg must be the last in is struct */
--	struct scatterlist sg[];
-+	struct scatterlist sg[] __counted_by(sgpages);
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index fb6c6109fdca..4944136efaa2 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -664,7 +664,7 @@ struct kvm_irq_routing_table {
+ 	 * Array indexed by gsi. Each entry contains list of irq chips
+ 	 * the gsi is connected to.
+ 	 */
+-	struct hlist_head map[];
++	struct hlist_head map[] __counted_by(nr_rt_entries);
  };
+ #endif
  
- /*
 -- 
 2.34.1
 
