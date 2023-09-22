@@ -1,50 +1,53 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FD8B436AE
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 17:29:10 +0000 (UTC)
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA6C51BD
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:29:03 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-691c05bc5aaso1964760b3a.2
-        for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:29:03 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39D5B436BB
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 17:29:11 +0000 (UTC)
+Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E84F1A4
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:29:06 -0700 (PDT)
+Received: by mail-pf1-x435.google.com with SMTP id d2e1a72fcca58-68c576d35feso2221906b3a.2
+        for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:29:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695403743; x=1696008543; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=c8+zsDKqPYa5khoeQ/X2KkaY8mmY8r9M3Aj1MNqbUX4=;
-        b=PLUE5dDTqFZ7VWtRtpwVm9vtlfkwNL8vm5+TsbEpX4W9qLxjD3SFs+58HPEu/XteGz
-         MCx9O7xaoxTNLet5Z4OaiMPRwxAUCBZdQ8DarEJ3GdmPNnwtJBBqEctDmkm4XFTbNqKc
-         93hoJPOkUOrgybb0baWj/GLs2XjeIkT5RSgyw=
+        d=chromium.org; s=google; t=1695403745; x=1696008545; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZheShKBMXsJafSBhUem9NUmco8TlRbxuPgRJhrYLuF4=;
+        b=mu+50WzRPb9bbl0T3bxpkUbT0QWHF28QLLRdjKAqoxTUvyL8dLakRT9mSMy8lklS0G
+         SZCcmYbRKmIRKqXI/PoNdd33PDM4nBOXc2Uk66KQpQPVK/WcrYEb0rtxrEERka1HXJ9I
+         xABIWUdNXMizKp5cTzCu6E7/2r1DaXyKNacTA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695403743; x=1696008543;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=c8+zsDKqPYa5khoeQ/X2KkaY8mmY8r9M3Aj1MNqbUX4=;
-        b=XXN1TUhwSz1wakKiaFlb3OPmD2nTW0/qVHDdxAM98VMwYvIQMCIo6E323GMOmkEpb4
-         qiU26OJWQDa+AN9nrg0//Flmn6LDvbYuSVaNIfZl6GWBmoEBwAcH4SFEwk2H4vp5dRUC
-         NbtkRbJse2UE/8QXSuHAOKgZXx20w7uB52dJ4nobUsyDwrZJv+t0sC83azNe3+/OGWFX
-         BrUlUHxWElrT9SXnjr3rgiunu7nu9cXfEwKRb+fUklos77SFZD8NW5PX8j4R4pSrwQwv
-         chMAeOy5jfwPXiNSbVc8yXhyone1aBzL+KIjlBS13zU+fpHQowSwQc0/p9JaPup5Dolb
-         CDVA==
-X-Gm-Message-State: AOJu0YxfkYh0/5ldJmoCdezVDH7eVbn6/rtWs3jQLppfprlpGuF/HElD
-	7TSSVe6YCHDgh9Grp4Jj9W5vmg==
-X-Google-Smtp-Source: AGHT+IHy7einxOZJqzMeGrtUp41zCyAYhfTGbgIj6G7ktKqXoRq3UXI9VRRfBIaYo38BL3FmkYPa8A==
-X-Received: by 2002:a05:6a00:847:b0:68a:5e5b:e450 with SMTP id q7-20020a056a00084700b0068a5e5be450mr72319pfk.26.1695403743180;
-        Fri, 22 Sep 2023 10:29:03 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1695403745; x=1696008545;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZheShKBMXsJafSBhUem9NUmco8TlRbxuPgRJhrYLuF4=;
+        b=wT4nZcStLuWecowa5ADm3eRaOojcGHrJ2fz0zaz8pdTEc2Qb0vyOzT0nrYQMdmQdMg
+         JG7152W117uWsyQS2NF8xR6tKXyZyHsyvf0WFwwL7tK2sXwI6but8bvv1E/HIt0bO/om
+         5w1lByRYIMohfyRR+XgJ48Wol/LfAmveOzixocbOgDG170UhI7IX+mAwhl5gbzwgzPTX
+         PXVyalPJQZKmqer0S4FhmpB3/4hdEEWzsjKlb/vAjC6z581nVSboVfQL7R2Q0egMCkQS
+         FDsMRniA1v48qygO1JBZM/clmTIEVA8JyysKG0hjrK9ZMFQFRLesYh62ozFONCsKPgxJ
+         wmeg==
+X-Gm-Message-State: AOJu0Yz3aWrg9OCUHZDrlAYyrkDDpr4/05okIscUBN7FjvfD1sYv5FcV
+	3iDixEk5fBBnpEt1pxTPXn/PQw==
+X-Google-Smtp-Source: AGHT+IHBD+XOqFGuVt7zhAgqg1fo+3BmPSo/pC8XNv6BsKuDlMg0uaN9Oe1iY9oPKLd/9z1fhn6ftQ==
+X-Received: by 2002:a05:6a20:3cac:b0:158:17e6:7a6 with SMTP id b44-20020a056a203cac00b0015817e607a6mr221373pzj.42.1695403745651;
+        Fri, 22 Sep 2023 10:29:05 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id y10-20020a056a001c8a00b006926e3dc2besm2777741pfw.108.2023.09.22.10.28.59
+        by smtp.gmail.com with ESMTPSA id b6-20020aa78706000000b0068e12e6954csm3458358pfo.36.2023.09.22.10.29.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Sep 2023 10:29:00 -0700 (PDT)
+        Fri, 22 Sep 2023 10:29:03 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
 To: Jakub Kicinski <kuba@kernel.org>
 Cc: Kees Cook <keescook@chromium.org>,
-	Jamal Hadi Salim <jhs@mojatatu.com>,
+	Alex Elder <elder@kernel.org>,
 	"David S. Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>,
 	Eric Dumazet <edumazet@google.com>,
 	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org,
+	Jamal Hadi Salim <jhs@mojatatu.com>,
+	David Ahern <dsahern@kernel.org>,
 	Martin KaFai Lau <martin.lau@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Alexei Starovoitov <ast@kernel.org>,
@@ -58,7 +61,6 @@ Cc: Kees Cook <keescook@chromium.org>,
 	Dexuan Cui <decui@microsoft.com>,
 	Long Li <longli@microsoft.com>,
 	Ajay Sharma <sharmaajay@microsoft.com>,
-	Alex Elder <elder@kernel.org>,
 	Pravin B Shelar <pshelar@ovn.org>,
 	Shaokun Zhang <zhangshaokun@hisilicon.com>,
 	Cong Wang <xiyou.wangcong@gmail.com>,
@@ -68,98 +70,80 @@ Cc: Kees Cook <keescook@chromium.org>,
 	Tom Rix <trix@redhat.com>,
 	Simon Horman <horms@kernel.org>,
 	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
 	linux-hyperv@vger.kernel.org,
 	linux-rdma@vger.kernel.org,
 	dev@openvswitch.org,
 	linux-parisc@vger.kernel.org,
 	llvm@lists.linux.dev,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH 00/14] Batch 1: Annotate structs with __counted_by
-Date: Fri, 22 Sep 2023 10:28:42 -0700
-Message-Id: <20230922172449.work.906-kees@kernel.org>
+Subject: [PATCH 08/14] net: ipa: Annotate struct ipa_power with __counted_by
+Date: Fri, 22 Sep 2023 10:28:50 -0700
+Message-Id: <20230922172858.3822653-8-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230922172449.work.906-kees@kernel.org>
+References: <20230922172449.work.906-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2504; i=keescook@chromium.org;
- h=from:subject:message-id; bh=tD+5se4WoWIAJwEPLvlJBN6wlUKoasq6Szn6nibv1zQ=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlDc7Wu+d5o7777Jp53tWR0nER5gmlkAVoVjoqh
- J5JIlgoeMOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQ3O1gAKCRCJcvTf3G3A
- JrqqEACeFuiUMDgjhvtyqa9O/ntgqeTDML08nWyLGJ79aRe6YFXyHEddM/LbmREWkrtJUThTPL+
- 5cqYB5ebSIzmAdm4jbres07kHLFvt+2wcfmJa92BLomL4uPyqTUFXgn1mSYnLrb14IzV3e88Sx0
- dEDq9SHrXgKyFWkQfaC7RzupSY7nGw1X1Fv3+vLo/ofLr89BRjbc1wH0tOJMrBPr7asUo/F7eG2
- 7lxjFPkC1mLDulQotR5dcnl637i1mztV/DHfJlCRJQwcUcE/rH65VJ6UPC1PCNvc+eqL/CMKwKM
- T9iKyVQLU0gOVexJO+FPe5rDRoi/YrXfznJqI0MZx9L7MnZqanTpbTbIIWmdObv8ciWWZz3S8K/
- yHSIfhDofc7jQmUJnSJywpwkeAUyF50SOAkYngCVfxzswzgtYznLShCCbrSr2PLyVIU3xwoNL1F
- GJNRC4AJkef4eAA0hMVt6HF0UypVDq3Kvny+Q0xdl+MznPGBX1NQuKAvUri7Y8KGZ4yVf9N80Lt
- 88tUHrZopBg7iXoM1qSKMZPHxRK5nqMN/qqfUi48CEB5SZ8IzvOnLAvs7qd5FBCO4P3/yH8OWBy
- blZo4EB4+EAYhVbu8a/RM7O+YjAH2q2muPkUv7s/sP9KxF8m7FHQgFogan1njOplS3zYEN8SVhu
- HgXxG8g LJHlR5Bg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1399; i=keescook@chromium.org;
+ h=from:subject; bh=ZVNa42RINhV0v/Ht3T7iUT3nE/j+aJWcJU1ourfEiHs=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlDc7Xrsd3u3GIIaa0RoAqhrB+eBWXpaTGMEQ/u
+ 44xb3Uo6V+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQ3O1wAKCRCJcvTf3G3A
+ Ju/8D/sG14Nl2om0NTcT3T/FMCMrw5caewzWYYZZA5qGbOQyUerx5rGQueGAkyPPzVCA3z1X5Ei
+ RAGkC4MQg8U6DuG+B6Y1GivTSRwcfrgH0NCU6rCO6TCwfwx3GMsNvAVp1J0YiNbBKcGq0C1Pwn3
+ tOg+us9yQCjqWWxhOxxt+uFv25NxnxjZjDDqxtYh6SYPQRwSw49hCykEDOott+K24NhX8NPAYaz
+ jcD8tBJDS2QTRtd56RnyfIIeDq7ekRHm7ECmBw7eXdLbD1D1jzGncRJuupIgENxJO55A1F/abO2
+ rp7ZAzuNHsSIezVTtETCcKaGUBAx7qAE2T5yIZT+yed0mwppMzZm79vOzVq9N6hVgyw3lKWllRx
+ 42WAgbPQ4Etr9HIBG3IkmYAyAvxu6db3KV9eDsWJ+49A2sbLor6jbJmppVskRGaBKsq1jm54hAK
+ DtyjOKF2noGlhzLtQU3xpPVLiyizpXlHiGphYq+WC+nuXS7ILP2asn0W0c2Ip9uX1sml99XYNbj
+ L9MR+41qLcYAX5yN6Jd+WAlhJO2SVaZHdWsr5FDN80BNIQO3kRKYVc4rzv4J4ZiBpukNZ7gqU2H
+ tmh0agc3IN/G2PWAx2O6+YIDCIdoGDabLbVvGpLrI2tAQfg5cIYqgJoQMkstH5cn9Zy8t+JEv2d c8jebhrkUEu4ufQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.6
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Hi,
-
-This is the batch 1 of patches touching netdev for preparing for
-the coming implementation by GCC and Clang of the __counted_by
+Prepare for the coming implementation by GCC and Clang of the __counted_by
 attribute. Flexible array members annotated with __counted_by can have
 their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 functions).
 
-As found with Coccinelle[1], add __counted_by to structs that would
-benefit from the annotation.
-
-Since the element count member must be set before accessing the annotated
-flexible array member, some patches also move the member's initialization
-earlier. (These are noted in the individual patches.)
-
--Kees
+As found with Coccinelle[1], add __counted_by for struct ipa_power.
 
 [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 
+Cc: Alex Elder <elder@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/net/ipa/ipa_power.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Kees Cook (14):
-  ipv4: Annotate struct fib_info with __counted_by
-  ipv4/igmp: Annotate struct ip_sf_socklist with __counted_by
-  ipv6: Annotate struct ip6_sf_socklist with __counted_by
-  net: hns: Annotate struct ppe_common_cb with __counted_by
-  net: enetc: Annotate struct enetc_int_vector with __counted_by
-  net: hisilicon: Annotate struct rcb_common_cb with __counted_by
-  net: mana: Annotate struct mana_rxq with __counted_by
-  net: ipa: Annotate struct ipa_power with __counted_by
-  net: mana: Annotate struct hwc_dma_buf with __counted_by
-  net: openvswitch: Annotate struct dp_meter_instance with __counted_by
-  net: enetc: Annotate struct enetc_psfp_gate with __counted_by
-  net: openvswitch: Annotate struct dp_meter with __counted_by
-  net: tulip: Annotate struct mediatable with __counted_by
-  net: sched: Annotate struct tc_pedit with __counted_by
-
- drivers/net/ethernet/dec/tulip/tulip.h            | 2 +-
- drivers/net/ethernet/freescale/enetc/enetc.h      | 2 +-
- drivers/net/ethernet/freescale/enetc/enetc_qos.c  | 2 +-
- drivers/net/ethernet/hisilicon/hns/hns_dsaf_ppe.h | 2 +-
- drivers/net/ethernet/hisilicon/hns/hns_dsaf_rcb.h | 2 +-
- drivers/net/ipa/ipa_power.c                       | 2 +-
- include/linux/igmp.h                              | 2 +-
- include/net/if_inet6.h                            | 2 +-
- include/net/ip_fib.h                              | 2 +-
- include/net/mana/hw_channel.h                     | 2 +-
- include/net/mana/mana.h                           | 2 +-
- net/openvswitch/meter.h                           | 4 ++--
- net/sched/act_pedit.c                             | 2 +-
- 13 files changed, 14 insertions(+), 14 deletions(-)
-
+diff --git a/drivers/net/ipa/ipa_power.c b/drivers/net/ipa/ipa_power.c
+index 0eaa7a7f3343..e223886123ce 100644
+--- a/drivers/net/ipa/ipa_power.c
++++ b/drivers/net/ipa/ipa_power.c
+@@ -67,7 +67,7 @@ struct ipa_power {
+ 	spinlock_t spinlock;	/* used with STOPPED/STARTED power flags */
+ 	DECLARE_BITMAP(flags, IPA_POWER_FLAG_COUNT);
+ 	u32 interconnect_count;
+-	struct icc_bulk_data interconnect[];
++	struct icc_bulk_data interconnect[] __counted_by(interconnect_count);
+ };
+ 
+ /* Initialize interconnects required for IPA operation */
 -- 
 2.34.1
 
