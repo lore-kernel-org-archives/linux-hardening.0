@@ -1,156 +1,99 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C5DA1DA44
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 08:04:19 +0000 (UTC)
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB1C6CD7;
-	Fri, 22 Sep 2023 01:03:49 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-	by smtp-out1.suse.de (Postfix) with ESMTP id 753DE21AB9;
-	Fri, 22 Sep 2023 08:03:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1695369828; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZGIZ1SL3XOn4v/k/jfc0V/Kx2cFAQpv1ro3HElGvJKI=;
-	b=VVAadmS3V5n9yqHi52W+JiUysLV4LVQylZ3Rd+HLfeQes6xs5GDZhRvzzNSdIEyuAon763
-	SCGpgRLdY4W+L+srgUlGbWANiHrRpKVZNXJ/gxgDYSgrjJJ5IHLH+upiO2SLwwxkIQh8lk
-	1a18tDDLcqAcbIELxJHR9b3H2uXIuwg=
-Received: from suse.cz (pmladek.udp.ovpn2.prg.suse.de [10.100.201.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by relay2.suse.de (Postfix) with ESMTPS id EED312C142;
-	Fri, 22 Sep 2023 08:03:47 +0000 (UTC)
-Date: Fri, 22 Sep 2023 10:03:47 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Enlin Mu <enlinmu@gmail.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Enlin Mu <enlin.mu@outlook.com>, rostedt@goodmis.org,
-	senozhatsky@chromium.org, keescook@chromium.org,
-	tony.luck@intel.com, gpiccoli@igalia.com, enlin.mu@unisoc.com,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F9FE1EA7C
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:10:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16E60C433CA;
+	Fri, 22 Sep 2023 10:10:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1695377447;
+	bh=33Tgy9zFb+25f45bxXvE9vqs5K0swv1i/LRG0rsLIP8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZRckGD9LAAQnDK/ghKMPAyO39B4Dc7dD/KtrMuIbVHxFym0bmgfZloMqwY8Oa+abh
+	 bTc8ozFDCJKsngLTD8LVVLC54y9eM9cO/bpSCybYzBBG0AIK30FGNQpQHnnpJaWh9f
+	 OPnUmrm55U23dce7eswmSUQzYSXE59u0bOmk6g6uCYUYBsU/EqeAkfKClAXk+5y+3D
+	 E953C88XqwRTWhXBJrTjk9hdmw5dS5/JUn+XdzIH/SdCr3fjXBPxi5JJW0jHPnPcHa
+	 480UWBMKu9RvoxUsoGsYMxM9peExWDWltwdyKwKntJD1LuiBvzM0h4Qumgg4SQj3f4
+	 K8tvW0zIDSNxw==
+Date: Fri, 22 Sep 2023 12:10:44 +0200
+From: Wolfram Sang <wsa@kernel.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Bence =?utf-8?B?Q3PDs2vDoXM=?= <bence98@sch.bme.hu>,
+	Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] printk: add cpu id information to printk() output
-Message-ID: <ZQ1KYyJfZjd33fqL@alley>
-References: <JH0PR04MB7072A4B6946EAEEB1EB8B0BE8AF6A@JH0PR04MB7072.apcprd04.prod.outlook.com>
- <8734zfx2bo.fsf@jogness.linutronix.de>
- <CAAfh-jPc+UWMcLPFbYy6rYUh4OU36frkVYVbkhNPNX4L6RG5sA@mail.gmail.com>
- <2023091547-mug-unlikable-571f@gregkh>
- <ZQSHJ_786kZNjEDX@alley>
- <CAAfh-jMvgYfDrgcbj7o4bv83syAhL2d+1r2vn1Yz+FY_Ws81Pw@mail.gmail.com>
+Subject: Re: [PATCH] i2c: cp2615: replace deprecated strncpy with strscpy
+Message-ID: <ZQ1oJB0Tiop3Z1Fv@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
+	Justin Stitt <justinstitt@google.com>,
+	Bence =?utf-8?B?Q3PDs2vDoXM=?= <bence98@sch.bme.hu>,
+	Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20230920-strncpy-drivers-i2c-busses-i2c-cp2615-c-v1-1-11406a996794@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="c0LwJnjHZmcinQj0"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAfh-jMvgYfDrgcbj7o4bv83syAhL2d+1r2vn1Yz+FY_Ws81Pw@mail.gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+In-Reply-To: <20230920-strncpy-drivers-i2c-busses-i2c-cp2615-c-v1-1-11406a996794@google.com>
 
-On Fri 2023-09-22 15:20:37, Enlin Mu wrote:
-> Petr Mladek <pmladek@suse.com> 于2023年9月16日周六 00:34写道：
-> >
-> > On Fri 2023-09-15 11:53:13, Greg KH wrote:
-> > > On Fri, Sep 15, 2023 at 04:46:02PM +0800, Enlin Mu wrote:
-> > > > John Ogness <john.ogness@linutronix.de> 于2023年9月15日周五 16:34写道：
-> > > > >
-> > > > > On 2023-09-15, Enlin Mu <enlin.mu@outlook.com> wrote:
-> > > > > > Sometimes we want to print cpu id of printk() messages to consoles
-> > > > > >
-> > > > > > diff --git a/include/linux/threads.h b/include/linux/threads.h
-> > > > > > index c34173e6c5f1..6700bd9a174f 100644
-> > > > > > --- a/include/linux/threads.h
-> > > > > > +++ b/include/linux/threads.h
-> > > > > > @@ -34,6 +34,9 @@
-> > > > > >  #define PID_MAX_LIMIT (CONFIG_BASE_SMALL ? PAGE_SIZE * 8 : \
-> > > > > >       (sizeof(long) > 4 ? 4 * 1024 * 1024 : PID_MAX_DEFAULT))
-> > > > > >
-> > > > > > +#define CPU_ID_SHIFT 23
-> > > > > > +#define CPU_ID_MASK  0xff800000
-> > > > >
-> > > > > This only supports 256 CPUs. I think it doesn't make sense to try to
-> > > > > squish CPU and Task IDs into 32 bits.
-> > > > Yes, it is not good way,
-> > > > >
-> > > > > What about introducing a caller_id option to always only print the CPU
-> > > > > ID? Or do you really need Task _and_ CPU?
-> > > >    Yes, I need it.Because I need to know which CPU is printing the
-> > > > log, so that I can identify the current system operation, such as load
-> > > > situation and CPU busy/idle status
-> > >
-> > > The cpu that is printing the log isn't the one that added the log
-> > > message, so I think you will have incorrect data here, right?
-> >
-> > We already store some metadata about the caller:
-> >
-> >  * All fields are set by the printk code except for @seq, which is
-> >  * set by the ringbuffer code.
-> >  */
-> > struct printk_info {
-> >         u64     seq;            /* sequence number */
-> >         u64     ts_nsec;        /* timestamp in nanoseconds */
-> >         u16     text_len;       /* length of text message */
-> >         u8      facility;       /* syslog facility */
-> >         u8      flags:5;        /* internal record flags */
-> >         u8      level:3;        /* syslog level */
-> >         u32     caller_id;      /* thread id or processor id */
-> >
-> >         struct dev_printk_info  dev_info;
-> > };
-> >
-> > The 32-bit caller ID is generated using:
-> >
-> > static inline u32 printk_caller_id(void)
-> > {
-> >         return in_task() ? task_pid_nr(current) :
-> >                 0x80000000 + smp_processor_id();
-> > }
-> >
-> > We could add more metadata and always store the CPU ID and something
-> > like:
-> >
-> >    [CTXT][ Tpid][  Ccpu]
-> >
-> > for example
-> >
-> >    [TASK][  T234][    C4]
-> >    [ IRQ][ T4567][   C17]
-> >    [SIRQ][    T5][    C0]
-> >    [ NMI][  T356][  C128]
-> >
-> Greate!
-> Do you have a plan to push it to linus?
 
-No. It was just a POC. It would require much more effort to make
-it ready for upstream, see below.
+--c0LwJnjHZmcinQj0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > The biggest problem is that it would change the format of the
-> > ringbuffer so that it would require updating external tools,
-> > working with crashdump, especially crash but there are also
-> > alternative python extensions for gdb.
+On Wed, Sep 20, 2023 at 08:08:52AM +0000, Justin Stitt wrote:
+> `strncpy` is deprecated for use on NUL-terminated destination strings [1].
+>=20
+> We should prefer more robust and less ambiguous string interfaces.
+>=20
+> We expect name to be NUL-terminated based on its numerous uses with
+> functions that expect NUL-terminated strings.
+>=20
+> For example in i2c-core-base.c +1533:
+> | dev_dbg(&adap->dev, "adapter [%s] registered\n", adap->name);
+>=20
+> NUL-padding is not required as `adap` is already zero-alloacted with:
+> | adap =3D devm_kzalloc(&usbif->dev, sizeof(struct i2c_adapter), GFP_KERN=
+EL);
+>=20
+> With the above in mind, a suitable replacement is `strscpy` [2] due to
+> the fact that it guarantees NUL-termination on the destination buffer
+> without unnecessarily NUL-padding.
+>=20
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strn=
+cpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.h=
+tml [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-It would require patches for the crash tool,
-./scripts/gdb/linux/dmesg.py,
-Documentation/admin-guide/kdump/gdbmacros.txt
+Applied to for-next, thanks!
 
-> > See below POC of the kernel part. It is not even compile tested. The size
-> > of the buffers is updated by a guess. Comments are not updated, ...
 
-And of course, make the POC working, update comments, ...
+--c0LwJnjHZmcinQj0
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I am sorry but I do not have enough time and motivation to do so.
-But I could answer questions, review the patches, ... when any
-interested person start working on it.
+-----BEGIN PGP SIGNATURE-----
 
-Best Regards,
-Petr
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmUNaCQACgkQFA3kzBSg
+KbZcVg/9E7peMn7vHeP47JzLjr4NVIkVY//5HALFdYGqXGp3VKTizc45nquNyd9j
+6BFcXqSC+d1DxJ5hiwuNPRoQc0ftZhaFUweAeucZHh/Gg3iPnK395lVv+WAVIeu8
+6DeK8sKeQmBJcQyX9xcPHypJfs3eW2i99KuPhz/97hDNLy4XezL50QOpzBSuarGE
+cbelsLwxxaOED+dtW9B5kgTrpNeKdIaBskoufFrOxNYn911cLv+bN0TRXks7tW94
+ytVLqdF7A/KH+0QNC1X2mnMcf13hRexZ8K946T/8+Caa1pnAJnzZWmwWsKqX4HPT
+6uLU1wQaG5ZrBryF6mItiISL0dRb7qNToS5/oPGHbgq2Pr7nV9JAW62kP18eNcKG
+zOP8QApoTzbzSASUR9y6xLhhhaXNvEkAK08HGfcJMtL8gVuJGqfm0eQoiwGTQoTp
+gP5rsfDKLgVar5dGkGMQ9OJaR7inQjHjGy0gkQ5+FT0yY0hWANH0eEq0EXmy71/z
+suSZZKZJlJK7s6EwS9l4NJlSk/whexyW86srKBq0ilYe+B0KrTnAJaDgxN1HJ8cx
+FUkLgfoEuEeuMBCA2E6iymbaB6nl93j7nvl6Y7cqKzJdsbWwoPfpfL+51kKTp4bR
+6SoUWGORqbZpku27IhTlRZgEqFnr+GXvGW2y8hW3UiWNrHpKw80=
+=V3V8
+-----END PGP SIGNATURE-----
+
+--c0LwJnjHZmcinQj0--
