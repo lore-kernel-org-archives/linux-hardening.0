@@ -1,57 +1,58 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2EC044472
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 17:52:56 +0000 (UTC)
-Received: from mail-ot1-x32f.google.com (mail-ot1-x32f.google.com [IPv6:2607:f8b0:4864:20::32f])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A8B32119
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:52:07 -0700 (PDT)
-Received: by mail-ot1-x32f.google.com with SMTP id 46e09a7af769-6c4b9e09528so648126a34.3
-        for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:52:07 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C00DE44473
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 17:52:57 +0000 (UTC)
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 435F41995
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:52:41 -0700 (PDT)
+Received: by mail-pg1-x535.google.com with SMTP id 41be03b00d2f7-53fbf2c42bfso1888392a12.3
+        for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:52:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695405125; x=1696009925; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1695405161; x=1696009961; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=rPeCsCM6RKnj7SP/7NeGfgjvWPniZKOlNUjLQPJjRrk=;
-        b=nsPPhAujoYnHbEV9rcA9vzDu5Mmxuzc8U6VYq6OZCF8Gl7xyc7Yv+LuH65H9mK4nxK
-         wbuXffyFykkwlAS9ru69GTCfZJOwp8SLOwZ4TenRdULgEjZokHTt0lvMJyW9yCNitAaw
-         VjaJZx/yUhwXilPpwB8s00m74tzHLXvEKR9hk=
+        bh=gSy8puFeXhx0444elPiTeRpnKr0zw+uEmx7ZUgtG/Dk=;
+        b=E8a+jlVLU42KDRxaSTV8s1DjumLBBmWzfzkfLJuYRzh4vzBWX36oz13mVR0tbDOXaW
+         nRW6afSYZebWtzmCLlgiiV5imwTYpibFaX5vwIbh/y4BrVV3wlBob3WubKZJKEv8bWXd
+         xeAZguQdA7d9Aj50sv3B9pBe3C3L0eR0EWPjs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695405125; x=1696009925;
+        d=1e100.net; s=20230601; t=1695405161; x=1696009961;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=rPeCsCM6RKnj7SP/7NeGfgjvWPniZKOlNUjLQPJjRrk=;
-        b=HehDKimGjBtABPrIMpwduzOI91I+R/ZpxRvb/acZnaGbSo3yJWoJwW9NG9J0IPkNYS
-         IAsBb6+twkXXWb5E8ASJyg8gryg59S+O6XAXFnrrUIe3OOZstxljLvZmHrkexxAGxM3P
-         /29BDiZWCIHVwg/QwBOjueM49Bi7VZs0jSQyXtNADk+RN1a+OX8PWiIDv5fqj6FhG7Sj
-         0kTZs14xtF45FOkEnRYgWWF2sKhuPcQrF+Jk6yVEecNKdgX22dChSoMl/JtuiwxCc6at
-         9mF1pZddr/HyG4zc/IcGoFu4EShrDe5mmH4suNDTUAHWVJZP92CyAQWxkNtCrbbSULTt
-         w4eg==
-X-Gm-Message-State: AOJu0YzFe+r6glh9eKgnO/5gw8FncWAJtk6VRj4qylFKSaLJ1M4Nh6Ui
-	VKrOTAUzT/qRMoue6d5yJVWtFw==
-X-Google-Smtp-Source: AGHT+IFEPZY2FWuoLuj/J8x0P9zfOloxPTwOyuvqJHiLkoPALd4nAHq6UVOZicjn7oGHx7saYqsMnA==
-X-Received: by 2002:a05:6358:278a:b0:143:3179:1a67 with SMTP id l10-20020a056358278a00b0014331791a67mr301716rwb.29.1695405125439;
-        Fri, 22 Sep 2023 10:52:05 -0700 (PDT)
+        bh=gSy8puFeXhx0444elPiTeRpnKr0zw+uEmx7ZUgtG/Dk=;
+        b=KLP55OJ5gMIh6kqMktFekEJz58z0ec50UCPf1y1zhBTEHQ65nxMLsT9Q6xBXSNneHR
+         +54pr7T2PSo/eo2HTODwN9uUBN1tg6jgcCHY3OEG+3M82K9b1wmdfRNseNAPT6Yi9WUb
+         9aZ7C4/wN2wz5JuYG8wf//CAf7so3cc5eF+60aTy24ySOHR6Bh1VHg0xK5NSZqs/lrk/
+         OcO62U540T5edaS4Lp7OEkMh5WZIikRGlYGfUkkKifbRXsnyBizKELOu+6dzAayT/mpz
+         aDaQtHBlU1kstZlmnTWTH8rJNahTngoufcmageXB/Ns4AJa8/6ijV0YdxclbSvDRlJQe
+         h1cA==
+X-Gm-Message-State: AOJu0Yz5X1WP4s7AXwcMdDFOn9G3R3Vr94C+NP6ZManGduE6Uy600O4c
+	0upAngOPHZ5GzX/8IGpJxV72EA==
+X-Google-Smtp-Source: AGHT+IGs9vWhlgTxV1Aqo0Ts/QnHggFMLwWvRbuUtTLBD1j/rEhcKu6yPTyXKYPaOAab6dPPu3rpqg==
+X-Received: by 2002:a17:90b:686:b0:268:13c4:b800 with SMTP id m6-20020a17090b068600b0026813c4b800mr417595pjz.21.1695405160722;
+        Fri, 22 Sep 2023 10:52:40 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id r9-20020a63a009000000b0057e13ed796esm728612pge.60.2023.09.22.10.52.04
+        by smtp.gmail.com with ESMTPSA id v8-20020a17090a4ec800b0026094c23d0asm3524738pjl.17.2023.09.22.10.52.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Sep 2023 10:52:05 -0700 (PDT)
+        Fri, 22 Sep 2023 10:52:40 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
-To: Linus Walleij <linus.walleij@linaro.org>
+To: Dan Williams <dan.j.williams@intel.com>
 Cc: Kees Cook <keescook@chromium.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andy@kernel.org>,
-	linux-gpio@vger.kernel.org,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	nvdimm@lists.linux.dev,
 	Nathan Chancellor <nathan@kernel.org>,
 	Nick Desaulniers <ndesaulniers@google.com>,
 	Tom Rix <trix@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	llvm@lists.linux.dev,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] gpiolib: cdev: Annotate struct linereq with __counted_by
-Date: Fri, 22 Sep 2023 10:52:03 -0700
-Message-Id: <20230922175203.work.760-kees@kernel.org>
+Subject: [PATCH] libnvdimm: Annotate struct nd_region with __counted_by
+Date: Fri, 22 Sep 2023 10:52:39 -0700
+Message-Id: <20230922175238.work.116-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -59,26 +60,26 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1931; i=keescook@chromium.org;
- h=from:subject:message-id; bh=8zr3EscqNMKGB+p2GQ+eNq4lFJNw863hYtHYoUZ6QT8=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlDdRDnHWem4qivuYvpUIrmnI1crVLCjWEs1Bl3
- gzzs3k1FJGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQ3UQwAKCRCJcvTf3G3A
- JseKD/4quBw/IubJ6kx2xMKEYBqn7EU8HCBh9hqvf/DZpDUBw12gRWSQNalISRWuYF67cas5Tkr
- EUj3MbyNdPUEx/IJrlL3WHXZfRNgY4r3M1SR9aDCVsSEylC1PQdUNdRTvU+rPLRjOr6JHlZDQqU
- ayR0dlH/PQnDDG2kVOZM5XHvZXu5mJUy8OvlhRV8vEMwvcodYJXl8SJreBqqCVIZqqwYhjP4B95
- OPINC+bpMgbcQ1hX/+IWYq1mh2HyM0AZw18fRaJevYcMTVvLd27oad+aja6ikDJpZnaiR4StABS
- JmE4ha3T05WdaaYiCf1MqC6qJRd/225OoZemjlFHuaqze/naFKA/dvHT18VPo69ezq0KkjQ2U7/
- 3TyK3eGInrlMpG4ABDIsl2HD8hDsc7Vl46x8b9DxIQmBF1Jls2LAm+7S3bLyc8zrT0fPP1I9oUd
- RAFcig+QfsIHBcf2MZIy/kj0y90XDIFLq4yXccv4vlI7+rJQOeoTeby164bXqumt9WVcYSdeyNK
- CRz0HHgMSkH60UvlLF05qx9N3E6PLjJ6k2x6KUC9SJbc92HLO1s63wzDJDfTgiy4SEiObVoyF76
- W9x+284Vs0VzKisQmXg6gBgf8fFLYi/xcW+8j+cNIQ4+uYqzT/L6JUY0SkB69rh+9U21waaUzft
- V7vH5yP GuFFYMXg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2382; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=F761VQHXmd2u4Wh2IEMoSgcuswWDj9IUbpQjwrV+U7U=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlDdRn7mm/yqnmTumY4FRBROvnp/IvAD87OmcL1
+ yK+d5kEY2GJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQ3UZwAKCRCJcvTf3G3A
+ JhAZEACeucv92nBVoYitGAfmlofYg5eafD6vhQlME6vo7ELBJbtrs5nr/6inRq0/eA0kAT7moqL
+ KQNjP6gMWKDuvItgrJBObPbsP1TX8Gf5Q4h7aGpP6aoBVEMGlUstcXMFNo/Y0dAjMchHw/UEf3h
+ O+fzNwcrJMiRRqZHP/axClfYmDNc8Os3sZ8c+6h1PofZK+HM7c+qpeHena/yZ/Ii3ZOnJR2Cd0p
+ fSDNE4t4g6onf4oN7KjzkOSCQoQ3ouDpsoBPCMByzL13NB7URsh0NTZ1I+ufBZYHGsIbswWi0p2
+ COaH0/j8klNyrzEHGbX9oNOiNjoggxZyefLa3/4Ep5yK/y8Ujsp/WSvzVAtBx7vyuVTd5vcsUPc
+ 6GerUe+AOVWiQtjG5Zx2qplTjE1qN/38QFxI52lCjl6QdnZkfARiKyDu1Fby2oLvw2gc6ywBImU
+ EXszuxp09F7eDU5USjQQlkNRSMI7i3NBbBSOV0VGH/2jbDpXv6fage8NNNNY95kPBx+j0yUDllz
+ f9dBtF5+cyeapGtokkSwa+v9mwfoggMism33zlyua73+Q6FdqegMBQz0yCC3R7hAziUujAeGcCm
+ zTHG2oNr0j2/n1xnSV5DewoHZaDuQVpxkLlge7kd+1NKZ+pzIzbgOaq2ol75jtMnlrXQokeCGqY
+ n6M6Oyu v8uheuFA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.6
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
@@ -88,50 +89,56 @@ their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 functions).
 
-As found with Coccinelle[1], add __counted_by for struct linereq.
+As found with Coccinelle[1], add __counted_by for struct nd_region.
 Additionally, since the element count member must be set before accessing
 the annotated flexible array member, move its initialization earlier.
 
 [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Andy Shevchenko <andy@kernel.org>
-Cc: linux-gpio@vger.kernel.org
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: nvdimm@lists.linux.dev
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/gpio/gpiolib-cdev.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/nvdimm/nd.h          | 2 +-
+ drivers/nvdimm/region_devs.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index e39d344feb28..31fc71a612c2 100644
---- a/drivers/gpio/gpiolib-cdev.c
-+++ b/drivers/gpio/gpiolib-cdev.c
-@@ -572,7 +572,7 @@ struct linereq {
- 	DECLARE_KFIFO_PTR(events, struct gpio_v2_line_event);
- 	atomic_t seqno;
- 	struct mutex config_mutex;
--	struct line lines[];
-+	struct line lines[] __counted_by(num_lines);
+diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
+index e8b9d27dbb3c..ae2078eb6a62 100644
+--- a/drivers/nvdimm/nd.h
++++ b/drivers/nvdimm/nd.h
+@@ -422,7 +422,7 @@ struct nd_region {
+ 	struct nd_interleave_set *nd_set;
+ 	struct nd_percpu_lane __percpu *lane;
+ 	int (*flush)(struct nd_region *nd_region, struct bio *bio);
+-	struct nd_mapping mapping[];
++	struct nd_mapping mapping[] __counted_by(ndr_mappings);
  };
  
- #define GPIO_V2_LINE_BIAS_FLAGS \
-@@ -1656,6 +1656,7 @@ static int linereq_create(struct gpio_device *gdev, void __user *ip)
- 	lr = kzalloc(struct_size(lr, lines, ulr.num_lines), GFP_KERNEL);
- 	if (!lr)
- 		return -ENOMEM;
-+	lr->num_lines = ulr.num_lines;
+ static inline bool nsl_validate_nlabel(struct nd_region *nd_region,
+diff --git a/drivers/nvdimm/region_devs.c b/drivers/nvdimm/region_devs.c
+index 0a81f87f6f6c..5be65fce85cf 100644
+--- a/drivers/nvdimm/region_devs.c
++++ b/drivers/nvdimm/region_devs.c
+@@ -1028,6 +1028,7 @@ static struct nd_region *nd_region_create(struct nvdimm_bus *nvdimm_bus,
  
- 	lr->gdev = gpio_device_get(gdev);
+ 	if (!nd_region)
+ 		return NULL;
++	nd_region->ndr_mappings = ndr_desc->num_mappings;
+ 	/* CXL pre-assigns memregion ids before creating nvdimm regions */
+ 	if (test_bit(ND_REGION_CXL, &ndr_desc->flags)) {
+ 		nd_region->id = ndr_desc->memregion;
+@@ -1062,7 +1063,6 @@ static struct nd_region *nd_region_create(struct nvdimm_bus *nvdimm_bus,
  
-@@ -1684,7 +1685,6 @@ static int linereq_create(struct gpio_device *gdev, void __user *ip)
- 		lr->event_buffer_size = GPIO_V2_LINES_MAX * 16;
- 
- 	atomic_set(&lr->seqno, 0);
--	lr->num_lines = ulr.num_lines;
- 
- 	/* Request each GPIO */
- 	for (i = 0; i < ulr.num_lines; i++) {
+ 		get_device(&nvdimm->dev);
+ 	}
+-	nd_region->ndr_mappings = ndr_desc->num_mappings;
+ 	nd_region->provider_data = ndr_desc->provider_data;
+ 	nd_region->nd_set = ndr_desc->nd_set;
+ 	nd_region->num_lanes = ndr_desc->num_lanes;
 -- 
 2.34.1
 
