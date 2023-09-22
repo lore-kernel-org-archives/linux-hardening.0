@@ -1,54 +1,63 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 362EB41AA4
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 17:54:03 +0000 (UTC)
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C95E1FF7
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:53:40 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-6910ea9cca1so2066836b3a.1
-        for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:53:40 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B2564447F
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 17:54:07 +0000 (UTC)
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC1FF26BF
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:53:43 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-1bf55a81eeaso21130395ad.0
+        for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:53:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695405220; x=1696010020; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1695405223; x=1696010023; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=35gtyXNkaxV1CbWW0mQ4JhX2sryrgmwmW4Qyfs+/hZM=;
-        b=O1LITAYt09swLRrJp8fve4IBMIdWFNCx9cj/PVDl+xTVKojkfdkar4gw2RNcJeg0AQ
-         SLGJ7GkgN98SKzK/bT7hWDqC3ziLqT3SnA1Nn/T4aVxNYaPc6hcY7pRVwhmOYgakMvcS
-         mhovKq7rDOgoZwOzpngygNSPNxWdb/o6CMgW4=
+        bh=F/L92X22dJhyhtQ8lDKApFNV7vkLUEgyD7DW61AIGrg=;
+        b=R9xyZN9cQTzCHh1zGdoKQao8yI/eVpTF6uJsDtWMYY9GWDxthUzvTpDgsXfpkWgh/V
+         /YdrSM1hp+eLqX2UPVgWaL9dStDGnatO9ahE+XSJD1OT50KM+lT5TJGelJE5MTBTX30t
+         wdulrdqgzfVkdLnMjJs0YdPshpQ7OKZseb+YY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695405220; x=1696010020;
+        d=1e100.net; s=20230601; t=1695405223; x=1696010023;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=35gtyXNkaxV1CbWW0mQ4JhX2sryrgmwmW4Qyfs+/hZM=;
-        b=DXJ8sTingn2Szvt3yjPdll9zlz16FZIowgtv1GZbqiixElnWr6wwvr8vguUMGLYqeP
-         FpxtaAJDobhzkq6tEYyLAuWf1b6gVjbd3Sf5a2n37teH1F6EDM57UkpI+S7iTSRY6Vwi
-         UmVQqO0dkLwTxcZeobeX232cCJcDfHE5mYmuH8wKIZXydArFykFOlRxGFgldWt3ZiAtP
-         FrZYNL8tpkw8nd2PA80NW6E5OgyHX8zm9ML7AZqilKoLhaBrpmNEOaLx8SOgENdcKId4
-         g9MdSPO7T60UYzWlhXikLbPbY90a1kEcZl+ZEp+q6rHGMwYOhPcjdygqrOxeT9Ds+RD+
-         6zmA==
-X-Gm-Message-State: AOJu0Yz7dYJAMKcGovyp47PtEWkMF7/g+ue24OSCobu81wx8NMjB2lHG
-	6sq/iv6Wl6DgVM3/0c32ptfm+goxO1+VmgLzRMk=
-X-Google-Smtp-Source: AGHT+IE4t0+eU5/4e6IKIf0243xPBzsg5WQKxy89ruYQeAv2++FejJkkI+uW5TH7Mk0QCKLUsty1kA==
-X-Received: by 2002:a05:6a00:987:b0:690:41a1:9b64 with SMTP id u7-20020a056a00098700b0069041a19b64mr90043pfg.1.1695405219712;
-        Fri, 22 Sep 2023 10:53:39 -0700 (PDT)
+        bh=F/L92X22dJhyhtQ8lDKApFNV7vkLUEgyD7DW61AIGrg=;
+        b=M0c8HF6a4xsMAG/YbUjftGGdQoTKLGH2zZUa1TWm4PW3MnD4RxcbXTXkmbshIcn7fs
+         SVd5H55f8dDbIvXKXe9v0s3lHkdPmptkSzeb1uZGwwtBY5/MLn1R5ARYN7iV4EbWkGFS
+         9S39WU14GR2lVZTtHmkZQOf+wlkQr9+IgrFtW6hHXsdeaenGMoX7eNTvDgEqGZVeGhL+
+         xkR6yOAq3yqnbFcZAcaoPCcQOlvMVcNvB/uhO32xc17rOrEtNL3VlxD5u7rv8Gi+NGM2
+         /gxKFc70KUefABnVx8k/z4LfddalywoOgpzd56FZPrPF6kjPIXi/y6CtbqKTk54wkBKh
+         M5pA==
+X-Gm-Message-State: AOJu0Yy+i6gsrbPcLYjuJd1ckna4GCAt3Nlj2W0XyQNuIVDGIdTIg9it
+	YvJrBWfPjvGA1sbHUqIkNTpbjA==
+X-Google-Smtp-Source: AGHT+IHGWszC9sNGNLlYcYJz1tQiG2EBYKJI1eKGKzyA7OlbgEJ46OgR6p2V4Nmm7b7vzpvejaUosA==
+X-Received: by 2002:a17:903:110d:b0:1bb:d280:5e0b with SMTP id n13-20020a170903110d00b001bbd2805e0bmr246508plh.18.1695405223181;
+        Fri, 22 Sep 2023 10:53:43 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id k130-20020a636f88000000b00563c1aa277asm3380555pgc.6.2023.09.22.10.53.39
+        by smtp.gmail.com with ESMTPSA id ji18-20020a170903325200b001bdbe6c86a9sm3779903plb.225.2023.09.22.10.53.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Sep 2023 10:53:39 -0700 (PDT)
+        Fri, 22 Sep 2023 10:53:42 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
-To: Lee Jones <lee@kernel.org>
+To: Andy Gross <agross@kernel.org>
 Cc: Kees Cook <keescook@chromium.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Amit Kucheria <amitk@kernel.org>,
+	Thara Gopinath <thara.gopinath@gmail.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	linux-arm-msm@vger.kernel.org,
+	linux-pm@vger.kernel.org,
 	Nathan Chancellor <nathan@kernel.org>,
 	Nick Desaulniers <ndesaulniers@google.com>,
 	Tom Rix <trix@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	llvm@lists.linux.dev,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] mfd: iqs62x: Annotate struct iqs62x_fw_blk with __counted_by
-Date: Fri, 22 Sep 2023 10:53:38 -0700
-Message-Id: <20230922175337.work.150-kees@kernel.org>
+Subject: [PATCH] drivers: thermal: tsens: Annotate struct tsens_priv with __counted_by
+Date: Fri, 22 Sep 2023 10:53:41 -0700
+Message-Id: <20230922175341.work.919-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -56,20 +65,20 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=969; i=keescook@chromium.org;
- h=from:subject:message-id; bh=40smk5nu73u0vfTxfrOWAC2AnRabVPFAKtr9H6m06to=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlDdSierso3cLUCkrGkR7SzFR8Eef9SkFGVBB++
- YGtQ3yHy4yJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQ3UogAKCRCJcvTf3G3A
- JjquEACNQ40A/dsuVWJtubBKqSUsV0RJy532o2a7KjsWRrhyAnUAyi95GcYxhpG1L2yeF3MdMBy
- thxxRTReJNGXfQwmqfsJQ1QMrDTWiVR7zXFq5mo7Uo/enLd1chriGNT+rMx1UvBuwOLj05zOchw
- MSpEKITLwGLx+YA0K02TZ9/3rt1ErYIX0xbTAPHcD+EP+T9uzKev2zNvbMj+kEmK0/Lkh1PVktA
- zHTyOqFn3coTptKLxDpkMJyWSlBeXb/lrvFYjaa3H45C3osBppBcKPGod9MMJAM/x73a6J5RzZc
- JfO5z5UsvwydKhrtUS+uoO+uEnIm7d7kYexmfe4FXQvJTMudNyH2MI8q2mXBo378A5PDkKLYeYF
- Ri2c4Ja+5VeIqpcCaxVGKngmTnT0Omlv6wHBT3zl1sCiRvqdEHf5lxIh+US/TTK+9F1l9ZdKnYv
- wQcUkUsep2ZxvWKHD/M1kQaxEzuEsA0oyGgO7iXmIW8HySZDT+Ii74EgmLDg+UxG+2xH2uZ09rp
- 07Qqy8qtTiZdDo7eAptBkGmie70Sn4C2VdJl3XVF31DeU3ZKLNEQwbF1J73d4L61K3oeEtz0x7R
- IYmgjByteN3WXc4sxL30VJTXfnaZOz56zFsyPX5CmOPfIGOPu1q1pZrn9wEco3Clbbj8y4I0omy
- GNCQZNPa TRkH0iQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1437; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=yU2HdTIvaMKiOikp0zqOQXXfFgKhOPJCGAbuECY4jOI=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlDdSlvezRdvtVZduY7QM2bmTOaemd9ierWA9Ag
+ 6m2g04zvqaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQ3UpQAKCRCJcvTf3G3A
+ Jj+VD/9XA5O7ImEBS5lp7pFupDLhl0qpeveeJl1/ws9XB4+qfWGwP+u+B/yGl1V1if8pWYaZHlS
+ gsqmwyDwotCQkne3cBhWOEhu34q/vFTAAFYkmFsBxgqdEmAvCgw6E93LPtr32936+3M036VPvAF
+ 69Kn+xQ++3aBnlnaUnGWexWUQtZ1BS1/3Qk1BZX9wiZcM2AppV+v03THCd2OnaV7GiuE8rZLidJ
+ IKwzISZpU7HmiLVADRtiQRxDQYY7udzm1EYCbIKeB16siRiRX/wJ8B0rmqgucSPZNQOor4PZM4l
+ vgNXz3L3qYnqgZa8ZT96/zA8GcZu7v8wB3rYxEfOqmYw43FXc0J0geWreIJRzsL9HEFlKGt1dSQ
+ rOFKd0sHwKcpv9uSOSDoYV7pbxj7ZQ24AKv7OeLykWg9uOpGPezAYIKNyHMbgHpRqmgHihP1Tmj
+ 4otwf/3z+CJgIl0XIVW0W1B6YF4lUaRB5hyf71QQggSR4OB0ReLaLvDMAtIslb+edPFvWeTzTHs
+ YSmoWaWdM3Mh1xXVaa4/UzuDRz1J8T3rY1YXU0VoYQZAsZIknGkKW3jUm/ZVnO4Gk0P7rHrxkSA
+ udeto6Sq0lS20NGkgL1YMg62eSI2ZRseFlf3zhvVz6ax5crha3+IWjhindVoZ+Xh3fMVbQllLbX
+ FqtV4/g FbpWcylQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -85,29 +94,38 @@ their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 functions).
 
-As found with Coccinelle[1], add __counted_by for struct iqs62x_fw_blk.
+As found with Coccinelle[1], add __counted_by for struct tsens_priv.
 
 [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 
-Cc: Lee Jones <lee@kernel.org>
+Cc: Andy Gross <agross@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Amit Kucheria <amitk@kernel.org>
+Cc: Thara Gopinath <thara.gopinath@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Zhang Rui <rui.zhang@intel.com>
+Cc: linux-arm-msm@vger.kernel.org
+Cc: linux-pm@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/mfd/iqs62x.c | 2 +-
+ drivers/thermal/qcom/tsens.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/iqs62x.c b/drivers/mfd/iqs62x.c
-index e03b4d38fbb0..1b465590567c 100644
---- a/drivers/mfd/iqs62x.c
-+++ b/drivers/mfd/iqs62x.c
-@@ -96,7 +96,7 @@ struct iqs62x_fw_blk {
- 	u8 addr;
- 	u8 mask;
- 	u8 len;
--	u8 data[];
-+	u8 data[] __counted_by(len);
+diff --git a/drivers/thermal/qcom/tsens.h b/drivers/thermal/qcom/tsens.h
+index 2805de1c6827..cb637fa289ca 100644
+--- a/drivers/thermal/qcom/tsens.h
++++ b/drivers/thermal/qcom/tsens.h
+@@ -585,7 +585,7 @@ struct tsens_priv {
+ 	struct dentry			*debug_root;
+ 	struct dentry			*debug;
+ 
+-	struct tsens_sensor		sensor[];
++	struct tsens_sensor		sensor[] __counted_by(num_sensors);
  };
  
- struct iqs62x_info {
+ /**
 -- 
 2.34.1
 
