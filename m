@@ -1,54 +1,50 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3289A42C1F
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 17:32:32 +0000 (UTC)
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8925F10F8
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:32:26 -0700 (PDT)
-Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1c43166b7e5so21899065ad.3
-        for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:32:26 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D039742C1F
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 17:32:33 +0000 (UTC)
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F13A6E49
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:32:27 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1c3d8fb23d9so20755765ad.0
+        for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:32:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695403946; x=1696008746; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1695403947; x=1696008747; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=WTtgeSpUdLuurLr/un8bnu1axQ+1dpOqA/3ccL3TFAo=;
-        b=RiZkqDxwPqiamDEPM6ALZ/ULcNxNIdY6CQequLRSq3ojpcEsCci+2dR63iJs3wo6RE
-         GJ3QlvFt+RKQNkbJ3UyedpBTu/UuHhh3EgZ1agWpoJWL36PIZNAGaspCHfZCVFycCgUf
-         D2cCaxVOgYQQLzqIfu+edsJpHoI8JOcJoduIc=
+        bh=gDHDeV42Frwj7XYTpJqGl5ND8N8KbUFLGf1moqK0weE=;
+        b=ba1nxS/RqQHudZO4/x3fannYl8NGDAPfxRiqZFu3wSv2oJcnNc9A/3yciGOdP3JbwZ
+         v4WVBTBbRBwcsS0i16jxBNbjUAsLJigQwnBtmwlklDwOVaz1dW3l875ih6BrEIj3GH50
+         LSlMP23XgZd3+7BZDEjx/cnfCqOV14b7g59NQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695403946; x=1696008746;
+        d=1e100.net; s=20230601; t=1695403947; x=1696008747;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=WTtgeSpUdLuurLr/un8bnu1axQ+1dpOqA/3ccL3TFAo=;
-        b=G9XvOSHL80aRkOiTDHBhShhqVFbaJ+Si1XGNgk+TL7khZR29PzsjWuFCp/3iCUZKHq
-         8bhUQLzPd4fFQ6O9gEwN71n65UO/CCKwI75jrngMT9RMizMKwED+vFS45AqrwzMnomZH
-         mFA/ckftx4SAL3g1jAeZ9vmj+4QDINwUORg/GVL7TLLNhOfnTmceNh1Q+Zb2Bx+V8j84
-         Wpkn4nIZbnbEiDHdu/sM27942o9GNZ60Lm2LejXZ/31q9LF/n47PKJDGMQ+DWE8b4X1w
-         tHlQTDIeUvyateYU5wxkNlZs791DJMHivby1Wjdt6/qzqduchB2D5MfKkCvWU/xKBOk0
-         h/vw==
-X-Gm-Message-State: AOJu0YxEGSoz+HSAzQVCKWqvzrGfgDMiTbdtG4Ooa7fLcrgeVgWz+B1I
-	SgP3DTJ86EqAJisK1h9+f7Orfg==
-X-Google-Smtp-Source: AGHT+IE4NKtjB8q0iCY5uRpFdVHfLGOGnUW9ndbQ3iwuIKZUl+ACrzobHns1ItGFQZS667ZYOrI2ZA==
-X-Received: by 2002:a17:902:6944:b0:1bc:c82:9368 with SMTP id k4-20020a170902694400b001bc0c829368mr112509plt.32.1695403945964;
-        Fri, 22 Sep 2023 10:32:25 -0700 (PDT)
+        bh=gDHDeV42Frwj7XYTpJqGl5ND8N8KbUFLGf1moqK0weE=;
+        b=wSc03B/ab75/ViZnxOn+E0L8AbyOfMzMaZep69zRQpjycswmf4ab//m2Dn45dIGe3i
+         mR0rZqy0nwAbHCWBLFB5rgtZ3LsnVkhGT34ge+sUpFeCQPYLD5hrvDHZdlMoHM7LjXNQ
+         PLxGsXFJmnXzASTA8H0grT1BycdK/uNv+MJP0ImoZdUG5FYLfr3C1Rh2iMVoRbEjq9dK
+         pGs8LhB0MgSsgRO5xHOgzEyTxt4V7cyIAK/0fxhlRCDpUeNS9UlikOr4rS+hj1u+YbNp
+         SVJ+aSXEntFv8b500iBtfFbC0pK0aYA3yVzUg6Ww3/BNIh97VuVZmVMOrPYy3ku9YyO+
+         8Txw==
+X-Gm-Message-State: AOJu0Yy8ugZriiHky1BE8q0wFygHPTDLupmMvwcpv2+60k2EhBAJICZ7
+	fulNt4RJMHCzE2Zt1UDzVV3H0w==
+X-Google-Smtp-Source: AGHT+IEC3lNqd6k67JPujYxNrx9QHnlj6kWd/En5u8yIwMg5BjeP/3s86llo86YUSFuXOu6sjLAyYg==
+X-Received: by 2002:a17:902:e802:b0:1c5:efd1:82b6 with SMTP id u2-20020a170902e80200b001c5efd182b6mr188724plg.30.1695403947353;
+        Fri, 22 Sep 2023 10:32:27 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id y3-20020a170902864300b001b0358848b0sm3747353plt.161.2023.09.22.10.32.20
+        by smtp.gmail.com with ESMTPSA id x4-20020a170902ec8400b001c5f62a639asm67076plg.196.2023.09.22.10.32.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Sep 2023 10:32:22 -0700 (PDT)
+        Fri, 22 Sep 2023 10:32:25 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
 To: David Airlie <airlied@gmail.com>
 Cc: Kees Cook <keescook@chromium.org>,
-	David Airlie <airlied@redhat.com>,
-	Gerd Hoffmann <kraxel@redhat.com>,
-	Gurchetan Singh <gurchetansingh@chromium.org>,
-	Chia-I Wu <olvaffe@gmail.com>,
+	Emma Anholt <emma@anholt.net>,
+	Melissa Wen <mwen@igalia.com>,
 	Daniel Vetter <daniel@ffwll.ch>,
 	dri-devel@lists.freedesktop.org,
-	virtualization@lists.linux-foundation.org,
-	Emma Anholt <emma@anholt.net>,
 	Evan Quan <evan.quan@amd.com>,
 	Alex Deucher <alexander.deucher@amd.com>,
 	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
@@ -75,9 +71,12 @@ Cc: Kees Cook <keescook@chromium.org>,
 	Karol Herbst <kherbst@redhat.com>,
 	Lyude Paul <lyude@redhat.com>,
 	Maxime Ripard <mripard@kernel.org>,
+	David Airlie <airlied@redhat.com>,
+	Gerd Hoffmann <kraxel@redhat.com>,
+	Gurchetan Singh <gurchetansingh@chromium.org>,
+	Chia-I Wu <olvaffe@gmail.com>,
 	Zack Rusin <zackr@vmware.com>,
 	VMware Graphics Reviewers <linux-graphics-maintainer@vmware.com>,
-	Melissa Wen <mwen@igalia.com>,
 	Nathan Chancellor <nathan@kernel.org>,
 	Nick Desaulniers <ndesaulniers@google.com>,
 	Tom Rix <trix@redhat.com>,
@@ -97,11 +96,12 @@ Cc: Kees Cook <keescook@chromium.org>,
 	linux-arm-msm@vger.kernel.org,
 	freedreno@lists.freedesktop.org,
 	nouveau@lists.freedesktop.org,
+	virtualization@lists.linux-foundation.org,
 	llvm@lists.linux.dev,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH 7/9] drm/virtio: Annotate struct virtio_gpu_object_array with __counted_by
-Date: Fri, 22 Sep 2023 10:32:12 -0700
-Message-Id: <20230922173216.3823169-7-keescook@chromium.org>
+Subject: [PATCH 9/9] drm/v3d: Annotate struct v3d_perfmon with __counted_by
+Date: Fri, 22 Sep 2023 10:32:14 -0700
+Message-Id: <20230922173216.3823169-9-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230922173110.work.084-kees@kernel.org>
 References: <20230922173110.work.084-kees@kernel.org>
@@ -111,19 +111,19 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1417; i=keescook@chromium.org;
- h=from:subject; bh=eZm0aznK0m8B2PZ9kKPoriymoURbDsQWuTqSiG5Zn6g=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlDc+ecN7AHVyI0F/T2hAcEM09nm5XXW5LLfQTE
- HSHvLmbqbqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQ3PngAKCRCJcvTf3G3A
- JmrOD/wOpyQVRHrGQGo8XfD5jMBVmYMEWa7mtPz8TQHyKwul0h4DAnDuY1syEElYvTvb0qCuTg6
- YHpqfYbVJonRUjUd83cqsdEqsNMRkx8ryd+FwIwDMcHFmp3kEWfg5s9zyJpQlhMbIA8qRhFRzp6
- 1nctWnxSwK5Y+R6FATebIjhT9U2Y8CD6khRnkG9NQuimrbhgcl/f447wIiYiu5X7idIzuMwSDFR
- Prf1JJwDz4YkxahRTnX8WrJXhYUDJjWqyw7MOMkMW6ybVBIL8ie1WLAZlKfuNoq/ypItBU4eAMz
- +BDqWKau3tdzcpK42SAJNB9SVOIvsM8EHP5boshP1NmOAEdUKG8SXMJr6bbYAfFt/Zdk5ZmYfpJ
- Yxipt98I+ZRxsbNFS4Y+4kVDYW0QBySazXXvWa8U736thID88na3V/aHvwB4Ql0tKp5Mk3oaHjZ
- VIJkT0hMJ0c+tnjLvg6pHMeQM7yKNB+s0mGuL84RFj6OyWPATVyWvcrsQ/dAxuy53EitcBlWyzG
- OhHlG4pbiUAIcoN9Kju8k9tthCpSQohkyEr1pwg2o2OfnyfTD7GoFuTt85RlHxHFcx2PYl1nV2x
- FeRCY+2qIpNwX19xvQ8Lx3Vt8SeFDNnJWY5M6UFCEs1Kyk4337zXOTTH+xiGEYKfZpRPhfZZ+7Z CzpyiCN8tLdjdOg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1250; i=keescook@chromium.org;
+ h=from:subject; bh=SnNIrp1FHi4lB0nFNYirvVw5/7/jvEw6i/lP/RJRA6A=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlDc+e3L4G5PZF7SaBMxHwj62ZCFc4FzMHTqhT9
+ tfDr8MgF6uJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQ3PngAKCRCJcvTf3G3A
+ JnkWEACXtjUq16fS873Hx8yyB8djpvoH6XVS+/OuSPCo2t7GIoIpy1zBkPiH2Ei14JMNlHdMGGy
+ 8yOKrl1rGoQOP3jjY04cxJWy1h5uFFHAxW6VGYIBsbbFRIqAXuVC4UKEN+qYZ97MTJmwc0eHVdX
+ Z441sTRctCLNHoMhSAQn6O3TWU2+/QOV8cz2Ls8cuKVLErRruCIa6OzHgGSnhC5Rq1OWXZyJNiQ
+ 1aWVoVn67WL0VqIe3RW1cZvMnlWNTbgZP1DUee1eLb7MmfT7XMLkW6Jz/8rTfAeSUSsLhxKbIcO
+ ZpXIWrrfcefYP4Dz3BMU6z9OLUAHdpdLEnnvQyDviUPLmbRyS5mdJpKrC9XT7FTANcayQSTonRu
+ M12CaA8ASNf3ak1iu7o4DhTMZeHyb2Wpz2kwj4Nyg6YzYpRNC2gtRkBRdxIJn60r90kd27Yxl7Y
+ Hb+w/DnzIvunJlaIiKWIEE9lJfyZWF2fgi9gcXtI26HlMj/Jn9jmdHnLwh96IqxloMmooRdvULL
+ NK01ICP7mB/XJ36KSBZv5ss3B5LUV9OwyC4T2xpvqKmG/iSr65/EUsg0AYInGQ5v0STKkN7TYFV
+ abYOWvuq0o/pltuNX+Gpbsn9+VvBaxhF2CeSHtOP8ARhgkctRhQJ2+OhqQ35i3SIQBBSkeCOxlL 2y59f7fhlJo6LCg==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -139,35 +139,33 @@ their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 functions).
 
-As found with Coccinelle[1], add __counted_by for struct virtio_gpu_object_array.
+As found with Coccinelle[1], add __counted_by for struct v3d_perfmon.
 
 [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 
-Cc: David Airlie <airlied@redhat.com>
-Cc: Gerd Hoffmann <kraxel@redhat.com>
-Cc: Gurchetan Singh <gurchetansingh@chromium.org>
-Cc: Chia-I Wu <olvaffe@gmail.com>
+Cc: Emma Anholt <emma@anholt.net>
+Cc: Melissa Wen <mwen@igalia.com>
+Cc: David Airlie <airlied@gmail.com>
 Cc: Daniel Vetter <daniel@ffwll.ch>
 Cc: dri-devel@lists.freedesktop.org
-Cc: virtualization@lists.linux-foundation.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/gpu/drm/virtio/virtgpu_drv.h | 2 +-
+ drivers/gpu/drm/v3d/v3d_drv.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
-index 8513b671f871..96365a772f77 100644
---- a/drivers/gpu/drm/virtio/virtgpu_drv.h
-+++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
-@@ -119,7 +119,7 @@ struct virtio_gpu_object_array {
- 	struct ww_acquire_ctx ticket;
- 	struct list_head next;
- 	u32 nents, total;
--	struct drm_gem_object *objs[];
-+	struct drm_gem_object *objs[] __counted_by(total);
+diff --git a/drivers/gpu/drm/v3d/v3d_drv.h b/drivers/gpu/drm/v3d/v3d_drv.h
+index 7f664a4b2a75..106454f28956 100644
+--- a/drivers/gpu/drm/v3d/v3d_drv.h
++++ b/drivers/gpu/drm/v3d/v3d_drv.h
+@@ -59,7 +59,7 @@ struct v3d_perfmon {
+ 	 * values can't be reset, but you can fake a reset by
+ 	 * destroying the perfmon and creating a new one.
+ 	 */
+-	u64 values[];
++	u64 values[] __counted_by(ncounters);
  };
  
- struct virtio_gpu_vbuffer;
+ struct v3d_dev {
 -- 
 2.34.1
 
