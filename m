@@ -1,151 +1,142 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4D143A86
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 17:49:52 +0000 (UTC)
-Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1949E19A
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:49:50 -0700 (PDT)
-Received: from eig-obgw-5009a.ext.cloudfilter.net ([10.0.29.176])
-	by cmsmtp with ESMTP
-	id jjUVqyJPJWU1cjkHlqOYN1; Fri, 22 Sep 2023 17:49:49 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id jkHkqwQsm3dWfjkHkqOmvF; Fri, 22 Sep 2023 17:49:49 +0000
-X-Authority-Analysis: v=2.4 cv=T8Gf8tGQ c=1 sm=1 tr=0 ts=650dd3bd
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=P7XfKmiOJ4/qXqHZrN7ymg==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=zNV7Rl7Rt7sA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
- a=J1Y8HTJGAAAA:8 a=VwQbUJbxAAAA:8 a=1XWaLZrsAAAA:8 a=cm27Pg_UAAAA:8
- a=e5xG7rUhXx-5Dd8OgBAA:9 a=QEXdDO2ut3YA:10 a=y1Q9-5lHfBjTkpIzbSAN:22
- a=AjGcO6oz07-iQ99wixmX:22 a=xmb-EsYY8bH0VWELuYED:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=71wuTBueWZAsw5Nv2J92OF9IxO/5J5d8n1IYa3AcwDQ=; b=sXOt9XzZabxT+1P2H/GRHGe1Rc
-	WbH0iwTO0N0TYMZ4HxF9EnOlBI0X6kBtalq4UgLcTzS82C1OfcfpsgA530jk25h+vlq4zVmGiFide
-	54Q9XuRULvnVkOCe9i8hnBU+/cmPCvyJnu/Qa0EEJgb47ZwExGP/nzYX9JPoysdAytm8jS1bgPUp8
-	LLeWRwgEbNq8aCupwQWFGoBTpitPuv9glJVfTZ6FEVduSXKDdXSnz4w+w+qsGW6XGV07GhdxCreIB
-	1BFZgDpGum5rMuOwGfNoSNEf4yqN/VrBTcJ09fZ0iztzaCW/izRpjSGkk8cfTChzAdWVjF5x4zEmW
-	ijhhX6ag==;
-Received: from [94.239.20.48] (port=37230 helo=[192.168.1.98])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1qjkHe-004NOP-25;
-	Fri, 22 Sep 2023 12:49:42 -0500
-Message-ID: <3bc23613-d1d0-5a05-3057-86933b2c844a@embeddedor.com>
-Date: Fri, 22 Sep 2023 19:50:39 -0600
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3686443A87
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 17:49:56 +0000 (UTC)
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFED61BC
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:49:54 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-690d9cda925so2250873b3a.3
+        for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:49:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1695404994; x=1696009794; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=i346clq8OfBFzjIMANH+n2WNr6xQCzrAEDi+whp12qc=;
+        b=Lpf995zItFq6sR0tGyAyBCBbqloaVSUoihECQF8R6YAWb1piw+dr8wUNLTVEVoz46j
+         Al074oqsdK/IUrEnJwMeL/j1i/8DIGuAjl8XCOtH7tHzG7dtP1/0/kmsDdOoEq6mglEi
+         Ya+zm7x0eydL5BHLdzZ07ZgWJTWFJnKZGihsQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695404994; x=1696009794;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=i346clq8OfBFzjIMANH+n2WNr6xQCzrAEDi+whp12qc=;
+        b=uFgyjKN6/BIWPFYGBw0oBMJwrEzSkXTlhUmjj+WCUXcHkA6M6Y3q0gPPd5JIrNrVEp
+         6anBk+lknqWyd0DGAZIocW+q+GqSzuxLL8d9894uqf47bVseW+H29Zel47dtB7wJMrA1
+         OpuADv0H+1OjhTtCRvykNsxbT0cLcuizazl2eB0JvzZ+AzANpcjs1F4msVaQXHc0jVd+
+         v10YxqmVfG7wKbIVaN7Pf4i3zdZ8keTtFNpnfjlw17FoV+D4y3QbsMg0iNLEQGJaNQNh
+         D76a9WVqVarOUsLTfNy3JIR2RNO09Ii7xglbB+yvK6SK+HUfrodLaA0Cvq41TkaJuL9N
+         Q08A==
+X-Gm-Message-State: AOJu0YxG3sy9cZPS0DwxPK82o29A6BzmBqbJIv4hZJnYBObVmgZYZ0Wy
+	xOkAcCwuzy6pK9xP9oCBYpK3Cg==
+X-Google-Smtp-Source: AGHT+IHDCf6iaIOrd4e/2vfSV3BCOtdXxkSb5FuhJslb/6GFKoAPt32qtP+ZnC440mhFZShfIwaS8A==
+X-Received: by 2002:a05:6a00:2e93:b0:690:2ad9:1436 with SMTP id fd19-20020a056a002e9300b006902ad91436mr184891pfb.7.1695404994406;
+        Fri, 22 Sep 2023 10:49:54 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id v13-20020a63b64d000000b0057783b0f102sm3053318pgt.40.2023.09.22.10.49.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Sep 2023 10:49:53 -0700 (PDT)
+From: Kees Cook <keescook@chromium.org>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+	lijian <lijian@yulong.com>,
+	linux-media@vger.kernel.org,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Tom Rix <trix@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] media: v4l2-event: Annotate struct v4l2_subscribed_event with __counted_by
+Date: Fri, 22 Sep 2023 10:49:52 -0700
+Message-Id: <20230922174951.work.160-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH 02/14] ipv4/igmp: Annotate struct ip_sf_socklist with
- __counted_by
-Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>, Jakub Kicinski <kuba@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Martin KaFai Lau <martin.lau@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Eric Dumazet <edumazet@google.com>, Alexei Starovoitov <ast@kernel.org>,
- Jamal Hadi Salim <jhs@mojatatu.com>, David Ahern <dsahern@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Yisen Zhuang <yisen.zhuang@huawei.com>,
- Salil Mehta <salil.mehta@huawei.com>, Claudiu Manoil
- <claudiu.manoil@nxp.com>, Vladimir Oltean <vladimir.oltean@nxp.com>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
- Ajay Sharma <sharmaajay@microsoft.com>, Alex Elder <elder@kernel.org>,
- Pravin B Shelar <pshelar@ovn.org>, Shaokun Zhang
- <zhangshaokun@hisilicon.com>, Cong Wang <xiyou.wangcong@gmail.com>,
- Jiri Pirko <jiri@resnulli.us>, Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
- Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, linux-hyperv@vger.kernel.org,
- linux-rdma@vger.kernel.org, dev@openvswitch.org,
- linux-parisc@vger.kernel.org, llvm@lists.linux.dev,
- linux-hardening@vger.kernel.org
-References: <20230922172449.work.906-kees@kernel.org>
- <20230922172858.3822653-2-keescook@chromium.org>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20230922172858.3822653-2-keescook@chromium.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 94.239.20.48
-X-Source-L: No
-X-Exim-ID: 1qjkHe-004NOP-25
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.98]) [94.239.20.48]:37230
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 38
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfKDTtlsrHwjNAOjQFTSolxUSV/z3rJMFhx71JWdzFNaoJtKoynS8LWIbjKB/RE7MTlWTi6hQl0TD/u3lBZdKTkYUzzampr8ix7Fnt3I9kh90JQ39LEDh
- qqtxDaelrtvuF1B3IRtHK8ebahISZGq+AYlxv0of/plfV/BHUkUhQ8zLut8POY1mQGgpbW72Yx8uFqs0X8KT/wfl9Si1wZ2s241GI+pQD7YYF6zIKIpcx1ps
-X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DATE_IN_FUTURE_06_12,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-	RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.6
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2092; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=C66/icBEq2MG+m/4ZluAAHZC3P5Kpbkm+mwqC112tHk=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlDdPAkSq5hJos3sXunT3ysggynSqRlnNPBwz8S
+ uw47BLY+beJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQ3TwAAKCRCJcvTf3G3A
+ JrwJD/9Ga6dhlY0NaypMA6bx76My1z2ArqeY+4D5HEL3TANx74Wr4Kc0p/+suRYVJWhO2AcnxeU
+ 2hrfzl3pi0Vvw9c5dSxjhNykeazY/+6bWYyMMPEZs+nkNWTNsSaNGWSuQlwi/DWkvux/s2CAfma
+ aNW56Oa/XhHaEk7LI2ZSJilEjfkWfZ7Yak8Ud4M2+BCIntq+ML2oE8ms1fCZqoYjtvZ+/UsHTmS
+ g3SYTUAf7cjUXhU15YO3y8zQyNYyZsatTU3HGJNpJAJjL/QYtBELDxXf70bmNHzha8SDMSv1YS8
+ MgDAkfMLfM7r+R4anEuiL/mXkrtSd6LB6jsKoXgK+VLjG1JP+UUKDIuvcmO7TM1l6VuHWj9WRld
+ yTTwN4mMvPSm47Xx3PUaC6LuTijjcqhA3Ua6nFbW0zvaPg7IpV44SycHiEpioj88TrElu81AFrL
+ kIGefhO0Hpe32pz7zFpcstbvnlZgAvxX88/pxkNiwIBzunAJ48TCSevzWX1fGf3Zt4iDpLr+bT5
+ V4BjtZntEnOCExVsQWu5ZfbI41epwpEP3p6WJ6KEcVIEcAzKw4q3Hbb0xAxEj0AR75RIOyyofOf
+ 5wYS6DC88fkx+lu3Yu29SH5YEGxqz8hysn6mgDV1W4BcnwHl9dkjhIvY13uFHiexjRTItbx3DEf
+ DL1oEuc RlCqUUwQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
+Prepare for the coming implementation by GCC and Clang of the __counted_by
+attribute. Flexible array members annotated with __counted_by can have
+their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+(for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+functions).
 
+As found with Coccinelle[1], add __counted_by for struct v4l2_subscribed_event.
+Additionally, since the element count member must be set before accessing
+the annotated flexible array member, move its initialization earlier.
 
-On 9/22/23 11:28, Kees Cook wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
-> 
-> As found with Coccinelle[1], add __counted_by for struct ip_sf_socklist.
-> 
-> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
-> 
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Martin KaFai Lau <martin.lau@kernel.org>
-> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Alexei Starovoitov <ast@kernel.org>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+[1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc: lijian <lijian@yulong.com>
+Cc: linux-media@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/media/v4l2-core/v4l2-event.c | 2 +-
+ include/media/v4l2-event.h           | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Thanks
+diff --git a/drivers/media/v4l2-core/v4l2-event.c b/drivers/media/v4l2-core/v4l2-event.c
+index c5ce9f11ad7b..3898ff7edddb 100644
+--- a/drivers/media/v4l2-core/v4l2-event.c
++++ b/drivers/media/v4l2-core/v4l2-event.c
+@@ -238,6 +238,7 @@ int v4l2_event_subscribe(struct v4l2_fh *fh,
+ 	sev = kvzalloc(struct_size(sev, events, elems), GFP_KERNEL);
+ 	if (!sev)
+ 		return -ENOMEM;
++	sev->elems = elems;
+ 	for (i = 0; i < elems; i++)
+ 		sev->events[i].sev = sev;
+ 	sev->type = sub->type;
+@@ -245,7 +246,6 @@ int v4l2_event_subscribe(struct v4l2_fh *fh,
+ 	sev->flags = sub->flags;
+ 	sev->fh = fh;
+ 	sev->ops = ops;
+-	sev->elems = elems;
+ 
+ 	mutex_lock(&fh->subscribe_lock);
+ 
+diff --git a/include/media/v4l2-event.h b/include/media/v4l2-event.h
+index 4ffa914ade3a..3a0e2588361c 100644
+--- a/include/media/v4l2-event.h
++++ b/include/media/v4l2-event.h
+@@ -78,7 +78,7 @@ struct v4l2_subscribed_event {
+ 	unsigned int		elems;
+ 	unsigned int		first;
+ 	unsigned int		in_use;
+-	struct v4l2_kevent	events[];
++	struct v4l2_kevent	events[] __counted_by(elems);
+ };
+ 
+ /**
 -- 
-Gustavo
+2.34.1
 
-> ---
->   include/linux/igmp.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/igmp.h b/include/linux/igmp.h
-> index ebf4349a53af..5171231f70a8 100644
-> --- a/include/linux/igmp.h
-> +++ b/include/linux/igmp.h
-> @@ -39,7 +39,7 @@ struct ip_sf_socklist {
->   	unsigned int		sl_max;
->   	unsigned int		sl_count;
->   	struct rcu_head		rcu;
-> -	__be32			sl_addr[];
-> +	__be32			sl_addr[] __counted_by(sl_max);
->   };
->   
->   #define IP_SFBLOCK	10	/* allocate this many at once */
