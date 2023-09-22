@@ -1,2733 +1,400 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B4FA18AF3;
-	Thu, 21 Sep 2023 20:10:50 +0000 (UTC)
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B34030F4;
-	Thu, 21 Sep 2023 13:10:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695327041; x=1726863041;
-  h=date:from:to:cc:subject:message-id;
-  bh=i3AIdKdxxN0I68MIe7NLusuuwSw3UKrkqwYlrYfMXec=;
-  b=Iyy3EMhStqI1t1yqH6uc9qoQI5MnH1i18qaZ1cXDb6rQTsZBuP1ukJRl
-   M2WrQF0GhoIc49Dly95J5udzkGlVSMu5yZui388DING9wD6gHmAJECuDb
-   aqvZtIEEcT8UCvRoqoxxHG6i/jvjzmNfGaAGB3bTKeHr31QQQfPEIvUzZ
-   rCisa17sBz7m0bbN2+HJ3E0aVkGMdQjgfboIp5yOYd5hsrrfkyaj6MsNy
-   2zkRZKOk8pfoebzfKhmFc0xlb/zg73Qkpv3zXrBkIwkiKkf8M7H3vyvh1
-   UGpzbLJOJHw6QjRObgouMjNmrJSd+n6WjbEWH4lc/lhQwhJphdGqT46xA
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10840"; a="360892240"
-X-IronPort-AV: E=Sophos;i="6.03,166,1694761200"; 
-   d="scan'208";a="360892240"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2023 13:10:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10840"; a="920876560"
-X-IronPort-AV: E=Sophos;i="6.03,166,1694761200"; 
-   d="scan'208";a="920876560"
-Received: from lkp-server02.sh.intel.com (HELO b77866e22201) ([10.239.97.151])
-  by orsmga005.jf.intel.com with ESMTP; 21 Sep 2023 13:10:14 -0700
-Received: from kbuild by b77866e22201 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1qjQ02-0000Lq-09;
-	Thu, 21 Sep 2023 20:10:10 +0000
-Date: Fri, 22 Sep 2023 04:09:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linux Memory Management List <linux-mm@kvack.org>,
- MPT-FusionLinux.pdl@broadcom.com, amd-gfx@lists.freedesktop.org,
- ath10k@lists.infradead.org, bpf@vger.kernel.org,
- cgroups@vger.kernel.org, dri-devel@lists.freedesktop.org,
- intel-gfx@lists.freedesktop.org, intel-wired-lan@lists.osuosl.org,
- iommu@lists.linux.dev, kunit-dev@googlegroups.com,
- linux-arm-kernel@lists.infradead.org, linux-block@vger.kernel.org,
- linux-crypto@vger.kernel.org, linux-edac@vger.kernel.org,
- linux-efi@vger.kernel.org, linux-ext4@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-iio@vger.kernel.org, linux-input@vger.kernel.org
-Subject: [linux-next:master] BUILD REGRESSION
- 940fcc189c51032dd0282cbee4497542c982ac59
-Message-ID: <202309220420.c5uFgRdL-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-	SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3789B179B6
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 07:21:09 +0000 (UTC)
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 280C2C2;
+	Fri, 22 Sep 2023 00:21:07 -0700 (PDT)
+Received: by mail-lf1-x12c.google.com with SMTP id 2adb3069b0e04-503065c4b25so2883852e87.1;
+        Fri, 22 Sep 2023 00:21:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1695367265; x=1695972065; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=J09BkyKjJxxQZQkhZ/+lLdlfpR0Mi3cmWdD7ssW7VS8=;
+        b=BIqpCH/yq3vJOuGkZXyUZ+YyMGcABKP64iKtkBWfON+QFWlX7g1BMCTyI3HAjKa9KD
+         sIAnDvNUWtFN0rA7iH+QG01OnnvV/nMIsp87iXl8xjPNs2O5vvfAUOP38iPi3ava9KhT
+         Vq30X1jdyawpkDRtSiX7v7OqsEdBQi9M3Is1f4omzlwPNSyzxEqH+YaFqGng8q6dHTaI
+         2p3RUfO+V2sF7+kGBezt4LFi81fD3B/ZhlkxYi4NKW+rKUHOry+2Ch8q61EizWeV+Qrg
+         MKp7bTq8bCV0S2G2Q6WN7SgceIR0AqZ+EX03Z/IMP/kCUGGJQsJcT07rYLgYcFSf7Uhx
+         e5DA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695367265; x=1695972065;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=J09BkyKjJxxQZQkhZ/+lLdlfpR0Mi3cmWdD7ssW7VS8=;
+        b=GqqHKtOcl26wzFH7dkTs/6jNWZWg9UALS/ylIjiAxkGgL3abODQyDSTj7zW/M+SQCn
+         yFv4sFyutF2oj3/9HMnsxahNie+4rW5r2YrXcSG0Qi58joLdr5oiOL5zZNhw9mXNID6p
+         cjsQjsRUTztM2P62C6Wj5bvMFf8RNcRowKugRX/THxNwL26CkTieIcRTSRRcZTMACgCQ
+         Lk8d16BGjkEV6ISAel2BWjEPtvXUuSL7TOnErx08gaQMmpjh0FciL6JslTqLwnbkKmmu
+         hejhHYndgFYlRS4JRIedAyb+6v2YP3cWR2zdSsVS1z9bdBHzpP230cmY9vt+kD7csXSg
+         qLNg==
+X-Gm-Message-State: AOJu0YyVOk0zfK9pOxoXjjPvqBawPVi1DyhN1K/N+6Ab+nr5HewOhsmL
+	kASrjtiWS60oTHGwTnPVM2movkun0+UbQ//5O90=
+X-Google-Smtp-Source: AGHT+IHfKyoNl9gq1bvrek/hvmuNXoP8wM8iLrZy91tHkq6lpuVBkur3FuFTQdmrKy3Ax1+ghjltqcwsRRKPSUFCAAM=
+X-Received: by 2002:a05:6512:3702:b0:503:3644:4a99 with SMTP id
+ z2-20020a056512370200b0050336444a99mr6491595lfr.51.1695367264891; Fri, 22 Sep
+ 2023 00:21:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <JH0PR04MB7072A4B6946EAEEB1EB8B0BE8AF6A@JH0PR04MB7072.apcprd04.prod.outlook.com>
+ <8734zfx2bo.fsf@jogness.linutronix.de> <CAAfh-jPc+UWMcLPFbYy6rYUh4OU36frkVYVbkhNPNX4L6RG5sA@mail.gmail.com>
+ <2023091547-mug-unlikable-571f@gregkh> <ZQSHJ_786kZNjEDX@alley>
+In-Reply-To: <ZQSHJ_786kZNjEDX@alley>
+From: Enlin Mu <enlinmu@gmail.com>
+Date: Fri, 22 Sep 2023 15:20:37 +0800
+Message-ID: <CAAfh-jMvgYfDrgcbj7o4bv83syAhL2d+1r2vn1Yz+FY_Ws81Pw@mail.gmail.com>
+Subject: Re: [PATCH] printk: add cpu id information to printk() output
+To: Petr Mladek <pmladek@suse.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, John Ogness <john.ogness@linutronix.de>, 
+	Enlin Mu <enlin.mu@outlook.com>, rostedt@goodmis.org, senozhatsky@chromium.org, 
+	keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com, 
+	enlin.mu@unisoc.com, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-branch HEAD: 940fcc189c51032dd0282cbee4497542c982ac59  Add linux-next specific files for 20230921
-
-Error/Warning reports:
-
-https://lore.kernel.org/oe-kbuild-all/202308240556.jFbsuVxg-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202308241150.LquDYwGT-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202308252255.2HPJ6x5Q-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202308282000.2XNh0K6D-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202309060824.qUfQMteL-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202309101830.7uQV4SMc-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202309122047.cRi9yJrq-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202309130213.mSR7X2jZ-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202309160110.7LQ8HD6U-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202309170545.BvBaHv0r-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202309192314.VBsjiIm5-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202309202345.yPRVHW8Q-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202309211608.K2NtoA7e-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202309211712.ti68BWbS-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202309212121.cul1pTRa-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202309212339.hxhBu2F1-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202309220139.8UKM1OB8-lkp@intel.com
-
-Error/Warning: (recently discovered and may have been fixed)
-
-<command-line>: warning: '%s' directive argument is null [-Wformat-overflow=]
-ERROR: modpost: ".L874" [drivers/mtd/nand/raw/nand.ko] undefined!
-arc-elf-ld: xfrm_algo.c:(.text+0x46c): undefined reference to `crypto_has_aead'
-arch/arm/kernel/bios32.c:413:39: warning: '%d' directive writing between 1 and 11 bytes into a region of size 9 [-Wformat-overflow=]
-arch/x86/kernel/cpu/microcode/amd.c:504:37: warning: 'h.bin' directive output may be truncated writing 5 bytes into a region of size between 1 and 7 [-Wformat-truncation=]
-arch/x86/kernel/cpu/microcode/amd.c:504:58: warning: 'h.bin' directive output may be truncated writing 5 bytes into a region of size between 1 and 7 [-Wformat-truncation=]
-block/blk-throttle.c:1531:53: warning: 'snprintf' output may be truncated before the last format character [-Wformat-truncation=]
-block/blk-throttle.c:1531:74: warning: 'snprintf' output may be truncated before the last format character [-Wformat-truncation=]
-block/blk-throttle.c:1538:15: warning: '%lu' directive output may be truncated writing between 1 and 20 bytes into a region of size 17 [-Wformat-truncation=]
-block/blk-throttle.c:1538:43: warning: '%lu' directive output may be truncated writing between 1 and 20 bytes into a region of size 17 [-Wformat-truncation=]
-drivers/accel/habanalabs/common/device.c:209:37: error: 'struct scatterlist' has no member named 'dma_length'; did you mean 'length'?
-drivers/accel/habanalabs/common/habanalabs_ioctl.c:323:30: error: implicit declaration of function 'rdtsc' [-Werror=implicit-function-declaration]
-drivers/block/virtio_blk.c:1079:68: warning: '%d' directive output may be truncated writing between 1 and 11 bytes into a region of size 7 [-Wformat-truncation=]
-drivers/clk/mvebu/clk-cpu.c:200:41: warning: 'sprintf' may write a terminating nul past the end of the destination [-Wformat-overflow=]
-drivers/clocksource/sh_mtu2.c:348:27: warning: '%u' directive writing between 1 and 10 bytes into a region of size 3 [-Wformat-overflow=]
-drivers/crypto/ccree/cc_cipher.c:1430:60: warning: '%s' directive output may be truncated writing up to 16283 bytes into a region of size 128 [-Wformat-truncation=]
-drivers/crypto/ccree/cc_cipher.c:1430:60: warning: '%s' directive output may be truncated writing up to 16927 bytes into a region of size 128 [-Wformat-truncation=]
-drivers/crypto/ccree/cc_cipher.c:1430:60: warning: '%s' directive output may be truncated writing up to 17295 bytes into a region of size 128 [-Wformat-truncation=]
-drivers/crypto/ccree/cc_cipher.c:1430:60: warning: '%s' directive output may be truncated writing up to 17663 bytes into a region of size 128 [-Wformat-truncation=]
-drivers/crypto/ccree/cc_cipher.c:1430:60: warning: '%s' directive output may be truncated writing up to 18215 bytes into a region of size 128 [-Wformat-truncation=]
-drivers/crypto/hifn_795x.c:2396:64: warning: '%s' directive output may be truncated writing up to 8447 bytes into a region of size 128 [-Wformat-truncation=]
-drivers/crypto/marvell/cesa/cesa.c:512:59: warning: '%d' directive output may be truncated writing between 1 and 11 bytes into a region of size 3 [-Wformat-truncation=]
-drivers/edac/sb_edac.c:1678:85: warning: 'snprintf' output may be truncated before the last format character [-Wformat-truncation=]
-drivers/edac/skx_common.c:392:87: warning: '_DIMM#' directive output may be truncated writing 6 bytes into a region of size between 0 and 9 [-Wformat-truncation=]
-drivers/firmware/efi/cper-arm.c:298:64: warning: 'snprintf' output may be truncated before the last format character [-Wformat-truncation=]
-drivers/firmware/efi/cper-x86.c:295:72: warning: 'snprintf' output may be truncated before the last format character [-Wformat-truncation=]
-drivers/firmware/turris-mox-rwtm.c:255:90: warning: '%08x' directive writing 8 bytes into a region of size between 7 and 9 [-Wformat-overflow=]
-drivers/gpu/drm/amd/amdgpu/../display/dc/clk_mgr/dcn32/dcn32_clk_mgr.c:491 dcn32_auto_dpm_test_log() warn: variable dereferenced before check 'new_clocks' (see line 471)
-drivers/gpu/drm/amd/amdgpu/../display/dc/clk_mgr/dcn35/dcn35_clk_mgr.c:990 dcn35_clk_mgr_construct() warn: variable dereferenced before check 'ctx->dc_bios' (see line 925)
-drivers/gpu/drm/amd/amdgpu/../display/dc/clk_mgr/dcn35/dcn35_clk_mgr.c:990 dcn35_clk_mgr_construct() warn: variable dereferenced before check 'ctx->dc_bios->integrated_info' (see line 925)
-drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc.c:3887: warning: Function parameter or member 'srf_updates' not described in 'could_mpcc_tree_change_for_active_pipes'
-drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_training_dpia.c:427:17: warning: 'dp_decide_lane_settings' accessing 4 bytes in a region of size 1 [-Wstringop-overflow=]
-drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_training_fixed_vs_pe_retimer.c:426:25: warning: 'dp_decide_lane_settings' accessing 4 bytes in a region of size 1 [-Wstringop-overflow=]
-drivers/gpu/drm/amd/amdgpu/amdgpu_gfx.c:331:33: warning: '%d' directive writing between 1 and 10 bytes into a region of size between 0 and 8 [-Wformat-overflow=]
-drivers/gpu/drm/amd/amdgpu/amdgpu_gfx.c:331:40: warning: '%d' directive writing between 1 and 10 bytes into a region of size between 0 and 8 [-Wformat-overflow=]
-drivers/gpu/drm/amd/amdgpu/amdgpu_mes.c:1404:66: warning: '%s' directive output may be truncated writing between 1 and 2 bytes into a region of size between 0 and 29 [-Wformat-truncation=]
-drivers/gpu/drm/amd/amdgpu/amdgpu_vpe.c:60:45: warning: '%s' directive output may be truncated writing up to 63 bytes into a region of size 57 [-Wformat-truncation=]
-drivers/gpu/drm/amd/amdgpu/amdgpu_vpe.c:60:52: warning: '%s' directive output may be truncated writing up to 63 bytes into a region of size 57 [-Wformat-truncation=]
-drivers/gpu/drm/i915/display/intel_tc.c:1851:11: error: '%d' directive output may be truncated writing between 1 and 11 bytes into a region of size 3 [-Werror=format-truncation=]
-drivers/gpu/drm/nouveau/nouveau_backlight.c:56:55: warning: '%d' directive output may be truncated writing between 1 and 10 bytes into a region of size 3 [-Wformat-truncation=]
-drivers/gpu/drm/nouveau/nouveau_backlight.c:56:69: warning: '%d' directive output may be truncated writing between 1 and 10 bytes into a region of size 3 [-Wformat-truncation=]
-drivers/hid/hid-logitech-dj.c:764:44: warning: '%d' directive output may be truncated writing between 1 and 3 bytes into a region of size 2 [-Wformat-truncation=]
-drivers/hid/hid-sensor-custom.c:591:62: warning: '%s' directive output may be truncated writing likely 4 or more bytes into a region of size between 0 and 63 [-Wformat-truncation=]
-drivers/input/keyboard/atkbd.c:1153:21: warning: '/input0' directive output may be truncated writing 7 bytes into a region of size between 1 and 32 [-Wformat-truncation=]
-drivers/input/keyboard/atkbd.c:1153:7: warning: '/input0' directive output may be truncated writing 7 bytes into a region of size between 1 and 32 [-Wformat-truncation=]
-drivers/input/keyboard/sunkbd.c:275:57: warning: '/input0' directive output may be truncated writing 7 bytes into a region of size between 1 and 32 [-Wformat-truncation=]
-drivers/input/mouse/alps.c:1419:49: warning: '%s' directive output may be truncated writing 6 bytes into a region of size between 0 and 31 [-Wformat-truncation=]
-drivers/input/mouse/alps.c:1419:56: warning: '%s' directive output may be truncated writing 6 bytes into a region of size between 0 and 31 [-Wformat-truncation=]
-drivers/input/mouse/alps.c:3102:49: warning: '/input1' directive output may be truncated writing 7 bytes into a region of size between 1 and 32 [-Wformat-truncation=]
-drivers/input/mouse/alps.c:3102:63: warning: '/input1' directive output may be truncated writing 7 bytes into a region of size between 1 and 32 [-Wformat-truncation=]
-drivers/input/mouse/elantech.c:2090:65: warning: '/input1' directive output may be truncated writing 7 bytes into a region of size between 1 and 32 [-Wformat-truncation=]
-drivers/input/mouse/lifebook.c:283:21: warning: '/input1' directive output may be truncated writing 7 bytes into a region of size between 1 and 32 [-Wformat-truncation=]
-drivers/input/mouse/lifebook.c:283:7: warning: '/input1' directive output may be truncated writing 7 bytes into a region of size between 1 and 32 [-Wformat-truncation=]
-drivers/input/mouse/psmouse-base.c:1603:52: warning: '/input0' directive output may be truncated writing 7 bytes into a region of size between 1 and 32 [-Wformat-truncation=]
-drivers/input/mouse/psmouse-base.c:1603:59: warning: '/input0' directive output may be truncated writing 7 bytes into a region of size between 1 and 32 [-Wformat-truncation=]
-drivers/input/mouse/sermouse.c:240:54: warning: '/input0' directive output may be truncated writing 7 bytes into a region of size between 1 and 32 [-Wformat-truncation=]
-drivers/input/mouse/sermouse.c:240:61: warning: '/input0' directive output may be truncated writing 7 bytes into a region of size between 1 and 32 [-Wformat-truncation=]
-drivers/input/mouse/vmmouse.c:455:46: warning: '/input1' directive output may be truncated writing 7 bytes into a region of size between 1 and 32 [-Wformat-truncation=]
-drivers/input/mouse/vmmouse.c:455:53: warning: '/input1' directive output may be truncated writing 7 bytes into a region of size between 1 and 32 [-Wformat-truncation=]
-drivers/input/mouse/vsxxxaa.c:468:48: warning: '/input0' directive output may be truncated writing 7 bytes into a region of size between 1 and 32 [-Wformat-truncation=]
-drivers/input/mouse/vsxxxaa.c:468:55: warning: '/input0' directive output may be truncated writing 7 bytes into a region of size between 1 and 32 [-Wformat-truncation=]
-drivers/input/serio/serio_raw.c:303:14: warning: '%ld' directive output may be truncated writing between 1 and 11 bytes into a region of size 7 [-Wformat-truncation=]
-drivers/input/serio/serio_raw.c:303:28: warning: '%ld' directive output may be truncated writing between 1 and 11 bytes into a region of size 7 [-Wformat-truncation=]
-drivers/iommu/intel/dmar.c:1062:35: warning: '%d' directive writing between 1 and 10 bytes into a region of size 9 [-Wformat-overflow=]
-drivers/leds/led-core.c:513:57: warning: 'snprintf' output may be truncated before the last format character [-Wformat-truncation=]
-drivers/leds/led-core.c:513:78: warning: 'snprintf' output may be truncated before the last format character [-Wformat-truncation=]
-drivers/leds/trigger/ledtrig-cpu.c:155:42: warning: '%d' directive output may be truncated writing between 1 and 11 bytes into a region of size 5 [-Wformat-truncation=]
-drivers/leds/trigger/ledtrig-cpu.c:155:56: warning: '%d' directive output may be truncated writing between 1 and 11 bytes into a region of size 5 [-Wformat-truncation=]
-drivers/leds/trigger/ledtrig-netdev.c:234:41: warning: writing 1 byte into a region of size 0 [-Wstringop-overflow=]
-drivers/md/raid5.c:2428:12: warning: '%s' directive output may be truncated writing up to 31 bytes into a region of size between 16 and 26 [-Wformat-truncation=]
-drivers/md/raid5.c:2428:33: warning: '%s' directive output may be truncated writing up to 31 bytes into a region of size between 16 and 26 [-Wformat-truncation=]
-drivers/media/radio/radio-miropcm20.c:206:57: warning: '%s' directive output may be truncated writing up to 35 bytes into a region of size 28 [-Wformat-truncation=]
-drivers/memory/tegra/tegra20.c:606:62: warning: '.' directive output may be truncated writing 1 byte into a region of size between 0 and 5 [-Wformat-truncation=]
-drivers/mmc/host/mmc_spi.c:248:57: warning: 'snprintf' output may be truncated before the last format character [-Wformat-truncation=]
-drivers/mmc/host/mmc_spi.c:248:64: warning: 'snprintf' output may be truncated before the last format character [-Wformat-truncation=]
-drivers/net/ethernet/amd/pds_core/core.c:126:45: warning: '%s' directive output may be truncated writing up to 31 bytes into a region of size between 19 and 21 [-Wformat-truncation=]
-drivers/net/ethernet/amd/pds_core/dev.c:267:22: warning: '%s' directive output may be truncated writing up to 64 bytes into a region of size 23 [-Wformat-truncation=]
-drivers/net/ethernet/aquantia/atlantic/aq_ethtool.c:277:59: warning: '%d' directive output may be truncated writing between 1 and 11 bytes into a region of size 6 [-Wformat-truncation=]
-drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c:153:40: warning: '%s' directive output may be truncated writing up to 19 bytes into a region of size between 13 and 24 [-Wformat-truncation=]
-drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c:3031:32: warning: '%s' directive output may be truncated writing up to 31 bytes into a region of size 26 [-Wformat-truncation=]
-drivers/net/ethernet/broadcom/tg3.c:11230:37: warning: '-txrx-' directive output may be truncated writing 6 bytes into a region of size between 1 and 16 [-Wformat-truncation=]
-drivers/net/ethernet/broadcom/tg3.c:11230:9: warning: '-txrx-' directive output may be truncated writing 6 bytes into a region of size between 1 and 16 [-Wformat-truncation=]
-drivers/net/ethernet/broadcom/tg3.c:11233:37: warning: '-tx-' directive output may be truncated writing 4 bytes into a region of size between 1 and 16 [-Wformat-truncation=]
-drivers/net/ethernet/broadcom/tg3.c:11233:9: warning: '-tx-' directive output may be truncated writing 4 bytes into a region of size between 1 and 16 [-Wformat-truncation=]
-drivers/net/ethernet/broadcom/tg3.c:11236:37: warning: '-rx-' directive output may be truncated writing 4 bytes into a region of size between 1 and 16 [-Wformat-truncation=]
-drivers/net/ethernet/broadcom/tg3.c:11236:9: warning: '-rx-' directive output may be truncated writing 4 bytes into a region of size between 1 and 16 [-Wformat-truncation=]
-drivers/net/ethernet/broadcom/tg3.c:11239:10: warning: '%d' directive output may be truncated writing between 1 and 11 bytes into a region of size between 0 and 15 [-Wformat-truncation=]
-drivers/net/ethernet/broadcom/tg3.c:11239:38: warning: '%d' directive output may be truncated writing between 1 and 11 bytes into a region of size between 0 and 15 [-Wformat-truncation=]
-drivers/net/ethernet/cadence/macb_main.c:3151:77: warning: '%s' directive output may be truncated writing up to 239 bytes into a region of size between 19 and 29 [-Wformat-truncation=]
-drivers/net/ethernet/cavium/liquidio/lio_core.c:1121:76: warning: '%u' directive output may be truncated writing between 1 and 10 bytes into a region of size between 0 and 13 [-Wformat-truncation=]
-drivers/net/ethernet/cavium/thunder/thunder_bgx.c:1432:27: warning: '%d' directive output may be truncated writing between 1 and 3 bytes into a region of size 2 [-Wformat-truncation=]
-drivers/net/ethernet/cavium/thunder/thunder_bgx.c:1432:34: warning: '%d' directive output may be truncated writing between 1 and 3 bytes into a region of size 2 [-Wformat-truncation=]
-drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c:257:64: warning: '%s' directive output may be truncated writing up to 287 bytes into a region of size 32 [-Wformat-truncation=]
-drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c:565:50: warning: '%s' directive output may be truncated writing up to 4079 bytes into a region of size 32 [-Wformat-truncation=]
-drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c:565:50: warning: '%s' directive output may be truncated writing up to 4895 bytes into a region of size 32 [-Wformat-truncation=]
-drivers/net/ethernet/intel/ice/ice_dpll.c:1066:(.text+0xf4c): undefined reference to `ice_get_cgu_state'
-drivers/net/ethernet/intel/ice/ice_dpll.c:1666:(.text+0xb84): undefined reference to `ice_cgu_get_pin_freq_supp'
-drivers/net/ethernet/intel/ice/ice_dpll.c:1802:(.text+0x1e2c): undefined reference to `ice_get_cgu_rclk_pin_info'
-drivers/net/ethernet/intel/ice/ice_lib.c:3656: undefined reference to `ice_is_cgu_present'
-drivers/net/ethernet/intel/ice/ice_lib.c:3717: undefined reference to `ice_is_clock_mux_present_e810t'
-drivers/net/ethernet/intel/ice/ice_lib.c:3993:(.text+0x69bc): undefined reference to `ice_is_phy_rclk_present'
-drivers/net/ethernet/intel/igb/igb_main.c:3092:25: warning: '%d' directive output may be truncated writing between 1 and 5 bytes into a region of size between 1 and 13 [-Wformat-truncation=]
-drivers/net/ethernet/intel/igb/igb_main.c:3092:53: warning: '%d' directive output may be truncated writing between 1 and 5 bytes into a region of size between 1 and 13 [-Wformat-truncation=]
-drivers/net/ethernet/marvell/octeontx2/af/cgx.c:1649:49: warning: '%d' directive writing between 1 and 11 bytes into a region of size between 4 and 6 [-Wformat-overflow=]
-drivers/net/ethernet/marvell/octeontx2/af/rvu_debugfs.c:533:36: warning: '%d' directive writing between 1 and 11 bytes into a region of size 7 [-Wformat-overflow=]
-drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c:1809:58: warning: 'snprintf' output may be truncated before the last format character [-Wformat-truncation=]
-drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.h:48:34: warning: '%s' directive argument is null [-Wformat-overflow=]
-drivers/net/ethernet/mellanox/mlxsw/core_thermal.c:545:66: warning: '%d' directive output may be truncated writing between 1 and 11 bytes into a region of size 7 [-Wformat-truncation=]
-drivers/net/ethernet/pensando/ionic/ionic_lif.c:237:25: warning: '%s' directive output may be truncated writing up to 31 bytes into a region of size between 10 and 25 [-Wformat-truncation=]
-drivers/net/ethernet/qlogic/netxen/netxen_nic_main.c:1052:45: warning: '%d' directive writing between 1 and 11 bytes into a region of size between 4 and 19 [-Wformat-overflow=]
-drivers/net/ethernet/qlogic/qede/qede_main.c:1903:61: warning: '%d' directive output may be truncated writing between 1 and 11 bytes into a region of size between 5 and 20 [-Wformat-truncation=]
-drivers/net/ethernet/qlogic/qlcnic/qlcnic_main.c:1771:49: warning: '%d' directive output may be truncated writing between 1 and 11 bytes into a region of size between 9 and 24 [-Wformat-truncation=]
-drivers/net/phy/mscc/mscc_main.c:452:64: warning: 'sprintf' may write a terminating nul past the end of the destination [-Wformat-overflow=]
-drivers/net/wan/hdlc_ppp.c:353:35: warning: '%s' directive argument is null [-Wformat-overflow=]
-drivers/net/wireless/ath/ath10k/core.c:928:50: warning: '%s' directive output may be truncated writing up to 99 bytes into a region of size between 98 and 99 [-Wformat-truncation=]
-drivers/opp/debugfs.c:43:13: warning: '%.62s' directive argument is null [-Wformat-overflow=]
-drivers/opp/debugfs.c:43:42: warning: '%.62s' directive argument is null [-Wformat-overflow=]
-drivers/opp/debugfs.c:43:6: warning: '%.62s' directive argument is null [-Wformat-overflow=]
-drivers/pci/controller/dwc/pcie-designware.c:898:50: warning: '%d' directive output may be truncated writing between 1 and 11 bytes into a region of size 3 [-Wformat-truncation=]
-drivers/phy/allwinner/phy-sun4i-usb.c:790:52: warning: '_vbus' directive output may be truncated writing 5 bytes into a region of size between 2 and 12 [-Wformat-truncation=]
-drivers/phy/allwinner/phy-sun4i-usb.c:804:60: warning: '_phy' directive output may be truncated writing 4 bytes into a region of size between 2 and 12 [-Wformat-truncation=]
-drivers/phy/allwinner/phy-sun4i-usb.c:817:60: warning: '_hsic_12M' directive output may be truncated writing 9 bytes into a region of size between 2 and 12 [-Wformat-truncation=]
-drivers/phy/allwinner/phy-sun4i-usb.c:824:60: warning: '_clk' directive output may be truncated writing 4 bytes into a region of size between 2 and 12 [-Wformat-truncation=]
-drivers/phy/allwinner/phy-sun4i-usb.c:832:52: warning: '_reset' directive output may be truncated writing 6 bytes into a region of size between 2 and 12 [-Wformat-truncation=]
-drivers/platform/mellanox/mlxreg-hotplug.c:86:61: warning: '%d' directive output may be truncated writing 1 byte into a region of size between 0 and 31 [-Wformat-truncation=]
-drivers/remoteproc/keystone_remoteproc.c:369:39: warning: '%d' directive output may be truncated writing between 1 and 10 bytes into a region of size 5 [-Wformat-truncation=]
-drivers/rtc/rtc-sh.c:517:58: warning: '%d' directive output may be truncated writing between 1 and 10 bytes into a region of size 3 [-Wformat-truncation=]
-drivers/scsi/aha1542.c:775:61: warning: 'snprintf' output may be truncated before the last format character [-Wformat-truncation=]
-drivers/scsi/ch.c:915:22: warning: '%d' directive writing between 1 and 10 bytes into a region of size 6 [-Wformat-overflow=]
-drivers/scsi/ch.c:915:29: warning: '%d' directive writing between 1 and 10 bytes into a region of size 6 [-Wformat-overflow=]
-drivers/scsi/lpfc/lpfc_init.c:14737:46: warning: '.grp' directive output may be truncated writing 4 bytes into a region of size between 1 and 80 [-Wformat-truncation=]
-drivers/scsi/lpfc/lpfc_init.c:14737:53: warning: '.grp' directive output may be truncated writing 4 bytes into a region of size between 1 and 80 [-Wformat-truncation=]
-drivers/scsi/megaraid.c:317:36: warning: '%d' directive output may be truncated writing between 1 and 2 bytes into a region of size between 1 and 2 [-Wformat-truncation=]
-drivers/scsi/mpt3sas/mpt3sas_base.c:3150:49: warning: '-mq-poll' directive output may be truncated writing 8 bytes into a region of size between 6 and 31 [-Wformat-truncation=]
-drivers/scsi/mpt3sas/mpt3sas_base.c:3150:63: warning: '-mq-poll' directive output may be truncated writing 8 bytes into a region of size between 6 and 31 [-Wformat-truncation=]
-drivers/scsi/mpt3sas/mpt3sas_base.c:3159:54: warning: '%d' directive output may be truncated writing between 1 and 3 bytes into a region of size between 1 and 26 [-Wformat-truncation=]
-drivers/scsi/mpt3sas/mpt3sas_base.c:3159:68: warning: '%d' directive output may be truncated writing between 1 and 3 bytes into a region of size between 1 and 26 [-Wformat-truncation=]
-drivers/scsi/mpt3sas/mpt3sas_base.c:847:50: warning: '%s' directive output may be truncated writing up to 23 bytes into a region of size 15 [-Wformat-truncation=]
-drivers/scsi/mpt3sas/mpt3sas_base.c:847:57: warning: '%s' directive output may be truncated writing up to 23 bytes into a region of size 15 [-Wformat-truncation=]
-drivers/scsi/mpt3sas/mpt3sas_scsih.c:12330:16: warning: '%s' directive output may be truncated writing up to 23 bytes into a region of size 11 [-Wformat-truncation=]
-drivers/scsi/mpt3sas/mpt3sas_scsih.c:12330:23: warning: '%s' directive output may be truncated writing up to 23 bytes into a region of size 11 [-Wformat-truncation=]
-drivers/scsi/st.c:4192:24: warning: '%s' directive output may be truncated writing up to 31 bytes into a region of size between 9 and 10 [-Wformat-truncation=]
-drivers/scsi/st.c:4192:31: warning: '%s' directive output may be truncated writing up to 31 bytes into a region of size between 9 and 10 [-Wformat-truncation=]
-drivers/thermal/thermal_sysfs.c:475:38: warning: '%d' directive output may be truncated writing between 1 and 10 bytes into a region of size 9 [-Wformat-truncation=]
-drivers/thermal/thermal_sysfs.c:475:38: warning: '%d' directive output may be truncated writing between 1 and 11 bytes into a region of size 9 [-Wformat-truncation=]
-drivers/usb/core/hcd.c:443:34: warning: '%s' directive output may be truncated writing up to 64 bytes into a region of size between 35 and 99 [-Wformat-truncation=]
-drivers/usb/core/hcd.c:443:48: warning: '%s' directive output may be truncated writing up to 64 bytes into a region of size between 35 and 99 [-Wformat-truncation=]
-drivers/usb/core/usb.c:706:37: warning: '%d' directive output may be truncated writing between 1 and 11 bytes into a region of size between 0 and 15 [-Wformat-truncation=]
-drivers/usb/core/usb.c:706:9: warning: '%d' directive output may be truncated writing between 1 and 11 bytes into a region of size between 0 and 15 [-Wformat-truncation=]
-drivers/usb/gadget/function/f_mass_storage.c:2946:48: warning: '%d' directive output may be truncated writing between 1 and 9 bytes into a region of size 5 [-Wformat-truncation=]
-drivers/usb/gadget/udc/fsl_udc_core.c:2491:36: warning: 'out' directive writing 3 bytes into a region of size between 2 and 11 [-Wformat-overflow=]
-drivers/usb/gadget/udc/fsl_udc_core.c:2493:38: warning: 'sprintf' may write a terminating nul past the end of the destination [-Wformat-overflow=]
-drivers/usb/gadget/udc/tegra-xudc.c:3546:60: warning: '%d' directive output may be truncated writing between 1 and 10 bytes into a region of size 2 [-Wformat-truncation=]
-drivers/vdpa/pds/debugfs.c:266:49: warning: '%02d' directive output may be truncated writing between 2 and 11 bytes into a region of size 6 [-Wformat-truncation=]
-drivers/xen/manage.c:354:60: warning: '%s' directive output may be truncated writing up to 71 bytes into a region of size 12 [-Wformat-truncation=]
-drivers/xen/manage.c:354:60: warning: '%s' directive output may be truncated writing up to 95 bytes into a region of size 12 [-Wformat-truncation=]
-fs/bcachefs/bcachefs_format.h:215:25: warning: 'p' offset 3 in 'struct bkey' isn't aligned to 4 [-Wpacked-not-aligned]
-fs/bcachefs/bcachefs_format.h:217:25: warning: 'version' offset 27 in 'struct bkey' isn't aligned to 4 [-Wpacked-not-aligned]
-fs/bcachefs/io_misc.c:467:6: warning: explicitly assigning value of variable of type 'int' to itself [-Wself-assign]
-ice_dpll.c:(.text+0xcd8): undefined reference to `ice_cgu_get_pin_freq_supp'
-include/linux/compiler_types.h:425:45: error: call to '__compiletime_assert_374' declared with attribute error: BUILD_BUG failed
-include/linux/fortify-string.h:406:19: warning: writing 1 byte into a region of size 0 [-Wstringop-overflow=]
-include/linux/fortify-string.h:57:33: warning: writing 8 bytes into a region of size 0 [-Wstringop-overflow=]
-include/linux/kern_levels.h:5:25: warning: '%s' directive argument is null [-Wformat-overflow=]
-include/linux/netlink.h:116:13: warning: ') out of range, only support...' directive output truncated writing 60 bytes into a region of size between 46 and 55 [-Wformat-truncation=]
-include/linux/netlink.h:116:13: warning: 'sfc: Unsupported: only suppo...' directive output truncated writing 104 bytes into a region of size 80 [-Wformat-truncation=]
-include/linux/netlink.h:116:6: warning: ') out of range, only support...' directive output truncated writing 60 bytes into a region of size between 46 and 55 [-Wformat-truncation=]
-include/linux/netlink.h:116:6: warning: 'sfc: Unsupported: only suppo...' directive output truncated writing 104 bytes into a region of size 80 [-Wformat-truncation=]
-include/linux/phy.h:300:20: warning: '%s' directive output may be truncated writing up to 60 bytes into a region of size 20 [-Wformat-truncation=]
-kernel/bpf/helpers.c:1905:19: warning: no previous declaration for 'bpf_percpu_obj_new_impl' [-Wmissing-declarations]
-kernel/bpf/helpers.c:1941:18: warning: no previous declaration for 'bpf_percpu_obj_drop_impl' [-Wmissing-declarations]
-kernel/bpf/helpers.c:2476:18: warning: no previous declaration for 'bpf_throw' [-Wmissing-declarations]
-kernel/locking/lockdep_proc.c:438:25: warning: '%lld' directive output may be truncated writing between 1 and 17 bytes into a region of size 15 [-Wformat-truncation=]
-kernel/locking/lockdep_proc.c:438:32: warning: '%lld' directive output may be truncated writing between 1 and 17 bytes into a region of size 15 [-Wformat-truncation=]
-kernel/relay.c:357:35: warning: 'snprintf' output may be truncated before the last format character [-Wformat-truncation=]
-kernel/relay.c:357:42: warning: 'snprintf' output may be truncated before the last format character [-Wformat-truncation=]
-kernel/workqueue.c:2188:40: warning: '%d' directive output may be truncated writing between 1 and 10 bytes into a region of size between 5 and 14 [-Wformat-truncation=]
-kernel/workqueue.c:2188:54: warning: '%d' directive output may be truncated writing between 1 and 10 bytes into a region of size between 5 and 14 [-Wformat-truncation=]
-lib/kunit/kunit-test.c:565:25: warning: cast from 'void (*)(const void *)' to 'kunit_action_t *' (aka 'void (*)(void *)') converts to incompatible function type [-Wcast-function-type-strict]
-lib/string_helpers.c:121:32: warning: '%03u' directive output may be truncated writing between 3 and 10 bytes into a region of size 7 [-Wformat-truncation=]
-lib/string_helpers.c:121:46: warning: '%03u' directive output may be truncated writing between 3 and 10 bytes into a region of size 7 [-Wformat-truncation=]
-loongarch64-linux-ld: drivers/net/ethernet/intel/ice/ice_dpll.c:1646:(.text+0xbb8): undefined reference to `ice_cgu_get_pin_name'
-loongarch64-linux-ld: drivers/net/ethernet/intel/ice/ice_dpll.c:1647:(.text+0xbcc): undefined reference to `ice_cgu_get_pin_type'
-loongarch64-linux-ld: drivers/net/ethernet/intel/ice/ice_lib.c:3998:(.text+0x69e0): undefined reference to `ice_is_cgu_present'
-loongarch64-linux-ld: drivers/net/ethernet/intel/ice/ice_lib.c:4000:(.text+0x69f4): undefined reference to `ice_is_clock_mux_present_e810t'
-loongarch64-linux-ld: ice_dpll.c:(.text+0xc40): undefined reference to `ice_cgu_get_pin_type'
-mm/mempolicy.c:3125:26: warning: writing 1 byte into a region of size 0 [-Wstringop-overflow=]
-net/8021q/vlan.c:235:46: warning: '%.4i' directive output may be truncated writing 4 bytes into a region of size between 0 and 15 [-Wformat-truncation=]
-net/8021q/vlan.c:247:32: warning: '%i' directive output may be truncated writing between 1 and 5 bytes into a region of size between 0 and 15 [-Wformat-truncation=]
-net/8021q/vlan.c:247:46: warning: '%i' directive output may be truncated writing between 1 and 4 bytes into a region of size between 0 and 15 [-Wformat-truncation=]
-net/8021q/vlan.c:247:46: warning: '%i' directive output may be truncated writing between 1 and 5 bytes into a region of size between 0 and 15 [-Wformat-truncation=]
-net/9p/trans_xen.c:444:39: warning: '%d' directive writing between 1 and 11 bytes into a region of size 8 [-Wformat-overflow=]
-net/core/selftests.c:404:52: warning: '%s' directive output may be truncated writing up to 251 bytes into a region of size 28 [-Wformat-truncation=]
-net/core/selftests.c:404:52: warning: '%s' directive output may be truncated writing up to 279 bytes into a region of size 28 [-Wformat-truncation=]
-net/socket.c:1679:21: warning: no previous declaration for 'update_socket_protocol' [-Wmissing-declarations]
-net/sunrpc/clnt.c:573:47: warning: '%s' directive output may be truncated writing up to 107 bytes into a region of size 48 [-Wformat-truncation=]
-net/sunrpc/clnt.c:573:75: warning: '%s' directive output may be truncated writing up to 107 bytes into a region of size 48 [-Wformat-truncation=]
-net/xfrm/xfrm_algo.c:695: undefined reference to `crypto_has_aead'
-riscv64-linux-ld: ice_dpll.c:(.text+0x8e0): undefined reference to `ice_cgu_get_pin_name'
-s390-linux-ld: ice_lib.c:(.text+0x48d8): undefined reference to `ice_is_cgu_present'
-s390-linux-ld: ice_lib.c:(.text+0x48f2): undefined reference to `ice_is_clock_mux_present_e810t'
-xfrm_algo.c:(.text+0x46c): undefined reference to `crypto_has_aead'
-
-Unverified Error/Warning (likely false positive, please contact us if interested):
-
-drivers/firmware/broadcom/bcm47xx_sprom.c:604:60: warning: '/' directive output may be truncated writing 1 byte into a region of size between 0 and 3 [-Wformat-truncation=]
-drivers/firmware/broadcom/bcm47xx_sprom.c:666:63: warning: 'snprintf' output may be truncated before the last format character [-Wformat-truncation=]
-drivers/gpu/drm/amd/amdgpu/../display/dc/dcn20/dcn20_hwseq.c:1751 dcn20_program_pipe() error: we previously assumed 'pipe_ctx->plane_state' could be null (see line 1710)
-drivers/gpu/drm/i915/display/intel_psr.c:3185 i915_psr_sink_status_show() error: uninitialized symbol 'error_status'.
-drivers/gpu/drm/i915/display/intel_tc.c:302 mtl_tc_port_get_max_lane_count() error: uninitialized symbol 'pin_mask'.
-fs/exfat/namei.c:393 exfat_find_empty_entry() error: uninitialized symbol 'last_clu'.
-fs/ext4/super.c:804 update_super_work() error: uninitialized symbol 'call_notify_err'.
-kernel/cgroup/cpuset.c:732 cpu_exclusive_check() warn: signedness bug returning '(-22)'
-lib/kunit/executor_test.c:39 parse_filter_test() error: double free of 'filter.suite_glob'
-lib/kunit/executor_test.c:40 parse_filter_test() error: double free of 'filter.test_glob'
-{standard input}:944: Error: unknown pseudo-op: `.'
-
-Error/Warning ids grouped by kconfigs:
-
-gcc_recent_errors
-|-- alpha-allnoconfig
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|-- alpha-allyesconfig
-|   |-- block-blk-throttle.c:warning:lu-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- block-blk-throttle.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- command-line:warning:s-directive-argument-is-null
-|   |-- drivers-block-virtio_blk.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-clocksource-sh_mtu2.c:warning:u-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-crypto-ccree-cc_cipher.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-firmware-broadcom-bcm47xx_sprom.c:warning:directive-output-may-be-truncated-writing-byte-into-a-region-of-size-between-and
-|   |-- drivers-firmware-broadcom-bcm47xx_sprom.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-firmware-turris-mox-rwtm.c:warning:08x-directive-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc.c:warning:Function-parameter-or-member-srf_updates-not-described-in-could_mpcc_tree_change_for_active_pipes
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_vpe.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-gpu-drm-nouveau-nouveau_backlight.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-hid-hid-logitech-dj.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-hid-hid-sensor-custom.c:warning:s-directive-output-may-be-truncated-writing-likely-or-more-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-sunkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-elantech.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-sermouse.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vsxxxaa.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-serio-serio_raw.c:warning:ld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-leds-trigger-ledtrig-cpu.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-md-raid5.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-media-radio-radio-miropcm20.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-mmc-host-mmc_spi.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-net-ethernet-amd-pds_core-core.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-amd-pds_core-dev.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-aquantia-atlantic-aq_ethtool.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:rx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:tx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:txrx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-cadence-macb_main.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-cavium-liquidio-lio_core.c:warning:u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-hisilicon-hns3-hns3pf-hclge_main.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-intel-igb-igb_main.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-marvell-octeontx2-af-cgx.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-marvell-octeontx2-af-rvu_debugfs.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-marvell-octeontx2-nic-otx2_pf.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-net-ethernet-mellanox-mlxsw-core_thermal.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-pensando-ionic-ionic_lif.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-qlogic-netxen-netxen_nic_main.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-qlogic-qede-qede_main.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-qlogic-qlcnic-qlcnic_main.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-pci-controller-dwc-pcie-designware.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_clk-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_hsic_12M-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_phy-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_reset-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_vbus-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-aha1542.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-scsi-megaraid.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:mq-poll-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-mpt3sas-mpt3sas_scsih.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-vdpa-pds-debugfs.c:warning:02d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- include-linux-netlink.h:warning:)-out-of-range-only-support...-directive-output-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-netlink.h:warning:sfc:Unsupported:only-suppo...-directive-output-truncated-writing-bytes-into-a-region-of-size
-|   |-- include-linux-phy.h:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-8021q-vlan.c:warning:.4i-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- net-core-selftests.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- alpha-defconfig
-|   |-- command-line:warning:s-directive-argument-is-null
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-8021q-vlan.c:warning:.4i-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- arc-allmodconfig
-|   |-- command-line:warning:s-directive-argument-is-null
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc.c:warning:Function-parameter-or-member-srf_updates-not-described-in-could_mpcc_tree_change_for_active_pipes
-|   |-- drivers-net-wan-hdlc_ppp.c:warning:s-directive-argument-is-null
-|   |-- fs-bcachefs-bcachefs_format.h:warning:p-offset-in-struct-bkey-isn-t-aligned-to
-|   |-- fs-bcachefs-bcachefs_format.h:warning:version-offset-in-struct-bkey-isn-t-aligned-to
-|   |-- include-linux-compiler_types.h:error:call-to-__compiletime_assert_NNN-declared-with-attribute-error:BUILD_BUG-failed
-|   `-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|-- arc-allyesconfig
-|   |-- command-line:warning:s-directive-argument-is-null
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc.c:warning:Function-parameter-or-member-srf_updates-not-described-in-could_mpcc_tree_change_for_active_pipes
-|   |-- drivers-net-wan-hdlc_ppp.c:warning:s-directive-argument-is-null
-|   |-- fs-bcachefs-bcachefs_format.h:warning:p-offset-in-struct-bkey-isn-t-aligned-to
-|   |-- fs-bcachefs-bcachefs_format.h:warning:version-offset-in-struct-bkey-isn-t-aligned-to
-|   |-- include-linux-compiler_types.h:error:call-to-__compiletime_assert_NNN-declared-with-attribute-error:BUILD_BUG-failed
-|   `-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|-- arc-defconfig
-|   |-- arc-elf-ld:xfrm_algo.c:(.text):undefined-reference-to-crypto_has_aead
-|   `-- xfrm_algo.c:(.text):undefined-reference-to-crypto_has_aead
-|-- arc-randconfig-001-20230921
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc.c:warning:Function-parameter-or-member-srf_updates-not-described-in-could_mpcc_tree_change_for_active_pipes
-|-- arc-randconfig-002-20230921
-|   `-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|-- arm-allnoconfig
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|-- arm-defconfig
-|   |-- arch-arm-kernel-bios32.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-clk-mvebu-clk-cpu.c:warning:sprintf-may-write-a-terminating-nul-past-the-end-of-the-destination
-|   |-- drivers-clocksource-sh_mtu2.c:warning:u-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-crypto-marvell-cesa-cesa.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-firmware-broadcom-bcm47xx_sprom.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-gpu-drm-nouveau-nouveau_backlight.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-elantech.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-memory-tegra-tegra20.c:warning:.-directive-output-may-be-truncated-writing-byte-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-cadence-macb_main.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-intel-igb-igb_main.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-pci-controller-dwc-pcie-designware.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_clk-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_hsic_12M-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_phy-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_reset-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_vbus-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-remoteproc-keystone_remoteproc.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-rtc-rtc-sh.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-gadget-function-f_mass_storage.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- include-linux-phy.h:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-core-selftests.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- arm-randconfig-002-20230921
-|   |-- drivers-crypto-ccree-cc_cipher.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-sunkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-sermouse.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-md-raid5.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-platform-mellanox-mlxreg-hotplug.c:warning:d-directive-output-may-be-truncated-writing-byte-into-a-region-of-size-between-and
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- net-core-selftests.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- arm-randconfig-004-20230921
-|   |-- command-line:warning:s-directive-argument-is-null
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-sunkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vsxxxaa.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-net-ethernet-cadence-macb_main.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|-- arm-socfpga_defconfig
-|   `-- net-xfrm-xfrm_algo.c:undefined-reference-to-crypto_has_aead
-|-- arm64-allnoconfig
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|-- arm64-defconfig
-|   |-- drivers-block-virtio_blk.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-crypto-ccree-cc_cipher.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-firmware-efi-cper-arm.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-gpu-drm-nouveau-nouveau_backlight.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-leds-trigger-ledtrig-cpu.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-mmc-host-mmc_spi.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-net-ethernet-cadence-macb_main.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-cavium-thunder-thunder_bgx.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-freescale-dpaa-dpaa_ethtool.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-hisilicon-hns3-hns3pf-hclge_main.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-intel-igb-igb_main.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-wireless-ath-ath10k-core.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-pci-controller-dwc-pcie-designware.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_clk-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_hsic_12M-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_phy-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_reset-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_vbus-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:mq-poll-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-mpt3sas-mpt3sas_scsih.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-gadget-udc-tegra-xudc.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-xen-manage.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- include-linux-phy.h:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-8021q-vlan.c:warning:.4i-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- net-core-selftests.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- arm64-randconfig-003-20230921
-|   |-- command-line:warning:s-directive-argument-is-null
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_mes.c:warning:s-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_vpe.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-elantech.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-sermouse.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vsxxxaa.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-serio-serio_raw.c:warning:ld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-mmc-host-mmc_spi.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-pci-controller-dwc-pcie-designware.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-xen-manage.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|-- arm64-randconfig-004-20230921
-|   |-- block-blk-throttle.c:warning:lu-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- block-blk-throttle.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-block-virtio_blk.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-crypto-ccree-cc_cipher.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-input-serio-serio_raw.c:warning:ld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-md-raid5.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_clk-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_hsic_12M-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_phy-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_reset-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_vbus-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-gadget-udc-tegra-xudc.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- fs-bcachefs-bcachefs_format.h:warning:p-offset-in-struct-bkey-isn-t-aligned-to
-|   |-- fs-bcachefs-bcachefs_format.h:warning:version-offset-in-struct-bkey-isn-t-aligned-to
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|-- csky-allmodconfig
-|   |-- command-line:warning:s-directive-argument-is-null
-|   |-- drivers-clocksource-sh_mtu2.c:warning:u-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc.c:warning:Function-parameter-or-member-srf_updates-not-described-in-could_mpcc_tree_change_for_active_pipes
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_vpe.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-gpu-drm-nouveau-nouveau_backlight.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-hid-hid-logitech-dj.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-hid-hid-sensor-custom.c:warning:s-directive-output-may-be-truncated-writing-likely-or-more-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-sunkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-elantech.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-sermouse.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vsxxxaa.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-md-raid5.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-mmc-host-mmc_spi.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:rx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:tx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:txrx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-cadence-macb_main.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-hisilicon-hns3-hns3pf-hclge_main.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-intel-igb-igb_main.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-pci-controller-dwc-pcie-designware.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_clk-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_hsic_12M-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_phy-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_reset-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_vbus-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:mq-poll-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-mpt3sas-mpt3sas_scsih.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- include-linux-netlink.h:warning:)-out-of-range-only-support...-directive-output-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-netlink.h:warning:sfc:Unsupported:only-suppo...-directive-output-truncated-writing-bytes-into-a-region-of-size
-|   |-- include-linux-phy.h:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- net-core-selftests.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- csky-allnoconfig
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|-- csky-allyesconfig
-|   |-- command-line:warning:s-directive-argument-is-null
-|   |-- drivers-clocksource-sh_mtu2.c:warning:u-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-firmware-broadcom-bcm47xx_sprom.c:warning:directive-output-may-be-truncated-writing-byte-into-a-region-of-size-between-and
-|   |-- drivers-firmware-broadcom-bcm47xx_sprom.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc.c:warning:Function-parameter-or-member-srf_updates-not-described-in-could_mpcc_tree_change_for_active_pipes
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_vpe.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-gpu-drm-nouveau-nouveau_backlight.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-hid-hid-logitech-dj.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-hid-hid-sensor-custom.c:warning:s-directive-output-may-be-truncated-writing-likely-or-more-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-sunkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-elantech.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-sermouse.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vsxxxaa.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-md-raid5.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-mmc-host-mmc_spi.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:rx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:tx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:txrx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-cadence-macb_main.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-hisilicon-hns3-hns3pf-hclge_main.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-intel-igb-igb_main.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-pci-controller-dwc-pcie-designware.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_clk-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_hsic_12M-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_phy-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_reset-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_vbus-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:mq-poll-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-mpt3sas-mpt3sas_scsih.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- include-linux-netlink.h:warning:)-out-of-range-only-support...-directive-output-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-netlink.h:warning:sfc:Unsupported:only-suppo...-directive-output-truncated-writing-bytes-into-a-region-of-size
-|   |-- include-linux-phy.h:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- net-core-selftests.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- csky-defconfig
-|   `-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|-- csky-randconfig-001-20230921
-|   |-- drivers-crypto-ccree-cc_cipher.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-crypto-hifn_795x.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-opp-debugfs.c:warning:.62s-directive-argument-is-null
-|   |-- drivers-pci-controller-dwc-pcie-designware.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_clk-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_hsic_12M-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_phy-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_reset-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_vbus-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-usb-gadget-function-f_mass_storage.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|-- csky-randconfig-002-20230921
-|   |-- drivers-crypto-hifn_795x.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_vpe.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-gpu-drm-nouveau-nouveau_backlight.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|-- i386-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc.c:warning:Function-parameter-or-member-srf_updates-not-described-in-could_mpcc_tree_change_for_active_pipes
-|   |-- drivers-leds-trigger-ledtrig-netdev.c:warning:writing-byte-into-a-region-of-size
-|   |-- drivers-net-wan-hdlc_ppp.c:warning:s-directive-argument-is-null
-|   `-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|-- i386-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc.c:warning:Function-parameter-or-member-srf_updates-not-described-in-could_mpcc_tree_change_for_active_pipes
-|   |-- drivers-leds-trigger-ledtrig-netdev.c:warning:writing-byte-into-a-region-of-size
-|   |-- drivers-net-wan-hdlc_ppp.c:warning:s-directive-argument-is-null
-|   `-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|-- i386-buildonly-randconfig-001-20230921
-|   `-- net-socket.c:warning:no-previous-declaration-for-update_socket_protocol
-|-- i386-buildonly-randconfig-002-20230921
-|   |-- drivers-net-wan-hdlc_ppp.c:warning:s-directive-argument-is-null
-|   `-- drivers-opp-debugfs.c:warning:.62s-directive-argument-is-null
-|-- i386-buildonly-randconfig-003-20230921
-|   `-- drivers-opp-debugfs.c:warning:.62s-directive-argument-is-null
-|-- i386-buildonly-randconfig-005-20230921
-|   |-- drivers-net-wan-hdlc_ppp.c:warning:s-directive-argument-is-null
-|   `-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|-- i386-buildonly-randconfig-006-20230921
-|   `-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|-- i386-debian-10.3
-|   |-- drivers-opp-debugfs.c:warning:.62s-directive-argument-is-null
-|   `-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|-- i386-defconfig
-|   `-- net-socket.c:warning:no-previous-declaration-for-update_socket_protocol
-|-- i386-randconfig-001-20230921
-|   `-- drivers-opp-debugfs.c:warning:.62s-directive-argument-is-null
-|-- i386-randconfig-002-20230921
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc.c:warning:Function-parameter-or-member-srf_updates-not-described-in-could_mpcc_tree_change_for_active_pipes
-|   |-- drivers-leds-trigger-ledtrig-netdev.c:warning:writing-byte-into-a-region-of-size
-|   `-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|-- i386-randconfig-003-20230921
-|   `-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|-- i386-randconfig-004-20230921
-|   |-- drivers-opp-debugfs.c:warning:.62s-directive-argument-is-null
-|   `-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|-- i386-randconfig-006-20230921
-|   |-- kernel-bpf-helpers.c:warning:no-previous-declaration-for-bpf_percpu_obj_drop_impl
-|   |-- kernel-bpf-helpers.c:warning:no-previous-declaration-for-bpf_percpu_obj_new_impl
-|   |-- kernel-bpf-helpers.c:warning:no-previous-declaration-for-bpf_throw
-|   `-- net-socket.c:warning:no-previous-declaration-for-update_socket_protocol
-|-- i386-randconfig-011-20230921
-|   |-- drivers-opp-debugfs.c:warning:.62s-directive-argument-is-null
-|   `-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|-- i386-randconfig-012-20230921
-|   `-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|-- i386-randconfig-013-20230921
-|   `-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|-- i386-randconfig-014-20230921
-|   |-- drivers-opp-debugfs.c:warning:.62s-directive-argument-is-null
-|   `-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|-- i386-randconfig-016-20230921
-|   `-- command-line:warning:s-directive-argument-is-null
-|-- i386-randconfig-141-20230921
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-clk_mgr-dcn32-dcn32_clk_mgr.c-dcn32_auto_dpm_test_log()-warn:inconsistent-indenting
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-clk_mgr-dcn32-dcn32_clk_mgr.c-dcn32_auto_dpm_test_log()-warn:variable-dereferenced-before-check-new_clocks-(see-line-)
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-clk_mgr-dcn35-dcn35_clk_mgr.c-dcn35_clk_mgr_construct()-warn:variable-dereferenced-before-check-ctx-dc_bios-(see-line-)
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-clk_mgr-dcn35-dcn35_clk_mgr.c-dcn35_clk_mgr_construct()-warn:variable-dereferenced-before-check-ctx-dc_bios-integrated_info-(see-line-)
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc.c:warning:Function-parameter-or-member-srf_updates-not-described-in-could_mpcc_tree_change_for_active_pipes
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn20-dcn20_hwseq.c-dcn20_program_pipe()-error:we-previously-assumed-pipe_ctx-plane_state-could-be-null-(see-line-)
-|   |-- drivers-gpu-drm-i915-display-intel_psr.c-i915_psr_sink_status_show()-error:uninitialized-symbol-error_status-.
-|   |-- drivers-gpu-drm-i915-display-intel_tc.c-mtl_tc_port_get_max_lane_count()-error:uninitialized-symbol-pin_mask-.
-|   |-- drivers-opp-debugfs.c:warning:.62s-directive-argument-is-null
-|   |-- lib-kunit-executor_test.c-parse_filter_test()-error:double-free-of-filter.suite_glob
-|   `-- lib-kunit-executor_test.c-parse_filter_test()-error:double-free-of-filter.test_glob
-|-- loongarch-allnoconfig
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|-- loongarch-defconfig
-|   |-- block-blk-throttle.c:warning:lu-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- block-blk-throttle.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-block-virtio_blk.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc.c:warning:Function-parameter-or-member-srf_updates-not-described-in-could_mpcc_tree_change_for_active_pipes
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_vpe.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-hid-hid-logitech-dj.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-elantech.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-sermouse.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-serio-serio_raw.c:warning:ld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-md-raid5.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-intel-igb-igb_main.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-opp-debugfs.c:warning:.62s-directive-argument-is-null
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-scsi-megaraid.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:mq-poll-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-mpt3sas-mpt3sas_scsih.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-8021q-vlan.c:warning:.4i-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- net-core-selftests.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- loongarch-randconfig-001-20230921
-|   |-- drivers-clocksource-sh_mtu2.c:warning:u-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-firmware-broadcom-bcm47xx_sprom.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-sunkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-serio-serio_raw.c:warning:ld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-opp-debugfs.c:warning:.62s-directive-argument-is-null
-|   |-- drivers-pci-controller-dwc-pcie-designware.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-platform-mellanox-mlxreg-hotplug.c:warning:d-directive-output-may-be-truncated-writing-byte-into-a-region-of-size-between-and
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   `-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|-- loongarch-randconfig-r026-20230731
-|   |-- drivers-net-ethernet-intel-ice-ice_dpll.c:(.text):undefined-reference-to-ice_cgu_get_pin_freq_supp
-|   |-- drivers-net-ethernet-intel-ice-ice_dpll.c:(.text):undefined-reference-to-ice_get_cgu_rclk_pin_info
-|   |-- drivers-net-ethernet-intel-ice-ice_dpll.c:(.text):undefined-reference-to-ice_get_cgu_state
-|   |-- drivers-net-ethernet-intel-ice-ice_lib.c:(.text):undefined-reference-to-ice_is_phy_rclk_present
-|   |-- loongarch64-linux-ld:drivers-net-ethernet-intel-ice-ice_dpll.c:(.text):undefined-reference-to-ice_cgu_get_pin_name
-|   |-- loongarch64-linux-ld:drivers-net-ethernet-intel-ice-ice_dpll.c:(.text):undefined-reference-to-ice_cgu_get_pin_type
-|   |-- loongarch64-linux-ld:drivers-net-ethernet-intel-ice-ice_lib.c:(.text):undefined-reference-to-ice_is_cgu_present
-|   `-- loongarch64-linux-ld:drivers-net-ethernet-intel-ice-ice_lib.c:(.text):undefined-reference-to-ice_is_clock_mux_present_e810t
-|-- loongarch-randconfig-s051-20230421
-|   |-- ice_dpll.c:(.text):undefined-reference-to-ice_cgu_get_pin_freq_supp
-|   `-- loongarch64-linux-ld:ice_dpll.c:(.text):undefined-reference-to-ice_cgu_get_pin_type
-|-- m68k-allmodconfig
-|   |-- command-line:warning:s-directive-argument-is-null
-|   |-- fs-bcachefs-bcachefs_format.h:warning:p-offset-in-struct-bkey-isn-t-aligned-to
-|   |-- fs-bcachefs-bcachefs_format.h:warning:version-offset-in-struct-bkey-isn-t-aligned-to
-|   `-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|-- m68k-allyesconfig
-|   |-- command-line:warning:s-directive-argument-is-null
-|   |-- fs-bcachefs-bcachefs_format.h:warning:p-offset-in-struct-bkey-isn-t-aligned-to
-|   |-- fs-bcachefs-bcachefs_format.h:warning:version-offset-in-struct-bkey-isn-t-aligned-to
-|   `-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|-- m68k-defconfig
-|   `-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|-- microblaze-allmodconfig
-|   |-- command-line:warning:s-directive-argument-is-null
-|   |-- drivers-clocksource-sh_mtu2.c:warning:u-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-crypto-ccree-cc_cipher.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc.c:warning:Function-parameter-or-member-srf_updates-not-described-in-could_mpcc_tree_change_for_active_pipes
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_vpe.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-gpu-drm-nouveau-nouveau_backlight.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-hid-hid-logitech-dj.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-hid-hid-sensor-custom.c:warning:s-directive-output-may-be-truncated-writing-likely-or-more-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-sunkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-elantech.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-sermouse.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vsxxxaa.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-md-raid5.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-mmc-host-mmc_spi.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:rx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:tx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:txrx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-cadence-macb_main.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-hisilicon-hns3-hns3pf-hclge_main.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-intel-igb-igb_main.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-pci-controller-dwc-pcie-designware.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_clk-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_hsic_12M-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_phy-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_reset-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_vbus-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-scsi-megaraid.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:mq-poll-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-mpt3sas-mpt3sas_scsih.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- include-linux-netlink.h:warning:)-out-of-range-only-support...-directive-output-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-netlink.h:warning:sfc:Unsupported:only-suppo...-directive-output-truncated-writing-bytes-into-a-region-of-size
-|   |-- include-linux-phy.h:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- net-core-selftests.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- microblaze-allnoconfig
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|-- microblaze-allyesconfig
-|   |-- command-line:warning:s-directive-argument-is-null
-|   |-- drivers-clocksource-sh_mtu2.c:warning:u-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-crypto-ccree-cc_cipher.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-firmware-broadcom-bcm47xx_sprom.c:warning:directive-output-may-be-truncated-writing-byte-into-a-region-of-size-between-and
-|   |-- drivers-firmware-broadcom-bcm47xx_sprom.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc.c:warning:Function-parameter-or-member-srf_updates-not-described-in-could_mpcc_tree_change_for_active_pipes
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_vpe.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-gpu-drm-nouveau-nouveau_backlight.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-hid-hid-logitech-dj.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-hid-hid-sensor-custom.c:warning:s-directive-output-may-be-truncated-writing-likely-or-more-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-sunkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-elantech.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-sermouse.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vsxxxaa.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-md-raid5.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-mmc-host-mmc_spi.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:rx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:tx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:txrx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-cadence-macb_main.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-hisilicon-hns3-hns3pf-hclge_main.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-intel-igb-igb_main.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-pci-controller-dwc-pcie-designware.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_clk-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_hsic_12M-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_phy-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_reset-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_vbus-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-scsi-megaraid.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:mq-poll-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-mpt3sas-mpt3sas_scsih.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- include-linux-netlink.h:warning:)-out-of-range-only-support...-directive-output-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-netlink.h:warning:sfc:Unsupported:only-suppo...-directive-output-truncated-writing-bytes-into-a-region-of-size
-|   |-- include-linux-phy.h:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- net-core-selftests.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- microblaze-defconfig
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-core-selftests.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- mips-bmips_be_defconfig
-|   `-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|-- mips-fuloong2e_defconfig
-|   |-- command-line:warning:s-directive-argument-is-null
-|   `-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|-- mips-jazz_defconfig
-|   |-- command-line:warning:s-directive-argument-is-null
-|   `-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|-- mips-loongson1b_defconfig
-|   `-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|-- mips-maltasmvp_eva_defconfig
-|   |-- command-line:warning:s-directive-argument-is-null
-|   `-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|-- mips-rb532_defconfig
-|   `-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|-- nios2-allmodconfig
-|   |-- command-line:warning:s-directive-argument-is-null
-|   `-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|-- nios2-allyesconfig
-|   |-- command-line:warning:s-directive-argument-is-null
-|   `-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|-- nios2-randconfig-001-20230921
-|   `-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|-- openrisc-allnoconfig
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|-- openrisc-allyesconfig
-|   |-- command-line:warning:s-directive-argument-is-null
-|   |-- drivers-clocksource-sh_mtu2.c:warning:u-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-crypto-ccree-cc_cipher.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-firmware-broadcom-bcm47xx_sprom.c:warning:directive-output-may-be-truncated-writing-byte-into-a-region-of-size-between-and
-|   |-- drivers-firmware-broadcom-bcm47xx_sprom.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc.c:warning:Function-parameter-or-member-srf_updates-not-described-in-could_mpcc_tree_change_for_active_pipes
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_vpe.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-gpu-drm-nouveau-nouveau_backlight.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-hid-hid-logitech-dj.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-hid-hid-sensor-custom.c:warning:s-directive-output-may-be-truncated-writing-likely-or-more-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-sunkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-elantech.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-sermouse.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vsxxxaa.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-md-raid5.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-mmc-host-mmc_spi.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:rx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:tx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:txrx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-cadence-macb_main.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-hisilicon-hns3-hns3pf-hclge_main.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-intel-igb-igb_main.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-pci-controller-dwc-pcie-designware.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_clk-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_hsic_12M-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_phy-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_reset-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_vbus-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:mq-poll-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-mpt3sas-mpt3sas_scsih.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- fs-bcachefs-bcachefs_format.h:warning:p-offset-in-struct-bkey-isn-t-aligned-to
-|   |-- fs-bcachefs-bcachefs_format.h:warning:version-offset-in-struct-bkey-isn-t-aligned-to
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- include-linux-netlink.h:warning:)-out-of-range-only-support...-directive-output-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-netlink.h:warning:sfc:Unsupported:only-suppo...-directive-output-truncated-writing-bytes-into-a-region-of-size
-|   |-- include-linux-phy.h:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- net-core-selftests.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- openrisc-defconfig
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-core-selftests.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- openrisc-simple_smp_defconfig
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-core-selftests.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- parisc-allmodconfig
-|   |-- ERROR:L874-drivers-mtd-nand-raw-nand.ko-undefined
-|   |-- command-line:warning:s-directive-argument-is-null
-|   |-- drivers-block-virtio_blk.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-firmware-turris-mox-rwtm.c:warning:08x-directive-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc.c:warning:Function-parameter-or-member-srf_updates-not-described-in-could_mpcc_tree_change_for_active_pipes
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_vpe.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-gpu-drm-nouveau-nouveau_backlight.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-hid-hid-logitech-dj.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-sunkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-elantech.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-sermouse.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vsxxxaa.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-md-raid5.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-mmc-host-mmc_spi.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-net-ethernet-aquantia-atlantic-aq_ethtool.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:rx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:tx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:txrx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-cadence-macb_main.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-hisilicon-hns3-hns3pf-hclge_main.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-intel-igb-igb_main.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-mellanox-mlxsw-core_thermal.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-qlogic-netxen-netxen_nic_main.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-qlogic-qede-qede_main.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-qlogic-qlcnic-qlcnic_main.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-phy-mscc-mscc_main.c:warning:sprintf-may-write-a-terminating-nul-past-the-end-of-the-destination
-|   |-- drivers-pci-controller-dwc-pcie-designware.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_clk-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_hsic_12M-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_phy-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_reset-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_vbus-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-scsi-megaraid.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:mq-poll-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-mpt3sas-mpt3sas_scsih.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- fs-bcachefs-bcachefs_format.h:warning:p-offset-in-struct-bkey-isn-t-aligned-to
-|   |-- fs-bcachefs-bcachefs_format.h:warning:version-offset-in-struct-bkey-isn-t-aligned-to
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- include-linux-netlink.h:warning:)-out-of-range-only-support...-directive-output-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-netlink.h:warning:sfc:Unsupported:only-suppo...-directive-output-truncated-writing-bytes-into-a-region-of-size
-|   |-- include-linux-phy.h:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- net-core-selftests.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- parisc-allnoconfig
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|-- parisc-allyesconfig
-|   |-- command-line:warning:s-directive-argument-is-null
-|   |-- drivers-block-virtio_blk.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-firmware-broadcom-bcm47xx_sprom.c:warning:directive-output-may-be-truncated-writing-byte-into-a-region-of-size-between-and
-|   |-- drivers-firmware-broadcom-bcm47xx_sprom.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc.c:warning:Function-parameter-or-member-srf_updates-not-described-in-could_mpcc_tree_change_for_active_pipes
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_vpe.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-gpu-drm-nouveau-nouveau_backlight.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-hid-hid-logitech-dj.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-sunkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-elantech.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-sermouse.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vsxxxaa.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-md-raid5.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-mmc-host-mmc_spi.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:rx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:tx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:txrx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-cadence-macb_main.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-hisilicon-hns3-hns3pf-hclge_main.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-intel-igb-igb_main.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-phy-mscc-mscc_main.c:warning:sprintf-may-write-a-terminating-nul-past-the-end-of-the-destination
-|   |-- drivers-pci-controller-dwc-pcie-designware.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_clk-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_hsic_12M-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_phy-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_reset-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_vbus-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-scsi-megaraid.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:mq-poll-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-mpt3sas-mpt3sas_scsih.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- fs-bcachefs-bcachefs_format.h:warning:p-offset-in-struct-bkey-isn-t-aligned-to
-|   |-- fs-bcachefs-bcachefs_format.h:warning:version-offset-in-struct-bkey-isn-t-aligned-to
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- include-linux-netlink.h:warning:)-out-of-range-only-support...-directive-output-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-netlink.h:warning:sfc:Unsupported:only-suppo...-directive-output-truncated-writing-bytes-into-a-region-of-size
-|   |-- include-linux-phy.h:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- net-core-selftests.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- parisc-defconfig
-|   |-- command-line:warning:s-directive-argument-is-null
-|   |-- drivers-hid-hid-logitech-dj.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-sermouse.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-md-raid5.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- parisc-randconfig-001-20230921
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-elantech.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-sermouse.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vsxxxaa.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-md-raid5.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|-- parisc-randconfig-002-20230921
-|   |-- command-line:warning:s-directive-argument-is-null
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-sunkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vsxxxaa.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-md-raid5.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-opp-debugfs.c:warning:.62s-directive-argument-is-null
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|-- parisc64-allmodconfig
-|   |-- ERROR:L874-drivers-mtd-nand-raw-nand.ko-undefined
-|   |-- command-line:warning:s-directive-argument-is-null
-|   |-- drivers-block-virtio_blk.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc.c:warning:Function-parameter-or-member-srf_updates-not-described-in-could_mpcc_tree_change_for_active_pipes
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_vpe.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-gpu-drm-nouveau-nouveau_backlight.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-hid-hid-logitech-dj.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-sunkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-elantech.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-sermouse.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vsxxxaa.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-md-raid5.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-mmc-host-mmc_spi.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:rx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:tx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:txrx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-cadence-macb_main.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-hisilicon-hns3-hns3pf-hclge_main.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-intel-igb-igb_main.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-phy-mscc-mscc_main.c:warning:sprintf-may-write-a-terminating-nul-past-the-end-of-the-destination
-|   |-- drivers-pci-controller-dwc-pcie-designware.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_clk-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_hsic_12M-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_phy-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_reset-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_vbus-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-scsi-megaraid.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:mq-poll-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-mpt3sas-mpt3sas_scsih.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- fs-bcachefs-bcachefs_format.h:warning:p-offset-in-struct-bkey-isn-t-aligned-to
-|   |-- fs-bcachefs-bcachefs_format.h:warning:version-offset-in-struct-bkey-isn-t-aligned-to
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- include-linux-netlink.h:warning:)-out-of-range-only-support...-directive-output-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-netlink.h:warning:sfc:Unsupported:only-suppo...-directive-output-truncated-writing-bytes-into-a-region-of-size
-|   |-- include-linux-phy.h:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- net-core-selftests.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- parisc64-defconfig
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-serio-serio_raw.c:warning:ld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-md-raid5.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:mq-poll-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-mpt3sas-mpt3sas_scsih.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-core-selftests.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- powerpc-allnoconfig
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|-- powerpc-cm5200_defconfig
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-core-selftests.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- powerpc-randconfig-001-20230921
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-sunkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vsxxxaa.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-pci-controller-dwc-pcie-designware.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   `-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|-- powerpc-randconfig-002-20230921
-|   |-- drivers-clocksource-sh_mtu2.c:warning:u-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_vpe.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-gpu-drm-nouveau-nouveau_backlight.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-mmc-host-mmc_spi.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-pci-controller-dwc-pcie-designware.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_clk-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_hsic_12M-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_phy-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_reset-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_vbus-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-scsi-megaraid.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:mq-poll-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-mpt3sas-mpt3sas_scsih.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|-- powerpc-randconfig-003-20230921
-|   |-- drivers-input-keyboard-sunkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-sermouse.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vsxxxaa.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-mmc-host-mmc_spi.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-opp-debugfs.c:warning:.62s-directive-argument-is-null
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_clk-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_hsic_12M-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_phy-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_reset-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_vbus-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-gadget-udc-fsl_udc_core.c:warning:out-directive-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-gadget-udc-fsl_udc_core.c:warning:sprintf-may-write-a-terminating-nul-past-the-end-of-the-destination
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|-- powerpc-sam440ep_defconfig
-|   |-- command-line:warning:s-directive-argument-is-null
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   `-- net-core-selftests.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- powerpc-sequoia_defconfig
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-core-selftests.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- riscv-allnoconfig
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|-- riscv-defconfig
-|   |-- command-line:warning:s-directive-argument-is-null
-|   |-- drivers-block-virtio_blk.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-gpu-drm-nouveau-nouveau_backlight.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-mmc-host-mmc_spi.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-net-ethernet-cadence-macb_main.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-pci-controller-dwc-pcie-designware.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_clk-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_hsic_12M-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_phy-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_reset-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_vbus-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-8021q-vlan.c:warning:.4i-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- net-core-selftests.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- riscv-randconfig-r006-20230221
-|   |-- drivers-net-ethernet-intel-ice-ice_lib.c:undefined-reference-to-ice_is_cgu_present
-|   `-- drivers-net-ethernet-intel-ice-ice_lib.c:undefined-reference-to-ice_is_clock_mux_present_e810t
-|-- riscv-randconfig-r022-20211002
-|   `-- riscv64-linux-ld:ice_dpll.c:(.text):undefined-reference-to-ice_cgu_get_pin_name
-|-- riscv-rv32_defconfig
-|   |-- command-line:warning:s-directive-argument-is-null
-|   |-- drivers-gpu-drm-nouveau-nouveau_backlight.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-mmc-host-mmc_spi.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-net-ethernet-cadence-macb_main.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-pci-controller-dwc-pcie-designware.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_clk-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_hsic_12M-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_phy-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_reset-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_vbus-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-8021q-vlan.c:warning:.4i-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- net-core-selftests.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- s390-allnoconfig
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|-- s390-defconfig
-|   |-- block-blk-throttle.c:warning:lu-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- block-blk-throttle.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-block-virtio_blk.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-md-raid5.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-mellanox-mlx5-core-mlx5_core.h:warning:s-directive-argument-is-null
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-8021q-vlan.c:warning:.4i-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- s390-randconfig-001-20230921
-|   |-- drivers-block-virtio_blk.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-crypto-ccree-cc_cipher.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_mes.c:warning:s-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_vpe.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-input-mouse-vsxxxaa.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-serio-serio_raw.c:warning:ld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-net-ethernet-intel-igb-igb_main.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-phy-mscc-mscc_main.c:warning:sprintf-may-write-a-terminating-nul-past-the-end-of-the-destination
-|   |-- drivers-pci-controller-dwc-pcie-designware.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:mq-poll-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-mpt3sas-mpt3sas_scsih.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|-- s390-randconfig-r003-20221127
-|   |-- s390-linux-ld:ice_lib.c:(.text):undefined-reference-to-ice_is_cgu_present
-|   `-- s390-linux-ld:ice_lib.c:(.text):undefined-reference-to-ice_is_clock_mux_present_e810t
-|-- sh-allmodconfig
-|   |-- command-line:warning:s-directive-argument-is-null
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   `-- standard-input:Error:unknown-pseudo-op:
-|-- sh-allyesconfig
-|   |-- command-line:warning:s-directive-argument-is-null
-|   `-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|-- sh-randconfig-002-20230921
-|   `-- drivers-opp-debugfs.c:warning:.62s-directive-argument-is-null
-|-- sparc-allmodconfig
-|   |-- block-blk-throttle.c:warning:lu-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- block-blk-throttle.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- command-line:warning:s-directive-argument-is-null
-|   |-- drivers-block-virtio_blk.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-clocksource-sh_mtu2.c:warning:u-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc.c:warning:Function-parameter-or-member-srf_updates-not-described-in-could_mpcc_tree_change_for_active_pipes
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_vpe.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-gpu-drm-nouveau-nouveau_backlight.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-hid-hid-logitech-dj.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-hid-hid-sensor-custom.c:warning:s-directive-output-may-be-truncated-writing-likely-or-more-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-sunkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-elantech.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-sermouse.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vsxxxaa.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-serio-serio_raw.c:warning:ld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-leds-trigger-ledtrig-cpu.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-md-raid5.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-mmc-host-mmc_spi.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-net-ethernet-amd-pds_core-core.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-amd-pds_core-dev.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:rx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:tx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:txrx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-cadence-macb_main.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-cavium-liquidio-lio_core.c:warning:u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-hisilicon-hns3-hns3pf-hclge_main.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-intel-igb-igb_main.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-marvell-octeontx2-af-rvu_debugfs.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-pensando-ionic-ionic_lif.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-pci-controller-dwc-pcie-designware.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_clk-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_hsic_12M-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_phy-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_reset-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_vbus-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-scsi-lpfc-lpfc_init.c:warning:.grp-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-megaraid.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:mq-poll-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-mpt3sas-mpt3sas_scsih.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- fs-bcachefs-bcachefs_format.h:warning:p-offset-in-struct-bkey-isn-t-aligned-to
-|   |-- fs-bcachefs-bcachefs_format.h:warning:version-offset-in-struct-bkey-isn-t-aligned-to
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- include-linux-netlink.h:warning:)-out-of-range-only-support...-directive-output-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-netlink.h:warning:sfc:Unsupported:only-suppo...-directive-output-truncated-writing-bytes-into-a-region-of-size
-|   |-- include-linux-phy.h:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- kernel-locking-lockdep_proc.c:warning:lld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- net-core-selftests.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- sparc-allnoconfig
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|-- sparc-allyesconfig
-|   |-- block-blk-throttle.c:warning:lu-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- block-blk-throttle.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- command-line:warning:s-directive-argument-is-null
-|   |-- drivers-block-virtio_blk.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-clocksource-sh_mtu2.c:warning:u-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-firmware-broadcom-bcm47xx_sprom.c:warning:directive-output-may-be-truncated-writing-byte-into-a-region-of-size-between-and
-|   |-- drivers-firmware-broadcom-bcm47xx_sprom.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc.c:warning:Function-parameter-or-member-srf_updates-not-described-in-could_mpcc_tree_change_for_active_pipes
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_vpe.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-gpu-drm-nouveau-nouveau_backlight.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-hid-hid-logitech-dj.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-hid-hid-sensor-custom.c:warning:s-directive-output-may-be-truncated-writing-likely-or-more-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-sunkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-elantech.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-sermouse.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vsxxxaa.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-serio-serio_raw.c:warning:ld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-leds-trigger-ledtrig-cpu.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-md-raid5.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-mmc-host-mmc_spi.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-net-ethernet-amd-pds_core-core.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-amd-pds_core-dev.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:rx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:tx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:txrx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-cadence-macb_main.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-cavium-liquidio-lio_core.c:warning:u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-hisilicon-hns3-hns3pf-hclge_main.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-intel-igb-igb_main.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-marvell-octeontx2-af-rvu_debugfs.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-pensando-ionic-ionic_lif.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-pci-controller-dwc-pcie-designware.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_clk-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_hsic_12M-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_phy-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_reset-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_vbus-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-scsi-lpfc-lpfc_init.c:warning:.grp-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-megaraid.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:mq-poll-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-mpt3sas-mpt3sas_scsih.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- fs-bcachefs-bcachefs_format.h:warning:p-offset-in-struct-bkey-isn-t-aligned-to
-|   |-- fs-bcachefs-bcachefs_format.h:warning:version-offset-in-struct-bkey-isn-t-aligned-to
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- include-linux-netlink.h:warning:)-out-of-range-only-support...-directive-output-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-netlink.h:warning:sfc:Unsupported:only-suppo...-directive-output-truncated-writing-bytes-into-a-region-of-size
-|   |-- include-linux-phy.h:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- kernel-locking-lockdep_proc.c:warning:lld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- net-core-selftests.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- sparc-defconfig
-|   |-- command-line:warning:s-directive-argument-is-null
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-sunkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-sermouse.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- sparc-randconfig-001-20230921
-|   |-- command-line:warning:s-directive-argument-is-null
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-sermouse.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vsxxxaa.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-pci-controller-dwc-pcie-designware.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:mq-poll-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-mpt3sas-mpt3sas_scsih.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|-- sparc-randconfig-002-20230921
-|   |-- drivers-clocksource-sh_mtu2.c:warning:u-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-crypto-ccree-cc_cipher.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_vpe.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_clk-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_hsic_12M-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_phy-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_reset-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_vbus-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-phy.h:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   `-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|-- sparc64-allmodconfig
-|   |-- block-blk-throttle.c:warning:lu-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- block-blk-throttle.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- command-line:warning:s-directive-argument-is-null
-|   |-- drivers-block-virtio_blk.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-clocksource-sh_mtu2.c:warning:u-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc.c:warning:Function-parameter-or-member-srf_updates-not-described-in-could_mpcc_tree_change_for_active_pipes
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_vpe.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-gpu-drm-nouveau-nouveau_backlight.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-hid-hid-logitech-dj.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-hid-hid-sensor-custom.c:warning:s-directive-output-may-be-truncated-writing-likely-or-more-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-sunkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-elantech.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-sermouse.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vsxxxaa.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-serio-serio_raw.c:warning:ld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-leds-trigger-ledtrig-cpu.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-md-raid5.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-mmc-host-mmc_spi.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-net-ethernet-amd-pds_core-core.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-amd-pds_core-dev.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:rx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:tx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:txrx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-cadence-macb_main.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-cavium-liquidio-lio_core.c:warning:u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-hisilicon-hns3-hns3pf-hclge_main.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-intel-igb-igb_main.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-marvell-octeontx2-af-cgx.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-marvell-octeontx2-af-rvu_debugfs.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-marvell-octeontx2-nic-otx2_pf.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-net-ethernet-pensando-ionic-ionic_lif.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-pci-controller-dwc-pcie-designware.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_clk-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_hsic_12M-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_phy-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_reset-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_vbus-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-scsi-lpfc-lpfc_init.c:warning:.grp-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-megaraid.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:mq-poll-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-mpt3sas-mpt3sas_scsih.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-vdpa-pds-debugfs.c:warning:02d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- fs-bcachefs-bcachefs_format.h:warning:p-offset-in-struct-bkey-isn-t-aligned-to
-|   |-- fs-bcachefs-bcachefs_format.h:warning:version-offset-in-struct-bkey-isn-t-aligned-to
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- include-linux-netlink.h:warning:)-out-of-range-only-support...-directive-output-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-netlink.h:warning:sfc:Unsupported:only-suppo...-directive-output-truncated-writing-bytes-into-a-region-of-size
-|   |-- include-linux-phy.h:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- kernel-locking-lockdep_proc.c:warning:lld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- net-core-selftests.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- sparc64-allyesconfig
-|   |-- block-blk-throttle.c:warning:lu-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- block-blk-throttle.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- command-line:warning:s-directive-argument-is-null
-|   |-- drivers-block-virtio_blk.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-clocksource-sh_mtu2.c:warning:u-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-firmware-broadcom-bcm47xx_sprom.c:warning:directive-output-may-be-truncated-writing-byte-into-a-region-of-size-between-and
-|   |-- drivers-firmware-broadcom-bcm47xx_sprom.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-firmware-turris-mox-rwtm.c:warning:08x-directive-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc.c:warning:Function-parameter-or-member-srf_updates-not-described-in-could_mpcc_tree_change_for_active_pipes
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_vpe.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-gpu-drm-nouveau-nouveau_backlight.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-hid-hid-logitech-dj.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-hid-hid-sensor-custom.c:warning:s-directive-output-may-be-truncated-writing-likely-or-more-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-sunkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-elantech.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-sermouse.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vsxxxaa.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-serio-serio_raw.c:warning:ld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-leds-trigger-ledtrig-cpu.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-md-raid5.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-mmc-host-mmc_spi.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-net-ethernet-amd-pds_core-core.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-amd-pds_core-dev.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-aquantia-atlantic-aq_ethtool.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:rx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:tx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:txrx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-cadence-macb_main.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-cavium-liquidio-lio_core.c:warning:u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-hisilicon-hns3-hns3pf-hclge_main.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-intel-igb-igb_main.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-marvell-octeontx2-af-cgx.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-marvell-octeontx2-af-rvu_debugfs.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-marvell-octeontx2-nic-otx2_pf.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-net-ethernet-mellanox-mlxsw-core_thermal.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-pensando-ionic-ionic_lif.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-qlogic-netxen-netxen_nic_main.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-qlogic-qede-qede_main.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-qlogic-qlcnic-qlcnic_main.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-pci-controller-dwc-pcie-designware.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_clk-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_hsic_12M-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_phy-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_reset-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_vbus-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-scsi-lpfc-lpfc_init.c:warning:.grp-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-megaraid.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:mq-poll-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-mpt3sas-mpt3sas_scsih.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-vdpa-pds-debugfs.c:warning:02d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- fs-bcachefs-bcachefs_format.h:warning:p-offset-in-struct-bkey-isn-t-aligned-to
-|   |-- fs-bcachefs-bcachefs_format.h:warning:version-offset-in-struct-bkey-isn-t-aligned-to
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- include-linux-netlink.h:warning:)-out-of-range-only-support...-directive-output-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-netlink.h:warning:sfc:Unsupported:only-suppo...-directive-output-truncated-writing-bytes-into-a-region-of-size
-|   |-- include-linux-phy.h:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- kernel-locking-lockdep_proc.c:warning:lld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- net-core-selftests.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- sparc64-defconfig
-|   |-- command-line:warning:s-directive-argument-is-null
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-sunkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-sermouse.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-serio-serio_raw.c:warning:ld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-md-raid5.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:rx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:tx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:txrx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-8021q-vlan.c:warning:.4i-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- net-core-selftests.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- sparc64-randconfig-001-20230921
-|   |-- block-blk-throttle.c:warning:lu-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- block-blk-throttle.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-sunkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-serio-serio_raw.c:warning:ld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-leds-trigger-ledtrig-cpu.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-mmc-host-mmc_spi.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- net-core-selftests.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- sparc64-randconfig-002-20230921
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_mes.c:warning:s-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_vpe.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-gpu-drm-nouveau-nouveau_backlight.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-net-ethernet-pensando-ionic-ionic_lif.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-platform-mellanox-mlxreg-hotplug.c:warning:d-directive-output-may-be-truncated-writing-byte-into-a-region-of-size-between-and
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- net-core-selftests.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- um-defconfig
-|   `-- command-line:warning:s-directive-argument-is-null
-|-- um-i386_defconfig
-|   `-- net-socket.c:warning:no-previous-declaration-for-update_socket_protocol
-|-- um-randconfig-001-20230921
-|   `-- net-socket.c:warning:no-previous-declaration-for-update_socket_protocol
-|-- um-randconfig-r005-20230815
-|   |-- drivers-accel-habanalabs-common-device.c:error:struct-scatterlist-has-no-member-named-dma_length
-|   `-- drivers-accel-habanalabs-common-habanalabs_ioctl.c:error:implicit-declaration-of-function-rdtsc
-|-- um-x86_64_defconfig
-|   `-- command-line:warning:s-directive-argument-is-null
-|-- x86_64-allnoconfig
-|   |-- arch-x86-kernel-cpu-microcode-amd.c:warning:h.bin-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|-- x86_64-allyesconfig
-|   |-- arch-x86-kernel-cpu-microcode-amd.c:warning:h.bin-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- block-blk-throttle.c:warning:lu-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- block-blk-throttle.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-block-virtio_blk.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-clocksource-sh_mtu2.c:warning:u-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-edac-sb_edac.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-edac-skx_common.c:warning:_DIMM-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-firmware-broadcom-bcm47xx_sprom.c:warning:directive-output-may-be-truncated-writing-byte-into-a-region-of-size-between-and
-|   |-- drivers-firmware-broadcom-bcm47xx_sprom.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-firmware-efi-cper-x86.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc.c:warning:Function-parameter-or-member-srf_updates-not-described-in-could_mpcc_tree_change_for_active_pipes
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_vpe.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-gpu-drm-nouveau-nouveau_backlight.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-hid-hid-logitech-dj.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-sunkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-elantech.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-lifebook.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-sermouse.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vmmouse.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vsxxxaa.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-serio-serio_raw.c:warning:ld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-iommu-intel-dmar.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-leds-trigger-ledtrig-cpu.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-leds-trigger-ledtrig-netdev.c:warning:writing-byte-into-a-region-of-size
-|   |-- drivers-md-raid5.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-media-radio-radio-miropcm20.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-mmc-host-mmc_spi.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-net-ethernet-amd-pds_core-core.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-amd-pds_core-dev.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-broadcom-bnxt-bnxt_ethtool.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:rx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:tx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:txrx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-cadence-macb_main.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-cavium-liquidio-lio_core.c:warning:u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-cavium-thunder-thunder_bgx.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-intel-igb-igb_main.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-marvell-octeontx2-af-rvu_debugfs.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-pensando-ionic-ionic_lif.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-wan-hdlc_ppp.c:warning:s-directive-argument-is-null
-|   |-- drivers-pci-controller-dwc-pcie-designware.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_clk-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_hsic_12M-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_phy-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_reset-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_vbus-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-scsi-lpfc-lpfc_init.c:warning:.grp-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-megaraid.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:mq-poll-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-mpt3sas-mpt3sas_scsih.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-xen-manage.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- include-linux-fortify-string.h:warning:writing-bytes-into-a-region-of-size
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- include-linux-netlink.h:warning:)-out-of-range-only-support...-directive-output-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-netlink.h:warning:sfc:Unsupported:only-suppo...-directive-output-truncated-writing-bytes-into-a-region-of-size
-|   |-- include-linux-phy.h:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- kernel-locking-lockdep_proc.c:warning:lld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- net-9p-trans_xen.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-core-selftests.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- x86_64-buildonly-randconfig-001-20230921
-|   |-- arch-x86-kernel-cpu-microcode-amd.c:warning:h.bin-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- block-blk-throttle.c:warning:lu-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- block-blk-throttle.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-firmware-efi-cper-x86.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-input-mouse-vsxxxaa.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-serio-serio_raw.c:warning:ld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-iommu-intel-dmar.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-md-raid5.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-bnxt-bnxt_ethtool.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:rx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:tx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:txrx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-cavium-liquidio-lio_core.c:warning:u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-pci-controller-dwc-pcie-designware.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-scsi-megaraid.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:mq-poll-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-mpt3sas-mpt3sas_scsih.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   `-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|-- x86_64-buildonly-randconfig-002-20230921
-|   |-- arch-x86-kernel-cpu-microcode-amd.c:warning:h.bin-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-gpu-drm-nouveau-nouveau_backlight.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-input-serio-serio_raw.c:warning:ld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-locking-lockdep_proc.c:warning:lld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|-- x86_64-buildonly-randconfig-003-20230921
-|   |-- arch-x86-kernel-cpu-microcode-amd.c:warning:h.bin-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-block-virtio_blk.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-firmware-efi-cper-x86.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-firmware-turris-mox-rwtm.c:warning:08x-directive-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-sunkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-sermouse.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vsxxxaa.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-leds-trigger-ledtrig-cpu.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-md-raid5.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-pci-controller-dwc-pcie-designware.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-platform-mellanox-mlxreg-hotplug.c:warning:d-directive-output-may-be-truncated-writing-byte-into-a-region-of-size-between-and
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   `-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|-- x86_64-buildonly-randconfig-004-20230921
-|   |-- arch-x86-kernel-cpu-microcode-amd.c:warning:h.bin-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-clocksource-sh_mtu2.c:warning:u-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-firmware-efi-cper-x86.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-elantech.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-lifebook.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-sermouse.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-serio-serio_raw.c:warning:ld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-md-raid5.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- kernel-locking-lockdep_proc.c:warning:lld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-8021q-vlan.c:warning:.4i-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- x86_64-buildonly-randconfig-005-20230921
-|   |-- arch-x86-kernel-cpu-microcode-amd.c:warning:h.bin-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-gpu-drm-nouveau-nouveau_backlight.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-input-mouse-sermouse.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vsxxxaa.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-serio-serio_raw.c:warning:ld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-opp-debugfs.c:warning:.62s-directive-argument-is-null
-|   |-- drivers-pci-controller-dwc-pcie-designware.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-platform-mellanox-mlxreg-hotplug.c:warning:d-directive-output-may-be-truncated-writing-byte-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   `-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|-- x86_64-buildonly-randconfig-006-20230921
-|   |-- arch-x86-kernel-cpu-microcode-amd.c:warning:h.bin-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-clocksource-sh_mtu2.c:warning:u-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_mes.c:warning:s-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_vpe.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-hid-hid-logitech-dj.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-input-mouse-sermouse.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vsxxxaa.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-serio-serio_raw.c:warning:ld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-pci-controller-dwc-pcie-designware.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_clk-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_hsic_12M-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_phy-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_reset-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-phy-allwinner-phy-sun4i-usb.c:warning:_vbus-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-platform-mellanox-mlxreg-hotplug.c:warning:d-directive-output-may-be-truncated-writing-byte-into-a-region-of-size-between-and
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|-- x86_64-defconfig
-|   |-- arch-x86-kernel-cpu-microcode-amd.c:warning:h.bin-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-lifebook.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-iommu-intel-dmar.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:rx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:tx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:txrx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- mm-mempolicy.c:warning:writing-byte-into-a-region-of-size
-|   |-- net-core-selftests.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- x86_64-randconfig-001-20230921
-|   |-- arch-x86-kernel-cpu-microcode-amd.c:warning:h.bin-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-block-virtio_blk.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_mes.c:warning:s-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_vpe.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-sermouse.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vmmouse.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vsxxxaa.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-serio-serio_raw.c:warning:ld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-leds-trigger-ledtrig-cpu.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-md-raid5.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-pci-controller-dwc-pcie-designware.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-platform-mellanox-mlxreg-hotplug.c:warning:d-directive-output-may-be-truncated-writing-byte-into-a-region-of-size-between-and
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- x86_64-randconfig-002-20230921
-|   |-- arch-x86-kernel-cpu-microcode-amd.c:warning:h.bin-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- x86_64-randconfig-003-20230921
-|   |-- arch-x86-kernel-cpu-microcode-amd.c:warning:h.bin-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- command-line:warning:s-directive-argument-is-null
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc.c:warning:Function-parameter-or-member-srf_updates-not-described-in-could_mpcc_tree_change_for_active_pipes
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training_dpia.c:warning:dp_decide_lane_settings-accessing-bytes-in-a-region-of-size
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training_fixed_vs_pe_retimer.c:warning:dp_decide_lane_settings-accessing-bytes-in-a-region-of-size
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_mes.c:warning:s-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_vpe.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-sunkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-elantech.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-serio-serio_raw.c:warning:ld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-md-raid5.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-amd-pds_core-core.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-amd-pds_core-dev.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-broadcom-bnx2x-bnx2x_cmn.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-cadence-macb_main.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-cavium-liquidio-lio_core.c:warning:u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-cavium-thunder-thunder_bgx.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-pensando-ionic-ionic_lif.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-opp-debugfs.c:warning:.62s-directive-argument-is-null
-|   |-- drivers-pci-controller-dwc-pcie-designware.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:mq-poll-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-mpt3sas-mpt3sas_scsih.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- kernel-locking-lockdep_proc.c:warning:lld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- x86_64-randconfig-004-20230921
-|   |-- arch-x86-kernel-cpu-microcode-amd.c:warning:h.bin-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-firmware-efi-cper-x86.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-sermouse.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vsxxxaa.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-leds-trigger-ledtrig-cpu.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-mmc-host-mmc_spi.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-opp-debugfs.c:warning:.62s-directive-argument-is-null
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- kernel-locking-lockdep_proc.c:warning:lld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- x86_64-randconfig-005-20230921
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-elantech.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-lifebook.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-sermouse.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vsxxxaa.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-serio-serio_raw.c:warning:ld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-opp-debugfs.c:warning:.62s-directive-argument-is-null
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- kernel-locking-lockdep_proc.c:warning:lld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- x86_64-randconfig-006-20230921
-|   |-- arch-x86-kernel-cpu-microcode-amd.c:warning:h.bin-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-serio-serio_raw.c:warning:ld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-md-raid5.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- x86_64-randconfig-011-20230921
-|   |-- arch-x86-kernel-cpu-microcode-amd.c:warning:h.bin-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-core-dc.c:warning:Function-parameter-or-member-srf_updates-not-described-in-could_mpcc_tree_change_for_active_pipes
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_vpe.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-mmc-host-mmc_spi.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:rx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:tx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-broadcom-tg3.c:warning:txrx-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-cavium-thunder-thunder_bgx.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-net-ethernet-intel-igb-igb_main.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-lpfc-lpfc_init.c:warning:.grp-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:mq-poll-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-mpt3sas-mpt3sas_scsih.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-netlink.h:warning:)-out-of-range-only-support...-directive-output-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-netlink.h:warning:sfc:Unsupported:only-suppo...-directive-output-truncated-writing-bytes-into-a-region-of-size
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- x86_64-randconfig-012-20230921
-|   |-- arch-x86-kernel-cpu-microcode-amd.c:warning:h.bin-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_vpe.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-gpu-drm-nouveau-nouveau_backlight.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-serio-serio_raw.c:warning:ld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-leds-trigger-ledtrig-cpu.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-md-raid5.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:mq-poll-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-mpt3sas-mpt3sas_scsih.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-fortify-string.h:warning:writing-byte-into-a-region-of-size
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- x86_64-randconfig-013-20230921
-|   |-- arch-x86-kernel-cpu-microcode-amd.c:warning:h.bin-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- block-blk-throttle.c:warning:lu-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- block-blk-throttle.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-gpu-drm-nouveau-nouveau_backlight.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-sermouse.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vsxxxaa.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-serio-serio_raw.c:warning:ld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-md-raid5.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-opp-debugfs.c:warning:.62s-directive-argument-is-null
-|   |-- drivers-pci-controller-dwc-pcie-designware.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- x86_64-randconfig-014-20230921
-|   |-- arch-x86-kernel-cpu-microcode-amd.c:warning:h.bin-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_mes.c:warning:s-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_vpe.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-elantech.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-lifebook.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-sermouse.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vmmouse.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vsxxxaa.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-serio-serio_raw.c:warning:ld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-pci-controller-dwc-pcie-designware.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-platform-mellanox-mlxreg-hotplug.c:warning:d-directive-output-may-be-truncated-writing-byte-into-a-region-of-size-between-and
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-phy.h:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- x86_64-randconfig-015-20230921
-|   |-- arch-x86-kernel-cpu-microcode-amd.c:warning:h.bin-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vsxxxaa.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-serio-serio_raw.c:warning:ld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- include-linux-phy.h:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- net-core-selftests.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- x86_64-randconfig-016-20230921
-|   |-- arch-x86-kernel-cpu-microcode-amd.c:warning:h.bin-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-serio-serio_raw.c:warning:ld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-leds-trigger-ledtrig-cpu.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-leds-trigger-ledtrig-netdev.c:warning:writing-byte-into-a-region-of-size
-|   |-- drivers-mmc-host-mmc_spi.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-net-wan-hdlc_ppp.c:warning:s-directive-argument-is-null
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- kernel-locking-lockdep_proc.c:warning:lld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   `-- net-core-selftests.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- x86_64-randconfig-071-20230921
-|   |-- arch-x86-kernel-cpu-microcode-amd.c:warning:h.bin-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-lifebook.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-serio-serio_raw.c:warning:ld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-mmc-host-mmc_spi.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   `-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|-- x86_64-randconfig-072-20230921
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-serio-serio_raw.c:warning:ld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-md-raid5.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- net-socket.c:warning:no-previous-declaration-for-update_socket_protocol
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- x86_64-randconfig-073-20230921
-|   |-- arch-x86-kernel-cpu-microcode-amd.c:warning:h.bin-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-lifebook.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-md-raid5.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-opp-debugfs.c:warning:.62s-directive-argument-is-null
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- kernel-locking-lockdep_proc.c:warning:lld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- x86_64-randconfig-074-20230921
-|   |-- drivers-gpu-drm-i915-display-intel_tc.c:error:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-mmc-host-mmc_spi.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- kernel-locking-lockdep_proc.c:warning:lld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-socket.c:warning:no-previous-declaration-for-update_socket_protocol
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- x86_64-randconfig-075-20230921
-|   |-- arch-x86-kernel-cpu-microcode-amd.c:warning:h.bin-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-serio-serio_raw.c:warning:ld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-leds-trigger-ledtrig-cpu.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-mmc-host-mmc_spi.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-xen-manage.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- x86_64-randconfig-076-20230921
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-serio-serio_raw.c:warning:ld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-socket.c:warning:no-previous-declaration-for-update_socket_protocol
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- x86_64-randconfig-161-20230921
-|   |-- arch-x86-kernel-cpu-microcode-amd.c:warning:h.bin-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- block-blk-throttle.c:warning:lu-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- block-blk-throttle.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-gpu-drm-i915-display-intel_psr.c-i915_psr_sink_status_show()-error:uninitialized-symbol-error_status-.
-|   |-- drivers-gpu-drm-i915-display-intel_tc.c-mtl_tc_port_get_max_lane_count()-error:uninitialized-symbol-pin_mask-.
-|   |-- drivers-gpu-drm-nouveau-nouveau_backlight.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-sermouse.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vmmouse.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vsxxxaa.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-serio-serio_raw.c:warning:ld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-leds-trigger-ledtrig-cpu.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-mmc-host-mmc_spi.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-opp-debugfs.c:warning:.62s-directive-argument-is-null
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- fs-exfat-namei.c-exfat_find_empty_entry()-error:uninitialized-symbol-last_clu-.
-|   |-- fs-ext4-super.c-update_super_work()-error:uninitialized-symbol-call_notify_err-.
-|   |-- kernel-cgroup-cpuset.c-cpu_exclusive_check()-warn:signedness-bug-returning
-|   |-- kernel-locking-lockdep_proc.c:warning:lld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   `-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|-- x86_64-rhel-8.3
-|   |-- block-blk-throttle.c:warning:lu-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- block-blk-throttle.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-block-virtio_blk.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-edac-sb_edac.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-edac-skx_common.c:warning:_DIMM-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-firmware-efi-cper-x86.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-hid-hid-logitech-dj.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-hid-hid-sensor-custom.c:warning:s-directive-output-may-be-truncated-writing-likely-or-more-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-keyboard-atkbd.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-alps.c:warning:s-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-elantech.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-lifebook.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-psmouse-base.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-sermouse.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vmmouse.c:warning:input1-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-mouse-vsxxxaa.c:warning:input0-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-input-serio-serio_raw.c:warning:ld-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-iommu-intel-dmar.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-leds-led-core.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- drivers-md-raid5.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-net-ethernet-intel-igb-igb_main.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-ch.c:warning:d-directive-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-scsi-megaraid.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:mq-poll-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- drivers-scsi-mpt3sas-mpt3sas_base.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-mpt3sas-mpt3sas_scsih.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- drivers-scsi-st.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-thermal-thermal_sysfs.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- drivers-usb-core-hcd.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size-between-and
-|   |-- drivers-usb-core-usb.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-|   |-- include-linux-phy.h:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   |-- kernel-relay.c:warning:snprintf-output-may-be-truncated-before-the-last-format-character
-|   |-- kernel-workqueue.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- lib-string_helpers.c:warning:03u-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
-|   |-- net-8021q-vlan.c:warning:.4i-directive-output-may-be-truncated-writing-bytes-into-a-region-of-size-between-and
-|   |-- net-8021q-vlan.c:warning:i-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size-between-and
-|   |-- net-core-selftests.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|   `-- net-sunrpc-clnt.c:warning:s-directive-output-may-be-truncated-writing-up-to-bytes-into-a-region-of-size
-|-- xtensa-randconfig-002-20230921
-|   |-- command-line:warning:s-directive-argument-is-null
-|   `-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-`-- xtensa-xip_kc705_defconfig
-    `-- include-linux-kern_levels.h:warning:s-directive-argument-is-null
-clang_recent_errors
-`-- i386-allyesconfig
-    |-- fs-bcachefs-io_misc.c:warning:explicitly-assigning-value-of-variable-of-type-int-to-itself
-    `-- lib-kunit-kunit-test.c:warning:cast-from-void-(-)(const-void-)-to-kunit_action_t-(aka-void-(-)(void-)-)-converts-to-incompatible-function-type
-
-elapsed time: 946m
-
-configs tested: 155
-configs skipped: 2
-
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20230921   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                     am200epdkit_defconfig   clang
-arm                                 defconfig   gcc  
-arm                            dove_defconfig   clang
-arm                             mxs_defconfig   clang
-arm                   randconfig-001-20230921   gcc  
-arm64                            allmodconfig   gcc  
-arm64                             allnoconfig   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   clang
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20230921   gcc  
-i386         buildonly-randconfig-002-20230921   gcc  
-i386         buildonly-randconfig-003-20230921   gcc  
-i386         buildonly-randconfig-004-20230921   gcc  
-i386         buildonly-randconfig-005-20230921   gcc  
-i386         buildonly-randconfig-006-20230921   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                  randconfig-001-20230921   gcc  
-i386                  randconfig-002-20230921   gcc  
-i386                  randconfig-003-20230921   gcc  
-i386                  randconfig-004-20230921   gcc  
-i386                  randconfig-005-20230921   gcc  
-i386                  randconfig-006-20230921   gcc  
-i386                  randconfig-011-20230921   gcc  
-i386                  randconfig-012-20230921   gcc  
-i386                  randconfig-013-20230921   gcc  
-i386                  randconfig-014-20230921   gcc  
-i386                  randconfig-015-20230921   gcc  
-i386                  randconfig-016-20230921   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20230921   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                       bmips_be_defconfig   gcc  
-mips                      fuloong2e_defconfig   gcc  
-mips                           jazz_defconfig   gcc  
-mips                     loongson1b_defconfig   gcc  
-mips                  maltasmvp_eva_defconfig   gcc  
-mips                          rb532_defconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-openrisc                 simple_smp_defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   gcc  
-powerpc                      cm5200_defconfig   gcc  
-powerpc                     kilauea_defconfig   clang
-powerpc                     mpc512x_defconfig   clang
-powerpc                    sam440ep_defconfig   gcc  
-powerpc                     sequoia_defconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                 randconfig-001-20230921   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                  randconfig-001-20230921   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                 kfr2r09-romimage_defconfig   gcc  
-sh                            migor_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                 randconfig-001-20230921   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-001-20230921   gcc  
-x86_64       buildonly-randconfig-002-20230921   gcc  
-x86_64       buildonly-randconfig-003-20230921   gcc  
-x86_64       buildonly-randconfig-004-20230921   gcc  
-x86_64       buildonly-randconfig-005-20230921   gcc  
-x86_64       buildonly-randconfig-006-20230921   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20230921   gcc  
-x86_64                randconfig-002-20230921   gcc  
-x86_64                randconfig-003-20230921   gcc  
-x86_64                randconfig-004-20230921   gcc  
-x86_64                randconfig-005-20230921   gcc  
-x86_64                randconfig-006-20230921   gcc  
-x86_64                randconfig-011-20230921   gcc  
-x86_64                randconfig-012-20230921   gcc  
-x86_64                randconfig-013-20230921   gcc  
-x86_64                randconfig-014-20230921   gcc  
-x86_64                randconfig-015-20230921   gcc  
-x86_64                randconfig-016-20230921   gcc  
-x86_64                randconfig-071-20230921   gcc  
-x86_64                randconfig-072-20230921   gcc  
-x86_64                randconfig-073-20230921   gcc  
-x86_64                randconfig-074-20230921   gcc  
-x86_64                randconfig-075-20230921   gcc  
-x86_64                randconfig-076-20230921   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
-xtensa                          iss_defconfig   gcc  
-xtensa                    xip_kc705_defconfig   gcc  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Petr Mladek <pmladek@suse.com> =E4=BA=8E2023=E5=B9=B49=E6=9C=8816=E6=97=A5=
+=E5=91=A8=E5=85=AD 00:34=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Fri 2023-09-15 11:53:13, Greg KH wrote:
+> > On Fri, Sep 15, 2023 at 04:46:02PM +0800, Enlin Mu wrote:
+> > > John Ogness <john.ogness@linutronix.de> =E4=BA=8E2023=E5=B9=B49=E6=9C=
+=8815=E6=97=A5=E5=91=A8=E4=BA=94 16:34=E5=86=99=E9=81=93=EF=BC=9A
+> > > >
+> > > > On 2023-09-15, Enlin Mu <enlin.mu@outlook.com> wrote:
+> > > > > Sometimes we want to print cpu id of printk() messages to console=
+s
+> > > > >
+> > > > > diff --git a/include/linux/threads.h b/include/linux/threads.h
+> > > > > index c34173e6c5f1..6700bd9a174f 100644
+> > > > > --- a/include/linux/threads.h
+> > > > > +++ b/include/linux/threads.h
+> > > > > @@ -34,6 +34,9 @@
+> > > > >  #define PID_MAX_LIMIT (CONFIG_BASE_SMALL ? PAGE_SIZE * 8 : \
+> > > > >       (sizeof(long) > 4 ? 4 * 1024 * 1024 : PID_MAX_DEFAULT))
+> > > > >
+> > > > > +#define CPU_ID_SHIFT 23
+> > > > > +#define CPU_ID_MASK  0xff800000
+> > > >
+> > > > This only supports 256 CPUs. I think it doesn't make sense to try t=
+o
+> > > > squish CPU and Task IDs into 32 bits.
+> > > Yes, it is not good way,
+> > > >
+> > > > What about introducing a caller_id option to always only print the =
+CPU
+> > > > ID? Or do you really need Task _and_ CPU?
+> > >    Yes, I need it.Because I need to know which CPU is printing the
+> > > log, so that I can identify the current system operation, such as loa=
+d
+> > > situation and CPU busy/idle status
+> >
+> > The cpu that is printing the log isn't the one that added the log
+> > message, so I think you will have incorrect data here, right?
+>
+> We already store some metadata about the caller:
+>
+>  * All fields are set by the printk code except for @seq, which is
+>  * set by the ringbuffer code.
+>  */
+> struct printk_info {
+>         u64     seq;            /* sequence number */
+>         u64     ts_nsec;        /* timestamp in nanoseconds */
+>         u16     text_len;       /* length of text message */
+>         u8      facility;       /* syslog facility */
+>         u8      flags:5;        /* internal record flags */
+>         u8      level:3;        /* syslog level */
+>         u32     caller_id;      /* thread id or processor id */
+>
+>         struct dev_printk_info  dev_info;
+> };
+>
+> The 32-bit caller ID is generated using:
+>
+> static inline u32 printk_caller_id(void)
+> {
+>         return in_task() ? task_pid_nr(current) :
+>                 0x80000000 + smp_processor_id();
+> }
+>
+> We could add more metadata and always store the CPU ID and something
+> like:
+>
+>    [CTXT][ Tpid][  Ccpu]
+>
+> for example
+>
+>    [TASK][  T234][    C4]
+>    [ IRQ][ T4567][   C17]
+>    [SIRQ][    T5][    C0]
+>    [ NMI][  T356][  C128]
+>
+Greate!
+Do you have a plan to push it to linus?
+>
+> The biggest problem is that it would change the format of the
+> ringbuffer so that it would require updating external tools,
+> working with crashdump, especially crash but there are also
+> alternative python extensions for gdb.
+>
+>
+> See below POC of the kernel part. It is not even compile tested. The size
+> of the buffers is updated by a guess. Comments are not updated, ...
+>
+> diff --git a/kernel/printk/internal.h b/kernel/printk/internal.h
+> index 7d4979d5c3ce..e3e0a9fdc0cf 100644
+> --- a/kernel/printk/internal.h
+> +++ b/kernel/printk/internal.h
+> @@ -15,7 +15,7 @@ int devkmsg_sysctl_set_loglvl(struct ctl_table *table, =
+int write,
+>  #ifdef CONFIG_PRINTK
+>
+>  #ifdef CONFIG_PRINTK_CALLER
+> -#define PRINTK_PREFIX_MAX      48
+> +#define PRINTK_PREFIX_MAX      64
+>  #else
+>  #define PRINTK_PREFIX_MAX      32
+>  #endif
+> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> index 7e0b4dd02398..bb393ccbd5e9 100644
+> --- a/kernel/printk/printk.c
+> +++ b/kernel/printk/printk.c
+> @@ -621,16 +621,20 @@ static void append_char(char **pp, char *e, char c)
+>                 *(*pp)++ =3D c;
+>  }
+>
+> +char printk_caller_ctxt_txt[][] =3D { "TSK", "IRQ", "SIRQ", "NMI"' };
+> +
+>  static ssize_t info_print_ext_header(char *buf, size_t size,
+>                                      struct printk_info *info)
+>  {
+>         u64 ts_usec =3D info->ts_nsec;
+> -       char caller[20];
+> +       char caller[40];
+>  #ifdef CONFIG_PRINTK_CALLER
+> -       u32 id =3D info->caller_id;
+> +       struct printk_caller_info *ci =3D info->caller_info;
+>
+> -       snprintf(caller, sizeof(caller), ",caller=3D%c%u",
+> -                id & 0x80000000 ? 'C' : 'T', id & ~0x80000000);
+> +       snprintf(caller, sizeof(caller),
+> +                ",caller.ctxt=3D%s,caller.pid=3D%d,caller.cpu=3D%d",
+> +                printk_caller_ctxt_txt[ci->ctxt],
+> +                ci->pid,ci->cpu);
+>  #else
+>         caller[0] =3D '\0';
+>  #endif
+> @@ -996,11 +1000,16 @@ void log_buf_vmcoreinfo_setup(void)
+>         VMCOREINFO_OFFSET(prb_data_blk_lpos, begin);
+>         VMCOREINFO_OFFSET(prb_data_blk_lpos, next);
+>
+> +       VMCOREINFO_STRUCT_SIZE(printk_caller_info);
+> +       VMCOREINFO_OFFSET(printk_caller_info, ctxt);
+> +       VMCOREINFO_OFFSET(printk_caller_info, cpu);
+> +       VMCOREINFO_OFFSET(printk_caller_info, pid);
+> +
+>         VMCOREINFO_STRUCT_SIZE(printk_info);
+>         VMCOREINFO_OFFSET(printk_info, seq);
+>         VMCOREINFO_OFFSET(printk_info, ts_nsec);
+>         VMCOREINFO_OFFSET(printk_info, text_len);
+> -       VMCOREINFO_OFFSET(printk_info, caller_id);
+> +       VMCOREINFO_OFFSET(printk_info, caller_info);
+>         VMCOREINFO_OFFSET(printk_info, dev_info);
+>
+>         VMCOREINFO_STRUCT_SIZE(dev_printk_info);
+> @@ -1111,7 +1120,7 @@ static unsigned int __init add_to_rb(struct printk_=
+ringbuffer *rb,
+>         dest_r.info->level =3D r->info->level;
+>         dest_r.info->flags =3D r->info->flags;
+>         dest_r.info->ts_nsec =3D r->info->ts_nsec;
+> -       dest_r.info->caller_id =3D r->info->caller_id;
+> +       dest_r.info->caller_info =3D r->info->caller_info;
+>         memcpy(&dest_r.info->dev_info, &r->info->dev_info, sizeof(dest_r.=
+info->dev_info));
+>
+>         prb_final_commit(&e);
+> @@ -1329,13 +1338,16 @@ static size_t print_time(u64 ts, char *buf)
+>  }
+>
+>  #ifdef CONFIG_PRINTK_CALLER
+> -static size_t print_caller(u32 id, char *buf)
+> +static size_t print_caller_info(struct printk_caller_info *ci, char *buf=
+)
+>  {
+> -       char caller[12];
+> +       char pid[12];
+> +       char cpu[12];
+>
+> -       snprintf(caller, sizeof(caller), "%c%u",
+> -                id & 0x80000000 ? 'C' : 'T', id & ~0x80000000);
+> -       return sprintf(buf, "[%6s]", caller);
+> +       snprintf(pid, sizeof(pid), "T%u", ci->pid);
+> +       snprintf(cpu, sizeof(cpu), "C%u", ci->cpu);
+> +
+> +       return sprintf(buf, "[%s][%6s][%6s]",
+> +                      printk_caller_ctxt_txt[ci->ctxt], pid, cpu);
+>  }
+>  #else
+>  #define print_caller(id, buf) 0
+> diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_rin=
+gbuffer.c
+> index fde338606ce8..66be9b47be46 100644
+> --- a/kernel/printk/printk_ringbuffer.c
+> +++ b/kernel/printk/printk_ringbuffer.c
+> @@ -431,7 +431,8 @@ static enum desc_state get_desc_state(unsigned long i=
+d,
+>   */
+>  static enum desc_state desc_read(struct prb_desc_ring *desc_ring,
+>                                  unsigned long id, struct prb_desc *desc_=
+out,
+> -                                u64 *seq_out, u32 *caller_id_out)
+> +                                u64 *seq_out,
+> +                                struct printk_caller_info *ci_out)
+>  {
+>         struct printk_info *info =3D to_info(desc_ring, id);
+>         struct prb_desc *desc =3D to_desc(desc_ring, id);
+> @@ -480,8 +481,8 @@ static enum desc_state desc_read(struct prb_desc_ring=
+ *desc_ring,
+>         }
+>         if (seq_out)
+>                 *seq_out =3D info->seq; /* also part of desc_read:C */
+> -       if (caller_id_out)
+> -               *caller_id_out =3D info->caller_id; /* also part of desc_=
+read:C */
+> +       if (caller_info_out)
+> +               *ci_out =3D info->caller_info; /* also part of desc_read:=
+C */
+>
+>         /*
+>          * 1. Guarantee the descriptor content is loaded before re-checki=
+ng
+> @@ -1251,14 +1252,22 @@ static const char *get_data(struct prb_data_ring =
+*data_ring,
+>         return &db->data[0];
+>  }
+>
+> +static bool same_caller(struct printk_caller_info *cur_ci,
+> +                       struct printk_caller_info *last_ci)
+> +{
+> +       return (cur_ci->cpu =3D=3D last_ci->cpu &&
+> +               cur_ci->pid =3D=3D last_ci->pid &&
+> +               cur_ci->ctxt =3D=3D last_ci->ctxt)
+>  /*
+>   * Attempt to transition the newest descriptor from committed back to re=
+served
+>   * so that the record can be modified by a writer again. This is only po=
+ssible
+>   * if the descriptor is not yet finalized and the provided @caller_id ma=
+tches.
+>   */
+>  static struct prb_desc *desc_reopen_last(struct prb_desc_ring *desc_ring=
+,
+> -                                        u32 caller_id, unsigned long *id=
+_out)
+> +                                        struct printk_caller_info *ci,
+> +                                        unsigned long *id_out)
+>  {
+> +       struct printk_caller_info last_ci;
+>         unsigned long prev_state_val;
+>         enum desc_state d_state;
+>         struct prb_desc desc;
+> @@ -1272,8 +1281,8 @@ static struct prb_desc *desc_reopen_last(struct prb=
+_desc_ring *desc_ring,
+>          * To reduce unnecessarily reopening, first check if the descript=
+or
+>          * state and caller ID are correct.
+>          */
+> -       d_state =3D desc_read(desc_ring, id, &desc, NULL, &cid);
+> -       if (d_state !=3D desc_committed || cid !=3D caller_id)
+> +       d_state =3D desc_read(desc_ring, id, &desc, NULL, &last_ci);
+> +       if (d_state !=3D desc_committed || !same_caller(&last_ci, ci))
+>                 return NULL;
+>
+>         d =3D to_desc(desc_ring, id);
+> @@ -1348,7 +1357,7 @@ static struct prb_desc *desc_reopen_last(struct prb=
+_desc_ring *desc_ring,
+>   *            @r->info->text_len after concatenating.
+>   */
+>  bool prb_reserve_in_last(struct prb_reserved_entry *e, struct printk_rin=
+gbuffer *rb,
+> -                        struct printk_record *r, u32 caller_id, unsigned=
+ int max_size)
+> +                        struct printk_record *r, struct printk_caller_in=
+fo *ci, unsigned int max_size)
+>  {
+>         struct prb_desc_ring *desc_ring =3D &rb->desc_ring;
+>         struct printk_info *info;
+> @@ -1359,7 +1368,7 @@ bool prb_reserve_in_last(struct prb_reserved_entry =
+*e, struct printk_ringbuffer
+>         local_irq_save(e->irqflags);
+>
+>         /* Transition the newest descriptor back to the reserved state. *=
+/
+> -       d =3D desc_reopen_last(desc_ring, caller_id, &id);
+> +       d =3D desc_reopen_last(desc_ring, ci, &id);
+>         if (!d) {
+>                 local_irq_restore(e->irqflags);
+>                 goto fail_reopen;
+> @@ -1377,11 +1386,11 @@ bool prb_reserve_in_last(struct prb_reserved_entr=
+y *e, struct printk_ringbuffer
+>         e->id =3D id;
+>
+>         /*
+> -        * desc_reopen_last() checked the caller_id, but there was no
+> +        * desc_reopen_last() checked the caller_info, but there was no
+>          * exclusive access at that point. The descriptor may have
+>          * changed since then.
+>          */
+> -       if (caller_id !=3D info->caller_id)
+> +       if (!match(ci, &info->caller_info)
+>                 goto fail;
+>
+>         if (BLK_DATALESS(&d->text_blk_lpos)) {
+> diff --git a/kernel/printk/printk_ringbuffer.h b/kernel/printk/printk_rin=
+gbuffer.h
+> index 18cd25e489b8..9934353965d4 100644
+> --- a/kernel/printk/printk_ringbuffer.h
+> +++ b/kernel/printk/printk_ringbuffer.h
+> @@ -6,6 +6,18 @@
+>  #include <linux/atomic.h>
+>  #include <linux/dev_printk.h>
+>
+> +#define PRINTK_CTXT_TASK       0
+> +#define PRINTK_CTXT_HARDIRQ    1
+> +#define PRINTK_CTXT_SOFTIRQ    2
+> +#define PRINTK_CTXT_NMI                3
+> +
+> +
+> +struct printk_caller_info {
+> +       u32     ctxt:2;         /* context */
+> +       u32     cpu:24;         /* CPU number */
+> +       u32     pid;            /* PID of the process */
+> +};
+> +
+>  /*
+>   * Meta information about each stored message.
+>   *
+> @@ -19,8 +31,7 @@ struct printk_info {
+>         u8      facility;       /* syslog facility */
+>         u8      flags:5;        /* internal record flags */
+>         u8      level:3;        /* syslog level */
+> -       u32     caller_id;      /* thread id or processor id */
+> -
+> +       struct printk_caller_info caller_info;
+>         struct dev_printk_info  dev_info;
+>  };
+>
