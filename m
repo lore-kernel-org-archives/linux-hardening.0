@@ -1,55 +1,55 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70DA74447F
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 17:54:24 +0000 (UTC)
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A04B1984
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:54:05 -0700 (PDT)
-Received: by mail-pf1-x435.google.com with SMTP id d2e1a72fcca58-68c576d35feso2265895b3a.2
-        for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:54:05 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76FF84447F
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 17:54:28 +0000 (UTC)
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DAC22116
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:53:37 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1c4194f769fso21008745ad.3
+        for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:53:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695405245; x=1696010045; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1695405216; x=1696010016; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=34/nNW3TrNCCiLSv5/UFr3FBjilgfcwTPeGBR7Y+KOg=;
-        b=kpy/YxNCeA8VgfZ4q8DplmSWRDgPWdc/dbRPlfnvYTOd58U0CpT++wHqDbBFBBBsY0
-         bA/5WfRwlObEKKgoj4mcuYFr0+7xxA3M4swptJMldjxyLI2SWvCGP6GuUujtnLxsxIpK
-         Y4CwcMV1qYnqOQm5bLyabypjv3f7oQPI06fNU=
+        bh=0ESOLZsY8LzKb8U8Ne5A0p04ejS/jT09yNraZRlcFPA=;
+        b=LVj+3II8JJfFP2xTT0R27ZSmh4Epdt0wDi4mqj/DpI2PK5FYwNcweVpfOBpvzSBDjj
+         UzMEhg2mEV4mXKJ5ueDDxfwPb1blfYQHbcM8PdybWlWdwjfFj2IjSl1o78XrPah5irJw
+         CA1GFwHXxbBHrr6arE7TT6bYO18q9Jt69uPhU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695405245; x=1696010045;
+        d=1e100.net; s=20230601; t=1695405216; x=1696010016;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=34/nNW3TrNCCiLSv5/UFr3FBjilgfcwTPeGBR7Y+KOg=;
-        b=QxwVWwMdG0sAFo+G0mVgMfrcdWNpFClH1MUVb3XUTn5x/yZa97QkjQWtGh0xo+QRZR
-         I3nlNIRlEjzzAuByDYe5WrZ96nn+ZQwBkovAYiZbONoYbOq8ka0WTdPtsIvr4pf/EHch
-         aUkDJME1bLGOL5pgDa5g66EsZJg4VrE4prhqM7hqiFQ8mX6WdPy8prfbSb/RvU1aZsgD
-         uSCKS8cuk4VXm784mjNTbpdTgWh35Cds+FWnlPmR4KbHIrPOmGzxXrvXPvhfL14wnDxE
-         LVxwXRu7/A4G/Pa9KnxtyvDZyfl/tNedJ5Ta8qRB4d+IgTq1hJE8+1MC7nV3GsTBfmr1
-         vH9Q==
-X-Gm-Message-State: AOJu0YyLqWNuHUz2izp0Rq7X0Tbb2JfEgvYXNX0umcof+uRdN5sEax+C
-	NuIFRfGKXcB/+k33rV73Pedt5w==
-X-Google-Smtp-Source: AGHT+IFu8Si52robeLLrv7QnuV/ngmZ3vweNN3Fajk9liMS4mVgXsR5xejFs2KwwI5VKN4JuZFZUMQ==
-X-Received: by 2002:a05:6a00:c8d:b0:68a:5cf8:dac5 with SMTP id a13-20020a056a000c8d00b0068a5cf8dac5mr127580pfv.22.1695405245065;
-        Fri, 22 Sep 2023 10:54:05 -0700 (PDT)
+        bh=0ESOLZsY8LzKb8U8Ne5A0p04ejS/jT09yNraZRlcFPA=;
+        b=Rk8lsMmFsz2KoLu/JygJ0elQwhzZS33HIuWDnGexBrCjqKNYxVCDtIzSg0ApS0mYYh
+         FFLXiWDEIGX6aMNee4z44zqAYmZDNXuvqQsyce7aNmrjKbTSnKzqAXeChRED3n8q9Rvq
+         8nYvMonMUv8M6XFa4KL+dtQnNtg3qMeDzEqSzo88qs8cLfIiqbD4vDDhLsxblv7O+C8a
+         wVaz3VpTu2ssnc5A/0cVze9r8yfkZi4dmQUOsJNQI/BMgkmwn90nRbmKnENw9HrUs36k
+         BqQ9eJghfuSEQPMos/+u0qdg4YHTrq5R6j70bvnRz5sdR/+SNMe4wZvCOKnlPEU4UpmA
+         gCbg==
+X-Gm-Message-State: AOJu0YwD/9dEPy/r2msq3Mq8mHJGKAjBQ/QNjikFx1nLxg74mTwQPzQr
+	ewaAU7fj8G5PqD4jz+BaT+DbT0Iu16XE2rYkyOw=
+X-Google-Smtp-Source: AGHT+IGA6b1K40k8NOZBF7/MYO6Cl8Ivzqv96Q9v0Q5p74UYCloHq1IDltxXKSseH3rgQcC3dxPQiQ==
+X-Received: by 2002:a17:902:d502:b0:1c3:1c74:5d0a with SMTP id b2-20020a170902d50200b001c31c745d0amr257725plg.34.1695405216432;
+        Fri, 22 Sep 2023 10:53:36 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id f14-20020aa782ce000000b00688435a9915sm3439900pfn.189.2023.09.22.10.54.04
+        by smtp.gmail.com with ESMTPSA id a5-20020a1709027d8500b001bfd92ec592sm3753380plm.292.2023.09.22.10.53.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Sep 2023 10:54:04 -0700 (PDT)
+        Fri, 22 Sep 2023 10:53:36 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
-To: Liam Girdwood <lgirdwood@gmail.com>
+To: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 Cc: Kees Cook <keescook@chromium.org>,
-	Mark Brown <broonie@kernel.org>,
+	linux1394-devel@lists.sourceforge.net,
 	Nathan Chancellor <nathan@kernel.org>,
 	Nick Desaulniers <ndesaulniers@google.com>,
 	Tom Rix <trix@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	llvm@lists.linux.dev,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] regulator: mc13xxx: Annotate struct mc13xxx_regulator_priv with __counted_by
-Date: Fri, 22 Sep 2023 10:54:02 -0700
-Message-Id: <20230922175402.work.819-kees@kernel.org>
+Subject: [PATCH] firewire: Annotate struct fw_node with __counted_by
+Date: Fri, 22 Sep 2023 10:53:35 -0700
+Message-Id: <20230922175334.work.335-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -57,26 +57,26 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1249; i=keescook@chromium.org;
- h=from:subject:message-id; bh=KsJXBGQGMKJej0OmC0WobZxtXra/Rqrs6lS3YBrQxLg=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlDdS65hlSt0m/5qN8cc1VbhNamI8AY6+v5Gz1j
- 6eiEzywV7uJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQ3UugAKCRCJcvTf3G3A
- JqyGD/9pxwUKyDCjaZwj9tRB6UH/KF8LOnItZsH2iWppBUJlMgX6c/2nT3syoqOJIqdnjmGOy8x
- f31ZyXzoPfdM0cIB2EPlAcWJsgK0IsUQ7fu2DHguSCWI02jL3IsUBBAAIwcklO1cM3F5qK54bwg
- jpELuZ53P91AHde5cplZD7CVHE61R6v+l1uug5MZTGzVUTnMbOL981zCABasMfkf5ujXIGq4Evs
- YUpeEMGOQWpL+dQkOzzr7DsOQIesMw2QM4enlSAA+7uwiROnq4xsiN/Bf3qRrLJBOYS0bwtA6H1
- S4usjGaAdXG127q9X34O7FFaE8n6rWviCZRREj2/+gbvk5ctM59ivqzGOP68wkG3WmoW8SFhOIq
- AWi6JH4i9QKhPjABYlalaRJ/sKV8uTQ32zP+S9+IZUvFUUse5N1SUV5bwkxDdCjoBSb8wqSN64z
- THOtdT7oDqtbkI7yG6ypfVR/YAl6MqwJhXn9yKSHbsZ07Zwh4V4MNVnrk3n7fzqfgMWH6a6KS1j
- gG4AWZjqfTWRugQGAA8077LwNOtyj8fyitwS2rdInDXYuFypO7/t/ioBfVxFSI2voeaFBirgUnA
- juPDUPRsEmPAzhrHaoGA3SEML+Gc9BX5ec5sEJ/s1OHDpx6JzekOOg3DbrC68Tv08s/56UgL11O
- w0QX184 vDcslfWg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1130; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=9IvQGv8Ld8cTigYPfagXmK/WvkbkZXS8rrCLNOUMCoE=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlDdSehVrabBM4sbb8Z4pDeRCLv7o6lEF00+KVr
+ vcvgJtKuoiJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQ3UngAKCRCJcvTf3G3A
+ JuXlEACFIcVdQ5RlHQbHTtQ9ay043utxenzIISiQP52aJ1w0fcS9QwkUjl+2VobSgaeZFhUOom6
+ lna7qmCRDRlUXlUYueUdesqU/mTityiOfmh98rYxQ9tMcwjxBv7IE8OC774oB5lrddTA+gRAxFe
+ C+SfcSmcI7TfXTifFKKrxJ+k55lPP8foiB7pEDF7PMdLYFwkNOHdFbQbkjcwnMDCDumGrChUN/y
+ +4arvqJVdo5mIiSAZsmTrTVbg1cK29YkvuftCM/ixlCqo3zUKR60DfJETE+hcTM7ltzTz+UOsmR
+ XuQnfP58J+tusioqlbfH0OZ4Kgfi5f27RQaH15DIxflDKR/n0OYMY3D3I1mWt0qIiV5TUT+EjWd
+ CO/Ek0FD2yBgyk64xjKr5zQjdPq8lxRGpfT70KVDXAVUk6/qhb56XBZbnPFvviBS6kiaJut3Ojk
+ yV2JvVclR+1hRNc9Czfd1Lx192tyn0TdkNSz7If/qhmuPoiPy0lo/lmrEk6icN5lYm2dSkM7ZBZ
+ OIry3h7lFA3Uj/Xvh0RwrKay5IOCfhcPsvCxCvtib0Yy7qg/R71NGva4LDmd8fTpOCsXpJbpYjU
+ ki4IL/FwzdYkGZvMWs7NZfbIwdP2uokgxuLxmpyDH/UJLF5BamS2Lc8JTKxs1r1vR8XOskV11qg
+ 9r/Fji7 4PHB7dRQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.6
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
@@ -86,30 +86,30 @@ their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 functions).
 
-As found with Coccinelle[1], add __counted_by for struct mc13xxx_regulator_priv.
+As found with Coccinelle[1], add __counted_by for struct fw_node.
 
 [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
+Cc: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Cc: linux1394-devel@lists.sourceforge.net
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/regulator/mc13xxx.h | 2 +-
+ drivers/firewire/core.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/mc13xxx.h b/drivers/regulator/mc13xxx.h
-index e03279dc43f4..057aaef6f086 100644
---- a/drivers/regulator/mc13xxx.h
-+++ b/drivers/regulator/mc13xxx.h
-@@ -24,7 +24,7 @@ struct mc13xxx_regulator_priv {
- 	u32 powermisc_pwgt_state;
- 	struct mc13xxx_regulator *mc13xxx_regulators;
- 	int num_regulators;
--	struct regulator_dev *regulators[];
-+	struct regulator_dev *regulators[] __counted_by(num_regulators);
+diff --git a/drivers/firewire/core.h b/drivers/firewire/core.h
+index 2a05f411328f..95c10f3d2282 100644
+--- a/drivers/firewire/core.h
++++ b/drivers/firewire/core.h
+@@ -191,7 +191,7 @@ struct fw_node {
+ 	/* Upper layer specific data. */
+ 	void *data;
+ 
+-	struct fw_node *ports[];
++	struct fw_node *ports[] __counted_by(port_count);
  };
  
- extern int mc13xxx_fixed_regulator_set_voltage(struct regulator_dev *rdev,
+ static inline struct fw_node *fw_node_get(struct fw_node *node)
 -- 
 2.34.1
 
