@@ -1,56 +1,55 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3FF243ABD
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 17:52:27 +0000 (UTC)
-Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4666EE62
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:52:10 -0700 (PDT)
-Received: by mail-pg1-x532.google.com with SMTP id 41be03b00d2f7-578a6bb11ecso1893715a12.0
-        for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:52:10 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF93344465
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 17:52:30 +0000 (UTC)
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B68C173A
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:52:13 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1c5bf7871dcso21611445ad.1
+        for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:52:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695405129; x=1696009929; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1695405133; x=1696009933; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=cpqiqZm2BGAxLAQ6OdHDPuq752RxFysRxRW91bm8OjQ=;
-        b=DPx9UYnVDmAgv087WLH2OS4ffv1QZPJ26HCnjx7aLlOqShPOIqKp/u+i40F6pJjiFz
-         PP3I9l907MsAiOKsC0GZGDToJFT+lDJCAD5C2KNTeDStcmpiX1Uxm43rHpr5MaHAskUP
-         iIHd9E7rr7m5+zWJmKZQN1dM4wqgCj9EYZIlg=
+        bh=P4lFdFSF/WMtJZ1n0IFqHz6mtLvevkit742tpw5OZis=;
+        b=TUltBHeCRYJUzVo8fVnGboc37KWD2XGgCL6pMasy80W4bhqo4tBxLiHWPwkomfGOnn
+         p2S3UeiOUOaoK14y2ATMxh1h/eRsSjtcpz4zOEGZTi58msCxUxAQ38qVJB19e7bHofgx
+         HKvV/9RB7HLpB+ilyMejoIoCHrdxcIllBq1ak=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695405129; x=1696009929;
+        d=1e100.net; s=20230601; t=1695405133; x=1696009933;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=cpqiqZm2BGAxLAQ6OdHDPuq752RxFysRxRW91bm8OjQ=;
-        b=qfYDYo7VBHaVwU67i0LXlvs8Sr1/3Omo/wRLG55CFsCCBmlpj1HX3r/bQ/DjP6Q2br
-         hHXbSAhBkFiVfJYUOOCxJ6L4K5+dN/PwEuG+oMK8Vr0yV8dr6ifpKZnP0gjiqGVQTbRZ
-         vNFrjceH9+npCQur4y4EFsZmuhNtkQJSsvx2nc31wQoABSLZGIgNBGN6138qHguAxXXR
-         /WiWiQaKVIQlltT7pc3jTj6W4gTXtkEEzVAWa3t56HQ9EDC2ik/zyh/O37ZRfk+gTtWT
-         Fn9TlRXQpmak6YcO/czAgJIHOnkw8aXPDYzmBPF3VCtD5gqwDDQaPiTrEI0VZpDXofne
-         0FdQ==
-X-Gm-Message-State: AOJu0YwqPjGXZVSmcdYMX07Xfn9O2vnZvcHpjotrv+8iGUVe1BzKyF/Q
-	1VI/SeihZVRhJk9CnxF+wZOD3A==
-X-Google-Smtp-Source: AGHT+IGxfNPicAEJhdDWx4Ql68n4egqT6i6RZ0S8ScwK1faDEmQciRT0Gd57r8K+JlrUvwVe+I6JqQ==
-X-Received: by 2002:a17:90a:608f:b0:274:729a:bcd9 with SMTP id z15-20020a17090a608f00b00274729abcd9mr366502pji.43.1695405129127;
-        Fri, 22 Sep 2023 10:52:09 -0700 (PDT)
+        bh=P4lFdFSF/WMtJZ1n0IFqHz6mtLvevkit742tpw5OZis=;
+        b=qspZOVLy1/pk83h2lPJySD4/9Lvkk7IPUoMj5AOVtFL3mvlBDocyEw97byMEFNIf/U
+         IjMw65ZQJxbse0yUwvUZ02u+/ZN46Z/EdNME7tyFs5KUAl4MWn6zzEs0+6DMdhk00vAX
+         x1oKlQw05SIsfmZTTJ439xyysds+usVeV0/71Dhi1z8xReH4+qH1W9ev3Ltn1wRV2gcg
+         wNC19/vRLwylCa0nkjrqJTPttDiHSwTISLP1joYHd8bkSr3PZenBsdNEeiRtTHUEkV6L
+         sHCZB84mR5RE8P5yhZUGdgi3c/V6PVCDFqTucIQZ74K+Awi4IWbECxiZAbLV8C/80z9U
+         KHUg==
+X-Gm-Message-State: AOJu0YyI4P0l3IHQ88ViDxHUBhujJMpX12i6pV2vFwHkzvk2pa70b4Ck
+	m7w4ib7RawVguVQaJ1i212DYxQ==
+X-Google-Smtp-Source: AGHT+IFNUyiAriBD2um7pITTD+eP5MvtFjnaKTM4jvzlaWc7m2Pz8Xlfs5hzadPTiz+e5UX0XZawsg==
+X-Received: by 2002:a17:902:a407:b0:1c0:aa07:1792 with SMTP id p7-20020a170902a40700b001c0aa071792mr169699plq.36.1695405132793;
+        Fri, 22 Sep 2023 10:52:12 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id ne10-20020a17090b374a00b00277246e857esm8872pjb.23.2023.09.22.10.52.08
+        by smtp.gmail.com with ESMTPSA id w12-20020a170902e88c00b001c5b8087fe5sm3784878plg.94.2023.09.22.10.52.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Sep 2023 10:52:08 -0700 (PDT)
+        Fri, 22 Sep 2023 10:52:12 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
-To: Support Opensource <support.opensource@diasemi.com>
+To: Damien Le Moal <dlemoal@kernel.org>
 Cc: Kees Cook <keescook@chromium.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
+	linux-ide@vger.kernel.org,
 	Nathan Chancellor <nathan@kernel.org>,
 	Nick Desaulniers <ndesaulniers@google.com>,
 	Tom Rix <trix@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	llvm@lists.linux.dev,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] regulator: da9063: Annotate struct da9063_regulators with __counted_by
-Date: Fri, 22 Sep 2023 10:52:07 -0700
-Message-Id: <20230922175207.work.576-kees@kernel.org>
+Subject: [PATCH] libata: Annotate struct ata_cpr_log with __counted_by
+Date: Fri, 22 Sep 2023 10:52:11 -0700
+Message-Id: <20230922175210.work.239-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -58,26 +57,26 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1320; i=keescook@chromium.org;
- h=from:subject:message-id; bh=ZdGIk5VtLtTn1AcHf5ktUG4eqSdrMBwaMfBOFKHGDSk=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlDdRHsC8woGcucLGBBK/2VeJ7ydLTnSW6b+X8+
- p9ed/qBYhOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQ3URwAKCRCJcvTf3G3A
- Jn0UEACoNbrcfq2k9xjIrqekuseq4tGHpvnrzKgvzV7tiw61SxQF7JunIspuLs34jo63kYlHjez
- 1maQE9Str8/eS26qLtM9+nfNH6FOgg7Qj150jrfYP87hwcjl43SORasxhYVZXPuS+KOcuUzgfEk
- BVt3U8+FkMOUUFCVi45OGumu/OwdfCwbbgb3CsAgqqjvWSMSpOu7tYzU3EhgRqbShtFEDI6mm/v
- hWvfASughriswZRRdh0lC9e577cdfeF5JKFdG3L+gXUeZSPiM81UCPkeGUrzkmlOUOpyb8+hLsr
- JP0ed3mZMjQgKXbKIwfyakVvTx0q4vTdF7B5v2p4I1j9LDriQm6Lp3v9XQ9+coKktG/ddH2KZ8J
- YAo5je8kcvHcsk7WZYj9u+WgoIoZJAXMKE/gsjuiYFJuSRfcxOnKIbgCnCrlQPw2SzI9/j1Vvg0
- 4eKpA4lwuCNH+bJSIEvBI5+jvJT6FlaAgKqPGyQzEcln1to1DFWoCfm2I1AjGMmNdyOrLha2OGQ
- kcov3mwlkJR8+q6XW3dwBE0JuRcEAvWpzBV8IH3m179Z3qQO3tpypI5E4KseKxmjYPHBRWKJOTK
- 40hQpD9foa4kSVvbWRIJCX7+4fQBODbBI5GX0WvmZEQxrmfxA12ST36l0nUPbBi5n56UrE8tiiP
- 7ewlZXF sf7w5Cfg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1046; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=ei96zfUMfrVFB3I3JdJNLz4izHCeTaYCT55cR6z67TQ=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlDdRLFoAwT1mCQLgtm1SMCJS/1dZx+seXgkUyx
+ yYvrZTRLmuJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQ3USwAKCRCJcvTf3G3A
+ Jm/NEACCMtnhoEgknOC6Ec69yaNMsjXyzdjGfPY/uDjWB8+n6l4ZY/abY54yTq6xlFNSbERWzy8
+ tTgTWRYZDHWLWFGja0Ov7FyVjLOC4LQcdhbsOu31k8bck/BANRCs2UHtkK5AVLxBnVqZ1zDWQNa
+ W2CdnFimXRaOo8wIg4eyi2gKj4pA95HuBP8w4WIzCkuucorP7rfyu5lPvE1/SmwfIf6j89Q2W82
+ suLkFQycstU6zebJDhPSs+V0gswuVmna0ifYiKJ+CnBVqQE4Vct/HJKGFxycica7769JXfk3DCX
+ /c/MwvwlYinM8lTmzRUjbZVCfPx/mMO4MmSmmIUpl5+BELtQqZ+2TaP8tbJ8gmbLoy4uqx44huH
+ +ks/vzrsMA2RdTm4+mZ+qekAIBc7wlp8EG+heSZ7BqKhgulEnhWg0wuKGID2fo5MlQw8+Ax4Vu7
+ uxlfbml1ExdKOuuFoD5Iwi8jbQEJYM8fpdArxCmQPCa8MMJ3J9HuCmmX6dtQqQQMS4J9kvDaiTx
+ VQVH4SdBkWJTgt96MILMcCvQNVZLXqimqbWvXGQQ1C7QX+CtwPZiOSI/wteKNiWnSUwc2iMLKFB
+ p45aN0buN27a4uTP2QaKsutqZT1vM/vbj7jSDTlcmLITJjEBl1uMh8SVnPLEYHnfOJvkWs4kjiZ
+ 0d4Giey 7//WndUQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.6
+	autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
@@ -87,31 +86,30 @@ their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 functions).
 
-As found with Coccinelle[1], add __counted_by for struct da9063_regulators.
+As found with Coccinelle[1], add __counted_by for struct ata_cpr_log.
 
 [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 
-Cc: Support Opensource <support.opensource@diasemi.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
+Cc: Damien Le Moal <dlemoal@kernel.org>
+Cc: linux-ide@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/regulator/da9063-regulator.c | 2 +-
+ include/linux/libata.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/da9063-regulator.c b/drivers/regulator/da9063-regulator.c
-index a0621665a6d2..82bf321ae06f 100644
---- a/drivers/regulator/da9063-regulator.c
-+++ b/drivers/regulator/da9063-regulator.c
-@@ -158,7 +158,7 @@ struct da9063_regulator {
- struct da9063_regulators {
- 	unsigned int				n_regulators;
- 	/* Array size to be defined during init. Keep at end. */
--	struct da9063_regulator			regulator[];
-+	struct da9063_regulator			regulator[] __counted_by(n_regulators);
+diff --git a/include/linux/libata.h b/include/linux/libata.h
+index 3c17a5053f00..f91e8e7f1c00 100644
+--- a/include/linux/libata.h
++++ b/include/linux/libata.h
+@@ -656,7 +656,7 @@ struct ata_cpr {
+ 
+ struct ata_cpr_log {
+ 	u8			nr_cpr;
+-	struct ata_cpr		cpr[];
++	struct ata_cpr		cpr[] __counted_by(nr_cpr);
  };
  
- /* BUCK modes for DA9063 */
+ struct ata_device {
 -- 
 2.34.1
 
