@@ -1,56 +1,58 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D476941E33
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 17:50:07 +0000 (UTC)
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90363CC6
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:50:02 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-690bccb0d8aso2040307b3a.0
-        for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:50:02 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D68511E502
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 17:50:15 +0000 (UTC)
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4A0D19E
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:50:08 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1c5bbb205e3so23358105ad.0
+        for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:50:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695405002; x=1696009802; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1695405008; x=1696009808; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=r/Zplt7bJOl4CFlcfp3YYRAe0azxom+WSOFTcPCPX8Y=;
-        b=Nst6s4GP7aybxtmVUD6pRmv7OLP8Tj6b7hQQCzttFBY2994lGhQqeWuszB+y7Wh9tE
-         cfQJaceAhAJp853l/BhwS9t6jkb/39QW5ufi4BzG+sh5l1s0ffk5dUWqml1VB8xNsoul
-         grG9Da/EFWX5H9/bFXCrfwCQQ2EBtVfxYk2Uc=
+        bh=KgYTKXR/I1FPvObxorvJSFTW8JIzpStmNm7nH5Non2I=;
+        b=VOonxcK75+nzXNe8OkKAoH3Qwlb23335pR/QCmMdP7cCQer2LB4e/E2t+ixUXlWneL
+         ragX7EEMg6g4gXJABvVYGUM1NRUplb7/J3vEFXYl7CBzrOAWp8BEF8Yq+kZU6IRU/I7/
+         1rDhzoXSAJMdv3UAIn/Bx5EBWr0g1xJ59fyOk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695405002; x=1696009802;
+        d=1e100.net; s=20230601; t=1695405008; x=1696009808;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=r/Zplt7bJOl4CFlcfp3YYRAe0azxom+WSOFTcPCPX8Y=;
-        b=oUdebsjK7451yb5O1EtKcHxhz4oYqfFh+mSnLvVpK3/s5y8vOnsmI4ozhPrs2eqf8y
-         kjknjOSoheZTYdbMvyUyiM/XKcu7bcoh8FdknCFmEhvFBhNHRgDvqdGbYsSrb/6501ZX
-         RSVk+/6PNai6yQi7b7v7tAZjvNh/UErJJ8c3iDxoGwjclHtCaIznqtBMCKSaAZW/PlUv
-         GQKGnoYOgBbaWLnUogAfGhbjiLhaqN0KZBvsW3OVLjSlyJYDUOrjSvWsBUNr4BcEddsB
-         9C2lGtvS+ZcABRUjUlsZ2mWT/7Cn7hrco8ZvdLYNwDjsaPpWqTNDGMJPs1X4jwD+9K7z
-         mUug==
-X-Gm-Message-State: AOJu0YxaPxm5tueZkj/MsbsT6sOPJ8NZRG7acTBlk4fhgFTPHW5rFitG
-	fbF2f8KZ2lPLaN9k7NwxuDSMZw==
-X-Google-Smtp-Source: AGHT+IGRer91bTYN2Rt+KzEEMh2s2tn6KVHqAwMKSj3SAFOo2KuajUauyZQXDFrsQbJ3tkXF9FmX/Q==
-X-Received: by 2002:a05:6a20:9383:b0:149:44d9:bbb0 with SMTP id x3-20020a056a20938300b0014944d9bbb0mr244163pzh.43.1695405001898;
-        Fri, 22 Sep 2023 10:50:01 -0700 (PDT)
+        bh=KgYTKXR/I1FPvObxorvJSFTW8JIzpStmNm7nH5Non2I=;
+        b=brJFygVGYACctN1csMPy9l2QDdyQn+b+A7KJ/2gPfKsYpMEzYhnZs9nyT6GNTmGYvV
+         zi/d4lqYkk5hyPPfEmngYTInSC/RApyohoiMYCc5Tqz/Pi98tmjQ4wObqTcC5RfddZKf
+         ojxB5ilJwFXNnwt3sM5ZRD2y2SJL8d2sNQhV3uKrQ43hol82bwVi9qW/rL/D09MXo13F
+         dlPOdMOvoepYcyGP2Hnh5JXj/8TrGrx+Ff07q3hOKJaGCxv0prJmUfI0KnrXhCRRMilT
+         TTDnZJctZRcnAC6TJzsW4mQwboBcNpuvutoG5FI11S5uVHLov/rGjlaXA6CVrkJOTuGG
+         qJYg==
+X-Gm-Message-State: AOJu0YwiLd9MBVTTXnnaHSycO4CJXXxnKkBdVG6BEUKZQ2yg2YLdcmEy
+	r5A/wSQxiECcKp53qdS/epWN6A==
+X-Google-Smtp-Source: AGHT+IFoNtsi25M+QrWUhiPSf6zW6D/xwoc6OJ3HOy2c3JyRBK7yqttvE9WeRwOY/cIOvf6x0iTR+Q==
+X-Received: by 2002:a17:902:f551:b0:1c3:3b5c:1fbf with SMTP id h17-20020a170902f55100b001c33b5c1fbfmr216816plf.10.1695405008186;
+        Fri, 22 Sep 2023 10:50:08 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id e12-20020a63db0c000000b00553dcfc2179sm3420871pgg.52.2023.09.22.10.50.01
+        by smtp.gmail.com with ESMTPSA id p7-20020a170902e74700b001bf6ea340b3sm3777501plf.116.2023.09.22.10.50.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Sep 2023 10:50:01 -0700 (PDT)
+        Fri, 22 Sep 2023 10:50:07 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Linus Walleij <linus.walleij@linaro.org>
 Cc: Kees Cook <keescook@chromium.org>,
-	Peter Rosin <peda@axentia.se>,
-	linux-i2c@vger.kernel.org,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
 	Nathan Chancellor <nathan@kernel.org>,
 	Nick Desaulniers <ndesaulniers@google.com>,
 	Tom Rix <trix@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	llvm@lists.linux.dev,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] i2c: mux: demux-pinctrl: Annotate struct i2c_demux_pinctrl_priv with __counted_by
-Date: Fri, 22 Sep 2023 10:49:59 -0700
-Message-Id: <20230922174959.work.093-kees@kernel.org>
+Subject: [PATCH] pinctrl: uniphier: Annotate struct uniphier_pinctrl_reg_region with __counted_by
+Date: Fri, 22 Sep 2023 10:50:06 -0700
+Message-Id: <20230922175006.work.421-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -58,26 +60,26 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2071; i=keescook@chromium.org;
- h=from:subject:message-id; bh=4Rvl/5wL+K6ZOeH1ROPGt2vMng9UfD2mTlgwhwq1jQY=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlDdPHYWMdyHq0jxtRP9ZmEsFazTpzFSBpF1GF4
- 5CfsbLb84qJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQ3TxwAKCRCJcvTf3G3A
- Jrn0D/4ugY7BUA37RdDIydA7/mOWNmkmEKNS3VHSQIjnl9AmK7Nu6+gjsJBhg34oojB97r5nuZq
- 27lhAKwwHmKEUrGCfAmRhXJLH4CDVxvZqXwd+xqrqNjpeG3yUAeoxso+/rgduvaq1YNA7WBHsc2
- IO352NHTSy+oDzHW5/KH7d3wL7NuSKO0DBZxakE4e4DiloSvDN51A7iOOg5EVSRqc0526QSZm0B
- s9FFKEqzkb9apkcltRxtfBR98w+1GMf6SUMivowvhdNdMGq6vSGxSBxPC65bfF99bKPgwY4F+t+
- 1xptfzmEgCPRpCINY9ZNM3KgOkJW7H44axytK5qBWLZfi8xpxSP+WjQHmYunF/kCXmCLMQ16KHF
- GrxMceQX5DFhczV0ozC3jvTx2xZx0Y5n9ERFS1iGE2a1ouJ5enOXpb8gqGSqGl3XW38Q7D2uBf7
- cYNtly9HT5VX5NvqVkSVN6gV5+JdhROiC1Gyr2uRrLR3gnu6jDtM77OKbL1FAKBp+uu6KbvDgAd
- 8jv+bUxpkifNcJ9mpuDxyYS8L2TRXL8ak+wxUGXHwRcC3mHWFBDNuy6J1qdfw7ScjxtDyjrtI1v
- 3aj5010thsXGUIoUlN3u7UXb3zPa2Nxr2V3kUaEV4McZJd5mod4HSafaLrSR33EH3WR/HikPJ3r
- Vek09K+ /QRhY4pw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1374; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=Tm7WSbhCUuk32XvIW7v3CIW2EM0z50wK155ChWrac9c=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlDdPOjizzHR2Fjm5ECZPVLRxlOXXgda6lwE7va
+ Ga/RNMhW1yJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQ3TzgAKCRCJcvTf3G3A
+ JhnID/9BsoGqvMvrhL7fUCSef2KOrN+0LY8Y9Gh+WefjyMcP4C22g4sclGpsrxAQkqk8krUt+5w
+ c7zIvVimPqMsIxiBaJWr1OqtIB0pDqA7Jb9lW7lh9N68utQ2cB2YXUYQmvUM4N6MgXplPdH42V8
+ y1MjcClXYSpmWA19UsRuXCGUG9dxZ4OdFC0yxoUW6D5nN3u4hL+hsWlwH50C4TBF0TEt2WWkNJ3
+ rBbr/WxM67dRdxxurhQZjdL1O1fFBezTz2PbpZJTg4BL1pRSwu/3zexiLxHjIi9mAugGtkzBWSb
+ ueMncH+Gb06R2+p3vmMrWonH4OPujnK4xFzBcOfrfn4dEUF9UZBjHM7NE/I/KRR2VcYvr7n+LpB
+ YZJDrvy+6inR3Am6Ib+dY8Vwo//eb/uPXD0KXtGAwA0H3098tSkdl3eDQxDR3/g+Ih66IWvwkrP
+ GqJRkE8sF3Nxzk9eBkl3C2myQjSsEuodvl45xOyqOUPpqF5sZNeJfu9dSMTgV7izNogHL8n2OgE
+ JLb5a0Akkl9jAqBRGsKQPxNFYEu1Pi+bMfCc0fiWj7xTMCrMPFQMrlOb+tH9RaYnX4eHZC3gfdj
+ O/tYjcDU6tm2Ak81vIxZ9R+zc/Y45CD0xr09bAu8gjOGQfLMYC5IYhCqGT3fzqOCd4wI4BFWpGn
+ nW5lHw/ 91efgg9g==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.6
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
@@ -87,51 +89,33 @@ their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 functions).
 
-As found with Coccinelle[1], add __counted_by for struct i2c_demux_pinctrl_priv.
-Additionally, since the element count member must be set before accessing
-the annotated flexible array member, move its initialization earlier.
+As found with Coccinelle[1], add __counted_by for struct uniphier_pinctrl_reg_region.
 
 [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: Peter Rosin <peda@axentia.se>
-Cc: linux-i2c@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/i2c/muxes/i2c-demux-pinctrl.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/pinctrl/uniphier/pinctrl-uniphier-core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/muxes/i2c-demux-pinctrl.c b/drivers/i2c/muxes/i2c-demux-pinctrl.c
-index a3a122fae71e..5e15d8777229 100644
---- a/drivers/i2c/muxes/i2c-demux-pinctrl.c
-+++ b/drivers/i2c/muxes/i2c-demux-pinctrl.c
-@@ -32,7 +32,7 @@ struct i2c_demux_pinctrl_priv {
- 	const char *bus_name;
- 	struct i2c_adapter cur_adap;
- 	struct i2c_algorithm algo;
--	struct i2c_demux_pinctrl_chan chan[];
-+	struct i2c_demux_pinctrl_chan chan[] __counted_by(num_chan);
+diff --git a/drivers/pinctrl/uniphier/pinctrl-uniphier-core.c b/drivers/pinctrl/uniphier/pinctrl-uniphier-core.c
+index 18d3a4f69e63..fbd0fcdb42c8 100644
+--- a/drivers/pinctrl/uniphier/pinctrl-uniphier-core.c
++++ b/drivers/pinctrl/uniphier/pinctrl-uniphier-core.c
+@@ -31,7 +31,7 @@ struct uniphier_pinctrl_reg_region {
+ 	struct list_head node;
+ 	unsigned int base;
+ 	unsigned int nregs;
+-	u32 vals[];
++	u32 vals[] __counted_by(nregs);
  };
  
- static int i2c_demux_master_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[], int num)
-@@ -226,6 +226,8 @@ static int i2c_demux_pinctrl_probe(struct platform_device *pdev)
- 	if (!priv || !props)
- 		return -ENOMEM;
- 
-+	priv->num_chan = num_chan;
-+
- 	err = of_property_read_string(np, "i2c-bus-name", &priv->bus_name);
- 	if (err)
- 		return err;
-@@ -248,8 +250,6 @@ static int i2c_demux_pinctrl_probe(struct platform_device *pdev)
- 		of_changeset_init(&priv->chan[i].chgset);
- 		of_changeset_update_property(&priv->chan[i].chgset, adap_np, &props[i]);
- 	}
--
--	priv->num_chan = num_chan;
- 	priv->dev = &pdev->dev;
- 
- 	platform_set_drvdata(pdev, priv);
+ struct uniphier_pinctrl_priv {
 -- 
 2.34.1
 
