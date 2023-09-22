@@ -1,68 +1,57 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 536D143AB8
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 17:52:15 +0000 (UTC)
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51DFF1FE4
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:51:54 -0700 (PDT)
-Received: by mail-pj1-x102e.google.com with SMTP id 98e67ed59e1d1-274c05edb69so1705932a91.2
-        for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:51:54 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF1CE44460
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 17:52:18 +0000 (UTC)
+Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10F6ACF8
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:51:58 -0700 (PDT)
+Received: by mail-pf1-x435.google.com with SMTP id d2e1a72fcca58-690fa0eea3cso2266184b3a.0
+        for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:51:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695405113; x=1696009913; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1695405117; x=1696009917; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZILszX4MWtz7bh2TMVWfqmp53JcjPScOVS5QC17vqfk=;
-        b=bAyFRd++MAhZa6YTQQSr2m+eyFy2ovYko+HtobZCZuNCZjliiOVQ/NWhQReL5gf1oa
-         ZAkD7N2/jup39syzqE9P6nb/aXe8KBo7EuNXIgRZ9ECwfw2/4opfKF+WTghcH1gXK5or
-         0T2fAJD3EJDLLUx0CN1qAAof6dKQ0TEzklWZM=
+        bh=LMP6Eo/vaMIazZNY5B2EIxzC5JUt58mRyjJ2WHITWvc=;
+        b=EXVamoRZkEedTX2JhbRhHnxZSe33ND2+9sr7vmkR1nGNQOrqxgczFuEN27qT3RV9n+
+         m1QtmBForVG0oajKGziFwhY7vAGLcEj6V4VY0DE0FwbDpAVQEGlr5Q97EHf9oarW7uFl
+         Ymp7T6gkdlHZ150KOvoltstzse+coUk5b5t8o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695405113; x=1696009913;
+        d=1e100.net; s=20230601; t=1695405117; x=1696009917;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ZILszX4MWtz7bh2TMVWfqmp53JcjPScOVS5QC17vqfk=;
-        b=OQhWldNaLM6sj6qXR5t94UoYo/YELU4gEnMWbaDTMsaT8vdCGh0Uz5tPR0VAcAO84A
-         YetkGaxhuRlig3LpPEyDa0adhwEB0Kf94YLgH0EI2Ab14PU0uRb4niC/Vhjp+JXBsS/e
-         Kb8GlTWHGZ3skaytckkngTVVei383zDJlrciasnxiY9S+FpGtzn90ZgSDsa+3TkWgkCv
-         4EypKRC2TPO1m13zhFqGLBYSCFKabhAvna/zIOC2UGPP6QjEDQpvcr5TTSiJUN4bzG5Q
-         xrzFcZi0yOMGDrRjoYtcbUbB7ZrYHAnLAqfQZGnedo87QyN5t6tdxNrmSipjdhDS+ucI
-         cA5w==
-X-Gm-Message-State: AOJu0YybJoRDhsswUzEyi6jhlBE1JK9Hn3C8+wYTeSc3rVmf8bFqLpRv
-	9GXZuKtBnD1dtbu6tjckrE/7LYGo4gtqTk3gCic=
-X-Google-Smtp-Source: AGHT+IGJyRN4d5EfONgEzWohOYEXpV8ZyHwIQaIwZgUrXnlaWap5XtP+1N7abHIvI+8NFIgf78FE5w==
-X-Received: by 2002:a17:90a:1f07:b0:277:183e:185a with SMTP id u7-20020a17090a1f0700b00277183e185amr407052pja.3.1695405113456;
-        Fri, 22 Sep 2023 10:51:53 -0700 (PDT)
+        bh=LMP6Eo/vaMIazZNY5B2EIxzC5JUt58mRyjJ2WHITWvc=;
+        b=trCoI0qGlh86izebw4uOenTTmP0zEGjaq0vXzZH95WSz+xdyB8RNebg39ErNUVXNfn
+         aGvtNPedkq0v8MgyytVbjHajjWJt/JWU8N9TbrhDrTqYDdmfysqMEC+U2MKXPs/IoRRp
+         OQIBpOzpT52e5TYykr2mOC5ZdvlQC2t8TT3Tvu0qJs3snWXgnNpDExueM1LPRrw/pnB3
+         bhF+FXOd44TGTXzie5zD9TXuKFyFsiZaAGsdcEq7B+v5TPXcS71cO6a6cPs7SY6PSy0f
+         TLKHQBMpzbteApQZceu2RbmkjMk0Rk9LpF47SFrRP7qEfr4/ZpTYZNOQc0Vs1qQ0t6hX
+         APDQ==
+X-Gm-Message-State: AOJu0YwRF2Pj5r4ihWTOFlExLgx2LREIzZGU2/Qq7bRSaQFCuowlGGOC
+	vjsYy6SFEpMbu3+TWxpgCQAzDw==
+X-Google-Smtp-Source: AGHT+IFPV6bCMgdrADQ4gtFCdwV9MgXVLuYaes6w0ZZJOH08TXJJuxiCpV6lhgi5HCH4XD7ka4TMrw==
+X-Received: by 2002:a05:6a21:a586:b0:159:fe1d:2f09 with SMTP id gd6-20020a056a21a58600b00159fe1d2f09mr307564pzc.6.1695405117494;
+        Fri, 22 Sep 2023 10:51:57 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id mv5-20020a17090b198500b0027722832498sm76944pjb.52.2023.09.22.10.51.52
+        by smtp.gmail.com with ESMTPSA id e5-20020a62ee05000000b0069069ca9814sm3463168pfi.219.2023.09.22.10.51.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Sep 2023 10:51:53 -0700 (PDT)
+        Fri, 22 Sep 2023 10:51:57 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
-To: Steve Wahl <steve.wahl@hpe.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: Kees Cook <keescook@chromium.org>,
-	Mike Travis <mike.travis@hpe.com>,
-	Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-	Russ Anderson <russ.anderson@hpe.com>,
-	Darren Hart <dvhart@infradead.org>,
-	Andy Shevchenko <andy@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	platform-driver-x86@vger.kernel.org,
-	Justin Ernst <justin.ernst@hpe.com>,
-	Kyle Meyer <kyle.meyer@hpe.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-i2c@vger.kernel.org,
 	Nathan Chancellor <nathan@kernel.org>,
 	Nick Desaulniers <ndesaulniers@google.com>,
 	Tom Rix <trix@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	llvm@lists.linux.dev,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] x86/platform/uv: Annotate struct uv_rtc_timer_head with __counted_by
-Date: Fri, 22 Sep 2023 10:51:51 -0700
-Message-Id: <20230922175151.work.118-kees@kernel.org>
+Subject: [PATCH] eeprom: at24: Annotate struct at24_data with __counted_by
+Date: Fri, 22 Sep 2023 10:51:55 -0700
+Message-Id: <20230922175155.work.872-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -70,26 +59,26 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1571; i=keescook@chromium.org;
- h=from:subject:message-id; bh=k+Nu3NX5QQ2aJpVbKl87jzPBT9AwnncU9NuJ+rJwak4=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlDdQ3/IWfXym/BBCdmz9yiUCx49Gifs9/mFbU1
- fQjtBKVTPaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQ3UNwAKCRCJcvTf3G3A
- JqAKEACyJ4XXD0xFdoCxlx2T4B9GXHlkr0u0aIlUPFBN3pQD+P3BF5IzIJwgRcoVsqotPdlY/Rb
- wX8bNqO4HGy2JRIm67/oRWnZHaIhamlnh9HrkPLIWDE9xJOWQsvc6s/C2bSFPfQSlumNLC6yl9q
- 9yvvYdOuBn9QAX1xEWsHI+uIQ37ZUnFxvQTQ+dAnhXJRTm9T4CDNYs4Ka6Db57dB7DOOLHPiWM9
- 8/L84K0X+266nBtXX6Ux21Utcfzx7XbCCUwhJ6SypTPW/gqUiQdvyIw15WnhJoTYMwauzp+W/UT
- SHLxMwOrt8utH7z9acQen3/81bEmaxiofVy6F2ufC4O44RIwFEl7v/RsLxsfn2KSs290t7QaHBv
- WSniGI3Bl7uuhyCpRjCSYs2gppdfZKvcNu5Q0mGxEKay32lJKCjxnjr1tCV0oOBgFdPJ4RzSxqv
- l4Ssrx1TKwTYA8PavonNHCbyYrCqEeuM0wrCUbTW4vGPmRqEJDEWHln9va6TYtNMOstCSaOrIGC
- M+fyocdkfeTtnGViO++fqOgij3SKB4vu73/iBMRv7Kuzho9/d8vSqvIvaYud377MDl5h98k0tHh
- AmHt66ztgM3wW/s9CwFjN3ChnkNnds29tKewAdepJZO2OPp8hTVnD2V2l5d5YBvLTxOWsa06jET
- 52pSu6h sWAZ6zbQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1169; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=DIpsB/ou/Bn4dXxGISBN9wBhUC+HRqEPU3gJ+srAuCA=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlDdQ77Iev/RbO+fPKpsBUGVaL7crbXoZB/KWdF
+ Xqifi3aarSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQ3UOwAKCRCJcvTf3G3A
+ Juo/EACZ6Od5Kn99qc5leb8EtaCoZDT1wKVq+FCHfwf1oDM9tMGvk0gt7nu+QQmrcgu/+nCNpy5
+ pGVC8+lAd7xQZlw+YzjGV/ogHKK/cKbtCpl2xoPrs4RUzNEqCbNm3VIjRII1D7Wr9wg5A+mg//0
+ 10ZhtU7LlSGXqp9TM97DojKy2hS7JFzb/WRCX6Ns6a/XahbuncnM9zNLz5fjqkg0d76a88Ys6Sj
+ reiGEku7RQWZQSp0sBw8CGdD/gJOcEaS5FXe4dJ+1pXWmH+0q0sfXCZWBBxItKOU8wZpNxlRVtB
+ HLlbLc1cz3FMEielQXectGA4SXvdNa4WObULLyPwpdiH8m18LkVNGjuGSGgsgJoWOdhy0BNs7Yy
+ Ptb9Xg1aLq6fzqnS6Be7NqOFofukMU6arKsgvWxJZOmL4atQ8ja//EHhssObOi9A3aUBXbihMrp
+ czGAc27Qc37LZP7iXq76h462Rv6uRlhIdUUusZUFRF0ooHmsnxXRcVUI8WFRAAsN3xEVxyAVFA0
+ OfXe9C6EV2sAmkapNTAc8VU7lzH2iqwTAklmAsqle3aYC7GbJZ5xcpixKadpgxbwlV4my4kJw5f
+ blbAi1WprMuKKNiUqZ3bg0MlZ8Yb5NBJxLJqwSwL3kvhUVTUSOrCXvmv8zDkJqxcgUQigoBq/U7
+ 8ekvNsl G0KklGmw==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.6
+	autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
@@ -99,38 +88,29 @@ their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 functions).
 
-As found with Coccinelle[1], add __counted_by for struct uv_rtc_timer_head.
+As found with Coccinelle[1], add __counted_by for struct at24_data.
 
 [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 
-Cc: Steve Wahl <steve.wahl@hpe.com>
-Cc: Mike Travis <mike.travis@hpe.com>
-Cc: Dimitri Sivanich <dimitri.sivanich@hpe.com>
-Cc: Russ Anderson <russ.anderson@hpe.com>
-Cc: Darren Hart <dvhart@infradead.org>
-Cc: Andy Shevchenko <andy@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: x86@kernel.org
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: platform-driver-x86@vger.kernel.org
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-i2c@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- arch/x86/platform/uv/uv_time.c | 2 +-
+ drivers/misc/eeprom/at24.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/platform/uv/uv_time.c b/arch/x86/platform/uv/uv_time.c
-index 54663f3e00cb..ff5afc8a5a41 100644
---- a/arch/x86/platform/uv/uv_time.c
-+++ b/arch/x86/platform/uv/uv_time.c
-@@ -53,7 +53,7 @@ struct uv_rtc_timer_head {
- 	struct {
- 		int	lcpu;		/* systemwide logical cpu number */
- 		u64	expires;	/* next timer expiration for this cpu */
--	} cpu[];
-+	} cpu[] __counted_by(ncpus);
+diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
+index af83aca452b7..7dfd7fdb423e 100644
+--- a/drivers/misc/eeprom/at24.c
++++ b/drivers/misc/eeprom/at24.c
+@@ -92,7 +92,7 @@ struct at24_data {
+ 	 * them for us.
+ 	 */
+ 	u8 bank_addr_shift;
+-	struct regmap *client_regmaps[];
++	struct regmap *client_regmaps[] __counted_by(num_addresses);
  };
  
  /*
