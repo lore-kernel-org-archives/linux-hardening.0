@@ -1,58 +1,56 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 677654447F
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 17:54:41 +0000 (UTC)
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7DAB35BB
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:54:23 -0700 (PDT)
-Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-68fdd6011f2so2029144b3a.3
-        for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:54:23 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D24FE44499
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 17:54:42 +0000 (UTC)
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34EEB1F18
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:53:54 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id 98e67ed59e1d1-274d3ff35e5so1733944a91.2
+        for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 10:53:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695405262; x=1696010062; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1695405233; x=1696010033; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1ISP2L+rvg6dxZG1wcmYnXloNsZywrTUtixv49IhJ0I=;
-        b=jIWF4/z4UcLuiRz0wCvniJrPmxP3Z9Xk2oBg1jRX5yU4wYwfGGP/1BJZg2TWhJikah
-         5clKmlgZHGFLNRHpFcSj682t3/0f1EFPjRE1yYxe3GMcAk0BgYOGVSupcP/q3lT7fST8
-         er+emuk5vVib37xngsMQ973oBiMxxSXfF65B0=
+        bh=C/sXEbgxXtNKYo/L4/vhLbpgVFK4H06rEANzOjtTwNM=;
+        b=Opo/Lw9Xcz3gvImn+NciJDMentXtHzLqobpFUi/U1ddOICmS1ET8QtHIHvhavSxCM8
+         Cj80HQX0Xr95NCUCmAGPLecK3RX4jzO+3pi+/BVILBDWiG0hZ8DEy9W0doYaQJXDNlsf
+         i9Qiko+CcLGUzdUtspAxxTii54hJ07oiVC0HA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695405262; x=1696010062;
+        d=1e100.net; s=20230601; t=1695405233; x=1696010033;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=1ISP2L+rvg6dxZG1wcmYnXloNsZywrTUtixv49IhJ0I=;
-        b=vlZAzA1E8eg9ivMvSZPMEpPBDTIrrpkOU42ZQlDKGz7/MHKIPjteQOeKyn/8BdnBSE
-         nEKz2WcyoIXJx5DeTZB0MXlhfxVDbXRD9AUwqEaacqQXqrU9Ea4Tj64PXy5EX3GoZxH3
-         hcgETeiWEtOIKlKMSsB+p8GS3mj0ayqrriN7kjV2laR0iRvpr/amiqMGH4ZDjZK657qx
-         kgKvuurQJOfoNGchB1SMb3dtC1fV1krDf9ZgSBVOIotaP9EKp8qTmhFb4cIlO49M3IqQ
-         ZZM/IlSzELLPfozoRD/q2Iy95SNMx+sHOHC8JW03t3JMKNl3QOoDKQtFhqe/hUIQVkg5
-         zOEA==
-X-Gm-Message-State: AOJu0Yzkn0QuBBl4nj5zQQSdJEMNqipDd5vEYYBdDN2UKOZRWWb1UUJp
-	QiQRkmc7qObGwcwX+Dg6PdBopQ==
-X-Google-Smtp-Source: AGHT+IGxW0pO6A2XYuuil33uTylCAIbRaQSzobX5s7nUCpWCckLaGOgJJl/22O16HRisYCP+P0WYhg==
-X-Received: by 2002:a05:6a20:9499:b0:13b:a2c9:922e with SMTP id hs25-20020a056a20949900b0013ba2c9922emr268710pzb.27.1695405262686;
-        Fri, 22 Sep 2023 10:54:22 -0700 (PDT)
+        bh=C/sXEbgxXtNKYo/L4/vhLbpgVFK4H06rEANzOjtTwNM=;
+        b=IXm9zLah+DC9HydePuxIQWiGIVFYKVYimFRjdS8lcI6f1JDOXA7KZROOxZRlgt4xIr
+         4yECwxsKVM3F64w2VnyDS0q4N4n5xSrvWVu+kdJQ6v3iHNWKowa7+pSMXd3Er+t8I2ja
+         Qy1GVr0Z4E+OM80l9IJx8oLaYQAP3bounwH3e6l8vzbcBEJPrQtg3tBLkSs8tstW299k
+         mS1dX6bzFFJKj8Jjop+R20e/6PLjo63L29lqCqj8ilQ57njVhcztZBH/YFMC6V/jpGMJ
+         QlcdvEjPqKNrnF7oNRorYl+F1T04KD55xFn84jCLuYcHumYbq4b9FexGb0QSetHz/78T
+         rt0g==
+X-Gm-Message-State: AOJu0YyeHjXr88xQJ/jkzHoAy3hfI3khk8jPM9btqi6DX4MSa6gM7cge
+	PcBp1aP6kaodJ+7uZb1xnpsN2A==
+X-Google-Smtp-Source: AGHT+IHjmTLQbm2SiN3w8uyT78a+4tZ23kPyNdMBOXmx6iaVEN70LQnN88b589oOJikCMvI5LcWmIw==
+X-Received: by 2002:a17:90b:1e4a:b0:274:5e18:851c with SMTP id pi10-20020a17090b1e4a00b002745e18851cmr438131pjb.4.1695405233436;
+        Fri, 22 Sep 2023 10:53:53 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id c7-20020aa78c07000000b006878cc942f1sm3457800pfd.54.2023.09.22.10.54.22
+        by smtp.gmail.com with ESMTPSA id 15-20020a17090a1a0f00b00263dfe9b972sm5559788pjk.0.2023.09.22.10.53.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Sep 2023 10:54:22 -0700 (PDT)
+        Fri, 22 Sep 2023 10:53:53 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
-To: Jorge Lopez <jorge.lopez2@hp.com>
+To: Jassi Brar <jassisinghbrar@gmail.com>
 Cc: Kees Cook <keescook@chromium.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Mark Gross <markgross@kernel.org>,
+	Michal Simek <michal.simek@amd.com>,
+	linux-arm-kernel@lists.infradead.org,
 	Nathan Chancellor <nathan@kernel.org>,
 	Nick Desaulniers <ndesaulniers@google.com>,
 	Tom Rix <trix@redhat.com>,
-	platform-driver-x86@vger.kernel.org,
-	llvm@lists.linux.dev,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] platform/x86: hp-bioscfg: Annotate struct bios_args with __counted_by
-Date: Fri, 22 Sep 2023 10:54:21 -0700
-Message-Id: <20230922175420.work.701-kees@kernel.org>
+Subject: [PATCH] mailbox: zynqmp: Annotate struct zynqmp_ipi_pdata with __counted_by
+Date: Fri, 22 Sep 2023 10:53:51 -0700
+Message-Id: <20230922175351.work.018-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -60,20 +58,20 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1418; i=keescook@chromium.org;
- h=from:subject:message-id; bh=kt0VlUdlEwKUKwWP1rv6tofv8fjvexz2uhyfkXWj6p8=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlDdTMfB+LYH5eKEwcBoqoFlTtLOyMMpn1kR2Sa
- TizrkR/ooiJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQ3UzAAKCRCJcvTf3G3A
- JsfnD/wN2QM835WwG5VD399xvmpEfqV/waSzTryLMYZxcqIlyuTG4pL75mWspCtqsPuHkcPq/5+
- dS56aaMDY1kiOZILGtGY/o+GWgizQ0X87eI7vpaVFKNq5aVB81SWua/rKAzQ02ogL1ld6i21Bax
- iKS3RQ4mhGVuAyMeSzgYg6LVxU7VHCAX1MzNuZBEbxxYYc9ePrN+y0Hkr39IRDtkwVWcx2PaZr+
- ZPLbM7Gr1c73OWGB0bhxLfHaX1rgfqmB9gXC3lJW/WyMNt2wnbyTplB/202KUySHEVGpzzl7+TK
- 1cMerBWqiNFK3BmK1tZOZh3L/GUu6t+hXEG1zkNP3sFOGOsRItI8w2yDQEocODb2NVCQZr5t3B+
- HELziLz9sxbCa7uWd78WEaYlS+jm4KnMPuXwIOm49XG7eeyCEqDz1zHK07JijFrG3CMQkyWttQ/
- J92lXH7PGL8Jnme0WvdP5OUM1swG3A1kKndnO4G2vXJ464QIOn+OsvQC02MTg4EG2OF2cvXaXuz
- V7+ZvYpLopVQKGVbWWY5H2WfbsVTdPZQHrTdnHLHVkmL6vLAD8wnzqR4fR9rDCWgCGtAzfNnpDD
- MMUbIToTezIl9ipPdd7j5G99rxqHhdMNHOS6KM1DGgOhQzpxGIl2uXlE55Wb3yx3OZcsI/MIXov
- dMn7rbm UmQyK2GQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1269; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=1poq85ba9j+7J1PLFH3/OUdUEKILRF+ZhAzDjq4Mb1A=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlDdSv0B0ZAwn8thcnEoGKGRm6tzJNHNC4p1SKM
+ twNnK6o/LyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZQ3UrwAKCRCJcvTf3G3A
+ JpICD/4s9t+i2GRgZhTVaFg+1WEWAK9XubwciA/mVOtx0WxFwtlB9FKhov7qaG3t9gZ4lzoMrMK
+ 4xct4DPrkm3EJX4D71EADhTvPbCzsPcJVxqrxLdUptg/nCgNrvKVRvigyvw8dJN7CEMKtohXO3p
+ 7+nD+RxwWorUc5zOaJhIUX+OtZN1MgqqXNHH3XlSPRglnMIiCg9uL12FUXGQ9huF9W2+CBdC5/G
+ 2hjhh2JfjT+ZkxCYjfsgakw3gz/B6lNH9B4ESOTQ+JDFCovfy8npuG/lnEPWVl1t3aQDTw+Ggvg
+ Bm2VYWACynNShZlEisvshdeozocThIzZnp5388I/hjsfO3dGJ9NkEg3pYxIvaj3ZXmZZHb5n03c
+ BKxHbmk84rHGRDfnv1JshClFI4fUy+QU4s7tTsjmYwvwvuPat04djCAB27Rmu7eKPVknR5U7Ygm
+ F7Xk8GmbeNyOB8r3/b0z47UjjXri8DcBUSRJ7T5I0bci5BacG0974PRqG302aV0mNoOhysxe2rA
+ vZWNpKUYK81yZ9Tsp6Jo+6YD9HH0bNEwmG81K2w6zbCDokfK2+Bz4UZ0OKcF2YRdqOtvdCWi9gy
+ hbceAJvcoBvTaOPPT8bPQO7sA6TSJxF1xrFLNO+WzUCykLJ1nPq8GXQUBWK44XyhikDJI4Qe+hK
+ FTeA9y1 2E9MSx2A==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -89,36 +87,31 @@ their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 functions).
 
-As found with Coccinelle[1], add __counted_by for struct bios_args.
+As found with Coccinelle[1], add __counted_by for struct zynqmp_ipi_pdata.
 
 [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 
-Cc: Jorge Lopez <jorge.lopez2@hp.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Mark Gross <markgross@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Tom Rix <trix@redhat.com>
-Cc: platform-driver-x86@vger.kernel.org
-Cc: llvm@lists.linux.dev
+Cc: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Michal Simek <michal.simek@amd.com>
+Cc: linux-arm-kernel@lists.infradead.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.c | 2 +-
+ drivers/mailbox/zynqmp-ipi-mailbox.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.c b/drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.c
-index dea54f35b8b5..4da99cb7218d 100644
---- a/drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.c
-+++ b/drivers/platform/x86/hp/hp-bioscfg/biosattr-interface.c
-@@ -19,7 +19,7 @@ struct bios_args {
- 	u32 command;
- 	u32 commandtype;
- 	u32 datasize;
--	u8 data[];
-+	u8 data[] __counted_by(datasize);
+diff --git a/drivers/mailbox/zynqmp-ipi-mailbox.c b/drivers/mailbox/zynqmp-ipi-mailbox.c
+index e4fcac97dbfa..7fa533e80dd9 100644
+--- a/drivers/mailbox/zynqmp-ipi-mailbox.c
++++ b/drivers/mailbox/zynqmp-ipi-mailbox.c
+@@ -108,7 +108,7 @@ struct zynqmp_ipi_pdata {
+ 	unsigned int method;
+ 	u32 local_id;
+ 	int num_mboxes;
+-	struct zynqmp_ipi_mbox ipi_mboxes[];
++	struct zynqmp_ipi_mbox ipi_mboxes[] __counted_by(num_mboxes);
  };
  
- /**
+ static struct device_driver zynqmp_ipi_mbox_driver = {
 -- 
 2.34.1
 
