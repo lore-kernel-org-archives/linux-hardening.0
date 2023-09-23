@@ -1,144 +1,153 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D976E654
-	for <linux-hardening@vger.kernel.org>; Sun, 24 Sep 2023 03:43:11 +0000 (UTC)
-Received: from mail-oo1-xc29.google.com (mail-oo1-xc29.google.com [IPv6:2607:f8b0:4864:20::c29])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB71010D
-	for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 20:43:09 -0700 (PDT)
-Received: by mail-oo1-xc29.google.com with SMTP id 006d021491bc7-57b5f0d658dso2276780eaf.0
-        for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 20:43:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695526989; x=1696131789; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=seBNO35I6t27+aW9cJIbrOKykhwY8CBfF73TPyxAkzU=;
-        b=EDFXaiYkSd1bB8l0T5fa8bmSbpBIrk1zJeZoev6LOoy0s0jSOIXjiJtr+XPk517mCe
-         vW8k3VAizHB85g+A8uuCFlJtOPhHO55Z3Ilsqw46eFFernrVTPXTQ42bEn6sS9HDganI
-         5ZJxuRwCRizbTpOZ/jBfOfHyaA86KqFaUoNYs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695526989; x=1696131789;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=seBNO35I6t27+aW9cJIbrOKykhwY8CBfF73TPyxAkzU=;
-        b=cUIdrCqTlJ2Bm7gaSOuwaH+ijhhXF/Al7W8YKs8uZcxy3pY8XxSya5aQqxiDhODCSH
-         Xmj606j+yo6FXoiqPqaaXoEsaD5lDhIfhTUD4af8b1//Do4Y1LT3qLyZPFsOYJJuDEvl
-         /gq8sMCphYaIgLoeVb81GQA+jfH6s7r6AJBpWRbak+zg0bI7HzplRQk1i/nfdBNdp1Qu
-         xaE6wydM31haawl3oc1euyIxHQXux7YcVDWXQurpCwFJItcKKGb5Is+Wm8aI1Qkus+yj
-         1uwnRxm+11I3mIkLznK6sgFfC2Q248wd/VABqhLmp7qwUI3bF1UBrR5xANFx2i+uKWV8
-         ek4w==
-X-Gm-Message-State: AOJu0Yz1wVEe7feJ8fgSi8n3c3NF7JczTUo6EtAJI/UTL5xp6kx5GUPk
-	Nik8VHMHnzqT3Cx6cy0fJG35IA==
-X-Google-Smtp-Source: AGHT+IE2/HgUIEM6nD5lxm0qSmNTG5hyr9cbCU3gawGphubnH/fGhDM5TcuGczSqA2L3/1x/UlkG6A==
-X-Received: by 2002:a05:6358:41a3:b0:143:9f18:d71a with SMTP id w35-20020a05635841a300b001439f18d71amr3868238rwc.14.1695526989027;
-        Sat, 23 Sep 2023 20:43:09 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id 23-20020a17090a199700b002694fee879csm8008047pji.36.2023.09.23.20.43.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 Sep 2023 20:43:08 -0700 (PDT)
-Date: Sat, 23 Sep 2023 20:43:07 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
-	linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] leds: lp3952: replace deprecated strncpy with strscpy
-Message-ID: <202309232039.979F3B4@keescook>
-References: <20230922-strncpy-drivers-leds-leds-lp3952-c-v1-1-4941d6f60ca4@google.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D44E67F;
+	Sun, 24 Sep 2023 09:41:37 +0000 (UTC)
+Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D31D610C;
+	Sun, 24 Sep 2023 02:41:35 -0700 (PDT)
+Received: from eig-obgw-6003a.ext.cloudfilter.net ([10.0.30.151])
+	by cmsmtp with ESMTP
+	id kGalqlK7LOzKlkLcNqLyVb; Sun, 24 Sep 2023 09:41:35 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id kLcMqwMxA8SgTkLcMqZzIU; Sun, 24 Sep 2023 09:41:34 +0000
+X-Authority-Analysis: v=2.4 cv=VLTOIvDX c=1 sm=1 tr=0 ts=6510044e
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=P7XfKmiOJ4/qXqHZrN7ymg==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=zNV7Rl7Rt7sA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
+ a=J1Y8HTJGAAAA:8 a=1XWaLZrsAAAA:8 a=VwQbUJbxAAAA:8 a=20KFwNOVAAAA:8
+ a=BTeA3XvPAAAA:8 a=cm27Pg_UAAAA:8 a=YSKGN3ub9cUXa_79IdMA:9 a=QEXdDO2ut3YA:10
+ a=y1Q9-5lHfBjTkpIzbSAN:22 a=AjGcO6oz07-iQ99wixmX:22 a=tafbbOV3vt1XuEhzTjGK:22
+ a=xmb-EsYY8bH0VWELuYED:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=odgPbAvrwGH+UmmYpTRJgA4yHGpV4Hdbo+oKj5UQnHY=; b=BF5Tz9di81H3pELwZp3VBCFyHU
+	uUNNQ/zbobZcHG93TJTx9zHwXzwtHMZ/SRSoNTJU8sfSUwW1ewC28NOoLbdJuOmQp4jDLT2vXOOr2
+	zMVcpCPBnKCPwpMbSIEmongWUMJx0gQix4ECiCdNET6ghNU1ie+mXfOjkCfNKYOPfB22FGwB8PST4
+	0pIfU71FcAQ9rz/VOybUQ259V8VbgWGbRNxtBN4Flp6TVbj/F/QN2XydwDU81LG/divmgAEbFwE9T
+	12l/w/YWKdP9+RWpoC9EHvBgNHECd9uX39ojSsUh1JbVuZUYC1vdlt55zJLhDPXPKJdRnQPN9BuJt
+	1o7mXEqw==;
+Received: from [94.239.20.48] (port=41972 helo=[192.168.1.98])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1qjkOE-0006cR-1m;
+	Fri, 22 Sep 2023 12:56:30 -0500
+Message-ID: <ee360342-3f39-73ab-fbc4-22cf3899939a@embeddedor.com>
+Date: Fri, 22 Sep 2023 19:57:26 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230922-strncpy-drivers-leds-leds-lp3952-c-v1-1-4941d6f60ca4@google.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH 13/14] net: tulip: Annotate struct mediatable with
+ __counted_by
+Content-Language: en-US
+To: Kees Cook <keescook@chromium.org>, Jakub Kicinski <kuba@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ Shaokun Zhang <zhangshaokun@hisilicon.com>, netdev@vger.kernel.org,
+ linux-parisc@vger.kernel.org, Jamal Hadi Salim <jhs@mojatatu.com>,
+ David Ahern <dsahern@kernel.org>, Martin KaFai Lau <martin.lau@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Alexei Starovoitov <ast@kernel.org>, Yisen Zhuang <yisen.zhuang@huawei.com>,
+ Salil Mehta <salil.mehta@huawei.com>, Claudiu Manoil
+ <claudiu.manoil@nxp.com>, Vladimir Oltean <vladimir.oltean@nxp.com>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>,
+ Ajay Sharma <sharmaajay@microsoft.com>, Alex Elder <elder@kernel.org>,
+ Pravin B Shelar <pshelar@ovn.org>, Cong Wang <xiyou.wangcong@gmail.com>,
+ Jiri Pirko <jiri@resnulli.us>, Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
+ Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, linux-rdma@vger.kernel.org,
+ dev@openvswitch.org, llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+References: <20230922172449.work.906-kees@kernel.org>
+ <20230922172858.3822653-13-keescook@chromium.org>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20230922172858.3822653-13-keescook@chromium.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 94.239.20.48
+X-Source-L: No
+X-Exim-ID: 1qjkOE-0006cR-1m
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.98]) [94.239.20.48]:41972
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 0
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfE35Xmr3WOAdQqQHc9iZlMfs2PP5g2rDVR0I4yz7O70Q2O0oRpoVKkroOkzWJoV3+FWgUZNA+u7sXrAGtBviRcDzJ6xYc8gRECzbYaz2Qn9mNFVKNdYg
+ hXiAi9PQ+cOpLhSDeaHYa2fZTjwqOcuTB5dM/vvW09ZD2mLVfpcPk8sl2HCktSDPxjWqMCyea33wBgJwnu50wMTP/0qJoyA9vJ3Q0cWTb3JlQ6kdX92LtlsJ
+ kbm9b31I9bQghj/8CqQ1EctQpKbVXLlPwkeOgQD7LZma+HWkz3+JSUBMGGHSl4SjKgQkyUCav9ZCta3PnoZhQg2mRenZpuohmrvjP/7SsIVprGAmlrAfyBGl
+ 1IMWbr4DkYoswcBzDdb5CH+Cw6Ymw4JhcwYghoyKYMfhUGpNjSzDFgSbZ6ESaLzgg+TgVZ3H
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,DATE_IN_FUTURE_06_12,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Fri, Sep 22, 2023 at 03:27:17PM +0000, Justin Stitt wrote:
-> `strncpy` is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
-> 
-> We expect `dest` to be NUL-terminated due to its use with dev_err.
-> 
-> lp3952_get_label()'s  dest argument is priv->leds[i].name:
-> |    acpi_ret = lp3952_get_label(&priv->client->dev, led_name_hdl[i],
-> |                                priv->leds[i].name);
-> ... which is then assigned to:
-> |    priv->leds[i].cdev.name = priv->leds[i].name;
-> ... which is used with a format string
-> |    dev_err(&priv->client->dev,
-> |            "couldn't register LED %s\n",
-> |            priv->leds[i].cdev.name);
-> 
-> There is no indication that NUL-padding is required but if it is let's
-> opt for strscpy_pad.
-> 
-> Considering the above, a suitable replacement is `strscpy` [2] due to
-> the fact that it guarantees NUL-termination on the destination buffer
-> without unnecessarily NUL-padding.
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
-> Note: build-tested only.
-> ---
->  drivers/leds/leds-lp3952.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/leds/leds-lp3952.c b/drivers/leds/leds-lp3952.c
-> index 3bd55652a706..62ade3f05a87 100644
-> --- a/drivers/leds/leds-lp3952.c
-> +++ b/drivers/leds/leds-lp3952.c
-> @@ -101,7 +101,7 @@ static int lp3952_get_label(struct device *dev, const char *label, char *dest)
->  	if (ret)
->  		return ret;
->  
-> -	strncpy(dest, str, LP3952_LABEL_MAX_LEN);
-> +	strscpy(dest, str, LP3952_LABEL_MAX_LEN);
 
-Given my desire to use sizeof(dest) for these things, I wonder if it'd
-be nicer to pass more context here for the compiler as the only user of
-this function is the immediately next function. Instead of passing in
-"char *dest", it could pass "struct lp3952_led_array *priv", and
-suddenly sizeof() would be possible.
 
-But, since it's technically correct as-is:
-
-struct lp3952_ctrl_hdl {
-        struct led_classdev cdev;
-        char name[LP3952_LABEL_MAX_LEN];
-
-There's no pressing need to actually do the priv refactor. It's just a
-comment on the coding style of the original code. :)
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--Kees
-
->  	return 0;
->  }
->  
+On 9/22/23 11:28, Kees Cook wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
 > 
-> ---
-> base-commit: 2cf0f715623872823a72e451243bbf555d10d032
-> change-id: 20230922-strncpy-drivers-leds-leds-lp3952-c-666fcfabeebd
+> As found with Coccinelle[1], add __counted_by for struct mediatable.
 > 
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
+> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 > 
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: Shaokun Zhang <zhangshaokun@hisilicon.com>
+> Cc: netdev@vger.kernel.org
+> Cc: linux-parisc@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Thanks
 -- 
-Kees Cook
+Gustavo
+
+> ---
+>   drivers/net/ethernet/dec/tulip/tulip.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/dec/tulip/tulip.h b/drivers/net/ethernet/dec/tulip/tulip.h
+> index 0ed598dc7569..bd786dfbc066 100644
+> --- a/drivers/net/ethernet/dec/tulip/tulip.h
+> +++ b/drivers/net/ethernet/dec/tulip/tulip.h
+> @@ -381,7 +381,7 @@ struct mediatable {
+>   	unsigned has_reset:6;
+>   	u32 csr15dir;
+>   	u32 csr15val;		/* 21143 NWay setting. */
+> -	struct medialeaf mleaf[];
+> +	struct medialeaf mleaf[] __counted_by(leafcount);
+>   };
+>   
+>   
