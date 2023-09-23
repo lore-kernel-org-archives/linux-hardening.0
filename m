@@ -1,34 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C356CA6C;
-	Sat, 23 Sep 2023 08:57:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0D37C433C9;
-	Sat, 23 Sep 2023 08:57:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4159D2E9;
+	Sat, 23 Sep 2023 08:58:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E22F9C433C8;
+	Sat, 23 Sep 2023 08:58:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1695459472;
-	bh=lkZTTPkhqLfjkprWT4Ia6kfXgvK3+U2RT5SryrW5fU0=;
+	s=k20201202; t=1695459522;
+	bh=O8EiSLhEdCxqqFSOJYtTaig/d7zFufVU+L6LPLjr9m8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iNzDdi2ADZy/5iSMNEcMTw6rPJDQxwZ1X0gpCVWzWc0zGB0T1WV5/GusCdWkQLcdU
-	 XUnM+6j6Piv3G8J6rmB5QiFtH0juwUwqGasjKeOF1gd+EYg7jak8AHnPnU5V7n1+Od
-	 xxyBZhDS9xQb6vntJcYMIvJnE15ktDV3+CQtX6XWABq3sJcKy1ncSM6IMWcUQKTCJg
-	 QoT0LWMMWz4tTZGgC7XiojTHDRDzxF9OOWBI5ADB3i4HVmlxBqtvO4juFDoVcZrI0+
-	 PGowALpXhR8mJ2rUeR4RVt9BU3xXNj1JXedl+FDXQImOecyzSF0IGpMsQRike1Zq+l
-	 55vUUeYL3O13A==
-Date: Sat, 23 Sep 2023 10:58:55 -0600
+	b=aqEcSHEZ+l6vTmxiwq8AHSQFIC2Sh/9sXbMCfWkWLaXXX57fk5NVdF18/clTMpwoT
+	 J0r6lxieBB7Ke4qKFEcFWk9Z8GIB+6zt3hoVnCLZLZTjKasDeTlbmrpJzz6NpFJ5J2
+	 r8RvD3Bqb+qEtjyqqSUXapGVesxUOwuHIg0ToI3oKwFDOak7mmxgU1bFJ41sbygkYb
+	 bf0JVA+7IqsUwG9w6Ow/ZyNPEpdnfAZX7ngTmL+u3HMimCfMm5VxkhO6h9rw3s5j5T
+	 QCXXdan51VuR3mKi0BP+OAKkP0I1eLcJ2yVWcg1csw6JASbE/hGbgBEXotA87XRhnq
+	 I1VlPogaVVBgQ==
+Date: Sat, 23 Sep 2023 10:59:43 -0600
 From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
 To: Kees Cook <keescook@chromium.org>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
-	Conor Culhane <conor.culhane@silvaco.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	linux-i3c@lists.infradead.org,
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
 	Nathan Chancellor <nathan@kernel.org>,
 	Nick Desaulniers <ndesaulniers@google.com>,
 	Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
 	llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] i3c: svc: Annotate struct svc_i3c_xfer with __counted_by
-Message-ID: <ZQ8ZTwbg56QgmRTd@work>
-References: <20230922175023.work.239-kees@kernel.org>
+Subject: Re: [PATCH] cxl/acpi: Annotate struct cxl_cxims_data with
+ __counted_by
+Message-ID: <ZQ8Zf0ckEeRwGr/X@work>
+References: <20230922175319.work.096-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -37,23 +41,29 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230922175023.work.239-kees@kernel.org>
+In-Reply-To: <20230922175319.work.096-kees@kernel.org>
 
-On Fri, Sep 22, 2023 at 10:50:23AM -0700, Kees Cook wrote:
+On Fri, Sep 22, 2023 at 10:53:19AM -0700, Kees Cook wrote:
 > Prepare for the coming implementation by GCC and Clang of the __counted_by
 > attribute. Flexible array members annotated with __counted_by can have
 > their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
 > 
-> As found with Coccinelle[1], add __counted_by for struct svc_i3c_xfer.
+> As found with Coccinelle[1], add __counted_by for struct cxl_cxims_data.
+> Additionally, since the element count member must be set before accessing
+> the annotated flexible array member, move its initialization earlier.
 > 
 > [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 > 
-> Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-> Cc: Conor Culhane <conor.culhane@silvaco.com>
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Cc: linux-i3c@lists.infradead.org
+> Cc: Davidlohr Bueso <dave@stgolabs.net>
+> Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Alison Schofield <alison.schofield@intel.com>
+> Cc: Vishal Verma <vishal.l.verma@intel.com>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: linux-cxl@vger.kernel.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 
 Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
@@ -63,22 +73,33 @@ Thanks
 Gustavo
 
 > ---
->  drivers/i3c/master/svc-i3c-master.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/cxl/acpi.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
-> index 8f8295acdadb..32eca2d6caf0 100644
-> --- a/drivers/i3c/master/svc-i3c-master.c
-> +++ b/drivers/i3c/master/svc-i3c-master.c
-> @@ -143,7 +143,7 @@ struct svc_i3c_xfer {
->  	int ret;
->  	unsigned int type;
->  	unsigned int ncmds;
-> -	struct svc_i3c_cmd cmds[];
-> +	struct svc_i3c_cmd cmds[] __counted_by(ncmds);
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index d1c559879dcc..40d055560e52 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -14,7 +14,7 @@
+>  
+>  struct cxl_cxims_data {
+>  	int nr_maps;
+> -	u64 xormaps[];
+> +	u64 xormaps[] __counted_by(nr_maps);
 >  };
 >  
->  struct svc_i3c_regs_save {
+>  /*
+> @@ -112,9 +112,9 @@ static int cxl_parse_cxims(union acpi_subtable_headers *header, void *arg,
+>  			      GFP_KERNEL);
+>  	if (!cximsd)
+>  		return -ENOMEM;
+> +	cximsd->nr_maps = nr_maps;
+>  	memcpy(cximsd->xormaps, cxims->xormap_list,
+>  	       nr_maps * sizeof(*cximsd->xormaps));
+> -	cximsd->nr_maps = nr_maps;
+>  	cxlrd->platform_data = cximsd;
+>  
+>  	return 0;
 > -- 
 > 2.34.1
 > 
