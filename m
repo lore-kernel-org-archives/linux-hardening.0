@@ -1,136 +1,112 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFF4518E20
-	for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 12:22:21 +0000 (UTC)
-Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F548E61;
-	Sat, 23 Sep 2023 05:22:14 -0700 (PDT)
-Received: from eig-obgw-6006a.ext.cloudfilter.net ([10.0.30.182])
-	by cmsmtp with ESMTP
-	id k0HiqAx7oyYOwk1eIq0htS; Sat, 23 Sep 2023 12:22:14 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id k1eHqtmnAHLNfk1eHqjbxb; Sat, 23 Sep 2023 12:22:13 +0000
-X-Authority-Analysis: v=2.4 cv=Vp0wvs6n c=1 sm=1 tr=0 ts=650ed875
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=P7XfKmiOJ4/qXqHZrN7ymg==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=zNV7Rl7Rt7sA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
- a=iox4zFpeAAAA:8 a=QyXUC8HyAAAA:8 a=foHCeV_ZAAAA:8 a=cm27Pg_UAAAA:8
- a=VwQbUJbxAAAA:8 a=HvF037n1xESchLcPDVoA:9 a=QEXdDO2ut3YA:10
- a=WzC6qhA0u3u7Ye7llzcV:22 a=h8a9FgHX5U4dIE3jaWyr:22 a=xmb-EsYY8bH0VWELuYED:22
- a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=WPSdLZnPg0Xa+53dl/XdXFwCV7Ecr3f4T970hU8aPKw=; b=Z3jEnZQq53K5tmRETOr6lUQXLV
-	GxGRCgRrcAzMAe2v1b2jeEEzjTjYaAdI1G+zBh8Wp22m3D4wvZWFZuwF7KNF9rdszsiwGGeBtvzti
-	hk0JOwUDnbu+Ph3vrDel7rstwGAiI5to7zIbuzFuidzdoRaNFkgu03zyLupWRJB2MTIQKW+N1fl2Q
-	r5i/e3FEBOdFjVeOZv5MCPH30JaloYdfplRGbnzziJPmtiRkfU1p/cYaiS4F+bC+s2xRww1q4Dbwz
-	UAuZe51+H3okQggzMJwTLMFQAbDXNwAa683TEGZ9H6Uf2/ec9KYKkTuANB2VI1CVQXNiHNPFJDT+w
-	gHxQ6hxA==;
-Received: from [94.239.20.48] (port=46926 helo=[192.168.1.98])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1qjy0q-003YA9-1Y;
-	Sat, 23 Sep 2023 03:29:17 -0500
-Message-ID: <9838a857-9752-5c06-0b00-3cd279f665d0@embeddedor.com>
-Date: Sat, 23 Sep 2023 10:30:14 -0600
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0873E1D521
+	for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 14:24:15 +0000 (UTC)
+Received: from sender-of-o51.zoho.in (sender-of-o51.zoho.in [103.117.158.51])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62D3919A;
+	Sat, 23 Sep 2023 07:24:13 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1695478990; cv=none; 
+	d=zohomail.in; s=zohoarc; 
+	b=T2KBF4yIjalK1ZzDEEM0bNBS6lrf1rzPibf611WAnNH6Vj0xTunIPujntuCeRexyyq9CDzFEumukC8m7vfaN02SKx+VLV/ovHo0wG1yHKmHvFTEI1FxRCePdQ4U5jyMA8Gk0wCA7ekmYJ4QcWIpoIWY7uuE+IqAO09QNiWlZErg=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.in; s=zohoarc; 
+	t=1695478990; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=WZ/aGCA500ed2bcHIimQvNXpZhLASpaAWul68HLtyGw=; 
+	b=M77DzljXk6xpQujq654Kk9vs7HCjjuRSTg72l3/lw769poX2mZ9yZpNHro87Gr8TqivW9BHA3j1Kh8o33dWvSKmJg1kIzLn7pEHu5ufAnND563x63wSV8sPVHd+GYE7NP00a75Ng6t+45L+SevUlScckPUU8accni0XFdPUva4s=
+ARC-Authentication-Results: i=1; mx.zohomail.in;
+	dkim=pass  header.i=siddh.me;
+	spf=pass  smtp.mailfrom=code@siddh.me;
+	dmarc=pass header.from=<code@siddh.me>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1695478990;
+	s=zmail; d=siddh.me; i=code@siddh.me;
+	h=Date:Date:From:From:To:To:Cc:Cc:Message-ID:In-Reply-To:References:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=WZ/aGCA500ed2bcHIimQvNXpZhLASpaAWul68HLtyGw=;
+	b=HIB8IY0kzqs3Ddq+mTUKr+78Mu8wosEADsTE/bbq6WTrTaXfoYwTkmn1GkjZYGNG
+	uDSd7yQti2nKuCxcr4sz7/knfUb7kCndcoph2Wci1IZzz/cksZxUo5ziHtgHoKQGuEF
+	MD7LhbGa+mGgOA9MFQI3O5JTZZpivQ5xB/zmussQ=
+Received: from mail.zoho.in by mx.zoho.in
+	with SMTP id 1695478959143581.0852754386215; Sat, 23 Sep 2023 19:52:39 +0530 (IST)
+Date: Sat, 23 Sep 2023 19:52:39 +0530
+From: Siddh Raman Pant <code@siddh.me>
+To: "Kees Cook" <keescook@chromium.org>
+Cc: "David Howells" <dhowells@redhat.com>,
+	"Randy Dunlap" <rdunlap@infradead.org>,
+	"Al Viro" <viro@zeniv.linux.org.uk>,
+	"Christian Brauner" <brauner@kernel.org>,
+	"Jonathan Corbet" <corbet@lwn.net>,
+	"Mauro Carvalho Chehab" <mchehab@kernel.org>,
+	"Qian Cai" <cai@redhat.com>, "Nathan Chancellor" <nathan@kernel.org>,
+	"Nick Desaulniers" <ndesaulniers@google.com>,
+	"Tom Rix" <trix@redhat.com>,
+	"linux-kernel" <linux-kernel@vger.kernel.org>,
+	"llvm" <llvm@lists.linux.dev>,
+	"linux-hardening" <linux-hardening@vger.kernel.org>
+Message-ID: <18ac26bcc00.365acdab160974.4357076391181710171@siddh.me>
+In-Reply-To: <20230922175407.work.754-kees@kernel.org>
+References: <20230922175407.work.754-kees@kernel.org>
+Subject: Re: [PATCH] watch_queue: Annotate struct watch_filter with
+ __counted_by
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH] ALSA: hda: Annotate struct hda_conn_list with
- __counted_by
-Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>, Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>, Cezary Rojewski
- <cezary.rojewski@intel.com>, alsa-devel@alsa-project.org,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
- Kai Vehmanen <kai.vehmanen@linux.intel.com>,
- Jason Montleon <jmontleo@redhat.com>, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-References: <20230922175042.work.547-kees@kernel.org>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20230922175042.work.547-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 94.239.20.48
-X-Source-L: No
-X-Exim-ID: 1qjy0q-003YA9-1Y
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.98]) [94.239.20.48]:46926
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 0
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfFIX8y0TXXMbFw1WobXM9gEnT6ItVvtk1uhepJXqEwyXegCZj5K4jyJjiVXLhAdEf5nL7/E359ob2PMM22H61Hutc/J6BzDosEycfgpErAIlN4xp4JUK
- 7u65dNK3ATuXxcB51CcbjIcW7TcMUojCb52Ac5Pxs98+2SeNJ3npoKSSqtyXKqGAC+MMqPnkJyoTcJ9OpzC5IxDtPC5Bcbqqs4aXzUGbG9RS4hwxlyYZrWBj
- yBz+BesgxwJ/wgR6EFUTljg2jWfcwjOwShgMJHZWnu0=
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DATE_IN_FUTURE_03_06,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-	RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.6
+Importance: Medium
+User-Agent: Zoho Mail
+X-Mailer: Zoho Mail
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-
-
-On 9/22/23 11:50, Kees Cook wrote:
+On Fri, 22 Sep 2023 23:24:08 +0530, Kees Cook wrote:
 > Prepare for the coming implementation by GCC and Clang of the __counted_by
 > attribute. Flexible array members annotated with __counted_by can have
 > their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
 > 
-> As found with Coccinelle[1], add __counted_by for struct hda_conn_list.
+> As found with Coccinelle[1], add __counted_by for struct watch_filter.
 > 
 > [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 > 
-> Cc: Jaroslav Kysela <perex@perex.cz>
-> Cc: Takashi Iwai <tiwai@suse.com>
-> Cc: Cezary Rojewski <cezary.rojewski@intel.com>
-> Cc: alsa-devel@alsa-project.org
+> Cc: David Howells <dhowells@redhat.com>
+> Cc: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Cc: Christian Brauner <brauner@kernel.org>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: Siddh Raman Pant <code@siddh.me>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: Qian Cai <cai@redhat.com>
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Tested with keyutils testsuite.
 
-Thanks
--- 
-Gustavo
+Tested-by: Siddh Raman Pant <code@siddh.me>
+
+Thanks,
+Siddh
 
 > ---
->   sound/pci/hda/hda_codec.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>  include/linux/watch_queue.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/sound/pci/hda/hda_codec.c b/sound/pci/hda/hda_codec.c
-> index 33af707a65ab..01718b1fc9a7 100644
-> --- a/sound/pci/hda/hda_codec.c
-> +++ b/sound/pci/hda/hda_codec.c
-> @@ -88,7 +88,7 @@ struct hda_conn_list {
->   	struct list_head list;
->   	int len;
->   	hda_nid_t nid;
-> -	hda_nid_t conns[];
-> +	hda_nid_t conns[] __counted_by(len);
->   };
->   
->   /* look up the cached results */
+> diff --git a/include/linux/watch_queue.h b/include/linux/watch_queue.h
+> index 45cd42f55d49..429c7b6afead 100644
+> --- a/include/linux/watch_queue.h
+> +++ b/include/linux/watch_queue.h
+> @@ -32,7 +32,7 @@ struct watch_filter {
+>  		DECLARE_BITMAP(type_filter, WATCH_TYPE__NR);
+>  	};
+>  	u32			nr_filters;	/* Number of filters */
+> -	struct watch_type_filter filters[];
+> +	struct watch_type_filter filters[] __counted_by(nr_filters);
+>  };
+>  
+>  struct watch_queue {
+> -- 
+> 2.34.1
