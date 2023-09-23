@@ -1,148 +1,124 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0A9020B3D
-	for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 17:42:19 +0000 (UTC)
-Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D77FDE78;
-	Sat, 23 Sep 2023 10:42:11 -0700 (PDT)
-Received: from eig-obgw-6008a.ext.cloudfilter.net ([10.0.30.227])
-	by cmsmtp with ESMTP
-	id jnFfqzM8aWU1ck6duqUhMa; Sat, 23 Sep 2023 17:42:11 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id k6duqYt1ssKmik6duqOQUx; Sat, 23 Sep 2023 17:42:10 +0000
-X-Authority-Analysis: v=2.4 cv=JOMoDuGb c=1 sm=1 tr=0 ts=650f2372
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=P7XfKmiOJ4/qXqHZrN7ymg==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=zNV7Rl7Rt7sA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
- a=QyXUC8HyAAAA:8 a=cm27Pg_UAAAA:8 a=VwQbUJbxAAAA:8 a=qjWHau5h7Oqj65Zv8QkA:9
- a=QEXdDO2ut3YA:10 a=xmb-EsYY8bH0VWELuYED:22 a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=l/Fa2g6PgtI/l80Yludonwd/RnBWl59lIxgeKs29bP4=; b=im+3DqFCWX2/Oi88WqFAOx2B0S
-	AO+dk1KB0IMZ9RxhtSqGHgHIxe0LTwhGKSKxdLspoX7P1WmsfyE9Qy4mFwQKapgBcdMOdXpEvR/qo
-	pfuBLeKnsaW60CLDi1pOlbhrkviaLDVRusBVU/eySxnVnTZoXc32HpnEGNyMY0q0Fz+1VhnZPfEvg
-	AVUPdYOe7pmSe8EC4mmoMrzC7bJZb5vpw+E+oypqdEYjEKDsfO9G+/fTvhmYDibtVycjAo3S9HmKm
-	p+T7QI9OXM0ALpGx6hKf5Oc2mpJqV3dgg5VxZrsZLVmbcG/nuqo8uoMRYYG+SAn2xpFc8lv3RfQ3g
-	Gtq2dBxQ==;
-Received: from [94.239.20.48] (port=36114 helo=[192.168.1.98])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1qjy2g-003aI4-2i;
-	Sat, 23 Sep 2023 03:31:11 -0500
-Message-ID: <665343e3-d2d0-82bf-350c-20f935510ce7@embeddedor.com>
-Date: Sat, 23 Sep 2023 10:32:16 -0600
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 837C74691
+	for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 17:47:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00BBAC433C8;
+	Sat, 23 Sep 2023 17:47:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1695491277;
+	bh=pXFjjIo52VpqBLzSpVTwm0qtUeJqbtXcgnQcpU2K5IA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ZX5Ich2bTnSu/1xEz5odYS2wZwmVvI2ndgOvJE1acPw9E1Z/833ffAZPllAAc4mFe
+	 ouFvlaCb1KiMHtm8KWQre/4pp1EUcX7//rCaRsliU7IUBlHcE5Pttk90WC832htNzp
+	 q6lMTC9mIoYOfbOywin5hvW81Ko+89JlICCw+MQ2lc8mp2W5/ittxBamp5LEWpvxov
+	 EidfP5f9al4JVXhjuaN+p8Urhm8cDIWES7F/u89B812RBC+PlZGuXSk95fxTVZNIfJ
+	 ow3vfmHpMViWU7hbk5SIyXuW9iWQNeTWP/BRfdQgMtd4BqjPufSpt9w+imZOLGJKr6
+	 Zcb/mG+qF0W6w==
+Date: Sat, 23 Sep 2023 18:47:51 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] iio: sx9324: replace deprecated strncpy
+Message-ID: <20230923184751.41d52b9d@jic23-huawei>
+In-Reply-To: <20230921-strncpy-drivers-iio-proximity-sx9324-c-v1-1-4e8d28fd1e7c@google.com>
+References: <20230921-strncpy-drivers-iio-proximity-sx9324-c-v1-1-4e8d28fd1e7c@google.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH] virt: acrn: Annotate struct vm_memory_region_batch with
- __counted_by
-Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>, Fei Li <fei1.li@intel.com>
-Cc: Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
- linux-hardening@vger.kernel.org
-References: <20230922175102.work.020-kees@kernel.org>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20230922175102.work.020-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 94.239.20.48
-X-Source-L: No
-X-Exim-ID: 1qjy2g-003aI4-2i
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.98]) [94.239.20.48]:36114
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 0
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfMXcGdFyXwjqwrh3Kji2n+g/L5ix7e8CmYGw2WhlCL0SmE0vszJTakmZtt0P6WKHn9kzGLes7Fnznh0PIWLdtXVHZblnY1DKSaxhDK+Mb4pAH4LkNVof
- DDJFWDxq/fOO0wf8eA1DbHwnFEDaLa8Cxh4H/6lbcfpCadoC+EsHQ5H6YupkJhlVPqAt+ZvBYmKnoMRcW2ofyYuKrIggGlmz9B0vM8Epf2PyTbiFTkmRLcNH
- yLSyK6pwwmo5gYz5AjqrZJy5UUDJBF0KHaNJkoex8mI=
-X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
 
+On Thu, 21 Sep 2023 07:01:01 +0000
+Justin Stitt <justinstitt@google.com> wrote:
 
-
-On 9/22/23 11:51, Kees Cook wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
+> `strncpy` is deprecated for use on NUL-terminated destination strings [1].
 > 
-> As found with Coccinelle[1], add __counted_by for struct vm_memory_region_batch.
-> Additionally, since the element count member must be set before accessing
-> the annotated flexible array member, move its initialization earlier.
+> We should prefer more robust and less ambiguous string interfaces.
 > 
-> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+> `prop` is defined as this string literal with size 30 (including null):
+> |       #define SX9324_PROXRAW_DEF "semtech,ph01-proxraw-strength"
+> |      	char prop[] = SX9324_PROXRAW_DEF;
 > 
-> Cc: Fei Li <fei1.li@intel.com>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Thanks
--- 
-Gustavo
-
+> Each of the strncpy->strscpy replacements involve string literals with a
+> size less than 30 which means there are no current problems with how
+> strncpy is used. However, let's move away from using strncpy entirely.
+> 
+> A suitable replacement is `strscpy` [2] due to the fact that it
+> guarantees NUL-termination on the destination buffer without
+> unnecessarily NUL-padding.
+> 
+> Moreover, let's opt for the more conventional `sizeof()` as opposed to
+> `ARRAY_SIZE` for these simple strings.
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
 > ---
->   drivers/virt/acrn/acrn_drv.h | 2 +-
->   drivers/virt/acrn/mm.c       | 2 +-
->   2 files changed, 2 insertions(+), 2 deletions(-)
+> FWIW: It seems fragile to base future `prop` stores on the
+> size of it's default string.
+
+Agreed - can we just get rid of the copying?  Just set a const char *
+to point to appropriate string instead and use that?
+
+The dance is just about reasonable for the case where there is
+a string format being used to fill in the numbers, here I can't see any
+advantage at all. (for the other case, a kasprintf() or similar is probably
+more appropriate anyway) given this isn't a particular hot path.
+
+Jonathan
 > 
-> diff --git a/drivers/virt/acrn/acrn_drv.h b/drivers/virt/acrn/acrn_drv.h
-> index 5663c17ad37c..fb8438094f6f 100644
-> --- a/drivers/virt/acrn/acrn_drv.h
-> +++ b/drivers/virt/acrn/acrn_drv.h
-> @@ -60,7 +60,7 @@ struct vm_memory_region_batch {
->   	u16			   reserved[3];
->   	u32			   regions_num;
->   	u64			   regions_gpa;
-> -	struct vm_memory_region_op regions_op[];
-> +	struct vm_memory_region_op regions_op[] __counted_by(regions_num);
->   };
->   
->   /**
-> diff --git a/drivers/virt/acrn/mm.c b/drivers/virt/acrn/mm.c
-> index b4ad8d452e9a..fa5d9ca6be57 100644
-> --- a/drivers/virt/acrn/mm.c
-> +++ b/drivers/virt/acrn/mm.c
-> @@ -250,11 +250,11 @@ int acrn_vm_ram_map(struct acrn_vm *vm, struct acrn_vm_memmap *memmap)
->   		ret = -ENOMEM;
->   		goto unmap_kernel_map;
->   	}
-> +	regions_info->regions_num = nr_regions;
->   
->   	/* Fill each vm_memory_region_op */
->   	vm_region = regions_info->regions_op;
->   	regions_info->vmid = vm->vmid;
-> -	regions_info->regions_num = nr_regions;
->   	regions_info->regions_gpa = virt_to_phys(vm_region);
->   	user_vm_pa = memmap->user_vm_pa;
->   	i = 0;
+> Note: build-tested
+> ---
+>  drivers/iio/proximity/sx9324.c | 12 ++++--------
+>  1 file changed, 4 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/iio/proximity/sx9324.c b/drivers/iio/proximity/sx9324.c
+> index 438f9c9aba6e..25ac2733bcef 100644
+> --- a/drivers/iio/proximity/sx9324.c
+> +++ b/drivers/iio/proximity/sx9324.c
+> @@ -937,11 +937,9 @@ sx9324_get_default_reg(struct device *dev, int idx,
+>  	case SX9324_REG_AFE_CTRL4:
+>  	case SX9324_REG_AFE_CTRL7:
+>  		if (reg_def->reg == SX9324_REG_AFE_CTRL4)
+> -			strncpy(prop, "semtech,ph01-resolution",
+> -				ARRAY_SIZE(prop));
+> +			strscpy(prop, "semtech,ph01-resolution", sizeof(prop));
+>  		else
+> -			strncpy(prop, "semtech,ph23-resolution",
+> -				ARRAY_SIZE(prop));
+> +			strscpy(prop, "semtech,ph23-resolution", sizeof(prop));
+>  
+>  		ret = device_property_read_u32(dev, prop, &raw);
+>  		if (ret)
+> @@ -1012,11 +1010,9 @@ sx9324_get_default_reg(struct device *dev, int idx,
+>  	case SX9324_REG_PROX_CTRL0:
+>  	case SX9324_REG_PROX_CTRL1:
+>  		if (reg_def->reg == SX9324_REG_PROX_CTRL0)
+> -			strncpy(prop, "semtech,ph01-proxraw-strength",
+> -				ARRAY_SIZE(prop));
+> +			strscpy(prop, "semtech,ph01-proxraw-strength", sizeof(prop));
+>  		else
+> -			strncpy(prop, "semtech,ph23-proxraw-strength",
+> -				ARRAY_SIZE(prop));
+> +			strscpy(prop, "semtech,ph23-proxraw-strength", sizeof(prop));
+>  		ret = device_property_read_u32(dev, prop, &raw);
+>  		if (ret)
+>  			break;
+> 
+> ---
+> base-commit: 2cf0f715623872823a72e451243bbf555d10d032
+> change-id: 20230921-strncpy-drivers-iio-proximity-sx9324-c-8c3437676039
+> 
+> Best regards,
+> --
+> Justin Stitt <justinstitt@google.com>
+> 
+
