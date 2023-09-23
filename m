@@ -1,101 +1,167 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B09F0383
-	for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 00:46:57 +0000 (UTC)
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AEE8B9
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 17:46:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1695430015;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lFq6zMaaGytyLVjCRlM3YGZB/pczKiOV+8u9ckMtHlE=;
-	b=G3vrTVVC1of69IpxZZuPPqUi+P5WnXPwduI0eWjoclZyr0X+S5ZU9zgV7vvtFAop58koAq
-	LfyPQ//gY1F+PcbHfwfZm6hHVP42zwuP25aDSm3ET9r5yv6/g/7I8euN2wnMxPw9XHThUG
-	N3om5xZRRnKAN/q7UY9KsdLllkyPKpQ=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-82-UHzJRoO2NxSdEjhQPdTCeg-1; Fri, 22 Sep 2023 20:46:52 -0400
-X-MC-Unique: UHzJRoO2NxSdEjhQPdTCeg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9CC3185A5BA;
-	Sat, 23 Sep 2023 00:46:51 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.18])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id DB10928FB;
-	Sat, 23 Sep 2023 00:46:50 +0000 (UTC)
-Date: Sat, 23 Sep 2023 08:46:47 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Kees Cook <keescook@chromium.org>
-Cc: Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org,
-	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] kexec: Annotate struct crash_mem with __counted_by
-Message-ID: <ZQ41d5majBepW48Z@MiWiFi-R3L-srv>
-References: <20230922175224.work.712-kees@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36BB137A
+	for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 01:41:41 +0000 (UTC)
+Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB3651A8;
+	Fri, 22 Sep 2023 18:41:40 -0700 (PDT)
+Received: from eig-obgw-6010a.ext.cloudfilter.net ([10.0.30.248])
+	by cmsmtp with ESMTP
+	id jq43qu56eEoVsjreOqFZBP; Sat, 23 Sep 2023 01:41:40 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id jreNqDMJSySCujreNqUCUr; Sat, 23 Sep 2023 01:41:39 +0000
+X-Authority-Analysis: v=2.4 cv=ea8uwpIH c=1 sm=1 tr=0 ts=650e4253
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=P7XfKmiOJ4/qXqHZrN7ymg==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=zNV7Rl7Rt7sA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
+ a=-VAfIpHNAAAA:8 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=e5mUnYsNAAAA:8
+ a=cm27Pg_UAAAA:8 a=HvF037n1xESchLcPDVoA:9 a=QEXdDO2ut3YA:10
+ a=srlwD-8ojaedGGhPAyx8:22 a=AjGcO6oz07-iQ99wixmX:22 a=Vxmtnl_E_bksehYqCbjh:22
+ a=xmb-EsYY8bH0VWELuYED:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=26mug2OgFJgVqTLezDBhTB27nouTOVCr4w9qfN76dRA=; b=gWUmwGML3LS+6SgXzjEE2Nv0zY
+	6WvEyyE/D9r5aCj97Qk0hU44T53pcFDfJ0WyOiS/y/dodQv4zYLJWZVtBZg6aROkxEqiqHxWMAJ61
+	+bd/LUHoDPJN5875L0nhhFj064A/XItWKFZvpwztqirYg9Wo8HlyZHMRGa2FXndjO5z3QOeEehb5x
+	9pWKegwGcf6NwBGOyvfvUpoFR09ZCPES7oKwjP54v2sT2Oga4jwYCdhMiQe75/Xvu5af1uayGh/Zi
+	LcKlz1Qa7HgfYM4nH9rvd6EoSM6xQwXtEMS+kzdzm26iBfpWyzv/7s9+4bmv2+xTf8q41SvM9G7GE
+	L+885mkQ==;
+Received: from [94.239.20.48] (port=50846 helo=[192.168.1.98])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1qjkgW-000Qi0-2c;
+	Fri, 22 Sep 2023 13:15:24 -0500
+Message-ID: <75f4a4fa-a177-db4a-4653-f121a1e54141@embeddedor.com>
+Date: Fri, 22 Sep 2023 20:16:16 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230922175224.work.712-kees@kernel.org>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-	SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
-	version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH 6/9] drm/vc4: Annotate struct vc4_perfmon with
+ __counted_by
+Content-Language: en-US
+To: Kees Cook <keescook@chromium.org>, David Airlie <airlied@gmail.com>
+Cc: Emma Anholt <emma@anholt.net>, Maxime Ripard <mripard@kernel.org>,
+ Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org,
+ Evan Quan <evan.quan@amd.com>, Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+ "Pan, Xinhui" <Xinhui.Pan@amd.com>, Xiaojian Du <Xiaojian.Du@amd.com>,
+ Huang Rui <ray.huang@amd.com>, Kevin Wang <kevin1.wang@amd.com>,
+ Hawking Zhang <Hawking.Zhang@amd.com>,
+ Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+ Chris Wilson <chris@chris-wilson.co.uk>,
+ John Harrison <john.c.harrison@Intel.com>,
+ Andi Shyti <andi.shyti@linux.intel.com>,
+ Matthew Brost <matthew.brost@intel.com>, Rob Clark <robdclark@gmail.com>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ Bjorn Andersson <andersson@kernel.org>, Ben Skeggs <bskeggs@redhat.com>,
+ Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
+ David Airlie <airlied@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>,
+ Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
+ <olvaffe@gmail.com>, Zack Rusin <zackr@vmware.com>,
+ VMware Graphics Reviewers <linux-graphics-maintainer@vmware.com>,
+ Melissa Wen <mwen@igalia.com>, Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
+ Le Ma <le.ma@amd.com>, Lijo Lazar <lijo.lazar@amd.com>,
+ Yifan Zhang <yifan1.zhang@amd.com>, Prike Liang <Prike.Liang@amd.com>,
+ Lang Yu <Lang.Yu@amd.com>, Tejas Upadhyay <tejas.upadhyay@intel.com>,
+ Nirmoy Das <nirmoy.das@intel.com>, Andrzej Hajda <andrzej.hajda@intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Kuogee Hsieh <quic_khsieh@quicinc.com>, linux-kernel@vger.kernel.org,
+ amd-gfx@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+ linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+ nouveau@lists.freedesktop.org, virtualization@lists.linux-foundation.org,
+ llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+References: <20230922173110.work.084-kees@kernel.org>
+ <20230922173216.3823169-6-keescook@chromium.org>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20230922173216.3823169-6-keescook@chromium.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 94.239.20.48
+X-Source-L: No
+X-Exim-ID: 1qjkgW-000Qi0-2c
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.98]) [94.239.20.48]:50846
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 0
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfB4cE4VeGiXbSX6tBxbAXRvt99ZbcAEghDwSPwVA+/ne/GfY8db3qMLOEgSYq0iE9V8Tw/WQC1btOWOlK9qOY8u5ZKvu+ya9RN58sRu+pxLVf3bjnelq
+ Z56bp3sb3EhhqI2j4pHY2lp59OItj4+YbZpBwgRq5hHadNXmu7Rfk95KKAprSFTTkfbJhy7aK3iv/1rMzO37kadaaZ3xKetYojzN+MNCXIBZSyXaCX0tyMgJ
+ pa+hxB1UeXisfNQ3SFQOq6pZw9vc6zjj7ApXmZjQ3uSNMlbJJsbTACFDRmOXau6GCYDLo6eEeiRc3pBoOODDkw==
+X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On 09/22/23 at 10:52am, Kees Cook wrote:
+
+
+On 9/22/23 11:32, Kees Cook wrote:
 > Prepare for the coming implementation by GCC and Clang of the __counted_by
 > attribute. Flexible array members annotated with __counted_by can have
 > their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
 > 
-> As found with Coccinelle[1], add __counted_by for struct crash_mem.
+> As found with Coccinelle[1], add __counted_by for struct vc4_perfmon.
 > 
 > [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 > 
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Cc: kexec@lists.infradead.org
+> Cc: Emma Anholt <emma@anholt.net>
+> Cc: Maxime Ripard <mripard@kernel.org>
+> Cc: David Airlie <airlied@gmail.com>
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: dri-devel@lists.freedesktop.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
+
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Thanks
+-- 
+Gustavo
+
 > ---
->  include/linux/crash_core.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>   drivers/gpu/drm/vc4/vc4_drv.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-> index 3426f6eef60b..5126a4fecb44 100644
-> --- a/include/linux/crash_core.h
-> +++ b/include/linux/crash_core.h
-> @@ -131,7 +131,7 @@ static inline void __init reserve_crashkernel_generic(char *cmdline,
->  struct crash_mem {
->  	unsigned int max_nr_ranges;
->  	unsigned int nr_ranges;
-> -	struct range ranges[];
-> +	struct range ranges[] __counted_by(max_nr_ranges);
-
-This __counted_by() only makes sense when there's a obvious upper
-boundary, max_nr_ranges in this case. This heavily depends and isn't
-much in kernel? E.g struct swap_info_struct->avail_lists[]. Just
-curious, not related to this patch though.
-
->  };
->  
->  extern int crash_exclude_mem_range(struct crash_mem *mem,
-> -- 
-> 2.34.1
-> 
-
+> diff --git a/drivers/gpu/drm/vc4/vc4_drv.h b/drivers/gpu/drm/vc4/vc4_drv.h
+> index bf66499765fb..ab61e96e7e14 100644
+> --- a/drivers/gpu/drm/vc4/vc4_drv.h
+> +++ b/drivers/gpu/drm/vc4/vc4_drv.h
+> @@ -76,7 +76,7 @@ struct vc4_perfmon {
+>   	 * Note that counter values can't be reset, but you can fake a reset by
+>   	 * destroying the perfmon and creating a new one.
+>   	 */
+> -	u64 counters[];
+> +	u64 counters[] __counted_by(ncounters);
+>   };
+>   
+>   struct vc4_dev {
