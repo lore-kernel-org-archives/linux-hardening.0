@@ -1,124 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 837C74691
-	for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 17:47:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00BBAC433C8;
-	Sat, 23 Sep 2023 17:47:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1695491277;
-	bh=pXFjjIo52VpqBLzSpVTwm0qtUeJqbtXcgnQcpU2K5IA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ZX5Ich2bTnSu/1xEz5odYS2wZwmVvI2ndgOvJE1acPw9E1Z/833ffAZPllAAc4mFe
-	 ouFvlaCb1KiMHtm8KWQre/4pp1EUcX7//rCaRsliU7IUBlHcE5Pttk90WC832htNzp
-	 q6lMTC9mIoYOfbOywin5hvW81Ko+89JlICCw+MQ2lc8mp2W5/ittxBamp5LEWpvxov
-	 EidfP5f9al4JVXhjuaN+p8Urhm8cDIWES7F/u89B812RBC+PlZGuXSk95fxTVZNIfJ
-	 ow3vfmHpMViWU7hbk5SIyXuW9iWQNeTWP/BRfdQgMtd4BqjPufSpt9w+imZOLGJKr6
-	 Zcb/mG+qF0W6w==
-Date: Sat, 23 Sep 2023 18:47:51 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] iio: sx9324: replace deprecated strncpy
-Message-ID: <20230923184751.41d52b9d@jic23-huawei>
-In-Reply-To: <20230921-strncpy-drivers-iio-proximity-sx9324-c-v1-1-4e8d28fd1e7c@google.com>
-References: <20230921-strncpy-drivers-iio-proximity-sx9324-c-v1-1-4e8d28fd1e7c@google.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4037420B1B
+	for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 18:05:19 +0000 (UTC)
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6712127
+	for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 11:05:18 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-50336768615so6700225e87.0
+        for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 11:05:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1695492317; x=1696097117; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=wcipxSNQY08wl7UPw3CDMFJCTeN6Z65jpzmRv2y1p7Y=;
+        b=Yb0m3ZNueVYWCDBBP0RdYirqLddPCZX0l+BK8D2hQljNkocxGFmwA5TZD5QEAtk9Sh
+         IjAirY78b/pd7KK46EDlhMN+IkuHASg55baBzueEdCvgzIFPaO294zkE8vZs3yi1wxY7
+         lfRwopxyMQG4s01cBPk1gTSnv59H8AnLB0k48=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695492317; x=1696097117;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wcipxSNQY08wl7UPw3CDMFJCTeN6Z65jpzmRv2y1p7Y=;
+        b=cq1rlmwh0qihyx7tPDHc0uaA7q5bHATbL84i74WjOit/eM2wu2BP06vc6HMMpqDeIH
+         dtJ1YhfFP6As1e588/tiwL1Vl9uUpAOk3wRHQ3N38gbZgG462fHNLzrTav+3BS+bU/Gn
+         RZIHZrjVge8AGQNGTTXYzHbpCE4DNCPc+NeFI96DjvuMVOxQYleFL96806sn4R/Zsboo
+         Wv8VYxfSmtlltN21B4iQhi9Tl3ryIVpl2oQaqmjdGmjq6gEG6B+KHzZoD6cRQkfn5R0i
+         JafM002WcrTUR7irNckTYDmRiermNYrGO9sq3zy7W1TsckD1wKZIjniJRWxvFnsHgpf4
+         nd0w==
+X-Gm-Message-State: AOJu0Yyd606qw/t1B4YnvKK1Fn5HnuuGYvm6U2ZCZ+RhEEGgzzuavVZ9
+	shEA+eu5XYMzt1yAriDM60IsCAPQhk2dV9Ee6Wg9Lq0i
+X-Google-Smtp-Source: AGHT+IGmBhHoT07F5oCX8JWEXDwcgKJXNakcnF/tAv77Mfg1GaThXS3TZN6p6Aj8WgP55nPFnUFP/w==
+X-Received: by 2002:a05:6512:3697:b0:4f9:54f0:b6db with SMTP id d23-20020a056512369700b004f954f0b6dbmr2093607lfs.13.1695492316916;
+        Sat, 23 Sep 2023 11:05:16 -0700 (PDT)
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
+        by smtp.gmail.com with ESMTPSA id i26-20020a056512007a00b00501c6d78f11sm1151937lfo.298.2023.09.23.11.05.15
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 23 Sep 2023 11:05:15 -0700 (PDT)
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-50336768615so6700164e87.0
+        for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 11:05:15 -0700 (PDT)
+X-Received: by 2002:ac2:4bcd:0:b0:504:4165:54c1 with SMTP id
+ o13-20020ac24bcd000000b00504416554c1mr2774098lfq.7.1695492315346; Sat, 23 Sep
+ 2023 11:05:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <202309220957.927ADC0586@keescook> <CAHk-=wg0C+eEm0Tegpvc1zZjcqkdG9L0ed10tg_rQ1-WZciMGA@mail.gmail.com>
+ <202309222034.F2B777F55@keescook>
+In-Reply-To: <202309222034.F2B777F55@keescook>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sat, 23 Sep 2023 11:04:57 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whf6Zu3Cfm1eOTxXniZf5EPaf1iLj_q_6BVHrzTUBfUGw@mail.gmail.com>
+Message-ID: <CAHk-=whf6Zu3Cfm1eOTxXniZf5EPaf1iLj_q_6BVHrzTUBfUGw@mail.gmail.com>
+Subject: Re: [GIT PULL] hardening fixes for v6.6-rc3
+To: Kees Cook <keescook@chromium.org>
+Cc: linux-kernel@vger.kernel.org, Alexey Dobriyan <adobriyan@gmail.com>, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-On Thu, 21 Sep 2023 07:01:01 +0000
-Justin Stitt <justinstitt@google.com> wrote:
+On Fri, 22 Sept 2023 at 20:49, Kees Cook <keescook@chromium.org> wrote:
+>
+> 2) __cplusplus is relatively common in UAPI headers already:
+>    $ git grep __cplusplus -- include/uapi | wc -l
+>    58
 
-> `strncpy` is deprecated for use on NUL-terminated destination strings [1].
-> 
-> We should prefer more robust and less ambiguous string interfaces.
-> 
-> `prop` is defined as this string literal with size 30 (including null):
-> |       #define SX9324_PROXRAW_DEF "semtech,ph01-proxraw-strength"
-> |      	char prop[] = SX9324_PROXRAW_DEF;
-> 
-> Each of the strncpy->strscpy replacements involve string literals with a
-> size less than 30 which means there are no current problems with how
-> strncpy is used. However, let's move away from using strncpy entirely.
-> 
-> A suitable replacement is `strscpy` [2] due to the fact that it
-> guarantees NUL-termination on the destination buffer without
-> unnecessarily NUL-padding.
-> 
-> Moreover, let's opt for the more conventional `sizeof()` as opposed to
-> `ARRAY_SIZE` for these simple strings.
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
-> FWIW: It seems fragile to base future `prop` stores on the
-> size of it's default string.
+Look a bit closer.
 
-Agreed - can we just get rid of the copying?  Just set a const char *
-to point to appropriate string instead and use that?
+Most of those - by far - is for the usual
 
-The dance is just about reasonable for the case where there is
-a string format being used to fill in the numbers, here I can't see any
-advantage at all. (for the other case, a kasprintf() or similar is probably
-more appropriate anyway) given this isn't a particular hot path.
+  #if defined(__cplusplus)
+  extern "C" {
+  #endif
 
-Jonathan
-> 
-> Note: build-tested
-> ---
->  drivers/iio/proximity/sx9324.c | 12 ++++--------
->  1 file changed, 4 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/iio/proximity/sx9324.c b/drivers/iio/proximity/sx9324.c
-> index 438f9c9aba6e..25ac2733bcef 100644
-> --- a/drivers/iio/proximity/sx9324.c
-> +++ b/drivers/iio/proximity/sx9324.c
-> @@ -937,11 +937,9 @@ sx9324_get_default_reg(struct device *dev, int idx,
->  	case SX9324_REG_AFE_CTRL4:
->  	case SX9324_REG_AFE_CTRL7:
->  		if (reg_def->reg == SX9324_REG_AFE_CTRL4)
-> -			strncpy(prop, "semtech,ph01-resolution",
-> -				ARRAY_SIZE(prop));
-> +			strscpy(prop, "semtech,ph01-resolution", sizeof(prop));
->  		else
-> -			strncpy(prop, "semtech,ph23-resolution",
-> -				ARRAY_SIZE(prop));
-> +			strscpy(prop, "semtech,ph23-resolution", sizeof(prop));
->  
->  		ret = device_property_read_u32(dev, prop, &raw);
->  		if (ret)
-> @@ -1012,11 +1010,9 @@ sx9324_get_default_reg(struct device *dev, int idx,
->  	case SX9324_REG_PROX_CTRL0:
->  	case SX9324_REG_PROX_CTRL1:
->  		if (reg_def->reg == SX9324_REG_PROX_CTRL0)
-> -			strncpy(prop, "semtech,ph01-proxraw-strength",
-> -				ARRAY_SIZE(prop));
-> +			strscpy(prop, "semtech,ph01-proxraw-strength", sizeof(prop));
->  		else
-> -			strncpy(prop, "semtech,ph23-proxraw-strength",
-> -				ARRAY_SIZE(prop));
-> +			strscpy(prop, "semtech,ph23-proxraw-strength", sizeof(prop));
->  		ret = device_property_read_u32(dev, prop, &raw);
->  		if (ret)
->  			break;
-> 
-> ---
-> base-commit: 2cf0f715623872823a72e451243bbf555d10d032
-> change-id: 20230921-strncpy-drivers-iio-proximity-sx9324-c-8c3437676039
-> 
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
-> 
+pattern. IOW, it's explicitly not different code, but telling the C++
+compiler that "this is C code".
 
+So this new #ifdef is an ugly new pattern of "do totally different
+things for C++".
+
+Apparently required, but very ugly nonetheless.
+
+               Linus
