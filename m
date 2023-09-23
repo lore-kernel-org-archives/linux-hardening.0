@@ -1,44 +1,43 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75B361D68F
-	for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 15:01:51 +0000 (UTC)
-Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E2121A6;
-	Sat, 23 Sep 2023 08:01:47 -0700 (PDT)
-Received: from eig-obgw-6002a.ext.cloudfilter.net ([10.0.30.222])
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2F41D68D
+	for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 15:02:03 +0000 (UTC)
+Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E894CE1;
+	Sat, 23 Sep 2023 08:02:01 -0700 (PDT)
+Received: from eig-obgw-6007a.ext.cloudfilter.net ([10.0.30.247])
 	by cmsmtp with ESMTP
-	id jx8iqaxc5DKaKk48fqJ3vE; Sat, 23 Sep 2023 15:01:46 +0000
+	id k2vBq28rsWU1ck48uqU5d4; Sat, 23 Sep 2023 15:02:00 +0000
 Received: from gator4166.hostgator.com ([108.167.133.22])
 	by cmsmtp with ESMTPS
-	id k48fqaK9HjsHGk48fq8Iae; Sat, 23 Sep 2023 15:01:45 +0000
-X-Authority-Analysis: v=2.4 cv=FtoWQknq c=1 sm=1 tr=0 ts=650efdd9
+	id k48tq882blFgfk48tqymSf; Sat, 23 Sep 2023 15:01:59 +0000
+X-Authority-Analysis: v=2.4 cv=dpLItns4 c=1 sm=1 tr=0 ts=650efde7
  a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=P7XfKmiOJ4/qXqHZrN7ymg==:17
  a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
  a=IkcTkHD0fZMA:10 a=zNV7Rl7Rt7sA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
- a=eh1Yez-EAAAA:8 a=pGLkceISAAAA:8 a=e5mUnYsNAAAA:8 a=cm27Pg_UAAAA:8
- a=VwQbUJbxAAAA:8 a=HvF037n1xESchLcPDVoA:9 a=QEXdDO2ut3YA:10
- a=Vxmtnl_E_bksehYqCbjh:22 a=xmb-EsYY8bH0VWELuYED:22 a=AjGcO6oz07-iQ99wixmX:22
+ a=VwQbUJbxAAAA:8 a=cm27Pg_UAAAA:8 a=HvF037n1xESchLcPDVoA:9 a=QEXdDO2ut3YA:10
+ a=AjGcO6oz07-iQ99wixmX:22 a=xmb-EsYY8bH0VWELuYED:22
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
 	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
 	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
 	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=o8E/r0wuMmRjHcbDYiPdXr88j22h/Q9UdmpVBTr3fBw=; b=BLe+r9AA41QKGz9wo55FNBte6i
-	H72+radBOWNzTAB6YiP7NELCaOSUh0zphAmfZIqfiso9KD0nTzsR68abI0R7dpkp8YLmdo9rH9W1M
-	y/x7o2CfwQI49wqo9+6Arj3JEoAcl6KpVfpycFLpDKudkIwexQ30QLJmtHnMVeeApcR7HtyzJSLzd
-	N1Qw5maGcqTTQvoP1cKBzAaqU0SwOha6paZj9rt4HM+HiWmFfsl7/PgdBWS5Y1NWyXIc29RHLGBel
-	ssGmkoESQQLyM5+lfD8ksLaw8QMPB6hySoTXQwz5w943dZ/ZjstewVsj/SjhEK2Lq1iGO6RoxYqaB
-	oZTNnKkQ==;
-Received: from [94.239.20.48] (port=59176 helo=[192.168.1.98])
+	bh=zpNghta1rKfd6QVcv7ngRAUbGtVPymL/xvCr6DZ/1mM=; b=CPWheT3UDfuQuO36cvgjnF1k3/
+	s9ahj9STnIpRlFZf0ht3ydI0Kj9Q8F1lj7PgmXmaa5rG6sf4rDM5s0Wb9c+sx++NG8+n0XcbsFMRZ
+	N0C46tZDSp0ZkwDxKlLPq37oEBdzrT3WL+5hpni9hQdHkD2Y5tBj4ODOlrKkp6aT1UEuDKjHNK/Fy
+	nDAvRp6AEX/wyZKDiHTUPXyqs5uezpsL/ryt/DR15wZY2YT1vHY9ZfcBXgHy2T0UBadiVoOCrpyb6
+	/qFmnLmiube3L34Jf+mKZpF5NbTXCjnKZjmX3jVOWvT+NoGjPiKI09AbTqHUM7alZO6e9gER1Zn6k
+	g5kWvntQ==;
+Received: from [94.239.20.48] (port=59778 helo=[192.168.1.98])
 	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.96)
 	(envelope-from <gustavo@embeddedor.com>)
-	id 1qjl0l-000khc-1m;
-	Fri, 22 Sep 2023 13:36:19 -0500
-Message-ID: <9aa42b20-4388-4954-012f-65e3bc99b7f0@embeddedor.com>
-Date: Fri, 22 Sep 2023 20:37:09 -0600
+	id 1qjy3F-003atH-0V;
+	Sat, 23 Sep 2023 03:31:45 -0500
+Message-ID: <470453a9-c326-2cf2-271f-f5b61d20740b@embeddedor.com>
+Date: Sat, 23 Sep 2023 10:32:51 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -47,52 +46,16 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.15.1
-Subject: Re: [PATCH 8/9] drm/vmwgfx: Annotate struct vmw_surface_dirty with
- __counted_by
+Subject: Re: [PATCH] irqdomain: Annotate struct irq_domain with __counted_by
 Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>, David Airlie <airlied@gmail.com>
-Cc: Zack Rusin <zackr@vmware.com>,
- VMware Graphics Reviewers <linux-graphics-maintainer@vmware.com>,
- Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org,
- Emma Anholt <emma@anholt.net>, Evan Quan <evan.quan@amd.com>,
- Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
- "Pan, Xinhui" <Xinhui.Pan@amd.com>, Xiaojian Du <Xiaojian.Du@amd.com>,
- Huang Rui <ray.huang@amd.com>, Kevin Wang <kevin1.wang@amd.com>,
- Hawking Zhang <Hawking.Zhang@amd.com>,
- Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
- Chris Wilson <chris@chris-wilson.co.uk>,
- John Harrison <john.c.harrison@Intel.com>,
- Andi Shyti <andi.shyti@linux.intel.com>,
- Matthew Brost <matthew.brost@intel.com>, Rob Clark <robdclark@gmail.com>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- Bjorn Andersson <andersson@kernel.org>, Ben Skeggs <bskeggs@redhat.com>,
- Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
- Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@redhat.com>,
- Gerd Hoffmann <kraxel@redhat.com>,
- Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
- <olvaffe@gmail.com>, Melissa Wen <mwen@igalia.com>,
- Nathan Chancellor <nathan@kernel.org>,
+To: Kees Cook <keescook@chromium.org>, Marc Zyngier <maz@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>,
  Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
- Le Ma <le.ma@amd.com>, Lijo Lazar <lijo.lazar@amd.com>,
- Yifan Zhang <yifan1.zhang@amd.com>, Prike Liang <Prike.Liang@amd.com>,
- Lang Yu <Lang.Yu@amd.com>, Tejas Upadhyay <tejas.upadhyay@intel.com>,
- Nirmoy Das <nirmoy.das@intel.com>, Andrzej Hajda <andrzej.hajda@intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Kuogee Hsieh <quic_khsieh@quicinc.com>, linux-kernel@vger.kernel.org,
- amd-gfx@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
- linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
- nouveau@lists.freedesktop.org, virtualization@lists.linux-foundation.org,
- llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-References: <20230922173110.work.084-kees@kernel.org>
- <20230922173216.3823169-8-keescook@chromium.org>
+ linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+ linux-hardening@vger.kernel.org
+References: <20230922175127.work.214-kees@kernel.org>
 From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20230922173216.3823169-8-keescook@chromium.org>
+In-Reply-To: <20230922175127.work.214-kees@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
@@ -103,44 +66,40 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 94.239.20.48
 X-Source-L: No
-X-Exim-ID: 1qjl0l-000khc-1m
+X-Exim-ID: 1qjy3F-003atH-0V
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: ([192.168.1.98]) [94.239.20.48]:59176
+X-Source-Sender: ([192.168.1.98]) [94.239.20.48]:59778
 X-Source-Auth: gustavo@embeddedor.com
 X-Email-Count: 0
 X-Org: HG=hgshared;ORG=hostgator;
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfGn6qotgw9zuL/RvACs7oEvaFbM+uAb77jEQu5pwWoBzM9TrzWtMh3BjRLsZPs9yM0OvG14QTiWwkxeBYFaSwMpuBYYyC/3Oc84bxWN6S4Qbk0ALKKas
- dMsbsGEORdWtMz3WJ30HTuabzmLW2WqyGsjOhzF+vgFLybFhjG4P9MKmCfMX+oPBM8clAHRWdIflDsVWlgs3dPfPgzRDCWGjtXYctNmF2pgfcx15ELDR4rQA
- Wb6WymaBbtoSynVtMevtw1az1i4zLLuVEU9ZWlbF3hFBx3gVQKu7j2IpPpIn5spSFCk4dxEZiRSHeBDif3PSdg==
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,DATE_IN_FUTURE_06_12,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.6
+X-CMAE-Envelope: MS4xfE8WDLoiubZQQFAMX82gCGbLdtl1YrNWKZyyF686OTdVmZu2AhQcSdZmRYyS7ljR8SQcifOH0KVkavvOH7KkUmySW3pipmyUKO78/fEuGktWFiZ6OPJt
+ fpsEk8f3P8pjf9suUF9y/Fsl3aqJtjdvVh5la44JjSDWWk0BLF7pQ9tYIcSUbZF01Tm70FigqfGU8FB3EXBMIgrfXChne7wh8Hct80p44uC5D12XcjjV2qL6
+ ID57Aa+uzN+J2uO3AiKQZvLyuTJYBJY0H4QkTalUlgM=
+X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
 
 
-On 9/22/23 11:32, Kees Cook wrote:
+On 9/22/23 11:51, Kees Cook wrote:
 > Prepare for the coming implementation by GCC and Clang of the __counted_by
 > attribute. Flexible array members annotated with __counted_by can have
 > their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
 > 
-> As found with Coccinelle[1], add __counted_by for struct vmw_surface_dirty.
+> As found with Coccinelle[1], add __counted_by for struct irq_domain.
 > 
 > [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 > 
-> Cc: Zack Rusin <zackr@vmware.com>
-> Cc: VMware Graphics Reviewers <linux-graphics-maintainer@vmware.com>
-> Cc: David Airlie <airlied@gmail.com>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: dri-devel@lists.freedesktop.org
+> Cc: Marc Zyngier <maz@kernel.org>
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 
 Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
@@ -149,21 +108,20 @@ Thanks
 -- 
 Gustavo
 
-
 > ---
->   drivers/gpu/drm/vmwgfx/vmwgfx_surface.c | 2 +-
+>   include/linux/irqdomain.h | 2 +-
 >   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_surface.c b/drivers/gpu/drm/vmwgfx/vmwgfx_surface.c
-> index 5db403ee8261..2d1d857f99ae 100644
-> --- a/drivers/gpu/drm/vmwgfx/vmwgfx_surface.c
-> +++ b/drivers/gpu/drm/vmwgfx/vmwgfx_surface.c
-> @@ -77,7 +77,7 @@ struct vmw_surface_offset {
->   struct vmw_surface_dirty {
->   	struct vmw_surface_cache cache;
->   	u32 num_subres;
-> -	SVGA3dBox boxes[];
-> +	SVGA3dBox boxes[] __counted_by(num_subres);
+> diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
+> index 51c254b7fec2..ee0a82c60508 100644
+> --- a/include/linux/irqdomain.h
+> +++ b/include/linux/irqdomain.h
+> @@ -174,7 +174,7 @@ struct irq_domain {
+>   	irq_hw_number_t			hwirq_max;
+>   	unsigned int			revmap_size;
+>   	struct radix_tree_root		revmap_tree;
+> -	struct irq_data __rcu		*revmap[];
+> +	struct irq_data __rcu		*revmap[] __counted_by(revmap_size);
 >   };
 >   
->   static void vmw_user_surface_free(struct vmw_resource *res);
+>   /* Irq domain flags */
