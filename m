@@ -1,44 +1,43 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2473A20B3D
-	for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 17:42:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0A9020B3D
+	for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 17:42:19 +0000 (UTC)
 Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A18F81A5;
-	Sat, 23 Sep 2023 10:42:09 -0700 (PDT)
-Received: from eig-obgw-5010a.ext.cloudfilter.net ([10.0.29.199])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D77FDE78;
+	Sat, 23 Sep 2023 10:42:11 -0700 (PDT)
+Received: from eig-obgw-6008a.ext.cloudfilter.net ([10.0.30.227])
 	by cmsmtp with ESMTP
-	id jq43qzx7eWU1ck6dtqUhMO; Sat, 23 Sep 2023 17:42:09 +0000
+	id jnFfqzM8aWU1ck6duqUhMa; Sat, 23 Sep 2023 17:42:11 +0000
 Received: from gator4166.hostgator.com ([108.167.133.22])
 	by cmsmtp with ESMTPS
-	id k6dsqFkZIIDdmk6dsqEVCs; Sat, 23 Sep 2023 17:42:09 +0000
-X-Authority-Analysis: v=2.4 cv=HcYH8wI8 c=1 sm=1 tr=0 ts=650f2371
+	id k6duqYt1ssKmik6duqOQUx; Sat, 23 Sep 2023 17:42:10 +0000
+X-Authority-Analysis: v=2.4 cv=JOMoDuGb c=1 sm=1 tr=0 ts=650f2372
  a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=P7XfKmiOJ4/qXqHZrN7ymg==:17
  a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
  a=IkcTkHD0fZMA:10 a=zNV7Rl7Rt7sA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
- a=VwQbUJbxAAAA:8 a=e5mUnYsNAAAA:8 a=cm27Pg_UAAAA:8 a=HvF037n1xESchLcPDVoA:9
- a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22 a=Vxmtnl_E_bksehYqCbjh:22
- a=xmb-EsYY8bH0VWELuYED:22
+ a=QyXUC8HyAAAA:8 a=cm27Pg_UAAAA:8 a=VwQbUJbxAAAA:8 a=qjWHau5h7Oqj65Zv8QkA:9
+ a=QEXdDO2ut3YA:10 a=xmb-EsYY8bH0VWELuYED:22 a=AjGcO6oz07-iQ99wixmX:22
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
 	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
 	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
 	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=0rkBlmV7dOjQhBHsZ5GTBisbKAaQB5v8qd8FFYm1jjE=; b=gDzaf9mgGEPzjYwWt9k1zjunVm
-	kiCe+R15b5ygw6mW8y8DI/nchsHnlOi0xRigLWG9oGd0KFCP8ir2WiRrQn5NboMn0nAM34Nd42LZ6
-	x+sLRke2d85WZDZirtFoJwv1l7juJIkSTJ3YDR0sW80cSL6MuhK/mop5lNe/t9qmnq3m+4X3DYT+E
-	mtTHzKIq6RwlQKypARoflwQ8shVmU2nFsMiJx9Xnfd/vHjrqhrvJQz6ZK9/hYHei0v1L7xiptgwry
-	Zb7r76eQN4oDMZxD1kZo/QcTheXAi9fLif9ydnGNpHnq37lJdVJ7QPbAlYP72cehx1CpJUxRlh9bJ
-	o+S6M/6g==;
-Received: from [94.239.20.48] (port=52760 helo=[192.168.1.98])
+	bh=l/Fa2g6PgtI/l80Yludonwd/RnBWl59lIxgeKs29bP4=; b=im+3DqFCWX2/Oi88WqFAOx2B0S
+	AO+dk1KB0IMZ9RxhtSqGHgHIxe0LTwhGKSKxdLspoX7P1WmsfyE9Qy4mFwQKapgBcdMOdXpEvR/qo
+	pfuBLeKnsaW60CLDi1pOlbhrkviaLDVRusBVU/eySxnVnTZoXc32HpnEGNyMY0q0Fz+1VhnZPfEvg
+	AVUPdYOe7pmSe8EC4mmoMrzC7bJZb5vpw+E+oypqdEYjEKDsfO9G+/fTvhmYDibtVycjAo3S9HmKm
+	p+T7QI9OXM0ALpGx6hKf5Oc2mpJqV3dgg5VxZrsZLVmbcG/nuqo8uoMRYYG+SAn2xpFc8lv3RfQ3g
+	Gtq2dBxQ==;
+Received: from [94.239.20.48] (port=36114 helo=[192.168.1.98])
 	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.96)
 	(envelope-from <gustavo@embeddedor.com>)
-	id 1qjy3g-003bRP-1r;
-	Sat, 23 Sep 2023 03:32:12 -0500
-Message-ID: <6dae12b4-125c-a7be-4129-75065f7a5128@embeddedor.com>
-Date: Sat, 23 Sep 2023 10:33:17 -0600
+	id 1qjy2g-003aI4-2i;
+	Sat, 23 Sep 2023 03:31:11 -0500
+Message-ID: <665343e3-d2d0-82bf-350c-20f935510ce7@embeddedor.com>
+Date: Sat, 23 Sep 2023 10:32:16 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -47,18 +46,17 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.15.1
-Subject: Re: [PATCH] video: fbdev: mmp: Annotate struct mmphw_ctrl with
+Subject: Re: [PATCH] virt: acrn: Annotate struct vm_memory_region_batch with
  __counted_by
 Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>, Helge Deller <deller@gmx.de>
-Cc: linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
- Nathan Chancellor <nathan@kernel.org>,
+To: Kees Cook <keescook@chromium.org>, Fei Li <fei1.li@intel.com>
+Cc: Nathan Chancellor <nathan@kernel.org>,
  Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
  linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
  linux-hardening@vger.kernel.org
-References: <20230922175137.work.062-kees@kernel.org>
+References: <20230922175102.work.020-kees@kernel.org>
 From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20230922175137.work.062-kees@kernel.org>
+In-Reply-To: <20230922175102.work.020-kees@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
@@ -69,19 +67,19 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 94.239.20.48
 X-Source-L: No
-X-Exim-ID: 1qjy3g-003bRP-1r
+X-Exim-ID: 1qjy2g-003aI4-2i
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: ([192.168.1.98]) [94.239.20.48]:52760
+X-Source-Sender: ([192.168.1.98]) [94.239.20.48]:36114
 X-Source-Auth: gustavo@embeddedor.com
 X-Email-Count: 0
 X-Org: HG=hgshared;ORG=hostgator;
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfDA/7fhybGLm27idUlLz4PuTe0rBgfzesmVyPUXNIA2L4RMXX3pMqbXkIhR3HkWaOWrAOOzEM/jkYXvBUi87smvR00RiJM9WlxDFRGI4QW0s7RUPeAEk
- cm/rruSa1aFyxOuDCnepYUtDIERLHoHcIurLJsSUZ1mWAbGEx1vj+buvZ4Bsnt0hSqmjNtUMsbVQ2ValLyBJ+31TOdsXww8Djo6l9Aakwdhd/JrcBuPqBDdL
- 1/rGR5WQHZDpwbS1n9Mu0Do4/VK2LCk2mNEPdWxLG6zfR5jk77rTMRUTk0FgsRRpNPtccV10WIOYjewtuSGvkQ==
+X-CMAE-Envelope: MS4xfMXcGdFyXwjqwrh3Kji2n+g/L5ix7e8CmYGw2WhlCL0SmE0vszJTakmZtt0P6WKHn9kzGLes7Fnznh0PIWLdtXVHZblnY1DKSaxhDK+Mb4pAH4LkNVof
+ DDJFWDxq/fOO0wf8eA1DbHwnFEDaLa8Cxh4H/6lbcfpCadoC+EsHQ5H6YupkJhlVPqAt+ZvBYmKnoMRcW2ofyYuKrIggGlmz9B0vM8Epf2PyTbiFTkmRLcNH
+ yLSyK6pwwmo5gYz5AjqrZJy5UUDJBF0KHaNJkoex8mI=
 X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
 	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -98,13 +96,13 @@ On 9/22/23 11:51, Kees Cook wrote:
 > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
 > 
-> As found with Coccinelle[1], add __counted_by for struct mmphw_ctrl.
+> As found with Coccinelle[1], add __counted_by for struct vm_memory_region_batch.
+> Additionally, since the element count member must be set before accessing
+> the annotated flexible array member, move its initialization earlier.
 > 
 > [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 > 
-> Cc: Helge Deller <deller@gmx.de>
-> Cc: linux-fbdev@vger.kernel.org
-> Cc: dri-devel@lists.freedesktop.org
+> Cc: Fei Li <fei1.li@intel.com>
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 
 Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
@@ -114,19 +112,37 @@ Thanks
 Gustavo
 
 > ---
->   drivers/video/fbdev/mmp/hw/mmp_ctrl.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>   drivers/virt/acrn/acrn_drv.h | 2 +-
+>   drivers/virt/acrn/mm.c       | 2 +-
+>   2 files changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/video/fbdev/mmp/hw/mmp_ctrl.h b/drivers/video/fbdev/mmp/hw/mmp_ctrl.h
-> index 167585a889d3..719b99a9bc77 100644
-> --- a/drivers/video/fbdev/mmp/hw/mmp_ctrl.h
-> +++ b/drivers/video/fbdev/mmp/hw/mmp_ctrl.h
-> @@ -1406,7 +1406,7 @@ struct mmphw_ctrl {
->   
->   	/*pathes*/
->   	int path_num;
-> -	struct mmphw_path_plat path_plats[];
-> +	struct mmphw_path_plat path_plats[] __counted_by(path_num);
+> diff --git a/drivers/virt/acrn/acrn_drv.h b/drivers/virt/acrn/acrn_drv.h
+> index 5663c17ad37c..fb8438094f6f 100644
+> --- a/drivers/virt/acrn/acrn_drv.h
+> +++ b/drivers/virt/acrn/acrn_drv.h
+> @@ -60,7 +60,7 @@ struct vm_memory_region_batch {
+>   	u16			   reserved[3];
+>   	u32			   regions_num;
+>   	u64			   regions_gpa;
+> -	struct vm_memory_region_op regions_op[];
+> +	struct vm_memory_region_op regions_op[] __counted_by(regions_num);
 >   };
 >   
->   static inline int overlay_is_vid(struct mmp_overlay *overlay)
+>   /**
+> diff --git a/drivers/virt/acrn/mm.c b/drivers/virt/acrn/mm.c
+> index b4ad8d452e9a..fa5d9ca6be57 100644
+> --- a/drivers/virt/acrn/mm.c
+> +++ b/drivers/virt/acrn/mm.c
+> @@ -250,11 +250,11 @@ int acrn_vm_ram_map(struct acrn_vm *vm, struct acrn_vm_memmap *memmap)
+>   		ret = -ENOMEM;
+>   		goto unmap_kernel_map;
+>   	}
+> +	regions_info->regions_num = nr_regions;
+>   
+>   	/* Fill each vm_memory_region_op */
+>   	vm_region = regions_info->regions_op;
+>   	regions_info->vmid = vm->vmid;
+> -	regions_info->regions_num = nr_regions;
+>   	regions_info->regions_gpa = virt_to_phys(vm_region);
+>   	user_vm_pa = memmap->user_vm_pa;
+>   	i = 0;
