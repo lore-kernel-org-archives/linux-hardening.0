@@ -1,43 +1,43 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F0151D69C
-	for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 15:01:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D811D68D
+	for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 15:01:53 +0000 (UTC)
 Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00FEE19F;
-	Sat, 23 Sep 2023 08:01:49 -0700 (PDT)
-Received: from eig-obgw-5008a.ext.cloudfilter.net ([10.0.29.246])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B2C819A;
+	Sat, 23 Sep 2023 08:01:51 -0700 (PDT)
+Received: from eig-obgw-5010a.ext.cloudfilter.net ([10.0.29.199])
 	by cmsmtp with ESMTP
-	id jx7qqGhLYez0Ck48LqCMbL; Sat, 23 Sep 2023 15:01:25 +0000
+	id jyvyqGzeoez0Ck48MqCMc8; Sat, 23 Sep 2023 15:01:26 +0000
 Received: from gator4166.hostgator.com ([108.167.133.22])
 	by cmsmtp with ESMTPS
-	id k48iqiIvf22LNk48iqjftS; Sat, 23 Sep 2023 15:01:48 +0000
-X-Authority-Analysis: v=2.4 cv=c7O4/Dxl c=1 sm=1 tr=0 ts=650efddc
+	id k48jqC7HqIDdmk48kqCw9u; Sat, 23 Sep 2023 15:01:50 +0000
+X-Authority-Analysis: v=2.4 cv=HcYH8wI8 c=1 sm=1 tr=0 ts=650efdde
  a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=P7XfKmiOJ4/qXqHZrN7ymg==:17
  a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
  a=IkcTkHD0fZMA:10 a=zNV7Rl7Rt7sA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
- a=VnNF1IyMAAAA:8 a=cm27Pg_UAAAA:8 a=VwQbUJbxAAAA:8 a=HvF037n1xESchLcPDVoA:9
- a=QEXdDO2ut3YA:10 a=xmb-EsYY8bH0VWELuYED:22 a=AjGcO6oz07-iQ99wixmX:22
+ a=VwQbUJbxAAAA:8 a=cm27Pg_UAAAA:8 a=HvF037n1xESchLcPDVoA:9 a=QEXdDO2ut3YA:10
+ a=AjGcO6oz07-iQ99wixmX:22 a=xmb-EsYY8bH0VWELuYED:22
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
 	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
 	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
 	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=TgmeyvTv6/GFjXWezYgO1lYXlHOkD/szL9csZtjsEzo=; b=tVe9KZ+4QIkA7YDm03YPplIuLy
-	fcfm5fZMUCCG76tZ/dt97A1650fOQfXUzMtqZuucZOuL/TptgfGsrFhYT1BSR3F0LpJAXB3yKrHZZ
-	mpqDVM2ono0os4bDwHBTx+lpZQVZVhduLJ2Ce90W7iV+6ySy8gIMsqdVOOmjsD2TBgSLrx2iXGxA1
-	8Le7p94dmdBsApOTKv8ue2R1vcoEKRYros7RJE7KbMPO6WjUTQfYnPdKHAvCploC+SuLuUHy9p1Mo
-	tQRunJO8+BfQ5FsRdsMnMnqFKNh0YnIGhI6ebsyt5ZeF/QS0YG+Hxfq7/OU9DIPqr7/gClPPd3xgQ
-	AnhgWEmg==;
-Received: from [94.239.20.48] (port=60870 helo=[192.168.1.98])
+	bh=EabzJG2rVzengUzDcWBcKvR8fjGQXhmX4ki6ncLymxs=; b=gbIV+wQRirZt/G48bleKQNkkZA
+	Hz2yDIjD4PHK3btnm/PH2fllBsDAu7wmnm4YAG6C0wXhEdqaSiiJ1FPKDeqcN+0vVvMDl2FQjVL0P
+	e+YD0jNxVhHJzQgwb74SaU+Gaug5y4N7YAoaJk+V+qHCOJIBFfdMicBDgUNIX7eG+vqtRc+BbsOOI
+	kKdto1Gw5d1iShBJqkdXi4U22T5H22gS+I1vMIrGnvvSNwhqjKvi85XfqNIFp6xwK0dj2O79wSGMK
+	tEfoFd+WDiO9iAi2vZHw+HhTrl9wvfFyqw5CT+jbxl636BBLPlZUOEfuq3PX1xq9jBTWgu2U0tl0M
+	EYnHPA+w==;
+Received: from [94.239.20.48] (port=46296 helo=[192.168.1.98])
 	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.96)
 	(envelope-from <gustavo@embeddedor.com>)
-	id 1qjy5n-003eED-0Y;
-	Sat, 23 Sep 2023 03:34:23 -0500
-Message-ID: <4d5e29e0-cd74-37e3-6305-d5c8daedf7c3@embeddedor.com>
-Date: Sat, 23 Sep 2023 10:35:28 -0600
+	id 1qjy5R-003dKL-0q;
+	Sat, 23 Sep 2023 03:34:01 -0500
+Message-ID: <17cda7da-a70f-8d0d-4224-c82b0ddc4364@embeddedor.com>
+Date: Sat, 23 Sep 2023 10:35:07 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -46,17 +46,16 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.15.1
-Subject: Re: [PATCH] gcov: Annotate struct gcov_iterator with __counted_by
+Subject: Re: [PATCH] libata: Annotate struct ata_cpr_log with __counted_by
 Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>,
- Peter Oberparleiter <oberpar@linux.ibm.com>
-Cc: Nathan Chancellor <nathan@kernel.org>,
+To: Kees Cook <keescook@chromium.org>, Damien Le Moal <dlemoal@kernel.org>
+Cc: linux-ide@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>,
  Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
  linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
  linux-hardening@vger.kernel.org
-References: <20230922175220.work.327-kees@kernel.org>
+References: <20230922175210.work.239-kees@kernel.org>
 From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20230922175220.work.327-kees@kernel.org>
+In-Reply-To: <20230922175210.work.239-kees@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
@@ -67,19 +66,19 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 94.239.20.48
 X-Source-L: No
-X-Exim-ID: 1qjy5n-003eED-0Y
+X-Exim-ID: 1qjy5R-003dKL-0q
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: ([192.168.1.98]) [94.239.20.48]:60870
+X-Source-Sender: ([192.168.1.98]) [94.239.20.48]:46296
 X-Source-Auth: gustavo@embeddedor.com
 X-Email-Count: 0
 X-Org: HG=hgshared;ORG=hostgator;
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfPx2KYC4evmVq6LhRjQQbJhN9T2HIxLxtOhqgv8lLsSAqtg9FZCih74tBZCiW4JhZ5VR8HH9H5hrS0vIZwtFigjjiQPwHz6flC6kyZGSAnMQkDhr3g8Z
- yPZrvrbPi5YwK02jqpg7N4g1HrB7IYbvVIGWpqugDRVMhlsZQBrQLMfrUBUHEPoU0uOFn6d2GZnD0i41OrFGNkPrwZXDN3W4zWnvOzX4tVGAbdbZ80D+WRv4
- wP3VUQQt3qgTCn0aN7FpmGJJPpQfoa2ltRhNp7RspOM=
+X-CMAE-Envelope: MS4xfLObdDCitD7CqE3EpOs3qVYVbj7OD5XNZe8p2p0A5cXFT/8OZStJZgBdnvKfynbslQg9EnK3AyG98klPkd1RibzZChdS9FwxcCp+Ckgv+2s9+pTZUOxC
+ DbKEM/eCKMQIayKV8E7J2GdUZJkBQsmm0WtARvDamo2Q0p/KacT25cCTNTEZKQHXK8I9KfcCP9h8Kztqx0z/Pnr3Td+meyqxQJPza8Hy0oIn7YxqRPxxlwts
+ 9O9G/Lo+XaQTwaDtjdY9aLCVm5jv775cAv786UMD1GaiKdbFrwWb3wQDGI4d/+bdLRElh9om/ma3IA2Ntn4okA==
 X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
 	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
@@ -96,11 +95,12 @@ On 9/22/23 11:52, Kees Cook wrote:
 > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
 > 
-> As found with Coccinelle[1], add __counted_by for struct gcov_iterator.
+> As found with Coccinelle[1], add __counted_by for struct ata_cpr_log.
 > 
 > [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 > 
-> Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
+> Cc: Damien Le Moal <dlemoal@kernel.org>
+> Cc: linux-ide@vger.kernel.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 
 Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
@@ -110,19 +110,19 @@ Thanks
 Gustavo
 
 > ---
->   kernel/gcov/fs.c | 2 +-
+>   include/linux/libata.h | 2 +-
 >   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/kernel/gcov/fs.c b/kernel/gcov/fs.c
-> index 5c3086cad8f9..01520689b57c 100644
-> --- a/kernel/gcov/fs.c
-> +++ b/kernel/gcov/fs.c
-> @@ -99,7 +99,7 @@ struct gcov_iterator {
->   	struct gcov_info *info;
->   	size_t size;
->   	loff_t pos;
-> -	char buffer[];
-> +	char buffer[] __counted_by(size);
+> diff --git a/include/linux/libata.h b/include/linux/libata.h
+> index 3c17a5053f00..f91e8e7f1c00 100644
+> --- a/include/linux/libata.h
+> +++ b/include/linux/libata.h
+> @@ -656,7 +656,7 @@ struct ata_cpr {
+>   
+>   struct ata_cpr_log {
+>   	u8			nr_cpr;
+> -	struct ata_cpr		cpr[];
+> +	struct ata_cpr		cpr[] __counted_by(nr_cpr);
 >   };
 >   
->   /**
+>   struct ata_device {
