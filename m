@@ -1,135 +1,96 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C06101CF
-	for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 09:41:53 +0000 (UTC)
-Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E94A7197;
-	Sat, 23 Sep 2023 02:41:50 -0700 (PDT)
-Received: from eig-obgw-6003a.ext.cloudfilter.net ([10.0.30.151])
-	by cmsmtp with ESMTP
-	id jkvlqyk2aWU1cjz93qSqCk; Sat, 23 Sep 2023 09:41:50 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id jz92qVlwT8SgTjz93qMfdg; Sat, 23 Sep 2023 09:41:49 +0000
-X-Authority-Analysis: v=2.4 cv=VLTOIvDX c=1 sm=1 tr=0 ts=650eb2dd
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=P7XfKmiOJ4/qXqHZrN7ymg==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=zNV7Rl7Rt7sA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
- a=pGLkceISAAAA:8 a=yPCof4ZbAAAA:8 a=VwQbUJbxAAAA:8 a=cm27Pg_UAAAA:8
- a=HvF037n1xESchLcPDVoA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
- a=xmb-EsYY8bH0VWELuYED:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=W59l0qYTaJCJR+DSooa3iIlRJqVuefAJWm70dNU33tM=; b=n1skR6Z83tyH06zw6HanzSoLGt
-	GmhipnH13DzlSeNZWRxSiW7YIFRd3NrKekMLH4Kg7ZUL7NsFYIE/3n3zFsjOjoOFMmQKIC2JuXXK9
-	fw8cU1BOREgyvDJ+0wSez5l7na5w8P3Wgbd4iQFS9jhEs6r4ruxBLq+jYjkFIu2/J2HghwY6iDvjo
-	szoowIGTHJsxPOspnqZKBRKRkwItA26Yqhc0oYSmbitMGqlIaNNDJTGEogDMFdHtcXI8+FDJxfXfi
-	1hgA6rVoD8EUioBRui2te4qVhCmcxPOvKJy3cs2s7jodGv/J4GZ9X/MWTn/miRPwfxRfNIOqt2N0i
-	DwjpFcCA==;
-Received: from [94.239.20.48] (port=47800 helo=[192.168.1.98])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1qjy6p-003fLi-34;
-	Sat, 23 Sep 2023 03:35:28 -0500
-Message-ID: <f0a4bd2c-c099-b8e1-2a0e-7c505b4f7e6f@embeddedor.com>
-Date: Sat, 23 Sep 2023 10:36:32 -0600
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D385210A0C
+	for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 10:37:34 +0000 (UTC)
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3B89A9;
+	Sat, 23 Sep 2023 03:37:30 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id C4D8321B1D;
+	Sat, 23 Sep 2023 10:37:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1695465447; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2W9BF97SqiNwR44UTKyJIL2C/qyxi5M9MCWRyPEaLmw=;
+	b=JuvpEpMqV9y6fLJbjdzMQwg0h+Lsx2O4wFgIem1jQy2SwHoPlS56wrP58UaOLsuEIbr795
+	ark93U4IZpw51JiDfUhS9fhTaT9MBKVM5fZNKyW2WfYZU9i86j6IXimOPF2Gd1acl8mZzy
+	AYBzIS199Kx/yveg+WnzkfkTguGYa4M=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1695465447;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2W9BF97SqiNwR44UTKyJIL2C/qyxi5M9MCWRyPEaLmw=;
+	b=NSa4rUvK8i4/moouamWix2DGnqjmSWbUDYD33kKY4vanvTr5WtgjXl93Mu5I8XwlVh4iGh
+	EUYD6YXmGg66HXCQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 84B781390B;
+	Sat, 23 Sep 2023 10:37:27 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id i9IlH+e/DmUQZwAAMHmgww
+	(envelope-from <tiwai@suse.de>); Sat, 23 Sep 2023 10:37:27 +0000
+Date: Sat, 23 Sep 2023 12:37:26 +0200
+Message-ID: <87h6nlb2ft.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Kees Cook <keescook@chromium.org>
+Cc: Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Cezary Rojewski <cezary.rojewski@intel.com>,
+	alsa-devel@alsa-project.org,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Tom Rix <trix@redhat.com>,
+	Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+	Jason Montleon <jmontleo@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] ALSA: hda: Annotate struct hda_conn_list with __counted_by
+In-Reply-To: <20230922175042.work.547-kees@kernel.org>
+References: <20230922175042.work.547-kees@kernel.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH] scsi: target: tcmu: Annotate struct tcmu_tmr with
- __counted_by
-Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>, Bodo Stroesser <bostroesser@gmail.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>,
- linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
- linux-hardening@vger.kernel.org
-References: <20230922175300.work.148-kees@kernel.org>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20230922175300.work.148-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 94.239.20.48
-X-Source-L: No
-X-Exim-ID: 1qjy6p-003fLi-34
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.98]) [94.239.20.48]:47800
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 0
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfKyYb1xFu1OukEAObDyaG7s7XWZNB3Wmzc2/lsKXNsOdroZzgB4tgeKdbhugSOFYFv6sDTcZa9SBM+Jce2W9hBQWGb+SMOFIjJIRkWZK53wCYiq4z+WX
- +P9byGWJYxmNarq3MF4tCy4q8DFBDKVirvWn98Xq6QsrfZ5zF1ELQHSycq1+81SzoDnxXeeP94FKbXfgZO0GehEXL5EwaFPUvUhAINuYn0D33qspTqGZhgb7
- 0+HU24jREvPeexj+gRe3b7VGCrzBJVFtXh14o0QazP1B+q/eW62TT8/1oFH+rhcaRPxGW2GWYwsF8/dQpkksBZ9qMy+B9cjUppTbkfZFNBqFoN7uLDHDe9SD
- QujXsqH5
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,DATE_IN_FUTURE_06_12,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-
-
-On 9/22/23 11:53, Kees Cook wrote:
+On Fri, 22 Sep 2023 19:50:42 +0200,
+Kees Cook wrote:
+> 
 > Prepare for the coming implementation by GCC and Clang of the __counted_by
 > attribute. Flexible array members annotated with __counted_by can have
 > their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
 > 
-> As found with Coccinelle[1], add __counted_by for struct tcmu_tmr.
+> As found with Coccinelle[1], add __counted_by for struct hda_conn_list.
 > 
 > [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 > 
-> Cc: Bodo Stroesser <bostroesser@gmail.com>
-> Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-> Cc: linux-scsi@vger.kernel.org
-> Cc: target-devel@vger.kernel.org
+> Cc: Jaroslav Kysela <perex@perex.cz>
+> Cc: Takashi Iwai <tiwai@suse.com>
+> Cc: Cezary Rojewski <cezary.rojewski@intel.com>
+> Cc: alsa-devel@alsa-project.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Applied now.  Thanks.
 
-Thanks
--- 
-Gustavo
 
-> ---
->   drivers/target/target_core_user.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/target/target_core_user.c b/drivers/target/target_core_user.c
-> index 22cc6cac0ba2..7eb94894bd68 100644
-> --- a/drivers/target/target_core_user.c
-> +++ b/drivers/target/target_core_user.c
-> @@ -201,7 +201,7 @@ struct tcmu_tmr {
->   
->   	uint8_t tmr_type;
->   	uint32_t tmr_cmd_cnt;
-> -	int16_t tmr_cmd_ids[];
-> +	int16_t tmr_cmd_ids[] __counted_by(tmr_cmd_cnt);
->   };
->   
->   /*
+Takashi
