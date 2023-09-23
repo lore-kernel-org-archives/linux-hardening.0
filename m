@@ -1,44 +1,44 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F421D306
-	for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 09:41:46 +0000 (UTC)
-Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C41E71AC;
-	Sat, 23 Sep 2023 02:41:44 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9AE2101CF
+	for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 09:41:49 +0000 (UTC)
+Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 939CACCA;
+	Sat, 23 Sep 2023 02:41:47 -0700 (PDT)
 Received: from eig-obgw-5002a.ext.cloudfilter.net ([10.0.29.215])
 	by cmsmtp with ESMTP
-	id jx8dqJ7iMbK1Vjz8yqkWMF; Sat, 23 Sep 2023 09:41:44 +0000
+	id jx8cqaxZ8DKaKjz90qHoLh; Sat, 23 Sep 2023 09:41:46 +0000
 Received: from gator4166.hostgator.com ([108.167.133.22])
 	by cmsmtp with ESMTPS
-	id jz8xqyR9OZb7Mjz8xq1r4V; Sat, 23 Sep 2023 09:41:43 +0000
-X-Authority-Analysis: v=2.4 cv=Z57/oVdA c=1 sm=1 tr=0 ts=650eb2d7
+	id jz8zqyRBBZb7Mjz8zq1r5N; Sat, 23 Sep 2023 09:41:46 +0000
+X-Authority-Analysis: v=2.4 cv=Z57/oVdA c=1 sm=1 tr=0 ts=650eb2da
  a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=P7XfKmiOJ4/qXqHZrN7ymg==:17
  a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
  a=IkcTkHD0fZMA:10 a=zNV7Rl7Rt7sA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
- a=J1Y8HTJGAAAA:8 a=VwQbUJbxAAAA:8 a=cm27Pg_UAAAA:8 a=HvF037n1xESchLcPDVoA:9
- a=QEXdDO2ut3YA:10 a=y1Q9-5lHfBjTkpIzbSAN:22 a=AjGcO6oz07-iQ99wixmX:22
- a=xmb-EsYY8bH0VWELuYED:22
+ a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=pGLkceISAAAA:8 a=QyXUC8HyAAAA:8
+ a=cm27Pg_UAAAA:8 a=gq5M5jF_6ledRb6gi8cA:9 a=QEXdDO2ut3YA:10
+ a=AjGcO6oz07-iQ99wixmX:22 a=cvBusfyB2V15izCimMoJ:22 a=xmb-EsYY8bH0VWELuYED:22
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
 	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
 	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
 	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=f0xMfpFbXrJ1GVDfUSIPxZ3rtagU/wUURpese8OucSQ=; b=fY2KKhHpvEo85qEso9g3x0ZfpC
-	xDsF3dI4fI+ilSx+ve765boHnB8HnUgO59pvmSW2kSClMuYcaEZppXxkmNwXJDcw64xBfcXuI5Nz0
-	TEk/BErlY2za6dvk+rNv8gllZItAuoeC5dzlilx8Odpt0aWWXAHET9E7w78s100npVTlYwF+Pijau
-	ZylFyM6X7pGWQtDNLrXT1kz47k+YcqW6oO7dAjdbeqt+zWJCmLb1basDnVDKEy2dFqJns8a5O+j06
-	WIyFdHL1lDC4AxpaKO4M/9TjE8LNnremX/aNXgbxhiWc0CXarUbZa1cwtdx7mqmsGWfghSPMe8Jqh
-	w7mEGsKQ==;
-Received: from [94.239.20.48] (port=43746 helo=[192.168.1.98])
+	bh=0NtaCTVGjOYSpp7Vv4BMjxuQDFYb5u3uxvIHM5NV04k=; b=FU7vQujz2rS0onI7bq2398r92f
+	yjnfA8G0aQkFCaHHiAQNObT89HDOuXpxfchnLtf/LZIOXXI0557oPadCaz0cxOIpO9vlp5nyaJnmY
+	lzY1kKtx8iuZ7r7Xjk35r6tfJFqh3Ts9D/jxjrOEcwDxCxsS+ySD59ijGTizylOrSBrQ01ds7h8DC
+	QHghQuneEEYZqbsgDkaGauphGNKcrayXtHw+QATlBE70wJDGgK2cTrgIQFGxJjxhR3tUUKQzpZsKc
+	jriQOX3K7c/NHW2rIm1sVxGbppvGhYvkLgpBnFmABsLohWW/mIF8h5JoWjW777iXZn+Sat7EzEXmr
+	JBZs88PQ==;
+Received: from [94.239.20.48] (port=55432 helo=[192.168.1.98])
 	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.96)
 	(envelope-from <gustavo@embeddedor.com>)
-	id 1qjy4m-003ciH-36;
-	Sat, 23 Sep 2023 03:33:21 -0500
-Message-ID: <f0ed26fb-c462-72f9-2f7e-834bab505ce4@embeddedor.com>
-Date: Sat, 23 Sep 2023 10:34:26 -0600
+	id 1qjy7m-003gxW-0M;
+	Sat, 23 Sep 2023 03:36:26 -0500
+Message-ID: <436d7488-1a20-b6af-8e3f-f151ba2c210d@embeddedor.com>
+Date: Sat, 23 Sep 2023 10:37:30 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -47,16 +47,23 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.15.1
-Subject: Re: [PATCH] sparc: Annotate struct cpuinfo_tree with __counted_by
+Subject: Re: [PATCH] drivers: thermal: tsens: Annotate struct tsens_priv with
+ __counted_by
 Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>, "David S. Miller" <davem@davemloft.net>
-Cc: sparclinux@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>,
+To: Kees Cook <keescook@chromium.org>, Andy Gross <agross@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Amit Kucheria <amitk@kernel.org>,
+ Thara Gopinath <thara.gopinath@gmail.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
+ linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+ Nathan Chancellor <nathan@kernel.org>,
  Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
  linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
  linux-hardening@vger.kernel.org
-References: <20230922175159.work.357-kees@kernel.org>
+References: <20230922175341.work.919-kees@kernel.org>
 From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20230922175159.work.357-kees@kernel.org>
+In-Reply-To: <20230922175341.work.919-kees@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
@@ -67,41 +74,50 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 94.239.20.48
 X-Source-L: No
-X-Exim-ID: 1qjy4m-003ciH-36
+X-Exim-ID: 1qjy7m-003gxW-0M
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: ([192.168.1.98]) [94.239.20.48]:43746
+X-Source-Sender: ([192.168.1.98]) [94.239.20.48]:55432
 X-Source-Auth: gustavo@embeddedor.com
 X-Email-Count: 0
 X-Org: HG=hgshared;ORG=hostgator;
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfBCMpQ24JdfeIfKb+SfBD75VpoTYD77+OkegjNj6czvjqrNjzPfb6BXQ6f/HWeGHwVZIBmOsH0v0n4ztlwAtkORTeGnaCp89lCszQ9RmEpRlfCAaS7Zb
- kcsTwGLJH8Nk0IVgIKBrc9Idtk9gHjdUpWyDpqDjgiuFEDnKkyE7IZLkpCJc63nbsTKFKTy4AyR16huJajwJakqJIF+b57YD2ZSFWQCc5FrkkhEm8J5a9Asg
- rHWWujpua8VepHzeWFGpZpWJuPyqLrodArvo9MA71Wv+1GHmgX6n7xoK3XoRvQkcYap2KYOY8rk+sm+kXqaCIg==
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,DATE_IN_FUTURE_06_12,
+X-CMAE-Envelope: MS4xfArTGrjtDyCD+nMBKezyuAx5fwLeVjXFBuwD2atG6aDTeJ40gn1jnEDJj4Hx59AAYCAr5+CUvPxoFCSyHDeK2gdWLq1aCMdBdP3df4EtwL9zdekjkyBm
+ 6+zmKihJqDBBHqbrqf3FBQ+73EDOqYMx5NY7rTqX02UeDzkzQ/Xl5746xxBn2Be0Jt+ql/7oTiuhH/sYPkD+K5EzHdAvaltzrGrYJj0t7WQdkN/OU5d9hnXS
+ xDyxVANNoRXSAEbWnIBl8OowUHYidPNMqdZYnd11iDdhzQP7H/HlxBHn9JrqbHOZr4qKWch2ZZj8syvGIHw11+ma/8V4yJzaWdZQNwe9S6p03TclWjvlxz0c
+ gHAxYZ7U
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DATE_IN_FUTURE_06_12,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+	RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
 
 
-On 9/22/23 11:52, Kees Cook wrote:
+On 9/22/23 11:53, Kees Cook wrote:
 > Prepare for the coming implementation by GCC and Clang of the __counted_by
 > attribute. Flexible array members annotated with __counted_by can have
 > their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
 > 
-> As found with Coccinelle[1], add __counted_by for struct cpuinfo_tree.
+> As found with Coccinelle[1], add __counted_by for struct tsens_priv.
 > 
 > [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 > 
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: sparclinux@vger.kernel.org
+> Cc: Andy Gross <agross@kernel.org>
+> Cc: Bjorn Andersson <andersson@kernel.org>
+> Cc: Konrad Dybcio <konrad.dybcio@linaro.org>
+> Cc: Amit Kucheria <amitk@kernel.org>
+> Cc: Thara Gopinath <thara.gopinath@gmail.com>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: Zhang Rui <rui.zhang@intel.com>
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: linux-pm@vger.kernel.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 
 Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
@@ -111,19 +127,19 @@ Thanks
 Gustavo
 
 > ---
->   arch/sparc/kernel/cpumap.c | 2 +-
+>   drivers/thermal/qcom/tsens.h | 2 +-
 >   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/sparc/kernel/cpumap.c b/arch/sparc/kernel/cpumap.c
-> index f07ea88a83af..8fcf2d8c6bd2 100644
-> --- a/arch/sparc/kernel/cpumap.c
-> +++ b/arch/sparc/kernel/cpumap.c
-> @@ -50,7 +50,7 @@ struct cpuinfo_tree {
+> diff --git a/drivers/thermal/qcom/tsens.h b/drivers/thermal/qcom/tsens.h
+> index 2805de1c6827..cb637fa289ca 100644
+> --- a/drivers/thermal/qcom/tsens.h
+> +++ b/drivers/thermal/qcom/tsens.h
+> @@ -585,7 +585,7 @@ struct tsens_priv {
+>   	struct dentry			*debug_root;
+>   	struct dentry			*debug;
 >   
->   	/* Offsets into nodes[] for each level of the tree */
->   	struct cpuinfo_level level[CPUINFO_LVL_MAX];
-> -	struct cpuinfo_node  nodes[];
-> +	struct cpuinfo_node  nodes[] __counted_by(total_nodes);
+> -	struct tsens_sensor		sensor[];
+> +	struct tsens_sensor		sensor[] __counted_by(num_sensors);
 >   };
 >   
->   
+>   /**
