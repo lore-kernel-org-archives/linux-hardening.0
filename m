@@ -1,56 +1,51 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4420164E
-	for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 03:26:03 +0000 (UTC)
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCE5E1A5
-	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 20:26:01 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-690d25b1dbdso2881466b3a.2
-        for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 20:26:01 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19976651
+	for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 03:49:23 +0000 (UTC)
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEFAD139
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 20:49:22 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-1c0c6d4d650so29114435ad.0
+        for <linux-hardening@vger.kernel.org>; Fri, 22 Sep 2023 20:49:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695439561; x=1696044361; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1695440962; x=1696045762; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LR9DR3BeUG86XkT5sEqTxjBnOBqP8nuIev7GEpE4GGc=;
-        b=ZixLuEXkt7URqTMWYy/LiOvTr+2VBk7oX8tD4FFTvs127Gt+hwzaVCCHBuwmbcAR6q
-         uFAzMoku/QEbYpnCeDstaHUSGeLwMqO6ONaRVroiZgNB4ylk4ICP1gCaAXQzOyKvrfa/
-         bVlkHy1kfghMx1ABW28YhSRDOD2XIdD5ROcIE=
+        bh=avM5LlsDA73WnR3UrffkZ0OMPeQzuORhxY0IwjP+1Cs=;
+        b=DUc4JHBSkMF1iURo1YUoZRxsf8a+znZWIIcxLn+WMjxOrRLATDgWr/pxAXfpApV9nz
+         aXuwqPz2qBYSzUjgNAxLE4Bk5gXMzkbjRq6kLPJWWv8Y6op5/ReL19HdTf8p5xwW4Xk7
+         lFtO153lsHRqKEAvXXd66gexHleqkOUM30xmI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695439561; x=1696044361;
+        d=1e100.net; s=20230601; t=1695440962; x=1696045762;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LR9DR3BeUG86XkT5sEqTxjBnOBqP8nuIev7GEpE4GGc=;
-        b=X4YIPmONtkaa4DTvwytBLCMCuHw1RiB2EfjceUpQRHo0u8AedqMVxazceGqqHsH+MH
-         b/RTLr0qyC/qR/zThTGhZJJV/EobIeKitAeisJ6YayWjHatZ+1AJHPuDqVpv4HOzSdfN
-         V4j2cTMUWLmuaBSaX/Zqpq0JpT9SBkfRiV4+bQf/ZqBXDZRjaRJZeuWepZg5ROphk7kv
-         uyPu1wBGhgPpZ6LbThJd+RsEJdgwkrzrZwBJRkoLnka6xVeU3KtzoNLlBN1g1zT+km+6
-         MGN1H/n5uxTiZjaJiLT6h22uYj6y5234Q0qFt3O/KIisN/LsY3byLuf1d5xkbUyC2lPK
-         lCSA==
-X-Gm-Message-State: AOJu0YwJZxHLkI1WPuiPJZuKJ/wBnZ2Ar0vEmhyaaSRNAHLej+7cHKNf
-	GQ38NXCvn+zb8bJdY09nEzyhLQ==
-X-Google-Smtp-Source: AGHT+IG+yKlVthCSQJVmhQADSNEyr7VJLqnwS4nHKn7LFSAEe8auAjxigMDQH74ce+YiDA1xBlG0bQ==
-X-Received: by 2002:a05:6a00:2d85:b0:690:c5cf:91f4 with SMTP id fb5-20020a056a002d8500b00690c5cf91f4mr1235039pfb.12.1695439561233;
-        Fri, 22 Sep 2023 20:26:01 -0700 (PDT)
+        bh=avM5LlsDA73WnR3UrffkZ0OMPeQzuORhxY0IwjP+1Cs=;
+        b=a5aWh5N+Bcgu6CNqi9hRUqhCK670QGVYk/EZrfY570n63fUo9KhxBpYjWrXZV5W/98
+         9H/mNuFhozXmHIIExLsC8VUjvcsJP4/+QfjOpnNuizucfh4Ln7XdA13HXbRKCriXivwd
+         WFO8vzhtQwhfPwNiYY9ZAE5gO/AK0c1wrqBm3Uy18OPdlG55XWsne/Pqugk4Ft6rJ/ZD
+         TdGboRx7lIC+e14lkdFkqecGJEj94ZpWdt6YFdVA4T6iTnfucJLBjsEqPmDNfoQ4ysVY
+         4XhW/AlscM/aFCP6TS2Zp2DuQwbAL3ha1gsPJwGoz8xh7kHIEhBNJ8IuUGT5aFeFax9O
+         t4+w==
+X-Gm-Message-State: AOJu0Yz1sulszSn8bkkuLz8lHHPXAuUBDiHLTI0nTaziN/tylfO66VeX
+	AEO85k3TOka2G8a5Fbqo/kJra//aeSXh0+/esjQ+ag==
+X-Google-Smtp-Source: AGHT+IHE9L/Ls29q6YetpIw6y6dSYetPlIprop/PC5rY4Yxt4+q0LWG5/cvVYSfmPVV36KNZQ+jQmg==
+X-Received: by 2002:a17:903:41c2:b0:1c5:cd1c:4705 with SMTP id u2-20020a17090341c200b001c5cd1c4705mr1632517ple.10.1695440962307;
+        Fri, 22 Sep 2023 20:49:22 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id s24-20020aa78298000000b0068fe8a42f45sm3894818pfm.207.2023.09.22.20.26.00
+        by smtp.gmail.com with ESMTPSA id je15-20020a170903264f00b001ab39cd875csm547209plb.133.2023.09.22.20.49.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Sep 2023 20:26:00 -0700 (PDT)
-Date: Fri, 22 Sep 2023 20:25:59 -0700
+        Fri, 22 Sep 2023 20:49:21 -0700 (PDT)
+Date: Fri, 22 Sep 2023 20:49:21 -0700
 From: Kees Cook <keescook@chromium.org>
-To: Baoquan He <bhe@redhat.com>
-Cc: Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org,
-	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, linux-hardening@vger.kernel.org,
-	Shakeel Butt <shakeelb@google.com>
-Subject: Re: [PATCH] kexec: Annotate struct crash_mem with __counted_by
-Message-ID: <202309222012.49E3C0AA@keescook>
-References: <20230922175224.work.712-kees@kernel.org>
- <ZQ41d5majBepW48Z@MiWiFi-R3L-srv>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Alexey Dobriyan <adobriyan@gmail.com>,
+	linux-hardening@vger.kernel.org
+Subject: Re: [GIT PULL] hardening fixes for v6.6-rc3
+Message-ID: <202309222034.F2B777F55@keescook>
+References: <202309220957.927ADC0586@keescook>
+ <CAHk-=wg0C+eEm0Tegpvc1zZjcqkdG9L0ed10tg_rQ1-WZciMGA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -59,7 +54,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZQ41d5majBepW48Z@MiWiFi-R3L-srv>
+In-Reply-To: <CAHk-=wg0C+eEm0Tegpvc1zZjcqkdG9L0ed10tg_rQ1-WZciMGA@mail.gmail.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -67,93 +62,45 @@ X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Sat, Sep 23, 2023 at 08:46:47AM +0800, Baoquan He wrote:
-> On 09/22/23 at 10:52am, Kees Cook wrote:
-> > Prepare for the coming implementation by GCC and Clang of the __counted_by
-> > attribute. Flexible array members annotated with __counted_by can have
-> > their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-> > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> > functions).
-> > 
-> > As found with Coccinelle[1], add __counted_by for struct crash_mem.
-> > 
-> > [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
-> > 
-> > Cc: Eric Biederman <ebiederm@xmission.com>
-> > Cc: kexec@lists.infradead.org
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  include/linux/crash_core.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-> > index 3426f6eef60b..5126a4fecb44 100644
-> > --- a/include/linux/crash_core.h
-> > +++ b/include/linux/crash_core.h
-> > @@ -131,7 +131,7 @@ static inline void __init reserve_crashkernel_generic(char *cmdline,
-> >  struct crash_mem {
-> >  	unsigned int max_nr_ranges;
-> >  	unsigned int nr_ranges;
-> > -	struct range ranges[];
-> > +	struct range ranges[] __counted_by(max_nr_ranges);
+On Fri, Sep 22, 2023 at 04:55:45PM -0700, Linus Torvalds wrote:
+> On Fri, 22 Sept 2023 at 09:59, Kees Cook <keescook@chromium.org> wrote:
+> >
+> > - Fix UAPI stddef.h to avoid C++-ism (Alexey Dobriyan)
 > 
-> This __counted_by() only makes sense when there's a obvious upper
-> boundary, max_nr_ranges in this case.
+> Ugh. Did we really have to make two different versions of that define?
+> 
+> Ok, so C++ did something stupid wrt an empty struct. Fine.
+> 
+> But I think we could have still shared the same definition by just
+> using the same 'zero-sized array' trick, regardless of any 'empty
+> struct has a size in C++'.
+> 
+> IOW, wouldn't this just work universally, without any "two completely
+> different versions" hack?
+> 
+> #define __DECLARE_FLEX_ARRAY(TYPE, NAME)        \
+>         struct { \
+>                 char __empty_ ## NAME[0]; \
+>                 TYPE NAME[]; \
+>         }
+> 
+> I didn't test. I'm just hating on that '#ifdef __cplusplus'.
 
-Yes; it's designed to be the array element count used for the
-allocation. For example with the above case:
+Yeah, I had same thought[1], but in the end I left it the way Alexey
+suggested for one decent reason, and one weak reason:
 
-        nr_ranges += 2;
-        cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
-        if (!cmem)
-                return NULL;
+1) As discovered[2] while porting this helper to ACPICA, using a flexible
+   array in a struct like this does not fly with MSVC, so for MSVC
+   ingesting UAPI, having the separate struct is likely more robust.
 
-        cmem->max_nr_ranges = nr_ranges;
-        cmem->nr_ranges = 0;
-
-nr_ranges is the max count of the elements.
-
-_However_, if a structure (like this one) has _two_ counters, one for
-"in use" and another for "max available", __counted_by could specify the
-"in use" case, as long as array indexing only happens when that "in use"
-has been updated. So, if it were:
-
-struct crash_mem {
-    unsigned int max_nr_ranges;
-    unsigned int nr_ranges;
-    struct range ranges[] __counted_by(nr_ranges);
-};
-
-then this would trigger the bounds checking:
-
-	cmem->ranges[0] = some_range;	/* "nr_ranges" is still 0 so index 0 isn't allowed */
-	cmem->nr_ranges ++;
-
-but this would not:
-
-	cmem->nr_ranges ++;		/* index 0 is now available for use. */
-	cmem->ranges[0] = some_range;
-
-> This heavily depends and isn't much in kernel?
-
-Which "this" do you mean? The tracking of max allocation is common.
-Tracking max and "in use" happens in some places (like here), but is
-less common.
-
-> E.g struct swap_info_struct->avail_lists[].
-
-This is even less common: tracking the count externally from the struct,
-as done there with nr_node_ids. Shakeel asked a very similar question
-and also pointed out nr_node_ids:
-https://lore.kernel.org/all/202309221128.6AC35E3@keescook/
-
-> Just curious, not related to this patch though.
-
-I'm happy to answer questions! Yeah, as I said in the above thread,
-I expect to expand what __counted_by can use, and I suspect (hope)
-a global would be easier to add than an arbitrary expression. :)
+2) __cplusplus is relatively common in UAPI headers already:
+   $ git grep __cplusplus -- include/uapi | wc -l
+   58
 
 -Kees
+
+[1] https://lore.kernel.org/all/202309151208.C99747375@keescook/
+[2] https://github.com/acpica/acpica/pull/837
 
 -- 
 Kees Cook
