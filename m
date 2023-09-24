@@ -1,96 +1,115 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC5F1391
-	for <linux-hardening@vger.kernel.org>; Sun, 24 Sep 2023 12:10:03 +0000 (UTC)
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28D62101
-	for <linux-hardening@vger.kernel.org>; Sun, 24 Sep 2023 05:10:02 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id a640c23a62f3a-99c93638322so1115308666b.1
-        for <linux-hardening@vger.kernel.org>; Sun, 24 Sep 2023 05:10:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1695557400; x=1696162200; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OSaR+L6f1m7u+tcvmJlO+a3NVKKfrp8TzdBW1XZxETg=;
-        b=ww+dhZZUS08fr6ppS8i0rXazHxAoLi+tbci6CwNC3i7kZs8moZFLbqyP2Cfl+InwxC
-         ANua2ibNEeFrKdqLgmJX+5OOF5mCRNDkhPzQywLbC6vUCfwUra1otlp2/Tww6K866KU8
-         tZfB6pOc9PSil52EUeVvY6kLOknnMNPbMoP7eGOWA3tBLZFJqns+EZjQnHfm2g7znGw0
-         egzwM+zo4jqNegTamqHZtRhgGNWRbGw/3ZDdPbKuUatbHrkEBo14ykzKqlO3EPt5LRyJ
-         zME7n1LEHdfhdnLyQ9TAVr7PNvsVJKiNJz8gXxsPKhrEDHTgyKLgDe382bQvD3DEM4YG
-         P3VQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695557400; x=1696162200;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OSaR+L6f1m7u+tcvmJlO+a3NVKKfrp8TzdBW1XZxETg=;
-        b=GSgSeSHg1ZxJ9PQI+xKOJ/I/lAcL16+LdTRTpo9L1V4AwsZLOpHLy/Rtd2Gt4xpyRT
-         /yA0SfFx2oPdDCb3Rp699Nu4VUvLG+bP3iIJYTLGclzKvQJlhWi0EVXY5P9ARnEdMIfY
-         kozqCl7wMSae6A0BqK7dsPOfItYnrd5oYvsSgkT0+cEQ0f2pTllIqycI+44ZNrFopNfM
-         OMcc83EelTu0sPoQjm9M4kBQepIlToDwigy4mIQse2cJGieyyWOisfZQ7w2nz4WknOkS
-         dAvx9nnJ2SP8de3/oYIVht2yFh2VVYVX+EkwP3imvjvms3tiAImVLixv2LYy+jrkvcsf
-         ShWQ==
-X-Gm-Message-State: AOJu0YyWkKDVlDEhcVQjVhkd6uJI0d9Xj9Zsno1qkr/R/YS23kKXPRnz
-	SmowUfYmrQIWxvKC7GFup7u/FA==
-X-Google-Smtp-Source: AGHT+IESYrCzZQvTB73XFlkulKwL+gvntMR0RunpUbasR1i4r6vxyq92UsW0nCePWlX+r7XuUyXHwA==
-X-Received: by 2002:a17:907:6e8a:b0:9ae:3768:f0ce with SMTP id sh10-20020a1709076e8a00b009ae3768f0cemr11340922ejc.0.1695557400559;
-        Sun, 24 Sep 2023 05:10:00 -0700 (PDT)
-Received: from krzk-bin.. ([178.197.219.100])
-        by smtp.gmail.com with ESMTPSA id fy20-20020a170906b7d400b0099bccb03eadsm4908664ejb.205.2023.09.24.05.09.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Sep 2023 05:09:59 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2401D1C13
+	for <linux-hardening@vger.kernel.org>; Sun, 24 Sep 2023 12:55:02 +0000 (UTC)
+Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3D3AFC;
+	Sun, 24 Sep 2023 05:55:00 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailout.nyi.internal (Postfix) with ESMTP id 9BB575C00B4;
+	Sun, 24 Sep 2023 08:54:57 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Sun, 24 Sep 2023 08:54:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:sender:subject:subject:to:to; s=fm2; t=1695560097; x=
+	1695646497; bh=upcTOUv0s1EAQvf7LZF+X61mhFBEOsrezBxhi1tuN1E=; b=D
+	Vj+DrDCuSDVaNNM2OxSmHfA4eQYRCtpwV8kzSHeTXErr+x19tfKbKqB1cIKFVjIC
+	Suzy7TdPNazUvrrtiUKATWgPojNFZIHN3dEuL/GzP/nbaXRHS2CgkIiGZEfTLx3r
+	GByWCKHd5As9VKKcJn+oHaZysZpZZWFYtMFH9bmdu+0iB4dqouPkuTneE7KchjZP
+	UlWfgkxhUgcu0C14l2TF3X0OTkqYy1rUGIYoKV5F5Q4gxjPHqer3LHQnsHUx0BNn
+	olK6q2GHj9KqBigfNEpS5QsKFZBJGRpZRvgHrFXHqHo/a8Eu1twOkh8n0u6uHekS
+	AasGVJIwI1qz7emzPorhw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm2; t=1695560097; x=1695646497; bh=upcTOUv0s1EAQ
+	vf7LZF+X61mhFBEOsrezBxhi1tuN1E=; b=ozor45gGnPdBTUlpI9Gn3UIpBn1/7
+	Cdy6Jb+e2IRZV2Z7yaiSU76MLWc4ZrVGl45WgRrYi0Tw0T9GZ+wpI8rVvpzWsRqD
+	03AOL7NSiiCVo62DjSqYi2im/MRh3Als1S1KbAMLzur+7vukt3w3nLfP07byRFPw
+	AJqBqh11x/4YQCk5WqwbGofrAmYtP7ZNEEPX+NGkqsa26mcVEyQkV5s72IZsAzzC
+	giKqoeu1VxCwGECAEcdGdTO6nwMLyGfFVJJHJ6tz8A9SGCFFwtX6DuCLDbG0kqNK
+	KmhJC215IemEYcQHpfZwHQ63XrMFywzvKLX5VQ7upxmfDNjKZ1Pl3eNJQ==
+X-ME-Sender: <xms:oTEQZcRa6dWdP15_7XLqsKX9QtiePGFI_-HUq4_JNpLOUjbQ64iYPw>
+    <xme:oTEQZZzZjaj5dpJ0FC066zlVmgKmo4m3WM2zWlVJ4Cns-DRIHIZQ8XqmibflxxwH1
+    rn1spcTSJ5Hrvlr_U8>
+X-ME-Received: <xmr:oTEQZZ0nGBGZ5eo0XNvqQ2V8uxpagKxztrH35GWzyuXyM_kYvzff6Uk3QrcDK3JyW7NOPNXsNhb2INgKP8aFD4q_SvgnuOyeXCY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrudelvddgheejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepvfgrkhgr
+    shhhihcuufgrkhgrmhhothhouceoohdqthgrkhgrshhhihesshgrkhgrmhhotggthhhird
+    hjpheqnecuggftrfgrthhtvghrnhepudehgeeuveetuedvkeekvdfgffelieeivdelhfet
+    tedtveettefgffegjeefleeknecuffhomhgrihhnpehgihhthhhusgdrtghomhenucevlh
+    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehoqdhtrghkrghs
+    hhhisehsrghkrghmohgttghhihdrjhhp
+X-ME-Proxy: <xmx:oTEQZQBYf-qKo_bj25wnk7uzD0U2kOBN9JkeI2rXv9o-BJvsI7Qj4w>
+    <xmx:oTEQZVg8jJ3NvMN6R6AgcAhozpUrwFi3bD-u6bk1fintqhYwcBt4uw>
+    <xmx:oTEQZcpd84R5h0reAkVDd5RGwHr_THcak0TMjZ4n3lOIZsoL11qPPQ>
+    <xmx:oTEQZQX5Mm-JshwYDF5L_yy083R2F0ilOIcV9x3jheqLbtFvOwA3EQ>
+Feedback-ID: ie8e14432:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 24 Sep 2023 08:54:55 -0400 (EDT)
+Date: Sun, 24 Sep 2023 21:54:51 +0900
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 To: Kees Cook <keescook@chromium.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	linux-arm-kernel@lists.infradead.org,
+Cc: linux1394-devel@lists.sourceforge.net,
 	Nathan Chancellor <nathan@kernel.org>,
 	Nick Desaulniers <ndesaulniers@google.com>,
-	Tom Rix <trix@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] memory: atmel-ebi: Annotate struct atmel_ebi_dev with __counted_by
-Date: Sun, 24 Sep 2023 14:09:56 +0200
-Message-Id: <169555739436.7093.14241184537444848139.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230922175215.work.122-kees@kernel.org>
-References: <20230922175215.work.122-kees@kernel.org>
+	Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] firewire: Annotate struct fw_node with __counted_by
+Message-ID: <20230924125451.GA329414@workstation.local>
+Mail-Followup-To: Kees Cook <keescook@chromium.org>,
+	linux1394-devel@lists.sourceforge.net,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+References: <20230922175334.work.335-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230922175334.work.335-kees@kernel.org>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+	RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
+Hi,
 
-On Fri, 22 Sep 2023 10:52:15 -0700, Kees Cook wrote:
+On Fri, Sep 22, 2023 at 10:53:35AM -0700, Kees Cook wrote:
 > Prepare for the coming implementation by GCC and Clang of the __counted_by
 > attribute. Flexible array members annotated with __counted_by can have
 > their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
 > 
-> As found with Coccinelle[1], add __counted_by for struct atmel_ebi_dev.
+> As found with Coccinelle[1], add __counted_by for struct fw_node.
 > 
-> [...]
+> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+> 
+> Cc: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+> Cc: linux1394-devel@lists.sourceforge.net
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  drivers/firewire/core.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Applied, thanks!
+Applied to for-next branch, thanks.
 
-[1/1] memory: atmel-ebi: Annotate struct atmel_ebi_dev with __counted_by
-      https://git.kernel.org/krzk/linux-mem-ctrl/c/c1f2c81631df7654c249a457b7a54bbc36042248
 
-Best regards,
--- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Regards
+
+Takashi Sakamoto
