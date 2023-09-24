@@ -1,55 +1,51 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D925C19B
-	for <linux-hardening@vger.kernel.org>; Sun, 24 Sep 2023 03:15:12 +0000 (UTC)
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EC38139
-	for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 20:15:11 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-1c46b30a1ceso38250965ad.3
-        for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 20:15:11 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A26019B
+	for <linux-hardening@vger.kernel.org>; Sun, 24 Sep 2023 03:18:32 +0000 (UTC)
+Received: from mail-oi1-x22a.google.com (mail-oi1-x22a.google.com [IPv6:2607:f8b0:4864:20::22a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCDA910A
+	for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 20:18:30 -0700 (PDT)
+Received: by mail-oi1-x22a.google.com with SMTP id 5614622812f47-3ae1916ba69so2005602b6e.2
+        for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 20:18:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695525311; x=1696130111; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1695525510; x=1696130310; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=amfWmJu/D4QCQg50FQhzHOc1h7E/bVbjM0QuAI+Q2Gk=;
-        b=TIDf5zSN9LdiJvqXnghqlpKej7FcCscsssdJmQ384ZNH02UE8rDH75xcZp0ayoaGpw
-         xX8qcBgTt5F4wb9jHB2w7i4Tie2DrTPeZnrjlcHmsq0UvcpOw1om/8zNQUqzOpeEF2t1
-         c9nBnN6ewUnBoOaDKMZzzoumvH5eygjf+LBys=
+        bh=/AAy6PIqi8JA3SHRERLqm80k0JlOd55TNJFXlfS2oUI=;
+        b=cQRKnkvKqAcSOxrzVTzpuX1OW1olQi4qtyFfDQJ2NOkgjZz5mZtiS8AjbSeNtQpAnH
+         ns30oW41LWWtF9+TkxVPbaggze7+De9BppNUgKVAJ4e3R1C5VT2T/eMcCl/D//M5V2pr
+         hOzOOBl0nq4GXkTBkk8FS4TDctBsrJ3nvEM7Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695525311; x=1696130111;
+        d=1e100.net; s=20230601; t=1695525510; x=1696130310;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=amfWmJu/D4QCQg50FQhzHOc1h7E/bVbjM0QuAI+Q2Gk=;
-        b=DiOgjQN5sTn5KjrzTn9/3Wf8Y9yuCuiOTIw7XMWaNfmHzsFnBh1zvMEsPbikCyDjbd
-         N8upUF1jqQvJp1WuqU0q8VD8atHYRIchTsJZ812mBkmpPZoHX26mwoeRxu1q7U1DTq6+
-         T+TQsiKAoXCPwcrUuu/JytbKJ1OKvYfzQX0FbFZbYWFsOVxF4oOJNY+NjZBSG9Km7YF6
-         DUbluZ3U0f+1tQ26ADziuRzRvtfoiyca+VBp5bcvStQ0ehDqunJrBGfpUILYRUI0+SVP
-         awJ0vmrsYEFugmdwxOY1FAUOnNy9Q4PyfzKzreqjvgjsFK8qFJfKz4xWf2Np9PRe9Osb
-         0hOQ==
-X-Gm-Message-State: AOJu0Ywp9uJFKWIBooDV0Z6LttQVzTNESswt80px6ZZssuH/BZmIGMdm
-	ii6NKT838uB5fNJ93KlZ3GxKGg==
-X-Google-Smtp-Source: AGHT+IGisq+WD0tay8J8+6P9QCEXyW0JTTlcVZMxuf3DfjOxdjEguwLeM2nc5M2gPZJSS04saXBlow==
-X-Received: by 2002:a17:903:11c6:b0:1c4:4251:68b3 with SMTP id q6-20020a17090311c600b001c4425168b3mr4201343plh.54.1695525310870;
-        Sat, 23 Sep 2023 20:15:10 -0700 (PDT)
+        bh=/AAy6PIqi8JA3SHRERLqm80k0JlOd55TNJFXlfS2oUI=;
+        b=X7ggGmBRRtNnah97oQ6Jl53odQwn+6LMCnocTbHian0cNPQJkLSHDRj7cNwByPkPjw
+         D7+/0UmbnMEteBpp+hGzYYNRbwk8Owb41ym/m9VW9NR/OtDNT9g/YFTUkX4dBtzYm9oX
+         l3eH1tBO8kXvime9zN/CrMq7ZTKyD1yoemsK8ppT3C5aGh4PTNeKXUmbLM5PFJeBUerf
+         AFMLmBOr7QSj47dxVkkVozSSkhF42g1+E6y08tfPkwE4zfiXtBvwwwBdgAz+gng2VzFq
+         q+ZLeV4sBvDxjojwZ9hARyb/y0dMwXvJsgSUULiGbmfL3N+nC8O/hKcFg3l3IhRp805y
+         oHEQ==
+X-Gm-Message-State: AOJu0YyJ5so36aR1ecluAkJCGocY4dgVHO3FZjkQGnQhiNvFLmKLBhZr
+	dbnzb+P1hwHRwd/VhYxcsJ48QaLljqnpR7KawDM=
+X-Google-Smtp-Source: AGHT+IHxl8ow6piO8ZdhDMa7DDNx9sc75pSwTQukBg+zX/9NFg883HTo7pR+R2tuQSXm/f8dneJfjA==
+X-Received: by 2002:a05:6808:bd0:b0:3a4:633:44d2 with SMTP id o16-20020a0568080bd000b003a4063344d2mr6364418oik.18.1695525510212;
+        Sat, 23 Sep 2023 20:18:30 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id i18-20020a170902eb5200b001bbdd44bbb6sm700006pli.136.2023.09.23.20.15.09
+        by smtp.gmail.com with ESMTPSA id f9-20020a170902ce8900b001b86492d724sm6053970plg.223.2023.09.23.20.18.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 Sep 2023 20:15:10 -0700 (PDT)
-Date: Sat, 23 Sep 2023 20:15:09 -0700
+        Sat, 23 Sep 2023 20:18:29 -0700 (PDT)
+Date: Sat, 23 Sep 2023 20:18:29 -0700
 From: Kees Cook <keescook@chromium.org>
 To: Justin Stitt <justinstitt@google.com>
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	linux-iio@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
+	linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] iio: adc: stm32-adc: replace deprecated strncpy
-Message-ID: <202309232006.690F89A@keescook>
-References: <20230921-strncpy-drivers-iio-adc-stm32-adc-c-v1-1-c50eca098597@google.com>
+Subject: Re: [PATCH v3] hwmon: refactor deprecated strncpy
+Message-ID: <202309232016.6D6E70983B@keescook>
+References: <20230921-strncpy-drivers-hwmon-acpi_power_meter-c-v3-1-307552c6ec3f@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -58,7 +54,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230921-strncpy-drivers-iio-adc-stm32-adc-c-v1-1-c50eca098597@google.com>
+In-Reply-To: <20230921-strncpy-drivers-hwmon-acpi_power_meter-c-v3-1-307552c6ec3f@google.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -66,67 +62,76 @@ X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Thu, Sep 21, 2023 at 04:54:00AM +0000, Justin Stitt wrote:
+On Thu, Sep 21, 2023 at 05:41:46AM +0000, Justin Stitt wrote:
 > `strncpy` is deprecated for use on NUL-terminated destination strings [1].
 > 
-> We should prefer more robust and less ambiguous string interfaces.
+> Let's refactor this kcalloc() + strncpy() into a kmemdup_nul() which has
+> more obvious behavior and is less error prone.
 > 
-> We expect adc->chan_name[val] to be NUL-terminated based on ch_name's
-> use within functions that expect NUL-terminated strings like strncmp and
-> printf-likes:
-> | 	if (!strncmp(stm32_adc_ic[i].name, ch_name, STM32_ADC_CH_SZ)) {
-> | 		/* Check internal channel availability */
-> | 		switch (i) {
-> | 		case STM32_ADC_INT_CH_VDDCORE:
-> | 			if (!adc->cfg->regs->or_vddcore.reg)
-> | 				dev_warn(&indio_dev->dev,
-> | 					 "%s channel not available\n", ch_name);
-> ...
+> To avoid truncating the last byte supply `...length + 1` to
+> kmemdup_nul() as `element->string.length` does not account for the
+> trailing null as made obvious from it's definition (and associated
+> comment):
+> |       u32 length;	/* # of bytes in string, excluding trailing null */
 > 
-> There is no evidence that NUL-padding is needed either.
-
-Agreed -- it's used as a C string everywhere I can see.
-
-> 
-> Considering the above, a suitable replacement is `strscpy` [2] due to
-> the fact that it guarantees NUL-termination on the destination buffer
-> without unnecessarily NUL-padding. If, for any reason, NUL-padding _is_
-> required we should go for `strscpy_pad`.
+> ... this is precisely what the original kcalloc invocation did as well.
 > 
 > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
 > Link: https://github.com/KSPP/linux/issues/90
 > Cc: linux-hardening@vger.kernel.org
 > Signed-off-by: Justin Stitt <justinstitt@google.com>
 > ---
-> Note: build-tested
-> ---
->  drivers/iio/adc/stm32-adc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Changes in v3:
+> - refactor to use kmemdup_nul() (thanks Thomas and Kees)
+> - change commit msg to reflect ^
+> - rebase onto 2cf0f71562387282
+> - Link to v2: https://lore.kernel.org/r/20230919-strncpy-drivers-hwmon-acpi_power_meter-c-v2-1-8348432d6442@google.com
 > 
-> diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
-> index f7613efb870d..9cdcf396d901 100644
-> --- a/drivers/iio/adc/stm32-adc.c
-> +++ b/drivers/iio/adc/stm32-adc.c
-> @@ -2209,7 +2209,7 @@ static int stm32_adc_generic_chan_init(struct iio_dev *indio_dev,
->  				ret = -EINVAL;
->  				goto err;
->  			}
-> -			strncpy(adc->chan_name[val], name, STM32_ADC_CH_SZ);
-> +			strscpy(adc->chan_name[val], name, STM32_ADC_CH_SZ);
+> Changes in v2:
+> - use memcpy over strscpy (thanks Kees)
+> - Link to v1: https://lore.kernel.org/r/20230914-strncpy-drivers-hwmon-acpi_power_meter-c-v1-1-905297479fe8@google.com
+> ---
+>  drivers/hwmon/acpi_power_meter.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/hwmon/acpi_power_meter.c b/drivers/hwmon/acpi_power_meter.c
+> index fa28d447f0df..146c4f09c897 100644
+> --- a/drivers/hwmon/acpi_power_meter.c
+> +++ b/drivers/hwmon/acpi_power_meter.c
+> @@ -796,14 +796,13 @@ static int read_capabilities(struct acpi_power_meter_resource *resource)
+>  			goto error;
+>  		}
+>  
+> -		*str = kcalloc(element->string.length + 1, sizeof(u8),
+> -			       GFP_KERNEL);
+> +		*str = kmemdup_nul(element->string.pointer, element->string.length + 1,
+> +						 GFP_KERNEL);
 
-I still prefer sizeof($dst), but yes, these are the same:
+kmemdup_nul() already adds the "+ 1", so it's not needed here.
 
-        char chan_name[STM32_ADC_CH_MAX][STM32_ADC_CH_SZ];
-
-If this needs a v2, please improve the Subject, but it is technically
-correct, so:
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
-:)
+For v4, please improve the Subject along the lines of "...: Replace
+open-coded kmemdup_nul"
 
 -Kees
+
+>  		if (!*str) {
+>  			res = -ENOMEM;
+>  			goto error;
+>  		}
+>  
+> -		strncpy(*str, element->string.pointer, element->string.length);
+>  		str++;
+>  	}
+>  
+> 
+> ---
+> base-commit: 2cf0f715623872823a72e451243bbf555d10d032
+> change-id: 20230914-strncpy-drivers-hwmon-acpi_power_meter-c-c9f2d8053bef
+> 
+> Best regards,
+> --
+> Justin Stitt <justinstitt@google.com>
+> 
 
 -- 
 Kees Cook
