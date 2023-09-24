@@ -1,55 +1,51 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BC7D19B
-	for <linux-hardening@vger.kernel.org>; Sun, 24 Sep 2023 03:20:57 +0000 (UTC)
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F042B124
-	for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 20:20:55 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1c5cd27b1acso38348525ad.2
-        for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 20:20:55 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 423CD654
+	for <linux-hardening@vger.kernel.org>; Sun, 24 Sep 2023 03:29:22 +0000 (UTC)
+Received: from mail-yw1-x112e.google.com (mail-yw1-x112e.google.com [IPv6:2607:f8b0:4864:20::112e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B849E10D
+	for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 20:29:20 -0700 (PDT)
+Received: by mail-yw1-x112e.google.com with SMTP id 00721157ae682-59b5484fbe6so52415897b3.1
+        for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 20:29:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695525655; x=1696130455; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1695526160; x=1696130960; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Vm7SCjjGy1Czz0oUxMb12CgrgnjC7R0vO3/WEnyLchc=;
-        b=nnMWdjCMIB1XJ7/J5zhYC2iOXRCSPzJkNbPokyjM6/w1ON8c5NpFRHs6XmX0DheMSK
-         0eKC9bDoU3yogqLfAGT/5ymWdu72faS05bCtYgEkxc49u9PybwIuyk88IDx0YjgDQJaK
-         5ZdSZsitUR9UlwMBSwy9xPVIZZWgtha2YhZ3s=
+        bh=0sacnJ2cxsyUdNljEIHRMc8mGWJME3BUwqYb875zUKc=;
+        b=bNPrIkdhXQsPfHHBYGX/l+QLdpOgRh0rElNTjuHlRuPh9+25cPvcdVFJ3GxVoZ2A6S
+         JcPtP06Sz1Tiw/PPvXzrciZ7TQNK2V7d5YRcbrtBj8OHJVp8SprwrOMQ13JLE75KWQcG
+         8xV6fsM0+mJbQMOuqS/bhspmE8cbq5/pzgGuM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695525655; x=1696130455;
+        d=1e100.net; s=20230601; t=1695526160; x=1696130960;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Vm7SCjjGy1Czz0oUxMb12CgrgnjC7R0vO3/WEnyLchc=;
-        b=Jk4Ao5TbdL9+DpaaPsseMmU/RgkIAiK3RjXY5eHjAWVbM/lJ7/GyftIUB6coLv9XSD
-         ILloI8uFRDCHxrFwX0KWKI7eM/XzaqMvzFs4vHlk6bpZ5le4NqjsmlJT+U/wNLqF/E95
-         HsG6ly85P+/A6FQFk/Hgqe63LgmYulrIoEgO1B2GDhBnl1k+IN/kKl3gnMThMIeclD8x
-         Umf09rkzzjLu55KXDMJSvVzG9KRtRJFsk1XHlqnXLeXBHlw27bnS0OKsvwGocyy2J7X7
-         SkvFJVAUEhG+i8cGJsJVlzqRrZvJY/bhqhpeuKEfsaXsih8GU1NST/GHhHWdOqryqfXb
-         NZHw==
-X-Gm-Message-State: AOJu0YwmY+RtsDTw2Ge02o7dHH1oaOGzDEiAg1Q6NhkSNExkOBt9mOTb
-	qnuVKsKZP4BlL81Gtl7wJtyDcg==
-X-Google-Smtp-Source: AGHT+IEH+ufcAfsC/h1xsmpcmOa3SWqJmAQ4vBQv3H+anN+BqhYa/Dh+uB5O8ypum1NEvfheOeVWpQ==
-X-Received: by 2002:a17:903:120a:b0:1c4:2641:7744 with SMTP id l10-20020a170903120a00b001c426417744mr4619036plh.25.1695525655440;
-        Sat, 23 Sep 2023 20:20:55 -0700 (PDT)
+        bh=0sacnJ2cxsyUdNljEIHRMc8mGWJME3BUwqYb875zUKc=;
+        b=I6rpeeY924lSTpw6GBYWH4rHjIW+cNiLvcQ22zftTHAKKoj9Q6wKnoZjbs+0ROZAtr
+         HRzcJGb3ntfvb/Yhc8UbrEV4jE6D1TPRjaM/itTVQ7jg3r1zLzuPms/iRdU5BgIw37ej
+         rc/tZywdpKDa3hKX5Byjnspr68InRQimWepg/57UukdNOzFz17U9n+ADI0rsuolZrVFn
+         SJDayoP1lk1mHEHuKRfVglwKHYu0X5w/q1T97G3K7BV7IE8iwMcNVjCcfHpNPDTyIqT3
+         CFU27xeVxUimGUjNS/3soKLeYn9fOObOk7Tt4uaJQ3RBLLbfVUT9Ksi1zMAKrVJC6tzX
+         Mhrg==
+X-Gm-Message-State: AOJu0Yx5wOUZgU+Ex/7h7QLrt7cf1NQl/ikNBs6hnLfKGFAHAbhsoaXR
+	ey9wLA4BhNlYwexneguJRGP+hA==
+X-Google-Smtp-Source: AGHT+IHLetgN8Z6HYfxweRg549a0pUcJGB5rSTpFWmQXRJFkbO+pUmNPNqkjbmqo3NU1E0uzRrbQIA==
+X-Received: by 2002:a0d:f685:0:b0:56d:9e2:7d9e with SMTP id g127-20020a0df685000000b0056d09e27d9emr2932368ywf.21.1695526159922;
+        Sat, 23 Sep 2023 20:29:19 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id n11-20020a170902d2cb00b001c1f4edfb9csm6070846plc.173.2023.09.23.20.20.54
+        by smtp.gmail.com with ESMTPSA id hi11-20020a17090b30cb00b00277371fd346sm1120927pjb.30.2023.09.23.20.29.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 Sep 2023 20:20:54 -0700 (PDT)
-Date: Sat, 23 Sep 2023 20:20:54 -0700
+        Sat, 23 Sep 2023 20:29:19 -0700 (PDT)
+Date: Sat, 23 Sep 2023 20:29:18 -0700
 From: Kees Cook <keescook@chromium.org>
-To: Dean Luick <dean.luick@cornelisnetworks.com>
-Cc: Leon Romanovsky <leon@kernel.org>,
-	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Justin Stitt <justinstitt@google.com>, linux-rdma@vger.kernel.org,
+To: Justin Stitt <justinstitt@google.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Chen-Yu Tsai <wens@csie.org>, linux-input@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] IB/hfi1: replace deprecated strncpy
-Message-ID: <202309232019.BE78A9C0@keescook>
-References: <20230921-strncpy-drivers-infiniband-hw-hfi1-chip-c-v1-1-37afcf4964d9@google.com>
- <169537858725.3339131.15264681410291677148.b4-ty@kernel.org>
- <2f4bd46c-664e-4253-8d57-16bd46dd3be8@cornelisnetworks.com>
+Subject: Re: [PATCH] Input: axp20x-pek - refactor deprecated strncpy
+Message-ID: <202309232024.9A31A291@keescook>
+References: <20230921-strncpy-drivers-input-misc-axp20x-pek-c-v1-1-f7f6f4a5cf81@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -58,7 +54,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2f4bd46c-664e-4253-8d57-16bd46dd3be8@cornelisnetworks.com>
+In-Reply-To: <20230921-strncpy-drivers-input-misc-axp20x-pek-c-v1-1-f7f6f4a5cf81@google.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -66,54 +62,101 @@ X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Fri, Sep 22, 2023 at 09:25:39AM -0500, Dean Luick wrote:
-> On 9/22/2023 5:29 AM, Leon Romanovsky wrote:
-> >
-> > On Thu, 21 Sep 2023 07:17:47 +0000, Justin Stitt wrote:
-> >> `strncpy` is deprecated for use on NUL-terminated destination strings
-> >> [1] and as such we should prefer more robust and less ambiguous string
-> >> interfaces.
-> >>
-> >> We see that `buf` is expected to be NUL-terminated based on it's use
-> >> within a trace event wherein `is_misc_err_name` and `is_various_name`
-> >> map to `is_name` through `is_table`:
-> >> | TRACE_EVENT(hfi1_interrupt,
-> >> |        TP_PROTO(struct hfi1_devdata *dd, const struct is_table *is_entry,
-> >> |                 int src),
-> >> |        TP_ARGS(dd, is_entry, src),
-> >> |        TP_STRUCT__entry(DD_DEV_ENTRY(dd)
-> >> |                         __array(char, buf, 64)
-> >> |                         __field(int, src)
-> >> |                         ),
-> >> |        TP_fast_assign(DD_DEV_ASSIGN(dd);
-> >> |                       is_entry->is_name(__entry->buf, 64,
-> >> |                                         src - is_entry->start);
-> >> |                       __entry->src = src;
-> >> |                       ),
-> >> |        TP_printk("[%s] source: %s [%d]", __get_str(dev), __entry->buf,
-> >> |                  __entry->src)
-> >> | );
-> >>
-> >> [...]
-> >
-> > Applied, thanks!
+On Thu, Sep 21, 2023 at 09:17:25AM +0000, Justin Stitt wrote:
+> `strncpy` is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
 > 
-> It is unfortunate that this and the qib patch was accepted so quickly.  The replacement is functionally correct.  However, I was going to suggest using strscpy() since the return value is never looked at and all use cases only require a NUL-terminated string.  Padding is not needed.
+> Ensuring we have a trailing NUL-byte and checking the length of bytes
+> copied are both intrinsic behavior of strscpy.
+> 
+> Therefore, a suitable replacement is `strscpy` [2] due to the fact that
+> it guarantees NUL-termination on the destination buffer without
+> unnecessarily NUL-padding.
+> 
+> It should be noted that the original code can silently truncate and so
+> can this refactoring. However, a check could be added if truncation
+> is an issue:
+> | len = strscpy(val_str, buf, sizeof(val_str));
+> | if (len < 0) { // add this
+> |   return -E2BIG; // or -EINVAL
+> | }
+> 
+> Also, now check for `len > 0` instead of just a truthy `len` because
+> `len` is now a signed type and we could run into problems if strscpy
+> returned -E2BIG which would pass the truthy test.
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+> Note: build-tested only.
+> ---
+>  drivers/input/misc/axp20x-pek.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/input/misc/axp20x-pek.c b/drivers/input/misc/axp20x-pek.c
+> index 4581606a28d6..abcf78785b45 100644
+> --- a/drivers/input/misc/axp20x-pek.c
+> +++ b/drivers/input/misc/axp20x-pek.c
+> @@ -134,16 +134,14 @@ static ssize_t axp20x_store_attr(struct device *dev,
+>  {
+>  	struct axp20x_pek *axp20x_pek = dev_get_drvdata(dev);
+>  	char val_str[20];
+> -	size_t len;
+> +	ssize_t len;
+>  	int ret, i;
+>  	unsigned int val, idx = 0;
+>  	unsigned int best_err = UINT_MAX;
+>  
+> -	val_str[sizeof(val_str) - 1] = '\0';
+> -	strncpy(val_str, buf, sizeof(val_str) - 1);
+> -	len = strlen(val_str);
+> +	len = strscpy(val_str, buf, sizeof(val_str));
+>  
+> -	if (len && val_str[len - 1] == '\n')
+> +	if (len > 0 && val_str[len - 1] == '\n')
+>  		val_str[len - 1] = '\0';
+>  
+>  	ret = kstrtouint(val_str, 10, &val);
 
-Is the trace buffer already guaranteed to be zeroed? Since this is
-defined as a fixed-size string in the buffer, it made sense to me to be
-sure that the unused bytes were 0 before copying them to userspace.
+This code is doing a LOT of work before handing it off to kstrtouint(),
+and none of it is needed. val_str is never used again, and the work is
+to make sure the newline is dropped -- but kstrtouint() does this
+already. I think this can just be:
+
+
+diff --git a/drivers/input/misc/axp20x-pek.c b/drivers/input/misc/axp20x-pek.c
+index 4581606a28d6..b1389a4c7702 100644
+--- a/drivers/input/misc/axp20x-pek.c
++++ b/drivers/input/misc/axp20x-pek.c
+@@ -134,19 +134,11 @@ static ssize_t axp20x_store_attr(struct device *dev,
+ {
+ 	struct axp20x_pek *axp20x_pek = dev_get_drvdata(dev);
+ 	char val_str[20];
+-	size_t len;
+ 	int ret, i;
+ 	unsigned int val, idx = 0;
+ 	unsigned int best_err = UINT_MAX;
+ 
+-	val_str[sizeof(val_str) - 1] = '\0';
+-	strncpy(val_str, buf, sizeof(val_str) - 1);
+-	len = strlen(val_str);
+-
+-	if (len && val_str[len - 1] == '\n')
+-		val_str[len - 1] = '\0';
+-
+-	ret = kstrtouint(val_str, 10, &val);
++	ret = kstrtouint(buf, 10, &val);
+ 	if (ret)
+ 		return ret;
+ 
+And, [broken record] for v2, please update the Subject to better describe
+the resulting change. :)
 
 -Kees
-
-> 
-> >
-> > [1/1] IB/hfi1: replace deprecated strncpy
-> >       https://git.kernel.org/rdma/rdma/c/c2d0c5b28a77d5
-> >
-> > Best regards,
-> 
-> External recipient
 
 -- 
 Kees Cook
