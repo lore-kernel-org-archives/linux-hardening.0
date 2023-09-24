@@ -1,169 +1,78 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6989D7F
-	for <linux-hardening@vger.kernel.org>; Sun, 24 Sep 2023 09:41:49 +0000 (UTC)
-Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0749710B;
-	Sun, 24 Sep 2023 02:41:46 -0700 (PDT)
-Received: from eig-obgw-5003a.ext.cloudfilter.net ([10.0.29.159])
-	by cmsmtp with ESMTP
-	id kJQ6q4SUuWU1ckLcYqXMUv; Sun, 24 Sep 2023 09:41:46 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id kLcXqnsVhVpk9kLcXqe4I9; Sun, 24 Sep 2023 09:41:45 +0000
-X-Authority-Analysis: v=2.4 cv=CLw54DnD c=1 sm=1 tr=0 ts=65100459
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=P7XfKmiOJ4/qXqHZrN7ymg==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=zNV7Rl7Rt7sA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
- a=20KFwNOVAAAA:8 a=pGLkceISAAAA:8 a=e5mUnYsNAAAA:8 a=cm27Pg_UAAAA:8
- a=VwQbUJbxAAAA:8 a=HvF037n1xESchLcPDVoA:9 a=QEXdDO2ut3YA:10
- a=Vxmtnl_E_bksehYqCbjh:22 a=xmb-EsYY8bH0VWELuYED:22 a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=LJpKFYI8HAurZQUNChdEApljY9SFiaiFueT/5w9ez8A=; b=WyNj3hQ4m7k99wwrLc5UCHs1Jc
-	69JnjimjP16rPGM6Z286Pdu1EnpdBf8mvn8UjKRtZI4bAMSZGQvQ1d9x7xbbF7jhGmj8i/KfgpVr7
-	c6kMdlOOArSNLIvPI7ALTr7ZlFSq7jOM6qDaQO6AiuyehwfBegbjTZSqAQxzkVDGe842WreDX4kmx
-	XHRRkPtm2Lm/yGKMlAU/xXjqaVY17tUk+7nbeeqd30QAFyaig/PT4oxogP8/FHPvh54Qsp4aKp1TB
-	3O/2rSe65FJAdRxmlsC+oYSc83Oe5/HxuSX2iIA+whoUWfQqwbJkO09DT4sckq66htTHHi6PRZ1hS
-	7w0+uMIg==;
-Received: from [94.239.20.48] (port=43422 helo=[192.168.1.98])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1qjkgF-000Q0w-1S;
-	Fri, 22 Sep 2023 13:15:07 -0500
-Message-ID: <1916c681-cc7b-c101-de7d-5e9e0746c0c1@embeddedor.com>
-Date: Fri, 22 Sep 2023 20:15:58 -0600
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AC3E7F;
+	Sun, 24 Sep 2023 09:45:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 833ADC433C8;
+	Sun, 24 Sep 2023 09:45:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1695548714;
+	bh=LzXtXNSrED4dMzen6Q/uURvpZAZL8E9Bv/zlsiifUII=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ZlyGDYOLKcdOI7ErZN7x3cEp1epP1Z/Z3Ba7up5RSWSUq0KLw2R+0+1ANgitmvj4P
+	 QZ74tclE1yJ4rfJgn1l0QZnYAZ3lCFGLzexHP47RxgiuDjZDM1tRXRbq8fWdqtCSvi
+	 soo+5Q8vY70nDyo3NvUSfwRev0vbcS6gfpzjQM0fVn9BnoO9wO0dI9YsghbetekJr/
+	 UZFR4oKcU6XNQDnvMktSngOQU63SUCgB/tlYHXWWdNZxowRRxquMcT98surVnDqBrD
+	 nbkZ58dGvz5F7xM50ntR76IU71sheGal5jC6xHMo5vKMB6I+oXcTe+CTQ2FPFPXO6Q
+	 hdqEJOCzhREyQ==
+From: Christian Brauner <brauner@kernel.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Siddh Raman Pant <code@siddh.me>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Qian Cai <cai@redhat.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Tom Rix <trix@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev,
+	linux-hardening@vger.kernel.org,
+	David Howells <dhowells@redhat.com>
+Subject: Re: [PATCH] watch_queue: Annotate struct watch_filter with __counted_by
+Date: Sun, 24 Sep 2023 11:45:06 +0200
+Message-Id: <20230924-fass-bass-7b1f7aa70dd3@brauner>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230922175407.work.754-kees@kernel.org>
+References: <20230922175407.work.754-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH 5/9] drm/nouveau/pm: Annotate struct nvkm_perfdom with
- __counted_by
-Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>, David Airlie <airlied@gmail.com>
-Cc: Ben Skeggs <bskeggs@redhat.com>, Karol Herbst <kherbst@redhat.com>,
- Lyude Paul <lyude@redhat.com>, Daniel Vetter <daniel@ffwll.ch>,
- dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
- Emma Anholt <emma@anholt.net>, Evan Quan <evan.quan@amd.com>,
- Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
- "Pan, Xinhui" <Xinhui.Pan@amd.com>, Xiaojian Du <Xiaojian.Du@amd.com>,
- Huang Rui <ray.huang@amd.com>, Kevin Wang <kevin1.wang@amd.com>,
- Hawking Zhang <Hawking.Zhang@amd.com>,
- Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
- Chris Wilson <chris@chris-wilson.co.uk>,
- John Harrison <john.c.harrison@Intel.com>,
- Andi Shyti <andi.shyti@linux.intel.com>,
- Matthew Brost <matthew.brost@intel.com>, Rob Clark <robdclark@gmail.com>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- Bjorn Andersson <andersson@kernel.org>, Maxime Ripard <mripard@kernel.org>,
- David Airlie <airlied@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>,
- Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
- <olvaffe@gmail.com>, Zack Rusin <zackr@vmware.com>,
- VMware Graphics Reviewers <linux-graphics-maintainer@vmware.com>,
- Melissa Wen <mwen@igalia.com>, Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
- Le Ma <le.ma@amd.com>, Lijo Lazar <lijo.lazar@amd.com>,
- Yifan Zhang <yifan1.zhang@amd.com>, Prike Liang <Prike.Liang@amd.com>,
- Lang Yu <Lang.Yu@amd.com>, Tejas Upadhyay <tejas.upadhyay@intel.com>,
- Nirmoy Das <nirmoy.das@intel.com>, Andrzej Hajda <andrzej.hajda@intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Kuogee Hsieh <quic_khsieh@quicinc.com>, linux-kernel@vger.kernel.org,
- amd-gfx@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
- linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
- virtualization@lists.linux-foundation.org, llvm@lists.linux.dev,
- linux-hardening@vger.kernel.org
-References: <20230922173110.work.084-kees@kernel.org>
- <20230922173216.3823169-5-keescook@chromium.org>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20230922173216.3823169-5-keescook@chromium.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 94.239.20.48
-X-Source-L: No
-X-Exim-ID: 1qjkgF-000Q0w-1S
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.98]) [94.239.20.48]:43422
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 0
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfCxE3WD6exDlnOmD0zV1OLqGyrFfBSwzJN2uXCqrNCXIUzfLGJUZDcVlAOdUJPv8yknQV64bkxokpOyYPpucOmwJL0QXtLOzhU65rg8kdbdKDCEfpbIV
- eFHr8Sp1pJQJQX2baE4fEWLNBr1QU5paOTJ81dbAdrygtecAzaFRr+H8lo3+nZLgIn+rJD7IECLw1QvXaPZCrpyDZA2WJWRegOzib6NQuaJXS91zpVB93dKi
- LTbUHZZpKryO5t3d8KJePW5ML/XCdXKSQEJvfL7HARlzlZOKBpaC627BA6hz+81fA0ano0YowWq4hg4VsvWsuQ==
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,DATE_IN_FUTURE_06_12,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1237; i=brauner@kernel.org; h=from:subject:message-id; bh=LzXtXNSrED4dMzen6Q/uURvpZAZL8E9Bv/zlsiifUII=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaQKsLJ+VWk8O3WrfU6JsPL0Sq3cRXuX5S86vlXvZtll8T/P HExaOkpZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACaSJsLwP/T830PVzxO/SBaxnjv9u1 xP9FfmkxNJlpX3jWsdfdZ+AanQUu6oPc5ndTmwZnf2kd/fvlWKxC5Zcu3aYk/Ho117KpkB
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-
-
-On 9/22/23 11:32, Kees Cook wrote:
+On Fri, 22 Sep 2023 10:54:08 -0700, Kees Cook wrote:
 > Prepare for the coming implementation by GCC and Clang of the __counted_by
 > attribute. Flexible array members annotated with __counted_by can have
 > their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
 > 
-> As found with Coccinelle[1], add __counted_by for struct nvkm_perfdom.
+> As found with Coccinelle[1], add __counted_by for struct watch_filter.
 > 
-> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
-> 
-> Cc: Ben Skeggs <bskeggs@redhat.com>
-> Cc: Karol Herbst <kherbst@redhat.com>
-> Cc: Lyude Paul <lyude@redhat.com>
-> Cc: David Airlie <airlied@gmail.com>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: nouveau@lists.freedesktop.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> [...]
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Applied to the vfs.misc branch of the vfs/vfs.git tree.
+Patches in the vfs.misc branch should appear in linux-next soon.
 
-Thanks
--- 
-Gustavo
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-> ---
->   drivers/gpu/drm/nouveau/nvkm/engine/pm/priv.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/pm/priv.h b/drivers/gpu/drm/nouveau/nvkm/engine/pm/priv.h
-> index 6ae25d3e7f45..c011227f7052 100644
-> --- a/drivers/gpu/drm/nouveau/nvkm/engine/pm/priv.h
-> +++ b/drivers/gpu/drm/nouveau/nvkm/engine/pm/priv.h
-> @@ -82,7 +82,7 @@ struct nvkm_perfdom {
->   	u8  mode;
->   	u32 clk;
->   	u16 signal_nr;
-> -	struct nvkm_perfsig signal[];
-> +	struct nvkm_perfsig signal[] __counted_by(signal_nr);
->   };
->   
->   struct nvkm_funcdom {
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.misc
+
+[1/1] watch_queue: Annotate struct watch_filter with __counted_by
+      https://git.kernel.org/vfs/vfs/c/6b601adb5e79
