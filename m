@@ -1,78 +1,53 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A458634
-	for <linux-hardening@vger.kernel.org>; Sun, 24 Sep 2023 02:03:30 +0000 (UTC)
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 619E7180
-	for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 19:03:29 -0700 (PDT)
-Received: by mail-pj1-x1030.google.com with SMTP id 98e67ed59e1d1-27702912521so2804765a91.1
-        for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 19:03:29 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F5D19B
+	for <linux-hardening@vger.kernel.org>; Sun, 24 Sep 2023 02:52:02 +0000 (UTC)
+Received: from mail-oi1-x235.google.com (mail-oi1-x235.google.com [IPv6:2607:f8b0:4864:20::235])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86798124
+	for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 19:52:00 -0700 (PDT)
+Received: by mail-oi1-x235.google.com with SMTP id 5614622812f47-3ae214a077cso1906111b6e.0
+        for <linux-hardening@vger.kernel.org>; Sat, 23 Sep 2023 19:52:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695521007; x=1696125807; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1695523920; x=1696128720; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vYVo5GdkTbBgfnivmVoW8KukwKTsj2A6u4CjQwQFBnw=;
-        b=SGLLhABuwI73NA3/AHiKeurFZFCrtZ9/z8Ak3RS++VRDkQVMnDFnEOA9U/FpoOUOJH
-         N4ab3hpVJ9odTyIIOSnLhEtH8al8lU+sASIYFOYEWniMI7Z33DLBGwR+YvI8GJKJc/DP
-         zCPTX3B3mKKdk+gXhtXGAvbgtxQ2ocPZE86qQ=
+        bh=qoxOpoYwwbcXvP8AhdHBWCEQ7XvmIo4NgjxEavDKJS0=;
+        b=R7+78uPj1vsN9ArLH0OMzIGPyTzfVp7iVwptGLxavDM/4VWGPINkimkMWDGhYsJLLA
+         KPLMZ/osNzryQT/bOFE2YrFLhsv5W1qWrGIgc+K6wycrLBQMNxtGOYN15t0Ewsl6cHcD
+         nCBea44ociJPStjlivuIrUJ/jNR6rTgPiY/E0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695521007; x=1696125807;
+        d=1e100.net; s=20230601; t=1695523920; x=1696128720;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vYVo5GdkTbBgfnivmVoW8KukwKTsj2A6u4CjQwQFBnw=;
-        b=JHaHZmRl2TyTkFGdsesSeuaswFQl8hW8NR2mz09oFeOejbQeoxHQiM6M/+5Wqm0c/d
-         BchrE/FmdkD7NZBg2fwwDyKtXJiKbRrltg9d2vQsQ+kNsJQbGf2lC8c8lMa3A7ab6YJN
-         5ulIoIRlJqCFQBgLqWc4PXmOVsDlR6OaJQ5ObUTFlC4XnU9H5Vnf1mnSDG5V60VuyljG
-         MeuLKOWabOjaI8Yp+l64ZvQb6BfpnGSc7J+EzqsSxTOiT6qM2lZHZbJnQZnRDH+57ulj
-         P6BQh5T1M9rciw0fFzr4NE3gsbTMMr/fWoG0l7sw03LAqZgysTESR32Y6UOpoCqLNDgt
-         7u0g==
-X-Gm-Message-State: AOJu0Yy0mZ0VzuyQ4FIWOdR5boWEcrVAv22T2HtN5BsfmtNmj0zrc6iv
-	f6sFXIdLE+QfXYgpB8dt0xatJQ==
-X-Google-Smtp-Source: AGHT+IGasKw5qGGD+KI5YxzCFxg3lZRJ7Ns/75yx0TF2sBm+b8qXZJKFwUDGZ86xbS0T4ovXuXNpDA==
-X-Received: by 2002:a17:90b:11d5:b0:274:ac60:1d57 with SMTP id gv21-20020a17090b11d500b00274ac601d57mr9710054pjb.16.1695521007664;
-        Sat, 23 Sep 2023 19:03:27 -0700 (PDT)
+        bh=qoxOpoYwwbcXvP8AhdHBWCEQ7XvmIo4NgjxEavDKJS0=;
+        b=gAJiL+Jv8AQ13RjlHDhWbnaXVN6gDEhLE4DPWQTaq9ry6Ay2BebHbQv3gpyUwHtq07
+         MC8sKIhw45DGi4fpkIYWeRVbpaWl/sl1SaUfqKfoQrvbcRINI+pNyeQyzKuMl91IAiUJ
+         n5ZJJuaoWylryN2QLMbDLBglByqObm06MiUeZizRR9qVmaw3kGgcwaO2iE4Hvf/7/tHK
+         KIzY/BZfRIcQot+HbWsR+WqX/vTiQAsTa7Lt35pHPNEXlCiBnmSGqsoNZ3PgTQukZtKG
+         7UltbN7kCMcqStN9BuzVbvIpFVXwpHhuz8dOrzscFsHX+HNdhKGqTQ6AKIJQBId3Heq3
+         EJKg==
+X-Gm-Message-State: AOJu0YyhthPELUG9ujE7rJUVB2MHd6L+DBZtdKbvhU42sk1UT6tXgNS/
+	gWLKkMMqq/AR94mldcVgx8Ra2A==
+X-Google-Smtp-Source: AGHT+IHcUoAikiUF1QqzgTagOroRwcP1YpmHmYrwno+IIkRbBhz92pli07wtVSNBbwi76ORGeUjvtg==
+X-Received: by 2002:aca:1c14:0:b0:3a7:aa1:f883 with SMTP id c20-20020aca1c14000000b003a70aa1f883mr3738720oic.29.1695523919867;
+        Sat, 23 Sep 2023 19:51:59 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id n6-20020a17090ade8600b002680dfd368dsm5521151pjv.51.2023.09.23.19.03.26
+        by smtp.gmail.com with ESMTPSA id jg13-20020a17090326cd00b001bba669a7eesm6038250plb.52.2023.09.23.19.51.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 Sep 2023 19:03:26 -0700 (PDT)
-Date: Sat, 23 Sep 2023 19:03:26 -0700
+        Sat, 23 Sep 2023 19:51:58 -0700 (PDT)
+Date: Sat, 23 Sep 2023 19:51:58 -0700
 From: Kees Cook <keescook@chromium.org>
-To: Alex Elder <elder@ieee.org>
-Cc: Jakub Kicinski <kuba@kernel.org>, Alex Elder <elder@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, Jamal Hadi Salim <jhs@mojatatu.com>,
-	David Ahern <dsahern@kernel.org>,
-	Martin KaFai Lau <martin.lau@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Yisen Zhuang <yisen.zhuang@huawei.com>,
-	Salil Mehta <salil.mehta@huawei.com>,
-	Claudiu Manoil <claudiu.manoil@nxp.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Long Li <longli@microsoft.com>,
-	Ajay Sharma <sharmaajay@microsoft.com>,
-	Pravin B Shelar <pshelar@ovn.org>,
-	Shaokun Zhang <zhangshaokun@hisilicon.com>,
-	Cong Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Tom Rix <trix@redhat.com>, Simon Horman <horms@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	linux-rdma@vger.kernel.org, dev@openvswitch.org,
-	linux-parisc@vger.kernel.org, llvm@lists.linux.dev,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 08/14] net: ipa: Annotate struct ipa_power with
- __counted_by
-Message-ID: <202309231859.D8467DB23@keescook>
-References: <20230922172449.work.906-kees@kernel.org>
- <20230922172858.3822653-8-keescook@chromium.org>
- <6f52f36c-be16-2427-c19f-0e8b3dd2ff5f@ieee.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
+	James Morse <james.morse@arm.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Robert Richter <rric@kernel.org>, linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v4] EDAC/mc_sysfs: refactor deprecated strncpy
+Message-ID: <202309231950.698026E687@keescook>
+References: <20230918-strncpy-drivers-edac-edac_mc_sysfs-c-v4-1-38a23d2fcdd8@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -81,50 +56,31 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6f52f36c-be16-2427-c19f-0e8b3dd2ff5f@ieee.org>
+In-Reply-To: <20230918-strncpy-drivers-edac-edac_mc_sysfs-c-v4-1-38a23d2fcdd8@google.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Sat, Sep 23, 2023 at 07:09:19AM -0500, Alex Elder wrote:
-> On 9/22/23 12:28 PM, Kees Cook wrote:
-> > Prepare for the coming implementation by GCC and Clang of the __counted_by
-> > attribute. Flexible array members annotated with __counted_by can have
-> > their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-> > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> > functions).
-> > 
-> > As found with Coccinelle[1], add __counted_by for struct ipa_power.
+On Mon, Sep 18, 2023 at 07:47:29AM +0000, Justin Stitt wrote:
+> `strncpy` is deprecated for use on NUL-terminated destination strings [1].
 > 
-> Looks good, thanks.
+> We've already calculated bounds, possible truncation with '\0' or '\n'
+> and manually NUL-terminated. The situation is now just a literal byte
+> copy from one buffer to another, let's treat it as such and use a less
+> ambiguous interface in memcpy.
 > 
-> Reviewed-by: Alex Elder <elder@linaro.org>
-> 
-> Note that there is some interaction between struct ipa_power_data
-> and struct ipa_power (the former is used to initialize the latter).
-> Both of these contain flexible arrays counted by another field in
-> the structure.  It seems possible that the way these are initialized
-> might need slight modification to allow the compiler to do its
-> enforcement; if that's the case, please reach out to me.
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-I think it's all okay:
+Yeah, I think this looks good now. If a v5 is needed, a tiny improvement
+would be to update the Subject: to "...: replace strncpy with memcpy".
 
-struct ipa_power_data {
-        u32 core_clock_rate;
-        u32 interconnect_count;         /* # entries in interconnect_data[] */
-        const struct ipa_interconnect_data *interconnect_data;
-};
-
-"interconnect_data" here is a pointer, not a flexible array. (Yes,
-__counted_by is expected to be expanded in the future for pointers,
-but not yet.) Looking at initializers, I didn't see any problems with
-how struct ipa_power is allocated.
-
-Thanks for the heads-up; I'm sure I'll look at this again when we can
-further expand __counted_by to pointers. :)
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -Kees
 
