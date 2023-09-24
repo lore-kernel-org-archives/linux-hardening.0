@@ -1,113 +1,108 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FFBDD52C
-	for <linux-hardening@vger.kernel.org>; Sun, 24 Sep 2023 17:06:30 +0000 (UTC)
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A6B3CF;
-	Sun, 24 Sep 2023 10:06:29 -0700 (PDT)
-Received: by mail-lf1-x12f.google.com with SMTP id 2adb3069b0e04-5043a01ee20so5583305e87.0;
-        Sun, 24 Sep 2023 10:06:29 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFAAED52F
+	for <linux-hardening@vger.kernel.org>; Sun, 24 Sep 2023 17:25:03 +0000 (UTC)
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 694DBFC
+	for <linux-hardening@vger.kernel.org>; Sun, 24 Sep 2023 10:25:01 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id a640c23a62f3a-99c93638322so1172329466b.1
+        for <linux-hardening@vger.kernel.org>; Sun, 24 Sep 2023 10:25:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695575187; x=1696179987; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gG8vnWQHvQhRnrvCqdEqT6JTTQ016xPNLohZ4GJlrMs=;
-        b=izTK4OoNLhWkjZEtI25JEFgNhwssqHSu4NJitCOmmkBopTZ/AvX2Hv/t0MFffFQS2+
-         EMTAR2XMXfA+HhSX1qJHPIkJtOx54KGFw0IFEYae0FA1JZNdepFIwZACH+sDVFHZSPCA
-         iPCBL2tyawmSUNrsQPKnz5BEaTwR0q3yuwozJKMtRXDUl0MPCPyjWF5G7QAWOhgM01D2
-         C0q7SGgZJ3CO8QM9j270aLDxfQHYGoUUru9PkQW63JIgBA2MhJdyNUbVa392dVFaigSA
-         DVP2CwujcuM7gDtuIYA+hLxOYMD1xF60K9cJaF0K/8DXZcTZxTZN74MIsGgscuUjXlBt
-         HR6Q==
+        d=linux-foundation.org; s=google; t=1695576299; x=1696181099; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=RRXyiwDnkcF0zN2JsUwtWTqR+TaAuDaKDz+KJ6kvRrU=;
+        b=HLGqwnkyzFQVdgYOXY0i49HeFCR6URzFxfpL1sidrOrd7PMp434Uk0KBW11wXZSpu4
+         3HErpiTjei99XzJzZVVKa4rHW7n49LeqZEQPOL9vz5uoFrMV1UXMbokYlOKBrlHAxAXv
+         9BQdA++xabk014UiEZT/kMxhZFGNlXbvrYpFE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695575187; x=1696179987;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gG8vnWQHvQhRnrvCqdEqT6JTTQ016xPNLohZ4GJlrMs=;
-        b=ck3Gs++ZjBbt8UsGj563EK9/ZTuw930UjJYfo45xzrmvTCMYNE/bSd6ESZdSlwxU06
-         YiXh5GGhxlCLZJYS3p3Xz6kPok3wuxMGPSRjoV6gZcv6jqxs4wmKadh0ITi2c7qyN+d2
-         QR6RC1+Nqv+6eYdb5+aE9yhJ5S/9XIeq46NpkDKWguCV8Y+PVqbqhkJ4xn+vSS0X0dgr
-         yJtD4cnozHmp0k02Pewq6VmBoW6Bv285uAuEwXFYyz1UMnDCaWRF8L2kyMIZPz764I9p
-         sJhEyavlVnj6gl3edpl4XB5A1YhzB2yMIQsYH7gkAvNZJ6sQwcbclL2wn0ZMDYav7YKB
-         9nDA==
-X-Gm-Message-State: AOJu0YyFqgAxUen6rPdQGykJUjWrxNd1koKpfbN92+iWHxYKxg3WB1Ti
-	cMveJzvq/Dr5ck7rEQmnu5s=
-X-Google-Smtp-Source: AGHT+IEtoFr2Pbg8fZweBJMsD1JXTiezgzBgcOIx0X/hI7Iqh7usEJ41J/mea3D1UezDz38TmVOXRg==
-X-Received: by 2002:a19:2d01:0:b0:503:36cb:5438 with SMTP id k1-20020a192d01000000b0050336cb5438mr4050615lfj.21.1695575186869;
-        Sun, 24 Sep 2023 10:06:26 -0700 (PDT)
-Received: from [192.168.178.40] ([146.52.231.36])
-        by smtp.gmail.com with ESMTPSA id y19-20020a056402135300b0052fdfd8870bsm4476566edw.89.2023.09.24.10.06.25
+        d=1e100.net; s=20230601; t=1695576299; x=1696181099;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RRXyiwDnkcF0zN2JsUwtWTqR+TaAuDaKDz+KJ6kvRrU=;
+        b=sMT2Dd52t5kDTtkNF+uzr+Gv7fF+vZ5ZPUOV0SJVmAjIpXXhrYMKLVrlrCPUHRndIC
+         qihTovD0MbPNr1j4/kR0v6W/yo5P0TzsvillzpZ20EHCMGTntjyhFTlzL/omLHI3CfNC
+         +Th0QjWyOXWfwiuJryhllv93eZ2tw1+oUWYHZ+LgoI7yIg0apKRLVmwW7/B12KmP8mFP
+         HgAl2v/jhNLjAAbyH21iMyNbrEwJrQs0sEWxpn8bvkSH9a0eEyRXIfC2TThJ81/GjjUr
+         Jb+XAwU5gLi0TIwzrFOkYtnrJJggE6LBtNuOWFF7/OD9ONFz8VAdp3aKvfBJ/mYWOyZB
+         KCeQ==
+X-Gm-Message-State: AOJu0YwWLBEK93HHU7Xhs+zKgSWyCpJ0nO6Pip4iDtzFHzXEofJVXDP+
+	VJl2bJ6VpjOCQc2Bfv5EaAYPEk+lX4l2G7e9OsUIj385
+X-Google-Smtp-Source: AGHT+IHJkpBaD4OjAPdkJwt5NSSfrXN4dMpU9qpGyjxo5ws2R5L40VpuEXc2sVzJKQweLZw/xe2f1w==
+X-Received: by 2002:a17:906:4fce:b0:9aa:206d:b052 with SMTP id i14-20020a1709064fce00b009aa206db052mr12356363ejw.27.1695576299716;
+        Sun, 24 Sep 2023 10:24:59 -0700 (PDT)
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com. [209.85.208.46])
+        by smtp.gmail.com with ESMTPSA id a7-20020a170906670700b0099293cdbc98sm5267660ejp.145.2023.09.24.10.24.58
+        for <linux-hardening@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 24 Sep 2023 10:06:26 -0700 (PDT)
-Message-ID: <bc42418d-117e-8d69-2630-0f072b9e196b@gmail.com>
-Date: Sun, 24 Sep 2023 19:06:25 +0200
+        Sun, 24 Sep 2023 10:24:58 -0700 (PDT)
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-52f3ba561d9so11674466a12.1
+        for <linux-hardening@vger.kernel.org>; Sun, 24 Sep 2023 10:24:58 -0700 (PDT)
+X-Received: by 2002:a05:6402:270d:b0:530:bfb6:66cd with SMTP id
+ y13-20020a056402270d00b00530bfb666cdmr11388000edd.7.1695576298038; Sun, 24
+ Sep 2023 10:24:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH] scsi: target: tcmu: Annotate struct tcmu_tmr with
- __counted_by
-To: Kees Cook <keescook@chromium.org>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>,
- linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
- linux-hardening@vger.kernel.org
-References: <20230922175300.work.148-kees@kernel.org>
-Content-Language: en-US
-From: Bodo Stroesser <bostroesser@gmail.com>
-In-Reply-To: <20230922175300.work.148-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+References: <202309220957.927ADC0586@keescook> <CAHk-=wg0C+eEm0Tegpvc1zZjcqkdG9L0ed10tg_rQ1-WZciMGA@mail.gmail.com>
+ <202309222034.F2B777F55@keescook> <CAHk-=whf6Zu3Cfm1eOTxXniZf5EPaf1iLj_q_6BVHrzTUBfUGw@mail.gmail.com>
+ <88707e12-dba9-4a9f-95d7-8d6f3c8f0f58@p183>
+In-Reply-To: <88707e12-dba9-4a9f-95d7-8d6f3c8f0f58@p183>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sun, 24 Sep 2023 10:24:40 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh++R5W1ifuS6YoSb-9ExKGr7cVavo8SHiWtzyR4-hVgg@mail.gmail.com>
+Message-ID: <CAHk-=wh++R5W1ifuS6YoSb-9ExKGr7cVavo8SHiWtzyR4-hVgg@mail.gmail.com>
+Subject: Re: [GIT PULL] hardening fixes for v6.6-rc3
+To: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On 22.09.23 19:53, Kees Cook wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
-> 
-> As found with Coccinelle[1], add __counted_by for struct tcmu_tmr.
-> 
-> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
-> 
-> Cc: Bodo Stroesser <bostroesser@gmail.com>
-> Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-> Cc: linux-scsi@vger.kernel.org
-> Cc: target-devel@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->   drivers/target/target_core_user.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/target/target_core_user.c b/drivers/target/target_core_user.c
-> index 22cc6cac0ba2..7eb94894bd68 100644
-> --- a/drivers/target/target_core_user.c
-> +++ b/drivers/target/target_core_user.c
-> @@ -201,7 +201,7 @@ struct tcmu_tmr {
->   
->   	uint8_t tmr_type;
->   	uint32_t tmr_cmd_cnt;
-> -	int16_t tmr_cmd_ids[];
-> +	int16_t tmr_cmd_ids[] __counted_by(tmr_cmd_cnt);
->   };
->   
->   /*
+On Sun, 24 Sept 2023 at 09:58, Alexey Dobriyan <adobriyan@gmail.com> wrote:
+>
+> Most of those in uapi/ are likely unnecessary: extern "C" means
+> "don't mangle", but kernel doesn't export functions to userspace
+> except vDSO so there is nothing to mangle in the first place.
 
-Reviewed-by: Bodo Stroesser <bostroesser@gmail.com>
+I suspect a lot of it is "this got copied-and-pasted from a source
+that used it".
 
-Thank you,
-Bodo
+And even if you don't export, you have to *match* the linkage in case
+you have the same name.
+
+So I suspect that if you have any kind of prototype sharing between
+user space (that might use C++) and kernel space, and end up with the
+same helper functions in both cases, and having some header sharing,
+you end up with that pattern. And you do it just once, and then it
+spreads by copy-and-paste.
+
+And then about a third of the hits seem to be in tools, which is
+literally user space and probably actually has C and C++ mixing.
+
+Another third is the drm uapi files. I didn't even try to look at what
+the cause there is. But presumably there are common names used in user
+space vs kernel.
+
+And then the last third is random.
+
+We do have a few other uses of __cplusplus. Sometimes just "we have a
+structure member name that the C++ people decided was a magic
+keyword".
+
+So it's not like this new pattern is *completely* new - we've had
+random "people want to use this header with C++ compilers and that
+causes random issues" before. The details are different, the cause is
+similar.
+
+                Linus
