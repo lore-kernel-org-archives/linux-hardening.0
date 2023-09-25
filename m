@@ -1,134 +1,163 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19A9D1B27D
-	for <linux-hardening@vger.kernel.org>; Mon, 25 Sep 2023 12:20:55 +0000 (UTC)
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 667B0103;
-	Mon, 25 Sep 2023 05:20:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695644454; x=1727180454;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=DuowFPWx8WzqGKtlSQ1LLSC/9eNAA11N0z3LCFyNJPw=;
-  b=ff+IftKAhdGpIZBjye12W7HsazMjN6ZE/3buBQWYO5jQxeTvk3Iy6cr0
-   wAK4IFydmdybFdzSbZ0t9BJNqnL2+xTE+WsDnKrAmtrkDHd3pqc90JqOM
-   kCJPZHcaUy07RSEQvzUj7pOekdfdMcZk67ceczGmpkaS4X0XA8WHL2eUU
-   qDcyISSgBwAeGXf9329VpNbM9VzbgicITJ3efoQZOji2BOqNJjb2KLRTN
-   7MVCsdJeyv8iQrNM/tfpba72A8qwDUUZDDE5iXXAGchiAh1xFk/9RIaC5
-   kusFKfhog2H7DwqWJ+KHAe3bHIohQyMnPT6ycTZqZ2J+nSZH/y+b379Cj
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="383996632"
-X-IronPort-AV: E=Sophos;i="6.03,174,1694761200"; 
-   d="scan'208";a="383996632"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 05:20:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="748329775"
-X-IronPort-AV: E=Sophos;i="6.03,174,1694761200"; 
-   d="scan'208";a="748329775"
-Received: from nurqayrx-mobl2.gar.corp.intel.com (HELO intel.com) ([10.213.34.118])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 05:20:19 -0700
-Date: Mon, 25 Sep 2023 14:20:13 +0200
-From: Andi Shyti <andi.shyti@linux.intel.com>
-To: Kees Cook <keescook@chromium.org>
-Cc: David Airlie <airlied@gmail.com>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Chris Wilson <chris@chris-wilson.co.uk>,
-	John Harrison <john.c.harrison@intel.com>,
-	Andi Shyti <andi.shyti@linux.intel.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	Emma Anholt <emma@anholt.net>, Evan Quan <evan.quan@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?iso-8859-15?Q?K=F6nig?= <christian.koenig@amd.com>,
-	"Pan, Xinhui" <Xinhui.Pan@amd.com>,
-	Xiaojian Du <Xiaojian.Du@amd.com>, Huang Rui <ray.huang@amd.com>,
-	Kevin Wang <kevin1.wang@amd.com>,
-	Hawking Zhang <Hawking.Zhang@amd.com>,
-	Rob Clark <robdclark@gmail.com>,
-	Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Sean Paul <sean@poorly.run>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Ben Skeggs <bskeggs@redhat.com>, Karol Herbst <kherbst@redhat.com>,
-	Lyude Paul <lyude@redhat.com>, Maxime Ripard <mripard@kernel.org>,
-	David Airlie <airlied@redhat.com>,
-	Gerd Hoffmann <kraxel@redhat.com>,
-	Gurchetan Singh <gurchetansingh@chromium.org>,
-	Chia-I Wu <olvaffe@gmail.com>, Zack Rusin <zackr@vmware.com>,
-	VMware Graphics Reviewers <linux-graphics-maintainer@vmware.com>,
-	Melissa Wen <mwen@igalia.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Tom Rix <trix@redhat.com>, Le Ma <le.ma@amd.com>,
-	Lijo Lazar <lijo.lazar@amd.com>, Yifan Zhang <yifan1.zhang@amd.com>,
-	Prike Liang <Prike.Liang@amd.com>, Lang Yu <Lang.Yu@amd.com>,
-	Tejas Upadhyay <tejas.upadhyay@intel.com>,
-	Nirmoy Das <nirmoy.das@intel.com>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kuogee Hsieh <quic_khsieh@quicinc.com>,
-	linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-	linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
-	nouveau@lists.freedesktop.org,
-	virtualization@lists.linux-foundation.org, llvm@lists.linux.dev,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 3/9] drm/i915/selftests: Annotate struct perf_series with
- __counted_by
-Message-ID: <ZRF6/VBgVvgl6lpn@ashyti-mobl2.lan>
-References: <20230922173110.work.084-kees@kernel.org>
- <20230922173216.3823169-3-keescook@chromium.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E8C41BDEB
+	for <linux-hardening@vger.kernel.org>; Mon, 25 Sep 2023 14:07:41 +0000 (UTC)
+Received: from mail-oa1-x33.google.com (mail-oa1-x33.google.com [IPv6:2001:4860:4864:20::33])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD8F5C0;
+	Mon, 25 Sep 2023 07:07:39 -0700 (PDT)
+Received: by mail-oa1-x33.google.com with SMTP id 586e51a60fabf-1dcedc832d4so1596272fac.3;
+        Mon, 25 Sep 2023 07:07:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1695650859; x=1696255659; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eOm71FSa/a54JWdPxFTdFQYbsSYB0XKCvLJel7l+Bek=;
+        b=jpP9f+SoKQVqdTnEQFoH5+vMmHrMw0e/70zsHfZH/xpE97jLfDgqAHah88ugAV0rnN
+         2abK60Jt4jELKdCt/4ejxbl/HvUUPl0eYNToTSNFZNMpYHecr2+qKLW57q6NeNoVfuy0
+         O+Zski8i8p1tE+ZhSDi+y+iK9sgwLoLqFf7uDMqUB85m0wLCmoMVp3ijoHEFafFCm7L+
+         hE6O616wGt0zbqORXyYHqQwyLLn/4+GMP8VInbs9Sb9Y7Mn/6OFKR5VJ+NJddMRmdnHO
+         bDirD2rZA8i7dqUwEQdRYqpTBDu2bejN8pAqDKDF+nzQgxkXLNk6I+vwhRDSFLELji32
+         ZpdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695650859; x=1696255659;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eOm71FSa/a54JWdPxFTdFQYbsSYB0XKCvLJel7l+Bek=;
+        b=um0ZjABdcpWgOfuqigQtnzpgcpSIN7joQYjrmG/Vds25nR0FNlGiGIBOkSnbH+KEDI
+         /68OvvuO7TahZRsBTWyt60y5CJjNKN3ibJUPitnDpvbmlBHLxECAPrydizwHapx8gaCn
+         qHTP8DOTksdSkd4mdKaUr45GfYqKSpNvH54fhMM3Zi7tOg3FKXeMoA3A42IswNUE/bb+
+         t+dVwgNHFKzfkD6+L+9R4PiUoSKhQZf+eaVEku8rh1smOXTooTQ7PCz+uOxXpnS6LK/F
+         i9BOz4o+6oa2zhGawmH/cl8XdtrbOLV0LP5MkyGpcEjfBgtOKK71gpdqXg3DX8eum3qR
+         nDgg==
+X-Gm-Message-State: AOJu0YyK/5RVyHaJ0pfuiyLO0XgzxV7c99+uS/99j9rs8gdW2M76EIkU
+	yaPuwfnax9Cd55Wd74MHAO3Emzd9u4u/X3dOrUs=
+X-Google-Smtp-Source: AGHT+IEAGihrK0Fxy+zmQS+jCavrD8i0S0F6RPaTyUWR0Tsr+swWkiWj17Z4gpkbPnpNw9W+uaTcvGPHY2GFxPPQ6jk=
+X-Received: by 2002:a05:6870:b68b:b0:19e:fa1f:fc2f with SMTP id
+ cy11-20020a056870b68b00b0019efa1ffc2fmr7668945oab.38.1695650859043; Mon, 25
+ Sep 2023 07:07:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230922173216.3823169-3-keescook@chromium.org>
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-	RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-	autolearn=ham autolearn_force=no version=3.4.6
+References: <20230922173110.work.084-kees@kernel.org> <20230922173216.3823169-1-keescook@chromium.org>
+ <CADnq5_P2p3bmczci=pU+pG6f9+hqn=-xp1EynP2345CJZRW08w@mail.gmail.com> <2635922e-f52a-4e91-40c6-4f1358972786@amd.com>
+In-Reply-To: <2635922e-f52a-4e91-40c6-4f1358972786@amd.com>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Mon, 25 Sep 2023 10:07:27 -0400
+Message-ID: <CADnq5_P1tg2-rWUmsRAy3aPJLT7ZmaZORMSOrPa6t6oSc5xS3g@mail.gmail.com>
+Subject: Re: [PATCH 1/9] drm/amd/pm: Annotate struct smu10_voltage_dependency_table
+ with __counted_by
+To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: Kees Cook <keescook@chromium.org>, David Airlie <airlied@gmail.com>, 
+	Tejas Upadhyay <tejas.upadhyay@intel.com>, Emma Anholt <emma@anholt.net>, Tom Rix <trix@redhat.com>, 
+	llvm@lists.linux.dev, dri-devel@lists.freedesktop.org, 
+	Chris Wilson <chris@chris-wilson.co.uk>, Prike Liang <Prike.Liang@amd.com>, 
+	Huang Rui <ray.huang@amd.com>, Gerd Hoffmann <kraxel@redhat.com>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Marijn Suijten <marijn.suijten@somainline.org>, 
+	Matthew Brost <matthew.brost@intel.com>, Karol Herbst <kherbst@redhat.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, amd-gfx@lists.freedesktop.org, 
+	Kuogee Hsieh <quic_khsieh@quicinc.com>, Nathan Chancellor <nathan@kernel.org>, 
+	VMware Graphics Reviewers <linux-graphics-maintainer@vmware.com>, Ben Skeggs <bskeggs@redhat.com>, 
+	Andi Shyti <andi.shyti@linux.intel.com>, nouveau@lists.freedesktop.org, 
+	David Airlie <airlied@redhat.com>, virtualization@lists.linux-foundation.org, 
+	linux-hardening@vger.kernel.org, Lijo Lazar <lijo.lazar@amd.com>, 
+	Yifan Zhang <yifan1.zhang@amd.com>, linux-arm-msm@vger.kernel.org, 
+	intel-gfx@lists.freedesktop.org, Kevin Wang <kevin1.wang@amd.com>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, Melissa Wen <mwen@igalia.com>, 
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Gurchetan Singh <gurchetansingh@chromium.org>, 
+	Maxime Ripard <mripard@kernel.org>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Evan Quan <evan.quan@amd.com>, Sean Paul <sean@poorly.run>, 
+	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>, Xiaojian Du <Xiaojian.Du@amd.com>, 
+	Le Ma <le.ma@amd.com>, freedreno@lists.freedesktop.org, 
+	Bjorn Andersson <andersson@kernel.org>, "Pan, Xinhui" <Xinhui.Pan@amd.com>, 
+	Nick Desaulniers <ndesaulniers@google.com>, linux-kernel@vger.kernel.org, 
+	Alex Deucher <alexander.deucher@amd.com>, Nirmoy Das <nirmoy.das@intel.com>, 
+	Lang Yu <Lang.Yu@amd.com>, John Harrison <john.c.harrison@intel.com>, 
+	Hawking Zhang <Hawking.Zhang@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Hi Kees,
+On Mon, Sep 25, 2023 at 2:30=E2=80=AFAM Christian K=C3=B6nig
+<christian.koenig@amd.com> wrote:
+>
+> Am 22.09.23 um 19:41 schrieb Alex Deucher:
+> > On Fri, Sep 22, 2023 at 1:32=E2=80=AFPM Kees Cook <keescook@chromium.or=
+g> wrote:
+> >> Prepare for the coming implementation by GCC and Clang of the __counte=
+d_by
+> >> attribute. Flexible array members annotated with __counted_by can have
+> >> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BO=
+UNDS
+> >> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-fami=
+ly
+> >> functions).
+> >>
+> >> As found with Coccinelle[1], add __counted_by for struct smu10_voltage=
+_dependency_table.
+> >>
+> >> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/example=
+s/counted_by.cocci
+> >>
+> >> Cc: Evan Quan <evan.quan@amd.com>
+> >> Cc: Alex Deucher <alexander.deucher@amd.com>
+> >> Cc: "Christian K=C3=B6nig" <christian.koenig@amd.com>
+> >> Cc: "Pan, Xinhui" <Xinhui.Pan@amd.com>
+> >> Cc: David Airlie <airlied@gmail.com>
+> >> Cc: Daniel Vetter <daniel@ffwll.ch>
+> >> Cc: Xiaojian Du <Xiaojian.Du@amd.com>
+> >> Cc: Huang Rui <ray.huang@amd.com>
+> >> Cc: Kevin Wang <kevin1.wang@amd.com>
+> >> Cc: amd-gfx@lists.freedesktop.org
+> >> Cc: dri-devel@lists.freedesktop.org
+> >> Signed-off-by: Kees Cook <keescook@chromium.org>
+> > Acked-by: Alex Deucher <alexander.deucher@amd.com>
+>
+> Mhm, I'm not sure if this is a good idea. That is a structure filled in
+> by the firmware, isn't it?
+>
+> That would imply that we might need to byte swap count before it is
+> checkable.
 
-On Fri, Sep 22, 2023 at 10:32:08AM -0700, Kees Cook wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
-> 
-> As found with Coccinelle[1], add __counted_by for struct perf_series.
-> 
-> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
-> 
-> Cc: Jani Nikula <jani.nikula@linux.intel.com>
-> Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-> Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
-> Cc: Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>
-> Cc: David Airlie <airlied@gmail.com>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: Chris Wilson <chris@chris-wilson.co.uk>
-> Cc: John Harrison <john.c.harrison@Intel.com>
-> Cc: Andi Shyti <andi.shyti@linux.intel.com>
-> Cc: Matthew Brost <matthew.brost@intel.com>
-> Cc: intel-gfx@lists.freedesktop.org
-> Cc: dri-devel@lists.freedesktop.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+True. Good point.  Same for the other amdgpu patch.
 
-Reviewed-by: Andi Shyti <andi.shyti@linux.intel.com> 
+Alex
 
-Thanks,
-Andi
+>
+> Regards,
+> Christian.
+>
+> >
+> >> ---
+> >>   drivers/gpu/drm/amd/pm/powerplay/hwmgr/smu10_hwmgr.h | 2 +-
+> >>   1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/gpu/drm/amd/pm/powerplay/hwmgr/smu10_hwmgr.h b/dr=
+ivers/gpu/drm/amd/pm/powerplay/hwmgr/smu10_hwmgr.h
+> >> index 808e0ecbe1f0..42adc2a3dcbc 100644
+> >> --- a/drivers/gpu/drm/amd/pm/powerplay/hwmgr/smu10_hwmgr.h
+> >> +++ b/drivers/gpu/drm/amd/pm/powerplay/hwmgr/smu10_hwmgr.h
+> >> @@ -192,7 +192,7 @@ struct smu10_clock_voltage_dependency_record {
+> >>
+> >>   struct smu10_voltage_dependency_table {
+> >>          uint32_t count;
+> >> -       struct smu10_clock_voltage_dependency_record entries[];
+> >> +       struct smu10_clock_voltage_dependency_record entries[] __count=
+ed_by(count);
+> >>   };
+> >>
+> >>   struct smu10_clock_voltage_information {
+> >> --
+> >> 2.34.1
+> >>
+>
