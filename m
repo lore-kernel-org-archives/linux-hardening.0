@@ -1,127 +1,136 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 693097F
-	for <linux-hardening@vger.kernel.org>; Mon, 25 Sep 2023 03:43:27 +0000 (UTC)
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F405CA
-	for <linux-hardening@vger.kernel.org>; Sun, 24 Sep 2023 20:43:25 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d8153284d6eso8485223276.3
-        for <linux-hardening@vger.kernel.org>; Sun, 24 Sep 2023 20:43:25 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7800A10E4
+	for <linux-hardening@vger.kernel.org>; Mon, 25 Sep 2023 04:31:16 +0000 (UTC)
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B9D4E8
+	for <linux-hardening@vger.kernel.org>; Sun, 24 Sep 2023 21:31:09 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-59f8134ec00so14395807b3.3
+        for <linux-hardening@vger.kernel.org>; Sun, 24 Sep 2023 21:31:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1695613404; x=1696218204; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1695616268; x=1696221068; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=kGi+l4riuiaECjqmxxM9T013wn7H2VmKYNQkmtyxbEM=;
-        b=fJC5qr8gg57/YeN024dGxE569nrPQ7n7Ms7eT+oerUUINbPVOFDA+JdoOzRv4WkVhd
-         UpajUvo2i8wDGjuBdiyKPPMbFc2ZTqdHIti2kmRE3XglI+x436aTA528ItrdB1CsGWqG
-         R5i//U/uAvW7T/EwiAT8+TciTyicA02YT6BJ1qlJ770XUZT5H2sN1Hg68lEHZzqf1s3J
-         YIHbnTx87ZBvqCm52BOPE9cvwS3VbUlbkWrVklaJeQozxvKt0JTZQNx90cutgN126vS0
-         jzBH7QZfQBRIn7nggv5MgqLeju2k7VpIN5BebkrlU0Cln4PdH3EAh6Y3Xp9disVKr3Ta
-         CiOQ==
+        bh=u9uHumzTyf+gjmcuSq47+yVY/ogRXox3AvMpCppjL8A=;
+        b=L/5s9hS+tgCT2x3dMNT6z9FXQPlt6oZJn2ctzmnys3Nubs7O+NOlwJvHa0NqJMz7co
+         QLeQbpZgRyXETyg1V7rJqQLAkqv/g6YJgs0u2g+XY1WGuo7zu1g5U9KHfgeg9kyEoZ7L
+         /O1KPPNFAPH+RUk3mM5VppU1WixW2VRqla5TK1A8F34YyEj8ykzAJtl8A4fRyuln4uCI
+         302kH3kfDLsi9ZNMdR94zUOskb4Bk7kfi5eA95zgoRZpQBO58QVsDHQ8jB09J/qNB+9m
+         bm6jQd/6j6qQ09o8zw1AtmLzxk/1DWpcjbUMhIasHxfzHxfDQmSKyh7okAk7KVIiGOqS
+         5Rnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695613404; x=1696218204;
+        d=1e100.net; s=20230601; t=1695616268; x=1696221068;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=kGi+l4riuiaECjqmxxM9T013wn7H2VmKYNQkmtyxbEM=;
-        b=M2ctKqpABfB2A3BC0h5UP64sOV7bAWoZaorLi6tLVi9B6o5my9lrEj16jP8plgtq01
-         /JLi2vOtkOuEl/JBjAqCs/fi6U9eo906AHUOGy55XuqxwZU4F/zd7ZoFgApaJKRAjmi2
-         PzJzw+xe78NQp9RSopWL+3vbgEvGmcaKORW0Nusv7c6mNsT9RJW+OxOvSdiTibAr82qU
-         JBuEfpXHWbI+YD82b3mt9fUg4SezHYwhQbA/zKe5Lb7yCCiJhSCk3irAlmhoqrYHYQz1
-         093dXR1BcwXSu1t+4p4dPJBJ/cbUMKeo5N+W/FPuxCK4qI4743hL9/ZWEQFEmA2sPTPc
-         mCDQ==
-X-Gm-Message-State: AOJu0YxYFyB6wOU9/uVrH3H/dHjU7X+6cgLKvfORk5BPbrXdogFrqB2g
-	j4wdi0WamZjVtQDCafNhNaFmKtAtFBVN/vEINw==
-X-Google-Smtp-Source: AGHT+IHCPc5EgxxRujqxihGGDCVQM4hAhwT+dn65Q42IWRVfZlIOVbw1xYKDwpW15j1rDyTCgAi3WLfG/J+Ani0eUA==
+        bh=u9uHumzTyf+gjmcuSq47+yVY/ogRXox3AvMpCppjL8A=;
+        b=nd19RfVq6NA6OOuH1Mw0AsIT0GH+SKA9LGwwoE/PwS8BbXYV5beDwoNCzI32B7hWEF
+         FR0QIBxpVndpvNDLKA61z/Kc62KXGjIDJFYDhUvSmgFAP6ByOEhX0OYpGlBVFumUmyEI
+         hVi3/2lYYb5VQ6BX+szwiuSYpYzZRD8ph3VeAuBWCdM69+U2M6DOEwXAkjfYOeLXjkoA
+         5eb9muDbGkbE7PBRAi2qqP/sualzIiTHJJl7deb6mec+IvvRN5jtyD9Yvtw9lyqUsqFp
+         99ZS6C1utbhJDc/eULrcM+/2Qmt2Ze8r23B3skK9P94Mf5vbIP27z+tYnvpdWfQpIQpx
+         ukeg==
+X-Gm-Message-State: AOJu0YyZjGSIrEdokanj6iKrMvrCwFtS0gHlv/Y6w5IR9dhJwKBEoSXa
+	HoFnzV9wwJC0odu9LvxpZYNK+sP9GfkmAh9EGA==
+X-Google-Smtp-Source: AGHT+IHPf37TtcAQw/kZ/if+wxjiRYYEoKTZ/EE11hWMdLINb9IuxCcKQ3MtEWuw4p0np8qDJEFrJ0n1xqFOgQcaNA==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a25:5050:0:b0:d81:7617:a397 with SMTP
- id e77-20020a255050000000b00d817617a397mr54759ybb.9.1695613404635; Sun, 24
- Sep 2023 20:43:24 -0700 (PDT)
-Date: Mon, 25 Sep 2023 03:43:23 +0000
+ (user=justinstitt job=sendgmr) by 2002:a81:eb0c:0:b0:58c:7cb1:10f with SMTP
+ id n12-20020a81eb0c000000b0058c7cb1010fmr64056ywm.9.1695616268339; Sun, 24
+ Sep 2023 21:31:08 -0700 (PDT)
+Date: Mon, 25 Sep 2023 04:31:05 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIANoBEWUC/53NQW7CMBCF4asgrzuVPXZIzKr3qBACZ5xYauJoH
- BmiKHfHsKLqii7fW3z/KhJxoCQOu1Uw5ZBCHMswHzvh+vPYEYS2bIEStbTKQJp5dNMCLYdMnKC
- /DnGEs5vCaYpX4tNAMzE4cNZj28hKX8iLwk1MPtyeqe9j2X1Ic+TlWc7q8f4jkhUosLJCW5vae
- mq+uhi7H/p0cRCPSsZX2b4hY5EbbRqjsd0bg39k/SKjekPWRdayrip0e3La/5K3bbsDahucXJU BAAA=
+X-B4-Tracking: v=1; b=H4sIAAgNEWUC/5XNSw6DIBSF4a0Yxr0NoK2PUffROFC86E0rELBEY
+ 9x7qTvo8D+D8+0soCcMrMl25jFSIGtSyEvG1NSZEYGG1ExymfNaCgiLN8ptMHiK6AOQcZ8FZgo
+ KutVJvoLDFyjIVVHyqpZF3w8svTmPmtZTerapJwqL9dsJR/Fb/zeiAAG61HdddDelK/EYrR3fe FV2Zu1xHF9KMXl23wAAAA==
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1695613403; l=2092;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1695616267; l=2212;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=ioSkjFW6xO8Zk6Hy0g0yjtRiiK1nC4uSchEb5oNum5w=; b=fMjWVGvcSh9yNcffpjEcUdHXCUXqgO+uc1xT2SyEgz2oCVkPicvItUudYEWRwJTfU561WP+ua
- RdtVThBRACuA8mljVOy6FIl3jboq2056DJkW4IqXe500CvQqhMj6Crn
+ bh=Sw+ZJKnGZ+JwKov1VeH3ACtZRgGvZ2w/x0E7T3CskvA=; b=DqRU49YR3wzheuEpQc3E2ii9tcBqhXWtzvAnZX/mi6knIBj7UivaiZux27mnaODzfuwNsJ4jT
+ 6pgb6ayjgqFBTY47ZtK16xtYWzLYXRTlLuAQyXIH0qqWIODFqN7j+W7
 X-Mailer: b4 0.12.3
-Message-ID: <20230925-strncpy-drivers-hwmon-acpi_power_meter-c-v4-1-3bac7534f10f@google.com>
-Subject: [PATCH v4] hwmon: (acpi_power_meter) replace open-coded kmemdup_nul
+Message-ID: <20230925-strncpy-drivers-input-misc-axp20x-pek-c-v2-1-ff7abe8498d6@google.com>
+Subject: [PATCH v2] Input: axp20x-pek - avoid needless newline removal
 From: Justin Stitt <justinstitt@google.com>
-To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>
-Cc: linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>, 
+	Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
 X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.6
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-`strncpy` is deprecated for use on NUL-terminated destination strings [1].
+This code is doing more work than it needs to.
 
-Let's refactor this kcalloc() + strncpy() into a kmemdup_nul() which has
-more obvious behavior and is less error prone.
+Before handing off `val_str` to `kstrtouint()` we are eagerly removing
+any trailing newline which requires copying `buf`, validating it's
+length and checking/replacing any potential newlines.
 
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+kstrtouint() handles this implicitly:
+kstrtouint ->
+  kstrotoull -> (documentation)
+|   /**
+|    * kstrtoull - convert a string to an unsigned long long
+|    * @s: The start of the string. The string must be null-terminated, and may also
+|    *  include a single newline before its terminating null. The first character
+|    ...
+
+Let's remove the redundant functionality and let kstrtouint handle it.
+
 Link: https://github.com/KSPP/linux/issues/90
 Cc: linux-hardening@vger.kernel.org
+Suggested-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
-Changes in v4:
-- drop +1 from length arg (thanks Kees)
-- reword subject line (thanks Kees)
-- rebase onto 6465e260f4879080
-- Link to v3: https://lore.kernel.org/r/20230921-strncpy-drivers-hwmon-acpi_power_meter-c-v3-1-307552c6ec3f@google.com
-
-Changes in v3:
-- refactor to use kmemdup_nul() (thanks Thomas and Kees)
-- change commit msg to reflect ^
-- rebase onto 2cf0f71562387282
-- Link to v2: https://lore.kernel.org/r/20230919-strncpy-drivers-hwmon-acpi_power_meter-c-v2-1-8348432d6442@google.com
-
 Changes in v2:
-- use memcpy over strscpy (thanks Kees)
-- Link to v1: https://lore.kernel.org/r/20230914-strncpy-drivers-hwmon-acpi_power_meter-c-v1-1-905297479fe8@google.com
+- remove eager newline removal (thanks Kees)
+- use better subject line (thanks Kees)
+- rebase on 6465e260f4879080
+- Link to v1: https://lore.kernel.org/r/20230921-strncpy-drivers-input-misc-axp20x-pek-c-v1-1-f7f6f4a5cf81@google.com
 ---
- drivers/hwmon/acpi_power_meter.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+Note: build-tested only.
+---
+ drivers/input/misc/axp20x-pek.c | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
 
-diff --git a/drivers/hwmon/acpi_power_meter.c b/drivers/hwmon/acpi_power_meter.c
-index fa28d447f0df..c13b5c8a0433 100644
---- a/drivers/hwmon/acpi_power_meter.c
-+++ b/drivers/hwmon/acpi_power_meter.c
-@@ -796,14 +796,13 @@ static int read_capabilities(struct acpi_power_meter_resource *resource)
- 			goto error;
- 		}
+diff --git a/drivers/input/misc/axp20x-pek.c b/drivers/input/misc/axp20x-pek.c
+index 4581606a28d6..24f9e9d893de 100644
+--- a/drivers/input/misc/axp20x-pek.c
++++ b/drivers/input/misc/axp20x-pek.c
+@@ -133,20 +133,11 @@ static ssize_t axp20x_store_attr(struct device *dev,
+ 				 size_t count)
+ {
+ 	struct axp20x_pek *axp20x_pek = dev_get_drvdata(dev);
+-	char val_str[20];
+-	size_t len;
+ 	int ret, i;
+ 	unsigned int val, idx = 0;
+ 	unsigned int best_err = UINT_MAX;
  
--		*str = kcalloc(element->string.length + 1, sizeof(u8),
--			       GFP_KERNEL);
-+		*str = kmemdup_nul(element->string.pointer, element->string.length,
-+						 GFP_KERNEL);
- 		if (!*str) {
- 			res = -ENOMEM;
- 			goto error;
- 		}
- 
--		strncpy(*str, element->string.pointer, element->string.length);
- 		str++;
- 	}
+-	val_str[sizeof(val_str) - 1] = '\0';
+-	strncpy(val_str, buf, sizeof(val_str) - 1);
+-	len = strlen(val_str);
+-
+-	if (len && val_str[len - 1] == '\n')
+-		val_str[len - 1] = '\0';
+-
+-	ret = kstrtouint(val_str, 10, &val);
++	ret = kstrtouint(buf, 10, &val);
+ 	if (ret)
+ 		return ret;
  
 
 ---
 base-commit: 6465e260f48790807eef06b583b38ca9789b6072
-change-id: 20230914-strncpy-drivers-hwmon-acpi_power_meter-c-c9f2d8053bef
+change-id: 20230921-strncpy-drivers-input-misc-axp20x-pek-c-3c4708924bbd
 
 Best regards,
 --
