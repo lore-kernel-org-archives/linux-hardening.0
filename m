@@ -1,51 +1,50 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49F861D523
-	for <linux-hardening@vger.kernel.org>; Mon, 25 Sep 2023 18:20:22 +0000 (UTC)
-Received: from mail-ot1-x32c.google.com (mail-ot1-x32c.google.com [IPv6:2607:f8b0:4864:20::32c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE6A2103
-	for <linux-hardening@vger.kernel.org>; Mon, 25 Sep 2023 11:20:19 -0700 (PDT)
-Received: by mail-ot1-x32c.google.com with SMTP id 46e09a7af769-6c0d6fef60cso4556152a34.1
-        for <linux-hardening@vger.kernel.org>; Mon, 25 Sep 2023 11:20:19 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15077224DF
+	for <linux-hardening@vger.kernel.org>; Mon, 25 Sep 2023 18:22:32 +0000 (UTC)
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B87EE9B
+	for <linux-hardening@vger.kernel.org>; Mon, 25 Sep 2023 11:22:30 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-68bed2c786eso5412612b3a.0
+        for <linux-hardening@vger.kernel.org>; Mon, 25 Sep 2023 11:22:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695666019; x=1696270819; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1695666150; x=1696270950; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NO8m8eKRK6gw6Fe8TwUzngktRHamqnnDsDwwzDNH28M=;
-        b=O/nD1cQaazGdhOue2jahkm1+yeWeoKqu1M4ITJ0EcOBorhKIpyziT1/lSG+8Npva//
-         X9uMhsvJvYJxAfqbGmp6fdFoOv1VSXr8/XoHF5Bf5yBTkM07ZYceMSWkswbfovSD0sLL
-         GIsX5bkCmA1rQ80+S3H5OE9sqUqPIYZqgWJzw=
+        bh=SpNbWbvzS2q57dWxeknHKSNngDyC+YXA3SyUyIcqgV0=;
+        b=oEdicces7SIKnRCNSI+ZmPuThpa0jogvbZ/fpoOl9Pkw2L+opVdOwVeI85NQGP/dHv
+         vAdlU91eRrWLRkphF5JVOvrs7K4MV+L/YH0RVXyxGP8SkM/UjFg3CGSykotzbIU9xnis
+         E9Y1p6I2tJWluky7QdVy3jEdw7oQR4IcrONQk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695666019; x=1696270819;
+        d=1e100.net; s=20230601; t=1695666150; x=1696270950;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NO8m8eKRK6gw6Fe8TwUzngktRHamqnnDsDwwzDNH28M=;
-        b=fsTqn4if7TqCMeBqydB+XXqjDAPG7rlxKOESbsu0RYoGazLqvCR5gs3kLPwPWvSPug
-         7ypm1bUuM/TTITyNfMcBwbyD6SBNWv+T23pUTWHMHAxt8n6tiILm52o9NhW27l6BSmqE
-         AvfPjPONUrc2gpDxF437gpAGHar11aTcC4r9hLObba0GirhoyTDVct2ix5djf72Qm8m7
-         yrshTTZDbZF1WWpxKlbJ+FwTaC1nSxU80D/PlBuFPEtiqSl37HXgPWTp5SvnWiAEoHJC
-         L4jA43HAe6o0YqR/WDsbRQNBnwNurFNtEwFqeJhdOiaUxwgjGsjDcLjISxpHN3FQTkqs
-         Juvg==
-X-Gm-Message-State: AOJu0Yw5CyjlLTWHx7CZ73qJzqqRSQDsn/tTfTK0WCgXCeRAM4WmZ7jJ
-	bAT3FlRh1bRLWohU88ytBA1LiA==
-X-Google-Smtp-Source: AGHT+IHKSOY+zwApZkbmmnPtFl0loyWLQ/uN8QUCjcTuZ0xU2ovE+l4Elr00aAvn1WMqw7C2F4wggA==
-X-Received: by 2002:a05:6830:115a:b0:6bc:b8d9:476e with SMTP id x26-20020a056830115a00b006bcb8d9476emr9039803otq.16.1695666019073;
-        Mon, 25 Sep 2023 11:20:19 -0700 (PDT)
+        bh=SpNbWbvzS2q57dWxeknHKSNngDyC+YXA3SyUyIcqgV0=;
+        b=Pq3sLVHdHUHqtFSalsA7mPJ/tO3efs4Z+aQ6yfsALFW3VMWCxZDedzNk5YyAGRpQ+E
+         IeHenz+4A0oaCNAt5CwbcHgFzkVefZaPJThkayLDCdZoqjZGRLrOr8PaR8bsHrS+uTqb
+         vlCiwABNjhu5ZhVQU48EFwNXeod79oQvHb39T097eWDOMya/cEUIIk2XXrgKO4Y6gvQF
+         iziyKcnwtDgDVg4S6dj5K7UF0ZKlhhjTryQmhiVY+EOiZuLnipwyzc6FnplCd6X+6znc
+         5Vdj8VfCDvyE/0tVmZkfr0hjSJzQrOXB/Bga45C7S5cXCC0lomH5ZeV+Zaj4mxAf5Wgq
+         5/Sg==
+X-Gm-Message-State: AOJu0YzAqG/Hr4lG6iZsA5abJPXI5rFd3KrCACG+Nd7NXU+j7N5ir+0Q
+	kf7fH3VIoUSQQSZCKXVS5OnbWA==
+X-Google-Smtp-Source: AGHT+IHd4QFtesolKcSPxo1IJZdVv7PWj/npeJjsBWAqDvfwr0jS1184WR5bwEWepbECZb+2TGN04g==
+X-Received: by 2002:a05:6a00:134b:b0:692:780a:de89 with SMTP id k11-20020a056a00134b00b00692780ade89mr6391028pfu.33.1695666150071;
+        Mon, 25 Sep 2023 11:22:30 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id k7-20020aa790c7000000b006875df4773fsm8310724pfk.163.2023.09.25.11.20.18
+        by smtp.gmail.com with ESMTPSA id fk22-20020a056a003a9600b0068a30f6cf32sm8604713pfb.143.2023.09.25.11.22.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Sep 2023 11:20:18 -0700 (PDT)
-Date: Mon, 25 Sep 2023 11:20:18 -0700
+        Mon, 25 Sep 2023 11:22:29 -0700 (PDT)
+Date: Mon, 25 Sep 2023 11:22:29 -0700
 From: Kees Cook <keescook@chromium.org>
 To: Justin Stitt <justinstitt@google.com>
-Cc: Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>,
-	dm-devel@redhat.com, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] dm log userspace: replace deprecated strncpy with strscpy
-Message-ID: <202309251119.69C15DC@keescook>
-References: <20230925-strncpy-drivers-md-dm-log-userspace-base-c-v1-1-030d7bcf1004@google.com>
+Cc: Song Liu <song@kernel.org>, linux-raid@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] md: replace deprecated strncpy with memcpy
+Message-ID: <202309251122.6E3E678140@keescook>
+References: <20230925-strncpy-drivers-md-md-c-v1-1-2b0093b89c2b@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -54,70 +53,84 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230925-strncpy-drivers-md-dm-log-userspace-base-c-v1-1-030d7bcf1004@google.com>
+In-Reply-To: <20230925-strncpy-drivers-md-md-c-v1-1-2b0093b89c2b@google.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Mon, Sep 25, 2023 at 07:06:03AM +0000, Justin Stitt wrote:
+On Mon, Sep 25, 2023 at 09:49:17AM +0000, Justin Stitt wrote:
 > `strncpy` is deprecated for use on NUL-terminated destination strings
 > [1] and as such we should prefer more robust and less ambiguous string
 > interfaces.
 > 
-> `lc` is already zero-allocated:
-> |       lc = kzalloc(sizeof(*lc), GFP_KERNEL);
-> ... as such, any future NUL-padding is superfluous.
+> There are three such strncpy uses that this patch addresses:
 > 
-> A suitable replacement is `strscpy` [2] due to the fact that it
-> guarantees NUL-termination on the destination buffer without
-> unnecessarily NUL-padding.
+> The respective destination buffers are:
+> 1) mddev->clevel
+> 2) clevel
+> 3) mddev->metadata_type
 > 
-> Let's also go with the more idiomatic `dest, src, sizeof(dest)` pattern
-> for destination buffers that the compiler can calculate the size for.
+> We expect mddev->clevel to be NUL-terminated due to its use with format
+> strings:
+> |       ret = sprintf(page, "%s\n", mddev->clevel);
+> 
+> Furthermore, we can see that mddev->clevel is not expected to be
+> NUL-padded as `md_clean()` merely set's its first byte to NULL -- not
+> the entire buffer:
+> |       static void md_clean(struct mddev *mddev)
+> |       {
+> |       	mddev->array_sectors = 0;
+> |       	mddev->external_size = 0;
+> |               ...
+> |       	mddev->level = LEVEL_NONE;
+> |       	mddev->clevel[0] = 0;
+> |               ...
+> 
+> A suitable replacement for this instance is `memcpy` as we know the
+> number of bytes to copy and perform manual NUL-termination at a
+> specified offset. This really decays to just a byte copy from one buffer
+> to another. `strscpy` is also a considerable replacement but using
+> `slen` as the length argument would result in truncation of the last
+> byte unless something like `slen + 1` was provided which isn't the most
+> idiomatic strscpy usage.
+> 
+> For the next case, the destination buffer `clevel` is expected to be
+> NUL-terminated based on its usage within kstrtol() which expects
+> NUL-terminated strings. Note that, in context, this code removes a
+> trailing newline which is seemingly not required as kstrtol() can handle
+> trailing newlines implicitly. However, there exists further usage of
+> clevel (or buf) that would also like to have the newline removed. All in
+> all, with similar reasoning to the first case, let's just use memcpy as
+> this is just a byte copy and NUL-termination is handled manually.
+> 
+> The third and final case concerning `mddev->metadata_type` is more or
+> less the same as the other two. We expect that it be NUL-terminated
+> based on its usage with seq_printf:
+> |       seq_printf(seq, " super external:%s",
+> |       	   mddev->metadata_type);
+> ... and we can surmise that NUL-padding isn't required either due to how
+> it is handled in md_clean():
+> |       static void md_clean(struct mddev *mddev)
+> |       {
+> |       ...
+> |       mddev->metadata_type[0] = 0;
+> |       ...
+> 
+> So really, all these instances have precisely calculated lengths and
+> purposeful NUL-termination so we can just use memcpy to remove ambiguity
+> surrounding strncpy.
 > 
 > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
 > Link: https://github.com/KSPP/linux/issues/90
 > Cc: linux-hardening@vger.kernel.org
-> Cc: Kees Cook <keescook@chromium.org>
 > Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-Looks good to me. Thanks for the sizeof() replacement. :)
+I agree on the analysis of the replacements. Thanks for all the detail!
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
-
--Kees
-
-> ---
-> Note: build-tested only.
-> ---
->  drivers/md/dm-log-userspace-base.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/md/dm-log-userspace-base.c b/drivers/md/dm-log-userspace-base.c
-> index 5aace6ee6d47..7e4f27e86150 100644
-> --- a/drivers/md/dm-log-userspace-base.c
-> +++ b/drivers/md/dm-log-userspace-base.c
-> @@ -224,7 +224,7 @@ static int userspace_ctr(struct dm_dirty_log *log, struct dm_target *ti,
->  
->  	lc->usr_argc = argc;
->  
-> -	strncpy(lc->uuid, argv[0], DM_UUID_LEN);
-> +	strscpy(lc->uuid, argv[0], sizeof(lc->uuid));
->  	argc--;
->  	argv++;
->  	spin_lock_init(&lc->flush_lock);
-> 
-> ---
-> base-commit: 6465e260f48790807eef06b583b38ca9789b6072
-> change-id: 20230925-strncpy-drivers-md-dm-log-userspace-base-c-857579d9834f
-> 
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
-> 
 
 -- 
 Kees Cook
