@@ -1,109 +1,94 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B50E179A0
-	for <linux-hardening@vger.kernel.org>; Mon, 25 Sep 2023 11:03:59 +0000 (UTC)
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B616AB;
-	Mon, 25 Sep 2023 04:03:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695639838; x=1727175838;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=w8jzm9ukgkRaSpCF3iWY59UBd1VY/ShRBJdRFVOKN0U=;
-  b=nUPOnuwIAwesCAhKDUbmf6PpjAvOkASj6KngY/wkEQNebW97J4Dc9t3w
-   v5l8uRoqMXcyBa7Cd4bIx2vmb2yZ2583CVomUGCMXaZNF2wOK7KcnQQjl
-   QLcnvxFUEM+ZJkbgSjkwG+mqWoMMnhoSC+ii0GSI+Dk90qAZnB4S9ViYs
-   rLjnefSm4D/LehMrNFpoqZE/HGAu3Ho3KdSyZulmAcbWt7uZoP2Bkmkyq
-   vBDhmRrIOrnQO1QN335xNWX3QB7sx8Osn4YWoCqFpSsKx9meCV/Ks07ah
-   aoMICmlh+5Ew/rC52XewfzWOKG98D/BfuC9CIH/x3JeUP9/VbM+51Isxs
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="412153494"
-X-IronPort-AV: E=Sophos;i="6.03,174,1694761200"; 
-   d="scan'208";a="412153494"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 04:03:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="921936202"
-X-IronPort-AV: E=Sophos;i="6.03,174,1694761200"; 
-   d="scan'208";a="921936202"
-Received: from joe-255.igk.intel.com (HELO localhost) ([10.91.220.57])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 04:03:54 -0700
-Date: Mon, 25 Sep 2023 13:03:52 +0200
-From: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
-To: Kees Cook <keescook@chromium.org>
-Cc: Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>,
-	Oded Gabbay <ogabbay@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Tom Rix <trix@redhat.com>, dri-devel@lists.freedesktop.org,
-	llvm@lists.linux.dev, linux-kernel@vger.kernel.org,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC2510A3D
+	for <linux-hardening@vger.kernel.org>; Mon, 25 Sep 2023 11:24:32 +0000 (UTC)
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52E35DF;
+	Mon, 25 Sep 2023 04:24:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=CZlIUfCEZAaduIab/BeYk1An+kVppDAcETHyx1HtxZE=; b=OLKk7KzHiiGpF1sqjWKSHcWnBZ
+	92q6oAsLH8WkTJ+FhxjcGNaRuF+h8XwsCxZhYYqda0aMpb2cL4VmSVVm/BkygQ4pqREJW/O9PEsoH
+	kGpcMhAXZLjcT2iGMbS73ooDgePc0V9S2npQoXjzsW/GmDP0nW9GDTZdiPVJ1Q+Xj+IX5wXMqaCtE
+	IFO648RpE+win1TFMnfxg5RDgEfDQvFgtgXf418BDPcR5oid/G6hnWo9eDcna1Wz9Bxek/r6HC7XD
+	jkiltcKNHN6SeLrlkuv6M8SpYywXLT+jiqcyO63cHS7K67XKjPSzn9pbj1sVAWbU/7SkZZB0a8LC0
+	WSmJI7FQ==;
+Received: from [195.181.170.235] (helo=[172.31.28.226])
+	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1qkjhM-001A2F-Jx; Mon, 25 Sep 2023 11:24:20 +0000
+Message-ID: <cb5e785d19a15356d85bca11bebf7975c495e948.camel@infradead.org>
+Subject: Re: [PATCH] virtio_console: Annotate struct port_buffer with
+ __counted_by
+From: Amit Shah <amit@infradead.org>
+To: Kees Cook <keescook@chromium.org>, Amit Shah <amit@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman
+	 <gregkh@linuxfoundation.org>, virtualization@lists.linux-foundation.org, 
+	Nathan Chancellor
+	 <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, Tom Rix
+	 <trix@redhat.com>, linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] accel/ivpu: Annotate struct ivpu_job with __counted_by
-Message-ID: <20230925110352.GB846747@linux.intel.com>
-References: <20230922175416.work.272-kees@kernel.org>
+Date: Mon, 25 Sep 2023 13:24:19 +0200
+In-Reply-To: <20230922175115.work.059-kees@kernel.org>
+References: <20230922175115.work.059-kees@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230922175416.work.272-kees@kernel.org>
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-	RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-	autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+	RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_NONE autolearn=no autolearn_force=no
+	version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Fri, Sep 22, 2023 at 10:54:17AM -0700, Kees Cook wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
+On Fri, 2023-09-22 at 10:51 -0700, Kees Cook wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_b=
+y
 > attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUND=
+S
 > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
-> 
-> As found with Coccinelle[1], add __counted_by for struct ivpu_job.
-> 
-> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
-> 
-> Cc: Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>
-> Cc: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
-> Cc: Oded Gabbay <ogabbay@kernel.org>
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: Tom Rix <trix@redhat.com>
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: llvm@lists.linux.dev
+>=20
+> As found with Coccinelle[1], add __counted_by for struct port_buffer.
+>=20
+> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/c=
+ounted_by.cocci
+>=20
+> Cc: Amit Shah <amit@kernel.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: virtualization@lists.linux-foundation.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
-
-Please apply the patch via whatever tree is appropriate. Or if I have
-to take it via drm-misc, please let me know.
-
-Regards
-Stanislaw
-
 > ---
->  drivers/accel/ivpu/ivpu_job.h | 2 +-
+>  drivers/char/virtio_console.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/accel/ivpu/ivpu_job.h b/drivers/accel/ivpu/ivpu_job.h
-> index aa1f0b9479b0..5514c2d8a609 100644
-> --- a/drivers/accel/ivpu/ivpu_job.h
-> +++ b/drivers/accel/ivpu/ivpu_job.h
-> @@ -51,7 +51,7 @@ struct ivpu_job {
->  	u32 job_id;
->  	u32 engine_idx;
->  	size_t bo_count;
-> -	struct ivpu_bo *bos[];
-> +	struct ivpu_bo *bos[] __counted_by(bo_count);
+>=20
+> diff --git a/drivers/char/virtio_console.c b/drivers/char/virtio_console.=
+c
+> index 680d1ef2a217..431e9e5bf9c1 100644
+> --- a/drivers/char/virtio_console.c
+> +++ b/drivers/char/virtio_console.c
+> @@ -106,7 +106,7 @@ struct port_buffer {
+>  	unsigned int sgpages;
+> =20
+>  	/* sg is used if spages > 0. sg must be the last in is struct */
+> -	struct scatterlist sg[];
+> +	struct scatterlist sg[] __counted_by(sgpages);
 >  };
->  
->  int ivpu_submit_ioctl(struct drm_device *dev, void *data, struct drm_file *file);
-> -- 
-> 2.34.1
-> 
+
+Reviewed-by: Amit Shah <amit@kernel.org>
+
+Greg, please pick this up.
+
+Thanks,
+
+		Amit
