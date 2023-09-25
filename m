@@ -1,98 +1,83 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1897B1CAA5
-	for <linux-hardening@vger.kernel.org>; Mon, 25 Sep 2023 15:14:58 +0000 (UTC)
-Received: from mickerik.phytec.de (mickerik.phytec.de [91.26.50.163])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CDE8FF
-	for <linux-hardening@vger.kernel.org>; Mon, 25 Sep 2023 08:14:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; d=phytec.de; s=a4; c=relaxed/simple;
-	q=dns/txt; i=@phytec.de; t=1695654892; x=1698246892;
-	h=From:Sender:Reply-To:Subject:Date:Message-ID:To:CC:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Aztr3VYtO8kOtoJBuY53Z9iJWLMmwPwq9fsB2RzDtKk=;
-	b=AnBSQtaPa9MTodUaSH+SFciBGM7DR5ig4na9sM40UjF6Jb34TgyJQHK1w7qhjLIV
-	n9/k2Oin/9H1dXYM6XvGuMDs16OJK7o47mP1NSbEPus8a0qVGoD9rhQOMdSCygld
-	1E7/WveNSA3ZSwRNcxuTSYm+Rri8yWKVRjkekjCMNfI=;
-X-AuditID: ac14000a-6d65670000001e37-95-6511a3eca3b2
-Received: from berlix.phytec.de (Unknown_Domain [172.25.0.12])
-	(using TLS with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(Client did not present a certificate)
-	by mickerik.phytec.de (PHYTEC Mail Gateway) with SMTP id 3E.42.07735.CE3A1156; Mon, 25 Sep 2023 17:14:52 +0200 (CEST)
-Received: from augenblix2.phytec.de (172.25.0.11) by Berlix.phytec.de
- (172.25.0.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.18; Mon, 25 Sep
- 2023 17:14:52 +0200
-From: Wadim Egorov <w.egorov@phytec.de>
-To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-	<keescook@chromium.org>, <tony.luck@intel.com>, <gpiccoli@igalia.com>
-CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-	<upstream@lists.phytec.de>
-Subject: [PATCH v2] arm64: dts: ti: k3-am625-beagleplay: Fix typo in ramoops reg
-Date: Mon, 25 Sep 2023 17:14:44 +0200
-Message-ID: <20230925151444.1856852-1-w.egorov@phytec.de>
-X-Mailer: git-send-email 2.25.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FEA61F18D
+	for <linux-hardening@vger.kernel.org>; Mon, 25 Sep 2023 17:13:25 +0000 (UTC)
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1120A136
+	for <linux-hardening@vger.kernel.org>; Mon, 25 Sep 2023 10:13:22 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id 41be03b00d2f7-51b4ef5378bso5225742a12.1
+        for <linux-hardening@vger.kernel.org>; Mon, 25 Sep 2023 10:13:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1695662001; x=1696266801; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=C8AVXr6vllU577ND8JQi6s5Wb2XnBxy1FQk2gXYImts=;
+        b=nwdwXGckYPlPX21pEof3xnvcqZtcLo+KJ3+jVK0axkL3B9r8vRWYdHvuPmYQG+0SMW
+         0kplhw0TQhtU0Iwi8LNa4wT1D+uBm3rl8SZyA+8Yw+2aNjTVr3NIha6HuMFqSvToYIPN
+         2KvBec9sl1KfxAXU/PbYcm2nl3P/IgqmPDnkQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695662001; x=1696266801;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=C8AVXr6vllU577ND8JQi6s5Wb2XnBxy1FQk2gXYImts=;
+        b=PxyXSOjwMsGLxqPABXhOgOyayRwzSbLbu4KjjelifKaFmya5RYEO4ksgUdYDKQz0Io
+         d6qVLvrKva4ZYLr0kzec6TQUVaqwFhtaaZFMoLSjVUVXtiKimtHWpLv9ixJGUo4eu1zS
+         ilAJqWbMaduSmCGsMbeEoE9OWUK5actxcu4zxbKy5d9PJR4+Kq8A2Qcv8MKT1uYcyoTi
+         DVgIhQwX/s5DVeogBwOuDutL3lWyGJkQLXrYvWzF6EFI9Zxq+Z9oPmwA272AiZdNUJUy
+         7ksutKU/BnR9dxqCKUl68XRme8swwYd2CLEsX7l6srkjBRgEVuvPOK0j8lRYwOr/pRKE
+         C1nw==
+X-Gm-Message-State: AOJu0YxmEY1aQnFzrT3iAnPODZqvds2vKoSucYOAr9lMt8JZj6iv1QT0
+	9mys6w/eDkT8TvAvo47a0gEGUA==
+X-Google-Smtp-Source: AGHT+IHWl3AN866Dif5RDGSG6cKkeY0zzlRZ9iz5O7jZ3LOhJATZBUXvLNzYu+Ccp3gZwtb6gOE9uw==
+X-Received: by 2002:a17:90a:4e4e:b0:268:f987:305f with SMTP id t14-20020a17090a4e4e00b00268f987305fmr6859749pjl.46.1695662001491;
+        Mon, 25 Sep 2023 10:13:21 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id 20-20020a17090a199400b00268b439a0cbsm9146846pji.23.2023.09.25.10.13.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Sep 2023 10:13:21 -0700 (PDT)
+Date: Mon, 25 Sep 2023 10:13:20 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Shuai Xue <xueshuai@linux.alibaba.com>
+Cc: tony.luck@intel.com, gpiccoli@igalia.com, rafael@kernel.org,
+	lenb@kernel.org, james.morse@arm.com, bp@alien8.de,
+	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+	x86@kernel.org, hpa@zytor.com, ardb@kernel.org,
+	robert.moore@intel.com, linux-hardening@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-edac@vger.kernel.org, linux-efi@vger.kernel.org,
+	acpica-devel@lists.linuxfoundation.org,
+	baolin.wang@linux.alibaba.com
+Subject: Re: [RFC PATCH v2 1/9] pstore: move pstore creator id, section type
+ and record struct to common header
+Message-ID: <202309251012.AD87704BB@keescook>
+References: <20230925074426.97856-1-xueshuai@linux.alibaba.com>
+ <20230925074426.97856-2-xueshuai@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [172.25.0.11]
-X-ClientProxiedBy: Berlix.phytec.de (172.25.0.12) To Berlix.phytec.de
- (172.25.0.12)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpgkeLIzCtJLcpLzFFi42JZI8nAo/tmsWCqwdv/0hZr9p5jsph/5Byr
-	xbzzh9ktznTnWiz/PJvdou/FQ2aLTY+vAcXX/2S0uLxrDpvFmx9nmSxa9x5ht3hz4R6LRfc7
-	dYv/Zz+wO/B5zG64yOIxYXY3m8fiPS+ZPDat6mTzuHNtD5vH5iX1Hv3dLawex29sZ/L4vEku
-	gDOKyyYlNSezLLVI3y6BK+P4ywvsBZs4Kpbs2s/awNjA3sXIySEhYCJxr28HSxcjF4eQwBIm
-	iYk/37KBJIQEnjBKTLuiD2KzCahL3NnwjRWkSETgCqPElgNz2EEcZoHVjBKz3m5nAqkSFgiQ
-	6J36lBXEZhFQlbjccogZxOYVsJS4u24HM8Q6eYmZl76zQ8QFJU7OfMICYjMDxZu3zmaGsCUk
-	Dr54wQxxhbzEi0vLWWB6p517DTUnVGLrl+1MExgFZiEZNQvJqFlIRi1gZF7FKJSbmZydWpSZ
-	rVeQUVmSmqyXkrqJERRLIgxcOxj75ngcYmTiYDzEKMHBrCTC++sZX6oQb0piZVVqUX58UWlO
-	avEhRmkOFiVx3vs9TIlCAumJJanZqakFqUUwWSYOTqkGxrXSqzYZ9P9wPF/s7Z/ROC27aK7U
-	7DdfozK9tnGItkWbbmru5sgU3Ol4UaFZVy4u6AErS5DZkcM8yzoatSeFbRLpX1Mcvnz9o87Z
-	PxX27okyc+yLNC1baHp3x0PLycpc3Qdea5itk+h2iJVpOif1kTfs7ufvF5f0To3mfq4YkO42
-	RV1C/t0TJZbijERDLeai4kQA4eOXKJMCAAA=
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230925074426.97856-2-xueshuai@linux.alibaba.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Seems like the address value of the reg property was mistyped.
-Update reg to 0x9ca00000 to match node's definition.
+On Mon, Sep 25, 2023 at 03:44:18PM +0800, Shuai Xue wrote:
+> Move pstore creator id, section type and record struct to the common
+> header, so that it can be use by MCE and GHES driver.
 
-Fixes: f5a731f0787f ("arm64: dts: ti: Add k3-am625-beagleplay")
-Signed-off-by: Wadim Egorov <w.egorov@phytec.de>
-Reviewed-by: Nishanth Menon <nm@ti.com>
----
-v2:
-  - Add Fixes: f5a731f0787f ("arm64: dts: ti: Add k3-am625-beagleplay")
-  - Add Reviewed-by: Nishanth Menon <nm@ti.com>
+I would prefer this was not in the pstore header -- this is a backend
+detail that should stay in backend headers.
 
----
- arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+-Kees
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts b/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
-index 7cfdf562b53b..2de74428a8bd 100644
---- a/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
-@@ -58,7 +58,7 @@ reserved-memory {
- 
- 		ramoops: ramoops@9ca00000 {
- 			compatible = "ramoops";
--			reg = <0x00 0x9c700000 0x00 0x00100000>;
-+			reg = <0x00 0x9ca00000 0x00 0x00100000>;
- 			record-size = <0x8000>;
- 			console-size = <0x8000>;
- 			ftrace-size = <0x00>;
 -- 
-2.25.1
-
+Kees Cook
