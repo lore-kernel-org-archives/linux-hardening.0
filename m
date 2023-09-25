@@ -1,179 +1,149 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 360A4134DC
-	for <linux-hardening@vger.kernel.org>; Mon, 25 Sep 2023 09:49:21 +0000 (UTC)
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CC0DFC
-	for <linux-hardening@vger.kernel.org>; Mon, 25 Sep 2023 02:49:19 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d8153284d6eso9136552276.3
-        for <linux-hardening@vger.kernel.org>; Mon, 25 Sep 2023 02:49:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1695635358; x=1696240158; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=KNKA1Hnc4RjaO6AH2fv63+ZGpcGBvExfQ+lR664bMdQ=;
-        b=zbVQlnOZ6010Or/YsXkUbCdUyqNMCzubKAHRKDJQQuJdQhzM8yCTGXh1Hf5It6qijq
-         byoV1xW8VLQ9m+TTk2EUWemjtdd+8LCcDBHPB83Ot1l93vuuIr1kdcxWMKC/8gdBPthd
-         OgKaqT4sTMt/WUYmk0cNJUe3cgK95/zqZ1EFJXCWa4qmUGEHC1hmxqs00Hd2FOV9SI0r
-         qPf5YE3ArikYD8jpgQAR0d9mKQRsmCR9qG6FunkttE5FWIG/a/3ULRtpnKPNQlaXwXU+
-         JdV7hY6u96AAxjM1kDlBa/NCPxAuDo1Zhhva75FJEyu/mjq3gZt35DljO1i7E2SJ6eST
-         82Bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695635358; x=1696240158;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KNKA1Hnc4RjaO6AH2fv63+ZGpcGBvExfQ+lR664bMdQ=;
-        b=oSK6ga825dMvru0vMSDrLnDgbBOqGA9jsO3U2rZ8zOnLZq5UKC8gteKIKZnJKmmuok
-         bC9ZUyM4q8ZsvU4TGNCJn7kazYxBjoUPy1xjFDShsfhOeKxJrflopdP5zrK7qjPeY27c
-         Sxd86EEpiznqAXlJnEMl26mOd9940SpAYqYv470lwuicqQ8cRvyrCv4/iCE6GJ6KiCVC
-         btDMGFV6tyzObCUU/ddweXuvrYCoBiMWHjsAq5cBvyS4CeHKO2s5nlIMnGN9lzd86e0A
-         jLR/0Dk5VxLn7Trtf41LCoNgMHG6NOHZLggiiPQeQ/4/tnaYfWOHQCLfWYsOkZ8Ktp51
-         SnNw==
-X-Gm-Message-State: AOJu0YynUKbcDYyG/UF5JE9opTbwzTKsQSFUhFqIdBehzDA/dKvji0sv
-	uDF9RRlcC7w8foOZF1rMDSLPnnqBbQW20ynIjg==
-X-Google-Smtp-Source: AGHT+IFT/EoU9lF7/VSsXmZNp13EyCokrNfEwzOn2ORuhycPRZW5LSoattYb6Rv3yo/3wgjyJcwA1oRaojmXPxV9KQ==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a25:ab4a:0:b0:d82:9342:8627 with SMTP
- id u68-20020a25ab4a000000b00d8293428627mr54397ybi.6.1695635358682; Mon, 25
- Sep 2023 02:49:18 -0700 (PDT)
-Date: Mon, 25 Sep 2023 09:49:17 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F62314A81
+	for <linux-hardening@vger.kernel.org>; Mon, 25 Sep 2023 10:08:54 +0000 (UTC)
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10465CC0;
+	Mon, 25 Sep 2023 03:08:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1695636533; x=1727172533;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=9SzzmhaLPWx2xAIJWkDOyEqBDTZ2PvwdNCWiw1GRUAs=;
+  b=aUtCH1SPxLrSzpRlMSC+CI/5cgQ9MR8Fn8CCf9UmmS16+w2aggFPpdws
+   omgH/+1TqYioXg6F7e2Z0m79UomMNOad/4hCBXZzB06k7CL1rMtW9giqw
+   Nyyqn6HBkcQDFaMJOPdzJhLBF3vt2QornJaZvkL/n4Xa5HPSF9YKB7wfu
+   LPZ6zKpzrgBzgMHb3FUx8GNxSR8Ve8sCERd4yDkOVkDgEioCsIg9Tz8HQ
+   d49ZQd+fvaZ/5fYWdMxQQibmPoXCX7+PeuWUDxjuUJADiaOwoD9/a6Nrg
+   sfUN8FTKXQSNZuaaIjJtbhLWEXWQLtHqzAtC2u9MHh1wTJoRUnsqtcA4y
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="467501544"
+X-IronPort-AV: E=Sophos;i="6.03,174,1694761200"; 
+   d="scan'208";a="467501544"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 03:08:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="777606983"
+X-IronPort-AV: E=Sophos;i="6.03,174,1694761200"; 
+   d="scan'208";a="777606983"
+Received: from ahajda-mobl.ger.corp.intel.com (HELO [10.213.8.144]) ([10.213.8.144])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 03:08:37 -0700
+Message-ID: <b668d521-c8fd-1207-0a65-e1200e7ebb2c@intel.com>
+Date: Mon, 25 Sep 2023 12:08:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAJxXEWUC/x2MQQqEMAwAvyI5G6h1q6xfEQ/aRs1hqyQiivj3r
- cJc5jBzgZIwKTTZBUI7Ky8xSZFn4Oc+ToQckoM1tjRf61A3iX49MQjvJIq/8OCR6to58ymroh8 g1avQyMd7brv7/gN2ckahaQAAAA==
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1695635357; l=4211;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=RjrTr0cPh729SghrvkaIM4sQRHLM0A9sLRviR1AfBFw=; b=L2D/Pw7TiJhA8KqYSyzmqfnA3+R9aVlA2dlttmP8heuAPcLNDjh0ZCx88XvOZQstWCrmGCR5x
- 2ZqRJaLQa2JAf7CGkq9+6n5cq26REsMTKlVHwJ7qUOEmMtADI8PKZuk
-X-Mailer: b4 0.12.3
-Message-ID: <20230925-strncpy-drivers-md-md-c-v1-1-2b0093b89c2b@google.com>
-Subject: [PATCH] md: replace deprecated strncpy with memcpy
-From: Justin Stitt <justinstitt@google.com>
-To: Song Liu <song@kernel.org>
-Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.15.1
+Subject: Re: [PATCH 3/9] drm/i915/selftests: Annotate struct perf_series with
+ __counted_by
+Content-Language: en-US
+To: Kees Cook <keescook@chromium.org>, David Airlie <airlied@gmail.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+ Daniel Vetter <daniel@ffwll.ch>, Chris Wilson <chris@chris-wilson.co.uk>,
+ John Harrison <john.c.harrison@Intel.com>,
+ Andi Shyti <andi.shyti@linux.intel.com>,
+ Matthew Brost <matthew.brost@intel.com>, intel-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, Emma Anholt <emma@anholt.net>,
+ Evan Quan <evan.quan@amd.com>, Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+ "Pan, Xinhui" <Xinhui.Pan@amd.com>, Xiaojian Du <Xiaojian.Du@amd.com>,
+ Huang Rui <ray.huang@amd.com>, Kevin Wang <kevin1.wang@amd.com>,
+ Hawking Zhang <Hawking.Zhang@amd.com>, Rob Clark <robdclark@gmail.com>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ Bjorn Andersson <andersson@kernel.org>, Ben Skeggs <bskeggs@redhat.com>,
+ Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
+ Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@redhat.com>,
+ Gerd Hoffmann <kraxel@redhat.com>,
+ Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
+ <olvaffe@gmail.com>, Zack Rusin <zackr@vmware.com>,
+ VMware Graphics Reviewers <linux-graphics-maintainer@vmware.com>,
+ Melissa Wen <mwen@igalia.com>, Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
+ Le Ma <le.ma@amd.com>, Lijo Lazar <lijo.lazar@amd.com>,
+ Yifan Zhang <yifan1.zhang@amd.com>, Prike Liang <Prike.Liang@amd.com>,
+ Lang Yu <Lang.Yu@amd.com>, Tejas Upadhyay <tejas.upadhyay@intel.com>,
+ Nirmoy Das <nirmoy.das@intel.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Kuogee Hsieh <quic_khsieh@quicinc.com>,
+ linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+ linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+ nouveau@lists.freedesktop.org, virtualization@lists.linux-foundation.org,
+ llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+References: <20230922173110.work.084-kees@kernel.org>
+ <20230922173216.3823169-3-keescook@chromium.org>
+From: Andrzej Hajda <andrzej.hajda@intel.com>
+Organization: Intel Technology Poland sp. z o.o. - ul. Slowackiego 173, 80-298
+ Gdansk - KRS 101882 - NIP 957-07-52-316
+In-Reply-To: <20230922173216.3823169-3-keescook@chromium.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-`strncpy` is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous string
-interfaces.
 
-There are three such strncpy uses that this patch addresses:
 
-The respective destination buffers are:
-1) mddev->clevel
-2) clevel
-3) mddev->metadata_type
+On 22.09.2023 19:32, Kees Cook wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
+>
+> As found with Coccinelle[1], add __counted_by for struct perf_series.
+>
+> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+>
+> Cc: Jani Nikula <jani.nikula@linux.intel.com>
+> Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+> Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+> Cc: Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>
+> Cc: David Airlie <airlied@gmail.com>
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: Chris Wilson <chris@chris-wilson.co.uk>
+> Cc: John Harrison <john.c.harrison@Intel.com>
+> Cc: Andi Shyti <andi.shyti@linux.intel.com>
+> Cc: Matthew Brost <matthew.brost@intel.com>
+> Cc: intel-gfx@lists.freedesktop.org
+> Cc: dri-devel@lists.freedesktop.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-We expect mddev->clevel to be NUL-terminated due to its use with format
-strings:
-|       ret = sprintf(page, "%s\n", mddev->clevel);
+I am surprised this is the only finding in i915, I would expected more. 
+Anyway:
 
-Furthermore, we can see that mddev->clevel is not expected to be
-NUL-padded as `md_clean()` merely set's its first byte to NULL -- not
-the entire buffer:
-|       static void md_clean(struct mddev *mddev)
-|       {
-|       	mddev->array_sectors = 0;
-|       	mddev->external_size = 0;
-|               ...
-|       	mddev->level = LEVEL_NONE;
-|       	mddev->clevel[0] = 0;
-|               ...
+Reviewed-by: Andrzej Hajda <andrzej.hajda@intel.com>
 
-A suitable replacement for this instance is `memcpy` as we know the
-number of bytes to copy and perform manual NUL-termination at a
-specified offset. This really decays to just a byte copy from one buffer
-to another. `strscpy` is also a considerable replacement but using
-`slen` as the length argument would result in truncation of the last
-byte unless something like `slen + 1` was provided which isn't the most
-idiomatic strscpy usage.
+Regards
+Andrzej
 
-For the next case, the destination buffer `clevel` is expected to be
-NUL-terminated based on its usage within kstrtol() which expects
-NUL-terminated strings. Note that, in context, this code removes a
-trailing newline which is seemingly not required as kstrtol() can handle
-trailing newlines implicitly. However, there exists further usage of
-clevel (or buf) that would also like to have the newline removed. All in
-all, with similar reasoning to the first case, let's just use memcpy as
-this is just a byte copy and NUL-termination is handled manually.
-
-The third and final case concerning `mddev->metadata_type` is more or
-less the same as the other two. We expect that it be NUL-terminated
-based on its usage with seq_printf:
-|       seq_printf(seq, " super external:%s",
-|       	   mddev->metadata_type);
-... and we can surmise that NUL-padding isn't required either due to how
-it is handled in md_clean():
-|       static void md_clean(struct mddev *mddev)
-|       {
-|       ...
-|       mddev->metadata_type[0] = 0;
-|       ...
-
-So really, all these instances have precisely calculated lengths and
-purposeful NUL-termination so we can just use memcpy to remove ambiguity
-surrounding strncpy.
-
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Note: build-tested only.
----
- drivers/md/md.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index a104a025084d..73846c275880 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -3879,7 +3879,7 @@ level_store(struct mddev *mddev, const char *buf, size_t len)
- 		return rv;
- 
- 	if (mddev->pers == NULL) {
--		strncpy(mddev->clevel, buf, slen);
-+		memcpy(mddev->clevel, buf, slen);
- 		if (mddev->clevel[slen-1] == '\n')
- 			slen--;
- 		mddev->clevel[slen] = 0;
-@@ -3912,7 +3912,7 @@ level_store(struct mddev *mddev, const char *buf, size_t len)
- 	}
- 
- 	/* Now find the new personality */
--	strncpy(clevel, buf, slen);
-+	memcpy(clevel, buf, slen);
- 	if (clevel[slen-1] == '\n')
- 		slen--;
- 	clevel[slen] = 0;
-@@ -4698,7 +4698,7 @@ metadata_store(struct mddev *mddev, const char *buf, size_t len)
- 		size_t namelen = len-9;
- 		if (namelen >= sizeof(mddev->metadata_type))
- 			namelen = sizeof(mddev->metadata_type)-1;
--		strncpy(mddev->metadata_type, buf+9, namelen);
-+		memcpy(mddev->metadata_type, buf+9, namelen);
- 		mddev->metadata_type[namelen] = 0;
- 		if (namelen && mddev->metadata_type[namelen-1] == '\n')
- 			mddev->metadata_type[--namelen] = 0;
-
----
-base-commit: 6465e260f48790807eef06b583b38ca9789b6072
-change-id: 20230925-strncpy-drivers-md-md-c-e775504361ab
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
+> ---
+>   drivers/gpu/drm/i915/selftests/i915_request.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/i915/selftests/i915_request.c b/drivers/gpu/drm/i915/selftests/i915_request.c
+> index a9b79888c193..acae30a04a94 100644
+> --- a/drivers/gpu/drm/i915/selftests/i915_request.c
+> +++ b/drivers/gpu/drm/i915/selftests/i915_request.c
+> @@ -1924,7 +1924,7 @@ struct perf_stats {
+>   struct perf_series {
+>   	struct drm_i915_private *i915;
+>   	unsigned int nengines;
+> -	struct intel_context *ce[];
+> +	struct intel_context *ce[] __counted_by(nengines);
+>   };
+>   
+>   static int cmp_u32(const void *A, const void *B)
 
