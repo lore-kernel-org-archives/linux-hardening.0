@@ -1,102 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE65DDDB;
-	Sun, 24 Sep 2023 20:51:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9381C433C8;
-	Sun, 24 Sep 2023 20:51:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1695588719;
-	bh=DivKW36ifYhSuWveaE8fv6x1ATPfjvZRn5gc+v4tRdw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hWrrw28VLH3hL52RjHuYuQ9WP4LokvIYdkeSvmHLfITI/a5ob2xyq4Cr2AOf4LhaE
-	 hHCVc5cnERCeHnG640ipd7FfhDlkTx+tBE2IsmVp3vwsSqoxLYJWJnGb+HStciptZN
-	 jHUsF6lwDOgM6zuK/I5TQ7Vn2VBazjRGipHkwrbV37x4ilDVZf8cQfXerYb2O7OHL/
-	 PzXxw25DYf10bqWOyNhMdpR19JiaMfCS+ea77DWf2NszCiljz31cbrRFruYCCr2lN/
-	 Oysp06ZopNIwBcSYND1uvyaT+4iag2keC8eEVMzPRRqcQkTmkm4mzby3umPCliWbjb
-	 8wH+zOLU9b8iw==
-Date: Sun, 24 Sep 2023 22:51:55 +0200
-From: Wolfram Sang <wsa@kernel.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Tom Rix <trix@redhat.com>, linux-i2c@vger.kernel.org,
-	llvm@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] media: i2c: Annotate struct i2c_atr with __counted_by
-Message-ID: <ZRCha5mt/MpJRFv+@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-	Kees Cook <keescook@chromium.org>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Tom Rix <trix@redhat.com>, linux-i2c@vger.kernel.org,
-	llvm@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-References: <20230922175424.work.863-kees@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9539710E2
+	for <linux-hardening@vger.kernel.org>; Mon, 25 Sep 2023 02:22:36 +0000 (UTC)
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEB68CF;
+	Sun, 24 Sep 2023 19:22:34 -0700 (PDT)
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R421e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=joseph.qi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0Vsjmorv_1695608551;
+Received: from 30.221.128.98(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0Vsjmorv_1695608551)
+          by smtp.aliyun-inc.com;
+          Mon, 25 Sep 2023 10:22:32 +0800
+Message-ID: <ef147298-26a5-26e7-67c9-cd2f13ffb81b@linux.alibaba.com>
+Date: Mon, 25 Sep 2023 10:22:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ra/2MJe5Rrzch4Us"
-Content-Disposition: inline
-In-Reply-To: <20230922175424.work.863-kees@kernel.org>
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.15.1
+Subject: Re: [PATCH] ocfs2: Annotate struct ocfs2_replay_map with __counted_by
+To: Kees Cook <keescook@chromium.org>, Mark Fasheh <mark@fasheh.com>,
+ akpm <akpm@linux-foundation.org>
+Cc: Joel Becker <jlbec@evilplan.org>, Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
+ ocfs2-devel@lists.linux.dev, llvm@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20230922174925.work.293-kees@kernel.org>
+Content-Language: en-US
+From: Joseph Qi <joseph.qi@linux.alibaba.com>
+In-Reply-To: <20230922174925.work.293-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-11.4 required=5.0 tests=BAYES_00,
+	ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham
+	autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
 
---ra/2MJe5Rrzch4Us
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 22, 2023 at 10:54:25AM -0700, Kees Cook wrote:
+On 9/23/23 1:49 AM, Kees Cook wrote:
 > Prepare for the coming implementation by GCC and Clang of the __counted_by
 > attribute. Flexible array members annotated with __counted_by can have
 > their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
->=20
-> As found with Coccinelle[1], add __counted_by for struct i2c_atr.
->=20
-> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/c=
-ounted_by.cocci
->=20
-> Cc: Wolfram Sang <wsa@kernel.org>
-> Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-> Cc: Luca Ceresoli <luca.ceresoli@bootlin.com>
+> 
+> As found with Coccinelle[1], add __counted_by for struct ocfs2_replay_map.
+> 
+> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+> 
+> Cc: Mark Fasheh <mark@fasheh.com>
+> Cc: Joel Becker <jlbec@evilplan.org>
+> Cc: Joseph Qi <joseph.qi@linux.alibaba.com>
 > Cc: Nathan Chancellor <nathan@kernel.org>
 > Cc: Nick Desaulniers <ndesaulniers@google.com>
 > Cc: Tom Rix <trix@redhat.com>
-> Cc: linux-i2c@vger.kernel.org
+> Cc: ocfs2-devel@lists.linux.dev
 > Cc: llvm@lists.linux.dev
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Removed "media: " from $subject and applied to for-next, thanks!
-
-
---ra/2MJe5Rrzch4Us
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmUQoWsACgkQFA3kzBSg
-KbZryw//V+lKwNm7KSeUZkoAllbOtYbTr5J5dwbk1ySzTcbJYNZTGItjW3cRpaBm
-KR20iCnXa3l/eTZTd3k1p6JO2QgFMbeIh+oaEhgoXQKxwCHZqSkQJVwysCSIASIz
-Xbh20wCE/Oaq++TywoSE98GOiWjrLKEvCtrF9+zYLRbXUaTicKjJbxnP3YXiayqe
-RT33QWpfl3BJy/i5tmzhgTItYzFMeA6jiAhYegHEW8iiCcoPKwtpF3PWvGCE2TqR
-w2bZsOo9eCupS0sVs7hXTDaoY7tX4b7eOddjZi8Bhtla/W1xemI0LigbEfbnwMPB
-b6iZcJKtIEw/dDhyVxGFgxXObQAmM7W+jOmXYXM/TObVvvYp5HFBCF3k2kkvnP8l
-kTXhGRw3pJGF12iImIqgjPaLQ/kXJ23fY/X8XIZr3ty09OK/qq3vE+P+vfMHIkAs
-LfR6wPgrzpookiwwY1SBrw7o6a0ZNGKHQH+aUq8sVkKrD8Vm+C3Oqu95IbGfo2P6
-EZVcMbMIovTKii3MMnMKsv5mgxnLiF87o6L+hz1RybNwpRL5L2G2WbVQl/NMNwzT
-LMY3NC2ozbUhF7id5x6XxD0tg8cxj8tKHvtJGf+jMtmJ8V35zJSQciYEY0l4Cjy2
-UAmohNCw8KP1sCzI7QPbqIyP95UzzN4Rus9NOgvm4e3RPwEqqy4=
-=aMwP
------END PGP SIGNATURE-----
-
---ra/2MJe5Rrzch4Us--
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+> ---
+>  fs/ocfs2/journal.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/ocfs2/journal.c b/fs/ocfs2/journal.c
+> index ce215565d061..604fea3a26ff 100644
+> --- a/fs/ocfs2/journal.c
+> +++ b/fs/ocfs2/journal.c
+> @@ -90,7 +90,7 @@ enum ocfs2_replay_state {
+>  struct ocfs2_replay_map {
+>  	unsigned int rm_slots;
+>  	enum ocfs2_replay_state rm_state;
+> -	unsigned char rm_replay_slots[];
+> +	unsigned char rm_replay_slots[] __counted_by(rm_slots);
+>  };
+>  
+>  static void ocfs2_replay_map_set_state(struct ocfs2_super *osb, int state)
