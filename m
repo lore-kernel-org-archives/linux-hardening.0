@@ -1,124 +1,110 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B03041094E
-	for <linux-hardening@vger.kernel.org>; Mon, 25 Sep 2023 07:20:35 +0000 (UTC)
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17D57DF;
-	Mon, 25 Sep 2023 00:20:34 -0700 (PDT)
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-532bf1943ebso6885654a12.0;
-        Mon, 25 Sep 2023 00:20:34 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA69510A00
+	for <linux-hardening@vger.kernel.org>; Mon, 25 Sep 2023 07:41:10 +0000 (UTC)
+Received: from mail-vs1-xe32.google.com (mail-vs1-xe32.google.com [IPv6:2607:f8b0:4864:20::e32])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5228E3
+	for <linux-hardening@vger.kernel.org>; Mon, 25 Sep 2023 00:41:08 -0700 (PDT)
+Received: by mail-vs1-xe32.google.com with SMTP id ada2fe7eead31-4529d1238a9so2439261137.3
+        for <linux-hardening@vger.kernel.org>; Mon, 25 Sep 2023 00:41:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1695627667; x=1696232467; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tiYZdX9DU54hlyCL6A/xG5cg0RmJhcg6NNDUibAVUyM=;
+        b=T+SWuozF8p5UNcF4T8GwMGauc784jE2iIkm53erAQQ30lNHY8u3xAUjX6P2uPLyWee
+         rbXYSdDrsy3uHF1ClYhkxlw7wEhRX4ckShYHTrKfegTvOtLHoVtis8DHD6geh/XsrW5x
+         vJVwN9uFuZYZx3YSReBnawR8jg0OyugWDMPuKUuK0pmU//MSffcj0+xOH2MMrJzgoxYA
+         JOZCGtqf57WdeJ+XEH33FP/PKAnUNzYnv3WtJ00JjgUi/bGBdVr7hGe3d0hoh3rbwOqq
+         HPZMp24PtdeYQTGZ3nV3T7ZyL0ekt1GMjP5RMQi7lFqXtyK1kG3w75m5LFUWoZ99SnwH
+         O24Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695626432; x=1696231232;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iyybh6pplspB2rwPtFA24ueEaez50udlE7kWJqQ2CKU=;
-        b=fbkcJ1qgo+i3CZXRRcFA6ViDzfDkjsJxnfQf19DN8tuWhN5NNLQ5g5quWzYiHJeYpd
-         h+adWIYS1sk/EcaRaj/ntN1ol96JAU8p+JRX+FQSMD+Tlr8dX6lI+Am7YCbOpxOuXUdD
-         /ZWJ12Ogat/jP900HdGpCqSOSHGLlCeaK2WnaJQcZDu7AbLjpox21oF3lluPrJbff3Ds
-         He1YaKBDu3ReKhT22oaZy+2S+tz2aHBpgRxN2iuZgaX9F+pjm8KsyUutublUVo4eB2D1
-         YT4/uEqtXnSnLTLUFO6FsRN2EofZOfiQAkf4pC1ccqTrMKfa2PONB2p1V40oq/KwBPHj
-         S/YQ==
-X-Gm-Message-State: AOJu0YzGTMTZmDhKOsbhD23xyddoIc9rJADnZ14SytmUL+svdtEC27kP
-	NUGIwMbH6G+MBglRMpk4Tyc=
-X-Google-Smtp-Source: AGHT+IHJjrnQ4/8QZPNyOAllJn3tegdHLUO9J1MTRCU6+VG2TeBmnMXOhWa04jB5gD1ROcnE6kUuIQ==
-X-Received: by 2002:a17:906:178d:b0:9ae:696c:2c43 with SMTP id t13-20020a170906178d00b009ae696c2c43mr4316622eje.28.1695626432207;
-        Mon, 25 Sep 2023 00:20:32 -0700 (PDT)
-Received: from ?IPV6:2a0b:e7c0:0:107::aaaa:59? ([2a0b:e7c0:0:107::aaaa:59])
-        by smtp.gmail.com with ESMTPSA id pw15-20020a17090720af00b0099bca8b9a31sm5897534ejb.100.2023.09.25.00.20.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Sep 2023 00:20:31 -0700 (PDT)
-Message-ID: <b1659ba0-24cd-4cc0-9558-a311781e0a22@kernel.org>
-Date: Mon, 25 Sep 2023 09:20:31 +0200
+        d=1e100.net; s=20230601; t=1695627667; x=1696232467;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tiYZdX9DU54hlyCL6A/xG5cg0RmJhcg6NNDUibAVUyM=;
+        b=sSMzLQmnVC5CA8sgtiHdQeVDg1V7srbVXAYTgcGB/xqveLcap8z1uQkmuzji9Y0yDS
+         Ks9qq4l9zEcqo2dl2T05I7tE/vYwclgDWXgLIUKoZdnBrh8XfLAcefmR5fIF3GnR8RmK
+         a/IehrBfzoSKqxrKpdBzFed8rpgSGK5ziB7Q1GlmSFBrsQJoKWPDPUOAJ2IG3LGpsZl/
+         M0JnGLCYTa8aJ3xf6MrPnQ5US//h1lmUg2WEtRU+f1n08TqXR71jqYPeXHXTITbpBWBi
+         ifHNUPuGm1vGgiS0H4UCt2WT5pAtmwz7uzWm0ZtKJeS4BFA5iECdW/DslxoYRhGi4Vgp
+         p1/w==
+X-Gm-Message-State: AOJu0YxKeSFgPWG736+a1Yu5u9PpeDGy0A5HIHl3wf2ZYsOmi8sHLqO0
+	rR6AFuKU8UZjaQCeQOTy/72JW6YaFdwp7inDI7kL7g==
+X-Google-Smtp-Source: AGHT+IFx82zmsxjoLuNTPGGd8GrhippPyNF9FQn3hKIpX7aWK+Ny/ek0o4jNsCfrxS8J3MiCNYA4klx50t41kyL94KQ=
+X-Received: by 2002:a67:fb89:0:b0:44e:e7d7:6847 with SMTP id
+ n9-20020a67fb89000000b0044ee7d76847mr2800971vsr.7.1695627667358; Mon, 25 Sep
+ 2023 00:41:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mxser: Annotate struct mxser_board with __counted_by
-Content-Language: en-US
+References: <20230922175155.work.872-kees@kernel.org>
+In-Reply-To: <20230922175155.work.872-kees@kernel.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 25 Sep 2023 09:40:56 +0200
+Message-ID: <CAMRc=Md+BM0fGoO9SrnmKOKAmXmMBNJ9aBvuOCfKpT94rhv+zQ@mail.gmail.com>
+Subject: Re: [PATCH] eeprom: at24: Annotate struct at24_data with __counted_by
 To: Kees Cook <keescook@chromium.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>,
- linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
- linux-hardening@vger.kernel.org
-References: <20230922175245.work.196-kees@kernel.org>
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <20230922175245.work.196-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.6
+Cc: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-i2c@vger.kernel.org, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On 22. 09. 23, 19:52, Kees Cook wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
+On Fri, Sep 22, 2023 at 7:51=E2=80=AFPM Kees Cook <keescook@chromium.org> w=
+rote:
+>
+> Prepare for the coming implementation by GCC and Clang of the __counted_b=
+y
 > attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUND=
+S
 > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
-> 
-> As found with Coccinelle[1], add __counted_by for struct mxser_board.
-> 
-> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+>
+> As found with Coccinelle[1], add __counted_by for struct at24_data.
+>
+> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/c=
+ounted_by.cocci
+>
+> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: linux-i2c@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  drivers/misc/eeprom/at24.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
+> index af83aca452b7..7dfd7fdb423e 100644
+> --- a/drivers/misc/eeprom/at24.c
+> +++ b/drivers/misc/eeprom/at24.c
+> @@ -92,7 +92,7 @@ struct at24_data {
+>          * them for us.
+>          */
+>         u8 bank_addr_shift;
+> -       struct regmap *client_regmaps[];
+> +       struct regmap *client_regmaps[] __counted_by(num_addresses);
+>  };
+>
+>  /*
+> --
+> 2.34.1
+>
 
-Reviewed-by: Jiri Slaby <jirislaby@kernel.org>
+Applied, thanks!
 
-thanks,
--- 
-js
-suse labs
-
+Bart
