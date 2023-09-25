@@ -1,83 +1,71 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9539710E2
-	for <linux-hardening@vger.kernel.org>; Mon, 25 Sep 2023 02:22:36 +0000 (UTC)
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEB68CF;
-	Sun, 24 Sep 2023 19:22:34 -0700 (PDT)
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R421e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=joseph.qi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0Vsjmorv_1695608551;
-Received: from 30.221.128.98(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0Vsjmorv_1695608551)
-          by smtp.aliyun-inc.com;
-          Mon, 25 Sep 2023 10:22:32 +0800
-Message-ID: <ef147298-26a5-26e7-67c9-cd2f13ffb81b@linux.alibaba.com>
-Date: Mon, 25 Sep 2023 10:22:31 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 372B815AC;
+	Mon, 25 Sep 2023 02:30:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 96557C433CA;
+	Mon, 25 Sep 2023 02:30:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1695609023;
+	bh=0jDwZ96nyJhTF4nmVXocUav9QlceaTK+fsd1hTcuQrQ=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=prDohBtJO9880AllSqZPuVLeO5pSLOAWQukM68p11IT6YUwQ9CkWU7RniZFdEFV7E
+	 Nt/v/hT+u3N4BN4a0HbN4afaVVz+Wc5rqHEi8AhyONnIqQ4G0nXT6y0xNvF566IWnG
+	 rfNM2owzp6jW9j2ZlkeRCvm0MNWrfEw4q2VPV5JDiRKDhLicr1ku4TYyrxGMNNHB6T
+	 HRHZafrHXNYBnNfuUbVYJFPHQ8G/R3TUHXZOj2TUg8d8ySkXAVDvKoWDwvTB0kOiCM
+	 sadS1mh56zJBBPi9/Burjre+j9G0lOzNU0kuK5rWRGq0wqcGjBvGHUG63nollnp/U9
+	 SUfr5gi1x70/A==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 79FA6E29AFD;
+	Mon, 25 Sep 2023 02:30:23 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.15.1
-Subject: Re: [PATCH] ocfs2: Annotate struct ocfs2_replay_map with __counted_by
-To: Kees Cook <keescook@chromium.org>, Mark Fasheh <mark@fasheh.com>,
- akpm <akpm@linux-foundation.org>
-Cc: Joel Becker <jlbec@evilplan.org>, Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
- ocfs2-devel@lists.linux.dev, llvm@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20230922174925.work.293-kees@kernel.org>
-Content-Language: en-US
-From: Joseph Qi <joseph.qi@linux.alibaba.com>
-In-Reply-To: <20230922174925.work.293-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-11.4 required=5.0 tests=BAYES_00,
-	ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham
-	autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] platform/chrome: wilco_ec: Annotate struct ec_event_queue
+ with __counted_by
+From: patchwork-bot+chrome-platform@kernel.org
+Message-Id: 
+ <169560902349.21032.13563278253669519579.git-patchwork-notify@kernel.org>
+Date: Mon, 25 Sep 2023 02:30:23 +0000
+References: <20230922175146.work.219-kees@kernel.org>
+In-Reply-To: <20230922175146.work.219-kees@kernel.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: bleung@chromium.org, tzungbi@kernel.org, set_pte_at@outlook.com,
+ dmitry.torokhov@gmail.com, luzmaximilian@gmail.com,
+ u.kleine-koenig@pengutronix.de, gregkh@linuxfoundation.org,
+ jiangjian@cdjrlc.com, chrome-platform@lists.linux.dev, nathan@kernel.org,
+ ndesaulniers@google.com, trix@redhat.com, hdegoede@redhat.com,
+ lee@kernel.org, linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+ linux-hardening@vger.kernel.org
 
+Hello:
 
+This patch was applied to chrome-platform/linux.git (for-kernelci)
+by Tzung-Bi Shih <tzungbi@kernel.org>:
 
-On 9/23/23 1:49 AM, Kees Cook wrote:
+On Fri, 22 Sep 2023 10:51:47 -0700 you wrote:
 > Prepare for the coming implementation by GCC and Clang of the __counted_by
 > attribute. Flexible array members annotated with __counted_by can have
 > their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
 > 
-> As found with Coccinelle[1], add __counted_by for struct ocfs2_replay_map.
+> As found with Coccinelle[1], add __counted_by for struct ec_event_queue.
 > 
-> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
-> 
-> Cc: Mark Fasheh <mark@fasheh.com>
-> Cc: Joel Becker <jlbec@evilplan.org>
-> Cc: Joseph Qi <joseph.qi@linux.alibaba.com>
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: Tom Rix <trix@redhat.com>
-> Cc: ocfs2-devel@lists.linux.dev
-> Cc: llvm@lists.linux.dev
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> [...]
 
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-> ---
->  fs/ocfs2/journal.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/ocfs2/journal.c b/fs/ocfs2/journal.c
-> index ce215565d061..604fea3a26ff 100644
-> --- a/fs/ocfs2/journal.c
-> +++ b/fs/ocfs2/journal.c
-> @@ -90,7 +90,7 @@ enum ocfs2_replay_state {
->  struct ocfs2_replay_map {
->  	unsigned int rm_slots;
->  	enum ocfs2_replay_state rm_state;
-> -	unsigned char rm_replay_slots[];
-> +	unsigned char rm_replay_slots[] __counted_by(rm_slots);
->  };
->  
->  static void ocfs2_replay_map_set_state(struct ocfs2_super *osb, int state)
+Here is the summary with links:
+  - platform/chrome: wilco_ec: Annotate struct ec_event_queue with __counted_by
+    https://git.kernel.org/chrome-platform/c/1aa8df90f456
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
