@@ -1,94 +1,134 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC2510A3D
-	for <linux-hardening@vger.kernel.org>; Mon, 25 Sep 2023 11:24:32 +0000 (UTC)
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52E35DF;
-	Mon, 25 Sep 2023 04:24:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description;
-	bh=CZlIUfCEZAaduIab/BeYk1An+kVppDAcETHyx1HtxZE=; b=OLKk7KzHiiGpF1sqjWKSHcWnBZ
-	92q6oAsLH8WkTJ+FhxjcGNaRuF+h8XwsCxZhYYqda0aMpb2cL4VmSVVm/BkygQ4pqREJW/O9PEsoH
-	kGpcMhAXZLjcT2iGMbS73ooDgePc0V9S2npQoXjzsW/GmDP0nW9GDTZdiPVJ1Q+Xj+IX5wXMqaCtE
-	IFO648RpE+win1TFMnfxg5RDgEfDQvFgtgXf418BDPcR5oid/G6hnWo9eDcna1Wz9Bxek/r6HC7XD
-	jkiltcKNHN6SeLrlkuv6M8SpYywXLT+jiqcyO63cHS7K67XKjPSzn9pbj1sVAWbU/7SkZZB0a8LC0
-	WSmJI7FQ==;
-Received: from [195.181.170.235] (helo=[172.31.28.226])
-	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1qkjhM-001A2F-Jx; Mon, 25 Sep 2023 11:24:20 +0000
-Message-ID: <cb5e785d19a15356d85bca11bebf7975c495e948.camel@infradead.org>
-Subject: Re: [PATCH] virtio_console: Annotate struct port_buffer with
- __counted_by
-From: Amit Shah <amit@infradead.org>
-To: Kees Cook <keescook@chromium.org>, Amit Shah <amit@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman
-	 <gregkh@linuxfoundation.org>, virtualization@lists.linux-foundation.org, 
-	Nathan Chancellor
-	 <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, Tom Rix
-	 <trix@redhat.com>, linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19A9D1B27D
+	for <linux-hardening@vger.kernel.org>; Mon, 25 Sep 2023 12:20:55 +0000 (UTC)
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 667B0103;
+	Mon, 25 Sep 2023 05:20:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1695644454; x=1727180454;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=DuowFPWx8WzqGKtlSQ1LLSC/9eNAA11N0z3LCFyNJPw=;
+  b=ff+IftKAhdGpIZBjye12W7HsazMjN6ZE/3buBQWYO5jQxeTvk3Iy6cr0
+   wAK4IFydmdybFdzSbZ0t9BJNqnL2+xTE+WsDnKrAmtrkDHd3pqc90JqOM
+   kCJPZHcaUy07RSEQvzUj7pOekdfdMcZk67ceczGmpkaS4X0XA8WHL2eUU
+   qDcyISSgBwAeGXf9329VpNbM9VzbgicITJ3efoQZOji2BOqNJjb2KLRTN
+   7MVCsdJeyv8iQrNM/tfpba72A8qwDUUZDDE5iXXAGchiAh1xFk/9RIaC5
+   kusFKfhog2H7DwqWJ+KHAe3bHIohQyMnPT6ycTZqZ2J+nSZH/y+b379Cj
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="383996632"
+X-IronPort-AV: E=Sophos;i="6.03,174,1694761200"; 
+   d="scan'208";a="383996632"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 05:20:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="748329775"
+X-IronPort-AV: E=Sophos;i="6.03,174,1694761200"; 
+   d="scan'208";a="748329775"
+Received: from nurqayrx-mobl2.gar.corp.intel.com (HELO intel.com) ([10.213.34.118])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Sep 2023 05:20:19 -0700
+Date: Mon, 25 Sep 2023 14:20:13 +0200
+From: Andi Shyti <andi.shyti@linux.intel.com>
+To: Kees Cook <keescook@chromium.org>
+Cc: David Airlie <airlied@gmail.com>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Chris Wilson <chris@chris-wilson.co.uk>,
+	John Harrison <john.c.harrison@intel.com>,
+	Andi Shyti <andi.shyti@linux.intel.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	Emma Anholt <emma@anholt.net>, Evan Quan <evan.quan@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?iso-8859-15?Q?K=F6nig?= <christian.koenig@amd.com>,
+	"Pan, Xinhui" <Xinhui.Pan@amd.com>,
+	Xiaojian Du <Xiaojian.Du@amd.com>, Huang Rui <ray.huang@amd.com>,
+	Kevin Wang <kevin1.wang@amd.com>,
+	Hawking Zhang <Hawking.Zhang@amd.com>,
+	Rob Clark <robdclark@gmail.com>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Ben Skeggs <bskeggs@redhat.com>, Karol Herbst <kherbst@redhat.com>,
+	Lyude Paul <lyude@redhat.com>, Maxime Ripard <mripard@kernel.org>,
+	David Airlie <airlied@redhat.com>,
+	Gerd Hoffmann <kraxel@redhat.com>,
+	Gurchetan Singh <gurchetansingh@chromium.org>,
+	Chia-I Wu <olvaffe@gmail.com>, Zack Rusin <zackr@vmware.com>,
+	VMware Graphics Reviewers <linux-graphics-maintainer@vmware.com>,
+	Melissa Wen <mwen@igalia.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Tom Rix <trix@redhat.com>, Le Ma <le.ma@amd.com>,
+	Lijo Lazar <lijo.lazar@amd.com>, Yifan Zhang <yifan1.zhang@amd.com>,
+	Prike Liang <Prike.Liang@amd.com>, Lang Yu <Lang.Yu@amd.com>,
+	Tejas Upadhyay <tejas.upadhyay@intel.com>,
+	Nirmoy Das <nirmoy.das@intel.com>,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kuogee Hsieh <quic_khsieh@quicinc.com>,
+	linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+	linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+	nouveau@lists.freedesktop.org,
+	virtualization@lists.linux-foundation.org, llvm@lists.linux.dev,
 	linux-hardening@vger.kernel.org
-Date: Mon, 25 Sep 2023 13:24:19 +0200
-In-Reply-To: <20230922175115.work.059-kees@kernel.org>
-References: <20230922175115.work.059-kees@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+Subject: Re: [PATCH 3/9] drm/i915/selftests: Annotate struct perf_series with
+ __counted_by
+Message-ID: <ZRF6/VBgVvgl6lpn@ashyti-mobl2.lan>
+References: <20230922173110.work.084-kees@kernel.org>
+ <20230922173216.3823169-3-keescook@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-	RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_NONE autolearn=no autolearn_force=no
-	version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230922173216.3823169-3-keescook@chromium.org>
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+	RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Fri, 2023-09-22 at 10:51 -0700, Kees Cook wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_b=
-y
+Hi Kees,
+
+On Fri, Sep 22, 2023 at 10:32:08AM -0700, Kees Cook wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
 > attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUND=
-S
+> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
->=20
-> As found with Coccinelle[1], add __counted_by for struct port_buffer.
->=20
-> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/c=
-ounted_by.cocci
->=20
-> Cc: Amit Shah <amit@kernel.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: virtualization@lists.linux-foundation.org
+> 
+> As found with Coccinelle[1], add __counted_by for struct perf_series.
+> 
+> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+> 
+> Cc: Jani Nikula <jani.nikula@linux.intel.com>
+> Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+> Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+> Cc: Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>
+> Cc: David Airlie <airlied@gmail.com>
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: Chris Wilson <chris@chris-wilson.co.uk>
+> Cc: John Harrison <john.c.harrison@Intel.com>
+> Cc: Andi Shyti <andi.shyti@linux.intel.com>
+> Cc: Matthew Brost <matthew.brost@intel.com>
+> Cc: intel-gfx@lists.freedesktop.org
+> Cc: dri-devel@lists.freedesktop.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  drivers/char/virtio_console.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/char/virtio_console.c b/drivers/char/virtio_console.=
-c
-> index 680d1ef2a217..431e9e5bf9c1 100644
-> --- a/drivers/char/virtio_console.c
-> +++ b/drivers/char/virtio_console.c
-> @@ -106,7 +106,7 @@ struct port_buffer {
->  	unsigned int sgpages;
-> =20
->  	/* sg is used if spages > 0. sg must be the last in is struct */
-> -	struct scatterlist sg[];
-> +	struct scatterlist sg[] __counted_by(sgpages);
->  };
 
-Reviewed-by: Amit Shah <amit@kernel.org>
-
-Greg, please pick this up.
+Reviewed-by: Andi Shyti <andi.shyti@linux.intel.com> 
 
 Thanks,
-
-		Amit
+Andi
