@@ -1,18 +1,17 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F092763AF;
-	Tue, 26 Sep 2023 09:24:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCCA06D38;
+	Tue, 26 Sep 2023 09:24:57 +0000 (UTC)
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F91F12A;
-	Tue, 26 Sep 2023 02:24:34 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07CAABE;
+	Tue, 26 Sep 2023 02:24:56 -0700 (PDT)
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id E3A3768AA6; Tue, 26 Sep 2023 11:24:27 +0200 (CEST)
-Date: Tue, 26 Sep 2023 11:24:27 +0200
+	id 17E4968D05; Tue, 26 Sep 2023 11:24:53 +0200 (CEST)
+Date: Tue, 26 Sep 2023 11:24:52 +0200
 From: Christoph Hellwig <hch@lst.de>
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: Christoph Hellwig <hch@lst.de>, Christian Brauner <brauner@kernel.org>,
-	Al Viro <viro@zeniv.linux.org.uk>,
+To: Christian Brauner <brauner@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
 	Heiko Carstens <hca@linux.ibm.com>,
 	Vasily Gorbik <gor@linux.ibm.com>,
 	Alexander Gordeev <agordeev@linux.ibm.com>,
@@ -32,9 +31,9 @@ Cc: Christoph Hellwig <hch@lst.de>, Christian Brauner <brauner@kernel.org>,
 	linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org,
 	linux-nfs@vger.kernel.org, linux-hardening@vger.kernel.org,
 	cgroups@vger.kernel.org
-Subject: Re: [PATCH 10/19] USB: gadget/legacy: remove sb_mutex
-Message-ID: <20230926092427.GC12504@lst.de>
-References: <20230913111013.77623-1-hch@lst.de> <20230913111013.77623-11-hch@lst.de> <7f839be1-4898-41ad-8eda-10d5a0350bdf@rowland.harvard.edu>
+Subject: Re: [PATCH 01/19] fs: reflow deactivate_locked_super
+Message-ID: <20230926092452.GD12504@lst.de>
+References: <20230913111013.77623-1-hch@lst.de> <20230913111013.77623-2-hch@lst.de> <20230913-betuchte-vervollkommnen-0609db0eaab8@brauner>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -43,27 +42,16 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7f839be1-4898-41ad-8eda-10d5a0350bdf@rowland.harvard.edu>
+In-Reply-To: <20230913-betuchte-vervollkommnen-0609db0eaab8@brauner>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
 	SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Wed, Sep 13, 2023 at 12:10:56PM -0400, Alan Stern wrote:
-> On Wed, Sep 13, 2023 at 08:10:04AM -0300, Christoph Hellwig wrote:
-> > Creating new a new super_block vs freeing the old one for single instance
-> > file systems is serialized by the wait for SB_DEAD.
-> > 
-> > Remove the superfluous sb_mutex.
-> > 
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > ---
-> 
-> You might mention that this is essentially a reversion of commit 
-> d18dcfe9860e ("USB: gadgetfs: Fix race between mounting and 
-> unmounting").
+On Wed, Sep 13, 2023 at 06:35:03PM +0200, Christian Brauner wrote:
+> I wouldn't mind s/s/sb/ here as well. So we stop using @s in some and
+> @sb in other places.
 
-The difference we have now is that sb creation waits for the
-old one to go way, but I'll add a notice on all that.
-
+I did that in an earlier version and decided to have some less churn.
+But I can add it back.
