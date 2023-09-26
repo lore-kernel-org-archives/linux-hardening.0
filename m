@@ -1,91 +1,114 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AFA528DD2
-	for <linux-hardening@vger.kernel.org>; Tue, 26 Sep 2023 13:05:19 +0000 (UTC)
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EFE4F3;
-	Tue, 26 Sep 2023 06:05:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695733518; x=1727269518;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=FmbKCqSsz0kqTsakPv8EB8BnPpBLaPEGLkuj5LldCX8=;
-  b=n2FTKXNsD4VcQuW/7woIiQB8CBUHmagBUXGWf6PltQpjzRz9RYUr73M2
-   k3xFB2A8GiuAkR6Q9S6KQd+Ep/TFk1jpNHGoo31fCnLTrRT39I8Fo8h4p
-   2Wcyct+52Wuug5qZzHN2ixRMmqI/72ERV/1Ng5RkHgmAIdbBuYiScr783
-   pNklhXhKOhXXuyjON+tpOgZfUkQMY/zGPjgmiyDscbjQaFnpD/ZUk/YKd
-   qZrMMWFrWG1u91NZo2JDSqH4IZH0dFqmLue9NOlnKGAuzznOzqPqdDB3B
-   udFHXBJk3uitTEIGecGgK+wYL7gb4VvJbWnAa4teyHHtlIiXMzs4ohkMy
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="448055579"
-X-IronPort-AV: E=Sophos;i="6.03,177,1694761200"; 
-   d="scan'208";a="448055579"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 06:05:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10843"; a="922409490"
-X-IronPort-AV: E=Sophos;i="6.03,177,1694761200"; 
-   d="scan'208";a="922409490"
-Received: from hongy-mobl.ger.corp.intel.com (HELO localhost) ([10.252.41.3])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2023 06:05:12 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Maximilian Luz <luzmaximilian@gmail.com>, 
- Kees Cook <keescook@chromium.org>
-Cc: platform-driver-x86@vger.kernel.org, 
- Nathan Chancellor <nathan@kernel.org>, 
- Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>, 
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
- linux-hardening@vger.kernel.org
-In-Reply-To: <20230922175436.work.031-kees@kernel.org>
-References: <20230922175436.work.031-kees@kernel.org>
-Subject: Re: [PATCH] platform/surface: aggregator: Annotate struct
- ssam_event with __counted_by
-Message-Id: <169573350863.5370.3148602716407027239.b4-ty@linux.intel.com>
-Date: Tue, 26 Sep 2023 16:05:08 +0300
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 704D928DD5
+	for <linux-hardening@vger.kernel.org>; Tue, 26 Sep 2023 15:04:38 +0000 (UTC)
+Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3EA1E76
+	for <linux-hardening@vger.kernel.org>; Tue, 26 Sep 2023 08:04:24 -0700 (PDT)
+Received: by mail-yb1-xb30.google.com with SMTP id 3f1490d57ef6-d77ad095f13so10182791276.2
+        for <linux-hardening@vger.kernel.org>; Tue, 26 Sep 2023 08:04:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1695740663; x=1696345463; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Hi8I/a7o7wwNWCt1t7ekaKgHNV+vsdHqCcY2PQYg2QI=;
+        b=zkXj+jWgCXTz8EVcqT4K+5J9FTmhy1AsGvuhiNbT9vvQiDkcI3FPAbt4cZAawG8rs9
+         5D+mhHmhlKrnfMafXDymPIALL4dxUoEdQuO7rE4Avjpn/o156+PJEygwEQUKPMqkGgcn
+         mSOVtlhzNODEU0wMJLZzGesogWeqngupnEgAlGLaE1yKskTv34Jc32fI3IrXqy6Naw+L
+         n43c9h5yeXBsXaEqmpfu/JAcm4llYv9giN6H0tgCLAiEC3OwSDqYNv26XDeSO2gEKLGN
+         aOH6ufFWeXvyy85tFU+amTHC8nboW0SkHXHjAVeis2y/L35Mlc8W11ctEGKAhbvXWexy
+         EQ4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695740663; x=1696345463;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Hi8I/a7o7wwNWCt1t7ekaKgHNV+vsdHqCcY2PQYg2QI=;
+        b=EQKRti7hCva7vd+gMAGntWe66bxY8sOljbXPMfXM4n6vernknOLcXEBlYxHaNRUAE5
+         7wcUp4jXVSG3kIJaLuUp2tDhc2UVkYOmshndyov+JNuNeqO7orrWh/a2BkyH3nHeUOf/
+         3KWwGdPiVXGQkM2j9ImIKLDimXWljAFGHGeWK0VjMEoIwuwgxUXq3qFIDhZq5jenSO8Y
+         Dx+AfyZgUAXJnmwzjxMPd3w/5CwS+Eq+OShuybAyKsrrFq3vviIBw1424jPV1SlnumpP
+         pN7lUHNIe0Us09mAI2RLrtpvAMXNsDVtx7poJ6oiYjPoFb1WjY6DUtv7b9qbMS+VALeN
+         wVJA==
+X-Gm-Message-State: AOJu0YyLRweyMDTzQ2MDox7JnQ7SvToTPuNQhwH5S6L8x41tyHrGZ57e
+	0vH53/+9chOzmKhxumUrGno6BWzlhQkLOv/JUyKJrpcXoMqrCFQC
+X-Google-Smtp-Source: AGHT+IGQ+cDmUBy1mScBjOKjo++Q7IVdwaEUb7YBFTbK5U0lEpvDf6oS2L6LJvgIzbDQlTFsBZNTNRnN7t9lk62BZKU=
+X-Received: by 2002:a5b:54b:0:b0:d84:90c5:4e1f with SMTP id
+ r11-20020a5b054b000000b00d8490c54e1fmr7705526ybp.63.1695740663508; Tue, 26
+ Sep 2023 08:04:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.3
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+References: <20230922175249.work.593-kees@kernel.org>
+In-Reply-To: <20230922175249.work.593-kees@kernel.org>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Tue, 26 Sep 2023 17:03:47 +0200
+Message-ID: <CAPDyKFo2CeV2Gw-MCbYvA=SRMrb+BptK3hW7f3sz2m1ChmgMAw@mail.gmail.com>
+Subject: Re: [PATCH] memstick: jmb38x_ms: Annotate struct jmb38x_ms with __counted_by
+To: Kees Cook <keescook@chromium.org>
+Cc: Maxim Levitsky <maximlevitsky@gmail.com>, Alex Dubov <oakad@yahoo.com>, Tom Rix <trix@redhat.com>, 
+	Len Baker <len.baker@gmx.com>, Dan Carpenter <error27@gmail.com>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-mmc@vger.kernel.org, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Fri, 22 Sep 2023 10:54:37 -0700, Kees Cook wrote:
-
+On Fri, 22 Sept 2023 at 19:52, Kees Cook <keescook@chromium.org> wrote:
+>
 > Prepare for the coming implementation by GCC and Clang of the __counted_by
 > attribute. Flexible array members annotated with __counted_by can have
 > their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
-> 
-> As found with Coccinelle[1], add __counted_by for struct ssam_event.
-> 
-> [...]
+>
+> As found with Coccinelle[1], add __counted_by for struct jmb38x_ms.
+>
+> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+>
+> Cc: Maxim Levitsky <maximlevitsky@gmail.com>
+> Cc: Alex Dubov <oakad@yahoo.com>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: Tom Rix <trix@redhat.com>
+> Cc: Len Baker <len.baker@gmx.com>
+> Cc: Dan Carpenter <error27@gmail.com>
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: linux-mmc@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+
+Applied for next, thanks!
+
+Kind regards
+Uffe
 
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo branch only once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on the review-ilpo branch the patches
-there will be added to the platform-drivers-x86/for-next branch
-and eventually will be included in the pdx86 pull-request to
-Linus for the next merge-window.
-
-The list of commits applied:
-[1/1] platform/surface: aggregator: Annotate struct ssam_event with __counted_by
-      commit: 9cf63f3a33e929f7eca36409914b8c12102b9984
-
---
- i.
-
+> ---
+>  drivers/memstick/host/jmb38x_ms.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/memstick/host/jmb38x_ms.c b/drivers/memstick/host/jmb38x_ms.c
+> index 21cb2a786058..e77eb8b0eb12 100644
+> --- a/drivers/memstick/host/jmb38x_ms.c
+> +++ b/drivers/memstick/host/jmb38x_ms.c
+> @@ -66,7 +66,7 @@ struct jmb38x_ms_host {
+>  struct jmb38x_ms {
+>         struct pci_dev        *pdev;
+>         int                   host_cnt;
+> -       struct memstick_host  *hosts[];
+> +       struct memstick_host  *hosts[] __counted_by(host_cnt);
+>  };
+>
+>  #define BLOCK_COUNT_MASK       0xffff0000
+> --
+> 2.34.1
+>
