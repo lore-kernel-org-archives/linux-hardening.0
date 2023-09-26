@@ -1,145 +1,69 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A3372908
-	for <linux-hardening@vger.kernel.org>; Tue, 26 Sep 2023 08:41:34 +0000 (UTC)
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26FCC9D
-	for <linux-hardening@vger.kernel.org>; Tue, 26 Sep 2023 01:41:33 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id a640c23a62f3a-9ad8bf9bfabso1032872166b.3
-        for <linux-hardening@vger.kernel.org>; Tue, 26 Sep 2023 01:41:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1695717691; x=1696322491; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uFWrsoW4uNhqV0CxpxdAxPRUEmdQJwwmxY6JAL4tAZc=;
-        b=4y76pwsSHQ1jolHRYQ9LBmyEoooVg5c6W0oMp675RqvV5Vv9Shbd4FP/PYdA0Ds5Lb
-         OvxOYgrZnnvjqkyoYbK6ELnTm94uXfAmuORz8gxCWu4WsrGtJN8KjrIYcp6STosOlSCS
-         7jRanLsqujZ+l5fktqpQB66OdEeuH0aCuGqqr3j9TnjPC+ji3LY7iBfulXdaJZBkKqtX
-         cjysTbNajf6Y58STfRf7JZ758Lsa6mDku0J0MZMzfZLmK6uo0XlEkj6XfMTjWP9PgrDx
-         QZYLVoWgcUluLd6YItUHAH2HbtYMkv0H4My0/SNExOX2eFncUIwrQuu0q/wH/VUEq1gO
-         S57g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695717691; x=1696322491;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uFWrsoW4uNhqV0CxpxdAxPRUEmdQJwwmxY6JAL4tAZc=;
-        b=ffaw4RzCsaKNPmCgLmRPv6DheKe4mXchkGBqlODUHcFU4axnnveForkSNO6+7LZcGU
-         IRO48vXUFRybdAt9LD938f3PE0D63+SfyfrX7ucBj7FCAUQgHzVrMAWEuojJRJx/nksg
-         ad0RCnLGs2ef4xXsitIEpPg8dliwLT2IR6lLWjsTjv13yZaJW4fRbseGjMGENU1jjNmF
-         wZcahiea0WI8IRRmPRm5cOuABI592toBfM40Tt5NSwZgfCDMhRpmG6wEcIXkvMyK08nk
-         WBLvucOYwCDiHTn8vbNHKRYrS0hXza8iHhxfkGU9PMPLPKXWV5sWZhoUkecbsJK5eKFP
-         hnzg==
-X-Gm-Message-State: AOJu0YwgVxrZOx72fjmhWOiQDRhgLQI/VLnnEWsW/r79bnkAT/odbhKZ
-	0nZkF2vmwemjeBwSBDVRkhAyJmqTME1E7jBF1HJVr418INY/iyoxk03ZLA==
-X-Google-Smtp-Source: AGHT+IFnlAV0ixfWXVd7v6IEYdyAKxGRYvU1ns24lPtiEkc11WdiAOY4l02gkYVu0p5p6HA+HAggXHzdCjBC/Ggmq+4=
-X-Received: by 2002:a17:906:2202:b0:9a4:88af:b7b with SMTP id
- s2-20020a170906220200b009a488af0b7bmr8190922ejs.62.1695717691523; Tue, 26 Sep
- 2023 01:41:31 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F092763AF;
+	Tue, 26 Sep 2023 09:24:35 +0000 (UTC)
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F91F12A;
+	Tue, 26 Sep 2023 02:24:34 -0700 (PDT)
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id E3A3768AA6; Tue, 26 Sep 2023 11:24:27 +0200 (CEST)
+Date: Tue, 26 Sep 2023 11:24:27 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: Christoph Hellwig <hch@lst.de>, Christian Brauner <brauner@kernel.org>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Fenghua Yu <fenghua.yu@intel.com>,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+	Tejun Heo <tj@kernel.org>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Anna Schumaker <anna@kernel.org>, Kees Cook <keescook@chromium.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Naohiro Aota <naohiro.aota@wdc.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org,
+	linux-nfs@vger.kernel.org, linux-hardening@vger.kernel.org,
+	cgroups@vger.kernel.org
+Subject: Re: [PATCH 10/19] USB: gadget/legacy: remove sb_mutex
+Message-ID: <20230926092427.GC12504@lst.de>
+References: <20230913111013.77623-1-hch@lst.de> <20230913111013.77623-11-hch@lst.de> <7f839be1-4898-41ad-8eda-10d5a0350bdf@rowland.harvard.edu>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230925172037.work.853-kees@kernel.org> <20230926045721.GA3118@sol.localdomain>
- <CAFhGd8q_GsawVXmwft=2g8bU+9Z5sM-q2Siajk2geL6cPQUiQA@mail.gmail.com>
-In-Reply-To: <CAFhGd8q_GsawVXmwft=2g8bU+9Z5sM-q2Siajk2geL6cPQUiQA@mail.gmail.com>
-From: Justin Stitt <justinstitt@google.com>
-Date: Tue, 26 Sep 2023 17:41:19 +0900
-Message-ID: <CAFhGd8pq5mQkj8nvuYwOBmgHvo8FEw=9g+XUeLd_hdR0cHKrNw@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: hardening: Add __counted_by regex
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
-	autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7f839be1-4898-41ad-8eda-10d5a0350bdf@rowland.harvard.edu>
+User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+	SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Tue, Sep 26, 2023 at 5:35=E2=80=AFPM Justin Stitt <justinstitt@google.co=
-m> wrote:
->
-> On Tue, Sep 26, 2023 at 1:57=E2=80=AFPM Eric Biggers <ebiggers@kernel.org=
-> wrote:
-> >
-> > Hi Kees,
-> >
-> > On Mon, Sep 25, 2023 at 10:20:41AM -0700, Kees Cook wrote:
-> > > Since __counted_by annotations may also require that code be changed =
-to
-> > > get initialization ordering correct, let's get an extra group of eyes=
- on
-> > > code that is working on these annotations.
-> > >
-> > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > ---
-> > >  MAINTAINERS | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > index 737dcc7a2155..741285b8246e 100644
-> > > --- a/MAINTAINERS
-> > > +++ b/MAINTAINERS
-> > > @@ -11405,6 +11405,7 @@ F:    kernel/configs/hardening.config
-> > >  F:   mm/usercopy.c
-> > >  K:   \b(add|choose)_random_kstack_offset\b
-> > >  K:   \b__check_(object_size|heap_object)\b
-> > > +K:   \b__counted_by\b
-> > >
-> >
-> > Are you sure you want to volunteer to maintain every file that contains
-> > "__counted_by"?  That's what "K" does; get_maintainer.pl will list you =
-(and
-> > linux-hardening@vger.kernel.org) for every such file.
->
-> Do people call get_maintainer.pl on specific tree files as opposed to
-> invoking it against a .patch file? In the event of the .patch file
-> "K:" should only pick-up what's in the patch and not read into the
-> files outside of the context that the diff provides.
+On Wed, Sep 13, 2023 at 12:10:56PM -0400, Alan Stern wrote:
+> On Wed, Sep 13, 2023 at 08:10:04AM -0300, Christoph Hellwig wrote:
+> > Creating new a new super_block vs freeing the old one for single instance
+> > file systems is serialized by the wait for SB_DEAD.
+> > 
+> > Remove the superfluous sb_mutex.
+> > 
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > ---
+> 
+> You might mention that this is essentially a reversion of commit 
+> d18dcfe9860e ("USB: gadgetfs: Fix race between mounting and 
+> unmounting").
 
-FWIW, b4 just uses the patches and not entire files:
+The difference we have now is that sb creation waits for the
+old one to go way, but I'll add a notice on all that.
 
-   ...
-    try:
-        tos, ccs, tag_msg, patches =3D get_prep_branch_as_patches()
-    except RuntimeError:
-        logger.info('No commits in branch')
-        return
-
-    logger.info('Collecting To/Cc addresses')
-    # Go through the messages to make to/cc headers
-    for commit, msg in patches:
-        if not msg or not commit:
-            continue
-
-        logger.debug('Collecting from: %s', msg.get('subject'))
-        msgbytes =3D msg.as_bytes()
-        ...
-
-
->
-> If needed, I could send a patch adding a "D:" which would only
-> consider patches and not tree files -- reducing noise.
->
-> >
-> > Other users of "K" have been surprised by this behavior.  It seems that=
- most
-> > people expect it to only apply to patches, not to files.  Given that yo=
-u're
-> > interested in using this functionality, have you considered updating
-> > checkpatch.pl to handle it in the way that you probably expect that it =
-works?
-> >
-> > - Eric
-> >
->
-> Thanks
-> Justin
