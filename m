@@ -1,43 +1,43 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC87E570
-	for <linux-hardening@vger.kernel.org>; Tue, 26 Sep 2023 08:36:09 +0000 (UTC)
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9775FC
-	for <linux-hardening@vger.kernel.org>; Tue, 26 Sep 2023 01:36:03 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id a640c23a62f3a-99bdeae1d0aso1012941066b.1
-        for <linux-hardening@vger.kernel.org>; Tue, 26 Sep 2023 01:36:03 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A3372908
+	for <linux-hardening@vger.kernel.org>; Tue, 26 Sep 2023 08:41:34 +0000 (UTC)
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26FCC9D
+	for <linux-hardening@vger.kernel.org>; Tue, 26 Sep 2023 01:41:33 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id a640c23a62f3a-9ad8bf9bfabso1032872166b.3
+        for <linux-hardening@vger.kernel.org>; Tue, 26 Sep 2023 01:41:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1695717362; x=1696322162; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1695717691; x=1696322491; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LjnOqBYDIBukB8OfPAJ6Ctq72GgFY1Pbrxf/0XUTr0U=;
-        b=RMWwc3FK1XzQMOtYTT5NXG/VxUD4MG+CKKlaThaj32zMhRNI6jWFMuCbLJvC7MaosK
-         X3PqKNzwNp78NDljLsaXeVu6m5UkfGGoEhXA8Cyy6ukhBFLSNQKLfNnEi45HI8/mJkzr
-         9cbh45p43dyYoJX2ukXDTG+jypVuos1XQ+Gdni6XD1ZjFcL8k0hIuml8FhEYoLe6hSx9
-         geTD/7t/RnrM4cTNj5LABjbZQzDFlBg571mc/PJy+pVgboJlPZm8GJ5jDsWrBeaeceCK
-         t48EQW/5POT/z9v/dTKStyppDrnCx13jC38kpsiR0cMkXGB+9+kGCCHys34ef19DPknA
-         RZRA==
+        bh=uFWrsoW4uNhqV0CxpxdAxPRUEmdQJwwmxY6JAL4tAZc=;
+        b=4y76pwsSHQ1jolHRYQ9LBmyEoooVg5c6W0oMp675RqvV5Vv9Shbd4FP/PYdA0Ds5Lb
+         OvxOYgrZnnvjqkyoYbK6ELnTm94uXfAmuORz8gxCWu4WsrGtJN8KjrIYcp6STosOlSCS
+         7jRanLsqujZ+l5fktqpQB66OdEeuH0aCuGqqr3j9TnjPC+ji3LY7iBfulXdaJZBkKqtX
+         cjysTbNajf6Y58STfRf7JZ758Lsa6mDku0J0MZMzfZLmK6uo0XlEkj6XfMTjWP9PgrDx
+         QZYLVoWgcUluLd6YItUHAH2HbtYMkv0H4My0/SNExOX2eFncUIwrQuu0q/wH/VUEq1gO
+         S57g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695717362; x=1696322162;
+        d=1e100.net; s=20230601; t=1695717691; x=1696322491;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LjnOqBYDIBukB8OfPAJ6Ctq72GgFY1Pbrxf/0XUTr0U=;
-        b=GLY3nZ0JaLeshYFb/ppsg6noF/Jng1rMBFKaZEmdswz5IHtXznTT718b1kphf4EebB
-         AqQPG1G1A74WIIssO45xQoujg+NB/xBtCN8ygwlvjYMRCHFNq8Ciim6VrsWycRUGPsHd
-         W2YfvAQjga569lj47jbrSiCikzNxEZh//YYjrGteCEM8Wf10fe9/uiecXGvPoELEwlT3
-         1qU+nD0q9ODUURKN9K5jssK1ZTHbbBGxWJKxQRbGgQMvJanq+jPjzIXTALuP/82Rb2VF
-         p0k0cysmqhMhxv+OZcHIM2UrZpHiOrEPvwlDax6aqSRLRv5PrKbaGGxQOeThWgyovR8O
-         8e5A==
-X-Gm-Message-State: AOJu0Yy2GcChrQ6r+vq0oEixh7+l9SN2zPknmF3rLpe0W+klmZ8rrUwF
-	4kXq/hyQClP5lpYZIsCfV0DDApTG6apTzkZAkH6r/A==
-X-Google-Smtp-Source: AGHT+IE591DZVU2mJKfq33uK6SQBvR3uoWMKY6HLmrVDjaQ2l1qfraVqaMTyJdeqZwIRRA66fsONQh2x5kKbTHwP2xE=
-X-Received: by 2002:a17:906:1ba1:b0:9a1:e233:e627 with SMTP id
- r1-20020a1709061ba100b009a1e233e627mr8324753ejg.42.1695717362060; Tue, 26 Sep
- 2023 01:36:02 -0700 (PDT)
+        bh=uFWrsoW4uNhqV0CxpxdAxPRUEmdQJwwmxY6JAL4tAZc=;
+        b=ffaw4RzCsaKNPmCgLmRPv6DheKe4mXchkGBqlODUHcFU4axnnveForkSNO6+7LZcGU
+         IRO48vXUFRybdAt9LD938f3PE0D63+SfyfrX7ucBj7FCAUQgHzVrMAWEuojJRJx/nksg
+         ad0RCnLGs2ef4xXsitIEpPg8dliwLT2IR6lLWjsTjv13yZaJW4fRbseGjMGENU1jjNmF
+         wZcahiea0WI8IRRmPRm5cOuABI592toBfM40Tt5NSwZgfCDMhRpmG6wEcIXkvMyK08nk
+         WBLvucOYwCDiHTn8vbNHKRYrS0hXza8iHhxfkGU9PMPLPKXWV5sWZhoUkecbsJK5eKFP
+         hnzg==
+X-Gm-Message-State: AOJu0YwgVxrZOx72fjmhWOiQDRhgLQI/VLnnEWsW/r79bnkAT/odbhKZ
+	0nZkF2vmwemjeBwSBDVRkhAyJmqTME1E7jBF1HJVr418INY/iyoxk03ZLA==
+X-Google-Smtp-Source: AGHT+IFnlAV0ixfWXVd7v6IEYdyAKxGRYvU1ns24lPtiEkc11WdiAOY4l02gkYVu0p5p6HA+HAggXHzdCjBC/Ggmq+4=
+X-Received: by 2002:a17:906:2202:b0:9a4:88af:b7b with SMTP id
+ s2-20020a170906220200b009a488af0b7bmr8190922ejs.62.1695717691523; Tue, 26 Sep
+ 2023 01:41:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -45,10 +45,11 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20230925172037.work.853-kees@kernel.org> <20230926045721.GA3118@sol.localdomain>
-In-Reply-To: <20230926045721.GA3118@sol.localdomain>
+ <CAFhGd8q_GsawVXmwft=2g8bU+9Z5sM-q2Siajk2geL6cPQUiQA@mail.gmail.com>
+In-Reply-To: <CAFhGd8q_GsawVXmwft=2g8bU+9Z5sM-q2Siajk2geL6cPQUiQA@mail.gmail.com>
 From: Justin Stitt <justinstitt@google.com>
-Date: Tue, 26 Sep 2023 17:35:50 +0900
-Message-ID: <CAFhGd8q_GsawVXmwft=2g8bU+9Z5sM-q2Siajk2geL6cPQUiQA@mail.gmail.com>
+Date: Tue, 26 Sep 2023 17:41:19 +0900
+Message-ID: <CAFhGd8pq5mQkj8nvuYwOBmgHvo8FEw=9g+XUeLd_hdR0cHKrNw@mail.gmail.com>
 Subject: Re: [PATCH] MAINTAINERS: hardening: Add __counted_by regex
 To: Eric Biggers <ebiggers@kernel.org>
 Cc: Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org, 
@@ -63,57 +64,82 @@ X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Tue, Sep 26, 2023 at 1:57=E2=80=AFPM Eric Biggers <ebiggers@kernel.org> =
-wrote:
+On Tue, Sep 26, 2023 at 5:35=E2=80=AFPM Justin Stitt <justinstitt@google.co=
+m> wrote:
 >
-> Hi Kees,
->
-> On Mon, Sep 25, 2023 at 10:20:41AM -0700, Kees Cook wrote:
-> > Since __counted_by annotations may also require that code be changed to
-> > get initialization ordering correct, let's get an extra group of eyes o=
-n
-> > code that is working on these annotations.
+> On Tue, Sep 26, 2023 at 1:57=E2=80=AFPM Eric Biggers <ebiggers@kernel.org=
+> wrote:
 > >
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  MAINTAINERS | 1 +
-> >  1 file changed, 1 insertion(+)
+> > Hi Kees,
 > >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 737dcc7a2155..741285b8246e 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -11405,6 +11405,7 @@ F:    kernel/configs/hardening.config
-> >  F:   mm/usercopy.c
-> >  K:   \b(add|choose)_random_kstack_offset\b
-> >  K:   \b__check_(object_size|heap_object)\b
-> > +K:   \b__counted_by\b
+> > On Mon, Sep 25, 2023 at 10:20:41AM -0700, Kees Cook wrote:
+> > > Since __counted_by annotations may also require that code be changed =
+to
+> > > get initialization ordering correct, let's get an extra group of eyes=
+ on
+> > > code that is working on these annotations.
+> > >
+> > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > ---
+> > >  MAINTAINERS | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index 737dcc7a2155..741285b8246e 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -11405,6 +11405,7 @@ F:    kernel/configs/hardening.config
+> > >  F:   mm/usercopy.c
+> > >  K:   \b(add|choose)_random_kstack_offset\b
+> > >  K:   \b__check_(object_size|heap_object)\b
+> > > +K:   \b__counted_by\b
+> > >
+> >
+> > Are you sure you want to volunteer to maintain every file that contains
+> > "__counted_by"?  That's what "K" does; get_maintainer.pl will list you =
+(and
+> > linux-hardening@vger.kernel.org) for every such file.
+>
+> Do people call get_maintainer.pl on specific tree files as opposed to
+> invoking it against a .patch file? In the event of the .patch file
+> "K:" should only pick-up what's in the patch and not read into the
+> files outside of the context that the diff provides.
+
+FWIW, b4 just uses the patches and not entire files:
+
+   ...
+    try:
+        tos, ccs, tag_msg, patches =3D get_prep_branch_as_patches()
+    except RuntimeError:
+        logger.info('No commits in branch')
+        return
+
+    logger.info('Collecting To/Cc addresses')
+    # Go through the messages to make to/cc headers
+    for commit, msg in patches:
+        if not msg or not commit:
+            continue
+
+        logger.debug('Collecting from: %s', msg.get('subject'))
+        msgbytes =3D msg.as_bytes()
+        ...
+
+
+>
+> If needed, I could send a patch adding a "D:" which would only
+> consider patches and not tree files -- reducing noise.
+>
+> >
+> > Other users of "K" have been surprised by this behavior.  It seems that=
+ most
+> > people expect it to only apply to patches, not to files.  Given that yo=
+u're
+> > interested in using this functionality, have you considered updating
+> > checkpatch.pl to handle it in the way that you probably expect that it =
+works?
+> >
+> > - Eric
 > >
 >
-> Are you sure you want to volunteer to maintain every file that contains
-> "__counted_by"?  That's what "K" does; get_maintainer.pl will list you (a=
-nd
-> linux-hardening@vger.kernel.org) for every such file.
-
-Do people call get_maintainer.pl on specific tree files as opposed to
-invoking it against a .patch file? In the event of the .patch file
-"K:" should only pick-up what's in the patch and not read into the
-files outside of the context that the diff provides.
-
-If needed, I could send a patch adding a "D:" which would only
-consider patches and not tree files -- reducing noise.
-
->
-> Other users of "K" have been surprised by this behavior.  It seems that m=
-ost
-> people expect it to only apply to patches, not to files.  Given that you'=
-re
-> interested in using this functionality, have you considered updating
-> checkpatch.pl to handle it in the way that you probably expect that it wo=
-rks?
->
-> - Eric
->
-
-Thanks
-Justin
+> Thanks
+> Justin
