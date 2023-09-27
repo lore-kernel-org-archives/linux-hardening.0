@@ -1,117 +1,129 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08F99523F
-	for <linux-hardening@vger.kernel.org>; Wed, 27 Sep 2023 05:21:01 +0000 (UTC)
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 589EB2D51
-	for <linux-hardening@vger.kernel.org>; Tue, 26 Sep 2023 22:21:00 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d815354ea7fso15225687276.1
-        for <linux-hardening@vger.kernel.org>; Tue, 26 Sep 2023 22:21:00 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CD401118
+	for <linux-hardening@vger.kernel.org>; Wed, 27 Sep 2023 05:37:09 +0000 (UTC)
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF81710C2
+	for <linux-hardening@vger.kernel.org>; Tue, 26 Sep 2023 22:37:07 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-59c0dd156e5so214903427b3.3
+        for <linux-hardening@vger.kernel.org>; Tue, 26 Sep 2023 22:37:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1695792059; x=1696396859; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1695793027; x=1696397827; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=lz/tzt2FhoJSlisVyBotc0Kj5HYUeKExNXWDpILSgIc=;
-        b=jxPSRuCh2GiA5ml2AR0opCZ88ky6+UTpPBhYDJpn5sXvyQwKuI/mwdBIZOaYL7wPtu
-         i3FzcUZ4jj65FV/lLI1grLztvVU44S5nygVz7YhgY7+8ZKaPHbUw70ciOMexYtYJb2c0
-         obnHNiTmphB52b7IoHuoOz+KZV+Wkli92J2JazC8U/ZoyEZIB+lydEqI+GRitHeTwqIL
-         bxUHGZxMECI0AqCkcSBdLgJAHYPzQWQoBYMn1dQqldu6zSyAJNJBcXtcqI/PgnVNFa7T
-         gFH2s8OJzbJfmJo15bwRGJ1PI1z0ZbXPqRxkJe9lVf1EgDnZYT4uwzk266g3Cr9zUesi
-         X7OQ==
+        bh=hQjpvsz8B6fWGFRS892bByH0/TfLx87GHgF3C9zLecE=;
+        b=r8u2u8aUVw4N37UsmIXh1E9gbopc+mFYZC5VAqhp7WzGbub79chi3JA5deBD0vC/+u
+         nqCkF4PSOEQKBvpkkFgVp0EBZEmp/2J2BV5Mnz0S/pluU7CAurBKUVhhhukCp73xFiik
+         TExlJYTBlK9dGnBsnCOvkkuY9CB7YMTHmbs3gtrbN/rsbu/SHlskKKJZGT0/qB82dIIz
+         rZ7TucWHpvCeXgLyi+BafsfLYqQi19dFI2HEZdcrEHN0u2vjsX9h3280/iUlBsxcNQ8J
+         cIHcplL0NJpgirBgYC3LalFGcu6pCAwvB4R7W/mRdUL8v2VM1wr0NQ8zLrQzgLnkkprT
+         phmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695792059; x=1696396859;
+        d=1e100.net; s=20230601; t=1695793027; x=1696397827;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=lz/tzt2FhoJSlisVyBotc0Kj5HYUeKExNXWDpILSgIc=;
-        b=Yam5tZBnGe9jQoZj5/WmEbEsXWCUS7g5RaztyutzaxnXGav0LwilJhct+AVh5Zx9ui
-         A4SpSd9vHruf7VB/pCZTQmzPSKrABAQu1hT2bW2Vn83Lj/o9ZG3veEKvVGRGe/dhv8hL
-         mgMryWQRSUyImY9Sa45kAC/TyeqcJ9KSo1dh2vQy51KMe7NNAFV8IePgfzHEaevmJlbC
-         +ttweRjs46hl9UghnlFL6K1zwM6/f8mH0+SC8GESXey1HU9QFoE7AKCBku1XZHU9LgTN
-         aPXrJojJC3tXBRTevql9vfxxS+Zq9PMeTt4fwaxr+wgNhvulxdDXoYMuURZ+SjglxDBV
-         jw/g==
-X-Gm-Message-State: AOJu0YxEt8slxZqyxMEVMDLKXlvYikPzD0aJ7vUpjgSk+ovGgF5kmgZM
-	eWt6jHLP9bRn5wdrmxA4UCORK0S2P6LlMlmn/g==
-X-Google-Smtp-Source: AGHT+IGQ4S6InwXRWTgaURsWBQh6RxYVFt/Bp+IrO6ECsGXqShMbbeNAl9naPNeF/L8Wg9aHddRgZy3gQ/CyC+vwJA==
+        bh=hQjpvsz8B6fWGFRS892bByH0/TfLx87GHgF3C9zLecE=;
+        b=aOCHeS3uLpaGqgEdOZffgtUbZQDO2VzL5zWW7bjBNrXJ+pgCKspBI/Azk5ghO0v0P2
+         3X/olkTN0ooeBFZ3zWMlFMvvJzlEIaPBUUBqX8zUpxA+RfozKCvhf22QXYXwZe9WR5DS
+         7EoV0eUc5YS8kieEH1Dpl45PXI7OoDlATNE5ovSKzU/kIktie1dAZE1I5zvkZxrg6yZp
+         2vUfiJ+LLrhNoLCI3IBJASc67RN4M+MOTOIVsIrLV/boXrj12z5fKqWH6BxfXNKDgNAw
+         qnc0DNcWtbJkdI8SX2j4lvtG6+eptVMVGqIaxQxGsSW6HzpO5f+4d3KFCnwCNhrJuQoq
+         2jHA==
+X-Gm-Message-State: AOJu0YzcaU5L0L17BHGvFjZgpuwvUHvnWykyezxoQKkxiLxKUJHV75zQ
+	vnu1izU4HQIeSPJub4jOa2ylpgi/v/kdfrdM2w==
+X-Google-Smtp-Source: AGHT+IF2eTEQrA0AUAFSM3JAhkULrL3njtW9SQSuwZCDD1tPWpemdoG+Uf54B2wD+F5KHhTY4D/ysfwkHPl6cGxMCg==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a25:aa09:0:b0:d7a:6a4c:b657 with SMTP
- id s9-20020a25aa09000000b00d7a6a4cb657mr12365ybi.0.1695792059592; Tue, 26 Sep
- 2023 22:20:59 -0700 (PDT)
-Date: Wed, 27 Sep 2023 05:20:58 +0000
+ (user=justinstitt job=sendgmr) by 2002:a25:4293:0:b0:d81:7617:a397 with SMTP
+ id p141-20020a254293000000b00d817617a397mr10857yba.9.1695793027117; Tue, 26
+ Sep 2023 22:37:07 -0700 (PDT)
+Date: Wed, 27 Sep 2023 05:37:06 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIALm7E2UC/x3NQQqEMAxA0atI1gZsZRS9irgoMc5kYVsSEUW8u
- 2WWb/P/DcYqbDBWNygfYpJigasroF+IX0ZZisE3vm0G36PtGilfuKgcrIabGCH5nHRHSspIGII burZzK9MHSigrr3L+J9P8PC9p7qJ0dAAAAA==
+X-B4-Tracking: v=1; b=H4sIAIG/E2UC/x2NwQrCMBAFf6Xs2YUYKTH+iojY5Gn30DTsllIp/
+ XeDx4FhZieDCoxu3U6KVUzm0uB86iiNr/IBS25M3vmLiz6wLVpS/XJWWaHGk1hioOo8NXV5XuN YYRsnHlxE7nsXhpCp9ariLdv/dX8cxw+rCT1JewAAAA==
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1695792058; l=1837;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1695793026; l=2217;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=yQqGrF2k0OLEIxxzfq32VFlgneWmvHqUwZOd9GeKl9Q=; b=GcVEbzE3m6R3BQuN95/HUu/Su4qXiV7N+d85g46JeEu4i/Hy5Trt6MURz/eeYNCmmQt/TOPsI
- UCr87Jtq+Y9D+Uya8HayxqfYkZrp7eEP4oaqYAlYThIOw6C2MGCel/P
+ bh=YmUsybfVQe5zWGf5jAxBKfMLPjPHkISPd1MoaRXDQM0=; b=NnPpHhicfwRq3aw0g0ffOiYeu9GpDcJMkqekY6y7VMB3EAjMVg8b06HE/BZGpYy5L/gyLcJUP
+ aMjUtWcfbOrCSXGxoVEFAkSnAjny2kZpdesatoBbkprjuWZXvxOIMzT
 X-Mailer: b4 0.12.3
-Message-ID: <20230927-strncpy-drivers-misc-c2port-core-c-v1-1-978f6d220a54@google.com>
-Subject: [PATCH] c2port: replace deprecated strncpy with strscpy
+Message-ID: <20230927-strncpy-drivers-misc-eeprom-idt_89hpesx-c-v1-1-08e3d45b8c05@google.com>
+Subject: [PATCH] eeprom: idt_89hpesx: replace open-coded kmemdup_nul
 From: Justin Stitt <justinstitt@google.com>
 To: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Justin Stitt <justinstitt@google.com>
+	Kees Cook <keescook@chromium.org>, Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
 X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-`strncpy` is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous string
-interfaces.
+A malloc + strncpy + manual NUL_termination is just kmemdup_nul. Let's use
+this interface as it is less error-prone and more readable.
 
-We expect `c2dev->name` to be NUL-terminated based on its usage with
-format strings:
-|       dev_info(c2dev->dev, "C2 port %s removed\n", c2dev->name);
-
-Moreover, NUL-padding is _not_ required as c2dev is zero-allocated:
-|       c2dev = kzalloc(sizeof(struct c2port_device), GFP_KERNEL);
-
-Considering the above, a suitable replacement is `strscpy` [2] due to
-the fact that it guarantees NUL-termination on the destination buffer
-without unnecessarily NUL-padding.
-
-Let's also drop `C2PORT_NAME_LEN - 1` for `sizeof(dest)` which is more
-idiomatic strscpy usage.
+Also drop `csraddr_len` as it is just used in a single place and we can
+just do the arithmetic in-line.
 
 Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
 Link: https://github.com/KSPP/linux/issues/90
 Cc: linux-hardening@vger.kernel.org
+Cc: Kees Cook <keescook@chromium.org>
 Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
 Note: build-tested only.
 ---
- drivers/misc/c2port/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/misc/eeprom/idt_89hpesx.c | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/misc/c2port/core.c b/drivers/misc/c2port/core.c
-index f574c83b82cf..2bb1dd2511f9 100644
---- a/drivers/misc/c2port/core.c
-+++ b/drivers/misc/c2port/core.c
-@@ -923,7 +923,7 @@ struct c2port_device *c2port_device_register(char *name,
- 	}
- 	dev_set_drvdata(c2dev->dev, c2dev);
+diff --git a/drivers/misc/eeprom/idt_89hpesx.c b/drivers/misc/eeprom/idt_89hpesx.c
+index 1d1f30b5c426..d807d08e2614 100644
+--- a/drivers/misc/eeprom/idt_89hpesx.c
++++ b/drivers/misc/eeprom/idt_89hpesx.c
+@@ -905,7 +905,7 @@ static ssize_t idt_dbgfs_csr_write(struct file *filep, const char __user *ubuf,
+ {
+ 	struct idt_89hpesx_dev *pdev = filep->private_data;
+ 	char *colon_ch, *csraddr_str, *csrval_str;
+-	int ret, csraddr_len;
++	int ret;
+ 	u32 csraddr, csrval;
+ 	char *buf;
  
--	strncpy(c2dev->name, name, C2PORT_NAME_LEN - 1);
-+	strscpy(c2dev->name, name, sizeof(c2dev->name));
- 	c2dev->ops = ops;
- 	mutex_init(&c2dev->mutex);
+@@ -927,21 +927,16 @@ static ssize_t idt_dbgfs_csr_write(struct file *filep, const char __user *ubuf,
+ 	 * no new CSR value
+ 	 */
+ 	if (colon_ch != NULL) {
+-		csraddr_len = colon_ch - buf;
+-		csraddr_str =
+-			kmalloc(csraddr_len + 1, GFP_KERNEL);
++		/* Copy the register address to the substring buffer */
++		csraddr_str = kmemdup_nul(buf, colon_ch - buf, GFP_KERNEL);
+ 		if (csraddr_str == NULL) {
+ 			ret = -ENOMEM;
+ 			goto free_buf;
+ 		}
+-		/* Copy the register address to the substring buffer */
+-		strncpy(csraddr_str, buf, csraddr_len);
+-		csraddr_str[csraddr_len] = '\0';
+ 		/* Register value must follow the colon */
+ 		csrval_str = colon_ch + 1;
+ 	} else /* if (str_colon == NULL) */ {
+ 		csraddr_str = (char *)buf; /* Just to shut warning up */
+-		csraddr_len = strnlen(csraddr_str, count);
+ 		csrval_str = NULL;
+ 	}
  
 
 ---
 base-commit: 6465e260f48790807eef06b583b38ca9789b6072
-change-id: 20230927-strncpy-drivers-misc-c2port-core-c-aa196361fec5
+change-id: 20230927-strncpy-drivers-misc-eeprom-idt_89hpesx-c-b09ed5507b7d
 
 Best regards,
 --
