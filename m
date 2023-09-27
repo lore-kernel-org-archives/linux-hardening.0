@@ -1,59 +1,59 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F292F17EE
-	for <linux-hardening@vger.kernel.org>; Wed, 27 Sep 2023 04:06:26 +0000 (UTC)
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 743856198
-	for <linux-hardening@vger.kernel.org>; Tue, 26 Sep 2023 21:06:24 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-59c0dd156e5so212354257b3.3
-        for <linux-hardening@vger.kernel.org>; Tue, 26 Sep 2023 21:06:24 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8302A10ED
+	for <linux-hardening@vger.kernel.org>; Wed, 27 Sep 2023 04:43:12 +0000 (UTC)
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FA8661B2
+	for <linux-hardening@vger.kernel.org>; Tue, 26 Sep 2023 21:43:10 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d81486a0382so16301006276.0
+        for <linux-hardening@vger.kernel.org>; Tue, 26 Sep 2023 21:43:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1695787583; x=1696392383; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1695789789; x=1696394589; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=muQRz7J2lzpUyBnJLzYwr4LEEEw5RWh2QZi+e4QQ9Ck=;
-        b=0XzGvJa1L+yZh4aZHanhTfTUEnsEt27cRpli89EBL0zcaXPqvll0mmqDOnRPV6e+8i
-         7/0Zwa3xX8xy/xuFQiQESpcmJe7o8iYldMbYe6IKDJXpz3lEvIG3+C8Xc4G7G5OFrS6m
-         V2ZrrR+/q6ye6xKeNOjEynx/wvAGdjIK4WUlIBthOCKZBr78jQzbEPODyM56D+u2hjGn
-         G0Iju5uho8/jtuMCy5xnQgKIOK1BAc18DWL4rSKFdRNP0xxv/vjxmii8gKMaMvwGeRlj
-         DII6zuOWUjS9qUfFK9jzI8LenEnCDqOoqQh/KMagyXC0ZKYmBUBpghB/+czd/69x+X7L
-         RcFw==
+        bh=iePGiIkzKfdzMIOYNHOPRk3cHv3ow4quHNbS62CX7cc=;
+        b=f+BgNC9iLIinJJtX9RsOwyapX+ljtdbJ6aXe875+wmA+mhGZZpFyW8IXkfcCq6foEF
+         hBi7GYcengpzpVU04f0ddt/A61YSoN7ayzrL/TX/G+iZI3LQxtupxuhxOsNq/vzo/IBG
+         +5BlZGaWVRWaMF8jGmSYi5/SolazV3zHGXhXvZnd4wJdhEYzEfJWPIrhu6QKAdnQ77kH
+         CUHUwARmC3VHOdvK9gHu/+jSB+JjPSWuI8joKEmt5Pbc+OX0EzepzllCI+GLmQHKwaC7
+         59TGzErtfZxD5ng8c+EX14dgtvH4qOil1hccALcQXOC3i5DG30McDOyzlP30HKIQgV2b
+         CXww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695787583; x=1696392383;
+        d=1e100.net; s=20230601; t=1695789789; x=1696394589;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=muQRz7J2lzpUyBnJLzYwr4LEEEw5RWh2QZi+e4QQ9Ck=;
-        b=DVt9n7Dllzwnl+oC18GcYzo3+mQEkFML100fk/uUJTYPqUvoKkNm0BQWL3AsBqiuHR
-         QOWqAMW2SvmVJC6T1uJWZgTBQEZpU9sSbIw3Idvvtp7molXRLXzumjAfUTgnrmyfGwU4
-         TXR/d2XrhRkxEygUC5GClhrS3/uPGVYqZRAiuvpx8IvsBdmOYqA8cBQB+rh/gKRswRwi
-         5sjdL1kQYWfau5kQo4asyxar7im7lRmWnQWqce2B9OOQ7OlzDRWR5igTRdjIO2kJMmZx
-         XvK38NBvQ1r8eJAvrBL15oQI4BYjryIfIL4XKqpZjrhtJAV6Zbsl/P0ALy6URqa4PMKe
-         1z3g==
-X-Gm-Message-State: AOJu0Yy5wszQ9Kgj4VgHdB7QJTtmk64sbkBog+dV7a02TxBQmkC6DLYQ
-	RQmQ1bM6ESJtMsRnmd3roPfHQMf/F43VRcrMww==
-X-Google-Smtp-Source: AGHT+IGsXNoWWYJOPzCYKtauH719o/KetAshJi2wOaDvi+H+P1j+pOhifslLD+fTpHe+INzB6DLUTvY3yrJWyDOwWg==
+        bh=iePGiIkzKfdzMIOYNHOPRk3cHv3ow4quHNbS62CX7cc=;
+        b=kgxovTPU4aR87uwvJS1DUd7c/U+zeSHgrNwRzmbe5ruC6NjNWUiwMFJczib6NvX/rt
+         C4xrp9howwi/Cz+8WkBC1LHZ2FB72/J96El0w9KgfPkxdFpQbbRyJOiHJyava3cJE+Mo
+         Mu82csUNWrKEgJxHaeQYFVqmEmAGoQg7wasZMFvOzdhncpov+tuRfkTQs6ucqxMgXXkb
+         3uxj5WJ/gQOSDHcpGPJl9mD0tPiiu0Jso0PuUdZ4iNVTXpKn18gI9IYzjVE4pToyRhc8
+         udfNpl+GsfoIvhN4UaBnIbSW0Px2KqZHScjHaR21SdYSi9TJ4kJmma5/P3LLkV3N8p6v
+         GhNg==
+X-Gm-Message-State: AOJu0YyY8KAlpYccTqHGV5DtT66FrcRRZ+AGI79W/wH3ySy016Pppv8h
+	JTTwYUsU8dOkzQzjEmubwqurhWRc1eQm8/wx6Q==
+X-Google-Smtp-Source: AGHT+IFd0ooW1etTxxJiTNoTbFujxXZt/InXzvbY0UsHwCdSv0uv0h4zfagMpHW3ZgyyIZZQBDRZadcuoO6RPk4m5Q==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a81:e308:0:b0:59f:2323:acb5 with SMTP
- id q8-20020a81e308000000b0059f2323acb5mr12644ywl.3.1695787583729; Tue, 26 Sep
- 2023 21:06:23 -0700 (PDT)
-Date: Wed, 27 Sep 2023 04:06:09 +0000
+ (user=justinstitt job=sendgmr) by 2002:a05:6902:503:b0:d7b:8acc:beb8 with
+ SMTP id x3-20020a056902050300b00d7b8accbeb8mr10054ybs.2.1695789789581; Tue,
+ 26 Sep 2023 21:43:09 -0700 (PDT)
+Date: Wed, 27 Sep 2023 04:43:08 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIADCqE2UC/x2N0QrCMAxFf2Xk2cDsKHP+ivhQ00wDrpakG8rYv
- 9vt8cA996xgrMIG12YF5UVMPqnC+dQAvUJ6MkqsDK51XTu4Hq1oovzDqLKwGk5sFupsnHcVp1y ovJHQc+/9heLQhQfUt6w8yvco3e7b9gcnFoW+eQAAAA==
+X-B4-Tracking: v=1; b=H4sIANuyE2UC/x2NSw7CMAwFr1J5jaVgQHyuglhEiQNeNER+pQJVv
+ TuB5Uhv3iwEdVPQZVjIdTbYs3bYbgZKj1jvypY7kwTZhbMcGZPX1D6c3WZ18KhA7LPy+qk8tgk RnLiI5EPch5OoUH9rrsXe/9L1tq5fn35o8HkAAAA=
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1695787582; l=4204;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1695789788; l=3357;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=QWt5IYuPT1K3lDjtegiynEZCkUucvHzztTM0T9agtnc=; b=ZCWCZUT8EBoFkt5LsljAQshOVImItYimTU2LI5U7jKMuSeL2a2rUgBRthWA0DILUqU9Q4gtrl
- GBz5dkv7YDvDJrqmtxK8mN5zTIdRo5Im4nuTxY5F8Kh4Vm6KQRy8MCY
+ bh=EG1YpGCKOg76/PpeoMN8n1JVEehvPAP4ohoFDY4oUi4=; b=qhrzWo9sVm0VaNN5eB2F4JA68rayk7qenKcrcBKhCIwLhJbjdk7cI5E1kw0NBzW7Fn/9c+Wsc
+ TDomOeaRGTJDjyyt3Nq2pOIikjhgZO5jnJrgq1M8e+SRVRIwLmBzEVc
 X-Mailer: b4 0.12.3
-Message-ID: <20230927-strncpy-drivers-message-fusion-mptctl-c-v1-1-bb2eddc1743c@google.com>
-Subject: [PATCH] scsi: message: fusion: replace deprecated strncpy with strscpy_pad
+Message-ID: <20230927-strncpy-drivers-message-fusion-mptsas-c-v1-1-edac65cd7010@google.com>
+Subject: [PATCH] scsi: message: fusion: replace deprecated strncpy with strscpy
 From: Justin Stitt <justinstitt@google.com>
 To: Sathya Prakash <sathya.prakash@broadcom.com>, 
 	Sreekanth Reddy <sreekanth.reddy@broadcom.com>, 
@@ -63,9 +63,9 @@ Cc: MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
 	Kees Cook <keescook@chromium.org>, Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
 X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.6
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
@@ -73,101 +73,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 [1] and as such we should prefer more robust and less ambiguous string
 interfaces.
 
-Since all these structs are copied out to userspace let's keep them
-NUL-padded by using `strscpy_pad` which guarantees NUL-termination of
-the destination buffer while also providing the NUL-padding behavior
-that strncpy has.
+The only caller of mptsas_exp_repmanufacture_info() is
+mptsas_probe_one_phy() which can allocate rphy in either
+sas_end_device_alloc() or sas_expander_alloc(). Both of which
+zero-allocate:
+|       rdev = kzalloc(sizeof(*rdev), GFP_KERNEL);
+... this is supplied to mptsas_exp_repmanufacture_info() as edev meaning
+that no future NUL-padding of edev members is needed.
 
-Let's also opt to use the more idiomatic strscpy usage of:
-`dest, src, sizeof(dest)` in cases where the compiler can determine the
-size of the destination buffer. Do this for all cases of strscpy...() in
-this file.
+Considering the above, a suitable replacement is `strscpy` [2] due to
+the fact that it guarantees NUL-termination on the destination buffer
+without unnecessarily NUL-padding.
 
-To be abundantly sure we don't leak stack data out to user space let's
-also change a strscpy to strscpy_pad. This strscpy was introduced in
-Commit dbe37c71d1246ec2 ("scsi: message: fusion: Replace all
-non-returning strlcpy() with strscpy()")
-
-Note that since we are creating these structs with a copy_from_user()
-and modifying fields and then copying back out to the user it is
-probably OK not to explicitly NUL-pad everything as any data leak is
-probably just data from the user themselves. If this is too eager, let's
-opt for `strscpy` which is still in the spirit of removing deprecated
-strncpy usage treewide.
+Note that while `strscpy(dest, src, sizeof(dest))` is more idiomatic
+strscpy usage, we should keep `SAS_EXPANDER...LEN` for length arguments
+since changing these to sizeof would mean we are getting buffers one
+character larger than expected due to the declaration for these members:
+|       char   vendor_id[SAS_EXPANDER_VENDOR_ID_LEN+1];
+|       char   product_id[SAS_EXPANDER_PRODUCT_ID_LEN+1];
+|       char   product_rev[SAS_EXPANDER_PRODUCT_REV_LEN+1];
+|       char   component_vendor_id[SAS_EXPANDER_COMPONENT_VENDOR_ID_LEN+1];
+... and simply removing the "+1" in conjunction with using sizeof() may
+not work as other code may rely on this adjusted buffer length for
+sas_expander_device members.
 
 Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
 Link: https://github.com/KSPP/linux/issues/90
 Cc: linux-hardening@vger.kernel.org
 Cc: Kees Cook <keescook@chromium.org>
 Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
 Note: build-tested only.
----
- drivers/message/fusion/mptctl.c | 19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/message/fusion/mptctl.c b/drivers/message/fusion/mptctl.c
-index dd028df4b283..9f3999750c23 100644
---- a/drivers/message/fusion/mptctl.c
-+++ b/drivers/message/fusion/mptctl.c
-@@ -1328,8 +1328,8 @@ mptctl_getiocinfo (MPT_ADAPTER *ioc, unsigned long arg, unsigned int data_size)
+Note: similar to drivers/scsi/mpi3mr/mpi3mr_transport.c +212 which uses
+strscpy
+---
+ drivers/message/fusion/mptsas.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/message/fusion/mptsas.c b/drivers/message/fusion/mptsas.c
+index 86f16f3ea478..1dc225701a50 100644
+--- a/drivers/message/fusion/mptsas.c
++++ b/drivers/message/fusion/mptsas.c
+@@ -2964,15 +2964,15 @@ mptsas_exp_repmanufacture_info(MPT_ADAPTER *ioc,
+ 			goto out_free;
  
- 	/* Set the Version Strings.
- 	 */
--	strncpy (karg->driverVersion, MPT_LINUX_PACKAGE_NAME, MPT_IOCTL_VERSION_LENGTH);
--	karg->driverVersion[MPT_IOCTL_VERSION_LENGTH-1]='\0';
-+	strscpy_pad(karg->driverVersion, MPT_LINUX_PACKAGE_NAME,
-+		    sizeof(karg->driverVersion));
- 
- 	karg->busChangeEvent = 0;
- 	karg->hostId = ioc->pfacts[port].PortSCSIID;
-@@ -1493,10 +1493,8 @@ mptctl_readtest (MPT_ADAPTER *ioc, unsigned long arg)
- #else
- 	karg.chip_type = ioc->pcidev->device;
- #endif
--	strncpy (karg.name, ioc->name, MPT_MAX_NAME);
--	karg.name[MPT_MAX_NAME-1]='\0';
--	strncpy (karg.product, ioc->prod_name, MPT_PRODUCT_LENGTH);
--	karg.product[MPT_PRODUCT_LENGTH-1]='\0';
-+	strscpy_pad(karg.name, ioc->name, sizeof(karg.name));
-+	strscpy_pad(karg.product, ioc->prod_name, sizeof(karg.product));
- 
- 	/* Copy the data from kernel memory to user memory
- 	 */
-@@ -2394,7 +2392,7 @@ mptctl_hp_hostinfo(MPT_ADAPTER *ioc, unsigned long arg, unsigned int data_size)
- 	cfg.dir = 0;	/* read */
- 	cfg.timeout = 10;
- 
--	strncpy(karg.serial_number, " ", 24);
-+	strscpy_pad(karg.serial_number, " ", sizeof(karg.serial_number));
- 	if (mpt_config(ioc, &cfg) == 0) {
- 		if (cfg.cfghdr.hdr->PageLength > 0) {
- 			/* Issue the second config page request */
-@@ -2408,8 +2406,9 @@ mptctl_hp_hostinfo(MPT_ADAPTER *ioc, unsigned long arg, unsigned int data_size)
- 				if (mpt_config(ioc, &cfg) == 0) {
- 					ManufacturingPage0_t *pdata = (ManufacturingPage0_t *) pbuf;
- 					if (strlen(pdata->BoardTracerNumber) > 1) {
--						strscpy(karg.serial_number,
--							pdata->BoardTracerNumber, 24);
-+						strscpy_pad(karg.serial_number,
-+							pdata->BoardTracerNumber,
-+							sizeof(karg.serial_number));
- 					}
- 				}
- 				dma_free_coherent(&ioc->pcidev->dev,
-@@ -2456,7 +2455,7 @@ mptctl_hp_hostinfo(MPT_ADAPTER *ioc, unsigned long arg, unsigned int data_size)
- 		}
- 	}
- 
--	/* 
-+	/*
- 	 * Gather ISTWI(Industry Standard Two Wire Interface) Data
- 	 */
- 	if ((mf = mpt_get_msg_frame(mptctl_id, ioc)) == NULL) {
+ 		manufacture_reply = data_out + sizeof(struct rep_manu_request);
+-		strncpy(edev->vendor_id, manufacture_reply->vendor_id,
++		strscpy(edev->vendor_id, manufacture_reply->vendor_id,
+ 			SAS_EXPANDER_VENDOR_ID_LEN);
+-		strncpy(edev->product_id, manufacture_reply->product_id,
++		strscpy(edev->product_id, manufacture_reply->product_id,
+ 			SAS_EXPANDER_PRODUCT_ID_LEN);
+-		strncpy(edev->product_rev, manufacture_reply->product_rev,
++		strscpy(edev->product_rev, manufacture_reply->product_rev,
+ 			SAS_EXPANDER_PRODUCT_REV_LEN);
+ 		edev->level = manufacture_reply->sas_format;
+ 		if (manufacture_reply->sas_format) {
+-			strncpy(edev->component_vendor_id,
++			strscpy(edev->component_vendor_id,
+ 				manufacture_reply->component_vendor_id,
+ 				SAS_EXPANDER_COMPONENT_VENDOR_ID_LEN);
+ 			tmp = (u8 *)&manufacture_reply->component_id;
 
 ---
 base-commit: 6465e260f48790807eef06b583b38ca9789b6072
-change-id: 20230927-strncpy-drivers-message-fusion-mptctl-c-5e7558cd93ab
+change-id: 20230927-strncpy-drivers-message-fusion-mptsas-c-f22d5a4082e2
 
 Best regards,
 --
