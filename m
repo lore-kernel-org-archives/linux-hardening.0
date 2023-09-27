@@ -1,131 +1,112 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CD401118
-	for <linux-hardening@vger.kernel.org>; Wed, 27 Sep 2023 05:37:09 +0000 (UTC)
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF81710C2
-	for <linux-hardening@vger.kernel.org>; Tue, 26 Sep 2023 22:37:07 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-59c0dd156e5so214903427b3.3
-        for <linux-hardening@vger.kernel.org>; Tue, 26 Sep 2023 22:37:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1695793027; x=1696397827; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=hQjpvsz8B6fWGFRS892bByH0/TfLx87GHgF3C9zLecE=;
-        b=r8u2u8aUVw4N37UsmIXh1E9gbopc+mFYZC5VAqhp7WzGbub79chi3JA5deBD0vC/+u
-         nqCkF4PSOEQKBvpkkFgVp0EBZEmp/2J2BV5Mnz0S/pluU7CAurBKUVhhhukCp73xFiik
-         TExlJYTBlK9dGnBsnCOvkkuY9CB7YMTHmbs3gtrbN/rsbu/SHlskKKJZGT0/qB82dIIz
-         rZ7TucWHpvCeXgLyi+BafsfLYqQi19dFI2HEZdcrEHN0u2vjsX9h3280/iUlBsxcNQ8J
-         cIHcplL0NJpgirBgYC3LalFGcu6pCAwvB4R7W/mRdUL8v2VM1wr0NQ8zLrQzgLnkkprT
-         phmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695793027; x=1696397827;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hQjpvsz8B6fWGFRS892bByH0/TfLx87GHgF3C9zLecE=;
-        b=aOCHeS3uLpaGqgEdOZffgtUbZQDO2VzL5zWW7bjBNrXJ+pgCKspBI/Azk5ghO0v0P2
-         3X/olkTN0ooeBFZ3zWMlFMvvJzlEIaPBUUBqX8zUpxA+RfozKCvhf22QXYXwZe9WR5DS
-         7EoV0eUc5YS8kieEH1Dpl45PXI7OoDlATNE5ovSKzU/kIktie1dAZE1I5zvkZxrg6yZp
-         2vUfiJ+LLrhNoLCI3IBJASc67RN4M+MOTOIVsIrLV/boXrj12z5fKqWH6BxfXNKDgNAw
-         qnc0DNcWtbJkdI8SX2j4lvtG6+eptVMVGqIaxQxGsSW6HzpO5f+4d3KFCnwCNhrJuQoq
-         2jHA==
-X-Gm-Message-State: AOJu0YzcaU5L0L17BHGvFjZgpuwvUHvnWykyezxoQKkxiLxKUJHV75zQ
-	vnu1izU4HQIeSPJub4jOa2ylpgi/v/kdfrdM2w==
-X-Google-Smtp-Source: AGHT+IF2eTEQrA0AUAFSM3JAhkULrL3njtW9SQSuwZCDD1tPWpemdoG+Uf54B2wD+F5KHhTY4D/ysfwkHPl6cGxMCg==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a25:4293:0:b0:d81:7617:a397 with SMTP
- id p141-20020a254293000000b00d817617a397mr10857yba.9.1695793027117; Tue, 26
- Sep 2023 22:37:07 -0700 (PDT)
-Date: Wed, 27 Sep 2023 05:37:06 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394A914A9F
+	for <linux-hardening@vger.kernel.org>; Wed, 27 Sep 2023 05:50:24 +0000 (UTC)
+Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09A94DD;
+	Tue, 26 Sep 2023 22:50:21 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailout.nyi.internal (Postfix) with ESMTP id 069EA5C279B;
+	Wed, 27 Sep 2023 01:50:19 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Wed, 27 Sep 2023 01:50:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:sender
+	:subject:subject:to:to; s=fm1; t=1695793819; x=1695880219; bh=o7
+	81UB75dWtQPWqWz6T4vyY29QjIlXMO7I9AjykpvSs=; b=YOT4isX4Z7eoYa9AnX
+	A+p+d+XSOzWhESZ3HtZ5f6sQlTcTZ8CrMeGEqmzqdI614EcFxdsaYTaPfsrHPncP
+	hwMC4AOqd2j+thNvvcFUF+CoxfFGfucoKRlRHyOz0NZaeiL4W9I7Gz2kunvnHwaS
+	4Q/9YvxoMperG28X25H3nf8af6f1T2CEHKX6hpkR8Ebx2MQPz2r2gzTu5SIU/5N4
+	Zc8BwIT4MX5KmMeVXUYIBvITzHvAGKRpVK2MDSTVjQrtn0OS3YLGzlxgYKZGGU8c
+	tsG3PMUGlsDG+i7a4U4U3W5+FJh23Jyc0EoEPbTHWUTpn556ioRFqs3SWiADyKui
+	MZCA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm2; t=1695793819; x=1695880219; bh=o781UB75dWtQP
+	WqWz6T4vyY29QjIlXMO7I9AjykpvSs=; b=U1yJVQKvG270QvtV7tXFsPOcaZLLD
+	yEEH2DxH+BOtgfVJJPX+5AawRPDaO9+TPqhh8raF0ml6dxYGFqoG1UmZyKy1VmZN
+	KPT+bnVUmscNnHNdP5PDSx0MzZz2635/ofTrtwtfu9N2a0ICKfoR1K8N7/sdQwcA
+	O9QcI3G3XAmq1pOd4KYqgJrA8ym7Jl46fNVpQqfLG9UbhTYlnfYMUaRV6ii2LLiU
+	1NNsVcsQRWJZHE98+znNbq5/ytyP3em9yfVxJeEFMt799bq694UUVd5PgPnR0HZY
+	wy4HRRppFkWcWMrFPyvd7SpKeaDyuoQuXhXwukboxKgxBDYBf53nIS7/g==
+X-ME-Sender: <xms:mcITZX50sTS5Pr-ILjqro9fQJMD9vZ5yKgHCvUUcbutinozr9z2Tkg>
+    <xme:mcITZc7pVc5RoY9WdgFmGpecTL4V5Q4Vds7CAudgFLpiLwkNZJe1pnTQOuYsTtqRH
+    IhnchUbs7sJmJd_d9Y>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvjedrtddugdellecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
+    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
+    gvrhhnpefhgefhteevtdeviedtgeffueevjeevtedvkefgvdekudfftdefledtudeljeej
+    hfenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdguvggsihgrnhdrohhrghdpghhith
+    hhuhgsrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
+    rhhomheprghrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:mcITZef46y8tcoyWOxRFgYpnQMVjCA9pnVenMPXV6VPbJ_hkt1cJDA>
+    <xmx:mcITZYLw73TUyWwuDs9xMDoh13nl0-yvygoOoMiJh6jBaT_OnxJzEA>
+    <xmx:mcITZbL3WQyKtGLuzdaCoVpoJ3cznnWz1dsvmmJbaW3RDVCLcs_2mQ>
+    <xmx:m8ITZRjKb7WG-BlTVXG_sEcTSG2s2dAahe-0cD8NCNkVqFdej9kiwA>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id D043EB60089; Wed, 27 Sep 2023 01:50:17 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-957-ga1ccdb4cff-fm-20230919.001-ga1ccdb4c
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAIG/E2UC/x2NwQrCMBAFf6Xs2YUYKTH+iojY5Gn30DTsllIp/
- XeDx4FhZieDCoxu3U6KVUzm0uB86iiNr/IBS25M3vmLiz6wLVpS/XJWWaHGk1hioOo8NXV5XuN YYRsnHlxE7nsXhpCp9ariLdv/dX8cxw+rCT1JewAAAA==
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1695793026; l=2217;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=YmUsybfVQe5zWGf5jAxBKfMLPjPHkISPd1MoaRXDQM0=; b=NnPpHhicfwRq3aw0g0ffOiYeu9GpDcJMkqekY6y7VMB3EAjMVg8b06HE/BZGpYy5L/gyLcJUP
- aMjUtWcfbOrCSXGxoVEFAkSnAjny2kZpdesatoBbkprjuWZXvxOIMzT
-X-Mailer: b4 0.12.3
-Message-ID: <20230927-strncpy-drivers-misc-eeprom-idt_89hpesx-c-v1-1-08e3d45b8c05@google.com>
-Subject: [PATCH] eeprom: idt_89hpesx: replace open-coded kmemdup_nul
-From: Justin Stitt <justinstitt@google.com>
-To: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Kees Cook <keescook@chromium.org>, Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.6
+MIME-Version: 1.0
+Message-Id: <b70fa1d5-7f38-4511-ad2a-abe1b1ad5992@app.fastmail.com>
+In-Reply-To: 
+ <20230927-strncpy-drivers-misc-c2port-core-c-v1-1-978f6d220a54@google.com>
+References: 
+ <20230927-strncpy-drivers-misc-c2port-core-c-v1-1-978f6d220a54@google.com>
+Date: Wed, 27 Sep 2023 07:49:56 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Justin Stitt" <justinstitt@google.com>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] c2port: replace deprecated strncpy with strscpy
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+	RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-A malloc + strncpy + manual NUL_termination is just kmemdup_nul. Let's use
-this interface as it is less error-prone and more readable.
+On Wed, Sep 27, 2023, at 07:20, Justin Stitt wrote:
+> `strncpy` is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
+>
+> We expect `c2dev->name` to be NUL-terminated based on its usage with
+> format strings:
+> |       dev_info(c2dev->dev, "C2 port %s removed\n", c2dev->name);
+>
+> Moreover, NUL-padding is _not_ required as c2dev is zero-allocated:
+> |       c2dev = kzalloc(sizeof(struct c2port_device), GFP_KERNEL);
+>
+> Considering the above, a suitable replacement is `strscpy` [2] due to
+> the fact that it guarantees NUL-termination on the destination buffer
+> without unnecessarily NUL-padding.
+>
+> Let's also drop `C2PORT_NAME_LEN - 1` for `sizeof(dest)` which is more
+> idiomatic strscpy usage.
+>
+> Link: 
+> https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings 
+> [1]
+> Link: 
+> https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html 
+> [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-Also drop `csraddr_len` as it is just used in a single place and we can
-just do the arithmetic in-line.
-
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Cc: Kees Cook <keescook@chromium.org>
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Note: build-tested only.
----
- drivers/misc/eeprom/idt_89hpesx.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/misc/eeprom/idt_89hpesx.c b/drivers/misc/eeprom/idt_89hpesx.c
-index 1d1f30b5c426..d807d08e2614 100644
---- a/drivers/misc/eeprom/idt_89hpesx.c
-+++ b/drivers/misc/eeprom/idt_89hpesx.c
-@@ -905,7 +905,7 @@ static ssize_t idt_dbgfs_csr_write(struct file *filep, const char __user *ubuf,
- {
- 	struct idt_89hpesx_dev *pdev = filep->private_data;
- 	char *colon_ch, *csraddr_str, *csrval_str;
--	int ret, csraddr_len;
-+	int ret;
- 	u32 csraddr, csrval;
- 	char *buf;
- 
-@@ -927,21 +927,16 @@ static ssize_t idt_dbgfs_csr_write(struct file *filep, const char __user *ubuf,
- 	 * no new CSR value
- 	 */
- 	if (colon_ch != NULL) {
--		csraddr_len = colon_ch - buf;
--		csraddr_str =
--			kmalloc(csraddr_len + 1, GFP_KERNEL);
-+		/* Copy the register address to the substring buffer */
-+		csraddr_str = kmemdup_nul(buf, colon_ch - buf, GFP_KERNEL);
- 		if (csraddr_str == NULL) {
- 			ret = -ENOMEM;
- 			goto free_buf;
- 		}
--		/* Copy the register address to the substring buffer */
--		strncpy(csraddr_str, buf, csraddr_len);
--		csraddr_str[csraddr_len] = '\0';
- 		/* Register value must follow the colon */
- 		csrval_str = colon_ch + 1;
- 	} else /* if (str_colon == NULL) */ {
- 		csraddr_str = (char *)buf; /* Just to shut warning up */
--		csraddr_len = strnlen(csraddr_str, count);
- 		csrval_str = NULL;
- 	}
- 
-
----
-base-commit: 6465e260f48790807eef06b583b38ca9789b6072
-change-id: 20230927-strncpy-drivers-misc-eeprom-idt_89hpesx-c-b09ed5507b7d
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
-
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
