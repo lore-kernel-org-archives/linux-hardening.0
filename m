@@ -1,112 +1,112 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394A914A9F
-	for <linux-hardening@vger.kernel.org>; Wed, 27 Sep 2023 05:50:24 +0000 (UTC)
-Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09A94DD;
-	Tue, 26 Sep 2023 22:50:21 -0700 (PDT)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailout.nyi.internal (Postfix) with ESMTP id 069EA5C279B;
-	Wed, 27 Sep 2023 01:50:19 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Wed, 27 Sep 2023 01:50:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:sender
-	:subject:subject:to:to; s=fm1; t=1695793819; x=1695880219; bh=o7
-	81UB75dWtQPWqWz6T4vyY29QjIlXMO7I9AjykpvSs=; b=YOT4isX4Z7eoYa9AnX
-	A+p+d+XSOzWhESZ3HtZ5f6sQlTcTZ8CrMeGEqmzqdI614EcFxdsaYTaPfsrHPncP
-	hwMC4AOqd2j+thNvvcFUF+CoxfFGfucoKRlRHyOz0NZaeiL4W9I7Gz2kunvnHwaS
-	4Q/9YvxoMperG28X25H3nf8af6f1T2CEHKX6hpkR8Ebx2MQPz2r2gzTu5SIU/5N4
-	Zc8BwIT4MX5KmMeVXUYIBvITzHvAGKRpVK2MDSTVjQrtn0OS3YLGzlxgYKZGGU8c
-	tsG3PMUGlsDG+i7a4U4U3W5+FJh23Jyc0EoEPbTHWUTpn556ioRFqs3SWiADyKui
-	MZCA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm2; t=1695793819; x=1695880219; bh=o781UB75dWtQP
-	WqWz6T4vyY29QjIlXMO7I9AjykpvSs=; b=U1yJVQKvG270QvtV7tXFsPOcaZLLD
-	yEEH2DxH+BOtgfVJJPX+5AawRPDaO9+TPqhh8raF0ml6dxYGFqoG1UmZyKy1VmZN
-	KPT+bnVUmscNnHNdP5PDSx0MzZz2635/ofTrtwtfu9N2a0ICKfoR1K8N7/sdQwcA
-	O9QcI3G3XAmq1pOd4KYqgJrA8ym7Jl46fNVpQqfLG9UbhTYlnfYMUaRV6ii2LLiU
-	1NNsVcsQRWJZHE98+znNbq5/ytyP3em9yfVxJeEFMt799bq694UUVd5PgPnR0HZY
-	wy4HRRppFkWcWMrFPyvd7SpKeaDyuoQuXhXwukboxKgxBDYBf53nIS7/g==
-X-ME-Sender: <xms:mcITZX50sTS5Pr-ILjqro9fQJMD9vZ5yKgHCvUUcbutinozr9z2Tkg>
-    <xme:mcITZc7pVc5RoY9WdgFmGpecTL4V5Q4Vds7CAudgFLpiLwkNZJe1pnTQOuYsTtqRH
-    IhnchUbs7sJmJd_d9Y>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvjedrtddugdellecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpefhgefhteevtdeviedtgeffueevjeevtedvkefgvdekudfftdefledtudeljeej
-    hfenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdguvggsihgrnhdrohhrghdpghhith
-    hhuhgsrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
-    rhhomheprghrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:mcITZef46y8tcoyWOxRFgYpnQMVjCA9pnVenMPXV6VPbJ_hkt1cJDA>
-    <xmx:mcITZYLw73TUyWwuDs9xMDoh13nl0-yvygoOoMiJh6jBaT_OnxJzEA>
-    <xmx:mcITZbL3WQyKtGLuzdaCoVpoJ3cznnWz1dsvmmJbaW3RDVCLcs_2mQ>
-    <xmx:m8ITZRjKb7WG-BlTVXG_sEcTSG2s2dAahe-0cD8NCNkVqFdej9kiwA>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id D043EB60089; Wed, 27 Sep 2023 01:50:17 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-957-ga1ccdb4cff-fm-20230919.001-ga1ccdb4c
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8579E11CBC
+	for <linux-hardening@vger.kernel.org>; Wed, 27 Sep 2023 05:52:18 +0000 (UTC)
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 635C21A7
+	for <linux-hardening@vger.kernel.org>; Tue, 26 Sep 2023 22:52:16 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d81841ef79bso17847001276.1
+        for <linux-hardening@vger.kernel.org>; Tue, 26 Sep 2023 22:52:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1695793935; x=1696398735; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=PdEyDvEQWoBI92qpF/Uzb1GUaex9NeolFXPHe23E1k8=;
+        b=RzSvcCoZN1JIWrqdM8SYFc/lG7oJ3rZn/MloLV8r/A1Bltyj2o7Kg9r9zusYwajApS
+         GHNqHKIzV+VDBd0d/kLqzwK8kJMeWc7jJohq9aaq9vX8yQDxJWIqnR2TcHZ9ox0X42/9
+         NkgFnitQWnJGaikxL2+WsX+PXSgoOf+DbcgUDwL+A/AU4Vd3LJ31LU1b+ajMd98UrjBG
+         23ITdrNScc2RqBiZB9HC48wVh7nOzisfuWAk9/SPnsbv0Ncl+YBep/uPokNL33cSTeOg
+         oFJuNC4JfH7UEmLfDURfzT82WSWJPCcrpe5DykpT58kwrQRCaJYF5rs9Qnwx6hmVfclQ
+         Nt9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695793935; x=1696398735;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PdEyDvEQWoBI92qpF/Uzb1GUaex9NeolFXPHe23E1k8=;
+        b=Xf0ztPIzzsja3xRuByiFZc245foiktJp8PhdTAqvlqeV8eWQbjL/0cNW6uu1wH1MWH
+         UNn6RBPhA3fZzsKjcc2bffG1zV/ARXd6J2PAE4HjX7IkwVe9lpDYKvCDuE8R5g1GzBDN
+         0FJvCAxPuCTw67Wn3kMBSigyM+pCDfqARxzWuIkLOg1Bb13FXCzjgcbGOFfnTkfsTYvH
+         QzruQ/97GkgN/78X7fPEGWBbt2yb7zSTUesno1OhkJzh27PIGF7X8Xi+N7drQbQnW8x3
+         NdbR4+qphlp6KriEpubydxh42ObiEAEJRdUbyNe/9xqmDSgDJfFI9+3yvtUcDajSCeu6
+         anvg==
+X-Gm-Message-State: AOJu0YwpV0PxQv/cMmW0i1c73KpXOAiAXuOaMFubvaa4aRAHZOshXV3f
+	dPuW+lYrE52ka3wMYezkSL7CGrA3PEr2EVbblA==
+X-Google-Smtp-Source: AGHT+IEaS5LFX+8+6L9Q61zarfCqUXo3huTncRIZR8kYZ9xqH7nQBhWg2JgKaj+jTH+e0xqrs03slPUJ1I5966n0MQ==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a25:cc57:0:b0:d4d:8ade:4dfa with SMTP
+ id l84-20020a25cc57000000b00d4d8ade4dfamr11730ybf.1.1695793935601; Tue, 26
+ Sep 2023 22:52:15 -0700 (PDT)
+Date: Wed, 27 Sep 2023 05:52:14 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Message-Id: <b70fa1d5-7f38-4511-ad2a-abe1b1ad5992@app.fastmail.com>
-In-Reply-To: 
- <20230927-strncpy-drivers-misc-c2port-core-c-v1-1-978f6d220a54@google.com>
-References: 
- <20230927-strncpy-drivers-misc-c2port-core-c-v1-1-978f6d220a54@google.com>
-Date: Wed, 27 Sep 2023 07:49:56 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Justin Stitt" <justinstitt@google.com>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] c2port: replace deprecated strncpy with strscpy
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.6
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAA3DE2UC/x3MwQqDMAwA0F+RnBfQtk7crwwPLkaXQztJpDjEf
+ 7d4fJd3gLEKG7yqA5SzmPxSQfOogL5jWhhlKgZXO1/3rkPbNNH6x0klsxpGMUL5xBwJCVsffOi 75jmPAcqxKs+y3/97OM8L8ryHqG8AAAA=
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1695793934; l=1586;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=wWwjcICs9gtgVAVLbVDl2AzKRTJfFBmL/hPhS0rX2sU=; b=H91kmNzP7h9iUJihNntBjcaYva+p8s04nGgbyn8MlVRybrFRnzz2WT4H/o661VS+FNDHi3FnW
+ uYdMPF/jBmNBYE0aW5zXwz90P8UWU4tGEdGpR3XL4ospVokhUoyAQg2
+X-Mailer: b4 0.12.3
+Message-ID: <20230927-strncpy-drivers-misc-ibmvmc-c-v1-1-29f56cd3a269@google.com>
+Subject: [PATCH] ibmvmc: replace deprecated strncpy with strscpy
+From: Justin Stitt <justinstitt@google.com>
+To: Brad Warrum <bwarrum@linux.ibm.com>, Ritu Agarwal <rituagar@linux.ibm.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
+X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Wed, Sep 27, 2023, at 07:20, Justin Stitt wrote:
-> `strncpy` is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
->
-> We expect `c2dev->name` to be NUL-terminated based on its usage with
-> format strings:
-> |       dev_info(c2dev->dev, "C2 port %s removed\n", c2dev->name);
->
-> Moreover, NUL-padding is _not_ required as c2dev is zero-allocated:
-> |       c2dev = kzalloc(sizeof(struct c2port_device), GFP_KERNEL);
->
-> Considering the above, a suitable replacement is `strscpy` [2] due to
-> the fact that it guarantees NUL-termination on the destination buffer
-> without unnecessarily NUL-padding.
->
-> Let's also drop `C2PORT_NAME_LEN - 1` for `sizeof(dest)` which is more
-> idiomatic strscpy usage.
->
-> Link: 
-> https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings 
-> [1]
-> Link: 
-> https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html 
-> [2]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+`strncpy` is deprecated for use on NUL-terminated destination strings
+[1] and as such we should prefer more robust and less ambiguous string
+interfaces.
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+A suitable replacement is `strscpy` [2] due to the fact that it
+guarantees NUL-termination on the destination buffer without
+unnecessarily NUL-padding.
+
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Note: build-tested only.
+---
+ drivers/misc/ibmvmc.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/drivers/misc/ibmvmc.c b/drivers/misc/ibmvmc.c
+index 2101eb12bcba..6d9ed9325f9f 100644
+--- a/drivers/misc/ibmvmc.c
++++ b/drivers/misc/ibmvmc.c
+@@ -1249,9 +1249,7 @@ static long ibmvmc_ioctl_sethmcid(struct ibmvmc_file_session *session,
+ 		return -EIO;
+ 	}
+ 
+-	/* Make sure buffer is NULL terminated before trying to print it */
+-	memset(print_buffer, 0, HMC_ID_LEN + 1);
+-	strncpy(print_buffer, hmc->hmc_id, HMC_ID_LEN);
++	strscpy(print_buffer, hmc->hmc_id, sizeof(print_buffer));
+ 	pr_info("ibmvmc: sethmcid: Set HMC ID: \"%s\"\n", print_buffer);
+ 
+ 	memcpy(buffer->real_addr_local, hmc->hmc_id, HMC_ID_LEN);
+
+---
+base-commit: 6465e260f48790807eef06b583b38ca9789b6072
+change-id: 20230927-strncpy-drivers-misc-ibmvmc-c-534349716fa4
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
+
