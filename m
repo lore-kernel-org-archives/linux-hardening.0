@@ -1,57 +1,55 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 538A88C08
-	for <linux-hardening@vger.kernel.org>; Wed, 27 Sep 2023 10:43:52 +0000 (UTC)
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 849FB139;
-	Wed, 27 Sep 2023 03:43:50 -0700 (PDT)
-Received: by mail-ej1-x629.google.com with SMTP id a640c23a62f3a-99bdeae1d0aso1376384566b.1;
-        Wed, 27 Sep 2023 03:43:50 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D35D3F9CD
+	for <linux-hardening@vger.kernel.org>; Wed, 27 Sep 2023 12:49:01 +0000 (UTC)
+Received: from mail-io1-xd2d.google.com (mail-io1-xd2d.google.com [IPv6:2607:f8b0:4864:20::d2d])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C573E6;
+	Wed, 27 Sep 2023 05:49:00 -0700 (PDT)
+Received: by mail-io1-xd2d.google.com with SMTP id ca18e2360f4ac-79fa416b7ffso334246339f.2;
+        Wed, 27 Sep 2023 05:49:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695811429; x=1696416229; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ozgRDTC+2UK6mD107LVNtKBM9DQ8506FxPydFp9FLHU=;
-        b=WP8qZHGLln5e3/FHLTK6pZxxr2azrFmDxBAkmMdndcBcsc36I7iOqZO7E1CLMuJbZ5
-         MNxlnR9wvrHC3rT0PTVeKnp+nJFF3oLshQEOR5hCq8UFHSge/3jM0MYLdFQy+QOu5Knc
-         OnzTrHTtKuM1sUksq+3H+Y04cX2V6YzNMuM6zc1Bo9zL2gFTC/0WjR4vHOW7ySn4UwRC
-         VhiBoLHtRYw4adbTTqZEzCNpzhbN8O55xHJYWMU6eyrSidFJvWHplxnSZngq1zCq2ZVa
-         II4NYVnIWOkMEWzk1H8KzU2vg2FsBBLdPRgwgcqPY3O8c2FS1Caz27qPLK308MU7ZYNb
-         UQ4Q==
+        d=gmail.com; s=20230601; t=1695818940; x=1696423740; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hEv5gTzCBSNWos/XoZhX+HMntbjZFYSz9lEJ4TMjS+0=;
+        b=T8R+UQ/+RXlETDER3JBxyVIu7CU75u/gBW6s1FYuWgZ5K9zag9VicAp/SYEx7T1lLM
+         /NkgbyI0qs3PE/MT0kwAhgOxLB/PC2sAXQkyxc2LDFIUQP4Z4G/QaDKTWoEk1ARNv8nr
+         PiS1r6nlVqkE/2K1uoY5V3DMYHhtnEOohl+fkLczeIp6cY5CyIO+Q/GwRRSl+Oh6emCk
+         lh6HRyp/XfcZ4yA9lS9gx/2BuVrZU7j2EsdLk1wUOTtABkI5XYj6tw62aUS4NvtHzB+A
+         5AQu2C0wDT6K6e6N93xaBQGrABdQvM+fxbYJ4OZ4vPdBD299AeTYi7vQB5ufbZOUauDn
+         A/gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695811429; x=1696416229;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ozgRDTC+2UK6mD107LVNtKBM9DQ8506FxPydFp9FLHU=;
-        b=nSV/UJyc6i6gaYLNp2ZGE1eduqU7iiIMvdkIaDHPxBXsWZvCg/lxHX/QbCxgYe5+Yj
-         QrW7NRpOUKAQKku6+Cn2eveECaOvHk+vgfnVAvgmFWbxJcv2IqKSeS3dTTA9HcEz8otn
-         uvsXv1D5RFf1OU7SFme6tKWG4QCygq/dwqYG9ief/FWVDxZlVenujXLRIfx/a7lccJgC
-         s6MyflqkyXqFHZfgv+5F/ooth2Z9OOweHBcBxYtemOX6k4rqi8lHR4epbfRNLaxSIRW8
-         nuD4wz2uyCtbytq/q+O0Hikf9UNX1EHeww6P6L7e8plrt04XDZdEJq1gImWlpvf/Et5I
-         QCmA==
-X-Gm-Message-State: AOJu0YxaPuEaGEmMcBPo2Q4ML+hgGUVMpihHrcg8lJmVSiOvV4qpniR5
-	XLBzs3bd3Z4I0MTY68I5eXMGEl8bVpI=
-X-Google-Smtp-Source: AGHT+IFrfTl0CPJDAs5rBjmyIwqBNlUP129i/O3iWILp8f0G9qcw0Tg7SqobzwuGvCR0qdEB+F9qWg==
-X-Received: by 2002:a17:906:d41:b0:9ae:4843:66ee with SMTP id r1-20020a1709060d4100b009ae484366eemr1400373ejh.36.1695811428590;
-        Wed, 27 Sep 2023 03:43:48 -0700 (PDT)
-Received: from localhost (81-226-149-122-no518.tbcn.telia.com. [81.226.149.122])
-        by smtp.gmail.com with ESMTPSA id lw3-20020a170906bcc300b009ade1a4f795sm9013116ejb.168.2023.09.27.03.43.47
+        d=1e100.net; s=20230601; t=1695818940; x=1696423740;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hEv5gTzCBSNWos/XoZhX+HMntbjZFYSz9lEJ4TMjS+0=;
+        b=Rxzr8lyK5SlvjOJGQdjNrJN/Oiapx7HjM1GhDwQ28nmYUIljPrsZTlaV+Pc79WbBVo
+         uwDsASCRjHd3LM91B/yRqzirI+aejrFKgZGoEDQs6DjLvx+Z8TOhrNxqY7sGjm0hZP/0
+         03gyIdLQ5COZajUoNh+TGjyvhwc4mTJ4rpxRGtXpWzW4w1RJyFhfqNi0lf3GaARmAlBL
+         Yn+Cz2Zjju1oLoLqnHqf5ZIE/EmRFbJwFf4jNY17DOrVTHZcGZ5tEHQhhWpAXGq8u4BZ
+         xtjvg+6i4u8Jl+YVPKANOaolK38hfZ5xjy0Zd/zgxHd/ofVUZZHvD9a4NFBU6ASpkcHx
+         5jVA==
+X-Gm-Message-State: AOJu0YyriwZ/dJyGDbqGmbBqA85+whVVNzjueaCduRBOs+4A6/Ie/DUh
+	IThcn8+6QxVAhpaXDeYBY/o=
+X-Google-Smtp-Source: AGHT+IGBWI9TSRFdCwoD10pgG78eddGuSS6x0I2f47WdbCulTSWC+kijzDLc/jUMknyMOxBPbLj1Ig==
+X-Received: by 2002:a05:6602:3355:b0:79f:cdb4:3f87 with SMTP id c21-20020a056602335500b0079fcdb43f87mr1877939ioz.4.1695818939692;
+        Wed, 27 Sep 2023 05:48:59 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id j19-20020a6bf913000000b007836252a084sm3895077iog.48.2023.09.27.05.48.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Sep 2023 03:43:48 -0700 (PDT)
-Date: Wed, 27 Sep 2023 12:43:46 +0200
-From: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+        Wed, 27 Sep 2023 05:48:58 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Wed, 27 Sep 2023 05:48:56 -0700
+From: Guenter Roeck <linux@roeck-us.net>
 To: Justin Stitt <justinstitt@google.com>
-Cc: David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] drm/gma500: refactor deprecated strncpy
-Message-ID: <fmvdws32xrjj3a3vqwcghnniojcglrpzs4mk5cw67vog6vlwta@zmoz6bv2i5iw>
-Mail-Followup-To: Justin Stitt <justinstitt@google.com>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org, 
+Cc: Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20230919-drivers-gpu-drm-gma500-oaktrail_lvds_i2c-c-v2-1-9ebe6983b4cb@google.com>
+Subject: Re: [PATCH v3] hwmon: refactor deprecated strncpy
+Message-ID: <9837d8dd-d802-4d5d-bca7-6e029658ba76@roeck-us.net>
+References: <20230921-strncpy-drivers-hwmon-acpi_power_meter-c-v3-1-307552c6ec3f@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -60,62 +58,38 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230919-drivers-gpu-drm-gma500-oaktrail_lvds_i2c-c-v2-1-9ebe6983b4cb@google.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+In-Reply-To: <20230921-strncpy-drivers-hwmon-acpi_power_meter-c-v3-1-307552c6ec3f@google.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Tue, Sep 19, 2023 at 04:41:16AM +0000, Justin Stitt wrote:
+On Thu, Sep 21, 2023 at 05:41:46AM +0000, Justin Stitt wrote:
 > `strncpy` is deprecated for use on NUL-terminated destination strings [1].
 > 
-> We should prefer more robust and less ambiguous string interfaces.
+> Let's refactor this kcalloc() + strncpy() into a kmemdup_nul() which has
+> more obvious behavior and is less error prone.
 > 
-> Since `chan->base.name` is expected to be NUL-terminated, a suitable
-> replacement is `strscpy` [2] due to the fact that it guarantees
-> NUL-termination on the destination buffer without also unnecessarily
-> NUL-padding (since `chan` is kzalloc'd already).
+> To avoid truncating the last byte supply `...length + 1` to
+> kmemdup_nul() as `element->string.length` does not account for the
+> trailing null as made obvious from it's definition (and associated
+> comment):
+> |       u32 length;	/* # of bytes in string, excluding trailing null */
+> 
+> ... this is precisely what the original kcalloc invocation did as well.
 > 
 > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
 > Link: https://github.com/KSPP/linux/issues/90
 > Cc: linux-hardening@vger.kernel.org
 > Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-Applied to drm-misc-next.
+I have multiple patches with the hwmon: prefix but no driver,
+like this one, suggesting the change is in the hwmon core,
+when in reality it is in some hwmon driver.
+I am not going to apply any of those, and I am not even going to
+look into them.
 
-Thanks
-Patrik
-
-> ---
-> Changes in v2:
-> - use sizeof() instead of I2C_NAME_SIZE (thanks Kees, Patrik)
-> - Link to v1: https://lore.kernel.org/r/20230914-drivers-gpu-drm-gma500-oaktrail_lvds_i2c-c-v1-1-0a53a076ce20@google.com
-> ---
->  drivers/gpu/drm/gma500/oaktrail_lvds_i2c.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/gma500/oaktrail_lvds_i2c.c b/drivers/gpu/drm/gma500/oaktrail_lvds_i2c.c
-> index 06b5b2d70d48..939c53fd09e8 100644
-> --- a/drivers/gpu/drm/gma500/oaktrail_lvds_i2c.c
-> +++ b/drivers/gpu/drm/gma500/oaktrail_lvds_i2c.c
-> @@ -141,7 +141,7 @@ struct gma_i2c_chan *oaktrail_lvds_i2c_init(struct drm_device *dev)
->  
->  	chan->drm_dev = dev;
->  	chan->reg = dev_priv->lpc_gpio_base;
-> -	strncpy(chan->base.name, "gma500 LPC",  I2C_NAME_SIZE - 1);
-> +	strscpy(chan->base.name, "gma500 LPC",  sizeof(chan->base.name));
->  	chan->base.owner = THIS_MODULE;
->  	chan->base.algo_data = &chan->algo;
->  	chan->base.dev.parent = dev->dev;
-> 
-> ---
-> base-commit: 3669558bdf354cd352be955ef2764cde6a9bf5ec
-> change-id: 20230914-drivers-gpu-drm-gma500-oaktrail_lvds_i2c-c-a53c6d8bd62f
-> 
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
-> 
+Guenter
