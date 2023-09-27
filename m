@@ -1,317 +1,175 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 347F879FE
-	for <linux-hardening@vger.kernel.org>; Wed, 27 Sep 2023 03:42:29 +0000 (UTC)
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEB715FFD
-	for <linux-hardening@vger.kernel.org>; Tue, 26 Sep 2023 20:42:25 -0700 (PDT)
-Received: by mail-pl1-x636.google.com with SMTP id d9443c01a7336-1c328b53aeaso91359945ad.2
-        for <linux-hardening@vger.kernel.org>; Tue, 26 Sep 2023 20:42:25 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F292F17EE
+	for <linux-hardening@vger.kernel.org>; Wed, 27 Sep 2023 04:06:26 +0000 (UTC)
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 743856198
+	for <linux-hardening@vger.kernel.org>; Tue, 26 Sep 2023 21:06:24 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-59c0dd156e5so212354257b3.3
+        for <linux-hardening@vger.kernel.org>; Tue, 26 Sep 2023 21:06:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695786145; x=1696390945; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=q1S2QHXg38kETw2Vrnc3ITAH/+VCqfp/XhwxJe7fVnI=;
-        b=k0E+QxA4OV8E5mylkojffngpwkYwv8qFWaHbI/u9tlv2Eui5TWOn7AGnT2TVhC/Oju
-         D8aSUUT7g7I3iyZNtsHfMNqOQb90FVcHzcDKep/BaUWwF3V8IRyAEo/RgKhxhvvPxzAT
-         aBRvTqi//8cZF9+LD42mrDAUkPuwbZKsRGspY=
+        d=google.com; s=20230601; t=1695787583; x=1696392383; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=muQRz7J2lzpUyBnJLzYwr4LEEEw5RWh2QZi+e4QQ9Ck=;
+        b=0XzGvJa1L+yZh4aZHanhTfTUEnsEt27cRpli89EBL0zcaXPqvll0mmqDOnRPV6e+8i
+         7/0Zwa3xX8xy/xuFQiQESpcmJe7o8iYldMbYe6IKDJXpz3lEvIG3+C8Xc4G7G5OFrS6m
+         V2ZrrR+/q6ye6xKeNOjEynx/wvAGdjIK4WUlIBthOCKZBr78jQzbEPODyM56D+u2hjGn
+         G0Iju5uho8/jtuMCy5xnQgKIOK1BAc18DWL4rSKFdRNP0xxv/vjxmii8gKMaMvwGeRlj
+         DII6zuOWUjS9qUfFK9jzI8LenEnCDqOoqQh/KMagyXC0ZKYmBUBpghB/+czd/69x+X7L
+         RcFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695786145; x=1696390945;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=q1S2QHXg38kETw2Vrnc3ITAH/+VCqfp/XhwxJe7fVnI=;
-        b=UIxarAHO/Gu6gpFJOkQqgXmMtaz4Zn3bmS2+6PKQU6MzgEt5qaxi72W7O3D6BAPW5Y
-         B0sprDTeMZLXIV54pxtHnrLF1n2GWd+ixM2DByp47Jz6RCAzOj+/3A/KSKQyBgGq/BxD
-         RdsTvPqqJShop7sTgKzG/G7BIR8eB6AWtbQ0L90BgS45f0K2PB0stUhAGOkcT1rC0R91
-         Fj7Iw+z7qAla/hdk3+HFBBAL+C8l3y9Inp7kHpgIdDnKn6e5A7rmzv9CViu5eMJVPVeC
-         GV5PQPi75kNk8v+hOrt9lD2jK+O5KEbhWE5vSogqxnHYO5Uge8dmu0FwH+/Oi+VpfNI8
-         xLMg==
-X-Gm-Message-State: AOJu0Yz1LhO8P+Tp7ZSOn+VRlswXxC6t8P3zS4MVv6or9aDUukrfR9gh
-	jY543Qh9PnQeQXdw+iWJiMbepg==
-X-Google-Smtp-Source: AGHT+IFe7SiLGGQxcesMYUTekhGYP9tx7X00nTSSjxQpTyzG+5pYTZ/MtjR/GtWHi7oYLAWe7SLIfQ==
-X-Received: by 2002:a17:902:db0a:b0:1c6:2dbb:e5fa with SMTP id m10-20020a170902db0a00b001c62dbbe5famr755412plx.44.1695786145303;
-        Tue, 26 Sep 2023 20:42:25 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id iz19-20020a170902ef9300b001c3bc7b8816sm11900661plb.284.2023.09.26.20.42.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Sep 2023 20:42:24 -0700 (PDT)
-From: Kees Cook <keescook@chromium.org>
-To: Eric Biederman <ebiederm@xmission.com>
-Cc: Kees Cook <keescook@chromium.org>,
-	Sebastian Ott <sebott@redhat.com>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Pedro Falcato <pedro.falcato@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v3 1/4] binfmt_elf: Support segments with 0 filesz and misaligned starts
-Date: Tue, 26 Sep 2023 20:42:18 -0700
-Message-Id: <20230927034223.986157-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230927033634.make.602-kees@kernel.org>
-References: <20230927033634.make.602-kees@kernel.org>
+        d=1e100.net; s=20230601; t=1695787583; x=1696392383;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=muQRz7J2lzpUyBnJLzYwr4LEEEw5RWh2QZi+e4QQ9Ck=;
+        b=DVt9n7Dllzwnl+oC18GcYzo3+mQEkFML100fk/uUJTYPqUvoKkNm0BQWL3AsBqiuHR
+         QOWqAMW2SvmVJC6T1uJWZgTBQEZpU9sSbIw3Idvvtp7molXRLXzumjAfUTgnrmyfGwU4
+         TXR/d2XrhRkxEygUC5GClhrS3/uPGVYqZRAiuvpx8IvsBdmOYqA8cBQB+rh/gKRswRwi
+         5sjdL1kQYWfau5kQo4asyxar7im7lRmWnQWqce2B9OOQ7OlzDRWR5igTRdjIO2kJMmZx
+         XvK38NBvQ1r8eJAvrBL15oQI4BYjryIfIL4XKqpZjrhtJAV6Zbsl/P0ALy6URqa4PMKe
+         1z3g==
+X-Gm-Message-State: AOJu0Yy5wszQ9Kgj4VgHdB7QJTtmk64sbkBog+dV7a02TxBQmkC6DLYQ
+	RQmQ1bM6ESJtMsRnmd3roPfHQMf/F43VRcrMww==
+X-Google-Smtp-Source: AGHT+IGsXNoWWYJOPzCYKtauH719o/KetAshJi2wOaDvi+H+P1j+pOhifslLD+fTpHe+INzB6DLUTvY3yrJWyDOwWg==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a81:e308:0:b0:59f:2323:acb5 with SMTP
+ id q8-20020a81e308000000b0059f2323acb5mr12644ywl.3.1695787583729; Tue, 26 Sep
+ 2023 21:06:23 -0700 (PDT)
+Date: Wed, 27 Sep 2023 04:06:09 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8056; i=keescook@chromium.org;
- h=from:subject; bh=17HFsxzRR6qjNPl2OqeDyONMEClWu0Ld8l5K3CgB/PI=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlE6Sd9ky4C5SoI1ZcjBN8kT+abWcWJ1uQcH9Lv
- 1XdD+58PfSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZROknQAKCRCJcvTf3G3A
- JoKdEACLlARnwXh8gO+l0ringMMre5I4XKiCn1NVJQv/JS/kN/l3wYxfL7OoFGJto2s+6iml7nK
- peWKblSMEhaNZAO8qfqYUyi/ZpP3RBKGBcBlze989hvAGAq75DOpEdN8PoeowwFXFUbACsQcX8Q
- OtIJfFZIiP6qNwdHVe2tudNOTtW5glJyjdBoEm8Bs0tLgHa+H8PDBqU2e+SCFQQzYLktWLPY1DQ
- Rt1+dVHxoom31wssNi01Pm2Fwna3qyPOWL8xB162Mq+0lTRlxBsLJJEfDYn3xdeVPLs3l+5xGYB
- u+DgPFiv2QGDibshSWyYSvsaCmG5jLBuIbV37VJPE9rnj/DM7N/PHGkV2EMgUzNuHcPtUfr414T
- jM5KuTByaqkRJia081X3TfoAawDH9SPSRrs8fAKq1ErKhi81NdP2bljkE7VknEsJ4FfLBb0rhts
- ciyyJj4tpRVZek8NF6AxjqZrIvV0XSK8OO3qntjbUkVGX6p+XCrW8peffqsynyr2eV0D8Io0EQg
- YZ3nGO5w1nG6RxWJYAP51wZZ74RhpWRfOxDkqOxu7XG345mE0IJgdel6mb87HZhY+i7W/TmcfVl
- 5rlv5Ll1/Vne3C9HV5g3tHhcOdIzX0C2TpVOSyEa4z4b/2ru9eR7hJdsF7O6potoe4OVwkXAkxr zsu/qJWtB/3bjDQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIADCqE2UC/x2N0QrCMAxFf2Xk2cDsKHP+ivhQ00wDrpakG8rYv
+ 9vt8cA996xgrMIG12YF5UVMPqnC+dQAvUJ6MkqsDK51XTu4Hq1oovzDqLKwGk5sFupsnHcVp1y ovJHQc+/9heLQhQfUt6w8yvco3e7b9gcnFoW+eQAAAA==
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1695787582; l=4204;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=QWt5IYuPT1K3lDjtegiynEZCkUucvHzztTM0T9agtnc=; b=ZCWCZUT8EBoFkt5LsljAQshOVImItYimTU2LI5U7jKMuSeL2a2rUgBRthWA0DILUqU9Q4gtrl
+ GBz5dkv7YDvDJrqmtxK8mN5zTIdRo5Im4nuTxY5F8Kh4Vm6KQRy8MCY
+X-Mailer: b4 0.12.3
+Message-ID: <20230927-strncpy-drivers-message-fusion-mptctl-c-v1-1-bb2eddc1743c@google.com>
+Subject: [PATCH] scsi: message: fusion: replace deprecated strncpy with strscpy_pad
+From: Justin Stitt <justinstitt@google.com>
+To: Sathya Prakash <sathya.prakash@broadcom.com>, 
+	Sreekanth Reddy <sreekanth.reddy@broadcom.com>, 
+	Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>
+Cc: MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Kees Cook <keescook@chromium.org>, Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
+X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.6
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-From: "Eric W. Biederman" <ebiederm@xmission.com>
+`strncpy` is deprecated for use on NUL-terminated destination strings
+[1] and as such we should prefer more robust and less ambiguous string
+interfaces.
 
-Implement a helper elf_load() that wraps elf_map() and performs all
-of the necessary work to ensure that when "memsz > filesz" the bytes
-described by "memsz > filesz" are zeroed.
+Since all these structs are copied out to userspace let's keep them
+NUL-padded by using `strscpy_pad` which guarantees NUL-termination of
+the destination buffer while also providing the NUL-padding behavior
+that strncpy has.
 
-An outstanding issue is if the first segment has filesz 0, and has a
-randomized location. But that is the same as today.
+Let's also opt to use the more idiomatic strscpy usage of:
+`dest, src, sizeof(dest)` in cases where the compiler can determine the
+size of the destination buffer. Do this for all cases of strscpy...() in
+this file.
 
-In this change I replaced an open coded padzero() that did not clear
-all of the way to the end of the page, with padzero() that does.
+To be abundantly sure we don't leak stack data out to user space let's
+also change a strscpy to strscpy_pad. This strscpy was introduced in
+Commit dbe37c71d1246ec2 ("scsi: message: fusion: Replace all
+non-returning strlcpy() with strscpy()")
 
-I also stopped checking the return of padzero() as there is at least
-one known case where testing for failure is the wrong thing to do.
-It looks like binfmt_elf_fdpic may have the proper set of tests
-for when error handling can be safely completed.
+Note that since we are creating these structs with a copy_from_user()
+and modifying fields and then copying back out to the user it is
+probably OK not to explicitly NUL-pad everything as any data leak is
+probably just data from the user themselves. If this is too eager, let's
+opt for `strscpy` which is still in the spirit of removing deprecated
+strncpy usage treewide.
 
-I found a couple of commits in the old history
-https://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git,
-that look very interesting in understanding this code.
-
-commit 39b56d902bf3 ("[PATCH] binfmt_elf: clearing bss may fail")
-commit c6e2227e4a3e ("[SPARC64]: Missing user access return value checks in fs/binfmt_elf.c and fs/compat.c")
-commit 5bf3be033f50 ("v2.4.10.1 -> v2.4.10.2")
-
-Looking at commit 39b56d902bf3 ("[PATCH] binfmt_elf: clearing bss may fail"):
->  commit 39b56d902bf35241e7cba6cc30b828ed937175ad
->  Author: Pavel Machek <pavel@ucw.cz>
->  Date:   Wed Feb 9 22:40:30 2005 -0800
->
->     [PATCH] binfmt_elf: clearing bss may fail
->
->     So we discover that Borland's Kylix application builder emits weird elf
->     files which describe a non-writeable bss segment.
->
->     So remove the clear_user() check at the place where we zero out the bss.  I
->     don't _think_ there are any security implications here (plus we've never
->     checked that clear_user() return value, so whoops if it is a problem).
->
->     Signed-off-by: Pavel Machek <pavel@suse.cz>
->     Signed-off-by: Andrew Morton <akpm@osdl.org>
->     Signed-off-by: Linus Torvalds <torvalds@osdl.org>
-
-It seems pretty clear that binfmt_elf_fdpic with skipping clear_user() for
-non-writable segments and otherwise calling clear_user(), aka padzero(),
-and checking it's return code is the right thing to do.
-
-I just skipped the error checking as that avoids breaking things.
-
-And notably, it looks like Borland's Kylix died in 2005 so it might be
-safe to just consider read-only segments with memsz > filesz an error.
-
-Reported-by: Sebastian Ott <sebott@redhat.com>
-Reported-by: Thomas Weißschuh <linux@weissschuh.net>
-Closes: https://lkml.kernel.org/r/20230914-bss-alloc-v1-1-78de67d2c6dd@weissschuh.net
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-Link: https://lore.kernel.org/r/87sf71f123.fsf@email.froward.int.ebiederm.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Cc: Kees Cook <keescook@chromium.org>
+Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
- fs/binfmt_elf.c | 111 +++++++++++++++++++++---------------------------
- 1 file changed, 48 insertions(+), 63 deletions(-)
+Note: build-tested only.
+---
+ drivers/message/fusion/mptctl.c | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index 7b3d2d491407..2a615f476e44 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -110,25 +110,6 @@ static struct linux_binfmt elf_format = {
+diff --git a/drivers/message/fusion/mptctl.c b/drivers/message/fusion/mptctl.c
+index dd028df4b283..9f3999750c23 100644
+--- a/drivers/message/fusion/mptctl.c
++++ b/drivers/message/fusion/mptctl.c
+@@ -1328,8 +1328,8 @@ mptctl_getiocinfo (MPT_ADAPTER *ioc, unsigned long arg, unsigned int data_size)
  
- #define BAD_ADDR(x) (unlikely((unsigned long)(x) >= TASK_SIZE))
+ 	/* Set the Version Strings.
+ 	 */
+-	strncpy (karg->driverVersion, MPT_LINUX_PACKAGE_NAME, MPT_IOCTL_VERSION_LENGTH);
+-	karg->driverVersion[MPT_IOCTL_VERSION_LENGTH-1]='\0';
++	strscpy_pad(karg->driverVersion, MPT_LINUX_PACKAGE_NAME,
++		    sizeof(karg->driverVersion));
  
--static int set_brk(unsigned long start, unsigned long end, int prot)
--{
--	start = ELF_PAGEALIGN(start);
--	end = ELF_PAGEALIGN(end);
--	if (end > start) {
--		/*
--		 * Map the last of the bss segment.
--		 * If the header is requesting these pages to be
--		 * executable, honour that (ppc32 needs this).
--		 */
--		int error = vm_brk_flags(start, end - start,
--				prot & PROT_EXEC ? VM_EXEC : 0);
--		if (error)
--			return error;
--	}
--	current->mm->start_brk = current->mm->brk = end;
--	return 0;
--}
--
- /* We need to explicitly zero any fractional pages
-    after the data section (i.e. bss).  This would
-    contain the junk from the file that should not
-@@ -406,6 +387,51 @@ static unsigned long elf_map(struct file *filep, unsigned long addr,
- 	return(map_addr);
- }
+ 	karg->busChangeEvent = 0;
+ 	karg->hostId = ioc->pfacts[port].PortSCSIID;
+@@ -1493,10 +1493,8 @@ mptctl_readtest (MPT_ADAPTER *ioc, unsigned long arg)
+ #else
+ 	karg.chip_type = ioc->pcidev->device;
+ #endif
+-	strncpy (karg.name, ioc->name, MPT_MAX_NAME);
+-	karg.name[MPT_MAX_NAME-1]='\0';
+-	strncpy (karg.product, ioc->prod_name, MPT_PRODUCT_LENGTH);
+-	karg.product[MPT_PRODUCT_LENGTH-1]='\0';
++	strscpy_pad(karg.name, ioc->name, sizeof(karg.name));
++	strscpy_pad(karg.product, ioc->prod_name, sizeof(karg.product));
  
-+static unsigned long elf_load(struct file *filep, unsigned long addr,
-+		const struct elf_phdr *eppnt, int prot, int type,
-+		unsigned long total_size)
-+{
-+	unsigned long zero_start, zero_end;
-+	unsigned long map_addr;
-+
-+	if (eppnt->p_filesz) {
-+		map_addr = elf_map(filep, addr, eppnt, prot, type, total_size);
-+		if (BAD_ADDR(map_addr))
-+			return map_addr;
-+		if (eppnt->p_memsz > eppnt->p_filesz) {
-+			zero_start = map_addr + ELF_PAGEOFFSET(eppnt->p_vaddr) +
-+				eppnt->p_filesz;
-+			zero_end = map_addr + ELF_PAGEOFFSET(eppnt->p_vaddr) +
-+				eppnt->p_memsz;
-+
-+			/* Zero the end of the last mapped page */
-+			padzero(zero_start);
-+		}
-+	} else {
-+		map_addr = zero_start = ELF_PAGESTART(addr);
-+		zero_end = zero_start + ELF_PAGEOFFSET(eppnt->p_vaddr) +
-+			eppnt->p_memsz;
-+	}
-+	if (eppnt->p_memsz > eppnt->p_filesz) {
-+		/*
-+		 * Map the last of the segment.
-+		 * If the header is requesting these pages to be
-+		 * executable, honour that (ppc32 needs this).
-+		 */
-+		int error;
-+
-+		zero_start = ELF_PAGEALIGN(zero_start);
-+		zero_end = ELF_PAGEALIGN(zero_end);
-+
-+		error = vm_brk_flags(zero_start, zero_end - zero_start,
-+				     prot & PROT_EXEC ? VM_EXEC : 0);
-+		if (error)
-+			map_addr = error;
-+	}
-+	return map_addr;
-+}
-+
-+
- static unsigned long total_mapping_size(const struct elf_phdr *phdr, int nr)
- {
- 	elf_addr_t min_addr = -1;
-@@ -829,7 +855,6 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 	struct elf_phdr *elf_ppnt, *elf_phdata, *interp_elf_phdata = NULL;
- 	struct elf_phdr *elf_property_phdata = NULL;
- 	unsigned long elf_bss, elf_brk;
--	int bss_prot = 0;
- 	int retval, i;
- 	unsigned long elf_entry;
- 	unsigned long e_entry;
-@@ -1040,33 +1065,6 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 		if (elf_ppnt->p_type != PT_LOAD)
- 			continue;
+ 	/* Copy the data from kernel memory to user memory
+ 	 */
+@@ -2394,7 +2392,7 @@ mptctl_hp_hostinfo(MPT_ADAPTER *ioc, unsigned long arg, unsigned int data_size)
+ 	cfg.dir = 0;	/* read */
+ 	cfg.timeout = 10;
  
--		if (unlikely (elf_brk > elf_bss)) {
--			unsigned long nbyte;
--
--			/* There was a PT_LOAD segment with p_memsz > p_filesz
--			   before this one. Map anonymous pages, if needed,
--			   and clear the area.  */
--			retval = set_brk(elf_bss + load_bias,
--					 elf_brk + load_bias,
--					 bss_prot);
--			if (retval)
--				goto out_free_dentry;
--			nbyte = ELF_PAGEOFFSET(elf_bss);
--			if (nbyte) {
--				nbyte = ELF_MIN_ALIGN - nbyte;
--				if (nbyte > elf_brk - elf_bss)
--					nbyte = elf_brk - elf_bss;
--				if (clear_user((void __user *)elf_bss +
--							load_bias, nbyte)) {
--					/*
--					 * This bss-zeroing can fail if the ELF
--					 * file specifies odd protections. So
--					 * we don't check the return value
--					 */
--				}
--			}
--		}
--
- 		elf_prot = make_prot(elf_ppnt->p_flags, &arch_state,
- 				     !!interpreter, false);
- 
-@@ -1162,7 +1160,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 			}
+-	strncpy(karg.serial_number, " ", 24);
++	strscpy_pad(karg.serial_number, " ", sizeof(karg.serial_number));
+ 	if (mpt_config(ioc, &cfg) == 0) {
+ 		if (cfg.cfghdr.hdr->PageLength > 0) {
+ 			/* Issue the second config page request */
+@@ -2408,8 +2406,9 @@ mptctl_hp_hostinfo(MPT_ADAPTER *ioc, unsigned long arg, unsigned int data_size)
+ 				if (mpt_config(ioc, &cfg) == 0) {
+ 					ManufacturingPage0_t *pdata = (ManufacturingPage0_t *) pbuf;
+ 					if (strlen(pdata->BoardTracerNumber) > 1) {
+-						strscpy(karg.serial_number,
+-							pdata->BoardTracerNumber, 24);
++						strscpy_pad(karg.serial_number,
++							pdata->BoardTracerNumber,
++							sizeof(karg.serial_number));
+ 					}
+ 				}
+ 				dma_free_coherent(&ioc->pcidev->dev,
+@@ -2456,7 +2455,7 @@ mptctl_hp_hostinfo(MPT_ADAPTER *ioc, unsigned long arg, unsigned int data_size)
  		}
- 
--		error = elf_map(bprm->file, load_bias + vaddr, elf_ppnt,
-+		error = elf_load(bprm->file, load_bias + vaddr, elf_ppnt,
- 				elf_prot, elf_flags, total_size);
- 		if (BAD_ADDR(error)) {
- 			retval = IS_ERR_VALUE(error) ?
-@@ -1217,10 +1215,8 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 		if (end_data < k)
- 			end_data = k;
- 		k = elf_ppnt->p_vaddr + elf_ppnt->p_memsz;
--		if (k > elf_brk) {
--			bss_prot = elf_prot;
-+		if (k > elf_brk)
- 			elf_brk = k;
--		}
  	}
  
- 	e_entry = elf_ex->e_entry + load_bias;
-@@ -1232,18 +1228,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 	start_data += load_bias;
- 	end_data += load_bias;
- 
--	/* Calling set_brk effectively mmaps the pages that we need
--	 * for the bss and break sections.  We must do this before
--	 * mapping in the interpreter, to make sure it doesn't wind
--	 * up getting placed where the bss needs to go.
--	 */
--	retval = set_brk(elf_bss, elf_brk, bss_prot);
--	if (retval)
--		goto out_free_dentry;
--	if (likely(elf_bss != elf_brk) && unlikely(padzero(elf_bss))) {
--		retval = -EFAULT; /* Nobody gets to see this, but.. */
--		goto out_free_dentry;
--	}
-+	current->mm->start_brk = current->mm->brk = ELF_PAGEALIGN(elf_brk);
- 
- 	if (interpreter) {
- 		elf_entry = load_elf_interp(interp_elf_ex,
--- 
-2.34.1
+-	/* 
++	/*
+ 	 * Gather ISTWI(Industry Standard Two Wire Interface) Data
+ 	 */
+ 	if ((mf = mpt_get_msg_frame(mptctl_id, ioc)) == NULL) {
+
+---
+base-commit: 6465e260f48790807eef06b583b38ca9789b6072
+change-id: 20230927-strncpy-drivers-message-fusion-mptctl-c-5e7558cd93ab
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
 
