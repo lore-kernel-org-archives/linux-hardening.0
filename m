@@ -1,93 +1,179 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DC1017EE
-	for <linux-hardening@vger.kernel.org>; Wed, 27 Sep 2023 01:18:32 +0000 (UTC)
-Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8F3630EB
-	for <linux-hardening@vger.kernel.org>; Tue, 26 Sep 2023 18:18:30 -0700 (PDT)
-Received: by mail-il1-x134.google.com with SMTP id e9e14a558f8ab-34f69780037so5833145ab.1
-        for <linux-hardening@vger.kernel.org>; Tue, 26 Sep 2023 18:18:30 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 487631078B
+	for <linux-hardening@vger.kernel.org>; Wed, 27 Sep 2023 03:42:27 +0000 (UTC)
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E0113A95
+	for <linux-hardening@vger.kernel.org>; Tue, 26 Sep 2023 20:42:25 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-693375d2028so301117b3a.2
+        for <linux-hardening@vger.kernel.org>; Tue, 26 Sep 2023 20:42:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1695777510; x=1696382310; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pSK45h5LTS9VqkVC57gaj2Wd82aeyGKZrEYe4dJCVic=;
-        b=bxVM6N7U4F+Ynjj38INwi6ASqm3IBKUZ2yJDT7Ckbee+wq9E3UZNBRzyGfQcYS34Zm
-         390zUF6zyX1jXsJs0qezpAIk0Fh/LHYP2jTC2k9Oekg0LvZ2uiw1Xok3H/KHren2K1Kj
-         zuzTpI7pO+/1KMER6qwgrgRDhYD6SZbd/b9wM=
+        d=chromium.org; s=google; t=1695786145; x=1696390945; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=psNe55NiIGmm2xWNk7Y7WSenoVYReQWIa41A35qkMTo=;
+        b=DMgt7E8zbjdDxpmCg9lVKkaaMN5PJ8SCsJBHXx4/bPe0fcnr4RiVcettQb2AyiHLJt
+         WRYfU4rkd/G3iLCuExCN+SdDhRs6JghrEnjQNd6OpCYRqQr8S4xGdKG/Uyo1piDLPEN4
+         IKGkUT2o5cda7EDvkdd5tYH44m2IAQYre1fi8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695777510; x=1696382310;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pSK45h5LTS9VqkVC57gaj2Wd82aeyGKZrEYe4dJCVic=;
-        b=oX++snGqNZWpQFUYc9tNdlcBzs2/k/cqgdgq89hLWX9IUcgbhn+ZgU9ea7Mlbbh53A
-         SryPCDZxZbBf5dqfbQ+xCCS3km7vCLbJbOqqhXnCV8v7VCIwB+MQArIvb6T6x7SU9hIY
-         XdySNBEVl+YXy4+ZonSADlm2HIsqENG5FrsUubkqgcyWdfNsaN9HVYSwJ+BxZwNX7ocx
-         TilPdiO0K+i19wdQxDsUchxLKxGrETYQTgAhIipOhSYuYnAqWDZQ8gcIKiEktDOix0US
-         lgQYf2gs92A9b6AIhWW4vraTSJyi/fOdWm45/pVXF7Jfvgsvadb+K/oTglArXv6tIVPj
-         L1xg==
-X-Gm-Message-State: AOJu0Yy5lk2fOV9bEEVBbDnfJqWN7EkmRdowfRqriBCG/Tg4vosoXpgS
-	E+fNLsscBJIDLhdrFDHdxLs0uQ==
-X-Google-Smtp-Source: AGHT+IE2jaCutfBvakslg8GPNafee+TlzK+8frCnXrODTVfbk9z1YRbburEMP7cvS9iSP7ZFw0fvlQ==
-X-Received: by 2002:a92:cc46:0:b0:350:f353:4017 with SMTP id t6-20020a92cc46000000b00350f3534017mr614948ilq.0.1695777510062;
-        Tue, 26 Sep 2023 18:18:30 -0700 (PDT)
-Received: from [192.168.1.128] ([38.15.45.1])
-        by smtp.gmail.com with ESMTPSA id y3-20020a92d203000000b0034f3220c086sm2389624ily.12.2023.09.26.18.18.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 Sep 2023 18:18:29 -0700 (PDT)
-Message-ID: <fc915b30-5842-5851-bd76-71c2133685b9@linuxfoundation.org>
-Date: Tue, 26 Sep 2023 19:18:28 -0600
+        d=1e100.net; s=20230601; t=1695786145; x=1696390945;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=psNe55NiIGmm2xWNk7Y7WSenoVYReQWIa41A35qkMTo=;
+        b=tIpLRh2cRitK09hQ1601nwX8r2XQMusdSnPz52vHcAry7uxZ6bZz+fJm8KnUfeI11B
+         RJYPiV8GgFkYCEU0Koi0Y5hdpMSYVoNAOJ0sLaPBu4AZM39H90UAkj6foAcd6+AUpVLZ
+         gKh40ypvndNYhPcK1XZLeC4kRcrqkD+yoAMWbWF3Cn89hzpb1D1sdqfTXgeB8yCgp4tJ
+         kz58JJwmfGCi58Ap3jqRhKDSN6UgnObsMkYlK+u9PR5YDpFT9aX61jwTjk/l6gfSTDwv
+         rM4wnzOtyF9xErZAzso0QwNEnOTH3NGRK5nd+uOuqUmsFIF8ExDlPewSMUC8wx/U+x7/
+         7HBw==
+X-Gm-Message-State: AOJu0YzvS0GAxutWJQuLItDyK8dcNmEKy/1bQFO09TeC2po4r3TtVaqz
+	e0QOUXAutplFlbYoV0Ejd/LqDg==
+X-Google-Smtp-Source: AGHT+IH5EAvrsjyvsdjMBX+hRb48/9Odz2jhGyduyLfeui8bYT0jgwoq8H4vxWQ8plZNKiKb1c39bg==
+X-Received: by 2002:a05:6a00:1745:b0:690:3b59:cc7a with SMTP id j5-20020a056a00174500b006903b59cc7amr1223964pfc.23.1695786144630;
+        Tue, 26 Sep 2023 20:42:24 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id l21-20020a62be15000000b0068fe5a5a566sm11050779pff.142.2023.09.26.20.42.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Sep 2023 20:42:24 -0700 (PDT)
+From: Kees Cook <keescook@chromium.org>
+To: Eric Biederman <ebiederm@xmission.com>
+Cc: Kees Cook <keescook@chromium.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	Pedro Falcato <pedro.falcato@gmail.com>,
+	Sebastian Ott <sebott@redhat.com>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v3 4/4] binfmt_elf: Use elf_load() for interpreter
+Date: Tue, 26 Sep 2023 20:42:21 -0700
+Message-Id: <20230927034223.986157-4-keescook@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230927033634.make.602-kees@kernel.org>
+References: <20230927033634.make.602-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH] selftests: Fix wrong TARGET in kselftest top level
- Makefile
-Content-Language: en-US
-To: Juntong Deng <juntong.deng@outlook.com>, shuah@kernel.org,
- mic@digikod.net, brauner@kernel.org, keescook@chromium.org,
- tony.luck@intel.com, gpiccoli@igalia.com, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu
-Cc: linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-security-module@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-riscv@lists.infradead.org, bpf@vger.kernel.org,
- linux-kernel-mentees@lists.linuxfoundation.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <VI1P193MB0752596147F224B9F921C85199C3A@VI1P193MB0752.EURP193.PROD.OUTLOOK.COM>
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <VI1P193MB0752596147F224B9F921C85199C3A@VI1P193MB0752.EURP193.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2946; i=keescook@chromium.org;
+ h=from:subject; bh=ESjAlwugvTKH54m807EA0V7P1zfqWIUst+9ebRisI1g=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlE6SdTC81Lo/IK1HXDqbNXd8+1ZQdNAkLqgYld
+ ib+qt6Vsy+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZROknQAKCRCJcvTf3G3A
+ JtadEACKjgl6qtJqAh0AMdgrhwl3xNt5d2qNuR5potUxETk/BXU7u2GTXYtP2F9RDpOrkDiKZgs
+ kHaZ+K0S58tXoM1EESrVf9DgwoH2Yiu3a5Wnx/9cSLQ39gLchJc9iacJBevN5PWRNSQGhPINVHD
+ ppnkc1dc2MgRLHRWccbGhLJoWY9ypb0+DB2+c326VYEE9A6ZcH0XF2mBBGZWXFdJf5FqvPjjP7d
+ 3aH1zRNKNI0RS4QKXR0yRxvLTkQu1CHaVV2EUyc2z8A2QyuQlLPUE/1Sndgz+rJf4zaBAGoUu15
+ xtdsaw1/9QllvwqXSugoOkXpIIDx4n8QOYsgxRkRVM1a+KkJy54IQyjYj7yhw+IlJhX1NVUKiwd
+ 5TyNEMzi/OHgIlQ0Zx61x8PDB9FHITdRrPmmhjgmSMl5lVf/iutiyYsdRdW/udNxhJwecomGd+V
+ FPKrzpAU5XCcgfQavEm4SC012nzVWQXMKBChSTYtRcchUfBI8yKMx0vBF3AUzEGnUxkenFTBZCX
+ 501e3882lR4jnNHar/3lok+SU91dFINJ79VHpEjsURQH5gylPvdbtX+i1nqijpI8fY16XKQPVsO
+ A9WZlk3iYIvwmclIZazzIknfX61fR/qhvIhhre1iOr1xSWFFYOOhAzzXr+/bT6hmLGWrqrb36DM i6jNABcOoxu5qhA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On 9/26/23 12:03, Juntong Deng wrote:
-> The 'uevents' subdirectory does not exist in tools/testing/selftests/
-> and adding 'uevents' to the TARGETS list results in the following error:
-> 
-> make[1]: Entering directory 'xx/tools/testing/selftests/uevents'
-> make[1]: *** No targets specified and no makefile found. Stop.
-> make[1]: Leaving directory 'xx/tools/testing/selftests/uevents'
-> 
-> What actually exists in tools/testing/selftests/ is the 'uevent'
-> subdirectory.
-> 
-> Signed-off-by: Juntong Deng <juntong.deng@outlook.com>
-> ---
+Handle arbitrary memsz>filesz in interpreter ELF segments, instead of
+only supporting it in the last segment (which is expected to be the
+BSS).
 
-Thank you. Applied now to linux-kselftest fixes for the next rc
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-mm@kvack.org
+Reported-by: Pedro Falcato <pedro.falcato@gmail.com>
+Closes: https://lore.kernel.org/lkml/20221106021657.1145519-1-pedro.falcato@gmail.com/
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ fs/binfmt_elf.c | 46 +---------------------------------------------
+ 1 file changed, 1 insertion(+), 45 deletions(-)
 
-thanks,
--- Shuah
+diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+index b939cfe3215c..74af5c8319a0 100644
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -635,8 +635,6 @@ static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
+ 	struct elf_phdr *eppnt;
+ 	unsigned long load_addr = 0;
+ 	int load_addr_set = 0;
+-	unsigned long last_bss = 0, elf_bss = 0;
+-	int bss_prot = 0;
+ 	unsigned long error = ~0UL;
+ 	unsigned long total_size;
+ 	int i;
+@@ -673,7 +671,7 @@ static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
+ 			else if (no_base && interp_elf_ex->e_type == ET_DYN)
+ 				load_addr = -vaddr;
+ 
+-			map_addr = elf_map(interpreter, load_addr + vaddr,
++			map_addr = elf_load(interpreter, load_addr + vaddr,
+ 					eppnt, elf_prot, elf_type, total_size);
+ 			total_size = 0;
+ 			error = map_addr;
+@@ -699,51 +697,9 @@ static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
+ 				error = -ENOMEM;
+ 				goto out;
+ 			}
+-
+-			/*
+-			 * Find the end of the file mapping for this phdr, and
+-			 * keep track of the largest address we see for this.
+-			 */
+-			k = load_addr + eppnt->p_vaddr + eppnt->p_filesz;
+-			if (k > elf_bss)
+-				elf_bss = k;
+-
+-			/*
+-			 * Do the same thing for the memory mapping - between
+-			 * elf_bss and last_bss is the bss section.
+-			 */
+-			k = load_addr + eppnt->p_vaddr + eppnt->p_memsz;
+-			if (k > last_bss) {
+-				last_bss = k;
+-				bss_prot = elf_prot;
+-			}
+ 		}
+ 	}
+ 
+-	/*
+-	 * Now fill out the bss section: first pad the last page from
+-	 * the file up to the page boundary, and zero it from elf_bss
+-	 * up to the end of the page.
+-	 */
+-	if (padzero(elf_bss, bss_prot)) {
+-		error = -EFAULT;
+-		goto out;
+-	}
+-	/*
+-	 * Next, align both the file and mem bss up to the page size,
+-	 * since this is where elf_bss was just zeroed up to, and where
+-	 * last_bss will end after the vm_brk_flags() below.
+-	 */
+-	elf_bss = ELF_PAGEALIGN(elf_bss);
+-	last_bss = ELF_PAGEALIGN(last_bss);
+-	/* Finally, if there is still more bss to allocate, do it. */
+-	if (last_bss > elf_bss) {
+-		error = vm_brk_flags(elf_bss, last_bss - elf_bss,
+-				bss_prot & PROT_EXEC ? VM_EXEC : 0);
+-		if (error)
+-			goto out;
+-	}
+-
+ 	error = load_addr;
+ out:
+ 	return error;
+-- 
+2.34.1
 
