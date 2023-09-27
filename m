@@ -1,64 +1,58 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D188E1F189
-	for <linux-hardening@vger.kernel.org>; Wed, 27 Sep 2023 09:00:06 +0000 (UTC)
-Received: from mail-yw1-x1136.google.com (mail-yw1-x1136.google.com [IPv6:2607:f8b0:4864:20::1136])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF554D6
-	for <linux-hardening@vger.kernel.org>; Wed, 27 Sep 2023 02:00:04 -0700 (PDT)
-Received: by mail-yw1-x1136.google.com with SMTP id 00721157ae682-5a200028437so7255747b3.1
-        for <linux-hardening@vger.kernel.org>; Wed, 27 Sep 2023 02:00:04 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071C36AA4
+	for <linux-hardening@vger.kernel.org>; Wed, 27 Sep 2023 10:41:01 +0000 (UTC)
+Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 752DB139
+	for <linux-hardening@vger.kernel.org>; Wed, 27 Sep 2023 03:40:59 -0700 (PDT)
+Received: by mail-yb1-xb31.google.com with SMTP id 3f1490d57ef6-d7e904674aeso12474958276.3
+        for <linux-hardening@vger.kernel.org>; Wed, 27 Sep 2023 03:40:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1695805204; x=1696410004; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TutIAe4KzHZUJ9ATW3VpQ4iw5gN1jLgS94r63g8BT3A=;
-        b=G/C9h8ACQ4gisppe+8QdxxZVETy2BjOPzbl93h6IFvwnlaZOF7aLwhGnVgF/vCzmpp
-         /sYd/c15H27j9S7/5J3Ee30LhgNKyrO2fPMvDYrBIPH8LntDvp4ae0qj90nuHF1XxCgX
-         NoFZ4LoAbmV2LONc/J/sgI+VqiyPfK02DixUCkfGsvcHyVBilXKOiEYCqL3dlQ6Vga1d
-         WqGrPFH5yzlZRLJP8VqnoDytB4PCEV07zBJV11+7UFh9qA/EkQ7EKkZ6z4DNzMffDEvH
-         6ULUeOFnTcwXME2V1C3k7g01hbn/FgeHm0zi98u1Gv0KktMGGygV6jKeGNF6OO8PSmLf
-         8Arg==
+        d=linaro.org; s=google; t=1695811258; x=1696416058; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=t3NNfm4Je7/nE4q7Oqll1kvCkkttzLCgnEc8/NlXhfo=;
+        b=Rfn0aAJ2bYTTBKZgKR838uiRQ04ufYCSuG3LdUxD2Np+cUZ5wBWQw/0ARSrYIzMRI7
+         rbopCeuPcpJCQnsGaCwfY5cHiOJbayXIoBw1HKi/IKMwruyzAJ5HF82SrGe5fjOsQu21
+         xA9nTJQoMwY7waysqURlJRtSZzq0bi9PS6O24nxRYlW/YOsTLkuol0PFOiILYXAkmsd/
+         16xCoHosjnCAjwaVKNA45Fqvxhv6I7ss3am3DPC148kX48WH4ZUo62YqO3s3TE1U2+GL
+         qPgQtS4PDIEbNH8sywNAP86SFly+u8mzVNq9Hwijo5I743bEfsX/iJB92IVtStVSj4Bo
+         Nf6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695805204; x=1696410004;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TutIAe4KzHZUJ9ATW3VpQ4iw5gN1jLgS94r63g8BT3A=;
-        b=WtNey5PZDXIBm9UWy9zHF/xGmrSYxdgLILeGDJcfTfE2te02FJORYjHOw3zn1yYELp
-         B77fzzwRxaHKR9Fm4MpgnlsqrqOoHpVxsQURY/b2aur6nWRe0h9LPlLkpRkV8NE/b9O5
-         n5Fl6JGFHAQFKiWjevC73jeeIGazCGOfsqAC2OBITNT0G1sT14KzWUT8bfgil4O4LDM4
-         q4cmFAfLS3QblRxn21pD90712Sj75pexcnsSAQaKTLlkx83TPPg0qCK5nf/34Xq9Hb3b
-         0zJpJ1DwGllXDS+lIyskJwMP3eIAoetlQ5G21SXH7te5j8AWgKfN7xd6pJnfr8qSJ/rT
-         Ki2A==
-X-Gm-Message-State: AOJu0YxzIe6T/R7fVmlMU4xt1U7Nn7F+ARevKlpAp1TBVEpFZhfnaA9Y
-	OqEGwP1qtUBJTJK2goqixZiL4X0ytiaooM7MglgI/g==
-X-Google-Smtp-Source: AGHT+IEnVNlxtU365OSVa+Vju3oylJH3jIZadB6OzZFRZDu29MnEdrWa5VJAMDN8qQBkpr8ELeV9VjCIo0BH0fj47CQ=
-X-Received: by 2002:a0d:df45:0:b0:59f:7dcf:edee with SMTP id
- i66-20020a0ddf45000000b0059f7dcfedeemr1832413ywe.9.1695805203882; Wed, 27 Sep
- 2023 02:00:03 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1695811258; x=1696416058;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=t3NNfm4Je7/nE4q7Oqll1kvCkkttzLCgnEc8/NlXhfo=;
+        b=sPV9D62dNFTMKtg2KC7vQi4kDFed4AN/X7PvbxhE4ckJrB7fVw89OPFbVsjlv8DFcw
+         sV2iPRxmuR8yGTAyfRc1bTd81Y5YnCt5/0g997nkl40ltZZ4OGjdDOTl0qhSXTpPf2Wi
+         2d81kVOuTYxXOfmL57qkzTc6RCLrZ0fOw0wLUOjt4NSKGsdJ/7st63WPgs9zFkhk4XIp
+         UwlY4PR9ab9h+gCJIiecc/gvjIL1NR3v98KRdJVX0qV6UfQkZeThHPQXy/NaB8diuMo6
+         QBt4BOYo3AMU4sVR3IM/89In+8jOitSEMtix94WOIJwOIdf6PjMBXnz9cSC5sOVdYoGE
+         Jigg==
+X-Gm-Message-State: AOJu0YwQoH+t3r1Ohit6fpwJPYP5c0HrtWXYUPTAv8iQsrAbKprTFyH2
+	N8pXGj/wBjQYICYRGJY7UWYPQzrxG9UgBeWOqGQDUw==
+X-Google-Smtp-Source: AGHT+IHEhCnTUnZjApThCWz0JSq83eRUInpiinMPx97RC+PdIF5eBhf8j0FcFjicqFvXvz2XgJ1j+1rE4s0xhzji3zI=
+X-Received: by 2002:a25:abac:0:b0:d81:a0c5:f275 with SMTP id
+ v41-20020a25abac000000b00d81a0c5f275mr1838716ybi.15.1695811258566; Wed, 27
+ Sep 2023 03:40:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230922175006.work.421-kees@kernel.org>
-In-Reply-To: <20230922175006.work.421-kees@kernel.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 27 Sep 2023 10:59:52 +0200
-Message-ID: <CACRpkdaVauiB0M3PNjGgcAj2Cw1gZ=NenkOuh=PKT=8uEYc5rA@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: uniphier: Annotate struct uniphier_pinctrl_reg_region
- with __counted_by
-To: Kees Cook <keescook@chromium.org>
-Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
+References: <20230927-strncpy-drivers-mmc-host-vub300-c-v1-1-77426f62eef4@google.com>
+In-Reply-To: <20230927-strncpy-drivers-mmc-host-vub300-c-v1-1-77426f62eef4@google.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Wed, 27 Sep 2023 12:40:22 +0200
+Message-ID: <CAPDyKFp7NYL5JNdopqUc3x0S8voh1W1meQzmqJJBuc+EYmLZfw@mail.gmail.com>
+Subject: Re: [PATCH] mmc: vub300: replace deprecated strncpy with strscpy
+To: Justin Stitt <justinstitt@google.com>
+Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
@@ -66,32 +60,151 @@ X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Fri, Sep 22, 2023 at 7:50=E2=80=AFPM Kees Cook <keescook@chromium.org> w=
-rote:
-
-> Prepare for the coming implementation by GCC and Clang of the __counted_b=
-y
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUND=
-S
-> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
+On Wed, 27 Sept 2023 at 08:41, Justin Stitt <justinstitt@google.com> wrote:
 >
-> As found with Coccinelle[1], add __counted_by for struct uniphier_pinctrl=
-_reg_region.
+> `strncpy` is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
 >
-> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/c=
-ounted_by.cocci
+> We expect `vub300->vub_name` to be NUL-terminated based on its uses with
+> format strings:
+> |       dev_info(&vub300->udev->dev, "using %s for SDIO offload processing\n",
+> |                vub300->vub_name);
 >
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: linux-gpio@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> NUL-padding is not needed. We can see cleaning out vub_name simply
+> consists of:
+> |       vub300->vub_name[0] = 0;
+>
+> Considering the above, for all 11 cases a suitable replacement is
+> `strscpy` [2] due to the fact that it guarantees NUL-termination on the
+> destination buffer without unnecessarily NUL-padding.
+>
+> To be clear, there is no existing bug in the current implementation as
+> the string literals are all small enough as to not cause a buffer
+> overread. Nonetheless, this gets us 11 steps closer to removing strncpy
+> uses.
+>
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-Excellent!
-Patch applied.
+Applied for next, thanks!
 
-Yours,
-Linus Walleij
+Kind regards
+Uffe
+
+
+> ---
+> Note: build-tested only.
+> ---
+>  drivers/mmc/host/vub300.c | 22 +++++++++++-----------
+>  1 file changed, 11 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/mmc/host/vub300.c b/drivers/mmc/host/vub300.c
+> index 9ec593d52f0f..de3f443f5fdc 100644
+> --- a/drivers/mmc/host/vub300.c
+> +++ b/drivers/mmc/host/vub300.c
+> @@ -512,7 +512,7 @@ static void new_system_port_status(struct vub300_mmc_host *vub300)
+>                 vub300->card_present = 1;
+>                 vub300->bus_width = 0;
+>                 if (disable_offload_processing)
+> -                       strncpy(vub300->vub_name, "EMPTY Processing Disabled",
+> +                       strscpy(vub300->vub_name, "EMPTY Processing Disabled",
+>                                 sizeof(vub300->vub_name));
+>                 else
+>                         vub300->vub_name[0] = 0;
+> @@ -1216,7 +1216,7 @@ static void __download_offload_pseudocode(struct vub300_mmc_host *vub300,
+>                 dev_err(&vub300->udev->dev,
+>                         "corrupt offload pseudocode in firmware %s\n",
+>                         vub300->vub_name);
+> -               strncpy(vub300->vub_name, "corrupt offload pseudocode",
+> +               strscpy(vub300->vub_name, "corrupt offload pseudocode",
+>                         sizeof(vub300->vub_name));
+>                 return;
+>         }
+> @@ -1250,7 +1250,7 @@ static void __download_offload_pseudocode(struct vub300_mmc_host *vub300,
+>                                 "not enough memory for xfer buffer to send"
+>                                 " INTERRUPT_PSEUDOCODE for %s %s\n", fw->data,
+>                                 vub300->vub_name);
+> -                       strncpy(vub300->vub_name,
+> +                       strscpy(vub300->vub_name,
+>                                 "SDIO interrupt pseudocode download failed",
+>                                 sizeof(vub300->vub_name));
+>                         return;
+> @@ -1259,7 +1259,7 @@ static void __download_offload_pseudocode(struct vub300_mmc_host *vub300,
+>                 dev_err(&vub300->udev->dev,
+>                         "corrupt interrupt pseudocode in firmware %s %s\n",
+>                         fw->data, vub300->vub_name);
+> -               strncpy(vub300->vub_name, "corrupt interrupt pseudocode",
+> +               strscpy(vub300->vub_name, "corrupt interrupt pseudocode",
+>                         sizeof(vub300->vub_name));
+>                 return;
+>         }
+> @@ -1293,7 +1293,7 @@ static void __download_offload_pseudocode(struct vub300_mmc_host *vub300,
+>                                 "not enough memory for xfer buffer to send"
+>                                 " TRANSFER_PSEUDOCODE for %s %s\n", fw->data,
+>                                 vub300->vub_name);
+> -                       strncpy(vub300->vub_name,
+> +                       strscpy(vub300->vub_name,
+>                                 "SDIO transfer pseudocode download failed",
+>                                 sizeof(vub300->vub_name));
+>                         return;
+> @@ -1302,7 +1302,7 @@ static void __download_offload_pseudocode(struct vub300_mmc_host *vub300,
+>                 dev_err(&vub300->udev->dev,
+>                         "corrupt transfer pseudocode in firmware %s %s\n",
+>                         fw->data, vub300->vub_name);
+> -               strncpy(vub300->vub_name, "corrupt transfer pseudocode",
+> +               strscpy(vub300->vub_name, "corrupt transfer pseudocode",
+>                         sizeof(vub300->vub_name));
+>                 return;
+>         }
+> @@ -1336,13 +1336,13 @@ static void __download_offload_pseudocode(struct vub300_mmc_host *vub300,
+>                 dev_err(&vub300->udev->dev,
+>                         "corrupt dynamic registers in firmware %s\n",
+>                         vub300->vub_name);
+> -               strncpy(vub300->vub_name, "corrupt dynamic registers",
+> +               strscpy(vub300->vub_name, "corrupt dynamic registers",
+>                         sizeof(vub300->vub_name));
+>                 return;
+>         }
+>
+>  copy_error_message:
+> -       strncpy(vub300->vub_name, "SDIO pseudocode download failed",
+> +       strscpy(vub300->vub_name, "SDIO pseudocode download failed",
+>                 sizeof(vub300->vub_name));
+>  }
+>
+> @@ -1370,11 +1370,11 @@ static void download_offload_pseudocode(struct vub300_mmc_host *vub300)
+>                  vub300->vub_name);
+>         retval = request_firmware(&fw, vub300->vub_name, &card->dev);
+>         if (retval < 0) {
+> -               strncpy(vub300->vub_name, "vub_default.bin",
+> +               strscpy(vub300->vub_name, "vub_default.bin",
+>                         sizeof(vub300->vub_name));
+>                 retval = request_firmware(&fw, vub300->vub_name, &card->dev);
+>                 if (retval < 0) {
+> -                       strncpy(vub300->vub_name,
+> +                       strscpy(vub300->vub_name,
+>                                 "no SDIO offload firmware found",
+>                                 sizeof(vub300->vub_name));
+>                 } else {
+> @@ -1758,7 +1758,7 @@ static void vub300_cmndwork_thread(struct work_struct *work)
+>                          * has been already downloaded to the VUB300 chip
+>                          */
+>                 } else if (0 == vub300->mmc->card->sdio_funcs) {
+> -                       strncpy(vub300->vub_name, "SD memory device",
+> +                       strscpy(vub300->vub_name, "SD memory device",
+>                                 sizeof(vub300->vub_name));
+>                 } else {
+>                         download_offload_pseudocode(vub300);
+>
+> ---
+> base-commit: 6465e260f48790807eef06b583b38ca9789b6072
+> change-id: 20230927-strncpy-drivers-mmc-host-vub300-c-b7b39f82e584
+>
+> Best regards,
+> --
+> Justin Stitt <justinstitt@google.com>
+>
