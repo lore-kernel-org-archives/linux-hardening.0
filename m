@@ -1,107 +1,118 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F23719CA6A
-	for <linux-hardening@vger.kernel.org>; Thu, 28 Sep 2023 21:45:07 +0000 (UTC)
-Received: from mail-yw1-x112e.google.com (mail-yw1-x112e.google.com [IPv6:2607:f8b0:4864:20::112e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D563E199
-	for <linux-hardening@vger.kernel.org>; Thu, 28 Sep 2023 14:45:05 -0700 (PDT)
-Received: by mail-yw1-x112e.google.com with SMTP id 00721157ae682-59e77e4f707so165831207b3.0
-        for <linux-hardening@vger.kernel.org>; Thu, 28 Sep 2023 14:45:05 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F28E199C3
+	for <linux-hardening@vger.kernel.org>; Thu, 28 Sep 2023 23:42:14 +0000 (UTC)
+Received: from mail-oo1-xc2f.google.com (mail-oo1-xc2f.google.com [IPv6:2607:f8b0:4864:20::c2f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79BCE19F
+	for <linux-hardening@vger.kernel.org>; Thu, 28 Sep 2023 16:42:12 -0700 (PDT)
+Received: by mail-oo1-xc2f.google.com with SMTP id 006d021491bc7-57bb6a2481fso4093013eaf.1
+        for <linux-hardening@vger.kernel.org>; Thu, 28 Sep 2023 16:42:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1695937505; x=1696542305; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=d53VmuoWKktNI02x/f4SVOnb4OpZ9AYZl6S7M2mENOQ=;
-        b=nzty1U2pWLvDqcpqJ94rU6HFEx3DmdPGnkI/X/B6+uoyETWQgoH7gxY4dLSiQ6D3qv
-         JXvoVUz/PkK8s601b7l6pG8fGZ0CYYPO3oet9Xycc8voX15G8ay6eh4f8WMRzxSGm/Vj
-         /InXsaVuxKp/ND3f4oxcHNTrw7okKArHQ/vsr+nmsvWc1EzZE4fdM1u8AeNtR8CvlR8J
-         udfTBaP3g9x7xgVfFe6al9fVs4XqCQPBj7iLuevmdt2IkO2TURezw6W24HHYlTHfqlUI
-         jhCIc+rSDKRxtaakqqic3q4Q+ZIYa0EIvbxonMWQf/dOSMjvyI9LCEzPJy8FcrpoPsam
-         6Oww==
+        d=chromium.org; s=google; t=1695944532; x=1696549332; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=3RV2WVrYFvmUIy/kF4sgLaI/igSwAmnqnqr5+CNVDt8=;
+        b=eIm0Tr3UrWUjzJ4jN6/2IK7vGtk83w/aM+dkwIMq+AwB2ci1Gu09xf9F9GMwaILj70
+         n4QvEnSrxRKunYK7/hD7XS4qnfKHiKUaPe20ZtTX7CsoKDMIVZZO8CFpNReTVXNSUq67
+         RXlmxi/OVy4WJv6gtNUzW8faa2GmV5dV2N214=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695937505; x=1696542305;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=d53VmuoWKktNI02x/f4SVOnb4OpZ9AYZl6S7M2mENOQ=;
-        b=djwCaHycGKleZQ7t2JlCUKHoIlL3enpzj17HwZmkPvZoXoiMobgl/tr7llV8tVf5jA
-         3nbz5cM9rfyl0K+2Bko0gyGfkxjVTiIdTp7I7RyCGwnfHuLGyGeXBO6SehX5TcjDeArQ
-         1/sBVTlmDpYh6tr2zJ8kzS4BRfr9Ip308RZHN/xtDGBUghlOCl9B/TDfqDYc2hLkF6BD
-         z26fdXX3SuqaVD5iQcXDzjUPe9bIPokPkwsVqU+Uy/9Zvuk8J5aJc7MzUTnXU5giulFz
-         sFVxBGvTmZxq2wtsyP4tf3v0CAt6GnrZ0cemk7VWghI2f9MbQQF+GjtkfJfiUBao6RF8
-         DLWA==
-X-Gm-Message-State: AOJu0Yxj53RI7yHd3SgssLHaktt8TOf4R6WOwkQXt/J7PzoBZhLvbRB4
-	BTdfir8/hTh5UEeCfXujwUBsF2PWIzS97HXq91p/zA==
-X-Google-Smtp-Source: AGHT+IFmD0TeY/RAzzjpTHUvmIzABRZnRZfjdrG+rUh84QC2EVS0feP28y/RWjO81DOkItfuirnotVhBhAFKqW22Cd8=
-X-Received: by 2002:a81:72c5:0:b0:59b:2458:f612 with SMTP id
- n188-20020a8172c5000000b0059b2458f612mr2417694ywc.28.1695937505000; Thu, 28
- Sep 2023 14:45:05 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1695944532; x=1696549332;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3RV2WVrYFvmUIy/kF4sgLaI/igSwAmnqnqr5+CNVDt8=;
+        b=YzTnQu+PPRMNmp6fEPOsCpzk8X5T2wdwtrAN0RThpp9yaHxiLQVfK5S5chhtiGntFO
+         45yeT/wZxXa4akEOy8dDKklyY78dQ8YCWtOqefE9pAE+Jt3oXK217lY1LwW5NNHskzXc
+         vkNiywMYSaBMx2ze/IoEaTgNzCepZ54t07z1tPYMUpOf+uGyLc16tMK2l2AmqKMVMhog
+         kv2HGbY9L6S1Zqxfw6cZErpvi2nYD/xiWVyg1pSdmW4haZp+prJC2hf92bA9Vls2OK+U
+         vNDw28U8Ji2UHZClgCbQsxEDuP+lQjRuMu4geipJWJ5nYLvFGStKLCC9FQH29NNOZVYM
+         mHfg==
+X-Gm-Message-State: AOJu0YzRQv/GsZTWYrIAXYZudHzfaPCwTCIia6Q0yzgxp5Cu1u6G/rYz
+	/IlL63ATQFPzF2UvFV/cS+aRkA==
+X-Google-Smtp-Source: AGHT+IHBsCldxysDZTajanQY+g4dIkq4a5ohe3XveIhxwgWt0zJyzNyJaoBdNbO8ZXRuiDiGJefhMw==
+X-Received: by 2002:a05:6358:2808:b0:13e:ea2a:40aa with SMTP id k8-20020a056358280800b0013eea2a40aamr1895209rwb.8.1695944531707;
+        Thu, 28 Sep 2023 16:42:11 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id t6-20020a639546000000b0057a868900a9sm13316234pgn.67.2023.09.28.16.42.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Sep 2023 16:42:10 -0700 (PDT)
+Date: Thu, 28 Sep 2023 16:42:09 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Ludovic Desroches <ludovic.desroches@microchip.com>,
+	Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Zhou Wang <wangzhou1@hisilicon.com>, Jie Hai <haijie1@huawei.com>,
+	Andy Gross <agross@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Green Wan <green.wan@sifive.com>, Orson Zhai <orsonzhai@gmail.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Chunyan Zhang <zhang.lyra@gmail.com>,
+	Patrice Chotard <patrice.chotard@foss.st.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Laxman Dewangan <ldewangan@nvidia.com>,
+	Jon Hunter <jonathanh@nvidia.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Yu Kuai <yukuai3@huawei.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jordy Zomer <jordy@pwning.systems>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	dmaengine@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-tegra@vger.kernel.org, llvm@lists.linux.dev,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 00/21] dmaengine: Annotate with __counted_by
+Message-ID: <202309281641.47911CC@keescook>
+References: <20230817235428.never.111-kees@kernel.org>
+ <169590216841.152265.1942803099201042070.b4-ty@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230927-strncpy-drivers-mfd-db8500-prcmu-c-v1-1-db9693f92a68@google.com>
-In-Reply-To: <20230927-strncpy-drivers-mfd-db8500-prcmu-c-v1-1-db9693f92a68@google.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 28 Sep 2023 23:44:53 +0200
-Message-ID: <CACRpkdaPvDFvxSVHeLZ3Bxx5yVH3LN1OOpGm78cJ+wp7q3C+Vw@mail.gmail.com>
-Subject: Re: [PATCH] mfd: db8500-prcmu: replace deprecated strncpy with strscpy
-To: Justin Stitt <justinstitt@google.com>
-Cc: Lee Jones <lee@kernel.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <169590216841.152265.1942803099201042070.b4-ty@kernel.org>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Hi Justin,
+On Thu, Sep 28, 2023 at 05:26:08PM +0530, Vinod Koul wrote:
+> 
+> On Thu, 17 Aug 2023 16:58:37 -0700, Kees Cook wrote:
+> > This annotates several structures with the coming __counted_by attribute
+> > for bounds checking of flexible arrays at run-time. For more details, see
+> > commit dd06e72e68bc ("Compiler Attributes: Add __counted_by macro").
+> > 
+> > Thanks!
+> > 
+> > -Kees
+> > 
+> > [...]
+> 
+> Applied, thanks!
 
-thanks for your patch!
+Thanks! I've dropped them from my tree. :)
 
-On Wed, Sep 27, 2023 at 7:10=E2=80=AFAM Justin Stitt <justinstitt@google.co=
-m> wrote:
+Also, I found 1 more, which I'll send separately.
 
-> `strncpy` is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
->
-> We expect project_name to be NUL-terminated based on its use with
-> pr_info:
-> |       pr_info("PRCMU firmware: %s(%d), version %d.%d.%d\n",
-> |               fw_info.version.project_name,
-> |               fw_info.version.project,
-> |               fw_info.version.api_version,
-> |               fw_info.version.func_version,
-> |               fw_info.version.errata);
->
-> Moreover, NUL-padding does not seem to be needed.
->
-> Considering the above, a suitable replacement is `strscpy` [2] due to
-> the fact that it guarantees NUL-termination on the destination buffer
-> without unnecessarily NUL-padding.
->
-> Let's also change `PRCMU_FW_PROJECT_NAME_LEN` to just
-> sizeof(fw_info.version.project_name) as this is more idiomatic strscpy
-> usage.
->
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strn=
-cpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.h=
-tml [2]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+-Kees
 
-Well analyzed, well patched, what can I say! Hats off.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
+-- 
+Kees Cook
