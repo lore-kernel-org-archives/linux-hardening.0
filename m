@@ -1,88 +1,123 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C0B23FB01;
-	Thu, 28 Sep 2023 14:44:02 +0000 (UTC)
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB724180;
-	Thu, 28 Sep 2023 07:44:00 -0700 (PDT)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id DDC0240E0176;
-	Thu, 28 Sep 2023 14:43:55 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id OWLQHTNbZWTX; Thu, 28 Sep 2023 14:43:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1695912233; bh=h1/LDhE8fzT9yHzOAMn/O1uQcjI/GQRZwIc2SRP75FA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iZ5FRVunRWlEOnzVstKpLgxo9Pq1pLk58HzP++2IaqcTwzO8HrerFTvz+m0xvvPbA
-	 /1OYLbkPTP8O7vAFVM23V3gaF/swxmTcjRGRnDzcX6HKQ60eDJ9lFFmZx8SRyOwt4a
-	 gyyNnqRe+YgkZsoj+PJlVyCRJfSQBhxg8htG0sPi4XPKyx6hQkP8dikTsmct2e3Ifl
-	 UJ5PpeYWN6IbaMlFA2mv5N6SgFZhyMzBJOB702tLvbSQLn0+99W7IZfuPRozvWtxmP
-	 coGgcLA/k7hwojbNnq9oxY6uYA5481XGe2E0cDYK3VIVADW0p6WyVfAX8HuIcB+I2U
-	 OUTKPKDwtS5d8g/bLwq4yVYAm7OcT+lIFK1fKgmdggeKQqkNdKeDSu+7hSork76W1n
-	 B0xOU/+he+a/RqX6UyQyMS+kkfkQx7hIGxIeBZ9YgP8M1qEZJBd6Kl00RhuQRUBFV5
-	 wx2Ec8ZQlHwYd/MA6hQ5QH8u/cCNug+w7aFQVWzPunz/Ay7xqRMpbM+b4qRSHZmN+k
-	 RQig38hcXZ1IoLJa5xR1LXPxDFLcz61ZMbVx2/vem56E/luM49qcnwJQ5n6AMVJm2L
-	 xOIu9TAw8C3ZOTYf4EpvJUp2GAXG7WSB1O0j8IKufzGudrIurXHvYjx4Iijzna35tD
-	 I9qe4vVT+23x0C4PkzqztaUA=
-Received: from nazgul.tnic (unknown [88.128.88.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4AD0D40E00B3;
-	Thu, 28 Sep 2023 14:43:32 +0000 (UTC)
-Date: Thu, 28 Sep 2023 16:43:45 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
-	rafael@kernel.org, lenb@kernel.org, james.morse@arm.com,
-	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, ardb@kernel.org,
-	robert.moore@intel.com, linux-hardening@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-edac@vger.kernel.org, linux-efi@vger.kernel.org,
-	acpica-devel@lists.linuxfoundation.org,
-	baolin.wang@linux.alibaba.com
-Subject: Re: [RFC PATCH v2 0/9] Use ERST for persistent storage of MCE and
- APEI errors
-Message-ID: <20230928144345.GAZRWRIXH1Tfgn5EpO@fat_crate.local>
-References: <20230925074426.97856-1-xueshuai@linux.alibaba.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BEFC4E287
+	for <linux-hardening@vger.kernel.org>; Thu, 28 Sep 2023 15:18:19 +0000 (UTC)
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08B00CFD;
+	Thu, 28 Sep 2023 08:18:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=trot3+TGWG2OOMY4ChPeFe3zf2LJzFBVfmF3pbXC7Xo=; b=higqqnDmzxmr+X3cfpKInvzj3o
+	BqvWpQGHvH67nWnfc0XAoOqx9PXGwtMHNh9pxk0oebmPzjEX7R+4f1blAH9+4S5qw796Lv7aWaopn
+	OPEn6RhhEua/OPFIH6MXBzs3xY7lHtUt4TfCx9LWA934JiaFnKl0qFh0Ub9wyXDq+MkAtH+KdS4Fs
+	iT7lhSmKl2qB1wdOkkBOoUayyFaiRkkAAvxfl1txVMTS8BQaJQ6dwujlhoA/q8pHzkc5mItIlOlSp
+	DNC4wfQi03pP2QScb9qLX4GTmyrx8Ej+PdIPFaND/La/DZ03zb1Y7aNBQFiRh8eLvGG0z1FOzaW4j
+	Y90I6VGQ==;
+Received: from [177.34.168.16] (helo=[192.168.0.8])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1qlskm-009K4n-35; Thu, 28 Sep 2023 17:16:36 +0200
+Message-ID: <708d9fa0-0957-796a-ecc1-9ad4fdae6339@igalia.com>
+Date: Thu, 28 Sep 2023 12:16:16 -0300
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20230925074426.97856-1-xueshuai@linux.alibaba.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH 9/9] drm/v3d: Annotate struct v3d_perfmon with
+ __counted_by
+Content-Language: en-US
+To: Kees Cook <keescook@chromium.org>, David Airlie <airlied@gmail.com>
+Cc: Tejas Upadhyay <tejas.upadhyay@intel.com>, Emma Anholt <emma@anholt.net>,
+ Tom Rix <trix@redhat.com>, llvm@lists.linux.dev,
+ dri-devel@lists.freedesktop.org, Chris Wilson <chris@chris-wilson.co.uk>,
+ Prike Liang <Prike.Liang@amd.com>, Huang Rui <ray.huang@amd.com>,
+ Gerd Hoffmann <kraxel@redhat.com>, Andrzej Hajda <andrzej.hajda@intel.com>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ Matthew Brost <matthew.brost@intel.com>, Karol Herbst <kherbst@redhat.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, amd-gfx@lists.freedesktop.org,
+ Kuogee Hsieh <quic_khsieh@quicinc.com>, Nathan Chancellor
+ <nathan@kernel.org>,
+ VMware Graphics Reviewers <linux-graphics-maintainer@vmware.com>,
+ Ben Skeggs <bskeggs@redhat.com>, Andi Shyti <andi.shyti@linux.intel.com>,
+ nouveau@lists.freedesktop.org, David Airlie <airlied@redhat.com>,
+ virtualization@lists.linux-foundation.org, linux-hardening@vger.kernel.org,
+ Lijo Lazar <lijo.lazar@amd.com>, Yifan Zhang <yifan1.zhang@amd.com>,
+ linux-arm-msm@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+ Kevin Wang <kevin1.wang@amd.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Melissa Wen <mwen@igalia.com>, Dmitry Baryshkov
+ <dmitry.baryshkov@linaro.org>, Gurchetan Singh
+ <gurchetansingh@chromium.org>, Maxime Ripard <mripard@kernel.org>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Evan Quan <evan.quan@amd.com>,
+ Sean Paul <sean@poorly.run>, Tvrtko Ursulin
+ <tvrtko.ursulin@linux.intel.com>, Xiaojian Du <Xiaojian.Du@amd.com>,
+ Le Ma <le.ma@amd.com>, freedreno@lists.freedesktop.org,
+ Bjorn Andersson <andersson@kernel.org>, "Pan, Xinhui" <Xinhui.Pan@amd.com>,
+ Nick Desaulniers <ndesaulniers@google.com>, linux-kernel@vger.kernel.org,
+ Alex Deucher <alexander.deucher@amd.com>, Nirmoy Das <nirmoy.das@intel.com>,
+ Lang Yu <Lang.Yu@amd.com>, =?UTF-8?Q?Christian_K=c3=b6nig?=
+ <christian.koenig@amd.com>, John Harrison <john.c.harrison@Intel.com>,
+ Hawking Zhang <Hawking.Zhang@amd.com>
+References: <20230922173110.work.084-kees@kernel.org>
+ <20230922173216.3823169-9-keescook@chromium.org>
+From: Maira Canal <mcanal@igalia.com>
+In-Reply-To: <20230922173216.3823169-9-keescook@chromium.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Mon, Sep 25, 2023 at 03:44:17PM +0800, Shuai Xue wrote:
-> After /dev/mcelog character device deprecated by commit 5de97c9f6d85
-> ("x86/mce: Factor out and deprecate the /dev/mcelog driver"), the
-> serialized MCE error record, of previous boot in persistent storage is not
-> collected via APEI ERST.
+Hi Kees,
 
-You lost me here. /dev/mcelog is deprecated but you can still use it and
-apei_write_mce() still happens.
+On 9/22/23 14:32, Kees Cook wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
+> 
+> As found with Coccinelle[1], add __counted_by for struct v3d_perfmon.
+> 
+> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+> 
+> Cc: Emma Anholt <emma@anholt.net>
+> Cc: Melissa Wen <mwen@igalia.com>
+> Cc: David Airlie <airlied@gmail.com>
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: dri-devel@lists.freedesktop.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Looking at your patches, you're adding this to ghes so how about you sit
-down first and explain your exact use case and what exactly you wanna
-do?
+Reviewed-by: Maíra Canal <mcanal@igalia.com>
 
-Thx.
+Best Regards,
+- Maíra
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+> ---
+>   drivers/gpu/drm/v3d/v3d_drv.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/v3d/v3d_drv.h b/drivers/gpu/drm/v3d/v3d_drv.h
+> index 7f664a4b2a75..106454f28956 100644
+> --- a/drivers/gpu/drm/v3d/v3d_drv.h
+> +++ b/drivers/gpu/drm/v3d/v3d_drv.h
+> @@ -59,7 +59,7 @@ struct v3d_perfmon {
+>   	 * values can't be reset, but you can fake a reset by
+>   	 * destroying the perfmon and creating a new one.
+>   	 */
+> -	u64 values[];
+> +	u64 values[] __counted_by(ncounters);
+>   };
+>   
+>   struct v3d_dev {
