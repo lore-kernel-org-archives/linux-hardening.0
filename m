@@ -1,29 +1,53 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B1291863F
-	for <linux-hardening@vger.kernel.org>; Thu, 28 Sep 2023 06:43:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55545C433C8;
-	Thu, 28 Sep 2023 06:43:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1695883404;
-	bh=DSvDae1aDnAGK6cZ1bq0OV0fku1272PZ2tdvrFmrup4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=xm1YqDrbd47/RaAXYtFbyDPcMfa81W/h3Bqbh5qK1av3hDzGKhVxeBgQbahJzJt3p
-	 Lc5jIl5zrlw64Ebf55Aez44e13cTU1VioTZXZXPpDq+IoHPMiaYb5/R06abeYxxGFf
-	 3xopreGCGy0F88x4Lu3Bv4vxn4QlBBdcunhiZ3Xs=
-Date: Thu, 28 Sep 2023 08:43:22 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Yuanhe Shu <xiangzao@linux.alibaba.com>
-Cc: jirislaby@kernel.org, keescook@chromium.org, tony.luck@intel.com,
-	gpiccoli@igalia.com, shuah@kernel.org, linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	Xingrui Yi <yixingrui@linux.alibaba.com>
-Subject: Re: [PATCH 1/5] pstore: add tty frontend
-Message-ID: <2023092804-backslid-ninth-3afe@gregkh>
-References: <20230928024244.257687-1-xiangzao@linux.alibaba.com>
- <20230928024244.257687-2-xiangzao@linux.alibaba.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04B1D8467
+	for <linux-hardening@vger.kernel.org>; Thu, 28 Sep 2023 06:58:56 +0000 (UTC)
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15F6DA3
+	for <linux-hardening@vger.kernel.org>; Wed, 27 Sep 2023 23:58:55 -0700 (PDT)
+Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1c5ff5f858dso68129695ad.2
+        for <linux-hardening@vger.kernel.org>; Wed, 27 Sep 2023 23:58:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1695884334; x=1696489134; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nwI6smVHd5UMaBia65XA0pC9Bo4/EoWiOYnQn85uIHg=;
+        b=PPbXQX/eAeR94mdeE3TLCv3fep00QImAa0B080BO3wpbTb5rPx71szKD5eaGnjh+mC
+         mlEfB3AF5h8bRn8poqpztouc9CPSkeU4ro3RFTuwr4hqkQBefP3pPc+IgDdpY7DyxE0j
+         ChEA7M3JCK4lBdrRkvHmHUcgqmdWLw8+7tXxJVW//KiFHEMRkLkiBK3qBMKcjMf3h18c
+         LDwB701dls7iAA47rbo66aFoOvp92igmexdAbylrKyYxMpSpuqcSXhQekzWLgVFk50qb
+         8WJbYxlgteP0F0sxmRnbkwmAOH0gHQXDwuFISvP0O3CyG1HqCsGcBh887oqZrfvSD91m
+         g0dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695884334; x=1696489134;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nwI6smVHd5UMaBia65XA0pC9Bo4/EoWiOYnQn85uIHg=;
+        b=IZxwyY/8KtX1U28qQgRRukldaJ8PR0GKmI5zA3xhmC3i7G3G7f7pcvr8yrE+04WZtv
+         KnpYjDHIIs2N7eiJprkcwwsW9VAv3xxOCLScjrd6VVRgg2SboH6ZYwMNFsu32yeF2+As
+         NqSa0akmEdFt34XHNOz8wE9MgNX7pkN5urgm1lxEpENsz0F1pCBU1UgOw4TEQAb+0zr4
+         5NHrg140DtKHmgRnORrnkZTWo1YC8O8QvIQ82IeH8SuW68WSo9vvUcqI2P9IEhO4Q/Wh
+         irMvawTkbVVoE1amQ4GCnYPtQCMi5e/igbSrglaZjEidde1VtR+tTuoi3VtLyhJOO79B
+         OM5Q==
+X-Gm-Message-State: AOJu0YwmQ8ezL0XlzTiM7BRwqUalZOzV5Rl+A9oia2x4FCC5wc/Ry2IW
+	h0HUBkgKQJ9Z8HMpqvEyPdbjUw==
+X-Google-Smtp-Source: AGHT+IGrj7aiQMA4Uprf8SfQhI+1smIAVwuJN/uHYkcV4Vjv7Aer3HJ4iBpF4ZBfrRArUrRDEVF3Yw==
+X-Received: by 2002:a17:903:1109:b0:1c3:ed30:ce04 with SMTP id n9-20020a170903110900b001c3ed30ce04mr398860plh.25.1695884334495;
+        Wed, 27 Sep 2023 23:58:54 -0700 (PDT)
+Received: from localhost ([122.172.81.92])
+        by smtp.gmail.com with ESMTPSA id n12-20020a170902d2cc00b001c474d6a408sm14221518plc.201.2023.09.27.23.58.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Sep 2023 23:58:53 -0700 (PDT)
+Date: Thu, 28 Sep 2023 12:28:51 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] cpufreq: refactor deprecated strncpy
+Message-ID: <20230928065851.5zhqxjxd3vgdmbsd@vireshk-i7>
+References: <20230913-strncpy-drivers-cpufreq-cpufreq-c-v1-1-f1608bfeff63@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -32,145 +56,61 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230928024244.257687-2-xiangzao@linux.alibaba.com>
+In-Reply-To: <20230913-strncpy-drivers-cpufreq-cpufreq-c-v1-1-f1608bfeff63@google.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-On Thu, Sep 28, 2023 at 10:42:40AM +0800, Yuanhe Shu wrote:
-> Provide a pstore frontend which can log all messages that are send
-> to tty drivers when there are some problems with drivers or there
-> is no access to serial ports.
+On 13-09-23, 00:07, Justin Stitt wrote:
+> `strncpy` is deprecated for use on NUL-terminated destination strings [1].
 > 
-> Using pmsg requires us to redirect the output of the user state.
-> When we need to globally view the serial output of various processes,
-> it is tedious to redirect the output of each process. We think pmsg is
-> more suitable for targeted viewing of certain processes' output, and
-> we also need a tool that can quickly do a global view so that we can
-> get user-state printed data if the tty driver is working abnormally or
-> if we don't have serial access.
+> We should prefer more robust and less ambiguous string interfaces.
 > 
-> Furthermore, by enabling tty frontend and console/dmesg frontend in
-> dump capture kernel, one can collect kernel and user messages to
-> discover why kdump service works abnormal.
+> Both `policy->last_governor` and `default_governor` are expected to be
+> NUL-terminated which is shown by their heavy usage with other string
+> apis like `strcmp`.
 > 
-> Signed-off-by: Yuanhe Shu <xiangzao@linux.alibaba.com>
-> Signed-off-by: Xingrui Yi <yixingrui@linux.alibaba.com>
+> A suitable replacement is `strscpy` [2] due to the fact that it guarantees
+> NUL-termination on the destination buffer.
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
 > ---
->  drivers/tty/n_tty.c         |  1 +
->  fs/pstore/Kconfig           | 23 +++++++++++++++++
->  fs/pstore/Makefile          |  2 ++
->  fs/pstore/blk.c             | 10 ++++++++
->  fs/pstore/internal.h        |  8 ++++++
->  fs/pstore/platform.c        |  5 ++++
->  fs/pstore/ram.c             | 40 +++++++++++++++++++++++++++--
->  fs/pstore/tty.c             | 50 +++++++++++++++++++++++++++++++++++++
->  fs/pstore/zone.c            | 42 ++++++++++++++++++++++++++++++-
->  include/linux/pstore.h      |  2 ++
->  include/linux/pstore_blk.h  |  3 +++
->  include/linux/pstore_ram.h  |  1 +
->  include/linux/pstore_zone.h |  2 ++
->  include/linux/tty.h         | 14 +++++++++++
->  14 files changed, 200 insertions(+), 3 deletions(-)
->  create mode 100644 fs/pstore/tty.c
+> Note: build-tested
+> ---
+>  drivers/cpufreq/cpufreq.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/tty/n_tty.c b/drivers/tty/n_tty.c
-> index 552e8a741562..55ca40605e4c 100644
-> --- a/drivers/tty/n_tty.c
-> +++ b/drivers/tty/n_tty.c
-> @@ -582,6 +582,7 @@ static ssize_t process_output_block(struct tty_struct *tty,
->  		}
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index 50bbc969ffe5..3eb851a03fce 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -1607,7 +1607,7 @@ static void __cpufreq_offline(unsigned int cpu, struct cpufreq_policy *policy)
 >  	}
->  break_out:
-> +	tty_pstore_hook(buf, i);
-
-"hook"?  That does not help explain what this is doing here at all.  A
-better name would be best, but why is this part of n_tty at all?  Why
-isn't it a console driver just for this, you are sitting in the middle
-of the fast-path of the tty layer sucking in data all the time, what is
-the performance impact of this extra jump?
-
-> --- a/fs/pstore/blk.c
-> +++ b/fs/pstore/blk.c
-> @@ -52,6 +52,14 @@ static long ftrace_size = -1;
->  module_param(ftrace_size, long, 0400);
->  MODULE_PARM_DESC(ftrace_size, "ftrace size in kbytes");
 >  
-> +#if IS_ENABLED(CONFIG_PSTORE_TTY)
-> +static long tty_size = CONFIG_PSTORE_BLK_TTY_SIZE;
-> +#else
-> +static long tty_size = -1;
-> +#endif
-> +module_param(tty_size, long, 0400);
-> +MODULE_PARM_DESC(tty_size, "tty_size size in kbytes");
-
-Do we really need more module parameters that are undocumented?
-
-> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-> index 2f625e1fa8d8..f59712bc51d3 100644
-> --- a/fs/pstore/ram.c
-> +++ b/fs/pstore/ram.c
-> @@ -44,6 +44,10 @@ static ulong ramoops_pmsg_size = MIN_MEM_SIZE;
->  module_param_named(pmsg_size, ramoops_pmsg_size, ulong, 0400);
->  MODULE_PARM_DESC(pmsg_size, "size of user space message log");
+>  	if (has_target())
+> -		strncpy(policy->last_governor, policy->governor->name,
+> +		strscpy(policy->last_governor, policy->governor->name,
+>  			CPUFREQ_NAME_LEN);
+>  	else
+>  		policy->last_policy = policy->policy;
+> @@ -2951,7 +2951,7 @@ static int __init cpufreq_core_init(void)
+>  	BUG_ON(!cpufreq_global_kobject);
 >  
-> +static ulong ramoops_tty_size = MIN_MEM_SIZE;
-> +module_param_named(tty_size, ramoops_tty_size, ulong, 0400);
-> +MODULE_PARM_DESC(tty_size, "size of tty message log");
+>  	if (!strlen(default_governor))
+> -		strncpy(default_governor, gov->name, CPUFREQ_NAME_LEN);
+> +		strscpy(default_governor, gov->name, CPUFREQ_NAME_LEN);
+>  
+>  	return 0;
+>  }
 
-Again, why a module parameter?
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-> --- /dev/null
-> +++ b/fs/pstore/tty.c
-> @@ -0,0 +1,50 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Provide a pstore frontend which can log all messages that are send
-> + * to tty drivers when there are some problems with drivers or there
-> + * is no access to serial ports.
-> + */
-
-No copyright line?  Are you sure your company is ok with that?
-
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/tty.h>
-> +#include <linux/tty_driver.h>
-> +#include "internal.h"
-> +
-> +DEFINE_STATIC_KEY_FALSE(tty_key);
-> +
-> +#define TTY_NAME "tty"
-> +#undef pr_fmt
-> +#define pr_fmt(fmt) TTY_NAME ": " fmt
-> +
-> +static void do_write_ttymsg(const unsigned char *buf, int count,
-> +							struct pstore_info *psinfo)
-
-Odd formatting :(
-
-
-> +{
-> +	struct pstore_record record, newline;
-> +
-> +	pstore_record_init(&record, psinfo);
-> +	record.type = PSTORE_TYPE_TTY;
-> +	record.size = count;
-> +	record.buf = (char *)buf;
-
-Why the casting?  Why isn't the buffer a u8 * here?
-
-> +	psinfo->write(&record);
-> +
-> +	pstore_record_init(&newline, psinfo);
-> +	newline.type = PSTORE_TYPE_TTY;
-> +	newline.size = strlen("\n");
-> +	newline.buf = "\n";
-> +	psinfo->write(&newline);
-
-Why have 2 structures and not just one?  And why the new line all the
-time, you are not guaranteed that your buffer must have a new line here,
-it could be in the middle of a hunk of data that is longer than the
-normal buffer size.  Why not rely on the tty data to handle the new line
-stuff for you in the proper location?
-
-thanks,
-
-greg k-h
+-- 
+viresh
