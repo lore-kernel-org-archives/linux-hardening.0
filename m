@@ -1,130 +1,65 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D84B328AE;
-	Thu, 28 Sep 2023 13:27:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7F3BC433C8;
-	Thu, 28 Sep 2023 13:27:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D0E33AC3D
+	for <linux-hardening@vger.kernel.org>; Thu, 28 Sep 2023 13:41:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA69FC433C8;
+	Thu, 28 Sep 2023 13:41:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1695907670;
-	bh=l2AzfVnQusW7bzHrFKQB4PAqb+m//Ig8AMRGcQRghPA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ezyR/FxmKsts3EHdMLgVbT0yHbZFg4bvvJ9WhGuWXLkquTvF9fZkDoItY6n6O9x3g
-	 7HEN4870TbLrza3/zkzdGiJDY3SVLxl1D9oEshZa1hUps3DfKsW3AB7RqjoWiAzkej
-	 FC9UYKPVn0E+bp4WmMMyRknhpPC/I56PUc0U1batkkUxy26zxxWwOBhC4I2mBYH9d3
-	 0VwsNDhPh7H9oprBjq9iwwJLmzj5iJBohSvw9WUy3RlF35GwS+9wFSqBo2GkpKnEos
-	 Gzkix9bLvTMdqOYqWToBDA1udMUTOVe1nmnoCutQBiIJtcmGZ5bpAQYn0GcW7eowec
-	 R8h/P3w6Y+6QQ==
-Date: Thu, 28 Sep 2023 15:27:37 +0200
-From: Simon Horman <horms@kernel.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Ariel Elior <aelior@marvell.com>, Manish Chopra <manishc@marvell.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Michal Kalderon <Michal.Kalderon@cavium.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] qed/red_ll2: Fix undefined behavior bug in struct
- qed_ll2_info
-Message-ID: <20230928132737.GL24230@kernel.org>
-References: <ZQ+Nz8DfPg56pIzr@work>
+	s=k20201202; t=1695908491;
+	bh=rJxLo1ABDRJDSxy1BujIrMAZQ/znSO0a+HwmrquB1+U=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=mav+ZW23Dj6p8y5GSitPt1RgAPgFnreDpKvaTT6jmn2sRET+o9tGZOq2vct+4wJ6p
+	 MCV8h6xcv3Y5m81H44uouJ6banZb+ZuA0Fl/yCI7xzrOSbD+kSjc3ZK0C4tE9KiDhF
+	 2SeONbWxfHiJwFLNbBj+jY9iCz+eIAT8Vxa7VD90pT997dMhU8rgpjFO7/wJx6nycQ
+	 OrqX2d9nItKFqSD4BRx1sKWnSRZjyd4NsX52kcB+6N0yyAXSlmmIaOe6xs5m4llaXl
+	 o8TjNhUw1SxgRvIvrv6NkpaG2Kq+rlIdBN8CRzEMzGeyc1F8usoGT0oIpB72QnFybG
+	 pIrof6A38DGHw==
+From: Lee Jones <lee@kernel.org>
+To: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
+ Justin Stitt <justinstitt@google.com>
+Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org
+In-Reply-To: <20230922-strncpy-drivers-leds-leds-lp3952-c-v1-1-4941d6f60ca4@google.com>
+References: <20230922-strncpy-drivers-leds-leds-lp3952-c-v1-1-4941d6f60ca4@google.com>
+Subject: Re: (subset) [PATCH] leds: lp3952: replace deprecated strncpy with
+ strscpy
+Message-Id: <169590849042.1603670.14283146758350554856.b4-ty@kernel.org>
+Date: Thu, 28 Sep 2023 14:41:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZQ+Nz8DfPg56pIzr@work>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.12.2
 
-On Sat, Sep 23, 2023 at 07:15:59PM -0600, Gustavo A. R. Silva wrote:
-> The flexible structure (a structure that contains a flexible-array member
-> at the end) `qed_ll2_tx_packet` is nested within the second layer of
-> `struct qed_ll2_info`:
+On Fri, 22 Sep 2023 15:27:17 +0000, Justin Stitt wrote:
+> `strncpy` is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
 > 
-> struct qed_ll2_tx_packet {
-> 	...
->         /* Flexible Array of bds_set determined by max_bds_per_packet */
->         struct {
->                 struct core_tx_bd *txq_bd;
->                 dma_addr_t tx_frag;
->                 u16 frag_len;
->         } bds_set[];
-> };
+> We expect `dest` to be NUL-terminated due to its use with dev_err.
 > 
-> struct qed_ll2_tx_queue {
-> 	...
-> 	struct qed_ll2_tx_packet cur_completing_packet;
-> };
+> lp3952_get_label()'s  dest argument is priv->leds[i].name:
+> |    acpi_ret = lp3952_get_label(&priv->client->dev, led_name_hdl[i],
+> |                                priv->leds[i].name);
+> ... which is then assigned to:
+> |    priv->leds[i].cdev.name = priv->leds[i].name;
+> ... which is used with a format string
+> |    dev_err(&priv->client->dev,
+> |            "couldn't register LED %s\n",
+> |            priv->leds[i].cdev.name);
 > 
-> struct qed_ll2_info {
-> 	...
-> 	struct qed_ll2_tx_queue tx_queue;
->         struct qed_ll2_cbs cbs;
-> };
-> 
-> The problem is that member `cbs` in `struct qed_ll2_info` is placed just
-> after an object of type `struct qed_ll2_tx_queue`, which is in itself
-> an implicit flexible structure, which by definition ends in a flexible
-> array member, in this case `bds_set`. This causes an undefined behavior
-> bug at run-time when dynamic memory is allocated for `bds_set`, which
-> could lead to a serious issue if `cbs` in `struct qed_ll2_info` is
-> overwritten by the contents of `bds_set`. Notice that the type of `cbs`
-> is a structure full of function pointers (and a cookie :) ):
-> 
-> include/linux/qed/qed_ll2_if.h:
-> 107 typedef
-> 108 void (*qed_ll2_complete_rx_packet_cb)(void *cxt,
-> 109                                       struct qed_ll2_comp_rx_data *data);
-> 110
-> 111 typedef
-> 112 void (*qed_ll2_release_rx_packet_cb)(void *cxt,
-> 113                                      u8 connection_handle,
-> 114                                      void *cookie,
-> 115                                      dma_addr_t rx_buf_addr,
-> 116                                      bool b_last_packet);
-> 117
-> 118 typedef
-> 119 void (*qed_ll2_complete_tx_packet_cb)(void *cxt,
-> 120                                       u8 connection_handle,
-> 121                                       void *cookie,
-> 122                                       dma_addr_t first_frag_addr,
-> 123                                       bool b_last_fragment,
-> 124                                       bool b_last_packet);
-> 125
-> 126 typedef
-> 127 void (*qed_ll2_release_tx_packet_cb)(void *cxt,
-> 128                                      u8 connection_handle,
-> 129                                      void *cookie,
-> 130                                      dma_addr_t first_frag_addr,
-> 131                                      bool b_last_fragment, bool b_last_packet);
-> 132
-> 133 typedef
-> 134 void (*qed_ll2_slowpath_cb)(void *cxt, u8 connection_handle,
-> 135                             u32 opaque_data_0, u32 opaque_data_1);
-> 136
-> 137 struct qed_ll2_cbs {
-> 138         qed_ll2_complete_rx_packet_cb rx_comp_cb;
-> 139         qed_ll2_release_rx_packet_cb rx_release_cb;
-> 140         qed_ll2_complete_tx_packet_cb tx_comp_cb;
-> 141         qed_ll2_release_tx_packet_cb tx_release_cb;
-> 142         qed_ll2_slowpath_cb slowpath_cb;
-> 143         void *cookie;
-> 144 };
-> 
-> Fix this by moving the declaration of `cbs` to the  middle of its
-> containing structure `qed_ll2_info`, preventing it from being
-> overwritten by the contents of `bds_set` at run-time.
-> 
-> This bug was introduced in 2017, when `bds_set` was converted to a
-> one-element array, and started to be used as a Variable Length Object
-> (VLO) at run-time.
-> 
-> Fixes: f5823fe6897c ("qed: Add ll2 option to limit the number of bds per packet")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> [...]
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+Applied, thanks!
+
+[1/1] leds: lp3952: replace deprecated strncpy with strscpy
+      commit: 821d3ff4b4e2c689576a623348555114e3f2f1c2
+
+--
+Lee Jones [李琼斯]
 
