@@ -1,215 +1,107 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CCCA9CA71
-	for <linux-hardening@vger.kernel.org>; Thu, 28 Sep 2023 21:27:31 +0000 (UTC)
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AE011A2
-	for <linux-hardening@vger.kernel.org>; Thu, 28 Sep 2023 14:27:29 -0700 (PDT)
-Received: from cwcc.thunk.org (pool-173-48-111-87.bstnma.fios.verizon.net [173.48.111.87])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 38SLQvsp021536
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 28 Sep 2023 17:26:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1695936425; bh=w4hql40FuyyfsTNK9D530X9ExV2y5b7TU7/1a0HHsnU=;
-	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
-	b=NGPOVv6aP7Wgx4/k9ruqGjDYWmjUQVAfEL5fppG6yE2RNxUM6uiyoWrXBZfGmZyL2
-	 gb1zEZjWcSSCFd+NWg1/BYhZ5jeEptXNin1ZAM6seg38Angccj8YOPtyzxOx/hDFrb
-	 Q+ePr/t98/fHq2BcSzJCThnFTNb50fVmlIrGfb3oMvB11ToZpH+p8R2mhaDk4/44dl
-	 uEHGVh6Q6Ih5iyFuN8+PasXijpXT1PXJm+5Rkla8PX5Glna1OAsFe3wre6CQl62oa4
-	 RAr1Z2b44rKF067M11yaRPI56z2wMDur4vLyEnjrhgmaYzW5D9XQ8I+PJlbP887wDq
-	 NXSNNWLPWiTbQ==
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id 06AD715C0266; Thu, 28 Sep 2023 17:26:57 -0400 (EDT)
-Date: Thu, 28 Sep 2023 17:26:56 -0400
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: "Darrick J. Wong" <djwong@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        David Sterba <dsterba@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>, Jeremy Kerr <jk@ozlabs.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Carlos Llamas <cmllamas@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Mattia Dongili <malattia@linux.it>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-        Brad Warrum <bwarrum@linux.ibm.com>,
-        Ritu Agarwal <rituagar@linux.ibm.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Mark Gross <markgross@kernel.org>, Jiri Slaby <jirislaby@kernel.org>,
-        Eric Van Hensbergen <ericvh@kernel.org>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Christian Schoenebeck <linux_oss@crudebyte.com>,
-        David Sterba <dsterba@suse.com>, David Howells <dhowells@redhat.com>,
-        Marc Dionne <marc.dionne@auristor.com>, Ian Kent <raven@themaw.net>,
-        Luis de Bethencourt <luisbg@kernel.org>,
-        Salah Triki <salah.triki@gmail.com>,
-        "Tigran A. Aivazian" <aivazian.tigran@gmail.com>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
-        Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
-        Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>, Gao Xiang <xiang@kernel.org>,
-        Chao Yu <chao@kernel.org>,
-        Yue Hu <huyue2@gl0jj8bn.sched.sma.tdnsstic1.cn>,
-        Jeffle Xu <jefflexu@linux.alibaba.com>,
-        Namjae Jeon <linkinjeon@kernel.org>,
-        Sungjong Seo <sj1557.seo@samsung.com>, Jan Kara <jack@suse.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        Christoph Hellwig <hch@infradead.org>,
-        Miklos Szeredi <miklos@szeredi.hu>, Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Muchun Song <muchun.song@linux.dev>, Jan Kara <jack@suse.cz>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Dave Kleikamp <shaggy@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
-        Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>,
-        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-        Anton Altaparmakov <anton@tuxera.com>,
-        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-        Mark Fasheh <mark@fasheh.com>, Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Bob Copeland <me@bobcopeland.com>, Mike Marshall <hubcap@omnibond.com>,
-        Martin Brandenburg <martin@omnibond.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>, Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        Anders Larsen <al@alarsen.net>, Steve French <sfrench@samba.org>,
-        Paulo Alcantara <pc@manguebit.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Shyam Prasad N <sprasad@microsoft.com>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Phillip Lougher <phillip@squashfs.org.uk>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Evgeniy Dushistov <dushistov@mail.ru>,
-        Chandan Babu R <chandan.babu@oracle.com>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Johannes Thumshirn <jth@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-        Yonghong Song <yonghong.song@linux.dev>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        John Johansen <john.johansen@canonical.com>,
-        Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
-        v9fs@lists.linux.dev, linux-afs@lists.infradead.org,
-        autofs@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        ceph-devel@vger.kernel.org, codalist@telemann.coda.cs.cmu.edu,
-        linux-efi@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        gfs2@lists.linux.dev, linux-um@lists.infradead.org,
-        linux-mtd@lists.infradead.org, jfs-discussion@lists.sourceforge.net,
-        linux-nfs@vger.kernel.org, linux-nilfs@vger.kernel.org,
-        linux-ntfs-dev@lists.sourceforge.net, ntfs3@lists.linux.dev,
-        ocfs2-devel@lists.linux.dev, linux-karma-devel@lists.sourceforge.net,
-        devel@lists.orangefs.org, linux-unionfs@vger.kernel.org,
-        linux-hardening@vger.kernel.org, reiserfs-devel@vger.kernel.org,
-        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
-        linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        bpf@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
-        apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
-        selinux@vger.kernel.org
-Subject: Re: [PATCH 86/87] fs: switch timespec64 fields in inode to discrete
- integers
-Message-ID: <20230928212656.GC189345@mit.edu>
-References: <20230928110554.34758-1-jlayton@kernel.org>
- <20230928110554.34758-2-jlayton@kernel.org>
- <6020d6e7-b187-4abb-bf38-dc09d8bd0f6d@app.fastmail.com>
- <af047e4a1c6947c59d4a13d4ae221c784a5386b4.camel@kernel.org>
- <20230928171943.GK11439@frogsfrogsfrogs>
- <6a6f37d16b55a3003af3f3dbb7778a367f68cd8d.camel@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F23719CA6A
+	for <linux-hardening@vger.kernel.org>; Thu, 28 Sep 2023 21:45:07 +0000 (UTC)
+Received: from mail-yw1-x112e.google.com (mail-yw1-x112e.google.com [IPv6:2607:f8b0:4864:20::112e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D563E199
+	for <linux-hardening@vger.kernel.org>; Thu, 28 Sep 2023 14:45:05 -0700 (PDT)
+Received: by mail-yw1-x112e.google.com with SMTP id 00721157ae682-59e77e4f707so165831207b3.0
+        for <linux-hardening@vger.kernel.org>; Thu, 28 Sep 2023 14:45:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1695937505; x=1696542305; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=d53VmuoWKktNI02x/f4SVOnb4OpZ9AYZl6S7M2mENOQ=;
+        b=nzty1U2pWLvDqcpqJ94rU6HFEx3DmdPGnkI/X/B6+uoyETWQgoH7gxY4dLSiQ6D3qv
+         JXvoVUz/PkK8s601b7l6pG8fGZ0CYYPO3oet9Xycc8voX15G8ay6eh4f8WMRzxSGm/Vj
+         /InXsaVuxKp/ND3f4oxcHNTrw7okKArHQ/vsr+nmsvWc1EzZE4fdM1u8AeNtR8CvlR8J
+         udfTBaP3g9x7xgVfFe6al9fVs4XqCQPBj7iLuevmdt2IkO2TURezw6W24HHYlTHfqlUI
+         jhCIc+rSDKRxtaakqqic3q4Q+ZIYa0EIvbxonMWQf/dOSMjvyI9LCEzPJy8FcrpoPsam
+         6Oww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695937505; x=1696542305;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=d53VmuoWKktNI02x/f4SVOnb4OpZ9AYZl6S7M2mENOQ=;
+        b=djwCaHycGKleZQ7t2JlCUKHoIlL3enpzj17HwZmkPvZoXoiMobgl/tr7llV8tVf5jA
+         3nbz5cM9rfyl0K+2Bko0gyGfkxjVTiIdTp7I7RyCGwnfHuLGyGeXBO6SehX5TcjDeArQ
+         1/sBVTlmDpYh6tr2zJ8kzS4BRfr9Ip308RZHN/xtDGBUghlOCl9B/TDfqDYc2hLkF6BD
+         z26fdXX3SuqaVD5iQcXDzjUPe9bIPokPkwsVqU+Uy/9Zvuk8J5aJc7MzUTnXU5giulFz
+         sFVxBGvTmZxq2wtsyP4tf3v0CAt6GnrZ0cemk7VWghI2f9MbQQF+GjtkfJfiUBao6RF8
+         DLWA==
+X-Gm-Message-State: AOJu0Yxj53RI7yHd3SgssLHaktt8TOf4R6WOwkQXt/J7PzoBZhLvbRB4
+	BTdfir8/hTh5UEeCfXujwUBsF2PWIzS97HXq91p/zA==
+X-Google-Smtp-Source: AGHT+IFmD0TeY/RAzzjpTHUvmIzABRZnRZfjdrG+rUh84QC2EVS0feP28y/RWjO81DOkItfuirnotVhBhAFKqW22Cd8=
+X-Received: by 2002:a81:72c5:0:b0:59b:2458:f612 with SMTP id
+ n188-20020a8172c5000000b0059b2458f612mr2417694ywc.28.1695937505000; Thu, 28
+ Sep 2023 14:45:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6a6f37d16b55a3003af3f3dbb7778a367f68cd8d.camel@kernel.org>
+References: <20230927-strncpy-drivers-mfd-db8500-prcmu-c-v1-1-db9693f92a68@google.com>
+In-Reply-To: <20230927-strncpy-drivers-mfd-db8500-prcmu-c-v1-1-db9693f92a68@google.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 28 Sep 2023 23:44:53 +0200
+Message-ID: <CACRpkdaPvDFvxSVHeLZ3Bxx5yVH3LN1OOpGm78cJ+wp7q3C+Vw@mail.gmail.com>
+Subject: Re: [PATCH] mfd: db8500-prcmu: replace deprecated strncpy with strscpy
+To: Justin Stitt <justinstitt@google.com>
+Cc: Lee Jones <lee@kernel.org>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Thu, Sep 28, 2023 at 01:40:55PM -0400, Jeff Layton wrote:
-> 
-> Correct. We'd lose some fidelity in currently stored timestamps, but as
-> Linus and Ted pointed out, anything below ~100ns granularity is
-> effectively just noise, as that's the floor overhead for calling into
-> the kernel. It's hard to argue that any application needs that sort of
-> timestamp resolution, at least with contemporary hardware. 
-> 
-> Doing that would mean that tests that store specific values in the
-> atime/mtime and expect to be able to fetch exactly that value back would
-> break though, so we'd have to be OK with that if we want to try it. The
-> good news is that it's relatively easy to experiment with new ways to
-> store timestamps with these wrappers in place.
+Hi Justin,
 
-The reason why we store 1ns granularity in ext4's on-disk format (and
-accept that we only support times only a couple of centuries into the
-future, as opposed shooting for an on-disk format good for several
-millennia :-), was in case there was userspace that might try to store
-a very fine-grained timestamp and want to be able to get it back
-bit-for-bit identical.
+thanks for your patch!
 
-For example, what if someone was trying to implement some kind of
-steganographic scheme where they going store a secret message (or more
-likely, a 256-bit AES key) in the nanosecond fields of the file's
-{c,m,a,cr}time timestamps, "hiding in plain sight".  Not that I think
-that we have to support something like that, since the field is for
-*timestamps* not cryptographic bits, so if we break someone who is
-doing that, do we care?
+On Wed, Sep 27, 2023 at 7:10=E2=80=AFAM Justin Stitt <justinstitt@google.co=
+m> wrote:
 
-I don't think anyone will complain about breaking the userspace API
---- especially since if, say, the CIA was using this for their spies'
-drop boxes, they probably wouldn't want to admit it.  :-)
+> `strncpy` is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
+>
+> We expect project_name to be NUL-terminated based on its use with
+> pr_info:
+> |       pr_info("PRCMU firmware: %s(%d), version %d.%d.%d\n",
+> |               fw_info.version.project_name,
+> |               fw_info.version.project,
+> |               fw_info.version.api_version,
+> |               fw_info.version.func_version,
+> |               fw_info.version.errata);
+>
+> Moreover, NUL-padding does not seem to be needed.
+>
+> Considering the above, a suitable replacement is `strscpy` [2] due to
+> the fact that it guarantees NUL-termination on the destination buffer
+> without unnecessarily NUL-padding.
+>
+> Let's also change `PRCMU_FW_PROJECT_NAME_LEN` to just
+> sizeof(fw_info.version.project_name) as this is more idiomatic strscpy
+> usage.
+>
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strn=
+cpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.h=
+tml [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-       	    	     	      	      	    - Ted
+Well analyzed, well patched, what can I say! Hats off.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
