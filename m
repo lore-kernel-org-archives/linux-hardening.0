@@ -1,103 +1,117 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F6AD11188;
-	Wed, 27 Sep 2023 22:29:33 +0000 (UTC)
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8632102;
-	Wed, 27 Sep 2023 15:29:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Y5BdNredrDHTYUunP3kApqKLWcDG2AzXoWP37/0LaLo=; b=ndvyW/v5AnnTWjFcOaHmQtJ2tQ
-	BC/6lzWxYgmdgHXT3PvPZcC090LQrp5ml02Ae1GnoSZckoSqvjoU59jpnfAR30t9sQc4/Tr/mYnNI
-	X6fsO3Ipq3PoKVycIJsEvT0+99hFr4CUSn/aQRGG2eC0g6Iw2svNRD/I3rMzmeTP9B1nb7c4dqeqA
-	JN6364DWbEtruq3HNM0pL9YLgknS628sDSI3CSoX5x4axSRNWXVW2YPZpfLHfh77TVYhq6vn6Ypxd
-	WcP/K9r5N10De0XaKEEw5J4cGIg6JXFmGw4wiy5LDY2ZiUC1DhwwA6Vw2c8s4Kjh2Vk+HNoezE5u+
-	4u/hMT3A==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1qld1m-00CP4N-2B;
-	Wed, 27 Sep 2023 22:29:07 +0000
-Date: Wed, 27 Sep 2023 23:29:06 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Fenghua Yu <fenghua.yu@intel.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-	Tejun Heo <tj@kernel.org>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Anna Schumaker <anna@kernel.org>, Kees Cook <keescook@chromium.org>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Naohiro Aota <naohiro.aota@wdc.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org,
-	linux-nfs@vger.kernel.org, linux-hardening@vger.kernel.org,
-	cgroups@vger.kernel.org
-Subject: Re: [PATCH 03/19] fs: release anon dev_t in deactivate_locked_super
-Message-ID: <20230927222906.GO800259@ZenIV>
-References: <20230913111013.77623-1-hch@lst.de>
- <20230913111013.77623-4-hch@lst.de>
- <20230913232712.GC800259@ZenIV>
- <20230926093834.GB13806@lst.de>
- <20230926212515.GN800259@ZenIV>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7447D163
+	for <linux-hardening@vger.kernel.org>; Thu, 28 Sep 2023 00:17:43 +0000 (UTC)
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C069BF;
+	Wed, 27 Sep 2023 17:17:37 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1c1ff5b741cso110949525ad.2;
+        Wed, 27 Sep 2023 17:17:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1695860257; x=1696465057; darn=vger.kernel.org;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qvZYJDFjw6AtaYjYTuzTNmQLcMXi0xxUU7gqtmd/9gc=;
+        b=OXkcPr1YDDHJxxiCkh2yzz/Wtwm7bow5DDBkAtRvRKzmK+53I/MLkvbUmrJ2vYC+8J
+         eW45Zw37QD47t9UuxkVBEjhwtfVzh0tASmopkSk96eWb35ijSphWsbuS+H7v7qZvCaxg
+         f84ENkWqWeM3Y0dcvxrOcYSpQ867GThLVmXAjfS4g484iXyp/iLra0uhRYNTTqaHcPJW
+         QyQlAdj+EAlhzbhbexRCEvJDwSKutyntaagrgK6HOlSXR/naUf9zLxpwZJCJN1sy2fId
+         VqClx7xGhBjDcR2LRIE0VjOWCYkHHGJ0zEyDwtFoaoNc2NLWqCWgNcv31Zctc24vz702
+         B+Kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695860257; x=1696465057;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=qvZYJDFjw6AtaYjYTuzTNmQLcMXi0xxUU7gqtmd/9gc=;
+        b=DE/CeKoMTZids8gZYE+1wtiFEhUT0MVbPNa3JyWgu8yv6LEQPXh0cnsL0sWDUpSHkP
+         v1vYPDtqlsIuiw2nEgEcOyi6Jl+4JIMwP6YCTUB2pTTPrJXnr/Fo+8KNlLP52iJd6sY1
+         Ig0IlHSBZT6ij02akzEY1ZLwzVe3WM0NnTFedjyda5djcxxXmZT/y7llTKCwwePAbTWr
+         hcSNzhL8Gn2jvCZ18lpPBQUqTBkfUwyzwKOvIorh3x+MH/Hegala6FVyTD5wkcicsnN1
+         YqstQMF7F9k7GkdsexO3usGhzH4ersQBcq2x2ewMGchEHbZgZBVamCSGLZGzjiZHi9BA
+         U8DQ==
+X-Gm-Message-State: AOJu0YwO6JRBwQj42MWCqkI+9pM0030aNfhRHvstiinIA+lZAJyvzzpR
+	ud0IF71+QNQ+ab0NDtUcEMk=
+X-Google-Smtp-Source: AGHT+IHlbfoihbCEKofpMw/0JZU0HYH2cWhIJn6F5hSC1Meu2QrWUcExGMHVTjyVpnTlXGel2ufM8w==
+X-Received: by 2002:a17:902:da84:b0:1c6:183a:f4ec with SMTP id j4-20020a170902da8400b001c6183af4ecmr3632437plx.17.1695860256324;
+        Wed, 27 Sep 2023 17:17:36 -0700 (PDT)
+Received: from [192.168.0.106] ([103.124.138.83])
+        by smtp.gmail.com with ESMTPSA id p11-20020a170902eacb00b001c625d6ffccsm5887624pld.129.2023.09.27.17.17.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 Sep 2023 17:17:35 -0700 (PDT)
+Message-ID: <99b9d4d1-f7a9-4b6c-aebf-ef1d2ddee0d7@gmail.com>
+Date: Thu, 28 Sep 2023 07:17:27 +0700
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230926212515.GN800259@ZenIV>
-Sender: Al Viro <viro@ftp.linux.org.uk>
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
-	autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: John Ogness <john.ogness@linutronix.de>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>, Petr Mladek
+ <pmladek@suse.com>, Todd Brandt <todd.e.brandt@intel.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Hardening <linux-hardening@vger.kernel.org>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Fwd: Performance regression: resume_console takes 100ms longer in
+ S2idle/S3 resume in v6.6-rc1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+	RCVD_IN_DNSWL_NONE,RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Tue, Sep 26, 2023 at 10:25:15PM +0100, Al Viro wrote:
+Hi,
 
-> Before your patch: foo_kill_super() calls kill_anon_super(),
-> which calls kill_super_notify(), which removes the sucker from
-> the list, then frees ->s_fs_info.  After your patch:
-> removal from the lists happens via the call of kill_super_notify()
-> *after* both of your methods had been called, while freeing
-> ->s_fs_info happens from the method call.  IOW, you've restored
-> the situation prior to "super: ensure valid info".  The whole
-> point of that commit had been to make sure that we have nothing
-> in the lists with ->s_fs_info pointing to a freed object.
+I notice a regression report on Bugzilla [1]. Quoting from it:
 
-More detailed example: take a look at NFS.  We have ->get_tree() there
-call sget_fc() with nfs_compare_super() as possible 'test' callback.
-It does look at ->s_fs_info of the superblocks found on the list
-of instances for fs type in question.  Moreover, it proceeds to
-call nfs_compare_mount_options(), which chases pointers from that
-(at the very least fetch ->client in nfs_server instance ->s_fs_info
-points to and dereferences that).
+> Ever since 6.6.0-rc1 we've seen S3 and S2idle resume take 100ms longer because of resume_comsole. resume_console ordinarily takes only a few milliseconds, but now it's consistently 100ms. I've bisected the issue to this commit:
+> 
+> commit 9e70a5e109a4a23367810de09be826c52d27ee2f
+> Author: John Ogness <john.ogness@linutronix.de>
+> Date:   Mon Jul 17 21:52:06 2023 +0206
+> 
+>     printk: Add per-console suspended state
+>     
+>     Currently the global @console_suspended is used to determine if
+>     consoles are in a suspended state. Its primary purpose is to allow
+>     usage of the console_lock when suspended without causing console
+>     printing. It is synchronized by the console_lock.
+>     
+>     Rather than relying on the console_lock to determine suspended
+>     state, make it an official per-console state that is set within
+>     console->flags. This allows the state to be queried via SRCU.
+>     
+>     Remove @console_suspended. Console printing will still be avoided
+>     when suspended because console_is_usable() returns false when
+>     the new suspended flag is set for that console.
+> 
+> We are seeing this on roughly 2/3 of our machines, both on test systems and production systems.
 
-We really, really do not want nfs_free_server() happen while the
-superblock is visible in the instances list.  Now, in your tree
-nfs_free_sb() call nfs_free_server().  *Without* having called
-kill_super_notify() first - you do that only after the call of
-->free_sb().
+Then,
 
-So with this series applied we have UAF on race between mount and
-umount.  For NFS.  No block devices involved.
+> The effect is most pronounced in the GigaByte z170x UD5. It goes from 300ms to 400ms because of an msleep 100 in the resume_console code. This might not seem like much but it's in series with everything else so it will always be there. Our goal is to keep both suspend and resume under 1 second if at all possible, so every bit counts.
 
-Old logics had been "after generic_shutdown_super() the private
-parts of superblock belong to filesystem alone; they might be
-accessed by methods called from RCU pathwalk, but that's it".
+See Bugzilla for the full thread and attached sleepgraph timelines
+(in html format).
 
-I still don't see any clear rules for the new one.  And the more
-I'm looking, the more sceptical I get about the approach you've
-taken, TBH...
+Anyway, I'm adding this regression to be tracked by regzbot:
+
+#regzbot introduced: 9e70a5e109a4a2 https://bugzilla.kernel.org/show_bug.cgi?id=217955
+#regzbot title: resume_console performance regression due to per-console suspended state
+
+Thanks.
+
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217955
+
+-- 
+An old man doll... just what I always wanted! - Clara
