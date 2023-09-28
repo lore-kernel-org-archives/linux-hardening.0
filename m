@@ -1,139 +1,176 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB5AE749B
-	for <linux-hardening@vger.kernel.org>; Thu, 28 Sep 2023 04:48:50 +0000 (UTC)
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A940139
-	for <linux-hardening@vger.kernel.org>; Wed, 27 Sep 2023 21:48:47 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id a640c23a62f3a-9b0168a9e05so1319950366b.3
-        for <linux-hardening@vger.kernel.org>; Wed, 27 Sep 2023 21:48:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1695876525; x=1696481325; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=heHPGL1VWDNNf6XFxEEfiRz4HN3qiwrjyD3dIT3TT3Y=;
-        b=iFtUSMQ2WG+o3eku0DMh8DgE/Lz1f2VH6+eYClR1+G8JlIHRsTFy84+FWsSdyZxq21
-         8fL4JATtWSDiuj9CnY1bYHTy++1A6GWWFmsoGOheEGiQst3VVIPGcD1C40Wljbcu6qSE
-         XaXvL55UpA3b/JOh7C305laFdjoJnz3TpRU0lJ+jAUBzbDf0bLapd9z4Bhyokn21YZRU
-         9B6wfV55CiHS8oxLsRv6FjDi+PeD83EqF/7yvZrGQNvcv1nllpA2UnD8Vt71Ffls44wI
-         ogqyU2GIDRKtW3WNPPy8z8NIOZgYVx1R0CjLfkDIzEESSCCd6ii9LZZeomD5gbjwUk30
-         Wz7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695876525; x=1696481325;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=heHPGL1VWDNNf6XFxEEfiRz4HN3qiwrjyD3dIT3TT3Y=;
-        b=hrxD4lEhOQ3FocwuOvs0n0mU/TnJBdnKh/8LjOe8EhHHvHW8YX+C9sj8jZkrNgD3Xr
-         +sNX3sXI/80NM2Gg/h0Sd33x3ZuudDbWrjKZIIJRVGbbtcuaWvfIFNXwlBasMNHEXjvs
-         rtvlLnaDIrZjkjyJ0gbZMtvND0dhfzJ3KcqUZqgOuAPQZd4FP1MnvMPMTqFBdhtE0gQn
-         wXqtl/dO1gXDz3Q6BuusCPMmTC/UsKO1HRoG0PK4PPSgplhU/s0+XCSq06qkGxqDDOff
-         9LOfWgmEgvaCfk5QjxgPvr17KrDagOD7cmrvcp0Lqja8EueUHyQiE/+jYGaMOk0YKAwP
-         MOHw==
-X-Gm-Message-State: AOJu0Yw3JqyPs0xkCnQpA7ekeCRLefAWgMx26zXrb3z/X0CZUAJluHl7
-	+Zh8FJaw6BJDQQO7+Nm8jlS8dzOy/jqzv0dmRxRYHg==
-X-Google-Smtp-Source: AGHT+IGiiFxnaM49SGb+63NiClG0YLueyxu9CNO9+fTK7ufBWNBl6F+BFa5pFCOChXf1fAyEMh5KUhanvrUUAun0FOY=
-X-Received: by 2002:a17:906:8a77:b0:9ae:5848:3f8e with SMTP id
- hy23-20020a1709068a7700b009ae58483f8emr150816ejc.49.1695876525470; Wed, 27
- Sep 2023 21:48:45 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B1291863F
+	for <linux-hardening@vger.kernel.org>; Thu, 28 Sep 2023 06:43:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55545C433C8;
+	Thu, 28 Sep 2023 06:43:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1695883404;
+	bh=DSvDae1aDnAGK6cZ1bq0OV0fku1272PZ2tdvrFmrup4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=xm1YqDrbd47/RaAXYtFbyDPcMfa81W/h3Bqbh5qK1av3hDzGKhVxeBgQbahJzJt3p
+	 Lc5jIl5zrlw64Ebf55Aez44e13cTU1VioTZXZXPpDq+IoHPMiaYb5/R06abeYxxGFf
+	 3xopreGCGy0F88x4Lu3Bv4vxn4QlBBdcunhiZ3Xs=
+Date: Thu, 28 Sep 2023 08:43:22 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Yuanhe Shu <xiangzao@linux.alibaba.com>
+Cc: jirislaby@kernel.org, keescook@chromium.org, tony.luck@intel.com,
+	gpiccoli@igalia.com, shuah@kernel.org, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	Xingrui Yi <yixingrui@linux.alibaba.com>
+Subject: Re: [PATCH 1/5] pstore: add tty frontend
+Message-ID: <2023092804-backslid-ninth-3afe@gregkh>
+References: <20230928024244.257687-1-xiangzao@linux.alibaba.com>
+ <20230928024244.257687-2-xiangzao@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230922175319.work.096-kees@kernel.org>
-In-Reply-To: <20230922175319.work.096-kees@kernel.org>
-From: Justin Stitt <justinstitt@google.com>
-Date: Thu, 28 Sep 2023 13:48:34 +0900
-Message-ID: <CAFhGd8qdBmqwxAWsxDmmRYweOTRK33nFXWdM_QpqHtv6=bOcOQ@mail.gmail.com>
-Subject: Re: [PATCH] cxl/acpi: Annotate struct cxl_cxims_data with __counted_by
-To: Kees Cook <keescook@chromium.org>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
-	Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
-	autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230928024244.257687-2-xiangzao@linux.alibaba.com>
 
-On Sat, Sep 23, 2023 at 2:53=E2=80=AFAM Kees Cook <keescook@chromium.org> w=
-rote:
->
-> Prepare for the coming implementation by GCC and Clang of the __counted_b=
-y
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUND=
-S
-> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
->
-> As found with Coccinelle[1], add __counted_by for struct cxl_cxims_data.
-> Additionally, since the element count member must be set before accessing
-> the annotated flexible array member, move its initialization earlier.
->
-> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/c=
-ounted_by.cocci
->
-> Cc: Davidlohr Bueso <dave@stgolabs.net>
-> Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Alison Schofield <alison.schofield@intel.com>
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: linux-cxl@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-
-Looks good.
-
-The reordering of the count assignment is crucial here otherwise
-the runtime checks will trip when `cximsd->xormaps` is used as
-memcpy destination.
-
-Reviewed-by: Justin Stitt <justinstitt@google.com>
-
+On Thu, Sep 28, 2023 at 10:42:40AM +0800, Yuanhe Shu wrote:
+> Provide a pstore frontend which can log all messages that are send
+> to tty drivers when there are some problems with drivers or there
+> is no access to serial ports.
+> 
+> Using pmsg requires us to redirect the output of the user state.
+> When we need to globally view the serial output of various processes,
+> it is tedious to redirect the output of each process. We think pmsg is
+> more suitable for targeted viewing of certain processes' output, and
+> we also need a tool that can quickly do a global view so that we can
+> get user-state printed data if the tty driver is working abnormally or
+> if we don't have serial access.
+> 
+> Furthermore, by enabling tty frontend and console/dmesg frontend in
+> dump capture kernel, one can collect kernel and user messages to
+> discover why kdump service works abnormal.
+> 
+> Signed-off-by: Yuanhe Shu <xiangzao@linux.alibaba.com>
+> Signed-off-by: Xingrui Yi <yixingrui@linux.alibaba.com>
 > ---
->  drivers/cxl/acpi.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> index d1c559879dcc..40d055560e52 100644
-> --- a/drivers/cxl/acpi.c
-> +++ b/drivers/cxl/acpi.c
-> @@ -14,7 +14,7 @@
->
->  struct cxl_cxims_data {
->         int nr_maps;
-> -       u64 xormaps[];
-> +       u64 xormaps[] __counted_by(nr_maps);
->  };
->
->  /*
-> @@ -112,9 +112,9 @@ static int cxl_parse_cxims(union acpi_subtable_header=
-s *header, void *arg,
->                               GFP_KERNEL);
->         if (!cximsd)
->                 return -ENOMEM;
-> +       cximsd->nr_maps =3D nr_maps;
->         memcpy(cximsd->xormaps, cxims->xormap_list,
->                nr_maps * sizeof(*cximsd->xormaps));
-> -       cximsd->nr_maps =3D nr_maps;
->         cxlrd->platform_data =3D cximsd;
->
->         return 0;
-> --
-> 2.34.1
->
->
+>  drivers/tty/n_tty.c         |  1 +
+>  fs/pstore/Kconfig           | 23 +++++++++++++++++
+>  fs/pstore/Makefile          |  2 ++
+>  fs/pstore/blk.c             | 10 ++++++++
+>  fs/pstore/internal.h        |  8 ++++++
+>  fs/pstore/platform.c        |  5 ++++
+>  fs/pstore/ram.c             | 40 +++++++++++++++++++++++++++--
+>  fs/pstore/tty.c             | 50 +++++++++++++++++++++++++++++++++++++
+>  fs/pstore/zone.c            | 42 ++++++++++++++++++++++++++++++-
+>  include/linux/pstore.h      |  2 ++
+>  include/linux/pstore_blk.h  |  3 +++
+>  include/linux/pstore_ram.h  |  1 +
+>  include/linux/pstore_zone.h |  2 ++
+>  include/linux/tty.h         | 14 +++++++++++
+>  14 files changed, 200 insertions(+), 3 deletions(-)
+>  create mode 100644 fs/pstore/tty.c
+> 
+> diff --git a/drivers/tty/n_tty.c b/drivers/tty/n_tty.c
+> index 552e8a741562..55ca40605e4c 100644
+> --- a/drivers/tty/n_tty.c
+> +++ b/drivers/tty/n_tty.c
+> @@ -582,6 +582,7 @@ static ssize_t process_output_block(struct tty_struct *tty,
+>  		}
+>  	}
+>  break_out:
+> +	tty_pstore_hook(buf, i);
+
+"hook"?  That does not help explain what this is doing here at all.  A
+better name would be best, but why is this part of n_tty at all?  Why
+isn't it a console driver just for this, you are sitting in the middle
+of the fast-path of the tty layer sucking in data all the time, what is
+the performance impact of this extra jump?
+
+> --- a/fs/pstore/blk.c
+> +++ b/fs/pstore/blk.c
+> @@ -52,6 +52,14 @@ static long ftrace_size = -1;
+>  module_param(ftrace_size, long, 0400);
+>  MODULE_PARM_DESC(ftrace_size, "ftrace size in kbytes");
+>  
+> +#if IS_ENABLED(CONFIG_PSTORE_TTY)
+> +static long tty_size = CONFIG_PSTORE_BLK_TTY_SIZE;
+> +#else
+> +static long tty_size = -1;
+> +#endif
+> +module_param(tty_size, long, 0400);
+> +MODULE_PARM_DESC(tty_size, "tty_size size in kbytes");
+
+Do we really need more module parameters that are undocumented?
+
+> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+> index 2f625e1fa8d8..f59712bc51d3 100644
+> --- a/fs/pstore/ram.c
+> +++ b/fs/pstore/ram.c
+> @@ -44,6 +44,10 @@ static ulong ramoops_pmsg_size = MIN_MEM_SIZE;
+>  module_param_named(pmsg_size, ramoops_pmsg_size, ulong, 0400);
+>  MODULE_PARM_DESC(pmsg_size, "size of user space message log");
+>  
+> +static ulong ramoops_tty_size = MIN_MEM_SIZE;
+> +module_param_named(tty_size, ramoops_tty_size, ulong, 0400);
+> +MODULE_PARM_DESC(tty_size, "size of tty message log");
+
+Again, why a module parameter?
+
+> --- /dev/null
+> +++ b/fs/pstore/tty.c
+> @@ -0,0 +1,50 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Provide a pstore frontend which can log all messages that are send
+> + * to tty drivers when there are some problems with drivers or there
+> + * is no access to serial ports.
+> + */
+
+No copyright line?  Are you sure your company is ok with that?
+
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/tty.h>
+> +#include <linux/tty_driver.h>
+> +#include "internal.h"
+> +
+> +DEFINE_STATIC_KEY_FALSE(tty_key);
+> +
+> +#define TTY_NAME "tty"
+> +#undef pr_fmt
+> +#define pr_fmt(fmt) TTY_NAME ": " fmt
+> +
+> +static void do_write_ttymsg(const unsigned char *buf, int count,
+> +							struct pstore_info *psinfo)
+
+Odd formatting :(
+
+
+> +{
+> +	struct pstore_record record, newline;
+> +
+> +	pstore_record_init(&record, psinfo);
+> +	record.type = PSTORE_TYPE_TTY;
+> +	record.size = count;
+> +	record.buf = (char *)buf;
+
+Why the casting?  Why isn't the buffer a u8 * here?
+
+> +	psinfo->write(&record);
+> +
+> +	pstore_record_init(&newline, psinfo);
+> +	newline.type = PSTORE_TYPE_TTY;
+> +	newline.size = strlen("\n");
+> +	newline.buf = "\n";
+> +	psinfo->write(&newline);
+
+Why have 2 structures and not just one?  And why the new line all the
+time, you are not guaranteed that your buffer must have a new line here,
+it could be in the middle of a hunk of data that is longer than the
+normal buffer size.  Why not rely on the tty data to handle the new line
+stuff for you in the proper location?
+
+thanks,
+
+greg k-h
