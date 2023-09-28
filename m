@@ -1,155 +1,115 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10CA51118
-	for <linux-hardening@vger.kernel.org>; Thu, 28 Sep 2023 01:18:35 +0000 (UTC)
-Received: from crane.ash.relay.mailchannels.net (crane.ash.relay.mailchannels.net [23.83.222.43])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25F4CF5;
-	Wed, 27 Sep 2023 18:18:31 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 0925681796;
-	Thu, 28 Sep 2023 01:18:28 +0000 (UTC)
-Received: from pdx1-sub0-mail-a245.dreamhost.com (unknown [127.0.0.6])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 6035681907;
-	Thu, 28 Sep 2023 01:18:27 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1695863907; a=rsa-sha256;
-	cv=none;
-	b=V4wYvncNg7bEDdCPtYHL+fbFo8S181rnzS/3S+9PYcembfJCHai+NfQXQoqKRHK+iFcxi9
-	8GBeqVTLC1nNkbYoIg1m92PPxWnq5++vc9g6zlcITra05VYL+maeOh4By5/cKT+bUYlnTN
-	A5ry1Ziiii4Lkfl0uzaj6i/KEw6cNkj1H/ufu0Bzsk7USMGzC3X9ycBdv4SwvjsVQp0GLQ
-	MGCk+GEOLYXZgu2I4ehra+neCg3n9it/j0i66YrFm9gi7IQcp33BHd8Ym+sNlg+ohjOfnt
-	PBB2wc73OT2aBOt23qF/ZOHT9cAIYsc0jRYweZeGLw5GZeXAFUrjVslQMuVIUQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1695863907;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=l+vBFqPjBMKFbqu5XhbV2rCmcl4slYz26Cs5fxb/yqc=;
-	b=koec0pYPCw9g0QRdwaUdTM5lKi8bcpDDkH628od9Ivo9tlfb1AhyTnbSMlfIF3k35mPm1T
-	i7/68OIGBoAfVRidX3GGb4ThoXjHSZqqxW/ZPXh+luSgGYnY2bmC7aSxser7DcyefuFbdK
-	Y4UNAybBO9aE9u+sQQ9hgxbEbI/oQMD+9fWIAO5N7DxArTiKso7KBfLUMln3gc1FRlZlEb
-	+qxC4YtFnTYowA4XzQmce5+SbUJbWA71ltusozXnjmsdb04UGU+xYKzxo1x2TFiX5UNsUy
-	tALZfnDi0e2TBXdwmZq1sBjy7RVKN3LahwyUoXavqT09ZxDEfGWZehMYlToVhA==
-ARC-Authentication-Results: i=1;
-	rspamd-7d5dc8fd68-mc6tx;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Arithmetic-Turn: 159e1a1812a75633_1695863907725_2640573531
-X-MC-Loop-Signature: 1695863907725:2557605338
-X-MC-Ingress-Time: 1695863907725
-Received: from pdx1-sub0-mail-a245.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.109.110.212 (trex/6.9.1);
-	Thu, 28 Sep 2023 01:18:27 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a245.dreamhost.com (Postfix) with ESMTPSA id 4RwwbQ3gL3zK5;
-	Wed, 27 Sep 2023 18:18:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1695863907;
-	bh=l+vBFqPjBMKFbqu5XhbV2rCmcl4slYz26Cs5fxb/yqc=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=rJgekkcoy7Q8C/P9/eF8+K1d9bkC2cx9hbqs0snKgxexK5VLvQ3fQ298p9phsEqSD
-	 4INrjIaxHYy+BSiXnr2s5AcKmHdIjbg0KDP3sF58PyfHxsRJ4T90Esv6rDKpMGhMV6
-	 3Wv15rL/aMnmhqMXGuShpco3pgocfHTjvldifqcn4jyR2OTJ8FUeItexnVWPU3/1YO
-	 gi2K//U+19T9LI3ikyVQTPbKMMc0mxU8SGqk8qBgIT87+Ewx8+lKzQN1j9IKHU59A+
-	 0BpKre3NWP9SQhyrQb+jk0cRwxacZqbtjiqMpMWsiNgLnkFzsY+Po3lXA63efNHpwd
-	 TRy9yu5g9FcrA==
-Date: Wed, 27 Sep 2023 18:18:23 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Kees Cook <keescook@chromium.org>
-Cc: Jonathan Cameron <jonathan.cameron@huawei.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
-	Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org, 
-	llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] cxl/acpi: Annotate struct cxl_cxims_data with
- __counted_by
-Message-ID: <2jvukfliknlhy2j4fespmmezbjc4q4kffznfyeloirs6flya42@hniebubdznlh>
-References: <20230922175319.work.096-kees@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4F2CA50
+	for <linux-hardening@vger.kernel.org>; Thu, 28 Sep 2023 02:43:49 +0000 (UTC)
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5757794;
+	Wed, 27 Sep 2023 19:43:47 -0700 (PDT)
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=xiangzao@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0Vt.rlBx_1695869003;
+Received: from localhost.localdomain(mailfrom:xiangzao@linux.alibaba.com fp:SMTPD_---0Vt.rlBx_1695869003)
+          by smtp.aliyun-inc.com;
+          Thu, 28 Sep 2023 10:43:45 +0800
+From: Yuanhe Shu <xiangzao@linux.alibaba.com>
+To: gregkh@linuxfoundation.org,
+	jirislaby@kernel.org,
+	keescook@chromium.org,
+	tony.luck@intel.com,
+	gpiccoli@igalia.com,
+	shuah@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	Yuanhe Shu <xiangzao@linux.alibaba.com>
+Subject: [PATCH 0/5] pstore: add tty frontend and multi-backend
+Date: Thu, 28 Sep 2023 10:42:39 +0800
+Message-Id: <20230928024244.257687-1-xiangzao@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20230922175319.work.096-kees@kernel.org>
-User-Agent: NeoMutt/20230517
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
+	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no
+	version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Fri, 22 Sep 2023, Kees Cook wrote:
+In public cloud scenario, if kdump service works abnormally,
+users cannot get vmcore. Without vmcore, user has no idea why the
+kernel crashed. Meanwhile, there is no additional information
+to find the reason why the kdump service is abnormal.
 
->Prepare for the coming implementation by GCC and Clang of the __counted_by
->attribute. Flexible array members annotated with __counted_by can have
->their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
->(for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
->functions).
->
->As found with Coccinelle[1], add __counted_by for struct cxl_cxims_data.
->Additionally, since the element count member must be set before accessing
->the annotated flexible array member, move its initialization earlier.
+One way is to obtain console messages through VNC. The drawback 
+is that VNC is real-time, if user missed the timing to get the VNC
+output, the crash needs to be retriggered.
 
-Nice.
+Another way is to enable the console frontend of pstore and record the
+console messages to the pstore backend. On the one hand, the console
+logs only contain kernel printk logs and does not cover
+user-mode print logs. Although we can redirect user-mode logs to the
+pmsg frontend provided by pstore, user-mode information related to
+booting and kdump service vary from systemd, kdump.sh, and so on which
+makes redirection troublesome. So we added a tty frontend and save all
+logs of tty driver to the pstore backend.
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+Another problem is that currently pstore only supports a single backend.
+For debugging kdump problems, we hope to save the console logs and tty
+logs to the ramoops backend of pstore, as it will not be lost after
+rebooting. If the user has enabled another backend, the ramoops backend
+will not be registered. To this end, we add the multi-backend function
+to support simultaneous registration of multiple backends.
 
->
->[1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
->
->Cc: Davidlohr Bueso <dave@stgolabs.net>
->Cc: Jonathan Cameron <jonathan.cameron@huawei.com>
->Cc: Dave Jiang <dave.jiang@intel.com>
->Cc: Alison Schofield <alison.schofield@intel.com>
->Cc: Vishal Verma <vishal.l.verma@intel.com>
->Cc: Ira Weiny <ira.weiny@intel.com>
->Cc: Dan Williams <dan.j.williams@intel.com>
->Cc: linux-cxl@vger.kernel.org
->Signed-off-by: Kees Cook <keescook@chromium.org>
->---
-> drivers/cxl/acpi.c | 4 ++--
-> 1 file changed, 2 insertions(+), 2 deletions(-)
->
->diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
->index d1c559879dcc..40d055560e52 100644
->--- a/drivers/cxl/acpi.c
->+++ b/drivers/cxl/acpi.c
->@@ -14,7 +14,7 @@
->
-> struct cxl_cxims_data {
->	int nr_maps;
->-	u64 xormaps[];
->+	u64 xormaps[] __counted_by(nr_maps);
-> };
->
-> /*
->@@ -112,9 +112,9 @@ static int cxl_parse_cxims(union acpi_subtable_headers *header, void *arg,
->			      GFP_KERNEL);
->	if (!cximsd)
->		return -ENOMEM;
->+	cximsd->nr_maps = nr_maps;
->	memcpy(cximsd->xormaps, cxims->xormap_list,
->	       nr_maps * sizeof(*cximsd->xormaps));
->-	cximsd->nr_maps = nr_maps;
->	cxlrd->platform_data = cximsd;
->
->	return 0;
->--
->2.34.1
->
+Based on the above changes, we can enable pstore in the crashdump kernel
+and save the console logs and tty logs to the ramoops backend of pstore.
+After rebooting, we can view the relevant logs by mounting the pstore
+file system.
+
+Furthermore, we also modified kexec-tools referring to crash-utils for
+reading memory, so that pstore ramoops information can be read without
+enabling pstore in first kernel. As we set the address and size of ramoops,
+as well as the sizes of console and tty, we can infer the physical address
+of console logs and tty logs in memory. Referring to the read method of
+crash-utils, the console logs and tty logs are read from the memory,
+user can get pstore debug information without affecting the first kernel
+at all.
+
+kexec-tools modification can be seen at
+https://github.com/shuyuanmen/kexec-tools/blob/main/Add-pstore-segment.patch
+
+Yuanhe Shu (5):
+  pstore: add tty frontend
+  pstore: add multi-backends support
+  pstore: add subdirs for multi-backends
+  pstore: remove the module parameter "backend"
+  tools/pstore: update pstore selftests
+
+ drivers/tty/n_tty.c                         |   1 +
+ fs/pstore/Kconfig                           |  23 ++
+ fs/pstore/Makefile                          |   2 +
+ fs/pstore/blk.c                             |  10 +
+ fs/pstore/ftrace.c                          |  22 +-
+ fs/pstore/inode.c                           |  86 ++++++-
+ fs/pstore/internal.h                        |  16 +-
+ fs/pstore/platform.c                        | 238 ++++++++++++--------
+ fs/pstore/pmsg.c                            |  23 +-
+ fs/pstore/ram.c                             |  40 +++-
+ fs/pstore/tty.c                             |  56 +++++
+ fs/pstore/zone.c                            |  42 +++-
+ include/linux/pstore.h                      |  33 +++
+ include/linux/pstore_blk.h                  |   3 +
+ include/linux/pstore_ram.h                  |   1 +
+ include/linux/pstore_zone.h                 |   2 +
+ include/linux/tty.h                         |  14 ++
+ tools/testing/selftests/pstore/common_tests |   4 -
+ 18 files changed, 500 insertions(+), 116 deletions(-)
+ create mode 100644 fs/pstore/tty.c
+
+-- 
+2.39.3
+
