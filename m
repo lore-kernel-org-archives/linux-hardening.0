@@ -1,59 +1,59 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43DB246A9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC2835244
 	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 03:24:44 +0000 (UTC)
-Received: from mail-qk1-x729.google.com (mail-qk1-x729.google.com [IPv6:2607:f8b0:4864:20::729])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD51D1AC
-	for <linux-hardening@vger.kernel.org>; Thu, 28 Sep 2023 20:24:40 -0700 (PDT)
-Received: by mail-qk1-x729.google.com with SMTP id af79cd13be357-7742da399a2so624678085a.0
-        for <linux-hardening@vger.kernel.org>; Thu, 28 Sep 2023 20:24:40 -0700 (PDT)
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BA551AA
+	for <linux-hardening@vger.kernel.org>; Thu, 28 Sep 2023 20:24:42 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id 98e67ed59e1d1-2777a5e22b5so5735839a91.1
+        for <linux-hardening@vger.kernel.org>; Thu, 28 Sep 2023 20:24:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695957880; x=1696562680; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1695957881; x=1696562681; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7JCtI6Mw9jLbpCfzTWeYqaol0MCiq7teZQqSoN5bxO4=;
-        b=PAEZ/ez4XM+Nfd7IxqcYrATv76QfWiEkrKWgea+lJzL31QWfywvX55Hr196SMSWJv2
-         H+tdJI+HyacXvcIeNp6Xwg12Gxfp9T1WzOP7CBBIDiCRmh3z9klBb8Zqmb62ID6ugxzS
-         /Bxt6UgTKJOkP4uKTqSctiHKw+9ZTNqwBg3ts=
+        bh=+wPEhWpvRY896Xnw5Ev1/y00zI5fAQGyVN5RsYugNn8=;
+        b=QIPJhQmPgqMaezjOXQu9ufOmTKlnJYeYRBnC/L59my/pZbXCnc0RWylCjiZ3ymcOkJ
+         LWZpFCY0T/PBct+kWcmVACzEjG/mtT3nN/shP/UZlrbjlVLQlJMukDG5/54WFFl1FZDM
+         XxJBi9w42no+IBnHSdFzxtp2hu5/Yd+gnBi8s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695957880; x=1696562680;
+        d=1e100.net; s=20230601; t=1695957881; x=1696562681;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7JCtI6Mw9jLbpCfzTWeYqaol0MCiq7teZQqSoN5bxO4=;
-        b=hL7HYTM/bjSPwWaW9BXTkFiOPwnbkEEY7rhWUiAsLP8aDVocZYukY1k2dbkUK1/zNZ
-         n2mJYsKWIAYSD8myjEjLpK5kcpi3K51bjZ4HJiZYMr/8SB2kjjK0lHwHHk9JWxpM9n8G
-         UglSeENnNJAK1C9m+aj/nfmgcBnPOwBeNLEUPX9OTcAgPnZoXs7sWp9+9sgqrqHabxoV
-         VLRs6mxbnepMLS7i0bTDUPfQPpofFyeHHH7sL1dXsClQ/oTW529kGfbCSvdVP3gYKEhh
-         ZAy23CdSWNHWiKbHFinCMJQhRvREiwFwHna/CR5McyXpIq05JaHJffGIKyjCcQ69aOJf
-         BYTw==
-X-Gm-Message-State: AOJu0YzxQw0lgU85GeLTVXzyRgccs+28A4kqGgrijJygOAaFfnz7xcH4
-	NOTVnEu6lYl2E2n8h1Sz3yywJif6tAwx1eRQe2Q=
-X-Google-Smtp-Source: AGHT+IELcqZMMKb1td/vncjB5sH12I54PHU5TdsvQyhNwOMv+fB/QBhAjEGhxQYK020wITjebfX9sQ==
-X-Received: by 2002:a05:620a:e9d:b0:772:6443:daf3 with SMTP id w29-20020a05620a0e9d00b007726443daf3mr2738735qkm.66.1695957879917;
-        Thu, 28 Sep 2023 20:24:39 -0700 (PDT)
+        bh=+wPEhWpvRY896Xnw5Ev1/y00zI5fAQGyVN5RsYugNn8=;
+        b=VKP6Lc1Hd/7jWp7BQJpwLJQ+qB2KbZlZOFQ2sg0g5cdAiUHwC49Pa7NFgQU0UFtpGY
+         mdkIWp3mJby7QcDsaunyfIz3uKOibeMCNff54S/fiMunGoMUOKRPq7DoBYK5UA/EpD2C
+         uzgnE5A8ZyiyEj9m8RnwdmG0OKIf2XuPpb02xcqlKMFfVY9piifJVYr1CE3z/CLJCL5l
+         JYnTXOrC88AavR4ARiT4arUlbjfwaStCR2CYELwojghlzh0f9ftU/GgcEYCT/K3ev3kH
+         KQ4cpGeldBgwcrYGPm5YD1CLtUjJhZY4gKCgOUQ+9+JYdKRVswo7xnhMrJG0sYp3HMRH
+         yG+A==
+X-Gm-Message-State: AOJu0YzUzKqgiiQS2zgf19j4Jk8AxAPDQxfMhJeSD3eXBGGDgoWZG5Ku
+	Zq6HPxZ720K/LbyKIT9c+C2cnA==
+X-Google-Smtp-Source: AGHT+IGrJvdYK0UubFjOkgcsulZp4Iwd9Tt7tIAbT+bREXfQrb6kahqghubh3CtXHQN6f3Ye2DXCOA==
+X-Received: by 2002:a17:90a:ba92:b0:267:ffcf:e9e3 with SMTP id t18-20020a17090aba9200b00267ffcfe9e3mr3087478pjr.46.1695957881706;
+        Thu, 28 Sep 2023 20:24:41 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id du14-20020a056a002b4e00b00690fe1c928esm10256201pfb.91.2023.09.28.20.24.36
+        by smtp.gmail.com with ESMTPSA id x15-20020a17090a530f00b0027654d389casm297683pjh.54.2023.09.28.20.24.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Sep 2023 20:24:36 -0700 (PDT)
+        Thu, 28 Sep 2023 20:24:39 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
 To: Eric Biederman <ebiederm@xmission.com>
 Cc: Kees Cook <keescook@chromium.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	linux-fsdevel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
 	linux-mm@kvack.org,
-	Pedro Falcato <pedro.falcato@gmail.com>,
 	Sebastian Ott <sebott@redhat.com>,
 	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-	Andrew Morton <akpm@linux-foundation.org>,
+	Pedro Falcato <pedro.falcato@gmail.com>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
 	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v4 3/6] binfmt_elf: Use elf_load() for interpreter
-Date: Thu, 28 Sep 2023 20:24:31 -0700
-Message-Id: <20230929032435.2391507-3-keescook@chromium.org>
+Subject: [PATCH v4 6/6] mm: Remove unused vm_brk()
+Date: Thu, 28 Sep 2023 20:24:34 -0700
+Message-Id: <20230929032435.2391507-6-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230929031716.it.155-kees@kernel.org>
 References: <20230929031716.it.155-kees@kernel.org>
@@ -63,118 +63,87 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2936; i=keescook@chromium.org;
- h=from:subject; bh=8mN64ZnApkL7mlS3J3j8M/PeeHjiU24xpvEFIwO52Sc=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlFkNyQ5p5E4Tg789OjEFFGvDw6hy8O/CboaqJO
- +gn/YtsP02JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZRZDcgAKCRCJcvTf3G3A
- JlfrD/0UmFIiwvqM26CPsRIStoMfmoWWLE+1T0+B6VIpoHHYl6fxgrYIk1GMjuaGbD0RwF9QP+t
- BqcWROGSbE7jtsk5rW33lmv5P4kATjv1E8P0xTh6YLwy/qmxm1iBcqH7A7aIp5rT/ZZxmRWS7z/
- KaumFG9s9XzIzz7vNtyCpYAslNBn7Ct0D760d/KdyUyF0tRcwUZGbbqsCSJ3qDlqi9Oh48d8rqr
- zVrOdBbcoN0GFz2NFhwg1g0iypiVC72gYNSKuCVuYoSflzMWmk+MWWz+KoGHh8QQyufk09tUrRt
- 7e7QzVJPtxRfKGiVSBnbT7mPxw87BCa7B1z+sX5Sj7D4++z7rbKsnwJGiOeSn9hRsn3zwU/bHKg
- 2VugFFQ+5/llgN3z58QGPu56dO6ydWYCZeneBcrQoNc1xhZyz8M2IpA5m0iJS719hxg22R2fW1p
- xaQITu1kMm0y6BxdReD/XHhw3eM0HzXWV9ltG8nLrJXOVz5Ve3z1wcEusMGPOh07NsX6dEfXDJv
- XYtMF21/+UxnZ3eYxaWMHimE+Qo2DtB694DxSqJhwRK4FB4KUShHOAsbSQTcGSzXCx13gP3vhF0
- S8eSoWkYBz90zkFWSPCcyq4F9jfXjVmVgHQgU/leUKWz2vDzeEVdmX04CQNaCQPS6MFWyGJaKml bTMeDeMtwCCfvfQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2050; i=keescook@chromium.org;
+ h=from:subject; bh=qQgWJ2LfzVKqVSy79Ld0II87Ub3I62svbZlMXS8eqNU=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlFkNyozNMKFDP2i80754Px/+ZY/Cx7wBo4sXmZ
+ GfAFEgqokWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZRZDcgAKCRCJcvTf3G3A
+ JvugEAC1X9CtGDjUrVOsqG0t9TTnzkbAODtZErc43R+VjV7tM+wgC1YoBq1uGKg3kk/39J5ROiJ
+ rUkABHj3UilMN33EplFoDi9bG/ErY91MQttOzzjtGtjVqWIrEJ/Vl9Txp0Lfb8zYFy9NsK/6FUL
+ MtgFp5sk40k0qU96E6p96fB7SzEc44a33CLYYExFKVE2M08Bylw2aJ9Ee0dsno2XN3kwHuLByFf
+ wcJ9XIEkkKA6ek8B7IuLsRGmbigeQnoNgTo87K5bPOqAGNyvV5AaKea9aX90W7XTFl3Mg767UDU
+ QBSQvaLWv+t6WEIH+DBweDTKSOHJsyAOniUBtf5ZYA37xZuqPVJdtHMHNT5eperaA7H3rjw+UUz
+ Jlq6iSEPSQzB/ur6ucWrK0s4O62amvSspv633OZXBOo6liFA9krixvk0n9DDIpK4izJk9sqIro1
+ JU8Wshi103umj8FDzYRXujBj+g//VNypVJAxw30ltepS01lpNn33UpY/bazcxEBWtzAI6WzksOn
+ OioMLo/fYEk9tr3WtHRgTsp7V0afPDYJ6aOpeBzZjAdyfqtuIfngMDD8ITow2mnQdSypEQ39K9p
+ Rr6tuk/SEYKG3c/cQmyk7L+/cRTRAgeeYxAnZFNKbHqj7DeGYfmOdb6oTSlHNHgU9S+L8PRk5BL FEozwXjpMVEPE4w==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.6
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Handle arbitrary memsz>filesz in interpreter ELF segments, instead of
-only supporting it in the last segment (which is expected to be the
-BSS).
+With fs/binfmt_elf.c fully refactored to use the new elf_load() helper,
+there are no more users of vm_brk(), so remove it.
 
-Cc: Eric Biederman <ebiederm@xmission.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: linux-mm@kvack.org
-Reported-by: Pedro Falcato <pedro.falcato@gmail.com>
-Closes: https://lore.kernel.org/lkml/20221106021657.1145519-1-pedro.falcato@gmail.com/
+Suggested-by: Eric Biederman <ebiederm@xmission.com>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- fs/binfmt_elf.c | 46 +---------------------------------------------
- 1 file changed, 1 insertion(+), 45 deletions(-)
+ include/linux/mm.h | 3 +--
+ mm/mmap.c          | 6 ------
+ mm/nommu.c         | 5 -----
+ 3 files changed, 1 insertion(+), 13 deletions(-)
 
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index 0214d5a949fc..db47cb802f89 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -622,8 +622,6 @@ static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
- 	struct elf_phdr *eppnt;
- 	unsigned long load_addr = 0;
- 	int load_addr_set = 0;
--	unsigned long last_bss = 0, elf_bss = 0;
--	int bss_prot = 0;
- 	unsigned long error = ~0UL;
- 	unsigned long total_size;
- 	int i;
-@@ -660,7 +658,7 @@ static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
- 			else if (no_base && interp_elf_ex->e_type == ET_DYN)
- 				load_addr = -vaddr;
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index bf5d0b1b16f4..216dd0c6dcf8 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -3308,8 +3308,7 @@ static inline void mm_populate(unsigned long addr, unsigned long len)
+ static inline void mm_populate(unsigned long addr, unsigned long len) {}
+ #endif
  
--			map_addr = elf_map(interpreter, load_addr + vaddr,
-+			map_addr = elf_load(interpreter, load_addr + vaddr,
- 					eppnt, elf_prot, elf_type, total_size);
- 			total_size = 0;
- 			error = map_addr;
-@@ -686,51 +684,9 @@ static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
- 				error = -ENOMEM;
- 				goto out;
- 			}
--
--			/*
--			 * Find the end of the file mapping for this phdr, and
--			 * keep track of the largest address we see for this.
--			 */
--			k = load_addr + eppnt->p_vaddr + eppnt->p_filesz;
--			if (k > elf_bss)
--				elf_bss = k;
--
--			/*
--			 * Do the same thing for the memory mapping - between
--			 * elf_bss and last_bss is the bss section.
--			 */
--			k = load_addr + eppnt->p_vaddr + eppnt->p_memsz;
--			if (k > last_bss) {
--				last_bss = k;
--				bss_prot = elf_prot;
--			}
- 		}
- 	}
+-/* These take the mm semaphore themselves */
+-extern int __must_check vm_brk(unsigned long, unsigned long);
++/* This takes the mm semaphore itself */
+ extern int __must_check vm_brk_flags(unsigned long, unsigned long, unsigned long);
+ extern int vm_munmap(unsigned long, size_t);
+ extern unsigned long __must_check vm_mmap(struct file *, unsigned long,
+diff --git a/mm/mmap.c b/mm/mmap.c
+index b56a7f0c9f85..34d2337ace59 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -3174,12 +3174,6 @@ int vm_brk_flags(unsigned long addr, unsigned long request, unsigned long flags)
+ }
+ EXPORT_SYMBOL(vm_brk_flags);
  
--	/*
--	 * Now fill out the bss section: first pad the last page from
--	 * the file up to the page boundary, and zero it from elf_bss
--	 * up to the end of the page.
--	 */
--	if (padzero(elf_bss)) {
--		error = -EFAULT;
--		goto out;
--	}
--	/*
--	 * Next, align both the file and mem bss up to the page size,
--	 * since this is where elf_bss was just zeroed up to, and where
--	 * last_bss will end after the vm_brk_flags() below.
--	 */
--	elf_bss = ELF_PAGEALIGN(elf_bss);
--	last_bss = ELF_PAGEALIGN(last_bss);
--	/* Finally, if there is still more bss to allocate, do it. */
--	if (last_bss > elf_bss) {
--		error = vm_brk_flags(elf_bss, last_bss - elf_bss,
--				bss_prot & PROT_EXEC ? VM_EXEC : 0);
--		if (error)
--			goto out;
--	}
+-int vm_brk(unsigned long addr, unsigned long len)
+-{
+-	return vm_brk_flags(addr, len, 0);
+-}
+-EXPORT_SYMBOL(vm_brk);
 -
- 	error = load_addr;
- out:
- 	return error;
+ /* Release all mmaps. */
+ void exit_mmap(struct mm_struct *mm)
+ {
+diff --git a/mm/nommu.c b/mm/nommu.c
+index 7f9e9e5a0e12..23c43c208f2b 100644
+--- a/mm/nommu.c
++++ b/mm/nommu.c
+@@ -1531,11 +1531,6 @@ void exit_mmap(struct mm_struct *mm)
+ 	mmap_write_unlock(mm);
+ }
+ 
+-int vm_brk(unsigned long addr, unsigned long len)
+-{
+-	return -ENOMEM;
+-}
+-
+ /*
+  * expand (or shrink) an existing mapping, potentially moving it at the same
+  * time (controlled by the MREMAP_MAYMOVE flag and available VM space)
 -- 
 2.34.1
 
