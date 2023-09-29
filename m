@@ -1,177 +1,207 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAADA522B
-	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 03:24:46 +0000 (UTC)
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DFF61B0
-	for <linux-hardening@vger.kernel.org>; Thu, 28 Sep 2023 20:24:43 -0700 (PDT)
-Received: by mail-pg1-x534.google.com with SMTP id 41be03b00d2f7-578d0d94986so9929720a12.2
-        for <linux-hardening@vger.kernel.org>; Thu, 28 Sep 2023 20:24:43 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7CFE566B;
+	Fri, 29 Sep 2023 03:28:12 +0000 (UTC)
+Received: from mail-ua1-x931.google.com (mail-ua1-x931.google.com [IPv6:2607:f8b0:4864:20::931])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E53819C;
+	Thu, 28 Sep 2023 20:28:10 -0700 (PDT)
+Received: by mail-ua1-x931.google.com with SMTP id a1e0cc1a2514c-79df12ff0f0so5164966241.3;
+        Thu, 28 Sep 2023 20:28:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695957882; x=1696562682; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1695958089; x=1696562889; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1N2/5RenlXFMtuBqo/+f8Vcn16/Uj2Iw7MwFuqiNorY=;
-        b=gHYyAdOoo9+Uq0fM+3FDoaZjk+aghJ6WPsGkXPszGftW8VjFFXzy5d93L9aLeFwAyd
-         ni2RloEREBWicKL8qFOb2QZyUIzcTVsLW+9zzyU9fq5euZ9xVNh3PaRWTcV5nw//82Pq
-         yL9rgN+tzJFgm0KSeoLGYfnpud/KR5kuELKag=
+        bh=IiAb/i1gc98L6SazD4d4ItKm7HOWY4Sc1dUvsARnIt8=;
+        b=Zj6wu2hbBXtbYyTQuFA71C53wbF8PuIPcek7IRZ5p5evtCnhM4RHLS1ciB8ceh/nam
+         AazrV5vm/uC2lXnN6Oi09ElGY7GqmeLgUPi7gERFik0UB2dcHZPMxLEzaAHc0KizeCcJ
+         jy+iCmTdIuJvAx4iVchMJciykIgMZGLaLtji5QTDBg1zO8WyQ1X70ZdoW5ZcjlhgAimF
+         GneNVj6PBDgt5LT0ZFaMAwwHlIojzeBSnC7YTWSSWAn5ilhjP8I4llftBM2mLboWhMvN
+         pu7fLkxmrB+0/olPBxMkkiJXYp0il+Anbp5cqKpOpjUe8ZE97A9IJQU+ZRU+ZOMzZvKI
+         3aUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695957882; x=1696562682;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1695958089; x=1696562889;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1N2/5RenlXFMtuBqo/+f8Vcn16/Uj2Iw7MwFuqiNorY=;
-        b=u5WMjuaPc/dL7EMREx+vPYTryGpaXOhRssopXU5vDPFCrR8M7yfZWSGTRKbQFBNyog
-         Gt3VBBgBa14tzYq0BV+udcaa+6D0Vix5cEY50/jUnGSP9rT1Qe5kLAetJ2df3g5i8Kif
-         37Bfg6vtm76bJqn6qC9NoiLc3A8xWefXHBAdYeaLOV0WqRciwsfhnn/qc4D94zJg+taU
-         yc71R4H2zam9u421cyBAGDXfpRMtkUDNMo2wLFtnDlfQG9u1EzbnFVK+axytlkXKgFrr
-         vBf3CIUDRrUbF1BszEFnAtGK49mgkKSCBxbc6y/yeaCdJmFM/aK9uA3twCtfGjLWuCNP
-         LaqQ==
-X-Gm-Message-State: AOJu0Yzxfd+azHYOCq5d7B3K0hQvwo7VoKNT/pPi8RqxTyYC60aDY3Pz
-	7iKYaIyMBPyE8rTqU0bBEwF4Nw==
-X-Google-Smtp-Source: AGHT+IFuiY5V1hPcrjWZ+wALbwRJ0bkGU805RDV1GGRAKG36PeI1WQG0N/Q94yXBG5u0guRkQHN2ew==
-X-Received: by 2002:a05:6a21:6d90:b0:162:d056:9f52 with SMTP id wl16-20020a056a216d9000b00162d0569f52mr2317143pzb.14.1695957882509;
-        Thu, 28 Sep 2023 20:24:42 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id d12-20020a17090a498c00b0026b3ed37ddcsm297774pjh.32.2023.09.28.20.24.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Sep 2023 20:24:39 -0700 (PDT)
-From: Kees Cook <keescook@chromium.org>
-To: Eric Biederman <ebiederm@xmission.com>
-Cc: Kees Cook <keescook@chromium.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	Sebastian Ott <sebott@redhat.com>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-	Pedro Falcato <pedro.falcato@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v4 5/6] binfmt_elf: Only report padzero() errors when PROT_WRITE
-Date: Thu, 28 Sep 2023 20:24:33 -0700
-Message-Id: <20230929032435.2391507-5-keescook@chromium.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230929031716.it.155-kees@kernel.org>
-References: <20230929031716.it.155-kees@kernel.org>
+        bh=IiAb/i1gc98L6SazD4d4ItKm7HOWY4Sc1dUvsARnIt8=;
+        b=tL7/g17bpWYcQYaJ16R4JZ+biK1Gzl6plQR7vIhuLMke8njsTE+mA7K+O/hOZJUfrs
+         yec+HsfW8H1aqMyFEu1FyaYpr8jvcsfwJTkxVOA+nBY8PLe1mEEq1rbktn5n6fyzhkkE
+         G6UUV8aUtMya88qBCriEZ/KuiHvfbZy3YjKVtUUAlx3Yc4S9LP3s/iULgvpgzMaFE94n
+         Z4HlHI5iUKIAc1ggoo9adkYq7fkgVt3w/pqmrlVEsPhC2P0VH2r3yGW6goQNy26UCXDR
+         S+L39Q/NMYC6x4/75GDS40EZ31xBA8wyF1/uwS3YZwPoNeWpvf/YlnFSldK9nKPIfNwy
+         FIAg==
+X-Gm-Message-State: AOJu0YyZcKHQstOpPp3yV73AfiQhyqeovlppFglKFv2NaFHBTg3r4tb2
+	F9X2MQBXEcoseJuroV2v5fq4LegLSMMWjlh0Qtg=
+X-Google-Smtp-Source: AGHT+IFwxD5MHwB8nCElH3p97gGzSZFtR6vWTxEs/mssfRQyF6PkJIQiA0uHM4z+FM+M3FEQI561MxdOs0m92SBkdVk=
+X-Received: by 2002:a05:6102:d8:b0:452:6da0:678f with SMTP id
+ u24-20020a05610200d800b004526da0678fmr2890488vsp.9.1695958089382; Thu, 28 Sep
+ 2023 20:28:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3206; i=keescook@chromium.org;
- h=from:subject; bh=jt1fmczJcOormxbVcL/G+gA6YgAS2bIpzH9lxZKP6J8=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlFkNyRwIKy/9+p28ZJ729vcNHK8Gg7yPfE0ByN
- 6nvj7/qVLeJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZRZDcgAKCRCJcvTf3G3A
- JjvTD/0efjaJu1+PNkM8NRGdk1dsGyZJ0dd4tY+8HW5FWR8J7niOASg788NVSLqFFUmdhaHRjmO
- Lj56b26Bw9GOyQXHYda5l7wqDTMXm6RIMUYBjTHTuUu3K8IYicpe/vidGvDuun74TWC6gT0TcQS
- JBtpkVYUzN9Quzlr+hjKY4YwSAMa+50O1SYTdUGqwmckLYkIpbbwVLAo7r/VX4KL73ojipa0uZL
- U4Z96HcimN4eOgUTJL+Z0t4VxznrtCujhN04154vNUcC1vzmWqEyPkrIaegDJh86UloTxqH/Esa
- mEVSbpK9HjAWKRRsvhfOPp2btfPm3150XfvwHXXipw4qVDOWOWYhb7tHCVoYriEG/H0nn5qroT1
- PIRndidx60sCNBiIR++8QGxeZhVypD2rtBlFMJYxk8hREnuCOUIUakD1s4SmYoqYAa/N6j10yfn
- USW7wazw7KE0x/SHGyklD7+FJFIHi/dFaGRXo6PdpXd2O8m/Fnh82Px9LxMZldJtVxrwmm2YcUb
- AIegTgqbd3pR1GCUvhncdf3yEUBwywr6llI4pfc2Bpc4oznxAVKNeJoY5hIrwCbXVKuO54wkBIg
- dP9Sl+hc6k26DlLVynWraFAeBWkU+QBlgtEZI18h+WBXWKlb9zkdhbKOcrAovas3JG4CcT3Onsb u68NsqyzQBTv3nw==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20230928110554.34758-1-jlayton@kernel.org> <20230928110554.34758-2-jlayton@kernel.org>
+ <6020d6e7-b187-4abb-bf38-dc09d8bd0f6d@app.fastmail.com> <af047e4a1c6947c59d4a13d4ae221c784a5386b4.camel@kernel.org>
+ <20230928171943.GK11439@frogsfrogsfrogs>
+In-Reply-To: <20230928171943.GK11439@frogsfrogsfrogs>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Fri, 29 Sep 2023 06:27:57 +0300
+Message-ID: <CAOQ4uxjTpPPUa3VXW+DWKy72JABOZBCXD6pjNk-FhJZWnqvNPA@mail.gmail.com>
+Subject: Re: [PATCH 86/87] fs: switch timespec64 fields in inode to discrete integers
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Jeff Layton <jlayton@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, David Sterba <dsterba@suse.cz>, 
+	"Theodore Ts'o" <tytso@mit.edu>, "Eric W. Biederman" <ebiederm@xmission.com>, Kees Cook <keescook@chromium.org>, 
+	Jeremy Kerr <jk@ozlabs.org>, Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>, 
+	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
+	Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Mattia Dongili <malattia@linux.it>, 
+	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Leon Romanovsky <leon@kernel.org>, Brad Warrum <bwarrum@linux.ibm.com>, 
+	Ritu Agarwal <rituagar@linux.ibm.com>, Hans de Goede <hdegoede@redhat.com>, 
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Mark Gross <markgross@kernel.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Eric Van Hensbergen <ericvh@kernel.org>, Latchesar Ionkov <lucho@ionkov.net>, 
+	Dominique Martinet <asmadeus@codewreck.org>, Christian Schoenebeck <linux_oss@crudebyte.com>, 
+	David Sterba <dsterba@suse.com>, David Howells <dhowells@redhat.com>, 
+	Marc Dionne <marc.dionne@auristor.com>, Ian Kent <raven@themaw.net>, 
+	Luis de Bethencourt <luisbg@kernel.org>, Salah Triki <salah.triki@gmail.com>, 
+	"Tigran A. Aivazian" <aivazian.tigran@gmail.com>, Chris Mason <clm@fb.com>, 
+	Josef Bacik <josef@toxicpanda.com>, Xiubo Li <xiubli@redhat.com>, 
+	Ilya Dryomov <idryomov@gmail.com>, Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu, 
+	Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>, Nicolas Pitre <nico@fluxnic.net>, 
+	"Rafael J . Wysocki" <rafael@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Gao Xiang <xiang@kernel.org>, 
+	Chao Yu <chao@kernel.org>, Yue Hu <huyue2@coolpad.com>, 
+	Jeffle Xu <jefflexu@linux.alibaba.com>, Namjae Jeon <linkinjeon@kernel.org>, 
+	Sungjong Seo <sj1557.seo@samsung.com>, Jan Kara <jack@suse.com>, 
+	Andreas Dilger <adilger.kernel@dilger.ca>, Jaegeuk Kim <jaegeuk@kernel.org>, 
+	OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>, Christoph Hellwig <hch@infradead.org>, 
+	Miklos Szeredi <miklos@szeredi.hu>, Bob Peterson <rpeterso@redhat.com>, 
+	Andreas Gruenbacher <agruenba@redhat.com>, Richard Weinberger <richard@nod.at>, 
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg <johannes@sipsolutions.net>, 
+	Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>, Mike Kravetz <mike.kravetz@oracle.com>, 
+	Muchun Song <muchun.song@linux.dev>, Jan Kara <jack@suse.cz>, 
+	David Woodhouse <dwmw2@infradead.org>, Dave Kleikamp <shaggy@kernel.org>, Tejun Heo <tj@kernel.org>, 
+	Trond Myklebust <trond.myklebust@hammerspace.com>, Anna Schumaker <anna@kernel.org>, 
+	Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
+	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
+	Ryusuke Konishi <konishi.ryusuke@gmail.com>, Anton Altaparmakov <anton@tuxera.com>, 
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, Mark Fasheh <mark@fasheh.com>, 
+	Joseph Qi <joseph.qi@linux.alibaba.com>, Bob Copeland <me@bobcopeland.com>, 
+	Mike Marshall <hubcap@omnibond.com>, Martin Brandenburg <martin@omnibond.com>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Iurii Zaikin <yzaikin@google.com>, Tony Luck <tony.luck@intel.com>, 
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, Anders Larsen <al@alarsen.net>, Steve French <sfrench@samba.org>, 
+	Paulo Alcantara <pc@manguebit.com>, Ronnie Sahlberg <lsahlber@redhat.com>, 
+	Shyam Prasad N <sprasad@microsoft.com>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Phillip Lougher <phillip@squashfs.org.uk>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Evgeniy Dushistov <dushistov@mail.ru>, 
+	Chandan Babu R <chandan.babu@oracle.com>, Damien Le Moal <dlemoal@kernel.org>, 
+	Naohiro Aota <naohiro.aota@wdc.com>, Johannes Thumshirn <jth@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Hugh Dickins <hughd@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, "David S . Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	John Johansen <john.johansen@canonical.com>, Paul Moore <paul@paul-moore.com>, 
+	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
+	Stephen Smalley <stephen.smalley.work@gmail.com>, Eric Paris <eparis@parisplace.org>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, linux-rdma@vger.kernel.org, 
+	linux-serial@vger.kernel.org, linux-usb@vger.kernel.org, v9fs@lists.linux.dev, 
+	linux-afs@lists.infradead.org, autofs@vger.kernel.org, 
+	linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org, 
+	codalist@coda.cs.cmu.edu, linux-efi@vger.kernel.org, 
+	linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org, 
+	linux-f2fs-devel@lists.sourceforge.net, gfs2@lists.linux.dev, 
+	linux-um@lists.infradead.org, linux-mtd@lists.infradead.org, 
+	jfs-discussion@lists.sourceforge.net, linux-nfs@vger.kernel.org, 
+	linux-nilfs@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net, 
+	ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev, 
+	linux-karma-devel@lists.sourceforge.net, devel@lists.orangefs.org, 
+	linux-unionfs@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	reiserfs-devel@vger.kernel.org, linux-cifs@vger.kernel.org, 
+	samba-technical@lists.samba.org, linux-trace-kernel@vger.kernel.org, 
+	linux-xfs@vger.kernel.org, bpf@vger.kernel.org, 
+	Netdev <netdev@vger.kernel.org>, apparmor@lists.ubuntu.com, 
+	linux-security-module@vger.kernel.org, selinux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Errors with padzero() should be caught unless we're expecting a
-pathological (non-writable) segment. Report -EFAULT only when PROT_WRITE
-is present.
+On Thu, Sep 28, 2023 at 8:19=E2=80=AFPM Darrick J. Wong <djwong@kernel.org>=
+ wrote:
+>
+> On Thu, Sep 28, 2023 at 01:06:03PM -0400, Jeff Layton wrote:
+> > On Thu, 2023-09-28 at 11:48 -0400, Arnd Bergmann wrote:
+> > > On Thu, Sep 28, 2023, at 07:05, Jeff Layton wrote:
+> > > > This shaves 8 bytes off struct inode, according to pahole.
+> > > >
+> > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > >
+> > > FWIW, this is similar to the approach that Deepa suggested
+> > > back in 2016:
+> > >
+> > > https://lore.kernel.org/lkml/1452144972-15802-3-git-send-email-deepa.=
+kernel@gmail.com/
+> > >
+> > > It was NaKed at the time because of the added complexity,
+> > > though it would have been much easier to do it then,
+> > > as we had to touch all the timespec references anyway.
+> > >
+> > > The approach still seems ok to me, but I'm not sure it's worth
+> > > doing it now if we didn't do it then.
+> > >
+> >
+> > I remember seeing those patches go by. I don't remember that change
+> > being NaK'ed, but I wasn't paying close attention at the time
+> >
+> > Looking at it objectively now, I think it's worth it to recover 8 bytes
+> > per inode and open a 4 byte hole that Amir can use to grow the
+> > i_fsnotify_mask. We might even able to shave off another 12 bytes
+> > eventually if we can move to a single 64-bit word per timestamp.
+>
+> I don't think you can, since btrfs timestamps utilize s64 seconds
+> counting in both directions from the Unix epoch.  They also support ns
+> resolution:
+>
+>         struct btrfs_timespec {
+>                 __le64 sec;
+>                 __le32 nsec;
+>         } __attribute__ ((__packed__));
+>
+> --D
+>
 
-Additionally add some more documentation to padzero(), elf_map(), and
-elf_load().
+Sure we can.
+That's what btrfs_inode is for.
+vfs inode also does not store i_otime (birth time) and there is even a
+precedent of vfs/btrfs variable size mismatch:
 
-Cc: Eric Biederman <ebiederm@xmission.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org
-Cc: linux-mm@kvack.org
-Suggested-by: Eric Biederman <ebiederm@xmission.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- fs/binfmt_elf.c | 32 +++++++++++++++++++++++---------
- 1 file changed, 23 insertions(+), 9 deletions(-)
+        /* full 64 bit generation number, struct vfs_inode doesn't have a b=
+ig
+         * enough field for this.
+         */
+        u64 generation;
 
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index f8b4747f87ed..22027b0a5923 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -110,19 +110,19 @@ static struct linux_binfmt elf_format = {
- 
- #define BAD_ADDR(x) (unlikely((unsigned long)(x) >= TASK_SIZE))
- 
--/* We need to explicitly zero any fractional pages
--   after the data section (i.e. bss).  This would
--   contain the junk from the file that should not
--   be in memory
-+/*
-+ * We need to explicitly zero any trailing portion of the page that follows
-+ * p_filesz when it ends before the page ends (e.g. bss), otherwise this
-+ * memory will contain the junk from the file that should not be present.
-  */
--static int padzero(unsigned long elf_bss)
-+static int padzero(unsigned long address)
- {
- 	unsigned long nbyte;
- 
--	nbyte = ELF_PAGEOFFSET(elf_bss);
-+	nbyte = ELF_PAGEOFFSET(address);
- 	if (nbyte) {
- 		nbyte = ELF_MIN_ALIGN - nbyte;
--		if (clear_user((void __user *) elf_bss, nbyte))
-+		if (clear_user((void __user *)address, nbyte))
- 			return -EFAULT;
- 	}
- 	return 0;
-@@ -348,6 +348,11 @@ create_elf_tables(struct linux_binprm *bprm, const struct elfhdr *exec,
- 	return 0;
- }
- 
-+/*
-+ * Map "eppnt->p_filesz" bytes from "filep" offset "eppnt->p_offset"
-+ * into memory at "addr". (Note that p_filesz is rounded up to the
-+ * next page, so any extra bytes from the file must be wiped.)
-+ */
- static unsigned long elf_map(struct file *filep, unsigned long addr,
- 		const struct elf_phdr *eppnt, int prot, int type,
- 		unsigned long total_size)
-@@ -387,6 +392,11 @@ static unsigned long elf_map(struct file *filep, unsigned long addr,
- 	return(map_addr);
- }
- 
-+/*
-+ * Map "eppnt->p_filesz" bytes from "filep" offset "eppnt->p_offset"
-+ * into memory at "addr". Memory from "p_filesz" through "p_memsz"
-+ * rounded up to the next page is zeroed.
-+ */
- static unsigned long elf_load(struct file *filep, unsigned long addr,
- 		const struct elf_phdr *eppnt, int prot, int type,
- 		unsigned long total_size)
-@@ -404,8 +414,12 @@ static unsigned long elf_load(struct file *filep, unsigned long addr,
- 			zero_end = map_addr + ELF_PAGEOFFSET(eppnt->p_vaddr) +
- 				eppnt->p_memsz;
- 
--			/* Zero the end of the last mapped page */
--			padzero(zero_start);
-+			/*
-+			 * Zero the end of the last mapped page but ignore
-+			 * any errors if the segment isn't writable.
-+			 */
-+			if (padzero(zero_start) && (prot & PROT_WRITE))
-+				return -EFAULT;
- 		}
- 	} else {
- 		map_addr = zero_start = ELF_PAGESTART(addr);
--- 
-2.34.1
+If we decide that vfs should use "bigtime", btrfs pre-historic
+timestamps are not a show stopper.
 
+Thanks,
+Amir.
