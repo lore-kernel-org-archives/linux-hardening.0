@@ -1,19 +1,17 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17DAD513C0
-	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 15:52:21 +0000 (UTC)
-X-Greylist: delayed 570 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 29 Sep 2023 08:52:19 PDT
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24058516C1
+	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 15:52:22 +0000 (UTC)
 Received: from mx.skole.hr (mx1.hosting.skole.hr [161.53.165.185])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A1191A8;
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FFF81AC;
 	Fri, 29 Sep 2023 08:52:18 -0700 (PDT)
 Received: from mx1.hosting.skole.hr (localhost.localdomain [127.0.0.1])
-	by mx.skole.hr (mx.skole.hr) with ESMTP id 859A2834C9;
-	Fri, 29 Sep 2023 17:42:54 +0200 (CEST)
+	by mx.skole.hr (mx.skole.hr) with ESMTP id A0C55834CD;
+	Fri, 29 Sep 2023 17:42:52 +0200 (CEST)
 From: =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Date: Fri, 29 Sep 2023 17:42:04 +0200
-Subject: [PATCH RESEND v5 8/8] MAINTAINERS: add myself as Marvell PXA1908
- maintainer
+Date: Fri, 29 Sep 2023 17:42:01 +0200
+Subject: [PATCH RESEND v5 5/8] dt-bindings: marvell: Document PXA1908 SoC
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -22,7 +20,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20230929-pxa1908-lkml-v5-8-5aa5a1109c5f@skole.hr>
+Message-Id: <20230929-pxa1908-lkml-v5-5-5aa5a1109c5f@skole.hr>
 References: <20230929-pxa1908-lkml-v5-0-5aa5a1109c5f@skole.hr>
 In-Reply-To: <20230929-pxa1908-lkml-v5-0-5aa5a1109c5f@skole.hr>
 To: Robert Jarzmik <robert.jarzmik@free.fr>, 
@@ -40,23 +38,24 @@ Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-arm-kernel@lists.infradead.org, linux-hardening@vger.kernel.org, 
  ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
- afaerber@suse.de, balejk@matfyz.cz
+ afaerber@suse.de, balejk@matfyz.cz, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=908;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=890;
  i=duje.mihanovic@skole.hr; h=from:subject:message-id;
- bh=rZ0/2aarhuZmb4/RBctyFNylsa1DhpMnW4LU8kO7JSQ=;
- b=owEBbQKS/ZANAwAIAZoRnrBCLZbhAcsmYgBlFvBzztR/DmN/BrPp8VPfpH2DOR204+B0rFGw0
- yxH1jjmnVKJAjMEAAEIAB0WIQRT351NnD/hEPs2LXiaEZ6wQi2W4QUCZRbwcwAKCRCaEZ6wQi2W
- 4dh5EACFr3lrsSwFYi4yZmCSHNc8n+hfwg/m1pLjQNkjuj2cl1ihInCd0B2fCurTjf1UHjVdSqZ
- bV8FF5OW7H9fzh0QrXZDiyitC3nBgEeeq+/Szn70GDb3zdBTkYXfbbJHWVCw6y6kekEVy8zMutw
- dvSL3Y0S9VqTzdRRtkpEiIp3MkOI39afEYk7eDZsMYFqugLl0gWQItz53w4ySmjQyaFWDi0wjeo
- vY0EFw5mPLyUZyDbwMO+QdTaowOgkRiGJDzY+E0c+21yQvTSpaIYekJXoU7v4t0N1hAbe56naDG
- S5UDfWHZN0A9d6p7PDNQjR6QR9XXhJqBpXka2yCbyl2YFL6L/jB9Vte4enhRDnI1FAKLxWjXSM1
- QbuhjxEBBF4j80VFq2NwhrKWOZggDD2xpwFNCzUv52JsNq5XWuZRTMW6gudVWajfYMf7nWS81Dt
- 5H/m5kxEhD27+VqcLVwWYlqyIc69vupe3xzxVmX0KMbZxp8iq48G8xbLMFY3lDFz3wfbRoHacoC
- 0+F1Ta0SCTK9lcbFmvIz62b9GdIgT8vN1sHxn1Bq7/87j2oJnzwo/Ykohs+z7lScqwvZz4rFHZf
- qHR1q1uTqL26HQQWR9edspD5/K7S7OkNgQYaQCgkztjf0qJuYfBZ3RyUlHEcyuLiE4ukZwXWIA8
- uy19OEOG8k8erug==
+ bh=68SP0psZM8Sot29iAM52aLi+c+3JVnNIUMMY8bC0VIc=;
+ b=owEBbQKS/ZANAwAIAZoRnrBCLZbhAcsmYgBlFvBykbMfnls1yGf4fnlrBhT+2giyUpNMrmngY
+ NrnBlnuSCWJAjMEAAEIAB0WIQRT351NnD/hEPs2LXiaEZ6wQi2W4QUCZRbwcgAKCRCaEZ6wQi2W
+ 4Q1UD/0a2+plywFrZfoPOUGfUG21u20/lq32w+NkuuOqs0DPmluvGJ5lXnub50JGVHmZDhS/mW6
+ Ln47gQ/55U0zv6SOIqHXJiR7tw8yZ/fZeny9n5orx7vRUa2GlER2xH9X8Ml8eRjU8mfR1ynopjW
+ PXRSyNCqQeGaBChiK8V0bvZ2pKoLjuJV5iZUaRPGUnHvuy1R68ogDAtiwgPrPs8OS4hmCJVZSdS
+ 9rUuN9TeXaNhIHr5ZRaShmFR1fv4vCgBthvyedVJCrOBJF3ebbvpFCwWdGf72TA5hYnwur2QMZv
+ dKCyFntK5EmICsXlS3L/X8rN154ze0TcbuWZI98hLw9R1GExT1RsbkcNa3Wy6r2wx7KApqGHzRX
+ bB1uGp8haqSOhURcbeAZ8WTszBaJIExB1Jms6SkeDBo1nq4zNPgDGgnKF4E8SH5tLB4DZXy/sf7
+ zjmqXpvZ0ZoFQh5XbRQG0SL3sIzO2SNNprqd6TkbdE7lJiDmB/3TJ4U++EeVzPZ+31WJFPTTT9D
+ ExNtFFTVNBRtHNkIBhxKU5yxFy2s2yvPr+9bWFFV/LEM+Q5XVoVEGPahC7Bxd0FwCTdaTGdKOKi
+ XZw0n8lHbSbB8bQ8Q0ODp36k2nUc3k8oUkk7IztLMv2pAxjEJb+vU8o7nQ26EDnKh55BYtUepuS
+ AewQLy2gKT+t58A==
 X-Developer-Key: i=duje.mihanovic@skole.hr; a=openpgp;
  fpr=53DF9D4D9C3FE110FB362D789A119EB0422D96E1
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
@@ -65,33 +64,30 @@ X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Add myself as the maintainer for Marvell PXA1908 SoC support.
+Add dt binding for the Marvell PXA1908 SoC.
 
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
 ---
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0f966f05fb0d..6f5233f3904b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2299,6 +2299,15 @@ F:	drivers/irqchip/irq-mvebu-*
- F:	drivers/pinctrl/mvebu/
- F:	drivers/rtc/rtc-armada38x.c
+diff --git a/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml b/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml
+index 4c43eaf3632e..f73bb8ec3a1a 100644
+--- a/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml
++++ b/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml
+@@ -35,6 +35,11 @@ properties:
+           - enum:
+               - dell,wyse-ariel
+           - const: marvell,mmp3
++      - description: PXA1908 based boards
++        items:
++          - enum:
++              - samsung,coreprimevelte
++          - const: marvell,pxa1908
  
-+ARM/Marvell PXA1908 SOC support
-+M:	Duje Mihanović <duje.mihanovic@skole.hr>
-+L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-+S:	Maintained
-+T:	git https://gitlab.com/LegoLivesMatter/linux
-+F:	arch/arm64/boot/dts/marvell/pxa1908*
-+F:	drivers/clk/mmp/clk-of-pxa1908.c
-+F:	include/dt-bindings/clock/marvell,pxa1908.h
-+
- ARM/Mediatek RTC DRIVER
- M:	Eddie Huang <eddie.huang@mediatek.com>
- M:	Sean Wang <sean.wang@mediatek.com>
+ additionalProperties: true
+ 
 
 -- 
 2.42.0
