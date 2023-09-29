@@ -1,18 +1,19 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 240A3521AF
-	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 15:52:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17DAD513C0
+	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 15:52:21 +0000 (UTC)
+X-Greylist: delayed 570 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 29 Sep 2023 08:52:19 PDT
 Received: from mx.skole.hr (mx1.hosting.skole.hr [161.53.165.185])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 201341AE;
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A1191A8;
 	Fri, 29 Sep 2023 08:52:18 -0700 (PDT)
 Received: from mx1.hosting.skole.hr (localhost.localdomain [127.0.0.1])
-	by mx.skole.hr (mx.skole.hr) with ESMTP id B954F8349A;
-	Fri, 29 Sep 2023 17:42:53 +0200 (CEST)
+	by mx.skole.hr (mx.skole.hr) with ESMTP id 859A2834C9;
+	Fri, 29 Sep 2023 17:42:54 +0200 (CEST)
 From: =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Date: Fri, 29 Sep 2023 17:42:02 +0200
-Subject: [PATCH RESEND v5 6/8] arm64: Kconfig.platforms: Add config for
- Marvell PXA1908 platform
+Date: Fri, 29 Sep 2023 17:42:04 +0200
+Subject: [PATCH RESEND v5 8/8] MAINTAINERS: add myself as Marvell PXA1908
+ maintainer
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -21,7 +22,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20230929-pxa1908-lkml-v5-6-5aa5a1109c5f@skole.hr>
+Message-Id: <20230929-pxa1908-lkml-v5-8-5aa5a1109c5f@skole.hr>
 References: <20230929-pxa1908-lkml-v5-0-5aa5a1109c5f@skole.hr>
 In-Reply-To: <20230929-pxa1908-lkml-v5-0-5aa5a1109c5f@skole.hr>
 To: Robert Jarzmik <robert.jarzmik@free.fr>, 
@@ -41,21 +42,21 @@ Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
  ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
  afaerber@suse.de, balejk@matfyz.cz
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=848;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=908;
  i=duje.mihanovic@skole.hr; h=from:subject:message-id;
- bh=EiZLJFEyV4LY8QGlZs87/IL+BtGJZigZwDQYelB5sZM=;
- b=owEBbQKS/ZANAwAIAZoRnrBCLZbhAcsmYgBlFvBy5uzW/LL/CcRvs8TKhAE2CJDg53uNJXpqB
- WIj3G5CfaSJAjMEAAEIAB0WIQRT351NnD/hEPs2LXiaEZ6wQi2W4QUCZRbwcgAKCRCaEZ6wQi2W
- 4eK1D/oDPrI8Qg9Z7g/Nm10aEg0oGnGPrgFYif0TsiH1kF4RdzGfuNlM7Ph+z9VZysWbnCxvcFr
- JL7IVR5E86SvYVoWbtDyP8gt51aHZeW4wYs0LT+c/9zuZa49I4SGDKdPwHpyTPzYEYuU1clJ7qk
- oABb32rdSPMhbVHK0g4t0oKhAr0rrHOuQYGVIf0pa8Eyj/IM1HA6NzT6N3eDRY1XY1oBE84FwxW
- dJCRJ3NaEi0gef08e0kdkVrxx++x+1U8l+c6qWLx6/J+m7BP7/L7IJS5dqumHc15FOgSNtL4Abs
- MBoviEwxZqrwELp76IQUwK5SKCoJ/hyCnDEoNs8CViHPsZP3o8id3b2DcPauZwEp4+0lB6y08Mn
- Qfyhx5Ag6WQFMec/fhRG3xEbFBhwnuONl8waiBt0riSVCmkYIvc0HDRbW/c1OrEvmgPD2BCIKeB
- 4yTRZsRuyefAfCANJ4uXKpQ4Q37BJaPATaAqo6kR7HPrNga6v8+JzA9L3nWoB9ni8P5XfyWKBrp
- EZR7etx4f70NwLUNAjDw2jk85nwnREnuTKP/7U4NZJ9PhHVX2/J7IisV2MYuLVHj6hReE77M8yO
- E6S5080StLX2ysPiwQ6m8kYP0BwIuA1oVNriwAjlPUwh0f4bi1hA3r42Q3Fv/JSGRmRpmm0CTC5
- CYB0hDhLjSL1CPg==
+ bh=rZ0/2aarhuZmb4/RBctyFNylsa1DhpMnW4LU8kO7JSQ=;
+ b=owEBbQKS/ZANAwAIAZoRnrBCLZbhAcsmYgBlFvBzztR/DmN/BrPp8VPfpH2DOR204+B0rFGw0
+ yxH1jjmnVKJAjMEAAEIAB0WIQRT351NnD/hEPs2LXiaEZ6wQi2W4QUCZRbwcwAKCRCaEZ6wQi2W
+ 4dh5EACFr3lrsSwFYi4yZmCSHNc8n+hfwg/m1pLjQNkjuj2cl1ihInCd0B2fCurTjf1UHjVdSqZ
+ bV8FF5OW7H9fzh0QrXZDiyitC3nBgEeeq+/Szn70GDb3zdBTkYXfbbJHWVCw6y6kekEVy8zMutw
+ dvSL3Y0S9VqTzdRRtkpEiIp3MkOI39afEYk7eDZsMYFqugLl0gWQItz53w4ySmjQyaFWDi0wjeo
+ vY0EFw5mPLyUZyDbwMO+QdTaowOgkRiGJDzY+E0c+21yQvTSpaIYekJXoU7v4t0N1hAbe56naDG
+ S5UDfWHZN0A9d6p7PDNQjR6QR9XXhJqBpXka2yCbyl2YFL6L/jB9Vte4enhRDnI1FAKLxWjXSM1
+ QbuhjxEBBF4j80VFq2NwhrKWOZggDD2xpwFNCzUv52JsNq5XWuZRTMW6gudVWajfYMf7nWS81Dt
+ 5H/m5kxEhD27+VqcLVwWYlqyIc69vupe3xzxVmX0KMbZxp8iq48G8xbLMFY3lDFz3wfbRoHacoC
+ 0+F1Ta0SCTK9lcbFmvIz62b9GdIgT8vN1sHxn1Bq7/87j2oJnzwo/Ykohs+z7lScqwvZz4rFHZf
+ qHR1q1uTqL26HQQWR9edspD5/K7S7OkNgQYaQCgkztjf0qJuYfBZ3RyUlHEcyuLiE4ukZwXWIA8
+ uy19OEOG8k8erug==
 X-Developer-Key: i=duje.mihanovic@skole.hr; a=openpgp;
  fpr=53DF9D4D9C3FE110FB362D789A119EB0422D96E1
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
@@ -64,35 +65,33 @@ X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Add ARCH_MMP configuration option for Marvell PXA1908 SoC.
+Add myself as the maintainer for Marvell PXA1908 SoC support.
 
 Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
 ---
- arch/arm64/Kconfig.platforms | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ MAINTAINERS | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index 6069120199bb..b417cae42c84 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -89,6 +89,17 @@ config ARCH_BERLIN
- 	help
- 	  This enables support for Marvell Berlin SoC Family
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 0f966f05fb0d..6f5233f3904b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2299,6 +2299,15 @@ F:	drivers/irqchip/irq-mvebu-*
+ F:	drivers/pinctrl/mvebu/
+ F:	drivers/rtc/rtc-armada38x.c
  
-+config ARCH_MMP
-+	bool "Marvell MMP SoC Family"
-+	select ARM_GIC
-+	select ARM_ARCH_TIMER
-+	select ARM_SMMU
-+	select MMP_PDMA
-+	select PINCTRL_SINGLE
-+	help
-+	  This enables support for Marvell MMP SoC family, currently
-+	  supporting PXA1908 aka IAP140.
++ARM/Marvell PXA1908 SOC support
++M:	Duje Mihanović <duje.mihanovic@skole.hr>
++L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
++S:	Maintained
++T:	git https://gitlab.com/LegoLivesMatter/linux
++F:	arch/arm64/boot/dts/marvell/pxa1908*
++F:	drivers/clk/mmp/clk-of-pxa1908.c
++F:	include/dt-bindings/clock/marvell,pxa1908.h
 +
- config ARCH_BITMAIN
- 	bool "Bitmain SoC Platforms"
- 	help
+ ARM/Mediatek RTC DRIVER
+ M:	Eddie Huang <eddie.huang@mediatek.com>
+ M:	Sean Wang <sean.wang@mediatek.com>
 
 -- 
 2.42.0
