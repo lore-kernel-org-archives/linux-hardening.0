@@ -1,41 +1,41 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D60E466688
-	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 18:11:52 +0000 (UTC)
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 774C6136
-	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 11:11:51 -0700 (PDT)
-Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1c434c33ec0so111750825ad.3
-        for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 11:11:51 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 764496669A
+	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 18:11:55 +0000 (UTC)
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58886EB
+	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 11:11:53 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-1c1ff5b741cso130318645ad.2
+        for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 11:11:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1696011111; x=1696615911; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1696011113; x=1696615913; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LelDNgIaKJAGv8m5QtAniz9H43KU5lbEctjO62ftcqY=;
-        b=c6JXIVj8+lpK/dfbLFSBBXWCRfw/iOqrSjbUE9h28HcY5xoTuqoUYrChI+t9ZpwZuU
-         JAWSdZxLk04I308cwN7stuS6ROcscZTvhh8N3J6jarqvnP4DwINMJ2qa3nC4A3CEi1Wd
-         J1Cfi7W5VK3YwrWjia9nk4/rIiDGc6c5uqCIs=
+        bh=oDRQEh16G/ipKRezI+KzovNtgIHUYl51I1aN5U61Mmg=;
+        b=RV3QaUXCNHZVtSSY+yAdRYFkjPVOJfCFKbNJiV4df5lpiBMUt4YFEfb6czBBtG9x4p
+         l13uGVE8Qv/YTRgMTjETGR1ZB4QwYX7zBOcKLTXDJO5IFWDirWUYmuMWx/MEvdWwlfF9
+         X2hqNROldY7k050FDM7m4HETqR0fklrhZo8Eg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696011111; x=1696615911;
+        d=1e100.net; s=20230601; t=1696011113; x=1696615913;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LelDNgIaKJAGv8m5QtAniz9H43KU5lbEctjO62ftcqY=;
-        b=ldfBSe3+Qt9nPI+qqA2ovPCnZk/haa9KzATcMw1zSaHSkPrnTdPq41NkKuzXXl6lTa
-         cntTadGV5GUHXaYcrwsVKlGrOm3eYoP8o+hOSGakh7+kdq1LFMoLuPf/O1EPSmORDfp4
-         EencpwzgQQroe/j+L3hXVw3N2JBnGx7sV2MOPSawrr+0TFjQduXYK2JEqgfC7Z7iTqLJ
-         F7eFYQA3cTIPRttsbBbHBYg1pUfLeRRGKzBWhR+1xIb2siLb9GyJtHEi+vcMcd8YoUpi
-         B+2Cmly+WTeyo+WR7IpFkgL4Greh9MM0NDHY2ZVTtN+G7uSSv6k2f1K3tYfBgHDlXvhO
-         fBSg==
-X-Gm-Message-State: AOJu0YzzTA7a4N5uVyl3lkU48nhmdUGoE1E1AQPyIdidaV/mcdMTUNyC
-	rItCYqhSYHkK4QbqqJ8WpRc6hA==
-X-Google-Smtp-Source: AGHT+IFp3bhP+Nqbdbpr+lLgR4vtr77JK8lxcWx2zxMlaCWdtIt61fdrd8th89qUIyLgBpTfPNGTAg==
-X-Received: by 2002:a17:902:e545:b0:1c0:d17a:bfef with SMTP id n5-20020a170902e54500b001c0d17abfefmr4502026plf.30.1696011110955;
-        Fri, 29 Sep 2023 11:11:50 -0700 (PDT)
+        bh=oDRQEh16G/ipKRezI+KzovNtgIHUYl51I1aN5U61Mmg=;
+        b=kl4fFSjdj82Dxsq3R613m0aQyA/XY8VAiXEvbeHQ2C/ODO4NIGecrEpu1W1CBod+j9
+         RoXLYSnZLG0kERjJTGzepKqRKoquGef6Z7vYYEfL5xHvpnJLipSvgcVUDD0PvQMgQfUp
+         1GoccbAbmO380djKveHVa/06QAKn3JB40Lm3o0w1lV2QhMytELMCwO0cgcPyIwF19MRA
+         p54kA3J476mwTn26ySGBdW58krGX25MPcWyCVWBwEQiHHjdMTjtB65kjNPLKFF7kpAhg
+         wiRf5XdrUquL3U17gtK6OzB7ecYJsH2SjDsDm2LNgbtMZSJnoyl3gAT0fpjTrNOkLTUx
+         Z7cA==
+X-Gm-Message-State: AOJu0YzzYJVoDYxjqda44vri/wdeqDgVZRd5OFoHvpcICGNeGiTaCNFz
+	VSwCYSBh4hYVpK8W4YpSsjXPxA==
+X-Google-Smtp-Source: AGHT+IGFwlJWyVkm3A0mUQlX8g9/99iOnnwZlUWPyYk2xMspY3q7K0JlfsqBEcTTaZjRplBDOBuiwg==
+X-Received: by 2002:a17:902:bc4b:b0:1c5:b1a6:8118 with SMTP id t11-20020a170902bc4b00b001c5b1a68118mr4839960plz.42.1696011112843;
+        Fri, 29 Sep 2023 11:11:52 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id g10-20020a1709026b4a00b001b8a2edab6asm17075217plt.244.2023.09.29.11.11.50
+        by smtp.gmail.com with ESMTPSA id 21-20020a170902c15500b001c5fc291ef9sm13312784plj.209.2023.09.29.11.11.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 29 Sep 2023 11:11:50 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
@@ -53,9 +53,9 @@ Cc: Kees Cook <keescook@chromium.org>,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org,
 	llvm@lists.linux.dev
-Subject: [PATCH 2/5] cxgb4: Annotate struct clip_tbl with __counted_by
-Date: Fri, 29 Sep 2023 11:11:46 -0700
-Message-Id: <20230929181149.3006432-2-keescook@chromium.org>
+Subject: [PATCH 4/5] cxgb4: Annotate struct sched_table with __counted_by
+Date: Fri, 29 Sep 2023 11:11:48 -0700
+Message-Id: <20230929181149.3006432-4-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230929181042.work.990-kees@kernel.org>
 References: <20230929181042.work.990-kees@kernel.org>
@@ -65,24 +65,25 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1345; i=keescook@chromium.org;
- h=from:subject; bh=1xjwdL5f1ZwQtlSjHraq4S6Ct1cTzMptk05f7F0Knyw=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlFxNkClAByZ2t2imOLxlyWRMjihvubRYuwVOju
- CbJdpqAEYiJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZRcTZAAKCRCJcvTf3G3A
- JmRDD/4xcFd2xErFHHO52g54sKzulxzUwaY7hKB/cJqB+eXbtFGgB2tt9GnWDUYTucvNWfGfrRO
- WefuPoFa1In2irZrcx0pjDUGznGE0qFXLd86FJtIOeSIEJq35TMjFQOnq6tqhTenU3znVkbQZev
- 64kT7WHWe+/WYF1syArYm5+LofMLkW1zctxLTdrpIRXBXpxbK9IzCd6gG7yQPGh/nCDZaZJR++k
- D/oSNxxnkr/cGbxRxhf5s/8qYKXv5Y8uzNPu2q5G9yzEf6e+8urdbYNlDIn4WGlWwpOVsGubTh+
- ef8O9z++/PzDHpk+g5s6fMxH3IM1sNyQbzRSblOMYA6ciGJzENjrSxqVZKJtIVk/gu4cEYIdRSC
- MZTZgdpN+v10komKMPQwIO/PiQ/38irV/eA1mWTw5lLAm8tqB6LPg6MgYOuOGXtFoI+neSJYPf/
- x5hWOqzImqqP2rxs3VchpeExsk3srsZJl6fPJKZxcRQ2K8rIR49s8wzZr3k3xKhPdYXoqMAu6lK
- whn/87qgrQShDDdmtGChdFZuoQ8jBLDXo1Y37dgkk0uN1pnVazzfaYydiESmJYIMAqDs7eiDSb+
- dMhc2XY+KeQ78Dvg0PDZtR//QWpS5+pG+iPfaLmlEqG6/1pQASs8+LUwdkJXtia2ClOU5W+qlcR fszdrCV9cNLMyTQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1384; i=keescook@chromium.org;
+ h=from:subject; bh=kcIodOTCVIvY76AS2Uf+/xwdtFjYx7zCzGpQXcox5NQ=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlFxNkxHK+/1uBSnROiVBnNQXzF7bg+qpdlTfz8
+ ywFHOxF76eJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZRcTZAAKCRCJcvTf3G3A
+ JvRwD/4vZRzCzyJ7qZ5e0LaFPcNTQJBX3MNd8d1CbPHzcNnsTiUzvwr2QTMa+SJNHbJz1OW0YkF
+ F8oDEfY8iB86DNWrxXtU8Mh3SxWPpOWhGm5D1NYhVVOxsc3lD9nY+CMXj/H1ll8yIc9ZOPDTlXl
+ sbpzhQSqKnzMh0pruH9XXBjZdMOcPY541+f1VcAWUR15XNGVYztINFkCllOwGK7/TfFUkGa67xK
+ /OFPRD/X5XA40emcOai1thpLYunfLuJT65xmN9IiPI/43TO8t9O+990Gk2tsSLFSxh54Jym8nXj
+ WjDX6F4t5K5a80F8HuSOL7xkxbslxqmV1QoPUCLSWpTOhyX6ysRsd3YDRxNomMJAjaz0QIWUuM2
+ BEwG12H7dp8Uq/JgicSWz3qgEi+NnCp0T8n7PsDod43AaAQOg0hY5f+PjAS+kcj2N5EL6f2YXxG
+ rQVl/O12pw7A5Uz5FQkUklt7d2uYQ3ZUQuhx+S7bfzC6tGPBK+c5tGq1gN19O03rnPjOmcpoTG9
+ Yn6B340GmCnWDHH2xaAZn5Vi1qAY9krgGCjtRMTM0T4JJRDT43jON6staRXoccxa1ReFpqv0TW+
+ qpSBF1Xzr7UAXSbT56sXO7mAN64CubXJtY8Y28rYrWzq68zey/FU4c2JFbmLKUGO47FVhZ6kXoC k6U28UbshZcl60g==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
@@ -92,7 +93,7 @@ their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 functions).
 
-As found with Coccinelle[1], add __counted_by for struct clip_tbl.
+As found with Coccinelle[1], add __counted_by for struct sched_table.
 
 [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 
@@ -104,22 +105,22 @@ Cc: Paolo Abeni <pabeni@redhat.com>
 Cc: netdev@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/net/ethernet/chelsio/cxgb4/clip_tbl.h | 2 +-
+ drivers/net/ethernet/chelsio/cxgb4/sched.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/clip_tbl.h b/drivers/net/ethernet/chelsio/cxgb4/clip_tbl.h
-index 290c1058069a..847c7fc2bbd9 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/clip_tbl.h
-+++ b/drivers/net/ethernet/chelsio/cxgb4/clip_tbl.h
-@@ -29,7 +29,7 @@ struct clip_tbl {
- 	atomic_t nfree;
- 	struct list_head ce_free_head;
- 	void *cl_list;
--	struct list_head hash_list[];
-+	struct list_head hash_list[] __counted_by(clipt_size);
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/sched.h b/drivers/net/ethernet/chelsio/cxgb4/sched.h
+index 5f8b871d79af..6b3c778815f0 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/sched.h
++++ b/drivers/net/ethernet/chelsio/cxgb4/sched.h
+@@ -82,7 +82,7 @@ struct sched_class {
+ 
+ struct sched_table {      /* per port scheduling table */
+ 	u8 sched_size;
+-	struct sched_class tab[];
++	struct sched_class tab[] __counted_by(sched_size);
  };
  
- enum {
+ static inline bool can_sched(struct net_device *dev)
 -- 
 2.34.1
 
