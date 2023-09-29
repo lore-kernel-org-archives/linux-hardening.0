@@ -1,41 +1,41 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BB4B66663
-	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 18:04:39 +0000 (UTC)
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4302ECE9
-	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 11:04:38 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-68c576d35feso12742089b3a.2
-        for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 11:04:38 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B1C066681
+	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 18:04:38 +0000 (UTC)
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC33BCF3
+	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 11:04:36 -0700 (PDT)
+Received: by mail-pg1-x534.google.com with SMTP id 41be03b00d2f7-5855333fbadso3240305a12.1
+        for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 11:04:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1696010678; x=1696615478; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1696010676; x=1696615476; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=G6dSgw/viVX1hF9GiVxg31bNXS5ti9jq2oLyQe/SrHc=;
-        b=RAgSKSo4zQtWvBRw+50KgyVoBcddzo6Bxc8UevyFsYod4tHXTeT445CN4cpaSQ+9sM
-         jOM9XQdA5XkKkBphfL4rm7rHzTioY2SgCLph1lWbeQrTteSM5PHvldaQAcEbXfyrYhri
-         GWh0z9UUYr0L30xAZqh1/AdgcZ6F2Bh/NGmfU=
+        bh=J1v3O8Y0CLFHcIVug6/xydUDIhYw4BbQ+Ux1bHhPShA=;
+        b=cbTOKtunlDcbaub/tWHdE6pCd5d3tSM1bl91q2hx3xWKEudWNUrov2insAI/zlAV32
+         jtQuwhYnYDt9ShE5SHmvd1z+cBIA57CUO39EXzIOb6kTX2BUMxVSpDuVdD+PqWp0mSrw
+         xS7OUaXrwasRnjtgKB+MPP6Yls3vT1d1uOqo0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696010678; x=1696615478;
+        d=1e100.net; s=20230601; t=1696010676; x=1696615476;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=G6dSgw/viVX1hF9GiVxg31bNXS5ti9jq2oLyQe/SrHc=;
-        b=beyllyfs3w6kModoWGIKocYXEJpLX3CLLzZFNb5yHSlTi41+tW9/nn/YSHMA5SJN1g
-         e80k/FyK0abtT0jTCK1t9Pmy5y+aSWYIosELzTBAtPo3CdbgUA8x8NEuy540MFQh3f5x
-         SvaX1OVH9ePGyefPry2tYou6lHCNQRvbgn6ib42GpnR7Rv2Mpvl68dV1q8u56Kjc/szh
-         PMTYSZESZr0G/wOIngAp9SeiRk3Afhv5UArmpw5tJMviUTIKXXFptxJIhqvz2y4W9KLf
-         eMWrLBf//Kc66fK69T4QH+PhwrwtV/6uOY9bNbd5Xr5GRSS1PN6G9bjhJATQF5t3ocHX
-         DKtQ==
-X-Gm-Message-State: AOJu0Yx+M7S5OOUNf5cf4eFbHFnQYWaNxkfZTtRSp4zhog8n9dEKGU7W
-	xm703fBIm4jtU+vkOls5pDJ5jg==
-X-Google-Smtp-Source: AGHT+IE20otJ4RSneK87xPc+d9C9PCpIJ8g8LIGpqUyyhEz7f1L4BvfQ+bBNZm9ZhHkhttGWrv8vlQ==
-X-Received: by 2002:a05:6a20:549a:b0:14b:8023:33cb with SMTP id i26-20020a056a20549a00b0014b802333cbmr5761090pzk.11.1696010677683;
-        Fri, 29 Sep 2023 11:04:37 -0700 (PDT)
+        bh=J1v3O8Y0CLFHcIVug6/xydUDIhYw4BbQ+Ux1bHhPShA=;
+        b=BkxDX1v73iQ7tPxSFftxzpZCfGcZZdU+HZ13m7IqVFd9nRnsuLxURfv1W0ZmLp3661
+         2BFVKJAIcwy97C4PRbxSvQVlLCQEdizi3yy+TmdYzZrQgWvgCJ0rK9yE9E/80iSf0NxR
+         rJGigFUPLAsutUgg32IKEwy4E7W+F2a/aa4tNWFpiVB2rxlRbVDZWigo2/kZilDqKFyA
+         xqTyQDLYKbuZ8Ue8FZO4iuS27fES/RgpPQWdd9SQDwjiR/rQdpNM46cHTia0GqoUyIca
+         s8P4iIoy0X3ngvufi867iliA0WHcFeGSMxRQC6x1Erp3zSW9dlhyTPT6QHEYp+/lpF3P
+         oYCg==
+X-Gm-Message-State: AOJu0YwdhikQp2ehPlDZ45NLqzqI99fHo7OGWv3+6pQD3R1rycvWR+NQ
+	1WEDZl7cdwZ7OuuLQkOesAyIvg==
+X-Google-Smtp-Source: AGHT+IHKYAnhCdsp9/XUAjoT8AOVwZwLCEjfmC0BrAcjWZiOg0t25ONKgJp0Zm+bImAEicHDnkFA+Q==
+X-Received: by 2002:a17:90a:ca90:b0:26d:355a:47e3 with SMTP id y16-20020a17090aca9000b0026d355a47e3mr4692859pjt.38.1696010676160;
+        Fri, 29 Sep 2023 11:04:36 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id d18-20020aa78692000000b00690fb385ea9sm15316956pfo.47.2023.09.29.11.04.33
+        by smtp.gmail.com with ESMTPSA id c9-20020a17090ab28900b00279163e52bbsm1786686pjr.17.2023.09.29.11.04.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 29 Sep 2023 11:04:34 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
@@ -63,9 +63,9 @@ Cc: Kees Cook <keescook@chromium.org>,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org,
 	llvm@lists.linux.dev
-Subject: [PATCH 6/7] IB/mthca: Annotate struct mthca_icm_table with __counted_by
-Date: Fri, 29 Sep 2023 11:04:29 -0700
-Message-Id: <20230929180431.3005464-6-keescook@chromium.org>
+Subject: [PATCH 1/7] RDMA: Annotate struct rdma_hw_stats with __counted_by
+Date: Fri, 29 Sep 2023 11:04:24 -0700
+Message-Id: <20230929180431.3005464-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230929180305.work.590-kees@kernel.org>
 References: <20230929180305.work.590-kees@kernel.org>
@@ -75,24 +75,24 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1251; i=keescook@chromium.org;
- h=from:subject; bh=KnzErPDnGsoACiNJdVcsN/BX+MW+GH0rlXVaL/E2pIg=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlFxGudlYNxBZwxaAdfN5vXxcaqFfVqmj7dgAXy
- KxCK6A4NgOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZRcRrgAKCRCJcvTf3G3A
- Jq2fD/wOjmJ/GTNcAOHMWxIkPbGB6y5ReI6NRHk1MISbwnUZHxFPl3cbxT4uBJ/tSFMWvYBIaZd
- CHF5KasHHeSkYcZgmCwOmDN1uWLSey/4j8PDvrpfKYLZ6trEcfgkT79P1w8JSgXNi/O8mBA7P3b
- 7skNWfNzTtAOq3D9GCfGkKoa7SOuU+Zs+g2so6pg3TInolHbr36AlerV403JYrGfIAQROPlltvf
- 6HbSLVByZEh4E3MlUrYKQhxmGo350//eAiVrjrpgj8zp6ASrjFLr5MSG5EZ1K1SOUhb1z1M710M
- KCxJhPfcH804qdRPlcPegKvBN3JwbexhAiuJUv81lEL8aIud2X5tFi8lJZfHbAtREW3ZALi+1XC
- qsi6RyjGH/EaSX65t5UCRLFRRnLK1Fu1L0ad+ny7oCoS+zPSFELwsvSsgeO1Ay3V9M3VM/t6xi9
- nPKdHSmc8EFPNM4xPJRu584TvMccInO4cFOq4JyjHaWZ9NX3EalXvkRQA6TUx4zo+AD2xJeYXb2
- lQWAJnl0LZCQ42huxY9W+Jj0X6J9hT32sjj6XnQGW65WPWCcGRBrEUoubExTgbb5eFqErnOwKcA
- R/RCcDiXvP+N2bi7MXqQ+DBgsFWZ4P1MaCRmEolelIiFmKGq3vm8m7RdjYnD9qmODro0EDfFQCR iOTFHqonxskMATQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1154; i=keescook@chromium.org;
+ h=from:subject; bh=yQF+4e/aqHGB0srQ03GVNPOtQXH2kpsbv4fi3QGNdHI=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlFxGtgBLXF4g50iVq6EwmS+sUwzqICeThKMiiq
+ qjLqq6vT+iJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZRcRrQAKCRCJcvTf3G3A
+ JmJbEACVWuoy65M7vBgTJIDcKZPUvKhfzgLipudCYXts5TRyUgUktR6iJw19uk3BoRwPxFocyM3
+ ExfOcE8LBavCmfabOcJ39ktmgXtRjV58WqVSvO2/j5sSyvKRz7LGsfWAGZSR/DWCjHEAh+VMZhU
+ Z8OPkNfIJj7YTE+E9jOGy/F04iicCdFqr8JQa2ewd1laq1+UWvf7EUi1hHFAZJnsJNQz+mmLi0F
+ UzE8KI22713mH9lZvekZjD3P4XWexgfHDNfB5dN9IeQL64dQuNSTgKjXi24c05ztrn/fM5MbpUw
+ pADkVjP2pObgLKlNZm2IBCmdiay5gjdGOEF6hVKkM6wctvZFLvaJR+C0hHLALyE8ETpnAlI11Pj
+ LPkJY48XnA6eqip5rHG9dSFxp+AMmY3b5JwYyobAjt06jhz7rP84urhSYKpr8Yh6/hLBIGxo23u
+ 70TdBMtN7JrvnKMZ4f9QVTMo7IA2bg+aTqPN5wpsGB9lnVXPRmROUU/uFp01np3OeFDtkP0klBD
+ gZDscuQtcb6PUFOnZ0vTXaWFZ0B/BHfq//tDhTWm4Ld8cgX/z7d5/roVZ5Ff1aWEj5FykucrrJL
+ vLwSQDrgsIHWx806Gkwz/89heSeoInGCh1noMh3fU8iXAxEfa7W0Vd8ey3taoQsTzjtgAvWSvWg zv8haP9PfQ1toZA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
@@ -103,7 +103,7 @@ their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 functions).
 
-As found with Coccinelle[1], add __counted_by for struct mthca_icm_table.
+As found with Coccinelle[1], add __counted_by for struct rdma_hw_stats.
 
 [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 
@@ -112,22 +112,22 @@ Cc: Leon Romanovsky <leon@kernel.org>
 Cc: linux-rdma@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/infiniband/hw/mthca/mthca_memfree.h | 2 +-
+ include/rdma/ib_verbs.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/mthca/mthca_memfree.h b/drivers/infiniband/hw/mthca/mthca_memfree.h
-index f9a2e65e2ff5..61d5bbba293a 100644
---- a/drivers/infiniband/hw/mthca/mthca_memfree.h
-+++ b/drivers/infiniband/hw/mthca/mthca_memfree.h
-@@ -68,7 +68,7 @@ struct mthca_icm_table {
- 	int               lowmem;
- 	int               coherent;
- 	struct mutex      mutex;
--	struct mthca_icm *icm[];
-+	struct mthca_icm *icm[] __counted_by(num_icm);
+diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
+index e36c0d9aad27..79bcdebbe228 100644
+--- a/include/rdma/ib_verbs.h
++++ b/include/rdma/ib_verbs.h
+@@ -607,7 +607,7 @@ struct rdma_hw_stats {
+ 	const struct rdma_stat_desc *descs;
+ 	unsigned long	*is_disabled;
+ 	int		num_counters;
+-	u64		value[];
++	u64		value[] __counted_by(num_counters);
  };
  
- struct mthca_icm_iter {
+ #define RDMA_HW_STATS_DEFAULT_LIFESPAN 10
 -- 
 2.34.1
 
