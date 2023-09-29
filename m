@@ -1,120 +1,129 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6358851B88
-	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 17:40:47 +0000 (UTC)
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C11F1AE
-	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 10:40:44 -0700 (PDT)
-Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1c6052422acso193275ad.1
-        for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 10:40:44 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF64A66676
+	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 18:04:34 +0000 (UTC)
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AA85CE5
+	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 11:04:33 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-690ba63891dso11434414b3a.2
+        for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 11:04:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696009244; x=1696614044; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=liTCdYbj1FVkuMGo6fO69hfA7Wsl1/IBO31+ywknd5c=;
-        b=j0zMxg24klXUUNmyYuRMJS0z1XElu3mMvF50e7DfCViWICEsg1rzK8dwiJrQPLS0yq
-         ia8KJnPjyLqj5hQhNYBn+yMdaN3L5oVT9igh3CJ5Cl2aXQnGCJx2/6uYBSeSu3Atde+S
-         zToUBzgrDhOLZ7l4Eg42RUhsozk+vPFNA5Q76FR3v44pxZqoGHyU+Zbhzsk2SnOxWxpL
-         hWLHc81GOt3/c+Wn0NxGOPPyB8YPkyCVeSt1Y3yxUJ7w5esRF/i/29BrBV8p7MvNnivr
-         pG51NSenTpY4cPBG1J0TQTBFyEfZ6GpV2s+K0xUEP3cS3wIWwZKMdWEEjYbN6rYexw6J
-         BAsA==
+        d=chromium.org; s=google; t=1696010673; x=1696615473; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=q/QLRqHS2L1NZ+5Mittg0t9KUpHsT5gMIELAAOGClyI=;
+        b=CnWJmFgDThESeBVrWvndRL7qevdh1LedSSoza2qpzq1NbzCsE5Z+V/JhhSt/4s6hhV
+         a2ZsuSY7lMs1NtZF9tAuBQb/v+ysmbMW0PonovPnMYgGc8bMnpjHz6hKuJTriaMMlcRP
+         BaiWCIy6iTKVZP6TB+a682fT2tPZUp4ZrqpHY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696009244; x=1696614044;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=liTCdYbj1FVkuMGo6fO69hfA7Wsl1/IBO31+ywknd5c=;
-        b=IT5rZm5u14J4aIRdI+LGr7+slvPGctwjsyQaWYdOU2fzs2pcd8R61fP0/iXoHZ+OVm
-         +SSYq5FHLHbW9MBr+vK11m6XIwDlZD7m9p/ffqFwWDe1RsdzMv98qxstpbaVpC5nhEOT
-         oATB0Qrmwx0UrSvlID2oklFcxYXtH0cKAK7TdzG28HGHmxHIGxVSt1lVLJtazzdbvjP3
-         UhmfdNEx9UnypixCFbX3rT2g1AJvtvE/95U2mXquiTSgEnsHYoNmcFMose6GIEuS5svA
-         01L8tjSyc+MQVxStXKqNpA7lJITc9H9+bkKNCfG7jrIqCZ+Yr8yHsGnIT69UDocDhUHD
-         fg/Q==
-X-Gm-Message-State: AOJu0YxE1Q0kuaRceMXZiQ2lxbsihJPyi3VSidP+cwhrKaoO9L8gEXzq
-	q5bzk8Qt5j0c5y41Eh68cauXKH8TSKQtSKNiqdGs7Q==
-X-Google-Smtp-Source: AGHT+IG8I6uaBrpHLsp0opKXQTpmS3lePr+15GdaosXyNMvMTOYnYBMFJsjMoiUol29+4CmIxCtKX8GDmFAxRmDFoU0=
-X-Received: by 2002:a17:903:41d2:b0:1c3:25c0:6dd7 with SMTP id
- u18-20020a17090341d200b001c325c06dd7mr21422ple.16.1696009243683; Fri, 29 Sep
- 2023 10:40:43 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1696010673; x=1696615473;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=q/QLRqHS2L1NZ+5Mittg0t9KUpHsT5gMIELAAOGClyI=;
+        b=sHdcNs3bdF2ZHGdms83RgXj7wjHgmdlyllMT1GyAY48/R7KGbe2bBaauE1hEAI5BII
+         I+D8Leur7Vb8V+1YaF4Ntm6G6CtzyL4D6PKTwxPLEWOSdE5W2oKLo7zxbPnHqjv7TAKn
+         MbxFaluIPW0EhpIHpljw6KRPaCfSI2x0xOcMiglSytrzgbxp2EuGHd/9PdaTFxwQPSJO
+         H3hFrEbEM0aW4Bvb7eufWxcSHwsfjUt0r98PF5MTkLjUNjdl6KfzBvxN5TdNW5VTTZ9z
+         umJY8MNBy7rsYOA5OHGm91NX+8yiaOwi6LSrdTDnWk8lALkxT6w/lN0mxUrhpbsFeGHr
+         qhwg==
+X-Gm-Message-State: AOJu0YxFX686nYTHal/tCR/Ws41bfNK8WsYg4Tiw196uLXZj3lTuN9a/
+	9bOd+c3r4Ftb4cypb9sGtwj5Yg==
+X-Google-Smtp-Source: AGHT+IGac3Y+OxZ1Rfapit3zv2uDFcPVgfD1mFi/owGzR0eAKACpnMWPiW7mh4tp2DCOwfeg6BIUyQ==
+X-Received: by 2002:a05:6a20:7d92:b0:15c:fa48:2c09 with SMTP id v18-20020a056a207d9200b0015cfa482c09mr6069263pzj.15.1696010672901;
+        Fri, 29 Sep 2023 11:04:32 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id gp15-20020a17090adf0f00b002790ded9c6dsm1743374pjb.31.2023.09.29.11.04.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 Sep 2023 11:04:32 -0700 (PDT)
+From: Kees Cook <keescook@chromium.org>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Kees Cook <keescook@chromium.org>,
+	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	=?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
+	Avihai Horon <avihaih@nvidia.com>,
+	Anand Khoje <anand.a.khoje@oracle.com>,
+	Mark Bloch <mbloch@nvidia.com>,
+	Christian Benvenuti <benve@cisco.com>,
+	Nelson Escobar <neescoba@cisco.com>,
+	Bernard Metzler <bmt@zurich.ibm.com>,
+	Bart Van Assche <bvanassche@acm.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Tom Rix <trix@redhat.com>,
+	Patrisious Haddad <phaddad@nvidia.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	wangjianli <wangjianli@cdjrlc.com>,
+	linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH 0/7] RDMA: Annotate structs with __counted_by
+Date: Fri, 29 Sep 2023 11:04:23 -0700
+Message-Id: <20230929180305.work.590-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZRbwU8Qnx28gpbuO@work> <202309291027.305751B8@keescook>
-In-Reply-To: <202309291027.305751B8@keescook>
-From: Jann Horn <jannh@google.com>
-Date: Fri, 29 Sep 2023 19:40:07 +0200
-Message-ID: <CAG48ez1w_gBUF6qRmfO_wb+eYLTfrLs5csjEaPhE9iQxdqPj+Q@mail.gmail.com>
-Subject: Re: [PATCH][next] media: usb: siano: Fix undefined behavior bug in
- struct smsusb_urb_t
-To: Kees Cook <keescook@chromium.org>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1121; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=/4LMpXENw48q7fWMpYL2O5Uv9CCph1q6zJBZxS3OiTQ=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlFxGtfNnwAB6/IhVqdJxC7ZgaTcIkDx4p62U8K
+ 94/n2sAm5mJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZRcRrQAKCRCJcvTf3G3A
+ JrPDD/9G/FXBBVcXylRtWq4GKt0j7nGB3Sb1K6AcSlCVxVFBRy+nxwfYQQZr4xtXxsWvyMHA3GO
+ an6tniLg3oW6KAqeWlyoWTPCgAB03CJi+G+hDiHHCov15sOhpiT+456fNXINz4dWnuT1qjDocWu
+ qVgb/JbcWJ1yknRDBwLxZj8BxmPFaaI0fAk3CBQ1uQGoIuXnpCcwPc3K4LnXUr291JEhvyG1GYm
+ 3AoB/bQL+pdZ+iiLJ8Yy/zYhFRiaJJjemNfx4dgeoeVtFYw/5lBL12b3cig48nQ5OYmhzuKV6DH
+ J+ivtBBRlahSdgzv3pA7WYfvof4aT9lQPMFU8DAhQwTPxyBIQBQGJcmO6kpVvOYl/RV3fMyaG4O
+ AHoNT3KByS2bpG0ExZn6Uudg9PdpU4oZDnBycx9eyVau5Fo5w3iNBmOaONQqpSV8sm21McFz7bc
+ PlWSe1ghKr/6+gz6B7c6xuGI5XUCPAgmfeoZK0ImUfSKKq4dMNZQgXsbUKst/+9wQuU6Xes3YQo
+ Th5dJxMb43142TKmxCpqx3Rjz4V3QoMFZuIzOmqjdgLuZ4/h/zPhD/7BIsty0C49KtvuHqctwCa
+ 6mxhmeKDdB6fYNPos0YZ/L7sWYNIQGJxNq4XbGnQijtT1dR331wWDNTg+3OFKZr5O6Et2PaYOjJ
+ nEyQXsh KrnMXw1g==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Fri, Sep 29, 2023 at 7:29=E2=80=AFPM Kees Cook <keescook@chromium.org> w=
-rote:
-> On Fri, Sep 29, 2023 at 05:42:11PM +0200, Gustavo A. R. Silva wrote:
-> > `struct urb` is a flexible structure, which means that it contains a
-> > flexible-array member at the bottom. This could potentially lead to an
-> > overwrite of the object `wq` at run-time with the contents of `urb`.
-> >
-> > Fix this by placing object `urb` at the end of `struct smsusb_urb_t`.
-> >
-> > Fixes: dd47fbd40e6e ("[media] smsusb: don't sleep while atomic")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->
-> As Jann pointed out, it's unlikely there is a function bug here, but I
-> still think it's right to make sure this is robust and clears the way
-> for -Wflex-array-member-not-at-end.
+Hi,
 
-But if this change makes the warning go away, that just means the
-warning is implemented badly, right?
+This annotates several structures with the coming __counted_by attribute
+for bounds checking of flexible arrays at run-time. For more details, see
+commit dd06e72e68bc ("Compiler Attributes: Add __counted_by macro").
 
-Like, before we had:
+Thanks!
 
-struct urb {
-  ...
-  struct usb_iso_packet_descriptor iso_frame_desc[];
-};
-struct smsusb_urb_t {
-  ...
-  struct urb urb; // not last element
-  ...
-};
+-Kees
 
-whereas afterwards we have:
+Kees Cook (7):
+  RDMA: Annotate struct rdma_hw_stats with __counted_by
+  RDMA/core: Annotate struct ib_pkey_cache with __counted_by
+  RDMA/usnic: Annotate struct usnic_uiom_chunk with __counted_by
+  RDMA/siw: Annotate struct siw_pbl with __counted_by
+  IB/srp: Annotate struct srp_fr_pool with __counted_by
+  IB/mthca: Annotate struct mthca_icm_table with __counted_by
+  IB/hfi1: Annotate struct tid_rb_node with __counted_by
 
-struct urb {
-  ...
-  struct usb_iso_packet_descriptor iso_frame_desc[];
-};
-struct smsusb_urb_t {
-  ...
-  struct urb urb;
-};
-struct smsusb_device_t {
-  ...
-  struct smsusb_urb_t surbs[MAX_URBS]; // array, and not last element
-  ...
-};
+ drivers/infiniband/core/cache.c             | 2 +-
+ drivers/infiniband/hw/hfi1/user_exp_rcv.h   | 2 +-
+ drivers/infiniband/hw/mthca/mthca_memfree.h | 2 +-
+ drivers/infiniband/hw/usnic/usnic_uiom.h    | 2 +-
+ drivers/infiniband/sw/siw/siw.h             | 2 +-
+ drivers/infiniband/ulp/srp/ib_srp.h         | 2 +-
+ include/rdma/ib_verbs.h                     | 2 +-
+ 7 files changed, 7 insertions(+), 7 deletions(-)
 
-That's basically the same pattern! Except that the new version has one
-more layer of indirection and there's an array involved.
+-- 
+2.34.1
 
-And you can't address that by moving struct members around because of
-the involvement of the array.
