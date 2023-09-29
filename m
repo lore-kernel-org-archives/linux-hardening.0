@@ -1,67 +1,66 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89EFD66666
-	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 19:21:20 +0000 (UTC)
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA6461B9
-	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 12:21:18 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1c723f1c80fso43512735ad.1
-        for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 12:21:18 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31A806588D
+	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 19:21:21 +0000 (UTC)
+Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E43CE1B5
+	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 12:21:19 -0700 (PDT)
+Received: by mail-pg1-x531.google.com with SMTP id 41be03b00d2f7-51b4ef5378bso11133629a12.1
+        for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 12:21:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1696015278; x=1696620078; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1696015279; x=1696620079; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ilE7Vn1v/6L1xjJiSnZJWIX4iPYebLM1xUgfMUUBIXI=;
-        b=l1xKYYCO0814xfitFFg3tTO2AT9+9UZgRImRulirJNri6/R8G48vt7MVrsxzwN/yb9
-         yZcK5RIeg2Dnra8ZA5VYQ6jsSEfwkHjIdSx/M3JiS3KW6skKsLi+OoDS799kphCDvFul
-         f55bYSu/I95TCgrsNLDFkV1d4tO7/oQKR06NA=
+        bh=tCv+kMrx/0UVGQCBQ46tqfp9gvNT/0LM2qgPxtgaA9o=;
+        b=VX4hN++I+aUc1RYQv6yPxwRdma7EuTF2+LNbnhnxHUwwju+e1crZgJgNTyuPIwvvdd
+         i2ZkwRKYiUHJVbJpEKaLXNEQeTEho1lzI/nc9C0A0s7LDNWs/FB03nMQnsrkAN4JvCdc
+         2lkpELBtihCNmQMAAgMZIpmM7ELu2Cl/4J3v4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696015278; x=1696620078;
+        d=1e100.net; s=20230601; t=1696015279; x=1696620079;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ilE7Vn1v/6L1xjJiSnZJWIX4iPYebLM1xUgfMUUBIXI=;
-        b=jwqR3IRUxKv/jM402ur+u88Gv/ghyDTmL+r9sCxqKFM9PDLVlAXevvELTvEcq/3Qxb
-         WEzMmu7aSr0oawgjujkGHM9vmBy4G7xr4TagvpmPktfXoar6hLg+sB/jIlbhPQeET5ZD
-         GFF4d7kv57PaaVmg1G2M/IwSISq/qLdgPcxaBuiQIefJNweRybdis5GoIpFNzl8m2U5j
-         GDpMFCa4881sRRgTIqPPRRiGlzXnGxHqcyakP01IFQtqQhi4HmFeqrilL9ome0fs2RWO
-         vvZrGh9QNPBzL5wRR6FQIUrERX9Q09RQ07eHYQIi9iM2U9VYpPu+oyDFaVYpyLxVs0Mt
-         511A==
-X-Gm-Message-State: AOJu0YyfRlFxeOL3+VwPwT0RAST/dHlPKsPeR4QHMVzynWfd5q67iloL
-	ifE6eGc5n+2wT/dRLNNGGb0h7w==
-X-Google-Smtp-Source: AGHT+IF0tQMM6MXJc6XxNKRi0sTdKpt1DN5cZbXrTlB5Mp1e+iC1EFDxKCNZm0dE3mY+fujU5z55eQ==
-X-Received: by 2002:a17:902:e549:b0:1c3:d07f:39f7 with SMTP id n9-20020a170902e54900b001c3d07f39f7mr5943508plf.62.1696015278370;
-        Fri, 29 Sep 2023 12:21:18 -0700 (PDT)
+        bh=tCv+kMrx/0UVGQCBQ46tqfp9gvNT/0LM2qgPxtgaA9o=;
+        b=encbpXDf/U5IY8xXQTpXMy9owFc0jxSbTcaUIK8hzj5wyBDJhCetX978+rd95z57ji
+         0zNrmTSHSCEn/JaGToUY7vkmA+XSKvy3Mg5w5e0Q3U/KAdpPjKeyXOKOsDKmlF6Iw2XB
+         jNyIeqf5kKSNoC/YPpZ5EWvqFC4Wei6WVkyRw97owPBZ2Ryes/3dEi5YrnN/RW3rU0wy
+         ozYdJJo4QOAf6nG1GcInwuAwQBImQLlofb5KEfMXJ8KhlKQyjsGmVHvjsjoBCyuO/siF
+         OdWAv400PNnr++hbLDaQHZBe2Q3DwwiKkifqhVpGqtezri1Dw6si3iOGz9y8dOVQcIHM
+         XQ4A==
+X-Gm-Message-State: AOJu0YwEisQBNtB5DX5hAXtwbpzAK4IR74rQVWnXCC6L/dNNmV+jlq2S
+	pTYbEdPsv5jd1cRfrPG9W1qW7jbtj0IBt/6XtpQ=
+X-Google-Smtp-Source: AGHT+IGiBwStaHPR44R6ANK1/tkrYWC/2DFh5Z+5BULeXdWKDr6O8WVqqWNlE6Fy+1azpzu06/HF2A==
+X-Received: by 2002:a05:6a20:3d22:b0:160:a752:59e with SMTP id y34-20020a056a203d2200b00160a752059emr5701827pzi.40.1696015279415;
+        Fri, 29 Sep 2023 12:21:19 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id x4-20020a170902ec8400b001c5f62a639asm13455348plg.196.2023.09.29.12.21.15
+        by smtp.gmail.com with ESMTPSA id y7-20020a637d07000000b0054fa8539681sm14767022pgc.34.2023.09.29.12.21.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 29 Sep 2023 12:21:16 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Kees Cook <keescook@chromium.org>
 Cc: John Keeping <john@keeping.me.uk>,
-	Peter Chen <peter.chen@nxp.com>,
-	Hulk Robot <hulkci@huawei.com>,
-	Allen Pais <allen.lkml@gmail.com>,
-	Will McVicker <willmcvicker@google.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Zhang Qilong <zhangqilong3@huawei.com>,
+	Udipto Goswami <quic_ugoswami@quicinc.com>,
+	Linyu Yuan <quic_linyyuan@quicinc.com>,
 	linux-usb@vger.kernel.org,
 	Nathan Chancellor <nathan@kernel.org>,
 	Nick Desaulniers <ndesaulniers@google.com>,
 	Tom Rix <trix@redhat.com>,
-	Linyu Yuan <quic_linyyuan@quicinc.com>,
+	Krishna Kurapati <quic_kriskura@quicinc.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Uttkarsh Aggarwal <quic_uaggarwa@quicinc.com>,
+	Yuta Hayama <hayama@lineo.co.jp>,
 	linux-kernel@vger.kernel.org,
 	llvm@lists.linux.dev,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] usb: gadget: f_midi: Annotate struct f_midi with __counted_by
-Date: Fri, 29 Sep 2023 12:21:12 -0700
-Message-Id: <169601526970.3013632.470911371867487341.b4-ty@chromium.org>
+Subject: Re: [PATCH] usb: gadget: f_fs: Annotate struct ffs_buffer with __counted_by
+Date: Fri, 29 Sep 2023 12:21:11 -0700
+Message-Id: <169601526969.3013632.10440475414357366621.b4-ty@chromium.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230915195938.never.611-kees@kernel.org>
-References: <20230915195938.never.611-kees@kernel.org>
+In-Reply-To: <20230915195849.never.275-kees@kernel.org>
+References: <20230915195849.never.275-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -77,23 +76,21 @@ X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Fri, 15 Sep 2023 12:59:39 -0700, Kees Cook wrote:
+On Fri, 15 Sep 2023 12:58:49 -0700, Kees Cook wrote:
 > Prepare for the coming implementation by GCC and Clang of the __counted_by
 > attribute. Flexible array members annotated with __counted_by can have
 > their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
 > 
-> As found with Coccinelle[1], add __counted_by for struct f_midi.
-> Additionally, since the element count member must be set before accessing
-> the annotated flexible array member, move its initialization earlier.
+> As found with Coccinelle[1], add __counted_by for struct ffs_buffer.
 > 
 > [...]
 
 Applied to for-next/hardening, thanks!
 
-[1/1] usb: gadget: f_midi: Annotate struct f_midi with __counted_by
-      https://git.kernel.org/kees/c/cfe2af2d553f
+[1/1] usb: gadget: f_fs: Annotate struct ffs_buffer with __counted_by
+      https://git.kernel.org/kees/c/84657a30a0c9
 
 Take care,
 
