@@ -1,80 +1,245 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2739D8465
-	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 12:12:27 +0000 (UTC)
-Received: from mail-vs1-xe32.google.com (mail-vs1-xe32.google.com [IPv6:2607:f8b0:4864:20::e32])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA8661AB;
-	Fri, 29 Sep 2023 05:12:24 -0700 (PDT)
-Received: by mail-vs1-xe32.google.com with SMTP id ada2fe7eead31-4526d872941so6692454137.1;
-        Fri, 29 Sep 2023 05:12:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695989544; x=1696594344; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=O6AGwXiXnrUMPXklIL5nmsijRotoMkC208+2TMbjvG0=;
-        b=RBxcuYGI1dv7jxQE9x20eY7D2XBeEyKX+eOQlUVeHfhGNW6j5272xeruDLqzWsxmcG
-         pNQdEYcS5YDWSA9tF5hlmxQzIWbjk6OHZAfbFyoZMUUC6OftT3x8RNUcXL46gfV0YPJh
-         iAUfGHY8WeZ43vGw9UPzRAKFDpQ2gATQ0UxlkFNry78m1MCTeeJ66YwUZdUqECNHsAKe
-         okxM5KVvCano5BNaPaeoLWwUdsj6y0MYYR63ocSsz76Kv0+QaU6o2JU8Lf9UqoNd8Jov
-         jpCFfNHGYp9fge/3fiKRHR07sNd70UXstiTEZMNP2EeckFTI/hvGOZ42YgxrMxjbZraG
-         ROng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695989544; x=1696594344;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=O6AGwXiXnrUMPXklIL5nmsijRotoMkC208+2TMbjvG0=;
-        b=ea0BYpCgOXTkmWQpSsv36usDuLbvdjnSuHkylz82SLVVG49eGjJ1wxBvLJEww/wCVw
-         xDwDDmbuj1RmU1oeEQ/D8/nLLSb7yM+UabBqXTvGWnhhF3Y7rPmg0rUPrxwMQ227Wys2
-         Pylg9nuMdtM1oHpntvtSQZmp+ol4oqeFGXN4aXH6VkNhiJPbczH+t/JoiDbgaJ1Z4C6t
-         HYzxjIO+n+FxcCY8jxXISYO8Y9Ru+iMdWKi4JKjetvl6+ZbtiAjXhTk8j5J5HcrX9rPK
-         +76xbX+lRFvX54uxc/HnN5d9vH5BLELzVSw7j9YQvkw5Nbb9EivJMrDwI5d84WfnkyQ7
-         lt/Q==
-X-Gm-Message-State: AOJu0Yyt0DYVsqbNcJ4pFuSsT9yi3Rj3T0Ou5491BbpbB9i7IukYba5G
-	gh/8E7XhQzUTyd5jPST8jzjgrE7h9DUdzot5bSU=
-X-Google-Smtp-Source: AGHT+IFL72KqbSIw/G7vE5rVtmiJ3L3ZrqYM/4H/e5qUq9cV909l+/PBvNa7N1kRqgXb9QMyFQV3Xm6Xw7VpBFtehK4=
-X-Received: by 2002:a67:ffc7:0:b0:44d:3bc0:f1bc with SMTP id
- w7-20020a67ffc7000000b0044d3bc0f1bcmr3884563vsq.18.1695989543918; Fri, 29 Sep
- 2023 05:12:23 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6BCA18631
+	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 15:23:46 +0000 (UTC)
+Received: from out03.mta.xmission.com (out03.mta.xmission.com [166.70.13.233])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E481DD6;
+	Fri, 29 Sep 2023 08:23:44 -0700 (PDT)
+Received: from in01.mta.xmission.com ([166.70.13.51]:54204)
+	by out03.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1qmFLC-00FymL-Go; Fri, 29 Sep 2023 09:23:43 -0600
+Received: from ip68-227-168-167.om.om.cox.net ([68.227.168.167]:54014 helo=email.froward.int.ebiederm.org.xmission.com)
+	by in01.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1qmFLB-009ZoQ-44; Fri, 29 Sep 2023 09:23:42 -0600
+From: "Eric W. Biederman" <ebiederm@xmission.com>
+To: Pedro Falcato <pedro.falcato@gmail.com>
+Cc: Kees Cook <keescook@chromium.org>,  Sebastian Ott <sebott@redhat.com>,
+  Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,  Al Viro
+ <viro@zeniv.linux.org.uk>,  Christian Brauner <brauner@kernel.org>,
+  Andrew Morton <akpm@linux-foundation.org>,  linux-kernel@vger.kernel.org,
+  linux-fsdevel@vger.kernel.org,  linux-mm@kvack.org,
+  linux-hardening@vger.kernel.org
+References: <20230929031716.it.155-kees@kernel.org>
+	<20230929032435.2391507-1-keescook@chromium.org>
+	<CAKbZUD3E2if8Sncy+M2YKncc_Zh08-86W6U5wR0ZMazShxbHHA@mail.gmail.com>
+Date: Fri, 29 Sep 2023 10:23:33 -0500
+In-Reply-To: <CAKbZUD3E2if8Sncy+M2YKncc_Zh08-86W6U5wR0ZMazShxbHHA@mail.gmail.com>
+	(Pedro Falcato's message of "Fri, 29 Sep 2023 13:06:38 +0100")
+Message-ID: <87o7hl80lm.fsf@email.froward.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230929031716.it.155-kees@kernel.org> <20230929032435.2391507-4-keescook@chromium.org>
-In-Reply-To: <20230929032435.2391507-4-keescook@chromium.org>
-From: Pedro Falcato <pedro.falcato@gmail.com>
-Date: Fri, 29 Sep 2023 13:12:13 +0100
-Message-ID: <CAKbZUD1ojuNN_+x6gkxEMsmLOd5KbCs-wfJcMM==b8+k8_uD_w@mail.gmail.com>
-Subject: Re: [PATCH v4 4/6] binfmt_elf: Use elf_load() for library
-To: Kees Cook <keescook@chromium.org>
-Cc: Eric Biederman <ebiederm@xmission.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	Sebastian Ott <sebott@redhat.com>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
+X-XM-SPF: eid=1qmFLB-009ZoQ-44;;;mid=<87o7hl80lm.fsf@email.froward.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.168.167;;;frm=ebiederm@xmission.com;;;spf=pass
+X-XM-AID: U2FsdGVkX18rmihOrcx0Q0L++mXAU7hLrmijYwsrwOA=
+X-SA-Exim-Connect-IP: 68.227.168.167
+X-SA-Exim-Mail-From: ebiederm@xmission.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.6
+X-Spam-DCC: XMission; sa06 1397; Body=1 Fuz1=1 Fuz2=1 
+X-Spam-Combo: **;Pedro Falcato <pedro.falcato@gmail.com>
+X-Spam-Relay-Country: 
+X-Spam-Timing: total 794 ms - load_scoreonly_sql: 0.05 (0.0%),
+	signal_user_changed: 12 (1.5%), b_tie_ro: 10 (1.3%), parse: 1.28
+	(0.2%), extract_message_metadata: 53 (6.6%), get_uri_detail_list: 5
+	(0.7%), tests_pri_-2000: 59 (7.4%), tests_pri_-1000: 2.9 (0.4%),
+	tests_pri_-950: 1.40 (0.2%), tests_pri_-900: 1.11 (0.1%),
+	tests_pri_-200: 0.95 (0.1%), tests_pri_-100: 19 (2.4%), tests_pri_-90:
+	107 (13.4%), check_bayes: 90 (11.3%), b_tokenize: 15 (1.9%),
+	b_tok_get_all: 15 (1.9%), b_comp_prob: 4.6 (0.6%), b_tok_touch_all: 50
+	(6.3%), b_finish: 1.00 (0.1%), tests_pri_0: 518 (65.3%),
+	check_dkim_signature: 0.63 (0.1%), check_dkim_adsp: 6 (0.8%),
+	poll_dns_idle: 0.61 (0.1%), tests_pri_10: 2.1 (0.3%), tests_pri_500:
+	10 (1.3%), rewrite_mail: 0.00 (0.0%)
+Subject: Re: [PATCH v4 1/6] binfmt_elf: Support segments with 0 filesz and
+ misaligned starts
+X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 
-On Fri, Sep 29, 2023 at 4:24=E2=80=AFAM Kees Cook <keescook@chromium.org> w=
-rote:
+Pedro Falcato <pedro.falcato@gmail.com> writes:
+
+> On Fri, Sep 29, 2023 at 4:24=E2=80=AFAM Kees Cook <keescook@chromium.org>=
+ wrote:
+>>
+>> From: "Eric W. Biederman" <ebiederm@xmission.com>
+>>
+>> Implement a helper elf_load() that wraps elf_map() and performs all
+>> of the necessary work to ensure that when "memsz > filesz" the bytes
+>> described by "memsz > filesz" are zeroed.
+>>
+>> An outstanding issue is if the first segment has filesz 0, and has a
+>> randomized location. But that is the same as today.
+>>
+>> In this change I replaced an open coded padzero() that did not clear
+>> all of the way to the end of the page, with padzero() that does.
+>>
+>> I also stopped checking the return of padzero() as there is at least
+>> one known case where testing for failure is the wrong thing to do.
+>> It looks like binfmt_elf_fdpic may have the proper set of tests
+>> for when error handling can be safely completed.
+>>
+>> I found a couple of commits in the old history
+>> https://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git,
+>> that look very interesting in understanding this code.
+>>
+>> commit 39b56d902bf3 ("[PATCH] binfmt_elf: clearing bss may fail")
+>> commit c6e2227e4a3e ("[SPARC64]: Missing user access return value checks=
+ in fs/binfmt_elf.c and fs/compat.c")
+>> commit 5bf3be033f50 ("v2.4.10.1 -> v2.4.10.2")
+>>
+>> Looking at commit 39b56d902bf3 ("[PATCH] binfmt_elf: clearing bss may fa=
+il"):
+>> >  commit 39b56d902bf35241e7cba6cc30b828ed937175ad
+>> >  Author: Pavel Machek <pavel@ucw.cz>
+>> >  Date:   Wed Feb 9 22:40:30 2005 -0800
+>> >
+>> >     [PATCH] binfmt_elf: clearing bss may fail
+>> >
+>> >     So we discover that Borland's Kylix application builder emits weir=
+d elf
+>> >     files which describe a non-writeable bss segment.
+>> >
+>> >     So remove the clear_user() check at the place where we zero out th=
+e bss.  I
+>> >     don't _think_ there are any security implications here (plus we've=
+ never
+>> >     checked that clear_user() return value, so whoops if it is a probl=
+em).
+>> >
+>> >     Signed-off-by: Pavel Machek <pavel@suse.cz>
+>> >     Signed-off-by: Andrew Morton <akpm@osdl.org>
+>> >     Signed-off-by: Linus Torvalds <torvalds@osdl.org>
+>>
+>> It seems pretty clear that binfmt_elf_fdpic with skipping clear_user() f=
+or
+>> non-writable segments and otherwise calling clear_user(), aka padzero(),
+>> and checking it's return code is the right thing to do.
+>>
+>> I just skipped the error checking as that avoids breaking things.
+>>
+>> And notably, it looks like Borland's Kylix died in 2005 so it might be
+>> safe to just consider read-only segments with memsz > filesz an error.
+>>
+>> Reported-by: Sebastian Ott <sebott@redhat.com>
+>> Reported-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
+>> Closes: https://lkml.kernel.org/r/20230914-bss-alloc-v1-1-78de67d2c6dd@w=
+eissschuh.net
+>> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+>> Link: https://lore.kernel.org/r/87sf71f123.fsf@email.froward.int.ebieder=
+m.org
+>> Signed-off-by: Kees Cook <keescook@chromium.org>
+>> ---
+>>  fs/binfmt_elf.c | 111 +++++++++++++++++++++---------------------------
+>>  1 file changed, 48 insertions(+), 63 deletions(-)
+>>
+>> diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+>> index 7b3d2d491407..2a615f476e44 100644
+>> --- a/fs/binfmt_elf.c
+>> +++ b/fs/binfmt_elf.c
+>> @@ -110,25 +110,6 @@ static struct linux_binfmt elf_format =3D {
+>>
+>>  #define BAD_ADDR(x) (unlikely((unsigned long)(x) >=3D TASK_SIZE))
+>>
+>> -static int set_brk(unsigned long start, unsigned long end, int prot)
+>> -{
+>> -       start =3D ELF_PAGEALIGN(start);
+>> -       end =3D ELF_PAGEALIGN(end);
+>> -       if (end > start) {
+>> -               /*
+>> -                * Map the last of the bss segment.
+>> -                * If the header is requesting these pages to be
+>> -                * executable, honour that (ppc32 needs this).
+>> -                */
+>> -               int error =3D vm_brk_flags(start, end - start,
+>> -                               prot & PROT_EXEC ? VM_EXEC : 0);
+>> -               if (error)
+>> -                       return error;
+>> -       }
+>> -       current->mm->start_brk =3D current->mm->brk =3D end;
+>> -       return 0;
+>> -}
+>> -
+>>  /* We need to explicitly zero any fractional pages
+>>     after the data section (i.e. bss).  This would
+>>     contain the junk from the file that should not
+>> @@ -406,6 +387,51 @@ static unsigned long elf_map(struct file *filep, un=
+signed long addr,
+>>         return(map_addr);
+>>  }
+>>
+>> +static unsigned long elf_load(struct file *filep, unsigned long addr,
+>> +               const struct elf_phdr *eppnt, int prot, int type,
+>> +               unsigned long total_size)
+>> +{
+>> +       unsigned long zero_start, zero_end;
+>> +       unsigned long map_addr;
+>> +
+>> +       if (eppnt->p_filesz) {
+>> +               map_addr =3D elf_map(filep, addr, eppnt, prot, type, tot=
+al_size);
+>> +               if (BAD_ADDR(map_addr))
+>> +                       return map_addr;
+>> +               if (eppnt->p_memsz > eppnt->p_filesz) {
+>> +                       zero_start =3D map_addr + ELF_PAGEOFFSET(eppnt->=
+p_vaddr) +
+>> +                               eppnt->p_filesz;
+>> +                       zero_end =3D map_addr + ELF_PAGEOFFSET(eppnt->p_=
+vaddr) +
+>> +                               eppnt->p_memsz;
+>> +
+>> +                       /* Zero the end of the last mapped page */
+>> +                       padzero(zero_start);
+>> +               }
+>> +       } else {
+>> +               map_addr =3D zero_start =3D ELF_PAGESTART(addr);
+>> +               zero_end =3D zero_start + ELF_PAGEOFFSET(eppnt->p_vaddr)=
+ +
+>> +                       eppnt->p_memsz;
 >
-> While load_elf_library() is a libc5-ism, we can still replace most of
-> its contents with elf_load() as well, further simplifying the code.
+> What happens if a previous segment has mapped ELF_PAGESTART(addr)?
+> Don't we risk mapping over that?
 
-While I understand you want to break as little as possible (as the ELF
-loader maintainer), I'm wondering if we could axe CONFIG_USELIB
-altogether? Since CONFIG_BINFMT_AOUT also got axed. Does this have
-users anywhere?
+It is bug of whomever produced the ELF executable.
 
---=20
-Pedro
+The architectural page size is known is part of the per architecture
+sysv ABI.  Typical it is the same or larger than the hardware page
+size.
+
+ELF executables are always mmaped in page sized chunks.  Which makes a
+starting offset part-way through a page weird, and a bit awkward, but it
+is something the code already attempts to handle.
+
+> Whereas AFAIK old logic would just padzero the bss bytes.
+
+No.  The old logic would either map that region with elf_map, and then
+call padzero to zero out the bss bytes, or the old logic would fail if
+the file offset was not contained within the file.
+
+The updated logic if "filesz =3D=3D 0" simply ignores the file offset
+and always mmaps /dev/zero instead.  This means that giving a bogus
+file offset does not unnecessarily cause an executable to fail.
+
+
+If the desired behavior is to have file contents and bss on the same
+page of data, the generator of the elf program header needs to
+have "memsz > filesz".  That is already well supported for everything
+except the elf interpreters.
+
+Eric
+
+
+
+
