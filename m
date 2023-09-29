@@ -1,127 +1,82 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 616DAC2FD
-	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 22:05:58 +0000 (UTC)
-Received: from mail-ot1-x331.google.com (mail-ot1-x331.google.com [IPv6:2607:f8b0:4864:20::331])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC2FDF1
-	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 15:05:54 -0700 (PDT)
-Received: by mail-ot1-x331.google.com with SMTP id 46e09a7af769-6c4fc2ce697so3900471a34.0
-        for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 15:05:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696025154; x=1696629954; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=naHj0xuXcByQMM+TdtCohvVCq+osNBK01cxTTEKKxyw=;
-        b=EMu61RC9E0ws5MSlrG2oGhY1AnPg/IGdr04eGFJ3BsNxIEOKmnxqTy9B8MNlvN7b3n
-         S63AA34zWXuXcY0mR8qFLGNJCBXQEsZW+kwFqwl331FDfQXaEUMvkMNM5EeAaQKoWivB
-         65S+Ztu5IvAGRoOM09th3MPCD/oAAN7C+FBnELRuCA3BV94svnENd0nNgHoSRtPWPkMW
-         4Kuk7MmMXNthr5O1wJsSbcfqauVEDNUzI96KAQYZzE7FIORehlmuZ0eboHekUpVDQC71
-         nbth5Gi600YW39RapUI4yVvTgZZ+XWmoJ78eOtzOGdoyqzOx8bGBQ70vRBPXI3VWTnG2
-         KMXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696025154; x=1696629954;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=naHj0xuXcByQMM+TdtCohvVCq+osNBK01cxTTEKKxyw=;
-        b=l4KsnvrlvHewtPsRoqxdSV5WjP+SEoLAK4C2mYPn3WWramT9+/g5ttoyqRRkQQC5JD
-         MxuchmR0OiJLcX8hCMBAd2kVFMdgPTsNsx+qBD/gNKPvBHciNBx6Z+YDFWuiOfN4NaRQ
-         XUo5MjDt20lDlyCBJj6APel/8nZ8Cz02MAHvonakD7ZoByXT9ts4spStY9evYmvHjkVT
-         LqDxSqbyc7XcfX5We8ZPbYYI4mq/XK7MhQxoB0uGgaLxnhfVsbNEfBaHBee1ikCaBWAs
-         9ZfV3GFiZuix5LJxD0JA0P90B2J2eKgXWc4Gl7o3nJZIqb4+6HUHknbmOLmdIZHVAJ+w
-         cG8A==
-X-Gm-Message-State: AOJu0YweeXMUBjugY6HhL7pT51KRxTeIBHseTEcMV78R5zhFPjihxfu5
-	TMpgcxkUJMnep4QqwWRxdRHpTIPdgDAGthSDjAwm/w==
-X-Google-Smtp-Source: AGHT+IHyE4YQUm7vQs1QcqQjr5b1q+oQmKp3WntnD5jmb4mEWI4W6j13UW4F5G4vJnz8UfQSlOEZzp7+UN0w1kzOeHs=
-X-Received: by 2002:a05:6358:e49c:b0:143:8aa4:30bc with SMTP id
- by28-20020a056358e49c00b001438aa430bcmr5947074rwb.8.1696025154053; Fri, 29
- Sep 2023 15:05:54 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014B8F9F6
+	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 23:40:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69086C433CA;
+	Fri, 29 Sep 2023 23:40:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1696030827;
+	bh=j795K5/MAlYT7miSth5njB9uoLB+NjYOmU2pz6sh7/8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=LnESN84csn3Ak6ZRIYlcj8hNERPAid/65iQ720iQ5ASNMzRc7vL9gjrg/0jbnmU1W
+	 TUrEaca6mXN/sLX0EBP/ffXYpmyHynGyGsWQsLCM3ffM/HP12xIbYxtFJnIdvDTMlV
+	 0uNBJK1k70vPURiWyjPPHUpA/gMu9D/E8zFBi8CChm24mDu88gPZjDn1T9T1O/s3gG
+	 z5Bk9GKhpjQH1049I3YZNwxk0WaHvw5n++7FKL6+zWqQfxNNCu8aOOiVkD/LC2e6Se
+	 XfW61O7iKz2k/W9h93s7XkXYnIO8367dE+0uvxUYvrNgThYCUJcPzcguty63YE3hyL
+	 +dqHKPXyn1fGQ==
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-503056c8195so23616841e87.1;
+        Fri, 29 Sep 2023 16:40:27 -0700 (PDT)
+X-Gm-Message-State: AOJu0YxzKdn9nruGW3lOLvgghPfH5ybeIYxKWum1DP4NnejWgT/9vqbK
+	YHFWIwNo3xU3z65SmWYRLl40G9eyPnWymYXfYcY=
+X-Google-Smtp-Source: AGHT+IFp7rMJNApRkcjAscXMkeiqDCqNsoHNvxFXia7ij003zaInwJkMVLmEYpzg05PtEQhv43/orpA/sFcxIJIt5G8=
+X-Received: by 2002:a19:504b:0:b0:500:9a15:9054 with SMTP id
+ z11-20020a19504b000000b005009a159054mr4131558lfj.20.1696030825585; Fri, 29
+ Sep 2023 16:40:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230929-pxa1908-lkml-v5-0-5aa5a1109c5f@skole.hr> <20230929-pxa1908-lkml-v5-7-5aa5a1109c5f@skole.hr>
-In-Reply-To: <20230929-pxa1908-lkml-v5-7-5aa5a1109c5f@skole.hr>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Sat, 30 Sep 2023 00:05:41 +0200
-Message-ID: <CACRpkdb=8LU9Mkkn_VDcTGoH1pWn=hp9ZhN5dLm5pykif8cp-w@mail.gmail.com>
-Subject: Re: [PATCH RESEND v5 7/8] arm64: dts: Add DTS for Marvell PXA1908 and samsung,coreprimevelte
-To: =?UTF-8?Q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Cc: Robert Jarzmik <robert.jarzmik@free.fr>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Andy Shevchenko <andy@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Lubomir Rintel <lkundrak@v3.sk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>, 
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-hardening@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
-	phone-devel@vger.kernel.org, afaerber@suse.de, balejk@matfyz.cz
+References: <20230915200328.never.064-kees@kernel.org> <169601526973.3013632.16756928162777602693.b4-ty@chromium.org>
+In-Reply-To: <169601526973.3013632.16756928162777602693.b4-ty@chromium.org>
+From: Song Liu <song@kernel.org>
+Date: Fri, 29 Sep 2023 16:40:13 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW6RfCryssufHjWHRdUGCh2DywnNNtidZ-UxEWvwo4gcbQ@mail.gmail.com>
+Message-ID: <CAPhsuW6RfCryssufHjWHRdUGCh2DywnNNtidZ-UxEWvwo4gcbQ@mail.gmail.com>
+Subject: Re: [PATCH] md/md-linear: Annotate struct linear_conf with __counted_by
+To: Kees Cook <keescook@chromium.org>, Jens Axboe <axboe@kernel.dk>
+Cc: linux-raid@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org, 
+	llvm@lists.linux.dev, linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
 
-On Fri, Sep 29, 2023 at 5:42=E2=80=AFPM Duje Mihanovi=C4=87 <duje.mihanovic=
-@skole.hr> wrote:
-
-> Add DTS for Marvell PXA1908 SoC and Samsung Galaxy Core Prime Value
-> Edition LTE, a smartphone based on said SoC.
+On Fri, Sep 29, 2023 at 12:21=E2=80=AFPM Kees Cook <keescook@chromium.org> =
+wrote:
 >
-> Signed-off-by: Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
-(...)
+> On Fri, 15 Sep 2023 13:03:28 -0700, Kees Cook wrote:
+> > Prepare for the coming implementation by GCC and Clang of the __counted=
+_by
+> > attribute. Flexible array members annotated with __counted_by can have
+> > their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOU=
+NDS
+> > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-famil=
+y
+> > functions).
+> >
+> > As found with Coccinelle[1], add __counted_by for struct linear_conf.
+> > Additionally, since the element count member must be set before accessi=
+ng
+> > the annotated flexible array member, move its initialization earlier.
+> >
+> > [...]
+>
+> Applied to for-next/hardening, thanks!
+>
+> [1/1] md/md-linear: Annotate struct linear_conf with __counted_by
+>       https://git.kernel.org/kees/c/9add7681e09b
 
-> +&pmx {
-> +       pinctrl-single,gpio-range =3D <&range 55 55 0>,
-> +                                   <&range 110 32 0>,
-> +                                   <&range 52 1 0>;
-> +
-> +       pinctrl-names =3D "default";
-> +       pinctrl-0 =3D <&board_pins_1 &board_pins_2 &board_pins_3>;
-> +
-> +       board_pins_1: pinmux-board-1 {
-> +               pinctrl-single,pins =3D <
-> +                       0x160 0
-> +                       0x164 0
-> +                       0x168 0
-> +                       0x16c 0
-> +               >;
-> +               pinctrl-single,drive-strength =3D <0x1000 0x1800>;
-> +               pinctrl-single,bias-pullup =3D <0x8000 0x8000 0 0xc000>;
-> +               pinctrl-single,bias-pulldown =3D <0x8000 0x8000 0 0xa000>=
-;
-> +               pinctrl-single,input-schmitt =3D <0 0x30>;
-> +               pinctrl-single,input-schmitt-enable =3D <0x40 0 0x40 0x40=
->;
-> +               pinctrl-single,low-power-mode =3D <0x288 0x388>;
-> +       };
-(...)
-> +                       pmx: pinmux@1e000 {
-> +                               compatible =3D "pinconf-single";
+Hmm..
 
-At least add a new binding for "marvell,pxa1908-padconf"
-and use that like this:
+Jens pulled this into his for-next branch and for-6.7/block branch
+earlier today:
 
-compatible =3D "marvell,pxa1908-padconf", "pinconf-single";
+https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/commi=
+t/?h=3Dfor-next&id=3De887544d7620f1d3cef017e45df7bc625182caff
 
-When you use pinctrl-single you get the slightly opaque device
-trees as seen above, so it's not something I'd recommend, I'd
-rather write my own pin controller.
+Do we need to do anything about this (drop one of them)?
 
-But it exists, so I can't say you can't use it. Not my choice.
-I understand it is convenient.
-
-It is possible to switch later, but only if you have a unique
-pin controller compatible so please add that.
-
-Yours,
-Linus Walleij
+Thanks,
+Song
