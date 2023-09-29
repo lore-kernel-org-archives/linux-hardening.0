@@ -1,47 +1,46 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C1B66DC3
-	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 18:07:54 +0000 (UTC)
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 846FD1B5
-	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 11:07:51 -0700 (PDT)
-Received: by mail-pl1-x636.google.com with SMTP id d9443c01a7336-1c3cbfa40d6so129745905ad.1
-        for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 11:07:51 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F69866670
+	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 18:11:53 +0000 (UTC)
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C20981AE
+	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 11:11:51 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-690bf8fdd1aso11759734b3a.2
+        for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 11:11:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1696010871; x=1696615671; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1696011111; x=1696615911; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Y+OUXUGuXcJBjG1vjBPXQ48YFM5VCEcB7cIToPK1BuE=;
-        b=YsLbaIi+Z54JGdna1Uvf1EVWSGngBtHHD7+2x3QgK547Xp2CQNNggVStgV0kFZ1YTy
-         SR7qUcI8WS+zSQM1xaO/dc5IJBZH2CY6VECA0XFDR5jxuo//jVtKFlb3InnyVLi/BLNf
-         rlsZoHKlZUCqO5WVAT0t7HUbn9HrTYidAl21M=
+        bh=OH0PiR0WI/UE2sZjCTyFU1iLE9Onm3jTTwerBkotyuo=;
+        b=M6H97+PWjTqOpphNFmzrKJiS8uUoVdZ/atl4aDIURSnYWgxqvCjtOqLmhOrKjlfZtH
+         2x5gg8ZM4LtE14rl5dbuLnCCYn6qyGEW35F/jPX7MxKg3EUisYQlEDna2xhTqQO2o6N/
+         NEB5IX+TqMQapc++UTQ/y80qz8YBaIljJ0RR8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696010871; x=1696615671;
+        d=1e100.net; s=20230601; t=1696011111; x=1696615911;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Y+OUXUGuXcJBjG1vjBPXQ48YFM5VCEcB7cIToPK1BuE=;
-        b=MUY/FlMhSQexl58c/UxBZV4Evg1Cg52KXV51JMaCcDWbGGjwyWdzdQcHOJx9rdnavG
-         cBjHMIYMXycFvQvfYXDiCSnJGRSFix5CHjvHhMWnUXGWhKWJms+1QBNdPHp+awFCaV9w
-         HVJk9VnKWDB3ntiGx+jkLhaQ7q6e3RH7a/or66/gjTFUkE/XVTKQsArhAqS8jjX3XWyQ
-         0csuDMNFhIjmuxk/w0wIM1wYFKatLQVEg3sETXPbEsyRe4pxzEIojx6FMKqKcpfyGdF2
-         nx+IqGt1jpFNFaD4B+BVe88DskYGDhLU/dkavxB2HELzH0Sz9XofwsG8PK2BOJdPArN1
-         rctg==
-X-Gm-Message-State: AOJu0Yx71QZP3x4spBbq2xUzBz5cJyIR8Ld8GOS7F9Ldx//p2ps6NHvk
-	F02ztwX8o6sU0uEETSSGShqfCA==
-X-Google-Smtp-Source: AGHT+IEUS5Q6CItC18bYsvchkQTR8lfIdVZ9unfjKsIV5LAfE1xlw6Gtd4iK7tOPYWs64fb0cikyIA==
-X-Received: by 2002:a17:903:1247:b0:1bf:8779:e045 with SMTP id u7-20020a170903124700b001bf8779e045mr5483760plh.50.1696010870993;
-        Fri, 29 Sep 2023 11:07:50 -0700 (PDT)
+        bh=OH0PiR0WI/UE2sZjCTyFU1iLE9Onm3jTTwerBkotyuo=;
+        b=VMfSlZ7sir+6DYMQHaGzwbdXxexQOLo7Fv1XMRWInF/CMPg+DDMVsPtEAvMikYJb0c
+         G570/lo/Yk9LxgIjndAJKR1rkA+5beD4YSS8mB8jnb4CnilmS3khQJwT8Gw7jMOjeIT8
+         cIJIboapuyIPh2t9klakrUbNNg9FhNBNKvWTApVqTqq5NGMQoV+TbZ2bz2+NCvP4ba4M
+         VZIyqJL0K3VBXsfdsEhF/eIWsq2o4Z6Yl8OUXe851iOgz7aLP1pFXE3/FXDnHkOKjEku
+         5QmDt4qe4NlTcykBxKzwacvapM/OUuFCWF/i9psXLa3eXVjCYyFok0l8encdc+W39/jm
+         rESQ==
+X-Gm-Message-State: AOJu0YxyTRcQiNo2KJBQ3xAiI6d6D8wDT0e+HmpP2unViJezAwNoT+32
+	MGkqdhQRM490Afk91l3agFFScQ==
+X-Google-Smtp-Source: AGHT+IHAY4rhk60X1mRZO3KkP8CVqHVHv0bnb2oq8VCNZiw3pzIiWNqw+uVNR3TmEftzfyciqOQl3Q==
+X-Received: by 2002:a05:6a20:442a:b0:12f:c0c1:d70 with SMTP id ce42-20020a056a20442a00b0012fc0c10d70mr5673020pzb.40.1696011111199;
+        Fri, 29 Sep 2023 11:11:51 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id jc1-20020a17090325c100b001b8a3e2c241sm10147160plb.14.2023.09.29.11.07.47
+        by smtp.gmail.com with ESMTPSA id u2-20020a17090282c200b001c5fe217fb9sm13142608plz.267.2023.09.29.11.11.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Sep 2023 11:07:49 -0700 (PDT)
+        Fri, 29 Sep 2023 11:11:50 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
-To: Ido Schimmel <idosch@nvidia.com>
+To: Raju Rangoju <rajur@chelsio.com>
 Cc: Kees Cook <keescook@chromium.org>,
-	Petr Machata <petrm@nvidia.com>,
 	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
 	Jakub Kicinski <kuba@kernel.org>,
@@ -54,36 +53,36 @@ Cc: Kees Cook <keescook@chromium.org>,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org,
 	llvm@lists.linux.dev
-Subject: [PATCH 5/5] mlxsw: spectrum_span: Annotate struct mlxsw_sp_span with __counted_by
-Date: Fri, 29 Sep 2023 11:07:44 -0700
-Message-Id: <20230929180746.3005922-5-keescook@chromium.org>
+Subject: [PATCH 1/5] chelsio/l2t: Annotate struct l2t_data with __counted_by
+Date: Fri, 29 Sep 2023 11:11:45 -0700
+Message-Id: <20230929181149.3006432-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230929180611.work.870-kees@kernel.org>
-References: <20230929180611.work.870-kees@kernel.org>
+In-Reply-To: <20230929181042.work.990-kees@kernel.org>
+References: <20230929181042.work.990-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1497; i=keescook@chromium.org;
- h=from:subject; bh=jOjkutl+FN0Q0NcydftzDs97qCbfIf1phadYTLsXBco=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlFxJwlBbholfX/29SJCBAGZf8A8xz38gXp6NGn
- iJOOuDg+hWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZRcScAAKCRCJcvTf3G3A
- Jl1kD/90JOuRmIMhCW3kVJu4Gf7kOSWnfxMGxbUxzN86sjU+wC/P4QEzsQgpQHekYaH3EkKx7w3
- hZY3FZcnwP5TRImzUsKk3CTw9Mh+q5lC+9myfP1SslNwswdLHQFuNlACOS3ib7oQcKfwl/L+0+C
- 4nNsIZCoUyPTYoHcC5bpZ2/WYHFFyzk1INSN5bwLVHjUtbYzN8WfOnbhXAh2UCBZx6M241VRFt8
- GdGwT6UEKT/WxeFImZc1/we2T3lPaFgJL6cTsFwBsC7VzwsJjSGrozdK64zfdYXL8GR0hu6IFON
- q1m8C/5hOkI5Roxt+ixnIcsJCMEtG/toG1nRVfNmwbrvS47XKtz/9suOKadveDxhgjmE8ly8vb9
- 7I8Y68+f9/E2SZs1lLgKDlALZRHfjrUcCQKkaSOdncpJ79tVuDV1WHvLwlkOXKcS5PZp79wPxwU
- C1nBv+Fb8S9rOV2GUWx4CwY6gPSJITjbsK8OwtN2gpaZ4HEwqJNynjJKdJ3pnlxS8L5G7JQQ0Z0
- sL2oqyF2kseDrtIcEFZjha2dZXLaLgCwgW5bGfqsUbO/7bxD82ySZTA7UMqKtDu7ukVDDnrHoPM
- 34KCVIJKR5OuqECReYCfRgG35+fh2+3yxWpNQu+qbdDtXvkRWrF76jUvTEoG0cSZ9AhOMB2wrUZ ptq+XEqPzyVUZaQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2088; i=keescook@chromium.org;
+ h=from:subject; bh=A70ndgAnsB63r0Ibz6C+3NACmZt0aUvaCrb1LtGUWWA=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlFxNkvS86dHwSxy8ppyZ4ezGlY0dySlfyX5m8D
+ KpLi1xEZTeJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZRcTZAAKCRCJcvTf3G3A
+ JnXDEACBpLVSApm8BNpQD0pC+7W9QFQ72d157scW1CwY8mp7MuBY9cbc42hxF04FiiP0uxr0uGw
+ XLnttDJr1KtImVLWmFl0uTUJ2xvOvLqJgAcPgUHpRHHu4p6f3W4JigMcvvGsLfUiWnHrd2E70bp
+ EXieKubhNH+KdSuW1X6a5GdsevlmO37r3NEQ/nOm2IYzC0HZTjokvwhXWWKVx7PdVa1cQrq0fDz
+ quZ7/aSDzhr6+fC04zQC3bu3IKGusBFOz/tN8NVAhXu45U5wB41EVV+fRKcODPdVPU2b1dI0RpL
+ RtwvZQbS4kgZN4bu3pjCR32LHbyD8Y1N01Thzl3TlndTZo1u+6F5MIgL7EyQErTsPKBc3LXQk2H
+ xjyT65i/n3qp12l8Ja1892vv5FIXxnfo6mfq4aXqZtEamwm9FmJAypVESnfvoodbydB/Enrzg99
+ uk6ya1qT3/vKaXJ8N3tsc4MOhcwS82XDxjADntekAFtoVjfy9vhxoYUKT+hWXd+41p6BGl2hgKH
+ 2wYFDc6IR6RWodoZd7pwH1GFZt/Z+anl5r8+FqFUO8RSQxzUiclCweDbghMn1pLP9Ga9SS1r8O7
+ kM5qmK82FMBYrUe+3Zsdv7TlwH2LRPNEXsX+HH3vqdQgn+8ZzHuUBmb16fmcZi3/PVPhM0+TBlf BTl+VEbGPVimvcw==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
@@ -94,12 +93,11 @@ their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 functions).
 
-As found with Coccinelle[1], add __counted_by for struct mlxsw_sp_span.
+As found with Coccinelle[1], add __counted_by for struct l2t_data.
 
 [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 
-Cc: Ido Schimmel <idosch@nvidia.com>
-Cc: Petr Machata <petrm@nvidia.com>
+Cc: Raju Rangoju <rajur@chelsio.com>
 Cc: "David S. Miller" <davem@davemloft.net>
 Cc: Eric Dumazet <edumazet@google.com>
 Cc: Jakub Kicinski <kuba@kernel.org>
@@ -107,22 +105,36 @@ Cc: Paolo Abeni <pabeni@redhat.com>
 Cc: netdev@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/spectrum_span.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/chelsio/cxgb3/l2t.h | 2 +-
+ drivers/net/ethernet/chelsio/cxgb4/l2t.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_span.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_span.c
-index b3472fb94617..af50ff9e5f26 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_span.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_span.c
-@@ -31,7 +31,7 @@ struct mlxsw_sp_span {
- 	refcount_t policer_id_base_ref_count;
- 	atomic_t active_entries_count;
- 	int entries_count;
--	struct mlxsw_sp_span_entry entries[];
-+	struct mlxsw_sp_span_entry entries[] __counted_by(entries_count);
+diff --git a/drivers/net/ethernet/chelsio/cxgb3/l2t.h b/drivers/net/ethernet/chelsio/cxgb3/l2t.h
+index ea75f275023f..646ca0bc25bd 100644
+--- a/drivers/net/ethernet/chelsio/cxgb3/l2t.h
++++ b/drivers/net/ethernet/chelsio/cxgb3/l2t.h
+@@ -76,7 +76,7 @@ struct l2t_data {
+ 	atomic_t nfree;		/* number of free entries */
+ 	rwlock_t lock;
+ 	struct rcu_head rcu_head;	/* to handle rcu cleanup */
+-	struct l2t_entry l2tab[];
++	struct l2t_entry l2tab[] __counted_by(nentries);
  };
  
- struct mlxsw_sp_span_analyzed_port {
+ typedef void (*arp_failure_handler_func)(struct t3cdev * dev,
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/l2t.c b/drivers/net/ethernet/chelsio/cxgb4/l2t.c
+index a10a6862a9a4..1e5f5b1a22a6 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/l2t.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/l2t.c
+@@ -59,7 +59,7 @@ struct l2t_data {
+ 	rwlock_t lock;
+ 	atomic_t nfree;             /* number of free entries */
+ 	struct l2t_entry *rover;    /* starting point for next allocation */
+-	struct l2t_entry l2tab[];  /* MUST BE LAST */
++	struct l2t_entry l2tab[] __counted_by(l2t_size);  /* MUST BE LAST */
+ };
+ 
+ static inline unsigned int vlan_prio(const struct l2t_entry *e)
 -- 
 2.34.1
 
