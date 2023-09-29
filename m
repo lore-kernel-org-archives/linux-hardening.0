@@ -1,41 +1,41 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4D2666691
-	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 18:07:51 +0000 (UTC)
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D2121B3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E5206669A
+	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 18:07:53 +0000 (UTC)
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79E29CC3
 	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 11:07:50 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1c6219307b2so72472905ad.1
+Received: by mail-pf1-x433.google.com with SMTP id d2e1a72fcca58-69335ddbe16so3967774b3a.1
         for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 11:07:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1696010869; x=1696615669; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1696010870; x=1696615670; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Z1fCnyMESIUDw106GjvVeHm07JaGiyNbi4ApDENYnlM=;
-        b=i7xHrXvm+x+CXquDtwP3n/6SITwyQLaNnPs/iDit5wVSn9kPZ8ni8jT0KLjaFj1bCn
-         Ol2D23xwnqUrGXkm0hdDWcquaq4LlQ6Z3+qZb8YvupZjLed4EqP4vMcKAl4Sce/U57Ne
-         VNoIs2qPpRmdcN2+VHjE2NTdqJB+HGG2DulUc=
+        bh=KZNuuPDo9it8tkX6qPOGwJo4GQ7mQ5hyHXJpkMAiaQU=;
+        b=Xe4tE7z3UjPddP/3wIOYwdmU5WH1aUpqMSwfeVediFgy50ezbBfLiAMHJDz7zT5Gc0
+         F/+RE5p0eBiGuPJ/wYZ2fr5kAOG3ifZNPiCG+bWEa1V+Ls+I57PqRPAs/lHfsCgFxesu
+         MpfOnu+/cjzx6FwhKDC5gWFInbrRKGci81SV0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696010869; x=1696615669;
+        d=1e100.net; s=20230601; t=1696010870; x=1696615670;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Z1fCnyMESIUDw106GjvVeHm07JaGiyNbi4ApDENYnlM=;
-        b=cPnT52LjxQUMrYtC9i+vMf3hN/+viSdaKynZeMfEtrCsynCrwI+zqz3nYnKio/MqXY
-         m/RMsnm3LrgPiNuuNDz44b6xcweFcGYcknrmk8qTtKSkYYQTZGO9hqShFWzZ6pQkAUgB
-         fRDFXJe96k8aVbx+Vvf8KyiEh+DCyyH73o0V06QU6ab1b5Q3ffeKH1w90C5DvyvWxc9u
-         cxAAWNE8STuaAXKql4NFG58ts/kRZHqI6/fcdNE/dIYzE+ywFUEFJA3jGXKEwyQ91K1K
-         hOf9i8R8azvzBL5ut1+INS6lvW96Gdg85a3FXju3zWheOjKvCpEeNcxQDuSln3IHYmNT
-         iU4g==
-X-Gm-Message-State: AOJu0Yw5qgKCBNXTRjgCQ4Ghe5WdWst4zDcVvu5gcnruaJyXtIvlEz/O
-	KsrL2fZCZqLki8mYAQ6SDXlg8w==
-X-Google-Smtp-Source: AGHT+IEYP50F7nEfHcXuhCVPvSqHJT+dGY9l357PrVksSC4o53t+1o2XfasILPny5/J4Mg6J6IWTvw==
-X-Received: by 2002:a17:902:c408:b0:1c4:5c05:c3c9 with SMTP id k8-20020a170902c40800b001c45c05c3c9mr5808758plk.56.1696010869523;
-        Fri, 29 Sep 2023 11:07:49 -0700 (PDT)
+        bh=KZNuuPDo9it8tkX6qPOGwJo4GQ7mQ5hyHXJpkMAiaQU=;
+        b=ne+R1NwbS105YfGU7FxCY8vcw9TuqaRZom/b6ZVu5fp6cs1bjDKxbRIIRqLahE3rPn
+         JstbVFjy+wI41MjppGbx4HSulgSF1ddo7L43AVFz8rvnK7UFIY5lAF3UH7PC3uoeXlYh
+         iXcMrMJnhJ2DJ8hQO/YI4c/piiZZe7LmrRcC3Wfjdo6kDi+KoiZLSGxeh4vTL3UD8oqr
+         S5fDD15Cn7UDHheNCPYlNgyTGEeyx2+91VrNutd0USURU7CcttTuyq8X7XMiks7NiKI2
+         8/hdmQTfbLjBOFXSyyOjCukJgH3dApRMXmj1EbA9YOdk84+8lOUiRYMyZwVlyzVu4AWi
+         y7nA==
+X-Gm-Message-State: AOJu0Ywgo1SIY37micd4vjUA+3Pf6GQEK1XXEZipbKi86mNBZujySGdS
+	Jx12c1DRxnQ6UWh8wWbMponMag==
+X-Google-Smtp-Source: AGHT+IFJ95BU6niyoo2gApDZnCXcDkP0dSKiwEwps//qgcxM63JrZFlYbqCMoWXf0lhhCnJHW9sTvw==
+X-Received: by 2002:a05:6a20:158e:b0:160:18d6:a3d7 with SMTP id h14-20020a056a20158e00b0016018d6a3d7mr5378517pzj.1.1696010868900;
+        Fri, 29 Sep 2023 11:07:48 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id m1-20020a170902d18100b001b8b1f6619asm17332300plb.75.2023.09.29.11.07.46
+        by smtp.gmail.com with ESMTPSA id c13-20020a170902d48d00b001bee782a1desm17055007plg.181.2023.09.29.11.07.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 29 Sep 2023 11:07:47 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
@@ -54,9 +54,9 @@ Cc: Kees Cook <keescook@chromium.org>,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org,
 	llvm@lists.linux.dev
-Subject: [PATCH 3/5] mlxsw: spectrum: Annotate struct mlxsw_sp_counter_pool with __counted_by
-Date: Fri, 29 Sep 2023 11:07:42 -0700
-Message-Id: <20230929180746.3005922-3-keescook@chromium.org>
+Subject: [PATCH 4/5] mlxsw: spectrum_router: Annotate struct mlxsw_sp_nexthop_group_info with __counted_by
+Date: Fri, 29 Sep 2023 11:07:43 -0700
+Message-Id: <20230929180746.3005922-4-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230929180611.work.870-kees@kernel.org>
 References: <20230929180611.work.870-kees@kernel.org>
@@ -66,24 +66,24 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1611; i=keescook@chromium.org;
- h=from:subject; bh=+RWfw0GyGwLXMxH+fSx74341Dume6vULCGctkWzJyII=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlFxJvQ2MJX5MIYubHbp+JLru78XV8PSD9HfCip
- MzkMrfhDwOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZRcSbwAKCRCJcvTf3G3A
- JnRLD/9EGd9KZ/Tj7Icy70EINkAG/rdfxW+EXWV6I9tI7aqUVeByxYSzHqj8FOidkSGNCh4jARc
- +uXnybahYfPpBWVV41kZfAhAIpxzSoq6s8NuNmkX6T8LHkps1oWxj6pDoKaoFfCMdsAhNUK1xcK
- UiU2qHZHzc1qKNWo1sAcHnPjme+swZST7xHSQ8SF2E13eDaQvKKEpdPeGtSNgPEV8yLj58EN7a0
- iP8n1qZPDs7IoEuCGekv4cGmTTaSzUDc0R7Za2m+3bdHl4DcF9E+nOig6tbTybEZi1aNNjPdNL+
- s+j9/MzDWmw9GMUxIetw7H9laEtIav7YYaf6G8aRv+wTndvPDcfVqBcvfdYnZNx0/rgJSm4e1K+
- QhoQGun8o9/gzP/Y0vAq9j6Fqo2XYbAy9jfvjwol3QlvCJMu54iuM/U5nr6GkAWJ4k7d9jZiVFx
- W2aBOpvnHsbXQd8exwGC8sDd5XFNezCGfQ+qK0pWvD3xzZtJ8mgiQFrhnx7KZDh2+fYU33Hzy8K
- 6beObhLWjwE4DYbXYUH8YXOE31yPMSY5K6435NP9Zhlwr4oB1bNxjmDgCqJC73O+PFfJuj6UzKl
- fpEuOHPJVmLtuWUTjz2a/oXMxNT4xkygpO3lIq/qJUoDhiJqrHWI4WM1E4GV4EiRdSAkrIFp856 Z9rPTNG+P+HSMvw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1562; i=keescook@chromium.org;
+ h=from:subject; bh=B8keI90TRW2q45uUonlCrEQKui4OLUvrgLBebVNQ9NA=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlFxJv3gQ2icCiNvzN2SrB6CO5vY/Quxy8Fmvkp
+ MWA5zi05RKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZRcSbwAKCRCJcvTf3G3A
+ JlMgD/9KspItI7uRPQsQk5b1n6wj1VGlU6uDB/MzB8j7BFvYACH75tHJ6+EtAxCMs6WH2/1xOJB
+ Zc//rKE5ME8cSKtfDy2yuCaWHFyuMkgN1a33v24+KmVjWOC8Z/QjFt5svRWte8710RTditYZOT7
+ XKykSAvsTe4/HJALIvV4CYJjTF4uavOTyu5UlYB7ZHjBBe0+VR+xepIZPkEjOgCYBRLh7lX/MeG
+ fr3kiTfV1+0L6p5GA+Jbl2WymK1k56AOkQZXyBngR74bpIruI0iJJdu0vJKwC30V3SHQujqCe2k
+ z598oohT+Wnd0x8ojB3RKTl1Kd1jHRSPN3uXlaIEIr33yM8vKL4PaoYIRnE6ZAh4LB8XeMkhrF2
+ AQjtjTNgvq05sJ/iwgNhIjSE0TzGlV8uwf6IBWDELikCMijBFN2BhQg5lXOlI9ZzjV39Pv6Ghbg
+ IEa8dbjv8XLSyhtIAWT9wZq+uOFfvYMeRwC/ff+Qeqx7S0B97oA19xAfKE2Ug/0eKSAwybHM0Ao
+ eEzDT1/Q9mpQFcEl0vrNwq17gJM2cUasPKjBnI1W7aqj+rez0GpJxzyho+3j2K9MSMxbW2cqrw1
+ nPBe7q3r8weENye2KqEWW5tjD5rkm2B1ikBvcdhkjlR/5K3OlyydwoM7dgEWGY1p0uLg0xY5rcC kErWnebJxPj8H3A==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
@@ -94,7 +94,7 @@ their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 functions).
 
-As found with Coccinelle[1], add __counted_by for struct mlxsw_sp_counter_pool.
+As found with Coccinelle[1], add __counted_by for struct mlxsw_sp_nexthop_group_info.
 
 [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 
@@ -107,22 +107,22 @@ Cc: Paolo Abeni <pabeni@redhat.com>
 Cc: netdev@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/spectrum_cnt.c | 2 +-
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_cnt.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_cnt.c
-index ee59c79156e4..50e591420bd9 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_cnt.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_cnt.c
-@@ -24,7 +24,7 @@ struct mlxsw_sp_counter_pool {
- 	spinlock_t counter_pool_lock; /* Protects counter pool allocations */
- 	atomic_t active_entries_count;
- 	unsigned int sub_pools_count;
--	struct mlxsw_sp_counter_sub_pool sub_pools[];
-+	struct mlxsw_sp_counter_sub_pool sub_pools[] __counted_by(sub_pools_count);
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
+index debd2c466f11..82a95125d9ca 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
+@@ -3107,7 +3107,7 @@ struct mlxsw_sp_nexthop_group_info {
+ 	   gateway:1, /* routes using the group use a gateway */
+ 	   is_resilient:1;
+ 	struct list_head list; /* member in nh_res_grp_list */
+-	struct mlxsw_sp_nexthop nexthops[];
++	struct mlxsw_sp_nexthop nexthops[] __counted_by(count);
  };
  
- static const struct mlxsw_sp_counter_sub_pool mlxsw_sp_counter_sub_pools[] = {
+ static struct mlxsw_sp_rif *
 -- 
 2.34.1
 
