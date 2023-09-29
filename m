@@ -1,60 +1,61 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295A720F9
-	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 18:32:43 +0000 (UTC)
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CBE1199
-	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 11:32:41 -0700 (PDT)
-Received: by mail-pf1-x42b.google.com with SMTP id d2e1a72fcca58-69101d33315so12357952b3a.3
-        for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 11:32:41 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 605C2849C
+	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 18:34:38 +0000 (UTC)
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A066B1AE
+	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 11:34:36 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-6910ea9cddbso12572006b3a.0
+        for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 11:34:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1696012360; x=1696617160; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1696012476; x=1696617276; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SF6n2eufv24UNtvoOGLmOHY49lmjyqKXfDP05Zw/ODU=;
-        b=laaJX50eAyYEbQc+fvnKCztUz6fDVfl+/0tdP1N/EPbnY/iIFKnCnMsHbs1G8f8I2a
-         t0gH3EMd8rhtA7VOdwqa8VXbWVmjJPZpvcjBoRg429HX7avSOgV+OBJ7Su4+IzK2KKUP
-         XTOFOLBiEp+vNzOmQ98YLe3LNYd9+aJwDJlGE=
+        bh=eB0rJAp0zg9JOPur8i8NsK/kuHM5BlZt26jybAyks+8=;
+        b=R4Bm1s2YMDNb8i6t9eeaPRJ8BU9BL2z2660ZgaUZiopxwwI0MT9l3WjfOptgGYvo3v
+         3Q44/h6kKhWuA2IR/y3BGr9qnItKzdWQVJqN0PrzT11nATFlhA1IIvCY2jbMoBB5Xr2K
+         a5V3YSY5fAH0gimUYPyhggy5XLF2VB7hhxGmE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696012360; x=1696617160;
+        d=1e100.net; s=20230601; t=1696012476; x=1696617276;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=SF6n2eufv24UNtvoOGLmOHY49lmjyqKXfDP05Zw/ODU=;
-        b=dUSD5PeYl0iQ9Mzw4pTiLlHZrjvafNb4+FgECRxAvCWav9TFaY0LBOC7qrFywd3wv0
-         gfrAb+hhoESOr6AQ1VLxDIOnZrkgosZ1AVy74ZumE0uwaei1YwrojEbwT1eHX5cQUuOH
-         b+349FDQaoCVnYncNR+zdGMjVznukhtAGtG6irbjvIWP29Zks+yoa8+7otJMh2GI7wvy
-         WJ99OazmGxgsBNDuYbzS8tCBhWBWzon1cVSf3UGn8LQzVaUTAjzmMIQNY4j990qxf8Ez
-         9DsDeCmaVRRutIORD7CiHt0Ch7MiVR9kKHPHxs/GMyzGt6jrf4ltAiOinKATXa/3QsAD
-         UN9g==
-X-Gm-Message-State: AOJu0Yyzv00bYRtRx5J2+bUCT6MSg4nVD45IJQS+9QO66VW9nsqTJ205
-	VlV5knOfrTnObjQLmlJd5QDl1g==
-X-Google-Smtp-Source: AGHT+IEvX1oEeUKbJDfcj50CrRy49qfzCBzl6yJV/KOKS/JsgDFnXD5aAAqU/2nWkWm8ccindXE2oA==
-X-Received: by 2002:a05:6a20:a11c:b0:14d:7130:7bb3 with SMTP id q28-20020a056a20a11c00b0014d71307bb3mr5797622pzk.13.1696012360531;
-        Fri, 29 Sep 2023 11:32:40 -0700 (PDT)
+        bh=eB0rJAp0zg9JOPur8i8NsK/kuHM5BlZt26jybAyks+8=;
+        b=pl7AlJwUEWEthibuh6lPvCl2j/J1uptOf7GY1q0pl2q+spetbvH3U5dNbeRpKWYjWM
+         8wcNw9uiDIJrDaEvDuAt3VqV9Eg9v9dWLDUgsywc9H89jP6qw2RlNhDaXSMyjlc+UjRq
+         u4tmfEbJcLVc5nJPhkyNB104TIZLScTWyyHjm3H8c8aZMQKjj4udwlZTmnJNaAiQzvlF
+         FgDWJJVSaxyYLj4xWdHgUm87OWBYZgzPSOFiURndHkprS8bvUK5AEaD00EJ67Otm1+Li
+         kys/gNDRBuqZWBirGYB3Yo7PdnMY5Cyj9u+QfSKzPnV1RbfoUt3ANj4tyOrT44IR/1GA
+         bsoQ==
+X-Gm-Message-State: AOJu0YwTTgMiLbCnivaGQalddFU8g+Z7XEMD0H06YXlvcnoIMKIaXIwN
+	Nd520R7IQGECYjkbHb8rr63s2Q==
+X-Google-Smtp-Source: AGHT+IF2Huj+7CtO7jU1UHaoN/b3RP+BS7arEzCw35sdCLa1Kq6KkDAUvYLxeedGWg9tisSKDFxpYQ==
+X-Received: by 2002:a05:6a21:3d88:b0:15d:f3ae:665b with SMTP id bj8-20020a056a213d8800b0015df3ae665bmr4493650pzc.28.1696012476128;
+        Fri, 29 Sep 2023 11:34:36 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id y3-20020a170902864300b001b8b2a6c4a4sm17133890plt.172.2023.09.29.11.32.39
+        by smtp.gmail.com with ESMTPSA id y7-20020aa78047000000b006879493aca0sm4082161pfm.26.2023.09.29.11.34.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Sep 2023 11:32:39 -0700 (PDT)
+        Fri, 29 Sep 2023 11:34:35 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
-To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
 	Justin Stitt <justinstitt@google.com>
 Cc: Kees Cook <keescook@chromium.org>,
-	linux-um@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] um,ethertap: refactor deprecated strncpy
-Date: Fri, 29 Sep 2023 11:32:37 -0700
-Message-Id: <169601235586.3007879.13354261591100704778.b4-ty@chromium.org>
+	linux-hardening@vger.kernel.org,
+	Nick Desaulniers <ndesaulniers@google.com>
+Subject: Re: [PATCH] x86/tdx: refactor deprecated strncpy
+Date: Fri, 29 Sep 2023 11:33:46 -0700
+Message-Id: <169601242377.3008066.9973846266706309040.b4-ty@chromium.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230911-strncpy-arch-um-os-linux-drivers-ethertap_user-c-v1-1-d9e53f52ab32@google.com>
-References: <20230911-strncpy-arch-um-os-linux-drivers-ethertap_user-c-v1-1-d9e53f52ab32@google.com>
+In-Reply-To: <20230911-strncpy-arch-x86-coco-tdx-tdx-c-v1-1-4b38155727f3@google.com>
+References: <20230911-strncpy-arch-x86-coco-tdx-tdx-c-v1-1-4b38155727f3@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -65,26 +66,28 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Mon, 11 Sep 2023 17:52:44 +0000, Justin Stitt wrote:
-> `strncpy` is deprecated for use on NUL-terminated destination strings [1].
+On Mon, 11 Sep 2023 18:27:25 +0000, Justin Stitt wrote:
+> `strncpy` is deprecated and we should prefer more robust string apis.
 > 
-> `gate_buf` should always be NUL-terminated and does not require
-> NUL-padding. It is used as a string arg inside an argv array given to
-> `run_helper()`. Due to this, let's use `strscpy` as it guarantees
-> NUL-terminated on the destination buffer preventing potential buffer
-> overreads [2].
+> In this case, `message.str` is not expected to be NUL-terminated as it
+> is simply a buffer of characters residing in a union which allows for
+> named fields representing 8 bytes each. There is only one caller of
+> `tdx_panic()` and they use a 59-length string for `msg`:
+> |	const char *msg = "TD misconfiguration: SEPT_VE_DISABLE attribute must be set.";
 > 
 > [...]
 
+This appears to be trivially correct, so I can take it via my tree.
+
 Applied to for-next/hardening, thanks!
 
-[1/1] um,ethertap: refactor deprecated strncpy
-      https://git.kernel.org/kees/c/d4e178fe19c9
+[1/1] x86/tdx: refactor deprecated strncpy
+      https://git.kernel.org/kees/c/e32c46753312
 
 Take care,
 
