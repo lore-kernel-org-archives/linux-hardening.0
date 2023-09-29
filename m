@@ -1,100 +1,127 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4765567291
-	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 21:51:07 +0000 (UTC)
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDEA41BD
-	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 14:51:02 -0700 (PDT)
-Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-692d2e8c003so837867b3a.1
-        for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 14:51:02 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 616DAC2FD
+	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 22:05:58 +0000 (UTC)
+Received: from mail-ot1-x331.google.com (mail-ot1-x331.google.com [IPv6:2607:f8b0:4864:20::331])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC2FDF1
+	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 15:05:54 -0700 (PDT)
+Received: by mail-ot1-x331.google.com with SMTP id 46e09a7af769-6c4fc2ce697so3900471a34.0
+        for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 15:05:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1696024262; x=1696629062; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WJ98meF439fDlbDs5bAR/G0m1owNdqgEbq46LFrbqGU=;
-        b=L4KnPbZYfbbjr6tdDvM96PRevPAbSVRnSxLjW8WKX8lAc1OUAaktRBmNcO3ha7E+AZ
-         t0niJskLdtX67nd0cvOPOheyaXL5ukypfgrwCAExZpzUCQ2QTFJBV5hyESrC2F1pDMIR
-         +9w132x/wSscnUqpSSfuS6LtZV4ZdzbYM5gSE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696024262; x=1696629062;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1696025154; x=1696629954; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=WJ98meF439fDlbDs5bAR/G0m1owNdqgEbq46LFrbqGU=;
-        b=nIkKkoZJnXf2YPjh+oPV6t82IKkjFtW+AFt9w1xfDycTxbvMHm5W2VBYJdyb5ACpeN
-         RAB7Y1sNCv4WCepdyn3g7FEX2IxywsS7TWWgkoDRLxmxTjQx9nBJQdWU+XQOWce7DMPI
-         8mtFQVQ+zhebCat/4tuHYWZyIWF/f2H9GKMq93GutmGZsx5rhwdhzcFEZauEE7aNXw0w
-         k7nM4wxnhM9rfgOEFWBIzgivrrDQDZ63poEL/cWAM9nyUXgvySXOhQCdfUJybdQh6Ahg
-         9WMs8OIs7IkMvVRwsqvnFFPmrnzjgXkZMFU4RlRrLdOodR6BqNEs6GKYCLvmMX8nYjpe
-         HX8g==
-X-Gm-Message-State: AOJu0YzXVRTjg3kuewC+8iqBbYy8GZw2kPmKx89dyn35wU9v0wxQ1jev
-	V8py0ForNp1/0IDIvXsAvi3kFw==
-X-Google-Smtp-Source: AGHT+IHTiJ5wqSsBC/Ti87qgGkYT07bfiI59uolyZwfnU9sNrZIYWr4gwcgRWYX+5dDl1H+O7sSxIA==
-X-Received: by 2002:a05:6a20:3242:b0:15e:4084:6480 with SMTP id hm2-20020a056a20324200b0015e40846480mr6416231pzc.27.1696024262280;
-        Fri, 29 Sep 2023 14:51:02 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id fk3-20020a056a003a8300b00690daae925bsm15491197pfb.51.2023.09.29.14.51.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Sep 2023 14:51:01 -0700 (PDT)
-Date: Fri, 29 Sep 2023 14:51:01 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [PATCH] x86/tdx: refactor deprecated strncpy
-Message-ID: <202309291450.E78582CC@keescook>
-References: <20230911-strncpy-arch-x86-coco-tdx-tdx-c-v1-1-4b38155727f3@google.com>
- <169601242377.3008066.9973846266706309040.b4-ty@chromium.org>
- <ZRc+JqO7XvyHg/nB@gmail.com>
+        bh=naHj0xuXcByQMM+TdtCohvVCq+osNBK01cxTTEKKxyw=;
+        b=EMu61RC9E0ws5MSlrG2oGhY1AnPg/IGdr04eGFJ3BsNxIEOKmnxqTy9B8MNlvN7b3n
+         S63AA34zWXuXcY0mR8qFLGNJCBXQEsZW+kwFqwl331FDfQXaEUMvkMNM5EeAaQKoWivB
+         65S+Ztu5IvAGRoOM09th3MPCD/oAAN7C+FBnELRuCA3BV94svnENd0nNgHoSRtPWPkMW
+         4Kuk7MmMXNthr5O1wJsSbcfqauVEDNUzI96KAQYZzE7FIORehlmuZ0eboHekUpVDQC71
+         nbth5Gi600YW39RapUI4yVvTgZZ+XWmoJ78eOtzOGdoyqzOx8bGBQ70vRBPXI3VWTnG2
+         KMXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696025154; x=1696629954;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=naHj0xuXcByQMM+TdtCohvVCq+osNBK01cxTTEKKxyw=;
+        b=l4KsnvrlvHewtPsRoqxdSV5WjP+SEoLAK4C2mYPn3WWramT9+/g5ttoyqRRkQQC5JD
+         MxuchmR0OiJLcX8hCMBAd2kVFMdgPTsNsx+qBD/gNKPvBHciNBx6Z+YDFWuiOfN4NaRQ
+         XUo5MjDt20lDlyCBJj6APel/8nZ8Cz02MAHvonakD7ZoByXT9ts4spStY9evYmvHjkVT
+         LqDxSqbyc7XcfX5We8ZPbYYI4mq/XK7MhQxoB0uGgaLxnhfVsbNEfBaHBee1ikCaBWAs
+         9ZfV3GFiZuix5LJxD0JA0P90B2J2eKgXWc4Gl7o3nJZIqb4+6HUHknbmOLmdIZHVAJ+w
+         cG8A==
+X-Gm-Message-State: AOJu0YweeXMUBjugY6HhL7pT51KRxTeIBHseTEcMV78R5zhFPjihxfu5
+	TMpgcxkUJMnep4QqwWRxdRHpTIPdgDAGthSDjAwm/w==
+X-Google-Smtp-Source: AGHT+IHyE4YQUm7vQs1QcqQjr5b1q+oQmKp3WntnD5jmb4mEWI4W6j13UW4F5G4vJnz8UfQSlOEZzp7+UN0w1kzOeHs=
+X-Received: by 2002:a05:6358:e49c:b0:143:8aa4:30bc with SMTP id
+ by28-20020a056358e49c00b001438aa430bcmr5947074rwb.8.1696025154053; Fri, 29
+ Sep 2023 15:05:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZRc+JqO7XvyHg/nB@gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20230929-pxa1908-lkml-v5-0-5aa5a1109c5f@skole.hr> <20230929-pxa1908-lkml-v5-7-5aa5a1109c5f@skole.hr>
+In-Reply-To: <20230929-pxa1908-lkml-v5-7-5aa5a1109c5f@skole.hr>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Sat, 30 Sep 2023 00:05:41 +0200
+Message-ID: <CACRpkdb=8LU9Mkkn_VDcTGoH1pWn=hp9ZhN5dLm5pykif8cp-w@mail.gmail.com>
+Subject: Re: [PATCH RESEND v5 7/8] arm64: dts: Add DTS for Marvell PXA1908 and samsung,coreprimevelte
+To: =?UTF-8?Q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+Cc: Robert Jarzmik <robert.jarzmik@free.fr>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Andy Shevchenko <andy@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Lubomir Rintel <lkundrak@v3.sk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>, 
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-hardening@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
+	phone-devel@vger.kernel.org, afaerber@suse.de, balejk@matfyz.cz
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Fri, Sep 29, 2023 at 11:14:14PM +0200, Ingo Molnar wrote:
-> 
-> * Kees Cook <keescook@chromium.org> wrote:
-> 
-> > On Mon, 11 Sep 2023 18:27:25 +0000, Justin Stitt wrote:
-> > > `strncpy` is deprecated and we should prefer more robust string apis.
-> > > 
-> > > In this case, `message.str` is not expected to be NUL-terminated as it
-> > > is simply a buffer of characters residing in a union which allows for
-> > > named fields representing 8 bytes each. There is only one caller of
-> > > `tdx_panic()` and they use a 59-length string for `msg`:
-> > > |	const char *msg = "TD misconfiguration: SEPT_VE_DISABLE attribute must be set.";
-> > > 
-> > > [...]
-> > 
-> > This appears to be trivially correct, so I can take it via my tree.
-> > 
-> > Applied to for-next/hardening, thanks!
-> > 
-> > [1/1] x86/tdx: refactor deprecated strncpy
-> >       https://git.kernel.org/kees/c/e32c46753312
-> 
-> Please don't apply - Dave had some reservations, plus after the
-> change the comment would be now out of sync with the code ...
-> 
-> Also, we generally carry such patches in the x86 tree.
+On Fri, Sep 29, 2023 at 5:42=E2=80=AFPM Duje Mihanovi=C4=87 <duje.mihanovic=
+@skole.hr> wrote:
 
-I've dropped it now. Thanks!
+> Add DTS for Marvell PXA1908 SoC and Samsung Galaxy Core Prime Value
+> Edition LTE, a smartphone based on said SoC.
+>
+> Signed-off-by: Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
+(...)
 
--- 
-Kees Cook
+> +&pmx {
+> +       pinctrl-single,gpio-range =3D <&range 55 55 0>,
+> +                                   <&range 110 32 0>,
+> +                                   <&range 52 1 0>;
+> +
+> +       pinctrl-names =3D "default";
+> +       pinctrl-0 =3D <&board_pins_1 &board_pins_2 &board_pins_3>;
+> +
+> +       board_pins_1: pinmux-board-1 {
+> +               pinctrl-single,pins =3D <
+> +                       0x160 0
+> +                       0x164 0
+> +                       0x168 0
+> +                       0x16c 0
+> +               >;
+> +               pinctrl-single,drive-strength =3D <0x1000 0x1800>;
+> +               pinctrl-single,bias-pullup =3D <0x8000 0x8000 0 0xc000>;
+> +               pinctrl-single,bias-pulldown =3D <0x8000 0x8000 0 0xa000>=
+;
+> +               pinctrl-single,input-schmitt =3D <0 0x30>;
+> +               pinctrl-single,input-schmitt-enable =3D <0x40 0 0x40 0x40=
+>;
+> +               pinctrl-single,low-power-mode =3D <0x288 0x388>;
+> +       };
+(...)
+> +                       pmx: pinmux@1e000 {
+> +                               compatible =3D "pinconf-single";
+
+At least add a new binding for "marvell,pxa1908-padconf"
+and use that like this:
+
+compatible =3D "marvell,pxa1908-padconf", "pinconf-single";
+
+When you use pinctrl-single you get the slightly opaque device
+trees as seen above, so it's not something I'd recommend, I'd
+rather write my own pin controller.
+
+But it exists, so I can't say you can't use it. Not my choice.
+I understand it is convenient.
+
+It is possible to switch later, but only if you have a unique
+pin controller compatible so please add that.
+
+Yours,
+Linus Walleij
