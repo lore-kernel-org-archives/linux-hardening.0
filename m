@@ -1,59 +1,59 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B1C623A2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B92B46A9
 	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 03:24:41 +0000 (UTC)
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 833D71A8
-	for <linux-hardening@vger.kernel.org>; Thu, 28 Sep 2023 20:24:39 -0700 (PDT)
-Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-68fdcc37827so161776b3a.0
-        for <linux-hardening@vger.kernel.org>; Thu, 28 Sep 2023 20:24:39 -0700 (PDT)
+Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D2DB1A5
+	for <linux-hardening@vger.kernel.org>; Thu, 28 Sep 2023 20:24:38 -0700 (PDT)
+Received: by mail-pg1-x533.google.com with SMTP id 41be03b00d2f7-573e67cc6eeso9319913a12.2
+        for <linux-hardening@vger.kernel.org>; Thu, 28 Sep 2023 20:24:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1695957879; x=1696562679; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1695957877; x=1696562677; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=95+jGh9HzPfjIjeeQbyhCMVgDdqV+t+zi0ml5yOYuB8=;
-        b=jxYfHi6UrmlN+2RUW3BFPUPF6/N0gHYlZIWZzjNHw7WzqWZzyCSQIRcCf7rXysywY3
-         s1yOxdFMqC5M6da9Zpq4ZD/D53DypziHPfjATX/sfflu3nUOB5j8/C0VJBMaHXLMRUrV
-         CLytRsuOuOhoJWKJqFJCuVH8yPGfPTe1n9hmw=
+        bh=q1S2QHXg38kETw2Vrnc3ITAH/+VCqfp/XhwxJe7fVnI=;
+        b=mF636whglJkKt7whpXv2+mWn/3LbbjPxcpSg7nd1s5iqgrchl9a8PaFb9wmzPGcVqO
+         9XbxqfoBqUjRYWix1e8ecXY5uX3R1E2OokPG91RVYv3JnJjGo3NX3KD+ijbxuTtJfZi+
+         JjHL3NpAuz3eKBeRt3BBifNfytPS1Pfb8vzmQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695957879; x=1696562679;
+        d=1e100.net; s=20230601; t=1695957877; x=1696562677;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=95+jGh9HzPfjIjeeQbyhCMVgDdqV+t+zi0ml5yOYuB8=;
-        b=iVzkSJq90lxBifXAFyykV7HA+py+DDGK/L7xlJTBnbsMHV0urz1CIxSPC9jKv36FV2
-         ds9nvHLPV2ZW+ZbLob5c0LqF5WjVc9ZbD3HpT+8JnpbRYTiXR2dTUk2mi0aYwoNPxAO1
-         9omg44MxV4hyBGRg2IXkQRKxcqGl3z+UmXQkpG09jIKksh0uQPbAI8dSkG3steSzdwL9
-         s1FhSWgqrDAEXfAwR/XG6r3o/whE4EEG019NjiAzX1NxtilRz8721SFsXpAuNMWfFcXD
-         acMQc9IxT1nHvxtr9EWtRoHDSA6uCpVhr6bCMc7ku6/+PT9IAtrmh5IP3+lj3uqTrT2v
-         seww==
-X-Gm-Message-State: AOJu0YxrRukIX5cQ1pSq13+JvJ76Z5Pld7ew38HJFGlNe1q5dSfBVqRd
-	eE+b2/h+ZppcSDCpD9IdaqgH3Q==
-X-Google-Smtp-Source: AGHT+IENptQn7XIn+gHi7Xk/Rom3FrwjZlYNl2dbdfUf0uD5PWaNHfgd4GwUs3Rvuj8dtt6Ixw6ezw==
-X-Received: by 2002:a05:6a20:72a5:b0:153:4ea6:d12e with SMTP id o37-20020a056a2072a500b001534ea6d12emr5304382pzk.17.1695957878823;
-        Thu, 28 Sep 2023 20:24:38 -0700 (PDT)
+        bh=q1S2QHXg38kETw2Vrnc3ITAH/+VCqfp/XhwxJe7fVnI=;
+        b=weYBshNrQyZW/TLco/E5k1N2rXJw/1Fpjth+cpeYa+m1c/9AmY1VRpGuYM0tKvCTcv
+         ztjl+5MGDZbgIF5speHyMvj6oV0u9V2WRhX617WeC/1nSkle9o3+AIksQpQaSEQK7V2n
+         1J7dnQBYjHIdNHgB3mOy4xFEOOpNHVWtj7T/5Tk0R9kLDDXmxXD/8EgpUJL+ZOwdUGob
+         YEoFzYmAhX0+w/zn69q6MSywZpsOqE3rdrauKxbwpWevUlmH1Ce0C9djKyD3iYn1QOZy
+         ncgtETrGvA1SpHtjjOGLnCfApNVmIvBe1bE341cvGYRs5rc+uOrk9H48A3twk616g9st
+         64IQ==
+X-Gm-Message-State: AOJu0YxuealLE8ozPn2O038gSduFhpkikDmdb/Batar9iBgFxhovzcqo
+	aXIGLe5SVz2ptsGfto1tHjnpcg==
+X-Google-Smtp-Source: AGHT+IE41fRv5mNKe4vvztkmUzkhz9pAxOvK1Y/IqQsGTpnsnBawSfxRlm726T+ZhHtYQg36mF0ZmA==
+X-Received: by 2002:a05:6a20:d90b:b0:160:cc73:39ef with SMTP id jd11-20020a056a20d90b00b00160cc7339efmr2588831pzb.48.1695957877520;
+        Thu, 28 Sep 2023 20:24:37 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id b5-20020aa78705000000b0068ff267f094sm3481738pfo.158.2023.09.28.20.24.36
+        by smtp.gmail.com with ESMTPSA id g9-20020a170902c38900b001c7373769basm2074161plg.88.2023.09.28.20.24.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 28 Sep 2023 20:24:36 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
 To: Eric Biederman <ebiederm@xmission.com>
 Cc: Kees Cook <keescook@chromium.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
 	Sebastian Ott <sebott@redhat.com>,
 	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
 	Pedro Falcato <pedro.falcato@gmail.com>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v4 4/6] binfmt_elf: Use elf_load() for library
-Date: Thu, 28 Sep 2023 20:24:32 -0700
-Message-Id: <20230929032435.2391507-4-keescook@chromium.org>
+Subject: [PATCH v4 1/6] binfmt_elf: Support segments with 0 filesz and misaligned starts
+Date: Thu, 28 Sep 2023 20:24:29 -0700
+Message-Id: <20230929032435.2391507-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230929031716.it.155-kees@kernel.org>
 References: <20230929031716.it.155-kees@kernel.org>
@@ -63,19 +63,20 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1627; i=keescook@chromium.org;
- h=from:subject; bh=HDRWJgiZi2B41NjfcoHun/GXVPB8PhMH+K8nRgD/QEY=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlFkNyd7onj53UAnvTrNuqjrOoqdzlhhnL6T0n4
- waDipxrCuyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZRZDcgAKCRCJcvTf3G3A
- JgqhEACQaxzh9TUbPcDbZo8niTtocmDdmljr+QUAo/kUcZsO7WwVGlruTUeAl3DsFH2PvI/7f8q
- 6Gzf2F516CRNsoFBvkxeJHFWa21p4CjiRwEYH+rdFGIQwe4ZXPrdSrcJhWVB35JNjqR8CK/aRK2
- NAJeh7WuuaTnpcDhFmPiXWQuRt1noAczm74SRZU8IZ06ucQ49FNFgl7FPCGA0RLuWRQDEc4zXaQ
- BQktUi2h0of64YlxMdZfk+SQMGz2lOqO7a3F8Zy9PazbSnHb5k2NrkreHnNxtncdID9uE6SiKy+
- JVJ8/BMveYU1W8I+asdhp8xe2CV19g1Qmlq4ZVCoeGxeV9OtFE+c8gjwaTlFdRjzRgfVqvqVmtp
- OYM3ExS5b6+tEeavoEpUw88foXpj9yoZLMwL8pVfsXc2FYIlPsrtaFfUyacQhttqevffosf/oUf
- bksChMr+i07cgy1L/yGOx/6wCfvU8HTwH+VMXDpSSowba7S7GbBmvxw9EtoVWjqJAGNdtQ6FvJZ
- 6SXLe7ag42PtcuMWe8C14GuF1yYIcvu/o/vpy24R3zfZUovoJAGPuns5yKBok4/GV2c31zPoB/p
- 5ZXXOtl28un+F7p/qF9lnnk6I8GbyO4YgCPqLeXph77PUUZfI4r38oOBt9/p+hKk0yQ+7nD6eH+ 8MpI/toIRLPKXkg==
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8056; i=keescook@chromium.org;
+ h=from:subject; bh=17HFsxzRR6qjNPl2OqeDyONMEClWu0Ld8l5K3CgB/PI=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlFkNx9ky4C5SoI1ZcjBN8kT+abWcWJ1uQcH9Lv
+ 1XdD+58PfSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZRZDcQAKCRCJcvTf3G3A
+ Jkq+D/4+ERIwd+j9kCgE3YL8f6BaEPCM1Wy540egTRyd8uxuhJLV/MjU4bGQTq5IzynPij0EVRZ
+ AMX3Kda0AuvJ9/nAqmFqVAPvO0yR68AwteJvc5m7SSBnbNIYr6LAJ4jO+2fBU/rx9GNhwZPe6dB
+ blk7g6mbQXiRAeKTdqGu5bjoYcZTrrQFJj91tUj9OCuNDZEr2lD4iMNVPhZfK6HO97g2NWw11kt
+ UEcNkn69PVA0KRsMgCqWh02zT9JvaZP+ciKiHEDz1aQoPHotcJpFQqEDxUSWkGUQwlkbKrGRaf1
+ fcPi2kq7GTJiTxXPgxd5o7yWriWxPHNTyhKGXcbmToLSeKJBOkj8NWQIkYlv05UyEUw+gY+0WZw
+ FJ3LNMpBDzrKiUiNWUfal8Watcpz/yp+mjIELKSDFReTXTqLQW49KvqulWYNZHPtbpVVaTmkGGu
+ bKCHrI4wlZo/0Ea4v4V205GrLpUsbdCcsj8CpSpWGlWqb+FWHvo0dQhWmwNQEWqpSA7soBBxKsV
+ 5Ragq8YPGzA2Xl68fzMW7FnyZCLJOeob+5SPgEzYkdiUSqO3L0nZ2V8J5Xyxo3nxEyZ5KfjGyzU
+ 8JgId+qHNCzcdvZSiOJ6nW3Io53wtMH4PaQZLa4PNAB19C3URkhNr/gqkDCFsv4txyd8mlojxjf NlBsHU/1WHut/KA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -84,58 +85,233 @@ X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-While load_elf_library() is a libc5-ism, we can still replace most of
-its contents with elf_load() as well, further simplifying the code.
+From: "Eric W. Biederman" <ebiederm@xmission.com>
 
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org
-Cc: linux-mm@kvack.org
-Suggested-by: Eric Biederman <ebiederm@xmission.com>
+Implement a helper elf_load() that wraps elf_map() and performs all
+of the necessary work to ensure that when "memsz > filesz" the bytes
+described by "memsz > filesz" are zeroed.
+
+An outstanding issue is if the first segment has filesz 0, and has a
+randomized location. But that is the same as today.
+
+In this change I replaced an open coded padzero() that did not clear
+all of the way to the end of the page, with padzero() that does.
+
+I also stopped checking the return of padzero() as there is at least
+one known case where testing for failure is the wrong thing to do.
+It looks like binfmt_elf_fdpic may have the proper set of tests
+for when error handling can be safely completed.
+
+I found a couple of commits in the old history
+https://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git,
+that look very interesting in understanding this code.
+
+commit 39b56d902bf3 ("[PATCH] binfmt_elf: clearing bss may fail")
+commit c6e2227e4a3e ("[SPARC64]: Missing user access return value checks in fs/binfmt_elf.c and fs/compat.c")
+commit 5bf3be033f50 ("v2.4.10.1 -> v2.4.10.2")
+
+Looking at commit 39b56d902bf3 ("[PATCH] binfmt_elf: clearing bss may fail"):
+>  commit 39b56d902bf35241e7cba6cc30b828ed937175ad
+>  Author: Pavel Machek <pavel@ucw.cz>
+>  Date:   Wed Feb 9 22:40:30 2005 -0800
+>
+>     [PATCH] binfmt_elf: clearing bss may fail
+>
+>     So we discover that Borland's Kylix application builder emits weird elf
+>     files which describe a non-writeable bss segment.
+>
+>     So remove the clear_user() check at the place where we zero out the bss.  I
+>     don't _think_ there are any security implications here (plus we've never
+>     checked that clear_user() return value, so whoops if it is a problem).
+>
+>     Signed-off-by: Pavel Machek <pavel@suse.cz>
+>     Signed-off-by: Andrew Morton <akpm@osdl.org>
+>     Signed-off-by: Linus Torvalds <torvalds@osdl.org>
+
+It seems pretty clear that binfmt_elf_fdpic with skipping clear_user() for
+non-writable segments and otherwise calling clear_user(), aka padzero(),
+and checking it's return code is the right thing to do.
+
+I just skipped the error checking as that avoids breaking things.
+
+And notably, it looks like Borland's Kylix died in 2005 so it might be
+safe to just consider read-only segments with memsz > filesz an error.
+
+Reported-by: Sebastian Ott <sebott@redhat.com>
+Reported-by: Thomas Weißschuh <linux@weissschuh.net>
+Closes: https://lkml.kernel.org/r/20230914-bss-alloc-v1-1-78de67d2c6dd@weissschuh.net
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Link: https://lore.kernel.org/r/87sf71f123.fsf@email.froward.int.ebiederm.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- fs/binfmt_elf.c | 23 ++++-------------------
- 1 file changed, 4 insertions(+), 19 deletions(-)
+ fs/binfmt_elf.c | 111 +++++++++++++++++++++---------------------------
+ 1 file changed, 48 insertions(+), 63 deletions(-)
 
 diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index db47cb802f89..f8b4747f87ed 100644
+index 7b3d2d491407..2a615f476e44 100644
 --- a/fs/binfmt_elf.c
 +++ b/fs/binfmt_elf.c
-@@ -1351,30 +1351,15 @@ static int load_elf_library(struct file *file)
- 		eppnt++;
+@@ -110,25 +110,6 @@ static struct linux_binfmt elf_format = {
  
- 	/* Now use mmap to map the library into memory. */
--	error = vm_mmap(file,
--			ELF_PAGESTART(eppnt->p_vaddr),
--			(eppnt->p_filesz +
--			 ELF_PAGEOFFSET(eppnt->p_vaddr)),
-+	error = elf_load(file, ELF_PAGESTART(eppnt->p_vaddr),
-+			eppnt,
- 			PROT_READ | PROT_WRITE | PROT_EXEC,
- 			MAP_FIXED_NOREPLACE | MAP_PRIVATE,
--			(eppnt->p_offset -
--			 ELF_PAGEOFFSET(eppnt->p_vaddr)));
--	if (error != ELF_PAGESTART(eppnt->p_vaddr))
--		goto out_free_ph;
-+			0);
+ #define BAD_ADDR(x) (unlikely((unsigned long)(x) >= TASK_SIZE))
  
--	elf_bss = eppnt->p_vaddr + eppnt->p_filesz;
--	if (padzero(elf_bss)) {
--		error = -EFAULT;
-+	if (error != ELF_PAGESTART(eppnt->p_vaddr))
- 		goto out_free_ph;
--	}
- 
--	len = ELF_PAGEALIGN(eppnt->p_filesz + eppnt->p_vaddr);
--	bss = ELF_PAGEALIGN(eppnt->p_memsz + eppnt->p_vaddr);
--	if (bss > len) {
--		error = vm_brk(len, bss - len);
+-static int set_brk(unsigned long start, unsigned long end, int prot)
+-{
+-	start = ELF_PAGEALIGN(start);
+-	end = ELF_PAGEALIGN(end);
+-	if (end > start) {
+-		/*
+-		 * Map the last of the bss segment.
+-		 * If the header is requesting these pages to be
+-		 * executable, honour that (ppc32 needs this).
+-		 */
+-		int error = vm_brk_flags(start, end - start,
+-				prot & PROT_EXEC ? VM_EXEC : 0);
 -		if (error)
--			goto out_free_ph;
+-			return error;
 -	}
- 	error = 0;
+-	current->mm->start_brk = current->mm->brk = end;
+-	return 0;
+-}
+-
+ /* We need to explicitly zero any fractional pages
+    after the data section (i.e. bss).  This would
+    contain the junk from the file that should not
+@@ -406,6 +387,51 @@ static unsigned long elf_map(struct file *filep, unsigned long addr,
+ 	return(map_addr);
+ }
  
- out_free_ph:
++static unsigned long elf_load(struct file *filep, unsigned long addr,
++		const struct elf_phdr *eppnt, int prot, int type,
++		unsigned long total_size)
++{
++	unsigned long zero_start, zero_end;
++	unsigned long map_addr;
++
++	if (eppnt->p_filesz) {
++		map_addr = elf_map(filep, addr, eppnt, prot, type, total_size);
++		if (BAD_ADDR(map_addr))
++			return map_addr;
++		if (eppnt->p_memsz > eppnt->p_filesz) {
++			zero_start = map_addr + ELF_PAGEOFFSET(eppnt->p_vaddr) +
++				eppnt->p_filesz;
++			zero_end = map_addr + ELF_PAGEOFFSET(eppnt->p_vaddr) +
++				eppnt->p_memsz;
++
++			/* Zero the end of the last mapped page */
++			padzero(zero_start);
++		}
++	} else {
++		map_addr = zero_start = ELF_PAGESTART(addr);
++		zero_end = zero_start + ELF_PAGEOFFSET(eppnt->p_vaddr) +
++			eppnt->p_memsz;
++	}
++	if (eppnt->p_memsz > eppnt->p_filesz) {
++		/*
++		 * Map the last of the segment.
++		 * If the header is requesting these pages to be
++		 * executable, honour that (ppc32 needs this).
++		 */
++		int error;
++
++		zero_start = ELF_PAGEALIGN(zero_start);
++		zero_end = ELF_PAGEALIGN(zero_end);
++
++		error = vm_brk_flags(zero_start, zero_end - zero_start,
++				     prot & PROT_EXEC ? VM_EXEC : 0);
++		if (error)
++			map_addr = error;
++	}
++	return map_addr;
++}
++
++
+ static unsigned long total_mapping_size(const struct elf_phdr *phdr, int nr)
+ {
+ 	elf_addr_t min_addr = -1;
+@@ -829,7 +855,6 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 	struct elf_phdr *elf_ppnt, *elf_phdata, *interp_elf_phdata = NULL;
+ 	struct elf_phdr *elf_property_phdata = NULL;
+ 	unsigned long elf_bss, elf_brk;
+-	int bss_prot = 0;
+ 	int retval, i;
+ 	unsigned long elf_entry;
+ 	unsigned long e_entry;
+@@ -1040,33 +1065,6 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 		if (elf_ppnt->p_type != PT_LOAD)
+ 			continue;
+ 
+-		if (unlikely (elf_brk > elf_bss)) {
+-			unsigned long nbyte;
+-
+-			/* There was a PT_LOAD segment with p_memsz > p_filesz
+-			   before this one. Map anonymous pages, if needed,
+-			   and clear the area.  */
+-			retval = set_brk(elf_bss + load_bias,
+-					 elf_brk + load_bias,
+-					 bss_prot);
+-			if (retval)
+-				goto out_free_dentry;
+-			nbyte = ELF_PAGEOFFSET(elf_bss);
+-			if (nbyte) {
+-				nbyte = ELF_MIN_ALIGN - nbyte;
+-				if (nbyte > elf_brk - elf_bss)
+-					nbyte = elf_brk - elf_bss;
+-				if (clear_user((void __user *)elf_bss +
+-							load_bias, nbyte)) {
+-					/*
+-					 * This bss-zeroing can fail if the ELF
+-					 * file specifies odd protections. So
+-					 * we don't check the return value
+-					 */
+-				}
+-			}
+-		}
+-
+ 		elf_prot = make_prot(elf_ppnt->p_flags, &arch_state,
+ 				     !!interpreter, false);
+ 
+@@ -1162,7 +1160,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 			}
+ 		}
+ 
+-		error = elf_map(bprm->file, load_bias + vaddr, elf_ppnt,
++		error = elf_load(bprm->file, load_bias + vaddr, elf_ppnt,
+ 				elf_prot, elf_flags, total_size);
+ 		if (BAD_ADDR(error)) {
+ 			retval = IS_ERR_VALUE(error) ?
+@@ -1217,10 +1215,8 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 		if (end_data < k)
+ 			end_data = k;
+ 		k = elf_ppnt->p_vaddr + elf_ppnt->p_memsz;
+-		if (k > elf_brk) {
+-			bss_prot = elf_prot;
++		if (k > elf_brk)
+ 			elf_brk = k;
+-		}
+ 	}
+ 
+ 	e_entry = elf_ex->e_entry + load_bias;
+@@ -1232,18 +1228,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 	start_data += load_bias;
+ 	end_data += load_bias;
+ 
+-	/* Calling set_brk effectively mmaps the pages that we need
+-	 * for the bss and break sections.  We must do this before
+-	 * mapping in the interpreter, to make sure it doesn't wind
+-	 * up getting placed where the bss needs to go.
+-	 */
+-	retval = set_brk(elf_bss, elf_brk, bss_prot);
+-	if (retval)
+-		goto out_free_dentry;
+-	if (likely(elf_bss != elf_brk) && unlikely(padzero(elf_bss))) {
+-		retval = -EFAULT; /* Nobody gets to see this, but.. */
+-		goto out_free_dentry;
+-	}
++	current->mm->start_brk = current->mm->brk = ELF_PAGEALIGN(elf_brk);
+ 
+ 	if (interpreter) {
+ 		elf_entry = load_elf_interp(interp_elf_ex,
 -- 
 2.34.1
 
