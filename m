@@ -1,113 +1,100 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D6717EF
-	for <linux-hardening@vger.kernel.org>; Sat, 30 Sep 2023 06:39:49 +0000 (UTC)
-Received: from smtp.smtpout.orange.fr (smtp-20.smtpout.orange.fr [80.12.242.20])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D5DF1A7
-	for <linux-hardening@vger.kernel.org>; Fri, 29 Sep 2023 23:39:47 -0700 (PDT)
-Received: from [192.168.1.18] ([86.243.2.178])
-	by smtp.orange.fr with ESMTPA
-	id mTdfqzIAmNwJhmTdfqg9fR; Sat, 30 Sep 2023 08:39:45 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1696055985;
-	bh=PuFtE8Nzqce9GbOstUVaI0iC3LvA8WVVT5UfiC0x0N8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=B8ElbXXvOXWetZw3fI9NSyo1YhshaygFu+vth0MHhOvzg3ysKfsBlWRQpf0dzTSsv
-	 ON1DpCMkrAVP9pZsorOE7xJjN+WxBNnen29CakYPhf4cwjmCeVKS7ZFQhiGzexltvv
-	 5gLR5PM0fBWQBkP3ugRsFgsaq4arZftG6QWLwgrQOsnFEisWlYTzjODYjLAnvNGlAy
-	 MB3JZSgfIWkdOCS0HkBlRe/o7SpEyTrjxU/lUF5n1UwPYLdoA7tKJ4pWtfTPhEppd5
-	 kcFJHGZy8iV+eAhgOGlo7fS3LFD/foHBP2k2dpzZHvTkIBACjSu2mI4vcbrtcYW6Si
-	 ISnU8FR4vMGYw==
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 30 Sep 2023 08:39:45 +0200
-X-ME-IP: 86.243.2.178
-Message-ID: <10341d7c-2903-9aba-9e33-c60bab32df5d@wanadoo.fr>
-Date: Sat, 30 Sep 2023 08:39:42 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 600641385;
+	Sat, 30 Sep 2023 07:01:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FF0FC433C7;
+	Sat, 30 Sep 2023 07:01:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1696057273;
+	bh=aH5DifR1+J1vJdlt0HdKBLUJn1v/XbPJouikZChEZlI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=B+gwLL3DtZ6fdEbiMlKWdDAslWvJnAtuWXp52nw1rU2c2LU+QkKt7rUIr1o9ly0jU
+	 rVBkKKyoB31D8MJEmrAgy717YH3yTN0APjd4dYAUD2UZb6H0sFfM23QhY2iKc2aj2G
+	 qccOAwvjavs9nGtVRzBK6/Lg/WzjnWTflT2bnjsM=
+Date: Sat, 30 Sep 2023 09:01:11 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Jann Horn <jannh@google.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	USB list <linux-usb@vger.kernel.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] media: usb: siano: Fix undefined behavior bug in
+ struct smsusb_urb_t
+Message-ID: <2023093029-primary-likewise-9579@gregkh>
+References: <ZRbwU8Qnx28gpbuO@work>
+ <CAG48ez2SJMJSYrJQ9RVC44hbj3uNYBZeN0yfxWa7pqX9Fp2L7g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH 1/5] chelsio/l2t: Annotate struct l2t_data with
- __counted_by
-To: Kees Cook <keescook@chromium.org>, Raju Rangoju <rajur@chelsio.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- llvm@lists.linux.dev
-References: <20230929181042.work.990-kees@kernel.org>
- <20230929181149.3006432-1-keescook@chromium.org>
-Content-Language: fr, en-GB
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20230929181149.3006432-1-keescook@chromium.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-	SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+In-Reply-To: <CAG48ez2SJMJSYrJQ9RVC44hbj3uNYBZeN0yfxWa7pqX9Fp2L7g@mail.gmail.com>
 
-Le 29/09/2023 à 20:11, Kees Cook a écrit :
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
+On Fri, Sep 29, 2023 at 06:20:10PM +0200, Jann Horn wrote:
+> On Fri, Sep 29, 2023 at 5:42 PM Gustavo A. R. Silva
+> <gustavoars@kernel.org> wrote:
+> > `struct urb` is a flexible structure, which means that it contains a
+> > flexible-array member at the bottom. This could potentially lead to an
+> > overwrite of the object `wq` at run-time with the contents of `urb`.
+> >
+> > Fix this by placing object `urb` at the end of `struct smsusb_urb_t`.
 > 
-> As found with Coccinelle[1], add __counted_by for struct l2t_data.
+> Does this really change the situation? "struct smsusb_device_t"
+> contains an array of "struct smsusb_urb_t", so it seems to be like
+> you're just shifting the "VLA inside a non-final member of a struct"
+> thing around so that there is one more layer of abstraction in
+> between.
 > 
-> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+> Comments on "struct urb" say:
 > 
-> Cc: Raju Rangoju <rajur@chelsio.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->   drivers/net/ethernet/chelsio/cxgb3/l2t.h | 2 +-
->   drivers/net/ethernet/chelsio/cxgb4/l2t.c | 2 +-
->   2 files changed, 2 insertions(+), 2 deletions(-)
+>  * Isochronous URBs have a different data transfer model, in part because
+>  * the quality of service is only "best effort".  Callers provide specially
+>  * allocated URBs, with number_of_packets worth of iso_frame_desc structures
+>  * at the end.
 > 
-> diff --git a/drivers/net/ethernet/chelsio/cxgb3/l2t.h b/drivers/net/ethernet/chelsio/cxgb3/l2t.h
-> index ea75f275023f..646ca0bc25bd 100644
-> --- a/drivers/net/ethernet/chelsio/cxgb3/l2t.h
-> +++ b/drivers/net/ethernet/chelsio/cxgb3/l2t.h
-> @@ -76,7 +76,7 @@ struct l2t_data {
->   	atomic_t nfree;		/* number of free entries */
->   	rwlock_t lock;
->   	struct rcu_head rcu_head;	/* to handle rcu cleanup */
-> -	struct l2t_entry l2tab[];
-> +	struct l2t_entry l2tab[] __counted_by(nentries);
->   };
->   
->   typedef void (*arp_failure_handler_func)(struct t3cdev * dev,
-> diff --git a/drivers/net/ethernet/chelsio/cxgb4/l2t.c b/drivers/net/ethernet/chelsio/cxgb4/l2t.c
-> index a10a6862a9a4..1e5f5b1a22a6 100644
-> --- a/drivers/net/ethernet/chelsio/cxgb4/l2t.c
-> +++ b/drivers/net/ethernet/chelsio/cxgb4/l2t.c
-> @@ -59,7 +59,7 @@ struct l2t_data {
->   	rwlock_t lock;
->   	atomic_t nfree;             /* number of free entries */
->   	struct l2t_entry *rover;    /* starting point for next allocation */
-> -	struct l2t_entry l2tab[];  /* MUST BE LAST */
-> +	struct l2t_entry l2tab[] __counted_by(l2t_size);  /* MUST BE LAST */
+> and:
+> 
+> /* (in) ISO ONLY */
+> 
+> And it looks like smsusb only uses that URB as a bulk URB, so the flex
+> array is unused and we can't have an overflow here?
+> 
+> If this is intended to make it possible to enable some kinda compiler
+> warning, it might be worth talking to the USB folks to figure out the
+> right approach here.
+> 
+> > Fixes: dd47fbd40e6e ("[media] smsusb: don't sleep while atomic")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > ---
+> >  drivers/media/usb/siano/smsusb.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/media/usb/siano/smsusb.c b/drivers/media/usb/siano/smsusb.c
+> > index 9d9e14c858e6..2c048f8e8371 100644
+> > --- a/drivers/media/usb/siano/smsusb.c
+> > +++ b/drivers/media/usb/siano/smsusb.c
+> > @@ -40,10 +40,10 @@ struct smsusb_urb_t {
+> >         struct smscore_buffer_t *cb;
+> >         struct smsusb_device_t *dev;
+> >
+> > -       struct urb urb;
+> > -
+> >         /* For the bottom half */
+> >         struct work_struct wq;
+> > +
+> > +       struct urb urb;
+> >  };
 
-Nit: the comment is maybe unneeded.
+Yeah, this is going to get messy.  Ideally, just dynamically create the
+urb and change this to a "struct urb *urb;" instead.
 
->   };
->   
->   static inline unsigned int vlan_prio(const struct l2t_entry *e)
+thanks,
 
+greg k-h
