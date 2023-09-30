@@ -1,87 +1,115 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21F4C5699
-	for <linux-hardening@vger.kernel.org>; Sat, 30 Sep 2023 16:38:16 +0000 (UTC)
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A064D3;
-	Sat, 30 Sep 2023 09:38:15 -0700 (PDT)
-Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-1c3cbfa40d6so136589625ad.1;
-        Sat, 30 Sep 2023 09:38:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696091895; x=1696696695; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ll5RgjPd4WERjGYzQzNFee7tOPsdSELqkfPGuXCqmQY=;
-        b=OozuIZ2doM7hMTUYmcI9K6cyaEgqTbIcJ6WwyV5CKRII+z0zHptUju1v3e2apEo6cg
-         1uL86Hcy/iymYPBs2xvhnMhq1uWw5M8rx3Uuh5uXyz9vr4JOO1hXc+okmP9ggC6TLP/K
-         nMVYpPSluE0t4NuusF7+epuFHRnDVto1/weMq2TK3EA9N1dNW/1mNUsfkAqPW7cPCq1d
-         mVvXPJZpWvHSW7N1bBDPYwucspetYsG0wmCEffIkLQu1sODnucKV+bVMIfguTwAJJBd4
-         N3xJzHQhhkthEHkzo754YdAsBFHrH+mfi2CdGxNstMtIC61+aHGvUan5cpTRiYXwZILS
-         7xYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696091895; x=1696696695;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ll5RgjPd4WERjGYzQzNFee7tOPsdSELqkfPGuXCqmQY=;
-        b=MwA8KmTSvRSyzH53/mIbDOCzHzJABrRCUTxWS3ix+7Q2RmMe54f54hnuwTXqTcTukQ
-         omvGzEo2mPPvMy8/VN17AcyY2LWtqACJJoty5dUDNGrOIfE4wmN4VDyU/BMNdbLh60MZ
-         9xywYrLiTIElePkMUjqPe/hlvx7RLaRoA5wwIwYZkaz23MooUJNxoIBWcZe6PwwUIblH
-         xDnJAerf+H6q0MKY21w+Cz/SsVTGEZlaObrdhYOklVBe345afrEnMMgcu07lBVxIOgsP
-         tTgz2y01XVLIEPc0FDAzHPNzfjyCi06gmUo2TwByhGu/R+JwOHZFEKhe9VKvkkHtGEiE
-         TsDA==
-X-Gm-Message-State: AOJu0YzCh6vqa3K616xuMRF9H+jPjd9O94vWIL75YcUgo48HOzdKWNm6
-	BmWJDID4MO1uryA3M3xL5WE=
-X-Google-Smtp-Source: AGHT+IEokMxdLDwnG72GNo8md4NLX8fZro4ky2KeOokEesCSFdQ1+vI/RtlGtfvbM1IityteBfIaUw==
-X-Received: by 2002:a17:902:d34b:b0:1bb:9b29:20d9 with SMTP id l11-20020a170902d34b00b001bb9b2920d9mr8060404plk.20.1696091894718;
-        Sat, 30 Sep 2023 09:38:14 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:a90f:2dad:30c1:d923])
-        by smtp.gmail.com with ESMTPSA id j1-20020a170902c3c100b001bc18e579aesm12841649plj.101.2023.09.30.09.38.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 30 Sep 2023 09:38:14 -0700 (PDT)
-Date: Sat, 30 Sep 2023 09:38:11 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B33E7168CF
+	for <linux-hardening@vger.kernel.org>; Sat, 30 Sep 2023 17:41:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 958E0C433C8;
+	Sat, 30 Sep 2023 17:41:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1696095679;
+	bh=+etRTCZPNPJTHh+N1MKyjYR8NQe0gI1JFDlR+ExjRJM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=mBeARBSn8fmfsR2i08eGBTauyugnNT7jKXny6cHo6Y6UuKmLBwA7OE1hzwLzty89c
+	 m3TMncW+2/Y+MrwZQ7ZPMSQDMs771zemoTlLVNF0ky0hbF1ZuKXbHW0Mp7RyWLypGt
+	 fUnA3jvf6gMkX2ySekmdZrxt2ghgjJkTbbl7RbZARkYQlhazUWdBJOQG8bA/FuZEaS
+	 ydjyOYcA4ifQOqIRtf75va8Sko3Vu8tsOD/68syYDf3eN5hxqiwY3JIBfD5vVF9Qkg
+	 5iEwRZPV2DNNyDWEYHAtd8KAt6sowjLeULvNm20d/f1Z/J2NfDolaPvIt3T7pLNPLJ
+	 Lf2vIDHQ3qHBA==
+Date: Sat, 30 Sep 2023 18:41:18 +0100
+From: Jonathan Cameron <jic23@kernel.org>
 To: Kees Cook <keescook@chromium.org>
-Cc: linux-input@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] input: mt: Annotate struct input_mt with __counted_by
-Message-ID: <ZRhO828Ml4qpoS60@google.com>
-References: <20230922175036.work.762-kees@kernel.org>
+Cc: Justin Stitt <justinstitt@google.com>, Lars-Peter Clausen
+ <lars@metafoo.de>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre
+ Torgue <alexandre.torgue@foss.st.com>, linux-iio@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] iio: adc: stm32-adc: replace deprecated strncpy
+Message-ID: <20230930184118.73d7465a@jic23-huawei>
+In-Reply-To: <202309232006.690F89A@keescook>
+References: <20230921-strncpy-drivers-iio-adc-stm32-adc-c-v1-1-c50eca098597@google.com>
+	<202309232006.690F89A@keescook>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230922175036.work.762-kees@kernel.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Sep 22, 2023 at 10:50:37AM -0700, Kees Cook wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
-> 
-> As found with Coccinelle[1], add __counted_by for struct input_mt.
-> 
-> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
-> 
-> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Cc: linux-input@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+On Sat, 23 Sep 2023 20:15:09 -0700
+Kees Cook <keescook@chromium.org> wrote:
 
-Applied, thank you.
+> On Thu, Sep 21, 2023 at 04:54:00AM +0000, Justin Stitt wrote:
+> > `strncpy` is deprecated for use on NUL-terminated destination strings [1].
+> > 
+> > We should prefer more robust and less ambiguous string interfaces.
+> > 
+> > We expect adc->chan_name[val] to be NUL-terminated based on ch_name's
+> > use within functions that expect NUL-terminated strings like strncmp and
+> > printf-likes:
+> > | 	if (!strncmp(stm32_adc_ic[i].name, ch_name, STM32_ADC_CH_SZ)) {
+> > | 		/* Check internal channel availability */
+> > | 		switch (i) {
+> > | 		case STM32_ADC_INT_CH_VDDCORE:
+> > | 			if (!adc->cfg->regs->or_vddcore.reg)
+> > | 				dev_warn(&indio_dev->dev,
+> > | 					 "%s channel not available\n", ch_name);
+> > ...
+> > 
+> > There is no evidence that NUL-padding is needed either.  
+> 
+> Agreed -- it's used as a C string everywhere I can see.
+> 
+> > 
+> > Considering the above, a suitable replacement is `strscpy` [2] due to
+> > the fact that it guarantees NUL-termination on the destination buffer
+> > without unnecessarily NUL-padding. If, for any reason, NUL-padding _is_
+> > required we should go for `strscpy_pad`.
+> > 
+> > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> > Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+> > Link: https://github.com/KSPP/linux/issues/90
+> > Cc: linux-hardening@vger.kernel.org
+> > Signed-off-by: Justin Stitt <justinstitt@google.com>
+> > ---
+> > Note: build-tested
+> > ---
+> >  drivers/iio/adc/stm32-adc.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
+> > index f7613efb870d..9cdcf396d901 100644
+> > --- a/drivers/iio/adc/stm32-adc.c
+> > +++ b/drivers/iio/adc/stm32-adc.c
+> > @@ -2209,7 +2209,7 @@ static int stm32_adc_generic_chan_init(struct iio_dev *indio_dev,
+> >  				ret = -EINVAL;
+> >  				goto err;
+> >  			}
+> > -			strncpy(adc->chan_name[val], name, STM32_ADC_CH_SZ);
+> > +			strscpy(adc->chan_name[val], name, STM32_ADC_CH_SZ);  
+> 
+> I still prefer sizeof($dst), but yes, these are the same:
+> 
+>         char chan_name[STM32_ADC_CH_MAX][STM32_ADC_CH_SZ];
+> 
+> If this needs a v2, please improve the Subject, but it is technically
+> correct, so:
 
--- 
-Dmitry
+Hi Kees,
+
+I can tweak the subject whilst applying.  What did you have in mind
+as a better one?
+
+Jonathan
+
+> 
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> 
+> :)
+> 
+> -Kees
+> 
+
