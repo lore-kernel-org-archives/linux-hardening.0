@@ -1,247 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B28EB23AA;
-	Sat, 30 Sep 2023 09:30:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E4FFC433C7;
-	Sat, 30 Sep 2023 09:30:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696066232;
-	bh=tin0U19Nf4ANHDkcJXK1cl2YnmWbZlWUAWYQns6q95A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GrJMGkZXrPIT7StjOmeW+Fl8xwgebNyjtUdAOXRb7MJ/TkKMz13DPx5Qoi0HwXWp1
-	 Mj2c9yfx7SVQvUXsKfnq2P+RHMAyI6mccAk8fKyDW4gULxhlZPGShSX0WB+iPaLSr7
-	 mUiK0T0ddtqYsPPd0h1y920r2619heC5HkItOvuIA5vB7ZbXGsO9h6OwebpZKIXYfF
-	 cpzqp4c9klicbTpjXdFyqmWoSxM1g9gXG3Rv/6g0U6gQbBYq5kpvOkn71X4pJA4cJz
-	 KBit/mnJ2hHesyHyAhpoqwuKWDve8VIIRBfPJ7YgW7vnqnXZCqNQXymd7meZ+Cwm2y
-	 ZlR+A2h8PKMfg==
-Date: Sat, 30 Sep 2023 10:30:24 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Duje =?utf-8?Q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Cc: Robert Jarzmik <robert.jarzmik@free.fr>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andy@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Lubomir Rintel <lkundrak@v3.sk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Kees Cook <keescook@chromium.org>,
-	Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-hardening@vger.kernel.org,
-	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-	afaerber@suse.de, balejk@matfyz.cz
-Subject: Re: [PATCH RESEND v5 3/8] dt-bindings: clock: Add Marvell PXA1908
- clock bindings
-Message-ID: <20230930-purr-catchable-7149ee271df9@spud>
-References: <20230929-pxa1908-lkml-v5-0-5aa5a1109c5f@skole.hr>
- <20230929-pxa1908-lkml-v5-3-5aa5a1109c5f@skole.hr>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB59515A6
+	for <linux-hardening@vger.kernel.org>; Sat, 30 Sep 2023 11:04:14 +0000 (UTC)
+Received: from mail-vs1-xe32.google.com (mail-vs1-xe32.google.com [IPv6:2607:f8b0:4864:20::e32])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 723C0CA;
+	Sat, 30 Sep 2023 04:04:13 -0700 (PDT)
+Received: by mail-vs1-xe32.google.com with SMTP id ada2fe7eead31-4526c6579afso1096302137.0;
+        Sat, 30 Sep 2023 04:04:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1696071852; x=1696676652; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fJo83pwx4y7gaRZ8bey8OSQgDQ8Tv3HF9f55YMBadbY=;
+        b=aP39uq4xPESzyElD1xyo5SmtwAiJ1LP5/dqlMERS2bF7kLP/CTgoOYcUsR9EPFdmsZ
+         n0Huf8YvLlUJ6K/y0QC2sntpMWXgTExpZ8AEMCpleaGqwR89LxkQVLLcNZG8hfxr2jQo
+         N1SPm0CpvBcyk1pRCEfouwElfvgBnsQLsqbwMj17NHIMGXYNbCMSPVIVjUNmyIePiHS+
+         U+nTQowuoxjha4hRQEqSftHLx9D3ynspzNc5BvsNZ2nAMUpcUNiJC7mE9zUOAJ8ausGv
+         xIqqs5lDYKRqxjxPTR0Uca4SPlTNjtcDM8xAssurtN+8lRH7VCDMAMmt2FBK5bYn6lbo
+         GkAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696071852; x=1696676652;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fJo83pwx4y7gaRZ8bey8OSQgDQ8Tv3HF9f55YMBadbY=;
+        b=a7GlLy76iBo7tg+zuE5jaCFnmkO/FhFbPKLkrXYg9Dy3N9f+iYCA62zAXutPyx1zmw
+         E/jWj1fOviPoZmZIMs9eLMgmbvtV91qGbmewbuzB5pkNjcxuv7Zy460mpvt1/fr4PyIr
+         0BYVXXOEIqLGWkNXeovXuxvaRpWHGI+jI7oOxcps6Ht7UZUMJFUeipapBZAxQwrZAtmd
+         kJbQg/60sHGygMFWHJUMccbJ9k7Wfuvs1tVyRrksV2rDdgUfxJPA6pUR4Bg9mNzvL1RJ
+         5fVWvgYVXP7odKXpWToGI9HdW9DhRq4HPb1q0dHGDVniXbRalW/QXBT6KNKuMkU1HjWJ
+         /h+g==
+X-Gm-Message-State: AOJu0YzSbIBQKusMqRlqDEhyXGUu+DhLFzgaWOgO/tD+O1ANACLTDsnZ
+	7zHj18KE+gnQSAaEneWTvdt+Zt30mA1iX92U/Jw=
+X-Google-Smtp-Source: AGHT+IE2qF/n7ShtQDqO7HPLK5FDKy2SymdW2yn4PQByIVeeaU1qQHfQj8OmZG4uK+8n2mr3IzPZWyYWBbSRlWktX0A=
+X-Received: by 2002:a05:6102:5587:b0:452:6cea:89b7 with SMTP id
+ dc7-20020a056102558700b004526cea89b7mr3719924vsb.14.1696071852334; Sat, 30
+ Sep 2023 04:04:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="xztbYI3ipS2Vh9bj"
-Content-Disposition: inline
-In-Reply-To: <20230929-pxa1908-lkml-v5-3-5aa5a1109c5f@skole.hr>
-
-
---xztbYI3ipS2Vh9bj
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <20230915105933.495735-1-matteorizzo@google.com> <20230915105933.495735-2-matteorizzo@google.com>
+In-Reply-To: <20230915105933.495735-2-matteorizzo@google.com>
+From: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+Date: Sat, 30 Sep 2023 20:04:00 +0900
+Message-ID: <CAB=+i9RQiDWE6ignfKn2p+UiDF9W=jAuqsmYhHrO9h06+X-pKA@mail.gmail.com>
+Subject: Re: [RFC PATCH 01/14] mm/slub: don't try to dereference invalid freepointers
+To: Matteo Rizzo <matteorizzo@google.com>
+Cc: cl@linux.com, penberg@kernel.org, rientjes@google.com, 
+	iamjoonsoo.kim@lge.com, akpm@linux-foundation.org, vbabka@suse.cz, 
+	roman.gushchin@linux.dev, keescook@chromium.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-mm@kvack.org, 
+	linux-hardening@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com, 
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	corbet@lwn.net, luto@kernel.org, peterz@infradead.org, jannh@google.com, 
+	evn@google.com, poprdi@google.com, jordyzomer@google.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-0.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,HK_RANDOM_ENVFROM,
+	HK_RANDOM_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-On Fri, Sep 29, 2023 at 05:41:59PM +0200, Duje Mihanovi=C4=87 wrote:
-> Add dt bindings and documentation for the Marvell PXA1908 clock
-> controller.
->=20
-> Signed-off-by: Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
-
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-
-Thanks,
-Conor.
-
+On Fri, Sep 15, 2023 at 7:59=E2=80=AFPM Matteo Rizzo <matteorizzo@google.co=
+m> wrote:
+>
+> slab_free_freelist_hook tries to read a freelist pointer from the
+> current object even when freeing a single object. This is invalid
+> because single objects don't actually contain a freelist pointer when
+> they're freed and the memory contains other data. This causes problems
+> for checking the integrity of freelist in get_freepointer.
+>
+> Signed-off-by: Matteo Rizzo <matteorizzo@google.com>
 > ---
->  .../devicetree/bindings/clock/marvell,pxa1908.yaml | 48 ++++++++++++
->  include/dt-bindings/clock/marvell,pxa1908.h        | 88 ++++++++++++++++=
-++++++
->  2 files changed, 136 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/clock/marvell,pxa1908.yaml=
- b/Documentation/devicetree/bindings/clock/marvell,pxa1908.yaml
-> new file mode 100644
-> index 000000000000..4e78933232b6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/marvell,pxa1908.yaml
-> @@ -0,0 +1,48 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/clock/marvell,pxa1908.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Marvell PXA1908 Clock Controllers
-> +
-> +maintainers:
-> +  - Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
-> +
-> +description: |
-> +  The PXA1908 clock subsystem generates and supplies clock to various
-> +  controllers within the PXA1908 SoC. The PXA1908 contains numerous clock
-> +  controller blocks, with the ones currently supported being APBC, APBCP=
-, MPMU
-> +  and APMU roughly corresponding to internal buses.
-> +
-> +  All these clock identifiers could be found in <include/dt-bindings/mar=
-vell,pxa1908.h>.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - marvell,pxa1908-apbc
-> +      - marvell,pxa1908-apbcp
-> +      - marvell,pxa1908-mpmu
-> +      - marvell,pxa1908-apmu
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  '#clock-cells':
-> +    const: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - '#clock-cells'
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  # APMU block:
-> +  - |
-> +    clock-controller@d4282800 {
-> +      compatible =3D "marvell,pxa1908-apmu";
-> +      reg =3D <0xd4282800 0x400>;
-> +      #clock-cells =3D <1>;
-> +    };
-> diff --git a/include/dt-bindings/clock/marvell,pxa1908.h b/include/dt-bin=
-dings/clock/marvell,pxa1908.h
-> new file mode 100644
-> index 000000000000..fb15b0d0cd4c
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/marvell,pxa1908.h
-> @@ -0,0 +1,88 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
-> +#ifndef __DTS_MARVELL_PXA1908_CLOCK_H
-> +#define __DTS_MARVELL_PXA1908_CLOCK_H
-> +
-> +/* plls */
-> +#define PXA1908_CLK_CLK32		1
-> +#define PXA1908_CLK_VCTCXO		2
-> +#define PXA1908_CLK_PLL1_624		3
-> +#define PXA1908_CLK_PLL1_416		4
-> +#define PXA1908_CLK_PLL1_499		5
-> +#define PXA1908_CLK_PLL1_832		6
-> +#define PXA1908_CLK_PLL1_1248		7
-> +#define PXA1908_CLK_PLL1_D2		8
-> +#define PXA1908_CLK_PLL1_D4		9
-> +#define PXA1908_CLK_PLL1_D8		10
-> +#define PXA1908_CLK_PLL1_D16		11
-> +#define PXA1908_CLK_PLL1_D6		12
-> +#define PXA1908_CLK_PLL1_D12		13
-> +#define PXA1908_CLK_PLL1_D24		14
-> +#define PXA1908_CLK_PLL1_D48		15
-> +#define PXA1908_CLK_PLL1_D96		16
-> +#define PXA1908_CLK_PLL1_D13		17
-> +#define PXA1908_CLK_PLL1_32		18
-> +#define PXA1908_CLK_PLL1_208		19
-> +#define PXA1908_CLK_PLL1_117		20
-> +#define PXA1908_CLK_PLL1_416_GATE	21
-> +#define PXA1908_CLK_PLL1_624_GATE	22
-> +#define PXA1908_CLK_PLL1_832_GATE	23
-> +#define PXA1908_CLK_PLL1_1248_GATE	24
-> +#define PXA1908_CLK_PLL1_D2_GATE	25
-> +#define PXA1908_CLK_PLL1_499_EN		26
-> +#define PXA1908_CLK_PLL2VCO		27
-> +#define PXA1908_CLK_PLL2		28
-> +#define PXA1908_CLK_PLL2P		29
-> +#define PXA1908_CLK_PLL2VCODIV3		30
-> +#define PXA1908_CLK_PLL3VCO		31
-> +#define PXA1908_CLK_PLL3		32
-> +#define PXA1908_CLK_PLL3P		33
-> +#define PXA1908_CLK_PLL3VCODIV3		34
-> +#define PXA1908_CLK_PLL4VCO		35
-> +#define PXA1908_CLK_PLL4		36
-> +#define PXA1908_CLK_PLL4P		37
-> +#define PXA1908_CLK_PLL4VCODIV3		38
-> +
-> +/* apb (apbc) peripherals */
-> +#define PXA1908_CLK_UART0		1
-> +#define PXA1908_CLK_UART1		2
-> +#define PXA1908_CLK_GPIO		3
-> +#define PXA1908_CLK_PWM0		4
-> +#define PXA1908_CLK_PWM1		5
-> +#define PXA1908_CLK_PWM2		6
-> +#define PXA1908_CLK_PWM3		7
-> +#define PXA1908_CLK_SSP0		8
-> +#define PXA1908_CLK_SSP1		9
-> +#define PXA1908_CLK_IPC_RST		10
-> +#define PXA1908_CLK_RTC			11
-> +#define PXA1908_CLK_TWSI0		12
-> +#define PXA1908_CLK_KPC			13
-> +#define PXA1908_CLK_SWJTAG		14
-> +#define PXA1908_CLK_SSP2		15
-> +#define PXA1908_CLK_TWSI1		16
-> +#define PXA1908_CLK_THERMAL		17
-> +#define PXA1908_CLK_TWSI3		18
-> +
-> +/* apb (apbcp) peripherals */
-> +#define PXA1908_CLK_UART2		1
-> +#define PXA1908_CLK_TWSI2		2
-> +#define PXA1908_CLK_AICER		3
-> +
-> +/* axi (apmu) peripherals */
-> +#define PXA1908_CLK_CCIC1		1
-> +#define PXA1908_CLK_ISP			2
-> +#define PXA1908_CLK_DSI1		3
-> +#define PXA1908_CLK_DISP1		4
-> +#define PXA1908_CLK_CCIC0		5
-> +#define PXA1908_CLK_SDH0		6
-> +#define PXA1908_CLK_SDH1		7
-> +#define PXA1908_CLK_USB			8
-> +#define PXA1908_CLK_NF			9
-> +#define PXA1908_CLK_CORE_DEBUG		10
-> +#define PXA1908_CLK_VPU			11
-> +#define PXA1908_CLK_GC			12
-> +#define PXA1908_CLK_SDH2		13
-> +#define PXA1908_CLK_GC2D		14
-> +#define PXA1908_CLK_TRACE		15
-> +#define PXA1908_CLK_DVC_DFC_DEBUG	16
-> +
-> +#endif
->=20
-> --=20
-> 2.42.0
->=20
->=20
+>  mm/slub.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/mm/slub.c b/mm/slub.c
+> index f7940048138c..a7dae207c2d2 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -1820,7 +1820,9 @@ static inline bool slab_free_freelist_hook(struct k=
+mem_cache *s,
+>
+>         do {
+>                 object =3D next;
+> -               next =3D get_freepointer(s, object);
+> +               /* Single objects don't actually contain a freepointer */
+> +               if (object !=3D old_tail)
+> +                       next =3D get_freepointer(s, object);
+>
+>                 /* If object's reuse doesn't have to be delayed */
+>                 if (!slab_free_hook(s, object, slab_want_init_on_free(s))=
+) {
+> --
+> 2.42.0.459.ge4e396fd5e-goog
+>
 
---xztbYI3ipS2Vh9bj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZRfqsAAKCRB4tDGHoIJi
-0jIyAQClD4BtPUpM5qBMvLM7SmIKbmSXy1dLhn3+zWj1ceg1kgD/XLaUdvmI7W0U
-Itc9gfrWaDvaBLCZSGLLCFp10gm07AE=
-=eaix
------END PGP SIGNATURE-----
-
---xztbYI3ipS2Vh9bj--
+Looks good to me,
+Reviewed-by: Hyeonggon Yoo <42.hyeyoo@gmail.com>
