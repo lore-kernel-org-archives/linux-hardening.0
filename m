@@ -1,53 +1,54 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570D923D8
-	for <linux-hardening@vger.kernel.org>; Sat, 30 Sep 2023 16:06:47 +0000 (UTC)
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D50FCF;
-	Sat, 30 Sep 2023 09:06:45 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id 98e67ed59e1d1-2773f776f49so1235200a91.1;
-        Sat, 30 Sep 2023 09:06:45 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E4DA9CA70
+	for <linux-hardening@vger.kernel.org>; Sat, 30 Sep 2023 16:34:39 +0000 (UTC)
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 110C0D3;
+	Sat, 30 Sep 2023 09:34:38 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-1c61bde0b4bso94150385ad.3;
+        Sat, 30 Sep 2023 09:34:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696090005; x=1696694805; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1696091677; x=1696696477; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q8g5zh2+S3KfLdCdYm0vIOGyOHILVZHLfAlpK9xB3iQ=;
-        b=d2nZK0kT+gKf6G/FYrksM+5APZ7AyBrpdFtsqF4WPDjbSpXZySYMUucS9kZI6rD9kS
-         Q0ZERGUPQf6oGwtmDc4Pe5ORkmdDiicEi5e7qAmgb6baWiUP/TSer8pxHhkoQZ6NOqdL
-         sUnCr49I2Nx4d55pS0lOTdkwJWsNqDLImKapMGDh9UcPvxt6//TG0t3oi2zn358V7qQK
-         0osFdzZIKIZ/87B9uRhqie0o+x6qn+eunBI4lwugBRyKvw0oI5pWUbRbg8iGle1XQgTM
-         chLx1IJl86uPi8VzGMoGGY/7zUreUPXssVC9wfPS8VZwydt/h1kSvT6nhggW25xvFHbM
-         2m0A==
+        bh=8ewlMK21MKF6oJNKsgHRX5GI6if3+DmnKGcJn9diq3M=;
+        b=dRnidEflpLHnPYPtw7r8l9OFETDqz1nJ1JnUw8S7sFmo5/j7zw9BXbjiL8HqJ9IuNJ
+         9DKFPjObTZdv6KcNaAQ2JgUt0YPk0OdTVi2ySJnjxVs3ZddOVqLSfLFmGiQNGHS+YjZH
+         k9KwpFZoLeN+Bz6iiaWQtODvtfa3bXxvqIUYVRsJy/oCOloLOVRc79vsYPQeOmfVgPOp
+         Pif0Wymm+XeupKasTiz1RsFHdqxIdXtsQEU8BuA9fP5mOnTbYa6oPuiCWnNPMy6W2lLr
+         ztDLUYNf2BYjNvvV66Gwm7y5WbMO7BwBW1/3Pfl3NE7tLywL0VyLefxxBXE+WPD7FvdJ
+         Hrqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696090005; x=1696694805;
+        d=1e100.net; s=20230601; t=1696091677; x=1696696477;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Q8g5zh2+S3KfLdCdYm0vIOGyOHILVZHLfAlpK9xB3iQ=;
-        b=YL6ayZjUy1fQOwcv7TGXpCEKUULxN83gQpmn7BcHeD1xj8rMaPYMqaKeqAEUaYpTJj
-         2/LEX8tZsvt4LJGTdA4rMO+KjtHyv6yCDI6VGf4aSvRF/1ACdsVzpVGvv5+68hlMJk+y
-         ns8OhKYgIO3aHue2Cik3B9IHtqNbB4DdCKf9c79iwYocelYKOZ18sbkjEOqprleoyF1r
-         iNSqltgEBtptVlWBY1K6eb5wKBj4H2sT/3uEEsmWvxAO3/DrFzpOtwVNDqF08l4dUe0F
-         pXkGnB+rKDc5MeGLlg+1bblh/xrdr3VuVnmnu/Cp0R97SGj4//xoC7oYBA1SgeNJgE+/
-         dEGQ==
-X-Gm-Message-State: AOJu0YzV3fF36HkjzdJvaDH2u6NcrZmB7rkjS4wtxB4/fHF4/6mb05zu
-	l+GobjZu4/f0jkDF1wNTTeq+0/BVp9hyiQ==
-X-Google-Smtp-Source: AGHT+IGQznklh9nhBZNDU6/vy6sY0noeGGdH4RaF5VT9ZimkO852B5RHvONjkda8SVCMgyV/k3l8Iw==
-X-Received: by 2002:a17:90b:190f:b0:279:5a3:d5f with SMTP id mp15-20020a17090b190f00b0027905a30d5fmr11974647pjb.9.1696090004913;
-        Sat, 30 Sep 2023 09:06:44 -0700 (PDT)
+        bh=8ewlMK21MKF6oJNKsgHRX5GI6if3+DmnKGcJn9diq3M=;
+        b=GCFl1tTV++i0CogiSoQ62i65KjCgPXhq4CNeUsvdSVvh00jEhaFIHIxnSlDrO6dw4K
+         a0YsZ+fHYi7uFUTld/TH8KHKjaXnOSb8QYYDzDTAZTjTgmDJQNnb3k7FlodlqpC6byUp
+         kO7B23Jhvhu7yuojfOpykFU1kXX5Gd4h3GDeHeLwFc2ZwzLScl5LW8FazhG6zDSrugYm
+         oVCqwWQ/SSzoJwzket4jl6vZki0xVXkTXi7wqK5lP3yLzZMgkPCUyxlvnsoITLLOeBQT
+         ycgKkYHHoLT10qrxcvUyMjDyPTqU390KOPz3JFyt2LuPggVmGn6d7eIC3zK8+ikA5AML
+         oUyw==
+X-Gm-Message-State: AOJu0YyEGGHOHnOszQZW0M2Aq5vy0KkM55LEXxQ72ucvLlxMWawX++oT
+	UtrKvK9LMn/BLKzp9P0SHBM=
+X-Google-Smtp-Source: AGHT+IG7lbKTIdQ5hyO75ovbO8AXTNMHRGFsh8NoO0PZ08axK5wOB9G7iErT7i10qxrbCPjqMezcIg==
+X-Received: by 2002:a17:903:11d2:b0:1c7:2697:ec0a with SMTP id q18-20020a17090311d200b001c72697ec0amr8541234plh.30.1696091677410;
+        Sat, 30 Sep 2023 09:34:37 -0700 (PDT)
 Received: from google.com ([2620:15c:9d:2:a90f:2dad:30c1:d923])
-        by smtp.gmail.com with ESMTPSA id cl1-20020a17090af68100b00277246e857esm3346261pjb.23.2023.09.30.09.06.43
+        by smtp.gmail.com with ESMTPSA id e21-20020a170902d39500b001b9e86e05b7sm18923187pld.0.2023.09.30.09.34.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 30 Sep 2023 09:06:44 -0700 (PDT)
-Date: Sat, 30 Sep 2023 09:06:41 -0700
+        Sat, 30 Sep 2023 09:34:37 -0700 (PDT)
+Date: Sat, 30 Sep 2023 09:34:34 -0700
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To: Justin Stitt <justinstitt@google.com>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] Input: synaptics-rmi4 - replace deprecated strncpy
-Message-ID: <ZRhHkS8MfnwMlQot@google.com>
-References: <20230921-strncpy-drivers-input-rmi4-rmi_f34-c-v1-1-4aef2e84b8d2@google.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH v2] Input: axp20x-pek - avoid needless newline removal
+Message-ID: <ZRhOGiZjEI8EEgtl@google.com>
+References: <20230925-strncpy-drivers-input-misc-axp20x-pek-c-v2-1-ff7abe8498d6@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -56,7 +57,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230921-strncpy-drivers-input-rmi4-rmi_f34-c-v1-1-4aef2e84b8d2@google.com>
+In-Reply-To: <20230925-strncpy-drivers-input-misc-axp20x-pek-c-v2-1-ff7abe8498d6@google.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
 	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -64,16 +65,27 @@ X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Thu, Sep 21, 2023 at 09:58:11AM +0000, Justin Stitt wrote:
-> `strncpy` is deprecated for use on NUL-terminated destination strings [1]
+On Mon, Sep 25, 2023 at 04:31:05AM +0000, Justin Stitt wrote:
+> This code is doing more work than it needs to.
 > 
-> Let's use memcpy() as the bounds have already been checked and this
-> decays into a simple byte copy from one buffer to another removing any
-> ambiguity that strncpy has.
+> Before handing off `val_str` to `kstrtouint()` we are eagerly removing
+> any trailing newline which requires copying `buf`, validating it's
+> length and checking/replacing any potential newlines.
 > 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> kstrtouint() handles this implicitly:
+> kstrtouint ->
+>   kstrotoull -> (documentation)
+> |   /**
+> |    * kstrtoull - convert a string to an unsigned long long
+> |    * @s: The start of the string. The string must be null-terminated, and may also
+> |    *  include a single newline before its terminating null. The first character
+> |    ...
+> 
+> Let's remove the redundant functionality and let kstrtouint handle it.
+> 
 > Link: https://github.com/KSPP/linux/issues/90
 > Cc: linux-hardening@vger.kernel.org
+> Suggested-by: Kees Cook <keescook@chromium.org>
 > Signed-off-by: Justin Stitt <justinstitt@google.com>
 
 Applied, thank you.
