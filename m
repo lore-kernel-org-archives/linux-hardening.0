@@ -1,120 +1,176 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905D520F2
-	for <linux-hardening@vger.kernel.org>; Sat, 30 Sep 2023 12:31:43 +0000 (UTC)
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 596FFBD;
-	Sat, 30 Sep 2023 05:31:41 -0700 (PDT)
-Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-690bc3f82a7so12788224b3a.0;
-        Sat, 30 Sep 2023 05:31:41 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0201F9CF;
+	Sat, 30 Sep 2023 14:50:57 +0000 (UTC)
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DB1CB7;
+	Sat, 30 Sep 2023 07:50:55 -0700 (PDT)
+Received: by mail-lf1-x12c.google.com with SMTP id 2adb3069b0e04-5046bf37daeso14337382e87.1;
+        Sat, 30 Sep 2023 07:50:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696077101; x=1696681901; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=0PEuv1JE1ji/lSxoZu0EKZ3PyEQs2C6XzXKupEO4HsI=;
-        b=g+zXLR7zeIamobd1EhaifgMeW3Z2kHjB58mZ4DDfMxJnRs9U66ovnop9/uRr4k83cs
-         jUwx7Q6X0KywFIjbAwacCZ+oVX0YoTeUeP9NkusJGBmXZyySb4CQDqzFJGIROr24D84h
-         3Z+ieegFlFeK+zWsoQfNryGd+TeE5stkgdczMJWNJGiZ+gI0cHYaie5sX9PvWFAyEbhr
-         v0FvurisjzUy3o8Rw0tXDws5jDWfb/0HY+q1lcAJt3LI7fQSBenJbJudF7+UmJpdVxZu
-         7ElO4wwFW/Ufj19ht26oJedSrXgZTBli3O+c6uauSUl7ghTbFsI+XcOxjYVeclooVi0p
-         O4NQ==
+        d=gmail.com; s=20230601; t=1696085453; x=1696690253; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=laSU2ptF5dJtGJTOfsu2vTDoKsI4bo31YwsLIpMZHsY=;
+        b=MwDUKEd6QG0EtvDSCKf1uxGsuk6yCPhM15PYIYhqDJOgasuaT7+4Oh6GiJZ/vmFugy
+         lmSCSLc0F+hG3ukOAM3WdNdBnEAtspfwfQIzIK1Wl+hsYj7CnlRK1SN0CwP2toV4bow4
+         LCG2gYB2ozawxJ9b/KfUJbxAn6Xa7t4YEVAl9uocXX1Jw3qs6c/EXfaIr8Rz78OCo8KR
+         46YxdeGs8zmcFe+Db4BddvMZE57ZBrJ3u+0YeAZwI0lUMX0nfUrsuM9wr1T+Cx+4tFCh
+         43LmQPeSUyLxSTkiFSJ67LGdePIyZblA6OKDAQ/vyk5/2yD5+W+J95PEpgI6GVNdDKdn
+         9Sww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696077101; x=1696681901;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0PEuv1JE1ji/lSxoZu0EKZ3PyEQs2C6XzXKupEO4HsI=;
-        b=CaHbJZpBTmp6d9/dNWnxMXKCX02k2kLtZ2D7srzi0tNvy1V2aNrixumJ/Sw46SORc+
-         lGxW0028WL06D6E1BD0qHyZW+c1Er9njIdoDoeQBmf1HMFxRXDU2jlLVEbln+z0Dh8DT
-         HpsYWbhvLz+TDzFTHui1+C2sH3+Ckotjwo96/lrkd7Hz3MmnZpjjOFC3vGnsuKR3bPFJ
-         ISGW/IflSAAmxxmUjY3tOPm8VNi2y1upyvSu+E8nW1iikYGVR2ffs2WZNVScTw8Fj3mw
-         c9jjk9WxYo5JQarSKy7JZidu/sAQ3lSUIkz9TD+XpxmDUAOUfDtroFeC3SdPL5OLAiVD
-         TfGQ==
-X-Gm-Message-State: AOJu0Yxdo4WaufLNc0b0GGIE1FiXi4w9rlde61M1z4mynwCo75XSuuDq
-	tl4cZHAJsFIN5U989VyHQ74=
-X-Google-Smtp-Source: AGHT+IEhI7eA8uS9H8VpG7zI0niIhieHYI5PZG8NgJ2DvP5MEnONifsqFETJAiDku+qqJ+SYqEFV2A==
-X-Received: by 2002:a05:6a00:24c6:b0:68c:2be:67bb with SMTP id d6-20020a056a0024c600b0068c02be67bbmr7158316pfv.20.1696077100602;
-        Sat, 30 Sep 2023 05:31:40 -0700 (PDT)
-Received: from [192.168.0.106] ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id e25-20020a62ee19000000b00690d9901ce5sm7900536pfi.102.2023.09.30.05.31.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 30 Sep 2023 05:31:39 -0700 (PDT)
-Message-ID: <da91c950-51c0-4c71-855e-ae11898a97f5@gmail.com>
-Date: Sat, 30 Sep 2023 19:31:34 +0700
+        d=1e100.net; s=20230601; t=1696085453; x=1696690253;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=laSU2ptF5dJtGJTOfsu2vTDoKsI4bo31YwsLIpMZHsY=;
+        b=T8inobxiaergECByFFZ1CXDbC3XpIp10sjfxquseZvUOFeu2160pvxp0AzdP6cwpsW
+         2kGV7KJk9GIz1Oj9AnixG0avheyT4r8wY1P+7mDouL4LbpFsN872mecuBdlfe7NvnDab
+         GVoo3WnsccIQpZ/XcHAdxWvc0C/REEi9X+IEwN2c1ii0X+WC4DGXGa6GwNPTKxqdIBet
+         A334oKWX3Ex4J8ygtgZKUbCrnpRs8SMDnD0/WXU+7QCJl4wyW29GabzCdhVuOYa/0CGr
+         fQvavOmh3je7pojydXHqJ+BKy6MuKRDfSGS4f/Azl+4tfeMHRvqFQCuuvAwXMD6ztg51
+         hRKA==
+X-Gm-Message-State: AOJu0YwxCCE2ZdXfvn+fN9bDB86YP0y09EvvFI143pYlVp4qXIMaSumB
+	jxSh19bFZGCMwTmkGL2yJGIgODIRi2Yhl2GhGJQ=
+X-Google-Smtp-Source: AGHT+IFKxuEfsWI2Hoye015VefDxXDDWWovJHhYR0GsRnul5m9+uvo7GWv6zNWozBrWHqGB+PwbJIGFbA8W5CapoIHU=
+X-Received: by 2002:a05:6512:124a:b0:503:5cd:998b with SMTP id
+ fb10-20020a056512124a00b0050305cd998bmr7557694lfb.28.1696085453195; Sat, 30
+ Sep 2023 07:50:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Fwd: Performance regression: resume_console takes 100ms longer in
- S2idle/S3 resume in v6.6-rc1
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: John Ogness <john.ogness@linutronix.de>,
- Sergey Senozhatsky <senozhatsky@chromium.org>, Petr Mladek
- <pmladek@suse.com>, Todd Brandt <todd.e.brandt@intel.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>,
- Linux Hardening <linux-hardening@vger.kernel.org>
-References: <99b9d4d1-f7a9-4b6c-aebf-ef1d2ddee0d7@gmail.com>
-Content-Language: en-US
-In-Reply-To: <99b9d4d1-f7a9-4b6c-aebf-ef1d2ddee0d7@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+References: <20230928110554.34758-1-jlayton@kernel.org> <20230928110554.34758-2-jlayton@kernel.org>
+ <6020d6e7-b187-4abb-bf38-dc09d8bd0f6d@app.fastmail.com> <af047e4a1c6947c59d4a13d4ae221c784a5386b4.camel@kernel.org>
+ <20230928171943.GK11439@frogsfrogsfrogs> <6a6f37d16b55a3003af3f3dbb7778a367f68cd8d.camel@kernel.org>
+ <636661.1695969129@warthog.procyon.org.uk>
+In-Reply-To: <636661.1695969129@warthog.procyon.org.uk>
+From: Steve French <smfrench@gmail.com>
+Date: Sat, 30 Sep 2023 09:50:41 -0500
+Message-ID: <CAH2r5ms14hPaz=Ex2a=Dj0Hz3XxYLRKFj_rHHekznTbNJ_wABQ@mail.gmail.com>
+Subject: Re: [PATCH 86/87] fs: switch timespec64 fields in inode to discrete integers
+To: David Howells <dhowells@redhat.com>
+Cc: Jeff Layton <jlayton@kernel.org>, Latchesar Ionkov <lucho@ionkov.net>, 
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, 
+	"Rafael J . Wysocki" <rafael@kernel.org>, "Darrick J. Wong" <djwong@kernel.org>, Anders Larsen <al@alarsen.net>, 
+	Carlos Llamas <cmllamas@google.com>, Andrii Nakryiko <andrii@kernel.org>, 
+	Mattia Dongili <malattia@linux.it>, Hugh Dickins <hughd@google.com>, 
+	John Johansen <john.johansen@canonical.com>, Yonghong Song <yonghong.song@linux.dev>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christoph Hellwig <hch@lst.de>, Mike Marshall <hubcap@omnibond.com>, 
+	Paulo Alcantara <pc@manguebit.com>, linux-xfs@vger.kernel.org, 
+	Michael Ellerman <mpe@ellerman.id.au>, James Morris <jmorris@namei.org>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, devel@lists.orangefs.org, 
+	Shyam Prasad N <sprasad@microsoft.com>, linux-um@lists.infradead.org, 
+	Nicholas Piggin <npiggin@gmail.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Eric Van Hensbergen <ericvh@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Trond Myklebust <trond.myklebust@hammerspace.com>, Anton Altaparmakov <anton@tuxera.com>, 
+	Christian Brauner <brauner@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Stephen Smalley <stephen.smalley.work@gmail.com>, linux-usb@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>, 
+	Sergey Senozhatsky <senozhatsky@chromium.org>, =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>, 
+	Chuck Lever <chuck.lever@oracle.com>, Sven Schnelle <svens@linux.ibm.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Jan Kara <jack@suse.com>, Tejun Heo <tj@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, linux-trace-kernel@vger.kernel.org, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Dave Kleikamp <shaggy@kernel.org>, linux-mm@kvack.org, 
+	Joel Fernandes <joel@joelfernandes.org>, Eric Dumazet <edumazet@google.com>, 
+	Stanislav Fomichev <sdf@google.com>, linux-s390@vger.kernel.org, linux-nilfs@vger.kernel.org, 
+	Paul Moore <paul@paul-moore.com>, Leon Romanovsky <leon@kernel.org>, 
+	John Fastabend <john.fastabend@gmail.com>, Luis Chamberlain <mcgrof@kernel.org>, codalist@coda.cs.cmu.edu, 
+	Iurii Zaikin <yzaikin@google.com>, Namjae Jeon <linkinjeon@kernel.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Todd Kjos <tkjos@android.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, selinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	reiserfs-devel@vger.kernel.org, Miklos Szeredi <miklos@szeredi.hu>, 
+	Yue Hu <huyue2@coolpad.com>, Jaegeuk Kim <jaegeuk@kernel.org>, 
+	Martijn Coenen <maco@android.com>, OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>, 
+	Hao Luo <haoluo@google.com>, Tony Luck <tony.luck@intel.com>, "Theodore Ts'o" <tytso@mit.edu>, 
+	Nicolas Pitre <nico@fluxnic.net>, linux-ntfs-dev@lists.sourceforge.net, 
+	Muchun Song <muchun.song@linux.dev>, linux-f2fs-devel@lists.sourceforge.net, 
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, gfs2@lists.linux.dev, 
+	"Eric W. Biederman" <ebiederm@xmission.com>, Anna Schumaker <anna@kernel.org>, 
+	Brad Warrum <bwarrum@linux.ibm.com>, Mike Kravetz <mike.kravetz@oracle.com>, 
+	linux-efi@vger.kernel.org, Martin Brandenburg <martin@omnibond.com>, 
+	ocfs2-devel@lists.linux.dev, Alexei Starovoitov <ast@kernel.org>, 
+	platform-driver-x86@vger.kernel.org, Chris Mason <clm@fb.com>, 
+	linux-mtd@lists.infradead.org, linux-hardening@vger.kernel.org, 
+	Marc Dionne <marc.dionne@auristor.com>, Jiri Slaby <jirislaby@kernel.org>, 
+	linux-afs@lists.infradead.org, Ian Kent <raven@themaw.net>, 
+	Naohiro Aota <naohiro.aota@wdc.com>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>, linux-rdma@vger.kernel.org, 
+	coda@cs.cmu.edu, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Ilya Dryomov <idryomov@gmail.com>, Paolo Abeni <pabeni@redhat.com>, 
+	"Serge E. Hallyn" <serge@hallyn.com>, Christian Schoenebeck <linux_oss@crudebyte.com>, 
+	Kees Cook <keescook@chromium.org>, Arnd Bergmann <arnd@arndb.de>, autofs@vger.kernel.org, 
+	Steven Rostedt <rostedt@goodmis.org>, Mark Gross <markgross@kernel.org>, 
+	Damien Le Moal <dlemoal@kernel.org>, Eric Paris <eparis@parisplace.org>, ceph-devel@vger.kernel.org, 
+	Gao Xiang <xiang@kernel.org>, Jan Harkes <jaharkes@cs.cmu.edu>, linux-nfs@vger.kernel.org, 
+	linux-ext4@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>, Song Liu <song@kernel.org>, 
+	samba-technical@lists.samba.org, Steve French <sfrench@samba.org>, 
+	Jeremy Kerr <jk@ozlabs.org>, Netdev <netdev@vger.kernel.org>, 
+	Bob Peterson <rpeterso@redhat.com>, linux-fsdevel@vger.kernel.org, bpf@vger.kernel.org, 
+	ntfs3@lists.linux.dev, linux-erofs@lists.ozlabs.org, 
+	"David S . Miller" <davem@davemloft.net>, Chandan Babu R <chandan.babu@oracle.com>, 
+	jfs-discussion@lists.sourceforge.net, Jan Kara <jack@suse.cz>, 
+	Neil Brown <neilb@suse.de>, Dominique Martinet <asmadeus@codewreck.org>, 
+	Amir Goldstein <amir73il@gmail.com>, Bob Copeland <me@bobcopeland.com>, KP Singh <kpsingh@kernel.org>, 
+	linux-unionfs@vger.kernel.org, Joseph Qi <joseph.qi@linux.alibaba.com>, 
+	Andreas Dilger <adilger.kernel@dilger.ca>, 
+	Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>, Ard Biesheuvel <ardb@kernel.org>, 
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Andreas Gruenbacher <agruenba@redhat.com>, 
+	Richard Weinberger <richard@nod.at>, Mark Fasheh <mark@fasheh.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, linux-serial@vger.kernel.org, 
+	Jakub Kicinski <kuba@kernel.org>, Salah Triki <salah.triki@gmail.com>, 
+	Evgeniy Dushistov <dushistov@mail.ru>, linux-cifs@vger.kernel.org, 
+	Heiko Carstens <hca@linux.ibm.com>, Chao Yu <chao@kernel.org>, apparmor@lists.ubuntu.com, 
+	Josef Bacik <josef@toxicpanda.com>, Tom Talpey <tom@talpey.com>, 
+	Hans de Goede <hdegoede@redhat.com>, "Tigran A. Aivazian" <aivazian.tigran@gmail.com>, 
+	David Sterba <dsterba@suse.com>, Xiubo Li <xiubli@redhat.com>, 
+	Ryusuke Konishi <konishi.ryusuke@gmail.com>, Johannes Thumshirn <jth@kernel.org>, 
+	Ritu Agarwal <rituagar@linux.ibm.com>, Luis de Bethencourt <luisbg@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, v9fs@lists.linux.dev, David Sterba <dsterba@suse.cz>, 
+	linux-security-module@vger.kernel.org, Jeffle Xu <jefflexu@linux.alibaba.com>, 
+	Phillip Lougher <phillip@squashfs.org.uk>, Johannes Berg <johannes@sipsolutions.net>, 
+	Sungjong Seo <sj1557.seo@samsung.com>, David Woodhouse <dwmw2@infradead.org>, 
+	linux-karma-devel@lists.sourceforge.net, linux-btrfs@vger.kernel.org, 
+	Joel Becker <jlbec@evilplan.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: *
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On 28/09/2023 07:17, Bagas Sanjaya wrote:
-> Hi,
-> 
-> I notice a regression report on Bugzilla [1]. Quoting from it:
-> 
->> Ever since 6.6.0-rc1 we've seen S3 and S2idle resume take 100ms longer because of resume_comsole. resume_console ordinarily takes only a few milliseconds, but now it's consistently 100ms. I've bisected the issue to this commit:
->>
->> commit 9e70a5e109a4a23367810de09be826c52d27ee2f
->> Author: John Ogness <john.ogness@linutronix.de>
->> Date:   Mon Jul 17 21:52:06 2023 +0206
->>
->>     printk: Add per-console suspended state
->>     
->>     Currently the global @console_suspended is used to determine if
->>     consoles are in a suspended state. Its primary purpose is to allow
->>     usage of the console_lock when suspended without causing console
->>     printing. It is synchronized by the console_lock.
->>     
->>     Rather than relying on the console_lock to determine suspended
->>     state, make it an official per-console state that is set within
->>     console->flags. This allows the state to be queried via SRCU.
->>     
->>     Remove @console_suspended. Console printing will still be avoided
->>     when suspended because console_is_usable() returns false when
->>     the new suspended flag is set for that console.
->>
->> We are seeing this on roughly 2/3 of our machines, both on test systems and production systems.
-> 
-> Then,
-> 
->> The effect is most pronounced in the GigaByte z170x UD5. It goes from 300ms to 400ms because of an msleep 100 in the resume_console code. This might not seem like much but it's in series with everything else so it will always be there. Our goal is to keep both suspend and resume under 1 second if at all possible, so every bit counts.
-> 
-> See Bugzilla for the full thread and attached sleepgraph timelines
-> (in html format).
-> 
-> Anyway, I'm adding this regression to be tracked by regzbot:
-> 
-> #regzbot introduced: 9e70a5e109a4a2 https://bugzilla.kernel.org/show_bug.cgi?id=217955
-> #regzbot title: resume_console performance regression due to per-console suspended state
-> 
+On Fri, Sep 29, 2023 at 3:06=E2=80=AFAM David Howells via samba-technical
+<samba-technical@lists.samba.org> wrote:
+>
+>
+> Jeff Layton <jlayton@kernel.org> wrote:
+>
+> > Correct. We'd lose some fidelity in currently stored timestamps, but as
+> > Linus and Ted pointed out, anything below ~100ns granularity is
+> > effectively just noise, as that's the floor overhead for calling into
+> > the kernel. It's hard to argue that any application needs that sort of
+> > timestamp resolution, at least with contemporary hardware.
+>
+> Albeit with the danger of making Steve French very happy;-), would it mak=
+e
+> sense to switch internally to Microsoft-style 64-bit timestamps with thei=
+r
+> 100ns granularity?
 
-#regzbot fix: printk: flush consoles before checking progress
+100ns granularity does seem to make sense and IIRC was used by various
+DCE standards in the 90s and 2000s (not just used for SMB2/SMB3 protocol an=
+d
+various Windows filesystems)
 
--- 
-An old man doll... just what I always wanted! - Clara
 
+--=20
+Thanks,
+
+Steve
