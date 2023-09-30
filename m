@@ -1,117 +1,82 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45B8E2C9E
-	for <linux-hardening@vger.kernel.org>; Sat, 30 Sep 2023 15:37:37 +0000 (UTC)
-Received: from mail-yw1-x112b.google.com (mail-yw1-x112b.google.com [IPv6:2607:f8b0:4864:20::112b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE2CCE5
-	for <linux-hardening@vger.kernel.org>; Sat, 30 Sep 2023 08:37:31 -0700 (PDT)
-Received: by mail-yw1-x112b.google.com with SMTP id 00721157ae682-5a1d0fee86aso113098127b3.2
-        for <linux-hardening@vger.kernel.org>; Sat, 30 Sep 2023 08:37:31 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570D923D8
+	for <linux-hardening@vger.kernel.org>; Sat, 30 Sep 2023 16:06:47 +0000 (UTC)
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D50FCF;
+	Sat, 30 Sep 2023 09:06:45 -0700 (PDT)
+Received: by mail-pj1-x1035.google.com with SMTP id 98e67ed59e1d1-2773f776f49so1235200a91.1;
+        Sat, 30 Sep 2023 09:06:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696088251; x=1696693051; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Iij7GZPs4ta7mpI/DDP/sOC6B5pAs6vBvsF5JU59Dng=;
-        b=sYzo6XUj/VGXsS/c+8iIR/YiKUJBwnimrOMTrD+9AUnOIlUUa+wIQpkqJpMyHu/bf3
-         d4+1cDx5AvDqd5noI/NmQZhb10XCf2l8YeZJ+vjZgD/EBXHWLMG0DGxPXcTDNouaD37Y
-         KptpNMaeTeRLAfOvYv4NWBe6a6fVZvxUlO7i8GMXc8wVhc5FpGVv285qRKt5d9Yz6M4a
-         1jh5qc3Bj6I612sXZ9g4DcjZS0+7mfrkOudLL53a6W8DsPdyyCnMvvXD5BY4B3bJJJ5O
-         /vNzBAyqjW70SEluDVl5R9zhVXvcSV6igSvORQ4pfcYfRmUEV0/CJ5ttuXWQddP3dS0N
-         r+sw==
+        d=gmail.com; s=20230601; t=1696090005; x=1696694805; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q8g5zh2+S3KfLdCdYm0vIOGyOHILVZHLfAlpK9xB3iQ=;
+        b=d2nZK0kT+gKf6G/FYrksM+5APZ7AyBrpdFtsqF4WPDjbSpXZySYMUucS9kZI6rD9kS
+         Q0ZERGUPQf6oGwtmDc4Pe5ORkmdDiicEi5e7qAmgb6baWiUP/TSer8pxHhkoQZ6NOqdL
+         sUnCr49I2Nx4d55pS0lOTdkwJWsNqDLImKapMGDh9UcPvxt6//TG0t3oi2zn358V7qQK
+         0osFdzZIKIZ/87B9uRhqie0o+x6qn+eunBI4lwugBRyKvw0oI5pWUbRbg8iGle1XQgTM
+         chLx1IJl86uPi8VzGMoGGY/7zUreUPXssVC9wfPS8VZwydt/h1kSvT6nhggW25xvFHbM
+         2m0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696088251; x=1696693051;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Iij7GZPs4ta7mpI/DDP/sOC6B5pAs6vBvsF5JU59Dng=;
-        b=kzPiZfo9JYlrzgID6E3W/dwvQ0XHNfBoQzCv5QFZygC/+agF3TAtC1+gTURXWiU6et
-         0Y2/YZVpCZV/EkTRbX6qHU1VdEJXIV0ZuTMPi2QMBCOO5UkkOK2eDXCDlaXUkSTY0xfN
-         EeltlndgNxbE5lX9k6EYduvDHsPm7MuMu/CozgvmDZ5OMbswi9cwsF9ZkDYVx0HBhh5R
-         ICkUaOdGUody0UOti1oM9/KQyU1r88qaGkSKYEuYM7lgKbYFro67T84suxnZ8wZpQJX+
-         FPIwuUl+7lLc8hkOw2Q/ADkeS8bS6jO6yUBme8eCs/rKSPDwZ8Ao0+VyRNKgW1Uyz3hl
-         zzEg==
-X-Gm-Message-State: AOJu0Yz7nRV6TwHVLaoMtLyVO7OKx+SshTy6snlTxZqvPYH4KP2+EA/7
-	ymDjJ2LV5APDQvyC3nOEXZVGVyq+NABxppeFQAnt0g==
-X-Google-Smtp-Source: AGHT+IGFEGxNW9iad1m1hopLGKbkXI8hjBmpaUfewF+ozAfJ+lrOwUFw+LD1rcN0USj40MfR4GqG12cZk9y2+fvzoII=
-X-Received: by 2002:a0d:ddc1:0:b0:5a1:d4bc:7faa with SMTP id
- g184-20020a0dddc1000000b005a1d4bc7faamr7394744ywe.18.1696088251028; Sat, 30
- Sep 2023 08:37:31 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1696090005; x=1696694805;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Q8g5zh2+S3KfLdCdYm0vIOGyOHILVZHLfAlpK9xB3iQ=;
+        b=YL6ayZjUy1fQOwcv7TGXpCEKUULxN83gQpmn7BcHeD1xj8rMaPYMqaKeqAEUaYpTJj
+         2/LEX8tZsvt4LJGTdA4rMO+KjtHyv6yCDI6VGf4aSvRF/1ACdsVzpVGvv5+68hlMJk+y
+         ns8OhKYgIO3aHue2Cik3B9IHtqNbB4DdCKf9c79iwYocelYKOZ18sbkjEOqprleoyF1r
+         iNSqltgEBtptVlWBY1K6eb5wKBj4H2sT/3uEEsmWvxAO3/DrFzpOtwVNDqF08l4dUe0F
+         pXkGnB+rKDc5MeGLlg+1bblh/xrdr3VuVnmnu/Cp0R97SGj4//xoC7oYBA1SgeNJgE+/
+         dEGQ==
+X-Gm-Message-State: AOJu0YzV3fF36HkjzdJvaDH2u6NcrZmB7rkjS4wtxB4/fHF4/6mb05zu
+	l+GobjZu4/f0jkDF1wNTTeq+0/BVp9hyiQ==
+X-Google-Smtp-Source: AGHT+IGQznklh9nhBZNDU6/vy6sY0noeGGdH4RaF5VT9ZimkO852B5RHvONjkda8SVCMgyV/k3l8Iw==
+X-Received: by 2002:a17:90b:190f:b0:279:5a3:d5f with SMTP id mp15-20020a17090b190f00b0027905a30d5fmr11974647pjb.9.1696090004913;
+        Sat, 30 Sep 2023 09:06:44 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:a90f:2dad:30c1:d923])
+        by smtp.gmail.com with ESMTPSA id cl1-20020a17090af68100b00277246e857esm3346261pjb.23.2023.09.30.09.06.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 30 Sep 2023 09:06:44 -0700 (PDT)
+Date: Sat, 30 Sep 2023 09:06:41 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Justin Stitt <justinstitt@google.com>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] Input: synaptics-rmi4 - replace deprecated strncpy
+Message-ID: <ZRhHkS8MfnwMlQot@google.com>
+References: <20230921-strncpy-drivers-input-rmi4-rmi_f34-c-v1-1-4aef2e84b8d2@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230929-pxa1908-lkml-v5-0-5aa5a1109c5f@skole.hr>
- <20230929-pxa1908-lkml-v5-7-5aa5a1109c5f@skole.hr> <CACRpkdb=8LU9Mkkn_VDcTGoH1pWn=hp9ZhN5dLm5pykif8cp-w@mail.gmail.com>
- <5715527.DvuYhMxLoT@radijator>
-In-Reply-To: <5715527.DvuYhMxLoT@radijator>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Sat, 30 Sep 2023 17:37:19 +0200
-Message-ID: <CACRpkdYOLjZ2thKdR7JoYxa2gr078AHO6JXu76fUU+dBzG7MPQ@mail.gmail.com>
-Subject: Re: [PATCH RESEND v5 7/8] arm64: dts: Add DTS for Marvell PXA1908 and samsung,coreprimevelte
-To: =?UTF-8?Q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>, 
-	Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: Robert Jarzmik <robert.jarzmik@free.fr>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Andy Shevchenko <andy@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Lubomir Rintel <lkundrak@v3.sk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>, 
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-hardening@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
-	phone-devel@vger.kernel.org, afaerber@suse.de, balejk@matfyz.cz
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230921-strncpy-drivers-input-rmi4-rmi_f34-c-v1-1-4aef2e84b8d2@google.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.6
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Sat, Sep 30, 2023 at 10:25=E2=80=AFAM Duje Mihanovi=C4=87 <duje.mihanovi=
-c@skole.hr> wrote:
-> On Saturday, September 30, 2023 12:05:41 AM CEST Linus Walleij wrote:
-> > But it exists, so I can't say you can't use it. Not my choice.
-> > I understand it is convenient.
-> >
-> > It is possible to switch later, but only if you have a unique
-> > pin controller compatible so please add that.
->
-> Maybe a dumb question. I might want to do this at some point to clean up =
-the
-> device tree a bit, are there any such pinctrl drivers I can use as a
-> reference?
+On Thu, Sep 21, 2023 at 09:58:11AM +0000, Justin Stitt wrote:
+> `strncpy` is deprecated for use on NUL-terminated destination strings [1]
+> 
+> Let's use memcpy() as the bounds have already been checked and this
+> decays into a simple byte copy from one buffer to another removing any
+> ambiguity that strncpy has.
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-Since it's Marvell after all (albeit a descendant of the 20 yo
-PXA platform!) I would expect new Marvell SoCs to be more alike
-the AC5 bindings that Chris Packham merged only last year:
-Documentation/devicetree/bindings/pinctrl/marvell,ac5-pinctrl.yaml
-Driver:
-drivers/pinctrl/mvebu/pinctrl-armada-xp.c
-drivers/pinctrl/mvebu/pinctrl-mvebu.c
+Applied, thank you.
 
-But if this pin controller is more related to PXA (Intel) hardware
-than to either Kirkwood or Armada, you might want to do something
-entirely different. It depends a bit on hardware.
-
-Hardware such as pinctrl-single.c with one mux configuration
-register per pin usually follow the Qualcomm way of doing
-things, which is to simply have one group per pin, then that
-can be associated with desired functions:
-Documentation/devicetree/bindings/pinctrl/qcom,tlmm-common.yaml
-this has the upside of using all the standard bindings for
-bias etc. Driver:
-drivers/pinctrl/qcom/pinctrl-msm.c
-then qualcomm have subdrivers for each SoC calling into this
-so you have to check "real" bindings and drivers such as:
-Documentation/devicetree/bindings/pinctrl/qcom,sm8550-tlmm.yaml
-drivers/pinctrl/qcom/pinctrl-sm8550.c
-
-Yours,
-Linus Walleij
+-- 
+Dmitry
