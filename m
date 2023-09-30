@@ -1,57 +1,56 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46888B678
-	for <linux-hardening@vger.kernel.org>; Sat, 30 Sep 2023 17:57:11 +0000 (UTC)
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDC4BE1
-	for <linux-hardening@vger.kernel.org>; Sat, 30 Sep 2023 10:57:08 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1c3cbfa40d6so136932245ad.1
-        for <linux-hardening@vger.kernel.org>; Sat, 30 Sep 2023 10:57:08 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0EDB668
+	for <linux-hardening@vger.kernel.org>; Sat, 30 Sep 2023 20:57:16 +0000 (UTC)
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C02D1D3
+	for <linux-hardening@vger.kernel.org>; Sat, 30 Sep 2023 13:57:14 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-1c5cd27b1acso137730655ad.2
+        for <linux-hardening@vger.kernel.org>; Sat, 30 Sep 2023 13:57:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1696096628; x=1696701428; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1696107434; x=1696712234; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ye4XTAWb4daUNWZiDSISaHwk+X7iJoEzGWCL7sgi0rE=;
-        b=FggECs0mPLgxcWtFYGjkFui3NvNmMxZ9Xr9H8G4dQUZKr+MYBiC5Z9+4EOt6b2NFiq
-         oybo/ah6svBaPp5fG67JFoOlCUFkroXPiBHV+1iK4ShllGYbaTaH6+Uvw+jsEfuxGJxb
-         LZBz0cWqvi6bN3Ntz0QR+QIxAqbNiqSTWa7E0=
+        bh=F8ShV6E/8QsJOCzMhx8IRO8TVLv4FnaEtvtGItg5wE4=;
+        b=cZxRnjs8xuLe22cyUvJKz48zZ5sPRdbdfhyzq0BhREf8IvBWNBPqtoPu7mW8mTNoyS
+         eHQpHlytoAy+PUhOgmr2UIRIL1X/MsCvfcj5ghkT5XLG7h7hYAV9buucE/BvVC6+ERPR
+         UDs59KQ5ia3ikpBcm8LMWfuNLypcd6LfCyh4k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696096628; x=1696701428;
+        d=1e100.net; s=20230601; t=1696107434; x=1696712234;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ye4XTAWb4daUNWZiDSISaHwk+X7iJoEzGWCL7sgi0rE=;
-        b=gqdFr9CLT6pz12tqamPGiLEMknj/A6jWCLY8R72EowLEoHNTDjyaYAiL94Q31/Hrhv
-         7THOHryXFtP7ikhbldjsZ7TLEUfTG5OZtXhvIx+IACAeqJmcxjAAL79Byv+U6QEf8+EV
-         h4FZUoUdob7XYtLqLCaDaYvljcmtphPzojeFZbrBPxDo5XkVW0Owo9wrzkYvO9nGBhL7
-         EYRa7QuRpKxWYcQ31tC6bG/FqFZs9q39YynsNkCWh4W5jIUKBYIqIonGkTd6mPmrGq15
-         fR1pgB8kM30d/O/P6b7282hD5ux0XCcq2KrHUDiP/+Ng/8npRxV7DctwN+ndqN4Ui23z
-         yWiw==
-X-Gm-Message-State: AOJu0YzOeF08OcoWWoogQIvR6uVyvDcaKjHxZFK+3NKFpBSdaiCr5BKA
-	haKDJJgEJHJhSiOE4mVb6xVIOg==
-X-Google-Smtp-Source: AGHT+IFTEuvq+b7y368t9GEXwnKx90oqxSX/2b3AsPpSe1C2LnJOYtXNrap0hYgQfFUMDxuxcnPy6A==
-X-Received: by 2002:a17:902:ee89:b0:1c5:f68d:cec3 with SMTP id a9-20020a170902ee8900b001c5f68dcec3mr6686648pld.64.1696096628167;
-        Sat, 30 Sep 2023 10:57:08 -0700 (PDT)
+        bh=F8ShV6E/8QsJOCzMhx8IRO8TVLv4FnaEtvtGItg5wE4=;
+        b=jbtJ4uHSlnNq7JHSnVjWOGMNIuLMv0+oW0dX3c8Ax7RnNOue5SIcJCoVYxMRlCtZsA
+         YXUe7ifymkAJYc4zJa/xqMWGFP20rvPA2sUTjNXra9owP7a3MXBEiraISpFByPea6qcg
+         DCAro6Ssr1VSqtaq7Bp543avPgpRIHbX3YkL5m0wI6xUufgN9S3+472naRAheLkVqs05
+         t08YWtJ/4WFA7uMzvW4NSTQ4FTPHHSClOtkyJDv/+oa40FbQ554tTUFqPLXYwWJa1yTM
+         XF8KJvooGXjxJXYgUmNFtyG9g4UalvYE1R7Cq3k4meRLa6fpjR/F0NZR9PmkcIrfbrA/
+         g73g==
+X-Gm-Message-State: AOJu0YyydYe+gZgWODKam3mbJys0SxtfYLo/gyb3zBpHg/iaWztTB1WJ
+	EJ1jA3MtbDSpxIMZnBU4lPvvKQ==
+X-Google-Smtp-Source: AGHT+IF0qsPtMg/V1LWALu0KMhdTxitqAJp89szdV7WijDpDZ83pa5U+dzDtHVCD8w4avxADg/CUcw==
+X-Received: by 2002:a17:903:1247:b0:1bf:8779:e045 with SMTP id u7-20020a170903124700b001bf8779e045mr9024419plh.50.1696107434169;
+        Sat, 30 Sep 2023 13:57:14 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id x10-20020a170902820a00b001c1f161949fsm18920114pln.96.2023.09.30.10.57.06
+        by smtp.gmail.com with ESMTPSA id b12-20020a170903228c00b001bbb7af4963sm19102341plh.68.2023.09.30.13.57.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 30 Sep 2023 10:57:07 -0700 (PDT)
-Date: Sat, 30 Sep 2023 10:57:03 -0700
+        Sat, 30 Sep 2023 13:57:13 -0700 (PDT)
+Date: Sat, 30 Sep 2023 13:57:09 -0700
 From: Kees Cook <keescook@chromium.org>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Justin Stitt <justinstitt@google.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	linux-iio@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] iio: adc: stm32-adc: replace deprecated strncpy
-Message-ID: <202309301056.5A21C37D5@keescook>
-References: <20230921-strncpy-drivers-iio-adc-stm32-adc-c-v1-1-c50eca098597@google.com>
- <202309232006.690F89A@keescook>
- <20230930184118.73d7465a@jic23-huawei>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Ian Abbott <abbotti@mev.co.uk>,
+	H Hartley Sweeten <hsweeten@visionengravers.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org, linux-hardening@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH] comedi: Annotate struct comedi_lrange with __counted_by
+Message-ID: <202309301342.5B5BED40A1@keescook>
+References: <5c3b7459b820e22e2ac6ce892d4aadcc119cc919.1696065263.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -60,84 +59,93 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230930184118.73d7465a@jic23-huawei>
+In-Reply-To: <5c3b7459b820e22e2ac6ce892d4aadcc119cc919.1696065263.git.christophe.jaillet@wanadoo.fr>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.6
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Sat, Sep 30, 2023 at 06:41:18PM +0100, Jonathan Cameron wrote:
-> On Sat, 23 Sep 2023 20:15:09 -0700
-> Kees Cook <keescook@chromium.org> wrote:
+On Sat, Sep 30, 2023 at 11:14:47AM +0200, Christophe JAILLET wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
 > 
-> > On Thu, Sep 21, 2023 at 04:54:00AM +0000, Justin Stitt wrote:
-> > > `strncpy` is deprecated for use on NUL-terminated destination strings [1].
-> > > 
-> > > We should prefer more robust and less ambiguous string interfaces.
-> > > 
-> > > We expect adc->chan_name[val] to be NUL-terminated based on ch_name's
-> > > use within functions that expect NUL-terminated strings like strncmp and
-> > > printf-likes:
-> > > | 	if (!strncmp(stm32_adc_ic[i].name, ch_name, STM32_ADC_CH_SZ)) {
-> > > | 		/* Check internal channel availability */
-> > > | 		switch (i) {
-> > > | 		case STM32_ADC_INT_CH_VDDCORE:
-> > > | 			if (!adc->cfg->regs->or_vddcore.reg)
-> > > | 				dev_warn(&indio_dev->dev,
-> > > | 					 "%s channel not available\n", ch_name);
-> > > ...
-> > > 
-> > > There is no evidence that NUL-padding is needed either.  
-> > 
-> > Agreed -- it's used as a C string everywhere I can see.
-> > 
-> > > 
-> > > Considering the above, a suitable replacement is `strscpy` [2] due to
-> > > the fact that it guarantees NUL-termination on the destination buffer
-> > > without unnecessarily NUL-padding. If, for any reason, NUL-padding _is_
-> > > required we should go for `strscpy_pad`.
-> > > 
-> > > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> > > Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> > > Link: https://github.com/KSPP/linux/issues/90
-> > > Cc: linux-hardening@vger.kernel.org
-> > > Signed-off-by: Justin Stitt <justinstitt@google.com>
-> > > ---
-> > > Note: build-tested
-> > > ---
-> > >  drivers/iio/adc/stm32-adc.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
-> > > index f7613efb870d..9cdcf396d901 100644
-> > > --- a/drivers/iio/adc/stm32-adc.c
-> > > +++ b/drivers/iio/adc/stm32-adc.c
-> > > @@ -2209,7 +2209,7 @@ static int stm32_adc_generic_chan_init(struct iio_dev *indio_dev,
-> > >  				ret = -EINVAL;
-> > >  				goto err;
-> > >  			}
-> > > -			strncpy(adc->chan_name[val], name, STM32_ADC_CH_SZ);
-> > > +			strscpy(adc->chan_name[val], name, STM32_ADC_CH_SZ);  
-> > 
-> > I still prefer sizeof($dst), but yes, these are the same:
-> > 
-> >         char chan_name[STM32_ADC_CH_MAX][STM32_ADC_CH_SZ];
-> > 
-> > If this needs a v2, please improve the Subject, but it is technically
-> > correct, so:
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+> This patch is part of a work done in parallel of what is currently worked
+> on by Kees Cook.
 > 
-> Hi Kees,
+> My patches are only related to corner cases that do NOT match the
+> semantic of his Coccinelle script[1].
+
+Nice!
+
+struct comedi_lrange {
+        int length;
+        struct comedi_krange range[];
+};
+...
+static const struct comedi_lrange range_rti800_ai_10_bipolar = {
+        4, {
+                BIP_RANGE(10),
+                BIP_RANGE(1),
+                BIP_RANGE(0.1),
+                BIP_RANGE(0.02)
+        }
+};
+
+I'm struggling to come up with a way for Coccinelle to find this kind of
+thing in other places...
+
+> In this case, it is been spotted because of comedi_alloc_spriv().
+> All other usages of struct comedi_lrange seem to be static definition of
+> the structure that explicitly set the .length field.
+
+Ah-ha, I found it in drivers/comedi/drivers/das16.c das16_ai_range():
+
+                lrange = comedi_alloc_spriv(s,
+                                            struct_size(lrange, range, 1));
+
+I was also able to find this:
+
+union jr3_pci_single_range {
+        struct comedi_lrange l;
+        char _reserved[offsetof(struct comedi_lrange, range[1])];
+};
+
+Which looks a lot like DEFINE_FLEX:
+https://lore.kernel.org/linux-hardening/20230912115937.1645707-2-przemyslaw.kitszel@intel.com/
+But that above for stack varaibles rather than globals. But I'm way off
+topic now. ;)
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
 > 
-> I can tweak the subject whilst applying.  What did you have in mind
-> as a better one?
-
-I would use "iio: adc: stm32-adc: Replace deprecated strncpy() with strscpy()"
-
-Thanks!
-
--Kees
+> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+> ---
+>  include/linux/comedi/comedidev.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/comedi/comedidev.h b/include/linux/comedi/comedidev.h
+> index 0a1150900ef3..c08416a7364b 100644
+> --- a/include/linux/comedi/comedidev.h
+> +++ b/include/linux/comedi/comedidev.h
+> @@ -633,7 +633,7 @@ extern const struct comedi_lrange range_unknown;
+>   */
+>  struct comedi_lrange {
+>  	int length;
+> -	struct comedi_krange range[];
+> +	struct comedi_krange range[] __counted_by(length);
+>  };
+>  
+>  /**
+> -- 
+> 2.34.1
+> 
 
 -- 
 Kees Cook
