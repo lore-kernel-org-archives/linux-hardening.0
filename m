@@ -1,107 +1,120 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB59515A6
-	for <linux-hardening@vger.kernel.org>; Sat, 30 Sep 2023 11:04:14 +0000 (UTC)
-Received: from mail-vs1-xe32.google.com (mail-vs1-xe32.google.com [IPv6:2607:f8b0:4864:20::e32])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 723C0CA;
-	Sat, 30 Sep 2023 04:04:13 -0700 (PDT)
-Received: by mail-vs1-xe32.google.com with SMTP id ada2fe7eead31-4526c6579afso1096302137.0;
-        Sat, 30 Sep 2023 04:04:13 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905D520F2
+	for <linux-hardening@vger.kernel.org>; Sat, 30 Sep 2023 12:31:43 +0000 (UTC)
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 596FFBD;
+	Sat, 30 Sep 2023 05:31:41 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-690bc3f82a7so12788224b3a.0;
+        Sat, 30 Sep 2023 05:31:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696071852; x=1696676652; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fJo83pwx4y7gaRZ8bey8OSQgDQ8Tv3HF9f55YMBadbY=;
-        b=aP39uq4xPESzyElD1xyo5SmtwAiJ1LP5/dqlMERS2bF7kLP/CTgoOYcUsR9EPFdmsZ
-         n0Huf8YvLlUJ6K/y0QC2sntpMWXgTExpZ8AEMCpleaGqwR89LxkQVLLcNZG8hfxr2jQo
-         N1SPm0CpvBcyk1pRCEfouwElfvgBnsQLsqbwMj17NHIMGXYNbCMSPVIVjUNmyIePiHS+
-         U+nTQowuoxjha4hRQEqSftHLx9D3ynspzNc5BvsNZ2nAMUpcUNiJC7mE9zUOAJ8ausGv
-         xIqqs5lDYKRqxjxPTR0Uca4SPlTNjtcDM8xAssurtN+8lRH7VCDMAMmt2FBK5bYn6lbo
-         GkAQ==
+        d=gmail.com; s=20230601; t=1696077101; x=1696681901; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=0PEuv1JE1ji/lSxoZu0EKZ3PyEQs2C6XzXKupEO4HsI=;
+        b=g+zXLR7zeIamobd1EhaifgMeW3Z2kHjB58mZ4DDfMxJnRs9U66ovnop9/uRr4k83cs
+         jUwx7Q6X0KywFIjbAwacCZ+oVX0YoTeUeP9NkusJGBmXZyySb4CQDqzFJGIROr24D84h
+         3Z+ieegFlFeK+zWsoQfNryGd+TeE5stkgdczMJWNJGiZ+gI0cHYaie5sX9PvWFAyEbhr
+         v0FvurisjzUy3o8Rw0tXDws5jDWfb/0HY+q1lcAJt3LI7fQSBenJbJudF7+UmJpdVxZu
+         7ElO4wwFW/Ufj19ht26oJedSrXgZTBli3O+c6uauSUl7ghTbFsI+XcOxjYVeclooVi0p
+         O4NQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696071852; x=1696676652;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fJo83pwx4y7gaRZ8bey8OSQgDQ8Tv3HF9f55YMBadbY=;
-        b=a7GlLy76iBo7tg+zuE5jaCFnmkO/FhFbPKLkrXYg9Dy3N9f+iYCA62zAXutPyx1zmw
-         E/jWj1fOviPoZmZIMs9eLMgmbvtV91qGbmewbuzB5pkNjcxuv7Zy460mpvt1/fr4PyIr
-         0BYVXXOEIqLGWkNXeovXuxvaRpWHGI+jI7oOxcps6Ht7UZUMJFUeipapBZAxQwrZAtmd
-         kJbQg/60sHGygMFWHJUMccbJ9k7Wfuvs1tVyRrksV2rDdgUfxJPA6pUR4Bg9mNzvL1RJ
-         5fVWvgYVXP7odKXpWToGI9HdW9DhRq4HPb1q0dHGDVniXbRalW/QXBT6KNKuMkU1HjWJ
-         /h+g==
-X-Gm-Message-State: AOJu0YzSbIBQKusMqRlqDEhyXGUu+DhLFzgaWOgO/tD+O1ANACLTDsnZ
-	7zHj18KE+gnQSAaEneWTvdt+Zt30mA1iX92U/Jw=
-X-Google-Smtp-Source: AGHT+IE2qF/n7ShtQDqO7HPLK5FDKy2SymdW2yn4PQByIVeeaU1qQHfQj8OmZG4uK+8n2mr3IzPZWyYWBbSRlWktX0A=
-X-Received: by 2002:a05:6102:5587:b0:452:6cea:89b7 with SMTP id
- dc7-20020a056102558700b004526cea89b7mr3719924vsb.14.1696071852334; Sat, 30
- Sep 2023 04:04:12 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1696077101; x=1696681901;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0PEuv1JE1ji/lSxoZu0EKZ3PyEQs2C6XzXKupEO4HsI=;
+        b=CaHbJZpBTmp6d9/dNWnxMXKCX02k2kLtZ2D7srzi0tNvy1V2aNrixumJ/Sw46SORc+
+         lGxW0028WL06D6E1BD0qHyZW+c1Er9njIdoDoeQBmf1HMFxRXDU2jlLVEbln+z0Dh8DT
+         HpsYWbhvLz+TDzFTHui1+C2sH3+Ckotjwo96/lrkd7Hz3MmnZpjjOFC3vGnsuKR3bPFJ
+         ISGW/IflSAAmxxmUjY3tOPm8VNi2y1upyvSu+E8nW1iikYGVR2ffs2WZNVScTw8Fj3mw
+         c9jjk9WxYo5JQarSKy7JZidu/sAQ3lSUIkz9TD+XpxmDUAOUfDtroFeC3SdPL5OLAiVD
+         TfGQ==
+X-Gm-Message-State: AOJu0Yxdo4WaufLNc0b0GGIE1FiXi4w9rlde61M1z4mynwCo75XSuuDq
+	tl4cZHAJsFIN5U989VyHQ74=
+X-Google-Smtp-Source: AGHT+IEhI7eA8uS9H8VpG7zI0niIhieHYI5PZG8NgJ2DvP5MEnONifsqFETJAiDku+qqJ+SYqEFV2A==
+X-Received: by 2002:a05:6a00:24c6:b0:68c:2be:67bb with SMTP id d6-20020a056a0024c600b0068c02be67bbmr7158316pfv.20.1696077100602;
+        Sat, 30 Sep 2023 05:31:40 -0700 (PDT)
+Received: from [192.168.0.106] ([103.131.18.64])
+        by smtp.gmail.com with ESMTPSA id e25-20020a62ee19000000b00690d9901ce5sm7900536pfi.102.2023.09.30.05.31.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 30 Sep 2023 05:31:39 -0700 (PDT)
+Message-ID: <da91c950-51c0-4c71-855e-ae11898a97f5@gmail.com>
+Date: Sat, 30 Sep 2023 19:31:34 +0700
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230915105933.495735-1-matteorizzo@google.com> <20230915105933.495735-2-matteorizzo@google.com>
-In-Reply-To: <20230915105933.495735-2-matteorizzo@google.com>
-From: Hyeonggon Yoo <42.hyeyoo@gmail.com>
-Date: Sat, 30 Sep 2023 20:04:00 +0900
-Message-ID: <CAB=+i9RQiDWE6ignfKn2p+UiDF9W=jAuqsmYhHrO9h06+X-pKA@mail.gmail.com>
-Subject: Re: [RFC PATCH 01/14] mm/slub: don't try to dereference invalid freepointers
-To: Matteo Rizzo <matteorizzo@google.com>
-Cc: cl@linux.com, penberg@kernel.org, rientjes@google.com, 
-	iamjoonsoo.kim@lge.com, akpm@linux-foundation.org, vbabka@suse.cz, 
-	roman.gushchin@linux.dev, keescook@chromium.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, 
-	linux-hardening@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com, 
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
-	corbet@lwn.net, luto@kernel.org, peterz@infradead.org, jannh@google.com, 
-	evn@google.com, poprdi@google.com, jordyzomer@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-0.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,HK_RANDOM_ENVFROM,
-	HK_RANDOM_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
+User-Agent: Mozilla Thunderbird
+Subject: Re: Fwd: Performance regression: resume_console takes 100ms longer in
+ S2idle/S3 resume in v6.6-rc1
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: John Ogness <john.ogness@linutronix.de>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>, Petr Mladek
+ <pmladek@suse.com>, Todd Brandt <todd.e.brandt@intel.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>,
+ Linux Hardening <linux-hardening@vger.kernel.org>
+References: <99b9d4d1-f7a9-4b6c-aebf-ef1d2ddee0d7@gmail.com>
+Content-Language: en-US
+In-Reply-To: <99b9d4d1-f7a9-4b6c-aebf-ef1d2ddee0d7@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Fri, Sep 15, 2023 at 7:59=E2=80=AFPM Matteo Rizzo <matteorizzo@google.co=
-m> wrote:
->
-> slab_free_freelist_hook tries to read a freelist pointer from the
-> current object even when freeing a single object. This is invalid
-> because single objects don't actually contain a freelist pointer when
-> they're freed and the memory contains other data. This causes problems
-> for checking the integrity of freelist in get_freepointer.
->
-> Signed-off-by: Matteo Rizzo <matteorizzo@google.com>
-> ---
->  mm/slub.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/mm/slub.c b/mm/slub.c
-> index f7940048138c..a7dae207c2d2 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -1820,7 +1820,9 @@ static inline bool slab_free_freelist_hook(struct k=
-mem_cache *s,
->
->         do {
->                 object =3D next;
-> -               next =3D get_freepointer(s, object);
-> +               /* Single objects don't actually contain a freepointer */
-> +               if (object !=3D old_tail)
-> +                       next =3D get_freepointer(s, object);
->
->                 /* If object's reuse doesn't have to be delayed */
->                 if (!slab_free_hook(s, object, slab_want_init_on_free(s))=
-) {
-> --
-> 2.42.0.459.ge4e396fd5e-goog
->
+On 28/09/2023 07:17, Bagas Sanjaya wrote:
+> Hi,
+> 
+> I notice a regression report on Bugzilla [1]. Quoting from it:
+> 
+>> Ever since 6.6.0-rc1 we've seen S3 and S2idle resume take 100ms longer because of resume_comsole. resume_console ordinarily takes only a few milliseconds, but now it's consistently 100ms. I've bisected the issue to this commit:
+>>
+>> commit 9e70a5e109a4a23367810de09be826c52d27ee2f
+>> Author: John Ogness <john.ogness@linutronix.de>
+>> Date:   Mon Jul 17 21:52:06 2023 +0206
+>>
+>>     printk: Add per-console suspended state
+>>     
+>>     Currently the global @console_suspended is used to determine if
+>>     consoles are in a suspended state. Its primary purpose is to allow
+>>     usage of the console_lock when suspended without causing console
+>>     printing. It is synchronized by the console_lock.
+>>     
+>>     Rather than relying on the console_lock to determine suspended
+>>     state, make it an official per-console state that is set within
+>>     console->flags. This allows the state to be queried via SRCU.
+>>     
+>>     Remove @console_suspended. Console printing will still be avoided
+>>     when suspended because console_is_usable() returns false when
+>>     the new suspended flag is set for that console.
+>>
+>> We are seeing this on roughly 2/3 of our machines, both on test systems and production systems.
+> 
+> Then,
+> 
+>> The effect is most pronounced in the GigaByte z170x UD5. It goes from 300ms to 400ms because of an msleep 100 in the resume_console code. This might not seem like much but it's in series with everything else so it will always be there. Our goal is to keep both suspend and resume under 1 second if at all possible, so every bit counts.
+> 
+> See Bugzilla for the full thread and attached sleepgraph timelines
+> (in html format).
+> 
+> Anyway, I'm adding this regression to be tracked by regzbot:
+> 
+> #regzbot introduced: 9e70a5e109a4a2 https://bugzilla.kernel.org/show_bug.cgi?id=217955
+> #regzbot title: resume_console performance regression due to per-console suspended state
+> 
 
-Looks good to me,
-Reviewed-by: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+#regzbot fix: printk: flush consoles before checking progress
+
+-- 
+An old man doll... just what I always wanted! - Clara
+
