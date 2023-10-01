@@ -1,146 +1,159 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06482AD35
-	for <linux-hardening@vger.kernel.org>; Sun,  1 Oct 2023 07:45:45 +0000 (UTC)
-Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D92BAC2;
-	Sun,  1 Oct 2023 00:45:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=HErumfQldrZ1wEAyapunbIKIjtch5VpFsR6qI9KUJ58=;
-  b=dvJxunxcAAF9RE+E67eRBJamxQtvEHk9DK6p9GV/Ku+VnWJlkR3aFP7S
-   HKheznWnSAH41GJxiZpIMcvi6dA0oM0iNwXnk43vHh7W0IN0FHBfQ4Dfg
-   QjCU/4hS/CDm02LQarZa3bgivW9k72emllYOZ/odOX3XpW4DwmvM34hL2
-   w=;
-Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="6.03,191,1694728800"; 
-   d="scan'208";a="67431193"
-Received: from 231.85.89.92.rev.sfr.net (HELO hadrien) ([92.89.85.231])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2023 09:45:42 +0200
-Date: Sun, 1 Oct 2023 09:45:41 +0200 (CEST)
-From: Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To: Kees Cook <keescook@chromium.org>
-cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>, 
-    Ian Abbott <abbotti@mev.co.uk>, 
-    H Hartley Sweeten <hsweeten@visionengravers.com>, 
-    "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-    Nathan Chancellor <nathan@kernel.org>, 
-    Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>, 
-    linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org, 
-    linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH] comedi: Annotate struct comedi_lrange with
- __counted_by
-In-Reply-To: <202309301342.5B5BED40A1@keescook>
-Message-ID: <alpine.DEB.2.22.394.2310010945130.3166@hadrien>
-References: <5c3b7459b820e22e2ac6ce892d4aadcc119cc919.1696065263.git.christophe.jaillet@wanadoo.fr> <202309301342.5B5BED40A1@keescook>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C114ABA58
+	for <linux-hardening@vger.kernel.org>; Sun,  1 Oct 2023 07:49:26 +0000 (UTC)
+Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 103EBD8
+	for <linux-hardening@vger.kernel.org>; Sun,  1 Oct 2023 00:49:25 -0700 (PDT)
+Received: from eig-obgw-6003a.ext.cloudfilter.net ([10.0.30.151])
+	by cmsmtp with ESMTP
+	id mekpqHFRwMZBkmrCeq6e1W; Sun, 01 Oct 2023 07:49:24 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id mrCdqqyW0Qjw7mrCeq0l0O; Sun, 01 Oct 2023 07:49:24 +0000
+X-Authority-Analysis: v=2.4 cv=YqYc+qUX c=1 sm=1 tr=0 ts=65192484
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=P7XfKmiOJ4/qXqHZrN7ymg==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=bhdUkHdE2iEA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
+ a=NEAV23lmAAAA:8 a=cLZyiMI5l2q1nrJyhZUA:9 a=QEXdDO2ut3YA:10
+ a=AjGcO6oz07-iQ99wixmX:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=ctbPsvlFsKyDYeo7FjRggIA8ffQtTboXoPN4rM9I5Ak=; b=U+nXmy3Z6LSZdtXmnO3XiLegSK
+	kdboceARJMpolXbgZGHt1Q1rWpezLjLdiErLTqBd2mzmn3CC3IbiBpOMxWiqAp8bsn6hZ20xwEYBI
+	3nwEETsTZoe9O9rniIN+IWKzHpl3uvm4f6T0BV3wfu+YALy2zdzRmSwi5nc+7o4GMS0g/FPpTwSUb
+	IYlNt64qP9L7Gn0FIRsijCjALoZmQyXHc1aaYEqI6njCWnSOl6psjMYnltkCeJTa/zQbEvJom0JQc
+	1LC6bqtPcC1cw6RW9r3MiztBpSwz4HVLA+8hCMQfbgLgTlPca2HgkSyZTzIgfyiyO7aVtZg3b38T+
+	otR7PGDQ==;
+Received: from [94.239.20.48] (port=43776 helo=[192.168.1.98])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1qmrCb-002Jj3-1w;
+	Sun, 01 Oct 2023 02:49:21 -0500
+Message-ID: <1bcde585-f740-8959-6e2e-19793795b60e@embeddedor.com>
+Date: Sun, 1 Oct 2023 09:49:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH] mtd: rawnand: rockchip: Use struct_size()
+Content-Language: en-US
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Heiko Stuebner <heiko@sntech.de>, Kees Cook <keescook@chromium.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>
+Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-hardening@vger.kernel.org,
+ llvm@lists.linux.dev
+References: <481721c2c7fe570b4027dbe231d523961c953d5a.1696146232.git.christophe.jaillet@wanadoo.fr>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <481721c2c7fe570b4027dbe231d523961c953d5a.1696146232.git.christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 94.239.20.48
+X-Source-L: No
+X-Exim-ID: 1qmrCb-002Jj3-1w
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.98]) [94.239.20.48]:43776
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 15
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfGEyiv696OZF8V9cXTLihcxIteyvAqiArG2QRu/2+zu9WIJ3Eo4JpgsT6oAguEpt5ohLehN4CV/EKqinvU1qCiPWdpRfs3hUUr0+eXABotBf3JuXC12q
+ feavPIQ5g5UMUD+JRSQ0yWh6HxeT41s0xw5GVF8NgsSF65kSRfd+UwvkR229glGV1Ca3kMlSfwQfsq5naBQaZnfkj0strXtMhjzVlHeltaVkjTpg1Cvh/9Tj
+X-Spam-Status: No, score=-5.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
 
 
-On Sat, 30 Sep 2023, Kees Cook wrote:
+On 10/1/23 09:44, Christophe JAILLET wrote:
+> Use struct_size() instead of hand writing it.
+> This is less verbose and more robust.
+> 
+> While at it, prepare for the coming implementation by GCC and Clang of the
+> __counted_by attribute. Flexible array members annotated with __counted_by
+> can have their accesses bounds-checked at run-time checking via
+> CONFIG_UBSAN_BOUNDS (for array indexing) and CONFIG_FORTIFY_SOURCE (for
+> strcpy/memcpy-family functions).
 
-> On Sat, Sep 30, 2023 at 11:14:47AM +0200, Christophe JAILLET wrote:
-> > Prepare for the coming implementation by GCC and Clang of the __counted_by
-> > attribute. Flexible array members annotated with __counted_by can have
-> > their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-> > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> > functions).
-> >
-> > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> > ---
-> > This patch is part of a work done in parallel of what is currently worked
-> > on by Kees Cook.
-> >
-> > My patches are only related to corner cases that do NOT match the
-> > semantic of his Coccinelle script[1].
->
-> Nice!
->
-> struct comedi_lrange {
->         int length;
->         struct comedi_krange range[];
-> };
-> ...
-> static const struct comedi_lrange range_rti800_ai_10_bipolar = {
->         4, {
->                 BIP_RANGE(10),
->                 BIP_RANGE(1),
->                 BIP_RANGE(0.1),
->                 BIP_RANGE(0.02)
->         }
-> };
->
-> I'm struggling to come up with a way for Coccinelle to find this kind of
-> thing in other places...
+Again, I'd prefer this as two separate patches.
 
-Kees, what exactly are you trying to match?  Static allocations?
+> 
+> Also remove a useless comment about the position of a flex-array in a
+> structure.
+> 
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-julia
+In any case:
 
->
-> > In this case, it is been spotted because of comedi_alloc_spriv().
-> > All other usages of struct comedi_lrange seem to be static definition of
-> > the structure that explicitly set the .length field.
->
-> Ah-ha, I found it in drivers/comedi/drivers/das16.c das16_ai_range():
->
->                 lrange = comedi_alloc_spriv(s,
->                                             struct_size(lrange, range, 1));
->
-> I was also able to find this:
->
-> union jr3_pci_single_range {
->         struct comedi_lrange l;
->         char _reserved[offsetof(struct comedi_lrange, range[1])];
-> };
->
-> Which looks a lot like DEFINE_FLEX:
-> https://lore.kernel.org/linux-hardening/20230912115937.1645707-2-przemyslaw.kitszel@intel.com/
-> But that above for stack varaibles rather than globals. But I'm way off
-> topic now. ;)
->
-> Reviewed-by: Kees Cook <keescook@chromium.org>
->
-> >
-> > [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
-> > ---
-> >  include/linux/comedi/comedidev.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/include/linux/comedi/comedidev.h b/include/linux/comedi/comedidev.h
-> > index 0a1150900ef3..c08416a7364b 100644
-> > --- a/include/linux/comedi/comedidev.h
-> > +++ b/include/linux/comedi/comedidev.h
-> > @@ -633,7 +633,7 @@ extern const struct comedi_lrange range_unknown;
-> >   */
-> >  struct comedi_lrange {
-> >  	int length;
-> > -	struct comedi_krange range[];
-> > +	struct comedi_krange range[] __counted_by(length);
-> >  };
-> >
-> >  /**
-> > --
-> > 2.34.1
-> >
->
-> --
-> Kees Cook
->
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Thanks
+-- 
+Gustavo
+
+> ---
+> This patch is part of a work done in parallel of what is currently worked
+> on by Kees Cook.
+> 
+> My patches are only related to corner cases that do NOT match the
+> semantic of his Coccinelle script[1].
+> 
+> In this case, struct_size() was not used to compute the size needed for the
+> structure and its flex array.
+> 
+> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+> ---
+>   drivers/mtd/nand/raw/rockchip-nand-controller.c | 5 ++---
+>   1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/mtd/nand/raw/rockchip-nand-controller.c b/drivers/mtd/nand/raw/rockchip-nand-controller.c
+> index 5bc90ffa721f..596cf9a78274 100644
+> --- a/drivers/mtd/nand/raw/rockchip-nand-controller.c
+> +++ b/drivers/mtd/nand/raw/rockchip-nand-controller.c
+> @@ -158,8 +158,7 @@ struct rk_nfc_nand_chip {
+>   	u32 timing;
+>   
+>   	u8 nsels;
+> -	u8 sels[];
+> -	/* Nothing after this field. */
+> +	u8 sels[] __counted_by(nsels);
+>   };
+>   
+>   struct rk_nfc {
+> @@ -1119,7 +1118,7 @@ static int rk_nfc_nand_chip_init(struct device *dev, struct rk_nfc *nfc,
+>   		return -EINVAL;
+>   	}
+>   
+> -	rknand = devm_kzalloc(dev, sizeof(*rknand) + nsels * sizeof(u8),
+> +	rknand = devm_kzalloc(dev, struct_size(rknand, sels, nsels),
+>   			      GFP_KERNEL);
+>   	if (!rknand)
+>   		return -ENOMEM;
