@@ -1,113 +1,163 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C5E88F6A
-	for <linux-hardening@vger.kernel.org>; Sun,  1 Oct 2023 07:14:11 +0000 (UTC)
-Received: from smtp.smtpout.orange.fr (smtp-16.smtpout.orange.fr [80.12.242.16])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C431C2
-	for <linux-hardening@vger.kernel.org>; Sun,  1 Oct 2023 00:14:08 -0700 (PDT)
-Received: from pop-os.home ([86.243.2.178])
-	by smtp.orange.fr with ESMTPA
-	id mqeRqDkx1FUAImqeRqiyTX; Sun, 01 Oct 2023 09:14:06 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1696144446;
-	bh=Dz1UeOwZ8D3gWqhd347/K4+hqBwOzPrkQWzzaVtlMzY=;
-	h=From:To:Cc:Subject:Date;
-	b=PQawNpi9kuc2NtZ7RgyVhcDO425+uGUgiUz6D13ulhKLSwmkQA6wWu5hiT3J7Y8jk
-	 yNpNrMK0R4GbtAYoC2a2VMHMzWQ9V6tvquetNHnhGvTEs0SQ5gdTplEfBq1YQS9oSo
-	 oBXRPQBNWDuHO8Pxj0lh898dN6EUpyq1V36bV1nORSquzqw9j6G7wVlN4byFgd6Gys
-	 9x8wYJabPmpFjO6ito9ye6c8yerJR22PSZNtmTNz1TtPlUoEFGRxwtTVa5i7i9JRQG
-	 nw37iCpgVbnGPr7+1Su7hBZBnhnCPkGur3OSgLSK22yUrj8Vb20JHP3FN/MZNrebVi
-	 Kgr34PBPFnnmg==
-X-ME-Helo: pop-os.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 01 Oct 2023 09:14:06 +0200
-X-ME-IP: 86.243.2.178
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Kent Overstreet <kent.overstreet@linux.dev>,
-	Brian Foster <bfoster@redhat.com>,
-	Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Tom Rix <trix@redhat.com>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-bcachefs@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH] bcachefs: Use struct_size()
-Date: Sun,  1 Oct 2023 09:13:54 +0200
-Message-Id: <120b638f99b088f91d5a4491c800463c554e70b8.1696144401.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FBB828FC
+	for <linux-hardening@vger.kernel.org>; Sun,  1 Oct 2023 07:25:12 +0000 (UTC)
+Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BE81BF;
+	Sun,  1 Oct 2023 00:25:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=inria.fr; s=dc;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=ojMGvfX4EQDBSjYC40hfQgCdDjoAMF7YsfOIfh6s8Lo=;
+  b=uHY2qLaZzbaNayyA7pb/uFAQ6qNO5z1SEJna0zofg4j98bZOCu9vtqD5
+   PMHTQAQkGKCrMNBCDSx45A5wgw6UrNQQCaQ4tJEqH5DBk7iExxGqDkFN4
+   8/QFdqwXsC0o8mHsskDDRfOJQhweB/n6LpsyZl9dXFUaw28hhjI+eyKeV
+   Q=;
+Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="6.03,191,1694728800"; 
+   d="scan'208";a="67430614"
+Received: from 231.85.89.92.rev.sfr.net (HELO hadrien) ([92.89.85.231])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2023 09:25:09 +0200
+Date: Sun, 1 Oct 2023 09:25:07 +0200 (CEST)
+From: Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To: Kees Cook <keescook@chromium.org>
+cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>, 
+    Ian Abbott <abbotti@mev.co.uk>, 
+    H Hartley Sweeten <hsweeten@visionengravers.com>, 
+    "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+    Nathan Chancellor <nathan@kernel.org>, 
+    Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>, 
+    linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org, 
+    linux-hardening@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH] comedi: Annotate struct comedi_lrange with
+ __counted_by
+In-Reply-To: <202309301342.5B5BED40A1@keescook>
+Message-ID: <alpine.DEB.2.22.394.2310010922250.3166@hadrien>
+References: <5c3b7459b820e22e2ac6ce892d4aadcc119cc919.1696065263.git.christophe.jaillet@wanadoo.fr> <202309301342.5B5BED40A1@keescook>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.6
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+	RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Use struct_size() instead of hand writing it.
-This is less verbose and more robust.
 
-While at it, prepare for the coming implementation by GCC and Clang of the
-__counted_by attribute. Flexible array members annotated with __counted_by
-can have their accesses bounds-checked at run-time checking via
-CONFIG_UBSAN_BOUNDS (for array indexing) and CONFIG_FORTIFY_SOURCE (for
-strcpy/memcpy-family functions).
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-This patch is part of a work done in parallel of what is currently worked
-on by Kees Cook.
+On Sat, 30 Sep 2023, Kees Cook wrote:
 
-My patches are only related to corner cases that do NOT match the
-semantic of his Coccinelle script[1].
+> On Sat, Sep 30, 2023 at 11:14:47AM +0200, Christophe JAILLET wrote:
+> > Prepare for the coming implementation by GCC and Clang of the __counted_by
+> > attribute. Flexible array members annotated with __counted_by can have
+> > their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+> > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> > functions).
+> >
+> > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> > ---
+> > This patch is part of a work done in parallel of what is currently worked
+> > on by Kees Cook.
+> >
+> > My patches are only related to corner cases that do NOT match the
+> > semantic of his Coccinelle script[1].
+>
+> Nice!
+>
+> struct comedi_lrange {
+>         int length;
+>         struct comedi_krange range[];
+> };
+> ...
+> static const struct comedi_lrange range_rti800_ai_10_bipolar = {
+>         4, {
+>                 BIP_RANGE(10),
+>                 BIP_RANGE(1),
+>                 BIP_RANGE(0.1),
+>                 BIP_RANGE(0.02)
+>         }
+> };
+>
+> I'm struggling to come up with a way for Coccinelle to find this kind of
+> thing in other places...
+>
+> > In this case, it is been spotted because of comedi_alloc_spriv().
+> > All other usages of struct comedi_lrange seem to be static definition of
+> > the structure that explicitly set the .length field.
+>
+> Ah-ha, I found it in drivers/comedi/drivers/das16.c das16_ai_range():
+>
+>                 lrange = comedi_alloc_spriv(s,
+>                                             struct_size(lrange, range, 1));
 
-In this case, struct_size() was not used to compute the size needed for the
-structure and its flex array.
+This is not found due to the regular expression used for the name of the
+alloc function.  Maybe you could drop it entirely?  Maybe you could just
+check for alloc somewhere in the string?
 
-[1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
----
- fs/bcachefs/disk_groups.c | 3 +--
- fs/bcachefs/super_types.h | 2 +-
- 2 files changed, 2 insertions(+), 3 deletions(-)
+identifier ALLOC =~ "alloc";
 
-diff --git a/fs/bcachefs/disk_groups.c b/fs/bcachefs/disk_groups.c
-index b292dbef7992..224efa917427 100644
---- a/fs/bcachefs/disk_groups.c
-+++ b/fs/bcachefs/disk_groups.c
-@@ -166,8 +166,7 @@ int bch2_sb_disk_groups_to_cpu(struct bch_fs *c)
- 	if (!groups)
- 		return 0;
- 
--	cpu_g = kzalloc(sizeof(*cpu_g) +
--			sizeof(cpu_g->entries[0]) * nr_groups, GFP_KERNEL);
-+	cpu_g = kzalloc(struct_size(cpu_g, entries, nr_groups), GFP_KERNEL);
- 	if (!cpu_g)
- 		return -BCH_ERR_ENOMEM_disk_groups_to_cpu;
- 
-diff --git a/fs/bcachefs/super_types.h b/fs/bcachefs/super_types.h
-index 597a8db73585..78d6138db62d 100644
---- a/fs/bcachefs/super_types.h
-+++ b/fs/bcachefs/super_types.h
-@@ -46,7 +46,7 @@ struct bch_disk_group_cpu {
- struct bch_disk_groups_cpu {
- 	struct rcu_head			rcu;
- 	unsigned			nr;
--	struct bch_disk_group_cpu	entries[];
-+	struct bch_disk_group_cpu	entries[] __counted_by(nr);
- };
- 
- #endif /* _BCACHEFS_SUPER_TYPES_H */
--- 
-2.34.1
+works in this case.
 
+Also, I see in the link that you have:
+
+// Options: --all-includes
+
+You can actually force this by putting
+
+#spatch --all-includes
+
+and any other options you want.
+
+julia
+
+
+>
+> I was also able to find this:
+>
+> union jr3_pci_single_range {
+>         struct comedi_lrange l;
+>         char _reserved[offsetof(struct comedi_lrange, range[1])];
+> };
+>
+> Which looks a lot like DEFINE_FLEX:
+> https://lore.kernel.org/linux-hardening/20230912115937.1645707-2-przemyslaw.kitszel@intel.com/
+> But that above for stack varaibles rather than globals. But I'm way off
+> topic now. ;)
+>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+>
+> >
+> > [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+> > ---
+> >  include/linux/comedi/comedidev.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/include/linux/comedi/comedidev.h b/include/linux/comedi/comedidev.h
+> > index 0a1150900ef3..c08416a7364b 100644
+> > --- a/include/linux/comedi/comedidev.h
+> > +++ b/include/linux/comedi/comedidev.h
+> > @@ -633,7 +633,7 @@ extern const struct comedi_lrange range_unknown;
+> >   */
+> >  struct comedi_lrange {
+> >  	int length;
+> > -	struct comedi_krange range[];
+> > +	struct comedi_krange range[] __counted_by(length);
+> >  };
+> >
+> >  /**
+> > --
+> > 2.34.1
+> >
+>
+> --
+> Kees Cook
+>
