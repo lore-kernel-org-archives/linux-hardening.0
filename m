@@ -1,45 +1,43 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1271E8F5A
-	for <linux-hardening@vger.kernel.org>; Sun,  1 Oct 2023 06:37:17 +0000 (UTC)
-Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25585BF
-	for <linux-hardening@vger.kernel.org>; Sat, 30 Sep 2023 23:37:16 -0700 (PDT)
-Received: from eig-obgw-5008a.ext.cloudfilter.net ([10.0.29.246])
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDA1DAD27
+	for <linux-hardening@vger.kernel.org>; Sun,  1 Oct 2023 06:43:50 +0000 (UTC)
+Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF483BF
+	for <linux-hardening@vger.kernel.org>; Sat, 30 Sep 2023 23:43:49 -0700 (PDT)
+Received: from eig-obgw-6010a.ext.cloudfilter.net ([10.0.30.248])
 	by cmsmtp with ESMTP
-	id mm6Aq4RrhnGhUmq4pqYqY6; Sun, 01 Oct 2023 06:37:15 +0000
+	id mm65qKutBNWIemqBAqtGlS; Sun, 01 Oct 2023 06:43:49 +0000
 Received: from gator4166.hostgator.com ([108.167.133.22])
 	by cmsmtp with ESMTPS
-	id mq4oqqeQTD0hHmq4pqLCkT; Sun, 01 Oct 2023 06:37:15 +0000
-X-Authority-Analysis: v=2.4 cv=HacH8wI8 c=1 sm=1 tr=0 ts=6519139b
+	id mqBAqAKo1PoqfmqBAqur0m; Sun, 01 Oct 2023 06:43:48 +0000
+X-Authority-Analysis: v=2.4 cv=BbLLb5h2 c=1 sm=1 tr=0 ts=65191524
  a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=P7XfKmiOJ4/qXqHZrN7ymg==:17
  a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=bhdUkHdE2iEA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
- a=AGRr4plBAAAA:8 a=J1Y8HTJGAAAA:8 a=1XWaLZrsAAAA:8 a=VwQbUJbxAAAA:8
- a=20KFwNOVAAAA:8 a=cm27Pg_UAAAA:8 a=mPYTGMt3QxH6nEoWC7IA:9 a=QEXdDO2ut3YA:10
- a=bOnWt3ThIoLzEnqt84vq:22 a=y1Q9-5lHfBjTkpIzbSAN:22 a=AjGcO6oz07-iQ99wixmX:22
- a=xmb-EsYY8bH0VWELuYED:22
+ a=IkcTkHD0fZMA:10 a=bhdUkHdE2iEA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
+ a=NEAV23lmAAAA:8 a=HvF037n1xESchLcPDVoA:9 a=QEXdDO2ut3YA:10
+ a=AjGcO6oz07-iQ99wixmX:22
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
 	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
 	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
 	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=g5MdlvfGn5PBnddiBG+HppV2yyn6X8aIPOkd1eWAi/E=; b=gc/CvdPXluVMA4b22ec4rdThNR
-	kTNLg06RI1qYPqDnrh1UtGQElDVx45pBTFIZ3n5GRQln0A5xPVLExDC59KLfFdAqWia5GxXjpv9t/
-	BUK7YuNgUOUEKL4e+cY03oYk6B8FpuCe+7kWqxDbXfqTXDk55+H0BaPUGSuv+Knt9EzsZeOIWYEDF
-	m0DZdP4yBTpCkuEwKa1mCMdEw0g5kLpKYQJ36y0qK18g3gaZGcyrNEyAdzQjZLmMmxQc68wu0QBT/
-	kiUt0BjaNO8zrfJZX2tj4KbueCc54t6KjmvSo9tJPg2KRViirUK7lx8VxfAFT5f1HRXv5jwyPzJjs
-	ftXbe+zw==;
-Received: from [94.239.20.48] (port=37250 helo=[192.168.1.98])
+	bh=ZuglWOHeRktdc1SI7fZMrBNHt7pae0GyCoYbfoLsddc=; b=GFdvOHVqx5Ih/kinRsGsl14I4H
+	XwgD7x624J2I2bdWybbFp0blj7IipDqTb2ve8qeM1Zr6SStvdA1RDj4fLKTA+gu+Px53PQkTEfhPA
+	F8Tdj5L0w+fk1NcqtKULEGRfDKe/H/V3lDCCDS81uwTDIVSeCIwuGj/Rr51EDxyHU4mQoTYnjRS7z
+	Een0yBKUVeStFKGXsILzuV55OhL0zibUcfe4sRvsi54GMD5jthFMPrKwLdJY4gHBpPRkyP8SvuaFJ
+	ZOO2FqckXRE0UWVQngqNNafYK6Jhr8b7I5R4gQhhYBNf/529jWdDw2iPKECUyLMULWp7JFPZM4X6r
+	KLmBhQDg==;
+Received: from [94.239.20.48] (port=48958 helo=[192.168.1.98])
 	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.96)
 	(envelope-from <gustavo@embeddedor.com>)
-	id 1qmq4m-001KXe-27;
-	Sun, 01 Oct 2023 01:37:12 -0500
-Message-ID: <0e75f94b-0322-cca4-d720-efc784b385e8@embeddedor.com>
-Date: Sun, 1 Oct 2023 08:37:06 +0200
+	id 1qmqB8-001P7H-25;
+	Sun, 01 Oct 2023 01:43:46 -0500
+Message-ID: <935d0577-4a6a-eb84-6ae0-f1efa4352b5b@embeddedor.com>
+Date: Sun, 1 Oct 2023 08:43:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -48,21 +46,20 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.15.1
-Subject: Re: [PATCH 5/5] cxgb4: Annotate struct smt_data with __counted_by
+Subject: Re: [PATCH] comedi: Annotate struct comedi_lrange with __counted_by
 Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>, Raju Rangoju <rajur@chelsio.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+ Ian Abbott <abbotti@mev.co.uk>,
+ H Hartley Sweeten <hsweeten@visionengravers.com>,
+ Kees Cook <keescook@chromium.org>,
  "Gustavo A. R. Silva" <gustavoars@kernel.org>,
  Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- llvm@lists.linux.dev
-References: <20230929181042.work.990-kees@kernel.org>
- <20230929181149.3006432-5-keescook@chromium.org>
+ Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>
+Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ linux-hardening@vger.kernel.org, llvm@lists.linux.dev
+References: <5c3b7459b820e22e2ac6ce892d4aadcc119cc919.1696065263.git.christophe.jaillet@wanadoo.fr>
 From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20230929181149.3006432-5-keescook@chromium.org>
+In-Reply-To: <5c3b7459b820e22e2ac6ce892d4aadcc119cc919.1696065263.git.christophe.jaillet@wanadoo.fr>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
@@ -73,18 +70,18 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 94.239.20.48
 X-Source-L: No
-X-Exim-ID: 1qmq4m-001KXe-27
+X-Exim-ID: 1qmqB8-001P7H-25
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: ([192.168.1.98]) [94.239.20.48]:37250
+X-Source-Sender: ([192.168.1.98]) [94.239.20.48]:48958
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 58
+X-Email-Count: 72
 X-Org: HG=hgshared;ORG=hostgator;
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfHFggWQZmAI8R2vH/w9VzanLGIRgBK0eoHzCdRQnKqucAl0ugJVp93bNjZipZ3yl781R0aGXd1LUJYtDUh6JC65dcBOe5DIy5mk5XhPMssO2inmunWGi
- Qd9KzeoB40p8WbZTBw0cKjTHpuwAWAbg76HRMDWRNNd3qI1qWFafnYQVOlPT66xw5PlMNYFg6k8epOlbK66M+34vCvSnd4Vn25bIoSXrvXggDBXDmaN1BJ46
+X-CMAE-Envelope: MS4xfPyPLE+jHL/eRLQ84C4DXdNNGYZmHa5cTxL9bLWUN3AX55ZRwn45+CCj5mIziZLv/d9pLJ/fy2ZEJ0Rt3F1HNYuSOfhzbF7hn7dTgQxd1fzKKpBB1n8O
+ FLR5wZQZh6GPiMrNgIOcSG7tR0VfkF6nskeK7dwQaoj/6NE56HP282xCGXguwzozhaomSbwe5lfi80WGQs1BDq+svKemhsd+QkzAxTlEPmZcSns/cHMKp+Zs
 X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
 	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
@@ -94,45 +91,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 
 
 
-On 9/29/23 20:11, Kees Cook wrote:
+On 9/30/23 11:14, Christophe JAILLET wrote:
 > Prepare for the coming implementation by GCC and Clang of the __counted_by
 > attribute. Flexible array members annotated with __counted_by can have
 > their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
 > 
-> As found with Coccinelle[1], add __counted_by for struct smt_data.
-> 
-> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
-> 
-> Cc: Raju Rangoju <rajur@chelsio.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
 Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
 Thanks
---
+-- 
 Gustavo
 
 > ---
->   drivers/net/ethernet/chelsio/cxgb4/smt.h | 2 +-
+> This patch is part of a work done in parallel of what is currently worked
+> on by Kees Cook.
+> 
+> My patches are only related to corner cases that do NOT match the
+> semantic of his Coccinelle script[1].
+> 
+> In this case, it is been spotted because of comedi_alloc_spriv().
+> All other usages of struct comedi_lrange seem to be static definition of
+> the structure that explicitly set the .length field.
+> 
+> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+> ---
+>   include/linux/comedi/comedidev.h | 2 +-
 >   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/net/ethernet/chelsio/cxgb4/smt.h b/drivers/net/ethernet/chelsio/cxgb4/smt.h
-> index 541249d78914..109c1dff563a 100644
-> --- a/drivers/net/ethernet/chelsio/cxgb4/smt.h
-> +++ b/drivers/net/ethernet/chelsio/cxgb4/smt.h
-> @@ -66,7 +66,7 @@ struct smt_entry {
->   struct smt_data {
->   	unsigned int smt_size;
->   	rwlock_t lock;
-> -	struct smt_entry smtab[];
-> +	struct smt_entry smtab[] __counted_by(smt_size);
+> diff --git a/include/linux/comedi/comedidev.h b/include/linux/comedi/comedidev.h
+> index 0a1150900ef3..c08416a7364b 100644
+> --- a/include/linux/comedi/comedidev.h
+> +++ b/include/linux/comedi/comedidev.h
+> @@ -633,7 +633,7 @@ extern const struct comedi_lrange range_unknown;
+>    */
+>   struct comedi_lrange {
+>   	int length;
+> -	struct comedi_krange range[];
+> +	struct comedi_krange range[] __counted_by(length);
 >   };
 >   
->   struct smt_data *t4_init_smt(void);
+>   /**
