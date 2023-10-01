@@ -1,43 +1,43 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B873B1944C
-	for <linux-hardening@vger.kernel.org>; Sun,  1 Oct 2023 21:22:24 +0000 (UTC)
-Received: from mail-oo1-xc36.google.com (mail-oo1-xc36.google.com [IPv6:2607:f8b0:4864:20::c36])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84E78CE
-	for <linux-hardening@vger.kernel.org>; Sun,  1 Oct 2023 14:22:23 -0700 (PDT)
-Received: by mail-oo1-xc36.google.com with SMTP id 006d021491bc7-57bab4e9e1aso6867025eaf.3
-        for <linux-hardening@vger.kernel.org>; Sun, 01 Oct 2023 14:22:23 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8665914F73
+	for <linux-hardening@vger.kernel.org>; Sun,  1 Oct 2023 22:21:34 +0000 (UTC)
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33744C9
+	for <linux-hardening@vger.kernel.org>; Sun,  1 Oct 2023 15:21:31 -0700 (PDT)
+Received: by mail-pf1-x42b.google.com with SMTP id d2e1a72fcca58-69101022969so14348356b3a.3
+        for <linux-hardening@vger.kernel.org>; Sun, 01 Oct 2023 15:21:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1696195343; x=1696800143; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1696198890; x=1696803690; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=PHJrlgm7LFwgtNAlZtL3Zhw4zS1ia4QUcX3TsUNW/zY=;
-        b=K8ahlFg2t0R6P640XZbVxn1n2eDcpclSPylMTjfPl2JXWodDr6kLrmiNBWzklmDxfH
-         Aw2tK9NBINlcbwYXlmiUEecoy2Zwz4jDigiPKrVjpnE7TY7Rvf5x+y+PkzQQHURorboz
-         xCH+3AnjYHGTOI1euqmlPVViIwmcqqhQwYQ1Q=
+        bh=0pqyiI3+7drkqtZIOt/nPWQvKqd+z/yppiMX4edx8e0=;
+        b=NDfAyqKtPqK4dieOW/2h7XgW879BvlK+Zs+BmgGEF2I3fiZNYTmR1iQI2w3z6Hv90s
+         qW2AfUWgYRNNZyu4aMHnl43dZDH8EEFYHWe/mIEYp8P4Nu0aXUDFgFbLz6B7zqpzrsTH
+         rbSicNfLts5ilJRxU+mBMaa9C/2syFmn3aBYI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696195343; x=1696800143;
+        d=1e100.net; s=20230601; t=1696198890; x=1696803690;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=PHJrlgm7LFwgtNAlZtL3Zhw4zS1ia4QUcX3TsUNW/zY=;
-        b=ey3cp0rc0mIypn/oCZljwZAyGpNcp4KElQojjecUI5DWlgAM5zuX0h2sq6qDvWWi+/
-         /WSaSoh5y8WuToZqxyeL/Cst8+n5ovX+WLzOppjPF+iwRtulg8R6h11sBBN0HqIn1f1M
-         xlJWWlZsyA15lSz9lcFwWYsrRtfkh4JCCTaulXjuwBL346WMQ9fzi3JaFObx9Om0A1u5
-         d3WHpr05Htk1mN/fJRZedDaeH+fXczORyqtdzUh/u/54zSrZNt/oJhknNxjOFB1m9hUE
-         br7chCpSmmRyR/EvbCeugDJqEC07moy+Xcry/ub6WoU3jopMiVKeyYs7ZYWdLg6Gh1yY
-         lESg==
-X-Gm-Message-State: AOJu0YzEa+BEhHqb0vd9zQyvurw18xAYZAv9UHxxZ9JaVy1x6xZdCqXj
-	G3yoFqqglBT+cQumQhMq6sfEew==
-X-Google-Smtp-Source: AGHT+IFJ8g4Z37QS8SaU2llcFOkETm2VqxZtmL7Bq8TmJ06CIdCQ3MlUKaTsGOWE7trNihoFqgoeXw==
-X-Received: by 2002:a05:6358:91c:b0:139:cb15:ecd3 with SMTP id r28-20020a056358091c00b00139cb15ecd3mr12488851rwi.8.1696195342750;
-        Sun, 01 Oct 2023 14:22:22 -0700 (PDT)
+        bh=0pqyiI3+7drkqtZIOt/nPWQvKqd+z/yppiMX4edx8e0=;
+        b=E367Hl68jdFHI2oyj/+eAleM1iGEBe4uicEbeL5Sltx4yPNcSRNfDOJ8kR3LucpbJQ
+         FyUhTOBycTNcNRJT86dKYU6SgUs6k8sYannrQGnkETj1jDfIIAjaGWs5dSbvJTFj+qH1
+         DrGcQgBuy7y3pNqrHITvz/h65HXxrK6sfaHX9nx7+ZSgYWEcUBAUzeYr7lyKAS4/9r1Q
+         vnA8azfB4Z3WGBz+d6ilaZmT93YByTc+WTjzdUnh00iAVmSK6ayn82OP2TT6Qu0ObZS7
+         Bpsx9xG4VIXkzctnYlcCl5d03N1EPt45GTQ7sk/dUuOgJM9amUX9suIhz934epIX2FJO
+         /g0A==
+X-Gm-Message-State: AOJu0Yy4hvP6EUbsKLngP80HgDHSpk7ZDEKa3IDDYW6OOSO3FZMI4cXH
+	kvV5gffDcMGVFbHgnscWJbedjtU3h701tCspiek=
+X-Google-Smtp-Source: AGHT+IEygYiXe/d0uPbrlFytK8CFzeVNQ2yBgFbzEaFRC83+K+JWqX4wlfI8uaxMMEcnvrQFQnEagw==
+X-Received: by 2002:a05:6a00:852:b0:691:da6:47a with SMTP id q18-20020a056a00085200b006910da6047amr12630310pfk.31.1696198890639;
+        Sun, 01 Oct 2023 15:21:30 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id y5-20020a62b505000000b0068ffb8da107sm18363405pfe.212.2023.10.01.14.22.21
+        by smtp.gmail.com with ESMTPSA id q26-20020a62ae1a000000b0068ffd4eb66dsm18313851pff.35.2023.10.01.15.21.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Oct 2023 14:22:22 -0700 (PDT)
-Date: Sun, 1 Oct 2023 14:22:17 -0700
+        Sun, 01 Oct 2023 15:21:29 -0700 (PDT)
+Date: Sun, 1 Oct 2023 15:21:27 -0700
 From: Kees Cook <keescook@chromium.org>
 To: Julia Lawall <julia.lawall@inria.fr>
 Cc: Kees Cook <kees@kernel.org>,
@@ -51,13 +51,14 @@ Cc: Kees Cook <kees@kernel.org>,
 	kernel-janitors@vger.kernel.org, linux-hardening@vger.kernel.org,
 	llvm@lists.linux.dev
 Subject: Re: [PATCH] comedi: Annotate struct comedi_lrange with __counted_by
-Message-ID: <202310011421.C4F19D45@keescook>
+Message-ID: <202310011515.D4C9184@keescook>
 References: <5c3b7459b820e22e2ac6ce892d4aadcc119cc919.1696065263.git.christophe.jaillet@wanadoo.fr>
  <202309301342.5B5BED40A1@keescook>
  <alpine.DEB.2.22.394.2310010945130.3166@hadrien>
  <90E2BBA5-8A2D-42DE-B36A-CD37BABBB433@kernel.org>
  <alpine.DEB.2.22.394.2310012112560.3166@hadrien>
  <202310011405.7599BA9@keescook>
+ <202310011421.C4F19D45@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -66,29 +67,54 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202310011405.7599BA9@keescook>
+In-Reply-To: <202310011421.C4F19D45@keescook>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Sun, Oct 01, 2023 at 02:05:46PM -0700, Kees Cook wrote:
-> On Sun, Oct 01, 2023 at 09:14:02PM +0200, Julia Lawall wrote:
-> > Kees,
+On Sun, Oct 01, 2023 at 02:22:17PM -0700, Kees Cook wrote:
+> On Sun, Oct 01, 2023 at 02:05:46PM -0700, Kees Cook wrote:
+> > On Sun, Oct 01, 2023 at 09:14:02PM +0200, Julia Lawall wrote:
+> > > Kees,
+> > > 
+> > > You can try the following.
 > > 
-> > You can try the following.
+> > Cool! Yeah, this finds the example:
+> > 
+> > drivers/comedi/drivers/rti800.c:74: struct comedi_lrange: field at offset 0 is the counter for the flex array
+> > drivers/comedi/drivers/rti800.c:83: struct comedi_lrange: field at offset 0 is the counter for the flex array
+> > drivers/comedi/drivers/rti800.c:92: struct comedi_lrange: field at offset 0 is the counter for the flex array
+> > 
+> > I'll run it on the whole codebase...
 > 
-> Cool! Yeah, this finds the example:
-> 
-> drivers/comedi/drivers/rti800.c:74: struct comedi_lrange: field at offset 0 is the counter for the flex array
-> drivers/comedi/drivers/rti800.c:83: struct comedi_lrange: field at offset 0 is the counter for the flex array
-> drivers/comedi/drivers/rti800.c:92: struct comedi_lrange: field at offset 0 is the counter for the flex array
-> 
-> I'll run it on the whole codebase...
+> It found only the struct comedi_lrange instances, but that's good to
+> know. :)
 
-It found only the struct comedi_lrange instances, but that's good to
-know. :)
+On a related note, why doesn't this work?
+
+@allocated@
+identifier STRUCT, ARRAY;
+expression COUNT;
+struct STRUCT *PTR;
+identifier ALLOC;
+type ELEMENT_TYPE;
+@@
+
+        PTR = ALLOC(..., sizeof(\(*PTR\|struct STRUCT\)) +
+                         COUNT * sizeof(\(*PTR->ARRAY\|PTR->ARRAY[0]\|ELEMENT_TYPE\)), ...);
+
+
+minus: parse error: 
+  File "alloc.cocci", line 15, column 34, charpos = 485
+  around = 'struct',
+  whole content =       PTR = ALLOC(..., sizeof(\(*PTR\|struct STRUCT\)) +
+
+if I drop "struct", then it complains about ELEMENT_TYPE...
+
+-Kees
 
 -- 
 Kees Cook
