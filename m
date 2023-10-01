@@ -1,62 +1,30 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 898632F39
-	for <linux-hardening@vger.kernel.org>; Sun,  1 Oct 2023 21:05:55 +0000 (UTC)
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB041D3
-	for <linux-hardening@vger.kernel.org>; Sun,  1 Oct 2023 14:05:50 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-690b7cb71aeso1698489b3a.0
-        for <linux-hardening@vger.kernel.org>; Sun, 01 Oct 2023 14:05:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1696194350; x=1696799150; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oPET9w0ktAjq+TgFKzzsSU899+RQr2NesK2FVmHe4kw=;
-        b=hfQm/i2c3iIU6NuDvBvdAwDcI2x6tSxTZDkToKU5jkDdjFSSCOstKg0ihGXLm7fTzQ
-         VdLnCATCoPwOsnDceiE4gi0zT4yc7hTroxnRJS/k2TBqjc6+h5xMhJraaDGR8dIkzLr7
-         Kd82n8lq/zAIiV/3VGo+BrjoXUMGW8O+w+Fb8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696194350; x=1696799150;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oPET9w0ktAjq+TgFKzzsSU899+RQr2NesK2FVmHe4kw=;
-        b=umcG4vWSMKGPV1mcBUH88cXxyMOJTsAU3Bi/N9iDYvlDjvNkEqrUTA6H18QwTL/HZm
-         jf0UypRHuj4K5EAVFApfqjcCod1eoipJ5Lm041P1wRHGPhHyTbXLDYbbzCc5KBAADDyc
-         lSqlIXzli2Rw9jEYk8fXoHKEXSSJH9fZCBI0gRW+y6nOWcbw8PihMD7wqmVF/ZO19j2B
-         3IHgLccrgjprCLkEjVylCDQ8qCvloOmv+ffx9qPcSEE5657aON3zWum/gOsplkM8wBot
-         RtLPWOUg5QCD+11Lu4toTaEszckN3Sn0hk7QQcu2BPxaDoqQ3P5ugnMKxoc/ODpVSNC4
-         NQYg==
-X-Gm-Message-State: AOJu0YzaSgxnm39EVCaHxjnOQsRplE0C5wbj55cIzFS3MWuMkviwK8W+
-	qHLaozZILUfFpzX2U8/QrBmRog==
-X-Google-Smtp-Source: AGHT+IH3XCX1bFhdggGosLrTWDSZbda+DgRtjDOd4Jr02++pIlTQr7eU8vyMgOL14EARFIWEhjY/yg==
-X-Received: by 2002:a05:6a00:1886:b0:68f:cc67:e709 with SMTP id x6-20020a056a00188600b0068fcc67e709mr18341051pfh.16.1696194350427;
-        Sun, 01 Oct 2023 14:05:50 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id u7-20020a637907000000b00584b293d157sm9552553pgc.80.2023.10.01.14.05.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Oct 2023 14:05:49 -0700 (PDT)
-Date: Sun, 1 Oct 2023 14:05:46 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Julia Lawall <julia.lawall@inria.fr>
-Cc: Kees Cook <kees@kernel.org>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Ian Abbott <abbotti@mev.co.uk>,
-	H Hartley Sweeten <hsweeten@visionengravers.com>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D84752F39
+	for <linux-hardening@vger.kernel.org>; Sun,  1 Oct 2023 21:09:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9F79C433C7;
+	Sun,  1 Oct 2023 21:09:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1696194546;
+	bh=KlpsTUbvJ/T3JQMeSxp6/dgvFP7eP+U9AV1bcVV6PP0=;
+	h=Date:From:To:Cc:Subject:From;
+	b=IkTJexmQrS6lFMoEvE68sJw8EwkmmMhbHx0qcxU8M9m3i6FnVbp5hSSh3YNxhwG7s
+	 VJ0NroEzoyK+n+dKuNwwvnruRe0hioND27AReoy80kzCUM9Tqwmop46j1H1G5qUzb2
+	 mWiTPlTEgfq6Tz8ZqRnNrxJKmDbMs4PexTD3XY3aJ3Zaig4Rqa3JHDpS7pRuvvpMBC
+	 AG/T3jo+VqFuPR/Tm9bwNeGH+jh3a0b20qVGjfDdDg8i5UmfJIWLB9QPpXJW8rO0Gl
+	 Qc7ODBciOQHZz+ziLfmv91qrXKdXgjBrloxAGWo/H8HWFnFM9t0vmWEny/zXiCw6zz
+	 oHGNIqbElVGJA==
+Date: Sun, 1 Oct 2023 23:08:59 +0200
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org, linux-hardening@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH] comedi: Annotate struct comedi_lrange with __counted_by
-Message-ID: <202310011405.7599BA9@keescook>
-References: <5c3b7459b820e22e2ac6ce892d4aadcc119cc919.1696065263.git.christophe.jaillet@wanadoo.fr>
- <202309301342.5B5BED40A1@keescook>
- <alpine.DEB.2.22.394.2310010945130.3166@hadrien>
- <90E2BBA5-8A2D-42DE-B36A-CD37BABBB433@kernel.org>
- <alpine.DEB.2.22.394.2310012112560.3166@hadrien>
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] PCI/P2PDMA: Fix undefined behavior bug in struct
+ pci_p2pdma_pagemap
+Message-ID: <ZRnf6wVOu0IJQ2Ok@work>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -65,26 +33,41 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.22.394.2310012112560.3166@hadrien>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
 
-On Sun, Oct 01, 2023 at 09:14:02PM +0200, Julia Lawall wrote:
-> Kees,
-> 
-> You can try the following.
+`struct dev_pagemap` is a flexible structure, which means that it
+contains a flexible-array member at the bottom. This could potentially
+lead to an overwrite of the objects following `pgmap` in `struct
+pci_p2pdma_pagemap`, when `nr_range > 1`.
 
-Cool! Yeah, this finds the example:
+Fix this by placing the declaration of object `pgmap` at the end of
+`struct pci_p2pdma_pagemap`.
 
-drivers/comedi/drivers/rti800.c:74: struct comedi_lrange: field at offset 0 is the counter for the flex array
-drivers/comedi/drivers/rti800.c:83: struct comedi_lrange: field at offset 0 is the counter for the flex array
-drivers/comedi/drivers/rti800.c:92: struct comedi_lrange: field at offset 0 is the counter for the flex array
+-Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
+ready to enable it globally.
 
-I'll run it on the whole codebase...
+Fixes: 0afea3814358 ("PCI/P2PDMA: Add provider's pci_dev to pci_p2pdma_pagemap struct")
+Fixes: a6e6fe6549f6 ("PCI/P2PDMA: Introduce private pagemap structure")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/pci/p2pdma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+index fa7370f9561a..ab34d3d36a64 100644
+--- a/drivers/pci/p2pdma.c
++++ b/drivers/pci/p2pdma.c
+@@ -28,9 +28,9 @@ struct pci_p2pdma {
+ };
+ 
+ struct pci_p2pdma_pagemap {
+-	struct dev_pagemap pgmap;
+ 	struct pci_dev *provider;
+ 	u64 bus_offset;
++	struct dev_pagemap pgmap;
+ };
+ 
+ static struct pci_p2pdma_pagemap *to_p2p_pgmap(struct dev_pagemap *pgmap)
 -- 
-Kees Cook
+2.34.1
+
