@@ -1,18 +1,18 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5AC29CA75
-	for <linux-hardening@vger.kernel.org>; Sun,  1 Oct 2023 06:36:07 +0000 (UTC)
-Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 506CF9F
-	for <linux-hardening@vger.kernel.org>; Sat, 30 Sep 2023 23:36:06 -0700 (PDT)
-Received: from eig-obgw-6006a.ext.cloudfilter.net ([10.0.30.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C3188F5A
+	for <linux-hardening@vger.kernel.org>; Sun,  1 Oct 2023 06:36:33 +0000 (UTC)
+Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E03C1BE
+	for <linux-hardening@vger.kernel.org>; Sat, 30 Sep 2023 23:36:31 -0700 (PDT)
+Received: from eig-obgw-6007a.ext.cloudfilter.net ([10.0.30.247])
 	by cmsmtp with ESMTP
-	id mm5qqFeGSIBlVmq3Hqiqvd; Sun, 01 Oct 2023 06:35:39 +0000
+	id mekIqJoyFNWIemq47qtFbW; Sun, 01 Oct 2023 06:36:31 +0000
 Received: from gator4166.hostgator.com ([108.167.133.22])
 	by cmsmtp with ESMTPS
-	id mq3gq3lCwSfdJmq3hqWyk9; Sun, 01 Oct 2023 06:36:05 +0000
-X-Authority-Analysis: v=2.4 cv=R+0QpPdX c=1 sm=1 tr=0 ts=65191355
+	id mq46qo32nSGi1mq46qxwht; Sun, 01 Oct 2023 06:36:30 +0000
+X-Authority-Analysis: v=2.4 cv=HPLQq6hv c=1 sm=1 tr=0 ts=6519136e
  a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=P7XfKmiOJ4/qXqHZrN7ymg==:17
  a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
  a=IkcTkHD0fZMA:10 a=bhdUkHdE2iEA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
@@ -26,20 +26,20 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
 	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=wEbc3aLc5WkB4zgnblCikUvyXlXYHxn2wdtnmUdcKTo=; b=nWHV5orJl3ozAobr0tfIcJ386H
-	5/1waZHpyc1KwT5s0QQn52LgylXA+s2qkRtrxi8/ZrSO0jtylGm5rg7Pgx0398O3YHsAyb4RVFmEn
-	IP/Uq3CUV4FZngoZTw3UluleYhf2ah4ladk1X0TrULqXGabst7svM+IKO1WB056wo7amc9HLHzR2f
-	FOtLrHYmGkA4z29/uDTtimAE0DOORaBIzidASVAc6u27OBJ0a6alhNYS5HZWwHB+hJYG3x0LItyTZ
-	4dgNnFhoLWZF682CBxUuStNNOJuHxoyLYl3l4IK6oQ3vZL7s4cZYhNE1MxDpsnOOdbzeDrlDBOWrZ
-	VrERjJGA==;
-Received: from [94.239.20.48] (port=56274 helo=[192.168.1.98])
+	bh=l94u8xNBfZNlbl7wM7/4FCAq7L1psobhc0IxdIbvqVQ=; b=frElGOPdBImCXcHhDIL8JLVwQJ
+	WDscQnv2YPzFgNcYCPNJ9d43igZpHI+X2e+6yK3bCWcWi24JvvS3hCh9kgQC6FaoOqvNtBo7bseZ8
+	qh2pl7dCB/ObEeylTFHLVRGRxKNkYuy8uCkJ4MNojrtAxAtgP4n2wNMDZzu+5hNpuYwymCpLus3aq
+	KIqP194JcWzWAVq6G4yuaQ0TpLpxe4JbESWrTgccJnqZU2RDR60FuTMUIRHART4WJku4yplAwZFXP
+	v3t9MMechRilCqjF3RLFpTmMjBQKem7onWJDFnqf+EEZF4XhgcEMsRPUdrvc0IdTCB8krPOFCmMjk
+	nJ/C2yUg==;
+Received: from [94.239.20.48] (port=33478 helo=[192.168.1.98])
 	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.96)
 	(envelope-from <gustavo@embeddedor.com>)
-	id 1qmq3f-001JVJ-0A;
-	Sun, 01 Oct 2023 01:36:03 -0500
-Message-ID: <96317217-3eb8-c537-c3f6-a741b44d4148@embeddedor.com>
-Date: Sun, 1 Oct 2023 08:35:58 +0200
+	id 1qmq44-001Ju3-26;
+	Sun, 01 Oct 2023 01:36:28 -0500
+Message-ID: <a3c9a0f8-7634-fe30-95b0-fb18adaf443e@embeddedor.com>
+Date: Sun, 1 Oct 2023 08:36:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -48,7 +48,8 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.15.1
-Subject: Re: [PATCH 2/5] cxgb4: Annotate struct clip_tbl with __counted_by
+Subject: Re: [PATCH 3/5] cxgb4: Annotate struct cxgb4_tc_u32_table with
+ __counted_by
 Content-Language: en-US
 To: Kees Cook <keescook@chromium.org>, Raju Rangoju <rajur@chelsio.com>
 Cc: "David S. Miller" <davem@davemloft.net>,
@@ -60,9 +61,9 @@ Cc: "David S. Miller" <davem@davemloft.net>,
  linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
  llvm@lists.linux.dev
 References: <20230929181042.work.990-kees@kernel.org>
- <20230929181149.3006432-2-keescook@chromium.org>
+ <20230929181149.3006432-3-keescook@chromium.org>
 From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20230929181149.3006432-2-keescook@chromium.org>
+In-Reply-To: <20230929181149.3006432-3-keescook@chromium.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
@@ -73,18 +74,18 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 94.239.20.48
 X-Source-L: No
-X-Exim-ID: 1qmq3f-001JVJ-0A
+X-Exim-ID: 1qmq44-001Ju3-26
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: ([192.168.1.98]) [94.239.20.48]:56274
+X-Source-Sender: ([192.168.1.98]) [94.239.20.48]:33478
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 16
+X-Email-Count: 30
 X-Org: HG=hgshared;ORG=hostgator;
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfEVJFQWAwRmAB749NHB/S3jn15+NLGscUuINDqrkEw9b2KgRIL0O3RAmzJbd6wjho9TGFYDjNG6rq4l8PUq/ZryfWOrbCH1iTjcCOy+RQL5uCFQnZ2q1
- sipwJtMdDSTi603mYx80pbIa2XqvMGiZK7K2jUM76s/6PpkeIpEjh1ZfAs63+y9n7lB/y2WI6NR7p/eQNdtziJA1cEW/d5gsSq9cH6yGcwOM3ZgNAM/XpP3W
+X-CMAE-Envelope: MS4xfD7xo3F0z4pJ+ke8PmfjzErVbSspRLTKUCqHjAPlsNBDPHZUcfpW++pYTTeSlRKvSktbwkA0IihlcseSaRkEBD5PxJhqtOG7ivUvgfjnOofMY/1yrMtx
+ ane92VQhY8AWzfno1K4qxVhe5zcfPY6NmG7uch75UTxXkucY0t7Y0QdVLQops6vLrihh936G9iY7WTm+mnVv5lvKR7rpHQAgZkmcyk55/1S9nCXW6tDWJOji
 X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
 	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
@@ -101,7 +102,7 @@ On 9/29/23 20:11, Kees Cook wrote:
 > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
 > 
-> As found with Coccinelle[1], add __counted_by for struct clip_tbl.
+> As found with Coccinelle[1], add __counted_by for struct cxgb4_tc_u32_table.
 > 
 > [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 > 
@@ -120,19 +121,18 @@ Thanks
 Gustavo
 
 > ---
->   drivers/net/ethernet/chelsio/cxgb4/clip_tbl.h | 2 +-
+>   drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32_parse.h | 2 +-
 >   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/net/ethernet/chelsio/cxgb4/clip_tbl.h b/drivers/net/ethernet/chelsio/cxgb4/clip_tbl.h
-> index 290c1058069a..847c7fc2bbd9 100644
-> --- a/drivers/net/ethernet/chelsio/cxgb4/clip_tbl.h
-> +++ b/drivers/net/ethernet/chelsio/cxgb4/clip_tbl.h
-> @@ -29,7 +29,7 @@ struct clip_tbl {
->   	atomic_t nfree;
->   	struct list_head ce_free_head;
->   	void *cl_list;
-> -	struct list_head hash_list[];
-> +	struct list_head hash_list[] __counted_by(clipt_size);
->   };
+> diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32_parse.h b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32_parse.h
+> index f59dd4b2ae6f..9050568a034c 100644
+> --- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32_parse.h
+> +++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32_parse.h
+> @@ -331,6 +331,6 @@ struct cxgb4_link {
 >   
->   enum {
+>   struct cxgb4_tc_u32_table {
+>   	unsigned int size;          /* number of entries in table */
+> -	struct cxgb4_link table[]; /* Jump table */
+> +	struct cxgb4_link table[] __counted_by(size); /* Jump table */
+>   };
+>   #endif /* __CXGB4_TC_U32_PARSE_H */
