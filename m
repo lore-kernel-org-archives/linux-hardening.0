@@ -1,80 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 140971EA74;
-	Mon,  2 Oct 2023 18:31:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 290E8C433C7;
-	Mon,  2 Oct 2023 18:31:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E59EA1EA8C;
+	Mon,  2 Oct 2023 18:40:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B0136C433C7;
+	Mon,  2 Oct 2023 18:40:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696271509;
-	bh=FwOWdXcduUEuYueUYb3WKEmK/UO8XkOGezapIcoLank=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=nXztEeJMKGNe5w7pRztMXGYK/3RIFockMyii4+e+9IvyivRQTAnvy1vyrvzDeO21f
-	 iKU2HTcj94fyDABBbgMlwgUC8CTQG89l1KY7S8LVPLMqOt+CDcuW0fQYRISYsaDvos
-	 HvE6+8vVtjWuISVyQmW2JPpxrzcAI30tx4w0uZ+cgMSVdNgkM8R6uqiKq/uUe2RZra
-	 Zib9hBL+cex/Ey/T3JkJAGJtMDV/iOr5V67gcACD5HLZKxJvB8rLBuSNxuTlg2qbIX
-	 NzweXBCSFW9P5Ks5oDRRG/NO7iUyZAV6gyZIboSH+b8a9xVsxeJ0lDMU17k04my2UL
-	 cqPirDsCOLtXQ==
-Date: Mon, 2 Oct 2023 11:31:48 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Ayush Sawal <ayush.sawal@chelsio.com>
-Cc: Kees Cook <keescook@chromium.org>, Raju Rangoju <Raju.Rangoju@amd.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, "Gustavo A. R.
- Silva" <gustavoars@kernel.org>, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 0/5] chelsio: Annotate structs with __counted_by
-Message-ID: <20231002113148.2d6f578b@kernel.org>
-In-Reply-To: <202309291240.BC52203CB@keescook>
-References: <20230929181042.work.990-kees@kernel.org>
-	<202309291240.BC52203CB@keescook>
+	s=k20201202; t=1696272030;
+	bh=UV9QeO2eUsWxPfUTEhIPFDbW+ZsPP9uBROySkLMm6WY=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=NmheTg+Pbz2sHwigFT80jEFLdtK/7lEz3/CeKzCeB+q7elJhLqYkyETjViMFc/Uaw
+	 kKCNpCaAFc4hnjTpev5zWa8zekc4zJZ0QJkJA+YMOv4gpROcYRngTgUYQ+6vaBgq4n
+	 iRpLJpIs/cfGXOuewBy7GoxKjLX77XQ9AMPV/MITd2P8vJKpC2j9fx6iUHL9kR1qpJ
+	 tgIprk9eX6F62MfbxePbkZ+k4rC+uBPdQpMl7zXdETZijcSIjf/RGQvqnEgn8BDAii
+	 azhsoFlrMWPq1F+K4njlEmSBxg6cZpBHsmBOm/JbdCRP8qc7+jmAab/jPH4Q/cVk+O
+	 JlPWMB/+nfORQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 928C6C395C5;
+	Mon,  2 Oct 2023 18:40:30 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH 0/5] mlxsw: Annotate structs with __counted_by
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <169627203059.11990.1243800738958439683.git-patchwork-notify@kernel.org>
+Date: Mon, 02 Oct 2023 18:40:30 +0000
+References: <20230929180611.work.870-kees@kernel.org>
+In-Reply-To: <20230929180611.work.870-kees@kernel.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: idosch@nvidia.com, petrm@nvidia.com, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ gustavoars@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
+ trix@redhat.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ linux-hardening@vger.kernel.org, llvm@lists.linux.dev
 
-On Fri, 29 Sep 2023 12:44:45 -0700 Kees Cook wrote:
-> On Fri, Sep 29, 2023 at 11:11:44AM -0700, Kees Cook wrote:
-> > Hi,
-> > 
-> > This annotates several chelsio structures with the coming __counted_by
-> > attribute for bounds checking of flexible arrays at run-time. For more details,
-> > see commit dd06e72e68bc ("Compiler Attributes: Add __counted_by macro").
-> > 
-> > Thanks!
-> > 
-> > -Kees
-> > 
-> > Kees Cook (5):
-> >   chelsio/l2t: Annotate struct l2t_data with __counted_by
-> >   cxgb4: Annotate struct clip_tbl with __counted_by
-> >   cxgb4: Annotate struct cxgb4_tc_u32_table with __counted_by
-> >   cxgb4: Annotate struct sched_table with __counted_by
-> >   cxgb4: Annotate struct smt_data with __counted_by
-> > 
-> >  drivers/net/ethernet/chelsio/cxgb3/l2t.h                | 2 +-
-> >  drivers/net/ethernet/chelsio/cxgb4/clip_tbl.h           | 2 +-
-> >  drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32_parse.h | 2 +-
-> >  drivers/net/ethernet/chelsio/cxgb4/l2t.c                | 2 +-
-> >  drivers/net/ethernet/chelsio/cxgb4/sched.h              | 2 +-
-> >  drivers/net/ethernet/chelsio/cxgb4/smt.h                | 2 +-
-> >  6 files changed, 6 insertions(+), 6 deletions(-)  
+Hello:
+
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Fri, 29 Sep 2023 11:07:39 -0700 you wrote:
+> Hi,
 > 
-> Hm, it looks like this is not "Supported" any more? I'm getting bounces
-> from "Raju Rangoju <rajur@chelsio.com>" ...
+> This annotates several mlxsw structures with the coming __counted_by attribute
+> for bounds checking of flexible arrays at run-time. For more details, see
+> commit dd06e72e68bc ("Compiler Attributes: Add __counted_by macro").
 > 
-> CXGB4 ETHERNET DRIVER (CXGB4)
-> M:      Raju Rangoju <rajur@chelsio.com>
-> L:      netdev@vger.kernel.org
-> S:      Supported
-> W:      http://www.chelsio.com
-> F:      drivers/net/ethernet/chelsio/cxgb4/
+> Thanks!
+> 
+> [...]
 
-Hi Ayush,
+Here is the summary with links:
+  - [1/5] mlxsw: Annotate struct mlxsw_linecards with __counted_by
+    https://git.kernel.org/netdev/net-next/c/0b7ed8183375
+  - [2/5] mlxsw: core: Annotate struct mlxsw_env with __counted_by
+    https://git.kernel.org/netdev/net-next/c/c63da7d62893
+  - [3/5] mlxsw: spectrum: Annotate struct mlxsw_sp_counter_pool with __counted_by
+    https://git.kernel.org/netdev/net-next/c/f7ebae83768f
+  - [4/5] mlxsw: spectrum_router: Annotate struct mlxsw_sp_nexthop_group_info with __counted_by
+    https://git.kernel.org/netdev/net-next/c/4d3a42ec5cff
+  - [5/5] mlxsw: spectrum_span: Annotate struct mlxsw_sp_span with __counted_by
+    https://git.kernel.org/netdev/net-next/c/18cee9da32cd
 
-any idea who should be maintaining the Ethernet part of cxgb4 
-at this point?
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
