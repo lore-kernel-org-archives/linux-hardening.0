@@ -1,60 +1,79 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73CDDE566;
-	Mon,  2 Oct 2023 11:42:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40348C433C7;
-	Mon,  2 Oct 2023 11:42:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1696246924;
-	bh=d8FcFb3yWGd/9wtt0mcVGwPft2o/vm/EglUHKzdkfgQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sPG0RdMpsRSEdUD24LYEMhEURsA7sqlGX29fJ5XEfM0gmq3NlvgvkoV7tHor+LC0x
-	 uWR04f5dKQExuM5HEQ8X5EPbFKBAW20JvqzSgDBiJ/Ig8a1xMp3Y6jXJhmXXKIzutf
-	 iWGdjOIB2dSKGH3qUVJmpIaSboNgAp0rqLbeEFmA=
-Date: Mon, 2 Oct 2023 13:42:01 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: Alan Stern <stern@rowland.harvard.edu>,
-	Mathias Nyman <mathias.nyman@intel.com>, linux-usb@vger.kernel.org,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] usb: Annotate struct urb_priv with __counted_by
-Message-ID: <2023100246-stem-overcoat-c4b8@gregkh>
-References: <20230915195812.never.371-kees@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C10DEAD4;
+	Mon,  2 Oct 2023 11:45:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F18F7C433C7;
+	Mon,  2 Oct 2023 11:45:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1696247119;
+	bh=tYbjMAUcN0XthNOVzmGs+Y3qL7jGJzmEPsY7LU8xTvA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=BTfPMprg4YuP+Z/b4wNUvLHqmhQhknwnOsJaCrX8jdJgMG2qQkoakD1KWkwJpw4ae
+	 WKVJJGbwR55plXJnNoyyUV/6wOC5TXyibvJgL1jpMPR28Jf/5UQDiOIDRmT1RFh27S
+	 sIU8eJxG39H5R8owFjMNsWZTItcsulV0TJI1TfE4Nf8KgO9y9tF96f6ETso+iLdEpl
+	 CoJKbDgyTLzSeqEcl5GN3xhY57Z6/+bL35hj+2HVJoXsv0B/PpGR9dm4FxM6Jonefm
+	 hKUWpK6reWVyaTW2roySUWjO/UgJdJVgLsYbHcAQSB20M7g5RU+hemNg8KQVa5hIff
+	 9JUA5RWAxrT4Q==
+From: Leon Romanovsky <leon@kernel.org>
+To: Jason Gunthorpe <jgg@ziepe.ca>, Kees Cook <keescook@chromium.org>
+Cc: Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+ =?utf-8?q?H=C3=A5kon?= Bugge <haakon.bugge@oracle.com>,
+ Avihai Horon <avihaih@nvidia.com>, Anand Khoje <anand.a.khoje@oracle.com>,
+ Mark Bloch <mbloch@nvidia.com>, Christian Benvenuti <benve@cisco.com>,
+ Nelson Escobar <neescoba@cisco.com>, Bernard Metzler <bmt@zurich.ibm.com>,
+ Bart Van Assche <bvanassche@acm.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
+ Patrisious Haddad <phaddad@nvidia.com>, Chuck Lever <chuck.lever@oracle.com>,
+ Tom Talpey <tom@talpey.com>, wangjianli <wangjianli@cdjrlc.com>,
+ linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+ linux-hardening@vger.kernel.org, llvm@lists.linux.dev
+In-Reply-To: <20230929180305.work.590-kees@kernel.org>
+References: <20230929180305.work.590-kees@kernel.org>
+Subject: Re: [PATCH 0/7] RDMA: Annotate structs with __counted_by
+Message-Id: <169624711583.134088.705118476077332376.b4-ty@kernel.org>
+Date: Mon, 02 Oct 2023 14:45:15 +0300
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230915195812.never.371-kees@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12-dev-a055d
 
-On Fri, Sep 15, 2023 at 12:58:16PM -0700, Kees Cook wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
-> 
-> As found with Coccinelle[1], add __counted_by for struct urb_priv.
-> 
-> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
-> 
-> Cc: Alan Stern <stern@rowland.harvard.edu>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Mathias Nyman <mathias.nyman@intel.com>
-> Cc: linux-usb@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  drivers/usb/host/ohci.h | 2 +-
->  drivers/usb/host/xhci.h | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
 
-Thanks for taking these changes through your tree, I was too slow...
+On Fri, 29 Sep 2023 11:04:23 -0700, Kees Cook wrote:
+> This annotates several structures with the coming __counted_by attribute
+> for bounds checking of flexible arrays at run-time. For more details, see
+> commit dd06e72e68bc ("Compiler Attributes: Add __counted_by macro").
+> 
+> Thanks!
+> 
+> -Kees
+> 
+> [...]
 
-greg k-h
+Applied, thanks!
+
+[1/7] RDMA: Annotate struct rdma_hw_stats with __counted_by
+      https://git.kernel.org/rdma/rdma/c/4755dc6f29597d
+[2/7] RDMA/core: Annotate struct ib_pkey_cache with __counted_by
+      https://git.kernel.org/rdma/rdma/c/fc424078f50840
+[3/7] RDMA/usnic: Annotate struct usnic_uiom_chunk with __counted_by
+      https://git.kernel.org/rdma/rdma/c/ed7c64de622ff9
+[4/7] RDMA/siw: Annotate struct siw_pbl with __counted_by
+      https://git.kernel.org/rdma/rdma/c/0bc018b7a7b733
+[5/7] IB/srp: Annotate struct srp_fr_pool with __counted_by
+      https://git.kernel.org/rdma/rdma/c/bd8eec5bfa59b5
+[6/7] IB/mthca: Annotate struct mthca_icm_table with __counted_by
+      https://git.kernel.org/rdma/rdma/c/2aba54a9e0ead5
+[7/7] IB/hfi1: Annotate struct tid_rb_node with __counted_by
+      https://git.kernel.org/rdma/rdma/c/964168970cef5f
+
+Best regards,
+-- 
+Leon Romanovsky <leon@kernel.org>
