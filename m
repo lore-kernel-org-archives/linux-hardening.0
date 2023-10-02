@@ -1,94 +1,98 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D032718E00
-	for <linux-hardening@vger.kernel.org>; Mon,  2 Oct 2023 16:40:46 +0000 (UTC)
-X-Greylist: delayed 1991 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 02 Oct 2023 09:40:44 PDT
-Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFD7A9B;
-	Mon,  2 Oct 2023 09:40:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
-	MIME-Version:Date:Message-ID:content-disposition;
-	bh=XGVVjLtCy/b7XBDMrd+l3TWnpYYLvXFcVZSGnHlFQ0I=; b=mJQqcPDwO7ipsx68RKWvm0jKtr
-	FhyNNxdJSAYCuqGp617XQ+BSogb8Pfn7INKEXNbGv1t8ftDBmR86NY0yWTghteijc+FPWNLX5LowD
-	vZdlqta/hTH0lChornsXgF/i4XXA/64c7kmp5LvFJaiq4XXQdR46f+y4m7m1TOlbzkpDnyQQT2f+y
-	W4eZXQvVqtVFivZr4qskUjmy48juNz3iDo3x1PmuwRFaNkQR0PqRbkA9eC64D+/mILIafBxGaXdRf
-	S2JyxGWZLtDxNFClQvZdZMQfK9qxxn3Rf2/p8Du7URV62I8opHx9O1l4KRAYBOg5/9CR0i4KvXJuu
-	MyYHwAOQ==;
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-	by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.94.2)
-	(envelope-from <logang@deltatee.com>)
-	id 1qnLS5-002kN1-J5; Mon, 02 Oct 2023 10:07:23 -0600
-Message-ID: <29da763d-1570-7197-2d5a-03c5659b8b52@deltatee.com>
-Date: Mon, 2 Oct 2023 10:07:21 -0600
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E06291DA2C
+	for <linux-hardening@vger.kernel.org>; Mon,  2 Oct 2023 16:49:14 +0000 (UTC)
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2502FA7
+	for <linux-hardening@vger.kernel.org>; Mon,  2 Oct 2023 09:49:13 -0700 (PDT)
+Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1c60a514f3aso117505825ad.3
+        for <linux-hardening@vger.kernel.org>; Mon, 02 Oct 2023 09:49:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1696265352; x=1696870152; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=b7XJ5dqJNV5CR1Ji4WUBRRsOzTxjBAVuiqQFOAjz294=;
+        b=E8qQgqeUla7Z+Sv3I6z+DXWD8CATV7TWihdR5WJYkycIYg9MH72uJkAua1tD8ySbBG
+         Zj3KoLdyI5jEVh5Y3iYLpKdU8Tr1CVwzgeI2B8fuGvwx1knWXx7AqOSm2UFvFv//XsOt
+         BEfpbh7dXt4GSwjIqmCKxcmDjmJ3rEdJ+TaJ8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696265352; x=1696870152;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=b7XJ5dqJNV5CR1Ji4WUBRRsOzTxjBAVuiqQFOAjz294=;
+        b=FJcmrdn2kv8iy6wZrsKQKdy2VRlkuPqc/qu4D9zg9cWikMx+5ZORexI6mZw870N/9v
+         UzPsZfDbMX+uth572D6BsEVBanQut2bf929RhY1mfWhRBl96UcOvahaufxM2OH/2D9of
+         AUKyxY0V87xZscPkorDb3dnAcTFtbWJKPr7tLeY4n2LvCEfB1TIXTQf9bURelmYeixnv
+         l5aBmMFFKfDRILk7OTFw9iFrFmqPD6IE2lFLdbk5AOwdVq1UXAzvPkRDTniuwGCE3XAE
+         grCVTbMbWB/79/UO8Okd912x+VZqRlZGKRqJB0lkTs/LUIb3RhYntSdVwNZGpNkr2zmG
+         mbBw==
+X-Gm-Message-State: AOJu0YyaL/JyBNwMXGwTv7O7DMk++P1sOmX7SoLJLAvSQjblh/lsc9QH
+	5YrVKtO/YQ34HlEuuRwCemc0Zg==
+X-Google-Smtp-Source: AGHT+IHrv23LVD12gIvMlECOZzW2oxgMdBZp+C3BsK92+u/yOg4JgdFuJ1c1G1mAfbhW7PBrvKLhkg==
+X-Received: by 2002:a17:903:2788:b0:1c1:e380:b128 with SMTP id jw8-20020a170903278800b001c1e380b128mr11306748plb.60.1696265352674;
+        Mon, 02 Oct 2023 09:49:12 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id g6-20020a170902740600b001c63429fa89sm12200145pll.247.2023.10.02.09.49.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Oct 2023 09:49:11 -0700 (PDT)
+Date: Mon, 2 Oct 2023 09:49:10 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
+	Bard Liao <yung-chuan.liao@linux.intel.com>,
+	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+	Daniel Baluta <daniel.baluta@nxp.com>,
+	Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	sound-open-firmware@alsa-project.org, alsa-devel@alsa-project.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] ASoC: SOF: ipc4-topology: Use size_add() in call
+ to struct_size()
+Message-ID: <202310020948.DEFCF4F@keescook>
+References: <ZQSr15AYJpDpipg6@work>
+ <169625984488.65718.9772394979337795498.b4-ty@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Content-Language: en-CA
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <ZRnf6wVOu0IJQ2Ok@work>
-From: Logan Gunthorpe <logang@deltatee.com>
-In-Reply-To: <ZRnf6wVOu0IJQ2Ok@work>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: gustavoars@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-X-SA-Exim-Mail-From: logang@deltatee.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <169625984488.65718.9772394979337795498.b4-ty@kernel.org>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
-Subject: Re: [PATCH][next] PCI/P2PDMA: Fix undefined behavior bug in struct
- pci_p2pdma_pagemap
-X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 
-
-
-On 2023-10-01 15:08, Gustavo A. R. Silva wrote:
-> `struct dev_pagemap` is a flexible structure, which means that it
-> contains a flexible-array member at the bottom. This could potentially
-> lead to an overwrite of the objects following `pgmap` in `struct
-> pci_p2pdma_pagemap`, when `nr_range > 1`.
+On Mon, Oct 02, 2023 at 04:17:24PM +0100, Mark Brown wrote:
+> On Fri, 15 Sep 2023 13:09:11 -0600, Gustavo A. R. Silva wrote:
+> > If, for any reason, the open-coded arithmetic causes a wraparound,
+> > the protection that `struct_size()` adds against potential integer
+> > overflows is defeated. Fix this by hardening call to `struct_size()`
+> > with `size_add()`.
+> > 
+> > 
 > 
-> Fix this by placing the declaration of object `pgmap` at the end of
-> `struct pci_p2pdma_pagemap`.
+> Applied to
 > 
-> -Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
-> ready to enable it globally.
+>    https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 > 
-> Fixes: 0afea3814358 ("PCI/P2PDMA: Add provider's pci_dev to pci_p2pdma_pagemap struct")
-> Fixes: a6e6fe6549f6 ("PCI/P2PDMA: Introduce private pagemap structure")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Thanks!
+> 
+> [1/1] ASoC: SOF: ipc4-topology: Use size_add() in call to struct_size()
+>       commit: 3746284c233d5cf5f456400e61cd4a46a69c6e8c
 
+Thanks! I've dropped it from my tree.
 
-Makes sense to me, thanks.
+-Kees
 
-Although, I'm not sure the fixes tags are appropriate. The
-flexible-array member was introduced in 5.10 (b7b3c01b19) and both the
-"fixed" commits predate that change by a number of releases.
-
-Also, it's probably worth noting in the commit message that the p2pdma
-code hardcodes nr_ranges to 1 (in pci_p2pdma_add_resource); so there is
-no way to actually hit any bug with the current code.
-
-I totally agree that the patch should be applied to prevent possible
-bugs being introduced in the future:
-
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-
-Logan
+-- 
+Kees Cook
