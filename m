@@ -1,103 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E59B41DA4D;
-	Mon,  2 Oct 2023 18:40:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A3C9CC433C9;
-	Mon,  2 Oct 2023 18:40:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696272030;
-	bh=6KsLZI9g7UhiN89nAcewKJ5x/HxWt4mFru++XEczoDg=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=kl1bxsepo+ybIiREqjgx6wx0ShnxoUpHhOb8jw0rJC74J5TAO1gXryRFhSr8JahB/
-	 /U1aL71EW62ZKhgkUaTwq9dYMPVnXluHHp8RfWlW/Fnl9xoRLQo05UmgxLgYOHDSnY
-	 3HaLBufuykE0Ga8nAS2DRgiVfBkDp9jrO99Of5B2PPzAw8vdWyaWr9hPGW/q2rGQbz
-	 2zEGRxCOI8Wa53iD7jmbL0foJ3xzr489GnEki+zvjJQnvfGcx8xlSfUq4yB20KHE6r
-	 jcnLoUwUjTGvxMf1j53okC4H8YotaXjn6zPVplQyypMYcNxtstzlnfG07Fx9eGxmVM
-	 UmYqlnBxHMSsg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 85DCAE632CE;
-	Mon,  2 Oct 2023 18:40:30 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 564CC1EA98
+	for <linux-hardening@vger.kernel.org>; Mon,  2 Oct 2023 18:40:46 +0000 (UTC)
+Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5249F0
+	for <linux-hardening@vger.kernel.org>; Mon,  2 Oct 2023 11:40:39 -0700 (PDT)
+Received: from eig-obgw-5001a.ext.cloudfilter.net ([10.0.29.139])
+	by cmsmtp with ESMTP
+	id nHLGq6HHjQUgRnNqOqmc2G; Mon, 02 Oct 2023 18:40:36 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id nNqNqKY8tx6rjnNqNqTxqb; Mon, 02 Oct 2023 18:40:35 +0000
+X-Authority-Analysis: v=2.4 cv=BICgEXcG c=1 sm=1 tr=0 ts=651b0ea3
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=Dx1Zrv+1i3YEdDUMOX3koA==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=bhdUkHdE2iEA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
+ a=gXLdhW2jAAAA:8 a=MqvWAp6GOtdlVlTrVWUA:9 a=QEXdDO2ut3YA:10
+ a=AjGcO6oz07-iQ99wixmX:22 a=Dn9eIPSr_RzuO0KTJioD:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=7ClwwiYL5MaAd6g9xWmRVME3vEiVZ83RtKSsFLeZH90=; b=aD+wgnXlbRDuzRcV2OZazjH5P4
+	AqpZWHdIkg+cjMYqvbj8Vr1+wq0saI3cAHD/iPUBuk5J50iVbJFNZoGGu7vihEjTHEOmETr74aR9r
+	pEMGfTzUr+DIc4LwYoiz7+MxyON0MbHV7vRAtNLw/sfZeTnaxSRlg0feSY7l+xTOGWRejO3g2TnmE
+	l77Bp06LIg+h8JTnqgpTPKWX1b99Szb/E1fEDJx5dmTl95llZ3yYeGXW/UGc/WpW6mf5MRWapj7O3
+	38yTTPShFZCJugG27W/tXCcJHTxeuV7jkL8vGxqlW6z3IBhfGXtSElCkI+6UeyR9h2Mfoqj8FyHLT
+	Jj0YvC6g==;
+Received: from 94-238-9-39.abo.bbox.fr ([94.238.9.39]:41648 helo=[192.168.1.98])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1qnNqM-003NdX-1u;
+	Mon, 02 Oct 2023 13:40:34 -0500
+Message-ID: <734c7fdf-4c41-2890-dbe7-ddb23fd6bcc7@embeddedor.com>
+Date: Mon, 2 Oct 2023 20:40:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 00/14] Batch 1: Annotate structs with __counted_by
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <169627203054.11990.6492371681347182041.git-patchwork-notify@kernel.org>
-Date: Mon, 02 Oct 2023 18:40:30 +0000
-References: <20230922172449.work.906-kees@kernel.org>
-In-Reply-To: <20230922172449.work.906-kees@kernel.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: kuba@kernel.org, jhs@mojatatu.com, davem@davemloft.net,
- dsahern@kernel.org, edumazet@google.com, pabeni@redhat.com,
- martin.lau@kernel.org, gustavoars@kernel.org, ast@kernel.org,
- yisen.zhuang@huawei.com, salil.mehta@huawei.com, claudiu.manoil@nxp.com,
- vladimir.oltean@nxp.com, kys@microsoft.com, haiyangz@microsoft.com,
- wei.liu@kernel.org, decui@microsoft.com, longli@microsoft.com,
- sharmaajay@microsoft.com, elder@kernel.org, pshelar@ovn.org,
- zhangshaokun@hisilicon.com, xiyou.wangcong@gmail.com, jiri@resnulli.us,
- nathan@kernel.org, ndesaulniers@google.com, trix@redhat.com,
- horms@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- linux-hyperv@vger.kernel.org, linux-rdma@vger.kernel.org,
- dev@openvswitch.org, linux-parisc@vger.kernel.org, llvm@lists.linux.dev,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH][next] PCI/P2PDMA: Fix undefined behavior bug in struct
+ pci_p2pdma_pagemap
+Content-Language: en-US
+To: Logan Gunthorpe <logang@deltatee.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-hardening@vger.kernel.org
+References: <ZRnf6wVOu0IJQ2Ok@work>
+ <29da763d-1570-7197-2d5a-03c5659b8b52@deltatee.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <29da763d-1570-7197-2d5a-03c5659b8b52@deltatee.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 94.238.9.39
+X-Source-L: No
+X-Exim-ID: 1qnNqM-003NdX-1u
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 94-238-9-39.abo.bbox.fr ([192.168.1.98]) [94.238.9.39]:41648
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 2
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfKrGWeaBesXi0E/JAIpM4qDch5mEyRe5/hY0mPVvv0b8FVkaB+nKyVdRbRH4/WuoXof1AzeMSdC2/hd9AGas5z/I1MIE5UGSmIaglTdzHF8kRhJApYUq
+ E4ZqUBEFEeUCvb92Pzy7jw7vI5GIq2JhRXEBgL6l/7VwfBI+qlgQcuiBS7NLAcWLo/HXlWG5sqvTih095DS/gcGWI2PGMC+B4scd3S42uBhrvu6gjlJylX/K
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-Hello:
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
 
-On Fri, 22 Sep 2023 10:28:42 -0700 you wrote:
-> Hi,
+On 10/2/23 18:07, Logan Gunthorpe wrote:
 > 
-> This is the batch 1 of patches touching netdev for preparing for
-> the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
 > 
-> [...]
+> On 2023-10-01 15:08, Gustavo A. R. Silva wrote:
+>> `struct dev_pagemap` is a flexible structure, which means that it
+>> contains a flexible-array member at the bottom. This could potentially
+>> lead to an overwrite of the objects following `pgmap` in `struct
+>> pci_p2pdma_pagemap`, when `nr_range > 1`.
+>>
+>> Fix this by placing the declaration of object `pgmap` at the end of
+>> `struct pci_p2pdma_pagemap`.
+>>
+>> -Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
+>> ready to enable it globally.
+>>
+>> Fixes: 0afea3814358 ("PCI/P2PDMA: Add provider's pci_dev to pci_p2pdma_pagemap struct")
+>> Fixes: a6e6fe6549f6 ("PCI/P2PDMA: Introduce private pagemap structure")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> 
+> 
+> Makes sense to me, thanks.
+> 
+> Although, I'm not sure the fixes tags are appropriate. The
+> flexible-array member was introduced in 5.10 (b7b3c01b19) and both the
+> "fixed" commits predate that change by a number of releases.
 
-Here is the summary with links:
-  - [01/14] ipv4: Annotate struct fib_info with __counted_by
-    https://git.kernel.org/netdev/net-next/c/5b98fd5dc1e3
-  - [02/14] ipv4/igmp: Annotate struct ip_sf_socklist with __counted_by
-    https://git.kernel.org/netdev/net-next/c/210d4e9c732f
-  - [03/14] ipv6: Annotate struct ip6_sf_socklist with __counted_by
-    https://git.kernel.org/netdev/net-next/c/5d22b6528073
-  - [04/14] net: hns: Annotate struct ppe_common_cb with __counted_by
-    https://git.kernel.org/netdev/net-next/c/5b829c8460ae
-  - [05/14] net: enetc: Annotate struct enetc_int_vector with __counted_by
-    https://git.kernel.org/netdev/net-next/c/dd8e215ea9a8
-  - [06/14] net: hisilicon: Annotate struct rcb_common_cb with __counted_by
-    https://git.kernel.org/netdev/net-next/c/2290999d278e
-  - [07/14] net: mana: Annotate struct mana_rxq with __counted_by
-    https://git.kernel.org/netdev/net-next/c/a3d7a1209bbb
-  - [08/14] net: ipa: Annotate struct ipa_power with __counted_by
-    https://git.kernel.org/netdev/net-next/c/20551ee45d7d
-  - [09/14] net: mana: Annotate struct hwc_dma_buf with __counted_by
-    https://git.kernel.org/netdev/net-next/c/59656519763d
-  - [10/14] net: openvswitch: Annotate struct dp_meter_instance with __counted_by
-    https://git.kernel.org/netdev/net-next/c/e7b34822fa4d
-  - [11/14] net: enetc: Annotate struct enetc_psfp_gate with __counted_by
-    https://git.kernel.org/netdev/net-next/c/93bc6ab6b19d
-  - [12/14] net: openvswitch: Annotate struct dp_meter with __counted_by
-    https://git.kernel.org/netdev/net-next/c/16ae53d80c00
-  - [13/14] net: tulip: Annotate struct mediatable with __counted_by
-    https://git.kernel.org/netdev/net-next/c/0d01cfe5aaaf
-  - [14/14] net: sched: Annotate struct tc_pedit with __counted_by
-    (no matching commit)
+You're right. I'll remove those tags.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+> 
+> Also, it's probably worth noting in the commit message that the p2pdma
+> code hardcodes nr_ranges to 1 (in pci_p2pdma_add_resource); so there is
+> no way to actually hit any bug with the current code.
 
+Yep. I mention that in this part "This could potentially lead to an
+overwrite of the objects following `pgmap` in `struct pci_p2pdma_pagemap`,
+when `nr_range > 1`."
 
+> 
+> I totally agree that the patch should be applied to prevent possible
+> bugs being introduced in the future:
+> 
+> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+
+Thanks for the RB and the feedback. :)
+--
+Gustavo
