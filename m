@@ -1,64 +1,36 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8665914F73
-	for <linux-hardening@vger.kernel.org>; Sun,  1 Oct 2023 22:21:34 +0000 (UTC)
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33744C9
-	for <linux-hardening@vger.kernel.org>; Sun,  1 Oct 2023 15:21:31 -0700 (PDT)
-Received: by mail-pf1-x42b.google.com with SMTP id d2e1a72fcca58-69101022969so14348356b3a.3
-        for <linux-hardening@vger.kernel.org>; Sun, 01 Oct 2023 15:21:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1696198890; x=1696803690; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0pqyiI3+7drkqtZIOt/nPWQvKqd+z/yppiMX4edx8e0=;
-        b=NDfAyqKtPqK4dieOW/2h7XgW879BvlK+Zs+BmgGEF2I3fiZNYTmR1iQI2w3z6Hv90s
-         qW2AfUWgYRNNZyu4aMHnl43dZDH8EEFYHWe/mIEYp8P4Nu0aXUDFgFbLz6B7zqpzrsTH
-         rbSicNfLts5ilJRxU+mBMaa9C/2syFmn3aBYI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696198890; x=1696803690;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0pqyiI3+7drkqtZIOt/nPWQvKqd+z/yppiMX4edx8e0=;
-        b=E367Hl68jdFHI2oyj/+eAleM1iGEBe4uicEbeL5Sltx4yPNcSRNfDOJ8kR3LucpbJQ
-         FyUhTOBycTNcNRJT86dKYU6SgUs6k8sYannrQGnkETj1jDfIIAjaGWs5dSbvJTFj+qH1
-         DrGcQgBuy7y3pNqrHITvz/h65HXxrK6sfaHX9nx7+ZSgYWEcUBAUzeYr7lyKAS4/9r1Q
-         vnA8azfB4Z3WGBz+d6ilaZmT93YByTc+WTjzdUnh00iAVmSK6ayn82OP2TT6Qu0ObZS7
-         Bpsx9xG4VIXkzctnYlcCl5d03N1EPt45GTQ7sk/dUuOgJM9amUX9suIhz934epIX2FJO
-         /g0A==
-X-Gm-Message-State: AOJu0Yy4hvP6EUbsKLngP80HgDHSpk7ZDEKa3IDDYW6OOSO3FZMI4cXH
-	kvV5gffDcMGVFbHgnscWJbedjtU3h701tCspiek=
-X-Google-Smtp-Source: AGHT+IEygYiXe/d0uPbrlFytK8CFzeVNQ2yBgFbzEaFRC83+K+JWqX4wlfI8uaxMMEcnvrQFQnEagw==
-X-Received: by 2002:a05:6a00:852:b0:691:da6:47a with SMTP id q18-20020a056a00085200b006910da6047amr12630310pfk.31.1696198890639;
-        Sun, 01 Oct 2023 15:21:30 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id q26-20020a62ae1a000000b0068ffd4eb66dsm18313851pff.35.2023.10.01.15.21.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Oct 2023 15:21:29 -0700 (PDT)
-Date: Sun, 1 Oct 2023 15:21:27 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Julia Lawall <julia.lawall@inria.fr>
-Cc: Kees Cook <kees@kernel.org>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Ian Abbott <abbotti@mev.co.uk>,
-	H Hartley Sweeten <hsweeten@visionengravers.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org, linux-hardening@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH] comedi: Annotate struct comedi_lrange with __counted_by
-Message-ID: <202310011515.D4C9184@keescook>
-References: <5c3b7459b820e22e2ac6ce892d4aadcc119cc919.1696065263.git.christophe.jaillet@wanadoo.fr>
- <202309301342.5B5BED40A1@keescook>
- <alpine.DEB.2.22.394.2310010945130.3166@hadrien>
- <90E2BBA5-8A2D-42DE-B36A-CD37BABBB433@kernel.org>
- <alpine.DEB.2.22.394.2310012112560.3166@hadrien>
- <202310011405.7599BA9@keescook>
- <202310011421.C4F19D45@keescook>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9965D7E3
+	for <linux-hardening@vger.kernel.org>; Mon,  2 Oct 2023 03:28:33 +0000 (UTC)
+X-Greylist: delayed 343 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 01 Oct 2023 20:28:31 PDT
+Received: from out-206.mta0.migadu.com (out-206.mta0.migadu.com [IPv6:2001:41d0:1004:224b::ce])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 941969B
+	for <linux-hardening@vger.kernel.org>; Sun,  1 Oct 2023 20:28:31 -0700 (PDT)
+Date: Sun, 1 Oct 2023 23:22:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1696216963;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JklXW6Z7ajflSgg9Kh9ih47eyxtCv9eOtR0Gj32NGWI=;
+	b=fFCaLqAAMWQH/QRpOQ9JxdRKCdWSnR0t7DWuPHFx8mbxDlr7/dAk1mrNvBTjYQM7HMs+FQ
+	Q0Jj7htwUxRj0iB46vCoQPvdomL2lLVdPkoYS2xix3IwFtRDbdbtqNEZco+V+UxChHzKRN
+	a2/2B6psnFUXzoYq6y1jxtvPv25XD58=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Kees Cook <keescook@chromium.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Brian Foster <bfoster@redhat.com>,
+	kernel test robot <lkp@intel.com>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	linux-fsdevel@vger.kernel.org, linux-bcachefs@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [linux-next:master] BUILD REGRESSION
+ df964ce9ef9fea10cf131bf6bad8658fde7956f6
+Message-ID: <20231002032239.t7ghpigbq5jy3ng7@moria.home.lan>
+References: <202309301308.d22sJdaF-lkp@intel.com>
+ <202309301403.82201B0A@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -67,54 +39,161 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202310011421.C4F19D45@keescook>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.6
+In-Reply-To: <202309301403.82201B0A@keescook>
+X-Migadu-Flow: FLOW_OUT
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Sun, Oct 01, 2023 at 02:22:17PM -0700, Kees Cook wrote:
-> On Sun, Oct 01, 2023 at 02:05:46PM -0700, Kees Cook wrote:
-> > On Sun, Oct 01, 2023 at 09:14:02PM +0200, Julia Lawall wrote:
-> > > Kees,
-> > > 
-> > > You can try the following.
-> > 
-> > Cool! Yeah, this finds the example:
-> > 
-> > drivers/comedi/drivers/rti800.c:74: struct comedi_lrange: field at offset 0 is the counter for the flex array
-> > drivers/comedi/drivers/rti800.c:83: struct comedi_lrange: field at offset 0 is the counter for the flex array
-> > drivers/comedi/drivers/rti800.c:92: struct comedi_lrange: field at offset 0 is the counter for the flex array
-> > 
-> > I'll run it on the whole codebase...
+On Sat, Sep 30, 2023 at 02:56:01PM -0700, Kees Cook wrote:
+> Hi Kent,
 > 
-> It found only the struct comedi_lrange instances, but that's good to
-> know. :)
+> Andrew pointed this out to me, and it's a FORTIFY issue under a W=1 build:
+> 
+> On Sat, Sep 30, 2023 at 01:25:34PM +0800, kernel test robot wrote:
+> > tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+> > branch HEAD: df964ce9ef9fea10cf131bf6bad8658fde7956f6  Add linux-next specific files for 20230929
+> > 
+> > Error/Warning reports:
+> > 
+> > [...]
+> > https://lore.kernel.org/oe-kbuild-all/202309192314.VBsjiIm5-lkp@intel.com
+> 
+>    fs/bcachefs/extents.c: In function 'bch2_bkey_append_ptr':
+>    include/linux/fortify-string.h:57:33: warning: writing 8 bytes into a region of size 0 [-Wstringop-overflow=]
+>       57 | #define __underlying_memcpy     __builtin_memcpy
+>          |                                 ^
+>    include/linux/fortify-string.h:648:9: note: in expansion of macro '__underlying_memcpy'
+>      648 |         __underlying_##op(p, q, __fortify_size);                        \
+>          |         ^~~~~~~~~~~~~
+>    include/linux/fortify-string.h:693:26: note: in expansion of macro '__fortify_memcpy_chk'
+>      693 | #define memcpy(p, q, s)  __fortify_memcpy_chk(p, q, s,                  \
+>          |                          ^~~~~~~~~~~~~~~~~~~~
+>    fs/bcachefs/extents.c:235:17: note: in expansion of macro 'memcpy'
+>      235 |                 memcpy((void *) &k->v + bkey_val_bytes(&k->k),
+>          |                 ^~~~~~
+>    fs/bcachefs/bcachefs_format.h:287:33: note: destination object 'v' of size 0
+>      287 |                 struct bch_val  v;
+>          |                                 ^
+> 
+> The problem here is the struct bch_val is explicitly declared as a
+> zero-sized array, so the compiler becomes unhappy. :) Converting bch_val
+> to a flexible array will just kick the can down the road, since this is
+> going to run into -Wflex-array-member-not-at-end soon too since bch_val
+> overlaps with other structures:
+> 
+> struct bch_inode_v3 {
+>         struct bch_val          v;
+> 
+>         __le64                  bi_journal_seq;
+> ...
+> };
+> 
+> As a container_of() target, this is fine -- leave it a zero-sized
+> array. The problem is using it as a destination for memcpy, etc, since
+> the compiler will believe it to be 0 sized. Instead, we need to impart
+> a type of some kind so that the compiler can actually unambiguously
+> reason about sizes. The memcpy() in the warning is targeting bch_val,
+> so I think the best fix is to correctly handle the different types.
+> 
+> So just to have everything in front of me, here's a summary of what I'm
+> seeing in the code:
+> 
+> struct bkey {
+>         /* Size of combined key and value, in u64s */
+>         __u8            u64s;
+> ...
+> };
+> 
+> /* Empty placeholder struct, for container_of() */
+> struct bch_val {
+>         __u64           __nothing[0];
+> };
+> 
+> struct bkey_i {
+>         __u64                   _data[0];
+> 
+>         struct bkey     k;
+>         struct bch_val  v;
+> };
+> 
+> static inline void bch2_bkey_append_ptr(struct bkey_i *k, struct bch_extent_ptr ptr)
+> {
+>         EBUG_ON(bch2_bkey_has_device(bkey_i_to_s(k), ptr.dev));
+> 
+>         switch (k->k.type) {
+>         case KEY_TYPE_btree_ptr:
+>         case KEY_TYPE_btree_ptr_v2:
+>         case KEY_TYPE_extent:
+>                 EBUG_ON(bkey_val_u64s(&k->k) >= BKEY_EXTENT_VAL_U64s_MAX);
+> 
+>                 ptr.type = 1 << BCH_EXTENT_ENTRY_ptr;
+> 
+>                 memcpy((void *) &k->v + bkey_val_bytes(&k->k),
+>                        &ptr,
+>                        sizeof(ptr));
+>                 k->k.u64s++;
+>                 break;
+>         default:
+>                 BUG();
+>         }
+> }
+> 
+> So this is appending u64s into the region that start with bkey_i. Could
+> this gain a u64 flexible array?
+> 
+> struct bkey_i {
+>         __u64                   _data[0];
+> 
+>         struct bkey     k;
+>         struct bch_val  v;
+> 	__u64		ptrs[];
+> };
+> 
+> Then the memcpy() could be just a direct assignment:
+> 
+> 		k->ptrs[bkey_val_u64s(&k->k)] = (u64)ptr;
+>                 k->k.u64s++;
 
-On a related note, why doesn't this work?
+No, that's not going to work. You're adding a field that's specific to
+bch_extent (and not even correct for that) to bkey_i, the generic key;
+there are many other different types of values.
 
-@allocated@
-identifier STRUCT, ARRAY;
-expression COUNT;
-struct STRUCT *PTR;
-identifier ALLOC;
-type ELEMENT_TYPE;
-@@
+> Alternatively, perhaps struct bkey could be the one to grow this flexible
+> array, and then it could eventually be tracked with __counted_by (but
+> not today since it expects to count the array element count, not a whole
+> struct size):
+> 
+> struct bkey {
+>         /* Size of combined key and value, in u64s */
+>         __u8            u64s;
+> ...
+> 	__u64		data[] __counted_by(.u64s - BKEY_U64s);
+> };
+> 
+> And bch_val could be dropped...
 
-        PTR = ALLOC(..., sizeof(\(*PTR\|struct STRUCT\)) +
-                         COUNT * sizeof(\(*PTR->ARRAY\|PTR->ARRAY[0]\|ELEMENT_TYPE\)), ...);
+bch_val can't be dropped. bkey_i is different from bkey; bkey_i is a
+bkey with an inline value, we also have bkey_s and bkey_s_c for a bkey
+with a split value (and const variation); bch_val is in bkey_i and not
+bkey because container_of to get to the value is correct for bkey_i, but
+not bkey.
 
+> Then the memcpy becomes:
+> 
+>                 k->k.u64s++;
+>                 k->k.data[bkey_val_u64s(&k->k)] = (u64)ptr;
+> 
+> It just seems like there is a lot of work happening that could really
+> just type casting or unions...
 
-minus: parse error: 
-  File "alloc.cocci", line 15, column 34, charpos = 485
-  around = 'struct',
-  whole content =       PTR = ALLOC(..., sizeof(\(*PTR\|struct STRUCT\)) +
+Honestly, I think we really just need an escape hatch. Casting to a void
+pointer clearly isn't it - and this isn't the only issue I'm still
+seeing with all the recent FORTIFY_SOURCE stuff, and honestly it's been
+making me tear my hair out.
 
-if I drop "struct", then it complains about ELEMENT_TYPE...
-
--Kees
-
--- 
-Kees Cook
+I'm not leaping at the chance to reorganize my fundamental data
+structures for this. Can we get such an escape hatch?
