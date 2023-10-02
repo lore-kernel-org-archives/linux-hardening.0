@@ -1,82 +1,114 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67C24388
-	for <linux-hardening@vger.kernel.org>; Mon,  2 Oct 2023 04:52:26 +0000 (UTC)
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F11CFBF
-	for <linux-hardening@vger.kernel.org>; Sun,  1 Oct 2023 21:52:24 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1c5db4925f9so18643615ad.1
-        for <linux-hardening@vger.kernel.org>; Sun, 01 Oct 2023 21:52:24 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2930EA5D
+	for <linux-hardening@vger.kernel.org>; Mon,  2 Oct 2023 05:38:46 +0000 (UTC)
+Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BEE59F;
+	Sun,  1 Oct 2023 22:38:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1696222344; x=1696827144; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vgZc1gl8r9gpj8F7Au1ygxE46XZZIEmRRHjiEVQPVBA=;
-        b=TL+HoLMvWBDopW0IXzRldKSynFlSpTg0Bg1mJ4trFQJilvADyqdIfpRRV0VZlwLXh7
-         Sc3dCxRRCOZNIcawLY8aBmEyTDR2cFz2FbiIyc6/IMFfBa4+V6f9HlTQog0wfwISkkfI
-         iZc749P+OsQk+I8lQnLhnH63D7kTF5iSkptB8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696222344; x=1696827144;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vgZc1gl8r9gpj8F7Au1ygxE46XZZIEmRRHjiEVQPVBA=;
-        b=CKpv9/NxWd7siU+exIe3v6ZVvRYyNgdXAa0bB/UKjjVcQ/A+bO2pBnfFD1PZh6ovXI
-         BqVce0ydG/xY2+GfTnRU9W9AF7uM8nh2X0vWr8TtGzZCcljhNaFiWbIABBxQ9eUl7zsm
-         mtvrQnsluigaH6a6S1va/i6K+Nn2XggzLrp2ELAlqr703pexZdrpun5MBY4Fi8e78rDt
-         vo14hG1zsFbweKpkG8oyujbn2Vjw6Selu7z1cvN9vjLoZ7f4tQyfzfWQkufa3MEdXMX0
-         n5vWser/QoLVrOzL/E9MScLcAXsMwg686RGwH2KuKBAgsjoTSVzrCO2CY786g2T4FoAs
-         qH/w==
-X-Gm-Message-State: AOJu0Yw0j5n2gs2Nq68xC6841y2aQdQCQf+y3DE9xQWpR1PwcNTwrteQ
-	pbYTyeNernwLrC4ujWHUssoGEQ==
-X-Google-Smtp-Source: AGHT+IEoCHeBBwDUL5/duEukBlE8ayroCrMSrtJAST1F9vN+5909TzVhFCg4Lq92qLJoTTJZW7Qzsg==
-X-Received: by 2002:a17:902:e54a:b0:1c5:6f4d:d6dd with SMTP id n10-20020a170902e54a00b001c56f4dd6ddmr18858004plf.24.1696222344309;
-        Sun, 01 Oct 2023 21:52:24 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id b18-20020a170902d31200b001b03a1a3151sm9883404plc.70.2023.10.01.21.52.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Oct 2023 21:52:23 -0700 (PDT)
-Date: Sun, 1 Oct 2023 21:52:22 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Brian Foster <bfoster@redhat.com>,
-	kernel test robot <lkp@intel.com>,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	linux-fsdevel@vger.kernel.org, linux-bcachefs@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [linux-next:master] BUILD REGRESSION
- df964ce9ef9fea10cf131bf6bad8658fde7956f6
-Message-ID: <202310012150.72AAB06FAD@keescook>
-References: <202309301308.d22sJdaF-lkp@intel.com>
- <202309301403.82201B0A@keescook>
- <20231002032239.t7ghpigbq5jy3ng7@moria.home.lan>
+  d=inria.fr; s=dc;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=uOUzmb8ftzbOyFeK0edTqft1MheQUfEIQXgPtEe/8BM=;
+  b=Hd8NbBKsVd0zs1p7J5JnV+4cB+382/OjJB/78nDnuyqCucAQsl6Nk0H2
+   fy6HM5EWGeeK2/gAFUSUB1wpfOsGxEFpu2tBRjL4k02Bgv5uEi/dH+oo7
+   ozD+ml33TF3cf43UZFaTWgXzclPYV+SccLRPMrVqkzn/GbSCp7Dc7yqLI
+   I=;
+Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="6.03,193,1694728800"; 
+   d="scan'208";a="67469029"
+Received: from 231.85.89.92.rev.sfr.net (HELO hadrien) ([92.89.85.231])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Oct 2023 07:38:42 +0200
+Date: Mon, 2 Oct 2023 07:38:42 +0200 (CEST)
+From: Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To: Kees Cook <keescook@chromium.org>
+cc: Julia Lawall <julia.lawall@inria.fr>, Kees Cook <kees@kernel.org>, 
+    Christophe JAILLET <christophe.jaillet@wanadoo.fr>, 
+    Ian Abbott <abbotti@mev.co.uk>, 
+    H Hartley Sweeten <hsweeten@visionengravers.com>, 
+    "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+    Nathan Chancellor <nathan@kernel.org>, 
+    Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>, 
+    linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org, 
+    linux-hardening@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH] comedi: Annotate struct comedi_lrange with
+ __counted_by
+In-Reply-To: <202310011515.D4C9184@keescook>
+Message-ID: <alpine.DEB.2.22.394.2310020737570.3166@hadrien>
+References: <5c3b7459b820e22e2ac6ce892d4aadcc119cc919.1696065263.git.christophe.jaillet@wanadoo.fr> <202309301342.5B5BED40A1@keescook> <alpine.DEB.2.22.394.2310010945130.3166@hadrien> <90E2BBA5-8A2D-42DE-B36A-CD37BABBB433@kernel.org>
+ <alpine.DEB.2.22.394.2310012112560.3166@hadrien> <202310011405.7599BA9@keescook> <202310011421.C4F19D45@keescook> <202310011515.D4C9184@keescook>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231002032239.t7ghpigbq5jy3ng7@moria.home.lan>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+	RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Sun, Oct 01, 2023 at 11:22:39PM -0400, Kent Overstreet wrote:
-> I'm not leaping at the chance to reorganize my fundamental data
-> structures for this.
 
-Yeah, understood. Thanks for taking a look at it!
 
-> Can we get such an escape hatch?
+On Sun, 1 Oct 2023, Kees Cook wrote:
 
-Sure, please use unsafe_memcpy(), and include a comment on how the sizing
-has been bounds checked, etc.
+> On Sun, Oct 01, 2023 at 02:22:17PM -0700, Kees Cook wrote:
+> > On Sun, Oct 01, 2023 at 02:05:46PM -0700, Kees Cook wrote:
+> > > On Sun, Oct 01, 2023 at 09:14:02PM +0200, Julia Lawall wrote:
+> > > > Kees,
+> > > >
+> > > > You can try the following.
+> > >
+> > > Cool! Yeah, this finds the example:
+> > >
+> > > drivers/comedi/drivers/rti800.c:74: struct comedi_lrange: field at offset 0 is the counter for the flex array
+> > > drivers/comedi/drivers/rti800.c:83: struct comedi_lrange: field at offset 0 is the counter for the flex array
+> > > drivers/comedi/drivers/rti800.c:92: struct comedi_lrange: field at offset 0 is the counter for the flex array
+> > >
+> > > I'll run it on the whole codebase...
+> >
+> > It found only the struct comedi_lrange instances, but that's good to
+> > know. :)
+>
+> On a related note, why doesn't this work?
+>
+> @allocated@
+> identifier STRUCT, ARRAY;
+> expression COUNT;
+> struct STRUCT *PTR;
+> identifier ALLOC;
+> type ELEMENT_TYPE;
+> @@
+>
+>         PTR = ALLOC(..., sizeof(\(*PTR\|struct STRUCT\)) +
+>                          COUNT * sizeof(\(*PTR->ARRAY\|PTR->ARRAY[0]\|ELEMENT_TYPE\)), ...);
+>
+>
+> minus: parse error:
+>   File "alloc.cocci", line 15, column 34, charpos = 485
+>   around = 'struct',
+>   whole content =       PTR = ALLOC(..., sizeof(\(*PTR\|struct STRUCT\)) +
+>
+> if I drop "struct", then it complains about ELEMENT_TYPE...
 
--- 
-Kees Cook
+The sizeof with an expression argument is treated differently than the
+sizeof with a type argument.  So you need to write:
+
+@allocated@
+identifier STRUCT, ARRAY;
+expression COUNT;
+struct STRUCT *PTR;
+identifier ALLOC;
+type ELEMENT_TYPE;
+@@
+
+        PTR = ALLOC(..., \(sizeof(*PTR)\|sizeof(struct STRUCT)\) +
+                         COUNT * \(sizeof(*PTR->ARRAY)\|sizeof(PTR->ARRAY[0])\|sizeof(ELEMENT_TYPE)\), ...);
+
+julia
