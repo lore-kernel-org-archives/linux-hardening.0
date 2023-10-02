@@ -1,73 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 814501DA28
-	for <linux-hardening@vger.kernel.org>; Mon,  2 Oct 2023 16:14:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA69BC433C7;
-	Mon,  2 Oct 2023 16:14:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696263271;
-	bh=z2fk8YtqV+V10VoyiNxtWZBlzYiMUwqKV/e12y8Dpx0=;
-	h=Date:From:To:Cc:Subject:From;
-	b=GbwsDYRm+UDgIYREREAZP0jTTQBCIV4CJJHH7wEetdjC+jxysZa0rBH8QzAwzAFwZ
-	 v7lxoCioIVK/r5zbt1IOpNUptgXs7b3khb6v3d7hOAEGjrnJJ4yvcESo7MtDHwXTDP
-	 VdkN1SdElzRobMstfIArea3xeRsFkk8p+DIIEkIFGhJ/oqwOipzgGy0oLPoMTcuM8S
-	 3u67P2ISVpF4mDi/QhrtiiQdxlSnVoCP0S6B8GM98iE4Yse5HtdyRDf1Ljk5oPm8N+
-	 6V8OiI3ER7Dx0VnidTST7wrI//SY7+4gj1/0fHBNLzT2sbyzOLUScUS1vNSaxojfOO
-	 bwl94dkd8l2sw==
-Date: Mon, 2 Oct 2023 18:14:26 +0200
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Jan Kara <jack@suse.com>
-Cc: linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] udf: Fix undefined behavior bug in struct
- udf_fileident_iter
-Message-ID: <ZRrsYkKIQe8K6F/t@work>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D032718E00
+	for <linux-hardening@vger.kernel.org>; Mon,  2 Oct 2023 16:40:46 +0000 (UTC)
+X-Greylist: delayed 1991 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 02 Oct 2023 09:40:44 PDT
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFD7A9B;
+	Mon,  2 Oct 2023 09:40:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
+	MIME-Version:Date:Message-ID:content-disposition;
+	bh=XGVVjLtCy/b7XBDMrd+l3TWnpYYLvXFcVZSGnHlFQ0I=; b=mJQqcPDwO7ipsx68RKWvm0jKtr
+	FhyNNxdJSAYCuqGp617XQ+BSogb8Pfn7INKEXNbGv1t8ftDBmR86NY0yWTghteijc+FPWNLX5LowD
+	vZdlqta/hTH0lChornsXgF/i4XXA/64c7kmp5LvFJaiq4XXQdR46f+y4m7m1TOlbzkpDnyQQT2f+y
+	W4eZXQvVqtVFivZr4qskUjmy48juNz3iDo3x1PmuwRFaNkQR0PqRbkA9eC64D+/mILIafBxGaXdRf
+	S2JyxGWZLtDxNFClQvZdZMQfK9qxxn3Rf2/p8Du7URV62I8opHx9O1l4KRAYBOg5/9CR0i4KvXJuu
+	MyYHwAOQ==;
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+	by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.94.2)
+	(envelope-from <logang@deltatee.com>)
+	id 1qnLS5-002kN1-J5; Mon, 02 Oct 2023 10:07:23 -0600
+Message-ID: <29da763d-1570-7197-2d5a-03c5659b8b52@deltatee.com>
+Date: Mon, 2 Oct 2023 10:07:21 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Content-Language: en-CA
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <ZRnf6wVOu0IJQ2Ok@work>
+From: Logan Gunthorpe <logang@deltatee.com>
+In-Reply-To: <ZRnf6wVOu0IJQ2Ok@work>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: gustavoars@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.6
+Subject: Re: [PATCH][next] PCI/P2PDMA: Fix undefined behavior bug in struct
+ pci_p2pdma_pagemap
+X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 
-`struct fileIdentDesc` is a flexible structure, which means that it
-contains a flexible-array member at the bottom. This could potentially
-lead to an overwrite of the objects following `fi` in `struct
-udf_fileident_iter` at run-time.
 
-Fix this by placing the declaration of object `fi` at the end of
-`struct udf_fileident_iter`.
 
--Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
-ready to enable it globally.
+On 2023-10-01 15:08, Gustavo A. R. Silva wrote:
+> `struct dev_pagemap` is a flexible structure, which means that it
+> contains a flexible-array member at the bottom. This could potentially
+> lead to an overwrite of the objects following `pgmap` in `struct
+> pci_p2pdma_pagemap`, when `nr_range > 1`.
+> 
+> Fix this by placing the declaration of object `pgmap` at the end of
+> `struct pci_p2pdma_pagemap`.
+> 
+> -Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
+> ready to enable it globally.
+> 
+> Fixes: 0afea3814358 ("PCI/P2PDMA: Add provider's pci_dev to pci_p2pdma_pagemap struct")
+> Fixes: a6e6fe6549f6 ("PCI/P2PDMA: Introduce private pagemap structure")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Fixes: d16076d9b684 ("udf: New directory iteration code")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- fs/udf/udfdecl.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/udf/udfdecl.h b/fs/udf/udfdecl.h
-index 88692512a466..736f591abc89 100644
---- a/fs/udf/udfdecl.h
-+++ b/fs/udf/udfdecl.h
-@@ -93,11 +93,11 @@ struct udf_fileident_iter {
- 	sector_t loffset;		/* Block offset of 'pos' within above
- 					 * extent */
- 	struct extent_position epos;	/* Position after the above extent */
--	struct fileIdentDesc fi;	/* Copied directory entry */
- 	uint8_t *name;			/* Pointer to entry name */
- 	uint8_t *namebuf;		/* Storage for entry name in case
- 					 * the name is split between two blocks
- 					 */
-+	struct fileIdentDesc fi;	/* Copied directory entry */
- };
- 
- struct udf_vds_record {
--- 
-2.34.1
+Makes sense to me, thanks.
 
+Although, I'm not sure the fixes tags are appropriate. The
+flexible-array member was introduced in 5.10 (b7b3c01b19) and both the
+"fixed" commits predate that change by a number of releases.
+
+Also, it's probably worth noting in the commit message that the p2pdma
+code hardcodes nr_ranges to 1 (in pci_p2pdma_add_resource); so there is
+no way to actually hit any bug with the current code.
+
+I totally agree that the patch should be applied to prevent possible
+bugs being introduced in the future:
+
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+
+Logan
