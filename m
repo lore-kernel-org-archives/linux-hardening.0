@@ -1,47 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6774B1EA91;
-	Mon,  2 Oct 2023 18:26:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D269C433C9;
-	Mon,  2 Oct 2023 18:26:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 140971EA74;
+	Mon,  2 Oct 2023 18:31:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 290E8C433C7;
+	Mon,  2 Oct 2023 18:31:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696271198;
-	bh=eur7A7Y3SzDW6ljEQkfCfCenQyoxYCoEfd1Tln8zfqc=;
+	s=k20201202; t=1696271509;
+	bh=FwOWdXcduUEuYueUYb3WKEmK/UO8XkOGezapIcoLank=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=iJUIwUx4t7QNZst/Cx4lJwT62Xfz3o6VvavukhzSh5nzFA5PEry5FIMcU2nA5JHGH
-	 Nb2r2SQQVFOgadlBtnmsH168qXAkq+tjPtXwJtss3Jl6UnuhW8mm2r5J3RMQDjvzkm
-	 sCnKmGhA+n9Ur3yJp/MbievOAuPxiMRbhTG/3/Mt3q48+6gldE4VofhC8K27ng12hF
-	 kP7O62WOxp5G2s39ieBfQJ74BIA5eXjPW39F2I1G4opvSOlAuI9pC2ZpIl7nJQqgYn
-	 6Gmm7Q/Aonk710NI7tpIg4Ht2PCwSbaAOODvwmKGJSmGQfEUWwiSiCXnh9bPw42aYB
-	 2d5iDQxGKIWiA==
-Date: Mon, 2 Oct 2023 11:26:35 -0700
+	b=nXztEeJMKGNe5w7pRztMXGYK/3RIFockMyii4+e+9IvyivRQTAnvy1vyrvzDeO21f
+	 iKU2HTcj94fyDABBbgMlwgUC8CTQG89l1KY7S8LVPLMqOt+CDcuW0fQYRISYsaDvos
+	 HvE6+8vVtjWuISVyQmW2JPpxrzcAI30tx4w0uZ+cgMSVdNgkM8R6uqiKq/uUe2RZra
+	 Zib9hBL+cex/Ey/T3JkJAGJtMDV/iOr5V67gcACD5HLZKxJvB8rLBuSNxuTlg2qbIX
+	 NzweXBCSFW9P5Ks5oDRRG/NO7iUyZAV6gyZIboSH+b8a9xVsxeJ0lDMU17k04my2UL
+	 cqPirDsCOLtXQ==
+Date: Mon, 2 Oct 2023 11:31:48 -0700
 From: Jakub Kicinski <kuba@kernel.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>, "David S. Miller"
- <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Martin KaFai Lau
- <martin.lau@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Alexei Starovoitov <ast@kernel.org>, Yisen Zhuang
- <yisen.zhuang@huawei.com>, Salil Mehta <salil.mehta@huawei.com>, Claudiu
- Manoil <claudiu.manoil@nxp.com>, Vladimir Oltean <vladimir.oltean@nxp.com>,
- "K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang
- <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
- <decui@microsoft.com>, Long Li <longli@microsoft.com>, Ajay Sharma
- <sharmaajay@microsoft.com>, Alex Elder <elder@kernel.org>, Pravin B Shelar
- <pshelar@ovn.org>, Shaokun Zhang <zhangshaokun@hisilicon.com>, Cong Wang
- <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>, Nathan
- Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>,
- Tom Rix <trix@redhat.com>, Simon Horman <horms@kernel.org>,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- linux-hyperv@vger.kernel.org, linux-rdma@vger.kernel.org,
- dev@openvswitch.org, linux-parisc@vger.kernel.org, llvm@lists.linux.dev,
- linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 00/14] Batch 1: Annotate structs with __counted_by
-Message-ID: <20231002112635.7daf13ef@kernel.org>
-In-Reply-To: <202309270854.67756EAC2@keescook>
-References: <20230922172449.work.906-kees@kernel.org>
-	<202309270854.67756EAC2@keescook>
+To: Ayush Sawal <ayush.sawal@chelsio.com>
+Cc: Kees Cook <keescook@chromium.org>, Raju Rangoju <Raju.Rangoju@amd.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, "Gustavo A. R.
+ Silva" <gustavoars@kernel.org>, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 0/5] chelsio: Annotate structs with __counted_by
+Message-ID: <20231002113148.2d6f578b@kernel.org>
+In-Reply-To: <202309291240.BC52203CB@keescook>
+References: <20230929181042.work.990-kees@kernel.org>
+	<202309291240.BC52203CB@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -51,12 +37,44 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 27 Sep 2023 08:57:36 -0700 Kees Cook wrote:
-> > Since the element count member must be set before accessing the annotated
-> > flexible array member, some patches also move the member's initialization
-> > earlier. (These are noted in the individual patches.)  
+On Fri, 29 Sep 2023 12:44:45 -0700 Kees Cook wrote:
+> On Fri, Sep 29, 2023 at 11:11:44AM -0700, Kees Cook wrote:
+> > Hi,
+> > 
+> > This annotates several chelsio structures with the coming __counted_by
+> > attribute for bounds checking of flexible arrays at run-time. For more details,
+> > see commit dd06e72e68bc ("Compiler Attributes: Add __counted_by macro").
+> > 
+> > Thanks!
+> > 
+> > -Kees
+> > 
+> > Kees Cook (5):
+> >   chelsio/l2t: Annotate struct l2t_data with __counted_by
+> >   cxgb4: Annotate struct clip_tbl with __counted_by
+> >   cxgb4: Annotate struct cxgb4_tc_u32_table with __counted_by
+> >   cxgb4: Annotate struct sched_table with __counted_by
+> >   cxgb4: Annotate struct smt_data with __counted_by
+> > 
+> >  drivers/net/ethernet/chelsio/cxgb3/l2t.h                | 2 +-
+> >  drivers/net/ethernet/chelsio/cxgb4/clip_tbl.h           | 2 +-
+> >  drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32_parse.h | 2 +-
+> >  drivers/net/ethernet/chelsio/cxgb4/l2t.c                | 2 +-
+> >  drivers/net/ethernet/chelsio/cxgb4/sched.h              | 2 +-
+> >  drivers/net/ethernet/chelsio/cxgb4/smt.h                | 2 +-
+> >  6 files changed, 6 insertions(+), 6 deletions(-)  
 > 
-> Hi, just checking on this batch of changes. Is it possible to take the
-> 1-13 subset:
+> Hm, it looks like this is not "Supported" any more? I'm getting bounces
+> from "Raju Rangoju <rajur@chelsio.com>" ...
+> 
+> CXGB4 ETHERNET DRIVER (CXGB4)
+> M:      Raju Rangoju <rajur@chelsio.com>
+> L:      netdev@vger.kernel.org
+> S:      Supported
+> W:      http://www.chelsio.com
+> F:      drivers/net/ethernet/chelsio/cxgb4/
 
-On it, sorry for the delay.
+Hi Ayush,
+
+any idea who should be maintaining the Ethernet part of cxgb4 
+at this point?
