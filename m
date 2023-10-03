@@ -1,93 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43443208B0;
-	Tue,  3 Oct 2023 10:57:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68061C433CA;
-	Tue,  3 Oct 2023 10:56:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696330620;
-	bh=L2ltrDergf8j+6fN/XHH5Y2TY5o3ImTEqYPcQIDDz74=;
-	h=Date:From:To:Cc:Subject:From;
-	b=XI3o7enOreh7fRsdaT70e9scAOoD65yQRBnHI6PYbVcep0ISwndyOulaRdbTy/VTF
-	 0U9drLcniIQyOtYmnZjHHNM0cX3J1t8xX/uazdVob2up4RGkLBhod76s+s1+iDsUQL
-	 dN01yQ2zvr8ECqcQnAVSH8KQUr6SsXxDNNXQsqYQc/jksSmHJx3H5yk3pf2c9Y2a1K
-	 17BlOVCZDoDyXgKR5wmI0VclvNtJLyP1+ntRipJp4kFsqTQ25kh3yl4FCZrhpVs9r3
-	 1XOq2udkA3et5rTP2CVa8jqSzPzCLPjh2xg2J+ExgVfpFV75GBtuH+dKAgZWo1qYOW
-	 GmIlJrrfFpuTg==
-Date: Tue, 3 Oct 2023 12:56:54 +0200
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Ayush Sawal <ayush.sawal@chelsio.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rohit Maheshwari <rohitm@chelsio.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2][next] cxgb4/ch_ktls: Fix undefined behavior bug in struct
- chcr_ktls_ofld_ctx_tx
-Message-ID: <ZRvzdlvlbX4+eIln@work>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40FFDF4EE;
+	Tue,  3 Oct 2023 11:04:43 +0000 (UTC)
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6A47BD;
+	Tue,  3 Oct 2023 04:04:41 -0700 (PDT)
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 393B4GBt060602;
+	Tue, 3 Oct 2023 06:04:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1696331056;
+	bh=WOMYLjdsgwCUjmueSDss3yq/aUWw73r1I6VvK8Gyu0A=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=lvtStY2/YyzJ55lD+PupoVpOcfTpGgLLGS/Rm22zo4JVgB6jm1tpsl1mX9b5jptOd
+	 fB1YaWRXD/qbkEUlKSC1meSSENCbzNeW17C27rXtwa4/fyqKJrkXSnNVBt+wmOtbfM
+	 a4qYqO3BGG8fCQTjFNRmLdoq/09JVOZFL++RcpuI=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 393B4GXP001885
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 3 Oct 2023 06:04:16 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 3
+ Oct 2023 06:04:16 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 3 Oct 2023 06:04:16 -0500
+Received: from uda0132425.dhcp.ti.com (ileaxei01-snat2.itg.ti.com [10.180.69.6])
+	by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 393B1Dvr129223;
+	Tue, 3 Oct 2023 06:04:11 -0500
+From: Vignesh Raghavendra <vigneshr@ti.com>
+To: <nm@ti.com>, <kristo@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <keescook@chromium.org>, <tony.luck@intel.com>, <gpiccoli@igalia.com>,
+        Wadim
+ Egorov <w.egorov@phytec.de>
+CC: Vignesh Raghavendra <vigneshr@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <upstream@lists.phytec.de>
+Subject: Re: [PATCH v2] arm64: dts: ti: k3-am625-beagleplay: Fix typo in ramoops reg
+Date: Tue, 3 Oct 2023 16:30:54 +0530
+Message-ID: <169633065056.2221719.2919691139656141039.b4-ty@ti.com>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20230925151444.1856852-1-w.egorov@phytec.de>
+References: <20230925151444.1856852-1-w.egorov@phytec.de>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-`struct tls_offload_context_tx` is a flexible structure, which means
-that it contains a flexible-array member at the bottom. This could
-potentially lead to an overwrite of the objects following `base` in
-`struct chcr_ktls_ofld_ctx_tx` at run-time.
+Hi Wadim Egorov,
 
-Notice that flexible-array member `driver_state` in `struct
-tls_offload_context_tx` can grow up to 16 bytes:
+On Mon, 25 Sep 2023 17:14:44 +0200, Wadim Egorov wrote:
+> Seems like the address value of the reg property was mistyped.
+> Update reg to 0x9ca00000 to match node's definition.
+> 
+> 
 
-| include/net/tls.h-170:
-| #define TLS_DRIVER_STATE_SIZE_TX  16
+I have applied the following to branch ti-k3-dts-next on [1].
+Thank you!
 
-| include/net/tls.h-173:
-| #define TLS_OFFLOAD_CONTEXT_SIZE_TX                                     \
-|	(sizeof(struct tls_offload_context_tx) + TLS_DRIVER_STATE_SIZE_TX)
+[1/1] arm64: dts: ti: k3-am625-beagleplay: Fix typo in ramoops reg
+      commit: c3357773f560135c956de0c195e5ffe71c744a34
 
-| net/tls/tls_device.c-1119:
-| offload_ctx = kzalloc(TLS_OFFLOAD_CONTEXT_SIZE_TX, GFP_KERNEL);
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent up the chain during
+the next merge window (or sooner if it is a relevant bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-Fix this by placing the declaration of object `base` at the end of
-`struct chcr_ktls_ofld_ctx_tx`.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
--Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
-ready to enable it globally.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-Fixes: 34aba2c45024 ("cxgb4/chcr : Register to tls add and del callback")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v2:
- - Update changelog text: mention -Wflex-array-member-not-at-end.
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-v1:
- - Link: https://lore.kernel.org/linux-hardening/ZRvyysCUTqA7aXN4@work/
-
- drivers/net/ethernet/chelsio/inline_crypto/ch_ktls/chcr_ktls.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/chelsio/inline_crypto/ch_ktls/chcr_ktls.h b/drivers/net/ethernet/chelsio/inline_crypto/ch_ktls/chcr_ktls.h
-index 10572dc55365..35e34e3db663 100644
---- a/drivers/net/ethernet/chelsio/inline_crypto/ch_ktls/chcr_ktls.h
-+++ b/drivers/net/ethernet/chelsio/inline_crypto/ch_ktls/chcr_ktls.h
-@@ -68,8 +68,8 @@ struct chcr_ktls_info {
- };
- 
- struct chcr_ktls_ofld_ctx_tx {
--	struct tls_offload_context_tx base;
- 	struct chcr_ktls_info *chcr_info;
-+	struct tls_offload_context_tx base;
- };
- 
- struct chcr_ktls_uld_ctx {
--- 
-2.34.1
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
+--
+Vignesh
 
