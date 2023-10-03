@@ -1,52 +1,53 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E1223FB09
-	for <linux-hardening@vger.kernel.org>; Tue,  3 Oct 2023 23:41:54 +0000 (UTC)
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EEA9AD
-	for <linux-hardening@vger.kernel.org>; Tue,  3 Oct 2023 16:41:52 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id 98e67ed59e1d1-27777b778bfso989877a91.3
-        for <linux-hardening@vger.kernel.org>; Tue, 03 Oct 2023 16:41:52 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4A8A3FB09
+	for <linux-hardening@vger.kernel.org>; Tue,  3 Oct 2023 23:44:13 +0000 (UTC)
+Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E92F6AF
+	for <linux-hardening@vger.kernel.org>; Tue,  3 Oct 2023 16:44:11 -0700 (PDT)
+Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-59bbdb435bfso18607917b3.3
+        for <linux-hardening@vger.kernel.org>; Tue, 03 Oct 2023 16:44:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1696376512; x=1696981312; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1696376651; x=1696981451; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WhYcyR6Fe80biMSdh0fvQHW+o+cY1bEtG/iTTN+PcWg=;
-        b=IHpUi4Ksr7Sxs+EbzIhbDtk+ViKhlKz9Km5JnR4HJs/OQ0KTliyWo//MOgxoddb8T7
-         6ZlU3Y6KL2eWRewgAHgcBZqEnllPNwEtbaj+u4xJv6SyKhH8YxJDAgYIgrP28fXuE0WL
-         tJRReKVlRVi8HOoqzeZeiR4+VmGIPjVhplyEY=
+        bh=a4manyg4jn+tfLYFok6RJE4vtrYhKXlkYtdCzoyuohU=;
+        b=TmAyl1n/eNsZtKfURDuoL2gUaXRF+rJFXEaqCV1I72bWyHKFuW2oHz/2rgauQL8BrG
+         8Vlhf9tgFn0MzonSCIdAK6qZDxR8I4slUj9+e5Cp5HZRDBYzWgT8osKyCAos/zJze+Ea
+         jdBcMZjeROboH62HT5TehThLdfw78X2N6Nfw0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696376512; x=1696981312;
+        d=1e100.net; s=20230601; t=1696376651; x=1696981451;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=WhYcyR6Fe80biMSdh0fvQHW+o+cY1bEtG/iTTN+PcWg=;
-        b=wbbu5NzsmSOKGM+U9WXmG6GvQaZt6bALXMxhT28ltKJrqnKNX6QL8Z5f95+M6/aqku
-         lFxQ74k3dKGWsASuioLXzH4XDKx23djZF3I6uS/i+yUN3sXK1aAjw1FMfFXnMfasa/+8
-         7ABkDyGS1s1sj9uaxpp2VQXD9V58DWhaJlZNb5YypTz/GsUxwk2UTaeGNV5ISrkKPCqz
-         Yt8wRE001xvxhylTkrUCav5HRoQEpJCDRWhAOVNTJ+AcBvwXjGtislK+nweqGoC2niik
-         1YIB6ykmtwZ62H0CKWQJl4KwM2Om+SGD/jos2XPMvzwYKK2Ezbkpkxfm0TUZX7ZXBdbt
-         DjBw==
-X-Gm-Message-State: AOJu0YxKVodivoIfMCrDUDaHqDg8XLx/VivvUIu3Leyh972Qq69mvp/A
-	AazltivL9AuW5z4RnG+7Wk5lGA==
-X-Google-Smtp-Source: AGHT+IEn0DmTvbVbBFxNdq3OKXXpFw4I9foZJK6ZxmUa8EteSnTE9RTr4xVQgT2VKg+fsVzgi2nZeA==
-X-Received: by 2002:a17:90a:bf13:b0:277:5652:cb00 with SMTP id c19-20020a17090abf1300b002775652cb00mr674622pjs.24.1696376511915;
-        Tue, 03 Oct 2023 16:41:51 -0700 (PDT)
+        bh=a4manyg4jn+tfLYFok6RJE4vtrYhKXlkYtdCzoyuohU=;
+        b=kFOj3AlhJUxF3UOgl5ykMHdubWHtkpqQotDBlRLqpM/EPfKDPiYGpxHw1yw3NirQyC
+         SJJeuryw/WgYW/VOB3E1AG4b1ckCADGCqN1u57yu0RYiTpb4aGwk6JkZMrrA/W5BI5Nc
+         VfMTwrnZ4QlpiC+NeWoblVnXyUao+ZRj3rqNWMAj0VYqWwAj3Izz4Sd1roKS9yRrbDlI
+         lXRcOEa+Auo8q4f8chvkL5b95WoOwY71MWpD1pGwI5fPUaD506ulqfHFyTg7Qevd30Lz
+         idFtJiwewZyaVN/SNOwiT0yvi22S2CwD98m8B4iedmNj8Gq5dTOOPHDsCS2ixfIEnrE3
+         gWtA==
+X-Gm-Message-State: AOJu0Yw1IVJ2ffzcUB5s0Qbs9HYsuIqbMR1yUTKN1OvA8kIG5HfepVPn
+	YZdG4XVss8gBkCaAmk17lxkMyA==
+X-Google-Smtp-Source: AGHT+IHPKf7qkMfv0ykTP8tZbmRCmQF77ozLScEX2ILIqdPv0U+kgh2tvOnmYsnzTfp8OGZxvKtt7A==
+X-Received: by 2002:a05:6902:920:b0:d74:6c43:f32e with SMTP id bu32-20020a056902092000b00d746c43f32emr655844ybb.3.1696376651180;
+        Tue, 03 Oct 2023 16:44:11 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id 6-20020a17090a1a0600b00263dfe9b972sm188454pjk.0.2023.10.03.16.41.51
+        by smtp.gmail.com with ESMTPSA id q20-20020a656a94000000b00553dcfc2179sm1735207pgu.52.2023.10.03.16.44.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Oct 2023 16:41:51 -0700 (PDT)
-Date: Tue, 3 Oct 2023 16:41:50 -0700
+        Tue, 03 Oct 2023 16:44:10 -0700 (PDT)
+Date: Tue, 3 Oct 2023 16:44:09 -0700
 From: Kees Cook <keescook@chromium.org>
 To: Justin Stitt <justinstitt@google.com>
-Cc: David Rheinsberg <david@readahead.eu>, Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] HID: uhid: replace deprecated strncpy with strscpy
-Message-ID: <202310031641.53DE6178@keescook>
-References: <20231003-strncpy-drivers-hid-uhid-c-v2-1-6a501402581e@google.com>
+Subject: Re: [PATCH v2] x86/tdx: replace deprecated strncpy with strtomem_pad
+Message-ID: <202310031642.E858E955B2@keescook>
+References: <20231003-strncpy-arch-x86-coco-tdx-tdx-c-v2-1-0bd21174a217@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -55,38 +56,28 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231003-strncpy-drivers-hid-uhid-c-v2-1-6a501402581e@google.com>
+In-Reply-To: <20231003-strncpy-arch-x86-coco-tdx-tdx-c-v2-1-0bd21174a217@google.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.6
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Tue, Oct 03, 2023 at 09:01:58PM +0000, Justin Stitt wrote:
-> `strncpy` is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
+On Tue, Oct 03, 2023 at 09:54:59PM +0000, Justin Stitt wrote:
+> strncpy works perfectly here in all cases, however, it is deprecated and
+> as such we should prefer more robust and less ambiguous string apis.
 > 
-> A suitable replacement is `strscpy` [2] due to the fact that it
-> guarantees NUL-termination on the destination buffer without
-> unnecessarily NUL-padding.
-> 
-> Furthermore, let's make sure `hid->xyz` and `ev->u.create2.xyz` are the
-> same size at compile time to prevent silent truncation.
-> 
-> With these changes, it is abundantly clear what the intent and behavior
-> of the code is -- We are getting a string to string copy with
-> NUL-termination and no truncation.
+> Let's use `strtomem_pad` as this matches the functionality of `strncpy`
+> and is _not_ deprecated.
 > 
 > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
 > Link: https://github.com/KSPP/linux/issues/90
 > Cc: linux-hardening@vger.kernel.org
 > Cc: Kees Cook <keescook@chromium.org>
 > Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-Great! This looks much simpler to me. Thanks for adjusting it.
+Thanks for respinning this! And yeah, I'd agree the comment probably
+should stay.
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
 
