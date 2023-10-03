@@ -1,123 +1,136 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C316D81C
-	for <linux-hardening@vger.kernel.org>; Wed,  4 Oct 2023 01:44:54 +0000 (UTC)
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51FB99E
-	for <linux-hardening@vger.kernel.org>; Tue,  3 Oct 2023 18:44:53 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id 98e67ed59e1d1-27763c2c22eso1139634a91.3
-        for <linux-hardening@vger.kernel.org>; Tue, 03 Oct 2023 18:44:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1696383893; x=1696988693; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6m+ltiUxBgyP6O6NGVJRhv6n+IMmSQtxpfXHOcBL8MI=;
-        b=cxbpQhcllg9aTHbTy6a3vGKZq5DMQujQscQ01G285jPDoIIoOdHUr3WWFzyyJzvd3d
-         KI+VNTG/FSdBUPyYQ3XVZ94EpOo2eOwBG2/yG7rEVFrJ33oiDlQOSWqMPafrHk0QUCrK
-         T8Sy7zuVGoRHdu72VNg5Sv31yZiQ9K9VKdldw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696383893; x=1696988693;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6m+ltiUxBgyP6O6NGVJRhv6n+IMmSQtxpfXHOcBL8MI=;
-        b=qQvrebUE2J75DTD0Q9cB+IUBccyVH3fVQh1wrSa2k1/PViNAbYtfQzIqA0gqI+l+GF
-         6ZQPLqc82vILNw06WpQVvaxEwR1/w6zucHPENXB1mcsvSuFYsZfrce1wkOJsvuuVza6B
-         Xiz7Je0CrhzBSn6NdWMjTX1sRfoNpS1vMlMZuvEbNNI39QnVxIP/+TnSV0t1bfR0yrYp
-         fFGqfcQFiOF8ERt0NOKSciIFubaHm4uWx9AV8eYAFSxLDB3g8c9DrjnqFOAMtrHC126e
-         t3yHBbN2EHb5Dl1HN2XKKB+V3528RriWeCKx3bTfTXu+5+gnyjLc80XIxyAxqcxl7Jyt
-         oJag==
-X-Gm-Message-State: AOJu0YzZqDDF9TjsBP4KkvS4tOk2B9F8B7afmVGdohk5QVM0tqOfRlSm
-	eG/qEQ1CfpVg3grajRlt3zGLQg==
-X-Google-Smtp-Source: AGHT+IHoFcFaJCYuiM/XpPveaXoTnc32bdzwR7t511qo6mo1UVxZdSWNTi7fDNbl77FYtG6vuNalPQ==
-X-Received: by 2002:a17:90b:164f:b0:274:735c:e2d3 with SMTP id il15-20020a17090b164f00b00274735ce2d3mr999366pjb.8.1696383892759;
-        Tue, 03 Oct 2023 18:44:52 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id 13-20020a17090a030d00b0026971450601sm287996pje.7.2023.10.03.18.44.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Oct 2023 18:44:52 -0700 (PDT)
-From: Kees Cook <keescook@chromium.org>
-To: David Ahern <dsahern@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Tom Rix <trix@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH] nexthop: Annotate struct nh_group with __counted_by
-Date: Tue,  3 Oct 2023 18:44:49 -0700
-Message-Id: <20231004014445.work.587-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4845A807
+	for <linux-hardening@vger.kernel.org>; Wed,  4 Oct 2023 01:45:13 +0000 (UTC)
+Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC0BC9E;
+	Tue,  3 Oct 2023 18:45:11 -0700 (PDT)
+Received: from eig-obgw-5001a.ext.cloudfilter.net ([10.0.29.139])
+	by cmsmtp with ESMTP
+	id nlmVqGOOinGhUnqwoqx3Mp; Wed, 04 Oct 2023 01:45:11 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id nqwoqWxsSxEghnqwoqtghY; Wed, 04 Oct 2023 01:45:10 +0000
+X-Authority-Analysis: v=2.4 cv=E4zeGIRl c=1 sm=1 tr=0 ts=651cc3a6
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=Dx1Zrv+1i3YEdDUMOX3koA==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=bhdUkHdE2iEA:10 a=wYkD_t78qR0A:10 a=Q-fNiiVtAAAA:8
+ a=Ikd4Dj_1AAAA:8 a=JfrnYn6hAAAA:8 a=NEAV23lmAAAA:8 a=cm27Pg_UAAAA:8
+ a=VwQbUJbxAAAA:8 a=0yL73Cyy68KADmUz8mEA:9 a=QEXdDO2ut3YA:10
+ a=Fp8MccfUoT0GBdDC_Lng:22 a=1CNFftbPRP8L7MoqJWF3:22 a=xmb-EsYY8bH0VWELuYED:22
+ a=AjGcO6oz07-iQ99wixmX:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=ImoiuXHkkzYBkG9LKuEgSe16wxZXend4hMS2gVLnqeU=; b=Ub75atfzUGXufNj+3tjZebWBx8
+	Crenc6HJ6Yl/4YCNWrD0qflFAMM0WdKD2DxyvfKpjk6idLxTSpJrZ13D7INnqMbF7FxnMsM68mmz5
+	dVb6fJ4snbVd6ANUBT+Ouwek6qAgeNcYAk5fwkyhSI2AtttDKbezk3RvUbxeJSTYbO3DryQMI/YH6
+	d9PL+p6V6cCcMI0lQ+EpnSvVnxKnaGE091zU7nookkT9KArJwZARY4H6BaU+VIsPm7CGQ2FlrRhEP
+	YCFxAF19FBXDPDAv740N9cxlo9gZEz+/DWvFSOc14o79yum/wICE772FHji9KnyFE94fgkguBxqzW
+	Brsn+lTA==;
+Received: from 94-238-9-39.abo.bbox.fr ([94.238.9.39]:58730 helo=[192.168.1.98])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1qnp1W-001Wx8-2Y;
+	Tue, 03 Oct 2023 18:41:54 -0500
+Message-ID: <e2bf83bf-7832-aa1c-bf7a-bbc0d311b25f@embeddedor.com>
+Date: Wed, 4 Oct 2023 01:41:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1227; i=keescook@chromium.org;
- h=from:subject:message-id; bh=cMswho+iyVCS84W5fjbN8jRy801YZPgydXwTL+hQ8kc=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlHMOR/Qnr9xsjz+RFrB//RUqkmhmuWuLMRFIHY
- H/zRm5APC2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZRzDkQAKCRCJcvTf3G3A
- JuubD/4pBLzIK8LRipBfuGiuOfRseLiRbFNh1J5EeR0aFUlyz21VWo/ONGuXtGXOxgktDliVWxQ
- pv0tg3RLvxJNCOGY0pFJOG7j7tgN8w7Tn1Eomvh7IHQ5UyysY1/txn95G/iwzma9N0e7cspWjOk
- i71eVTwBrYMFx/XI4JIGT/Y9Zt1Z7uXKyqTlkZXE6kTi3ZsMUE37k9g0yX58iiGmmdLols1ocL0
- rqjyPdN/KncryQkGHLsjMD3SXftQJUoKrZK61q7t0of7ZLGX8o4I0yTevYIk1imAMduLhWTqEYR
- n5BRvPG5JvAE5d8L3VsggU36WF5pidU5c5RPVzoOeztl69WWEB9ecpndC9ok0Z2xCh48x36HD/G
- G8235S8ONP14DbGP/eVc/1yqdWpS4vrLruFiJ1HySU5pHPtGQ2rcuJbbPDQx35xXPl6D7okwBw5
- 6MMdORrwX7unzOIOhGIWeKBICZes22QAxOctpG8/+dcQkEIty1JY7KSivhZUA1pxzAp73DIoOtr
- hNj60Fetls5Hcp93vQjT0Ls91cpLL/i80y2sZmrX6m/CIEexZMYuGUrLdBMlDJrEb/v487rDH+P
- CEGyWn17nSifdO3/K+Cm1GoILthQET2DXe6j2wjQk5tbiB+Rs+XVL9eXb9mtQUGsB5NdyB+aJU3
- MmGRBkZ wCCDJXzA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH] nvmet-fc: Annotate struct nvmet_fc_tgt_queue with
+ __counted_by
+Content-Language: en-US
+To: Kees Cook <keescook@chromium.org>, James Smart <james.smart@broadcom.com>
+Cc: Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+ Chaitanya Kulkarni <kch@nvidia.com>, linux-nvme@lists.infradead.org,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ llvm@lists.linux.dev
+References: <20231003232511.work.459-kees@kernel.org>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20231003232511.work.459-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 94.238.9.39
+X-Source-L: No
+X-Exim-ID: 1qnp1W-001Wx8-2Y
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 94-238-9-39.abo.bbox.fr ([192.168.1.98]) [94.238.9.39]:58730
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 0
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfNtKKHCkXKI22vNp21HBsdbIHNuhmQodwfLKhb8eyjlPt/0DqOSieOWGdXkeKqpogeiWRwFaCRRdMLV0pmRK2i3JVf6D2ieHl+SK1hDt41vau3/0d4RI
+ XQaJLydLiDB1OXTEjp0pDx09iJi90qpAjKjwesTW6JX/PycogGvQQC6nzfeOuaUjpgJMGvrIQf1nAYaNNc7PkSSNeI66pnJH2rjD6CAvQtLgynMEBdQup0FW
+ YNaUgoUwOb489kfWV1S/+T+OkVisVcHNhOMcxx4A09E=
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+	RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Prepare for the coming implementation by GCC and Clang of the __counted_by
-attribute. Flexible array members annotated with __counted_by can have
-their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
-array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-functions).
 
-As found with Coccinelle[1], add __counted_by for struct nh_group.
 
-Cc: David Ahern <dsahern@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org
-Link: https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci [1]
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- include/net/nexthop.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 10/4/23 01:25, Kees Cook wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
+> array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
+> 
+> As found with Coccinelle[1], add __counted_by for struct nvmet_fc_tgt_queue.
+> 
+> Cc: James Smart <james.smart@broadcom.com>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Sagi Grimberg <sagi@grimberg.me>
+> Cc: Chaitanya Kulkarni <kch@nvidia.com>
+> Cc: linux-nvme@lists.infradead.org
+> Link: https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci [1]
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-diff --git a/include/net/nexthop.h b/include/net/nexthop.h
-index 8f5a2ab45920..d92046a4a078 100644
---- a/include/net/nexthop.h
-+++ b/include/net/nexthop.h
-@@ -126,7 +126,7 @@ struct nh_group {
- 	bool			has_v4;
- 
- 	struct nh_res_table __rcu *res_table;
--	struct nh_grp_entry	nh_entries[];
-+	struct nh_grp_entry	nh_entries[] __counted_by(num_nh);
- };
- 
- struct nexthop {
--- 
-2.34.1
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
+Thanks
+--
+Gustavo
+
+> ---
+>   drivers/nvme/target/fc.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/nvme/target/fc.c b/drivers/nvme/target/fc.c
+> index 1ab6601fdd5c..0fa2d658cdeb 100644
+> --- a/drivers/nvme/target/fc.c
+> +++ b/drivers/nvme/target/fc.c
+> @@ -146,7 +146,7 @@ struct nvmet_fc_tgt_queue {
+>   	struct workqueue_struct		*work_q;
+>   	struct kref			ref;
+>   	struct rcu_head			rcu;
+> -	struct nvmet_fc_fcp_iod		fod[];		/* array of fcp_iods */
+> +	struct nvmet_fc_fcp_iod		fod[] __counted_by(sqsize); /* array of fcp_iods */
+>   } __aligned(sizeof(unsigned long long));
+>   
+>   struct nvmet_fc_hostport {
