@@ -1,80 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB429D2EB;
-	Tue,  3 Oct 2023 21:10:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 46A15C433C8;
-	Tue,  3 Oct 2023 21:10:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696367426;
-	bh=a2OQUcE+ISQtj09ENLHvNyZpLnb2mGbhv6CIImC0Y1o=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=EWUGiwUg1CL/Zl4/IfF+fn0PrMvK6Q/i6OxqLQd937mJN7vNibUdpXWmmkrDaWkyP
-	 EVM0Ke/cKhjfTzrCLBJTFKzhJ7cGnjl/w5M1ADgK71MxjUQDoMaH0WqxtEdhCpJYl6
-	 jxRCLyK7+r8EE2NL0sAANqCtlXCr6Tfaq7YQY9lIJe3SIuzSpDv6I1cSoSTxWukRnD
-	 Dbuc9hhgVrutDG0VC7rlLT+PfGmXvw3yQK9vWeZSqEwZd/8ahPFf+amatJh42G46jZ
-	 h/grImG00zjg3Nn0pXJkJh6djfHV3JKt9MLgES8W4gOfXpoyg0c5tnWCgSPVVRFO2p
-	 9cNjhSUQwPh9A==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 276F6C595D2;
-	Tue,  3 Oct 2023 21:10:26 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C4A3347CB
+	for <linux-hardening@vger.kernel.org>; Tue,  3 Oct 2023 21:55:02 +0000 (UTC)
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBB92A7
+	for <linux-hardening@vger.kernel.org>; Tue,  3 Oct 2023 14:55:00 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5a23ad271d7so21931517b3.1
+        for <linux-hardening@vger.kernel.org>; Tue, 03 Oct 2023 14:55:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1696370100; x=1696974900; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=a34O7D75QLNIsPbv9jkIuZDS2dnhXViv0FrAp24vkuM=;
+        b=cwkjOnBp+W/U4LePjLOOq9YqvwuS6aMCmVWov5eBf8yXldJIvG5uFyG85nBHxV4Tq5
+         Cb4ola4eYWk5DzF3CLDCqDv10UF+5pBhaA0o5aysiLmqNwWUdBKxVc8eGMo1+a3bApIJ
+         BJAIqV5XZ+xIshlU9NqlhTnK4bRTyhfQwAoCwGLenOT6KLI2j9MXVoTQTwsktr1J+0yf
+         3xQoqWeG5jijiKdjN3IL+/zKvmdcA5/eNcgnMLP0YWifGloRC0vAPnpVEhJilZTPqgcH
+         jJJ4AVBWd8vFSkAX4IUmNeD06XMc+h8GbcLE/emdlvvn3eiGXbShj0WW7eDewKOBSH5e
+         eDFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696370100; x=1696974900;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=a34O7D75QLNIsPbv9jkIuZDS2dnhXViv0FrAp24vkuM=;
+        b=t40kHTJ4qgnGrXKSjuP86ACWsVBJk8YHL8FqWX79QQIx9d//gmx1tFZX/xsRKvYo4s
+         7e2wfuZto2HCjdFK+9LISpzeq7DZea+iCPoPr0Nrt9BYjdbtDFbs5Jo242ZtglJz2GiR
+         VEF3E/GfnTv58MSv5RZKUmojONQaCtjYz34q6DwNUIQeaQPJc0lQPK1E1sFIU5gTPQNS
+         xOs2q9uV1X/NgYMXxcRhnwUq8GAhZWkh0DjMzJIVL0rB1K2aJHcgx11av9tLS5jif2h2
+         ekoQC3/L3QQQc/QOuiZuPY9ItFQGTGxnUlqKiJlLMKGEO6618qZAYo7JgmGjMVzpBQOh
+         S5+g==
+X-Gm-Message-State: AOJu0YzKm+Y8dL5n6UZjirh4itUHzDjTmxTEQoHLN1B8wANFDWJei5mD
+	5B7FWBEws+QTFek7Rh03w1qg3Arjgpc3agrH7w==
+X-Google-Smtp-Source: AGHT+IF/GguYZiaA3U/0oiqCoh7GmySeKwqqgo51/38ZdR7OW9pjPSqP5Lbons7QQjg3A4OWl3sbt7nu9R/8AnvUiA==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a5b:b50:0:b0:d80:904d:c211 with SMTP
+ id b16-20020a5b0b50000000b00d80904dc211mr9088ybr.7.1696370100160; Tue, 03 Oct
+ 2023 14:55:00 -0700 (PDT)
+Date: Tue, 03 Oct 2023 21:54:59 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v5 0/7] introduce DEFINE_FLEX() macro
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <169636742615.22161.7688987075875689506.git-patchwork-notify@kernel.org>
-Date: Tue, 03 Oct 2023 21:10:26 +0000
-References: <20230912115937.1645707-1-przemyslaw.kitszel@intel.com>
-In-Reply-To: <20230912115937.1645707-1-przemyslaw.kitszel@intel.com>
-To: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Cc: netdev@vger.kernel.org, kuba@kernel.org, davem@davemloft.net,
- edumazet@google.com, pabeni@redhat.com, keescook@chromium.org,
- jacob.e.keller@intel.com, intel-wired-lan@lists.osuosl.org,
- aleksander.lobakin@intel.com, linux-hardening@vger.kernel.org,
- steven.zou@intel.com, anthony.l.nguyen@intel.com, David.Laight@ACULAB.COM
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIALKNHGUC/42NMQ6DMBAEv4KuzkXYBDBU+UdEgQ8DlhIO2ZYFQ
+ vw9Di9IscVsMXOAN84aD212gDPRestLAnnLgOZ+mQzaITHIXBZ5IwT64BZad+wdzbipComJMQz
+ bNcJG6Vw3VaW1GiBZVmdGu12FV5d4tj6w269gFL/3f3cUKPChCyXKspb1WDwn5ult7sQf6M7z/ AK7Or9wzwAAAA==
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1696370099; l=1983;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=PfoJUZKcz8zggS6f4ZS1DBK4K8u1I0Mr9PkhUy/a6XA=; b=EOuTr5sNtf5yNIHhFwCHLi3CcldhMNdQHeDS7LFD2wpobtYnAgSMDEeeIbhtkyPOd5ho0eqOT
+ /o+QShgmwW4AlnFbhjd9aWiTIgtw2Af/2mOWekgELZOOoQ0SyJ5p7DG
+X-Mailer: b4 0.12.3
+Message-ID: <20231003-strncpy-arch-x86-coco-tdx-tdx-c-v2-1-0bd21174a217@google.com>
+Subject: [PATCH v2] x86/tdx: replace deprecated strncpy with strtomem_pad
+From: Justin Stitt <justinstitt@google.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>
+Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Kees Cook <keescook@chromium.org>, Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
+X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-Hello:
+strncpy works perfectly here in all cases, however, it is deprecated and
+as such we should prefer more robust and less ambiguous string apis.
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Let's use `strtomem_pad` as this matches the functionality of `strncpy`
+and is _not_ deprecated.
 
-On Tue, 12 Sep 2023 07:59:30 -0400 you wrote:
-> Add DEFINE_FLEX() macro, that helps on-stack allocation of structures
-> with trailing flex array member.
-> Expose __struct_size() macro which reads size of data allocated
-> by DEFINE_FLEX().
-> 
-> Accompany new macros introduction with actual usage,
-> in the ice driver - hence targeting for netdev tree.
-> 
-> [...]
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Cc: Kees Cook <keescook@chromium.org>
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Changes in v2:
+- update subject (thanks Kees)
+- update commit message (thanks Dave)
+- rebase onto mainline cbf3a2cb156a2c91
+- Link to v1: https://lore.kernel.org/r/20230911-strncpy-arch-x86-coco-tdx-tdx-c-v1-1-4b38155727f3@google.com
+---
+Note: build-tested
 
-Here is the summary with links:
-  - [net-next,v5,1/7] overflow: add DEFINE_FLEX() for on-stack allocs
-    https://git.kernel.org/netdev/net-next/c/26dd68d293fd
-  - [net-next,v5,2/7] ice: ice_sched_remove_elems: replace 1 elem array param by u32
-    https://git.kernel.org/netdev/net-next/c/ece285af77d0
-  - [net-next,v5,3/7] ice: drop two params of ice_aq_move_sched_elems()
-    https://git.kernel.org/netdev/net-next/c/a034fcdbeaf7
-  - [net-next,v5,4/7] ice: make use of DEFINE_FLEX() in ice_ddp.c
-    https://git.kernel.org/netdev/net-next/c/230064baa43d
-  - [net-next,v5,5/7] ice: make use of DEFINE_FLEX() for struct ice_aqc_add_tx_qgrp
-    https://git.kernel.org/netdev/net-next/c/43bba3b1664d
-  - [net-next,v5,6/7] ice: make use of DEFINE_FLEX() for struct ice_aqc_dis_txq_item
-    https://git.kernel.org/netdev/net-next/c/11dee3d611dd
-  - [net-next,v5,7/7] ice: make use of DEFINE_FLEX() in ice_switch.c
-    https://git.kernel.org/netdev/net-next/c/e268b9722705
+Note: Ingo Molnar has some concerns about the comment being out of sync
+[1] but I believe the comment still has a place as we can still
+theoretically copy 64 bytes into our destination buffer without a
+NUL-byte. The extra information about the 65th byte being NUL may serve
+helpful to future travelers of this code. What do we think? I can drop
+the comment in a v3 if needed.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+[1]: https://lore.kernel.org/all/ZRc+JqO7XvyHg%2FnB@gmail.com/
+---
+ arch/x86/coco/tdx/tdx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
+index 1d6b863c42b0..2e1be592c220 100644
+--- a/arch/x86/coco/tdx/tdx.c
++++ b/arch/x86/coco/tdx/tdx.c
+@@ -119,7 +119,7 @@ static void __noreturn tdx_panic(const char *msg)
+ 	} message;
+ 
+ 	/* VMM assumes '\0' in byte 65, if the message took all 64 bytes */
+-	strncpy(message.str, msg, 64);
++	strtomem_pad(message.str, msg, '\0');
+ 
+ 	args.r8  = message.r8;
+ 	args.r9  = message.r9;
+
+---
+base-commit: cbf3a2cb156a2c911d8f38d8247814b4c07f49a2
+change-id: 20230911-strncpy-arch-x86-coco-tdx-tdx-c-98b0b966bb8d
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
 
