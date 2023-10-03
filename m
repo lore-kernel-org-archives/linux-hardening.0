@@ -1,99 +1,109 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40FFDF4EE;
-	Tue,  3 Oct 2023 11:04:43 +0000 (UTC)
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6A47BD;
-	Tue,  3 Oct 2023 04:04:41 -0700 (PDT)
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 393B4GBt060602;
-	Tue, 3 Oct 2023 06:04:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1696331056;
-	bh=WOMYLjdsgwCUjmueSDss3yq/aUWw73r1I6VvK8Gyu0A=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=lvtStY2/YyzJ55lD+PupoVpOcfTpGgLLGS/Rm22zo4JVgB6jm1tpsl1mX9b5jptOd
-	 fB1YaWRXD/qbkEUlKSC1meSSENCbzNeW17C27rXtwa4/fyqKJrkXSnNVBt+wmOtbfM
-	 a4qYqO3BGG8fCQTjFNRmLdoq/09JVOZFL++RcpuI=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 393B4GXP001885
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 3 Oct 2023 06:04:16 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 3
- Oct 2023 06:04:16 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 3 Oct 2023 06:04:16 -0500
-Received: from uda0132425.dhcp.ti.com (ileaxei01-snat2.itg.ti.com [10.180.69.6])
-	by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 393B1Dvr129223;
-	Tue, 3 Oct 2023 06:04:11 -0500
-From: Vignesh Raghavendra <vigneshr@ti.com>
-To: <nm@ti.com>, <kristo@kernel.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <keescook@chromium.org>, <tony.luck@intel.com>, <gpiccoli@igalia.com>,
-        Wadim
- Egorov <w.egorov@phytec.de>
-CC: Vignesh Raghavendra <vigneshr@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <upstream@lists.phytec.de>
-Subject: Re: [PATCH v2] arm64: dts: ti: k3-am625-beagleplay: Fix typo in ramoops reg
-Date: Tue, 3 Oct 2023 16:30:54 +0530
-Message-ID: <169633065056.2221719.2919691139656141039.b4-ty@ti.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20230925151444.1856852-1-w.egorov@phytec.de>
-References: <20230925151444.1856852-1-w.egorov@phytec.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19A4923767
+	for <linux-hardening@vger.kernel.org>; Tue,  3 Oct 2023 13:01:49 +0000 (UTC)
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0756693;
+	Tue,  3 Oct 2023 06:01:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696338109; x=1727874109;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=5BuiHCbUGxDTXwBye3t5k+Ijkv31TrOL/+KCudCyRS8=;
+  b=FqUn7KpepFTyNqXzdElUcBDwZoLpH+mPPbz7O2O2c3Xs3AbrOtJXpUha
+   7cj9RRxKoC4PDlBHccCS+IQtA6bsHc8+L2HeW7F1fAyyFrXEHuOdv4Ygr
+   PqnEOLDHiPP8a5BzZb3YLXQU1Jne5bYd6sij91YS9L2+0ebVJxiTqueR1
+   HQlg0VpR+keKEP+0WGETeWTqv205JNCaWMMg+2frIT+GopxjySzCFT8YC
+   FOAMe62ZFIvA5ok97jLK27zWufP2akDY3/52trYKcIibhIm4bsJ7lDDo7
+   13yhlRzVgEGiHwEtqCm/hTNBXP4B19WR2KB4d3uVLCC+C81RhjaQbG27S
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="381745967"
+X-IronPort-AV: E=Sophos;i="6.03,197,1694761200"; 
+   d="scan'208";a="381745967"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2023 06:01:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10852"; a="786085405"
+X-IronPort-AV: E=Sophos;i="6.03,197,1694761200"; 
+   d="scan'208";a="786085405"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga001.jf.intel.com with ESMTP; 03 Oct 2023 06:01:46 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 9AEE118A0; Tue,  3 Oct 2023 16:01:45 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Cc: Kees Cook <keescook@chromium.org>,
+	Andy Shevchenko <andy@kernel.org>
+Subject: [PATCH v1 1/1] kernel.h: Move lib/cmdline.c prototypes to string.h
+Date: Tue,  3 Oct 2023 16:01:42 +0300
+Message-Id: <20231003130142.2936503-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Hi Wadim Egorov,
+The lib/cmdline.c is basically a set of some small string parsers
+which are wide used in the kernel. Their prototypes belong to the
+string.h rather then kernel.h.
 
-On Mon, 25 Sep 2023 17:14:44 +0200, Wadim Egorov wrote:
-> Seems like the address value of the reg property was mistyped.
-> Update reg to 0x9ca00000 to match node's definition.
-> 
-> 
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ include/linux/kernel.h | 6 ------
+ include/linux/string.h | 8 ++++++++
+ 2 files changed, 8 insertions(+), 6 deletions(-)
 
-I have applied the following to branch ti-k3-dts-next on [1].
-Thank you!
-
-[1/1] arm64: dts: ti: k3-am625-beagleplay: Fix typo in ramoops reg
-      commit: c3357773f560135c956de0c195e5ffe71c744a34
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent up the chain during
-the next merge window (or sooner if it is a relevant bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
---
-Vignesh
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index c07f9c779d45..3e6c5ac08f8b 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -195,12 +195,6 @@ static inline void might_fault(void) { }
+ 
+ void do_exit(long error_code) __noreturn;
+ 
+-extern int get_option(char **str, int *pint);
+-extern char *get_options(const char *str, int nints, int *ints);
+-extern unsigned long long memparse(const char *ptr, char **retptr);
+-extern bool parse_option_str(const char *str, const char *option);
+-extern char *next_arg(char *args, char **param, char **val);
+-
+ extern int core_kernel_text(unsigned long addr);
+ extern int __kernel_text_address(unsigned long addr);
+ extern int kernel_text_address(unsigned long addr);
+diff --git a/include/linux/string.h b/include/linux/string.h
+index 3c920b6d609b..0995f2a737ef 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -181,9 +181,17 @@ extern void *kmemdup(const void *src, size_t len, gfp_t gfp) __realloc_size(2);
+ extern void *kvmemdup(const void *src, size_t len, gfp_t gfp) __realloc_size(2);
+ extern char *kmemdup_nul(const char *s, size_t len, gfp_t gfp);
+ 
++/* lib/argv_split.c */
+ extern char **argv_split(gfp_t gfp, const char *str, int *argcp);
+ extern void argv_free(char **argv);
+ 
++/* lib/cmdline.c */
++extern int get_option(char **str, int *pint);
++extern char *get_options(const char *str, int nints, int *ints);
++extern unsigned long long memparse(const char *ptr, char **retptr);
++extern bool parse_option_str(const char *str, const char *option);
++extern char *next_arg(char *args, char **param, char **val);
++
+ extern bool sysfs_streq(const char *s1, const char *s2);
+ int match_string(const char * const *array, size_t n, const char *string);
+ int __sysfs_match_string(const char * const *array, size_t n, const char *s);
+-- 
+2.40.0.1.gaa8946217a0b
 
