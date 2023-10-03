@@ -1,158 +1,138 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB4B23FB3F
-	for <linux-hardening@vger.kernel.org>; Tue,  3 Oct 2023 23:30:00 +0000 (UTC)
-Received: from mail-ot1-x32e.google.com (mail-ot1-x32e.google.com [IPv6:2607:f8b0:4864:20::32e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A65BF11D
-	for <linux-hardening@vger.kernel.org>; Tue,  3 Oct 2023 16:29:57 -0700 (PDT)
-Received: by mail-ot1-x32e.google.com with SMTP id 46e09a7af769-6c4fa1c804bso981663a34.2
-        for <linux-hardening@vger.kernel.org>; Tue, 03 Oct 2023 16:29:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1696375797; x=1696980597; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=sHOGbVO4yt56UuQA6X7B53h+Y2FMmkpmlA/gBYESKrU=;
-        b=fA6WvqOX2yVHn25xoajqEX5lILQzqY0725LFgpkrgTzDCGDb6QZ3iUd/iQruXUZZfU
-         TtWOf1ok6LXF8MQXS5DReYrspEpiNlBun8EjWCmc7ZpvxGAxqzvH9paq9sBuV8QCR7VB
-         UYQxiwRKikQImpZ8f8ebEAdurnrDx7v61afXQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696375797; x=1696980597;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sHOGbVO4yt56UuQA6X7B53h+Y2FMmkpmlA/gBYESKrU=;
-        b=A0XB6eooO3nE3CnL9U3NwaOSMtse5GG4t0fGZxTH3vtUSLjj5WkemYqOKo4GbHmuYc
-         Hz4jXj5m9Ah/entOdyFIubqp3TICWxJ+/QDMjyot8AEyIYtjEYYt45sdQeuo/tE8tk+p
-         vhdKBxHRglUGZ0nPMaUaoNdSCTD9I1QogKDcSzR0H1XN/OXxs+4YidfGeLt3gkwPE8GD
-         vfvRMB+aHFKAfOn9on9KySfIdtBj9kNjzHOnzhAm3fM+6y/nu0Zy81jCn1RPkkLNHAA1
-         WBRFZVU7fgxJGI+hZNiMfCe40zTD9G6yGpsmmh8tmmk/eQUmoW8wTKV2WK5wOUAsLvVz
-         qwog==
-X-Gm-Message-State: AOJu0YxrBUYRa3ZCLQoIAJ3W4g1w/hd9hXLLFo1lUx+jD2OVNFDm9t2z
-	uVyTJ6R3LGolX94NkJpUN58CsQ==
-X-Google-Smtp-Source: AGHT+IE5Y1aTeSmZultlmhH08sL/6gXNiFbzPXi0v1PX93a6hQ7va5s5hktVz94Kc3mdmWYw273bWw==
-X-Received: by 2002:a05:6358:3182:b0:143:1063:d1eb with SMTP id q2-20020a056358318200b001431063d1ebmr1010070rwd.17.1696375796777;
-        Tue, 03 Oct 2023 16:29:56 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id z20-20020a17090a8b9400b0026d54b2abe9sm134489pjn.37.2023.10.03.16.29.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Oct 2023 16:29:56 -0700 (PDT)
-From: Kees Cook <keescook@chromium.org>
-To: Alex Deucher <alexander.deucher@amd.com>
-Cc: Kees Cook <keescook@chromium.org>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	"Pan, Xinhui" <Xinhui.Pan@amd.com>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Luben Tuikov <luben.tuikov@amd.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Felix Kuehling <Felix.Kuehling@amd.com>,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-hardening@vger.kernel.org,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Tom Rix <trix@redhat.com>,
-	Arunpravin Paneer Selvam <Arunpravin.PaneerSelvam@amd.com>,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH] drm/amdgpu: Annotate struct amdgpu_bo_list with __counted_by
-Date: Tue,  3 Oct 2023 16:29:52 -0700
-Message-Id: <20231003232952.work.158-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A793FB3F
+	for <linux-hardening@vger.kernel.org>; Tue,  3 Oct 2023 23:33:37 +0000 (UTC)
+Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2959AC
+	for <linux-hardening@vger.kernel.org>; Tue,  3 Oct 2023 16:33:36 -0700 (PDT)
+Received: from eig-obgw-5006a.ext.cloudfilter.net ([10.0.29.179])
+	by cmsmtp with ESMTP
+	id nkBbqFv7qnGhUnotUqwSUc; Tue, 03 Oct 2023 23:33:36 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id notTq0YpurhMnnotTqYGRS; Tue, 03 Oct 2023 23:33:35 +0000
+X-Authority-Analysis: v=2.4 cv=WLps41gR c=1 sm=1 tr=0 ts=651ca4cf
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=Dx1Zrv+1i3YEdDUMOX3koA==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=bhdUkHdE2iEA:10 a=wYkD_t78qR0A:10 a=Ikd4Dj_1AAAA:8
+ a=VwQbUJbxAAAA:8 a=J1Y8HTJGAAAA:8 a=1XWaLZrsAAAA:8 a=20KFwNOVAAAA:8
+ a=NEAV23lmAAAA:8 a=cm27Pg_UAAAA:8 a=iEZwmkagaeyaR-ujPQYA:9 a=QEXdDO2ut3YA:10
+ a=AjGcO6oz07-iQ99wixmX:22 a=y1Q9-5lHfBjTkpIzbSAN:22 a=xmb-EsYY8bH0VWELuYED:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=ZGNZBVKvev9TXchOa5hWx7nps+DYuiDzkuzUalGDAU0=; b=edJ2EQo4MagW2qPg11wClyPN6M
+	mmtkmBylJvJb+98bbqQo40hdEELcuRmiUYXYBrjNtAcEq0/tdOtctYzS14IfaGd3WomMhxZ0RvVuV
+	cVwfaEQYOp4ZSuSQ/egtjH4J9SDuimRdm0Z/oyyY75p7gND+fW04GQ9cYvUWMg8JwzmhHHjSRY3ac
+	zZp4i0yxH8rvPfBTvD4Rz/1mUqvVNsaMi60MsekwOxLTgaSRs5K2rb+2zJ/2Mh1UrB1mcO2T4JGhm
+	X+AVF1HCDRiKHdS1fLV7xfzwHfRdxyycvz+3Pk4i95pgYW8jijD48eiKysZ1eZWHCsnO+dDMC8PuJ
+	vtJP5q8Q==;
+Received: from 94-238-9-39.abo.bbox.fr ([94.238.9.39]:56204 helo=[192.168.1.98])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1qnotQ-001Opf-2r;
+	Tue, 03 Oct 2023 18:33:33 -0500
+Message-ID: <dcc5978b-c77d-ce0d-7d49-b930984db1f8@embeddedor.com>
+Date: Wed, 4 Oct 2023 01:33:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2647; i=keescook@chromium.org;
- h=from:subject:message-id; bh=1v/oxBN7ZqO28+dM0oWFTdo9vpsVEGznhHHT3hTYF8I=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlHKPwyIdWSWld6J97atG9hIxpNtU0Dh7/kol1x
- NGYcBbZXXGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZRyj8AAKCRCJcvTf3G3A
- JgEqEACpA4yYWb2KVzTOCIfwm8hujCVTSJPb/hR3KANtcMNWX25mFUB8inrRxZWNTJKlqnLkDzN
- VGPP1FbsCXD2NkpMv9Mi5rqHxnIYI4dPDjXghdQZo5wwWSmTJ0gDxcvYlhF68WAUuSdvzAYcuRR
- Ua+upzrG0Zxau1z8VFtdASoWxhl6W5HCuBWKVJzL8coLB2q2sxHBtdJC9utqgikQ+n0LXYRG5/V
- aIQWGc1WjEYexxVOe0SI0nqCGbvf/eSyWa7NM5pbGLR1oVDB4ThDda1/F+wHQ/qmoam8kolP2AJ
- oif+XR3OH8/MLa0+Kb/eK+eJEclZP7gav8nxBSgsB0gjyvfBjmVd5mIPJGIteGyclUcZWQVeb0l
- Kv+i+yrEZgNkEfh8Gflfov5ubL79ZXskKLGfkaJmMBAIm9kvZBbvzIrIzGxI9tuD3sRDd+CrqSU
- XlgByjZ5HUL2Uqwbuj+8V4e6ks6sp0HYyeN26gSl+Ta8yOR8L1c+HaJpeBpPhItyuMwXwEN8vV4
- WJCL05UQH36noU9sZ9FxQwYeP7wFkf6e4jOTjhPwjBMg3Lc9cDgUHaU3r+BizH/wpINJF9UCSmF
- ibq3bJCAyYdVnesvLjy+QzmKTpbLov9bkIJeuxtJ/uTrmRoaLQunBZ3qRodYL81VPJ74Nt+blMg
- vM2VNuF fGpQ1XFg==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH] net/mlx5: Annotate struct mlx5_fc_bulk with __counted_by
+To: Kees Cook <keescook@chromium.org>, Saeed Mahameed <saeedm@nvidia.com>
+Cc: Leon Romanovsky <leon@kernel.org>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ llvm@lists.linux.dev
+References: <20231003231718.work.679-kees@kernel.org>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20231003231718.work.679-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 94.238.9.39
+X-Source-L: No
+X-Exim-ID: 1qnotQ-001Opf-2r
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 94-238-9-39.abo.bbox.fr ([192.168.1.98]) [94.238.9.39]:56204
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 2
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfG/JeQTZrfXxvNX0czvb0S0ra7rMjDHqtc3wzWLROsH0wkawXTeeooz3pBI/J6U7/JRXRpM5Cz2d4fIzKcWbunwZG9eeiOUUZiadhjU1kiuY4RtJltpl
+ 1sl5M6SnnaEBpwxUWUBXn9/sMb2ESFcrOHfFHgQ3VZF2mdGS4Zy7wyRz4IKcmYprEm5+s83BxbfQzBT/y83nn+MRO0PtBUCRIRVTCho+hOKDv68VhhPs6/6N
+X-Spam-Status: No, score=-3.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Prepare for the coming implementation by GCC and Clang of the __counted_by
-attribute. Flexible array members annotated with __counted_by can have
-their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
-array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-functions).
 
-As found with Coccinelle[1], add __counted_by for struct amdgpu_bo_list.
-Additionally, since the element count member must be set before accessing
-the annotated flexible array member, move its initialization earlier.
 
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Cc: "Christian König" <christian.koenig@amd.com>
-Cc: "Pan, Xinhui" <Xinhui.Pan@amd.com>
-Cc: David Airlie <airlied@gmail.com>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Luben Tuikov <luben.tuikov@amd.com>
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Felix Kuehling <Felix.Kuehling@amd.com>
-Cc: amd-gfx@lists.freedesktop.org
-Cc: dri-devel@lists.freedesktop.org
-Cc: linux-hardening@vger.kernel.org
-Link: https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci [1]
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c | 2 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+On 10/4/23 01:17, Kees Cook wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
+> array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
+> 
+> As found with Coccinelle[1], add __counted_by for struct mlx5_fc_bulk.
+> 
+> Cc: Saeed Mahameed <saeedm@nvidia.com>
+> Cc: Leon Romanovsky <leon@kernel.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: netdev@vger.kernel.org
+> Cc: linux-rdma@vger.kernel.org
+> Link: https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci [1]
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
-index 6f5b641b631e..781e5c5ce04d 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
-@@ -84,6 +84,7 @@ int amdgpu_bo_list_create(struct amdgpu_device *adev, struct drm_file *filp,
- 
- 	kref_init(&list->refcount);
- 
-+	list->num_entries = num_entries;
- 	array = list->entries;
- 
- 	for (i = 0; i < num_entries; ++i) {
-@@ -129,7 +130,6 @@ int amdgpu_bo_list_create(struct amdgpu_device *adev, struct drm_file *filp,
- 	}
- 
- 	list->first_userptr = first_userptr;
--	list->num_entries = num_entries;
- 	sort(array, last_entry, sizeof(struct amdgpu_bo_list_entry),
- 	     amdgpu_bo_list_entry_cmp, NULL);
- 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.h
-index 6a703be45d04..555cd6d877c3 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.h
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.h
-@@ -56,7 +56,7 @@ struct amdgpu_bo_list {
- 	 */
- 	struct mutex bo_list_mutex;
- 
--	struct amdgpu_bo_list_entry entries[];
-+	struct amdgpu_bo_list_entry entries[] __counted_by(num_entries);
- };
- 
- int amdgpu_bo_list_get(struct amdgpu_fpriv *fpriv, int id,
--- 
-2.34.1
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
+Thanks
+--
+Gustavo
+
+> ---
+>   drivers/net/ethernet/mellanox/mlx5/core/fs_counters.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fs_counters.c b/drivers/net/ethernet/mellanox/mlx5/core/fs_counters.c
+> index 17fe30a4c06c..0c26d707eed2 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/fs_counters.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/fs_counters.c
+> @@ -539,7 +539,7 @@ struct mlx5_fc_bulk {
+>   	u32 base_id;
+>   	int bulk_len;
+>   	unsigned long *bitmask;
+> -	struct mlx5_fc fcs[];
+> +	struct mlx5_fc fcs[] __counted_by(bulk_len);
+>   };
+>   
+>   static void mlx5_fc_init(struct mlx5_fc *counter, struct mlx5_fc_bulk *bulk,
