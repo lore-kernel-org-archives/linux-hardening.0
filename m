@@ -1,56 +1,59 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 709273F4A3
-	for <linux-hardening@vger.kernel.org>; Tue,  3 Oct 2023 23:28:05 +0000 (UTC)
-Received: from mail-oi1-x230.google.com (mail-oi1-x230.google.com [IPv6:2607:f8b0:4864:20::230])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D43DB4
-	for <linux-hardening@vger.kernel.org>; Tue,  3 Oct 2023 16:28:03 -0700 (PDT)
-Received: by mail-oi1-x230.google.com with SMTP id 5614622812f47-3af608eb367so990250b6e.2
-        for <linux-hardening@vger.kernel.org>; Tue, 03 Oct 2023 16:28:03 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77B4E3FB3F
+	for <linux-hardening@vger.kernel.org>; Tue,  3 Oct 2023 23:28:59 +0000 (UTC)
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B897B0
+	for <linux-hardening@vger.kernel.org>; Tue,  3 Oct 2023 16:28:57 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1c60cec8041so10711325ad.3
+        for <linux-hardening@vger.kernel.org>; Tue, 03 Oct 2023 16:28:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1696375682; x=1696980482; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1696375737; x=1696980537; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=l1cocEZekiORqignw5iQ3QnO8ZAEe34D0CJMf8KTzIs=;
-        b=kmkt1mjeshnqomFJXrb9VPO9h7KiUu+pNppPH5zsgOlumyN2gSxB2gN8n834+FlHas
-         YyV+8ljv2oQrTAlAmNmy4xvuyeXbCDJMlJpGGmtHdRHgnersE0+gfz2D9bHXGHw2hVn6
-         FgtGoph3zItdFwAWwEIK+bNESIOC8wA+XtlFM=
+        bh=mewr2b70zj+E+PpMtuqRQXYpLvw4Y2kPAtz8L71vU0I=;
+        b=Gq+gphMwlzljnJCKit7St6eAm1T3gh4oMGIP2fokDe9rOonYZfG2soLJwkTfm8Eo9h
+         rfljuBIeizdZtNbUbOXnc9m7VkIleh3hhJG+jcsBmg+ZJbwea4IW5wcRxsTBxncRWQ2L
+         7MV7Bwh+SJqxK0Ida1JGynx2Z86cK2sM4Q9zk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696375682; x=1696980482;
+        d=1e100.net; s=20230601; t=1696375737; x=1696980537;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=l1cocEZekiORqignw5iQ3QnO8ZAEe34D0CJMf8KTzIs=;
-        b=IGnbP5B2qN6cdEIGR/51nPiuRbE4xf0buayoJimW+mCfV8bv4MQb0DkHm4cc4egZ7C
-         cfdQTTnYMWow45JAMAoEeXlph3OzjpE1T8WW3j4fGEYdx/DY5BvUu7NPyvyaV4r3/yhE
-         t+QRAyiegefkuxM+eA3lsPpC7FNVY4TuFqTyVEKXA1b4HblxkwvAC6n2nHrhM9xVHmf5
-         JOZSHtdMhZqg1e3/Nra0vpjvu4971Q1jhwcYpp5CBGR8u5HlcZ/ObuBZyv9FLOLogbTT
-         k106INMbpjuIgOJOdzdNwqq3OE0cwq6Vl85jFnhKIdDuNobh2DybFH9gT8wl9x6ftgo0
-         /sFw==
-X-Gm-Message-State: AOJu0YwhDO6+EHqptig6p2D932Jhxxg640Xoxhqitnm2IoVIcmThTj07
-	//wr/GVQBywInYCQAWp5PtAz0A==
-X-Google-Smtp-Source: AGHT+IGcDZsz8I7q8HeOw+zAOiVjTbrdYbyOyLeLVe3dMszaNS4gWaQkf5NPvjAd8b8Ijnz9eccivg==
-X-Received: by 2002:a05:6808:1386:b0:3ab:83fe:e18f with SMTP id c6-20020a056808138600b003ab83fee18fmr1040629oiw.35.1696375682763;
-        Tue, 03 Oct 2023 16:28:02 -0700 (PDT)
+        bh=mewr2b70zj+E+PpMtuqRQXYpLvw4Y2kPAtz8L71vU0I=;
+        b=Qwnucpf7ZvkPt0FV0tN4fG0pE2AJ8/lg915xfRk1QCunEcv+RpHNL+yqtEQXKs94ZA
+         LSjISdrdu9Bmxu8LMv2NKrVqYgold6Gi4V7V6mTpOkNFcalrzVYhKJsAgCWA7mk0OLp4
+         dkWEmXFYiH8hFkm7TVwXPZWevSmIxEwtcvZp9xR1oX/A7h/V7Ze0g/7GyAq3Tm/zr+Sv
+         1zcedNv55ne1MOVxHqsj43QoYaLG+OsSXUhyGORJ+6DgQ0H3SEhTVKEH7XZ/Ngwf6jZE
+         7j3v9i48spo+aIWNal/t0v8NEBgUzrV58fu/alR5iUhUowSO7w6Rua1oqo7Y2/AHMUHg
+         C+5g==
+X-Gm-Message-State: AOJu0YygY4eegJYwoBICzDC5DaYSUcirkRUGyBvV4eXtJwNlXkYOBK3K
+	UKjEhlNHJeNME10aDIk4Hpm6LQ==
+X-Google-Smtp-Source: AGHT+IE9+0pmjc2CqAJFQTA1BUgWoTDOaeHCQ2RtQhFPP3SatP2ZRDf6Q59SkUDovbfYKbDPKVBYdQ==
+X-Received: by 2002:a17:903:24c:b0:1c7:4f87:3dbe with SMTP id j12-20020a170903024c00b001c74f873dbemr1177087plh.31.1696375736870;
+        Tue, 03 Oct 2023 16:28:56 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id b2-20020a63a102000000b005637030d00csm1917249pgf.30.2023.10.03.16.28.02
+        by smtp.gmail.com with ESMTPSA id s16-20020a170902ea1000b001bbd1562e75sm2201487plg.55.2023.10.03.16.28.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Oct 2023 16:28:02 -0700 (PDT)
+        Tue, 03 Oct 2023 16:28:56 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
-To: Vinod Koul <vkoul@kernel.org>
+To: Liam Girdwood <lgirdwood@gmail.com>
 Cc: Kees Cook <keescook@chromium.org>,
-	dmaengine@vger.kernel.org,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	alsa-devel@alsa-project.org,
+	linux-hardening@vger.kernel.org,
 	Nathan Chancellor <nathan@kernel.org>,
 	Nick Desaulniers <ndesaulniers@google.com>,
 	Tom Rix <trix@redhat.com>,
 	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
 	llvm@lists.linux.dev
-Subject: [PATCH] dmaengine: fsl-edma: Annotate struct struct fsl_edma_engine with __counted_by
-Date: Tue,  3 Oct 2023 16:27:56 -0700
-Message-Id: <20231003232704.work.596-kees@kernel.org>
+Subject: [PATCH] ASoC: soc-dapm: Annotate struct snd_soc_dapm_widget_list with __counted_by
+Date: Tue,  3 Oct 2023 16:28:53 -0700
+Message-Id: <20231003232852.work.257-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -58,25 +61,25 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1156; i=keescook@chromium.org;
- h=from:subject:message-id; bh=s8UpsNSdXXPa2sG80VKv45a8RFcNlzZa7z4+aE1gKZA=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlHKN8cBMJPNyzXXuGAC8pBAjZvNoG6NrfePoLd
- C9D5gSb26qJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZRyjfAAKCRCJcvTf3G3A
- JuEJD/9v/LCGJzv4Rw87JT1vYJVt0ykGcqLmnwnqOBGGZsqevqD+b7qp14+O1Q8lnIkI4W33lG2
- WbeXUWN6tcTbe2U5IZqKbtksxWFE9qY5jG44U0LWuYDitzIy3zpXoUzf9KKtH0MFHEZgbdcWT+v
- advfP2YT7lRageoZr5YdGugHBpNZ/jaZEB75Sbmm6rfce8egfMISd/JvRWzu5Vk1EszldbP1i9b
- X0VVdfiA4Ip9o7U//FK/Qhh+dHVNCeAxH8tjonoTn8VmX9dVq9kEIIlNdqdakhQ0cqotn8K+UUz
- TEg4oOAtEvyQFwLSSFJOWWrbwtEsZt/hyQKAZg0s7KrNXDkaRw2QJ+HfpOmnWnrZIEIcSeVSYxl
- ZG7UCCXQkpA+wJQ7/w/j53k+5e+LHjmnZgv9fkU9QVQs/NUCWMvaldXHJnVsUBfJ2Wsl464Pd6Q
- VDhJzr/ZMMATrkL4cRoZCmPBuJHtTFPoUDIiMmnFlZab82OB2xZ02UKYagv77ZurGq/O9vmzYdl
- 6D8O7BYvb1dlOYv/uEpQHR3PaTu2k+nq1RXhNk3opBHUl1hrke7gJEcsFF6ehvPQY2fvHgESw04
- RR7Lmu9tmg7ilcDwH1bO92ixNm7NP1P8B30siaG24HjWBbalKHnxhHyQaO60ldjhBdlBVJ0wRGl
- /fnpHhl RpJmix4Q==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2049; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=6X+YStEd0LKlaV0dQ/+jU63am+Tg/LnFddxaxahC+bw=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlHKO1gHu4l9h8ToOMvkOmkto8cSVU/vIIIfRBe
+ GeN6y35pSWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZRyjtQAKCRCJcvTf3G3A
+ JgNjD/4q5gV6j+9dUNB2OWkREBYsVc6X++ugjnovyEuKGMIO5OVnXc9jH79Kp+y27z4flA8uzzb
+ +/r402rgPMkNPLC5GCQr12BvpEC1X8LALA79ist2DeSe1oktOoVS3aMe+/Xy6TqdcMeDeIZoo/7
+ T1Rn6zkPYXU/8vtFSebH5zH51EeajceKubb+yEJ8rmen79X1C7Gyeb7Ijc3HWazoUS0FKasUx5A
+ cOnmPn+ui24LfU1Qa7V7TdcR9rfRZ8updCADmqZ6QM5DHxxwuvgir/CGTN4izQGV1OUxMJgJS4l
+ +wodJb5c0SRHeF+7+yAT6WO4qsuBQQwFXdnsw2ywzFe2rTOZ22M/mAcK22lbc28oAaVPrL6tWj1
+ MT6VpE1AqFevzjlgTxDde83nlltZhG2Vveh6cPfzFBtn53tVWK1kaPFTw5cr4Ku6TnJswmeRLtJ
+ sxEuDhD/KSvpRx1PhGEU8jGsnOjuSnT9E79xugfNmv/2wjEIJSha6UeyebKRB3HpoAqL5eXJBDb
+ 37rBp22xYP5M/W7HQmIFzZ+iR3s7UV+UW+3JYpQusIFADZzQH0yUHk/DoV7EVgBxMtYXwAs0xOn
+ vxcomU0K+gw5b+cB6mxXslxsu7jQ5DVxyatycmhvSOz7GUbXtQlraWBOe+LhgFI/Y8J7Mupz2q9
+ aPyj3M0 Mg5yrwWA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
@@ -87,29 +90,51 @@ their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
 array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 functions).
 
-As found with Coccinelle[1], add __counted_by for struct struct fsl_edma_engine.
+As found with Coccinelle[1], add __counted_by for struct snd_soc_dapm_widget_list.
+Additionally, since the element count member must be set before accessing
+the annotated flexible array member, move its initialization earlier.
 
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: dmaengine@vger.kernel.org
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: alsa-devel@alsa-project.org
+Cc: linux-hardening@vger.kernel.org
 Link: https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci [1]
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/dma/fsl-edma-common.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/sound/soc-dapm.h | 2 +-
+ sound/soc/soc-dapm.c     | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/fsl-edma-common.h b/drivers/dma/fsl-edma-common.h
-index 40d50cc3d75a..bb5221158a77 100644
---- a/drivers/dma/fsl-edma-common.h
-+++ b/drivers/dma/fsl-edma-common.h
-@@ -225,7 +225,7 @@ struct fsl_edma_engine {
- 	bool			big_endian;
- 	struct edma_regs	regs;
- 	u64			chan_masked;
--	struct fsl_edma_chan	chans[];
-+	struct fsl_edma_chan	chans[] __counted_by(n_chans);
+diff --git a/include/sound/soc-dapm.h b/include/sound/soc-dapm.h
+index d2faec9a323e..51516c93916e 100644
+--- a/include/sound/soc-dapm.h
++++ b/include/sound/soc-dapm.h
+@@ -717,7 +717,7 @@ struct snd_soc_dapm_context {
+ /* A list of widgets associated with an object, typically a snd_kcontrol */
+ struct snd_soc_dapm_widget_list {
+ 	int num_widgets;
+-	struct snd_soc_dapm_widget *widgets[];
++	struct snd_soc_dapm_widget *widgets[] __counted_by(num_widgets);
  };
  
- #define edma_read_tcdreg(chan, __name)				\
+ #define for_each_dapm_widgets(list, i, widget)				\
+diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
+index 2512aadf95f7..2e3df47c9cf3 100644
+--- a/sound/soc/soc-dapm.c
++++ b/sound/soc/soc-dapm.c
+@@ -497,8 +497,8 @@ static int dapm_kcontrol_add_widget(struct snd_kcontrol *kcontrol,
+ 	if (!new_wlist)
+ 		return -ENOMEM;
+ 
+-	new_wlist->widgets[n - 1] = widget;
+ 	new_wlist->num_widgets = n;
++	new_wlist->widgets[n - 1] = widget;
+ 
+ 	data->wlist = new_wlist;
+ 
 -- 
 2.34.1
 
