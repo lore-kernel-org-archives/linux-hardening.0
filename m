@@ -1,56 +1,56 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9908B3F4A0
-	for <linux-hardening@vger.kernel.org>; Tue,  3 Oct 2023 23:06:44 +0000 (UTC)
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 764E89E
-	for <linux-hardening@vger.kernel.org>; Tue,  3 Oct 2023 16:06:42 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id a640c23a62f3a-99bf3f59905so266463266b.3
-        for <linux-hardening@vger.kernel.org>; Tue, 03 Oct 2023 16:06:42 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0735B3F4A9
+	for <linux-hardening@vger.kernel.org>; Tue,  3 Oct 2023 23:12:58 +0000 (UTC)
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FC5CB0
+	for <linux-hardening@vger.kernel.org>; Tue,  3 Oct 2023 16:12:56 -0700 (PDT)
+Received: by mail-ej1-x635.google.com with SMTP id a640c23a62f3a-9b281a2aa94so267345366b.2
+        for <linux-hardening@vger.kernel.org>; Tue, 03 Oct 2023 16:12:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696374401; x=1696979201; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1696374775; x=1696979575; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BED3t2aRrxtx0D0q4ZEBs+ApkSmWh8HJDsZNXZO2H1E=;
-        b=TJhdldhY/lq5NAoTeyNdXfSWa2OwK0PBlKYQII4OhYv7/eTz26t8J7BnCKJSEH40JC
-         +BpPvq7HOxdk3r3JFa17jtKJPJ1ZfLa+FWbBrO6pHWiH4UsLrP/KH6t5xbzPEQtgVHTR
-         Tj2nxh+2AtYbqzcAlpUM6LJBBDFwet6JXVB1WfrQ9N0rO6oUPIPqsIllni53MFANCRMq
-         FfU7UKZfAs4EWCv5uOISuUtguyUISA/C9JPm5SnKjkbFGUmYYAHESoxyhhZCxjl/ZwDz
-         cVAGW7c4uS9XDYb4NsdexcnD1lxc6r8BYsVQNhMr4aBsAYoBGAJXKrgNATKVcZGfflbu
-         HcmA==
+        bh=iaFpiEY5JH4xoOaWyLud8W3R/SAnqW0FuICHPBykSfM=;
+        b=RS7hKJEP6pS2DPmYR+PYIf76iLY/l1jcZLAVMMKX1ld9HBXOjQaFMOgKbki/hJGMaq
+         15DAR6wTs7VpZVG1jDCEvwLbKNHKfYXzeDw58AlhgXbodM26FU77UPATIFub97um+WPE
+         UDYCFGp3MsSytxBx5sCFdBYLQzo9TlAkrMHKUjm2ti8w+B9PXgBQz9+4Eo/qScylulPx
+         vyU0WxaIJ0eMYlYpZJ0V0oo0gGzRe0Tccae1Gk1L+MMYMYXvTNgceTW4aRWiOYNYTrbH
+         SRMrTndo7QPYBHRc0kMBMCGm6cLFOu4qgRkGQYbl/Xx5FWbvNw/hVLKq+tGGvVxRZwlH
+         VzDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696374401; x=1696979201;
+        d=1e100.net; s=20230601; t=1696374775; x=1696979575;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BED3t2aRrxtx0D0q4ZEBs+ApkSmWh8HJDsZNXZO2H1E=;
-        b=PMhAN0/zkcfpgpbVvo3gP6iEOmfvUGtZ5LZAtuCEyOQayDELy2sT7oag1vf5q17bjC
-         i5xLLWQa8FruzZ7XYR9tiIF34wRYcDnN348KEsbJbrIEjn7Dd2vDyuY1EBZn8OAm1wkm
-         bIzcmWK8aSdF0EqQCwulQZwUd+6PncoQSEc9fYbiiOLhtUvmeiXKQ7Dyi66ShnidqRme
-         So5mpb3uktEHzbz9gOBBx+IIaZVeqbwMXSTe4XT2XNju1KdJRBLX7pcFri0nGqSVcDbQ
-         bBsypkuFeN4DkhHxzvRIbFkPC1XA6GF7gVuo0gRPRGCK+GqAazTTgk5avuGeGbO6pXH8
-         gf+A==
-X-Gm-Message-State: AOJu0YxsdKroxcnPAM8xiaY/Do1ox8SHF7/juY00N5hqWS422Gqen6cd
-	gvgET+3gLd29O2oOxaVDH/n3ujWODxKlJnP2D+/hIQ==
-X-Google-Smtp-Source: AGHT+IHB2pzA3bg1Fesj416efcT1N1xTYVtbEVVGRJW14+RdrX8v8VDBTH1EuOSCUOzjyMf3H2XQMrs2+N3Lkip4XW8=
-X-Received: by 2002:a17:906:74cc:b0:99b:ead0:2733 with SMTP id
- z12-20020a17090674cc00b0099bead02733mr593265ejl.72.1696374400964; Tue, 03 Oct
- 2023 16:06:40 -0700 (PDT)
+        bh=iaFpiEY5JH4xoOaWyLud8W3R/SAnqW0FuICHPBykSfM=;
+        b=JZT4i/BcPnTAod9F2p4HkHIs/LYisNOETm7mdMMlsgSkZPPRXsBjCKTxPfrsmOmDnC
+         aZGLH1YllPJjsoKRTEei930G74f5i25omQKzWfUM3FSULGaTuoBYDvloDADAT67bHkM+
+         jijQWFXpiQ5rhQdxcQ3LhlIN+3Zh3SVr7eDmzu4JafMirD65UMMG8imfVTl4MdsUsRon
+         p3eyEcx2xWsHDGhBGNczDulr6AZn6bumU6jNqLJCJNwQFg3EDFAMo5dvr2ypFUk0YZ5j
+         pdf0CsZGsWYoQ63q9iBxxWUcLdEZHlMINj0RTrB4h16OPSAg4v4KlvcV+Hda128Y084l
+         e51A==
+X-Gm-Message-State: AOJu0YytODebyzx8P79pT0vOLswNNzlUfeGWWeZLFc2dTow7NDSvxaFF
+	bKAPZ3MhjBFjNstieX8/gKY2Pn76mKoyQIQuTL2SKQ==
+X-Google-Smtp-Source: AGHT+IGIAv1B8l7PPJwCoeN7f0g0yeR5LZROzHms5LHhhlU7a5bSwRk1Gpmtk7Zd8a8qWTdhzqWf4oRXEPk/0ORHwv0=
+X-Received: by 2002:a17:906:76cf:b0:9b2:a7e5:c47 with SMTP id
+ q15-20020a17090676cf00b009b2a7e50c47mr577019ejn.9.1696374774622; Tue, 03 Oct
+ 2023 16:12:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230929180611.work.870-kees@kernel.org> <20230929180746.3005922-5-keescook@chromium.org>
-In-Reply-To: <20230929180746.3005922-5-keescook@chromium.org>
+References: <20230929180611.work.870-kees@kernel.org> <20230929180746.3005922-4-keescook@chromium.org>
+In-Reply-To: <20230929180746.3005922-4-keescook@chromium.org>
 From: Justin Stitt <justinstitt@google.com>
-Date: Tue, 3 Oct 2023 16:06:28 -0700
-Message-ID: <CAFhGd8pCJa=qevxwhtQDvXMwdhF-33fV87m90GGaUFkOa6eRuA@mail.gmail.com>
-Subject: Re: [PATCH 5/5] mlxsw: spectrum_span: Annotate struct mlxsw_sp_span
- with __counted_by
+Date: Tue, 3 Oct 2023 16:12:42 -0700
+Message-ID: <CAFhGd8oKZEhWhv=C3FZHH3D3DLevKONV+VdVLLpS1U8JFF3bvg@mail.gmail.com>
+Subject: Re: [PATCH 4/5] mlxsw: spectrum_router: Annotate struct
+ mlxsw_sp_nexthop_group_info with __counted_by
 To: Kees Cook <keescook@chromium.org>
 Cc: Ido Schimmel <idosch@nvidia.com>, Petr Machata <petrm@nvidia.com>, 
 	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
@@ -79,7 +79,8 @@ S
 > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
 >
-> As found with Coccinelle[1], add __counted_by for struct mlxsw_sp_span.
+> As found with Coccinelle[1], add __counted_by for struct mlxsw_sp_nexthop=
+_group_info.
 >
 > [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/c=
 ounted_by.cocci
@@ -94,36 +95,25 @@ ounted_by.cocci
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
 
-Great patch!
-
-Crucially, span->entries_count is assigned before any flexible array
-accesses.
-
-        span->entries_count =3D entries_count;
-        ...
-        for (i =3D 0; i < mlxsw_sp->span->entries_count; i++)
-                mlxsw_sp->span->entries[i].id =3D i;
-
-
 Reviewed-by: Justin Stitt <justinstitt@google.com>
 
->  drivers/net/ethernet/mellanox/mlxsw/spectrum_span.c | 2 +-
+>  drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_span.c b/driver=
-s/net/ethernet/mellanox/mlxsw/spectrum_span.c
-> index b3472fb94617..af50ff9e5f26 100644
-> --- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_span.c
-> +++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_span.c
-> @@ -31,7 +31,7 @@ struct mlxsw_sp_span {
->         refcount_t policer_id_base_ref_count;
->         atomic_t active_entries_count;
->         int entries_count;
-> -       struct mlxsw_sp_span_entry entries[];
-> +       struct mlxsw_sp_span_entry entries[] __counted_by(entries_count);
+> diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c b/driv=
+ers/net/ethernet/mellanox/mlxsw/spectrum_router.c
+> index debd2c466f11..82a95125d9ca 100644
+> --- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
+> +++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
+> @@ -3107,7 +3107,7 @@ struct mlxsw_sp_nexthop_group_info {
+>            gateway:1, /* routes using the group use a gateway */
+>            is_resilient:1;
+>         struct list_head list; /* member in nh_res_grp_list */
+> -       struct mlxsw_sp_nexthop nexthops[];
+> +       struct mlxsw_sp_nexthop nexthops[] __counted_by(count);
 >  };
 >
->  struct mlxsw_sp_span_analyzed_port {
+>  static struct mlxsw_sp_rif *
 > --
 > 2.34.1
 >
