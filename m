@@ -1,73 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C4B0405CF;
-	Tue,  3 Oct 2023 23:37:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DDE4C433C8;
-	Tue,  3 Oct 2023 23:37:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696376221;
-	bh=2qFD7ci96RgiVJyZ7j0nx2Ffl5SbucWr9eaZ/kne1Ow=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aKqhO7eSDVXXXlqD8/5/qPoZcBCuGRokmV2bbWsSI+02G8FNPPO8omhm/p39IISqF
-	 k0WsZxgPnFGSUuQzjIm15UFLB9MHX+ANjeTGDl3ykrCIDc2BBHSBo6HnyOnmEHj3le
-	 SXYfhRwyQzu9ZHC0m51sAAS2O/foh0C0/kyLhIhWFbnf96Wb4V+pX63YmrVUWsAtK0
-	 mp34Ud/3aIW9Rg7GklL79aGwLqmmpzz2THkAVUUvTyDM1NdG7Bibd7YG3H3O3NsU9N
-	 HiB6VXEQ0PW63FzBnDUbrBUFbT3pQD8KRf100jcZdOJUldHbDnOAbKvU75X6/EXwFW
-	 CqyNQa34bbKIA==
-Message-ID: <5af06f3c-bc84-b73d-d7f7-a1154a5a84e1@kernel.org>
-Date: Tue, 3 Oct 2023 17:37:00 -0600
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C9FF405CF
+	for <linux-hardening@vger.kernel.org>; Tue,  3 Oct 2023 23:38:33 +0000 (UTC)
+Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B636AF
+	for <linux-hardening@vger.kernel.org>; Tue,  3 Oct 2023 16:38:31 -0700 (PDT)
+Received: from eig-obgw-6009a.ext.cloudfilter.net ([10.0.30.184])
+	by cmsmtp with ESMTP
+	id nlhvqzLjVaLCxnoyEqLn4l; Tue, 03 Oct 2023 23:38:30 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id noyEqQfkv2PLNnoyEqmC9e; Tue, 03 Oct 2023 23:38:30 +0000
+X-Authority-Analysis: v=2.4 cv=GMgbr8BK c=1 sm=1 tr=0 ts=651ca5f6
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=Dx1Zrv+1i3YEdDUMOX3koA==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=bhdUkHdE2iEA:10 a=wYkD_t78qR0A:10 a=jZVsG21pAAAA:8
+ a=A7XncKjpAAAA:8 a=pGLkceISAAAA:8 a=J1Y8HTJGAAAA:8 a=1XWaLZrsAAAA:8
+ a=VwQbUJbxAAAA:8 a=20KFwNOVAAAA:8 a=NEAV23lmAAAA:8 a=cm27Pg_UAAAA:8
+ a=YSKGN3ub9cUXa_79IdMA:9 a=QEXdDO2ut3YA:10 a=3Sh2lD0sZASs_lUdrUhf:22
+ a=R9rPLQDAdC6-Ub70kJmZ:22 a=y1Q9-5lHfBjTkpIzbSAN:22 a=AjGcO6oz07-iQ99wixmX:22
+ a=xmb-EsYY8bH0VWELuYED:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=4k6s6HPefL8zQEK7ac5EIag+vEYxjPOoY24oUSgOdLQ=; b=hIwkmocJAVHD5i9cchOxA/WmoG
+	+u6ZNQD7xpdwl2CYON3DfqhkAwvur7SOoh31KWI7NngusWQ+laEuQ06UtM6Si1aa94tARb2NaCYuB
+	nnHRBnYztTdqJJKMunkQcX/9rxRmOm6n6R2s5IVRUPC9XJ+Ulk8J2ahdO9xM288aPOUMaUMTA477j
+	AUOQ1xp/l6g7MJdi+bKbsBoel+tvoysSPXuRjdAZH+jZssUNPB9HMrE7lrF4gYY+5IPH7s+hlS3zC
+	WwNc90Oq26bz1DfmmAZ7ZSL8VPfFGfLdMjARetHakxa+6+twtrMp+lvP7YBMYbyVypDedZT2lYf4K
+	qna13b5g==;
+Received: from 94-238-9-39.abo.bbox.fr ([94.238.9.39]:42398 helo=[192.168.1.98])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1qnoyC-001SqE-0Y;
+	Tue, 03 Oct 2023 18:38:28 -0500
+Message-ID: <839118ce-ff16-a743-d660-dd030a7e2d90@embeddedor.com>
+Date: Wed, 4 Oct 2023 01:38:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.15.1
-Subject: Re: [PATCH] nexthop: Annotate struct nh_notifier_grp_info with
- __counted_by
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH] netem: Annotate struct disttable with __counted_by
 Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Nathan Chancellor <nathan@kernel.org>,
+To: Kees Cook <keescook@chromium.org>,
+ Stephen Hemminger <stephen@networkplumber.org>
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang
+ <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ netdev@vger.kernel.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>,
  Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
- netdev@vger.kernel.org, llvm@lists.linux.dev,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20231003232146.work.248-kees@kernel.org>
-From: David Ahern <dsahern@kernel.org>
-In-Reply-To: <20231003232146.work.248-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ llvm@lists.linux.dev
+References: <20231003231823.work.684-kees@kernel.org>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20231003231823.work.684-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 94.238.9.39
+X-Source-L: No
+X-Exim-ID: 1qnoyC-001SqE-0Y
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 94-238-9-39.abo.bbox.fr ([192.168.1.98]) [94.238.9.39]:42398
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 83
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfFQUIxitSKLEhnsE3cc4lFhK8j/TTi5wJGWtBCVMlLqcK+wPkHVnjf0gTTJY7agwSkySTGFy6t895f7IRTc7vNeCvX2Px2usKxCk2fFAP9RrVbqyba9F
+ G4XDk+x7D8Axc2uIlQxUaL81eJyllM5mmy+05O6N0SILlwFG+WohG14LlBAdB+MV0aiIzU3QeBcqRvWot5QPhOXbN00RvnrtB78g5vcnGVeqMGhA6wcwJBjX
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+	RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-On 10/3/23 5:21 PM, Kees Cook wrote:
+
+
+On 10/4/23 01:18, Kees Cook wrote:
 > Prepare for the coming implementation by GCC and Clang of the __counted_by
 > attribute. Flexible array members annotated with __counted_by can have
 > their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
 > array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
 > 
-> As found with Coccinelle[1], add __counted_by for struct nh_notifier_grp_info.
+> As found with Coccinelle[1], add __counted_by for struct disttable.
 > 
-> Cc: David Ahern <dsahern@kernel.org>
+> Cc: Stephen Hemminger <stephen@networkplumber.org>
+> Cc: Jamal Hadi Salim <jhs@mojatatu.com>
+> Cc: Cong Wang <xiyou.wangcong@gmail.com>
+> Cc: Jiri Pirko <jiri@resnulli.us>
 > Cc: "David S. Miller" <davem@davemloft.net>
 > Cc: Eric Dumazet <edumazet@google.com>
 > Cc: Jakub Kicinski <kuba@kernel.org>
 > Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: Tom Rix <trix@redhat.com>
 > Cc: netdev@vger.kernel.org
-> Cc: llvm@lists.linux.dev
 > Link: https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci [1]
 > Signed-off-by: Kees Cook <keescook@chromium.org>
+
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Thanks
+--
+Gustavo
+
 > ---
->  include/net/nexthop.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>   net/sched/sch_netem.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-
-
-Reviewed-by: David Ahern <dsahern@kernel.org>
-
+> diff --git a/net/sched/sch_netem.c b/net/sched/sch_netem.c
+> index 4ad39a4a3cf5..6ba2dc191ed9 100644
+> --- a/net/sched/sch_netem.c
+> +++ b/net/sched/sch_netem.c
+> @@ -67,7 +67,7 @@
+>   
+>   struct disttable {
+>   	u32  size;
+> -	s16 table[];
+> +	s16 table[] __counted_by(size);
+>   };
+>   
+>   struct netem_sched_data {
