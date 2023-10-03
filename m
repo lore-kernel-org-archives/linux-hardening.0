@@ -1,54 +1,52 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A60E03FB09
-	for <linux-hardening@vger.kernel.org>; Tue,  3 Oct 2023 23:45:59 +0000 (UTC)
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CE44B4
-	for <linux-hardening@vger.kernel.org>; Tue,  3 Oct 2023 16:45:56 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1c736b00639so11385755ad.2
-        for <linux-hardening@vger.kernel.org>; Tue, 03 Oct 2023 16:45:56 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31D283FB09
+	for <linux-hardening@vger.kernel.org>; Tue,  3 Oct 2023 23:46:49 +0000 (UTC)
+Received: from mail-oo1-xc31.google.com (mail-oo1-xc31.google.com [IPv6:2607:f8b0:4864:20::c31])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBED6C4
+	for <linux-hardening@vger.kernel.org>; Tue,  3 Oct 2023 16:46:47 -0700 (PDT)
+Received: by mail-oo1-xc31.google.com with SMTP id 006d021491bc7-57bca5b9b0aso869220eaf.3
+        for <linux-hardening@vger.kernel.org>; Tue, 03 Oct 2023 16:46:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1696376755; x=1696981555; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1696376807; x=1696981607; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RtHYjR3XxoRF+iJTkvp+E/jMMzI/Fs5RNWq+H0ugZaQ=;
-        b=Uv+54UEBZvITyMjEPII19CZmsTxTZvB5NDyFvUS5nkcYu7rsLrGfwtaxdwjj7+JYOW
-         INlN5xBxwlyY/IxesJp44tCcAW05pW5ACZ/4CqNs7+0CSGRFuSRd6tEFa5oSFWCaU8bU
-         XZUqzdUa7jp42b/HYHusuibM+HM3PWkhob+vU=
+        bh=PPFPtgXKpDPjFV3QZDdRhVrKDYAKfhNMoOZnAYYIu54=;
+        b=dMSf0fmkjXKzyUhCUD+39MmCtkSf7GOv33nC3LVWu6SHJyYFqx2PK0l6bg/xw0CGIo
+         r1C4Z1UuD32Bt6HWZ4bxGHVw2DG5ga/JsfCx6Op1pcbOA+6OgBFWTTaEXXZdymVMNe1Y
+         jt+TXutgbPeDvjdFV2Rka7ZhEG8VMVf+5LYUY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696376755; x=1696981555;
+        d=1e100.net; s=20230601; t=1696376807; x=1696981607;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RtHYjR3XxoRF+iJTkvp+E/jMMzI/Fs5RNWq+H0ugZaQ=;
-        b=sUpw6pRqZ4zH0dP53yPNGe4twaK8eVFErS+6H6477yEotKvFV5T5XJmwh+UUSprM+p
-         wnEXSJ01bYOppGAQTmuGcjkudzNLDIb7NubHUVF/+cC0dwhE43J3Kc/IzhdSoYFJeo//
-         T2q00eSyC2ZGptmydMAAfLOzVxfucBU4ygRpY4wI8YRk1/N+bqkADuB4I19ey7CA1HZV
-         JMpA5R28ub0Fb/Rhx4YLwqxbEwn2K1y1EGFeAq9eM2KsDKrsTiEaK1PvGod/7Neepjuc
-         U2lCnH0ZMkEIOcnaDoxc+OqQNrUt/0OqK5kWQ84dF5xhdCZpl8C5QjrrOx/Pc8FbShDg
-         SKJg==
-X-Gm-Message-State: AOJu0YwF4yAjRJ/3NMyfPCkouZ1Bvbco7ktPIYE0qUWdJ1z7SmBKFEaK
-	xlFuSyfGHCaRzSJQcOL5r6pX+g==
-X-Google-Smtp-Source: AGHT+IHujQcVFHUY7j+G/kYmbSjiEDK3lKj5pw/1RC5Ut3/Cx7sRwL7lI9kZJjkyqrtiKpo0Jw7Fag==
-X-Received: by 2002:a17:902:e850:b0:1c5:d1a2:c3e8 with SMTP id t16-20020a170902e85000b001c5d1a2c3e8mr1097347plg.5.1696376755493;
-        Tue, 03 Oct 2023 16:45:55 -0700 (PDT)
+        bh=PPFPtgXKpDPjFV3QZDdRhVrKDYAKfhNMoOZnAYYIu54=;
+        b=SBQ0SHWXp9T6Xnzki/FV5eH86NRa7rHFys1mvAlWsmzjuU8yqGpopQOdQQqDxMCZK9
+         dP1fdgALcs/ZrZ+TlqVvK1mTaVVNVpfzI8cATA32KcfUvICWLnJKSucq6AQb+5i4It61
+         wE3oodv6v3CnOd2hozg3yTmjbSRZz35Jbsm9xRybcwxkMAsaIuSpqNGJKhLjlzzFbVu0
+         UTFrYK8XLkJfJcCZIqr9SrtSrq7/6XbeQ2ZZu1OL+Z36fxFTW1QSdcWJMyQGPEIH8lFB
+         AKfdHEIO+4ahCkxdMfVcvX/4OSLce2+MXWHPlAX+KNHBxshyFdT5dZtVTcMOcKNfDYpn
+         hZdw==
+X-Gm-Message-State: AOJu0Ywbsq16ddlV3BN+VkBMExqFSNBo98WlFQXF9P86iSsj329AH97o
+	W/nDlL0o5iY9ucc9wcmdAyhgyg==
+X-Google-Smtp-Source: AGHT+IHbxAfwDk9rTDaWI6/sinLESFPC9XLXsSohZ3q/HHKFgdJUwD8aS1e0iHAM1k2HY5fFzEXS7w==
+X-Received: by 2002:a05:6358:e4aa:b0:143:9b25:c029 with SMTP id by42-20020a056358e4aa00b001439b25c029mr898736rwb.2.1696376807010;
+        Tue, 03 Oct 2023 16:46:47 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id ji13-20020a170903324d00b001c726147a45sm2196482plb.190.2023.10.03.16.45.54
+        by smtp.gmail.com with ESMTPSA id gl18-20020a17090b121200b002775281b9easm146149pjb.50.2023.10.03.16.46.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Oct 2023 16:45:55 -0700 (PDT)
-Date: Tue, 3 Oct 2023 16:45:52 -0700
+        Tue, 03 Oct 2023 16:46:46 -0700 (PDT)
+Date: Tue, 3 Oct 2023 16:46:45 -0700
 From: Kees Cook <keescook@chromium.org>
 To: Justin Stitt <justinstitt@google.com>
-Cc: Sathya Prakash <sathya.prakash@broadcom.com>,
-	Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-	Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>,
-	MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] scsi: message: fusion: replace deprecated strncpy
- with strscpy
-Message-ID: <202310031645.FBD5955@keescook>
-References: <20231003-strncpy-drivers-message-fusion-mptsas-c-v2-1-5ce07e60bd21@google.com>
+Subject: Re: [PATCH v2] drivers: misc: ti-st: replace deprecated strncpy with
+ strscpy
+Message-ID: <202310031646.C94326A6@keescook>
+References: <20231003-strncpy-drivers-misc-ti-st-st_kim-c-v2-1-79630447b0a1@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -57,41 +55,41 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231003-strncpy-drivers-message-fusion-mptsas-c-v2-1-5ce07e60bd21@google.com>
+In-Reply-To: <20231003-strncpy-drivers-misc-ti-st-st_kim-c-v2-1-79630447b0a1@google.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.6
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Tue, Oct 03, 2023 at 10:15:45PM +0000, Justin Stitt wrote:
+On Tue, Oct 03, 2023 at 10:23:07PM +0000, Justin Stitt wrote:
 > `strncpy` is deprecated for use on NUL-terminated destination strings
 > [1] and as such we should prefer more robust and less ambiguous string
 > interfaces.
 > 
-> The only caller of mptsas_exp_repmanufacture_info() is
-> mptsas_probe_one_phy() which can allocate rphy in either
-> sas_end_device_alloc() or sas_expander_alloc(). Both of which
-> zero-allocate:
-> |       rdev = kzalloc(sizeof(*rdev), GFP_KERNEL);
-> ... this is supplied to mptsas_exp_repmanufacture_info() as edev meaning
-> that no future NUL-padding of edev members is needed.
+> We expect both `kim_data->dev_name` and `kim_gdata->dev_name` to be
+> NUL-terminated.
+> 
+> `kim_data->dev_name` seems to not require NUL-padding.
+> 
+> `kim_gdata` is already zero-allocated and as such does not require
+> NUL-padding:
+> |       kim_gdata = kzalloc(sizeof(struct kim_data_s), GFP_KERNEL);
 > 
 > Considering the above, a suitable replacement is `strscpy` [2] due to
 > the fact that it guarantees NUL-termination on the destination buffer
 > without unnecessarily NUL-padding.
 > 
-> Also use the more idiomatic strscpy pattern of (dest, src, sizeof(dest))
+> Let's also opt to use the more idiomatic strscpy usage of:
+> strscpy(dest, src, sizeof(dest))
 > 
 > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
 > Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
 > Link: https://github.com/KSPP/linux/issues/90
 > Cc: linux-hardening@vger.kernel.org
-> Cc: Kees Cook <keescook@chromium.org>
 > Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-Thanks for adjusting the sizes. Looks good!
+Thanks for the adjustment. This looks right to me now.
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
 
