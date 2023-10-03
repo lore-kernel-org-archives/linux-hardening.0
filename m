@@ -1,24 +1,24 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F154A28;
-	Wed,  4 Oct 2023 01:46:03 +0000 (UTC)
-Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC33CAB;
-	Tue,  3 Oct 2023 18:46:01 -0700 (PDT)
-Received: from eig-obgw-5010a.ext.cloudfilter.net ([10.0.29.199])
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0FF381C
+	for <linux-hardening@vger.kernel.org>; Wed,  4 Oct 2023 01:46:23 +0000 (UTC)
+Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D68EAF;
+	Tue,  3 Oct 2023 18:46:21 -0700 (PDT)
+Received: from eig-obgw-5009a.ext.cloudfilter.net ([10.0.29.176])
 	by cmsmtp with ESMTP
-	id npJ5qY89aNWIenqxcqHTNl; Wed, 04 Oct 2023 01:46:00 +0000
+	id nn1gqEITbQUgRnqxxq06Ja; Wed, 04 Oct 2023 01:46:21 +0000
 Received: from gator4166.hostgator.com ([108.167.133.22])
 	by cmsmtp with ESMTPS
-	id nqxbqBPih3s6Tnqxbq6DO7; Wed, 04 Oct 2023 01:46:00 +0000
-X-Authority-Analysis: v=2.4 cv=EoDBEAQA c=1 sm=1 tr=0 ts=651cc3d8
+	id nqxwqmFPtmWDSnqxwqBPQS; Wed, 04 Oct 2023 01:46:21 +0000
+X-Authority-Analysis: v=2.4 cv=HY0H8wI8 c=1 sm=1 tr=0 ts=651cc3ed
  a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=Dx1Zrv+1i3YEdDUMOX3koA==:17
  a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=bhdUkHdE2iEA:10 a=wYkD_t78qR0A:10 a=sIshrF94AAAA:8
- a=VwQbUJbxAAAA:8 a=J1Y8HTJGAAAA:8 a=1XWaLZrsAAAA:8 a=20KFwNOVAAAA:8
- a=NEAV23lmAAAA:8 a=cm27Pg_UAAAA:8 a=9VsTxJehNoVBklTQRoEA:9 a=QEXdDO2ut3YA:10
- a=39svzKx7NMVfYuMjZabV:22 a=AjGcO6oz07-iQ99wixmX:22 a=y1Q9-5lHfBjTkpIzbSAN:22
+ a=IkcTkHD0fZMA:10 a=bhdUkHdE2iEA:10 a=wYkD_t78qR0A:10 a=pGLkceISAAAA:8
+ a=VwQbUJbxAAAA:8 a=iox4zFpeAAAA:8 a=foHCeV_ZAAAA:8 a=NEAV23lmAAAA:8
+ a=cm27Pg_UAAAA:8 a=IaUvMuFcDdv1ADpriA4A:9 a=QEXdDO2ut3YA:10
+ a=AjGcO6oz07-iQ99wixmX:22 a=WzC6qhA0u3u7Ye7llzcV:22 a=h8a9FgHX5U4dIE3jaWyr:22
  a=xmb-EsYY8bH0VWELuYED:22
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
@@ -26,20 +26,20 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
 	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Hln1ZH+P279DPfU6DvTo+WLQ5/zWlyvXgx6IBvAK7tc=; b=Rsqkmy20Bd0Hj/aUt1kEFlt4wO
-	UXDU5uqYJhoNjew4RY7i5/p1OozvdQTIODUjDGIUf+NYIxddQf27npT0RweBg/kaFaUJqUk5V0KMP
-	SXBFV+r4v78oVnGYWOU3epg65ajaxHg2xJxvZus1pPla4w2wDPaJpznwQgjeFNgp3g8Gpy6PGNA21
-	gLo5CjeXLomoWXuImB4mK3kdzoAVL2SiEcWKpEu16LhtppUrsLLkgvF6NwNyS/2nHmsdBUlhW0zSJ
-	lf/fyOB8+dZN0VWAwfSEaoNsjoJ70djDXM1gm6V2qh99oPNjwhP/f2fw4PAWs2iD10GzUutqXlfiG
-	Zvccsa+g==;
-Received: from 94-238-9-39.abo.bbox.fr ([94.238.9.39]:41938 helo=[192.168.1.98])
+	bh=aQi0SGsm4QcdWyVW84ENcOXnkIwO2ZFqykwHJAizI1E=; b=XuCfZVCHbScmtR2kQ4l5F7QEDn
+	1b9GaD3yZIMP5D0CMaFKITWP0XiYORZxwgp/8Jxv35THpGlLIZcGjnCmiaPXGaWP2v+3MnGUaYPBM
+	CZrXxEc0MJEkvZXo0RlKsyOEnSJVZsgg0qIfr5FcyfY3QQmWkSgnn/xJszygyvzY1PLioQsXtZPP2
+	ih0r21z9/IKDJSoZMipJLMrqnBaLQJ/SQXh5axKVRgWnDn1PByJl7fOuB8KAH6qY9bvmJ20E7F3kN
+	O0R+BULFU6YlGEo7aTpmv1JVfzqD979j6GvbIauu5+44+Aey0xPeDcxerCkeBtsB12AHwTVc4pgVP
+	KoxDlzoQ==;
+Received: from 94-238-9-39.abo.bbox.fr ([94.238.9.39]:48880 helo=[192.168.1.98])
 	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.96)
 	(envelope-from <gustavo@embeddedor.com>)
-	id 1qnozK-001TqT-1b;
-	Tue, 03 Oct 2023 18:39:38 -0500
-Message-ID: <63f3d89e-41f3-65c7-0a29-fb667960243f@embeddedor.com>
-Date: Wed, 4 Oct 2023 01:39:32 +0200
+	id 1qnp2w-001ZYs-1Y;
+	Tue, 03 Oct 2023 18:43:22 -0500
+Message-ID: <509b7545-ca05-b806-2874-a38cbdbfe732@embeddedor.com>
+Date: Wed, 4 Oct 2023 01:43:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -48,22 +48,19 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.15.1
-Subject: Re: [PATCH] nfp: Annotate struct nfp_reprs with __counted_by
+Subject: Re: [PATCH] ASoC: soc-dapm: Annotate struct snd_soc_dapm_widget_list
+ with __counted_by
 Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>, Simon Horman <horms@kernel.org>
-Cc: Simon Horman <simon.horman@corigine.com>, Jakub Kicinski
- <kuba@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
- oss-drivers@corigine.com, netdev@vger.kernel.org,
- Louis Peens <louis.peens@corigine.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>,
+To: Kees Cook <keescook@chromium.org>, Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, "Gustavo A. R. Silva"
+ <gustavoars@kernel.org>, alsa-devel@alsa-project.org,
+ linux-hardening@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>,
  Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- llvm@lists.linux.dev
-References: <20231003231843.work.811-kees@kernel.org>
+ linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+References: <20231003232852.work.257-kees@kernel.org>
 From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20231003231843.work.811-kees@kernel.org>
+In-Reply-To: <20231003232852.work.257-kees@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
@@ -74,19 +71,19 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 94.238.9.39
 X-Source-L: No
-X-Exim-ID: 1qnozK-001TqT-1b
+X-Exim-ID: 1qnp2w-001ZYs-1Y
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: 94-238-9-39.abo.bbox.fr ([192.168.1.98]) [94.238.9.39]:41938
+X-Source-Sender: 94-238-9-39.abo.bbox.fr ([192.168.1.98]) [94.238.9.39]:48880
 X-Source-Auth: gustavo@embeddedor.com
 X-Email-Count: 0
 X-Org: HG=hgshared;ORG=hostgator;
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfCSK8tNWkHs/VqYoum/MtjJrNiGBoQUuP+UzAzTCmnJV2g3FAYnnrJzKgfL7eZeh5dA1nt1wknGzmbnpPx+bvHQiK3fyaLZBbBz/t1nv9y12BpSSij02
- uYSiRzTQpIwqYv4qBI09iD2B3ougGodJeFeMwyY71DJZOozUGowZfQF2A7n2pFrVntDgoF/M9wvhOkUsaCdMreM0VNPMRXpsJnNXBAt0lq3Gu83TwQiVsABS
- j7DhTqrHh4S6RCbQqjePj24XEPtHXcZcj7dzVRuRXVi2VwnTC0Rq2z/t5jn4jiMm
+X-CMAE-Envelope: MS4xfDURYyS3O0Q+b8EUMp6b97ao0u1POcswz2QTnDQv0/4wWrZLJyTtF4Ecwyax9n7mW6rhUJJSMtjaF5xDGM+g9CwBTX7T5mLCb4rkKfctWKoTil9L32tQ
+ ROFT4nNFwcnFaZcWL0CZaRevRhGp3k+l0dq4hEaJjZHCo5fJNpvGuvcNsM3XCSLYM9+Mh1Iz1k/Of+Gwx5sre4NKkoV61W5H8sTL3O+gtrLclmZ0i3sv4tbU
+ Mf4ZyMvkQlcA9TdDkJVabrg6TEcojsBZ+l8AkC/CRws=
 X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
 	RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
@@ -96,22 +93,24 @@ X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 
 
 
-On 10/4/23 01:18, Kees Cook wrote:
+On 10/4/23 01:28, Kees Cook wrote:
 > Prepare for the coming implementation by GCC and Clang of the __counted_by
 > attribute. Flexible array members annotated with __counted_by can have
 > their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
 > array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
 > 
-> As found with Coccinelle[1], add __counted_by for struct nfp_reprs.
+> As found with Coccinelle[1], add __counted_by for struct snd_soc_dapm_widget_list.
+> Additionally, since the element count member must be set before accessing
+> the annotated flexible array member, move its initialization earlier.
 > 
-> Cc: Simon Horman <simon.horman@corigine.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: oss-drivers@corigine.com
-> Cc: netdev@vger.kernel.org
+> Cc: Liam Girdwood <lgirdwood@gmail.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Jaroslav Kysela <perex@perex.cz>
+> Cc: Takashi Iwai <tiwai@suse.com>
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: alsa-devel@alsa-project.org
+> Cc: linux-hardening@vger.kernel.org
 > Link: https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci [1]
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 
@@ -122,19 +121,34 @@ Thanks
 Gustavo
 
 > ---
->   drivers/net/ethernet/netronome/nfp/nfp_net_repr.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>   include/sound/soc-dapm.h | 2 +-
+>   sound/soc/soc-dapm.c     | 2 +-
+>   2 files changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/net/ethernet/netronome/nfp/nfp_net_repr.h b/drivers/net/ethernet/netronome/nfp/nfp_net_repr.h
-> index 48a74accbbd3..77bf4198dbde 100644
-> --- a/drivers/net/ethernet/netronome/nfp/nfp_net_repr.h
-> +++ b/drivers/net/ethernet/netronome/nfp/nfp_net_repr.h
-> @@ -18,7 +18,7 @@ struct nfp_port;
->    */
->   struct nfp_reprs {
->   	unsigned int num_reprs;
-> -	struct net_device __rcu *reprs[];
-> +	struct net_device __rcu *reprs[] __counted_by(num_reprs);
+> diff --git a/include/sound/soc-dapm.h b/include/sound/soc-dapm.h
+> index d2faec9a323e..51516c93916e 100644
+> --- a/include/sound/soc-dapm.h
+> +++ b/include/sound/soc-dapm.h
+> @@ -717,7 +717,7 @@ struct snd_soc_dapm_context {
+>   /* A list of widgets associated with an object, typically a snd_kcontrol */
+>   struct snd_soc_dapm_widget_list {
+>   	int num_widgets;
+> -	struct snd_soc_dapm_widget *widgets[];
+> +	struct snd_soc_dapm_widget *widgets[] __counted_by(num_widgets);
 >   };
 >   
->   /**
+>   #define for_each_dapm_widgets(list, i, widget)				\
+> diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
+> index 2512aadf95f7..2e3df47c9cf3 100644
+> --- a/sound/soc/soc-dapm.c
+> +++ b/sound/soc/soc-dapm.c
+> @@ -497,8 +497,8 @@ static int dapm_kcontrol_add_widget(struct snd_kcontrol *kcontrol,
+>   	if (!new_wlist)
+>   		return -ENOMEM;
+>   
+> -	new_wlist->widgets[n - 1] = widget;
+>   	new_wlist->num_widgets = n;
+> +	new_wlist->widgets[n - 1] = widget;
+>   
+>   	data->wlist = new_wlist;
+>   
