@@ -1,123 +1,147 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C4A3347CB
-	for <linux-hardening@vger.kernel.org>; Tue,  3 Oct 2023 21:55:02 +0000 (UTC)
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBB92A7
-	for <linux-hardening@vger.kernel.org>; Tue,  3 Oct 2023 14:55:00 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5a23ad271d7so21931517b3.1
-        for <linux-hardening@vger.kernel.org>; Tue, 03 Oct 2023 14:55:00 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A48829433
+	for <linux-hardening@vger.kernel.org>; Tue,  3 Oct 2023 22:15:49 +0000 (UTC)
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5980CA7
+	for <linux-hardening@vger.kernel.org>; Tue,  3 Oct 2023 15:15:48 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d859ac9ea15so1757854276.2
+        for <linux-hardening@vger.kernel.org>; Tue, 03 Oct 2023 15:15:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696370100; x=1696974900; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1696371347; x=1696976147; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=a34O7D75QLNIsPbv9jkIuZDS2dnhXViv0FrAp24vkuM=;
-        b=cwkjOnBp+W/U4LePjLOOq9YqvwuS6aMCmVWov5eBf8yXldJIvG5uFyG85nBHxV4Tq5
-         Cb4ola4eYWk5DzF3CLDCqDv10UF+5pBhaA0o5aysiLmqNwWUdBKxVc8eGMo1+a3bApIJ
-         BJAIqV5XZ+xIshlU9NqlhTnK4bRTyhfQwAoCwGLenOT6KLI2j9MXVoTQTwsktr1J+0yf
-         3xQoqWeG5jijiKdjN3IL+/zKvmdcA5/eNcgnMLP0YWifGloRC0vAPnpVEhJilZTPqgcH
-         jJJ4AVBWd8vFSkAX4IUmNeD06XMc+h8GbcLE/emdlvvn3eiGXbShj0WW7eDewKOBSH5e
-         eDFg==
+        bh=glUGQRb/GBSrrTfvaW6K09zpdeEaoPTJ452gHEUadv0=;
+        b=WTKWNT/QY1KIvHBOebCr0+RgxvLLRJczRHQlHgZHKjwz3TVC7f5TpSS+6Al3tU4vmW
+         +yaV4kbsIemMjOWfRqCvkb4NHINO1OiwkLdk73sfWIJIaDsNwwQTL4ii7H8ubW9Pub0T
+         gJFtSz5E1D44t6vt0cze6YVGdkizEwWxc0LJozy03GiXqAe3xp++mbVOAWr66+tbrwTh
+         OkARiPtKX/uGMfzIK4otS7aybV3G7EQDZqP72gPCLvt4Pazw0r2At7xp4Nvyvwibtqs9
+         rDT8TkZfvsZwvtR1nfsP8UPYaAXAZRj+qmne4RJjR4IIJi/+g37N0GYkx5pdB2OaJwoo
+         ADVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696370100; x=1696974900;
+        d=1e100.net; s=20230601; t=1696371347; x=1696976147;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=a34O7D75QLNIsPbv9jkIuZDS2dnhXViv0FrAp24vkuM=;
-        b=t40kHTJ4qgnGrXKSjuP86ACWsVBJk8YHL8FqWX79QQIx9d//gmx1tFZX/xsRKvYo4s
-         7e2wfuZto2HCjdFK+9LISpzeq7DZea+iCPoPr0Nrt9BYjdbtDFbs5Jo242ZtglJz2GiR
-         VEF3E/GfnTv58MSv5RZKUmojONQaCtjYz34q6DwNUIQeaQPJc0lQPK1E1sFIU5gTPQNS
-         xOs2q9uV1X/NgYMXxcRhnwUq8GAhZWkh0DjMzJIVL0rB1K2aJHcgx11av9tLS5jif2h2
-         ekoQC3/L3QQQc/QOuiZuPY9ItFQGTGxnUlqKiJlLMKGEO6618qZAYo7JgmGjMVzpBQOh
-         S5+g==
-X-Gm-Message-State: AOJu0YzKm+Y8dL5n6UZjirh4itUHzDjTmxTEQoHLN1B8wANFDWJei5mD
-	5B7FWBEws+QTFek7Rh03w1qg3Arjgpc3agrH7w==
-X-Google-Smtp-Source: AGHT+IF/GguYZiaA3U/0oiqCoh7GmySeKwqqgo51/38ZdR7OW9pjPSqP5Lbons7QQjg3A4OWl3sbt7nu9R/8AnvUiA==
+        bh=glUGQRb/GBSrrTfvaW6K09zpdeEaoPTJ452gHEUadv0=;
+        b=rAD8E/nDT5VFTQ7bd2O+0kazdVteR1NpveMN2M1dtruO6e4bNHWHCE0TkZrDL4Kluh
+         /8abrrlWjd0U1S5+h9N70MOaBsDA71CTqgvoSLzPnyzqzLGGm58Mt0G31HrU5wNP71vC
+         dmyUL6Eht32+kEqfUttseFRHcavXRktWfyj7sS6Xtci3TdfHCkbLPiIrlDGxGigIlJyW
+         CnOPKFmmcJb7BE5HE6dqXGssgFb3OLMLfagr6rQ+au9KaHqM7kZXW+9jDHkDYa4NSJn9
+         6v+0Ni86gU0Ik53DSjN078wqiTTwJp/ZsIEBq4IGOdxn+SoTlSKcOFEzHYB/5j2d2TEx
+         VtUQ==
+X-Gm-Message-State: AOJu0Yx80BnFx+3Zqo6lVTLIX/VYotZUTEielAr5kiSuccLZDcpUeq7V
+	vwOd9VCPXhAUxDmkUiMHotomQ9WEhiV4lLMvsQ==
+X-Google-Smtp-Source: AGHT+IGdGCAuJA1wNrRfEOEXy8YnXpaqALyFXNbFGW3k419izX+ExXkii771wp0CrG+9MTGjPzGAAKtV27pphMrZug==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a5b:b50:0:b0:d80:904d:c211 with SMTP
- id b16-20020a5b0b50000000b00d80904dc211mr9088ybr.7.1696370100160; Tue, 03 Oct
- 2023 14:55:00 -0700 (PDT)
-Date: Tue, 03 Oct 2023 21:54:59 +0000
+ (user=justinstitt job=sendgmr) by 2002:a05:6902:1603:b0:d7a:bfcf:2d7 with
+ SMTP id bw3-20020a056902160300b00d7abfcf02d7mr8207ybb.6.1696371347547; Tue,
+ 03 Oct 2023 15:15:47 -0700 (PDT)
+Date: Tue, 03 Oct 2023 22:15:45 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIALKNHGUC/42NMQ6DMBAEv4KuzkXYBDBU+UdEgQ8DlhIO2ZYFQ
- vw9Di9IscVsMXOAN84aD212gDPRestLAnnLgOZ+mQzaITHIXBZ5IwT64BZad+wdzbipComJMQz
- bNcJG6Vw3VaW1GiBZVmdGu12FV5d4tj6w269gFL/3f3cUKPChCyXKspb1WDwn5ult7sQf6M7z/ AK7Or9wzwAAAA==
+X-B4-Tracking: v=1; b=H4sIAJCSHGUC/5WNQQ6CMBBFr0K6dkw7iigr72FYNO0ATYSSGWwkh
+ LtbuIHL9/P/f6sS4kCi6mJVTClIiGMGPBXK9XbsCILPrFDjRT+wApl5dNMCnkMiFhhIxOZa+9m
+ nMEyzWAEHLaIv7VXfkVDlt4mpDd/D9Goy90HmyMshTmZP/3ckAwbIW3crna+00c8uxu5NZxcH1 Wzb9gOuMsAt3wAAAA==
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1696370099; l=1983;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1696371346; l=3172;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=PfoJUZKcz8zggS6f4ZS1DBK4K8u1I0Mr9PkhUy/a6XA=; b=EOuTr5sNtf5yNIHhFwCHLi3CcldhMNdQHeDS7LFD2wpobtYnAgSMDEeeIbhtkyPOd5ho0eqOT
- /o+QShgmwW4AlnFbhjd9aWiTIgtw2Af/2mOWekgELZOOoQ0SyJ5p7DG
+ bh=D6TnBFlTL+yFDnhyUKzZ8WPpEO6pZlaPy5QQBmG4HnE=; b=+DWq/nrZH1zk08S36hWN94OBXnhx03M+unNMnYLjJ+uFT7PHncocUUu4CY/RrIzw97eg07gGy
+ UkHDufSUfF+CmRjkJLcW6IfcMUxy+o1rN7x/Ga2VZV3RcaabL63ZD3j
 X-Mailer: b4 0.12.3
-Message-ID: <20231003-strncpy-arch-x86-coco-tdx-tdx-c-v2-1-0bd21174a217@google.com>
-Subject: [PATCH v2] x86/tdx: replace deprecated strncpy with strtomem_pad
+Message-ID: <20231003-strncpy-drivers-message-fusion-mptsas-c-v2-1-5ce07e60bd21@google.com>
+Subject: [PATCH v2] scsi: message: fusion: replace deprecated strncpy with strscpy
 From: Justin Stitt <justinstitt@google.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>
-Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+To: Sathya Prakash <sathya.prakash@broadcom.com>, 
+	Sreekanth Reddy <sreekanth.reddy@broadcom.com>, 
+	Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>
+Cc: MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
 	Kees Cook <keescook@chromium.org>, Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
 X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.6
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-strncpy works perfectly here in all cases, however, it is deprecated and
-as such we should prefer more robust and less ambiguous string apis.
+`strncpy` is deprecated for use on NUL-terminated destination strings
+[1] and as such we should prefer more robust and less ambiguous string
+interfaces.
 
-Let's use `strtomem_pad` as this matches the functionality of `strncpy`
-and is _not_ deprecated.
+The only caller of mptsas_exp_repmanufacture_info() is
+mptsas_probe_one_phy() which can allocate rphy in either
+sas_end_device_alloc() or sas_expander_alloc(). Both of which
+zero-allocate:
+|       rdev = kzalloc(sizeof(*rdev), GFP_KERNEL);
+... this is supplied to mptsas_exp_repmanufacture_info() as edev meaning
+that no future NUL-padding of edev members is needed.
+
+Considering the above, a suitable replacement is `strscpy` [2] due to
+the fact that it guarantees NUL-termination on the destination buffer
+without unnecessarily NUL-padding.
+
+Also use the more idiomatic strscpy pattern of (dest, src, sizeof(dest))
 
 Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
 Link: https://github.com/KSPP/linux/issues/90
 Cc: linux-hardening@vger.kernel.org
 Cc: Kees Cook <keescook@chromium.org>
 Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
 Changes in v2:
-- update subject (thanks Kees)
-- update commit message (thanks Dave)
+- use sizeof(dest) pattern (thanks Kees)
 - rebase onto mainline cbf3a2cb156a2c91
-- Link to v1: https://lore.kernel.org/r/20230911-strncpy-arch-x86-coco-tdx-tdx-c-v1-1-4b38155727f3@google.com
+- Link to v1: https://lore.kernel.org/r/20230927-strncpy-drivers-message-fusion-mptsas-c-v1-1-edac65cd7010@google.com
 ---
-Note: build-tested
+Note: build-tested only.
 
-Note: Ingo Molnar has some concerns about the comment being out of sync
-[1] but I believe the comment still has a place as we can still
-theoretically copy 64 bytes into our destination buffer without a
-NUL-byte. The extra information about the 65th byte being NUL may serve
-helpful to future travelers of this code. What do we think? I can drop
-the comment in a v3 if needed.
-
-[1]: https://lore.kernel.org/all/ZRc+JqO7XvyHg%2FnB@gmail.com/
+Note: similar to drivers/scsi/mpi3mr/mpi3mr_transport.c +212 which uses
+strscpy
 ---
- arch/x86/coco/tdx/tdx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/message/fusion/mptsas.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
-index 1d6b863c42b0..2e1be592c220 100644
---- a/arch/x86/coco/tdx/tdx.c
-+++ b/arch/x86/coco/tdx/tdx.c
-@@ -119,7 +119,7 @@ static void __noreturn tdx_panic(const char *msg)
- 	} message;
+diff --git a/drivers/message/fusion/mptsas.c b/drivers/message/fusion/mptsas.c
+index 86f16f3ea478..300f8e955a53 100644
+--- a/drivers/message/fusion/mptsas.c
++++ b/drivers/message/fusion/mptsas.c
+@@ -2964,17 +2964,17 @@ mptsas_exp_repmanufacture_info(MPT_ADAPTER *ioc,
+ 			goto out_free;
  
- 	/* VMM assumes '\0' in byte 65, if the message took all 64 bytes */
--	strncpy(message.str, msg, 64);
-+	strtomem_pad(message.str, msg, '\0');
- 
- 	args.r8  = message.r8;
- 	args.r9  = message.r9;
+ 		manufacture_reply = data_out + sizeof(struct rep_manu_request);
+-		strncpy(edev->vendor_id, manufacture_reply->vendor_id,
+-			SAS_EXPANDER_VENDOR_ID_LEN);
+-		strncpy(edev->product_id, manufacture_reply->product_id,
+-			SAS_EXPANDER_PRODUCT_ID_LEN);
+-		strncpy(edev->product_rev, manufacture_reply->product_rev,
+-			SAS_EXPANDER_PRODUCT_REV_LEN);
++		strscpy(edev->vendor_id, manufacture_reply->vendor_id,
++			sizeof(edev->vendor_id));
++		strscpy(edev->product_id, manufacture_reply->product_id,
++			sizeof(edev->product_id));
++		strscpy(edev->product_rev, manufacture_reply->product_rev,
++			sizeof(edev->product_rev));
+ 		edev->level = manufacture_reply->sas_format;
+ 		if (manufacture_reply->sas_format) {
+-			strncpy(edev->component_vendor_id,
++			strscpy(edev->component_vendor_id,
+ 				manufacture_reply->component_vendor_id,
+-				SAS_EXPANDER_COMPONENT_VENDOR_ID_LEN);
++				sizeof(edev->component_vendor_id));
+ 			tmp = (u8 *)&manufacture_reply->component_id;
+ 			edev->component_id = tmp[0] << 8 | tmp[1];
+ 			edev->component_revision_id =
 
 ---
 base-commit: cbf3a2cb156a2c911d8f38d8247814b4c07f49a2
-change-id: 20230911-strncpy-arch-x86-coco-tdx-tdx-c-98b0b966bb8d
+change-id: 20230927-strncpy-drivers-message-fusion-mptsas-c-f22d5a4082e2
 
 Best regards,
 --
