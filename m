@@ -1,100 +1,129 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D689D10F1
-	for <linux-hardening@vger.kernel.org>; Wed,  4 Oct 2023 03:32:45 +0000 (UTC)
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F311BB0
-	for <linux-hardening@vger.kernel.org>; Tue,  3 Oct 2023 20:32:43 -0700 (PDT)
-Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-690f7d73a3aso1294552b3a.0
-        for <linux-hardening@vger.kernel.org>; Tue, 03 Oct 2023 20:32:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20230601.gappssmtp.com; s=20230601; t=1696390363; x=1696995163; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u5OaR8DthMsUyWl9mFY7CUG1t46HFxwH/NtoS9Paoao=;
-        b=CWSjTOLfUidj+/k6i1A3DoOdhE5OhuTRB+68BrImmMhE8U4NkhujiJVYce/8cc9y1O
-         QEeS9VfCd4oYzEZRK1CS1ScVMZgqfbQ73ZM7YZ62N7xSe0P4A3sawCZ7ZkNkayOyjnsR
-         gqpQSSgeT9NQvaTFIjH/I5set4oM63NUeJzpHa4BTsc0wuadWYBb1Ga99RP/TBrOa5Ae
-         nC8KDQ8azkmPl4Uztua02iQIV9WypRSgcpZVbh8/pTeCaKRXCeZDM3HhrnI9Si+AuNIV
-         g8cNtrr7HRYpXYh3eqrHA10W619fwbwN1hzpP2+cqd2IrnFk58fNFkHGD905gFbQgB52
-         1bRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696390363; x=1696995163;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=u5OaR8DthMsUyWl9mFY7CUG1t46HFxwH/NtoS9Paoao=;
-        b=R2YjV1FbPX+SVguuPobH7stjw/kYoZG7msnYj0o+rFy7Rio3FE9BJj+Hro495pggaj
-         iZKt1yKXYJ6R9s5G3rEkEhXC+BnfCqNt6giGYrp++laiIvDZLNuYGQE3lzDee/qQJa6W
-         Dg6ifTbsLmLHWb4fDTW4spwTHx1W4ehoEo28yYxCuhhLs22SZDCGLAzCBvdFPM9Cd05x
-         bKZ7m9UGAZ5o9ouKmu6dk/ro5rq62gkO+24zA+L+Jf2WsRcrQuYi9wcDt7OU8lkVlkkn
-         YeKmZ4c9DUEGTK5ZwCegP9B6duRfsvpnMl9kHU6Ge1bwL6i8nZQU1tvQA72hxzdnhq7L
-         lj1Q==
-X-Gm-Message-State: AOJu0YxkyjXzpsfQI/4dLuGmfJ8impMPSNBv8TaTGKziu+haNVyJt1Hw
-	mtcNJIkzeIR+6IXv8FVW86b0oQ==
-X-Google-Smtp-Source: AGHT+IGGpsEw0e3LTyT8M7WzDJclFEVAubYuk5fb/YO6bOu6xRTDtMULAYA3M1rgQmLE3v3tCyXsrA==
-X-Received: by 2002:a05:6a00:a18:b0:690:fe13:1d28 with SMTP id p24-20020a056a000a1800b00690fe131d28mr1249286pfh.33.1696390363246;
-        Tue, 03 Oct 2023 20:32:43 -0700 (PDT)
-Received: from hermes.local (204-195-126-68.wavecable.com. [204.195.126.68])
-        by smtp.gmail.com with ESMTPSA id m16-20020aa79010000000b0069346777241sm2185428pfo.97.2023.10.03.20.32.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Oct 2023 20:32:43 -0700 (PDT)
-Date: Tue, 3 Oct 2023 20:32:40 -0700
-From: Stephen Hemminger <stephen@networkplumber.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang
- <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- netdev@vger.kernel.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers
- <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- llvm@lists.linux.dev
-Subject: Re: [PATCH] netem: Annotate struct disttable with __counted_by
-Message-ID: <20231003203240.45705fde@hermes.local>
-In-Reply-To: <20231003231823.work.684-kees@kernel.org>
-References: <20231003231823.work.684-kees@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3236EED6
+	for <linux-hardening@vger.kernel.org>; Wed,  4 Oct 2023 04:25:24 +0000 (UTC)
+Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02A34B8;
+	Tue,  3 Oct 2023 21:25:19 -0700 (PDT)
+Received: from eig-obgw-6001a.ext.cloudfilter.net ([10.0.30.140])
+	by cmsmtp with ESMTP
+	id npJ5qpBfzytxcntRnqKfRi; Wed, 04 Oct 2023 04:25:19 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id ntRmqh6ODaLYjntRnqH2bC; Wed, 04 Oct 2023 04:25:19 +0000
+X-Authority-Analysis: v=2.4 cv=c764/Dxl c=1 sm=1 tr=0 ts=651ce92f
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=Dx1Zrv+1i3YEdDUMOX3koA==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=bhdUkHdE2iEA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
+ a=NEAV23lmAAAA:8 a=cm27Pg_UAAAA:8 a=0yL73Cyy68KADmUz8mEA:9 a=QEXdDO2ut3YA:10
+ a=AjGcO6oz07-iQ99wixmX:22 a=xmb-EsYY8bH0VWELuYED:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=ATLVwROIy0WDBtGkwve64B69YI4jtu5jD65viGC9LUs=; b=zPdZ2JL/OcajtT1/TtUCZaUpva
+	GdHLlaoybosv1Lnh5O4vTVMW64GCpVP4i8XXgIY+xepNPRgsjJ1Kc+Uv9NzRbXOBxy86s3ALQ/3Rv
+	aff2+m8cM1z/s1L8MZAlMSggxG5j49Hi72xxAUHdnqDq3/KgL2t5j0tMmuJZTSuTFt1RppqFzpPIg
+	SyKf1NAV7dT35RDCWGXi+mjsAJ1Ly6i/doEqmDqOW7C9FQDp+f2j3MOsV/6MqsPuy9KvohinA8zRX
+	Nh0X5xF0sCDCLkvEpRugg5ugNHsNdaNU8fiRQM7kHM08ovc1Gbde4+hnmeEqPyMOTpwa+rzItejn+
+	ah3G/jjw==;
+Received: from 94-238-9-39.abo.bbox.fr ([94.238.9.39]:58986 helo=[192.168.1.98])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1qnp2Q-001Z3j-2X;
+	Tue, 03 Oct 2023 18:42:50 -0500
+Message-ID: <32b291a1-57f3-4282-eb21-f4e039f54931@embeddedor.com>
+Date: Wed, 4 Oct 2023 01:42:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH] dmaengine: fsl-edma: Annotate struct struct
+ fsl_edma_engine with __counted_by
+Content-Language: en-US
+To: Kees Cook <keescook@chromium.org>, Vinod Koul <vkoul@kernel.org>
+Cc: dmaengine@vger.kernel.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ llvm@lists.linux.dev
+References: <20231003232704.work.596-kees@kernel.org>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20231003232704.work.596-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 94.238.9.39
+X-Source-L: No
+X-Exim-ID: 1qnp2Q-001Z3j-2X
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 94-238-9-39.abo.bbox.fr ([192.168.1.98]) [94.238.9.39]:58986
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 0
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfMssYrgH2yhWgFvVPNPyD6z+JDdiogl+gCFtTl5atZBX3PL1XIn6ACUbLpoZYewzTfxlxCVKityjBHvbrxX7Lz5iXbY5k81GKnVz5GgoXBtfZZ8c/D0N
+ Fuaiantb82vbMKRA20xgwo1c5CNXneoNLxsLUnHsSdAMXUQFLq7M1nkgtKIZUU9vgABQVILDJgYWUmudEE0blSihUk84zqDnUaptEgdI4bN8G+jviTq0q33I
+ 6MluE07L5LK08zU9kFO0BFf+TmvVqSCMOQM+3IPeWvQhqg+RUk76WyYWrhtfcxxrkdKhAna0knsumivcYK4K6w==
+X-Spam-Status: No, score=-3.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Tue,  3 Oct 2023 16:18:23 -0700
-Kees Cook <keescook@chromium.org> wrote:
 
+
+On 10/4/23 01:27, Kees Cook wrote:
 > Prepare for the coming implementation by GCC and Clang of the __counted_by
 > attribute. Flexible array members annotated with __counted_by can have
 > their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
 > array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
 > 
-> As found with Coccinelle[1], add __counted_by for struct disttable.
+> As found with Coccinelle[1], add __counted_by for struct struct fsl_edma_engine.
 > 
-> Cc: Stephen Hemminger <stephen@networkplumber.org>
-> Cc: Jamal Hadi Salim <jhs@mojatatu.com>
-> Cc: Cong Wang <xiyou.wangcong@gmail.com>
-> Cc: Jiri Pirko <jiri@resnulli.us>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: netdev@vger.kernel.org
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Cc: dmaengine@vger.kernel.org
 > Link: https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci [1]
-> Signed-off-by: Kees Cook <keescook@chromium.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Reviewed-by: Stephen Hemminger <stephen@networkplumber.org>
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-PS: size is intended wrong in original code but that is not important.
-Should have lined up with table[].
+Thanks
+--
+Gustavo
+
+> ---
+>   drivers/dma/fsl-edma-common.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dma/fsl-edma-common.h b/drivers/dma/fsl-edma-common.h
+> index 40d50cc3d75a..bb5221158a77 100644
+> --- a/drivers/dma/fsl-edma-common.h
+> +++ b/drivers/dma/fsl-edma-common.h
+> @@ -225,7 +225,7 @@ struct fsl_edma_engine {
+>   	bool			big_endian;
+>   	struct edma_regs	regs;
+>   	u64			chan_masked;
+> -	struct fsl_edma_chan	chans[];
+> +	struct fsl_edma_chan	chans[] __counted_by(n_chans);
+>   };
+>   
+>   #define edma_read_tcdreg(chan, __name)				\
