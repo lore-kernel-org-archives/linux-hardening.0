@@ -1,95 +1,157 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC3807E
-	for <linux-hardening@vger.kernel.org>; Wed,  4 Oct 2023 00:24:02 +0000 (UTC)
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4F90AF
-	for <linux-hardening@vger.kernel.org>; Tue,  3 Oct 2023 17:24:01 -0700 (PDT)
-Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1c72e235debso3360265ad.0
-        for <linux-hardening@vger.kernel.org>; Tue, 03 Oct 2023 17:24:01 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08B8B36D
+	for <linux-hardening@vger.kernel.org>; Wed,  4 Oct 2023 00:50:12 +0000 (UTC)
+Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55043B0
+	for <linux-hardening@vger.kernel.org>; Tue,  3 Oct 2023 17:50:10 -0700 (PDT)
+Received: by mail-pg1-x52e.google.com with SMTP id 41be03b00d2f7-53fa455cd94so995661a12.2
+        for <linux-hardening@vger.kernel.org>; Tue, 03 Oct 2023 17:50:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1696379041; x=1696983841; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z+5Ev8JWtX66U66pqJ0cubLluMVIrf54bZdgwJ7z1Ak=;
-        b=R/HoyXxxAEP3kkZLfR3iS1pHFGv8S1VtXsck6cLhsWAX7OlcWwoSfrDvIfI1dl2P8F
-         d5zKFM+hasB0Qx0Uw+WhVzSR/4McPloibAnCpKdOaLDupbgY4W++f8+XdAL8918V9b6q
-         0jPIXcgMaB/vyokc155iZFt/gjXZLYl96U6enQatTeLqo8QKqV3HlcW/JA5NUgHBzJRc
-         lec9ILki6Ctpc0iwzro7krpbR83Nhemc3m0pmmrJG4raw34aV4glr1IuMYYreNhyr2YO
-         n8hLL8gZc/bvs7nTZ058S3OitX6CBsScXg1GbKHLGbRsvytwh1DooSsiJD6bwiNXdVk+
-         zy/g==
+        d=chromium.org; s=google; t=1696380610; x=1696985410; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HkObdmx0XqrL9iRYXBWgzfnzoTu3OH9oUH6D5cDUZRU=;
+        b=L3R9K9XDB8Q1+pK9k1izQMuZS0heWehXxJbRSfLg91HQf0lWXgnrCNWbADKGf6zz7Y
+         EATGrkFp2v8rG8kjHuzGaE5fcDjSckLg3xS+Opy4KadewzbW5ACyYO33K2BqZ0tzYd2I
+         SvqK/W6CCCkdLY7WQqTdhH6DlQBXjL3sESvDg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696379041; x=1696983841;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Z+5Ev8JWtX66U66pqJ0cubLluMVIrf54bZdgwJ7z1Ak=;
-        b=knQmh2kulzqlMXziliMTo79UHotteRzlzZx8JMZjOGD+/mfgEIKcmK1S/eqDRG8O/X
-         JpLZ9HIKZMu4qKEGhTH2LigVmagz33PBa+XIY4BdfFH+tKEGup8FThYoKNbAT6/zjGn6
-         HiXi/47Q8tBXlZDhme13Qa6Umu5+wrJc9f4MX8q8I/ZCeUjsNlQyBP9tdkUNJaSOqyWf
-         vUg8nodh4m1H5Ppmp2LA14dKoKZLdWKnBPGDimHIAx+y/ubRaL8/cbJhFTqS2vJr4vZw
-         YpbPcXtyIccr5F+3Q4A0Xql7tJS+67H4EtpBH7Y/dHcnj26WPLX22WUY7xWzW5fjCyEx
-         rw/Q==
-X-Gm-Message-State: AOJu0YywwN8nvxGwCRDLZnKMZyJOQ9ZSLTjSjbZaTI3LGr+d5rIfDTRM
-	EnN/o8wkhQ2NB3bGmJEpIWdrPze9vWEiR2odCAU=
-X-Google-Smtp-Source: AGHT+IEvQwCu5KlFSVrIsyfFD4FEedBJjE5H3J5n5+KArZ9kYYzxcWis1JxMvNXNH05ayQypBqz28w==
-X-Received: by 2002:a17:903:22cc:b0:1b8:2ba0:c9a8 with SMTP id y12-20020a17090322cc00b001b82ba0c9a8mr1114184plg.2.1696379040778;
-        Tue, 03 Oct 2023 17:24:00 -0700 (PDT)
-Received: from [127.0.0.1] ([198.8.77.194])
-        by smtp.gmail.com with ESMTPSA id y20-20020a1709029b9400b001c0a414695dsm2241525plp.62.2023.10.03.17.23.59
+        d=1e100.net; s=20230601; t=1696380610; x=1696985410;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HkObdmx0XqrL9iRYXBWgzfnzoTu3OH9oUH6D5cDUZRU=;
+        b=LBMquajh6OttQV2tKp2I4lIgPHomUNuuLPt8lHE3vgcJapQHo16WJVPRD5vhrQKG31
+         QaXQMv/giW7GUCxCRowOkdKAnLv4Ieidszng3Ln+JcBV6rpU6Vtm9//HT8mSwltqkEMx
+         OJNeSp6DtgSc84fHKTD9w3pH0IfXOehXO4IhjHV/yElW0uShIOnK+Ozi0HvYNC9iOGNq
+         6gIvrVsJG43QwNStPwD8Otim1dz6+gq0rJ/sN6jYzQw+RoF+qc4Y8FcNv1wAqPYcy3RI
+         0YDqwpNF1bWl9h9EVrn+brmSYnuPAk/y/1nBvzBhn04oYMuYPVqdOKaezpzW3TRGlpWs
+         tAYw==
+X-Gm-Message-State: AOJu0YwCFy+RlX12sc9mFBqSpJ3QDtEAsBlD1Mg2jkvJ76BcxvcFd91e
+	/Rrjud3b1Ov0Geq5i+Nws40Uhw==
+X-Google-Smtp-Source: AGHT+IGI/mx9BNPA/mhtet3yk8HW5ozun3RdTR2B5hPC+jgDlXDoFcfxl39ptXhO0jTLDSEXJUdJkg==
+X-Received: by 2002:a05:6300:8002:b0:140:324c:124c with SMTP id an2-20020a056300800200b00140324c124cmr860380pzc.62.1696380609805;
+        Tue, 03 Oct 2023 17:50:09 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id r2-20020a62e402000000b0068aca503b9fsm1983321pfh.114.2023.10.03.17.50.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Oct 2023 17:24:00 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: Justin Sanders <justin@coraid.com>, 
- Justin Stitt <justinstitt@google.com>
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>, 
- Xu Panda <xu.panda@zte.com.cn>, Yang Yang <yang.yang29@zte.com>
-In-Reply-To: <20230919-strncpy-drivers-block-aoe-aoenet-c-v2-1-3d5d158410e9@google.com>
-References: <20230919-strncpy-drivers-block-aoe-aoenet-c-v2-1-3d5d158410e9@google.com>
-Subject: Re: [PATCH v2] aoe: replace strncpy with strscpy
-Message-Id: <169637903951.2062263.17214636672785738003.b4-ty@kernel.dk>
-Date: Tue, 03 Oct 2023 18:23:59 -0600
+        Tue, 03 Oct 2023 17:50:09 -0700 (PDT)
+From: Kees Cook <keescook@chromium.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	workflows@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] Documentation: embargoed-hardware-issues.rst: Clarify prenotifaction
+Date: Tue,  3 Oct 2023 17:50:03 -0700
+Message-Id: <20231004004959.work.258-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13-dev-034f2
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.6
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3829; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=hLygWwZ4r2oWqCkWiQIJpJX1Eb6KLVK7aDJIYb6pK8s=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlHLa7vXH9VlCVJ865fzbKZj5zAyA99QKxgRs1S
+ F1Ihht6Yz2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZRy2uwAKCRCJcvTf3G3A
+ JlDxEACjkpEV7WilYLPNOhCZGPsuvAEqxdIw+03oEcYlN3xdvQS90hiYX2Z8JV+vVca97hUrUu1
+ ZGYsPZyTwkzxdqedvxOXZ1PJRDWT+x5PYZTiKAcvLyVvYj7yP/WZRG9DFtZHHhHo/dmoXLTYC9W
+ d/zVRHEJr9FlejKIWLIiAwCQih2sS8yHNNEswmVr1rI8c5KjnhjpD7SSW7WuPiVAK9cF+LGxCet
+ aZOXiuNgLvCSgLK4s5ahSpRkyQ27i1YzM/WLP8AflzGl+Fe348ftZ/TL6SIXOLK21G4oKnCuU/9
+ QGWsMhIA5AzOdXK1WeDRV0XJVXy8ZCCZJ1LXo7Qf74qR8lOOinFGzBRQe47wcN70uveRDjGIy8k
+ xge/pegM2EgeX4P0/leLUL9I41wsE+68hjG1DMd/s+N7p8/dkKMiiVx4tscFruXYFpJx9OK5w+Z
+ QQZu7NLK0gWB4XmmhhkE6oxU8wR3raG8lRzAz5PYEXlxg/iEsgsGsuXgmtg7o5PR4w4crDbidZR
+ h70wBYUNAhMILeo71lMdk8Lo/wLJHrwgW35AZ3PTM6XUlm6r8K8Q3BMAAF/Tpbnd0hHDhtV9Lgl
+ ayiQ7IC6ncAsCCx7i0nqycM5czn4z9I73RbNlNYf/s3aE9Wb8pJcjqTT75mA+AORXwSNleRxHWA
+ 2I/bpr6 JS68W72g==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	WEIRD_QUOTING autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
+There has been a repeated misunderstanding about what the hardware embargo
+list is for. Clarify the language in the process so that it is clear
+that only fixes are coordinated. There is explicitly no prenotification
+process. The list members are also expected to keep total radio silence
+during embargoes.
 
-On Tue, 19 Sep 2023 05:27:45 +0000, Justin Stitt wrote:
-> `strncpy` is deprecated for use on NUL-terminated destination strings [1].
-> 
-> `aoe_iflist` is expected to be NUL-terminated which is evident by its
-> use with string apis later on like `strspn`:
-> | 	p = aoe_iflist + strspn(aoe_iflist, WHITESPACE);
-> 
-> It also seems `aoe_iflist` does not need to be NUL-padded which means
-> `strscpy` [2] is a suitable replacement due to the fact that it
-> guarantees NUL-termination on the destination buffer while not
-> unnecessarily NUL-padding.
-> 
-> [...]
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: workflows@vger.kernel.org
+Cc: linux-doc@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ .../process/embargoed-hardware-issues.rst     | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
 
-Applied, thanks!
-
-[1/1] aoe: replace strncpy with strscpy
-      commit: 5e9b7cfc209b84d135993b8cb75ea383f24b2bba
-
-Best regards,
+diff --git a/Documentation/process/embargoed-hardware-issues.rst b/Documentation/process/embargoed-hardware-issues.rst
+index ac7c52f130c9..31000f075707 100644
+--- a/Documentation/process/embargoed-hardware-issues.rst
++++ b/Documentation/process/embargoed-hardware-issues.rst
+@@ -25,15 +25,15 @@ Contact
+ The Linux kernel hardware security team is separate from the regular Linux
+ kernel security team.
+ 
+-The team only handles the coordination of embargoed hardware security
+-issues.  Reports of pure software security bugs in the Linux kernel are not
++The team only handles developing fixes for embargoed hardware security
++issues. Reports of pure software security bugs in the Linux kernel are not
+ handled by this team and the reporter will be guided to contact the regular
+ Linux kernel security team (:ref:`Documentation/admin-guide/
+ <securitybugs>`) instead.
+ 
+ The team can be contacted by email at <hardware-security@kernel.org>. This
+-is a private list of security officers who will help you to coordinate an
+-issue according to our documented process.
++is a private list of security officers who will help you to coordinate a
++fix according to our documented process.
+ 
+ The list is encrypted and email to the list can be sent by either PGP or
+ S/MIME encrypted and must be signed with the reporter's PGP key or S/MIME
+@@ -132,11 +132,11 @@ other hardware could be affected.
+ 
+ The hardware security team will provide an incident-specific encrypted
+ mailing-list which will be used for initial discussion with the reporter,
+-further disclosure and coordination.
++further disclosure, and coordination of fixes.
+ 
+ The hardware security team will provide the disclosing party a list of
+ developers (domain experts) who should be informed initially about the
+-issue after confirming with the developers  that they will adhere to this
++issue after confirming with the developers that they will adhere to this
+ Memorandum of Understanding and the documented process. These developers
+ form the initial response team and will be responsible for handling the
+ issue after initial contact. The hardware security team is supporting the
+@@ -209,13 +209,18 @@ five work days this is taken as silent acknowledgement.
+ After acknowledgement or resolution of an objection the expert is disclosed
+ by the incident team and brought into the development process.
+ 
++List participants may not communicate about the issue outside of the
++private mailing list. List participants may not use any shared resources
++(e.g. employer build farms, CI systems, etc) when working on patches.
++
+ 
+ Coordinated release
+ """""""""""""""""""
+ 
+ The involved parties will negotiate the date and time where the embargo
+ ends. At that point the prepared mitigations are integrated into the
+-relevant kernel trees and published.
++relevant kernel trees and published. There is no pre-notification process:
++fixes are published in public and available to everyone at the same time.
+ 
+ While we understand that hardware security issues need coordinated embargo
+ time, the embargo time should be constrained to the minimum time which is
 -- 
-Jens Axboe
-
-
+2.34.1
 
