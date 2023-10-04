@@ -1,210 +1,370 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DEDE1CAB6
-	for <linux-hardening@vger.kernel.org>; Wed,  4 Oct 2023 17:31:41 +0000 (UTC)
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2059.outbound.protection.outlook.com [40.107.92.59])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D24B2A6;
-	Wed,  4 Oct 2023 10:31:37 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iR9j7u0vPpRHmWVZrWMomO25qsGgYEc5fkdHb2QtCJRi0jbgMaJZCkOha7g1+rzyroB6RSsfLr85+EiarHm9KzgyUncZw7/CETRDsBPAa/1onDHHjJtAioOZNY6fr/I8PGQJ18CVWVoI9ql8ZPJvV1jfi+wxBpbIWc+IQbRj6vQBAqtzVAISDO0mlHo0k9KsYxJlKPTJ6Wg/5uLykxrxLGRWH0Psn7oK6e1SNU2b+JqQeOwOu3bFEydsKQcpa11NgGsJL7IaN0PZxuaPgSilcc3IyWYNgvwgJjHcGhbT7nQV+ocmoC7b5Wz+8ahvI/uB3t8s8+gHLnE2Zea1wxY/0A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IOAGf0M3vNkT1cGJY7nZ81AuTAMJe3+R0WWxn7T5yWg=;
- b=SFDJ4+2pU0Up8Exer97j/Ea57v2Z9sED5sZyENJAKKeMYpvXPuARBKk9stdvz/N7mefyNgSIHu2jt6OH6gMAJw3MOdMT4JVYMGaQnRRq/AJf1KL/GFeEkPUtEWVQSTNKoHunf+2Xn+0+Zy1Hm/DNp9lfGO2BsaVecdQbk0kXThGZ6J6sOx1AMmFt+DYbM6v89Fsn3+sNhLNah01AvtWIFDYI/HTeuF0A+pA9sHIl6+Cd3kJnEWCO789hsEys9V27F+13nWKT7o4FCfhcf4yAjSIo3BwgmUOYtjafalBM63VMhOuPQhfeQOPtjlaFQT85vXco7kji2q0xoNBruukKLg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IOAGf0M3vNkT1cGJY7nZ81AuTAMJe3+R0WWxn7T5yWg=;
- b=A3EsjKdpDJVjs7KzFaS3LLTOgXXNZ9e02mn6ugA3+YLjv0a7+Ll9OPQYmByu6Aixg2JyIxoqjfIHjAiDp35xn5sp0BOPU1WqrtNEayUz8SkW2dTfCAg5M57pWwIpyHC43NkyOMGivhBItmTlOOci0scvi0ZipvpOrdiih2zaf0A=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB3370.namprd12.prod.outlook.com (2603:10b6:5:38::25) by
- DS0PR12MB8319.namprd12.prod.outlook.com (2603:10b6:8:f7::11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6838.33; Wed, 4 Oct 2023 17:31:35 +0000
-Received: from DM6PR12MB3370.namprd12.prod.outlook.com
- ([fe80::8a67:3bbe:8309:4f87]) by DM6PR12MB3370.namprd12.prod.outlook.com
- ([fe80::8a67:3bbe:8309:4f87%3]) with mapi id 15.20.6768.029; Wed, 4 Oct 2023
- 17:31:35 +0000
-Message-ID: <f0f1e7ff-642f-4fe5-8004-4b38c079699a@amd.com>
-Date: Wed, 4 Oct 2023 13:31:31 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:115.0) Gecko/20100101
- Thunderbird/115.3.0
-Subject: Re: [PATCH] drm/amdgpu: Annotate struct amdgpu_bo_list with
- __counted_by
-To: Kees Cook <keescook@chromium.org>,
- Alex Deucher <alexander.deucher@amd.com>
-Cc: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- "Pan, Xinhui" <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, "Gustavo A. R. Silva"
- <gustavoars@kernel.org>, Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
- Felix Kuehling <Felix.Kuehling@amd.com>, amd-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, linux-hardening@vger.kernel.org,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
- Arunpravin Paneer Selvam <Arunpravin.PaneerSelvam@amd.com>,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-References: <20231003232952.work.158-kees@kernel.org>
-Content-Language: en-CA, en-US
-From: Luben Tuikov <luben.tuikov@amd.com>
-Autocrypt: addr=luben.tuikov@amd.com; keydata=
- xjMEY1i6jxYJKwYBBAHaRw8BAQdAhfD+Cc+P5t/fiF08Vw25EMLiwUuxULYRiDQAP6H50MTN
- I0x1YmVuIFR1aWtvdiA8bHViZW4udHVpa292QGFtZC5jb20+wpkEExYKAEEWIQQyyR05VSHw
- x45E/SoppxulNG8HhgUCY1i6jwIbAwUJCWYBgAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIX
- gAAKCRAppxulNG8Hhk53AP4k4UY5xfcje0c5OF1k22pNv8tErxtVpgKKZgvfetA4xwD+OoAh
- vesLIYumBDxP0BoLiLN84udxdT15HwPFUGiDmwDOOARjWLqPEgorBgEEAZdVAQUBAQdAzSxY
- a2EtvvIwd09NckBLSTarSLNDkUthmqPnwolwiDYDAQgHwn4EGBYKACYWIQQyyR05VSHwx45E
- /SoppxulNG8HhgUCY1i6jwIbDAUJCWYBgAAKCRAppxulNG8HhnBLAP4yjSGpK6PE1mapKhrq
- 8bSl9reo+F6EqdhE8X2TTHPycAEAt8EkTEstSiaOpM66gneU7r+xxzOYULo1b1XjXayGvwM=
-In-Reply-To: <20231003232952.work.158-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: YQBPR0101CA0216.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c01:67::27) To DM6PR12MB3370.namprd12.prod.outlook.com
- (2603:10b6:5:38::25)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF8061BDE9;
+	Wed,  4 Oct 2023 18:39:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GEFx+XlN"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F0D2BF;
+	Wed,  4 Oct 2023 11:39:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696444742; x=1727980742;
+  h=date:from:to:cc:subject:message-id;
+  bh=gnRpsP+7CnP0yiRI2VNQVjPOHCBbxw61Jj5irU9iDk8=;
+  b=GEFx+XlN76vrp/AaGYwaGjI2CvVCbN5B+CLUheOcogngJWs/B88wDcsV
+   2/uOdE7MCJGR92AZGR2/j7T3I27gIu2NUOuqKUMKfZSp8bIChNsKadWEP
+   /VQqGKvw7wmSvomuR3EIKi8b1OWg4ZFM7fYTCMPeke6zig7c0IxRTnzJk
+   Q8ojkd4euXFM24iexcMyV4W6IalJ61ATXEmhXWWbiD6RQg6mxWTRYJVg1
+   fR+xhuwQUu6/2ZChnbBuYVeQWpBEvtsgmw+jV5HUofkkIBRMDxoXCfQxV
+   e0wonFke+pv9+mhj3cC2TWlg9ANn3ODlwLyANZoqFCdY0iQArL3wpsZfQ
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10853"; a="383169018"
+X-IronPort-AV: E=Sophos;i="6.03,201,1694761200"; 
+   d="scan'208";a="383169018"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2023 11:39:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10853"; a="780909668"
+X-IronPort-AV: E=Sophos;i="6.03,201,1694761200"; 
+   d="scan'208";a="780909668"
+Received: from lkp-server02.sh.intel.com (HELO c3b01524d57c) ([10.239.97.151])
+  by orsmga008.jf.intel.com with ESMTP; 04 Oct 2023 11:38:57 -0700
+Received: from kbuild by c3b01524d57c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1qo6lq-000KVR-39;
+	Wed, 04 Oct 2023 18:38:54 +0000
+Date: Thu, 05 Oct 2023 02:37:57 +0800
+From: kernel test robot <lkp@intel.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Linux Memory Management List <linux-mm@kvack.org>,
+ alsa-devel@alsa-project.org, bpf@vger.kernel.org, gfs2@lists.linux.dev,
+ intel-wired-lan@lists.osuosl.org, linux-arm-kernel@lists.infradead.org,
+ linux-arm-msm@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, ntfs3@lists.linux.dev
+Subject: [linux-next:master] BUILD REGRESSION
+ 33b64befb1a28bca3f5a9ed9807d2f87e976c63a
+Message-ID: <202310050242.IY1kedcV-lkp@intel.com>
+User-Agent: s-nail v14.9.24
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+	SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3370:EE_|DS0PR12MB8319:EE_
-X-MS-Office365-Filtering-Correlation-Id: 49c8666d-a863-4181-91b6-08dbc4ffc1e0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	C52NnohovJaxX8KlS21flhg4nhGZVybfzP1XMIpZjXCguzSxzqlfS1ytrisIjX1mnpQ8xQq24l/Qunv7LC0wIXCjrpOhoWKY1Qi4zG5ZCXxAPinYVe5itCZax2ixlFLBO4Z+xqiCXNhVBMsw/NbTTtzbojNyZqp+y8W4XNXiON8mUtyGlIWYkHrH2AzgngO9MpKuHHTGglQQC2EY9F+PdGutuDwic+n63e6/9/V5WaqT9kHHP4yep40wqj9VKqk7oBRERqgsvzrxB7eJ7q3wO3YErb4MTEYhJvutlFmlTCtQliD7l5iXqrwEhesMkhpBPD6sLjIBtXbdfmaJMRfN1UeKwzQtfrHFThjrU5w7A2mw+g+4vmjxReEtm0VWZ/s7Q4oWQI7dXb4R2Urc7/qF9GKgJ4oKXtInwAmDfMUd/JqNzMgkEZ/P53hV0rGo2Nv71KSX0xmZKVl9ic+0JvXCwy5dVnaanes08OJb00RUBkyfK85GAkpinW40iVvBkedSpMMA4mVVRFKMg9kr4X5rzLxYLiT4Qaao+JKmKy081uHJASMkry4Q7AH8RW824T672mhdVh2lkTJ5o6ZneS5d+BxNKMQUBS8mjiOWk5B5mGYxOZPqKzjtuOKymfhLHLVyeKrq2JKMQsrC/c9tp2MZOg==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(39860400002)(346002)(376002)(136003)(396003)(230922051799003)(186009)(1800799009)(64100799003)(451199024)(6506007)(53546011)(6666004)(6486002)(966005)(478600001)(83380400001)(2616005)(6512007)(26005)(110136005)(2906002)(7416002)(41300700001)(8936002)(8676002)(316002)(6636002)(66476007)(54906003)(66556008)(66946007)(5660300002)(4326008)(44832011)(36756003)(38100700002)(86362001)(31696002)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?L1V2QjhnbXB0WUJQQStMK3VoZW1PaHBLQ2FNbW1uZU1EbkNjY1B6V3NybSt3?=
- =?utf-8?B?M3RkWGk4bHJ0YmtSeStFV3NXVExoWk5RT1NBME12RmczWHlGZnhKaTZOU3Bj?=
- =?utf-8?B?VjdzVTIxczZMbGkzaWMxb2U1TGx3bzZQVWlIWWJ3c3ZUdUVvVDVBSEprSHp6?=
- =?utf-8?B?NFN1NjQ5cmE2enlIeERCTEJ4Y0hsYXBNWnVoUG10NTJLVzB0bGxZOENnUzlq?=
- =?utf-8?B?eC9zUUhseHJtVEpNS3M0SlFxb291S1FXKzBnTkpPMjZrNmord243T1MxSWNV?=
- =?utf-8?B?dk1NWG9IUFVkaGxmV20xRUZYVEpQRFFFbVFJbU9XZDVzWm9CVDBUS1lzdHdZ?=
- =?utf-8?B?aXZ4WmdLNlF6WDczWjlkREliSStwZ1hCRmJjQW9nN3E0bUxoeXN2MTNrL0ZF?=
- =?utf-8?B?ZVpYM3pXbUhGUGpEdllHM3h0ekFVU1E5VnkrYVpLRHhyTjdkVjBmR0tyRmcz?=
- =?utf-8?B?VTFNT0ZGeXgwOWt0S3pocFJYaDZpOENYRCsyWXFhVjRnR2hmWHVHek9Uckt5?=
- =?utf-8?B?MEkvMmFsb0p2T0RpOGFyU0tGUEpKYmxqeVI4SnkxYW8yb01iN2xLb3dPRnZm?=
- =?utf-8?B?QlI1cE96T0VORHdjUTVpb0FvR0ZpNUJ2NUJVNUg0S1ZBRnB1bktSZVd5akVm?=
- =?utf-8?B?QUJFaTdvTXFuUzdZTUlDd2U5cllLRVQxeFVqNnJzVGU0czVkdVdIR2h5UFdP?=
- =?utf-8?B?Q0NvUnJwVlByN21RWis0NFVGTmxZT2VjSDQxK0d5UjNJcGQyRUNWY2t1ZFlX?=
- =?utf-8?B?bEo5UUJnQ0J5NWFONFV0TlpwU3FNYlhsMkV3c1F6UzVpMkxYaC92dmc4d1Vv?=
- =?utf-8?B?NENFOUlxRlZjS05PL0cwd0xlT3U2VGk4L0ZJYXVkRjJFcU5nOE1hY0F0TlJk?=
- =?utf-8?B?TFJDek83V2tsYitKSm1uT1VjSmlmS2tXTXJRTG5LS3BCMnV5bGVQNy8reDlW?=
- =?utf-8?B?cXdnQ1lpeEVJaTBOcWtGZW1ta3VBR3pjWnhncEZCTkYrbHFDakRmbm5FZ0FD?=
- =?utf-8?B?YnFhK1JUekVuNXlEdVZyM0NVMnhTaUx5VkVqV3hBTjI5dTJTZjIrVzVJOXNX?=
- =?utf-8?B?NlAyUUVGbDB1aGpFRkh3UnhwcU8xU3dnR2ZlaWswZWdZUm1DdGVYdTZmUEh0?=
- =?utf-8?B?Y00wc1l3MEJPNmFGOW9ldmtyeWRrRUNTUE8zK3VuU1lHejdmWWRnam1RL2dl?=
- =?utf-8?B?MGtBU21mZ1lObStQWHNoUXVSSmtZdDJWc3QzMklNNU1teXZmbUFPMDFiKzNy?=
- =?utf-8?B?bDhJc0hIbk5ENWFNQUQ3eGRDNGdsSkFveVJobXdHNXY3TWFwQXFSd25DRGIw?=
- =?utf-8?B?cWRtdGZKSnpkangyUXZQRXZYblZIVmNRNnRTVlZUclNkUkkvcE0yRng3M0hx?=
- =?utf-8?B?ckFYUzRGOFJNb2dLNW1YT1JHOFF5WlZOU0g2bGZ4ZFlPdlBocGN6dnlkckMw?=
- =?utf-8?B?QlpHRjl4U3NDZ0lWUWp1R0pudnlXcTlsYUx4QnNHa0NkSUJlSzkxNGFzUHNk?=
- =?utf-8?B?dnpmbTMzRXpuTDhTZCt1dmhkejhFQ1hFSmpMZGRpZU1NVGtBTmRIbGZIUjBh?=
- =?utf-8?B?TTUwSFRCczBidzFldVZVYTJJZjFTcEZMWGQ0ZHUyS1E5cld4eTlEdTh3Qmw2?=
- =?utf-8?B?UkNVWHZtRC9YVXBqMTVhZnd5RlZBSkZnemhGN0I1TDkwNXI0ZG9lR2VnVGJG?=
- =?utf-8?B?MExaUWFHRCtOQXcrRVJRMk5CWGFlN09XYnhKN0J6UE1WV2hXTkh2UnhkdXNq?=
- =?utf-8?B?a3B3V1dFOG5ncFp5ZEw4MXQybGNvbGM4cjJhRUYwWDlDSE4yQWpYTWdCa2RW?=
- =?utf-8?B?ck1LSk1sdWJJMTZZNXk3cm5WRTg2TkJkNEh1Yi8xZ2F6aGl6aWdXQi8yVUlV?=
- =?utf-8?B?cGJrUHZNWDdvaXRRQk9BL05ldjNwYnVCc2QxZFVINmlWSDdqSkdjU1VXU3VL?=
- =?utf-8?B?U05MeVk1eDJaNm9WdzhrenRLcVNRT3oxcXVuckpWaGhKR0xHM0NNRXZrblE2?=
- =?utf-8?B?dSsvbExJc1BxL3NXcm5MNndieXlaY1Q5eGNOQkNYOFpCS1JVMngzenZUQkx6?=
- =?utf-8?B?ZnFMRk5NN0YxRmE0Ky9CTWxnZmZPUkJRbGsrY2VTVklOL0IybFpQUG1TZ0Mx?=
- =?utf-8?Q?9WD7rT2XNGe6bToZ8VczmnmUg?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 49c8666d-a863-4181-91b6-08dbc4ffc1e0
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3370.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Oct 2023 17:31:35.3222
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lGSXbusJoDXOCuYzcYlXrdSUgcNmtHbTZgB7hSRC0R6acjVh47ztltPJuyzHxpw1
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8319
-X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-	NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-	SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
 
-On 2023-10-03 19:29, Kees Cook wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
-> array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
-> 
-> As found with Coccinelle[1], add __counted_by for struct amdgpu_bo_list.
-> Additionally, since the element count member must be set before accessing
-> the annotated flexible array member, move its initialization earlier.
-> 
-> Cc: Alex Deucher <alexander.deucher@amd.com>
-> Cc: "Christian König" <christian.koenig@amd.com>
-> Cc: "Pan, Xinhui" <Xinhui.Pan@amd.com>
-> Cc: David Airlie <airlied@gmail.com>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: Luben Tuikov <luben.tuikov@amd.com>
-> Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> Cc: Felix Kuehling <Felix.Kuehling@amd.com>
-> Cc: amd-gfx@lists.freedesktop.org
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: linux-hardening@vger.kernel.org
-> Link: https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci [1]
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+branch HEAD: 33b64befb1a28bca3f5a9ed9807d2f87e976c63a  Add linux-next specific files for 20231004
 
-Reviewed-by: Luben Tuikov <luben.tuikov@amd.com>
+Error/Warning reports:
+
+https://lore.kernel.org/oe-kbuild-all/202309122047.cRi9yJrq-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202309192314.VBsjiIm5-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202309212121.cul1pTRa-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202309212339.hxhBu2F1-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202309221945.uwcQ56zg-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202310041744.d34gIv9V-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202310042215.w9PG3Rqs-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202310042342.Bv7kezcd-lkp@intel.com
+
+Error/Warning: (recently discovered and may have been fixed)
+
+Documentation/gpu/amdgpu/thermal:43: ./drivers/gpu/drm/amd/pm/amdgpu_pm.c:988: WARNING: Unexpected indentation.
+drivers/cpufreq/sti-cpufreq.c:215:50: warning: '%d' directive output may be truncated writing between 1 and 10 bytes into a region of size 2 [-Wformat-truncation=]
+drivers/net/ethernet/intel/ice/ice_dpll.c:1066: undefined reference to `ice_get_cgu_state'
+drivers/net/ethernet/intel/ice/ice_dpll.c:1666: undefined reference to `ice_cgu_get_pin_freq_supp'
+drivers/net/ethernet/intel/ice/ice_dpll.c:1802: undefined reference to `ice_get_cgu_rclk_pin_info'
+drivers/net/ethernet/intel/ice/ice_lib.c:3979: undefined reference to `ice_is_phy_rclk_present'
+fs/bcachefs/bcachefs_format.h:215:25: warning: 'p' offset 3 in 'struct bkey' isn't aligned to 4 [-Wpacked-not-aligned]
+fs/bcachefs/bcachefs_format.h:217:25: warning: 'version' offset 27 in 'struct bkey' isn't aligned to 4 [-Wpacked-not-aligned]
+fs/gfs2/inode.c:1876:14: sparse:    struct gfs2_glock *
+fs/gfs2/inode.c:1876:14: sparse:    struct gfs2_glock [noderef] __rcu *
+fs/gfs2/super.c:1543:17: sparse:    struct gfs2_glock *
+fs/gfs2/super.c:1543:17: sparse:    struct gfs2_glock [noderef] __rcu *
+include/linux/fortify-string.h:57:33: warning: writing 8 bytes into a region of size 0 [-Wstringop-overflow=]
+kernel/bpf/helpers.c:1906:19: warning: no previous declaration for 'bpf_percpu_obj_new_impl' [-Wmissing-declarations]
+kernel/bpf/helpers.c:1942:18: warning: no previous declaration for 'bpf_percpu_obj_drop_impl' [-Wmissing-declarations]
+kernel/bpf/helpers.c:2477:18: warning: no previous declaration for 'bpf_throw' [-Wmissing-declarations]
+ld: drivers/net/ethernet/intel/ice/ice_dpll.c:1646: undefined reference to `ice_cgu_get_pin_name'
+ld: drivers/net/ethernet/intel/ice/ice_dpll.c:1647: undefined reference to `ice_cgu_get_pin_type'
+ld: drivers/net/ethernet/intel/ice/ice_lib.c:3984: undefined reference to `ice_is_cgu_present'
+ld: drivers/net/ethernet/intel/ice/ice_lib.c:3986: undefined reference to `ice_is_clock_mux_present_e810t'
+loongarch64-linux-ld: ice_dpll.c:(.text+0xb78): undefined reference to `ice_cgu_get_pin_type'
+s390-linux-ld: ice_dpll.c:(.text+0xa4c): undefined reference to `ice_cgu_get_pin_type'
+s390-linux-ld: ice_dpll.c:(.text+0xaf0): undefined reference to `ice_cgu_get_pin_freq_supp'
+s390-linux-ld: ice_lib.c:(.text+0x4c7a): undefined reference to `ice_is_cgu_present'
+s390-linux-ld: ice_lib.c:(.text+0x4c96): undefined reference to `ice_is_clock_mux_present_e810t'
+sound/pci/hda/cirrus_scodec_test.c:151:60: error: initializer element is not a compile-time constant
+
+Unverified Error/Warning (likely false positive, please contact us if interested):
+
+Documentation/devicetree/bindings/mfd/qcom-pm8xxx.yaml:
+fs/ntfs3/bitmap.c:662 wnd_init() warn: Please consider using kvcalloc instead of kvmalloc_array
+fs/ntfs3/super.c:466:23: sparse: sparse: unknown escape sequence: '\%'
+
+Error/Warning ids grouped by kconfigs:
+
+gcc_recent_errors
+|-- arc-allmodconfig
+|   |-- fs-bcachefs-bcachefs_format.h:warning:p-offset-in-struct-bkey-isn-t-aligned-to
+|   `-- fs-bcachefs-bcachefs_format.h:warning:version-offset-in-struct-bkey-isn-t-aligned-to
+|-- arc-allyesconfig
+|   |-- fs-bcachefs-bcachefs_format.h:warning:p-offset-in-struct-bkey-isn-t-aligned-to
+|   `-- fs-bcachefs-bcachefs_format.h:warning:version-offset-in-struct-bkey-isn-t-aligned-to
+|-- arm-allmodconfig
+|   `-- drivers-cpufreq-sti-cpufreq.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
+|-- arm-allyesconfig
+|   `-- drivers-cpufreq-sti-cpufreq.c:warning:d-directive-output-may-be-truncated-writing-between-and-bytes-into-a-region-of-size
+|-- arm64-allmodconfig
+|   `-- include-linux-fortify-string.h:warning:writing-bytes-into-a-region-of-size
+|-- arm64-allyesconfig
+|   `-- include-linux-fortify-string.h:warning:writing-bytes-into-a-region-of-size
+|-- i386-randconfig-006-20231004
+|   |-- drivers-net-ethernet-intel-ice-ice_dpll.c:undefined-reference-to-ice_cgu_get_pin_freq_supp
+|   |-- drivers-net-ethernet-intel-ice-ice_dpll.c:undefined-reference-to-ice_get_cgu_rclk_pin_info
+|   |-- drivers-net-ethernet-intel-ice-ice_dpll.c:undefined-reference-to-ice_get_cgu_state
+|   |-- drivers-net-ethernet-intel-ice-ice_lib.c:undefined-reference-to-ice_is_phy_rclk_present
+|   |-- ld:drivers-net-ethernet-intel-ice-ice_dpll.c:undefined-reference-to-ice_cgu_get_pin_name
+|   |-- ld:drivers-net-ethernet-intel-ice-ice_dpll.c:undefined-reference-to-ice_cgu_get_pin_type
+|   |-- ld:drivers-net-ethernet-intel-ice-ice_lib.c:undefined-reference-to-ice_is_cgu_present
+|   `-- ld:drivers-net-ethernet-intel-ice-ice_lib.c:undefined-reference-to-ice_is_clock_mux_present_e810t
+|-- i386-randconfig-061-20231004
+|   |-- fs-file.c:sparse:sparse:incorrect-type-in-argument-(different-address-spaces)-expected-struct-atomic_t-usertype-v-got-struct-atomic_t-noderef-__rcu
+|   |-- fs-file.c:sparse:sparse:incorrect-type-in-argument-(different-address-spaces)-expected-struct-file-got-struct-file-noderef-__rcu-file
+|   |-- fs-file.c:sparse:sparse:incorrect-type-in-assignment-(different-address-spaces)-expected-struct-file-noderef-__rcu-file-got-struct-file
+|   |-- fs-file.c:sparse:sparse:incorrect-type-in-assignment-(different-address-spaces)-expected-struct-file-noderef-__rcu-file_reloaded-got-struct-file
+|   |-- fs-file.c:sparse:sparse:incorrect-type-in-return-expression-(different-address-spaces)-expected-struct-file-got-struct-file-noderef-__rcu-file_reloaded
+|   |-- fs-gfs2-inode.c:sparse:sparse:incompatible-types-in-comparison-expression-(different-address-spaces):
+|   |-- fs-gfs2-inode.c:sparse:struct-gfs2_glock
+|   |-- fs-gfs2-inode.c:sparse:struct-gfs2_glock-noderef-__rcu
+|   |-- fs-gfs2-super.c:sparse:sparse:incompatible-types-in-comparison-expression-(different-address-spaces):
+|   |-- fs-gfs2-super.c:sparse:struct-gfs2_glock
+|   |-- fs-gfs2-super.c:sparse:struct-gfs2_glock-noderef-__rcu
+|   `-- fs-ntfs3-super.c:sparse:sparse:unknown-escape-sequence:
+|-- i386-randconfig-062-20231004
+|   |-- fs-file.c:sparse:sparse:incorrect-type-in-argument-(different-address-spaces)-expected-struct-atomic_t-usertype-v-got-struct-atomic_t-noderef-__rcu
+|   |-- fs-file.c:sparse:sparse:incorrect-type-in-argument-(different-address-spaces)-expected-struct-file-got-struct-file-noderef-__rcu-file
+|   |-- fs-file.c:sparse:sparse:incorrect-type-in-assignment-(different-address-spaces)-expected-struct-file-noderef-__rcu-file-got-struct-file
+|   |-- fs-file.c:sparse:sparse:incorrect-type-in-assignment-(different-address-spaces)-expected-struct-file-noderef-__rcu-file_reloaded-got-struct-file
+|   `-- fs-file.c:sparse:sparse:incorrect-type-in-return-expression-(different-address-spaces)-expected-struct-file-got-struct-file-noderef-__rcu-file_reloaded
+|-- i386-randconfig-063-20231004
+|   |-- fs-file.c:sparse:sparse:incorrect-type-in-argument-(different-address-spaces)-expected-struct-atomic_t-usertype-v-got-struct-atomic_t-noderef-__rcu
+|   |-- fs-file.c:sparse:sparse:incorrect-type-in-argument-(different-address-spaces)-expected-struct-file-got-struct-file-noderef-__rcu-file
+|   |-- fs-file.c:sparse:sparse:incorrect-type-in-assignment-(different-address-spaces)-expected-struct-file-noderef-__rcu-file-got-struct-file
+|   |-- fs-file.c:sparse:sparse:incorrect-type-in-assignment-(different-address-spaces)-expected-struct-file-noderef-__rcu-file_reloaded-got-struct-file
+|   `-- fs-file.c:sparse:sparse:incorrect-type-in-return-expression-(different-address-spaces)-expected-struct-file-got-struct-file-noderef-__rcu-file_reloaded
+|-- loongarch-randconfig-001-20231004
+|   `-- Documentation-devicetree-bindings-mfd-qcom-pm8xxx.yaml:
+|-- loongarch-randconfig-r001-20230813
+|   `-- loongarch64-linux-ld:ice_dpll.c:(.text):undefined-reference-to-ice_cgu_get_pin_type
+|-- m68k-allmodconfig
+|   |-- fs-bcachefs-bcachefs_format.h:warning:p-offset-in-struct-bkey-isn-t-aligned-to
+|   `-- fs-bcachefs-bcachefs_format.h:warning:version-offset-in-struct-bkey-isn-t-aligned-to
+|-- m68k-allyesconfig
+|   |-- fs-bcachefs-bcachefs_format.h:warning:p-offset-in-struct-bkey-isn-t-aligned-to
+|   `-- fs-bcachefs-bcachefs_format.h:warning:version-offset-in-struct-bkey-isn-t-aligned-to
+|-- mips-allmodconfig
+|   |-- fs-bcachefs-bcachefs_format.h:warning:p-offset-in-struct-bkey-isn-t-aligned-to
+|   `-- fs-bcachefs-bcachefs_format.h:warning:version-offset-in-struct-bkey-isn-t-aligned-to
+|-- mips-allyesconfig
+|   |-- fs-bcachefs-bcachefs_format.h:warning:p-offset-in-struct-bkey-isn-t-aligned-to
+|   `-- fs-bcachefs-bcachefs_format.h:warning:version-offset-in-struct-bkey-isn-t-aligned-to
+|-- openrisc-allmodconfig
+|   |-- fs-bcachefs-bcachefs_format.h:warning:p-offset-in-struct-bkey-isn-t-aligned-to
+|   `-- fs-bcachefs-bcachefs_format.h:warning:version-offset-in-struct-bkey-isn-t-aligned-to
+|-- openrisc-allyesconfig
+|   |-- fs-bcachefs-bcachefs_format.h:warning:p-offset-in-struct-bkey-isn-t-aligned-to
+|   `-- fs-bcachefs-bcachefs_format.h:warning:version-offset-in-struct-bkey-isn-t-aligned-to
+|-- parisc-allmodconfig
+|   |-- fs-bcachefs-bcachefs_format.h:warning:p-offset-in-struct-bkey-isn-t-aligned-to
+|   `-- fs-bcachefs-bcachefs_format.h:warning:version-offset-in-struct-bkey-isn-t-aligned-to
+|-- parisc-allyesconfig
+|   |-- fs-bcachefs-bcachefs_format.h:warning:p-offset-in-struct-bkey-isn-t-aligned-to
+|   `-- fs-bcachefs-bcachefs_format.h:warning:version-offset-in-struct-bkey-isn-t-aligned-to
+|-- parisc64-allyesconfig
+|   |-- fs-bcachefs-bcachefs_format.h:warning:p-offset-in-struct-bkey-isn-t-aligned-to
+|   `-- fs-bcachefs-bcachefs_format.h:warning:version-offset-in-struct-bkey-isn-t-aligned-to
+|-- powerpc-allmodconfig
+|   |-- fs-bcachefs-bcachefs_format.h:warning:p-offset-in-struct-bkey-isn-t-aligned-to
+|   |-- fs-bcachefs-bcachefs_format.h:warning:version-offset-in-struct-bkey-isn-t-aligned-to
+|   `-- include-linux-fortify-string.h:warning:writing-bytes-into-a-region-of-size
+|-- powerpc-allyesconfig
+|   |-- fs-bcachefs-bcachefs_format.h:warning:p-offset-in-struct-bkey-isn-t-aligned-to
+|   |-- fs-bcachefs-bcachefs_format.h:warning:version-offset-in-struct-bkey-isn-t-aligned-to
+|   `-- include-linux-fortify-string.h:warning:writing-bytes-into-a-region-of-size
+|-- s390-allmodconfig
+|   |-- fs-bcachefs-bcachefs_format.h:warning:p-offset-in-struct-bkey-isn-t-aligned-to
+|   |-- fs-bcachefs-bcachefs_format.h:warning:version-offset-in-struct-bkey-isn-t-aligned-to
+|   `-- include-linux-fortify-string.h:warning:writing-bytes-into-a-region-of-size
+|-- s390-allyesconfig
+|   |-- fs-bcachefs-bcachefs_format.h:warning:p-offset-in-struct-bkey-isn-t-aligned-to
+|   |-- fs-bcachefs-bcachefs_format.h:warning:version-offset-in-struct-bkey-isn-t-aligned-to
+|   `-- include-linux-fortify-string.h:warning:writing-bytes-into-a-region-of-size
+|-- s390-randconfig-r033-20220907
+|   |-- s390-linux-ld:ice_dpll.c:(.text):undefined-reference-to-ice_cgu_get_pin_freq_supp
+|   |-- s390-linux-ld:ice_dpll.c:(.text):undefined-reference-to-ice_cgu_get_pin_type
+|   |-- s390-linux-ld:ice_lib.c:(.text):undefined-reference-to-ice_is_cgu_present
+|   `-- s390-linux-ld:ice_lib.c:(.text):undefined-reference-to-ice_is_clock_mux_present_e810t
+|-- sparc-allmodconfig
+|   |-- fs-bcachefs-bcachefs_format.h:warning:p-offset-in-struct-bkey-isn-t-aligned-to
+|   `-- fs-bcachefs-bcachefs_format.h:warning:version-offset-in-struct-bkey-isn-t-aligned-to
+|-- sparc-allyesconfig
+|   |-- fs-bcachefs-bcachefs_format.h:warning:p-offset-in-struct-bkey-isn-t-aligned-to
+|   `-- fs-bcachefs-bcachefs_format.h:warning:version-offset-in-struct-bkey-isn-t-aligned-to
+|-- sparc64-allmodconfig
+|   |-- fs-bcachefs-bcachefs_format.h:warning:p-offset-in-struct-bkey-isn-t-aligned-to
+|   `-- fs-bcachefs-bcachefs_format.h:warning:version-offset-in-struct-bkey-isn-t-aligned-to
+|-- sparc64-allyesconfig
+|   |-- fs-bcachefs-bcachefs_format.h:warning:p-offset-in-struct-bkey-isn-t-aligned-to
+|   `-- fs-bcachefs-bcachefs_format.h:warning:version-offset-in-struct-bkey-isn-t-aligned-to
+|-- x86_64-allnoconfig
+|   `-- Documentation-gpu-amdgpu-thermal:.-drivers-gpu-drm-amd-pm-amdgpu_pm.c:WARNING:Unexpected-indentation.
+|-- x86_64-allyesconfig
+|   `-- include-linux-fortify-string.h:warning:writing-bytes-into-a-region-of-size
+|-- x86_64-randconfig-002-20231004
+|   |-- kernel-bpf-helpers.c:warning:no-previous-declaration-for-bpf_percpu_obj_drop_impl
+|   |-- kernel-bpf-helpers.c:warning:no-previous-declaration-for-bpf_percpu_obj_new_impl
+|   `-- kernel-bpf-helpers.c:warning:no-previous-declaration-for-bpf_throw
+`-- x86_64-randconfig-161-20231003
+    `-- fs-ntfs3-bitmap.c-wnd_init()-warn:Please-consider-using-kvcalloc-instead-of-kvmalloc_array
+clang_recent_errors
+|-- hexagon-randconfig-r003-20221116
+|   `-- bin-bash:line:Segmentation-fault-LLVM_OBJCOPY-llvm-objcopy-pahole-J-btf_gen_floats-j-lang_exclude-rust-skip_encoding_btf_inconsistent_proto-btf_gen_optimized-btf_base-vmlinux-drivers-power-supply-bq25
+`-- hexagon-randconfig-r036-20230213
+    `-- sound-pci-hda-cirrus_scodec_test.c:error:initializer-element-is-not-a-compile-time-constant
+
+elapsed time: 720m
+
+configs tested: 119
+configs skipped: 2
+
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20231004   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                       multi_v4t_defconfig   gcc  
+arm                   randconfig-001-20231004   gcc  
+arm64                            allmodconfig   gcc  
+arm64                             allnoconfig   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20231004   gcc  
+i386         buildonly-randconfig-002-20231004   gcc  
+i386         buildonly-randconfig-003-20231004   gcc  
+i386         buildonly-randconfig-004-20231004   gcc  
+i386         buildonly-randconfig-005-20231004   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                  randconfig-001-20231004   gcc  
+i386                  randconfig-002-20231004   gcc  
+i386                  randconfig-003-20231004   gcc  
+i386                  randconfig-004-20231004   gcc  
+i386                  randconfig-005-20231004   gcc  
+i386                  randconfig-006-20231004   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20231004   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                            ar7_defconfig   gcc  
+mips                       rbtx49xx_defconfig   clang
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+openrisc                         allmodconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+openrisc                  or1klitex_defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   gcc  
+powerpc                     asp8347_defconfig   gcc  
+powerpc                   bluestone_defconfig   clang
+powerpc                     ep8248e_defconfig   gcc  
+powerpc                       holly_defconfig   gcc  
+powerpc                 mpc832x_rdb_defconfig   clang
+powerpc                      walnut_defconfig   clang
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                              allnoconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                     magicpanelr2_defconfig   gcc  
+sh                     sh7710voipgw_defconfig   gcc  
+sh                            shmin_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20231004   gcc  
+x86_64                randconfig-002-20231004   gcc  
+x86_64                randconfig-003-20231004   gcc  
+x86_64                randconfig-004-20231004   gcc  
+x86_64                randconfig-005-20231004   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                  nommu_kc705_defconfig   gcc  
+
 -- 
-Regards,
-Luben
-
-> ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c | 2 +-
->  drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.h | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
-> index 6f5b641b631e..781e5c5ce04d 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
-> @@ -84,6 +84,7 @@ int amdgpu_bo_list_create(struct amdgpu_device *adev, struct drm_file *filp,
->  
->  	kref_init(&list->refcount);
->  
-> +	list->num_entries = num_entries;
->  	array = list->entries;
->  
->  	for (i = 0; i < num_entries; ++i) {
-> @@ -129,7 +130,6 @@ int amdgpu_bo_list_create(struct amdgpu_device *adev, struct drm_file *filp,
->  	}
->  
->  	list->first_userptr = first_userptr;
-> -	list->num_entries = num_entries;
->  	sort(array, last_entry, sizeof(struct amdgpu_bo_list_entry),
->  	     amdgpu_bo_list_entry_cmp, NULL);
->  
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.h
-> index 6a703be45d04..555cd6d877c3 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.h
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.h
-> @@ -56,7 +56,7 @@ struct amdgpu_bo_list {
->  	 */
->  	struct mutex bo_list_mutex;
->  
-> -	struct amdgpu_bo_list_entry entries[];
-> +	struct amdgpu_bo_list_entry entries[] __counted_by(num_entries);
->  };
->  
->  int amdgpu_bo_list_get(struct amdgpu_fpriv *fpriv, int id,
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
