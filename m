@@ -1,86 +1,139 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 201FA10970
-	for <linux-hardening@vger.kernel.org>; Wed,  4 Oct 2023 09:28:20 +0000 (UTC)
-Received: from mail-oa1-x2d.google.com (mail-oa1-x2d.google.com [IPv6:2001:4860:4864:20::2d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AE38A7;
-	Wed,  4 Oct 2023 02:28:20 -0700 (PDT)
-Received: by mail-oa1-x2d.google.com with SMTP id 586e51a60fabf-1dd5b98d9aeso385511fac.0;
-        Wed, 04 Oct 2023 02:28:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696411697; x=1697016497; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KRXKpGBes2rUzzjaWR4OqYKNQnz+8sTz34lO9NeNuWM=;
-        b=armtjL6daOW85htO6dmVOZ0cMkZT5KMwj1b0JmzXfEYZUh0eBW/mKBjVM73hwZF/kR
-         wNdAoMd++OhPVW0gFJpkR0TzAd7mEZxuOspo0q8Gf1MSdkiYymD+ahYFuTncFuVjoZ4I
-         jQ/Py5gd/K4hlxh7gFLSEGT1XfwXiUvFnEFtlb5IN8rkzD7kBtBr96A4oLGR+eVvNw3Z
-         RDBYht/2otzL2J2ZkqnOmRsdeeSuNG3/EOp5rJNIkD0bYYO8WRgyO9Tcv+mPOflKkuT4
-         6qngFtiNWJMaMFnO3Hj8Qy7t3xgjRrqTdkGdPtb52AD6K9GH/k3KHu0PM00mNHsGptrp
-         yFOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696411697; x=1697016497;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KRXKpGBes2rUzzjaWR4OqYKNQnz+8sTz34lO9NeNuWM=;
-        b=rub+VUfwFkDzY23Wny3X/fYbSI3uSqozTo3WbH0PiT548UVluFbLRmp2jqRk2jM5oC
-         +LL29PXZc+pabzbcZ11keX9BDQPCk0vBRvinZjEQiDtI/JfhHpQ+UziQIipBB4Is1rse
-         w7np3VmJUTff6BKk0qQLpA54PdEpj2cxoBBQ0YKkUz0QBRBIW5z+PeOKfJQzXoUpw4WH
-         09Oo7vPN4idMaXyRRtIvT70ymiskB2ApD2ZCqX8dkBwQ8tJLMvSp4uIaETbEBFLjog6i
-         DfNAy9oxbKiAdyKqyZf3vwacNYP1eMf+oEAZ5uTnrSrYEdGH2/At8xoePPODEmbpK+GN
-         +xhg==
-X-Gm-Message-State: AOJu0Yzga2EWNL/Ech3ZaBoKtqiYMUAgiXajUmzjUpJI+bvhRLfyAEHI
-	HYk27/wB6zGINtjtv8uJu4lYQ8l1DVUk4A2bkRw=
-X-Google-Smtp-Source: AGHT+IFvdOBdsYNhOUttsn0uChqCkcyiqSqrVLc5oVDHEWUWQ6pwuH1wuPuYjvMDfA1PVVmCgzo3kWlzVPmosvtDX+E=
-X-Received: by 2002:a05:6870:8a12:b0:1dd:611e:d404 with SMTP id
- p18-20020a0568708a1200b001dd611ed404mr3009612oaq.21.1696411697471; Wed, 04
- Oct 2023 02:28:17 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1BEE1400D;
+	Wed,  4 Oct 2023 13:19:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39850C433C7;
+	Wed,  4 Oct 2023 13:19:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1696425584;
+	bh=bhclEsddtPiCxtYvFgBUs63/P/GoHLqamR5MHHrkOGs=;
+	h=Date:From:To:Cc:Subject:From;
+	b=eVTuL3hok71ptrABuk/GXY5dSnBMUIKIyxTpnstpH8KlEo3/1n+GA9pCZ+P8NioaB
+	 psPOxIbZ4ATGY7Rje6IKtCBcGebBP9mM1GJVfeEgXh2L3epgTG+wZAa5HF14Wh4VZV
+	 HMriNU1ynrdrLKC6RMJY8C3llX6ylefeuA0w03lNzJtERXE87MbWAz4NPMlrOURBqP
+	 64Cu/tLWsjFM+6kC2Nber7j6EwoCpYrYdqCYTYp5cmWJSpn+fAi6vZT8KCxfGDD+gG
+	 PMH0Lkdi59RLj9f8MAJ9hx2l919azOpWDb4JNwBZ+WyVLihiNDpEWosfqgkY6f7SVd
+	 k0m7kvHd+8zLw==
+Date: Wed, 4 Oct 2023 15:19:37 +0200
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Jamal Hadi Salim <jhs@mojatatu.com>,
+	Cong Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>
+Subject: [PATCH v2] net: sched: cls_u32: Fix allocation size in u32_init()
+Message-ID: <ZR1maZoAh2W/0Vw6@work>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231003130142.2936503-1-andriy.shevchenko@linux.intel.com> <202310031638.D39E80C32B@keescook>
-In-Reply-To: <202310031638.D39E80C32B@keescook>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 4 Oct 2023 12:27:41 +0300
-Message-ID: <CAHp75VeqvxjqXjmF8ymEYevJkCoQVnkJiuBkccHuGsU_E14LzA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] kernel.h: Move lib/cmdline.c prototypes to string.h
-To: Kees Cook <keescook@chromium.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Andy Shevchenko <andy@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Wed, Oct 4, 2023 at 2:39=E2=80=AFAM Kees Cook <keescook@chromium.org> wr=
-ote:
->
-> On Tue, Oct 03, 2023 at 04:01:42PM +0300, Andy Shevchenko wrote:
-> > The lib/cmdline.c is basically a set of some small string parsers
-> > which are wide used in the kernel. Their prototypes belong to the
-> > string.h rather then kernel.h.
-> >
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->
-> I think these should live in string_helpers.h not string.h (which is, in
-> theory, supposed to be used for the standard C string library functions,
-> though that's not 100% currently)...
+commit d61491a51f7e ("net/sched: cls_u32: Replace one-element array
+with flexible-array member") incorrecly replaced an instance of
+`sizeof(*tp_c)` with `struct_size(tp_c, hlist->ht, 1)`. This results
+in a an over-allocation of 8 bytes.
 
-These are being used in the early stages where usually we have
-string.h. So, I would argue, but if you insist, I can move them. What
-about lib/argv_slit.c then? Because semantically it's quite close to
-what the lib/cmdline.c is doing.
+This change is wrong because `hlist` in `struct tc_u_common` is a
+pointer:
 
---=20
-With Best Regards,
-Andy Shevchenko
+net/sched/cls_u32.c:
+struct tc_u_common {
+        struct tc_u_hnode __rcu *hlist;
+        void                    *ptr;
+        int                     refcnt;
+        struct idr              handle_idr;
+        struct hlist_node       hnode;
+        long                    knodes;
+};
+
+So, the use of `struct_size()` makes no sense: we don't need to allocate
+any extra space for a flexible-array member. `sizeof(*tp_c)` is just fine.
+
+So, `struct_size(tp_c, hlist->ht, 1)` translates to:
+
+sizeof(*tp_c) + sizeof(tp_c->hlist->ht) ==
+sizeof(struct tc_u_common) + sizeof(struct tc_u_knode *) ==
+						144 + 8  == 0x98 (byes)
+						     ^^^
+						      |
+						unnecessary extra
+						allocation size
+
+$ pahole -C tc_u_common net/sched/cls_u32.o
+struct tc_u_common {
+	struct tc_u_hnode *        hlist;                /*     0     8 */
+	void *                     ptr;                  /*     8     8 */
+	int                        refcnt;               /*    16     4 */
+
+	/* XXX 4 bytes hole, try to pack */
+
+	struct idr                 handle_idr;           /*    24    96 */
+	/* --- cacheline 1 boundary (64 bytes) was 56 bytes ago --- */
+	struct hlist_node          hnode;                /*   120    16 */
+	/* --- cacheline 2 boundary (128 bytes) was 8 bytes ago --- */
+	long int                   knodes;               /*   136     8 */
+
+	/* size: 144, cachelines: 3, members: 6 */
+	/* sum members: 140, holes: 1, sum holes: 4 */
+	/* last cacheline: 16 bytes */
+};
+
+And with `sizeof(*tp_c)`, we have:
+
+	sizeof(*tp_c) == sizeof(struct tc_u_common) == 144 == 0x90 (bytes)
+
+which is the correct and original allocation size.
+
+Fix this issue by replacing `struct_size(tp_c, hlist->ht, 1)` with
+`sizeof(*tp_c)`, and avoid allocating 8 too many bytes.
+
+The following difference in binary output is expected and reflects the
+desired change:
+
+| net/sched/cls_u32.o
+| @@ -6148,7 +6148,7 @@
+| include/linux/slab.h:599
+|     2cf5:      mov    0x0(%rip),%rdi        # 2cfc <u32_init+0xfc>
+|                        2cf8: R_X86_64_PC32     kmalloc_caches+0xc
+|-    2cfc:      mov    $0x98,%edx
+|+    2cfc:      mov    $0x90,%edx
+
+Reported-by: Alejandro Colomar <alx@kernel.org>
+Closes: https://lore.kernel.org/lkml/09b4a2ce-da74-3a19-6961-67883f634d98@kernel.org/
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v2:
+ - Update subject line.
+ - Update changelog text.
+
+v1:
+ - Link: https://lore.kernel.org/linux-hardening/ZN5DvRyq6JNz20l1@work/
+
+ net/sched/cls_u32.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/sched/cls_u32.c b/net/sched/cls_u32.c
+index da4c179a4d41..6663e971a13e 100644
+--- a/net/sched/cls_u32.c
++++ b/net/sched/cls_u32.c
+@@ -366,7 +366,7 @@ static int u32_init(struct tcf_proto *tp)
+ 	idr_init(&root_ht->handle_idr);
+ 
+ 	if (tp_c == NULL) {
+-		tp_c = kzalloc(struct_size(tp_c, hlist->ht, 1), GFP_KERNEL);
++		tp_c = kzalloc(sizeof(*tp_c), GFP_KERNEL);
+ 		if (tp_c == NULL) {
+ 			kfree(root_ht);
+ 			return -ENOBUFS;
+-- 
+2.34.1
+
