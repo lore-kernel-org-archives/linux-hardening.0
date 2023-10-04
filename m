@@ -1,131 +1,86 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1F2B748A
-	for <linux-hardening@vger.kernel.org>; Wed,  4 Oct 2023 07:33:00 +0000 (UTC)
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF76098;
-	Wed,  4 Oct 2023 00:32:58 -0700 (PDT)
-Received: by mail-ej1-x62e.google.com with SMTP id a640c23a62f3a-9ad8bf9bfabso333071666b.3;
-        Wed, 04 Oct 2023 00:32:58 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 201FA10970
+	for <linux-hardening@vger.kernel.org>; Wed,  4 Oct 2023 09:28:20 +0000 (UTC)
+Received: from mail-oa1-x2d.google.com (mail-oa1-x2d.google.com [IPv6:2001:4860:4864:20::2d])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AE38A7;
+	Wed,  4 Oct 2023 02:28:20 -0700 (PDT)
+Received: by mail-oa1-x2d.google.com with SMTP id 586e51a60fabf-1dd5b98d9aeso385511fac.0;
+        Wed, 04 Oct 2023 02:28:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696404777; x=1697009577; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=x5Uy06MF6r5s4tofVRVpqtiiuIjO2bB4ESmT7SAj9MY=;
-        b=Ggp7U9n+Sq25U6emSuwLzB+DawQe3A2NU0GSU1JvmYCzBY4XNYoECSsqVtdc3RFelO
-         22trYSK1+gD1IoxA5fXBmcKD/sK3C1HYv1sGROqjrY2ZtFMCRA03+CSC7Kx5i9EhCpHz
-         fbQUcqZfSfgxTGkRpiAM6eomOb9Bg/inuHGZ40wm4h3bVdrGYqc0poQqKRL5j2zbuKsV
-         aR99Xqw/Waj6aPmsO6Huc2yBUVGVmWSzdWGaiTefz6JiTRd57yTpEVLIGDmXgnGIzJIa
-         ctm5RCvFm22Bp5uu+fiSchv94Bz/qRgGVrH4I0s2ySRd3lV2SgFU4SoBz9iMpV1/CKDO
-         8dZQ==
+        d=gmail.com; s=20230601; t=1696411697; x=1697016497; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KRXKpGBes2rUzzjaWR4OqYKNQnz+8sTz34lO9NeNuWM=;
+        b=armtjL6daOW85htO6dmVOZ0cMkZT5KMwj1b0JmzXfEYZUh0eBW/mKBjVM73hwZF/kR
+         wNdAoMd++OhPVW0gFJpkR0TzAd7mEZxuOspo0q8Gf1MSdkiYymD+ahYFuTncFuVjoZ4I
+         jQ/Py5gd/K4hlxh7gFLSEGT1XfwXiUvFnEFtlb5IN8rkzD7kBtBr96A4oLGR+eVvNw3Z
+         RDBYht/2otzL2J2ZkqnOmRsdeeSuNG3/EOp5rJNIkD0bYYO8WRgyO9Tcv+mPOflKkuT4
+         6qngFtiNWJMaMFnO3Hj8Qy7t3xgjRrqTdkGdPtb52AD6K9GH/k3KHu0PM00mNHsGptrp
+         yFOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696404777; x=1697009577;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1696411697; x=1697016497;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=x5Uy06MF6r5s4tofVRVpqtiiuIjO2bB4ESmT7SAj9MY=;
-        b=RGifU07qW5eKnZU3L3gGWM0PZ65JfRAxu5Q8oDUsTKFZZdbALfyHjdu8lzA+AVNYlP
-         Dr+Ikbv+y7e50ulUl/b/jOP2ASjnaVSvDkccBvHdi01xurZM+zFv15cu5T7hlovyNPUd
-         JJmYoZ8pXLthX5NhO1pMKf6CWLpwzvlxpEWRMilqbybwXir2HiUCTCV+ulBxLjH9W207
-         s+6tn9VAR5wpSzn8s3jRyUgtuMpEw4ASm26Td/zR+pcn3j1dBp5dVboNNspHiRsaO3QS
-         CRE/aBt6sJUqSofDJhFIMzSVZI/iZdft9RN3237CEvtqMw1td473Fi0IKinQId57W78r
-         0iRg==
-X-Gm-Message-State: AOJu0YyZ5FSmF9wGFZ6/uD2l3MY54NqJGD4xpJGhy1Y1DtojCPdQa9KK
-	XxEvUrBy0XPNqOPoxfdCGJA=
-X-Google-Smtp-Source: AGHT+IHDvySrbKlvjT+ET5wXwV0u/nDtUew8J8/RSIpQZZJW2H6Z7InqAcK5PGnRmJ+FVbD8k7Bq4w==
-X-Received: by 2002:a17:906:20ce:b0:9ae:3210:22fd with SMTP id c14-20020a17090620ce00b009ae321022fdmr1338641ejc.48.1696404776875;
-        Wed, 04 Oct 2023 00:32:56 -0700 (PDT)
-Received: from gmail.com (1F2EF530.nat.pool.telekom.hu. [31.46.245.48])
-        by smtp.gmail.com with ESMTPSA id la12-20020a170906ad8c00b009a1dbf55665sm2282805ejb.161.2023.10.04.00.32.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Oct 2023 00:32:56 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date: Wed, 4 Oct 2023 09:32:54 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH v2] x86/tdx: replace deprecated strncpy with strtomem_pad
-Message-ID: <ZR0VJsgA6g0Wk4dq@gmail.com>
-References: <20231003-strncpy-arch-x86-coco-tdx-tdx-c-v2-1-0bd21174a217@google.com>
+        bh=KRXKpGBes2rUzzjaWR4OqYKNQnz+8sTz34lO9NeNuWM=;
+        b=rub+VUfwFkDzY23Wny3X/fYbSI3uSqozTo3WbH0PiT548UVluFbLRmp2jqRk2jM5oC
+         +LL29PXZc+pabzbcZ11keX9BDQPCk0vBRvinZjEQiDtI/JfhHpQ+UziQIipBB4Is1rse
+         w7np3VmJUTff6BKk0qQLpA54PdEpj2cxoBBQ0YKkUz0QBRBIW5z+PeOKfJQzXoUpw4WH
+         09Oo7vPN4idMaXyRRtIvT70ymiskB2ApD2ZCqX8dkBwQ8tJLMvSp4uIaETbEBFLjog6i
+         DfNAy9oxbKiAdyKqyZf3vwacNYP1eMf+oEAZ5uTnrSrYEdGH2/At8xoePPODEmbpK+GN
+         +xhg==
+X-Gm-Message-State: AOJu0Yzga2EWNL/Ech3ZaBoKtqiYMUAgiXajUmzjUpJI+bvhRLfyAEHI
+	HYk27/wB6zGINtjtv8uJu4lYQ8l1DVUk4A2bkRw=
+X-Google-Smtp-Source: AGHT+IFvdOBdsYNhOUttsn0uChqCkcyiqSqrVLc5oVDHEWUWQ6pwuH1wuPuYjvMDfA1PVVmCgzo3kWlzVPmosvtDX+E=
+X-Received: by 2002:a05:6870:8a12:b0:1dd:611e:d404 with SMTP id
+ p18-20020a0568708a1200b001dd611ed404mr3009612oaq.21.1696411697471; Wed, 04
+ Oct 2023 02:28:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231003-strncpy-arch-x86-coco-tdx-tdx-c-v2-1-0bd21174a217@google.com>
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+References: <20231003130142.2936503-1-andriy.shevchenko@linux.intel.com> <202310031638.D39E80C32B@keescook>
+In-Reply-To: <202310031638.D39E80C32B@keescook>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 4 Oct 2023 12:27:41 +0300
+Message-ID: <CAHp75VeqvxjqXjmF8ymEYevJkCoQVnkJiuBkccHuGsU_E14LzA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] kernel.h: Move lib/cmdline.c prototypes to string.h
+To: Kees Cook <keescook@chromium.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Andy Shevchenko <andy@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
+On Wed, Oct 4, 2023 at 2:39=E2=80=AFAM Kees Cook <keescook@chromium.org> wr=
+ote:
+>
+> On Tue, Oct 03, 2023 at 04:01:42PM +0300, Andy Shevchenko wrote:
+> > The lib/cmdline.c is basically a set of some small string parsers
+> > which are wide used in the kernel. Their prototypes belong to the
+> > string.h rather then kernel.h.
+> >
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>
+> I think these should live in string_helpers.h not string.h (which is, in
+> theory, supposed to be used for the standard C string library functions,
+> though that's not 100% currently)...
 
-* Justin Stitt <justinstitt@google.com> wrote:
+These are being used in the early stages where usually we have
+string.h. So, I would argue, but if you insist, I can move them. What
+about lib/argv_slit.c then? Because semantically it's quite close to
+what the lib/cmdline.c is doing.
 
-> strncpy works perfectly here in all cases, however, it is deprecated and
-> as such we should prefer more robust and less ambiguous string apis.
-> 
-> Let's use `strtomem_pad` as this matches the functionality of `strncpy`
-> and is _not_ deprecated.
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Cc: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
-> Changes in v2:
-> - update subject (thanks Kees)
-> - update commit message (thanks Dave)
-> - rebase onto mainline cbf3a2cb156a2c91
-> - Link to v1: https://lore.kernel.org/r/20230911-strncpy-arch-x86-coco-tdx-tdx-c-v1-1-4b38155727f3@google.com
-> ---
-> Note: build-tested
-> 
-> Note: Ingo Molnar has some concerns about the comment being out of sync
-> [1] but I believe the comment still has a place as we can still
-> theoretically copy 64 bytes into our destination buffer without a
-> NUL-byte. The extra information about the 65th byte being NUL may serve
-> helpful to future travelers of this code. What do we think? I can drop
-> the comment in a v3 if needed.
-
->  	/* VMM assumes '\0' in byte 65, if the message took all 64 bytes */
-> -	strncpy(message.str, msg, 64);
-> +	strtomem_pad(message.str, msg, '\0');
-
-My concern was that with the old code it was obvious that the size
-of message.str was 64 bytes - but I judged this based on the
-patch context alone, which seemingly lost context due to the change.
-
-In reality it's easy to see it when reading the code, because the
-length definition is right before the code:
-
-        union {
-                /* Define register order according to the GHCI */
-                struct { u64 r14, r15, rbx, rdi, rsi, r8, r9, rdx; };
-
-                char str[64];
-                ^^^^^^^^^^^^^
-        } message;
-
-        /* VMM assumes '\0' in byte 65, if the message took all 64 bytes */
-        strtomem_pad(message.str, msg, '\0');
-
-
-:-)
-
-So no worries - I've applied your patch to tip:x86/mm as-is.
-
-Thanks,
-
-	Ingo
+--=20
+With Best Regards,
+Andy Shevchenko
