@@ -1,54 +1,60 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08B8B36D
-	for <linux-hardening@vger.kernel.org>; Wed,  4 Oct 2023 00:50:12 +0000 (UTC)
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55043B0
-	for <linux-hardening@vger.kernel.org>; Tue,  3 Oct 2023 17:50:10 -0700 (PDT)
-Received: by mail-pg1-x52e.google.com with SMTP id 41be03b00d2f7-53fa455cd94so995661a12.2
-        for <linux-hardening@vger.kernel.org>; Tue, 03 Oct 2023 17:50:10 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C316D81C
+	for <linux-hardening@vger.kernel.org>; Wed,  4 Oct 2023 01:44:54 +0000 (UTC)
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51FB99E
+	for <linux-hardening@vger.kernel.org>; Tue,  3 Oct 2023 18:44:53 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id 98e67ed59e1d1-27763c2c22eso1139634a91.3
+        for <linux-hardening@vger.kernel.org>; Tue, 03 Oct 2023 18:44:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1696380610; x=1696985410; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1696383893; x=1696988693; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=HkObdmx0XqrL9iRYXBWgzfnzoTu3OH9oUH6D5cDUZRU=;
-        b=L3R9K9XDB8Q1+pK9k1izQMuZS0heWehXxJbRSfLg91HQf0lWXgnrCNWbADKGf6zz7Y
-         EATGrkFp2v8rG8kjHuzGaE5fcDjSckLg3xS+Opy4KadewzbW5ACyYO33K2BqZ0tzYd2I
-         SvqK/W6CCCkdLY7WQqTdhH6DlQBXjL3sESvDg=
+        bh=6m+ltiUxBgyP6O6NGVJRhv6n+IMmSQtxpfXHOcBL8MI=;
+        b=cxbpQhcllg9aTHbTy6a3vGKZq5DMQujQscQ01G285jPDoIIoOdHUr3WWFzyyJzvd3d
+         KI+VNTG/FSdBUPyYQ3XVZ94EpOo2eOwBG2/yG7rEVFrJ33oiDlQOSWqMPafrHk0QUCrK
+         T8Sy7zuVGoRHdu72VNg5Sv31yZiQ9K9VKdldw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696380610; x=1696985410;
+        d=1e100.net; s=20230601; t=1696383893; x=1696988693;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=HkObdmx0XqrL9iRYXBWgzfnzoTu3OH9oUH6D5cDUZRU=;
-        b=LBMquajh6OttQV2tKp2I4lIgPHomUNuuLPt8lHE3vgcJapQHo16WJVPRD5vhrQKG31
-         QaXQMv/giW7GUCxCRowOkdKAnLv4Ieidszng3Ln+JcBV6rpU6Vtm9//HT8mSwltqkEMx
-         OJNeSp6DtgSc84fHKTD9w3pH0IfXOehXO4IhjHV/yElW0uShIOnK+Ozi0HvYNC9iOGNq
-         6gIvrVsJG43QwNStPwD8Otim1dz6+gq0rJ/sN6jYzQw+RoF+qc4Y8FcNv1wAqPYcy3RI
-         0YDqwpNF1bWl9h9EVrn+brmSYnuPAk/y/1nBvzBhn04oYMuYPVqdOKaezpzW3TRGlpWs
-         tAYw==
-X-Gm-Message-State: AOJu0YwCFy+RlX12sc9mFBqSpJ3QDtEAsBlD1Mg2jkvJ76BcxvcFd91e
-	/Rrjud3b1Ov0Geq5i+Nws40Uhw==
-X-Google-Smtp-Source: AGHT+IGI/mx9BNPA/mhtet3yk8HW5ozun3RdTR2B5hPC+jgDlXDoFcfxl39ptXhO0jTLDSEXJUdJkg==
-X-Received: by 2002:a05:6300:8002:b0:140:324c:124c with SMTP id an2-20020a056300800200b00140324c124cmr860380pzc.62.1696380609805;
-        Tue, 03 Oct 2023 17:50:09 -0700 (PDT)
+        bh=6m+ltiUxBgyP6O6NGVJRhv6n+IMmSQtxpfXHOcBL8MI=;
+        b=qQvrebUE2J75DTD0Q9cB+IUBccyVH3fVQh1wrSa2k1/PViNAbYtfQzIqA0gqI+l+GF
+         6ZQPLqc82vILNw06WpQVvaxEwR1/w6zucHPENXB1mcsvSuFYsZfrce1wkOJsvuuVza6B
+         Xiz7Je0CrhzBSn6NdWMjTX1sRfoNpS1vMlMZuvEbNNI39QnVxIP/+TnSV0t1bfR0yrYp
+         fFGqfcQFiOF8ERt0NOKSciIFubaHm4uWx9AV8eYAFSxLDB3g8c9DrjnqFOAMtrHC126e
+         t3yHBbN2EHb5Dl1HN2XKKB+V3528RriWeCKx3bTfTXu+5+gnyjLc80XIxyAxqcxl7Jyt
+         oJag==
+X-Gm-Message-State: AOJu0YzZqDDF9TjsBP4KkvS4tOk2B9F8B7afmVGdohk5QVM0tqOfRlSm
+	eG/qEQ1CfpVg3grajRlt3zGLQg==
+X-Google-Smtp-Source: AGHT+IHoFcFaJCYuiM/XpPveaXoTnc32bdzwR7t511qo6mo1UVxZdSWNTi7fDNbl77FYtG6vuNalPQ==
+X-Received: by 2002:a17:90b:164f:b0:274:735c:e2d3 with SMTP id il15-20020a17090b164f00b00274735ce2d3mr999366pjb.8.1696383892759;
+        Tue, 03 Oct 2023 18:44:52 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id r2-20020a62e402000000b0068aca503b9fsm1983321pfh.114.2023.10.03.17.50.08
+        by smtp.gmail.com with ESMTPSA id 13-20020a17090a030d00b0026971450601sm287996pje.7.2023.10.03.18.44.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Oct 2023 17:50:09 -0700 (PDT)
+        Tue, 03 Oct 2023 18:44:52 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: David Ahern <dsahern@kernel.org>
 Cc: Kees Cook <keescook@chromium.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	workflows@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Jonathan Corbet <corbet@lwn.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Tom Rix <trix@redhat.com>,
 	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] Documentation: embargoed-hardware-issues.rst: Clarify prenotifaction
-Date: Tue,  3 Oct 2023 17:50:03 -0700
-Message-Id: <20231004004959.work.258-kees@kernel.org>
+	linux-hardening@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH] nexthop: Annotate struct nh_group with __counted_by
+Date: Tue,  3 Oct 2023 18:44:49 -0700
+Message-Id: <20231004014445.work.587-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -56,102 +62,62 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3829; i=keescook@chromium.org;
- h=from:subject:message-id; bh=hLygWwZ4r2oWqCkWiQIJpJX1Eb6KLVK7aDJIYb6pK8s=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlHLa7vXH9VlCVJ865fzbKZj5zAyA99QKxgRs1S
- F1Ihht6Yz2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZRy2uwAKCRCJcvTf3G3A
- JlDxEACjkpEV7WilYLPNOhCZGPsuvAEqxdIw+03oEcYlN3xdvQS90hiYX2Z8JV+vVca97hUrUu1
- ZGYsPZyTwkzxdqedvxOXZ1PJRDWT+x5PYZTiKAcvLyVvYj7yP/WZRG9DFtZHHhHo/dmoXLTYC9W
- d/zVRHEJr9FlejKIWLIiAwCQih2sS8yHNNEswmVr1rI8c5KjnhjpD7SSW7WuPiVAK9cF+LGxCet
- aZOXiuNgLvCSgLK4s5ahSpRkyQ27i1YzM/WLP8AflzGl+Fe348ftZ/TL6SIXOLK21G4oKnCuU/9
- QGWsMhIA5AzOdXK1WeDRV0XJVXy8ZCCZJ1LXo7Qf74qR8lOOinFGzBRQe47wcN70uveRDjGIy8k
- xge/pegM2EgeX4P0/leLUL9I41wsE+68hjG1DMd/s+N7p8/dkKMiiVx4tscFruXYFpJx9OK5w+Z
- QQZu7NLK0gWB4XmmhhkE6oxU8wR3raG8lRzAz5PYEXlxg/iEsgsGsuXgmtg7o5PR4w4crDbidZR
- h70wBYUNAhMILeo71lMdk8Lo/wLJHrwgW35AZ3PTM6XUlm6r8K8Q3BMAAF/Tpbnd0hHDhtV9Lgl
- ayiQ7IC6ncAsCCx7i0nqycM5czn4z9I73RbNlNYf/s3aE9Wb8pJcjqTT75mA+AORXwSNleRxHWA
- 2I/bpr6 JS68W72g==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1227; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=cMswho+iyVCS84W5fjbN8jRy801YZPgydXwTL+hQ8kc=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlHMOR/Qnr9xsjz+RFrB//RUqkmhmuWuLMRFIHY
+ H/zRm5APC2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZRzDkQAKCRCJcvTf3G3A
+ JuubD/4pBLzIK8LRipBfuGiuOfRseLiRbFNh1J5EeR0aFUlyz21VWo/ONGuXtGXOxgktDliVWxQ
+ pv0tg3RLvxJNCOGY0pFJOG7j7tgN8w7Tn1Eomvh7IHQ5UyysY1/txn95G/iwzma9N0e7cspWjOk
+ i71eVTwBrYMFx/XI4JIGT/Y9Zt1Z7uXKyqTlkZXE6kTi3ZsMUE37k9g0yX58iiGmmdLols1ocL0
+ rqjyPdN/KncryQkGHLsjMD3SXftQJUoKrZK61q7t0of7ZLGX8o4I0yTevYIk1imAMduLhWTqEYR
+ n5BRvPG5JvAE5d8L3VsggU36WF5pidU5c5RPVzoOeztl69WWEB9ecpndC9ok0Z2xCh48x36HD/G
+ G8235S8ONP14DbGP/eVc/1yqdWpS4vrLruFiJ1HySU5pHPtGQ2rcuJbbPDQx35xXPl6D7okwBw5
+ 6MMdORrwX7unzOIOhGIWeKBICZes22QAxOctpG8/+dcQkEIty1JY7KSivhZUA1pxzAp73DIoOtr
+ hNj60Fetls5Hcp93vQjT0Ls91cpLL/i80y2sZmrX6m/CIEexZMYuGUrLdBMlDJrEb/v487rDH+P
+ CEGyWn17nSifdO3/K+Cm1GoILthQET2DXe6j2wjQk5tbiB+Rs+XVL9eXb9mtQUGsB5NdyB+aJU3
+ MmGRBkZ wCCDJXzA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	WEIRD_QUOTING autolearn=unavailable autolearn_force=no version=3.4.6
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-There has been a repeated misunderstanding about what the hardware embargo
-list is for. Clarify the language in the process so that it is clear
-that only fixes are coordinated. There is explicitly no prenotification
-process. The list members are also expected to keep total radio silence
-during embargoes.
+Prepare for the coming implementation by GCC and Clang of the __counted_by
+attribute. Flexible array members annotated with __counted_by can have
+their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
+array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+functions).
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: workflows@vger.kernel.org
-Cc: linux-doc@vger.kernel.org
+As found with Coccinelle[1], add __counted_by for struct nh_group.
+
+Cc: David Ahern <dsahern@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org
+Link: https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci [1]
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- .../process/embargoed-hardware-issues.rst     | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
+ include/net/nexthop.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/process/embargoed-hardware-issues.rst b/Documentation/process/embargoed-hardware-issues.rst
-index ac7c52f130c9..31000f075707 100644
---- a/Documentation/process/embargoed-hardware-issues.rst
-+++ b/Documentation/process/embargoed-hardware-issues.rst
-@@ -25,15 +25,15 @@ Contact
- The Linux kernel hardware security team is separate from the regular Linux
- kernel security team.
+diff --git a/include/net/nexthop.h b/include/net/nexthop.h
+index 8f5a2ab45920..d92046a4a078 100644
+--- a/include/net/nexthop.h
++++ b/include/net/nexthop.h
+@@ -126,7 +126,7 @@ struct nh_group {
+ 	bool			has_v4;
  
--The team only handles the coordination of embargoed hardware security
--issues.  Reports of pure software security bugs in the Linux kernel are not
-+The team only handles developing fixes for embargoed hardware security
-+issues. Reports of pure software security bugs in the Linux kernel are not
- handled by this team and the reporter will be guided to contact the regular
- Linux kernel security team (:ref:`Documentation/admin-guide/
- <securitybugs>`) instead.
+ 	struct nh_res_table __rcu *res_table;
+-	struct nh_grp_entry	nh_entries[];
++	struct nh_grp_entry	nh_entries[] __counted_by(num_nh);
+ };
  
- The team can be contacted by email at <hardware-security@kernel.org>. This
--is a private list of security officers who will help you to coordinate an
--issue according to our documented process.
-+is a private list of security officers who will help you to coordinate a
-+fix according to our documented process.
- 
- The list is encrypted and email to the list can be sent by either PGP or
- S/MIME encrypted and must be signed with the reporter's PGP key or S/MIME
-@@ -132,11 +132,11 @@ other hardware could be affected.
- 
- The hardware security team will provide an incident-specific encrypted
- mailing-list which will be used for initial discussion with the reporter,
--further disclosure and coordination.
-+further disclosure, and coordination of fixes.
- 
- The hardware security team will provide the disclosing party a list of
- developers (domain experts) who should be informed initially about the
--issue after confirming with the developers  that they will adhere to this
-+issue after confirming with the developers that they will adhere to this
- Memorandum of Understanding and the documented process. These developers
- form the initial response team and will be responsible for handling the
- issue after initial contact. The hardware security team is supporting the
-@@ -209,13 +209,18 @@ five work days this is taken as silent acknowledgement.
- After acknowledgement or resolution of an objection the expert is disclosed
- by the incident team and brought into the development process.
- 
-+List participants may not communicate about the issue outside of the
-+private mailing list. List participants may not use any shared resources
-+(e.g. employer build farms, CI systems, etc) when working on patches.
-+
- 
- Coordinated release
- """""""""""""""""""
- 
- The involved parties will negotiate the date and time where the embargo
- ends. At that point the prepared mitigations are integrated into the
--relevant kernel trees and published.
-+relevant kernel trees and published. There is no pre-notification process:
-+fixes are published in public and available to everyone at the same time.
- 
- While we understand that hardware security issues need coordinated embargo
- time, the embargo time should be constrained to the minimum time which is
+ struct nexthop {
 -- 
 2.34.1
 
