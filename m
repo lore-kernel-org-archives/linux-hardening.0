@@ -1,131 +1,111 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CA5C1FBF
-	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 05:02:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YLBQ1BxY"
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32E7D46AC
-	for <linux-hardening@vger.kernel.org>; Wed,  4 Oct 2023 22:02:02 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-692c02adeefso478898b3a.3
-        for <linux-hardening@vger.kernel.org>; Wed, 04 Oct 2023 22:02:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1696482121; x=1697086921; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yUBlx/UQfywFlhuFUEtaOwhU14ReSLK4xryxpZiMBMw=;
-        b=YLBQ1BxYb6Oo3iEqCEf7FMl2Pql60ePnmQn9Jt6CocarMGEQrJgz6clcP8Kxig5Cko
-         cPfbMGubBK3dOYebFXAcj+n856/xdU+x9oqjMqSuoDSDit0pTLmTwe2tg/AFvzAsxRpk
-         PJ8W+tw8rIPEhY3U4tWLf+PRvd9ZOn0UQOT6I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696482121; x=1697086921;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yUBlx/UQfywFlhuFUEtaOwhU14ReSLK4xryxpZiMBMw=;
-        b=Zcd2Rrpev/VyOd/m8gTB7FSmPHbQFQ/UBgWcOhf9XFwFkgsBQTmOby5Aer8fzqvTMd
-         i+DBWsavfkErgQkj5/4XenObanmqq+Qth+CitM0Vw4hQiZ/Th2ZRonO62F0a/IGiwt5W
-         pB15Bq8EVoV+gcHdtYXkZtsvr9IMzvgckfOGVOo6UZ+Q0jED8PVn5Zz53rAsm+JWUb/U
-         0C4C2x2O/9WM6mmrSGup8Q5+Lh/mDgljlASXIOnIYW7Ho5/E93txTDvCc2tV154IXrHv
-         4cvu6VnScFnpJIrhWOhrVHD5ST97F31SBGIcyAAMNGPqGUzQjWFmbCUKBru1OdZTfWjg
-         uNvQ==
-X-Gm-Message-State: AOJu0Yw1nJNHSiEql/uzb/p8PHQpE7bkxQjeOkyTsQZrW3bJm4ymdTrd
-	oBJvFqAvwNEKiDsDt6zL7hPFLQ==
-X-Google-Smtp-Source: AGHT+IEk+eklSeAFalrRyIHIONGqBuEv6GuX4yxnxOUjMCyo+vHzQ4Go73W8cmFTtUM0zUjsBQO7jQ==
-X-Received: by 2002:a05:6a20:5485:b0:161:25e5:8de9 with SMTP id i5-20020a056a20548500b0016125e58de9mr4742809pzk.48.1696482121626;
-        Wed, 04 Oct 2023 22:02:01 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id c16-20020a62e810000000b00690f662a1cbsm427974pfi.0.2023.10.04.22.02.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Oct 2023 22:02:00 -0700 (PDT)
-Date: Wed, 4 Oct 2023 22:02:00 -0700
-From: Kees Cook <keescook@chromium.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E7515385
+	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 08:10:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B8328699
+	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 01:10:58 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1qoJRY-0007TQ-8T; Thu, 05 Oct 2023 10:10:48 +0200
+Received: from [2a0a:edc0:0:b01:1d::7b] (helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1qoJRW-00BDt4-Vq; Thu, 05 Oct 2023 10:10:47 +0200
+Received: from pengutronix.de (unknown [172.20.34.65])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id 96E5722F885;
+	Thu,  5 Oct 2023 08:10:46 +0000 (UTC)
+Date: Thu, 5 Oct 2023 10:10:46 +0200
+From: Marc Kleine-Budde <mkl@pengutronix.de>
 To: Justin Stitt <justinstitt@google.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
+Cc: Wolfgang Grandegger <wg@grandegger.com>,
 	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
 	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] net: dsa: lan9303: replace deprecated strncpy with memcpy
-Message-ID: <202310042201.7B14CA59@keescook>
-References: <20231005-strncpy-drivers-net-dsa-lan9303-core-c-v1-1-5a66c538147e@google.com>
- <202310041959.727EB5ED@keescook>
+	linux-can@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] can: peak_pci: replace deprecated strncpy with strscpy
+Message-ID: <20231005-protract-trough-04a747b5dae2-mkl@pengutronix.de>
+References: <20231005-strncpy-drivers-net-can-sja1000-peak_pci-c-v1-1-c36e1702cd56@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="yfy7e5plv3snihai"
 Content-Disposition: inline
-In-Reply-To: <202310041959.727EB5ED@keescook>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+In-Reply-To: <20231005-strncpy-drivers-net-can-sja1000-peak_pci-c-v1-1-c36e1702cd56@google.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-hardening@vger.kernel.org
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
 	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Wed, Oct 04, 2023 at 08:07:55PM -0700, Kees Cook wrote:
-> On Thu, Oct 05, 2023 at 12:30:18AM +0000, Justin Stitt wrote:
-> > `strncpy` is deprecated for use on NUL-terminated destination strings
-> > [1] and as such we should prefer more robust and less ambiguous
-> > interfaces.
-> > 
-> > Let's opt for memcpy as we are copying strings into slices of length
-> > `ETH_GSTRING_LEN` within the `data` buffer. Other similar get_strings()
-> > implementations [2] [3] use memcpy().
-> > 
-> > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> > Link: https://elixir.bootlin.com/linux/v6.3/source/drivers/infiniband/ulp/opa_vnic/opa_vnic_ethtool.c#L167 [2]
-> > Link: https://elixir.bootlin.com/linux/v6.3/source/drivers/infiniband/ulp/ipoib/ipoib_ethtool.c#L137 [3]
-> > Link: https://github.com/KSPP/linux/issues/90
-> > Cc: linux-hardening@vger.kernel.org
-> > Signed-off-by: Justin Stitt <justinstitt@google.com>
-> > ---
-> > Note: build-tested only.
-> > ---
-> >  drivers/net/dsa/lan9303-core.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/net/dsa/lan9303-core.c b/drivers/net/dsa/lan9303-core.c
-> > index ee67adeb2cdb..665d69384b62 100644
-> > --- a/drivers/net/dsa/lan9303-core.c
-> > +++ b/drivers/net/dsa/lan9303-core.c
-> > @@ -1013,8 +1013,8 @@ static void lan9303_get_strings(struct dsa_switch *ds, int port,
-> >  		return;
-> >  
-> >  	for (u = 0; u < ARRAY_SIZE(lan9303_mib); u++) {
-> > -		strncpy(data + u * ETH_GSTRING_LEN, lan9303_mib[u].name,
-> > -			ETH_GSTRING_LEN);
-> > +		memcpy(data + u * ETH_GSTRING_LEN, lan9303_mib[u].name,
-> > +		       ETH_GSTRING_LEN);
-> 
-> This won't work because lan9303_mib entries aren't ETH_GSTRING_LEN-long
-> strings; they're string pointers:
-> 
-> static const struct lan9303_mib_desc lan9303_mib[] = {
->         { .offset = LAN9303_MAC_RX_BRDCST_CNT_0, .name = "RxBroad", },
-> 
-> So this really does need a strcpy-family function.
-> 
-> And, I think the vnic_gstrings_stats and ipoib_gstrings_stats examples
-> are actually buggy -- they're copying junk into userspace...
-> 
-> I am reminded of this patch, which correctly uses strscpy_pad():
-> https://lore.kernel.org/lkml/20230718-net-dsa-strncpy-v1-1-e84664747713@google.com/
-> 
-> I think you want to do the same here, and use strscpy_pad(). And perhaps
-> send some fixes for the other memcpy() users?
 
-Meh, I think it's not worth fixing the memcpy() users of this. This
-buggy pattern is very common, it seems:
+--yfy7e5plv3snihai
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-$ git grep 'data.*ETH_GSTRING_LEN' | grep memcpy | wc -l
-47
+On 05.10.2023 00:05:35, Justin Stitt wrote:
+> `strncpy` is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
+>=20
+> NUL-padding is not required since card is already zero-initialized:
+> |       card =3D kzalloc(sizeof(*card), GFP_KERNEL);
+>=20
+> A suitable replacement is `strscpy` [2] due to the fact that it
+> guarantees NUL-termination on the destination buffer without
+> unnecessarily NUL-padding.
+>=20
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strn=
+cpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.h=
+tml [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
 
--- 
-Kees Cook
+applied to linux-can-next/testing.
+
+regards,
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+
+--yfy7e5plv3snihai
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEDs2BvajyNKlf9TJQvlAcSiqKBOgFAmUeb4MACgkQvlAcSiqK
+BOi/9AgAsHPVzlJglzleNQFMFyxaqGkZkwgc5tOD3xnbqtN9QtO26R+8Aoq7BBSz
+Sh/g6gASRMZ+SLHQRN+kREceexYQE9Yj9/LQ5btjEEQDvtqCH18wFbKs8UPUrTM6
+OVxPY2nABTwkAlPHflfFqZMj8e04Dj5xzINkzL5Y/zJb0EjQkW//vArdwsoN1MaZ
+Xl416b4G1VEvnRiL1r72stKahrdcatuVGeFiX3h/MaK9dxEh9TTDfbRBy4as9ffL
+ce5iKQRJRC2Cdwz1e59lQNS1Swk+uBuE70TNJmMD7+0oI6DG2HCulCIsPGoHxvii
+gpVabP87ZEiCOeIynVbyyJeYAxNsSA==
+=Ov1N
+-----END PGP SIGNATURE-----
+
+--yfy7e5plv3snihai--
