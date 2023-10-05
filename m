@@ -1,173 +1,133 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1BA730D13
-	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 15:52:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8DC430F93
+	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 16:14:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="itW+cuee"
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6BDB7E207;
-	Thu,  5 Oct 2023 08:52:27 -0700 (PDT)
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 395CwDgK012965;
-	Thu, 5 Oct 2023 15:51:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=date : from : to :
- cc : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=qcppdkim1; bh=fE8UxgxFd/+tbRnT90cqvx9+XVdQKge5mU28dzOU2JI=;
- b=itW+cueeVhBvD/SJRYJKKomxKEJu/qcwwCnA5Jy2XqOiePynqlvXBHE2i7qo3hjZJX/H
- Sdnv1Cwdis7zPbsHUyjJKokb/WvBocElaXd+tpXVCBSYcbWoCJonLAirVuPGLp+URnyD
- cZa8joTdEyZHtpvmtYUN8J9zohRICV+wveXBUxCYiC7YqPDi7E6vuC70OnAnsKsrLc1m
- BT2nc1OjBOqsbAOFwQ9H6yLjIV0fXrij0ZAIiCwTZMYCo5KUxdqr5kNVCLdoDOYspfPf
- OOF37c6Lz0dV4hoRLt7N9YRin2fDIUbbbgdborBgQJNwm/XDTJvw1cHaeG1aGl5Egac1 XA== 
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3thnfa98ys-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 05 Oct 2023 15:51:44 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 395Fphso012311
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 5 Oct 2023 15:51:43 GMT
-Received: from hu-pkondeti-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.36; Thu, 5 Oct 2023 08:51:31 -0700
-Date: Thu, 5 Oct 2023 21:21:28 +0530
-From: Pavan Kondeti <quic_pkondeti@quicinc.com>
-To: Mukesh Ojha <quic_mojha@quicinc.com>
-CC: Pavan Kondeti <quic_pkondeti@quicinc.com>,
-        Kees Cook
-	<keescook@chromium.org>, Will Deacon <will@kernel.org>,
-        <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <tony.luck@intel.com>, <gpiccoli@igalia.com>,
-        <mathieu.poirier@linaro.org>, <catalin.marinas@arm.com>,
-        <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>,
-        <vigneshr@ti.com>, <nm@ti.com>, <matthias.bgg@gmail.com>,
-        <kgene@kernel.org>, <alim.akhtar@samsung.com>, <bmasney@redhat.com>,
-        <quic_tsoni@quicinc.com>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>, <kernel@quicinc.com>
-Subject: Re: [REBASE PATCH v5 08/17] arm64: mm: Add dynamic ramoops region
- support through command line
-Message-ID: <85d5aea1-71f8-4465-9787-b3289119cac2@quicinc.com>
-References: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com>
- <1694429639-21484-9-git-send-email-quic_mojha@quicinc.com>
- <20230912101820.GA10884@willie-the-truck>
- <202309131613.C0E12D0D14@keescook>
- <3273977a-be7d-85f6-6754-52a3dd9b784a@quicinc.com>
- <0120ea7e-e9cc-4955-81dd-6801b56068dc@quicinc.com>
- <7c59b835-d29e-04af-7f2f-801da584c71c@quicinc.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J8zL4yRZ"
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 061C183E4
+	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 09:14:15 -0700 (PDT)
+Received: by mail-pl1-x62f.google.com with SMTP id d9443c01a7336-1c60cec8041so8197145ad.3
+        for <linux-hardening@vger.kernel.org>; Thu, 05 Oct 2023 09:14:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1696522455; x=1697127255; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xBF/uFJVvJ7YTUEt6WwDwwpmUQaEEUWvnNqj8YdJfwI=;
+        b=J8zL4yRZ2WZ1V44ebqQo+9Xr3VmKtKkY66scP2NRdqwfArYapDjG5HCfOdF0RXt1u7
+         iEBxgZFSNdJN0h8l9bFqiYfyWiPkny4l4VsfNkQk/I8uFE14LOBiU7utLFaZ4o8ItxP1
+         2/dFWipCtoU4NSPQNDySP6uLrtcyIGyRvaZR0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696522455; x=1697127255;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xBF/uFJVvJ7YTUEt6WwDwwpmUQaEEUWvnNqj8YdJfwI=;
+        b=g/xlTm0R6gBsDHEVoMoU8JwD+XM2ntqWZRW46MvplD/jzuGpdKPLPI2jqmG+MZJ3O1
+         X/hkd/pHi/GF/iTlG33+0KWKHr5DXpDWyK0Z+nSZ4MBOxGnGYiVux1McEsjFWx8YHYjD
+         WxUnWj3neuRZO/1mno8bwolH84Esu0rkGhS9grtWUC8CvQ4NlCCzcjrLno5e5UhwJ/Yk
+         5LupkRzvmdvSpAnGV8yQUB4bpTYB6lp5bGeMw9Y8T/SD4+yMcO7MyrSB0cHSpLTv/b8Q
+         hB2iA5Dl3HziAITXi16KYnL0d7cCc8zzRk2sJ5eNR8Y7UB5FH1SAlnVdH01HkkCv8yrZ
+         h50A==
+X-Gm-Message-State: AOJu0YwPika4AdT9WwSLE/v1ZC/8BAdYPniVgtOkIFSaWQd1/Wipwwh/
+	JgcvTkKe5QVzNhnV8YbtC+WUxQ==
+X-Google-Smtp-Source: AGHT+IGEiAWvdJBH7vw0BMgCGCiF3Mgfn0JsxTp7iLsTYooxV9aBdAbTG33uN0QT0rwuirwD86o/pA==
+X-Received: by 2002:a17:903:110d:b0:1bb:d59d:8c57 with SMTP id n13-20020a170903110d00b001bbd59d8c57mr6223640plh.18.1696522455224;
+        Thu, 05 Oct 2023 09:14:15 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id iw11-20020a170903044b00b001ab2b4105ddsm1908267plb.60.2023.10.05.09.14.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Oct 2023 09:14:14 -0700 (PDT)
+From: Kees Cook <keescook@chromium.org>
+To: James Smart <james.smart@broadcom.com>
+Cc: Kees Cook <keescook@chromium.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	linux-nvme@lists.infradead.org,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Tom Rix <trix@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH v2] nvmet-fc: Annotate struct nvmet_fc_tgt_queue with __counted_by
+Date: Thu,  5 Oct 2023 09:14:12 -0700
+Message-Id: <20231005161408.it.584-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <7c59b835-d29e-04af-7f2f-801da584c71c@quicinc.com>
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 9576hdoEh0Sr0KThF3OkDVBMsWRJhQEg
-X-Proofpoint-ORIG-GUID: 9576hdoEh0Sr0KThF3OkDVBMsWRJhQEg
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-05_10,2023-10-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- lowpriorityscore=0 mlxlogscore=999 malwarescore=0 bulkscore=0 spamscore=0
- impostorscore=0 clxscore=1015 adultscore=0 phishscore=0 mlxscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2309180000 definitions=main-2310050123
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.6
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1706; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=/lvW3aKbNdffAyIzlZf6gptKlwtHFiNZjl+aiSSruKE=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlHuDUOvSUL7xliWcJbrUDOxdv4EUfSnKX5nVYU
+ HaIdxE+uD+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZR7g1AAKCRCJcvTf3G3A
+ JiKOD/96Q3m/bw8VJQ0KeM2IuPUQ633i3udn5aE3jXFjW+0sbngxXC3XfZhjBPWqskqZeuFQt/7
+ C79xRJkXdJad1LJ7YM24WaCnCt+fl97aXOTe9PxxPcb1AcG4vXEGxDvTbNYMLjs8FHj2xqM1YbW
+ Dn8wFtBa0znQB2zkit7kGuGEK08HMpZWo9wau5NjzVRERVhH69QRP1XFBi/cyj9ipeOXNK2wsue
+ 3xBl9/iAexBwfkye17sBM7Tbb/63Vc2tK3VPlS823E7C7v/ZMLL5fRI71scSzDrEJPWlixjK6Uv
+ Hwh8dFGSftd5OxMzHhdhZ7QgnCUhvY+q/+6fFjSVDfdYRQ2l3cvFoxxmPh/pKjzj2/CUXCmMCf4
+ t01h2bm1zOWaYPqcNG1QcbkujeaIzZ5urnIPANLs7x4rtJ3atmjqBmsdVrtMIPR8jT+MSoWnYlh
+ 1vHZJeMPKspJrVFDFTUnI0N9CW5yE3ItLGWxYdWQ5g4gnMg1ZadPqj/m4zL3lGZ+mDeUD8cZaC7
+ bLE1/1rvg/yhBuLIf/9b9fP2P0eobnoGNccZYVMn7Ca8IGMViNPrd0lV72V9U4mV4blRV2JXAjH
+ Q2vFfDlimFZqEizGr9sC+SD368iX6rnr4xv8yXJOKnlr8wcYt20VBySEQfjg4aKu43PgU81/X9v
+ guQwQ4r EcbVCq3g==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Thu, Oct 05, 2023 at 09:12:25PM +0530, Mukesh Ojha wrote:
-> 
-> 
-> On 10/5/2023 5:14 PM, Pavan Kondeti wrote:
-> > On Thu, Oct 05, 2023 at 04:52:20PM +0530, Mukesh Ojha wrote:
-> > > Sorry for the late reply, was on a long vacation.
-> > > 
-> > > On 9/14/2023 4:47 AM, Kees Cook wrote:
-> > > > On Tue, Sep 12, 2023 at 11:18:20AM +0100, Will Deacon wrote:
-> > > > > On Mon, Sep 11, 2023 at 04:23:50PM +0530, Mukesh Ojha wrote:
-> > > > > > The reserved memory region for ramoops is assumed to be at a fixed
-> > > > > > and known location when read from the devicetree. This may not be
-> > > > > > required for something like Qualcomm's minidump which is interested
-> > > > > > in knowing addresses of ramoops region but it does not put hard
-> > > > > > requirement of address being fixed as most of it's SoC does not
-> > > > > > support warm reset and does not use pstorefs at all instead it has
-> > > > > > firmware way of collecting ramoops region if it gets to know the
-> > > > > > address and register it with apss minidump table which is sitting
-> > > > > > in shared memory region in DDR and firmware will have access to
-> > > > > > these table during reset and collects it on crash of SoC.
-> > > > > > 
-> > > > > > So, add the support of reserving ramoops region to be dynamically
-> > > > > > allocated early during boot if it is request through command line
-> > > > > > via 'dyn_ramoops_size=' and fill up reserved resource structure and
-> > > > > > export the structure, so that it can be read by ramoops driver.
-> > > > > > 
-> > > > > > Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
-> > > > > > ---
-> > > > > >    arch/arm64/mm/init.c       | 94 ++++++++++++++++++++++++++++++++++++++++++++++
-> > > > > 
-> > > > > Why does this need to be in the arch code? There's absolutely nothing
-> > > > > arm64-specific here.
-> > > > 
-> > > > I would agree: this needs to be in ramoops itself, IMO. It should be a
-> > > > ramoops module argument, too.
-> > > > 
-> > > > It being unhelpful for systems that don't have an external consumer is
-> > > > certainly true, but I think it would still make more sense for this
-> > > > change to live entirely within ramoops. Specifically: you're
-> > > > implementing a pstore backend behavioral change. In the same way that
-> > > > patch 10 is putting the "output" side of this into pstore/, I'd expect
-> > > > the "input" side also in pstore/
-> > > 
-> > > How do we reserve memory? are you suggesting to use dma api's for
-> > > dynamic ramoops ?
-> > > 
-> > Sharing my thoughts:
-> > 
-> > Your patch is inspired from how kexec allocate memory for crash kernel
-> > right?
-> 
-> Yes.
-> 
-> > There is a series [1] which moved arch code (ARM64/x86) to
-> > generic kexec core. Something we should also do as the feedback
-> > received here.
-> > 
-> > Coming to how part, we still have to use memblock API to increase the chance
-> > of allocating contiguous memory. Since PSTORE_RAM can also be
-> > compiled as a module, we probably need another pstore layer that needs to
-> > be built statically in kernel to allocate memory using memblock API.
-> > once slab is available, all memblock API will re-direct to slab
-> > allocations. This layer can be enabled via ARCH_WANTS_PSTORE_xxx or
-> > another config that only supports 'y'. PSTORE_RAM can still be a module but
-> > when this layer is available, it supports dynamic ramoops. Another option
-> > would be just including this layer in PSTORE RAM module but take away module
-> > option  when this layer is enabled.
-> 
-> I thought about this but still the caller will be in Arch code,
-> right ? would that be fine with others ?
-> 
+Prepare for the coming implementation by GCC and Clang of the __counted_by
+attribute. Flexible array members annotated with __counted_by can have
+their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
+array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+functions).
 
-The caller is not necessarily to be in the arch code. For ex:
-mm_core_init()->kfence_alloc_pool_and_metadata()
+As found with Coccinelle[1], add __counted_by for struct
+nvmet_fc_tgt_queue. Additionally, since the element count member must
+be set before accessing the annotated flexible array member, move its
+initialization earlier.
 
-> > 
-> > 
-> > [1]
-> > https://lore.kernel.org/all/20211020020317.1220-6-thunder.leizhen@huawei.com/
+Cc: James Smart <james.smart@broadcom.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Sagi Grimberg <sagi@grimberg.me>
+Cc: linux-nvme@lists.infradead.org
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
+Link: https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci [1]
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+v1 https://lore.kernel.org/all/20231003232511.work.459-kees@kernel.org/
+v2
+ - move comment to line above (hch)
+ - add reviewed-bys
+---
+ drivers/nvme/target/fc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/nvme/target/fc.c b/drivers/nvme/target/fc.c
+index 1ab6601fdd5c..bd59990b5250 100644
+--- a/drivers/nvme/target/fc.c
++++ b/drivers/nvme/target/fc.c
+@@ -146,7 +146,8 @@ struct nvmet_fc_tgt_queue {
+ 	struct workqueue_struct		*work_q;
+ 	struct kref			ref;
+ 	struct rcu_head			rcu;
+-	struct nvmet_fc_fcp_iod		fod[];		/* array of fcp_iods */
++	/* array of fcp_iods */
++	struct nvmet_fc_fcp_iod		fod[] __counted_by(sqsize);
+ } __aligned(sizeof(unsigned long long));
+ 
+ struct nvmet_fc_hostport {
+-- 
+2.34.1
+
