@@ -1,111 +1,95 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E7515385
-	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 08:10:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B8328699
-	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 01:10:58 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1qoJRY-0007TQ-8T; Thu, 05 Oct 2023 10:10:48 +0200
-Received: from [2a0a:edc0:0:b01:1d::7b] (helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1qoJRW-00BDt4-Vq; Thu, 05 Oct 2023 10:10:47 +0200
-Received: from pengutronix.de (unknown [172.20.34.65])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 96E5722F885;
-	Thu,  5 Oct 2023 08:10:46 +0000 (UTC)
-Date: Thu, 5 Oct 2023 10:10:46 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Wolfgang Grandegger <wg@grandegger.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	linux-can@vger.kernel.org, netdev@vger.kernel.org,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88F2120E3
+	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 08:57:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="2wdIbPWH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5AC7C116B1;
+	Thu,  5 Oct 2023 08:57:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1696496221;
+	bh=pVrbjUBz8B4tQzXARceL2fDR5Lj64WmB0u1Zx7kMTpg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=2wdIbPWHyAHClvpS9Kyn1G7hcCW1xtL5Cgatcdr8jg9vkdMAkhnpe1F/in0hczCdw
+	 PzglEJZgEFQEjOws+30EQEUstsEDQelJlPlciv8h3E+D72sFoQ1U9ps6ZwPYyEiP9E
+	 aWsWESqOXiZw6BC1ZW3OID0jsS/xQuZm07CTUwkQ=
+Date: Thu, 5 Oct 2023 10:56:58 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, workflows@vger.kernel.org,
+	linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] can: peak_pci: replace deprecated strncpy with strscpy
-Message-ID: <20231005-protract-trough-04a747b5dae2-mkl@pengutronix.de>
-References: <20231005-strncpy-drivers-net-can-sja1000-peak_pci-c-v1-1-c36e1702cd56@google.com>
+Subject: Re: [PATCH] Documentation: embargoed-hardware-issues.rst: Clarify
+ prenotifaction
+Message-ID: <2023100546-unrelated-trekker-320b@gregkh>
+References: <20231004004959.work.258-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="yfy7e5plv3snihai"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231005-strncpy-drivers-net-can-sja1000-peak_pci-c-v1-1-c36e1702cd56@google.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-hardening@vger.kernel.org
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+In-Reply-To: <20231004004959.work.258-kees@kernel.org>
 
+On Tue, Oct 03, 2023 at 05:50:03PM -0700, Kees Cook wrote:
+> There has been a repeated misunderstanding about what the hardware embargo
+> list is for. Clarify the language in the process so that it is clear
+> that only fixes are coordinated. There is explicitly no prenotification
+> process. The list members are also expected to keep total radio silence
+> during embargoes.
+> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: workflows@vger.kernel.org
+> Cc: linux-doc@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  .../process/embargoed-hardware-issues.rst     | 19 ++++++++++++-------
+>  1 file changed, 12 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Documentation/process/embargoed-hardware-issues.rst b/Documentation/process/embargoed-hardware-issues.rst
+> index ac7c52f130c9..31000f075707 100644
+> --- a/Documentation/process/embargoed-hardware-issues.rst
+> +++ b/Documentation/process/embargoed-hardware-issues.rst
+> @@ -25,15 +25,15 @@ Contact
+>  The Linux kernel hardware security team is separate from the regular Linux
+>  kernel security team.
+>  
+> -The team only handles the coordination of embargoed hardware security
+> -issues.  Reports of pure software security bugs in the Linux kernel are not
+> +The team only handles developing fixes for embargoed hardware security
+> +issues. Reports of pure software security bugs in the Linux kernel are not
+>  handled by this team and the reporter will be guided to contact the regular
+>  Linux kernel security team (:ref:`Documentation/admin-guide/
+>  <securitybugs>`) instead.
+>  
+>  The team can be contacted by email at <hardware-security@kernel.org>. This
+> -is a private list of security officers who will help you to coordinate an
+> -issue according to our documented process.
+> +is a private list of security officers who will help you to coordinate a
+> +fix according to our documented process.
+>  
+>  The list is encrypted and email to the list can be sent by either PGP or
+>  S/MIME encrypted and must be signed with the reporter's PGP key or S/MIME
+> @@ -132,11 +132,11 @@ other hardware could be affected.
+>  
+>  The hardware security team will provide an incident-specific encrypted
+>  mailing-list which will be used for initial discussion with the reporter,
+> -further disclosure and coordination.
+> +further disclosure, and coordination of fixes.
+>  
+>  The hardware security team will provide the disclosing party a list of
+>  developers (domain experts) who should be informed initially about the
+> -issue after confirming with the developers  that they will adhere to this
+> +issue after confirming with the developers that they will adhere to this
 
---yfy7e5plv3snihai
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Nit, whitespace change wasn't documented in the changelog :)
 
-On 05.10.2023 00:05:35, Justin Stitt wrote:
-> `strncpy` is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
->=20
-> NUL-padding is not required since card is already zero-initialized:
-> |       card =3D kzalloc(sizeof(*card), GFP_KERNEL);
->=20
-> A suitable replacement is `strscpy` [2] due to the fact that it
-> guarantees NUL-termination on the destination buffer without
-> unnecessarily NUL-padding.
->=20
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strn=
-cpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.h=
-tml [2]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+Thanks for this, it matches up with the list rules now much better (that
+everyone gets when they join one of these lists), so I'll go apply it to
+my tree now.
 
-applied to linux-can-next/testing.
-
-regards,
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---yfy7e5plv3snihai
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEDs2BvajyNKlf9TJQvlAcSiqKBOgFAmUeb4MACgkQvlAcSiqK
-BOi/9AgAsHPVzlJglzleNQFMFyxaqGkZkwgc5tOD3xnbqtN9QtO26R+8Aoq7BBSz
-Sh/g6gASRMZ+SLHQRN+kREceexYQE9Yj9/LQ5btjEEQDvtqCH18wFbKs8UPUrTM6
-OVxPY2nABTwkAlPHflfFqZMj8e04Dj5xzINkzL5Y/zJb0EjQkW//vArdwsoN1MaZ
-Xl416b4G1VEvnRiL1r72stKahrdcatuVGeFiX3h/MaK9dxEh9TTDfbRBy4as9ffL
-ce5iKQRJRC2Cdwz1e59lQNS1Swk+uBuE70TNJmMD7+0oI6DG2HCulCIsPGoHxvii
-gpVabP87ZEiCOeIynVbyyJeYAxNsSA==
-=Ov1N
------END PGP SIGNATURE-----
-
---yfy7e5plv3snihai--
+greg k-h
