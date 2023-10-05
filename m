@@ -1,59 +1,55 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FA651775F
-	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 22:42:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC76E15484
+	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 22:46:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MiifTB1O"
-Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F0E3F1
-	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 15:42:10 -0700 (PDT)
-Received: by mail-pg1-x52c.google.com with SMTP id 41be03b00d2f7-58916df84c8so1026710a12.3
-        for <linux-hardening@vger.kernel.org>; Thu, 05 Oct 2023 15:42:10 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iuROY2lN"
+Received: from mail-oi1-x22d.google.com (mail-oi1-x22d.google.com [IPv6:2607:f8b0:4864:20::22d])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21F82D9
+	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 15:46:10 -0700 (PDT)
+Received: by mail-oi1-x22d.google.com with SMTP id 5614622812f47-3af65455e7fso1061242b6e.3
+        for <linux-hardening@vger.kernel.org>; Thu, 05 Oct 2023 15:46:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1696545730; x=1697150530; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1696545969; x=1697150769; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Nz7lk7ASZyzYk8GD9c9UI0XKLO+hFISo62X4fmfBjLs=;
-        b=MiifTB1OW2EQSGbn8uFBfa+BeiveCEke0uMAPHIm4aaUAjKKIcpMghHK5G2n9Rae98
-         Kx/ynOtpHDU43KdyJuoA/A3Dvde3JMe/hL1NMVOFnEIAr38uZOoH41jT14cOF4IBgZo2
-         mXyn0wYyaruDOfkyOGFGnL8AyLF7fOSw0FzN8=
+        bh=ePyskiEJCEOltRf//00HdVQ4cJ67D/wO+W+PB1Wu8iw=;
+        b=iuROY2lNaoGjIIE9uohhCqFE4Q/gSKmQAQnrfz2eaypGCLHwS6nnLVL46Qily4BlHV
+         CddSMA+7bcZY5bNhiBO+tmSUpHOWNQAsp9HuqcOr7d2dyQ6jrXa/tGKUZA5ue7FtXGQ0
+         fqSokBtGSpL3/tcooiE5689m5uIwx+1w3XmTI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696545730; x=1697150530;
+        d=1e100.net; s=20230601; t=1696545969; x=1697150769;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Nz7lk7ASZyzYk8GD9c9UI0XKLO+hFISo62X4fmfBjLs=;
-        b=Hjf15dLgVvd0ku2Eo1nQFCKZtwKD9mY7fbn8JzLsN31Y4BRhZGjHHd87IuxOKQ4si6
-         prCixobRkUDUvDUX0/bM8oHsisNN561vzOk8tRzljcFNyBHNdtC8jclaOarZ+O065T2a
-         zNrT+CqpYH4ektcHvpu1AGtKIi1RNhEmfpvGa3TaO9HjaXzUk7lrKpdNEB4K85OSuUZp
-         uclcITaFKA6DPpDUf8pnIXs2sRA9SLz9HUcGjLdDkG8FAU6nSVSD12rYJbtocxrKxsX4
-         sMAKdXrRyfvRKCOFDqgXQKygxX2W+NgX9ThgTLI/JU6ESvVKFK8GXNDb+b7ED8MNftdu
-         VQuA==
-X-Gm-Message-State: AOJu0YztbbqCZ4vn1FmXwdZCfgwsBn/dXMbCfNDrwR59ot1NRFh9Klw0
-	rJvLzjR6uUZGmH/P5izyfZou5Q==
-X-Google-Smtp-Source: AGHT+IEgQZTEs2BdqQ0GOWFAgas7OCDMFaKUSGv2iXW7ue7c1U+XG351TvMd1vGVOqGjStDFLsY+kA==
-X-Received: by 2002:a05:6a21:819f:b0:15d:8409:8804 with SMTP id pd31-20020a056a21819f00b0015d84098804mr5926846pzb.57.1696545729755;
-        Thu, 05 Oct 2023 15:42:09 -0700 (PDT)
+        bh=ePyskiEJCEOltRf//00HdVQ4cJ67D/wO+W+PB1Wu8iw=;
+        b=KZFklkKmsbfJ/CGFKZaphx+PEStgA3B3d1A7MnQVhaP/RgaNI45RSy8vuSQPvkc6k/
+         e1i3iynDI1y9+8l1gXGNwqWLECfFb2ogvUlwh/aCNQs7Bn75CzWZJP9hJxn5btH+PN5k
+         aakZengqOCqX/6Gvonn6WHwmKpCJOiv5/KTy5piUtmBrjFPweIH2pBU9v1v5hNJMsAoa
+         kcbBBFQ0dKWnHEfipUNSCaO+8/4aVurBvzpHRmJXrvCda1yJ+vFUhGg/4jPvtmBSmPvI
+         MDlwfF4cMKkG8/s2c7Jk2CcX5ST97gz+hCDvKIjTPKOIBk8Su69GlpZ5dRXaGhUFel2j
+         RB9Q==
+X-Gm-Message-State: AOJu0YwrohOtqtJWLR6juZ5sofHLLGpPFuzpF86kjuwbtKGiZuMNISWA
+	Cb4hz3+BMt8qPqM3pIFohTNHVA==
+X-Google-Smtp-Source: AGHT+IGaIDqu6BSYW2le6DfTb8YAwAbC27p7HsJYK0cA5SoI/rfP7fY4ed258/zRZ4xNHEbx5qw3Bg==
+X-Received: by 2002:a05:6808:110:b0:3ae:87c8:437e with SMTP id b16-20020a056808011000b003ae87c8437emr6462389oie.41.1696545969449;
+        Thu, 05 Oct 2023 15:46:09 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id j2-20020a170902da8200b001c5de06f13bsm2284923plx.226.2023.10.05.15.42.08
+        by smtp.gmail.com with ESMTPSA id p19-20020a639513000000b00585391d0aafsm1984306pgd.6.2023.10.05.15.46.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Oct 2023 15:42:09 -0700 (PDT)
-Date: Thu, 5 Oct 2023 15:42:08 -0700
+        Thu, 05 Oct 2023 15:46:08 -0700 (PDT)
+Date: Thu, 5 Oct 2023 15:46:08 -0700
 From: Kees Cook <keescook@chromium.org>
 To: Justin Stitt <justinstitt@google.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
+Cc: "David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
 	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
 	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Alexander Lobakin <aleksander.lobakin@intel.com>
-Subject: Re: [PATCH v2] net: dsa: lan9303: use ethtool_sprintf() for
- lan9303_get_strings()
-Message-ID: <202310051539.B2D34DB@keescook>
-References: <20231005-strncpy-drivers-net-dsa-lan9303-core-c-v2-1-feb452a532db@google.com>
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] bcm63xx_enet: replace deprecated strncpy with strscpy
+Message-ID: <202310051544.822967F55@keescook>
+References: <20231005-strncpy-drivers-net-ethernet-broadcom-bcm63xx_enet-c-v1-1-6823b3c3c443@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -62,7 +58,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231005-strncpy-drivers-net-dsa-lan9303-core-c-v2-1-feb452a532db@google.com>
+In-Reply-To: <20231005-strncpy-drivers-net-ethernet-broadcom-bcm63xx_enet-c-v1-1-6823b3c3c443@google.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
@@ -70,26 +66,35 @@ X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Thu, Oct 05, 2023 at 06:56:50PM +0000, Justin Stitt wrote:
-> This pattern of strncpy with some pointer arithmetic setting fixed-sized
-> intervals with string literal data is a bit weird so let's use
-> ethtool_sprintf() as this has more obvious behavior and is less-error
-> prone.
+On Thu, Oct 05, 2023 at 08:51:40PM +0000, Justin Stitt wrote:
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
 > 
-> Nicely, we also get to drop a usage of the now deprecated strncpy() [1].
+> A suitable replacement is strscpy() [2] due to the fact that it
+> guarantees NUL-termination on the destination buffer without
+> unnecessarily NUL-padding.
 > 
-> One might consider this pattern:
-> |       ethtool_sprintf(&buf, lan9303_mib[u].name);
-> ... but this triggers a -Wformat-security warning.
+> bcm_enet_get_drvinfo() already uses strscpy(), let's match it's
+> implementation:
+> |       static void bcm_enet_get_drvinfo(struct net_device *netdev,
+> |       				 struct ethtool_drvinfo *drvinfo)
+> |       {
+> |       	strscpy(drvinfo->driver, bcm_enet_driver_name, sizeof(drvinfo->driver));
+> |       	strscpy(drvinfo->bus_info, "bcm63xx", sizeof(drvinfo->bus_info));
+> |       }
+> 
+> Note that now bcm_enet_get_drvinfo() and bcm_enetsw_get_drvinfo() do the
+> exact same thing.
 > 
 > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
 > Link: https://github.com/KSPP/linux/issues/90
 > Cc: linux-hardening@vger.kernel.org
-> Cc: Kees Cook <keescook@chromium.org>
 > Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-Ah, cool ethtool_sprintf() works. Maybe some day we can fix the whole
-API to actually have bounds, but yes, this is fine.
+Looks good. Other writers to drvinfo, as you saw, do the same strscpy,
+so this looks correct to me.
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
 
