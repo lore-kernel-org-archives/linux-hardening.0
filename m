@@ -1,130 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C635626281
-	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 14:02:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3E2627718
+	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 14:04:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ER3vAkdF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5BDEC43215;
-	Thu,  5 Oct 2023 14:02:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696514554;
-	bh=Yym/0Ckebdzm9KAQ3LjZwwE9ndHEvxXkPTtFfyHgzvE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ER3vAkdFfURm/ku44XkFaBj8mcSYJLYFIYPR8MrjZrUJHY3tihb1iK/Bz/mNn5mJX
-	 nqafOXXXRV/PZt8t2NgzI/Kdq3BZIsN9QCNi5Gdy+6eXj0uTql3Cn6PLdrt8hky8md
-	 ozSiQcR+qZRxEJWWYd1Baedcigz67LabOdu7W4mm0UQV5M6dhp111qJ4M7y3fODTfk
-	 V4sR7fedFXtIjsCvaM5S+R9s7HSQthyB8cVFHA48Jyg1elyf9RoT4FQOca2mibPYdt
-	 SN4tvojfOQ4tWW81z9o1Ues63Mc8ksEvPQjebNgHEicof6x7R3Iiir30sCJ6gwaD+7
-	 5ps5SdnvV4MhQ==
-Date: Thu, 5 Oct 2023 15:02:38 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: Justin Stitt <justinstitt@google.com>, Lars-Peter Clausen
- <lars@metafoo.de>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre
- Torgue <alexandre.torgue@foss.st.com>, linux-iio@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] iio: adc: stm32-adc: replace deprecated strncpy
-Message-ID: <20231005150238.0f5ff100@jic23-huawei>
-In-Reply-To: <202309301056.5A21C37D5@keescook>
-References: <20230921-strncpy-drivers-iio-adc-stm32-adc-c-v1-1-c50eca098597@google.com>
-	<202309232006.690F89A@keescook>
-	<20230930184118.73d7465a@jic23-huawei>
-	<202309301056.5A21C37D5@keescook>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ggk4UX5n"
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C42C34F6CF;
+	Thu,  5 Oct 2023 07:02:50 -0700 (PDT)
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3959mP2d016206;
+	Thu, 5 Oct 2023 11:23:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=AStgfaaTWIWjtJNJOJxciXIDBBRnSo68KvO+i7k27lU=;
+ b=ggk4UX5n75YzD4YsFD4zLDhSuQydWWKsE4Qv8PgwqD+GoRRjC7toHCPS/mkyI4wW2CbW
+ r0c/BMZzMWqhY1e4ft9nbPA47sNserFtmyue086NlFl++7Qnzcv9iHEWrsRQPtgdlxLR
+ ibMgyI1+Nn/IaBjmkVm2g4ieaQysibX7v2QsQlRQCmP7BCbpV74rNqvUL1ZgVmE9g3Rf
+ Zf2JzPDbHQizL88V6DlzQL2+S30y4n4YDUv4fPJlB/3sN912+gWQX5PaFsSiJOoWSKEQ
+ T65rzenwyoApz9Vh42qef3YNXbz5tPZluzGDsSjn6/qPn/aXWFYeEkT+TSjEzKIANc/O Jg== 
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3th8ck2nn9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 05 Oct 2023 11:23:56 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 395BNtw3002316
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 5 Oct 2023 11:23:55 GMT
+Received: from [10.216.26.22] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.36; Thu, 5 Oct
+ 2023 04:23:05 -0700
+Message-ID: <3273977a-be7d-85f6-6754-52a3dd9b784a@quicinc.com>
+Date: Thu, 5 Oct 2023 16:52:20 +0530
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [REBASE PATCH v5 08/17] arm64: mm: Add dynamic ramoops region
+ support through command line
+Content-Language: en-US
+To: Kees Cook <keescook@chromium.org>, Will Deacon <will@kernel.org>
+CC: <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <tony.luck@intel.com>, <gpiccoli@igalia.com>,
+        <mathieu.poirier@linaro.org>, <catalin.marinas@arm.com>,
+        <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>,
+        <vigneshr@ti.com>, <nm@ti.com>, <matthias.bgg@gmail.com>,
+        <kgene@kernel.org>, <alim.akhtar@samsung.com>, <bmasney@redhat.com>,
+        <quic_tsoni@quicinc.com>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-samsung-soc@vger.kernel.org>, <kernel@quicinc.com>
+References: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com>
+ <1694429639-21484-9-git-send-email-quic_mojha@quicinc.com>
+ <20230912101820.GA10884@willie-the-truck> <202309131613.C0E12D0D14@keescook>
+From: Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <202309131613.C0E12D0D14@keescook>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: tYP2aPd8wLHqCtbdfy0OmUbx-TMAVFMI
+X-Proofpoint-ORIG-GUID: tYP2aPd8wLHqCtbdfy0OmUbx-TMAVFMI
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-05_08,2023-10-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011
+ priorityscore=1501 mlxscore=0 impostorscore=0 malwarescore=0
+ mlxlogscore=999 adultscore=0 bulkscore=0 lowpriorityscore=0 spamscore=0
+ suspectscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2309180000 definitions=main-2310050088
+X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-On Sat, 30 Sep 2023 10:57:03 -0700
-Kees Cook <keescook@chromium.org> wrote:
+Sorry for the late reply, was on a long vacation.
 
-> On Sat, Sep 30, 2023 at 06:41:18PM +0100, Jonathan Cameron wrote:
-> > On Sat, 23 Sep 2023 20:15:09 -0700
-> > Kees Cook <keescook@chromium.org> wrote:
-> >   
-> > > On Thu, Sep 21, 2023 at 04:54:00AM +0000, Justin Stitt wrote:  
-> > > > `strncpy` is deprecated for use on NUL-terminated destination strings [1].
-> > > > 
-> > > > We should prefer more robust and less ambiguous string interfaces.
-> > > > 
-> > > > We expect adc->chan_name[val] to be NUL-terminated based on ch_name's
-> > > > use within functions that expect NUL-terminated strings like strncmp and
-> > > > printf-likes:
-> > > > | 	if (!strncmp(stm32_adc_ic[i].name, ch_name, STM32_ADC_CH_SZ)) {
-> > > > | 		/* Check internal channel availability */
-> > > > | 		switch (i) {
-> > > > | 		case STM32_ADC_INT_CH_VDDCORE:
-> > > > | 			if (!adc->cfg->regs->or_vddcore.reg)
-> > > > | 				dev_warn(&indio_dev->dev,
-> > > > | 					 "%s channel not available\n", ch_name);
-> > > > ...
-> > > > 
-> > > > There is no evidence that NUL-padding is needed either.    
-> > > 
-> > > Agreed -- it's used as a C string everywhere I can see.
-> > >   
-> > > > 
-> > > > Considering the above, a suitable replacement is `strscpy` [2] due to
-> > > > the fact that it guarantees NUL-termination on the destination buffer
-> > > > without unnecessarily NUL-padding. If, for any reason, NUL-padding _is_
-> > > > required we should go for `strscpy_pad`.
-> > > > 
-> > > > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> > > > Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> > > > Link: https://github.com/KSPP/linux/issues/90
-> > > > Cc: linux-hardening@vger.kernel.org
-> > > > Signed-off-by: Justin Stitt <justinstitt@google.com>
-> > > > ---
-> > > > Note: build-tested
-> > > > ---
-> > > >  drivers/iio/adc/stm32-adc.c | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
-> > > > index f7613efb870d..9cdcf396d901 100644
-> > > > --- a/drivers/iio/adc/stm32-adc.c
-> > > > +++ b/drivers/iio/adc/stm32-adc.c
-> > > > @@ -2209,7 +2209,7 @@ static int stm32_adc_generic_chan_init(struct iio_dev *indio_dev,
-> > > >  				ret = -EINVAL;
-> > > >  				goto err;
-> > > >  			}
-> > > > -			strncpy(adc->chan_name[val], name, STM32_ADC_CH_SZ);
-> > > > +			strscpy(adc->chan_name[val], name, STM32_ADC_CH_SZ);    
-> > > 
-> > > I still prefer sizeof($dst), but yes, these are the same:
-> > > 
-> > >         char chan_name[STM32_ADC_CH_MAX][STM32_ADC_CH_SZ];
-> > > 
-> > > If this needs a v2, please improve the Subject, but it is technically
-> > > correct, so:  
-> > 
-> > Hi Kees,
-> > 
-> > I can tweak the subject whilst applying.  What did you have in mind
-> > as a better one?  
+On 9/14/2023 4:47 AM, Kees Cook wrote:
+> On Tue, Sep 12, 2023 at 11:18:20AM +0100, Will Deacon wrote:
+>> On Mon, Sep 11, 2023 at 04:23:50PM +0530, Mukesh Ojha wrote:
+>>> The reserved memory region for ramoops is assumed to be at a fixed
+>>> and known location when read from the devicetree. This may not be
+>>> required for something like Qualcomm's minidump which is interested
+>>> in knowing addresses of ramoops region but it does not put hard
+>>> requirement of address being fixed as most of it's SoC does not
+>>> support warm reset and does not use pstorefs at all instead it has
+>>> firmware way of collecting ramoops region if it gets to know the
+>>> address and register it with apss minidump table which is sitting
+>>> in shared memory region in DDR and firmware will have access to
+>>> these table during reset and collects it on crash of SoC.
+>>>
+>>> So, add the support of reserving ramoops region to be dynamically
+>>> allocated early during boot if it is request through command line
+>>> via 'dyn_ramoops_size=' and fill up reserved resource structure and
+>>> export the structure, so that it can be read by ramoops driver.
+>>>
+>>> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+>>> ---
+>>>   arch/arm64/mm/init.c       | 94 ++++++++++++++++++++++++++++++++++++++++++++++
+>>
+>> Why does this need to be in the arch code? There's absolutely nothing
+>> arm64-specific here.
 > 
-> I would use "iio: adc: stm32-adc: Replace deprecated strncpy() with strscpy()"
-Makes sense. I also used the () approach to identify functions in the
-text of the patch description instead of `funcname`
-
-Applied with those tweaks to the togreg branch of iio.git but initially
-just pushed out as testing to let 0-day take a look at it.
-
-Thanks,
-
-Jonathan
-
+> I would agree: this needs to be in ramoops itself, IMO. It should be a
+> ramoops module argument, too.
 > 
-> Thanks!
-> 
-> -Kees
-> 
+> It being unhelpful for systems that don't have an external consumer is
+> certainly true, but I think it would still make more sense for this
+> change to live entirely within ramoops. Specifically: you're
+> implementing a pstore backend behavioral change. In the same way that
+> patch 10 is putting the "output" side of this into pstore/, I'd expect
+> the "input" side also in pstore/
 
+How do we reserve memory? are you suggesting to use dma api's for
+dynamic ramoops ?
+
+-Mukesh
+> 
+> More comments there, though.
+> 
