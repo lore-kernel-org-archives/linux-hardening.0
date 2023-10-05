@@ -1,108 +1,124 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBF5341AA9
-	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 19:58:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A1FB102
-	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 12:58:22 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1qoUUF-0004jc-TW
-	for linux-hardening@vger.kernel.org; Thu, 05 Oct 2023 21:58:19 +0200
-Received: from [2a0a:edc0:0:b01:1d::7b] (helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1qoUUD-00BLGU-Hf
-	for linux-hardening@vger.kernel.org; Thu, 05 Oct 2023 21:58:17 +0200
-Received: from dspam.blackshift.org (localhost [127.0.0.1])
-	by bjornoya.blackshift.org (Postfix) with SMTP id 3339D22FFC8
-	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 19:58:17 +0000 (UTC)
-Received: from hardanger.blackshift.org (unknown [172.20.34.65])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by bjornoya.blackshift.org (Postfix) with ESMTPS id 8D78222FF69;
-	Thu,  5 Oct 2023 19:58:14 +0000 (UTC)
-Received: from blackshift.org (localhost [::1])
-	by hardanger.blackshift.org (OpenSMTPD) with ESMTP id 8568e3eb;
-	Thu, 5 Oct 2023 19:58:13 +0000 (UTC)
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: netdev@vger.kernel.org
-Cc: davem@davemloft.net,
-	kuba@kernel.org,
-	linux-can@vger.kernel.org,
-	kernel@pengutronix.de,
-	Justin Stitt <justinstitt@google.com>,
-	linux-hardening@vger.kernel.org,
-	Kees Cook <keescook@chromium.org>,
-	Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH net-next 05/37] can: peak_pci: replace deprecated strncpy with strscpy
-Date: Thu,  5 Oct 2023 21:57:40 +0200
-Message-Id: <20231005195812.549776-6-mkl@pengutronix.de>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20231005195812.549776-1-mkl@pengutronix.de>
-References: <20231005195812.549776-1-mkl@pengutronix.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A89463B2B9
+	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 20:51:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xG+CTsJT"
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACF509F
+	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 13:51:43 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-59c0dd156e5so21166757b3.3
+        for <linux-hardening@vger.kernel.org>; Thu, 05 Oct 2023 13:51:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1696539103; x=1697143903; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=pWpal7Doqq48f7+hvv3YlQfRBTUj+OxMigJ6y40qk1g=;
+        b=xG+CTsJTTp+oaimkbFjqus/BKGf8TqNesqXt/WXK02iGj+0jNuNqx68rDw+nVpaPS1
+         V9PZmIScV5m4mDEa72dLtZYhZsTC1wuSQIojR5uteUiZyR31B8okSDRgRY3cSarlM8I5
+         u+ef1NxW6CA1qId1ztismbL+bUHCuAuwaTB4ZLpzT0ntY0fcoG68PdkAAkeyim9hzC8m
+         /3gj4/jqGTgXepQLdC+pVYdVdRDphoBel7HxVciyCBKyXV6zsg1WwRoUWZiRA/b+fcvZ
+         tHM3uA9Oq5D9irU5YdzgE5Nj+lXXPvIG0OH32Zr98y5XyNjI2/RfJWYvYm8mdxkL8t/H
+         kRWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696539103; x=1697143903;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pWpal7Doqq48f7+hvv3YlQfRBTUj+OxMigJ6y40qk1g=;
+        b=lLBefv3q49ToU2JE2KgnWzZ2MBOxqtYONu+HPkEEt/8MUWwYCE/3NKlTukU9lLuQoy
+         IPkKxQB/W90e92S/YT8M+tl0ZjJeytM32NQ5DkXjPwCOGZ3JxdG+B9TT7JuFvB4ZStis
+         tOkjFE34py/M3n/OOOAMgO3Mso945Q07aZfgFtmOZhdT5KFYwR2DURiJsuoczVVJk6sV
+         wAVp4YJHcJopmcwnLHV9jqNvfl2E5eYr938dbvNnH0OuJu7jinrNgcfmt/vEBRGFFaSq
+         qnQIs5Maj81Xe0insRh0TFLQpd7EbzF2UyUwXwsTOtW4qAZG5U0UDdCR/7S0gWBsdsN5
+         1LtA==
+X-Gm-Message-State: AOJu0YyX2ex0VpiHc43MKzxuJFGxDEV/ChDInVvbxe7sPWlAfh+b7ZuL
+	N3PpdYBL2HGa08i35FxpFNMKFTCXJqHc0QR5Vg==
+X-Google-Smtp-Source: AGHT+IGqcipxr9mLYWAXnLc/UolSpoC3KLcNCHXG3TB8SdXjwnoEzD0TUipTTDv2sPCy+uHcy/NIrlZhpW1v7T7Rdg==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a81:8d46:0:b0:59b:ec33:ec6d with SMTP
+ id w6-20020a818d46000000b0059bec33ec6dmr120908ywj.5.1696539102785; Thu, 05
+ Oct 2023 13:51:42 -0700 (PDT)
+Date: Thu, 05 Oct 2023 20:51:40 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-hardening@vger.kernel.org
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.6
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIANshH2UC/x2NQQqDMBBFryKz7kBiqtBepZQSJ9M6CxOZBEkR7
+ 97Y3Xtv8f8OmVU4w73bQXmTLCk2sZcOaPbxwyihOfSmd9aYAXPRSOsXg8rGmjFyQS4z6wmTJh8 oLTjRMrpaX3xWQuNvAwXn7HU00KZX5bfU/+3jeRw/mVzKc4YAAAA=
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1696539101; l=2256;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=HxayhA1aIuyooSvwu5FkzbNfRLctZ8S9IVA9YM7wlQ4=; b=cNbM0i4jK1A3lEG+pC81fjLHqpJikLXzKR/UUwfLOkhbplaGtwiOVGPOSKdIomtH14tQ9TAvl
+ +Iyswe7yIH0DdajsI7UZ9M2Jp/MQSYuZlg9bAaeb5E2g3FXhQMaWt5V
+X-Mailer: b4 0.12.3
+Message-ID: <20231005-strncpy-drivers-net-ethernet-broadcom-bcm63xx_enet-c-v1-1-6823b3c3c443@google.com>
+Subject: [PATCH] bcm63xx_enet: replace deprecated strncpy with strscpy
+From: Justin Stitt <justinstitt@google.com>
+To: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
+X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-From: Justin Stitt <justinstitt@google.com>
-
-`strncpy` is deprecated for use on NUL-terminated destination strings
+strncpy() is deprecated for use on NUL-terminated destination strings
 [1] and as such we should prefer more robust and less ambiguous string
 interfaces.
 
-NUL-padding is not required since card is already zero-initialized:
-|       card = kzalloc(sizeof(*card), GFP_KERNEL);
-
-A suitable replacement is `strscpy` [2] due to the fact that it
+A suitable replacement is strscpy() [2] due to the fact that it
 guarantees NUL-termination on the destination buffer without
 unnecessarily NUL-padding.
+
+bcm_enet_get_drvinfo() already uses strscpy(), let's match it's
+implementation:
+|       static void bcm_enet_get_drvinfo(struct net_device *netdev,
+|       				 struct ethtool_drvinfo *drvinfo)
+|       {
+|       	strscpy(drvinfo->driver, bcm_enet_driver_name, sizeof(drvinfo->driver));
+|       	strscpy(drvinfo->bus_info, "bcm63xx", sizeof(drvinfo->bus_info));
+|       }
+
+Note that now bcm_enet_get_drvinfo() and bcm_enetsw_get_drvinfo() do the
+exact same thing.
 
 Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
 Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
 Link: https://github.com/KSPP/linux/issues/90
 Cc: linux-hardening@vger.kernel.org
 Signed-off-by: Justin Stitt <justinstitt@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Link: https://lore.kernel.org/all/20231005-strncpy-drivers-net-can-sja1000-peak_pci-c-v1-1-c36e1702cd56@google.com
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 ---
- drivers/net/can/sja1000/peak_pci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/bcm63xx_enet.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/can/sja1000/peak_pci.c b/drivers/net/can/sja1000/peak_pci.c
-index 84f34020aafb..da396d641e24 100644
---- a/drivers/net/can/sja1000/peak_pci.c
-+++ b/drivers/net/can/sja1000/peak_pci.c
-@@ -462,7 +462,7 @@ static int peak_pciec_probe(struct pci_dev *pdev, struct net_device *dev)
- 		card->led_chip.owner = THIS_MODULE;
- 		card->led_chip.dev.parent = &pdev->dev;
- 		card->led_chip.algo_data = &card->i2c_bit;
--		strncpy(card->led_chip.name, "peak_i2c",
-+		strscpy(card->led_chip.name, "peak_i2c",
- 			sizeof(card->led_chip.name));
+diff --git a/drivers/net/ethernet/broadcom/bcm63xx_enet.c b/drivers/net/ethernet/broadcom/bcm63xx_enet.c
+index a741070f1f9a..8b18493759bf 100644
+--- a/drivers/net/ethernet/broadcom/bcm63xx_enet.c
++++ b/drivers/net/ethernet/broadcom/bcm63xx_enet.c
+@@ -2531,8 +2531,8 @@ static int bcm_enetsw_get_sset_count(struct net_device *netdev,
+ static void bcm_enetsw_get_drvinfo(struct net_device *netdev,
+ 				   struct ethtool_drvinfo *drvinfo)
+ {
+-	strncpy(drvinfo->driver, bcm_enet_driver_name, sizeof(drvinfo->driver));
+-	strncpy(drvinfo->bus_info, "bcm63xx", sizeof(drvinfo->bus_info));
++	strscpy(drvinfo->driver, bcm_enet_driver_name, sizeof(drvinfo->driver));
++	strscpy(drvinfo->bus_info, "bcm63xx", sizeof(drvinfo->bus_info));
+ }
  
- 		card->i2c_bit = peak_pciec_i2c_bit_ops;
--- 
-2.40.1
+ static void bcm_enetsw_get_ethtool_stats(struct net_device *netdev,
 
+---
+base-commit: cbf3a2cb156a2c911d8f38d8247814b4c07f49a2
+change-id: 20231005-strncpy-drivers-net-ethernet-broadcom-bcm63xx_enet-c-0a95cd331460
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
 
