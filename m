@@ -1,61 +1,61 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0E0C41E5C
-	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 21:41:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4A2041E57
+	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 21:55:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yih8VVQV"
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59F63DE
-	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 14:41:02 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-59f67676065so21254907b3.0
-        for <linux-hardening@vger.kernel.org>; Thu, 05 Oct 2023 14:41:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t/xvbDfx"
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0140AD8
+	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 14:55:08 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d91c3b26c9eso1350718276.0
+        for <linux-hardening@vger.kernel.org>; Thu, 05 Oct 2023 14:55:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696542061; x=1697146861; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1696542907; x=1697147707; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=jUNTafqkYZ7pS8TSpllde2onzuaLMD5Rpj1fQvAjFxs=;
-        b=yih8VVQVbfsOJD+xe9G7VSjmr3gkSrWedv7OE+hc/NKhaEz52vDlJjfpANDyNCOo++
-         ZuJQ5KRjVDHPo3XqJ+3Fi9+WyvUDWIRT2JMMe2m9BamJcMN7BXvENbovA9X18peyHhY2
-         CYe/EFiW+eEqOOFmJ5qGoW1QFRdrwmx9o5Wz9wYT0cygBGmU9GdUgKjmziDI6554PGNM
-         JvREF67MTmmfgu2+KTBQHUZREQ6k1YrkV2Gcg3M/myhyUZHmt/Rpdrf4bbKJQLymPb8O
-         Uw1RfHbJr41a9wxTeNqTy0PQ3+o1lK3YxuX58TOExUz0iXqBa9QSwaTUsM8yVwnyifNg
-         jEFw==
+        bh=15N1cZsxfmEbv2x0hxsW9ZXAdYEMZDd2ct4HcMI5LaA=;
+        b=t/xvbDfxHrSLeKTjuoFd34jmqVuNPi5stRvxijdXe65BY87jpk4/+tYPoC0i0fdoS6
+         SGbJF7g3BTrAOoz3C6ftD7wwP7nlZd6T4kXuWZwO8g5eb8QmT5Fr21gTyGJErqfrjGOa
+         wZvmcmw00Oq8p//67yQqCbi42V1W1KKYjw2aqtzCWvAhz4J1yI8sdqjn5ZvvWSOOufvK
+         A6AR6jEtdqnFBq0Fm8neFYixKuo28W5Vccv5olkTEYpCcTC6PWC/Ot22fNNC6iH/z8GS
+         S7/lNMAJYlAVpXKQt8kkTGIkzYl/0j4WKeR3MPAKw73qEvCOnDHa/0IAuUdDQ21Df4cX
+         cL1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696542061; x=1697146861;
+        d=1e100.net; s=20230601; t=1696542907; x=1697147707;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=jUNTafqkYZ7pS8TSpllde2onzuaLMD5Rpj1fQvAjFxs=;
-        b=wi6f0SWwtVVT5PwtvKMI2l1IZJBpSlNCuUcvcTa8Ay04hyHF/2yMMxBEmXN6Yn+STW
-         jV6LFlbw8sQ2OpvdieoIcB2JCA2oRsfJy/bR/fZg5+1Un8OmIFKJxPiHd8iaKX/x9Iur
-         XqprGw3rIQ9tk/1dGN+hDC4QoZqKztkSmN2IJw/QXROLPzipHuKD3Uz0O6XiMVJueKKs
-         KlQgkkk4NFiSvb8T2UFSE1wsQhYstYMdXX9MWwmlkdHQ5TgyxQnnJm71YLHAPOIhrMk2
-         Au8G3LgmWC9FNCdz5QZ1mjpvFJYYVtYyOfzUREzznK5XUNnmdSCCNRtvHxWCLCWdR4oP
-         875g==
-X-Gm-Message-State: AOJu0YxTsL+CMKXRFJZc8APBH0+cVk9hvKIglWRwgW6YV6sMZSJt8l+w
-	kNV4KXAiENK3sdb6s/vzaATV3VlP21vR+2NOwg==
-X-Google-Smtp-Source: AGHT+IHIj5z+jvjYSjnBQF7WCdI7cYn9+zHtt+lT2Tek1tSQxg8/n/kE/wh2oRCpNDC0LT+wVxbd/NvsJuSfkIjCmg==
+        bh=15N1cZsxfmEbv2x0hxsW9ZXAdYEMZDd2ct4HcMI5LaA=;
+        b=hGZpAgliImmDQEgXkZ9bjFlP/i06P0b3hHWDwR4d5yvckVp/plDyK+k9JufcpxKTCP
+         o4PyZ1MCiZUlws1NSiApP2y7p5gvxIwSP1arspv2k7eO/sqM0B9q0zPO2rzWoZyNbGBD
+         rrFWU4n227Ogx8eTqkDPiDOH89bIz4qh1xzuaAseLwQiqohaKMfrgyJicOZAzH0883jL
+         3A0rCctHUKZ48cb3V2WP3zAQR65ollo2AdRNUB8e/m+Jej/lznOZ/pw+0Zve+6Nb2TGZ
+         CyWXq8qpIbeEkOkbWBwnopUQq3OV/TO/JB8CZ3tvhgJfd6ErF88QD+HMvGA1cvTfONfn
+         rRaA==
+X-Gm-Message-State: AOJu0Yzsg03v2vqx90YXhgTxAZOzbejYSzHCoJRnRP5mY9Mzh0dxZAB4
+	MWTHsKaX/JGp/iSPW0hDz9ZKfC386EI3dhDvgg==
+X-Google-Smtp-Source: AGHT+IH5kmRWTxHnbOHdcVuA+Thho6voAhFH0EXqlEnU/rGEgIjyx1taDbBJdWNEnWATXo/uaqRozazszc/sPEmxyg==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a81:bd08:0:b0:59b:c811:a702 with SMTP
- id b8-20020a81bd08000000b0059bc811a702mr115088ywi.6.1696542061583; Thu, 05
- Oct 2023 14:41:01 -0700 (PDT)
-Date: Thu, 05 Oct 2023 21:41:01 +0000
+ (user=justinstitt job=sendgmr) by 2002:a25:dcd0:0:b0:d7b:89af:b153 with SMTP
+ id y199-20020a25dcd0000000b00d7b89afb153mr86513ybe.5.1696542907205; Thu, 05
+ Oct 2023 14:55:07 -0700 (PDT)
+Date: Thu, 05 Oct 2023 21:55:06 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAGwtH2UC/x2NQQ7CIBAAv9Ls2U2gDWj8ijEGYWs3sVAXSjRN/
- y56m7nMbJBJmDKcuw2EKmdOsYk+dOAnFx+EHJpDr/pBK2UwF4l++WAQriQZIxWkMpH8wLvK64x Pfq0cODVIt9lxRI93ZcbjyVptBwOtvgiN/P6fL9d9/wIUVboaiQAAAA==
+X-B4-Tracking: v=1; b=H4sIALkwH2UC/x2NQQ7CIBAAv9Ls2U0oWE39ijFNC1u7iQIulGia/
+ l30NnOZ2SCRMCW4NBsIFU4cfJX20IBdRn8nZFcdtNKmVarDlMXb+EEnXEgSespIeSH5gR0Lr09 88Gtlx6FCGMo8CEW0OGnTnc7TUfemh9qPQjO//+/rbd+/cdJAXYsAAAA=
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1696542060; l=1918;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1696542906; l=1813;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=yhFq2y5Pvep99s3JFnDeKpoF+G2I2fKxp4dpMs9PGrs=; b=IYKSrXCoOucrIGOtUWa4qysZwdksei5CHi15EgsgQOrR/qCXqCUliEBjohbluw3vTmot+IDW9
- T5berNGOdbtBJlSvm1r9BfJbMiOaF5ISWKSrN++2bykFZjoprZKmXdg
+ bh=C3xl2J3v8gwUN0HU8+dA4WXLs/v1+iBpCZbkeacUwtw=; b=KPY5MJEWqGL5WHVZsLvPbRYVOUHno7nU5umJO/gm3OQgFouMAf3NVUYZm4NefBHbah92WVVAO
+ tojH7L8NeE7AtbzYIPVMs+OSU1U+HvhZRhzdhy4pfuZYpecxKULJA3f
 X-Mailer: b4 0.12.3
-Message-ID: <20231005-strncpy-drivers-net-ethernet-cavium-liquidio-lio_main-c-v1-1-663e3f1d8f99@google.com>
-Subject: [PATCH] net: liquidio: replace deprecated strncpy with strscpy_pad
+Message-ID: <20231005-strncpy-drivers-net-ethernet-cavium-liquidio-lio_vf_rep-c-v1-1-92123a747780@google.com>
+Subject: [PATCH] liquidio: replace deprecated strncpy with strscpy
 From: Justin Stitt <justinstitt@google.com>
 To: Derek Chickles <dchickles@marvell.com>, Satanand Burla <sburla@marvell.com>, 
 	Felix Manlunas <fmanlunas@marvell.com>, "David S. Miller" <davem@davemloft.net>, 
@@ -74,49 +74,42 @@ X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 [1] and as such we should prefer more robust and less ambiguous string
 interfaces.
 
-We know `fw_type` must be NUL-terminated based on use here:
-|       static bool fw_type_is_auto(void)
-|       {
-|       	return strncmp(fw_type, LIO_FW_NAME_TYPE_AUTO,
-|       		       sizeof(LIO_FW_NAME_TYPE_AUTO)) == 0;
-|       }
-...and here
-|       module_param_string(fw_type, fw_type, sizeof(fw_type), 0444);
+NUL-padding is not required as rep_cfg is memset to 0:
+|       memset(&rep_cfg, 0, sizeof(rep_cfg));
 
-Let's opt to NUL-pad the destination buffer as well so that we maintain
-the same exact behavior that `strncpy` provided here.
-
-A suitable replacement is `strscpy_pad` due to the fact that it
-guarantees both NUL-termination and NUL-padding on the destination
-buffer.
+A suitable replacement is `strscpy` [2] due to the fact that it
+guarantees NUL-termination on the destination buffer without
+unnecessarily NUL-padding.
 
 Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
 Link: https://github.com/KSPP/linux/issues/90
 Cc: linux-hardening@vger.kernel.org
 Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
 Note: build-tested only.
 ---
- drivers/net/ethernet/cavium/liquidio/lio_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/cavium/liquidio/lio_vf_rep.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/cavium/liquidio/lio_main.c b/drivers/net/ethernet/cavium/liquidio/lio_main.c
-index 100daadbea2a..34f02a8ec2ca 100644
---- a/drivers/net/ethernet/cavium/liquidio/lio_main.c
-+++ b/drivers/net/ethernet/cavium/liquidio/lio_main.c
-@@ -1689,7 +1689,7 @@ static int load_firmware(struct octeon_device *oct)
+diff --git a/drivers/net/ethernet/cavium/liquidio/lio_vf_rep.c b/drivers/net/ethernet/cavium/liquidio/lio_vf_rep.c
+index 600de587d7a9..aa6c0dfb6f1c 100644
+--- a/drivers/net/ethernet/cavium/liquidio/lio_vf_rep.c
++++ b/drivers/net/ethernet/cavium/liquidio/lio_vf_rep.c
+@@ -638,7 +638,8 @@ lio_vf_rep_netdev_event(struct notifier_block *nb,
+ 	memset(&rep_cfg, 0, sizeof(rep_cfg));
+ 	rep_cfg.req_type = LIO_VF_REP_REQ_DEVNAME;
+ 	rep_cfg.ifidx = vf_rep->ifidx;
+-	strncpy(rep_cfg.rep_name.name, ndev->name, LIO_IF_NAME_SIZE);
++	strscpy(rep_cfg.rep_name.name, ndev->name,
++		sizeof(rep_cfg.rep_name.name));
  
- 	if (fw_type_is_auto()) {
- 		tmp_fw_type = LIO_FW_NAME_TYPE_NIC;
--		strncpy(fw_type, tmp_fw_type, sizeof(fw_type));
-+		strscpy_pad(fw_type, tmp_fw_type, sizeof(fw_type));
- 	} else {
- 		tmp_fw_type = fw_type;
- 	}
+ 	ret = lio_vf_rep_send_soft_command(oct, &rep_cfg,
+ 					   sizeof(rep_cfg), NULL, 0);
 
 ---
 base-commit: cbf3a2cb156a2c911d8f38d8247814b4c07f49a2
-change-id: 20231005-strncpy-drivers-net-ethernet-cavium-liquidio-lio_main-c-b05f78661635
+change-id: 20231005-strncpy-drivers-net-ethernet-cavium-liquidio-lio_vf_rep-c-b23567b42939
 
 Best regards,
 --
