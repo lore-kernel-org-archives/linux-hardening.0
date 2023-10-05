@@ -1,105 +1,94 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46CED7E
-	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 02:56:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8659C7E
+	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 02:58:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZMX3iS/C"
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88C4A112
-	for <linux-hardening@vger.kernel.org>; Wed,  4 Oct 2023 19:56:28 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id d9443c01a7336-1c752caeaa6so3595685ad.1
-        for <linux-hardening@vger.kernel.org>; Wed, 04 Oct 2023 19:56:28 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="i4L/3Aj8"
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C344124
+	for <linux-hardening@vger.kernel.org>; Wed,  4 Oct 2023 19:58:43 -0700 (PDT)
+Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1c877f27e8fso3652275ad.1
+        for <linux-hardening@vger.kernel.org>; Wed, 04 Oct 2023 19:58:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1696474588; x=1697079388; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Hp2x9Ltp2Ai2cgY/IY4VFvuHeSSiTk0rfcUCP8Bu0Y8=;
-        b=ZMX3iS/Cfoxpu9NpYWySr4M2cCHFEyi+/NhhNMTOj1RXslsEV0lvm05U1FWnkhs0Om
-         UoExBi1dVfkk/z/hiydBKLiAgR+j2FOVQS0dP2/74CAw1/sUz1tyKgA1uIvWnvTMTjfL
-         PK7axzRSb3GcHy17qH35enlVDfcHmq33n1p94=
+        d=chromium.org; s=google; t=1696474723; x=1697079523; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=0kNnoNX+VycKJxCFVsIPAbCtAe5boObmTDcjKlCDp2k=;
+        b=i4L/3Aj8ygTjSUp9/p9XDWPSBBKIRjWIC5psTSo5nX3ZwidzXnhiCBlczgVVI2zjpZ
+         9XWh+QJWSXuMiPpDWrlgZpJl/Z8tuZxCXx3YMi3JB62A4zXJlhkRATn11k3SCHNFLDbf
+         Tk89LjB5wR/1YdxTpbiNiRU0F/Rvj9JM4j2NY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696474588; x=1697079388;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Hp2x9Ltp2Ai2cgY/IY4VFvuHeSSiTk0rfcUCP8Bu0Y8=;
-        b=d7J1m9rB9hQFNO1+qh1vvFw3b0aQg6HOy4Br1csao8tGLJgV+7kNzgiahNpf8iBOIq
-         4R07p4+eIDv+HbtZG9csf14NpjrJ0g8IGTd9F4RZB66OsqSkifz6sklPsOQn2AOWY/EV
-         k6ftYppZ6AJrPp+Y2aHtKgQFfpGnqA7vYZOcwh7nKSDeacTaP+7a2T27+8rJ+H20fTtF
-         /pvIcz1sl7Dao6NM5oHbJdpjNSLh4eInm+Nqty+8kFHoW5UHYRy79r9/Agvo1J1JHBhv
-         caXW79kJERWco2F9oFg0NVDGb4Nov1O0zjFsi53+GcJJecl+1zurLDo3qqIkAzR9YhAW
-         Qk0A==
-X-Gm-Message-State: AOJu0YznjkW9OrqK9oOdg6PgrBOJIC6j9L2SebcUVJTPtdKw1XOBi8xZ
-	YfguWjHJh/ljz2zUSfazPbvhrw==
-X-Google-Smtp-Source: AGHT+IGzKXtlYTyFAyJxsn0YtydWrFVTkiE3rJN/i5QNmjp5IWWgIQNLh8gGPCrwuP4RXGdCsYJ0pg==
-X-Received: by 2002:a17:903:22cb:b0:1c4:5e9e:7865 with SMTP id y11-20020a17090322cb00b001c45e9e7865mr4806918plg.0.1696474587984;
-        Wed, 04 Oct 2023 19:56:27 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1696474723; x=1697079523;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0kNnoNX+VycKJxCFVsIPAbCtAe5boObmTDcjKlCDp2k=;
+        b=hcpJGohQUu0dMNF2f+zVIjJqmcgXvCLhWdeA48rQXvUdrrSOcLOLg3Bn3+fd0JsSe4
+         TjxxJkdzSAE39Pr6+gJNGkFS3U+ie8rSAlK0mCJgyqi49EdL8OZEOX6SKzjbHu2NP1MC
+         8hNqy8zbnIedC8BRW3PloslqcqVcTvO2eyixzgZd/NOIplzTg/4lEmw7mhF0K/kLNjgM
+         RB21SSg2zJFXzKk+he+/+9kFAUknsQ+lHSB947vwNjEABdl6qSLK87NGBoxIu4tF4sgc
+         Vdf394Gc0b7rEUGcOI2ux/pRj1i7ZSQKAb/lVCVU/vno04+x57ZVD0zL1gGxOBeK12TW
+         874A==
+X-Gm-Message-State: AOJu0YxoeRI9uYphmwTRkyNnzRop/AyDAXbozmvmy09DmXy3EGDnBAkX
+	DZ7EivhUXKn+D8dL2p4kYR+9hw==
+X-Google-Smtp-Source: AGHT+IEuvtkB5cCQbgCWYrRd54NAG8rv4yhh7aSFHMbN97v3p48aULxm0ARxKFDY+QpqB2XuHsjBOg==
+X-Received: by 2002:a17:903:1cc:b0:1c7:2661:91e1 with SMTP id e12-20020a17090301cc00b001c7266191e1mr3864559plh.15.1696474722969;
+        Wed, 04 Oct 2023 19:58:42 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id c16-20020a170903235000b001c724732058sm309809plh.235.2023.10.04.19.56.26
+        by smtp.gmail.com with ESMTPSA id p10-20020a170902eaca00b001b8a85489a3sm313410pld.262.2023.10.04.19.58.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Oct 2023 19:56:27 -0700 (PDT)
+        Wed, 04 Oct 2023 19:58:42 -0700 (PDT)
+Date: Wed, 4 Oct 2023 19:58:39 -0700
 From: Kees Cook <keescook@chromium.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] MAINTAINERS: Include sof headers under ASoC
-Date: Wed,  4 Oct 2023 19:56:21 -0700
-Message-Id: <20231005025618.work.355-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+To: Justin Stitt <justinstitt@google.com>
+Cc: Wolfgang Grandegger <wg@grandegger.com>,
+	Marc Kleine-Budde <mkl@pengutronix.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	linux-can@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] can: peak_pci: replace deprecated strncpy with strscpy
+Message-ID: <202310041958.12F8A261A@keescook>
+References: <20231005-strncpy-drivers-net-can-sja1000-peak_pci-c-v1-1-c36e1702cd56@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=707; i=keescook@chromium.org;
- h=from:subject:message-id; bh=1XKbY9x91B/FZLpCrXeADLgIXY2PtIiBsgGvJMAcMfc=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlHiXVlntw2mnLlbUmA5XbA4LI/lm54Dci8rr+f
- miK/UuUKTqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZR4l1QAKCRCJcvTf3G3A
- JoqJD/9cFG7TlWh91sULXaqZacvlKmqNwlACQ23Wy+Dh3MD7OKq17VAIMYGV7O89aQa4XhYxMxV
- bCn8CFyQ31P3Bpg59Ogl8BMif+Q0UOm3Apfq6vLTjWEXgQPVaCgizBQ1X+siJfOTkmUEUtTJa7O
- axnf5U5gdmji+VA9Acl+gMTCshPKg5jToXiiU/h2FuY0hHEGzN4ZvnA0H5gPcTXuLzntVivYV3P
- ixCRzL5CWDNSrb4yQPTRFc6rs3S51d91z53paVM16j8pSZb3GqucGUYbLNVL7rPhl/Q2OwalIiR
- XoGHiE19O/Nhpin9OxdfwJsh946IeXEjI/NDvSkqi493Dy09qyeeEtXvVbCxwppbbvSWaMJ40Bo
- Yh/4umb0r42AoTFBK+Q4vVKzSRdvBhpH3WdmYZM4SST7PnF0GZ9DTZY3OUZ30D+8f0yZT2DaK3u
- yTXxXQArLdNsaJAdNy83xH23qGNd3hJYw5DnZUEgqyJ/2ci8GNtLiedY3xsuKWZvRqz7YLU3O+5
- RZ+xMHKAwdrvjL548hOB/TkI7kLT9oZN8mMCIc/YnGWARYHr6SbFPOJEEPiwvDzl26DtKDm/Njs
- hFHiM8ClbPaOaVyLfaQbWue/lLQiFd89+2HPzMsVMIgaVjbKgalO9JcJ3bSU0XoTESDSGXSZSJM
- H17cOqnF yV5FKZQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231005-strncpy-drivers-net-can-sja1000-peak_pci-c-v1-1-c36e1702cd56@google.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.6
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Add missing sof header files for ASoC.
+On Thu, Oct 05, 2023 at 12:05:35AM +0000, Justin Stitt wrote:
+> `strncpy` is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
+> 
+> NUL-padding is not required since card is already zero-initialized:
+> |       card = kzalloc(sizeof(*card), GFP_KERNEL);
+> 
+> A suitable replacement is `strscpy` [2] due to the fact that it
+> guarantees NUL-termination on the destination buffer without
+> unnecessarily NUL-padding.
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-Suggested-by: Mark Brown <broonie@kernel.org>
-Link: https://lore.kernel.org/lkml/f258a7e6-0728-4f55-a71a-6e99113ce7e5@sirena.org.uk
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+Yup, this looks like a standard direct replacement.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 585a13b9b52a..811e59d50291 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -20116,7 +20116,9 @@ F:	Documentation/devicetree/bindings/sound/
- F:	Documentation/sound/soc/
- F:	include/dt-bindings/sound/
- F:	include/sound/soc*
-+F:	include/sound/sof.h
- F:	include/sound/sof/
-+F:	include/trace/events/sof*.h
- F:	include/uapi/sound/asoc.h
- F:	sound/soc/
- 
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
 -- 
-2.34.1
-
+Kees Cook
