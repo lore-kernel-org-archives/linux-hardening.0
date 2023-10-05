@@ -1,77 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3244B1BDEE;
-	Wed,  4 Oct 2023 22:50:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B799F173
+	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 00:05:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LEmpmqIl"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 96C0CC433C8;
-	Wed,  4 Oct 2023 22:50:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696459829;
-	bh=29qFIdltgl6F0PKskAEDQDppIMvIB/Uobyguual+LQg=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=LEmpmqIlpgtWsaiXKVqzHc4G0I3TbO96VrUbSHaL0oeWWqWihAN0y2vaYQLoL/5pc
-	 FqNWOByLj+tTstlBaAf7AJIdyl0kUY3fsr884/RytG+u+Z76Zdfg31ZAcqDy31ROMY
-	 /fQxpefVfwO1lB/rxR8torCl0v5e/h643xIYz3B6X6huf67kwEpC2j2MN0nVwWxMdi
-	 lRvVtl7X67gGmOnKFhhGiyLSm6Tngrq8Ax2K253XVVSZoy11zewSd/qMDUKQS86/e8
-	 mM4Uu77Ng8b30wBFUDDDpC9XREAzQ+7ms7bRJHCyBz/3/MrHdpC+I0RGs/Ropu1LR/
-	 S5P2QKs+M6hFQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 78DADE632D6;
-	Wed,  4 Oct 2023 22:50:29 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K02LwLZc"
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC876D7
+	for <linux-hardening@vger.kernel.org>; Wed,  4 Oct 2023 17:05:39 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-594e1154756so5005937b3.2
+        for <linux-hardening@vger.kernel.org>; Wed, 04 Oct 2023 17:05:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1696464339; x=1697069139; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=kDV9H2uqIJhr2H0MOz02/qFIRGm8ZuULD9yNay+8KCk=;
+        b=K02LwLZc/Smk0mQ3VBoQ78isLxECitC5Vg1GfKQCmUOBsHVwhyu91I3xP2xKgA8nWl
+         CnX1iJnJrwZ7KrrEGxqlP92wWGiAiPhfniOSbUneU2YXRa7KPaJDNUlnGFgI8PizHRAX
+         p2OgXY8px0NT3V1hLj/ABoeKF1tB5dis+bgxVw0InN4z9UjJuyMd+rPf4fn3sSE2IBBH
+         5mU2Q5tgptwk+smA7bxPCOQepKL0vUpiQ2eln94WaXK/SSf93WvWNlZGPK27FB8nNIUN
+         6flZmVKfvMnGXBJkJVyIGntT/Bsw1Op++gCOcTro0LRWAuJ7VHFrhuEITcQ1EXoHpR67
+         dZIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696464339; x=1697069139;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kDV9H2uqIJhr2H0MOz02/qFIRGm8ZuULD9yNay+8KCk=;
+        b=VJWjYFX/l9/Qbi36iR25IhjXQpq1ldZhYHp9I2aUx1C+lv3gkr5Vc/qvaDL+gCTs9z
+         ZSIL/hQDMY/JL4dIedkyfwy7aCJZBgoFn7LTkE/CZcgWatO6/p8GNsdjPsH2kBpZ0HL3
+         1UlWfnB31nA4sMS8snOgTkKqByP5q86ArJLiY8LfcOU3Kv0Kww3vfDemvYFD5gAr/0bd
+         YWBk/4G46Ul2tFWTRCbc7qlqhIqgdal7bwMKc3MgBeoa3/Sbj9yYT66a8Ef9bbrlzKZt
+         BVQopkvr8FWiGCzwUQJBvlmvsTSh+zoxeMCZn335HU+2q22zRBB/iWhoXrCZSB9wrHUJ
+         /oIg==
+X-Gm-Message-State: AOJu0YynJvlTd8/y2k13U9Qi/iDwIyxn+uvlar4Ofrt97zvJv8wYJx9m
+	C6foJzH3qGZZR15kHKg6Qn+KVy9nUoSRhVvOPQ==
+X-Google-Smtp-Source: AGHT+IGTiXwbNXO7t2kuJzI5viQlgrAq3e1RhUIhpSHCpv6OU7nkZ+Yipbuymx3X62nCckzHZkW3q0ytTz4SHMFoxg==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a05:6902:85:b0:d86:5644:5d12 with SMTP
+ id h5-20020a056902008500b00d8656445d12mr65620ybs.4.1696464338892; Wed, 04 Oct
+ 2023 17:05:38 -0700 (PDT)
+Date: Thu, 05 Oct 2023 00:05:35 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 0/5] chelsio: Annotate structs with __counted_by
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <169645982948.18987.9169162380776342631.git-patchwork-notify@kernel.org>
-Date: Wed, 04 Oct 2023 22:50:29 +0000
-References: <20230929181042.work.990-kees@kernel.org>
-In-Reply-To: <20230929181042.work.990-kees@kernel.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: rajur@chelsio.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, gustavoars@kernel.org, nathan@kernel.org,
- ndesaulniers@google.com, trix@redhat.com, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, linux-hardening@vger.kernel.org, llvm@lists.linux.dev
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAM79HWUC/x2NUQrCMBAFr1L224U0qaBeRUTi9qmrEMNuKUrp3
+ Q39HAZmFnKYwunULWSY1fVTGvS7juSZywOsY2OKIaY+hIF9siL1x6PpDHMumFhyYX/l5gNX5Pe 1irLwUSL2SPGGQ6IWrIa7frfZ+bKuf7wKd7p8AAAA
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1696464338; l=1704;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=apMk3PAp7wXCg1G7f65LzqlG2jyMKCWZrLKd+QMkLV0=; b=KC7laJ0xXFcTNOKm5F+aafeyNRacesWewOUckhjMrjqfd5s8iINWyi0XoECH8dh8asYPWgvfu
+ BkhfjUaE7GHDyMxgXBmMJY/o+OV6NUTP4UvGyJ2uJ8NkWTata7w8+5A
+X-Mailer: b4 0.12.3
+Message-ID: <20231005-strncpy-drivers-net-can-sja1000-peak_pci-c-v1-1-c36e1702cd56@google.com>
+Subject: [PATCH] can: peak_pci: replace deprecated strncpy with strscpy
+From: Justin Stitt <justinstitt@google.com>
+To: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
+X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-Hello:
+`strncpy` is deprecated for use on NUL-terminated destination strings
+[1] and as such we should prefer more robust and less ambiguous string
+interfaces.
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+NUL-padding is not required since card is already zero-initialized:
+|       card = kzalloc(sizeof(*card), GFP_KERNEL);
 
-On Fri, 29 Sep 2023 11:11:44 -0700 you wrote:
-> Hi,
-> 
-> This annotates several chelsio structures with the coming __counted_by
-> attribute for bounds checking of flexible arrays at run-time. For more details,
-> see commit dd06e72e68bc ("Compiler Attributes: Add __counted_by macro").
-> 
-> Thanks!
-> 
-> [...]
+A suitable replacement is `strscpy` [2] due to the fact that it
+guarantees NUL-termination on the destination buffer without
+unnecessarily NUL-padding.
 
-Here is the summary with links:
-  - [1/5] chelsio/l2t: Annotate struct l2t_data with __counted_by
-    https://git.kernel.org/netdev/net-next/c/3bbae5f1c651
-  - [2/5] cxgb4: Annotate struct clip_tbl with __counted_by
-    https://git.kernel.org/netdev/net-next/c/c3db467b0822
-  - [3/5] cxgb4: Annotate struct cxgb4_tc_u32_table with __counted_by
-    https://git.kernel.org/netdev/net-next/c/157c56a4fede
-  - [4/5] cxgb4: Annotate struct sched_table with __counted_by
-    https://git.kernel.org/netdev/net-next/c/ceba9725fb45
-  - [5/5] cxgb4: Annotate struct smt_data with __counted_by
-    https://git.kernel.org/netdev/net-next/c/1508cb7e0752
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Note: build-tested only.
+---
+ drivers/net/can/sja1000/peak_pci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+diff --git a/drivers/net/can/sja1000/peak_pci.c b/drivers/net/can/sja1000/peak_pci.c
+index 84f34020aafb..da396d641e24 100644
+--- a/drivers/net/can/sja1000/peak_pci.c
++++ b/drivers/net/can/sja1000/peak_pci.c
+@@ -462,7 +462,7 @@ static int peak_pciec_probe(struct pci_dev *pdev, struct net_device *dev)
+ 		card->led_chip.owner = THIS_MODULE;
+ 		card->led_chip.dev.parent = &pdev->dev;
+ 		card->led_chip.algo_data = &card->i2c_bit;
+-		strncpy(card->led_chip.name, "peak_i2c",
++		strscpy(card->led_chip.name, "peak_i2c",
+ 			sizeof(card->led_chip.name));
+ 
+ 		card->i2c_bit = peak_pciec_i2c_bit_ops;
 
+---
+base-commit: cbf3a2cb156a2c911d8f38d8247814b4c07f49a2
+change-id: 20231004-strncpy-drivers-net-can-sja1000-peak_pci-c-9c2e5e32be83
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
 
