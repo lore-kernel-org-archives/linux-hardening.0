@@ -1,157 +1,145 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C24A42BF4
-	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 21:57:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21A2F12B74;
+	Thu,  5 Oct 2023 22:25:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bjvf6wpq"
-Received: from mail-oa1-x32.google.com (mail-oa1-x32.google.com [IPv6:2001:4860:4864:20::32])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8141295;
-	Thu,  5 Oct 2023 14:57:11 -0700 (PDT)
-Received: by mail-oa1-x32.google.com with SMTP id 586e51a60fabf-1e1b1b96746so924252fac.2;
-        Thu, 05 Oct 2023 14:57:11 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Dfn+Ajgh"
+Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34A8295;
+	Thu,  5 Oct 2023 15:25:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696543031; x=1697147831; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CAYKChfRdgudPucMl+HqonIt/5AX5oN5CCdBSnTYy0c=;
-        b=bjvf6wpq7yI0gGDm3xsQPU5ihcI64ca8P+cCefKl7l2C1eQ9bwadTkaCcUXZyLwriM
-         F8zOh7onMzlhIQSVncOO/pAqnSn4Yg8uA10Txgud2GTdiMVrXlcN+lRYE5msk9BeNAHH
-         lwCLArOJJGxOooO+J8d/jluLezoFvQJ37OgIKC/ryDDih7OkQsdq8ED7f3La4DiRXQT/
-         ur0gl7kRr1Bxz3DfA297mW0LRtmLLIoiarOzHHx2yZbvLaive7nS3AN8nFtsZgKormWf
-         MGBi1nHnaCGR5gYoRpkKajtZwHHcOMHbkPhDjcuzbFqoTrfUN08PXyyWUfVWhp/Pe25N
-         HAJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696543031; x=1697147831;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CAYKChfRdgudPucMl+HqonIt/5AX5oN5CCdBSnTYy0c=;
-        b=thXIZyq8mEbhYh1WkD9K7heTex7ySuBGLetsl2FMeYcvF8OvLueXoxmCfBTLflS3qD
-         45Adh7KiJ+RqC9Zv7OccYAdzIGwPiUflY2SRnKqL19Bu8lwA9LnWA93xqh+u9PTn9PfF
-         QO1BRK1ZIUemmLXMIw8rOZn7o9HWJ/VMfbzGsQeUGuStQAClvM9M7GPu1uF3g/wFzrB2
-         4saGccx87ee7C4JX6jiTD8q90I8vELmeOYPl0nI23/YLQbHqWZCuurbarR+iAyc9i139
-         yPFpiUK2NeiAYLPy7TpWPLy1GJTdWjvpSDynXkIr+c42q6iHNN29bTvdcIozkosy8G+n
-         lBDw==
-X-Gm-Message-State: AOJu0YynAkhr+QPMWQ2ndRrVU6z2bhS/ntaHZKXLTv1Sr1yjMFpr2WR+
-	25k60EB0qOF7F1cEvLq6pTgummwhdTU6OGZF6yM=
-X-Google-Smtp-Source: AGHT+IE7Mh8ZxS9AEdUoRo8DfhqsdjKx0m14eBvMkDCkjbKr9ARO/M6kPfpebfea3wIhcrXCtgeKYHTEYOpyT1BJiWU=
-X-Received: by 2002:a05:6870:888b:b0:1bb:8842:7b5c with SMTP id
- m11-20020a056870888b00b001bb88427b5cmr7517247oam.43.1696543030835; Thu, 05
- Oct 2023 14:57:10 -0700 (PDT)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1696544737; x=1728080737;
+  h=from:to:cc:date:message-id:references:in-reply-to:
+   content-transfer-encoding:mime-version:subject;
+  bh=4lNRmXT4BmRQ3teTJfK+a/+f+iw/5qUJ9Zfro83P9FA=;
+  b=Dfn+AjghG51/Xn/m6Mt/AfDjZ/AY8a+vph9sPpbOvUoV5WGvY3T5gqSf
+   I/54e7xcKvtibOocGNmc0oC2eQSVOlpT+B+uzuVIM4ogK/rMoOfpWThXm
+   3Is6kcXrbuXW512H3yoMHVW/3J0ryU+g0Zjg7LSdOCsNe+jsxfqROy+Qm
+   k=;
+X-IronPort-AV: E=Sophos;i="6.03,203,1694736000"; 
+   d="scan'208";a="360362503"
+Subject: RE: [PATCH] net: ena: replace deprecated strncpy with strscpy
+Thread-Topic: [PATCH] net: ena: replace deprecated strncpy with strscpy
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-iad-1a-m6i4x-96feee09.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-6002.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2023 22:25:34 +0000
+Received: from EX19D015EUA003.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+	by email-inbound-relay-iad-1a-m6i4x-96feee09.us-east-1.amazon.com (Postfix) with ESMTPS id 8C2E248422;
+	Thu,  5 Oct 2023 22:25:32 +0000 (UTC)
+Received: from EX19D047EUA003.ant.amazon.com (10.252.50.160) by
+ EX19D015EUA003.ant.amazon.com (10.252.50.252) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.37; Thu, 5 Oct 2023 22:25:31 +0000
+Received: from EX19D022EUA002.ant.amazon.com (10.252.50.201) by
+ EX19D047EUA003.ant.amazon.com (10.252.50.160) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.37; Thu, 5 Oct 2023 22:25:31 +0000
+Received: from EX19D022EUA002.ant.amazon.com ([fe80::7f87:7d63:def0:157d]) by
+ EX19D022EUA002.ant.amazon.com ([fe80::7f87:7d63:def0:157d%3]) with mapi id
+ 15.02.1118.037; Thu, 5 Oct 2023 22:25:31 +0000
+From: "Kiyanovski, Arthur" <akiyano@amazon.com>
+To: Justin Stitt <justinstitt@google.com>, "Agroskin, Shay"
+	<shayagr@amazon.com>, "Arinzon, David" <darinzon@amazon.com>, "Dagan, Noam"
+	<ndagan@amazon.com>, "Bshara, Saeed" <saeedb@amazon.com>, "David S. Miller"
+	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+CC: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Thread-Index: AQHZ9ybKM2b6eyqkVE+Gavzwy9pPV7A7w5Hw
+Date: Thu, 5 Oct 2023 22:25:08 +0000
+Deferred-Delivery: Thu, 5 Oct 2023 22:24:26 +0000
+Message-ID: <fe65f57f91f342c7a173891b84cda37b@amazon.com>
+References: <20231005-strncpy-drivers-net-ethernet-amazon-ena-ena_netdev-c-v1-1-ba4879974160@google.com>
+In-Reply-To: <20231005-strncpy-drivers-net-ethernet-amazon-ena-ena_netdev-c-v1-1-ba4879974160@google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-originating-ip: [10.85.143.172]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231003232952.work.158-kees@kernel.org> <ca2006f4-a038-460d-a9ca-d14dca8e4a8b@gmail.com>
-In-Reply-To: <ca2006f4-a038-460d-a9ca-d14dca8e4a8b@gmail.com>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Thu, 5 Oct 2023 17:56:59 -0400
-Message-ID: <CADnq5_MfkVQNU268wg1b6AStnELjvrpgU4Xrf_k-Qa2KsXGcmg@mail.gmail.com>
-Subject: Re: [PATCH] drm/amdgpu: Annotate struct amdgpu_bo_list with __counted_by
-To: =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>
-Cc: Kees Cook <keescook@chromium.org>, Alex Deucher <alexander.deucher@amd.com>, 
-	"Pan, Xinhui" <Xinhui.Pan@amd.com>, 
-	Arunpravin Paneer Selvam <Arunpravin.PaneerSelvam@amd.com>, Tom Rix <trix@redhat.com>, 
-	Felix Kuehling <Felix.Kuehling@amd.com>, llvm@lists.linux.dev, 
-	Nick Desaulniers <ndesaulniers@google.com>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	Nathan Chancellor <nathan@kernel.org>, Luben Tuikov <luben.tuikov@amd.com>, 
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>, dri-devel@lists.freedesktop.org, 
-	Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@gmail.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Precedence: Bulk
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Applied.  Thanks!
-
-Alex
-
-On Thu, Oct 5, 2023 at 10:32=E2=80=AFAM Christian K=C3=B6nig
-<ckoenig.leichtzumerken@gmail.com> wrote:
->
-> Am 04.10.23 um 01:29 schrieb Kees Cook:
-> > Prepare for the coming implementation by GCC and Clang of the __counted=
-_by
-> > attribute. Flexible array members annotated with __counted_by can have
-> > their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
-> > array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> > functions).
-> >
-> > As found with Coccinelle[1], add __counted_by for struct amdgpu_bo_list=
-.
-> > Additionally, since the element count member must be set before accessi=
-ng
-> > the annotated flexible array member, move its initialization earlier.
-> >
-> > Cc: Alex Deucher <alexander.deucher@amd.com>
-> > Cc: "Christian K=C3=B6nig" <christian.koenig@amd.com>
-> > Cc: "Pan, Xinhui" <Xinhui.Pan@amd.com>
-> > Cc: David Airlie <airlied@gmail.com>
-> > Cc: Daniel Vetter <daniel@ffwll.ch>
-> > Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> > Cc: Luben Tuikov <luben.tuikov@amd.com>
-> > Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> > Cc: Felix Kuehling <Felix.Kuehling@amd.com>
-> > Cc: amd-gfx@lists.freedesktop.org
-> > Cc: dri-devel@lists.freedesktop.org
-> > Cc: linux-hardening@vger.kernel.org
-> > Link: https://github.com/kees/kernel-tools/blob/trunk/coccinelle/exampl=
-es/counted_by.cocci [1]
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
->
-> Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>
->
-> > ---
-> >   drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c | 2 +-
-> >   drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.h | 2 +-
-> >   2 files changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c b/drivers/gpu/=
-drm/amd/amdgpu/amdgpu_bo_list.c
-> > index 6f5b641b631e..781e5c5ce04d 100644
-> > --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
-> > +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
-> > @@ -84,6 +84,7 @@ int amdgpu_bo_list_create(struct amdgpu_device *adev,=
- struct drm_file *filp,
-> >
-> >       kref_init(&list->refcount);
-> >
-> > +     list->num_entries =3D num_entries;
-> >       array =3D list->entries;
-> >
-> >       for (i =3D 0; i < num_entries; ++i) {
-> > @@ -129,7 +130,6 @@ int amdgpu_bo_list_create(struct amdgpu_device *ade=
-v, struct drm_file *filp,
-> >       }
-> >
-> >       list->first_userptr =3D first_userptr;
-> > -     list->num_entries =3D num_entries;
-> >       sort(array, last_entry, sizeof(struct amdgpu_bo_list_entry),
-> >            amdgpu_bo_list_entry_cmp, NULL);
-> >
-> > diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.h b/drivers/gpu/=
-drm/amd/amdgpu/amdgpu_bo_list.h
-> > index 6a703be45d04..555cd6d877c3 100644
-> > --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.h
-> > +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.h
-> > @@ -56,7 +56,7 @@ struct amdgpu_bo_list {
-> >        */
-> >       struct mutex bo_list_mutex;
-> >
-> > -     struct amdgpu_bo_list_entry entries[];
-> > +     struct amdgpu_bo_list_entry entries[] __counted_by(num_entries);
-> >   };
-> >
-> >   int amdgpu_bo_list_get(struct amdgpu_fpriv *fpriv, int id,
->
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBKdXN0aW4gU3RpdHQgPGp1c3Rp
+bnN0aXR0QGdvb2dsZS5jb20+DQo+IFNlbnQ6IFRodXJzZGF5LCBPY3RvYmVyIDUsIDIwMjMgMzo1
+NiBBTQ0KPiBUbzogQWdyb3NraW4sIFNoYXkgPHNoYXlhZ3JAYW1hem9uLmNvbT47IEtpeWFub3Zz
+a2ksIEFydGh1cg0KPiA8YWtpeWFub0BhbWF6b24uY29tPjsgQXJpbnpvbiwgRGF2aWQgPGRhcmlu
+em9uQGFtYXpvbi5jb20+OyBEYWdhbiwNCj4gTm9hbSA8bmRhZ2FuQGFtYXpvbi5jb20+OyBCc2hh
+cmEsIFNhZWVkIDxzYWVlZGJAYW1hem9uLmNvbT47IERhdmlkDQo+IFMuIE1pbGxlciA8ZGF2ZW1A
+ZGF2ZW1sb2Z0Lm5ldD47IEVyaWMgRHVtYXpldCA8ZWR1bWF6ZXRAZ29vZ2xlLmNvbT47DQo+IEph
+a3ViIEtpY2luc2tpIDxrdWJhQGtlcm5lbC5vcmc+OyBQYW9sbyBBYmVuaSA8cGFiZW5pQHJlZGhh
+dC5jb20+DQo+IENjOiBuZXRkZXZAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5r
+ZXJuZWwub3JnOyBsaW51eC0NCj4gaGFyZGVuaW5nQHZnZXIua2VybmVsLm9yZzsgSnVzdGluIFN0
+aXR0IDxqdXN0aW5zdGl0dEBnb29nbGUuY29tPg0KPiBTdWJqZWN0OiBbRVhURVJOQUxdIFtQQVRD
+SF0gbmV0OiBlbmE6IHJlcGxhY2UgZGVwcmVjYXRlZCBzdHJuY3B5IHdpdGggc3Ryc2NweQ0KPiAN
+Cj4gQ0FVVElPTjogVGhpcyBlbWFpbCBvcmlnaW5hdGVkIGZyb20gb3V0c2lkZSBvZiB0aGUgb3Jn
+YW5pemF0aW9uLiBEbyBub3QgY2xpY2sNCj4gbGlua3Mgb3Igb3BlbiBhdHRhY2htZW50cyB1bmxl
+c3MgeW91IGNhbiBjb25maXJtIHRoZSBzZW5kZXIgYW5kIGtub3cgdGhlDQo+IGNvbnRlbnQgaXMg
+c2FmZS4NCj4gDQo+IA0KPiANCj4gYHN0cm5jcHlgIGlzIGRlcHJlY2F0ZWQgZm9yIHVzZSBvbiBO
+VUwtdGVybWluYXRlZCBkZXN0aW5hdGlvbiBzdHJpbmdzIFsxXSBhbmQgYXMNCj4gc3VjaCB3ZSBz
+aG91bGQgcHJlZmVyIG1vcmUgcm9idXN0IGFuZCBsZXNzIGFtYmlndW91cyBzdHJpbmcgaW50ZXJm
+YWNlcy4NCj4gDQo+IE5VTC1wYWRkaW5nIGlzIG5vdCBuZWNlc3NhcnkgYXMgaG9zdF9pbmZvIGlz
+IGluaXRpYWxpemVkIHRvIGBlbmFfZGV2LQ0KPiA+aG9zdF9hdHRyLmhvc3RfaW5mb2Agd2hpY2gg
+aXMgdWx0aW1hdGVseSB6ZXJvLWluaXRpYWxpemVkIHZpYQ0KPiBhbGxvY19ldGhlcmRldl9tcSgp
+Lg0KPiANCj4gQSBzdWl0YWJsZSByZXBsYWNlbWVudCBpcyBgc3Ryc2NweWAgWzJdIGR1ZSB0byB0
+aGUgZmFjdCB0aGF0IGl0IGd1YXJhbnRlZXMgTlVMLQ0KPiB0ZXJtaW5hdGlvbiBvbiB0aGUgZGVz
+dGluYXRpb24gYnVmZmVyIHdpdGhvdXQgdW5uZWNlc3NhcmlseSBOVUwtcGFkZGluZy4NCj4gDQo+
+IExpbms6DQo+IGh0dHBzOi8vd3d3Lmtlcm5lbC5vcmcvZG9jL2h0bWwvbGF0ZXN0L3Byb2Nlc3Mv
+ZGVwcmVjYXRlZC5odG1sI3N0cm5jcHktb24tDQo+IG51bC10ZXJtaW5hdGVkLXN0cmluZ3MgWzFd
+DQo+IExpbms6IGh0dHBzOi8vbWFucGFnZXMuZGViaWFuLm9yZy90ZXN0aW5nL2xpbnV4LW1hbnVh
+bC00Ljgvc3Ryc2NweS45LmVuLmh0bWwNCj4gWzJdDQo+IExpbms6IGh0dHBzOi8vZ2l0aHViLmNv
+bS9LU1BQL2xpbnV4L2lzc3Vlcy85MA0KPiBDYzogbGludXgtaGFyZGVuaW5nQHZnZXIua2VybmVs
+Lm9yZw0KPiBTaWduZWQtb2ZmLWJ5OiBKdXN0aW4gU3RpdHQgPGp1c3RpbnN0aXR0QGdvb2dsZS5j
+b20+DQo+IC0tLQ0KPiBOb3RlOiBidWlsZC10ZXN0ZWQgb25seS4NCj4gLS0tDQo+ICBkcml2ZXJz
+L25ldC9ldGhlcm5ldC9hbWF6b24vZW5hL2VuYV9uZXRkZXYuYyB8IDQgKystLQ0KPiAgMSBmaWxl
+IGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9hbWF6b24vZW5hL2VuYV9uZXRkZXYuYw0KPiBiL2Ry
+aXZlcnMvbmV0L2V0aGVybmV0L2FtYXpvbi9lbmEvZW5hX25ldGRldi5jDQo+IGluZGV4IGY5NTVi
+ZGUxMGNmOS4uMzExOGE2MTdjOWI2IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL25ldC9ldGhlcm5l
+dC9hbWF6b24vZW5hL2VuYV9uZXRkZXYuYw0KPiArKysgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9h
+bWF6b24vZW5hL2VuYV9uZXRkZXYuYw0KPiBAQCAtMzI3Niw4ICszMjc2LDggQEAgc3RhdGljIHZv
+aWQgZW5hX2NvbmZpZ19ob3N0X2luZm8oc3RydWN0DQo+IGVuYV9jb21fZGV2ICplbmFfZGV2LCBz
+dHJ1Y3QgcGNpX2RldiAqcGQNCj4gICAgICAgICBzdHJzY3B5KGhvc3RfaW5mby0+a2VybmVsX3Zl
+cl9zdHIsIHV0c25hbWUoKS0+dmVyc2lvbiwNCj4gICAgICAgICAgICAgICAgIHNpemVvZihob3N0
+X2luZm8tPmtlcm5lbF92ZXJfc3RyKSAtIDEpOw0KPiAgICAgICAgIGhvc3RfaW5mby0+b3NfZGlz
+dCA9IDA7DQo+IC0gICAgICAgc3RybmNweShob3N0X2luZm8tPm9zX2Rpc3Rfc3RyLCB1dHNuYW1l
+KCktPnJlbGVhc2UsDQo+IC0gICAgICAgICAgICAgICBzaXplb2YoaG9zdF9pbmZvLT5vc19kaXN0
+X3N0cikgLSAxKTsNCj4gKyAgICAgICBzdHJzY3B5KGhvc3RfaW5mby0+b3NfZGlzdF9zdHIsIHV0
+c25hbWUoKS0+cmVsZWFzZSwNCj4gKyAgICAgICAgICAgICAgIHNpemVvZihob3N0X2luZm8tPm9z
+X2Rpc3Rfc3RyKSk7DQo+ICAgICAgICAgaG9zdF9pbmZvLT5kcml2ZXJfdmVyc2lvbiA9DQo+ICAg
+ICAgICAgICAgICAgICAoRFJWX01PRFVMRV9HRU5fTUFKT1IpIHwNCj4gICAgICAgICAgICAgICAg
+IChEUlZfTU9EVUxFX0dFTl9NSU5PUiA8PA0KPiBFTkFfQURNSU5fSE9TVF9JTkZPX01JTk9SX1NI
+SUZUKSB8DQo+IA0KPiAtLS0NCj4gYmFzZS1jb21taXQ6IGNiZjNhMmNiMTU2YTJjOTExZDhmMzhk
+ODI0NzgxNGI0YzA3ZjQ5YTINCj4gY2hhbmdlLWlkOiAyMDIzMTAwNS1zdHJuY3B5LWRyaXZlcnMt
+bmV0LWV0aGVybmV0LWFtYXpvbi1lbmEtZW5hX25ldGRldi1jLQ0KPiA2YzQ4MDQ0NjZhYTcNCj4g
+DQo+IEJlc3QgcmVnYXJkcywNCj4gLS0NCj4gSnVzdGluIFN0aXR0IDxqdXN0aW5zdGl0dEBnb29n
+bGUuY29tPg0KPiANCg0KVGhhbmtzIGZvciBzdWJtaXR0aW5nIHRoaXMgY2hhbmdlLg0KDQpUaGUg
+Y2hhbmdlIGxvb2tzIGdvb2QgYnV0IHRoZSBzZW50ZW5jZSAiTlVMLXBhZGRpbmcgaXMgbm90IG5l
+Y2Vzc2FyeSBhcw0KaG9zdF9pbmZvIGlzIGluaXRpYWxpemVkIHRvIGBlbmFfZGV2LT5ob3N0X2F0
+dHIuaG9zdF9pbmZvYCB3aGljaCBpcyB1bHRpbWF0ZWx5DQp6ZXJvLWluaXRpYWxpemVkIHZpYSBh
+bGxvY19ldGhlcmRldl9tcSgpLiIgaXMgaW5hY2N1cmF0ZS4gDQoNCmhvc3RfaW5mbyBhbGxvY2F0
+aW9uIGlzIGRvbmUgaW4gZW5hX2NvbV9hbGxvY2F0ZV9ob3N0X2luZm8oKSB2aWEgDQpkbWFfYWxs
+b2NfY29oZXJlbnQoKSBhbmQgaXMgbm90IHplcm8gaW5pdGlhbGl6ZWQgYnkgYWxsb2NfZXRoZXJk
+ZXZfbXEoKS4NCg0KSSBsb29rZWQgYXQgYm90aCB0aGUgZG9jdW1lbnRhdGlvbiBvZiBkbWFfYWxs
+b2NfY29oZXJlbnQoKSBpbiANCmh0dHBzOi8vd3d3Lmtlcm5lbC5vcmcvZG9jL0RvY3VtZW50YXRp
+b24vRE1BLUFQSS50eHQNCmFzIHdlbGwgYXMgdGhlIGNvZGUgaXRzZWxmLCBhbmQgKG1heWJlIEkn
+bSB3cm9uZyBidXQpIEkgZGlkbid0IHNlZSAxMDAlDQpndWFyYW50ZWVzIHRoZSB0aGF0IHRoZSBt
+ZW1vcnkgaXMgemVyby1pbml0aWFsaXplZC4NCg0KSG93ZXZlciB6ZXJvIGluaXRpYWxpemF0aW9u
+IG9mIHRoZSBkZXN0aW5hdGlvbiBkb2Vzbid0IG1hdHRlciBpbiB0aGlzIGNhc2UsDQpiZWNhdXNl
+IHN0cnNjcHkoKSBndWFyYW50ZWVzIGEgTlVMTCB0ZXJtaW5hdGlvbi4NCg0KU28gcGxlYXNlIGp1
+c3QgcmVtb3ZlIHRoaXMgc2VudGVuY2UgZnJvbSB0aGUgY29tbWl0IG1lc3NhZ2UuDQoNClRoYW5r
+cywNCkFydGh1ciBLaXlhbm92c2tpDQoNCg==
