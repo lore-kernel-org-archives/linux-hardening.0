@@ -1,93 +1,93 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A89463B2B9
-	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 20:51:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7749341764
+	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 21:05:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xG+CTsJT"
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACF509F
-	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 13:51:43 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-59c0dd156e5so21166757b3.3
-        for <linux-hardening@vger.kernel.org>; Thu, 05 Oct 2023 13:51:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3UHxsNuJ"
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2882B6
+	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 14:05:44 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d85fc108f0eso2062248276.2
+        for <linux-hardening@vger.kernel.org>; Thu, 05 Oct 2023 14:05:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696539103; x=1697143903; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1696539944; x=1697144744; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=pWpal7Doqq48f7+hvv3YlQfRBTUj+OxMigJ6y40qk1g=;
-        b=xG+CTsJTTp+oaimkbFjqus/BKGf8TqNesqXt/WXK02iGj+0jNuNqx68rDw+nVpaPS1
-         V9PZmIScV5m4mDEa72dLtZYhZsTC1wuSQIojR5uteUiZyR31B8okSDRgRY3cSarlM8I5
-         u+ef1NxW6CA1qId1ztismbL+bUHCuAuwaTB4ZLpzT0ntY0fcoG68PdkAAkeyim9hzC8m
-         /3gj4/jqGTgXepQLdC+pVYdVdRDphoBel7HxVciyCBKyXV6zsg1WwRoUWZiRA/b+fcvZ
-         tHM3uA9Oq5D9irU5YdzgE5Nj+lXXPvIG0OH32Zr98y5XyNjI2/RfJWYvYm8mdxkL8t/H
-         kRWw==
+        bh=H4y2YlrnXWnp/3hBKGWFmY8QqOEGdTjDuhv++ThsjEU=;
+        b=3UHxsNuJw13MYYcb1v/IzDb9O+Ehjey4iE5+8L7c4DKUlVB59vKzKp7yRpDq2MORDy
+         uhE9ga55yAyh0ZkC0+58TtAFMP94wBZd9phHO4SBc2KC3bYAncqR6aLIVwyKcrPxvKQv
+         UQtq5gYNQFTQKdzRmWEEDiNhFqb+YndaqyqZzk589ePyq570td+Ur8WNiOYvMHWgO+Qh
+         Pkb9DAAmCfJBB1WU7EsrJcmv3rMDJUp75MFmwXI/iNcNLdCji/gOyAgZkDdqw63uFqfb
+         p2odL43ZiZ19uHM23jeqMWL4aQZ4EPoKAu0S6xiUYgknczYDwVHp5cCiSz2LfxZyco/9
+         oXmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696539103; x=1697143903;
+        d=1e100.net; s=20230601; t=1696539944; x=1697144744;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=pWpal7Doqq48f7+hvv3YlQfRBTUj+OxMigJ6y40qk1g=;
-        b=lLBefv3q49ToU2JE2KgnWzZ2MBOxqtYONu+HPkEEt/8MUWwYCE/3NKlTukU9lLuQoy
-         IPkKxQB/W90e92S/YT8M+tl0ZjJeytM32NQ5DkXjPwCOGZ3JxdG+B9TT7JuFvB4ZStis
-         tOkjFE34py/M3n/OOOAMgO3Mso945Q07aZfgFtmOZhdT5KFYwR2DURiJsuoczVVJk6sV
-         wAVp4YJHcJopmcwnLHV9jqNvfl2E5eYr938dbvNnH0OuJu7jinrNgcfmt/vEBRGFFaSq
-         qnQIs5Maj81Xe0insRh0TFLQpd7EbzF2UyUwXwsTOtW4qAZG5U0UDdCR/7S0gWBsdsN5
-         1LtA==
-X-Gm-Message-State: AOJu0YyX2ex0VpiHc43MKzxuJFGxDEV/ChDInVvbxe7sPWlAfh+b7ZuL
-	N3PpdYBL2HGa08i35FxpFNMKFTCXJqHc0QR5Vg==
-X-Google-Smtp-Source: AGHT+IGqcipxr9mLYWAXnLc/UolSpoC3KLcNCHXG3TB8SdXjwnoEzD0TUipTTDv2sPCy+uHcy/NIrlZhpW1v7T7Rdg==
+        bh=H4y2YlrnXWnp/3hBKGWFmY8QqOEGdTjDuhv++ThsjEU=;
+        b=P2hSSCvHb141W6ghlMxqvQYyrEY4IHq5r3orRNexU7mS62fq/5hENqOf44iIowvJb9
+         Y0GAEayUP92BA1SH+gULttHMiQvAtA+UHLauyHXr2+wn5h4nqqRmDNYpA/BAqPUq8DBz
+         jTZ1p06cW2OaXdzbtYg9qIRY6sAn0zfXoUL4cfC0rZa4S+SFlqXK5YmVQP9XgxRTDJSL
+         kwMqDtVqGyavE6a/7suwOEfMf7xfAcHzQb8c8bQLdu+aO2qurCgal1ifJoLBHFAEpwVH
+         yzQpHYAa4O/BrJvmaSH1MnkEDqzUPXY0wxGj4DiRdly1GODqNEDZ+vsDyuTB7pcIXpLV
+         iMyw==
+X-Gm-Message-State: AOJu0YzybFJ5/aprg9Nz9dFDt78H9vrSEQRr4lOkGCDlJuZc9H3s5AmH
+	oEUObh8LJDVAElZw7QkkvELzm1I/QU34VFZcMA==
+X-Google-Smtp-Source: AGHT+IFYZDAsDI3aH1FkA57sI5MM9STwBtsstxHMNmmbHQo/N9JCli+azP76TBoo+x7ITXmPrGjh48fOOPj243Ue6Q==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a81:8d46:0:b0:59b:ec33:ec6d with SMTP
- id w6-20020a818d46000000b0059bec33ec6dmr120908ywj.5.1696539102785; Thu, 05
- Oct 2023 13:51:42 -0700 (PDT)
-Date: Thu, 05 Oct 2023 20:51:40 +0000
+ (user=justinstitt job=sendgmr) by 2002:a25:db48:0:b0:d7a:c85c:725b with SMTP
+ id g69-20020a25db48000000b00d7ac85c725bmr87457ybf.7.1696539943849; Thu, 05
+ Oct 2023 14:05:43 -0700 (PDT)
+Date: Thu, 05 Oct 2023 21:05:42 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIANshH2UC/x2NQQqDMBBFryKz7kBiqtBepZQSJ9M6CxOZBEkR7
- 97Y3Xtv8f8OmVU4w73bQXmTLCk2sZcOaPbxwyihOfSmd9aYAXPRSOsXg8rGmjFyQS4z6wmTJh8 oLTjRMrpaX3xWQuNvAwXn7HU00KZX5bfU/+3jeRw/mVzKc4YAAAA=
+X-B4-Tracking: v=1; b=H4sIACYlH2UC/x2NywrDIBAAfyXsuQsaqdj+SinFx9rsRcMqISXk3
+ 2t7m7nMHNBImBrcpwOENm5cyxB9mSAuvrwJOQ2HWc1GK3XF1qXE9YNJeCNpWKgj9YXkB0Fq9Ik wFI8h+xfXiBGty9rcrM3GORjhVSjz/p8+nuf5BXYfPFuEAAAA
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1696539101; l=2256;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1696539942; l=1996;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=HxayhA1aIuyooSvwu5FkzbNfRLctZ8S9IVA9YM7wlQ4=; b=cNbM0i4jK1A3lEG+pC81fjLHqpJikLXzKR/UUwfLOkhbplaGtwiOVGPOSKdIomtH14tQ9TAvl
- +Iyswe7yIH0DdajsI7UZ9M2Jp/MQSYuZlg9bAaeb5E2g3FXhQMaWt5V
+ bh=iWuTwxZczKzh+7gmgNXvK16vk7UgCuMWmTg1ny2oD8c=; b=YUlHgcN+oWStnkY0k8QsPE2sF9MJDlMlJwDVM6YDuXy2QvULO8Sa7bbF2I2FRmDvDk+53iYiN
+ PyeP9/j4AHXAubuga/ZsL0+ZE9XOJq358MDHfpYVgcH2yjIPsxeX8yO
 X-Mailer: b4 0.12.3
-Message-ID: <20231005-strncpy-drivers-net-ethernet-broadcom-bcm63xx_enet-c-v1-1-6823b3c3c443@google.com>
-Subject: [PATCH] bcm63xx_enet: replace deprecated strncpy with strscpy
+Message-ID: <20231005-strncpy-drivers-net-ethernet-brocade-bna-bfa_ioc-c-v1-1-8dfd30123afc@google.com>
+Subject: [PATCH] bna: replace deprecated strncpy with strscpy
 From: Justin Stitt <justinstitt@google.com>
-To: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+To: Rasesh Mody <rmody@marvell.com>, Sudarsana Kalluru <skalluru@marvell.com>, 
+	GR-Linux-NIC-Dev@marvell.com, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
 Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
 X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.6
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-strncpy() is deprecated for use on NUL-terminated destination strings
+`strncpy` is deprecated for use on NUL-terminated destination strings
 [1] and as such we should prefer more robust and less ambiguous string
 interfaces.
 
-A suitable replacement is strscpy() [2] due to the fact that it
-guarantees NUL-termination on the destination buffer without
-unnecessarily NUL-padding.
+bfa_ioc_get_adapter_manufacturer() simply copies a string literal into
+`manufacturer`.
 
-bcm_enet_get_drvinfo() already uses strscpy(), let's match it's
-implementation:
-|       static void bcm_enet_get_drvinfo(struct net_device *netdev,
-|       				 struct ethtool_drvinfo *drvinfo)
-|       {
-|       	strscpy(drvinfo->driver, bcm_enet_driver_name, sizeof(drvinfo->driver));
-|       	strscpy(drvinfo->bus_info, "bcm63xx", sizeof(drvinfo->bus_info));
-|       }
+NUL-padding is not needed because bfa_ioc_get_adapter_manufacturer()'s
+only caller passes `ad_attr` (which is from ioc_attr) which is then
+memset to 0.
+ bfa_nw_ioc_get_attr() ->
+   bfa_ioc_get_adapter_attr() ->
+     bfa_nw_ioc_get_attr() ->
+       memset((void *)ioc_attr, 0, sizeof(struct bfa_ioc_attr));
 
-Note that now bcm_enet_get_drvinfo() and bcm_enetsw_get_drvinfo() do the
-exact same thing.
+Considering the above, a suitable replacement is `strscpy` [2] due to
+the fact that it guarantees NUL-termination on the destination buffer
+without unnecessarily NUL-padding.
 
 Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
 Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
@@ -95,28 +95,28 @@ Link: https://github.com/KSPP/linux/issues/90
 Cc: linux-hardening@vger.kernel.org
 Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
- drivers/net/ethernet/broadcom/bcm63xx_enet.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Note: build-tested only.
+---
+ drivers/net/ethernet/brocade/bna/bfa_ioc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bcm63xx_enet.c b/drivers/net/ethernet/broadcom/bcm63xx_enet.c
-index a741070f1f9a..8b18493759bf 100644
---- a/drivers/net/ethernet/broadcom/bcm63xx_enet.c
-+++ b/drivers/net/ethernet/broadcom/bcm63xx_enet.c
-@@ -2531,8 +2531,8 @@ static int bcm_enetsw_get_sset_count(struct net_device *netdev,
- static void bcm_enetsw_get_drvinfo(struct net_device *netdev,
- 				   struct ethtool_drvinfo *drvinfo)
+diff --git a/drivers/net/ethernet/brocade/bna/bfa_ioc.c b/drivers/net/ethernet/brocade/bna/bfa_ioc.c
+index b07522ac3e74..497cb65f2d06 100644
+--- a/drivers/net/ethernet/brocade/bna/bfa_ioc.c
++++ b/drivers/net/ethernet/brocade/bna/bfa_ioc.c
+@@ -2839,7 +2839,7 @@ bfa_ioc_get_adapter_optrom_ver(struct bfa_ioc *ioc, char *optrom_ver)
+ static void
+ bfa_ioc_get_adapter_manufacturer(struct bfa_ioc *ioc, char *manufacturer)
  {
--	strncpy(drvinfo->driver, bcm_enet_driver_name, sizeof(drvinfo->driver));
--	strncpy(drvinfo->bus_info, "bcm63xx", sizeof(drvinfo->bus_info));
-+	strscpy(drvinfo->driver, bcm_enet_driver_name, sizeof(drvinfo->driver));
-+	strscpy(drvinfo->bus_info, "bcm63xx", sizeof(drvinfo->bus_info));
+-	strncpy(manufacturer, BFA_MFG_NAME, BFA_ADAPTER_MFG_NAME_LEN);
++	strscpy(manufacturer, BFA_MFG_NAME, sizeof(manufacturer));
  }
  
- static void bcm_enetsw_get_ethtool_stats(struct net_device *netdev,
+ static void
 
 ---
 base-commit: cbf3a2cb156a2c911d8f38d8247814b4c07f49a2
-change-id: 20231005-strncpy-drivers-net-ethernet-broadcom-bcm63xx_enet-c-0a95cd331460
+change-id: 20231005-strncpy-drivers-net-ethernet-brocade-bna-bfa_ioc-c-68f13966f388
 
 Best regards,
 --
