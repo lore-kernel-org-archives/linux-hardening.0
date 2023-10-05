@@ -1,114 +1,118 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6797FEA6
-	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 00:30:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDC5CEA2
+	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 00:56:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JEP1Q4OD"
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D840CE
-	for <linux-hardening@vger.kernel.org>; Wed,  4 Oct 2023 17:30:20 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-59b5a586da6so3908087b3.1
-        for <linux-hardening@vger.kernel.org>; Wed, 04 Oct 2023 17:30:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BaQ9d6uj"
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9253CE
+	for <linux-hardening@vger.kernel.org>; Wed,  4 Oct 2023 17:56:15 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d815354ea7fso586138276.1
+        for <linux-hardening@vger.kernel.org>; Wed, 04 Oct 2023 17:56:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696465819; x=1697070619; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1696467375; x=1697072175; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=z9CoIYBwy9paxLnmDstL0tKAJy9h7YqHeLlFxLDJHMU=;
-        b=JEP1Q4ODGE5fcLMCkUqZ0c1QuktvoQvuYVTsfhSiG4KidVawy7KKL3FptUsFCE77XV
-         kuNwTnsXqWoW4IxZzhw8DfIAUxRNU6XY4pzURg40OSBI2GSBXq/xVY1BieRJ2pMTC12h
-         MGZN4X6zTNgaq1NEpdrJzLhLe0iIQ/DD3hR0HJnCDm2l2rL0RdodaOWkBKlPcNMsrVzs
-         Fv8EoVVKKkeht2Ei+cmOUKLaq6GO0J1Rtg6nRYJRG42CjKp5kvlLQtSfdZ1WQJ2E0Zr1
-         B8XJxHCToyJ7wN6qNNs0eHNdC+al1kHx54iHfvtBCMSLdA5a71FhrD7JHTQTWYcJA9Of
-         rFzg==
+        bh=yS8Bb8q8kdoQqLbaTlLJ5dI+ywfic8t8uh1+wVPOGm4=;
+        b=BaQ9d6ujiNiMxT8SflsFkzt0tk622nWZWBfE2j3no5QrHCY4OZlo4JWJhObUBPbqP5
+         j0xhx8bBNpYlna0YTjgyk2zpqtqnAStGK3JdJpba95sUKzKkj6BT2mMYlhYIp9EoDxWY
+         rtAZg3CaGsv0W/tuNPohQ/q5wThF8YEpsgzr0qUveWyq3QYuIzqOOoKyrBDa84VQ4CX3
+         rqkw3u3QdqY0SF7lH+iIqQY11pw7janjRA9xvvrm3YEfUqO538kJK/gw9aoxZVhze92X
+         QZigAZ/H27Xv4aNEuGvbyedZwwRhFgu/aC9Xh3z6QocdJ3IoYk9Inn0fG1O1QN40JmQj
+         wkkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696465819; x=1697070619;
+        d=1e100.net; s=20230601; t=1696467375; x=1697072175;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=z9CoIYBwy9paxLnmDstL0tKAJy9h7YqHeLlFxLDJHMU=;
-        b=DXYsK3hMEUlUwXLcvTNs/dJW9Kwu3ixZTeq9Aeo9zE1waex8n+aCgjVgGj7FgE9btM
-         Y/AgQAaW+HSpc+0zusVgnepeLbeI2bDEt18BHvJxlJeNkgXxxGFqbXOuynJaAzTy7NbX
-         zl7xDcBWTX7j2eJvoWOZhii2vhDBxlcL5dnwiEBOERbWmnGaX5ZLnGDSxZRelFy3sBV4
-         hj14nyVgqAu4SqV+9ueAqOLSEKRalwwyNBtIz56sWHZuuhYuoYSkZaN6wYaRWHRvjMVD
-         inPyx/ozsuoGKtDFbrFli8f4wQ44AcAK0tXDT0JrlT2GNmvB+XNPI86FyCb9EaVXMD28
-         vmCQ==
-X-Gm-Message-State: AOJu0Ywwg2ASXKUbwKm6lMBkjJQ3pakpzOHjJcP0xbBin9zg5sUGJh3d
-	hmT5Zbl2l2mJ8Js15NI4ZKT7RLzUy01Xs6CwWw==
-X-Google-Smtp-Source: AGHT+IG0es9PxjtNd90XgRPnwu44HS8DYm3gD4DhHoBDUsXrvHL8ssHqt8naJhqssuQu0/Hywy4s6PDhIf5KwkbN6A==
+        bh=yS8Bb8q8kdoQqLbaTlLJ5dI+ywfic8t8uh1+wVPOGm4=;
+        b=UY4/NZu3xwX8ELmLF4d0xpjR9DOhYMj5F/7qeztPI5vlmhpq7J4RbeQXE7lBWbODLA
+         4SxKprZJGyvBkgKb0BfP58jnM94L70Y+y91bUOKe/DqWF95GTLTDN2iRgQOR8oiM4QT0
+         8NuHQpxnKtNgUXMCS3ki4MUPIH3q4dVx+rESvhy387ceSmayqhnU2Kfe2aby6+OPj97P
+         Za+25NU28Wm53YAsIUc+isNNKg42Ez+pgfMI2I+Lqa9sm5UyXb69GBg5Nrh+zRi0t5iQ
+         PeT0J949NaKG8qXZbMJu4gzby2Ua4o52EI+5V97BPovA09MMcl8Q2TTlFJjpaL5Yki+5
+         YIeQ==
+X-Gm-Message-State: AOJu0YwW7t6g5nxWGMZh+No/KmRW0IrY50VO1ZVp43jDWEtmgXtCSzw8
+	rvecNTl1JH7Yj2QsuSGEObBbIeJWuaEjybz78g==
+X-Google-Smtp-Source: AGHT+IEVa7B+vWdKYnaqa/ml6FmWGTTkWZOqn2AoIBcgUldlABHSkzBAkPS1IM01PDsKog9sABYRUJq5TjmKm/4TCA==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:690c:c04:b0:595:7304:68e5 with
- SMTP id cl4-20020a05690c0c0400b00595730468e5mr25561ywb.0.1696465819306; Wed,
- 04 Oct 2023 17:30:19 -0700 (PDT)
-Date: Thu, 05 Oct 2023 00:30:18 +0000
+ (user=justinstitt job=sendgmr) by 2002:a25:4d45:0:b0:c78:c530:6345 with SMTP
+ id a66-20020a254d45000000b00c78c5306345mr51482ybb.7.1696467375122; Wed, 04
+ Oct 2023 17:56:15 -0700 (PDT)
+Date: Thu, 05 Oct 2023 00:56:08 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAJkDHmUC/x3NwQrCMAyA4VcZORvoWjqqryIeSho1INlIxpiMv
- bvF43f5/wOcTdjhNhxgvInLrB3jZQB6V30xSuuGGGIaQ8joqyktX2wmG5uj8orNK36qXlNISLM xEk6pTCUXzhQj9Nhi/JT9P7o/zvMHaoGrR3gAAAA=
+X-B4-Tracking: v=1; b=H4sIAKcJHmUC/x2NwQrCMBBEf6Xs2YW0xij+ihRZktXuwW3ZhKCW/
+ ruph4F57zCzQmYTznDtVjCukmXWBv2hgziRPhklNYbBDcfeuRPmYhqXDyaTypZRuSCXiW0v9KL vrMhKe+5NJa4YMUR/cd6HQHSGNr0YP+T9v72N2/YDecqbyIYAAAA=
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1696465818; l=1658;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1696467374; l=1950;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=bsKNbLzu3Ry5CEVwYR5pkDz3ZbDhkIowy3jtYMWC4UU=; b=ibUfNayaIATafgTAMuJ6HX3fgX+SPnajRCu3PTyOpaKrLLvonFUzzZJj5z8G4VBo1QBRXRPfx
- GxtwDu8o5ulDTLISW/SBzvFSNNvL/dlNf+TQdK8bXC5sCzPDKsDoyae
+ bh=KCtAufgjQfpYF459amayClzlw1GlaQTMZbPkAkOzZV8=; b=kGMw+9Ze9IpgvGvYiqL18X42iKGg/7yLSWlDsNgalIPMRHTQZhWkM6xDbrRLpbd27XWyB08c0
+ UeYN1Xxszo2BuMDzYK5TY23IPaGRM1+AeM2bdSL6SLiQenwlAvlN5lF
 X-Mailer: b4 0.12.3
-Message-ID: <20231005-strncpy-drivers-net-dsa-lan9303-core-c-v1-1-5a66c538147e@google.com>
-Subject: [PATCH] net: dsa: lan9303: replace deprecated strncpy with memcpy
+Message-ID: <20231005-strncpy-drivers-net-ethernet-amazon-ena-ena_netdev-c-v1-1-ba4879974160@google.com>
+Subject: [PATCH] net: ena: replace deprecated strncpy with strscpy
 From: Justin Stitt <justinstitt@google.com>
-To: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, 
-	Vladimir Oltean <olteanv@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
+To: Shay Agroskin <shayagr@amazon.com>, Arthur Kiyanovski <akiyano@amazon.com>, 
+	David Arinzon <darinzon@amazon.com>, Noam Dagan <ndagan@amazon.com>, 
+	Saeed Bishara <saeedb@amazon.com>, "David S. Miller" <davem@davemloft.net>, 
 	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
 Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
 X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.6
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
 `strncpy` is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous
+[1] and as such we should prefer more robust and less ambiguous string
 interfaces.
 
-Let's opt for memcpy as we are copying strings into slices of length
-`ETH_GSTRING_LEN` within the `data` buffer. Other similar get_strings()
-implementations [2] [3] use memcpy().
+NUL-padding is not necessary as host_info is initialized to
+`ena_dev->host_attr.host_info` which is ultimately zero-initialized via
+alloc_etherdev_mq().
+
+A suitable replacement is `strscpy` [2] due to the fact that it
+guarantees NUL-termination on the destination buffer without
+unnecessarily NUL-padding.
 
 Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://elixir.bootlin.com/linux/v6.3/source/drivers/infiniband/ulp/opa_vnic/opa_vnic_ethtool.c#L167 [2]
-Link: https://elixir.bootlin.com/linux/v6.3/source/drivers/infiniband/ulp/ipoib/ipoib_ethtool.c#L137 [3]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
 Link: https://github.com/KSPP/linux/issues/90
 Cc: linux-hardening@vger.kernel.org
 Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
 Note: build-tested only.
 ---
- drivers/net/dsa/lan9303-core.c | 4 ++--
+ drivers/net/ethernet/amazon/ena/ena_netdev.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/dsa/lan9303-core.c b/drivers/net/dsa/lan9303-core.c
-index ee67adeb2cdb..665d69384b62 100644
---- a/drivers/net/dsa/lan9303-core.c
-+++ b/drivers/net/dsa/lan9303-core.c
-@@ -1013,8 +1013,8 @@ static void lan9303_get_strings(struct dsa_switch *ds, int port,
- 		return;
- 
- 	for (u = 0; u < ARRAY_SIZE(lan9303_mib); u++) {
--		strncpy(data + u * ETH_GSTRING_LEN, lan9303_mib[u].name,
--			ETH_GSTRING_LEN);
-+		memcpy(data + u * ETH_GSTRING_LEN, lan9303_mib[u].name,
-+		       ETH_GSTRING_LEN);
- 	}
- }
- 
+diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+index f955bde10cf9..3118a617c9b6 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
++++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+@@ -3276,8 +3276,8 @@ static void ena_config_host_info(struct ena_com_dev *ena_dev, struct pci_dev *pd
+ 	strscpy(host_info->kernel_ver_str, utsname()->version,
+ 		sizeof(host_info->kernel_ver_str) - 1);
+ 	host_info->os_dist = 0;
+-	strncpy(host_info->os_dist_str, utsname()->release,
+-		sizeof(host_info->os_dist_str) - 1);
++	strscpy(host_info->os_dist_str, utsname()->release,
++		sizeof(host_info->os_dist_str));
+ 	host_info->driver_version =
+ 		(DRV_MODULE_GEN_MAJOR) |
+ 		(DRV_MODULE_GEN_MINOR << ENA_ADMIN_HOST_INFO_MINOR_SHIFT) |
 
 ---
 base-commit: cbf3a2cb156a2c911d8f38d8247814b4c07f49a2
-change-id: 20231005-strncpy-drivers-net-dsa-lan9303-core-c-6386858e5c22
+change-id: 20231005-strncpy-drivers-net-ethernet-amazon-ena-ena_netdev-c-6c4804466aa7
 
 Best regards,
 --
