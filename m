@@ -1,115 +1,114 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B799F173
-	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 00:05:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6797FEA6
+	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 00:30:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K02LwLZc"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JEP1Q4OD"
 Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC876D7
-	for <linux-hardening@vger.kernel.org>; Wed,  4 Oct 2023 17:05:39 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-594e1154756so5005937b3.2
-        for <linux-hardening@vger.kernel.org>; Wed, 04 Oct 2023 17:05:39 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D840CE
+	for <linux-hardening@vger.kernel.org>; Wed,  4 Oct 2023 17:30:20 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-59b5a586da6so3908087b3.1
+        for <linux-hardening@vger.kernel.org>; Wed, 04 Oct 2023 17:30:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696464339; x=1697069139; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1696465819; x=1697070619; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=kDV9H2uqIJhr2H0MOz02/qFIRGm8ZuULD9yNay+8KCk=;
-        b=K02LwLZc/Smk0mQ3VBoQ78isLxECitC5Vg1GfKQCmUOBsHVwhyu91I3xP2xKgA8nWl
-         CnX1iJnJrwZ7KrrEGxqlP92wWGiAiPhfniOSbUneU2YXRa7KPaJDNUlnGFgI8PizHRAX
-         p2OgXY8px0NT3V1hLj/ABoeKF1tB5dis+bgxVw0InN4z9UjJuyMd+rPf4fn3sSE2IBBH
-         5mU2Q5tgptwk+smA7bxPCOQepKL0vUpiQ2eln94WaXK/SSf93WvWNlZGPK27FB8nNIUN
-         6flZmVKfvMnGXBJkJVyIGntT/Bsw1Op++gCOcTro0LRWAuJ7VHFrhuEITcQ1EXoHpR67
-         dZIQ==
+        bh=z9CoIYBwy9paxLnmDstL0tKAJy9h7YqHeLlFxLDJHMU=;
+        b=JEP1Q4ODGE5fcLMCkUqZ0c1QuktvoQvuYVTsfhSiG4KidVawy7KKL3FptUsFCE77XV
+         kuNwTnsXqWoW4IxZzhw8DfIAUxRNU6XY4pzURg40OSBI2GSBXq/xVY1BieRJ2pMTC12h
+         MGZN4X6zTNgaq1NEpdrJzLhLe0iIQ/DD3hR0HJnCDm2l2rL0RdodaOWkBKlPcNMsrVzs
+         Fv8EoVVKKkeht2Ei+cmOUKLaq6GO0J1Rtg6nRYJRG42CjKp5kvlLQtSfdZ1WQJ2E0Zr1
+         B8XJxHCToyJ7wN6qNNs0eHNdC+al1kHx54iHfvtBCMSLdA5a71FhrD7JHTQTWYcJA9Of
+         rFzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696464339; x=1697069139;
+        d=1e100.net; s=20230601; t=1696465819; x=1697070619;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=kDV9H2uqIJhr2H0MOz02/qFIRGm8ZuULD9yNay+8KCk=;
-        b=VJWjYFX/l9/Qbi36iR25IhjXQpq1ldZhYHp9I2aUx1C+lv3gkr5Vc/qvaDL+gCTs9z
-         ZSIL/hQDMY/JL4dIedkyfwy7aCJZBgoFn7LTkE/CZcgWatO6/p8GNsdjPsH2kBpZ0HL3
-         1UlWfnB31nA4sMS8snOgTkKqByP5q86ArJLiY8LfcOU3Kv0Kww3vfDemvYFD5gAr/0bd
-         YWBk/4G46Ul2tFWTRCbc7qlqhIqgdal7bwMKc3MgBeoa3/Sbj9yYT66a8Ef9bbrlzKZt
-         BVQopkvr8FWiGCzwUQJBvlmvsTSh+zoxeMCZn335HU+2q22zRBB/iWhoXrCZSB9wrHUJ
-         /oIg==
-X-Gm-Message-State: AOJu0YynJvlTd8/y2k13U9Qi/iDwIyxn+uvlar4Ofrt97zvJv8wYJx9m
-	C6foJzH3qGZZR15kHKg6Qn+KVy9nUoSRhVvOPQ==
-X-Google-Smtp-Source: AGHT+IGTiXwbNXO7t2kuJzI5viQlgrAq3e1RhUIhpSHCpv6OU7nkZ+Yipbuymx3X62nCckzHZkW3q0ytTz4SHMFoxg==
+        bh=z9CoIYBwy9paxLnmDstL0tKAJy9h7YqHeLlFxLDJHMU=;
+        b=DXYsK3hMEUlUwXLcvTNs/dJW9Kwu3ixZTeq9Aeo9zE1waex8n+aCgjVgGj7FgE9btM
+         Y/AgQAaW+HSpc+0zusVgnepeLbeI2bDEt18BHvJxlJeNkgXxxGFqbXOuynJaAzTy7NbX
+         zl7xDcBWTX7j2eJvoWOZhii2vhDBxlcL5dnwiEBOERbWmnGaX5ZLnGDSxZRelFy3sBV4
+         hj14nyVgqAu4SqV+9ueAqOLSEKRalwwyNBtIz56sWHZuuhYuoYSkZaN6wYaRWHRvjMVD
+         inPyx/ozsuoGKtDFbrFli8f4wQ44AcAK0tXDT0JrlT2GNmvB+XNPI86FyCb9EaVXMD28
+         vmCQ==
+X-Gm-Message-State: AOJu0Ywwg2ASXKUbwKm6lMBkjJQ3pakpzOHjJcP0xbBin9zg5sUGJh3d
+	hmT5Zbl2l2mJ8Js15NI4ZKT7RLzUy01Xs6CwWw==
+X-Google-Smtp-Source: AGHT+IG0es9PxjtNd90XgRPnwu44HS8DYm3gD4DhHoBDUsXrvHL8ssHqt8naJhqssuQu0/Hywy4s6PDhIf5KwkbN6A==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6902:85:b0:d86:5644:5d12 with SMTP
- id h5-20020a056902008500b00d8656445d12mr65620ybs.4.1696464338892; Wed, 04 Oct
- 2023 17:05:38 -0700 (PDT)
-Date: Thu, 05 Oct 2023 00:05:35 +0000
+ (user=justinstitt job=sendgmr) by 2002:a05:690c:c04:b0:595:7304:68e5 with
+ SMTP id cl4-20020a05690c0c0400b00595730468e5mr25561ywb.0.1696465819306; Wed,
+ 04 Oct 2023 17:30:19 -0700 (PDT)
+Date: Thu, 05 Oct 2023 00:30:18 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAM79HWUC/x2NUQrCMBAFr1L224U0qaBeRUTi9qmrEMNuKUrp3
- Q39HAZmFnKYwunULWSY1fVTGvS7juSZywOsY2OKIaY+hIF9siL1x6PpDHMumFhyYX/l5gNX5Pe 1irLwUSL2SPGGQ6IWrIa7frfZ+bKuf7wKd7p8AAAA
+X-B4-Tracking: v=1; b=H4sIAJkDHmUC/x3NwQrCMAyA4VcZORvoWjqqryIeSho1INlIxpiMv
+ bvF43f5/wOcTdjhNhxgvInLrB3jZQB6V30xSuuGGGIaQ8joqyktX2wmG5uj8orNK36qXlNISLM xEk6pTCUXzhQj9Nhi/JT9P7o/zvMHaoGrR3gAAAA=
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1696464338; l=1704;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1696465818; l=1658;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=apMk3PAp7wXCg1G7f65LzqlG2jyMKCWZrLKd+QMkLV0=; b=KC7laJ0xXFcTNOKm5F+aafeyNRacesWewOUckhjMrjqfd5s8iINWyi0XoECH8dh8asYPWgvfu
- BkhfjUaE7GHDyMxgXBmMJY/o+OV6NUTP4UvGyJ2uJ8NkWTata7w8+5A
+ bh=bsKNbLzu3Ry5CEVwYR5pkDz3ZbDhkIowy3jtYMWC4UU=; b=ibUfNayaIATafgTAMuJ6HX3fgX+SPnajRCu3PTyOpaKrLLvonFUzzZJj5z8G4VBo1QBRXRPfx
+ GxtwDu8o5ulDTLISW/SBzvFSNNvL/dlNf+TQdK8bXC5sCzPDKsDoyae
 X-Mailer: b4 0.12.3
-Message-ID: <20231005-strncpy-drivers-net-can-sja1000-peak_pci-c-v1-1-c36e1702cd56@google.com>
-Subject: [PATCH] can: peak_pci: replace deprecated strncpy with strscpy
+Message-ID: <20231005-strncpy-drivers-net-dsa-lan9303-core-c-v1-1-5a66c538147e@google.com>
+Subject: [PATCH] net: dsa: lan9303: replace deprecated strncpy with memcpy
 From: Justin Stitt <justinstitt@google.com>
-To: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Justin Stitt <justinstitt@google.com>
+To: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, 
+	Vladimir Oltean <olteanv@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
 X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.6
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
 `strncpy` is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous string
+[1] and as such we should prefer more robust and less ambiguous
 interfaces.
 
-NUL-padding is not required since card is already zero-initialized:
-|       card = kzalloc(sizeof(*card), GFP_KERNEL);
-
-A suitable replacement is `strscpy` [2] due to the fact that it
-guarantees NUL-termination on the destination buffer without
-unnecessarily NUL-padding.
+Let's opt for memcpy as we are copying strings into slices of length
+`ETH_GSTRING_LEN` within the `data` buffer. Other similar get_strings()
+implementations [2] [3] use memcpy().
 
 Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+Link: https://elixir.bootlin.com/linux/v6.3/source/drivers/infiniband/ulp/opa_vnic/opa_vnic_ethtool.c#L167 [2]
+Link: https://elixir.bootlin.com/linux/v6.3/source/drivers/infiniband/ulp/ipoib/ipoib_ethtool.c#L137 [3]
 Link: https://github.com/KSPP/linux/issues/90
 Cc: linux-hardening@vger.kernel.org
 Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
 Note: build-tested only.
 ---
- drivers/net/can/sja1000/peak_pci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/dsa/lan9303-core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/can/sja1000/peak_pci.c b/drivers/net/can/sja1000/peak_pci.c
-index 84f34020aafb..da396d641e24 100644
---- a/drivers/net/can/sja1000/peak_pci.c
-+++ b/drivers/net/can/sja1000/peak_pci.c
-@@ -462,7 +462,7 @@ static int peak_pciec_probe(struct pci_dev *pdev, struct net_device *dev)
- 		card->led_chip.owner = THIS_MODULE;
- 		card->led_chip.dev.parent = &pdev->dev;
- 		card->led_chip.algo_data = &card->i2c_bit;
--		strncpy(card->led_chip.name, "peak_i2c",
-+		strscpy(card->led_chip.name, "peak_i2c",
- 			sizeof(card->led_chip.name));
+diff --git a/drivers/net/dsa/lan9303-core.c b/drivers/net/dsa/lan9303-core.c
+index ee67adeb2cdb..665d69384b62 100644
+--- a/drivers/net/dsa/lan9303-core.c
++++ b/drivers/net/dsa/lan9303-core.c
+@@ -1013,8 +1013,8 @@ static void lan9303_get_strings(struct dsa_switch *ds, int port,
+ 		return;
  
- 		card->i2c_bit = peak_pciec_i2c_bit_ops;
+ 	for (u = 0; u < ARRAY_SIZE(lan9303_mib); u++) {
+-		strncpy(data + u * ETH_GSTRING_LEN, lan9303_mib[u].name,
+-			ETH_GSTRING_LEN);
++		memcpy(data + u * ETH_GSTRING_LEN, lan9303_mib[u].name,
++		       ETH_GSTRING_LEN);
+ 	}
+ }
+ 
 
 ---
 base-commit: cbf3a2cb156a2c911d8f38d8247814b4c07f49a2
-change-id: 20231004-strncpy-drivers-net-can-sja1000-peak_pci-c-9c2e5e32be83
+change-id: 20231005-strncpy-drivers-net-dsa-lan9303-core-c-6386858e5c22
 
 Best regards,
 --
