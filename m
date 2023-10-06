@@ -1,25 +1,25 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1222F15492;
-	Fri,  6 Oct 2023 10:40:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC2A0125B7;
+	Fri,  6 Oct 2023 10:50:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MV/Kwoml"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8ECCDC43391;
-	Fri,  6 Oct 2023 10:40:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ALoMSHL/"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7CF64C43397;
+	Fri,  6 Oct 2023 10:50:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696588824;
-	bh=KzIZOnElrqYjlyNCRhXZ/6dGkAdW/0c9GqOyBEpsNSY=;
+	s=k20201202; t=1696589428;
+	bh=EaLFpGzb50pV6X09gUMdvVo2luHhSkmKNOAfJKlqomw=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=MV/KwomlYP3ethv7qRyi1HhKSpMRJQaqjQIimlbvulYa2t67ba9M1V8xuxMDFEQK+
-	 EUGMCd3/3Crxija3JP/m6nR38DDF4vlcJQPIGm+8wuZb6SsbERYTKjo/DLa0brCfEa
-	 xVPPzkd51dBirKbzrjrLZw66w2FQSrDUCwi3k7WOqZh+R5aLcvjI8Tbd9IZlU6MTTK
-	 vpf3a4Rnasccgdlhb9HqiJcNArs10qxyCSnD/ZJqcct0BvAmkiCnrHzjvES95Do088
-	 5NrycW+SLm5h6E4eI9F9Ouj7EnYkDG+BS1yxkf/S4ixWFRmVCNxAOtZILbJH7/2RfF
-	 2Dct7quwMbVSg==
+	b=ALoMSHL/a++y4z8Z5V8r/KcIHKCpDc5kvPUbVLqEB+zonGPgYdMdPp7TK7d+nIMq6
+	 jXGTXc+Apg8dqSeDjXi0EWmpF2OV39Jg9WpFPDpAIl2AVqj6o6LQzigVb9eqTeWEW3
+	 FLG9PWCB+8YKK/bPiUPziYpiIEatH+J8uM1qIcGhl8cN+OvKtXmvC7QphYopzr5PmX
+	 YYe3LpV6d+/Ams5yadZ8rU7yYLjRFUecJWB/5Wo+l/6wc8DbT4HyN7u/RWzklyxdwZ
+	 2vQxkB9cytycPz0DQICUTG7glZiJg95Ui5+qdSzjci75G3dsWxBn9gLKgW901ZbIlw
+	 OlyIoiASrjuJg==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 69844C595CB;
-	Fri,  6 Oct 2023 10:40:24 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 5C2D3E22AE3;
+	Fri,  6 Oct 2023 10:50:28 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -28,40 +28,38 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] flow_offload: Annotate struct flow_action_entry with
- __counted_by
+Subject: Re: [PATCH v2] net: sched: cls_u32: Fix allocation size in u32_init()
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <169658882442.10984.13385053977600897940.git-patchwork-notify@kernel.org>
-Date: Fri, 06 Oct 2023 10:40:24 +0000
-References: <20231003231833.work.027-kees@kernel.org>
-In-Reply-To: <20231003231833.work.027-kees@kernel.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, netdev@vger.kernel.org, gustavoars@kernel.org,
- nathan@kernel.org, ndesaulniers@google.com, trix@redhat.com,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- llvm@lists.linux.dev
+ <169658942837.16254.5390070465876130493.git-patchwork-notify@kernel.org>
+Date: Fri, 06 Oct 2023 10:50:28 +0000
+References: <ZR1maZoAh2W/0Vw6@work>
+In-Reply-To: <ZR1maZoAh2W/0Vw6@work>
+To: Gustavo A. R. Silva <gustavoars@kernel.org>
+Cc: jhs@mojatatu.com, xiyou.wangcong@gmail.com, jiri@resnulli.us,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, keescook@chromium.org
 
 Hello:
 
-This patch was applied to netdev/net-next.git (main)
+This patch was applied to netdev/net.git (main)
 by David S. Miller <davem@davemloft.net>:
 
-On Tue,  3 Oct 2023 16:18:33 -0700 you wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
-> array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
+On Wed, 4 Oct 2023 15:19:37 +0200 you wrote:
+> commit d61491a51f7e ("net/sched: cls_u32: Replace one-element array
+> with flexible-array member") incorrecly replaced an instance of
+> `sizeof(*tp_c)` with `struct_size(tp_c, hlist->ht, 1)`. This results
+> in a an over-allocation of 8 bytes.
 > 
-> As found with Coccinelle[1], add __counted_by for struct flow_action_entry.
+> This change is wrong because `hlist` in `struct tc_u_common` is a
+> pointer:
 > 
 > [...]
 
 Here is the summary with links:
-  - flow_offload: Annotate struct flow_action_entry with __counted_by
-    https://git.kernel.org/netdev/net-next/c/99474727d5d5
+  - [v2] net: sched: cls_u32: Fix allocation size in u32_init()
+    https://git.kernel.org/netdev/net/c/c4d49196ceec
 
 You are awesome, thank you!
 -- 
