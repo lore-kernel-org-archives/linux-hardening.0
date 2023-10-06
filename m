@@ -1,143 +1,71 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3127D42C1F
-	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 23:22:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63C515AD;
+	Fri,  6 Oct 2023 01:40:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LVj33L2U"
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BE73D4C
-	for <linux-hardening@vger.kernel.org>; Thu,  5 Oct 2023 16:22:13 -0700 (PDT)
-Received: by mail-pg1-x536.google.com with SMTP id 41be03b00d2f7-51b4ef5378bso1188090a12.1
-        for <linux-hardening@vger.kernel.org>; Thu, 05 Oct 2023 16:22:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1696548132; x=1697152932; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6bji6Y/iqc3Ls4HMnb/SvLNQn11BkVMYtm7umOlKP+Y=;
-        b=LVj33L2UFWQMakAG3Bh/RooDyc4ptKeAgr8LVX6xm06gxXWhqKvr27XMxlnkff1j25
-         y0zatUiKeEdOeq0EHCNmlEvd+yHB2hv2JBbBKaZFlM2Hx7EHw8pwC7oyySvXHdwYlc2d
-         gD8GmwG2DBQlZXG7nh+3cGTzk1CZpZbtj0JWw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696548132; x=1697152932;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6bji6Y/iqc3Ls4HMnb/SvLNQn11BkVMYtm7umOlKP+Y=;
-        b=nf+YCrF7W+0pql9xBqBNrSEfqX/Nl6DnwIzE4sgj0PVFmG8lxOoHn3EVp29kKgd1R3
-         /C9GqsVy0pchPwVk/phrJTAk5YmyQy+Gp0cBLmY8vWg2fEDbJguT6YUQfjqF93s1Wf92
-         EfOtGb+eIr46AXxU27ukVkOSuFqVCABVIqOcUodrrw7QaQf/Fvdn/qR2W3DMxiJ8T/AM
-         0w1rcwEKN0l7JpJStBtA6Jsmd+v3uy+xjXAI5fR/0z1bpH9W6jOUrtmUSipm5xQQdCks
-         s3ccU6iAoIeTen0FfyWLbx0Z1wJrTfDqsaNNohVU7E/WPnwqP3+OZHbd7hyZXyUHWJyv
-         Gpiw==
-X-Gm-Message-State: AOJu0YxKLnTYQ5QI/EhLqRXNAgG6BNYl2PqI1hXOnRuAj/0VTZ8MsFYX
-	QkUtVfbNeVt2dx9JF8Q4ZQwsJA==
-X-Google-Smtp-Source: AGHT+IHcVAOVq3Ibd4ay7/n9G/MxAAd8KXHRxyv+DWM76fM8x8ZKzUr/Kz0H3QBJYudJsStbU5RLpQ==
-X-Received: by 2002:a05:6a20:1596:b0:137:74f8:62ee with SMTP id h22-20020a056a20159600b0013774f862eemr7879316pzj.18.1696548132606;
-        Thu, 05 Oct 2023 16:22:12 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id m7-20020aa78a07000000b0064fd4a6b306sm129832pfa.76.2023.10.05.16.22.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Oct 2023 16:22:12 -0700 (PDT)
-Date: Thu, 5 Oct 2023 16:22:10 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Derek Chickles <dchickles@marvell.com>,
-	Satanand Burla <sburla@marvell.com>,
-	Felix Manlunas <fmanlunas@marvell.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] cavium/liquidio: replace deprecated strncpy with strscpy
-Message-ID: <202310051621.3893B1EA4@keescook>
-References: <20231005-strncpy-drivers-net-ethernet-cavium-liquidio-octeon_device-c-v1-1-9a207cef9438@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A4gy7FOO"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 369FCC433D9;
+	Fri,  6 Oct 2023 01:40:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1696556426;
+	bh=Ybo4PA+YOfwHZpwG7F/ih3tq0pio/1SFsEdxpMf6r90=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=A4gy7FOOEFBLp+72P2HX9SBrrMGxjF3zHnLKAk/YUwO1+AZVdxXjIKo/XZqzDk0kF
+	 jNWAkSrVA/mA1dhI5kpJpQ52pgSvCdw0cGhXTJ4fA13UpAz2tyyyvGAWCX+ycoGO3l
+	 0YRA9XVKq7jnsxFXf2LBx9fvOdGwOyzPdCb6xwg67ajYR39LTU5H6+gg6g/tBFIkCK
+	 txD7meyQqCC0PqRd0rtu0xy+KhP+TIZ9hf+eJNuq7Pw5oJoD/Y3kg1QMt7CqQnxXzW
+	 AFIyXsU7C5Udh8UaRanl7M6dHjglHMDMeVEZTQvvFxATkSepM69JYb7VfgvFvlXskc
+	 iah+SLQCq89lg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 1A346E11F52;
+	Fri,  6 Oct 2023 01:40:26 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231005-strncpy-drivers-net-ethernet-cavium-liquidio-octeon_device-c-v1-1-9a207cef9438@google.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] nfp: Annotate struct nfp_reprs with __counted_by
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <169655642610.20160.13967622151608370397.git-patchwork-notify@kernel.org>
+Date: Fri, 06 Oct 2023 01:40:26 +0000
+References: <20231003231843.work.811-kees@kernel.org>
+In-Reply-To: <20231003231843.work.811-kees@kernel.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: horms@kernel.org, simon.horman@corigine.com, kuba@kernel.org,
+ davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+ oss-drivers@corigine.com, netdev@vger.kernel.org, louis.peens@corigine.com,
+ gustavoars@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
+ trix@redhat.com, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, llvm@lists.linux.dev
 
-On Thu, Oct 05, 2023 at 10:52:34PM +0000, Justin Stitt wrote:
-> `strncpy` is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
+Hello:
+
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Tue,  3 Oct 2023 16:18:43 -0700 you wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
+> array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
 > 
-> We expect `app_name` to be NUL-terminated:
-> 	dev_info(&oct->pci_dev->dev,
-> 		 "Running %s (%llu Hz)\n",
-> 		 app_name, CVM_CAST64(cs->corefreq));
-> ... and it seems NUL-padding is not required, let's opt for strscpy().
+> As found with Coccinelle[1], add __counted_by for struct nfp_reprs.
 > 
-> For `oct->boardinfo.name/serial_number` let's opt for strscpy() as well
-> since it is expected to be NUL-terminated and does not require
-> NUL-padding as `oct` is zero-initialized in octeon_device.c +707:
-> |       buf = vzalloc(size);
-> |       if (!buf)
-> |       	return NULL;
-> |
-> |       oct = (struct octeon_device *)buf;
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
-> Note: build-tested only.
-> ---
->  drivers/net/ethernet/cavium/liquidio/octeon_device.c | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/cavium/liquidio/octeon_device.c b/drivers/net/ethernet/cavium/liquidio/octeon_device.c
-> index 364f4f912dc2..6b6cb73482d7 100644
-> --- a/drivers/net/ethernet/cavium/liquidio/octeon_device.c
-> +++ b/drivers/net/ethernet/cavium/liquidio/octeon_device.c
-> @@ -1217,10 +1217,10 @@ int octeon_core_drv_init(struct octeon_recv_info *recv_info, void *buf)
->  		goto core_drv_init_err;
->  	}
->  
-> -	strncpy(app_name,
-> +	strscpy(app_name,
->  		get_oct_app_string(
->  		(u32)recv_pkt->rh.r_core_drv_init.app_mode),
-> -		sizeof(app_name) - 1);
-> +		sizeof(app_name));
+> [...]
 
-Direct replacement, good.
+Here is the summary with links:
+  - nfp: Annotate struct nfp_reprs with __counted_by
+    https://git.kernel.org/netdev/net-next/c/4514aa9f56fd
 
->  	oct->app_mode = (u32)recv_pkt->rh.r_core_drv_init.app_mode;
->  	if (recv_pkt->rh.r_core_drv_init.app_mode == CVM_DRV_NIC_APP) {
->  		oct->fw_info.max_nic_ports =
-> @@ -1257,9 +1257,10 @@ int octeon_core_drv_init(struct octeon_recv_info *recv_info, void *buf)
->  	memcpy(cs, get_rbd(
->  	       recv_pkt->buffer_ptr[0]) + OCT_DROQ_INFO_SIZE, sizeof(*cs));
->  
-> -	strncpy(oct->boardinfo.name, cs->boardname, OCT_BOARD_NAME);
-> -	strncpy(oct->boardinfo.serial_number, cs->board_serial_number,
-> -		OCT_SERIAL_LEN);
-> +	strscpy(oct->boardinfo.name, cs->boardname,
-> +		    sizeof(oct->boardinfo.name));
-> +	strscpy(oct->boardinfo.serial_number, cs->board_serial_number,
-> +		    sizeof(oct->boardinfo.serial_number));
-
-struct octeon_board_info {
-        char name[OCT_BOARD_NAME];
-        char serial_number[OCT_SERIAL_LEN];
-
-Good, sizeof()s match.
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
+You are awesome, thank you!
 -- 
-Kees Cook
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
