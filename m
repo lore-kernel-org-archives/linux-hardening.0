@@ -1,71 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B3A31855;
-	Fri,  6 Oct 2023 01:40:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vag4T/za"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4F3F6C433AD;
-	Fri,  6 Oct 2023 01:40:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696556426;
-	bh=GUAGPA2TNMtqx/k5hqRWI0g69x3ow7E+AEcpieFF9Ns=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Vag4T/zamUJR4smsB80cnOswuxlstYz5FUWud/I1xaGmMV6FKlmymerOiYOHrb34T
-	 flFH/gCFphNdKuMCsOFJeXfA06+Xvng3OYMLEvOZvoo7pNE2jbIYZCBN1y+M6Fm2Ef
-	 3TzfesztHm3YD+MpXW4KQPeLTGA5WUpUJe9fsrYcmCTIgsWjWNQY2er+Z5daugBylH
-	 iJXkx8n2w/MgX0h7mnjorTxq/0PQoXaWdqfxxRin8r7ywQ9qBQ0Rr2kOiVUTP9Z81R
-	 VNM7GUcPKlBxpyF4GMcC1T44bGAkKHU755jNMlsXgRDlIGUYV8p14hPmrrSxHJbTbg
-	 Z9hYi21mcDcBg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 31728E11F54;
-	Fri,  6 Oct 2023 01:40:26 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A83EA1;
+	Fri,  6 Oct 2023 05:47:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from a.mx.secunet.com (a.mx.secunet.com [62.96.220.36])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 940D8B6;
+	Thu,  5 Oct 2023 22:47:33 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+	by a.mx.secunet.com (Postfix) with ESMTP id 41DD92087D;
+	Fri,  6 Oct 2023 07:47:31 +0200 (CEST)
+X-Virus-Scanned: by secunet
+Received: from a.mx.secunet.com ([127.0.0.1])
+	by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id pHY9T4XaCd70; Fri,  6 Oct 2023 07:47:30 +0200 (CEST)
+Received: from mailout1.secunet.com (mailout1.secunet.com [62.96.220.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by a.mx.secunet.com (Postfix) with ESMTPS id 01E5D207BB;
+	Fri,  6 Oct 2023 07:47:30 +0200 (CEST)
+Received: from cas-essen-01.secunet.de (unknown [10.53.40.201])
+	by mailout1.secunet.com (Postfix) with ESMTP id E937280004A;
+	Fri,  6 Oct 2023 07:47:29 +0200 (CEST)
+Received: from mbx-essen-02.secunet.de (10.53.40.198) by
+ cas-essen-01.secunet.de (10.53.40.201) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32; Fri, 6 Oct 2023 07:47:29 +0200
+Received: from gauss2.secunet.de (10.182.7.193) by mbx-essen-02.secunet.de
+ (10.53.40.198) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.32; Fri, 6 Oct
+ 2023 07:47:29 +0200
+Received: by gauss2.secunet.de (Postfix, from userid 1000)
+	id 29F9B3182C7D; Fri,  6 Oct 2023 07:47:29 +0200 (CEST)
+Date: Fri, 6 Oct 2023 07:47:29 +0200
+From: Steffen Klassert <steffen.klassert@secunet.com>
+To: Kees Cook <keescook@chromium.org>
+CC: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller"
+	<davem@davemloft.net>, <netdev@vger.kernel.org>, "Gustavo A. R. Silva"
+	<gustavoars@kernel.org>, Nathan Chancellor <nathan@kernel.org>, "Nick
+ Desaulniers" <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
+	<linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+	<llvm@lists.linux.dev>
+Subject: Re: [PATCH] xfrm: Annotate struct xfrm_sec_ctx with __counted_by
+Message-ID: <ZR+fcY+W5CBODmfX@gauss3.secunet.de>
+References: <20231003231828.work.527-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] netem: Annotate struct disttable with __counted_by
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <169655642619.20160.13590972818824999769.git-patchwork-notify@kernel.org>
-Date: Fri, 06 Oct 2023 01:40:26 +0000
-References: <20231003231823.work.684-kees@kernel.org>
-In-Reply-To: <20231003231823.work.684-kees@kernel.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: stephen@networkplumber.org, jhs@mojatatu.com, xiyou.wangcong@gmail.com,
- jiri@resnulli.us, davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, netdev@vger.kernel.org, gustavoars@kernel.org,
- nathan@kernel.org, ndesaulniers@google.com, trix@redhat.com,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- llvm@lists.linux.dev
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20231003231828.work.527-kees@kernel.org>
+X-ClientProxiedBy: cas-essen-02.secunet.de (10.53.40.202) To
+ mbx-essen-02.secunet.de (10.53.40.198)
+X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-Hello:
-
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Tue,  3 Oct 2023 16:18:23 -0700 you wrote:
+On Tue, Oct 03, 2023 at 04:18:28PM -0700, Kees Cook wrote:
 > Prepare for the coming implementation by GCC and Clang of the __counted_by
 > attribute. Flexible array members annotated with __counted_by can have
 > their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
 > array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
 > 
-> As found with Coccinelle[1], add __counted_by for struct disttable.
+> As found with Coccinelle[1], add __counted_by for struct xfrm_sec_ctx.
 > 
-> [...]
+> Cc: Steffen Klassert <steffen.klassert@secunet.com>
+> Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: netdev@vger.kernel.org
+> Link: https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci [1]
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Here is the summary with links:
-  - netem: Annotate struct disttable with __counted_by
-    https://git.kernel.org/netdev/net-next/c/0fef0907d6fa
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Applied to ipsec-next, thanks!
