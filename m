@@ -1,25 +1,25 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47AAE14266;
-	Fri,  6 Oct 2023 09:50:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 646C6125B3;
+	Fri,  6 Oct 2023 10:00:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rN2JonUT"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C7903C433CB;
-	Fri,  6 Oct 2023 09:50:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BRhmwgmY"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BE053C433C9;
+	Fri,  6 Oct 2023 10:00:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696585828;
-	bh=a2ENf7MUDBFrK1E4vnGaCFh7KLJbS+N/a85HAgbx1j0=;
+	s=k20201202; t=1696586426;
+	bh=Lv3Klna2FTPeB1l0WLzXoU1kCYsAsFAU4Irfc+zJ3yc=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=rN2JonUTGn3aA/Tlln/U2jm/BQlVEjkuXw5TipzdjgF0zdbl69HeRxjaPkQYd7lTi
-	 j+cg+IRtCLyYlSR1D4YqqbL/ASRjWZVRK32oeVnFgdT94LAMii8q9otDkEmCEVwr/t
-	 ZvRgP4aNuNhYPYjnGV3JGyWAXThOZ0znK2XOuFsNfovIW4cwlJ9tDGRi8aKAcI2H+A
-	 JE9xRwr0gUAq3lKmaxGH0REgkY0GRL0ujSaHiTwWaWTPztZ6sdAc12New5jYi32v8a
-	 QOPu/4Wx6ehvbWnURVmjsrMsVnkZaRH8POaA9dxDYf2V/nHvVRk1cDOkdz++Jz39yY
-	 tHmhX1Pzq6mBA==
+	b=BRhmwgmYih5xopqLETDSS3Keu9xlfYM+GQ6LakR7JP8Pf6pSbjZ+i+Ewazp6IEsDp
+	 rtOI6u8U1efgdBJ6AsiaqtdIZwwTWqP8lMId4oWHGLLL9AJ8O6W49/SfxAMYJZmetI
+	 Jf27Fl43QL7+q0lHyaRmzvdq+kkFOX4MtjpqoYNGd1/ba9wVJjSVcWXuL60G6v9bWJ
+	 9PW19QMJ192/xt/a10jgkyQuZnJqzOJvHVdEMfmELL8MSs6qZgTKS8zkq6208sn+tk
+	 A6jEfMSqywh3dMUMSE5gXFra5z5fnIhB/lHMHTAt6r8IJ3WVxYQp7dgzrZfKpCf0PP
+	 9uFsaIhg7XQ3Q==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A4A49E22AE4;
-	Fri,  6 Oct 2023 09:50:28 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9EBBFC595CB;
+	Fri,  6 Oct 2023 10:00:26 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -28,40 +28,39 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] nexthop: Annotate struct nh_notifier_grp_info with
- __counted_by
+Subject: Re: [PATCH] nexthop: Annotate struct nh_group with __counted_by
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <169658582866.14501.11680494229277915986.git-patchwork-notify@kernel.org>
-Date: Fri, 06 Oct 2023 09:50:28 +0000
-References: <20231003232146.work.248-kees@kernel.org>
-In-Reply-To: <20231003232146.work.248-kees@kernel.org>
+ <169658642664.19666.16771125566763338647.git-patchwork-notify@kernel.org>
+Date: Fri, 06 Oct 2023 10:00:26 +0000
+References: <20231004014445.work.587-kees@kernel.org>
+In-Reply-To: <20231004014445.work.587-kees@kernel.org>
 To: Kees Cook <keescook@chromium.org>
 Cc: dsahern@kernel.org, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, nathan@kernel.org,
- ndesaulniers@google.com, trix@redhat.com, netdev@vger.kernel.org,
- llvm@lists.linux.dev, gustavoars@kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
+ kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+ gustavoars@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
+ trix@redhat.com, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, llvm@lists.linux.dev
 
 Hello:
 
 This patch was applied to netdev/net-next.git (main)
 by David S. Miller <davem@davemloft.net>:
 
-On Tue,  3 Oct 2023 16:21:47 -0700 you wrote:
+On Tue,  3 Oct 2023 18:44:49 -0700 you wrote:
 > Prepare for the coming implementation by GCC and Clang of the __counted_by
 > attribute. Flexible array members annotated with __counted_by can have
 > their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
 > array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
 > 
-> As found with Coccinelle[1], add __counted_by for struct nh_notifier_grp_info.
+> As found with Coccinelle[1], add __counted_by for struct nh_group.
 > 
 > [...]
 
 Here is the summary with links:
-  - nexthop: Annotate struct nh_notifier_grp_info with __counted_by
-    https://git.kernel.org/netdev/net-next/c/cf9ecad97725
+  - nexthop: Annotate struct nh_group with __counted_by
+    https://git.kernel.org/netdev/net-next/c/2a92fccdaca8
 
 You are awesome, thank you!
 -- 
