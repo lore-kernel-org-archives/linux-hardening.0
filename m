@@ -1,66 +1,69 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 653E028DAF
-	for <linux-hardening@vger.kernel.org>; Fri,  6 Oct 2023 20:24:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2707F44460
+	for <linux-hardening@vger.kernel.org>; Fri,  6 Oct 2023 20:26:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iQRTcKN0"
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCE17BD
-	for <linux-hardening@vger.kernel.org>; Fri,  6 Oct 2023 13:23:59 -0700 (PDT)
-Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1c5bf7871dcso21387295ad.1
-        for <linux-hardening@vger.kernel.org>; Fri, 06 Oct 2023 13:23:59 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gD3kK/oS"
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E133BE
+	for <linux-hardening@vger.kernel.org>; Fri,  6 Oct 2023 13:26:57 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-690bd8f89baso2107640b3a.2
+        for <linux-hardening@vger.kernel.org>; Fri, 06 Oct 2023 13:26:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1696623839; x=1697228639; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yeQqUbIodZOEmRnT0u+h/uvWq4E1WjoaKYarDgehFlU=;
-        b=iQRTcKN0wALqRkVkliQHqshB55L2Nmw99XqnJWa2UNQ7C1T36H46nNDrxh7Unz1xAq
-         i7rSlm7JXbCY8+buinpGkob+OTERy91GR6oFT7PQuY0WF3aOUUW7/qCfDLMVW2pe4kBz
-         YJIAlAC1WVFdoELEYq4iuUBPt4MIG02P0/PDQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696623839; x=1697228639;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=chromium.org; s=google; t=1696624017; x=1697228817; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yeQqUbIodZOEmRnT0u+h/uvWq4E1WjoaKYarDgehFlU=;
-        b=YCyRCit276GeDF8YkPWEScKgZxKrMvsY5pUmBXEd6di59vD6QkTugMwzdAoTU7HMeQ
-         5pdjNVuJLRK2GY6VwkT+Xf0pzkMPdz7XizTou+CTLdgP+sN0X3JtemoPki9S0c2lzV+p
-         WmP1MUZgeloTuY4g+cp79mjFgXsl9THuD3f8r1o8k4GllCcI4GYJ5NYMyxmfZNB2zoWy
-         ZbHENVLlb/SCb/htveuRCbbcMGnjQI9nV1pg3n767B8LjKGoKI/zr1k1vStd1Pwu4L4V
-         dzP0+YPPzFmmOeXyw8bAU/zFTqUoW02V1j6xHn8nKwFcotZH2yF8aM5hrlI5ktk6ZsBt
-         NqUw==
-X-Gm-Message-State: AOJu0YzTRwjz2rCLB22Nf4UzZMwMPbrIWQOrr6CDduCKvnQi5CJDZ9Kk
-	JIW44cIsSllNusoaef7u5oithQ==
-X-Google-Smtp-Source: AGHT+IHEr5nv1cWEM1Y3LbpIOqHG/Lj+SrRUHy4wA915uDKNkG765B0Y8Pm/6H1gh2Qpt05VCVwqjA==
-X-Received: by 2002:a17:90a:a085:b0:276:e14a:4991 with SMTP id r5-20020a17090aa08500b00276e14a4991mr8929179pjp.2.1696623839216;
-        Fri, 06 Oct 2023 13:23:59 -0700 (PDT)
+        bh=5ik+8xyOrxrDENzMU2+XdXOoH+BEnHgLDW/RYA7oHq4=;
+        b=gD3kK/oSz9HpK1bX6ilsgqMakimaq8cgsY52n1LikFP8Titet9S97kTAwIIa6d7y4F
+         1RJWF9rdgeOWQCoB/ft170/3JQTKpCxY8FKvdmNzTXAbASZPDsG2tjd7EtEk2XqpVNZH
+         Wix9Eo44RUWCVF5p0lzNn79tIabC7ZQGPe5uU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696624017; x=1697228817;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5ik+8xyOrxrDENzMU2+XdXOoH+BEnHgLDW/RYA7oHq4=;
+        b=uVrXQb21lV7/BDfRltS3P0mbnXnpG7y1Zz/u7M3HMfdIArexk8J3inR0w3+iYxqGzz
+         VA5Zdi7kZtmKwD8e5gN964jIumKHd14JuNBJxz7q7au/Vx5D89fCuQt9fi4kd3NdxILJ
+         tbEjS7YLKnPyJ88zPC363Bpo9MlI6ZXih51xwah9QtHcfM9KRlil1AoHCfGBH/2bJUPA
+         7wwzDVz/BoJeN+/wJ/LbWCM48wuTo7IF2//5cgIalwCu4Ja7HThrZHrSEoyiNj45HmEa
+         gzJua9izYwwQunDU/zocqrOygTAy3r+JCx+FzDjuf9VLGM8bl7S3PWf5teX7V1/McGPE
+         XAPg==
+X-Gm-Message-State: AOJu0YzBpdyXP80rcFCUru0fuNj/nybaNjsRG0mYbCg2VU0JlLP98W4m
+	TupRBm926Oy7HZ0pY+lsC5jSeQ==
+X-Google-Smtp-Source: AGHT+IG2uZ4oQ6pqs/gPUxE9hmNLIVY3TcFTdzCBj+5FryP0YVUJaPRylWXG7huLOl6hdWH/tBpVog==
+X-Received: by 2002:a05:6a20:3942:b0:14b:8023:33c8 with SMTP id r2-20020a056a20394200b0014b802333c8mr10453505pzg.2.1696624016776;
+        Fri, 06 Oct 2023 13:26:56 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id 13-20020a170902c10d00b001bc68602e54sm4343643pli.142.2023.10.06.13.23.58
+        by smtp.gmail.com with ESMTPSA id c8-20020aa78c08000000b0069102ae6d93sm1952733pfd.14.2023.10.06.13.26.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Oct 2023 13:23:58 -0700 (PDT)
-Date: Fri, 6 Oct 2023 13:23:56 -0700
+        Fri, 06 Oct 2023 13:26:56 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>,
-	Russell King <linux+etnaviv@armlinux.org.uk>,
-	Christian Gmeiner <christian.gmeiner@gmail.com>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Bo YU <tsu.yubo@gmail.com>
-Subject: Re: [PATCH v2] drm/etnaviv: refactor deprecated strncpy
-Message-ID: <202310061323.05B262D@keescook>
-References: <20230918-strncpy-drivers-gpu-drm-etnaviv-etnaviv_perfmon-c-v2-1-8ae12071c138@google.com>
+To: "David S. Miller" <davem@davemloft.net>,
+	Kees Cook <keescook@chromium.org>
+Cc: sparclinux@vger.kernel.org,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Tom Rix <trix@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] sparc: Annotate struct cpuinfo_tree with __counted_by
+Date: Fri,  6 Oct 2023 13:25:46 -0700
+Message-Id: <169662394357.2154428.12028362294967452741.b4-ty@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230922175159.work.357-kees@kernel.org>
+References: <20230922175159.work.357-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230918-strncpy-drivers-gpu-drm-etnaviv-etnaviv_perfmon-c-v2-1-8ae12071c138@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -68,70 +71,27 @@ X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Mon, Sep 18, 2023 at 01:34:08PM +0000, Justin Stitt wrote:
-> `strncpy` is deprecated for use on NUL-terminated destination strings [1].
+On Fri, 22 Sep 2023 10:52:00 -0700, Kees Cook wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
 > 
-> We should prefer more robust and less ambiguous string interfaces.
+> As found with Coccinelle[1], add __counted_by for struct cpuinfo_tree.
 > 
-> A suitable replacement is `strscpy_pad` due to the fact that it
-> guarantees NUL-termination on the destination buffer whilst maintaining
-> the NUL-padding behavior that strncpy provides.
+> [...]
 
-Friend ping. Who can pick this change up?
+Since this is a trivial change and it's been 2 week without further
+discussion, I'll snag this patch.
 
-Thanks!
+Applied to for-next/hardening, thanks!
 
--Kees
+[1/1] sparc: Annotate struct cpuinfo_tree with __counted_by
+      https://git.kernel.org/kees/c/cfa36f889f23
 
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Cc: Bo YU <tsu.yubo@gmail.com>
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
-> Changes in v2:
-> - use strscpy_pad (thanks Kees)
-> - Link to v1: https://lore.kernel.org/r/20230914-strncpy-drivers-gpu-drm-etnaviv-etnaviv_perfmon-c-v1-1-3adc2d9bfc52@google.com
-> ---
-> Similar to [2] which was never picked up. Let's prefer strscpy_pad to strlcpy, though
-> 
-> [2]: https://lore.kernel.org/all/20190328080918.9290-1-tsu.yubo@gmail.com/
-> ---
->  drivers/gpu/drm/etnaviv/etnaviv_perfmon.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-> index bafdfe49c1d8..dc9dea664a28 100644
-> --- a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-> +++ b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-> @@ -511,7 +511,7 @@ int etnaviv_pm_query_dom(struct etnaviv_gpu *gpu,
->  
->  	domain->id = domain->iter;
->  	domain->nr_signals = dom->nr_signals;
-> -	strncpy(domain->name, dom->name, sizeof(domain->name));
-> +	strscpy_pad(domain->name, dom->name, sizeof(domain->name));
->  
->  	domain->iter++;
->  	if (domain->iter == nr_domains)
-> @@ -540,7 +540,7 @@ int etnaviv_pm_query_sig(struct etnaviv_gpu *gpu,
->  	sig = &dom->signal[signal->iter];
->  
->  	signal->id = signal->iter;
-> -	strncpy(signal->name, sig->name, sizeof(signal->name));
-> +	strscpy_pad(signal->name, sig->name, sizeof(signal->name));
->  
->  	signal->iter++;
->  	if (signal->iter == dom->nr_signals)
-> 
-> ---
-> base-commit: 3669558bdf354cd352be955ef2764cde6a9bf5ec
-> change-id: 20230914-strncpy-drivers-gpu-drm-etnaviv-etnaviv_perfmon-c-dd095491dfde
-> 
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
-> 
+Take care,
 
 -- 
 Kees Cook
+
