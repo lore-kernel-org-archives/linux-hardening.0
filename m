@@ -1,69 +1,58 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B0943687
-	for <linux-hardening@vger.kernel.org>; Fri,  6 Oct 2023 20:17:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E0143689
+	for <linux-hardening@vger.kernel.org>; Fri,  6 Oct 2023 20:17:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ULKnwnb8"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="K5CnQ1YA"
 Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 684ED111
-	for <linux-hardening@vger.kernel.org>; Fri,  6 Oct 2023 13:17:37 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-694ed847889so2244317b3a.2
-        for <linux-hardening@vger.kernel.org>; Fri, 06 Oct 2023 13:17:37 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 378FDD8
+	for <linux-hardening@vger.kernel.org>; Fri,  6 Oct 2023 13:17:43 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-6969b391791so2054927b3a.3
+        for <linux-hardening@vger.kernel.org>; Fri, 06 Oct 2023 13:17:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1696623456; x=1697228256; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1696623462; x=1697228262; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SVW48+aAw5RrT5lkfRy3SJYTnhGkwarT0QT62F6zY44=;
-        b=ULKnwnb8G0N3lbHYsw1zCXa+eYk4VmkMVui/kjGkhAmncYHkwlnhpKoD/fflMOPVP4
-         kcTWJnkGVEZO743tx48QyvflU06THMOT/epv9UXja9O1nRJUwDSsS5iyBlpy8yLOCeSY
-         ktT1bAv0qE7zg6MfJXt8jHC9feQeXTGKTGFOw=
+        bh=cooY0MAMsYVxpLHsEagLhRsMlrOOzAuT6eHluvswwK8=;
+        b=K5CnQ1YA0TzTA+ufdNAmEV7DRuqDKo8OJLMQE5r2FN4sOB3EC3AQp/1+pjDVU4fn7O
+         bBmS+YTP8ACMCI2DM3dVHWocphzVWSMPhZ/a3Vyyl+ctYTE+o0+K9g5pbiGHVkCmxxjs
+         eh7Q2BAFHw5DMTkRVXJElH/4rQ/mw359e8IRE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696623456; x=1697228256;
+        d=1e100.net; s=20230601; t=1696623462; x=1697228262;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=SVW48+aAw5RrT5lkfRy3SJYTnhGkwarT0QT62F6zY44=;
-        b=b8mmchFGx+gm3YyxbnP5JjeNGpQqsY5RWWz7uTu0QzPbX5Ltwjp7BvFq/oUta2ofCr
-         xRXBKLdnf/c9dtJrn6L58/mXhBAHbGmKG53pDo+eCmPMVQFVfCcQyXRAAXzzo1CQRLxB
-         wTfAQmd4PAl2k7hiECjuUR8XeLd0OkQsPfT+PLRSoHswnYEn7XEDytdAomVouID5Ls5F
-         DsLDYbTBGgXSxlv5anmaoC2ENzqIOWUDXPwIjgFYK+fMNOkaR49WvfFXrzw/12D41egk
-         FumbF17F5O+4uB9q5jw8glDuyzL4GF6unshSSBKCWGKEc962MjaeGYk/4C6M4ke2RtlO
-         wNQg==
-X-Gm-Message-State: AOJu0YwHASxguPNXF7PzdXbfmqGGejwPGvbOi00f6aUJSic5qE3BIlok
-	aOzAzdGK8kot8G27L2GhffLTwg==
-X-Google-Smtp-Source: AGHT+IGgULuRMAk+2xAiqAngtQMYH/45dfkfgIQakgeEwSnSB9Ck2fpTw3sOiYnEFueq2+Zw0HIj5g==
-X-Received: by 2002:a05:6a00:1d89:b0:68f:c6f8:144a with SMTP id z9-20020a056a001d8900b0068fc6f8144amr8344041pfw.22.1696623456614;
-        Fri, 06 Oct 2023 13:17:36 -0700 (PDT)
+        bh=cooY0MAMsYVxpLHsEagLhRsMlrOOzAuT6eHluvswwK8=;
+        b=iji927sSmsm9hiQm4RaJSOR+5jmuYZNYE+QpUymeOvWgcD3/pd0WH2Rol1W6Sq3AHB
+         LXLhW++gPMucTEBCyT6TjSJ2DKZt5XNPKF1d7G9JwyD13+QiBIH5MQf09bv950VbJMaq
+         wNHu/14ipOFxqBjPE+kEsJF+rcqeIEeRmZ4ULRerxy9SkX18SU0JROhF48+Et2WQSuPD
+         6HQlaol96ckL4GAUszocCg/QY8jWrxV1cM360g+p9paOb0YcF6JBEAKOAS2ZNhIwgMfa
+         gw00oXZ3sWh2pNLJuEcJOp7BrV8K6+6SkRLEFW5S1UXTKFHk74wYKeWggqV2AzgUvM7M
+         iwUA==
+X-Gm-Message-State: AOJu0YxGtFE0rNkTciL46V160XSYwLUy6eeBCmCrkgM8NaY248qDITTH
+	PACeQhOChq3CJ/SSyt8c+krhew==
+X-Google-Smtp-Source: AGHT+IHUP6fdhxVw5+bU8sj77QbFDalwCdaztMsMP6E3h8cype5SCNuQP6iLgFtkHlOh+mQyspcpdw==
+X-Received: by 2002:a05:6a20:2451:b0:14d:5580:8ff0 with SMTP id t17-20020a056a20245100b0014d55808ff0mr10186119pzc.25.1696623462546;
+        Fri, 06 Oct 2023 13:17:42 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id g29-20020a63375d000000b0056c2de1f32esm3761746pgn.78.2023.10.06.13.17.35
+        by smtp.gmail.com with ESMTPSA id s14-20020a056a00178e00b00690d7da743dsm122039pfg.161.2023.10.06.13.17.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Oct 2023 13:17:36 -0700 (PDT)
+        Fri, 06 Oct 2023 13:17:42 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
-To: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Cc: Kees Cook <keescook@chromium.org>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Roger Quadros <rogerq@kernel.org>,
-	Thierry Reding <treding@nvidia.com>,
-	Yang Yingliang <yangyingliang@huawei.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Valentin Korenblit <vkorenblit@sequans.com>,
-	ye xingchen <ye.xingchen@zte.com.cn>,
-	linux-mtd@lists.infradead.org,
+	linux-input@vger.kernel.org,
 	linux-hardening@vger.kernel.org,
 	Nathan Chancellor <nathan@kernel.org>,
 	Nick Desaulniers <ndesaulniers@google.com>,
 	Tom Rix <trix@redhat.com>,
-	Heiko Stuebner <heiko@sntech.de>,
 	linux-kernel@vger.kernel.org,
 	llvm@lists.linux.dev
-Subject: [PATCH] mtd: rawnand: cadence: Annotate struct cdns_nand_chip with __counted_by
-Date: Fri,  6 Oct 2023 13:17:34 -0700
-Message-Id: <20231006201734.work.060-kees@kernel.org>
+Subject: [PATCH] Input: Annotate struct ff_device with __counted_by
+Date: Fri,  6 Oct 2023 13:17:39 -0700
+Message-Id: <20231006201739.work.350-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -71,26 +60,25 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1719; i=keescook@chromium.org;
- h=from:subject:message-id; bh=v/mBW37FRWiHDbQSeKGRt7jHSIbBK2m2caz2GN2pAMs=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlIGtehhtNs4fsQLlK/idmpyBfIyy3VLPUCxgiM
- uN0LPqd+ImJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZSBrXgAKCRCJcvTf3G3A
- JkStEACSGTbTsp8zz1atoDGJhIXcLq7dkczKkpuqx43dYR8vq3nM6javyZ6DU7cAg2OhRoAplw0
- mA8jHnMFQixkl5LkbmCfoRytUqgJCK+dMCySAAPwBp9IItFtaqczmNI/I6/d/gDJvtqQQep0jSk
- PW0HSCeEDsFzX/CdW0t6C1dRPVu7gddhQI2dT1KUMTLPghKqCKjqgUrKfruh+yarpwMIKUmhV3X
- rklM4b718lqThCqUPASeb/zZeCoN3g+MQAmL5MM3Vf9Vtx780jFE4SHxFwk+do0CrYsWhTxO9a4
- 8FNOJNfUrv8dasPXCafK9pQxYkzRE4lKjDlKWPbrzSfelocXGryBNFQPiOTkAkRMf3RqiNh2GCR
- z8QM/L+lmF4dv//gnu3oXL3ds1MRzA8FY5nKjYoduHvOOsVDQTEx+B+4XPa6vTmDxWk68HDhoOV
- CKOyMtZUCdXdo7dGXx+OhYtsFT/beclrvneNK+WXJJ8DAXpxRJYlmCGfmAV1/okr5oEOrE8U8ru
- cshkana+HpzpbJuzw28HhcouY+hWSF2Clzt6FUws6hL+evFTv6yEopyovGmCakC3k2VR5UMumZ7
- MvA//yU5JMxP7SDbF30UVevcNuhKSu2LoEBaAp4CJ4xAJzaBrUaKqgdOogIP6IIGac0nANokUqs
- 9OfVz+T lNbq/PRA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1214; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=92ygPnQr2BZyPQ3qIX2yS3pgGDsopbxEBr/j0bwJ8e8=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlIGtjMlnU/pjqbrZ5CQEVQaELCA6A7cLEBqput
+ m//g4X/1lmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZSBrYwAKCRCJcvTf3G3A
+ JiQMD/9NkmiSLoQomYQqV3clnux5XRRcwkQCUnQAZnkJAHdYIVLMK5g3w1Gc7XWKLgMC4QyP1L7
+ qm7X2Q0zgJOqzqHC4/e65i7y3NLIlLMkQitzbAAztC4cri6bE5Np7XWZZpu1EDmK+gvVqf/viMz
+ Xl84c2Wv4XvRuO2HwqaTDTwaVyIya28nU1721VSdoUPrfeBEA2zAwVnG4jFMD0JdUEtKfKyCN/t
+ GJjwY4uVhB6GeTbSsmOOSUOb22xKpdr4HGSncY2StRh01l00IZ2YPyTgeXqjU6XgSgtN9Y2rbX2
+ dkjg3sZsQwrmA1UVgdvxRIvq8TtzUcMQNgJ2fu6y45RuFduGpH/eYAiWEwZsX8iFRD+TFJXUxc2
+ 0VMqMZVjpQ1pVnjzfx//tJnUb+45Z6xFIVIA4HBt79bUs7uVl6JgjieyisIhDtOPam5hexjlFfb
+ /6ZGO/LqrzRVQtHhqWg/I8HB5YSPWM+Q87D7fgJ9wYbgXWywLKmXljVXVACEQqLtrwwDTdiqXwI
+ gID029EAX8FW0uWDM+TmLDt71BtNBB7AOGX3GKmx5mJ1HuT4ajqM2JEwxymEOwWGEaH6lhJMtm8
+ 6F+AXOZf30iAsgKi8sDCgKUl9XSCeZyYVbI8zkK96wUnffwve5N7sNsZyjfAGGUf5teFUvkVOBx
+ yymY6Xn lZsWUeLA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
@@ -101,41 +89,31 @@ their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
 array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 functions).
 
-As found with Coccinelle[1], add __counted_by for struct cdns_nand_chip.
+As found with Coccinelle[1], add __counted_by for struct ff_device.
 
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Richard Weinberger <richard@nod.at>
-Cc: Vignesh Raghavendra <vigneshr@ti.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: Roger Quadros <rogerq@kernel.org>
-Cc: Thierry Reding <treding@nvidia.com>
-Cc: Yang Yingliang <yangyingliang@huawei.com>
-Cc: "Uwe Kleine-König" <u.kleine-koenig@pengutronix.de>
-Cc: Valentin Korenblit <vkorenblit@sequans.com>
-Cc: ye xingchen <ye.xingchen@zte.com.cn>
-Cc: linux-mtd@lists.infradead.org
+Cc: linux-input@vger.kernel.org
 Cc: linux-hardening@vger.kernel.org
 Link: https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci [1]
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/mtd/nand/raw/cadence-nand-controller.c | 2 +-
+ include/linux/input.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mtd/nand/raw/cadence-nand-controller.c b/drivers/mtd/nand/raw/cadence-nand-controller.c
-index 034ec564c2ed..7d5ef7ffe0fe 100644
---- a/drivers/mtd/nand/raw/cadence-nand-controller.c
-+++ b/drivers/mtd/nand/raw/cadence-nand-controller.c
-@@ -526,7 +526,7 @@ struct cdns_nand_chip {
- 	/* ECC strength index. */
- 	u8 corr_str_idx;
+diff --git a/include/linux/input.h b/include/linux/input.h
+index 49790c1bd2c4..de6503c0edb8 100644
+--- a/include/linux/input.h
++++ b/include/linux/input.h
+@@ -562,7 +562,7 @@ struct ff_device {
  
--	u8 cs[];
-+	u8 cs[] __counted_by(nsels);
+ 	int max_effects;
+ 	struct ff_effect *effects;
+-	struct file *effect_owners[];
++	struct file *effect_owners[] __counted_by(max_effects);
  };
  
- struct ecc_info {
+ int input_ff_create(struct input_dev *dev, unsigned int max_effects);
 -- 
 2.34.1
 
