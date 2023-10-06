@@ -1,63 +1,139 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A74FF31A6F
-	for <linux-hardening@vger.kernel.org>; Fri,  6 Oct 2023 17:33:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B92930FA0
+	for <linux-hardening@vger.kernel.org>; Fri,  6 Oct 2023 20:17:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="NFVqlDcw"
-Received: from out-192.mta0.migadu.com (out-192.mta0.migadu.com [IPv6:2001:41d0:1004:224b::c0])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F705BF
-	for <linux-hardening@vger.kernel.org>; Fri,  6 Oct 2023 10:32:58 -0700 (PDT)
-Date: Fri, 6 Oct 2023 13:32:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1696613571;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iUMRqrzp9W95pILwy96rYNmF5hIvu0nKh4XVqWJvVSc=;
-	b=NFVqlDcwNUWDo8jT9q7F9j+KLX1hUbmwWpDbz6g6QmFFw2uCJ9T/1s8Y+LDo5tNftPqdkB
-	9WHn1P6XslM4qUBwY6IQgTK86eE6M0I0l9MXwmZT8y3VhoIwz9jzP6StUedJU02/QxdsrN
-	xlctjU3lE2jpUGnG7b09S4MGHW4uTwk=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Brian Foster <bfoster@redhat.com>, Kees Cook <keescook@chromium.org>,
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="glIQtzsV"
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC820BD
+	for <linux-hardening@vger.kernel.org>; Fri,  6 Oct 2023 13:17:03 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-693375d2028so2226125b3a.2
+        for <linux-hardening@vger.kernel.org>; Fri, 06 Oct 2023 13:17:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1696623423; x=1697228223; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=SYgd9NJoGeVd+4g2HyXZYAbiV1zNgq5LXMke4LgVM60=;
+        b=glIQtzsVltLJbPBFndOe3pOHcLeCDAEaLQ22HcKgV7jpj++ELRZ/kKVwxirUVEiOTG
+         XzsD49z7sXHoG6Dy3IQLvFSdAgQ7FpKTlvC6aIwAfsIJUrFsOVz7EXZcExrW0GapI4j0
+         ln04IfZjypBCNGI6nwYayqP8K/oW387tby1h8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696623423; x=1697228223;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SYgd9NJoGeVd+4g2HyXZYAbiV1zNgq5LXMke4LgVM60=;
+        b=vTSdKLvc/BRfD/QdUrCnDMycUHN1cCrguCnJkgvEACdmd1EBKU+8Fn8T9XMgMx0CfV
+         oHIabWkL3JOkZ2sqDQXl4E1UYqIc/6qswGmxhOeA2ZED6pzwldr0CdMXfAoIQlHzrlot
+         YIDMehGOSEQqe5OeVZltiMUq2j0IKrWBrawQkChvimr7yZ/EtPUOPCH6pnYgPTtK2rk3
+         /ykY5WU8otUu1Pth/5CIYXUBjK4CobI9FRkeNdWEnUTrHBEGiZnFfopekWpcgPkYKy40
+         Rew2+t3vlx2UirAO4uEUgOlO8xhSb4OwuR7KVVnpDpUOj1VOj2Jt9sVj0UuZCyxE9bgN
+         bqXA==
+X-Gm-Message-State: AOJu0YwkSlsu0sI383M+SMclGcyKX0fJd5PsyPoTybvYZLTO1TFEsruq
+	vSPNfXmtynp3/uKWSGUSO9Nx1w==
+X-Google-Smtp-Source: AGHT+IHNx7VkfRUNypD93pqsPmMMdOU2NO3A55MZeXkGPOgFGJWdkVlpQzoHs03ZJTKJS6nWutO5pQ==
+X-Received: by 2002:a05:6a20:324d:b0:14d:7511:1c2 with SMTP id hm13-20020a056a20324d00b0014d751101c2mr8303161pzc.55.1696623423132;
+        Fri, 06 Oct 2023 13:17:03 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id w18-20020aa78592000000b0064f76992905sm1879945pfn.202.2023.10.06.13.17.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Oct 2023 13:17:02 -0700 (PDT)
+From: Kees Cook <keescook@chromium.org>
+To: Song Liu <song@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	bpf@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
 	Nathan Chancellor <nathan@kernel.org>,
 	Nick Desaulniers <ndesaulniers@google.com>,
-	Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org, linux-bcachefs@vger.kernel.org,
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH] bcachefs: Use struct_size()
-Message-ID: <20231006173247.zn4l6mwhup4bjkrf@moria.home.lan>
-References: <120b638f99b088f91d5a4491c800463c554e70b8.1696144401.git.christophe.jaillet@wanadoo.fr>
+	Tom Rix <trix@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH] bpf: Annotate struct bpf_stack_map with __counted_by
+Date: Fri,  6 Oct 2023 13:17:00 -0700
+Message-Id: <20231006201657.work.531-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <120b638f99b088f91d5a4491c800463c554e70b8.1696144401.git.christophe.jaillet@wanadoo.fr>
-X-Migadu-Flow: FLOW_OUT
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.6
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1619; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=Cn0rZ3uKUzlAqWZVBxaI1s9wb/BhJmGzsMuyAyrT7Jg=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlIGs8PUE7GHQQH9B2FtvPO9v/D7n9b+rl68H2W
+ RKqjf8h0JKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZSBrPAAKCRCJcvTf3G3A
+ JtaTEACURo4jMkXwmgS7m4ShxZQ4TwAfA6ZzmjYsh6vYRU9jgLzxlVmFZGarKW2zf9Cv86qoTQB
+ OuLpPhBaNyLhx6zEvR7V9tnxUwEkqNowljuks8/uiTM7dKUMCX8mPrr0W8i7NY3rag314m42553
+ 4Qg7E6CGkIv9FjnVwEy+WwyO4gtQ9T6LSBaDiqznryLw4DMRHSPX5FY1RreXN0hu2KlSN6NE/95
+ 6y+nhBnSpe5AG0WcCaKwduCSLQAYDwu5gSLTQC8ufTlI+8wLVB9RxmJVplQ6ifVtmjwG0mal2Q9
+ g4CWK58aEl82E6jwl1ibHfcGfj1BOPSrjGWgcVRQGS4Oz95mMtS36TUv3GF/NGMEYbeVMSAOYF/
+ dZ+ZDcDelDkkrftFCQ0GblqS/FPjlacGmdkA99CUVIKR0c9Dwzz2pJCPVrLvu/vVGqSoU2DKd2O
+ S/u5edTIQKXF+6S74bRXmCTvYDFgRzeDFVbxJ/gKxodnhRJZOwKgzpFeqz2h5A2DjvMkysoTOLr
+ QgNDS9ZfejJ6ptqnkCoFaLOYYEdwTTjLQ/2vQ0ruMLTLZWT6fYMQYrP/Cd9bfrPxcuNg6YA1iqv
+ 5A2La5ev+YTxG4cMliYTclB/18XZ5/C74z+hmZYBC6SCICu7BofIrV+WBsrWOqzu+iMD2dRwPe0
+ DtdkIXf jUFo8IGQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Sun, Oct 01, 2023 at 09:13:54AM +0200, Christophe JAILLET wrote:
-> Use struct_size() instead of hand writing it.
-> This is less verbose and more robust.
-> 
-> While at it, prepare for the coming implementation by GCC and Clang of the
-> __counted_by attribute. Flexible array members annotated with __counted_by
-> can have their accesses bounds-checked at run-time checking via
-> CONFIG_UBSAN_BOUNDS (for array indexing) and CONFIG_FORTIFY_SOURCE (for
-> strcpy/memcpy-family functions).
-> 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Prepare for the coming implementation by GCC and Clang of the __counted_by
+attribute. Flexible array members annotated with __counted_by can have
+their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
+array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+functions).
 
-Thanks! Applied.
+As found with Coccinelle[1], add __counted_by for struct bpf_stack_map.
+
+Cc: Song Liu <song@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Andrii Nakryiko <andrii@kernel.org>
+Cc: Martin KaFai Lau <martin.lau@linux.dev>
+Cc: Yonghong Song <yonghong.song@linux.dev>
+Cc: John Fastabend <john.fastabend@gmail.com>
+Cc: KP Singh <kpsingh@kernel.org>
+Cc: Stanislav Fomichev <sdf@google.com>
+Cc: Hao Luo <haoluo@google.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: bpf@vger.kernel.org
+Cc: linux-hardening@vger.kernel.org
+Link: https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci [1]
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ kernel/bpf/stackmap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
+index 458bb80b14d5..d6b277482085 100644
+--- a/kernel/bpf/stackmap.c
++++ b/kernel/bpf/stackmap.c
+@@ -28,7 +28,7 @@ struct bpf_stack_map {
+ 	void *elems;
+ 	struct pcpu_freelist freelist;
+ 	u32 n_buckets;
+-	struct stack_map_bucket *buckets[];
++	struct stack_map_bucket *buckets[] __counted_by(n_buckets);
+ };
+ 
+ static inline bool stack_map_use_build_id(struct bpf_map *map)
+-- 
+2.34.1
+
