@@ -1,46 +1,45 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1C474446B
-	for <linux-hardening@vger.kernel.org>; Fri,  6 Oct 2023 20:47:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1087138FB5
+	for <linux-hardening@vger.kernel.org>; Fri,  6 Oct 2023 20:47:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="JgvHqPHi"
-Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3CBD124
-	for <linux-hardening@vger.kernel.org>; Fri,  6 Oct 2023 13:47:24 -0700 (PDT)
-Received: from eig-obgw-6005a.ext.cloudfilter.net ([10.0.30.201])
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="zp+qGE27"
+Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B0FCF0
+	for <linux-hardening@vger.kernel.org>; Fri,  6 Oct 2023 13:47:40 -0700 (PDT)
+Received: from eig-obgw-5007a.ext.cloudfilter.net ([10.0.29.141])
 	by cmsmtp with ESMTP
-	id orRIqdGkLqBU3orjHqVAWN; Fri, 06 Oct 2023 20:47:23 +0000
+	id orRZq5HlMytxcorjXqlVpR; Fri, 06 Oct 2023 20:47:40 +0000
 Received: from gator4166.hostgator.com ([108.167.133.22])
 	by cmsmtp with ESMTPS
-	id orjGqauRgsqNForjGqbnsD; Fri, 06 Oct 2023 20:47:22 +0000
-X-Authority-Analysis: v=2.4 cv=aPzjFJxm c=1 sm=1 tr=0 ts=6520725b
+	id orjWqdlDBOktuorjXq9HQy; Fri, 06 Oct 2023 20:47:39 +0000
+X-Authority-Analysis: v=2.4 cv=QpBNYH+d c=1 sm=1 tr=0 ts=6520726b
  a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=Dx1Zrv+1i3YEdDUMOX3koA==:17
  a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=bhdUkHdE2iEA:10 a=wYkD_t78qR0A:10 a=QyXUC8HyAAAA:8
- a=pGLkceISAAAA:8 a=VwQbUJbxAAAA:8 a=e5mUnYsNAAAA:8 a=NEAV23lmAAAA:8
- a=cm27Pg_UAAAA:8 a=0yL73Cyy68KADmUz8mEA:9 a=QEXdDO2ut3YA:10
- a=AjGcO6oz07-iQ99wixmX:22 a=Vxmtnl_E_bksehYqCbjh:22 a=xmb-EsYY8bH0VWELuYED:22
+ a=IkcTkHD0fZMA:10 a=bhdUkHdE2iEA:10 a=wYkD_t78qR0A:10 a=pGLkceISAAAA:8
+ a=VwQbUJbxAAAA:8 a=NEAV23lmAAAA:8 a=cm27Pg_UAAAA:8 a=0yL73Cyy68KADmUz8mEA:9
+ a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22 a=xmb-EsYY8bH0VWELuYED:22
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
 	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
 	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
 	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Gxo07NLXbFSWfnqQOYpGIbOTWGu4BVeTP7jYHXk3874=; b=JgvHqPHiQMKYNI1XgUZo7Vh4Jd
-	lzqNacFRqbSwkSzk2FyX9NNJU/aDOHERlwXSRnHZXIYsgoFxAja3vpwycTCx5G6Yss9QnHwKGkZpY
-	as2tH0Qc3DKLw2Z4WpDBbH5MEnp/6euZtMQ+FAAmPvBHlqjrzXPaF5+Q0mDdEklwwKo98WarQQyaE
-	qEA5xEP/nw9GVWFgAB575gMdU4X0Dzde4Xl3/6XVVJHr/o3yi909a6bU9wdnx7a3mVCEZzOQ9O29E
-	ig63PqVUEbMRKvevRwLYWpXG9+kVynfbyJ4jPZsu7S1+miYK4KzQqkBwj6ZYFtMxdu7Z3eGbyA4mW
-	zPOn6Yug==;
+	bh=uutu2d96GOUWoDaNZkSgG8iTdQ1zETIvXR8LQU44b6c=; b=zp+qGE273mXifSnwj9eRj3iYCP
+	xQO6KK9aQwBPhPKnhKBMPnFbrObfSfjawnGJv2BXXqOl6EVmSsa02ad0UZZ19xZ+0IDNRtJwQg1G/
+	dKTYyHNyTULKWzmZZRO0rzTH8hzJRJQLG0RSbnHsmPcOlJsvr66LRQv1wCy19ijuVaLLhkYWOUa7z
+	9qEmidpfXeG5jHQTUr4eS26qJdDG8/tTaDiVIe9gb8RQqUFoMbIeE21ZPWxqWdIqaK/sNsMGX8sIT
+	n4sAlV5lZcQg1AVmUYVFUuYeHLPLyTMM1Ei/KNZwcQppTek5utZFho+0Mc6np9+5EvLdSI69P2cJr
+	up4vErBw==;
 Received: from 94-238-9-39.abo.bbox.fr ([94.238.9.39]:47408 helo=[192.168.1.98])
 	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.96.1)
 	(envelope-from <gustavo@embeddedor.com>)
-	id 1qorjE-001Bge-09;
-	Fri, 06 Oct 2023 15:47:20 -0500
-Message-ID: <b14bc28d-c9e2-45fe-82b8-e77ffb4f7ecf@embeddedor.com>
-Date: Fri, 6 Oct 2023 22:47:15 +0200
+	id 1qorjW-001Bge-0I;
+	Fri, 06 Oct 2023 15:47:38 -0500
+Message-ID: <07438cd0-0bd2-4505-a787-cc30b2340719@embeddedor.com>
+Date: Fri, 6 Oct 2023 22:47:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -48,29 +47,18 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/i915/guc: Annotate struct ct_incoming_msg with
- __counted_by
+Subject: Re: [PATCH] Input: Annotate struct ff_device with __counted_by
 Content-Language: en-US
 To: Kees Cook <keescook@chromium.org>,
- Jani Nikula <jani.nikula@linux.intel.com>
-Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- John Harrison <John.C.Harrison@Intel.com>,
- Matthew Brost <matthew.brost@intel.com>,
- Michal Wajdeczko <michal.wajdeczko@intel.com>,
- Matt Roper <matthew.d.roper@intel.com>, intel-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, linux-hardening@vger.kernel.org,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ linux-input@vger.kernel.org, linux-hardening@vger.kernel.org,
  Nathan Chancellor <nathan@kernel.org>,
  Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
- Andi Shyti <andi.shyti@linux.intel.com>, Nirmoy Das <nirmoy.das@intel.com>,
- Jonathan Cavitt <jonathan.cavitt@intel.com>, Fei Yang <fei.yang@intel.com>,
  linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-References: <20231006201744.work.135-kees@kernel.org>
+References: <20231006201739.work.350-kees@kernel.org>
 From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20231006201744.work.135-kees@kernel.org>
+In-Reply-To: <20231006201739.work.350-kees@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
@@ -81,21 +69,22 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 94.238.9.39
 X-Source-L: No
-X-Exim-ID: 1qorjE-001Bge-09
+X-Exim-ID: 1qorjW-001Bge-0I
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
 X-Source-Sender: 94-238-9-39.abo.bbox.fr ([192.168.1.98]) [94.238.9.39]:47408
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 53
+X-Email-Count: 73
 X-Org: HG=hgshared;ORG=hostgator;
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfBlYfZgjrzGw1c3EzWa+cxgBO1WgApimBkGnkOdW4MxUKOqrf6dG/L0rUaK8lfIbCB32W/ATPqQwVHxoGsVsvrOMMy+3J+5Jo4rumfY5vYEXyV4jJ5mh
- /S49tQ4HI6zws518yLlaGaQDPtmLYjdCqiOJ5hchYDz3idcICbYKnkY4RgCVMe4tW/1BsvRtCzNcsr/Aq57e5Um1VFhHKwsq+15N2OJlF5ir3XI6N44wyFnA
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+X-CMAE-Envelope: MS4xfKWwHKq7UJH2hLp9S4VeuFfNDbJkNupzzNeDfENFCLPKIeqcANW/zrKPaf9s8OISt/q8bEqm2StDYjmDjixqTFXFhRrA0R4RsdCClr5PToXuXxEOYitI
+ RtHnDDmVDySglhjw0uxQgSPJIBB+k6JQHl5bES6hfauDwInrSlSlv56QcB7lXNFEqewLKkkwGJ1OJMSHHzn9VLENNAGExPQ2zUd17FeZ7iW5pRHmO0ln6LKM
+X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+	RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
@@ -108,21 +97,11 @@ On 10/6/23 22:17, Kees Cook wrote:
 > array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
 > 
-> As found with Coccinelle[1], add __counted_by for struct ct_incoming_msg.
+> As found with Coccinelle[1], add __counted_by for struct ff_device.
 > 
-> Cc: Jani Nikula <jani.nikula@linux.intel.com>
-> Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-> Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
-> Cc: Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>
-> Cc: David Airlie <airlied@gmail.com>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 > Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: John Harrison <John.C.Harrison@Intel.com>
-> Cc: Matthew Brost <matthew.brost@intel.com>
-> Cc: Michal Wajdeczko <michal.wajdeczko@intel.com>
-> Cc: Matt Roper <matthew.d.roper@intel.com>
-> Cc: intel-gfx@lists.freedesktop.org
-> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-input@vger.kernel.org
 > Cc: linux-hardening@vger.kernel.org
 > Link: https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci [1]
 > Signed-off-by: Kees Cook <keescook@chromium.org>
@@ -134,19 +113,19 @@ Thanks!
 Gustavo
 
 > ---
->   drivers/gpu/drm/i915/gt/uc/intel_guc_ct.c | 2 +-
+>   include/linux/input.h | 2 +-
 >   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/gpu/drm/i915/gt/uc/intel_guc_ct.c b/drivers/gpu/drm/i915/gt/uc/intel_guc_ct.c
-> index 6e22af31513a..c33210ead1ef 100644
-> --- a/drivers/gpu/drm/i915/gt/uc/intel_guc_ct.c
-> +++ b/drivers/gpu/drm/i915/gt/uc/intel_guc_ct.c
-> @@ -96,7 +96,7 @@ struct ct_request {
->   struct ct_incoming_msg {
->   	struct list_head link;
->   	u32 size;
-> -	u32 msg[];
-> +	u32 msg[] __counted_by(size);
+> diff --git a/include/linux/input.h b/include/linux/input.h
+> index 49790c1bd2c4..de6503c0edb8 100644
+> --- a/include/linux/input.h
+> +++ b/include/linux/input.h
+> @@ -562,7 +562,7 @@ struct ff_device {
+>   
+>   	int max_effects;
+>   	struct ff_effect *effects;
+> -	struct file *effect_owners[];
+> +	struct file *effect_owners[] __counted_by(max_effects);
 >   };
 >   
->   enum { CTB_SEND = 0, CTB_RECV = 1 };
+>   int input_ff_create(struct input_dev *dev, unsigned int max_effects);
