@@ -1,50 +1,50 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF1C44462
-	for <linux-hardening@vger.kernel.org>; Fri,  6 Oct 2023 20:28:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42FE5328A7
+	for <linux-hardening@vger.kernel.org>; Fri,  6 Oct 2023 20:29:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KOET+slU"
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12C95BE
-	for <linux-hardening@vger.kernel.org>; Fri,  6 Oct 2023 13:28:13 -0700 (PDT)
-Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-692c70bc440so2188945b3a.3
-        for <linux-hardening@vger.kernel.org>; Fri, 06 Oct 2023 13:28:13 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QaOEVh4i"
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53571C2
+	for <linux-hardening@vger.kernel.org>; Fri,  6 Oct 2023 13:29:11 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-692a885f129so2140295b3a.0
+        for <linux-hardening@vger.kernel.org>; Fri, 06 Oct 2023 13:29:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1696624092; x=1697228892; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1696624151; x=1697228951; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UdDFi4NoIdKfky4gxD+eJQUbrV7mhgqDmFd2bTgvDgw=;
-        b=KOET+slUdofgm4Z5MZD5VgaA+MU7xFza3K5BxgPnBoAi3I18FIrvp9y10Ad0A7cl+e
-         AR5XdKFQjeWQQJ73m4apNBfAoHj4ia2cVK11Bfj1sZFmI5QcHsvUmsiFa8mg3/zKyr/c
-         BYPBTK7/gDBnpzWnmng77LGdzq5TV+Gom0jQ4=
+        bh=wEFC14BkrpnGEbJ9O9/6ay29sN85g5PSsTmfl2FKtGM=;
+        b=QaOEVh4iMGiGUAf28F4zIIUf6DWwqGRlCKLy/mzlxp1g3D4hO+qfCBKGne2r1sal+Q
+         Tsy0hX4VAkveQLZU6GhgKeGw2urgslGMfrleHbtuqUnAr7cUgCiQvEH6vuD7RgdjnR6d
+         GDn0rk2ZFAioj2LsNNfZfc0k0PgytS9TKT5xc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696624092; x=1697228892;
+        d=1e100.net; s=20230601; t=1696624151; x=1697228951;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UdDFi4NoIdKfky4gxD+eJQUbrV7mhgqDmFd2bTgvDgw=;
-        b=Rcr5aB/amjaszudTLvltCzHRQYDJBPT3gMR5ov8M7OPAy1SFePo+P0QR2Stc5psfmf
-         iGWi6BVNdqJOyobJuoHhaUOvHqkz+A7J4DgQur3VWO9lP+JZI+ZMpKE8LoVp1UdtU2KL
-         t0pFdrsD1vieRTWdwmgCsWbsNHtL01c/5qtWs+6pMqkAfAqBu02u3TdbtMeEVO2cQLE8
-         ZxMuIMrLyNilFn21E3mP9p4zoRlLXY9j571lEdbGbPO2f+XwC0lxTSMv41mhCU+gDrvI
-         JA7vXiTrB18Q1NhpHsF0a1KIoxCj7yDGD0828m/81JDkkBzRdHhGHtRC15Oa5wJw7MUW
-         5BQg==
-X-Gm-Message-State: AOJu0YytNr0J323vhraNei0EfrTZ1TXK/LxMhE74So3WCt8ts57PCLoL
-	6ulMQRUVhF2cp2rj+T3aN+5lkw==
-X-Google-Smtp-Source: AGHT+IHzavjcegg0su2LV3PG5i2JGplCgrkDJGkfhDYDgXFWCha9xijJu8LR4T++xQ/Q93fkWVoRgg==
-X-Received: by 2002:a05:6a20:3952:b0:163:b85e:631a with SMTP id r18-20020a056a20395200b00163b85e631amr10348902pzg.39.1696624092561;
-        Fri, 06 Oct 2023 13:28:12 -0700 (PDT)
+        bh=wEFC14BkrpnGEbJ9O9/6ay29sN85g5PSsTmfl2FKtGM=;
+        b=esEaPoUQ9+CUPty0wRLBvqvPBA+sGp95boWwfEoVvoN7Yy82hMtiJeSkMqNSDxr4yx
+         p0bAVeAKxZuq8MiLjaXStOv3k0dkihFZzb/zcvayaxAiK0r8xe+pTnmx2nQ/FEIRSoOI
+         bPHqkCcF2BU3MRrYIkKS/Ybty/i3CEzTmmnP/dcHLhgz+qrzaDjaC9YFjQqey/EXLRBe
+         EKkU17pGNukdwiO/CFTA3UT0vGACRVpLmQ0rUDxohMqM1zyGvVJ2ahXN7uiZe5sKhqTK
+         hk6lX1yPorJU2X0U0IduLko7HNw9VxHNFdmJ5MFr46Oy4DsP611R6wWMZSOwCr1rM+0z
+         ntug==
+X-Gm-Message-State: AOJu0Ywxla8aUYdxYDoUiBXMeYBkhW0V8HVXaRrUyX6Ffxm3cf9wT3kC
+	fXeJANFi/dgDD0S0wEmDkwFZLApJHsrj8PSRdeo=
+X-Google-Smtp-Source: AGHT+IGRyv8sAjwYvp43ZGf13MZV0quwDxaxDpmItfLr+PaHBjrnG6egScp3KHGIyEw9yf3qE2TREA==
+X-Received: by 2002:a05:6a00:168b:b0:692:6d3f:485b with SMTP id k11-20020a056a00168b00b006926d3f485bmr10482622pfc.3.1696624150808;
+        Fri, 06 Oct 2023 13:29:10 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id ff18-20020a056a002f5200b00690d4464b95sm1974172pfb.16.2023.10.06.13.28.11
+        by smtp.gmail.com with ESMTPSA id c17-20020aa78c11000000b0068c10187dc3sm1896078pfd.168.2023.10.06.13.29.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Oct 2023 13:28:12 -0700 (PDT)
+        Fri, 06 Oct 2023 13:29:10 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
-To: Michael Tretter <m.tretter@pengutronix.de>,
+To: Mauro Carvalho Chehab <mchehab@kernel.org>,
 	Kees Cook <keescook@chromium.org>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
+Cc: Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+	lijian <lijian@yulong.com>,
 	linux-media@vger.kernel.org,
 	Nathan Chancellor <nathan@kernel.org>,
 	Nick Desaulniers <ndesaulniers@google.com>,
@@ -52,12 +52,12 @@ Cc: Pengutronix Kernel Team <kernel@pengutronix.de>,
 	linux-kernel@vger.kernel.org,
 	llvm@lists.linux.dev,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] media: allegro: Annotate struct mcu_msg_push_buffers_internal with __counted_by
-Date: Fri,  6 Oct 2023 13:27:57 -0700
-Message-Id: <169662407189.2154681.1298231079393484992.b4-ty@chromium.org>
+Subject: Re: [PATCH] media: v4l2-event: Annotate struct v4l2_subscribed_event with __counted_by
+Date: Fri,  6 Oct 2023 13:28:40 -0700
+Message-Id: <169662411867.2154917.2192633783167073007.b4-ty@chromium.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230922174935.work.699-kees@kernel.org>
-References: <20230922174935.work.699-kees@kernel.org>
+In-Reply-To: <20230922174951.work.160-kees@kernel.org>
+References: <20230922174951.work.160-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -73,14 +73,16 @@ X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Fri, 22 Sep 2023 10:49:36 -0700, Kees Cook wrote:
+On Fri, 22 Sep 2023 10:49:52 -0700, Kees Cook wrote:
 > Prepare for the coming implementation by GCC and Clang of the __counted_by
 > attribute. Flexible array members annotated with __counted_by can have
 > their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
 > 
-> As found with Coccinelle[1], add __counted_by for struct mcu_msg_push_buffers_internal.
+> As found with Coccinelle[1], add __counted_by for struct v4l2_subscribed_event.
+> Additionally, since the element count member must be set before accessing
+> the annotated flexible array member, move its initialization earlier.
 > 
 > [...]
 
@@ -89,8 +91,8 @@ discussion, I'll snag this patch.
 
 Applied to for-next/hardening, thanks!
 
-[1/1] media: allegro: Annotate struct mcu_msg_push_buffers_internal with __counted_by
-      https://git.kernel.org/kees/c/63eed8dcdf49
+[1/1] media: v4l2-event: Annotate struct v4l2_subscribed_event with __counted_by
+      https://git.kernel.org/kees/c/b1a20bbd4687
 
 Take care,
 
