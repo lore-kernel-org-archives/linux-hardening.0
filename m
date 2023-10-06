@@ -1,80 +1,131 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A83EA1;
-	Fri,  6 Oct 2023 05:47:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from a.mx.secunet.com (a.mx.secunet.com [62.96.220.36])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 940D8B6;
-	Thu,  5 Oct 2023 22:47:33 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-	by a.mx.secunet.com (Postfix) with ESMTP id 41DD92087D;
-	Fri,  6 Oct 2023 07:47:31 +0200 (CEST)
-X-Virus-Scanned: by secunet
-Received: from a.mx.secunet.com ([127.0.0.1])
-	by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id pHY9T4XaCd70; Fri,  6 Oct 2023 07:47:30 +0200 (CEST)
-Received: from mailout1.secunet.com (mailout1.secunet.com [62.96.220.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71BFF1078B
+	for <linux-hardening@vger.kernel.org>; Fri,  6 Oct 2023 08:59:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ZCsjFioV";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="jDkDMmAT"
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A469695;
+	Fri,  6 Oct 2023 01:59:56 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by a.mx.secunet.com (Postfix) with ESMTPS id 01E5D207BB;
-	Fri,  6 Oct 2023 07:47:30 +0200 (CEST)
-Received: from cas-essen-01.secunet.de (unknown [10.53.40.201])
-	by mailout1.secunet.com (Postfix) with ESMTP id E937280004A;
-	Fri,  6 Oct 2023 07:47:29 +0200 (CEST)
-Received: from mbx-essen-02.secunet.de (10.53.40.198) by
- cas-essen-01.secunet.de (10.53.40.201) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Fri, 6 Oct 2023 07:47:29 +0200
-Received: from gauss2.secunet.de (10.182.7.193) by mbx-essen-02.secunet.de
- (10.53.40.198) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.32; Fri, 6 Oct
- 2023 07:47:29 +0200
-Received: by gauss2.secunet.de (Postfix, from userid 1000)
-	id 29F9B3182C7D; Fri,  6 Oct 2023 07:47:29 +0200 (CEST)
-Date: Fri, 6 Oct 2023 07:47:29 +0200
-From: Steffen Klassert <steffen.klassert@secunet.com>
-To: Kees Cook <keescook@chromium.org>
-CC: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller"
-	<davem@davemloft.net>, <netdev@vger.kernel.org>, "Gustavo A. R. Silva"
-	<gustavoars@kernel.org>, Nathan Chancellor <nathan@kernel.org>, "Nick
- Desaulniers" <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
-	<linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-	<llvm@lists.linux.dev>
-Subject: Re: [PATCH] xfrm: Annotate struct xfrm_sec_ctx with __counted_by
-Message-ID: <ZR+fcY+W5CBODmfX@gauss3.secunet.de>
-References: <20231003231828.work.527-kees@kernel.org>
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 611CD1F896;
+	Fri,  6 Oct 2023 08:59:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1696582795; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=srsNrgZL9zR7WLAyT/RuTZKhjlgD3sHz3MPU5cn2BWI=;
+	b=ZCsjFioV7vYcwiEHo+5WQbDXQfwKOFUSQr8L6NlaRfg3WSyQyj1z8YAytwlDi4zp+II0PG
+	79QLmVOl5S2tBkOwoRWLBK1FIsQo4zOSkXYasWBJNCnEMUGougG+kPlFI2ak6S+3hUPIe7
+	k2yv1v/KP5cRYYdRh4+yM0XdBUC4QTc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1696582795;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=srsNrgZL9zR7WLAyT/RuTZKhjlgD3sHz3MPU5cn2BWI=;
+	b=jDkDMmATGw1QHuu5h9nmfyzmoUhPndizF41NCJAiTgTTHXNKphOTcdSwlRub96x085JSWZ
+	/k0EXK0fzmkumhCA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 25A6E13A2E;
+	Fri,  6 Oct 2023 08:59:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id todOCIvMH2UbKAAAMHmgww
+	(envelope-from <tiwai@suse.de>); Fri, 06 Oct 2023 08:59:55 +0000
+Date: Fri, 06 Oct 2023 10:59:54 +0200
+Message-ID: <87pm1sw2gl.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Jussi Kivilinna <jussi.kivilinna@iki.fi>,
+	alsa-devel@alsa-project.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] ALSA: 6fire: Fix undefined behavior bug in struct comm_runtime
+In-Reply-To: <ZRb0WiViajjqcyKT@work>
+References: <ZRb0WiViajjqcyKT@work>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20231003231828.work.527-kees@kernel.org>
-X-ClientProxiedBy: cas-essen-02.secunet.de (10.53.40.202) To
- mbx-essen-02.secunet.de (10.53.40.198)
-X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Tue, Oct 03, 2023 at 04:18:28PM -0700, Kees Cook wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
-> array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
+On Fri, 29 Sep 2023 17:59:22 +0200,
+Gustavo A. R. Silva wrote:
 > 
-> As found with Coccinelle[1], add __counted_by for struct xfrm_sec_ctx.
+> `struct urb` is a flexible structure, which means that it contains a
+> flexible-array member at the bottom. This could potentially lead to an
+> overwrite of the objects following `receiver` in `struct comm_runtime`,
+> among them some function pointers.
 > 
-> Cc: Steffen Klassert <steffen.klassert@secunet.com>
-> Cc: Herbert Xu <herbert@gondor.apana.org.au>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: netdev@vger.kernel.org
-> Link: https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci [1]
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Fix this by placing the declaration of object `receiver` at the end of
+> `struct comm_runtime`.
+> 
+> Fixes: ddb6b5a96437 ("ALSA: 6fire: fix DMA issues with URB transfer_buffer usage")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Applied to ipsec-next, thanks!
+Sorry for the late reply, as I've been (still) off since the last
+week.
+
+Through a quick glance, I don't mind much to apply this, but I still
+wonder how this "fixes" anything.  Does it silence compiler warnings
+or such?
+
+Certainly struct urb *may* have flex array, but in this case, it's
+clearly not used, so it's fixed-size.  And, even if we shuffle the
+member to put to the last, it doesn't fix anything automagically
+alone.  If a flex array were used, it still leads to memory corruption
+unless we implement the allocation properly.  So I find the patch
+description is somehow misleading.
+
+
+thanks,
+
+Takashi
+
+> ---
+>  sound/usb/6fire/comm.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/sound/usb/6fire/comm.h b/sound/usb/6fire/comm.h
+> index 2447d7ecf179..ee81572a4eec 100644
+> --- a/sound/usb/6fire/comm.h
+> +++ b/sound/usb/6fire/comm.h
+> @@ -19,7 +19,6 @@ enum /* settings for comm */
+>  struct comm_runtime {
+>  	struct sfire_chip *chip;
+>  
+> -	struct urb receiver;
+>  	u8 *receiver_buffer;
+>  
+>  	u8 serial; /* urb serial */
+> @@ -30,6 +29,7 @@ struct comm_runtime {
+>  	int (*write8)(struct comm_runtime *rt, u8 request, u8 reg, u8 value);
+>  	int (*write16)(struct comm_runtime *rt, u8 request, u8 reg,
+>  			u8 vh, u8 vl);
+> +	struct urb receiver;
+>  };
+>  
+>  int usb6fire_comm_init(struct sfire_chip *chip);
+> -- 
+> 2.34.1
+> 
