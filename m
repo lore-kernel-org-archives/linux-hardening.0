@@ -1,70 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2BA917FC;
-	Sat,  7 Oct 2023 03:43:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0FB01842
+	for <linux-hardening@vger.kernel.org>; Sat,  7 Oct 2023 04:12:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nai38z5t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F1D1C433C8;
-	Sat,  7 Oct 2023 03:43:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696650213;
-	bh=/XnJFcvVU6ZpIin+GOGN2gLHcNQTV4L7LTIlpf+1yQY=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=nai38z5tQi/p+Yb92wCONFYch2eSpqfHrzRMrnJ7iVeumcdV887o0orT0t+lcNxbD
-	 i40XIhm1BvRGR2ZMm9DH7dxV++olEpvAkXVd2E4mYUe8BtD/3KIZunE3wZ200+FA4e
-	 BVzRxvSlnUrshY2lDc56P5Hdequv+9GOndP7+nYDi1H3p7tMgPUekIdu2PwlCkjMAH
-	 KJ956YKUgrVkzSVW8EgLKj7UAnqXalGPoLumnXY8f5ot1+bmNpwT0pPydbsN+uByu4
-	 U3sdDb8y3JeAf6SLYC8az7syBFG43FhZ4FKz8XJST4Ym/fAmRDep1oEenb1kvF2zue
-	 xGX8o2/Ru1yfg==
-From: Kalle Valo <kvalo@kernel.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: Felix Fietkau <nbd@nbd.name>,  Lorenzo Bianconi <lorenzo@kernel.org>,
-  Ryder Lee <ryder.lee@mediatek.com>,  Shayne Chen
- <shayne.chen@mediatek.com>,  Sean Wang <sean.wang@mediatek.com>,  Matthias
- Brugger <matthias.bgg@gmail.com>,  AngeloGioacchino Del Regno
- <angelogioacchino.delregno@collabora.com>,
-  linux-wireless@vger.kernel.org,  linux-arm-kernel@lists.infradead.org,
-  linux-mediatek@lists.infradead.org,  Nathan Chancellor
- <nathan@kernel.org>,  Nick Desaulniers <ndesaulniers@google.com>,  Tom Rix
- <trix@redhat.com>,  linux-kernel@vger.kernel.org,  llvm@lists.linux.dev,
-  linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] wifi: mt76: Annotate struct mt76_rx_tid with __counted_by
-References: <20230915200612.never.786-kees@kernel.org>
-	<202310061320.8630F7E51@keescook>
-Date: Sat, 07 Oct 2023 06:45:52 +0300
-In-Reply-To: <202310061320.8630F7E51@keescook> (Kees Cook's message of "Fri, 6
-	Oct 2023 13:21:13 -0700")
-Message-ID: <87cyxrgknj.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="glsiKpdJ"
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2462FBD
+	for <linux-hardening@vger.kernel.org>; Fri,  6 Oct 2023 21:12:10 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1c737d61a00so22499945ad.3
+        for <linux-hardening@vger.kernel.org>; Fri, 06 Oct 2023 21:12:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1696651929; x=1697256729; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KZXl4fZOZGW6S4QLpiluo7ub/jMSf5d18x41Dh4pVsY=;
+        b=glsiKpdJrZmJ4caPvGoW8B8n5fHOLSiFIRfOe89tE9+yCuoNSBld1/sfbWTb8CKmPc
+         cPEzKfD+XlsLkRD9F9hMv3PASOeYRgvWPhBQupzWddxH4zeQvKtzhmNHiP1Ak+KEMqW4
+         XWjtj0aF0/Ltkm2Uw0Ac0u8yJVwMayWdGbucA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696651929; x=1697256729;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KZXl4fZOZGW6S4QLpiluo7ub/jMSf5d18x41Dh4pVsY=;
+        b=YRNInbVCMUJjZ6dX6fobygb+1dPwY/hwD3vq0da4xcXlAOw9RC5vex62zWggzLKpsT
+         7Yx0jEsZe+230VWr54vxJEyU05UV75UVRqcLEMpWoEopRORbV0fDOOYYA3drSFOeVHHL
+         n5M1ZPf2Pd5EVRYcfGbrdUOQ6ejUgXgnbdWCfV1B+Yb6lfELpElLbi765zdBa9ZT0k4c
+         cx7HZNnTv1VnkIYCEQF13uhEdXkhcvvt1BBn2gu6Mu1lpZXgZ2g8ObKY8Wg8HenemvPl
+         YjA9VboRWhHRMA2JPgNXjMn6xyf/3iywHLq/ex7IGTSC/n3NZ5ESYsaK5pmfEQ8WeW7e
+         gEYA==
+X-Gm-Message-State: AOJu0Yz1nmsjbdjIv4a6bW4LqSV7qrhrWqpSV9VtvJr9poYDwzy4T9fo
+	HCQlZRsVUsGAiU+RbIoT8X6r7w==
+X-Google-Smtp-Source: AGHT+IF/ZipK2R7tGfd625n03Z25S787onFBu5JyqaUiGZOKjSrX04s0bRLQ8heHgUE/EU7Spolwug==
+X-Received: by 2002:a17:902:e749:b0:1b8:76ce:9d91 with SMTP id p9-20020a170902e74900b001b876ce9d91mr12712347plf.1.1696651929605;
+        Fri, 06 Oct 2023 21:12:09 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id ju8-20020a170903428800b001c72d694ea5sm4757330plb.303.2023.10.06.21.12.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Oct 2023 21:12:09 -0700 (PDT)
+Date: Fri, 6 Oct 2023 21:12:06 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Lukas Loidolt <e1634039@student.tuwien.ac.at>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Daniel Marth <daniel.marth@inso.tuwien.ac.at>
+Subject: Re: Missing cache considerations in randstruct performance feature
+Message-ID: <202310062111.809AB4E56@keescook>
+References: <f3ca77f0-e414-4065-83a5-ae4c4d25545d@student.tuwien.ac.at>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f3ca77f0-e414-4065-83a5-ae4c4d25545d@student.tuwien.ac.at>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-Kees Cook <keescook@chromium.org> writes:
+On Sat, Oct 07, 2023 at 12:30:01AM +0200, Lukas Loidolt wrote:
+> In my tests, however, the performance version behaves more or less like the
+> full version of randstruct.
 
-> On Fri, Sep 15, 2023 at 01:06:12PM -0700, Kees Cook wrote:
->> Prepare for the coming implementation by GCC and Clang of the __counted_by
->> attribute. Flexible array members annotated with __counted_by can have
->> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
->> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
->> functions).
->> 
->> As found with Coccinelle[1], add __counted_by for struct mt76_rx_tid.
->
-> Friendly ping. Can this get picked up by the wifi tree, or should it go
-> via something else?
+Can you try this patch?
 
-It's already in mt76 pull request and should be in wireless-next next
-week:
 
-https://patchwork.kernel.org/project/linux-wireless/patch/a5a2baaa-0db4-403e-9ebd-a7ff089675b4@nbd.name/
+commit d73a3244700d3c945cedea7e1fb7042243c41e08
+Author:     Kees Cook <keescook@chromium.org>
+AuthorDate: Fri Oct 6 21:09:28 2023 -0700
+Commit:     Kees Cook <keescook@chromium.org>
+CommitDate: Fri Oct 6 21:09:28 2023 -0700
+
+    randstruct: Fix gcc-plugin performance mode to stay in group
+    
+    The performance mode of the gcc-plugin randstruct was shuffling struct
+    members outside of the cache-line groups. Limit the range to the
+    specified group indexes.
+    
+    Cc: linux-hardening@vger.kernel.org
+    Reported-by: Lukas Loidolt <e1634039@student.tuwien.ac.at>
+    Closes: https://lore.kernel.org/all/f3ca77f0-e414-4065-83a5-ae4c4d25545d@student.tuwien.ac.at
+    Signed-off-by: Kees Cook <keescook@chromium.org>
+
+diff --git a/scripts/gcc-plugins/randomize_layout_plugin.c b/scripts/gcc-plugins/randomize_layout_plugin.c
+index 951b74ba1b24..178831917f01 100644
+--- a/scripts/gcc-plugins/randomize_layout_plugin.c
++++ b/scripts/gcc-plugins/randomize_layout_plugin.c
+@@ -191,7 +191,7 @@ static void partition_struct(tree *fields, unsigned long length, struct partitio
+ 
+ static void performance_shuffle(tree *newtree, unsigned long length, ranctx *prng_state)
+ {
+-	unsigned long i, x;
++	unsigned long i, x, index;
+ 	struct partition_group size_group[length];
+ 	unsigned long num_groups = 0;
+ 	unsigned long randnum;
+@@ -206,11 +206,14 @@ static void performance_shuffle(tree *newtree, unsigned long length, ranctx *prn
+ 	}
+ 
+ 	for (x = 0; x < num_groups; x++) {
+-		for (i = size_group[x].start + size_group[x].length - 1; i > size_group[x].start; i--) {
++		for (index = size_group[x].length - 1; index > 0; index--) {
+ 			tree tmp;
++
++			i = size_group[x].start + index;
+ 			if (DECL_BIT_FIELD_TYPE(newtree[i]))
+ 				continue;
+ 			randnum = ranval(prng_state) % (i + 1);
++			randnum += size_group[x].start;
+ 			// we could handle this case differently if desired
+ 			if (DECL_BIT_FIELD_TYPE(newtree[randnum]))
+ 				continue;
 
 -- 
-https://patchwork.kernel.org/project/linux-wireless/list/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Kees Cook
