@@ -1,135 +1,109 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C24DF44487
-	for <linux-hardening@vger.kernel.org>; Fri,  6 Oct 2023 23:03:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ep9L0mkk"
-Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67B40A6;
-	Fri,  6 Oct 2023 16:03:02 -0700 (PDT)
-Received: from eig-obgw-5008a.ext.cloudfilter.net ([10.0.29.246])
-	by cmsmtp with ESMTP
-	id oYGBqjmR9NWIeotqXqjgZm; Fri, 06 Oct 2023 23:03:01 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id otqWqCwDY0GnbotqXqXpZZ; Fri, 06 Oct 2023 23:03:01 +0000
-X-Authority-Analysis: v=2.4 cv=btBfuWWi c=1 sm=1 tr=0 ts=65209225
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=Dx1Zrv+1i3YEdDUMOX3koA==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=bhdUkHdE2iEA:10 a=wYkD_t78qR0A:10 a=n9Sqmae0AAAA:8
- a=VwQbUJbxAAAA:8 a=NEAV23lmAAAA:8 a=cm27Pg_UAAAA:8 a=u-_MtDP4nkpryoX2ZJoA:9
- a=QEXdDO2ut3YA:10 a=UmAUUZEt6-oIqEbegvw9:22 a=AjGcO6oz07-iQ99wixmX:22
- a=xmb-EsYY8bH0VWELuYED:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=VBGDvZyyYkRgxFIbXzQBi8VzcoI67HAzbQQBsrMirwE=; b=ep9L0mkkrQy2WMIZJ65JEfzfix
-	0zmqIVnJ0o3V5YcvcY6kyu4NDrTdhiz+ZlVj1SA17X4irNaBJlcB2FBrBaXILf1NdkMHTDuzjIqL5
-	2Uf7VNW65DgEfzdOAdWe6hK8+HcTTp2mhoK6EPR/lNdS+ceNT+azTgCQha+GOMzNva66uitI7tKR8
-	fcKFyR3lJIBu0KH3DGzInQGLgjHf6sPmwPcZz+2HyeHxceFAEcoPFwRc5UKE1sjFWczy+Zku6qnI4
-	FymLJzjlIF7IHDp5UgEhkl57bAOLCf6MaLUIaN5hw8d9VQZ2hszGruPAYwxgqRoHOLRhYZpZpe4i2
-	ZKs1C1Rw==;
-Received: from 94-238-9-39.abo.bbox.fr ([94.238.9.39]:47408 helo=[192.168.1.98])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1qorlY-001Bge-0E;
-	Fri, 06 Oct 2023 15:49:44 -0500
-Message-ID: <00482b1c-c88d-4e84-ba06-92f00dec8f53@embeddedor.com>
-Date: Fri, 6 Oct 2023 22:49:41 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B15EF1360
+	for <linux-hardening@vger.kernel.org>; Sat,  7 Oct 2023 01:21:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DB2CC5;
+	Fri,  6 Oct 2023 18:21:14 -0700 (PDT)
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 3971KhZN22568955, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/2.92/5.92) with ESMTPS id 3971KhZN22568955
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 7 Oct 2023 09:20:43 +0800
+Received: from RTEXDAG01.realtek.com.tw (172.21.6.100) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.17; Sat, 7 Oct 2023 09:20:44 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXDAG01.realtek.com.tw (172.21.6.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.7; Sat, 7 Oct 2023 09:20:43 +0800
+Received: from RTEXMBS04.realtek.com.tw ([fe80::40c2:6c24:2df4:e6c7]) by
+ RTEXMBS04.realtek.com.tw ([fe80::40c2:6c24:2df4:e6c7%5]) with mapi id
+ 15.01.2375.007; Sat, 7 Oct 2023 09:20:43 +0800
+From: Ping-Ke Shih <pkshih@realtek.com>
+To: "keescook@chromium.org" <keescook@chromium.org>
+CC: "kvalo@kernel.org" <kvalo@kernel.org>,
+        "llvm@lists.linux.dev"
+	<llvm@lists.linux.dev>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>,
+        "linux-wireless@vger.kernel.org"
+	<linux-wireless@vger.kernel.org>,
+        "linux-hardening@vger.kernel.org"
+	<linux-hardening@vger.kernel.org>,
+        "trix@redhat.com" <trix@redhat.com>,
+        "nathan@kernel.org" <nathan@kernel.org>,
+        "ndesaulniers@google.com"
+	<ndesaulniers@google.com>,
+        "gustavoars@kernel.org" <gustavoars@kernel.org>
+Subject: Re: [PATCH] wifi: rtw89: coex: Annotate struct rtw89_btc_btf_set_slot_table with __counted_by
+Thread-Topic: [PATCH] wifi: rtw89: coex: Annotate struct
+ rtw89_btc_btf_set_slot_table with __counted_by
+Thread-Index: AQHZ+JIdINNFwhWCA0q/Xu1rquYi7LA9Aa0A
+Date: Sat, 7 Oct 2023 01:20:43 +0000
+Message-ID: <4716f3c7bf3d34ea25229edd5250f5f0cff639d8.camel@realtek.com>
+References: <20231006201715.work.239-kees@kernel.org>
+In-Reply-To: <20231006201715.work.239-kees@kernel.org>
+Accept-Language: en-US, zh-TW
+Content-Language: zh-TW
+user-agent: Evolution 3.36.1-2 
+x-originating-ip: [125.224.81.64]
+x-kse-serverinfo: RTEXDAG01.realtek.com.tw, 9
+x-kse-antispam-interceptor-info: fallback
+x-kse-antivirus-interceptor-info: fallback
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <055816771E1C154CA2754D4B6C70B030@realtek.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] wifi: rtw89: coex: Annotate struct
- rtw89_btc_btf_set_slot_table with __counted_by
-Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>, Ping-Ke Shih <pkshih@realtek.com>
-Cc: Kalle Valo <kvalo@kernel.org>, "Gustavo A. R. Silva"
- <gustavoars@kernel.org>, linux-wireless@vger.kernel.org,
- linux-hardening@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-References: <20231006201715.work.239-kees@kernel.org>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20231006201715.work.239-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 94.238.9.39
-X-Source-L: No
-X-Exim-ID: 1qorlY-001Bge-0E
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 94-238-9-39.abo.bbox.fr ([192.168.1.98]) [94.238.9.39]:47408
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 0
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfKCkX5Qz9iTbjJqp+ORZRZ/hg+4pAS96w8SuLz2X9dpNO2zyYo+HXK0BkSTvmBVJYoudOYjddaUSj4dNPP0cO9BmqeH9xTKJ/tMqO4wLmivTC3gaqrjd
- CwGPwUBZbChREXWuM5t7zHfFIKTzjIoxKEAXoigeJFPihlTbITdwLw2ZX8n5JspiRLBh03W10nO5t1WcWXm5tv5QBQZRi3o+uJl2kIAacI4Ldmf//N2n0B/2
- OibSFX0DFCtqAn1nSzqCu2IbZJHQ9aHoJrVyRXNtIYu89+q+UN2WFFoyu7anIwzKDsJl6rRHSGWKK59inAaKKw==
-X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-	RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-
-
-On 10/6/23 22:17, Kees Cook wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
-> array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
-> 
-> As found with Coccinelle[1], add __counted_by for struct
-> rtw89_btc_btf_set_slot_table.
-> 
-> Cc: Ping-Ke Shih <pkshih@realtek.com>
-> Cc: Kalle Valo <kvalo@kernel.org>
-> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: linux-wireless@vger.kernel.org
-> Cc: linux-hardening@vger.kernel.org
-> Link: https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci [1]
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Thanks!
--- 
-Gustavo
-
-> ---
->   drivers/net/wireless/realtek/rtw89/coex.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/wireless/realtek/rtw89/coex.c b/drivers/net/wireless/realtek/rtw89/coex.c
-> index 4ba8b3df70ae..d66a1152c3f5 100644
-> --- a/drivers/net/wireless/realtek/rtw89/coex.c
-> +++ b/drivers/net/wireless/realtek/rtw89/coex.c
-> @@ -237,7 +237,7 @@ struct rtw89_btc_btf_set_report {
->   struct rtw89_btc_btf_set_slot_table {
->   	u8 fver;
->   	u8 tbl_num;
-> -	u8 buf[];
-> +	u8 buf[] __counted_by(tbl_num);
->   } __packed;
->   
->   struct rtw89_btc_btf_set_mon_reg {
+T24gRnJpLCAyMDIzLTEwLTA2IGF0IDEzOjE3IC0wNzAwLCBLZWVzIENvb2sgd3JvdGU6DQo+IA0K
+PiBQcmVwYXJlIGZvciB0aGUgY29taW5nIGltcGxlbWVudGF0aW9uIGJ5IEdDQyBhbmQgQ2xhbmcg
+b2YgdGhlIF9fY291bnRlZF9ieQ0KPiBhdHRyaWJ1dGUuIEZsZXhpYmxlIGFycmF5IG1lbWJlcnMg
+YW5ub3RhdGVkIHdpdGggX19jb3VudGVkX2J5IGNhbiBoYXZlDQo+IHRoZWlyIGFjY2Vzc2VzIGJv
+dW5kcy1jaGVja2VkIGF0IHJ1bi10aW1lIHZpYSBDT05GSUdfVUJTQU5fQk9VTkRTIChmb3INCj4g
+YXJyYXkgaW5kZXhpbmcpIGFuZCBDT05GSUdfRk9SVElGWV9TT1VSQ0UgKGZvciBzdHJjcHkvbWVt
+Y3B5LWZhbWlseQ0KPiBmdW5jdGlvbnMpLg0KPiANCj4gQXMgZm91bmQgd2l0aCBDb2NjaW5lbGxl
+WzFdLCBhZGQgX19jb3VudGVkX2J5IGZvciBzdHJ1Y3QNCj4gcnR3ODlfYnRjX2J0Zl9zZXRfc2xv
+dF90YWJsZS4NCj4gDQo+IENjOiBQaW5nLUtlIFNoaWggPHBrc2hpaEByZWFsdGVrLmNvbT4NCj4g
+Q2M6IEthbGxlIFZhbG8gPGt2YWxvQGtlcm5lbC5vcmc+DQo+IENjOiAiR3VzdGF2byBBLiBSLiBT
+aWx2YSIgPGd1c3Rhdm9hcnNAa2VybmVsLm9yZz4NCj4gQ2M6IGxpbnV4LXdpcmVsZXNzQHZnZXIu
+a2VybmVsLm9yZw0KPiBDYzogbGludXgtaGFyZGVuaW5nQHZnZXIua2VybmVsLm9yZw0KPiBMaW5r
+OiBodHRwczovL2dpdGh1Yi5jb20va2Vlcy9rZXJuZWwtdG9vbHMvYmxvYi90cnVuay9jb2NjaW5l
+bGxlL2V4YW1wbGVzL2NvdW50ZWRfYnkuY29jY2kgWzFdDQo+IFNpZ25lZC1vZmYtYnk6IEtlZXMg
+Q29vayA8a2Vlc2Nvb2tAY2hyb21pdW0ub3JnPg0KPiAtLS0NCj4gIGRyaXZlcnMvbmV0L3dpcmVs
+ZXNzL3JlYWx0ZWsvcnR3ODkvY29leC5jIHwgMiArLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5z
+ZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQv
+d2lyZWxlc3MvcmVhbHRlay9ydHc4OS9jb2V4LmMgYi9kcml2ZXJzL25ldC93aXJlbGVzcy9yZWFs
+dGVrL3J0dzg5L2NvZXguYw0KPiBpbmRleCA0YmE4YjNkZjcwYWUuLmQ2NmExMTUyYzNmNSAxMDA2
+NDQNCj4gLS0tIGEvZHJpdmVycy9uZXQvd2lyZWxlc3MvcmVhbHRlay9ydHc4OS9jb2V4LmMNCj4g
+KysrIGIvZHJpdmVycy9uZXQvd2lyZWxlc3MvcmVhbHRlay9ydHc4OS9jb2V4LmMNCj4gQEAgLTIz
+Nyw3ICsyMzcsNyBAQCBzdHJ1Y3QgcnR3ODlfYnRjX2J0Zl9zZXRfcmVwb3J0IHsNCj4gIHN0cnVj
+dCBydHc4OV9idGNfYnRmX3NldF9zbG90X3RhYmxlIHsNCj4gICAgICAgICB1OCBmdmVyOw0KPiAg
+ICAgICAgIHU4IHRibF9udW07DQo+IC0gICAgICAgdTggYnVmW107DQo+ICsgICAgICAgdTggYnVm
+W10gX19jb3VudGVkX2J5KHRibF9udW0pOw0KDQpUaGlzIHN0cnVjdCBpc24ndCBkZWZpbmVkIHBy
+b3Blcmx5LiBJdCBzaG91bGQgYmUgDQoNCnN0cnVjdCBydHc4OV9idGNfYnRmX3NldF9zbG90X3Rh
+YmxlIHsNCgl1OCBmdmVyOw0KCXU4IHRibF9udW07DQoJc3RydWN0IHJ0dzg5X2J0Y19mYnRjX3Ns
+b3QgdGJsW10gX19jb3VudGVkX2J5KHRibF9udW0pOw0KfSBfX3BhY2tlZDsNCg0KQW5kLCB3ZSBz
+aG91bGQgbW9kaWZ5IHJ0dzg5X2J0Y19md19zZXRfc2xvdHMoKSBhcyB3ZWxsLiANCg0KQW5vdGhl
+ciBzdHJ1Y3QgJ3J0dzg5X2J0Y19idGZfc2V0X21vbl9yZWcnIGhhcyBzaW1pbGFyIHByb2JsZW0u
+DQoNClNvLCBOQUNLIHRoaXMgcGF0Y2guIEkgd2lsbCBwcmVwYXJlIG9uZSBvciB0d28gcGF0Y2hl
+cyBmb3IgdGhlbSBuZXh0IHdlZWsuIA0KDQpCeSB0aGUgd2F5LCBJIGhhdmUgcXVlc3Rpb24gYWJv
+dXQgX19jb3VudGVkX2J5KCkuIENhbiBJIGFwcGx5IGl0IHRvIGxpdHRsZS9iaWctDQplbmRpYW4g
+J251bSc/IExpa2UNCg0Kc3RydWN0IGZvbyB7DQoJLi4uDQoJX19sZTMyIG51bTsNCglfX2xlMzIg
+ZGF0YVtdIF9fY291bnRlZF9ieShudW0pOw0KfQ0KDQoNCj4gIH0gX19wYWNrZWQ7DQo+IA0KPiAg
+c3RydWN0IHJ0dzg5X2J0Y19idGZfc2V0X21vbl9yZWcgew0KPiAtLQ0KPiAyLjM0LjENCj4gDQoN
+Cg0KDQo=
