@@ -1,109 +1,178 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B15EF1360
-	for <linux-hardening@vger.kernel.org>; Sat,  7 Oct 2023 01:21:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DB2CC5;
-	Fri,  6 Oct 2023 18:21:14 -0700 (PDT)
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 3971KhZN22568955, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/2.92/5.92) with ESMTPS id 3971KhZN22568955
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 7 Oct 2023 09:20:43 +0800
-Received: from RTEXDAG01.realtek.com.tw (172.21.6.100) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.17; Sat, 7 Oct 2023 09:20:44 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXDAG01.realtek.com.tw (172.21.6.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.7; Sat, 7 Oct 2023 09:20:43 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::40c2:6c24:2df4:e6c7]) by
- RTEXMBS04.realtek.com.tw ([fe80::40c2:6c24:2df4:e6c7%5]) with mapi id
- 15.01.2375.007; Sat, 7 Oct 2023 09:20:43 +0800
-From: Ping-Ke Shih <pkshih@realtek.com>
-To: "keescook@chromium.org" <keescook@chromium.org>
-CC: "kvalo@kernel.org" <kvalo@kernel.org>,
-        "llvm@lists.linux.dev"
-	<llvm@lists.linux.dev>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "linux-wireless@vger.kernel.org"
-	<linux-wireless@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org"
-	<linux-hardening@vger.kernel.org>,
-        "trix@redhat.com" <trix@redhat.com>,
-        "nathan@kernel.org" <nathan@kernel.org>,
-        "ndesaulniers@google.com"
-	<ndesaulniers@google.com>,
-        "gustavoars@kernel.org" <gustavoars@kernel.org>
-Subject: Re: [PATCH] wifi: rtw89: coex: Annotate struct rtw89_btc_btf_set_slot_table with __counted_by
-Thread-Topic: [PATCH] wifi: rtw89: coex: Annotate struct
- rtw89_btc_btf_set_slot_table with __counted_by
-Thread-Index: AQHZ+JIdINNFwhWCA0q/Xu1rquYi7LA9Aa0A
-Date: Sat, 7 Oct 2023 01:20:43 +0000
-Message-ID: <4716f3c7bf3d34ea25229edd5250f5f0cff639d8.camel@realtek.com>
-References: <20231006201715.work.239-kees@kernel.org>
-In-Reply-To: <20231006201715.work.239-kees@kernel.org>
-Accept-Language: en-US, zh-TW
-Content-Language: zh-TW
-user-agent: Evolution 3.36.1-2 
-x-originating-ip: [125.224.81.64]
-x-kse-serverinfo: RTEXDAG01.realtek.com.tw, 9
-x-kse-antispam-interceptor-info: fallback
-x-kse-antivirus-interceptor-info: fallback
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <055816771E1C154CA2754D4B6C70B030@realtek.com>
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D03E1389
+	for <linux-hardening@vger.kernel.org>; Sat,  7 Oct 2023 02:24:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZNsfcdCp"
+Received: from mail-oi1-x231.google.com (mail-oi1-x231.google.com [IPv6:2607:f8b0:4864:20::231])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FB18BE
+	for <linux-hardening@vger.kernel.org>; Fri,  6 Oct 2023 19:24:25 -0700 (PDT)
+Received: by mail-oi1-x231.google.com with SMTP id 5614622812f47-3ae2896974bso1768769b6e.0
+        for <linux-hardening@vger.kernel.org>; Fri, 06 Oct 2023 19:24:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1696645465; x=1697250265; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=e9UWXPGpBqN8/aGLtCDuuQnwCBGM2WifajEW12m85LU=;
+        b=ZNsfcdCpmj2gbSBbVYL0oGP+wUsjukbRmMJSW8GWncBBLNO28mIsezWj0fFY1TlFdU
+         jWEjJqMJjggafU56u4cfsWVnl2t39EKpENCbqaO6TfOu8xx3m7J/MQp+ueeRc1vbn6HH
+         5yqegWEx9hnmIcUThF2LsNoMdXYD/GrzrSD8U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696645465; x=1697250265;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e9UWXPGpBqN8/aGLtCDuuQnwCBGM2WifajEW12m85LU=;
+        b=h6IiKfqy9nTOdOvtKNE9H+/4tPqbFR6fo9W1SL5JDXwvAaw0XBoOwqOJM+EwuOmQLF
+         OOe8Is4nZ0bVzSsFn/eribeilK2wUap7JHL8CQM/WJ3hssKfZ2H0t8NhSo01sKu0hSiT
+         PYSMdX9MzsFkQDGDxS7j46x6JGiTXtXEnUh3SZQZ161VpOm8dYDug5EbxZG3WfQNXqZC
+         3WKsfcMR0tYBEuIxuZpgGySigUzYmTJGMR9UYiHj+pp38oTl1KuaQQ1Sx7tMAAy66leE
+         DZCXjK9YfRGPIyjrAukCcZlWX10ezBHoSTKtNtIpN5HuhCCe0JPm2Z8nqSVRvjsv5ab+
+         Fp/w==
+X-Gm-Message-State: AOJu0Yx1RUqzkIJ0DIzTUruyeq161z/UblqM2IUi/vnNdxyI9f+GQxgq
+	SO0S+YkB1r8Y5RDHZ8VF5UyjY0K0SfTdg6j960I=
+X-Google-Smtp-Source: AGHT+IHzkphbjEVz/o20GkGeZNmC6qgu3BYytys8/iIThThDt3sjc1ZRrJDHBBv1x8FOc4/t6VoC5A==
+X-Received: by 2002:a05:6808:c3:b0:3a7:3ce0:1ad7 with SMTP id t3-20020a05680800c300b003a73ce01ad7mr9128888oic.20.1696645464800;
+        Fri, 06 Oct 2023 19:24:24 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id l30-20020a63701e000000b00578cc5f4905sm3966426pgc.28.2023.10.06.19.24.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Oct 2023 19:24:23 -0700 (PDT)
+Date: Fri, 6 Oct 2023 19:24:20 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Lukas Loidolt <e1634039@student.tuwien.ac.at>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Daniel Marth <daniel.marth@inso.tuwien.ac.at>
+Subject: Re: Missing cache considerations in randstruct performance feature
+Message-ID: <202310061840.045F218F08@keescook>
+References: <f3ca77f0-e414-4065-83a5-ae4c4d25545d@student.tuwien.ac.at>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-KSE-AntiSpam-Interceptor-Info: fallback
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f3ca77f0-e414-4065-83a5-ae4c4d25545d@student.tuwien.ac.at>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-T24gRnJpLCAyMDIzLTEwLTA2IGF0IDEzOjE3IC0wNzAwLCBLZWVzIENvb2sgd3JvdGU6DQo+IA0K
-PiBQcmVwYXJlIGZvciB0aGUgY29taW5nIGltcGxlbWVudGF0aW9uIGJ5IEdDQyBhbmQgQ2xhbmcg
-b2YgdGhlIF9fY291bnRlZF9ieQ0KPiBhdHRyaWJ1dGUuIEZsZXhpYmxlIGFycmF5IG1lbWJlcnMg
-YW5ub3RhdGVkIHdpdGggX19jb3VudGVkX2J5IGNhbiBoYXZlDQo+IHRoZWlyIGFjY2Vzc2VzIGJv
-dW5kcy1jaGVja2VkIGF0IHJ1bi10aW1lIHZpYSBDT05GSUdfVUJTQU5fQk9VTkRTIChmb3INCj4g
-YXJyYXkgaW5kZXhpbmcpIGFuZCBDT05GSUdfRk9SVElGWV9TT1VSQ0UgKGZvciBzdHJjcHkvbWVt
-Y3B5LWZhbWlseQ0KPiBmdW5jdGlvbnMpLg0KPiANCj4gQXMgZm91bmQgd2l0aCBDb2NjaW5lbGxl
-WzFdLCBhZGQgX19jb3VudGVkX2J5IGZvciBzdHJ1Y3QNCj4gcnR3ODlfYnRjX2J0Zl9zZXRfc2xv
-dF90YWJsZS4NCj4gDQo+IENjOiBQaW5nLUtlIFNoaWggPHBrc2hpaEByZWFsdGVrLmNvbT4NCj4g
-Q2M6IEthbGxlIFZhbG8gPGt2YWxvQGtlcm5lbC5vcmc+DQo+IENjOiAiR3VzdGF2byBBLiBSLiBT
-aWx2YSIgPGd1c3Rhdm9hcnNAa2VybmVsLm9yZz4NCj4gQ2M6IGxpbnV4LXdpcmVsZXNzQHZnZXIu
-a2VybmVsLm9yZw0KPiBDYzogbGludXgtaGFyZGVuaW5nQHZnZXIua2VybmVsLm9yZw0KPiBMaW5r
-OiBodHRwczovL2dpdGh1Yi5jb20va2Vlcy9rZXJuZWwtdG9vbHMvYmxvYi90cnVuay9jb2NjaW5l
-bGxlL2V4YW1wbGVzL2NvdW50ZWRfYnkuY29jY2kgWzFdDQo+IFNpZ25lZC1vZmYtYnk6IEtlZXMg
-Q29vayA8a2Vlc2Nvb2tAY2hyb21pdW0ub3JnPg0KPiAtLS0NCj4gIGRyaXZlcnMvbmV0L3dpcmVs
-ZXNzL3JlYWx0ZWsvcnR3ODkvY29leC5jIHwgMiArLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5z
-ZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQv
-d2lyZWxlc3MvcmVhbHRlay9ydHc4OS9jb2V4LmMgYi9kcml2ZXJzL25ldC93aXJlbGVzcy9yZWFs
-dGVrL3J0dzg5L2NvZXguYw0KPiBpbmRleCA0YmE4YjNkZjcwYWUuLmQ2NmExMTUyYzNmNSAxMDA2
-NDQNCj4gLS0tIGEvZHJpdmVycy9uZXQvd2lyZWxlc3MvcmVhbHRlay9ydHc4OS9jb2V4LmMNCj4g
-KysrIGIvZHJpdmVycy9uZXQvd2lyZWxlc3MvcmVhbHRlay9ydHc4OS9jb2V4LmMNCj4gQEAgLTIz
-Nyw3ICsyMzcsNyBAQCBzdHJ1Y3QgcnR3ODlfYnRjX2J0Zl9zZXRfcmVwb3J0IHsNCj4gIHN0cnVj
-dCBydHc4OV9idGNfYnRmX3NldF9zbG90X3RhYmxlIHsNCj4gICAgICAgICB1OCBmdmVyOw0KPiAg
-ICAgICAgIHU4IHRibF9udW07DQo+IC0gICAgICAgdTggYnVmW107DQo+ICsgICAgICAgdTggYnVm
-W10gX19jb3VudGVkX2J5KHRibF9udW0pOw0KDQpUaGlzIHN0cnVjdCBpc24ndCBkZWZpbmVkIHBy
-b3Blcmx5LiBJdCBzaG91bGQgYmUgDQoNCnN0cnVjdCBydHc4OV9idGNfYnRmX3NldF9zbG90X3Rh
-YmxlIHsNCgl1OCBmdmVyOw0KCXU4IHRibF9udW07DQoJc3RydWN0IHJ0dzg5X2J0Y19mYnRjX3Ns
-b3QgdGJsW10gX19jb3VudGVkX2J5KHRibF9udW0pOw0KfSBfX3BhY2tlZDsNCg0KQW5kLCB3ZSBz
-aG91bGQgbW9kaWZ5IHJ0dzg5X2J0Y19md19zZXRfc2xvdHMoKSBhcyB3ZWxsLiANCg0KQW5vdGhl
-ciBzdHJ1Y3QgJ3J0dzg5X2J0Y19idGZfc2V0X21vbl9yZWcnIGhhcyBzaW1pbGFyIHByb2JsZW0u
-DQoNClNvLCBOQUNLIHRoaXMgcGF0Y2guIEkgd2lsbCBwcmVwYXJlIG9uZSBvciB0d28gcGF0Y2hl
-cyBmb3IgdGhlbSBuZXh0IHdlZWsuIA0KDQpCeSB0aGUgd2F5LCBJIGhhdmUgcXVlc3Rpb24gYWJv
-dXQgX19jb3VudGVkX2J5KCkuIENhbiBJIGFwcGx5IGl0IHRvIGxpdHRsZS9iaWctDQplbmRpYW4g
-J251bSc/IExpa2UNCg0Kc3RydWN0IGZvbyB7DQoJLi4uDQoJX19sZTMyIG51bTsNCglfX2xlMzIg
-ZGF0YVtdIF9fY291bnRlZF9ieShudW0pOw0KfQ0KDQoNCj4gIH0gX19wYWNrZWQ7DQo+IA0KPiAg
-c3RydWN0IHJ0dzg5X2J0Y19idGZfc2V0X21vbl9yZWcgew0KPiAtLQ0KPiAyLjM0LjENCj4gDQoN
-Cg0KDQo=
+On Sat, Oct 07, 2023 at 12:30:01AM +0200, Lukas Loidolt wrote:
+> Hello!
+> 
+> I have been looking into the implementation of the "randstruct" gcc-plugin
+> and noticed a potential bug in its performance version, which is supposed to
+> limit randomization to cache-line sized groupings of structure members.
+> I haven't been able to find too much documentation on this version of
+> randstruct, but my general understanding of its intended behavior is as
+> follows:
+> 
+> - in performance mode, randstruct groups structure members into cache line
+> sized partitions of 64 bytes each
+> - the order of these partitions is randomized
+> - the order of structure members within each partition is also randomized
+> 
+> In my tests, however, the performance version behaves more or less like the
+> full version of randstruct.
+> For example, testing on a struct of 10 function pointers:
+> 
+> struct test_struct{
+>     void (*func1)(void);
+>     void (*func2)(void);
+>     void (*func3)(void);
+>     void (*func4)(void);
+>     void (*func5)(void);
+>     void (*func6)(void);
+>     void (*func7)(void);
+>     void (*func8)(void);
+>     void (*func9)(void);
+>     void (*func10)(void);
+> };
+> 
+> resulted in the following randomized memory layout:
+> 
+> func3 (offset 0)
+> func5 (offset 8)
+> func10 (offset 16)
+> func2 (offset 24)
+> func1 (offset 32)
+> func6 (offset 40)
+> func8 (offset 48)
+> func7 (offset 56)
+> func9 (offset 64)
+> func4 (offset 72)
+
+I'd agree; this doesn't look like an expected layout.
+
+> I would have expected cache-line sized partitions of (up to) 8 pointers, so
+> that func1 through func8 are adjacent in the final layout, but these
+> partitions are seemingly not preserved.
+
+I'd expect the order of func1-func8 to be randomized together, and
+func9-func10 order to be randomized together, and then they're pasted
+together.
+
+> Assuming that this is indeed not the intended behavior, the culprit is line
+> 213 in "randomize_layout_plugin.c"
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/scripts/gcc-plugins/randomize_layout_plugin.c?id=f291209eca5eba0b4704fa0832af57b12dbc1a02#n213
+> 
+> where
+> 
+> randnum = ranval(prng_state) % (i + 1);
+> 
+> should probably be something like
+> 
+> randnum = size_group[x].start + ranval(prng_state) % size_group[x].length;
+
+I thought the intent was to handle it in the loop offsets:
+
+	for (i = size_group[x].start + size_group[x].length - 1; i > size_group[x].start; i--) {
+
+But, no, this looks wrong, see below...
+
+> After changing this line, cache-line sized partitions are created and
+> preserved as expected.
+> However, while structure members within each partition are randomized, the
+> order of the partitions themselves is not randomized and remains the same as
+> in the original struct declaration.
+
+size_group[] is what holds the initial partitions. I would agree,
+though, the group shuffling doesn't seem to do anything.
+
+> I assume that the for loop in lines 200 to 206 is intended to shuffle the
+> partition_group structures
+> 
+> for (i = num_groups - 1; i > 0; i--) {
+>         struct partition_group tmp;
+>         randnum = ranval(prng_state) % (i + 1);
+>         tmp = size_group[i];
+>         size_group[i] = size_group[randnum];
+>         size_group[randnum] = tmp;
+> }
+> 
+> but the order of the partition_group structs is not written back into the
+> newtree object, so the randomization from this loop is not reflected in the
+> final layout.
+
+I'd expect the newtree index to start at 0, rather than reusing "i", if
+the intent was to move groups around too. But in fact, the second
+shuffle loop seems to just not work at all: it's not shuffling within
+the group, since it operates from 0 to i, not size_group[x].start
+through size_group[x].start + size_group[x].length.
+
+> I would be interested to know if this is an actual issue with the
+> implementation or if I'm misinterpreting how randstruct is supposed to work
+> here.
+
+I'd agree; this looks totally broken.
+
+-Kees
+
+-- 
+Kees Cook
