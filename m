@@ -1,178 +1,70 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D03E1389
-	for <linux-hardening@vger.kernel.org>; Sat,  7 Oct 2023 02:24:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2BA917FC;
+	Sat,  7 Oct 2023 03:43:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZNsfcdCp"
-Received: from mail-oi1-x231.google.com (mail-oi1-x231.google.com [IPv6:2607:f8b0:4864:20::231])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FB18BE
-	for <linux-hardening@vger.kernel.org>; Fri,  6 Oct 2023 19:24:25 -0700 (PDT)
-Received: by mail-oi1-x231.google.com with SMTP id 5614622812f47-3ae2896974bso1768769b6e.0
-        for <linux-hardening@vger.kernel.org>; Fri, 06 Oct 2023 19:24:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1696645465; x=1697250265; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=e9UWXPGpBqN8/aGLtCDuuQnwCBGM2WifajEW12m85LU=;
-        b=ZNsfcdCpmj2gbSBbVYL0oGP+wUsjukbRmMJSW8GWncBBLNO28mIsezWj0fFY1TlFdU
-         jWEjJqMJjggafU56u4cfsWVnl2t39EKpENCbqaO6TfOu8xx3m7J/MQp+ueeRc1vbn6HH
-         5yqegWEx9hnmIcUThF2LsNoMdXYD/GrzrSD8U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696645465; x=1697250265;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e9UWXPGpBqN8/aGLtCDuuQnwCBGM2WifajEW12m85LU=;
-        b=h6IiKfqy9nTOdOvtKNE9H+/4tPqbFR6fo9W1SL5JDXwvAaw0XBoOwqOJM+EwuOmQLF
-         OOe8Is4nZ0bVzSsFn/eribeilK2wUap7JHL8CQM/WJ3hssKfZ2H0t8NhSo01sKu0hSiT
-         PYSMdX9MzsFkQDGDxS7j46x6JGiTXtXEnUh3SZQZ161VpOm8dYDug5EbxZG3WfQNXqZC
-         3WKsfcMR0tYBEuIxuZpgGySigUzYmTJGMR9UYiHj+pp38oTl1KuaQQ1Sx7tMAAy66leE
-         DZCXjK9YfRGPIyjrAukCcZlWX10ezBHoSTKtNtIpN5HuhCCe0JPm2Z8nqSVRvjsv5ab+
-         Fp/w==
-X-Gm-Message-State: AOJu0Yx1RUqzkIJ0DIzTUruyeq161z/UblqM2IUi/vnNdxyI9f+GQxgq
-	SO0S+YkB1r8Y5RDHZ8VF5UyjY0K0SfTdg6j960I=
-X-Google-Smtp-Source: AGHT+IHzkphbjEVz/o20GkGeZNmC6qgu3BYytys8/iIThThDt3sjc1ZRrJDHBBv1x8FOc4/t6VoC5A==
-X-Received: by 2002:a05:6808:c3:b0:3a7:3ce0:1ad7 with SMTP id t3-20020a05680800c300b003a73ce01ad7mr9128888oic.20.1696645464800;
-        Fri, 06 Oct 2023 19:24:24 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id l30-20020a63701e000000b00578cc5f4905sm3966426pgc.28.2023.10.06.19.24.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Oct 2023 19:24:23 -0700 (PDT)
-Date: Fri, 6 Oct 2023 19:24:20 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Lukas Loidolt <e1634039@student.tuwien.ac.at>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Daniel Marth <daniel.marth@inso.tuwien.ac.at>
-Subject: Re: Missing cache considerations in randstruct performance feature
-Message-ID: <202310061840.045F218F08@keescook>
-References: <f3ca77f0-e414-4065-83a5-ae4c4d25545d@student.tuwien.ac.at>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nai38z5t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F1D1C433C8;
+	Sat,  7 Oct 2023 03:43:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1696650213;
+	bh=/XnJFcvVU6ZpIin+GOGN2gLHcNQTV4L7LTIlpf+1yQY=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=nai38z5tQi/p+Yb92wCONFYch2eSpqfHrzRMrnJ7iVeumcdV887o0orT0t+lcNxbD
+	 i40XIhm1BvRGR2ZMm9DH7dxV++olEpvAkXVd2E4mYUe8BtD/3KIZunE3wZ200+FA4e
+	 BVzRxvSlnUrshY2lDc56P5Hdequv+9GOndP7+nYDi1H3p7tMgPUekIdu2PwlCkjMAH
+	 KJ956YKUgrVkzSVW8EgLKj7UAnqXalGPoLumnXY8f5ot1+bmNpwT0pPydbsN+uByu4
+	 U3sdDb8y3JeAf6SLYC8az7syBFG43FhZ4FKz8XJST4Ym/fAmRDep1oEenb1kvF2zue
+	 xGX8o2/Ru1yfg==
+From: Kalle Valo <kvalo@kernel.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: Felix Fietkau <nbd@nbd.name>,  Lorenzo Bianconi <lorenzo@kernel.org>,
+  Ryder Lee <ryder.lee@mediatek.com>,  Shayne Chen
+ <shayne.chen@mediatek.com>,  Sean Wang <sean.wang@mediatek.com>,  Matthias
+ Brugger <matthias.bgg@gmail.com>,  AngeloGioacchino Del Regno
+ <angelogioacchino.delregno@collabora.com>,
+  linux-wireless@vger.kernel.org,  linux-arm-kernel@lists.infradead.org,
+  linux-mediatek@lists.infradead.org,  Nathan Chancellor
+ <nathan@kernel.org>,  Nick Desaulniers <ndesaulniers@google.com>,  Tom Rix
+ <trix@redhat.com>,  linux-kernel@vger.kernel.org,  llvm@lists.linux.dev,
+  linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] wifi: mt76: Annotate struct mt76_rx_tid with __counted_by
+References: <20230915200612.never.786-kees@kernel.org>
+	<202310061320.8630F7E51@keescook>
+Date: Sat, 07 Oct 2023 06:45:52 +0300
+In-Reply-To: <202310061320.8630F7E51@keescook> (Kees Cook's message of "Fri, 6
+	Oct 2023 13:21:13 -0700")
+Message-ID: <87cyxrgknj.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f3ca77f0-e414-4065-83a5-ae4c4d25545d@student.tuwien.ac.at>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+Content-Type: text/plain
 
-On Sat, Oct 07, 2023 at 12:30:01AM +0200, Lukas Loidolt wrote:
-> Hello!
-> 
-> I have been looking into the implementation of the "randstruct" gcc-plugin
-> and noticed a potential bug in its performance version, which is supposed to
-> limit randomization to cache-line sized groupings of structure members.
-> I haven't been able to find too much documentation on this version of
-> randstruct, but my general understanding of its intended behavior is as
-> follows:
-> 
-> - in performance mode, randstruct groups structure members into cache line
-> sized partitions of 64 bytes each
-> - the order of these partitions is randomized
-> - the order of structure members within each partition is also randomized
-> 
-> In my tests, however, the performance version behaves more or less like the
-> full version of randstruct.
-> For example, testing on a struct of 10 function pointers:
-> 
-> struct test_struct{
->     void (*func1)(void);
->     void (*func2)(void);
->     void (*func3)(void);
->     void (*func4)(void);
->     void (*func5)(void);
->     void (*func6)(void);
->     void (*func7)(void);
->     void (*func8)(void);
->     void (*func9)(void);
->     void (*func10)(void);
-> };
-> 
-> resulted in the following randomized memory layout:
-> 
-> func3 (offset 0)
-> func5 (offset 8)
-> func10 (offset 16)
-> func2 (offset 24)
-> func1 (offset 32)
-> func6 (offset 40)
-> func8 (offset 48)
-> func7 (offset 56)
-> func9 (offset 64)
-> func4 (offset 72)
+Kees Cook <keescook@chromium.org> writes:
 
-I'd agree; this doesn't look like an expected layout.
+> On Fri, Sep 15, 2023 at 01:06:12PM -0700, Kees Cook wrote:
+>> Prepare for the coming implementation by GCC and Clang of the __counted_by
+>> attribute. Flexible array members annotated with __counted_by can have
+>> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+>> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+>> functions).
+>> 
+>> As found with Coccinelle[1], add __counted_by for struct mt76_rx_tid.
+>
+> Friendly ping. Can this get picked up by the wifi tree, or should it go
+> via something else?
 
-> I would have expected cache-line sized partitions of (up to) 8 pointers, so
-> that func1 through func8 are adjacent in the final layout, but these
-> partitions are seemingly not preserved.
+It's already in mt76 pull request and should be in wireless-next next
+week:
 
-I'd expect the order of func1-func8 to be randomized together, and
-func9-func10 order to be randomized together, and then they're pasted
-together.
-
-> Assuming that this is indeed not the intended behavior, the culprit is line
-> 213 in "randomize_layout_plugin.c"
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/scripts/gcc-plugins/randomize_layout_plugin.c?id=f291209eca5eba0b4704fa0832af57b12dbc1a02#n213
-> 
-> where
-> 
-> randnum = ranval(prng_state) % (i + 1);
-> 
-> should probably be something like
-> 
-> randnum = size_group[x].start + ranval(prng_state) % size_group[x].length;
-
-I thought the intent was to handle it in the loop offsets:
-
-	for (i = size_group[x].start + size_group[x].length - 1; i > size_group[x].start; i--) {
-
-But, no, this looks wrong, see below...
-
-> After changing this line, cache-line sized partitions are created and
-> preserved as expected.
-> However, while structure members within each partition are randomized, the
-> order of the partitions themselves is not randomized and remains the same as
-> in the original struct declaration.
-
-size_group[] is what holds the initial partitions. I would agree,
-though, the group shuffling doesn't seem to do anything.
-
-> I assume that the for loop in lines 200 to 206 is intended to shuffle the
-> partition_group structures
-> 
-> for (i = num_groups - 1; i > 0; i--) {
->         struct partition_group tmp;
->         randnum = ranval(prng_state) % (i + 1);
->         tmp = size_group[i];
->         size_group[i] = size_group[randnum];
->         size_group[randnum] = tmp;
-> }
-> 
-> but the order of the partition_group structs is not written back into the
-> newtree object, so the randomization from this loop is not reflected in the
-> final layout.
-
-I'd expect the newtree index to start at 0, rather than reusing "i", if
-the intent was to move groups around too. But in fact, the second
-shuffle loop seems to just not work at all: it's not shuffling within
-the group, since it operates from 0 to i, not size_group[x].start
-through size_group[x].start + size_group[x].length.
-
-> I would be interested to know if this is an actual issue with the
-> implementation or if I'm misinterpreting how randstruct is supposed to work
-> here.
-
-I'd agree; this looks totally broken.
-
--Kees
+https://patchwork.kernel.org/project/linux-wireless/patch/a5a2baaa-0db4-403e-9ebd-a7ff089675b4@nbd.name/
 
 -- 
-Kees Cook
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
