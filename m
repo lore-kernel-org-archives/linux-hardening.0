@@ -1,131 +1,135 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9322D156D7
-	for <linux-hardening@vger.kernel.org>; Sun,  8 Oct 2023 17:06:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C70E156C7
+	for <linux-hardening@vger.kernel.org>; Sun,  8 Oct 2023 17:12:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="L0TxNufF"
-Received: from mail-oa1-x29.google.com (mail-oa1-x29.google.com [IPv6:2001:4860:4864:20::29])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A327B3
-	for <linux-hardening@vger.kernel.org>; Sun,  8 Oct 2023 10:06:09 -0700 (PDT)
-Received: by mail-oa1-x29.google.com with SMTP id 586e51a60fabf-1dd8304b980so2651805fac.2
-        for <linux-hardening@vger.kernel.org>; Sun, 08 Oct 2023 10:06:09 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dBZytdHt"
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC5C1A6
+	for <linux-hardening@vger.kernel.org>; Sun,  8 Oct 2023 10:12:04 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-69101022969so3396583b3a.3
+        for <linux-hardening@vger.kernel.org>; Sun, 08 Oct 2023 10:12:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1696784768; x=1697389568; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=3nqNFicLmChhNvsLQV7hRq15LodE1T4vEvc1Jrz7PUE=;
-        b=L0TxNufFJ28PNYnbTDlW8JYZug0+VINdkAENywU0sVEluA5eaY8p56UM2H6ONSSewX
-         BefgBZc+S/sRjWgKbA5qTWbACLf4JhnH/gK8VlkswbOqL+avc5Zhn7R0WCAFlLyyIjXb
-         HCc1iaaeefS9+CHIhOPt2ZBvwZgYonpkNOm2A=
+        d=chromium.org; s=google; t=1696785124; x=1697389924; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bdDGhksNk+95G2Rk4jqSpCJbRS1WE04e+7m7Uoe1Ug8=;
+        b=dBZytdHto7KRrS97jg4yn4uuKIm8AXHZ90ml0A9czb7D4Q1uM5+9OS7yqh1btoOXSQ
+         QQp4VRrwNVKaRQl09RE/cn7Tl/P2DIAaUe8Tz/4v2LsmfvZZHnJ2Ibvw8kARoJfA8j2w
+         v0xZnzdobwun9wI3rt551hG6Iv83Hv/MZzdB0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696784768; x=1697389568;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3nqNFicLmChhNvsLQV7hRq15LodE1T4vEvc1Jrz7PUE=;
-        b=M03eDRqIkCmKfLfXD47y8wwf5SfxtjbIyeKYyAYlT+f5fsvQjlhP+2lXqn2pou90dr
-         KSTEKWk/7Ib8w4Sun9OjXksBzkP+pUL8LUwKt1iomjvCVi4FNbpvtuSkxLqRDsc5fV+Y
-         g/2yuBEfYU7XqMT57R35gKKfLxYp0E0bfneS+mIKhIpSSB8q/Tq6fZMjghq1gde+n6WX
-         6CUoeGjeRsX/nLI9ohkAQ/0VPbKDC0bhRZUr8s9kR69e8PYSBiWvQgZ1ed4M29o7l10x
-         pn8TWHf3GE/wE6Dyuja5xmI9UFqaiMzhchUNq40hd2GKXGrvC67zKAJKszHzSsRFXpjb
-         q3JA==
-X-Gm-Message-State: AOJu0YwVBJyFcepgwdzGyHGOg6hpp21jKq/BG08gH7GRR69l5QI7gdYj
-	rlenFE43Z4loHmrtzvi5dQDLQA==
-X-Google-Smtp-Source: AGHT+IG2CL4VX7lW1hVP1JbsiQepUUABt/IJtOXBKKYge0GlWd1+Drv72rEVv1gvSoMI0PJ8SMz+qw==
-X-Received: by 2002:a05:6870:e99a:b0:1d6:439d:d03e with SMTP id r26-20020a056870e99a00b001d6439dd03emr16299580oao.18.1696784768266;
-        Sun, 08 Oct 2023 10:06:08 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1696785124; x=1697389924;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bdDGhksNk+95G2Rk4jqSpCJbRS1WE04e+7m7Uoe1Ug8=;
+        b=FYAY1j/Rzeiy0IGtI89m+2Zm38oUjYiyijTdlqFSuPRNrhLXnL7gtZTOe5Mdmts7Kc
+         MM5qdQ+NCqYPoaMvL+duC205zrHAZjzfFfKjOo2AFxFE8S1MjFKKaYmkm/Ed9+YCkZXD
+         yi5QK7vr/aUb8bUWuIonAF9m//3cTFQgd1Nc1v7/uSOrdMuBicRoa86UWbbwAxL5RajB
+         qKRO1kmQUFfmB3/Qm5T54pxpE9s/r5wbJu+ac64S8rXibByFx+X11Zzys/v/ti6Mrmtp
+         9NtON0fjqCjKbNFd6kCO4mdiYK/TlY9d2asON9F7wQ37Ilx/V5314SsDqrl6un5P1/Ww
+         xh0g==
+X-Gm-Message-State: AOJu0YzjeilxyFDlwtWFU0RJDiHXsjhchqtms9Q8DD+nO8Yq+ODiCcO8
+	86wAGx8yKYHbRr1ldPH/mr+FFw==
+X-Google-Smtp-Source: AGHT+IHHu6wejYufFLWQOKaw9Sok91yvolc0x+XXaNMoZPSzMAJuU/9qzMAG/BoOfXai94GB8wgegA==
+X-Received: by 2002:a05:6a00:39a6:b0:690:fa09:61d3 with SMTP id fi38-20020a056a0039a600b00690fa0961d3mr17059096pfb.15.1696785124399;
+        Sun, 08 Oct 2023 10:12:04 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id r5-20020a638f45000000b0058901200bbbsm6729861pgn.40.2023.10.08.10.06.07
+        by smtp.gmail.com with ESMTPSA id k22-20020aa78216000000b0069337938be8sm4748906pfi.110.2023.10.08.10.12.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Oct 2023 10:06:07 -0700 (PDT)
+        Sun, 08 Oct 2023 10:12:03 -0700 (PDT)
+Date: Sun, 8 Oct 2023 10:12:01 -0700
 From: Kees Cook <keescook@chromium.org>
-To: linux-hardening@vger.kernel.org
-Cc: Kees Cook <keescook@chromium.org>,
-	Lukas Loidolt <e1634039@student.tuwien.ac.at>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] randstruct: Fix gcc-plugin performance mode to stay in group
-Date: Sun,  8 Oct 2023 10:05:56 -0700
-Message-Id: <20231008170552.work.766-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Bryan Tan <bryantan@vmware.com>, Vishnu Dasa <vdasa@vmware.com>,
+	VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org, linux-hardening@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH] VMCI: Annotate struct vmci_handle_arr with __counted_by
+Message-ID: <202310081009.045F3E99@keescook>
+References: <56bef519d982218176b59bbba64a3a308d8733d5.1696689091.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2103; i=keescook@chromium.org;
- h=from:subject:message-id; bh=qv0SIpdVAd3ngaHncfIuud+zey9eeaZyOKuEy6jeorw=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlIuFzu7vTuSz+3VGO1JVCPh0ubAQljqhiucij9
- oLQjB3POL+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZSLhcwAKCRCJcvTf3G3A
- JhOyD/0d8vIe30z382IYGDgIbm+R6DVIQhzHkNFDVHXPEMNVNNJ0UEcqT92bmfcVFEgsO7trUWc
- G2grf+7o60WseUEXUTIdxVtXAgn0rfpqwf4Gy942wFdBBeMgG+seMxmv7i9A+swhbETnQvK3CWF
- CLVAyreBEpDjOwr6sgxKag+zn79zZtYu2ZnUZ8VC7kJR02Cx7GRekWahCoLjojjWkViJ1E3L6Jb
- viPAoDn1ukpTK96MdHdBbYl61E2b61yfJKcn3O+qCRQahQ4617117WZwswKzlqGvU//6Gnzydnp
- 1SyG0S5+rEia+QCmd2AZLNmhPEAhEtydF12bUE2HYmkcR+FuZaKExVbEGhQ8bm//dJLl2F5YIj7
- w9GdaLz4bxRAYAasP8iQz03jNQTNI05OOaZEZwEsDYMMKL5otxQzD4GFku3Ap1j+UBofndwK/bz
- +IIhuT1mq4hb230NybmGBZaQT+tMCwAkzYUGVKgIEVNObR8/L6D8rtVPApVE9KGAGYlpWfOa6Qj
- 9HYM4uCYuG846NQdF4pbXS1tcmbQF3FR0vJvuFg02JZK1SFojNtWvNYKWUUO5+JbjBhAvQfncCu
- PunvqMXM8H5hwTfyq1UolEEjtNmlpYPF0nPBR7UdD6Nko9Yz5EYgq9+VNyN1kc2NULSyXl58XnD
- ITgKT3X FQTEXZWA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <56bef519d982218176b59bbba64a3a308d8733d5.1696689091.git.christophe.jaillet@wanadoo.fr>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-The performance mode of the gcc-plugin randstruct was shuffling struct
-members outside of the cache-line groups. Limit the range to the
-specified group indexes.
+On Sat, Oct 07, 2023 at 04:32:34PM +0200, Christophe JAILLET wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
+> 
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+> This patch is part of a work done in parallel of what is currently worked
+> on by Kees Cook.
+> 
+> My patches are only related to corner cases that do NOT match the
+> semantic of his Coccinelle script[1].
+> 
+> In this case, something similar to struct_size() is implemented in
+> handle_arr_calc_size().
 
-Cc: linux-hardening@vger.kernel.org
-Reported-by: Lukas Loidolt <e1634039@student.tuwien.ac.at>
-Closes: https://lore.kernel.org/all/f3ca77f0-e414-4065-83a5-ae4c4d25545d@student.tuwien.ac.at
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- scripts/gcc-plugins/randomize_layout_plugin.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+I think this should likely lose VMCI_HANDLE_ARRAY_HEADER_SIZE entirely
+and the helper to use sizeof() and struct_size() directly, but probably
+as a separate patch.
 
-diff --git a/scripts/gcc-plugins/randomize_layout_plugin.c b/scripts/gcc-plugins/randomize_layout_plugin.c
-index 951b74ba1b24..366395cab490 100644
---- a/scripts/gcc-plugins/randomize_layout_plugin.c
-+++ b/scripts/gcc-plugins/randomize_layout_plugin.c
-@@ -191,12 +191,14 @@ static void partition_struct(tree *fields, unsigned long length, struct partitio
- 
- static void performance_shuffle(tree *newtree, unsigned long length, ranctx *prng_state)
- {
--	unsigned long i, x;
-+	unsigned long i, x, index;
- 	struct partition_group size_group[length];
- 	unsigned long num_groups = 0;
- 	unsigned long randnum;
- 
- 	partition_struct(newtree, length, (struct partition_group *)&size_group, &num_groups);
-+
-+	/* FIXME: this group shuffle is currently a no-op. */
- 	for (i = num_groups - 1; i > 0; i--) {
- 		struct partition_group tmp;
- 		randnum = ranval(prng_state) % (i + 1);
-@@ -206,11 +208,14 @@ static void performance_shuffle(tree *newtree, unsigned long length, ranctx *prn
- 	}
- 
- 	for (x = 0; x < num_groups; x++) {
--		for (i = size_group[x].start + size_group[x].length - 1; i > size_group[x].start; i--) {
-+		for (index = size_group[x].length - 1; index > 0; index--) {
- 			tree tmp;
-+
-+			i = size_group[x].start + index;
- 			if (DECL_BIT_FIELD_TYPE(newtree[i]))
- 				continue;
--			randnum = ranval(prng_state) % (i + 1);
-+			randnum = ranval(prng_state) % (index + 1);
-+			randnum += size_group[x].start;
- 			// we could handle this case differently if desired
- 			if (DECL_BIT_FIELD_TYPE(newtree[randnum]))
- 				continue;
+> 
+> Note that I'm slightly unsure on how things will behave in regards to the
+> krealloc() in vmci_handle_arr_append_entry().
+
+It looks correct to me:
+
+                new_array = krealloc(array, new_size, GFP_ATOMIC);
+		...
+                new_array->capacity += capacity_bump;
+
+i.e. "capacity" is adjusted up before accessing any "entries".
+
+> 
+> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+> ---
+>  drivers/misc/vmw_vmci/vmci_handle_array.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/misc/vmw_vmci/vmci_handle_array.h b/drivers/misc/vmw_vmci/vmci_handle_array.h
+> index 96193f85be5b..b0e6b1956014 100644
+> --- a/drivers/misc/vmw_vmci/vmci_handle_array.h
+> +++ b/drivers/misc/vmw_vmci/vmci_handle_array.h
+> @@ -17,7 +17,7 @@ struct vmci_handle_arr {
+>  	u32 max_capacity;
+>  	u32 size;
+>  	u32 pad;
+> -	struct vmci_handle entries[];
+> +	struct vmci_handle entries[] __counted_by(capacity);
+>  };
+>  
+>  #define VMCI_HANDLE_ARRAY_HEADER_SIZE				\
+> -- 
+> 2.34.1
+> 
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+
 -- 
-2.34.1
-
+Kees Cook
