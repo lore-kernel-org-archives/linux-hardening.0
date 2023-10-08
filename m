@@ -1,60 +1,58 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C70E156C7
-	for <linux-hardening@vger.kernel.org>; Sun,  8 Oct 2023 17:12:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E387811708
+	for <linux-hardening@vger.kernel.org>; Sun,  8 Oct 2023 21:02:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dBZytdHt"
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC5C1A6
-	for <linux-hardening@vger.kernel.org>; Sun,  8 Oct 2023 10:12:04 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-69101022969so3396583b3a.3
-        for <linux-hardening@vger.kernel.org>; Sun, 08 Oct 2023 10:12:04 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kiumIqxC"
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3861A6
+	for <linux-hardening@vger.kernel.org>; Sun,  8 Oct 2023 14:02:31 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1c736b00639so25805545ad.2
+        for <linux-hardening@vger.kernel.org>; Sun, 08 Oct 2023 14:02:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1696785124; x=1697389924; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1696798951; x=1697403751; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bdDGhksNk+95G2Rk4jqSpCJbRS1WE04e+7m7Uoe1Ug8=;
-        b=dBZytdHto7KRrS97jg4yn4uuKIm8AXHZ90ml0A9czb7D4Q1uM5+9OS7yqh1btoOXSQ
-         QQp4VRrwNVKaRQl09RE/cn7Tl/P2DIAaUe8Tz/4v2LsmfvZZHnJ2Ibvw8kARoJfA8j2w
-         v0xZnzdobwun9wI3rt551hG6Iv83Hv/MZzdB0=
+        bh=+637J8JrxpPBKVObYJuwDVzNM6P1JOtG34tKxFSpPmw=;
+        b=kiumIqxCXurcE5rVbMY1WNBT4+vW8RJyyelhy11gsoSUiVi3JwFxoTtlQqDgAfkwPQ
+         ZbwR1I5Ox2W8z7XnmMboYlsSriYDiGxlValNLH3xedDPtoxHi14RX5dGMwstjyME8deZ
+         j3MtSXSDCoCbFYegTcfcV/OjDAVd9bpcAQD+k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696785124; x=1697389924;
+        d=1e100.net; s=20230601; t=1696798951; x=1697403751;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bdDGhksNk+95G2Rk4jqSpCJbRS1WE04e+7m7Uoe1Ug8=;
-        b=FYAY1j/Rzeiy0IGtI89m+2Zm38oUjYiyijTdlqFSuPRNrhLXnL7gtZTOe5Mdmts7Kc
-         MM5qdQ+NCqYPoaMvL+duC205zrHAZjzfFfKjOo2AFxFE8S1MjFKKaYmkm/Ed9+YCkZXD
-         yi5QK7vr/aUb8bUWuIonAF9m//3cTFQgd1Nc1v7/uSOrdMuBicRoa86UWbbwAxL5RajB
-         qKRO1kmQUFfmB3/Qm5T54pxpE9s/r5wbJu+ac64S8rXibByFx+X11Zzys/v/ti6Mrmtp
-         9NtON0fjqCjKbNFd6kCO4mdiYK/TlY9d2asON9F7wQ37Ilx/V5314SsDqrl6un5P1/Ww
-         xh0g==
-X-Gm-Message-State: AOJu0YzjeilxyFDlwtWFU0RJDiHXsjhchqtms9Q8DD+nO8Yq+ODiCcO8
-	86wAGx8yKYHbRr1ldPH/mr+FFw==
-X-Google-Smtp-Source: AGHT+IHHu6wejYufFLWQOKaw9Sok91yvolc0x+XXaNMoZPSzMAJuU/9qzMAG/BoOfXai94GB8wgegA==
-X-Received: by 2002:a05:6a00:39a6:b0:690:fa09:61d3 with SMTP id fi38-20020a056a0039a600b00690fa0961d3mr17059096pfb.15.1696785124399;
-        Sun, 08 Oct 2023 10:12:04 -0700 (PDT)
+        bh=+637J8JrxpPBKVObYJuwDVzNM6P1JOtG34tKxFSpPmw=;
+        b=DUHVK9WeaNCuJ6FR6GhFpiTsBLVmTrjl0fsBVACnNptHh0wixlPvhejIsNfM/4+DRz
+         YgwPH0j3pigpwX31gs57KN5EgFxDpH5+mje1P7ZZovM09mBr0yI5w+0p2mtXhsiR5A5c
+         l2na/xRHyI2U20Kc8tDDXBeSWbeZtx6JiTYSC6MYvLtbdW/PGkUDaIZZU2/qjH9VVhIc
+         Lhlm2jXaetWKTQd3S6DwkBExBCbf4zvPXQTR86UTAqhAPX6QZ0iLufp77PKL6sEiCHBD
+         j/vLhnzJeL2ogObxxF5ttR/X8jSSgWd7WbCYwAbms8l1mrK4jrqJOYUkXd7LXZDiq5Vb
+         WWLQ==
+X-Gm-Message-State: AOJu0YwrlU0+HE0vHCVoUJwplcy3LANzxqrPk1FTK96NXv+6UoA+2X8Q
+	BQHaVRkjtyiM8Joe9NryxCKz7pZXjOI+ypBcqkg=
+X-Google-Smtp-Source: AGHT+IGA+gNn0/afQ19stAKcVih0BRUUfkT7EAYUidRwr3O0DF16NyVLt6G/9/uEJWXsIq4Yp/7DBQ==
+X-Received: by 2002:a17:90b:3a8e:b0:274:2906:656a with SMTP id om14-20020a17090b3a8e00b002742906656amr11799946pjb.5.1696798951057;
+        Sun, 08 Oct 2023 14:02:31 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id k22-20020aa78216000000b0069337938be8sm4748906pfi.110.2023.10.08.10.12.03
+        by smtp.gmail.com with ESMTPSA id nv16-20020a17090b1b5000b00271c5811019sm6919052pjb.38.2023.10.08.14.02.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Oct 2023 10:12:03 -0700 (PDT)
-Date: Sun, 8 Oct 2023 10:12:01 -0700
+        Sun, 08 Oct 2023 14:02:30 -0700 (PDT)
+Date: Sun, 8 Oct 2023 14:02:28 -0700
 From: Kees Cook <keescook@chromium.org>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Bryan Tan <bryantan@vmware.com>, Vishnu Dasa <vdasa@vmware.com>,
-	VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
+To: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, lijian <lijian@yulong.com>,
+	linux-media@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>,
 	Nick Desaulniers <ndesaulniers@google.com>,
 	Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org, linux-hardening@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH] VMCI: Annotate struct vmci_handle_arr with __counted_by
-Message-ID: <202310081009.045F3E99@keescook>
-References: <56bef519d982218176b59bbba64a3a308d8733d5.1696689091.git.christophe.jaillet@wanadoo.fr>
+	llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] media: v4l2-event: Annotate struct v4l2_subscribed_event
+ with __counted_by
+Message-ID: <202310081402.F4DBC2B@keescook>
+References: <20230922174951.work.160-kees@kernel.org>
+ <169662411867.2154917.2192633783167073007.b4-ty@chromium.org>
+ <eeeb183e-f6ed-4158-8852-04da5e452d9b@xs4all.nl>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -63,73 +61,41 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <56bef519d982218176b59bbba64a3a308d8733d5.1696689091.git.christophe.jaillet@wanadoo.fr>
+In-Reply-To: <eeeb183e-f6ed-4158-8852-04da5e452d9b@xs4all.nl>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Sat, Oct 07, 2023 at 04:32:34PM +0200, Christophe JAILLET wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
+On Sat, Oct 07, 2023 at 11:21:26AM +0200, Hans Verkuil wrote:
+> On 06/10/2023 22:28, Kees Cook wrote:
+> > On Fri, 22 Sep 2023 10:49:52 -0700, Kees Cook wrote:
+> >> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> >> attribute. Flexible array members annotated with __counted_by can have
+> >> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+> >> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> >> functions).
+> >>
+> >> As found with Coccinelle[1], add __counted_by for struct v4l2_subscribed_event.
+> >> Additionally, since the element count member must be set before accessing
+> >> the annotated flexible array member, move its initialization earlier.
+> >>
+> >> [...]
+> > 
+> > Since this is a trivial change and it's been 2 week without further
+> > discussion, I'll snag this patch.
 > 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
-> This patch is part of a work done in parallel of what is currently worked
-> on by Kees Cook.
+> Ah, I picked this up for media as well. Same for the other patch.
+> You should have gotten an email from patchwork on Oct 3 that it was accepted.
 > 
-> My patches are only related to corner cases that do NOT match the
-> semantic of his Coccinelle script[1].
-> 
-> In this case, something similar to struct_size() is implemented in
-> handle_arr_calc_size().
+> I think I should be more pro-active and reply when I pick up patches from
+> non-media developers instead of relying on patchwork. It seems that it is
+> easy to miss emails from patchwork.
 
-I think this should likely lose VMCI_HANDLE_ARRAY_HEADER_SIZE entirely
-and the helper to use sizeof() and struct_size() directly, but probably
-as a separate patch.
+Ah! Thanks for reminding me. I'll drop them from the hardening tree. :)
 
-> 
-> Note that I'm slightly unsure on how things will behave in regards to the
-> krealloc() in vmci_handle_arr_append_entry().
-
-It looks correct to me:
-
-                new_array = krealloc(array, new_size, GFP_ATOMIC);
-		...
-                new_array->capacity += capacity_bump;
-
-i.e. "capacity" is adjusted up before accessing any "entries".
-
-> 
-> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
-> ---
->  drivers/misc/vmw_vmci/vmci_handle_array.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/misc/vmw_vmci/vmci_handle_array.h b/drivers/misc/vmw_vmci/vmci_handle_array.h
-> index 96193f85be5b..b0e6b1956014 100644
-> --- a/drivers/misc/vmw_vmci/vmci_handle_array.h
-> +++ b/drivers/misc/vmw_vmci/vmci_handle_array.h
-> @@ -17,7 +17,7 @@ struct vmci_handle_arr {
->  	u32 max_capacity;
->  	u32 size;
->  	u32 pad;
-> -	struct vmci_handle entries[];
-> +	struct vmci_handle entries[] __counted_by(capacity);
->  };
->  
->  #define VMCI_HANDLE_ARRAY_HEADER_SIZE				\
-> -- 
-> 2.34.1
-> 
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
+-Kees
 
 -- 
 Kees Cook
