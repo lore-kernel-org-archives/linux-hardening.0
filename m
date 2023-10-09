@@ -1,173 +1,107 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92AB563DF
-	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 12:00:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81057182C3
+	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 12:28:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="EqS9Eb8Q"
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9173C94;
-	Mon,  9 Oct 2023 05:00:46 -0700 (PDT)
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 399Bk93c029864;
-	Mon, 9 Oct 2023 12:00:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=o9r1b72AGzQX2cPr3WsZ4YtvkbsTzQxrKOO5gARLsSg=;
- b=EqS9Eb8QuzhS2rsmdbzg/FEhk6CjLoBgeb2ZxodZgr80/jtVRB/v1t/oYe9xYXbHgg++
- m9vY5hE9lS44rxu4+RjHXogYHDr+P4tdv0vifgUMsiSzLEDYgF2W0xsuP5GLxqPD3ND0
- zatW1t7s2F3ZpspyyLlNa0Te6QBEYoDTKFmCxEJ+Z6uZf0Fe73IhI4ch+MA971Od89WM
- EbKXPSF2GdZ1eoMrMfGPYAKxTOJ4OnZEOB4fvOrZBY1vu187+2duPrD9iFORbXcibe3x
- NXP4hYGibfPgAfMj2huKwl1O09eBmYVzJa4ZXBRvLbIRswsY1c2axJda5LcxQA5hjmVR Jg== 
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3tkh592b8c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 09 Oct 2023 12:00:04 +0000
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 399C02Xr000308
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 9 Oct 2023 12:00:02 GMT
-Received: from [10.214.225.95] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.36; Mon, 9 Oct
- 2023 04:59:49 -0700
-Message-ID: <a869ec2e-966b-f8ea-7f68-a77c214a45af@quicinc.com>
-Date: Mon, 9 Oct 2023 17:29:40 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fUDPshpf"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6699499;
+	Mon,  9 Oct 2023 05:28:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696854519; x=1728390519;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=RfddNvi5x0wejZG5QzaCfI3Qcz87rv0fDzUvwx9WuLY=;
+  b=fUDPshpfWyU0gstdvmwc7yu5vRQjt5H8WEwzNEyynd1VWg/F4XMp6Qhy
+   Y7JOYJpT5EZv8imQGi8sv5IPX3QxVx6e6aZGjP5o9zimyj7r2jYMGp4UY
+   tfeF0n3CxHlz9nCS1MG9uLfYC8Mb2/R+sy5zcrevYcRVWCnnmHG5ohvnB
+   Kylf0jTO1+G3MruC70DrSnfFsOEkF39xiMdLUu3u/AU9la93Qa6FSLIYC
+   5NofFMSgsLm78Daos+ZIopxmRZHdDbIHGPPeLMgpruFJQdnHTtL5bMeZI
+   6aTM4zBVNqGJGFfwZPrzxQd3VxQrOXdL/pqDHihIsw8oOQ8j2laPNDUsW
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10858"; a="384004945"
+X-IronPort-AV: E=Sophos;i="6.03,210,1694761200"; 
+   d="scan'208";a="384004945"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2023 05:28:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10858"; a="746656325"
+X-IronPort-AV: E=Sophos;i="6.03,210,1694761200"; 
+   d="scan'208";a="746656325"
+Received: from ibrahim2-mobl2.gar.corp.intel.com (HELO intel.com) ([10.213.42.185])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2023 05:28:26 -0700
+Date: Mon, 9 Oct 2023 14:28:20 +0200
+From: Andi Shyti <andi.shyti@linux.intel.com>
+To: Kees Cook <keescook@chromium.org>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	John Harrison <John.C.Harrison@intel.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Michal Wajdeczko <michal.wajdeczko@intel.com>,
+	Matt Roper <matthew.d.roper@intel.com>,
+	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	linux-hardening@vger.kernel.org,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Tom Rix <trix@redhat.com>, Andi Shyti <andi.shyti@linux.intel.com>,
+	Nirmoy Das <nirmoy.das@intel.com>,
+	Jonathan Cavitt <jonathan.cavitt@intel.com>,
+	Fei Yang <fei.yang@intel.com>, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH] drm/i915/guc: Annotate struct ct_incoming_msg with
+ __counted_by
+Message-ID: <ZSPx5OrMBm0O6wpL@ashyti-mobl2.lan>
+References: <20231006201744.work.135-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [REBASE PATCH v5 10/17] pstore: Add pstore_region_defined()
- helper and export it
-To: Kees Cook <keescook@chromium.org>
-CC: <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <tony.luck@intel.com>, <gpiccoli@igalia.com>,
-        <mathieu.poirier@linaro.org>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <linus.walleij@linaro.org>,
-        <andy.shevchenko@gmail.com>, <vigneshr@ti.com>, <nm@ti.com>,
-        <matthias.bgg@gmail.com>, <kgene@kernel.org>,
-        <alim.akhtar@samsung.com>, <bmasney@redhat.com>,
-        <quic_tsoni@quicinc.com>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>, <kernel@quicinc.com>
-References: <1694429639-21484-1-git-send-email-quic_mojha@quicinc.com>
- <1694429639-21484-11-git-send-email-quic_mojha@quicinc.com>
- <202309131620.34EB0F6972@keescook>
-Content-Language: en-US
-From: Mukesh Ojha <quic_mojha@quicinc.com>
-In-Reply-To: <202309131620.34EB0F6972@keescook>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: DDbFoX8caW9i9Gk7bqvbx_eyrZSMb8tu
-X-Proofpoint-GUID: DDbFoX8caW9i9Gk7bqvbx_eyrZSMb8tu
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-09_11,2023-10-09_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- clxscore=1015 suspectscore=0 priorityscore=1501 mlxlogscore=999
- bulkscore=0 phishscore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2309180000 definitions=main-2310090098
-X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231006201744.work.135-kees@kernel.org>
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+	SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Thanks for the review.
+Hi Kees,
 
-On 9/14/2023 4:54 AM, Kees Cook wrote:
-> On Mon, Sep 11, 2023 at 04:23:52PM +0530, Mukesh Ojha wrote:
->> There are users like Qualcomm minidump which is interested in
->> knowing the pstore frontend addresses and sizes from the backend
->> (ram) to be able to register it with firmware to finally collect
->> them during crash for debugging.
->>
->> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
->> ---
->>   fs/pstore/platform.c   | 15 +++++++++++++++
->>   fs/pstore/ram.c        | 42 ++++++++++++++++++++++++++++++++++++++++++
->>   include/linux/pstore.h |  6 ++++++
->>   3 files changed, 63 insertions(+)
->>
->> diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
->> index e5bca9a004cc..fdac951059c1 100644
->> --- a/fs/pstore/platform.c
->> +++ b/fs/pstore/platform.c
->> @@ -139,6 +139,21 @@ enum pstore_type_id pstore_name_to_type(const char *name)
->>   }
->>   EXPORT_SYMBOL_GPL(pstore_name_to_type);
->>   
->> +int pstore_region_defined(struct pstore_record *record,
->> +			  void **virt, phys_addr_t *phys,
->> +			  size_t *size, unsigned int *max_dump_cnt)
->> +{
->> +	if (!psinfo)
->> +		return -EINVAL;
->> +
->> +	record->psi = psinfo;
+On Fri, Oct 06, 2023 at 01:17:45PM -0700, Kees Cook wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
+> array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
 > 
-> Uh, this makes no sense to me. If this is a real pstore_record, you
-> cannot just assign psi here.
+> As found with Coccinelle[1], add __counted_by for struct ct_incoming_msg.
+> 
+> Cc: Jani Nikula <jani.nikula@linux.intel.com>
+> Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+> Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+> Cc: Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>
+> Cc: David Airlie <airlied@gmail.com>
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: John Harrison <John.C.Harrison@Intel.com>
+> Cc: Matthew Brost <matthew.brost@intel.com>
+> Cc: Michal Wajdeczko <michal.wajdeczko@intel.com>
+> Cc: Matt Roper <matthew.d.roper@intel.com>
+> Cc: intel-gfx@lists.freedesktop.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-hardening@vger.kernel.org
+> Link: https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci [1]
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Ok.
+merged in drm-intel-gt-next.
 
-> 
->> +
->> +	return psinfo->region_info ?
->> +	       psinfo->region_info(record, virt, phys, size, max_dump_cnt) :
->> +	       -EINVAL;
-> 
-> Common code style for this kind of thing is usually like this:
-> 
-> 	if (!psinfo->region_info)
-> 		return -EINVAL;
-> 
-> 	return psinfo->region_info(...)
-
-Thanks.
-
--Mukesh
-> 
->> +}
->> +EXPORT_SYMBOL_GPL(pstore_region_defined);
->> +
->>   static void pstore_timer_kick(void)
->>   {
->>   	if (pstore_update_ms < 0)
->> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
->> index ab551caa1d2a..62202f3ddf63 100644
->> --- a/fs/pstore/ram.c
->> +++ b/fs/pstore/ram.c
->> @@ -437,6 +437,47 @@ static int ramoops_pstore_erase(struct pstore_record *record)
->>   	return 0;
->>   }
->>   
->> +static int ramoops_region_info(struct pstore_record *record,
->> +			       void **virt, phys_addr_t *phys,
->> +			       size_t *size, unsigned int *max_dump_cnt)
-> 
-> But there's a larger problem here -- "virt", "phys" and likely
-> "max_dump_cnt" are aspects _specific to the ram backend_. This can't be
-> a generic pstore interface.
-> 
-> I'm not opposed to it being exposed only from ramoops, though.
-> 
-> But I think you'll want a pstore generic way to iterate over the
-> records..
+Thanks,
+Andi
