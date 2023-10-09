@@ -1,35 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD8A141E4F
-	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 21:42:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA11D42BF5;
+	Mon,  9 Oct 2023 21:46:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LhxZG3fG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D458AC433C7;
-	Mon,  9 Oct 2023 21:42:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DbzY3biD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 416FBC433C8;
+	Mon,  9 Oct 2023 21:46:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696887728;
-	bh=kq7cApyaT7hqQOO78PhiQUyzEI02824CzKv278QATpY=;
+	s=k20201202; t=1696887983;
+	bh=hOV1TPaxRK6lKBeU8FkupnPDNPfBklnFK2iqPujS67E=;
 	h=Date:From:To:Cc:Subject:From;
-	b=LhxZG3fGzzNxCc8RPo3e5Apt/vaJKOUso5HbDl0esgi/4BcjGd46MWi6EjUemPJM0
-	 eC3Yo/QQtFvvtIshkn3s5CzSQveQ1RLlh+VJpdtrnMhz1+dhL2I0IKkaueyS2krcvZ
-	 UtdFf9SjO5lWp5TdS5Gorhp/lJjHWhFmHn8fGkxrpYnMk2s6hLkgG2Hn58bh3ZSN6v
-	 k1pAj8vT1qSI1jn2cXNdhOLb7XBnKUAgVf1E9D7N63CgW/1h+ISrufFpCghZkCbfDZ
-	 Le1a/d7Fa1uvsVA4+TXZEKboWAEBshbN91oiFmrkUD3myeRkg5ulbbNJ/pW/q/EJxH
-	 5FBDRwAxf+zig==
-Date: Mon, 9 Oct 2023 15:42:04 -0600
+	b=DbzY3biDgO4mfCIA4qPzupLl+uX9GQuhb11X3aVuywb+Bl5IiANsNQ87Dq6LSmK2G
+	 N+NCZxZ6Io0Elk4NgT8Tu4MX/Wbc/Zlyh+3yaAk2picUd7NwkzG2epTTBf92SeO7Zn
+	 H+iQ5RERpBZ9vTb3eOW5ELre2i0mPtM7mA2AkKXShWbogN5G9ftpllRSnRVZDjiX+u
+	 Z6gHzuzsir9EofnMs4F0iGxxpYt+rRTCLF4k2fA0rHNG8r99DhPaFICqWsqKebAfxR
+	 EltoEEpdN8DY7vzaPZL+x8Im429T6LSYjnYmhGiioMo6fjMsYsbjcQft4CvhkJ7dap
+	 wytsDX0E0V9tg==
+Date: Mon, 9 Oct 2023 15:46:18 -0600
 From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Arend van Spriel <aspriel@gmail.com>,
-	Franky Lin <franky.lin@broadcom.com>,
-	Hante Meuleman <hante.meuleman@broadcom.com>,
-	Kalle Valo <kvalo@kernel.org>
-Cc: linux-wireless@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com,
-	SHA-cyfmac-dev-list@infineon.com, linux-kernel@vger.kernel.org,
+To: Chandrashekar Devegowda <chandrashekar.devegowda@intel.com>,
+	Intel Corporation <linuxwwan@intel.com>,
+	Chiranjeevi Rapolu <chiranjeevi.rapolu@linux.intel.com>,
+	Liu Haijun <haijun.liu@mediatek.com>,
+	M Chetan Kumar <m.chetan.kumar@linux.intel.com>,
+	Ricardo Martinez <ricardo.martinez@linux.intel.com>,
+	Loic Poulain <loic.poulain@linaro.org>,
+	Sergey Ryazanov <ryazanov.s.a@gmail.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] wifi: brcmfmac: fweh: Add __counted_by for struct
- brcmf_fweh_queue_item and use struct_size()
-Message-ID: <ZSRzrIe0345eymk2@work>
+Subject: [PATCH][next] net: wwan: t7xx: Add __counted_by for struct
+ t7xx_fsm_event and use struct_size()
+Message-ID: <ZSR0qh5dEV5qoBW4@work>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -45,11 +52,6 @@ their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
 array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 functions).
 
-Also, relocate `event->datalen = datalen;` to before calling
-`memcpy(event->data, data, datalen);`, so that the __counted_by
-annotation has effect, and flex-array member `data` can be properly
-bounds-checked at run-time.
-
 While there, use struct_size() helper, instead of the open-coded
 version, to calculate the size for the allocation of the whole
 flexible structure, including of course, the flexible-array member.
@@ -59,42 +61,37 @@ fixed manually.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/wwan/t7xx/t7xx_state_monitor.c | 3 ++-
+ drivers/net/wwan/t7xx/t7xx_state_monitor.h | 2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.c
-index dac7eb77799b..68960ae98987 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fweh.c
-@@ -33,7 +33,7 @@ struct brcmf_fweh_queue_item {
- 	u8 ifaddr[ETH_ALEN];
- 	struct brcmf_event_msg_be emsg;
- 	u32 datalen;
--	u8 data[];
-+	u8 data[] __counted_by(datalen);
+diff --git a/drivers/net/wwan/t7xx/t7xx_state_monitor.c b/drivers/net/wwan/t7xx/t7xx_state_monitor.c
+index 80edb8e75a6a..0bc97430211b 100644
+--- a/drivers/net/wwan/t7xx/t7xx_state_monitor.c
++++ b/drivers/net/wwan/t7xx/t7xx_state_monitor.c
+@@ -445,7 +445,8 @@ int t7xx_fsm_append_event(struct t7xx_fsm_ctl *ctl, enum t7xx_fsm_event_state ev
+ 		return -EINVAL;
+ 	}
+ 
+-	event = kmalloc(sizeof(*event) + length, in_interrupt() ? GFP_ATOMIC : GFP_KERNEL);
++	event = kmalloc(struct_size(event, data, length),
++			in_interrupt() ? GFP_ATOMIC : GFP_KERNEL);
+ 	if (!event)
+ 		return -ENOMEM;
+ 
+diff --git a/drivers/net/wwan/t7xx/t7xx_state_monitor.h b/drivers/net/wwan/t7xx/t7xx_state_monitor.h
+index b6e76f3903c8..b0b3662ae6d7 100644
+--- a/drivers/net/wwan/t7xx/t7xx_state_monitor.h
++++ b/drivers/net/wwan/t7xx/t7xx_state_monitor.h
+@@ -102,7 +102,7 @@ struct t7xx_fsm_event {
+ 	struct list_head	entry;
+ 	enum t7xx_fsm_event_state event_id;
+ 	unsigned int		length;
+-	unsigned char		data[];
++	unsigned char		data[] __counted_by(length);
  };
  
- /*
-@@ -418,17 +418,17 @@ void brcmf_fweh_process_event(struct brcmf_pub *drvr,
- 	    datalen + sizeof(*event_packet) > packet_len)
- 		return;
- 
--	event = kzalloc(sizeof(*event) + datalen, gfp);
-+	event = kzalloc(struct_size(event, data, datalen), gfp);
- 	if (!event)
- 		return;
- 
-+	event->datalen = datalen;
- 	event->code = code;
- 	event->ifidx = event_packet->msg.ifidx;
- 
- 	/* use memcpy to get aligned event message */
- 	memcpy(&event->emsg, &event_packet->msg, sizeof(event->emsg));
- 	memcpy(event->data, data, datalen);
--	event->datalen = datalen;
- 	memcpy(event->ifaddr, event_packet->eth.h_dest, ETH_ALEN);
- 
- 	brcmf_fweh_queue_event(fweh, event);
+ struct t7xx_fsm_command {
 -- 
 2.34.1
 
