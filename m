@@ -1,100 +1,124 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92C51374FC;
-	Mon,  9 Oct 2023 23:14:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E761173D
+	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 23:20:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hLKRPo4T"
-Received: from mail-ua1-x92d.google.com (mail-ua1-x92d.google.com [IPv6:2607:f8b0:4864:20::92d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D72A26A6;
-	Mon,  9 Oct 2023 16:12:10 -0700 (PDT)
-Received: by mail-ua1-x92d.google.com with SMTP id a1e0cc1a2514c-7b5f0bbe137so216991241.2;
-        Mon, 09 Oct 2023 16:12:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rGgDo/H5"
+Received: from mail-oa1-x4a.google.com (mail-oa1-x4a.google.com [IPv6:2001:4860:4864:20::4a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D316BA4
+	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 16:19:58 -0700 (PDT)
+Received: by mail-oa1-x4a.google.com with SMTP id 586e51a60fabf-1dd51b98342so7460751fac.3
+        for <linux-hardening@vger.kernel.org>; Mon, 09 Oct 2023 16:19:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696893125; x=1697497925; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cBvYA2ZtciSSP4BymFX/zrFacKuKzAMWo9vVUVhdRHg=;
-        b=hLKRPo4TtZv1TluLN/cfBRSLpkEwYaTe2YKxDyH90OfaR9I9Y6O4M+QK38lg7aLzMH
-         B9KWV0C0HIUkQTKj2RLxVYYaHLXHLoQUWtNwI5GFy2NwQ8TyHGJO6Ybqmeom/u8JVl/d
-         IMXjXRvUEORFR6DPvrlnsL6T7ESGUAWXkh2SPzTUv+01BS7Yj0IFUBmjEAdq+FrD9AVP
-         2inr3yRipughj0eH3UVSUmm5HRh1tffUvG9orn0C9jCy27JKM6Sy/Bn4fx30UbDGDdH1
-         6hxB0LxWDvFaMVA+6weKeLhL/1FDojje4vqyDudi0tDrljaY9rb/ZC4XPWFDIz7VjQur
-         cSXg==
+        d=google.com; s=20230601; t=1696893598; x=1697498398; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=zjHQyvadONVOud3v/rE/Az+3J92aB2vK1iZQZ/OYRLE=;
+        b=rGgDo/H5T9gZYLPmFpOQGJVZ4k6OAoKrpALI+biAf+tM24a13+h8KfK3Z04ysSZ92P
+         lcuIFq/S4RgiZPrxJP7OmlhmlRU3lP3uCwsV0FXtlKSSIHlYV9rW8AeQO3Xm0MbOsnWP
+         J3wfoKZSiXvl/Hq9nzVcR+F5zG1k6TXmEy+eIfQ27mzRP0ueLKEl4shn+W5X9EvW4aF4
+         rg8v2ZjME3f2/4jTY7OaPnHOV5IXd6IHVti0q8gKE/J+MLPpVjCSoghcTIQ5Ce8UWkSs
+         kcWyqBJ5YQeYo7503/Vv8QxoJTQHr48OQFlXT7ZjBY/SFK8w+WEGP8WlqQyDgLV4KPFj
+         +H4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696893125; x=1697497925;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cBvYA2ZtciSSP4BymFX/zrFacKuKzAMWo9vVUVhdRHg=;
-        b=Kc/adbFYEo7eoC759FNa7SvvKmT60bWN93G9IC3SYG59jZ7OjJqQ0rvTwtxxCrLhMS
-         TRoDUN/IwPJ7yGmwqhMTUGdLf/KBx8NmQCDTiWVa4vPZ/gm4XSUczQatMPj+SC8AUbze
-         dNS774De3CNfSlJKcCTGzuWXnpqURpZAiqMA1RxZpFLf/8EXFP6K5DaEbOZpq9NGD1ho
-         U2Y+EWS/D8y/JUNn0+M905wpBrJPkEDGaG+yie3SECrtv84F5PQMT6hOjYgMdWWdCwMj
-         D/iioJkhLoDOb6+FlAHdMKxL1sJWgoHqRFBgQT/s0m6ymbM74f0LwDKupVD6Z2/7V7+5
-         5LXg==
-X-Gm-Message-State: AOJu0YxYHhm4wRCR4hhqgtuUZFnObcQkw2drcGedl+yTtz8kkIlIVAKn
-	/RSoBEvjNek8LclB6+mbLHw=
-X-Google-Smtp-Source: AGHT+IEqlTB6xMUxC2uUzyE65eT9G6Bzyn95oHRdOyu2UltAtccDUj8YlgFVkih9ZpIZ+RtuAB5iFA==
-X-Received: by 2002:a05:6102:3a76:b0:454:6dc6:cd5e with SMTP id bf22-20020a0561023a7600b004546dc6cd5emr15136006vsb.15.1696893125521;
-        Mon, 09 Oct 2023 16:12:05 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id s27-20020a05620a031b00b00767d572d651sm3874915qkm.87.2023.10.09.16.12.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Oct 2023 16:12:04 -0700 (PDT)
-Message-ID: <ab209176-b172-48c4-9550-d74b084ecaeb@gmail.com>
-Date: Mon, 9 Oct 2023 16:12:01 -0700
+        d=1e100.net; s=20230601; t=1696893598; x=1697498398;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zjHQyvadONVOud3v/rE/Az+3J92aB2vK1iZQZ/OYRLE=;
+        b=hXZRSQJH41G1JHhDmgOCugBtRP3Cz3hw2+5AgbGR4SqarVBkMgRKIVNG8AXOHnQRX8
+         QZ6+d1ETMIjm8fVCyAY23A99W8+01EBiU2nK9IQ91f2tNQpRZ69bio4xfQRjmKqJb2GL
+         1lnQkzZgiE+L+//+9n4nPiIrc0OEw/QHTMJhpxVV5UpXuk7P/PgqsplOWofNxO8zlzT7
+         jY3RZXCckwM1ggVfRtNU9QIL68nub417GYIpHa3+ieOPwCKiiAL7jQG9IeijgnCLdqYo
+         E8/tw+ZJtAvW44AHlpXYDS/sTJv4qeZXnHjjNxx+xj+aR8TavbFYe8+i+XtabH3gFjao
+         KAQg==
+X-Gm-Message-State: AOJu0Yx5IPxJkJJC5jmrGySocMAH2Ckqs7qUJ4cGlpMTGrgJ3dztSYPL
+	u0/1f2LctwHpmSgwH+9kMRhp6+n8d8wyigN2oA==
+X-Google-Smtp-Source: AGHT+IEJoSw0wb7t9m20c6ZpjKDlOmD783PHpu5vdHPvTTgfWAZC5cRf21JJzRLNwBCQUCa+9r2jjqVtgVy/1uiCHQ==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a05:6870:3a10:b0:1d5:95fc:2a65 with
+ SMTP id du16-20020a0568703a1000b001d595fc2a65mr6733088oab.0.1696893598255;
+ Mon, 09 Oct 2023 16:19:58 -0700 (PDT)
+Date: Mon, 09 Oct 2023 23:19:57 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] net: fec: replace deprecated strncpy with ethtool_sprintf
-Content-Language: en-US
-To: Justin Stitt <justinstitt@google.com>, Wei Fang <wei.fang@nxp.com>,
- Shenwei Wang <shenwei.wang@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>,
- NXP Linux Team <linux-imx@nxp.com>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- bpf@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20231009-strncpy-drivers-net-ethernet-freescale-fec_main-c-v1-1-4166833f1431@google.com>
-From: Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <20231009-strncpy-drivers-net-ethernet-freescale-fec_main-c-v1-1-4166833f1431@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAJyKJGUC/x2NQQrCMBBFr1Jm7cCkohCvIi7a9GtnYSwzIVRK7
+ 27q4sF/m/82cpjC6dZtZKjq+slNwqmjNA/5BdapOfXSn4NIZC+W0/LlybTCnDMKo8ywY+j4Pqh ZEyeGRJFxCBGXK7XDxfDU9R+7P/b9B+1asIF8AAAA
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1696893597; l=1913;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=IQPojGhMm0FWYkhisYrQ00VPkfbCrbcIeRucK9CSAtU=; b=lqQitRgTvDQrS2yNAdU1MwFFmxI/TImPYzq1XkAQrajgWQGjpKNWCOFzZ6AGd8vHFb8Xj4b88
+ UcPIIFUP2hSCCsgd+ycewkMTnHNJ1UB2BTMpZXFag89Q1wnWwAwYyer
+X-Mailer: b4 0.12.3
+Message-ID: <20231009-strncpy-drivers-net-ethernet-ibm-ibmvnic-c-v1-1-712866f16754@google.com>
+Subject: [PATCH] ibmvnic: replace deprecated strncpy with strscpy
+From: Justin Stitt <justinstitt@google.com>
+To: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Haren Myneni <haren@linux.ibm.com>, 
+	Rick Lindsley <ricklind@linux.ibm.com>, Nick Child <nnac123@linux.ibm.com>, 
+	Dany Madden <danymadden@us.ibm.com>, Thomas Falcon <tlfalcon@linux.ibm.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
+X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On 10/9/23 16:05, Justin Stitt wrote:
-> `strncpy` is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
-> 
-> ethtool_sprintf() is designed specifically for get_strings() usage.
-> Let's replace strncpy in favor of this more robust and easier to
-> understand interface.
-> 
-> Also, while we're here, let's change memcpy() over to ethtool_sprintf()
-> for consistency.
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+`strncpy` is deprecated for use on NUL-terminated destination strings
+[1] and as such we should prefer more robust and less ambiguous string
+interfaces.
 
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
+NUL-padding is not required as the buffer is already memset to 0:
+|       memset(adapter->fw_version, 0, 32);
+
+Note that another usage of strscpy exists on the same buffer:
+|       strscpy((char *)adapter->fw_version, "N/A", sizeof(adapter->fw_version));
+
+Considering the above, a suitable replacement is `strscpy` [2] due to
+the fact that it guarantees NUL-termination on the destination buffer
+without unnecessarily NUL-padding.
+
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Note: build-tested only.
+---
+ drivers/net/ethernet/ibm/ibmvnic.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
+index cdf5251e5679..ac15dcadf4c1 100644
+--- a/drivers/net/ethernet/ibm/ibmvnic.c
++++ b/drivers/net/ethernet/ibm/ibmvnic.c
+@@ -5247,7 +5247,8 @@ static void handle_vpd_rsp(union ibmvnic_crq *crq,
+ 	/* copy firmware version string from vpd into adapter */
+ 	if ((substr + 3 + fw_level_len) <
+ 	    (adapter->vpd->buff + adapter->vpd->len)) {
+-		strncpy((char *)adapter->fw_version, substr + 3, fw_level_len);
++		strscpy(adapter->fw_version, substr + 3,
++			sizeof(adapter->fw_version));
+ 	} else {
+ 		dev_info(dev, "FW substr extrapolated VPD buff\n");
+ 	}
+
+---
+base-commit: cbf3a2cb156a2c911d8f38d8247814b4c07f49a2
+change-id: 20231009-strncpy-drivers-net-ethernet-ibm-ibmvnic-c-e0900ba19e56
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
 
