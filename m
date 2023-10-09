@@ -1,124 +1,96 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70AD4171CE
-	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 22:47:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9D6D1428B;
+	Mon,  9 Oct 2023 22:53:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DmPAehzv"
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DC149E
-	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 15:47:38 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5a234ffeb90so77198827b3.3
-        for <linux-hardening@vger.kernel.org>; Mon, 09 Oct 2023 15:47:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lcB4F6dV"
+Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25DE09D;
+	Mon,  9 Oct 2023 15:53:25 -0700 (PDT)
+Received: by mail-qk1-x731.google.com with SMTP id af79cd13be357-7740c8509c8so288856285a.3;
+        Mon, 09 Oct 2023 15:53:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696891657; x=1697496457; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=2JxJfBT4mqTTWnkuNgqYZhhygki461FFicbWyOS8kMU=;
-        b=DmPAehzvoTwkKdspLj51IBwSEzAFLp6fjnm20o3YJ/KuILkutjMKDgPEHiJ2qpCrAh
-         wO7ncqUy8274bSTlhusCsAnGQ70FtjMznmruxDj7lWKaQBbMnSOkaKXO/pl44IiqAhsP
-         XsvIcI+2d1uLlLLrUqdoQ4Gqdx5bTe3xL4ZcLCLaVVWTITDVqXgUouLG0vopNvSBhc8a
-         kDWUynDXQamaethdZsg5I592cMmLhEu6FHLe9QFCuljCYHlp7jB0aJ31DP4OqTfbhgxa
-         tgMLcDS4V/luRjx7R8pfkZ5/gw1TfmkqVO+e/5hSKGDeZxeTQ9f1x0y/PjDIwH9C6xOh
-         Mtbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696891657; x=1697496457;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+        d=gmail.com; s=20230601; t=1696892004; x=1697496804; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=2JxJfBT4mqTTWnkuNgqYZhhygki461FFicbWyOS8kMU=;
-        b=BwxpBSeHU3zgc4mLX578mevK1fhyzPiPNhd6/3NaDcOwchHOwX003bcqeWclSR/dJ1
-         Eo18k46yUN4zujKpdB/QM7fj9aVnzxWb1Dvii8gGUoy3ZdGXXiSnWKeE2rjQVy4bBrzf
-         OZkMl5mIQyHvCgfVE6aD3r1m+7LkPZXzTgYknE9Tor0/83eGdns+QtKGIfmJwAfz48Q3
-         jfGj1sSaRTcEg1ZlncAVCe64RakjYV/RLssbq1SobkqhV2E2Ol5iPyULfxy0j2Exvana
-         Cn5fSwj9Y1SuyJsK8K8qi8e/O5Ig6CjGbW3+dCSvjXAG5n85Av+qjBhHELN9chUB1Kh3
-         2fOw==
-X-Gm-Message-State: AOJu0YzHbbYnNMHCs7EZ7LIhAuZjpdrlW0G/EMuYEm8v/Hi9OUAg+8d/
-	vVd4FzCvgAODJx/uq0niHHLDIAhrE16mu2yk4Q==
-X-Google-Smtp-Source: AGHT+IElN9GkpT3U2xvrH7+kjhlHlG+bmfY+dBqb/0nsReSoHqtmIJ/Qqs5nM/0N4BjpBVaPpbPj2pXTmOviCVtSrQ==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:690c:2a0f:b0:5a7:aa51:c08e with
- SMTP id ei15-20020a05690c2a0f00b005a7aa51c08emr38184ywb.1.1696891657694; Mon,
- 09 Oct 2023 15:47:37 -0700 (PDT)
-Date: Mon, 09 Oct 2023 22:47:37 +0000
+        bh=lekoIS635mFSnJFnmD86U+ekn9Tz8INaPVzVfkQ9DI8=;
+        b=lcB4F6dVnE8vmlomKYhAD6xLlirfWAQlZGW5XaRFiitOHkB4S7AuNbxdP/mgSR6tvB
+         lWtE5iEKX1vWBouR2/GtTNFtYs6nmgtvu8ot8NI7md5LpT/Iv5iN5x4MaHv4h+bAtd7E
+         GAY1PPuOJQQCICPBJRCH0d51mzbJDip9Y/bIT3qIHMdCUeYZQwNkFa6OWvjRBsKrYsQu
+         oJ3C03Cju910vdRsu6jX3JJQGPX/GAbnuJG4oi9/pkSW7TeW6W1I/vmbo3zrMKFuMzfg
+         tJClLMc+8q1xqFHzjl4CpynbawOAdJaY9tEd2UvP94AsZvhpaYWMzTzDp1rxNf0NDwIX
+         2CjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696892004; x=1697496804;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lekoIS635mFSnJFnmD86U+ekn9Tz8INaPVzVfkQ9DI8=;
+        b=tIboxvVzo9aAT/Ygbo9LrvURb5DLcgmR4lbNs6FJbbukI/XJMu213cGGq/k01WlclK
+         /IMn4HvJVHkhyJsTd30LOZOyZlffGffnndKfROVwS6bW6eUw+i4BHDbpFE/2ivbWCBZy
+         bkVXCtYfaptCv04xmttNCWGIpuw/wDR96JH54iaw4tzTwrxldinM4ipZ+mBjSU4eR31q
+         75w2cxUHXS8QOg7DN8Q4ySPrnHO1gM4KIJIiiBV1DbmBG00oNprLB6/ad0SKO99rMXn7
+         Fpknom+iRbO1/bcLc/9HWvE0HrG4lQ6mc7rgCJDgu7wPVVOHuXC5oQBB18NE00jv4djZ
+         3k3w==
+X-Gm-Message-State: AOJu0YzX5lbn9Z1lm/hYk+sLXIevnemA7qIAY/1AYvGY2S6IdBMPBZD5
+	h1/08TSJB3VTpbCEn7sS1RI=
+X-Google-Smtp-Source: AGHT+IF75Yik8/0jIF2RqOUNQnY9bTOnJl4g2qUttvz+Z+detbNQwh4rD+tWcbdphWbz63ONoho2GQ==
+X-Received: by 2002:a05:620a:240f:b0:775:90b5:f91b with SMTP id d15-20020a05620a240f00b0077590b5f91bmr17404095qkn.3.1696892003976;
+        Mon, 09 Oct 2023 15:53:23 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id os7-20020a05620a810700b00767e2668536sm3860565qkn.17.2023.10.09.15.53.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Oct 2023 15:53:23 -0700 (PDT)
+Message-ID: <ff39e0fd-9745-4646-a0b5-91af7673cd45@gmail.com>
+Date: Mon, 9 Oct 2023 15:53:20 -0700
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAAiDJGUC/x3NQQrCQAxA0auUrA2kLQ7qVcTFkKQaLNOSDEUpv
- buDy7f5f4dQNw24dTu4bha2lIb+1AG/cnkqmjTDQMPYE10xqhdevyhum3pg0YoSGV3zXPWNXuf LmBLy4oqMiTJNJMJnZmjR1XWyz394fxzHDzHi6qqAAAAA
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1696891656; l=1743;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=wtw1m2N4k6i9bXVmmrVL0qb6WJmJ01VqahgGi3xl8qU=; b=KSLRqEm2ZqeXXCS1E3PZL8ukrOE9+X+1GQ0FA+gBqwC/r+hSaMsJlHCmEWNAH5+mcSDLOMho1
- qP2UVgg2jHxC9Qn+PsWDNqkGJi73jv5FRKqRIWkKFdYvO/bGMOrfOqe
-X-Mailer: b4 0.12.3
-Message-ID: <20231009-strncpy-drivers-net-dsa-realtek-rtl8366-core-c-v1-1-74e1b5190778@google.com>
-Subject: [PATCH] net: dsa: realtek: replace deprecated strncpy with ethtool_sprintf
-From: Justin Stitt <justinstitt@google.com>
-To: Linus Walleij <linus.walleij@linaro.org>, 
-	"=?utf-8?q?Alvin_=C5=A0ipraga?=" <alsi@bang-olufsen.dk>, Andrew Lunn <andrew@lunn.ch>, 
-	Florian Fainelli <f.fainelli@gmail.com>, Vladimir Oltean <olteanv@gmail.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.6
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] net: dsa: realtek: rtl8365mb: replace deprecated strncpy
+ with ethtool_sprintf
+Content-Language: en-US
+To: Justin Stitt <justinstitt@google.com>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ =?UTF-8?Q?Alvin_=C5=A0ipraga?= <alsi@bang-olufsen.dk>,
+ Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean <olteanv@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20231009-strncpy-drivers-net-dsa-realtek-rtl8365mb-c-v1-1-0537fe9fb08c@google.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+In-Reply-To: <20231009-strncpy-drivers-net-dsa-realtek-rtl8365mb-c-v1-1-0537fe9fb08c@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-`strncpy` is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous string
-interfaces.
+On 10/9/23 15:43, Justin Stitt wrote:
+> `strncpy` is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
+> 
+> ethtool_sprintf() is designed specifically for get_strings() usage.
+> Let's replace strncpy in favor of this more robust and easier to
+> understand interface.
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-ethtool_sprintf() is designed specifically for get_strings() usage.
-Let's replace strncpy in favor of this more robust and easier to
-understand interface.
-
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Note: build-tested only.
----
- drivers/net/dsa/realtek/rtl8366-core.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
-
-diff --git a/drivers/net/dsa/realtek/rtl8366-core.c b/drivers/net/dsa/realtek/rtl8366-core.c
-index dc5f75be3017..b13766a3acbb 100644
---- a/drivers/net/dsa/realtek/rtl8366-core.c
-+++ b/drivers/net/dsa/realtek/rtl8366-core.c
-@@ -395,16 +395,13 @@ void rtl8366_get_strings(struct dsa_switch *ds, int port, u32 stringset,
- 			 uint8_t *data)
- {
- 	struct realtek_priv *priv = ds->priv;
--	struct rtl8366_mib_counter *mib;
- 	int i;
- 
- 	if (port >= priv->num_ports)
- 		return;
- 
- 	for (i = 0; i < priv->num_mib_counters; i++) {
--		mib = &priv->mib_counters[i];
--		strncpy(data + i * ETH_GSTRING_LEN,
--			mib->name, ETH_GSTRING_LEN);
-+		ethtool_sprintf(&data, "%s", priv->mib_counters[i].name);
- 	}
- }
- EXPORT_SYMBOL_GPL(rtl8366_get_strings);
-
----
-base-commit: cbf3a2cb156a2c911d8f38d8247814b4c07f49a2
-change-id: 20231009-strncpy-drivers-net-dsa-realtek-rtl8366-core-c-60a0f0ddc5cc
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
 
