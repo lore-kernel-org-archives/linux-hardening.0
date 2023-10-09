@@ -1,39 +1,38 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D452C1A701;
-	Mon,  9 Oct 2023 18:36:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69E9CF7;
-	Mon,  9 Oct 2023 11:36:51 -0700 (PDT)
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.96)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1qpv7I-0004vG-0s;
-	Mon, 09 Oct 2023 18:36:32 +0000
-Date: Mon, 9 Oct 2023 20:34:08 +0200
-From: Daniel Golle <daniel@makrotopia.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: =?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
-	Landen Chao <Landen.Chao@mediatek.com>,
-	DENG Qingfang <dqfext@gmail.com>,
-	Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] net: dsa: mt7530: replace deprecated strncpy with
- ethtool_sprintf
-Message-ID: <ZSRHoC1MwzRv1DYb@pidgin.makrotopia.org>
-References: <20231009-strncpy-drivers-net-dsa-mt7530-c-v1-1-ec6677a6436a@google.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A07736B0E
+	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 18:42:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dUdg+Q1G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2863AC433C7;
+	Mon,  9 Oct 2023 18:42:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1696876929;
+	bh=pOd28ycSTuXiUWMP0Dwr/hJLjUUz6PJ55hSKuTCzAb4=;
+	h=Date:From:To:Cc:Subject:From;
+	b=dUdg+Q1GNGEu1lG4+5q+dBKPNIXKRXg+XNVDksa9t4B7yiviWQtCOAEYsFdlTq1GV
+	 a8c30hvRV+VqasI0wjQscMsnPLVw2PCVmveO1LX2uC+HefZ7rUFM3x4psnjbOJeXsn
+	 RVL+eCQwM5t59B+3wZKf8Vk9PcVKwAr1feGMCQ+/X23ehYamX4NMhe4zcxeObIJYuZ
+	 m+7y9hN7iXY2bVOnXN+gfipCzwMYDdSZAfUt59Ayq2QGWKEXi0zsKtGEqLqtFZyTtG
+	 skqPReNdklQEKY5UJLnCdkpAlsZ1A4FispQQ2TP5Z3w6DYfaRO4BwKYTHH66QaZaTk
+	 s7dsg98nFck6Q==
+Date: Mon, 9 Oct 2023 12:42:05 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
+	Vikash Garodia <quic_vgarodia@quicinc.com>,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	Andy Gross <agross@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] media: venus: hfi_cmds: Replace one-element array with
+ flex-array member and use __counted_by
+Message-ID: <ZSRJfRdUXQOzagKr@work>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -42,56 +41,55 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231009-strncpy-drivers-net-dsa-mt7530-c-v1-1-ec6677a6436a@google.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
 
-On Mon, Oct 09, 2023 at 06:29:19PM +0000, Justin Stitt wrote:
-> `strncpy` is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
-> 
-> ethtool_sprintf() is designed specifically for get_strings() usage.
-> Let's replace strncpy in favor of this more robust and easier to
-> understand interface.
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+Array `data` in `struct hfi_sfr` is being used as a fake flexible array
+at run-time:
 
-Acked-by: Daniel Golle <daniel@makrotopia.org>
+drivers/media/platform/qcom/venus/hfi_venus.c:
+1033         p = memchr(sfr->data, '\0', sfr->buf_size);
+1034         /*
+1035          * SFR isn't guaranteed to be NULL terminated since SYS_ERROR indicates
+1036          * that Venus is in the process of crashing.
+1037          */
+1038         if (!p)
+1039                 sfr->data[sfr->buf_size - 1] = '\0';
+1040
+1041         dev_err_ratelimited(dev, "SFR message from FW: %s\n", sfr->data);
 
-> ---
-> Note: build-tested only.
-> ---
->  drivers/net/dsa/mt7530.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-> index 035a34b50f31..e00126af8318 100644
-> --- a/drivers/net/dsa/mt7530.c
-> +++ b/drivers/net/dsa/mt7530.c
-> @@ -836,8 +836,7 @@ mt7530_get_strings(struct dsa_switch *ds, int port, u32 stringset,
->  		return;
->  
->  	for (i = 0; i < ARRAY_SIZE(mt7530_mib); i++)
-> -		strncpy(data + i * ETH_GSTRING_LEN, mt7530_mib[i].name,
-> -			ETH_GSTRING_LEN);
-> +		ethtool_sprintf(&data, "%s", mt7530_mib[i].name);
->  }
->  
->  static void
-> 
-> ---
-> base-commit: cbf3a2cb156a2c911d8f38d8247814b4c07f49a2
-> change-id: 20231009-strncpy-drivers-net-dsa-mt7530-c-40cad383654d
-> 
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
-> 
+Fake flexible arrays are deprecated, and should be replaced by
+flexible-array members. So, replace one-element array with a
+flexible-array member in `struct hfi_sfr`.
+
+While there, also annotate array `data` with __counted_by() to prepare
+for the coming implementation by GCC and Clang of the __counted_by
+attribute. Flexible array members annotated with __counted_by can have
+their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
+array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+functions).
+
+This results in no differences in binary output.
+
+This issue was found with the help of Coccinelle, and audited and fixed
+manually.
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/media/platform/qcom/venus/hfi_cmds.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/media/platform/qcom/venus/hfi_cmds.h b/drivers/media/platform/qcom/venus/hfi_cmds.h
+index dd9c5066442d..20acd412ee7b 100644
+--- a/drivers/media/platform/qcom/venus/hfi_cmds.h
++++ b/drivers/media/platform/qcom/venus/hfi_cmds.h
+@@ -242,7 +242,7 @@ struct hfi_session_parse_sequence_header_pkt {
+ 
+ struct hfi_sfr {
+ 	u32 buf_size;
+-	u8 data[1];
++	u8 data[] __counted_by(buf_size);
+ };
+ 
+ struct hfi_sys_test_ssr_pkt {
+-- 
+2.34.1
+
