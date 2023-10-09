@@ -1,60 +1,56 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A2AC38BD9
-	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 18:57:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9208438DFC
+	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 19:01:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lpO2oNy6"
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E31C1A6
-	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 11:57:22 -0700 (PDT)
-Received: by mail-pf1-x433.google.com with SMTP id d2e1a72fcca58-6969b391791so3266384b3a.3
-        for <linux-hardening@vger.kernel.org>; Mon, 09 Oct 2023 11:57:22 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PoZiT3Uq"
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A11AEB
+	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 12:01:27 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-692eed30152so3553032b3a.1
+        for <linux-hardening@vger.kernel.org>; Mon, 09 Oct 2023 12:01:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1696877842; x=1697482642; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1696878087; x=1697482887; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ef2KltIf/Jizj+cWsThstfJI8FTNgm2Gv7ZqircULnk=;
-        b=lpO2oNy6rAUVMqUJwdzK9SfX0IgGOBBDrVu9kPv+W3YBwUBE6DDo2Uis7+f31qOLxe
-         xCjOdkEOGfVkzJVsxZ5cwIbfnkSAkoAVNBF12e/XHsjuPjNnI29nBAJdapMefJbp2uUT
-         2/iVht4Z0z1D4nN5WcvRnOCc2aq82qvEwGZn4=
+        bh=3IFH55pRhzV5onmAR0V0RcmvgjZQ6iKkHWC3kCd8jJc=;
+        b=PoZiT3UqKgc5P5UHtpnVW9w2t38Nr2lIz8qnfzc1ZvUOpn45tx9nUbDt5j/yVMw2PK
+         FZWWhuqP/AyRzKTPaR2BTsHcc7vWWTFf0f056NVcoZu6Oen/oTltyHLInlmAKa5i22Pf
+         Lb+/Vt4+SqT9yzQjVVTIxBdVOnOQTO5Tp5XtY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696877842; x=1697482642;
+        d=1e100.net; s=20230601; t=1696878087; x=1697482887;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ef2KltIf/Jizj+cWsThstfJI8FTNgm2Gv7ZqircULnk=;
-        b=bppu8XXnHJXMsuSWqgttnJZAXJ2Xs487Nhgk3aBVbI/yFAdC9Kzt0C78UYFuHkm6Ji
-         KEY4n0CQp2y0WM27QWLTBT+YM02vbQA6KL0fz86Ah/t/E15w4v9l4hGD13o5A2WOXRSe
-         zb1hIA3Vyjts0cgryEbBIh8zCgr2KPD7or6CqndksWh8TsPwgzC47sI6wHxTfTSa33lI
-         4yufTzJWFOV0Kr1AnvyfNkgOvO9ejdrEuEIvoY0Uuf06ULu6avjdTS50f2N1fSCVkays
-         B1DfmU8/DgQToZIooYRnBuCE/osSQrZIfA5n6VXbkWj8FAiQUL8vWOpMq31yRxc/YxvE
-         /eRQ==
-X-Gm-Message-State: AOJu0YwhRpnrG+i5qlcRjQQRI+ICuUGc8cVEptdk0n1sskM9qTwnRiRy
-	6zEsxftopMhMcrrXEi+0dRFi7Q==
-X-Google-Smtp-Source: AGHT+IE4vqs9atio0N5fkJGlaREins6sf7uxHziFBJfwRZO5gxQHdqS9RWYAu7UcEcHK+4OWLtOB9g==
-X-Received: by 2002:a05:6a20:841b:b0:137:2f8c:fab0 with SMTP id c27-20020a056a20841b00b001372f8cfab0mr16715873pzd.49.1696877842295;
-        Mon, 09 Oct 2023 11:57:22 -0700 (PDT)
+        bh=3IFH55pRhzV5onmAR0V0RcmvgjZQ6iKkHWC3kCd8jJc=;
+        b=v3PH5dEoZJjhWWCyVoame2tBUF7e5mO4KD64aYfaZy5y9EfOoMta+NPGKiEXOttg/7
+         ftjqkRtTbjFbKnWhsryn9t7j1Nbz817VqHGN45EEstwZu5hWdT+ZoiKVOtoJMpfgvbBa
+         NdcmRjCnzO0hm/gOwRiT6K1eZoIxko0Eke4MdBwAjX4Qc4zJ4OUdnBzTPIukX9+sSkWb
+         kuX2Tnzwv9reFrhdwyq886rO1LtwcssspRowz3iXIZBZAcPNV/uk7k8+xRw0a3xm0Tji
+         C0d5pTD9jig2giMqPK/DXjEh9tMpdp+Z5FoTY0jRuSCVmwkektub4W3pdMpba4E/Dmvr
+         Ianw==
+X-Gm-Message-State: AOJu0YwkEbI/zYs/A2kpWvBNmC4UfA4geeDwwAtibA2Pw4yk6CNfdfiQ
+	pBdEL8UiLrq6+SGbcGuEHhUjDA==
+X-Google-Smtp-Source: AGHT+IEdiLUEPaXGkHEsA/tYV+jvxhXR25Tgergrl7cSdjdxq9CSr6ZJuinl4dMflGBaKnVK+mZmDw==
+X-Received: by 2002:a05:6a00:b82:b0:68f:e810:e894 with SMTP id g2-20020a056a000b8200b0068fe810e894mr17362981pfj.33.1696878085896;
+        Mon, 09 Oct 2023 12:01:25 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id p18-20020aa78612000000b00689f5940061sm6902037pfn.17.2023.10.09.11.57.21
+        by smtp.gmail.com with ESMTPSA id f24-20020aa78b18000000b0068fd026b496sm6613220pfd.46.2023.10.09.12.01.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Oct 2023 11:57:21 -0700 (PDT)
-Date: Mon, 9 Oct 2023 11:57:19 -0700
+        Mon, 09 Oct 2023 12:01:25 -0700 (PDT)
+Date: Mon, 9 Oct 2023 12:01:23 -0700
 From: Kees Cook <keescook@chromium.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Hauke Mehrtens <hauke@hauke-m.de>, Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Juergen Gross <jgross@suse.com>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+	xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] net: dsa: lantiq_gswip: replace deprecated strncpy with
- ethtool_sprintf
-Message-ID: <202310091156.978D4E1@keescook>
-References: <20231009-strncpy-drivers-net-dsa-lantiq_gswip-c-v1-1-d55a986a14cc@google.com>
- <202310091134.67A4236E@keescook>
+Subject: Re: [PATCH][next] xen/xenbus: Add __counted_by for struct
+ read_buffer and use struct_size()
+Message-ID: <202310091200.2DFF1FE4B5@keescook>
+References: <ZSRMosLuJJS5Y/io@work>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -63,54 +59,33 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202310091134.67A4236E@keescook>
+In-Reply-To: <ZSRMosLuJJS5Y/io@work>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Mon, Oct 09, 2023 at 11:34:27AM -0700, Kees Cook wrote:
-> On Mon, Oct 09, 2023 at 06:24:20PM +0000, Justin Stitt wrote:
-> > `strncpy` is deprecated for use on NUL-terminated destination strings
-> > [1] and as such we should prefer more robust and less ambiguous string
-> > interfaces.
-> > 
-> > ethtool_sprintf() is designed specifically for get_strings() usage.
-> > Let's replace strncpy in favor of this more robust and easier to
-> > understand interface.
-> > 
-> > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> > Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> > Link: https://github.com/KSPP/linux/issues/90
-> > Cc: linux-hardening@vger.kernel.org
-> > Signed-off-by: Justin Stitt <justinstitt@google.com>
-> > ---
-> > Note: build-tested only.
-> > ---
-> >  drivers/net/dsa/lantiq_gswip.c | 3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/net/dsa/lantiq_gswip.c b/drivers/net/dsa/lantiq_gswip.c
-> > index 3c76a1a14aee..d60bc2e37701 100644
-> > --- a/drivers/net/dsa/lantiq_gswip.c
-> > +++ b/drivers/net/dsa/lantiq_gswip.c
-> > @@ -1759,8 +1759,7 @@ static void gswip_get_strings(struct dsa_switch *ds, int port, u32 stringset,
-> >  		return;
-> >  
-> >  	for (i = 0; i < ARRAY_SIZE(gswip_rmon_cnt); i++)
-> > -		strncpy(data + i * ETH_GSTRING_LEN, gswip_rmon_cnt[i].name,
-> > -			ETH_GSTRING_LEN);
-> > +		ethtool_sprintf(&data, "%s", gswip_rmon_cnt[i].name);
+On Mon, Oct 09, 2023 at 12:55:30PM -0600, Gustavo A. R. Silva wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
+> array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
 > 
-> Sorry, I read too fast: this should be "data", not "&data", yeah?
+> While there, use struct_size() helper, instead of the open-coded
+> version, to calculate the size for the allocation of the whole
+> flexible structure, including of course, the flexible-array member.
+> 
+> This code was found with the help of Coccinelle, and audited and
+> fixed manually.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-As I said in the other email, please ignore me. &data is correct. I'm
-not used to ethtool_sprintf(), clearly. :) My original Reviewed-by
-stands. Sorry for the noise!
+Looks good. There are going to be lots of 1-byte flex array members...
 
--Kees
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -- 
 Kees Cook
