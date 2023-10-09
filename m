@@ -1,57 +1,57 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A3E42BF5;
-	Mon,  9 Oct 2023 21:58:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89F43374E2
+	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 22:04:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="tQPA9yIq"
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2B5499;
-	Mon,  9 Oct 2023 14:58:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Uo1EiyojZdAoskTvMvtwCcjNoSWtdzYtyhDVJ0XRCLA=; b=tQPA9yIqHmqNSbhOVvxiucllWR
-	l2tso1BLwh5CGWav21hSNoCV18PYO+IsxWdqSb/pXzM2cPknMXd9P7ke0zHb6UliQGYi6gLyRpPKv
-	U7hiFaveQ7mceuNDQ8jXcyNC9Wn3AkdirOyK8p0NOTO/Oj6yURkgBAyy5W9y7bWeLSH/O6DDIkmyl
-	WCp+Xw1NcUBfI4VrenMtUjHlxEHqjrSYPedcuoxv/CrT5Nzph7SfGqANRPJyxErt/tMNNVW/JgwXK
-	fM0gVUEdTnwkyob+53dTu2ypbGyfYDxKYT5I9ypDKvQN6UcsFeM5PE4elD0hso579aRXCVJbRT5mn
-	T7zz5aAw==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1qpyGA-00HK0m-1f;
-	Mon, 09 Oct 2023 21:57:54 +0000
-Date: Mon, 9 Oct 2023 22:57:54 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Fenghua Yu <fenghua.yu@intel.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-	Tejun Heo <tj@kernel.org>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Anna Schumaker <anna@kernel.org>, Kees Cook <keescook@chromium.org>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Naohiro Aota <naohiro.aota@wdc.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org,
-	linux-nfs@vger.kernel.org, linux-hardening@vger.kernel.org,
-	cgroups@vger.kernel.org
-Subject: Re: [PATCH 03/19] fs: release anon dev_t in deactivate_locked_super
-Message-ID: <20231009215754.GL800259@ZenIV>
-References: <20230913111013.77623-1-hch@lst.de>
- <20230913111013.77623-4-hch@lst.de>
- <20230913232712.GC800259@ZenIV>
- <20230926093834.GB13806@lst.de>
- <20230926212515.GN800259@ZenIV>
- <20231002064646.GA1799@lst.de>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H41bVc++"
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB4C3CF
+	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 15:03:59 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-692c02adeefso3632828b3a.3
+        for <linux-hardening@vger.kernel.org>; Mon, 09 Oct 2023 15:03:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1696889039; x=1697493839; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ys7O5oFEmO1QCviYjPEYrUnc2jO2bomITSGGcdISQfo=;
+        b=H41bVc++pRQxUSD3+HPGj9CapgckzkFj4jkAdPm1+DGXBZbpusDYBC46uK9GFNkqNn
+         j1sh4axWxLNzu1/iAWtaru8sYZDbTIPbAgW5zKkqDjBVKxZLUcK7u1nIeOiTaj4VTOv0
+         GR+Whk96oyvFM1uPoujx/244EYhlhg2R4e1E4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696889039; x=1697493839;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ys7O5oFEmO1QCviYjPEYrUnc2jO2bomITSGGcdISQfo=;
+        b=Yr0rvgXRr75Rx7/M/Q8gqB91qeLwgvTWyAntM81CjDz1bTumHQ4DL3hcng8ncSKFXV
+         ye/O0835Pz2wEM3NkcwrweOyDsH3/DvQsZhnKqR/VvjkcvQ9rml8eMlOoqWYql/iM7aj
+         0hkf6ENIqjWUKgfJYiYWiyVB5KgZzbcQ2immJvnVvvoqw9QM/KwJkwFMH39w2q8EofDk
+         yXIJGRzOyTLRhkUg5RwABc49bMGxUGKRoLDyo4al1xeebexYcn/RIR22XuzOFmGB96YD
+         m1tZrxrIFGTqHSdebm8xtPsT9UnKtqsh7yQakp6YJU5Rn13HjXvF6FbrnknBOf5zy/j5
+         +vWg==
+X-Gm-Message-State: AOJu0YzDraChzkTS2WkjqUDyoc/noLKhQh5kyeFivEpaoUvTyWhqXF2P
+	VWwSm6+AdHS8Ep94pACGkeZ5wA==
+X-Google-Smtp-Source: AGHT+IFjPnCNTHgmoj8ii2/P0s9nH6rj/IoWKH7/YKY4P8GJP1oGAXAR6Ca7aG9HVdB+DAVpWTaDCg==
+X-Received: by 2002:a05:6a21:338c:b0:159:e0b9:bd25 with SMTP id yy12-20020a056a21338c00b00159e0b9bd25mr16823979pzb.57.1696889039248;
+        Mon, 09 Oct 2023 15:03:59 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id x5-20020a656aa5000000b0059b64b153fcsm120296pgu.17.2023.10.09.15.03.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Oct 2023 15:03:58 -0700 (PDT)
+Date: Mon, 9 Oct 2023 15:03:56 -0700
+From: Kees Cook <keescook@chromium.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] ASoC: sigmadsp: Add __counted_by for struct
+ sigmadsp_data and use struct_size()
+Message-ID: <202310091503.E59363D14@keescook>
+References: <ZSRvh1j2MVVhuOUv@work>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -60,132 +60,68 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231002064646.GA1799@lst.de>
-Sender: Al Viro <viro@ftp.linux.org.uk>
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
-	autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <ZSRvh1j2MVVhuOUv@work>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Mon, Oct 02, 2023 at 08:46:46AM +0200, Christoph Hellwig wrote:
-> On Tue, Sep 26, 2023 at 10:25:15PM +0100, Al Viro wrote:
-> > Before your patch: foo_kill_super() calls kill_anon_super(),
-> > which calls kill_super_notify(), which removes the sucker from
-> > the list, then frees ->s_fs_info.  After your patch:
-> > removal from the lists happens via the call of kill_super_notify()
-> > *after* both of your methods had been called, while freeing
-> > ->s_fs_info happens from the method call.  IOW, you've restored
-> > the situation prior to "super: ensure valid info".  The whole
-> > point of that commit had been to make sure that we have nothing
-> > in the lists with ->s_fs_info pointing to a freed object.
-> > 
-> > It's not about free_anon_bdev(); that part is fine - it's the
-> > "we can drop the weird second call site of kill_super_notify()"
-> > thing that is broken.
+On Mon, Oct 09, 2023 at 03:24:23PM -0600, Gustavo A. R. Silva wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
+> array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
 > 
-> The point has been to only release the anon dev_t after
-> kill_super_notify, to prevent two of them beeing reused.
+> While there, use struct_size() and size_sub() helpers, instead of the
+> open-coded version, to calculate the size for the allocation of the
+> whole flexible structure, including of course, the flexible-array
+> member.
 > 
-> Which we do as the free_anon_bdev is done directly in
-> deactivate_locked_super.  The new ->free_sb for non-block file systems
-> frees resources, but none of them matter for sget.
+> This code was found with the help of Coccinelle, and audited and
+> fixed manually.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  sound/soc/codecs/sigmadsp.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/sound/soc/codecs/sigmadsp.c b/sound/soc/codecs/sigmadsp.c
+> index b93c078a8040..56546e2394ab 100644
+> --- a/sound/soc/codecs/sigmadsp.c
+> +++ b/sound/soc/codecs/sigmadsp.c
+> @@ -43,7 +43,7 @@ struct sigmadsp_data {
+>  	uint32_t samplerates;
+>  	unsigned int addr;
+>  	unsigned int length;
+> -	uint8_t data[];
+> +	uint8_t data[] __counted_by(length);
+>  };
+>  
+>  struct sigma_fw_chunk {
+> @@ -270,7 +270,7 @@ static int sigma_fw_load_data(struct sigmadsp *sigmadsp,
+>  
+>  	length -= sizeof(*data_chunk);
+>  
+> -	data = kzalloc(sizeof(*data) + length, GFP_KERNEL);
+> +	data = kzalloc(struct_size(data, data, length), GFP_KERNEL);
+>  	if (!data)
+>  		return -ENOMEM;
+>  
+> @@ -413,7 +413,8 @@ static int process_sigma_action(struct sigmadsp *sigmadsp,
+>  		if (len < 3)
+>  			return -EINVAL;
+>  
+> -		data = kzalloc(sizeof(*data) + len - 2, GFP_KERNEL);
+> +		data = kzalloc(struct_size(data, data, size_sub(len, 2)),
+> +			       GFP_KERNEL);
 
-We keep talking past each other...  Let me try again:
-at the tip of your branch you have
+Since len was just size-checked before the alloc, size_sub() is a bit of
+overkill, but it's not technically wrong. :P
 
-static struct file_system_type ubifs_fs_type = {
-        .name    = "ubifs",
-	.owner   = THIS_MODULE,
-	.mount   = ubifs_mount,
-	.free_sb = ubifs_free_sb,
-};
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-static void ubifs_free_sb(struct super_block *s)
-{
-        kfree(s->s_fs_info);
-}
-
-static struct dentry *ubifs_mount(struct file_system_type *fs_type, int flags,
-                        const char *name, void *data)
-{
-	...
-        sb = sget(fs_type, sb_test, sb_set, flags, c);
-	...
-}
-
-static int sb_test(struct super_block *sb, void *data)
-{
-        struct ubifs_info *c1 = data;
-        struct ubifs_info *c = sb->s_fs_info;
-
-        return c->vi.cdev == c1->vi.cdev;
-}
-
-See the problem?  Mainline has
-
-static void kill_ubifs_super(struct super_block *s)
-{
-        struct ubifs_info *c = s->s_fs_info;
-        kill_anon_super(s);
-        kfree(c);
-}
-and
-void kill_anon_super(struct super_block *sb)
-{
-        dev_t dev = sb->s_dev;
-        generic_shutdown_super(sb);
-        kill_super_notify(sb);
-        free_anon_bdev(dev);
-}
-
-That removes the superblock from the list of instances before its
-->s_fs_info is freed.  In your branch removal happens here:
-
-        if (fs->shutdown_sb)
-                fs->shutdown_sb(s);
-        generic_shutdown_super(s);
-        if (fs->free_sb)
-                fs->free_sb(s);
-
-        kill_super_notify(s);
-
-That comes *after* ubifs_free_sb() has freed ->s_fs_info.  And there's
-nothing to stop ubifs_mount() (on a completely unrelated device) to get
-called right at that moment.  Doing the sget() call quoted above.  Now,
-in sget() we have
-                hlist_for_each_entry(old, &type->fs_supers, s_instances) {
-                        if (!test(old, data))
-and that will hit sb_test(old, data), with old being a superblock still
-in ->fs_supers, but with ->s_fs_info already freed.  So in sb_test()
-we have c equal to old->s_fs_info and
-        return c->vi.cdev == c1->vi.cdev;
-is a bloody use after free.
-
-Here we are unlikely to get fucked over - it's a plain fetch from freed
-object.  If you look at e.g. nfs, you'll see a lot more than that -
-pointer chasing from freed (and possibly reused) object.  The only
-difference is that there you have sget_fc() instead of sget() - same
-loop anyway.
-
-The bottom line: in the form it is posted, your series reintroduces the
-class of UAF that had been added by taking removal from the instances
-list out of generic_shutdown_super() and then papered over by adding
-that kill_super_notify() into kill_anon_super().
-
-And frankly, I believe that the root cause is the insistence that
-list removal should happen after generic_shutdown_super().  Sure, you
-want the superblock to serve as bdev holder, which leads to fun
-with -EBUSY if mount comes while umount still hadn't closed the
-device.  I suspect that it would make a lot more sense to
-introduce an intermediate state - "held, but will be released
-in a short while".  You already have something similar, but
-only for the entire disk ->bd_claiming stuff.
-
-Add a new primitive (will_release_bdev()), so that attempts to
-claim the sucker will wait until it gets released instead of
-failing with -EBUSY.  And do *that* before generic_shutdown_super()
-when unmounting something that is block-based.  Allows to bring
-the list removal back where it used to be, no UAF at all...
-
-IMO that direction is a lot more promising.
+-- 
+Kees Cook
