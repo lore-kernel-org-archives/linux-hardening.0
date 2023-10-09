@@ -1,129 +1,125 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 241F44446C
-	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 23:41:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B70C28E6
+	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 23:46:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pPS45aZW"
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 722499E
-	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 16:41:02 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-59c09bcf078so76346877b3.1
-        for <linux-hardening@vger.kernel.org>; Mon, 09 Oct 2023 16:41:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p2MFTdg4"
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9A93A4
+	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 16:46:50 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id 4fb4d7f45d1cf-53b8f8c6b1fso3875645a12.0
+        for <linux-hardening@vger.kernel.org>; Mon, 09 Oct 2023 16:46:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696894861; x=1697499661; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=A6Z4evA91RaB6pmH2A/2rhvKNwl4+C0QTWWpQbLxwWQ=;
-        b=pPS45aZWuCpT+9Vxvmefh1MC6ASGGp2VC21qWmQj9/NFN9nNymBl308rBS+uUQFQjz
-         7yuC/YuBQ6zKGtKi0ShV3ZrL29M9gJqvSLT/FsFcQa9lotH0oS8io+MlGD7lNlP8Rnv5
-         hZ4dMOUK6H3Sh3S5X01KeFELb5QLg/lg/8k0Z3jr5+HgeBopmsWNIKb2p3R32HdZiMpk
-         5f4Jw+dvRtizWqoKybrHukV1wOWfEQq0v+N0nwPccy5CdePS8v6YDAQNv1255bk8I+L6
-         +qYgCGGclp7dBTmRejrn4ZErrqvS4p+3a7/thmaBLwcWgYOBCjnlfo6tDJF5M1SISco7
-         yLuA==
+        d=google.com; s=20230601; t=1696895209; x=1697500009; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yXbLKS+MxtD32e7DqErJ9Y3Mh+T6J/t2QZRdubLMtiQ=;
+        b=p2MFTdg4Ku/ED/0Lw9LyVc8RZ6mH6QdHG18FcltKEMRFZUp6mvDe+bDHa0khBH0f52
+         lyVpSrMTmqA8zRsmYmhQ8S6hGilZn9MAlHR35bIXNoxrntxtUAFYcYxg9M2Bd4nu6j3C
+         0vavPkpRs6vDfye8asGPZA2STFmW3WyI8JBojpwz6ZeHOSP6Hv7twlawnZDpmWPQ3YnF
+         WRNWWSCFO+QNM/yBR1PxiHRthqcslsnTHOJ2RaTsxAKAkJ6unqJchN0ZOWgjxoZet6xC
+         ztm9MBVq5yFHB7WM45lJBK+FMVf0d+cyh1wS2nbdhYi2GBW+ZTnN2M9ElG5wnqWt6AcT
+         iD7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696894861; x=1697499661;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=A6Z4evA91RaB6pmH2A/2rhvKNwl4+C0QTWWpQbLxwWQ=;
-        b=ModEIRPd4lkvcDwfOmH0y2EigmjmwBSZP8P4vbcw1IkkF62jpRWSx1VthNWZflHV4Y
-         YbICcBzbgaxq9VGtRPMGVVs4YeB5r40P1LaZsx7UOJCySIMcKidHooZy6GE1dNQPGxKS
-         yWTMqSEmlxuZ/B+eXD+AS38B06wQ955vDvxxt/gw5jLGKHmog0kdJlfpqBP6hRKSMrQB
-         Id4QZS+3cBXzSIRY3jJdUWh9TnYTSY3u/AbQk5Y5/DI2nsaieAaeRqrTZH5iGPrvZMGx
-         6sfk7Jn29ep61cEAmAaKqTCfQiHVq3wMn9ET8ZvHQhz8t+wyd9kMFX+uu7RqIaiNn4Fn
-         NUZw==
-X-Gm-Message-State: AOJu0Yxtq5sXfeXGcUic1Fd+OcSkCTc2nkf+KDUm2qHovsscgMEqV1DB
-	bJTqtYyE1mf7ZI1aB/P8b13RerAYMjf5kvynNw==
-X-Google-Smtp-Source: AGHT+IGx5bzH8i9gi0scN1ZcZer1Nz83kHCbQMDLy4zOwOK19tSyG5kJ8Zj40xQk1LSh/8UqMGwUUOHA3V/a7HBHtg==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:690c:2c8c:b0:5a7:afd5:1cb1 with
- SMTP id ep12-20020a05690c2c8c00b005a7afd51cb1mr31543ywb.1.1696894861758; Mon,
- 09 Oct 2023 16:41:01 -0700 (PDT)
-Date: Mon, 09 Oct 2023 23:41:01 +0000
+        d=1e100.net; s=20230601; t=1696895209; x=1697500009;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yXbLKS+MxtD32e7DqErJ9Y3Mh+T6J/t2QZRdubLMtiQ=;
+        b=rWXf/ebU7BoR7PyVfBY/I3XX9kLHjNN+tEvdI6Nwre5D1Ehp2aB3jeYuWDgKSN+42z
+         a4uXyvvKF2ETz+lHJwK6vDd3XOvW21VrXFolshVutxdhvqAFAO8B87Z+1JFLP9saU505
+         jEYxXjBJ3e1TI3rYRxOP6fNpYqDRC8q/CIP9fEIDT6OQw1v3eJIo7Me94gRdcxh7E61U
+         2/WoYgeOHeljMSvbOuexCVWdATRPt4xecjf++8tGo2Gv02lAg82P2JY1whgU1CDw0hMJ
+         +EJkOGxUgY8WjmtgJmzzl6SjwbNnExtj5ceElMdmJRrqvduH7Rfkwb3A8eJOUSvm8n8O
+         uWOQ==
+X-Gm-Message-State: AOJu0Yy8nJvjKwvwW0z14tqRQFwVCNsscp08eYyQfpXWMtXH2mkQkSJI
+	vbQeIpi1SHwj5C+QNViH8nJPBZBddwevUTwEetYfQg==
+X-Google-Smtp-Source: AGHT+IHxLOxVJsCnD34Qu13Ga8MaOle2QYFCYyhM8gdiqM+aR02mWA0J6BETSOKihrN6QR5kLYk1mEbinX+qyX2zgEo=
+X-Received: by 2002:aa7:c541:0:b0:534:2fd8:a9e1 with SMTP id
+ s1-20020aa7c541000000b005342fd8a9e1mr14401271edr.22.1696895209185; Mon, 09
+ Oct 2023 16:46:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAIyPJGUC/x2N0QqDMBAEf0XuuQdJtEj6K6UPJVnrQUnlLohF/
- HfTvs3AsLuTQQVGt24nxSomn9LEXzpK87O8wJKbU3Ch985FtqolLV/OKivUuKAy6gz9gZSKN6O FnHi4DqMfY45TSNT2FsUk2//r/jiOExbB7zl7AAAA
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1696894860; l=2207;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=XvVTVgj9L3pc35eYMTZ+RVyQ6ZuyIqHrJFw3fZ6pxVo=; b=fGuGaHWljs9MXvOhbcaaNDiRGNceZqYhpBDPSUvVWleANuYMUnmCNkLdx8nZcCsE77WqOQfIg
- p/9Sahdrv55DWIKFkxJFDo8Y7ZNIJJkS44FJROIsdggDIJ5wbfN7Rmv
-X-Mailer: b4 0.12.3
-Message-ID: <20231009-strncpy-drivers-net-ethernet-intel-e100-c-v1-1-ca0ff96868a3@google.com>
-Subject: [PATCH] e100: replace deprecated strncpy with strscpy
+MIME-Version: 1.0
+References: <ZSRw6RNi3Crhd32H@work>
+In-Reply-To: <ZSRw6RNi3Crhd32H@work>
 From: Justin Stitt <justinstitt@google.com>
-To: Jesse Brandeburg <jesse.brandeburg@intel.com>, Tony Nguyen <anthony.l.nguyen@intel.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+Date: Mon, 9 Oct 2023 16:46:36 -0700
+Message-ID: <CAFhGd8o=UB5C_RDUHvNLEkW6OJEDn-uB2tCz3ZMnD4KRq3DcCQ@mail.gmail.com>
+Subject: Re: [PATCH][next] soc: qcom: apr: Add __counted_by for struct
+ apr_rx_buf and use struct_size()
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Banajit Goswami <bgoswami@quicinc.com>, 
+	Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, alsa-devel@alsa-project.org, 
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-`strncpy` is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous string
-interfaces.
+On Mon, Oct 9, 2023 at 2:30=E2=80=AFPM Gustavo A. R. Silva
+<gustavoars@kernel.org> wrote:
+>
+> Prepare for the coming implementation by GCC and Clang of the __counted_b=
+y
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
+> array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
+>
+> While there, use struct_size() helper, instead of the open-coded
+> version, to calculate the size for the allocation of the whole
+> flexible structure, including of course, the flexible-array member.
+>
+> This code was found with the help of Coccinelle, and audited and
+> fixed manually.
+>
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-The "...-1" pattern makes it evident that netdev->name is expected to be
-NUL-terminated.
+Excited for __counted_by to land! This looks right.
 
-Meanwhile, it seems NUL-padding is not required due to alloc_etherdev
-zero-allocating the buffer.
+Reviewed-by: Justin Stitt <justinstitt@google.com>
 
-Considering the above, a suitable replacement is `strscpy` [2] due to
-the fact that it guarantees NUL-termination on the destination buffer
-without unnecessarily NUL-padding.
-
-This is in line with other uses of strscpy on netdev->name:
-$ rg "strscpy\(netdev\->name.*pci.*"
-
-drivers/net/ethernet/intel/e1000e/netdev.c
-7455:   strscpy(netdev->name, pci_name(pdev), sizeof(netdev->name));
-
-drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-10839:  strscpy(netdev->name, pci_name(pdev), sizeof(netdev->name));
-
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Note: build-tested only.
----
- drivers/net/ethernet/intel/e100.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/intel/e100.c b/drivers/net/ethernet/intel/e100.c
-index d3fdc290937f..01f0f12035ca 100644
---- a/drivers/net/ethernet/intel/e100.c
-+++ b/drivers/net/ethernet/intel/e100.c
-@@ -2841,7 +2841,7 @@ static int e100_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	netdev->netdev_ops = &e100_netdev_ops;
- 	netdev->ethtool_ops = &e100_ethtool_ops;
- 	netdev->watchdog_timeo = E100_WATCHDOG_PERIOD;
--	strncpy(netdev->name, pci_name(pdev), sizeof(netdev->name) - 1);
-+	strscpy(netdev->name, pci_name(pdev), sizeof(netdev->name));
- 
- 	nic = netdev_priv(netdev);
- 	netif_napi_add_weight(netdev, &nic->napi, e100_poll, E100_NAPI_WEIGHT);
-
----
-base-commit: cbf3a2cb156a2c911d8f38d8247814b4c07f49a2
-change-id: 20231009-strncpy-drivers-net-ethernet-intel-e100-c-4547179d9f2c
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
-
+> ---
+>  drivers/soc/qcom/apr.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/soc/qcom/apr.c b/drivers/soc/qcom/apr.c
+> index 30f81d6d9d9d..1f8b315576a4 100644
+> --- a/drivers/soc/qcom/apr.c
+> +++ b/drivers/soc/qcom/apr.c
+> @@ -41,7 +41,7 @@ struct packet_router {
+>  struct apr_rx_buf {
+>         struct list_head node;
+>         int len;
+> -       uint8_t buf[];
+> +       uint8_t buf[] __counted_by(len);
+>  };
+>
+>  /**
+> @@ -171,7 +171,7 @@ static int apr_callback(struct rpmsg_device *rpdev, v=
+oid *buf,
+>                 return -EINVAL;
+>         }
+>
+> -       abuf =3D kzalloc(sizeof(*abuf) + len, GFP_ATOMIC);
+> +       abuf =3D kzalloc(struct_size(abuf, buf, len), GFP_ATOMIC);
+>         if (!abuf)
+>                 return -ENOMEM;
+>
+> --
+> 2.34.1
+>
+>
