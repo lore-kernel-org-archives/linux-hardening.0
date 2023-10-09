@@ -1,32 +1,54 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D80051F93E
-	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 20:44:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5FD12030B
+	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 21:10:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZEZGlqku"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46609C433C8;
-	Mon,  9 Oct 2023 20:44:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696884298;
-	bh=xqPPlteo+/irwg1A8Nmsg7I8TpquWpmsFmUvKGKyQHo=;
-	h=Date:From:To:Cc:Subject:From;
-	b=ZEZGlqkuZvJF2yg5oonzytBzx9hYOgBwyLTgVN0/S7cA1HKqyN7f84BevW/PYUGjZ
-	 jm+fg16/Eoqtk5lixQKPZ1rb3J4iK1kAHnHvdi6G8QezxsgYveuaxfWqx9OwnvqiYI
-	 aQGXJ8B+DRU9+0zi2Aa/G//zaR+6hzBdIZbsqevBzeBgCWE4h56/16MJHw8z5LqO4X
-	 QdyEhvT8Fg/n9I4q5cLU0fSwzw6sJPWRc+vpRkqjLl1uZlLzMwCibT1ZPvklAcmTsi
-	 D+u7jNb0ZgmaruYQcPbHlVcReX40dDp2VQhJFJZ5dRN47OZdKB7m6AVVbOvRw5shLm
-	 qKhW28wJqYPSQ==
-Date: Mon, 9 Oct 2023 14:44:54 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>
-Cc: linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] btrfs: Add __counted_by for struct btrfs_delayed_item
- and use struct_size()
-Message-ID: <ZSRmRj7leOsdUmJm@work>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Lcw70bfw"
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1574B4
+	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 14:10:05 -0700 (PDT)
+Received: by mail-pg1-x534.google.com with SMTP id 41be03b00d2f7-578d0dcd4e1so3103835a12.2
+        for <linux-hardening@vger.kernel.org>; Mon, 09 Oct 2023 14:10:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1696885805; x=1697490605; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=OJOpUmBqlji2QAqs4FK3KdbooedgBE7y6YtkmC6dsyM=;
+        b=Lcw70bfwSz8qgRt+ziIoUl3bz8NTrXSMKBGgir7RP0FEgbqT+vit4XputDdT9wI0yp
+         cTeW/KBfzJeiZpiev6B+9/gozlWeU7XQeWr+sxRjYpZCZVeHHfjaoc9YJhO+O/eBllQV
+         C5mvS47ihleTwu3X5z8hDNmrJnbAd+EoPMbTM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696885805; x=1697490605;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OJOpUmBqlji2QAqs4FK3KdbooedgBE7y6YtkmC6dsyM=;
+        b=JTNIjAcaRmLv9fw/Lgz+vp7qAdZDWVvpjR2z2KjX9wZmOHmFngKuGpWKGMhWEI2JgF
+         5a58e00avhGcaaMldFXXMbPab4jD/MDXELr2re2qWP4C/7+Mr0Gv1KGNOTeUL31snORR
+         LkIBtQis39FauVNW4bEJ3g+1dCz/Dkvf7MEHBkcQw9m6+bNcKqycBRlwDqzoy0r/JsH1
+         cEuUJQX1wa6B7m5LT2ydwJ0GnPZESYDdJ7MeRmQsikE+Dy9kb1EMTB7TCA6pseAaVsEk
+         5doJ8YrVk9W4LQ9LtWwpZVpYKx8wxqqSO/VWh+GNBnSInc1NxH95dGxznLIshb5+40vN
+         euxw==
+X-Gm-Message-State: AOJu0Yyn4AOIdaZ+dbtmd42J4AgTeIUO5CEEJtc0doWIhhWPf2yhzphA
+	WdiT3z+iXslsZjMoXfhsmEzT3A==
+X-Google-Smtp-Source: AGHT+IFnTN0angGPv5fbuTlnpVzKaxjDgULBfyhCs/8OevVZtUFVnV/Kq3iMj6Ta3SNEAJ/cPTs+og==
+X-Received: by 2002:a05:6a20:4423:b0:15e:71c9:7d47 with SMTP id ce35-20020a056a20442300b0015e71c97d47mr19179231pzb.26.1696885805208;
+        Mon, 09 Oct 2023 14:10:05 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id fm3-20020a056a002f8300b0068bbd43a6e2sm7060782pfb.10.2023.10.09.14.10.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Oct 2023 14:10:04 -0700 (PDT)
+Date: Mon, 9 Oct 2023 14:10:01 -0700
+From: Kees Cook <keescook@chromium.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] btrfs: Add __counted_by for struct
+ btrfs_delayed_item and use struct_size()
+Message-ID: <202310091409.6F3B10C@keescook>
+References: <ZSRmRj7leOsdUmJm@work>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -35,52 +57,33 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <ZSRmRj7leOsdUmJm@work>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-Prepare for the coming implementation by GCC and Clang of the __counted_by
-attribute. Flexible array members annotated with __counted_by can have
-their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
-array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-functions).
+On Mon, Oct 09, 2023 at 02:44:54PM -0600, Gustavo A. R. Silva wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
+> array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
+> 
+> While there, use struct_size() helper, instead of the open-coded
+> version, to calculate the size for the allocation of the whole
+> flexible structure, including of course, the flexible-array member.
+> 
+> This code was found with the help of Coccinelle, and audited and
+> fixed manually.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-While there, use struct_size() helper, instead of the open-coded
-version, to calculate the size for the allocation of the whole
-flexible structure, including of course, the flexible-array member.
+Looks right to me.
 
-This code was found with the help of Coccinelle, and audited and
-fixed manually.
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- fs/btrfs/delayed-inode.c | 2 +-
- fs/btrfs/delayed-inode.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/fs/btrfs/delayed-inode.c b/fs/btrfs/delayed-inode.c
-index 35d7616615c1..4f364e242341 100644
---- a/fs/btrfs/delayed-inode.c
-+++ b/fs/btrfs/delayed-inode.c
-@@ -313,7 +313,7 @@ static struct btrfs_delayed_item *btrfs_alloc_delayed_item(u16 data_len,
- {
- 	struct btrfs_delayed_item *item;
- 
--	item = kmalloc(sizeof(*item) + data_len, GFP_NOFS);
-+	item = kmalloc(struct_size(item, data, data_len), GFP_NOFS);
- 	if (item) {
- 		item->data_len = data_len;
- 		item->type = type;
-diff --git a/fs/btrfs/delayed-inode.h b/fs/btrfs/delayed-inode.h
-index d050e572c7f9..5cceb31bbd16 100644
---- a/fs/btrfs/delayed-inode.h
-+++ b/fs/btrfs/delayed-inode.h
-@@ -95,7 +95,7 @@ struct btrfs_delayed_item {
- 	bool logged;
- 	/* The maximum leaf size is 64K, so u16 is more than enough. */
- 	u16 data_len;
--	char data[];
-+	char data[] __counted_by(data_len);
- };
- 
- static inline void btrfs_init_delayed_root(
 -- 
-2.34.1
-
+Kees Cook
