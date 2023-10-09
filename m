@@ -1,166 +1,69 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0F8211708
-	for <linux-hardening@vger.kernel.org>; Sun,  8 Oct 2023 21:05:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08C9D46AE
+	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 06:12:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="S2ejNuTm"
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0EE2A6
-	for <linux-hardening@vger.kernel.org>; Sun,  8 Oct 2023 14:05:13 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-69101d33315so2830844b3a.3
-        for <linux-hardening@vger.kernel.org>; Sun, 08 Oct 2023 14:05:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1696799113; x=1697403913; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6gxm93K6GGWMbjUtGXp1BZmgoqSMt/fikbA5J3YWvlU=;
-        b=S2ejNuTm6W8bIEkFe3KjXWzRMN75Gy4bYtOi6KAeZGoOmPCfeba3AUcGaeMW21N6Qd
-         Ucr2bEoKyv9ujkr8F2dNOso1rA/lXseMHrMt3WHWifHt0bpYV69qEpIYro9uq0mCxalf
-         5MqJvjgs9C5wVov/SFGKFF5cbeQ+UAiPNAUGk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696799113; x=1697403913;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6gxm93K6GGWMbjUtGXp1BZmgoqSMt/fikbA5J3YWvlU=;
-        b=ZM8u5EEcIyhOgwO+OsvaaSXLbzOxSVSZZDhxRmgzB8TOtIYI/6tNc/VkrkzkaNHNIG
-         EXZMR7FT54EmhfO7k7CcLvQoQyA9NqBUUn8DsFDqBK32bQvoK5HemiJzeWvOnebp/XIw
-         KNzCrSxNlerKns53aMQXJ0OQ0WYz02XWZrxrKozbRIumNsl2n65TgQFSHONWL8wNGkRe
-         hV7Z8VfFbtUcYMyLMBNN0zu8nbte+VUrfe+QcTt7MHH0mZ4SKUa+1O9pl1K0MUYsxz7I
-         ZmEUqk5M0XaLKKpnKQx//FN97VkVqZA/CEYTrFrInfcGZHb33PcFBRGyR0G07plf5bQA
-         9Xmg==
-X-Gm-Message-State: AOJu0Yxi76RYo52ldi5rTZr6OG7CYDCP8XrCg2hMoFcon2LiOc+QiUzu
-	g8LnNS8xwP/vUohm6N1uNtzoPw==
-X-Google-Smtp-Source: AGHT+IHXtwJV5QiOwEV9BS5g5BayCndoQLHqktCHa0OWTprxahWUvy7m6rsAL0Es1eBJ85IRithi+g==
-X-Received: by 2002:a05:6a00:1d89:b0:68f:c6f8:144a with SMTP id z9-20020a056a001d8900b0068fc6f8144amr10953293pfw.22.1696799113111;
-        Sun, 08 Oct 2023 14:05:13 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id e9-20020aa78249000000b006934390d0c5sm5078353pfn.175.2023.10.08.14.05.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Oct 2023 14:05:12 -0700 (PDT)
-Date: Sun, 8 Oct 2023 14:05:10 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: gustavoars@kernel.org, Daniel Mack <daniel@zonque.org>,
-	Haojian Zhuang <haojian.zhuang@gmail.com>,
-	Robert Jarzmik <robert.jarzmik@free.fr>,
-	Vinod Koul <vkoul@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Tom Rix <trix@redhat.com>, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH 2/2] dmaengine: pxa_dma: Annotate struct pxad_desc_sw
- with __counted_by
-Message-ID: <202310081404.382AE20@keescook>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dqWM+5MZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBCE1C433CA;
+	Mon,  9 Oct 2023 06:12:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1696831937;
+	bh=FTNOXpa65H/cSqigLsrU9/tvUHcGMrJuoHxbZJutJa8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=dqWM+5MZqoUaGuyBCCy0tnTXdOwqal2FpQ2R8vdT92eBmht1UsZX6gnPTT+cyeDJv
+	 DrWg5TGEZDgg81bfklvh9WpewY+gPezRmgN7Hhdn9q3/xrqp3yPwyFf1X7+seOCU+J
+	 VJNqSNY7hkkSXcXnntiyo2qyh1ym+l6Q5ajXo31TpUuAWGmGVB7ocWSNz+UNh9SHav
+	 PmBIMeRrs6PDY3sYngGZ/vgPIDLM6cZCWqx45ngk0Zz9skzbKXk70orlxIyQh8ILH0
+	 ah8psLqd258l0ZUzl0smrZieCFHkFfDRiWqvw6ddeF5YGEJAtsG9n3UVb9X23YP6eb
+	 22LnrVkmat2Ww==
+From: Vinod Koul <vkoul@kernel.org>
+To: keescook@chromium.org, gustavoars@kernel.org, 
+ Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, 
+ Robert Jarzmik <robert.jarzmik@free.fr>, 
+ Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ kernel-janitors@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ dmaengine@vger.kernel.org
+In-Reply-To: <c8fc5563c9593c914fde41f0f7d1489a21b45a9a.1696676782.git.christophe.jaillet@wanadoo.fr>
 References: <c8fc5563c9593c914fde41f0f7d1489a21b45a9a.1696676782.git.christophe.jaillet@wanadoo.fr>
- <1c9ef22826f449a3756bb13a83494e9fe3e0be8b.1696676782.git.christophe.jaillet@wanadoo.fr>
+Subject: Re: [PATCH 1/2] dmaengine: pxa_dma: Remove an erroneous BUG_ON()
+ in pxad_free_desc()
+Message-Id: <169683193345.43997.16902412199226518649.b4-ty@kernel.org>
+Date: Mon, 09 Oct 2023 11:42:13 +0530
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1c9ef22826f449a3756bb13a83494e9fe3e0be8b.1696676782.git.christophe.jaillet@wanadoo.fr>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.3
 
-On Sat, Oct 07, 2023 at 01:13:10PM +0200, Christophe JAILLET wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
-> 
-> To do so, the code needs a little shuffling related to how hw_desc is used
-> and nb_desc incremented.
-> 
-> The one by one increment is needed for the error handling path, calling
-> pxad_free_desc(), to work correctly.
-> 
-> So, add a new intermediate variable, desc, to store the result of the
-> dma_pool_alloc() call.
-> 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-Thanks! Yeah, this looks like a sensible refactor to handle the
-increment before array assignment without losing error checking.
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--Kees
-
-> ---
-> This patch is part of a work done in parallel of what is currently worked
-> on by Kees Cook.
+On Sat, 07 Oct 2023 13:13:09 +0200, Christophe JAILLET wrote:
+> If pxad_alloc_desc() fails on the first dma_pool_alloc() call, then
+> sw_desc->nb_desc is zero.
+> In such a case pxad_free_desc() is called and it will BUG_ON().
 > 
-> My patches are only related to corner cases that do NOT match the
-> semantic of his Coccinelle script[1].
+> Remove this erroneous BUG_ON().
 > 
-> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
-> ---
->  drivers/dma/pxa_dma.c | 13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
+> It is also useless, because if "sw_desc->nb_desc == 0", then, on the first
+> iteration of the for loop, i is -1 and the loop will not be executed.
+> (both i and sw_desc->nb_desc are 'int')
 > 
-> diff --git a/drivers/dma/pxa_dma.c b/drivers/dma/pxa_dma.c
-> index 94cef2905940..c6e2862896e3 100644
-> --- a/drivers/dma/pxa_dma.c
-> +++ b/drivers/dma/pxa_dma.c
-> @@ -91,7 +91,8 @@ struct pxad_desc_sw {
->  	bool			cyclic;
->  	struct dma_pool		*desc_pool;	/* Channel's used allocator */
->  
-> -	struct pxad_desc_hw	*hw_desc[];	/* DMA coherent descriptors */
-> +	struct pxad_desc_hw	*hw_desc[] __counted_by(nb_desc);
-> +						/* DMA coherent descriptors */
->  };
->  
->  struct pxad_phy {
-> @@ -739,6 +740,7 @@ pxad_alloc_desc(struct pxad_chan *chan, unsigned int nb_hw_desc)
->  {
->  	struct pxad_desc_sw *sw_desc;
->  	dma_addr_t dma;
-> +	void *desc;
->  	int i;
->  
->  	sw_desc = kzalloc(struct_size(sw_desc, hw_desc, nb_hw_desc),
-> @@ -748,20 +750,21 @@ pxad_alloc_desc(struct pxad_chan *chan, unsigned int nb_hw_desc)
->  	sw_desc->desc_pool = chan->desc_pool;
->  
->  	for (i = 0; i < nb_hw_desc; i++) {
-> -		sw_desc->hw_desc[i] = dma_pool_alloc(sw_desc->desc_pool,
-> -						     GFP_NOWAIT, &dma);
-> -		if (!sw_desc->hw_desc[i]) {
-> +		desc = dma_pool_alloc(sw_desc->desc_pool, GFP_NOWAIT, &dma);
-> +		if (!desc) {
->  			dev_err(&chan->vc.chan.dev->device,
->  				"%s(): Couldn't allocate the %dth hw_desc from dma_pool %p\n",
->  				__func__, i, sw_desc->desc_pool);
->  			goto err;
->  		}
->  
-> +		sw_desc->nb_desc++;
-> +		sw_desc->hw_desc[i] = desc;
-> +
->  		if (i == 0)
->  			sw_desc->first = dma;
->  		else
->  			sw_desc->hw_desc[i - 1]->ddadr = dma;
-> -		sw_desc->nb_desc++;
->  	}
->  
->  	return sw_desc;
-> -- 
-> 2.34.1
-> 
+> [...]
 
+Applied, thanks!
+
+[1/2] dmaengine: pxa_dma: Remove an erroneous BUG_ON() in pxad_free_desc()
+      commit: 83c761f568733277ce1f7eb9dc9e890649c29a8c
+[2/2] dmaengine: pxa_dma: Annotate struct pxad_desc_sw with __counted_by
+      commit: 0481291f0ccbc5147635cf0eb108f9fe5a05ee7d
+
+Best regards,
 -- 
-Kees Cook
+~Vinod
+
+
