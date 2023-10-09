@@ -1,58 +1,62 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9DC3D383
-	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 19:58:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 443063B7A6
+	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 20:00:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JNz0qgsY"
-Received: from mail-oi1-x22a.google.com (mail-oi1-x22a.google.com [IPv6:2607:f8b0:4864:20::22a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99E3FA6
-	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 12:58:35 -0700 (PDT)
-Received: by mail-oi1-x22a.google.com with SMTP id 5614622812f47-3af604c3f8fso3475677b6e.1
-        for <linux-hardening@vger.kernel.org>; Mon, 09 Oct 2023 12:58:35 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="C774o6WS"
+Received: from mail-oi1-x22e.google.com (mail-oi1-x22e.google.com [IPv6:2607:f8b0:4864:20::22e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A6FFA6
+	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 13:00:04 -0700 (PDT)
+Received: by mail-oi1-x22e.google.com with SMTP id 5614622812f47-3af86819ba9so3278415b6e.3
+        for <linux-hardening@vger.kernel.org>; Mon, 09 Oct 2023 13:00:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1696881515; x=1697486315; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1696881603; x=1697486403; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KLuHSTvxz6vkfDxRZ/vqO8f0OQyjGiohBBwWRgjVl/4=;
-        b=JNz0qgsYuK3TBnHTDPh/Cc8uro9vD0eEaeoje+InVGLUF7ebq4oIiwWPlHW3hBV6cm
-         K5bjjD0d0TKKi4kyiXF6pWHhu2v34gR6/+gzFX/pBfEXU1HoIc/8oqKMyQop8Mjq+knU
-         ND32KrXG51kEUrvqVOwSZmwbIrEJiBpaWMGa0=
+        bh=XnnNZrfQHu6U702fU9qv9YujuMNy/CqVElyAPuDlNS8=;
+        b=C774o6WSf/gt2YrkMRsHjeigz24wLn36GDvorNU0gUCxqUjrVcUsHb/F5XpmpaHRb9
+         GI4v6CFdNJAWydxM1Gsft3erUrCeOjIn9yvdVpi8Cuvfd8MlGlVGiChGLhiq1yCUoicR
+         pxLEmdRAdkdSZtOe55jC1HQc3RShNIEZNQI/M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696881515; x=1697486315;
+        d=1e100.net; s=20230601; t=1696881603; x=1697486403;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KLuHSTvxz6vkfDxRZ/vqO8f0OQyjGiohBBwWRgjVl/4=;
-        b=DzreGjNPA3K5o4PpyapNQvTrri/dKa578DLxdLOigZds1QFsYsmcMDG1iXo6Ije1wN
-         gxF0iXDAnj2sIczWVZpQ5aovD6jiTsysoCkO02qVwoUeYTS99QPlr71oKf4wiRy7btvk
-         OHRFUU8Dj4WtnIb7L4jauhWh6LH4XDrDowEM9smymJJh7mhSXBT4vlMQvzIdxZhovcx4
-         o05G9S3QSvQ6Rw0Q6RqFK6LaB1HnoDW4Lw/RNBrHE6J0AzBmpFWQv0bdQkMAv/D2IizI
-         Xfy3+ypigkdfiuGwEFyr6hy7uQJty9KdPlEYbjcR3CoYphgIn28Ofw0POP5lurmkZYyu
-         edPw==
-X-Gm-Message-State: AOJu0Yz+9ZndbgpXOVtvEvEFDdIM4RP1zhlu+FQNvLNk5fsKGGixiNWd
-	4aKho1FDp4jQtRe+JVpKTpWHhg==
-X-Google-Smtp-Source: AGHT+IEYzKgq/AXneaurNLWylzPihiqK77Oe890uhQ8y3iiRMPVTe3Jvvb72QyLFVuRIES4e/xI2jw==
-X-Received: by 2002:a05:6808:2d6:b0:3a7:3988:87ee with SMTP id a22-20020a05680802d600b003a7398887eemr16427801oid.58.1696881514875;
-        Mon, 09 Oct 2023 12:58:34 -0700 (PDT)
+        bh=XnnNZrfQHu6U702fU9qv9YujuMNy/CqVElyAPuDlNS8=;
+        b=d9FkcrF4X2axqBvNr+F/zzUMyAdNbf22bUbdOoX67irmkdNZavXpxtII4hv3jwKilL
+         isHFjMfXJQeZaHt6OeUoSdfaCdxKyOW0viXFVBm+cEml8eIC8juNf6OPQI/5W2G/EywZ
+         ZM1rfiyyrb4wQojevT55dGRNkSS9z/BNBa/QlSbM5GuAFnYArAeZD69imrEKSSL8JUk2
+         irMrmkFZqO9ThjVkIqYAmAzXA+KQ2nBt9zCLQDp7IrBzLm1ra+9zfiFIh+sXUwhaeS77
+         T83FrZphR1oto9e2vLBNfbNwIha5l61w4tpjTYHaYorD4KmYH0yGud69JawmvPJzkz24
+         zRGQ==
+X-Gm-Message-State: AOJu0Yy1ZpYBtckW5+G7bFEnOXxjWf3E2EMN4zqAETraSonld6HD8HtV
+	+I4oDo5V3ZXvVKGrBbx4qy1MJA==
+X-Google-Smtp-Source: AGHT+IFr2diKV0FUnPCKvbVJgM9zVEQvrx9lAF5Q6PUGXjcm/39HFBRDZ6m3k4XI8U3B8QraX/ZFbw==
+X-Received: by 2002:a05:6358:42a6:b0:143:321:f36b with SMTP id s38-20020a05635842a600b001430321f36bmr14035556rwc.18.1696881603565;
+        Mon, 09 Oct 2023 13:00:03 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id i6-20020a633c46000000b0058563287aedsm8906706pgn.72.2023.10.09.12.58.34
+        by smtp.gmail.com with ESMTPSA id b21-20020a170902d31500b001bdc8a5e96csm10053257plc.169.2023.10.09.13.00.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Oct 2023 12:58:34 -0700 (PDT)
-Date: Mon, 9 Oct 2023 12:58:32 -0700
+        Mon, 09 Oct 2023 13:00:03 -0700 (PDT)
+Date: Mon, 9 Oct 2023 12:59:58 -0700
 From: Kees Cook <keescook@chromium.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Rasesh Mody <rmody@marvell.com>,
-	Sudarsana Kalluru <skalluru@marvell.com>,
-	GR-Linux-NIC-Dev@marvell.com,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] bna: replace deprecated strncpy with strscpy_pad
-Message-ID: <202310091258.C4CDBBED7D@keescook>
-References: <20231009-strncpy-drivers-net-ethernet-brocade-bna-bfa_ioc-c-v2-1-78e0f47985d3@google.com>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org, linux-mtd@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-hardening@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH] mtd: rawnand: rockchip: Use struct_size()
+Message-ID: <202310091259.1D9E73DAE@keescook>
+References: <481721c2c7fe570b4027dbe231d523961c953d5a.1696146232.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -61,40 +65,31 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231009-strncpy-drivers-net-ethernet-brocade-bna-bfa_ioc-c-v2-1-78e0f47985d3@google.com>
+In-Reply-To: <481721c2c7fe570b4027dbe231d523961c953d5a.1696146232.git.christophe.jaillet@wanadoo.fr>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Mon, Oct 09, 2023 at 05:45:33PM +0000, Justin Stitt wrote:
-> `strncpy` is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
+On Sun, Oct 01, 2023 at 09:44:04AM +0200, Christophe JAILLET wrote:
+> Use struct_size() instead of hand writing it.
+> This is less verbose and more robust.
 > 
-> bfa_ioc_get_adapter_manufacturer() simply copies a string literal into
-> `manufacturer`.
+> While at it, prepare for the coming implementation by GCC and Clang of the
+> __counted_by attribute. Flexible array members annotated with __counted_by
+> can have their accesses bounds-checked at run-time checking via
+> CONFIG_UBSAN_BOUNDS (for array indexing) and CONFIG_FORTIFY_SOURCE (for
+> strcpy/memcpy-family functions).
 > 
-> Another implementation of bfa_ioc_get_adapter_manufacturer() from
-> drivers/scsi/bfa/bfa_ioc.c uses memset + strscpy:
-> |	void
-> |	bfa_ioc_get_adapter_manufacturer(struct bfa_ioc_s *ioc, char *manufacturer)
-> |	{
-> |		memset((void *)manufacturer, 0, BFA_ADAPTER_MFG_NAME_LEN);
-> |			strscpy(manufacturer, BFA_MFG_NAME, BFA_ADAPTER_MFG_NAME_LEN);
-> |	}
+> Also remove a useless comment about the position of a flex-array in a
+> structure.
 > 
-> Let's use `strscpy_pad` to eliminate some redundant work while still
-> NUL-terminating and NUL-padding the destination buffer.
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-Thanks for the update! Yeah, this looks safe to me now.
+It seems the consensus is to keep the struct_size() changes together
+with the __counted_by annotation, so yes, this looks correct to me:
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
 
