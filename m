@@ -1,156 +1,116 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC7B405C5
-	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 22:10:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C357417D1
+	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 22:44:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="tiuwuZN9"
-Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20E7299
-	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 15:10:48 -0700 (PDT)
-Received: from eig-obgw-6005a.ext.cloudfilter.net ([10.0.30.201])
-	by cmsmtp with ESMTP
-	id pv2lqzxxtNWIepySdq2cet; Mon, 09 Oct 2023 22:10:47 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id pyScq0TwtHJPZpyScqw9Hb; Mon, 09 Oct 2023 22:10:46 +0000
-X-Authority-Analysis: v=2.4 cv=Orxcdgzt c=1 sm=1 tr=0 ts=65247a66
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=bhdUkHdE2iEA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=cm27Pg_UAAAA:8 a=TiVRK5GloQ2tXinOWEgA:9 a=QEXdDO2ut3YA:10
- a=AjGcO6oz07-iQ99wixmX:22 a=xmb-EsYY8bH0VWELuYED:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=z00a85cxpePpAkmDwxgedq3waCKHZ8B80JhlZHQ33mo=; b=tiuwuZN9V3RBFMGVrh2Cxj1kQq
-	mdUI/UvLH2QvS96EQV2M0bdCHlELBmBS0OpPwE2WTL5nOfNv/NNd5IHux+NedAccZ6iHLfig8yjyd
-	OZ6NTrJiNyHhJ7XOLHijROQEOz4zkzvyzbC6r7KH6ZQIfJs9SCBrg712wzhlcE+dTcbbuUhrdSejS
-	mak7oYF0O6vhkXds87qLhAmNvfQWRKAIMzR0TGbYwV6Wa/idhnPejqqDhqkmy2CScBRZwfrS9LI28
-	3puZuNXrqlm+uCj+UAVdBqIEPDLYR7ADiB83I/TZqK719k3Vfk89dafuk5Eo6APe7RmOS5QdKQf5W
-	SvSS1+dA==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:56696 helo=[192.168.15.7])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1qpySa-0029nO-1P;
-	Mon, 09 Oct 2023 17:10:44 -0500
-Message-ID: <f30b0784-de06-4e53-9405-69aa2f86df28@embeddedor.com>
-Date: Mon, 9 Oct 2023 16:10:42 -0600
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Rwa4I42W"
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C4E29F
+	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 15:44:01 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d9a5836ab12so122248276.2
+        for <linux-hardening@vger.kernel.org>; Mon, 09 Oct 2023 15:44:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1696891440; x=1697496240; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=lcEkRtI6p90rXcCOvkouPghb3M9m0aVLP4AHp4xDips=;
+        b=Rwa4I42WxiXXdptfUjSOUyqNZhDMOnOI1l+KC1YWHpvGJDOs3o17zdVc5WqhTsapfk
+         ao99ZcqBhVR5+QVPTGcaozDvyDqEh6/C6nExnGFY7MsqUwj85VcrnAjJH6bqxqkqChTi
+         OGEfpoPmbqez+38JL6xq9RUSrraHwKJ8Tjwjql/ODJt1/4k7SsCp15mL0vTJfjB+GSDZ
+         x/1Lkklz3prHhrjlvsOU03vL9XpiMvnUbApv8zCyqIqwrtZWRECR7xQpRMN/FtCJauPL
+         iZn3VqmxtIDxDbJ49LmpkiWZ/vpjWsQdbFETqwKWFpKZAKOm72JMTW8FXtg0j79iQUkw
+         SD3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696891440; x=1697496240;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lcEkRtI6p90rXcCOvkouPghb3M9m0aVLP4AHp4xDips=;
+        b=dbkl54zK6rICuEIKFiFrkmkqOKTLqd4lmOvi+bzIQoNgss0isFysvpKJlKPyRqK3k0
+         4DNU14wD8a957zho5w30xtDSQ2iDr2LckpzBaRovyE93Ybk23LOXBsDJdK+HW4K5EaSy
+         ZCQpPR+B5wG9tPx3MQhan4ou56Vu80kZe6d63xM6310qt6/dDDHTMOUVHkCwP6vJrEjw
+         F4avRXAteU6aozEEo/WB4PXhaO7p680JkXm6PrJjxARRCAdm+4AI/zRKIpQh7DPOVzw7
+         wJfiFqLAhG030YVvYyBMURQc1RztZ3OAru8alAwcyCR1U4U7vLDCL1Sk6n4PegBbXrb2
+         3+eA==
+X-Gm-Message-State: AOJu0YyYPLaGiVysFbG0O4uOidnEO6TVqmlvVgr+ain+yNjc3IIBs3f9
+	Hu5c0qR1Dg7QAUI8An0szRryfIypSurx3vzVkQ==
+X-Google-Smtp-Source: AGHT+IHkpV1hHXIfuxQJyt7g8E/CbFYu+6ckAULhpEVyGObpkH0MlWXRLpGSIDfzr9abk8U0Q+VRPJuFdqHSOOF6Ug==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a25:c3:0:b0:d9a:45e7:b8bc with SMTP id
+ 186-20020a2500c3000000b00d9a45e7b8bcmr25189yba.4.1696891440537; Mon, 09 Oct
+ 2023 15:44:00 -0700 (PDT)
+Date: Mon, 09 Oct 2023 22:43:59 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] ASoC: sigmadsp: Add __counted_by for struct
- sigmadsp_data and use struct_size()
-Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <ZSRvh1j2MVVhuOUv@work> <202310091503.E59363D14@keescook>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <202310091503.E59363D14@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1qpySa-0029nO-1P
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.7]) [187.162.21.192]:56696
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfLKGp5q+9IinkLhypPy6RxqNmfmIpGtoOarnfZSb+CvWMp2LROQv3U9OFr+45HUzk2LidmdM+HCgUdPlVIgsM0d5twCjtKQw/NxmGADuMTLF0xjTR6m6
- 9DwhT5pcE+bXF4BX95b7zBYxgbQ9+I9J8rqU7CyjgTRtFsMGegUSlGymHFCeDYkk/R+I+p5ZA9sKCdcdGFSueDNrEcUtSYLHxqJYjY/HXDfCReD1Gy0qSX65
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-	RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAC6CJGUC/x3NTQrCQAxA4auUrA0krRb1KuJifqIG61iSoSild
+ 3dw+W3eW8HFVBzO3Qomi7q+SwPvOkiPUO6Cmpuhp35gohN6tZLmL2bTRcyxSMXsAU3CVOWJVqf jMB5eERPGyDTKPjFTglacTW76+d8u1237AVexKdp9AAAA
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1696891439; l=1543;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=t6ppbaGIRSBsCeLAwhf3icSi3QggQapCJpuQhPkWhCk=; b=FWHhhun5aGED0QoILNdMciMZW3HTaYxCbuwQE2GB9YVe3/t5D443MOnBAm6QN6t6igpdopFpI
+ UblLVj3B+mDBhtxxWYA5eMKhHFTTQGn4GjNgywTjOiej/yfypbDcEFq
+X-Mailer: b4 0.12.3
+Message-ID: <20231009-strncpy-drivers-net-dsa-realtek-rtl8365mb-c-v1-1-0537fe9fb08c@google.com>
+Subject: [PATCH] net: dsa: realtek: rtl8365mb: replace deprecated strncpy with ethtool_sprintf
+From: Justin Stitt <justinstitt@google.com>
+To: Linus Walleij <linus.walleij@linaro.org>, 
+	"=?utf-8?q?Alvin_=C5=A0ipraga?=" <alsi@bang-olufsen.dk>, Andrew Lunn <andrew@lunn.ch>, 
+	Florian Fainelli <f.fainelli@gmail.com>, Vladimir Oltean <olteanv@gmail.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
+X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
+`strncpy` is deprecated for use on NUL-terminated destination strings
+[1] and as such we should prefer more robust and less ambiguous string
+interfaces.
 
+ethtool_sprintf() is designed specifically for get_strings() usage.
+Let's replace strncpy in favor of this more robust and easier to
+understand interface.
 
-On 10/10/23 00:03, Kees Cook wrote:
-> On Mon, Oct 09, 2023 at 03:24:23PM -0600, Gustavo A. R. Silva wrote:
->> Prepare for the coming implementation by GCC and Clang of the __counted_by
->> attribute. Flexible array members annotated with __counted_by can have
->> their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
->> array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
->> functions).
->>
->> While there, use struct_size() and size_sub() helpers, instead of the
->> open-coded version, to calculate the size for the allocation of the
->> whole flexible structure, including of course, the flexible-array
->> member.
->>
->> This code was found with the help of Coccinelle, and audited and
->> fixed manually.
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->> ---
->>   sound/soc/codecs/sigmadsp.c | 7 ++++---
->>   1 file changed, 4 insertions(+), 3 deletions(-)
->>
->> diff --git a/sound/soc/codecs/sigmadsp.c b/sound/soc/codecs/sigmadsp.c
->> index b93c078a8040..56546e2394ab 100644
->> --- a/sound/soc/codecs/sigmadsp.c
->> +++ b/sound/soc/codecs/sigmadsp.c
->> @@ -43,7 +43,7 @@ struct sigmadsp_data {
->>   	uint32_t samplerates;
->>   	unsigned int addr;
->>   	unsigned int length;
->> -	uint8_t data[];
->> +	uint8_t data[] __counted_by(length);
->>   };
->>   
->>   struct sigma_fw_chunk {
->> @@ -270,7 +270,7 @@ static int sigma_fw_load_data(struct sigmadsp *sigmadsp,
->>   
->>   	length -= sizeof(*data_chunk);
->>   
->> -	data = kzalloc(sizeof(*data) + length, GFP_KERNEL);
->> +	data = kzalloc(struct_size(data, data, length), GFP_KERNEL);
->>   	if (!data)
->>   		return -ENOMEM;
->>   
->> @@ -413,7 +413,8 @@ static int process_sigma_action(struct sigmadsp *sigmadsp,
->>   		if (len < 3)
->>   			return -EINVAL;
->>   
->> -		data = kzalloc(sizeof(*data) + len - 2, GFP_KERNEL);
->> +		data = kzalloc(struct_size(data, data, size_sub(len, 2)),
->> +			       GFP_KERNEL);
-> 
-> Since len was just size-checked before the alloc, size_sub() is a bit of
-> overkill, but it's not technically wrong. :P
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Note: build-tested only.
+---
+ drivers/net/dsa/realtek/rtl8365mb.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Oops.. yep, you're right, I totally overlooked that check.
+diff --git a/drivers/net/dsa/realtek/rtl8365mb.c b/drivers/net/dsa/realtek/rtl8365mb.c
+index 41ea3b5a42b1..d171c18dd354 100644
+--- a/drivers/net/dsa/realtek/rtl8365mb.c
++++ b/drivers/net/dsa/realtek/rtl8365mb.c
+@@ -1303,8 +1303,7 @@ static void rtl8365mb_get_strings(struct dsa_switch *ds, int port, u32 stringset
+ 
+ 	for (i = 0; i < RTL8365MB_MIB_END; i++) {
+ 		struct rtl8365mb_mib_counter *mib = &rtl8365mb_mib_counters[i];
+-
+-		strncpy(data + i * ETH_GSTRING_LEN, mib->name, ETH_GSTRING_LEN);
++		ethtool_sprintf(&data, "%s", mib->name);
+ 	}
+ }
+ 
 
-> 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> 
+---
+base-commit: cbf3a2cb156a2c911d8f38d8247814b4c07f49a2
+change-id: 20231009-strncpy-drivers-net-dsa-realtek-rtl8365mb-c-bb106e4c110c
 
-Thanks!
+Best regards,
 --
-Gustavo
+Justin Stitt <justinstitt@google.com>
+
