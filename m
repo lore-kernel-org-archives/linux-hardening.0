@@ -1,69 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08C9D46AE
-	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 06:12:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 475AA800
+	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 09:13:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dqWM+5MZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBCE1C433CA;
-	Mon,  9 Oct 2023 06:12:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696831937;
-	bh=FTNOXpa65H/cSqigLsrU9/tvUHcGMrJuoHxbZJutJa8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=dqWM+5MZqoUaGuyBCCy0tnTXdOwqal2FpQ2R8vdT92eBmht1UsZX6gnPTT+cyeDJv
-	 DrWg5TGEZDgg81bfklvh9WpewY+gPezRmgN7Hhdn9q3/xrqp3yPwyFf1X7+seOCU+J
-	 VJNqSNY7hkkSXcXnntiyo2qyh1ym+l6Q5ajXo31TpUuAWGmGVB7ocWSNz+UNh9SHav
-	 PmBIMeRrs6PDY3sYngGZ/vgPIDLM6cZCWqx45ngk0Zz9skzbKXk70orlxIyQh8ILH0
-	 ah8psLqd258l0ZUzl0smrZieCFHkFfDRiWqvw6ddeF5YGEJAtsG9n3UVb9X23YP6eb
-	 22LnrVkmat2Ww==
-From: Vinod Koul <vkoul@kernel.org>
-To: keescook@chromium.org, gustavoars@kernel.org, 
- Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, 
- Robert Jarzmik <robert.jarzmik@free.fr>, 
- Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
- kernel-janitors@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- dmaengine@vger.kernel.org
-In-Reply-To: <c8fc5563c9593c914fde41f0f7d1489a21b45a9a.1696676782.git.christophe.jaillet@wanadoo.fr>
-References: <c8fc5563c9593c914fde41f0f7d1489a21b45a9a.1696676782.git.christophe.jaillet@wanadoo.fr>
-Subject: Re: [PATCH 1/2] dmaengine: pxa_dma: Remove an erroneous BUG_ON()
- in pxad_free_desc()
-Message-Id: <169683193345.43997.16902412199226518649.b4-ty@kernel.org>
-Date: Mon, 09 Oct 2023 11:42:13 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d6ziKF0S"
+Received: from mail-oa1-x29.google.com (mail-oa1-x29.google.com [IPv6:2001:4860:4864:20::29])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EA9BC5;
+	Mon,  9 Oct 2023 02:13:15 -0700 (PDT)
+Received: by mail-oa1-x29.google.com with SMTP id 586e51a60fabf-1dcdfeb7e44so3038335fac.0;
+        Mon, 09 Oct 2023 02:13:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1696842793; x=1697447593; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=+6j4vvxY4EqozcmVPKocYKAhoEnZR1RKLlrR38PBlyo=;
+        b=d6ziKF0S2B2Sl1ewD2umYwSmLlmj3LWmdBQgnVrRNnwxBuwGo9Gco/pfaLj0V945/t
+         tIO0kWWckdVF6LLUP2rT3i2LJMayvOiXPj2fWYGWkQgm9uRjEmIa/Tv9ZoPfuMUU/gDd
+         Nh+dCBIuhTQQYeqsSTSNN/2TTLwDQHp6h9zKDTKUByJep1OqU3xP1KMnpHfHgNhp9O2D
+         vEBQaa4cPcoXnMw2XltATKY9PNEfA6gtk1ZeQ3fCckvdQWE15vYplhm6gfvSPyapjLSX
+         zqcIfS3mnPf/BqNtX5HTvXKecR9zSEralYad7sj43qWcX2HT3un9DHc73fLwtczD05NR
+         w1yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696842793; x=1697447593;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+6j4vvxY4EqozcmVPKocYKAhoEnZR1RKLlrR38PBlyo=;
+        b=rslnCnzN44sURSdwQhT4bGfPwtfjxa551Q34b2nOxwr1Dz/AGafKbL6tqo+hGMpeOf
+         AleXiPuL4cuo+gisOc6EqqANn4VKhlWefQgbNGi4tXTGM9fqkeGkuUDtpoyF3SzNQW8Q
+         zs6XHt1ZUM+Pdi/x3nOD+go2+5/iE61FzoPukMayIqZvJ97auLwWS4WTV6Shhz/Rf97h
+         ohm+O/dVZhpvAgJ7ZJ4y6V1h8n/GrfzCMaA+4SYKxMjmMklcwX0xoG+3PJl3tFgQQhI7
+         tlqHfdZE0DYiN8ESSqrTPD0Q25llS+bEUXVzZtD0qljCG4vvtKaQQLn3/xKshq6g5sBY
+         r5cA==
+X-Gm-Message-State: AOJu0YxZKkCg5KDAizzAJ7Ae4Isl4TKoCtJ6n3uYvyPDxfgmSQEtR6m+
+	fkYyKQkEFXKfvgamXBo9HRY7uFKBoDL/X32lyUKAs0RMSF3/MA==
+X-Google-Smtp-Source: AGHT+IFC5K5ukyGxfSgYqssv30cv3lVT+tGyeW1gq1ro6ijzaWIOfHM87jWQp/uZiGRud8xNqHx7+THodnZg3ePCxhs=
+X-Received: by 2002:a05:6870:5ba0:b0:1be:f8d9:7bdd with SMTP id
+ em32-20020a0568705ba000b001bef8d97bddmr18638659oab.6.1696842793555; Mon, 09
+ Oct 2023 02:13:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.3
+References: <20230918-strncpy-drivers-gpu-drm-etnaviv-etnaviv_perfmon-c-v2-1-8ae12071c138@google.com>
+ <202310061323.05B262D@keescook>
+In-Reply-To: <202310061323.05B262D@keescook>
+From: Christian Gmeiner <christian.gmeiner@gmail.com>
+Date: Mon, 9 Oct 2023 11:13:02 +0200
+Message-ID: <CAH9NwWfM2E=M1u_LnRLXkXqbJapR0aga2kex=uc3YBMkdP2fHg@mail.gmail.com>
+Subject: Re: [PATCH v2] drm/etnaviv: refactor deprecated strncpy
+To: Kees Cook <keescook@chromium.org>
+Cc: Justin Stitt <justinstitt@google.com>, Lucas Stach <l.stach@pengutronix.de>, 
+	Russell King <linux+etnaviv@armlinux.org.uk>, David Airlie <airlied@gmail.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, etnaviv@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Bo YU <tsu.yubo@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
+Am Fr., 6. Okt. 2023 um 22:23 Uhr schrieb Kees Cook <keescook@chromium.org>:
+>
+> On Mon, Sep 18, 2023 at 01:34:08PM +0000, Justin Stitt wrote:
+> > `strncpy` is deprecated for use on NUL-terminated destination strings [1].
+> >
+> > We should prefer more robust and less ambiguous string interfaces.
+> >
+> > A suitable replacement is `strscpy_pad` due to the fact that it
+> > guarantees NUL-termination on the destination buffer whilst maintaining
+> > the NUL-padding behavior that strncpy provides.
+>
+> Friend ping. Who can pick this change up?
+>
 
-On Sat, 07 Oct 2023 13:13:09 +0200, Christophe JAILLET wrote:
-> If pxad_alloc_desc() fails on the first dma_pool_alloc() call, then
-> sw_desc->nb_desc is zero.
-> In such a case pxad_free_desc() is called and it will BUG_ON().
-> 
-> Remove this erroneous BUG_ON().
-> 
-> It is also useless, because if "sw_desc->nb_desc == 0", then, on the first
-> iteration of the for loop, i is -1 and the loop will not be executed.
-> (both i and sw_desc->nb_desc are 'int')
-> 
-> [...]
+Lucas is the one who is responsible for this job.
 
-Applied, thanks!
+>
+> Thanks!
+>
+> -Kees
+>
+> >
+> > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> > Link: https://github.com/KSPP/linux/issues/90
+> > Cc: linux-hardening@vger.kernel.org
+> > Cc: Bo YU <tsu.yubo@gmail.com>
+> > Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-[1/2] dmaengine: pxa_dma: Remove an erroneous BUG_ON() in pxad_free_desc()
-      commit: 83c761f568733277ce1f7eb9dc9e890649c29a8c
-[2/2] dmaengine: pxa_dma: Annotate struct pxad_desc_sw with __counted_by
-      commit: 0481291f0ccbc5147635cf0eb108f9fe5a05ee7d
+Reviewed-by: Christian Gmeiner <cgmeiner@igalia.com>
 
-Best regards,
 -- 
-~Vinod
+greets
+--
+Christian Gmeiner, MSc
 
-
+https://christian-gmeiner.info/privacypolicy
