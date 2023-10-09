@@ -1,94 +1,136 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A71F3F4D3;
-	Mon,  9 Oct 2023 20:34:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22B662F4E
+	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 20:42:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M8KjGQrK"
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08761B0;
-	Mon,  9 Oct 2023 13:34:06 -0700 (PDT)
-Received: by mail-pf1-x435.google.com with SMTP id d2e1a72fcca58-692c70bc440so3740205b3a.3;
-        Mon, 09 Oct 2023 13:34:05 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Wu+000MO"
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E05DC9E
+	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 13:42:15 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1c5c91bece9so35712835ad.3
+        for <linux-hardening@vger.kernel.org>; Mon, 09 Oct 2023 13:42:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696883645; x=1697488445; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=f2qyhCFIapZAKu/wCnXN+K5MLupOwIsieC6PqwP164A=;
-        b=M8KjGQrK/gYOVvpoeo6f7nzgk/IBLVMKKdjWzsIlKhm1mgJSlcEWc7ybiVS2ZXIl51
-         uddKRfuUPyoDknZIYWaAOX1yyCa4cKqZCYcyW2zQAj2ZWUrl3eemSTEXJ1+4lkaemKE4
-         BE+jIaHWXY248R/dMbxgBTQbgqBuPVqM5X3s8Gi4OCxShvvMeyZKkk11kMd1H68ZNsAm
-         r8rMGTpHDni5I4fHFdE0qW45Ez5GMh6txjWtaVzf1hpuIc3WrtBoL3WIJl/a9piRYlzg
-         cxtI+AmulcUdgdSqurpasSf54daQHYomJW3jkb2wnQYe6wccvmjoHV1wLOCkHFJx5R8s
-         W9Tw==
+        d=chromium.org; s=google; t=1696884135; x=1697488935; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jQQInxgsjBt8w5xcxIPIHbM5AYNFsiZIBl4w68pdIx8=;
+        b=Wu+000MO5t3eBFYqm22mZBbmq8jg7gvPF00LNVrW5E0kJlsEJL3c18fdwsSNzRehm9
+         kAO/9ugiSIt6CTMutB999b+SOmUl8BEpvRLAxv4esa0OfQaHbgboDsckZ0ToUCk3jimg
+         C7zE/Its3EVqTcbDo8+wel28Z66Mpk14wKyoU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696883645; x=1697488445;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=f2qyhCFIapZAKu/wCnXN+K5MLupOwIsieC6PqwP164A=;
-        b=U2F+kIOJksgnLdUBmVM9zgLy8qzQiQN4WR3Pwy2cH+xmtKiRBqtw8/cmUxAtxEVQ0u
-         LPaoD+czLDs3JibWPawLtg5+JGWfT70bfT2kW4ZTY/XjY3v9p6eKeeF8uZWo17l4OEvy
-         gidbHPU8SlhWW71EJgeJ7cLtql4RSB/qIcPjAC2JGtzcqM14E38haTUHUTzTICIlLNo1
-         BXLLhPicNzx1lZ/U3VssXnYatbV71sEZCQoUiVsAXF12koyNvAka3s/y+YZqijpUUhVR
-         is0kHW6qX53IE6uc8pvubcSVLD84LlUQ2+t1EyM/sBfBWUhfruNfWz/KE32LSf98kCji
-         53uQ==
-X-Gm-Message-State: AOJu0Yzr52AV6WTtJp1T4/pJkAlj3YBtbh3deSnOtij3qu3XyN6Wtl8c
-	xN/A8s7XSbr+zBRDkze6v5M=
-X-Google-Smtp-Source: AGHT+IFiPy/ssDGzLtsPS3uELgiU2iVVl3nQTF5uG4usgP3xOaS7d1dsgxUu2z1mnKS9QicN+EfMXA==
-X-Received: by 2002:a17:90b:38cb:b0:274:729a:bcd9 with SMTP id nn11-20020a17090b38cb00b00274729abcd9mr13946558pjb.43.1696883645359;
-        Mon, 09 Oct 2023 13:34:05 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id t16-20020a17090ae51000b00267ee71f463sm6776912pjy.0.2023.10.09.13.34.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Oct 2023 13:34:04 -0700 (PDT)
-Message-ID: <a66a8fa4-7ca6-4fdb-a802-d2aa05a1d9eb@gmail.com>
-Date: Mon, 9 Oct 2023 13:34:03 -0700
+        d=1e100.net; s=20230601; t=1696884135; x=1697488935;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jQQInxgsjBt8w5xcxIPIHbM5AYNFsiZIBl4w68pdIx8=;
+        b=LbJ9b1fqZTCvej7Yby4xp/1EPRtsDwUjTLnA7Zu4glvN0TCulXwLVuJ/H8ZZaMkDVl
+         Lh+BvJx7gNyC8tRRQjetuix0qGgc6imiXZzexkIOYPmhGt6F58aBWx3WZ1WPUlyG7zRg
+         z6qPeGLvshcLmtUjMBpQIrF3KrKnyOk02Fe4jQUJmWgYuaNe5O8/mb+Cg9XCczS6e5rB
+         jy4ySLQWuuct2CdmalUJA5kEJv9QSA22sBas7RQ0DfJearlxSElGBfQh+rMJR3Mjh3uF
+         RP+UigR3d+fkKxh4of8op+ch/UixJ4JUR20wBEVHbH7yCaVF4XBGDEJekv4JWuh8rFTu
+         QClg==
+X-Gm-Message-State: AOJu0Yy+gPTPl/kSZVdlwDP2UwTnCgOFHz9bhKhfwvXtoFOpLhVCP/Gq
+	/maz/gOaeqvj/g564JuyfB7Myg==
+X-Google-Smtp-Source: AGHT+IH9MdMNUUJjdaGAliL795A9zatzD6Si8kgw2QUoHjHiomp879pl81fC008rIbxKA5Jr3etkHA==
+X-Received: by 2002:a17:902:e883:b0:1c6:19da:b29f with SMTP id w3-20020a170902e88300b001c619dab29fmr16439549plg.26.1696884135372;
+        Mon, 09 Oct 2023 13:42:15 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id t10-20020a1709027fca00b001c465bedaccsm10286698plb.83.2023.10.09.13.42.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Oct 2023 13:42:14 -0700 (PDT)
+Date: Mon, 9 Oct 2023 13:42:12 -0700
+From: Kees Cook <keescook@chromium.org>
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Kalle Valo <kvalo@kernel.org>, linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] hostap: Add __counted_by for struct
+ prism2_download_data and use struct_size()
+Message-ID: <202310091341.74A2D82BB@keescook>
+References: <ZSRXXvWMMkm7qqRW@work>
+ <202310091253.665A9C9@keescook>
+ <169f782e-9cc4-49bc-9618-ca6acc526e37@embeddedor.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] net: dsa: qca8k: replace deprecated strncpy with
- ethtool_sprintf
-Content-Language: en-US
-To: Justin Stitt <justinstitt@google.com>, Andrew Lunn <andrew@lunn.ch>,
- Vladimir Oltean <olteanv@gmail.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20231009-strncpy-drivers-net-dsa-qca-qca8k-common-c-v1-1-34c8040e0f32@google.com>
-From: Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <20231009-strncpy-drivers-net-dsa-qca-qca8k-common-c-v1-1-34c8040e0f32@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <169f782e-9cc4-49bc-9618-ca6acc526e37@embeddedor.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On 10/9/23 11:34, Justin Stitt wrote:
-> `strncpy` is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
+On Mon, Oct 09, 2023 at 02:33:01PM -0600, Gustavo A. R. Silva wrote:
 > 
-> ethtool_sprintf() is designed specifically for get_strings() usage.
-> Let's replace strncpy in favor of this more robust and easier to
-> understand interface.
 > 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> On 10/9/23 21:54, Kees Cook wrote:
+> > On Mon, Oct 09, 2023 at 01:41:18PM -0600, Gustavo A. R. Silva wrote:
+> > > Prepare for the coming implementation by GCC and Clang of the __counted_by
+> > > attribute. Flexible array members annotated with __counted_by can have
+> > > their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
+> > > array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> > > functions).
+> > > 
+> > > While there, use struct_size() helper, instead of the open-coded
+> > > version, to calculate the size for the allocation of the whole
+> > > flexible structure, including of course, the flexible-array member.
+> > > 
+> > > This code was found with the help of Coccinelle, and audited and
+> > > fixed manually.
+> > > 
+> > > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > > ---
+> > >   drivers/net/wireless/intersil/hostap/hostap_download.c | 3 +--
+> > >   drivers/net/wireless/intersil/hostap/hostap_wlan.h     | 2 +-
+> > >   2 files changed, 2 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/drivers/net/wireless/intersil/hostap/hostap_download.c b/drivers/net/wireless/intersil/hostap/hostap_download.c
+> > > index 3672291ced5c..5e5bada28b5b 100644
+> > > --- a/drivers/net/wireless/intersil/hostap/hostap_download.c
+> > > +++ b/drivers/net/wireless/intersil/hostap/hostap_download.c
+> > > @@ -732,8 +732,7 @@ static int prism2_download(local_info_t *local,
+> > >   		goto out;
+> > >   	}
+> > > -	dl = kzalloc(sizeof(*dl) + param->num_areas *
+> > > -		     sizeof(struct prism2_download_data_area), GFP_KERNEL);
+> > > +	dl = kzalloc(struct_size(dl, data, param->num_areas), GFP_KERNEL);
+> > >   	if (dl == NULL) {
+> > >   		ret = -ENOMEM;
+> > >   		goto out;
+> > > diff --git a/drivers/net/wireless/intersil/hostap/hostap_wlan.h b/drivers/net/wireless/intersil/hostap/hostap_wlan.h
+> > > index c25cd21d18bd..f71c0545c0be 100644
+> > > --- a/drivers/net/wireless/intersil/hostap/hostap_wlan.h
+> > > +++ b/drivers/net/wireless/intersil/hostap/hostap_wlan.h
+> > > @@ -617,7 +617,7 @@ struct prism2_download_data {
+> > >   		u32 addr; /* wlan card address */
+> > >   		u32 len;
+> > >   		u8 *data; /* allocated data */
+> > > -	} data[];
+> > > +	} data[] __counted_by(num_areas);
+> > >   };
+> > 
+> > Should this be considered a v2 of:
+> > https://lore.kernel.org/linux-hardening/94848cc3-6f5c-46d7-8cc7-98a4f10865b3@embeddedor.com/
+> > 
+> > ?
+> 
+> Oops... sorry, I forgot I had reviewed this patch of yours.
+> 
+> > 
+> > Yours is more complete since it includes the struct_size() change...
+> > 
+> 
+> Should I resend this explicitly marking it as a v2?
 
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+I defer to Kalle -- your Subject is more accurate, so perhaps let's just
+let this stand?
+
 -- 
-Florian
-
+Kees Cook
