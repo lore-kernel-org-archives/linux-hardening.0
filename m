@@ -1,45 +1,45 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F23893B2AA
-	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 18:31:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A013B294
+	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 18:31:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aW6zBS3Q"
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D324A3
-	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 11:31:04 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1c894e4573bso15691195ad.0
-        for <linux-hardening@vger.kernel.org>; Mon, 09 Oct 2023 11:31:04 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="n/SIJ1/S"
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C69ADDF
+	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 11:31:49 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-692ada71d79so3663337b3a.1
+        for <linux-hardening@vger.kernel.org>; Mon, 09 Oct 2023 11:31:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1696876264; x=1697481064; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1696876309; x=1697481109; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=b4YLGGXbrrLjvb4zCyI7F1AlXVbYIpxU4ak6ei/Asfk=;
-        b=aW6zBS3QsW3eQpvI/D8FWHWl8BlNQeMCdQsgvlPEGOiIKeSx51PKH9F2h2D+o2ZPki
-         SEG8VU9xYj8OlT+88GAYWnaM35NNq4xgCyF+zHrqZb4eMvrn36tvQhWElge892sKS/TT
-         9/NcULfgX9BU+eNyf1VTxfst2QmCmEN2GiISg=
+        bh=KxOk0Qe6UPn44OvxWZwPSW3rRJkqXORiJb9E5OphMiQ=;
+        b=n/SIJ1/StnZQ/Sekobp/ZBP8e7mbHRPqgRKZcEuCrTTrDwpzYLkFBLVxBKWuo9R0EC
+         nmlxQdeSuXKXMf9PYDxBCJlM31//nzfzLdLP5IE/W///X0nFvnaWWef9CHnIRrOODrxX
+         nnpNJUEfL64aHETUZeDvMQ0Wbc0frAJdmckKc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696876264; x=1697481064;
+        d=1e100.net; s=20230601; t=1696876309; x=1697481109;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=b4YLGGXbrrLjvb4zCyI7F1AlXVbYIpxU4ak6ei/Asfk=;
-        b=Qq2laSDZVQ2xDvSbEHP4Zugj0hpwwn8gZj89sYjQXBNCxRCi6HctoC2I1rCIt/zOpa
-         SwPlLohmfxUFhFDxlSJKmqs7Dl41lL0j1tLSwcuLpXVAnrOOGCxUazph0AK2S5GOjzB7
-         Cez2CmcJorY3zJcWwVOUz0X/RaFDzoDQJ/3GIeWPDwhGcM5XslQTFuJN02ZbGy6v3coV
-         6GO26droSrAL9A7uQNhhIRK+h3L7pSqglWhaYf5Zv4MJakNxlb0FCQ3RhPZ6jbNE+d7U
-         OrQpl7m2SZltCqgZ8wlQl7H2iZWavo/aIZg9r5+RV3uE76FL5tkM4Fei+4NdNpnXdBAF
-         WMkw==
-X-Gm-Message-State: AOJu0YzFMuaLoidUsLWEZkgu6L8YpRiIE1z2HCPWKLgbnobxXqNUJjzB
-	Sp+TFzasQxOt6XjFjii7lF8bDA==
-X-Google-Smtp-Source: AGHT+IEfZLu+q8z77f8yTs57x1Oc7X+rrXlwq2+A/E6WLeAqCfE6BHI+9FeLGHL6pUrvjkTjs5bmFA==
-X-Received: by 2002:a17:902:7084:b0:1b6:649b:92cc with SMTP id z4-20020a170902708400b001b6649b92ccmr11607238plk.69.1696876263974;
-        Mon, 09 Oct 2023 11:31:03 -0700 (PDT)
+        bh=KxOk0Qe6UPn44OvxWZwPSW3rRJkqXORiJb9E5OphMiQ=;
+        b=RCD+QV0BLfTnQHf2c5WFL7j3GjEoMtp+TOijf1yT6xLDiFNqhRrUpAZVMB2zBOAX2F
+         kvp0zmWBSJyZEDmoO0qAOA1a+/Xibapl1YUaGQpmgvSnFRsIOfgErGXYJwo/9T9Ol5t1
+         DhvTX+HGMEdNaJ2YyEYVy8qqJEgR75gWUd8I1hArHBcRuSNAsDiiTw+i8q+aIFG6Yi+o
+         XPaSAJ8XTq9+U4f/O4B34ZCeRXA+ZR3XWswIVtloAqZVxY9WGvSK6hJxUkI6pHp7DY+e
+         UqcVn5THkAWfThAz7AaCUbRgNZBaAomeB0ezs31Cgi1dKBCXLYFYpb7WOZYxkQ6xBwyL
+         xAvg==
+X-Gm-Message-State: AOJu0YwyPb+0Mmxi21VnY6m7WnE55G5mYigzNoGgRNFlBPx2sgXFHOGE
+	OgJOi+2733jFo5SUuTS3BtA4Jw==
+X-Google-Smtp-Source: AGHT+IGMYrmFaqpRwdTAW2MVusib1Bdp/eV2z4yNjbyFulBH77GpTBAsliVbiaNkBmPnFki9DWoAJw==
+X-Received: by 2002:a05:6a20:3d29:b0:15d:7e2a:cc77 with SMTP id y41-20020a056a203d2900b0015d7e2acc77mr16427859pzi.48.1696876309199;
+        Mon, 09 Oct 2023 11:31:49 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id a21-20020a170902ee9500b001c5fc291ef9sm184216pld.209.2023.10.09.11.31.03
+        by smtp.gmail.com with ESMTPSA id a25-20020a62e219000000b0068fe7e07190sm6653399pfi.3.2023.10.09.11.31.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Oct 2023 11:31:03 -0700 (PDT)
-Date: Mon, 9 Oct 2023 11:31:00 -0700
+        Mon, 09 Oct 2023 11:31:48 -0700 (PDT)
+Date: Mon, 9 Oct 2023 11:31:46 -0700
 From: Kees Cook <keescook@chromium.org>
 To: Justin Stitt <justinstitt@google.com>
 Cc: =?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
@@ -59,7 +59,7 @@ Cc: =?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
 	linux-mediatek@lists.infradead.org, linux-hardening@vger.kernel.org
 Subject: Re: [PATCH] net: dsa: mt7530: replace deprecated strncpy with
  ethtool_sprintf
-Message-ID: <202310091130.D951BA0A6@keescook>
+Message-ID: <202310091131.550C9CD8@keescook>
 References: <20231009-strncpy-drivers-net-dsa-mt7530-c-v1-1-ec6677a6436a@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -72,7 +72,7 @@ Content-Disposition: inline
 In-Reply-To: <20231009-strncpy-drivers-net-dsa-mt7530-c-v1-1-ec6677a6436a@google.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
@@ -91,10 +91,39 @@ On Mon, Oct 09, 2023 at 06:29:19PM +0000, Justin Stitt wrote:
 > Link: https://github.com/KSPP/linux/issues/90
 > Cc: linux-hardening@vger.kernel.org
 > Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+> Note: build-tested only.
+> ---
+>  drivers/net/dsa/mt7530.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
+> index 035a34b50f31..e00126af8318 100644
+> --- a/drivers/net/dsa/mt7530.c
+> +++ b/drivers/net/dsa/mt7530.c
+> @@ -836,8 +836,7 @@ mt7530_get_strings(struct dsa_switch *ds, int port, u32 stringset,
+>  		return;
+>  
+>  	for (i = 0; i < ARRAY_SIZE(mt7530_mib); i++)
+> -		strncpy(data + i * ETH_GSTRING_LEN, mt7530_mib[i].name,
+> -			ETH_GSTRING_LEN);
+> +		ethtool_sprintf(&data, "%s", mt7530_mib[i].name);
 
-Looks correct to me.
+Err, wait, I spoke too soon. Shouldn't this be "data" and not "&data"?
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+>  }
+>  
+>  static void
+> 
+> ---
+> base-commit: cbf3a2cb156a2c911d8f38d8247814b4c07f49a2
+> change-id: 20231009-strncpy-drivers-net-dsa-mt7530-c-40cad383654d
+> 
+> Best regards,
+> --
+> Justin Stitt <justinstitt@google.com>
+> 
+> 
 
 -- 
 Kees Cook
