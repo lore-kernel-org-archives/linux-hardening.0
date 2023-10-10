@@ -1,96 +1,71 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 680A17F0
-	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 02:10:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0295510F5;
+	Tue, 10 Oct 2023 02:50:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="1VSbNAdY"
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA7CCA7;
-	Mon,  9 Oct 2023 19:10:01 -0700 (PDT)
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 399NwuB9016274;
-	Tue, 10 Oct 2023 02:09:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2023-03-30;
- bh=tLdCG6jN7hKzemz3BqeIqgk+1LWVl64DMX/5vSOGzuU=;
- b=1VSbNAdYfjhd59uutV3S/ras1X34agVW3cGcUSEjg8U/657+vAVblWInhj8XJ+38mqyC
- V9/p9cPxOA1udFDuIl+4+SOU6s9pVo3W7OVhxPHPBYarR8k4CFSCSVH8gztAyMRVGLeJ
- pNVldwuKDfs88Pp89q5DnbtvqWgwd1lNs8q/xADnNt3vsU5MT2MEPPKz9/r8z+ow0VmZ
- Nf7gtXF7piozNM2A2vQ3D4R7IdbJusKtbS3TuIosLpyQ85S5q/65922YxTnaCClXK1oF
- ZRTRZB2AMyBs/rYAXIncrPjio/EKHj/0SUeRVqC7LzEWxtwiONulWYooRnNlk//lquBR Cg== 
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3tmh89sdk8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 10 Oct 2023 02:09:44 +0000
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 39A1JBsp014884;
-	Tue, 10 Oct 2023 02:09:43 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3tjws63mcb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 10 Oct 2023 02:09:43 +0000
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39A29dUM036611;
-	Tue, 10 Oct 2023 02:09:42 GMT
-Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3tjws63m9y-3;
-	Tue, 10 Oct 2023 02:09:42 +0000
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-To: Bodo Stroesser <bostroesser@gmail.com>, Kees Cook <keescook@chromium.org>
-Cc: "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
-        linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] scsi: target: tcmu: Annotate struct tcmu_tmr with __counted_by
-Date: Mon,  9 Oct 2023 22:09:34 -0400
-Message-Id: <169690017527.1410956.11295274010331353504.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230922175300.work.148-kees@kernel.org>
-References: <20230922175300.work.148-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n/ijsvDh"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id AE742C433CA;
+	Tue, 10 Oct 2023 02:50:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1696906225;
+	bh=Q5s1VZPYSu7cCJ2rJAuxMhAetdHKNdZm685p/HDoroc=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=n/ijsvDhn+w7otl1J7HbIa+sLxP8OUx0bIN0E55RYLohfPhgjOagv/PWODvsYJdGH
+	 FlWCuFPQDjjWyYJno+NdcA4PghE30mfKmcxzhVQUD9itTSzhvCMt+YZ7ZTTxuSyaLA
+	 4LP8evtXoHO9LgLMq9/p3iC/hcntejZuLeBVFClREpbu0/k5da0QPXKFBghG754NRm
+	 OuL8uIb8sI3H3SWKQg9H4d4hkYu1ERFI8ljvOPWvyWxCFPDxc7rJskW2ByDovF//AS
+	 vLdnF9TwDBUjh7/bfdiHUji+T2sO61DZLI00un02sS7sQ6/A5+eSVX0moRYXzg3PWJ
+	 lT8AnIiXS7wqg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8FFE2E11F4C;
+	Tue, 10 Oct 2023 02:50:25 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-10_01,2023-10-09_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=682 mlxscore=0
- bulkscore=0 phishscore=0 suspectscore=0 spamscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2309180000
- definitions=main-2310100013
-X-Proofpoint-GUID: bkFeGgmIwkMBadGMwEnQVSLRIbis1HxP
-X-Proofpoint-ORIG-GUID: bkFeGgmIwkMBadGMwEnQVSLRIbis1HxP
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
-	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+Subject: Re: [PATCH] cavium/liquidio: replace deprecated strncpy with strscpy
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <169690622558.548.11736861209884778850.git-patchwork-notify@kernel.org>
+Date: Tue, 10 Oct 2023 02:50:25 +0000
+References: <20231005-strncpy-drivers-net-ethernet-cavium-liquidio-octeon_device-c-v1-1-9a207cef9438@google.com>
+In-Reply-To: <20231005-strncpy-drivers-net-ethernet-cavium-liquidio-octeon_device-c-v1-1-9a207cef9438@google.com>
+To: Justin Stitt <justinstitt@google.com>
+Cc: dchickles@marvell.com, sburla@marvell.com, fmanlunas@marvell.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
 
-On Fri, 22 Sep 2023 10:53:01 -0700, Kees Cook wrote:
+Hello:
 
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Thu, 05 Oct 2023 22:52:34 +0000 you wrote:
+> `strncpy` is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
 > 
-> As found with Coccinelle[1], add __counted_by for struct tcmu_tmr.
+> We expect `app_name` to be NUL-terminated:
+> 	dev_info(&oct->pci_dev->dev,
+> 		 "Running %s (%llu Hz)\n",
+> 		 app_name, CVM_CAST64(cs->corefreq));
+> ... and it seems NUL-padding is not required, let's opt for strscpy().
 > 
 > [...]
 
-Applied to 6.7/scsi-queue, thanks!
+Here is the summary with links:
+  - cavium/liquidio: replace deprecated strncpy with strscpy
+    https://git.kernel.org/netdev/net-next/c/c04235395595
 
-[1/1] scsi: target: tcmu: Annotate struct tcmu_tmr with __counted_by
-      https://git.kernel.org/mkp/scsi/c/caf22c969ed1
-
+You are awesome, thank you!
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
