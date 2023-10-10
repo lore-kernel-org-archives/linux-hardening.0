@@ -1,198 +1,105 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8218182A7;
-	Tue, 10 Oct 2023 11:20:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 296D2D314
+	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 12:44:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SrwP2Dr+"
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 079A0A4;
-	Tue, 10 Oct 2023 04:20:56 -0700 (PDT)
-Received: by mail-ed1-x52c.google.com with SMTP id 4fb4d7f45d1cf-53b32dca0bfso8487959a12.0;
-        Tue, 10 Oct 2023 04:20:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696936854; x=1697541654; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sQsOgeceEIsXhp0lkWDt2Tm0RKONRcHVaKqhgdrpmWA=;
-        b=SrwP2Dr+nbYMbywpyMpPVXsAA1CiPs/F+/1HdiuOTSpyxrcnq1dI72tWpnTJ61QFrO
-         BSOEG6k8hwpaE59h5fV7OGpU9BH5VUv+T+68zw8k0gySQJVDYA5Ed7IL1GCC+JIc4Q6P
-         ZUwjAyxLA5kHO47CHNcO/a/6Y/KQg+RfH87AovJcIHxnRwp8zKGUz/sl7bPkRE00T+Py
-         +EeOTRVFcYZtEnzcx/37cv+61E3PVWcJ4MYN8u0RWH7bxzHZtw6Ix/M9WpBTvzvkHho7
-         tMfCRtlUDmvwTwN38/qb670gS7Tf3rYd37GuUM1Omw1+CU3+XkoppZSTCE9IOocYbreU
-         ta1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696936854; x=1697541654;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sQsOgeceEIsXhp0lkWDt2Tm0RKONRcHVaKqhgdrpmWA=;
-        b=CGgmqooMh0q8XLTN+vsjQTY8gH3tT81HZcoYp2zps6qIZDqmQPwmXDhv5LX9vxHCPh
-         a0td6doGrFJ401eppygBvzmVIx+VPut3peC/R+cfxli/Db8HdbxKGDDXay1hWEoDXSqp
-         6IaMLrJhRkcGI+BCK/OVzogjUtr/r01xgKGQ5/t+g8RV+RQQpvmWArKAcmf57XgRsKxX
-         dwaMp7W9zhPv2kTnNJ+/xMYPxxW7hLz2lYHDB9T++D0FTACDidU8jgwZw3NrtdLu/rno
-         AZbcXS1Sc9646IHSVh1xUPvwD+J8hk1jTaCJhIjQwpc+G9aDy9dcS3bqZ6moLA7Xfoja
-         +IEg==
-X-Gm-Message-State: AOJu0YzHgtmh4iYOEG2rKNgTl8QVyCgGcY17nToS1FPGDyZ3cAZjrWLt
-	HAvht7bAhkrS6c+1zNor8Ls=
-X-Google-Smtp-Source: AGHT+IHQg5XnMxa+WG+1BhKXXbSTRxIr71eh+hShfTQmwO35pOdo02/EP4obh3cA9lf1wm2F7dDO/A==
-X-Received: by 2002:a05:6402:5190:b0:534:6b86:eda2 with SMTP id q16-20020a056402519000b005346b86eda2mr10776212edd.21.1696936854308;
-        Tue, 10 Oct 2023 04:20:54 -0700 (PDT)
-Received: from skbuf ([188.26.57.160])
-        by smtp.gmail.com with ESMTPSA id r14-20020a05640251ce00b0053da777f7d1sm281611edd.10.2023.10.10.04.20.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Oct 2023 04:20:54 -0700 (PDT)
-Date: Tue, 10 Oct 2023 14:20:51 +0300
-From: Vladimir Oltean <olteanv@gmail.com>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] net: dsa: vsc73xx: replace deprecated strncpy with
- ethtool_sprintf
-Message-ID: <20231010112051.zgefbx2c3tjneudz@skbuf>
-References: <20231009-strncpy-drivers-net-dsa-vitesse-vsc73xx-core-c-v1-1-e2427e087fad@google.com>
- <20231009-strncpy-drivers-net-dsa-vitesse-vsc73xx-core-c-v1-1-e2427e087fad@google.com>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="n0IIPU70"
+Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32989B4
+	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 05:44:49 -0700 (PDT)
+Received: from eig-obgw-6003a.ext.cloudfilter.net ([10.0.30.151])
+	by cmsmtp with ESMTP
+	id pwKzqpL5AqBU3qC6SqtoYH; Tue, 10 Oct 2023 12:44:48 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id qC6Rq9YyRZO2dqC6RqSMwA; Tue, 10 Oct 2023 12:44:47 +0000
+X-Authority-Analysis: v=2.4 cv=fNgqYLWe c=1 sm=1 tr=0 ts=6525473f
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=bhdUkHdE2iEA:10 a=wYkD_t78qR0A:10
+ a=jDH3Shn7vTvwIdt3UFAA:9 a=QEXdDO2ut3YA:10
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=w69pY1l90qXB0+Na6v5MmCnARPNAj99fld00SExm3i8=; b=n0IIPU70CeF1gla0g/bB3sif3p
+	0IQJuOZxW/vc8fXodjZTtPNS/9Ocyqvt7LepwbzuysMJMSf06kNIwKaLWwhbndcC6RzBtyNpO0w4H
+	efqGQ6fF192ZRjuHCgkmmwLvefCI0zm08RvXQxm6+kmz3YbzoKcbvEi5SWNIw/5t8RQFUzQ7FNai7
+	Tk5cXaEhRP9Nz1rAOM5BJqWNYrX2AhJpifnTrgq8kI5JKxsru4wvGnvk1JFnL9UoMXqIF3xXmZMHD
+	rrdrRehvta5S/dD43ubSvEWG7ZHAmEZUNKRWUDvtwVBQJY7nCY++ZyQslmEI+Ye9TrI04ywbO/DEt
+	qC440T/w==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:57606 helo=[192.168.15.7])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1qqC6Q-0029an-2c;
+	Tue, 10 Oct 2023 07:44:46 -0500
+Message-ID: <584b8c6f-a77d-482f-a33e-c6043b080b3e@embeddedor.com>
+Date: Tue, 10 Oct 2023 06:44:43 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231009-strncpy-drivers-net-dsa-vitesse-vsc73xx-core-c-v1-1-e2427e087fad@google.com>
- <20231009-strncpy-drivers-net-dsa-vitesse-vsc73xx-core-c-v1-1-e2427e087fad@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] hostap: Add __counted_by for struct
+ prism2_download_data and use struct_size()
+Content-Language: en-US
+To: Kalle Valo <kvalo@kernel.org>, Kees Cook <keescook@chromium.org>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <ZSRXXvWMMkm7qqRW@work> <202310091253.665A9C9@keescook>
+ <169f782e-9cc4-49bc-9618-ca6acc526e37@embeddedor.com>
+ <202310091341.74A2D82BB@keescook> <877cnv57cx.fsf@kernel.org>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <877cnv57cx.fsf@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.21.192
+X-Source-L: No
+X-Exim-ID: 1qqC6Q-0029an-2c
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.7]) [187.162.21.192]:57606
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfA7o8gG3b6V16HqGnWdqirYTgyHeF1ApLDhW9bz/Lc66F6LWuNUIMIE8cYpKGTFSz///uhsFDn5bAlHoa4CspJOyGHbsjRGnLIxNH7WaoIfqedV30aVb
+ l6LoKYB8yN8AKfdOIpMtgb01Ki7nVIEyLYzpzzB2vTbnm5DeNszjYGGQnp/51JJAjuDXE2YJAfcX7eQWb9MJph717czz34umxE+kfXGUm/Xpf1Tk/xYlIX+8
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Mon, Oct 09, 2023 at 10:54:37PM +0000, Justin Stitt wrote:
-> `strncpy` is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
+
+
+On 10/10/23 08:17, Kalle Valo wrote:
+
 > 
-> ethtool_sprintf() is designed specifically for get_strings() usage.
-> Let's replace strncpy in favor of this more robust and easier to
-> understand interface.
+> No need to resend. I marked Kees' version as Superseded so that I don't
+> accidentally take the wrong version.
 > 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
-> Note: build-tested only.
-> ---
->  drivers/net/dsa/vitesse-vsc73xx-core.c | 20 ++++++--------------
->  1 file changed, 6 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/net/dsa/vitesse-vsc73xx-core.c b/drivers/net/dsa/vitesse-vsc73xx-core.c
-> index 4f09e7438f3b..09955fdea2ff 100644
-> --- a/drivers/net/dsa/vitesse-vsc73xx-core.c
-> +++ b/drivers/net/dsa/vitesse-vsc73xx-core.c
-> @@ -928,7 +928,8 @@ static void vsc73xx_get_strings(struct dsa_switch *ds, int port, u32 stringset,
->  	const struct vsc73xx_counter *cnt;
->  	struct vsc73xx *vsc = ds->priv;
->  	u8 indices[6];
-> -	int i, j;
-> +	u8 *buf = data;
-> +	int i;
->  	u32 val;
->  	int ret;
->  
-> @@ -948,10 +949,7 @@ static void vsc73xx_get_strings(struct dsa_switch *ds, int port, u32 stringset,
->  	indices[5] = ((val >> 26) & 0x1f); /* TX counter 2 */
->  
->  	/* The first counters is the RX octets */
-> -	j = 0;
-> -	strncpy(data + j * ETH_GSTRING_LEN,
-> -		"RxEtherStatsOctets", ETH_GSTRING_LEN);
-> -	j++;
-> +	ethtool_sprintf(&buf, "RxEtherStatsOctets");
-
-Here you don't use "%s", but everywhere else you do. Can't you just pass
-the counter name everywhere, without "%s"?
-
->  
->  	/* Each port supports recording 3 RX counters and 3 TX counters,
->  	 * figure out what counters we use in this set-up and return the
-> @@ -962,22 +960,16 @@ static void vsc73xx_get_strings(struct dsa_switch *ds, int port, u32 stringset,
->  	for (i = 0; i < 3; i++) {
->  		cnt = vsc73xx_find_counter(vsc, indices[i], false);
->  		if (cnt)
-> -			strncpy(data + j * ETH_GSTRING_LEN,
-> -				cnt->name, ETH_GSTRING_LEN);
-> -		j++;
-> +			ethtool_sprintf(&buf, "%s", cnt->name);
-
-The code conversion is not functionally identical, and I think it's a
-bit hard to make it identical.
-
-The VSC7395 has 45 port counters, but it seems that it can only monitor
-and display 8 of them at a time - 2 fixed and 6 configurable through
-some windows.
-
-vsc73xx_get_strings() detects which counter is each window configured
-for, based on the value of the CNT_CTRL_CFG hardware register (VSC73XX_C_CFG
-in the code). It displays a different string depending on the hardware
-value.
-
-The code must deal with the case where vsc73xx_find_counter() returns
-NULL, aka the hardware window is configured for a value that vsc73xx_tx_counters[]
-and vsc73xx_rx_counters[] don't know about.
-
-Currently, the way that this is treated is by skipping the strncpy()
-(and thus leaving an empty string), and incrementing j to get to the
-next ethtool counter, and next window.
-
-The order of the strings in vsc73xx_get_strings() needs to be strongly
-correlated to the order of the counters from vsc73xx_get_ethtool_stats().
-So, the driver would still print counter values for the unknown windows,
-it will just not provide a string for them.
-
-In your proposal, the increment of j basically goes into the "if (cnt)"
-block because it's embedded within ethtool_sprintf(), which means that
-if a hardware counter is unknown, the total number of reported strings
-will be less than 8. Which is very problematic, because vsc73xx_get_sset_count()
-says that 8 strings are reported. Also, all the counter strings after
-the unknown one will be shifted to the left.
-
-I suggest that "if (!cnt)", you should call ethtool_sprintf() with an
-empty string, to preserve the original behavior.
-
->  	}
->  
->  	/* TX stats begins with the number of TX octets */
-> -	strncpy(data + j * ETH_GSTRING_LEN,
-> -		"TxEtherStatsOctets", ETH_GSTRING_LEN);
-> -	j++;
-> +	ethtool_sprintf(&buf, "TxEtherStatsOctets");
->  
->  	for (i = 3; i < 6; i++) {
->  		cnt = vsc73xx_find_counter(vsc, indices[i], true);
->  		if (cnt)
-> -			strncpy(data + j * ETH_GSTRING_LEN,
-> -				cnt->name, ETH_GSTRING_LEN);
-> -		j++;
-> +			ethtool_sprintf(&buf, "%s", cnt->name);
->  	}
->  }
->  
-> 
-> ---
-> base-commit: cbf3a2cb156a2c911d8f38d8247814b4c07f49a2
-> change-id: 20231009-strncpy-drivers-net-dsa-vitesse-vsc73xx-core-c-1cfd0ac2d81b
-> 
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
+> In the title "wifi:" is missing but I can add that during commit.
 > 
 
+Awesome. :)
+
+Thanks, Kalle!
+--
+Gustavo
