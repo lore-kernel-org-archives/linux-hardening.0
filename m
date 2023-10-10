@@ -1,124 +1,125 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C52D354F6
-	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 22:27:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE5DF31598
+	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 22:30:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="w8ePxtLU"
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9039AC
-	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 15:27:15 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d9a61f7aaf8so1483743276.3
-        for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 15:27:15 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Tmcb004r"
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E73BB6
+	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 15:30:11 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id 98e67ed59e1d1-277550774e5so4094215a91.3
+        for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 15:30:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696976835; x=1697581635; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TlakbgGWTqcDQ2xuVKeK3nhNuDzBfPQq0/+GRmlX5C8=;
-        b=w8ePxtLUgoM/h+NoEz/90TBSsGTZpWch4xp1qa0oYaJh/mhwbSnEw7kITkwz/7cOTE
-         nW9rypZvVYgCTjEjxthXs6MJP8KcmCUnT/vbQOAToegTk/HX5027pKZnhDyh535JVuWL
-         lWGPdpH+xIiT737RglR+ioIoBJx7PiTtVB08gKeMMAkIGPL2S2vDe8YOYWlDhwpweIH5
-         CQRyBz78JB3NcmuLjdYYZPMW92RKetaGcG8pslc9hcd6RkniFvNvZtdfLR0zBZrOKdgp
-         p2OtDXW5Dpb3XcSLxqVO1YX80mlaNBTMozgjI6+sxSHvcG2J2cI2pwidAq5vbwaGIpne
-         OOQA==
+        d=chromium.org; s=google; t=1696977010; x=1697581810; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jk/roA1OX5FDgRmG8rXSW1i76Cf+PVeWpMPLt8rVrkA=;
+        b=Tmcb004r2BAcfqR4j+lcfiVLjXKhEvQrI1NQavhS8xO0Nunm8kF6Kq2GmI5hAj7asK
+         jk2e3qk83ec+AjMmyarMsumpnHJCbKi83deuUZmkI/SscA5ZSU4HhACGgIfczJusMa+0
+         uBC3plmTYoFj45QECcfTsLEdo5NMkwDLwYn0k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696976835; x=1697581635;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TlakbgGWTqcDQ2xuVKeK3nhNuDzBfPQq0/+GRmlX5C8=;
-        b=OeSUFnN2mfwHc13kzAmi3DyNxINCcFT1BO4a3OwO5Z84a7t02kM+WHqQv32WXNb1pJ
-         jAgAg60ep105p1MW7meK8vq47uu6j4fNr7Qc0j8lQ0IXXlsSWZS+GkX+pt1yfG1W7X5X
-         JSkGDZtmyASwhrxnmBV/cpKhrgBZgeQIGHyGYB2KE7oVcG40quhNsjgAxdGfFKtwb8sS
-         q5tvpbq5R3zhqOuYUmpODG5VXAynbQJIYw7USztwRqXeqbKjhJsB3u2IrOpWb+E9acKa
-         eMQ8dvNduuIpm4muSsaIiMLhtwB5Fu4XJBdpzMqkzPopet0IggfjTRVcTEYQtwPcRVEV
-         PzQA==
-X-Gm-Message-State: AOJu0YzLI80WLW6Xavolu7p7jzrLnWay9Q2uCW1pQwDss6RIatnkzRym
-	ReoQlUNhYRencvWPDXRinrkP3wgwaQ2Ogo1sTQ==
-X-Google-Smtp-Source: AGHT+IGzYEq54Il7W2YEgs1cfyYc8gNX6HEw1AL6yXL3SCPfuWpHyotzmuT619yMLidQOlA9hNzRlpWN7L1xRgRrQA==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a25:a162:0:b0:d85:ad61:1591 with SMTP
- id z89-20020a25a162000000b00d85ad611591mr315298ybh.11.1696976835057; Tue, 10
- Oct 2023 15:27:15 -0700 (PDT)
-Date: Tue, 10 Oct 2023 22:27:00 +0000
-In-Reply-To: <20231010-netdev-replace-strncpy-resend-as-series-v1-0-caf9f0f2f021@google.com>
+        d=1e100.net; s=20230601; t=1696977010; x=1697581810;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jk/roA1OX5FDgRmG8rXSW1i76Cf+PVeWpMPLt8rVrkA=;
+        b=mdCgytjc3thgqWyeYJv+zfLyMJIJI1VnEODEQ8gPO5W6OPejJcppJReVv3imyhT723
+         EvXABvy6K0k/SIXdaP9yd0zxFmlSp0u1lJDhWEZnFp1WNn2mW8azMiUJY3/SokXprBwH
+         jmi5q2B+orza6bTnUnKXNfz2lw3hWWW6L0KST3XzK8jNSdzz8e1CxvSamxcL4foPDC4T
+         bI0+rzMG72wPUFAFOOmDL+PcpdOW5a/DxRzPu3jyoiZFhNMqr4GDVtafU7pSxEbDvDbK
+         wNbBDrz8Mw0Sum9P8941yvHJXLwHiZaXyHivZZ+jjX+xKtyGSXMaEYYbMvDhqO3vNE9o
+         HHEA==
+X-Gm-Message-State: AOJu0YwB1KPB68o9u6C5qQ0gVu3CZZs5u9CyS2dut4mXRd5mMbYEhTEg
+	Raqt6od7+Tyt0ZGisM0r6VBzqg==
+X-Google-Smtp-Source: AGHT+IFJJFy6I0NJ7fJc92KgL1DUF2I4+xXv/DYwva8smLJkbVqRlyh1cWrhEPh+t9R4XFb2bAm6cg==
+X-Received: by 2002:a17:90a:788e:b0:276:ae0f:57c0 with SMTP id x14-20020a17090a788e00b00276ae0f57c0mr16533759pjk.19.1696977010647;
+        Tue, 10 Oct 2023 15:30:10 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id l19-20020a17090b079300b002791491f811sm10504761pjz.8.2023.10.10.15.30.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Oct 2023 15:30:10 -0700 (PDT)
+Date: Tue, 10 Oct 2023 15:30:06 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Vladimir Oltean <olteanv@gmail.com>
+Cc: Justin Stitt <justinstitt@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Alvin =?utf-8?Q?=C5=A0ipraga?= <alsi@bang-olufsen.dk>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] net: dsa: realtek: rtl8365mb: replace deprecated strncpy
+ with ethtool_sprintf
+Message-ID: <202310101528.9496539BE@keescook>
+References: <20231009-strncpy-drivers-net-dsa-realtek-rtl8365mb-c-v1-1-0537fe9fb08c@google.com>
+ <20231010110717.cw5sqxm5mlzyi2rq@skbuf>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20231010-netdev-replace-strncpy-resend-as-series-v1-0-caf9f0f2f021@google.com>
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1696976825; l=1942;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=6jGMK+cCOOSLNNUn0TBt6IBLIOJaTfgy8BwlGd7P468=; b=35oBACPXlL3wg2v3AbE8axFEM9yJJX/Bfv5dcLDCY+rrP7a8HRLOAFEg/ZA8gNWEWwSfT6QVK
- J4O6EmvMtglD6nXKST7OY8ieVbM+DsbZ81c8dF/wyiqDDJWJ1HsPtah
-X-Mailer: b4 0.12.3
-Message-ID: <20231010-netdev-replace-strncpy-resend-as-series-v1-7-caf9f0f2f021@google.com>
-Subject: [PATCH v1 net-next 7/7] igc: replace deprecated strncpy with strscpy
-From: Justin Stitt <justinstitt@google.com>
-To: Jesse Brandeburg <jesse.brandeburg@intel.com>, Tony Nguyen <anthony.l.nguyen@intel.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: linux-hardening@vger.kernel.org, intel-wired-lan@lists.osuosl.org, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.6
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231010110717.cw5sqxm5mlzyi2rq@skbuf>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-`strncpy` is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous string
-interfaces.
+On Tue, Oct 10, 2023 at 02:07:17PM +0300, Vladimir Oltean wrote:
+> Hello Justin,
+> 
+> On Mon, Oct 09, 2023 at 10:43:59PM +0000, Justin Stitt wrote:
+> > `strncpy` is deprecated for use on NUL-terminated destination strings
+> > [1] and as such we should prefer more robust and less ambiguous string
+> > interfaces.
+> > 
+> > ethtool_sprintf() is designed specifically for get_strings() usage.
+> > Let's replace strncpy in favor of this more robust and easier to
+> > understand interface.
+> > 
+> > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> > Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+> > Link: https://github.com/KSPP/linux/issues/90
+> > Cc: linux-hardening@vger.kernel.org
+> > Signed-off-by: Justin Stitt <justinstitt@google.com>
+> > ---
+> > Note: build-tested only.
+> > ---
+> >  drivers/net/dsa/realtek/rtl8365mb.c | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/net/dsa/realtek/rtl8365mb.c b/drivers/net/dsa/realtek/rtl8365mb.c
+> > index 41ea3b5a42b1..d171c18dd354 100644
+> > --- a/drivers/net/dsa/realtek/rtl8365mb.c
+> > +++ b/drivers/net/dsa/realtek/rtl8365mb.c
+> > @@ -1303,8 +1303,7 @@ static void rtl8365mb_get_strings(struct dsa_switch *ds, int port, u32 stringset
+> >  
+> >  	for (i = 0; i < RTL8365MB_MIB_END; i++) {
+> >  		struct rtl8365mb_mib_counter *mib = &rtl8365mb_mib_counters[i];
+> > -
+> > -		strncpy(data + i * ETH_GSTRING_LEN, mib->name, ETH_GSTRING_LEN);
+> > +		ethtool_sprintf(&data, "%s", mib->name);
+> 
+> Is there any particular reason why you opted for the "%s" printf format
+> specifier when you could have simply given mib->name as the single
+> argument? This comment applies to all the ethtool_sprintf() patches
+> you've submitted.
 
-We expect netdev->name to be NUL-terminated based on its use with format
-strings:
-|       if (q_vector->rx.ring && q_vector->tx.ring)
-|               sprintf(q_vector->name, "%s-TxRx-%u", netdev->name,
+The primary reason is that without the "%s", any format specifiers in
+mib->name will be processed by sprintf(), which could lead to very
+unexpected results. One never wants to just pass a string directly to
+the sprintf-family of functions for this reason. "%s" is needed to keep
+things safe.
 
-Furthermore, we do not need NUL-padding as netdev is already
-zero-allocated:
-|       netdev = alloc_etherdev_mq(sizeof(struct igc_adapter),
-|                                  IGC_MAX_TX_QUEUES);
-...
-alloc_etherdev() -> alloc_etherdev_mq() -> alloc_etherdev_mqs() ->
-alloc_netdev_mqs() ...
-|       p = kvzalloc(alloc_size, GFP_KERNEL_ACCOUNT | __GFP_RETRY_MAYFAIL);
-
-Considering the above, a suitable replacement is `strscpy` [2] due to
-the fact that it guarantees NUL-termination on the destination buffer
-without unnecessarily NUL-padding.
-
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
-
----
-Note: build-tested only.
----
- drivers/net/ethernet/intel/igc/igc_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
-index 98de34d0ce07..e9bb403bbacf 100644
---- a/drivers/net/ethernet/intel/igc/igc_main.c
-+++ b/drivers/net/ethernet/intel/igc/igc_main.c
-@@ -6935,7 +6935,7 @@ static int igc_probe(struct pci_dev *pdev,
- 	 */
- 	igc_get_hw_control(adapter);
- 
--	strncpy(netdev->name, "eth%d", IFNAMSIZ);
-+	strscpy(netdev->name, "eth%d", sizeof(netdev->name));
- 	err = register_netdev(netdev);
- 	if (err)
- 		goto err_register;
+-Kees
 
 -- 
-2.42.0.609.gbb76f46606-goog
-
+Kees Cook
