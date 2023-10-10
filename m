@@ -1,61 +1,61 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9648186C
-	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 20:53:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28129156D3
+	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 21:08:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1mksrxoa"
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BBB091
-	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 13:53:05 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d815354ea7fso8125045276.1
-        for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 13:53:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yH7JNjCG"
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C37609B
+	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 14:08:00 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5a7aa161b2fso28946807b3.2
+        for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 14:08:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696971185; x=1697575985; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1696972080; x=1697576880; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=nzrS9yyU7Fxl+rEcRC2xGRsO34stFhcBXCNXeuzJc9Q=;
-        b=1mksrxoazT1pzlHvN6L+lcXmg/Imy21GLAGQ04+Nx8DKk9suu1RKbM57IqXPm6bJqN
-         LeJh1EHuF+9oNubAIcitTqnHQz4UVTNGVLkxkl3eXtEf2vVLShgooYeKnQ/BMeXKvX6a
-         REW2ZGlAjncB+7tWENokHQu7IKN50q+8rPl31kj1KnH9HukCB3lYM6P5YysnroTYgNj8
-         KbC/F6UmUiNn8VFUPyOTbIUpstD8u2aVOpELXPGODR0UpwLD+vbSGNuO5CXnqMHepTkA
-         TUfC3v490losvT/9oeP99f0bZzRcoC0YuzGxeF64lTdwxfgobUVCWEQNUs7zpfxzbpNu
-         bMpA==
+        bh=ndlPGfYsR5FrdEZ+vU/Zj3bD+kBDGYy33Ae6WjfGffY=;
+        b=yH7JNjCGblBJnpFGem+LJ0XJ46VVdoQ8IFy1TPq5B/CXj96sbF05KjMW8+hD1cSwrj
+         LzdCJWSnVCNcZUsPQZB9QArlCV1Niq0YfaXz/j4c8pQWXLQYBswKq8RVblq5N8+d92ZV
+         pw+O4IeIVAgmgXigzueKgaTYrX77fiXP4NdAACB+zKPnzUTwhyvwOKI7kgFhd4sG09pQ
+         1j2EiCxGFOtc36v//Mv3yOSGyo1TSAL33uTkCWqVH6SZxrkDB1t2feYKL3sXKoUL/zav
+         a1smD6ldyJIFYI8MaCrY2aCZY1KAVNFAUPNbSe9u+yfBOX1QQ3cQoTERj55dQvJ2gnv1
+         pAGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696971185; x=1697575985;
+        d=1e100.net; s=20230601; t=1696972080; x=1697576880;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=nzrS9yyU7Fxl+rEcRC2xGRsO34stFhcBXCNXeuzJc9Q=;
-        b=EJAlbyGqm3TzKnFSnk7KkNN/MR6eDTLpcdrvYAi1w5PEc8GMFP5IITo9dOcCKy+24o
-         nuQcIzjHohYov8SPQ76EM4+WiWVgw6HrC9L/uAsC1uzRAD7cKJikyUoWXsTstOBlfBwf
-         hIfH3KwfrSPsutdKaNW/p2ifZxLsiS7XMH906BQ3V6esry06tocKn3xHfG6aLiljIVS1
-         W9ADfHikh1lEhy9z9BRkQGn1eUHJy7LyUSbL6u/CiVdNjTvho27PmgLKwulxkwJdrz6d
-         borZ/pdu8p9yR8bCdu/Vl/TpIsVeXzv0Yj/BeeQRTg0dVTCo2Y1tMrikRk96mr790Fq+
-         Xh7Q==
-X-Gm-Message-State: AOJu0YzUXBVhtmMkhZJX68tm5y/Zontqj1jBTSuyEjWUZYAZ02GInDzY
-	eXpEzmmtRpkJxtU870gs7kQ7kaMFUJNfOzsDoA==
-X-Google-Smtp-Source: AGHT+IFEawv3/Q1aVdi1akfbJBKo97xvPPwQmp2OCE1jugDl7DSQ5964VSx1uuZU3vGzMYluwJTj8jYCJu4sipxh6g==
+        bh=ndlPGfYsR5FrdEZ+vU/Zj3bD+kBDGYy33Ae6WjfGffY=;
+        b=aeJ7WLwtcTYti/D6U51k90iw+5F9m/U58UfmwALNCKEkaRZ7oUgKImMlUrqkEqdDc/
+         n626SNsND+Yd7IK8pVoQAmlMuGwhCyQFC3IMoEtOnzQ3eksiWFR+Hc9eTFuVHZvw6pY7
+         khgjfexdjbHs2Z8xHoT1X6oPZrQF35vAGNZnMgnE+lR6DP9h2kc3m/VEJNmlq+H6ZI4I
+         t8HhC4qlRSohu6bQor1SZWqFD8OxDZYQjJNZ4AY8EQSgXqkKCcwpmGe0mXmaYMkWiERA
+         4Pvi97AqbaoEGDXm1e8VFsDmzE2VgFDjkn0kv5JH+Cb1oEJ1gN2EsMFjmnX21yjvN8Gh
+         7Dog==
+X-Gm-Message-State: AOJu0Yw6sxflyz5Tln/tGcJ4a81CbU6R/jGCbpmE8pPlHHnIZ9sJFvMD
+	J+zcLE+SDcth7gufIZclg/DQ8CovAeiY61ndvw==
+X-Google-Smtp-Source: AGHT+IHj9mcr3yN9cr0pAbeqwrfthhwiz6e+OtQon8JznMOo9KT/dvFu6WV/L5M0mXZjtD1IJkgEjwfrm/dmYR4P9g==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6902:85:b0:d86:5644:5d12 with SMTP
- id h5-20020a056902008500b00d8656445d12mr360216ybs.4.1696971184847; Tue, 10
- Oct 2023 13:53:04 -0700 (PDT)
-Date: Tue, 10 Oct 2023 20:53:00 +0000
+ (user=justinstitt job=sendgmr) by 2002:a25:69d4:0:b0:d9a:58e1:bb52 with SMTP
+ id e203-20020a2569d4000000b00d9a58e1bb52mr58171ybc.6.1696972080036; Tue, 10
+ Oct 2023 14:08:00 -0700 (PDT)
+Date: Tue, 10 Oct 2023 21:07:59 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAKu5JWUC/x2N0QrCMBAEf6XcswdJqhT8FRGxua09kBguoVRK/
- 93Yl2HnZWejAlMUunYbGRYt+klN/KmjOD/TC6zSnIILvXfecamWYv6ymC6wwgmVUWfYf2iqeLO eHQ48RDJHFhmm4MYBchFqx9kw6XpEb/d9/wFd1mpihAAAAA==
+X-B4-Tracking: v=1; b=H4sIAC69JWUC/x2N0QrCMBAEf6XcswdJimD9FRFpk217oGe5hKKU/
+ rupDwM7LzsbZZgg07XZyLBKlrdW8aeG4tzrBJZUnYILrXfecS6mcflyMllhmRWFUWbYMUQLniz TcPB49aIceQjnDu0YLl1qqf4uhlE+/+btvu8/fpTvp4MAAAA=
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1696971183; l=2113;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1696972079; l=2221;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=2n+/99+B9opeglb9JUPmq/bkJEGJQqpMF0ubyjWVGZk=; b=QW1y3WrgWpVSmEbu1+0vOfFFpmr1+pxJv4LGFzx7Dc1VvHcE4fwNoHfwpAzs/aoR0cBHfUaXB
- QqdiMRspgFuCva36ud5TV5Qm1njxFennsGdx1/XqmdCR/al80n4nf9s
+ bh=flnqc77MqO1c7xUbgevXQV3iKIfkAbCA1etAFyGMSlA=; b=L1o+advtN54cbFa+xXqTVzRfB3SNNlR/1bgBEQXRIdYE2QN+ozFKD/Z7wyvk6nz8JnPbMksY9
+ tQcwMCs+e4lBLETRdzxOSlViiob55aevqxlvK6JogW8Evrv/bSkGeKc
 X-Mailer: b4 0.12.3
-Message-ID: <20231010-strncpy-drivers-net-ethernet-intel-i40e-i40e_ddp-c-v1-1-f01a23394eab@google.com>
-Subject: [PATCH] i40e: use scnprintf over strncpy+strncat
+Message-ID: <20231010-strncpy-drivers-net-ethernet-intel-igb-igb_main-c-v1-1-d796234a8abf@google.com>
+Subject: [PATCH] igb: replace deprecated strncpy with strscpy
 From: Justin Stitt <justinstitt@google.com>
 To: Jesse Brandeburg <jesse.brandeburg@intel.com>, Tony Nguyen <anthony.l.nguyen@intel.com>, 
 	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
@@ -67,7 +67,7 @@ Content-Type: text/plain; charset="utf-8"
 X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.6
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
@@ -75,15 +75,22 @@ X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 [1] and as such we should prefer more robust and less ambiguous string
 interfaces.
 
-Moreover, `strncat` shouldn't really be used either as per
-fortify-string.h:
- * Do not use this function. While FORTIFY_SOURCE tries to avoid
- * read and write overflows, this is only possible when the sizes
- * of @p and @q are known to the compiler. Prefer building the
- * string with formatting, via scnprintf() or similar.
+We see that netdev->name is expected to be NUL-terminated based on its
+usage with format strings:
+|       sprintf(q_vector->name, "%s-TxRx-%u", netdev->name,
+|               q_vector->rx.ring->queue_index);
 
-Instead, use `scnprintf` with "%s%s" format string. This code is now
-more readable and robust.
+Furthermore, NUL-padding is not required as netdev is already
+zero-allocated:
+|       netdev = alloc_etherdev_mq(sizeof(struct igb_adapter),
+|                                  IGB_MAX_TX_QUEUES);
+...
+alloc_etherdev_mq() -> alloc_etherdev_mqs() -> alloc_netdev_mqs() ...
+|       p = kvzalloc(alloc_size, GFP_KERNEL_ACCOUNT | __GFP_RETRY_MAYFAIL);
+
+Considering the above, a suitable replacement is `strscpy` [2] due to
+the fact that it guarantees NUL-termination on the destination buffer
+without unnecessarily NUL-padding.
 
 Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
 Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
@@ -93,31 +100,26 @@ Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
 Note: build-tested only.
 ---
- drivers/net/ethernet/intel/i40e/i40e_ddp.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/intel/igb/igb_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_ddp.c b/drivers/net/ethernet/intel/i40e/i40e_ddp.c
-index 0e72abd178ae..ec25e4be250f 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_ddp.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_ddp.c
-@@ -438,10 +438,9 @@ int i40e_ddp_flash(struct net_device *netdev, struct ethtool_flash *flash)
- 		char profile_name[sizeof(I40E_DDP_PROFILE_PATH)
- 				  + I40E_DDP_PROFILE_NAME_MAX];
+diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
+index 76b34cee1da3..9de103bd3ad3 100644
+--- a/drivers/net/ethernet/intel/igb/igb_main.c
++++ b/drivers/net/ethernet/intel/igb/igb_main.c
+@@ -3264,7 +3264,7 @@ static int igb_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	igb_set_ethtool_ops(netdev);
+ 	netdev->watchdog_timeo = 5 * HZ;
  
--		profile_name[sizeof(profile_name) - 1] = 0;
--		strncpy(profile_name, I40E_DDP_PROFILE_PATH,
--			sizeof(profile_name) - 1);
--		strncat(profile_name, flash->data, I40E_DDP_PROFILE_NAME_MAX);
-+		scnprintf(profile_name, sizeof(profile_name), "%s%s",
-+			  I40E_DDP_PROFILE_PATH, flash->data);
-+
- 		/* Load DDP recipe. */
- 		status = request_firmware(&ddp_config, profile_name,
- 					  &netdev->dev);
+-	strncpy(netdev->name, pci_name(pdev), sizeof(netdev->name) - 1);
++	strscpy(netdev->name, pci_name(pdev), sizeof(netdev->name));
+ 
+ 	netdev->mem_start = pci_resource_start(pdev, 0);
+ 	netdev->mem_end = pci_resource_end(pdev, 0);
 
 ---
 base-commit: cbf3a2cb156a2c911d8f38d8247814b4c07f49a2
-change-id: 20231010-strncpy-drivers-net-ethernet-intel-i40e-i40e_ddp-c-dd7f20b7ed5d
+change-id: 20231010-strncpy-drivers-net-ethernet-intel-igb-igb_main-c-b259e3f289d3
 
 Best regards,
 --
