@@ -1,118 +1,96 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2447B7FD
-	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 02:01:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 680A17F0
+	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 02:10:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b="PPck21GW"
-Received: from mail-io1-xd2b.google.com (mail-io1-xd2b.google.com [IPv6:2607:f8b0:4864:20::d2b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 691489F
-	for <linux-hardening@vger.kernel.org>; Mon,  9 Oct 2023 19:01:16 -0700 (PDT)
-Received: by mail-io1-xd2b.google.com with SMTP id ca18e2360f4ac-79faba5fe12so198061539f.3
-        for <linux-hardening@vger.kernel.org>; Mon, 09 Oct 2023 19:01:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ieee.org; s=google; t=1696903275; x=1697508075; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=n8W5jicDuFfCto5Rz0a13pdOEWWZtFkes7WHBt5JLjo=;
-        b=PPck21GWL+u2Kz2+xAqPoG+3Njc9DnYMxHPMLqb/wap5zMDkndfy6+58OybjVB5mf9
-         8mg3lhE9YO95n96UZzWFsbwqYH78K/kMiMhSo39XRrDbfq3fd+sGK+8rUhrl31hUl8FS
-         f/KhV6r6je0ihv234UHGQs9Vzs8s0/0isOjog=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696903276; x=1697508076;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=n8W5jicDuFfCto5Rz0a13pdOEWWZtFkes7WHBt5JLjo=;
-        b=wPsUWwElJ0KF0w0Uqx3xnj7Q1y8Z7xnJRrQEICLoQgYQDfx66DsWTQgP/nSD20KuqH
-         Zs8aLoBtMuMIfwnh3vz2S+0H5T+rFh26tHf/nGu3KuqrgZ6NL0tLot6mhCy2ZmLkCETB
-         1C9YW1tAB9n5oxLhXuLtGS1NKKV45am29/mMJzgei3APpLZdro5zoD2cqyXK9bbNXZS1
-         GX9Y9R95IAdcy7iWbttJJj7BUf8AiKRIhFzwRWKYoG+WqXXrLHTWHT048qwM90Cbldba
-         TMxVBiHXtJnB7x1bBOgfoIOAMEkmVAqfPnl98UaovCxk112sbJilM/piYDw/pK1gfVBr
-         tiCw==
-X-Gm-Message-State: AOJu0YylkBUtNef+RxATfUVxxu/3EdYCposD5UBBQBixqt4wtCkCNqX2
-	84OBf6f4kl2dO3S9T50Ws3IOWxrj+JJ8kJW31Oc=
-X-Google-Smtp-Source: AGHT+IFxEbsxiAkqgad1NR+N5qEc+xJnzBRXuoUOorumGMCjl3dh8xe9qk/x6WqhsQZNVSqcE/TbYw==
-X-Received: by 2002:a05:6e02:1d1a:b0:351:b22:af5c with SMTP id i26-20020a056e021d1a00b003510b22af5cmr19923893ila.32.1696903275665;
-        Mon, 09 Oct 2023 19:01:15 -0700 (PDT)
-Received: from [10.211.55.3] (c-98-61-227-136.hsd1.mn.comcast.net. [98.61.227.136])
-        by smtp.googlemail.com with ESMTPSA id l17-20020a922811000000b003513b7613f3sm3247512ilf.3.2023.10.09.19.01.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Oct 2023 19:01:15 -0700 (PDT)
-Message-ID: <42a24a62-8dba-452c-b460-61ee06171d74@ieee.org>
-Date: Mon, 9 Oct 2023 21:01:13 -0500
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="1VSbNAdY"
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA7CCA7;
+	Mon,  9 Oct 2023 19:10:01 -0700 (PDT)
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 399NwuB9016274;
+	Tue, 10 Oct 2023 02:09:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2023-03-30;
+ bh=tLdCG6jN7hKzemz3BqeIqgk+1LWVl64DMX/5vSOGzuU=;
+ b=1VSbNAdYfjhd59uutV3S/ras1X34agVW3cGcUSEjg8U/657+vAVblWInhj8XJ+38mqyC
+ V9/p9cPxOA1udFDuIl+4+SOU6s9pVo3W7OVhxPHPBYarR8k4CFSCSVH8gztAyMRVGLeJ
+ pNVldwuKDfs88Pp89q5DnbtvqWgwd1lNs8q/xADnNt3vsU5MT2MEPPKz9/r8z+ow0VmZ
+ Nf7gtXF7piozNM2A2vQ3D4R7IdbJusKtbS3TuIosLpyQ85S5q/65922YxTnaCClXK1oF
+ ZRTRZB2AMyBs/rYAXIncrPjio/EKHj/0SUeRVqC7LzEWxtwiONulWYooRnNlk//lquBR Cg== 
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3tmh89sdk8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 10 Oct 2023 02:09:44 +0000
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 39A1JBsp014884;
+	Tue, 10 Oct 2023 02:09:43 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3tjws63mcb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 10 Oct 2023 02:09:43 +0000
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39A29dUM036611;
+	Tue, 10 Oct 2023 02:09:42 GMT
+Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3tjws63m9y-3;
+	Tue, 10 Oct 2023 02:09:42 +0000
+From: "Martin K. Petersen" <martin.petersen@oracle.com>
+To: Bodo Stroesser <bostroesser@gmail.com>, Kees Cook <keescook@chromium.org>
+Cc: "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>,
+        linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] scsi: target: tcmu: Annotate struct tcmu_tmr with __counted_by
+Date: Mon,  9 Oct 2023 22:09:34 -0400
+Message-Id: <169690017527.1410956.11295274010331353504.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20230922175300.work.148-kees@kernel.org>
+References: <20230922175300.work.148-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] staging: greybus: Add __counted_by for struct
- apr_rx_buf and use struct_size()
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <ZSR2O6zGyT/VX6ve@work>
-Content-Language: en-US
-From: Alex Elder <elder@ieee.org>
-In-Reply-To: <ZSR2O6zGyT/VX6ve@work>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-10_01,2023-10-09_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=682 mlxscore=0
+ bulkscore=0 phishscore=0 suspectscore=0 spamscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2309180000
+ definitions=main-2310100013
+X-Proofpoint-GUID: bkFeGgmIwkMBadGMwEnQVSLRIbis1HxP
+X-Proofpoint-ORIG-GUID: bkFeGgmIwkMBadGMwEnQVSLRIbis1HxP
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On 10/9/23 4:52 PM, Gustavo A. R. Silva wrote:
+On Fri, 22 Sep 2023 10:53:01 -0700, Kees Cook wrote:
+
 > Prepare for the coming implementation by GCC and Clang of the __counted_by
 > attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
-> array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
 > 
-> While there, use struct_size() helper, instead of the open-coded
-> version, to calculate the size for the allocation of the whole
-> flexible structure, including of course, the flexible-array member.
+> As found with Coccinelle[1], add __counted_by for struct tcmu_tmr.
 > 
-> This code was found with the help of Coccinelle, and audited and
-> fixed manually.
+> [...]
 
-Looks good to me, and I like the use of struct_size().
+Applied to 6.7/scsi-queue, thanks!
 
-Reviewed-by: Alex Elder <elder@linaro.org>
+[1/1] scsi: target: tcmu: Annotate struct tcmu_tmr with __counted_by
+      https://git.kernel.org/mkp/scsi/c/caf22c969ed1
 
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->   drivers/staging/greybus/raw.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/staging/greybus/raw.c b/drivers/staging/greybus/raw.c
-> index a00978c8e1d2..b9c6eff7cdc1 100644
-> --- a/drivers/staging/greybus/raw.c
-> +++ b/drivers/staging/greybus/raw.c
-> @@ -29,7 +29,7 @@ struct gb_raw {
->   struct raw_data {
->   	struct list_head entry;
->   	u32 len;
-> -	u8 data[];
-> +	u8 data[] __counted_by(len);
->   };
->   
->   static const struct class raw_class = {
-> @@ -73,7 +73,7 @@ static int receive_data(struct gb_raw *raw, u32 len, u8 *data)
->   		goto exit;
->   	}
->   
-> -	raw_data = kmalloc(sizeof(*raw_data) + len, GFP_KERNEL);
-> +	raw_data = kmalloc(struct_size(raw_data, data, len), GFP_KERNEL);
->   	if (!raw_data) {
->   		retval = -ENOMEM;
->   		goto exit;
-
+-- 
+Martin K. Petersen	Oracle Linux Engineering
