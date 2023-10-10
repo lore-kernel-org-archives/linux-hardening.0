@@ -1,74 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39B8D1C06;
-	Tue, 10 Oct 2023 02:50:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DC0110F5
+	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 03:02:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="klRtq/dA"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B949FC433A9;
-	Tue, 10 Oct 2023 02:50:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696906225;
-	bh=EeLf/BSDH3FguVNAD/id6IC30XdWEcWyl9KuPVMXqsA=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=klRtq/dArl66N9Hu0gw19UsoQKYbxJQVfYkdxHSS/2WSQb8C5+iVfmQ3qiqWHQcA8
-	 THsFTzQSgDrxlbe/AG/RzR1DQl6IelQ9Sd37iONMIcYALM53pD35jgAlbR+sU2ZzDI
-	 m5HK0dQ3CRrE4e1Xa119k5t5YD9zP6ykWoDiCWrjf3TguFH7XgSJwbaPMcikpAjiZM
-	 d6ufdEkEv2C9+/cYWGGm9q/f976JKlfrTFfh8EAF3OGy1mfq+3xu7sTw3F9f6ulx+q
-	 YtmTqOyDllcYLGFt7er0hzKVe91gsrKQMtJ+mV+ZR82TIYT0qJmBev3FEH4tu8Ms3J
-	 W+IW/FlDnhCGQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 98AF3E0009B;
-	Tue, 10 Oct 2023 02:50:25 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KedbAA66"
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9E3CA4;
+	Mon,  9 Oct 2023 20:02:19 -0700 (PDT)
+Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-53808d5b774so9273372a12.3;
+        Mon, 09 Oct 2023 20:02:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1696906938; x=1697511738; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7NFw7jVHwZYrsuKeB3oiagILvwz0AJLaFyHBUay/pXI=;
+        b=KedbAA66c2lovP2/bCByzWMAYTxUQ0R/c7/hjpCoUx8SEhU9br8HN8HtYEbTi6L/Fz
+         n5hTt6CD1m4OJhl+Cw3ICSD0VJXJZYF8nTG7ZwhNLEZ5GKf5PQhoOHHw5IBPT/pU1aru
+         jT6L+musipjgz5qcQpGVJP1bGKsNyKFmo9xZBJxOEbmLT+AuZzgxf1jAtDHWDCaV4yhl
+         E0NxVgpNhJnYSVuT3Sm1XTDLMw7XRUxv67LlPip23Nq8SM6raDi7nqeGHQ4GKFl38GCJ
+         Ltk7KWiT6H73uA9j2aejVcqmgTMYDh+yVZGCXjlW6r7ADwHaIQMLtTTD9AS4GQpkgohE
+         Md9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696906938; x=1697511738;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7NFw7jVHwZYrsuKeB3oiagILvwz0AJLaFyHBUay/pXI=;
+        b=HBBfPpfSmEVLp1dBlpcHi7ihY8dvGe1ngKserIE4LfybURN3wLa5RCiqW+/cu37ShK
+         czPV0lnQPmi+eannV7o4p7jOA9FnO+uCouR+7v9ty6i0FR4q39hB+Ifsy5dhd1Umq4A6
+         7w61S8KGWs5zcFkR87zBPV4ngNhcHUWbsKz0jd+9TwJ575mspwYrTaeYRtdqyNiwxxzy
+         e9gg3+ZanOwbKdWPBQi/5pvlx/r5QkBiOJ3SjbqQdUkX27uvvzdkf2wtRfUHc1UhJPP7
+         9xt6C37EIoIxdI4YL2ivwU4dPwVvNHons4CrvllsBFseNlJtuQmPTTLZMzJqYfCEpJAI
+         Girw==
+X-Gm-Message-State: AOJu0Yxgeo/Mr2/DRLu8od0vOk7VzeHFrSqqmw97H50IRZ0RHtL+vaoP
+	RgIWu3608aA9sEa3oNJ8qKJ41Std2osF2ZZMKpE=
+X-Google-Smtp-Source: AGHT+IH6dZvjOAHSoyZ23JF4sn6FJyDLMeAw5grAZpTEz+0OBLlzvWWcjEkif2Tg9mP7XdnE3F8cAKLKbkxmFY5kzDE=
+X-Received: by 2002:a50:fa95:0:b0:52c:92e3:1d12 with SMTP id
+ w21-20020a50fa95000000b0052c92e31d12mr14278796edr.11.1696906938155; Mon, 09
+ Oct 2023 20:02:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] net: liquidio: replace deprecated strncpy with strscpy_pad
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <169690622562.548.12764552380663468970.git-patchwork-notify@kernel.org>
-Date: Tue, 10 Oct 2023 02:50:25 +0000
-References: <20231005-strncpy-drivers-net-ethernet-cavium-liquidio-lio_main-c-v1-1-663e3f1d8f99@google.com>
-In-Reply-To: <20231005-strncpy-drivers-net-ethernet-cavium-liquidio-lio_main-c-v1-1-663e3f1d8f99@google.com>
-To: Justin Stitt <justinstitt@google.com>
-Cc: dchickles@marvell.com, sburla@marvell.com, fmanlunas@marvell.com,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
+References: <20231009161028.it.544-kees@kernel.org>
+In-Reply-To: <20231009161028.it.544-kees@kernel.org>
+From: Jason Andryuk <jandryuk@gmail.com>
+Date: Mon, 9 Oct 2023 23:02:06 -0400
+Message-ID: <CAKf6xpvPgaSMA=oCMgXqoHWYfYt53_U1vAhvh1dX6HHytKjOwA@mail.gmail.com>
+Subject: Re: [PATCH v2] wifi: p54: Annotate struct p54_cal_database with __counted_by
+To: Kees Cook <keescook@chromium.org>
+Cc: Christian Lamparter <chunkeey@googlemail.com>, Kalle Valo <kvalo@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-wireless@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org, 
+	llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-Hello:
+On Mon, Oct 9, 2023 at 12:10=E2=80=AFPM Kees Cook <keescook@chromium.org> w=
+rote:
+>
+> Prepare for the coming implementation by GCC and Clang of the __counted_b=
+y
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
+> array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
+>
+> Add __counted_by for struct p54_cal_database.
+>
+> Cc: Christian Lamparter <chunkeey@googlemail.com>
+> Cc: Kalle Valo <kvalo@kernel.org>
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: linux-wireless@vger.kernel.org
+> Cc: linux-hardening@vger.kernel.org
+> Suggested-by: Jason Andryuk <jandryuk@gmail.com>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Reviewed-by: Jason Andryuk <jandryuk@gmail.com>
 
-On Thu, 05 Oct 2023 21:41:01 +0000 you wrote:
-> `strncpy` is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
-> 
-> We know `fw_type` must be NUL-terminated based on use here:
-> |       static bool fw_type_is_auto(void)
-> |       {
-> |       	return strncmp(fw_type, LIO_FW_NAME_TYPE_AUTO,
-> |       		       sizeof(LIO_FW_NAME_TYPE_AUTO)) == 0;
-> |       }
-> ...and here
-> |       module_param_string(fw_type, fw_type, sizeof(fw_type), 0444);
-> 
-> [...]
-
-Here is the summary with links:
-  - net: liquidio: replace deprecated strncpy with strscpy_pad
-    https://git.kernel.org/netdev/net-next/c/092b0be65032
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Thanks,
+Jason
