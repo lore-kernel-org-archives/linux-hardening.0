@@ -1,139 +1,100 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FBCD32C8E
-	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 23:23:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80406315B3
+	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 23:24:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="33pFKAEW"
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6551599
-	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 16:22:58 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id 4fb4d7f45d1cf-5384975e34cso11100463a12.0
-        for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 16:22:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696980177; x=1697584977; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hPvi0L7FMz0a4O2DqWnfcamp8uZvbVMLd2V0ja/dStw=;
-        b=33pFKAEWL1e73plTg0/16WYm9+uqGaLYDqP1bOb43wfZiQfK2uaG956ehWtfjaJR3j
-         sKwIPvPPuhk7yPJp48qhsG8uLtoDlGfo1AZ9IOrwFFny+hYwdpYpiapZlCUbXwzdviti
-         HwFPkn6j375KlQO0jO5ra3vWXsTozqg7DS2UMkkatoEMf5BjDTBru5B7FUGyDrQ6S+Ai
-         fBp82rb6kZBpVm1CKF6LR2YbZr1XKVUBWBGWC2+EkH8IfyygMoQH9v/WIAeT6Fk+CFS5
-         ZLuwG993oaSJCA1C3uDRA3Dl8K8uGf9MuVZiKOSpL4V3ue4XbpS7byIHtj9c1xXs9YOt
-         hydw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696980177; x=1697584977;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hPvi0L7FMz0a4O2DqWnfcamp8uZvbVMLd2V0ja/dStw=;
-        b=PumJR/+sB3F514vVvftqBQqYJPtew6luFBkO4Hbt/Lpvtq3c46qkP9Z//qVXT9KZrW
-         vWtBZx9xidKKVi1tymy/jHOaw+6NC0oefTGME+uJOgm48V/2TFYjHydy2DLiWXoBGDun
-         6m6c+R2KoW23XzqRhwJWPPYn3NZtQZPSK9dDo9L3bcyVH7DHRKglb6XUllS1smp8I7uC
-         9O+xKWtadYQPA0hrEoHE/U9va3LhgszDdKVv2QJZlmpwtjW8HegQscMHGd/Sk1gHm67X
-         47D11hOVFML0wXaJ/scULTdXEvsF/hmuEc+iHIB5/hARiG9Xn9et5LzWyRXfhc5IFtDC
-         OBFQ==
-X-Gm-Message-State: AOJu0YwjBAOFrbI/pnrh5eR2kmrgGaaJee5OOo5crffdrlXCzn8guZTD
-	X4UmKOZNXtD+Cqp4VKNsNsbDVC4/nc+v1MgJ08GX2Q==
-X-Google-Smtp-Source: AGHT+IEJChFsbAup1enHy98cd4OYKs1F1JHVG9lgsLEhDADJM6SkfGrgSjsiomi0yma0H29NDkjf/IVCDKiHB7N/gNw=
-X-Received: by 2002:a05:6402:344a:b0:52e:3262:e6c9 with SMTP id
- l10-20020a056402344a00b0052e3262e6c9mr17278593edc.33.1696980176775; Tue, 10
- Oct 2023 16:22:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="utjopGZ7"
+Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6401C93
+	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 16:24:35 -0700 (PDT)
+Received: from eig-obgw-6008a.ext.cloudfilter.net ([10.0.30.227])
+	by cmsmtp with ESMTP
+	id qJuFqlcBaQUgRqM5Zqw1jm; Tue, 10 Oct 2023 23:24:33 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id qM5YqdAg0CZgIqM5ZqPpNs; Tue, 10 Oct 2023 23:24:33 +0000
+X-Authority-Analysis: v=2.4 cv=fLMqYLWe c=1 sm=1 tr=0 ts=6525dd31
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=bhdUkHdE2iEA:10 a=wYkD_t78qR0A:10 a=cm27Pg_UAAAA:8
+ a=G-lt6N7Yx29dGf9IkNAA:9 a=QEXdDO2ut3YA:10 a=t_Z6pCN3e-wA:10
+ a=xmb-EsYY8bH0VWELuYED:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=sYBsanTMELU9eC2s0PIPTCW6urGWz8biLYZfCgY3QAM=; b=utjopGZ7CaIL1u6/a/GzwVrjg2
+	DNDLoVvXCP9CmpaETVFerGq4v6W/BBP57Jq0gUco7gI30b24KOy9nbw4iiT3SfG2F/mvSh/r1FoVD
+	OWEyoYJZ3eGY0QyFpwdmDSkKWKyJQMkGGCfJSAgEjjkMtlYN+tgOyQipb9ed778NWRKs80AvfDPQ/
+	ozPlUPwp/XE+ISXPoCGUD/DDhGH//GNPh+5MLVl41t53LxBWN+tvVN3LjxJlXod3wgmjOKBRusP87
+	ZHLDdOagkWPK4mDea/9ZLXObhhSb/1q7e6opW40AmzkpnXmHINLXQgU+NZKwJJ2JDrS3PTR50/Ngy
+	0YiiFq3A==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:48998 helo=[192.168.15.7])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1qqM5Y-003zTy-0x;
+	Tue, 10 Oct 2023 18:24:32 -0500
+Message-ID: <a3336eae-a24d-48c8-9c91-e9c989ec89db@embeddedor.com>
+Date: Tue, 10 Oct 2023 17:24:30 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231010-netdev-replace-strncpy-resend-as-series-v1-0-caf9f0f2f021@google.com>
- <d84f2d4d-40d7-af15-0049-f8e1efed1eba@intel.com>
-In-Reply-To: <d84f2d4d-40d7-af15-0049-f8e1efed1eba@intel.com>
-From: Justin Stitt <justinstitt@google.com>
-Date: Tue, 10 Oct 2023 16:22:44 -0700
-Message-ID: <CAFhGd8pR4EdjVzHLKwxtH=OHNO1rLsuWAs=ZHX7hWohhE8Kcjg@mail.gmail.com>
-Subject: Re: [PATCH net-next 0/7] net: intel: replace deprecated strncpy uses
-To: Jesse Brandeburg <jesse.brandeburg@intel.com>
-Cc: Tony Nguyen <anthony.l.nguyen@intel.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	linux-hardening@vger.kernel.org, intel-wired-lan@lists.osuosl.org, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] hostap: Add __counted_by for struct
+ prism2_download_data and use struct_size()
+Content-Language: en-US
+To: Kees Cook <keescook@chromium.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Kalle Valo <kvalo@kernel.org>, linux-wireless@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <ZSRXXvWMMkm7qqRW@work> <202310101549.E09DE6F@keescook>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <202310101549.E09DE6F@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.21.192
+X-Source-L: No
+X-Exim-ID: 1qqM5Y-003zTy-0x
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.7]) [187.162.21.192]:48998
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfAZhfRIJisfl6K1dnBUytWit2biz8wS+ABmij/e1LCxYRe6UuoTqjxaUWtL0pVSnhcFTdpyutxq4qHe9s6yMENWHqEa5O8VWRvkCkB2DSlL6ITHLWcef
+ vG9OvsO8ToOn/uAtJgL5PWK5TWp9pqOQYQo70L1rabJ7t8ir3wIm5o61NMO0eZ2HC8heSRNMY84hNkD72OOmQ4ob287FDcLiy7JKqxkBVBwlnVfFbZpoakaD
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+	RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Tue, Oct 10, 2023 at 4:19=E2=80=AFPM Jesse Brandeburg
-<jesse.brandeburg@intel.com> wrote:
->
-> On 10/10/2023 3:26 PM, Justin Stitt wrote:
-> > Hi,
-> >
-> > This series aims to eliminate uses of strncpy() as it is a deprecated
-> > interface [1] with many viable replacements available.
-> >
-> > Predominantly, strscpy() is the go-to replacement as it guarantees
-> > NUL-termination on the destination buffer (which strncpy does not). Wit=
-h
-> > that being said, I did not identify any buffer overread problems as the
-> > size arguments were carefully measured to leave room for trailing
-> > NUL-bytes. Nonetheless, we should favor more robust and less ambiguous
-> > interfaces.
-> >
-> > Previously, each of these patches was sent individually at:
-> > 1) https://lore.kernel.org/all/20231009-strncpy-drivers-net-ethernet-in=
-tel-e100-c-v1-1-ca0ff96868a3@google.com/
-> > 2) https://lore.kernel.org/all/20231010-strncpy-drivers-net-ethernet-in=
-tel-e1000-e1000_main-c-v1-1-b1d64581f983@google.com/
-> > 3) https://lore.kernel.org/all/20231010-strncpy-drivers-net-ethernet-in=
-tel-fm10k-fm10k_ethtool-c-v1-1-dbdc4570c5a6@google.com/
-> > 4) https://lore.kernel.org/all/20231010-strncpy-drivers-net-ethernet-in=
-tel-i40e-i40e_ddp-c-v1-1-f01a23394eab@google.com/
-> > 5) https://lore.kernel.org/all/20231010-strncpy-drivers-net-ethernet-in=
-tel-igb-igb_main-c-v1-1-d796234a8abf@google.com/
-> > 6) https://lore.kernel.org/all/20231010-strncpy-drivers-net-ethernet-in=
-tel-igbvf-netdev-c-v1-1-69ccfb2c2aa5@google.com/
-> > 7) https://lore.kernel.org/all/20231010-strncpy-drivers-net-ethernet-in=
-tel-igc-igc_main-c-v1-1-f1f507ecc476@google.com/
-> >
-> > Consider these dead as this series is their new home :)
-> >
-> > I found all these instances with: $ rg "strncpy\("
-> >
-> > This series may collide in a not-so-nice way with [3]. This series can
-> > go in after that one with a rebase. I'll send a v2 if necessary.
-> >
-> > [3]: https://lore.kernel.org/netdev/20231003183603.3887546-1-jesse.bran=
-deburg@intel.com/
-> >
-> > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#st=
-rncpy-on-nul-terminated-strings [1]
-> > Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en=
-.html [2]
-> > Link: https://github.com/KSPP/linux/issues/90
-> > Signed-off-by: Justin Stitt <justinstitt@google.com>
->
-> Thanks Justin for fixing all these!
->
-> For the series:
-> Reviewed-by: Jesse Brandeburg <jesse.brandeburg@intel.com>
->
-> PS: have you considered adding a script to scripts/coccinelle/api which
-> might catch and try to fix future (ab)users of strncpy?
 
-There is a checkpatch routine for it. Also, the docs are littered with
-aversions to strncpy. With that being said, I would not be opposed
-to adding more checks, though.
+> I realize I didn't actually send my R-b for this thread, so here it is:
+> 
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> 
+> :)
+> 
 
-Once I'm more caught up on all the outstanding strncpy uses,
-I'll look into adding some coccinelle support.
+Thanks! :)
 
->
-
-Thanks
-Justin
+--
+Gustavo
