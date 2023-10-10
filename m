@@ -1,45 +1,45 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 477F032C8A
-	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 22:27:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98EB832C86
+	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 22:27:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dNtSoZG1"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sCzWLzIf"
 Received: from mail-oa1-x4a.google.com (mail-oa1-x4a.google.com [IPv6:2001:4860:4864:20::4a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1285107
-	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 15:27:08 -0700 (PDT)
-Received: by mail-oa1-x4a.google.com with SMTP id 586e51a60fabf-1e97420176bso1399646fac.2
-        for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 15:27:08 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6876FF
+	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 15:27:07 -0700 (PDT)
+Received: by mail-oa1-x4a.google.com with SMTP id 586e51a60fabf-1e96d3ee623so1636322fac.2
+        for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 15:27:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696976828; x=1697581628; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1696976827; x=1697581627; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pa7deZDH3/y1FuC+NXYPP7L7Yz4eW2ecVvy54MDyytM=;
-        b=dNtSoZG14IAbsxG+bS1SasW0twm/JezTe1SxCulaRIoCL7PfsbgwPfV1ZcT+Uwc5gB
-         fZ9DJf0tnuni4fFF1TI+EOZcopc9nBjpGpwdEFb4rZ/n9UkL9qjp0sl+dRA3haXjuUZ5
-         +w8EOorgTHr0Gzyojdkrf1JbRHoWKtt0sQ58YPliIHwzZIhGecNutR6SF+NgbjPhqCkq
-         qNAoDCCQtpVVRXx3nGnAJEffH7f6xf0aYbTyotbXE3m8jfeWWYWLUf8y8d0Kga60gTnO
-         tPWK68jU23eRmgsavQ9SKSpTMslsMCN+37MQrefGA4QDRM9oX026F3eDwjXeoSvYzrHb
-         SfkA==
+        bh=oRxxfOpYGYsMYGCPD0LU0Gx9K2SMiFZ6T4X3/eq+2Jo=;
+        b=sCzWLzIfbyvEdCcjd9shAkwt7hPStxK53ArHcfgnX2URuIOwrYvwkKjs2ENbrkKMM2
+         R/FnDR+TI05cGo+o/Vr1a1wo2ADkb0gieGjV3wViWVQQNRYjZbv38WDQyv8fHFzgG9o2
+         Ak07Pse+fp8trMmMT9gfKSH7ePXt+G6eftHgpJAX729MFyX1Wq9hz6tSl07LSAL42jy8
+         2VzkDd84qFrQxRktlAz3UO2Z2PxDfWyTnKSzuBmqt9L8SZc5SofmAGBYAkDYi9XZgUT/
+         6uCPj8w54u7CHODVfb/e1b/BYT68Srycl6IzLMPF2q3bJMDOmELqdr6gziXZf4c+bko+
+         Xq4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696976828; x=1697581628;
+        d=1e100.net; s=20230601; t=1696976827; x=1697581627;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pa7deZDH3/y1FuC+NXYPP7L7Yz4eW2ecVvy54MDyytM=;
-        b=kAsCxttN79B7fy3TP1TSLQhKYabsk50ynenTgTRLKxLIOA7uhvSbnxMN2zMWjX6n/0
-         Fm2weCgeTABCM9JjHLb2ILopNJFU1CgxpEFI4y1qV4F6Di+X0SIgglqgj7CMXe1UcEzd
-         pC8odersNwraaIojKACTg9B3rZB8CK7FF9lKjJCTUcVDg1ABXmUjeAjEHexMRmxmIhm8
-         EccMXJmX8wNPhyXFse6oX37h+zdV6GT+8uzea2c582HsKmiT1AdmGC9aV0rb/fvoGGoC
-         kIuVULEpGS/hesSEV3o1VaP7lTY+ZdEYArx5YWTvGzjpRuUDA/ZkVDZOJ7afOAAghBCa
-         U6qw==
-X-Gm-Message-State: AOJu0YwShV+pwbxsrwHE+c6ypdpAXSkAB2bzQP/TMlgdSTsZvUTmwpkk
-	6ER1o3bA+J2NesN1XUVsmn/ZENcga5W7h4Foxw==
-X-Google-Smtp-Source: AGHT+IEadZBbjvmTPKL6ZoF9E9/8NzOm+22mrGAZMVtdJWKWPzsgKk+C0ltQCmzXV0c0zTmFQFZqIhheM6Siw0DEMQ==
+        bh=oRxxfOpYGYsMYGCPD0LU0Gx9K2SMiFZ6T4X3/eq+2Jo=;
+        b=LYYP6sKZiMAf7hnrMMK/p6JPGRRPxWtw01gTTqAz17SLVPy5EGmJVi6+6WMlGo30Hd
+         jNpqpYNOEvR8h8S9FXwq8CkbWUJHlYFZ7HJh9ktRS2nc8S9pgciWJ3LSvyLAjmMunC5f
+         S1UF4qoJg0+5Jsq2uUKYQWKhja8FpTA7zlMgxjE0n8tNToUTmBpl2C6cj+KKnEJz4/0Z
+         VVy6AyD88akqKFk+9G9MnHgWNEm8KhfehwaqN0qhOaByUU3T1Yv6xkPiHane5EXvjAQY
+         Rh2krAds2NDTcubMKw+JegBJtP/KukMKdIUgAfhS/ZL00czPLQ1x2Q/ItxpEFAjOhCEr
+         13Vg==
+X-Gm-Message-State: AOJu0YyFTqe0LJF6bSw0eHUQjfF453yNS+SosAqq4ih9GaaDSmKRaToG
+	/Zz5n+d0mWYlc1dgse30lIOzojB1jJz98LxKwg==
+X-Google-Smtp-Source: AGHT+IF7Z0F3Kme/HBMNT7IsdnfUyQ7lDRY4xVZb2ZtGQ3g2V9x0IBedcSSdWdeMcYlxHd4de/rHK0jPUa+aQGw4QA==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6870:b7b5:b0:1dd:7381:e05 with
- SMTP id ed53-20020a056870b7b500b001dd73810e05mr8328180oab.3.1696976828369;
- Tue, 10 Oct 2023 15:27:08 -0700 (PDT)
-Date: Tue, 10 Oct 2023 22:26:55 +0000
+ (user=justinstitt job=sendgmr) by 2002:a05:6870:9891:b0:1d6:5e45:3bc7 with
+ SMTP id eg17-20020a056870989100b001d65e453bc7mr8002308oab.5.1696976826877;
+ Tue, 10 Oct 2023 15:27:06 -0700 (PDT)
+Date: Tue, 10 Oct 2023 22:26:54 +0000
 In-Reply-To: <20231010-netdev-replace-strncpy-resend-as-series-v1-0-caf9f0f2f021@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -49,13 +49,13 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231010-netdev-replace-strncpy-resend-as-series-v1-0-caf9f0f2f021@google.com>
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1696976824; l=1965;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1696976824; l=2047;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=rxi6aLNd8v6Nf40hnmQomEOrEb/86fYL7CHbZkLYeOc=; b=j6JQnwbowPf3dzuBaUDjGqeCKA2qyFTP3KIo3eNBNMZczwWVdcd3sWaiujAjoY1XHmfpZr4MB
- wYA0z04z+jOBph3+HO6oqCmF+03nCsxlBi/fNo6z+SwJCX6k5QcwpK9
+ bh=OWWhQIBafVgfDlqmMd0xlq6kW1ggHRaXB3P7V35piho=; b=VuwZhA1UAIYHpGKXaFjSv1uwbivUM+rFKhtVdtifrMMZE3YsgHH/o4bhCiH0jMRbuplw/zZ5l
+ Sq50xVfC9K1BbFHqYK+Q9zMPrzpmcn1bglNfo7vqJwP60dNdZLWRsiu
 X-Mailer: b4 0.12.3
-Message-ID: <20231010-netdev-replace-strncpy-resend-as-series-v1-2-caf9f0f2f021@google.com>
-Subject: [PATCH v1 net-next 2/7] e1000: replace deprecated strncpy with strscpy
+Message-ID: <20231010-netdev-replace-strncpy-resend-as-series-v1-1-caf9f0f2f021@google.com>
+Subject: [PATCH v1 net-next 1/7] e100: replace deprecated strncpy with strscpy
 From: Justin Stitt <justinstitt@google.com>
 To: Jesse Brandeburg <jesse.brandeburg@intel.com>, Tony Nguyen <anthony.l.nguyen@intel.com>, 
 	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
@@ -75,14 +75,15 @@ X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 [1] and as such we should prefer more robust and less ambiguous string
 interfaces.
 
-We can see that netdev->name is expected to be NUL-terminated based on
-it's usage with format strings:
-|       pr_info("%s NIC Link is Down\n",
-|               netdev->name);
+The "...-1" pattern makes it evident that netdev->name is expected to be
+NUL-terminated.
 
-A suitable replacement is `strscpy` [2] due to the fact that it
-guarantees NUL-termination on the destination buffer without
-unnecessarily NUL-padding.
+Meanwhile, it seems NUL-padding is not required due to alloc_etherdev
+zero-allocating the buffer.
+
+Considering the above, a suitable replacement is `strscpy` [2] due to
+the fact that it guarantees NUL-termination on the destination buffer
+without unnecessarily NUL-padding.
 
 This is in line with other uses of strscpy on netdev->name:
 $ rg "strscpy\(netdev\->name.*pci.*"
@@ -102,22 +103,22 @@ Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
 Note: build-tested only.
 ---
- drivers/net/ethernet/intel/e1000/e1000_main.c | 2 +-
+ drivers/net/ethernet/intel/e100.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/e1000/e1000_main.c b/drivers/net/ethernet/intel/e1000/e1000_main.c
-index da6e303ad99b..1d1e93686af2 100644
---- a/drivers/net/ethernet/intel/e1000/e1000_main.c
-+++ b/drivers/net/ethernet/intel/e1000/e1000_main.c
-@@ -1014,7 +1014,7 @@ static int e1000_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	netdev->watchdog_timeo = 5 * HZ;
- 	netif_napi_add(netdev, &adapter->napi, e1000_clean);
- 
+diff --git a/drivers/net/ethernet/intel/e100.c b/drivers/net/ethernet/intel/e100.c
+index d3fdc290937f..01f0f12035ca 100644
+--- a/drivers/net/ethernet/intel/e100.c
++++ b/drivers/net/ethernet/intel/e100.c
+@@ -2841,7 +2841,7 @@ static int e100_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	netdev->netdev_ops = &e100_netdev_ops;
+ 	netdev->ethtool_ops = &e100_ethtool_ops;
+ 	netdev->watchdog_timeo = E100_WATCHDOG_PERIOD;
 -	strncpy(netdev->name, pci_name(pdev), sizeof(netdev->name) - 1);
 +	strscpy(netdev->name, pci_name(pdev), sizeof(netdev->name));
  
- 	adapter->bd_number = cards_found;
- 
+ 	nic = netdev_priv(netdev);
+ 	netif_napi_add_weight(netdev, &nic->napi, e100_poll, E100_NAPI_WEIGHT);
 
 -- 
 2.42.0.609.gbb76f46606-goog
