@@ -1,63 +1,55 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F6BC35518
-	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 22:51:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4C9629433
+	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 22:53:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EBH9NEEA"
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9A959D
-	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 15:51:27 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1c9c5a1b87bso5687335ad.3
-        for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 15:51:27 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DM92OVe/"
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0F8198
+	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 15:53:35 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1c60f1a2652so2953975ad.0
+        for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 15:53:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1696978287; x=1697583087; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1696978415; x=1697583215; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ubmSWqN4/oZllpUx9ALydSh0+D44g/WNY6GMZGog46U=;
-        b=EBH9NEEA8EE5LFojIFp3SBe11Rw4H5/IkJ3Ub+81fEPvHifX2B6Z52hZwmR3BedT0x
-         rRqZYSerhF4YBiXmSLt6RF6a2GjRiUcmgBE995B/BaSGMeNbqr1cbns0UJndxMsr4eXh
-         nUlpujl9q/oMlglA35FpUNHgWLQNTmGXkXtNA=
+        bh=sM2D1z73zi+5HYrcOqeqetxrp6E/x8mIV2xfN5N2igs=;
+        b=DM92OVe/C6YiKLrtiL2N8KFHcGveutEPVbhbsoYAq2nse0Gy7k7dQfxjFlWDRNa3hm
+         No3QxubAVLFg5Ygt4kf/s3slq3FsYMP+xa8uFN8Uizy372mas1041Z6Q6ZwOJ5EYQ+zx
+         /8HAPQwsljYJZ2WWlQOjTH28PhubKfVem091E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696978287; x=1697583087;
+        d=1e100.net; s=20230601; t=1696978415; x=1697583215;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ubmSWqN4/oZllpUx9ALydSh0+D44g/WNY6GMZGog46U=;
-        b=fNaZoAyN//o8GBHZKLPWFGkk06HK6Q2SQ0IBMiGGlwegkJcmKhOVMcFRtWddXHET3N
-         uDxDTskFrOHLvyjvVCqYB/fsXxzBqfBsGrrhxEAv1eGzSC3dCZeqVP/5/RyurLGHXFYH
-         PvE6hkGPIMrpw5o96hDIfZ9Lt9QjZ2MK+vBYA3SuGKb3y1zpHjV+0i2K6Rl2zl5NNW/n
-         JTJ+s77IlnWGFokFm6j3hwOs44Xs0NtNrHsSelBKYywFaPzBhDlfc2TlIeYYnM8zQZjm
-         yO//YoGvCiIiTMm2hoaXbZvZL6lqld15kwwHlc1YaXGgSSURSQD5s2pt0PKdRE/cVFj3
-         y3dw==
-X-Gm-Message-State: AOJu0YyKpmzNaZTHnIAgRwJrBjt4QQgZ88s0TS1l2VjUPreGB6fCMAAU
-	mmyP8pozQ4wW1btvoRemyF2t4g==
-X-Google-Smtp-Source: AGHT+IGy+/NzfRV3ud+i8e03ChCZFw5EN81pR1ltghJlrE4aP8IIfdWDbQLD3eDks1ZvJ8So6yMflQ==
-X-Received: by 2002:a17:903:2445:b0:1c7:74a2:5b56 with SMTP id l5-20020a170903244500b001c774a25b56mr20177500pls.43.1696978287254;
-        Tue, 10 Oct 2023 15:51:27 -0700 (PDT)
+        bh=sM2D1z73zi+5HYrcOqeqetxrp6E/x8mIV2xfN5N2igs=;
+        b=w/xlzu5XOh1rEN1wUjJELoL7NZC84ywZJLIzTdhxgKOEFcr8hO3EVWztD4/t0KXzOT
+         A2LtOmHRBakYE5259N7CM9zsGJRg6shbtqRrMqs5Fjt1x3/EVpPgUEiKeb7WyEbLYFaQ
+         Gkp7D2UCfBGNdvXtyBgy6vCpBMChSrP2TXslG0I2OA6637s4013x1mqgppRDctCUNwsA
+         Q9fysK8AVWk1XUY5l0tAzkBDj395NhzBPEFZIh+d0HWluFtVbiMMVIq/YF1l5d9Dcar7
+         pkvWv0vP28RkoUFhNHqKOj1HngzofNUciS8j1ncFZNkPz2ChwWpZbwa5NrrDTcgtpu/+
+         HRCQ==
+X-Gm-Message-State: AOJu0Yy6KITiX6T9T9QwXFML3GzXWefmmvIHCY2gifaTRPM5MCu/k0tD
+	n2AlDCOcnRRbyxYiXjzihsi9wA==
+X-Google-Smtp-Source: AGHT+IF5qzcdrI8/uAq34pNGWTaPSCwg++M1k0mWJv9CMAIOsIQmhZyd+wlOKIN+dREI7d5oXJ4TwQ==
+X-Received: by 2002:a17:903:493:b0:1c0:bcbc:d66 with SMTP id jj19-20020a170903049300b001c0bcbc0d66mr20932044plb.7.1696978415300;
+        Tue, 10 Oct 2023 15:53:35 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id c20-20020a170902c1d400b001c3be750900sm12325562plc.163.2023.10.10.15.51.25
+        by smtp.gmail.com with ESMTPSA id e10-20020a170902b78a00b001bde65894c8sm1782132pls.268.2023.10.10.15.53.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Oct 2023 15:51:26 -0700 (PDT)
-Date: Tue, 10 Oct 2023 15:51:23 -0700
+        Tue, 10 Oct 2023 15:53:34 -0700 (PDT)
+Date: Tue, 10 Oct 2023 15:53:28 -0700
 From: Kees Cook <keescook@chromium.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Haren Myneni <haren@linux.ibm.com>,
-	Rick Lindsley <ricklind@linux.ibm.com>,
-	Nick Child <nnac123@linux.ibm.com>,
-	Dany Madden <danymadden@us.ibm.com>,
-	Thomas Falcon <tlfalcon@linux.ibm.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] ibmvnic: replace deprecated strncpy with strscpy
-Message-ID: <202310101551.DAE933A@keescook>
-References: <20231009-strncpy-drivers-net-ethernet-ibm-ibmvnic-c-v1-1-712866f16754@google.com>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: David Howells <dhowells@redhat.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] afs: Add __counted_by for struct afs_acl and use
+ struct_size()
+Message-ID: <202310101552.3578F46@keescook>
+References: <ZSVKwBmxQ1amv47E@work>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -66,38 +58,54 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231009-strncpy-drivers-net-ethernet-ibm-ibmvnic-c-v1-1-712866f16754@google.com>
+In-Reply-To: <ZSVKwBmxQ1amv47E@work>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.6
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Mon, Oct 09, 2023 at 11:19:57PM +0000, Justin Stitt wrote:
-> `strncpy` is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
+On Tue, Oct 10, 2023 at 06:59:44AM -0600, Gustavo A. R. Silva wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
+> array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
 > 
-> NUL-padding is not required as the buffer is already memset to 0:
-> |       memset(adapter->fw_version, 0, 32);
+> While there, use struct_size() helper, instead of the open-coded
+> version, to calculate the size for the allocation of the whole
+> flexible structure, including of course, the flexible-array member.
 > 
-> Note that another usage of strscpy exists on the same buffer:
-> |       strscpy((char *)adapter->fw_version, "N/A", sizeof(adapter->fw_version));
+> This code was found with the help of Coccinelle, and audited and
+> fixed manually.
 > 
-> Considering the above, a suitable replacement is `strscpy` [2] due to
-> the fact that it guarantees NUL-termination on the destination buffer
-> without unnecessarily NUL-padding.
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  fs/afs/internal.h | 2 +-
+>  fs/afs/xattr.c    | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
 > 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> diff --git a/fs/afs/internal.h b/fs/afs/internal.h
+> index 469a717467a4..e263a58b82ba 100644
+> --- a/fs/afs/internal.h
+> +++ b/fs/afs/internal.h
+> @@ -1116,7 +1116,7 @@ extern void afs_fs_inline_bulk_status(struct afs_operation *);
+>  
+>  struct afs_acl {
+>  	u32	size;
+> -	u8	data[];
+> +	u8	data[] __counted_by(size);
+>  };
 
-Thanks, this looks right to me.
+It's surprising how many of these 2-member structs we have in the kernel
+that do the same basic thing. :)
+
+And I see that "size" is assigned before using "data", good.
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-Kees
 
 -- 
 Kees Cook
