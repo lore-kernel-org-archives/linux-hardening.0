@@ -1,45 +1,45 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98EB832C86
-	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 22:27:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3760832C95
+	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 22:27:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sCzWLzIf"
-Received: from mail-oa1-x4a.google.com (mail-oa1-x4a.google.com [IPv6:2001:4860:4864:20::4a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6876FF
-	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 15:27:07 -0700 (PDT)
-Received: by mail-oa1-x4a.google.com with SMTP id 586e51a60fabf-1e96d3ee623so1636322fac.2
-        for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 15:27:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HaXYx2MH"
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5093CD3
+	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 15:27:10 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d9a3e5f1742so2570552276.0
+        for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 15:27:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696976827; x=1697581627; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1696976829; x=1697581629; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oRxxfOpYGYsMYGCPD0LU0Gx9K2SMiFZ6T4X3/eq+2Jo=;
-        b=sCzWLzIfbyvEdCcjd9shAkwt7hPStxK53ArHcfgnX2URuIOwrYvwkKjs2ENbrkKMM2
-         R/FnDR+TI05cGo+o/Vr1a1wo2ADkb0gieGjV3wViWVQQNRYjZbv38WDQyv8fHFzgG9o2
-         Ak07Pse+fp8trMmMT9gfKSH7ePXt+G6eftHgpJAX729MFyX1Wq9hz6tSl07LSAL42jy8
-         2VzkDd84qFrQxRktlAz3UO2Z2PxDfWyTnKSzuBmqt9L8SZc5SofmAGBYAkDYi9XZgUT/
-         6uCPj8w54u7CHODVfb/e1b/BYT68Srycl6IzLMPF2q3bJMDOmELqdr6gziXZf4c+bko+
-         Xq4Q==
+        bh=lTnwaqL2jLBaxkmW2WMaRMaHCldHf8+/MXLc/TIFT4c=;
+        b=HaXYx2MHjD9Ln9m2JeqtU5jOiYeAa5LVO/a7+aRBVUcBVGti0k/pnWDJrS9TTGt2Eb
+         6jyB2MOw64gG1EYLLODJlEbdJjJdGmi2CHrTsgq/BLUfmI/EDeIJBVhNGh+jNDv3T7wf
+         scwzc1yNRQTAwBs57Gp2roWdL4onWVEWuSOewIzmQu1B7vzmo0DGtnCrwJQOgxJ2w/Rz
+         kLdy972tJFimWH4+R8sAdPUkghl/fnPLdEOESBTXoHNRGSBvmUY4sPEDU97CyiWGqEqk
+         55KUWlw1/KLqaqghQWvvD+TV/NCnxFP6GsVt9p1mzr6Kj9PKuklNiazCRy6BoZ52+GST
+         jtwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696976827; x=1697581627;
+        d=1e100.net; s=20230601; t=1696976829; x=1697581629;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oRxxfOpYGYsMYGCPD0LU0Gx9K2SMiFZ6T4X3/eq+2Jo=;
-        b=LYYP6sKZiMAf7hnrMMK/p6JPGRRPxWtw01gTTqAz17SLVPy5EGmJVi6+6WMlGo30Hd
-         jNpqpYNOEvR8h8S9FXwq8CkbWUJHlYFZ7HJh9ktRS2nc8S9pgciWJ3LSvyLAjmMunC5f
-         S1UF4qoJg0+5Jsq2uUKYQWKhja8FpTA7zlMgxjE0n8tNToUTmBpl2C6cj+KKnEJz4/0Z
-         VVy6AyD88akqKFk+9G9MnHgWNEm8KhfehwaqN0qhOaByUU3T1Yv6xkPiHane5EXvjAQY
-         Rh2krAds2NDTcubMKw+JegBJtP/KukMKdIUgAfhS/ZL00czPLQ1x2Q/ItxpEFAjOhCEr
-         13Vg==
-X-Gm-Message-State: AOJu0YyFTqe0LJF6bSw0eHUQjfF453yNS+SosAqq4ih9GaaDSmKRaToG
-	/Zz5n+d0mWYlc1dgse30lIOzojB1jJz98LxKwg==
-X-Google-Smtp-Source: AGHT+IF7Z0F3Kme/HBMNT7IsdnfUyQ7lDRY4xVZb2ZtGQ3g2V9x0IBedcSSdWdeMcYlxHd4de/rHK0jPUa+aQGw4QA==
+        bh=lTnwaqL2jLBaxkmW2WMaRMaHCldHf8+/MXLc/TIFT4c=;
+        b=Sf1pwFs6M/BIHXO1I2YGTNfMXWrDqoZAhYcrkZk9jqJG7ph7Zip5fFSYYYziHVFLHt
+         3bo4PEvhDNP9dqlo14ltdbzkaVsneDi6EgLRJq6QZxhQNMJvTLyUjLS/WwBTttIqGGkj
+         uxfMhgVsBedLitJN8U9FXbnaZzDvE+O2b5cs5OFQID798yrbPgPP3vUSlL92+0AzrF64
+         IFwSORKV7KiDacQcGohcBzhLAl9G3UFQ7xcAs/I8ZiYKKttVAWJiIWi3sVE61mPoJaF0
+         oNBmj1wspmXt06pbK7BApJCEV95SHJDj+yTFvdGOPygtjrlWofIBoskyMeaenZ0Ot/SU
+         +pYQ==
+X-Gm-Message-State: AOJu0YwfoNqe2Hytw9bCDZ1s642CsH/M9WBOW6jjj5hz0Rqui2rUci/y
+	3u3aSk5VNmgQG/jJ5Ho5irqYHa35YKAsDKyM8w==
+X-Google-Smtp-Source: AGHT+IEhKRo7Fa50WHzFdWOO31BMGB9F9TmfVk9lGMD83bOfMPCZJRqBjhsWFbscP5Go+W8LBaXKuS+3ektW2jj+vA==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6870:9891:b0:1d6:5e45:3bc7 with
- SMTP id eg17-20020a056870989100b001d65e453bc7mr8002308oab.5.1696976826877;
- Tue, 10 Oct 2023 15:27:06 -0700 (PDT)
-Date: Tue, 10 Oct 2023 22:26:54 +0000
+ (user=justinstitt job=sendgmr) by 2002:a25:9349:0:b0:d80:12c:d49b with SMTP
+ id g9-20020a259349000000b00d80012cd49bmr352222ybo.8.1696976829556; Tue, 10
+ Oct 2023 15:27:09 -0700 (PDT)
+Date: Tue, 10 Oct 2023 22:26:56 +0000
 In-Reply-To: <20231010-netdev-replace-strncpy-resend-as-series-v1-0-caf9f0f2f021@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -49,13 +49,13 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231010-netdev-replace-strncpy-resend-as-series-v1-0-caf9f0f2f021@google.com>
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1696976824; l=2047;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1696976825; l=2155;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=OWWhQIBafVgfDlqmMd0xlq6kW1ggHRaXB3P7V35piho=; b=VuwZhA1UAIYHpGKXaFjSv1uwbivUM+rFKhtVdtifrMMZE3YsgHH/o4bhCiH0jMRbuplw/zZ5l
- Sq50xVfC9K1BbFHqYK+Q9zMPrzpmcn1bglNfo7vqJwP60dNdZLWRsiu
+ bh=OVZJsM7ldFpBAzherL0f3bvpgvacQBDrwKwi/3HnF5o=; b=VAP1FhD196P2wXpYtHTj+oub2FKXyLs035gJ11JD9BWHTobZWE7G6hG6hva6AMypTOMJugLLr
+ iU1NTx0gyFVACLLcwaYcZNUqVriQ4UPkUi7BGHg/1QJ/x1taOIyXHl8
 X-Mailer: b4 0.12.3
-Message-ID: <20231010-netdev-replace-strncpy-resend-as-series-v1-1-caf9f0f2f021@google.com>
-Subject: [PATCH v1 net-next 1/7] e100: replace deprecated strncpy with strscpy
+Message-ID: <20231010-netdev-replace-strncpy-resend-as-series-v1-3-caf9f0f2f021@google.com>
+Subject: [PATCH v1 net-next 3/7] fm10k: replace deprecated strncpy with strscpy
 From: Justin Stitt <justinstitt@google.com>
 To: Jesse Brandeburg <jesse.brandeburg@intel.com>, Tony Nguyen <anthony.l.nguyen@intel.com>, 
 	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
@@ -65,9 +65,9 @@ Cc: linux-hardening@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
 	Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
 X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.6
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
@@ -75,24 +75,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 [1] and as such we should prefer more robust and less ambiguous string
 interfaces.
 
-The "...-1" pattern makes it evident that netdev->name is expected to be
-NUL-terminated.
+A suitable replacement is `strscpy` [2] due to the fact that it
+guarantees NUL-termination on the destination buffer without
+unnecessarily NUL-padding.
 
-Meanwhile, it seems NUL-padding is not required due to alloc_etherdev
-zero-allocating the buffer.
+Other implementations of .*get_drvinfo also use strscpy so this patch
+brings fm10k_get_drvinfo in line as well:
 
-Considering the above, a suitable replacement is `strscpy` [2] due to
-the fact that it guarantees NUL-termination on the destination buffer
-without unnecessarily NUL-padding.
+igb/igb_ethtool.c +851
+static void igb_get_drvinfo(struct net_device *netdev,
 
-This is in line with other uses of strscpy on netdev->name:
-$ rg "strscpy\(netdev\->name.*pci.*"
+igbvf/ethtool.c
+167:static void igbvf_get_drvinfo(struct net_device *netdev,
 
-drivers/net/ethernet/intel/e1000e/netdev.c
-7455:   strscpy(netdev->name, pci_name(pdev), sizeof(netdev->name));
+i40e/i40e_ethtool.c
+1999:static void i40e_get_drvinfo(struct net_device *netdev,
 
-drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-10839:  strscpy(netdev->name, pci_name(pdev), sizeof(netdev->name));
+e1000/e1000_ethtool.c
+529:static void e1000_get_drvinfo(struct net_device *netdev,
+
+ixgbevf/ethtool.c
+211:static void ixgbevf_get_drvinfo(struct net_device *netdev,
 
 Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
 Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
@@ -103,22 +106,28 @@ Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
 Note: build-tested only.
 ---
- drivers/net/ethernet/intel/e100.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/intel/fm10k/fm10k_ethtool.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/e100.c b/drivers/net/ethernet/intel/e100.c
-index d3fdc290937f..01f0f12035ca 100644
---- a/drivers/net/ethernet/intel/e100.c
-+++ b/drivers/net/ethernet/intel/e100.c
-@@ -2841,7 +2841,7 @@ static int e100_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	netdev->netdev_ops = &e100_netdev_ops;
- 	netdev->ethtool_ops = &e100_ethtool_ops;
- 	netdev->watchdog_timeo = E100_WATCHDOG_PERIOD;
--	strncpy(netdev->name, pci_name(pdev), sizeof(netdev->name) - 1);
-+	strscpy(netdev->name, pci_name(pdev), sizeof(netdev->name));
+diff --git a/drivers/net/ethernet/intel/fm10k/fm10k_ethtool.c b/drivers/net/ethernet/intel/fm10k/fm10k_ethtool.c
+index d53369e30040..13a05604dcc0 100644
+--- a/drivers/net/ethernet/intel/fm10k/fm10k_ethtool.c
++++ b/drivers/net/ethernet/intel/fm10k/fm10k_ethtool.c
+@@ -448,10 +448,10 @@ static void fm10k_get_drvinfo(struct net_device *dev,
+ {
+ 	struct fm10k_intfc *interface = netdev_priv(dev);
  
- 	nic = netdev_priv(netdev);
- 	netif_napi_add_weight(netdev, &nic->napi, e100_poll, E100_NAPI_WEIGHT);
+-	strncpy(info->driver, fm10k_driver_name,
+-		sizeof(info->driver) - 1);
+-	strncpy(info->bus_info, pci_name(interface->pdev),
+-		sizeof(info->bus_info) - 1);
++	strscpy(info->driver, fm10k_driver_name,
++		sizeof(info->driver));
++	strscpy(info->bus_info, pci_name(interface->pdev),
++		sizeof(info->bus_info));
+ }
+ 
+ static void fm10k_get_pauseparam(struct net_device *dev,
 
 -- 
 2.42.0.609.gbb76f46606-goog
