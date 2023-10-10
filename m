@@ -1,80 +1,78 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFFDA31A94
-	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 17:36:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43077225A0
+	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 17:44:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1zzlZH8c"
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FC6197
-	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 10:36:50 -0700 (PDT)
-Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-53d9f001b35so1307834a12.2
-        for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 10:36:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ct9KezJS"
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F60EA4
+	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 10:44:56 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-50567477b29so7745216e87.3
+        for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 10:44:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1696959409; x=1697564209; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1696959894; x=1697564694; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZWNVXhOMB/X7Db/z1zWLDue+XTDYtJ9T9vo+cNZEfhw=;
-        b=1zzlZH8cXHkHdZRDMVCSWZMTfaqJJcf9gxAfzNtj+qEkReE6HIZ8Ss0tDAGAyf6Bng
-         L927lSmBL0nPZ6LXlLe0oyUG4UhHj5Jgu+uaYEK6boTmxza+qnbyLa2hv7WAGZmI4+DB
-         f+cUi5/y7Q1fxilYLgSuFB3UPYvwHYSaMA98VKEV0oM5iDc2LO5y0oVeII2giaBoppi9
-         vjD7vSRvj5uTvQAdDgJYU7A/TpjXplrWUM0OUCrNZ6SWN3z016TqdXwZxne0+4cbF2PY
-         l5YmKTDsxn7aVOhylIWtgM7Kh95S5r46H+a1qjQ9aHPDblTU0L/i5QoqkjTG+PSjp+cd
-         EgcQ==
+        bh=CZKPadVGhq7IGu5t5fQwhttBM2lc5ZmxiCdIFjcEzCY=;
+        b=ct9KezJSg/5J6pcz3PO/PabhbqOQPfK+7MyXgDVCe1HprLEmJ6f/INCudym/5Mbz1Y
+         zAVdMPA6S9qDXPN84Z6rhAWHzoQmWwhNHJmX7gFdyBs9J9qs5MFsFuRXB4w2ErZIP4l+
+         MBaT7bu75fviY/6H31yqppOvEGgoq8YUyiJqsVnV4w3mz8hkEPT4d7zuyAZyGirGhlcZ
+         5n8eg7KGLrh8d9aMqwdWbMZCTLbPbTdcE9dylDZmWAV19fd9diAeTipgPPuvPTYUB+JD
+         7ZIAGlmyBJJ16hHCrWnI0re+f9+/pnO+TiIvFhdr7UEDkWtPgB45BF1RmX9+CaZPxHI3
+         Di7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696959409; x=1697564209;
+        d=1e100.net; s=20230601; t=1696959894; x=1697564694;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ZWNVXhOMB/X7Db/z1zWLDue+XTDYtJ9T9vo+cNZEfhw=;
-        b=rme4mC5VpEseJkW4sEsMcEOsqYyli0w2CMKCMe4Keb1a260Pgot4lswjiUOesS6u5p
-         FOGvb/MEEgT5r9l8CuRIqCyRuiQJPznbAPv+pPlsUX3JTpeNpvGl6MMNPUEngAhx3GL8
-         Jp3W42L7Q6mnOs8JI3T8y9V3H2kvDxG0Z2ZYK6bOmLxlwLD8Het8N+GM96yxW6z5aear
-         qt8q628mJSiR4Jmji3uBEgmzT64rQM82EGYwRDdln8ekfHVubeOEsXr6+/w8T5aOBCAz
-         RmBe13Jvhv13Q6NJtDnsl1qiSR6+HfKxW7dT4vtJfAbohIX8GJsfW37JWhc+EvSICS+9
-         FXIg==
-X-Gm-Message-State: AOJu0Yw2gAZhSIcgmEri8H7y7KKlipWJe/DZoJz/gpcFJ4TNKA8/Zfz3
-	Ym2BAhvohWyUHugEw1mKjw9KGKOgSq/mmWXnegQwYg==
-X-Google-Smtp-Source: AGHT+IGLNIUhNFg4goSmZvGSOS1oKrfqY+cMA+PaALzrOB69uFcOn6GaHQE6JU/84F7XmflfUBWSo38rtPlyLd1RMJk=
-X-Received: by 2002:aa7:dad2:0:b0:533:5e56:bef2 with SMTP id
- x18-20020aa7dad2000000b005335e56bef2mr17194800eds.10.1696959408584; Tue, 10
- Oct 2023 10:36:48 -0700 (PDT)
+        bh=CZKPadVGhq7IGu5t5fQwhttBM2lc5ZmxiCdIFjcEzCY=;
+        b=JKYJipnXtdjQyuYfmOUc4H1SacKxfdF/JMf8Sqd/RnIVMHXh06LFZ4dBxwhkvpqJxW
+         VRJ6zYVtVhXFXUHG36Ji6B8lbCLeVSAI71nNZQCE27+n+cKJIDDOvUn/9sx3Z3JDa6Ji
+         Z4nsJXiC71FC+98DCIS7BAwEBkWrbrDnuYsx6o03GJ8gCMIAN/v7WfTmE6lrxVhUpBt5
+         wxg58adxa3e/33YKZYxr52X06NCnaGLqj1zg3IY/JtjjIptqQWY4ktaqhFg34XtFO3Hf
+         YQ6cxXqx49VheV7jlqER/S63JHdhfzXhjdXtRxj87cfk/T3Pcm5Qr9PQU66U3z8dlh5S
+         DyNg==
+X-Gm-Message-State: AOJu0YyqEGMxxXFffH8cWBCJbBYsTV38uqrP+V/b95UFWgeteXMewPhb
+	7DguLVu0SbM2tRu5IQBVmi0rHTtIUkoTe24X4WnKZg==
+X-Google-Smtp-Source: AGHT+IEIhc9IU/4HKiS+vMCnOVgQHp9LKtgDSFXjvJ1QHCm9VmXIRJEc0Lyrrby/q5aHKa/b3qsI1w9i7DXBF+PAH1k=
+X-Received: by 2002:a05:6512:34d3:b0:500:9d4a:8a02 with SMTP id
+ w19-20020a05651234d300b005009d4a8a02mr13360689lfr.62.1696959894309; Tue, 10
+ Oct 2023 10:44:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231009-strncpy-drivers-net-dsa-realtek-rtl8365mb-c-v1-1-0537fe9fb08c@google.com>
- <20231010110717.cw5sqxm5mlzyi2rq@skbuf>
-In-Reply-To: <20231010110717.cw5sqxm5mlzyi2rq@skbuf>
+References: <20231009-strncpy-drivers-net-dsa-vitesse-vsc73xx-core-c-v1-1-e2427e087fad@google.com>
+ <20231010112051.zgefbx2c3tjneudz@skbuf>
+In-Reply-To: <20231010112051.zgefbx2c3tjneudz@skbuf>
 From: Justin Stitt <justinstitt@google.com>
-Date: Tue, 10 Oct 2023 10:36:36 -0700
-Message-ID: <CAFhGd8pgGij4BXNzrB5fqk_2CNPDBTgf-3nN0i6cJak6vye_bA@mail.gmail.com>
-Subject: Re: [PATCH] net: dsa: realtek: rtl8365mb: replace deprecated strncpy
- with ethtool_sprintf
+Date: Tue, 10 Oct 2023 10:44:42 -0700
+Message-ID: <CAFhGd8pF04DCbMJFOR+93azqzWYZ2aE9FByp7yVVJR90g7MN9g@mail.gmail.com>
+Subject: Re: [PATCH] net: dsa: vsc73xx: replace deprecated strncpy with ethtool_sprintf
 To: Vladimir Oltean <olteanv@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, =?UTF-8?Q?Alvin_=C5=A0ipraga?= <alsi@bang-olufsen.dk>, 
-	Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, 
+Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, 
 	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
 	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Linus Walleij <linus.walleij@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	ENV_AND_HDR_SPF_MATCH,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
+	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Tue, Oct 10, 2023 at 4:07=E2=80=AFAM Vladimir Oltean <olteanv@gmail.com>=
+On Tue, Oct 10, 2023 at 4:20=E2=80=AFAM Vladimir Oltean <olteanv@gmail.com>=
  wrote:
 >
-> Hello Justin,
->
-> On Mon, Oct 09, 2023 at 10:43:59PM +0000, Justin Stitt wrote:
+> On Mon, Oct 09, 2023 at 10:54:37PM +0000, Justin Stitt wrote:
 > > `strncpy` is deprecated for use on NUL-terminated destination strings
 > > [1] and as such we should prefer more robust and less ambiguous string
 > > interfaces.
@@ -93,32 +91,129 @@ rncpy-on-nul-terminated-strings [1]
 > > ---
 > > Note: build-tested only.
 > > ---
-> >  drivers/net/dsa/realtek/rtl8365mb.c | 3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> >  drivers/net/dsa/vitesse-vsc73xx-core.c | 20 ++++++--------------
+> >  1 file changed, 6 insertions(+), 14 deletions(-)
 > >
-> > diff --git a/drivers/net/dsa/realtek/rtl8365mb.c b/drivers/net/dsa/real=
-tek/rtl8365mb.c
-> > index 41ea3b5a42b1..d171c18dd354 100644
-> > --- a/drivers/net/dsa/realtek/rtl8365mb.c
-> > +++ b/drivers/net/dsa/realtek/rtl8365mb.c
-> > @@ -1303,8 +1303,7 @@ static void rtl8365mb_get_strings(struct dsa_swit=
-ch *ds, int port, u32 stringset
+> > diff --git a/drivers/net/dsa/vitesse-vsc73xx-core.c b/drivers/net/dsa/v=
+itesse-vsc73xx-core.c
+> > index 4f09e7438f3b..09955fdea2ff 100644
+> > --- a/drivers/net/dsa/vitesse-vsc73xx-core.c
+> > +++ b/drivers/net/dsa/vitesse-vsc73xx-core.c
+> > @@ -928,7 +928,8 @@ static void vsc73xx_get_strings(struct dsa_switch *=
+ds, int port, u32 stringset,
+> >       const struct vsc73xx_counter *cnt;
+> >       struct vsc73xx *vsc =3D ds->priv;
+> >       u8 indices[6];
+> > -     int i, j;
+> > +     u8 *buf =3D data;
+> > +     int i;
+> >       u32 val;
+> >       int ret;
 > >
-> >       for (i =3D 0; i < RTL8365MB_MIB_END; i++) {
-> >               struct rtl8365mb_mib_counter *mib =3D &rtl8365mb_mib_coun=
-ters[i];
-> > -
-> > -             strncpy(data + i * ETH_GSTRING_LEN, mib->name, ETH_GSTRIN=
-G_LEN);
-> > +             ethtool_sprintf(&data, "%s", mib->name);
+> > @@ -948,10 +949,7 @@ static void vsc73xx_get_strings(struct dsa_switch =
+*ds, int port, u32 stringset,
+> >       indices[5] =3D ((val >> 26) & 0x1f); /* TX counter 2 */
+> >
+> >       /* The first counters is the RX octets */
+> > -     j =3D 0;
+> > -     strncpy(data + j * ETH_GSTRING_LEN,
+> > -             "RxEtherStatsOctets", ETH_GSTRING_LEN);
+> > -     j++;
+> > +     ethtool_sprintf(&buf, "RxEtherStatsOctets");
 >
-> Is there any particular reason why you opted for the "%s" printf format
-> specifier when you could have simply given mib->name as the single
-> argument? This comment applies to all the ethtool_sprintf() patches
-> you've submitted.
+> Here you don't use "%s", but everywhere else you do. Can't you just pass
+> the counter name everywhere, without "%s"?
+>
+> >
+> >       /* Each port supports recording 3 RX counters and 3 TX counters,
+> >        * figure out what counters we use in this set-up and return the
+> > @@ -962,22 +960,16 @@ static void vsc73xx_get_strings(struct dsa_switch=
+ *ds, int port, u32 stringset,
+> >       for (i =3D 0; i < 3; i++) {
+> >               cnt =3D vsc73xx_find_counter(vsc, indices[i], false);
+> >               if (cnt)
+> > -                     strncpy(data + j * ETH_GSTRING_LEN,
+> > -                             cnt->name, ETH_GSTRING_LEN);
+> > -             j++;
+> > +                     ethtool_sprintf(&buf, "%s", cnt->name);
+>
+> The code conversion is not functionally identical, and I think it's a
+> bit hard to make it identical.
+>
+> The VSC7395 has 45 port counters, but it seems that it can only monitor
+> and display 8 of them at a time - 2 fixed and 6 configurable through
+> some windows.
+>
+> vsc73xx_get_strings() detects which counter is each window configured
+> for, based on the value of the CNT_CTRL_CFG hardware register (VSC73XX_C_=
+CFG
+> in the code). It displays a different string depending on the hardware
+> value.
+>
+> The code must deal with the case where vsc73xx_find_counter() returns
+> NULL, aka the hardware window is configured for a value that vsc73xx_tx_c=
+ounters[]
+> and vsc73xx_rx_counters[] don't know about.
+>
+> Currently, the way that this is treated is by skipping the strncpy()
+> (and thus leaving an empty string), and incrementing j to get to the
+> next ethtool counter, and next window.
+>
+> The order of the strings in vsc73xx_get_strings() needs to be strongly
+> correlated to the order of the counters from vsc73xx_get_ethtool_stats().
+> So, the driver would still print counter values for the unknown windows,
+> it will just not provide a string for them.
+>
+> In your proposal, the increment of j basically goes into the "if (cnt)"
+> block because it's embedded within ethtool_sprintf(), which means that
+> if a hardware counter is unknown, the total number of reported strings
+> will be less than 8. Which is very problematic, because vsc73xx_get_sset_=
+count()
+> says that 8 strings are reported. Also, all the counter strings after
+> the unknown one will be shifted to the left.
+>
+> I suggest that "if (!cnt)", you should call ethtool_sprintf() with an
+> empty string, to preserve the original behavior.
 
-Yeah, it causes a -Wformat-security warning for me. I briefly mentioned it
-in one of my first patches like this [1].
+Wow, thanks for the feedback here. I agree that the current
+proposal is problematic. I wonder what you think about
+using a ternary to avoid smelly code dupe:
 
-[1]: https://lore.kernel.org/all/20231005-strncpy-drivers-net-dsa-lan9303-c=
-ore-c-v2-1-feb452a532db@google.com/
+for (i =3D 0; i < 3; i++) {
+        cnt =3D vsc73xx_find_counter(vsc, indices[i], false);
+        ethtool_sprintf(&buf, "%s", cnt ? cnt->name : "");
+}
+
+>
+> >       }
+> >
+> >       /* TX stats begins with the number of TX octets */
+> > -     strncpy(data + j * ETH_GSTRING_LEN,
+> > -             "TxEtherStatsOctets", ETH_GSTRING_LEN);
+> > -     j++;
+> > +     ethtool_sprintf(&buf, "TxEtherStatsOctets");
+> >
+> >       for (i =3D 3; i < 6; i++) {
+> >               cnt =3D vsc73xx_find_counter(vsc, indices[i], true);
+> >               if (cnt)
+> > -                     strncpy(data + j * ETH_GSTRING_LEN,
+> > -                             cnt->name, ETH_GSTRING_LEN);
+> > -             j++;
+> > +                     ethtool_sprintf(&buf, "%s", cnt->name);
+> >       }
+> >  }
+> >
+> >
+> > ---
+> > base-commit: cbf3a2cb156a2c911d8f38d8247814b4c07f49a2
+> > change-id: 20231009-strncpy-drivers-net-dsa-vitesse-vsc73xx-core-c-1cfd=
+0ac2d81b
+> >
+> > Best regards,
+> > --
+> > Justin Stitt <justinstitt@google.com>
+> >
+>
+
+Thanks
+Justin
