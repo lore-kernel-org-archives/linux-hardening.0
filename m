@@ -1,123 +1,155 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2314732C99
-	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 23:31:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C617354ED
+	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 23:56:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NWvU7CML"
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 830AD93
-	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 16:31:35 -0700 (PDT)
-Received: by mail-pf1-x42b.google.com with SMTP id d2e1a72fcca58-6969b391791so4381757b3a.3
-        for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 16:31:35 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="m427+hn9"
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBCE39D
+	for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 16:56:16 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id 98e67ed59e1d1-27740ce6c76so3817608a91.0
+        for <linux-hardening@vger.kernel.org>; Tue, 10 Oct 2023 16:56:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1696980695; x=1697585495; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FUjyOBhd765L6DdntubpjwFEWCc0T7iDXxMPZLU1JCY=;
-        b=NWvU7CMLLYsJpb5uFw9TyZIB1eCWO/UDWuWv2zEdcdJCByEXY0mZvGlGHZrdqP/74N
-         Q2CHV/eEIRe7OhugD9qjYrmDNDYz691nZ0bVgTUftEHMqwPW7rJTQWzEcGv82jUhTTxA
-         bQaqdv/sY7CEccy9ISRdlzLkDZvwWDHPJ6nBo=
+        d=chromium.org; s=google; t=1696982176; x=1697586976; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=SdPr3RKtwxQhWuHnqZTk9V1Z28AKlq2nPJ/l3gwUyjE=;
+        b=m427+hn96EjA9k673xw/YA0i4csQFSbT/Hq8f9wirAjqlOyW7qB17FdXINXZ9nUwq1
+         NYj6f0XnuvwhsidixeHHgvqdNQpaOkpyGrmQsYuuyha15E9j0A7t5KMgRjJDVfkqba+6
+         GX0iFcxYS4yicR2YLmE/TbWHqP1HlIpUkwjYg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696980695; x=1697585495;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FUjyOBhd765L6DdntubpjwFEWCc0T7iDXxMPZLU1JCY=;
-        b=RWsLmny7+5nawZVPZK/RCTVnUZQ0EaGOwQU9yud/rptwL3MaMyHaLg8mOC/DxewShb
-         8GntZVcjTiNdyShy11+6P+Maa9B8rjIy86NTJeeCaAb/gGdNIkhHsWp9Pi0S7cB+Amga
-         MyuhhNDlfPUZ+BVrPhnvZT2yEszssbOzg3i8uo6QEuuynehn38eBu3Yb6H2BX3S1cdni
-         UlfLpBtXLyJe0S3PADXi/yHM6+yrX34IKyL/FJ23z9vbsjNj9l8zDK7SkjoJPJauu5Xf
-         BV9W1HInv0Dxj4zqdZiwr+hOSSP4T0QVEspn8gW6jHbgP0xp3FdjFL5I8tKJXBMijTQN
-         vMbQ==
-X-Gm-Message-State: AOJu0Yz4mG82CBtaCnSTdeCp4zN/HC968NaTKAOH+eNAgR0PByWhX21w
-	PzHinWZ1AQF7nak4k0T338C1Iw==
-X-Google-Smtp-Source: AGHT+IGadnp4YcxPOL/WJ85GFmKVZw/8m1cJ8MXKeIjm+wQceLO6xqiz7GHgTMTUka9eEN3b6icCIw==
-X-Received: by 2002:a05:6a00:18a3:b0:690:ca4e:662f with SMTP id x35-20020a056a0018a300b00690ca4e662fmr19894283pfh.5.1696980694989;
-        Tue, 10 Oct 2023 16:31:34 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1696982176; x=1697586976;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SdPr3RKtwxQhWuHnqZTk9V1Z28AKlq2nPJ/l3gwUyjE=;
+        b=pgxPfERWfwqfUuIrY6ds5ZfnthQS28Z7LNvjzeZGyFyCRhFJQWYnK5c1BIyfT8AwFY
+         4KjSmTBQMg95YD/cAVFF9aXpsWQWx2anHebIKGgkVXTmtssRRmmJqStmlQQBN+SjFLL9
+         fZ9gdDzqtoXLy+j4JTG61Yr96NyPMMl24xol6+2gXbvSz89wVvlLcjwD0fEw4FkdT7iT
+         AfEnjKjCM2naS7ZS0mKFNg8P3qMNE5s8KHM6Qr37ZgeCL/fNqG5Rz43qPlE6Qm0MN2jY
+         DQD4p9uf5vC4XRk5AW6Me/8lRRDPhZcPD4Om802yCbLJvByhYOLO4dhHeKWWZNN6fzob
+         vITg==
+X-Gm-Message-State: AOJu0YzEusD0xjWx635NibknyOc6UyJiGveQy7edhJ/iAtDzWWdQWZio
+	UobDw3RpXrGs0B5STe6ra3k6HQ==
+X-Google-Smtp-Source: AGHT+IH+WJmRWraSjOLt34ZIr86Kq/Dgp8sL08aDaqHDiZLwRxz3/4ptFPF/mx7+YDgup2PbusVYBA==
+X-Received: by 2002:a17:90a:d804:b0:273:efc0:33eb with SMTP id a4-20020a17090ad80400b00273efc033ebmr14987050pjv.14.1696982176352;
+        Tue, 10 Oct 2023 16:56:16 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id fn6-20020a056a002fc600b0069302c3c054sm8810670pfb.207.2023.10.10.16.31.34
+        by smtp.gmail.com with ESMTPSA id fa9-20020a17090af0c900b0027360359b70sm12746037pjb.48.2023.10.10.16.56.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Oct 2023 16:31:34 -0700 (PDT)
-Date: Tue, 10 Oct 2023 16:31:32 -0700
+        Tue, 10 Oct 2023 16:56:15 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	linux-hardening@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 0/7] net: intel: replace deprecated strncpy uses
-Message-ID: <202310101630.AB35100@keescook>
-References: <20231010-netdev-replace-strncpy-resend-as-series-v1-0-caf9f0f2f021@google.com>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Kees Cook <keescook@chromium.org>,
+	Brian Foster <bfoster@redhat.com>,
+	linux-bcachefs@vger.kernel.org,
+	kernel test robot <lkp@intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] bcachefs: Refactor bkey_i to use a flexible array
+Date: Tue, 10 Oct 2023 16:56:12 -0700
+Message-Id: <20231010235609.work.594-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231010-netdev-replace-strncpy-resend-as-series-v1-0-caf9f0f2f021@google.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3104; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=NfdMvLiG7AP1UedLusFnQqnFA5ZiezwfWaxIM+i+tRA=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlJeScSUyz3NZfxL43a/8LlJ7zzNz0b3ul121Gl
+ upxtR3bHn2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZSXknAAKCRCJcvTf3G3A
+ JoNbD/4whEZUDyONG/LAxsYi0gic1AeiW2Z37d9rJL7Rfib1H9dD+bou+gfPycZoOl1o5d0cZCY
+ bCtHhYf5PFfCLaRRmUGRKtfc41Wgc1b3VFfadHluT7vP26PMUnNlvw7NFYJvT4/LDXDBOML20YI
+ iYnbwgq/WlTapLBDULe9PutZ67M7Y4f6g56i2801W0pQwW0v1ue08ShxGEvHdCFLwJMYTHjFfJi
+ 27ylDaeszwHHC80vtS9UAnrpllO5aXideMB2wAg55qT8J+LoxVqoixEcJ9vwiK9p/7bn78iJjWS
+ uYDQV24ERXP/K3lHSAuuqhi3PMGtiCBvyZvI0aUZmV0buzqlcN4AuAEjBhrGlxRoil/KJrPKfbI
+ UEj7HsIliQ5cCGXEXwaJPzifXGa10MgWAJSBlOUfpzkUMrwVyMDW7MwRkayQ3M8bOAnhLFYqnq1
+ Io+kKq29sLs+DBo9vTApgL4Rod2o+uFrF2EIDI/jrl+6pqBjxojxCzNVgH7AZzixKBFq1VSjw2e
+ e9Ff+cEZXZ878o+k81FTz42FxT+DT/zlqiD+/KGPhOnj5J5LLXILogAps2eLpfi2B5fm5Ty4Hbj
+ GsfXuU6y0XIX4wDT8xmB+O5SzFTAaDeSvb/Td4xmnQmqhxaVyonefLCpkR+kVcyX6nDGtEo6ZV4
+ hPufHRL lXjHsLzg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.6
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Tue, Oct 10, 2023 at 10:26:53PM +0000, Justin Stitt wrote:
-> Hi,
-> 
-> This series aims to eliminate uses of strncpy() as it is a deprecated
-> interface [1] with many viable replacements available.
-> 
-> Predominantly, strscpy() is the go-to replacement as it guarantees
-> NUL-termination on the destination buffer (which strncpy does not). With
-> that being said, I did not identify any buffer overread problems as the
-> size arguments were carefully measured to leave room for trailing
-> NUL-bytes. Nonetheless, we should favor more robust and less ambiguous
-> interfaces.
-> 
-> Previously, each of these patches was sent individually at:
-> 1) https://lore.kernel.org/all/20231009-strncpy-drivers-net-ethernet-intel-e100-c-v1-1-ca0ff96868a3@google.com/
-> 2) https://lore.kernel.org/all/20231010-strncpy-drivers-net-ethernet-intel-e1000-e1000_main-c-v1-1-b1d64581f983@google.com/
-> 3) https://lore.kernel.org/all/20231010-strncpy-drivers-net-ethernet-intel-fm10k-fm10k_ethtool-c-v1-1-dbdc4570c5a6@google.com/
-> 4) https://lore.kernel.org/all/20231010-strncpy-drivers-net-ethernet-intel-i40e-i40e_ddp-c-v1-1-f01a23394eab@google.com/
-> 5) https://lore.kernel.org/all/20231010-strncpy-drivers-net-ethernet-intel-igb-igb_main-c-v1-1-d796234a8abf@google.com/
-> 6) https://lore.kernel.org/all/20231010-strncpy-drivers-net-ethernet-intel-igbvf-netdev-c-v1-1-69ccfb2c2aa5@google.com/
-> 7) https://lore.kernel.org/all/20231010-strncpy-drivers-net-ethernet-intel-igc-igc_main-c-v1-1-f1f507ecc476@google.com/
-> 
-> Consider these dead as this series is their new home :)
-> 
-> I found all these instances with: $ rg "strncpy\("
-> 
-> This series may collide in a not-so-nice way with [3]. This series can
-> go in after that one with a rebase. I'll send a v2 if necessary.
-> 
-> [3]: https://lore.kernel.org/netdev/20231003183603.3887546-1-jesse.brandeburg@intel.com/
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> Link: https://github.com/KSPP/linux/issues/90
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
-> Justin Stitt (7):
->       e100: replace deprecated strncpy with strscpy
->       e1000: replace deprecated strncpy with strscpy
->       fm10k: replace deprecated strncpy with strscpy
->       i40e: use scnprintf over strncpy+strncat
->       igb: replace deprecated strncpy with strscpy
->       igbvf: replace deprecated strncpy with strscpy
->       igc: replace deprecated strncpy with strscpy
+The memcpy() in bch2_bkey_append_ptr() is operating on an embedded
+fake flexible array. Instead, make it explicit, and convert the memcpy
+to target the flexible array instead. Fixes the W=1 warning seen for
+-Wstringop-overflow:
 
-These all look good to me. Thanks for the careful analysis!
+   In file included from include/linux/string.h:254,
+                    from include/linux/bitmap.h:11,
+                    from include/linux/cpumask.h:12,
+                    from include/linux/smp.h:13,
+                    from include/linux/lockdep.h:14,
+                    from include/linux/radix-tree.h:14,
+                    from include/linux/backing-dev-defs.h:6,
+                    from fs/bcachefs/bcachefs.h:182:
+   fs/bcachefs/extents.c: In function 'bch2_bkey_append_ptr':
+   include/linux/fortify-string.h:57:33: warning: writing 8 bytes into a region of size 0 [-Wstringop-overflow=]
+      57 | #define __underlying_memcpy     __builtin_memcpy
+         |                                 ^
+   include/linux/fortify-string.h:648:9: note: in expansion of macro '__underlying_memcpy'
+     648 |         __underlying_##op(p, q, __fortify_size);                        \
+         |         ^~~~~~~~~~~~~
+   include/linux/fortify-string.h:693:26: note: in expansion of macro '__fortify_memcpy_chk'
+     693 | #define memcpy(p, q, s)  __fortify_memcpy_chk(p, q, s,                  \
+         |                          ^~~~~~~~~~~~~~~~~~~~
+   fs/bcachefs/extents.c:235:17: note: in expansion of macro 'memcpy'
+     235 |                 memcpy((void *) &k->v + bkey_val_bytes(&k->k),
+         |                 ^~~~~~
+   fs/bcachefs/bcachefs_format.h:287:33: note: destination object 'v' of size 0
+     287 |                 struct bch_val  v;
+         |                                 ^
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Brian Foster <bfoster@redhat.com>
+Cc: linux-bcachefs@vger.kernel.org
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202309192314.VBsjiIm5-lkp@intel.com/
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ fs/bcachefs/bcachefs_format.h | 5 ++++-
+ fs/bcachefs/extents.h         | 2 +-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
--Kees
-
+diff --git a/fs/bcachefs/bcachefs_format.h b/fs/bcachefs/bcachefs_format.h
+index f0d130440baa..f5e8cb43697b 100644
+--- a/fs/bcachefs/bcachefs_format.h
++++ b/fs/bcachefs/bcachefs_format.h
+@@ -300,7 +300,10 @@ struct bkey_i {
+ 	__u64			_data[0];
+ 
+ 	struct bkey	k;
+-	struct bch_val	v;
++	union {
++		struct bch_val	v;
++		DECLARE_FLEX_ARRAY(__u8, bytes);
++	};
+ };
+ 
+ #define KEY(_inode, _offset, _size)					\
+diff --git a/fs/bcachefs/extents.h b/fs/bcachefs/extents.h
+index 7ee8d031bb6c..6248e17bbac5 100644
+--- a/fs/bcachefs/extents.h
++++ b/fs/bcachefs/extents.h
+@@ -642,7 +642,7 @@ static inline void bch2_bkey_append_ptr(struct bkey_i *k, struct bch_extent_ptr
+ 
+ 		ptr.type = 1 << BCH_EXTENT_ENTRY_ptr;
+ 
+-		memcpy((void *) &k->v + bkey_val_bytes(&k->k),
++		memcpy(&k->bytes[bkey_val_bytes(&k->k)],
+ 		       &ptr,
+ 		       sizeof(ptr));
+ 		k->k.u64s++;
 -- 
-Kees Cook
+2.34.1
+
