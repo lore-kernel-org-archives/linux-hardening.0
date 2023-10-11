@@ -1,92 +1,164 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FEA72031D
-	for <linux-hardening@vger.kernel.org>; Wed, 11 Oct 2023 15:36:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F379C30FA6
+	for <linux-hardening@vger.kernel.org>; Wed, 11 Oct 2023 16:04:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GJJ3GkeJ"
-Received: from mail-qv1-xf2b.google.com (mail-qv1-xf2b.google.com [IPv6:2607:f8b0:4864:20::f2b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A0F792;
-	Wed, 11 Oct 2023 08:36:48 -0700 (PDT)
-Received: by mail-qv1-xf2b.google.com with SMTP id 6a1803df08f44-66afd39c8edso31199586d6.2;
-        Wed, 11 Oct 2023 08:36:48 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Xc1EJqel"
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7061B8
+	for <linux-hardening@vger.kernel.org>; Wed, 11 Oct 2023 09:04:01 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1c9d7a98abbso2739915ad.1
+        for <linux-hardening@vger.kernel.org>; Wed, 11 Oct 2023 09:04:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697038607; x=1697643407; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3d70RV8D3q4Lw0yJT/tGgP8JEXxsa+Fuj9xKAysUS94=;
-        b=GJJ3GkeJIbVcj9S9gKeyxcUcrTIrt4F1xmKIMCuR6iFFiZCuSkCVy/+0YXx6q8Wn5C
-         ikMekwNuV3AKCUx1pvpedym6dq6WxYDDYcsAcspRLvTFu/T4rf4JogLiN4PAPiAvGXJH
-         oCf1lV1mdCIII3qKo6DmBlowhkZqoSz7JOMfht9hsLPD+aw4NvjM8ELB61wZrMXb9NeE
-         6tGobG8pCHld4xtK4mAzJPM6+VehgGLQCffcSUOuw6cwj569M3hW3kutJfW1hC80vylD
-         3ciM7YKfqSLRFeydfvaSIuuLscCOdvwgE8g8RSEdpTgcZH9K/BxsaPxq9qG1URYGG5CO
-         juFw==
+        d=chromium.org; s=google; t=1697040241; x=1697645041; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/JdPIzkZRw+UEDCwPct/StXsx1OeuztdzUWh/BOTJXs=;
+        b=Xc1EJqelwNYwe6Kfm2eAtA+XjRix1DyZKgwQEYFbVIKUUCcIGcjZR2WLhB2MLXxPX0
+         94Q4uq4CfMxRvyn4xMGcNfiWykpv8hw1yYfq7Ti/9rQ58zqk4fpvoBPqYVp6aTd2cvZy
+         PssJ3Cmh+uof7P87zQx6jkKvklsPgM5myBsKk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697038607; x=1697643407;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3d70RV8D3q4Lw0yJT/tGgP8JEXxsa+Fuj9xKAysUS94=;
-        b=jSAF6r36VpUHXY4SUwTATGRw5ViHh1UGILlEQFlb3i5sqt3v4s1ZnR9wczo5UAY82w
-         JC3Ztv90dJgwTFDsmn9e9o6lTPMTQ6r9qgvlD9K/BJpu1IN8mTfpYnWSDoQQIfoCp4P5
-         iFMRCUxEuIR5Dggh5zpJRzP/zIaMa1DbvLzgdochGXy4iHRuYXuuNnL7oSXV4ZXVAc3q
-         fVqw1EB8wgNmkAqj6uBf913Lfumz036cnxihX8Y3oKJNbMDAiQSsaf8iORRELvwullwC
-         LcrnuXayK2/Tsbs1XdUqokpFcvrp2dyzf1S1PAh8pgb6+q/z2Kd470B/gX9lwJnE/qFR
-         /VfQ==
-X-Gm-Message-State: AOJu0Yx0VDA7rnCLLSGjDQfSfoU5x5RVrMyGKBX/mR4moxI8pWpHgULD
-	9uM/Sg3qMtULDmSllxcpQPSMvSyY/KHl25iteFrtQVWzTYGqvA==
-X-Google-Smtp-Source: AGHT+IFU1SyCP9HwZEqNMLh2P+CII7WW5qTkTr5uJLytAwl8ChOtAUnXs0neArcgm7RUqu0fppbZXGkflHXFbWQDwrI=
-X-Received: by 2002:a0c:8cca:0:b0:65b:1802:4f3c with SMTP id
- q10-20020a0c8cca000000b0065b18024f3cmr18358578qvb.21.1697038607513; Wed, 11
- Oct 2023 08:36:47 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1697040241; x=1697645041;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/JdPIzkZRw+UEDCwPct/StXsx1OeuztdzUWh/BOTJXs=;
+        b=MPTiAShXP1ow3+Y1ZGyDyNE1u5OXr+NBEhrE2ECRxqas2CAptRgu3U7kaQ1pZLyWvI
+         akZUEZBP+QzJ5qRGcro532aVbhsMIJ/13IS8bLlqgTZdnivOaStd/0YZH5PuKpvqTjKh
+         qrQOcx1R5Gv7ommVnGycnp7ZogwnExe7aTyu6j+Ja5Jsl2QeEgBRXCyJuJysajGXvwrO
+         Vm5cDQzjeIaPxCTWA3w2kTEtOcf0vZPyq1YF9fIYyxnt/iuTg/u7edE7yaJaZ29IZUBj
+         98d0BO/wLtNmPlNlcK8ooAQ2WQCQNdoP/z7Zv91zlKPF3EXYyxHypMQFBc2nzX4l1j+R
+         MNtQ==
+X-Gm-Message-State: AOJu0Yws/dvL1XTEG82Ir4S1JnIgSWU0W3f9RzxqT39hJ0KL/e5cn0tg
+	HUhGFrDDNpPnrxMrBK+cXTnJhQ==
+X-Google-Smtp-Source: AGHT+IGqjWqrCIqSHnONJ5fjKcFYrHjY07tSyis9X/kZiXSoJrS/q64lZQJ+lrnayGHRVg3N8XWShA==
+X-Received: by 2002:a17:903:2289:b0:1c6:28f6:9545 with SMTP id b9-20020a170903228900b001c628f69545mr21755725plh.45.1697040241156;
+        Wed, 11 Oct 2023 09:04:01 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id jw14-20020a170903278e00b001adf6b21c77sm9908plb.107.2023.10.11.09.04.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Oct 2023 09:04:00 -0700 (PDT)
+Date: Wed, 11 Oct 2023 09:03:58 -0700
+From: Kees Cook <keescook@chromium.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>,
+	Gustavo Padovan <gustavo@padovan.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Arvind Yadav <Arvind.Yadav@amd.com>, linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] dma-buf: Fix NULL pointer dereference in
+ dma_fence_enable_sw_signaling()
+Message-ID: <202310110903.FE533CBCD@keescook>
+References: <ZSarP0/+hG8/87//@work>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231011093412.7994-1-kkartik@nvidia.com> <20231011093412.7994-2-kkartik@nvidia.com>
-In-Reply-To: <20231011093412.7994-2-kkartik@nvidia.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 11 Oct 2023 18:36:11 +0300
-Message-ID: <CAHp75VdBh0k_XU3GG99EvgLOztOFWn87QXknpokcDy=29yu=Aw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/8] mm/util: Introduce kmemdup_array() to duplicate an array
-To: Kartik <kkartik@nvidia.com>
-Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, keescook@chromium.org, 
-	andy@kernel.org, akpm@linux-foundation.org, arnd@arndb.de, 
-	petlozup@nvidia.com, pshete@nvidia.com, ulf.hansson@linaro.org, 
-	frank.li@vivo.com, robh@kernel.org, stefank@nvidia.com, 
-	pdeschrijver@nvidia.com, linux-tegra@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZSarP0/+hG8/87//@work>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Wed, Oct 11, 2023 at 2:17=E2=80=AFPM Kartik <kkartik@nvidia.com> wrote:
->
-> Introduce function kmemdup_array(), that will copy `n` number of
-> elements from a given array `src` to `dst`.
->
-> On success, kmemdup_array() returns 0 and copy the elements from `src`
-> to newly allocated array `dst`, it also stores number of elements
-> copied from `src` array to `dst_count` parameter. On failure, this
-> returns a negative integer value containing the error value.
+On Wed, Oct 11, 2023 at 08:03:43AM -0600, Gustavo A. R. Silva wrote:
+> Currently, a NULL pointer dereference will happen in function
+> `dma_fence_enable_sw_signaling()` (at line 615), in case `chain`
+> is not allocated in `mock_chain()` and this function returns
+> `NULL` (at line 86). See below:
+> 
+> drivers/dma-buf/st-dma-fence-chain.c:
+>  86         chain = mock_chain(NULL, f, 1);
+>  87         if (!chain)
+>  88                 err = -ENOMEM;
+>  89
+>  90         dma_fence_enable_sw_signaling(chain);
 
-Hmm... Why is it so complicated?
+Instead of the larger patch, should line 88 here just do a "return
+-ENOMEM" instead?
 
-Can it be as simple as
+-Kees
 
-  return kmemdup(size_mul());
+> 
+> drivers/dma-buf/dma-fence.c:
+>  611 void dma_fence_enable_sw_signaling(struct dma_fence *fence)
+>  612 {
+>  613         unsigned long flags;
+>  614
+>  615         spin_lock_irqsave(fence->lock, flags);
+> 			       ^^^^^^^^^^^
+> 				    |
+> 			  NULL pointer reference
+> 			  if fence == NULL
+> 
+>  616         __dma_fence_enable_signaling(fence);
+>  617         spin_unlock_irqrestore(fence->lock, flags);
+>  618 }
+> 
+> Fix this by adding a NULL check before dereferencing `fence` in
+> `dma_fence_enable_sw_signaling()`. This will prevent any other NULL
+> pointer dereference when the `fence` passed as an argument is `NULL`.
+> 
+> Addresses-Coverity: ("Dereference after null check")
+> Fixes: d62c43a953ce ("dma-buf: Enable signaling on fence for selftests")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/dma-buf/dma-fence.c | 9 ++++++++-
+>  include/linux/dma-fence.h   | 2 +-
+>  2 files changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/dma-buf/dma-fence.c b/drivers/dma-buf/dma-fence.c
+> index 8aa8f8cb7071..4d2f13560d0f 100644
+> --- a/drivers/dma-buf/dma-fence.c
+> +++ b/drivers/dma-buf/dma-fence.c
+> @@ -607,14 +607,21 @@ static bool __dma_fence_enable_signaling(struct dma_fence *fence)
+>   * This will request for sw signaling to be enabled, to make the fence
+>   * complete as soon as possible. This calls &dma_fence_ops.enable_signaling
+>   * internally.
+> + *
+> + * Returns 0 on success and a negative error value when @fence is NULL.
+>   */
+> -void dma_fence_enable_sw_signaling(struct dma_fence *fence)
+> +int dma_fence_enable_sw_signaling(struct dma_fence *fence)
+>  {
+>  	unsigned long flags;
+>  
+> +	if (!fence)
+> +		return -EINVAL;
+> +
+>  	spin_lock_irqsave(fence->lock, flags);
+>  	__dma_fence_enable_signaling(fence);
+>  	spin_unlock_irqrestore(fence->lock, flags);
+> +
+> +	return 0;
+>  }
+>  EXPORT_SYMBOL(dma_fence_enable_sw_signaling);
+>  
+> diff --git a/include/linux/dma-fence.h b/include/linux/dma-fence.h
+> index ebe78bd3d121..1e4025e925e6 100644
+> --- a/include/linux/dma-fence.h
+> +++ b/include/linux/dma-fence.h
+> @@ -399,7 +399,7 @@ int dma_fence_add_callback(struct dma_fence *fence,
+>  			   dma_fence_func_t func);
+>  bool dma_fence_remove_callback(struct dma_fence *fence,
+>  			       struct dma_fence_cb *cb);
+> -void dma_fence_enable_sw_signaling(struct dma_fence *fence);
+> +int dma_fence_enable_sw_signaling(struct dma_fence *fence);
+>  
+>  /**
+>   * dma_fence_is_signaled_locked - Return an indication if the fence
+> -- 
+> 2.34.1
+> 
+> 
 
-?
-
---
-With Best Regards,
-Andy Shevchenko
+-- 
+Kees Cook
