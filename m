@@ -1,73 +1,72 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2767C2230D
-	for <linux-hardening@vger.kernel.org>; Wed, 11 Oct 2023 21:48:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A126032C74
+	for <linux-hardening@vger.kernel.org>; Wed, 11 Oct 2023 21:53:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wsL7rKbs"
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C8A7AF
-	for <linux-hardening@vger.kernel.org>; Wed, 11 Oct 2023 14:48:41 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d81646fcf3eso371643276.0
-        for <linux-hardening@vger.kernel.org>; Wed, 11 Oct 2023 14:48:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X34h2Y2P"
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E1A6A9
+	for <linux-hardening@vger.kernel.org>; Wed, 11 Oct 2023 14:53:46 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d86dac81f8fso413943276.1
+        for <linux-hardening@vger.kernel.org>; Wed, 11 Oct 2023 14:53:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697060920; x=1697665720; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1697061225; x=1697666025; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=Fmgja0bLa+jteMFhSajUsHxegsUDbMvKhEZglRqt45Q=;
-        b=wsL7rKbs/MulTCGq7SLJxQqpb+ep5Soiu+13mphubbPnPScNBdl4FUKSdjQNnLGZsd
-         JxE+cMV2D/PELRJTwMJna7YWX1QtrIxpUBb/ZZUn60pokcKtxREydkv69xLgZdRtDjRa
-         rmy4XCKskBB0ZY80ZA18i9vXWwS51ZAPRQPjJJDiqdtimvb09w+FMsWiVMG1lbwVFlqf
-         a3it/hR317J48b2nwFksgweF1h+PqcsjCRATItiS7TAM2gSbTWgVMLzaaAq/ail5JRxg
-         fKErnlMz5RTtH7GBfo6Nv5JSH5FnqyQgWLIJZmchCtfTTApDBnCKn9F5BfGZ8+dLjhlo
-         C14Q==
+        bh=z0mEh2eQbdOiMZkH+CgX68hk8AnM/JOc/WD0lj3h3vo=;
+        b=X34h2Y2P+Q5oHS2+qlEu/nfKIp10yRHS09FNOvi88rGu7EqT8oo+vSeY+8nLAEikoj
+         w3Hs1IuM/aATxMb5GxxI4jS9vGCLEdQwyz8wgCTVsvz8mKNJnE0IzRGcvAKk5Z+Ve6NJ
+         kLolAGeqle0xrOHIEC0OYQNgtiy4syqDeq3d9RybMa7/dHc/uf4PKcRDYFSEVEC7EVGy
+         VVuzW2DtKNhowJ80PlhTEfnNKNF9/QwW+EYyYM47e13lPreGMwMUvN1ahRZA9+e90F8Z
+         CU1FRlvwPqXBPbAvLG1VhuPKSrh5Pyhc7RZbbv9RhBxfDmtqwr6kGKMP9jyvX3zotKTA
+         G2lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697060920; x=1697665720;
+        d=1e100.net; s=20230601; t=1697061225; x=1697666025;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Fmgja0bLa+jteMFhSajUsHxegsUDbMvKhEZglRqt45Q=;
-        b=ri4SE2jaRDSqMLAcs0CGWB/MTP3WB24yPHa2m/up+eYo6USkljyTfcxm3GFQ/9VcMN
-         AfZs9PM9qmg7CNVJaiad5xtVncr7tZfoP2ka4KO1myYXkJZIah2859WRdzPXguS0pvFZ
-         h6D2wycwtjaNmFMKtupBUPLE0AMfHjx17//1IlidU6zhrd9apIFmI8ZJnTyI5UVEKdH4
-         9GLd/avpzLsmvI+xm0NxgTUsPyMU9vDUQSpt9Yn5cTzSRGOii1zctbxC0txW4EMPnrGS
-         rLnj/GAKxxygjutMKZjO+5wFlWGnUUNwCh/qi8O9kYv5pJYBTjoq0WJ/Y+uSgNVjMxGJ
-         6yzw==
-X-Gm-Message-State: AOJu0YyuQT4Y3M/7jVVooRhEUVXkglyuc6kUkIxXJnFACklZhjs56ht5
-	nxiPf8mJSdd1XVWUZxKYQan6HFHn9lsqyS2DLw==
-X-Google-Smtp-Source: AGHT+IGJoTG4b7zDPCsibXJpxnlw6jNvBvSJLdFkY2BSvTdOPSvUCRCdC6zVI4G66sLlVvOY3vTtDT7UkI8II5FbKQ==
+        bh=z0mEh2eQbdOiMZkH+CgX68hk8AnM/JOc/WD0lj3h3vo=;
+        b=KcTt8aX7GzhiNH8t4VvHzCiIBNxWcClM/JOHnLrjJHEKn0MkJy29w6h4s0PebQxpU0
+         RNpqzG2GiSA8D+2Yp9qHqO0sopeaR0rPSAt/ANw2AWJh5iUciAzV3i039U0l7NKoSA/J
+         GmliWfRaYOO6yzFNpmSjnVzYBBJvUYOrQnK3YiS3Biv5sYHfoF6vAG5PxDuC+juE3ot0
+         xa23ZGlS5jgrrGo7hmshx7p9x8fC11B6FZ8dKRhLMew4ZjexFmS3WOOP5lZ4XdyB1d3b
+         aPotLmqs9nttBnHaRbqjTxErDF0CLn8Bndo1eCFtxN6I9WZpB2k95U7R7PddlrZGTmZK
+         BpPQ==
+X-Gm-Message-State: AOJu0Yzz3A4u7Up9+JNkuma79Z8dkRqrPCsYL5oObSDfZsfpYCbq7ApJ
+	Kko4rEbD8zv2wpv+otLOFTzDH7joxWoC0S/NzQ==
+X-Google-Smtp-Source: AGHT+IEXNxC5u7cyo6EzXWEZxvQryMMMVtV0GnYvMVdnh1TDPLsWmBI2chv/jJx3JlUicFWGPx//4VMX8BWxX8RTxw==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a25:870c:0:b0:d9a:3a25:36df with SMTP
- id a12-20020a25870c000000b00d9a3a2536dfmr177263ybl.8.1697060920492; Wed, 11
- Oct 2023 14:48:40 -0700 (PDT)
-Date: Wed, 11 Oct 2023 21:48:39 +0000
+ (user=justinstitt job=sendgmr) by 2002:a25:1f56:0:b0:d7e:7a8a:2159 with SMTP
+ id f83-20020a251f56000000b00d7e7a8a2159mr373076ybf.5.1697061225382; Wed, 11
+ Oct 2023 14:53:45 -0700 (PDT)
+Date: Wed, 11 Oct 2023 21:53:44 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIADcYJ2UC/x2OQQrCMBBFr1Jm7UAnRSxeRUR0MrFZOAmTtCild
- zft4sF7q/9XKGJRCly7FUyWWGLSFnTqgKenvgWjbw2udwP1RFiqKecfeouLWEGVilInsV0aljR 9BDXkHU52+MOkpNlYkJFGcq9xOF8Ce2g72STE7/Hhdt+2P37e/baTAAAA
+X-B4-Tracking: v=1; b=H4sIAGcZJ2UC/yWNSwrDMAwFrxK0rsByFv1cpZRibKXRooqRTGgJu
+ XvddvOY2czbwNmEHS7DBsaruCzahQ4D5Dnpg1FKd4ghjhSI0Jtprm8sJiubo3JDbjPbFyqrJy0 L9ork/96fSRQzHsN5Ok3EaaQIPV+NJ3n9rq+3ff8AtMyfvYoAAAA=
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1697060919; l=2791;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1697061224; l=1801;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=d1CwcSoXBknLIhkv+OR1VBIGF8nQz/k16YwYlTdC9Ds=; b=OX8CmXZpnCy8ywuesrOENMy2j4fqvuDPmBTZziT688Z17/BOW8xmijt701YYwPkN1Ws6XyooM
- RgXZMOR098sC456O0B2+zgQidajVjXgp6fBUqs2vZ/7XEhUvTT2W3s/
+ bh=nMuSVOhysev7uUh/Sd/w6qnA6sjV53pd+anm3qSOdWM=; b=YIDWB6LpP36QEb79ACUN9X7xFlKvJc7IleF4p1QG5Yl7uybR9TYv1KHDJInStRLYBNOkkGYBj
+ dIGBBHJSvRSBT/tC28YNnxzt1ZJI6cXmWHQHfQRcbejP0mHLDgv4Y5x
 X-Mailer: b4 0.12.3
-Message-ID: <20231011-strncpy-drivers-net-ethernet-netronome-nfp-nfpcore-nfp_resource-c-v1-1-7d1c984f0eba@google.com>
-Subject: [PATCH] nfp: replace deprecated strncpy with strscpy
+Message-ID: <20231011-strncpy-drivers-net-ethernet-pensando-ionic-ionic_main-c-v1-1-23c62a16ff58@google.com>
+Subject: [PATCH] ionic: replace deprecated strncpy with strscpy
 From: Justin Stitt <justinstitt@google.com>
-To: Louis Peens <louis.peens@corigine.com>, Jakub Kicinski <kuba@kernel.org>, 
+To: Shannon Nelson <shannon.nelson@amd.com>, Brett Creeley <brett.creeley@amd.com>, drivers@pensando.io, 
 	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Paolo Abeni <pabeni@redhat.com>
-Cc: oss-drivers@corigine.com, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Justin Stitt <justinstitt@google.com>
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
 X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.6
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
@@ -75,34 +74,12 @@ strncpy() is deprecated for use on NUL-terminated destination strings
 [1] and as such we should prefer more robust and less ambiguous string
 interfaces.
 
-We expect res->name to be NUL-terminated based on its usage with format
-strings:
-|       dev_err(cpp->dev.parent, "Dangling area: %d:%d:%d:0x%0llx-0x%0llx%s%s\n",
-|               NFP_CPP_ID_TARGET_of(res->cpp_id),
-|               NFP_CPP_ID_ACTION_of(res->cpp_id),
-|               NFP_CPP_ID_TOKEN_of(res->cpp_id),
-|               res->start, res->end,
-|               res->name ? " " : "",
-|               res->name ? res->name : "");
-... and with strcmp()
-|       if (!strcmp(res->name, NFP_RESOURCE_TBL_NAME)) {
-
-Moreover, NUL-padding is not required as `res` is already
-zero-allocated:
-|       res = kzalloc(sizeof(*res), GFP_KERNEL);
+NUL-padding is not needed due to `ident` being memset'd to 0 just before
+the copy.
 
 Considering the above, a suitable replacement is `strscpy` [2] due to
 the fact that it guarantees NUL-termination on the destination buffer
 without unnecessarily NUL-padding.
-
-Let's also opt to use the more idiomatic strscpy() usage of (dest, src,
-sizeof(dest)) rather than (dest, src, SOME_LEN).
-
-Typically the pattern of 1) allocate memory for string, 2) copy string
-into freshly-allocated memory is a candidate for kmemdup_nul() but in
-this case we are allocating the entirety of the `res` struct and that
-should stay as is. As mentioned above, simple 1:1 replacement of strncpy
--> strscpy :)
 
 Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
 Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
@@ -114,26 +91,28 @@ Note: build-tested only.
 
 Found with: $ rg "strncpy\("
 ---
- drivers/net/ethernet/netronome/nfp/nfpcore/nfp_resource.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/pensando/ionic/ionic_main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/netronome/nfp/nfpcore/nfp_resource.c b/drivers/net/ethernet/netronome/nfp/nfpcore/nfp_resource.c
-index ce7492a6a98f..279ea0b56955 100644
---- a/drivers/net/ethernet/netronome/nfp/nfpcore/nfp_resource.c
-+++ b/drivers/net/ethernet/netronome/nfp/nfpcore/nfp_resource.c
-@@ -159,7 +159,7 @@ nfp_resource_acquire(struct nfp_cpp *cpp, const char *name)
- 	if (!res)
- 		return ERR_PTR(-ENOMEM);
+diff --git a/drivers/net/ethernet/pensando/ionic/ionic_main.c b/drivers/net/ethernet/pensando/ionic/ionic_main.c
+index 1dc79cecc5cc..835577392178 100644
+--- a/drivers/net/ethernet/pensando/ionic/ionic_main.c
++++ b/drivers/net/ethernet/pensando/ionic/ionic_main.c
+@@ -554,8 +554,8 @@ int ionic_identify(struct ionic *ionic)
+ 	memset(ident, 0, sizeof(*ident));
  
--	strncpy(res->name, name, NFP_RESOURCE_ENTRY_NAME_SZ);
-+	strscpy(res->name, name, sizeof(res->name));
+ 	ident->drv.os_type = cpu_to_le32(IONIC_OS_TYPE_LINUX);
+-	strncpy(ident->drv.driver_ver_str, UTS_RELEASE,
+-		sizeof(ident->drv.driver_ver_str) - 1);
++	strscpy(ident->drv.driver_ver_str, UTS_RELEASE,
++		sizeof(ident->drv.driver_ver_str));
  
- 	dev_mutex = nfp_cpp_mutex_alloc(cpp, NFP_RESOURCE_TBL_TARGET,
- 					NFP_RESOURCE_TBL_BASE,
+ 	mutex_lock(&ionic->dev_cmd_lock);
+ 
 
 ---
 base-commit: cbf3a2cb156a2c911d8f38d8247814b4c07f49a2
-change-id: 20231011-strncpy-drivers-net-ethernet-netronome-nfp-nfpcore-nfp_resource-c-1812b8357fcd
+change-id: 20231011-strncpy-drivers-net-ethernet-pensando-ionic-ionic_main-c-709f8f1ea312
 
 Best regards,
 --
