@@ -1,141 +1,151 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A94C18B04
-	for <linux-hardening@vger.kernel.org>; Wed, 11 Oct 2023 16:14:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9123F3E493
+	for <linux-hardening@vger.kernel.org>; Wed, 11 Oct 2023 16:31:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="kSqrEGZ9"
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2085.outbound.protection.outlook.com [40.107.244.85])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76C5CB0;
-	Wed, 11 Oct 2023 09:14:27 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fHE2HzGWq4IKZAp9wpMoE+PH6V39kqAvcSqEkwUoix1qbyS4IfSEOTec7Urf7bHtBbg3ivRSspbp0jdmICQiUEYJFLqyxJ3pZplvzl5UTiO2JjqzHvTTyBN1No3YuvRuKFefpimVU5d50ZkIz02gGzx7Z03vGA0zs+m540siHQeVmmPpz00r44NiStWxLhwUp3YFna+lQmn29QOY7BLMJwzctnL8ufKh6o8H37XnhmzeoKVvSbNtuslNqF1IcuzOk5WWOQFB1DD6Gj8uzwwbfCpEOrvRafVFWDWUSszsv56nvv++PncWOUhHELSugxGK/vCrrun0uaPBeNomjL4Zvg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DxAr48jZWSkVW5eya7hY1V7YgwubjvBsjmNdEpK6cL8=;
- b=nx0JSRlEQRJ0qgMJFw/D7KulhhaV/K7eh2e9XP1INWlecIiZBQTUgmD0TB9EC3np3KWWtjfFnHaTjUoHfGjAal/5hL3k5d54wgSUOMp0FOHz1GPt6+hinKw6dQYUoAo4ngQ6t6kI8nSiiwh1kpZlJtpJlTMvbRdbuRc2g7SviLEVFmIyB2bQr+FF0W26hmowBdrALD3YuIJcXt2Ic/28wTK3mUyL9VHWu9hJC/5yxGViAtnirqQkBsYWpi8ucQNoOMWvxW0U9VBp69/X8rsR55qn0fMDrmVisq3VnJve4UCQvsE7hDQhvVnKgKm5N3fgmB2ZZxrW4S7X/ujOj9Bp8w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=gmail.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DxAr48jZWSkVW5eya7hY1V7YgwubjvBsjmNdEpK6cL8=;
- b=kSqrEGZ9KjFWRnA6Y9Ei5qUBgUteRwNEkm2VZ8oc2aI78QE2fI780QsMLJeDv+e5qPd+JuzqK57+KDA5+XGhLvswzUHOP43pGp1R4aUBUJxbWJoMdyZsl8icHiUrLeAMqUaG8EewA3Bz7z2kAmv2Il6wqo97P4lBom/SCByhjKVQJ/CeI9HtzeE1SSWrve4SMj9s3Q3hS78gaog5qhunJDGGoTRh067M5jPGlZGHNNwCr3M6G8hfPRQn16k14LRKrRZRRxEkWNm5Q4Dm8X4N/BolrJc4xjAzfvzO+VfjwTST90DxmOvZHFFPHeTxTqC4rCWCWclCsYvkbgil2dt4Cg==
-Received: from BL0PR03CA0030.namprd03.prod.outlook.com (2603:10b6:208:2d::43)
- by DM6PR12MB4299.namprd12.prod.outlook.com (2603:10b6:5:223::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6863.37; Wed, 11 Oct
- 2023 16:14:25 +0000
-Received: from BL6PEPF0001AB56.namprd02.prod.outlook.com
- (2603:10b6:208:2d:cafe::6f) by BL0PR03CA0030.outlook.office365.com
- (2603:10b6:208:2d::43) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6886.28 via Frontend
- Transport; Wed, 11 Oct 2023 16:14:25 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- BL6PEPF0001AB56.mail.protection.outlook.com (10.167.241.8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6838.22 via Frontend Transport; Wed, 11 Oct 2023 16:14:25 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Wed, 11 Oct
- 2023 09:14:10 -0700
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Wed, 11 Oct
- 2023 09:14:09 -0700
-Received: from localhost.localdomain (10.127.8.9) by mail.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server id 15.2.986.41 via Frontend
- Transport; Wed, 11 Oct 2023 09:14:03 -0700
-From: Kartik <kkartik@nvidia.com>
-To: <andy.shevchenko@gmail.com>
-CC: <akpm@linux-foundation.org>, <andy@kernel.org>, <arnd@arndb.de>,
-	<frank.li@vivo.com>, <jonathanh@nvidia.com>, <keescook@chromium.org>,
-	<kkartik@nvidia.com>, <linux-hardening@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-	<linux-tegra@vger.kernel.org>, <pdeschrijver@nvidia.com>,
-	<petlozup@nvidia.com>, <pshete@nvidia.com>, <robh@kernel.org>,
-	<stefank@nvidia.com>, <thierry.reding@gmail.com>, <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v4 1/8] mm/util: Introduce kmemdup_array() to duplicate an array
-Date: Wed, 11 Oct 2023 21:43:59 +0530
-Message-ID: <20231011161359.1368-1-kkartik@nvidia.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DCUCJVOd"
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F10DFCC
+	for <linux-hardening@vger.kernel.org>; Wed, 11 Oct 2023 09:31:48 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-6969b391791so5071816b3a.3
+        for <linux-hardening@vger.kernel.org>; Wed, 11 Oct 2023 09:31:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1697041908; x=1697646708; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=H+MMx8yPQF+8HcCzQjqdZnLD/WD4YyZebT9qiOBQ8gg=;
+        b=DCUCJVOdtsgwD+XFhC5rjJ/2yawUhJ8I5aWSZ6N3+cycUsL4ZQ1aepWAD2auyjLJtc
+         qKsk5so7IzN4YKc60U4rymWANux/juBb6BaXT48VrREVDF48kBE96UtkwQYbMK8CL5jl
+         Fn4fRposp6Baiw5I8+nkphoqXKV36pR551Izk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697041908; x=1697646708;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=H+MMx8yPQF+8HcCzQjqdZnLD/WD4YyZebT9qiOBQ8gg=;
+        b=aVU7p2fRwtNzOusIkB1VJtcqKdBRjesvaxReW+5THANCLX0vLHdA36z39BlZMW74Cs
+         clGlX6uPmTWwM5+xS5Z3fis7qm0B860RECZgZWAJ/LY0OsLfpz56EDSAFANgj3GRP6Gt
+         XkN1PJvnYj0JzvlA5vG9MqNNjwddG5jeqZ2wbYNqYZsyBi87LO1ic59gvwGzK7atOvDO
+         8f45Qirn3goeHDliGEKHPy+Gg02XvyGAJr9KcEpKtjfgGLFHwEOzt8xindRb1MhKVyPZ
+         RgFXQ0GvheTUpf59U3MMsNWgH6UYeJfZ1eYT/pg3RiJlBij4kiDYK1RKwvI7liAX9TVl
+         JxgA==
+X-Gm-Message-State: AOJu0YzPBHBzfO7EDIbL26/yNf8I6S6/8ZC8Zn1F5bMjDWPlJmOq+8fj
+	nqq0XI+ao2ENqiMJfmH5xm+uQA==
+X-Google-Smtp-Source: AGHT+IES01ZbXdY6aRhuBKS26Q5mlzP46k5cW0I7syaN7Gn4A+8DmL/xUNf667TCEWUfCACCDgb8xQ==
+X-Received: by 2002:a05:6a20:dd9a:b0:167:af7d:9e8c with SMTP id kw26-20020a056a20dd9a00b00167af7d9e8cmr14523020pzb.56.1697041908446;
+        Wed, 11 Oct 2023 09:31:48 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id q4-20020a656a84000000b00563df2ba23bsm66090pgu.50.2023.10.11.09.31.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Oct 2023 09:31:47 -0700 (PDT)
+From: Kees Cook <keescook@chromium.org>
+To: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+Cc: Kees Cook <keescook@chromium.org>,
+	Edward AD <twuufnxlz@gmail.com>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Johan Hedberg <johan.hedberg@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	linux-bluetooth@vger.kernel.org,
+	netdev@vger.kernel.org,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	syzbot+c90849c50ed209d77689@syzkaller.appspotmail.com,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] Bluetooth: hci_sock: Correctly bounds check and pad HCI_MON_NEW_INDEX name
+Date: Wed, 11 Oct 2023 09:31:44 -0700
+Message-Id: <20231011163140.work.317-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <CAHp75VdBh0k_XU3GG99EvgLOztOFWn87QXknpokcDy=29yu=Aw@mail.gmail.com>
-References: <CAHp75VdBh0k_XU3GG99EvgLOztOFWn87QXknpokcDy=29yu=Aw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-X-NVConfidentiality: public
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2385; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=on0TcWQI6be5JbFS4MvZB6HiilmbXCZNq0hVdsTZcTA=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlJs3wuHKC8tFUYtd66UFMEWlaF6VGRB0wyy4r4
+ v0kXJ9+LcuJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZSbN8AAKCRCJcvTf3G3A
+ JuqXD/9HcIT6Ydof+BGGggd18PoUB8YhhWaiA8oKdvxkbk3Iumw5829rLzHYLeXZFlNYjAGHJ4w
+ YGdSNyjF2lzjbJFZ6wLTuVN7zy0aK9MeyNiT1ch8f3EewDWqA9+P19sq4aSINnJ6L4IIysOPL1J
+ Tp7pmoKzWngdKXAXARarmZ0G05FOIyyhnkmJXRuEyiv58jcsvLZTfcpuwJ1gUcJsiK+LFwLgRih
+ 1JpDT7C2MQTzrLf9gzsEeFabAQwczaq5l6Kf2BTerw5trq03upcF6Vme6OAlyTCjwUxnxzpS1c1
+ ofPNtp18esK1fHIrptpkuEyx2jngkEHn/MQwZ9WlhNC2UtiDgPgDlTLuCW65uA38lNzJHW16fcp
+ tISkBl6vPUkmux1FOIDab1LKa149zIZRVPjYg6oDpKSQP3e5rdBTHyEU40aNRJe90uEaOUOOqZQ
+ m50d99pztGFeDJ7Pfdz1jKBI76dDKJXjg7wzHNYe8vlmFyjDnV5oMWaIa2Or2ZU3qGQfeQkQhI+
+ Cj6oI87eX2uaqqzAb1UO/Cb55BVerNIIbDTHnNGljfQ2rihIKChwA3SIfrwkrukcwGcVtVo7JF2
+ mWProGQLXUAVvM/+G0FSQlt99cKkJryGbF5/5KbqNpaORdEcOuQIqt//SPEQFLcVRbuJSAY5dJ5
+ d25ys4e FE7RuudQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB56:EE_|DM6PR12MB4299:EE_
-X-MS-Office365-Filtering-Correlation-Id: 15bf3596-9416-450e-7a91-08dbca752328
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	WSGWuG7PN5iPck+UH+SeUUhs1vsv4Tm7LECToTuhFu46e5E8aJZjmaVIPF4v+q3OzldgJFxl9ErEQdlWIEOU8y6Ka6VPL4GmCEzVrCQSJqCNe0oS/9fQGHi51aVKnlZfHlD/RtY0w5PBUQbidz6/jzDmMrqxAVg2ZKJqib30VnlLxpmQXuTqGon/+QAHftlMUDXnOmzw+F7DYX6+R1CPl9BqjAAyfVptLZKkv1XQ1cDNToJsgkmgG41iO4r4VYlK+TkwGr20sH/hoiSLXlkCmobw5lghJlMjLR/bZ6vUnjzUmjJQ8fcmsNM87PZ13e90FLQ5WPoDKTnMwepXOXuGuUYIpzytZLwJ/rs03kEKV+Zf5YsQAdUNfhxywgZ2aNCWlNcuZOodSCQM5Mqp60qxRNBGPRzAoN7l7/9cpLuJsc73KgdMmPlLBccp6+jYdNsJWCG2havEgs8BP/Qt/MTIvwx1Bod0Z80MEpj7k+6p9pK3VqpUY/AptEr4cr8K8rK4uFkjeqhW1JjAkFOV0ib6gpgWDuosBTN6LJag0Io2Vxs0f9+nYOiVP/DfgdHUANxsyhZJw3qhk334jvGnivQoSgYZCBgVfjvSFv1f89nrjUXD7vbp8WNiydWQ1Vdgvb6eTA4cLmUzIsqIiPF7yHOTNeTzot21hR2+wjcOOVdYz0kFvwYOWzbkjIr/FWOsVK9BZreoKajMr3DF9y+hkBaYGdINjRzi9wSZ6AbqC+2YrJo+HchaBYfn42r1NlZcq7lO
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(346002)(376002)(396003)(136003)(39860400002)(230922051799003)(64100799003)(186009)(1800799009)(82310400011)(451199024)(46966006)(36840700001)(40470700004)(40480700001)(4001150100001)(478600001)(40460700003)(426003)(336012)(2616005)(83380400001)(36860700001)(47076005)(1076003)(26005)(70586007)(54906003)(316002)(6916009)(70206006)(7416002)(4326008)(8676002)(5660300002)(41300700001)(53546011)(2906002)(4744005)(8936002)(6666004)(36756003)(356005)(7636003)(86362001)(82740400003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Oct 2023 16:14:25.0709
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 15bf3596-9416-450e-7a91-08dbca752328
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF0001AB56.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4299
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Wed, 2023-10-11 at 18:36:11 +0300, Andy Shevchenko wrote:
-> On Wed, Oct 11, 2023 at 2:17 PM Kartik <kkartik@nvidia.com> wrote:
-> >
-> > Introduce function kmemdup_array(), that will copy `n` number of
-> > elements from a given array `src` to `dst`.
-> >
-> > On success, kmemdup_array() returns 0 and copy the elements from `src`
-> > to newly allocated array `dst`, it also stores number of elements
-> > copied from `src` array to `dst_count` parameter. On failure, this
-> > returns a negative integer value containing the error value.
-> 
-> Hmm... Why is it so complicated?
-> 
-> Can it be as simple as
-> 
->   return kmemdup(size_mul());
-> 
-> ?
-> 
-> --
-> With Best Regards,
-> Andy Shevchenko
+The code pattern of memcpy(dst, src, strlen(src)) is almost always
+wrong. In this case it is wrong because it leaves memory uninitialized
+if it is less than sizeof(ni->name), and overflows ni->name when longer.
 
-The idea was to validate the arguments that are passed to kmemdup_array().
-But I agree doing so complicates things here.
+Normally strtomem_pad() could be used here, but since ni->name is a
+trailing array in struct hci_mon_new_index, compilers that don't support
+-fstrict-flex-arrays=3 can't tell how large this array is via
+__builtin_object_size(). Instead, open-code the helper and use sizeof()
+since it will work correctly.
 
-I will update this in the next patchset.
+Additionally mark ni->name as __nonstring since it appears to not be a
+%NUL terminated C string.
 
-Thanks & Regards,
-Kartik
+Cc: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+Cc: Edward AD <twuufnxlz@gmail.com>
+Cc: Marcel Holtmann <marcel@holtmann.org>
+Cc: Johan Hedberg <johan.hedberg@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: linux-bluetooth@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Fixes: 78480de55a96 ("Bluetooth: hci_sock: fix slab oob read in create_monitor_event")
+Link: https://lore.kernel.org/lkml/202310110908.F2639D3276@keescook/
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ include/net/bluetooth/hci_mon.h | 2 +-
+ net/bluetooth/hci_sock.c        | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/include/net/bluetooth/hci_mon.h b/include/net/bluetooth/hci_mon.h
+index 2d5fcda1bcd0..082f89531b88 100644
+--- a/include/net/bluetooth/hci_mon.h
++++ b/include/net/bluetooth/hci_mon.h
+@@ -56,7 +56,7 @@ struct hci_mon_new_index {
+ 	__u8		type;
+ 	__u8		bus;
+ 	bdaddr_t	bdaddr;
+-	char		name[8];
++	char		name[8] __nonstring;
+ } __packed;
+ #define HCI_MON_NEW_INDEX_SIZE 16
+ 
+diff --git a/net/bluetooth/hci_sock.c b/net/bluetooth/hci_sock.c
+index 72abe54c45dd..3e7cd330d731 100644
+--- a/net/bluetooth/hci_sock.c
++++ b/net/bluetooth/hci_sock.c
+@@ -488,7 +488,8 @@ static struct sk_buff *create_monitor_event(struct hci_dev *hdev, int event)
+ 		ni->type = hdev->dev_type;
+ 		ni->bus = hdev->bus;
+ 		bacpy(&ni->bdaddr, &hdev->bdaddr);
+-		memcpy(ni->name, hdev->name, strlen(hdev->name));
++		memcpy_and_pad(ni->name, sizeof(ni->name), hdev->name,
++			       strnlen(hdev->name, sizeof(ni->name)), '\0');
+ 
+ 		opcode = cpu_to_le16(HCI_MON_NEW_INDEX);
+ 		break;
+-- 
+2.34.1
+
