@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C20826FD9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C017A6FC2;
 	Wed, 11 Oct 2023 03:10:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JeZXDjgi"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 61349C433CC;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="STbSyrL2"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6C2ADC43395;
 	Wed, 11 Oct 2023 03:10:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1696993826;
-	bh=OmfMysb2I1m4wQt9oCwoXkgaur3Ia1ti7igGfmNp7Wg=;
+	bh=tcn66kt+l9iDn6H9EiJxQxImbQ3H8oPLkbEIEMBGK7U=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=JeZXDjgiFK17sJYMmFdTMLwyXqY2eq82ui7+lhiMF9Bd3utoKv4NCtSmPnfbSaDjY
-	 Kgth5Au6V7o2SAqwXR87PGPUF9ophQOJ9KvPYsq8kpaIlBR/EUTIYFCKT0uBqHzZuv
-	 wlz10rYR2W00VvQY49Fv2GARrdt9r4EyT+kwTqqAUyPQtLpQsWhq4J3UHAzZv9/fJl
-	 gqCZYzYXXRB5P7AxF78ep51DrixrFi2lWXubT4lQKGzyoPNRU/WjAWPVUyywRq9e65
-	 uQk5EvsGVa4qs/7xxS+xhtzPSwITa4PBMReLzT+P2z22koFpu24merq/35KomtyffN
-	 3e4uNY8GG4QEg==
+	b=STbSyrL256HXlI5d8ErZzje4nEtk/t+xxlCs4d4EYW5g9knu9OzqiSKN6frIUSwTq
+	 xGrMdGeMxgOFzusTGNJerzoIapceKMb/E7BzBtd8C36y8InP+6HwnOdDoCTAAyCJrA
+	 hvMq9dIkLJda1s1XIhaY2E5UaPxkNcjNez0O3vEYyPqRZjKJIJ7pj/KQHp+27CSFck
+	 bFg6dhqZfkKaM+JEI7AKkqy46IBP/wa9Y4NTQSeEs5Bs0a2MFrOcmqYO/qbVIqwMj/
+	 NMxYsDlOhkFkOr4zYKDzdH9y6dmEPYhbyXPrkgOPdXpxIMxlR8p5xPALq3v814N2gE
+	 KhaXfg3AgTyXA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 48C8DE0009E;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 5158EE11F44;
 	Wed, 11 Oct 2023 03:10:26 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -28,17 +28,18 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] net: dsa: qca8k: replace deprecated strncpy with
+Subject: Re: [PATCH] net: dsa: realtek: rtl8365mb: replace deprecated strncpy with
  ethtool_sprintf
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <169699382629.3301.16130210765800603828.git-patchwork-notify@kernel.org>
+ <169699382632.3301.16295806677296620947.git-patchwork-notify@kernel.org>
 Date: Wed, 11 Oct 2023 03:10:26 +0000
-References: <20231009-strncpy-drivers-net-dsa-qca-qca8k-common-c-v1-1-34c8040e0f32@google.com>
-In-Reply-To: <20231009-strncpy-drivers-net-dsa-qca-qca8k-common-c-v1-1-34c8040e0f32@google.com>
+References: <20231009-strncpy-drivers-net-dsa-realtek-rtl8365mb-c-v1-1-0537fe9fb08c@google.com>
+In-Reply-To: <20231009-strncpy-drivers-net-dsa-realtek-rtl8365mb-c-v1-1-0537fe9fb08c@google.com>
 To: Justin Stitt <justinstitt@google.com>
-Cc: andrew@lunn.ch, f.fainelli@gmail.com, olteanv@gmail.com,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+Cc: linus.walleij@linaro.org, alsi@bang-olufsen.dk, andrew@lunn.ch,
+ f.fainelli@gmail.com, olteanv@gmail.com, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
  netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-hardening@vger.kernel.org
 
@@ -47,7 +48,7 @@ Hello:
 This patch was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Mon, 09 Oct 2023 18:34:45 +0000 you wrote:
+On Mon, 09 Oct 2023 22:43:59 +0000 you wrote:
 > `strncpy` is deprecated for use on NUL-terminated destination strings
 > [1] and as such we should prefer more robust and less ambiguous string
 > interfaces.
@@ -59,8 +60,8 @@ On Mon, 09 Oct 2023 18:34:45 +0000 you wrote:
 > [...]
 
 Here is the summary with links:
-  - net: dsa: qca8k: replace deprecated strncpy with ethtool_sprintf
-    https://git.kernel.org/netdev/net-next/c/382bb32d3865
+  - net: dsa: realtek: rtl8365mb: replace deprecated strncpy with ethtool_sprintf
+    https://git.kernel.org/netdev/net-next/c/e5f061d5e340
 
 You are awesome, thank you!
 -- 
