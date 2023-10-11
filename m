@@ -1,151 +1,116 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9123F3E493
-	for <linux-hardening@vger.kernel.org>; Wed, 11 Oct 2023 16:31:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DCUCJVOd"
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F10DFCC
-	for <linux-hardening@vger.kernel.org>; Wed, 11 Oct 2023 09:31:48 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-6969b391791so5071816b3a.3
-        for <linux-hardening@vger.kernel.org>; Wed, 11 Oct 2023 09:31:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1697041908; x=1697646708; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=H+MMx8yPQF+8HcCzQjqdZnLD/WD4YyZebT9qiOBQ8gg=;
-        b=DCUCJVOdtsgwD+XFhC5rjJ/2yawUhJ8I5aWSZ6N3+cycUsL4ZQ1aepWAD2auyjLJtc
-         qKsk5so7IzN4YKc60U4rymWANux/juBb6BaXT48VrREVDF48kBE96UtkwQYbMK8CL5jl
-         Fn4fRposp6Baiw5I8+nkphoqXKV36pR551Izk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697041908; x=1697646708;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=H+MMx8yPQF+8HcCzQjqdZnLD/WD4YyZebT9qiOBQ8gg=;
-        b=aVU7p2fRwtNzOusIkB1VJtcqKdBRjesvaxReW+5THANCLX0vLHdA36z39BlZMW74Cs
-         clGlX6uPmTWwM5+xS5Z3fis7qm0B860RECZgZWAJ/LY0OsLfpz56EDSAFANgj3GRP6Gt
-         XkN1PJvnYj0JzvlA5vG9MqNNjwddG5jeqZ2wbYNqYZsyBi87LO1ic59gvwGzK7atOvDO
-         8f45Qirn3goeHDliGEKHPy+Gg02XvyGAJr9KcEpKtjfgGLFHwEOzt8xindRb1MhKVyPZ
-         RgFXQ0GvheTUpf59U3MMsNWgH6UYeJfZ1eYT/pg3RiJlBij4kiDYK1RKwvI7liAX9TVl
-         JxgA==
-X-Gm-Message-State: AOJu0YzPBHBzfO7EDIbL26/yNf8I6S6/8ZC8Zn1F5bMjDWPlJmOq+8fj
-	nqq0XI+ao2ENqiMJfmH5xm+uQA==
-X-Google-Smtp-Source: AGHT+IES01ZbXdY6aRhuBKS26Q5mlzP46k5cW0I7syaN7Gn4A+8DmL/xUNf667TCEWUfCACCDgb8xQ==
-X-Received: by 2002:a05:6a20:dd9a:b0:167:af7d:9e8c with SMTP id kw26-20020a056a20dd9a00b00167af7d9e8cmr14523020pzb.56.1697041908446;
-        Wed, 11 Oct 2023 09:31:48 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id q4-20020a656a84000000b00563df2ba23bsm66090pgu.50.2023.10.11.09.31.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Oct 2023 09:31:47 -0700 (PDT)
-From: Kees Cook <keescook@chromium.org>
-To: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
-Cc: Kees Cook <keescook@chromium.org>,
-	Edward AD <twuufnxlz@gmail.com>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	linux-bluetooth@vger.kernel.org,
-	netdev@vger.kernel.org,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	syzbot+c90849c50ed209d77689@syzkaller.appspotmail.com,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] Bluetooth: hci_sock: Correctly bounds check and pad HCI_MON_NEW_INDEX name
-Date: Wed, 11 Oct 2023 09:31:44 -0700
-Message-Id: <20231011163140.work.317-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AC2639946
+	for <linux-hardening@vger.kernel.org>; Wed, 11 Oct 2023 17:03:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EBF3B0
+	for <linux-hardening@vger.kernel.org>; Wed, 11 Oct 2023 10:03:55 -0700 (PDT)
+Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[IPv6:::1])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <l.stach@pengutronix.de>)
+	id 1qqccf-0005vR-JA; Wed, 11 Oct 2023 19:03:49 +0200
+Message-ID: <e9826fb1cd037e829533edddd6e9e18683ad5e6f.camel@pengutronix.de>
+Subject: Re: [PATCH v2] drm/etnaviv: refactor deprecated strncpy
+From: Lucas Stach <l.stach@pengutronix.de>
+To: Justin Stitt <justinstitt@google.com>, Russell King
+ <linux+etnaviv@armlinux.org.uk>, Christian Gmeiner
+ <christian.gmeiner@gmail.com>,  David Airlie <airlied@gmail.com>, Daniel
+ Vetter <daniel@ffwll.ch>
+Cc: etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, Bo YU
+	 <tsu.yubo@gmail.com>
+Date: Wed, 11 Oct 2023 19:03:47 +0200
+In-Reply-To: <20230918-strncpy-drivers-gpu-drm-etnaviv-etnaviv_perfmon-c-v2-1-8ae12071c138@google.com>
+References: 
+	<20230918-strncpy-drivers-gpu-drm-etnaviv-etnaviv_perfmon-c-v2-1-8ae12071c138@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2385; i=keescook@chromium.org;
- h=from:subject:message-id; bh=on0TcWQI6be5JbFS4MvZB6HiilmbXCZNq0hVdsTZcTA=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlJs3wuHKC8tFUYtd66UFMEWlaF6VGRB0wyy4r4
- v0kXJ9+LcuJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZSbN8AAKCRCJcvTf3G3A
- JuqXD/9HcIT6Ydof+BGGggd18PoUB8YhhWaiA8oKdvxkbk3Iumw5829rLzHYLeXZFlNYjAGHJ4w
- YGdSNyjF2lzjbJFZ6wLTuVN7zy0aK9MeyNiT1ch8f3EewDWqA9+P19sq4aSINnJ6L4IIysOPL1J
- Tp7pmoKzWngdKXAXARarmZ0G05FOIyyhnkmJXRuEyiv58jcsvLZTfcpuwJ1gUcJsiK+LFwLgRih
- 1JpDT7C2MQTzrLf9gzsEeFabAQwczaq5l6Kf2BTerw5trq03upcF6Vme6OAlyTCjwUxnxzpS1c1
- ofPNtp18esK1fHIrptpkuEyx2jngkEHn/MQwZ9WlhNC2UtiDgPgDlTLuCW65uA38lNzJHW16fcp
- tISkBl6vPUkmux1FOIDab1LKa149zIZRVPjYg6oDpKSQP3e5rdBTHyEU40aNRJe90uEaOUOOqZQ
- m50d99pztGFeDJ7Pfdz1jKBI76dDKJXjg7wzHNYe8vlmFyjDnV5oMWaIa2Or2ZU3qGQfeQkQhI+
- Cj6oI87eX2uaqqzAb1UO/Cb55BVerNIIbDTHnNGljfQ2rihIKChwA3SIfrwkrukcwGcVtVo7JF2
- mWProGQLXUAVvM/+G0FSQlt99cKkJryGbF5/5KbqNpaORdEcOuQIqt//SPEQFLcVRbuJSAY5dJ5
- d25ys4e FE7RuudQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.6
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-hardening@vger.kernel.org
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-The code pattern of memcpy(dst, src, strlen(src)) is almost always
-wrong. In this case it is wrong because it leaves memory uninitialized
-if it is less than sizeof(ni->name), and overflows ni->name when longer.
+Am Montag, dem 18.09.2023 um 13:34 +0000 schrieb Justin Stitt:
+> `strncpy` is deprecated for use on NUL-terminated destination strings [1]=
+.
+>=20
+> We should prefer more robust and less ambiguous string interfaces.
+>=20
+> A suitable replacement is `strscpy_pad` due to the fact that it
+> guarantees NUL-termination on the destination buffer whilst maintaining
+> the NUL-padding behavior that strncpy provides.
+>=20
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strn=
+cpy-on-nul-terminated-strings [1]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Cc: Bo YU <tsu.yubo@gmail.com>
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-Normally strtomem_pad() could be used here, but since ni->name is a
-trailing array in struct hci_mon_new_index, compilers that don't support
--fstrict-flex-arrays=3 can't tell how large this array is via
-__builtin_object_size(). Instead, open-code the helper and use sizeof()
-since it will work correctly.
+Thanks, applied to my etnaviv/next branch.
 
-Additionally mark ni->name as __nonstring since it appears to not be a
-%NUL terminated C string.
-
-Cc: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
-Cc: Edward AD <twuufnxlz@gmail.com>
-Cc: Marcel Holtmann <marcel@holtmann.org>
-Cc: Johan Hedberg <johan.hedberg@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: linux-bluetooth@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Fixes: 78480de55a96 ("Bluetooth: hci_sock: fix slab oob read in create_monitor_event")
-Link: https://lore.kernel.org/lkml/202310110908.F2639D3276@keescook/
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- include/net/bluetooth/hci_mon.h | 2 +-
- net/bluetooth/hci_sock.c        | 3 ++-
- 2 files changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/include/net/bluetooth/hci_mon.h b/include/net/bluetooth/hci_mon.h
-index 2d5fcda1bcd0..082f89531b88 100644
---- a/include/net/bluetooth/hci_mon.h
-+++ b/include/net/bluetooth/hci_mon.h
-@@ -56,7 +56,7 @@ struct hci_mon_new_index {
- 	__u8		type;
- 	__u8		bus;
- 	bdaddr_t	bdaddr;
--	char		name[8];
-+	char		name[8] __nonstring;
- } __packed;
- #define HCI_MON_NEW_INDEX_SIZE 16
- 
-diff --git a/net/bluetooth/hci_sock.c b/net/bluetooth/hci_sock.c
-index 72abe54c45dd..3e7cd330d731 100644
---- a/net/bluetooth/hci_sock.c
-+++ b/net/bluetooth/hci_sock.c
-@@ -488,7 +488,8 @@ static struct sk_buff *create_monitor_event(struct hci_dev *hdev, int event)
- 		ni->type = hdev->dev_type;
- 		ni->bus = hdev->bus;
- 		bacpy(&ni->bdaddr, &hdev->bdaddr);
--		memcpy(ni->name, hdev->name, strlen(hdev->name));
-+		memcpy_and_pad(ni->name, sizeof(ni->name), hdev->name,
-+			       strnlen(hdev->name, sizeof(ni->name)), '\0');
- 
- 		opcode = cpu_to_le16(HCI_MON_NEW_INDEX);
- 		break;
--- 
-2.34.1
+Regards,
+Lucas
+> ---
+> Changes in v2:
+> - use strscpy_pad (thanks Kees)
+> - Link to v1: https://lore.kernel.org/r/20230914-strncpy-drivers-gpu-drm-=
+etnaviv-etnaviv_perfmon-c-v1-1-3adc2d9bfc52@google.com
+> ---
+> Similar to [2] which was never picked up. Let's prefer strscpy_pad to str=
+lcpy, though
+>=20
+> [2]: https://lore.kernel.org/all/20190328080918.9290-1-tsu.yubo@gmail.com=
+/
+> ---
+>  drivers/gpu/drm/etnaviv/etnaviv_perfmon.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c b/drivers/gpu/drm/=
+etnaviv/etnaviv_perfmon.c
+> index bafdfe49c1d8..dc9dea664a28 100644
+> --- a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
+> +++ b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
+> @@ -511,7 +511,7 @@ int etnaviv_pm_query_dom(struct etnaviv_gpu *gpu,
+> =20
+>  	domain->id =3D domain->iter;
+>  	domain->nr_signals =3D dom->nr_signals;
+> -	strncpy(domain->name, dom->name, sizeof(domain->name));
+> +	strscpy_pad(domain->name, dom->name, sizeof(domain->name));
+> =20
+>  	domain->iter++;
+>  	if (domain->iter =3D=3D nr_domains)
+> @@ -540,7 +540,7 @@ int etnaviv_pm_query_sig(struct etnaviv_gpu *gpu,
+>  	sig =3D &dom->signal[signal->iter];
+> =20
+>  	signal->id =3D signal->iter;
+> -	strncpy(signal->name, sig->name, sizeof(signal->name));
+> +	strscpy_pad(signal->name, sig->name, sizeof(signal->name));
+> =20
+>  	signal->iter++;
+>  	if (signal->iter =3D=3D dom->nr_signals)
+>=20
+> ---
+> base-commit: 3669558bdf354cd352be955ef2764cde6a9bf5ec
+> change-id: 20230914-strncpy-drivers-gpu-drm-etnaviv-etnaviv_perfmon-c-dd0=
+95491dfde
+>=20
+> Best regards,
+> --
+> Justin Stitt <justinstitt@google.com>
+>=20
 
