@@ -1,120 +1,181 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A126032C74
-	for <linux-hardening@vger.kernel.org>; Wed, 11 Oct 2023 21:53:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BAC9249E2;
+	Wed, 11 Oct 2023 22:17:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X34h2Y2P"
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E1A6A9
-	for <linux-hardening@vger.kernel.org>; Wed, 11 Oct 2023 14:53:46 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d86dac81f8fso413943276.1
-        for <linux-hardening@vger.kernel.org>; Wed, 11 Oct 2023 14:53:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697061225; x=1697666025; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=z0mEh2eQbdOiMZkH+CgX68hk8AnM/JOc/WD0lj3h3vo=;
-        b=X34h2Y2P+Q5oHS2+qlEu/nfKIp10yRHS09FNOvi88rGu7EqT8oo+vSeY+8nLAEikoj
-         w3Hs1IuM/aATxMb5GxxI4jS9vGCLEdQwyz8wgCTVsvz8mKNJnE0IzRGcvAKk5Z+Ve6NJ
-         kLolAGeqle0xrOHIEC0OYQNgtiy4syqDeq3d9RybMa7/dHc/uf4PKcRDYFSEVEC7EVGy
-         VVuzW2DtKNhowJ80PlhTEfnNKNF9/QwW+EYyYM47e13lPreGMwMUvN1ahRZA9+e90F8Z
-         CU1FRlvwPqXBPbAvLG1VhuPKSrh5Pyhc7RZbbv9RhBxfDmtqwr6kGKMP9jyvX3zotKTA
-         G2lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697061225; x=1697666025;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=z0mEh2eQbdOiMZkH+CgX68hk8AnM/JOc/WD0lj3h3vo=;
-        b=KcTt8aX7GzhiNH8t4VvHzCiIBNxWcClM/JOHnLrjJHEKn0MkJy29w6h4s0PebQxpU0
-         RNpqzG2GiSA8D+2Yp9qHqO0sopeaR0rPSAt/ANw2AWJh5iUciAzV3i039U0l7NKoSA/J
-         GmliWfRaYOO6yzFNpmSjnVzYBBJvUYOrQnK3YiS3Biv5sYHfoF6vAG5PxDuC+juE3ot0
-         xa23ZGlS5jgrrGo7hmshx7p9x8fC11B6FZ8dKRhLMew4ZjexFmS3WOOP5lZ4XdyB1d3b
-         aPotLmqs9nttBnHaRbqjTxErDF0CLn8Bndo1eCFtxN6I9WZpB2k95U7R7PddlrZGTmZK
-         BpPQ==
-X-Gm-Message-State: AOJu0Yzz3A4u7Up9+JNkuma79Z8dkRqrPCsYL5oObSDfZsfpYCbq7ApJ
-	Kko4rEbD8zv2wpv+otLOFTzDH7joxWoC0S/NzQ==
-X-Google-Smtp-Source: AGHT+IEXNxC5u7cyo6EzXWEZxvQryMMMVtV0GnYvMVdnh1TDPLsWmBI2chv/jJx3JlUicFWGPx//4VMX8BWxX8RTxw==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a25:1f56:0:b0:d7e:7a8a:2159 with SMTP
- id f83-20020a251f56000000b00d7e7a8a2159mr373076ybf.5.1697061225382; Wed, 11
- Oct 2023 14:53:45 -0700 (PDT)
-Date: Wed, 11 Oct 2023 21:53:44 +0000
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="V6d33GKV"
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2073.outbound.protection.outlook.com [40.107.95.73])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A93FA91;
+	Wed, 11 Oct 2023 15:17:11 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JAe1Pi3KRsm83jZZlX7cXn1pxi4TaUy+eDWvSFfONQSX/LdT2gS/U2UqCgWn5b8qXiXeF3gMzLDWCZv6maYJwz6U9lboEvzFnSTPj6BKVwBw9+znL3Lo0P5dKSqL5u2PxjOp/pxeaJlHLTpvvv+7AW0zyCYd/+k4nTMTmPB3FBH3yNllsIykxfZzvGIZI/C1QItgueFCV9S+U3DQYa1yrAYgKvTfqSF8YxiL40g7N1GX5VRmCXb+8yW3f0yXuxmTHIo+D6T2Tam38mmF1Dwk2C9AkM7g8kriRvL6FUyHzDSTWF7uEGgfIl4fIaU7NFqXXMy16UTU0q7JnYYVcUl3Uw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KYz03LnvIU8O44jtQpAHEdb2+oSXbdgks8YK03sGt4A=;
+ b=CU23BxDwFQPcwwtP3UV5m7EC0fFgMs7afZvmcw2oAmWyKfjBJl3TJ2f6gtanRh2VgCQnIuDEZ11DQT3Dv9a8I+TXcZSUN/p8df2AX+UkwfSH3TuW1uN6SlW8aw/BKHxLolKvHtCmY2WJLEPWHaRka9dOV9rnO31/ZjzNCuQTZ9/I8JHLedU3rfs3BrA0A2IM/WEEbIZX26q8CN8AQStFog9rXPqjB3COQdn9IpdTPI5rfeNFTXWrZT3hBI+Rb8BffcSZO4HWa/7F9SaI0FVKMCOTSC8H2maX4pKHMwRXweMDNN8Kn86iDwKfFtBxP98D2G7s4ncbYQLGCicPBOoAVw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KYz03LnvIU8O44jtQpAHEdb2+oSXbdgks8YK03sGt4A=;
+ b=V6d33GKVb+nZJD/2wSUBWdIzKlk01iGKesl9z4A3ntvFS0zGe6sWvxSYuKxxyeUE2NQjvwvobxA7Xv7oFHwZbttMfP0oxL+7hLgMZ8s7K/qghC5tZoH4o02CpEiT5hSOY0+Tm5XRAf5LX8mNTR0kl5lnO/C3EZc+ZbfSbbn1EUU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6583.namprd12.prod.outlook.com (2603:10b6:8:d1::12) by
+ SA1PR12MB8886.namprd12.prod.outlook.com (2603:10b6:806:375::6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6863.38; Wed, 11 Oct 2023 22:17:09 +0000
+Received: from DS0PR12MB6583.namprd12.prod.outlook.com
+ ([fe80::e31c:de3c:af9d:cd2c]) by DS0PR12MB6583.namprd12.prod.outlook.com
+ ([fe80::e31c:de3c:af9d:cd2c%5]) with mapi id 15.20.6863.032; Wed, 11 Oct 2023
+ 22:17:09 +0000
+Message-ID: <cadf72fc-2c0b-428a-b445-0f6a34c18d9b@amd.com>
+Date: Wed, 11 Oct 2023 15:17:06 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ionic: replace deprecated strncpy with strscpy
+To: Justin Stitt <justinstitt@google.com>,
+ Brett Creeley <brett.creeley@amd.com>, drivers@pensando.io,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20231011-strncpy-drivers-net-ethernet-pensando-ionic-ionic_main-c-v1-1-23c62a16ff58@google.com>
+Content-Language: en-US
+From: "Nelson, Shannon" <shannon.nelson@amd.com>
+In-Reply-To: <20231011-strncpy-drivers-net-ethernet-pensando-ionic-ionic_main-c-v1-1-23c62a16ff58@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BY5PR13CA0025.namprd13.prod.outlook.com
+ (2603:10b6:a03:180::38) To DS0PR12MB6583.namprd12.prod.outlook.com
+ (2603:10b6:8:d1::12)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAGcZJ2UC/yWNSwrDMAwFrxK0rsByFv1cpZRibKXRooqRTGgJu
- XvddvOY2czbwNmEHS7DBsaruCzahQ4D5Dnpg1FKd4ghjhSI0Jtprm8sJiubo3JDbjPbFyqrJy0 L9ork/96fSRQzHsN5Ok3EaaQIPV+NJ3n9rq+3ff8AtMyfvYoAAAA=
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1697061224; l=1801;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=nMuSVOhysev7uUh/Sd/w6qnA6sjV53pd+anm3qSOdWM=; b=YIDWB6LpP36QEb79ACUN9X7xFlKvJc7IleF4p1QG5Yl7uybR9TYv1KHDJInStRLYBNOkkGYBj
- dIGBBHJSvRSBT/tC28YNnxzt1ZJI6cXmWHQHfQRcbejP0mHLDgv4Y5x
-X-Mailer: b4 0.12.3
-Message-ID: <20231011-strncpy-drivers-net-ethernet-pensando-ionic-ionic_main-c-v1-1-23c62a16ff58@google.com>
-Subject: [PATCH] ionic: replace deprecated strncpy with strscpy
-From: Justin Stitt <justinstitt@google.com>
-To: Shannon Nelson <shannon.nelson@amd.com>, Brett Creeley <brett.creeley@amd.com>, drivers@pensando.io, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.6
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6583:EE_|SA1PR12MB8886:EE_
+X-MS-Office365-Filtering-Correlation-Id: c2b047a1-9380-4531-6cc3-08dbcaa7cf60
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	7cq3DKr7ttAtQwJktn7NMNU+R6H3wCK/vER2qDmfj1atGvRxb9P/TcGSPk8YAFpGyb3VmHuhMLfvRSmHx/71v8WhF40nE+f4vfuNZWvR7W8IrnEJfubYO4vqDgAyqpsJK11QiHMnlS6Yivls2gX/2YiKiq0en5omzaoPHXU/SH1KnUQOy51yZq3MlSEGXQ7fQincf+M2vlyY2WvUuWlrkAVqb1gp96tW4rhFukplkKaML3mOnk8iJ7UlFuCJrMn7oWf9tgo5iCEqFKXL0433JLukX86aoYORMpQivYL698oClCddmrmGrapaRmslBaMqZ7w25Iq7yJUAj8Rj6RZbAShVcK3lCSd/nmTzwxkp3ha6pQ7blA/YEUu97pPtC0qJG/BA6Aawj12YxhSi1FF52M+80h5HSJXef5AycT1wxLH/cxiFGG8DUa5vF2TRjFmz95YYhOWMKrUNkBDcKk9e8MdpksmZtsuTF21O/EygQu3ayVgtWIUzG4E7zb7hGefoU0wb2zYsPYdfICVp5kMHkZVskweSqQfKkmyLdolyrRmTjlix6GTqKv43cr7xfjwijhWxjMWWiSYzlmk8J6CHnYH8HqPk7d2juW9kOq5y42tGDrhH9vBqH2/45e3YB/7CWXVE5TjtMsu+x4xtkNUVLhbIzz9zJBguPjipa4wpoFDpIC1n/7fg+H6NeiG1saloTmWc0Mf5NsP9iWQANv9gnQ==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6583.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(376002)(346002)(366004)(396003)(39860400002)(230922051799003)(64100799003)(1800799009)(186009)(451199024)(6512007)(53546011)(478600001)(6486002)(966005)(6666004)(2616005)(2906002)(26005)(83380400001)(110136005)(66946007)(5660300002)(66476007)(316002)(4326008)(8676002)(8936002)(41300700001)(31696002)(6506007)(36756003)(38100700002)(86362001)(66556008)(31686004)(156123004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?MVd0QjhSbTdieExGLzdYeXM3VFd3alQzVHEvM2tjRFBvMkNJcWtKNVkyL0lY?=
+ =?utf-8?B?N3NYSUVpcHZwNkxGcmcrOUNUSHdLb1RubC9JYm56czN3NHFPUHN6ZFkvVElS?=
+ =?utf-8?B?NkMxOUJiZTdBZ09XN3N6MC91NkZJeDBVNGkvRkNLNk4rUXZSWDRUbE8vYm1W?=
+ =?utf-8?B?UDlycUhHV1hmb1VrWFF1RHZhQUdpVFRsK29rbEd2Vk5RUzVBRDJ5c1ZZbHNy?=
+ =?utf-8?B?RUk0SVV6aHJ6UloyS0U3a3c3QXVYSDNrTU4vMkVFanlBNHZncGZoZzBweC9j?=
+ =?utf-8?B?alVLd3EvcFZGYVAzdEpyRVFxaHcyMlc0b0ZZMVBUL3dEM3F5SHhCL0p2UmxY?=
+ =?utf-8?B?YjNTNXRHODIyU29HTi9jNFVhbkZDdFdQMGNQRUxwV0RuTVVvbTJpQUg3bjRi?=
+ =?utf-8?B?QW4vTlp1QkM2MWN1ZkpsR1U1R2J2SkM1aGZTQk1YR2NsVGp0VHlJcFlkeXpw?=
+ =?utf-8?B?aUozUEhHNExFN2RBWmk1U3BtaG9OaS8yV0RrZHl3MlFxc2J4c2NWd3FpMDhw?=
+ =?utf-8?B?SXZML0R4VElGUHhiaFI4RER6TlpPRE1JdDFwenVucWVldkRFdXQvcXVsZC9o?=
+ =?utf-8?B?Y0FyTjdzcEdQZmpQejdERGhRL0hWYXJ2NTdGQUN6OE1nYUxIaVFzUnQwNFlL?=
+ =?utf-8?B?SG8yK0wrTnZ2YTVtQTVhNXlzSHJZOUJYOUdlSDFZandXdEpzbEFQRDNPYWQ4?=
+ =?utf-8?B?MEdFMzBOTCt3MUhFU1hIQnh1UFMranhJK3VUTExNdll6Rk5ReGJncVNsZ0Ru?=
+ =?utf-8?B?WFdQbjhrWWpMdU1rbmNtMzNLT3UvU216UkM0UDQyN1JrY0JmL1ZNdlBRRE43?=
+ =?utf-8?B?cWcxKzVLYnNsQi9zdW9lbXJDcnYxN3hRQkxrc1BQR0NWL1pGWGlXUml6MUxi?=
+ =?utf-8?B?eFdTMjJTeEx0Qm1qVVRSQ2JReUFJdkxCSVpHOXV2RUgxNXBQRHhtQVByVzNq?=
+ =?utf-8?B?WSttaHUvK21zcjAzelVsRTRBRzlCOXM0Q0tPLzY5U0VFSk9EdzBHN3R5RmtM?=
+ =?utf-8?B?dG14L1VUWUg2dkR5ZHlIc2Iwb3NpakNrZ25oSFQ2alFxZ1BXaGdwWkpHSU9t?=
+ =?utf-8?B?VHFDeVlHTnFETGpjeGxCcWthQ2FraC9MSGRRZnpFTytXM3VUUnhiTTYrYlE2?=
+ =?utf-8?B?YXpLQ294ZXBoUmRNWW9iR1VYT3J2Y0xEQTE1Y3laME1IN015RWVKT3haaThj?=
+ =?utf-8?B?UytYNXhEMkJ4R2VXVGFWanU4bU5wOWlBM3E1dTUyaGhNSmNpQzU0bGFKbVlB?=
+ =?utf-8?B?UklycHFMY05mOHB4TDNFOGJUTlk5Q3E5RzZHQ084dXlMNkZQcGFPNithT29h?=
+ =?utf-8?B?MXNhcWV6TlVGMVdMbmRiRHNMOHVXa0psOG43czBqQ1czV1BZQlZEaGJ6Tkhw?=
+ =?utf-8?B?NnBvME9WY1hiejNLUHBxZnNlWXF1YmFKelI3cFQzbmp4M0lxZnJKZDRmTWc1?=
+ =?utf-8?B?ZVhaYlRQdG9aS0hRRlU2M0d1NUFrMHVOdTVyeXZXMnFnL20wcXd3d2xIcXA3?=
+ =?utf-8?B?K1hKaGRQL1JESkJVbUd2MEFQaSsvN214YytrZ0xjcXhwRlpKVm5uV2VLU3Vm?=
+ =?utf-8?B?L2NjZXQxajJSb3I4S2tqbC80QjJ6MkZENU9xa2RyTDY2LzR3WXRNalNjY3VQ?=
+ =?utf-8?B?WlliMzRjaWJSMVcxWTZKS0IvMnVyVXVIM2dWcGRBR3BISktSS0Y1Y244RzZF?=
+ =?utf-8?B?Y3c5em0xMHUvNDQvZ1o0S0EyNVUrekgyckM2VHBVeWU2NEZiYXJQY1UrWjFR?=
+ =?utf-8?B?ck5qbGVVVThpUXdRanNtT3lJZUl6N0JXck1GaThVVm1CRkJibDBWdXhrVHIv?=
+ =?utf-8?B?Q2FHZTQvQWZmZVBOL3Y3STV3dlkwaEx6em5BRFY0NHBwcTFESVBNYkhCbmIz?=
+ =?utf-8?B?NG9CVWRBVnFSOC90SHVzZnkzV2hwQzFnakNGQnpnNzZxY3kzNjR1S1ZTWG1R?=
+ =?utf-8?B?NStmYzcwTmUrOTR0RlNHQ0lwNytFcXFwUmY2T2xuZlRkd0NtcjhUdUcydzVa?=
+ =?utf-8?B?UjlNVEhMY0MyQzNxV2FqMWwwTDlOVXRJaDEvTmo4cFpkZStJZDJVK2hMbXZQ?=
+ =?utf-8?B?dnNLRE9nem9aTUVpUnFNbi80MXRvOWVyKzkvRGZhYm9nbEVLaVB4MWFlMStG?=
+ =?utf-8?Q?nJ/v5lQYIyN0TKSsr/QClL+Wu?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c2b047a1-9380-4531-6cc3-08dbcaa7cf60
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6583.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Oct 2023 22:17:09.1856
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Xxiod5hcEYVRPA/r92GrlEjlpqKBglHu6taWYOYAkdDs9huIsxXf6Vr1K2KIx/cUc2XUSmbi0zVfGu/IYKwrlg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8886
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+	RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-strncpy() is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous string
-interfaces.
+On 10/11/2023 2:53 PM, 'Justin Stitt' via Pensando Drivers wrote:
+> 
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
+> 
+> NUL-padding is not needed due to `ident` being memset'd to 0 just before
+> the copy.
+> 
+> Considering the above, a suitable replacement is `strscpy` [2] due to
+> the fact that it guarantees NUL-termination on the destination buffer
+> without unnecessarily NUL-padding.
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-NUL-padding is not needed due to `ident` being memset'd to 0 just before
-the copy.
+Thanks, I suspected this was coming soon :-)
 
-Considering the above, a suitable replacement is `strscpy` [2] due to
-the fact that it guarantees NUL-termination on the destination buffer
-without unnecessarily NUL-padding.
+Reviewed-by: Shannon Nelson <shannon.nelson@amd.com>
 
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Note: build-tested only.
 
-Found with: $ rg "strncpy\("
----
- drivers/net/ethernet/pensando/ionic/ionic_main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/pensando/ionic/ionic_main.c b/drivers/net/ethernet/pensando/ionic/ionic_main.c
-index 1dc79cecc5cc..835577392178 100644
---- a/drivers/net/ethernet/pensando/ionic/ionic_main.c
-+++ b/drivers/net/ethernet/pensando/ionic/ionic_main.c
-@@ -554,8 +554,8 @@ int ionic_identify(struct ionic *ionic)
- 	memset(ident, 0, sizeof(*ident));
- 
- 	ident->drv.os_type = cpu_to_le32(IONIC_OS_TYPE_LINUX);
--	strncpy(ident->drv.driver_ver_str, UTS_RELEASE,
--		sizeof(ident->drv.driver_ver_str) - 1);
-+	strscpy(ident->drv.driver_ver_str, UTS_RELEASE,
-+		sizeof(ident->drv.driver_ver_str));
- 
- 	mutex_lock(&ionic->dev_cmd_lock);
- 
-
----
-base-commit: cbf3a2cb156a2c911d8f38d8247814b4c07f49a2
-change-id: 20231011-strncpy-drivers-net-ethernet-pensando-ionic-ionic_main-c-709f8f1ea312
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
-
+> ---
+> Note: build-tested only.
+> 
+> Found with: $ rg "strncpy\("
+> ---
+>   drivers/net/ethernet/pensando/ionic/ionic_main.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/pensando/ionic/ionic_main.c b/drivers/net/ethernet/pensando/ionic/ionic_main.c
+> index 1dc79cecc5cc..835577392178 100644
+> --- a/drivers/net/ethernet/pensando/ionic/ionic_main.c
+> +++ b/drivers/net/ethernet/pensando/ionic/ionic_main.c
+> @@ -554,8 +554,8 @@ int ionic_identify(struct ionic *ionic)
+>          memset(ident, 0, sizeof(*ident));
+> 
+>          ident->drv.os_type = cpu_to_le32(IONIC_OS_TYPE_LINUX);
+> -       strncpy(ident->drv.driver_ver_str, UTS_RELEASE,
+> -               sizeof(ident->drv.driver_ver_str) - 1);
+> +       strscpy(ident->drv.driver_ver_str, UTS_RELEASE,
+> +               sizeof(ident->drv.driver_ver_str));
+> 
+>          mutex_lock(&ionic->dev_cmd_lock);
+> 
+> 
+> ---
+> base-commit: cbf3a2cb156a2c911d8f38d8247814b4c07f49a2
+> change-id: 20231011-strncpy-drivers-net-ethernet-pensando-ionic-ionic_main-c-709f8f1ea312
+> 
+> Best regards,
+> --
+> Justin Stitt <justinstitt@google.com>
+> 
