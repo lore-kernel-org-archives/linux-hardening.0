@@ -1,82 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD17914A80;
-	Wed, 11 Oct 2023 14:50:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FEA72031D
+	for <linux-hardening@vger.kernel.org>; Wed, 11 Oct 2023 15:36:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JN08u+FL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EFA2C433C8;
-	Wed, 11 Oct 2023 14:50:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697035849;
-	bh=D9pqkQn2GvEbB4YXfJmtr5GvHtbWhi/1v/+iPM/ovgQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=JN08u+FLFxwWnU8bT3fDcRyo3s1NXX6saj27sklrkikmLG2f9Z784B2ct04hXVHq3
-	 iLlihkOfMnRavREw4HenZDpIl30bVTkzL4V9RmPhUK6N9tM4yNZUe50c8at8P9kdVu
-	 m4xE5wYBIfCt2hgmUoIxQuj4vxQa3ctkbMmBBzOHCTZiYFBvML16bEW9JuWthpyIpi
-	 tycQCXcEfujepVAFc4nCYxT+hhJgwFmxnBAd1PGkw1hFLG8NYsQ/r7scjYEfPLUDXe
-	 97gsHU7XETucf29kiLW4h8t+LBhaWYa7vRBIyJMQVnWMbYGaUIfX4M8C1qJDqDPVSR
-	 6l+B0Yhrj3arg==
-From: Mark Brown <broonie@kernel.org>
-To: Support Opensource <support.opensource@diasemi.com>, 
- Kees Cook <keescook@chromium.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, 
- Nathan Chancellor <nathan@kernel.org>, 
- Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>, 
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
- linux-hardening@vger.kernel.org
-In-Reply-To: <20230922175207.work.576-kees@kernel.org>
-References: <20230922175207.work.576-kees@kernel.org>
-Subject: Re: [PATCH] regulator: da9063: Annotate struct da9063_regulators
- with __counted_by
-Message-Id: <169703584111.51285.14211447144066955668.b4-ty@kernel.org>
-Date: Wed, 11 Oct 2023 15:50:41 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GJJ3GkeJ"
+Received: from mail-qv1-xf2b.google.com (mail-qv1-xf2b.google.com [IPv6:2607:f8b0:4864:20::f2b])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A0F792;
+	Wed, 11 Oct 2023 08:36:48 -0700 (PDT)
+Received: by mail-qv1-xf2b.google.com with SMTP id 6a1803df08f44-66afd39c8edso31199586d6.2;
+        Wed, 11 Oct 2023 08:36:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1697038607; x=1697643407; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3d70RV8D3q4Lw0yJT/tGgP8JEXxsa+Fuj9xKAysUS94=;
+        b=GJJ3GkeJIbVcj9S9gKeyxcUcrTIrt4F1xmKIMCuR6iFFiZCuSkCVy/+0YXx6q8Wn5C
+         ikMekwNuV3AKCUx1pvpedym6dq6WxYDDYcsAcspRLvTFu/T4rf4JogLiN4PAPiAvGXJH
+         oCf1lV1mdCIII3qKo6DmBlowhkZqoSz7JOMfht9hsLPD+aw4NvjM8ELB61wZrMXb9NeE
+         6tGobG8pCHld4xtK4mAzJPM6+VehgGLQCffcSUOuw6cwj569M3hW3kutJfW1hC80vylD
+         3ciM7YKfqSLRFeydfvaSIuuLscCOdvwgE8g8RSEdpTgcZH9K/BxsaPxq9qG1URYGG5CO
+         juFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697038607; x=1697643407;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3d70RV8D3q4Lw0yJT/tGgP8JEXxsa+Fuj9xKAysUS94=;
+        b=jSAF6r36VpUHXY4SUwTATGRw5ViHh1UGILlEQFlb3i5sqt3v4s1ZnR9wczo5UAY82w
+         JC3Ztv90dJgwTFDsmn9e9o6lTPMTQ6r9qgvlD9K/BJpu1IN8mTfpYnWSDoQQIfoCp4P5
+         iFMRCUxEuIR5Dggh5zpJRzP/zIaMa1DbvLzgdochGXy4iHRuYXuuNnL7oSXV4ZXVAc3q
+         fVqw1EB8wgNmkAqj6uBf913Lfumz036cnxihX8Y3oKJNbMDAiQSsaf8iORRELvwullwC
+         LcrnuXayK2/Tsbs1XdUqokpFcvrp2dyzf1S1PAh8pgb6+q/z2Kd470B/gX9lwJnE/qFR
+         /VfQ==
+X-Gm-Message-State: AOJu0Yx0VDA7rnCLLSGjDQfSfoU5x5RVrMyGKBX/mR4moxI8pWpHgULD
+	9uM/Sg3qMtULDmSllxcpQPSMvSyY/KHl25iteFrtQVWzTYGqvA==
+X-Google-Smtp-Source: AGHT+IFU1SyCP9HwZEqNMLh2P+CII7WW5qTkTr5uJLytAwl8ChOtAUnXs0neArcgm7RUqu0fppbZXGkflHXFbWQDwrI=
+X-Received: by 2002:a0c:8cca:0:b0:65b:1802:4f3c with SMTP id
+ q10-20020a0c8cca000000b0065b18024f3cmr18358578qvb.21.1697038607513; Wed, 11
+ Oct 2023 08:36:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13-dev-0438c
+References: <20231011093412.7994-1-kkartik@nvidia.com> <20231011093412.7994-2-kkartik@nvidia.com>
+In-Reply-To: <20231011093412.7994-2-kkartik@nvidia.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 11 Oct 2023 18:36:11 +0300
+Message-ID: <CAHp75VdBh0k_XU3GG99EvgLOztOFWn87QXknpokcDy=29yu=Aw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/8] mm/util: Introduce kmemdup_array() to duplicate an array
+To: Kartik <kkartik@nvidia.com>
+Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, keescook@chromium.org, 
+	andy@kernel.org, akpm@linux-foundation.org, arnd@arndb.de, 
+	petlozup@nvidia.com, pshete@nvidia.com, ulf.hansson@linaro.org, 
+	frank.li@vivo.com, robh@kernel.org, stefank@nvidia.com, 
+	pdeschrijver@nvidia.com, linux-tegra@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-On Fri, 22 Sep 2023 10:52:07 -0700, Kees Cook wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
-> 
-> As found with Coccinelle[1], add __counted_by for struct da9063_regulators.
-> 
-> [...]
+On Wed, Oct 11, 2023 at 2:17=E2=80=AFPM Kartik <kkartik@nvidia.com> wrote:
+>
+> Introduce function kmemdup_array(), that will copy `n` number of
+> elements from a given array `src` to `dst`.
+>
+> On success, kmemdup_array() returns 0 and copy the elements from `src`
+> to newly allocated array `dst`, it also stores number of elements
+> copied from `src` array to `dst_count` parameter. On failure, this
+> returns a negative integer value containing the error value.
 
-Applied to
+Hmm... Why is it so complicated?
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+Can it be as simple as
 
-Thanks!
+  return kmemdup(size_mul());
 
-[1/1] regulator: da9063: Annotate struct da9063_regulators with __counted_by
-      commit: 1096f9fa2be18a1340d1299b4c4329af211076e7
+?
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+--
+With Best Regards,
+Andy Shevchenko
