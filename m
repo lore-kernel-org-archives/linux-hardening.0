@@ -1,124 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9C8C20302
-	for <linux-hardening@vger.kernel.org>; Wed, 11 Oct 2023 14:03:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD17914A80;
+	Wed, 11 Oct 2023 14:50:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZkP4DcvH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D101C433C8;
-	Wed, 11 Oct 2023 14:03:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JN08u+FL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EFA2C433C8;
+	Wed, 11 Oct 2023 14:50:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697033027;
-	bh=Zh3bJ54D4zW63Ncr/mu6xJinQ4B8/2BBuvC0nnjCJ+c=;
-	h=Date:From:To:Cc:Subject:From;
-	b=ZkP4DcvHTv+CAU+Bxp7bY8mRMIANtm2V9mIigWhS4C7tKd8ksjtwI42hJdKV47med
-	 Zbh8xz/Qia5Y0t4GtL+bAr4a4l8PKf5ZgCLjus2Zq+ODqvNMgmih9PufW6kUfk51mI
-	 BZ2j/V/EkLskGGRbRjul2+hRAY8mXTUH+y05qVcxCZRllwFjc8O5kvg564yw6Vctkm
-	 ZesOPr/II66swDL/BQ1+W5CawaE4hg0vrD8HdvBIFpSIZaSt82Px8k4kKlJeQRwDR6
-	 Sz+vbYcmtVygTHd5vsfk0MRCm6zl/6eriAYykaLUak4pPitWYW56gTGnVIVmUAQGoo
-	 c3iDm5VQFx7OQ==
-Date: Wed, 11 Oct 2023 08:03:43 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Sumit Semwal <sumit.semwal@linaro.org>,
-	Gustavo Padovan <gustavo@padovan.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Arvind Yadav <Arvind.Yadav@amd.com>
-Cc: linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] dma-buf: Fix NULL pointer dereference in
- dma_fence_enable_sw_signaling()
-Message-ID: <ZSarP0/+hG8/87//@work>
+	s=k20201202; t=1697035849;
+	bh=D9pqkQn2GvEbB4YXfJmtr5GvHtbWhi/1v/+iPM/ovgQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=JN08u+FLFxwWnU8bT3fDcRyo3s1NXX6saj27sklrkikmLG2f9Z784B2ct04hXVHq3
+	 iLlihkOfMnRavREw4HenZDpIl30bVTkzL4V9RmPhUK6N9tM4yNZUe50c8at8P9kdVu
+	 m4xE5wYBIfCt2hgmUoIxQuj4vxQa3ctkbMmBBzOHCTZiYFBvML16bEW9JuWthpyIpi
+	 tycQCXcEfujepVAFc4nCYxT+hhJgwFmxnBAd1PGkw1hFLG8NYsQ/r7scjYEfPLUDXe
+	 97gsHU7XETucf29kiLW4h8t+LBhaWYa7vRBIyJMQVnWMbYGaUIfX4M8C1qJDqDPVSR
+	 6l+B0Yhrj3arg==
+From: Mark Brown <broonie@kernel.org>
+To: Support Opensource <support.opensource@diasemi.com>, 
+ Kees Cook <keescook@chromium.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, 
+ Nathan Chancellor <nathan@kernel.org>, 
+ Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>, 
+ linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
+ linux-hardening@vger.kernel.org
+In-Reply-To: <20230922175207.work.576-kees@kernel.org>
+References: <20230922175207.work.576-kees@kernel.org>
+Subject: Re: [PATCH] regulator: da9063: Annotate struct da9063_regulators
+ with __counted_by
+Message-Id: <169703584111.51285.14211447144066955668.b4-ty@kernel.org>
+Date: Wed, 11 Oct 2023 15:50:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13-dev-0438c
 
-Currently, a NULL pointer dereference will happen in function
-`dma_fence_enable_sw_signaling()` (at line 615), in case `chain`
-is not allocated in `mock_chain()` and this function returns
-`NULL` (at line 86). See below:
+On Fri, 22 Sep 2023 10:52:07 -0700, Kees Cook wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
+> 
+> As found with Coccinelle[1], add __counted_by for struct da9063_regulators.
+> 
+> [...]
 
-drivers/dma-buf/st-dma-fence-chain.c:
- 86         chain = mock_chain(NULL, f, 1);
- 87         if (!chain)
- 88                 err = -ENOMEM;
- 89
- 90         dma_fence_enable_sw_signaling(chain);
+Applied to
 
-drivers/dma-buf/dma-fence.c:
- 611 void dma_fence_enable_sw_signaling(struct dma_fence *fence)
- 612 {
- 613         unsigned long flags;
- 614
- 615         spin_lock_irqsave(fence->lock, flags);
-			       ^^^^^^^^^^^
-				    |
-			  NULL pointer reference
-			  if fence == NULL
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
- 616         __dma_fence_enable_signaling(fence);
- 617         spin_unlock_irqrestore(fence->lock, flags);
- 618 }
+Thanks!
 
-Fix this by adding a NULL check before dereferencing `fence` in
-`dma_fence_enable_sw_signaling()`. This will prevent any other NULL
-pointer dereference when the `fence` passed as an argument is `NULL`.
+[1/1] regulator: da9063: Annotate struct da9063_regulators with __counted_by
+      commit: 1096f9fa2be18a1340d1299b4c4329af211076e7
 
-Addresses-Coverity: ("Dereference after null check")
-Fixes: d62c43a953ce ("dma-buf: Enable signaling on fence for selftests")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/dma-buf/dma-fence.c | 9 ++++++++-
- include/linux/dma-fence.h   | 2 +-
- 2 files changed, 9 insertions(+), 2 deletions(-)
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-diff --git a/drivers/dma-buf/dma-fence.c b/drivers/dma-buf/dma-fence.c
-index 8aa8f8cb7071..4d2f13560d0f 100644
---- a/drivers/dma-buf/dma-fence.c
-+++ b/drivers/dma-buf/dma-fence.c
-@@ -607,14 +607,21 @@ static bool __dma_fence_enable_signaling(struct dma_fence *fence)
-  * This will request for sw signaling to be enabled, to make the fence
-  * complete as soon as possible. This calls &dma_fence_ops.enable_signaling
-  * internally.
-+ *
-+ * Returns 0 on success and a negative error value when @fence is NULL.
-  */
--void dma_fence_enable_sw_signaling(struct dma_fence *fence)
-+int dma_fence_enable_sw_signaling(struct dma_fence *fence)
- {
- 	unsigned long flags;
- 
-+	if (!fence)
-+		return -EINVAL;
-+
- 	spin_lock_irqsave(fence->lock, flags);
- 	__dma_fence_enable_signaling(fence);
- 	spin_unlock_irqrestore(fence->lock, flags);
-+
-+	return 0;
- }
- EXPORT_SYMBOL(dma_fence_enable_sw_signaling);
- 
-diff --git a/include/linux/dma-fence.h b/include/linux/dma-fence.h
-index ebe78bd3d121..1e4025e925e6 100644
---- a/include/linux/dma-fence.h
-+++ b/include/linux/dma-fence.h
-@@ -399,7 +399,7 @@ int dma_fence_add_callback(struct dma_fence *fence,
- 			   dma_fence_func_t func);
- bool dma_fence_remove_callback(struct dma_fence *fence,
- 			       struct dma_fence_cb *cb);
--void dma_fence_enable_sw_signaling(struct dma_fence *fence);
-+int dma_fence_enable_sw_signaling(struct dma_fence *fence);
- 
- /**
-  * dma_fence_is_signaled_locked - Return an indication if the fence
--- 
-2.34.1
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
