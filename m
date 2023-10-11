@@ -1,71 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C33507494;
-	Wed, 11 Oct 2023 03:10:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DS7Xn5EX"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 590DEC433C7;
-	Wed, 11 Oct 2023 03:10:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696993826;
-	bh=qYTdkncRzmHOiS9jUcZB43675WSOE6NXjgbzHK4ZwW0=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=DS7Xn5EX8HbO7muP+OSDVFik1rg0yLxtdfDInizQAcFe6x0Q47p9U8D0V6+6U84ts
-	 1XOO/jCa9xRtycBb4Gjf2kSUeV+woGctGTHf7AdLBIvfjsU3NgIHb7rTtwmlwbf2Z0
-	 dvybZTwTjszQoU2fD5e6mrRvEhr5tUE1w+lE/0EQ0ZhgX5AJcrHazRuFbJqCi8qynH
-	 PaIgrJoqrFKWtsjxaFlv4OElQ9kjJPfo2CE4E/RR/l5ewbLUbg/Em/Hkm2Jxt0RU1k
-	 TBRNNH7w8JClXVkgFuZ5m5/a+men58tW4C4X35vYnlZdEZS52YSp1Z/EpBA5/7r2L4
-	 nwe6pRd3gd8dA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 40FD8C595C5;
-	Wed, 11 Oct 2023 03:10:26 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB6D6AAB
+	for <linux-hardening@vger.kernel.org>; Wed, 11 Oct 2023 06:42:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E17DA4;
+	Tue, 10 Oct 2023 23:42:54 -0700 (PDT)
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 39B6gOcJ53664973, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/2.92/5.92) with ESMTPS id 39B6gOcJ53664973
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 11 Oct 2023 14:42:24 +0800
+Received: from RTEXMBS03.realtek.com.tw (172.21.6.96) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.17; Wed, 11 Oct 2023 14:42:24 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXMBS03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.7; Wed, 11 Oct 2023 14:42:24 +0800
+Received: from RTEXMBS04.realtek.com.tw ([fe80::40c2:6c24:2df4:e6c7]) by
+ RTEXMBS04.realtek.com.tw ([fe80::40c2:6c24:2df4:e6c7%5]) with mapi id
+ 15.01.2375.007; Wed, 11 Oct 2023 14:42:24 +0800
+From: Ping-Ke Shih <pkshih@realtek.com>
+To: Kees Cook <keescook@chromium.org>
+CC: "kvalo@kernel.org" <kvalo@kernel.org>,
+        "llvm@lists.linux.dev"
+	<llvm@lists.linux.dev>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>,
+        "linux-wireless@vger.kernel.org"
+	<linux-wireless@vger.kernel.org>,
+        "linux-hardening@vger.kernel.org"
+	<linux-hardening@vger.kernel.org>,
+        "trix@redhat.com" <trix@redhat.com>,
+        "nathan@kernel.org" <nathan@kernel.org>,
+        "ndesaulniers@google.com"
+	<ndesaulniers@google.com>,
+        "gustavoars@kernel.org" <gustavoars@kernel.org>
+Subject: RE: [PATCH] wifi: rtw89: coex: Annotate struct rtw89_btc_btf_set_slot_table with __counted_by
+Thread-Topic: [PATCH] wifi: rtw89: coex: Annotate struct
+ rtw89_btc_btf_set_slot_table with __counted_by
+Thread-Index: AQHZ+JIdINNFwhWCA0q/Xu1rquYi7LA9Aa0AgAQqFYCAAv5lMA==
+Date: Wed, 11 Oct 2023 06:42:23 +0000
+Message-ID: <a47f01def02c4ccdb0d4ca3967ad7584@realtek.com>
+References: <20231006201715.work.239-kees@kernel.org>
+ <4716f3c7bf3d34ea25229edd5250f5f0cff639d8.camel@realtek.com>
+ <202310090953.B7CE5CF4B@keescook>
+In-Reply-To: <202310090953.B7CE5CF4B@keescook>
+Accept-Language: en-US, zh-TW
+Content-Language: zh-TW
+x-originating-ip: [172.21.69.25]
+x-kse-serverinfo: RTEXMBS03.realtek.com.tw, 9
+x-kse-antispam-interceptor-info: fallback
+x-kse-antivirus-interceptor-info: fallback
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] net: dsa: realtek: replace deprecated strncpy with
- ethtool_sprintf
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <169699382626.3301.16765588346169331676.git-patchwork-notify@kernel.org>
-Date: Wed, 11 Oct 2023 03:10:26 +0000
-References: <20231009-strncpy-drivers-net-dsa-realtek-rtl8366-core-c-v1-1-74e1b5190778@google.com>
-In-Reply-To: <20231009-strncpy-drivers-net-dsa-realtek-rtl8366-core-c-v1-1-74e1b5190778@google.com>
-To: Justin Stitt <justinstitt@google.com>
-Cc: linus.walleij@linaro.org, alsi@bang-olufsen.dk, andrew@lunn.ch,
- f.fainelli@gmail.com, olteanv@gmail.com, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-Hello:
+Hi Kees,
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+> -----Original Message-----
+> From: Kees Cook <keescook@chromium.org>
+> Sent: Tuesday, October 10, 2023 12:56 AM
+> To: Ping-Ke Shih <pkshih@realtek.com>
+> Cc: kvalo@kernel.org; llvm@lists.linux.dev; linux-kernel@vger.kernel.org;=
+ linux-wireless@vger.kernel.org;
+> linux-hardening@vger.kernel.org; trix@redhat.com; nathan@kernel.org; ndes=
+aulniers@google.com;
+> gustavoars@kernel.org
+> Subject: Re: [PATCH] wifi: rtw89: coex: Annotate struct rtw89_btc_btf_set=
+_slot_table with __counted_by
+>=20
+> On Sat, Oct 07, 2023 at 01:20:43AM +0000, Ping-Ke Shih wrote:
+> > On Fri, 2023-10-06 at 13:17 -0700, Kees Cook wrote:
+> >
+> > So, NACK this patch. I will prepare one or two patches for them next we=
+ek.
+>=20
+> Ah-ha; thank you!
 
-On Mon, 09 Oct 2023 22:47:37 +0000 you wrote:
-> `strncpy` is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
-> 
-> ethtool_sprintf() is designed specifically for get_strings() usage.
-> Let's replace strncpy in favor of this more robust and easier to
-> understand interface.
-> 
-> [...]
+I have sent two patches [1]. Please help to review and Cc people if needed.=
+=20
 
-Here is the summary with links:
-  - net: dsa: realtek: replace deprecated strncpy with ethtool_sprintf
-    https://git.kernel.org/netdev/net-next/c/b0e4a14f5ba1
+[1] https://lore.kernel.org/linux-wireless/20231011063725.25276-1-pkshih@re=
+altek.com/T/#t
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
