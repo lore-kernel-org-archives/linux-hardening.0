@@ -1,99 +1,259 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F20CA77
-	for <linux-hardening@vger.kernel.org>; Thu, 12 Oct 2023 06:35:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31DACDDA7
+	for <linux-hardening@vger.kernel.org>; Thu, 12 Oct 2023 06:49:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WBXSd3EK"
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDE7CBA
-	for <linux-hardening@vger.kernel.org>; Wed, 11 Oct 2023 23:35:22 -0700 (PDT)
-Received: by mail-wr1-x431.google.com with SMTP id ffacd0b85a97d-323168869daso594020f8f.2
-        for <linux-hardening@vger.kernel.org>; Wed, 11 Oct 2023 23:35:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1697092521; x=1697697321; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IQJ/cDndsjVH2agIvBOxH1c6r9a6N1viOd7ZKtxc98s=;
-        b=WBXSd3EKP3sUGRyIHh784yWZiUdoeJvSyYSpEYTlvzzHuBDdWC0DZlZyUzP8+fOCDl
-         roPdLFAVKhb7c8M7hNZ9SL64twoP+M/BjbNVSWyrhJHualoM1g4Adk5LVb/OJX808zFj
-         13/x7C5V48FauTB2TUx1xtoj+FjRQGs8Y9A+WWlnABzMUMaEexyxhuJAJqUUsZFtfgfJ
-         S5sMn5XmdcT9h5KGp3NaDeHMYvjLy3es1gqOtrRsMd+Ol1WEhC+GeGZ7rye978aLK+Bn
-         Wh2BSg453a2Ce0ImJqGMIsJOdzcKMNZnEnEoyfq+A3a8HKUqwqdVmqFpYywpMycqIZYS
-         WQTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697092521; x=1697697321;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IQJ/cDndsjVH2agIvBOxH1c6r9a6N1viOd7ZKtxc98s=;
-        b=LWaNIbB8MlbI79EttM6uySiGGHeiqPQEmwhtUggrtzVxT6RGPHt7AqxsZSWLGTwC3Q
-         1jEm1xsq2LCAN2MGLwRIt0CKJ8kE8NZufXxYlc/c1wvmhOJUOK3Isgg1vvnoBVGxvh/j
-         XPP+M3TaTNJkCrYLdEGkCOUZP52qLwZUA9wQX4GbzMBVdwinI1U9Knvn+phOpESAvsuB
-         eAPCdOFMPsxYyFBNe5xhpwm8JRM2nvFaLg9ZuHo+TFbtqLJ77mcA66ZgoIXmeLHvQ6Z1
-         4lCi6h1r8z3t5nS5fEJSU/dxnzgC9MBImvcvug4bY4B00rylyt99JimBlOSi2or7Uh89
-         qHDw==
-X-Gm-Message-State: AOJu0Yz9sLhpCn2KY7k81fjunK7NxUzLLJfLagVatF096cjLk8mHHbU2
-	jPPbGO4W7Y/a8fOogUlncQcP/Q==
-X-Google-Smtp-Source: AGHT+IGyIk4DWPD2t+N+AVlVanqjBQjctxVfCWWxlM2wMWm7zGXjiSQ9b0DLtWesEsgOMQL+O1Pglg==
-X-Received: by 2002:adf:e892:0:b0:31f:a503:c05c with SMTP id d18-20020adfe892000000b0031fa503c05cmr21106870wrm.38.1697092521391;
-        Wed, 11 Oct 2023 23:35:21 -0700 (PDT)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id w16-20020adf8bd0000000b0032d81837433sm4650965wra.30.2023.10.11.23.35.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Oct 2023 23:35:21 -0700 (PDT)
-Date: Thu, 12 Oct 2023 09:35:18 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Vasant Hegde <vasant.hegde@amd.com>
-Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>, iommu@lists.linux.dev,
-	Joerg Roedel <jroedel@suse.de>,
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-	Kees Cook <keescook@chromium.org>,
-	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hardening: x86: drop reference to removed config
- AMD_IOMMU_V2
-Message-ID: <b9f08b19-80e9-4908-89f1-8712bb3b59e8@kadam.mountain>
-References: <20231012045040.22088-1-lukas.bulwahn@gmail.com>
- <7533e359-2024-b69a-2bcf-1906c1a8dbca@amd.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="RtRNy4A2"
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2044.outbound.protection.outlook.com [40.107.220.44])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 780C490;
+	Wed, 11 Oct 2023 23:49:02 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GcRhC4D1g3VY55Ij2nI6a1OPENLt2wKtjjDu16WySuohqNBkx432ww8wUVJ01kSltH2Ww/cXZyFpqEme/2bLfQfVd2UH9rGPawS0ouPtjAT7SoF9Njg3he2JbpY1EwkgmxKVIPrCFy4OW84lD2TrCNb0zd7pbPCvuro5RIqu/eS7V3VHjpNWl5CDjJs5f7fiE8njEAqj57q2kCBgN5l3+v0OfMrYPAH4JZMJnZ0EdvH3PGnASa7xuAWvAm07gxctOi76okyZvviIJCWanrIPjIrDJ2rb/9Wsv22GoeMcdXMQADZ9RozJ/80//4VCLP4CKe0KkOSTlAhF3JP04ttb1g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=b0rcKqqRnLr3rgbHxWwdaXYBjoSWRTeCAVTBFXarmrM=;
+ b=mp6sDFOorb9RVpUtdK0AGlntv5sSJ5C2swOHVgD9GHq6cSDtzo2MzDu+bEekdVsOHYCkcDaAr4cnvZSL7y88WRSl7t0YaHGTB2uGhJgZ/s/+wEFMOggB0EYKOm5/dTFDHVLLFZwGQxiBdNX9MMuk/NlKrMf1WvsZ9L7hRw7WQ1oPZp2bhC1a+yTcu/Zg5/Gv3I0cry3vsmVIvX00IgBFZ0i5GQWAwyL013gNGy5OxhrXH42iv7wIGVG0hFd99kX8SrdkoqOhHY6EhZkKG59o4gKSSGea3Ro+5foLeHIwIU5NpHU5sL4N+H9SZfyW82SIn80z0YsO1zBR4H/Dp3A0Aw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=b0rcKqqRnLr3rgbHxWwdaXYBjoSWRTeCAVTBFXarmrM=;
+ b=RtRNy4A2+OW7HoFbxOsXtNMhY2p5eTHSQJAnN7QPieB3Q65MiU3GohCQMwSRk5uNznnfSOQGilZPRyY2A+Df8AXe82eqkkbnCzqGIr6BULjxOxnOqq22O+AZXoG++6SrpWJ0hmp8eDZFUuhUOUFS0C+KMnsob9gxSiRoZb8Bvcw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BN8PR12MB3587.namprd12.prod.outlook.com (2603:10b6:408:43::13)
+ by CY8PR12MB8216.namprd12.prod.outlook.com (2603:10b6:930:78::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6863.44; Thu, 12 Oct
+ 2023 06:48:59 +0000
+Received: from BN8PR12MB3587.namprd12.prod.outlook.com
+ ([fe80::a7fa:4411:67a3:131d]) by BN8PR12MB3587.namprd12.prod.outlook.com
+ ([fe80::a7fa:4411:67a3:131d%4]) with mapi id 15.20.6863.043; Thu, 12 Oct 2023
+ 06:48:59 +0000
+Message-ID: <067ee7e8-6dc3-4e84-84fe-bc00e1193848@amd.com>
+Date: Thu, 12 Oct 2023 08:48:54 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] dma-buf: Fix NULL pointer dereference in
+ dma_fence_enable_sw_signaling()
+Content-Language: en-US
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+ Kees Cook <keescook@chromium.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>,
+ Gustavo Padovan <gustavo@padovan.org>, Arvind Yadav <Arvind.Yadav@amd.com>,
+ linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <ZSarP0/+hG8/87//@work> <202310110903.FE533CBCD@keescook>
+ <0d63e8aa-5836-40e7-8f8a-2be10fbaac4a@embeddedor.com>
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+In-Reply-To: <0d63e8aa-5836-40e7-8f8a-2be10fbaac4a@embeddedor.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: FR2P281CA0064.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:93::12) To BN8PR12MB3587.namprd12.prod.outlook.com
+ (2603:10b6:408:43::13)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7533e359-2024-b69a-2bcf-1906c1a8dbca@amd.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN8PR12MB3587:EE_|CY8PR12MB8216:EE_
+X-MS-Office365-Filtering-Correlation-Id: fd69f58b-3cc5-43a7-09fa-08dbcaef4ff9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	Yz0x1Z0if7U3mtcZIZQyxZtyZUcOgRVjCBzGS9fLCxBw7P4O2gEI9wqKac0P9TEOXr7Yj//D4k64YMhq1oA6muds55a+4AhMCvy3bnEwNkh1FgLx1io+Z6n9aqNU8E+W5fNEP9rGPOH/rYyFVzsbEPGVWCp0zULTJJOGiZ8ahYMLeP6CwwS6xXfebgGoPw3IxICxUV1kB7Sz2OqOoD9dnjRgpTkajM2H8Wi29EGMCXTKhsvq20f6iw9yvXxUwdpp9AwbjBQ38nsShXp69aVI1axFEJBlo11Y1CXLboN3wA7lRW1sKC8pJwrfqigymFEt+vjnzXXBqu4LvzXH5kvq1PcBZqKpp/vTLoDNTmVjsN/1pc+EmycZqjw1MS29XyLyQEpsKnTBHwzhAr5NS1v7MFf943D1g4NNnYziENmaTIwE7rXaWi1TrsTpr6NgTw3ZHo3O2AQNT7RgYcE0GdWiD7GUf02uWs1Ezq1Oo/IW1sbQ3TqigNvcjESaSNs1d1PE83FP0lKGp4vbvix3Q7B/xdD6KaQQ08BIQkxQy0XQ/7n/zYVk3obiPo8Asak2opSV5QgOM+YzvNJyuIH1vZWKZzoS8aH++qM5e6EwLAthFIUwwJ1rIoDbBdVjU7IJ7y8uo9zMvyseW6adccmaTSYZZA==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3587.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(376002)(346002)(396003)(366004)(136003)(230922051799003)(1800799009)(64100799003)(451199024)(186009)(6486002)(478600001)(38100700002)(6666004)(8936002)(66556008)(66476007)(54906003)(110136005)(316002)(7416002)(66946007)(2906002)(31696002)(41300700001)(8676002)(36756003)(5660300002)(4326008)(86362001)(26005)(6512007)(2616005)(83380400001)(31686004)(6506007)(53546011)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UnNseFdSMVh4SU9vdng3cVB0eHcxdlVNREpySno2elEvVUloT2Frczk0bU1y?=
+ =?utf-8?B?QVNHbUNKYUFCTGQyKzFDMEM4VkNGeEorOW1QK0ZRN0ZsRmtNRUlqd0UybFVY?=
+ =?utf-8?B?aFdBV200bEJOZjB3bWg1NEV1eDlwTkwwcGM3QXQ1Mm0xOC9qZWQvTnBBMTgr?=
+ =?utf-8?B?TjVjR0lZT1hqSGJDcGhGOVVNRkY4bVZpQTc5YXVydFBpSVpTV1Z6c3dpaEtK?=
+ =?utf-8?B?Zit0eEkvdW5rMXJNYmo2aGdVajE5V3ptaUhBaFRXc1NXMk1JaGN0YVgrZGE5?=
+ =?utf-8?B?b2h1SW9ncFp2dTQ3WnlNdkZObTlaSGJ6VEpYOVJyRFRhcVY4cjNYblpCMksx?=
+ =?utf-8?B?NWliQzBpTjVrMkpxLzIzdy9Yd09FamJxREovK1liRWxYa2dmSGptR2RWRVZl?=
+ =?utf-8?B?Z3EzZWdMZFgrdG1ReFhFUDBOOHZycDhLV0RZYVBOSDNWbjF1L3hwVVc4Sk1m?=
+ =?utf-8?B?VFh6LzY4RmNyaTg0aTBNWVh0aVplU29yNkU5QzhrMWJnRnVWWnc0bW5OWEtW?=
+ =?utf-8?B?MWhPdTU2VGFtMHZLRXNqZGc2TUpEZTZ3TUozRTlmZEdGcXpKUlBFMy8vZm1x?=
+ =?utf-8?B?QThwdW1lT3lVZS95L0VhdkdrMFJYNDRPU1QzaFlnbXF1TkhqZk1SNXNtckxL?=
+ =?utf-8?B?WGNCelNtUkczQ3dvZmtmSHVidEo5S1JVczBISldlanFBajZMYm1nMldZM1Ja?=
+ =?utf-8?B?ZlRIbWF2bWpGWnQ5ZWFXU1RyajJGQWdDVHV0YkNPeVVFVFVndElaaHowaXhy?=
+ =?utf-8?B?OS9zN0xDMjFmNlFORlNTMWFCbDhWU0RoZEsxWW4yT3VSK2JmbENNKzJwWnRi?=
+ =?utf-8?B?Vmg0NXJRTld1a0ZzNk1nNml5Q1lKdU5mNlNsVVdyOWYrdzE1WkZaUkJlaEI5?=
+ =?utf-8?B?ZkxmaWIzWWR5K0hsNDZ5Q1VLa2pDZk5Nc01LdDhmaWdYc2JXNndPRldGSTZK?=
+ =?utf-8?B?a1dXSzR5cG1ablRseDhxN0d2TWQ4eGs5N1ltR0xqU1NKSkRicUxmNG9JQ3I1?=
+ =?utf-8?B?RWpsa0NJWHhESUJKaWx4eUo1bVRtQ0s4MFpIWnd6dEZXUldpQm5mSGE1ZVc0?=
+ =?utf-8?B?MGd6eHRLWkRFMGVjZzI5bCtYdjVRVVJ1NWZPWGN3ZjNyVnZONFZMdXMrREdz?=
+ =?utf-8?B?dkFGb1JsWW8xVTBta1Q1MXQvaHJ1RENzYXVBcHhOaVYyejV3N0h1WThFS1J1?=
+ =?utf-8?B?Y3M1QVNURHFJU2srQzRwUGtxbTZqU3Y0NThMMlk4Y0Y1Vlkxd05PQWQ4am5i?=
+ =?utf-8?B?K21WdkdSK3NVNk12ZXFTL3A4MENuaElJME9YK3U3eEpXQWJTZUQxWUFzL0ZO?=
+ =?utf-8?B?MVNURWZMaGI3QXFyUTg2S2ZkWURXQWhIMys2OE1Ob1dDODMwOTJjaGJ1LzZX?=
+ =?utf-8?B?MEhFRFlsQW1EeDdLRFRTUHE2QnNidWxlZDA4SytkWC9nc0JUMWZ5dko0eXBH?=
+ =?utf-8?B?RlZwU3huM0pxMjhwdWlxaE1TS3lLQUxMd212Skp0dlBhNzBndGw2RXdxM1Zp?=
+ =?utf-8?B?VEJuY0t0SUczejBZMXE3cStNL1FRd0QvWTNsQ2pjUVV5eDQvSmkyZklUMWN6?=
+ =?utf-8?B?dFhZSnk1bkZkRk1VNHdISm9iZS8zZUM5R0VXRitobE9vS0ZJQ3FaNXFXcW1N?=
+ =?utf-8?B?bUVReDd6bHJtS2U3K3N4bkVMaGpjeHhBZlRGYWxCdmhWbnkxZmNNWklZZVZu?=
+ =?utf-8?B?Slo1T092dzJTTk9zYWVBc0pKUHBIRm5hanoxWVlPSTRXdGNzVVl5cUpBaXVK?=
+ =?utf-8?B?VkY3K3p5WVlaU2pCaGFzb2JBTnNpZ0IvZWU5U0d1TCtEL3Nqb1Y5dldxc1ZI?=
+ =?utf-8?B?cldRaGROMjErTTAyejJ0dDJza1E5SlN1QTVhUG9ZS3Frd2UwZXFoQkM3clJx?=
+ =?utf-8?B?ckl2S0RQQUxnb2U5UUxOaVQySFczOXJhemZkWmpHQmgwbTliUkJqWnRyU0d0?=
+ =?utf-8?B?TWdFRXZ1aTVDbmR6akx6Y2lRV3dOQkdVays4SHJYajRUMHN6aWFxTkR5NnJ0?=
+ =?utf-8?B?Vnh2YjB3eVlOU3Z2MkNPTmVOWHRDQlNOcGNQMUNLcFlKa3FaQTVsQnBUaTVX?=
+ =?utf-8?B?c3JMUjJJVWJyR0VQbXNPV2FnMExjazk2WTRMODhWVGFXbVhHVGh3L1psdkdw?=
+ =?utf-8?Q?qLeU=3D?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fd69f58b-3cc5-43a7-09fa-08dbcaef4ff9
+X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3587.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Oct 2023 06:48:59.2053
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: o5H1w3RP/Cu4mytWgZq5HBboMKLluJOe0gPdqSfxkt3GO0U0Chk1OIeJr5SZKxA2
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8216
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+	autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Thu, Oct 12, 2023 at 10:45:03AM +0530, Vasant Hegde wrote:
-> 
-> 
-> On 10/12/2023 10:20 AM, Lukas Bulwahn wrote:
-> > Commit 5a0b11a180a9 ("iommu/amd: Remove iommu_v2 module") removes the
-> > config AMD_IOMMU_V2.
-> > 
-> > Remove the reference to this config in the x86 architecture-specific
-> > hardening config fragment as well.
-> > 
-> > Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> > ---
-> > Joerg, please pick this patch on top of the commit above. Thanks.
-> > 
-> >  arch/x86/configs/hardening.config | 1 -
-> 
-> Thanks for the fix Lukas. But I don't see this file in upstream linux tree. Am I
-> missing something?
-> 
 
-It was added on Aug 24 in linux-next.
 
-regards,
-dan carpenter
+Am 11.10.23 um 18:13 schrieb Gustavo A. R. Silva:
+>
+>
+> On 10/11/23 10:03, Kees Cook wrote:
+>> On Wed, Oct 11, 2023 at 08:03:43AM -0600, Gustavo A. R. Silva wrote:
+>>> Currently, a NULL pointer dereference will happen in function
+>>> `dma_fence_enable_sw_signaling()` (at line 615), in case `chain`
+>>> is not allocated in `mock_chain()` and this function returns
+>>> `NULL` (at line 86). See below:
+>>>
+>>> drivers/dma-buf/st-dma-fence-chain.c:
+>>>   86         chain = mock_chain(NULL, f, 1);
+>>>   87         if (!chain)
+>>>   88                 err = -ENOMEM;
+>>>   89
+>>>   90         dma_fence_enable_sw_signaling(chain);
+>>
+>> Instead of the larger patch, should line 88 here just do a "return
+>> -ENOMEM" instead?
+>
+> Nope. I would have to add a `goto` to skip 
+> `dma_fence_enable_sw_signaling(chain)`.
+>
+> I originally thought of that, but as other _signaling() functions have
+> sanity-checks inside, I decided to go with that solution.
+>
+> This bug has been there since Sep 2022. So, adding a sanity check 
+> inside that
+> function should prevent any other issue of this same kind to enter the 
+> codebase
+> and stay there for years.
+
+I'm trying to remove those sanity checks for years since they are hiding 
+problems instead of getting them fixed.
+
+Calling dma_fence_enable_sw_signaling with a NULL pointer is a coding 
+error and not a recoverable runtime error.
+
+The test case should be fixed instead.
+
+Regards,
+Christian.
+
+>
+> -- 
+> Gustavo
+>
+>>
+>> -Kees
+>>
+>>>
+>>> drivers/dma-buf/dma-fence.c:
+>>>   611 void dma_fence_enable_sw_signaling(struct dma_fence *fence)
+>>>   612 {
+>>>   613         unsigned long flags;
+>>>   614
+>>>   615         spin_lock_irqsave(fence->lock, flags);
+>>>                    ^^^^^^^^^^^
+>>>                     |
+>>>               NULL pointer reference
+>>>               if fence == NULL
+>>>
+>>>   616         __dma_fence_enable_signaling(fence);
+>>>   617         spin_unlock_irqrestore(fence->lock, flags);
+>>>   618 }
+>>>
+>>> Fix this by adding a NULL check before dereferencing `fence` in
+>>> `dma_fence_enable_sw_signaling()`. This will prevent any other NULL
+>>> pointer dereference when the `fence` passed as an argument is `NULL`.
+>>>
+>>> Addresses-Coverity: ("Dereference after null check")
+>>> Fixes: d62c43a953ce ("dma-buf: Enable signaling on fence for 
+>>> selftests")
+>>> Cc: stable@vger.kernel.org
+>>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>>> ---
+>>>   drivers/dma-buf/dma-fence.c | 9 ++++++++-
+>>>   include/linux/dma-fence.h   | 2 +-
+>>>   2 files changed, 9 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/dma-buf/dma-fence.c b/drivers/dma-buf/dma-fence.c
+>>> index 8aa8f8cb7071..4d2f13560d0f 100644
+>>> --- a/drivers/dma-buf/dma-fence.c
+>>> +++ b/drivers/dma-buf/dma-fence.c
+>>> @@ -607,14 +607,21 @@ static bool 
+>>> __dma_fence_enable_signaling(struct dma_fence *fence)
+>>>    * This will request for sw signaling to be enabled, to make the 
+>>> fence
+>>>    * complete as soon as possible. This calls 
+>>> &dma_fence_ops.enable_signaling
+>>>    * internally.
+>>> + *
+>>> + * Returns 0 on success and a negative error value when @fence is 
+>>> NULL.
+>>>    */
+>>> -void dma_fence_enable_sw_signaling(struct dma_fence *fence)
+>>> +int dma_fence_enable_sw_signaling(struct dma_fence *fence)
+>>>   {
+>>>       unsigned long flags;
+>>>   +    if (!fence)
+>>> +        return -EINVAL;
+>>> +
+>>>       spin_lock_irqsave(fence->lock, flags);
+>>>       __dma_fence_enable_signaling(fence);
+>>>       spin_unlock_irqrestore(fence->lock, flags);
+>>> +
+>>> +    return 0;
+>>>   }
+>>>   EXPORT_SYMBOL(dma_fence_enable_sw_signaling);
+>>>   diff --git a/include/linux/dma-fence.h b/include/linux/dma-fence.h
+>>> index ebe78bd3d121..1e4025e925e6 100644
+>>> --- a/include/linux/dma-fence.h
+>>> +++ b/include/linux/dma-fence.h
+>>> @@ -399,7 +399,7 @@ int dma_fence_add_callback(struct dma_fence *fence,
+>>>                  dma_fence_func_t func);
+>>>   bool dma_fence_remove_callback(struct dma_fence *fence,
+>>>                      struct dma_fence_cb *cb);
+>>> -void dma_fence_enable_sw_signaling(struct dma_fence *fence);
+>>> +int dma_fence_enable_sw_signaling(struct dma_fence *fence);
+>>>     /**
+>>>    * dma_fence_is_signaled_locked - Return an indication if the fence
+>>> -- 
+>>> 2.34.1
+>>>
+>>>
+>>
 
