@@ -1,61 +1,63 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31DACDDA7
-	for <linux-hardening@vger.kernel.org>; Thu, 12 Oct 2023 06:49:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A821DDC2
+	for <linux-hardening@vger.kernel.org>; Thu, 12 Oct 2023 06:58:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="RtRNy4A2"
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2044.outbound.protection.outlook.com [40.107.220.44])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 780C490;
-	Wed, 11 Oct 2023 23:49:02 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="h/lL5fhw"
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2086.outbound.protection.outlook.com [40.107.92.86])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50677BA;
+	Wed, 11 Oct 2023 23:58:13 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GcRhC4D1g3VY55Ij2nI6a1OPENLt2wKtjjDu16WySuohqNBkx432ww8wUVJ01kSltH2Ww/cXZyFpqEme/2bLfQfVd2UH9rGPawS0ouPtjAT7SoF9Njg3he2JbpY1EwkgmxKVIPrCFy4OW84lD2TrCNb0zd7pbPCvuro5RIqu/eS7V3VHjpNWl5CDjJs5f7fiE8njEAqj57q2kCBgN5l3+v0OfMrYPAH4JZMJnZ0EdvH3PGnASa7xuAWvAm07gxctOi76okyZvviIJCWanrIPjIrDJ2rb/9Wsv22GoeMcdXMQADZ9RozJ/80//4VCLP4CKe0KkOSTlAhF3JP04ttb1g==
+ b=lZZu2rAcTefcGHhErmaSSxq5Y2HdSrdwPjrajJTonOl6uav+2V+Ke7Zoyj2XWJvWK5ZkBFiXrKkLxQxj9P6dy0skPUUY32Vmvyipjw+X8lcGZ7WXbbKPpt3CA+XKy2U1EwgKQLfMCzvcW4gxzr53vzUZf1QTLzhRJxrBUPeD1XnyVm76vKCRVU8l0mtGUr38yBJB+q+RLIhHmYp/dGULZ+7n33kjoCYpcDWp+NQH+EudayXEQPrfLKvhffkFP7NUZ5Dd7r1DxItAfSimNvRrhlfc+OfuSDgqSd1ka2UgaXo3VI6lb7eM7l5pMmDlmUssPYa2m6gd6O6vs6fsEqiXfw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=b0rcKqqRnLr3rgbHxWwdaXYBjoSWRTeCAVTBFXarmrM=;
- b=mp6sDFOorb9RVpUtdK0AGlntv5sSJ5C2swOHVgD9GHq6cSDtzo2MzDu+bEekdVsOHYCkcDaAr4cnvZSL7y88WRSl7t0YaHGTB2uGhJgZ/s/+wEFMOggB0EYKOm5/dTFDHVLLFZwGQxiBdNX9MMuk/NlKrMf1WvsZ9L7hRw7WQ1oPZp2bhC1a+yTcu/Zg5/Gv3I0cry3vsmVIvX00IgBFZ0i5GQWAwyL013gNGy5OxhrXH42iv7wIGVG0hFd99kX8SrdkoqOhHY6EhZkKG59o4gKSSGea3Ro+5foLeHIwIU5NpHU5sL4N+H9SZfyW82SIn80z0YsO1zBR4H/Dp3A0Aw==
+ bh=L3NV5BW6qTD09tIABeawA/Ym6wDcKBEj6QDJo2oCTrY=;
+ b=e5xXFvF7pu8USVYStzF+ZhtuoDC+Qzo+ejI0KliTdrwbBGUu63cMuliLn4rtdVIQ7ewTuzE8UWSwqRl+8UGelbuH1gFCW+nPI2ukaqNjd+f0tgoIociU9ZdC0KHR3MdBrezvqBAgw3rsynHGMsiv/9RRghB3yCci5AlphXfX8TM4FrEYgV2VOX5SMsKrKXqCdOdoV5l73KBW5uu65fraanGIax9t5h275ydCqc8Qxi9YCJeLI+oyDa72uH/qfw+5nLE+EuQBdEkuKcP5YiL923hNJSg/99XrqKfTtwFXjY9gqEfRWRVXz6c8ZNUf5zJqmtpM/lh72/pQJiOWoHEu6g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=b0rcKqqRnLr3rgbHxWwdaXYBjoSWRTeCAVTBFXarmrM=;
- b=RtRNy4A2+OW7HoFbxOsXtNMhY2p5eTHSQJAnN7QPieB3Q65MiU3GohCQMwSRk5uNznnfSOQGilZPRyY2A+Df8AXe82eqkkbnCzqGIr6BULjxOxnOqq22O+AZXoG++6SrpWJ0hmp8eDZFUuhUOUFS0C+KMnsob9gxSiRoZb8Bvcw=
+ bh=L3NV5BW6qTD09tIABeawA/Ym6wDcKBEj6QDJo2oCTrY=;
+ b=h/lL5fhwyMUNTVIsDUulafiviP22+SSIK8cy0nlqPBPfLc91IyjeQJFq+MX3ZqxaglUL/15wBxOec6rELlZrz/dtmyvW6vPry+Ii+FGrSef8mtxW9Kj99CIJC7QXwsCoVUpU60DXHtojvZ/CuD+mbJ5HaSm+JaD6kF9yilbsaqE=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BN8PR12MB3587.namprd12.prod.outlook.com (2603:10b6:408:43::13)
- by CY8PR12MB8216.namprd12.prod.outlook.com (2603:10b6:930:78::20) with
+Received: from DS7PR12MB6048.namprd12.prod.outlook.com (2603:10b6:8:9f::5) by
+ BN9PR12MB5273.namprd12.prod.outlook.com (2603:10b6:408:11e::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6863.44; Thu, 12 Oct
- 2023 06:48:59 +0000
-Received: from BN8PR12MB3587.namprd12.prod.outlook.com
- ([fe80::a7fa:4411:67a3:131d]) by BN8PR12MB3587.namprd12.prod.outlook.com
- ([fe80::a7fa:4411:67a3:131d%4]) with mapi id 15.20.6863.043; Thu, 12 Oct 2023
- 06:48:59 +0000
-Message-ID: <067ee7e8-6dc3-4e84-84fe-bc00e1193848@amd.com>
-Date: Thu, 12 Oct 2023 08:48:54 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] dma-buf: Fix NULL pointer dereference in
- dma_fence_enable_sw_signaling()
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6863.45; Thu, 12 Oct
+ 2023 06:58:10 +0000
+Received: from DS7PR12MB6048.namprd12.prod.outlook.com
+ ([fe80::726d:296a:5a0b:1e98]) by DS7PR12MB6048.namprd12.prod.outlook.com
+ ([fe80::726d:296a:5a0b:1e98%4]) with mapi id 15.20.6863.032; Thu, 12 Oct 2023
+ 06:58:10 +0000
+Message-ID: <c90f5226-8a55-9a04-765d-104e54484d6b@amd.com>
+Date: Thu, 12 Oct 2023 12:27:57 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.1
+Subject: Re: [PATCH] hardening: x86: drop reference to removed config
+ AMD_IOMMU_V2
 Content-Language: en-US
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>, iommu@lists.linux.dev,
+ Joerg Roedel <jroedel@suse.de>,
+ Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
  Kees Cook <keescook@chromium.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>,
- Gustavo Padovan <gustavo@padovan.org>, Arvind Yadav <Arvind.Yadav@amd.com>,
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <ZSarP0/+hG8/87//@work> <202310110903.FE533CBCD@keescook>
- <0d63e8aa-5836-40e7-8f8a-2be10fbaac4a@embeddedor.com>
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-In-Reply-To: <0d63e8aa-5836-40e7-8f8a-2be10fbaac4a@embeddedor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR2P281CA0064.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:93::12) To BN8PR12MB3587.namprd12.prod.outlook.com
- (2603:10b6:408:43::13)
+ "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+ linux-hardening@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20231012045040.22088-1-lukas.bulwahn@gmail.com>
+ <7533e359-2024-b69a-2bcf-1906c1a8dbca@amd.com>
+ <b9f08b19-80e9-4908-89f1-8712bb3b59e8@kadam.mountain>
+From: Vasant Hegde <vasant.hegde@amd.com>
+In-Reply-To: <b9f08b19-80e9-4908-89f1-8712bb3b59e8@kadam.mountain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0124.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:96::12) To DS7PR12MB6048.namprd12.prod.outlook.com
+ (2603:10b6:8:9f::5)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -63,197 +65,98 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8PR12MB3587:EE_|CY8PR12MB8216:EE_
-X-MS-Office365-Filtering-Correlation-Id: fd69f58b-3cc5-43a7-09fa-08dbcaef4ff9
+X-MS-TrafficTypeDiagnostic: DS7PR12MB6048:EE_|BN9PR12MB5273:EE_
+X-MS-Office365-Filtering-Correlation-Id: 904b0d19-7f55-4f50-9768-08dbcaf09829
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	Yz0x1Z0if7U3mtcZIZQyxZtyZUcOgRVjCBzGS9fLCxBw7P4O2gEI9wqKac0P9TEOXr7Yj//D4k64YMhq1oA6muds55a+4AhMCvy3bnEwNkh1FgLx1io+Z6n9aqNU8E+W5fNEP9rGPOH/rYyFVzsbEPGVWCp0zULTJJOGiZ8ahYMLeP6CwwS6xXfebgGoPw3IxICxUV1kB7Sz2OqOoD9dnjRgpTkajM2H8Wi29EGMCXTKhsvq20f6iw9yvXxUwdpp9AwbjBQ38nsShXp69aVI1axFEJBlo11Y1CXLboN3wA7lRW1sKC8pJwrfqigymFEt+vjnzXXBqu4LvzXH5kvq1PcBZqKpp/vTLoDNTmVjsN/1pc+EmycZqjw1MS29XyLyQEpsKnTBHwzhAr5NS1v7MFf943D1g4NNnYziENmaTIwE7rXaWi1TrsTpr6NgTw3ZHo3O2AQNT7RgYcE0GdWiD7GUf02uWs1Ezq1Oo/IW1sbQ3TqigNvcjESaSNs1d1PE83FP0lKGp4vbvix3Q7B/xdD6KaQQ08BIQkxQy0XQ/7n/zYVk3obiPo8Asak2opSV5QgOM+YzvNJyuIH1vZWKZzoS8aH++qM5e6EwLAthFIUwwJ1rIoDbBdVjU7IJ7y8uo9zMvyseW6adccmaTSYZZA==
+	hjL+UnSrwVaWRUzkEet4SbYaYXKf4X/yiWLf4B/gLoOwdGTskgOwtB9Iaohh4mtZzL48UuN7EuWg9OKv2t3QtmUfQrXkrDM8uhuS7G1v4iy4153DDO3QUybf99wFAnwPjcBfZBFo698+C24cgAv8JuAPYgZwdFNkG+QuH8D8rouvyUMeGHwURvBF5ygjZDG7FKnaDQ7EV8tUgJAS+FEBOEQJpTgrCBZyFIkmkUcIzs4/AVJO/CiziqesBIhokLCcZNx4dBv+PrnNbCEvp0TDakiWddes1ppVP5K5q3BEvtcFbScTi6MriCVstA+nFJkyxh/zIW3pYcpxDY9qY7MJwr/qSGnxDJBne0d3g3KoDb0iH5IeQG/VHDP8tE9lSsXP8fgycTk2+cXJxNBtQ+b2UCayXRuQQJfxsmFy9bAvq+DH8/G9VyV6ELqm4UT3iBy12B2waH5af5yUnJNQG4KRxr5t3i1SMSO//T36949pOZRzuQZmUKTNNMhi/cCdpsJdaWlU+WyrDyVhTXRiR6vF3YVpPJI3/zOFW1uGYDTW7zxfC84KmYT7g59dtbZfB3QVTeT218rZr8Gj+r0pGkbFRR7Fk72Qr69oeWsHd4qTuQC3Y/XyxmY0GRW3jMUPoDEuSGA8lFXrZbftKk+9HpKpIA==
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3587.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(376002)(346002)(396003)(366004)(136003)(230922051799003)(1800799009)(64100799003)(451199024)(186009)(6486002)(478600001)(38100700002)(6666004)(8936002)(66556008)(66476007)(54906003)(110136005)(316002)(7416002)(66946007)(2906002)(31696002)(41300700001)(8676002)(36756003)(5660300002)(4326008)(86362001)(26005)(6512007)(2616005)(83380400001)(31686004)(6506007)(53546011)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6048.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(39860400002)(396003)(346002)(376002)(136003)(230922051799003)(451199024)(186009)(1800799009)(64100799003)(44832011)(8676002)(8936002)(4326008)(41300700001)(5660300002)(2906002)(4744005)(36756003)(31696002)(86362001)(38100700002)(26005)(2616005)(6916009)(316002)(478600001)(66556008)(66476007)(66946007)(54906003)(31686004)(53546011)(6486002)(6512007)(6666004)(6506007)(45980500001)(43740500002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UnNseFdSMVh4SU9vdng3cVB0eHcxdlVNREpySno2elEvVUloT2Frczk0bU1y?=
- =?utf-8?B?QVNHbUNKYUFCTGQyKzFDMEM4VkNGeEorOW1QK0ZRN0ZsRmtNRUlqd0UybFVY?=
- =?utf-8?B?aFdBV200bEJOZjB3bWg1NEV1eDlwTkwwcGM3QXQ1Mm0xOC9qZWQvTnBBMTgr?=
- =?utf-8?B?TjVjR0lZT1hqSGJDcGhGOVVNRkY4bVZpQTc5YXVydFBpSVpTV1Z6c3dpaEtK?=
- =?utf-8?B?Zit0eEkvdW5rMXJNYmo2aGdVajE5V3ptaUhBaFRXc1NXMk1JaGN0YVgrZGE5?=
- =?utf-8?B?b2h1SW9ncFp2dTQ3WnlNdkZObTlaSGJ6VEpYOVJyRFRhcVY4cjNYblpCMksx?=
- =?utf-8?B?NWliQzBpTjVrMkpxLzIzdy9Yd09FamJxREovK1liRWxYa2dmSGptR2RWRVZl?=
- =?utf-8?B?Z3EzZWdMZFgrdG1ReFhFUDBOOHZycDhLV0RZYVBOSDNWbjF1L3hwVVc4Sk1m?=
- =?utf-8?B?VFh6LzY4RmNyaTg0aTBNWVh0aVplU29yNkU5QzhrMWJnRnVWWnc0bW5OWEtW?=
- =?utf-8?B?MWhPdTU2VGFtMHZLRXNqZGc2TUpEZTZ3TUozRTlmZEdGcXpKUlBFMy8vZm1x?=
- =?utf-8?B?QThwdW1lT3lVZS95L0VhdkdrMFJYNDRPU1QzaFlnbXF1TkhqZk1SNXNtckxL?=
- =?utf-8?B?WGNCelNtUkczQ3dvZmtmSHVidEo5S1JVczBISldlanFBajZMYm1nMldZM1Ja?=
- =?utf-8?B?ZlRIbWF2bWpGWnQ5ZWFXU1RyajJGQWdDVHV0YkNPeVVFVFVndElaaHowaXhy?=
- =?utf-8?B?OS9zN0xDMjFmNlFORlNTMWFCbDhWU0RoZEsxWW4yT3VSK2JmbENNKzJwWnRi?=
- =?utf-8?B?Vmg0NXJRTld1a0ZzNk1nNml5Q1lKdU5mNlNsVVdyOWYrdzE1WkZaUkJlaEI5?=
- =?utf-8?B?ZkxmaWIzWWR5K0hsNDZ5Q1VLa2pDZk5Nc01LdDhmaWdYc2JXNndPRldGSTZK?=
- =?utf-8?B?a1dXSzR5cG1ablRseDhxN0d2TWQ4eGs5N1ltR0xqU1NKSkRicUxmNG9JQ3I1?=
- =?utf-8?B?RWpsa0NJWHhESUJKaWx4eUo1bVRtQ0s4MFpIWnd6dEZXUldpQm5mSGE1ZVc0?=
- =?utf-8?B?MGd6eHRLWkRFMGVjZzI5bCtYdjVRVVJ1NWZPWGN3ZjNyVnZONFZMdXMrREdz?=
- =?utf-8?B?dkFGb1JsWW8xVTBta1Q1MXQvaHJ1RENzYXVBcHhOaVYyejV3N0h1WThFS1J1?=
- =?utf-8?B?Y3M1QVNURHFJU2srQzRwUGtxbTZqU3Y0NThMMlk4Y0Y1Vlkxd05PQWQ4am5i?=
- =?utf-8?B?K21WdkdSK3NVNk12ZXFTL3A4MENuaElJME9YK3U3eEpXQWJTZUQxWUFzL0ZO?=
- =?utf-8?B?MVNURWZMaGI3QXFyUTg2S2ZkWURXQWhIMys2OE1Ob1dDODMwOTJjaGJ1LzZX?=
- =?utf-8?B?MEhFRFlsQW1EeDdLRFRTUHE2QnNidWxlZDA4SytkWC9nc0JUMWZ5dko0eXBH?=
- =?utf-8?B?RlZwU3huM0pxMjhwdWlxaE1TS3lLQUxMd212Skp0dlBhNzBndGw2RXdxM1Zp?=
- =?utf-8?B?VEJuY0t0SUczejBZMXE3cStNL1FRd0QvWTNsQ2pjUVV5eDQvSmkyZklUMWN6?=
- =?utf-8?B?dFhZSnk1bkZkRk1VNHdISm9iZS8zZUM5R0VXRitobE9vS0ZJQ3FaNXFXcW1N?=
- =?utf-8?B?bUVReDd6bHJtS2U3K3N4bkVMaGpjeHhBZlRGYWxCdmhWbnkxZmNNWklZZVZu?=
- =?utf-8?B?Slo1T092dzJTTk9zYWVBc0pKUHBIRm5hanoxWVlPSTRXdGNzVVl5cUpBaXVK?=
- =?utf-8?B?VkY3K3p5WVlaU2pCaGFzb2JBTnNpZ0IvZWU5U0d1TCtEL3Nqb1Y5dldxc1ZI?=
- =?utf-8?B?cldRaGROMjErTTAyejJ0dDJza1E5SlN1QTVhUG9ZS3Frd2UwZXFoQkM3clJx?=
- =?utf-8?B?ckl2S0RQQUxnb2U5UUxOaVQySFczOXJhemZkWmpHQmgwbTliUkJqWnRyU0d0?=
- =?utf-8?B?TWdFRXZ1aTVDbmR6akx6Y2lRV3dOQkdVays4SHJYajRUMHN6aWFxTkR5NnJ0?=
- =?utf-8?B?Vnh2YjB3eVlOU3Z2MkNPTmVOWHRDQlNOcGNQMUNLcFlKa3FaQTVsQnBUaTVX?=
- =?utf-8?B?c3JMUjJJVWJyR0VQbXNPV2FnMExjazk2WTRMODhWVGFXbVhHVGh3L1psdkdw?=
- =?utf-8?Q?qLeU=3D?=
+	=?utf-8?B?Z1ErTUh6YmwzZ0lPSUl6cmpvVmU2Uk9DR1NodXd1bllFaGdISStNR2Riczc3?=
+ =?utf-8?B?dkt6d3k1OXlLdDF0akVaTTM3eFpZMnVieFdZUk80K0Y5ZmFrVElxMkd0M2Jo?=
+ =?utf-8?B?RkQvOHd6b3UwUUJHZ0xwVzRicUllOGo2M2RGSUZVbFRtem9BQ1FmMGo1N1VR?=
+ =?utf-8?B?Y0xjWWhVWThtd0lpclo3RWJmbnlnazNLejFDbGpQR2tWaVZDMjJOY0xxQ01M?=
+ =?utf-8?B?dFpzbFFkSklDQlU0YS9nMFY5aUxKWk40VkJsSW9aMWtKMEp3S1prZjZGVkhF?=
+ =?utf-8?B?VzhwR21PeVpVUXBZdXkvZFF6RkkyU0RwM2p6ZWJCYWNDMXZZMTJzejlRbnVK?=
+ =?utf-8?B?aFNaMTRadlZoL3RmQ2F3VVdWZXJPZGY3RVZMcUk1VWlsZXU2STBpOVdDTUZT?=
+ =?utf-8?B?aHVCRC95Z01lWUVrbEkxUkNtZTJqRXpqUXFaSXhjMmFjcVFQQkNpWUlWTHdJ?=
+ =?utf-8?B?N0dIOW9NT01CUTk0RDdwSlVwZkZmLy9KbU9DTE1EOWxQS3lYd25UQUQ5SFh1?=
+ =?utf-8?B?NmhEVXBIb1lIa1JvTGFkblNPYWhydzJqblFUeWI3QS9pcFJVYmpIMm53dnk1?=
+ =?utf-8?B?RlFzbXlxM2UzTlprRlVQbkpRRVk2NG9Nay9XbG9COU5OdEEzVWJaMmk0Z3I1?=
+ =?utf-8?B?TFJuOEN2RU41TTFXVmcxaG1oWm4waUtLbWRMd1J0YUU3SDBHZEkvZzc0dnor?=
+ =?utf-8?B?a0tJcm9YdENWSHFRUWhXdTQ1MXFMT1k1UExpdUJrLzA4ODVBRWhmMnVvNFlW?=
+ =?utf-8?B?UG5mNXpPMzM1b1lrL0hJbDZnbTJWNnJET1lxbUpwQWhlZ0pzMkpranlyTzZP?=
+ =?utf-8?B?NWFIeUw3MTRCYkxubENITG8wMStKZ0VHdjJwenNFcVQ1S0cwU0xiVWNaUHA1?=
+ =?utf-8?B?b01RSkxiU2t5QVpuNWhIWlEvekdZSllralRlTzdLUHY4TmxKdkZReFpuRTZC?=
+ =?utf-8?B?dkJxK05yUGJFNVJEUEV1MEtHTDMyekF2YVM4Y0RqejZ1dXV0Njk3OXQ0eTlL?=
+ =?utf-8?B?NUpxTFhTUjI0QmZhTmJaL2R1TUEySEhldDJUVTc0VnAzMStDajN4WHpvdC9K?=
+ =?utf-8?B?d0VoMFdFRVVqQVFIZDdTM1oxZzBkNlNyTVhkYUVWWHBuRGtobnNkNDlaRjJK?=
+ =?utf-8?B?eEFVbm0ySkpHSENDVTJidS9VY1pWZGlicHVGaE8rUjRtSUp6aU1YZGduam96?=
+ =?utf-8?B?S2J2clN1WjA4dm81a0FvRUVueE1SbFU4YUFwL0lsR09QOVpvc0NUNUR0aVpM?=
+ =?utf-8?B?Y3NrbkFKdW5CQ0xwV1RBK1Jad09sVitIR0syNVN2ZThHbTcrY3VSVWNjbVph?=
+ =?utf-8?B?RmsrVUxJNndta0s4R2prS1RCRFNBdkdjZWtSRUdZT1IvUEVJNko2M2V5eFV5?=
+ =?utf-8?B?NEhMWFhXYlpsTm5keDROcEw5WEl5OEJRLzJ2Nm5wbW55TkJwZyszZ2ZEblUw?=
+ =?utf-8?B?OGo2bUNlcnBFTy9zMm96TmJyM21oazdyN3M2U0R6M0dpRXUzcnV2c2o5MmI4?=
+ =?utf-8?B?ZnBGM2tCTGRXSEJsY0lFcEY4NW1GdWh5YlI4MHZuYUdMVUNhRERUQVlaazBa?=
+ =?utf-8?B?YnNGR29wK1hKRER5QUdYOXNreE1tcWEwNWpxc2cyWGxrUURQMmYwUjVXOGF1?=
+ =?utf-8?B?S2JpOXhBMGtDQnc1L05YZlQ0U2pKUjJqUjBvWjNJSVBYaW92NEFXRGlTbitk?=
+ =?utf-8?B?QVdnZFdiZC8zSmt3b0hwdUxiU1JRcWx0eDVGTXY0Z0s5S3dZaG1aZkx5KzVE?=
+ =?utf-8?B?ck9ZMmtaTjRoQjlSSUNCdFlOQnFyeURzUFBuemt6dVBRTm8veVozSmhjS3V4?=
+ =?utf-8?B?OEdsemtBOVBWV1UvWXl1MHhSaEFGNVU0UEhld3lvdnk2cldPNnA5UE40Wllz?=
+ =?utf-8?B?TkJOR2xJWU9xNkZ3THpLWnNYcGovV05QalNvYWR0SFIreGpwVDlEZ0l5N3dT?=
+ =?utf-8?B?Nm9rZGUwSDFjdkJLcVRjRFZ5WlBlcUN2aDRGeG9zQ2YyaVBpLzYwRUFBZUht?=
+ =?utf-8?B?UW00Z0F6U1ZJeXByZjY0RHc0U1FoQW1GU3ZUaUh3VjFHcW1HSUQxMkczVFVJ?=
+ =?utf-8?B?dnk5bWZXK1FCMWRkbGVXTFllazBNRlJUMEttb0F5S05SeU1OZUViQTdRMDdZ?=
+ =?utf-8?Q?+Ai9zZo1fSQ3ADrPy2o9TI7q6?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fd69f58b-3cc5-43a7-09fa-08dbcaef4ff9
-X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3587.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 904b0d19-7f55-4f50-9768-08dbcaf09829
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6048.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Oct 2023 06:48:59.2053
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Oct 2023 06:58:10.0543
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: o5H1w3RP/Cu4mytWgZq5HBboMKLluJOe0gPdqSfxkt3GO0U0Chk1OIeJr5SZKxA2
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8216
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-MS-Exchange-CrossTenant-UserPrincipalName: AtQGjTzoNLKOR9TwWUMlyYB5CdBNRgSoN7bFiRQGk6eu17p8TDJfGYj8Oyio8ehc9wGbpbeGTEBGP+HD/KtxXg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5273
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-	autolearn=no autolearn_force=no version=3.4.6
+	NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
+	SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
 
 
-Am 11.10.23 um 18:13 schrieb Gustavo A. R. Silva:
->
->
-> On 10/11/23 10:03, Kees Cook wrote:
->> On Wed, Oct 11, 2023 at 08:03:43AM -0600, Gustavo A. R. Silva wrote:
->>> Currently, a NULL pointer dereference will happen in function
->>> `dma_fence_enable_sw_signaling()` (at line 615), in case `chain`
->>> is not allocated in `mock_chain()` and this function returns
->>> `NULL` (at line 86). See below:
->>>
->>> drivers/dma-buf/st-dma-fence-chain.c:
->>>   86         chain = mock_chain(NULL, f, 1);
->>>   87         if (!chain)
->>>   88                 err = -ENOMEM;
->>>   89
->>>   90         dma_fence_enable_sw_signaling(chain);
+On 10/12/2023 12:05 PM, Dan Carpenter wrote:
+> On Thu, Oct 12, 2023 at 10:45:03AM +0530, Vasant Hegde wrote:
 >>
->> Instead of the larger patch, should line 88 here just do a "return
->> -ENOMEM" instead?
->
-> Nope. I would have to add a `goto` to skip 
-> `dma_fence_enable_sw_signaling(chain)`.
->
-> I originally thought of that, but as other _signaling() functions have
-> sanity-checks inside, I decided to go with that solution.
->
-> This bug has been there since Sep 2022. So, adding a sanity check 
-> inside that
-> function should prevent any other issue of this same kind to enter the 
-> codebase
-> and stay there for years.
-
-I'm trying to remove those sanity checks for years since they are hiding 
-problems instead of getting them fixed.
-
-Calling dma_fence_enable_sw_signaling with a NULL pointer is a coding 
-error and not a recoverable runtime error.
-
-The test case should be fixed instead.
-
-Regards,
-Christian.
-
->
-> -- 
-> Gustavo
->
 >>
->> -Kees
->>
+>> On 10/12/2023 10:20 AM, Lukas Bulwahn wrote:
+>>> Commit 5a0b11a180a9 ("iommu/amd: Remove iommu_v2 module") removes the
+>>> config AMD_IOMMU_V2.
 >>>
->>> drivers/dma-buf/dma-fence.c:
->>>   611 void dma_fence_enable_sw_signaling(struct dma_fence *fence)
->>>   612 {
->>>   613         unsigned long flags;
->>>   614
->>>   615         spin_lock_irqsave(fence->lock, flags);
->>>                    ^^^^^^^^^^^
->>>                     |
->>>               NULL pointer reference
->>>               if fence == NULL
+>>> Remove the reference to this config in the x86 architecture-specific
+>>> hardening config fragment as well.
 >>>
->>>   616         __dma_fence_enable_signaling(fence);
->>>   617         spin_unlock_irqrestore(fence->lock, flags);
->>>   618 }
->>>
->>> Fix this by adding a NULL check before dereferencing `fence` in
->>> `dma_fence_enable_sw_signaling()`. This will prevent any other NULL
->>> pointer dereference when the `fence` passed as an argument is `NULL`.
->>>
->>> Addresses-Coverity: ("Dereference after null check")
->>> Fixes: d62c43a953ce ("dma-buf: Enable signaling on fence for 
->>> selftests")
->>> Cc: stable@vger.kernel.org
->>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>>> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 >>> ---
->>>   drivers/dma-buf/dma-fence.c | 9 ++++++++-
->>>   include/linux/dma-fence.h   | 2 +-
->>>   2 files changed, 9 insertions(+), 2 deletions(-)
+>>> Joerg, please pick this patch on top of the commit above. Thanks.
 >>>
->>> diff --git a/drivers/dma-buf/dma-fence.c b/drivers/dma-buf/dma-fence.c
->>> index 8aa8f8cb7071..4d2f13560d0f 100644
->>> --- a/drivers/dma-buf/dma-fence.c
->>> +++ b/drivers/dma-buf/dma-fence.c
->>> @@ -607,14 +607,21 @@ static bool 
->>> __dma_fence_enable_signaling(struct dma_fence *fence)
->>>    * This will request for sw signaling to be enabled, to make the 
->>> fence
->>>    * complete as soon as possible. This calls 
->>> &dma_fence_ops.enable_signaling
->>>    * internally.
->>> + *
->>> + * Returns 0 on success and a negative error value when @fence is 
->>> NULL.
->>>    */
->>> -void dma_fence_enable_sw_signaling(struct dma_fence *fence)
->>> +int dma_fence_enable_sw_signaling(struct dma_fence *fence)
->>>   {
->>>       unsigned long flags;
->>>   +    if (!fence)
->>> +        return -EINVAL;
->>> +
->>>       spin_lock_irqsave(fence->lock, flags);
->>>       __dma_fence_enable_signaling(fence);
->>>       spin_unlock_irqrestore(fence->lock, flags);
->>> +
->>> +    return 0;
->>>   }
->>>   EXPORT_SYMBOL(dma_fence_enable_sw_signaling);
->>>   diff --git a/include/linux/dma-fence.h b/include/linux/dma-fence.h
->>> index ebe78bd3d121..1e4025e925e6 100644
->>> --- a/include/linux/dma-fence.h
->>> +++ b/include/linux/dma-fence.h
->>> @@ -399,7 +399,7 @@ int dma_fence_add_callback(struct dma_fence *fence,
->>>                  dma_fence_func_t func);
->>>   bool dma_fence_remove_callback(struct dma_fence *fence,
->>>                      struct dma_fence_cb *cb);
->>> -void dma_fence_enable_sw_signaling(struct dma_fence *fence);
->>> +int dma_fence_enable_sw_signaling(struct dma_fence *fence);
->>>     /**
->>>    * dma_fence_is_signaled_locked - Return an indication if the fence
->>> -- 
->>> 2.34.1
->>>
->>>
+>>>  arch/x86/configs/hardening.config | 1 -
 >>
+>> Thanks for the fix Lukas. But I don't see this file in upstream linux tree. Am I
+>> missing something?
+>>
+> 
+> It was added on Aug 24 in linux-next.
 
+Thanks Dan. I can see the patch in linux-next.
+
+Reviewed-by: Vasant Hegde <vasant.hegde@amd.com>
+
+-Vasant
