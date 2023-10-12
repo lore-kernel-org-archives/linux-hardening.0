@@ -1,72 +1,72 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B09D3E49D
-	for <linux-hardening@vger.kernel.org>; Thu, 12 Oct 2023 21:33:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 134333F4B6
+	for <linux-hardening@vger.kernel.org>; Thu, 12 Oct 2023 21:43:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j3CIIv3g"
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3750FD9
-	for <linux-hardening@vger.kernel.org>; Thu, 12 Oct 2023 14:33:34 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5a7af69a4baso21797697b3.0
-        for <linux-hardening@vger.kernel.org>; Thu, 12 Oct 2023 14:33:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BqjzRRa3"
+Received: from mail-ot1-x34a.google.com (mail-ot1-x34a.google.com [IPv6:2607:f8b0:4864:20::34a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E919EB7
+	for <linux-hardening@vger.kernel.org>; Thu, 12 Oct 2023 14:43:03 -0700 (PDT)
+Received: by mail-ot1-x34a.google.com with SMTP id 46e09a7af769-6c65c78d7bbso2040692a34.3
+        for <linux-hardening@vger.kernel.org>; Thu, 12 Oct 2023 14:43:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697146413; x=1697751213; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1697146983; x=1697751783; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=hYSTVrCouVWE319gwaD4mDagDCplKYTMAl9k6NN6p0U=;
-        b=j3CIIv3gCVmU9R0l2dslE+oPVXaVD1Wa12FQFQirrDPseN8A6dyuCjQkG4CehA7t1K
-         zIKzQ/jnbO72wkULosOjGE3p2+FlOAojLHQt6Yhpgen1kY01ui21t7uupxt9dbDP7NBW
-         Xsl7U0Ceuwcax1UQPZSnQ4gZzAz5K+Q20nqi2u7o2OnxBs0I4R91gOBp4hg0G4OTFwzC
-         M/yTkOKiVBVDy/udMkd/tg9/nBLXJZ8WYkmYMYiW3RKBbYU40THgrA0nEhjEpn4veDd7
-         SL55rM0LcZY4zrw+T2zRKByaW6gfhT1IBAhRWlYd7QkxJM1KA4s40A2t6S0cvivV35Gg
-         IlRQ==
+        bh=ckODqKWwUmyyZSfS7B6anNT9+4anYQ1z042IchWem40=;
+        b=BqjzRRa3FLGvoIRg6o7G4FNSEtFlsgChV+Y4cW8W+XPqkqSUnyYASRV+YQ+MVF151K
+         D3ZAJp5DXxNOyWt9RcSK9+gyvSMPbjzYeItalcMK1Qgblr/gkYi6XCwkbw/27SmTKvIC
+         lju5Iv1DGwekJ6NgWCqnk3kdmiDnVAqKCMHdzDYwSzc0zSteIINrBSHSuYTTJ5NUvFUc
+         GpsaNpJJQ27Dd+bvOoN1B6syqF/uwjcAdBTRIdbRS46mpYXh07Fxdgb5ZDo+HVu+xwj9
+         QBAtixvaxSPhhtplXhlMOBwFH/00SoHItql791nkozUifW7Tus7RgAqDrzq5ZdMdRGoS
+         N30w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697146413; x=1697751213;
+        d=1e100.net; s=20230601; t=1697146983; x=1697751783;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=hYSTVrCouVWE319gwaD4mDagDCplKYTMAl9k6NN6p0U=;
-        b=YNjXaJMnUFmVx5vTobKwH1Tt9I8aY1g1z+hvqQ/ImTbcCoT9egppnLEqQDzNRzhSAR
-         eeCTMcLjNA4nKXEgX3lbTYO9q9yRrG9zjGDzJhzMtz3upMPpEphfhC4f33xwvSqAwNxb
-         M3BOOjp9l2l+gaiEXKyqDqwDFfv59429nJGb0MCc/zQJNVg6ZlKJ8y+SXQ8Go179fsN1
-         LGDDLFX2LwsuH8SxvK/pCSc+IKGa61uFnl629tkFqCSX684q8uWlbWXXqBcX/E4UMQ11
-         4HRvB+7sZENNVQpn+fZ3v8TExScHzmVAQJyfW42HIr2ax8BC0M/XgsF5DnhgPAFf0RH9
-         CVcg==
-X-Gm-Message-State: AOJu0Yxfl6YtHJWGiMRlQNgzf69I+R+zjxxBmKUjIdJ2mTM05y61dK7B
-	qJCM4RhaKuKo3oIhfirOd0/EWie43LcAjO8WPw==
-X-Google-Smtp-Source: AGHT+IHLXU+q2owngkTbSiNtMR5BADqKtueGDHMDZYEex8Po8KdOypDGg++9ce6J7+BSWDwmTy9Wy7uJXqIZ+5F3rA==
+        bh=ckODqKWwUmyyZSfS7B6anNT9+4anYQ1z042IchWem40=;
+        b=J2QBBn9aGD1ZwQz24zkywxnypIdkpQSFFeabTqiyJwhjiRRTaC0z7+2tGVB9Wc0I/G
+         bIU11PEbJJo9CHEXuCUlUQKKWEZ48QeE7hUzB9PEYfycRJv5hU42Az5oNReYZ6021BYd
+         C2nLcU2rxg0yl94ufmNLL6NOwow0otZnbP9Kwfxbv3dnC44hkvwmMoptkb2pqxx3OFMi
+         34Emg+oK8ydfHJU5WhsuGKcMrLXMbZ49ZtZ/sqKVBk/Yo8R77O9p1wnQB9y2wtN87VmG
+         DUjpvFWMNFI+nB2m1Py7KgxP0jvITgIJcmbkzq2vnb3HRZlHVBsFFHwGC175oPivfjMB
+         Qogw==
+X-Gm-Message-State: AOJu0YxKgoZM9A1xZGm+XHAlrIx1B3SEZA8ZUPUYsYx7kxTk4u44rT8/
+	9tJoTbXPZ2qtBzYUUwadRkjNNXNVAxVJhukmNw==
+X-Google-Smtp-Source: AGHT+IFtZwHYGlL93wukpRq7BxaZsrNlBNW/+fS27oiqXTJZW48Rd9AZgGPpX3cV4pAtPXJZ/PoBke3vV5DZKrTN6g==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a25:361e:0:b0:d9a:6b49:433d with SMTP
- id d30-20020a25361e000000b00d9a6b49433dmr164492yba.6.1697146413504; Thu, 12
- Oct 2023 14:33:33 -0700 (PDT)
-Date: Thu, 12 Oct 2023 21:33:32 +0000
+ (user=justinstitt job=sendgmr) by 2002:a05:6830:108c:b0:6bd:b74:2dab with
+ SMTP id y12-20020a056830108c00b006bd0b742dabmr7579190oto.2.1697146983205;
+ Thu, 12 Oct 2023 14:43:03 -0700 (PDT)
+Date: Thu, 12 Oct 2023 21:43:02 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIACxmKGUC/x3NwQqDMAyA4VeRnBcwVcbcq4wxahpnDrYlFZmI7
- 27Z8bv8/wFFTKXAsznAZNOiKVbQrQGeffwKaqgG17qOWnJYVoucdwymm1jBKCvOfjEfNOHod07 LR3JGxrsQ8dA/unGYoPayyaS//+v1Ps8LZduKZXsAAAA=
+X-B4-Tracking: v=1; b=H4sIAGVoKGUC/yWNQQqDMBAAvxL27EISodB+RTzU7NbuoTHsSqiIf
+ zfoZWAuMzsYq7DBy+2gXMVkyU1C5yB933lmFGoO0cc++BDRVs2pbEgqldUw84o/kuXGXBoSTkT 0ZPLp0XtoqaL8kf+1GcbjOAG8TR1PdgAAAA==
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1697146412; l=2666;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1697146982; l=1715;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=GEipWyiXVMyF4NttCT1RNho91xfYNJdcMAw0nEmg9aU=; b=x7E6v7q0m/O/QprpRqxWPblE89KJH/8AAzMt116g3gzow9M2f7BwcEy/LlgWAsSKhgaWC4jk0
- 9TdRQ3QWP87CvCdaWXAAGHMw7Gj12xOELpNOijQRm8halo5ZaaCR6zx
+ bh=MQMqs+o6dLV3RqgzRciNxc9rt3vo/Ab+9GqIMNjVntc=; b=YWJ6iLREklL66OaSZXMlM8IAnqD7ueQYViHBhLA7JWNoc26BMAl9fiWfKKo0Bmy1yL9ohw3rp
+ 9WCcEeFAoj7DAdqxQCDoWMRWxBwP4A2PVPOF+2SCsBP9uOu++JwQ3fm
 X-Mailer: b4 0.12.3
-Message-ID: <20231012-strncpy-drivers-net-hamradio-baycom_epp-c-v1-1-8f4097538ee4@google.com>
-Subject: [PATCH] hamradio: replace deprecated strncpy with strscpy
+Message-ID: <20231012-strncpy-drivers-net-mdio-mdio-gpio-c-v1-1-ab9b06cfcdab@google.com>
+Subject: [PATCH] net: mdio: replace deprecated strncpy with strscpy
 From: Justin Stitt <justinstitt@google.com>
-To: Thomas Sailer <t.sailer@alumni.ethz.ch>, "David S. Miller" <davem@davemloft.net>, 
+To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+	Russell King <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, 
 	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: linux-hams@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Justin Stitt <justinstitt@google.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
 X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.6
+	autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
@@ -74,22 +74,13 @@ strncpy() is deprecated for use on NUL-terminated destination strings
 [1] and as such we should prefer more robust and less ambiguous string
 interfaces.
 
-We expect both hi.data.modename and hi.data.drivername to be
-NUL-terminated but not necessarily NUL-padded which is evident by its
-usage with sprintf:
-|       sprintf(hi.data.modename, "%sclk,%smodem,fclk=%d,bps=%d%s",
-|               bc->cfg.intclk ? "int" : "ext",
-|               bc->cfg.extmodem ? "ext" : "int", bc->cfg.fclk, bc->cfg.bps,
-|               bc->cfg.loopback ? ",loopback" : "");
+We expect new_bus->id to be NUL-terminated but not NUL-padded based on
+its prior assignment through snprintf:
+|       snprintf(new_bus->id, MII_BUS_ID_SIZE, "gpio-%x", bus_id);
 
-Note that this data is copied out to userspace with:
-|       if (copy_to_user(data, &hi, sizeof(hi)))
-... however, the data was also copied FROM the user here:
-|       if (copy_from_user(&hi, data, sizeof(hi)))
-
-Considering the above, a suitable replacement is `strscpy` [2] due to
-the fact that it guarantees NUL-termination on the destination buffer
-without unnecessarily NUL-padding.
+Due to this, a suitable replacement is `strscpy` [2] due to the fact
+that it guarantees NUL-termination on the destination buffer without
+unnecessarily NUL-padding.
 
 Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
 Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
@@ -99,38 +90,28 @@ Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
 Note: build-tested only.
 
-Also, there are 33 instances of trailing whitespace in this file alone.
-I've opted to not remove them in this patch.
+Found with: $ rg "strncpy\("
 ---
- drivers/net/hamradio/baycom_epp.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/mdio/mdio-gpio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/hamradio/baycom_epp.c b/drivers/net/hamradio/baycom_epp.c
-index 83ff882f5d97..30a0fbb12b9c 100644
---- a/drivers/net/hamradio/baycom_epp.c
-+++ b/drivers/net/hamradio/baycom_epp.c
-@@ -1074,7 +1074,7 @@ static int baycom_siocdevprivate(struct net_device *dev, struct ifreq *ifr,
- 		return 0;
+diff --git a/drivers/net/mdio/mdio-gpio.c b/drivers/net/mdio/mdio-gpio.c
+index 0fb3c2de0845..a1718d646504 100644
+--- a/drivers/net/mdio/mdio-gpio.c
++++ b/drivers/net/mdio/mdio-gpio.c
+@@ -125,7 +125,7 @@ static struct mii_bus *mdio_gpio_bus_init(struct device *dev,
+ 	if (bus_id != -1)
+ 		snprintf(new_bus->id, MII_BUS_ID_SIZE, "gpio-%x", bus_id);
+ 	else
+-		strncpy(new_bus->id, "gpio", MII_BUS_ID_SIZE);
++		strscpy(new_bus->id, "gpio", sizeof(new_bus->id));
  
- 	case HDLCDRVCTL_DRIVERNAME:
--		strncpy(hi.data.drivername, "baycom_epp", sizeof(hi.data.drivername));
-+		strscpy(hi.data.drivername, "baycom_epp", sizeof(hi.data.drivername));
- 		break;
- 		
- 	case HDLCDRVCTL_GETMODE:
-@@ -1091,7 +1091,7 @@ static int baycom_siocdevprivate(struct net_device *dev, struct ifreq *ifr,
- 		return baycom_setmode(bc, hi.data.modename);
- 
- 	case HDLCDRVCTL_MODELIST:
--		strncpy(hi.data.modename, "intclk,extclk,intmodem,extmodem,divider=x",
-+		strscpy(hi.data.modename, "intclk,extclk,intmodem,extmodem,divider=x",
- 			sizeof(hi.data.modename));
- 		break;
- 
+ 	if (pdata) {
+ 		new_bus->phy_mask = pdata->phy_mask;
 
 ---
 base-commit: cbf3a2cb156a2c911d8f38d8247814b4c07f49a2
-change-id: 20231012-strncpy-drivers-net-hamradio-baycom_epp-c-6e11c9483b9f
+change-id: 20231012-strncpy-drivers-net-mdio-mdio-gpio-c-bddd9ed0c630
 
 Best regards,
 --
