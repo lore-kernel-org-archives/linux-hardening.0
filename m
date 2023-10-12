@@ -1,147 +1,129 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994283C6A4
-	for <linux-hardening@vger.kernel.org>; Thu, 12 Oct 2023 20:03:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1ECE3CCFE
+	for <linux-hardening@vger.kernel.org>; Thu, 12 Oct 2023 20:13:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YzZEc2Av"
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B242CF
-	for <linux-hardening@vger.kernel.org>; Thu, 12 Oct 2023 13:03:28 -0700 (PDT)
-Received: by mail-wm1-x32e.google.com with SMTP id 5b1f17b1804b1-4056ce55e7eso14171995e9.2
-        for <linux-hardening@vger.kernel.org>; Thu, 12 Oct 2023 13:03:28 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aNamkpJM"
+Received: from mail-il1-x135.google.com (mail-il1-x135.google.com [IPv6:2607:f8b0:4864:20::135])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A80C9CC
+	for <linux-hardening@vger.kernel.org>; Thu, 12 Oct 2023 13:13:31 -0700 (PDT)
+Received: by mail-il1-x135.google.com with SMTP id e9e14a558f8ab-351250be257so5233135ab.0
+        for <linux-hardening@vger.kernel.org>; Thu, 12 Oct 2023 13:13:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1697141007; x=1697745807; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XFXAdZ+DOyTqhVoDf02smI8kk3bzOohuxtlB2qnoM+k=;
-        b=YzZEc2Av3ejshLKoI/ixT1QBzG4ZiN9AKVlvB1blDgxm5RmfOSLLjfhAN28Np/Fdht
-         AkKgCV6+6CYuHOyG7hc5YlWobq1CylyXP98Bc7fXs3CMIMR6ZujQkWwPdO6unfzY2cCC
-         9mVL+ZW7WtM1dk6b9WFzr/n/yq+UgrQC/tk/55nyZkYNGFKzCYITMu5NDpSZP3u3Lntt
-         STTFKgfzh/GwEXBFHkHPhjiCaSW3hw5s35RPnbs6aNanpD8K7Adrm2ZTjwTMjgMTB3Io
-         bf7UI7hLIwylKjveR7gD840/BxrZvzSLtOPIMh6lwtdr+DnDqX2YheQJoH2ekWHPTnfD
-         mzUg==
+        d=chromium.org; s=google; t=1697141611; x=1697746411; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=wWha34q0YQUKT0DSdVeRBdS11wQENGBeefusmSYpbX0=;
+        b=aNamkpJMNKwOjGNLHXsDgOLRFaNOq4Ng3wc3rklFRJ19J2R7CLU7MJyefdGBY8aVoU
+         rhzPYb6t8CWwgrf1eb28fzRpKIy+wBwjUyMSpeGafzCJmwRZ1jkAYb5MfI46SC7htDQo
+         Gc6UNvv0Et0d3AGtsY4JlIETM3y3xMnq4vxCI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697141007; x=1697745807;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XFXAdZ+DOyTqhVoDf02smI8kk3bzOohuxtlB2qnoM+k=;
-        b=k9aLejzdn+c8IKVYcNYL+ZPv7XtFNzTX7uXD4Ch6KEsZO3d1WTjiCnVk2CRnJTEkgm
-         /FmkVByjpbECSpOf27rT8kTqQ0EAe+agpBVyTrOc/N0cWxXRvwQvgmFeBqTQQrlNUnKa
-         gOZkpI/sbM/2RR6ZKmRVtiM52HQnyFVPD+6mm+dH3ZBHAvAC1zd2d0gwlxqE4SgHFgDr
-         iWypcS4UjGCQNaLHoen0G4ECqTcHzhzaXLftg1GvG7M53DdFUTI4mt4KmzwsmzT1UKDp
-         tCv+Et9lcF8HAKUWKdViUDmsSRPvbSwyoUfG44lfddIpnCg3hfRbpp7AtWa2ILPK43Ir
-         QrnA==
-X-Gm-Message-State: AOJu0YzonQpEqfVvTjs/fSUFCbnmqn+gYquOhJIJ+wIO39yyKuJGcqxM
-	IGyTotFxawqNk1/juyitZVAcLw==
-X-Google-Smtp-Source: AGHT+IGjkAQ86wK69Ci5LhI94Gj/nMXk/RGVVGqelXPAbRFUmgl1V3u2voLRTcE1BA5ZnI5bc9/98A==
-X-Received: by 2002:a7b:cb89:0:b0:406:54e4:359c with SMTP id m9-20020a7bcb89000000b0040654e4359cmr21877824wmi.19.1697141007139;
-        Thu, 12 Oct 2023 13:03:27 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.219.100])
-        by smtp.gmail.com with ESMTPSA id s15-20020a05600c044f00b0040747010f8csm660770wmb.40.2023.10.12.13.03.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Oct 2023 13:03:26 -0700 (PDT)
-Message-ID: <72cf8478-9683-4ea8-830f-fcb46b583f2b@linaro.org>
-Date: Thu, 12 Oct 2023 22:03:25 +0200
+        d=1e100.net; s=20230601; t=1697141611; x=1697746411;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wWha34q0YQUKT0DSdVeRBdS11wQENGBeefusmSYpbX0=;
+        b=hvEkfiD8WdLAsm4pMV3DhEirMAs4R0Sl/FAw3QoPr3J4XGXnFFpcfhoI38BJx82e/+
+         QpemdMqZr8JCwO6zwBhxhf8wtqp9dIfZ3ogIcXiQJNMnbkkLaeYuczOPQ1ypPccnmrXn
+         eKRgSAouDQlPWVWasYrRTfD2N0NbbTGF92cJxdR9rk1steGAW6p9KJiIjZU8uNWDstl0
+         uEvwnM+9QR2XmyqrIpn4Wr1UB5b4ejNdb1e2PF6Gk6zNMAb3WLJf1iE+jpyZzQbCFaHa
+         bCYmAETrs9xiB/flhnWMpNjwNg1Ui0wZEg8YCcRgKZJVVKL+20qhtsH/frkrDwSDWNH3
+         DpNg==
+X-Gm-Message-State: AOJu0YwlYn7WsTIpTj5eQnCQcHEPhZDd55Qpu4/Afb5ekpeNOh9MzlQq
+	/9DQtfg7/rVKcA1bSJD18Vf8jw==
+X-Google-Smtp-Source: AGHT+IE7mdeTTDRMn1YtqQYctsHkfyHOEBDy/praRDPF4WV4iEIajBBQIJujHaNI03o+tm5FVxDNuQ==
+X-Received: by 2002:a05:6e02:cad:b0:34f:b88d:b2cb with SMTP id 13-20020a056e020cad00b0034fb88db2cbmr23706804ilg.21.1697141611059;
+        Thu, 12 Oct 2023 13:13:31 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id n14-20020a62e50e000000b0069319bfed42sm12089991pff.79.2023.10.12.13.13.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Oct 2023 13:13:30 -0700 (PDT)
+Date: Thu, 12 Oct 2023 13:13:19 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Nick Terrell <terrelln@meta.com>
+Cc: Eric Biggers <ebiggers@kernel.org>,
+	syzbot <syzbot+1f2eb3e8cd123ffce499@syzkaller.appspotmail.com>,
+	Chris Mason <clm@meta.com>, "dsterba@suse.com" <dsterba@suse.com>,
+	"josef@toxicpanda.com" <josef@toxicpanda.com>,
+	"linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Subject: Re: [syzbot] [zstd] UBSAN: array-index-out-of-bounds in
+ FSE_decompress_wksp_body_bmi2
+Message-ID: <202310121311.4B9DD96E51@keescook>
+References: <00000000000049964e06041f2cbf@google.com>
+ <20231007210556.GA174883@sol.localdomain>
+ <202310091025.4939AEBC9@keescook>
+ <19E42116-8FE3-4C4B-8D26-E9B47B0B9AC5@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: exynos: Add reserved memory for pstore on
- E850-96
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Rob Herring <robh+dt@kernel.org>, Sam Protsenko <semen.protsenko@linaro.org>
-Cc: Conor Dooley <conor+dt@kernel.org>, Alim Akhtar
- <alim.akhtar@samsung.com>, Kees Cook <keescook@chromium.org>,
- Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli"
- <gpiccoli@igalia.com>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20231008033633.21304-1-semen.protsenko@linaro.org>
- <169714096778.12426.2726125345142435040.b4-ty@linaro.org>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzTRLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpQGxpbmFyby5vcmc+wsGUBBMBCgA+FiEE
- m9B+DgxR+NWWd7dUG5NDfTtBYpsFAmI+BxMCGwMFCRRfreEFCwkIBwIGFQoJCAsCBBYCAwEC
- HgECF4AACgkQG5NDfTtBYptgbhAAjAGunRoOTduBeC7V6GGOQMYIT5n3OuDSzG1oZyM4kyvO
- XeodvvYv49/ng473E8ZFhXfrre+c1olbr1A8pnz9vKVQs9JGVa6wwr/6ddH7/yvcaCQnHRPK
- mnXyP2BViBlyDWQ71UC3N12YCoHE2cVmfrn4JeyK/gHCvcW3hUW4i5rMd5M5WZAeiJj3rvYh
- v8WMKDJOtZFXxwaYGbvFJNDdvdTHc2x2fGaWwmXMJn2xs1ZyFAeHQvrp49mS6PBQZzcx0XL5
- cU9ZjhzOZDn6Apv45/C/lUJvPc3lo/pr5cmlOvPq1AsP6/xRXsEFX/SdvdxJ8w9KtGaxdJuf
- rpzLQ8Ht+H0lY2On1duYhmro8WglOypHy+TusYrDEry2qDNlc/bApQKtd9uqyDZ+rx8bGxyY
- qBP6bvsQx5YACI4p8R0J43tSqWwJTP/R5oPRQW2O1Ye1DEcdeyzZfifrQz58aoZrVQq+innR
- aDwu8qDB5UgmMQ7cjDSeAQABdghq7pqrA4P8lkA7qTG+aw8Z21OoAyZdUNm8NWJoQy8m4nUP
- gmeeQPRc0vjp5JkYPgTqwf08cluqO6vQuYL2YmwVBIbO7cE7LNGkPDA3RYMu+zPY9UUi/ln5
- dcKuEStFZ5eqVyqVoZ9eu3RTCGIXAHe1NcfcMT9HT0DPp3+ieTxFx6RjY3kYTGLOwU0EVUNc
- NAEQAM2StBhJERQvgPcbCzjokShn0cRA4q2SvCOvOXD+0KapXMRFE+/PZeDyfv4dEKuCqeh0
- hihSHlaxTzg3TcqUu54w2xYskG8Fq5tg3gm4kh1Gvh1LijIXX99ABA8eHxOGmLPRIBkXHqJY
- oHtCvPc6sYKNM9xbp6I4yF56xVLmHGJ61KaWKf5KKWYgA9kfHufbja7qR0c6H79LIsiYqf92
- H1HNq1WlQpu/fh4/XAAaV1axHFt/dY/2kU05tLMj8GjeQDz1fHas7augL4argt4e+jum3Nwt
- yupodQBxncKAUbzwKcDrPqUFmfRbJ7ARw8491xQHZDsP82JRj4cOJX32sBg8nO2N5OsFJOcd
- 5IE9v6qfllkZDAh1Rb1h6DFYq9dcdPAHl4zOj9EHq99/CpyccOh7SrtWDNFFknCmLpowhct9
- 5ZnlavBrDbOV0W47gO33WkXMFI4il4y1+Bv89979rVYn8aBohEgET41SpyQz7fMkcaZU+ok/
- +HYjC/qfDxT7tjKXqBQEscVODaFicsUkjheOD4BfWEcVUqa+XdUEciwG/SgNyxBZepj41oVq
- FPSVE+Ni2tNrW/e16b8mgXNngHSnbsr6pAIXZH3qFW+4TKPMGZ2rZ6zITrMip+12jgw4mGjy
- 5y06JZvA02rZT2k9aa7i9dUUFggaanI09jNGbRA/ABEBAAHCwXwEGAEKACYCGwwWIQSb0H4O
- DFH41ZZ3t1Qbk0N9O0FimwUCYDzvagUJFF+UtgAKCRAbk0N9O0Fim9JzD/0auoGtUu4mgnna
- oEEpQEOjgT7l9TVuO3Qa/SeH+E0m55y5Fjpp6ZToc481za3xAcxK/BtIX5Wn1mQ6+szfrJQ6
- 59y2io437BeuWIRjQniSxHz1kgtFECiV30yHRgOoQlzUea7FgsnuWdstgfWi6LxstswEzxLZ
- Sj1EqpXYZE4uLjh6dW292sO+j4LEqPYr53hyV4I2LPmptPE9Rb9yCTAbSUlzgjiyyjuXhcwM
- qf3lzsm02y7Ooq+ERVKiJzlvLd9tSe4jRx6Z6LMXhB21fa5DGs/tHAcUF35hSJrvMJzPT/+u
- /oVmYDFZkbLlqs2XpWaVCo2jv8+iHxZZ9FL7F6AHFzqEFdqGnJQqmEApiRqH6b4jRBOgJ+cY
- qc+rJggwMQcJL9F+oDm3wX47nr6jIsEB5ZftdybIzpMZ5V9v45lUwmdnMrSzZVgC4jRGXzsU
- EViBQt2CopXtHtYfPAO5nAkIvKSNp3jmGxZw4aTc5xoAZBLo0OV+Ezo71pg3AYvq0a3/oGRG
- KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
- fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <169714096778.12426.2726125345142435040.b4-ty@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <19E42116-8FE3-4C4B-8D26-E9B47B0B9AC5@meta.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On 12/10/2023 22:02, Krzysztof Kozlowski wrote:
+On Thu, Oct 12, 2023 at 07:55:55PM +0000, Nick Terrell wrote:
 > 
-> On Sat, 07 Oct 2023 22:36:33 -0500, Sam Protsenko wrote:
->> Reserve a 2 MiB memory region to record kmsg dumps, console, ftrace and
->> userspace messages. The implemented memory split allows capturing and
->> reading corresponding ring buffers:
->>   * dmesg: 6 dumps, 128 KiB each
->>   * console: 128 KiB
->>   * ftrace: 128 KiB for each of 8 CPUs (1 MiB total)
->>   * userspace messages: 128 KiB
->>
->> [...]
+> > On Oct 9, 2023, at 1:29 PM, Kees Cook <keescook@chromium.org> wrote:
+> > 
+> > !-------------------------------------------------------------------|
+> >  This Message Is From an External Sender
+> > 
+> > |-------------------------------------------------------------------!
+> > 
+> > On Sat, Oct 07, 2023 at 02:05:56PM -0700, Eric Biggers wrote:
+> >> Hi Nick,
+> >> 
+> >> On Wed, Aug 30, 2023 at 12:49:53AM -0700, syzbot wrote:
+> >>> UBSAN: array-index-out-of-bounds in lib/zstd/common/fse_decompress.c:345:30
+> >>> index 33 is out of range for type 'FSE_DTable[1]' (aka 'unsigned int[1]')
+> >> 
+> >> Zstandard needs to be converted to use C99 flex-arrays instead of length-1
+> >> arrays.  https://github.com/facebook/zstd/pull/3785 would fix this in upstream
+> >> Zstandard, though it doesn't work well with the fact that upstream Zstandard
+> >> supports C90.  Not sure how you want to handle this.
+> > 
+> > For the kernel, we just need:
+> > 
+> > diff --git a/lib/zstd/common/fse_decompress.c b/lib/zstd/common/fse_decompress.c
+> > index a0d06095be83..b11e87fff261 100644
+> > --- a/lib/zstd/common/fse_decompress.c
+> > +++ b/lib/zstd/common/fse_decompress.c
+> > @@ -312,7 +312,7 @@ size_t FSE_decompress_wksp(void* dst, size_t dstCapacity, const void* cSrc, size
+> > 
+> > typedef struct {
+> >     short ncount[FSE_MAX_SYMBOL_VALUE + 1];
+> > -    FSE_DTable dtable[1]; /* Dynamically sized */
+> > +    FSE_DTable dtable[]; /* Dynamically sized */
+> > } FSE_DecompressWksp;
 > 
-> Applied, thanks!
+> Thanks Eric and Kees for the report and the fix! I am working on putting this
+> patch up now, just need to test the fix myself to ensure I can reproduce the
+> issue and the fix.
 > 
-> [1/1] arm64: dts: exynos: Add reserved memory for pstore on E850-96
->       https://git.kernel.org/krzk/linux/c/23e4a49943624dd83199989c852565a3ff760fa7
+> In your opinion does this worth trying to get this patch into v6.6, or should it
+> wait for v6.7?
 
-Thanks, applied.
-It is however very late in the cycle, so there is a chance this will
-miss the merge window. If this happens, I will keep it for the next
-cycle (no need for resending).
+For all these flex array conversions we're mostly on a "slow and steady"
+route, so there's no rush really. I think waiting for v6.7 is fine. If
+anyone ends up wanting to backport it, it should be pretty clean
+I imagine.
 
-Best regards,
-Krzysztof
+Thanks for getting it all landed! :)
 
+-Kees
+
+-- 
+Kees Cook
