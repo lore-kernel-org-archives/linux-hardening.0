@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF297EA;
-	Thu, 12 Oct 2023 00:30:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7B87F3;
+	Thu, 12 Oct 2023 00:30:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sw0Sk+KS"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 980C4C433CC;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V7eJ3qhN"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BF8EDC433B8;
 	Thu, 12 Oct 2023 00:30:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1697070625;
-	bh=IvJA5+/1A+oM3Zbf+KWTHlj+YZ6HcUH+DTBEV/43keg=;
+	bh=JygYXv/iY2L4YfL3LQXXh3cOvpCmrEV6BuAM2IZkvXU=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=sw0Sk+KSPrRRR8xtwZ4nK7l4zDBWMYBvOWApGoK3eIMAhVdVaeZMdKqX/wpP8mQbO
-	 cLKpGhX3OClgSTBlZ38ECkn6JFFRzUw4z74y8+hsTSbDumicAS/u0QNv9VbdPB/IiK
-	 Iwy1mKJAWa65MgA9pLXBJnzDNE9Wn2HDIlLXoSjuKdzBneInft+CJBk/kdu0kijYUV
-	 b24xEqFAFxAxFxJdimzxA0NNQejb4LJjLaLZZ8QDjVs1iQdmUhk5GQBKvsg0se5yDk
-	 BYHzP3otNyNT9hLAX2u3N4eAAkVsrNYLgMXBVUs+zhdawD2e2ffq3oz/U8EnIpxA5j
-	 4g9jQhHf0jsyQ==
+	b=V7eJ3qhNjVkM7W5nCe7ih12nbjrJysAUnTPoR5w4YneFbMZzrhySAvPkyZX3AVMys
+	 e122Nx+q6x62Pp4oUtkUZdUifT2npjT5Y9Fpa0E1PGCzhcBMxJk6DV0ZDNIpq2taJP
+	 paMVYkyF2itpgpRVXmeqqUnwtSoGUioS0Uy3gFOR1G+SK1CH2up+CPKYJYEU75TK8J
+	 MC8hfNd64OgOsUfK5lNnhVGJuVAj0gLuiC2aRPXG2JfQoiGgUtFn/nFIRHYjKVe4NJ
+	 LaQ9RbZAQ9ngZx/RRL/QFKsuQ+rqHuX3onTREU9ji13+513/nOtDCbPlaC/eVvNbha
+	 DohCAI57xzIMw==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 84CA3C595C5;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A8421E000BB;
 	Thu, 12 Oct 2023 00:30:25 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -28,16 +28,17 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] net: mvpp2: replace deprecated strncpy with strscpy
+Subject: Re: [PATCH] octeontx2-af: replace deprecated strncpy with strscpy
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <169707062553.15864.15839733815188901404.git-patchwork-notify@kernel.org>
+ <169707062568.15864.7454843502958715402.git-patchwork-notify@kernel.org>
 Date: Thu, 12 Oct 2023 00:30:25 +0000
-References: <20231010-strncpy-drivers-net-ethernet-marvell-mvpp2-mvpp2_main-c-v1-1-51be96ad0324@google.com>
-In-Reply-To: <20231010-strncpy-drivers-net-ethernet-marvell-mvpp2-mvpp2_main-c-v1-1-51be96ad0324@google.com>
+References: <20231010-strncpy-drivers-net-ethernet-marvell-octeontx2-af-cgx-c-v1-1-a443e18f9de8@google.com>
+In-Reply-To: <20231010-strncpy-drivers-net-ethernet-marvell-octeontx2-af-cgx-c-v1-1-a443e18f9de8@google.com>
 To: Justin Stitt <justinstitt@google.com>
-Cc: mw@semihalf.com, linux@armlinux.org.uk, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+Cc: sgoutham@marvell.com, lcherian@marvell.com, gakula@marvell.com,
+ jerinj@marvell.com, hkelam@marvell.com, sbhatta@marvell.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
  netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-hardening@vger.kernel.org
 
@@ -46,23 +47,20 @@ Hello:
 This patch was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Tue, 10 Oct 2023 21:24:42 +0000 you wrote:
+On Tue, 10 Oct 2023 21:38:11 +0000 you wrote:
 > `strncpy` is deprecated for use on NUL-terminated destination strings
 > [1] and as such we should prefer more robust and less ambiguous string
 > interfaces.
 > 
-> We expect `irqname` to be NUL-terminated based on its use with
-> of_irq_get_byname() -> of_property_match_string() wherein it is used
-> with a format string and a `strcmp`:
-> |       pr_debug("comparing %s with %s\n", string, p);
-> |       if (strcmp(string, p) == 0)
-> |               return i; /* Found it; return index */
+> We can see that linfo->lmac_type is expected to be NUL-terminated based
+> on the `... - 1`'s present in the current code. Presumably making room
+> for a NUL-byte at the end of the buffer.
 > 
 > [...]
 
 Here is the summary with links:
-  - net: mvpp2: replace deprecated strncpy with strscpy
-    https://git.kernel.org/netdev/net-next/c/fda9e465a9d9
+  - octeontx2-af: replace deprecated strncpy with strscpy
+    https://git.kernel.org/netdev/net-next/c/473f8f2d1bfe
 
 You are awesome, thank you!
 -- 
