@@ -1,61 +1,61 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9E03B28A
-	for <linux-hardening@vger.kernel.org>; Thu, 12 Oct 2023 22:25:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90644405C1
+	for <linux-hardening@vger.kernel.org>; Thu, 12 Oct 2023 22:27:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MBlYxber"
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3466C9
-	for <linux-hardening@vger.kernel.org>; Thu, 12 Oct 2023 15:25:15 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5a81cd8d267so626057b3.1
-        for <linux-hardening@vger.kernel.org>; Thu, 12 Oct 2023 15:25:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="z0hOqJQA"
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F40DEB8
+	for <linux-hardening@vger.kernel.org>; Thu, 12 Oct 2023 15:27:53 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d9a483bdce7so2149942276.2
+        for <linux-hardening@vger.kernel.org>; Thu, 12 Oct 2023 15:27:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697149515; x=1697754315; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1697149673; x=1697754473; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=4cW7wFWvnFRZJ8ywKO4YSs7fPF7BTc9LFrtaZSrdIDc=;
-        b=MBlYxberzusxJ3c/QS12vHfR2P2xraSd0tr179NcFgrWQUwWpbzoSIWSuQIfyV/qcM
-         +STqKyyBcA1F/Ero3F4X1cqB/dEHUS95F+blljG8Fs5zggeiTkPvLCTGBeiZh9OHCwp6
-         pJkLpTWGcfdG1fEPXUEar7zTf5YE2mJmRkNjyFh4msqV5pAeRsCXBpoaIxvFZkbTRg5G
-         a29PfL8pMRWPlZdONRX9kJcDnoc2XK/WJQZLEDF04M6ZUN9uky39bVRcXUG03VL/hAe5
-         3J6eQNG1ndhcoEgqy/AwzNayf+OnB2VnCQcNV/i09IKUo/MnlEz/1iy0ns0NW8ttlBL2
-         wAUw==
+        bh=rZYpAvmIgIMiNPsdg/lY35j3EeR/rUqwRQrzCZkd3d0=;
+        b=z0hOqJQAGcLilxNgiHT9cMELbFMFkG17er1m8n/oQ8MsVcVffzAje5T4EpZKz8d+cv
+         vsx3Qb6bz2QKuV0JWv5QDQ174OzMuXM+6vZDhBAwc7Sf5RxtZmokXG3qA8uEBdNC6Nv2
+         w3KUTbjj156Hck9EMxBGBM1JnDXKNuAJ4cUrvz8Js73DKWPkH4mQTxdwAGK9nfPblTv+
+         RM7L0tOanYbNO7+drkC2XzL2V+MsOL0dURSX3Uy9hmr+v9Y1AzjqJxbTV4Yvwedjcz+a
+         /hvVT+9/Qmsyrom9EzDM3gFhwfo9D04cFR0VgtWYHQzNiRp9xApV0n8NUEHAQmD/dZUq
+         DI4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697149515; x=1697754315;
+        d=1e100.net; s=20230601; t=1697149673; x=1697754473;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=4cW7wFWvnFRZJ8ywKO4YSs7fPF7BTc9LFrtaZSrdIDc=;
-        b=nbzUFiwu/d6yKs0fr9aagwsEAJgIteRAwQEqg8r+H/NXIiAiRzznXJ+Ufkkwsxg8cb
-         Yy6W3PR7/CLw0dkW56nmpN208Uj9ZwinWQ++rkiiZel3po1o5maq8qZ0u1kRQgPAkXnw
-         emsAfZu/gwJlgpWMiPOuXUMuj8HnMpjp/y0uZNE9zWDBQlydLUWkm2GVDMrOKlXH+kMc
-         KvUJpmKCmq7DtGCynAnwPcOuTcbLA8ueTOBJxo3WhncmKGP4BtpbAe4EWO/NxXrBXcJu
-         KXjquOZ+yowhPEbxmnq/i+owXg0fvgFlIypjG4rrytMS44LKOwOL2fpIqLm2f8+b5dfw
-         ailg==
-X-Gm-Message-State: AOJu0Ywiqw8JLqzmJnn4LpBGu2+uZeR72KUIaWm5KSKvRZz/QVrJcnKq
-	AteHxg9Xz9WPac5+p46Wk/hJEKSAuTFRU5vsXA==
-X-Google-Smtp-Source: AGHT+IGBAbIIcoW0CqLfhN7DK13ZkiVJSw8iVxGlivsbecvejC2H92bx+d5WdZOaPJzjelOAlzToduoOuE7EQf7FuQ==
+        bh=rZYpAvmIgIMiNPsdg/lY35j3EeR/rUqwRQrzCZkd3d0=;
+        b=IynytVrM/+tLMcZGledBusukKNifJ5lz/cLy4FRiwAbT2whjMfyITE6A9mOQsojmpO
+         z8OK+ipY10APMuNkbQ9Sr9TmtzwrtIQkjk+blKwNobYaArT2VJS88wV9iBD0Y1T30h/S
+         AKrwGPLLfgno0FNAUd5xLS4gcXh/THaxNCKyA7a1kqLULeWK7Q/bM9IgF6/M4mJyxRvi
+         BK4C2nLzUhfZzOoanAPrVuFz2L9RHXob2NXwNMyOfMahr/bTSNVQ0/DDGKJ7HKsyHmgc
+         i7b1AzpPheSSdCRP9MrmPlbwhSrJG8klYwdVX0acaQaIL1oI7QMhjQR8yCAIIUG4T37I
+         gdMQ==
+X-Gm-Message-State: AOJu0Yw6KabkrgD6EJ+UxzmXPchtcCvYw6SWOTb/dqC9MFBgVFI4WA6n
+	545Gq1pRltTIs9Z7+QoFcaxVZ4S2aSxffpQqPA==
+X-Google-Smtp-Source: AGHT+IGvsAhFHjxwUVFZUgMRL3+/P7L3Q3QaP/2sCXzGdan8GAMGU0q90XgVFJVBfLiIRlvUoZwcR9p9tY0tNTEHNw==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a81:d444:0:b0:59b:ebe0:9fcd with SMTP
- id g4-20020a81d444000000b0059bebe09fcdmr542887ywl.7.1697149515012; Thu, 12
- Oct 2023 15:25:15 -0700 (PDT)
-Date: Thu, 12 Oct 2023 22:25:12 +0000
+ (user=justinstitt job=sendgmr) by 2002:a25:8a0d:0:b0:d81:582b:4661 with SMTP
+ id g13-20020a258a0d000000b00d81582b4661mr526282ybl.8.1697149673145; Thu, 12
+ Oct 2023 15:27:53 -0700 (PDT)
+Date: Thu, 12 Oct 2023 22:27:52 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAEdyKGUC/x3NMQ7CMAxA0atUnrFkBwbCVRBDSQw1Q4jsqEpV9
- e5EjG/5fwcXU3G4TTuYrOr6LQN8miAtc3kLah6GQOHMxAG9WUl1w2y6ijkWaViXDUuv2D4zc++ YMEbiSFd6cr7AaFWTl/b/5/44jh9NOHRxdwAAAA==
+X-B4-Tracking: v=1; b=H4sIAOdyKGUC/x3NMQqAMAxA0atIZgO2IopXEQdtU81gLYmIIt7d4
+ viW/x9QEiaFvnhA6GTlPWaYsgC3TnEhZJ8NtrK1qYxFPSS6dKMXPkkUIx2Y1ht1U4cO28aH0LX zNDc15EgSCnz9g2F83w8DaSpFcAAAAA==
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1697149514; l=1614;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1697149672; l=1565;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=++HwxaEbHmOYVMN+LAm7g1M8JgRA8xefB8jT1C9ZOnM=; b=ze8sDKCjWG59fZljQnv44JBnL9EeMTQjI7aP0ag/CneGCWxrrlELOiVc5Y4ZRsDDwIQy0qlw1
- dd/v50D7pV7Af+Kr5HJ0RA5X6YoyFLaIKVSBeMLSlJjQ3dsgRe3RsFm
+ bh=5QhySr/Q36zDeZ98j7zPXD0GUeZwX1jIeAwMYdxCyJY=; b=KrpFlNS4TYnLFKZYhQfQ//GmLAMKDMsDyCpew83lBGhmjSjQwft46M0mgguiqwpB6z88nBcuU
+ Ds7ihe1nXe0DZ4uk2R64dfZCwG7NdZ7DIULPlIejpSdriFk3YldG2FT
 X-Mailer: b4 0.12.3
-Message-ID: <20231012-strncpy-drivers-net-phy-nxp-tja11xx-c-v1-1-5ad6c9dff5c4@google.com>
-Subject: [PATCH] net: phy: tja11xx: replace deprecated strncpy with ethtool_sprintf
+Message-ID: <20231012-strncpy-drivers-net-phy-smsc-c-v1-1-00528f7524b3@google.com>
+Subject: [PATCH] net: phy: smsc: replace deprecated strncpy with ethtool_sprintf
 From: Justin Stitt <justinstitt@google.com>
 To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
 	Russell King <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, 
@@ -87,30 +87,30 @@ Note: build-tested only.
 
 Found with: $ rg "strncpy\("
 ---
- drivers/net/phy/nxp-tja11xx.c | 6 ++----
+ drivers/net/phy/smsc.c | 6 ++----
  1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/phy/nxp-tja11xx.c b/drivers/net/phy/nxp-tja11xx.c
-index b13e15310feb..a71399965142 100644
---- a/drivers/net/phy/nxp-tja11xx.c
-+++ b/drivers/net/phy/nxp-tja11xx.c
-@@ -414,10 +414,8 @@ static void tja11xx_get_strings(struct phy_device *phydev, u8 *data)
+diff --git a/drivers/net/phy/smsc.c b/drivers/net/phy/smsc.c
+index c88edb19d2e7..1c7306a1af13 100644
+--- a/drivers/net/phy/smsc.c
++++ b/drivers/net/phy/smsc.c
+@@ -507,10 +507,8 @@ static void smsc_get_strings(struct phy_device *phydev, u8 *data)
  {
  	int i;
  
--	for (i = 0; i < ARRAY_SIZE(tja11xx_hw_stats); i++) {
+-	for (i = 0; i < ARRAY_SIZE(smsc_hw_stats); i++) {
 -		strncpy(data + i * ETH_GSTRING_LEN,
--			tja11xx_hw_stats[i].string, ETH_GSTRING_LEN);
+-		       smsc_hw_stats[i].string, ETH_GSTRING_LEN);
 -	}
-+	for (i = 0; i < ARRAY_SIZE(tja11xx_hw_stats); i++)
-+		ethtool_sprintf(&data, "%s", tja11xx_hw_stats[i].string);
++	for (i = 0; i < ARRAY_SIZE(smsc_hw_stats); i++)
++		ethtool_sprintf(&data, "%s", smsc_hw_stats[i].string);
  }
  
- static void tja11xx_get_stats(struct phy_device *phydev,
+ static u64 smsc_get_stat(struct phy_device *phydev, int i)
 
 ---
 base-commit: cbf3a2cb156a2c911d8f38d8247814b4c07f49a2
-change-id: 20231012-strncpy-drivers-net-phy-nxp-tja11xx-c-99019080b1d4
+change-id: 20231012-strncpy-drivers-net-phy-smsc-c-75dff87bab53
 
 Best regards,
 --
