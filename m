@@ -1,107 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 732187E4
-	for <linux-hardening@vger.kernel.org>; Thu, 12 Oct 2023 02:18:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B29246116
+	for <linux-hardening@vger.kernel.org>; Thu, 12 Oct 2023 04:50:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UVhiz6z/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5BE0C433C8;
-	Thu, 12 Oct 2023 02:18:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697077129;
-	bh=NePGQwBKuxNkoa39buLkrVoRes9zHH25Dkf23OgpCjM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UVhiz6z/97OOSugRxlauh+TMHfJufV+mWRoRMD2YXt8tyY1UPkDiYTakb/Bx/GamR
-	 MigEfZyD9OMed1dDbdfM87yNyzEAliLbMH98/oI6B1+taXYd2rbvFvrdy9xWhe2+A+
-	 SIGWUgGYJx7/XsjBDTpzj3OY2ODYJ1iPYFsHmZjRTqM+78PHUrfH2QcgRaxU/dKcv0
-	 vpsC8wp2NPgL8NzJigOm+oTjYH/L459BACaMAgKkPqX6tj7kiFvdTzQ+ckpjSM53O8
-	 kzGsqRjWfpOSEngRJbl4wenw7qBM6A3F+VxRRGTuEJr+f7faCg2DKIFtiR+ZnyPFff
-	 ysV2ArQKTDviA==
-Date: Wed, 11 Oct 2023 20:18:45 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Cc: Kees Cook <keescook@chromium.org>, linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH 2/2][next] clk: visconti: Add bounds-checking coverage for
- struct visconti_pll_provider
-Message-ID: <675633f7ae9893371d35b238f06fd02a3acffebb.1697076650.git.gustavoars@kernel.org>
-References: <cover.1697076650.git.gustavoars@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eJ1Pz6J7"
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B28B790;
+	Wed, 11 Oct 2023 21:50:56 -0700 (PDT)
+Received: by mail-ej1-x62b.google.com with SMTP id a640c23a62f3a-9a645e54806so82143966b.0;
+        Wed, 11 Oct 2023 21:50:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1697086255; x=1697691055; darn=vger.kernel.org;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YSjZDUjjPOz4QqV7E0UZLHS9zrizXOtrbmGqfrqmqCI=;
+        b=eJ1Pz6J7H8qQO31WvJYQSvt4ui401mMgjSEmgtcetAfPwDyXx/FVoQabxHRAkcPsT0
+         /AUbWuP3uQTD3cabFiyVNldNiPHfo7lSivmfD9pTpLfcmcfiCj5xC380XK4fZuUpZ6Uu
+         zZBc3696Lg/BuQhNYWwFhmRUMawZ3b/g2oQwjVoyJv5iFsf/83PayyvS/RNn7CvP67CD
+         qCJX5qSJko4KSTzPjEcuq7msYzI+tV3TzSqPbkwkyHba2mojpf+AYuLloOOiFrbCH8eM
+         yMo2iXliZfN4kdjcENJoX/R0w7HPjDlhaJurznXui0scpmj6DC5khhvDzLLaPrc9SxyU
+         PMTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697086255; x=1697691055;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YSjZDUjjPOz4QqV7E0UZLHS9zrizXOtrbmGqfrqmqCI=;
+        b=cYF0wf7Ol+U/mFswR8jD53lrMFFzNTCt7bbQGy5iGc8WHaV6dSwy6C59vUANMbZrIr
+         jJJYQJjq5ahUnnEyD1JZKbPL4m86YQYm53RONeVRbo5Q4Fbba5Kl1BxbccI2drL9ksHF
+         K0Ia6CwLxofKe7FnVaoK9bI7B20P06OlsI85UMAcIebL4TelxBSkomwC6Pz9x6cSPO2v
+         Rbim0k+YnYk8sAhEj425kjJkhX/SQmyUYBmtyCO4t9Xv7sX7twKssl86w5AV8e6eOomm
+         WnImcEHYk+c1p4xoWXHtOXJ7KpIFso9/XHT6MoBu/YlK+3hvE6AkNB3puoi/HP68NV2r
+         rtYg==
+X-Gm-Message-State: AOJu0YxPiPIAbu9iGZVClmMx2yVN0epkk3fen+rkFxKR7W4FE9aySCWX
+	Ovlb/QxBg39h5EZDNpCA5RU=
+X-Google-Smtp-Source: AGHT+IFJU5Xjs5SYCirYwBHBkaBd6589j3RzlYuxc/TtMyuhUiNB3IoWlaEQrYaPTu0/d3k7JkPpdQ==
+X-Received: by 2002:a17:906:2d2:b0:9ad:8ef8:a7e8 with SMTP id 18-20020a17090602d200b009ad8ef8a7e8mr20459122ejk.25.1697086254881;
+        Wed, 11 Oct 2023 21:50:54 -0700 (PDT)
+Received: from felia.fritz.box ([2a02:810d:7e40:14b0:78dc:282:cf18:8032])
+        by smtp.gmail.com with ESMTPSA id w19-20020a170906481300b009b9720a85e5sm10573362ejq.38.2023.10.11.21.50.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Oct 2023 21:50:54 -0700 (PDT)
+From: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To: iommu@lists.linux.dev,
+	Joerg Roedel <jroedel@suse.de>,
+	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+	Vasant Hegde <vasant.hegde@amd.com>
+Cc: Kees Cook <keescook@chromium.org>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH] hardening: x86: drop reference to removed config AMD_IOMMU_V2
+Date: Thu, 12 Oct 2023 06:50:40 +0200
+Message-Id: <20231012045040.22088-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1697076650.git.gustavoars@kernel.org>
 
-In order to gain the bounds-checking coverage that __counted_by provides
-to flexible-array members at run-time via CONFIG_UBSAN_BOUNDS (for array
-indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family functions),
-we must make sure that the counter member, in this particular case `num`,
-is updated before the first access to the flex-array member, in this
-particular case array `hws`. See below:
+Commit 5a0b11a180a9 ("iommu/amd: Remove iommu_v2 module") removes the
+config AMD_IOMMU_V2.
 
-commit f316cdff8d67 ("clk: Annotate struct clk_hw_onecell_data with
-__counted_by") introduced `__counted_by` for `struct clk_hw_onecell_data`
-together with changes to relocate some of assignments of counter `num`
-before `hws` is accessed:
+Remove the reference to this config in the x86 architecture-specific
+hardening config fragment as well.
 
-include/linux/clk-provider.h:
-1380 struct clk_hw_onecell_data {
-1381         unsigned int num;
-1382         struct clk_hw *hws[] __counted_by(num);
-1383 };
-
-However, this structure is used as a member in other structs, in this
-case in `struct visconti_pll_provider`:
-
-drivers/clk/visconti/pll.h:
- 16 struct visconti_pll_provider {
- 17         void __iomem *reg_base;
- 18         struct device_node *node;
- 19 
- 20         /* Must be last */
- 21         struct clk_hw_onecell_data clk_data;
- 22 };
-
-Hence, we need to move the assignments to `ctx->clk_data.num` after
-allocation for `struct visconti_pll_provider` and before accessing the
-flexible array `ctx->clk_data.hws`. And, as assignments for all members
-in `struct visconti_pll_provider` are originally adjacent to each other,
-relocate all assignments together, so we don't split up
-`ctx->clk_data.hws = nr_plls` from the rest. :)
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 ---
- drivers/clk/visconti/pll.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Joerg, please pick this patch on top of the commit above. Thanks.
 
-diff --git a/drivers/clk/visconti/pll.c b/drivers/clk/visconti/pll.c
-index 1f3234f22667..e9cd80e085dc 100644
---- a/drivers/clk/visconti/pll.c
-+++ b/drivers/clk/visconti/pll.c
-@@ -329,12 +329,12 @@ struct visconti_pll_provider * __init visconti_init_pll(struct device_node *np,
- 	if (!ctx)
- 		return ERR_PTR(-ENOMEM);
+ arch/x86/configs/hardening.config | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/arch/x86/configs/hardening.config b/arch/x86/configs/hardening.config
+index 19bb0c7a7669..7b497f3b7bc3 100644
+--- a/arch/x86/configs/hardening.config
++++ b/arch/x86/configs/hardening.config
+@@ -9,7 +9,6 @@ CONFIG_INTEL_IOMMU=y
+ CONFIG_INTEL_IOMMU_DEFAULT_ON=y
+ CONFIG_INTEL_IOMMU_SVM=y
+ CONFIG_AMD_IOMMU=y
+-CONFIG_AMD_IOMMU_V2=y
  
--	for (i = 0; i < nr_plls; ++i)
--		ctx->clk_data.hws[i] = ERR_PTR(-ENOENT);
--
- 	ctx->node = np;
- 	ctx->reg_base = base;
- 	ctx->clk_data.num = nr_plls;
- 
-+	for (i = 0; i < nr_plls; ++i)
-+		ctx->clk_data.hws[i] = ERR_PTR(-ENOENT);
-+
- 	return ctx;
- }
+ # Enable CET Shadow Stack for userspace.
+ CONFIG_X86_USER_SHADOW_STACK=y
 -- 
-2.34.1
+2.17.1
 
