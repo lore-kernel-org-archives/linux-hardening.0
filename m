@@ -1,67 +1,67 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1349358BA
-	for <linux-hardening@vger.kernel.org>; Thu, 12 Oct 2023 21:20:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B09D3E49D
+	for <linux-hardening@vger.kernel.org>; Thu, 12 Oct 2023 21:33:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XkLaD7X7"
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DDE4BB
-	for <linux-hardening@vger.kernel.org>; Thu, 12 Oct 2023 14:20:05 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-59f61a639b9so21839797b3.1
-        for <linux-hardening@vger.kernel.org>; Thu, 12 Oct 2023 14:20:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j3CIIv3g"
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3750FD9
+	for <linux-hardening@vger.kernel.org>; Thu, 12 Oct 2023 14:33:34 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5a7af69a4baso21797697b3.0
+        for <linux-hardening@vger.kernel.org>; Thu, 12 Oct 2023 14:33:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697145604; x=1697750404; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1697146413; x=1697751213; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=Hnx2hMUROy5hPaWMuQS6wGUcTD4C+Y8X52y6T46QNnk=;
-        b=XkLaD7X7q8fkKutL6vUFBc68A+tAQ9/sIOS21rjfw57sGiz+TOYsD85qQSv+C2xgxb
-         lQDhbPztXnHeZES2/gdkdSUtRMUy8REZ4UJFj9Wo4iRMZ84Dd5/liVwuL3Qa1TqBW3BH
-         jlpV7rdPPrLIYATw07Jk3evdgmyuXvzIHkEGEk1MHCN+1ZQ+EE4jMRSvwSBWHHzOEPAk
-         j1ScvGrYxWsfh5SFjmTTKze7NVdYdnL+tG8UWmick/5GdFthB9vlwYaNSPzlI2hnWGs9
-         EfgIFe99jOKuRqoGvITo5UTaq3jlPGHSrrVVVCoAM0y2QIbIcL9a34qRo7VFpnpf7FAi
-         zQ5Q==
+        bh=hYSTVrCouVWE319gwaD4mDagDCplKYTMAl9k6NN6p0U=;
+        b=j3CIIv3gCVmU9R0l2dslE+oPVXaVD1Wa12FQFQirrDPseN8A6dyuCjQkG4CehA7t1K
+         zIKzQ/jnbO72wkULosOjGE3p2+FlOAojLHQt6Yhpgen1kY01ui21t7uupxt9dbDP7NBW
+         Xsl7U0Ceuwcax1UQPZSnQ4gZzAz5K+Q20nqi2u7o2OnxBs0I4R91gOBp4hg0G4OTFwzC
+         M/yTkOKiVBVDy/udMkd/tg9/nBLXJZ8WYkmYMYiW3RKBbYU40THgrA0nEhjEpn4veDd7
+         SL55rM0LcZY4zrw+T2zRKByaW6gfhT1IBAhRWlYd7QkxJM1KA4s40A2t6S0cvivV35Gg
+         IlRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697145604; x=1697750404;
+        d=1e100.net; s=20230601; t=1697146413; x=1697751213;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Hnx2hMUROy5hPaWMuQS6wGUcTD4C+Y8X52y6T46QNnk=;
-        b=KwnOr3CKLY7uVi6HNSkPjsR7EC3hr6JST1McOAylRMYYQNdp/HEt0HbcuFqTdcpC7E
-         I84W67imjq9ycff6ezNxXfuOJBJdduoQ9lsFDlZVLG27tfXwCnm1AQQr5LJ89shhBwbF
-         pGTdXeYuKdfWfd7Tprl4l0sTJqOE76xHrTAo8HzQ5oeljABvROex53aCzSe9oR4cRYPB
-         AbQow8ACKneUtCgdonsdRO2Ikq74I/GtABPlaoHJKs1ias9tAJd7Di9jmIy0vpUWV4/L
-         mbbVhD0bfxSIq/QuVzSU6HhehG9UJgMpvBhkRGbYgAu/Nro5lCyFNqcc5WoXgAvoomvF
-         QHHg==
-X-Gm-Message-State: AOJu0YxwNF3CCRnz7W2zhbjz2siT/J4OyoGUR2QIRPstIkmDhC/xLok1
-	00JC3bHU5XsvI/meVmynIOgnfCB5n5uO3OknTg==
-X-Google-Smtp-Source: AGHT+IGEz38HdWBwXZW+qHolz7YTUuV4PlFesGO+loEhl5nFIdEKYX6auuR5XKLavYAKjeNoVukACpRoPzbikawFBw==
+        bh=hYSTVrCouVWE319gwaD4mDagDCplKYTMAl9k6NN6p0U=;
+        b=YNjXaJMnUFmVx5vTobKwH1Tt9I8aY1g1z+hvqQ/ImTbcCoT9egppnLEqQDzNRzhSAR
+         eeCTMcLjNA4nKXEgX3lbTYO9q9yRrG9zjGDzJhzMtz3upMPpEphfhC4f33xwvSqAwNxb
+         M3BOOjp9l2l+gaiEXKyqDqwDFfv59429nJGb0MCc/zQJNVg6ZlKJ8y+SXQ8Go179fsN1
+         LGDDLFX2LwsuH8SxvK/pCSc+IKGa61uFnl629tkFqCSX684q8uWlbWXXqBcX/E4UMQ11
+         4HRvB+7sZENNVQpn+fZ3v8TExScHzmVAQJyfW42HIr2ax8BC0M/XgsF5DnhgPAFf0RH9
+         CVcg==
+X-Gm-Message-State: AOJu0Yxfl6YtHJWGiMRlQNgzf69I+R+zjxxBmKUjIdJ2mTM05y61dK7B
+	qJCM4RhaKuKo3oIhfirOd0/EWie43LcAjO8WPw==
+X-Google-Smtp-Source: AGHT+IHLXU+q2owngkTbSiNtMR5BADqKtueGDHMDZYEex8Po8KdOypDGg++9ce6J7+BSWDwmTy9Wy7uJXqIZ+5F3rA==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a81:af27:0:b0:5a7:b54e:bfc1 with SMTP
- id n39-20020a81af27000000b005a7b54ebfc1mr243135ywh.10.1697145604749; Thu, 12
- Oct 2023 14:20:04 -0700 (PDT)
-Date: Thu, 12 Oct 2023 21:20:04 +0000
+ (user=justinstitt job=sendgmr) by 2002:a25:361e:0:b0:d9a:6b49:433d with SMTP
+ id d30-20020a25361e000000b00d9a6b49433dmr164492yba.6.1697146413504; Thu, 12
+ Oct 2023 14:33:33 -0700 (PDT)
+Date: Thu, 12 Oct 2023 21:33:32 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAANjKGUC/yWNQQ6DMAwEv4J8rqUkFRe+UlVVCAZ8qIvsFFIh/
- t60XFY7h9ndwUiZDLpmB6WVjV9SwV8aSHOUiZCHyhBcuHrnA1pWScsHB+WV1FAoI+WZ9Fe2apS 3YC5TT2c+npEFE7rWt6GPY0zBQV1flEYu/+fb/Ti++Q+lF4kAAAA=
+X-B4-Tracking: v=1; b=H4sIACxmKGUC/x3NwQqDMAyA4VeRnBcwVcbcq4wxahpnDrYlFZmI7
+ 27Z8bv8/wFFTKXAsznAZNOiKVbQrQGeffwKaqgG17qOWnJYVoucdwymm1jBKCvOfjEfNOHod07 LR3JGxrsQ8dA/unGYoPayyaS//+v1Ps8LZduKZXsAAAA=
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1697145603; l=2721;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1697146412; l=2666;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=K5JHCGxkEZHPygsVoHqfoDZGkV0pxG6IhwPB2u479/U=; b=bsjP3OcLje0SPvVnGKRcZtcvFRKAeLjmhv0CkhKsA5enluy6XHRLQ3iodA/qzFgN/6BR552D8
- h2380adLrRVA7mWJ7s69+bGSfcNmC0XDqvDOKG9KsHHWLGb/SSqaOQU
+ bh=GEipWyiXVMyF4NttCT1RNho91xfYNJdcMAw0nEmg9aU=; b=x7E6v7q0m/O/QprpRqxWPblE89KJH/8AAzMt116g3gzow9M2f7BwcEy/LlgWAsSKhgaWC4jk0
+ 9TdRQ3QWP87CvCdaWXAAGHMw7Gj12xOELpNOijQRm8halo5ZaaCR6zx
 X-Mailer: b4 0.12.3
-Message-ID: <20231012-strncpy-drivers-net-ethernet-wangxun-txgbe-txgbe_main-c-v1-1-c9bb3270ac98@google.com>
-Subject: [PATCH] net: txgbe: replace deprecated strncpy with strscpy
+Message-ID: <20231012-strncpy-drivers-net-hamradio-baycom_epp-c-v1-1-8f4097538ee4@google.com>
+Subject: [PATCH] hamradio: replace deprecated strncpy with strscpy
 From: Justin Stitt <justinstitt@google.com>
-To: Jiawen Wu <jiawenwu@trustnetic.com>, Mengyuan Lou <mengyuanlou@net-swift.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
+To: Thomas Sailer <t.sailer@alumni.ethz.ch>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: linux-hams@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
 X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
@@ -74,38 +74,18 @@ strncpy() is deprecated for use on NUL-terminated destination strings
 [1] and as such we should prefer more robust and less ambiguous string
 interfaces.
 
-Based on usage part_str usage within txgbe_read_pba_string(), we expect
-part_str to be NUL-terminated but not necessarily NUL-padded:
-|       /* put a null character on the end of our string */
-|       pba_num[10] = '\0';
+We expect both hi.data.modename and hi.data.drivername to be
+NUL-terminated but not necessarily NUL-padded which is evident by its
+usage with sprintf:
+|       sprintf(hi.data.modename, "%sclk,%smodem,fclk=%d,bps=%d%s",
+|               bc->cfg.intclk ? "int" : "ext",
+|               bc->cfg.extmodem ? "ext" : "int", bc->cfg.fclk, bc->cfg.bps,
+|               bc->cfg.loopback ? ",loopback" : "");
 
-Interestingly, part_str is not used after txgbe_read_pba_string():
-| ...
-|	err = txgbe_read_pba_string(wx, part_str, TXGBE_PBANUM_LENGTH);
-|	if (err)
-|		strscpy(part_str, "Unknown", sizeof(part_str));
-|
-|	netif_info(wx, probe, netdev, "%pM\n", netdev->dev_addr);
-|
-|	return 0;
-|
-|err_remove_phy:
-|	txgbe_remove_phy(txgbe);
-|err_release_hw:
-|	wx_clear_interrupt_scheme(wx);
-|	wx_control_hw(wx, false);
-|err_free_mac_table:
-|	kfree(wx->mac_table);
-|err_pci_release_regions:
-|	pci_release_selected_regions(pdev,
-|				     pci_select_bars(pdev, IORESOURCE_MEM));
-|err_pci_disable_dev:
-|	pci_disable_device(pdev);
-|	return err;
-|}
-... this means this strncpy (or now strscpy) is probably useless. For
-now, let's make the swap to strscpy() as I am not sure if this is truly
-dead code or not.
+Note that this data is copied out to userspace with:
+|       if (copy_to_user(data, &hi, sizeof(hi)))
+... however, the data was also copied FROM the user here:
+|       if (copy_from_user(&hi, data, sizeof(hi)))
 
 Considering the above, a suitable replacement is `strscpy` [2] due to
 the fact that it guarantees NUL-termination on the destination buffer
@@ -119,28 +99,38 @@ Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
 Note: build-tested only.
 
-Found with: $ rg "strncpy\("
+Also, there are 33 instances of trailing whitespace in this file alone.
+I've opted to not remove them in this patch.
 ---
- drivers/net/ethernet/wangxun/txgbe/txgbe_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/hamradio/baycom_epp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/wangxun/txgbe/txgbe_main.c b/drivers/net/ethernet/wangxun/txgbe/txgbe_main.c
-index 5c3aed516ac2..c795fbab37be 100644
---- a/drivers/net/ethernet/wangxun/txgbe/txgbe_main.c
-+++ b/drivers/net/ethernet/wangxun/txgbe/txgbe_main.c
-@@ -739,7 +739,7 @@ static int txgbe_probe(struct pci_dev *pdev,
- 	/* First try to read PBA as a string */
- 	err = txgbe_read_pba_string(wx, part_str, TXGBE_PBANUM_LENGTH);
- 	if (err)
--		strncpy(part_str, "Unknown", TXGBE_PBANUM_LENGTH);
-+		strscpy(part_str, "Unknown", sizeof(part_str));
+diff --git a/drivers/net/hamradio/baycom_epp.c b/drivers/net/hamradio/baycom_epp.c
+index 83ff882f5d97..30a0fbb12b9c 100644
+--- a/drivers/net/hamradio/baycom_epp.c
++++ b/drivers/net/hamradio/baycom_epp.c
+@@ -1074,7 +1074,7 @@ static int baycom_siocdevprivate(struct net_device *dev, struct ifreq *ifr,
+ 		return 0;
  
- 	netif_info(wx, probe, netdev, "%pM\n", netdev->dev_addr);
+ 	case HDLCDRVCTL_DRIVERNAME:
+-		strncpy(hi.data.drivername, "baycom_epp", sizeof(hi.data.drivername));
++		strscpy(hi.data.drivername, "baycom_epp", sizeof(hi.data.drivername));
+ 		break;
+ 		
+ 	case HDLCDRVCTL_GETMODE:
+@@ -1091,7 +1091,7 @@ static int baycom_siocdevprivate(struct net_device *dev, struct ifreq *ifr,
+ 		return baycom_setmode(bc, hi.data.modename);
+ 
+ 	case HDLCDRVCTL_MODELIST:
+-		strncpy(hi.data.modename, "intclk,extclk,intmodem,extmodem,divider=x",
++		strscpy(hi.data.modename, "intclk,extclk,intmodem,extmodem,divider=x",
+ 			sizeof(hi.data.modename));
+ 		break;
  
 
 ---
 base-commit: cbf3a2cb156a2c911d8f38d8247814b4c07f49a2
-change-id: 20231012-strncpy-drivers-net-ethernet-wangxun-txgbe-txgbe_main-c-05152bafac20
+change-id: 20231012-strncpy-drivers-net-hamradio-baycom_epp-c-6e11c9483b9f
 
 Best regards,
 --
