@@ -1,86 +1,146 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F3A2941C
-	for <linux-hardening@vger.kernel.org>; Thu, 12 Oct 2023 16:48:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55CC03A273
+	for <linux-hardening@vger.kernel.org>; Thu, 12 Oct 2023 18:35:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bRTOFj4f"
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 729E3DD
-	for <linux-hardening@vger.kernel.org>; Thu, 12 Oct 2023 09:48:44 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1c9a1762b43so10039235ad.1
-        for <linux-hardening@vger.kernel.org>; Thu, 12 Oct 2023 09:48:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DSZHXL9g"
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06899137
+	for <linux-hardening@vger.kernel.org>; Thu, 12 Oct 2023 11:35:42 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d99ec34829aso1781700276.1
+        for <linux-hardening@vger.kernel.org>; Thu, 12 Oct 2023 11:35:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1697129324; x=1697734124; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9zj94NuVMRyygdkOW8mvq9Nen4maWkMgZsmZqNR+8rw=;
-        b=bRTOFj4fSA056yrQKskox7o7RyuI3GNwUJPIzG55g6Vb1Vj52nUkqQhnJo4fRkVQZp
-         BQdiwdDAotjrg1oO3PqN4zr9BORHv9s5+pLpCKdN+IPZ2CV23Ab/nQujySzvosvML9TL
-         jxeSSVnjvDrn1e+T0a7dc/Ii+mk2RpVKRd34I=
+        d=google.com; s=20230601; t=1697135742; x=1697740542; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=zZ5vZeZ1rQtj/pLLfjwP55zNf2pNIW6kvAeBQT1x4bU=;
+        b=DSZHXL9gw45hmfv+Snb7H4L6njWd/lhK8QsZGUxgaJzK/+K1VwiW30ehjEpi6SnpBQ
+         9y8ORbiypnX1Fn+DDilQf3mM35qgPXSo1htW9agMVupQ+92UDvisv5XSIQlI6xzDQxTa
+         ZtaSe9MHYfARRmh1WjATl/L+HYNO7GWdoUey4JDXB+aQpW5fjeLNZPo0mfeRAfKmzZs7
+         DsJ1iWc/+GwKoJr5VAS6sutmqYGQBpm+fSQ1WTCkbWGxFaCmUdKM/w8OEaduRF8mVfZX
+         4c1jMKvuqh9NNHxU52MdZ1MeI6y7XK3m65lp+Yt5cd5iJGHrm4/ILb6k23hLxl5pylmz
+         H6VQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697129324; x=1697734124;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9zj94NuVMRyygdkOW8mvq9Nen4maWkMgZsmZqNR+8rw=;
-        b=CPT2Unbe9B1i5RsvV0ZuyvZwXIFbGPBj3J2segA6DHmy01AiZHl3UzHczPpqQyzFyy
-         YKTiJEuYne65N3/5pFiVOGF/0yLsKIMWsnacBB7ge9CyHIPLy4UrlDDh0TWY5/JYUhGL
-         00wdzXsUHXWFqExjyKxy+1rqwUFyi0PbnNZk9IL19XhHhnMScSU5zKHAVZH+22p+PIQx
-         Asqq50xBzZgtlo5krzAoEV3aK41GKY8P0K8pKLpEg0mSVmjC1ETPFwviVub+sE4yZggZ
-         4N2q+CRn9gX3MGB5/M/CW2fHKysZhc1uNgzGczx1b6o97sFFabEz137kPxUl0zT//ZGP
-         Ac8Q==
-X-Gm-Message-State: AOJu0Yxk5ghGw3QxtJw0PI4KhgCV0ZoR5Sb0x+sLqo8I5MLmc1pHkNTw
-	ttKvpRJ5br4X9f9eQyvj51UrZA==
-X-Google-Smtp-Source: AGHT+IF831rt9uwN8FV+a7yFdX158syIhIfsDP9+BmIbnBUGEesMv6egJHZONGeGkhVAAiy8eu5gZw==
-X-Received: by 2002:a17:903:11d2:b0:1c7:2697:ec0a with SMTP id q18-20020a17090311d200b001c72697ec0amr28084231plh.30.1697129323902;
-        Thu, 12 Oct 2023 09:48:43 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id x4-20020a170902ea8400b001c5076ae6absm2204778plb.126.2023.10.12.09.48.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Oct 2023 09:48:43 -0700 (PDT)
-From: Kees Cook <keescook@chromium.org>
-To: Jiasheng Jiang <jiasheng@iscas.ac.cn>
-Cc: Kees Cook <keescook@chromium.org>,
-	tony.luck@intel.com,
-	gpiccoli@igalia.com,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] pstore/platform: Add check for kstrdup
-Date: Thu, 12 Oct 2023 09:48:41 -0700
-Message-Id: <169712932001.5350.10182418867498473478.b4-ty@chromium.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230623022706.32125-1-jiasheng@iscas.ac.cn>
-References: <20230623022706.32125-1-jiasheng@iscas.ac.cn>
+        d=1e100.net; s=20230601; t=1697135742; x=1697740542;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zZ5vZeZ1rQtj/pLLfjwP55zNf2pNIW6kvAeBQT1x4bU=;
+        b=sYnD1QnV4pTgJPr5f+8nuYcRmeD5JYZwliEIhEz2QDaF0G0Sk2W9FdgSQFcS4bbJN2
+         B+kCY/6byNd0ybkWqO4RUlMRO2YAy1MDJMQILhtNPmS03/6R9uOUgusV4DnOnC1w7R06
+         5uXBpN6bHpDjVqQMJ+V89ygAV8VWwarF26/60OQUluMiAPlUufc38zF+7kDeBLBFFu/7
+         Avh3QR3mqu8PgMohRklCOLC/jAB3WTjyrt7+QTKfeyJ5WVFK0Voxua87cYNpZcPnpFTb
+         XvzG2z2Pew8FqRmyrquvpf0oGCLj0hyc1BlctA/RleM6G3kseLOku4xzMwmQgFnPgJEi
+         B2zg==
+X-Gm-Message-State: AOJu0YzhqbhSZSgLRaSz7TkFjv50YH1TP2w82HcUWFiwQaSjF4bpHH1Y
+	LTca6oTq8AO6OAxWyIpdoyP5LyaLC7jNpUu9Ng==
+X-Google-Smtp-Source: AGHT+IGAvRFiDoAAgv8+76QvrcJUTBz0asmElUscHpthtBCbO3PwIS4e92bgGQ5whYpEiOcgN0o4K9DW6LvVSd/RiQ==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a25:abab:0:b0:d9a:bd7c:189 with SMTP
+ id v40-20020a25abab000000b00d9abd7c0189mr67389ybi.4.1697135742183; Thu, 12
+ Oct 2023 11:35:42 -0700 (PDT)
+Date: Thu, 12 Oct 2023 18:35:41 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAHw8KGUC/6WOQQrCMBREryJZ+yU/tkJdeQ8pUpNv+qEmbRKDp
+ fTupr2Ci4F5s5iZRUQKTFFcD4sIlDmydwXU8SB03zlLwKawUFKdUSJCTMHpcQYTOFOI4CgBpZ7
+ CZqbBW9Ywkdn0MPT8WNCgEE3dVEoiVaI0j4Fe/N1X723hnmPyYd5PZNzS//YyAsJF6kZ3ytRVp 27WezvQSfu3aNd1/QFDxYYM9wAAAA==
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1697135741; l=2878;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=aHFOyb2iG6fjzUFXJXI6La24xrPjq56KO9Plhvehm8c=; b=xCNDPvyU646zkhkhjsYRp1o2dlZlirYKKLW2wM2NGn7p1AsuRwNCYh05miZknve/xyJY39trx
+ zLMNz9yaUKrAXx+fMPPolFn7b4FFi31Smw2iDKzM8nzzSdf16DUBlA2
+X-Mailer: b4 0.12.3
+Message-ID: <20231012-strncpy-drivers-net-ethernet-qlogic-qed-qed_debug-c-v2-1-16d2c0162b80@google.com>
+Subject: [PATCH v2] qed: replace uses of strncpy
+From: Justin Stitt <justinstitt@google.com>
+To: Ariel Elior <aelior@marvell.com>, Manish Chopra <manishc@marvell.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>, 
+	Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Fri, 23 Jun 2023 10:27:06 +0800, Jiasheng Jiang wrote:
-> Add check for the return value of kstrdup() and return the error
-> if it fails in order to avoid NULL pointer dereference.
-> 
-> 
+strncpy() is deprecated for use on NUL-terminated destination strings
+[1] and as such we should prefer more robust and less ambiguous string
+interfaces.
 
-Applied to for-next/pstore, thanks!
+This patch eliminates three uses of strncpy():
 
-[1/1] pstore/platform: Add check for kstrdup
-      https://git.kernel.org/kees/c/a19d48f7c5d5
+Firstly, `dest` is expected to be NUL-terminated which is evident by the
+manual setting of a NUL-byte at size - 1. For this use specifically,
+strscpy() is a viable replacement due to the fact that it guarantees
+NUL-termination on the destination buffer.
 
-Take care,
+The next two cases should simply be memcpy() as the size of the src
+string is always 3 and the destination string just wants the first 3
+bytes changed.
 
--- 
-Kees Cook
+To be clear, there are no buffer overread bugs in the current code as
+the sizes and offsets are carefully managed such that buffers are
+NUL-terminated. However, with these changes, the code is now more robust
+and less ambiguous (and hopefully easier to read).
+
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Cc: Kees Cook <keescook@chromium.org>
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Changes in v2:
+- prefer memcpy to snprintf (thanks Kees)
+- Link to v1: https://lore.kernel.org/r/20231011-strncpy-drivers-net-ethernet-qlogic-qed-qed_debug-c-v1-1-60c9ca2d54a2@google.com
+---
+Note: build-tested only.
+
+Found with: $ rg "strncpy\("
+---
+ drivers/net/ethernet/qlogic/qed/qed_debug.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_debug.c b/drivers/net/ethernet/qlogic/qed/qed_debug.c
+index cdcead614e9f..f67be4b8ad43 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_debug.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_debug.c
+@@ -3204,8 +3204,8 @@ static u32 qed_grc_dump_big_ram(struct qed_hwfn *p_hwfn,
+ 		     BIT(big_ram->is_256b_bit_offset[dev_data->chip_id]) ? 256
+ 									 : 128;
+ 
+-	strncpy(type_name, big_ram->instance_name, BIG_RAM_NAME_LEN);
+-	strncpy(mem_name, big_ram->instance_name, BIG_RAM_NAME_LEN);
++	memcpy(type_name, big_ram->instance_name, BIG_RAM_NAME_LEN);
++	memcpy(mem_name, big_ram->instance_name, BIG_RAM_NAME_LEN);
+ 
+ 	/* Dump memory header */
+ 	offset += qed_grc_dump_mem_hdr(p_hwfn,
+@@ -6359,8 +6359,7 @@ static void qed_read_str_from_buf(void *buf, u32 *offset, u32 size, char *dest)
+ {
+ 	const char *source_str = &((const char *)buf)[*offset];
+ 
+-	strncpy(dest, source_str, size);
+-	dest[size - 1] = '\0';
++	strscpy(dest, source_str, size);
+ 	*offset += size;
+ }
+ 
+
+---
+base-commit: cbf3a2cb156a2c911d8f38d8247814b4c07f49a2
+change-id: 20231011-strncpy-drivers-net-ethernet-qlogic-qed-qed_debug-c-211d594201e4
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
 
