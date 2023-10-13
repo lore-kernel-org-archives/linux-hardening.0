@@ -1,24 +1,24 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08BD210A0B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C29010A11;
 	Fri, 13 Oct 2023 09:20:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gd8Tb2MX"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9C80DC433CB;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZBMsi6z5"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A6489C433CC;
 	Fri, 13 Oct 2023 09:20:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1697188827;
-	bh=y9jDUO5xD/h+ai60uaWtxxXBe+UBTx8FQS8ef0NQ1CQ=;
+	bh=mWSyMxKE2quLVklS4mF6hrQjoWiFg+m/8c7WZjyz05c=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Gd8Tb2MXQKv6DGxUg8FsrdZKl2dCaM7voXeaoiMPw1XT/l8feYLlF8hObsMl+giqX
-	 FIgDIuUeKTHLowxNfOK+JeCPucUl57d49MRWT91CmksF2l96zO4xzGSWhr5/G5xeLR
-	 ImpqY7K5mNHUPjxq3HsBSq19Ob3pYIXPBowbKPJRDNGkBRvfcvzWPP6jZG02E5Cftl
-	 ram5MyckjFF8NiT+EPo8EuWD3QG75eUxCR4TvCddcOYTJ88alDgvlkKySzQDCq75Wa
-	 mU3Q14WiEEqD8VV05rxDVPyDr2vhjdsQUAbjrJ2QK3GmytuWFlQuQDYSxBu2j98P9y
-	 lrCPDkaVweQwA==
+	b=ZBMsi6z5ugLc/m4ZfrcPjuRlAq/WDH8OHESEVG/keyMetuwRPb4Y25hoGULUtP24q
+	 U0RkDrzqWj9J5BEqVL1ShLw59PZH8CxAil/T5xNXPD7diLv61HKomoDYvMZIUz/n82
+	 7m4XeP0r09bfnJ5LwELHQPTAL15J2twGrmmrNo2uDomaPmzr6yaIswIbA9xBIllUkK
+	 e5gbOw8wyIHCbZsJMefXtbfWNcn4iyC38P0ZUs1rUMbjfhEgJLIhqoORG72Jrh5uOm
+	 l7D/J2apOnFQHBs6HdAB6xnskaoi4Tow01Qhb6IcVhKvP92MYSfEl2ya+bHK+nJe89
+	 Mq1Gybze/rekA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 821DAC691EF;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8B497E1F66C;
 	Fri, 13 Oct 2023 09:20:27 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -28,40 +28,39 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] net: fec: replace deprecated strncpy with ethtool_sprintf
+Subject: Re: [PATCH] ibmvnic: replace deprecated strncpy with strscpy
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <169718882752.6212.16802837129949088436.git-patchwork-notify@kernel.org>
+ <169718882756.6212.2338041860471845995.git-patchwork-notify@kernel.org>
 Date: Fri, 13 Oct 2023 09:20:27 +0000
-References: <20231009-strncpy-drivers-net-ethernet-freescale-fec_main-c-v1-1-4166833f1431@google.com>
-In-Reply-To: <20231009-strncpy-drivers-net-ethernet-freescale-fec_main-c-v1-1-4166833f1431@google.com>
+References: <20231009-strncpy-drivers-net-ethernet-ibm-ibmvnic-c-v1-1-712866f16754@google.com>
+In-Reply-To: <20231009-strncpy-drivers-net-ethernet-ibm-ibmvnic-c-v1-1-712866f16754@google.com>
 To: Justin Stitt <justinstitt@google.com>
-Cc: wei.fang@nxp.com, shenwei.wang@nxp.com, xiaoning.wang@nxp.com,
- linux-imx@nxp.com, davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, ast@kernel.org, daniel@iogearbox.net, hawk@kernel.org,
- john.fastabend@gmail.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- linux-hardening@vger.kernel.org
+Cc: mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
+ haren@linux.ibm.com, ricklind@linux.ibm.com, nnac123@linux.ibm.com,
+ danymadden@us.ibm.com, tlfalcon@linux.ibm.com, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 
 Hello:
 
 This patch was applied to netdev/net-next.git (main)
 by David S. Miller <davem@davemloft.net>:
 
-On Mon, 09 Oct 2023 23:05:41 +0000 you wrote:
+On Mon, 09 Oct 2023 23:19:57 +0000 you wrote:
 > `strncpy` is deprecated for use on NUL-terminated destination strings
 > [1] and as such we should prefer more robust and less ambiguous string
 > interfaces.
 > 
-> ethtool_sprintf() is designed specifically for get_strings() usage.
-> Let's replace strncpy in favor of this more robust and easier to
-> understand interface.
+> NUL-padding is not required as the buffer is already memset to 0:
+> |       memset(adapter->fw_version, 0, 32);
 > 
 > [...]
 
 Here is the summary with links:
-  - net: fec: replace deprecated strncpy with ethtool_sprintf
-    https://git.kernel.org/netdev/net-next/c/659ce55fddd2
+  - ibmvnic: replace deprecated strncpy with strscpy
+    https://git.kernel.org/netdev/net-next/c/431acee06923
 
 You are awesome, thank you!
 -- 
