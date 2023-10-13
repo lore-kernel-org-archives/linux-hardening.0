@@ -1,125 +1,98 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FACA200D1
-	for <linux-hardening@vger.kernel.org>; Fri, 13 Oct 2023 20:53:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86E3621A0A
+	for <linux-hardening@vger.kernel.org>; Fri, 13 Oct 2023 21:04:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VFS9rzlm"
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3A19BF
-	for <linux-hardening@vger.kernel.org>; Fri, 13 Oct 2023 13:53:34 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5a7cc433782so39258627b3.3
-        for <linux-hardening@vger.kernel.org>; Fri, 13 Oct 2023 13:53:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697230414; x=1697835214; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=OzZl4+HNDCRg4UbOKbkT7uBUITuj6sL+WIkS7NUKeRU=;
-        b=VFS9rzlmbYywzA+6iwwLGKwQrfyVafuWixsnnz88rIowp1FR2GwcNYnh87iT9MFtf3
-         s3Z0ZsyepACmEG6LZD1+DceH6NBaOGb1mbSJwKRNigyolIlKNP1Kk20CTDr21yat3C0B
-         XMjpEq+Ep68MIKYnSlYWFhManYhg4yratCd26dzH77DWz4DdfC7htsA00XNGAbvy/FLR
-         neL6QIeF3XSqWHXR/cwUCl9H55EeIwQ7kZxJwA+Bbs2XtqkM7oMYxAO6keaRIEaWvVuM
-         BULlKvRNS9xaxCJ6et2hZmAuvp3GhUt/8EHjl8pjyEgDOzMJcCAf+7yMzsQ7eFUtoXgV
-         Ii3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697230414; x=1697835214;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OzZl4+HNDCRg4UbOKbkT7uBUITuj6sL+WIkS7NUKeRU=;
-        b=mFwm5EGLa5CsHoeNJ/D3OfcRtBKvxXbWD3RzK4XLXP0KtRdNPIJC/8FsohZJ1F3APS
-         gyL+eskleRgN0543dQDjmok6YD9AKXPsV2697fmgTbrs/ZhoFmeJB8ciuPPvHU60XknV
-         9LWCrtllBIjtgWyDMHWi3HamTPlwmE6WVEIcpucOOEUb6TV79M0or0CZTFWUDZN913UL
-         sMeSxPgEFhrAQSdRWUASk0dypvzo4NZs3xCMLq02+rgyYfUCrQjEU3u5/5vfCrePDrjf
-         zQwfK1tctRjYt7FILVUPalssGz7Su0qlJ1s1fFEwTI1XOcErwAJvzERjg3aFCEyNtqq2
-         jh0g==
-X-Gm-Message-State: AOJu0Yw/RPcP6USGyy7I1EAU08O6VoPG/ShcFgZ9x0bytf2QVgvP/93X
-	zkyqWProMzX/avR2I9iLbgx/1/z8GFWMru+Fpw==
-X-Google-Smtp-Source: AGHT+IHN26xr3FORe1m3+FXQr3Z2wC+M86g8vFee5wcig6JFqbRrXhFTD8j81hIOU0Ro3yfxxGIoK6Mc1qFrJlQ0ag==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a81:a150:0:b0:5a8:28be:bf86 with SMTP
- id y77-20020a81a150000000b005a828bebf86mr62498ywg.5.1697230413988; Fri, 13
- Oct 2023 13:53:33 -0700 (PDT)
-Date: Fri, 13 Oct 2023 20:53:33 +0000
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YUsYhhST"
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70BC7B7;
+	Fri, 13 Oct 2023 14:04:02 -0700 (PDT)
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39DKwuVw006388;
+	Fri, 13 Oct 2023 21:03:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2023-03-30;
+ bh=1ckC/D2af9B1OxbwAKPUry84euwDZtXoEbOMk2pCkW0=;
+ b=YUsYhhSTpKiO+rHnFTmq2Cyf+COTP02aKgiVy0LImDaWNe8NKdunFhVl78y5SPY+Uejn
+ 90vzm1AZnjdFTWW09+LNX0bVk9mlXxVJpL9u4rSHquCIDx+qstI1N+TuHa7DGDyElAMb
+ vdPaHwT4Ao5SbSEyNgXPDir09ilzZ7/fTGnr6HKyxcxlYQi3Zu98xaiK8epopiSvSBED
+ p1XmQ66tIleW2hsykVxwMRwNM6/Bym8EoHQ4248D8Ram35yP6j/WFgK6eoo6dHfuT5sT
+ FcbNZtmhXgY8dFNgrnz2WPbW7eFoG8zbM3DsqjKhsaq3w8uJC7fY9RaubeTUYAO7L+AH ZA== 
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3tjycdx194-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 13 Oct 2023 21:03:58 +0000
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 39DKLtrn037518;
+	Fri, 13 Oct 2023 21:03:58 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3tpt0uxn7m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 13 Oct 2023 21:03:57 +0000
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39DL1kdj003704;
+	Fri, 13 Oct 2023 21:03:57 GMT
+Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3tpt0uxn63-3;
+	Fri, 13 Oct 2023 21:03:57 +0000
+From: "Martin K. Petersen" <martin.petersen@oracle.com>
+To: Sathya Prakash <sathya.prakash@broadcom.com>,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>,
+        Justin Stitt <justinstitt@google.com>
+Cc: "Martin K . Petersen" <martin.petersen@oracle.com>,
+        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] scsi: message: fusion: replace deprecated strncpy with strscpy_pad
+Date: Fri, 13 Oct 2023 17:03:51 -0400
+Message-Id: <169721547124.1657123.15010949284795786278.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20230927-strncpy-drivers-message-fusion-mptctl-c-v1-1-bb2eddc1743c@google.com>
+References: <20230927-strncpy-drivers-message-fusion-mptctl-c-v1-1-bb2eddc1743c@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAEyuKWUC/x2NzQ6CMBAGX4Xs2U1oi/HnVYwHaD9lI6lkt0EN4
- d2tHuYwl5mVDCowOjcrKRYxeeYqbtdQHPt8B0uqTr71wbUusBXNcf5wUlmgxhmFX6KYYMZ9GX/ sHzwhcWTnu+MhAqcwgGpyVtzk/d9drtv2BccyB/Z+AAAA
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1697230412; l=2121;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=AwGkauBF747GZlKSLUDSAGULd+jPXO4eamh/1mrnOow=; b=jbmxFb3nNGqErXN238ktXtN+UHQuPKfn2bj7BMuyW8p3jYgRrpqT8otgeIeuvlOaf5YY2ER3u
- gfPL8Fjoz8sDgfubNhmKQ4vUxROcTIYlWSY6BhbY42kdlqtcmZbo5a/
-X-Mailer: b4 0.12.3
-Message-ID: <20231013-strncpy-drivers-net-wireless-ath-ath5k-led-c-v1-1-3acb0b5a21f2@google.com>
-Subject: [PATCH] ath5k: replace deprecated strncpy with strscpy
-From: Justin Stitt <justinstitt@google.com>
-To: Jiri Slaby <jirislaby@kernel.org>, Nick Kossifidis <mickflemm@gmail.com>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Kalle Valo <kvalo@kernel.org>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-13_12,2023-10-12_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 malwarescore=0
+ mlxlogscore=999 bulkscore=0 suspectscore=0 adultscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2309180000
+ definitions=main-2310130183
+X-Proofpoint-ORIG-GUID: HCwqWy4GZ3wpgE7XDZrOzLhtIPr6oBFN
+X-Proofpoint-GUID: HCwqWy4GZ3wpgE7XDZrOzLhtIPr6oBFN
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+	RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
 	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-strncpy() is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous string
-interfaces.
+On Wed, 27 Sep 2023 04:06:09 +0000, Justin Stitt wrote:
 
-We expect led->name to be NUL-terminated based on the presence of a
-manual NUL-byte assignment.
+> `strncpy` is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
+> 
+> Since all these structs are copied out to userspace let's keep them
+> NUL-padded by using `strscpy_pad` which guarantees NUL-termination of
+> the destination buffer while also providing the NUL-padding behavior
+> that strncpy has.
+> 
+> [...]
 
-This NUL-byte assignment was added in Commit daf9669bea30aa22 ("ath5k:
-ensure led name is null terminated"). If strscpy() had existed and had
-been used back when this code was written then potential bugs and the
-need to manually NUL-terminate could have been avoided. Since we now
-have the technology, let's use it :)
+Applied to 6.7/scsi-queue, thanks!
 
-Considering the above, a suitable replacement is `strscpy` [2] due to
-the fact that it guarantees NUL-termination on the destination buffer
-without unnecessarily NUL-padding. If NUL-padding is required let's opt
-for strscpy_pad().
+[1/1] scsi: message: fusion: replace deprecated strncpy with strscpy_pad
+      https://git.kernel.org/mkp/scsi/c/4280a0a70170
 
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Note: build-tested only.
-
-Found with: $ rg "strncpy\("
----
- drivers/net/wireless/ath/ath5k/led.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/net/wireless/ath/ath5k/led.c b/drivers/net/wireless/ath/ath5k/led.c
-index 33e9928af363..439052984796 100644
---- a/drivers/net/wireless/ath/ath5k/led.c
-+++ b/drivers/net/wireless/ath/ath5k/led.c
-@@ -131,8 +131,7 @@ ath5k_register_led(struct ath5k_hw *ah, struct ath5k_led *led,
- 	int err;
- 
- 	led->ah = ah;
--	strncpy(led->name, name, sizeof(led->name));
--	led->name[sizeof(led->name)-1] = 0;
-+	strscpy(led->name, name, sizeof(led->name));
- 	led->led_dev.name = led->name;
- 	led->led_dev.default_trigger = trigger;
- 	led->led_dev.brightness_set = ath5k_led_brightness_set;
-
----
-base-commit: cbf3a2cb156a2c911d8f38d8247814b4c07f49a2
-change-id: 20231013-strncpy-drivers-net-wireless-ath-ath5k-led-c-12487cee93be
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
-
+-- 
+Martin K. Petersen	Oracle Linux Engineering
