@@ -1,107 +1,144 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66219250FA;
-	Fri, 13 Oct 2023 20:13:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB52925108
+	for <linux-hardening@vger.kernel.org>; Fri, 13 Oct 2023 20:33:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="t08lQ0j+"
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD04EB7;
-	Fri, 13 Oct 2023 13:13:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=L87ipk/XEXKtmEMbuP/TQA9pUzG48gkBb6cfivxpP9A=; b=t0
-	8lQ0j+j4YvxeAkASSJaGG2sOnEb6XNrauv5v6mHcTH/qPg9ykCUMFoLrijCkWn5nyjEdAwWSfDnED
-	Earf0uBF36bLy6wfUE7KE3h0H5kakPHys71PpksHLeRiOOOIv8JOZ2Z9XiGNk/D1HH6plZPcYDMCt
-	kJkj7cYglKkxV68=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1qrOWm-00284c-ME; Fri, 13 Oct 2023 22:12:56 +0200
-Date: Fri, 13 Oct 2023 22:12:56 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] net: phy: tja11xx: replace deprecated strncpy with
- ethtool_sprintf
-Message-ID: <0c401bcb-70a8-47a5-bca0-0b9e8e0439a8@lunn.ch>
-References: <20231012-strncpy-drivers-net-phy-nxp-tja11xx-c-v1-1-5ad6c9dff5c4@google.com>
- <15af4bc4-2066-44bc-8d2e-839ff3945663@lunn.ch>
- <CAFhGd8pmq3UKBE_6ZbLyvRRhXJzaWMQ2GfosvcEEeAS-n7M4aQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2GLPtszD"
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68AAFB7
+	for <linux-hardening@vger.kernel.org>; Fri, 13 Oct 2023 13:33:49 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d9a3942461aso3605217276.2
+        for <linux-hardening@vger.kernel.org>; Fri, 13 Oct 2023 13:33:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1697229228; x=1697834028; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=eG6A8LXGdf5DishXidGUjCut3MBs3ddn444r7C+ElXE=;
+        b=2GLPtszDPum7mvEFFd7ZG16lA3MmeTdMHTlFft9GmpFMwSsT9ZZKIfhGdlCfmHi2FX
+         ZjuZMfsxXLbPvhhi9NdsObNaE1pZl3cT2P3AACBXiPkjpHetoMx+yFIlOBfPq0rHmE6m
+         Q0bEOF9BoBUd4FAmDDRMlCIMmHn93EOhLLtbGVCIlJbTXnOpPFNOX+wWDSXZD2xMsZbt
+         gsa7AgLr/5atERjPTKUu+h1H4OB6LMzbK19DxVYEST6XziN3W2B36hLiSY/N83IIXsYp
+         eS6l0gdaGQtgaooXyrDGtquM0gA2prIzokC3X/Xu7upj5Q96JW1+ZiHNPIs8Hol87akv
+         4exw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697229228; x=1697834028;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eG6A8LXGdf5DishXidGUjCut3MBs3ddn444r7C+ElXE=;
+        b=ar1DGYVrsfZQckeLSztBIiaSmR7MGn2OU2HLSkehbHh5kICNBHugN78Hj9OM7EVZ+n
+         0ga7mejb8sQXGOMMgLWAjwwbHcTARDIJaSjJ2gXUJTOi2Kuy0WpnTAobA51i0vwv67dA
+         zCg0M48hb8aLqImSeMzGNOX0U1duEnA/QOFXIK3TCSPH51NK/nrqER8xHAKS40vh7nso
+         dtIY3z5Tva+Lgl17QOzvtcdYZOiHHEwOTV/1x3L1pnmvcq1QqIoR5tDss2fbBoOwQRc4
+         B8meXxi7wtGl3LcWx8lwWoaEhxBuFaAP8bgxpYWQG+aLrtLbBn7dXQSyjb5iQXdr/K1L
+         pm1A==
+X-Gm-Message-State: AOJu0YyUb833nYuJO+llPbxpImNkP85K4QrN70oXOBRkzRurWna2u+fr
+	RkKrwvIE1/IPrg+cH5X6Ly2EeAsf8mhSWILkaw==
+X-Google-Smtp-Source: AGHT+IE1DLGODvnUeOyBO95DQWbeWAG3EQH/FQzqvAHpAtiVubf5eiiRi9rEMF1X30r6/tRVippKDNEtWmsLOAHylw==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a25:5056:0:b0:d9a:3dac:6c1a with SMTP
+ id e83-20020a255056000000b00d9a3dac6c1amr284177ybb.11.1697229228652; Fri, 13
+ Oct 2023 13:33:48 -0700 (PDT)
+Date: Fri, 13 Oct 2023 20:33:48 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFhGd8pmq3UKBE_6ZbLyvRRhXJzaWMQ2GfosvcEEeAS-n7M4aQ@mail.gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAKupKWUC/x2NQQrCMBBFr1Jm7UDS0AheRVyE9GsHNZaZ0Cqld
+ zfK4y/e5r+NDCowOnUbKRYxeZUm/tBRnlK5gWVsTr3rg3c+sFUtef7wqLJAjQsqr6J4wIxTnX7 z7s7PlLlxDGkYYoyIidrnrLjK+987X/b9C0V4zo5/AAAA
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1697229227; l=2804;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=bIMAUwS6tKmB9c3Rk81R/5V5UUFo1cBwPXaV7yFWMoA=; b=CMqSCYBAwjGQ8NqCJLEe3oWu/b2U+C4UYTWSlc/PUeeYHnfx5MQOccK4vtSKlHLLgk37gUzWa
+ wuqPSkQzuGcBq8W/yBQzKG3d3WsDrMe0sr4hx8u6ZKodNLkDgwsgk/2
+X-Mailer: b4 0.12.3
+Message-ID: <20231013-strncpy-drivers-net-wireless-ath-ath10k-mac-c-v1-1-24e40201afa3@google.com>
+Subject: [PATCH] ath10k: replace deprecated strncpy with strtomem_pad
+From: Justin Stitt <justinstitt@google.com>
+To: Kalle Valo <kvalo@kernel.org>, Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: ath10k@lists.infradead.org, linux-wireless@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
+X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Fri, Oct 13, 2023 at 12:53:53PM -0700, Justin Stitt wrote:
-> On Fri, Oct 13, 2023 at 5:22 AM Andrew Lunn <andrew@lunn.ch> wrote:
-> >
-> > > -     for (i = 0; i < ARRAY_SIZE(tja11xx_hw_stats); i++) {
-> > > -             strncpy(data + i * ETH_GSTRING_LEN,
-> > > -                     tja11xx_hw_stats[i].string, ETH_GSTRING_LEN);
-> > > -     }
-> > > +     for (i = 0; i < ARRAY_SIZE(tja11xx_hw_stats); i++)
-> > > +             ethtool_sprintf(&data, "%s", tja11xx_hw_stats[i].string);
-> > >  }
-> >
-> > I assume you are using "%s" because tja11xx_hw_stats[i].string cannot
-> > be trusted as a format string? Is this indicating we need an
-> > ethtool_puts() ?
-> 
-> Indeed, it would trigger a -Wformat-security warning.
-> 
-> An ethtool_puts() would be useful for this situation.
+strncpy() is deprecated [1] and we should prefer less ambiguous
+interfaces.
 
-Hi Justin
+In this case, arvif->u.ap.ssid has its length maintained by
+arvif->u.ap.ssid_len which indicates it may not need to be
+NUL-terminated, although by virtue of using strtomem_pad (with NUL-byte
+pad character) and having a destination size larger than the source,
+ssid will, incidentally, be NUL-terminated here.
 
-hyperv/netvsc_drv.c:			ethtool_sprintf(&p, netvsc_stats[i].name);
-hyperv/netvsc_drv.c:			ethtool_sprintf(&p, vf_stats[i].name);
-ethernet/intel/i40e/i40e_ethtool.c:		ethtool_sprintf(&p, i40e_gstrings_priv_flags[i].flag_string);
-ethernet/intel/i40e/i40e_ethtool.c:		ethtool_sprintf(&p, i40e_gl_gstrings_priv_flags[i].flag_string);
-ethernet/intel/ice/ice_ethtool.c:			ethtool_sprintf(&p, ice_gstrings_priv_flags[i].name);
-ethernet/intel/igc/igc_ethtool.c:			ethtool_sprintf(&p, igc_gstrings_stats[i].stat_string);
-ethernet/intel/ixgbe/ixgbe_ethtool.c:			ethtool_sprintf(&p, ixgbe_gstrings_test[i]);
-ethernet/netronome/nfp/nfp_net_ethtool.c:			ethtool_sprintf(&data, nfp_self_test[i].name);
-ethernet/netronome/nfp/nfp_net_ethtool.c:		ethtool_sprintf(&data, nfp_net_et_stats[i + swap_off].name);
-ethernet/netronome/nfp/nfp_net_ethtool.c:		ethtool_sprintf(&data, nfp_net_et_stats[i - swap_off].name);
-ethernet/netronome/nfp/nfp_net_ethtool.c:		ethtool_sprintf(&data, nfp_net_et_stats[i].name);
-ethernet/fungible/funeth/funeth_ethtool.c:			ethtool_sprintf(&p, txq_stat_names[j]);
-ethernet/fungible/funeth/funeth_ethtool.c:			ethtool_sprintf(&p, xdpq_stat_names[j]);
-ethernet/fungible/funeth/funeth_ethtool.c:			ethtool_sprintf(&p, rxq_stat_names[j]);
-ethernet/fungible/funeth/funeth_ethtool.c:			ethtool_sprintf(&p, tls_stat_names[j]);
-ethernet/amazon/ena/ena_ethtool.c:		ethtool_sprintf(&data, ena_stats->name);
-ethernet/amazon/ena/ena_ethtool.c:			ethtool_sprintf(&data, ena_stats->name);
-ethernet/brocade/bna/bnad_ethtool.c:		ethtool_sprintf(&string, bnad_net_stats_strings[i]);
-ethernet/pensando/ionic/ionic_stats.c:		ethtool_sprintf(buf, ionic_lif_stats_desc[i].name);
-ethernet/pensando/ionic/ionic_stats.c:		ethtool_sprintf(buf, ionic_port_stats_desc[i].name);
-ethernet/hisilicon/hns/hns_dsaf_gmac.c:		ethtool_sprintf(&buff, g_gmac_stats_string[i].desc);
-ethernet/hisilicon/hns/hns_dsaf_xgmac.c:		ethtool_sprintf(&buff, g_xgmac_stats_string[i].desc);
-vmxnet3/vmxnet3_ethtool.c:			ethtool_sprintf(&buf, vmxnet3_tq_dev_stats[i].desc);
-vmxnet3/vmxnet3_ethtool.c:			ethtool_sprintf(&buf, vmxnet3_tq_driver_stats[i].desc);
-vmxnet3/vmxnet3_ethtool.c:			ethtool_sprintf(&buf, vmxnet3_rq_dev_stats[i].desc);
-vmxnet3/vmxnet3_ethtool.c:			ethtool_sprintf(&buf, vmxnet3_rq_driver_stats[i].desc);
-vmxnet3/vmxnet3_ethtool.c:		ethtool_sprintf(&buf, vmxnet3_global_stats[i].desc);
+As strtomem_pad() docs say:
+ * @dest: Pointer of destination character array (marked as __nonstring)
+ * @src: Pointer to NUL-terminated string
+ * @pad: Padding character to fill any remaining bytes of @dest after copy
+ *
+ * This is a replacement for strncpy() uses where the destination is not
+ * a NUL-terminated string, but with bounds checking on the source size, and
+ * an explicit padding character. If padding is not required, use strtomem().
 
-It looks like there are enough potential users to justify adding
-it. Do you have the time and patience?
+Let's also mark ath10k_vif.u.ap.ssid as __nonstring.
 
-    Andrew
+It is unclear to me whether padding is strictly necessary. Perhaps we
+should opt for just strtomem() -- padding certainly doesn't hurt,
+though.
+
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Note: build-tested only.
+
+Found with: $ rg "strncpy\("
+---
+ drivers/net/wireless/ath/ath10k/core.h | 2 +-
+ drivers/net/wireless/ath/ath10k/mac.c  | 3 +--
+ 2 files changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/wireless/ath/ath10k/core.h b/drivers/net/wireless/ath/ath10k/core.h
+index 4b5239de4018..ba9795a8378a 100644
+--- a/drivers/net/wireless/ath/ath10k/core.h
++++ b/drivers/net/wireless/ath/ath10k/core.h
+@@ -607,7 +607,7 @@ struct ath10k_vif {
+ 			u8 tim_bitmap[64];
+ 			u8 tim_len;
+ 			u32 ssid_len;
+-			u8 ssid[IEEE80211_MAX_SSID_LEN];
++			u8 ssid[IEEE80211_MAX_SSID_LEN] __nonstring;
+ 			bool hidden_ssid;
+ 			/* P2P_IE with NoA attribute for P2P_GO case */
+ 			u32 noa_len;
+diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
+index 03e7bc5b6c0b..7daa007bd8b3 100644
+--- a/drivers/net/wireless/ath/ath10k/mac.c
++++ b/drivers/net/wireless/ath/ath10k/mac.c
+@@ -6125,8 +6125,7 @@ static void ath10k_bss_info_changed(struct ieee80211_hw *hw,
+ 
+ 		if (ieee80211_vif_is_mesh(vif)) {
+ 			/* mesh doesn't use SSID but firmware needs it */
+-			strncpy(arvif->u.ap.ssid, "mesh",
+-				sizeof(arvif->u.ap.ssid));
++			strtomem_pad(arvif->u.ap.ssid, "mesh", '\0');
+ 			arvif->u.ap.ssid_len = 4;
+ 		}
+ 	}
+
+---
+base-commit: cbf3a2cb156a2c911d8f38d8247814b4c07f49a2
+change-id: 20231013-strncpy-drivers-net-wireless-ath-ath10k-mac-c-c73a55666e6a
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
+
