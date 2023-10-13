@@ -1,66 +1,66 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB52925108
-	for <linux-hardening@vger.kernel.org>; Fri, 13 Oct 2023 20:33:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FACA200D1
+	for <linux-hardening@vger.kernel.org>; Fri, 13 Oct 2023 20:53:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2GLPtszD"
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68AAFB7
-	for <linux-hardening@vger.kernel.org>; Fri, 13 Oct 2023 13:33:49 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d9a3942461aso3605217276.2
-        for <linux-hardening@vger.kernel.org>; Fri, 13 Oct 2023 13:33:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VFS9rzlm"
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3A19BF
+	for <linux-hardening@vger.kernel.org>; Fri, 13 Oct 2023 13:53:34 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5a7cc433782so39258627b3.3
+        for <linux-hardening@vger.kernel.org>; Fri, 13 Oct 2023 13:53:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697229228; x=1697834028; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1697230414; x=1697835214; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=eG6A8LXGdf5DishXidGUjCut3MBs3ddn444r7C+ElXE=;
-        b=2GLPtszDPum7mvEFFd7ZG16lA3MmeTdMHTlFft9GmpFMwSsT9ZZKIfhGdlCfmHi2FX
-         ZjuZMfsxXLbPvhhi9NdsObNaE1pZl3cT2P3AACBXiPkjpHetoMx+yFIlOBfPq0rHmE6m
-         Q0bEOF9BoBUd4FAmDDRMlCIMmHn93EOhLLtbGVCIlJbTXnOpPFNOX+wWDSXZD2xMsZbt
-         gsa7AgLr/5atERjPTKUu+h1H4OB6LMzbK19DxVYEST6XziN3W2B36hLiSY/N83IIXsYp
-         eS6l0gdaGQtgaooXyrDGtquM0gA2prIzokC3X/Xu7upj5Q96JW1+ZiHNPIs8Hol87akv
-         4exw==
+        bh=OzZl4+HNDCRg4UbOKbkT7uBUITuj6sL+WIkS7NUKeRU=;
+        b=VFS9rzlmbYywzA+6iwwLGKwQrfyVafuWixsnnz88rIowp1FR2GwcNYnh87iT9MFtf3
+         s3Z0ZsyepACmEG6LZD1+DceH6NBaOGb1mbSJwKRNigyolIlKNP1Kk20CTDr21yat3C0B
+         XMjpEq+Ep68MIKYnSlYWFhManYhg4yratCd26dzH77DWz4DdfC7htsA00XNGAbvy/FLR
+         neL6QIeF3XSqWHXR/cwUCl9H55EeIwQ7kZxJwA+Bbs2XtqkM7oMYxAO6keaRIEaWvVuM
+         BULlKvRNS9xaxCJ6et2hZmAuvp3GhUt/8EHjl8pjyEgDOzMJcCAf+7yMzsQ7eFUtoXgV
+         Ii3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697229228; x=1697834028;
+        d=1e100.net; s=20230601; t=1697230414; x=1697835214;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=eG6A8LXGdf5DishXidGUjCut3MBs3ddn444r7C+ElXE=;
-        b=ar1DGYVrsfZQckeLSztBIiaSmR7MGn2OU2HLSkehbHh5kICNBHugN78Hj9OM7EVZ+n
-         0ga7mejb8sQXGOMMgLWAjwwbHcTARDIJaSjJ2gXUJTOi2Kuy0WpnTAobA51i0vwv67dA
-         zCg0M48hb8aLqImSeMzGNOX0U1duEnA/QOFXIK3TCSPH51NK/nrqER8xHAKS40vh7nso
-         dtIY3z5Tva+Lgl17QOzvtcdYZOiHHEwOTV/1x3L1pnmvcq1QqIoR5tDss2fbBoOwQRc4
-         B8meXxi7wtGl3LcWx8lwWoaEhxBuFaAP8bgxpYWQG+aLrtLbBn7dXQSyjb5iQXdr/K1L
-         pm1A==
-X-Gm-Message-State: AOJu0YyUb833nYuJO+llPbxpImNkP85K4QrN70oXOBRkzRurWna2u+fr
-	RkKrwvIE1/IPrg+cH5X6Ly2EeAsf8mhSWILkaw==
-X-Google-Smtp-Source: AGHT+IE1DLGODvnUeOyBO95DQWbeWAG3EQH/FQzqvAHpAtiVubf5eiiRi9rEMF1X30r6/tRVippKDNEtWmsLOAHylw==
+        bh=OzZl4+HNDCRg4UbOKbkT7uBUITuj6sL+WIkS7NUKeRU=;
+        b=mFwm5EGLa5CsHoeNJ/D3OfcRtBKvxXbWD3RzK4XLXP0KtRdNPIJC/8FsohZJ1F3APS
+         gyL+eskleRgN0543dQDjmok6YD9AKXPsV2697fmgTbrs/ZhoFmeJB8ciuPPvHU60XknV
+         9LWCrtllBIjtgWyDMHWi3HamTPlwmE6WVEIcpucOOEUb6TV79M0or0CZTFWUDZN913UL
+         sMeSxPgEFhrAQSdRWUASk0dypvzo4NZs3xCMLq02+rgyYfUCrQjEU3u5/5vfCrePDrjf
+         zQwfK1tctRjYt7FILVUPalssGz7Su0qlJ1s1fFEwTI1XOcErwAJvzERjg3aFCEyNtqq2
+         jh0g==
+X-Gm-Message-State: AOJu0Yw/RPcP6USGyy7I1EAU08O6VoPG/ShcFgZ9x0bytf2QVgvP/93X
+	zkyqWProMzX/avR2I9iLbgx/1/z8GFWMru+Fpw==
+X-Google-Smtp-Source: AGHT+IHN26xr3FORe1m3+FXQr3Z2wC+M86g8vFee5wcig6JFqbRrXhFTD8j81hIOU0Ro3yfxxGIoK6Mc1qFrJlQ0ag==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a25:5056:0:b0:d9a:3dac:6c1a with SMTP
- id e83-20020a255056000000b00d9a3dac6c1amr284177ybb.11.1697229228652; Fri, 13
- Oct 2023 13:33:48 -0700 (PDT)
-Date: Fri, 13 Oct 2023 20:33:48 +0000
+ (user=justinstitt job=sendgmr) by 2002:a81:a150:0:b0:5a8:28be:bf86 with SMTP
+ id y77-20020a81a150000000b005a828bebf86mr62498ywg.5.1697230413988; Fri, 13
+ Oct 2023 13:53:33 -0700 (PDT)
+Date: Fri, 13 Oct 2023 20:53:33 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAKupKWUC/x2NQQrCMBBFr1Jm7UDS0AheRVyE9GsHNZaZ0Cqld
- zfK4y/e5r+NDCowOnUbKRYxeZUm/tBRnlK5gWVsTr3rg3c+sFUtef7wqLJAjQsqr6J4wIxTnX7 z7s7PlLlxDGkYYoyIidrnrLjK+987X/b9C0V4zo5/AAAA
+X-B4-Tracking: v=1; b=H4sIAEyuKWUC/x2NzQ6CMBAGX4Xs2U1oi/HnVYwHaD9lI6lkt0EN4
+ d2tHuYwl5mVDCowOjcrKRYxeeYqbtdQHPt8B0uqTr71wbUusBXNcf5wUlmgxhmFX6KYYMZ9GX/ sHzwhcWTnu+MhAqcwgGpyVtzk/d9drtv2BccyB/Z+AAAA
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1697229227; l=2804;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1697230412; l=2121;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=bIMAUwS6tKmB9c3Rk81R/5V5UUFo1cBwPXaV7yFWMoA=; b=CMqSCYBAwjGQ8NqCJLEe3oWu/b2U+C4UYTWSlc/PUeeYHnfx5MQOccK4vtSKlHLLgk37gUzWa
- wuqPSkQzuGcBq8W/yBQzKG3d3WsDrMe0sr4hx8u6ZKodNLkDgwsgk/2
+ bh=AwGkauBF747GZlKSLUDSAGULd+jPXO4eamh/1mrnOow=; b=jbmxFb3nNGqErXN238ktXtN+UHQuPKfn2bj7BMuyW8p3jYgRrpqT8otgeIeuvlOaf5YY2ER3u
+ gfPL8Fjoz8sDgfubNhmKQ4vUxROcTIYlWSY6BhbY42kdlqtcmZbo5a/
 X-Mailer: b4 0.12.3
-Message-ID: <20231013-strncpy-drivers-net-wireless-ath-ath10k-mac-c-v1-1-24e40201afa3@google.com>
-Subject: [PATCH] ath10k: replace deprecated strncpy with strtomem_pad
+Message-ID: <20231013-strncpy-drivers-net-wireless-ath-ath5k-led-c-v1-1-3acb0b5a21f2@google.com>
+Subject: [PATCH] ath5k: replace deprecated strncpy with strscpy
 From: Justin Stitt <justinstitt@google.com>
-To: Kalle Valo <kvalo@kernel.org>, Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc: ath10k@lists.infradead.org, linux-wireless@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Justin Stitt <justinstitt@google.com>
+To: Jiri Slaby <jirislaby@kernel.org>, Nick Kossifidis <mickflemm@gmail.com>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Kalle Valo <kvalo@kernel.org>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
 X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
@@ -69,31 +69,26 @@ X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-strncpy() is deprecated [1] and we should prefer less ambiguous
+strncpy() is deprecated for use on NUL-terminated destination strings
+[1] and as such we should prefer more robust and less ambiguous string
 interfaces.
 
-In this case, arvif->u.ap.ssid has its length maintained by
-arvif->u.ap.ssid_len which indicates it may not need to be
-NUL-terminated, although by virtue of using strtomem_pad (with NUL-byte
-pad character) and having a destination size larger than the source,
-ssid will, incidentally, be NUL-terminated here.
+We expect led->name to be NUL-terminated based on the presence of a
+manual NUL-byte assignment.
 
-As strtomem_pad() docs say:
- * @dest: Pointer of destination character array (marked as __nonstring)
- * @src: Pointer to NUL-terminated string
- * @pad: Padding character to fill any remaining bytes of @dest after copy
- *
- * This is a replacement for strncpy() uses where the destination is not
- * a NUL-terminated string, but with bounds checking on the source size, and
- * an explicit padding character. If padding is not required, use strtomem().
+This NUL-byte assignment was added in Commit daf9669bea30aa22 ("ath5k:
+ensure led name is null terminated"). If strscpy() had existed and had
+been used back when this code was written then potential bugs and the
+need to manually NUL-terminate could have been avoided. Since we now
+have the technology, let's use it :)
 
-Let's also mark ath10k_vif.u.ap.ssid as __nonstring.
-
-It is unclear to me whether padding is strictly necessary. Perhaps we
-should opt for just strtomem() -- padding certainly doesn't hurt,
-though.
+Considering the above, a suitable replacement is `strscpy` [2] due to
+the fact that it guarantees NUL-termination on the destination buffer
+without unnecessarily NUL-padding. If NUL-padding is required let's opt
+for strscpy_pad().
 
 Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
 Link: https://github.com/KSPP/linux/issues/90
 Cc: linux-hardening@vger.kernel.org
 Signed-off-by: Justin Stitt <justinstitt@google.com>
@@ -102,41 +97,27 @@ Note: build-tested only.
 
 Found with: $ rg "strncpy\("
 ---
- drivers/net/wireless/ath/ath10k/core.h | 2 +-
- drivers/net/wireless/ath/ath10k/mac.c  | 3 +--
- 2 files changed, 2 insertions(+), 3 deletions(-)
+ drivers/net/wireless/ath/ath5k/led.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/core.h b/drivers/net/wireless/ath/ath10k/core.h
-index 4b5239de4018..ba9795a8378a 100644
---- a/drivers/net/wireless/ath/ath10k/core.h
-+++ b/drivers/net/wireless/ath/ath10k/core.h
-@@ -607,7 +607,7 @@ struct ath10k_vif {
- 			u8 tim_bitmap[64];
- 			u8 tim_len;
- 			u32 ssid_len;
--			u8 ssid[IEEE80211_MAX_SSID_LEN];
-+			u8 ssid[IEEE80211_MAX_SSID_LEN] __nonstring;
- 			bool hidden_ssid;
- 			/* P2P_IE with NoA attribute for P2P_GO case */
- 			u32 noa_len;
-diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
-index 03e7bc5b6c0b..7daa007bd8b3 100644
---- a/drivers/net/wireless/ath/ath10k/mac.c
-+++ b/drivers/net/wireless/ath/ath10k/mac.c
-@@ -6125,8 +6125,7 @@ static void ath10k_bss_info_changed(struct ieee80211_hw *hw,
+diff --git a/drivers/net/wireless/ath/ath5k/led.c b/drivers/net/wireless/ath/ath5k/led.c
+index 33e9928af363..439052984796 100644
+--- a/drivers/net/wireless/ath/ath5k/led.c
++++ b/drivers/net/wireless/ath/ath5k/led.c
+@@ -131,8 +131,7 @@ ath5k_register_led(struct ath5k_hw *ah, struct ath5k_led *led,
+ 	int err;
  
- 		if (ieee80211_vif_is_mesh(vif)) {
- 			/* mesh doesn't use SSID but firmware needs it */
--			strncpy(arvif->u.ap.ssid, "mesh",
--				sizeof(arvif->u.ap.ssid));
-+			strtomem_pad(arvif->u.ap.ssid, "mesh", '\0');
- 			arvif->u.ap.ssid_len = 4;
- 		}
- 	}
+ 	led->ah = ah;
+-	strncpy(led->name, name, sizeof(led->name));
+-	led->name[sizeof(led->name)-1] = 0;
++	strscpy(led->name, name, sizeof(led->name));
+ 	led->led_dev.name = led->name;
+ 	led->led_dev.default_trigger = trigger;
+ 	led->led_dev.brightness_set = ath5k_led_brightness_set;
 
 ---
 base-commit: cbf3a2cb156a2c911d8f38d8247814b4c07f49a2
-change-id: 20231013-strncpy-drivers-net-wireless-ath-ath10k-mac-c-c73a55666e6a
+change-id: 20231013-strncpy-drivers-net-wireless-ath-ath5k-led-c-12487cee93be
 
 Best regards,
 --
