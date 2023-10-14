@@ -1,45 +1,59 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 088227E;
-	Sat, 14 Oct 2023 01:55:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 531FCA46
+	for <linux-hardening@vger.kernel.org>; Sat, 14 Oct 2023 03:04:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="maqe7cYu"
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0346CBF;
-	Fri, 13 Oct 2023 18:55:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=cjW+qsUfbs6nzKf1dTERhV/HEx/8IziabIg1Ep2LkPw=; b=maqe7cYuDKIiDrqKlbKmWOn7xM
-	IrpLEF9ncAqzaX8IOBfdJCyG8Q6HyvABIRi8ENKEsHWCwFEk5fAvYk3zgfB6Rqm/zVAgE1T02HSWO
-	O+Pe0xzv6vu7U8uIEtWKUpGC0Qk+B/iAc2hRT6PRiRcYtwaQduanCgdydx2qIbm9+Ux4=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1qrTsT-0029U4-Mh; Sat, 14 Oct 2023 03:55:41 +0200
-Date: Sat, 14 Oct 2023 03:55:41 +0200
-From: Andrew Lunn <andrew@lunn.ch>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BLdzhAVB"
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE083A9;
+	Fri, 13 Oct 2023 20:04:44 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-6b36e1fcea0so901023b3a.1;
+        Fri, 13 Oct 2023 20:04:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1697252684; x=1697857484; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=tkmT5RX8v7VrB7rbJu0hYTNQC/OFJh9NeX4vrDd9wBY=;
+        b=BLdzhAVB0bDl9UCwwS1DmfdGYoWl7mRY+NH+P/O2h4IR+XPfFuaCpXZRCGqfDwJvCH
+         0yMq0iTlX8b3xI7fdljQIS3P7pn1oUF99KGXcZ5JoITtze3hLr/MQkrrWf1MtP55cwad
+         wqDfBiIHxdlp0XXUFW4tM1zucqu/TC+HH+UW3rGWSWFw0Ih/nvsZsYFnz5tRz5R3ZTgC
+         2y/vcUlyx8Iwsp5gPiQxkQaF8JTTX2KNZ86+n37IV+X9tj0J2hlxhbLrr2AWhWAK4Jwz
+         FZKzyJLVWfNu6PyHTIwZnNB0BPD8pKL+3+9kFF89zZJMbZlZ26ijUvh5jjrdgQL+251l
+         M7vQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697252684; x=1697857484;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tkmT5RX8v7VrB7rbJu0hYTNQC/OFJh9NeX4vrDd9wBY=;
+        b=mj9pZBOPI0Z4/pi4YLjE8lzXRxgGUeBM3nGwLKDfsE2vBfjuao4t5LFxr2f8xvLKqP
+         BSc4t2IFkrn5JgGcFIvx9XBi+sKxNwAao2ZONBNqYksChn2XKH55V+gONtTHwqJWWqq7
+         jM4SY7s5gLfRwrZwTnDaHxrdLGka8tf4jpSlaYRIRqCYN/eqeQKTGWMj2jM6aAuPRE+2
+         EjjoWrNhWkmaUBS2UevRBbvyzPHBMwQ+5T/r9Xg9/BizVCYg4Ysm/aSnC51htkycqlCp
+         2LHu4XfkMTYO0e2wn4QB+lZu8ZE+knbCKf4dmK/EEzrVSNXg1X4XLQzMnF+q3QfdbxhO
+         XIag==
+X-Gm-Message-State: AOJu0YzQR9jLPEeV8KgCnSk72dtRdt1KsTQ+8JJW/MiNSUsNADRhP8BL
+	AiJ5zBTA5QZUQaofTzQGH3s=
+X-Google-Smtp-Source: AGHT+IG0luxGMVCiiu/e7olkjVkBiHhOENnweMoA1ppTeqdfrgjznDhE5JBrMvoJo3mzbfy8uWRZIQ==
+X-Received: by 2002:a05:6a00:1592:b0:68f:cf6f:e212 with SMTP id u18-20020a056a00159200b0068fcf6fe212mr28693521pfk.20.1697252683916;
+        Fri, 13 Oct 2023 20:04:43 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:469c:3411:2771:1b7f])
+        by smtp.gmail.com with ESMTPSA id z10-20020aa79f8a000000b00690d4c16296sm1945364pfr.154.2023.10.13.20.04.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Oct 2023 20:04:43 -0700 (PDT)
+Date: Fri, 13 Oct 2023 20:04:40 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To: Kees Cook <keescook@chromium.org>
-Cc: Justin Stitt <justinstitt@google.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] net: phy: tja11xx: replace deprecated strncpy with
- ethtool_sprintf
-Message-ID: <a958d35e-98b6-4a95-b505-776482d1150c@lunn.ch>
-References: <20231012-strncpy-drivers-net-phy-nxp-tja11xx-c-v1-1-5ad6c9dff5c4@google.com>
- <15af4bc4-2066-44bc-8d2e-839ff3945663@lunn.ch>
- <CAFhGd8pmq3UKBE_6ZbLyvRRhXJzaWMQ2GfosvcEEeAS-n7M4aQ@mail.gmail.com>
- <0c401bcb-70a8-47a5-bca0-0b9e8e0439a8@lunn.ch>
- <CAFhGd8p3WzqQu7kT0Pt8Axuv5sKdHJQOLZVEg5x8S_QNwT6bjQ@mail.gmail.com>
- <CAFhGd8qcLARQ4GEabEvcD=HmLdikgP6J82VdT=A9hLTDNru0LQ@mail.gmail.com>
- <202310131630.5E435AD@keescook>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-input@vger.kernel.org, linux-hardening@vger.kernel.org,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH] Input: Annotate struct ff_device with __counted_by
+Message-ID: <ZSoFSF9xYeyei4JL@google.com>
+References: <20231006201739.work.350-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -48,32 +62,31 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202310131630.5E435AD@keescook>
+In-Reply-To: <20231006201739.work.350-kees@kernel.org>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-> I've been told that this whole ethtool API area is considered
-> deprecated. If that holds, then I don't think it's worth adding new
-> helpers to support it when ethtool_sprintf() is sufficient.
+On Fri, Oct 06, 2023 at 01:17:39PM -0700, Kees Cook wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
+> array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
+> 
+> As found with Coccinelle[1], add __counted_by for struct ff_device.
+> 
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: linux-input@vger.kernel.org
+> Cc: linux-hardening@vger.kernel.org
+> Link: https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci [1]
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-I think deprecated is too strong. The current API is not great, so
-maybe with time a new API will emerge. But given there are around 160
-users of the API, probably over 100 drivers, it will be 20 years or
-more before all that hardware becomes obsolete and the drivers are
-removed.
+Applied, thank you.
 
-> Once you're done with the strncpy->ethtool_sprintf conversions I think
-> it would be nice to have a single patch that fixes all of these
-> "%s"-less instances to use "%s". (Doing per-driver fixes for that case
-> seems just overly painful.)
-
-I guess it is the same amount of effort to replace them with
-ethtool_puts()?
-
-checkpatch warns about seq_printf() which could be seq_puts(), so
-somebody thinks using puts is the right thing to do?
-
-	 Andrew
+-- 
+Dmitry
