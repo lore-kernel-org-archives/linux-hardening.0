@@ -1,92 +1,109 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 531FCA46
-	for <linux-hardening@vger.kernel.org>; Sat, 14 Oct 2023 03:04:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3AE5523B
+	for <linux-hardening@vger.kernel.org>; Sat, 14 Oct 2023 06:35:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BLdzhAVB"
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE083A9;
-	Fri, 13 Oct 2023 20:04:44 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-6b36e1fcea0so901023b3a.1;
-        Fri, 13 Oct 2023 20:04:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697252684; x=1697857484; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tkmT5RX8v7VrB7rbJu0hYTNQC/OFJh9NeX4vrDd9wBY=;
-        b=BLdzhAVB0bDl9UCwwS1DmfdGYoWl7mRY+NH+P/O2h4IR+XPfFuaCpXZRCGqfDwJvCH
-         0yMq0iTlX8b3xI7fdljQIS3P7pn1oUF99KGXcZ5JoITtze3hLr/MQkrrWf1MtP55cwad
-         wqDfBiIHxdlp0XXUFW4tM1zucqu/TC+HH+UW3rGWSWFw0Ih/nvsZsYFnz5tRz5R3ZTgC
-         2y/vcUlyx8Iwsp5gPiQxkQaF8JTTX2KNZ86+n37IV+X9tj0J2hlxhbLrr2AWhWAK4Jwz
-         FZKzyJLVWfNu6PyHTIwZnNB0BPD8pKL+3+9kFF89zZJMbZlZ26ijUvh5jjrdgQL+251l
-         M7vQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697252684; x=1697857484;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tkmT5RX8v7VrB7rbJu0hYTNQC/OFJh9NeX4vrDd9wBY=;
-        b=mj9pZBOPI0Z4/pi4YLjE8lzXRxgGUeBM3nGwLKDfsE2vBfjuao4t5LFxr2f8xvLKqP
-         BSc4t2IFkrn5JgGcFIvx9XBi+sKxNwAao2ZONBNqYksChn2XKH55V+gONtTHwqJWWqq7
-         jM4SY7s5gLfRwrZwTnDaHxrdLGka8tf4jpSlaYRIRqCYN/eqeQKTGWMj2jM6aAuPRE+2
-         EjjoWrNhWkmaUBS2UevRBbvyzPHBMwQ+5T/r9Xg9/BizVCYg4Ysm/aSnC51htkycqlCp
-         2LHu4XfkMTYO0e2wn4QB+lZu8ZE+knbCKf4dmK/EEzrVSNXg1X4XLQzMnF+q3QfdbxhO
-         XIag==
-X-Gm-Message-State: AOJu0YzQR9jLPEeV8KgCnSk72dtRdt1KsTQ+8JJW/MiNSUsNADRhP8BL
-	AiJ5zBTA5QZUQaofTzQGH3s=
-X-Google-Smtp-Source: AGHT+IG0luxGMVCiiu/e7olkjVkBiHhOENnweMoA1ppTeqdfrgjznDhE5JBrMvoJo3mzbfy8uWRZIQ==
-X-Received: by 2002:a05:6a00:1592:b0:68f:cf6f:e212 with SMTP id u18-20020a056a00159200b0068fcf6fe212mr28693521pfk.20.1697252683916;
-        Fri, 13 Oct 2023 20:04:43 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:469c:3411:2771:1b7f])
-        by smtp.gmail.com with ESMTPSA id z10-20020aa79f8a000000b00690d4c16296sm1945364pfr.154.2023.10.13.20.04.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Oct 2023 20:04:43 -0700 (PDT)
-Date: Fri, 13 Oct 2023 20:04:40 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Kees Cook <keescook@chromium.org>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-input@vger.kernel.org, linux-hardening@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="Bo+61VSX"
+Received: from smtp.smtpout.orange.fr (smtp-14.smtpout.orange.fr [80.12.242.14])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FC56CE
+	for <linux-hardening@vger.kernel.org>; Fri, 13 Oct 2023 23:35:09 -0700 (PDT)
+Received: from pop-os.home ([86.243.2.178])
+	by smtp.orange.fr with ESMTPA
+	id rYEiqpnupvhM3rYEtqYMoq; Sat, 14 Oct 2023 08:35:08 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1697265308;
+	bh=il89cLsUPoSfIl2uIujuHP4uRIM1OQ8+x9zRodfnRok=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=Bo+61VSX/YyYHCKiYBpJL1M4zOyIazFJEkWMUYYuOZqqleYlxrRVIWb5m9/g/i2fk
+	 /mQgtot4aePqBFtElrsXiGMGf5KEJ4gObLlcrOg2AT7E8FiuLIIy8w9LlFI5aikPrA
+	 WEpS8BipFODvU5kvBv0CRASebxqMW9PzIhLsTjuYoW5kMujbLL2jeuQFVJD6XNLPz6
+	 QRELQx1T+AF5t8a4aMQxgdNyOYAkg2CkE5AtMEZWBLHPaFs7yYPB0Q9ebCjXDTqe5g
+	 Fwi4uo3NH/U9hS6shMji3XkK8YyMNjJjJ9XxaHF65GbJRWwoi3n57YNfnv8yG1/vNJ
+	 C5YpJmAFysrEg==
+X-ME-Helo: pop-os.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 14 Oct 2023 08:35:08 +0200
+X-ME-IP: 86.243.2.178
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Pravin B Shelar <pshelar@ovn.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Kees Cook <keescook@chromium.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Nathan Chancellor <nathan@kernel.org>,
 	Nick Desaulniers <ndesaulniers@google.com>,
-	Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+	Tom Rix <trix@redhat.com>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	netdev@vger.kernel.org,
+	dev@openvswitch.org,
+	linux-hardening@vger.kernel.org,
 	llvm@lists.linux.dev
-Subject: Re: [PATCH] Input: Annotate struct ff_device with __counted_by
-Message-ID: <ZSoFSF9xYeyei4JL@google.com>
-References: <20231006201739.work.350-kees@kernel.org>
+Subject: [PATCH v2 2/2] net: openvswitch: Annotate struct mask_array with __counted_by
+Date: Sat, 14 Oct 2023 08:34:53 +0200
+Message-Id: <ca5c8049f58bb933f231afd0816e30a5aaa0eddd.1697264974.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <e5122b4ff878cbf3ed72653a395ad5c4da04dc1e.1697264974.git.christophe.jaillet@wanadoo.fr>
+References: <e5122b4ff878cbf3ed72653a395ad5c4da04dc1e.1697264974.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231006201739.work.350-kees@kernel.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+	SPF_HELO_PASS,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Fri, Oct 06, 2023 at 01:17:39PM -0700, Kees Cook wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
-> array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
-> 
-> As found with Coccinelle[1], add __counted_by for struct ff_device.
-> 
-> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: linux-input@vger.kernel.org
-> Cc: linux-hardening@vger.kernel.org
-> Link: https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci [1]
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+Prepare for the coming implementation by GCC and Clang of the __counted_by
+attribute. Flexible array members annotated with __counted_by can have
+their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+(for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+functions).
 
-Applied, thank you.
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+v2: Fix the subject  [Ilya Maximets]
+    fix the field name used with __counted_by  [Ilya Maximets]
 
+v1: https://lore.kernel.org/all/f66ddcf1ef9328f10292ea75a17b584359b6cde3.1696156198.git.christophe.jaillet@wanadoo.fr/
+
+
+This patch is part of a work done in parallel of what is currently worked
+on by Kees Cook.
+
+My patches are only related to corner cases that do NOT match the
+semantic of his Coccinelle script[1].
+
+In this case, in tbl_mask_array_alloc(), several things are allocated with
+a single allocation. Then, some pointer arithmetic computes the address of
+the memory after the flex-array.
+
+[1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+---
+ net/openvswitch/flow_table.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/openvswitch/flow_table.h b/net/openvswitch/flow_table.h
+index 9e659db78c05..f524dc3e4862 100644
+--- a/net/openvswitch/flow_table.h
++++ b/net/openvswitch/flow_table.h
+@@ -48,7 +48,7 @@ struct mask_array {
+ 	int count, max;
+ 	struct mask_array_stats __percpu *masks_usage_stats;
+ 	u64 *masks_usage_zero_cntr;
+-	struct sw_flow_mask __rcu *masks[];
++	struct sw_flow_mask __rcu *masks[] __counted_by(max);
+ };
+ 
+ struct table_instance {
 -- 
-Dmitry
+2.34.1
+
