@@ -1,118 +1,79 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DFF27E
-	for <linux-hardening@vger.kernel.org>; Sat, 14 Oct 2023 00:58:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 088227E;
+	Sat, 14 Oct 2023 01:55:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="WhiUNd5a"
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0944191;
-	Fri, 13 Oct 2023 17:58:25 -0700 (PDT)
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39E0aN6V031312;
-	Sat, 14 Oct 2023 00:58:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=2Mn/sALuAGncO7Zfs3mDJhQdbV4y5KH35BwJzbtCZAM=;
- b=WhiUNd5a0vuOSUpe4BF+G9ZmBVZm6akp4HHGKJZ8zjmCzHVdOZiN4PUP7VBIBFBbla4G
- 7mFJ4GPoSDzJLTfzRsnoE1z4Nh6J8CiFsJWu6lJvSd3FylZLCGwBdo5kLzH/UNsCVOAu
- ZWhvP5Vsbz4vHwmEvJN06wLz3a1iAss3sK2XLcj2G1eK7CXEbir00SBLiVJpEZICrfm9
- bQgTbE/xrZvtoXiBEjTeg/tHO+kSvCWA/ryAw7QbTLAfYM5NcpvS3MO36qYLMD88WaVo
- UB/Id4N3mgoqF+4EHHEl1hQ+jstQwTpOy0slAAMqKk0PVYLkC1Ljy7fF/yDsuJQxGtqC kg== 
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3tq5101f85-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 14 Oct 2023 00:58:05 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 39E0w48k025410
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 14 Oct 2023 00:58:04 GMT
-Received: from [10.48.240.22] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.36; Fri, 13 Oct
- 2023 17:58:03 -0700
-Message-ID: <1cfc7c64-439c-437e-af82-7fce1202242d@quicinc.com>
-Date: Fri, 13 Oct 2023 17:58:03 -0700
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="maqe7cYu"
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0346CBF;
+	Fri, 13 Oct 2023 18:55:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=cjW+qsUfbs6nzKf1dTERhV/HEx/8IziabIg1Ep2LkPw=; b=maqe7cYuDKIiDrqKlbKmWOn7xM
+	IrpLEF9ncAqzaX8IOBfdJCyG8Q6HyvABIRi8ENKEsHWCwFEk5fAvYk3zgfB6Rqm/zVAgE1T02HSWO
+	O+Pe0xzv6vu7U8uIEtWKUpGC0Qk+B/iAc2hRT6PRiRcYtwaQduanCgdydx2qIbm9+Ux4=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1qrTsT-0029U4-Mh; Sat, 14 Oct 2023 03:55:41 +0200
+Date: Sat, 14 Oct 2023 03:55:41 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Kees Cook <keescook@chromium.org>
+Cc: Justin Stitt <justinstitt@google.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] net: phy: tja11xx: replace deprecated strncpy with
+ ethtool_sprintf
+Message-ID: <a958d35e-98b6-4a95-b505-776482d1150c@lunn.ch>
+References: <20231012-strncpy-drivers-net-phy-nxp-tja11xx-c-v1-1-5ad6c9dff5c4@google.com>
+ <15af4bc4-2066-44bc-8d2e-839ff3945663@lunn.ch>
+ <CAFhGd8pmq3UKBE_6ZbLyvRRhXJzaWMQ2GfosvcEEeAS-n7M4aQ@mail.gmail.com>
+ <0c401bcb-70a8-47a5-bca0-0b9e8e0439a8@lunn.ch>
+ <CAFhGd8p3WzqQu7kT0Pt8Axuv5sKdHJQOLZVEg5x8S_QNwT6bjQ@mail.gmail.com>
+ <CAFhGd8qcLARQ4GEabEvcD=HmLdikgP6J82VdT=A9hLTDNru0LQ@mail.gmail.com>
+ <202310131630.5E435AD@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ath10k: replace deprecated strncpy with strtomem_pad
-Content-Language: en-US
-To: Justin Stitt <justinstitt@google.com>, Kalle Valo <kvalo@kernel.org>
-CC: <ath10k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>
-References: <20231013-strncpy-drivers-net-wireless-ath-ath10k-mac-c-v1-1-24e40201afa3@google.com>
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-In-Reply-To: <20231013-strncpy-drivers-net-wireless-ath-ath10k-mac-c-v1-1-24e40201afa3@google.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.49.16.6]
-X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: D4pQm2n1GAZ-B8U95Qc8FjHAJ3n19PkZ
-X-Proofpoint-GUID: D4pQm2n1GAZ-B8U95Qc8FjHAJ3n19PkZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-13_12,2023-10-12_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- priorityscore=1501 bulkscore=0 lowpriorityscore=0 mlxscore=0
- mlxlogscore=751 spamscore=0 clxscore=1011 adultscore=0 impostorscore=0
- malwarescore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2309180000 definitions=main-2310140006
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202310131630.5E435AD@keescook>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+	SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On 10/13/2023 1:33 PM, Justin Stitt wrote:
-> strncpy() is deprecated [1] and we should prefer less ambiguous
-> interfaces.
-> 
-> In this case, arvif->u.ap.ssid has its length maintained by
-> arvif->u.ap.ssid_len which indicates it may not need to be
-> NUL-terminated, although by virtue of using strtomem_pad (with NUL-byte
-> pad character) and having a destination size larger than the source,
-> ssid will, incidentally, be NUL-terminated here.
-> 
-> As strtomem_pad() docs say:
->   * @dest: Pointer of destination character array (marked as __nonstring)
->   * @src: Pointer to NUL-terminated string
->   * @pad: Padding character to fill any remaining bytes of @dest after copy
->   *
->   * This is a replacement for strncpy() uses where the destination is not
->   * a NUL-terminated string, but with bounds checking on the source size, and
->   * an explicit padding character. If padding is not required, use strtomem().
-> 
-> Let's also mark ath10k_vif.u.ap.ssid as __nonstring.
+> I've been told that this whole ethtool API area is considered
+> deprecated. If that holds, then I don't think it's worth adding new
+> helpers to support it when ethtool_sprintf() is sufficient.
 
-what criteria is used to determine whether or not to use __nonstring?
-doesn't the use of u8 vs char already communicate that distinction?
-just want to know what other u8 arrays might require this.
-FWIW the documentation referenced by the __nonstring macro explicitly 
-refers to "type array of char, signed char, or unsigned char"
+I think deprecated is too strong. The current API is not great, so
+maybe with time a new API will emerge. But given there are around 160
+users of the API, probably over 100 drivers, it will be 20 years or
+more before all that hardware becomes obsolete and the drivers are
+removed.
 
-> 
-> It is unclear to me whether padding is strictly necessary. Perhaps we
-> should opt for just strtomem() -- padding certainly doesn't hurt,
-> though.
+> Once you're done with the strncpy->ethtool_sprintf conversions I think
+> it would be nice to have a single patch that fixes all of these
+> "%s"-less instances to use "%s". (Doing per-driver fixes for that case
+> seems just overly painful.)
 
-concur that padding probably isn't necessary but doesn't hurt, and will 
-prevent confusion if looking at this member in a crashdump
+I guess it is the same amount of effort to replace them with
+ethtool_puts()?
 
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+checkpatch warns about seq_printf() which could be seq_puts(), so
+somebody thinks using puts is the right thing to do?
 
-Either with or without the __nonstring...
-Acked-by: Jeff Johnson <quic_jjohnson@quicinc.com>
-
+	 Andrew
