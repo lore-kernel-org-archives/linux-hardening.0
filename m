@@ -1,188 +1,70 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E362B5DA
-	for <linux-hardening@vger.kernel.org>; Fri, 13 Oct 2023 23:44:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B79347DD;
+	Sat, 14 Oct 2023 00:00:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iRSRlkDy"
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 170D0B7
-	for <linux-hardening@vger.kernel.org>; Fri, 13 Oct 2023 16:44:23 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-1c9e06f058bso16900245ad.0
-        for <linux-hardening@vger.kernel.org>; Fri, 13 Oct 2023 16:44:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1697240662; x=1697845462; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=m16elKmpWpc68P/gnYgqcKwJ5UOKKxemZVtL5n1HtMw=;
-        b=iRSRlkDy6nibm5lx3s68pXIncuNti2mjv5zVZmFihUCK1HazgsrH1PEeLBWzv8Knfq
-         Bd+tCiSjODE6D02iuaKj5DT5EFXpgUYAgdW79efuIwOJz/povXmfHzhsVlLVJOyqGM47
-         HmM5AM7nBtoy69aOWMRdZnQ964UEL5A5iNt/A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697240662; x=1697845462;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=m16elKmpWpc68P/gnYgqcKwJ5UOKKxemZVtL5n1HtMw=;
-        b=HC2Z6ej0m4wjXr282YGidEF/2AWeeeAz9X5Udu/y3XvFzrBqSO9Tfbumm6eE0jvAj5
-         fLm4e48dmHHZmd5g+2IiZUJg3qDXtopAw/szXcMUHauA1Z7mGrGvzMbEzVB7/aUpE9mz
-         1K3LsEJFAvHh1JrSjmn0v1ltn/Ni3hItGdQqitJPgbB0VTETopGKEB3l08miw8e2jVuG
-         bzuFAvkiHGmaTqPCTGG+yyiC6l2U9if5QfqkeRkkMVSBFp6xPhi9SfQeXkvBynQ8Fd67
-         cxmnpoj2BdByVTz1Wr755n0oy9QU/KdrP0Vt4sKVmQhOi0e7Fo/xWR8s85SopxTDrDJg
-         nsEw==
-X-Gm-Message-State: AOJu0Yys9wFQjqTLuKAPiroIT0kBb/ydVAi+Hy8y+SCtVkjTx6j3aAcL
-	XujId7OYoALvHgK0ZkwOSun44A==
-X-Google-Smtp-Source: AGHT+IHHZCEh0KyaNG5lBNkcjPzUIl4Qu8VPp5RCrEU4Bxp2BkM5PBeuyURnfWsF9t+Xa0r6B2rC5A==
-X-Received: by 2002:a17:902:c945:b0:1ca:71:ea41 with SMTP id i5-20020a170902c94500b001ca0071ea41mr2422991pla.22.1697240662526;
-        Fri, 13 Oct 2023 16:44:22 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id h21-20020a170902f7d500b001b53c8659fesm4423805plw.30.2023.10.13.16.44.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Oct 2023 16:44:22 -0700 (PDT)
-Date: Fri, 13 Oct 2023 16:44:21 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Brian Foster <bfoster@redhat.com>
-Cc: Kent Overstreet <kent.overstreet@linux.dev>,
-	linux-bcachefs@vger.kernel.org, kernel test robot <lkp@intel.com>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] bcachefs: Refactor bkey_i to use a flexible array
-Message-ID: <202310131637.D0C66BFBA@keescook>
-References: <20231010235609.work.594-kees@kernel.org>
- <ZSkpU0vdrCTfTxuZ@bfoster>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rLbE/Xrl"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 10424C433B9;
+	Sat, 14 Oct 2023 00:00:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1697241626;
+	bh=2Cwm6LisU+P9GUP96QYZ7Q9NvdOC7Vh28XyKKYvVGZc=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=rLbE/XrlMcyajcNIas0Ah3tA53LrR9kXnNeUanCVaIKdMxwgBQ1NnqKpUaCQ2HrvP
+	 wbUrO0cP/19kUrYoHn+unf1E2eVU6eDJ22LsiIb3VDzTsZc8tQg60H6MSZXYx2gg6R
+	 oGCx6G0c0CADcjOA+gV2uxxyJeZdTI2sQa20M25/E9Ca0O4rS/3qeVDzCMdtxAAd1V
+	 1mtruKPEQvBFHv8tp2CG1yewrCqd4/aq/DOuxzQu+nb7yaBKvr/I/expxW9bfEWegr
+	 /JCXz3Pow1yzhLQwc9qPbt1e8HVd0zhZ+2Ca3zJHFQKGUl5HUACAtNeLkewu4bsnZY
+	 lR+QP3eiIPjMw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id F2A81C73FEA;
+	Sat, 14 Oct 2023 00:00:25 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZSkpU0vdrCTfTxuZ@bfoster>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2] net: dsa: vsc73xx: replace deprecated strncpy with
+ ethtool_sprintf
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <169724162599.10042.9303043491352873770.git-patchwork-notify@kernel.org>
+Date: Sat, 14 Oct 2023 00:00:25 +0000
+References: <20231010-strncpy-drivers-net-dsa-vitesse-vsc73xx-core-c-v2-1-ba4416a9ff23@google.com>
+In-Reply-To: <20231010-strncpy-drivers-net-dsa-vitesse-vsc73xx-core-c-v2-1-ba4416a9ff23@google.com>
+To: Justin Stitt <justinstitt@google.com>
+Cc: andrew@lunn.ch, f.fainelli@gmail.com, olteanv@gmail.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
 
-On Fri, Oct 13, 2023 at 07:26:11AM -0400, Brian Foster wrote:
-> On Tue, Oct 10, 2023 at 04:56:12PM -0700, Kees Cook wrote:
-> > The memcpy() in bch2_bkey_append_ptr() is operating on an embedded
-> > fake flexible array. Instead, make it explicit, and convert the memcpy
-> > to target the flexible array instead. Fixes the W=1 warning seen for
-> > -Wstringop-overflow:
-> > 
-> >    In file included from include/linux/string.h:254,
-> >                     from include/linux/bitmap.h:11,
-> >                     from include/linux/cpumask.h:12,
-> >                     from include/linux/smp.h:13,
-> >                     from include/linux/lockdep.h:14,
-> >                     from include/linux/radix-tree.h:14,
-> >                     from include/linux/backing-dev-defs.h:6,
-> >                     from fs/bcachefs/bcachefs.h:182:
-> >    fs/bcachefs/extents.c: In function 'bch2_bkey_append_ptr':
-> >    include/linux/fortify-string.h:57:33: warning: writing 8 bytes into a region of size 0 [-Wstringop-overflow=]
-> >       57 | #define __underlying_memcpy     __builtin_memcpy
-> >          |                                 ^
-> >    include/linux/fortify-string.h:648:9: note: in expansion of macro '__underlying_memcpy'
-> >      648 |         __underlying_##op(p, q, __fortify_size);                        \
-> >          |         ^~~~~~~~~~~~~
-> >    include/linux/fortify-string.h:693:26: note: in expansion of macro '__fortify_memcpy_chk'
-> >      693 | #define memcpy(p, q, s)  __fortify_memcpy_chk(p, q, s,                  \
-> >          |                          ^~~~~~~~~~~~~~~~~~~~
-> >    fs/bcachefs/extents.c:235:17: note: in expansion of macro 'memcpy'
-> >      235 |                 memcpy((void *) &k->v + bkey_val_bytes(&k->k),
-> >          |                 ^~~~~~
-> >    fs/bcachefs/bcachefs_format.h:287:33: note: destination object 'v' of size 0
-> >      287 |                 struct bch_val  v;
-> >          |                                 ^
-> > 
-> > Cc: Kent Overstreet <kent.overstreet@linux.dev>
-> > Cc: Brian Foster <bfoster@redhat.com>
-> > Cc: linux-bcachefs@vger.kernel.org
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Closes: https://lore.kernel.org/oe-kbuild-all/202309192314.VBsjiIm5-lkp@intel.com/
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  fs/bcachefs/bcachefs_format.h | 5 ++++-
-> >  fs/bcachefs/extents.h         | 2 +-
-> >  2 files changed, 5 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/fs/bcachefs/bcachefs_format.h b/fs/bcachefs/bcachefs_format.h
-> > index f0d130440baa..f5e8cb43697b 100644
-> > --- a/fs/bcachefs/bcachefs_format.h
-> > +++ b/fs/bcachefs/bcachefs_format.h
-> > @@ -300,7 +300,10 @@ struct bkey_i {
-> >  	__u64			_data[0];
-> >  
-> >  	struct bkey	k;
-> > -	struct bch_val	v;
-> > +	union {
-> > +		struct bch_val	v;
-> > +		DECLARE_FLEX_ARRAY(__u8, bytes);
-> > +	};
-> >  };
+Hello:
+
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Tue, 10 Oct 2023 22:32:35 +0000 you wrote:
+> `strncpy` is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
 > 
-> Hi Kees,
+> ethtool_sprintf() is designed specifically for get_strings() usage.
+> Let's replace strncpy in favor of this more robust and easier to
+> understand interface.
 > 
-> I'm curious if this is something that could be buried in bch_val given
-> it's already kind of a fake structure..? If not, my only nitty comment
+> [...]
 
-I was thinking it would be best to keep the flexible array has "high" in
-the struct as possible, as in the future more refactoring will be needed
-to avoid having flex arrays overlap with other members in composite
-structures. So instead of pushing into bch_val, I left it at the highest
-level possible, bch_i, as that's the struct being used by the memcpy().
+Here is the summary with links:
+  - [v2] net: dsa: vsc73xx: replace deprecated strncpy with ethtool_sprintf
+    https://git.kernel.org/netdev/net-next/c/e3bbab4754de
 
-Eventually proper unions will be needed instead of overlapping bch_i
-with other types, as in:
-
-struct btree_root {
-        struct btree            *b;
-
-        /* On disk root - see async splits: */
-        __BKEY_PADDED(key, BKEY_BTREE_PTR_VAL_U64s_MAX);
-        u8                      level;
-        u8                      alive;
-        s8                      error;
-};
-
-But that's all for the future. Right now I wanted to deal with the more
-pressing matter of a 0-sized array not being zero sized. :)
-
-> is that memcpy(k->bytes[], ...) makes it kind of read like we're copying
-> in opaque key data rather than value data, so perhaps a slightly more
-> descriptive field name would be helpful. But regardless I'd wait until
-> Kent has a chance to comment before changing anything..
-
-How about "v_bytes" instead of "bytes"? Or if it really is preferred,
-I can move the flex array into bch_val -- it just seems like the wrong
-layer...
-
--Kees
-
-> 
-> Brian
-> 
-> >  
-> >  #define KEY(_inode, _offset, _size)					\
-> > diff --git a/fs/bcachefs/extents.h b/fs/bcachefs/extents.h
-> > index 7ee8d031bb6c..6248e17bbac5 100644
-> > --- a/fs/bcachefs/extents.h
-> > +++ b/fs/bcachefs/extents.h
-> > @@ -642,7 +642,7 @@ static inline void bch2_bkey_append_ptr(struct bkey_i *k, struct bch_extent_ptr
-> >  
-> >  		ptr.type = 1 << BCH_EXTENT_ENTRY_ptr;
-> >  
-> > -		memcpy((void *) &k->v + bkey_val_bytes(&k->k),
-> > +		memcpy(&k->bytes[bkey_val_bytes(&k->k)],
-> >  		       &ptr,
-> >  		       sizeof(ptr));
-> >  		k->k.u64s++;
-> > -- 
-> > 2.34.1
-> > 
-> 
-
+You are awesome, thank you!
 -- 
-Kees Cook
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
