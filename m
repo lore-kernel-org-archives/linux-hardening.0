@@ -1,109 +1,81 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3AE5523B
-	for <linux-hardening@vger.kernel.org>; Sat, 14 Oct 2023 06:35:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 223E4F4F1;
+	Sat, 14 Oct 2023 16:13:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="Bo+61VSX"
-Received: from smtp.smtpout.orange.fr (smtp-14.smtpout.orange.fr [80.12.242.14])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FC56CE
-	for <linux-hardening@vger.kernel.org>; Fri, 13 Oct 2023 23:35:09 -0700 (PDT)
-Received: from pop-os.home ([86.243.2.178])
-	by smtp.orange.fr with ESMTPA
-	id rYEiqpnupvhM3rYEtqYMoq; Sat, 14 Oct 2023 08:35:08 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1697265308;
-	bh=il89cLsUPoSfIl2uIujuHP4uRIM1OQ8+x9zRodfnRok=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Bo+61VSX/YyYHCKiYBpJL1M4zOyIazFJEkWMUYYuOZqqleYlxrRVIWb5m9/g/i2fk
-	 /mQgtot4aePqBFtElrsXiGMGf5KEJ4gObLlcrOg2AT7E8FiuLIIy8w9LlFI5aikPrA
-	 WEpS8BipFODvU5kvBv0CRASebxqMW9PzIhLsTjuYoW5kMujbLL2jeuQFVJD6XNLPz6
-	 QRELQx1T+AF5t8a4aMQxgdNyOYAkg2CkE5AtMEZWBLHPaFs7yYPB0Q9ebCjXDTqe5g
-	 Fwi4uo3NH/U9hS6shMji3XkK8YyMNjJjJ9XxaHF65GbJRWwoi3n57YNfnv8yG1/vNJ
-	 C5YpJmAFysrEg==
-X-ME-Helo: pop-os.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 14 Oct 2023 08:35:08 +0200
-X-ME-IP: 86.243.2.178
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Pravin B Shelar <pshelar@ovn.org>,
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="0xP1chpQ"
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A4A0A2;
+	Sat, 14 Oct 2023 09:13:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=mzqMfzRxzG70Knwvi6tm0b5cGlVoxpozVCu8YLy3yG8=; b=0xP1chpQpytJmfkOYJUkI+Hvv4
+	4GO8LpdIGkE3fvVpwIfyzJn4nTntAloMj1KN06CCFJECEXAI/KW0+lrg27r/RXbg2LlJua3sHeRId
+	1eRBFJJQhorhTd0eDdQk6ZAWLwHa2dgjDHeIO9GesIrAT2YkDP8bjB4H4bA7xIp1NZq8=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1qrhGQ-002BXN-2v; Sat, 14 Oct 2023 18:13:18 +0200
+Date: Sat, 14 Oct 2023 18:13:18 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>,
 	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Tom Rix <trix@redhat.com>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	netdev@vger.kernel.org,
-	dev@openvswitch.org,
-	linux-hardening@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH v2 2/2] net: openvswitch: Annotate struct mask_array with __counted_by
-Date: Sat, 14 Oct 2023 08:34:53 +0200
-Message-Id: <ca5c8049f58bb933f231afd0816e30a5aaa0eddd.1697264974.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <e5122b4ff878cbf3ed72653a395ad5c4da04dc1e.1697264974.git.christophe.jaillet@wanadoo.fr>
-References: <e5122b4ff878cbf3ed72653a395ad5c4da04dc1e.1697264974.git.christophe.jaillet@wanadoo.fr>
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] net: cpmac: replace deprecated strncpy with strscpy
+Message-ID: <985a2962-c327-4115-bc59-b1bc896be9b3@lunn.ch>
+References: <20231012-strncpy-drivers-net-ethernet-ti-cpmac-c-v1-1-f0d430c9949f@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
-	SPF_HELO_PASS,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231012-strncpy-drivers-net-ethernet-ti-cpmac-c-v1-1-f0d430c9949f@google.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+	SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Prepare for the coming implementation by GCC and Clang of the __counted_by
-attribute. Flexible array members annotated with __counted_by can have
-their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-(for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-functions).
+On Thu, Oct 12, 2023 at 08:53:30PM +0000, Justin Stitt wrote:
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
+> 
+> We expect mdio_bus_id to be NUL-terminated based on its use with
+> snprint():
+> |       snprintf(priv->phy_name, MII_BUS_ID_SIZE, PHY_ID_FMT,
+> |                                               mdio_bus_id, phy_id);
+> 
+> Moreover, as this is the only use of mdio_bus_id, we can see that
+> NUL-padding is not required.
+> 
+> Considering the above, a suitable replacement is `strscpy` [2] due to
+> the fact that it guarantees NUL-termination on the destination buffer
+> without unnecessarily NUL-padding.
+> 
+> Note that for the replacement involving cpmac_mii->id, the source
+> buffer's length is equal to MII_BUS_ID_SIZE which could result in a
+> buffer overread. However, there is no buffer overread since "cpmac-1"
+> (the string copied into cpmac_mii->id) is smaller than MII_BUS_ID_SIZE
+> thus meaning the previous usage of strncpy() here did _not_ have any
+> overread bugs. Nonetheless, let's still favor strscpy() over strncpy().
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-v2: Fix the subject  [Ilya Maximets]
-    fix the field name used with __counted_by  [Ilya Maximets]
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-v1: https://lore.kernel.org/all/f66ddcf1ef9328f10292ea75a17b584359b6cde3.1696156198.git.christophe.jaillet@wanadoo.fr/
-
-
-This patch is part of a work done in parallel of what is currently worked
-on by Kees Cook.
-
-My patches are only related to corner cases that do NOT match the
-semantic of his Coccinelle script[1].
-
-In this case, in tbl_mask_array_alloc(), several things are allocated with
-a single allocation. Then, some pointer arithmetic computes the address of
-the memory after the flex-array.
-
-[1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
----
- net/openvswitch/flow_table.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/net/openvswitch/flow_table.h b/net/openvswitch/flow_table.h
-index 9e659db78c05..f524dc3e4862 100644
---- a/net/openvswitch/flow_table.h
-+++ b/net/openvswitch/flow_table.h
-@@ -48,7 +48,7 @@ struct mask_array {
- 	int count, max;
- 	struct mask_array_stats __percpu *masks_usage_stats;
- 	u64 *masks_usage_zero_cntr;
--	struct sw_flow_mask __rcu *masks[];
-+	struct sw_flow_mask __rcu *masks[] __counted_by(max);
- };
- 
- struct table_instance {
--- 
-2.34.1
-
+    Andrew
