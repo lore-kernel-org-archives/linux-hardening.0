@@ -1,71 +1,63 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 867CC286B9
-	for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 17:35:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08A8630FA0
+	for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 18:14:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pbg3q/DT"
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DB4083
-	for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 10:35:14 -0700 (PDT)
-Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1c9b70b9671so13545ad.1
-        for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 10:35:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AhLgjgLZ"
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10E60A7
+	for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 11:14:43 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-53db1fbee70so8211629a12.2
+        for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 11:14:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697477713; x=1698082513; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1697480081; x=1698084881; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1IE7ste/9K+MPz1i72hcvVlvzxuJt/UnGYdWTniw0P0=;
-        b=pbg3q/DTfSMo00CJe4tDhXCU+XNbURrWCmshNZ9V2CBp64Eo7SY/dBB6VCzNsYtcfF
-         VWjZV9MXVmxewx3QXk1RuyC2NewXCj7ONTmBK7fkLUD8NnQuB/ss87xF+K8N1jmYR1he
-         8pTPaKz5T6BDMLAQEWFPDOfmP/hnRFouH1cy9bcbAMik+fNuBxhZdRuaNulkEsdwT5f7
-         LNqVM21FkQ4Nzb5nxzNVAGRP8QVrV+vwKjRSEEJF5qt7is27i3NnkI9dgV9p2+ELubs2
-         br2NcanM23XYiEyzWC1oou0tvBJHevDKzqrovku2+JEg0DJLLyFhaHQ+zqSUzDu/m24G
-         gV/g==
+        bh=qRL/6VX7HAEyDPGl2HTyivOlN20wjAMOil4U+8Zf2+k=;
+        b=AhLgjgLZl67P4j/YjKLQIhP8byxtkC3GAroqeIuYOLU+9dshhBBbkZl8/eo9bwt4/D
+         7LJatgprrWqA5mH8Vwwnv1AbWv/hCau2SiSIuhlOQVhvzGEBbJLH4l8UHA/xd0SvkSR1
+         OAEx6jFJMi5ZrPkjksqbk8xykprcoqxDSCGqBIsmxowFQsiWlzCkCfjeeAb04C6+9Xp6
+         84fGRXnGmdQCFLNU3Myp6QmQpg47lWwzvQEAp31tlL+Qbh90Ia95HZ9dAbOT6yMTSqYy
+         WhVn5GQV3A8y9Hi451da10evusKZ2BY3HHSP3Dn4mgdEJ28kJCllEIHN6xcAuRxu3D+A
+         +Y9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697477713; x=1698082513;
+        d=1e100.net; s=20230601; t=1697480081; x=1698084881;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1IE7ste/9K+MPz1i72hcvVlvzxuJt/UnGYdWTniw0P0=;
-        b=q3okWCGZGPWAxrgm3P6re6JnOsY476tGiZoe6HwHxBUIgVYoUgFZ/052oEushNxlnv
-         rTH9iHmgB1UACRI1bP/TtMonE7YpQJ7bpEbm0Md1bthMrFJivcx6r1OmyNCRGKP7Y/Cb
-         t3Cm+oU1acSudmyh+AuPGmPF6ZFXt58naVc/TZp3qNRXYiy+Nv3+nzZQaVAWWiAIcZw8
-         j+ufKLbhCaMHHUUEoebK/UdU6Oiu3Oo9GECdn2E/L+mUF/fYCQ7RdtB2nMl+ZiJsBRCM
-         EP/6rNiS7YyKy8c6mIFXp9eHnri12edmKBskAWrQZiuXMswjnPZSbODkoo0qBPtSW4zA
-         OQBA==
-X-Gm-Message-State: AOJu0YyDODC2WB+O5tGi/2YLzZkShFs4XfwZdLcILRBnlZymWSEuG20g
-	V1BjYzo+xi2jx9WC0kta+5JYdF6ctcOPn//O6lFyFw==
-X-Google-Smtp-Source: AGHT+IHpLOQh8gGngPY81BrIpOn4V6KnmdVdaoL70Npuo2h09JrCSwDur1o0CQrQETq8n/zCk+qOPTnzOoAPcHQBU44=
-X-Received: by 2002:a17:902:f60e:b0:1b8:b564:b528 with SMTP id
- n14-20020a170902f60e00b001b8b564b528mr321729plg.7.1697477713183; Mon, 16 Oct
- 2023 10:35:13 -0700 (PDT)
+        bh=qRL/6VX7HAEyDPGl2HTyivOlN20wjAMOil4U+8Zf2+k=;
+        b=ecLP4NjNvoBLqQaWp6h77a/259de9wma1xy50aA4Ps5V5S7x0s+5bxEGtsIxEh6A/s
+         10i2P+jpNa4RxaTtH/GqdxRjKBfu0ldxJ8rK0ZffSLQoryESWv4eYZv3f+T8pJofS+Hk
+         AX8cXrUOBE4x6I5s/xOjWqJLtcoJYcL4mTOi8/xYCOwHMRvfs56yc1UXRsBxHd3dwWRA
+         sp7EIWudcxtPC4YXpPuF4iuANoHGbpFKerOORFgdCCi0P5glSgUQMP6UYDgKBQ2nMA5y
+         KcjmXRahM9Hzmnx0tlErZAxcJ9/mNkp9RxXs7cp3ZGVv4JbGBlVOt6UIwgynyE2CQi00
+         Dsuw==
+X-Gm-Message-State: AOJu0YyLC2jTsxzPZ8d7jZrVerkCWa/KZKjT7RAjRlLYzU+fwy3xIZ0S
+	rs1OwAVh4o0tpS//AZPeN/xUTCY2aSnn0AKyU/MCvA==
+X-Google-Smtp-Source: AGHT+IHWE+5Rhq2pCOMoR8bDSaQb/FjDy2AMJAB/4FZZkaJ3R2ZA5dlO1ZAXGzdrzGkzocSaigLv2m8YWy8QwPOXlIA=
+X-Received: by 2002:aa7:d1c7:0:b0:53e:1815:ed0f with SMTP id
+ g7-20020aa7d1c7000000b0053e1815ed0fmr8825edp.31.1697480081468; Mon, 16 Oct
+ 2023 11:14:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231016143828.647848-1-jeffxu@chromium.org>
-In-Reply-To: <20231016143828.647848-1-jeffxu@chromium.org>
-From: Jann Horn <jannh@google.com>
-Date: Mon, 16 Oct 2023 19:34:37 +0200
-Message-ID: <CAG48ez3ShUYey+ZAFsU2i1RpQn0a5eOs2hzQ426FkcgnfUGLvA@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 0/8] Introduce mseal() syscall
-To: jeffxu@chromium.org
-Cc: akpm@linux-foundation.org, keescook@chromium.org, sroettger@google.com, 
-	jeffxu@google.com, jorgelo@chromium.org, groeck@chromium.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, surenb@google.com, alex.sierra@amd.com, 
-	apopple@nvidia.com, aneesh.kumar@linux.ibm.com, axelrasmussen@google.com, 
-	ben@decadent.org.uk, catalin.marinas@arm.com, david@redhat.com, 
-	dwmw@amazon.co.uk, ying.huang@intel.com, hughd@google.com, joey.gouly@arm.com, 
-	corbet@lwn.net, wangkefeng.wang@huawei.com, Liam.Howlett@oracle.com, 
-	torvalds@linux-foundation.org, lstoakes@gmail.com, willy@infradead.org, 
-	mawupeng1@huawei.com, linmiaohe@huawei.com, namit@vmware.com, 
-	peterx@redhat.com, peterz@infradead.org, ryan.roberts@arm.com, 
-	shr@devkernel.io, vbabka@suse.cz, xiujianfeng@huawei.com, yu.ma@intel.com, 
-	zhangpeng362@huawei.com, dave.hansen@intel.com, luto@kernel.org, 
+References: <20231012-strncpy-drivers-net-ethernet-qlogic-qlcnic-qlcnic_83xx_init-c-v1-1-f0008d5e43be@google.com>
+ <202310141944.08A1FF6D9@keescook>
+In-Reply-To: <202310141944.08A1FF6D9@keescook>
+From: Justin Stitt <justinstitt@google.com>
+Date: Mon, 16 Oct 2023 11:14:29 -0700
+Message-ID: <CAFhGd8qqVAfSL6__Z0tC4r29FE31a4uHzhUAakKs8DURFnM_8A@mail.gmail.com>
+Subject: Re: [PATCH] qlcnic: replace deprecated strncpy with strscpy
+To: Kees Cook <keescook@chromium.org>
+Cc: Shahed Shaikh <shshaikh@marvell.com>, Manish Chopra <manishc@marvell.com>, 
+	GR-Linux-NIC-Dev@marvell.com, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
@@ -77,221 +69,109 @@ X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Mon, Oct 16, 2023 at 4:38=E2=80=AFPM <jeffxu@chromium.org> wrote:
+On Sat, Oct 14, 2023 at 7:47=E2=80=AFPM Kees Cook <keescook@chromium.org> w=
+rote:
 >
-> From: Jeff Xu <jeffxu@google.com>
+> On Thu, Oct 12, 2023 at 07:44:29PM +0000, Justin Stitt wrote:
+> > strncpy() is deprecated for use on NUL-terminated destination strings
+> > [1] and as such we should prefer more robust and less ambiguous string
+> > interfaces.
+> >
+> > We expect fw_info->fw_file_name to be NUL-terminated based on its use
+> > within _request_firmware_prepare() wherein `name` refers to it:
+> > |       if (firmware_request_builtin_buf(firmware, name, dbuf, size)) {
+> > |               dev_dbg(device, "using built-in %s\n", name);
+> > |               return 0; /* assigned */
+> > |       }
+> > ... and with firmware_request_builtin() also via `name`:
+> > |       if (strcmp(name, b_fw->name) =3D=3D 0) {
+> >
+> > There is no evidence that NUL-padding is required.
+> >
+> > Considering the above, a suitable replacement is `strscpy` [2] due to
+> > the fact that it guarantees NUL-termination on the destination buffer
+> > without unnecessarily NUL-padding.
 >
-> This patchset proposes a new mseal() syscall for the Linux kernel.
+> When doing the hard-coded value to sizeof(), can you include in the
+> commit log the rationale for it? For example:
 >
-> Modern CPUs support memory permissions such as RW and NX bits. Linux has
-> supported NX since the release of kernel version 2.6.8 in August 2004 [1]=
-.
-> The memory permission feature improves security stance on memory
-> corruption bugs, i.e. the attacker can=E2=80=99t just write to arbitrary =
-memory
-> and point the code to it, the memory has to be marked with X bit, or
-> else an exception will happen.
+>   Additionally replace size macro (QLC_FW_FILE_NAME_LEN) with
+>   sizeof(fw_info->fw_file_name) to more directly tie the maximum buffer
+>   size to the destination buffer:
 >
-> Memory sealing additionally protects the mapping itself against
-> modifications. This is useful to mitigate memory corruption issues where
-> a corrupted pointer is passed to a memory management syscall. For example=
-,
-> such an attacker primitive can break control-flow integrity guarantees
-> since read-only memory that is supposed to be trusted can become writable
-> or .text pages can get remapped. Memory sealing can automatically be
-> applied by the runtime loader to seal .text and .rodata pages and
-> applications can additionally seal security critical data at runtime.
-> A similar feature already exists in the XNU kernel with the
-> VM_FLAGS_PERMANENT [3] flag and on OpenBSD with the mimmutable syscall [4=
-].
-> Also, Chrome wants to adopt this feature for their CFI work [2] and this
-> patchset has been designed to be compatible with the Chrome use case.
+>   struct qlc_83xx_fw_info {
+>           ...
+>           char    fw_file_name[QLC_FW_FILE_NAME_LEN];
+>   };
 >
-> The new mseal() is an architecture independent syscall, and with
-> following signature:
+
+Sure, I'll be doing this from now on to make the change more clear!
+
 >
-> mseal(void addr, size_t len, unsigned int types, unsigned int flags)
-
-Is the plan that the VMAs you need to protect would be created and
-mseal()'ed while you expect that attacker code can not (yet) be
-running concurrently?
-
-Do you expect to be using sealed memory for shadow stacks (in x86 CET
-/ arm64 GCS) to prevent an attacker from mixing those up by moving
-pages inside a shadow stack or between different shadow stacks or
-such? (If that's even possible, I think it is but I haven't tried.)
-
-> addr/len: memory range.  Must be continuous/allocated memory, or else
-> mseal() will fail and no VMA is updated. For details on acceptable
-> arguments, please refer to comments in mseal.c. Those are also fully
-> covered by the selftest.
-> types: bit mask to specify which syscall to seal, currently they are:
-> MM_SEAL_MSEAL 0x1
-> MM_SEAL_MPROTECT 0x2
-> MM_SEAL_MUNMAP 0x4
-> MM_SEAL_MMAP 0x8
-> MM_SEAL_MREMAP 0x10
-
-You'd probably also want to block destructive madvise() operations
-that can effectively alter region contents by discarding pages and
-such, in particular MADV_FREE, MADV_DONTNEED, MADV_DONTNEED_LOCKED;
-probably also MADV_REMOVE, MADV_DONTFORK, MADV_WIPEONFORK. Maybe you'd
-want to just block all madvise() for sealed VMAs? Or rename
-process_madvise_behavior_valid() to something like
-"madvise_is_nondestructive()" and use that.
-
-The following comments probably mostly don't matter in practice if
-this feature is used in a context that is heavily seccomp-sandboxed
-(like Desktop Linux Chrome), but should maybe be addressed to make
-this feature more usable for other users. (Including Android Chrome,
-which has a weaker sandbox...)
-
-FWIW, it is also possible to write to read-only memory through the
-/proc/self/mem interface (or through ptrace commands like
-PTRACE_POKETEXT) because of FOLL_FORCE, depending on kernel
-configuration, seccomp policy, and what the LSMs do. (I think Android
-Chrome would allow /proc/self/mem writes, but would block
-PTRACE_POKETEXT with RestrictPtrace() in the sandbox code?)
-
-I had a related ancient patch series in 2016 with an attempt to allow
-SELinux to prevent bypassing W^X protections with this, but I never
-followed through with getting that landed...
-(https://lore.kernel.org/linux-mm/1475103281-7989-1-git-send-email-jann@the=
-jh.net/)
-
-I guess the question there is what the right semantics for this kind
-of protected memory are when a debugger is active. The simple solution
-that might break some debugging would be "just deny all FOLL_FORCE
-write access for this memory" (which would prevent debuggers from
-being able to place breakpoints, which would maybe not be great). But
-maybe it makes more sense to consider this to be an independent
-concern and solve it with a new SELinux feature or something like that
-instead, and then document that mseal() requires some complement to
-prevent forced writes to read-only private memory? (For which the
-simplest solution would be "don't grant filesystem access or ptrace()
-access to the sandboxed code".)
-
-
-What is the intended interaction with userfaultfd, which I believe by
-design permits arbitrary data into unpopulated areas of anonymous
-VMAs? If the intention is that the process should otherwise be
-sandboxed to not have access to userfaultfd, that should maybe be
-documented. (Alternatively I guess you could theoretically remove the
-VM_MAYWRITE bit from marked VMAs, but that might be more strict than
-we want, since it'd also block all FOLL_FORCE writes.)
-
-
-There are also some interfaces like AIO or the X86 Shadow Stacks
-interface that indirectly unmap memory through the kernel and look
-like they could perhaps be tricked into racily unmapping a
-just-created sealed VMA. You'd probably have to make sure that they
-can't do that and essentially treat their unmap operations as if they
-came from userspace, I guess? What Linus just wrote.
-
-
-I think either way this feature needs some documentation on what kind
-of context it's supposed to run in.
-
-
-> Each bit represents sealing for one specific syscall type, e.g.
-> MM_SEAL_MPROTECT will deny mprotect syscall. The consideration of bitmask
-> is that the API is extendable, i.e. when needed, the sealing can be
-> extended to madvise, mlock, etc. Backward compatibility is also easy.
+> >
+> > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#st=
+rncpy-on-nul-terminated-strings [1]
+> > Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en=
+.html [2]
+> > Link: https://github.com/KSPP/linux/issues/90
+> > Cc: linux-hardening@vger.kernel.org
+> > Signed-off-by: Justin Stitt <justinstitt@google.com>
+> > ---
+> > Note: build-tested only.
+> >
+> > Found with: $ rg "strncpy\("
+> > ---
+> >  drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c | 12 ++++++-----=
+-
+> >  1 file changed, 6 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c b/dr=
+ivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
+> > index c95d56e56c59..b733374b4dc5 100644
+> > --- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
+> > +++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
+> > @@ -2092,8 +2092,8 @@ static int qlcnic_83xx_run_post(struct qlcnic_ada=
+pter *adapter)
+> >               return -EINVAL;
+> >       }
+> >
+> > -     strncpy(fw_info->fw_file_name, QLC_83XX_POST_FW_FILE_NAME,
+> > -             QLC_FW_FILE_NAME_LEN);
+> > +     strscpy(fw_info->fw_file_name, QLC_83XX_POST_FW_FILE_NAME,
+> > +             sizeof(fw_info->fw_file_name));
+> >
+> >       ret =3D request_firmware(&fw_info->fw, fw_info->fw_file_name, dev=
+);
+> >       if (ret) {
+> > @@ -2396,12 +2396,12 @@ static int qlcnic_83xx_get_fw_info(struct qlcni=
+c_adapter *adapter)
+> >               switch (pdev->device) {
+> >               case PCI_DEVICE_ID_QLOGIC_QLE834X:
+> >               case PCI_DEVICE_ID_QLOGIC_QLE8830:
+> > -                     strncpy(fw_info->fw_file_name, QLC_83XX_FW_FILE_N=
+AME,
+> > -                             QLC_FW_FILE_NAME_LEN);
+> > +                     strscpy(fw_info->fw_file_name, QLC_83XX_FW_FILE_N=
+AME,
+> > +                             sizeof(fw_info->fw_file_name));
+> >                       break;
+> >               case PCI_DEVICE_ID_QLOGIC_QLE844X:
+> > -                     strncpy(fw_info->fw_file_name, QLC_84XX_FW_FILE_N=
+AME,
+> > -                             QLC_FW_FILE_NAME_LEN);
+> > +                     strscpy(fw_info->fw_file_name, QLC_84XX_FW_FILE_N=
+AME,
+> > +                             sizeof(fw_info->fw_file_name));
+> >                       break;
+> >               default:
+> >                       dev_err(&pdev->dev, "%s: Invalid device id\n",
 >
-> The kernel will remember which seal types are applied, and the applicatio=
-n
-> doesn=E2=80=99t need to repeat all existing seal types in the next mseal(=
-).  Once
-> a seal type is applied, it can=E2=80=99t be unsealed. Call mseal() on an =
-existing
-> seal type is a no-action, not a failure.
+> But yes, this all looks right to me.
 >
-> MM_SEAL_MSEAL will deny mseal() calls that try to add a new seal type.
->
-> Internally, vm_area_struct adds a new field vm_seals, to store the bit
-> masks.
->
-> For the affected syscalls, such as mprotect, a check(can_modify_mm) for
-> sealing is added, this usually happens at the early point of the syscall,
-> before any update is made to VMAs. The effect of that is: if any of the
-> VMAs in the given address range fails the sealing check, none of the VMA
-> will be updated. It might be worth noting that this is different from the
-> rest of mprotect(), where some updates can happen even when mprotect
-> returns fail. Consider can_modify_mm only checks vm_seals in
-> vm_area_struct, and it is not going deeper in the page table or updating
-> any HW, success or none behavior might fit better here. I would like to
-> listen to the community's feedback on this.
->
-> The idea that inspired this patch comes from Stephen R=C3=B6ttger=E2=80=
-=99s work in
-> V8 CFI [5],  Chrome browser in ChromeOS will be the first user of this AP=
-I.
->
-> In addition, Stephen is working on glibc change to add sealing support
-> into the dynamic linker to seal all non-writable segments at startup. Whe=
-n
-> that work is completed, all applications can automatically benefit from
-> these new protections.
->
-> [1] https://kernelnewbies.org/Linux_2_6_8
-> [2] https://v8.dev/blog/control-flow-integrity
-> [3] https://github.com/apple-oss-distributions/xnu/blob/1031c584a5e37aff1=
-77559b9f69dbd3c8c3fd30a/osfmk/mach/vm_statistics.h#L274
-> [4] https://man.openbsd.org/mimmutable.2
-> [5] https://docs.google.com/document/d/1O2jwK4dxI3nRcOJuPYkonhTkNQfbmwdvx=
-QMyXgeaRHo/edit#heading=3Dh.bvaojj9fu6hc
->
-> Jeff Xu (8):
->   Add mseal syscall
->   Wire up mseal syscall
->   mseal: add can_modify_mm and can_modify_vma
->   mseal: seal mprotect
->   mseal munmap
->   mseal mremap
->   mseal mmap
->   selftest mm/mseal mprotect/munmap/mremap/mmap
->
->  arch/alpha/kernel/syscalls/syscall.tbl      |    1 +
->  arch/arm/tools/syscall.tbl                  |    1 +
->  arch/arm64/include/asm/unistd.h             |    2 +-
->  arch/arm64/include/asm/unistd32.h           |    2 +
->  arch/ia64/kernel/syscalls/syscall.tbl       |    1 +
->  arch/m68k/kernel/syscalls/syscall.tbl       |    1 +
->  arch/microblaze/kernel/syscalls/syscall.tbl |    1 +
->  arch/mips/kernel/syscalls/syscall_n32.tbl   |    1 +
->  arch/mips/kernel/syscalls/syscall_n64.tbl   |    1 +
->  arch/mips/kernel/syscalls/syscall_o32.tbl   |    1 +
->  arch/parisc/kernel/syscalls/syscall.tbl     |    1 +
->  arch/powerpc/kernel/syscalls/syscall.tbl    |    1 +
->  arch/s390/kernel/syscalls/syscall.tbl       |    1 +
->  arch/sh/kernel/syscalls/syscall.tbl         |    1 +
->  arch/sparc/kernel/syscalls/syscall.tbl      |    1 +
->  arch/x86/entry/syscalls/syscall_32.tbl      |    1 +
->  arch/x86/entry/syscalls/syscall_64.tbl      |    1 +
->  arch/xtensa/kernel/syscalls/syscall.tbl     |    1 +
->  fs/aio.c                                    |    5 +-
->  include/linux/mm.h                          |   55 +-
->  include/linux/mm_types.h                    |    7 +
->  include/linux/syscalls.h                    |    2 +
->  include/uapi/asm-generic/unistd.h           |    5 +-
->  include/uapi/linux/mman.h                   |    6 +
->  ipc/shm.c                                   |    3 +-
->  kernel/sys_ni.c                             |    1 +
->  mm/Kconfig                                  |    8 +
->  mm/Makefile                                 |    1 +
->  mm/internal.h                               |    4 +-
->  mm/mmap.c                                   |   49 +-
->  mm/mprotect.c                               |    6 +
->  mm/mremap.c                                 |   19 +-
->  mm/mseal.c                                  |  328 +++++
->  mm/nommu.c                                  |    6 +-
->  mm/util.c                                   |    8 +-
->  tools/testing/selftests/mm/Makefile         |    1 +
->  tools/testing/selftests/mm/mseal_test.c     | 1428 +++++++++++++++++++
->  37 files changed, 1934 insertions(+), 28 deletions(-)
->  create mode 100644 mm/mseal.c
->  create mode 100644 tools/testing/selftests/mm/mseal_test.c
+> Reviewed-by: Kees Cook <keescook@chromium.org>
 >
 > --
-> 2.42.0.609.gbb76f46606-goog
->
+> Kees Cook
+
+Thanks
+Justin
