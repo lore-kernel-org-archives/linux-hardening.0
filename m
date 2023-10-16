@@ -1,344 +1,158 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE7F2770A
-	for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 21:18:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25B1B381A9
+	for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 21:27:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WeuRguor"
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E79DEAC
-	for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 14:18:20 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-68fb85afef4so3951683b3a.1
-        for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 14:18:20 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SyF8p1sI"
+Received: from mail-oo1-xc29.google.com (mail-oo1-xc29.google.com [IPv6:2607:f8b0:4864:20::c29])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90C4B93
+	for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 14:27:44 -0700 (PDT)
+Received: by mail-oo1-xc29.google.com with SMTP id 006d021491bc7-581b6b93bd1so862659eaf.1
+        for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 14:27:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1697491100; x=1698095900; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dadSSBc4th7Oq3HrYctNHxDRHsr2TvRZmUPJ29Jh97s=;
-        b=WeuRguorXF4GlUT15IuXIR8oumwTP3cQFpKsjP8mTjT/1fBzrzentsmfL2yYMkqYHQ
-         yA98qTyTsN24InwfCAP/3jSh8BKg8pdXEsiV5qRQurFzJLRo7W1eIO3gcYAJuvzaYGnR
-         QCSRSDq6y6hKALnf6KDyvXOlYqs+pn6qOrJuA=
+        d=chromium.org; s=google; t=1697491664; x=1698096464; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hPgMlBTFx+2I9248zEaT5u1u+rLOVrvQ5zC0LJfwWQ0=;
+        b=SyF8p1sIKoQrRUTRh2B/L+4Sp0wytVvB7HernGTi975VcWIE9ml0f93H6nv67nbAKw
+         9YI0PQPayOpDkaRrxlHfBNQLEeRpu+RfifMWJ0lEbmZJWJJG1qKccfvPhoufh1rIPlVO
+         IOuKXrFwzd5Ny2c28x5IguUtoe0XaZLn0cK6g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697491100; x=1698095900;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dadSSBc4th7Oq3HrYctNHxDRHsr2TvRZmUPJ29Jh97s=;
-        b=gaBup2kkRrQP+OL8rfUe8Pv77siG4umvP+2Rs/x14sn0GrzlmR7LmtzXCEvG3F7kGB
-         JN4GRyJhFZGg/XS6h1vZmsxTzUWJO75bTx5tNOfOS7N55E2BbYKq6W2nCzMSbGR6WIX8
-         c+0MV8jYZs03BxfWCha5S9f7pSUV6oitUNNV3lm1eELAZGOSea/Vqjefv52iQYB48oSO
-         P1YR7WCxu0K6UIvWbKfaw6azN0OBMeHzWvAkRShRs5wiLCQq+2QYfayb0rZzKops3TEV
-         CRur9PLMpt0fv9kEaE0L4dzh3DyLgPY3zCcx+HYzK+ocNS4nJkgwhMVcR7kA1gPbPbdQ
-         7KyQ==
-X-Gm-Message-State: AOJu0YyDJLb6vYMbxzX38lbCOA4PeI9gagr5951Y5+SK05e83224apGA
-	N/1Mm2Kew510Af5u47Xq+sLC7jhh3G84psI//N4=
-X-Google-Smtp-Source: AGHT+IHX1JuAZP7QjOOnXjPpL0JNyaDoeed5AbFBNbQHP3sAultOKIbHZ4eoTJA93ArTK4NBzJHzew==
-X-Received: by 2002:a05:6a00:1887:b0:691:2d4:23a2 with SMTP id x7-20020a056a00188700b0069102d423a2mr324434pfh.31.1697491100331;
-        Mon, 16 Oct 2023 14:18:20 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1697491664; x=1698096464;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hPgMlBTFx+2I9248zEaT5u1u+rLOVrvQ5zC0LJfwWQ0=;
+        b=RtF7jiiojwF7HeG5/sHnaYIYPBLzkUzPa8hYM+yALpef/kRVg5XPckKM8beszGl4Nx
+         gIjyOw2qPKJ1cl4hAeNnHLEE9ywzhr1AJ2R8ZRhxrXa31z+yNBSDd2EG3C/r1loFhap3
+         WFGr8WCGalYEcXtbTpR5A5FRwaitvulL5iFgGXUSE+vvryvh0Qx8aEzJz2f06IuP+Tbo
+         FadtvvGG7ImLi6CxGAF6kjJA499qIBMsPfMINeopiX5a6AQD8LN8+x14nefXwliGGyp5
+         8U+slYX4Y7GTC4jNha6l8M9MtuCWiAydOdtbR895R/NJbm94WDcJnR/T+ZC08DQWctbi
+         kd8A==
+X-Gm-Message-State: AOJu0YzHJZw3S/2pd0O1oOYfbst114rUIYo6GFL4OaUUTBDWKFV3hc/P
+	iY5prd5MevU1G6Ql8qdkdujCGw==
+X-Google-Smtp-Source: AGHT+IHrSWO54ZLXcXmETNNfpII8DusFKgDllyqDq/ZSWmhM7sp40S+wVHfc12SJxO/WdnVmkePGgA==
+X-Received: by 2002:a05:6359:5ea0:b0:166:d379:93c1 with SMTP id px32-20020a0563595ea000b00166d37993c1mr587200rwb.20.1697491663843;
+        Mon, 16 Oct 2023 14:27:43 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id n10-20020a63590a000000b0057a868900a9sm73977pgb.67.2023.10.16.14.18.19
+        by smtp.gmail.com with ESMTPSA id a6-20020aa78e86000000b0068fd026b496sm30364pfr.46.2023.10.16.14.27.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Oct 2023 14:18:19 -0700 (PDT)
-Date: Mon, 16 Oct 2023 14:18:19 -0700
+        Mon, 16 Oct 2023 14:27:43 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
-To: Brian Foster <bfoster@redhat.com>
-Cc: Kent Overstreet <kent.overstreet@linux.dev>,
-	linux-bcachefs@vger.kernel.org, kernel test robot <lkp@intel.com>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] bcachefs: Refactor bkey_i to use a flexible array
-Message-ID: <202310161249.43FB42A6@keescook>
-References: <20231010235609.work.594-kees@kernel.org>
- <ZSkpU0vdrCTfTxuZ@bfoster>
- <202310131637.D0C66BFBA@keescook>
- <ZS0vlpSwH1+/+EVM@bfoster>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Kees Cook <keescook@chromium.org>,
+	Brian Foster <bfoster@redhat.com>,
+	linux-bcachefs@vger.kernel.org,
+	kernel test robot <lkp@intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2] bcachefs: Refactor bkey_i to use a flexible array
+Date: Mon, 16 Oct 2023 14:27:39 -0700
+Message-Id: <20231016212735.it.314-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZS0vlpSwH1+/+EVM@bfoster>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3237; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=ZFVX4Et7GPEikNCf0Ix6A5YSoE2Mfb24IGbRkCLbcNc=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlLarL3fT0ZlYwcbjnSnTWM77NW/ozenkBQEVl3
+ aupJJB3LnOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZS2qywAKCRCJcvTf3G3A
+ Jse1D/9vmoEVewSjtb1/R8Ur1UqM8PbdX33bLxi16QrR0H+U/mxcWnnEzugwd0LqR/HJBaNordc
+ w/uC/7a8P2f9nW9QhXS6j2wo3U59Kexpsd5S60GxyiLtEwJA51JOEM/BHu5AreNoUPVivpINC0M
+ gY+EsSE7uvNa0Wm+ZF22AmwcY2pTf+qUyy6uK6tPsaCevoMDKpFEbgxVp2MkHaUfOCb7hNlj+r/
+ lDmfxxjxpW2IqKxQnsBbnjL9Bdq0+9Bw3j9K6Mi8s8ElzAZy4v334yhHKxuF7fm+8vU8S+oPIJ1
+ 16XKru1DChGWe8pxxL2Li1YuXsP8F1BkGwBdWpfcWLVeP08Fat82dEWXYfaBx6f2Xrb4kVGPbny
+ LhvjATPEbg2T2q67a9IfEEMt7eCqcYR9uvd+D4zQkby4rYdx1eSawPu6QM286GD/wift69yoAXl
+ OdbGYJIdw8Wk8Z2FBr3OunPOk1yKD8QrVUoV3fdPxBgIDLtqxdNAQTzosswze4be0ozl2oXYf+s
+ Uy/zjenXqlJT/hNQT1IcTU2UvriDo+0V58793WA77lHpT9+Zfps2oL911dWUDMKXAukmVbOLR4P
+ T0Q3FE/nRDAYEQCOTCxskheCOAFJtdykoWuhGgSgzcvqWGTGMR/WpHj0JK2P7T2GRovBLTMo2Ft
+ n0ZmyMs Pc1bRs0A==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Mon, Oct 16, 2023 at 08:41:58AM -0400, Brian Foster wrote:
-> On Fri, Oct 13, 2023 at 04:44:21PM -0700, Kees Cook wrote:
-> > On Fri, Oct 13, 2023 at 07:26:11AM -0400, Brian Foster wrote:
-> > > On Tue, Oct 10, 2023 at 04:56:12PM -0700, Kees Cook wrote:
-> > > > The memcpy() in bch2_bkey_append_ptr() is operating on an embedded
-> > > > fake flexible array. Instead, make it explicit, and convert the memcpy
-> > > > to target the flexible array instead. Fixes the W=1 warning seen for
-> > > > -Wstringop-overflow:
-> > > > 
-> > > >    In file included from include/linux/string.h:254,
-> > > >                     from include/linux/bitmap.h:11,
-> > > >                     from include/linux/cpumask.h:12,
-> > > >                     from include/linux/smp.h:13,
-> > > >                     from include/linux/lockdep.h:14,
-> > > >                     from include/linux/radix-tree.h:14,
-> > > >                     from include/linux/backing-dev-defs.h:6,
-> > > >                     from fs/bcachefs/bcachefs.h:182:
-> > > >    fs/bcachefs/extents.c: In function 'bch2_bkey_append_ptr':
-> > > >    include/linux/fortify-string.h:57:33: warning: writing 8 bytes into a region of size 0 [-Wstringop-overflow=]
-> > > >       57 | #define __underlying_memcpy     __builtin_memcpy
-> > > >          |                                 ^
-> > > >    include/linux/fortify-string.h:648:9: note: in expansion of macro '__underlying_memcpy'
-> > > >      648 |         __underlying_##op(p, q, __fortify_size);                        \
-> > > >          |         ^~~~~~~~~~~~~
-> > > >    include/linux/fortify-string.h:693:26: note: in expansion of macro '__fortify_memcpy_chk'
-> > > >      693 | #define memcpy(p, q, s)  __fortify_memcpy_chk(p, q, s,                  \
-> > > >          |                          ^~~~~~~~~~~~~~~~~~~~
-> > > >    fs/bcachefs/extents.c:235:17: note: in expansion of macro 'memcpy'
-> > > >      235 |                 memcpy((void *) &k->v + bkey_val_bytes(&k->k),
-> > > >          |                 ^~~~~~
-> > > >    fs/bcachefs/bcachefs_format.h:287:33: note: destination object 'v' of size 0
-> > > >      287 |                 struct bch_val  v;
-> > > >          |                                 ^
-> > > > 
-> > > > Cc: Kent Overstreet <kent.overstreet@linux.dev>
-> > > > Cc: Brian Foster <bfoster@redhat.com>
-> > > > Cc: linux-bcachefs@vger.kernel.org
-> > > > Reported-by: kernel test robot <lkp@intel.com>
-> > > > Closes: https://lore.kernel.org/oe-kbuild-all/202309192314.VBsjiIm5-lkp@intel.com/
-> > > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > > ---
-> > > >  fs/bcachefs/bcachefs_format.h | 5 ++++-
-> > > >  fs/bcachefs/extents.h         | 2 +-
-> > > >  2 files changed, 5 insertions(+), 2 deletions(-)
-> > > > 
-> > > > diff --git a/fs/bcachefs/bcachefs_format.h b/fs/bcachefs/bcachefs_format.h
-> > > > index f0d130440baa..f5e8cb43697b 100644
-> > > > --- a/fs/bcachefs/bcachefs_format.h
-> > > > +++ b/fs/bcachefs/bcachefs_format.h
-> > > > @@ -300,7 +300,10 @@ struct bkey_i {
-> > > >  	__u64			_data[0];
-> > > >  
-> > > >  	struct bkey	k;
-> > > > -	struct bch_val	v;
-> > > > +	union {
-> > > > +		struct bch_val	v;
-> > > > +		DECLARE_FLEX_ARRAY(__u8, bytes);
-> > > > +	};
-> > > >  };
-> > > 
-> > > Hi Kees,
-> > > 
-> > > I'm curious if this is something that could be buried in bch_val given
-> > > it's already kind of a fake structure..? If not, my only nitty comment
-> > 
-> > I was thinking it would be best to keep the flexible array has "high" in
-> > the struct as possible, as in the future more refactoring will be needed
-> > to avoid having flex arrays overlap with other members in composite
-> > structures. So instead of pushing into bch_val, I left it at the highest
-> > level possible, bch_i, as that's the struct being used by the memcpy().
-> > 
-> > Eventually proper unions will be needed instead of overlapping bch_i
-> > with other types, as in:
-> > 
-> > struct btree_root {
-> >         struct btree            *b;
-> > 
-> >         /* On disk root - see async splits: */
-> >         __BKEY_PADDED(key, BKEY_BTREE_PTR_VAL_U64s_MAX);
-> >         u8                      level;
-> >         u8                      alive;
-> >         s8                      error;
-> > };
-> > 
-> > But that's all for the future. Right now I wanted to deal with the more
-> > pressing matter of a 0-sized array not being zero sized. :)
-> > 
-> 
-> Ok, but I'm not really following how one approach vs. the other relates
-> to this particular example of an embedded bkey_i. I'm probably just not
-> familiar enough with the current issues with 0-sized arrays and the
-> anticipated path forward. Can you elaborate for somebody who is more
-> focused on trying to manage the design/complexity of these various key
-> data structures? For example, what's the practical difference here (for
-> future work) if the flex array lives in bch_val vs. bkey_i?
+The memcpy() in bch2_bkey_append_ptr() is operating on an embedded
+fake flexible array. Instead, make it explicit, and convert the memcpy
+to target the flexible array instead. Fixes the W=1 warning seen for
+-Wstringop-overflow:
 
-I was looking strictly at the layer it was happening: the function that
-calls memcpy() is working on a bkey_i, so I figured that was the place
-for it currently.
+   In file included from include/linux/string.h:254,
+                    from include/linux/bitmap.h:11,
+                    from include/linux/cpumask.h:12,
+                    from include/linux/smp.h:13,
+                    from include/linux/lockdep.h:14,
+                    from include/linux/radix-tree.h:14,
+                    from include/linux/backing-dev-defs.h:6,
+                    from fs/bcachefs/bcachefs.h:182:
+   fs/bcachefs/extents.c: In function 'bch2_bkey_append_ptr':
+   include/linux/fortify-string.h:57:33: warning: writing 8 bytes into a region of size 0 [-Wstringop-overflow=]
+      57 | #define __underlying_memcpy     __builtin_memcpy
+         |                                 ^
+   include/linux/fortify-string.h:648:9: note: in expansion of macro '__underlying_memcpy'
+     648 |         __underlying_##op(p, q, __fortify_size);                        \
+         |         ^~~~~~~~~~~~~
+   include/linux/fortify-string.h:693:26: note: in expansion of macro '__fortify_memcpy_chk'
+     693 | #define memcpy(p, q, s)  __fortify_memcpy_chk(p, q, s,                  \
+         |                          ^~~~~~~~~~~~~~~~~~~~
+   fs/bcachefs/extents.c:235:17: note: in expansion of macro 'memcpy'
+     235 |                 memcpy((void *) &k->v + bkey_val_bytes(&k->k),
+         |                 ^~~~~~
+   fs/bcachefs/bcachefs_format.h:287:33: note: destination object 'v' of size 0
+     287 |                 struct bch_val  v;
+         |                                 ^
 
-> Note that I don't necessarily have a strong opinion on this atm, but if
-> there's a "for future reasons" aspect to this approach I'd like to at
-> least understand it a little better. ;)
+Cc: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Brian Foster <bfoster@redhat.com>
+Cc: linux-bcachefs@vger.kernel.org
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202309192314.VBsjiIm5-lkp@intel.com/
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+v2 - Change flex array name to "v_bytes" (bfoster)
+v1 - https://lore.kernel.org/r/20231010235609.work.594-kees@kernel.org
+---
+ fs/bcachefs/bcachefs_format.h | 5 ++++-
+ fs/bcachefs/extents.h         | 2 +-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-The future work here is about making sure flexible arrays don't overlap
-with non-flexible array members[1], and that will require giving some
-thought to how the structures are arranged.
-
-The specific "problem" being solved is the ambiguity in the C language
-for dealing with flexible arrays. For example, this will already throw a
-warning:
-
-struct whoops {
-	u32 stuff;
-	u8 how_many_shorts;
-	u16 shorts[];
-	u64 flags;
-};
-
-Doing struct_size()-style allocations will end up with a clobbered
-"flags" member when accessing the first 4 "shorts", etc. This neighboring
-overwrite corruption code pattern has happened (and been fixed) a bunch[2]
-in the kernel when someone adds a new member to a struct at the end
-without noticing the flexible array. (In the past, it was usually via
-the 0-sized arrays, e.g. "u16 shorts[0]".) One of the many benefits of
-using C99 flex arrays is that the compiler will warn now (when it's in
-the same struct), and "flags" can be moved to the right place, etc.
-
-*However*, the compiler wasn't warning about composite structures, like
-this:
-
-struct inner {
-	u32 stuff;
-	u8 how_many_shorts;
-	u16 shorts[];
-};
-
-struct whoops {
-	struct inner instance;
-	u64 flags;
-};
-
-This ends up being an ambiguous situation: is "flags" an interpretation
-of the first 4 "shorts", or is it an accidental overlap that will lead
-to memory corruption? So, in our ongoing battle to eliminate ambiguities
-in the codebase, we've moving away from this code pattern (with the
-help of the future -Wflex-array-member-not-at-end compiler option),
-by switching to unambiguous structure layouts.
-
-The common "intentional overlap" use-case is very similar to the bcachefs
-code. For example:
-
-struct header {
-	u32 long flags;
-	struct other things;
-	size_t byte_count;
-	u8 bytes[];
-};
-
-struct cmd_one {
-	struct header hdr;
-	u64 detail;
-	u8 bits;
-};
-
-struct cmd_two {
-	struct header hdr;
-	u32 foo, bar;
-	u64 baz;
-};
-
-The use of "struct header" effectively says "we have some number of bytes,
-but we don't know *what* it is yet". Is it cmd_one, or cmd_two? Instead
-of combining the flex array with the header, we can either split it off:
-
-struct header {
-	u32 long flags;
-	struct other things;
-	size_t byte_count;
-};
-
-struct cmd_unknown {
-	struct header;
-	u8 bytes[];
-};
-
-Or we can merge all the structs together:
-
-struct everything {
-	u32 long flags;
-	struct other things;
-	size_t byte_count;
-	union {
-		struct cmd_one {
-			u64 detail;
-			u8 bits;
-		};
-		struct cmd_two {
-			u32 foo, bar;
-			u64 baz;
-		};
-		struct unknown {
-			u8 bytes[];
-		};
-	};
-};
-
-In the first style, the flexible array is distinctly separate. In the
-second style the overlap is explicitly shown via the union.
-
-I expect it will take a long time to make the kernel "flex array overlap
-clean", so while I don't feel any rush, I've been generally trying to
-avoid seeing new instances of ambiguous overlap _added_ to the kernel. :)
-
-bcachefs is in a unique places where because it's been out of tree
-its code patterns aren't "new", but it's just been "added" upstream.
-*shrug* So we'll deal with the existing warnings we've already got,
-and prepare for the future warnings as we can.
-
-Hopefully that helps!
-
--Kees
-
-[1] See "-Wflex-array-member-not-at-end":
-    https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] Going all the way back to 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-> 
-> > > is that memcpy(k->bytes[], ...) makes it kind of read like we're copying
-> > > in opaque key data rather than value data, so perhaps a slightly more
-> > > descriptive field name would be helpful. But regardless I'd wait until
-> > > Kent has a chance to comment before changing anything..
-> > 
-> > How about "v_bytes" instead of "bytes"? Or if it really is preferred,
-> > I can move the flex array into bch_val -- it just seems like the wrong
-> > layer...
-> > 
-> 
-> Yeah.. v_bytes, value_bytes, etc. etc. Anything that avoids misleading
-> code when using the field is good with me. Thanks.
-> 
-> Brian
-> 
-> > -Kees
-> > 
-> > > 
-> > > Brian
-> > > 
-> > > >  
-> > > >  #define KEY(_inode, _offset, _size)					\
-> > > > diff --git a/fs/bcachefs/extents.h b/fs/bcachefs/extents.h
-> > > > index 7ee8d031bb6c..6248e17bbac5 100644
-> > > > --- a/fs/bcachefs/extents.h
-> > > > +++ b/fs/bcachefs/extents.h
-> > > > @@ -642,7 +642,7 @@ static inline void bch2_bkey_append_ptr(struct bkey_i *k, struct bch_extent_ptr
-> > > >  
-> > > >  		ptr.type = 1 << BCH_EXTENT_ENTRY_ptr;
-> > > >  
-> > > > -		memcpy((void *) &k->v + bkey_val_bytes(&k->k),
-> > > > +		memcpy(&k->bytes[bkey_val_bytes(&k->k)],
-> > > >  		       &ptr,
-> > > >  		       sizeof(ptr));
-> > > >  		k->k.u64s++;
-> > > > -- 
-> > > > 2.34.1
-> > > > 
-> > > 
-> > 
-> > -- 
-> > Kees Cook
-> > 
-> 
-
+diff --git a/fs/bcachefs/bcachefs_format.h b/fs/bcachefs/bcachefs_format.h
+index f0d130440baa..cb1af3799b59 100644
+--- a/fs/bcachefs/bcachefs_format.h
++++ b/fs/bcachefs/bcachefs_format.h
+@@ -300,7 +300,10 @@ struct bkey_i {
+ 	__u64			_data[0];
+ 
+ 	struct bkey	k;
+-	struct bch_val	v;
++	union {
++		struct bch_val	v;
++		DECLARE_FLEX_ARRAY(__u8, v_bytes);
++	};
+ };
+ 
+ #define KEY(_inode, _offset, _size)					\
+diff --git a/fs/bcachefs/extents.h b/fs/bcachefs/extents.h
+index 7ee8d031bb6c..896fcfca4f21 100644
+--- a/fs/bcachefs/extents.h
++++ b/fs/bcachefs/extents.h
+@@ -642,7 +642,7 @@ static inline void bch2_bkey_append_ptr(struct bkey_i *k, struct bch_extent_ptr
+ 
+ 		ptr.type = 1 << BCH_EXTENT_ENTRY_ptr;
+ 
+-		memcpy((void *) &k->v + bkey_val_bytes(&k->k),
++		memcpy(&k->v_bytes[bkey_val_bytes(&k->k)],
+ 		       &ptr,
+ 		       sizeof(ptr));
+ 		k->k.u64s++;
 -- 
-Kees Cook
+2.34.1
+
