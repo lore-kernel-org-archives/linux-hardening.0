@@ -1,203 +1,108 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E28B79EE
-	for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 05:41:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66A031386
+	for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 05:48:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="CaZftvMt"
-Received: from smtp.smtpout.orange.fr (smtp-20.smtpout.orange.fr [80.12.242.20])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F98DE1
-	for <linux-hardening@vger.kernel.org>; Sun, 15 Oct 2023 22:41:20 -0700 (PDT)
-Received: from [192.168.1.18] ([86.243.2.178])
-	by smtp.orange.fr with ESMTPA
-	id sGLqqw1YgzhI0sGLqqd1yf; Mon, 16 Oct 2023 07:41:18 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1697434878;
-	bh=/n+tFNXdPwOJ6d19BaRcNoyu9yN3bdZ6yXB4UOXT29Q=;
-	h=Date:Subject:To:References:Cc:From:In-Reply-To;
-	b=CaZftvMttbHKDGt5Yl2YMSKbF/ZzixKDZiFrOxsHxV2ANUW00S51EAUOEcW93AbCZ
-	 KVTBMtSUz1Gx2PgRpLGqOGdmCVPyipWvxjWgCzrT1g2k8YbLgpGFDK5ywTMagJ9PR1
-	 AAV9DtGh68UxB38MFQLDRW87EeU+RZ/hzVH5yC0IBhT2IuEtwR4AUa9rDaMuDAgBnG
-	 BVBwkk2WyQ0Wz2Jt0aTtx3J2zLTW8zvg3e7vyPqC91RWbqnB6rzm0wP3wiEX3mK9RF
-	 G3Rj+11E/4Wb4k3rxmm0hoZ6l2qGsgx/uA4DQPVSwVRiVZRmkwyWL41xd25P4/vbMz
-	 gggGxd7pWJhwg==
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Mon, 16 Oct 2023 07:41:18 +0200
-X-ME-IP: 86.243.2.178
-Message-ID: <998767cb-1c70-45c2-91cc-858315be1a52@wanadoo.fr>
-Date: Mon, 16 Oct 2023 07:41:14 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WWU1oiPl"
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D2BAD9
+	for <linux-hardening@vger.kernel.org>; Sun, 15 Oct 2023 22:47:59 -0700 (PDT)
+Received: by mail-wm1-x331.google.com with SMTP id 5b1f17b1804b1-40572aeb6d0so40809655e9.1
+        for <linux-hardening@vger.kernel.org>; Sun, 15 Oct 2023 22:47:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1697435277; x=1698040077; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=APqyNWoGiniVbLUmpGHDy/Anj/nDAihOoYwD68G5Kvc=;
+        b=WWU1oiPlc2oIE3KUL3ECJKHqPSwtY7jmAM8/djDse3R9aZ3mxcrbCKET+DXtdvMc2L
+         C3IfIUhp5c1pL2GmgF8zG2UZQi3pIfShRxWF6GWnMLQmyEMdZg9+MdLoCkDr//A8EqH8
+         K4EmYcPbFpeosN1CQg5Yr5CRGYBtR9UjTbT0vFGTQMDHSW0MWWg4DEU9pmiWe8CAc8/g
+         d1xs8+MPshvxhuA4L2E3vTM0u8vEEAAvNTVzCmztn3N4QAVaMYteWMp9mPQFnmYHfkZW
+         CYJDG8EN3StEWsqe+n5wcV3NTcs44itulq4wOIOq4NFlSQZwlVAWOXGpeVwRZcAoJbVC
+         c3YQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697435277; x=1698040077;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=APqyNWoGiniVbLUmpGHDy/Anj/nDAihOoYwD68G5Kvc=;
+        b=dZcGbSbtHMuL1BOm+tUseyfq8rJLI5/vLwzazjkjkiJH1FviFezuaZanzaIznwfODq
+         HcO1R1VJOBz5l1X3Zg3IjD0rYkMql6FmEVt+1njfI+XJjrcKR4d5/LIL55Ro1CyMaaeB
+         UJ670OUOHT6G124d+JrIUwZelIEY83XyxI3ZfbO/g1m77iqhVd8AH++PDe8CtCZcOpTo
+         q23y40i2l54yWTfJyBdeeRukGXjAsklz7vfOibitArxTmqMqBOFw+BidFim1CG6IXmnh
+         L0NCLBl7BiHq3iK222Kqu3+lNmifTRyyYug3rOHn5EEtcckYRNwzcdM14jdfnmkCM4rY
+         acMw==
+X-Gm-Message-State: AOJu0YysyRK2gcBAD2+w7sIUVmw2c6x4QUxMA/y6uCkZ0RiokuuUkbS9
+	nQkod/MnXWrX/Z4JNTGMXiNEZN++nawUsHsjq3g=
+X-Google-Smtp-Source: AGHT+IEqFBJmt4qwktiIeWcTfadTv5RQBY42SkmYDcKqxJZy53DlvvoIzGgZ3IbRwu3jJLQlcNIdvw==
+X-Received: by 2002:a05:600c:2298:b0:3fe:1af6:6542 with SMTP id 24-20020a05600c229800b003fe1af66542mr27821090wmf.33.1697435277411;
+        Sun, 15 Oct 2023 22:47:57 -0700 (PDT)
+Received: from localhost ([102.36.222.112])
+        by smtp.gmail.com with ESMTPSA id 13-20020a05600c230d00b004068495910csm6156468wmo.23.2023.10.15.22.47.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Oct 2023 22:47:56 -0700 (PDT)
+Date: Mon, 16 Oct 2023 08:47:53 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Simon Horman <horms@kernel.org>
+Cc: Justin Stitt <justinstitt@google.com>,
+	Thomas Sailer <t.sailer@alumni.ethz.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	linux-hams@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] hamradio: replace deprecated strncpy with strscpy
+Message-ID: <ede96908-76ff-473c-a5e1-39e2ce130df9@kadam.mountain>
+References: <20231012-strncpy-drivers-net-hamradio-baycom_epp-c-v1-1-8f4097538ee4@google.com>
+ <20231015150619.GC1386676@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 4/8] soc/tegra: fuse: Add tegra_acpi_init_apbmisc()
-To: kkartik@nvidia.com
-References: <20231016053411.3380-1-kkartik@nvidia.com>
- <20231016053411.3380-5-kkartik@nvidia.com>
-Content-Language: fr
-Cc: akpm@linux-foundation.org, andy@kernel.org, arnd@arndb.de,
- frank.li@vivo.com, jonathanh@nvidia.com, keescook@chromium.org,
- linus.walleij@linaro.org, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-tegra@vger.kernel.org, pdeschrijver@nvidia.com, petlozup@nvidia.com,
- pshete@nvidia.com, robh@kernel.org, stefank@nvidia.com,
- thierry.reding@gmail.com, ulf.hansson@linaro.org
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20231016053411.3380-5-kkartik@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231015150619.GC1386676@kernel.org>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.6
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Le 16/10/2023 à 07:34, Kartik a écrit :
-> In preparation to ACPI support in Tegra fuse driver add function
-> tegra_acpi_init_apbmisc() to initialize tegra-apbmisc driver.
-> Also, document the reason of calling tegra_init_apbmisc() at early init.
+On Sun, Oct 15, 2023 at 05:06:19PM +0200, Simon Horman wrote:
+> On Thu, Oct 12, 2023 at 09:33:32PM +0000, Justin Stitt wrote:
+> > strncpy() is deprecated for use on NUL-terminated destination strings
+> > [1] and as such we should prefer more robust and less ambiguous string
+> > interfaces.
+> > 
+> > We expect both hi.data.modename and hi.data.drivername to be
+> > NUL-terminated but not necessarily NUL-padded which is evident by its
+> > usage with sprintf:
+> > |       sprintf(hi.data.modename, "%sclk,%smodem,fclk=%d,bps=%d%s",
+> > |               bc->cfg.intclk ? "int" : "ext",
+> > |               bc->cfg.extmodem ? "ext" : "int", bc->cfg.fclk, bc->cfg.bps,
+> > |               bc->cfg.loopback ? ",loopback" : "");
+> > 
+> > Note that this data is copied out to userspace with:
+> > |       if (copy_to_user(data, &hi, sizeof(hi)))
+> > ... however, the data was also copied FROM the user here:
+> > |       if (copy_from_user(&hi, data, sizeof(hi)))
 > 
-> Note that function tegra_acpi_init_apbmisc() is not placed in the __init
-> section, because it will be called during probe.
+> Thanks Justin,
 > 
-> Signed-off-by: Kartik <kkartik-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
-> v2 -> v3:
-> 	* Fix build warnings seen when CONFIG_ACPI is disabled by moving
-> 	  tegra_init_apbmisc table inside #ifdef CONFIG_ACPI block.
+> I see that too.
 > 
-> v1 -> v2:
-> 	* Update ACPI ID table 'tegra_init_apbmisc'.
-> 	* Add comment to document the reason to call tegra_init_apbmisc
-> 	  at early init.
-> 	* Fix an issue where acpi_dev_free_resource_list() and
-> 	* acpi_dev_put() were not called if
-> 	  acpi_dev_get_memory_resources() returned 1.
-> 	* Update logic to fetch memory resources in
-> 	  tegra_acpi_init_apbmisc().
-> 	* Fix build errors seen when CONFIG_ACPI is disabled.
-> ---
->   drivers/soc/tegra/fuse/fuse.h          |  1 +
->   drivers/soc/tegra/fuse/tegra-apbmisc.c | 72 ++++++++++++++++++++++++++
->   2 files changed, 73 insertions(+)
+> Perhaps I am off the mark here, and perhaps it's out of scope for this
+> patch, but I do think it would be nicer if the kernel only sent
+> intended data to user-space, even if any unintended payload came
+> from user-space.
 > 
-> diff --git a/drivers/soc/tegra/fuse/fuse.h b/drivers/soc/tegra/fuse/fuse.h
-> index 90f23be73894..a41e9f85281a 100644
-> --- a/drivers/soc/tegra/fuse/fuse.h
-> +++ b/drivers/soc/tegra/fuse/fuse.h
-> @@ -69,6 +69,7 @@ struct tegra_fuse {
->   
->   void tegra_init_revision(void);
->   void tegra_init_apbmisc(void);
-> +void tegra_acpi_init_apbmisc(void);
->   
->   u32 __init tegra_fuse_read_spare(unsigned int spare);
->   u32 __init tegra_fuse_read_early(unsigned int offset);
-> diff --git a/drivers/soc/tegra/fuse/tegra-apbmisc.c b/drivers/soc/tegra/fuse/tegra-apbmisc.c
-> index 06c1b3a2c7ec..e2ca93de6c1f 100644
-> --- a/drivers/soc/tegra/fuse/tegra-apbmisc.c
-> +++ b/drivers/soc/tegra/fuse/tegra-apbmisc.c
-> @@ -3,9 +3,11 @@
->    * Copyright (c) 2014-2023, NVIDIA CORPORATION.  All rights reserved.
->    */
->   
-> +#include <linux/acpi.h>
->   #include <linux/export.h>
->   #include <linux/io.h>
->   #include <linux/kernel.h>
-> +#include <linux/mod_devicetable.h>
->   #include <linux/of.h>
->   #include <linux/of_address.h>
->   
-> @@ -180,6 +182,12 @@ static void tegra_init_apbmisc_resources(struct resource *apbmisc,
->   	}
->   }
->   
-> +/**
-> + * tegra_init_apbmisc - Initializes Tegra APBMISC and Strapping registers.
-> + *
-> + * This is called during early init as some of the old 32-bit ARM code needs
-> + * information from the APBMISC registers very early during boot.
-> + */
->   void __init tegra_init_apbmisc(void)
->   {
->   	struct resource apbmisc, straps;
-> @@ -244,3 +252,67 @@ void __init tegra_init_apbmisc(void)
->   put:
->   	of_node_put(np);
->   }
-> +
-> +#ifdef CONFIG_ACPI
-> +static const struct acpi_device_id apbmisc_acpi_match[] = {
-> +	{ "NVDA2010" },
-> +	{ /* sentinel */ }
-> +};
-> +
-> +void tegra_acpi_init_apbmisc(void)
-> +{
-> +	struct resource *resources[2] = { NULL };
-> +	struct resource_entry *rentry, *tmp;
-> +	struct acpi_device *adev = NULL;
-> +	struct list_head resource_list;
-> +	int rcount = 0;
-> +	int ret;
-> +
-> +	adev = acpi_dev_get_first_match_dev(apbmisc_acpi_match[0].id, NULL, -1);
-> +	if (!adev)
-> +		return;
-> +
-> +	INIT_LIST_HEAD(&resource_list);
-> +
-> +	ret = acpi_dev_get_memory_resources(adev, &resource_list);
-> +	if (ret < 0) {
-> +		pr_err("failed to get APBMISC memory resources");
-> +		goto out_put_acpi_dev;
-> +	}
-> +
-> +	/*
-> +	 * Get required memory resources.
-> +	 *
-> +	 * resources[0]: apbmisc.
-> +	 * resources[1]: straps.
-> +	 */
-> +	resource_list_for_each_entry_safe(rentry, tmp, &resource_list) {
 
-Nit: Is the 'safe' version really needed here?
+It's kind of normal to pass user space data back to itself.  We
+generally only worry about info leaks.
 
-CJ
-
-> +		if (rcount >= ARRAY_SIZE(resources))
-> +			break;
-> +
-> +		resources[rcount++] = rentry->res;
-> +	}
-> +
-> +	if (!resources[0]) {
-> +		pr_err("failed to get APBMISC registers\n");
-> +		goto out_free_resource_list;
-> +	}
-> +
-> +	if (!resources[1]) {
-> +		pr_err("failed to get strapping options registers\n");
-> +		goto out_free_resource_list;
-> +	}
-> +
-> +	tegra_init_apbmisc_resources(resources[0], resources[1]);
-> +
-> +out_free_resource_list:
-> +	acpi_dev_free_resource_list(&resource_list);
-> +
-> +out_put_acpi_dev:
-> +	acpi_dev_put(adev);
-> +}
-> +#else
-> +void tegra_acpi_init_apbmisc(void)
-> +{
-> +}
-> +#endif
+regards,
+dan carpenter
 
