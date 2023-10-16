@@ -1,132 +1,222 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE01D1DDF4
-	for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 10:16:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784E6273E2
+	for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 12:41:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="EPRR7weU"
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 148F511F;
-	Mon, 16 Oct 2023 03:16:12 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ckm1SG9NuxLyoTkPqU28Ie+lbRhz2+J4XbqpqbfGoFrzHkqWFF9o+vpfxL2KwXyFHw7T5XqwQxN1vjSd17vXJ7yTUommTJpsiti9140PxL91S9U44Xaa7rtG1KhQl+zYUWUFBA8ZOh4GnBTcPQxMLQ5UsA95jME3Bau46qV8iWtq//8NHpkY4lO59UkLAXGGqvuI9V5CYnFWAjadZMAH47VbCJ4OkkfTQsEx0ouGsr1ke/9YCl829pSQmS9YVRyE37gtxSWMQQtHVNthF7weXFCVzAkeH7zCqw6YYdD8L4vEsGGCL9AuYLJeJx3zDLmOFIe9lfLYZUKcZ928XwHicQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WTMMZz+ODqltu/P2Nz06xKOCFERt6in5j7SlRnnZSD0=;
- b=L01bAaiqWuOsqi9wfzEo1Iqkng1HRELnWku5z6ggfM/5gN5fuwm1xUqNNutoNURElnyEDqkzQ6oBXQU8OVRDc3hyeZGTCrflQa5ealSbHfIpNYYRSsSwc16GplUkroetrQyL8qTtrFRTAMgaiEtTjQ/EqGZzw7/NoDC/Yhx2PymJvl9d7YmNvN45Wx13tYl8VxNCp/F7BHxfRz15EEPu40ZXuc3y1Xf46DxPvE4GeQPQcc7ECFfa3Ryboh2zQv1lgk1tari7ss3V9WcnW7JjKkDSPfA+WNBsgm7BjZ3avjD8wUOpN0mVqiasPZCt+jKMv1ALBPcEOttql8Mz2CCQPQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=wanadoo.fr smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WTMMZz+ODqltu/P2Nz06xKOCFERt6in5j7SlRnnZSD0=;
- b=EPRR7weUB7QfpnPEfk9BIAbRMg1Nf0rcDpArwuQSS54N3MKjOIXc2YwMJ85a2mdU4VlBxfn/b6KXrkX66O/OQzvbs1fPr2JEs8FWgeasF9MUywC5KveS4lE7oP3XICaG7qfo3eVbxi2hVCuTX3oQeTC+OJu9xbikuDfwzPf2UKvaUpKgqOFxchF8slHiugNw81K5bx32byvVBKQDGZslCJLAcji7d6Qv9drNOWWIvtJEWEaRTRzlD07jCB7x8Wp978r/AheWlyVMRqji8/g9LtGabNeEuP34HZ76a2+i/LOefezacgo0oI+Ac4TmoVAUMImHg5WMrx+ifSDw4woI8Q==
-Received: from DS7PR06CA0020.namprd06.prod.outlook.com (2603:10b6:8:2a::21) by
- IA1PR12MB6185.namprd12.prod.outlook.com (2603:10b6:208:3e7::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6886.35; Mon, 16 Oct
- 2023 10:16:09 +0000
-Received: from DS3PEPF000099D8.namprd04.prod.outlook.com
- (2603:10b6:8:2a:cafe::84) by DS7PR06CA0020.outlook.office365.com
- (2603:10b6:8:2a::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6886.35 via Frontend
- Transport; Mon, 16 Oct 2023 10:16:09 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- DS3PEPF000099D8.mail.protection.outlook.com (10.167.17.9) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6838.22 via Frontend Transport; Mon, 16 Oct 2023 10:16:09 +0000
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Mon, 16 Oct
- 2023 03:16:02 -0700
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail204.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Mon, 16 Oct
- 2023 03:16:01 -0700
-Received: from localhost.localdomain (10.127.8.10) by mail.nvidia.com
- (10.129.68.7) with Microsoft SMTP Server id 15.2.986.41 via Frontend
- Transport; Mon, 16 Oct 2023 03:15:56 -0700
-From: Kartik <kkartik@nvidia.com>
-To: <christophe.jaillet@wanadoo.fr>
-CC: <akpm@linux-foundation.org>, <andy@kernel.org>, <arnd@arndb.de>,
-	<frank.li@vivo.com>, <jonathanh@nvidia.com>, <keescook@chromium.org>,
-	<kkartik@nvidia.com>, <linus.walleij@linaro.org>,
-	<linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-mm@kvack.org>, <linux-tegra@vger.kernel.org>,
-	<pdeschrijver@nvidia.com>, <petlozup@nvidia.com>, <pshete@nvidia.com>,
-	<robh@kernel.org>, <stefank@nvidia.com>, <thierry.reding@gmail.com>,
-	<ulf.hansson@linaro.org>
-Subject: Re: [PATCH v5 4/8] soc/tegra: fuse: Add tegra_acpi_init_apbmisc()
-Date: Mon, 16 Oct 2023 15:45:51 +0530
-Message-ID: <20231016101551.7308-1-kkartik@nvidia.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <998767cb-1c70-45c2-91cc-858315be1a52@wanadoo.fr>
-References: <998767cb-1c70-45c2-91cc-858315be1a52@wanadoo.fr>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fqVaub6u"
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B96F5106
+	for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 05:41:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1697460096;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mO4SofqUiQyFUX1ot47zU7IJaXSxrjUqVWuCkw2EMIs=;
+	b=fqVaub6u9tMjA06vCmc34XZ5yFsO2TOLpl6Kd9ZgYwAila9vrSnmcjBa6uWgpVQimp4FBo
+	741sC2+n+lgAB/8zw/+RjLwZF0CRCJfTNCd9mQxMoTYEQCIw1k0NEzOItJrz2XNLqqRv4B
+	kLZ0zu0ROc+lVSEwG6DwwBxmmS5kW5E=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-151-eZEVfMa8PIyZI4LPpv4dqw-1; Mon, 16 Oct 2023 08:41:34 -0400
+X-MC-Unique: eZEVfMa8PIyZI4LPpv4dqw-1
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-66d38d57f49so23484516d6.0
+        for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 05:41:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697460093; x=1698064893;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mO4SofqUiQyFUX1ot47zU7IJaXSxrjUqVWuCkw2EMIs=;
+        b=NDRZWpogzSdPOsTSATvRinrNln+eg5QzEqoCdxGyReeEPNbYDEKHYqsaK7mLBBIUA9
+         v0UnWEwMuKIWmeYxSrkP0slfwzY6PPW9b/y5nr6lS0UadThZtZcaJY0HsZYbKY1KHOxC
+         0zY8ymGlgg4i3gbqRlsZq9nPGmfB09jcD6QxSb/8rDOg9E2dCHuAcvjFBw7IUfgzbSua
+         At/XJ+zg9IQL/FcNgLYIKbIPBjQ9IoHOq4LW3yD9bQyiIUlhEppZtA1Iz3l6XzvpiJLM
+         lnwimrgCJOBb7H/vaif+/Romdusn+4ke1FBoRpDUrZL7QC2em0USIWKN2HvC0jBZgJo3
+         aIeQ==
+X-Gm-Message-State: AOJu0YypXeddwR1cOPzG+dHiawIEDk67SS3jLmtqYPwU/N4PXSR+H3X8
+	oucEvH+sWnnBPHy+Mrfxq7JO88HfsktqO6FxI7Vvu2t8Kmh4u3ysmE2khJ/BGO6OJMqUntX3VZb
+	X/hyllnJl91uKBzqzyJ0ISX/QCNr5
+X-Received: by 2002:a05:6214:262b:b0:66d:63b3:690d with SMTP id gv11-20020a056214262b00b0066d63b3690dmr839216qvb.52.1697460093582;
+        Mon, 16 Oct 2023 05:41:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHZbF62hLypioq3YKXgp/WQB+xZJQLyIaHwZimjf5t0btZD9gbl26zMY3K8kByPTO5og++YUQ==
+X-Received: by 2002:a05:6214:262b:b0:66d:63b3:690d with SMTP id gv11-20020a056214262b00b0066d63b3690dmr839203qvb.52.1697460093330;
+        Mon, 16 Oct 2023 05:41:33 -0700 (PDT)
+Received: from bfoster (c-24-60-61-41.hsd1.ma.comcast.net. [24.60.61.41])
+        by smtp.gmail.com with ESMTPSA id n9-20020ae9c309000000b0076f0744ff50sm2915824qkg.136.2023.10.16.05.41.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Oct 2023 05:41:32 -0700 (PDT)
+Date: Mon, 16 Oct 2023 08:41:58 -0400
+From: Brian Foster <bfoster@redhat.com>
+To: Kees Cook <keescook@chromium.org>
+Cc: Kent Overstreet <kent.overstreet@linux.dev>,
+	linux-bcachefs@vger.kernel.org, kernel test robot <lkp@intel.com>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] bcachefs: Refactor bkey_i to use a flexible array
+Message-ID: <ZS0vlpSwH1+/+EVM@bfoster>
+References: <20231010235609.work.594-kees@kernel.org>
+ <ZSkpU0vdrCTfTxuZ@bfoster>
+ <202310131637.D0C66BFBA@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-X-NVConfidentiality: public
-Content-Transfer-Encoding: 8bit
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099D8:EE_|IA1PR12MB6185:EE_
-X-MS-Office365-Filtering-Correlation-Id: e9b18cee-965d-4e58-7bdf-08dbce30ea96
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	TKp60pzrPWD4RBGd4joc3R3UauRuTNw7RtH8Ih5i5oTIT8Fxg+jV+fSYZAyFstpsRRAh3XbeGkz4O/ImY+wtWWZ7NqLAzUOHbHjbM2687QliNI/Ab6sRjqZBBomUgoXu1g9vH0T0QJYB9xgDcqfu1ykAv2aVaTwjVxZLNANsJJAq0NRQRD4ThmTJYuLsoZH7tD+xf5ahccD9cvz0kTCuqQ9NuNSnpTq1omGr0nzq4TotsQwa+Pb3pIZ+uVwPkc2FOdWXqE1Cec3w+Jn7OA2YTfJnmKED2C70k4TF2+226IoW7428quKMdy6VWNWRPSlAIEIoowclpsyJvOEY3zB/6mug8BQDDvZMc3H2j1YsI8nUN9vBJfXgDDcyrZ0+FgUZ8uG9lyTesUGbvYlcmEL92v07m23itLwneWKlmQZmGXx46RIoY2p4Ru+t8oh7Y53Zw1JylcyUBikVyfZSMURdpZLjf3uNuCqb9qKS7IrFu2MYC9YvHTq2zTaptYWFSu8vyWkXyHdqFOcm0b/wytqglQkfUMpbQlanV+mXAZNL4xv2K4KI+FCQ/5VNyZllUYe/6sWy8kUkvUQL9P76qkRUdVO/IwUmPEblYWVrpQhdjlwsxGhcuEU94EkPicJ4ZWqKST5D8jQ1Ko4lRKX/zWbNgAi6Moz8vbCrU4okHKO1DMzfZTFjJilJ8if+asWRr1Z4cMpBIY+Ab8pQZX5PSzu3LFS/hbuXrGSHrVnfFA3dtkM=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(376002)(39860400002)(346002)(136003)(396003)(230922051799003)(451199024)(82310400011)(64100799003)(186009)(1800799009)(36840700001)(40470700004)(46966006)(40460700003)(40480700001)(82740400003)(36756003)(7636003)(356005)(36860700001)(47076005)(83380400001)(6666004)(26005)(70586007)(70206006)(54906003)(6916009)(316002)(478600001)(2616005)(1076003)(426003)(336012)(4001150100001)(41300700001)(4744005)(2906002)(7416002)(86362001)(5660300002)(8936002)(8676002)(4326008);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Oct 2023 10:16:09.1133
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e9b18cee-965d-4e58-7bdf-08dbce30ea96
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS3PEPF000099D8.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6185
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-	RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-	autolearn=no autolearn_force=no version=3.4.6
+In-Reply-To: <202310131637.D0C66BFBA@keescook>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+	autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Mon, 2023-10-16 at 07:41 +0200, Christophe JAILLET wrote:
-> > +	/*
-> > +	 * Get required memory resources.
-> > +	 *
-> > +	 * resources[0]: apbmisc.
-> > +	 * resources[1]: straps.
-> > +	 */
-> > +	resource_list_for_each_entry_safe(rentry, tmp, &resource_list) {
+On Fri, Oct 13, 2023 at 04:44:21PM -0700, Kees Cook wrote:
+> On Fri, Oct 13, 2023 at 07:26:11AM -0400, Brian Foster wrote:
+> > On Tue, Oct 10, 2023 at 04:56:12PM -0700, Kees Cook wrote:
+> > > The memcpy() in bch2_bkey_append_ptr() is operating on an embedded
+> > > fake flexible array. Instead, make it explicit, and convert the memcpy
+> > > to target the flexible array instead. Fixes the W=1 warning seen for
+> > > -Wstringop-overflow:
+> > > 
+> > >    In file included from include/linux/string.h:254,
+> > >                     from include/linux/bitmap.h:11,
+> > >                     from include/linux/cpumask.h:12,
+> > >                     from include/linux/smp.h:13,
+> > >                     from include/linux/lockdep.h:14,
+> > >                     from include/linux/radix-tree.h:14,
+> > >                     from include/linux/backing-dev-defs.h:6,
+> > >                     from fs/bcachefs/bcachefs.h:182:
+> > >    fs/bcachefs/extents.c: In function 'bch2_bkey_append_ptr':
+> > >    include/linux/fortify-string.h:57:33: warning: writing 8 bytes into a region of size 0 [-Wstringop-overflow=]
+> > >       57 | #define __underlying_memcpy     __builtin_memcpy
+> > >          |                                 ^
+> > >    include/linux/fortify-string.h:648:9: note: in expansion of macro '__underlying_memcpy'
+> > >      648 |         __underlying_##op(p, q, __fortify_size);                        \
+> > >          |         ^~~~~~~~~~~~~
+> > >    include/linux/fortify-string.h:693:26: note: in expansion of macro '__fortify_memcpy_chk'
+> > >      693 | #define memcpy(p, q, s)  __fortify_memcpy_chk(p, q, s,                  \
+> > >          |                          ^~~~~~~~~~~~~~~~~~~~
+> > >    fs/bcachefs/extents.c:235:17: note: in expansion of macro 'memcpy'
+> > >      235 |                 memcpy((void *) &k->v + bkey_val_bytes(&k->k),
+> > >          |                 ^~~~~~
+> > >    fs/bcachefs/bcachefs_format.h:287:33: note: destination object 'v' of size 0
+> > >      287 |                 struct bch_val  v;
+> > >          |                                 ^
+> > > 
+> > > Cc: Kent Overstreet <kent.overstreet@linux.dev>
+> > > Cc: Brian Foster <bfoster@redhat.com>
+> > > Cc: linux-bcachefs@vger.kernel.org
+> > > Reported-by: kernel test robot <lkp@intel.com>
+> > > Closes: https://lore.kernel.org/oe-kbuild-all/202309192314.VBsjiIm5-lkp@intel.com/
+> > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > ---
+> > >  fs/bcachefs/bcachefs_format.h | 5 ++++-
+> > >  fs/bcachefs/extents.h         | 2 +-
+> > >  2 files changed, 5 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/fs/bcachefs/bcachefs_format.h b/fs/bcachefs/bcachefs_format.h
+> > > index f0d130440baa..f5e8cb43697b 100644
+> > > --- a/fs/bcachefs/bcachefs_format.h
+> > > +++ b/fs/bcachefs/bcachefs_format.h
+> > > @@ -300,7 +300,10 @@ struct bkey_i {
+> > >  	__u64			_data[0];
+> > >  
+> > >  	struct bkey	k;
+> > > -	struct bch_val	v;
+> > > +	union {
+> > > +		struct bch_val	v;
+> > > +		DECLARE_FLEX_ARRAY(__u8, bytes);
+> > > +	};
+> > >  };
+> > 
+> > Hi Kees,
+> > 
+> > I'm curious if this is something that could be buried in bch_val given
+> > it's already kind of a fake structure..? If not, my only nitty comment
 > 
-> Nit: Is the 'safe' version really needed here?
+> I was thinking it would be best to keep the flexible array has "high" in
+> the struct as possible, as in the future more refactoring will be needed
+> to avoid having flex arrays overlap with other members in composite
+> structures. So instead of pushing into bch_val, I left it at the highest
+> level possible, bch_i, as that's the struct being used by the memcpy().
 > 
-> CJ
+> Eventually proper unions will be needed instead of overlapping bch_i
+> with other types, as in:
+> 
+> struct btree_root {
+>         struct btree            *b;
+> 
+>         /* On disk root - see async splits: */
+>         __BKEY_PADDED(key, BKEY_BTREE_PTR_VAL_U64s_MAX);
+>         u8                      level;
+>         u8                      alive;
+>         s8                      error;
+> };
+> 
+> But that's all for the future. Right now I wanted to deal with the more
+> pressing matter of a 0-sized array not being zero sized. :)
+> 
 
-No, it seems like the safe version is not required. We do not expect any
-modifications to resource_list here.
+Ok, but I'm not really following how one approach vs. the other relates
+to this particular example of an embedded bkey_i. I'm probably just not
+familiar enough with the current issues with 0-sized arrays and the
+anticipated path forward. Can you elaborate for somebody who is more
+focused on trying to manage the design/complexity of these various key
+data structures? For example, what's the practical difference here (for
+future work) if the flex array lives in bch_val vs. bkey_i?
 
-I've updated this in v6.
+Note that I don't necessarily have a strong opinion on this atm, but if
+there's a "for future reasons" aspect to this approach I'd like to at
+least understand it a little better. ;)
 
-Thanks and Regards,
-Kartik
+> > is that memcpy(k->bytes[], ...) makes it kind of read like we're copying
+> > in opaque key data rather than value data, so perhaps a slightly more
+> > descriptive field name would be helpful. But regardless I'd wait until
+> > Kent has a chance to comment before changing anything..
+> 
+> How about "v_bytes" instead of "bytes"? Or if it really is preferred,
+> I can move the flex array into bch_val -- it just seems like the wrong
+> layer...
+> 
+
+Yeah.. v_bytes, value_bytes, etc. etc. Anything that avoids misleading
+code when using the field is good with me. Thanks.
+
+Brian
+
+> -Kees
+> 
+> > 
+> > Brian
+> > 
+> > >  
+> > >  #define KEY(_inode, _offset, _size)					\
+> > > diff --git a/fs/bcachefs/extents.h b/fs/bcachefs/extents.h
+> > > index 7ee8d031bb6c..6248e17bbac5 100644
+> > > --- a/fs/bcachefs/extents.h
+> > > +++ b/fs/bcachefs/extents.h
+> > > @@ -642,7 +642,7 @@ static inline void bch2_bkey_append_ptr(struct bkey_i *k, struct bch_extent_ptr
+> > >  
+> > >  		ptr.type = 1 << BCH_EXTENT_ENTRY_ptr;
+> > >  
+> > > -		memcpy((void *) &k->v + bkey_val_bytes(&k->k),
+> > > +		memcpy(&k->bytes[bkey_val_bytes(&k->k)],
+> > >  		       &ptr,
+> > >  		       sizeof(ptr));
+> > >  		k->k.u64s++;
+> > > -- 
+> > > 2.34.1
+> > > 
+> > 
+> 
+> -- 
+> Kees Cook
+> 
+
