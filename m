@@ -1,124 +1,85 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15F9128DCC
-	for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 15:18:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7C6F28DAB
+	for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 15:33:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EV9tZnQJ"
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DDF1F1;
-	Mon, 16 Oct 2023 08:18:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=q1mk0edZzBzeqvaBvILL9fveNRk2O03GLgP3WO+MmcU=; b=EV9tZnQJGPjQ2XN7YaG1iFBGwU
-	CVhmKPs4rfB0vzIIjYWOAFfuD8Lclxxb3kH9GuUcHbzKvVXDibGUns84n44sJwba/b5OZXYMzpfgc
-	Dg3+GrFpKnF/FDc20y8fLmw/tWdZbWw7RZsmvQoWmOhZCj4gAoOA9oajpabnWYYOpQUagNYIbtKWU
-	sGfpICUov4sq+UCTadpy86PtxT8/LdcX+L9mItkitNc1hiT0ERHcMCKmrXX2UsbrO7bsGd6AbXmMX
-	AXNe8drk59YS8DwfBT4C8y+gASl7XiGxQ5RaNLDQisdytnXdQNpebca/HI2dFRVHE8UWOo+ePROth
-	daal4R4Q==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1qsPMS-006lo3-BB; Mon, 16 Oct 2023 15:18:28 +0000
-Date: Mon, 16 Oct 2023 16:18:28 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: jeffxu@chromium.org
-Cc: akpm@linux-foundation.org, keescook@chromium.org, sroettger@google.com,
-	jeffxu@google.com, jorgelo@chromium.org, groeck@chromium.org,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-mm@kvack.org, jannh@google.com, surenb@google.com,
-	alex.sierra@amd.com, apopple@nvidia.com, aneesh.kumar@linux.ibm.com,
-	axelrasmussen@google.com, ben@decadent.org.uk,
-	catalin.marinas@arm.com, david@redhat.com, dwmw@amazon.co.uk,
-	ying.huang@intel.com, hughd@google.com, joey.gouly@arm.com,
-	corbet@lwn.net, wangkefeng.wang@huawei.com, Liam.Howlett@oracle.com,
-	torvalds@linux-foundation.org, lstoakes@gmail.com,
-	mawupeng1@huawei.com, linmiaohe@huawei.com, namit@vmware.com,
-	peterx@redhat.com, peterz@infradead.org, ryan.roberts@arm.com,
-	shr@devkernel.io, vbabka@suse.cz, xiujianfeng@huawei.com,
-	yu.ma@intel.com, zhangpeng362@huawei.com, dave.hansen@intel.com,
-	luto@kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [RFC PATCH v1 0/8] Introduce mseal() syscall
-Message-ID: <ZS1URCBgwGGj9JtM@casper.infradead.org>
-References: <20231016143828.647848-1-jeffxu@chromium.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YwQ2Blf0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC103C433C8;
+	Mon, 16 Oct 2023 15:33:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1697470404;
+	bh=ReLBlkdX/Ih5s92nu5iD07eefwL3bPoRMnTYOk9amZc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=YwQ2Blf0JX3WRi+CsGYYqK+p3IfDkg4CRhEaIuGeSvR0S14R+Y7SJHvYyk+IkTFHt
+	 m+Wz7pA8uSrYinvoDUimMJFSZxk4EeWM5vniF9VnzEypA16j8ardzeW5wL/5b51eSU
+	 rfPVeuWw31RPYENCGvCBtcE7DVaddwsopMBWfC/a7PGQl93l2aM3t6r5txboT/dudS
+	 xzwp2QpqBZR+6ddwDT+0nFyHY/2fvOugNvOL20249udCTifgyc6L3uvTuL1pd2MYhN
+	 a9V8BV6QyNQmb8XaZnCRdUzerR4gebGzGpikomjLjVVCGbYvzF1RE+ZsxULK9MwpJh
+	 D9TCFXwWaXhKw==
+From: Mark Brown <broonie@kernel.org>
+To: Lars-Peter Clausen <lars@metafoo.de>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, 
+ linux-hardening@vger.kernel.org
+In-Reply-To: <ZSRvh1j2MVVhuOUv@work>
+References: <ZSRvh1j2MVVhuOUv@work>
+Subject: Re: [PATCH][next] ASoC: sigmadsp: Add __counted_by for struct
+ sigmadsp_data and use struct_size()
+Message-Id: <169747040242.42352.2081584730958275030.b4-ty@kernel.org>
+Date: Mon, 16 Oct 2023 16:33:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231016143828.647848-1-jeffxu@chromium.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13-dev-0438c
 
-On Mon, Oct 16, 2023 at 02:38:19PM +0000, jeffxu@chromium.org wrote:
-> Modern CPUs support memory permissions such as RW and NX bits. Linux has
-> supported NX since the release of kernel version 2.6.8 in August 2004 [1].
-
-This seems like a confusing way to introduce the subject.  Here, you're
-talking about page permissions, whereas (as far as I can tell), mseal() is
-about making _virtual_ addresses immutable, for some value of immutable.
-
-> Memory sealing additionally protects the mapping itself against
-> modifications. This is useful to mitigate memory corruption issues where
-> a corrupted pointer is passed to a memory management syscall. For example,
-> such an attacker primitive can break control-flow integrity guarantees
-> since read-only memory that is supposed to be trusted can become writable
-> or .text pages can get remapped. Memory sealing can automatically be
-> applied by the runtime loader to seal .text and .rodata pages and
-> applications can additionally seal security critical data at runtime.
-> A similar feature already exists in the XNU kernel with the
-> VM_FLAGS_PERMANENT [3] flag and on OpenBSD with the mimmutable syscall [4].
-> Also, Chrome wants to adopt this feature for their CFI work [2] and this
-> patchset has been designed to be compatible with the Chrome use case.
-
-This [2] seems very generic and wide-ranging, not helpful.  [5] was more
-useful to understand what you're trying to do.
-
-> The new mseal() is an architecture independent syscall, and with
-> following signature:
+On Mon, 09 Oct 2023 15:24:23 -0600, Gustavo A. R. Silva wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
+> array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
 > 
-> mseal(void addr, size_t len, unsigned int types, unsigned int flags)
+> While there, use struct_size() and size_sub() helpers, instead of the
+> open-coded version, to calculate the size for the allocation of the
+> whole flexible structure, including of course, the flexible-array
+> member.
 > 
-> addr/len: memory range.  Must be continuous/allocated memory, or else
-> mseal() will fail and no VMA is updated. For details on acceptable
-> arguments, please refer to comments in mseal.c. Those are also fully
-> covered by the selftest.
+> [...]
 
-Mmm.  So when you say "continuous/allocated" what you really mean is
-"Must have contiguous VMAs" rather than "All pages in this range must
-be populated", yes?
+Applied to
 
-> types: bit mask to specify which syscall to seal, currently they are:
-> MM_SEAL_MSEAL 0x1
-> MM_SEAL_MPROTECT 0x2
-> MM_SEAL_MUNMAP 0x4
-> MM_SEAL_MMAP 0x8
-> MM_SEAL_MREMAP 0x10
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-I don't understand why we want this level of granularity.  The OpenBSD
-and XNU examples just say "This must be immutable*".  For values of
-immutable that allow downgrading access (eg RW to RO or RX to RO),
-but not upgrading access (RW->RX, RO->*, RX->RW).
+Thanks!
 
-> Each bit represents sealing for one specific syscall type, e.g.
-> MM_SEAL_MPROTECT will deny mprotect syscall. The consideration of bitmask
-> is that the API is extendable, i.e. when needed, the sealing can be
-> extended to madvise, mlock, etc. Backward compatibility is also easy.
+[1/1] ASoC: sigmadsp: Add __counted_by for struct sigmadsp_data and use struct_size()
+      commit: 4f88c72b2479cca4a0d4de89b4cbb6f1b37ee96d
 
-Honestly, it feels too flexible.  Why not just two flags to mprotect()
--- PROT_IMMUTABLE and PROT_DOWNGRADABLE.  I can see a use for that --
-maybe for some things we want to be able to downgrade and for other
-things, we don't.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-I'd like to see some discussion of how this interacts with mprotect().
-As far as I can tell, the intent is to lock the protections/existance
-of the mapping, and not to force memory to stay in core.  So it's fine
-for the kernel to swap out the page and set up a PTE as a swap entry.
-It's also fine for the kernel to mark PTEs as RO to catch page faults;
-we're concerned with the LOGICAL permissions, and not the page tables.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
