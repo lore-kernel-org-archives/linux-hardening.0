@@ -1,45 +1,45 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC2AF28E10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38AFB286AA
 	for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 14:39:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Dn7INWNQ"
-Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34BA6F5
-	for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 07:39:03 -0700 (PDT)
-Received: by mail-pg1-x531.google.com with SMTP id 41be03b00d2f7-5a9bc2ec556so1995927a12.0
-        for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 07:39:03 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LwyrXl3v"
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52A35F1
+	for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 07:39:02 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-1c88b467ef8so30750125ad.0
+        for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 07:39:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google; t=1697467142; x=1698071942; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ousg6g8beQYrtnIXHdPl+6es+qhdKBwPjUl+0WcHVK4=;
-        b=Dn7INWNQd11NxXeBEcslakTeZYKSjZ65GFePmvMWfc9Iua9BL8GGSyI5XPqIZEpUMc
-         ieH3GDthP1TkPwazQSkrtzTShl1TskQ808Tbpxc+gixrQ1kmyJmboHOSmOqC9qg6bv1c
-         7MpfWFY4W0LYN5P7lclIvJn58df4F6m+1KrFY=
+        bh=Xej43+CxxYh9a3blA/g52Ig4N3aDI9kSsEpUlToUGyY=;
+        b=LwyrXl3vTxEDzbakDcTvG61WdDGcXTTnloGXmbWRhKmUm3qPzWzDAYM16vBObq/pc5
+         2oxGoOIBvqBsRWNfoJ12MqAPYo2DUq9eYoEFrVFogm5YiLsMajMzJdm5UHCMnCKQmzw6
+         YK/8I3KFIKpiCJvPwMlTyO6aIQ6/2HuWpkTOc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1697467142; x=1698071942;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Ousg6g8beQYrtnIXHdPl+6es+qhdKBwPjUl+0WcHVK4=;
-        b=f4Xzhref9KWWpR63GVc57MHV20picx0Mz92qWdFARydM2JrKDvRBwWj6kgq6WWDoFe
-         qOGQMf7vpLvlFEXLQhNupqALd1ECjy25dWUK6GNk6UYTOzFDS8eCjogL3BPUz3RT++F/
-         WZg/Q9SjX9dJGVdQ2DiuLzfQg8poaJJ3XRisKtuQpeCu8gdP/KcqgFXRUwdqFw38mhnL
-         EKlR8Bz7qSsGvk0Vq2Qjgd/RlL2xkULP3/sSeas8YFSPhaoWKYV0Dk9HN3nzkmnUigQc
-         ++T+FV779Byo0oHAu51kRkmgt2M1VEc7DYPBQ8/Th2JVqp+c/qWvfQFXZ0QSGYOVIkyH
-         SXjg==
-X-Gm-Message-State: AOJu0YwXDOBu2vuuWoDP5bjrAKbOTomFfNTYx2QruyUS95RZw1TH2eV7
-	t6HkXyqzmGj0UAsMl8E5sO9MSg==
-X-Google-Smtp-Source: AGHT+IGuDFDSElhARtpju/2TKNXZCv0dyrbDcGQSiLi1n6XeXR2D8iMicnP3qR+LojeqcMvPGZ4Uig==
-X-Received: by 2002:a05:6a21:789c:b0:14b:8b82:867f with SMTP id bf28-20020a056a21789c00b0014b8b82867fmr34279713pzc.50.1697467142619;
-        Mon, 16 Oct 2023 07:39:02 -0700 (PDT)
+        bh=Xej43+CxxYh9a3blA/g52Ig4N3aDI9kSsEpUlToUGyY=;
+        b=hRHYqNsLcyAX+gr3B0MTT7BGWI3x3czgwvZgw0DinKTeaKUtXpT5OrldGxONokjJLq
+         0q16wwAcVg1GbxcNlvxz48p6R6JzRRtMt8uOxdbG0zP4n414Bysh+oVIIbzrZX9w/Brq
+         +vdctMMKx5QkM40vyA0VHuleUKzHuYBFJ67qQhv+4ivzCRZ0I5ptbWYNFXdVAO6NTOld
+         R8h7WtyXWstsBx6JXw/VHl5FW/lk8stzURzbTsmEWyGPRDcacXR5z4B02ata1ZHQxP35
+         K2NiKngoqOERQYTd0MEgqXoz1nVnFxskk32sYcl1Mm1IQz211cRsTbYoNo4KSxle/c/f
+         omAQ==
+X-Gm-Message-State: AOJu0YxLGRZdoe0nGvBHC7o2bZrL0wEOe1eJhuK1+eHxRlXJmgfWjA4v
+	LN6rG19bl5TDx1f3/+vzgVk9EA==
+X-Google-Smtp-Source: AGHT+IGUzUb5v0t/3MkBLk3yxGa4HPz1kX3xlLqN5hhkqcb5wVyzEHQXpSYW2jltVLkxXX+Emd4ILg==
+X-Received: by 2002:a17:903:294b:b0:1c9:d143:e9e with SMTP id li11-20020a170903294b00b001c9d1430e9emr10728383plb.18.1697467141766;
+        Mon, 16 Oct 2023 07:39:01 -0700 (PDT)
 Received: from localhost (9.184.168.34.bc.googleusercontent.com. [34.168.184.9])
-        by smtp.gmail.com with UTF8SMTPSA id jn21-20020a170903051500b001c726147a45sm8599282plb.190.2023.10.16.07.39.02
+        by smtp.gmail.com with UTF8SMTPSA id ju1-20020a170903428100b001b9d335223csm8556065plb.26.2023.10.16.07.39.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Oct 2023 07:39:02 -0700 (PDT)
+        Mon, 16 Oct 2023 07:39:01 -0700 (PDT)
 From: jeffxu@chromium.org
 To: akpm@linux-foundation.org,
 	keescook@chromium.org,
@@ -83,9 +83,9 @@ Cc: jeffxu@google.com,
 	dave.hansen@intel.com,
 	luto@kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [RFC PATCH v1 4/8] mseal: seal mprotect
-Date: Mon, 16 Oct 2023 14:38:23 +0000
-Message-ID: <20231016143828.647848-5-jeffxu@chromium.org>
+Subject: [RFC PATCH v1 3/8] mseal: add can_modify_mm and can_modify_vma
+Date: Mon, 16 Oct 2023 14:38:22 +0000
+Message-ID: <20231016143828.647848-4-jeffxu@chromium.org>
 X-Mailer: git-send-email 2.42.0.655.g421f12c284-goog
 In-Reply-To: <20231016143828.647848-1-jeffxu@chromium.org>
 References: <20231016143828.647848-1-jeffxu@chromium.org>
@@ -105,30 +105,141 @@ X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 
 From: Jeff Xu <jeffxu@google.com>
 
-check sealing for mprotect(2).
+can_modify_mm:
+ checks sealing flags for given memory range.
+
+can_modify_vma:
+  checks sealing flags for given vma.
 
 Signed-off-by: Jeff Xu <jeffxu@google.com>
 ---
- mm/mprotect.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ include/linux/mm.h | 34 ++++++++++++++++++++++++++
+ mm/mseal.c         | 60 ++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 94 insertions(+)
 
-diff --git a/mm/mprotect.c b/mm/mprotect.c
-index 130db91d3a8c..5b67c66d55f7 100644
---- a/mm/mprotect.c
-+++ b/mm/mprotect.c
-@@ -753,6 +753,12 @@ static int do_mprotect_pkey(unsigned long start, size_t len,
- 		}
- 	}
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index e790b91a0cd4..aafdb68950f8 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -257,6 +257,18 @@ extern struct rw_semaphore nommu_region_sem;
+ extern unsigned int kobjsize(const void *objp);
+ #endif
  
-+	if (!can_modify_mm(current->mm, start, end, MM_ACTION_MPROTECT,
-+			   ON_BEHALF_OF_USERSPACE)) {
-+		error = -EACCES;
-+		goto out;
++enum caller_origin {
++	ON_BEHALF_OF_KERNEL = 0,
++	ON_BEHALF_OF_USERSPACE,
++};
++
++enum mm_action {
++	MM_ACTION_MPROTECT,
++	MM_ACTION_MUNMAP,
++	MM_ACTION_MREMAP,
++	MM_ACTION_MMAP,
++};
++
+ /*
+  * vm_seals in vm_area_struct, see mm_types.h.
+  */
+@@ -3302,6 +3314,28 @@ static inline void mm_populate(unsigned long addr, unsigned long len)
+ static inline void mm_populate(unsigned long addr, unsigned long len) {}
+ #endif
+ 
++#ifdef CONFIG_MSEAL
++extern bool can_modify_mm(struct mm_struct *mm, unsigned long start,
++			  unsigned long end, enum mm_action action,
++			  enum caller_origin called);
++
++extern bool can_modify_vma(struct vm_area_struct *vma, enum mm_action action,
++		    enum caller_origin called);
++#else
++static inline bool can_modify_mm(struct mm_struct *mm, unsigned long start,
++			  unsigned long end, enum mm_action action,
++			  enum caller_origin called)
++{
++	return true;
++}
++
++static inline bool can_modify_vma(struct vm_area_struct *vma, enum mm_action action,
++		    enum caller_origin called)
++{
++	return true;
++}
++#endif
++
+ /* These take the mm semaphore themselves */
+ extern int __must_check vm_brk(unsigned long, unsigned long);
+ extern int __must_check vm_brk_flags(unsigned long, unsigned long, unsigned long);
+diff --git a/mm/mseal.c b/mm/mseal.c
+index 615b6e06ab44..3285ef6b95a6 100644
+--- a/mm/mseal.c
++++ b/mm/mseal.c
+@@ -36,6 +36,66 @@ static bool can_do_mseal(unsigned int types, unsigned int flags)
+ 	return true;
+ }
+ 
++/*
++ * check if a vma is sealed for modification.
++ * return true, if modification is allowed.
++ */
++bool can_modify_vma(struct vm_area_struct *vma, enum mm_action action,
++		    enum caller_origin called)
++{
++	if (called == ON_BEHALF_OF_KERNEL)
++		return true;
++
++	switch (action) {
++	case MM_ACTION_MPROTECT:
++		if (vma->vm_seals & VM_SEAL_MPROTECT)
++			return false;
++		break;
++
++	case MM_ACTION_MUNMAP:
++		if (vma->vm_seals & VM_SEAL_MUNMAP)
++			return false;
++		break;
++
++	case MM_ACTION_MREMAP:
++		if (vma->vm_seals & VM_SEAL_MREMAP)
++			return false;
++		break;
++
++	case MM_ACTION_MMAP:
++		if (vma->vm_seals & VM_SEAL_MMAP)
++			return false;
++		break;
 +	}
 +
- 	prev = vma_prev(&vmi);
- 	if (start > vma->vm_start)
- 		prev = vma;
++	return true;
++}
++
++/*
++ * Check if the vmas of a memory range are allowed to be modified.
++ * the memory ranger can have a gap (unallocated memory).
++ * return true, if it is allowed.
++ */
++bool can_modify_mm(struct mm_struct *mm, unsigned long start, unsigned long end,
++		   enum mm_action action, enum caller_origin called)
++{
++	struct vm_area_struct *vma;
++
++	VMA_ITERATOR(vmi, mm, start);
++
++	if (called == ON_BEHALF_OF_KERNEL)
++		return true;
++
++	/* going through each vma to check */
++	for_each_vma_range(vmi, vma, end) {
++		if (!can_modify_vma(vma, action, called))
++			return false;
++	}
++
++	/* Allow by default. */
++	return true;
++}
++
+ /*
+  * Check if a seal type can be added to VMA.
+  */
 -- 
 2.42.0.609.gbb76f46606-goog
 
