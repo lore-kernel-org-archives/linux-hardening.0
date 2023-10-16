@@ -1,50 +1,45 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FFD730F95
-	for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 17:24:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 867CC286B9
+	for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 17:35:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="c5G9bRpz"
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F83AD9
-	for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 10:24:11 -0700 (PDT)
-Received: by mail-lf1-x12c.google.com with SMTP id 2adb3069b0e04-50305abe5f0so6186448e87.2
-        for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 10:24:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pbg3q/DT"
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DB4083
+	for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 10:35:14 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1c9b70b9671so13545ad.1
+        for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 10:35:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1697477049; x=1698081849; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ziSfOVrFPUUVHeu10UoweKHdhwL95UR6sSsnqfpXK6Q=;
-        b=c5G9bRpz7Izn1Kswvkr0gmn42WQtDXY0OAhZZ7BBreGoCDKmbI6BN+v7owNc9fnQyf
-         8mI16HM+SssCyL5YCypQ3mH1cw4hBBT1vuA1mmRsIy8BfwDrZLJw9eXYIh0XVTrALzze
-         +XTEAO+n9ip8aGT3uGC+GjVxW1DCnE0gsybgs=
+        d=google.com; s=20230601; t=1697477713; x=1698082513; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1IE7ste/9K+MPz1i72hcvVlvzxuJt/UnGYdWTniw0P0=;
+        b=pbg3q/DTfSMo00CJe4tDhXCU+XNbURrWCmshNZ9V2CBp64Eo7SY/dBB6VCzNsYtcfF
+         VWjZV9MXVmxewx3QXk1RuyC2NewXCj7ONTmBK7fkLUD8NnQuB/ss87xF+K8N1jmYR1he
+         8pTPaKz5T6BDMLAQEWFPDOfmP/hnRFouH1cy9bcbAMik+fNuBxhZdRuaNulkEsdwT5f7
+         LNqVM21FkQ4Nzb5nxzNVAGRP8QVrV+vwKjRSEEJF5qt7is27i3NnkI9dgV9p2+ELubs2
+         br2NcanM23XYiEyzWC1oou0tvBJHevDKzqrovku2+JEg0DJLLyFhaHQ+zqSUzDu/m24G
+         gV/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697477049; x=1698081849;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ziSfOVrFPUUVHeu10UoweKHdhwL95UR6sSsnqfpXK6Q=;
-        b=oVNvy7aOystxKtxuIrBmB2V0vyL6SjkDL+4iB3Ev/Ek5TpQvW6VW7HgQ3yh1Z0KAev
-         yI9zklwUHJpAPewfeBOvYF35jm19/KflcpJ8iglvFs83U5gSIlQwheeYkAR9oIY+ZdcF
-         EauvTxvGrFUUs6H1H7Vt4hKZzSZV6NTlZMwgENdQb4mZYv8+Gm5Z71SZwfI3Qc7mQNeP
-         rzvu3fqujkZnrucBYmixQBrfuF5hLZ7NhUudjVTxs5r5zeM0zrFhDgZeo0/pMEcN9jhv
-         DGYQv71F2CFhiOiFeqOc+fQfNIAPBAwu4K8O6ApEuJH/Po8+m2RAQprdaTQIGt+DDnDa
-         A/vQ==
-X-Gm-Message-State: AOJu0YzQ3HtnhBQr75N5T/9ii29bSq/ecRiuALcZ8DXH5Vx2P9z0YAnT
-	tLRA6KP05RxjQUxpiMhqT0nXWhrSq0QVnuHidYpRgA==
-X-Google-Smtp-Source: AGHT+IHb87n256u+gXsnNRaVGPMzZku4TmsQZgSfSHqwolAd0sCSgJfulb62Oedp48QXuTS/CM9EJA==
-X-Received: by 2002:ac2:4ac5:0:b0:4fd:c844:6a43 with SMTP id m5-20020ac24ac5000000b004fdc8446a43mr27064383lfp.43.1697477049252;
-        Mon, 16 Oct 2023 10:24:09 -0700 (PDT)
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com. [209.85.218.46])
-        by smtp.gmail.com with ESMTPSA id ck22-20020a170906c45600b009b2d46425absm4392234ejb.85.2023.10.16.10.24.08
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Oct 2023 10:24:08 -0700 (PDT)
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-99bdeae1d0aso776698866b.1
-        for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 10:24:08 -0700 (PDT)
-X-Received: by 2002:a17:907:78a:b0:9bd:a662:c066 with SMTP id
- xd10-20020a170907078a00b009bda662c066mr9387285ejb.76.1697477026848; Mon, 16
- Oct 2023 10:23:46 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1697477713; x=1698082513;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1IE7ste/9K+MPz1i72hcvVlvzxuJt/UnGYdWTniw0P0=;
+        b=q3okWCGZGPWAxrgm3P6re6JnOsY476tGiZoe6HwHxBUIgVYoUgFZ/052oEushNxlnv
+         rTH9iHmgB1UACRI1bP/TtMonE7YpQJ7bpEbm0Md1bthMrFJivcx6r1OmyNCRGKP7Y/Cb
+         t3Cm+oU1acSudmyh+AuPGmPF6ZFXt58naVc/TZp3qNRXYiy+Nv3+nzZQaVAWWiAIcZw8
+         j+ufKLbhCaMHHUUEoebK/UdU6Oiu3Oo9GECdn2E/L+mUF/fYCQ7RdtB2nMl+ZiJsBRCM
+         EP/6rNiS7YyKy8c6mIFXp9eHnri12edmKBskAWrQZiuXMswjnPZSbODkoo0qBPtSW4zA
+         OQBA==
+X-Gm-Message-State: AOJu0YyDODC2WB+O5tGi/2YLzZkShFs4XfwZdLcILRBnlZymWSEuG20g
+	V1BjYzo+xi2jx9WC0kta+5JYdF6ctcOPn//O6lFyFw==
+X-Google-Smtp-Source: AGHT+IHpLOQh8gGngPY81BrIpOn4V6KnmdVdaoL70Npuo2h09JrCSwDur1o0CQrQETq8n/zCk+qOPTnzOoAPcHQBU44=
+X-Received: by 2002:a17:902:f60e:b0:1b8:b564:b528 with SMTP id
+ n14-20020a170902f60e00b001b8b564b528mr321729plg.7.1697477713183; Mon, 16 Oct
+ 2023 10:35:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -53,166 +48,250 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20231016143828.647848-1-jeffxu@chromium.org>
 In-Reply-To: <20231016143828.647848-1-jeffxu@chromium.org>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 16 Oct 2023 10:23:29 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whFZoap+DBTYvJx6ohqPwn11Puzh7q4huFWDX9vBwXHgg@mail.gmail.com>
-Message-ID: <CAHk-=whFZoap+DBTYvJx6ohqPwn11Puzh7q4huFWDX9vBwXHgg@mail.gmail.com>
+From: Jann Horn <jannh@google.com>
+Date: Mon, 16 Oct 2023 19:34:37 +0200
+Message-ID: <CAG48ez3ShUYey+ZAFsU2i1RpQn0a5eOs2hzQ426FkcgnfUGLvA@mail.gmail.com>
 Subject: Re: [RFC PATCH v1 0/8] Introduce mseal() syscall
 To: jeffxu@chromium.org
 Cc: akpm@linux-foundation.org, keescook@chromium.org, sroettger@google.com, 
 	jeffxu@google.com, jorgelo@chromium.org, groeck@chromium.org, 
 	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, jannh@google.com, surenb@google.com, alex.sierra@amd.com, 
+	linux-mm@kvack.org, surenb@google.com, alex.sierra@amd.com, 
 	apopple@nvidia.com, aneesh.kumar@linux.ibm.com, axelrasmussen@google.com, 
 	ben@decadent.org.uk, catalin.marinas@arm.com, david@redhat.com, 
 	dwmw@amazon.co.uk, ying.huang@intel.com, hughd@google.com, joey.gouly@arm.com, 
 	corbet@lwn.net, wangkefeng.wang@huawei.com, Liam.Howlett@oracle.com, 
-	lstoakes@gmail.com, willy@infradead.org, mawupeng1@huawei.com, 
-	linmiaohe@huawei.com, namit@vmware.com, peterx@redhat.com, 
-	peterz@infradead.org, ryan.roberts@arm.com, shr@devkernel.io, vbabka@suse.cz, 
-	xiujianfeng@huawei.com, yu.ma@intel.com, zhangpeng362@huawei.com, 
-	dave.hansen@intel.com, luto@kernel.org, linux-hardening@vger.kernel.org
+	torvalds@linux-foundation.org, lstoakes@gmail.com, willy@infradead.org, 
+	mawupeng1@huawei.com, linmiaohe@huawei.com, namit@vmware.com, 
+	peterx@redhat.com, peterz@infradead.org, ryan.roberts@arm.com, 
+	shr@devkernel.io, vbabka@suse.cz, xiujianfeng@huawei.com, yu.ma@intel.com, 
+	zhangpeng362@huawei.com, dave.hansen@intel.com, luto@kernel.org, 
+	linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=no
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Mon, 16 Oct 2023 at 07:38, <jeffxu@chromium.org> wrote:
+On Mon, Oct 16, 2023 at 4:38=E2=80=AFPM <jeffxu@chromium.org> wrote:
+>
+> From: Jeff Xu <jeffxu@google.com>
 >
 > This patchset proposes a new mseal() syscall for the Linux kernel.
-
-So I have no objections to adding some kind of "lock down memory
-mappings" model, but this isn't it.
-
-First off, the simple stuff: the commit messages are worthless. Having
-
-   check seal for mmap(2)
-
-as the commit message is not even remotely acceptable, to pick one
-random example from the series (7/8).
-
-But that doesn't matter much, since I think the more fundamental
-problems are much worse:
-
- - the whole "ON_BEHALF_OF_KERNEL" and "ON_BEHALF_OF_USERSPACE" is
-just complete noise and totally illogical. The whole concept needs to
-be redone.
-
-Example of complete nonsense (again, picking 7/8, but that's again
-just a random example):
-
-> @@ -3017,8 +3022,8 @@ SYSCALL_DEFINE5(remap_file_pages,
->                 flags |= MAP_LOCKED;
 >
->         file = get_file(vma->vm_file);
-> -       ret = do_mmap(vma->vm_file, start, size,
-> -                       prot, flags, pgoff, &populate, NULL);
-> +       ret = do_mmap(vma->vm_file, start, size, prot, flags, pgoff,
-> +                       &populate, NULL, ON_BEHALF_OF_KERNEL);
->         fput(file);
->  out:
->         mmap_write_unlock(mm);
+> Modern CPUs support memory permissions such as RW and NX bits. Linux has
+> supported NX since the release of kernel version 2.6.8 in August 2004 [1]=
+.
+> The memory permission feature improves security stance on memory
+> corruption bugs, i.e. the attacker can=E2=80=99t just write to arbitrary =
+memory
+> and point the code to it, the memory has to be marked with X bit, or
+> else an exception will happen.
+>
+> Memory sealing additionally protects the mapping itself against
+> modifications. This is useful to mitigate memory corruption issues where
+> a corrupted pointer is passed to a memory management syscall. For example=
+,
+> such an attacker primitive can break control-flow integrity guarantees
+> since read-only memory that is supposed to be trusted can become writable
+> or .text pages can get remapped. Memory sealing can automatically be
+> applied by the runtime loader to seal .text and .rodata pages and
+> applications can additionally seal security critical data at runtime.
+> A similar feature already exists in the XNU kernel with the
+> VM_FLAGS_PERMANENT [3] flag and on OpenBSD with the mimmutable syscall [4=
+].
+> Also, Chrome wants to adopt this feature for their CFI work [2] and this
+> patchset has been designed to be compatible with the Chrome use case.
+>
+> The new mseal() is an architecture independent syscall, and with
+> following signature:
+>
+> mseal(void addr, size_t len, unsigned int types, unsigned int flags)
 
-Christ. That's *literally* the remap_file_pages() system call
-definition. No way in hell does "ON_BEHALF_OF_KERNEL" make any sense
-in this context.
+Is the plan that the VMAs you need to protect would be created and
+mseal()'ed while you expect that attacker code can not (yet) be
+running concurrently?
 
-It's not the only situation. "mremap() as the same thing. vm_munmap()
-has the same thing. vm_brk_flags() has the same thing. None of them
-make any sense.
+Do you expect to be using sealed memory for shadow stacks (in x86 CET
+/ arm64 GCS) to prevent an attacker from mixing those up by moving
+pages inside a shadow stack or between different shadow stacks or
+such? (If that's even possible, I think it is but I haven't tried.)
 
-But even if those obvious kinds of complete mis-designs were to be
-individually fixed, the whole naming and concept is bogus. The
-"ON_BEHALF_OF_KERNEL" thing seems to actually just mean "don't check
-sealing". Naming should describe what the thing *means*, not some
-random policy thing that may or may not be at all relevant.
+> addr/len: memory range.  Must be continuous/allocated memory, or else
+> mseal() will fail and no VMA is updated. For details on acceptable
+> arguments, please refer to comments in mseal.c. Those are also fully
+> covered by the selftest.
+> types: bit mask to specify which syscall to seal, currently they are:
+> MM_SEAL_MSEAL 0x1
+> MM_SEAL_MPROTECT 0x2
+> MM_SEAL_MUNMAP 0x4
+> MM_SEAL_MMAP 0x8
+> MM_SEAL_MREMAP 0x10
 
- - the whole MM_SEAL_xx vs VM_SEAL_xx artificial distinction needs to go away.
+You'd probably also want to block destructive madvise() operations
+that can effectively alter region contents by discarding pages and
+such, in particular MADV_FREE, MADV_DONTNEED, MADV_DONTNEED_LOCKED;
+probably also MADV_REMOVE, MADV_DONTFORK, MADV_WIPEONFORK. Maybe you'd
+want to just block all madvise() for sealed VMAs? Or rename
+process_madvise_behavior_valid() to something like
+"madvise_is_nondestructive()" and use that.
 
-Not only is it unacceptable to pointlessly create two different name
-spaces for no obvious reason, code like this (from 1/8) should not
-exist:
+The following comments probably mostly don't matter in practice if
+this feature is used in a context that is heavily seccomp-sandboxed
+(like Desktop Linux Chrome), but should maybe be addressed to make
+this feature more usable for other users. (Including Android Chrome,
+which has a weaker sandbox...)
 
-> +       if (types & MM_SEAL_MSEAL)
-> +               newtypes |= VM_SEAL_MSEAL;
-> +
-> +       if (types & MM_SEAL_MPROTECT)
-> +               newtypes |= VM_SEAL_MPROTECT;
-> +
-> +       if (types & MM_SEAL_MUNMAP)
-> +               newtypes |= VM_SEAL_MUNMAP;
-> +
-> +       if (types & MM_SEAL_MMAP)
-> +               newtypes |= VM_SEAL_MMAP;
-> +
-> +       if (types & MM_SEAL_MREMAP)
-> +               newtypes |= VM_SEAL_MREMAP;
+FWIW, it is also possible to write to read-only memory through the
+/proc/self/mem interface (or through ptrace commands like
+PTRACE_POKETEXT) because of FOLL_FORCE, depending on kernel
+configuration, seccomp policy, and what the LSMs do. (I think Android
+Chrome would allow /proc/self/mem writes, but would block
+PTRACE_POKETEXT with RestrictPtrace() in the sandbox code?)
 
-Sure, we have that in some cases when there was a *reason* for
-namespacing imposed on us from an API standpoint (ie the "open()"
-flags that get turned into FMODE_xyz flags, or the MS_xyz mount flags
-being turned into MNT_xyz flags), but those tend to be signs of
-problems in the system call API where some mixup made it impossible to
-use the flags directly (most commonly because there is some extended
-internal representation of said things).
+I had a related ancient patch series in 2016 with an attempt to allow
+SELinux to prevent bypassing W^X protections with this, but I never
+followed through with getting that landed...
+(https://lore.kernel.org/linux-mm/1475103281-7989-1-git-send-email-jann@the=
+jh.net/)
 
-For example, the MS_xyz namespace is a combination of "these are flags
-for the new mount" (like MS_RDONLY) and "this is how you should mount
-it" (like MS_REMOUNT), and so the user interface has that odd mixing
-of different things, and the MNT_xyz namespace is a distillation of
-the former.
+I guess the question there is what the right semantics for this kind
+of protected memory are when a debugger is active. The simple solution
+that might break some debugging would be "just deny all FOLL_FORCE
+write access for this memory" (which would prevent debuggers from
+being able to place breakpoints, which would maybe not be great). But
+maybe it makes more sense to consider this to be an independent
+concern and solve it with a new SELinux feature or something like that
+instead, and then document that mseal() requires some complement to
+prevent forced writes to read-only private memory? (For which the
+simplest solution would be "don't grant filesystem access or ptrace()
+access to the sandboxed code".)
 
-But we certainly should not strive to introduce *new* interfaces that
-start out with this kind of mixup and pointless "translate from one
-bit to another" code.
 
- - And finally (for now), I hate that MM_ACTION_xyz thing too!
+What is the intended interaction with userfaultfd, which I believe by
+design permits arbitrary data into unpopulated areas of anonymous
+VMAs? If the intention is that the process should otherwise be
+sandboxed to not have access to userfaultfd, that should maybe be
+documented. (Alternatively I guess you could theoretically remove the
+VM_MAYWRITE bit from marked VMAs, but that might be more strict than
+we want, since it'd also block all FOLL_FORCE writes.)
 
-Why do we have MM_ACTION_MREMAP, and pointless like this (from 3/8):
 
-> +       switch (action) {
-> +       case MM_ACTION_MPROTECT:
-> +               if (vma->vm_seals & VM_SEAL_MPROTECT)
-> +                       return false;
-> +               break;
+There are also some interfaces like AIO or the X86 Shadow Stacks
+interface that indirectly unmap memory through the kernel and look
+like they could perhaps be tricked into racily unmapping a
+just-created sealed VMA. You'd probably have to make sure that they
+can't do that and essentially treat their unmap operations as if they
+came from userspace, I guess? What Linus just wrote.
 
-when the sane thing to do is to use the *same* MM_SEAL_xyz bitmask and
-sealing bitmask and just say
 
-        if (vma->vm_seal & vm_action)
-                return -EPERM;
+I think either way this feature needs some documentation on what kind
+of context it's supposed to run in.
 
-IOW, you have pointlessly introduced not *two* different namespaces,
-but *three*. All doing the exact same thing, and all just causing
-pointless and ugly code to "translate" the actions of one into the
-model of another.
 
-So get rid of the "MM_ACTION_xyz" thing. Get rid of ther "VM_SEAL_xyz"
-thing. Use *one* single "these are the sealing bits".
-
-And get rid of "enum caller_origin" entirely. I don't know what the
-right model for that thing is, but that isn't it.
-
-*Maybe* the right model is some MM_SEAL_OVERRIDE bit that user space
-cannot set, but that the kernel can use internally - and if that is
-the right model, then dammit, the *uses* should be very very obvious
-why the override is fine, because that remap_file_pages() use sure as
-hell was *not* obvious.
-
-In fact, it's not at all obvious why anything should override the
-sealing bits - EVER. So I'm not convinced that the right model is
-"replace ON_BEHALF_OF_KERNEL with MM_SEAL_OVERRIDE". Why would we
-*ever* want to override sealing? It sounds like complete garbage. Most
-of the users seem to be things like "execve()", which is nonsensical,
-since the VM wouldn't have been sealed at that point _anyway_, so
-having a "don't bother checking sealing bits" flag seems entirely
-useless.
-
-Anyway, this is all a resounding NAK on this series in this form. My
-complaints are not some kind of small "fix this up". These are
-fundamental issues.
-
-            Linus
+> Each bit represents sealing for one specific syscall type, e.g.
+> MM_SEAL_MPROTECT will deny mprotect syscall. The consideration of bitmask
+> is that the API is extendable, i.e. when needed, the sealing can be
+> extended to madvise, mlock, etc. Backward compatibility is also easy.
+>
+> The kernel will remember which seal types are applied, and the applicatio=
+n
+> doesn=E2=80=99t need to repeat all existing seal types in the next mseal(=
+).  Once
+> a seal type is applied, it can=E2=80=99t be unsealed. Call mseal() on an =
+existing
+> seal type is a no-action, not a failure.
+>
+> MM_SEAL_MSEAL will deny mseal() calls that try to add a new seal type.
+>
+> Internally, vm_area_struct adds a new field vm_seals, to store the bit
+> masks.
+>
+> For the affected syscalls, such as mprotect, a check(can_modify_mm) for
+> sealing is added, this usually happens at the early point of the syscall,
+> before any update is made to VMAs. The effect of that is: if any of the
+> VMAs in the given address range fails the sealing check, none of the VMA
+> will be updated. It might be worth noting that this is different from the
+> rest of mprotect(), where some updates can happen even when mprotect
+> returns fail. Consider can_modify_mm only checks vm_seals in
+> vm_area_struct, and it is not going deeper in the page table or updating
+> any HW, success or none behavior might fit better here. I would like to
+> listen to the community's feedback on this.
+>
+> The idea that inspired this patch comes from Stephen R=C3=B6ttger=E2=80=
+=99s work in
+> V8 CFI [5],  Chrome browser in ChromeOS will be the first user of this AP=
+I.
+>
+> In addition, Stephen is working on glibc change to add sealing support
+> into the dynamic linker to seal all non-writable segments at startup. Whe=
+n
+> that work is completed, all applications can automatically benefit from
+> these new protections.
+>
+> [1] https://kernelnewbies.org/Linux_2_6_8
+> [2] https://v8.dev/blog/control-flow-integrity
+> [3] https://github.com/apple-oss-distributions/xnu/blob/1031c584a5e37aff1=
+77559b9f69dbd3c8c3fd30a/osfmk/mach/vm_statistics.h#L274
+> [4] https://man.openbsd.org/mimmutable.2
+> [5] https://docs.google.com/document/d/1O2jwK4dxI3nRcOJuPYkonhTkNQfbmwdvx=
+QMyXgeaRHo/edit#heading=3Dh.bvaojj9fu6hc
+>
+> Jeff Xu (8):
+>   Add mseal syscall
+>   Wire up mseal syscall
+>   mseal: add can_modify_mm and can_modify_vma
+>   mseal: seal mprotect
+>   mseal munmap
+>   mseal mremap
+>   mseal mmap
+>   selftest mm/mseal mprotect/munmap/mremap/mmap
+>
+>  arch/alpha/kernel/syscalls/syscall.tbl      |    1 +
+>  arch/arm/tools/syscall.tbl                  |    1 +
+>  arch/arm64/include/asm/unistd.h             |    2 +-
+>  arch/arm64/include/asm/unistd32.h           |    2 +
+>  arch/ia64/kernel/syscalls/syscall.tbl       |    1 +
+>  arch/m68k/kernel/syscalls/syscall.tbl       |    1 +
+>  arch/microblaze/kernel/syscalls/syscall.tbl |    1 +
+>  arch/mips/kernel/syscalls/syscall_n32.tbl   |    1 +
+>  arch/mips/kernel/syscalls/syscall_n64.tbl   |    1 +
+>  arch/mips/kernel/syscalls/syscall_o32.tbl   |    1 +
+>  arch/parisc/kernel/syscalls/syscall.tbl     |    1 +
+>  arch/powerpc/kernel/syscalls/syscall.tbl    |    1 +
+>  arch/s390/kernel/syscalls/syscall.tbl       |    1 +
+>  arch/sh/kernel/syscalls/syscall.tbl         |    1 +
+>  arch/sparc/kernel/syscalls/syscall.tbl      |    1 +
+>  arch/x86/entry/syscalls/syscall_32.tbl      |    1 +
+>  arch/x86/entry/syscalls/syscall_64.tbl      |    1 +
+>  arch/xtensa/kernel/syscalls/syscall.tbl     |    1 +
+>  fs/aio.c                                    |    5 +-
+>  include/linux/mm.h                          |   55 +-
+>  include/linux/mm_types.h                    |    7 +
+>  include/linux/syscalls.h                    |    2 +
+>  include/uapi/asm-generic/unistd.h           |    5 +-
+>  include/uapi/linux/mman.h                   |    6 +
+>  ipc/shm.c                                   |    3 +-
+>  kernel/sys_ni.c                             |    1 +
+>  mm/Kconfig                                  |    8 +
+>  mm/Makefile                                 |    1 +
+>  mm/internal.h                               |    4 +-
+>  mm/mmap.c                                   |   49 +-
+>  mm/mprotect.c                               |    6 +
+>  mm/mremap.c                                 |   19 +-
+>  mm/mseal.c                                  |  328 +++++
+>  mm/nommu.c                                  |    6 +-
+>  mm/util.c                                   |    8 +-
+>  tools/testing/selftests/mm/Makefile         |    1 +
+>  tools/testing/selftests/mm/mseal_test.c     | 1428 +++++++++++++++++++
+>  37 files changed, 1934 insertions(+), 28 deletions(-)
+>  create mode 100644 mm/mseal.c
+>  create mode 100644 tools/testing/selftests/mm/mseal_test.c
+>
+> --
+> 2.42.0.609.gbb76f46606-goog
+>
