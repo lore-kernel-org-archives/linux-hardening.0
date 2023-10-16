@@ -1,97 +1,108 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CFAD358BB
-	for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 20:22:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BDCD2770A
+	for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 20:48:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o8+sNLy0"
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6691E1
-	for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 13:22:46 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d9a528c2c8bso6128156276.1
-        for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 13:22:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qw8HAanK"
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6CF4A2
+	for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 13:48:36 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5a7ac9c1522so76948027b3.0
+        for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 13:48:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697487766; x=1698092566; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1697489316; x=1698094116; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=XsgTw1CJMHDMphse0HPVrCXoGi6YQMkmWaeP25eKZWc=;
-        b=o8+sNLy08emDvAq4aklEG6lmCDYopFWxnU4+TK1JRj10qWhxodXmgheUSa6MsScsjf
-         +ImxPMh3noRohUmbScTUrnNOzHBQdlAdHi0wdAwU2PiLgBDqV/k/RbZsfdoI9iVJBHDb
-         8d9lfoWXsNOtFLqSEo0NHu9JgJkWgQ8c8X0Q9NKQ3tLDHPpmC/G7Agnv4GlhkNqPAICy
-         CLzmDQP4tp8sTJ73GgGBevE9i1TlE3QcJ5bnl0AIjZXyB3koG/MtYrWERl22y1TuSXUl
-         fas+Pt/LjtjtpqOxLE98ETH7AtsrUt5Doi3XvhzTHAgM8nyEHq0467GWqQ7ynRhw4YiO
-         5/Sw==
+        bh=CfQG/UNYofASRrDwMjYhdG73TtrOn2QoLvMk2HP0VXc=;
+        b=qw8HAanKN9J0CnkvOmauyxICekf1JNGafGHP89BpW0CRYA0k93PgmnEWgxBBSiNDRR
+         txQk8XVhpHwnN9sW9oX6RGj4npBxp189Gsa2wl1Lcm42+CkkNJXpo8AjL94JjzEt5B4p
+         IedMJohD99oKnEXqm5Ml/AEhI/prnXJGwKAdH5cRl4ob4hOGMHj2SkW4bJNLvMliSNMz
+         aPKtk1XyWs1MmGTSUk7g5GAQw3RXJXRxAJ56mOvTr1nYf+7nGpfhhWtqu/DlIDF/emy8
+         pbIO9PbChvrh+lgwqueCPueVcwpOZeCcWtqs6/ATBigopa/2czlc+seJvWdWXpmPP8Rq
+         kEOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697487766; x=1698092566;
+        d=1e100.net; s=20230601; t=1697489316; x=1698094116;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=XsgTw1CJMHDMphse0HPVrCXoGi6YQMkmWaeP25eKZWc=;
-        b=ixi+XlVoDAwodrWzaBDC5npTofT9S8Nciu9HqzF18Btq1zw5TcbUfSUfDiuMAhVWA7
-         DsNJNIS5+pO8mKxXMlFL5UD0plE9AMAw2qXiSMsMzKtrjP16G8H4rNp3fszIRdmS5qQe
-         PupaPSjfT4mBcpFqSgTHtPFxq2g2RJRhFs5E5CrYGq/pkBGNvYufAw7de4XFZDzRe/fU
-         KjhrbNlk9Z8Uw7DCve+bdD8CdO0X4QfJ6jgVffPYXtErJQ+2IXAwe1/x/WndScKJuSg3
-         r22HLsW/hEaunPPTAWscD/TT3NZP/EVYfs7lDOolCtodp+2lyfVoQHvDr5wZa5+0o4kG
-         RfEw==
-X-Gm-Message-State: AOJu0YyMvkbECEIKB06CfxkGYosLL3tuzjsHIZqtcpU34qL8nVRvTokm
-	FLhk2k0o6kog3r/nFUWC3TaEcunhc+pvTPAhPg==
-X-Google-Smtp-Source: AGHT+IHQ5wdWI2ysVEyvwpliX52H0WBhxPQy/yEdkoI8j0clA4li6U5CriNyDxKoH6VQ/TdPRKg1iyGE3HtskTtPgA==
+        bh=CfQG/UNYofASRrDwMjYhdG73TtrOn2QoLvMk2HP0VXc=;
+        b=iTVKzUTFrXugBhStwdaavlpgqMJlpG6xV1/zdAc2osz2BCun+mwflvHl63Fewi+ms1
+         shxHUKs877BOHjF1uE9wu5olapC5nT0RIABga8bSOxMfSvRLNmEaJSkDo76TNgNK0P2o
+         /JmAOva10g/n8h6CxYIrSEdeXMPy/9DTiilz3udN5EUxf00hSBIIY6z35vRNuM18j6Ez
+         LQKYTmVAPu8OLZO/ZYJ54pL93mrRY1Wujm+lBM94o2wmIF9NR8JygAa11mYGBJ2lMUPd
+         FChXdSw/ixWAVw/6Mv/e/fwZ7i/BMjiRiX2rI2EGyUXnhlGMbSEt5hGD1sbqhnmwSPp+
+         82nA==
+X-Gm-Message-State: AOJu0YxoMXtpuDvfWKS7rbpyanROJYqdJ15ZDitaFdcc3WL9hJB6wfLf
+	Z1fiabvzFDPlExFCrPr0SOSUNSx9L0b8EMMd2g==
+X-Google-Smtp-Source: AGHT+IH2PJXIzD1777emyZ8QgxBof1e9+NC8sANBlMDPZVkPlBXOSucoAmRsX92WHt/bfBbuNjB2JXxsXNlAElOfCw==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a25:8a8b:0:b0:d9a:cc6b:cf1a with SMTP
- id h11-20020a258a8b000000b00d9acc6bcf1amr2518ybl.8.1697487765639; Mon, 16 Oct
- 2023 13:22:45 -0700 (PDT)
-Date: Mon, 16 Oct 2023 20:22:45 +0000
+ (user=justinstitt job=sendgmr) by 2002:a25:bfc3:0:b0:d9a:d233:b2a3 with SMTP
+ id q3-20020a25bfc3000000b00d9ad233b2a3mr4826ybm.1.1697489316076; Mon, 16 Oct
+ 2023 13:48:36 -0700 (PDT)
+Date: Mon, 16 Oct 2023 20:48:35 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAJSbLWUC/y2NwQrCQAwFf6XkbKBbqUV/RTws6VsN1LUkS1VK/
- 72LeBmYy8xKDlM4XZqVDIu6vnKVcGhIHjHfwTpWp67tjqENJ/ZiWeYvj6YLzDmj8FsNE9w5lie mP4UHiec+SBokRarB2ZD085tdb9u2A/j+Z9J8AAAA
+X-B4-Tracking: v=1; b=H4sIAKKhLWUC/yWOQQ6CMBBFr0K6dpJOVdJ4FeOiDgNOYguZIaAh3
+ N0Gd+/9zfubM1Zhc7dmc8qLmIylCp4aR69UBgbpqrvgwxk9tmCzFpq+0KksrAaFZ1hF+c1m8NQ xdTTmCpSjD4gH9TkRUD/8F4IUPPp4CdjGq6ulSbmXz/Hi/tj3Hzo06JCVAAAA
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1697487764; l=2957;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1697489315; l=2480;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=1+nNVSjnJRHuqWkXwql7HcWOFbNymzy4VcgSRCyCDGA=; b=55/2gEWyZRObYYt9U34T3z95iBbqHlCwUtlamFUm66VwEpc8DS5kSyJPPs7za29bOe/oMzu+s
- SQnU4HCklRvCzbBqjqBR0DvcqPrXnOhw6GF3Vg/DHoA169r0wl1nUkI
+ bh=WWAYi+x4Dx7aKKvUgODBQGUZ3smVI6qfsI47zTN1ZUE=; b=0BH3zclS0YNxwd3Ilm6W6FhkdILNUqiYw4eIUHdosTMZ1W5xRLPQOCCPOGNQ/ocIalDesk+Jw
+ BLI/L+ZPzwBAlD97aqRK/+kSE3oaxQemrHOIxxpWToj436kRGiVDq2h
 X-Mailer: b4 0.12.3
-Message-ID: <20231016-strncpy-drivers-net-wireless-atmel-atmel-c-v1-1-038d0e73c402@google.com>
-Subject: [PATCH] atmel: replace deprecated strncpy/strcpy with strscpy
+Message-ID: <20231016-strncpy-drivers-net-wireless-broadcom-brcm80211-brcmfmac-cfg80211-c-v1-1-4234807ca07e@google.com>
+Subject: [PATCH] brcmfmac: replace deprecated strncpy with strscpy
 From: Justin Stitt <justinstitt@google.com>
-To: Kalle Valo <kvalo@kernel.org>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, 
+To: Arend van Spriel <aspriel@gmail.com>, Franky Lin <franky.lin@broadcom.com>, 
+	Hante Meuleman <hante.meuleman@broadcom.com>, Kalle Valo <kvalo@kernel.org>
+Cc: linux-wireless@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com, 
+	SHA-cyfmac-dev-list@infineon.com, linux-kernel@vger.kernel.org, 
 	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
 X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.6
+	autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
 strncpy() is deprecated for use on NUL-terminated destination strings
 [1] and as such we should prefer more robust and less ambiguous string
-interfaces. strcpy() is also deprecated [2] and shouldn't be used.
+interfaces.
 
-We expect priv->firmware_id to be NUL-terminated based on its usage
-with seq_printf() and strlen() in atmel.c:
-1420 |       seq_printf(m, "%s loaded by host\n", priv->firmware_id);
+We expect ifp->ndev->name to be NUL-terminated based on its use in
+format strings within core.c:
+via brcmf_ifname() ->
+67 |       char *brcmf_ifname(struct brcmf_if *ifp)
+68 |       {
+69 |       	if (!ifp)
+70 |       		return "<if_null>";
+71 |
+72 |       	if (ifp->ndev)
+73 |       		return ifp->ndev->name;
+74 |
+75 |       	return "<if_none>";
+76 |       }
 ...
-3884 |       if (strlen(priv->firmware_id) == 0) {
-
-NUL-padding is not required, which is evident by the usage of a plain
-strcpy():
-3891 |   strcpy(priv->firmware_id, "atmel_at76c502.bin");
+288 |       static netdev_tx_t brcmf_netdev_start_xmit(struct sk_buff *skb,
+289 |       					   struct net_device *ndev) {
+...
+330 |       brcmf_dbg(INFO, "%s: insufficient headroom (%d)\n",
+331 |                 brcmf_ifname(ifp), head_delta);
+...
+336 |       bphy_err(drvr, "%s: failed to expand headroom\n",
+337 |                brcmf_ifname(ifp));
 
 Considering the above, a suitable replacement is `strscpy` [2] due to
 the fact that it guarantees NUL-termination on the destination buffer
 without unnecessarily NUL-padding.
 
-Let's also replace hard-coded lengths to be `sizeof(...)` for buffers
-that the compiler can detect the size for as this is less error prone.
-
 Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strcpy [2]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [3]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
 Link: https://github.com/KSPP/linux/issues/90
 Cc: linux-hardening@vger.kernel.org
 Signed-off-by: Justin Stitt <justinstitt@google.com>
@@ -100,46 +111,26 @@ Note: build-tested only.
 
 Found with: $ rg "strncpy\("
 ---
- drivers/net/wireless/atmel/atmel.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/atmel/atmel.c b/drivers/net/wireless/atmel/atmel.c
-index 7c2d1c588156..199b9144ef63 100644
---- a/drivers/net/wireless/atmel/atmel.c
-+++ b/drivers/net/wireless/atmel/atmel.c
-@@ -2011,7 +2011,7 @@ static int atmel_get_name(struct net_device *dev,
- 			  union iwreq_data *wrqu,
- 			  char *extra)
- {
--	strcpy(wrqu->name, "IEEE 802.11-DS");
-+	strscpy(wrqu->name, "IEEE 802.11-DS", sizeof(wrqu->name));
- 	return 0;
- }
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+index 2a90bb24ba77..7daa418df877 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+@@ -866,7 +866,7 @@ struct wireless_dev *brcmf_apsta_add_vif(struct wiphy *wiphy, const char *name,
+ 		goto fail;
+ 	}
  
-@@ -2651,8 +2651,7 @@ static int atmel_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
- 
- 		priv->firmware = new_firmware;
- 		priv->firmware_length = com.len;
--		strncpy(priv->firmware_id, com.id, 31);
--		priv->firmware_id[31] = '\0';
-+		strscpy(priv->firmware_id, com.id, sizeof(priv->firmware_id));
- 		break;
- 
- 	case ATMELRD:
-@@ -3889,7 +3888,8 @@ static int reset_atmel_card(struct net_device *dev)
- 					printk(KERN_INFO
- 					       "%s: if not, use the firmware= module parameter.\n",
- 					       dev->name);
--					strcpy(priv->firmware_id, "atmel_at76c502.bin");
-+					strscpy(priv->firmware_id, "atmel_at76c502.bin",
-+						sizeof(priv->firmware_id));
- 				}
- 				err = request_firmware(&fw_entry, priv->firmware_id, priv->sys_dev);
- 				if (err != 0) {
+-	strncpy(ifp->ndev->name, name, sizeof(ifp->ndev->name) - 1);
++	strscpy(ifp->ndev->name, name, sizeof(ifp->ndev->name));
+ 	err = brcmf_net_attach(ifp, true);
+ 	if (err) {
+ 		bphy_err(drvr, "Registering netdevice failed\n");
 
 ---
 base-commit: cbf3a2cb156a2c911d8f38d8247814b4c07f49a2
-change-id: 20231016-strncpy-drivers-net-wireless-atmel-atmel-c-7ca951cf7cfa
+change-id: 20231016-strncpy-drivers-net-wireless-broadcom-brcm80211-brcmfmac-cfg80211-c-a20108421685
 
 Best regards,
 --
