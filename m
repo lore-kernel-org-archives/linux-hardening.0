@@ -1,56 +1,58 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE7D1347AA
-	for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 19:42:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C582AB54
+	for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 19:49:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bvq0tPG9"
-Received: from mail-oo1-xc30.google.com (mail-oo1-xc30.google.com [IPv6:2607:f8b0:4864:20::c30])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF4C6B4
-	for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 12:42:24 -0700 (PDT)
-Received: by mail-oo1-xc30.google.com with SMTP id 006d021491bc7-57f0f81b2aeso2735885eaf.3
-        for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 12:42:24 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JsWsXFp7"
+Received: from mail-ot1-x335.google.com (mail-ot1-x335.google.com [IPv6:2607:f8b0:4864:20::335])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23AA1F5
+	for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 12:49:29 -0700 (PDT)
+Received: by mail-ot1-x335.google.com with SMTP id 46e09a7af769-6c7ce16ddfaso3433546a34.3
+        for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 12:49:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1697485344; x=1698090144; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1697485768; x=1698090568; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ExrixakovrZwkXwzxSDYUz9hfcSEIbjsFsf/1/2B5EU=;
-        b=bvq0tPG9Qz3Ml50a36v5I3pehFpxpSrEQTk/117kB6CUdoToUIT8AAeUV9tq/MI8Sp
-         94GvEvuXqu6WSgKw3bJFofFt+Apzq6tCn5fbloaSAuGSdcs6tn44yHZdcXYEeJ7k5246
-         v3SO3KcXl168YUke5TZ+D2sMEEeTCleK5j4es=
+        bh=TDEvoDDFlhaScQdoPW2tJhTzTU/5dfUG14nxqzDs2yA=;
+        b=JsWsXFp7B+tTYU2ItV0yg6gp2M0FieKyfLU1u65a9OD1zULLXTI9IUZjcTP7nPF7Cn
+         YSCdjyak05QNzkxjgILMkBBeuFuaEDcGmtspaaZ0UkOdFWCCO9Y+CEAiN6jstBqMGYAA
+         5fy3L2H023WgcLg5FJNBOoKl/Kgvhf3HtIiXQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697485344; x=1698090144;
+        d=1e100.net; s=20230601; t=1697485768; x=1698090568;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ExrixakovrZwkXwzxSDYUz9hfcSEIbjsFsf/1/2B5EU=;
-        b=kjAANE9VrjfzIrb5tT4KvP6dcUFdFQp6uvqxg++C1FKl8jVafmRCqju/NG8JtpdHWf
-         4HVI1fK4djVf4QCXiUJ50CJMmkVKCRHk96OqSSGFCHP6mxIzCFyJSRZmBC+jI1snT3ta
-         ihSdeXiibeaLxcIdASZlXqnF0W7WlC0W465plj6oJLSiosInlVfF5LVSlTmAuLQLmUkJ
-         8Em0KJ/Pe8HEuC6OFPYuGCB7oQEXiyhuQMv7Gb6WN8baAqNhBv264nkJB6oGBDPO55K/
-         hud/y8kxtpyCDmzPdi/0ai5dqiswt44FXV16uT6tpb/DsrcB9rdFFAGaUaji68/B8y9J
-         coQg==
-X-Gm-Message-State: AOJu0YwXbYIwNvcCDm6PAApb+Lfo2xB/lVsTCNd5p/IQKMHQnrJPLexS
-	TM6KDgtRXr3LITwRCHtK8Thbsw==
-X-Google-Smtp-Source: AGHT+IEeMQKbP2fH+oTMUOPgV4TLaiTN+m0ARSGjw8cOPGexL7cup7dn1q/zvw3k9ghoXA+I9hEAuQ==
-X-Received: by 2002:a05:6358:56:b0:132:f294:77fe with SMTP id 22-20020a056358005600b00132f29477femr477811rwx.2.1697485344034;
-        Mon, 16 Oct 2023 12:42:24 -0700 (PDT)
+        bh=TDEvoDDFlhaScQdoPW2tJhTzTU/5dfUG14nxqzDs2yA=;
+        b=ralxQ58nJrGqHQkBq26uZNOat1dgcXgzHAi0F7fdvZekn59XJ+Wb58P8LBKaDufG6l
+         q82CD2HbY7tg6jV4tdVXP7Qzz+NgEfNWu/6eJCPidxxl6nPN4mY5GTIeXUEba5tkQJWl
+         IvXEV1NCWp470d77Ga45w40CEkG4Y561mgVvZRi5gdG0xwJNmKWl3P5XDe41Q+ewkOgX
+         ZKkPk4/d7UxGUbfOZ3JMW1chGFrEbe0zM7pqmon9tvEWFy/XyXRMdQmotKZWPFXwTCed
+         1f3wNSr0J70yYzr1HT0EeFeaBioRO/vHQG+eSNjgquwX7/YefghhGpQ1GfMb3Ig5ayW2
+         e8+A==
+X-Gm-Message-State: AOJu0YwubFSM6YVkRFi4XPfwpbVUfbZW80anyW4cq9Pc1qI01GLh83RJ
+	bk8iMkUH7iRIviIeIRGYjgORZA==
+X-Google-Smtp-Source: AGHT+IGzztkRAoioNbwxGtaNyJL8FtTv0uRRmTERYsx7mf9E05Z0DIj6n8vDcTI8S1PZr6xfpA678g==
+X-Received: by 2002:a9d:6d9a:0:b0:6b8:807b:b50 with SMTP id x26-20020a9d6d9a000000b006b8807b0b50mr221886otp.22.1697485768484;
+        Mon, 16 Oct 2023 12:49:28 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id k126-20020a632484000000b005b488b6441esm3746pgk.58.2023.10.16.12.42.23
+        by smtp.gmail.com with ESMTPSA id v67-20020a626146000000b00690d1269691sm309260pfb.22.2023.10.16.12.49.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Oct 2023 12:42:23 -0700 (PDT)
-Date: Mon, 16 Oct 2023 12:42:22 -0700
+        Mon, 16 Oct 2023 12:49:27 -0700 (PDT)
+Date: Mon, 16 Oct 2023 12:49:27 -0700
 From: Kees Cook <keescook@chromium.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Thomas Sailer <t.sailer@alumni.ethz.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	linux-hams@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] hamradio: replace deprecated strncpy with strscpy_pad
-Message-ID: <202310161242.B0F9B693@keescook>
-References: <20231016-strncpy-drivers-net-hamradio-baycom_epp-c-v2-1-39f72a72de30@google.com>
+To: Kartik <kkartik@nvidia.com>
+Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, andy@kernel.org,
+	akpm@linux-foundation.org, arnd@arndb.de, ulf.hansson@linaro.org,
+	linus.walleij@linaro.org, pshete@nvidia.com, petlozup@nvidia.com,
+	frank.li@vivo.com, robh@kernel.org, stefank@nvidia.com,
+	pdeschrijver@nvidia.com, linux-tegra@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCH v5 1/8] mm/util: Introduce kmemdup_array()
+Message-ID: <202310161249.A59D2AE2@keescook>
+References: <20231016053411.3380-1-kkartik@nvidia.com>
+ <20231016053411.3380-2-kkartik@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -59,44 +61,22 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231016-strncpy-drivers-net-hamradio-baycom_epp-c-v2-1-39f72a72de30@google.com>
+In-Reply-To: <20231016053411.3380-2-kkartik@nvidia.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.6
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Mon, Oct 16, 2023 at 06:42:42PM +0000, Justin Stitt wrote:
-> strncpy() is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
+On Mon, Oct 16, 2023 at 11:04:04AM +0530, Kartik wrote:
+> Introduce kmemdup_array() API to duplicate `n` number of elements
+> from a given array. This internally uses kmemdup to allocate and duplicate
+> the `src` array.
 > 
-> We expect both hi.data.modename and hi.data.drivername to be
-> NUL-terminated based on its usage with sprintf:
-> |       sprintf(hi.data.modename, "%sclk,%smodem,fclk=%d,bps=%d%s",
-> |               bc->cfg.intclk ? "int" : "ext",
-> |               bc->cfg.extmodem ? "ext" : "int", bc->cfg.fclk, bc->cfg.bps,
-> |               bc->cfg.loopback ? ",loopback" : "");
-> 
-> Note that this data is copied out to userspace with:
-> |       if (copy_to_user(data, &hi, sizeof(hi)))
-> ... however, the data was also copied FROM the user here:
-> |       if (copy_from_user(&hi, data, sizeof(hi)))
-> 
-> Considering the above, a suitable replacement is strscpy_pad() as it
-> guarantees NUL-termination on the destination buffer while also
-> NUL-padding (which is good+wanted behavior when copying data to
-> userspace).
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> Signed-off-by: Kartik <kkartik@nvidia.com>
 
-Thanks!
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Acked-by: Kees Cook <keescook@chromium.org>
 
 -- 
 Kees Cook
