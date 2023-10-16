@@ -1,158 +1,65 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25B1B381A9
-	for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 21:27:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 559E8347AA
+	for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 22:04:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SyF8p1sI"
-Received: from mail-oo1-xc29.google.com (mail-oo1-xc29.google.com [IPv6:2607:f8b0:4864:20::c29])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90C4B93
-	for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 14:27:44 -0700 (PDT)
-Received: by mail-oo1-xc29.google.com with SMTP id 006d021491bc7-581b6b93bd1so862659eaf.1
-        for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 14:27:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1697491664; x=1698096464; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hPgMlBTFx+2I9248zEaT5u1u+rLOVrvQ5zC0LJfwWQ0=;
-        b=SyF8p1sIKoQrRUTRh2B/L+4Sp0wytVvB7HernGTi975VcWIE9ml0f93H6nv67nbAKw
-         9YI0PQPayOpDkaRrxlHfBNQLEeRpu+RfifMWJ0lEbmZJWJJG1qKccfvPhoufh1rIPlVO
-         IOuKXrFwzd5Ny2c28x5IguUtoe0XaZLn0cK6g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697491664; x=1698096464;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hPgMlBTFx+2I9248zEaT5u1u+rLOVrvQ5zC0LJfwWQ0=;
-        b=RtF7jiiojwF7HeG5/sHnaYIYPBLzkUzPa8hYM+yALpef/kRVg5XPckKM8beszGl4Nx
-         gIjyOw2qPKJ1cl4hAeNnHLEE9ywzhr1AJ2R8ZRhxrXa31z+yNBSDd2EG3C/r1loFhap3
-         WFGr8WCGalYEcXtbTpR5A5FRwaitvulL5iFgGXUSE+vvryvh0Qx8aEzJz2f06IuP+Tbo
-         FadtvvGG7ImLi6CxGAF6kjJA499qIBMsPfMINeopiX5a6AQD8LN8+x14nefXwliGGyp5
-         8U+slYX4Y7GTC4jNha6l8M9MtuCWiAydOdtbR895R/NJbm94WDcJnR/T+ZC08DQWctbi
-         kd8A==
-X-Gm-Message-State: AOJu0YzHJZw3S/2pd0O1oOYfbst114rUIYo6GFL4OaUUTBDWKFV3hc/P
-	iY5prd5MevU1G6Ql8qdkdujCGw==
-X-Google-Smtp-Source: AGHT+IHrSWO54ZLXcXmETNNfpII8DusFKgDllyqDq/ZSWmhM7sp40S+wVHfc12SJxO/WdnVmkePGgA==
-X-Received: by 2002:a05:6359:5ea0:b0:166:d379:93c1 with SMTP id px32-20020a0563595ea000b00166d37993c1mr587200rwb.20.1697491663843;
-        Mon, 16 Oct 2023 14:27:43 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id a6-20020aa78e86000000b0068fd026b496sm30364pfr.46.2023.10.16.14.27.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Oct 2023 14:27:43 -0700 (PDT)
-From: Kees Cook <keescook@chromium.org>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Kees Cook <keescook@chromium.org>,
-	Brian Foster <bfoster@redhat.com>,
-	linux-bcachefs@vger.kernel.org,
-	kernel test robot <lkp@intel.com>,
-	linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SDJ3m32h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82E17C433C7;
+	Mon, 16 Oct 2023 22:04:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1697493888;
+	bh=Zu8r+UFNm3vd5emenr5/jPt+Q2RIuOTafj17uJohU+Y=;
+	h=Date:From:To:Cc:Subject:From;
+	b=SDJ3m32h5Fq72f4xV1Mgs/ZVsIsG4MjIHRKKj/QV8CAZ77CUIzbBiFEqi2QnZz0yR
+	 NspIuMLPXzPeHhLFILOZ/UehXr7pIloHyDcr42gnrgPlmqSJDZkDIjy2Q7yeU23lDM
+	 vqH8+YmU4V0GTZPZKHMl5Ti64omHBT0tydfkyFNp5vjbevwRvEhPT1agkRuiY55d7l
+	 y0UoOCnk0XhVXZJy82x+htxUg081xzhEJPlEAGCzgYRlnXfyQm9BoOrCR45U9lcOAI
+	 75huKhqZ9nLcNvR4a1FUSkcT7U1IPqlSbU5087htRSiXfsgTVEPPljFoEJQYuUWq7d
+	 6RI2mMc7nuG9w==
+Date: Mon, 16 Oct 2023 16:04:44 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Cc: Kees Cook <keescook@chromium.org>, linux-clk@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v2] bcachefs: Refactor bkey_i to use a flexible array
-Date: Mon, 16 Oct 2023 14:27:39 -0700
-Message-Id: <20231016212735.it.314-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+Subject: [PATCH v2 0/2][next] clk: visconti: Fix undefined behavior bug and
+ add bounds-checking coverage
+Message-ID: <cover.1697492890.git.gustavoars@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3237; i=keescook@chromium.org;
- h=from:subject:message-id; bh=ZFVX4Et7GPEikNCf0Ix6A5YSoE2Mfb24IGbRkCLbcNc=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlLarL3fT0ZlYwcbjnSnTWM77NW/ozenkBQEVl3
- aupJJB3LnOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZS2qywAKCRCJcvTf3G3A
- Jse1D/9vmoEVewSjtb1/R8Ur1UqM8PbdX33bLxi16QrR0H+U/mxcWnnEzugwd0LqR/HJBaNordc
- w/uC/7a8P2f9nW9QhXS6j2wo3U59Kexpsd5S60GxyiLtEwJA51JOEM/BHu5AreNoUPVivpINC0M
- gY+EsSE7uvNa0Wm+ZF22AmwcY2pTf+qUyy6uK6tPsaCevoMDKpFEbgxVp2MkHaUfOCb7hNlj+r/
- lDmfxxjxpW2IqKxQnsBbnjL9Bdq0+9Bw3j9K6Mi8s8ElzAZy4v334yhHKxuF7fm+8vU8S+oPIJ1
- 16XKru1DChGWe8pxxL2Li1YuXsP8F1BkGwBdWpfcWLVeP08Fat82dEWXYfaBx6f2Xrb4kVGPbny
- LhvjATPEbg2T2q67a9IfEEMt7eCqcYR9uvd+D4zQkby4rYdx1eSawPu6QM286GD/wift69yoAXl
- OdbGYJIdw8Wk8Z2FBr3OunPOk1yKD8QrVUoV3fdPxBgIDLtqxdNAQTzosswze4be0ozl2oXYf+s
- Uy/zjenXqlJT/hNQT1IcTU2UvriDo+0V58793WA77lHpT9+Zfps2oL911dWUDMKXAukmVbOLR4P
- T0Q3FE/nRDAYEQCOTCxskheCOAFJtdykoWuhGgSgzcvqWGTGMR/WpHj0JK2P7T2GRovBLTMo2Ft
- n0ZmyMs Pc1bRs0A==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The memcpy() in bch2_bkey_append_ptr() is operating on an embedded
-fake flexible array. Instead, make it explicit, and convert the memcpy
-to target the flexible array instead. Fixes the W=1 warning seen for
--Wstringop-overflow:
+This small series aims to fix an undefined behavior bug in
+`struct visconti_pll_provider` and add bounds-checking
+coverage at run-time for flexible-array member `hws`
+in `struct clk_hw_onecell_data` when accessed throught
+`struct visconti_pll_provider`.
 
-   In file included from include/linux/string.h:254,
-                    from include/linux/bitmap.h:11,
-                    from include/linux/cpumask.h:12,
-                    from include/linux/smp.h:13,
-                    from include/linux/lockdep.h:14,
-                    from include/linux/radix-tree.h:14,
-                    from include/linux/backing-dev-defs.h:6,
-                    from fs/bcachefs/bcachefs.h:182:
-   fs/bcachefs/extents.c: In function 'bch2_bkey_append_ptr':
-   include/linux/fortify-string.h:57:33: warning: writing 8 bytes into a region of size 0 [-Wstringop-overflow=]
-      57 | #define __underlying_memcpy     __builtin_memcpy
-         |                                 ^
-   include/linux/fortify-string.h:648:9: note: in expansion of macro '__underlying_memcpy'
-     648 |         __underlying_##op(p, q, __fortify_size);                        \
-         |         ^~~~~~~~~~~~~
-   include/linux/fortify-string.h:693:26: note: in expansion of macro '__fortify_memcpy_chk'
-     693 | #define memcpy(p, q, s)  __fortify_memcpy_chk(p, q, s,                  \
-         |                          ^~~~~~~~~~~~~~~~~~~~
-   fs/bcachefs/extents.c:235:17: note: in expansion of macro 'memcpy'
-     235 |                 memcpy((void *) &k->v + bkey_val_bytes(&k->k),
-         |                 ^~~~~~
-   fs/bcachefs/bcachefs_format.h:287:33: note: destination object 'v' of size 0
-     287 |                 struct bch_val  v;
-         |                                 ^
+Changes in v2:
+ - Mention -Wflex-array-member-not-at-end in the changelog text.
 
-Cc: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Brian Foster <bfoster@redhat.com>
-Cc: linux-bcachefs@vger.kernel.org
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202309192314.VBsjiIm5-lkp@intel.com/
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-v2 - Change flex array name to "v_bytes" (bfoster)
-v1 - https://lore.kernel.org/r/20231010235609.work.594-kees@kernel.org
----
- fs/bcachefs/bcachefs_format.h | 5 ++++-
- fs/bcachefs/extents.h         | 2 +-
- 2 files changed, 5 insertions(+), 2 deletions(-)
+v1:
+ - Link: https://lore.kernel.org/linux-hardening/cover.1697076650.git.gustavoars@kernel.org/
 
-diff --git a/fs/bcachefs/bcachefs_format.h b/fs/bcachefs/bcachefs_format.h
-index f0d130440baa..cb1af3799b59 100644
---- a/fs/bcachefs/bcachefs_format.h
-+++ b/fs/bcachefs/bcachefs_format.h
-@@ -300,7 +300,10 @@ struct bkey_i {
- 	__u64			_data[0];
- 
- 	struct bkey	k;
--	struct bch_val	v;
-+	union {
-+		struct bch_val	v;
-+		DECLARE_FLEX_ARRAY(__u8, v_bytes);
-+	};
- };
- 
- #define KEY(_inode, _offset, _size)					\
-diff --git a/fs/bcachefs/extents.h b/fs/bcachefs/extents.h
-index 7ee8d031bb6c..896fcfca4f21 100644
---- a/fs/bcachefs/extents.h
-+++ b/fs/bcachefs/extents.h
-@@ -642,7 +642,7 @@ static inline void bch2_bkey_append_ptr(struct bkey_i *k, struct bch_extent_ptr
- 
- 		ptr.type = 1 << BCH_EXTENT_ENTRY_ptr;
- 
--		memcpy((void *) &k->v + bkey_val_bytes(&k->k),
-+		memcpy(&k->v_bytes[bkey_val_bytes(&k->k)],
- 		       &ptr,
- 		       sizeof(ptr));
- 		k->k.u64s++;
+Gustavo A. R. Silva (2):
+  clk: visconti: Fix undefined behavior bug in struct
+    visconti_pll_provider
+  clk: visconti: Add bounds-checking coverage for struct
+    visconti_pll_provider
+
+ drivers/clk/visconti/pll.c | 6 +++---
+ drivers/clk/visconti/pll.h | 4 +++-
+ 2 files changed, 6 insertions(+), 4 deletions(-)
+
 -- 
 2.34.1
 
