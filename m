@@ -1,37 +1,37 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 959DF2DF67;
-	Tue, 17 Oct 2023 19:04:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A09BD2DF6D;
+	Tue, 17 Oct 2023 19:04:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WgCip0l0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jevqTcWU"
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85EA0F1;
-	Tue, 17 Oct 2023 12:04:29 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52837FA;
+	Tue, 17 Oct 2023 12:04:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697569469; x=1729105469;
+  t=1697569470; x=1729105470;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=gob/uynTCd8CZardWQ2JwqOzNIZTjqHSGCOo7hkS5nA=;
-  b=WgCip0l0R0iF6tRZDFxni5bHZk/zD1+bhFa/S/54LRR9qSleUdQ87TFD
-   vGPsJWSkA6uKkgLYRSlGke0Xm7JDPAUj4nM8IE2gluB68cH/fa/5ZuWrP
-   JdScacqCE83ElEz0elxu/hN8h3nSieDH0MjL+VrLpSlYJ4MBcVL/n+K9P
-   SX7taax+IQdww9szwY4Mf1gUQrw99Z9flRKM90iyEh1eqG0JFHQBaFRfW
-   p9Fr+SX6NkHPr7xXSwliQrEzqwL//wTZqGpXSm1gPvdp93Owp9cKiT1x1
-   8pkvYy2y41yvKDKeiWQRREH4/ozK+exwOAVQ7GFxW0jO9byeIekbTYzDE
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10866"; a="384739719"
+  bh=ELpo/pn2Y/msqeFAzn0NofDSrgYC1mIGiwhvBAxCdt8=;
+  b=jevqTcWU17YIADx4leA7uziFuUEnLhq4tLXIkul4eNskKdnKuDuCf6eu
+   NRYig4mV++PDrSkJSI1E03UmdUf7mcHtI95/NQjRrswml5Ew4Xi6hxwuj
+   M3bkQlWTggkXUO4Meb50gtwZjTMmZocNKSJez0SrhP36Uvpc4elGgVKaO
+   0llbWvuaHwYx4EX13Yv0YgGCPtedSCWz8GQ19W+Oc3pn63Q03E7If4A46
+   PENwj9s4DEo4KvmVObG9CntSV/okHs9Lag4J0TIaYEf59e6KYUpnahlQJ
+   UqoU5BgpA30jA1izKS+8Mn3Q80bmkpG2cl9zUp0DjBh4Wg6r5n0+t2Pbd
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10866"; a="384739749"
 X-IronPort-AV: E=Sophos;i="6.03,233,1694761200"; 
-   d="scan'208";a="384739719"
+   d="scan'208";a="384739749"
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
   by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2023 12:04:19 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10866"; a="822108716"
+X-IronPort-AV: E=McAfee;i="6600,9927,10866"; a="822108740"
 X-IronPort-AV: E=Sophos;i="6.03,233,1694761200"; 
-   d="scan'208";a="822108716"
+   d="scan'208";a="822108740"
 Received: from jekeller-desk.amr.corp.intel.com (HELO jekeller-desk.jekeller.internal) ([10.166.241.1])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2023 12:04:18 -0700
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2023 12:04:19 -0700
 From: Jacob Keller <jacob.e.keller@intel.com>
 To: netdev@vger.kernel.org,
 	David Miller <davem@davemloft.net>,
@@ -39,9 +39,9 @@ To: netdev@vger.kernel.org,
 Cc: Justin Stitt <justinstitt@google.com>,
 	linux-hardening@vger.kernel.org,
 	Jacob Keller <jacob.e.keller@intel.com>
-Subject: [PATCH net-next 3/9] e100: replace deprecated strncpy with strscpy
-Date: Tue, 17 Oct 2023 12:04:05 -0700
-Message-ID: <20231017190411.2199743-4-jacob.e.keller@intel.com>
+Subject: [PATCH net-next 5/9] fm10k: replace deprecated strncpy with strscpy
+Date: Tue, 17 Oct 2023 12:04:07 -0700
+Message-ID: <20231017190411.2199743-6-jacob.e.keller@intel.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20231017190411.2199743-1-jacob.e.keller@intel.com>
 References: <20231017190411.2199743-1-jacob.e.keller@intel.com>
@@ -64,24 +64,27 @@ From: Justin Stitt <justinstitt@google.com>
 [1] and as such we should prefer more robust and less ambiguous string
 interfaces.
 
-The "...-1" pattern makes it evident that netdev->name is expected to be
-NUL-terminated.
+A suitable replacement is `strscpy` [2] due to the fact that it
+guarantees NUL-termination on the destination buffer without
+unnecessarily NUL-padding.
 
-Meanwhile, it seems NUL-padding is not required due to alloc_etherdev
-zero-allocating the buffer.
+Other implementations of .*get_drvinfo also use strscpy so this patch
+brings fm10k_get_drvinfo in line as well:
 
-Considering the above, a suitable replacement is `strscpy` [2] due to
-the fact that it guarantees NUL-termination on the destination buffer
-without unnecessarily NUL-padding.
+igb/igb_ethtool.c +851
+static void igb_get_drvinfo(struct net_device *netdev,
 
-This is in line with other uses of strscpy on netdev->name:
-$ rg "strscpy\(netdev\->name.*pci.*"
+igbvf/ethtool.c
+167:static void igbvf_get_drvinfo(struct net_device *netdev,
 
-drivers/net/ethernet/intel/e1000e/netdev.c
-7455:   strscpy(netdev->name, pci_name(pdev), sizeof(netdev->name));
+i40e/i40e_ethtool.c
+1999:static void i40e_get_drvinfo(struct net_device *netdev,
 
-drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-10839:  strscpy(netdev->name, pci_name(pdev), sizeof(netdev->name));
+e1000/e1000_ethtool.c
+529:static void e1000_get_drvinfo(struct net_device *netdev,
+
+ixgbevf/ethtool.c
+211:static void ixgbevf_get_drvinfo(struct net_device *netdev,
 
 Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
 Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
@@ -90,22 +93,28 @@ Cc: linux-hardening@vger.kernel.org
 Signed-off-by: Justin Stitt <justinstitt@google.com>
 Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
 ---
- drivers/net/ethernet/intel/e100.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/intel/fm10k/fm10k_ethtool.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/e100.c b/drivers/net/ethernet/intel/e100.c
-index d3fdc290937f..01f0f12035ca 100644
---- a/drivers/net/ethernet/intel/e100.c
-+++ b/drivers/net/ethernet/intel/e100.c
-@@ -2841,7 +2841,7 @@ static int e100_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	netdev->netdev_ops = &e100_netdev_ops;
- 	netdev->ethtool_ops = &e100_ethtool_ops;
- 	netdev->watchdog_timeo = E100_WATCHDOG_PERIOD;
--	strncpy(netdev->name, pci_name(pdev), sizeof(netdev->name) - 1);
-+	strscpy(netdev->name, pci_name(pdev), sizeof(netdev->name));
+diff --git a/drivers/net/ethernet/intel/fm10k/fm10k_ethtool.c b/drivers/net/ethernet/intel/fm10k/fm10k_ethtool.c
+index d53369e30040..13a05604dcc0 100644
+--- a/drivers/net/ethernet/intel/fm10k/fm10k_ethtool.c
++++ b/drivers/net/ethernet/intel/fm10k/fm10k_ethtool.c
+@@ -448,10 +448,10 @@ static void fm10k_get_drvinfo(struct net_device *dev,
+ {
+ 	struct fm10k_intfc *interface = netdev_priv(dev);
  
- 	nic = netdev_priv(netdev);
- 	netif_napi_add_weight(netdev, &nic->napi, e100_poll, E100_NAPI_WEIGHT);
+-	strncpy(info->driver, fm10k_driver_name,
+-		sizeof(info->driver) - 1);
+-	strncpy(info->bus_info, pci_name(interface->pdev),
+-		sizeof(info->bus_info) - 1);
++	strscpy(info->driver, fm10k_driver_name,
++		sizeof(info->driver));
++	strscpy(info->bus_info, pci_name(interface->pdev),
++		sizeof(info->bus_info));
+ }
+ 
+ static void fm10k_get_pauseparam(struct net_device *dev,
 -- 
 2.41.0
 
