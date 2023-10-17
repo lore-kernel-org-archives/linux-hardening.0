@@ -1,45 +1,45 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A7238FA0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 107333E473
 	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 09:08:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VDQppkk8"
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3991EFF
-	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 02:08:23 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id 98e67ed59e1d1-27d1b48e20dso3051649a91.0
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 02:08:23 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c792Q9VH"
+Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9517CFB
+	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 02:08:21 -0700 (PDT)
+Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-5a87ac9d245so23911247b3.3
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 02:08:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1697533702; x=1698138502; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1697533701; x=1698138501; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4llBoLvRHSRPhxaAVX+Xew1tpI9xPqxP9ssy5QguIl8=;
-        b=VDQppkk8b9oCirBVlMxquQtLBR6oq+NEIUW991fieiIzfnXy0uSyhDmOQ/pFCxsfTk
-         vNq0/t+GaIHx3RbgU+O+OsbqxmLJ+QfIBiRFL8ZupoXc2g2kM3tDfchfxPLkpoUW6Cks
-         mSwqs/n3UF4MnYQ4QiXTGmby2Ib/D07ubXtK8=
+        bh=f2cnGwgONMuFiKzqdro4bTWTESfW7gQ3dGqDUQlrl20=;
+        b=c792Q9VHjsG1/2FZSDXSRf8xwINkAj+w9OI8OEtjA0BkUW/rWr9cmHmdLK7GjwdDee
+         9oL4GUCF1MA68n4qZ5Y6T51sR+U6AtJvk+JL/qTEnkuVhkSfWDt4EFIwWFZioO7bX/Jz
+         WEItJOkdjpHei9rmm89svIaNcvU0+ddAMhjUM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697533702; x=1698138502;
+        d=1e100.net; s=20230601; t=1697533701; x=1698138501;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4llBoLvRHSRPhxaAVX+Xew1tpI9xPqxP9ssy5QguIl8=;
-        b=OOpBD7M+7w3fQDR3Vj20W6eo9uLyOWMk6eV2bG9+7D4XAI4ougnUMTmUk5953nDSem
-         2TU2UdRSfRZH5JtclyvLOrPaQGT6IEiSGdsfcyFdPbpZRTzpTeJbyHBpTwYG+gu+y53w
-         6t2yu5iC9+aMj1YIUBvg3Ao3P7oPCkCk82SzWywxVKxObimsKJb76cUmQlH3kTsZlFqE
-         7mrAmarzz2gQN4m5x0+kb8yCRp4+HQLV0wQaO59PlapnFSker/uUrVwZm+GUhruTqchV
-         gCVwdL+WN7WApDdmLK/u5g4XUOCN/MAASJ/XZXWemoJh//PLpEi6cEOTNTVxreJd2yMB
-         8xEQ==
-X-Gm-Message-State: AOJu0YyrzUr4Jpk9HKiPuloaezfzBwnsh4afffc/IvyCFnb3m6XnTaY5
-	uG4ht6G4PFWSeElG1NrLgEuzdw==
-X-Google-Smtp-Source: AGHT+IGY8Ka5xTN+9aN+5JwGnYHZ3aFuu39VQWy4bG7nyYFZ0P/8XqDQIp2idGjzoHOlr8sq9RvLbg==
-X-Received: by 2002:a17:90b:124a:b0:27c:f21b:6342 with SMTP id gx10-20020a17090b124a00b0027cf21b6342mr1443714pjb.22.1697533702687;
-        Tue, 17 Oct 2023 02:08:22 -0700 (PDT)
+        bh=f2cnGwgONMuFiKzqdro4bTWTESfW7gQ3dGqDUQlrl20=;
+        b=L/4pSvqVep9+WW1lmHHBD5o/DjDAOzaemwGuMRr/ke4n3UW7ZBYocO+8Z3Ofa1xj2t
+         +1F5gME5B7Kz1Qzzy+Xhk9bdnP3vpwMRxAr3mbK20teLvoqslw9C42YEIfRpZeHgxMOb
+         6ApsIBeG2d7MzKrRVaJmM9kkUcJ/usR0ggbN26hxGy7ieBQEqSkfjgHbIcUd2bgYutig
+         Vf2o6mPi6sdh+RnXm068z+/I+oiAL0brztJ733Sm0jcYtAm4yxBDHXvSsf7ydYUfr3Gg
+         puH8wfd/FJfEp0M+o+gwclW16/ogZ1eYljpyPSMlO6HpOGHseTzgnmYEPGni6v8ft/Oy
+         XFxQ==
+X-Gm-Message-State: AOJu0YwNww5C4gv3ee3W5xJWhN/qVadJKBFgrU9uj6DxUEG7fUsGItUO
+	d5s9U378l/xwK2AvtW5qwU+XVQ==
+X-Google-Smtp-Source: AGHT+IEK7RHTFUSPPkQL/tU2WyLa+OefKeSmCxcxvRxKg8e3OQYg6zBnYCJxPZc//BnDg+09Qpik4w==
+X-Received: by 2002:a0d:d703:0:b0:592:9235:4bcc with SMTP id z3-20020a0dd703000000b0059292354bccmr1734255ywd.50.1697533700754;
+        Tue, 17 Oct 2023 02:08:20 -0700 (PDT)
 Received: from localhost (9.184.168.34.bc.googleusercontent.com. [34.168.184.9])
-        by smtp.gmail.com with UTF8SMTPSA id t13-20020a17090ae50d00b00277326038dasm868586pjy.39.2023.10.17.02.08.22
+        by smtp.gmail.com with UTF8SMTPSA id i9-20020a63e449000000b0057c29fec795sm951964pgk.37.2023.10.17.02.08.20
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Oct 2023 02:08:22 -0700 (PDT)
+        Tue, 17 Oct 2023 02:08:20 -0700 (PDT)
 From: jeffxu@chromium.org
 To: akpm@linux-foundation.org,
 	keescook@chromium.org,
@@ -84,9 +84,9 @@ Cc: jeffxu@google.com,
 	dave.hansen@intel.com,
 	luto@kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [RFC PATCH v2 4/8] mseal: Check seal flag for mprotect(2)
-Date: Tue, 17 Oct 2023 09:08:11 +0000
-Message-ID: <20231017090815.1067790-5-jeffxu@chromium.org>
+Subject: [RFC PATCH v2 2/8] mseal: Wire up mseal syscall
+Date: Tue, 17 Oct 2023 09:08:09 +0000
+Message-ID: <20231017090815.1067790-3-jeffxu@chromium.org>
 X-Mailer: git-send-email 2.42.0.655.g421f12c284-goog
 In-Reply-To: <20231017090815.1067790-1-jeffxu@chromium.org>
 References: <20231017090815.1067790-1-jeffxu@chromium.org>
@@ -99,69 +99,228 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
 From: Jeff Xu <jeffxu@google.com>
 
-mprotect(2) changes protection of VMAs in the given address
-range. Sealing will prevent unintended mprotect call.
-
-What this patch does:
-When a mprotect(2) is invoked, if one of its VMAs has MM_SEAL_MPROTECT
-set from previous mseal(2) call, this mprotect(2) will fail, without
-any VMA modified.
-
-This patch is based on following:
-1. do_mprotect_pkey() currently called in two places:
-SYSCALL_DEFINE3(mprotect,...)
-SYSCALL_DEFINE4(pkey_mprotect, ...)
-and not in any other places, therefore omit changing the signature of
-do_mprotect_pkey(), i.e. not passing checkSeals flag.
-
-2. In do_mprotect_pkey(), calls can_modify_mm() before any
-update is made on the VMAs.
+Wire up mseal syscall for all architectures.
 
 Signed-off-by: Jeff Xu <jeffxu@google.com>
 ---
- mm/mprotect.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ arch/alpha/kernel/syscalls/syscall.tbl      | 1 +
+ arch/arm/tools/syscall.tbl                  | 1 +
+ arch/arm64/include/asm/unistd.h             | 2 +-
+ arch/arm64/include/asm/unistd32.h           | 2 ++
+ arch/ia64/kernel/syscalls/syscall.tbl       | 1 +
+ arch/m68k/kernel/syscalls/syscall.tbl       | 1 +
+ arch/microblaze/kernel/syscalls/syscall.tbl | 1 +
+ arch/mips/kernel/syscalls/syscall_n32.tbl   | 1 +
+ arch/mips/kernel/syscalls/syscall_n64.tbl   | 1 +
+ arch/mips/kernel/syscalls/syscall_o32.tbl   | 1 +
+ arch/parisc/kernel/syscalls/syscall.tbl     | 1 +
+ arch/powerpc/kernel/syscalls/syscall.tbl    | 1 +
+ arch/s390/kernel/syscalls/syscall.tbl       | 1 +
+ arch/sh/kernel/syscalls/syscall.tbl         | 1 +
+ arch/sparc/kernel/syscalls/syscall.tbl      | 1 +
+ arch/x86/entry/syscalls/syscall_32.tbl      | 1 +
+ arch/x86/entry/syscalls/syscall_64.tbl      | 1 +
+ arch/xtensa/kernel/syscalls/syscall.tbl     | 1 +
+ include/uapi/asm-generic/unistd.h           | 5 ++++-
+ 19 files changed, 23 insertions(+), 2 deletions(-)
 
-diff --git a/mm/mprotect.c b/mm/mprotect.c
-index 130db91d3a8c..6321c4d0aa3f 100644
---- a/mm/mprotect.c
-+++ b/mm/mprotect.c
-@@ -32,6 +32,7 @@
- #include <linux/sched/sysctl.h>
- #include <linux/userfaultfd_k.h>
- #include <linux/memory-tiers.h>
-+#include <uapi/linux/mman.h>
- #include <asm/cacheflush.h>
- #include <asm/mmu_context.h>
- #include <asm/tlbflush.h>
-@@ -753,6 +754,20 @@ static int do_mprotect_pkey(unsigned long start, size_t len,
- 		}
- 	}
+diff --git a/arch/alpha/kernel/syscalls/syscall.tbl b/arch/alpha/kernel/syscalls/syscall.tbl
+index ad37569d0507..b5847d53102a 100644
+--- a/arch/alpha/kernel/syscalls/syscall.tbl
++++ b/arch/alpha/kernel/syscalls/syscall.tbl
+@@ -492,3 +492,4 @@
+ 560	common	set_mempolicy_home_node		sys_ni_syscall
+ 561	common	cachestat			sys_cachestat
+ 562	common	fchmodat2			sys_fchmodat2
++563	common  mseal				sys_mseal
+diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
+index c572d6c3dee0..b50c5ca5047d 100644
+--- a/arch/arm/tools/syscall.tbl
++++ b/arch/arm/tools/syscall.tbl
+@@ -466,3 +466,4 @@
+ 450	common	set_mempolicy_home_node		sys_set_mempolicy_home_node
+ 451	common	cachestat			sys_cachestat
+ 452	common	fchmodat2			sys_fchmodat2
++453	common	mseal				sys_mseal
+diff --git a/arch/arm64/include/asm/unistd.h b/arch/arm64/include/asm/unistd.h
+index bd77253b62e0..6a28fb91b85d 100644
+--- a/arch/arm64/include/asm/unistd.h
++++ b/arch/arm64/include/asm/unistd.h
+@@ -39,7 +39,7 @@
+ #define __ARM_NR_compat_set_tls		(__ARM_NR_COMPAT_BASE + 5)
+ #define __ARM_NR_COMPAT_END		(__ARM_NR_COMPAT_BASE + 0x800)
  
-+       /*
-+	* do_mprotect_pkey() currently called from two places:
-+	* SYSCALL_DEFINE3(mprotect,...)
-+	* SYSCALL_DEFINE4(pkey_mprotect, ...)
-+	* and not from other places.
-+	* Therefore, omit changing the signature of do_mprotect_pkey().
-+	* Otherwise, we might need to add checkSeals and pass it
-+	* from all callers of do_mprotect_pkey().
-+	*/
-+	if (!can_modify_mm(current->mm, start, end, MM_SEAL_MPROTECT)) {
-+		error = -EACCES;
-+		goto out;
-+	}
+-#define __NR_compat_syscalls		453
++#define __NR_compat_syscalls		454
+ #endif
+ 
+ #define __ARCH_WANT_SYS_CLONE
+diff --git a/arch/arm64/include/asm/unistd32.h b/arch/arm64/include/asm/unistd32.h
+index 78b68311ec81..1e9b3c098a8e 100644
+--- a/arch/arm64/include/asm/unistd32.h
++++ b/arch/arm64/include/asm/unistd32.h
+@@ -911,6 +911,8 @@ __SYSCALL(__NR_set_mempolicy_home_node, sys_set_mempolicy_home_node)
+ __SYSCALL(__NR_cachestat, sys_cachestat)
+ #define __NR_fchmodat2 452
+ __SYSCALL(__NR_fchmodat2, sys_fchmodat2)
++#define __NR_mseal 453
++__SYSCALL(__NR_mseal, sys_mseal)
+ 
+ /*
+  * Please add new compat syscalls above this comment and update
+diff --git a/arch/ia64/kernel/syscalls/syscall.tbl b/arch/ia64/kernel/syscalls/syscall.tbl
+index 83d8609aec03..babe34d221ee 100644
+--- a/arch/ia64/kernel/syscalls/syscall.tbl
++++ b/arch/ia64/kernel/syscalls/syscall.tbl
+@@ -373,3 +373,4 @@
+ 450	common	set_mempolicy_home_node		sys_set_mempolicy_home_node
+ 451	common	cachestat			sys_cachestat
+ 452	common	fchmodat2			sys_fchmodat2
++453	common	mseal 				sys_mseal
+diff --git a/arch/m68k/kernel/syscalls/syscall.tbl b/arch/m68k/kernel/syscalls/syscall.tbl
+index 259ceb125367..27cd3f7dbd5e 100644
+--- a/arch/m68k/kernel/syscalls/syscall.tbl
++++ b/arch/m68k/kernel/syscalls/syscall.tbl
+@@ -452,3 +452,4 @@
+ 450	common	set_mempolicy_home_node		sys_set_mempolicy_home_node
+ 451	common	cachestat			sys_cachestat
+ 452	common	fchmodat2			sys_fchmodat2
++453	common	mseal				sys_mseal
+diff --git a/arch/microblaze/kernel/syscalls/syscall.tbl b/arch/microblaze/kernel/syscalls/syscall.tbl
+index a3798c2637fd..e49861f7c61f 100644
+--- a/arch/microblaze/kernel/syscalls/syscall.tbl
++++ b/arch/microblaze/kernel/syscalls/syscall.tbl
+@@ -458,3 +458,4 @@
+ 450	common	set_mempolicy_home_node		sys_set_mempolicy_home_node
+ 451	common	cachestat			sys_cachestat
+ 452	common	fchmodat2			sys_fchmodat2
++453	common	mseal				sys_mseal
+diff --git a/arch/mips/kernel/syscalls/syscall_n32.tbl b/arch/mips/kernel/syscalls/syscall_n32.tbl
+index 152034b8e0a0..78d15010cd77 100644
+--- a/arch/mips/kernel/syscalls/syscall_n32.tbl
++++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
+@@ -391,3 +391,4 @@
+ 450	n32	set_mempolicy_home_node		sys_set_mempolicy_home_node
+ 451	n32	cachestat			sys_cachestat
+ 452	n32	fchmodat2			sys_fchmodat2
++453	n32	mseal				sys_mseal
+diff --git a/arch/mips/kernel/syscalls/syscall_n64.tbl b/arch/mips/kernel/syscalls/syscall_n64.tbl
+index cb5e757f6621..813614fedb72 100644
+--- a/arch/mips/kernel/syscalls/syscall_n64.tbl
++++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
+@@ -367,3 +367,4 @@
+ 450	common	set_mempolicy_home_node		sys_set_mempolicy_home_node
+ 451	n64	cachestat			sys_cachestat
+ 452	n64	fchmodat2			sys_fchmodat2
++453	n64	mseal				sys_mseal
+diff --git a/arch/mips/kernel/syscalls/syscall_o32.tbl b/arch/mips/kernel/syscalls/syscall_o32.tbl
+index 1a646813afdc..01d88d3a6f3e 100644
+--- a/arch/mips/kernel/syscalls/syscall_o32.tbl
++++ b/arch/mips/kernel/syscalls/syscall_o32.tbl
+@@ -440,3 +440,4 @@
+ 450	o32	set_mempolicy_home_node		sys_set_mempolicy_home_node
+ 451	o32	cachestat			sys_cachestat
+ 452	o32	fchmodat2			sys_fchmodat2
++453	o32	mseal				sys_mseal
+diff --git a/arch/parisc/kernel/syscalls/syscall.tbl b/arch/parisc/kernel/syscalls/syscall.tbl
+index e97c175b56f9..d52d08f0a1ea 100644
+--- a/arch/parisc/kernel/syscalls/syscall.tbl
++++ b/arch/parisc/kernel/syscalls/syscall.tbl
+@@ -451,3 +451,4 @@
+ 450	common	set_mempolicy_home_node		sys_set_mempolicy_home_node
+ 451	common	cachestat			sys_cachestat
+ 452	common	fchmodat2			sys_fchmodat2
++453	common	mseal				sys_mseal
+diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
+index 20e50586e8a2..d38deba73a7b 100644
+--- a/arch/powerpc/kernel/syscalls/syscall.tbl
++++ b/arch/powerpc/kernel/syscalls/syscall.tbl
+@@ -539,3 +539,4 @@
+ 450 	nospu	set_mempolicy_home_node		sys_set_mempolicy_home_node
+ 451	common	cachestat			sys_cachestat
+ 452	common	fchmodat2			sys_fchmodat2
++453	common	mseal				sys_mseal
+diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
+index 0122cc156952..cf3243c2978b 100644
+--- a/arch/s390/kernel/syscalls/syscall.tbl
++++ b/arch/s390/kernel/syscalls/syscall.tbl
+@@ -455,3 +455,4 @@
+ 450  common	set_mempolicy_home_node	sys_set_mempolicy_home_node	sys_set_mempolicy_home_node
+ 451  common	cachestat		sys_cachestat			sys_cachestat
+ 452  common	fchmodat2		sys_fchmodat2			sys_fchmodat2
++453  common	mseal			sys_mseal			sys_mseal
+diff --git a/arch/sh/kernel/syscalls/syscall.tbl b/arch/sh/kernel/syscalls/syscall.tbl
+index e90d585c4d3e..76f1cd33adaa 100644
+--- a/arch/sh/kernel/syscalls/syscall.tbl
++++ b/arch/sh/kernel/syscalls/syscall.tbl
+@@ -455,3 +455,4 @@
+ 450	common	set_mempolicy_home_node		sys_set_mempolicy_home_node
+ 451	common	cachestat			sys_cachestat
+ 452	common	fchmodat2			sys_fchmodat2
++453	common	mseal				sys_mseal
+diff --git a/arch/sparc/kernel/syscalls/syscall.tbl b/arch/sparc/kernel/syscalls/syscall.tbl
+index 4ed06c71c43f..d7728695d780 100644
+--- a/arch/sparc/kernel/syscalls/syscall.tbl
++++ b/arch/sparc/kernel/syscalls/syscall.tbl
+@@ -498,3 +498,4 @@
+ 450	common	set_mempolicy_home_node		sys_set_mempolicy_home_node
+ 451	common	cachestat			sys_cachestat
+ 452	common	fchmodat2			sys_fchmodat2
++453	common	mseal 				sys_mseal
+diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
+index 2d0b1bd866ea..6d4cc386df22 100644
+--- a/arch/x86/entry/syscalls/syscall_32.tbl
++++ b/arch/x86/entry/syscalls/syscall_32.tbl
+@@ -457,3 +457,4 @@
+ 450	i386	set_mempolicy_home_node		sys_set_mempolicy_home_node
+ 451	i386	cachestat		sys_cachestat
+ 452	i386	fchmodat2		sys_fchmodat2
++453	i386	mseal 			sys_mseal
+diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
+index 814768249eae..73dcfc43d921 100644
+--- a/arch/x86/entry/syscalls/syscall_64.tbl
++++ b/arch/x86/entry/syscalls/syscall_64.tbl
+@@ -374,6 +374,7 @@
+ 450	common	set_mempolicy_home_node	sys_set_mempolicy_home_node
+ 451	common	cachestat		sys_cachestat
+ 452	common	fchmodat2		sys_fchmodat2
++453 	common  mseal			sys_mseal
+ 
+ #
+ # Due to a historical design error, certain syscalls are numbered differently
+diff --git a/arch/xtensa/kernel/syscalls/syscall.tbl b/arch/xtensa/kernel/syscalls/syscall.tbl
+index fc1a4f3c81d9..e8fd3bf35d73 100644
+--- a/arch/xtensa/kernel/syscalls/syscall.tbl
++++ b/arch/xtensa/kernel/syscalls/syscall.tbl
+@@ -423,3 +423,4 @@
+ 450	common	set_mempolicy_home_node		sys_set_mempolicy_home_node
+ 451	common	cachestat			sys_cachestat
+ 452	common	fchmodat2			sys_fchmodat2
++453	common	mseal 				sys_mseal
+diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
+index abe087c53b4b..0c945a798208 100644
+--- a/include/uapi/asm-generic/unistd.h
++++ b/include/uapi/asm-generic/unistd.h
+@@ -823,8 +823,11 @@ __SYSCALL(__NR_cachestat, sys_cachestat)
+ #define __NR_fchmodat2 452
+ __SYSCALL(__NR_fchmodat2, sys_fchmodat2)
+ 
++#define __NR_mseal 453
++__SYSCALL(__NR_mseal, sys_mseal)
 +
- 	prev = vma_prev(&vmi);
- 	if (start > vma->vm_start)
- 		prev = vma;
+ #undef __NR_syscalls
+-#define __NR_syscalls 453
++#define __NR_syscalls 454
+ 
+ /*
+  * 32 bit systems traditionally used different
 -- 
 2.42.0.655.g421f12c284-goog
 
