@@ -1,76 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A47692D05C
-	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 16:54:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EFEF2D024
+	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 16:55:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G9e4tcB0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F3C1C433C8;
-	Tue, 17 Oct 2023 16:54:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697561656;
-	bh=a13SyTChAbXtSyLKA3Qytu86LSlP+mbJIA1znGRGbho=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=G9e4tcB0/TgPX8wK2gT0kCasihjQQyColUwNmjQr8L2RQxJfX2hI/rK0ggsKkJkun
-	 Whj6/zbd8VxTKfc/xfAcqBz8Pfyzf4JyNEJP3ZnGIT5hDYV6UgB6UpdrOv0B4eshkF
-	 Ebl12GnCuBAb60Sn3yZNAts68NGmf5jAVmhJSO1VNur7j0CkmQYIqRbI4V93fOdxem
-	 D7JXAx8S2PpTLX79eQOM7ZaEcgDAHzcHbxf0v1/tauwoDZcEtzejxoF/q9H2vw6aiF
-	 pZqvCpyrBULgIsBkJyiKyRYRtVxn8AFA2HSUryb9agMeu44RZGCNDrnJdMUfVbPD7S
-	 25PdFFhTsB4UQ==
-From: Kalle Valo <kvalo@kernel.org>
-To: Franky Lin <franky.lin@broadcom.com>
-Cc: Justin Stitt <justinstitt@google.com>,  Arend van Spriel
- <aspriel@gmail.com>,  Hante Meuleman <hante.meuleman@broadcom.com>,
-  linux-wireless@vger.kernel.org,  brcm80211-dev-list.pdl@broadcom.com,
-  SHA-cyfmac-dev-list@infineon.com,  linux-kernel@vger.kernel.org,
-  linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] brcmfmac: replace deprecated strncpy
-References: <20231016-strncpy-drivers-net-wireless-broadcom-brcm80211-brcmfmac-cfg80211-c-v2-1-6c7567e1d3b8@google.com>
-	<CA+8PC_cZbchz-i0Wfhr1rE5M-xqUVdQZce94TowU=yqOynDBKg@mail.gmail.com>
-Date: Tue, 17 Oct 2023 19:54:11 +0300
-In-Reply-To: <CA+8PC_cZbchz-i0Wfhr1rE5M-xqUVdQZce94TowU=yqOynDBKg@mail.gmail.com>
-	(Franky Lin's message of "Tue, 17 Oct 2023 09:48:51 -0700")
-Message-ID: <875y352nrg.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="C95fucLX"
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A117A4
+	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 09:55:15 -0700 (PDT)
+Received: by mail-lf1-x12b.google.com with SMTP id 2adb3069b0e04-504a7f9204eso7739172e87.3
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 09:55:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1697561713; x=1698166513; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=K1bTNFT87lr+HVy46GvlRl8WsLt2mWlRGa4YdiUNjuo=;
+        b=C95fucLXDJ79V/XKh6ttBIPWEEXVfV8RilQN/2vkEUAhKwGV28ZkrLTlFMRfz4zvDb
+         lj9/aAqcGmMOVuklTGYFEPLVkIXFR5NaRMGcFW+YpY20iCZ5+u+/ipqkMXAwknp7J2/I
+         JkyLi4gIgFLRSWZemhuigpIbAlV8BW2fpXIFs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697561713; x=1698166513;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=K1bTNFT87lr+HVy46GvlRl8WsLt2mWlRGa4YdiUNjuo=;
+        b=G9efGa0o7j55RfnP7T0ZIVCEyX7cvBuC/tXnceKGmAL0emp2TiLHvYOq5QmBMUJEPU
+         fNqR2HO3DM7DCClIathYhaRS1xYxbJboLg4NpfRGOtIsAXAmzgpIwpv8KBD1duz+lulS
+         nbC6GuakHL6II6vlmTWXV7j8R2zUcA29wvaOKTusWdivNe5tNy31C4Wn/ds0Jtiq8jfs
+         rmixVcIwM9TyBpWAhAeaDQxmnNB5n2Ncu3zdK+JGDTaw9VdFBluNCJPANbYJr2jCd39O
+         vN8UH4MX4ILs2ZjHj4BNd2JwHaYZEPCCGKNg8ixD1Qj7aX3kztaC2iTrAUx4MBxviAy/
+         e66A==
+X-Gm-Message-State: AOJu0Yx+k8bk4gjmQyr9FKecsHArCfF9mgvfoCILvBaAaG1KliTmJ9RF
+	9zchBo00qqa4mfFRKVFmCxSxWKYsWJ0qlBY5ExPTGjPc
+X-Google-Smtp-Source: AGHT+IH+z82iSlcdRXIZim90Nx4GW+ig4U+tdzjiVIgRHUiYM2PvelBbfw2JjvQbgNCxfHZPFa7SvQ==
+X-Received: by 2002:a05:6512:3136:b0:4fd:c715:5667 with SMTP id p22-20020a056512313600b004fdc7155667mr1767102lfd.20.1697561713114;
+        Tue, 17 Oct 2023 09:55:13 -0700 (PDT)
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
+        by smtp.gmail.com with ESMTPSA id t8-20020ac243a8000000b005009b4d5c14sm344794lfl.265.2023.10.17.09.55.12
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Oct 2023 09:55:12 -0700 (PDT)
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2c523ac38fbso31671201fa.0
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 09:55:12 -0700 (PDT)
+X-Received: by 2002:a17:907:3cd:b0:9c4:b8c9:1bf2 with SMTP id
+ su13-20020a17090703cd00b009c4b8c91bf2mr1497085ejb.60.1697561692367; Tue, 17
+ Oct 2023 09:54:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <20231017090815.1067790-1-jeffxu@chromium.org> <20231017090815.1067790-6-jeffxu@chromium.org>
+In-Reply-To: <20231017090815.1067790-6-jeffxu@chromium.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 17 Oct 2023 09:54:35 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgwdHzOY_mT3y9gDHSMXZ8Xb5OYrK40-u9uRXLv25fNPA@mail.gmail.com>
+Message-ID: <CAHk-=wgwdHzOY_mT3y9gDHSMXZ8Xb5OYrK40-u9uRXLv25fNPA@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 5/8] mseal: Check seal flag for munmap(2)
+To: jeffxu@chromium.org
+Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com, 
+	sroettger@google.com, willy@infradead.org, gregkh@linuxfoundation.org, 
+	jeffxu@google.com, jorgelo@chromium.org, groeck@chromium.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-mm@kvack.org, surenb@google.com, alex.sierra@amd.com, 
+	apopple@nvidia.com, aneesh.kumar@linux.ibm.com, axelrasmussen@google.com, 
+	ben@decadent.org.uk, catalin.marinas@arm.com, david@redhat.com, 
+	dwmw@amazon.co.uk, ying.huang@intel.com, hughd@google.com, joey.gouly@arm.com, 
+	corbet@lwn.net, wangkefeng.wang@huawei.com, Liam.Howlett@oracle.com, 
+	lstoakes@gmail.com, mawupeng1@huawei.com, linmiaohe@huawei.com, 
+	namit@vmware.com, peterx@redhat.com, peterz@infradead.org, 
+	ryan.roberts@arm.com, shr@devkernel.io, vbabka@suse.cz, 
+	xiujianfeng@huawei.com, yu.ma@intel.com, zhangpeng362@huawei.com, 
+	dave.hansen@intel.com, luto@kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-Franky Lin <franky.lin@broadcom.com> writes:
-
->  Hi Justin,
+On Tue, 17 Oct 2023 at 02:08, <jeffxu@chromium.org> wrote:
 >
-> On Mon, Oct 16, 2023 at 3:14=E2=80=AFPM Justin Stitt <justinstitt@google.=
-com> wrote:
->>
->> strncpy() is deprecated for use on NUL-terminated destination strings
->> [1] and as such we should prefer more robust and less ambiguous string
->> interfaces.
->>
->> This patch replaces multiple strncpy uses. For easier reading, I'll list
->> each destination buffer and mention whether it requires either
->> NUL-termination or NUL-padding.
->
-> Kudos to the detailed analysis of each instance. One thing I can think
-> of to make this better is to split it into smaller patches so if any
-> regression is observed, only the specific code causing it needs to be
-> reverted. Maybe instance 2, 3, 4 can be handled in one patch since
-> they are touching the country code in one file. The other instances
-> each can be an individual patch.
->
-> The "brcmfmac" in the title is not accurate. The change touches both
-> brcmfmac and brcmsmac. So "brcm80211" would be more appropriate.
+> Of all the call paths that call into do_vmi_munmap(),
+> this is the only place where checkSeals = MM_SEAL_MUNMAP.
+> The rest has checkSeals = 0.
 
-Please also add "wifi:" to the title, see the wiki link below for more
-info.
+Why?
 
---=20
-https://patchwork.kernel.org/project/linux-wireless/list/
+None of this makes sense.
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
-hes
+So you say "we can't munmap in this *one* place, but all others ignore
+the sealing".
+
+Crazy.
+
+             Linus
