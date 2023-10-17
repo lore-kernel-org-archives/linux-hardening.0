@@ -1,77 +1,192 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE322E3ED
-	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 23:48:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70D82E3ED
+	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 23:56:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="IKE+gyGb"
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5A9193;
-	Tue, 17 Oct 2023 16:48:03 -0700 (PDT)
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39HNT8Eh018343;
-	Tue, 17 Oct 2023 23:47:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=DJoVEfqFMIqV1HS5dvMlwjU/EVOBb+1dppBYz/22x64=;
- b=IKE+gyGbd/y5V4x/BLos/pmADc6/9nAEs95JGJJd9hKQEnMl/FvYJv0tFK+w+IH6jjaW
- 9ypoBxSebCAgULnSYdpAGJfehhahF/ttEzX+gnSI3dAUx0wrgHmKWaLgYX4h7f0DW71H
- 1F1f8xgI7X1zx2HztX/v7pWbiamcKh7I81nlGYk0g5DaTbEggX/hzoft1WHBepUz1gf6
- YHQ+lryCk2+dARpysI6qnUiaxHsLsWDMxIL6om14pIHGA6MEIVOk12PyxGSP3FoSRcA9
- AMbs2dd0v0Y2V6FsKZVxIStIrMlA3a16+RKZS4W3nftegDL5acZMiVAKHqNT1eFly40v Cw== 
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ts85fuwk7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 17 Oct 2023 23:47:58 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 39HNlvbi004065
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 17 Oct 2023 23:47:57 GMT
-Received: from [10.111.183.229] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.39; Tue, 17 Oct
- 2023 16:47:57 -0700
-Message-ID: <36928c4f-3353-42c7-a42f-2bc31e1eee89@quicinc.com>
-Date: Tue, 17 Oct 2023 16:47:56 -0700
+	dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b="SLsc7qmI"
+Received: from cvs.openbsd.org (cvs.openbsd.org [199.185.137.3])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16B8C90;
+	Tue, 17 Oct 2023 16:56:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=selector1; bh=mQNHZDPQvu
+	ASJotD/Odo+8JawxYjAz7b0WRb1xLoD38=; h=date:references:in-reply-to:
+	subject:cc:to:from; d=openbsd.org; b=SLsc7qmIriF/7tGRoVuFVjym+4yzHDcvm
+	2WYSeVfK5NvQoQHwxNjVKEVEFeqtPqLcFRtrNqprVXUEN19o1IoqL3nLWCiVAFKfTPMCnh
+	gzppXtIR8ioKMjzfQjsCxG92iPn3mUIQ3mRGdLMD40TmbICajARhcH8/jVe7zmTmvFIBZh
+	1Un0sWpK+8HVju+PDUNaT8DYdAdCoWLOg2fLc8yk1aYV+TJYqjrHflepmmet5wCuy9CCVy
+	KvUQHZkA+jk9cfaeJzFAD0+6BfmA5ThqEvZoElGxyF4fcSw6O7Ti5gFQf5grAvrvqI4Xj4
+	dDCefAMtLy4K1vH5F59NJ7ZeXGeJw==
+Received: from cvs.openbsd.org (localhost [127.0.0.1])
+	by cvs.openbsd.org (OpenSMTPD) with ESMTP id d383b937;
+	Tue, 17 Oct 2023 17:56:55 -0600 (MDT)
+From: "Theo de Raadt" <deraadt@openbsd.org>
+To: Jeff Xu <jeffxu@google.com>
+cc: Linus Torvalds <torvalds@linux-foundation.org>, jeffxu@chromium.org,
+    akpm@linux-foundation.org, keescook@chromium.org,
+    sroettger@google.com, jorgelo@chromium.org, groeck@chromium.org,
+    linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+    linux-mm@kvack.org, jannh@google.com, surenb@google.com,
+    alex.sierra@amd.com, apopple@nvidia.com, aneesh.kumar@linux.ibm.com,
+    axelrasmussen@google.com, ben@decadent.org.uk,
+    catalin.marinas@arm.com, david@redhat.com, dwmw@amazon.co.uk,
+    ying.huang@intel.com, hughd@google.com, joey.gouly@arm.com,
+    corbet@lwn.net, wangkefeng.wang@huawei.com, Liam.Howlett@oracle.com,
+    lstoakes@gmail.com, willy@infradead.org, mawupeng1@huawei.com,
+    linmiaohe@huawei.com, namit@vmware.com, peterx@redhat.com,
+    peterz@infradead.org, ryan.roberts@arm.com, shr@devkernel.io,
+    vbabka@suse.cz, xiujianfeng@huawei.com, yu.ma@intel.com,
+    zhangpeng362@huawei.com, dave.hansen@intel.com, luto@kernel.org,
+    linux-hardening@vger.kernel.org
+Subject: Re: [RFC PATCH v1 0/8] Introduce mseal() syscall
+In-reply-to: <CALmYWFs81T=XnT=AXQTo0+9FXo=OBAV_4rrYPSn9-16O-gBTZg@mail.gmail.com>
+References: <20231016143828.647848-1-jeffxu@chromium.org> <CAHk-=whFZoap+DBTYvJx6ohqPwn11Puzh7q4huFWDX9vBwXHgg@mail.gmail.com> <CALmYWFtTDAb_kpZdAe_xspqwNgK1NWJmjTxaTC=jDEMzfe297Q@mail.gmail.com> <CAHk-=wj87GMTH=5901ob=SjQqegAm2JYBE7E4J7skJzE64U-wQ@mail.gmail.com> <55960.1697566804@cvs.openbsd.org> <CALmYWFs81T=XnT=AXQTo0+9FXo=OBAV_4rrYPSn9-16O-gBTZg@mail.gmail.com>
+Comments: In-reply-to Jeff Xu <jeffxu@google.com>
+   message dated "Tue, 17 Oct 2023 16:01:13 -0700."
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] wl18xx: replace deprecated strncpy with strscpy
-Content-Language: en-US
-To: Justin Stitt <justinstitt@google.com>, Kalle Valo <kvalo@kernel.org>
-CC: <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>
-References: <20231017-strncpy-drivers-net-wireless-ti-wl18xx-main-c-v1-1-ed5322ec8068@google.com>
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-In-Reply-To: <20231017-strncpy-drivers-net-wireless-ti-wl18xx-main-c-v1-1-ed5322ec8068@google.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.49.16.6]
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: ---xUCgFdwsCS9tW5717FXPkhoNc1glg
-X-Proofpoint-GUID: ---xUCgFdwsCS9tW5717FXPkhoNc1glg
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-17_07,2023-10-17_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
- priorityscore=1501 phishscore=0 malwarescore=0 spamscore=0 mlxscore=0
- bulkscore=0 impostorscore=0 suspectscore=0 mlxlogscore=378
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2309180000 definitions=main-2310170201
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <44926.1697587015.1@cvs.openbsd.org>
+Date: Tue, 17 Oct 2023 17:56:55 -0600
+Message-ID: <95482.1697587015@cvs.openbsd.org>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+	SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-this patch (and a few others in your recent set) are missing the wifi: 
-prefix. this prefix is a relatively new addition and would not show up 
-in the history of some of these ancient drivers you are touching :)
+Jeff Xu <jeffxu@google.com> wrote:
+
+> May I ask, for BSD's implementation of immutable(), do you cover
+> things such as mlock(),
+> madvice() ? or just the protection bit (WRX) + remap() + unmap().
+
+It only prevents removal of the mapping, placement of a replacement
+mapping, or changing the existing permissions.  If one page in the
+existing sub-region is marked immutable, the whole operation fails with
+EPERM.
+
+Those are the only user-visible aspects that an attacker cares about to
+utilize in this area.
+
+mlock() and madvise() deal with the physical memory handling underneath
+the VA.  They have nothing to do with how attack code might manipulate
+the VA address space inside a program to convert a series of dead-end
+approaches into a succesfull escalation strategy.
+
+[It would be very long conversation to explain where and how this has
+been utilized to make an attack succesfull]
+
+> In other words:
+> Is BSD's definition of immutable equivalent to
+> MM_SEAL_MPROTECT|MM_SEAL_MUNMAP|MM_SEAL_MREMAP|MM_SEAL_MMAP, of this patch set ?
+
+I can't compare it to your subsystem, because I completely fail to
+understand the cause or benefit of all the complexity.
+
+I think I've explained what mimmutable() is in extremely simple terms.
+
+And I don't understand else you are trying to do anything beyond what
+mimmutable() offers.  It seems like this is inventing additional
+solutions without proof that any of them are necessary to solve the
+specific problem that is known.
+
+> I hesitate to introduce the concept of immutable into linux because I don't know
+> all the scenarios present in linux where VMAs's metadata can be
+> modified.
+
+Good grief.  It seems obvious if you want to lock the change-behaviour
+of an object (the object in this case being a VA sub-region, there is a
+datastructure for that, in OpenBSD it is called an "entry"), then you
+put a flag in that object's data-structure and you simply check the flag
+everytime a change-operation is attempted.  It is a flag which gets set,
+and checked.  Nothing ever clears it (except address space teardown).
+
+This flag must be put on the data structure that manages VA sub-ranges.
+
+In our case when a prot/mapping operation reaches low-level code that
+will want to change an "entry", we notice it is not allowed and simply
+percolate EPERM up through the layers.
+
+> There could be quite a few things we still need to deal with, to
+> completely block the possibility,
+> e.g. malicious code attempting to write to a RO memory
+
+What?!  writes to RO memory are blocked by the permission bits.
+
+> or change RW memory to RWX.
+
+In our case that is blocked by W^X policy.
+
+But if the region is marked mimmutable, then that's another reason you cannot
+change RW to RWX.  It seems so off-topic, to talk about writes to RO memory.
+I get a feeling you are a bit lost.
+
+mimmutable() is not about permissions, but about locking permissions.
+- You can't change the permissions of the address space region.
+- You cannot map a replacement object at the location instead (especially
+  with different permission).
+- You cannot unmap at that location (which you would do if you wanted to
+  map a new object, with a different permission).
+
+All 3 of these scenarios are identical.  No regular code performs these 3
+operations on regions of the address space which we mark immutable.
+
+There is nothing more to mimmutable in the VM layer.  The hard work is
+writing code in execve() and ld.so which will decide which objects can
+be marked immutable automatically, so that programs don't do this to
+themselves.
+
+I'm aware of where this simple piece fits in.  It does not solve all
+problems, it is a very narrow change to impact a problem which only
+high-value targets will ever face (like chrome).
+
+But I think you don't understand the purpose of this mechanism.
+
+> If, as part of immutable, I also block madvice(), mlock(), which also updates
+> VMA's metadata, so by definition, I could.  What if the user wants the
+> features in
+> madvice() and at the same time, also wants their .text protected ?
+
+I have no idea what you are talking about.  None of those things relate
+to the access permission of the memory the user sees, and therefore none
+of them are in the attack surface profile which is being prevented.
+
+Meaning, we allow madvise() and mlock() and mphysicalquantummemory() because
+those relate to the physical storage and not the VA permission model.
+
+> Also, if linux introduces a new syscall that depends on a new metadata of VMA,
+> say msecret(), (for discussion purpose), should immutable
+> automatically support that ?
+
+How about the future makingexcuses() system call?
+
+I don't think you understand the problem space well enough to come up with
+your own solution for it.  I spent a year on this, and ship a complete system
+using it.  You are asking such simplistic questions above it shocks me.
+
+Maybe read the LWN article;
+
+    https://lwn.net/Articles/915640/
+
+> Without those questions answered, I couldn't choose the route of
+> immutable() yet.
+
+"... so I can clearly not choose the wine in front of you."
+
+If you don't understand what this thing is for, and cannot minimize the
+complexity of this thing, then Linux doesn't need it at all.
+
+I should warn everyone the hard work is not in the VM layer, but in
+ld.so -- deciding which parts of the image to make immutable, and when.
+It is also possible to make some segments immutable directly in execve()
+-- but in both cases you better have a really good grasp on RELRO
+executable layout or will make too many pieces immutable...
+
+I am pretty sure Linux will never get as far as we got. Even our main
+stacks are marked immutable, but in Linux that would conflict with glibc
+ld.so mprotecting RWX the stack if you dlopen() a shared library with
+GNUSTACK, a very bad idea which needs a different fight...
