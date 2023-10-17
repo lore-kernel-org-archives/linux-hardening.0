@@ -1,152 +1,238 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 064C043102
-	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 22:52:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C728D28DD2
+	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 23:01:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="e4Y2EOcW"
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 828EDC6;
-	Tue, 17 Oct 2023 15:52:05 -0700 (PDT)
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39HLmVON002294;
-	Tue, 17 Oct 2023 22:52:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=q9KRRRFXAQnEA4UviYcvdtUt2o4h6YZ/UCm4wZOGuzw=;
- b=e4Y2EOcWDAv8EDEOUOa2o0/OfO7pxUcPr13eSghkk2lq4YFw+TVIRMQUROlgLOAUUXPI
- T7LDsSs1OrwDoTYOb1VZHWqDyEF2dYnFYb8pbqdiTWft0/C9surDHRr94Sxi1Bycl+Xj
- ZfaJk9CUawdZIVEykAOD9oU+0bni+0er9IPr+fdNt/ruJKBhlb4ZKiw5EScaT0Z0p9/O
- uUyPzhdykXhNYzQAV47TIz7b/xl/TpwwGdTBeWHcfYcMSjX7zVoEWBqd4KDiZShDG0c7
- zcRFaSmlcVpnjjQ7vWJ6bsqgjWUiP/Xfp+lBqFw0C/2vzywy3tQFCdoFUaQNhD1MR4Qo jg== 
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3tsv0v160j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 17 Oct 2023 22:52:00 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 39HMq0Mh019625
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 17 Oct 2023 22:52:00 GMT
-Received: from [10.111.183.229] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.39; Tue, 17 Oct
- 2023 15:51:59 -0700
-Message-ID: <84ae63d1-671a-48b3-836b-7a12da54aa10@quicinc.com>
-Date: Tue, 17 Oct 2023 15:51:58 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A7yO6MSc"
+Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF46C123
+	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 16:01:52 -0700 (PDT)
+Received: by mail-qt1-x833.google.com with SMTP id d75a77b69052e-41b813f0a29so65031cf.0
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 16:01:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1697583711; x=1698188511; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ImnM3gTgvQUDZbbKNrv2s4PovNIFWxZGTx+tFBxEKCA=;
+        b=A7yO6MSch9D1Y7KGob8X8JTG8G9ij12MKR7I7utx1DUsTtuuQWiuYuFCPD/qg/hq0E
+         edj2wqPSVvbGNpHCl9278UUmDyxBzdgwkINhWwXbB1lYZ+pTcQbqOWFZLLqF2nbX+8k/
+         j4llB2vEaFCGO5SETUEoIzd6x1zdt4U8wkYTniL8fsrXJ/mAfFWF6igxbRUysywevlBs
+         QhzlhES29vTjn26T6zpTxlwPR0Wdke62227H/gnmSwAqLc4y2MvnRMLGWkEKAXhkKKhw
+         H6ULLh0h55BWIxoPVIGTeuYChQLfhXUY0/w3pfQeW4QLBS7nlyKHB2ltDx8v1Ib+YkWb
+         zcHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697583711; x=1698188511;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ImnM3gTgvQUDZbbKNrv2s4PovNIFWxZGTx+tFBxEKCA=;
+        b=M9JdZarRga/RrnnsMw/3Te1TvKsoCV1Uqs0c1TKgk4+K2gxxvYk9asLphLQp1PjsYS
+         mMXa1NKXqlGDfv5yUBOiBRUDTxmh/fe1pReQuN9cCdaq++QsOXQ8RbZPdfhwiGUm0Zpr
+         oajTsmM1BFfriF/ZABGfgmzZbEh+WNnShIzcgCvZG3atR5513fwWnSWEbeDYP7tcTwux
+         t1z8tENtYj+VrvQT+k5uPlH+KfcyjJ9kdcYhY5ZQ/Z8tpIAWS7qVliOpnwRh12nlFwLe
+         mNQiZ/d01zsT3Cfl3nkp7MS3pEUCur6Aqpv6tLvDta/dVXhX1Ytgjguq7bKlIVnqAH6R
+         1BAA==
+X-Gm-Message-State: AOJu0YwXCovy2rSvmuSoMaI4UaE0a0FypiRUgoQmJ1y7vz5WmJd6Fhbv
+	+HujucKSI2VrxtwFPqJ+t4uVOG+NPmFfWBUGUk/nYw==
+X-Google-Smtp-Source: AGHT+IFRiCphE8SGRZza9wFnaYv5dtjuDGiQxMHSXLNnXD68r7Tsnp6XlmaQHLEDn/NPKGLCG14R2gjFx0iFXzfE8zw=
+X-Received: by 2002:a05:622a:a047:b0:41b:ef8f:dcbc with SMTP id
+ ju7-20020a05622aa04700b0041bef8fdcbcmr149648qtb.0.1697583710994; Tue, 17 Oct
+ 2023 16:01:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] airo: replace deprecated strncpy with strscpy_pad
-Content-Language: en-US
-To: Justin Stitt <justinstitt@google.com>, Kalle Valo <kvalo@kernel.org>
-CC: <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>
-References: <20231017-strncpy-drivers-net-wireless-cisco-airo-c-v1-1-e34d5b3b7e37@google.com>
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-In-Reply-To: <20231017-strncpy-drivers-net-wireless-cisco-airo-c-v1-1-e34d5b3b7e37@google.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.49.16.6]
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: e7YafDeEjwbUi7N0jETZVROMWxZnKvpM
-X-Proofpoint-GUID: e7YafDeEjwbUi7N0jETZVROMWxZnKvpM
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-17_06,2023-10-17_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 malwarescore=0 phishscore=0 mlxscore=0 mlxlogscore=999
- impostorscore=0 bulkscore=0 spamscore=0 lowpriorityscore=0 suspectscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2309180000 definitions=main-2310170193
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20231016143828.647848-1-jeffxu@chromium.org> <CAHk-=whFZoap+DBTYvJx6ohqPwn11Puzh7q4huFWDX9vBwXHgg@mail.gmail.com>
+ <CALmYWFtTDAb_kpZdAe_xspqwNgK1NWJmjTxaTC=jDEMzfe297Q@mail.gmail.com>
+ <CAHk-=wj87GMTH=5901ob=SjQqegAm2JYBE7E4J7skJzE64U-wQ@mail.gmail.com> <55960.1697566804@cvs.openbsd.org>
+In-Reply-To: <55960.1697566804@cvs.openbsd.org>
+From: Jeff Xu <jeffxu@google.com>
+Date: Tue, 17 Oct 2023 16:01:13 -0700
+Message-ID: <CALmYWFs81T=XnT=AXQTo0+9FXo=OBAV_4rrYPSn9-16O-gBTZg@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 0/8] Introduce mseal() syscall
+To: Theo de Raadt <deraadt@openbsd.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, jeffxu@chromium.org, 
+	akpm@linux-foundation.org, keescook@chromium.org, sroettger@google.com, 
+	jorgelo@chromium.org, groeck@chromium.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, jannh@google.com, 
+	surenb@google.com, alex.sierra@amd.com, apopple@nvidia.com, 
+	aneesh.kumar@linux.ibm.com, axelrasmussen@google.com, ben@decadent.org.uk, 
+	catalin.marinas@arm.com, david@redhat.com, dwmw@amazon.co.uk, 
+	ying.huang@intel.com, hughd@google.com, joey.gouly@arm.com, corbet@lwn.net, 
+	wangkefeng.wang@huawei.com, Liam.Howlett@oracle.com, lstoakes@gmail.com, 
+	willy@infradead.org, mawupeng1@huawei.com, linmiaohe@huawei.com, 
+	namit@vmware.com, peterx@redhat.com, peterz@infradead.org, 
+	ryan.roberts@arm.com, shr@devkernel.io, vbabka@suse.cz, 
+	xiujianfeng@huawei.com, yu.ma@intel.com, zhangpeng362@huawei.com, 
+	dave.hansen@intel.com, luto@kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On 10/17/2023 2:12 PM, Justin Stitt wrote:
-> strncpy() is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
-> 
-> `extra` is clearly supposed to be NUL-terminated which is evident by the
-> manual NUL-byte assignment as well as its immediate usage with strlen().
-> 
-> Moreover, let's NUL-pad since there is deliberate effort (48 instances)
-> made elsewhere to zero-out buffers in these getters and setters:
-> 6050 | memset(local->config.nodeName, 0, sizeof(local->config.nodeName));
-> 6130 | memset(local->config.rates, 0, 8);
-> 6139 | memset(local->config.rates, 0, 8);
-> 6414 | memset(key.key, 0, MAX_KEY_SIZE);
-> 6497 | memset(extra, 0, 16);
-> (to be clear, strncpy also NUL-padded -- we are matching that behavior)
-> 
-> Considering the above, a suitable replacement is `strscpy_pad` due to
-> the fact that it guarantees both NUL-termination and NUL-padding on the
-> destination buffer.
-> 
-> Technically, we can now copy one less byte into `extra` as we cannot
-> determine the sizeof `extra` at compile time and the hard-coded value of
-> 16 means that strscpy_pad() will automatically truncate and set the byte
-> at offset 15 to NUL. However, the current code manually sets a
-> NUL-byte at offset 16. If this is an issue, the solution is to change
-> the hard-coded magic number to 17 instead of 16. I didn't do this in
-> this patch because a hard-coded 17 seems bad (even more so than 16).
+On Tue, Oct 17, 2023 at 11:20=E2=80=AFAM Theo de Raadt <deraadt@openbsd.org=
+> wrote:
+>
+> Linus Torvalds <torvalds@linux-foundation.org> wrote:
+>
+> > On Tue, 17 Oct 2023 at 02:08, Jeff Xu <jeffxu@google.com> wrote:
+> > >
+> > > It is probably worth noting that I choose to check one and only
+> > > one sealing type per syscall. i.e. munmap(2) checks
+> > > MM_SEAL_MUNMAP only.
+> >
+> > Yeah, this is wrong.
+> >
+> > It's wrong exactly because other system calls will unmap things too.
+> >
+> > Using mmap() to over-map something will unmap the old one.
+> >
+> > Same goes for mremap() to move over an existing mapping.
+> >
+> > So the whole "do things by the name of the system call" is not workable=
+.
+> >
+> > All that matters is what the system calls *do*, not what their name is.
+>
+> I agree completely...
+>
+> mseal() is a clone of mimmutable(2), but with an extremely
+> over-complicated API based upon dubious arguments.
+>
+> I designed mimmutable(2) [1] in OpenBSD, it took about a year to get all
+> the components working correctly.  There were many intermediate API
+> during development, but in the end the API is simply:
+>
+>      int mimmutable(void *addr, size_t len);
+>
+> The kernel code for mimmutable() traverses the specified VA range.  In
+> that range, it will find unmapped sub-regions (which are are ignored)
+> and mapped sub-regions. For these mapped regions, it does not care what
+> the permissions are, it just marks each sub-region as immutable.
+>
+> Later on, when any VM operation request upon a VA range attempts to
+>       (1) change the permissions
+>       (2) to re-map on top
+>       (3) or dispose of the mapping,
+> that operation is refused with errno EPERM.  We don't care where the
+> request comes from (ie. what system call).  It is a behaviour of the
+> VM system, when asked to act upon a VA sub-range mapping.
+>
+> Very simple semantics.
+>
+> The only case where the immutable marker is ignored is during address spa=
+ce
+> teardown as a result of process termination.
+>
+May I ask, for BSD's implementation of immutable(), do you cover
+things such as mlock(),
+madvice() ? or just the protection bit (WRX) + remap() + unmap().
 
-this function is a wext handler. In wext-core.c we have:
-static const struct iw_ioctl_description standard_ioctl[] = {
-...
-	[IW_IOCTL_IDX(SIOCGIWNICKN)] = {
-		.header_type	= IW_HEADER_TYPE_POINT,
-		.token_size	= 1,
-		.max_tokens	= IW_ESSID_MAX_SIZE,
-	},
+In other words:
+Is BSD's definition of immutable equivalent to
+MM_SEAL_MPROTECT|MM_SEAL_MUNMAP|MM_SEAL_MREMAP|MM_SEAL_MMAP, of this patch =
+set ?
 
-So the buffer size is (strangely) IW_ESSID_MAX_SIZE if you want to use 
-that for the buffer size
+I hesitate to introduce the concept of immutable into linux because I don't=
+ know
+all the scenarios present in linux where VMAs's metadata can be
+modified. As Jann's email pointed out,
+There could be quite a few things we still need to deal with, to
+completely block the possibility,
+e.g. malicious code attempting to write to a RO memory or change RW
+memory to RWX.
 
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
-> Note: build-tested only.
-> 
-> Found with: $ rg "strncpy\("
-> ---
->   drivers/net/wireless/cisco/airo.c | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/cisco/airo.c b/drivers/net/wireless/cisco/airo.c
-> index dbd13f7aa3e6..8cfb1de5933e 100644
-> --- a/drivers/net/wireless/cisco/airo.c
-> +++ b/drivers/net/wireless/cisco/airo.c
-> @@ -6067,8 +6067,7 @@ static int airo_get_nick(struct net_device *dev,
->   	struct airo_info *local = dev->ml_priv;
->   
->   	readConfigRid(local, 1);
-> -	strncpy(extra, local->config.nodeName, 16);
-> -	extra[16] = '\0';
-> +	strscpy_pad(extra, local->config.nodeName, 16);
->   	dwrq->length = strlen(extra);
->   
->   	return 0;
-> 
-> ---
-> base-commit: 58720809f52779dc0f08e53e54b014209d13eebb
-> change-id: 20231017-strncpy-drivers-net-wireless-cisco-airo-c-d09cd0500a6e
-> 
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
-> 
+If, as part of immutable, I also block madvice(), mlock(), which also updat=
+es
+VMA's metadata, so by definition, I could.  What if the user wants the
+features in
+madvice() and at the same time, also wants their .text protected ?
 
+Also, if linux introduces a new syscall that depends on a new metadata of V=
+MA,
+say msecret(), (for discussion purpose), should immutable
+automatically support that ?
+
+Without those questions answered, I couldn't choose the route of
+immutable() yet.
+
+-Jeff
+
+
+
+>
+> In his submission of this API, Jeff Xu makes three claims I find dubious;
+>
+> > Also, Chrome wants to adopt this feature for their CFI work [2] and thi=
+s
+> > patchset has been designed to be compatible with the Chrome use case.
+>
+> I specifically designed mimmutable(2) with chrome in mind, and the
+> chrome binary running on OpenBSD is full of immutable mappings.  All the
+> library regions automatically become immutable because ld.so can infer
+> it and do the mimmutable calls for the right subregions.
+>
+> So this chrome work has already been done by OpenBSD, and it is dead
+> simple.  During early development I thought mimmutable(2) would be
+> called by applications or libraries, but I was dead wrong: 99.9% of
+> calls are from ld.so, and no applications need to call it, these are the
+> two exceptions:
+>
+> In OpenBSD, mimmutable() is used in libc malloc() to lock-down some data
+> structures at initialization time, so they canoot be attacked to create
+> an invariant for use in ROP return-to-libc style methods.
+>
+> In Chrome, there is a v8_flags variable rounded out to a full page, and
+> placed in .data.  Chrome initialized this variable, and wants to mprotect
+> PROT_READ, but .data has been made immutable by ld.so.  So we force this
+> page into a new ELF section called "openbsd.mutable" which also behaves R=
+W
+> like .data.  Where chrome does the mprotect  PROT_READ, it now also perfo=
+rms
+> mimmutable() on that page.
+>
+> > Having a seal type per syscall type helps to add the feature incrementa=
+lly.
+>
+> Yet, somehow OpenBSD didn't do it per syscall, and we managed to make our
+> entire base operating system and 10,000+ applications automatically recei=
+ve
+> the benefits.  In one year's effort.  The only application which cared ab=
+out
+> it was chrome, described in the previous paragraph.
+>
+> I think Jeff's idea here is super dangerous.  What will actually happen
+> is people will add a few mseal() sub-operations and think the job is done=
+.
+> It isn't done.  They need all the mseal() requests, or the mapping are
+> not safe.
+>
+> It is very counterproductive to provide developers a complex API that has
+> insecure suboperations.
+>
+> > Applications also know exactly what is sealed.
+>
+> Actually applicatins won't know because there is no tooling to inspect th=
+is --
+> but I will argue further that applications don't need to know.  Immutable
+> marking is a system decision, not a program decision.
+>
+>
+> I'll close by asking for a new look at the mimmutable(2) API we settled
+> on for OpenBSD.  I think there is nothing wrong with it.  I'm willing to
+> help guide glibc / ld.so / musl teams through the problems they may find
+> along the way, I know where the skeletons are buried.  Two in
+> particular: -znow RELRO already today, and xonly-text in the future.
+>
+>
+> [1] https://man.openbsd.org/mimmutable.2
+>
