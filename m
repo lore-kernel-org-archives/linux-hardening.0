@@ -1,130 +1,155 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF9415B1
-	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 04:35:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ABB5BE58
+	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 05:23:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="mXWxCtu4"
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9337A93
-	for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 21:35:33 -0700 (PDT)
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id BE7083F692
-	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 04:35:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1697517331;
-	bh=iKSzw0H7imvFnQsSbXS4s9q/+KmLgFfqqX5RqZH9/7g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=mXWxCtu4VYDoH0Y4rZGGzv+kiJ3a77Uo1RPh3iMH1RNzEFijCF/WzKQYi6gvQyMwo
-	 eR9KEr2c+t2RhS7xYclxh6H3s9UnQL6zfPAo8eMheEjrYb/QObYI74jl5JNg27CBAl
-	 bC903xQYCNB7rQXtUArBfa11NIe+iIk9UYeZKiZVhJJcnYhzZ+BiLzgfBVEsKEM5LH
-	 6dHFRLpzcMONViZ20lz1ecTI8JaZJSgu0P3DV8DWVkogH/NCmPp68a7e19MudzBNGF
-	 DDmX9SI6DKUmKMgZJ3RYM3tBH8Z27iVAu0HitJAUZXG3ygA3WvuqBTR0Krp8t6HFYr
-	 gfIRKhhygNglA==
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-6bde4f405f9so1411314b3a.1
-        for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 21:35:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697517330; x=1698122130;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iKSzw0H7imvFnQsSbXS4s9q/+KmLgFfqqX5RqZH9/7g=;
-        b=NNLCDertkHZPTnyT2zkriSufod3ROXMfX7vXp3FtrFwUGTd95RPjkq20urHg2RlNAV
-         LAK7nxq+XmDgt2EF3rqATbNj5V+Eg3CxaSPqdN7gsQ59NUnLQ7eLbX9tGzAv86n64eXE
-         PJCLDR2rHDIeYAJ2L/at2iw/J/JCA69xhZmFP3Abiq5Wh9ueB9Ja1hCDL5taYsLDrAL5
-         b1h6+NFtlU52WCpmB95l+krR0cTz2iItaj4VdsJ5lJ/bEBG0+tl/40+odlBA5Tq6Cwtu
-         gOl9SPMFkn68uS5KUp8HKJSadtKbnFSOJMzXmJ6T0XPi31bVolT8rn/wasOkMyBcLAGs
-         vVlg==
-X-Gm-Message-State: AOJu0YyxsOXDEKkspb4KJH4/RnDwXYqoVVC6JgfQqj4GarwRJ5kWMx0V
-	Qkzjj533UL/WwbocYuzKssf+g6AYoSVtNyf8651pW4gyBeXeGOnAENICBr4MltApHLkjxiFrVRw
-	Lee9ePD398e3RbaAnAJAY4YVI1jgKR5oFXS1im3iuCZlF1n6E46wJMpyQHPaH/w==
-X-Received: by 2002:a05:6a20:748d:b0:13f:1622:29de with SMTP id p13-20020a056a20748d00b0013f162229demr1084709pzd.7.1697517330289;
-        Mon, 16 Oct 2023 21:35:30 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGFLDvl8FYUD59smCq9rBmVwBQHVhTMqWbcNJ5kiwZ/K6MdL50lc1s9Gp+P/vxymrzoENEc8vjZITD/t6KXXlM=
-X-Received: by 2002:a05:6a20:748d:b0:13f:1622:29de with SMTP id
- p13-20020a056a20748d00b0013f162229demr1084694pzd.7.1697517329969; Mon, 16 Oct
- 2023 21:35:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="VI9UV/a1"
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2054.outbound.protection.outlook.com [40.107.92.54])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6979511A;
+	Mon, 16 Oct 2023 22:23:46 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=W3nRbhsmYEDcO7i39N80l9LVH14+qh5dZCOOpw3J2HbQ+v4XCjfSsyLlis4P5qkElKKgubTM8sBgo51tOU1Y9VkPrD+FDnFLSWCh4W2ZiLHESx1Mqui655u1F3k9X1CM+imzB9RD8XbkZewX19zbnF/7rPhvdc2WZlLT5HFJ5MHojbdMiRJbR23BCG4IcqP34o3HgyTXpvLpm9I2oH5epszO1XwbYl0TB3w3lnQx2IeFoMimCtJsLu4LaA44jlgdPZ03n1dryUhXM9iQUKWeYsPgGdZIMe6kNNpGaILy0YQwzkZif21pIcwJAKztdJRGXvGO78QDN4BhJiXVKD9qRg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jUDn0U9Vj5mshxuMLl85ZX5Xfcf22GbNmQ8HrOCMdsU=;
+ b=lWY4nGvOzXnaOmzxOWJkOriZT2S+C1+U2GWQy61SRMfiC51TWI5ex6Ruw7r3yokCBLgZW3QjMuv7fVc4BFc1cThbnSxmckMcfVdmJBshLBi7AGVX2r3I5Lei7vUIOpeKajdQhUgsXM0tNxVuXZMO9gZ/YQEzK0flkYn0gBezbwmW8sbVxNOnt4cU7Tn+OkW2uGPy1f4E6voakVPC1yk6q2v92nTR00qJhCnASPwlZevGDH6wKfbI5sLHxGk2rILge99ZoLbnZFf9tqAY4w5WMITMf5NhyT8j49/2SSCbQWzxzD7Vy6Lsk4nCv04dNeVGKswQr13Duh83mUgqYw79Uw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=gmail.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jUDn0U9Vj5mshxuMLl85ZX5Xfcf22GbNmQ8HrOCMdsU=;
+ b=VI9UV/a1yr1Q5SVbTp8i5OwUZoDX6oDGGKBwgfZmbKh4gF+EmmeWge1P78EZlwVRg12IDwSM7G+z7HwdB9TUwbNOPGrmbScNM11v9oYJ0ZkGr2j8WRjBgBEnXKCuR69yV4YuK0yw3yvm5+XrgStJJtLP93uols8R3M8cW2iRGTucYJ9FlXqJ/PHyT7NlmgmUhyZO1OZS7S0SPt9yOUEVwG6aqOAR/xRCGrhB/GPnfM+PMC84CvI49IhIntvnwBV8WPsPlo5zUWoysVrSrxexWVfE5o2ZWlo2ftPj7u3M6MYdmaoWyOHVhX2yxMT8XCWPZPKubIt8bSsvj9vF2xSOpA==
+Received: from CY5PR18CA0041.namprd18.prod.outlook.com (2603:10b6:930:13::19)
+ by PH7PR12MB7968.namprd12.prod.outlook.com (2603:10b6:510:272::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6886.35; Tue, 17 Oct
+ 2023 05:23:43 +0000
+Received: from CY4PEPF0000E9DA.namprd05.prod.outlook.com
+ (2603:10b6:930:13:cafe::f) by CY5PR18CA0041.outlook.office365.com
+ (2603:10b6:930:13::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6886.36 via Frontend
+ Transport; Tue, 17 Oct 2023 05:23:42 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ CY4PEPF0000E9DA.mail.protection.outlook.com (10.167.241.79) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6838.22 via Frontend Transport; Tue, 17 Oct 2023 05:23:42 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Mon, 16 Oct
+ 2023 22:23:33 -0700
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Mon, 16 Oct
+ 2023 22:23:33 -0700
+Received: from localhost.localdomain (10.127.8.10) by mail.nvidia.com
+ (10.129.68.10) with Microsoft SMTP Server id 15.2.986.41 via Frontend
+ Transport; Mon, 16 Oct 2023 22:23:27 -0700
+From: Kartik <kkartik@nvidia.com>
+To: <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+	<keescook@chromium.org>, <andy@kernel.org>, <akpm@linux-foundation.org>,
+	<arnd@arndb.de>, <ulf.hansson@linaro.org>, <linus.walleij@linaro.org>,
+	<kkartik@nvidia.com>, <pshete@nvidia.com>, <petlozup@nvidia.com>,
+	<frank.li@vivo.com>, <robh@kernel.org>, <stefank@nvidia.com>,
+	<pdeschrijver@nvidia.com>, <christophe.jaillet@wanadoo.fr>,
+	<linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-hardening@vger.kernel.org>, <linux-mm@kvack.org>
+Subject: [PATCH v7 0/8] soc/tegra: fuse: Add ACPI support
+Date: Tue, 17 Oct 2023 10:53:14 +0530
+Message-ID: <20231017052322.2636-1-kkartik@nvidia.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231016040132.23824-1-kai.heng.feng@canonical.com> <20231016093210.GA22952@wunner.de>
-In-Reply-To: <20231016093210.GA22952@wunner.de>
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date: Tue, 17 Oct 2023 12:35:18 +0800
-Message-ID: <CAAd53p7gbWSkRbng205z2U0_kU42JeFw8qThcBuXuVwCC+Y_VQ@mail.gmail.com>
-Subject: Re: [PATCH] PCI: pciehp: Prevent child devices from doing RPM on PCIe
- Link Down
-To: Lukas Wunner <lukas@wunner.de>
-Cc: bhelgaas@google.com, linux-pm@vger.kernel.org, linux-mmc@vger.kernel.org, 
-	Ricky Wu <ricky_wu@realtek.com>, Kees Cook <keescook@chromium.org>, 
-	Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.6
+X-NVConfidentiality: public
+Content-Transfer-Encoding: 8bit
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9DA:EE_|PH7PR12MB7968:EE_
+X-MS-Office365-Filtering-Correlation-Id: e183e5c9-d005-41ed-05ae-08dbced13a95
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	KnmN4nAjKB8De+hyqs5ajTmfXlmTPfKSxBUHKlVtFM0EQsO2Z7Iur2fbQ6RN2JHKRZZvqY81GDyU21PBd73FQfu0KSx5KxPBMAm2lHwr9XJ5/2yp6glQMuBGh1w6KagaCfbon7v5ouF1de0JY7vFCQZDG5UZCxBMFgOAD5v2i+g1nrP2G5Gbe0KTzT+4ox3gwkluBttjXX8JX6lUuVkIH+SI0Nds+j9vQyuIh2q2eVo3A4GJ8pSRpjUwJDZciW8DiNhZ2Thyyu+iWAxhS5/rbw31kmfVBZAMNVBbFEDwoojwIj5mA6otQrZjO33StXdeAj+SmtCuCny+rauKAMDOE8A+1xWizSb+OymdxS8waQN9c39pV5SiecYBBwEe1vdOh6q/jz6rTRyBzS9kBlmT/PnA6Kxs5Xomsq0pfsxgDWeZBMFAIEpKcRxTW4aCByAwaKUMAR9zH7MWx0jZ4e6qJ/diddxnAlNyNIP2HPCv7aK0ID3EyGPyWKJsgMwLh44J3vC6Y5hfQB4Bl67YjbHwe4IgeEmE2HsealHhyYjExKT+lfzuG3Z2537h/jgRq2SXi/iE/h0PzqjKosIn46OcIDp4UY/Jt6HpekXllkS9Z1SVUx9Uug3ObTLIabn2KC6+SNUEVxHYTof5fHNHKyFYXiYLYBABpIu57RX1dKaiWUBhBu/VYkf+GNOUromfE9eZrGOWljwFW87PvP5rfCDDQARcB5K4+92oU0zzsXyTmXTdNsWtmLftwMFGRlFZ0KzHYgWOLC3yJbcZyHd4bG0NBwoo4jPP81ofGZYRbctF4on3NOcwgY2OdaQGvv3BrSKC
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(346002)(136003)(396003)(376002)(230922051799003)(451199024)(64100799003)(1800799009)(186009)(82310400011)(36840700001)(46966006)(40470700004)(86362001)(36756003)(40480700001)(26005)(40460700003)(478600001)(2906002)(5660300002)(41300700001)(82740400003)(356005)(921005)(7636003)(6666004)(2616005)(36860700001)(1076003)(336012)(426003)(316002)(70206006)(110136005)(8676002)(70586007)(8936002)(83380400001)(47076005)(7416002)(83996005)(2101003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Oct 2023 05:23:42.8138
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e183e5c9-d005-41ed-05ae-08dbced13a95
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000E9DA.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7968
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+	RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+	autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Mon, Oct 16, 2023 at 5:32=E2=80=AFPM Lukas Wunner <lukas@wunner.de> wrot=
-e:
->
-> On Mon, Oct 16, 2023 at 12:01:31PM +0800, Kai-Heng Feng wrote:
-> > When inserting an SD7.0 card to Realtek card reader, it can trigger PCI
-> > slot Link down and causes the following error:
->
-> Why does *inserting* a card cause a Link Down?
+This series of patches add ACPI support for Tegra194 and Tegra234 in
+Tegra fuse and apbmisc drivers. It also adds support for Tegra241
+which uses ACPI boot.
 
-Ricky, do you know the reason why Link Down happens?
+Kartik (8):
+  mm/util: Introduce kmemdup_array()
+  soc/tegra: fuse: Use dev_err_probe for probe failures
+  soc/tegra: fuse: Refactor resource mapping
+  soc/tegra: fuse: Add tegra_acpi_init_apbmisc()
+  soc/tegra: fuse: Add function to add lookups
+  soc/tegra: fuse: Add function to print SKU info
+  soc/tegra: fuse: Add ACPI support for Tegra194 and Tegra234
+  soc/tegra: fuse: Add support for Tegra241
 
->
->
-> > [   63.898861] pcieport 0000:00:1c.0: pciehp: Slot(8): Link Down
-> > [   63.912118] BUG: unable to handle page fault for address: ffffb24d40=
-3e5010
-> [...]
-> > [   63.912198]  ? asm_exc_page_fault+0x27/0x30
-> > [   63.912203]  ? ioread32+0x2e/0x70
-> > [   63.912206]  ? rtsx_pci_write_register+0x5b/0x90 [rtsx_pci]
-> > [   63.912217]  rtsx_set_l1off_sub+0x1c/0x30 [rtsx_pci]
-> > [   63.912226]  rts5261_set_l1off_cfg_sub_d0+0x36/0x40 [rtsx_pci]
-> > [   63.912234]  rtsx_pci_runtime_idle+0xc7/0x160 [rtsx_pci]
-> > [   63.912243]  ? __pfx_pci_pm_runtime_idle+0x10/0x10
-> > [   63.912246]  pci_pm_runtime_idle+0x34/0x70
-> > [   63.912248]  rpm_idle+0xc4/0x2b0
-> > [   63.912251]  pm_runtime_work+0x93/0xc0
-> > [   63.912254]  process_one_work+0x21a/0x430
-> > [   63.912258]  worker_thread+0x4a/0x3c0
->
-> This looks like pcr->remap_addr is accessed after it has been iounmap'ed
-> in rtsx_pci_remove() or before it has been iomap'ed in rtsx_pci_probe().
->
-> Is the card reader itself located below a hotplug port and unplugged here=
-?
-> Or is this about the card being removed from the card reader?
->
-> Having full dmesg output and lspci -vvv output attached to a bugzilla
-> would help to understand what is going on.
+ drivers/soc/tegra/Kconfig              |   5 ++
+ drivers/soc/tegra/fuse/fuse-tegra.c    | 112 ++++++++++++++++++-------
+ drivers/soc/tegra/fuse/fuse-tegra30.c  |  20 +++++
+ drivers/soc/tegra/fuse/fuse.h          |   5 ++
+ drivers/soc/tegra/fuse/tegra-apbmisc.c | 110 ++++++++++++++++++++----
+ include/linux/string.h                 |   1 +
+ include/soc/tegra/fuse.h               |   1 +
+ mm/util.c                              |  17 ++++
+ 8 files changed, 227 insertions(+), 44 deletions(-)
 
-I don't have the hardware so we need Ricky to provide more information here=
-.
+---
+v3 -> v4:
+	* Added following patch to introduce kmemdup_array:
+	  "mm/util: Introduce kmemdup_array() to duplicate an array"
+	* Add "soc/tegra: fuse: Use dev_err_probe for probe failures".
+v2 -> v3:
+	* Minor changes in following patches:
+	  soc/tegra: fuse: Add tegra_acpi_init_apbmisc()
+	  soc/tegra: fuse: Add ACPI support for Tegra194 and Tegra234
 
-Regardless of the cardreader issue, do you have any concern on the patch it=
-self?
+v1 -> v2:
+	* Used '--patience' while formatting patches.
+	* Added "soc/tegra: fuse: Refactor resource mapping" to share
+	  the common code between tegra_init_apbmisc() and
+	  tegra_acpi_init_apbmisc() functions.
+	* Dropped "soc/tegra: fuse: Add function to register nvmem"
+	  as ACPI and device-tree boot are sharing the same probe.
+	  So, no need to refactor the code here.
+---
+-- 
+2.34.1
 
-Kai-Heng
-
->
-> Thanks,
->
-> Lukas
