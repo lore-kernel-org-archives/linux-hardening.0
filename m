@@ -1,158 +1,161 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 548413B2B1
-	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 14:11:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD6AAEBE
+	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 15:30:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QjCyhxnM"
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3910F5
-	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 07:11:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1697551912;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qVbWHcpUgZBtR5NN7bJYHsaY9xVjfK+9siYhOyfKsEI=;
-	b=QjCyhxnM8WiUTaDQpGU5KOJPXhIPrCpKAoQr3kglbdLEFkC2Cjpt6Rc6DthWMFQtUhzUNE
-	yxzhpxhrnffSR4h/rXev4CGX35vkcr4OzdijmRKr+mYZ0t+AM8IDBYJTUj0VgpM1MQTmCy
-	hzGAtn0YLsUtOt09NNBdS3492hz5dM4=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-587-E1nv_YdqN_agUoR8-9f8SA-1; Tue, 17 Oct 2023 10:11:50 -0400
-X-MC-Unique: E1nv_YdqN_agUoR8-9f8SA-1
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-66d4aa946ceso41246546d6.1
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 07:11:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697551910; x=1698156710;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gJosHrMP"
+Received: from mail-vk1-xa2f.google.com (mail-vk1-xa2f.google.com [IPv6:2607:f8b0:4864:20::a2f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E780192;
+	Tue, 17 Oct 2023 08:30:10 -0700 (PDT)
+Received: by mail-vk1-xa2f.google.com with SMTP id 71dfb90a1353d-49d14708479so2422481e0c.2;
+        Tue, 17 Oct 2023 08:30:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1697556610; x=1698161410; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qVbWHcpUgZBtR5NN7bJYHsaY9xVjfK+9siYhOyfKsEI=;
-        b=iFle1k6ESfhVEkkHIR71F5OXQI4rxbnDqjVk5WS1e0RREQd03U+50SlmTd2+i5gfhg
-         +blMjMqCoynLLSQu182K3xsSPTHwxjHzwnpKdSnrKXFDgghoM9Ho0Y9sNOUKAYqd01is
-         tk9pHGQ8J53+muT3MjAdtkWMHbkAQAU8oaod2OX745e6ne4lb9gRi6uv2PIIjbD38elj
-         3NrxMabjmTuDqdr0meWDzS9KBmUKfsBiOHK2S4sp7Po4VSm8S8Jg9ehA+JpeqqP/IAcH
-         xWHnBhta72AVbrsPkWXUZijAhkIbl/PAQxjboY6OT4Ttq6lb1xlfGJ/4FYsauRBzKsq8
-         XKCQ==
-X-Gm-Message-State: AOJu0Yz8YUfzQv8jYs71Tbf0vOq7pgM2C70nYqRMx4JBrNw6oGuSM4DE
-	kjeAq3WZMtz3uPPZLWWdeTR+r/U5qwxiVlTH+6q+K4+a6BEECY5eKzpTYDbD8YPECFozC+ZuIqe
-	rKDusjr+Rp+Jd1RTL7Wl5DMvf78uB
-X-Received: by 2002:a05:6214:4389:b0:66d:6a92:16c2 with SMTP id oh9-20020a056214438900b0066d6a9216c2mr2774703qvb.8.1697551910455;
-        Tue, 17 Oct 2023 07:11:50 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFDUBVS13QvNQ9+bYuK6AltBNKVl+z+6NJPCUZzJSg6QJW2bjJdmi4MH3ixnmwR1DTWlzVidw==
-X-Received: by 2002:a05:6214:4389:b0:66d:6a92:16c2 with SMTP id oh9-20020a056214438900b0066d6a9216c2mr2774679qvb.8.1697551910205;
-        Tue, 17 Oct 2023 07:11:50 -0700 (PDT)
-Received: from bfoster (c-24-60-61-41.hsd1.ma.comcast.net. [24.60.61.41])
-        by smtp.gmail.com with ESMTPSA id du19-20020a05620a47d300b007757eddae8bsm680500qkb.62.2023.10.17.07.11.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Oct 2023 07:11:49 -0700 (PDT)
-Date: Tue, 17 Oct 2023 10:12:16 -0400
-From: Brian Foster <bfoster@redhat.com>
-To: Kees Cook <keescook@chromium.org>
-Cc: Kent Overstreet <kent.overstreet@linux.dev>,
-	linux-bcachefs@vger.kernel.org, kernel test robot <lkp@intel.com>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] bcachefs: Refactor bkey_i to use a flexible array
-Message-ID: <ZS6WQHvjMQQd42jO@bfoster>
-References: <20231016212735.it.314-kees@kernel.org>
+        bh=hzY0GitsyqElPw0k5xUlrTwnu+ANjyD6D4kPaGkZk+Y=;
+        b=gJosHrMPPwSl5KhyR/YP1VHR8TQDm8gLmCx7r9iY1UqFRk/hpvrPTKZUiRKCoN93Y6
+         jx2NaxbReA+EED4uC2KtJJ3lETe98yfaS1B6tumsVa+eR6pZAxcbe8NegVnbcZYmVeHy
+         Xwksty+fkpdENYzoGymwoyfqZ8L2xtxzGgLMnbPiOWvyAh4KCeWnrRu08uW8Qs2LZWfZ
+         jZCpAmRJI3cpkTmOtcgkqf2lbAy0AKVbvySswLJs8J7FOmJX9OQSzU4HsoD3Xf/Kdi+n
+         pSAYQ8VkeMkotyamjxhgGflgdHyshk+Ni8OArrSSQbTAs2IAjUhQlNGwdbnGfU4eDEMS
+         q9wQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697556610; x=1698161410;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hzY0GitsyqElPw0k5xUlrTwnu+ANjyD6D4kPaGkZk+Y=;
+        b=o3wAjPVkerhphkp4GnsM/9FbaVL3jQlOzNyUrPdYk6mokaRix+YZAyj5R9DpPDulkl
+         /VNURDWfIdWl8x9iWpaOgQtS+K62ScVtUqv4gKjffVOS0FF3vz1RL6zgWd2RBT4LO/Ah
+         mLxAstvOIYGk7/Dvda+mKqsV+rzeaaR6wgvFDRmTVMFAqMhl7y5GVsLzMCbyS6ubl4/K
+         uUjQW1GEOVgF10+8CYhEYbxW6HSnt52rBg4OUcWI/SElHFLKsvio7HKJz7HtYIJnsrH/
+         qzYYMfj90HBzj5SZnJIuiNtp890Bt4jk4gYQ7VJ1hBQCXpl7Jb7hAMh1PED67w43NDqJ
+         4pyg==
+X-Gm-Message-State: AOJu0YyziO83C0DaR8F0RyWoYAvx7HZZxaOWyoPk/zbjTaaJ0JnV9XDm
+	odifBNi7grgUOcEXQPGkswnnj/M9JiBAUB5+cFY=
+X-Google-Smtp-Source: AGHT+IEToIjI6smNAtb9fQBnBiUnBPsWCGQ9u1vaLqsMsmIj7mhsOek4OqQxscUBMCeGRUVeH5hK/AybixcyAuDmkds=
+X-Received: by 2002:a05:6122:30a2:b0:49d:d73e:5d07 with SMTP id
+ cd34-20020a05612230a200b0049dd73e5d07mr2683910vkb.16.1697556609819; Tue, 17
+ Oct 2023 08:30:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20231016212735.it.314-kees@kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-	autolearn=ham autolearn_force=no version=3.4.6
+References: <20231016143828.647848-1-jeffxu@chromium.org> <ZS1URCBgwGGj9JtM@casper.infradead.org>
+In-Reply-To: <ZS1URCBgwGGj9JtM@casper.infradead.org>
+From: Pedro Falcato <pedro.falcato@gmail.com>
+Date: Tue, 17 Oct 2023 16:29:58 +0100
+Message-ID: <CAKbZUD2A+=bp_sd+Q0Yif7NJqMu8p__eb4yguq0agEcmLH8SDQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 0/8] Introduce mseal() syscall
+To: Matthew Wilcox <willy@infradead.org>
+Cc: jeffxu@chromium.org, akpm@linux-foundation.org, keescook@chromium.org, 
+	sroettger@google.com, jeffxu@google.com, jorgelo@chromium.org, 
+	groeck@chromium.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, jannh@google.com, 
+	surenb@google.com, alex.sierra@amd.com, apopple@nvidia.com, 
+	aneesh.kumar@linux.ibm.com, axelrasmussen@google.com, ben@decadent.org.uk, 
+	catalin.marinas@arm.com, david@redhat.com, dwmw@amazon.co.uk, 
+	ying.huang@intel.com, hughd@google.com, joey.gouly@arm.com, corbet@lwn.net, 
+	wangkefeng.wang@huawei.com, Liam.Howlett@oracle.com, 
+	torvalds@linux-foundation.org, lstoakes@gmail.com, mawupeng1@huawei.com, 
+	linmiaohe@huawei.com, namit@vmware.com, peterx@redhat.com, 
+	peterz@infradead.org, ryan.roberts@arm.com, shr@devkernel.io, vbabka@suse.cz, 
+	xiujianfeng@huawei.com, yu.ma@intel.com, zhangpeng362@huawei.com, 
+	dave.hansen@intel.com, luto@kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Mon, Oct 16, 2023 at 02:27:39PM -0700, Kees Cook wrote:
-> The memcpy() in bch2_bkey_append_ptr() is operating on an embedded
-> fake flexible array. Instead, make it explicit, and convert the memcpy
-> to target the flexible array instead. Fixes the W=1 warning seen for
-> -Wstringop-overflow:
-> 
->    In file included from include/linux/string.h:254,
->                     from include/linux/bitmap.h:11,
->                     from include/linux/cpumask.h:12,
->                     from include/linux/smp.h:13,
->                     from include/linux/lockdep.h:14,
->                     from include/linux/radix-tree.h:14,
->                     from include/linux/backing-dev-defs.h:6,
->                     from fs/bcachefs/bcachefs.h:182:
->    fs/bcachefs/extents.c: In function 'bch2_bkey_append_ptr':
->    include/linux/fortify-string.h:57:33: warning: writing 8 bytes into a region of size 0 [-Wstringop-overflow=]
->       57 | #define __underlying_memcpy     __builtin_memcpy
->          |                                 ^
->    include/linux/fortify-string.h:648:9: note: in expansion of macro '__underlying_memcpy'
->      648 |         __underlying_##op(p, q, __fortify_size);                        \
->          |         ^~~~~~~~~~~~~
->    include/linux/fortify-string.h:693:26: note: in expansion of macro '__fortify_memcpy_chk'
->      693 | #define memcpy(p, q, s)  __fortify_memcpy_chk(p, q, s,                  \
->          |                          ^~~~~~~~~~~~~~~~~~~~
->    fs/bcachefs/extents.c:235:17: note: in expansion of macro 'memcpy'
->      235 |                 memcpy((void *) &k->v + bkey_val_bytes(&k->k),
->          |                 ^~~~~~
->    fs/bcachefs/bcachefs_format.h:287:33: note: destination object 'v' of size 0
->      287 |                 struct bch_val  v;
->          |                                 ^
-> 
-> Cc: Kent Overstreet <kent.overstreet@linux.dev>
-> Cc: Brian Foster <bfoster@redhat.com>
-> Cc: linux-bcachefs@vger.kernel.org
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202309192314.VBsjiIm5-lkp@intel.com/
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> v2 - Change flex array name to "v_bytes" (bfoster)
-> v1 - https://lore.kernel.org/r/20231010235609.work.594-kees@kernel.org
-> ---
+On Mon, Oct 16, 2023 at 4:18=E2=80=AFPM Matthew Wilcox <willy@infradead.org=
+> wrote:
+>
+> On Mon, Oct 16, 2023 at 02:38:19PM +0000, jeffxu@chromium.org wrote:
+> > Modern CPUs support memory permissions such as RW and NX bits. Linux ha=
+s
+> > supported NX since the release of kernel version 2.6.8 in August 2004 [=
+1].
+>
+> This seems like a confusing way to introduce the subject.  Here, you're
+> talking about page permissions, whereas (as far as I can tell), mseal() i=
+s
+> about making _virtual_ addresses immutable, for some value of immutable.
+>
+> > Memory sealing additionally protects the mapping itself against
+> > modifications. This is useful to mitigate memory corruption issues wher=
+e
+> > a corrupted pointer is passed to a memory management syscall. For examp=
+le,
+> > such an attacker primitive can break control-flow integrity guarantees
+> > since read-only memory that is supposed to be trusted can become writab=
+le
+> > or .text pages can get remapped. Memory sealing can automatically be
+> > applied by the runtime loader to seal .text and .rodata pages and
+> > applications can additionally seal security critical data at runtime.
+> > A similar feature already exists in the XNU kernel with the
+> > VM_FLAGS_PERMANENT [3] flag and on OpenBSD with the mimmutable syscall =
+[4].
+> > Also, Chrome wants to adopt this feature for their CFI work [2] and thi=
+s
+> > patchset has been designed to be compatible with the Chrome use case.
+>
+> This [2] seems very generic and wide-ranging, not helpful.  [5] was more
+> useful to understand what you're trying to do.
+>
+> > The new mseal() is an architecture independent syscall, and with
+> > following signature:
+> >
+> > mseal(void addr, size_t len, unsigned int types, unsigned int flags)
+> >
+> > addr/len: memory range.  Must be continuous/allocated memory, or else
+> > mseal() will fail and no VMA is updated. For details on acceptable
+> > arguments, please refer to comments in mseal.c. Those are also fully
+> > covered by the selftest.
+>
+> Mmm.  So when you say "continuous/allocated" what you really mean is
+> "Must have contiguous VMAs" rather than "All pages in this range must
+> be populated", yes?
+>
+> > types: bit mask to specify which syscall to seal, currently they are:
+> > MM_SEAL_MSEAL 0x1
+> > MM_SEAL_MPROTECT 0x2
+> > MM_SEAL_MUNMAP 0x4
+> > MM_SEAL_MMAP 0x8
+> > MM_SEAL_MREMAP 0x10
+>
+> I don't understand why we want this level of granularity.  The OpenBSD
+> and XNU examples just say "This must be immutable*".  For values of
+> immutable that allow downgrading access (eg RW to RO or RX to RO),
+> but not upgrading access (RW->RX, RO->*, RX->RW).
+>
+> > Each bit represents sealing for one specific syscall type, e.g.
+> > MM_SEAL_MPROTECT will deny mprotect syscall. The consideration of bitma=
+sk
+> > is that the API is extendable, i.e. when needed, the sealing can be
+> > extended to madvise, mlock, etc. Backward compatibility is also easy.
+>
+> Honestly, it feels too flexible.  Why not just two flags to mprotect()
+> -- PROT_IMMUTABLE and PROT_DOWNGRADABLE.  I can see a use for that --
+> maybe for some things we want to be able to downgrade and for other
+> things, we don't.
 
-Reviewed-by: Brian Foster <bfoster@redhat.com>
+I think it's worth pointing out that this suggestion (with PROT_*)
+could easily integrate with mmap() and as such allow for one-shot
+mmap() + mseal().
+If we consider the common case as 'addr =3D mmap(...); mseal(addr);', it
+definitely sounds like a performance win as we halve the number of
+syscalls for a sealed mapping. And if we trivially look at e.g OpenBSD
+ld.so code, mmap() + mimmutable() and mprotect() + mimmutable() seem
+like common patterns.
 
->  fs/bcachefs/bcachefs_format.h | 5 ++++-
->  fs/bcachefs/extents.h         | 2 +-
->  2 files changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/bcachefs/bcachefs_format.h b/fs/bcachefs/bcachefs_format.h
-> index f0d130440baa..cb1af3799b59 100644
-> --- a/fs/bcachefs/bcachefs_format.h
-> +++ b/fs/bcachefs/bcachefs_format.h
-> @@ -300,7 +300,10 @@ struct bkey_i {
->  	__u64			_data[0];
->  
->  	struct bkey	k;
-> -	struct bch_val	v;
-> +	union {
-> +		struct bch_val	v;
-> +		DECLARE_FLEX_ARRAY(__u8, v_bytes);
-> +	};
->  };
->  
->  #define KEY(_inode, _offset, _size)					\
-> diff --git a/fs/bcachefs/extents.h b/fs/bcachefs/extents.h
-> index 7ee8d031bb6c..896fcfca4f21 100644
-> --- a/fs/bcachefs/extents.h
-> +++ b/fs/bcachefs/extents.h
-> @@ -642,7 +642,7 @@ static inline void bch2_bkey_append_ptr(struct bkey_i *k, struct bch_extent_ptr
->  
->  		ptr.type = 1 << BCH_EXTENT_ENTRY_ptr;
->  
-> -		memcpy((void *) &k->v + bkey_val_bytes(&k->k),
-> +		memcpy(&k->v_bytes[bkey_val_bytes(&k->k)],
->  		       &ptr,
->  		       sizeof(ptr));
->  		k->k.u64s++;
-> -- 
-> 2.34.1
-> 
-
+--=20
+Pedro
