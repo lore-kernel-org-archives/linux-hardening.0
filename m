@@ -1,45 +1,45 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 107013E466
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A7238FA0
 	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 09:08:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Tar+f3Te"
-Received: from mail-oa1-x32.google.com (mail-oa1-x32.google.com [IPv6:2001:4860:4864:20::32])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 834DEED
-	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 02:08:22 -0700 (PDT)
-Received: by mail-oa1-x32.google.com with SMTP id 586e51a60fabf-1e9b6f39f9eso3616222fac.2
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 02:08:22 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VDQppkk8"
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3991EFF
+	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 02:08:23 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id 98e67ed59e1d1-27d1b48e20dso3051649a91.0
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 02:08:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google; t=1697533702; x=1698138502; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pUe9FJYX6yjMwKk8iWQD0cd7P0ayg/xoiIZR+/sHFb4=;
-        b=Tar+f3TeP7mKeTE7YZjLuDA8zHEaPiuMtI8mk1nouw+64mQMSc31q91+7zUFDGKKF6
-         sIYZ4OOvoQkrYOP1QyrZScHXiLQKHzaxJuTzTqGovO5vF5/Q1Dl/5syCz1YrGWmCK1Up
-         tAmj7wbuo/AhFpMcGnQZQfTeBogSZknmBMc4M=
+        bh=4llBoLvRHSRPhxaAVX+Xew1tpI9xPqxP9ssy5QguIl8=;
+        b=VDQppkk8b9oCirBVlMxquQtLBR6oq+NEIUW991fieiIzfnXy0uSyhDmOQ/pFCxsfTk
+         vNq0/t+GaIHx3RbgU+O+OsbqxmLJ+QfIBiRFL8ZupoXc2g2kM3tDfchfxPLkpoUW6Cks
+         mSwqs/n3UF4MnYQ4QiXTGmby2Ib/D07ubXtK8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1697533702; x=1698138502;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pUe9FJYX6yjMwKk8iWQD0cd7P0ayg/xoiIZR+/sHFb4=;
-        b=gu79oCnyxB9cpxy+/j7UigHu3NCcpz8xiEW8ZrxpNbigz8hrcbmJeRfXKs5HGxLUk6
-         v8u9ZP2oSixF87oN2X6YlPcWPizKlU5trpXqv05sLIrFdS0ohJ2Lcz0o17dHNudJG6js
-         6XYvAHt3TpsgkPnrjX+SG/3YhZfDUWq9E21LbxQwOOMG9BKn4u9Hjtkwi1B3vZEBg36+
-         ODdrY+Dt2re4sqw+RvCd1hIxgJ9Y1wrbdrUcAEA32p7ziR2/8AP9tMKKonZD8L17pID6
-         eFdNQRzDED98vXJEjFt+aPaLKJsfsybxP2w5i6+3WdFdVAmQAnfaRfVaSgtnFt0ns8hp
-         7tiQ==
-X-Gm-Message-State: AOJu0Yx4W/EBJpwq0OwIHpJePIbMyGMHOODg0FtsbvGlw5d0c9lX+9cg
-	PG3ozJIBAkn6T5QoWhFOeKcHUA==
-X-Google-Smtp-Source: AGHT+IGfvPndwtubeysEkGBSe3P/I0KBNSmcl27k26RD2FLLQ+j3OqYWoI+9c2SEWjqylHIx2vUv/Q==
-X-Received: by 2002:a05:6870:1391:b0:1ea:6a81:8c8a with SMTP id 17-20020a056870139100b001ea6a818c8amr1412779oas.29.1697533701742;
-        Tue, 17 Oct 2023 02:08:21 -0700 (PDT)
+        bh=4llBoLvRHSRPhxaAVX+Xew1tpI9xPqxP9ssy5QguIl8=;
+        b=OOpBD7M+7w3fQDR3Vj20W6eo9uLyOWMk6eV2bG9+7D4XAI4ougnUMTmUk5953nDSem
+         2TU2UdRSfRZH5JtclyvLOrPaQGT6IEiSGdsfcyFdPbpZRTzpTeJbyHBpTwYG+gu+y53w
+         6t2yu5iC9+aMj1YIUBvg3Ao3P7oPCkCk82SzWywxVKxObimsKJb76cUmQlH3kTsZlFqE
+         7mrAmarzz2gQN4m5x0+kb8yCRp4+HQLV0wQaO59PlapnFSker/uUrVwZm+GUhruTqchV
+         gCVwdL+WN7WApDdmLK/u5g4XUOCN/MAASJ/XZXWemoJh//PLpEi6cEOTNTVxreJd2yMB
+         8xEQ==
+X-Gm-Message-State: AOJu0YyrzUr4Jpk9HKiPuloaezfzBwnsh4afffc/IvyCFnb3m6XnTaY5
+	uG4ht6G4PFWSeElG1NrLgEuzdw==
+X-Google-Smtp-Source: AGHT+IGY8Ka5xTN+9aN+5JwGnYHZ3aFuu39VQWy4bG7nyYFZ0P/8XqDQIp2idGjzoHOlr8sq9RvLbg==
+X-Received: by 2002:a17:90b:124a:b0:27c:f21b:6342 with SMTP id gx10-20020a17090b124a00b0027cf21b6342mr1443714pjb.22.1697533702687;
+        Tue, 17 Oct 2023 02:08:22 -0700 (PDT)
 Received: from localhost (9.184.168.34.bc.googleusercontent.com. [34.168.184.9])
-        by smtp.gmail.com with UTF8SMTPSA id s11-20020a632c0b000000b0058958ea2aaesm945519pgs.83.2023.10.17.02.08.21
+        by smtp.gmail.com with UTF8SMTPSA id t13-20020a17090ae50d00b00277326038dasm868586pjy.39.2023.10.17.02.08.22
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Oct 2023 02:08:21 -0700 (PDT)
+        Tue, 17 Oct 2023 02:08:22 -0700 (PDT)
 From: jeffxu@chromium.org
 To: akpm@linux-foundation.org,
 	keescook@chromium.org,
@@ -84,9 +84,9 @@ Cc: jeffxu@google.com,
 	dave.hansen@intel.com,
 	luto@kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [RFC PATCH v2 3/8] mseal: add can_modify_mm and can_modify_vma
-Date: Tue, 17 Oct 2023 09:08:10 +0000
-Message-ID: <20231017090815.1067790-4-jeffxu@chromium.org>
+Subject: [RFC PATCH v2 4/8] mseal: Check seal flag for mprotect(2)
+Date: Tue, 17 Oct 2023 09:08:11 +0000
+Message-ID: <20231017090815.1067790-5-jeffxu@chromium.org>
 X-Mailer: git-send-email 2.42.0.655.g421f12c284-goog
 In-Reply-To: <20231017090815.1067790-1-jeffxu@chromium.org>
 References: <20231017090815.1067790-1-jeffxu@chromium.org>
@@ -106,122 +106,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 
 From: Jeff Xu <jeffxu@google.com>
 
-can_modify_mm:
- checks sealing flags for given memory range.
+mprotect(2) changes protection of VMAs in the given address
+range. Sealing will prevent unintended mprotect call.
 
-can_modify_vma:
-  checks sealing flags for given vma.
+What this patch does:
+When a mprotect(2) is invoked, if one of its VMAs has MM_SEAL_MPROTECT
+set from previous mseal(2) call, this mprotect(2) will fail, without
+any VMA modified.
+
+This patch is based on following:
+1. do_mprotect_pkey() currently called in two places:
+SYSCALL_DEFINE3(mprotect,...)
+SYSCALL_DEFINE4(pkey_mprotect, ...)
+and not in any other places, therefore omit changing the signature of
+do_mprotect_pkey(), i.e. not passing checkSeals flag.
+
+2. In do_mprotect_pkey(), calls can_modify_mm() before any
+update is made on the VMAs.
 
 Signed-off-by: Jeff Xu <jeffxu@google.com>
 ---
- include/linux/mm.h | 26 ++++++++++++++++++++++++++
- mm/mseal.c         | 42 ++++++++++++++++++++++++++++++++++++++++--
- 2 files changed, 66 insertions(+), 2 deletions(-)
+ mm/mprotect.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index b511932df033..b09df8501987 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -3299,6 +3299,32 @@ static inline void mm_populate(unsigned long addr, unsigned long len)
- static inline void mm_populate(unsigned long addr, unsigned long len) {}
- #endif
+diff --git a/mm/mprotect.c b/mm/mprotect.c
+index 130db91d3a8c..6321c4d0aa3f 100644
+--- a/mm/mprotect.c
++++ b/mm/mprotect.c
+@@ -32,6 +32,7 @@
+ #include <linux/sched/sysctl.h>
+ #include <linux/userfaultfd_k.h>
+ #include <linux/memory-tiers.h>
++#include <uapi/linux/mman.h>
+ #include <asm/cacheflush.h>
+ #include <asm/mmu_context.h>
+ #include <asm/tlbflush.h>
+@@ -753,6 +754,20 @@ static int do_mprotect_pkey(unsigned long start, size_t len,
+ 		}
+ 	}
  
-+#ifdef CONFIG_MSEAL
-+extern bool can_modify_mm(struct mm_struct *mm, unsigned long start,
-+			  unsigned long end, unsigned long checkSeals);
-+
-+extern bool can_modify_vma(struct vm_area_struct *vma,
-+		    unsigned long checkSeals);
-+
-+static inline unsigned long vma_seals(struct vm_area_struct *vma)
-+{
-+	return (vma->vm_seals & MM_SEAL_ALL);
-+}
-+
-+#else
-+static inline bool can_modify_mm(struct mm_struct *mm, unsigned long start,
-+			  unsigned long end, unsigned long checkSeals)
-+{
-+	return true;
-+}
-+
-+static inline bool can_modify_vma(struct vm_area_struct *vma,
-+		    unsigned long checkSeals)
-+{
-+	return true;
-+}
-+#endif
-+
- /* These take the mm semaphore themselves */
- extern int __must_check vm_brk(unsigned long, unsigned long);
- extern int __must_check vm_brk_flags(unsigned long, unsigned long, unsigned long);
-diff --git a/mm/mseal.c b/mm/mseal.c
-index ffe4c4c3f1bc..3e9d1c732c38 100644
---- a/mm/mseal.c
-+++ b/mm/mseal.c
-@@ -26,6 +26,44 @@ static bool can_do_mseal(unsigned long types, unsigned long flags)
- 	return true;
- }
- 
-+/*
-+ * check if a vma is sealed for modification.
-+ * return true, if modification is allowed.
-+ */
-+bool can_modify_vma(struct vm_area_struct *vma,
-+		    unsigned long checkSeals)
-+{
-+	if (checkSeals & vma_seals(vma))
-+		return false;
-+
-+	return true;
-+}
-+
-+/*
-+ * Check if the vmas of a memory range are allowed to be modified.
-+ * the memory ranger can have a gap (unallocated memory).
-+ * return true, if it is allowed.
-+ */
-+bool can_modify_mm(struct mm_struct *mm, unsigned long start, unsigned long end,
-+		   unsigned long checkSeals)
-+{
-+	struct vm_area_struct *vma;
-+
-+	VMA_ITERATOR(vmi, mm, start);
-+
-+	if (!checkSeals)
-+		return true;
-+
-+	/* going through each vma to check */
-+	for_each_vma_range(vmi, vma, end) {
-+		if (!can_modify_vma(vma, checkSeals))
-+			return false;
++       /*
++	* do_mprotect_pkey() currently called from two places:
++	* SYSCALL_DEFINE3(mprotect,...)
++	* SYSCALL_DEFINE4(pkey_mprotect, ...)
++	* and not from other places.
++	* Therefore, omit changing the signature of do_mprotect_pkey().
++	* Otherwise, we might need to add checkSeals and pass it
++	* from all callers of do_mprotect_pkey().
++	*/
++	if (!can_modify_mm(current->mm, start, end, MM_SEAL_MPROTECT)) {
++		error = -EACCES;
++		goto out;
 +	}
 +
-+	/* Allow by default. */
-+	return true;
-+}
-+
- /*
-  * Check if a seal type can be added to VMA.
-  */
-@@ -33,7 +71,7 @@ static bool can_add_vma_seals(struct vm_area_struct *vma, unsigned long newSeals
- {
- 	/* When SEAL_MSEAL is set, reject if a new type of seal is added */
- 	if ((vma->vm_seals & MM_SEAL_MSEAL) &&
--	    (newSeals & ~(vma->vm_seals & MM_SEAL_ALL)))
-+	    (newSeals & ~(vma_seals(vma))))
- 		return false;
- 
- 	return true;
-@@ -45,7 +83,7 @@ static int mseal_fixup(struct vma_iterator *vmi, struct vm_area_struct *vma,
- {
- 	int ret = 0;
- 
--	if (addtypes & ~(vma->vm_seals & MM_SEAL_ALL)) {
-+	if (addtypes & ~(vma_seals(vma))) {
- 		/*
- 		 * Handle split at start and end.
- 		 * Note: sealed VMA doesn't merge with other VMAs.
+ 	prev = vma_prev(&vmi);
+ 	if (start > vma->vm_start)
+ 		prev = vma;
 -- 
 2.42.0.655.g421f12c284-goog
 
