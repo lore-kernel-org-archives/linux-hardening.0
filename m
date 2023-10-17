@@ -1,169 +1,101 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60B612D798
-	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 18:26:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37DAEBE
+	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 18:39:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b="cIkCOZ/4"
-X-Greylist: delayed 400 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 17 Oct 2023 11:26:45 PDT
-Received: from cvs.openbsd.org (cvs.openbsd.org [199.185.137.3])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C43695;
-	Tue, 17 Oct 2023 11:26:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=selector1; bh=0vFOoOA2DO
-	SeMlsOMQTQm68lyM381k3f90VCwzU3xik=; h=date:references:in-reply-to:
-	subject:cc:to:from; d=openbsd.org; b=cIkCOZ/43MKoljVmU3oRIB4u6WYxtaE7o
-	HZOM2BZ8S56HfUIZsfnpEjQlT6nX8BjUvl337ZyDmbEBR3FpWbSEpIlQhSH5efoMABMvJu
-	fPt7B7kxCc9BiJcGMLspMoq2n0fp0t4vNihP+GRYwnQ+PXtGXD00kbiv6GNtzR0gKbGJ2n
-	nYXtaGErAXUWTKCJkCh6yf0nMOHJTEbyc9d6WznvhkM317NdEQJ0MO3xpLbqrwJ5qQRKZ+
-	v2DSU4O5x8TQLQ5B2gVSWAEkpok4RBLhTzp2/vt9wlc0QkWf+E2fBCJ4Ld1tjjxZ7uC/EA
-	Y8rLsgyMD35PthyzgC6BHgpnpp5Ag==
-Received: from cvs.openbsd.org (localhost [127.0.0.1])
-	by cvs.openbsd.org (OpenSMTPD) with ESMTP id f82c6e56;
-	Tue, 17 Oct 2023 12:20:04 -0600 (MDT)
-From: "Theo de Raadt" <deraadt@openbsd.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-cc: Jeff Xu <jeffxu@google.com>, jeffxu@chromium.org,
-    akpm@linux-foundation.org, keescook@chromium.org,
-    sroettger@google.com, jorgelo@chromium.org, groeck@chromium.org,
-    linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-    linux-mm@kvack.org, jannh@google.com, surenb@google.com,
-    alex.sierra@amd.com, apopple@nvidia.com, aneesh.kumar@linux.ibm.com,
-    axelrasmussen@google.com, ben@decadent.org.uk,
-    catalin.marinas@arm.com, david@redhat.com, dwmw@amazon.co.uk,
-    ying.huang@intel.com, hughd@google.com, joey.gouly@arm.com,
-    corbet@lwn.net, wangkefeng.wang@huawei.com, Liam.Howlett@oracle.com,
-    lstoakes@gmail.com, willy@infradead.org, mawupeng1@huawei.com,
-    linmiaohe@huawei.com, namit@vmware.com, peterx@redhat.com,
-    peterz@infradead.org, ryan.roberts@arm.com, shr@devkernel.io,
-    vbabka@suse.cz, xiujianfeng@huawei.com, yu.ma@intel.com,
-    zhangpeng362@huawei.com, dave.hansen@intel.com, luto@kernel.org,
-    linux-hardening@vger.kernel.org
-Subject: Re: [RFC PATCH v1 0/8] Introduce mseal() syscall
-In-reply-to: <CAHk-=wj87GMTH=5901ob=SjQqegAm2JYBE7E4J7skJzE64U-wQ@mail.gmail.com>
-References: <20231016143828.647848-1-jeffxu@chromium.org> <CAHk-=whFZoap+DBTYvJx6ohqPwn11Puzh7q4huFWDX9vBwXHgg@mail.gmail.com> <CALmYWFtTDAb_kpZdAe_xspqwNgK1NWJmjTxaTC=jDEMzfe297Q@mail.gmail.com> <CAHk-=wj87GMTH=5901ob=SjQqegAm2JYBE7E4J7skJzE64U-wQ@mail.gmail.com>
-Comments: In-reply-to Linus Torvalds <torvalds@linux-foundation.org>
-   message dated "Tue, 17 Oct 2023 10:22:16 -0700."
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="B5lNrtyZ"
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9070B109
+	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 11:39:00 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id a640c23a62f3a-9a58dbd5daeso973958766b.2
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 11:39:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1697567939; x=1698172739; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=USkbb5/cH3vJp4KF5jTF8rcY5cuD/NJi1SRBLDhJQGQ=;
+        b=B5lNrtyZVUEi4UcfcSavGLBauQId9QEWDJOCL7fhztpaX3WgnR8k7hJyQImlcgy3C1
+         tS6R5/+ix1tproAO3V8Q5/DssOrxUxYUOIBqBxVm3gj6nhE+JcR1uZQVXkOiAObfE7wq
+         n6WXqxWc8K7+1b4LDTvIl4cHEoIcAjweoh9zw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697567939; x=1698172739;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=USkbb5/cH3vJp4KF5jTF8rcY5cuD/NJi1SRBLDhJQGQ=;
+        b=WWy4Jj7vB85b8pogG0onJ2t/2ydpdxPKk+6zTvT8ZInhoPbCNbtmHbTyTnTW0cWDc8
+         iEaL6wGqK7xop1zg3bh7v2uduS+/wBrakRg+v54JoTsSgPnN4RNtFRum4fWukle1x3qH
+         Hp+rPYak4ZwDJf1vUHDYF9NxS1RqveS6QAvNZX9wr9FIFjIRhtVBCHf1BrhgttpxdCRR
+         bBh3rz8wfDteXrvIkzn6zxJRoaAP5xWHeNhMHYU24Go6lNmwvajtII/Ogn71cqrKoZvz
+         ygUsCSjYGjpeo7IcEhBjW+YIO0WrKEfi8RGoKDLyovEWOdDJa4tYw3myDbVIrduJ03HP
+         /5dw==
+X-Gm-Message-State: AOJu0YzY0qPLGXekqsJob+57GdaO9Kqt7/fQaMP5MfreptuR4tJEEPu3
+	8yjxzVLXy5Dn0eYJsZv3Jsj0MD0dEBBJc3JNDBDgI/qr
+X-Google-Smtp-Source: AGHT+IFKn7qv/EyrQ6hnuaxgolNBfvPkRvojNP6oPXowiV2EYZlU5CPhw5dWgYm3bC2RXQWBu6RQ4A==
+X-Received: by 2002:a17:907:744:b0:9bf:63b2:b6e2 with SMTP id xc4-20020a170907074400b009bf63b2b6e2mr2517208ejb.26.1697567938769;
+        Tue, 17 Oct 2023 11:38:58 -0700 (PDT)
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com. [209.85.208.51])
+        by smtp.gmail.com with ESMTPSA id a4-20020a170906684400b009ad75d318ffsm258028ejs.17.2023.10.17.11.38.58
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Oct 2023 11:38:58 -0700 (PDT)
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-53e751aeb3cso5970756a12.2
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 11:38:58 -0700 (PDT)
+X-Received: by 2002:a17:906:4fc7:b0:9b2:b149:b81a with SMTP id
+ i7-20020a1709064fc700b009b2b149b81amr2302073ejw.64.1697567917353; Tue, 17 Oct
+ 2023 11:38:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <35552.1697566804.1@cvs.openbsd.org>
-Date: Tue, 17 Oct 2023 12:20:04 -0600
-Message-ID: <55960.1697566804@cvs.openbsd.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20231016143828.647848-1-jeffxu@chromium.org> <CAHk-=whFZoap+DBTYvJx6ohqPwn11Puzh7q4huFWDX9vBwXHgg@mail.gmail.com>
+ <CALmYWFtTDAb_kpZdAe_xspqwNgK1NWJmjTxaTC=jDEMzfe297Q@mail.gmail.com>
+ <CAHk-=wj87GMTH=5901ob=SjQqegAm2JYBE7E4J7skJzE64U-wQ@mail.gmail.com> <55960.1697566804@cvs.openbsd.org>
+In-Reply-To: <55960.1697566804@cvs.openbsd.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 17 Oct 2023 11:38:19 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjS=xg12RVQdTNxEurjo21eXQBQO0D5My6Aox4LCfsO1A@mail.gmail.com>
+Message-ID: <CAHk-=wjS=xg12RVQdTNxEurjo21eXQBQO0D5My6Aox4LCfsO1A@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 0/8] Introduce mseal() syscall
+To: Theo de Raadt <deraadt@openbsd.org>
+Cc: Jeff Xu <jeffxu@google.com>, jeffxu@chromium.org, akpm@linux-foundation.org, 
+	keescook@chromium.org, sroettger@google.com, jorgelo@chromium.org, 
+	groeck@chromium.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, jannh@google.com, 
+	surenb@google.com, alex.sierra@amd.com, apopple@nvidia.com, 
+	aneesh.kumar@linux.ibm.com, axelrasmussen@google.com, ben@decadent.org.uk, 
+	catalin.marinas@arm.com, david@redhat.com, dwmw@amazon.co.uk, 
+	ying.huang@intel.com, hughd@google.com, joey.gouly@arm.com, corbet@lwn.net, 
+	wangkefeng.wang@huawei.com, Liam.Howlett@oracle.com, lstoakes@gmail.com, 
+	willy@infradead.org, mawupeng1@huawei.com, linmiaohe@huawei.com, 
+	namit@vmware.com, peterx@redhat.com, peterz@infradead.org, 
+	ryan.roberts@arm.com, shr@devkernel.io, vbabka@suse.cz, 
+	xiujianfeng@huawei.com, yu.ma@intel.com, zhangpeng362@huawei.com, 
+	dave.hansen@intel.com, luto@kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+On Tue, 17 Oct 2023 at 11:20, Theo de Raadt <deraadt@openbsd.org> wrote:
+>
+> The only case where the immutable marker is ignored is during address space
+> teardown as a result of process termination.
 
-> On Tue, 17 Oct 2023 at 02:08, Jeff Xu <jeffxu@google.com> wrote:
-> >
-> > It is probably worth noting that I choose to check one and only
-> > one sealing type per syscall. i.e. munmap(2) checks
-> > MM_SEAL_MUNMAP only.
-> 
-> Yeah, this is wrong.
-> 
-> It's wrong exactly because other system calls will unmap things too.
-> 
-> Using mmap() to over-map something will unmap the old one.
-> 
-> Same goes for mremap() to move over an existing mapping.
-> 
-> So the whole "do things by the name of the system call" is not workable.
-> 
-> All that matters is what the system calls *do*, not what their name is.
+.. and presumably also execve()?
 
-I agree completely...
+I do like us starting with just "mimmutable()", since it already
+exists. Particularly if chrome already knows how to use it.
 
-mseal() is a clone of mimmutable(2), but with an extremely
-over-complicated API based upon dubious arguments.
+Maybe add a flag field (require it to be zero initially) just to allow
+any future expansion. Maybe the chrome team has *wanted* to have some
+finer granularity thing and currently doesn't use mimmutable() in some
+case?
 
-I designed mimmutable(2) [1] in OpenBSD, it took about a year to get all
-the components working correctly.  There were many intermediate API
-during development, but in the end the API is simply:
-
-     int mimmutable(void *addr, size_t len);
-
-The kernel code for mimmutable() traverses the specified VA range.  In
-that range, it will find unmapped sub-regions (which are are ignored)
-and mapped sub-regions. For these mapped regions, it does not care what
-the permissions are, it just marks each sub-region as immutable.
-
-Later on, when any VM operation request upon a VA range attempts to
-      (1) change the permissions
-      (2) to re-map on top
-      (3) or dispose of the mapping,
-that operation is refused with errno EPERM.  We don't care where the
-request comes from (ie. what system call).  It is a behaviour of the
-VM system, when asked to act upon a VA sub-range mapping.
-
-Very simple semantics.
-
-The only case where the immutable marker is ignored is during address space
-teardown as a result of process termination.
-
-
-In his submission of this API, Jeff Xu makes three claims I find dubious;
-
-> Also, Chrome wants to adopt this feature for their CFI work [2] and this
-> patchset has been designed to be compatible with the Chrome use case.
-
-I specifically designed mimmutable(2) with chrome in mind, and the
-chrome binary running on OpenBSD is full of immutable mappings.  All the
-library regions automatically become immutable because ld.so can infer
-it and do the mimmutable calls for the right subregions.
-
-So this chrome work has already been done by OpenBSD, and it is dead
-simple.  During early development I thought mimmutable(2) would be
-called by applications or libraries, but I was dead wrong: 99.9% of
-calls are from ld.so, and no applications need to call it, these are the
-two exceptions:
-
-In OpenBSD, mimmutable() is used in libc malloc() to lock-down some data
-structures at initialization time, so they canoot be attacked to create
-an invariant for use in ROP return-to-libc style methods.
-
-In Chrome, there is a v8_flags variable rounded out to a full page, and
-placed in .data.  Chrome initialized this variable, and wants to mprotect
-PROT_READ, but .data has been made immutable by ld.so.  So we force this
-page into a new ELF section called "openbsd.mutable" which also behaves RW
-like .data.  Where chrome does the mprotect  PROT_READ, it now also performs
-mimmutable() on that page.
-
-> Having a seal type per syscall type helps to add the feature incrementally.
-
-Yet, somehow OpenBSD didn't do it per syscall, and we managed to make our
-entire base operating system and 10,000+ applications automatically receive
-the benefits.  In one year's effort.  The only application which cared about
-it was chrome, described in the previous paragraph.
-
-I think Jeff's idea here is super dangerous.  What will actually happen
-is people will add a few mseal() sub-operations and think the job is done.
-It isn't done.  They need all the mseal() requests, or the mapping are
-not safe.
-
-It is very counterproductive to provide developers a complex API that has
-insecure suboperations.
-
-> Applications also know exactly what is sealed.
-
-Actually applicatins won't know because there is no tooling to inspect this --
-but I will argue further that applications don't need to know.  Immutable
-marking is a system decision, not a program decision.
-
-
-I'll close by asking for a new look at the mimmutable(2) API we settled
-on for OpenBSD.  I think there is nothing wrong with it.  I'm willing to
-help guide glibc / ld.so / musl teams through the problems they may find
-along the way, I know where the skeletons are buried.  Two in
-particular: -znow RELRO already today, and xonly-text in the future.
-
-
-[1] https://man.openbsd.org/mimmutable.2
-
+                  Linus
