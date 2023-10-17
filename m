@@ -1,61 +1,62 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23596430F4
-	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 21:40:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC7F430F4
+	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 21:48:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qlAZQVX9"
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19CE0ED
-	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 14:40:26 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5a81a80097fso76312787b3.3
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 14:40:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gi6sz4EB"
+Received: from mail-ot1-x349.google.com (mail-ot1-x349.google.com [IPv6:2607:f8b0:4864:20::349])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A542CB0
+	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 14:48:18 -0700 (PDT)
+Received: by mail-ot1-x349.google.com with SMTP id 46e09a7af769-6c4f69456aeso8511178a34.2
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 14:48:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697578825; x=1698183625; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1697579298; x=1698184098; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=8h1aCmYwBL0e7W6QWqk+xWgvSrCWZqDeOTvw03oLfSg=;
-        b=qlAZQVX9to8AsnGtSK9dGDNbukyPI9T4vbd0dj6nd9YHFLQnNLVaotL36E1CD3uwna
-         snyna3DclkcApbbo4tkLOBNI1G5Lt26Bl9j8/ziNT7dxqIrtxMSfeqIaKD9VxsJou2mk
-         pEfrpcEbXyVCSfmc6cA78W+Fwq4DyCxzr+r05f0gLrmnUtOZqlRpQ7cB8P+i3DGc+Hze
-         VLIq4TZlUCrPDgpp/X9SEKTxAKKU49fzxEJDEbQYDB29EOazGR+u518qD2cACX12vAnt
-         1/r8gJ+F9O23/c+B7lLCbYmDQ7UlqaEcWDjbg9loRkoG3wsyM7vHlgvIussJIoMpokmN
-         xkGQ==
+        bh=jj/BDLyDGa85AqSpf8Df2TijHyh0pX3EpIXoVJmKNCk=;
+        b=gi6sz4EBJXXHstijbjXRHHmb7O2Y+koWFcl1JueeGAJ+IKJJuu2e6vhH3+aUcEzCOV
+         9LSNiE3kbr9yKQRaJMhLkGR6uduvwYxIRkdzkX+0K4X78ZWfzyoSlqv3if0NMaC0jmkR
+         ds4CBlg6nIhzpR3W9ElYLEa2TuG3eC5SNyqgb6evYz29xNRzTuYWR3CYa39Z9K3aOYAz
+         7FGL1XWdR+yvv8XYxXQZtuXd8HnswjuAqqOWg0OcMpcGczEk5CiYXhDsOPAMpxbd1B0y
+         Vg5RUwZ3cTEYn8kiO0VNpdMtFdgWdTJlLCii2ubidlSgEl933GUg+nGNlzKRENFhJ43K
+         oBSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697578825; x=1698183625;
+        d=1e100.net; s=20230601; t=1697579298; x=1698184098;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=8h1aCmYwBL0e7W6QWqk+xWgvSrCWZqDeOTvw03oLfSg=;
-        b=MmEaRS5om1gfbHNJpQoP3PWD5JWaPs9DBHT/iReLXyJCizTuI8OqDWVnJJ1Zdw9bkK
-         OWbZ1CI6g2ZdSJrEphmxwIcVtJVMsbevUqku817zHNUXzkLNkMHBIXu6dhrosWKxnghx
-         jL4aeo2OFGe7dADrYf1SVwMsSGnNnosHG+2EXKxAbEIPoT7N3HrADtH9IES7o8tgkrFI
-         CMnoUzL9f+0QepnEcfzRz+zeKGvAC87S69Y0SlCfv6TxKYXgPIbTDwVYsVQm2+e5t5Oh
-         1wD/1jLAUJLZ1UMmYdv3vzw1yoOG047673cx6Pc+l3VHOiy6JtHTDf2mBHQUVyMpR9k3
-         qNLA==
-X-Gm-Message-State: AOJu0Yxjr9EzyLjG83VSg3s6h1ZCNvRbhdiZRIQzyRALx9la3pLqjHCD
-	4tVS/f3ewClydZW5AT0d4UI4Gp0jh5F94QwOyQ==
-X-Google-Smtp-Source: AGHT+IFD9/z9qICdr6kZphkx91CVVnKWaOa56BAR7Tmf8Lf9ihklTplMdVnhLZQLfrXyng5/4mRo2/jNV92nK6R8IA==
+        bh=jj/BDLyDGa85AqSpf8Df2TijHyh0pX3EpIXoVJmKNCk=;
+        b=XN1n9X05uGNZIjzrXuF4tzdJoKXCS0HTS/vZLbNSlDDvvPgeOClBbAmy1ECLsLy5s2
+         6O41TOXSTedlQ+ADpeOxRGBo5QTq5XhLdV0ahBa29/mNtmKzO01kVmbmbOtuvwaKszp9
+         7rl1slpdV54z8Rd7meXKjvo9Ow5JdrYTvPZfEqKjr/nTs/Ktn71kWPw6LuaPs7RpHzTM
+         VIAP9upqM9kMsBv5Omxrfmo1dYArgdEX8Q6QUq45i4JZ2219nAAB00Bb4OGlS+nObmRW
+         zfgyWD7lijSImffWHYHqLu5KZkZ4omcjXDNIF+UB9hJKji13ELfrGNIqIuPkgi42CCRH
+         69IA==
+X-Gm-Message-State: AOJu0YxuzTDBkYwSebxn85TFGUqHA2fguokh3+4gVRyCm2scJ7/zICCk
+	6EQkqPyP+mi11Y7g41k97EOyEVLnFc589ZV97g==
+X-Google-Smtp-Source: AGHT+IGifKHIeEs6hQ9nd30qPs+zzZSt7lXKQ4GxXFSqvyt0kQejSoL8ILihmhinXdJGVmfGsL1ifdheILn0dvO2Ow==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a25:c711:0:b0:d9a:519f:d0e6 with SMTP
- id w17-20020a25c711000000b00d9a519fd0e6mr68734ybe.6.1697578825351; Tue, 17
- Oct 2023 14:40:25 -0700 (PDT)
-Date: Tue, 17 Oct 2023 21:40:24 +0000
+ (user=justinstitt job=sendgmr) by 2002:a9d:625a:0:b0:6c4:c061:341c with SMTP
+ id i26-20020a9d625a000000b006c4c061341cmr1115376otk.5.1697579298035; Tue, 17
+ Oct 2023 14:48:18 -0700 (PDT)
+Date: Tue, 17 Oct 2023 21:48:15 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAEj/LmUC/x2NwQqDMBAFf0X23IUkBRv6K6WHEp92QdKwG9Qi/
- rvB0zCXmZ0MKjB6djspFjH55Sb+1lH6fvIElqE5BRfu3vkHW9Wcyp8HlQVqnFF5FcUMM5ZcMbO UNWzOXQyNifsxxtgKAa6nli6KUbZr+3ofxwlgwuPYhgAAAA==
+X-B4-Tracking: v=1; b=H4sIAB4BL2UC/6WOQQqDMBBFr1Ky7pQkUg1d9R7FRTGjDthEZkJUx
+ Ls39Qpdfd5fvP93JciEoh6XXTFmEoqhgL1eVDe+w4BAvrCy2lZGmwYkcejmDTxTRhYImGAhxgl
+ FgELCCWhe7Kr1mbZkB3XvnCsGi7pWRT0z9rSes6+28EiSIm/ni2x+7Z+D2YABxMZXaO/ON+45x DhMeOviR7XHcXwBRc67tPkAAAA=
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1697578824; l=3644;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1697579297; l=3821;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=no/u8aepbF9xy/WjzFODZYqsJCgSR5M+hrKqDii17yY=; b=VjQaKS/y3uXgNEupzuOEFzu8WiM+Y7gt+1HvljUvV/p0HQ5TM4zVxf5vE5G7bp9kMvXLTjTQL
- mGnDQVQcQkcDeItbzifkeXs+wU3QaL+vkhF/Sb0gikb0eDMT2gXGCgi
+ bh=ZZ92JxohATICi1IhnExgHVpB9lc7D4o0lN8/nCXFWag=; b=DLkNhMPJ2kmoCBTHgNn3p10//NWOir3cf1evFANYbRyynZLyFff7F4SXVKNXaWrlubIajvY6T
+ XwkImuUtXeZBi+ck/Ln30rZdSFDnbjSVPJ4WXc5pMrUpe/SK/r2pKtU
 X-Mailer: b4 0.12.3
-Message-ID: <20231017-strncpy-drivers-net-wireless-intel-ipw2x00-ipw2200-c-v1-1-ee7d3e258d78@google.com>
-Subject: [PATCH] ipw2x00: replace deprecated strncpy with strscpy_pad
+Message-ID: <20231017-strncpy-drivers-net-wireless-intel-ipw2x00-ipw2200-c-v2-1-465e10dc817c@google.com>
+Subject: [PATCH v2] wifi: ipw2x00: replace deprecated strncpy with strscpy_pad
 From: Justin Stitt <justinstitt@google.com>
 To: Stanislav Yakovlev <stas.yakovlev@gmail.com>, Kalle Valo <kvalo@kernel.org>
 Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, 
@@ -64,7 +65,7 @@ Content-Type: text/plain; charset="utf-8"
 X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.6
+	autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
@@ -102,6 +103,10 @@ Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-
 Link: https://github.com/KSPP/linux/issues/90
 Cc: linux-hardening@vger.kernel.org
 Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Changes in v2:
+- add wifi: to subject
+- Link to v1: https://lore.kernel.org/r/20231017-strncpy-drivers-net-wireless-intel-ipw2x00-ipw2200-c-v1-1-ee7d3e258d78@google.com
 ---
 Note: build-tested only.
 
