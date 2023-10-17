@@ -1,116 +1,106 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 299F34123D;
-	Tue, 17 Oct 2023 10:26:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81E7D120;
-	Tue, 17 Oct 2023 03:26:13 -0700 (PDT)
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 39HAPeE724097804, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/2.93/5.92) with ESMTPS id 39HAPeE724097804
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 17 Oct 2023 18:25:40 +0800
-Received: from RTEXMBS06.realtek.com.tw (172.21.6.99) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.17; Tue, 17 Oct 2023 18:25:39 +0800
-Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
- RTEXMBS06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.34; Tue, 17 Oct 2023 18:25:39 +0800
-Received: from RTEXMBS01.realtek.com.tw ([fe80::9cb8:8d5:b6b3:213b]) by
- RTEXMBS01.realtek.com.tw ([fe80::9cb8:8d5:b6b3:213b%5]) with mapi id
- 15.01.2375.007; Tue, 17 Oct 2023 18:25:39 +0800
-From: Ricky WU <ricky_wu@realtek.com>
-To: Lukas Wunner <lukas@wunner.de>,
-        Kai-Heng Feng
-	<kai.heng.feng@canonical.com>
-CC: "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pm@vger.kernel.org"
-	<linux-pm@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org"
-	<linux-mmc@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>, Tony Luck
-	<tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
-Subject: RE: [PATCH] PCI: pciehp: Prevent child devices from doing RPM on PCIe Link Down
-Thread-Topic: [PATCH] PCI: pciehp: Prevent child devices from doing RPM on
- PCIe Link Down
-Thread-Index: AQHZ/+WX29Sx+yjN7keHtkFSV38Z/LBLoV4AgAIjnlA=
-Date: Tue, 17 Oct 2023 10:25:39 +0000
-Message-ID: <263982e90fc046cf977ecb8727003690@realtek.com>
-References: <20231016040132.23824-1-kai.heng.feng@canonical.com>
- <20231016093210.GA22952@wunner.de>
-In-Reply-To: <20231016093210.GA22952@wunner.de>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-x-originating-ip: [172.22.81.100]
-x-kse-serverinfo: RTEXMBS06.realtek.com.tw, 9
-x-kse-antispam-interceptor-info: fallback
-x-kse-antivirus-interceptor-info: fallback
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5571041E34
+	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 12:56:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ltmteh5H"
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29FFE10DE;
+	Tue, 17 Oct 2023 05:56:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=TjP165kdnXnZeWEs6lPqJmTemVZVmWMQm34b8bWqLdI=; b=ltmteh5Hzny7tVZzXlOFG8QS/p
+	3YJ7eG9UUk08wyDbfGAQhMuh2NIvNEbkORJg36P/Z7x/CSuUN8nmmbED0vYf4sl03v59vYlxP/X56
+	2IZmlUzb6CRzr140Z+kAr+DxyJ17yI+1JpUe3xicV5+2NDhzq5HzvC/R6iouB6ETf/v1gXWHAIFCH
+	eVGww/Mle6QpVDNH85gRMu4l6/FE6AUSDZ+f+b0HK1tDYdEsZFCwvS6bG5VLA5xOUHXHLu+N5j9U9
+	5nBRieVWKifUAdaMytJ9HB7s5/cAbKTWuOuMvWb5e3CAuDCvwAIXQKJMb3syDXVkZ15gMj+ez9pPd
+	w5et+yUA==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1qsjcJ-00CQmQ-7n; Tue, 17 Oct 2023 12:56:11 +0000
+Date: Tue, 17 Oct 2023 13:56:11 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Jeff Xu <jeffxu@google.com>
+Cc: jeffxu@chromium.org, akpm@linux-foundation.org, keescook@chromium.org,
+	sroettger@google.com, jorgelo@chromium.org, groeck@chromium.org,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org, jannh@google.com, surenb@google.com,
+	alex.sierra@amd.com, apopple@nvidia.com, aneesh.kumar@linux.ibm.com,
+	axelrasmussen@google.com, ben@decadent.org.uk,
+	catalin.marinas@arm.com, david@redhat.com, dwmw@amazon.co.uk,
+	ying.huang@intel.com, hughd@google.com, joey.gouly@arm.com,
+	corbet@lwn.net, wangkefeng.wang@huawei.com, Liam.Howlett@oracle.com,
+	torvalds@linux-foundation.org, lstoakes@gmail.com,
+	mawupeng1@huawei.com, linmiaohe@huawei.com, namit@vmware.com,
+	peterx@redhat.com, peterz@infradead.org, ryan.roberts@arm.com,
+	shr@devkernel.io, vbabka@suse.cz, xiujianfeng@huawei.com,
+	yu.ma@intel.com, zhangpeng362@huawei.com, dave.hansen@intel.com,
+	luto@kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [RFC PATCH v1 0/8] Introduce mseal() syscall
+Message-ID: <ZS6Ea4/KI0mKiRMv@casper.infradead.org>
+References: <20231016143828.647848-1-jeffxu@chromium.org>
+ <ZS1URCBgwGGj9JtM@casper.infradead.org>
+ <CALmYWFu58LYuSn8DqiU8NjPJzTQuLXu4mg7dHaP1ZW2z3jaaXQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-KSE-AntiSpam-Interceptor-Info: fallback
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALmYWFu58LYuSn8DqiU8NjPJzTQuLXu4mg7dHaP1ZW2z3jaaXQ@mail.gmail.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+	SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-> On Mon, Oct 16, 2023 at 12:01:31PM +0800, Kai-Heng Feng wrote:
-> > When inserting an SD7.0 card to Realtek card reader, it can trigger
-> > PCI slot Link down and causes the following error:
->=20
-> Why does *inserting* a card cause a Link Down?
->=20
->=20
-> > [   63.898861] pcieport 0000:00:1c.0: pciehp: Slot(8): Link Down
-> > [   63.912118] BUG: unable to handle page fault for address:
-> ffffb24d403e5010
-> [...]
-> > [   63.912198]  ? asm_exc_page_fault+0x27/0x30
-> > [   63.912203]  ? ioread32+0x2e/0x70
-> > [   63.912206]  ? rtsx_pci_write_register+0x5b/0x90 [rtsx_pci]
-> > [   63.912217]  rtsx_set_l1off_sub+0x1c/0x30 [rtsx_pci]
-> > [   63.912226]  rts5261_set_l1off_cfg_sub_d0+0x36/0x40 [rtsx_pci]
-> > [   63.912234]  rtsx_pci_runtime_idle+0xc7/0x160 [rtsx_pci]
-> > [   63.912243]  ? __pfx_pci_pm_runtime_idle+0x10/0x10
-> > [   63.912246]  pci_pm_runtime_idle+0x34/0x70
-> > [   63.912248]  rpm_idle+0xc4/0x2b0
-> > [   63.912251]  pm_runtime_work+0x93/0xc0
-> > [   63.912254]  process_one_work+0x21a/0x430
-> > [   63.912258]  worker_thread+0x4a/0x3c0
->=20
-> This looks like pcr->remap_addr is accessed after it has been iounmap'ed =
-in
-> rtsx_pci_remove() or before it has been iomap'ed in rtsx_pci_probe().
->=20
-> Is the card reader itself located below a hotplug port and unplugged here=
-?
+On Tue, Oct 17, 2023 at 01:34:35AM -0700, Jeff Xu wrote:
+> > > types: bit mask to specify which syscall to seal, currently they are:
+> > > MM_SEAL_MSEAL 0x1
+> > > MM_SEAL_MPROTECT 0x2
+> > > MM_SEAL_MUNMAP 0x4
+> > > MM_SEAL_MMAP 0x8
+> > > MM_SEAL_MREMAP 0x10
+> >
+> > I don't understand why we want this level of granularity.  The OpenBSD
+> > and XNU examples just say "This must be immutable*".  For values of
+> > immutable that allow downgrading access (eg RW to RO or RX to RO),
+> > but not upgrading access (RW->RX, RO->*, RX->RW).
+> >
+> > > Each bit represents sealing for one specific syscall type, e.g.
+> > > MM_SEAL_MPROTECT will deny mprotect syscall. The consideration of bitmask
+> > > is that the API is extendable, i.e. when needed, the sealing can be
+> > > extended to madvise, mlock, etc. Backward compatibility is also easy.
+> >
+> > Honestly, it feels too flexible.  Why not just two flags to mprotect()
+> > -- PROT_IMMUTABLE and PROT_DOWNGRADABLE.  I can see a use for that --
+> > maybe for some things we want to be able to downgrade and for other
+> > things, we don't.
+> >
+> Having a seal type per syscall type helps to add the feature incrementally.
+> Applications also know exactly what is sealed.
 
-Yes it is card reader unplug itself, because sd7.0 card is not used rtsx_pc=
-r, it use nvme driver=20
+You're trying to portray a disadvantage as an advantage,  This is the
+seccomp disease, only worse because you're trying to deny individual
+syscalls instead of building up a list of permitted syscalls.  If we
+introduce a new syscall tomorrow which can affect VMAs, we'll then
+make it the application's fault for not disabling that new syscall.
+That's terrible design!
 
-Ricky
+> I'm not against types such as IMMUTABLE and DOWNGRADEABLE, if we
+> can define what it seals precisely. As Jann pointed out, there have
+> other scenarios that potentially affect IMMUTABLE. Implementing all thoses
+> will take time. And if we missed a case, we could introduce backward
+> compatibility issues to the application. Bitmask will solve this nicely, i.e.
+> application will need to apply the newly added sealing type explicitly.
 
-> Or is this about the card being removed from the card reader?
->=20
-> Having full dmesg output and lspci -vvv output attached to a bugzilla wou=
-ld
-> help to understand what is going on.
->=20
-> Thanks,
->=20
-> Lukas
+It is your job to do this.  You seem to have taken the attitude that you
+will give the Chrome team exactly what they asked for instead of trying
+to understand their requirements and give them what they need.
+
+And don't send a v2 before discussion of v1 has come to an end.  It
+uselessly fragments the discussion.
