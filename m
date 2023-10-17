@@ -1,59 +1,58 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BA4811728
-	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 06:51:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CD0D3C6BC
+	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 08:35:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LFjN/upg"
-Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 774D3AB
-	for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 23:51:30 -0700 (PDT)
-Received: by mail-qt1-x82d.google.com with SMTP id d75a77b69052e-419b53acc11so162481cf.0
-        for <linux-hardening@vger.kernel.org>; Mon, 16 Oct 2023 23:51:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wkq/1Kot"
+Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8163B0
+	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 01:35:13 -0700 (PDT)
+Received: by mail-qt1-x835.google.com with SMTP id d75a77b69052e-419b53acc11so185901cf.0
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 01:35:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697525489; x=1698130289; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1697531713; x=1698136513; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oHCjcIwAgD8r2ZfWSRWE2jRRIUmP7obRVpW9zzIvXZY=;
-        b=LFjN/upgI4MMKEjVksgSFfYLl4hiuJAmzv7UAJJhTpD8bMjNFxX83y8A39/wySXMU0
-         j2Fm/iw6EHqdpjS4czvzmVThq/PLULAPmRr8b6FZW1b6bXkQE4u0F6SUsgvCvd24GVhX
-         uJ30oL9MoRY+ztlf3iJrv+tPhM+2g/5AHvI+Jhl5+u78pqEFU8FDunRbvFItETWQ/Si2
-         fufeBOfkDb51pLYE4URsib0FTYhYw7NXU+59TQovysbuLx4ceoDKoIGowtlSNXFNjcyg
-         mSRoeI21PDxx25DGeZ46DdEEoA/PGKmqgEN3zN02LQui/ri+yn4qkL0E+0f73VU0BLnP
-         yuGA==
+        bh=MJSddZ0dGB6k3S6Wf36lPI8PKwn536bSm0E7Nwxx8qM=;
+        b=wkq/1Kot3rNqHeT4HmUbhoGYAdDXmwDCwcVo/A9t8u30E91iqnTpZ6BhkBLD8yc1vF
+         13rBLjfH0cPCIl0xpEwybwbUWkovt5CLn8/L0sxhoJByVh71tmyx3jQfAf7YXgLipFEG
+         qCpFxLoQYKXikI6pnFlxOQDGM672AfavCs8wyWCTpo3UrubZfRJg+lkQSnY7C11LQ1UA
+         TE0GMWSGkdXr/zSKt2o2R7oItTIhceIhK8tIc26Q2yIoJAx0zCvNX1RW1MzSqsPuunIH
+         iMgeWr3DDk1trxj4F7CKf+WrVWmLqXa1NZtTBdI/GOQlVgp6lc3i6eevgBHdCaRa4lTN
+         XgpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697525489; x=1698130289;
+        d=1e100.net; s=20230601; t=1697531713; x=1698136513;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=oHCjcIwAgD8r2ZfWSRWE2jRRIUmP7obRVpW9zzIvXZY=;
-        b=j+Kwh/KysE6XMSFPtyjMmQRyTgjaA2pz3aGjXcoQxZmUfeF6RTLVfZY57mukyUKKO1
-         tl0RiJKAbM0qzzWCqMn8y3G/yoTZZWnB5bCVLJhj90vNYZaIjcy/IL1DoAb/TAIRgAbq
-         VelT7XrGjdizTYd8Jn0GlAM58rXvuryUo49rxg007RROY429/wCu0mIKrbjtd/hMphIq
-         SFvnQaesD9zx/jKSCL+sj8LuTVOA1YtDm5rfH883XPw8Z3pTeDV1SSQ1d1kW6UJsVz3r
-         /B6p9IYbbM1yudACTaEWOrRN368pjqLcqzV+ORL/toC98WuZJgRgIEmI1usWX28gIqmh
-         XvUg==
-X-Gm-Message-State: AOJu0Yz4wZgiW673TPMkfAMiwyXUwbGD/vzgcNsMG8pmfy+7K8B61oRP
-	+qDnXoUGszpbj0CVl3EyZ72ktcUeOxN0ABXnIZDz9w==
-X-Google-Smtp-Source: AGHT+IHrmXZFq+mqMHdy8UJpV06hwPvok6+26xdf07c69sqojlknFnXbe8Z30UoZafYhf/PHhODqV8N5XpLKhiJclqs=
-X-Received: by 2002:a05:622a:8119:b0:417:cd34:2a7b with SMTP id
- jx25-20020a05622a811900b00417cd342a7bmr111897qtb.3.1697525489453; Mon, 16 Oct
- 2023 23:51:29 -0700 (PDT)
+        bh=MJSddZ0dGB6k3S6Wf36lPI8PKwn536bSm0E7Nwxx8qM=;
+        b=PszuaLmF10Jpfxz4yYF/MM0lBeGpUfGRHczWZ9TsAculqu9QcL8XEWTHUJKYiruwjr
+         mNHqvm7a1SqjxRInJ9CHBOxhOCOoZD+5h/ukHlC1SBr0F/hysSNUeaGr2MBajnezFn6C
+         BBpUQQuFXQMgkLVFK8X9Ryc15qs0aqulqLB/msJnM4hiz9P7CaNXDhG5M66qrV8i8OPK
+         18DSmPhSfjkwd6qJQ+UEm7Ptp6SRX3Yc0vUtMTJ+hYsNhrJPE6kgHZV+z4dpNpcMD9HL
+         1vmJfJOr+bQl7U900hvw1YUf8WDulcEQGfDDSgzYkdnzB/82Ij8cpMOWB1h85sWwsmiE
+         9Tdg==
+X-Gm-Message-State: AOJu0YwmIbW6l7sCL4IjBZ8r3MwFCyoMLuACQJJv4otv3e4G2T5m9DD4
+	w7R4NY6/kMiO+lxck4Jpnx9HE7b4nV3nQhFt5GHI6A==
+X-Google-Smtp-Source: AGHT+IGdaallY0/Z0dk1uumP4gP3TI0PsofLDJ8x7UN64T/PbxNrhMxhrOA0/Iq+hFcVA8qb3CsR8jlHXjTnqg3B9Ek=
+X-Received: by 2002:ac8:7753:0:b0:417:9238:5a30 with SMTP id
+ g19-20020ac87753000000b0041792385a30mr137245qtu.29.1697531712820; Tue, 17 Oct
+ 2023 01:35:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231016143828.647848-1-jeffxu@chromium.org> <20231016143828.647848-2-jeffxu@chromium.org>
- <2023101614-scarce-discount-d7ff@gregkh>
-In-Reply-To: <2023101614-scarce-discount-d7ff@gregkh>
+References: <20231016143828.647848-1-jeffxu@chromium.org> <ZS1URCBgwGGj9JtM@casper.infradead.org>
+In-Reply-To: <ZS1URCBgwGGj9JtM@casper.infradead.org>
 From: Jeff Xu <jeffxu@google.com>
-Date: Mon, 16 Oct 2023 23:50:00 -0700
-Message-ID: <CALmYWFsVzHiysp1c2PuqfdE1ENDkK1xegoZedtCOaHzmxx2OSg@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 1/8] Add mseal syscall
-To: Greg KH <gregkh@linuxfoundation.org>
+Date: Tue, 17 Oct 2023 01:34:35 -0700
+Message-ID: <CALmYWFu58LYuSn8DqiU8NjPJzTQuLXu4mg7dHaP1ZW2z3jaaXQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 0/8] Introduce mseal() syscall
+To: Matthew Wilcox <willy@infradead.org>
 Cc: jeffxu@chromium.org, akpm@linux-foundation.org, keescook@chromium.org, 
 	sroettger@google.com, jorgelo@chromium.org, groeck@chromium.org, 
 	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
@@ -62,72 +61,122 @@ Cc: jeffxu@chromium.org, akpm@linux-foundation.org, keescook@chromium.org,
 	ben@decadent.org.uk, catalin.marinas@arm.com, david@redhat.com, 
 	dwmw@amazon.co.uk, ying.huang@intel.com, hughd@google.com, joey.gouly@arm.com, 
 	corbet@lwn.net, wangkefeng.wang@huawei.com, Liam.Howlett@oracle.com, 
-	torvalds@linux-foundation.org, lstoakes@gmail.com, willy@infradead.org, 
-	mawupeng1@huawei.com, linmiaohe@huawei.com, namit@vmware.com, 
-	peterx@redhat.com, peterz@infradead.org, ryan.roberts@arm.com, 
-	shr@devkernel.io, vbabka@suse.cz, xiujianfeng@huawei.com, yu.ma@intel.com, 
-	zhangpeng362@huawei.com, dave.hansen@intel.com, luto@kernel.org, 
-	linux-hardening@vger.kernel.org
+	torvalds@linux-foundation.org, lstoakes@gmail.com, mawupeng1@huawei.com, 
+	linmiaohe@huawei.com, namit@vmware.com, peterx@redhat.com, 
+	peterz@infradead.org, ryan.roberts@arm.com, shr@devkernel.io, vbabka@suse.cz, 
+	xiujianfeng@huawei.com, yu.ma@intel.com, zhangpeng362@huawei.com, 
+	dave.hansen@intel.com, luto@kernel.org, linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
 	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
+	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Mon, Oct 16, 2023 at 8:07=E2=80=AFAM Greg KH <gregkh@linuxfoundation.org=
+Hi Matthew.
+
+Thanks for your comments and time to review the patchset.
+
+On Mon, Oct 16, 2023 at 8:18=E2=80=AFAM Matthew Wilcox <willy@infradead.org=
 > wrote:
 >
-> On Mon, Oct 16, 2023 at 02:38:20PM +0000, jeffxu@chromium.org wrote:
-> > +#ifdef CONFIG_MSEAL
-> > +     /*
-> > +      * bit masks for seal.
-> > +      * need this since vm_flags is full.
-> > +      */
-> > +     unsigned long vm_seals;         /* seal flags, see mm.h. */
+> On Mon, Oct 16, 2023 at 02:38:19PM +0000, jeffxu@chromium.org wrote:
+> > Modern CPUs support memory permissions such as RW and NX bits. Linux ha=
+s
+> > supported NX since the release of kernel version 2.6.8 in August 2004 [=
+1].
 >
-> "unsigned long" and yet:
+> This seems like a confusing way to introduce the subject.  Here, you're
+> talking about page permissions, whereas (as far as I can tell), mseal() i=
+s
+> about making _virtual_ addresses immutable, for some value of immutable.
 >
-> > diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-> > index c0cb22cd607d..f574c7dbee76 100644
-> > --- a/include/linux/syscalls.h
-> > +++ b/include/linux/syscalls.h
-> > @@ -802,6 +802,8 @@ asmlinkage long sys_process_mrelease(int pidfd, uns=
-igned int flags);
-> >  asmlinkage long sys_remap_file_pages(unsigned long start, unsigned lon=
-g size,
-> >                       unsigned long prot, unsigned long pgoff,
-> >                       unsigned long flags);
-> > +asmlinkage long sys_mseal(unsigned long start, size_t len, unsigned in=
-t types,
-> > +                       unsigned int flags);
+> > Memory sealing additionally protects the mapping itself against
+> > modifications. This is useful to mitigate memory corruption issues wher=
+e
+> > a corrupted pointer is passed to a memory management syscall. For examp=
+le,
+> > such an attacker primitive can break control-flow integrity guarantees
+> > since read-only memory that is supposed to be trusted can become writab=
+le
+> > or .text pages can get remapped. Memory sealing can automatically be
+> > applied by the runtime loader to seal .text and .rodata pages and
+> > applications can additionally seal security critical data at runtime.
+> > A similar feature already exists in the XNU kernel with the
+> > VM_FLAGS_PERMANENT [3] flag and on OpenBSD with the mimmutable syscall =
+[4].
+> > Also, Chrome wants to adopt this feature for their CFI work [2] and thi=
+s
+> > patchset has been designed to be compatible with the Chrome use case.
 >
-> "unsigned int"?
+> This [2] seems very generic and wide-ranging, not helpful.  [5] was more
+> useful to understand what you're trying to do.
 >
-> Why the mis-match?
->
-Thanks. Fixed in V2.
-
-> > --- a/include/uapi/linux/mman.h
-> > +++ b/include/uapi/linux/mman.h
-> > @@ -55,4 +55,10 @@ struct cachestat {
-> >       __u64 nr_recently_evicted;
-> >  };
+> > The new mseal() is an architecture independent syscall, and with
+> > following signature:
 > >
-> > +#define MM_SEAL_MSEAL                0x1
-> > +#define MM_SEAL_MPROTECT     0x2
-> > +#define MM_SEAL_MUNMAP               0x4
-> > +#define MM_SEAL_MMAP         0x8
-> > +#define MM_SEAL_MREMAP               0x10
+> > mseal(void addr, size_t len, unsigned int types, unsigned int flags)
+> >
+> > addr/len: memory range.  Must be continuous/allocated memory, or else
+> > mseal() will fail and no VMA is updated. For details on acceptable
+> > arguments, please refer to comments in mseal.c. Those are also fully
+> > covered by the selftest.
 >
-> I think we can use the BIT() macro in uapi .h files now, it is _BITUL().
-> Might want to use it here too to make it obvious what is happening.
+> Mmm.  So when you say "continuous/allocated" what you really mean is
+> "Must have contiguous VMAs" rather than "All pages in this range must
+> be populated", yes?
 >
-Sure. Will update in V2.
+There can't be a gap (unallocated memory) in the given range.
+Those are covered in selftest:
+test_seal_unmapped_start()
+test_seal_unmapped_middle()
+test_seal_unmapped_end()
+The comments in check_mm_seal() also mentioned that.
 
-> thanks,
+> > types: bit mask to specify which syscall to seal, currently they are:
+> > MM_SEAL_MSEAL 0x1
+> > MM_SEAL_MPROTECT 0x2
+> > MM_SEAL_MUNMAP 0x4
+> > MM_SEAL_MMAP 0x8
+> > MM_SEAL_MREMAP 0x10
 >
-> greg k-h
+> I don't understand why we want this level of granularity.  The OpenBSD
+> and XNU examples just say "This must be immutable*".  For values of
+> immutable that allow downgrading access (eg RW to RO or RX to RO),
+> but not upgrading access (RW->RX, RO->*, RX->RW).
+>
+> > Each bit represents sealing for one specific syscall type, e.g.
+> > MM_SEAL_MPROTECT will deny mprotect syscall. The consideration of bitma=
+sk
+> > is that the API is extendable, i.e. when needed, the sealing can be
+> > extended to madvise, mlock, etc. Backward compatibility is also easy.
+>
+> Honestly, it feels too flexible.  Why not just two flags to mprotect()
+> -- PROT_IMMUTABLE and PROT_DOWNGRADABLE.  I can see a use for that --
+> maybe for some things we want to be able to downgrade and for other
+> things, we don't.
+>
+Having a seal type per syscall type helps to add the feature incrementally.
+Applications also know exactly what is sealed.
+
+I'm not against types such as IMMUTABLE and DOWNGRADEABLE, if we
+can define what it seals precisely. As Jann pointed out, there have
+other scenarios that potentially affect IMMUTABLE. Implementing all thoses
+will take time. And if we missed a case, we could introduce backward
+compatibility issues to the application. Bitmask will solve this nicely, i.=
+e.
+application will need to apply the newly added sealing type explicitly.
+
+> I'd like to see some discussion of how this interacts with mprotect().
+> As far as I can tell, the intent is to lock the protections/existance
+> of the mapping, and not to force memory to stay in core.  So it's fine
+> for the kernel to swap out the page and set up a PTE as a swap entry.
+> It's also fine for the kernel to mark PTEs as RO to catch page faults;
+> we're concerned with the LOGICAL permissions, and not the page tables.
+
+Yes. That is correct.
+
+-Jeff Xu
