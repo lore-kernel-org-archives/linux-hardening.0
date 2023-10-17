@@ -1,238 +1,137 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C728D28DD2
-	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 23:01:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB5EC2E402
+	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 23:12:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A7yO6MSc"
-Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF46C123
-	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 16:01:52 -0700 (PDT)
-Received: by mail-qt1-x833.google.com with SMTP id d75a77b69052e-41b813f0a29so65031cf.0
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 16:01:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PXOEaHY9"
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01891F1
+	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 16:12:49 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d9ad31a1fb3so7578428276.1
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 16:12:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697583711; x=1698188511; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ImnM3gTgvQUDZbbKNrv2s4PovNIFWxZGTx+tFBxEKCA=;
-        b=A7yO6MSch9D1Y7KGob8X8JTG8G9ij12MKR7I7utx1DUsTtuuQWiuYuFCPD/qg/hq0E
-         edj2wqPSVvbGNpHCl9278UUmDyxBzdgwkINhWwXbB1lYZ+pTcQbqOWFZLLqF2nbX+8k/
-         j4llB2vEaFCGO5SETUEoIzd6x1zdt4U8wkYTniL8fsrXJ/mAfFWF6igxbRUysywevlBs
-         QhzlhES29vTjn26T6zpTxlwPR0Wdke62227H/gnmSwAqLc4y2MvnRMLGWkEKAXhkKKhw
-         H6ULLh0h55BWIxoPVIGTeuYChQLfhXUY0/w3pfQeW4QLBS7nlyKHB2ltDx8v1Ib+YkWb
-         zcHw==
+        d=google.com; s=20230601; t=1697584369; x=1698189169; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=qJPL6XQWTu91QMPy+qd0o+1YjlCp6zhTXPWOlC7y3Hk=;
+        b=PXOEaHY92YXHkMvzlTiFsTgUrOrNK3mMmB/H3/fsEf7rHaom1eDW7UzhtVDL0S4zqH
+         ISj5Wv+0YlDZjlAc8mkGnUV3b6al6FRGdEkP9YmnJUVrJR0PbEIBNXGZ8SRzqXYI2Mp+
+         zasQZeaCF6qv0JL0iHra5uPblmqUpCnJrRymWByIIRj17mQFHmVP201UMeeJ/YWKNbYS
+         Y9swA1ZnlthbydwA7Jlg6scn0eTFGRjFnZ4UyLR9nUnhP5U+VVMoejHKTGm8KGYEcCth
+         p0DJGpiTYUcdA+/D4/HY6t5gPIstjY0//oxkxW89gf3mtvXAZ4P15XUMK9L6fU/eUgRo
+         v81g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697583711; x=1698188511;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ImnM3gTgvQUDZbbKNrv2s4PovNIFWxZGTx+tFBxEKCA=;
-        b=M9JdZarRga/RrnnsMw/3Te1TvKsoCV1Uqs0c1TKgk4+K2gxxvYk9asLphLQp1PjsYS
-         mMXa1NKXqlGDfv5yUBOiBRUDTxmh/fe1pReQuN9cCdaq++QsOXQ8RbZPdfhwiGUm0Zpr
-         oajTsmM1BFfriF/ZABGfgmzZbEh+WNnShIzcgCvZG3atR5513fwWnSWEbeDYP7tcTwux
-         t1z8tENtYj+VrvQT+k5uPlH+KfcyjJ9kdcYhY5ZQ/Z8tpIAWS7qVliOpnwRh12nlFwLe
-         mNQiZ/d01zsT3Cfl3nkp7MS3pEUCur6Aqpv6tLvDta/dVXhX1Ytgjguq7bKlIVnqAH6R
-         1BAA==
-X-Gm-Message-State: AOJu0YwXCovy2rSvmuSoMaI4UaE0a0FypiRUgoQmJ1y7vz5WmJd6Fhbv
-	+HujucKSI2VrxtwFPqJ+t4uVOG+NPmFfWBUGUk/nYw==
-X-Google-Smtp-Source: AGHT+IFRiCphE8SGRZza9wFnaYv5dtjuDGiQxMHSXLNnXD68r7Tsnp6XlmaQHLEDn/NPKGLCG14R2gjFx0iFXzfE8zw=
-X-Received: by 2002:a05:622a:a047:b0:41b:ef8f:dcbc with SMTP id
- ju7-20020a05622aa04700b0041bef8fdcbcmr149648qtb.0.1697583710994; Tue, 17 Oct
- 2023 16:01:50 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1697584369; x=1698189169;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qJPL6XQWTu91QMPy+qd0o+1YjlCp6zhTXPWOlC7y3Hk=;
+        b=S3TY5iwa/VUhMiIa2mUzyPuct0qhpegd8E/QShq0P5XgmgiyhfRNgi73tKQTl59c9x
+         nwXvPw+jFvvaO0q8KJxTgV8RtDlxO13ZBIl5SPtaXQ1GakY08FLOic3Qq3PwtgJazw1g
+         I1Mbu2D48yCqpmXw9CCw7Ur+32ePxnB+lJmHfh24ZqfKpyLDAre9lOljJugYxdjqcW3R
+         MYErKm/X9VX07XX+9FzpkCe2pHtkqhc3Klr1Jj9VuMKxxKfONNjkIHCZP46vv9NZAgWE
+         YHPNA6GWrrUqqGPojeepBV3J2cMydFZh0URQW94fw4iQQ7GvZRlo+2on3i7yRQpX3Yxi
+         hFiQ==
+X-Gm-Message-State: AOJu0YyeFRJE+9ulAYNXJabMw9D0MaPLUsKjCSaagcm2+CBvc79CNwLm
+	h4ycF++L8WO0Th/bnIFOXbK9eHDBiN+BBKLf8w==
+X-Google-Smtp-Source: AGHT+IF1RAxru2SV0JiTclifKFGV06p9lUAVjlXNjuX16xCj2mB+4VrqyxgTeao1uihdEdu2eAtySY8gBxdPfI0QMg==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a25:b09:0:b0:d9a:6855:6d31 with SMTP
+ id 9-20020a250b09000000b00d9a68556d31mr73485ybl.3.1697584369270; Tue, 17 Oct
+ 2023 16:12:49 -0700 (PDT)
+Date: Tue, 17 Oct 2023 23:12:48 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20231016143828.647848-1-jeffxu@chromium.org> <CAHk-=whFZoap+DBTYvJx6ohqPwn11Puzh7q4huFWDX9vBwXHgg@mail.gmail.com>
- <CALmYWFtTDAb_kpZdAe_xspqwNgK1NWJmjTxaTC=jDEMzfe297Q@mail.gmail.com>
- <CAHk-=wj87GMTH=5901ob=SjQqegAm2JYBE7E4J7skJzE64U-wQ@mail.gmail.com> <55960.1697566804@cvs.openbsd.org>
-In-Reply-To: <55960.1697566804@cvs.openbsd.org>
-From: Jeff Xu <jeffxu@google.com>
-Date: Tue, 17 Oct 2023 16:01:13 -0700
-Message-ID: <CALmYWFs81T=XnT=AXQTo0+9FXo=OBAV_4rrYPSn9-16O-gBTZg@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 0/8] Introduce mseal() syscall
-To: Theo de Raadt <deraadt@openbsd.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, jeffxu@chromium.org, 
-	akpm@linux-foundation.org, keescook@chromium.org, sroettger@google.com, 
-	jorgelo@chromium.org, groeck@chromium.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, jannh@google.com, 
-	surenb@google.com, alex.sierra@amd.com, apopple@nvidia.com, 
-	aneesh.kumar@linux.ibm.com, axelrasmussen@google.com, ben@decadent.org.uk, 
-	catalin.marinas@arm.com, david@redhat.com, dwmw@amazon.co.uk, 
-	ying.huang@intel.com, hughd@google.com, joey.gouly@arm.com, corbet@lwn.net, 
-	wangkefeng.wang@huawei.com, Liam.Howlett@oracle.com, lstoakes@gmail.com, 
-	willy@infradead.org, mawupeng1@huawei.com, linmiaohe@huawei.com, 
-	namit@vmware.com, peterx@redhat.com, peterz@infradead.org, 
-	ryan.roberts@arm.com, shr@devkernel.io, vbabka@suse.cz, 
-	xiujianfeng@huawei.com, yu.ma@intel.com, zhangpeng362@huawei.com, 
-	dave.hansen@intel.com, luto@kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAO8UL2UC/x3NTQqDMBBA4avIrDvgxKjQq5Qu0mTaDkiUmeAP4
+ t0buvw2751grMIG9+YE5VVM5lxBtwbiN+QPo6RqcK3rqKURrWiOy4FJZWU1zFxwE+WJzbAIbhO 5njDEHSP6kV9xCMn7roeaXJTfsv93j+d1/QBnMkHwfgAAAA==
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1697584368; l=2538;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=5D83orUb3gyhDUlDeVDVW1PaTTVcafALjffwJNnrV0I=; b=Zoa1dQfYP30omS9KZsLyHDYiXZj1atVVZDTjnUxa+sFDfk1rhxQUTD2gr/YxwotX/S6ojeeIz
+ 0NdGav3EIN5AGD+/Ha1lrhBT/HzBatDdLilGTbXA40x8NeuySGmwCYK
+X-Mailer: b4 0.12.3
+Message-ID: <20231017-strncpy-drivers-net-wireless-ti-wl1251-acx-c-v1-1-a99584e82f65@google.com>
+Subject: [PATCH] wl1251: replace deprecated strncpy with strscpy
+From: Justin Stitt <justinstitt@google.com>
+To: Kalle Valo <kvalo@kernel.org>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
+X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Tue, Oct 17, 2023 at 11:20=E2=80=AFAM Theo de Raadt <deraadt@openbsd.org=
-> wrote:
->
-> Linus Torvalds <torvalds@linux-foundation.org> wrote:
->
-> > On Tue, 17 Oct 2023 at 02:08, Jeff Xu <jeffxu@google.com> wrote:
-> > >
-> > > It is probably worth noting that I choose to check one and only
-> > > one sealing type per syscall. i.e. munmap(2) checks
-> > > MM_SEAL_MUNMAP only.
-> >
-> > Yeah, this is wrong.
-> >
-> > It's wrong exactly because other system calls will unmap things too.
-> >
-> > Using mmap() to over-map something will unmap the old one.
-> >
-> > Same goes for mremap() to move over an existing mapping.
-> >
-> > So the whole "do things by the name of the system call" is not workable=
-.
-> >
-> > All that matters is what the system calls *do*, not what their name is.
->
-> I agree completely...
->
-> mseal() is a clone of mimmutable(2), but with an extremely
-> over-complicated API based upon dubious arguments.
->
-> I designed mimmutable(2) [1] in OpenBSD, it took about a year to get all
-> the components working correctly.  There were many intermediate API
-> during development, but in the end the API is simply:
->
->      int mimmutable(void *addr, size_t len);
->
-> The kernel code for mimmutable() traverses the specified VA range.  In
-> that range, it will find unmapped sub-regions (which are are ignored)
-> and mapped sub-regions. For these mapped regions, it does not care what
-> the permissions are, it just marks each sub-region as immutable.
->
-> Later on, when any VM operation request upon a VA range attempts to
->       (1) change the permissions
->       (2) to re-map on top
->       (3) or dispose of the mapping,
-> that operation is refused with errno EPERM.  We don't care where the
-> request comes from (ie. what system call).  It is a behaviour of the
-> VM system, when asked to act upon a VA sub-range mapping.
->
-> Very simple semantics.
->
-> The only case where the immutable marker is ignored is during address spa=
-ce
-> teardown as a result of process termination.
->
-May I ask, for BSD's implementation of immutable(), do you cover
-things such as mlock(),
-madvice() ? or just the protection bit (WRX) + remap() + unmap().
+strncpy() is deprecated for use on NUL-terminated destination strings
+[1] and as such we should prefer more robust and less ambiguous string
+interfaces.
 
-In other words:
-Is BSD's definition of immutable equivalent to
-MM_SEAL_MPROTECT|MM_SEAL_MUNMAP|MM_SEAL_MREMAP|MM_SEAL_MMAP, of this patch =
-set ?
+There was a lot of effort done here to ensure buf is NUL-terminated. We
+now have access to better string apis -- `buf` should be NUL-terminated
+and doesn't seem to require NUL-padding as its only use is with format
+strings in wl1251/main.c
+403 | wl1251_info("firmware booted (%s)", wl->fw_ver);
 
-I hesitate to introduce the concept of immutable into linux because I don't=
- know
-all the scenarios present in linux where VMAs's metadata can be
-modified. As Jann's email pointed out,
-There could be quite a few things we still need to deal with, to
-completely block the possibility,
-e.g. malicious code attempting to write to a RO memory or change RW
-memory to RWX.
+Therefore, a suitable replacement is `strscpy` [2] due to the fact that
+it guarantees NUL-termination on the destination buffer without
+unnecessarily NUL-padding.
 
-If, as part of immutable, I also block madvice(), mlock(), which also updat=
-es
-VMA's metadata, so by definition, I could.  What if the user wants the
-features in
-madvice() and at the same time, also wants their .text protected ?
+Do note that there is only one caller of wl1251_acx_fw_version() in
+drivers/net/wireless/ti/wl1251/boot.c:
+264 | wl1251_acx_fw_version(wl, wl->fw_ver, sizeof(wl->fw_ver));
+... which passes wl->fw_ver and sizeof(wl->fw_ver) wherein fw_ver is
+defined as having size 21 in wl1251.h:
+383 | char fw_ver[21];
+... and since fw_version has a size of 20 in acx.h:
+66 | char fw_version[20];
+... there is no overflow or truncation because sizeof(dest) > sizeof(src).
 
-Also, if linux introduces a new syscall that depends on a new metadata of V=
-MA,
-say msecret(), (for discussion purpose), should immutable
-automatically support that ?
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Note: build-tested only.
 
-Without those questions answered, I couldn't choose the route of
-immutable() yet.
+Found with: $ rg "strncpy\("
+---
+ drivers/net/wireless/ti/wl1251/acx.c | 10 +---------
+ 1 file changed, 1 insertion(+), 9 deletions(-)
 
--Jeff
+diff --git a/drivers/net/wireless/ti/wl1251/acx.c b/drivers/net/wireless/ti/wl1251/acx.c
+index f78fc3880423..ed5733e0dd5e 100644
+--- a/drivers/net/wireless/ti/wl1251/acx.c
++++ b/drivers/net/wireless/ti/wl1251/acx.c
+@@ -149,15 +149,7 @@ int wl1251_acx_fw_version(struct wl1251 *wl, char *buf, size_t len)
+ 		goto out;
+ 	}
+ 
+-	/* be careful with the buffer sizes */
+-	strncpy(buf, rev->fw_version, min(len, sizeof(rev->fw_version)));
+-
+-	/*
+-	 * if the firmware version string is exactly
+-	 * sizeof(rev->fw_version) long or fw_len is less than
+-	 * sizeof(rev->fw_version) it won't be null terminated
+-	 */
+-	buf[min(len, sizeof(rev->fw_version)) - 1] = '\0';
++	strscpy(buf, rev->fw_version, len);
+ 
+ out:
+ 	kfree(rev);
 
+---
+base-commit: 58720809f52779dc0f08e53e54b014209d13eebb
+change-id: 20231017-strncpy-drivers-net-wireless-ti-wl1251-acx-c-47ebc6ad4435
 
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
 
->
-> In his submission of this API, Jeff Xu makes three claims I find dubious;
->
-> > Also, Chrome wants to adopt this feature for their CFI work [2] and thi=
-s
-> > patchset has been designed to be compatible with the Chrome use case.
->
-> I specifically designed mimmutable(2) with chrome in mind, and the
-> chrome binary running on OpenBSD is full of immutable mappings.  All the
-> library regions automatically become immutable because ld.so can infer
-> it and do the mimmutable calls for the right subregions.
->
-> So this chrome work has already been done by OpenBSD, and it is dead
-> simple.  During early development I thought mimmutable(2) would be
-> called by applications or libraries, but I was dead wrong: 99.9% of
-> calls are from ld.so, and no applications need to call it, these are the
-> two exceptions:
->
-> In OpenBSD, mimmutable() is used in libc malloc() to lock-down some data
-> structures at initialization time, so they canoot be attacked to create
-> an invariant for use in ROP return-to-libc style methods.
->
-> In Chrome, there is a v8_flags variable rounded out to a full page, and
-> placed in .data.  Chrome initialized this variable, and wants to mprotect
-> PROT_READ, but .data has been made immutable by ld.so.  So we force this
-> page into a new ELF section called "openbsd.mutable" which also behaves R=
-W
-> like .data.  Where chrome does the mprotect  PROT_READ, it now also perfo=
-rms
-> mimmutable() on that page.
->
-> > Having a seal type per syscall type helps to add the feature incrementa=
-lly.
->
-> Yet, somehow OpenBSD didn't do it per syscall, and we managed to make our
-> entire base operating system and 10,000+ applications automatically recei=
-ve
-> the benefits.  In one year's effort.  The only application which cared ab=
-out
-> it was chrome, described in the previous paragraph.
->
-> I think Jeff's idea here is super dangerous.  What will actually happen
-> is people will add a few mseal() sub-operations and think the job is done=
-.
-> It isn't done.  They need all the mseal() requests, or the mapping are
-> not safe.
->
-> It is very counterproductive to provide developers a complex API that has
-> insecure suboperations.
->
-> > Applications also know exactly what is sealed.
->
-> Actually applicatins won't know because there is no tooling to inspect th=
-is --
-> but I will argue further that applications don't need to know.  Immutable
-> marking is a system decision, not a program decision.
->
->
-> I'll close by asking for a new look at the mimmutable(2) API we settled
-> on for OpenBSD.  I think there is nothing wrong with it.  I'm willing to
-> help guide glibc / ld.so / musl teams through the problems they may find
-> along the way, I know where the skeletons are buried.  Two in
-> particular: -znow RELRO already today, and xonly-text in the future.
->
->
-> [1] https://man.openbsd.org/mimmutable.2
->
