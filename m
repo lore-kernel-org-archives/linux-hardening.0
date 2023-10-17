@@ -1,221 +1,152 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BD4C168D8
-	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 22:35:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 064C043102
+	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 22:52:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kz9JnNxI"
-Received: from mail-ua1-x92a.google.com (mail-ua1-x92a.google.com [IPv6:2607:f8b0:4864:20::92a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 231C1D3;
-	Tue, 17 Oct 2023 15:35:43 -0700 (PDT)
-Received: by mail-ua1-x92a.google.com with SMTP id a1e0cc1a2514c-7b652e785dbso1670703241.0;
-        Tue, 17 Oct 2023 15:35:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697582142; x=1698186942; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wdeKf2/h6eRXVjrIhtW4p5eKxKczJ25w9PIDmoQxibo=;
-        b=kz9JnNxIUjf6OO+HO6ozFGxWY9E3XWxXqtZBmDfSzNx4d2FAWGHTk0r8Kh+sMBdVGN
-         RR8dH13ai0vJx+omnUDA34J94KuTaWGgk7v50Hv4V/Dntj8JhkpctybYPrm5yRd7hUbo
-         BX3GBr+CIOwpy2ZExkt+XzgE8Zp0CKqgZa5MuTANqZvvEYo2sm2waZ8kFh0pwAQgl6fp
-         knqmhchJa0ZehJRzuKH3I7buMxUY/Sk0Y8BtIOQv8zRTlRFvqyD/hEmAy2Xl5G7mVymS
-         fkVw/9y0R0TZ33LE6oAedBlbOH6JHJ25aYnq0CSbFjhVIuaUMkPLzfWjzGH/uHPxyZ65
-         ytKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697582142; x=1698186942;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wdeKf2/h6eRXVjrIhtW4p5eKxKczJ25w9PIDmoQxibo=;
-        b=ef14aSyDOaG/WdbkyvrOi2P0Sh50+f8oFeixGt2X7B6zfV9+ex3w6ypSrq6yZ+kGSl
-         Jz+8YmAZGpXLhRx/bQoNsfqv1g9MwMQndBIOxdnmltiYdr2nhf+Li6QdM0akFmL9N1Sz
-         xw7lRk12enTysdSFvJgpCqDnSIy3/xXvW+e+BiXfW3UFnreyp/H48Co/sipstfEThMTM
-         ScogehiUrX5S3CldeUOqOGsqL5foU/hNFTS6v35AU9Mnxm9pB4KJr2+5a5tAnnCYOFGf
-         uhAYR5VlUYFmDz4VNeTb2N6HsFaPIvsE9TzC/w6TobHzjM22oLiv7q1ppuWXU0ZNUtGZ
-         X2/Q==
-X-Gm-Message-State: AOJu0YwHWt/x23qSjeB4ZQfqolSZvjL2umELKC0rW7kuUpKg6H48KNpJ
-	qsI+UvmeooRgzcT/IbYF/KLZxyUzgod+lSjAp/w=
-X-Google-Smtp-Source: AGHT+IH5j9aX5uFG6qIm/ceWB+MagtIHZd+LHx139RfrZUAJXvcGu6hpgvKLuHEaHwGfMDIBoSSU12wdggts1ghINmc=
-X-Received: by 2002:a67:cc15:0:b0:452:60c5:20b with SMTP id
- q21-20020a67cc15000000b0045260c5020bmr3720336vsl.15.1697582142134; Tue, 17
- Oct 2023 15:35:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="e4Y2EOcW"
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 828EDC6;
+	Tue, 17 Oct 2023 15:52:05 -0700 (PDT)
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39HLmVON002294;
+	Tue, 17 Oct 2023 22:52:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=q9KRRRFXAQnEA4UviYcvdtUt2o4h6YZ/UCm4wZOGuzw=;
+ b=e4Y2EOcWDAv8EDEOUOa2o0/OfO7pxUcPr13eSghkk2lq4YFw+TVIRMQUROlgLOAUUXPI
+ T7LDsSs1OrwDoTYOb1VZHWqDyEF2dYnFYb8pbqdiTWft0/C9surDHRr94Sxi1Bycl+Xj
+ ZfaJk9CUawdZIVEykAOD9oU+0bni+0er9IPr+fdNt/ruJKBhlb4ZKiw5EScaT0Z0p9/O
+ uUyPzhdykXhNYzQAV47TIz7b/xl/TpwwGdTBeWHcfYcMSjX7zVoEWBqd4KDiZShDG0c7
+ zcRFaSmlcVpnjjQ7vWJ6bsqgjWUiP/Xfp+lBqFw0C/2vzywy3tQFCdoFUaQNhD1MR4Qo jg== 
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3tsv0v160j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 17 Oct 2023 22:52:00 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 39HMq0Mh019625
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 17 Oct 2023 22:52:00 GMT
+Received: from [10.111.183.229] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.39; Tue, 17 Oct
+ 2023 15:51:59 -0700
+Message-ID: <84ae63d1-671a-48b3-836b-7a12da54aa10@quicinc.com>
+Date: Tue, 17 Oct 2023 15:51:58 -0700
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231016143828.647848-1-jeffxu@chromium.org> <ZS1URCBgwGGj9JtM@casper.infradead.org>
- <CAKbZUD2A+=bp_sd+Q0Yif7NJqMu8p__eb4yguq0agEcmLH8SDQ@mail.gmail.com> <CALmYWFtOgMAQDGNoM6k2Ev4kMHD396wwH+rVDODaSjsyVMDogg@mail.gmail.com>
-In-Reply-To: <CALmYWFtOgMAQDGNoM6k2Ev4kMHD396wwH+rVDODaSjsyVMDogg@mail.gmail.com>
-From: Pedro Falcato <pedro.falcato@gmail.com>
-Date: Tue, 17 Oct 2023 23:35:30 +0100
-Message-ID: <CAKbZUD2j1jbomCAVxUX_JmG1rfa8udc=5SqVOpDgc-3GnSTbAQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 0/8] Introduce mseal() syscall
-To: Jeff Xu <jeffxu@google.com>
-Cc: Matthew Wilcox <willy@infradead.org>, jeffxu@chromium.org, akpm@linux-foundation.org, 
-	keescook@chromium.org, sroettger@google.com, jorgelo@chromium.org, 
-	groeck@chromium.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, jannh@google.com, 
-	surenb@google.com, alex.sierra@amd.com, apopple@nvidia.com, 
-	aneesh.kumar@linux.ibm.com, axelrasmussen@google.com, ben@decadent.org.uk, 
-	catalin.marinas@arm.com, david@redhat.com, dwmw@amazon.co.uk, 
-	ying.huang@intel.com, hughd@google.com, joey.gouly@arm.com, corbet@lwn.net, 
-	wangkefeng.wang@huawei.com, Liam.Howlett@oracle.com, 
-	torvalds@linux-foundation.org, lstoakes@gmail.com, mawupeng1@huawei.com, 
-	linmiaohe@huawei.com, namit@vmware.com, peterx@redhat.com, 
-	peterz@infradead.org, ryan.roberts@arm.com, shr@devkernel.io, vbabka@suse.cz, 
-	xiujianfeng@huawei.com, yu.ma@intel.com, zhangpeng362@huawei.com, 
-	dave.hansen@intel.com, luto@kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] airo: replace deprecated strncpy with strscpy_pad
+Content-Language: en-US
+To: Justin Stitt <justinstitt@google.com>, Kalle Valo <kvalo@kernel.org>
+CC: <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>
+References: <20231017-strncpy-drivers-net-wireless-cisco-airo-c-v1-1-e34d5b3b7e37@google.com>
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+In-Reply-To: <20231017-strncpy-drivers-net-wireless-cisco-airo-c-v1-1-e34d5b3b7e37@google.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.49.16.6]
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: e7YafDeEjwbUi7N0jETZVROMWxZnKvpM
+X-Proofpoint-GUID: e7YafDeEjwbUi7N0jETZVROMWxZnKvpM
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-17_06,2023-10-17_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ priorityscore=1501 malwarescore=0 phishscore=0 mlxscore=0 mlxlogscore=999
+ impostorscore=0 bulkscore=0 spamscore=0 lowpriorityscore=0 suspectscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2309180000 definitions=main-2310170193
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.6
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Tue, Oct 17, 2023 at 10:34=E2=80=AFPM Jeff Xu <jeffxu@google.com> wrote:
->
-> On Tue, Oct 17, 2023 at 8:30=E2=80=AFAM Pedro Falcato <pedro.falcato@gmai=
-l.com> wrote:
-> >
-> > On Mon, Oct 16, 2023 at 4:18=E2=80=AFPM Matthew Wilcox <willy@infradead=
-.org> wrote:
-> > >
-> > > On Mon, Oct 16, 2023 at 02:38:19PM +0000, jeffxu@chromium.org wrote:
-> > > > Modern CPUs support memory permissions such as RW and NX bits. Linu=
-x has
-> > > > supported NX since the release of kernel version 2.6.8 in August 20=
-04 [1].
-> > >
-> > > This seems like a confusing way to introduce the subject.  Here, you'=
-re
-> > > talking about page permissions, whereas (as far as I can tell), mseal=
-() is
-> > > about making _virtual_ addresses immutable, for some value of immutab=
-le.
-> > >
-> > > > Memory sealing additionally protects the mapping itself against
-> > > > modifications. This is useful to mitigate memory corruption issues =
-where
-> > > > a corrupted pointer is passed to a memory management syscall. For e=
-xample,
-> > > > such an attacker primitive can break control-flow integrity guarant=
-ees
-> > > > since read-only memory that is supposed to be trusted can become wr=
-itable
-> > > > or .text pages can get remapped. Memory sealing can automatically b=
-e
-> > > > applied by the runtime loader to seal .text and .rodata pages and
-> > > > applications can additionally seal security critical data at runtim=
-e.
-> > > > A similar feature already exists in the XNU kernel with the
-> > > > VM_FLAGS_PERMANENT [3] flag and on OpenBSD with the mimmutable sysc=
-all [4].
-> > > > Also, Chrome wants to adopt this feature for their CFI work [2] and=
- this
-> > > > patchset has been designed to be compatible with the Chrome use cas=
-e.
-> > >
-> > > This [2] seems very generic and wide-ranging, not helpful.  [5] was m=
-ore
-> > > useful to understand what you're trying to do.
-> > >
-> > > > The new mseal() is an architecture independent syscall, and with
-> > > > following signature:
-> > > >
-> > > > mseal(void addr, size_t len, unsigned int types, unsigned int flags=
-)
-> > > >
-> > > > addr/len: memory range.  Must be continuous/allocated memory, or el=
-se
-> > > > mseal() will fail and no VMA is updated. For details on acceptable
-> > > > arguments, please refer to comments in mseal.c. Those are also full=
-y
-> > > > covered by the selftest.
-> > >
-> > > Mmm.  So when you say "continuous/allocated" what you really mean is
-> > > "Must have contiguous VMAs" rather than "All pages in this range must
-> > > be populated", yes?
-> > >
-> > > > types: bit mask to specify which syscall to seal, currently they ar=
-e:
-> > > > MM_SEAL_MSEAL 0x1
-> > > > MM_SEAL_MPROTECT 0x2
-> > > > MM_SEAL_MUNMAP 0x4
-> > > > MM_SEAL_MMAP 0x8
-> > > > MM_SEAL_MREMAP 0x10
-> > >
-> > > I don't understand why we want this level of granularity.  The OpenBS=
-D
-> > > and XNU examples just say "This must be immutable*".  For values of
-> > > immutable that allow downgrading access (eg RW to RO or RX to RO),
-> > > but not upgrading access (RW->RX, RO->*, RX->RW).
-> > >
-> > > > Each bit represents sealing for one specific syscall type, e.g.
-> > > > MM_SEAL_MPROTECT will deny mprotect syscall. The consideration of b=
-itmask
-> > > > is that the API is extendable, i.e. when needed, the sealing can be
-> > > > extended to madvise, mlock, etc. Backward compatibility is also eas=
-y.
-> > >
-> > > Honestly, it feels too flexible.  Why not just two flags to mprotect(=
-)
-> > > -- PROT_IMMUTABLE and PROT_DOWNGRADABLE.  I can see a use for that --
-> > > maybe for some things we want to be able to downgrade and for other
-> > > things, we don't.
-> >
-> > I think it's worth pointing out that this suggestion (with PROT_*)
-> > could easily integrate with mmap() and as such allow for one-shot
-> > mmap() + mseal().
-> > If we consider the common case as 'addr =3D mmap(...); mseal(addr);', i=
-t
-> > definitely sounds like a performance win as we halve the number of
-> > syscalls for a sealed mapping. And if we trivially look at e.g OpenBSD
-> > ld.so code, mmap() + mimmutable() and mprotect() + mimmutable() seem
-> > like common patterns.
-> >
-> Yes. mmap() can support sealing as well, and memory is allocated as
-> immutable from begining.
-> This is orthogonal to mseal() though.
+On 10/17/2023 2:12 PM, Justin Stitt wrote:
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
+> 
+> `extra` is clearly supposed to be NUL-terminated which is evident by the
+> manual NUL-byte assignment as well as its immediate usage with strlen().
+> 
+> Moreover, let's NUL-pad since there is deliberate effort (48 instances)
+> made elsewhere to zero-out buffers in these getters and setters:
+> 6050 | memset(local->config.nodeName, 0, sizeof(local->config.nodeName));
+> 6130 | memset(local->config.rates, 0, 8);
+> 6139 | memset(local->config.rates, 0, 8);
+> 6414 | memset(key.key, 0, MAX_KEY_SIZE);
+> 6497 | memset(extra, 0, 16);
+> (to be clear, strncpy also NUL-padded -- we are matching that behavior)
+> 
+> Considering the above, a suitable replacement is `strscpy_pad` due to
+> the fact that it guarantees both NUL-termination and NUL-padding on the
+> destination buffer.
+> 
+> Technically, we can now copy one less byte into `extra` as we cannot
+> determine the sizeof `extra` at compile time and the hard-coded value of
+> 16 means that strscpy_pad() will automatically truncate and set the byte
+> at offset 15 to NUL. However, the current code manually sets a
+> NUL-byte at offset 16. If this is an issue, the solution is to change
+> the hard-coded magic number to 17 instead of 16. I didn't do this in
+> this patch because a hard-coded 17 seems bad (even more so than 16).
 
-I don't see how this can be orthogonal to mseal().
-In the case we opt for adding PROT_ bits, we should more or less only
-need to adapt calc_vm_prot_bits(), and the rest should work without
-issues.
-vma merging won't merge vmas with different prots. The current
-interfaces (mmap and mprotect) would work just fine.
-In this case, mseal() or mimmutable() would only be needed if you need
-to set immutability over a range of VMAs with different permissions.
+this function is a wext handler. In wext-core.c we have:
+static const struct iw_ioctl_description standard_ioctl[] = {
+...
+	[IW_IOCTL_IDX(SIOCGIWNICKN)] = {
+		.header_type	= IW_HEADER_TYPE_POINT,
+		.token_size	= 1,
+		.max_tokens	= IW_ESSID_MAX_SIZE,
+	},
 
-Note: modifications should look kinda like this: https://godbolt.org/z/Tbjj=
-d14Pe
-The only annoying wrench in my plans here is that we have effectively
-run out of vm_flags bits in 32-bit architectures, so this approach as
-I described is not compatible with 32-bit.
+So the buffer size is (strangely) IW_ESSID_MAX_SIZE if you want to use 
+that for the buffer size
 
-> In case of ld.so, iiuc, memory can be first allocated as W, then later
-> changed to RO, for example, during symbol resolution.
-> The important point is that the application can decide what type of
-> sealing it wants, and when to apply it.  There needs to be an api(),
-> that can be mseal() or mprotect2() or mimmutable(), the naming is not
-> important to me.
->
-> mprotect() in linux have the following signature:
-> int mprotect(void addr[.len], size_t len, int prot);
-> the prot bitmasks are all taken here.
-> I have not checked the prot field in mmap(), there might be bits left,
-> even not, we could have mmap2(), so that is not an issue.
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+> Note: build-tested only.
+> 
+> Found with: $ rg "strncpy\("
+> ---
+>   drivers/net/wireless/cisco/airo.c | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/cisco/airo.c b/drivers/net/wireless/cisco/airo.c
+> index dbd13f7aa3e6..8cfb1de5933e 100644
+> --- a/drivers/net/wireless/cisco/airo.c
+> +++ b/drivers/net/wireless/cisco/airo.c
+> @@ -6067,8 +6067,7 @@ static int airo_get_nick(struct net_device *dev,
+>   	struct airo_info *local = dev->ml_priv;
+>   
+>   	readConfigRid(local, 1);
+> -	strncpy(extra, local->config.nodeName, 16);
+> -	extra[16] = '\0';
+> +	strscpy_pad(extra, local->config.nodeName, 16);
+>   	dwrq->length = strlen(extra);
+>   
+>   	return 0;
+> 
+> ---
+> base-commit: 58720809f52779dc0f08e53e54b014209d13eebb
+> change-id: 20231017-strncpy-drivers-net-wireless-cisco-airo-c-d09cd0500a6e
+> 
+> Best regards,
+> --
+> Justin Stitt <justinstitt@google.com>
+> 
 
-I don't see what you mean. We have plenty of prot bits left (32-bits,
-and we seem to have around 8 different bits used).
-And even if we didn't, prot is the same in mprotect and mmap and mmap2 :)
-
-The only issue seems to be that 32-bit ran out of vm_flags, but that
-can probably be worked around if need be.
-
---=20
-Pedro
