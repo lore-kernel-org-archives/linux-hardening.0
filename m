@@ -1,114 +1,85 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8ABF1F606
-	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 17:22:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2C092D030
+	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 17:26:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Sm8viTof"
-Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25F4AFF
-	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 10:22:58 -0700 (PDT)
-Received: by mail-lj1-x22a.google.com with SMTP id 38308e7fff4ca-2c509f2c46cso57011771fa.1
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 10:22:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iPRPU5A3"
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 794E5B0
+	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 10:26:11 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id 4fb4d7f45d1cf-53da72739c3so9939509a12.3
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 10:26:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1697563376; x=1698168176; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=pYYZG7yAyFfJYvTA6jWgYrv4Zal/uQTaztc6Ctmxivo=;
-        b=Sm8viTof2xiy4A2RW3mev2AmdN07fghDIyQ+KnNKVB1DCN8kJ+1QUSvuLUJUZbd58a
-         cLw5Dn/RtTKKzO5LNELyZ3X/1+JlOtEaJi8B9fe/H5g4z/Qi27FggyiVFDOZz/IbYgre
-         1Atl679J+IKgPeIl4qSdQNtUEEAlBz1OKuxAQ=
+        d=google.com; s=20230601; t=1697563570; x=1698168370; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=V3sJOjdz4HmVX5Ee8oZMm7CVfPOQuCMEb6MVEUzA9CM=;
+        b=iPRPU5A3XNNncjTScWnfjjRgn/g5N397H/BtEh9Wb1MvhKyPX1GjZ3RYu0T1JgLqrn
+         fySYCLqE7D/js+nHNetHa8Nrndz17qAqJJd0/Is3TmNxbS9Fa8KgUSIN6IyTZPebz4I5
+         rG5NJi0JbzG4kdUUnhboccde97OOIuKU75f+TzNS7Y0tDB2vBo6dYMQZWjNpaoPTxtuZ
+         OQrrwdsSC68YNiiW+GDSkYusQl1pK76iZb91afaHFjPYvu6po5BanAj9dZXEbVHPvFTr
+         vqe73Oi3fusGLBN5HEQAEm1hFxOGkcKVhLEBai1Q3QlxYjmcaHTVTXxjBouNwKmY8KSE
+         ONPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697563376; x=1698168176;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pYYZG7yAyFfJYvTA6jWgYrv4Zal/uQTaztc6Ctmxivo=;
-        b=bde9dbq/uc12arbTTvTbnCQ3TVUD7SMtRtb+VR4ta+jl5OqEaVUSfIV2VjtjPo8nai
-         xllmKi1Vmr2u3fhpQisrLGRLAQvS1BjOj8CRKWBCECDz421u6cDuSpDNHAkqkd2dhQCi
-         er1OJtv3LDGyz0CZYqzZFBCdsRArw+CgIyspDZQNY25CdMvugoKmyBFL5QDbSZneIZDy
-         LDcSlpyncDIYbM9Epegz5Y6147hP4fwWSjEisJQeWcgeHkfZfXWbCtFsTMv4CufNKPKh
-         pWhVGQ4MsKX6l/MZ7oM5qpeDX3KiQ2o0n9LGdpmJdBDVPuGddVew/lRFuoiPtIu5xTYs
-         CYlw==
-X-Gm-Message-State: AOJu0Yz29HL+5Fc2+TTuFLWnlyE2yBWMbjhAHMOh8p6FENT94eDpo6Aa
-	akSaMGPx+flmA7mada5FJdQILmX6gtgM170TkHvwtRqE
-X-Google-Smtp-Source: AGHT+IGf5XXbEO6MFuLMDybTY6FMb76CHdRVR4+kFGsEsNXzRSGc3cYdC0q+q1uMbTACAOVJNfb2dA==
-X-Received: by 2002:a05:651c:321:b0:2bc:b224:98ac with SMTP id b1-20020a05651c032100b002bcb22498acmr1819872ljp.31.1697563375824;
-        Tue, 17 Oct 2023 10:22:55 -0700 (PDT)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id y26-20020a2eb01a000000b002c02e57c72bsm331219ljk.140.2023.10.17.10.22.54
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Oct 2023 10:22:55 -0700 (PDT)
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2c515527310so43609951fa.2
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 10:22:54 -0700 (PDT)
-X-Received: by 2002:a17:907:c08:b0:9bd:e017:370e with SMTP id
- ga8-20020a1709070c0800b009bde017370emr2539597ejc.54.1697563353335; Tue, 17
- Oct 2023 10:22:33 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1697563570; x=1698168370;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=V3sJOjdz4HmVX5Ee8oZMm7CVfPOQuCMEb6MVEUzA9CM=;
+        b=FHIP8y3tw5W6NRw8YIVLv0L+d5HedJsGwi7ZAjdS0E482q0nPcmCjitCuq0rm2nUu4
+         AAd5xfwPPSjYyeq54ME8u3vRtF5+4JdvSv8K46frwEdX+4AFNtP7+Vc2jbR5WUqObcIA
+         uDKOn1Bmre0gO2al/uYRQ0MczeZWp4RGva503PcCH5bB/pqgS2vSG1Ui4ebO0QiSdttR
+         CIBpBxbsmvZcyKrpxTg2sJ4oMwBMw2nzqHJfWiBESUnWYZFOrrqupJbHVVvNIvgpqiM2
+         vb5UNjTqdper2O4vpHwU6W+Z1oqpRJnFtj/KI03GSL+VeYq1ppbqM5BDScxIcoJ6z4+U
+         FX8g==
+X-Gm-Message-State: AOJu0YyW9O6wod1g5bw3QV4V8iNjCMflNxZUXyfuo/FIU2lupf45zUVT
+	HTiipB9yxay4YDJLznk7oaGcWBTE31nVW70ABfT2bQ==
+X-Google-Smtp-Source: AGHT+IHoa+w5G+1WhCe9EF6u7DQRQO9M4r38jyklDSYv3wWlfUUxuyT2jQDUZ5LPEAlUKpxXSAxQoovOtPawZoU+rjY=
+X-Received: by 2002:a50:cd03:0:b0:53e:c2fa:54a with SMTP id
+ z3-20020a50cd03000000b0053ec2fa054amr2314809edi.22.1697563569925; Tue, 17 Oct
+ 2023 10:26:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231016143828.647848-1-jeffxu@chromium.org> <CAHk-=whFZoap+DBTYvJx6ohqPwn11Puzh7q4huFWDX9vBwXHgg@mail.gmail.com>
- <CALmYWFtTDAb_kpZdAe_xspqwNgK1NWJmjTxaTC=jDEMzfe297Q@mail.gmail.com>
-In-Reply-To: <CALmYWFtTDAb_kpZdAe_xspqwNgK1NWJmjTxaTC=jDEMzfe297Q@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 17 Oct 2023 10:22:16 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj87GMTH=5901ob=SjQqegAm2JYBE7E4J7skJzE64U-wQ@mail.gmail.com>
-Message-ID: <CAHk-=wj87GMTH=5901ob=SjQqegAm2JYBE7E4J7skJzE64U-wQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 0/8] Introduce mseal() syscall
-To: Jeff Xu <jeffxu@google.com>
-Cc: jeffxu@chromium.org, akpm@linux-foundation.org, keescook@chromium.org, 
-	sroettger@google.com, jorgelo@chromium.org, groeck@chromium.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, jannh@google.com, surenb@google.com, alex.sierra@amd.com, 
-	apopple@nvidia.com, aneesh.kumar@linux.ibm.com, axelrasmussen@google.com, 
-	ben@decadent.org.uk, catalin.marinas@arm.com, david@redhat.com, 
-	dwmw@amazon.co.uk, ying.huang@intel.com, hughd@google.com, joey.gouly@arm.com, 
-	corbet@lwn.net, wangkefeng.wang@huawei.com, Liam.Howlett@oracle.com, 
-	lstoakes@gmail.com, willy@infradead.org, mawupeng1@huawei.com, 
-	linmiaohe@huawei.com, namit@vmware.com, peterx@redhat.com, 
-	peterz@infradead.org, ryan.roberts@arm.com, shr@devkernel.io, vbabka@suse.cz, 
-	xiujianfeng@huawei.com, yu.ma@intel.com, zhangpeng362@huawei.com, 
-	dave.hansen@intel.com, luto@kernel.org, linux-hardening@vger.kernel.org
+References: <20231012-strncpy-drivers-net-ethernet-ti-cpmac-c-v1-1-f0d430c9949f@google.com>
+ <20231016161353.48af3ed7@kernel.org>
+In-Reply-To: <20231016161353.48af3ed7@kernel.org>
+From: Justin Stitt <justinstitt@google.com>
+Date: Tue, 17 Oct 2023 10:25:58 -0700
+Message-ID: <CAFhGd8rjwEn8g0HXLtejyjv=L_0Gj2bCiE4fEcNnqhOqpdC+Xg@mail.gmail.com>
+Subject: Re: [PATCH] net: cpmac: replace deprecated strncpy with strscpy
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=no
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Tue, 17 Oct 2023 at 02:08, Jeff Xu <jeffxu@google.com> wrote:
+On Mon, Oct 16, 2023 at 4:13=E2=80=AFPM Jakub Kicinski <kuba@kernel.org> wr=
+ote:
 >
-> It is probably worth noting that I choose to check one and only
-> one sealing type per syscall. i.e. munmap(2) checks
-> MM_SEAL_MUNMAP only.
+> On Thu, 12 Oct 2023 20:53:30 +0000 Justin Stitt wrote:
+> > strncpy() is deprecated for use on NUL-terminated destination strings
+> > [1] and as such we should prefer more robust and less ambiguous string
+> > interfaces.
+>
+> This driver no longer exists. Praise be.
 
-Yeah, this is wrong.
+Thanks for the heads up.
 
-It's wrong exactly because other system calls will unmap things too.
+Ignore this patch :)
 
-Using mmap() to over-map something will unmap the old one.
-
-Same goes for mremap() to move over an existing mapping.
-
-So the whole "do things by the name of the system call" is not workable.
-
-All that matters is what the system calls *do*, not what their name is.
-
-And mmap() will fundamentally munmap() as part of the action.
-
-This is why I absolutely hated the old "ON_BEHALF_OF_xyz" flag, and
-why I still absolutely hate the "randomly pass different sealing flags
-fto do_munmap()".
-
-You should *not* be passing any flags at all to do_munmap(). Because
-*regardless* of who calls it, and regardless of which system call
-started the action, do_munmap() unmaps a virtual memory area.
-
-See what I'm saying?
-
-                 Linus
+> --
+> pw-bot: reject
