@@ -1,119 +1,110 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8652C2D794
-	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 18:55:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C6912DF69;
+	Tue, 17 Oct 2023 19:04:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b="8xwIonPT"
-Received: from cvs.openbsd.org (cvs.openbsd.org [199.185.137.3])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36A69FC;
-	Tue, 17 Oct 2023 11:55:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=selector1; bh=nltAwsLnVc
-	o8Ol3OOUaPBGv1UdYJKAJvkuezLI48KVs=; h=date:references:in-reply-to:
-	subject:cc:to:from; d=openbsd.org; b=8xwIonPTgs5mDltwxve/VanHgI0S5pOMV
-	r3DRia+EKAbNalzQ8JRX2Amk9L1RYwHUWowf+ECZ+JuhNYSGBSpYlbBgfgX86UGBTCXjoH
-	wwbJhZOx/gCpNq6wZSObg695vA1FRW9rLvSWVfTKdOjot3/uWB7YUedZPcn2BlPA6o/nAK
-	43Re55EP1rS//OSdUm8FY5T34SaTav9Ufb4evq1lyA38xQr3BWH1I6iKvb0Iqz0CFXqgfJ
-	wM2LaB0vIkEnB8kWbahyz2vV8TsQD5Y7z9bHZB2nyy6YyOdMTPj4kEWNF75aZxLv5O40kx
-	YyBV47e7tbtJPiwZhUTzq8rNQ1raw==
-Received: from cvs.openbsd.org (localhost [127.0.0.1])
-	by cvs.openbsd.org (OpenSMTPD) with ESMTP id 0883e4b1;
-	Tue, 17 Oct 2023 12:55:01 -0600 (MDT)
-From: "Theo de Raadt" <deraadt@openbsd.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-cc: Jeff Xu <jeffxu@google.com>, jeffxu@chromium.org,
-    akpm@linux-foundation.org, keescook@chromium.org,
-    sroettger@google.com, jorgelo@chromium.org, groeck@chromium.org,
-    linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-    linux-mm@kvack.org, jannh@google.com, surenb@google.com,
-    alex.sierra@amd.com, apopple@nvidia.com, aneesh.kumar@linux.ibm.com,
-    axelrasmussen@google.com, ben@decadent.org.uk,
-    catalin.marinas@arm.com, david@redhat.com, dwmw@amazon.co.uk,
-    ying.huang@intel.com, hughd@google.com, joey.gouly@arm.com,
-    corbet@lwn.net, wangkefeng.wang@huawei.com, Liam.Howlett@oracle.com,
-    lstoakes@gmail.com, willy@infradead.org, mawupeng1@huawei.com,
-    linmiaohe@huawei.com, namit@vmware.com, peterx@redhat.com,
-    peterz@infradead.org, ryan.roberts@arm.com, shr@devkernel.io,
-    vbabka@suse.cz, xiujianfeng@huawei.com, yu.ma@intel.com,
-    zhangpeng362@huawei.com, dave.hansen@intel.com, luto@kernel.org,
-    linux-hardening@vger.kernel.org
-Subject: Re: [RFC PATCH v1 0/8] Introduce mseal() syscall
-In-reply-to: <CAHk-=wjS=xg12RVQdTNxEurjo21eXQBQO0D5My6Aox4LCfsO1A@mail.gmail.com>
-References: <20231016143828.647848-1-jeffxu@chromium.org> <CAHk-=whFZoap+DBTYvJx6ohqPwn11Puzh7q4huFWDX9vBwXHgg@mail.gmail.com> <CALmYWFtTDAb_kpZdAe_xspqwNgK1NWJmjTxaTC=jDEMzfe297Q@mail.gmail.com> <CAHk-=wj87GMTH=5901ob=SjQqegAm2JYBE7E4J7skJzE64U-wQ@mail.gmail.com> <55960.1697566804@cvs.openbsd.org> <CAHk-=wjS=xg12RVQdTNxEurjo21eXQBQO0D5My6Aox4LCfsO1A@mail.gmail.com>
-Comments: In-reply-to Linus Torvalds <torvalds@linux-foundation.org>
-   message dated "Tue, 17 Oct 2023 11:38:19 -0700."
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d4ChJT1q"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32B67E8;
+	Tue, 17 Oct 2023 12:04:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1697569470; x=1729105470;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=dVehR1VFnDGkb1Ww/v3YUCqWzGMLrLskQ6bmezqJlB0=;
+  b=d4ChJT1qEycyILT3AIgYzTuJPN7QCAznxapveYXVjxcg+BuYWftbgOJz
+   sb61HctmhfePWf0qVy4hBvNdDpxW7hDBwKzL4Tf7tCFsU0A3l65bIqxng
+   yA+OiL9xfUwjiPuxzs0Nv9AdMMsbAHPAXtvC7Yd+cVEf3JnzAiTQZ09Q3
+   QNY9DslG4NItZoEkl17BUzMuPJmhuxYKBWrOI6oQ0LrwpWil+GuUBp9hN
+   10bpUGTvcdQrZiH2k+d0WiUNdtj5C1bzxmZ6zRYIFCKt9ESn5zOma/3CH
+   eMar63uC5Sx5yC5t+ARgop7Q9fwD4rbiYNZzL77abvWIDUEnQGLipsahU
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10866"; a="384739734"
+X-IronPort-AV: E=Sophos;i="6.03,233,1694761200"; 
+   d="scan'208";a="384739734"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2023 12:04:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10866"; a="822108729"
+X-IronPort-AV: E=Sophos;i="6.03,233,1694761200"; 
+   d="scan'208";a="822108729"
+Received: from jekeller-desk.amr.corp.intel.com (HELO jekeller-desk.jekeller.internal) ([10.166.241.1])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2023 12:04:18 -0700
+From: Jacob Keller <jacob.e.keller@intel.com>
+To: netdev@vger.kernel.org,
+	David Miller <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>
+Cc: Justin Stitt <justinstitt@google.com>,
+	linux-hardening@vger.kernel.org,
+	Jacob Keller <jacob.e.keller@intel.com>
+Subject: [PATCH net-next 4/9] e1000: replace deprecated strncpy with strscpy
+Date: Tue, 17 Oct 2023 12:04:06 -0700
+Message-ID: <20231017190411.2199743-5-jacob.e.keller@intel.com>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20231017190411.2199743-1-jacob.e.keller@intel.com>
+References: <20231017190411.2199743-1-jacob.e.keller@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <68270.1697568901.1@cvs.openbsd.org>
-Date: Tue, 17 Oct 2023 12:55:01 -0600
-Message-ID: <19404.1697568901@cvs.openbsd.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+From: Justin Stitt <justinstitt@google.com>
 
-> On Tue, 17 Oct 2023 at 11:20, Theo de Raadt <deraadt@openbsd.org> wrote:
-> >
-> > The only case where the immutable marker is ignored is during address space
-> > teardown as a result of process termination.
-> 
-> .. and presumably also execve()?
+`strncpy` is deprecated for use on NUL-terminated destination strings
+[1] and as such we should prefer more robust and less ambiguous string
+interfaces.
 
-Ah yes of course that also.
+We can see that netdev->name is expected to be NUL-terminated based on
+it's usage with format strings:
+|       pr_info("%s NIC Link is Down\n",
+|               netdev->name);
 
-> I do like us starting with just "mimmutable()", since it already
-> exists. Particularly if chrome already knows how to use it.
+A suitable replacement is `strscpy` [2] due to the fact that it
+guarantees NUL-termination on the destination buffer without
+unnecessarily NUL-padding.
 
-Well, our chrome fork knows how to use it.  Robert Nagy in our group maintains
-1280 patches to make chrome work on OpenBSD.  Google ignores them and will not
-upstream them.  Some of these changes are security related, and they ignore
-them.  Other changes are to cope with security work we've done on our own,
-for example: JIT changes from Stephen@google for mandatory IBT which google
-hasn't upstreamed yet, impacts due to PROT_EXEC-only mappings, etc.
+This is in line with other uses of strscpy on netdev->name:
+$ rg "strscpy\(netdev\->name.*pci.*"
 
-But the only chrome diff required for mimmutable is for that v8_flags thing
-I described.   And the same issue would need handling for mseal().  Introducing
-the new "mutable" ELF section is probably going to be a bigger fuss than the
-system call after mprotect(PROT_READ)....
+drivers/net/ethernet/intel/e1000e/netdev.c
+7455:   strscpy(netdev->name, pci_name(pdev), sizeof(netdev->name));
 
-> Maybe add a flag field (require it to be zero initially) just to allow
-> any future expansion. Maybe the chrome team has *wanted* to have some
-> finer granularity thing and currently doesn't use mimmutable() in some
-> case?
+drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+10839:  strscpy(netdev->name, pci_name(pdev), sizeof(netdev->name));
 
-There's only one feature I can think of, and we already do it right now,
-documented in our manual page:
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
+---
+ drivers/net/ethernet/intel/e1000/e1000_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-CAVEATS
-     At present, mprotect(2) may reduce permissions on immutable pages marked
-     PROT_READ | PROT_WRITE to the less permissive PROT_READ.  This one-way
-     operation is permitted for an introductory period to observe how software
-     uses this mechanism.  It may change to require explicit mutable region
-     annotation with __attribute__((section(".openbsd.mutable"))) and explicit
-     calls to mimmutable().
+diff --git a/drivers/net/ethernet/intel/e1000/e1000_main.c b/drivers/net/ethernet/intel/e1000/e1000_main.c
+index da6e303ad99b..1d1e93686af2 100644
+--- a/drivers/net/ethernet/intel/e1000/e1000_main.c
++++ b/drivers/net/ethernet/intel/e1000/e1000_main.c
+@@ -1014,7 +1014,7 @@ static int e1000_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	netdev->watchdog_timeo = 5 * HZ;
+ 	netif_napi_add(netdev, &adapter->napi, e1000_clean);
+ 
+-	strncpy(netdev->name, pci_name(pdev), sizeof(netdev->name) - 1);
++	strscpy(netdev->name, pci_name(pdev), sizeof(netdev->name));
+ 
+ 	adapter->bd_number = cards_found;
+ 
+-- 
+2.41.0
 
-We had something which needed this behaviour during the development
-transition.  It is exlusively mprotect RW -> R, no other transitions
-allowed.
-
-But once the transition was done, we don't need it anymore.  I want to
-delete it, because it is a bit of a trap.  It still fails closed from an
-attack perspective, but...
-
-What worries me is a piece of code reached by mistake can do a
-mprotect(lowering), not receive -1 EPERM, and carry on running..  I'd
-prefer the first time you touch a mapping in the wrong way, you receive
-indication of error.  This only applies applies to mprotect() acting up
-on a region so the argument is a bit weak, due to mprotect() return
-value checking being about as rare as unicorns.
-
-Also, it would be a pain for OpenBSD to transition to adding a 0 flag.
-I would need to see real cause not theory.
