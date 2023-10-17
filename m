@@ -1,99 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 974C53D99D;
-	Tue, 17 Oct 2023 09:10:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HYFrKPux"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C7A1C433C8;
-	Tue, 17 Oct 2023 09:10:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697533809;
-	bh=XzWNIY/hrbTa3IpvjUeTL3enp5iOsmUIH+SzZ2/j/S4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HYFrKPuxxNnAO4bIJuWAo3vtIdUGAyUiM0Ji3FbzfmtycscCLf6EbhI0QBq1XyWZp
-	 v9HCOlY08mIS+7BDSJEyqQ9hbVrLXQ+qUeYPciXTcPP2mswDuUoDVITdjw8G3MYpm3
-	 0yy0JpWRsLtBixnefQMKg8SBdh6hldh8rt4ltCZsuipjz11rIaPwSpRLR1s8KCcH7k
-	 1oC4SuX7bcQk5aS6RpG41SLA0wEqXTzSFX2TndKUdUGP97V82uFSw+wpNHJV31PDeq
-	 vvMssJPuN3bgBsQsFyDvrPPlHo6QmDFEOuLMGFSH1jCL9zh28CM9ChnDRQIK8ffU4Q
-	 vioQ+2/eFWkcw==
-Date: Tue, 17 Oct 2023 11:10:02 +0200
-From: Simon Horman <horms@kernel.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>, dev@openvswitch.org,
-	kernel-janitors@vger.kernel.org, Tom Rix <trix@redhat.com>,
-	llvm@lists.linux.dev, Nick Desaulniers <ndesaulniers@google.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Eric Dumazet <edumazet@google.com>, linux-hardening@vger.kernel.org,
-	netdev@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [ovs-dev] [PATCH v2 2/2] net: openvswitch: Annotate struct
- mask_array with __counted_by
-Message-ID: <20231017091002.GR1751252@kernel.org>
-References: <e5122b4ff878cbf3ed72653a395ad5c4da04dc1e.1697264974.git.christophe.jaillet@wanadoo.fr>
- <ca5c8049f58bb933f231afd0816e30a5aaa0eddd.1697264974.git.christophe.jaillet@wanadoo.fr>
- <202310141928.23985F1CA@keescook>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 299F34123D;
+	Tue, 17 Oct 2023 10:26:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81E7D120;
+	Tue, 17 Oct 2023 03:26:13 -0700 (PDT)
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 39HAPeE724097804, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/2.93/5.92) with ESMTPS id 39HAPeE724097804
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 17 Oct 2023 18:25:40 +0800
+Received: from RTEXMBS06.realtek.com.tw (172.21.6.99) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.17; Tue, 17 Oct 2023 18:25:39 +0800
+Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
+ RTEXMBS06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.34; Tue, 17 Oct 2023 18:25:39 +0800
+Received: from RTEXMBS01.realtek.com.tw ([fe80::9cb8:8d5:b6b3:213b]) by
+ RTEXMBS01.realtek.com.tw ([fe80::9cb8:8d5:b6b3:213b%5]) with mapi id
+ 15.01.2375.007; Tue, 17 Oct 2023 18:25:39 +0800
+From: Ricky WU <ricky_wu@realtek.com>
+To: Lukas Wunner <lukas@wunner.de>,
+        Kai-Heng Feng
+	<kai.heng.feng@canonical.com>
+CC: "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pm@vger.kernel.org"
+	<linux-pm@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org"
+	<linux-mmc@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>, Tony Luck
+	<tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
+Subject: RE: [PATCH] PCI: pciehp: Prevent child devices from doing RPM on PCIe Link Down
+Thread-Topic: [PATCH] PCI: pciehp: Prevent child devices from doing RPM on
+ PCIe Link Down
+Thread-Index: AQHZ/+WX29Sx+yjN7keHtkFSV38Z/LBLoV4AgAIjnlA=
+Date: Tue, 17 Oct 2023 10:25:39 +0000
+Message-ID: <263982e90fc046cf977ecb8727003690@realtek.com>
+References: <20231016040132.23824-1-kai.heng.feng@canonical.com>
+ <20231016093210.GA22952@wunner.de>
+In-Reply-To: <20231016093210.GA22952@wunner.de>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+x-originating-ip: [172.22.81.100]
+x-kse-serverinfo: RTEXMBS06.realtek.com.tw, 9
+x-kse-antispam-interceptor-info: fallback
+x-kse-antivirus-interceptor-info: fallback
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202310141928.23985F1CA@keescook>
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+	RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+	lindbergh.monkeyblade.net
 
-On Sat, Oct 14, 2023 at 07:29:57PM -0700, Kees Cook wrote:
-> On Sat, Oct 14, 2023 at 08:34:53AM +0200, Christophe JAILLET wrote:
-> > Prepare for the coming implementation by GCC and Clang of the __counted_by
-> > attribute. Flexible array members annotated with __counted_by can have
-> > their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-> > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> > functions).
-> > 
-> > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> > ---
-> > v2: Fix the subject  [Ilya Maximets]
-> >     fix the field name used with __counted_by  [Ilya Maximets]
-> > 
-> > v1: https://lore.kernel.org/all/f66ddcf1ef9328f10292ea75a17b584359b6cde3.1696156198.git.christophe.jaillet@wanadoo.fr/
-> > 
-> > 
-> > This patch is part of a work done in parallel of what is currently worked
-> > on by Kees Cook.
-> > 
-> > My patches are only related to corner cases that do NOT match the
-> > semantic of his Coccinelle script[1].
-> > 
-> > In this case, in tbl_mask_array_alloc(), several things are allocated with
-> > a single allocation. Then, some pointer arithmetic computes the address of
-> > the memory after the flex-array.
-> > 
-> > [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
-> > ---
-> >  net/openvswitch/flow_table.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/net/openvswitch/flow_table.h b/net/openvswitch/flow_table.h
-> > index 9e659db78c05..f524dc3e4862 100644
-> > --- a/net/openvswitch/flow_table.h
-> > +++ b/net/openvswitch/flow_table.h
-> > @@ -48,7 +48,7 @@ struct mask_array {
-> >  	int count, max;
-> >  	struct mask_array_stats __percpu *masks_usage_stats;
-> >  	u64 *masks_usage_zero_cntr;
-> > -	struct sw_flow_mask __rcu *masks[];
-> > +	struct sw_flow_mask __rcu *masks[] __counted_by(max);
-> >  };
-> 
-> Yup, this looks correct to me. Thanks!
-> 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> 
+> On Mon, Oct 16, 2023 at 12:01:31PM +0800, Kai-Heng Feng wrote:
+> > When inserting an SD7.0 card to Realtek card reader, it can trigger
+> > PCI slot Link down and causes the following error:
+>=20
+> Why does *inserting* a card cause a Link Down?
+>=20
+>=20
+> > [   63.898861] pcieport 0000:00:1c.0: pciehp: Slot(8): Link Down
+> > [   63.912118] BUG: unable to handle page fault for address:
+> ffffb24d403e5010
+> [...]
+> > [   63.912198]  ? asm_exc_page_fault+0x27/0x30
+> > [   63.912203]  ? ioread32+0x2e/0x70
+> > [   63.912206]  ? rtsx_pci_write_register+0x5b/0x90 [rtsx_pci]
+> > [   63.912217]  rtsx_set_l1off_sub+0x1c/0x30 [rtsx_pci]
+> > [   63.912226]  rts5261_set_l1off_cfg_sub_d0+0x36/0x40 [rtsx_pci]
+> > [   63.912234]  rtsx_pci_runtime_idle+0xc7/0x160 [rtsx_pci]
+> > [   63.912243]  ? __pfx_pci_pm_runtime_idle+0x10/0x10
+> > [   63.912246]  pci_pm_runtime_idle+0x34/0x70
+> > [   63.912248]  rpm_idle+0xc4/0x2b0
+> > [   63.912251]  pm_runtime_work+0x93/0xc0
+> > [   63.912254]  process_one_work+0x21a/0x430
+> > [   63.912258]  worker_thread+0x4a/0x3c0
+>=20
+> This looks like pcr->remap_addr is accessed after it has been iounmap'ed =
+in
+> rtsx_pci_remove() or before it has been iomap'ed in rtsx_pci_probe().
+>=20
+> Is the card reader itself located below a hotplug port and unplugged here=
+?
 
-Likewise, I agree this is correct.
+Yes it is card reader unplug itself, because sd7.0 card is not used rtsx_pc=
+r, it use nvme driver=20
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+Ricky
+
+> Or is this about the card being removed from the card reader?
+>=20
+> Having full dmesg output and lspci -vvv output attached to a bugzilla wou=
+ld
+> help to understand what is going on.
+>=20
+> Thanks,
+>=20
+> Lukas
