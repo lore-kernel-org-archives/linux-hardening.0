@@ -1,66 +1,64 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58587430F7
-	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 20:11:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80FDC2E3F7
+	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 21:12:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GDEw2UZD"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R8PcU1W/"
 Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4943D6FAB
-	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 13:11:32 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5a7a6fd18abso93618827b3.1
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 13:11:32 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 780EFBA
+	for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 14:12:31 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5a7ed6903a6so93730447b3.2
+        for <linux-hardening@vger.kernel.org>; Tue, 17 Oct 2023 14:12:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697573491; x=1698178291; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=U16d/1k+vtJxpQ32+/WF4Jgqek04k8/6Qv2CuyTmXCM=;
-        b=GDEw2UZD8lhNP6ELGmB+xjB5hHNDqRBbdhGPd9h1sG3qFnW/nPWcOxYFXEZ+Wd9J/N
-         lPlZkZPgX2mH6M5V46HwIGj+Nui06vZpUDlRdMhyL10A/rkUnYuQHwhUIhYkpHOGCUws
-         /dd432KsbYNybH4owBweGCQJVzMEdNZRwIlH2/gO1oCsVtoudADx6YfHCg1ed9siU13J
-         xuof9Gn1cEuw6PDxWcnBd/+IRqSiXvuz1rLOanse6ob7Qvv6lDZMANcWcKl7C3DYZgOD
-         tfDBPzctQg5MZAmdHt+iGEtkD34/lvmuQwPl028phrBANLBjZrdU21FeRzhC/sc0ng3E
-         RC+Q==
+        d=google.com; s=20230601; t=1697577150; x=1698181950; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=QXzsHVghZ/vMgKxfKM1dzjkgTQebO8rvy+/S6SScf3k=;
+        b=R8PcU1W/5S6bkm52VpK5VdZMnRhqeBQROS+TV0xwjTr3e5M8njGi0/o/xDNUgFSb7f
+         tCbuWaUyV1DcwjlSSEX4Td/o7Z6dIJFzoN0EFoAD3EsjH9mFR/ZIbQAWZWBgTub09g64
+         uBFlugYflg80KZjjhQz1p6Fa3WsFRaZJio8kUums336YvMxizo9Lv6gltosa/ZO/JLaI
+         1sIVidDOS/jisgt2f5VUqDg+OOPVgrS18BvURi/zCx2MKNvWu9HwNFrtQmvUFkbNhoGi
+         h/9KG9c4Nb7oD96XogqxK8WmyQAbBue/Q6yvvbxKaZlJUwzYRs9QUOaUycYrfTp7K3FR
+         Skog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697573491; x=1698178291;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=U16d/1k+vtJxpQ32+/WF4Jgqek04k8/6Qv2CuyTmXCM=;
-        b=LwoAtJCIUPKg8Bjzksub2yrzKoDir9SuKn2TA5beJpem+TqZCTXZqYkiVH3MI30+5y
-         NQ3siDpzRvKXFXUhnHpTobUEvFPqDLrmI1tbzzFQpxTI0s9CMMCZ1317bh3jeGHB9W3/
-         3A5+LOCnQhhDJ8JQYDJugRA7FX/RRRqMC5w7hE1bPK74wGun6bL130u4ARz3yKVJVmx6
-         /Mv9ez5x+5XLZixBxrFVw+EQi0f7mk4FSzuCWUdbx0tOHulKzMkMUo8Ii24fQVNI6VlF
-         9RLSlsC+6xIpJq9LTJuBMP+dgUyiBFJDdoSKXzya7qz2/sLx2iSECn+WbR4lKnO/69Pp
-         qL1g==
-X-Gm-Message-State: AOJu0YyPlwBdxnZcvDh2aOC4Oi+8+Y55TtgOPb1jzKb22tab7/vktRbB
-	eXj8/slGKPHQD9isZ2oU958ckzkJX1JSKLN9bg==
-X-Google-Smtp-Source: AGHT+IGpHQMAlN9H+dIGsgef4tZ3F2beOgDLdbLhwLbsk5LDWsH2GwN5lcJpP9ul6mWvpEKLa973Tu7cXXdTrNS5Nw==
+        d=1e100.net; s=20230601; t=1697577150; x=1698181950;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QXzsHVghZ/vMgKxfKM1dzjkgTQebO8rvy+/S6SScf3k=;
+        b=vjqjjDoOMKcwujHXkBctm8YIs0XxQZxQ+NPzC4ZSZCFKx4CXxuaKq0f5VTEhnpBtD5
+         U0wWb9/2e6HZkFovgr85/luU2aDn0sivZAednlwG+rrinFVsgdLVrGL3nFPOYCtzhEGi
+         QWnK8eo+Op95gq0bJSmWJhHNQekUAiLEDcQBnzUbRIkw+VgK58w5jpDljLonvR8vusEY
+         9pYVJyvvrKpujXvgMu1a3kh4ZYwOrpiKGT3dPdk06b4gvApAfY1yhu7zRGRQkGMoTi6W
+         lj4PyuejZ9v6rwSG8nujRonoBNPQ/wkf9uOTPdEP6jwUdpwd8ZTcJkCHLBcla1T3nf+P
+         718g==
+X-Gm-Message-State: AOJu0YyhFz9rAR2T/vm/b6LoegJwFIYwpBBfkyHrrr8eyIhCWSLhTM9R
+	oPaOXP0+zic9bgFllfBT4kcz8ZfZBZkuF7JgNQ==
+X-Google-Smtp-Source: AGHT+IGJblzoOljLjk6/ecy438CFYmQUmdxFbWvGK70QvUdqQeqXtoTHla4D+YArJvsCrt0odJIX6Hsm57+fTpL7rA==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a81:84c8:0:b0:59b:eb63:4beb with SMTP
- id u191-20020a8184c8000000b0059beb634bebmr71930ywf.7.1697573491197; Tue, 17
- Oct 2023 13:11:31 -0700 (PDT)
-Date: Tue, 17 Oct 2023 20:11:29 +0000
-In-Reply-To: <20231017-strncpy-drivers-net-wireless-broadcom-brcm80211-brcmfmac-cfg80211-c-v3-0-af780d74ae38@google.com>
+ (user=justinstitt job=sendgmr) by 2002:a25:b118:0:b0:d9a:6b49:433d with SMTP
+ id g24-20020a25b118000000b00d9a6b49433dmr61099ybj.6.1697577150758; Tue, 17
+ Oct 2023 14:12:30 -0700 (PDT)
+Date: Tue, 17 Oct 2023 21:12:30 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20231017-strncpy-drivers-net-wireless-broadcom-brcm80211-brcmfmac-cfg80211-c-v3-0-af780d74ae38@google.com>
+X-B4-Tracking: v=1; b=H4sIAL34LmUC/x3NQQrCQAxG4auUrA1kKip6FXExZH41IDMlKVUpv
+ buDy2/z3koBNwRdhpUci4W12pF2A+kz1wfYSjeNMu6TpBPH7FWnLxe3BR5cMfPbHC9EsFpo42z eWLnIWYscRPIR1HuT426f/+t627YfhUfv7HsAAAA=
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1697573487; l=2638;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1697577149; l=2545;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=zJRX9bfYMLnf8bwx/y1SqZRLrWT3yCChHrc9KJ+aw0g=; b=36Wx10SOxayn+TXLBPF3Sdbo+ZOjyWFKEXOZQUWfzf/HDZaBLlDvUd/FbJiQtsFySN1BKVG9K
- S2f9g+oP7StAX9U5Iv2XSJNPkbxap07eIIAsrMoZPt/V36oDC327Jgg
+ bh=iByoXcEl+/fTj7qfxJpQSjCOu1SG80zw46SDN1JdAVA=; b=422phc1KfoxKuZOVw01uw/lgnVEOwbLB9bZNBj3xD+nmrWlmWo1VFxb4TdilgcB/yQ/FizVWk
+ oopegqE63ZDB+soiysSjOYI6D+ByXbd4dx2ld1FM64ecTwR85Ll2K55
 X-Mailer: b4 0.12.3
-Message-ID: <20231017-strncpy-drivers-net-wireless-broadcom-brcm80211-brcmfmac-cfg80211-c-v3-2-af780d74ae38@google.com>
-Subject: [PATCH v3 2/2] wifi: brcmsmac: replace deprecated strncpy with memcpy
+Message-ID: <20231017-strncpy-drivers-net-wireless-cisco-airo-c-v1-1-e34d5b3b7e37@google.com>
+Subject: [PATCH] airo: replace deprecated strncpy with strscpy_pad
 From: Justin Stitt <justinstitt@google.com>
-To: Arend van Spriel <aspriel@gmail.com>, Franky Lin <franky.lin@broadcom.com>, 
-	Hante Meuleman <hante.meuleman@broadcom.com>, Kalle Valo <kvalo@kernel.org>
-Cc: linux-wireless@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com, 
-	SHA-cyfmac-dev-list@infineon.com, linux-kernel@vger.kernel.org, 
+To: Kalle Valo <kvalo@kernel.org>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
 X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
@@ -70,66 +68,66 @@ X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Let's move away from using strncpy and instead use the more obvious
-interface for this context.
+strncpy() is deprecated for use on NUL-terminated destination strings
+[1] and as such we should prefer more robust and less ambiguous string
+interfaces.
 
-For wlc->pub->srom_ccode, we're just copying two bytes from ccode into
-wlc->pub->srom_ccode with no expectation that srom_ccode be
-NUL-terminated:
-wlc->pub->srom_ccode is only used in regulatory_hint():
-1193 |       if (wl->pub->srom_ccode[0] &&
-1194 |           regulatory_hint(wl->wiphy, wl->pub->srom_ccode))
-1195 |               wiphy_err(wl->wiphy, "%s: regulatory hint failed\n", __func__);
+`extra` is clearly supposed to be NUL-terminated which is evident by the
+manual NUL-byte assignment as well as its immediate usage with strlen().
 
-We can see that only index 0 and index 1 are accessed.
-3307 |       int regulatory_hint(struct wiphy *wiphy, const char *alpha2)
-3308 |       {
-...  |          ...
-3322 |          request->alpha2[0] = alpha2[0];
-3323 |          request->alpha2[1] = alpha2[1];
-...  |          ...
-3332 |       }
+Moreover, let's NUL-pad since there is deliberate effort (48 instances)
+made elsewhere to zero-out buffers in these getters and setters:
+6050 | memset(local->config.nodeName, 0, sizeof(local->config.nodeName));
+6130 | memset(local->config.rates, 0, 8);
+6139 | memset(local->config.rates, 0, 8);
+6414 | memset(key.key, 0, MAX_KEY_SIZE);
+6497 | memset(extra, 0, 16);
+(to be clear, strncpy also NUL-padded -- we are matching that behavior)
 
-Since this is just a simple byte copy with correct lengths, let's use
-memcpy(). There should be no functional change.
+Considering the above, a suitable replacement is `strscpy_pad` due to
+the fact that it guarantees both NUL-termination and NUL-padding on the
+destination buffer.
 
-In a similar boat, both wlc->country_default and
-wlc->autocountry_default are just simple byte copies so let's use
-memcpy. However, FWICT they aren't used anywhere. (they should be
-used or removed -- not in scope of my patch, though).
+Technically, we can now copy one less byte into `extra` as we cannot
+determine the sizeof `extra` at compile time and the hard-coded value of
+16 means that strscpy_pad() will automatically truncate and set the byte
+at offset 15 to NUL. However, the current code manually sets a
+NUL-byte at offset 16. If this is an issue, the solution is to change
+the hard-coded magic number to 17 instead of 16. I didn't do this in
+this patch because a hard-coded 17 seems bad (even more so than 16).
 
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
 Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmsmac/channel.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Note: build-tested only.
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/channel.c b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/channel.c
-index 5a6d9c86552a..f6962e558d7c 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/channel.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/channel.c
-@@ -341,7 +341,7 @@ struct brcms_cm_info *brcms_c_channel_mgr_attach(struct brcms_c_info *wlc)
- 	/* store the country code for passing up as a regulatory hint */
- 	wlc_cm->world_regd = brcms_world_regd(ccode, ccode_len);
- 	if (brcms_c_country_valid(ccode))
--		strncpy(wlc->pub->srom_ccode, ccode, ccode_len);
-+		memcpy(wlc->pub->srom_ccode, ccode, ccode_len);
- 
- 	/*
- 	 * If no custom world domain is found in the SROM, use the
-@@ -354,10 +354,10 @@ struct brcms_cm_info *brcms_c_channel_mgr_attach(struct brcms_c_info *wlc)
- 	}
- 
- 	/* save default country for exiting 11d regulatory mode */
--	strncpy(wlc->country_default, ccode, ccode_len);
-+	memcpy(wlc->country_default, ccode, ccode_len);
- 
- 	/* initialize autocountry_default to driver default */
--	strncpy(wlc->autocountry_default, ccode, ccode_len);
-+	memcpy(wlc->autocountry_default, ccode, ccode_len);
- 
- 	brcms_c_set_country(wlc_cm, wlc_cm->world_regd);
- 
+Found with: $ rg "strncpy\("
+---
+ drivers/net/wireless/cisco/airo.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
--- 
-2.42.0.655.g421f12c284-goog
+diff --git a/drivers/net/wireless/cisco/airo.c b/drivers/net/wireless/cisco/airo.c
+index dbd13f7aa3e6..8cfb1de5933e 100644
+--- a/drivers/net/wireless/cisco/airo.c
++++ b/drivers/net/wireless/cisco/airo.c
+@@ -6067,8 +6067,7 @@ static int airo_get_nick(struct net_device *dev,
+ 	struct airo_info *local = dev->ml_priv;
+ 
+ 	readConfigRid(local, 1);
+-	strncpy(extra, local->config.nodeName, 16);
+-	extra[16] = '\0';
++	strscpy_pad(extra, local->config.nodeName, 16);
+ 	dwrq->length = strlen(extra);
+ 
+ 	return 0;
+
+---
+base-commit: 58720809f52779dc0f08e53e54b014209d13eebb
+change-id: 20231017-strncpy-drivers-net-wireless-cisco-airo-c-d09cd0500a6e
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
 
