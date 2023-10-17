@@ -1,35 +1,35 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C6912DF69;
-	Tue, 17 Oct 2023 19:04:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 959DF2DF67;
+	Tue, 17 Oct 2023 19:04:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d4ChJT1q"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WgCip0l0"
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32B67E8;
-	Tue, 17 Oct 2023 12:04:30 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85EA0F1;
+	Tue, 17 Oct 2023 12:04:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697569470; x=1729105470;
+  t=1697569469; x=1729105469;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=dVehR1VFnDGkb1Ww/v3YUCqWzGMLrLskQ6bmezqJlB0=;
-  b=d4ChJT1qEycyILT3AIgYzTuJPN7QCAznxapveYXVjxcg+BuYWftbgOJz
-   sb61HctmhfePWf0qVy4hBvNdDpxW7hDBwKzL4Tf7tCFsU0A3l65bIqxng
-   yA+OiL9xfUwjiPuxzs0Nv9AdMMsbAHPAXtvC7Yd+cVEf3JnzAiTQZ09Q3
-   QNY9DslG4NItZoEkl17BUzMuPJmhuxYKBWrOI6oQ0LrwpWil+GuUBp9hN
-   10bpUGTvcdQrZiH2k+d0WiUNdtj5C1bzxmZ6zRYIFCKt9ESn5zOma/3CH
-   eMar63uC5Sx5yC5t+ARgop7Q9fwD4rbiYNZzL77abvWIDUEnQGLipsahU
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10866"; a="384739734"
+  bh=gob/uynTCd8CZardWQ2JwqOzNIZTjqHSGCOo7hkS5nA=;
+  b=WgCip0l0R0iF6tRZDFxni5bHZk/zD1+bhFa/S/54LRR9qSleUdQ87TFD
+   vGPsJWSkA6uKkgLYRSlGke0Xm7JDPAUj4nM8IE2gluB68cH/fa/5ZuWrP
+   JdScacqCE83ElEz0elxu/hN8h3nSieDH0MjL+VrLpSlYJ4MBcVL/n+K9P
+   SX7taax+IQdww9szwY4Mf1gUQrw99Z9flRKM90iyEh1eqG0JFHQBaFRfW
+   p9Fr+SX6NkHPr7xXSwliQrEzqwL//wTZqGpXSm1gPvdp93Owp9cKiT1x1
+   8pkvYy2y41yvKDKeiWQRREH4/ozK+exwOAVQ7GFxW0jO9byeIekbTYzDE
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10866"; a="384739719"
 X-IronPort-AV: E=Sophos;i="6.03,233,1694761200"; 
-   d="scan'208";a="384739734"
+   d="scan'208";a="384739719"
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
   by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2023 12:04:19 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10866"; a="822108729"
+X-IronPort-AV: E=McAfee;i="6600,9927,10866"; a="822108716"
 X-IronPort-AV: E=Sophos;i="6.03,233,1694761200"; 
-   d="scan'208";a="822108729"
+   d="scan'208";a="822108716"
 Received: from jekeller-desk.amr.corp.intel.com (HELO jekeller-desk.jekeller.internal) ([10.166.241.1])
   by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2023 12:04:18 -0700
 From: Jacob Keller <jacob.e.keller@intel.com>
@@ -39,9 +39,9 @@ To: netdev@vger.kernel.org,
 Cc: Justin Stitt <justinstitt@google.com>,
 	linux-hardening@vger.kernel.org,
 	Jacob Keller <jacob.e.keller@intel.com>
-Subject: [PATCH net-next 4/9] e1000: replace deprecated strncpy with strscpy
-Date: Tue, 17 Oct 2023 12:04:06 -0700
-Message-ID: <20231017190411.2199743-5-jacob.e.keller@intel.com>
+Subject: [PATCH net-next 3/9] e100: replace deprecated strncpy with strscpy
+Date: Tue, 17 Oct 2023 12:04:05 -0700
+Message-ID: <20231017190411.2199743-4-jacob.e.keller@intel.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20231017190411.2199743-1-jacob.e.keller@intel.com>
 References: <20231017190411.2199743-1-jacob.e.keller@intel.com>
@@ -64,14 +64,15 @@ From: Justin Stitt <justinstitt@google.com>
 [1] and as such we should prefer more robust and less ambiguous string
 interfaces.
 
-We can see that netdev->name is expected to be NUL-terminated based on
-it's usage with format strings:
-|       pr_info("%s NIC Link is Down\n",
-|               netdev->name);
+The "...-1" pattern makes it evident that netdev->name is expected to be
+NUL-terminated.
 
-A suitable replacement is `strscpy` [2] due to the fact that it
-guarantees NUL-termination on the destination buffer without
-unnecessarily NUL-padding.
+Meanwhile, it seems NUL-padding is not required due to alloc_etherdev
+zero-allocating the buffer.
+
+Considering the above, a suitable replacement is `strscpy` [2] due to
+the fact that it guarantees NUL-termination on the destination buffer
+without unnecessarily NUL-padding.
 
 This is in line with other uses of strscpy on netdev->name:
 $ rg "strscpy\(netdev\->name.*pci.*"
@@ -89,22 +90,22 @@ Cc: linux-hardening@vger.kernel.org
 Signed-off-by: Justin Stitt <justinstitt@google.com>
 Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
 ---
- drivers/net/ethernet/intel/e1000/e1000_main.c | 2 +-
+ drivers/net/ethernet/intel/e100.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/e1000/e1000_main.c b/drivers/net/ethernet/intel/e1000/e1000_main.c
-index da6e303ad99b..1d1e93686af2 100644
---- a/drivers/net/ethernet/intel/e1000/e1000_main.c
-+++ b/drivers/net/ethernet/intel/e1000/e1000_main.c
-@@ -1014,7 +1014,7 @@ static int e1000_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	netdev->watchdog_timeo = 5 * HZ;
- 	netif_napi_add(netdev, &adapter->napi, e1000_clean);
- 
+diff --git a/drivers/net/ethernet/intel/e100.c b/drivers/net/ethernet/intel/e100.c
+index d3fdc290937f..01f0f12035ca 100644
+--- a/drivers/net/ethernet/intel/e100.c
++++ b/drivers/net/ethernet/intel/e100.c
+@@ -2841,7 +2841,7 @@ static int e100_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	netdev->netdev_ops = &e100_netdev_ops;
+ 	netdev->ethtool_ops = &e100_ethtool_ops;
+ 	netdev->watchdog_timeo = E100_WATCHDOG_PERIOD;
 -	strncpy(netdev->name, pci_name(pdev), sizeof(netdev->name) - 1);
 +	strscpy(netdev->name, pci_name(pdev), sizeof(netdev->name));
  
- 	adapter->bd_number = cards_found;
- 
+ 	nic = netdev_priv(netdev);
+ 	netif_napi_add_weight(netdev, &nic->napi, e100_poll, E100_NAPI_WEIGHT);
 -- 
 2.41.0
 
