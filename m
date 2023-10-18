@@ -1,143 +1,116 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF1D3FE48
-	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 18:07:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81443FE49
+	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 18:16:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jsCio2pz"
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD253112
-	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 11:07:22 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-6b89ab5ddb7so4698589b3a.0
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 11:07:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1697652442; x=1698257242; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=XonaI8Xf/SLuA38iJr1RRfWuXVp5bhd8ehTmRJBXQ1A=;
-        b=jsCio2pz4AKPS9kJon3SZ6ovCU2LvJeLcwusI5VA/Moj02q2JBhz1LuFon1sDDZqYw
-         DRpBpOM9zmUXRqNU6zPaqWbVz+Pqq15nCuAC1jxTa1YJzYctIgJqE36uy/79gYi20s/A
-         JSuc1+uqTrC7k4bGSQstiHJ3bWCe2vipn+7ho=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697652442; x=1698257242;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XonaI8Xf/SLuA38iJr1RRfWuXVp5bhd8ehTmRJBXQ1A=;
-        b=nyXFVdrpRSLpGMtA4BcwolrZfHIgO/f9vU7UqmUzQPRlWowMBpGL0GtcOpEGEviD/j
-         D3KGmAk5dnDkKy8TTPHl1MkIHRuW5MB4+WSWyQqo9tYXVRxvtT0wLUfTgnQSXxQYkhHc
-         yVX/9B9sqH7xmTLP3JZbvY8xw5ykeSTLZtQBZJaNDL7degu4mR9XD3xX9G7PITFXG/Zj
-         hm4LHAOUHr9/t578AM0fi1dGcVgz63lbIy6gZCqbA8dpdkr8sx5vWcv98vgd68n+G274
-         PzcgOWvYkbnRIG1ZnHLjW7SgB7oexUV96Woh/skNoqc2HqVeFOQsvCXJE7jW1rjssteT
-         8rJw==
-X-Gm-Message-State: AOJu0YysvgzsTX2HA5ZwqrMpQV4IDLPkZ1JX/DjEPl0VlgEngqNdOrNr
-	kpiomg7XcOkF8h0XKWvZkiMZhg==
-X-Google-Smtp-Source: AGHT+IH3BprO2nrkOewTORYho++pGOdbQRZC1bN7WJi6N5dcshuFmh5PGHUbgMWTD3QbJWjs+bYJHA==
-X-Received: by 2002:a05:6a00:b46:b0:6be:4e6e:2a85 with SMTP id p6-20020a056a000b4600b006be4e6e2a85mr7147729pfo.30.1697652442150;
-        Wed, 18 Oct 2023 11:07:22 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id x26-20020aa79ada000000b0069309cbc220sm3625673pfp.121.2023.10.18.11.07.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Oct 2023 11:07:21 -0700 (PDT)
-From: Kees Cook <keescook@chromium.org>
-To: Andy Shevchenko <andy@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] string: Adjust strtomem_pad() logic to allow for smaller sources
-Date: Wed, 18 Oct 2023 11:07:17 -0700
-Message-Id: <20231018180709.work.293-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fbSQaHpx"
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BBE610F;
+	Wed, 18 Oct 2023 11:16:38 -0700 (PDT)
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39IICYHl018187;
+	Wed, 18 Oct 2023 18:16:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=JXYWDyiW1JWQMSgIR9Wmq9AjhDVUSqBRcb+FAPMPPO0=;
+ b=fbSQaHpxJaR5g2fymOhEELchQsyQ2Kl/XD2xMUqsdfjNMDuHI7eqPq2nyCmSaLrHGWxm
+ srcYiinznONGnFcMqmkylS4dZrSq/veVSBSlnf9YKi/3WVE3jWt2Iofe2SJmYfw/rgvb
+ 8qNdkuI01PkJ9HKtm4+TBrSfytP6BNUk20qblMdc5PCI/N0NlN1k6b7/sK5cVQLL3oCW
+ c2lq/N6Ry3KdWOZWjLxk5AiXtb5PO4XyyrT6pHdCwM4NbvlwzYamORS6HZrtTSAZr7oh
+ 5mxZXUzyv0xC6QoTH+cc6dSE/P8ERWR90pChgUmMmRckW41Td/lIHcF/e4184V8bRjg/ 3w== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ttmef05j3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 18 Oct 2023 18:16:25 +0000
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39IIDsWn022464;
+	Wed, 18 Oct 2023 18:16:24 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ttmef05db-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 18 Oct 2023 18:16:24 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 39IGdfRr012876;
+	Wed, 18 Oct 2023 18:16:20 GMT
+Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3tr5pyjyen-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 18 Oct 2023 18:16:20 +0000
+Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
+	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 39IIGJBH14811884
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 18 Oct 2023 18:16:20 GMT
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BEAE35805D;
+	Wed, 18 Oct 2023 18:16:19 +0000 (GMT)
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 39ADD58059;
+	Wed, 18 Oct 2023 18:16:19 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.watson.ibm.com (unknown [9.31.99.90])
+	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 18 Oct 2023 18:16:19 +0000 (GMT)
+Message-ID: <3117d99434303b00f5057bfbe4615cf8cd26b72a.camel@linux.ibm.com>
+Subject: Re: [PATCH] ima: Add __counted_by for struct modsig and use
+ struct_size()
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Dmitry Kasatkin
+ <dmitry.kasatkin@gmail.com>,
+        Paul Moore <paul@paul-moore.com>, James Morris
+ <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>
+Cc: linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Date: Wed, 18 Oct 2023 14:16:18 -0400
+In-Reply-To: <ZSRaDcJNARUUWUwS@work>
+References: <ZSRaDcJNARUUWUwS@work>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.28.5 (3.28.5-22.el8) 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2772; i=keescook@chromium.org;
- h=from:subject:message-id; bh=Rt1eV6YjyZR8hPzO/9qK3HhySIUW19g/DhKIx9uJ9jQ=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlMB7VZWKyUdda+qSVCCbnpliyQcdpJPLHtjhC6
- wQ+xa1Q9k2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZTAe1QAKCRCJcvTf3G3A
- JvLtD/4vR8iWSvia1DQYbZ8m+tqzhImzUGpErsH/KDBTULSjLG+5iWaI1Sk4C2zSlqEzo7SqEXM
- Kt3AZDESIQynRLJky5h+GNObiXryvBdfesyvC1ycPKr5Aror8ouzxAFzwgl6IRtNFLsn5z/9+VX
- 5chlFTq8xtubHLh3BXGvqQvKjRAdzDVBCGx9x5g/7rLJGaBD3rhJj6eYMsJpvwmFDc6EEyG8HKD
- YxeBhJLkHBSnkMpFRVYspLGVmsEa+lvAOHwfQa15huGvb4AtnJsoS85L0hXWbzNfjp5aDB1TzzL
- +38CUoVhtBzuAnEyXBWadZV06HbXyl6M3PEFE7kF+w47SGFXJ85SCN9Gm44sTyZDDxiUsLoiWjy
- 6jeKdH4O6pGyXuXlEnpEEBsIzmxzVF9Rl74P5e7vC7Eli1Jz7ILMVEpbrINStNOOkUBizb7oalu
- ZEIQrRlZWjm0Q+iD1y5oFExoM0edBPWIgBsi0qnWyQdnSFJk+2iySCuSaQczSAvorCWOukEZlRy
- iF3WFmv3J2WdEgXos+iuNxMbZalvvBAHYgdQleYGEoG2pdBz73lTvz3/bH2+Y4B/WTgvUwVjLre
- ljV/6yoBVamHn6dHWUj1x6AFevYMlr897FIZ07lhgqZpRDCBzmMjPvQNMCEC8mRyTvmsO0EiXNq
- HaRyCCV cae/bc5Q==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.6
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: VgXm1I8MYbDieq0_K6zSaJizz07j5t7Q
+X-Proofpoint-ORIG-GUID: ZnTnGrQ5qSE-VkGMaOS6SvsrK70Vyy6P
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-18_16,2023-10-18_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=611 bulkscore=0 lowpriorityscore=0 suspectscore=0 spamscore=0
+ adultscore=0 impostorscore=0 phishscore=0 clxscore=1011 mlxscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2309180000 definitions=main-2310180149
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-Arnd noticed we have a case where a shorter source string is being copied
-into a destination byte array, but this results in a strnlen() call that
-exceeds the size of the source. This is seen with -Wstringop-overread:
+On Mon, 2023-10-09 at 13:52 -0600, Gustavo A. R. Silva wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
+> array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
+> 
+> Also, relocate `hdr->raw_pkcs7_len = sig_len;` so that the __counted_by
+> annotation has effect, and flex-array member `raw_pkcs7` can be properly
+> bounds-checked at run-time.
+> 
+> While there, use struct_size() helper, instead of the open-coded
+> version, to calculate the size for the allocation of the whole
+> flexible structure, including of course, the flexible-array member.
+> 
+> This code was found with the help of Coccinelle, and audited and
+> fixed manually.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-In file included from ../include/linux/uuid.h:11,
-                 from ../include/linux/mod_devicetable.h:14,
-                 from ../include/linux/cpufeature.h:12,
-                 from ../arch/x86/coco/tdx/tdx.c:7:
-../arch/x86/coco/tdx/tdx.c: In function 'tdx_panic.constprop':
-../include/linux/string.h:284:9: error: 'strnlen' specified bound 64 exceeds source size 60 [-Werror=stringop-overread]
-  284 |         memcpy_and_pad(dest, _dest_len, src, strnlen(src, _dest_len), pad); \
-      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-../arch/x86/coco/tdx/tdx.c:124:9: note: in expansion of macro 'strtomem_pad'
-  124 |         strtomem_pad(message.str, msg, '\0');
-      |         ^~~~~~~~~~~~
-
-Use the smaller of the two buffer sizes when calling strnlen(). When
-src length is unknown (SIZE_MAX), it will use dest length, which is what
-the original code did.
-
-Reported-by: Arnd Bergmann <arnd@arndb.de>
-Fixes: dfbafa70bde2 ("string: Introduce strtomem() and strtomem_pad()")
-Cc: Andy Shevchenko <andy@kernel.org>
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- include/linux/string.h | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/string.h b/include/linux/string.h
-index dbfc66400050..9e3cb6923b0e 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -277,10 +277,12 @@ void memcpy_and_pad(void *dest, size_t dest_len, const void *src, size_t count,
-  */
- #define strtomem_pad(dest, src, pad)	do {				\
- 	const size_t _dest_len = __builtin_object_size(dest, 1);	\
-+	const size_t _src_len = __builtin_object_size(src, 1);		\
- 									\
- 	BUILD_BUG_ON(!__builtin_constant_p(_dest_len) ||		\
- 		     _dest_len == (size_t)-1);				\
--	memcpy_and_pad(dest, _dest_len, src, strnlen(src, _dest_len), pad); \
-+	memcpy_and_pad(dest, _dest_len, src,				\
-+		       strnlen(src, min(_src_len, _dest_len)), pad);	\
- } while (0)
- 
- /**
-@@ -298,10 +300,11 @@ void memcpy_and_pad(void *dest, size_t dest_len, const void *src, size_t count,
-  */
- #define strtomem(dest, src)	do {					\
- 	const size_t _dest_len = __builtin_object_size(dest, 1);	\
-+	const size_t _src_len = __builtin_object_size(src, 1);		\
- 									\
- 	BUILD_BUG_ON(!__builtin_constant_p(_dest_len) ||		\
- 		     _dest_len == (size_t)-1);				\
--	memcpy(dest, src, min(_dest_len, strnlen(src, _dest_len)));	\
-+	memcpy(dest, src, strnlen(src, min(_src_len, _dest_len)));	\
- } while (0)
- 
- /**
--- 
-2.34.1
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
 
