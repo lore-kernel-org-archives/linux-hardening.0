@@ -1,143 +1,87 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA0742907
-	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 21:15:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E97CB42907
+	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 21:17:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OHA9bpCh"
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56550FA
-	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 14:15:24 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d9a61f7aaf8so9687490276.3
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 14:15:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e+iFmLSR"
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A059D114
+	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 14:17:10 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id 4fb4d7f45d1cf-53de0d1dc46so12552452a12.3
+        for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 14:17:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697663723; x=1698268523; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=DWFdITK9FYnC6ndQyLKptFhv/4XAT9ljqHM/fNT7TZM=;
-        b=OHA9bpChmrzhXQ0BWjrKQKkp/9+hMPyiDE8UJgC4rg8W7Lnu2OQadEKaLF9ebIptmv
-         6WPZif1jBHClBCzQMsj0tYvPwZ3I+ZEeqAWtwjp8pA93esxzXYkhGYu5jMaRfI4AjOKr
-         E7M3WLQiho9dRH8XeN5xS7t+sjMdKUvFLdaNsa6KasV629qTboz1II3Dpi+oYP8ech/t
-         sPlJvjdwXJRteDxEbO3D7Vk5GX/beZFZE1ewC2oAfhweZKOGhp3iogi8LCLWR2qiuzZH
-         Atics1pSevmExBk0TkkVxzU2IWWprGyBlxnAqyFuQhy3Q0gipUDHV+b3hvw+od3wrtkm
-         d16w==
+        d=google.com; s=20230601; t=1697663829; x=1698268629; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BmzWNRuuuMHLesQTgLE+SaWMDv+DrXY0BM9GFaIRAmU=;
+        b=e+iFmLSRPde5OBfeeGguRNuxFKBq6QS1RO3O923Ks4FdwIsgfvga0zkp1A75T0UXGP
+         V78GjbrZ1TLlEY7bJWBOi73ia6Se/54+kRlSM8U1KUmFOh7QHap+JrMP7lWCaZn5lJVg
+         lmTOuNpGkaP+y0KZ4Lp+4IXShw7Yb+yiZGqlfNbwwd8O3ZYL296tb1qmJaIWeG20mJp0
+         3JnRf/RGEJ4XecGoTZJWvtJifAnJj4j8gXOmZ+SqQ5DRBoA06Hgy6VabvyElKk1hotgZ
+         cAtUnB+HDn2v53Qf9NFpdTXz7rkNuNk5ZO/QZPh2jjIQ04HMxZtOEzb+8P5SuKfpdq9T
+         pSzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697663723; x=1698268523;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DWFdITK9FYnC6ndQyLKptFhv/4XAT9ljqHM/fNT7TZM=;
-        b=gfYrFnPXRLaVQCI342gk00Qe2Cru/NHDCi/Jzm2FQ1k4UjT7SEtZNY4n/Grn9Ktj02
-         AfjKIYEaUxxQ1ngDraLVkwcMR7Q+1g+mioHM/AQQCOvNCQFl8fbyPURrsXdVJHWb2Y93
-         gp9OZQCBfwh6nq2m/xaeBlJXR2/B5+hAtNi/iSF6gvchfzq3QN8mgukQA7y8s4g81lZh
-         f3HiN9S+jxrRDc83YAY91wpCjDkNPZM969kHpdNRy61mH2/BNyeXFjM/3HozTEpsJUdr
-         hMeMK1LVmS7lKzBOCfNfv5zygiT4JSkvfNfV4E0Z40wPr9TZymWiesvhD2LdPl5GO7Dc
-         AGhA==
-X-Gm-Message-State: AOJu0Yw9REyIu4rdYVuknNgyFgSBuXZ9sGQNBN/b01TPhjW/Op68pT42
-	GuMetJIjifB/7MV65P3Ni/O5MoEt+2fwenDDkg==
-X-Google-Smtp-Source: AGHT+IE98FBPpehxuSmAoDMMyrPO6eIxEf9m+v4GafxR/P68phKpdYLKbL9enPw6AIvI9BgsiyIo3/p7t7gXzQzvYg==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a25:4215:0:b0:d9a:47ea:69a5 with SMTP
- id p21-20020a254215000000b00d9a47ea69a5mr13155yba.1.1697663723500; Wed, 18
- Oct 2023 14:15:23 -0700 (PDT)
-Date: Wed, 18 Oct 2023 21:15:23 +0000
+        d=1e100.net; s=20230601; t=1697663829; x=1698268629;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BmzWNRuuuMHLesQTgLE+SaWMDv+DrXY0BM9GFaIRAmU=;
+        b=FbpvuU/QsiRSHe2dSDCR76l2SUo5ZC0snxF3GimWE81A3/917/0OICI3Cz8rR9DWW2
+         i6k/tHK6spv9iLYo+oHaBu8mGvIb+AlH1xcg8bgJET7kIw7XBMfTAvbZiKO2kuwfyEYz
+         caSaoDu1UfFDO2zeck8XRXobqTtkx+yaGq1mNaN8fFLJBiMUi7GldzGhuRN59y7wwfq5
+         V/e9pIv2THzuAi4h8R1wL5fNX4s/+2SWsOAQRZ3w9NlC5jF5BVYmlHT2lzHzC1qM5pV3
+         pQSqyY18Gvw3sXWTQ9HFe5AWmOMB377tfEJOC8/d6OjnkHv5ZnWyuqJgqU5WiUmOdx5Y
+         Ft4A==
+X-Gm-Message-State: AOJu0Yw1zqNMIX7Lk7uohfT0Psv81z2KAJVBcBlCkqbcPCcF0l4IyMBc
+	umdd9zOgwgleKjzwCTkVtEyR7YSdmiOimZHEGlk6gA==
+X-Google-Smtp-Source: AGHT+IF6zjERAyTclhi1slQ6zRPCjIhAEdwhb3O6LQNCCsuTO+W6R8ZELmUgrESCNkBRM9HEiVaaSPyHU1ysa4KHxvg=
+X-Received: by 2002:a05:6402:520a:b0:53e:8972:1d4f with SMTP id
+ s10-20020a056402520a00b0053e89721d4fmr158614edd.5.1697663828986; Wed, 18 Oct
+ 2023 14:17:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAOpKMGUC/52NQQ6CMBBFr0K6dgxTghJX3sOwqO0Ik0BLpk2RE
- O5u9Qgu30/+e7uKJExR3apdCWWOHHwBfaqUHY0fCNgVVrrWDdZ4hZjE22UDJ5xJInhKsLLQRDF
- CYlgn1C3CbNiDhctTO9MhWWucKs5F6MXvX+/RFx45piDbL5/xu/5byggIjWltuXeamvY+hDBMd LZhVv1xHB9Bi0CG6wAAAA==
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1697663722; l=2913;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=yDbQL0fT5ECag/Hfa0melicYIqMQ//3xY2/rpNFfZOo=; b=iw2u/dbT5NFr1oMNr8mHNhtfVVlrHVDEyj+xyEAXaQhj7NdVCgY6R2c/BwjBfl2BSF93w/vCD
- qIz4P8kmKrDDoiAx7rQaljqwJ7AqZn07VHLp/I67Ngu6B4/Hxt+OECV
-X-Mailer: b4 0.12.3
-Message-ID: <20231018-strncpy-drivers-net-wireless-ti-wl1251-main-c-v2-1-67b63dfcb1b8@google.com>
-Subject: [PATCH v2] wifi: wl1251: replace deprecated strncpy with strscpy
+MIME-Version: 1.0
+References: <20231017-strncpy-drivers-net-wireless-ti-wl1251-main-c-v1-1-3a5c02382e35@google.com>
+ <68fba283-aff8-4751-a4df-78843d89ef13@quicinc.com>
+In-Reply-To: <68fba283-aff8-4751-a4df-78843d89ef13@quicinc.com>
 From: Justin Stitt <justinstitt@google.com>
-To: Kalle Valo <kvalo@kernel.org>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+Date: Wed, 18 Oct 2023 14:16:57 -0700
+Message-ID: <CAFhGd8pTPkY+8=cFf9ys7vfRrzTJsh0rvnKJwDGaWvq3s=MEvg@mail.gmail.com>
+Subject: Re: [PATCH] wifi: mac80211: replace deprecated strncpy with strscpy
+To: Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: Kalle Valo <kvalo@kernel.org>, linux-wireless@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-strncpy() is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous string
-interfaces.
+On Tue, Oct 17, 2023 at 4:46=E2=80=AFPM Jeff Johnson <quic_jjohnson@quicinc=
+.com> wrote:
+>
+> On 10/17/2023 4:30 PM, Justin Stitt wrote:
+> ...
+>
+> > diff --git a/drivers/net/wireless/ti/wl1251/main.c b/drivers/net/wirele=
+ss/ti/wl1251/main.c
+> > index eded284af600..cd9a41f59f32 100644
+> > --- a/drivers/net/wireless/ti/wl1251/main.c
+> > +++ b/drivers/net/wireless/ti/wl1251/main.c
+>
+> wrong subject for this path. unfortunately for you the most recent
+> changes to this file have been in conjunction with mac80211 changes and
+> hence why you see that prefix. But for a stand-alone driver patch the
+> correct prefix should be wifi: wl1251:
+>
 
-Based on other assignments of similar fw_version fields we can see that
-NUL-termination is required but not NUL-padding:
-ethernet/intel/ixgbe/ixgbe_ethtool.c
-1111:   strscpy(drvinfo->fw_version, adapter->eeprom_id,
-1112:           sizeof(drvinfo->fw_version));
+Ah, I see. I fixed it in [v2].
 
-ethernet/intel/igc/igc_ethtool.c
-147:    scnprintf(adapter->fw_version,
-148:              sizeof(adapter->fw_version),
-153:    strscpy(drvinfo->fw_version, adapter->fw_version,
-154:            sizeof(drvinfo->fw_version));
+[v2]: https://lore.kernel.org/r/20231018-strncpy-drivers-net-wireless-ti-wl=
+1251-main-c-v2-1-67b63dfcb1b8@google.com
 
-wireless/broadcom/brcm80211/brcmfmac/core.c
-569:    strscpy(info->fw_version, drvr->fwver, sizeof(info->fw_version));
+Thanks!
 
-wireless/broadcom/brcm80211/brcmsmac/main.c
-7867:           snprintf(wlc->wiphy->fw_version,
-7868:                    sizeof(wlc->wiphy->fw_version), "%u.%u", rev, patch);
-
-wireless/broadcom/b43legacy/main.c
-1765:   snprintf(wiphy->fw_version, sizeof(wiphy->fw_version), "%u.%u",
-
-wireless/broadcom/b43/main.c
-2730:   snprintf(wiphy->fw_version, sizeof(wiphy->fw_version), "%u.%u",
-
-wireless/intel/iwlwifi/dvm/main.c
-1465:   snprintf(priv->hw->wiphy->fw_version,
-1466:            sizeof(priv->hw->wiphy->fw_version),
-
-wireless/intel/ipw2x00/ipw2100.c
-5905:   snprintf(info->fw_version, sizeof(info->fw_version), "%s:%d:%s",
-
-A suitable replacement is `strscpy` due to the fact that it guarantees
-NUL-termination on the destination buffer without unnecessarily
-NUL-padding.
-
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Changes in v2:
-- fix subject (thanks Jeff)
-- Link to v1: https://lore.kernel.org/r/20231017-strncpy-drivers-net-wireless-ti-wl1251-main-c-v1-1-3a5c02382e35@google.com
----
-Note: build-tested only.
-
-Found with: $ rg "strncpy\("
----
- drivers/net/wireless/ti/wl1251/main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/wireless/ti/wl1251/main.c b/drivers/net/wireless/ti/wl1251/main.c
-index eded284af600..cd9a41f59f32 100644
---- a/drivers/net/wireless/ti/wl1251/main.c
-+++ b/drivers/net/wireless/ti/wl1251/main.c
-@@ -404,7 +404,7 @@ static int wl1251_op_start(struct ieee80211_hw *hw)
- 
- 	/* update hw/fw version info in wiphy struct */
- 	wiphy->hw_version = wl->chip_id;
--	strncpy(wiphy->fw_version, wl->fw_ver, sizeof(wiphy->fw_version));
-+	strscpy(wiphy->fw_version, wl->fw_ver, sizeof(wiphy->fw_version));
- 
- out:
- 	if (ret < 0)
-
----
-base-commit: 58720809f52779dc0f08e53e54b014209d13eebb
-change-id: 20231017-strncpy-drivers-net-wireless-ti-wl1251-main-c-6b2da81eccad
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
-
+Justin
