@@ -1,181 +1,78 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F00FC2E3
-	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 07:01:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B65156E9
+	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 08:31:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BDOaHkwV"
-Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A042C6
-	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 00:01:51 -0700 (PDT)
-Received: by mail-qt1-x832.google.com with SMTP id d75a77b69052e-41b19dda4c6so137801cf.1
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 00:01:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697612510; x=1698217310; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LQMWdsjrcNxGemB+Ki+j+OmjDR6Ap/DLLOnXpTvSXXU=;
-        b=BDOaHkwV4BokQ0SNJAvrLqGryf0MP/JZL+9jwKjPK0N4tG05P5vV5mY5deCuGRYUWJ
-         n5FhyYP8P30ngXwe0QEOgllGlNekSLWz+y6+GZD56Mv19PtQf35nvZNx5Pzqndki7q4h
-         JtjQnsIsJmEDmBamInZmUkgxtykcWNqfyqgnMgdxqoA5RL4PAmGEuZGp/TmO4QkyeRn4
-         yiF+h258/JE9kE2jZnyWcuI4QpofrkYxsDLfCIswY/hw5LxvQi1FZ7lnNJGR8VJuzAuI
-         7s/wFWb3+YI1EayMq7Z/q0CQy2CB1SpdefJ2cFwcLwbkg+qk2udXoQApeEQ4BaZjJG7H
-         azfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697612510; x=1698217310;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LQMWdsjrcNxGemB+Ki+j+OmjDR6Ap/DLLOnXpTvSXXU=;
-        b=At7VY0wlf1W8EcxHMnrE4lMF4DVt+azKVAQG3MeoJtBnMIs7eQAp7I8TsaS8kGIyNh
-         9IWqzSbIgJfC9RZw7XQ29Go8TJ/waJJio1F4qXNx4HUPfgC38SttJTJYt8KuyumqtKvg
-         ZQs84Mawm/BVJvtYnKJgGWYt9Cie1EM/2WM0zE+L18IO7vr0K5ODJroX+AKTnygoQsBg
-         wW/7t/lJMe2JpyCeQ7PNiHj5aXpFVnhXbFORc7YEhqpTJvhYc0XHTNDefXZXZGtNebZv
-         qcGimzAJpGcYLHWmldKC6fF6CEk+BE0CUi3s9TtfF6Pp3Dpx6O0NNjpzfVBPG7PIQ6bM
-         SHkA==
-X-Gm-Message-State: AOJu0YwHHqVncDSfBlkJ/jtc25JtGkGfqiWJspCwFsQIE5HHgxBMJ0wG
-	vqOdL6b0Po5bNrOAS4rAhF5+EkDN3asqLjYaxag2tg==
-X-Google-Smtp-Source: AGHT+IHQyYOLE+Z9gTa+AYX+0rUotOh258UwOYKTEH95jYD/ocMbUJZKoG7x1mSLfzj+pDUtHplvY6ztBQyrR0NiBRo=
-X-Received: by 2002:a05:622a:a047:b0:41b:ef8f:dcbc with SMTP id
- ju7-20020a05622aa04700b0041bef8fdcbcmr234597qtb.0.1697612509813; Wed, 18 Oct
- 2023 00:01:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qKt5Zdvw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A83B7C433C9;
+	Wed, 18 Oct 2023 08:31:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1697617915;
+	bh=7LzgGeipT9Qy5v1sgxiku72SEYU7sxO5+0HO8M6l8bQ=;
+	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+	b=qKt5ZdvwyBDhTdY/Carhf2QcB/N5BdLhJRXjIQrVpairy5npomajJthuzXG/OqMh2
+	 C1kfrrdgDAjJymrPiYciajAwXdHNovsfJ7E7dPk/SjXOiqANBCqssOV7JHUMt/Hr+m
+	 8uorOQF5OsYMl+g3YQLYWCeO3bRmfncZXtU9GJNc0sB8jwdvOSmJMibKZil+8bvLlM
+	 J8AX267eQ1RvwrJej9JPWj0POYBwQO6qzBRfEwzQc/99jITsmW1cqXrwCnQpeXMGUB
+	 cDz+et2TLAtyAJkhUoLSAkjeTcOku+n6c/FUc4TyLFzYrq23NR8vHMSxkIiGAX4bxP
+	 MdCNpOie3W88g==
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231017090815.1067790-1-jeffxu@chromium.org> <20231017090815.1067790-8-jeffxu@chromium.org>
- <CAHk-=wh+6n6f0zuezKem+W=aytHMv2bib6Fbrg-xnWOoujFb6g@mail.gmail.com> <CAHk-=whchB_=Qx_oNAg3KBe-erNg9R2p_91ikaRZhsNY_2-G7g@mail.gmail.com>
-In-Reply-To: <CAHk-=whchB_=Qx_oNAg3KBe-erNg9R2p_91ikaRZhsNY_2-G7g@mail.gmail.com>
-From: Jeff Xu <jeffxu@google.com>
-Date: Wed, 18 Oct 2023 00:01:13 -0700
-Message-ID: <CALmYWFtugBD9CJRjfKZ+tp0r4fPCGkotpH17t0rF5_atw8_PbA@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 7/8] mseal:Check seal flag for mmap(2)
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: jeffxu@chromium.org, akpm@linux-foundation.org, keescook@chromium.org, 
-	jannh@google.com, sroettger@google.com, willy@infradead.org, 
-	gregkh@linuxfoundation.org, jorgelo@chromium.org, groeck@chromium.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, surenb@google.com, alex.sierra@amd.com, 
-	apopple@nvidia.com, aneesh.kumar@linux.ibm.com, axelrasmussen@google.com, 
-	ben@decadent.org.uk, catalin.marinas@arm.com, david@redhat.com, 
-	dwmw@amazon.co.uk, ying.huang@intel.com, hughd@google.com, joey.gouly@arm.com, 
-	corbet@lwn.net, wangkefeng.wang@huawei.com, Liam.Howlett@oracle.com, 
-	lstoakes@gmail.com, mawupeng1@huawei.com, linmiaohe@huawei.com, 
-	namit@vmware.com, peterx@redhat.com, peterz@infradead.org, 
-	ryan.roberts@arm.com, shr@devkernel.io, vbabka@suse.cz, 
-	xiujianfeng@huawei.com, yu.ma@intel.com, zhangpeng362@huawei.com, 
-	dave.hansen@intel.com, luto@kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
-	autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-	lindbergh.monkeyblade.net
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] ath5k: replace deprecated strncpy with strscpy
+From: Kalle Valo <kvalo@kernel.org>
+In-Reply-To: 
+ <20231013-strncpy-drivers-net-wireless-ath-ath5k-led-c-v1-1-3acb0b5a21f2@google.com>
+References: 
+ <20231013-strncpy-drivers-net-wireless-ath-ath5k-led-c-v1-1-3acb0b5a21f2@google.com>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Jiri Slaby <jirislaby@kernel.org>, Nick Kossifidis <mickflemm@gmail.com>,
+ Luis Chamberlain <mcgrof@kernel.org>, linux-wireless@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ Justin Stitt <justinstitt@google.com>
+User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
+Message-ID: <169761791192.48072.4820317724523709074.kvalo@kernel.org>
+Date: Wed, 18 Oct 2023 08:31:53 +0000 (UTC)
 
-Hi Linus,
+Justin Stitt <justinstitt@google.com> wrote:
 
-On Tue, Oct 17, 2023 at 10:43=E2=80=AFAM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Tue, 17 Oct 2023 at 10:04, Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > Honestly, there is only two kinds of sealing that makes sense:
-> >
-> >  - you cannot change the permissions of some area
-> >
-> >  - you cannot unmap an area
->
-> Actually, I guess at least theoretically, there could be three different =
-things:
->
->  - you cannot move an area
->
-Yes.
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
+> 
+> We expect led->name to be NUL-terminated based on the presence of a
+> manual NUL-byte assignment.
+> 
+> This NUL-byte assignment was added in Commit daf9669bea30aa22 ("ath5k:
+> ensure led name is null terminated"). If strscpy() had existed and had
+> been used back when this code was written then potential bugs and the
+> need to manually NUL-terminate could have been avoided. Since we now
+> have the technology, let's use it :)
+> 
+> Considering the above, a suitable replacement is `strscpy` [2] due to
+> the fact that it guarantees NUL-termination on the destination buffer
+> without unnecessarily NUL-padding. If NUL-padding is required let's opt
+> for strscpy_pad().
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
 
-Actually, the newly added selftest covers some of the above:
-1. can't change the permission of some areas.
-test_seal_mprotect
-test_seal_mmap_overwrite_prot
+Patch applied to ath-next branch of ath.git, thanks.
 
-2. can't unmap an area (thus mmap() to the same address later)
-test_seal_munmap
+24709752bfe8 wifi: ath5k: replace deprecated strncpy with strscpy
 
-3. can't move to an area:
-test_seal_mremap_move         //can't move from a sealed area:
-test_seal_mremap_move_fixed_zero //can't move from a sealed area to a
-fixed address
-test_seal_mremap_move_fixed   //can't move to a sealed area.
+-- 
+https://patchwork.kernel.org/project/linux-wireless/patch/20231013-strncpy-drivers-net-wireless-ath-ath5k-led-c-v1-1-3acb0b5a21f2@google.com/
 
-4 can't expand or shrink the area:
-test_seal_mremap_shrink
-test_seal_mremap_expand
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
-> although I do think that maybe just saying "you cannot unmap" might
-> also include "you cannot move".
->
-> But I guess it depends on whether you feel it's the virtual _address_
-> you are protecting, or whether it's the concept of mapping something.
->
-> I personally think that from a security perspective, what you want to
-> protect is a particular address. That implies that "seal from
-> unmapping" would thus also include "you can't move this area
-> elsewhere".
->
-> But at least conceptually, splitting "unmap" and "move" apart might
-> make some sense. I would like to hear a practical reason for it,
-> though.
->
-> Without that practical reason, I think the only two sane sealing operatio=
-ns are:
->
->  - SEAL_MUNMAP: "don't allow this mapping address to go away"
->
->    IOW no unmap, no shrinking, no moving mremap
->
->  - SEAL_MPROTECT: "don't allow any mapping permission changes"
->
-I agree with the concept in general. The separation of two seal types
-is easy to understand.
-
-For mmap(MAP_FIXED), I know for a fact that it can modify permission of
-an existing mapping, (as in selftest:test_seal_mmap_overwrite_prot).
-I think it can also expand an existing VMA. This is not a problem, code-wis=
-e,
-I mention it here, because it needs extra care when coding mmap() change.
-
-> Again, that permission case might end up being "don't allow
-> _additional_ permissions" and "don't allow taking permissions away".
-> Or it could be split by operation (ie "don't allow permission changes
-> to writability / readability / executability respectively").
->
-Yes. If the application desires this, it can also be done.
-i.e. seal of X bit, or seal of W bit, this will be similar to file sealing.
-I discussed this with Stephan before, at this point of time,  Chrome
-doesn't have a use case.
-
-> I suspect there isn't a real-life example of splitting the
-> SEAL_MPROTECT (the same way I doubt there's a real-life example for
-> splitting the UNMAP into "unmap vs move"), so unless there is some
-> real reason, I'd keep the sealing minimal and to just those two flags.
->
-I think two seal-type (permission and unmap/move/expand/shrink)
-will work for the Chrome case. Stephen R=C3=B6ttger is an expert in Chrome,
-on vacation/ be back soon. I will wait for Stephen to confirm.
-
-> We could always add more flags later, if there is a real use case
-> (IOW, if we start with "don't allow any permission changes", we could
-> add a flag later that just says "don't allow writability changes").
->
-Agreed 100%, thanks for understanding.
-
--Jeff
-
-
->                Linus
