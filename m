@@ -1,116 +1,184 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81443FE49
-	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 18:16:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79160F9C4
+	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 18:20:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fbSQaHpx"
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BBE610F;
-	Wed, 18 Oct 2023 11:16:38 -0700 (PDT)
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39IICYHl018187;
-	Wed, 18 Oct 2023 18:16:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=JXYWDyiW1JWQMSgIR9Wmq9AjhDVUSqBRcb+FAPMPPO0=;
- b=fbSQaHpxJaR5g2fymOhEELchQsyQ2Kl/XD2xMUqsdfjNMDuHI7eqPq2nyCmSaLrHGWxm
- srcYiinznONGnFcMqmkylS4dZrSq/veVSBSlnf9YKi/3WVE3jWt2Iofe2SJmYfw/rgvb
- 8qNdkuI01PkJ9HKtm4+TBrSfytP6BNUk20qblMdc5PCI/N0NlN1k6b7/sK5cVQLL3oCW
- c2lq/N6Ry3KdWOZWjLxk5AiXtb5PO4XyyrT6pHdCwM4NbvlwzYamORS6HZrtTSAZr7oh
- 5mxZXUzyv0xC6QoTH+cc6dSE/P8ERWR90pChgUmMmRckW41Td/lIHcF/e4184V8bRjg/ 3w== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ttmef05j3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Oct 2023 18:16:25 +0000
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39IIDsWn022464;
-	Wed, 18 Oct 2023 18:16:24 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ttmef05db-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Oct 2023 18:16:24 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 39IGdfRr012876;
-	Wed, 18 Oct 2023 18:16:20 GMT
-Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3tr5pyjyen-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Oct 2023 18:16:20 +0000
-Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
-	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 39IIGJBH14811884
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 18 Oct 2023 18:16:20 GMT
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BEAE35805D;
-	Wed, 18 Oct 2023 18:16:19 +0000 (GMT)
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 39ADD58059;
-	Wed, 18 Oct 2023 18:16:19 +0000 (GMT)
-Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.watson.ibm.com (unknown [9.31.99.90])
-	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 18 Oct 2023 18:16:19 +0000 (GMT)
-Message-ID: <3117d99434303b00f5057bfbe4615cf8cd26b72a.camel@linux.ibm.com>
-Subject: Re: [PATCH] ima: Add __counted_by for struct modsig and use
- struct_size()
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Dmitry Kasatkin
- <dmitry.kasatkin@gmail.com>,
-        Paul Moore <paul@paul-moore.com>, James Morris
- <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-Cc: linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Date: Wed, 18 Oct 2023 14:16:18 -0400
-In-Reply-To: <ZSRaDcJNARUUWUwS@work>
-References: <ZSRaDcJNARUUWUwS@work>
-Content-Type: text/plain; charset="ISO-8859-15"
-X-Mailer: Evolution 3.28.5 (3.28.5-22.el8) 
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2Vlfe3wP"
+Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A8DB111
+	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 11:20:40 -0700 (PDT)
+Received: by mail-qt1-x833.google.com with SMTP id d75a77b69052e-419b53acc11so42731cf.0
+        for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 11:20:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1697653239; x=1698258039; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6vVIrHuWQVA6shM3HnYPie5+SRU5CPGTqtle1JU5tXo=;
+        b=2Vlfe3wPPKaCOHn3S36I5scTD/erTZe6VUeGITRJcVPh3Jsa4z0A1pMS9Drm2T31zQ
+         250mnWxYhasaEQ5DYVxSsSREv/TULBXzcITSNwLrUSMlLH6u0ofjTLQoA5DRArTGgxqj
+         G6stLv82rdMdF6FdxqSYYSBNcydyyzKfbsNQYF7oQzJNY0w2aXRiKKJd7Gm8WxR3somE
+         fQM76zCSVPBpkrfn6DGrSDpWOEhssv5+8qcsHoqClS7X3oLbc84zTDiAPpKY7uGDvLct
+         SukbY6cA0EhbPqgGhW9DrCLyku3rjNIO0yI5k1LZF0bz+tMqWvJYkMwYdxsWkk0frBVu
+         Ucwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697653239; x=1698258039;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6vVIrHuWQVA6shM3HnYPie5+SRU5CPGTqtle1JU5tXo=;
+        b=PO0uC4sY1vQaI8asq1QLXutUkTkyTqAG4Q0svAjKk5Q1aQ+PfPCDXxMzqStsObJ7Mq
+         btRSvMYAbiXJlcxaK5AMfSOrnvtlSEJCJ2o1Ffy8hgp1DN2yWp+a7ZOdZBY4ruZPKZQd
+         DROhDSt/sDpNbt6zykRwW6AQc+qnlbA9CbTwt34Qlts6D0IMhK4uHdL5iC7n7vVWh4G8
+         mPbND9fJvsENLop95v2Ra3sY7/FYWwSLfoDw4Y9sipbVn+81K8u4QIwz9aQ9Y3IgKxeY
+         JJQBwfJTvYWlYFpJ6t1JJQtsPmGbXEWIrq/HotiAvrobDXBl8kryURHEPcwGqLoIIgsG
+         nO7w==
+X-Gm-Message-State: AOJu0Ywgy3TGhCXYXbDTlMixNoGi3c16KVH7yvx/sNSQ+wYDXn3/Q5m7
+	ylMHcsK/8HFBgGB5uc1ziBm/j7oN0a15ZwjTUFEgXg==
+X-Google-Smtp-Source: AGHT+IGyGQSgQHJFj8BImsesXGVlASS7RW6eopJfbHL22F8InhKtFg9dsIpDe/ROKjo5uadHLqVLhE2zRmNvOeNRnlY=
+X-Received: by 2002:a05:622a:a049:b0:412:9cd:473b with SMTP id
+ ju9-20020a05622aa04900b0041209cd473bmr48343qtb.4.1697653239212; Wed, 18 Oct
+ 2023 11:20:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: VgXm1I8MYbDieq0_K6zSaJizz07j5t7Q
-X-Proofpoint-ORIG-GUID: ZnTnGrQ5qSE-VkGMaOS6SvsrK70Vyy6P
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-18_16,2023-10-18_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- mlxlogscore=611 bulkscore=0 lowpriorityscore=0 suspectscore=0 spamscore=0
- adultscore=0 impostorscore=0 phishscore=0 clxscore=1011 mlxscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2309180000 definitions=main-2310180149
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+MIME-Version: 1.0
+References: <20231016143828.647848-1-jeffxu@chromium.org> <ZS1URCBgwGGj9JtM@casper.infradead.org>
+ <CAKbZUD2A+=bp_sd+Q0Yif7NJqMu8p__eb4yguq0agEcmLH8SDQ@mail.gmail.com>
+ <CALmYWFtOgMAQDGNoM6k2Ev4kMHD396wwH+rVDODaSjsyVMDogg@mail.gmail.com> <CAKbZUD2j1jbomCAVxUX_JmG1rfa8udc=5SqVOpDgc-3GnSTbAQ@mail.gmail.com>
+In-Reply-To: <CAKbZUD2j1jbomCAVxUX_JmG1rfa8udc=5SqVOpDgc-3GnSTbAQ@mail.gmail.com>
+From: Jeff Xu <jeffxu@google.com>
+Date: Wed, 18 Oct 2023 11:20:02 -0700
+Message-ID: <CALmYWFv7jzOj5HPcYct=UzYKPrwwvtN1EQeHioQHDPwGFvL5Ug@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 0/8] Introduce mseal() syscall
+To: Pedro Falcato <pedro.falcato@gmail.com>
+Cc: Matthew Wilcox <willy@infradead.org>, jeffxu@chromium.org, akpm@linux-foundation.org, 
+	keescook@chromium.org, sroettger@google.com, jorgelo@chromium.org, 
+	groeck@chromium.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, jannh@google.com, 
+	surenb@google.com, alex.sierra@amd.com, apopple@nvidia.com, 
+	aneesh.kumar@linux.ibm.com, axelrasmussen@google.com, ben@decadent.org.uk, 
+	catalin.marinas@arm.com, david@redhat.com, dwmw@amazon.co.uk, 
+	ying.huang@intel.com, hughd@google.com, joey.gouly@arm.com, corbet@lwn.net, 
+	wangkefeng.wang@huawei.com, Liam.Howlett@oracle.com, 
+	torvalds@linux-foundation.org, lstoakes@gmail.com, mawupeng1@huawei.com, 
+	linmiaohe@huawei.com, namit@vmware.com, peterx@redhat.com, 
+	peterz@infradead.org, ryan.roberts@arm.com, shr@devkernel.io, vbabka@suse.cz, 
+	xiujianfeng@huawei.com, yu.ma@intel.com, zhangpeng362@huawei.com, 
+	dave.hansen@intel.com, luto@kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Mon, 2023-10-09 at 13:52 -0600, Gustavo A. R. Silva wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
-> array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
-> 
-> Also, relocate `hdr->raw_pkcs7_len = sig_len;` so that the __counted_by
-> annotation has effect, and flex-array member `raw_pkcs7` can be properly
-> bounds-checked at run-time.
-> 
-> While there, use struct_size() helper, instead of the open-coded
-> version, to calculate the size for the allocation of the whole
-> flexible structure, including of course, the flexible-array member.
-> 
-> This code was found with the help of Coccinelle, and audited and
-> fixed manually.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+On Tue, Oct 17, 2023 at 3:35=E2=80=AFPM Pedro Falcato <pedro.falcato@gmail.=
+com> wrote:
+>
+> > >
+> > > I think it's worth pointing out that this suggestion (with PROT_*)
+> > > could easily integrate with mmap() and as such allow for one-shot
+> > > mmap() + mseal().
+> > > If we consider the common case as 'addr =3D mmap(...); mseal(addr);',=
+ it
+> > > definitely sounds like a performance win as we halve the number of
+> > > syscalls for a sealed mapping. And if we trivially look at e.g OpenBS=
+D
+> > > ld.so code, mmap() + mimmutable() and mprotect() + mimmutable() seem
+> > > like common patterns.
+> > >
+> > Yes. mmap() can support sealing as well, and memory is allocated as
+> > immutable from begining.
+> > This is orthogonal to mseal() though.
+>
+> I don't see how this can be orthogonal to mseal().
+> In the case we opt for adding PROT_ bits, we should more or less only
+> need to adapt calc_vm_prot_bits(), and the rest should work without
+> issues.
+> vma merging won't merge vmas with different prots. The current
+> interfaces (mmap and mprotect) would work just fine.
+> In this case, mseal() or mimmutable() would only be needed if you need
+> to set immutability over a range of VMAs with different permissions.
+>
+Agreed. By orthogonal, I meant we can have two APIs:
+mmap() and mseal()/mprotect()
+i.e. we can't just rely on mmap() only without mseal()/mprotect()/mimmutabl=
+e().
+Sealing can be applied after initial memory creation.
 
-Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> Note: modifications should look kinda like this: https://godbolt.org/z/Tb=
+jjd14Pe
+> The only annoying wrench in my plans here is that we have effectively
+> run out of vm_flags bits in 32-bit architectures, so this approach as
+> I described is not compatible with 32-bit.
+>
+> > In case of ld.so, iiuc, memory can be first allocated as W, then later
+> > changed to RO, for example, during symbol resolution.
+> > The important point is that the application can decide what type of
+> > sealing it wants, and when to apply it.  There needs to be an api(),
+> > that can be mseal() or mprotect2() or mimmutable(), the naming is not
+> > important to me.
+> >
+> > mprotect() in linux have the following signature:
+> > int mprotect(void addr[.len], size_t len, int prot);
+> > the prot bitmasks are all taken here.
+> > I have not checked the prot field in mmap(), there might be bits left,
+> > even not, we could have mmap2(), so that is not an issue.
+>
+> I don't see what you mean. We have plenty of prot bits left (32-bits,
+> and we seem to have around 8 different bits used).
+> And even if we didn't, prot is the same in mprotect and mmap and mmap2 :)
+>
+> The only issue seems to be that 32-bit ran out of vm_flags, but that
+> can probably be worked around if need be.
+>
+Ah, you are right about this. vm_flags is full, and prot in mprotect() is n=
+ot.
+Apology that I was wrong previously and caused confusion.
 
+There is a slight difference in the syntax of mprotect and mseal.
+Each time when mprotect() is called, the kernel takes all of RWX bits
+and updates vm_flags,
+In other words, the application sets/unset each RWX, and kernel takes it.
+
+In the mseal() case, the kernel will remember which seal types were
+applied previously, and the application doesn=E2=80=99t need to repeat all
+existing seal types in the next mseal().  Once a seal type is applied,
+it can=E2=80=99t be unsealed.
+
+So if we want to use mprotect() for sealing, developers need to think
+of sealing bits differently than the rest of prot bits. It is a
+different programming model, might or might not be an obvious concept
+to developers.
+
+There is a difference in input check and error handling as well.
+for mseal(), if a given address range has a gap (unallocated memory),
+or if one of VMA is sealed with MM_SEAL_SEAL flag, none of VMAs is
+updated.
+For mprotect(), some VMAs can be updated, till an error happens to a VMA.
+
+IMO: I think it makes sense for mseal() and mprotect() to be different
+in this. mseal() only checks vma struct so it is fast, and mprotect()
+goes deeper into HW.
+
+Because of those two differences, personally I feel a new syscall
+might be worth the effort.
+
+That said, mmap() + mprotect() is workable to me if that is what the
+community wants.
+
+Thanks
+-Jeff
+
+-Jeff
+
+
+> --
+> Pedro
