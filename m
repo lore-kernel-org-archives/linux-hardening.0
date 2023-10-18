@@ -1,105 +1,99 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2069834CDF
-	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 22:14:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B3439850
+	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 22:35:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rpD9nXDr"
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A827A113
-	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 15:14:56 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5a7ed6903a6so111710737b3.2
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 15:14:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2p2deGNH"
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7F04114
+	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 15:35:48 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d99ec34829aso10185596276.1
+        for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 15:35:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697667296; x=1698272096; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1697668548; x=1698273348; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=PlQsMleo8ndyb1BkvS8psG/NpipwSb1Ibvd6wvaptgE=;
-        b=rpD9nXDr8ZV4X1Zjrx1Lpkbi8PcVhM+FAsPQEkE/bgGqvJdPH1dZ/7vggwFyV7nhEA
-         X8bQ+c4ABe5Lv0Lx4UdVxd3dONLa3xGFTYGjnsytjjaPuWHDgsSwaDQqOqxNYmUHL3E8
-         fd6cI8mvnnYu0l+EvsSOxOG18UhCTsNL6jB/fhq9pjPCpnyyxwUQHxSZ87gnNTZIS6r+
-         iRqmgKZXyA5v+lImVMteIruljC+BI0JQ11H/uZKwoOFulZPDL9CV4UpMWYejLAO+vAfZ
-         /dHi5bk0o61IOex9EqNmqWyAwgpM35REgb1kPuw72D9Xa/TL/git7S9ZvXE7Ceui1EnK
-         6sYA==
+        bh=U1aLFdy4LtlPdLdmsrELCrrPTI/o77pTc9HEh1RET2I=;
+        b=2p2deGNHebLT4omQqAuYtJ4sY0mclka+JFK43mbygOfC0S3ELvUQIZJy2zK8/e0xau
+         htu9nWxPiycgejEvsZhGPBgA5GBH27pu1j0qirCXPgQeO1fWl9aLh+qcCiO+x1baE22x
+         jhWuDcbkIM+4occcsxqZ4u4j8E4FQ8BzRZgeL0DBSNkcoF3U55iqT7OvlSMyEaOR1HCF
+         +ixVsEtDtDdPCsoZGath00LU4eXoC/m78Mh6Vz2KWlCEL/vGJtIkOZlk59i+34N46BHc
+         fHExU/qYYf7CEzND76rpM8W/HQ60Iwx+WVghUWB+l+qXf6MDsaj6/bWxCCbW8fnaDQd5
+         wCfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697667296; x=1698272096;
+        d=1e100.net; s=20230601; t=1697668548; x=1698273348;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=PlQsMleo8ndyb1BkvS8psG/NpipwSb1Ibvd6wvaptgE=;
-        b=Vgqrr6RVONbqLvtprPduw10gSKEoYZPvAG53iH5Io1rPcwVBx3P3bbKFniWC1d3hkd
-         9Xfg6ErSDt7I0PLV2rhi91X4oSx2ES2OSJ9WHLlscWzOiCmUbvtZLDfd8Exk7mWHod4B
-         0KVDeA3kbAuEBiP5PAcy98k349Mh0RPbDznyVLXBXIlAbIcQ5/rcuSBQNK9h1sh7JwJV
-         yn6HCrLPTUgX2/iFyvuDZGa/Aq5tECTbsr/azMVNDbSsKoRn8O3qPKQTJPsNM7QmYK7I
-         zkwudkWNU9EaeBFQ7Kw7Kk2atjxiQUAVXNFAZQODKYFv3gSFJt+sXnlRm5pD6j5XXO03
-         OdGw==
-X-Gm-Message-State: AOJu0YzuxVMStOSSZglJ1FtshAmG75ymfksY1c+v2gg+ayfduxIwo9OS
-	wOarkaXceDLUWCZozk1vF0V3txBx0X6SDJYnIQ==
-X-Google-Smtp-Source: AGHT+IFCGhabYMIAAC6XiL9TzzjSCY6BQgj3jImjG5X7Fcyl/tbrVb3NWUepotJZi0+qdYwrlX/ZrUxtd4WudCjg7Q==
+        bh=U1aLFdy4LtlPdLdmsrELCrrPTI/o77pTc9HEh1RET2I=;
+        b=if9SGd3xnKZt1BmpG6IwRA+KAQy6vfH9rdSgzgrqDDMVy8aSzPcxU/MW++lJzB3ypv
+         RZEMpWPM0KuBtNLgbNJwacd+qGmWs2NZx/lPrNJDDQnAdvbtpx1JeO3YxVZbspwObj95
+         pPya04OMvsySt8SbOshDVBdIescLFvS6k3Vb6iRZ5P9qQh8hlX3xGDYu/gKqM+XI3YWg
+         9I8byAtIRX6baSRQmvPEarKghxAL+lRKpsAs4jftSbGTfS0bL/AKzTA/CWSGRF+IGByJ
+         RKZJ77VEXk6QAnVht3lwc6w8KekugRTfIiu06gICR1TZ2ddLoWZcOlpXwWf698NSR+yJ
+         sTAg==
+X-Gm-Message-State: AOJu0YwiVE0/rof1qHIMNdk1ZD4HlqbbzsTUBKskYSMIqR5ZVAE0hbqg
+	VOnVdta/OOufgcezmagGz3EEg3PQ+SZWE4O7dg==
+X-Google-Smtp-Source: AGHT+IHwV2J0r/LBLvfNxSR2yGnXuXn3OeZ4+CSobU/6GKBkVZsitkQV2vNVMQqnN+mNHOCCvKr7NZw07FSmbv3F3g==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a0d:d9d2:0:b0:5a7:be10:461d with SMTP
- id b201-20020a0dd9d2000000b005a7be10461dmr15636ywe.2.1697667295839; Wed, 18
- Oct 2023 15:14:55 -0700 (PDT)
-Date: Wed, 18 Oct 2023 22:14:55 +0000
+ (user=justinstitt job=sendgmr) by 2002:a25:b0a8:0:b0:d9a:3a14:a5a2 with SMTP
+ id f40-20020a25b0a8000000b00d9a3a14a5a2mr15465ybj.13.1697668548155; Wed, 18
+ Oct 2023 15:35:48 -0700 (PDT)
+Date: Wed, 18 Oct 2023 22:35:47 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAN5YMGUC/x2NywrCMBAAf6Xs2YU8oIi/IlJCsqkLGsNuaJXSf
- 2/qbeYys4GSMCnchg2EFlb+lC72MkB8hjITcuoOzjhvjb2iNimx/jAJLySKhRquaygo9a3zdOI Um7wwos+jMyHk5N0IPViFMn//s/tj3w8hAG6ffAAAAA==
+X-B4-Tracking: v=1; b=H4sIAMJdMGUC/x3MwQqDMAwA0F+RnA20yljrr4iH2cYth3aSlOIQ/
+ 92y47u8E5SESWHqThCqrPzNDbbvIHxe+U3IsRkGM4zWWIdaJIf9h1G4kijmGjklXEvBgPax+dE 9vXeeoBW70MbHv5+X67oBjezIGm4AAAA=
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1697667294; l=2364;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1697668547; l=2405;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=+RiFAuTFDYeSx5+FsqkeyVgCujTXIxMDn3P2javi3XY=; b=123OWlCw+sopcVGOlRvo8H8eZ3pupMbwmZbCt7KUM82cnX6fdX3BK+EJUTP0xC4c1b3gbO3IB
- 1w6u2cozf6AB/MUjQvfMIuLfOn9l4T+IXmXkdkHqvfMcPANOo65c801
+ bh=wIXUkCLacDcvyYmWwXYlHGDFUt9BdHJS6MZL7uBj9BA=; b=n6GHlGhf250MWDnVuic43BVfEnftE5cYh9pXrKoHjqf2BnIxPPqvucB7iOWWF8tO9siLtvPfq
+ 0GZIeKqaZp+DOlGpq6Beb706YYhYEaXrCt36mqglIArldQsjrnrBK+2
 X-Mailer: b4 0.12.3
-Message-ID: <20231018-strncpy-drivers-net-wwan-rpmsg_wwan_ctrl-c-v1-1-4e343270373a@google.com>
-Subject: [PATCH] net: wwan: replace deprecated strncpy with strscpy_pad
+Message-ID: <20231018-strncpy-drivers-nvdimm-btt-c-v1-1-58070f7dc5c9@google.com>
+Subject: [PATCH] block: replace deprecated strncpy with strscpy
 From: Justin Stitt <justinstitt@google.com>
-To: Stephan Gerhold <stephan@gerhold.net>, Loic Poulain <loic.poulain@linaro.org>, 
-	Sergey Ryazanov <ryazanov.s.a@gmail.com>, Johannes Berg <johannes@sipsolutions.net>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Justin Stitt <justinstitt@google.com>
+To: Dan Williams <dan.j.williams@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>
+Cc: nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
 
 strncpy() is deprecated for use on NUL-terminated destination strings
 [1] and as such we should prefer more robust and less ambiguous string
 interfaces.
 
-We expect chinfo.name to be NUL-terminated based on its use with format
-strings and sprintf:
-rpmsg/rpmsg_char.c
-165:            dev_err(dev, "failed to open %s\n", eptdev->chinfo.name);
-368:    return sprintf(buf, "%s\n", eptdev->chinfo.name);
+We expect super->signature to be NUL-terminated based on its usage with
+memcpy against a NUL-term'd buffer:
+btt_devs.c:
+253 | if (memcmp(super->signature, BTT_SIG, BTT_SIG_LEN) != 0)
+btt.h:
+13  | #define BTT_SIG "BTT_ARENA_INFO\0"
 
-... and with strcmp():
-|  static struct rpmsg_endpoint *qcom_glink_create_ept(struct rpmsg_device *rpdev,
-|  						    rpmsg_rx_cb_t cb,
-|  						    void *priv,
-|  						    struct rpmsg_channel_info
-|  									chinfo)
-|  ...
-|  const char *name = chinfo.name;
-|  ...
-|  		if (!strcmp(channel->name, name))
+NUL-padding is not required as `super` is already zero-allocated:
+btt.c:
+985 | super = kzalloc(sizeof(struct btt_sb), GFP_NOIO);
+... rendering any additional NUL-padding superfluous.
 
-Moreover, as chinfo is not kzalloc'd, let's opt to NUL-pad the
-destination buffer
+Considering the above, a suitable replacement is `strscpy` [2] due to
+the fact that it guarantees NUL-termination on the destination buffer
+without unnecessarily NUL-padding.
 
-Similar change to:
-Commit 766279a8f85d ("rpmsg: qcom: glink: replace strncpy() with strscpy_pad()")
-and
-Commit 08de420a8014 ("rpmsg: glink: Replace strncpy() with strscpy_pad()")
+Let's also use the more idiomatic strscpy usage of (dest, src,
+sizeof(dest)) instead of (dest, src, XYZ_LEN) for buffers that the
+compiler can determine the size of. This more tightly correlates the
+destination buffer to the amount of bytes copied.
 
-Considering the above, a suitable replacement is `strscpy_pad` due to
-the fact that it guarantees both NUL-termination and NUL-padding on the
-destination buffer.
+Side note, this pattern of memcmp() on two NUL-terminated strings should
+really be changed to just a strncmp(), if i'm not mistaken? I see
+multiple instances of this pattern in this system.
 
 Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
 Link: https://github.com/KSPP/linux/issues/90
 Cc: linux-hardening@vger.kernel.org
 Signed-off-by: Justin Stitt <justinstitt@google.com>
@@ -108,26 +102,26 @@ Note: build-tested only.
 
 Found with: $ rg "strncpy\("
 ---
- drivers/net/wwan/rpmsg_wwan_ctrl.c | 2 +-
+ drivers/nvdimm/btt.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wwan/rpmsg_wwan_ctrl.c b/drivers/net/wwan/rpmsg_wwan_ctrl.c
-index 86b60aadfa11..39f5e780c478 100644
---- a/drivers/net/wwan/rpmsg_wwan_ctrl.c
-+++ b/drivers/net/wwan/rpmsg_wwan_ctrl.c
-@@ -37,7 +37,7 @@ static int rpmsg_wwan_ctrl_start(struct wwan_port *port)
- 		.dst = RPMSG_ADDR_ANY,
- 	};
+diff --git a/drivers/nvdimm/btt.c b/drivers/nvdimm/btt.c
+index d5593b0dc700..9372c36e8f76 100644
+--- a/drivers/nvdimm/btt.c
++++ b/drivers/nvdimm/btt.c
+@@ -986,7 +986,7 @@ static int btt_arena_write_layout(struct arena_info *arena)
+ 	if (!super)
+ 		return -ENOMEM;
  
--	strncpy(chinfo.name, rpwwan->rpdev->id.name, RPMSG_NAME_SIZE);
-+	strscpy_pad(chinfo.name, rpwwan->rpdev->id.name, sizeof(chinfo.name));
- 	rpwwan->ept = rpmsg_create_ept(rpwwan->rpdev, rpmsg_wwan_ctrl_callback,
- 				       rpwwan, chinfo);
- 	if (!rpwwan->ept)
+-	strncpy(super->signature, BTT_SIG, BTT_SIG_LEN);
++	strscpy(super->signature, BTT_SIG, sizeof(super->signature));
+ 	export_uuid(super->uuid, nd_btt->uuid);
+ 	export_uuid(super->parent_uuid, parent_uuid);
+ 	super->flags = cpu_to_le32(arena->flags);
 
 ---
 base-commit: 58720809f52779dc0f08e53e54b014209d13eebb
-change-id: 20231018-strncpy-drivers-net-wwan-rpmsg_wwan_ctrl-c-3f620aafd326
+change-id: 20231018-strncpy-drivers-nvdimm-btt-c-15f93879989e
 
 Best regards,
 --
