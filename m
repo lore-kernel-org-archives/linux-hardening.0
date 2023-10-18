@@ -1,68 +1,66 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0C8A3B2AE
-	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 18:55:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC2820307
+	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 19:07:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WlSvcMi5"
-Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83A76119
-	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 11:54:59 -0700 (PDT)
-Received: by mail-qt1-x82c.google.com with SMTP id d75a77b69052e-41b19dda4c6so48171cf.1
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 11:54:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OBX3H2C7"
+Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E90111C
+	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 12:07:47 -0700 (PDT)
+Received: by mail-qt1-x836.google.com with SMTP id d75a77b69052e-41cb7720579so52451cf.1
+        for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 12:07:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697655298; x=1698260098; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1697656066; x=1698260866; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NFJlA+mQhi+0DERBwp78bB/+mqro8rSJvhQZ9F+v2NE=;
-        b=WlSvcMi5F/jYXxVjjQcOVuG7FVY9JhBio0abDr6dtY+dGMzncWxQZdEqvyjdLwY3H5
-         mgSRekPrWheEXYi4QVxifQo8Z8b5FxJZX4fDGDhXv4Tv8OGRmSnFFAf8HoZceAyu5r63
-         J9k7UcPcoJgm4g8JjwCTAsoSkgVTa9J7OCIIK3G+XQrp8okByvd4G44x5Cntvz5V8Vgq
-         ZYmUuQTUEhhOxagJPOZYcS3LbvLUJtxj7KL7Tz4KP2f4EWQK1U9/pZk5m/NAuWfoQg2i
-         5bLKP4tBEULzUa5+vGvAyBdxYUxjJa+ue2vgWmh4WBa9NQcelU9GLW7N50/6hxDU90kA
-         H0yw==
+        bh=7jLh+LVsADEpQn0tXrIhHZOOTufYjaEXj860xp7E8aI=;
+        b=OBX3H2C7k1EqfyqW6yvKPa2SMVSMKpojBHDSs9X6IFDbHhwz7rEZ+vLnjVJ/u8WUFd
+         USUIZ0xyxBU3qjJ6pmlJyd9GVnOJToHmFvaMQlK/RWfn04ck6DIFiIxjvjhmdg25H41w
+         PpY+uW4qizmSEiX6HVtaL5XEId/RlnSf4VLw+PS1qHJ3jYmz7sK8UaZNQyGyJGENNGBj
+         5ca6Rz+UxDfZGbB64SG1Kd8kZpiPHL9hYyXhScTe6ncOdDxAkVat0E8SPmlXG9DXbweT
+         uoSedXxbrvJhfTOqO/5tu3veC0Vj3F/G82CN3wd0C49rPMbwBcsVamx6jUWaFo5CokOh
+         hvwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697655298; x=1698260098;
+        d=1e100.net; s=20230601; t=1697656066; x=1698260866;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NFJlA+mQhi+0DERBwp78bB/+mqro8rSJvhQZ9F+v2NE=;
-        b=RSuUlYwla8BDdtltnlqYjEB1kj+TA2WzwsUFK7cvCzUhLuVskJd4n6DlbIFVdxkLi/
-         UE5x19FdNn4rr+kLXUJ4weBtoRoU6RIWvxWiqda08Y8sNdjzf6J2nVnr5tAoQrB12nF8
-         1mSaQU50x0ZT32iDDMv89W2yubv5j6NNVCAqeBP7sOvvVOqPPpYpO1AYYuvc/ZkD8NyO
-         Tv/YONamAFmShF1tTHaD97QErHcxv6K9Z+E1SjQhGeHhzf9vfkeA8ugSdJg18AsKl+67
-         1ibaPuZsYw0MFIhwoRiRkuYhinO33L2BzduRstzUUafZ9pugV009JE4mcNRMTVLAh2yA
-         fBxA==
-X-Gm-Message-State: AOJu0YxPdQwkHxQdf0WKKiA1/I6iMdPis2Wdg9aUMT5jAMcXR1PIkkbI
-	2d87CF2hw5T2y4OO9wGGo1ViW7m/grRXKjjFDixmdw==
-X-Google-Smtp-Source: AGHT+IGjizzkFJ61gHRpVi03W6jxKFHsg7oR29EE+XHiKGg+Nd1AGPkE/bY4MhXNSrPSxo096Ldf5GQvn/xYA+BV/to=
-X-Received: by 2002:a05:622a:668a:b0:419:77b7:da5f with SMTP id
- hx10-20020a05622a668a00b0041977b7da5fmr39818qtb.11.1697655298459; Wed, 18 Oct
- 2023 11:54:58 -0700 (PDT)
+        bh=7jLh+LVsADEpQn0tXrIhHZOOTufYjaEXj860xp7E8aI=;
+        b=MHpFS8lBrXLVtsvPGZm2WVtKnNA0MHS6PDCgXxGEkpVhWpEFcDrv5zWbP4mk37zh9d
+         3aeo8TDkSXqcjiaezxqKxgU5yg6E+dWnfAuaPeEC2MZ2io8HxSEEndoiPN9OuOIUdf1z
+         1a4hgYBXjEOjKXlf70k6ZCX1rurYZ684VTJebOt4YeBNf3PVfyGcSg4cWue1s3Jjx2AW
+         t5YIhjjlhMgW8/gS+ZNZKuLnc7I620gYXAqc24utVDvIMdFPI3VWo+Vd4R18QzyGokta
+         ImAp1O+akt0jl0K2DYaNSi3VJPkNTZye+R9on3RzjlpUCZZS3u/EWjRVVMorbgTMn57D
+         crXg==
+X-Gm-Message-State: AOJu0YzUPaBd4jONxlYTJxM0C/iKum6YtDgxhh2MKD1PjAaBaHYvR/Jl
+	kTOGJHRzHLisYUJSYh5I9BSq/QYUZzIQWqckrv20/g==
+X-Google-Smtp-Source: AGHT+IEfpqH+NCZtb7mB+SU291n5YTFgfJ3T5+Hg/iP5B84SoIbdRXNJIdwzGfDI551ZVJup3pkbx5z6Q9EAvjVvxG8=
+X-Received: by 2002:ac8:4d5d:0:b0:41c:b700:fb84 with SMTP id
+ x29-20020ac84d5d000000b0041cb700fb84mr57193qtv.2.1697656066547; Wed, 18 Oct
+ 2023 12:07:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231016143828.647848-1-jeffxu@chromium.org> <CAHk-=whFZoap+DBTYvJx6ohqPwn11Puzh7q4huFWDX9vBwXHgg@mail.gmail.com>
- <CALmYWFtTDAb_kpZdAe_xspqwNgK1NWJmjTxaTC=jDEMzfe297Q@mail.gmail.com>
- <CAHk-=wj87GMTH=5901ob=SjQqegAm2JYBE7E4J7skJzE64U-wQ@mail.gmail.com>
- <55960.1697566804@cvs.openbsd.org> <CALmYWFs81T=XnT=AXQTo0+9FXo=OBAV_4rrYPSn9-16O-gBTZg@mail.gmail.com>
- <95482.1697587015@cvs.openbsd.org> <CALmYWFtQX57Z7ttKxrdXQH4QupFn4vi5KfizUBH9NkmP-S1JDw@mail.gmail.com>
- <ZS/3GCKvNn5qzhC4@casper.infradead.org>
-In-Reply-To: <ZS/3GCKvNn5qzhC4@casper.infradead.org>
+References: <20231017090815.1067790-1-jeffxu@chromium.org> <20231017090815.1067790-6-jeffxu@chromium.org>
+ <CAHk-=wgwdHzOY_mT3y9gDHSMXZ8Xb5OYrK40-u9uRXLv25fNPA@mail.gmail.com>
+ <CALmYWFux2m=9189Gs0o8-xhPNW4dnFvtqj7ptcT5QvzxVgfvYQ@mail.gmail.com>
+ <CALmYWFvgM7DOihdUpUC5SREhUMn9t53HYCX+YioeHHhLSD1KHw@mail.gmail.com> <CAHk-=wixGw88-OzcFbCLEuAzSe53oUUozdM-E_RJwvejgY6ySA@mail.gmail.com>
+In-Reply-To: <CAHk-=wixGw88-OzcFbCLEuAzSe53oUUozdM-E_RJwvejgY6ySA@mail.gmail.com>
 From: Jeff Xu <jeffxu@google.com>
-Date: Wed, 18 Oct 2023 11:54:22 -0700
-Message-ID: <CALmYWFu_uY=cWzAQaLtS0CdNrm+cO7tKz4sY2Ff02WQ8mGUUXw@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 0/8] Introduce mseal() syscall
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Theo de Raadt <deraadt@openbsd.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	jeffxu@chromium.org, akpm@linux-foundation.org, keescook@chromium.org, 
-	sroettger@google.com, jorgelo@chromium.org, groeck@chromium.org, 
+Date: Wed, 18 Oct 2023 12:07:10 -0700
+Message-ID: <CALmYWFssV_nqOBKR0=8ka8vOP2v__8Nx_dL_kLs53W_RbYXViQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 5/8] mseal: Check seal flag for munmap(2)
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: jeffxu@chromium.org, akpm@linux-foundation.org, keescook@chromium.org, 
+	jannh@google.com, sroettger@google.com, willy@infradead.org, 
+	gregkh@linuxfoundation.org, jorgelo@chromium.org, groeck@chromium.org, 
 	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, jannh@google.com, surenb@google.com, alex.sierra@amd.com, 
+	linux-mm@kvack.org, surenb@google.com, alex.sierra@amd.com, 
 	apopple@nvidia.com, aneesh.kumar@linux.ibm.com, axelrasmussen@google.com, 
 	ben@decadent.org.uk, catalin.marinas@arm.com, david@redhat.com, 
 	dwmw@amazon.co.uk, ying.huang@intel.com, hughd@google.com, joey.gouly@arm.com, 
@@ -75,36 +73,21 @@ Cc: Theo de Raadt <deraadt@openbsd.org>, Linus Torvalds <torvalds@linux-foundati
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 18, 2023 at 8:17=E2=80=AFAM Matthew Wilcox <willy@infradead.org=
-> wrote:
+On Wed, Oct 18, 2023 at 11:27=E2=80=AFAM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 >
-> Let's start with the purpose.  The point of mimmutable/mseal/whatever is
-> to fix the mapping of an address range to its underlying object, be it
-> a particular file mapping or anonymous memory.  After the call succeeds,
-> it must not be possible to make any address in that virtual range point
-> into any other object.
+> On Wed, 18 Oct 2023 at 10:14, Jeff Xu <jeffxu@google.com> wrote:
+> This is simply not up for discussion. Any flag for "ignore sealing" is wr=
+ong.
 >
-> The secondary purpose is to lock down permissions on that range.
-> Possibly to fix them where they are, possibly to allow RW->RO transitions=
+> We do have one special "unmap" case, namely "unmap_vmas()' called at
+> last mmput() -> __mmput() -> exit_mmap().
+>
+> And yes, that is called at munmap() time too, but that's after the
+> point of no return after we've already removed the vma's from the VM
+> lists. So it's long after any error cases have been checked.
+>
+Ah. I see.
+I didn't know there was no legit case, which is what I worried about before=
 .
->
-> With those purposes in mind, you should be able to deduce for any syscall
-> or any madvise(), ... whether it should be allowed.
->
-I got it.
-
-IMO: The approaches mimmutable() and mseal() took are different, but
-we all want to seal the memory from attackers and make the linux
-application safer.
-
-mimmutable() started  with "none of updates to the sealed address is
-allowed once marked as immutable", this includes from within kernel space
-including driver, or any new syscalls. It is reasonable to me.
-
-mseal() starts with 4 syscalls from userspace, which is just a way (among m=
-any
-other ways) to demo what memory operation can be sealed, which happens
-to meet what Chome wants.  This is an RFC, I appreciate your input.
-
-Best regards,
--Jeff
+this flag can be removed.
