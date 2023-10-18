@@ -1,129 +1,90 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B3439850
-	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 22:35:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3812B3984F
+	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 22:36:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2p2deGNH"
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7F04114
-	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 15:35:48 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d99ec34829aso10185596276.1
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 15:35:48 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GQhkVl/9"
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7794511B
+	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 15:36:02 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-1c5cd27b1acso62265195ad.2
+        for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 15:36:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697668548; x=1698273348; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=U1aLFdy4LtlPdLdmsrELCrrPTI/o77pTc9HEh1RET2I=;
-        b=2p2deGNHebLT4omQqAuYtJ4sY0mclka+JFK43mbygOfC0S3ELvUQIZJy2zK8/e0xau
-         htu9nWxPiycgejEvsZhGPBgA5GBH27pu1j0qirCXPgQeO1fWl9aLh+qcCiO+x1baE22x
-         jhWuDcbkIM+4occcsxqZ4u4j8E4FQ8BzRZgeL0DBSNkcoF3U55iqT7OvlSMyEaOR1HCF
-         +ixVsEtDtDdPCsoZGath00LU4eXoC/m78Mh6Vz2KWlCEL/vGJtIkOZlk59i+34N46BHc
-         fHExU/qYYf7CEzND76rpM8W/HQ60Iwx+WVghUWB+l+qXf6MDsaj6/bWxCCbW8fnaDQd5
-         wCfw==
+        d=chromium.org; s=google; t=1697668562; x=1698273362; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gU8UgFLtIwBMnNin+UfjeLA6KRbmnG6Wd91XkYWntpA=;
+        b=GQhkVl/9fDceZRGSVUreqYnt3zuY5DMfBTEFTanW2ex901gUNulYVNrrmdTLIvHRt7
+         w54JVgMxU+iBiWwDff9UJNcaBR6Dyixjer5sedl1HZc/Vt5DHZLrAMffHaHQyWUOYFYS
+         Sq/fV1rqYB1Sjq5yIIjAdwZqeYPzg/ybbts/w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697668548; x=1698273348;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=U1aLFdy4LtlPdLdmsrELCrrPTI/o77pTc9HEh1RET2I=;
-        b=if9SGd3xnKZt1BmpG6IwRA+KAQy6vfH9rdSgzgrqDDMVy8aSzPcxU/MW++lJzB3ypv
-         RZEMpWPM0KuBtNLgbNJwacd+qGmWs2NZx/lPrNJDDQnAdvbtpx1JeO3YxVZbspwObj95
-         pPya04OMvsySt8SbOshDVBdIescLFvS6k3Vb6iRZ5P9qQh8hlX3xGDYu/gKqM+XI3YWg
-         9I8byAtIRX6baSRQmvPEarKghxAL+lRKpsAs4jftSbGTfS0bL/AKzTA/CWSGRF+IGByJ
-         RKZJ77VEXk6QAnVht3lwc6w8KekugRTfIiu06gICR1TZ2ddLoWZcOlpXwWf698NSR+yJ
-         sTAg==
-X-Gm-Message-State: AOJu0YwiVE0/rof1qHIMNdk1ZD4HlqbbzsTUBKskYSMIqR5ZVAE0hbqg
-	VOnVdta/OOufgcezmagGz3EEg3PQ+SZWE4O7dg==
-X-Google-Smtp-Source: AGHT+IHwV2J0r/LBLvfNxSR2yGnXuXn3OeZ4+CSobU/6GKBkVZsitkQV2vNVMQqnN+mNHOCCvKr7NZw07FSmbv3F3g==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a25:b0a8:0:b0:d9a:3a14:a5a2 with SMTP
- id f40-20020a25b0a8000000b00d9a3a14a5a2mr15465ybj.13.1697668548155; Wed, 18
- Oct 2023 15:35:48 -0700 (PDT)
-Date: Wed, 18 Oct 2023 22:35:47 +0000
+        d=1e100.net; s=20230601; t=1697668562; x=1698273362;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gU8UgFLtIwBMnNin+UfjeLA6KRbmnG6Wd91XkYWntpA=;
+        b=gsJ/O8XLnKd2v0ahBmqRU00HPKLDesUfzxaqJsmfBY0z2AYzNxdOv2jyOf+JSvUkxL
+         OiYcjeM9FkUlAwC/+8pxH0624j0ZfLpDft6d5Q5cVWzl7AWL1dJboFFEMyhvfuLMrFna
+         D7K2H59A9ZGbDqkQDpf74dk88tnVK6I+/0sHlBvm2qAujJ/DgkGs64f+ug8aee/dHyNj
+         djKxK/0iQQDkVIr2uSR0wttOthQBFA+DcdRTT8RLvFE/aoeUeK5tXE2TBCdVb1jouYjk
+         iQrBXK2O5Ysn3T3EFSH5YrmnsNPZGgzjTKEyAF/QHaLaaQNv10/65lv6x2j7gZpuw8oC
+         wILg==
+X-Gm-Message-State: AOJu0YxnWTXzE/dUiVIqbxngTnuGMOvyZyHMJZVd357mhEM4HdLLGM+f
+	IOqJio85llOhYN/Vyr+BlfDGsg==
+X-Google-Smtp-Source: AGHT+IHZ7D6QAbuRry6EjRTPblbyH23khZ4i/P+R2xOAqDQmfqYJkoXHgkb29YoqYPno7OWAy5G2/Q==
+X-Received: by 2002:a17:903:2342:b0:1c7:5f03:8562 with SMTP id c2-20020a170903234200b001c75f038562mr729819plh.30.1697668561892;
+        Wed, 18 Oct 2023 15:36:01 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id iw6-20020a170903044600b001c0a414695dsm453085plb.62.2023.10.18.15.36.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Oct 2023 15:36:01 -0700 (PDT)
+Date: Wed, 18 Oct 2023 15:36:00 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Brian Foster <bfoster@redhat.com>, linux-bcachefs@vger.kernel.org,
+	kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] bcachefs: Refactor bkey_i to use a flexible array
+Message-ID: <202310181534.54934E68@keescook>
+References: <20231010235609.work.594-kees@kernel.org>
+ <ZSkpU0vdrCTfTxuZ@bfoster>
+ <202310131637.D0C66BFBA@keescook>
+ <20231018220407.b5dvm2ehibcqvhzq@moria.home.lan>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAMJdMGUC/x3MwQqDMAwA0F+RnA20yljrr4iH2cYth3aSlOIQ/
- 92y47u8E5SESWHqThCqrPzNDbbvIHxe+U3IsRkGM4zWWIdaJIf9h1G4kijmGjklXEvBgPax+dE 9vXeeoBW70MbHv5+X67oBjezIGm4AAAA=
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1697668547; l=2405;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=wIXUkCLacDcvyYmWwXYlHGDFUt9BdHJS6MZL7uBj9BA=; b=n6GHlGhf250MWDnVuic43BVfEnftE5cYh9pXrKoHjqf2BnIxPPqvucB7iOWWF8tO9siLtvPfq
- 0GZIeKqaZp+DOlGpq6Beb706YYhYEaXrCt36mqglIArldQsjrnrBK+2
-X-Mailer: b4 0.12.3
-Message-ID: <20231018-strncpy-drivers-nvdimm-btt-c-v1-1-58070f7dc5c9@google.com>
-Subject: [PATCH] block: replace deprecated strncpy with strscpy
-From: Justin Stitt <justinstitt@google.com>
-To: Dan Williams <dan.j.williams@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>
-Cc: nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231018220407.b5dvm2ehibcqvhzq@moria.home.lan>
 
-strncpy() is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous string
-interfaces.
+On Wed, Oct 18, 2023 at 06:04:07PM -0400, Kent Overstreet wrote:
+> On Fri, Oct 13, 2023 at 04:44:21PM -0700, Kees Cook wrote:
+> > On Fri, Oct 13, 2023 at 07:26:11AM -0400, Brian Foster wrote:
+> > > Hi Kees,
+> > > 
+> > > I'm curious if this is something that could be buried in bch_val given
+> > > it's already kind of a fake structure..? If not, my only nitty comment
+> > 
+> > I was thinking it would be best to keep the flexible array has "high" in
+> > the struct as possible, as in the future more refactoring will be needed
+> > to avoid having flex arrays overlap with other members in composite
+> > structures. So instead of pushing into bch_val, I left it at the highest
+> > level possible, bch_i, as that's the struct being used by the memcpy().
+> 
+> I agree with Brian here - I'd like this buried in bch_val, if possible.
+> 
+> I also went with unsafe_memcpy() for now - that's now in my for-next
+> tree. I'm not seeing any advantage of DECLARE_FLEX_ARRAY over that -
+> perhaps later if we could use __counted_by that would make more sense.
 
-We expect super->signature to be NUL-terminated based on its usage with
-memcpy against a NUL-term'd buffer:
-btt_devs.c:
-253 | if (memcmp(super->signature, BTT_SIG, BTT_SIG_LEN) != 0)
-btt.h:
-13  | #define BTT_SIG "BTT_ARENA_INFO\0"
+This won't help here because of the combination of -fstrict-flex-arrays=3
+and -Wstringop-overflow (the latter is in W=1 builds). The builtin memcpy
+still complains about the 0-sized destination. I'll send a v3 with this
+in bch_val.
 
-NUL-padding is not required as `super` is already zero-allocated:
-btt.c:
-985 | super = kzalloc(sizeof(struct btt_sb), GFP_NOIO);
-... rendering any additional NUL-padding superfluous.
-
-Considering the above, a suitable replacement is `strscpy` [2] due to
-the fact that it guarantees NUL-termination on the destination buffer
-without unnecessarily NUL-padding.
-
-Let's also use the more idiomatic strscpy usage of (dest, src,
-sizeof(dest)) instead of (dest, src, XYZ_LEN) for buffers that the
-compiler can determine the size of. This more tightly correlates the
-destination buffer to the amount of bytes copied.
-
-Side note, this pattern of memcmp() on two NUL-terminated strings should
-really be changed to just a strncmp(), if i'm not mistaken? I see
-multiple instances of this pattern in this system.
-
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Note: build-tested only.
-
-Found with: $ rg "strncpy\("
----
- drivers/nvdimm/btt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/nvdimm/btt.c b/drivers/nvdimm/btt.c
-index d5593b0dc700..9372c36e8f76 100644
---- a/drivers/nvdimm/btt.c
-+++ b/drivers/nvdimm/btt.c
-@@ -986,7 +986,7 @@ static int btt_arena_write_layout(struct arena_info *arena)
- 	if (!super)
- 		return -ENOMEM;
- 
--	strncpy(super->signature, BTT_SIG, BTT_SIG_LEN);
-+	strscpy(super->signature, BTT_SIG, sizeof(super->signature));
- 	export_uuid(super->uuid, nd_btt->uuid);
- 	export_uuid(super->parent_uuid, parent_uuid);
- 	super->flags = cpu_to_le32(arena->flags);
-
----
-base-commit: 58720809f52779dc0f08e53e54b014209d13eebb
-change-id: 20231018-strncpy-drivers-nvdimm-btt-c-15f93879989e
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
-
+-- 
+Kees Cook
