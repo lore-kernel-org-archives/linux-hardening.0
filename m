@@ -1,147 +1,137 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC8F3984B
-	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 22:40:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 242AB39850
+	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 22:48:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u2qXn8Oh"
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C71E2114
-	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 15:40:13 -0700 (PDT)
-Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-53db1fbee70so12390582a12.2
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 15:40:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gInKwQPE"
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12DC8115
+	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 15:48:51 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5a7ed6903a6so112051147b3.2
+        for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 15:48:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697668812; x=1698273612; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z31RrENcT3Hhy0E5og6HBcX5caES7mIPqdSDtyYrG1U=;
-        b=u2qXn8OhSKGhvZ64W/TgNrnChW/M0ca3s3qx21bpiTttonuigLa1K8ou+ToCaTMY1T
-         mtQyNcN9u8vlR9Ed4Xd2wrbSohaj4EQHVmHpa8uWjr0LmorvtNCZO5SwT541CfPjF3Nd
-         S4FtEo6bH+npZzbg+YGSTmiAlV5Sp+m4aDFCeb4zYnp9num3UYQiFLDw5Uj94QFfylnn
-         U9ulxH2yP8apKPmwjo+sFxNI7bZx2pBv6ZJ15VHqPv1udljSyw2wkqD2RzCEYyhcTVfi
-         IbnvuRIY3TRqptaFDzxYGwWrJ7oFGhd2D5VrF/d8h3nG5ZfRb20D+xEPv+VuCFf+MajI
-         Gifg==
+        d=google.com; s=20230601; t=1697669330; x=1698274130; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2bSQ7qSQqMVz/tkx7lIyl6/3Dlp40FjkhjBtPKLDoWc=;
+        b=gInKwQPEan85wo+wHCJe1s91K8I/+OYBZigEUPoAf21eDXGWzAIBMH2J3nf5kqd3g7
+         yKn49VFOaPzGPlZzrXVG6vT788Ngics3kvSkIiIdYxwDB/yD31OSAaMN21jGybJnD89x
+         /938DYxr0UcAmdPfeSykAYcgByOFQDNDlS4M4LtZ3yc2Y9BMQ0Ri2WGeklOYf+Tj/wJP
+         RMGLphqBHbTrS0IMk3tBXJjKVCF99bJ+h+2RIaGmrEo4kwLdMhj8IGajfKquEcJj7PS+
+         WFikqZ1PXePbzZMY0bGcMDyhyp+XZ3T0V9TfzP6CE3uoqOO6RF/WhvEDPEfM1iMUTE93
+         SAJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697668812; x=1698273612;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=z31RrENcT3Hhy0E5og6HBcX5caES7mIPqdSDtyYrG1U=;
-        b=X0/I5gLpyXqujiMFLAg9510L7TaEYGkksd2mTw2Y4Lgrdji4GzI+JWgcC525ZEmUvR
-         qRVNALhAwWVf9cfmbcfoBOPB8yfBPRJchuBxgFmI0jEKbN0ZXMK00eTZ/UNg3YL+596x
-         c1yE+qXxXAmPiCEszX/hn1U378M1BEnSlYrt/1UIcHjRP8wfmJ+WhrhaOqAqKyIwdcBz
-         C48vcy9bYTpAapOfqyzQGZ8k6s9Qh5ypiifKfrIphcAzxrhqoWzg7iEglDRvRfnpwCaa
-         sMacHRLQaCmXVqcJ4iZqNpJqrE9rfzI8J37R4O0yVHenaO0YNhBP/oh0yhBlN2Nlx+pU
-         TsHQ==
-X-Gm-Message-State: AOJu0YzoyKQOy/tPS9QtYE23pQzweMsLFz1upjAkvn0KOX3lj22DetZA
-	uqS1s+IxI/GRbxJ11E5swTHSvy5vNOLEpiGTguC2+w==
-X-Google-Smtp-Source: AGHT+IH0xBTpkyaIqW41fCuQjgPF5EQ6reBFxe2nMtEt6ALPr4+x7VzbsUCLJ1SIereHNmuCJlIzzV7NizscD3a+p7E=
-X-Received: by 2002:a05:6402:524a:b0:53e:2c49:8041 with SMTP id
- t10-20020a056402524a00b0053e2c498041mr298065edd.8.1697668812117; Wed, 18 Oct
- 2023 15:40:12 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1697669330; x=1698274130;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2bSQ7qSQqMVz/tkx7lIyl6/3Dlp40FjkhjBtPKLDoWc=;
+        b=g78fWxaFjHVGKP33jKONlffPKuwxvmVKS/rRxyjGIqIG19mk480uH7j/0WWFUhziWJ
+         KNRLIsngDAPYH2H941/tCYo9BUytFJtrVpC+7QWizDc+BE7igsbWpe44NZ135hiTXCVr
+         MKfNaDNsCTM/UHBLj5EcZgDAdchb3eRksCD+/dM0bdZLOnOd4D9P46tsdfMuHwcXt7RU
+         ovAu7GXOdACY/8twyYGiMeN44Y1qHEctz2zF9GtmN/XtNRiH5v9vPkL0CVXm/K51AMTb
+         e0F+MyZ88R9777srssHaPTMqQUuJunuOxTnLPQU4wqlDUBpM/gHckNMqqXt79jx2Sexg
+         sTJA==
+X-Gm-Message-State: AOJu0Yz+zkJIVdgDs+JlZzR8Wvm3fpJWLGC/AyJGt6H4dhy2MoJA0gsf
+	3viBJyKP720q4MV2C4kEvokokZONZASTSFX/lg==
+X-Google-Smtp-Source: AGHT+IGqdbWqQ7PEH4cUhxYJPzQti8rdqGeesI2OpR3f/9GfHYGXO/4kPNJHLV8sRzDs+qy+E+CBZAMToF2ahSILCA==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a81:5217:0:b0:57a:118a:f31 with SMTP
+ id g23-20020a815217000000b0057a118a0f31mr15075ywb.7.1697669330350; Wed, 18
+ Oct 2023 15:48:50 -0700 (PDT)
+Date: Wed, 18 Oct 2023 22:48:49 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20231018-strncpy-drivers-nvdimm-btt-c-v1-1-58070f7dc5c9@google.com>
-In-Reply-To: <20231018-strncpy-drivers-nvdimm-btt-c-v1-1-58070f7dc5c9@google.com>
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIANBgMGUC/x3NMQ6DMAxA0asgz7VEDFRpr1IxhGDAQwOyUdQKc
+ Xcixrf8f4CxChu8qwOUs5isqcA9KohLSDOjjMVANTWudh5t1xS3P44qmdUw5S/jstqOUxhUomH E1j2p84Goe3kopU15kt99+fTneQF0i0XsdQAAAA==
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1697669329; l=2668;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=eTZl8RLmSTRi1g6HBFXiHkDVcGwMrh/QN3Blnb4tlGM=; b=NqNL716tMxkz9di1bgPcw2w6eC4c776nurW+wFygYEOGZYbyCCVOYleoxDFKohV9u1XrQ7RvN
+ UxB6tgf9Ik5CsmgFtVwMYknNxVzD3Jah1eF23yTnA5oMSFhciN+z9AP
+X-Mailer: b4 0.12.3
+Message-ID: <20231018-strncpy-drivers-nvme-host-fabrics-c-v1-1-b6677df40a35@google.com>
+Subject: [PATCH] nvme-fabrics: replace deprecated strncpy with strscpy
 From: Justin Stitt <justinstitt@google.com>
-Date: Wed, 18 Oct 2023 15:39:59 -0700
-Message-ID: <CAFhGd8o-ftoGQ4qvrdGM2tSYWBqvYbF7Qb7O+UfsbzYxVmU6sA@mail.gmail.com>
-Subject: Re: [PATCH] block: replace deprecated strncpy with strscpy
-To: Dan Williams <dan.j.williams@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>
-Cc: nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+To: Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, 
+	Sagi Grimberg <sagi@grimberg.me>
+Cc: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-I have a feeling I may have botched the subject line for this patch.
-Can anyone confirm if it's good or not?
+strncpy() is deprecated for use on NUL-terminated destination strings
+[1] and as such we should prefer more robust and less ambiguous string
+interfaces.
 
-Automated tooling told me that this was the most common patch
-prefix but it may be caused by large patch series that just
-happened to touch this file once.
+We expect both data->subsysnqn and data->hostnqn to be NUL-terminated
+based on their usage with format specifier ("%s"):
+fabrics.c:
+322: dev_err(ctrl->device,
+323:   "%s, subsysnqn \"%s\"\n",
+324:   inv_data, data->subsysnqn);
+...
+349: dev_err(ctrl->device,
+350: 	 "Connect for subsystem %s is not allowed, hostnqn: %s\n",
+351: 	 data->subsysnqn, data->hostnqn);
 
-Should the subject be: nvdimm/btt: ... ?
+Moreover, there's no need to NUL-pad since `data` is zero-allocated
+already in fabrics.c:
+383: data = kzalloc(sizeof(*data), GFP_KERNEL);
+... therefore any further NUL-padding is rendered useless.
 
-Judging from [1] I see a few "block" and a few of nvdimm/btt.
+Considering the above, a suitable replacement is `strscpy` [2] due to
+the fact that it guarantees NUL-termination on the destination buffer
+without unnecessarily NUL-padding.
 
-On Wed, Oct 18, 2023 at 3:35=E2=80=AFPM Justin Stitt <justinstitt@google.co=
-m> wrote:
->
-> strncpy() is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
->
-> We expect super->signature to be NUL-terminated based on its usage with
-> memcpy against a NUL-term'd buffer:
-> btt_devs.c:
-> 253 | if (memcmp(super->signature, BTT_SIG, BTT_SIG_LEN) !=3D 0)
-> btt.h:
-> 13  | #define BTT_SIG "BTT_ARENA_INFO\0"
->
-> NUL-padding is not required as `super` is already zero-allocated:
-> btt.c:
-> 985 | super =3D kzalloc(sizeof(struct btt_sb), GFP_NOIO);
-> ... rendering any additional NUL-padding superfluous.
->
-> Considering the above, a suitable replacement is `strscpy` [2] due to
-> the fact that it guarantees NUL-termination on the destination buffer
-> without unnecessarily NUL-padding.
->
-> Let's also use the more idiomatic strscpy usage of (dest, src,
-> sizeof(dest)) instead of (dest, src, XYZ_LEN) for buffers that the
-> compiler can determine the size of. This more tightly correlates the
-> destination buffer to the amount of bytes copied.
->
-> Side note, this pattern of memcmp() on two NUL-terminated strings should
-> really be changed to just a strncmp(), if i'm not mistaken? I see
-> multiple instances of this pattern in this system.
->
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strn=
-cpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.h=
-tml [2]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
-> Note: build-tested only.
->
-> Found with: $ rg "strncpy\("
-> ---
->  drivers/nvdimm/btt.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/nvdimm/btt.c b/drivers/nvdimm/btt.c
-> index d5593b0dc700..9372c36e8f76 100644
-> --- a/drivers/nvdimm/btt.c
-> +++ b/drivers/nvdimm/btt.c
-> @@ -986,7 +986,7 @@ static int btt_arena_write_layout(struct arena_info *=
-arena)
->         if (!super)
->                 return -ENOMEM;
->
-> -       strncpy(super->signature, BTT_SIG, BTT_SIG_LEN);
-> +       strscpy(super->signature, BTT_SIG, sizeof(super->signature));
->         export_uuid(super->uuid, nd_btt->uuid);
->         export_uuid(super->parent_uuid, parent_uuid);
->         super->flags =3D cpu_to_le32(arena->flags);
->
-> ---
-> base-commit: 58720809f52779dc0f08e53e54b014209d13eebb
-> change-id: 20231018-strncpy-drivers-nvdimm-btt-c-15f93879989e
->
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
->
+I opted not to switch NVMF_NQN_SIZE to sizeof(data->xyz) because the
+size is defined as:
+|       /* NQN names in commands fields specified one size */
+|       #define NVMF_NQN_FIELD_LEN	256
 
-[1]: https://lore.kernel.org/all/?q=3Ddfn%3Adrivers%2Fnvdimm%2Fbtt.c
+... while NVMF_NQN_SIZE is defined as:
+|       /* However the max length of a qualified name is another size */
+|       #define NVMF_NQN_SIZE		223
 
-Thanks
-Justin
+Since 223 seems pretty magic, I'm not going to touch it.
+
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Note: build-tested only.
+
+Found with: $ rg "strncpy\("
+---
+ drivers/nvme/host/fabrics.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/nvme/host/fabrics.c b/drivers/nvme/host/fabrics.c
+index 8175d49f2909..57aad3ce311a 100644
+--- a/drivers/nvme/host/fabrics.c
++++ b/drivers/nvme/host/fabrics.c
+@@ -386,8 +386,8 @@ static struct nvmf_connect_data *nvmf_connect_data_prep(struct nvme_ctrl *ctrl,
+ 
+ 	uuid_copy(&data->hostid, &ctrl->opts->host->id);
+ 	data->cntlid = cpu_to_le16(cntlid);
+-	strncpy(data->subsysnqn, ctrl->opts->subsysnqn, NVMF_NQN_SIZE);
+-	strncpy(data->hostnqn, ctrl->opts->host->nqn, NVMF_NQN_SIZE);
++	strscpy(data->subsysnqn, ctrl->opts->subsysnqn, NVMF_NQN_SIZE);
++	strscpy(data->hostnqn, ctrl->opts->host->nqn, NVMF_NQN_SIZE);
+ 
+ 	return data;
+ }
+
+---
+base-commit: 58720809f52779dc0f08e53e54b014209d13eebb
+change-id: 20231018-strncpy-drivers-nvme-host-fabrics-c-416258a22598
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
+
