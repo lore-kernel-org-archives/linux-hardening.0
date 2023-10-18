@@ -1,119 +1,175 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4618420307
-	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 15:18:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 562BA37C96
+	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 17:14:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SP8eWuTh"
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D0BB94;
-	Wed, 18 Oct 2023 08:18:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=EYJWM82k/mYbNh1hfZQ8KkV147YIzBIZxX71F7kjj3o=; b=SP8eWuThWrXi0c+GKIfuQmjZth
-	m8/aZFY0nYGaQzDsejHx0z/V6t3NsJjeORp/uGXzhj39+OR2w2/oRsloh++YDaE2cTL3KmaFAfJOn
-	1abJTfFo5CEZEKuPxBZ0FPFkDnDehbk+hCyRjsxjHUY6NXG0/A+MD2FRrLo2JYgFo8BaKNUaq0SEz
-	/+odCu/MMdB5q5sBf9XxYOBN376/6smqd3AYT/9m7BwfQC9Adp6kQQhqG383BL57eLzLWs8latknJ
-	yTnbdZ1C+yUGO2QdDKTttULIj+JqxIRcKc4PdhojxFG7PgO/UW0fs6OY8VbZXahhYtUOFINnnIjMs
-	tVn/tT0w==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1qt8Iq-001bDQ-Mh; Wed, 18 Oct 2023 15:17:44 +0000
-Date: Wed, 18 Oct 2023 16:17:44 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Jeff Xu <jeffxu@google.com>
-Cc: Theo de Raadt <deraadt@openbsd.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>, jeffxu@chromium.org,
-	akpm@linux-foundation.org, keescook@chromium.org,
-	sroettger@google.com, jorgelo@chromium.org, groeck@chromium.org,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-mm@kvack.org, jannh@google.com, surenb@google.com,
-	alex.sierra@amd.com, apopple@nvidia.com, aneesh.kumar@linux.ibm.com,
-	axelrasmussen@google.com, ben@decadent.org.uk,
-	catalin.marinas@arm.com, david@redhat.com, dwmw@amazon.co.uk,
-	ying.huang@intel.com, hughd@google.com, joey.gouly@arm.com,
-	corbet@lwn.net, wangkefeng.wang@huawei.com, Liam.Howlett@oracle.com,
-	lstoakes@gmail.com, mawupeng1@huawei.com, linmiaohe@huawei.com,
-	namit@vmware.com, peterx@redhat.com, peterz@infradead.org,
-	ryan.roberts@arm.com, shr@devkernel.io, vbabka@suse.cz,
-	xiujianfeng@huawei.com, yu.ma@intel.com, zhangpeng362@huawei.com,
-	dave.hansen@intel.com, luto@kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [RFC PATCH v1 0/8] Introduce mseal() syscall
-Message-ID: <ZS/3GCKvNn5qzhC4@casper.infradead.org>
-References: <20231016143828.647848-1-jeffxu@chromium.org>
- <CAHk-=whFZoap+DBTYvJx6ohqPwn11Puzh7q4huFWDX9vBwXHgg@mail.gmail.com>
- <CALmYWFtTDAb_kpZdAe_xspqwNgK1NWJmjTxaTC=jDEMzfe297Q@mail.gmail.com>
- <CAHk-=wj87GMTH=5901ob=SjQqegAm2JYBE7E4J7skJzE64U-wQ@mail.gmail.com>
- <55960.1697566804@cvs.openbsd.org>
- <CALmYWFs81T=XnT=AXQTo0+9FXo=OBAV_4rrYPSn9-16O-gBTZg@mail.gmail.com>
- <95482.1697587015@cvs.openbsd.org>
- <CALmYWFtQX57Z7ttKxrdXQH4QupFn4vi5KfizUBH9NkmP-S1JDw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hMh+AtPX"
+Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B6B2B0
+	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 10:14:39 -0700 (PDT)
+Received: by mail-qt1-x833.google.com with SMTP id d75a77b69052e-41b19dda4c6so10811cf.1
+        for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 10:14:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1697649279; x=1698254079; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CxyGP1aBivHX+AXORIadgXhguJIarGguet1dgSguQtQ=;
+        b=hMh+AtPXbOLlCOMOk1bJIuiKgIrFaWev5dVIPjVvZbUc383ON12sf1zqHY+CywqTTR
+         5kod30imCKWk29UIxMLZqeV5v+fA6QJya83nZXmlZ5e96KeOZ94A9sei38WJaverrHb1
+         UD/Es20kPRerxiIvIKLjxm5v/AWkYbHdrsnxKkMMbFERGhXOePTuYPx8z6OOkhNOa3dv
+         NLoq3brL+zxqPX5XNxGPr3VsGQmTht7JW1ls2WFLQ3WZcUkRGrtP4OHJe+v2REq4NxI+
+         y3wwgbfA49RlUedhKb3/4EvoqfveNyLHsfpEywyU4Rcxxnz2R9GuRCBWrumiNp+ZmNbc
+         baPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697649279; x=1698254079;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CxyGP1aBivHX+AXORIadgXhguJIarGguet1dgSguQtQ=;
+        b=PEhLhYQvLWbAafs56dMXsY8AdLOgWjiGWldoOKb5pAYXh7D5v3t/A4AO2lCA69Cegw
+         CzIh2xGZo0vRaT6kUrTuJ1cnEHL+n/X+ZuA/QgUHu0/+/0A6H/FM/CutO2rZL6tUxHS9
+         xmB5ICYc0eNwKYx8HcXEOkPlntRntcJIdwXc+S8vG0T/SHDVE/7HNXJAKHdea+8mU1Hr
+         9e6k+HuUTaALZDXFBA60nm/FnRkbRImtffXH9QDC4GSSKcOo3Ma6XqoTxQ5bXoUY6YXb
+         4vA1nA+ytmOWb+aN6WlFtxlnD/rTdpoH1rhn2wdWtxSTKaQJDAp6yngNOLm6h+MDKIES
+         hFrQ==
+X-Gm-Message-State: AOJu0YxvicsgU8IQYglRHrF7awuXuxvhQGSPDkVJ43rDP06fK0fS+5iG
+	vu8F5mgyQYgznwuwGTTCoJfPQ8q9HCjxN8LKlppeww==
+X-Google-Smtp-Source: AGHT+IEx8unH0tTtFuD3qM/gmmzwuSTL87BuIGpNM0vGMDgmYaSjk/NG4CaQxYRwo+pn8/4o0oj3+4jWGdf0BWNNry4=
+X-Received: by 2002:ac8:4d4a:0:b0:41b:aedb:a82d with SMTP id
+ x10-20020ac84d4a000000b0041baedba82dmr15384qtv.28.1697649278489; Wed, 18 Oct
+ 2023 10:14:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALmYWFtQX57Z7ttKxrdXQH4QupFn4vi5KfizUBH9NkmP-S1JDw@mail.gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-	SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+References: <20231017090815.1067790-1-jeffxu@chromium.org> <20231017090815.1067790-6-jeffxu@chromium.org>
+ <CAHk-=wgwdHzOY_mT3y9gDHSMXZ8Xb5OYrK40-u9uRXLv25fNPA@mail.gmail.com> <CALmYWFux2m=9189Gs0o8-xhPNW4dnFvtqj7ptcT5QvzxVgfvYQ@mail.gmail.com>
+In-Reply-To: <CALmYWFux2m=9189Gs0o8-xhPNW4dnFvtqj7ptcT5QvzxVgfvYQ@mail.gmail.com>
+From: Jeff Xu <jeffxu@google.com>
+Date: Wed, 18 Oct 2023 10:14:02 -0700
+Message-ID: <CALmYWFvgM7DOihdUpUC5SREhUMn9t53HYCX+YioeHHhLSD1KHw@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 5/8] mseal: Check seal flag for munmap(2)
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: jeffxu@chromium.org, akpm@linux-foundation.org, keescook@chromium.org, 
+	jannh@google.com, sroettger@google.com, willy@infradead.org, 
+	gregkh@linuxfoundation.org, jorgelo@chromium.org, groeck@chromium.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-mm@kvack.org, surenb@google.com, alex.sierra@amd.com, 
+	apopple@nvidia.com, aneesh.kumar@linux.ibm.com, axelrasmussen@google.com, 
+	ben@decadent.org.uk, catalin.marinas@arm.com, david@redhat.com, 
+	dwmw@amazon.co.uk, ying.huang@intel.com, hughd@google.com, joey.gouly@arm.com, 
+	corbet@lwn.net, wangkefeng.wang@huawei.com, Liam.Howlett@oracle.com, 
+	lstoakes@gmail.com, mawupeng1@huawei.com, linmiaohe@huawei.com, 
+	namit@vmware.com, peterx@redhat.com, peterz@infradead.org, 
+	ryan.roberts@arm.com, shr@devkernel.io, vbabka@suse.cz, 
+	xiujianfeng@huawei.com, yu.ma@intel.com, zhangpeng362@huawei.com, 
+	dave.hansen@intel.com, luto@kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
+	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Tue, Oct 17, 2023 at 08:18:47PM -0700, Jeff Xu wrote:
-> In practice: libc could do below:
-> #define MM_IMMUTABLE
-> (MM_SEAL_MPROTECT|MM_SEAL_MUNMAP|MM_SEAL_MREMAP|MM_SEAL_MMAP)
-> mseal(add,len, MM_IMMUTABLE)
-> it will be equivalent to BSD's immutable().
+On Wed, Oct 18, 2023 at 8:08=E2=80=AFAM Jeff Xu <jeffxu@google.com> wrote:
+>
+> On Tue, Oct 17, 2023 at 9:54=E2=80=AFAM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > On Tue, 17 Oct 2023 at 02:08, <jeffxu@chromium.org> wrote:
+> > >
+> > > Of all the call paths that call into do_vmi_munmap(),
+> > > this is the only place where checkSeals =3D MM_SEAL_MUNMAP.
+> > > The rest has checkSeals =3D 0.
+> >
+> > Why?
+> >
+> > None of this makes sense.
+> >
+> > So you say "we can't munmap in this *one* place, but all others ignore
+> > the sealing".
+> >
+> I apologize that previously, I described what this code does, and not rea=
+soning.
+>
+> In our threat model, as Stephen R=C3=B6ttger point out in [1], and I quot=
+e:
+>
+> V8 exploits typically follow a similar pattern: an initial bug leads
+> to memory corruption but often the initial corruption is limited and
+> the attacker has to find a way to arbitrarily read/write in the whole
+> address space.
+>
+> The memory correction is in the user space process, e.g. Chrome.
+> Attackers will try to modify permission of the memory, by calling
+> mprotect,  or munmap then mmap to the same address but with different
+> permission, etc.
+>
+> Sealing blocks mprotect/munmap/mremap/mmap call from the user space
+> process, e.g. Chrome.
+>
+> At time of handling those 4 syscalls, we need to check the seal (
+> can_modify_mm), this requires locking the VMA (
+> mmap_write_lock_killable), and ideally, after validating the syscall
+> input. The reasonable place for can_modify_mm() is from utility
+> functions, such as do_mmap(), do_vmi_munmap(), etc.
+>
+> However, there is no guarantee that do_mmap() and do_vmi_munmap() are
+> only reachable from mprotect/munmap/mremap/mmap syscall entry point
+> (SYSCALL_DEFINE_XX). In theory,  the kernel can call those in other
+> scenarios, and some of them can be perfectly legit. Those other
+> scenarios are not covered by our threat model at this time. Therefore,
+> we need a flag, passed from the SYSCALL_DEFINE_XX entry , down to
+> can_modify_mm(), to differentiate those other scenarios.
+>
+> Now, back to code, it did some optimization, i.e. doesn't pass the
+> flag from SYSCALL_DEFINE_XX  in all cases. If SYSCALL_DEFINE_XX calls
+> do_a, and do_a has only one caller, I will set the flag in do_a,
+> instead of SYSCALL_DEFINE_XX. Doing this reduces the size of the
+> patchset, but it also makes the code less readable indeed. I could
+> remove this optimization in V3. I welcome suggestions to improve
+> readability on this.
+>
+> When handing the mmap/munmap/mremap/mmap, once the code passed
+> can_modify_mm(), it means the memory area is not sealed, if the code
+> continues to call the other utility functions, we don't need to check
+> the seal again. This is the case for mremap(), the seal of src address
+> and dest address (when applicable) are checked first, later when the
+> code calls  do_vmi_munmap(), it no longer needs to check the seal
+> again.
+>
+> [1] https://v8.dev/blog/control-flow-integrity
+>
+> -Jeff
 
-No, it wouldn't, because you've carefully listed the syscalls you're
-blocking instead of understanding the _concept_ of what you need to
-block.
+There is also alternative approach:
 
-> In linux cases, I think, eventually, mseal() will have a bigger scope than
-> BSD's mimmutable().  VMA's metadata(vm_area_struct) contains a lot
-> of control info, depending on application's needs, mseal() can be
-> expanded to seal individual control info.
-> 
-> For example, in madvice(2) case:
-> As Jann point out in [1] and I quote:
-> "you'd probably also want to block destructive madvise() operations
-> that can effectively alter region contents by discarding pages and
-> such, ..."
-> 
-> Another example: if an application wants to keep a memory always
-> present in RAM, for whatever the reason, it can call seal the mlock().
-> 
-> To handle those two new cases. mseal() could add two more bits:
-> MM_SEAL_MADVICE, MM_SEAL_MLOCK.
+For all the places that call do_vmi_munmap(), find out which
+case should ignore the sealing flag legitimately, set an ignore_seal
+flag and pass it down into do_vmi_munmap(). For the rest case,
+use default behavior.
 
-Yes, thank you for demonstrating that you have no idea what you need to
-block.
+All future API will automatically be covered for sealing, by using default.
 
-> It is practical to keep syscall extentable, when the business logic is the same.
+The risky side, if I missed a case that requires setting ignore_seal,
+there will be a bug.
 
-I concur with Theo & Linus.  You don't know what you're doing.  I think
-the underlying idea of mimmutable() is good, but how you've split it up
-and how you've implemented it is terrible.
+Also if a driver calls the utility functions to unmap a memory, the
+seal will be checked as well. (Driver is not in our threat model,
+but Chrome probably doesn't mind it.)
 
-Let's start with the purpose.  The point of mimmutable/mseal/whatever is
-to fix the mapping of an address range to its underlying object, be it
-a particular file mapping or anonymous memory.  After the call succeeds,
-it must not be possible to make any address in that virtual range point
-into any other object.
+Which of those two approaches are better ? I appreciate the direction on th=
+is.
 
-The secondary purpose is to lock down permissions on that range.
-Possibly to fix them where they are, possibly to allow RW->RO transitions.
+Thanks!
+-Jeff
 
-With those purposes in mind, you should be able to deduce for any syscall
-or any madvise(), ... whether it should be allowed.
 
-Look, I appreciate this is only your second set of patches to Linux and
-you've taken on a big job.  But that's all the more reason you should
-listen to people who are trying to help you.
+-Jeff
