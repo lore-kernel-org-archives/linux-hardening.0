@@ -1,22 +1,22 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B65156E9
-	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 08:31:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6A8B156D6
+	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 08:32:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qKt5Zdvw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A83B7C433C9;
-	Wed, 18 Oct 2023 08:31:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CjNGqGSW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D0D0C433C7;
+	Wed, 18 Oct 2023 08:32:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1697617915;
-	bh=7LzgGeipT9Qy5v1sgxiku72SEYU7sxO5+0HO8M6l8bQ=;
+	s=k20201202; t=1697617975;
+	bh=+prAov5OlbashqVGxd23DwmWrUyjOJwX2ICX0AH4eVk=;
 	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-	b=qKt5ZdvwyBDhTdY/Carhf2QcB/N5BdLhJRXjIQrVpairy5npomajJthuzXG/OqMh2
-	 C1kfrrdgDAjJymrPiYciajAwXdHNovsfJ7E7dPk/SjXOiqANBCqssOV7JHUMt/Hr+m
-	 8uorOQF5OsYMl+g3YQLYWCeO3bRmfncZXtU9GJNc0sB8jwdvOSmJMibKZil+8bvLlM
-	 J8AX267eQ1RvwrJej9JPWj0POYBwQO6qzBRfEwzQc/99jITsmW1cqXrwCnQpeXMGUB
-	 cDz+et2TLAtyAJkhUoLSAkjeTcOku+n6c/FUc4TyLFzYrq23NR8vHMSxkIiGAX4bxP
-	 MdCNpOie3W88g==
+	b=CjNGqGSWvHrtKbQ8zCQwdIxW0T3ZUh4VZ0mPhRZeGATCcL2Ix/xxbr5jmNFcLAnkh
+	 2QR2tCY99zo5BP6mUMV8iFdkZOr7vQypBc6Bjfn1nHce/YLNSSu2bGa5KLxygL6lpd
+	 AoZW9A0owRuwaKaikjkw5mVdS4sR5r2sudCe77sVPPpmlFXz4AMKRV611Ldb4Nq3L1
+	 eOS6aFHzYuL2MayCdF5RsHwrzVIoY2Z5URWo1sJDcWMby+MM+Q1zgVIeCK+450zs04
+	 cz/rfPAoX1BSRhm92C1OlpLXXNFUJjgZLzWvMMRG4bMmFVjUTLBFyFc7c5MiiKHIcz
+	 M/f4ABa127O2Q==
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -25,43 +25,35 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] ath5k: replace deprecated strncpy with strscpy
+Subject: Re: [PATCH] ath6kl: replace deprecated strncpy with memcpy
 From: Kalle Valo <kvalo@kernel.org>
 In-Reply-To: 
- <20231013-strncpy-drivers-net-wireless-ath-ath5k-led-c-v1-1-3acb0b5a21f2@google.com>
+ <20231013-strncpy-drivers-net-wireless-ath-ath6kl-init-c-v1-1-d69c599b49a9@google.com>
 References: 
- <20231013-strncpy-drivers-net-wireless-ath-ath5k-led-c-v1-1-3acb0b5a21f2@google.com>
+ <20231013-strncpy-drivers-net-wireless-ath-ath6kl-init-c-v1-1-d69c599b49a9@google.com>
 To: Justin Stitt <justinstitt@google.com>
-Cc: Jiri Slaby <jirislaby@kernel.org>, Nick Kossifidis <mickflemm@gmail.com>,
- Luis Chamberlain <mcgrof@kernel.org>, linux-wireless@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- Justin Stitt <justinstitt@google.com>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
 User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
-Message-ID: <169761791192.48072.4820317724523709074.kvalo@kernel.org>
-Date: Wed, 18 Oct 2023 08:31:53 +0000 (UTC)
+Message-ID: <169761797261.48072.1075267340140520177.kvalo@kernel.org>
+Date: Wed, 18 Oct 2023 08:32:54 +0000 (UTC)
 
 Justin Stitt <justinstitt@google.com> wrote:
 
 > strncpy() is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
+> [1] and as such we should prefer more robust and less ambiguous
 > interfaces.
 > 
-> We expect led->name to be NUL-terminated based on the presence of a
-> manual NUL-byte assignment.
+> The affected code's purpose is to truncate strings that are too long
+> with "..." like:
+> foobar -> fo...
 > 
-> This NUL-byte assignment was added in Commit daf9669bea30aa22 ("ath5k:
-> ensure led name is null terminated"). If strscpy() had existed and had
-> been used back when this code was written then potential bugs and the
-> need to manually NUL-terminate could have been avoided. Since we now
-> have the technology, let's use it :)
+> The lengths have been carefully calculated and as such this has decayed
+> to a simple byte copy from one buffer to another -- let's use memcpy().
 > 
-> Considering the above, a suitable replacement is `strscpy` [2] due to
-> the fact that it guarantees NUL-termination on the destination buffer
-> without unnecessarily NUL-padding. If NUL-padding is required let's opt
-> for strscpy_pad().
+> Note: build-tested only.
 > 
 > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
 > Link: https://github.com/KSPP/linux/issues/90
 > Cc: linux-hardening@vger.kernel.org
 > Signed-off-by: Justin Stitt <justinstitt@google.com>
@@ -69,10 +61,10 @@ Justin Stitt <justinstitt@google.com> wrote:
 
 Patch applied to ath-next branch of ath.git, thanks.
 
-24709752bfe8 wifi: ath5k: replace deprecated strncpy with strscpy
+40990961d983 wifi: ath6kl: replace deprecated strncpy with memcpy
 
 -- 
-https://patchwork.kernel.org/project/linux-wireless/patch/20231013-strncpy-drivers-net-wireless-ath-ath5k-led-c-v1-1-3acb0b5a21f2@google.com/
+https://patchwork.kernel.org/project/linux-wireless/patch/20231013-strncpy-drivers-net-wireless-ath-ath6kl-init-c-v1-1-d69c599b49a9@google.com/
 
 https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
