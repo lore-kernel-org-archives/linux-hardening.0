@@ -1,175 +1,143 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 562BA37C96
-	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 17:14:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF1D3FE48
+	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 18:07:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hMh+AtPX"
-Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B6B2B0
-	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 10:14:39 -0700 (PDT)
-Received: by mail-qt1-x833.google.com with SMTP id d75a77b69052e-41b19dda4c6so10811cf.1
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 10:14:39 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jsCio2pz"
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD253112
+	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 11:07:22 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-6b89ab5ddb7so4698589b3a.0
+        for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 11:07:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697649279; x=1698254079; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CxyGP1aBivHX+AXORIadgXhguJIarGguet1dgSguQtQ=;
-        b=hMh+AtPXbOLlCOMOk1bJIuiKgIrFaWev5dVIPjVvZbUc383ON12sf1zqHY+CywqTTR
-         5kod30imCKWk29UIxMLZqeV5v+fA6QJya83nZXmlZ5e96KeOZ94A9sei38WJaverrHb1
-         UD/Es20kPRerxiIvIKLjxm5v/AWkYbHdrsnxKkMMbFERGhXOePTuYPx8z6OOkhNOa3dv
-         NLoq3brL+zxqPX5XNxGPr3VsGQmTht7JW1ls2WFLQ3WZcUkRGrtP4OHJe+v2REq4NxI+
-         y3wwgbfA49RlUedhKb3/4EvoqfveNyLHsfpEywyU4Rcxxnz2R9GuRCBWrumiNp+ZmNbc
-         baPA==
+        d=chromium.org; s=google; t=1697652442; x=1698257242; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XonaI8Xf/SLuA38iJr1RRfWuXVp5bhd8ehTmRJBXQ1A=;
+        b=jsCio2pz4AKPS9kJon3SZ6ovCU2LvJeLcwusI5VA/Moj02q2JBhz1LuFon1sDDZqYw
+         DRpBpOM9zmUXRqNU6zPaqWbVz+Pqq15nCuAC1jxTa1YJzYctIgJqE36uy/79gYi20s/A
+         JSuc1+uqTrC7k4bGSQstiHJ3bWCe2vipn+7ho=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697649279; x=1698254079;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CxyGP1aBivHX+AXORIadgXhguJIarGguet1dgSguQtQ=;
-        b=PEhLhYQvLWbAafs56dMXsY8AdLOgWjiGWldoOKb5pAYXh7D5v3t/A4AO2lCA69Cegw
-         CzIh2xGZo0vRaT6kUrTuJ1cnEHL+n/X+ZuA/QgUHu0/+/0A6H/FM/CutO2rZL6tUxHS9
-         xmB5ICYc0eNwKYx8HcXEOkPlntRntcJIdwXc+S8vG0T/SHDVE/7HNXJAKHdea+8mU1Hr
-         9e6k+HuUTaALZDXFBA60nm/FnRkbRImtffXH9QDC4GSSKcOo3Ma6XqoTxQ5bXoUY6YXb
-         4vA1nA+ytmOWb+aN6WlFtxlnD/rTdpoH1rhn2wdWtxSTKaQJDAp6yngNOLm6h+MDKIES
-         hFrQ==
-X-Gm-Message-State: AOJu0YxvicsgU8IQYglRHrF7awuXuxvhQGSPDkVJ43rDP06fK0fS+5iG
-	vu8F5mgyQYgznwuwGTTCoJfPQ8q9HCjxN8LKlppeww==
-X-Google-Smtp-Source: AGHT+IEx8unH0tTtFuD3qM/gmmzwuSTL87BuIGpNM0vGMDgmYaSjk/NG4CaQxYRwo+pn8/4o0oj3+4jWGdf0BWNNry4=
-X-Received: by 2002:ac8:4d4a:0:b0:41b:aedb:a82d with SMTP id
- x10-20020ac84d4a000000b0041baedba82dmr15384qtv.28.1697649278489; Wed, 18 Oct
- 2023 10:14:38 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1697652442; x=1698257242;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XonaI8Xf/SLuA38iJr1RRfWuXVp5bhd8ehTmRJBXQ1A=;
+        b=nyXFVdrpRSLpGMtA4BcwolrZfHIgO/f9vU7UqmUzQPRlWowMBpGL0GtcOpEGEviD/j
+         D3KGmAk5dnDkKy8TTPHl1MkIHRuW5MB4+WSWyQqo9tYXVRxvtT0wLUfTgnQSXxQYkhHc
+         yVX/9B9sqH7xmTLP3JZbvY8xw5ykeSTLZtQBZJaNDL7degu4mR9XD3xX9G7PITFXG/Zj
+         hm4LHAOUHr9/t578AM0fi1dGcVgz63lbIy6gZCqbA8dpdkr8sx5vWcv98vgd68n+G274
+         PzcgOWvYkbnRIG1ZnHLjW7SgB7oexUV96Woh/skNoqc2HqVeFOQsvCXJE7jW1rjssteT
+         8rJw==
+X-Gm-Message-State: AOJu0YysvgzsTX2HA5ZwqrMpQV4IDLPkZ1JX/DjEPl0VlgEngqNdOrNr
+	kpiomg7XcOkF8h0XKWvZkiMZhg==
+X-Google-Smtp-Source: AGHT+IH3BprO2nrkOewTORYho++pGOdbQRZC1bN7WJi6N5dcshuFmh5PGHUbgMWTD3QbJWjs+bYJHA==
+X-Received: by 2002:a05:6a00:b46:b0:6be:4e6e:2a85 with SMTP id p6-20020a056a000b4600b006be4e6e2a85mr7147729pfo.30.1697652442150;
+        Wed, 18 Oct 2023 11:07:22 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id x26-20020aa79ada000000b0069309cbc220sm3625673pfp.121.2023.10.18.11.07.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Oct 2023 11:07:21 -0700 (PDT)
+From: Kees Cook <keescook@chromium.org>
+To: Andy Shevchenko <andy@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] string: Adjust strtomem_pad() logic to allow for smaller sources
+Date: Wed, 18 Oct 2023 11:07:17 -0700
+Message-Id: <20231018180709.work.293-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231017090815.1067790-1-jeffxu@chromium.org> <20231017090815.1067790-6-jeffxu@chromium.org>
- <CAHk-=wgwdHzOY_mT3y9gDHSMXZ8Xb5OYrK40-u9uRXLv25fNPA@mail.gmail.com> <CALmYWFux2m=9189Gs0o8-xhPNW4dnFvtqj7ptcT5QvzxVgfvYQ@mail.gmail.com>
-In-Reply-To: <CALmYWFux2m=9189Gs0o8-xhPNW4dnFvtqj7ptcT5QvzxVgfvYQ@mail.gmail.com>
-From: Jeff Xu <jeffxu@google.com>
-Date: Wed, 18 Oct 2023 10:14:02 -0700
-Message-ID: <CALmYWFvgM7DOihdUpUC5SREhUMn9t53HYCX+YioeHHhLSD1KHw@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 5/8] mseal: Check seal flag for munmap(2)
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: jeffxu@chromium.org, akpm@linux-foundation.org, keescook@chromium.org, 
-	jannh@google.com, sroettger@google.com, willy@infradead.org, 
-	gregkh@linuxfoundation.org, jorgelo@chromium.org, groeck@chromium.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, surenb@google.com, alex.sierra@amd.com, 
-	apopple@nvidia.com, aneesh.kumar@linux.ibm.com, axelrasmussen@google.com, 
-	ben@decadent.org.uk, catalin.marinas@arm.com, david@redhat.com, 
-	dwmw@amazon.co.uk, ying.huang@intel.com, hughd@google.com, joey.gouly@arm.com, 
-	corbet@lwn.net, wangkefeng.wang@huawei.com, Liam.Howlett@oracle.com, 
-	lstoakes@gmail.com, mawupeng1@huawei.com, linmiaohe@huawei.com, 
-	namit@vmware.com, peterx@redhat.com, peterz@infradead.org, 
-	ryan.roberts@arm.com, shr@devkernel.io, vbabka@suse.cz, 
-	xiujianfeng@huawei.com, yu.ma@intel.com, zhangpeng362@huawei.com, 
-	dave.hansen@intel.com, luto@kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
-	autolearn_force=no version=3.4.6
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2772; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=Rt1eV6YjyZR8hPzO/9qK3HhySIUW19g/DhKIx9uJ9jQ=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlMB7VZWKyUdda+qSVCCbnpliyQcdpJPLHtjhC6
+ wQ+xa1Q9k2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZTAe1QAKCRCJcvTf3G3A
+ JvLtD/4vR8iWSvia1DQYbZ8m+tqzhImzUGpErsH/KDBTULSjLG+5iWaI1Sk4C2zSlqEzo7SqEXM
+ Kt3AZDESIQynRLJky5h+GNObiXryvBdfesyvC1ycPKr5Aror8ouzxAFzwgl6IRtNFLsn5z/9+VX
+ 5chlFTq8xtubHLh3BXGvqQvKjRAdzDVBCGx9x5g/7rLJGaBD3rhJj6eYMsJpvwmFDc6EEyG8HKD
+ YxeBhJLkHBSnkMpFRVYspLGVmsEa+lvAOHwfQa15huGvb4AtnJsoS85L0hXWbzNfjp5aDB1TzzL
+ +38CUoVhtBzuAnEyXBWadZV06HbXyl6M3PEFE7kF+w47SGFXJ85SCN9Gm44sTyZDDxiUsLoiWjy
+ 6jeKdH4O6pGyXuXlEnpEEBsIzmxzVF9Rl74P5e7vC7Eli1Jz7ILMVEpbrINStNOOkUBizb7oalu
+ ZEIQrRlZWjm0Q+iD1y5oFExoM0edBPWIgBsi0qnWyQdnSFJk+2iySCuSaQczSAvorCWOukEZlRy
+ iF3WFmv3J2WdEgXos+iuNxMbZalvvBAHYgdQleYGEoG2pdBz73lTvz3/bH2+Y4B/WTgvUwVjLre
+ ljV/6yoBVamHn6dHWUj1x6AFevYMlr897FIZ07lhgqZpRDCBzmMjPvQNMCEC8mRyTvmsO0EiXNq
+ HaRyCCV cae/bc5Q==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
-On Wed, Oct 18, 2023 at 8:08=E2=80=AFAM Jeff Xu <jeffxu@google.com> wrote:
->
-> On Tue, Oct 17, 2023 at 9:54=E2=80=AFAM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > On Tue, 17 Oct 2023 at 02:08, <jeffxu@chromium.org> wrote:
-> > >
-> > > Of all the call paths that call into do_vmi_munmap(),
-> > > this is the only place where checkSeals =3D MM_SEAL_MUNMAP.
-> > > The rest has checkSeals =3D 0.
-> >
-> > Why?
-> >
-> > None of this makes sense.
-> >
-> > So you say "we can't munmap in this *one* place, but all others ignore
-> > the sealing".
-> >
-> I apologize that previously, I described what this code does, and not rea=
-soning.
->
-> In our threat model, as Stephen R=C3=B6ttger point out in [1], and I quot=
-e:
->
-> V8 exploits typically follow a similar pattern: an initial bug leads
-> to memory corruption but often the initial corruption is limited and
-> the attacker has to find a way to arbitrarily read/write in the whole
-> address space.
->
-> The memory correction is in the user space process, e.g. Chrome.
-> Attackers will try to modify permission of the memory, by calling
-> mprotect,  or munmap then mmap to the same address but with different
-> permission, etc.
->
-> Sealing blocks mprotect/munmap/mremap/mmap call from the user space
-> process, e.g. Chrome.
->
-> At time of handling those 4 syscalls, we need to check the seal (
-> can_modify_mm), this requires locking the VMA (
-> mmap_write_lock_killable), and ideally, after validating the syscall
-> input. The reasonable place for can_modify_mm() is from utility
-> functions, such as do_mmap(), do_vmi_munmap(), etc.
->
-> However, there is no guarantee that do_mmap() and do_vmi_munmap() are
-> only reachable from mprotect/munmap/mremap/mmap syscall entry point
-> (SYSCALL_DEFINE_XX). In theory,  the kernel can call those in other
-> scenarios, and some of them can be perfectly legit. Those other
-> scenarios are not covered by our threat model at this time. Therefore,
-> we need a flag, passed from the SYSCALL_DEFINE_XX entry , down to
-> can_modify_mm(), to differentiate those other scenarios.
->
-> Now, back to code, it did some optimization, i.e. doesn't pass the
-> flag from SYSCALL_DEFINE_XX  in all cases. If SYSCALL_DEFINE_XX calls
-> do_a, and do_a has only one caller, I will set the flag in do_a,
-> instead of SYSCALL_DEFINE_XX. Doing this reduces the size of the
-> patchset, but it also makes the code less readable indeed. I could
-> remove this optimization in V3. I welcome suggestions to improve
-> readability on this.
->
-> When handing the mmap/munmap/mremap/mmap, once the code passed
-> can_modify_mm(), it means the memory area is not sealed, if the code
-> continues to call the other utility functions, we don't need to check
-> the seal again. This is the case for mremap(), the seal of src address
-> and dest address (when applicable) are checked first, later when the
-> code calls  do_vmi_munmap(), it no longer needs to check the seal
-> again.
->
-> [1] https://v8.dev/blog/control-flow-integrity
->
-> -Jeff
+Arnd noticed we have a case where a shorter source string is being copied
+into a destination byte array, but this results in a strnlen() call that
+exceeds the size of the source. This is seen with -Wstringop-overread:
 
-There is also alternative approach:
+In file included from ../include/linux/uuid.h:11,
+                 from ../include/linux/mod_devicetable.h:14,
+                 from ../include/linux/cpufeature.h:12,
+                 from ../arch/x86/coco/tdx/tdx.c:7:
+../arch/x86/coco/tdx/tdx.c: In function 'tdx_panic.constprop':
+../include/linux/string.h:284:9: error: 'strnlen' specified bound 64 exceeds source size 60 [-Werror=stringop-overread]
+  284 |         memcpy_and_pad(dest, _dest_len, src, strnlen(src, _dest_len), pad); \
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../arch/x86/coco/tdx/tdx.c:124:9: note: in expansion of macro 'strtomem_pad'
+  124 |         strtomem_pad(message.str, msg, '\0');
+      |         ^~~~~~~~~~~~
 
-For all the places that call do_vmi_munmap(), find out which
-case should ignore the sealing flag legitimately, set an ignore_seal
-flag and pass it down into do_vmi_munmap(). For the rest case,
-use default behavior.
+Use the smaller of the two buffer sizes when calling strnlen(). When
+src length is unknown (SIZE_MAX), it will use dest length, which is what
+the original code did.
 
-All future API will automatically be covered for sealing, by using default.
+Reported-by: Arnd Bergmann <arnd@arndb.de>
+Fixes: dfbafa70bde2 ("string: Introduce strtomem() and strtomem_pad()")
+Cc: Andy Shevchenko <andy@kernel.org>
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ include/linux/string.h | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-The risky side, if I missed a case that requires setting ignore_seal,
-there will be a bug.
+diff --git a/include/linux/string.h b/include/linux/string.h
+index dbfc66400050..9e3cb6923b0e 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -277,10 +277,12 @@ void memcpy_and_pad(void *dest, size_t dest_len, const void *src, size_t count,
+  */
+ #define strtomem_pad(dest, src, pad)	do {				\
+ 	const size_t _dest_len = __builtin_object_size(dest, 1);	\
++	const size_t _src_len = __builtin_object_size(src, 1);		\
+ 									\
+ 	BUILD_BUG_ON(!__builtin_constant_p(_dest_len) ||		\
+ 		     _dest_len == (size_t)-1);				\
+-	memcpy_and_pad(dest, _dest_len, src, strnlen(src, _dest_len), pad); \
++	memcpy_and_pad(dest, _dest_len, src,				\
++		       strnlen(src, min(_src_len, _dest_len)), pad);	\
+ } while (0)
+ 
+ /**
+@@ -298,10 +300,11 @@ void memcpy_and_pad(void *dest, size_t dest_len, const void *src, size_t count,
+  */
+ #define strtomem(dest, src)	do {					\
+ 	const size_t _dest_len = __builtin_object_size(dest, 1);	\
++	const size_t _src_len = __builtin_object_size(src, 1);		\
+ 									\
+ 	BUILD_BUG_ON(!__builtin_constant_p(_dest_len) ||		\
+ 		     _dest_len == (size_t)-1);				\
+-	memcpy(dest, src, min(_dest_len, strnlen(src, _dest_len)));	\
++	memcpy(dest, src, strnlen(src, min(_src_len, _dest_len)));	\
+ } while (0)
+ 
+ /**
+-- 
+2.34.1
 
-Also if a driver calls the utility functions to unmap a memory, the
-seal will be checked as well. (Driver is not in our threat model,
-but Chrome probably doesn't mind it.)
-
-Which of those two approaches are better ? I appreciate the direction on th=
-is.
-
-Thanks!
--Jeff
-
-
--Jeff
