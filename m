@@ -1,211 +1,147 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF0718038
-	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 09:33:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7685237CBA
+	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 15:09:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="GGocxtMq"
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D5FF12A
-	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 02:33:48 -0700 (PDT)
-Received: by mail-lf1-x133.google.com with SMTP id 2adb3069b0e04-5079c846dcfso6075510e87.2
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 02:33:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0jEu3mNa"
+Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3C49BA
+	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 08:09:27 -0700 (PDT)
+Received: by mail-qt1-x831.google.com with SMTP id d75a77b69052e-41b19dda4c6so254421cf.1
+        for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 08:09:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1697621626; x=1698226426; darn=vger.kernel.org;
-        h=in-reply-to:from:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=Dzadp2GRlybcK8qZrjdzO1hYf12C5sJ7ylY3qiOsQkI=;
-        b=GGocxtMq5wCLsLUSarxjj1QIo4UQHzkYMwr/POcJEfUiQOfHcZ6fmNu7wNokBqjXm6
-         bfYGRCysquO7fvfBljiLiz4SkTZj1BcJiwblF7mdQ1bsVpMnm/MFX5fvwtJS5rCEZzTi
-         LgmfgcL+TH2vJkY6w4h1/tlPvhTJ6Ps1iDbJM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697621626; x=1698226426;
-        h=in-reply-to:from:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1697641767; x=1698246567; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Dzadp2GRlybcK8qZrjdzO1hYf12C5sJ7ylY3qiOsQkI=;
-        b=HZ9kiLFgE7n5aaV8zt231NfGZV5TU7bMqwJJRvywSSIGdxbQs2Ke2zO1cZhiqyFa9K
-         x2vzTGT4INGNCLQLFuN/9QCeWQKcZG9fFkBn7mTVW38jKNFxFfVkmYFNTIvmlEQtlNYE
-         /aMyr7/OXZ6WmpZiMs+ChVoMhajyisSVFOXNnwfs2mm2ARpn0L5Ic2OiO+A0vESKcfFt
-         uXe3WKewLf7XDLDc5tnUX7/3mi8jXfhxxBZvoTKSuMt4SqYSajJUhn6mdLbDMOzdkUlo
-         UCi7kCyINOQ0vOCMAkDQnQVOyxbgyW7nwDlw1c4pBGAYrNGAsF/qDEX7ZrNq4AMiGEil
-         pk8w==
-X-Gm-Message-State: AOJu0Yxl67uK0xe/V+hKx873MJyYEhjthCdcs1zM8g9Xdk1trkkCPa9D
-	lbhsCVduUIHVTYOxVa0RdfrNnA==
-X-Google-Smtp-Source: AGHT+IHelS2zEoBrVP13U11HK/7SHo3xUkitwB+UNdmBId2QI4xTMSS+V7kSvDvg9aV6XpyabVrM0g==
-X-Received: by 2002:a19:5043:0:b0:507:9e6c:e165 with SMTP id z3-20020a195043000000b005079e6ce165mr2666802lfj.50.1697621626437;
-        Wed, 18 Oct 2023 02:33:46 -0700 (PDT)
-Received: from [10.230.42.27] ([192.19.152.250])
-        by smtp.gmail.com with ESMTPSA id w8-20020a5d6808000000b0031779a6b451sm1664460wru.83.2023.10.18.02.33.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Oct 2023 02:33:44 -0700 (PDT)
-Message-ID: <009a6011-37b7-75da-8b50-13aa1bdc1266@broadcom.com>
-Date: Wed, 18 Oct 2023 11:33:43 +0200
+        bh=PvfWp1C5xv3xuTQ6WUqjUh4zSLJkkTSPfVE2loOXpbY=;
+        b=0jEu3mNalZW4sYjmW1SzcVilxuXEYHji310yhmvuXE7NXtCoNiXXrZBkyN11XwBp95
+         xef5o23/l9dw2F19XFwatSK6tyykDsd+ZBv2cc80OQQqqVIrosuIujuo/s/4FTzzA+P4
+         klXTf4U5Xn2F08Tqfy8ay/AVMdx/c4xgaiqF5qb7D53fjINkmLT9dYPXnHwdp4aXPcgA
+         nYQwvAqMrjEnWLBpXCUvunD64YfG3N0yPfz3neRg2060IUhGDXsg9djK50ix4yZcu89G
+         +Hyi38JTvsKkX6LPRi2widzY76CcSpTiDTDvFMvSd1C8OfruQ23WsucLw5eyyIWEyJpL
+         DnYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697641767; x=1698246567;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PvfWp1C5xv3xuTQ6WUqjUh4zSLJkkTSPfVE2loOXpbY=;
+        b=Qn1tU6bjNXFSIM+GdDKf1hHdgo3d+Nb4sLWDfw0gT3Ty8wzTbZmVeplqBS2RD+B3Pf
+         rhOaHMQ329HWpALfANVZomuettB2fM3PZHzX5yDmCKCasL7LhzHwxgKkGIHdubDHVU7L
+         YwW6jw/G2tciIlR5kvZOikFeDIEPPv2BgoOmhEXt/1L+t8yqwfJ/olSaD1YZ/4MS2i0v
+         +zQr1GMzPgYfAqRMOariNR7I716M9F1xvxqOEmIV+k/SeblJpxAjUTMBOsyxABHhorZS
+         Fr89BT1sPNjoT2gmpPGz8+oA4Cx8J/OXk/5zfve5TwfQt28TYVvetX9V0p5KIJxftzrO
+         Hu1A==
+X-Gm-Message-State: AOJu0YzgKXInfPRMB/EAiio92OI3pNtTV7h9tD/akOAU5Vp4y+smSWBV
+	mdZKphU5PXXud26kSbYtp4py8irl0j0mURFYLwQ53w==
+X-Google-Smtp-Source: AGHT+IFgbm8y7iUUT1tE/b9dwff4sTV8f+SQuOOmoj4EcmFYIHZ0gjVlcjmYUYdkCnzE862dRzyTETqhK35IYA7Fv4k=
+X-Received: by 2002:ac8:4b75:0:b0:410:9d31:68cd with SMTP id
+ g21-20020ac84b75000000b004109d3168cdmr221871qts.27.1697641766704; Wed, 18 Oct
+ 2023 08:09:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v3 0/2] wifi: brcm80211: replace deprecated strncpy
-To: Franky Lin <franky.lin@broadcom.com>,
- Justin Stitt <justinstitt@google.com>
-Cc: Arend van Spriel <aspriel@gmail.com>,
- Hante Meuleman <hante.meuleman@broadcom.com>, Kalle Valo <kvalo@kernel.org>,
- linux-wireless@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com,
- SHA-cyfmac-dev-list@infineon.com, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20231017-strncpy-drivers-net-wireless-broadcom-brcm80211-brcmfmac-cfg80211-c-v3-0-af780d74ae38@google.com>
- <CA+8PC_euoeTyvhm8ANWD0KawzZxYsEdRqys8COoez0dGvFxn6A@mail.gmail.com>
-From: Arend van Spriel <arend.vanspriel@broadcom.com>
-In-Reply-To: <CA+8PC_euoeTyvhm8ANWD0KawzZxYsEdRqys8COoez0dGvFxn6A@mail.gmail.com>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000086c3d0607fa560a"
-X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+References: <20231017090815.1067790-1-jeffxu@chromium.org> <20231017090815.1067790-6-jeffxu@chromium.org>
+ <CAHk-=wgwdHzOY_mT3y9gDHSMXZ8Xb5OYrK40-u9uRXLv25fNPA@mail.gmail.com>
+In-Reply-To: <CAHk-=wgwdHzOY_mT3y9gDHSMXZ8Xb5OYrK40-u9uRXLv25fNPA@mail.gmail.com>
+From: Jeff Xu <jeffxu@google.com>
+Date: Wed, 18 Oct 2023 08:08:49 -0700
+Message-ID: <CALmYWFux2m=9189Gs0o8-xhPNW4dnFvtqj7ptcT5QvzxVgfvYQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 5/8] mseal: Check seal flag for munmap(2)
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: jeffxu@chromium.org, akpm@linux-foundation.org, keescook@chromium.org, 
+	jannh@google.com, sroettger@google.com, willy@infradead.org, 
+	gregkh@linuxfoundation.org, jorgelo@chromium.org, groeck@chromium.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-mm@kvack.org, surenb@google.com, alex.sierra@amd.com, 
+	apopple@nvidia.com, aneesh.kumar@linux.ibm.com, axelrasmussen@google.com, 
+	ben@decadent.org.uk, catalin.marinas@arm.com, david@redhat.com, 
+	dwmw@amazon.co.uk, ying.huang@intel.com, hughd@google.com, joey.gouly@arm.com, 
+	corbet@lwn.net, wangkefeng.wang@huawei.com, Liam.Howlett@oracle.com, 
+	lstoakes@gmail.com, mawupeng1@huawei.com, linmiaohe@huawei.com, 
+	namit@vmware.com, peterx@redhat.com, peterz@infradead.org, 
+	ryan.roberts@arm.com, shr@devkernel.io, vbabka@suse.cz, 
+	xiujianfeng@huawei.com, yu.ma@intel.com, zhangpeng362@huawei.com, 
+	dave.hansen@intel.com, luto@kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
 	autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 	lindbergh.monkeyblade.net
 
---000000000000086c3d0607fa560a
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+On Tue, Oct 17, 2023 at 9:54=E2=80=AFAM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Tue, 17 Oct 2023 at 02:08, <jeffxu@chromium.org> wrote:
+> >
+> > Of all the call paths that call into do_vmi_munmap(),
+> > this is the only place where checkSeals =3D MM_SEAL_MUNMAP.
+> > The rest has checkSeals =3D 0.
+>
+> Why?
+>
+> None of this makes sense.
+>
+> So you say "we can't munmap in this *one* place, but all others ignore
+> the sealing".
+>
+I apologize that previously, I described what this code does, and not reaso=
+ning.
 
-On 10/17/2023 11:27 PM, Franky Lin wrote:
-> On Tue, Oct 17, 2023 at 1:11 PM 'Justin Stitt' via
-> BRCM80211-DEV-LIST,PDL <brcm80211-dev-list.pdl@broadcom.com> wrote:
->>
->> Hi,
->>
->> This series used to be just one patch in [v2] but I've split it into two
->> separate patches.
->>
->> The motivation behind this series is that strncpy() is deprecated for
->> use on NUL-terminated destination strings [1] and as such we should
->> prefer more robust and less ambiguous string interfaces.
->>
->> In cases where we expect the destination buffer to be NUL-terminated
->> let's opt for strscpy() as this guarantees NUL-termination. Other cases
->> are just simple byte copies with pre-determined bounds; for these let's
->> use plain-ol' memcpy().
->>
->> Each change is detailed in its accompanying patch message.
->>
->> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
->> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
->> Link: https://github.com/KSPP/linux/issues/90
->> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> 
-> Reviewed-by: Franky Lin <franky.lin@broadcom.com>
+In our threat model, as Stephen R=C3=B6ttger point out in [1], and I quote:
 
-Acked-by: Arend van Spriel <arend.vanspriel@broadcom.com>
+V8 exploits typically follow a similar pattern: an initial bug leads
+to memory corruption but often the initial corruption is limited and
+the attacker has to find a way to arbitrarily read/write in the whole
+address space.
 
->> ---
->> Changes in v3:
->> - split up into two separate patches (thanks Franky)
->> - use better subject line (thanks Franky + Kalle)
->> - Link to v2: https://lore.kernel.org/r/20231016-strncpy-drivers-net-wireless-broadcom-brcm80211-brcmfmac-cfg80211-c-v2-1-6c7567e1d3b8@google.com
->>
->> Changes in v2:
->> - add other strncpy replacements
->> - Link to v1: https://lore.kernel.org/r/20231016-strncpy-drivers-net-wireless-broadcom-brcm80211-brcmfmac-cfg80211-c-v1-1-4234807ca07e@google.com
->>
->> ---
->> Justin Stitt (2):
->>        wifi: brcm80211: replace deprecated strncpy with strscpy
->>        wifi: brcmsmac: replace deprecated strncpy with memcpy
->>
->>   drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c | 2 +-
->>   drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c      | 2 +-
->>   drivers/net/wireless/broadcom/brcm80211/brcmsmac/channel.c  | 6 +++---
->>   drivers/net/wireless/broadcom/brcm80211/brcmsmac/dma.c      | 3 +--
->>   drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c     | 4 ++--
->>   5 files changed, 8 insertions(+), 9 deletions(-)
->> ---
+The memory correction is in the user space process, e.g. Chrome.
+Attackers will try to modify permission of the memory, by calling
+mprotect,  or munmap then mmap to the same address but with different
+permission, etc.
 
---000000000000086c3d0607fa560a
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+Sealing blocks mprotect/munmap/mremap/mmap call from the user space
+process, e.g. Chrome.
 
-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
-2Gzj3QNJRLsZu1TLyOyBBIr/BE7UiY3RabgRzknBGAPmzhS+fmyM8OtM5BYBsFBrSUFtZZO2p/tf
-Nbc24J2zf2peoZ8MK+7WQqummYlOnz+FyDkA9EybeNMcS5C+xi/PAgMBAAGjggHdMIIB2TAOBgNV
-HQ8BAf8EBAMCBaAwgaMGCCsGAQUFBwEBBIGWMIGTME4GCCsGAQUFBzAChkJodHRwOi8vc2VjdXJl
-Lmdsb2JhbHNpZ24uY29tL2NhY2VydC9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcnQwQQYI
-KwYBBQUHMAGGNWh0dHA6Ly9vY3NwLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24y
-Y2EyMDIwME0GA1UdIARGMEQwQgYKKwYBBAGgMgEoCjA0MDIGCCsGAQUFBwIBFiZodHRwczovL3d3
-dy5nbG9iYWxzaWduLmNvbS9yZXBvc2l0b3J5LzAJBgNVHRMEAjAAMEkGA1UdHwRCMEAwPqA8oDqG
-OGh0dHA6Ly9jcmwuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3Js
-MCcGA1UdEQQgMB6BHGFyZW5kLnZhbnNwcmllbEBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYB
-BQUHAwQwHwYDVR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFIikAXd8CEtv
-ZbDflDRnf3tuStPuMA0GCSqGSIb3DQEBCwUAA4IBAQCdS5XCYx6k2GGZui9DlFsFm75khkqAU7rT
-zBX04sJU1+B1wtgmWTVIzW7ugdtDZ4gzaV0S9xRhpDErjJaltxPbCylb1DEsLj+AIvBR34caW6ZG
-sQk444t0HPb29HnWYj+OllIGMbdJWr0/P95ZrKk2bP24ub3ZP/8SyzrohfIba9WZKMq6g2nTLZE3
-BtkeSGJx/8dy0h8YmRn+adOrxKXHxhSL8BNn8wsmIZyYWe6fRcBtO3Ks2DOLyHCdkoFlN8x9VUQF
-N2ulEgqCbRKkx+qNirW86eF138lr1gRxzclu/38ko//MmkAYR/+hP3WnBll7zbpIt0jc9wyFkSqH
-p8a1MYICbTCCAmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1z
-YTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMTv1t
-bpIzNUky46LXMA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCCXSNoc59ioVa99CuW6
-K3gVLmmyNEUoe0r8aHCmplOeAzAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJ
-BTEPFw0yMzEwMTgwOTMzNDZaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFl
-AwQBFjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzAL
-BglghkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEAaTPo+2A2EvPv6/JthffJyMQLBS27CKINoZHl
-ITYZrLchSdKZ+gp88wX9+HGhnDgztjNHU3RMQ7tQ+PqNbsTPngGwKMfj1Zj1r8WLPdvFPkaqEus1
-N0xPY3i+3VrqlgZK6iMX/2sxzb5N5GiKKOurZh9w+/nkyHEPwPEuJQR8dPzf83iY3eS46QcSwcgd
-twEC8ZC7GZwzmfRw0mkhkeAqiNDc6P5ZBdSVL787ihecs4zIF5I49TiBo9EzC1yReWJoA8EmL+cz
-J4n+An0TOYH+cbomghvv4dv1/ZPDc33IdtVn2WdGkbJWR4UN2yWgkGsCSwyjY6hXwMi8d4GQhNuu
-Yw==
---000000000000086c3d0607fa560a--
+At time of handling those 4 syscalls, we need to check the seal (
+can_modify_mm), this requires locking the VMA (
+mmap_write_lock_killable), and ideally, after validating the syscall
+input. The reasonable place for can_modify_mm() is from utility
+functions, such as do_mmap(), do_vmi_munmap(), etc.
+
+However, there is no guarantee that do_mmap() and do_vmi_munmap() are
+only reachable from mprotect/munmap/mremap/mmap syscall entry point
+(SYSCALL_DEFINE_XX). In theory,  the kernel can call those in other
+scenarios, and some of them can be perfectly legit. Those other
+scenarios are not covered by our threat model at this time. Therefore,
+we need a flag, passed from the SYSCALL_DEFINE_XX entry , down to
+can_modify_mm(), to differentiate those other scenarios.
+
+Now, back to code, it did some optimization, i.e. doesn't pass the
+flag from SYSCALL_DEFINE_XX  in all cases. If SYSCALL_DEFINE_XX calls
+do_a, and do_a has only one caller, I will set the flag in do_a,
+instead of SYSCALL_DEFINE_XX. Doing this reduces the size of the
+patchset, but it also makes the code less readable indeed. I could
+remove this optimization in V3. I welcome suggestions to improve
+readability on this.
+
+When handing the mmap/munmap/mremap/mmap, once the code passed
+can_modify_mm(), it means the memory area is not sealed, if the code
+continues to call the other utility functions, we don't need to check
+the seal again. This is the case for mremap(), the seal of src address
+and dest address (when applicable) are checked first, later when the
+code calls  do_vmi_munmap(), it no longer needs to check the seal
+again.
+
+[1] https://v8.dev/blog/control-flow-integrity
+
+-Jeff
