@@ -1,59 +1,32 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AFD917E
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 00:03:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A59D8F6A
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 00:32:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iTY8joTj"
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C722D113
-	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 17:03:04 -0700 (PDT)
-Received: by mail-pg1-x536.google.com with SMTP id 41be03b00d2f7-5ae99bb5ccdso3077155a12.1
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 17:03:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1697673784; x=1698278584; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=T/Zi+O5EOF8MxmYTpNQNZzDcOGwyvihj+XdDWSOvn6s=;
-        b=iTY8joTjEef/ERLwWT1SitzkN02oqldiSAsUv38Bn7nIXqZFzrW+D9erwAxe29Dk7V
-         O5rSFaI9v6q1Ndk/Dh3RgW0ZXHyiQxwvJH801k5CfMuHe5aHLwsQ9LlMz0GPxdsBGiRU
-         AkK+jzaPEqxxikeP6WT23RtUwlDnlMTqCvLKI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697673784; x=1698278584;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T/Zi+O5EOF8MxmYTpNQNZzDcOGwyvihj+XdDWSOvn6s=;
-        b=YCLwW3GruNqat0GlQcU+4KWqpsAj7d1lmzI8gtyLQ/9+pFXCFTed2LS2XmCblrq0Ki
-         xr9dXZQy+KQky7bjPwpPsiJTQcnzfXHPuu69TPrSaZK+feFA45ydGJZPoZTNDScWziFm
-         DMbnZbipluvuRFtotFlwnhWcp7Prb8VoZ1NCQ5FWJGy/O1kAJ+bw+FB9Sasvuo2gx0Fd
-         N0W9WzQqFqxggu758UzY5KZV8Rxb3KqxQOwaoihl+VKRh8Ml2CBw2T3R9BTg75nE+hH0
-         bZk/78sNkYle3BA1nL+n61pPV1C6TyJZpVV91YCXwdgeCPjzosbOjJiGJsQPEbCPgYsd
-         fDjA==
-X-Gm-Message-State: AOJu0YxAHa0aSnU50+aN5gqkCZOUNBO7euymmCT8zt0Bhhw0nJDnW/iW
-	tUyYrnUrhl8+IyI6ZW7aR4T6Ag==
-X-Google-Smtp-Source: AGHT+IGrcFp93mw31etRpM+tGlTdUDGBZ2GMJztc6dNNbeKI6ATXUY7U6QHgT4Dp4nc4Q3FOq4tEVA==
-X-Received: by 2002:a05:6a20:12d5:b0:16b:c62d:876 with SMTP id v21-20020a056a2012d500b0016bc62d0876mr866390pzg.23.1697673784108;
-        Wed, 18 Oct 2023 17:03:04 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id d92-20020a17090a6f6500b0027654d389casm467204pjk.54.2023.10.18.17.03.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Oct 2023 17:03:03 -0700 (PDT)
-Date: Wed, 18 Oct 2023 17:03:02 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Arend van Spriel <aspriel@gmail.com>,
-	Franky Lin <franky.lin@broadcom.com>,
-	Hante Meuleman <hante.meuleman@broadcom.com>,
-	Kalle Valo <kvalo@kernel.org>, linux-wireless@vger.kernel.org,
-	brcm80211-dev-list.pdl@broadcom.com,
-	SHA-cyfmac-dev-list@infineon.com, linux-kernel@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="EnOF/bKt"
+Received: from out-206.mta1.migadu.com (out-206.mta1.migadu.com [95.215.58.206])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93F47FE
+	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 17:32:37 -0700 (PDT)
+Date: Wed, 18 Oct 2023 20:32:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1697675555;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hwS7/DcUtHPt4kJq4hSNEacDz1a7ECv/zqs7i4aI0Eg=;
+	b=EnOF/bKtp+QW7N3HS2qa+3qrbx+KqloGAi0gphqa7ayhh+LjdKDLCnEhls/ElClHD6wMYw
+	Y8oaqaEJrneKjjqeYz5ZUWTInl6kNnkeYYpK6Fo0QaKzV9VIC7+4hiKvsinpxOM32psro6
+	YdGflUMi+/JeK4oGK29uqBksKWyQUqQ=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Kees Cook <keescook@chromium.org>
+Cc: Brian Foster <bfoster@redhat.com>, linux-bcachefs@vger.kernel.org,
+	kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] wifi: brcmsmac: replace deprecated strncpy with
- memcpy
-Message-ID: <202310181654.E47A7709@keescook>
-References: <20231017-strncpy-drivers-net-wireless-broadcom-brcm80211-brcmfmac-cfg80211-c-v3-0-af780d74ae38@google.com>
- <20231017-strncpy-drivers-net-wireless-broadcom-brcm80211-brcmfmac-cfg80211-c-v3-2-af780d74ae38@google.com>
+Subject: Re: [PATCH v3] bcachefs: Refactor memcpy into direct assignment
+Message-ID: <20231019003232.5uwphr7de7nybsra@moria.home.lan>
+References: <20231018230728.make.202-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -62,97 +35,43 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231017-strncpy-drivers-net-wireless-broadcom-brcm80211-brcmfmac-cfg80211-c-v3-2-af780d74ae38@google.com>
+In-Reply-To: <20231018230728.make.202-kees@kernel.org>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Oct 17, 2023 at 08:11:29PM +0000, Justin Stitt wrote:
-> Let's move away from using strncpy and instead use the more obvious
-> interface for this context.
+On Wed, Oct 18, 2023 at 04:07:32PM -0700, Kees Cook wrote:
+> The memcpy() in bch2_bkey_append_ptr() is operating on an embedded fake
+> flexible array which looks to the compiler like it has 0 size. This
+> causes W=1 builds to emit warnings due to -Wstringop-overflow:
 > 
-> For wlc->pub->srom_ccode, we're just copying two bytes from ccode into
-> wlc->pub->srom_ccode with no expectation that srom_ccode be
-> NUL-terminated:
-> wlc->pub->srom_ccode is only used in regulatory_hint():
-> 1193 |       if (wl->pub->srom_ccode[0] &&
-> 1194 |           regulatory_hint(wl->wiphy, wl->pub->srom_ccode))
-> 1195 |               wiphy_err(wl->wiphy, "%s: regulatory hint failed\n", __func__);
+>    In file included from include/linux/string.h:254,
+>                     from include/linux/bitmap.h:11,
+>                     from include/linux/cpumask.h:12,
+>                     from include/linux/smp.h:13,
+>                     from include/linux/lockdep.h:14,
+>                     from include/linux/radix-tree.h:14,
+>                     from include/linux/backing-dev-defs.h:6,
+>                     from fs/bcachefs/bcachefs.h:182:
+>    fs/bcachefs/extents.c: In function 'bch2_bkey_append_ptr':
+>    include/linux/fortify-string.h:57:33: warning: writing 8 bytes into a region of size 0 [-Wstringop-overflow=]
+>       57 | #define __underlying_memcpy     __builtin_memcpy
+>          |                                 ^
+>    include/linux/fortify-string.h:648:9: note: in expansion of macro '__underlying_memcpy'
+>      648 |         __underlying_##op(p, q, __fortify_size);                        \
+>          |         ^~~~~~~~~~~~~
+>    include/linux/fortify-string.h:693:26: note: in expansion of macro '__fortify_memcpy_chk'
+>      693 | #define memcpy(p, q, s)  __fortify_memcpy_chk(p, q, s,                  \
+>          |                          ^~~~~~~~~~~~~~~~~~~~
+>    fs/bcachefs/extents.c:235:17: note: in expansion of macro 'memcpy'
+>      235 |                 memcpy((void *) &k->v + bkey_val_bytes(&k->k),
+>          |                 ^~~~~~
+>    fs/bcachefs/bcachefs_format.h:287:33: note: destination object 'v' of size 0
+>      287 |                 struct bch_val  v;
+>          |                                 ^
 > 
-> We can see that only index 0 and index 1 are accessed.
-> 3307 |       int regulatory_hint(struct wiphy *wiphy, const char *alpha2)
-> 3308 |       {
-> ...  |          ...
-> 3322 |          request->alpha2[0] = alpha2[0];
-> 3323 |          request->alpha2[1] = alpha2[1];
-> ...  |          ...
-> 3332 |       }
-> 
-> Since this is just a simple byte copy with correct lengths, let's use
-> memcpy(). There should be no functional change.
-> 
-> In a similar boat, both wlc->country_default and
-> wlc->autocountry_default are just simple byte copies so let's use
-> memcpy. However, FWICT they aren't used anywhere. (they should be
-> used or removed -- not in scope of my patch, though).
-> 
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
->  drivers/net/wireless/broadcom/brcm80211/brcmsmac/channel.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/channel.c b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/channel.c
-> index 5a6d9c86552a..f6962e558d7c 100644
-> --- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/channel.c
-> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/channel.c
-> @@ -341,7 +341,7 @@ struct brcms_cm_info *brcms_c_channel_mgr_attach(struct brcms_c_info *wlc)
->  	/* store the country code for passing up as a regulatory hint */
->  	wlc_cm->world_regd = brcms_world_regd(ccode, ccode_len);
->  	if (brcms_c_country_valid(ccode))
-> -		strncpy(wlc->pub->srom_ccode, ccode, ccode_len);
-> +		memcpy(wlc->pub->srom_ccode, ccode, ccode_len);
+> Avoid making any structure changes and just replace the u64 copy into a
+> direct assignment, side-stepping the entire problem.
 
-        const char *ccode = sprom->alpha2;
-        int ccode_len = sizeof(sprom->alpha2);
+This does make me wonder about the usefulness of the fortify source
+stuff if it can be sidestepped this way, but hey, I'll take it :)
 
-struct ssb_sprom {
-	...
-        char alpha2[2];         /* Country Code as two chars like EU or US */
-
-This should be marked __nonstring, IMO.
-
-struct brcms_pub {
-	...
-        char srom_ccode[BRCM_CNTRY_BUF_SZ];     /* Country Code in SROM */
-
-#define BRCM_CNTRY_BUF_SZ        4       /* Country string is 3 bytes + NUL */
-
-This, however, is shown as explicitly %NUL terminated.
-
-The old strncpy wasn't %NUL terminating wlc->pub->srom_ccode, though, so
-the memcpy is the same result, but is that actually _correct_ here?
-
->  
->  	/*
->  	 * If no custom world domain is found in the SROM, use the
-> @@ -354,10 +354,10 @@ struct brcms_cm_info *brcms_c_channel_mgr_attach(struct brcms_c_info *wlc)
->  	}
->  
->  	/* save default country for exiting 11d regulatory mode */
-> -	strncpy(wlc->country_default, ccode, ccode_len);
-> +	memcpy(wlc->country_default, ccode, ccode_len);
->  
->  	/* initialize autocountry_default to driver default */
-> -	strncpy(wlc->autocountry_default, ccode, ccode_len);
-> +	memcpy(wlc->autocountry_default, ccode, ccode_len);
-
-struct brcms_c_info {
-	...
-        char country_default[BRCM_CNTRY_BUF_SZ];
-        char autocountry_default[BRCM_CNTRY_BUF_SZ];
-
-These are similar...
-
-So, this change results in the same behavior, but is it right?
-
--Kees
-
--- 
-Kees Cook
+Pulled it into the testing branch, https://evilpiepirate.org/~testdashboard/ci?branch=bcachefs-testing
