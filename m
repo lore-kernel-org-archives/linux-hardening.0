@@ -1,54 +1,52 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07E6BEB8
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 02:28:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB73F396
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 03:25:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TC2KlZq2"
-Received: from mail-ot1-x32a.google.com (mail-ot1-x32a.google.com [IPv6:2607:f8b0:4864:20::32a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E56C119
-	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 19:28:39 -0700 (PDT)
-Received: by mail-ot1-x32a.google.com with SMTP id 46e09a7af769-6ce2aac0644so50234a34.0
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 19:28:39 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FYmXjFW2"
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A74611D
+	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 20:25:43 -0700 (PDT)
+Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1c434c33ec0so51850985ad.3
+        for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 20:25:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1697682518; x=1698287318; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1697685943; x=1698290743; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Pm17BzM2ARI2RrzePHTfnzeX6F07vJD4CzibGyt8MNI=;
-        b=TC2KlZq2f+2NP9WBSoxKsyth38NDh+ATmZuG2rIQLAIemhXN2auh2MaLS5WF06Y/bZ
-         piOMXBk56AEsAsq1lz8yi2ZBNGYm4SPxN4IIcE0SbCrzbrCs5vw7rjiTxiRBgB75DGbA
-         vqz3pUbDrRA34Bg0QErysGhegUmoODSxBh8bM=
+        bh=MHUzNIzJOVcPaGrU00gF++IjKBsdiY8jEN9JO/P5KMw=;
+        b=FYmXjFW2iOyvLr9PktujmgX55Ir/JiwpHrAyVS8t/RuMEltAr5GGgxpFzQSu/oAwu5
+         2OM3sejoyOcBRxrN0Nn4TEsz/iBwJaE4Bumjev8HuC2cG9v97dygEfvbLKkoKacx6F5u
+         V6Mi3Q4ke+GRJiPrUD+yp7nm8SPe1o+NEY9qU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697682518; x=1698287318;
+        d=1e100.net; s=20230601; t=1697685943; x=1698290743;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Pm17BzM2ARI2RrzePHTfnzeX6F07vJD4CzibGyt8MNI=;
-        b=EwtqAKBDocsrRGeM72LA/AewMIbz5oANq3VBwqYg/7C0wheXFctp79ZXgvalqbXYej
-         +OVsSdjVfcX2ElVv259z7uJjRiZNGeJD2HtCmHTp8GoCxPzgEaibktXsSMUT/IRn4fFD
-         gwigpjfu9fyiwLsnCmGHL1C25F7SGkzQBKgx+gCLbYIsrZZNChaO6kXiXoRI8FLZnrWn
-         LIwlI0w4dsVPvd4x7NGQlMbmlhGjN2JnpHUdui+c7ZViyfzamHDR4ig9wJojaqDBo6Yq
-         7TqDfCyLmg8Z530UvPncjuzesR0fU0Gh60zVScSLLHBG0JQ8B/p/AqLA9cGoOa+J6l49
-         J4eA==
-X-Gm-Message-State: AOJu0Yx/Bk2sYRGm2fXzjaEzc9AD7rh4BOsZ7wLLBehSrVlgsutoBDEn
-	H+qPeKSQTSEboel0os4X3Yixow==
-X-Google-Smtp-Source: AGHT+IH6n/YddGMyyhykRMLGfcwrjiN8g/F/Ne2bkA3nBvBFFVPKu/XWTZPWpMhTQPVvSmD2Qjdyhg==
-X-Received: by 2002:a9d:7f94:0:b0:6b7:5687:8a9e with SMTP id t20-20020a9d7f94000000b006b756878a9emr1006430otp.15.1697682518599;
-        Wed, 18 Oct 2023 19:28:38 -0700 (PDT)
+        bh=MHUzNIzJOVcPaGrU00gF++IjKBsdiY8jEN9JO/P5KMw=;
+        b=Yx6XxMBdu416TzDDy7TqM8yXwtBF2mJ8P2YotN9FZ5bfWurUOpZocwJSKFA8ArgYLP
+         fLieatGDjsd/IWvS03mHxXQsOkmD3X7cyVu9IQca7BqLnKTsOhM+gqkMs6XF/roOCEqN
+         BamOMzMrg8EWLRps3DjP+eqOL/E9QvvnorunXw3dwClQlAm6sUIZks5DjQDiP0nKupfn
+         ZGRYi6FL4feiWzFIcaU5wn2nI/TNjcF4Js7+xrIg/IF8+cFr8kfDfE+FxRLwJhX4CW3s
+         7+7Aqe4UnG7/6dcHbEeO5fkc5K9Anu4Ue8h951VN48KmtXJ/zR7vp7nyFgfavRMJNUkB
+         ZfLA==
+X-Gm-Message-State: AOJu0YyG+g6CXSeREOT1/YBGsrH8TGib8TeBWxIqS3v+2gZp2y+meA0D
+	74bv5vuO30ZIiCr+qHdyOXNShw==
+X-Google-Smtp-Source: AGHT+IF29KrVEu+UcCAxusXSjkxkDhirwB1hv8T6FJruleVOAqxDINURrXK3y03uADL6MugBT4krDQ==
+X-Received: by 2002:a17:902:bd0c:b0:1c6:2ae1:dc28 with SMTP id p12-20020a170902bd0c00b001c62ae1dc28mr1082672pls.36.1697685942788;
+        Wed, 18 Oct 2023 20:25:42 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id a129-20020a624d87000000b006906aaf1e4dsm4142079pfb.150.2023.10.18.19.28.37
+        by smtp.gmail.com with ESMTPSA id e6-20020a170902d38600b001c9d2360b2asm681051pld.22.2023.10.18.20.25.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Oct 2023 19:28:37 -0700 (PDT)
-Date: Wed, 18 Oct 2023 19:28:37 -0700
+        Wed, 18 Oct 2023 20:25:41 -0700 (PDT)
+Date: Wed, 18 Oct 2023 20:25:40 -0700
 From: Kees Cook <keescook@chromium.org>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Brian Foster <bfoster@redhat.com>, linux-bcachefs@vger.kernel.org,
-	kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3] bcachefs: Refactor memcpy into direct assignment
-Message-ID: <202310181927.F9CCC45@keescook>
-References: <20231018230728.make.202-kees@kernel.org>
- <20231019003232.5uwphr7de7nybsra@moria.home.lan>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Kalle Valo <kvalo@kernel.org>, linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] wifi: wl1251: replace deprecated strncpy with strscpy
+Message-ID: <202310182025.8A48543E6@keescook>
+References: <20231018-strncpy-drivers-net-wireless-ti-wl1251-main-c-v2-1-67b63dfcb1b8@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -57,54 +55,57 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231019003232.5uwphr7de7nybsra@moria.home.lan>
+In-Reply-To: <20231018-strncpy-drivers-net-wireless-ti-wl1251-main-c-v2-1-67b63dfcb1b8@google.com>
 
-On Wed, Oct 18, 2023 at 08:32:32PM -0400, Kent Overstreet wrote:
-> On Wed, Oct 18, 2023 at 04:07:32PM -0700, Kees Cook wrote:
-> > The memcpy() in bch2_bkey_append_ptr() is operating on an embedded fake
-> > flexible array which looks to the compiler like it has 0 size. This
-> > causes W=1 builds to emit warnings due to -Wstringop-overflow:
-> > 
-> >    In file included from include/linux/string.h:254,
-> >                     from include/linux/bitmap.h:11,
-> >                     from include/linux/cpumask.h:12,
-> >                     from include/linux/smp.h:13,
-> >                     from include/linux/lockdep.h:14,
-> >                     from include/linux/radix-tree.h:14,
-> >                     from include/linux/backing-dev-defs.h:6,
-> >                     from fs/bcachefs/bcachefs.h:182:
-> >    fs/bcachefs/extents.c: In function 'bch2_bkey_append_ptr':
-> >    include/linux/fortify-string.h:57:33: warning: writing 8 bytes into a region of size 0 [-Wstringop-overflow=]
-> >       57 | #define __underlying_memcpy     __builtin_memcpy
-> >          |                                 ^
-> >    include/linux/fortify-string.h:648:9: note: in expansion of macro '__underlying_memcpy'
-> >      648 |         __underlying_##op(p, q, __fortify_size);                        \
-> >          |         ^~~~~~~~~~~~~
-> >    include/linux/fortify-string.h:693:26: note: in expansion of macro '__fortify_memcpy_chk'
-> >      693 | #define memcpy(p, q, s)  __fortify_memcpy_chk(p, q, s,                  \
-> >          |                          ^~~~~~~~~~~~~~~~~~~~
-> >    fs/bcachefs/extents.c:235:17: note: in expansion of macro 'memcpy'
-> >      235 |                 memcpy((void *) &k->v + bkey_val_bytes(&k->k),
-> >          |                 ^~~~~~
-> >    fs/bcachefs/bcachefs_format.h:287:33: note: destination object 'v' of size 0
-> >      287 |                 struct bch_val  v;
-> >          |                                 ^
-> > 
-> > Avoid making any structure changes and just replace the u64 copy into a
-> > direct assignment, side-stepping the entire problem.
+On Wed, Oct 18, 2023 at 09:15:23PM +0000, Justin Stitt wrote:
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
 > 
-> This does make me wonder about the usefulness of the fortify source
-> stuff if it can be sidestepped this way, but hey, I'll take it :)
+> Based on other assignments of similar fw_version fields we can see that
+> NUL-termination is required but not NUL-padding:
+> ethernet/intel/ixgbe/ixgbe_ethtool.c
+> 1111:   strscpy(drvinfo->fw_version, adapter->eeprom_id,
+> 1112:           sizeof(drvinfo->fw_version));
+> 
+> ethernet/intel/igc/igc_ethtool.c
+> 147:    scnprintf(adapter->fw_version,
+> 148:              sizeof(adapter->fw_version),
+> 153:    strscpy(drvinfo->fw_version, adapter->fw_version,
+> 154:            sizeof(drvinfo->fw_version));
+> 
+> wireless/broadcom/brcm80211/brcmfmac/core.c
+> 569:    strscpy(info->fw_version, drvr->fwver, sizeof(info->fw_version));
+> 
+> wireless/broadcom/brcm80211/brcmsmac/main.c
+> 7867:           snprintf(wlc->wiphy->fw_version,
+> 7868:                    sizeof(wlc->wiphy->fw_version), "%u.%u", rev, patch);
+> 
+> wireless/broadcom/b43legacy/main.c
+> 1765:   snprintf(wiphy->fw_version, sizeof(wiphy->fw_version), "%u.%u",
+> 
+> wireless/broadcom/b43/main.c
+> 2730:   snprintf(wiphy->fw_version, sizeof(wiphy->fw_version), "%u.%u",
+> 
+> wireless/intel/iwlwifi/dvm/main.c
+> 1465:   snprintf(priv->hw->wiphy->fw_version,
+> 1466:            sizeof(priv->hw->wiphy->fw_version),
+> 
+> wireless/intel/ipw2x00/ipw2100.c
+> 5905:   snprintf(info->fw_version, sizeof(info->fw_version), "%s:%d:%s",
+> 
+> A suitable replacement is `strscpy` due to the fact that it guarantees
+> NUL-termination on the destination buffer without unnecessarily
+> NUL-padding.
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-Well, the "weird" cases like this are the ones that get attention. All
-the places it's working more cleanly are very effectively stomping real
-bugs.
+Yup, looks like a clean replacement.
 
-> Pulled it into the testing branch, https://evilpiepirate.org/~testdashboard/ci?branch=bcachefs-testing
-
-Thanks!
-
--Kees
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -- 
 Kees Cook
