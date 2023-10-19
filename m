@@ -1,127 +1,111 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16CA242923
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 23:06:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 953D719440
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 23:20:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="JiTnmeIb"
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13772115
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 16:06:54 -0700 (PDT)
-Received: by mail-ed1-x532.google.com with SMTP id 4fb4d7f45d1cf-53e3b8f906fso207258a12.2
-        for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 16:06:54 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WSnrBaFE"
+Received: from mail-ot1-x32d.google.com (mail-ot1-x32d.google.com [IPv6:2607:f8b0:4864:20::32d])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58E4B126
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 16:20:30 -0700 (PDT)
+Received: by mail-ot1-x32d.google.com with SMTP id 46e09a7af769-6cd09f51fe0so156306a34.1
+        for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 16:20:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1697756813; x=1698361613; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=vyephYMGi9WkrF+MMy/aTcTtLZAvJsqtW+X3GM9oKyI=;
-        b=JiTnmeIbyn0eI7O7WEeJEu3EpZGm4Rum3Ml96JxNuphs3OlRWaP09T4SW/jnPtgBv4
-         QYloOGaltrnCuDc7ilBWtuS9XeCgEBb1QX+OLRCoyWOBGabdKolVfefZ0UUZBB9k4ERo
-         Z7CO2TVsxEJzMCC4ONxsTVgIj26hXlF7w/gFQ=
+        d=chromium.org; s=google; t=1697757629; x=1698362429; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VxLJorg7sQZllVq+pAfloWwR0pqLP2/+/WDA8tc+KdQ=;
+        b=WSnrBaFEfIQzhBeOh2E56RJj/LqIQzFJe0rkjHDDH55NQzKDxQcZjWEM+VvqFwlUhw
+         rRVlsincpi5POhv4Ag1fK3Q0iLbGt5r363khKiJ6xyVNkPWKe062IjPo8e9aIwovMx3t
+         QiP8rofZnD+0QmmTCyOcF/3GVTBCHJH/cEWHk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697756813; x=1698361613;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vyephYMGi9WkrF+MMy/aTcTtLZAvJsqtW+X3GM9oKyI=;
-        b=AeLIU4EMGUo9NweUROeEZJ4MBvSBhLqjab66GFE5ea9ArC3YaFt89v5/Ux0izCojRD
-         GYkb58gYdEuoXbvqZ6J7RtqmvaYErvSrXKoVM9FDSHU7kkZRGt9xP1z0XtLaTBFjffFI
-         H7fM5MDLrBoEQqQ6DktIGtHt2mIXIoFjvbPEzefmcuISSUotMR9V4/kAx9GhitAPBS0F
-         qQAJFI2wBXUSDUi/JGUxWxvzJcrBnn1aojsAwzC8vR/PuA3InMAwhdjnO/WUobRl3MHQ
-         fdozfxffkVSvwpgklIbS10GcpkK+y6VnypLhgkwsOeJRhArp5XEKvraEhYF6tgmnszBG
-         jMWQ==
-X-Gm-Message-State: AOJu0YyJZ0/34VgvH1pcfGdNU+3CxdEXKcp2g7/4LrqXMFV/T+ZTF2q8
-	kEP2nzIfIE3sM4pWbdkfFllew16DHcARltr3yPoOte/i
-X-Google-Smtp-Source: AGHT+IH5AQRzOgafgVwt6G9L5ZQlXt5nEvPkgWwXak7u+CpdNCW+OH5Aq8Cd8MAGCKel3Ruqsfqvzg==
-X-Received: by 2002:a17:906:6a19:b0:9c7:5a01:ffe7 with SMTP id qw25-20020a1709066a1900b009c75a01ffe7mr62306ejc.12.1697756813339;
-        Thu, 19 Oct 2023 16:06:53 -0700 (PDT)
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com. [209.85.128.47])
-        by smtp.gmail.com with ESMTPSA id 16-20020a170906019000b009b2c9476726sm328809ejb.21.2023.10.19.16.06.52
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Oct 2023 16:06:52 -0700 (PDT)
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4084de32db5so1789445e9.0
-        for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 16:06:52 -0700 (PDT)
-X-Received: by 2002:ac2:533c:0:b0:503:3453:ea7a with SMTP id
- f28-20020ac2533c000000b005033453ea7amr52431lfh.66.1697756791018; Thu, 19 Oct
- 2023 16:06:31 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1697757629; x=1698362429;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VxLJorg7sQZllVq+pAfloWwR0pqLP2/+/WDA8tc+KdQ=;
+        b=OYy+6Lc2CrZPehr5qmDTIbInK9Lvo8hWwh3D12G9P3BfXP2tHrvvdQ/pcDGWtbSdy7
+         BWlBhQrCg2ifWP3wp2NZnSwKOp0xT/mIGcgA6c/X0rkIlp9q0Tn71nj0j6/iKBljJTUc
+         pAaeFTGY4KAI15S3EmInyhlq+krkawmdUymHDUqyHpIisQZJlmCNIg/+vhSsY+Obvf+X
+         9eHKlqw7JGJKGYwz7dIBjxmH1bkql1BtnfA5eQOJHfdcCxWu1HNeEamnX0sdGwjleMqV
+         FvDt8JVjZCvVM8q+RFDRabesk3XHaX8KOQGTOUKFwkLKyq7LPz7+Nsoys7cW0CClWjQm
+         DTPQ==
+X-Gm-Message-State: AOJu0YzYv0FAUAv8XTlfjbzwNjLR9qdcIdpQS3FUCuEMG4WHtRU0b6tB
+	bBPj8G23nVYEbDfXjxkk9qnQ3g==
+X-Google-Smtp-Source: AGHT+IHEKbiPITy9hpXV8pY+6rphvwnVu5/SOd6iNrHlgO7+Ii4hKo6iceZRtrHcdzoNlQQHAXQilg==
+X-Received: by 2002:a9d:74d7:0:b0:6cd:cac2:e504 with SMTP id a23-20020a9d74d7000000b006cdcac2e504mr248754otl.18.1697757629690;
+        Thu, 19 Oct 2023 16:20:29 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id p7-20020aa79e87000000b006b2e07a6235sm302622pfq.136.2023.10.19.16.20.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Oct 2023 16:20:29 -0700 (PDT)
+Date: Thu, 19 Oct 2023 16:20:28 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: James Smart <james.smart@broadcom.com>, Keith Busch <kbusch@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>, linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] nvme-fc: replace deprecated strncpy with strscpy
+Message-ID: <202310191619.6BE8E38@keescook>
+References: <20231019-strncpy-drivers-nvme-host-fc-c-v1-1-5805c15e4b49@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231016143828.647848-1-jeffxu@chromium.org> <ZS1URCBgwGGj9JtM@casper.infradead.org>
- <CAKbZUD2A+=bp_sd+Q0Yif7NJqMu8p__eb4yguq0agEcmLH8SDQ@mail.gmail.com>
- <CALmYWFtOgMAQDGNoM6k2Ev4kMHD396wwH+rVDODaSjsyVMDogg@mail.gmail.com>
- <CAKbZUD2j1jbomCAVxUX_JmG1rfa8udc=5SqVOpDgc-3GnSTbAQ@mail.gmail.com>
- <CALmYWFv7jzOj5HPcYct=UzYKPrwwvtN1EQeHioQHDPwGFvL5Ug@mail.gmail.com>
- <CALmYWFt71Vi6ySiZhW+tmE-LZL7Tnu-dQ1uMO10DUkASUTxzKA@mail.gmail.com> <CAKbZUD12pEaDCLysOpT3yL3064=P28Pm3c=UBqhOZYeBP026WA@mail.gmail.com>
-In-Reply-To: <CAKbZUD12pEaDCLysOpT3yL3064=P28Pm3c=UBqhOZYeBP026WA@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 19 Oct 2023 16:06:14 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgDv5vPx2xoxNQh+kbvLsskWubGGGK69cqF_i4FkM-GCw@mail.gmail.com>
-Message-ID: <CAHk-=wgDv5vPx2xoxNQh+kbvLsskWubGGGK69cqF_i4FkM-GCw@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 0/8] Introduce mseal() syscall
-To: Pedro Falcato <pedro.falcato@gmail.com>
-Cc: Jeff Xu <jeffxu@google.com>, Matthew Wilcox <willy@infradead.org>, jeffxu@chromium.org, 
-	akpm@linux-foundation.org, keescook@chromium.org, sroettger@google.com, 
-	jorgelo@chromium.org, groeck@chromium.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, jannh@google.com, 
-	surenb@google.com, alex.sierra@amd.com, apopple@nvidia.com, 
-	aneesh.kumar@linux.ibm.com, axelrasmussen@google.com, ben@decadent.org.uk, 
-	catalin.marinas@arm.com, david@redhat.com, dwmw@amazon.co.uk, 
-	ying.huang@intel.com, hughd@google.com, joey.gouly@arm.com, corbet@lwn.net, 
-	wangkefeng.wang@huawei.com, Liam.Howlett@oracle.com, lstoakes@gmail.com, 
-	mawupeng1@huawei.com, linmiaohe@huawei.com, namit@vmware.com, 
-	peterx@redhat.com, peterz@infradead.org, ryan.roberts@arm.com, 
-	shr@devkernel.io, vbabka@suse.cz, xiujianfeng@huawei.com, yu.ma@intel.com, 
-	zhangpeng362@huawei.com, dave.hansen@intel.com, luto@kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231019-strncpy-drivers-nvme-host-fc-c-v1-1-5805c15e4b49@google.com>
 
-On Thu, 19 Oct 2023 at 15:47, Pedro Falcato <pedro.falcato@gmail.com> wrote:
-> >
-> > For mprotect()/mmap(), is Linux implementation limited by POSIX ?
->
-> No. POSIX works merely as a baseline that UNIX systems aim towards.
-> You can (and very frequently do) extend POSIX interfaces (in fact,
-> it's how most of POSIX was written, through sheer
-> "design-by-committee" on a bunch of UNIX systems' extensions).
+On Thu, Oct 19, 2023 at 09:34:35PM +0000, Justin Stitt wrote:
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
+> 
+> Let's instead use strscpy() [2] as it guarantees NUL-termination on the
+> destination buffer.
+> 
+> Moreover, there is no need to use:
+> 
+> |       min(FCNVME_ASSOC_HOSTNQN_LEN, NVMF_NQN_SIZE));
+> 
+> I imagine this was originally done to make sure the destination buffer
+> is NUL-terminated by ensuring we copy a number of bytes less than the
+> size of our destination, thus leaving some NUL-bytes at the end.
 
-We can in extreme circumstances actually go further than that, and not
-only extend on POSIX requirements, but actively even violate them.
+Yeah, this is odd, but I agree that the resulting strscpy does the
+intended copy, since we've seen that other nqn strings are expected to
+be %NUL terminated.
 
-It does need a very good reason, though, but it has happened when
-POSIX requirements were simply actively wrong.
+> 
+> However, with strscpy(), we no longer need to do this and we can instead
+> opt for the more idiomatic strscpy() usage of:
+> 
+> | strscpy(dest, src, sizeof(dest))
+> 
+> Also, no NUL-padding is required as lsop is zero-allocated:
+> 
+> |       lsop = kzalloc((sizeof(*lsop) +
+> |                        sizeof(*assoc_rqst) + sizeof(*assoc_acc) +
+> |                        ctrl->lport->ops->lsrqst_priv_sz), GFP_KERNEL);
+> 
+> ... and assoc_rqst points to a field in lsop:
+> 
+> |       assoc_rqst = (struct fcnvme_ls_cr_assoc_rqst *)&lsop[1];
+> 
+> Therefore, any additional NUL-byte assignments (like the ones that
+> strncpy() makes) are redundant.
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> Similar-to: https://lore.kernel.org/all/20231018-strncpy-drivers-nvme-host-fabrics-c-v1-1-b6677df40a35@google.com/
 
-For example, at one point POSIX required
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-     int accept(int s, struct sockaddr *addr, size_t *addrlen);
-
-which was simply completely wrong. It's utter shite, and didn't
-actually match any reality.
-
-The 'addrlen' parameter is 'int *', and POSIX suddenly trying to make
-it "size_t" was completely unacceptable.
-
-So we ignored it, told POSIX people that they were full of sh*t, and
-they eventually fixed it in the next version (by introducing a
-"socklen_t" that had better be the same as "int").
-
-So POSIX can simply be wrong.
-
-Also, if it turns out that we had some ABI that wasn't
-POSIX-compatible, the whole "don't break user space" will take
-precedence over any POSIX concerns, and we will not "fix" our system
-call if people already use our old semantics.
-
-So in that case, we generally end up with a new system call (or new
-flags) instead.
-
-Or sometimes it just is such a small detail that nobody cares - POSIX
-also has a notion of documenting areas of non-conformance, and people
-who really care end up having notions like "conformance vs _strict_
-conformance".
-
-                 Linus
+-- 
+Kees Cook
