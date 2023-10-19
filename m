@@ -1,111 +1,127 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 953D719440
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 23:20:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4416219440
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 23:28:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WSnrBaFE"
-Received: from mail-ot1-x32d.google.com (mail-ot1-x32d.google.com [IPv6:2607:f8b0:4864:20::32d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58E4B126
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 16:20:30 -0700 (PDT)
-Received: by mail-ot1-x32d.google.com with SMTP id 46e09a7af769-6cd09f51fe0so156306a34.1
-        for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 16:20:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k9hzLcYX"
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2172512F
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 16:28:34 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-59b5a586da6so2209617b3.1
+        for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 16:28:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1697757629; x=1698362429; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VxLJorg7sQZllVq+pAfloWwR0pqLP2/+/WDA8tc+KdQ=;
-        b=WSnrBaFEfIQzhBeOh2E56RJj/LqIQzFJe0rkjHDDH55NQzKDxQcZjWEM+VvqFwlUhw
-         rRVlsincpi5POhv4Ag1fK3Q0iLbGt5r363khKiJ6xyVNkPWKe062IjPo8e9aIwovMx3t
-         QiP8rofZnD+0QmmTCyOcF/3GVTBCHJH/cEWHk=
+        d=google.com; s=20230601; t=1697758113; x=1698362913; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=pzUUh8EJbF6T18wc1SOQ/94eLw2vKmJD36Ybe2GN1oU=;
+        b=k9hzLcYXK2AM0JwncCKYEHnebdm/027o7DhhaGWPnhvxzbsriF2vtxzKhDGIwEqk5N
+         WxK+AasvRXuIq2d//xZZ0o1IOgmxH3hprw6uZfSHOA8ZDpTSYfd8jrw4gWmQVvPq56aq
+         TgMEk4r4BB+lEhtcMohcLnFCo4KEGSf8cVo7Hwq77aFbcdZCqsesoLV36LvsvPKu9PUJ
+         l2Xn9YMeKfDOaLEnukS5KhMlh4en5fRXkgKKFgV938BFMehmYZJA43sQ4Z1/bkmFnbJ0
+         mjQwH8ADF3vej5AsAT4LS0FSubn7+PTZ9i1MWQj1useDgO4tkcf2EzIXErUJsaNzYGPv
+         sAxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697757629; x=1698362429;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VxLJorg7sQZllVq+pAfloWwR0pqLP2/+/WDA8tc+KdQ=;
-        b=OYy+6Lc2CrZPehr5qmDTIbInK9Lvo8hWwh3D12G9P3BfXP2tHrvvdQ/pcDGWtbSdy7
-         BWlBhQrCg2ifWP3wp2NZnSwKOp0xT/mIGcgA6c/X0rkIlp9q0Tn71nj0j6/iKBljJTUc
-         pAaeFTGY4KAI15S3EmInyhlq+krkawmdUymHDUqyHpIisQZJlmCNIg/+vhSsY+Obvf+X
-         9eHKlqw7JGJKGYwz7dIBjxmH1bkql1BtnfA5eQOJHfdcCxWu1HNeEamnX0sdGwjleMqV
-         FvDt8JVjZCvVM8q+RFDRabesk3XHaX8KOQGTOUKFwkLKyq7LPz7+Nsoys7cW0CClWjQm
-         DTPQ==
-X-Gm-Message-State: AOJu0YzYv0FAUAv8XTlfjbzwNjLR9qdcIdpQS3FUCuEMG4WHtRU0b6tB
-	bBPj8G23nVYEbDfXjxkk9qnQ3g==
-X-Google-Smtp-Source: AGHT+IHEKbiPITy9hpXV8pY+6rphvwnVu5/SOd6iNrHlgO7+Ii4hKo6iceZRtrHcdzoNlQQHAXQilg==
-X-Received: by 2002:a9d:74d7:0:b0:6cd:cac2:e504 with SMTP id a23-20020a9d74d7000000b006cdcac2e504mr248754otl.18.1697757629690;
-        Thu, 19 Oct 2023 16:20:29 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id p7-20020aa79e87000000b006b2e07a6235sm302622pfq.136.2023.10.19.16.20.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Oct 2023 16:20:29 -0700 (PDT)
-Date: Thu, 19 Oct 2023 16:20:28 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: James Smart <james.smart@broadcom.com>, Keith Busch <kbusch@kernel.org>,
-	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-	Sagi Grimberg <sagi@grimberg.me>, linux-nvme@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] nvme-fc: replace deprecated strncpy with strscpy
-Message-ID: <202310191619.6BE8E38@keescook>
-References: <20231019-strncpy-drivers-nvme-host-fc-c-v1-1-5805c15e4b49@google.com>
+        d=1e100.net; s=20230601; t=1697758113; x=1698362913;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pzUUh8EJbF6T18wc1SOQ/94eLw2vKmJD36Ybe2GN1oU=;
+        b=Tf53kdiMUphaGxTVUv27kpFSsFwZYafDB6mmvdE89hNvktleaXFQVtl2Suv4vtu5on
+         QEL/0Eg2onNUUaMLpyWJdOhj5Rjw6+EZtjnTUhGsjanp/0dttepKxXn8BIIL41PqwF/R
+         92OHA/lxV241uJ5xbvvG7CpcjRJKCWDiLq+pxaRL2ubDX6iRDNZMO9EMjE97fgu3SuzE
+         IXCj/d16HffbOxkUyGszhM87fZFg729xOGRjcIapzAhJ+6sxG9PeDzKOJehXUbAKUYvc
+         YfaPDm7fTdwMvPoldMEbHj1t/Gi1HnwN7PuOZUXjsjv6kTEq9QMHjq6sm7676jaDoRCN
+         jLwQ==
+X-Gm-Message-State: AOJu0YzctzbmCJ5sSyX97EjFqsASW6RaoNfhPDxRZWsXOFszq9vYvWWo
+	V5YPzllwQb1m3wbW9w8q5kShITo4vVIyp8auGg==
+X-Google-Smtp-Source: AGHT+IGUI8wpguVW/zcazZa9+odYh4UV2WLd4vOIAq8jFTvfPkj7RADxp7QxZDCwYzqty+9DrmPoNBcIJhxGmfahNA==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a0d:d5d2:0:b0:5a7:ad04:5118 with SMTP
+ id x201-20020a0dd5d2000000b005a7ad045118mr5034ywd.3.1697758113362; Thu, 19
+ Oct 2023 16:28:33 -0700 (PDT)
+Date: Thu, 19 Oct 2023 23:28:32 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231019-strncpy-drivers-nvme-host-fc-c-v1-1-5805c15e4b49@google.com>
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAJ+7MWUC/x2NMQ6DMAwAv4I81xIhqSr4StUhOG7rJVh2hUCIv
+ zftcMMtdwc4m7DD1B1gvIrLUpuESwf0zvXFKKU5DP0QQx9G9I9V0h2LycrmqFV/zLI4mmu2FkT Ca7nFFFMKlAlaTI2fsv1H98d5fgFzoZffeAAAAA==
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1697758112; l=2436;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=nXaj+SDaGznDFnZbpN5SDDkaKW+YdcVYfsQcoGsWuEE=; b=vitL1pOLBqabYqfimZWktYB8iIQxDYX2yqZoBjW5OLRSdPWvEF4DWjPPpE2pF9Tlbyg8mNfab
+ acG5LdOUOGtDrLno91cbVzblWqZJlQLwwp5UbWp5kn3DqT2QZXDRf/P
+X-Mailer: b4 0.12.3
+Message-ID: <20231019-strncpy-drivers-pnp-pnpbios-rsparser-c-v1-1-e47d93b52e3e@google.com>
+Subject: [PATCH] PNP: replace deprecated strncpy with memcpy
+From: Justin Stitt <justinstitt@google.com>
+To: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On Thu, Oct 19, 2023 at 09:34:35PM +0000, Justin Stitt wrote:
-> strncpy() is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
-> 
-> Let's instead use strscpy() [2] as it guarantees NUL-termination on the
-> destination buffer.
-> 
-> Moreover, there is no need to use:
-> 
-> |       min(FCNVME_ASSOC_HOSTNQN_LEN, NVMF_NQN_SIZE));
-> 
-> I imagine this was originally done to make sure the destination buffer
-> is NUL-terminated by ensuring we copy a number of bytes less than the
-> size of our destination, thus leaving some NUL-bytes at the end.
+strncpy() is deprecated for use on NUL-terminated destination strings
+[1] and as such we should prefer more robust and less ambiguous
+interfaces.
 
-Yeah, this is odd, but I agree that the resulting strscpy does the
-intended copy, since we've seen that other nqn strings are expected to
-be %NUL terminated.
+After having precisely calculated the lengths and ensuring we don't
+overflow the buffer, this really decays to just a memcpy. Let's not use
+a C string api as it makes the intention of the code confusing.
 
-> 
-> However, with strscpy(), we no longer need to do this and we can instead
-> opt for the more idiomatic strscpy() usage of:
-> 
-> | strscpy(dest, src, sizeof(dest))
-> 
-> Also, no NUL-padding is required as lsop is zero-allocated:
-> 
-> |       lsop = kzalloc((sizeof(*lsop) +
-> |                        sizeof(*assoc_rqst) + sizeof(*assoc_acc) +
-> |                        ctrl->lport->ops->lsrqst_priv_sz), GFP_KERNEL);
-> 
-> ... and assoc_rqst points to a field in lsop:
-> 
-> |       assoc_rqst = (struct fcnvme_ls_cr_assoc_rqst *)&lsop[1];
-> 
-> Therefore, any additional NUL-byte assignments (like the ones that
-> strncpy() makes) are redundant.
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> Similar-to: https://lore.kernel.org/all/20231018-strncpy-drivers-nvme-host-fabrics-c-v1-1-b6677df40a35@google.com/
+It'd be nice to use strscpy() in this case (as we clearly want
+NUL-termination) because it'd clean up the code a bit. However, I don't
+quite know enough about what is going on here to justify a drop-in
+replacement -- too much bit magic and why (PNP_NAME_LEN - 2)? I'm afraid
+using strscpy() may result in copying too many or too few bytes into our
+dev->name buffer resulting in different behavior. At least using
+memcpy() we can ensure the behavior is exactly the same.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Side note:
+NUL-padding is not required because insert_device() calls
+pnpbios_parse_data_stream() with a zero-allocated `dev`:
+299 |  static int __init insert_device(struct pnp_bios_node *node) {
+...
+312 |  dev = pnp_alloc_dev(&pnpbios_protocol, node->handle, id);
+...
+316 |  pnpbios_parse_data_stream(dev, node);
 
--- 
-Kees Cook
+then pnpbios_parse_data_stream() calls pnpbios_parse_compatible_ids().
+
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Note: build-tested only.
+
+Found with: $ rg "strncpy\("
+---
+ drivers/pnp/pnpbios/rsparser.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pnp/pnpbios/rsparser.c b/drivers/pnp/pnpbios/rsparser.c
+index 2f31b212b1a5..70af7821d3fa 100644
+--- a/drivers/pnp/pnpbios/rsparser.c
++++ b/drivers/pnp/pnpbios/rsparser.c
+@@ -454,8 +454,8 @@ static unsigned char *pnpbios_parse_compatible_ids(unsigned char *p,
+ 		switch (tag) {
+ 
+ 		case LARGE_TAG_ANSISTR:
+-			strncpy(dev->name, p + 3,
+-				len >= PNP_NAME_LEN ? PNP_NAME_LEN - 2 : len);
++			memcpy(dev->name, p + 3,
++			       len >= PNP_NAME_LEN ? PNP_NAME_LEN - 2 : len);
+ 			dev->name[len >=
+ 				  PNP_NAME_LEN ? PNP_NAME_LEN - 1 : len] = '\0';
+ 			break;
+
+---
+base-commit: dab3e01664eaddae965699f1fec776609db0ea9d
+change-id: 20231019-strncpy-drivers-pnp-pnpbios-rsparser-c-5d7343441cac
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
+
