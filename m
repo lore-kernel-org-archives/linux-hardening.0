@@ -1,100 +1,100 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE87D8F64
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 07:27:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8374DF57
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 08:00:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GAoOf/cw"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rTeLy9Q6"
 Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADAB9123
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 00:27:17 -0700 (PDT)
-Received: by mail-ej1-x636.google.com with SMTP id a640c23a62f3a-99c1c66876aso1239960266b.2
-        for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 00:27:17 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 292B3115
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 01:00:49 -0700 (PDT)
+Received: by mail-ej1-x636.google.com with SMTP id a640c23a62f3a-98377c5d53eso1182642566b.0
+        for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 01:00:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697700436; x=1698305236; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1697702447; x=1698307247; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=O/ZKxMKf/USNm5bZ6xhM+rXMP6XySK64MyJeVcyVRQo=;
-        b=GAoOf/cwUX8NSRUIZNfD611OUNq95HSD2qyBBSMD+9I9H816iyTNFrIUndp6Jsl7xW
-         x03P7rTZhMB+yLfqT2vsWDKFfbTFMwnOFwUw5vE8XbJuh51zSd305L4i7QA6WMlRZ6un
-         D0RmyQvVMBQFuKPJryifqkToXnje2T0nT1y5HtlFu4gNDh48ydwE0tzPDC6r8hccq+mF
-         QPUyc1ROBZCF8Bn8DKUrn1uVZhAqczHsA5Qh/G/UXb2745Bb9hiAxaLnqjLrSVju940O
-         LmacuZgB95jBXP0aG+aPU9D6cBX2ZbYhG1NAJyuO7Yl8V6/AiNUQ5H4S3z4YyL0th6vN
-         xrxA==
+        bh=ACymOhha49GHG8WcdW2zLNZCOQpvyxXia5tNQJpdAJQ=;
+        b=rTeLy9Q6a3x9euSL6+b43mDQe48jmGqUookJGNUZefSK2poZGofhbXS+5nStGC39vx
+         F3u7NZOg63NOnMLlDio/pWRnDyaqzhc96NPiqn6WXtYXIAkfRkNQ/EXvs61KL2uz2MeN
+         6uFzMG4740DUX2wxKxQydnr1FfTXXEp8fGT1DqkjvYAs2FTgNXJLA3k+JmXyiVVPCsAy
+         UIcwN/7Hd5LZzWDLBcQ7ZXd2lsy0WzAzLd1lwVovwROOSpaz+dhoz2DzVc+ocHwV4/uv
+         HpsqgxGb/Wc6RG8ZbEYEcowHpFUiVei7XpWO4EqlO0OmjOUuZ2PB5UcQ5ctb9zaKiIB6
+         kuNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697700436; x=1698305236;
+        d=1e100.net; s=20230601; t=1697702447; x=1698307247;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=O/ZKxMKf/USNm5bZ6xhM+rXMP6XySK64MyJeVcyVRQo=;
-        b=VkmjUTFvkRDY3t8TZ9wGPHK3ZAWClOEeonIMd/9ZG/MMPYwQjBvwt04M8yDfEgFuHg
-         CVmYm8EgwHUbKZ3Rc069crXW11faBHvxfPhk1ADrVVraCSTnPpZjauUm4uQHQTkLW6jE
-         AgOrXyX+EeG3+c9r8xghbx3ZNwatIM6zuegD/kh9o2ggP2ORPdGnd+SqYuF2ynFPhQNN
-         N2viCHL2b1wjwhWw/9Uxvk52yJw+ehuXXNjmCpHAoCR5cEYMux49+2nA242bCPxKXu/2
-         omLjOla0cBrhZzOKwwkajqjLgJ9xt4DSyEJzquln7By2xrgWnkF6A7LNbZ/WhnGhnsVc
-         OA/A==
-X-Gm-Message-State: AOJu0Yxq3LsXlTZp6p3HOWUdKu3bEpz/wteDtuNgjOvklgyjQqInyaC9
-	tekguUUir3JVuI/PcQ9tNIlIG+fdOYZ6BfyIWXhH2g==
-X-Google-Smtp-Source: AGHT+IGDuSrjm/LSP0ZdVnB/CsSuk8tRwiJx8nY9IgGE+UbaAmYZ6S004s+qoUGv4L+jbyufwK1NmNeJnxPu2l58U3I=
-X-Received: by 2002:a17:907:2d9e:b0:9bf:b8f7:1fca with SMTP id
- gt30-20020a1709072d9e00b009bfb8f71fcamr971488ejc.55.1697700435854; Thu, 19
- Oct 2023 00:27:15 -0700 (PDT)
+        bh=ACymOhha49GHG8WcdW2zLNZCOQpvyxXia5tNQJpdAJQ=;
+        b=Dyml8Z+Lkb2XRiTGJJ5IFJMeAW6oGijtEKqxavZV+2Jub/uttCJI3JzTx125WTmb5u
+         UN2XmHeGUU74eErtSyCotgnzUrYHw+OFpR24q9/QlZsWXNd8tk56QmbcUJkiIGgOAxMb
+         cw4HBIRtdtbqM+eThyhvbcFJWHNlHhLN4GCT9mu+I6Yosl/vJR82xNiaqm5XTIh2Sb+u
+         hMld6dGTcSm8I8SkQqUGerAP2nrzEydkY2ewRgdUxFbVNo4pJBsdWv4EwocmvuHq0KvJ
+         1lowjq8wctKr1fGKI+w62q7qr75xhidLIdOCo7EEstmmiHkvCEJTM/nxsIBCG7r5pDDA
+         HtAA==
+X-Gm-Message-State: AOJu0YwIvZXD1pAPaS2zl67Qlvue27jT/1SjAVsi+mzb5hkM68dZtgtr
+	nHkS3oP8LvPw6Y9wP1y6wm6VOFrk73rAe5zTrpRQjg==
+X-Google-Smtp-Source: AGHT+IGvvBAOXddF5owRwRHOfUfE25ctm4Piy/qlWCUDwS2bRynHrk5Ji3mZ1+oA2JFNfhdLg+9pNtGTmYzliW9xAww=
+X-Received: by 2002:a17:907:786:b0:9be:834a:f80b with SMTP id
+ xd6-20020a170907078600b009be834af80bmr1206934ejb.75.1697702447293; Thu, 19
+ Oct 2023 01:00:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231017090815.1067790-1-jeffxu@chromium.org> <20231017090815.1067790-8-jeffxu@chromium.org>
- <CAHk-=wh+6n6f0zuezKem+W=aytHMv2bib6Fbrg-xnWOoujFb6g@mail.gmail.com> <CAHk-=whchB_=Qx_oNAg3KBe-erNg9R2p_91ikaRZhsNY_2-G7g@mail.gmail.com>
-In-Reply-To: <CAHk-=whchB_=Qx_oNAg3KBe-erNg9R2p_91ikaRZhsNY_2-G7g@mail.gmail.com>
+References: <20231016143828.647848-1-jeffxu@chromium.org> <CAHk-=whFZoap+DBTYvJx6ohqPwn11Puzh7q4huFWDX9vBwXHgg@mail.gmail.com>
+ <CALmYWFtTDAb_kpZdAe_xspqwNgK1NWJmjTxaTC=jDEMzfe297Q@mail.gmail.com>
+ <CAHk-=wj87GMTH=5901ob=SjQqegAm2JYBE7E4J7skJzE64U-wQ@mail.gmail.com>
+ <55960.1697566804@cvs.openbsd.org> <CAHk-=wjS=xg12RVQdTNxEurjo21eXQBQO0D5My6Aox4LCfsO1A@mail.gmail.com>
+In-Reply-To: <CAHk-=wjS=xg12RVQdTNxEurjo21eXQBQO0D5My6Aox4LCfsO1A@mail.gmail.com>
 From: =?UTF-8?Q?Stephen_R=C3=B6ttger?= <sroettger@google.com>
-Date: Thu, 19 Oct 2023 09:27:03 +0200
-Message-ID: <CAEAAPHYakbZxf7CYbhGVJ-sGM3KFP3vCMJ9kErbMpi75Ekg20A@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 7/8] mseal:Check seal flag for mmap(2)
+Date: Thu, 19 Oct 2023 10:00:33 +0200
+Message-ID: <CAEAAPHYgg49WtpE7Jdq6HDecFp5RHPhdxtPTUaNF12RONu5aDA@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 0/8] Introduce mseal() syscall
 To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: jeffxu@chromium.org, akpm@linux-foundation.org, keescook@chromium.org, 
-	jannh@google.com, willy@infradead.org, gregkh@linuxfoundation.org, 
-	jeffxu@google.com, jorgelo@chromium.org, groeck@chromium.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, surenb@google.com, alex.sierra@amd.com, 
-	apopple@nvidia.com, aneesh.kumar@linux.ibm.com, axelrasmussen@google.com, 
-	ben@decadent.org.uk, catalin.marinas@arm.com, david@redhat.com, 
-	dwmw@amazon.co.uk, ying.huang@intel.com, hughd@google.com, joey.gouly@arm.com, 
-	corbet@lwn.net, wangkefeng.wang@huawei.com, Liam.Howlett@oracle.com, 
-	lstoakes@gmail.com, mawupeng1@huawei.com, linmiaohe@huawei.com, 
+Cc: Theo de Raadt <deraadt@openbsd.org>, Jeff Xu <jeffxu@google.com>, jeffxu@chromium.org, 
+	akpm@linux-foundation.org, keescook@chromium.org, jorgelo@chromium.org, 
+	groeck@chromium.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, jannh@google.com, 
+	surenb@google.com, alex.sierra@amd.com, apopple@nvidia.com, 
+	aneesh.kumar@linux.ibm.com, axelrasmussen@google.com, ben@decadent.org.uk, 
+	catalin.marinas@arm.com, david@redhat.com, dwmw@amazon.co.uk, 
+	ying.huang@intel.com, hughd@google.com, joey.gouly@arm.com, corbet@lwn.net, 
+	wangkefeng.wang@huawei.com, Liam.Howlett@oracle.com, lstoakes@gmail.com, 
+	willy@infradead.org, mawupeng1@huawei.com, linmiaohe@huawei.com, 
 	namit@vmware.com, peterx@redhat.com, peterz@infradead.org, 
 	ryan.roberts@arm.com, shr@devkernel.io, vbabka@suse.cz, 
 	xiujianfeng@huawei.com, yu.ma@intel.com, zhangpeng362@huawei.com, 
 	dave.hansen@intel.com, luto@kernel.org, linux-hardening@vger.kernel.org
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000734f9906080caf88"
+	boundary="00000000000056b17b06080d27e6"
 
---000000000000734f9906080caf88
+--00000000000056b17b06080d27e6
 Content-Type: text/plain; charset="UTF-8"
 
-> Without that practical reason, I think the only two sane sealing operations are:
+> I do like us starting with just "mimmutable()", since it already
+> exists. Particularly if chrome already knows how to use it.
 >
->  - SEAL_MUNMAP: "don't allow this mapping address to go away"
->
->    IOW no unmap, no shrinking, no moving mremap
->
->  - SEAL_MPROTECT: "don't allow any mapping permission changes"
->
-> Again, that permission case might end up being "don't allow
-> _additional_ permissions" and "don't allow taking permissions away".
-> Or it could be split by operation (ie "don't allow permission changes
-> to writability / readability / executability respectively").
->
-> I suspect there isn't a real-life example of splitting the
-> SEAL_MPROTECT (the same way I doubt there's a real-life example for
-> splitting the UNMAP into "unmap vs move"), so unless there is some
-> real reason, I'd keep the sealing minimal and to just those two flags.
+> Maybe add a flag field (require it to be zero initially) just to allow
+> any future expansion. Maybe the chrome team has *wanted* to have some
+> finer granularity thing and currently doesn't use mimmutable() in some
+> case?
 
-These two flags are exactly what we would use in Chrome. I can't think of a
-use case for a more fine grained split either.
+Yes, we do have a use case in Chrome to split the sealing into unmap and
+mprotect which will allow us to seal additional pages that we can't seal with
+pure mimmutable().
+For example, we have pkey-tagged RWX memory that we want to seal. Since
+the memory is already RWX and the pkey controls write access, we don't care
+about permission changes but sometimes we do need to mprotect data only
+pages.
+But the munmap sealing will provide protection against implicit changes of the
+pkey in this case which would happen if a page gets unmapped and another
+mapped in its place.
 
---000000000000734f9906080caf88
+--00000000000056b17b06080d27e6
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -162,13 +162,13 @@ EXefUessFdMqMUSfGI6rUaZTfU0SRfdrVHW4IE8onI30/UVurbGlFiugNF3LbDMXdqzs2/eTsLiD
 8Dv1+pt7SJqI4zNhzZFOpvBPVIkxggJqMIICZgIBATBoMFQxCzAJBgNVBAYTAkJFMRkwFwYDVQQK
 ExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFzIFIzIFNNSU1FIENB
 IDIwMjACEAFp/vXw/R/y8Lw9a5440YEwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIE
-IN2IFPpOnvXSpoGzgEz3z1Q7ztGrZLNWxOihLSSxsUInMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0B
-BwEwHAYJKoZIhvcNAQkFMQ8XDTIzMTAxOTA3MjcxNlowaQYJKoZIhvcNAQkPMVwwWjALBglghkgB
+IPi898HIh9BIwdhETZ7/O7Dh3D+SsJLi3hgcuaXknxYwMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0B
+BwEwHAYJKoZIhvcNAQkFMQ8XDTIzMTAxOTA4MDA0N1owaQYJKoZIhvcNAQkPMVwwWjALBglghkgB
 ZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQow
-CwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQAQZi8Cbujk7196wVll
-Ohg031+F1CO0igozIyB4gXg6lJ/SWn7dHjH/fbtuqmRgIMAK0JJkv3/lxutEF7Rnw9CUgSSw7c8l
-eq2/8nqhOC6E6GgJ63tyfJ0q3EiwXZTfzqBNh5TnoFUFGjzgYr+eSKbP6DFGCYqLk/y3749s3yo2
-S9opv3yJY/2deCWfCSX7JM4UPM53PGyXZjtH/TW/ocuocdldouKXrnxbCr4+/MVHXHYale0oqmJV
-ahL7qn3Gpb6x7PBUGZ7XoZghcy4AKiPKaJXmyWEahnhhC+FPCfHRyuewSrWUbV3TyOdrbp7Tg/zt
-5gcgWkqKezX7GR/5d6KT
---000000000000734f9906080caf88--
+CwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQAZGA2Cd/UjtzNhs4zX
+p3eag/xW+BTUBF/ITizZRukko4vAy6z8c/uelsd47857pBOkhqW2SCgQ6A7YJOdqXi/IxYv1y+MH
+74cRBtTnZ3i2Qj/2oL0gXtuwLGWP2b8PwKnSigUOj6c06i8viH2pYF5QQkt9kJCYg7/BADl0VrCO
+KA0sChavPZ7DT2V7JwCH/i0okvfPuL3rGakweTdvuKK6VYUZJu+8MGoOp+Ybhtw574270ii8oC2a
+Dm/k/wQ+F0d38Tpfb9yxZoxzfOINM7H3ctc3gIXfjlSD90uAwcoriw5717lbvmHHQmfFH6Ny6kES
+y1ckI+KJBbzuPvnS6r8K
+--00000000000056b17b06080d27e6--
