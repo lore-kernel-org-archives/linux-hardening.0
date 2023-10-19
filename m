@@ -1,127 +1,185 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E0BA374D9
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 17:29:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC1D32C8D
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 17:31:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cHWdbIg0"
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01B7E12D
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 10:29:06 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d9a581346c4so11182782276.0
-        for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 10:29:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xsxW01Zw"
+Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 449DE106
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 10:30:59 -0700 (PDT)
+Received: by mail-qt1-x82f.google.com with SMTP id d75a77b69052e-41cb7720579so22091cf.1
+        for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 10:30:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697736546; x=1698341346; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=2dM38oFA9Pe/oU12qt1pqIA50gOKDfSgpU7CFprv1yc=;
-        b=cHWdbIg0jyNGVyVEhDpxNzd/63un5tiuklbwUfrz2KzIOUWXh2jO82q85+9CcBe5U0
-         sgydZEpiY/wZRkzrXt4xvcXdWMpEKw8u0elwoFUMYZWL0hi8wVFUUMj8gKm7liIsO7mF
-         D1S4j+F6r3+5yOyyUovTPr9LIfRgrRt7Wt4m2xz5rHIBC7u8BLS0cJuzkED03NtbrKnH
-         O+1rJhBdt0YFmnmJxFGBfwCjTuiIO5rz0cXvsmiJFfD3M1STA0DTgurSQ4VE7RmCGppe
-         HANmIARbxkaNF6UpdavJkoWMS/4HnnQxpk5u24CC57NgyXhd2QylQOn6t3C1Y9mEclAD
-         1gqA==
+        d=google.com; s=20230601; t=1697736658; x=1698341458; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Z1N5zlDoHQ+2HyvPpTZq9l5rRGfyzCE+KDCZYbiZxaQ=;
+        b=xsxW01ZwgIoQaakdguqbSTLEXeI2s7+1AXkq70fUWuCRPUyZtvAJTw3nPmDHtcGFBB
+         OgyM+/gf458ALHn674o4CmyWvMNXjETdC3RvZzsCBXWen+xDOjNL4+yEhGFV2p179u9V
+         M1vqzXVWg8ewhCSMduiYf4v8t0WfUqhfrGrLO4NkrsyNIe+PL9x5Fy6MTOzFXez3NsWz
+         1xk5A4p0Bkgss3neSEhv7EOhYVVu/upTKDEPTHhRz2m2zaw9UtHxq3ZaWvbZS1FzZbGX
+         DZrMJSKhrItIpm7omJwatOrVOoI7GyUOVWmB/1QyKRqtsjCOSEZ7NbmAsLAY6UL1OQF7
+         di2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697736546; x=1698341346;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2dM38oFA9Pe/oU12qt1pqIA50gOKDfSgpU7CFprv1yc=;
-        b=QCVdxjrFBqruTjUj7av8Y4ko/5ryhH0PVkUJZmsa0t27c9VvgKNwCwPmdzcpvQLLF7
-         SgNFPfeN1RcpLUQrpAmEVkwetJQSNAGsE3rX7v8BPyApXxMpyMopzVGb0wN6ZfMrFZaW
-         xtGFvoLwLc9i8uxkr38FV890LnBrf8l5rLn8sCPrFP2mvqt/ocS1ydNnrEpBz+SEP/o8
-         oBZFaIXTso8FTwP6OkWbTctrRhiIxz5sYhkom1eRmEhaM45fv1okaPfBc6wTfn5ouy2/
-         iOSdJNOYD9WXr881GCaYZwWfyXu3zyo9mqhrWqTaLIUNIbDi9x10mQ1/QQoniJ3vBng+
-         gW3w==
-X-Gm-Message-State: AOJu0Ywit6/jcw2n5bo+VC0nz6v92oFAjneHU54/wMW/hUr/uY8fxnss
-	otBRsdXN/EV1jfuJLsI+4rmBgCO5J3HfqzMiqg==
-X-Google-Smtp-Source: AGHT+IHny44lFcXUUZdQ9whIolzk/nLUcQB/99Ej3mtZ8rGAwmCLBlfTDxB6r6w+HnKOSx9S/ZCVp8RA1WGHhw/9Kw==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a5b:584:0:b0:c78:c530:6345 with SMTP
- id l4-20020a5b0584000000b00c78c5306345mr62074ybp.7.1697736546059; Thu, 19 Oct
- 2023 10:29:06 -0700 (PDT)
-Date: Thu, 19 Oct 2023 17:29:01 +0000
+        d=1e100.net; s=20230601; t=1697736658; x=1698341458;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Z1N5zlDoHQ+2HyvPpTZq9l5rRGfyzCE+KDCZYbiZxaQ=;
+        b=oQvOGn8NmD0QSkYhZGj2VRN2sh/wWsV/JmZw7ZvolwNRSWEv2jOU2qJ5IupdmJyJzf
+         XuYMoWR4nC1XO2vz222fCVBiE9mGByW+dNOmgqYufddH5mbA29A75I9ZfPd+e+jInrAG
+         uVUKF1PLnBfEuzyhrRXfcc5e09IthxRlwdb30fPG6Ha5+NaeFVHyPbHw3mshM/Y0YOn+
+         X3oR2DeVARh5+7oj9hupf6Yl1k2RlAftMhv4FNVtEGHHF2fSshE11a99vg4WBz6BybUq
+         p19Ep1wFoRZB32NspVFNjl92Lznz/znEOfMK5L1Qj7BtUgMHiJh3hqu30W8wdNlt//oi
+         hjtw==
+X-Gm-Message-State: AOJu0YxECdjVYY5K0sG/J/pSMWFBvzEFuxn+GNG7zliN1mRrYNNmwakM
+	ur5krQu201B1HIWYq63YbdfyqE7Ko09y3IBP4iJnNw==
+X-Google-Smtp-Source: AGHT+IEon0kv5nVW5ivsYs0TMVy/aup60ceSgksHiRzY/CZIUuTRYj4l6InpkOkHG7IoPubyjBnMxKq9Y68vWbNjl3Y=
+X-Received: by 2002:a05:622a:a020:b0:41c:bd34:7e44 with SMTP id
+ jt32-20020a05622aa02000b0041cbd347e44mr369701qtb.6.1697736658106; Thu, 19 Oct
+ 2023 10:30:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAFxnMWUC/52NQQ6CMBBFr0K6dkxbVNSV9zAsmmGAJtCSGVIlh
- LtbiSdw85P3F++tSog9iboXq2JKXnwMGeyhUNi70BH4JrOy2pZGmwvIzAGnBRr2iVgg0AwvzzS
- QCLh5pOG3CBW629lgW2HrVBZOTK1/77Fnnbn3Mkde9nYy3/evTDJgQJfXRlNV4knbRxdjN9AR4 6jqbds+HuzT1uUAAAA=
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1697736545; l=2387;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=XowZOHRhqMCWq2fZ6yqvbWeRdNj7KFUM/jYuUGt1iRs=; b=I3H8ns0MlDbP5d8HN0mCYlz9v6sQJLyJQnj1UZVv0uRXoG+50xHyRKxV+C0qMYGOmECPx9Ey5
- 8hoyNmvhpxYC4k6QRDMvh7xD/gPJGHhPeCc3sOaKgXZJlWxe7qv5Yt4
-X-Mailer: b4 0.12.3
-Message-ID: <20231019-strncpy-drivers-net-wireless-atmel-atmel-c-v2-1-52e46fbea083@google.com>
-Subject: [PATCH v2] atmel: replace deprecated strncpy with strscpy
-From: Justin Stitt <justinstitt@google.com>
-To: Kalle Valo <kvalo@kernel.org>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+References: <20231016143828.647848-1-jeffxu@chromium.org> <ZS1URCBgwGGj9JtM@casper.infradead.org>
+ <CAKbZUD2A+=bp_sd+Q0Yif7NJqMu8p__eb4yguq0agEcmLH8SDQ@mail.gmail.com>
+ <CALmYWFtOgMAQDGNoM6k2Ev4kMHD396wwH+rVDODaSjsyVMDogg@mail.gmail.com>
+ <CAKbZUD2j1jbomCAVxUX_JmG1rfa8udc=5SqVOpDgc-3GnSTbAQ@mail.gmail.com> <CALmYWFv7jzOj5HPcYct=UzYKPrwwvtN1EQeHioQHDPwGFvL5Ug@mail.gmail.com>
+In-Reply-To: <CALmYWFv7jzOj5HPcYct=UzYKPrwwvtN1EQeHioQHDPwGFvL5Ug@mail.gmail.com>
+From: Jeff Xu <jeffxu@google.com>
+Date: Thu, 19 Oct 2023 10:30:20 -0700
+Message-ID: <CALmYWFt71Vi6ySiZhW+tmE-LZL7Tnu-dQ1uMO10DUkASUTxzKA@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 0/8] Introduce mseal() syscall
+To: Pedro Falcato <pedro.falcato@gmail.com>
+Cc: Matthew Wilcox <willy@infradead.org>, jeffxu@chromium.org, akpm@linux-foundation.org, 
+	keescook@chromium.org, sroettger@google.com, jorgelo@chromium.org, 
+	groeck@chromium.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, jannh@google.com, 
+	surenb@google.com, alex.sierra@amd.com, apopple@nvidia.com, 
+	aneesh.kumar@linux.ibm.com, axelrasmussen@google.com, ben@decadent.org.uk, 
+	catalin.marinas@arm.com, david@redhat.com, dwmw@amazon.co.uk, 
+	ying.huang@intel.com, hughd@google.com, joey.gouly@arm.com, corbet@lwn.net, 
+	wangkefeng.wang@huawei.com, Liam.Howlett@oracle.com, 
+	torvalds@linux-foundation.org, lstoakes@gmail.com, mawupeng1@huawei.com, 
+	linmiaohe@huawei.com, namit@vmware.com, peterx@redhat.com, 
+	peterz@infradead.org, ryan.roberts@arm.com, shr@devkernel.io, vbabka@suse.cz, 
+	xiujianfeng@huawei.com, yu.ma@intel.com, zhangpeng362@huawei.com, 
+	dave.hansen@intel.com, luto@kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-strncpy() is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous string
-interfaces.
+Hi Pedro
 
-We expect priv->firmware_id to be NUL-terminated based on its usage
-with seq_printf() and strlen() in atmel.c:
-1420 |       seq_printf(m, "%s loaded by host\n", priv->firmware_id);
-...
-3884 |       if (strlen(priv->firmware_id) == 0) {
+Some followup on mmap() + mprotect():
 
-NUL-padding is not required, which is evident by the usage of a plain
-strcpy():
-3891 |   strcpy(priv->firmware_id, "atmel_at76c502.bin");
+On Wed, Oct 18, 2023 at 11:20=E2=80=AFAM Jeff Xu <jeffxu@google.com> wrote:
+>
+> On Tue, Oct 17, 2023 at 3:35=E2=80=AFPM Pedro Falcato <pedro.falcato@gmai=
+l.com> wrote:
+> >
+> > > >
+> > > > I think it's worth pointing out that this suggestion (with PROT_*)
+> > > > could easily integrate with mmap() and as such allow for one-shot
+> > > > mmap() + mseal().
+> > > > If we consider the common case as 'addr =3D mmap(...); mseal(addr);=
+', it
+> > > > definitely sounds like a performance win as we halve the number of
+> > > > syscalls for a sealed mapping. And if we trivially look at e.g Open=
+BSD
+> > > > ld.so code, mmap() + mimmutable() and mprotect() + mimmutable() see=
+m
+> > > > like common patterns.
+> > > >
+> > > Yes. mmap() can support sealing as well, and memory is allocated as
+> > > immutable from begining.
+> > > This is orthogonal to mseal() though.
+> >
+> > I don't see how this can be orthogonal to mseal().
+> > In the case we opt for adding PROT_ bits, we should more or less only
+> > need to adapt calc_vm_prot_bits(), and the rest should work without
+> > issues.
+> > vma merging won't merge vmas with different prots. The current
+> > interfaces (mmap and mprotect) would work just fine.
+> > In this case, mseal() or mimmutable() would only be needed if you need
+> > to set immutability over a range of VMAs with different permissions.
+> >
+> Agreed. By orthogonal, I meant we can have two APIs:
+> mmap() and mseal()/mprotect()
+> i.e. we can't just rely on mmap() only without mseal()/mprotect()/mimmuta=
+ble().
+> Sealing can be applied after initial memory creation.
+>
+> > Note: modifications should look kinda like this: https://godbolt.org/z/=
+Tbjjd14Pe
+> > The only annoying wrench in my plans here is that we have effectively
+> > run out of vm_flags bits in 32-bit architectures, so this approach as
+> > I described is not compatible with 32-bit.
+> >
+> > > In case of ld.so, iiuc, memory can be first allocated as W, then late=
+r
+> > > changed to RO, for example, during symbol resolution.
+> > > The important point is that the application can decide what type of
+> > > sealing it wants, and when to apply it.  There needs to be an api(),
+> > > that can be mseal() or mprotect2() or mimmutable(), the naming is not
+> > > important to me.
+> > >
+> > > mprotect() in linux have the following signature:
+> > > int mprotect(void addr[.len], size_t len, int prot);
+> > > the prot bitmasks are all taken here.
+> > > I have not checked the prot field in mmap(), there might be bits left=
+,
+> > > even not, we could have mmap2(), so that is not an issue.
+> >
+> > I don't see what you mean. We have plenty of prot bits left (32-bits,
+> > and we seem to have around 8 different bits used).
+> > And even if we didn't, prot is the same in mprotect and mmap and mmap2 =
+:)
+> >
+> > The only issue seems to be that 32-bit ran out of vm_flags, but that
+> > can probably be worked around if need be.
+> >
+> Ah, you are right about this. vm_flags is full, and prot in mprotect() is=
+ not.
+> Apology that I was wrong previously and caused confusion.
+>
+> There is a slight difference in the syntax of mprotect and mseal.
+> Each time when mprotect() is called, the kernel takes all of RWX bits
+> and updates vm_flags,
+> In other words, the application sets/unset each RWX, and kernel takes it.
+>
+> In the mseal() case, the kernel will remember which seal types were
+> applied previously, and the application doesn=E2=80=99t need to repeat al=
+l
+> existing seal types in the next mseal().  Once a seal type is applied,
+> it can=E2=80=99t be unsealed.
+>
+> So if we want to use mprotect() for sealing, developers need to think
+> of sealing bits differently than the rest of prot bits. It is a
+> different programming model, might or might not be an obvious concept
+> to developers.
+>
+This probably doesn't matter much to developers.
+We can enforce the sealing bit to be the same as the rest of PROT bits.
+If mprotect() tries to unset sealing, it will fail.
 
-Considering the above, a suitable replacement is `strscpy` [2] due to
-the fact that it guarantees NUL-termination on the destination buffer
-without unnecessarily NUL-padding.
+> There is a difference in input check and error handling as well.
+> for mseal(), if a given address range has a gap (unallocated memory),
+> or if one of VMA is sealed with MM_SEAL_SEAL flag, none of VMAs is
+> updated.
+> For mprotect(), some VMAs can be updated, till an error happens to a VMA.
+>
+This difference doesn't matter much.
 
-Let's also replace hard-coded lengths to be `sizeof(...)` for buffers
-that the compiler can detect the size for as this is less error prone.
+For mprotect()/mmap(), is Linux implementation limited by POSIX ?
+This can be made backward compatible.
+If there is no objection to adding linux specific values in mmap() and
+mprotect(),
+This works for me.
 
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strcpy [2]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [3]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Changes in v2:
-- leave strcpy() usage as is (thanks Kees)
-- Link to v1: https://lore.kernel.org/r/20231016-strncpy-drivers-net-wireless-atmel-atmel-c-v1-1-038d0e73c402@google.com
----
-Note: build-tested only.
-
-Found with: $ rg "strncpy\("
----
- drivers/net/wireless/atmel/atmel.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/net/wireless/atmel/atmel.c b/drivers/net/wireless/atmel/atmel.c
-index 7c2d1c588156..99920430e8b4 100644
---- a/drivers/net/wireless/atmel/atmel.c
-+++ b/drivers/net/wireless/atmel/atmel.c
-@@ -2651,8 +2651,7 @@ static int atmel_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
- 
- 		priv->firmware = new_firmware;
- 		priv->firmware_length = com.len;
--		strncpy(priv->firmware_id, com.id, 31);
--		priv->firmware_id[31] = '\0';
-+		strscpy(priv->firmware_id, com.id, sizeof(priv->firmware_id));
- 		break;
- 
- 	case ATMELRD:
-
----
-base-commit: cbf3a2cb156a2c911d8f38d8247814b4c07f49a2
-change-id: 20231016-strncpy-drivers-net-wireless-atmel-atmel-c-7ca951cf7cfa
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
-
+Thanks for your input.
+-Jeff
