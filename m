@@ -1,44 +1,44 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8374DF57
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 08:00:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7DE71548D
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 08:28:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rTeLy9Q6"
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 292B3115
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 01:00:49 -0700 (PDT)
-Received: by mail-ej1-x636.google.com with SMTP id a640c23a62f3a-98377c5d53eso1182642566b.0
-        for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 01:00:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FlC8as3/"
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7889E126
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 01:28:49 -0700 (PDT)
+Received: by mail-ej1-x632.google.com with SMTP id a640c23a62f3a-99357737980so1263673766b.2
+        for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 01:28:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697702447; x=1698307247; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1697704128; x=1698308928; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ACymOhha49GHG8WcdW2zLNZCOQpvyxXia5tNQJpdAJQ=;
-        b=rTeLy9Q6a3x9euSL6+b43mDQe48jmGqUookJGNUZefSK2poZGofhbXS+5nStGC39vx
-         F3u7NZOg63NOnMLlDio/pWRnDyaqzhc96NPiqn6WXtYXIAkfRkNQ/EXvs61KL2uz2MeN
-         6uFzMG4740DUX2wxKxQydnr1FfTXXEp8fGT1DqkjvYAs2FTgNXJLA3k+JmXyiVVPCsAy
-         UIcwN/7Hd5LZzWDLBcQ7ZXd2lsy0WzAzLd1lwVovwROOSpaz+dhoz2DzVc+ocHwV4/uv
-         HpsqgxGb/Wc6RG8ZbEYEcowHpFUiVei7XpWO4EqlO0OmjOUuZ2PB5UcQ5ctb9zaKiIB6
-         kuNg==
+        bh=Gc72+H47WsiILgfaupq1nHDFntWWInnqFJ+WabfxQyA=;
+        b=FlC8as3/eJxJypCjQw4d7sbTX31lTRqii+xpQm9GRQqIFfyGk1puz5DjLBpny3w48d
+         7APb5L7O/onXdkX6rdh3y76Q5Fgw7zNrykY26/E8/9+HzrztDq1X5hC6llnt1iGPfrbK
+         6Mhos5efDfzgXpLaP9SHwqbkBcEfwpBH/3sZn8DtZX3Vej0HLoAZ5UThDbXSlOJCZ1JY
+         hlbMYQ6DqquODxLw7MCjF6Z/GXETjwmc2+41SHNna8eSsXreuQU8/F6XBa+8JZkG/ELE
+         jf0TVp0RbzDfxfvqrJbt+4G+EwqoL4S8KRWLKFZEK7UuXW9w6Fqw2KMf7OWAHOQBjWqb
+         Agfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697702447; x=1698307247;
+        d=1e100.net; s=20230601; t=1697704128; x=1698308928;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ACymOhha49GHG8WcdW2zLNZCOQpvyxXia5tNQJpdAJQ=;
-        b=Dyml8Z+Lkb2XRiTGJJ5IFJMeAW6oGijtEKqxavZV+2Jub/uttCJI3JzTx125WTmb5u
-         UN2XmHeGUU74eErtSyCotgnzUrYHw+OFpR24q9/QlZsWXNd8tk56QmbcUJkiIGgOAxMb
-         cw4HBIRtdtbqM+eThyhvbcFJWHNlHhLN4GCT9mu+I6Yosl/vJR82xNiaqm5XTIh2Sb+u
-         hMld6dGTcSm8I8SkQqUGerAP2nrzEydkY2ewRgdUxFbVNo4pJBsdWv4EwocmvuHq0KvJ
-         1lowjq8wctKr1fGKI+w62q7qr75xhidLIdOCo7EEstmmiHkvCEJTM/nxsIBCG7r5pDDA
-         HtAA==
-X-Gm-Message-State: AOJu0YwIvZXD1pAPaS2zl67Qlvue27jT/1SjAVsi+mzb5hkM68dZtgtr
-	nHkS3oP8LvPw6Y9wP1y6wm6VOFrk73rAe5zTrpRQjg==
-X-Google-Smtp-Source: AGHT+IGvvBAOXddF5owRwRHOfUfE25ctm4Piy/qlWCUDwS2bRynHrk5Ji3mZ1+oA2JFNfhdLg+9pNtGTmYzliW9xAww=
-X-Received: by 2002:a17:907:786:b0:9be:834a:f80b with SMTP id
- xd6-20020a170907078600b009be834af80bmr1206934ejb.75.1697702447293; Thu, 19
- Oct 2023 01:00:47 -0700 (PDT)
+        bh=Gc72+H47WsiILgfaupq1nHDFntWWInnqFJ+WabfxQyA=;
+        b=O9Hna8MoyB1Zdv4H3R6j7ElgtiiXTq0jDqf8kqNKHV7svUCXXS3j3VfA54DHFezHjT
+         nWPHNN7oWgxrYZCsCS0OHaAOMcxekx6h+lL5osCmp+pYUrpuPFxn3zFllPFdz2L3hYBa
+         4eKLbHMLHSKpFTo/JPTCZw4TV4L9d0pzarbvRqV7+FZ8ARPAb7tGtMq+tVGDHIwFJSDp
+         wthdxWQYaZSlMGDdGuRGtMxo7mEI+Ww1Aw6ZbIQ8lx/QyRqu9Ig+i9Lo1u0M3Fp1XCL1
+         /1MRCdAfNWLwULshhFYDoECn8zZyVuLKV+owF+tKs9F+HMdNPiaCdQqujGCGJFWOtokZ
+         VJow==
+X-Gm-Message-State: AOJu0YzZNlIwSkjTHhcSa0QJcoebLHLL9UhRgr4d730Hk6uliLxQ4pCh
+	9Zqt17KnCoEOmF+OIB302Bhi6A32zPmDmVewEHP71A==
+X-Google-Smtp-Source: AGHT+IH7E2FmlBTzpRteQDk+hDLSK7kOdRA2fpg7JZn3vIczrsCBy6izaVZ3GrO0E1/IgeAz22mjsQeaPCnhTYZyymw=
+X-Received: by 2002:a17:907:7e94:b0:9bf:10f3:e435 with SMTP id
+ qb20-20020a1709077e9400b009bf10f3e435mr1350365ejc.1.1697704127553; Thu, 19
+ Oct 2023 01:28:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -48,14 +48,18 @@ MIME-Version: 1.0
 References: <20231016143828.647848-1-jeffxu@chromium.org> <CAHk-=whFZoap+DBTYvJx6ohqPwn11Puzh7q4huFWDX9vBwXHgg@mail.gmail.com>
  <CALmYWFtTDAb_kpZdAe_xspqwNgK1NWJmjTxaTC=jDEMzfe297Q@mail.gmail.com>
  <CAHk-=wj87GMTH=5901ob=SjQqegAm2JYBE7E4J7skJzE64U-wQ@mail.gmail.com>
- <55960.1697566804@cvs.openbsd.org> <CAHk-=wjS=xg12RVQdTNxEurjo21eXQBQO0D5My6Aox4LCfsO1A@mail.gmail.com>
-In-Reply-To: <CAHk-=wjS=xg12RVQdTNxEurjo21eXQBQO0D5My6Aox4LCfsO1A@mail.gmail.com>
+ <55960.1697566804@cvs.openbsd.org> <CALmYWFs81T=XnT=AXQTo0+9FXo=OBAV_4rrYPSn9-16O-gBTZg@mail.gmail.com>
+ <95482.1697587015@cvs.openbsd.org> <CALmYWFtQX57Z7ttKxrdXQH4QupFn4vi5KfizUBH9NkmP-S1JDw@mail.gmail.com>
+ <ZS/3GCKvNn5qzhC4@casper.infradead.org> <CALmYWFu_uY=cWzAQaLtS0CdNrm+cO7tKz4sY2Ff02WQ8mGUUXw@mail.gmail.com>
+ <7071.1697661373@cvs.openbsd.org>
+In-Reply-To: <7071.1697661373@cvs.openbsd.org>
 From: =?UTF-8?Q?Stephen_R=C3=B6ttger?= <sroettger@google.com>
-Date: Thu, 19 Oct 2023 10:00:33 +0200
-Message-ID: <CAEAAPHYgg49WtpE7Jdq6HDecFp5RHPhdxtPTUaNF12RONu5aDA@mail.gmail.com>
+Date: Thu, 19 Oct 2023 10:28:32 +0200
+Message-ID: <CAEAAPHbB0yZfpXGMib4bbH8z5diKfur5M6mAfZuB6qi9UVpcPw@mail.gmail.com>
 Subject: Re: [RFC PATCH v1 0/8] Introduce mseal() syscall
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Theo de Raadt <deraadt@openbsd.org>, Jeff Xu <jeffxu@google.com>, jeffxu@chromium.org, 
+To: Theo de Raadt <deraadt@openbsd.org>
+Cc: Jeff Xu <jeffxu@google.com>, Matthew Wilcox <willy@infradead.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, jeffxu@chromium.org, 
 	akpm@linux-foundation.org, keescook@chromium.org, jorgelo@chromium.org, 
 	groeck@chromium.org, linux-kernel@vger.kernel.org, 
 	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, jannh@google.com, 
@@ -64,37 +68,44 @@ Cc: Theo de Raadt <deraadt@openbsd.org>, Jeff Xu <jeffxu@google.com>, jeffxu@chr
 	catalin.marinas@arm.com, david@redhat.com, dwmw@amazon.co.uk, 
 	ying.huang@intel.com, hughd@google.com, joey.gouly@arm.com, corbet@lwn.net, 
 	wangkefeng.wang@huawei.com, Liam.Howlett@oracle.com, lstoakes@gmail.com, 
-	willy@infradead.org, mawupeng1@huawei.com, linmiaohe@huawei.com, 
-	namit@vmware.com, peterx@redhat.com, peterz@infradead.org, 
-	ryan.roberts@arm.com, shr@devkernel.io, vbabka@suse.cz, 
-	xiujianfeng@huawei.com, yu.ma@intel.com, zhangpeng362@huawei.com, 
-	dave.hansen@intel.com, luto@kernel.org, linux-hardening@vger.kernel.org
+	mawupeng1@huawei.com, linmiaohe@huawei.com, namit@vmware.com, 
+	peterx@redhat.com, peterz@infradead.org, ryan.roberts@arm.com, 
+	shr@devkernel.io, vbabka@suse.cz, xiujianfeng@huawei.com, yu.ma@intel.com, 
+	zhangpeng362@huawei.com, dave.hansen@intel.com, luto@kernel.org, 
+	linux-hardening@vger.kernel.org
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="00000000000056b17b06080d27e6"
+	boundary="0000000000007e261006080d8b4e"
 
---00000000000056b17b06080d27e6
+--0000000000007e261006080d8b4e
 Content-Type: text/plain; charset="UTF-8"
 
-> I do like us starting with just "mimmutable()", since it already
-> exists. Particularly if chrome already knows how to use it.
+> > IMO: The approaches mimmutable() and mseal() took are different, but
+> > we all want to seal the memory from attackers and make the linux
+> > application safer.
 >
-> Maybe add a flag field (require it to be zero initially) just to allow
-> any future expansion. Maybe the chrome team has *wanted* to have some
-> finer granularity thing and currently doesn't use mimmutable() in some
-> case?
+> I think you are building mseal for chrome, and chrome alone.
+>
+> I do not think this will work out for the rest of the application space
+> because
+>
+> 1) it is too complicated
+> 2) experience with mimmutable() says that applications don't do any of it
+>    themselves, it is all in execve(), libc initialization, and ld.so.
+>    You don't strike me as an execve, libc, or ld.so developer.
 
-Yes, we do have a use case in Chrome to split the sealing into unmap and
-mprotect which will allow us to seal additional pages that we can't seal with
-pure mimmutable().
-For example, we have pkey-tagged RWX memory that we want to seal. Since
-the memory is already RWX and the pkey controls write access, we don't care
-about permission changes but sometimes we do need to mprotect data only
-pages.
-But the munmap sealing will provide protection against implicit changes of the
-pkey in this case which would happen if a page gets unmapped and another
-mapped in its place.
+We do want to build this in a way that it can be applied automatically by ld.so
+and we appreciate all your feedback on this. The intention of
+splitting the sealing
+by syscall was to provide flexibility while still allowing ld.so to
+seal all operations.
+But it's clear from the feedback that both the fine grained split and
+the per-syscall
+approach are not the right way to go.
+Does Linus' proposal to just split munmap / mprotect sealing address your
+complexity concerns? ld.so would always use both flags which should then behave
+similar to mimmutable().
 
---00000000000056b17b06080d27e6
+--0000000000007e261006080d8b4e
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -162,13 +173,13 @@ EXefUessFdMqMUSfGI6rUaZTfU0SRfdrVHW4IE8onI30/UVurbGlFiugNF3LbDMXdqzs2/eTsLiD
 8Dv1+pt7SJqI4zNhzZFOpvBPVIkxggJqMIICZgIBATBoMFQxCzAJBgNVBAYTAkJFMRkwFwYDVQQK
 ExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFzIFIzIFNNSU1FIENB
 IDIwMjACEAFp/vXw/R/y8Lw9a5440YEwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIE
-IPi898HIh9BIwdhETZ7/O7Dh3D+SsJLi3hgcuaXknxYwMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0B
-BwEwHAYJKoZIhvcNAQkFMQ8XDTIzMTAxOTA4MDA0N1owaQYJKoZIhvcNAQkPMVwwWjALBglghkgB
+IPHNM1FLRZJiedGV78LWIbLcfhG44YthXIWK+1QlQlPyMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0B
+BwEwHAYJKoZIhvcNAQkFMQ8XDTIzMTAxOTA4Mjg0OFowaQYJKoZIhvcNAQkPMVwwWjALBglghkgB
 ZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQow
-CwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQAZGA2Cd/UjtzNhs4zX
-p3eag/xW+BTUBF/ITizZRukko4vAy6z8c/uelsd47857pBOkhqW2SCgQ6A7YJOdqXi/IxYv1y+MH
-74cRBtTnZ3i2Qj/2oL0gXtuwLGWP2b8PwKnSigUOj6c06i8viH2pYF5QQkt9kJCYg7/BADl0VrCO
-KA0sChavPZ7DT2V7JwCH/i0okvfPuL3rGakweTdvuKK6VYUZJu+8MGoOp+Ybhtw574270ii8oC2a
-Dm/k/wQ+F0d38Tpfb9yxZoxzfOINM7H3ctc3gIXfjlSD90uAwcoriw5717lbvmHHQmfFH6Ny6kES
-y1ckI+KJBbzuPvnS6r8K
---00000000000056b17b06080d27e6--
+CwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQClgRkBURnQbzqSbTnU
+T7G/1KuIehcwYLsoU5DQD7ft8qGZJSJeywY20n6aEYRrkGXXvXQtzKPFRyZeW/yY7fCKR7vH7KQn
+v5W5UlbY4C/JNiLRQ3ET8sGcdowV+0SJOxZozLKCH2tcMry7L8+0+O4Vm/zTxlq67ISc6O6ieRg3
+JhOqXkH71KV4tx/RITrBrVKtAZucJxJMNvfWWXAjuY29a3XEkFnfIVs1GHxNBKNMk1bSGNrBWOxv
+ufUq/0Yszi4X/VgSRKHRSUyCQeeK76dWZ+u0t2qcSTFBD7dEHFMT8ZofzEI6TB0xTLIYcVvplyis
+Rxsy+CLwqIHgibltIWG/
+--0000000000007e261006080d8b4e--
