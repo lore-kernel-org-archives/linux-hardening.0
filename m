@@ -1,214 +1,90 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52A254292A
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 22:56:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C56D4291B
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 23:06:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k8pWnrd2"
-Received: from mail-qk1-x730.google.com (mail-qk1-x730.google.com [IPv6:2607:f8b0:4864:20::730])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5F5A115;
-	Thu, 19 Oct 2023 15:56:53 -0700 (PDT)
-Received: by mail-qk1-x730.google.com with SMTP id af79cd13be357-7743448d88eso9015485a.2;
-        Thu, 19 Oct 2023 15:56:53 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DwCEvpeV"
+Received: from mail-oo1-xc30.google.com (mail-oo1-xc30.google.com [IPv6:2607:f8b0:4864:20::c30])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97475115
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 16:06:46 -0700 (PDT)
+Received: by mail-oo1-xc30.google.com with SMTP id 006d021491bc7-57d086365f7so140007eaf.0
+        for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 16:06:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697756213; x=1698361013; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CP2THLW7eHytlPbt5BfwCcXMf/R2fQdouS9d2T2WxRc=;
-        b=k8pWnrd2XDBKSQrZsOce0wWmdWD4NuuoM8713NzvK44dqGORSZwgwP/iRYlXBD7ztf
-         28d2Mj2PSMgKP4PTzjcmODUViGyazUSa9DYfRsBoNYWFXpVPxNQBPxWGkcIzsG5MC5N6
-         UvGNaeO+zVzgcnZOFFxp5nmDDJ8i+jqGkgEdzNaZ6PYiBgpSk3bGNoJuF05ZxU+kjzEO
-         VJXBlXSSIZfbCRGDHg53bnpQH0HN7KasO+IDYPkMztqXV6HsG09WTPRKoEu3+oSHo+YZ
-         uERz2J7lIHb4eVh1Cyn6qpbxoHJIBOuwmoaZAqimfPh45XKDsqWRRYiGMnKCCsE/dNeg
-         W2vg==
+        d=chromium.org; s=google; t=1697756806; x=1698361606; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1n3bce8Qxuu7Ba2jFaCFgRD9TCUV2s+7y/RFVwamEpU=;
+        b=DwCEvpeVXUfGsrXy6P4VMnQCCoM292F1h7bdgP+n7MoI+9Ue8H61cfhk1B55UBGPHo
+         DvpAImZ7KWlgAecQHVASQ3q3ow+k5QBeOk90BwbGJJfr8QA0mD86ww7w0jqG0OC++nzM
+         s/yQEVEi9sYbgJQ53lvOwMT7tpvA2QvCIe5FI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697756213; x=1698361013;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CP2THLW7eHytlPbt5BfwCcXMf/R2fQdouS9d2T2WxRc=;
-        b=S3DwZoibSaSzHs6BdJhjjUc4/abysR/XgIpfbhTE0UIQ3EUMDdFt3eCbprIS3054FO
-         UDpm4zCqcvMPqrRmOGKhAWXQ/6Si6ory2caAkymXgNThqprZqYtTwyimUieXo3v5k/3s
-         C58bvq8JA48psnHa16MVe/Dy2ULApv6JHflCuowCwivXtxF/TXPdjFqHg/zCilp6CTsL
-         PlfBXBnP06JzTdodCoYbdQZxTOoPKr9atbfHoihFvthsbBW1CeNwh0DN60Vx8Y+OjpPT
-         DJnV1Vd5fwPGQPw0JAvSDYmTXoaGEWBydkwHHN0HDxW4+NAeyllhcr48klHNi15O+L6i
-         cBtA==
-X-Gm-Message-State: AOJu0YxT7XqaXYdmIIBKWZnp0n3KQx75AFH0z5/iDEk2I7ayKfYrfjDk
-	jJDk3C2FzU2EMZ5SLjLll1iNWbnTkV7Ep6EX0Tu4kSG1jcsPyg==
-X-Google-Smtp-Source: AGHT+IHciFs/BQ6U6a7rjOnDJ2Xq+ukEzpkuMKRLiU5U69JMH0j5zohwipplwWO5SP4nlGF81WuRLROHWoNhvgHtxmc=
-X-Received: by 2002:a67:a209:0:b0:457:b85e:a9fe with SMTP id
- l9-20020a67a209000000b00457b85ea9femr91187vse.27.1697755677500; Thu, 19 Oct
- 2023 15:47:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1697756806; x=1698361606;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1n3bce8Qxuu7Ba2jFaCFgRD9TCUV2s+7y/RFVwamEpU=;
+        b=Ie0VKbotnwpQmJ1Q27wsbIFJ3dR126ihKcjMW86w1XxdtusCiYgvyE8BbVIiRpF91x
+         S0VHQXTf0MG06WGejWFaf9uy3e0V+G1c02dNXAAm1th2i7RD/GxNcJKsuGRVvKA/X774
+         pgq1o+uuz9GHZBM3l9G62Cm2aYXjpGgvl1+JVjXqtTJJU/kMqiW1RcQKpgVVC8a8Qi0D
+         iVsAUAyZS0R/gvU5jCuD1mMKn7fPfImQassceDykAZbwDLz7yTNYiO4mlodW9iT8W/Zi
+         Fe0YU6NUN07ZRKYuXpCJqoDG7RJhi+FyV2E5IYgqgRMkrbgfQL9ktvxnLdlUmVgt/RA7
+         CzKg==
+X-Gm-Message-State: AOJu0YxTznbzX8hNDlwk6+dkU3RD1A1f8qlQRhZqKTf1Shb+ARRXTGei
+	BOmEA65PcAP3Yq+nzldRikmaHg==
+X-Google-Smtp-Source: AGHT+IEhvEBOypzhBvUEC/LxnmQewUkvilNgMww7+1gCzs5lO9zQ2TaPhZ4dkppEJNjjFdom5AnCAg==
+X-Received: by 2002:a05:6358:e4a0:b0:166:f18e:e60 with SMTP id by32-20020a056358e4a000b00166f18e0e60mr98593rwb.7.1697756805783;
+        Thu, 19 Oct 2023 16:06:45 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id b13-20020aa7950d000000b0068ffd4eb66dsm301234pfp.35.2023.10.19.16.06.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Oct 2023 16:06:45 -0700 (PDT)
+Date: Thu, 19 Oct 2023 16:06:44 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] ACPI: replace deprecated strncpy with strscpy
+Message-ID: <202310191606.93920741B@keescook>
+References: <20231019-strncpy-drivers-pnp-pnpacpi-core-c-v1-1-4c634a73bcf3@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231016143828.647848-1-jeffxu@chromium.org> <ZS1URCBgwGGj9JtM@casper.infradead.org>
- <CAKbZUD2A+=bp_sd+Q0Yif7NJqMu8p__eb4yguq0agEcmLH8SDQ@mail.gmail.com>
- <CALmYWFtOgMAQDGNoM6k2Ev4kMHD396wwH+rVDODaSjsyVMDogg@mail.gmail.com>
- <CAKbZUD2j1jbomCAVxUX_JmG1rfa8udc=5SqVOpDgc-3GnSTbAQ@mail.gmail.com>
- <CALmYWFv7jzOj5HPcYct=UzYKPrwwvtN1EQeHioQHDPwGFvL5Ug@mail.gmail.com> <CALmYWFt71Vi6ySiZhW+tmE-LZL7Tnu-dQ1uMO10DUkASUTxzKA@mail.gmail.com>
-In-Reply-To: <CALmYWFt71Vi6ySiZhW+tmE-LZL7Tnu-dQ1uMO10DUkASUTxzKA@mail.gmail.com>
-From: Pedro Falcato <pedro.falcato@gmail.com>
-Date: Thu, 19 Oct 2023 23:47:46 +0100
-Message-ID: <CAKbZUD12pEaDCLysOpT3yL3064=P28Pm3c=UBqhOZYeBP026WA@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 0/8] Introduce mseal() syscall
-To: Jeff Xu <jeffxu@google.com>
-Cc: Matthew Wilcox <willy@infradead.org>, jeffxu@chromium.org, akpm@linux-foundation.org, 
-	keescook@chromium.org, sroettger@google.com, jorgelo@chromium.org, 
-	groeck@chromium.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, jannh@google.com, 
-	surenb@google.com, alex.sierra@amd.com, apopple@nvidia.com, 
-	aneesh.kumar@linux.ibm.com, axelrasmussen@google.com, ben@decadent.org.uk, 
-	catalin.marinas@arm.com, david@redhat.com, dwmw@amazon.co.uk, 
-	ying.huang@intel.com, hughd@google.com, joey.gouly@arm.com, corbet@lwn.net, 
-	wangkefeng.wang@huawei.com, Liam.Howlett@oracle.com, 
-	torvalds@linux-foundation.org, lstoakes@gmail.com, mawupeng1@huawei.com, 
-	linmiaohe@huawei.com, namit@vmware.com, peterx@redhat.com, 
-	peterz@infradead.org, ryan.roberts@arm.com, shr@devkernel.io, vbabka@suse.cz, 
-	xiujianfeng@huawei.com, yu.ma@intel.com, zhangpeng362@huawei.com, 
-	dave.hansen@intel.com, luto@kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231019-strncpy-drivers-pnp-pnpacpi-core-c-v1-1-4c634a73bcf3@google.com>
 
-On Thu, Oct 19, 2023 at 6:30=E2=80=AFPM Jeff Xu <jeffxu@google.com> wrote:
->
-> Hi Pedro
->
-> Some followup on mmap() + mprotect():
->
-> On Wed, Oct 18, 2023 at 11:20=E2=80=AFAM Jeff Xu <jeffxu@google.com> wrot=
-e:
-> >
-> > On Tue, Oct 17, 2023 at 3:35=E2=80=AFPM Pedro Falcato <pedro.falcato@gm=
-ail.com> wrote:
-> > >
-> > > > >
-> > > > > I think it's worth pointing out that this suggestion (with PROT_*=
-)
-> > > > > could easily integrate with mmap() and as such allow for one-shot
-> > > > > mmap() + mseal().
-> > > > > If we consider the common case as 'addr =3D mmap(...); mseal(addr=
-);', it
-> > > > > definitely sounds like a performance win as we halve the number o=
-f
-> > > > > syscalls for a sealed mapping. And if we trivially look at e.g Op=
-enBSD
-> > > > > ld.so code, mmap() + mimmutable() and mprotect() + mimmutable() s=
-eem
-> > > > > like common patterns.
-> > > > >
-> > > > Yes. mmap() can support sealing as well, and memory is allocated as
-> > > > immutable from begining.
-> > > > This is orthogonal to mseal() though.
-> > >
-> > > I don't see how this can be orthogonal to mseal().
-> > > In the case we opt for adding PROT_ bits, we should more or less only
-> > > need to adapt calc_vm_prot_bits(), and the rest should work without
-> > > issues.
-> > > vma merging won't merge vmas with different prots. The current
-> > > interfaces (mmap and mprotect) would work just fine.
-> > > In this case, mseal() or mimmutable() would only be needed if you nee=
-d
-> > > to set immutability over a range of VMAs with different permissions.
-> > >
-> > Agreed. By orthogonal, I meant we can have two APIs:
-> > mmap() and mseal()/mprotect()
-> > i.e. we can't just rely on mmap() only without mseal()/mprotect()/mimmu=
-table().
-> > Sealing can be applied after initial memory creation.
-> >
-> > > Note: modifications should look kinda like this: https://godbolt.org/=
-z/Tbjjd14Pe
-> > > The only annoying wrench in my plans here is that we have effectively
-> > > run out of vm_flags bits in 32-bit architectures, so this approach as
-> > > I described is not compatible with 32-bit.
-> > >
-> > > > In case of ld.so, iiuc, memory can be first allocated as W, then la=
-ter
-> > > > changed to RO, for example, during symbol resolution.
-> > > > The important point is that the application can decide what type of
-> > > > sealing it wants, and when to apply it.  There needs to be an api()=
-,
-> > > > that can be mseal() or mprotect2() or mimmutable(), the naming is n=
-ot
-> > > > important to me.
-> > > >
-> > > > mprotect() in linux have the following signature:
-> > > > int mprotect(void addr[.len], size_t len, int prot);
-> > > > the prot bitmasks are all taken here.
-> > > > I have not checked the prot field in mmap(), there might be bits le=
-ft,
-> > > > even not, we could have mmap2(), so that is not an issue.
-> > >
-> > > I don't see what you mean. We have plenty of prot bits left (32-bits,
-> > > and we seem to have around 8 different bits used).
-> > > And even if we didn't, prot is the same in mprotect and mmap and mmap=
-2 :)
-> > >
-> > > The only issue seems to be that 32-bit ran out of vm_flags, but that
-> > > can probably be worked around if need be.
-> > >
-> > Ah, you are right about this. vm_flags is full, and prot in mprotect() =
-is not.
-> > Apology that I was wrong previously and caused confusion.
-> >
-> > There is a slight difference in the syntax of mprotect and mseal.
-> > Each time when mprotect() is called, the kernel takes all of RWX bits
-> > and updates vm_flags,
-> > In other words, the application sets/unset each RWX, and kernel takes i=
-t.
-> >
-> > In the mseal() case, the kernel will remember which seal types were
-> > applied previously, and the application doesn=E2=80=99t need to repeat =
-all
-> > existing seal types in the next mseal().  Once a seal type is applied,
-> > it can=E2=80=99t be unsealed.
-> >
-> > So if we want to use mprotect() for sealing, developers need to think
-> > of sealing bits differently than the rest of prot bits. It is a
-> > different programming model, might or might not be an obvious concept
-> > to developers.
-> >
-> This probably doesn't matter much to developers.
-> We can enforce the sealing bit to be the same as the rest of PROT bits.
-> If mprotect() tries to unset sealing, it will fail.
+On Thu, Oct 19, 2023 at 10:47:58PM +0000, Justin Stitt wrote:
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
+> 
+> We know dev->name should be NUL-terminated based on the presence of a
+> manual NUL-byte assignment.
+> 
+> NUL-padding is not required as dev is already zero-allocated which
+> renders any further NUL-byte assignments redundant:
+> dev = pnp_alloc_dev(&pnpacpi_protocol, num, pnpid); --->
+>   dev = kzalloc(sizeof(struct pnp_dev), GFP_KERNEL);
+> 
+> Considering the above, a suitable replacement is `strscpy` [2] due to
+> the fact that it guarantees NUL-termination on the destination buffer
+> without unnecessarily NUL-padding. This simplifies the code and makes
+> the intent/behavior more obvious.
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-Yep. Erroneous or malicious mprotects would all be caught. However, if
-we add a PROT_DOWNGRADEABLE (that could let you, lets say, mprotect()
-to less permissions or even downright munmap()) you'd want some care
-to preserve that bit when setting permissions.
+Looks clean to me!
 
->
-> > There is a difference in input check and error handling as well.
-> > for mseal(), if a given address range has a gap (unallocated memory),
-> > or if one of VMA is sealed with MM_SEAL_SEAL flag, none of VMAs is
-> > updated.
-> > For mprotect(), some VMAs can be updated, till an error happens to a VM=
-A.
-> >
-> This difference doesn't matter much.
->
-> For mprotect()/mmap(), is Linux implementation limited by POSIX ?
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-No. POSIX works merely as a baseline that UNIX systems aim towards.
-You can (and very frequently do) extend POSIX interfaces (in fact,
-it's how most of POSIX was written, through sheer
-"design-by-committee" on a bunch of UNIX systems' extensions).
-
-> This can be made backward compatible.
-> If there is no objection to adding linux specific values in mmap() and
-> mprotect(),
-> This works for me.
-
-Linux already has system-specific values for PROT_ (PROT_BTI,
-PROT_MTE, PROT_GROWSUP, PROT_GROWSDOWN, etc).
-Whether this is the right interface is another question. I do like it
-a lot, but there's of course value in being compatible with existing
-solutions (like mimmutable()).
-
---=20
-Pedro
+-- 
+Kees Cook
