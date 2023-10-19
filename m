@@ -1,54 +1,54 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F86642
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 01:19:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7312838C
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 01:22:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RMvBUOSu"
-Received: from mail-yw1-x1134.google.com (mail-yw1-x1134.google.com [IPv6:2607:f8b0:4864:20::1134])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CD23B0
-	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 18:19:03 -0700 (PDT)
-Received: by mail-yw1-x1134.google.com with SMTP id 00721157ae682-5a7b91faf40so90868247b3.1
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 18:19:03 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RMS9RXfp"
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00F43113
+	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 18:22:16 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-6be840283ceso1977033b3a.3
+        for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 18:22:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1697678343; x=1698283143; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1697678536; x=1698283336; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xgp6z1oSdgUt9IWRR9iqkN0+S+6uNUFzUlZ52E0GfRE=;
-        b=RMvBUOSuSQCX8LvQNCehtRVgw0wL99GLaIgJSU/bnR+fEmFggV7rWCGvyK6hLiIHg6
-         QTKCknMBM8KKfiJWt1ctRNhT3qnBrMy7U7EzTOQTPl/e+9V9jD45SxzA0NTmBAO4/oWQ
-         lfLvi4tUuAoEBKkrrZlepge+e3Jmt0ocS5IQM=
+        bh=9n/QH+xbBrrvxUjfEmKhMirsI/te5jWZt1YAktGhyic=;
+        b=RMS9RXfpZBrDw1yQNo2zlTc605YBxEZufqMqx8YMBKY03h31xXYbqZ0pq6neufVJFT
+         CpA6MDAV7lFWMa2Y7YW905CpWrwNPfkj0ElWqs1zuPWbTDhTI1lPMNfJ5RlOVUPrXnIT
+         Vb4d3lE16NXGzRAsY99v1wm4Lk8zt8CZgrvAQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697678343; x=1698283143;
+        d=1e100.net; s=20230601; t=1697678536; x=1698283336;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Xgp6z1oSdgUt9IWRR9iqkN0+S+6uNUFzUlZ52E0GfRE=;
-        b=fLm2vNXO7KVg8jmi2ituVyJBd/fzkpI8apmTComEb/zPBIjF+QsJeyD+dJJ/EOzSh+
-         gQN9Gjc4n9KrVEHimq/wPIyuWR5FMtUtw3WIwx4den8bYxN2vEhQ7Uh4JlBuPz1irsGM
-         RdqiuvQU3ShxdNjaPf+2uBr8EnqVA/hyLmKW+LwBuFQNf40gdjCPxpRr2y1P+k0YJ4XJ
-         dbnm7EWZm7bAmfWCZOgID6W7Z+UTiAb2AJqgR+9SMh0y+8obi1o+vHkZnFv4q+fFD9V6
-         DtPvb9Lb3Mv4Dcbt8nUbj2A6QgTGQf9yaA2JsxIIsMu8Jxb8120kquZWZDOPm1ENfmDv
-         qKhA==
-X-Gm-Message-State: AOJu0YzPwDnN5nDAGTr/9cAISuDzkQHMbMwJyzGgCRLHinbSAc8paw93
-	FmFm1dm1j+IULWW7zHBBb3gH/A==
-X-Google-Smtp-Source: AGHT+IG3mAP8gw66SVpkc5giu589EfWx1B2jkhPIkaRjNV7e1LI2HxlT4Gr/1DydCq2HbLeRe8PkEw==
-X-Received: by 2002:a25:d50:0:b0:d9a:d61d:17dc with SMTP id 77-20020a250d50000000b00d9ad61d17dcmr915811ybn.36.1697678342824;
-        Wed, 18 Oct 2023 18:19:02 -0700 (PDT)
+        bh=9n/QH+xbBrrvxUjfEmKhMirsI/te5jWZt1YAktGhyic=;
+        b=hdPC9IV75MRyhrmsYSwsNU8e6Knw/TDySdNnr91RJjVqW0h4NrEfNrgQObvO9O2GOk
+         1kvOGWs/2juqkF4XSn6x9LLNfx9yoHhlYncEiVJNW2EbbUgvQ1XtGpTm8dWzMiSORXOQ
+         JPjSo+h6wzlpA+L/N9AiSBqnYZ3p4LRs1h/he0Hgx7RMsGL+qY5N+cpAmL0vPF/jsJPM
+         VXw7V3xP4z2uoylSPX2fAsEv5laXDwIyTz8QEHpNkXUcU0cyevHpvWWomOjLUR2flnz7
+         8HwHkb/R0tKwed6eDcQ8bbUPGMxwrDTyNn2w1A+owUQxmm7rXHg4k1v5vOXFIck1j5qq
+         ISYg==
+X-Gm-Message-State: AOJu0YzTgld0nWuUUlrMrt/Z6y2Hjz2Yrou/OSIS+KRQZI+35AJZaCie
+	WX/o+ZeT8wNecKt82AgVmS+lKg==
+X-Google-Smtp-Source: AGHT+IF7kVoDgCvAMAX61ZZHq2qj+2bRQzcvEeWrGaJGweRi1y5xM61ycUSkxB4x6/u047Ivm+nWwg==
+X-Received: by 2002:a05:6a00:3a09:b0:6bd:705b:56fb with SMTP id fj9-20020a056a003a0900b006bd705b56fbmr622425pfb.6.1697678536382;
+        Wed, 18 Oct 2023 18:22:16 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id h191-20020a6383c8000000b0058953648c27sm2318856pge.88.2023.10.18.18.19.02
+        by smtp.gmail.com with ESMTPSA id f186-20020a6251c3000000b00692754580f0sm4107595pfb.187.2023.10.18.18.22.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Oct 2023 18:19:02 -0700 (PDT)
-Date: Wed, 18 Oct 2023 18:19:01 -0700
+        Wed, 18 Oct 2023 18:22:15 -0700 (PDT)
+Date: Wed, 18 Oct 2023 18:22:15 -0700
 From: Kees Cook <keescook@chromium.org>
 To: Justin Stitt <justinstitt@google.com>
-Cc: Stanislav Yakovlev <stas.yakovlev@gmail.com>,
+Cc: Gregory Greenman <gregory.greenman@intel.com>,
 	Kalle Valo <kvalo@kernel.org>, linux-wireless@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] wifi: ipw2x00: replace deprecated strncpy with
- strscpy_pad
-Message-ID: <202310181800.C6F7B42@keescook>
-References: <20231017-strncpy-drivers-net-wireless-intel-ipw2x00-ipw2200-c-v2-1-465e10dc817c@google.com>
+Subject: Re: [PATCH] wifi: iwlwifi: fw: replace deprecated strncpy with
+ strscpy
+Message-ID: <202310181821.16FDE58565@keescook>
+References: <20231017-strncpy-drivers-net-wireless-intel-iwlwifi-fw-dbg-c-v1-1-bf69ec7d1b97@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -57,60 +57,73 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231017-strncpy-drivers-net-wireless-intel-ipw2x00-ipw2200-c-v2-1-465e10dc817c@google.com>
+In-Reply-To: <20231017-strncpy-drivers-net-wireless-intel-iwlwifi-fw-dbg-c-v1-1-bf69ec7d1b97@google.com>
 
-On Tue, Oct 17, 2023 at 09:48:15PM +0000, Justin Stitt wrote:
+On Tue, Oct 17, 2023 at 09:58:44PM +0000, Justin Stitt wrote:
 > strncpy() is deprecated for use on NUL-terminated destination strings
 > [1] and as such we should prefer more robust and less ambiguous string
 > interfaces.
 > 
-> `extra` is intended to be NUL-terminated which is evident by the manual
-> assignment of a NUL-byte as well as its immediate usage with strlen().
+> Based on the deliberate `sizeof(dest) ... - 1` pattern we can see that
+> both dump_info->dev_human_readable and dump_info->bus_human_readable are
+> intended to be NUL-terminated.
 > 
-> Moreover, many of these getters and setters are NUL-padding buffers with
-> memset():
-> 2439  |	memset(&tx_power, 0, sizeof(tx_power));
-> 9998  | memset(sys_config, 0, sizeof(struct ipw_sys_config));
-> 10084 | memset(tfd, 0, sizeof(*tfd));
-> 10261 | memset(&dummystats, 0, sizeof(dummystats));
-> ... let's maintain this behavior and NUL-pad our destination buffer.
+> Neither of these symbols seem to be actually used after being assigned.
+> Which means our replacement doesn't really matter. At any rate, it would
+> seem NUL-padding is not required so let's use `strscpy` [2] due to the
+> fact that it guarantees NUL-termination on the destination buffer
+> without unnecessarily NUL-padding. (but maybe these should be
+> used or removed).
+
+This appears to be crossing the file boundary. I would be more
+comfortable seeing strscpy_pad() used here just to make sure there is no
+behavior change at all.
+
+-Kees
+
 > 
-> Considering the above, a suitable replacement is `strscpy_pad` due to
-> the fact that it guarantees both NUL-termination and NUL-padding on the
-> destination buffer.
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+> Note: build-tested only.
 > 
-> To be clear, there is no bug in the current implementation as
-> MAX_WX_STRING is much larger than the size of the string literals being
-> copied from. Also, strncpy() does NUL-pad the destination buffer and
-> using strscpy_pad() simply matches that behavior. All in all, there
-> should be no functional change but we are one step closer to eliminating
-> usage of strncpy().
+> Found with: $ rg "strncpy\("
+> ---
+>  drivers/net/wireless/intel/iwlwifi/fw/dbg.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> Do note that we cannot use the more idiomatic strscpy invocation of
-> (dest, src, sizeof(dest)) as the destination buffer cannot have its size
-> determined at compile time. So, let's stick with (dest, src, LEN).
-
-Yeah, these interfaces have external buffer size declarations. In this
-case, MAX_WX_STRING.
-
-This is probably one of the most difficult set of callbacks to track
-down. sysfs might be worse...
-
-But, ultimately, this is a private ioctl handler, and it is all boiled
-down to calling ioctl_private_iw_point() (via ioctl_private_call()),
-which does the allocation of "extra". The size, which is not passed to
-the handler (*sob*), is determined by: get_priv_descr_and_size(), which
-is looking at drivers/net/wireless/intel/ipw2x00/ipw2200.c's
-ipw_priv_args:
-
-        {
-         .cmd = IPW_PRIV_GET_MODE,
-         .get_args = IW_PRIV_TYPE_CHAR | IW_PRIV_SIZE_FIXED | MAX_WX_STRING,
-         .name = "get_mode"},
-
-So it looks good to me.
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
+> diff --git a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
+> index 3ab6a68f1e9f..5455f8d1aab0 100644
+> --- a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
+> +++ b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
+> @@ -880,10 +880,10 @@ iwl_fw_error_dump_file(struct iwl_fw_runtime *fwrt,
+>  			cpu_to_le32(fwrt->trans->hw_rev_step);
+>  		memcpy(dump_info->fw_human_readable, fwrt->fw->human_readable,
+>  		       sizeof(dump_info->fw_human_readable));
+> -		strncpy(dump_info->dev_human_readable, fwrt->trans->name,
+> -			sizeof(dump_info->dev_human_readable) - 1);
+> -		strncpy(dump_info->bus_human_readable, fwrt->dev->bus->name,
+> -			sizeof(dump_info->bus_human_readable) - 1);
+> +		strscpy(dump_info->dev_human_readable, fwrt->trans->name,
+> +			sizeof(dump_info->dev_human_readable));
+> +		strscpy(dump_info->bus_human_readable, fwrt->dev->bus->name,
+> +			sizeof(dump_info->bus_human_readable));
+>  		dump_info->num_of_lmacs = fwrt->smem_cfg.num_lmacs;
+>  		dump_info->lmac_err_id[0] =
+>  			cpu_to_le32(fwrt->dump.lmac_err_id[0]);
+> 
+> ---
+> base-commit: 58720809f52779dc0f08e53e54b014209d13eebb
+> change-id: 20231017-strncpy-drivers-net-wireless-intel-iwlwifi-fw-dbg-c-1f49f00b8a2e
+> 
+> Best regards,
+> --
+> Justin Stitt <justinstitt@google.com>
+> 
+> 
 
 -- 
 Kees Cook
