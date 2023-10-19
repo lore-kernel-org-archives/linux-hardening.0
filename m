@@ -1,208 +1,142 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A96A23DFE5;
-	Thu, 19 Oct 2023 21:40:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 304B63FE24
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 22:00:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HvmpSS7k"
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48127BE;
-	Thu, 19 Oct 2023 14:40:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:In-Reply-To:References;
-	bh=b4HCbIcpuTf2AtCD4Gw8oaFAr3lLevKnvsjAPH9DoPw=; b=HvmpSS7kAWcYGs+Te9d8uMi2LS
-	avX/MnUrQidVGEn/cj37ZF4edJOaPxjKeng5T3EL1iVWhprMk+6WTfbOJOhFA+c8ieS8rsRbd6JFs
-	9Eus2DWJ/Effc8qVV6ed9rttxoAQBeqPvWKJZRHYLC4Zm/qDvz0YOD51PBtrL295nGb+Dv2CrjKTf
-	A7xKDWtHXzFD/bjogf+p+55FLq9ojxA1SGFBuaAPhebcAi4eL1YphFyHeVYdkyRKZM/YFQYrCQSkJ
-	9L9le5NOrlxZ2JgoyvgqE+03Tdz0i11NYmyIIebw++rR/T90G60xX900OXOs8llIPX0S+vjDbCqsD
-	gPIKZXLA==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1qtakt-009Mv5-BT; Thu, 19 Oct 2023 21:40:35 +0000
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Kees Cook <keescook@chromium.org>,
-	Christoph Hellwig <hch@lst.de>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IKG2SySN"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82C6DB6;
+	Thu, 19 Oct 2023 15:00:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1697752836; x=1729288836;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=XYOfl3k4kNXFxBzmpgdyr71706CFZuSZYJvSmjYNO0Y=;
+  b=IKG2SySN+OfRtHmxIjW7Ujjgw10WJL4U4vzJXBEA2I3Lj6ih8IOtv/zT
+   vPWmDY0CzaIOuceGAl7iyvj7r2SummOTGtP2aiopjc3CCqLiPXmX0l4YJ
+   seRSi690DtKF14YCDb63bWWMqXbPQQylWJv86JuyPY2w/nye0aQbMxl37
+   MYWlj/pidsubuVjCdFt6yE4IUYkkyy/9q/34cYX5tBA7RmMrBostmQUJz
+   X9Xv6UDx76ZBRFhJR+0KGBkBAbZ82mFc0aTj7yBWaxLtfPhrgTMCMiJnQ
+   iJrRMhdV3YVTGSPxRmp2dFkZU6t6LVWPQ8EDlVN1MqB4JjtVhwPxvuTOF
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10868"; a="371449989"
+X-IronPort-AV: E=Sophos;i="6.03,238,1694761200"; 
+   d="scan'208";a="371449989"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2023 15:00:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10868"; a="786568901"
+X-IronPort-AV: E=Sophos;i="6.03,238,1694761200"; 
+   d="scan'208";a="786568901"
+Received: from lkp-server01.sh.intel.com (HELO 8917679a5d3e) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 19 Oct 2023 15:00:32 -0700
+Received: from kbuild by 8917679a5d3e with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1qtb4A-0002dl-0h;
+	Thu, 19 Oct 2023 22:00:30 +0000
+Date: Fri, 20 Oct 2023 05:59:36 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>
+Cc: oe-kbuild-all@lists.linux.dev,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Kees Cook <keescook@chromium.org>, Christoph Hellwig <hch@lst.de>,
 	Justin Stitt <justinstitt@google.com>,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Petr Mladek <pmladek@suse.com>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Kent Overstreet <kmo@daterainc.com>, Petr Mladek <pmladek@suse.com>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
 	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCH 1/1] trace: Move readpos from seq_buf to trace_seq
-Date: Thu, 19 Oct 2023 22:40:33 +0100
-Message-Id: <20231019214033.2229099-1-willy@infradead.org>
-X-Mailer: git-send-email 2.37.1
+Subject: Re: [PATCH 1/1] trace: Move readpos from seq_buf to trace_seq
+Message-ID: <202310200523.ggyHvT6w-lkp@intel.com>
+References: <20231019194514.2115506-2-willy@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231019194514.2115506-2-willy@infradead.org>
 
-To make seq_buf more lightweight as a string buf, move the readpos member
-from seq_buf to its container, trace_seq.  That puts the responsibility
-of maintaining the readpos entirely in the tracing code.  If some future
-users want to package up the readpos with a seq_buf, we can define a
-new struct then.
+Hi Matthew,
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
----
- include/linux/seq_buf.h   |  5 +----
- include/linux/trace_seq.h |  2 ++
- kernel/trace/trace.c      | 10 +++++-----
- kernel/trace/trace_seq.c  |  6 +++++-
- lib/seq_buf.c             | 13 +++++--------
- 5 files changed, 18 insertions(+), 18 deletions(-)
+kernel test robot noticed the following build warnings:
 
-diff --git a/include/linux/seq_buf.h b/include/linux/seq_buf.h
-index 515d7fcb9634..a0fb013cebdf 100644
---- a/include/linux/seq_buf.h
-+++ b/include/linux/seq_buf.h
-@@ -14,19 +14,16 @@
-  * @buffer:	pointer to the buffer
-  * @size:	size of the buffer
-  * @len:	the amount of data inside the buffer
-- * @readpos:	The next position to read in the buffer.
-  */
- struct seq_buf {
- 	char			*buffer;
- 	size_t			size;
- 	size_t			len;
--	loff_t			readpos;
- };
- 
- static inline void seq_buf_clear(struct seq_buf *s)
- {
- 	s->len = 0;
--	s->readpos = 0;
- }
- 
- static inline void
-@@ -143,7 +140,7 @@ extern __printf(2, 0)
- int seq_buf_vprintf(struct seq_buf *s, const char *fmt, va_list args);
- extern int seq_buf_print_seq(struct seq_file *m, struct seq_buf *s);
- extern int seq_buf_to_user(struct seq_buf *s, char __user *ubuf,
--			   int cnt);
-+			   size_t start, int cnt);
- extern int seq_buf_puts(struct seq_buf *s, const char *str);
- extern int seq_buf_putc(struct seq_buf *s, unsigned char c);
- extern int seq_buf_putmem(struct seq_buf *s, const void *mem, unsigned int len);
-diff --git a/include/linux/trace_seq.h b/include/linux/trace_seq.h
-index 6be92bf559fe..3691e0e76a1a 100644
---- a/include/linux/trace_seq.h
-+++ b/include/linux/trace_seq.h
-@@ -14,6 +14,7 @@
- struct trace_seq {
- 	char			buffer[PAGE_SIZE];
- 	struct seq_buf		seq;
-+	size_t			readpos;
- 	int			full;
- };
- 
-@@ -22,6 +23,7 @@ trace_seq_init(struct trace_seq *s)
- {
- 	seq_buf_init(&s->seq, s->buffer, PAGE_SIZE);
- 	s->full = 0;
-+	s->readpos = 0;
- }
- 
- /**
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index abaaf516fcae..217cabd09c3e 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -1730,15 +1730,15 @@ static ssize_t trace_seq_to_buffer(struct trace_seq *s, void *buf, size_t cnt)
- {
- 	int len;
- 
--	if (trace_seq_used(s) <= s->seq.readpos)
-+	if (trace_seq_used(s) <= s->readpos)
- 		return -EBUSY;
- 
--	len = trace_seq_used(s) - s->seq.readpos;
-+	len = trace_seq_used(s) - s->readpos;
- 	if (cnt > len)
- 		cnt = len;
--	memcpy(buf, s->buffer + s->seq.readpos, cnt);
-+	memcpy(buf, s->buffer + s->readpos, cnt);
- 
--	s->seq.readpos += cnt;
-+	s->readpos += cnt;
- 	return cnt;
- }
- 
-@@ -7006,7 +7006,7 @@ tracing_read_pipe(struct file *filp, char __user *ubuf,
- 
- 	/* Now copy what we have to the user */
- 	sret = trace_seq_to_user(&iter->seq, ubuf, cnt);
--	if (iter->seq.seq.readpos >= trace_seq_used(&iter->seq))
-+	if (iter->seq.readpos >= trace_seq_used(&iter->seq))
- 		trace_seq_init(&iter->seq);
- 
- 	/*
-diff --git a/kernel/trace/trace_seq.c b/kernel/trace/trace_seq.c
-index bac06ee3b98b..7be97229ddf8 100644
---- a/kernel/trace/trace_seq.c
-+++ b/kernel/trace/trace_seq.c
-@@ -370,8 +370,12 @@ EXPORT_SYMBOL_GPL(trace_seq_path);
-  */
- int trace_seq_to_user(struct trace_seq *s, char __user *ubuf, int cnt)
- {
-+	int ret;
- 	__trace_seq_init(s);
--	return seq_buf_to_user(&s->seq, ubuf, cnt);
-+	ret = seq_buf_to_user(&s->seq, ubuf, s->readpos, cnt);
-+	if (ret > 0)
-+		s->readpos += ret;
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(trace_seq_to_user);
- 
-diff --git a/lib/seq_buf.c b/lib/seq_buf.c
-index 45c450f423fa..0d218f3835ae 100644
---- a/lib/seq_buf.c
-+++ b/lib/seq_buf.c
-@@ -340,7 +340,7 @@ int seq_buf_path(struct seq_buf *s, const struct path *path, const char *esc)
-  *
-  * Returns -EFAULT if the copy to userspace fails.
-  */
--int seq_buf_to_user(struct seq_buf *s, char __user *ubuf, int cnt)
-+int seq_buf_to_user(struct seq_buf *s, char __user *ubuf, size_t start, int cnt)
- {
- 	int len;
- 	int ret;
-@@ -350,20 +350,17 @@ int seq_buf_to_user(struct seq_buf *s, char __user *ubuf, int cnt)
- 
- 	len = seq_buf_used(s);
- 
--	if (len <= s->readpos)
-+	if (len <= start)
- 		return -EBUSY;
- 
--	len -= s->readpos;
-+	len -= start;
- 	if (cnt > len)
- 		cnt = len;
--	ret = copy_to_user(ubuf, s->buffer + s->readpos, cnt);
-+	ret = copy_to_user(ubuf, s->buffer + start, cnt);
- 	if (ret == cnt)
- 		return -EFAULT;
- 
--	cnt -= ret;
--
--	s->readpos += cnt;
--	return cnt;
-+	return cnt - ret;
- }
- 
- /**
+[auto build test WARNING on kees/for-next/pstore]
+[also build test WARNING on kees/for-next/kspp linus/master v6.6-rc6 next-20231019]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Matthew-Wilcox-Oracle/trace-Move-readpos-from-seq_buf-to-trace_seq/20231020-034718
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/pstore
+patch link:    https://lore.kernel.org/r/20231019194514.2115506-2-willy%40infradead.org
+patch subject: [PATCH 1/1] trace: Move readpos from seq_buf to trace_seq
+config: m68k-allyesconfig (https://download.01.org/0day-ci/archive/20231020/202310200523.ggyHvT6w-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231020/202310200523.ggyHvT6w-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202310200523.ggyHvT6w-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> lib/seq_buf.c:344: warning: Function parameter or member 'start' not described in 'seq_buf_to_user'
+
+
+vim +344 lib/seq_buf.c
+
+3a161d99c43ce7 kernel/trace/seq_buf.c Steven Rostedt (Red Hat  2014-06-25  322) 
+3a161d99c43ce7 kernel/trace/seq_buf.c Steven Rostedt (Red Hat  2014-06-25  323) /**
+9dbbc3b9d09d6d lib/seq_buf.c          Zhen Lei                 2021-07-07  324   * seq_buf_to_user - copy the sequence buffer to user space
+3a161d99c43ce7 kernel/trace/seq_buf.c Steven Rostedt (Red Hat  2014-06-25  325)  * @s: seq_buf descriptor
+3a161d99c43ce7 kernel/trace/seq_buf.c Steven Rostedt (Red Hat  2014-06-25  326)  * @ubuf: The userspace memory location to copy to
+3a161d99c43ce7 kernel/trace/seq_buf.c Steven Rostedt (Red Hat  2014-06-25  327)  * @cnt: The amount to copy
+3a161d99c43ce7 kernel/trace/seq_buf.c Steven Rostedt (Red Hat  2014-06-25  328)  *
+3a161d99c43ce7 kernel/trace/seq_buf.c Steven Rostedt (Red Hat  2014-06-25  329)  * Copies the sequence buffer into the userspace memory pointed to
+3a161d99c43ce7 kernel/trace/seq_buf.c Steven Rostedt (Red Hat  2014-06-25  330)  * by @ubuf. It starts from the last read position (@s->readpos)
+3a161d99c43ce7 kernel/trace/seq_buf.c Steven Rostedt (Red Hat  2014-06-25  331)  * and writes up to @cnt characters or till it reaches the end of
+3a161d99c43ce7 kernel/trace/seq_buf.c Steven Rostedt (Red Hat  2014-06-25  332)  * the content in the buffer (@s->len), which ever comes first.
+3a161d99c43ce7 kernel/trace/seq_buf.c Steven Rostedt (Red Hat  2014-06-25  333)  *
+3a161d99c43ce7 kernel/trace/seq_buf.c Steven Rostedt (Red Hat  2014-06-25  334)  * On success, it returns a positive number of the number of bytes
+3a161d99c43ce7 kernel/trace/seq_buf.c Steven Rostedt (Red Hat  2014-06-25  335)  * it copied.
+3a161d99c43ce7 kernel/trace/seq_buf.c Steven Rostedt (Red Hat  2014-06-25  336)  *
+3a161d99c43ce7 kernel/trace/seq_buf.c Steven Rostedt (Red Hat  2014-06-25  337)  * On failure it returns -EBUSY if all of the content in the
+3a161d99c43ce7 kernel/trace/seq_buf.c Steven Rostedt (Red Hat  2014-06-25  338)  * sequence has been already read, which includes nothing in the
+3a161d99c43ce7 kernel/trace/seq_buf.c Steven Rostedt (Red Hat  2014-06-25  339)  * sequence (@s->len == @s->readpos).
+3a161d99c43ce7 kernel/trace/seq_buf.c Steven Rostedt (Red Hat  2014-06-25  340)  *
+3a161d99c43ce7 kernel/trace/seq_buf.c Steven Rostedt (Red Hat  2014-06-25  341)  * Returns -EFAULT if the copy to userspace fails.
+3a161d99c43ce7 kernel/trace/seq_buf.c Steven Rostedt (Red Hat  2014-06-25  342)  */
+9377093a882be0 lib/seq_buf.c          Matthew Wilcox (Oracle   2023-10-19  343) int seq_buf_to_user(struct seq_buf *s, char __user *ubuf, size_t start, int cnt)
+3a161d99c43ce7 kernel/trace/seq_buf.c Steven Rostedt (Red Hat  2014-06-25 @344) {
+3a161d99c43ce7 kernel/trace/seq_buf.c Steven Rostedt (Red Hat  2014-06-25  345) 	int len;
+3a161d99c43ce7 kernel/trace/seq_buf.c Steven Rostedt (Red Hat  2014-06-25  346) 	int ret;
+3a161d99c43ce7 kernel/trace/seq_buf.c Steven Rostedt (Red Hat  2014-06-25  347) 
+3a161d99c43ce7 kernel/trace/seq_buf.c Steven Rostedt (Red Hat  2014-06-25  348) 	if (!cnt)
+3a161d99c43ce7 kernel/trace/seq_buf.c Steven Rostedt (Red Hat  2014-06-25  349) 		return 0;
+3a161d99c43ce7 kernel/trace/seq_buf.c Steven Rostedt (Red Hat  2014-06-25  350) 
+ff078d8fc64472 lib/seq_buf.c          Jerry Snitselaar         2015-11-16  351  	len = seq_buf_used(s);
+ff078d8fc64472 lib/seq_buf.c          Jerry Snitselaar         2015-11-16  352  
+9377093a882be0 lib/seq_buf.c          Matthew Wilcox (Oracle   2023-10-19  353) 	if (len <= start)
+3a161d99c43ce7 kernel/trace/seq_buf.c Steven Rostedt (Red Hat  2014-06-25  354) 		return -EBUSY;
+3a161d99c43ce7 kernel/trace/seq_buf.c Steven Rostedt (Red Hat  2014-06-25  355) 
+9377093a882be0 lib/seq_buf.c          Matthew Wilcox (Oracle   2023-10-19  356) 	len -= start;
+3a161d99c43ce7 kernel/trace/seq_buf.c Steven Rostedt (Red Hat  2014-06-25  357) 	if (cnt > len)
+3a161d99c43ce7 kernel/trace/seq_buf.c Steven Rostedt (Red Hat  2014-06-25  358) 		cnt = len;
+9377093a882be0 lib/seq_buf.c          Matthew Wilcox (Oracle   2023-10-19  359) 	ret = copy_to_user(ubuf, s->buffer + start, cnt);
+3a161d99c43ce7 kernel/trace/seq_buf.c Steven Rostedt (Red Hat  2014-06-25  360) 	if (ret == cnt)
+3a161d99c43ce7 kernel/trace/seq_buf.c Steven Rostedt (Red Hat  2014-06-25  361) 		return -EFAULT;
+3a161d99c43ce7 kernel/trace/seq_buf.c Steven Rostedt (Red Hat  2014-06-25  362) 
+9377093a882be0 lib/seq_buf.c          Matthew Wilcox (Oracle   2023-10-19  363) 	return cnt - ret;
+3a161d99c43ce7 kernel/trace/seq_buf.c Steven Rostedt (Red Hat  2014-06-25  364) }
+353cade3149c27 lib/seq_buf.c          Piotr Maziarz            2019-11-07  365  
+
 -- 
-2.40.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
