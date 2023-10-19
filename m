@@ -1,54 +1,55 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B1B61FBA
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 05:47:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBA47186C
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 06:02:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BScxuSjU"
-Received: from mail-oo1-xc30.google.com (mail-oo1-xc30.google.com [IPv6:2607:f8b0:4864:20::c30])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FE77FE
-	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 22:47:58 -0700 (PDT)
-Received: by mail-oo1-xc30.google.com with SMTP id 006d021491bc7-581bca3ebb0so1970176eaf.0
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 22:47:58 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kDxXRTAe"
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BE46192
+	for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 23:01:56 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-6b1ef786b7fso5651716b3a.3
+        for <linux-hardening@vger.kernel.org>; Wed, 18 Oct 2023 23:01:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1697694477; x=1698299277; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1697695316; x=1698300116; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LHnQ4ZKZoaOJV3l4XUHkBLyFFjTJvcv5ctVeQO+EOoI=;
-        b=BScxuSjU1tN8RG7REYbkpQsN/gjlJOIvo4nuTJngz/+YjIBlnxn1R+AShbC4MOlilt
-         xhmvHTUVCD4onrT7hCFTGQfAldFbudd28nfsIlwsO59nL3qi/RqrGvfT9E9+koJIEMbW
-         XBrcqxjTukOF0Azoty3rbORiNQ6OdbLVI9qnI=
+        bh=U7yDeCbKK7RJMvZiIVbGogXmcuCznb6lg3vpgldc7l0=;
+        b=kDxXRTAe+Pae7ibWBYLaO5zaM26mXUHLIeTfARzKL3y8pZdbuyII7QyG2ApgkuiDU8
+         Oc4dL/4l5JYs+LC94AY0bhrjRlHsx0gKWW87fPc6E8kSnW6Bcx4NvuNa9NeQ6OyCIlhV
+         UjyWBuKJJemeseBAO4L7fQyIqfJ5R9ZWj28aI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697694477; x=1698299277;
+        d=1e100.net; s=20230601; t=1697695316; x=1698300116;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LHnQ4ZKZoaOJV3l4XUHkBLyFFjTJvcv5ctVeQO+EOoI=;
-        b=SD8EAebXvR/SK5dlbquo+AzN5vDeJuyDtUtbyXzv7iVunMziSzbmPJWDk9p+x902Yy
-         HiemWtxQCBuwASaDauR/xoN3S1m8H0uXq0j2Mk+hSpG4RKAOWtpgZC/yd31DTbYV/ThY
-         K7xt5Hhw/RK4ClryIY3hWhBqkKj0C6yiyfZRrnaY3/iP9MtpiYT5L51o3qkhBiojCEe+
-         HrMo1USbld+PbIXf5hf+zEu0Rac41L7gIyIBUSZqzG+Nk+PD8gVLb30jP1Vyy0v6Bdov
-         TEjO1acco3eYijt5Xr3hAjese+3uRjeyXpOabyBcRVlbg9YaZaNl8W6+P2yddoq9LHTI
-         bNLA==
-X-Gm-Message-State: AOJu0YxrDL4paNGMQSccXMw7QimO3pdx6rgdSS+4PcfxbrUYOzfDkoRw
-	m+49xiW3iOBnRjEZmP75BC1sqg==
-X-Google-Smtp-Source: AGHT+IEu5PHDRWVUI0+QX9JrLp+wZUJ1GzmUN+Qx4C1JP4SsZPYFUoT1fuhYI5qBjJPg/eBSdZrWhg==
-X-Received: by 2002:a05:6358:7e16:b0:143:8c4e:283b with SMTP id o22-20020a0563587e1600b001438c4e283bmr1422228rwm.0.1697694477305;
-        Wed, 18 Oct 2023 22:47:57 -0700 (PDT)
+        bh=U7yDeCbKK7RJMvZiIVbGogXmcuCznb6lg3vpgldc7l0=;
+        b=FuKmYz8px7SvULTAs8ucQDTJOAr2yFBVbHK32EcjVSMtiqw+c0+yp4mH2uobBtRB01
+         c/Xtr3vXlFFst/w+z8dshkT2ZDGqpJivlz4yVbRqT+n6uAW2ruvxCmbhsQLuiYYS8bsF
+         ItuxbqPuRX3T8U/TWgtGdA1P/F6Q4Iq798vrptX7eJqMouYnLt7Jk5Wbp8o1kLxp7NEd
+         cCPrBwvgDIUeHEMeY6FB+AbNF8fmRLSgNKfW8aSl2kLLmNJG1NV27uyOAS1dulhwzlnw
+         a2DEGifr5ugsgkT7GantRQysOiPJyBY+IXMuerIBEb/msbvUOLFRNKLhT0VDr65CBouW
+         MYgg==
+X-Gm-Message-State: AOJu0YzcD/2L2zQR4Qry3dZjYmiUL4+prz2TVq29zyOEJd+qeKXL5SBH
+	i4wImbTv8NbF3yoU7EQZ2QyG2A==
+X-Google-Smtp-Source: AGHT+IFscLXN1xjak16gaHb4xEL+yenHdprgdAzW4lIxpVAmm+HGFxqot9MJirUqe2eamHFP5LRRhw==
+X-Received: by 2002:a05:6a00:cd6:b0:6b8:a6d6:f51a with SMTP id b22-20020a056a000cd600b006b8a6d6f51amr1126768pfv.31.1697695315885;
+        Wed, 18 Oct 2023 23:01:55 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id r2-20020aa79882000000b0069344caf840sm4422330pfl.18.2023.10.18.22.47.56
+        by smtp.gmail.com with ESMTPSA id h3-20020a056a00000300b006933866fd21sm4291678pfk.117.2023.10.18.23.01.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Oct 2023 22:47:56 -0700 (PDT)
-Date: Wed, 18 Oct 2023 22:47:56 -0700
+        Wed, 18 Oct 2023 23:01:55 -0700 (PDT)
+Date: Wed, 18 Oct 2023 23:01:54 -0700
 From: Kees Cook <keescook@chromium.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+To: Christoph Hellwig <hch@lst.de>
+Cc: Justin Stitt <justinstitt@google.com>, Keith Busch <kbusch@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>, Sagi Grimberg <sagi@grimberg.me>,
 	linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] nvme-fabrics: replace deprecated strncpy with strscpy
-Message-ID: <202310182237.C256F5B54D@keescook>
+	linux-hardening@vger.kernel.org, ksummit@lists.linux.dev
+Subject: Re: the nul-terminated string helper desk chair rearrangement
+Message-ID: <202310182248.9E197FFD5@keescook>
 References: <20231018-strncpy-drivers-nvme-host-fabrics-c-v1-1-b6677df40a35@google.com>
+ <20231019054642.GF14346@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -57,123 +58,54 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231018-strncpy-drivers-nvme-host-fabrics-c-v1-1-b6677df40a35@google.com>
+In-Reply-To: <20231019054642.GF14346@lst.de>
 
-On Wed, Oct 18, 2023 at 10:48:49PM +0000, Justin Stitt wrote:
-> strncpy() is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
+On Thu, Oct 19, 2023 at 07:46:42AM +0200, Christoph Hellwig wrote:
+> On Wed, Oct 18, 2023 at 10:48:49PM +0000, Justin Stitt wrote:
+> > strncpy() is deprecated for use on NUL-terminated destination strings
+> > [1] and as such we should prefer more robust and less ambiguous string
+> > interfaces.
 > 
-> We expect both data->subsysnqn and data->hostnqn to be NUL-terminated
-> based on their usage with format specifier ("%s"):
-> fabrics.c:
-> 322: dev_err(ctrl->device,
-> 323:   "%s, subsysnqn \"%s\"\n",
-> 324:   inv_data, data->subsysnqn);
-> ...
-> 349: dev_err(ctrl->device,
-> 350: 	 "Connect for subsystem %s is not allowed, hostnqn: %s\n",
-> 351: 	 data->subsysnqn, data->hostnqn);
+> If we want that we need to stop pretendening direct manipulation of
+> nul-terminate strings is a good idea.  I suspect the churn of replacing
+> one helper with another, maybe slightly better, one probably
+> introduces more bugs than it fixes.
 > 
-> Moreover, there's no need to NUL-pad since `data` is zero-allocated
-> already in fabrics.c:
-> 383: data = kzalloc(sizeof(*data), GFP_KERNEL);
-> ... therefore any further NUL-padding is rendered useless.
+> If we want to attack the issue for real we need to use something
+> better.
 > 
-> Considering the above, a suitable replacement is `strscpy` [2] due to
-> the fact that it guarantees NUL-termination on the destination buffer
-> without unnecessarily NUL-padding.
-> 
-> I opted not to switch NVMF_NQN_SIZE to sizeof(data->xyz) because the
-> size is defined as:
-> |       /* NQN names in commands fields specified one size */
-> |       #define NVMF_NQN_FIELD_LEN	256
-> 
-> ... while NVMF_NQN_SIZE is defined as:
-> |       /* However the max length of a qualified name is another size */
-> |       #define NVMF_NQN_SIZE		223
-> 
-> Since 223 seems pretty magic, I'm not going to touch it.
+> lib/seq_buf.c is a good start for a lot of simple cases that just
+> append to strings including creating complex ones.  Kent had a bunch
+> of good ideas on how to improve it, but couldn't be convinced to
+> contribute to it instead of duplicating the functionality which
+> is a bit sad, but I think we need to switch to something like
+> seq_buf that actually has a counted string instead of all this messing
+> around with the null-terminated strings.
 
-struct nvmf_connect_data {
-	...
-        char            subsysnqn[NVMF_NQN_FIELD_LEN];
-        char            hostnqn[NVMF_NQN_FIELD_LEN];
+When doing more complex string creation, I agree. I spent some time
+doing this while I was looking at removing strcat() and strlcat(); this
+is where seq_buf shines. (And seq_buf is actually both: it maintains its
+%NUL termination _and_ does the length counting.) The only thing clunky
+about it was initialization, but all the conversions I experimented with
+were way cleaner using seq_buf. I even added a comment to strlcat()'s
+kern-doc to aim folks at seq_buf. :)
 
-Honestly, the use of NVMF_NQN_SIZE as the length arg looks like a bug.
+/**
+ * strlcat - Append a string to an existing string
+...
+ * Do not use this function. While FORTIFY_SOURCE tries to avoid
+ * read and write overflows, this is only possible when the sizes
+ * of @p and @q are known to the compiler. Prefer building the
+ * string with formatting, via scnprintf(), seq_buf, or similar.
 
-struct nvmf_ctrl_options {
-	...
-        char                    *subsysnqn;
-	...
-        struct nvmf_host        *host;
-
-struct nvmf_host {
-	...
-        char                    nqn[NVMF_NQN_SIZE];
-
-ctrl->opts->host->nqn is sized as NVMF_NQN_SIZE, so this is like saying:
-
-	strscpy(dest, src, sizeof(src));
-
-Which can go wrong when dest is smaller than src, but that's not the
-case here. It seems ctrl->opts->host->nqn is expected to be a C string:
-
-drivers/nvme/host/fabrics.h:        strcmp(opts->host->nqn, ctrl->opts->host->nqn) ||
-
-And subsysnqn seems to be the same size:
-
-drivers/nvme/target/core.c:     subsys->subsysnqn = kstrndup(subsysnqn, NVMF_NQN_SIZE,
-drivers/nvme/target/core.c-                     GFP_KERNEL);
-
-So these really look like bugs to me. Perhaps a follow-up patch to fix
-this, if nvme maintainers agree?
-
-Either way, strscpy is an improvement:
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Almost all of the remaining strncpy() usage is just string to string
+copying, but the corner cases that are being spun out that aren't
+strscpy() or strscpy_pad() are covered by strtomem(), kmemdup_nul(),
+and memcpy(). Each of these are a clear improvement since they remove
+the ambiguity of the intended behavior. Using seq_buf ends up being way
+more overhead than is needed.
 
 -Kees
-
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
-> Note: build-tested only.
-> 
-> Found with: $ rg "strncpy\("
-> ---
->  drivers/nvme/host/fabrics.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/nvme/host/fabrics.c b/drivers/nvme/host/fabrics.c
-> index 8175d49f2909..57aad3ce311a 100644
-> --- a/drivers/nvme/host/fabrics.c
-> +++ b/drivers/nvme/host/fabrics.c
-> @@ -386,8 +386,8 @@ static struct nvmf_connect_data *nvmf_connect_data_prep(struct nvme_ctrl *ctrl,
->  
->  	uuid_copy(&data->hostid, &ctrl->opts->host->id);
->  	data->cntlid = cpu_to_le16(cntlid);
-> -	strncpy(data->subsysnqn, ctrl->opts->subsysnqn, NVMF_NQN_SIZE);
-> -	strncpy(data->hostnqn, ctrl->opts->host->nqn, NVMF_NQN_SIZE);
-> +	strscpy(data->subsysnqn, ctrl->opts->subsysnqn, NVMF_NQN_SIZE);
-> +	strscpy(data->hostnqn, ctrl->opts->host->nqn, NVMF_NQN_SIZE);
->  
->  	return data;
->  }
-> 
-> ---
-> base-commit: 58720809f52779dc0f08e53e54b014209d13eebb
-> change-id: 20231018-strncpy-drivers-nvme-host-fabrics-c-416258a22598
-> 
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
-> 
-> 
 
 -- 
 Kees Cook
