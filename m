@@ -1,185 +1,180 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC1D32C8D
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 17:31:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04AAC225BA
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 17:38:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xsxW01Zw"
-Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 449DE106
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 10:30:59 -0700 (PDT)
-Received: by mail-qt1-x82f.google.com with SMTP id d75a77b69052e-41cb7720579so22091cf.1
-        for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 10:30:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BMzbXv7T"
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDCC1126
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 10:37:58 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id 4fb4d7f45d1cf-53d8320f0easo14018839a12.3
+        for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 10:37:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697736658; x=1698341458; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1697737077; x=1698341877; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Z1N5zlDoHQ+2HyvPpTZq9l5rRGfyzCE+KDCZYbiZxaQ=;
-        b=xsxW01ZwgIoQaakdguqbSTLEXeI2s7+1AXkq70fUWuCRPUyZtvAJTw3nPmDHtcGFBB
-         OgyM+/gf458ALHn674o4CmyWvMNXjETdC3RvZzsCBXWen+xDOjNL4+yEhGFV2p179u9V
-         M1vqzXVWg8ewhCSMduiYf4v8t0WfUqhfrGrLO4NkrsyNIe+PL9x5Fy6MTOzFXez3NsWz
-         1xk5A4p0Bkgss3neSEhv7EOhYVVu/upTKDEPTHhRz2m2zaw9UtHxq3ZaWvbZS1FzZbGX
-         DZrMJSKhrItIpm7omJwatOrVOoI7GyUOVWmB/1QyKRqtsjCOSEZ7NbmAsLAY6UL1OQF7
-         di2Q==
+        bh=gVLsdu4894wzLjbCSVYdckk2YNXtNkRVnHj3GUzmzxE=;
+        b=BMzbXv7TA5pLGFuZoo4Nag6x50lPfNo5yJvW8CYSRGjYnCqGj2B+SZVSw2gpXMxS5C
+         3Gunmp8zD2pZb8RYNpZcaOfes0FtMtxj8B9NrLd8kPUKbWVzclbonq+kbO1jL/v8lxij
+         RX2FHAbzRnJWzJd8r8aluLSjFZSyoYLwJodmw5JkEN0nPocTa1yG+1NEVOb3UmEovUrJ
+         iR9+7n5HWcsV8J32xGWQZKVtxTpEyMx+lD83e0sV/Cx4bPEGzIY06Kr2iJK1Yo3nyk0H
+         Aw23yhhZ9CpAYTTmSMTejQ6u0JxfykdgivukiYkhcc4tT8ozRxDuwjkoLdW8RCXn2ezN
+         7otA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697736658; x=1698341458;
+        d=1e100.net; s=20230601; t=1697737077; x=1698341877;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Z1N5zlDoHQ+2HyvPpTZq9l5rRGfyzCE+KDCZYbiZxaQ=;
-        b=oQvOGn8NmD0QSkYhZGj2VRN2sh/wWsV/JmZw7ZvolwNRSWEv2jOU2qJ5IupdmJyJzf
-         XuYMoWR4nC1XO2vz222fCVBiE9mGByW+dNOmgqYufddH5mbA29A75I9ZfPd+e+jInrAG
-         uVUKF1PLnBfEuzyhrRXfcc5e09IthxRlwdb30fPG6Ha5+NaeFVHyPbHw3mshM/Y0YOn+
-         X3oR2DeVARh5+7oj9hupf6Yl1k2RlAftMhv4FNVtEGHHF2fSshE11a99vg4WBz6BybUq
-         p19Ep1wFoRZB32NspVFNjl92Lznz/znEOfMK5L1Qj7BtUgMHiJh3hqu30W8wdNlt//oi
-         hjtw==
-X-Gm-Message-State: AOJu0YxECdjVYY5K0sG/J/pSMWFBvzEFuxn+GNG7zliN1mRrYNNmwakM
-	ur5krQu201B1HIWYq63YbdfyqE7Ko09y3IBP4iJnNw==
-X-Google-Smtp-Source: AGHT+IEon0kv5nVW5ivsYs0TMVy/aup60ceSgksHiRzY/CZIUuTRYj4l6InpkOkHG7IoPubyjBnMxKq9Y68vWbNjl3Y=
-X-Received: by 2002:a05:622a:a020:b0:41c:bd34:7e44 with SMTP id
- jt32-20020a05622aa02000b0041cbd347e44mr369701qtb.6.1697736658106; Thu, 19 Oct
- 2023 10:30:58 -0700 (PDT)
+        bh=gVLsdu4894wzLjbCSVYdckk2YNXtNkRVnHj3GUzmzxE=;
+        b=Su/EzK7wplNWKv50JYzwNKWxrLRzUU0Hk8WD7qRNQ+hJw7pjjV8+u2dFaZwS4e5QMh
+         rGIX9Be8GzdHsWb66QGV3ajbL2eONP2PPAfEfUZoYiN872gYp0BIYzQs9JkCPBM+vsMA
+         a5aayDN5NcutKgx4CdeBW+eRiAqytLj8Yk4DFXz1PP5+1kBjSzqhfLig0c4WQRDIxLgq
+         qvHnrng9PcKZJPOeo7ZE77QffukkeWlsC917gspAOU+P4bol+OU13N8ylBOiBMT497Wm
+         1rEjy3ar567qQX2IAMOigRJsLBBYcMaN9h+tuJPjmTAwlt3oG1PuWXb8FDFukQJB980O
+         KX7A==
+X-Gm-Message-State: AOJu0YxroBGFo0s3ypSioYv9wiDrMsBk2qWhWI8znGmWmcEiKcQT7mbX
+	NGE1pWeraSSKVV+uz2+RL2AA/BiAiYU2L1RlQ7pvCg==
+X-Google-Smtp-Source: AGHT+IGgNlHXWJ4jAnKdze+bNbnKLPu1+tzb6oWrarJ3fNEgLoQAaoZLCjwvwJxcBXJ/th47uvdz3RgYjYvcHib0AQw=
+X-Received: by 2002:a05:6402:5106:b0:53d:a4e5:67d0 with SMTP id
+ m6-20020a056402510600b0053da4e567d0mr2179966edd.13.1697737077110; Thu, 19 Oct
+ 2023 10:37:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231016143828.647848-1-jeffxu@chromium.org> <ZS1URCBgwGGj9JtM@casper.infradead.org>
- <CAKbZUD2A+=bp_sd+Q0Yif7NJqMu8p__eb4yguq0agEcmLH8SDQ@mail.gmail.com>
- <CALmYWFtOgMAQDGNoM6k2Ev4kMHD396wwH+rVDODaSjsyVMDogg@mail.gmail.com>
- <CAKbZUD2j1jbomCAVxUX_JmG1rfa8udc=5SqVOpDgc-3GnSTbAQ@mail.gmail.com> <CALmYWFv7jzOj5HPcYct=UzYKPrwwvtN1EQeHioQHDPwGFvL5Ug@mail.gmail.com>
-In-Reply-To: <CALmYWFv7jzOj5HPcYct=UzYKPrwwvtN1EQeHioQHDPwGFvL5Ug@mail.gmail.com>
-From: Jeff Xu <jeffxu@google.com>
-Date: Thu, 19 Oct 2023 10:30:20 -0700
-Message-ID: <CALmYWFt71Vi6ySiZhW+tmE-LZL7Tnu-dQ1uMO10DUkASUTxzKA@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 0/8] Introduce mseal() syscall
-To: Pedro Falcato <pedro.falcato@gmail.com>
-Cc: Matthew Wilcox <willy@infradead.org>, jeffxu@chromium.org, akpm@linux-foundation.org, 
-	keescook@chromium.org, sroettger@google.com, jorgelo@chromium.org, 
-	groeck@chromium.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, jannh@google.com, 
-	surenb@google.com, alex.sierra@amd.com, apopple@nvidia.com, 
-	aneesh.kumar@linux.ibm.com, axelrasmussen@google.com, ben@decadent.org.uk, 
-	catalin.marinas@arm.com, david@redhat.com, dwmw@amazon.co.uk, 
-	ying.huang@intel.com, hughd@google.com, joey.gouly@arm.com, corbet@lwn.net, 
-	wangkefeng.wang@huawei.com, Liam.Howlett@oracle.com, 
-	torvalds@linux-foundation.org, lstoakes@gmail.com, mawupeng1@huawei.com, 
-	linmiaohe@huawei.com, namit@vmware.com, peterx@redhat.com, 
-	peterz@infradead.org, ryan.roberts@arm.com, shr@devkernel.io, vbabka@suse.cz, 
-	xiujianfeng@huawei.com, yu.ma@intel.com, zhangpeng362@huawei.com, 
-	dave.hansen@intel.com, luto@kernel.org, linux-hardening@vger.kernel.org
+References: <20231017-strncpy-drivers-net-wireless-broadcom-brcm80211-brcmfmac-cfg80211-c-v3-0-af780d74ae38@google.com>
+ <20231017-strncpy-drivers-net-wireless-broadcom-brcm80211-brcmfmac-cfg80211-c-v3-2-af780d74ae38@google.com>
+ <202310181654.E47A7709@keescook>
+In-Reply-To: <202310181654.E47A7709@keescook>
+From: Justin Stitt <justinstitt@google.com>
+Date: Thu, 19 Oct 2023 10:37:45 -0700
+Message-ID: <CAFhGd8oAaVUP3KcXPkpF061T55PfGCKbxMRKay-==RWguMqJWQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] wifi: brcmsmac: replace deprecated strncpy with memcpy
+To: Kees Cook <keescook@chromium.org>
+Cc: Arend van Spriel <aspriel@gmail.com>, Franky Lin <franky.lin@broadcom.com>, 
+	Hante Meuleman <hante.meuleman@broadcom.com>, Kalle Valo <kvalo@kernel.org>, 
+	linux-wireless@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com, 
+	SHA-cyfmac-dev-list@infineon.com, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Pedro
+On Wed, Oct 18, 2023 at 5:03=E2=80=AFPM Kees Cook <keescook@chromium.org> w=
+rote:
+>
+> On Tue, Oct 17, 2023 at 08:11:29PM +0000, Justin Stitt wrote:
+> > Let's move away from using strncpy and instead use the more obvious
+> > interface for this context.
+> >
+> > For wlc->pub->srom_ccode, we're just copying two bytes from ccode into
+> > wlc->pub->srom_ccode with no expectation that srom_ccode be
+> > NUL-terminated:
+> > wlc->pub->srom_ccode is only used in regulatory_hint():
+> > 1193 |       if (wl->pub->srom_ccode[0] &&
+> > 1194 |           regulatory_hint(wl->wiphy, wl->pub->srom_ccode))
+> > 1195 |               wiphy_err(wl->wiphy, "%s: regulatory hint failed\n=
+", __func__);
+> >
+> > We can see that only index 0 and index 1 are accessed.
+> > 3307 |       int regulatory_hint(struct wiphy *wiphy, const char *alpha=
+2)
+> > 3308 |       {
+> > ...  |          ...
+> > 3322 |          request->alpha2[0] =3D alpha2[0];
+> > 3323 |          request->alpha2[1] =3D alpha2[1];
+> > ...  |          ...
+> > 3332 |       }
+> >
+> > Since this is just a simple byte copy with correct lengths, let's use
+> > memcpy(). There should be no functional change.
+> >
+> > In a similar boat, both wlc->country_default and
+> > wlc->autocountry_default are just simple byte copies so let's use
+> > memcpy. However, FWICT they aren't used anywhere. (they should be
+> > used or removed -- not in scope of my patch, though).
+> >
+> > Signed-off-by: Justin Stitt <justinstitt@google.com>
+> > ---
+> >  drivers/net/wireless/broadcom/brcm80211/brcmsmac/channel.c | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/channel.c=
+ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/channel.c
+> > index 5a6d9c86552a..f6962e558d7c 100644
+> > --- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/channel.c
+> > +++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/channel.c
+> > @@ -341,7 +341,7 @@ struct brcms_cm_info *brcms_c_channel_mgr_attach(st=
+ruct brcms_c_info *wlc)
+> >       /* store the country code for passing up as a regulatory hint */
+> >       wlc_cm->world_regd =3D brcms_world_regd(ccode, ccode_len);
+> >       if (brcms_c_country_valid(ccode))
+> > -             strncpy(wlc->pub->srom_ccode, ccode, ccode_len);
+> > +             memcpy(wlc->pub->srom_ccode, ccode, ccode_len);
+>
+>         const char *ccode =3D sprom->alpha2;
+>         int ccode_len =3D sizeof(sprom->alpha2);
+>
+> struct ssb_sprom {
+>         ...
+>         char alpha2[2];         /* Country Code as two chars like EU or U=
+S */
+>
+> This should be marked __nonstring, IMO.
+>
+> struct brcms_pub {
+>         ...
+>         char srom_ccode[BRCM_CNTRY_BUF_SZ];     /* Country Code in SROM *=
+/
+>
+> #define BRCM_CNTRY_BUF_SZ        4       /* Country string is 3 bytes + N=
+UL */
+>
+> This, however, is shown as explicitly %NUL terminated.
+>
+> The old strncpy wasn't %NUL terminating wlc->pub->srom_ccode, though, so
+> the memcpy is the same result, but is that actually _correct_ here?
 
-Some followup on mmap() + mprotect():
+Judging from the usage, we can see that only bytes at offset 0 and 1 are
+used. I think the comment "/* Country string is 3 bytes + NUL */" might
+be misleading or perhaps there are other uses that I can't find (which
+require NUL-termination)?
 
-On Wed, Oct 18, 2023 at 11:20=E2=80=AFAM Jeff Xu <jeffxu@google.com> wrote:
 >
-> On Tue, Oct 17, 2023 at 3:35=E2=80=AFPM Pedro Falcato <pedro.falcato@gmai=
-l.com> wrote:
 > >
-> > > >
-> > > > I think it's worth pointing out that this suggestion (with PROT_*)
-> > > > could easily integrate with mmap() and as such allow for one-shot
-> > > > mmap() + mseal().
-> > > > If we consider the common case as 'addr =3D mmap(...); mseal(addr);=
-', it
-> > > > definitely sounds like a performance win as we halve the number of
-> > > > syscalls for a sealed mapping. And if we trivially look at e.g Open=
-BSD
-> > > > ld.so code, mmap() + mimmutable() and mprotect() + mimmutable() see=
-m
-> > > > like common patterns.
-> > > >
-> > > Yes. mmap() can support sealing as well, and memory is allocated as
-> > > immutable from begining.
-> > > This is orthogonal to mseal() though.
+> >       /*
+> >        * If no custom world domain is found in the SROM, use the
+> > @@ -354,10 +354,10 @@ struct brcms_cm_info *brcms_c_channel_mgr_attach(=
+struct brcms_c_info *wlc)
+> >       }
 > >
-> > I don't see how this can be orthogonal to mseal().
-> > In the case we opt for adding PROT_ bits, we should more or less only
-> > need to adapt calc_vm_prot_bits(), and the rest should work without
-> > issues.
-> > vma merging won't merge vmas with different prots. The current
-> > interfaces (mmap and mprotect) would work just fine.
-> > In this case, mseal() or mimmutable() would only be needed if you need
-> > to set immutability over a range of VMAs with different permissions.
+> >       /* save default country for exiting 11d regulatory mode */
+> > -     strncpy(wlc->country_default, ccode, ccode_len);
+> > +     memcpy(wlc->country_default, ccode, ccode_len);
 > >
-> Agreed. By orthogonal, I meant we can have two APIs:
-> mmap() and mseal()/mprotect()
-> i.e. we can't just rely on mmap() only without mseal()/mprotect()/mimmuta=
-ble().
-> Sealing can be applied after initial memory creation.
+> >       /* initialize autocountry_default to driver default */
+> > -     strncpy(wlc->autocountry_default, ccode, ccode_len);
+> > +     memcpy(wlc->autocountry_default, ccode, ccode_len);
 >
-> > Note: modifications should look kinda like this: https://godbolt.org/z/=
-Tbjjd14Pe
-> > The only annoying wrench in my plans here is that we have effectively
-> > run out of vm_flags bits in 32-bit architectures, so this approach as
-> > I described is not compatible with 32-bit.
-> >
-> > > In case of ld.so, iiuc, memory can be first allocated as W, then late=
-r
-> > > changed to RO, for example, during symbol resolution.
-> > > The important point is that the application can decide what type of
-> > > sealing it wants, and when to apply it.  There needs to be an api(),
-> > > that can be mseal() or mprotect2() or mimmutable(), the naming is not
-> > > important to me.
-> > >
-> > > mprotect() in linux have the following signature:
-> > > int mprotect(void addr[.len], size_t len, int prot);
-> > > the prot bitmasks are all taken here.
-> > > I have not checked the prot field in mmap(), there might be bits left=
-,
-> > > even not, we could have mmap2(), so that is not an issue.
-> >
-> > I don't see what you mean. We have plenty of prot bits left (32-bits,
-> > and we seem to have around 8 different bits used).
-> > And even if we didn't, prot is the same in mprotect and mmap and mmap2 =
-:)
-> >
-> > The only issue seems to be that 32-bit ran out of vm_flags, but that
-> > can probably be worked around if need be.
-> >
-> Ah, you are right about this. vm_flags is full, and prot in mprotect() is=
- not.
-> Apology that I was wrong previously and caused confusion.
+> struct brcms_c_info {
+>         ...
+>         char country_default[BRCM_CNTRY_BUF_SZ];
+>         char autocountry_default[BRCM_CNTRY_BUF_SZ];
 >
-> There is a slight difference in the syntax of mprotect and mseal.
-> Each time when mprotect() is called, the kernel takes all of RWX bits
-> and updates vm_flags,
-> In other words, the application sets/unset each RWX, and kernel takes it.
->
-> In the mseal() case, the kernel will remember which seal types were
-> applied previously, and the application doesn=E2=80=99t need to repeat al=
-l
-> existing seal types in the next mseal().  Once a seal type is applied,
-> it can=E2=80=99t be unsealed.
->
-> So if we want to use mprotect() for sealing, developers need to think
-> of sealing bits differently than the rest of prot bits. It is a
-> different programming model, might or might not be an obvious concept
-> to developers.
->
-This probably doesn't matter much to developers.
-We can enforce the sealing bit to be the same as the rest of PROT bits.
-If mprotect() tries to unset sealing, it will fail.
+> These are similar...
 
-> There is a difference in input check and error handling as well.
-> for mseal(), if a given address range has a gap (unallocated memory),
-> or if one of VMA is sealed with MM_SEAL_SEAL flag, none of VMAs is
-> updated.
-> For mprotect(), some VMAs can be updated, till an error happens to a VMA.
+I can't find any uses for these either.
+
 >
-This difference doesn't matter much.
+> So, this change results in the same behavior, but is it right?
+>
+> -Kees
+>
+> --
+> Kees Cook
 
-For mprotect()/mmap(), is Linux implementation limited by POSIX ?
-This can be made backward compatible.
-If there is no objection to adding linux specific values in mmap() and
-mprotect(),
-This works for me.
-
-Thanks for your input.
--Jeff
+Thanks
+Justin
