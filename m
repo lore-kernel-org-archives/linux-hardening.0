@@ -1,121 +1,143 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28D4354E5
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 17:45:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F27FA36B17
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 17:54:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XDrru/Ap"
-Received: from mail-oo1-xc49.google.com (mail-oo1-xc49.google.com [IPv6:2607:f8b0:4864:20::c49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0984F119
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 10:45:03 -0700 (PDT)
-Received: by mail-oo1-xc49.google.com with SMTP id 006d021491bc7-57b78a20341so10476985eaf.0
-        for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 10:45:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NZc9I8HD"
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8552112
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 10:54:19 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d86dac81f8fso12002370276.1
+        for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 10:54:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697737502; x=1698342302; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1697738059; x=1698342859; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=qg+otgUOPQR+8G/4uV/TUAnZUyW51Jn+plgzCktzBuA=;
-        b=XDrru/ApZi0UXweUD7gr35ntg23Lt6QbrC+gaMYzlj6SB+gYOAjz3t7R5ockw+MHY5
-         nAI8oYvVYUrtmsr7HZwamZqKxvQqafGaVIb0TBm9XjC5nGmARMH2nIyJL/D9g1OERy2K
-         2qlHmwyJ01x9qs5JsEZlpmr7+T05U7DMFoySaqPshFPCbwRuKld6h/hDhCGLtYHvuafi
-         To94gucsbTQwVuDc6Q3VzoDuh92fNEzpiGUAFO3ti0fBGfIA/d+ECCCbs2vGNZXXiNvM
-         j9q9D5SlqVSP2b3IJJYv4SNXHZGOgdTOnAXFMwmbZcFIHf7guo/8duT4QwWtp6qXC0GJ
-         xZ6Q==
+        bh=wCaHYSvOMmjyjjo+2DaJHIApqUGU3SdaqxSKwGR/sus=;
+        b=NZc9I8HD5Mbv3+kaOY8h3qn1a4tHq979zp/1L+q+oUGb3mnBXZ02OyWWp3sDxfvsML
+         XAZMTnzqH7+0O1qxB6Vdx4coiXRgIrlBV5mAOTxPSz91jgkS5VMBTvrJktrxnFZt//Hf
+         T/Fg6AkKFql4BkxAHme12JIbu4I48cEOnpAyqhKaAqjkzCt1zHiqlmmOamjCvklzrvV8
+         1msXByhXEi+640ucGLwqAYgyaXwYVIa/DW8YxYYMLutHNsZ9lkkfrUbUbV/94Fo63JGm
+         72BLnEUys5MchCBh07/IoHPHd8Ydjjeas1breSM6dK09KXmHShAmZVeJcw0o7DNMIZYa
+         TdrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697737502; x=1698342302;
+        d=1e100.net; s=20230601; t=1697738059; x=1698342859;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=qg+otgUOPQR+8G/4uV/TUAnZUyW51Jn+plgzCktzBuA=;
-        b=h+sGYhBZNttWMtFjzzCmbynMu4gdPmfphFuRvynpqv4tMVNhk6aDVhQ4Q9G9VhIGDh
-         7/LItSKU9nInySeKVBP0ktHbSuLWHRyfRWoVYSt574ldCtywhyhmTX9aDHZ2IN2EfIyo
-         +0aYj5PkYnzfhrNYRINK3eTNIAKvdr3yj/wSme5Xw0vS2j5VEju9Q0EGeYudnU8c8b1R
-         OE+BDdDzX08o19ws4Od7jtehu6vqDohVnTs9iQylXlQAGcYDtOhqIiyxB98gd/Bv5PEy
-         eGTUtjJcsr4B11qaccuywKsreWVih6P1nYoDxDzr3NWQ/vZZeFIqcNFaGl2J9ZyCDzq5
-         TxEQ==
-X-Gm-Message-State: AOJu0YzSeuQlfg7UyADmlBEsO31S+i1DNR+apUnWR/vMQLHnJC8ih8IC
-	Owx6RuETYOigiWyvHysWXk8C9VBsXPmiOI3EUA==
-X-Google-Smtp-Source: AGHT+IF/1XWODGKQ3tILQKxRsLwEu1ZDsY+BIBDOaGIwchVda0e1YeB9gM+pNN+BK6LJjMlqq0ITrFJ7PPV61+TGJA==
+        bh=wCaHYSvOMmjyjjo+2DaJHIApqUGU3SdaqxSKwGR/sus=;
+        b=Gpt2z3cmIVcUcbTXGZ+xevyUyl2YfBZF03BpDgWVQrohawzHm07UgFGuhUmyo/o8FN
+         mzhTAj0UkEiwVgyr2RskBpEQ9cf2A6kkelYvA+nQ+AsqaMPFk7w/WW48phk0ZJkmLJRL
+         9Z3aLyWDtEXMDwLgqEgv1MAhxri9AcddnyQrsw8VLxijsMevv+fKHo+fDWvLEUV5lwmT
+         DO6+J2mdDb+ufKULpItNAtavMhFMAPefuhcvE/JgcFSDu5tEBC+9at1CgUDS//sTxCN9
+         bM2jql5hU034AgGAmDq+huC8KU0/AxkEtH/XvRDYFAylWZXIQFvgKknKa0EC05vt6a8h
+         5ojw==
+X-Gm-Message-State: AOJu0Yx3VJNTEplq2Znm5N1Kl2VU4jG1aWtWXZrrcp4AsB6mSKjoisaD
+	ZIJMdz1kmq+nqFKkNZuiNTjRPauuSLvQgc/a8w==
+X-Google-Smtp-Source: AGHT+IFW/KpAD1OE2SUfMXnmaGMOttDNK0DgS3TLSfp4LYGTFI6KheySPCzP33IWgQ3o4jh68J7qlmtIbH4Cu9rxSg==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a4a:6c15:0:b0:581:f8d7:e4af with SMTP
- id q21-20020a4a6c15000000b00581f8d7e4afmr1090598ooc.0.1697737502309; Thu, 19
- Oct 2023 10:45:02 -0700 (PDT)
-Date: Thu, 19 Oct 2023 17:44:59 +0000
+ (user=justinstitt job=sendgmr) by 2002:a25:738b:0:b0:d9c:c9a8:8c27 with SMTP
+ id o133-20020a25738b000000b00d9cc9a88c27mr31838ybc.13.1697738058988; Thu, 19
+ Oct 2023 10:54:18 -0700 (PDT)
+Date: Thu, 19 Oct 2023 17:54:15 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIABtrMWUC/6WOQQ6CMBBFr0K6dgytRsSV9zAsoExhktqSadNKC
- He3cgWX7y3++5sIyIRBPKpNMCYK5F0BdaqEnns3IdBYWKhaXWQtGwiRnV5WGJkScgCHETIxWgw
- ByEW0QNlmMgQmwzhMoEGaa2vqerj3CkVZXhgNfY7qqys8U4ie1+NEkj/7Xy9JkDCYW4u6GeXQN s/J+8niWfu36PZ9/wL0GBhH9wAAAA==
+X-B4-Tracking: v=1; b=H4sIAEZtMWUC/43NQQ6DIBCF4asY1p0GMEboqvdoXLQw6iQVzEBIj
+ fHupZ6gy+8t/reLhEyYxK3ZBWOhRDFU6Esj3PwMEwL5aqGlbpVUBlLm4NYNPFNBThCKp2WBV87
+ gQHWjbU1vrbEoamJlHOlz5h9D9UwpR97Ot6J+65/hokBBZ2Qvx967ztn7FOP0xquLixiO4/gCb mF4u8kAAAA=
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1697737501; l=2408;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1697738058; l=2904;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=+j1ZR4eOwaN2eWhtI6Or7popX8JK/RP2CN1CNyJtMuM=; b=BJyGQKERL2LGGUnreMt73sxdVT2rdOk9iwAulRF+/ouCnd05D/W3ZTM6a5zobWDvA04d1pUyB
- RMDmJtVuIm/DdGrXlkpaGZ8jYNcg5qsjcAjsQrDmYemRAMmAxa9iYGi
+ bh=rw760A6im3UPDmPb1PvvzFcADO0t8QLqJon9lALd7qU=; b=NYE7eTw9PMvTw2M5a8Bn23YgudGYR1Uir+9aU2nJN/yFHTP0niBKIS6Z6tV2vKAW3CaEGvUBt
+ 56mAEMPR1qFCvf/IQUE+DNmLbFA7xeXjbNcSzdE6VeR+EPpGWLVtRMF
 X-Mailer: b4 0.12.3
-Message-ID: <20231019-strncpy-drivers-net-wireless-intel-iwlwifi-fw-dbg-c-v2-1-179b211a374b@google.com>
-Subject: [PATCH v2] wifi: iwlwifi: fw: replace deprecated strncpy with strscpy_pad
+Message-ID: <20231019-strncpy-drivers-nvdimm-btt-c-v2-1-366993878cf0@google.com>
+Subject: [PATCH v2] nvdimm/btt: replace deprecated strncpy with strscpy
 From: Justin Stitt <justinstitt@google.com>
-To: Gregory Greenman <gregory.greenman@intel.com>, Kalle Valo <kvalo@kernel.org>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
+To: Dan Williams <dan.j.williams@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>
+Cc: nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>, 
+	Kees Cook <keescook@chromium.org>
 Content-Type: text/plain; charset="utf-8"
+
+Found with grep.
 
 strncpy() is deprecated for use on NUL-terminated destination strings
 [1] and as such we should prefer more robust and less ambiguous string
 interfaces.
 
-Based on the deliberate `sizeof(dest) ... - 1` pattern we can see that
-both dump_info->dev_human_readable and dump_info->bus_human_readable are
-intended to be NUL-terminated.
+We expect super->signature to be NUL-terminated based on its usage with
+memcmp against a NUL-term'd buffer:
+btt_devs.c:
+253 | if (memcmp(super->signature, BTT_SIG, BTT_SIG_LEN) != 0)
+btt.h:
+13  | #define BTT_SIG "BTT_ARENA_INFO\0"
 
-Moreover, since this seems to cross the file boundary let's NUL-pad to
-ensure no behavior change.
+NUL-padding is not required as `super` is already zero-allocated:
+btt.c:
+985 | super = kzalloc(sizeof(struct btt_sb), GFP_NOIO);
+... rendering any additional NUL-padding superfluous.
 
-strscpy_pad() covers both the NUL-termination and NUL-padding, let's use
-it.
+Considering the above, a suitable replacement is `strscpy` [2] due to
+the fact that it guarantees NUL-termination on the destination buffer
+without unnecessarily NUL-padding.
+
+Let's also use the more idiomatic strscpy usage of (dest, src,
+sizeof(dest)) instead of (dest, src, XYZ_LEN) for buffers that the
+compiler can determine the size of. This more tightly correlates the
+destination buffer to the amount of bytes copied.
+
+Side note, this pattern of memcmp() on two NUL-terminated strings should
+really be changed to just a strncmp(), if i'm not mistaken? I see
+multiple instances of this pattern in this system:
+
+|       if (memcmp(super->signature, BTT_SIG, BTT_SIG_LEN) != 0)
+|               return false;
+
+where BIT_SIG is defined (weirdly) as a double NUL-terminated string:
+
+|       #define BTT_SIG "BTT_ARENA_INFO\0"
 
 Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
 Link: https://github.com/KSPP/linux/issues/90
 Cc: linux-hardening@vger.kernel.org
 Signed-off-by: Justin Stitt <justinstitt@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
 Changes in v2:
-- prefer strscpy_pad (thanks Kees)
-- Link to v1: https://lore.kernel.org/r/20231017-strncpy-drivers-net-wireless-intel-iwlwifi-fw-dbg-c-v1-1-bf69ec7d1b97@google.com
+- provide more details about memcmp()
+- fix typos in commit msg (thanks Kees)
+- fix subject line (thanks Alison)
+- Link to v1: https://lore.kernel.org/r/20231018-strncpy-drivers-nvdimm-btt-c-v1-1-58070f7dc5c9@google.com
 ---
 Note: build-tested only.
-
-Found with: $ rg "strncpy\("
 ---
- drivers/net/wireless/intel/iwlwifi/fw/dbg.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/nvdimm/btt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
-index 3ab6a68f1e9f..7aa282592cdc 100644
---- a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
-@@ -880,10 +880,10 @@ iwl_fw_error_dump_file(struct iwl_fw_runtime *fwrt,
- 			cpu_to_le32(fwrt->trans->hw_rev_step);
- 		memcpy(dump_info->fw_human_readable, fwrt->fw->human_readable,
- 		       sizeof(dump_info->fw_human_readable));
--		strncpy(dump_info->dev_human_readable, fwrt->trans->name,
--			sizeof(dump_info->dev_human_readable) - 1);
--		strncpy(dump_info->bus_human_readable, fwrt->dev->bus->name,
--			sizeof(dump_info->bus_human_readable) - 1);
-+		strscpy_pad(dump_info->dev_human_readable, fwrt->trans->name,
-+			sizeof(dump_info->dev_human_readable));
-+		strscpy_pad(dump_info->bus_human_readable, fwrt->dev->bus->name,
-+			sizeof(dump_info->bus_human_readable));
- 		dump_info->num_of_lmacs = fwrt->smem_cfg.num_lmacs;
- 		dump_info->lmac_err_id[0] =
- 			cpu_to_le32(fwrt->dump.lmac_err_id[0]);
+diff --git a/drivers/nvdimm/btt.c b/drivers/nvdimm/btt.c
+index d5593b0dc700..9372c36e8f76 100644
+--- a/drivers/nvdimm/btt.c
++++ b/drivers/nvdimm/btt.c
+@@ -986,7 +986,7 @@ static int btt_arena_write_layout(struct arena_info *arena)
+ 	if (!super)
+ 		return -ENOMEM;
+ 
+-	strncpy(super->signature, BTT_SIG, BTT_SIG_LEN);
++	strscpy(super->signature, BTT_SIG, sizeof(super->signature));
+ 	export_uuid(super->uuid, nd_btt->uuid);
+ 	export_uuid(super->parent_uuid, parent_uuid);
+ 	super->flags = cpu_to_le32(arena->flags);
 
 ---
 base-commit: 58720809f52779dc0f08e53e54b014209d13eebb
-change-id: 20231017-strncpy-drivers-net-wireless-intel-iwlwifi-fw-dbg-c-1f49f00b8a2e
+change-id: 20231018-strncpy-drivers-nvdimm-btt-c-15f93879989e
 
 Best regards,
 --
