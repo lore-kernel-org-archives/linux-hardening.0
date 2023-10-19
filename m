@@ -1,215 +1,146 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E1B337155
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 17:59:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B3D332C90
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 18:21:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qC1dqfqm"
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38D6A124
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 10:59:23 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id 2adb3069b0e04-507a29c7eefso7931365e87.1
-        for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 10:59:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UlxO7jfJ"
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3397911D
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 11:21:24 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d86dac81f8fso12038746276.1
+        for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 11:21:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697738361; x=1698343161; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wPpqFnRlR4uSK16DavFgn7RP6vUonhIX0hmH74GxJEI=;
-        b=qC1dqfqmsu1VgHCC8aGnOvqKSBJIJB8pDqKEA3FemWzHwsZ3/XLW0r8o7Cdo/I+rVB
-         05LWJobCopszkmmamFZe1LQAtyqepUGJhbT9cLuPgpsGE6FIlVSyqQ6CYHHbQmbJuFlk
-         rTD1CHCVYK8kAffg0h80e1TXrKw52NCoJ0k3aM2sTknQe2QAnu8g7IS4l0tGBd6d9ZVY
-         AlsIzXfM9HEG2QK/qhxalw4GdWN8eaDrt4FIDASDgd3HD75aG20SMEAtGQWf3uhPc3tA
-         JVaqd4mBHkp41fMtDRJ7CpS7V63ZBDXTotTow23surWdfI2ateLyCO5NLHficie1GDuX
-         I9ZA==
+        d=google.com; s=20230601; t=1697739683; x=1698344483; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=d4Js1cGoVd6Is4II9UaSATIKgACWkFcGE+hiHb+zhb4=;
+        b=UlxO7jfJT7LrfqoagBtOhuJDKklt5UatDzxoL19uExnG3cHnbhVlAteA8K+lq02Oak
+         dWEfb5nmtOerLFmeSsKEkQag+GAyLAycW9koeRTLFwOEbvIQRHLcY4wAly7fJoAmBk1L
+         Y7C3fOlOdIXERSKauJTLIvPRvu0hKm7itahJNkLNu39jtxbL1yEunOBXMJbZBCm99yPK
+         +JZmI6xScf3C7E4CXYZBnWj7fUBGNSyaHk0sN5uk2I5WmAJwxfrQfSoGmt+C/MNtNHZs
+         cl1adaMhd5QgbswD6DIPUXRI2DaHdgPX370WE7OhwZf9uDvCX/Ctb4puB+id2KI07K76
+         Y1TA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697738361; x=1698343161;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wPpqFnRlR4uSK16DavFgn7RP6vUonhIX0hmH74GxJEI=;
-        b=r7L0ZLK0gTgu6MnuS1h3P9H0pnQ6j1OKBn53j9UDOzFY0A36XZyz/gxJmgBsYPq9n0
-         Rv+X8DJrqrSjHSnbB/BFHAdvVGPD9EaQ7XLgpoEcT5f55LNionqTQZbFGoULNsUUIHQb
-         MkA70sUr6mM+6esp1LPoZd1d9up3i5dgDSPmc+BfRYvBrZLBtcz7LdAIU+qEgjl3brSj
-         drnYgcmHZOeBwFN44NDBJbQuIAs0T0PJuayoZXJMBJj/5T7TzlTY0MrVBEiUTg1aZA10
-         8Io8PDNAeg3C7kpITFaP+yQPvVIoJpOze8ovyTpxnwWCbPUaOq++066JpAR37ODm4is8
-         cs1w==
-X-Gm-Message-State: AOJu0Yz+k6ol9D1xSmqZTZXHtvShKNpgv51I0jSkAwJMFG1OgFBz/OKq
-	JtZSCtnNFy0d64KrsLL6300Jds+Oc7e6yPaxYdSEQw==
-X-Google-Smtp-Source: AGHT+IGZf3CoKIiKhyBtdv8sWG6RzJ6x50GjhcgoVZKdnvbl0TdRVmE4DPWaxT7rZJE37reFkRerDzjsiL6e4QWS7oY=
-X-Received: by 2002:ac2:5052:0:b0:4fb:94c6:fd63 with SMTP id
- a18-20020ac25052000000b004fb94c6fd63mr1983277lfm.17.1697738361215; Thu, 19
- Oct 2023 10:59:21 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1697739683; x=1698344483;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=d4Js1cGoVd6Is4II9UaSATIKgACWkFcGE+hiHb+zhb4=;
+        b=cLbj/6uF2LHBdJJN7k6JcXDZ9fTHkTpfGdVj9uBhnQhlkJc0lJ1H3nB9308pUmBpqC
+         k/og+2RlXPtw9QctY+DN1hrdZmY9FnHg0fmzm37TmuOfZp7+RovG7mmZaT3HYujNcEJs
+         cNJZUV9rqmIE0h9ERAXOLkpZF1OHL6nsa0ZZZxVy0I7uzkq/3N67fbugw5HTPAfr4WIb
+         YbUHlyCQUAqyv4b+a9XG1wmm1Lfh4Ti3IPaucP5SBKhuLZI3qt8jrHfy8oeHjIIiWtPl
+         ZZKlwzzQJGgpOTeh675ROjEYbmziW16gMxNHg1GCRmR9huxElScslGCxq6mJF0lH3xEw
+         QEHA==
+X-Gm-Message-State: AOJu0Yzbe6WudV66BBtZfDHl+SjDGtv+c6wb61GWmmtykp9R8G1CMO+a
+	cyUhB8z+Svq5ojbIJwEw9rtEmCV02wP9moGisA==
+X-Google-Smtp-Source: AGHT+IFlXICmJcfbDSmoO7A7EUA6iVEF74betNl2k852/gxnaf3TEuSWEbGfjZQ7BNIH7NpUBEkFg+ungfm4ArnZtQ==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a25:ec02:0:b0:d9a:3dac:6c1a with SMTP
+ id j2-20020a25ec02000000b00d9a3dac6c1amr73575ybh.11.1697739683357; Thu, 19
+ Oct 2023 11:21:23 -0700 (PDT)
+Date: Thu, 19 Oct 2023 18:21:22 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20231018-strncpy-drivers-nvdimm-btt-c-v1-1-58070f7dc5c9@google.com>
- <CAFhGd8o-ftoGQ4qvrdGM2tSYWBqvYbF7Qb7O+UfsbzYxVmU6sA@mail.gmail.com> <ZTBrSb/h13YzE3Ws@aschofie-mobl2>
-In-Reply-To: <ZTBrSb/h13YzE3Ws@aschofie-mobl2>
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAKFzMWUC/52NSwqDMBRFt1Iy7iv5iJaOuo8iEuIzBjSRlxAr4
+ t4bXUJn99zBOTuLSA4je912RphddMEXkPcbM6P2FsH1hZnkUgkunhATebNs0JPLSBE8JlhX7YG
+ WOdrunJ1JNIEBNdSSaz30StasCBfCwX2v2KctPLqYAm1XO4vz/SuTBQioUFVKNlw1Sr9tCHbCh wkza4/j+AHiV2SL5QAAAA==
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1697739682; l=2821;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=fmlQfhWbiCM67LS2nuJX0KI/1NzFMdegLgKJe+cta+Q=; b=wDUtP3Ror/d2KFXBRlN9RT2CDGzEW5TDMAgY6ZpEV6DYbx7hZuns1er9Wb2wR7lXEPmqCtncN
+ RTkxhUuMmpTDTdSDV0A6ncnIw87LXyDFbMHjm6T7oMQfm5T/3jQHUTh
+X-Mailer: b4 0.12.3
+Message-ID: <20231019-strncpy-drivers-net-wwan-rpmsg_wwan_ctrl-c-v2-1-ecf9b5a39430@google.com>
+Subject: [PATCH v2] net: wwan: replace deprecated strncpy with strscpy
 From: Justin Stitt <justinstitt@google.com>
-Date: Thu, 19 Oct 2023 10:59:09 -0700
-Message-ID: <CAFhGd8pC+uhovQPezcWoddFgPaJjB3Hpf1sTOhiKgMfRLsAFrg@mail.gmail.com>
-Subject: Re: [PATCH] block: replace deprecated strncpy with strscpy
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>, nvdimm@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+To: Stephan Gerhold <stephan@gerhold.net>, Loic Poulain <loic.poulain@linaro.org>, 
+	Sergey Ryazanov <ryazanov.s.a@gmail.com>, Johannes Berg <johannes@sipsolutions.net>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Justin Stitt <justinstitt@google.com>, Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="utf-8"
 
-On Wed, Oct 18, 2023 at 4:33=E2=80=AFPM Alison Schofield
-<alison.schofield@intel.com> wrote:
->
-> On Wed, Oct 18, 2023 at 03:39:59PM -0700, Justin Stitt wrote:
-> > I have a feeling I may have botched the subject line for this patch.
-> > Can anyone confirm if it's good or not?
-> >
-> > Automated tooling told me that this was the most common patch
-> > prefix but it may be caused by large patch series that just
-> > happened to touch this file once.
-> >
-> > Should the subject be: nvdimm/btt: ... ?
-> >
-> > Judging from [1] I see a few "block" and a few of nvdimm/btt.
->
-> Hi Justin,
->
-> It should be nvdimm/btt because it only touches btt.c.
+strncpy() is deprecated for use on NUL-terminated destination strings
+[1] and as such we should prefer more robust and less ambiguous string
+interfaces.
 
-Got it. I just sent a [v2].
+We expect chinfo.name to be NUL-terminated based on its use with format
+strings and sprintf:
+rpmsg/rpmsg_char.c
+165:            dev_err(dev, "failed to open %s\n", eptdev->chinfo.name);
+368:    return sprintf(buf, "%s\n", eptdev->chinfo.name);
 
->
-> Here's the old school way that I use to find prefixes. Maybe you can
-> train your automated tooling to do this, and then share it with me ;)
+... and with strcmp():
+|  static struct rpmsg_endpoint *qcom_glink_create_ept(struct rpmsg_device *rpdev,
+|  						    rpmsg_rx_cb_t cb,
+|  						    void *priv,
+|  						    struct rpmsg_channel_info
+|  									chinfo)
+|  ...
+|  const char *name = chinfo.name;
+|  ...
+|  		if (!strcmp(channel->name, name))
 
-I use a gently modified version of [1] which I've hardwired into my b4
-installation to automatically set the prefix when creating a patch.
+Since chinfo is initialized as such (just above the strscpy()):
 
->
-> I do:
->
-> ~/git/linux/drivers/nvdimm$ git log --pretty=3Doneline --abbrev-commit bt=
-t.c
->
-> 3222d8c2a7f8 block: remove ->rw_page
-> ba229aa8f249 nvdimm-btt: Use the enum req_op type
-> 86947df3a923 block: Change the type of the last .rw_page() argument
-> 8b9ab6266204 block: remove blk_cleanup_disk
-> 3205190655ea nvdimm-btt: use bvec_kmap_local in btt_rw_integrity
-> 322cbb50de71 block: remove genhd.h
->
-> And I see a few choices, with 'block' being pretty common.
-> I peek in those patches and see that block was used when the patch
-> included files in drivers/block AND also in nvdimm/btt.
->
-> Use nvdimm/btt for your patch.
->
-> A bit more below -
->
-> >
-> > On Wed, Oct 18, 2023 at 3:35=E2=80=AFPM Justin Stitt <justinstitt@googl=
-e.com> wrote:
-> > >
-> > > strncpy() is deprecated for use on NUL-terminated destination strings
-> > > [1] and as such we should prefer more robust and less ambiguous strin=
-g
-> > > interfaces.
-> > >
-> > > We expect super->signature to be NUL-terminated based on its usage wi=
-th
-> > > memcpy against a NUL-term'd buffer:
-> > > btt_devs.c:
-> > > 253 | if (memcmp(super->signature, BTT_SIG, BTT_SIG_LEN) !=3D 0)
-> > > btt.h:
-> > > 13  | #define BTT_SIG "BTT_ARENA_INFO\0"
-> > >
-> > > NUL-padding is not required as `super` is already zero-allocated:
-> > > btt.c:
-> > > 985 | super =3D kzalloc(sizeof(struct btt_sb), GFP_NOIO);
-> > > ... rendering any additional NUL-padding superfluous.
-> > >
-> > > Considering the above, a suitable replacement is `strscpy` [2] due to
-> > > the fact that it guarantees NUL-termination on the destination buffer
-> > > without unnecessarily NUL-padding.
-> > >
-> > > Let's also use the more idiomatic strscpy usage of (dest, src,
-> > > sizeof(dest)) instead of (dest, src, XYZ_LEN) for buffers that the
-> > > compiler can determine the size of. This more tightly correlates the
-> > > destination buffer to the amount of bytes copied.
-> > >
-> > > Side note, this pattern of memcmp() on two NUL-terminated strings sho=
-uld
-> > > really be changed to just a strncmp(), if i'm not mistaken? I see
-> > > multiple instances of this pattern in this system.
->
-> I'm not following this note about memcmp() usage. Where is that?
+|       struct rpmsg_channel_info chinfo = {
+|               .src = rpwwan->rpdev->src,
+|               .dst = RPMSG_ADDR_ANY,
+|       };
 
-Sorry, I wasn't very clear. I've added more info in [v2] but tl;dr is that
-it seems weird to me to use memcmp() on two NUL-terminated strings
-when we have something like strncmp() or strcmp() for that purpose.
-See [2].
+... we know other members are zero-initialized. This means no
+NUL-padding is required (as any NUL-byte assignments are redundant).
 
->
-> > >
-> > > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#=
-strncpy-on-nul-terminated-strings [1]
-> > > Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.=
-en.html [2]
-> > > Link: https://github.com/KSPP/linux/issues/90
-> > > Cc: linux-hardening@vger.kernel.org
-> > > Signed-off-by: Justin Stitt <justinstitt@google.com>
-> > > ---
-> > > Note: build-tested only.
-> > >
-> > > Found with: $ rg "strncpy\("
->
-> How you found it goes in the commit log, not below the line.
+Considering the above, a suitable replacement is `strscpy` due to the
+fact that it guarantees NUL-termination on the destination buffer
+without unnecessarily NUL-padding.
 
-Whoops, fixed in [v2].
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+---
+Changes in v2:
+- clarify chinfo _is_ zero-init'd in commit msg (thanks Stephan)
+- use strscpy instead (thanks Kees, Stephan)
+- Link to v1: https://lore.kernel.org/r/20231018-strncpy-drivers-net-wwan-rpmsg_wwan_ctrl-c-v1-1-4e343270373a@google.com
+---
+Note: found with grep
+Note: build-tested only
 
->
-> > > ---
-> > >  drivers/nvdimm/btt.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/nvdimm/btt.c b/drivers/nvdimm/btt.c
-> > > index d5593b0dc700..9372c36e8f76 100644
-> > > --- a/drivers/nvdimm/btt.c
-> > > +++ b/drivers/nvdimm/btt.c
-> > > @@ -986,7 +986,7 @@ static int btt_arena_write_layout(struct arena_in=
-fo *arena)
-> > >         if (!super)
-> > >                 return -ENOMEM;
-> > >
-> > > -       strncpy(super->signature, BTT_SIG, BTT_SIG_LEN);
-> > > +       strscpy(super->signature, BTT_SIG, sizeof(super->signature));
-> > >         export_uuid(super->uuid, nd_btt->uuid);
-> > >         export_uuid(super->parent_uuid, parent_uuid);
-> > >         super->flags =3D cpu_to_le32(arena->flags);
-> > >
-> > > ---
-> > > base-commit: 58720809f52779dc0f08e53e54b014209d13eebb
-> > > change-id: 20231018-strncpy-drivers-nvdimm-btt-c-15f93879989e
-> > >
-> > > Best regards,
-> > > --
-> > > Justin Stitt <justinstitt@google.com>
-> > >
-> >
-> > [1]: https://lore.kernel.org/all/?q=3Ddfn%3Adrivers%2Fnvdimm%2Fbtt.c
-> >
-> > Thanks
-> > Justin
-> >
+I've rolled Kees' RB into this patch from v1 as it matches his previous
+review.
+---
+ drivers/net/wwan/rpmsg_wwan_ctrl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-[v2]: https://lore.kernel.org/r/20231019-strncpy-drivers-nvdimm-btt-c-v2-1-=
-366993878cf0@google.com
-[1] https://github.com/kees/kernel-tools/blob/trunk/helpers/get-prefix
-[2]: https://elixir.bootlin.com/linux/v6.6-rc6/source/drivers/nvdimm/btt_de=
-vs.c#L253
+diff --git a/drivers/net/wwan/rpmsg_wwan_ctrl.c b/drivers/net/wwan/rpmsg_wwan_ctrl.c
+index 86b60aadfa11..26756ff0e44d 100644
+--- a/drivers/net/wwan/rpmsg_wwan_ctrl.c
++++ b/drivers/net/wwan/rpmsg_wwan_ctrl.c
+@@ -37,7 +37,7 @@ static int rpmsg_wwan_ctrl_start(struct wwan_port *port)
+ 		.dst = RPMSG_ADDR_ANY,
+ 	};
+ 
+-	strncpy(chinfo.name, rpwwan->rpdev->id.name, RPMSG_NAME_SIZE);
++	strscpy(chinfo.name, rpwwan->rpdev->id.name, sizeof(chinfo.name));
+ 	rpwwan->ept = rpmsg_create_ept(rpwwan->rpdev, rpmsg_wwan_ctrl_callback,
+ 				       rpwwan, chinfo);
+ 	if (!rpwwan->ept)
 
-Thanks
-Justin
+---
+base-commit: 58720809f52779dc0f08e53e54b014209d13eebb
+change-id: 20231018-strncpy-drivers-net-wwan-rpmsg_wwan_ctrl-c-3f620aafd326
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
+
