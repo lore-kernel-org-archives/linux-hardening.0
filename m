@@ -1,165 +1,127 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11B2CDDA6;
-	Thu, 19 Oct 2023 13:42:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E0BA374D9
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 17:29:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="CXRdo6q2";
-	dkim=permerror (0-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="JM9fLk3T"
-X-Greylist: delayed 184 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 19 Oct 2023 06:42:23 PDT
-Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [81.169.146.169])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60188124;
-	Thu, 19 Oct 2023 06:42:23 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1697722756; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=EFD3QYbBNAwdIpiJCeXqcDPAWe8hCm0JWYvEzP88ly6Xj65qtskAfhsbd6dcrjPGQy
-    MD7awJq1dw6or2Uv+SaN+L+sra8ss5jqNJxp63+tz/lcNHE1n+JLk2g4MLVWg2gLUOrQ
-    JxC2L8btf3fJbiSB3AYrkuJjpdGdiACScE08DSroIUGfYXFkyBX/EjP84XUgxipMz7GQ
-    aCOGDbmAzKo6WZYvGgvKORuGNm45yGPOxPpu3EKb1uJf2+WjlGmGlZDSdt5KAYniaVK1
-    INhePkKyWz7YNTegGUkByLL3LTZoyknd8a5M2wgqqipzLnzlt/xWemvaviU++ZSytiAw
-    c65g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1697722756;
-    s=strato-dkim-0002; d=strato.com;
-    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=IiAUACoAmD1dZiYlatQomGi3MwVID43ZHiBQH5Q1d+0=;
-    b=ljIvctqtJvBDkdGnIRJ89iB7acCc9h66+A11crb8qzilgureOvyhJmqOEaozHstcy4
-    sJvR3TpqSPwzJf/14S0vCHfJP9HiYLZjuipQF//++FlYHuOY2wVIYpj/Ansb6Uv3e5be
-    QevS51b6PuYjtrSqj2oDJ67Ans3cl1I0yz+RoruXCc/+CSCl5BCQGoUlj7JRn0ZA5RAd
-    LXNd2PdqNqLJPbxAkcsh/gNS0IBpbMU6hzZiLjbNYPBQG0aaezuA36KLtk8kcDLOkc0r
-    xpn8nYQJMGTYDRaXstoWXszfIbfGJdxuc63ht2MSS07IckNWnpfZVVQuPR5y4Q4EqZz1
-    Lepg==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo02
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1697722756;
-    s=strato-dkim-0002; d=gerhold.net;
-    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=IiAUACoAmD1dZiYlatQomGi3MwVID43ZHiBQH5Q1d+0=;
-    b=CXRdo6q2oEJBSO1pHcZjrJTrxUYyk04S2kUpFRHmpcxV8LaWVhb+Jtt3ec8qszNyGd
-    ZkOjqu3sOS0A+XVDJZL7tWoW1fQFepK4BR7TkOLIOyQH9CWbZpNGL2MRNkQNWXC1S4gc
-    8ZmZBFGFEhSGp4efXVDyHLs9+FIrRqyhTchT/Yd7L40fSy4cDjFWTDFnRFg6hseKto+/
-    DA+EYkHsEg1NdS+v98hBFIm1GyivoRUCMokKnqiM3ncmn1VrBdQGmUbW4lnwCAK7pX1n
-    Bfqd2HA5eIigfii4pDdz/W7u1sdijTNdf8SlCA1OqOpHz7cPk99jPu5PJy3pyho7bYiZ
-    S47w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1697722756;
-    s=strato-dkim-0003; d=gerhold.net;
-    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=IiAUACoAmD1dZiYlatQomGi3MwVID43ZHiBQH5Q1d+0=;
-    b=JM9fLk3TtDDldKevllM9q3uJh8Tp3iozbo0xtn50KB3M9rODzOytQBlRSWBClThq4r
-    YdYZC6BDhDtiYyB5zLBQ==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u261EJF5OxJD4paA95vh"
-Received: from gerhold.net
-    by smtp.strato.de (RZmta 49.9.0 DYNA|AUTH)
-    with ESMTPSA id j34a49z9JDdFDo9
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Thu, 19 Oct 2023 15:39:15 +0200 (CEST)
-Date: Thu, 19 Oct 2023 15:39:10 +0200
-From: Stephan Gerhold <stephan@gerhold.net>
-To: Kees Cook <keescook@chromium.org>,
-	Justin Stitt <justinstitt@google.com>
-Cc: Loic Poulain <loic.poulain@linaro.org>,
-	Sergey Ryazanov <ryazanov.s.a@gmail.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] net: wwan: replace deprecated strncpy with strscpy_pad
-Message-ID: <ZTExfv2aHPD2B1ze@gerhold.net>
-References: <20231018-strncpy-drivers-net-wwan-rpmsg_wwan_ctrl-c-v1-1-4e343270373a@google.com>
- <202310182232.A569D262@keescook>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cHWdbIg0"
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01B7E12D
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 10:29:06 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d9a581346c4so11182782276.0
+        for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 10:29:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1697736546; x=1698341346; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2dM38oFA9Pe/oU12qt1pqIA50gOKDfSgpU7CFprv1yc=;
+        b=cHWdbIg0jyNGVyVEhDpxNzd/63un5tiuklbwUfrz2KzIOUWXh2jO82q85+9CcBe5U0
+         sgydZEpiY/wZRkzrXt4xvcXdWMpEKw8u0elwoFUMYZWL0hi8wVFUUMj8gKm7liIsO7mF
+         D1S4j+F6r3+5yOyyUovTPr9LIfRgrRt7Wt4m2xz5rHIBC7u8BLS0cJuzkED03NtbrKnH
+         O+1rJhBdt0YFmnmJxFGBfwCjTuiIO5rz0cXvsmiJFfD3M1STA0DTgurSQ4VE7RmCGppe
+         HANmIARbxkaNF6UpdavJkoWMS/4HnnQxpk5u24CC57NgyXhd2QylQOn6t3C1Y9mEclAD
+         1gqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697736546; x=1698341346;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2dM38oFA9Pe/oU12qt1pqIA50gOKDfSgpU7CFprv1yc=;
+        b=QCVdxjrFBqruTjUj7av8Y4ko/5ryhH0PVkUJZmsa0t27c9VvgKNwCwPmdzcpvQLLF7
+         SgNFPfeN1RcpLUQrpAmEVkwetJQSNAGsE3rX7v8BPyApXxMpyMopzVGb0wN6ZfMrFZaW
+         xtGFvoLwLc9i8uxkr38FV890LnBrf8l5rLn8sCPrFP2mvqt/ocS1ydNnrEpBz+SEP/o8
+         oBZFaIXTso8FTwP6OkWbTctrRhiIxz5sYhkom1eRmEhaM45fv1okaPfBc6wTfn5ouy2/
+         iOSdJNOYD9WXr881GCaYZwWfyXu3zyo9mqhrWqTaLIUNIbDi9x10mQ1/QQoniJ3vBng+
+         gW3w==
+X-Gm-Message-State: AOJu0Ywit6/jcw2n5bo+VC0nz6v92oFAjneHU54/wMW/hUr/uY8fxnss
+	otBRsdXN/EV1jfuJLsI+4rmBgCO5J3HfqzMiqg==
+X-Google-Smtp-Source: AGHT+IHny44lFcXUUZdQ9whIolzk/nLUcQB/99Ej3mtZ8rGAwmCLBlfTDxB6r6w+HnKOSx9S/ZCVp8RA1WGHhw/9Kw==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a5b:584:0:b0:c78:c530:6345 with SMTP
+ id l4-20020a5b0584000000b00c78c5306345mr62074ybp.7.1697736546059; Thu, 19 Oct
+ 2023 10:29:06 -0700 (PDT)
+Date: Thu, 19 Oct 2023 17:29:01 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202310182232.A569D262@keescook>
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAFxnMWUC/52NQQ6CMBBFr0K6dkxbVNSV9zAsmmGAJtCSGVIlh
+ LtbiSdw85P3F++tSog9iboXq2JKXnwMGeyhUNi70BH4JrOy2pZGmwvIzAGnBRr2iVgg0AwvzzS
+ QCLh5pOG3CBW629lgW2HrVBZOTK1/77Fnnbn3Mkde9nYy3/evTDJgQJfXRlNV4knbRxdjN9AR4 6jqbds+HuzT1uUAAAA=
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1697736545; l=2387;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=XowZOHRhqMCWq2fZ6yqvbWeRdNj7KFUM/jYuUGt1iRs=; b=I3H8ns0MlDbP5d8HN0mCYlz9v6sQJLyJQnj1UZVv0uRXoG+50xHyRKxV+C0qMYGOmECPx9Ey5
+ 8hoyNmvhpxYC4k6QRDMvh7xD/gPJGHhPeCc3sOaKgXZJlWxe7qv5Yt4
+X-Mailer: b4 0.12.3
+Message-ID: <20231019-strncpy-drivers-net-wireless-atmel-atmel-c-v2-1-52e46fbea083@google.com>
+Subject: [PATCH v2] atmel: replace deprecated strncpy with strscpy
+From: Justin Stitt <justinstitt@google.com>
+To: Kalle Valo <kvalo@kernel.org>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On Wed, Oct 18, 2023 at 10:35:26PM -0700, Kees Cook wrote:
-> On Wed, Oct 18, 2023 at 10:14:55PM +0000, Justin Stitt wrote:
-> > strncpy() is deprecated for use on NUL-terminated destination strings
-> > [1] and as such we should prefer more robust and less ambiguous string
-> > interfaces.
-> > 
-> > We expect chinfo.name to be NUL-terminated based on its use with format
-> > strings and sprintf:
-> > rpmsg/rpmsg_char.c
-> > 165:            dev_err(dev, "failed to open %s\n", eptdev->chinfo.name);
-> > 368:    return sprintf(buf, "%s\n", eptdev->chinfo.name);
-> > 
-> > ... and with strcmp():
-> > |  static struct rpmsg_endpoint *qcom_glink_create_ept(struct rpmsg_device *rpdev,
-> > |  						    rpmsg_rx_cb_t cb,
-> > |  						    void *priv,
-> > |  						    struct rpmsg_channel_info
-> > |  									chinfo)
-> > |  ...
-> > |  const char *name = chinfo.name;
-> > |  ...
-> > |  		if (!strcmp(channel->name, name))
-> > 
-> > Moreover, as chinfo is not kzalloc'd, let's opt to NUL-pad the
-> > destination buffer
-> > 
-> > Similar change to:
-> > Commit 766279a8f85d ("rpmsg: qcom: glink: replace strncpy() with strscpy_pad()")
-> > and
-> > Commit 08de420a8014 ("rpmsg: glink: Replace strncpy() with strscpy_pad()")
-> > 
-> > Considering the above, a suitable replacement is `strscpy_pad` due to
-> > the fact that it guarantees both NUL-termination and NUL-padding on the
-> > destination buffer.
-> > 
-> > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> > Link: https://github.com/KSPP/linux/issues/90
-> > Cc: linux-hardening@vger.kernel.org
-> > Signed-off-by: Justin Stitt <justinstitt@google.com>
-> > ---
-> > Note: build-tested only.
-> > 
-> > Found with: $ rg "strncpy\("
-> > ---
-> >  drivers/net/wwan/rpmsg_wwan_ctrl.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/net/wwan/rpmsg_wwan_ctrl.c b/drivers/net/wwan/rpmsg_wwan_ctrl.c
-> > index 86b60aadfa11..39f5e780c478 100644
-> > --- a/drivers/net/wwan/rpmsg_wwan_ctrl.c
-> > +++ b/drivers/net/wwan/rpmsg_wwan_ctrl.c
-> > @@ -37,7 +37,7 @@ static int rpmsg_wwan_ctrl_start(struct wwan_port *port)
-> >  		.dst = RPMSG_ADDR_ANY,
-> >  	};
-> 
-> "chinfo" is initialized immediately above here, which means that it is
-> actually already zero filled for all the members that aren't explicitly
-> initialized, so the _pad variant isn't needed. I suspect Dead Store
-> Elimination will optimize it all away anyway, so this is probably fine.
-> 
+strncpy() is deprecated for use on NUL-terminated destination strings
+[1] and as such we should prefer more robust and less ambiguous string
+interfaces.
 
-Hm, strscpy_pad() is neither a typical compiler builtin nor an inline
-function, so my naive assumption would be that this could only be
-optimized away with LTO?
+We expect priv->firmware_id to be NUL-terminated based on its usage
+with seq_printf() and strlen() in atmel.c:
+1420 |       seq_printf(m, "%s loaded by host\n", priv->firmware_id);
+...
+3884 |       if (strlen(priv->firmware_id) == 0) {
 
-But I don't think this is particularly performance critical code, so
-maybe it's even better to be explicit in case someone ever changes the
-way chinfo is allocated.
+NUL-padding is not required, which is evident by the usage of a plain
+strcpy():
+3891 |   strcpy(priv->firmware_id, "atmel_at76c502.bin");
 
-@Justin: Nevertheless I would appreciate if you could briefly reword the
-commit message and add a note about this. Someone reading it later might
-get confused or mislead by the "Moreover, as chinfo is not kzalloc'd,"
-part. As Kees wrote, even without kzalloc the struct initializer of
-chinfo does actually ensure proper zero initialization of the missing
-members.
+Considering the above, a suitable replacement is `strscpy` [2] due to
+the fact that it guarantees NUL-termination on the destination buffer
+without unnecessarily NUL-padding.
 
-Thanks!
-Stephan
+Let's also replace hard-coded lengths to be `sizeof(...)` for buffers
+that the compiler can detect the size for as this is less error prone.
+
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strcpy [2]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [3]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Changes in v2:
+- leave strcpy() usage as is (thanks Kees)
+- Link to v1: https://lore.kernel.org/r/20231016-strncpy-drivers-net-wireless-atmel-atmel-c-v1-1-038d0e73c402@google.com
+---
+Note: build-tested only.
+
+Found with: $ rg "strncpy\("
+---
+ drivers/net/wireless/atmel/atmel.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/net/wireless/atmel/atmel.c b/drivers/net/wireless/atmel/atmel.c
+index 7c2d1c588156..99920430e8b4 100644
+--- a/drivers/net/wireless/atmel/atmel.c
++++ b/drivers/net/wireless/atmel/atmel.c
+@@ -2651,8 +2651,7 @@ static int atmel_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
+ 
+ 		priv->firmware = new_firmware;
+ 		priv->firmware_length = com.len;
+-		strncpy(priv->firmware_id, com.id, 31);
+-		priv->firmware_id[31] = '\0';
++		strscpy(priv->firmware_id, com.id, sizeof(priv->firmware_id));
+ 		break;
+ 
+ 	case ATMELRD:
+
+---
+base-commit: cbf3a2cb156a2c911d8f38d8247814b4c07f49a2
+change-id: 20231016-strncpy-drivers-net-wireless-atmel-atmel-c-7ca951cf7cfa
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
+
