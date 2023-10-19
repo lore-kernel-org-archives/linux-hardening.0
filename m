@@ -1,138 +1,208 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30EAC140
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 21:34:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A96A23DFE5;
+	Thu, 19 Oct 2023 21:40:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="x3KwTcGu"
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DADF106
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 14:34:39 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d86dac81f8fso229872276.1
-        for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 14:34:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697751278; x=1698356078; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=lqEsMCD2petOW7LvFR3PY5d0rpovBBpxs1upvL07Joc=;
-        b=x3KwTcGuXf3Wzm2xjlzyeR81q3rusVWLr41CBNirUTnQPEvyM14j7mfEqTpcpxxa6k
-         dJAX2Je3jYCtjmFLzhY9KCLRdmGQRlskksmVSjSMNRn1FjxB4kOQb0mG/hWeKtMWqiz3
-         8TawVPeQpOGakMJ3OaZM0bAvheUPfZCd6xzoNMut5yjqFcoVV7Ijtt3Mb5aSZaCqqxZM
-         gn37/DtZeQPHZ0DuV8YvtCWfruEbBgmZC76dG/zsjXYRA+6Y80LXVJR4ds1e2FGflFQC
-         dpFB6q6tt/NzVFeDTUsMd3w3idJK5F/75BwiZBuuLxUrJs/VXr6BYpKvvEaCipL12peH
-         ygTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697751278; x=1698356078;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lqEsMCD2petOW7LvFR3PY5d0rpovBBpxs1upvL07Joc=;
-        b=HQnkL0fsOzJS2PPEQwcb9mbUJgkUneUU5RMw+CsMjFBpsgecn33pOHXAVkLwbYKOw6
-         BpPoEozBbPwEnEUKOPbcP0JwzwVr7AKdlGdJr6nVJocp9BOZRbadjF8BhuG8UwehsCRw
-         B7Y2Va0wLpMpt3Us4eUopPGB2K5uXNhgqDlumA152r5tXIDGPJAWM/WPy5C7PRR12sPO
-         R8NohUnfw8Pblo+KuRL4TDY1dY9HDucs+GP5f9sXkNHAOSJSNjfZVVpIfGFGJtkQYBY7
-         x/ugVMXBOTCsUCQuAGa5hKllTC4L0r8So1BwQSfNX4CS1Tpwn6yjUkv3pnDb+RyAmQdS
-         7M7g==
-X-Gm-Message-State: AOJu0YwOufECfau6XxAtsNB3FcKERZVzS17tBhOzGIgCoW+3gqQO4jqv
-	e3lIW04pkRomgYMXEhLWtBlEoPo5Q66MOa615w==
-X-Google-Smtp-Source: AGHT+IEZOXJDte5mBKiSHod7tas1fWLJQLJRbTT4Mnc/qvcrMQZrSCM/hxqM5exEVwxnsM4TsX/4sGX1DymVjhGKgg==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a25:d110:0:b0:d9c:c9a8:8c27 with SMTP
- id i16-20020a25d110000000b00d9cc9a88c27mr446ybg.13.1697751278223; Thu, 19 Oct
- 2023 14:34:38 -0700 (PDT)
-Date: Thu, 19 Oct 2023 21:34:35 +0000
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HvmpSS7k"
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48127BE;
+	Thu, 19 Oct 2023 14:40:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:In-Reply-To:References;
+	bh=b4HCbIcpuTf2AtCD4Gw8oaFAr3lLevKnvsjAPH9DoPw=; b=HvmpSS7kAWcYGs+Te9d8uMi2LS
+	avX/MnUrQidVGEn/cj37ZF4edJOaPxjKeng5T3EL1iVWhprMk+6WTfbOJOhFA+c8ieS8rsRbd6JFs
+	9Eus2DWJ/Effc8qVV6ed9rttxoAQBeqPvWKJZRHYLC4Zm/qDvz0YOD51PBtrL295nGb+Dv2CrjKTf
+	A7xKDWtHXzFD/bjogf+p+55FLq9ojxA1SGFBuaAPhebcAi4eL1YphFyHeVYdkyRKZM/YFQYrCQSkJ
+	9L9le5NOrlxZ2JgoyvgqE+03Tdz0i11NYmyIIebw++rR/T90G60xX900OXOs8llIPX0S+vjDbCqsD
+	gPIKZXLA==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1qtakt-009Mv5-BT; Thu, 19 Oct 2023 21:40:35 +0000
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Kees Cook <keescook@chromium.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Petr Mladek <pmladek@suse.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: [PATCH 1/1] trace: Move readpos from seq_buf to trace_seq
+Date: Thu, 19 Oct 2023 22:40:33 +0100
+Message-Id: <20231019214033.2229099-1-willy@infradead.org>
+X-Mailer: git-send-email 2.37.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAOqgMWUC/x3NQQqEMAxA0atI1gbaqjh6FXGhNWoWUyUpxUG8+
- xSXb/P/DUrCpNAXNwglVj5Chi0L8PsUNkJessEZV1ljO9QowZ8/XIQTiWJIX8L90IirR49TU7u 5qudPaw3kyCm08vUOhvF5/p5i6cRwAAAA
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1697751277; l=2895;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=E7cZpx/98qOWGlojxJVSbMIF5mbCSTqGliFRklJggj8=; b=r5nMNcuHW5ecWZu9xGiqdmwQIceKXPadUITLieWfMFjmPqvtIMR7d5OaDyBK0FmycCu8pXiod
- LiUxzFjDcRrDIgL6K4o0W5CUFygua5UAEfx8VqQx05b4PaeO3KaJgSh
-X-Mailer: b4 0.12.3
-Message-ID: <20231019-strncpy-drivers-nvme-host-fc-c-v1-1-5805c15e4b49@google.com>
-Subject: [PATCH] nvme-fc: replace deprecated strncpy with strscpy
-From: Justin Stitt <justinstitt@google.com>
-To: James Smart <james.smart@broadcom.com>, Keith Busch <kbusch@kernel.org>, 
-	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>
-Cc: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-strncpy() is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous string
-interfaces.
+To make seq_buf more lightweight as a string buf, move the readpos member
+from seq_buf to its container, trace_seq.  That puts the responsibility
+of maintaining the readpos entirely in the tracing code.  If some future
+users want to package up the readpos with a seq_buf, we can define a
+new struct then.
 
-Let's instead use strscpy() [2] as it guarantees NUL-termination on the
-destination buffer.
-
-Moreover, there is no need to use:
-
-|       min(FCNVME_ASSOC_HOSTNQN_LEN, NVMF_NQN_SIZE));
-
-I imagine this was originally done to make sure the destination buffer
-is NUL-terminated by ensuring we copy a number of bytes less than the
-size of our destination, thus leaving some NUL-bytes at the end.
-
-However, with strscpy(), we no longer need to do this and we can instead
-opt for the more idiomatic strscpy() usage of:
-
-| strscpy(dest, src, sizeof(dest))
-
-Also, no NUL-padding is required as lsop is zero-allocated:
-
-|       lsop = kzalloc((sizeof(*lsop) +
-|                        sizeof(*assoc_rqst) + sizeof(*assoc_acc) +
-|                        ctrl->lport->ops->lsrqst_priv_sz), GFP_KERNEL);
-
-... and assoc_rqst points to a field in lsop:
-
-|       assoc_rqst = (struct fcnvme_ls_cr_assoc_rqst *)&lsop[1];
-
-Therefore, any additional NUL-byte assignments (like the ones that
-strncpy() makes) are redundant.
-
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
-Similar-to: https://lore.kernel.org/all/20231018-strncpy-drivers-nvme-host-fabrics-c-v1-1-b6677df40a35@google.com/
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
-Note: build-tested only.
----
- drivers/nvme/host/fc.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ include/linux/seq_buf.h   |  5 +----
+ include/linux/trace_seq.h |  2 ++
+ kernel/trace/trace.c      | 10 +++++-----
+ kernel/trace/trace_seq.c  |  6 +++++-
+ lib/seq_buf.c             | 13 +++++--------
+ 5 files changed, 18 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
-index a15b37750d6e..680585253f7c 100644
---- a/drivers/nvme/host/fc.c
-+++ b/drivers/nvme/host/fc.c
-@@ -1218,10 +1218,10 @@ nvme_fc_connect_admin_queue(struct nvme_fc_ctrl *ctrl,
- 	/* Linux supports only Dynamic controllers */
- 	assoc_rqst->assoc_cmd.cntlid = cpu_to_be16(0xffff);
- 	uuid_copy(&assoc_rqst->assoc_cmd.hostid, &ctrl->ctrl.opts->host->id);
--	strncpy(assoc_rqst->assoc_cmd.hostnqn, ctrl->ctrl.opts->host->nqn,
--		min(FCNVME_ASSOC_HOSTNQN_LEN, NVMF_NQN_SIZE));
--	strncpy(assoc_rqst->assoc_cmd.subnqn, ctrl->ctrl.opts->subsysnqn,
--		min(FCNVME_ASSOC_SUBNQN_LEN, NVMF_NQN_SIZE));
-+	strscpy(assoc_rqst->assoc_cmd.hostnqn, ctrl->ctrl.opts->host->nqn,
-+		sizeof(assoc_rqst->assoc_cmd.hostnqn));
-+	strscpy(assoc_rqst->assoc_cmd.subnqn, ctrl->ctrl.opts->subsysnqn,
-+		sizeof(assoc_rqst->assoc_cmd.subnqn));
+diff --git a/include/linux/seq_buf.h b/include/linux/seq_buf.h
+index 515d7fcb9634..a0fb013cebdf 100644
+--- a/include/linux/seq_buf.h
++++ b/include/linux/seq_buf.h
+@@ -14,19 +14,16 @@
+  * @buffer:	pointer to the buffer
+  * @size:	size of the buffer
+  * @len:	the amount of data inside the buffer
+- * @readpos:	The next position to read in the buffer.
+  */
+ struct seq_buf {
+ 	char			*buffer;
+ 	size_t			size;
+ 	size_t			len;
+-	loff_t			readpos;
+ };
  
- 	lsop->queue = queue;
- 	lsreq->rqstaddr = assoc_rqst;
-
----
-base-commit: dab3e01664eaddae965699f1fec776609db0ea9d
-change-id: 20231019-strncpy-drivers-nvme-host-fc-c-a542b34b8710
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
+ static inline void seq_buf_clear(struct seq_buf *s)
+ {
+ 	s->len = 0;
+-	s->readpos = 0;
+ }
+ 
+ static inline void
+@@ -143,7 +140,7 @@ extern __printf(2, 0)
+ int seq_buf_vprintf(struct seq_buf *s, const char *fmt, va_list args);
+ extern int seq_buf_print_seq(struct seq_file *m, struct seq_buf *s);
+ extern int seq_buf_to_user(struct seq_buf *s, char __user *ubuf,
+-			   int cnt);
++			   size_t start, int cnt);
+ extern int seq_buf_puts(struct seq_buf *s, const char *str);
+ extern int seq_buf_putc(struct seq_buf *s, unsigned char c);
+ extern int seq_buf_putmem(struct seq_buf *s, const void *mem, unsigned int len);
+diff --git a/include/linux/trace_seq.h b/include/linux/trace_seq.h
+index 6be92bf559fe..3691e0e76a1a 100644
+--- a/include/linux/trace_seq.h
++++ b/include/linux/trace_seq.h
+@@ -14,6 +14,7 @@
+ struct trace_seq {
+ 	char			buffer[PAGE_SIZE];
+ 	struct seq_buf		seq;
++	size_t			readpos;
+ 	int			full;
+ };
+ 
+@@ -22,6 +23,7 @@ trace_seq_init(struct trace_seq *s)
+ {
+ 	seq_buf_init(&s->seq, s->buffer, PAGE_SIZE);
+ 	s->full = 0;
++	s->readpos = 0;
+ }
+ 
+ /**
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index abaaf516fcae..217cabd09c3e 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -1730,15 +1730,15 @@ static ssize_t trace_seq_to_buffer(struct trace_seq *s, void *buf, size_t cnt)
+ {
+ 	int len;
+ 
+-	if (trace_seq_used(s) <= s->seq.readpos)
++	if (trace_seq_used(s) <= s->readpos)
+ 		return -EBUSY;
+ 
+-	len = trace_seq_used(s) - s->seq.readpos;
++	len = trace_seq_used(s) - s->readpos;
+ 	if (cnt > len)
+ 		cnt = len;
+-	memcpy(buf, s->buffer + s->seq.readpos, cnt);
++	memcpy(buf, s->buffer + s->readpos, cnt);
+ 
+-	s->seq.readpos += cnt;
++	s->readpos += cnt;
+ 	return cnt;
+ }
+ 
+@@ -7006,7 +7006,7 @@ tracing_read_pipe(struct file *filp, char __user *ubuf,
+ 
+ 	/* Now copy what we have to the user */
+ 	sret = trace_seq_to_user(&iter->seq, ubuf, cnt);
+-	if (iter->seq.seq.readpos >= trace_seq_used(&iter->seq))
++	if (iter->seq.readpos >= trace_seq_used(&iter->seq))
+ 		trace_seq_init(&iter->seq);
+ 
+ 	/*
+diff --git a/kernel/trace/trace_seq.c b/kernel/trace/trace_seq.c
+index bac06ee3b98b..7be97229ddf8 100644
+--- a/kernel/trace/trace_seq.c
++++ b/kernel/trace/trace_seq.c
+@@ -370,8 +370,12 @@ EXPORT_SYMBOL_GPL(trace_seq_path);
+  */
+ int trace_seq_to_user(struct trace_seq *s, char __user *ubuf, int cnt)
+ {
++	int ret;
+ 	__trace_seq_init(s);
+-	return seq_buf_to_user(&s->seq, ubuf, cnt);
++	ret = seq_buf_to_user(&s->seq, ubuf, s->readpos, cnt);
++	if (ret > 0)
++		s->readpos += ret;
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(trace_seq_to_user);
+ 
+diff --git a/lib/seq_buf.c b/lib/seq_buf.c
+index 45c450f423fa..0d218f3835ae 100644
+--- a/lib/seq_buf.c
++++ b/lib/seq_buf.c
+@@ -340,7 +340,7 @@ int seq_buf_path(struct seq_buf *s, const struct path *path, const char *esc)
+  *
+  * Returns -EFAULT if the copy to userspace fails.
+  */
+-int seq_buf_to_user(struct seq_buf *s, char __user *ubuf, int cnt)
++int seq_buf_to_user(struct seq_buf *s, char __user *ubuf, size_t start, int cnt)
+ {
+ 	int len;
+ 	int ret;
+@@ -350,20 +350,17 @@ int seq_buf_to_user(struct seq_buf *s, char __user *ubuf, int cnt)
+ 
+ 	len = seq_buf_used(s);
+ 
+-	if (len <= s->readpos)
++	if (len <= start)
+ 		return -EBUSY;
+ 
+-	len -= s->readpos;
++	len -= start;
+ 	if (cnt > len)
+ 		cnt = len;
+-	ret = copy_to_user(ubuf, s->buffer + s->readpos, cnt);
++	ret = copy_to_user(ubuf, s->buffer + start, cnt);
+ 	if (ret == cnt)
+ 		return -EFAULT;
+ 
+-	cnt -= ret;
+-
+-	s->readpos += cnt;
+-	return cnt;
++	return cnt - ret;
+ }
+ 
+ /**
+-- 
+2.40.1
 
