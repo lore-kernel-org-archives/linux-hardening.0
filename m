@@ -1,30 +1,79 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2A7A1DFE0
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 12:01:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9DE85138;
-	Thu, 19 Oct 2023 05:01:54 -0700 (PDT)
-Received: (from willy@localhost)
-	by mail.home.local (8.17.1/8.17.1/Submit) id 39JC0qTV004618;
-	Thu, 19 Oct 2023 14:00:52 +0200
-Date: Thu, 19 Oct 2023 14:00:52 +0200
-From: Willy Tarreau <w@1wt.eu>
-To: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Kees Cook <keescook@chromium.org>, Christoph Hellwig <hch@lst.de>,
-        Justin Stitt <justinstitt@google.com>, Keith Busch <kbusch@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, ksummit@lists.linux.dev
-Subject: Re: the nul-terminated string helper desk chair rearrangement
-Message-ID: <ZTEadLq8UFrxsHr/@1wt.eu>
-References: <20231018-strncpy-drivers-nvme-host-fabrics-c-v1-1-b6677df40a35@google.com>
- <20231019054642.GF14346@lst.de>
- <202310182248.9E197FFD5@keescook>
- <ZTDUYSBS7AO9pAgm@1wt.eu>
- <50ad206e-8a6a-4223-8050-0880e2b1581c@p183>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11B2CDDA6;
+	Thu, 19 Oct 2023 13:42:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="CXRdo6q2";
+	dkim=permerror (0-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="JM9fLk3T"
+X-Greylist: delayed 184 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 19 Oct 2023 06:42:23 PDT
+Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [81.169.146.169])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60188124;
+	Thu, 19 Oct 2023 06:42:23 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1697722756; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=EFD3QYbBNAwdIpiJCeXqcDPAWe8hCm0JWYvEzP88ly6Xj65qtskAfhsbd6dcrjPGQy
+    MD7awJq1dw6or2Uv+SaN+L+sra8ss5jqNJxp63+tz/lcNHE1n+JLk2g4MLVWg2gLUOrQ
+    JxC2L8btf3fJbiSB3AYrkuJjpdGdiACScE08DSroIUGfYXFkyBX/EjP84XUgxipMz7GQ
+    aCOGDbmAzKo6WZYvGgvKORuGNm45yGPOxPpu3EKb1uJf2+WjlGmGlZDSdt5KAYniaVK1
+    INhePkKyWz7YNTegGUkByLL3LTZoyknd8a5M2wgqqipzLnzlt/xWemvaviU++ZSytiAw
+    c65g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1697722756;
+    s=strato-dkim-0002; d=strato.com;
+    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=IiAUACoAmD1dZiYlatQomGi3MwVID43ZHiBQH5Q1d+0=;
+    b=ljIvctqtJvBDkdGnIRJ89iB7acCc9h66+A11crb8qzilgureOvyhJmqOEaozHstcy4
+    sJvR3TpqSPwzJf/14S0vCHfJP9HiYLZjuipQF//++FlYHuOY2wVIYpj/Ansb6Uv3e5be
+    QevS51b6PuYjtrSqj2oDJ67Ans3cl1I0yz+RoruXCc/+CSCl5BCQGoUlj7JRn0ZA5RAd
+    LXNd2PdqNqLJPbxAkcsh/gNS0IBpbMU6hzZiLjbNYPBQG0aaezuA36KLtk8kcDLOkc0r
+    xpn8nYQJMGTYDRaXstoWXszfIbfGJdxuc63ht2MSS07IckNWnpfZVVQuPR5y4Q4EqZz1
+    Lepg==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo02
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1697722756;
+    s=strato-dkim-0002; d=gerhold.net;
+    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=IiAUACoAmD1dZiYlatQomGi3MwVID43ZHiBQH5Q1d+0=;
+    b=CXRdo6q2oEJBSO1pHcZjrJTrxUYyk04S2kUpFRHmpcxV8LaWVhb+Jtt3ec8qszNyGd
+    ZkOjqu3sOS0A+XVDJZL7tWoW1fQFepK4BR7TkOLIOyQH9CWbZpNGL2MRNkQNWXC1S4gc
+    8ZmZBFGFEhSGp4efXVDyHLs9+FIrRqyhTchT/Yd7L40fSy4cDjFWTDFnRFg6hseKto+/
+    DA+EYkHsEg1NdS+v98hBFIm1GyivoRUCMokKnqiM3ncmn1VrBdQGmUbW4lnwCAK7pX1n
+    Bfqd2HA5eIigfii4pDdz/W7u1sdijTNdf8SlCA1OqOpHz7cPk99jPu5PJy3pyho7bYiZ
+    S47w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1697722756;
+    s=strato-dkim-0003; d=gerhold.net;
+    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=IiAUACoAmD1dZiYlatQomGi3MwVID43ZHiBQH5Q1d+0=;
+    b=JM9fLk3TtDDldKevllM9q3uJh8Tp3iozbo0xtn50KB3M9rODzOytQBlRSWBClThq4r
+    YdYZC6BDhDtiYyB5zLBQ==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u261EJF5OxJD4paA95vh"
+Received: from gerhold.net
+    by smtp.strato.de (RZmta 49.9.0 DYNA|AUTH)
+    with ESMTPSA id j34a49z9JDdFDo9
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Thu, 19 Oct 2023 15:39:15 +0200 (CEST)
+Date: Thu, 19 Oct 2023 15:39:10 +0200
+From: Stephan Gerhold <stephan@gerhold.net>
+To: Kees Cook <keescook@chromium.org>,
+	Justin Stitt <justinstitt@google.com>
+Cc: Loic Poulain <loic.poulain@linaro.org>,
+	Sergey Ryazanov <ryazanov.s.a@gmail.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] net: wwan: replace deprecated strncpy with strscpy_pad
+Message-ID: <ZTExfv2aHPD2B1ze@gerhold.net>
+References: <20231018-strncpy-drivers-net-wwan-rpmsg_wwan_ctrl-c-v1-1-4e343270373a@google.com>
+ <202310182232.A569D262@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -33,129 +82,84 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <50ad206e-8a6a-4223-8050-0880e2b1581c@p183>
+In-Reply-To: <202310182232.A569D262@keescook>
+Content-Transfer-Encoding: 7bit
 
-On Thu, Oct 19, 2023 at 02:40:52PM +0300, Alexey Dobriyan wrote:
-> On Thu, Oct 19, 2023 at 09:01:53AM +0200, Willy Tarreau wrote:
-> > On Wed, Oct 18, 2023 at 11:01:54PM -0700, Kees Cook wrote:
-> > > On Thu, Oct 19, 2023 at 07:46:42AM +0200, Christoph Hellwig wrote:
-> > > > On Wed, Oct 18, 2023 at 10:48:49PM +0000, Justin Stitt wrote:
-> > > > > strncpy() is deprecated for use on NUL-terminated destination strings
-> > > > > [1] and as such we should prefer more robust and less ambiguous string
-> > > > > interfaces.
-> > > > 
-> > > > If we want that we need to stop pretendening direct manipulation of
-> > > > nul-terminate strings is a good idea.  I suspect the churn of replacing
-> > > > one helper with another, maybe slightly better, one probably
-> > > > introduces more bugs than it fixes.
-> > > > 
-> > > > If we want to attack the issue for real we need to use something
-> > > > better.
-> > > > 
-> > > > lib/seq_buf.c is a good start for a lot of simple cases that just
-> > > > append to strings including creating complex ones.  Kent had a bunch
-> > > > of good ideas on how to improve it, but couldn't be convinced to
-> > > > contribute to it instead of duplicating the functionality which
-> > > > is a bit sad, but I think we need to switch to something like
-> > > > seq_buf that actually has a counted string instead of all this messing
-> > > > around with the null-terminated strings.
-> > > 
-> > > When doing more complex string creation, I agree. I spent some time
-> > > doing this while I was looking at removing strcat() and strlcat(); this
-> > > is where seq_buf shines. (And seq_buf is actually both: it maintains its
-> > > %NUL termination _and_ does the length counting.) The only thing clunky
-> > > about it was initialization, but all the conversions I experimented with
-> > > were way cleaner using seq_buf.
-> > (...)
+On Wed, Oct 18, 2023 at 10:35:26PM -0700, Kees Cook wrote:
+> On Wed, Oct 18, 2023 at 10:14:55PM +0000, Justin Stitt wrote:
+> > strncpy() is deprecated for use on NUL-terminated destination strings
+> > [1] and as such we should prefer more robust and less ambiguous string
+> > interfaces.
 > > 
-> > I also agree. I'm using several other schemes based on pointer+length in
-> > other projects and despite not being complete in terms of API (due to the
-> > slow migration of old working code), over time it proves much easier to
-> > use and requires far less controls.
+> > We expect chinfo.name to be NUL-terminated based on its use with format
+> > strings and sprintf:
+> > rpmsg/rpmsg_char.c
+> > 165:            dev_err(dev, "failed to open %s\n", eptdev->chinfo.name);
+> > 368:    return sprintf(buf, "%s\n", eptdev->chinfo.name);
 > > 
-> > With NUL-teminated strings you need to perform checks for each and every
-> > operation. When the length is known and controlled, most often you can
-> > get rid of many tests on intermediate operations and perform a check at
-> > the end, thus you end up with less "if" and "goto fail" in the code,
-> > because the checks are no longer for "not crashing nor introducing
-> > vulnerabilities", but just "returning a correct result", which can often
-> > be detected more easily.
+> > ... and with strcmp():
+> > |  static struct rpmsg_endpoint *qcom_glink_create_ept(struct rpmsg_device *rpdev,
+> > |  						    rpmsg_rx_cb_t cb,
+> > |  						    void *priv,
+> > |  						    struct rpmsg_channel_info
+> > |  									chinfo)
+> > |  ...
+> > |  const char *name = chinfo.name;
+> > |  ...
+> > |  		if (!strcmp(channel->name, name))
 > > 
-> > Another benefit I found by accident is that when you need to compare some
-> > tokens against multiple ones (say some keywords for example), it becomes
-> > much faster than strcmp()-based if/else series because in this case you
-> > start by comparing lengths instead of comparing contents. And when your
-> > macros allow you to constify string constants, the compiler will replace
-> > long "if" series with checks against constant values, and may even arrange
-> > them as a tree since all are constants, sometimes mixing with the first
-> > char as the discriminator. Typically on the test below I observe a 10x
-> > speedup at -O3 and ~5x at -O2 when I convert this:
+> > Moreover, as chinfo is not kzalloc'd, let's opt to NUL-pad the
+> > destination buffer
 > > 
-> > 	if (!strcmp(name, "host") ||
-> > 	    !strcmp(name, "content-length") ||
-> > 	    !strcmp(name, "connection") ||
-> > 	    !strcmp(name, "proxy-connection") ||
-> > 	    !strcmp(name, "keep-alive") ||
-> > 	    !strcmp(name, "upgrade") ||
-> > 	    !strcmp(name, "te") ||
-> > 	    !strcmp(name, "transfer-encoding"))
-> > 		return 1;
+> > Similar change to:
+> > Commit 766279a8f85d ("rpmsg: qcom: glink: replace strncpy() with strscpy_pad()")
+> > and
+> > Commit 08de420a8014 ("rpmsg: glink: Replace strncpy() with strscpy_pad()")
 > > 
-> > to this:
+> > Considering the above, a suitable replacement is `strscpy_pad` due to
+> > the fact that it guarantees both NUL-termination and NUL-padding on the
+> > destination buffer.
 > > 
-> > 	if (isteq(name, ist("host")) ||
-> > 	    isteq(name, ist("content-length")) ||
-> > 	    isteq(name, ist("connection")) ||
-> > 	    isteq(name, ist("proxy-connection")) ||
-> > 	    isteq(name, ist("keep-alive")) ||
-> > 	    isteq(name, ist("upgrade")) ||
-> > 	    isteq(name, ist("te")) ||
-> > 	    isteq(name, ist("transfer-encoding")))
-> > 		return 1;
+> > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> > Link: https://github.com/KSPP/linux/issues/90
+> > Cc: linux-hardening@vger.kernel.org
+> > Signed-off-by: Justin Stitt <justinstitt@google.com>
+> > ---
+> > Note: build-tested only.
 > > 
-> > The code is larger but when compiled at -Os, it instead becomes smaller.
+> > Found with: $ rg "strncpy\("
+> > ---
+> >  drivers/net/wwan/rpmsg_wwan_ctrl.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
 > > 
-> > Another interesting property I'm using in the API above, that might or
-> > might not apply there is that for most archs we care about, functions
-> > can take a struct of two words passed as registers, and can return
-> > such a struct as a pair of registers as well. This allows to chain
-> > functions by passing one function's return as the argument to another
-> > one, which is what users often want to do to avoid intermediate
-> > variables.
+> > diff --git a/drivers/net/wwan/rpmsg_wwan_ctrl.c b/drivers/net/wwan/rpmsg_wwan_ctrl.c
+> > index 86b60aadfa11..39f5e780c478 100644
+> > --- a/drivers/net/wwan/rpmsg_wwan_ctrl.c
+> > +++ b/drivers/net/wwan/rpmsg_wwan_ctrl.c
+> > @@ -37,7 +37,7 @@ static int rpmsg_wwan_ctrl_start(struct wwan_port *port)
+> >  		.dst = RPMSG_ADDR_ANY,
+> >  	};
 > 
-> Chaining should be nice cherry on top for very specific cases but certainly
-> not promoted or advertised. Deleting intermediate variables promotes
-> implementation-defined behaviour because of unspecified order of evaluation
-> of function arguments. Second, debuggers still operate with lines in mind,
-> so jumping to the next statement written like this
+> "chinfo" is initialized immediately above here, which means that it is
+> actually already zero filled for all the members that aren't explicitly
+> initialized, so the _pad variant isn't needed. I suspect Dead Store
+> Elimination will optimize it all away anyway, so this is probably fine.
 > 
-> 	f(g(), h())
-> 
-> can be problematic.
 
-It obviously depends what these functions do, but that remains true for
-lots of other use cases applying to a shared memory location, if that's
-the case. Also it happens that a lot of string functions that are used
-as arguments to other ones are in fact lookups, skip, trim etc which
-only manipulate the pointer and the length and not the contents.
+Hm, strscpy_pad() is neither a typical compiler builtin nor an inline
+function, so my naive assumption would be that this could only be
+optimized away with LTO?
 
-> Intermediate variables are much less of a problem now
-> that -Wdeclaration-after-statement has been finally abolished! They don't
-> consume LOC anymore.
+But I don't think this is particularly performance critical code, so
+maybe it's even better to be explicit in case someone ever changes the
+way chinfo is allocated.
 
-Intermediate variables declared after statements remain an abomination
-which turn a visual lookup from O(indent_levels) to O(lines) because
-normally you only have to quickly glance a the previous opening brace
-and if you don't find, you repeat, but with them you have to visually
-scan every single line. They're now allowed for macros and iterators
-which can make a good use of them but it's not a reason for abusing
-them in code supposed to be reviewable by humans.
+@Justin: Nevertheless I would appreciate if you could briefly reword the
+commit message and add a note about this. Someone reading it later might
+get confused or mislead by the "Moreover, as chinfo is not kzalloc'd,"
+part. As Kees wrote, even without kzalloc the struct initializer of
+chinfo does actually ensure proper zero initialization of the missing
+members.
 
-> > All this to say that length-based strings do offer quite a lot of
-> > benefits over the long term.
-> 
-> As long as they are named kstring :-) Or std_string, he-he.
-
-That point is the last of my concerns ;-)
-
-Willy
+Thanks!
+Stephan
