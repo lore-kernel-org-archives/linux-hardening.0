@@ -1,132 +1,107 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A475D2032B
-	for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 18:14:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 832C82032B
+	for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 18:22:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="edobgOcE"
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A872D5B
-	for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 11:14:58 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5a7b10c488cso15612667b3.2
-        for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 11:14:58 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Lr9ID9yD"
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77F19D5E
+	for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 11:22:29 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-1c87a85332bso9239225ad.2
+        for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 11:22:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697825697; x=1698430497; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=NjxtAigxI0HmCKPvB9UmZgA+mMJTBsPd7/Wkgi0tm4s=;
-        b=edobgOcEo2DQnIYa3i60Q0paZQLOBUFFJAspGON0iKv3guCLgQnv3MoUyA5m4XC6B2
-         1NnYrYOXf7ldJY7MtDeGWtmXcZF9gbcimkmUKsw4Tc+/ZndpptNZzqzFc2INZef6xm0S
-         /RPkQNIfekKCAhsQeQyPYpRiEfVlt9Y+ca0Rd0NKmzHNBrEir/weWKIrwLexMzg+b/em
-         uTi2rvaIE1haxah05bSE9QMepMX8j88AYAS3WXIXfMFnU4ehq2hiBJUE9kQ8VA/ylj4L
-         P1eh2Z9KYUc9mDdpZ4aruyzZZzflvk8I95vWb8Nd8z0LiZSHIiZzBpJKO83k2jNizmiA
-         fhWg==
+        d=chromium.org; s=google; t=1697826149; x=1698430949; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=04gH1wK0MN9lWn/YJPzI2WddwHxIZ8s/y81mEW7mDkQ=;
+        b=Lr9ID9yDkM16bb+2HlLfqAc8MuKa/2cAzq2S5BVwOZieEabyqCzHWeO4KBtbfKmpxP
+         oTCMyHlXZJoilixhSCR43zUBFkipk72FygdgC5UARU73Sjxr0WzjQjNmvgTRDn5eVCAL
+         K2A1KODbNRfea20xFtiItjHYYsW8xr3mXFVQI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697825697; x=1698430497;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=NjxtAigxI0HmCKPvB9UmZgA+mMJTBsPd7/Wkgi0tm4s=;
-        b=acxHBS1NX5ulatE7PqRjHKiNe41+sHbDEeFy1/X2/YvImW/oeA0PJX3i3ezTj6lzDZ
-         0x7GLsmUBEY0h4DFPXsj3zloUkp8FxitfaKzfzHLe6B6MWUhIdGdCmkkPkEtM/qqmojL
-         nvDKT1K5CNAPTKGLdY4+nLGwYDo7k+txi0osoo5ct+qgTZOCOTL52gcuHC4feytAwCtz
-         q2EdBkIafQCuelqDzviWAyvPNVZ13bI4fcFxPMx/eOHCIEatVAHeGnx/utfMhhBFsMSN
-         niQjbfbVc9F2pJoqzbN2pyBpfuciMCOuuaFnM3GGlHuXT8vHPjdua6Q1+83z2pj7F0cF
-         Roww==
-X-Gm-Message-State: AOJu0YzIo/FT55wDZ6uztUQG255sbnQn4NAsq8zQUDiL4eHQkrEYvC2o
-	GwPqtIuf9ZVgFht6lXs60jwZvlp8Q73+CAXROw==
-X-Google-Smtp-Source: AGHT+IF9SRE85ngks2gCtXwLYmkhJ3/uV8+grnXvrUYQkNHVHLP3fosnqqpIA3GEUwLdiQJy9CtyqVgplrjQH9jIsA==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6902:1083:b0:d9a:6007:223a with
- SMTP id v3-20020a056902108300b00d9a6007223amr82297ybu.8.1697825697460; Fri,
- 20 Oct 2023 11:14:57 -0700 (PDT)
-Date: Fri, 20 Oct 2023 18:14:47 +0000
+        d=1e100.net; s=20230601; t=1697826149; x=1698430949;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=04gH1wK0MN9lWn/YJPzI2WddwHxIZ8s/y81mEW7mDkQ=;
+        b=n/ex+m8V9HU9qSGD9SAVxwlbyz70h0GJEEQU8unYnCbVSzLuDOe427CxG5DFvTJTnJ
+         UnUfr7H8WjsqQZifx5QJq4EmfWzkWwGyOoR38ITrYDdjsP6yMMueFIOr3oHeD/o0F9/g
+         6pjS/KDzwGWv+bwFBfQ+9Uax74aDhGcqvWGNlicmKhTnh22+SL7OcoZUAIcb0zi8aqYn
+         JOzV+ZYbCYzc1pBXN4X8haGebzuo92pxrRnT3KA0mjVzJpf/QdBqBM3KTPdCCRkUTemF
+         8/4OeM29VfjW/BBZtOsDjAYRXNuJZLU2g5TCGs/Evhpdc2h+NmRmpNd7DEkUQRSohK6f
+         t3Iw==
+X-Gm-Message-State: AOJu0YzhJUvBe4Q2SWguYy4KKxFTuW+Bq1wFAx1LA0B0IyI7OLqKcJES
+	f2h/ULsOO5WXM9DEe73TNUw8bw==
+X-Google-Smtp-Source: AGHT+IHY7//XAjVbmv0+8CTvhanr4J11DW7dmowhqoeDWSPu7A2hJov+lZgIQALeiVmTuJFeYMRjFQ==
+X-Received: by 2002:a17:902:ea0e:b0:1ca:20a0:7b08 with SMTP id s14-20020a170902ea0e00b001ca20a07b08mr2589174plg.50.1697826148954;
+        Fri, 20 Oct 2023 11:22:28 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id je22-20020a170903265600b001c625acfed0sm1826088plb.44.2023.10.20.11.22.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Oct 2023 11:22:28 -0700 (PDT)
+Date: Fri, 20 Oct 2023 11:22:27 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Justin Stitt <justinstitt@google.com>, Christoph Hellwig <hch@lst.de>,
+	Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+	Sagi Grimberg <sagi@grimberg.me>, linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	ksummit@lists.linux.dev, Azeem Shaikh <azeemshaikh38@gmail.com>
+Subject: Re: the nul-terminated string helper desk chair rearrangement
+Message-ID: <202310201111.595F790@keescook>
+References: <20231018-strncpy-drivers-nvme-host-fabrics-c-v1-1-b6677df40a35@google.com>
+ <20231019054642.GF14346@lst.de>
+ <202310182248.9E197FFD5@keescook>
+ <20231020044645.GC11984@lst.de>
+ <CAFhGd8o8FaD-3rkBAhEXhc8XqpUk_cLqNwyfpndVuSxDOei_gA@mail.gmail.com>
+ <CAHk-=wj4BZei4JTiX9qsAwk8PEKnPrvkG5FU0i_HNkcDpy7NGQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAJbDMmUC/x2NUQrCQAwFr1LybWA3VUGvIiJumtaAbNekVkvp3
- V38nAfzZgUXU3E4NyuYzOo65gpx1wA/7nkQ1K4yUKA2Bgrok2UuC3ams5hjGT9i6O9SngumF+3 jKdyqakOdGY+JOYZDz9QmqKfFpNfvP3i5btsPUwdLHoAAAAA=
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1697825696; l=2477;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=JmvkYA0HtU/j7JDgpCDudlk1OJo4lvEUsupF7z8hezA=; b=reN8ZCf+oaoqlz7W8BUFLMQjlrdg0RWOzYHkUPRlg80x9tWDd0LI/VU/0C9F7Cv4z62I3vr4S
- MgzW8oVQ0SgAYcyQOaq0PxhkKmOjOEfBBehIC/R/ncW9Ox0M3ys31Q7
-X-Mailer: b4 0.12.3
-Message-ID: <20231020-strncpy-drivers-power-supply-bq24190_charger-c-v1-1-e896223cb795@google.com>
-Subject: [PATCH] power: supply: bq24190_charger: replace deprecated strncpy
- with strscpy
-From: Justin Stitt <justinstitt@google.com>
-To: Sebastian Reichel <sre@kernel.org>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wj4BZei4JTiX9qsAwk8PEKnPrvkG5FU0i_HNkcDpy7NGQ@mail.gmail.com>
 
-strncpy() is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous string
-interfaces.
+On Fri, Oct 20, 2023 at 10:56:31AM -0700, Linus Torvalds wrote:
+> On Fri, 20 Oct 2023 at 10:40, Justin Stitt <justinstitt@google.com> wrote:
+> >
+> > There's some docs at [1]. Perhaps there could be more?
+> >
+> > [1]: https://elixir.bootlin.com/linux/v6.6-rc6/source/include/linux/fortify-string.h#L292
+> 
+> Note that we have so few 'strlcpy()' calls that we really should
+> remove that horrid horrid interface. It's a buggy piece of sh*t.
 
-We expect bdi->model_name to be NUL-terminated based on its usage with
-sysfs_emit and format strings:
+Yup, that's on-going. There's just a few left; Azeem has been chipping
+away at strlcpy.
 
-val->strval is assigned to bdi->model_name in
-bq24190_charger_get_property():
-1186 | val->strval = bdi->model_name;
+> It does mean that if you used to have
+> 
+>     dst[4];
+>     strlcpy(dst, "abc", 8);
+> 
+> then that *used* to work (because it would copy four bytes: "abc\0"
+> and that fits in 'dst[]'). But
+> 
+>    dst[4];
+>    strscpy(dst, "abc", 8);
+> 
+> will overflow dst[], because it will do a word-copy and you told
+> 'strscpy()' that you had a 8-byte buffer, and it will try to write
+> "abc\0\0\0\0\0" into the destination.
 
-... then in power_supply_sysfs.c we use value.strval with a format string:
-311  | ret = sysfs_emit(buf, "%s\n", value.strval);
+Luckily, we already have checks for these mismatched sizes at compile
+time (i.e. CONFIG_FORTIFY_SOURCE will already check for pathological
+cases like above where 8 > sizeof(dst)).
 
-we assigned value.strval via:
-285  | ret = power_supply_get_property(psy, psp, &value);
-... which invokes psy->desc->get_property():
-1210 | return psy->desc->get_property(psy, psp, val);
+> The above is insane code, but it's an example of why a blind
+> strlcpy->strscpy conversion might change semantics.
 
-with bq24190_charger_get_property():
-1320 | static const struct power_supply_desc bq24190_charger_desc = {
-...
-1325 | 	.get_property		= bq24190_charger_get_property,
+Totally agreed. All of the recent string conversions have been paying
+close attention to the behavioral differences.
 
-Moreover, no NUL-padding is required as bdi is zero-allocated in
-bq24190_charger.c:
-1798 | bdi = devm_kzalloc(dev, sizeof(*bdi), GFP_KERNEL);
-
-Considering the above, a suitable replacement is `strscpy` [2] due to
-the fact that it guarantees NUL-termination on the destination buffer
-without unnecessarily NUL-padding.
-
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Note: build-tested only.
-
-Found with: $ rg "strncpy\("
----
- drivers/power/supply/bq24190_charger.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/power/supply/bq24190_charger.c b/drivers/power/supply/bq24190_charger.c
-index 3f99cb9590ba..1db290ee2591 100644
---- a/drivers/power/supply/bq24190_charger.c
-+++ b/drivers/power/supply/bq24190_charger.c
-@@ -1803,7 +1803,7 @@ static int bq24190_probe(struct i2c_client *client)
- 
- 	bdi->client = client;
- 	bdi->dev = dev;
--	strncpy(bdi->model_name, id->name, I2C_NAME_SIZE);
-+	strscpy(bdi->model_name, id->name, sizeof(bdi->model_name));
- 	mutex_init(&bdi->f_reg_lock);
- 	bdi->charge_type = POWER_SUPPLY_CHARGE_TYPE_FAST;
- 	bdi->f_reg = 0;
-
----
-base-commit: bb55d7f7f7445abcc8db50e6a65d4315e79f75c7
-change-id: 20231020-strncpy-drivers-power-supply-bq24190_charger-c-6bcc105fc23b
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
-
+-- 
+Kees Cook
