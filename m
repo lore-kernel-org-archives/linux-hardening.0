@@ -1,36 +1,25 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7453DA41;
-	Fri, 20 Oct 2023 05:05:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="pgtOpclt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FE50C433C8;
-	Fri, 20 Oct 2023 05:05:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1697778327;
-	bh=fkP5kKXCMlyWPz7pz7wvmEyP0oUqwxiPLe8Hc+jGjLE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pgtOpclt1U1oMhg9MqET8TC6szYa15Al9kd0jIeU8oG5z16svOE3D7r/LYKs31a1n
-	 i/VInf/SiAzumSwkkTtpCo/tgjbKO9Z/NeQFBOJkuLNx49NUmQyu8wcBVybT7Q/NyL
-	 OhPi6LcRsT0LcsspWDvPP3xXDfTHJYlyLr9Hb6MQ=
-Date: Fri, 20 Oct 2023 07:05:24 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Kees Cook <keescook@chromium.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Petr Mladek <pmladek@suse.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] trace: Move readpos from seq_buf to trace_seq
-Message-ID: <2023102012-pretense-agnostic-d377@gregkh>
-References: <20231020033545.2587554-1-willy@infradead.org>
- <20231020033545.2587554-2-willy@infradead.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB80179B5
+	for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 10:30:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9027310F4;
+	Fri, 20 Oct 2023 03:30:48 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9A28A2F4;
+	Fri, 20 Oct 2023 03:31:29 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.70.146])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 067A83F5A1;
+	Fri, 20 Oct 2023 03:30:47 -0700 (PDT)
+Date: Fri, 20 Oct 2023 11:30:38 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Kees Cook <keescook@chromium.org>
+Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: Include stackleak paths in hardening entry
+Message-ID: <ZTJWxLq4lHElmR19@FVFF77S0Q05N>
+References: <20231019004616.work.960-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -39,15 +28,39 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231020033545.2587554-2-willy@infradead.org>
+In-Reply-To: <20231019004616.work.960-kees@kernel.org>
 
-On Fri, Oct 20, 2023 at 04:35:45AM +0100, Matthew Wilcox (Oracle) wrote:
-> To make seq_buf more lightweight as a string buf, move the readpos member
-> from seq_buf to its container, trace_seq.  That puts the responsibility
-> of maintaining the readpos entirely in the tracing code.  If some future
-> users want to package up the readpos with a seq_buf, we can define a
-> new struct then.
+On Wed, Oct 18, 2023 at 05:46:20PM -0700, Kees Cook wrote:
+> While most of the gcc-plugins are self-contained in the
+> scripts/gcc-plugins directory, stackleak actually has some additional
+> files. Add those so changes are directed to the hardening list.
 > 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> Suggested-by: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Makes sense to me, so FWIW:
+
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+
+Mark.
+
+> ---
+>  MAINTAINERS | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 5f18ed0fbd42..a4de29c0036f 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -8615,6 +8615,8 @@ L:	linux-hardening@vger.kernel.org
+>  S:	Maintained
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/hardening
+>  F:	Documentation/kbuild/gcc-plugins.rst
+> +F:	include/linux/stackleak.h
+> +F:	kernel/stackleak.c
+>  F:	scripts/Makefile.gcc-plugins
+>  F:	scripts/gcc-plugins/
+>  
+> -- 
+> 2.34.1
+> 
