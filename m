@@ -1,128 +1,132 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3354208C1
-	for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 17:56:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A475D2032B
+	for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 18:14:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="X9zutY/W"
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C595D5B
-	for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 10:56:51 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id 4fb4d7f45d1cf-53fc7c67a41so2124081a12.0
-        for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 10:56:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="edobgOcE"
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A872D5B
+	for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 11:14:58 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5a7b10c488cso15612667b3.2
+        for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 11:14:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1697824610; x=1698429410; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=F4wi3imaHP2uII6OBg2l5IRaJiEg3OU2WqP11N/v4Ns=;
-        b=X9zutY/WqM+3WkhDKJkViI85FZ152N62zf9ss+VcnGp0DFn5nA55hjr1JxUl++E7BV
-         r0EDy3dWgbG4hl74Z+Qt3P0Kf/zj4vlDraNns4iZBT4SnQcR/wbxUEFQJ8VboJuc9/PF
-         CS6lbBs2M15DsGalnWkqYZ96wNwKbFyDebev8=
+        d=google.com; s=20230601; t=1697825697; x=1698430497; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=NjxtAigxI0HmCKPvB9UmZgA+mMJTBsPd7/Wkgi0tm4s=;
+        b=edobgOcEo2DQnIYa3i60Q0paZQLOBUFFJAspGON0iKv3guCLgQnv3MoUyA5m4XC6B2
+         1NnYrYOXf7ldJY7MtDeGWtmXcZF9gbcimkmUKsw4Tc+/ZndpptNZzqzFc2INZef6xm0S
+         /RPkQNIfekKCAhsQeQyPYpRiEfVlt9Y+ca0Rd0NKmzHNBrEir/weWKIrwLexMzg+b/em
+         uTi2rvaIE1haxah05bSE9QMepMX8j88AYAS3WXIXfMFnU4ehq2hiBJUE9kQ8VA/ylj4L
+         P1eh2Z9KYUc9mDdpZ4aruyzZZzflvk8I95vWb8Nd8z0LiZSHIiZzBpJKO83k2jNizmiA
+         fhWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697824610; x=1698429410;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=F4wi3imaHP2uII6OBg2l5IRaJiEg3OU2WqP11N/v4Ns=;
-        b=deGr1CVS/ZI2eh5RB6Gef3AqDcG5dGpM14lEJnoh//5I6aLNm0/2YhTFMsV3pvH+Yf
-         FoWa7buSxijUTPm3M+uFDHfBLPP3+BiuOLwO/Nl0ynoRw1jSyuLoD0jLgfS8XJ8N2dxy
-         p54E55wRPTYebMJzZDMNL7TUftqYNKN6pnXk5o45bWi/q6rxiWCPsyqSSOqdjv7fb2Ok
-         zdfD9IUIoI6IaBH7BEQztRSj0Ri1EYg3WTl9HVfe3RW7YbT0FUbDcz8+J0VN51nfdkHg
-         DD3tov3IMx0a0MYk/+3IGU5vyLjiwBsG85Fl6VcGGWrN/6Y1UxVfIouERweZjUnQcWT1
-         W6JA==
-X-Gm-Message-State: AOJu0YyIybbJEA7ZXhnOzxEX4P+d5q6TUGfBaqZfgwCO94PMPn3Lpyoq
-	E4T8TbO/hnoi8wvmSVhvlEALgl+SmVP3dFr/+Oe3Pmxr
-X-Google-Smtp-Source: AGHT+IGTNXiFhEAvp+7npOBkhxjeYuYYRTDb+2Y5AdS+al7Utf6kKugG6zZMbg7HfttzZFJ432lBuQ==
-X-Received: by 2002:a17:907:7212:b0:9bd:d405:4e8a with SMTP id dr18-20020a170907721200b009bdd4054e8amr2376807ejc.17.1697824609668;
-        Fri, 20 Oct 2023 10:56:49 -0700 (PDT)
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com. [209.85.208.44])
-        by smtp.gmail.com with ESMTPSA id z15-20020a17090655cf00b0099bc038eb2bsm1902194ejp.58.2023.10.20.10.56.49
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Oct 2023 10:56:49 -0700 (PDT)
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-51e28cac164so4624852a12.1
-        for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 10:56:49 -0700 (PDT)
-X-Received: by 2002:a17:907:94d0:b0:9ae:65d6:a51f with SMTP id
- dn16-20020a17090794d000b009ae65d6a51fmr5921646ejc.18.1697824608915; Fri, 20
- Oct 2023 10:56:48 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1697825697; x=1698430497;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NjxtAigxI0HmCKPvB9UmZgA+mMJTBsPd7/Wkgi0tm4s=;
+        b=acxHBS1NX5ulatE7PqRjHKiNe41+sHbDEeFy1/X2/YvImW/oeA0PJX3i3ezTj6lzDZ
+         0x7GLsmUBEY0h4DFPXsj3zloUkp8FxitfaKzfzHLe6B6MWUhIdGdCmkkPkEtM/qqmojL
+         nvDKT1K5CNAPTKGLdY4+nLGwYDo7k+txi0osoo5ct+qgTZOCOTL52gcuHC4feytAwCtz
+         q2EdBkIafQCuelqDzviWAyvPNVZ13bI4fcFxPMx/eOHCIEatVAHeGnx/utfMhhBFsMSN
+         niQjbfbVc9F2pJoqzbN2pyBpfuciMCOuuaFnM3GGlHuXT8vHPjdua6Q1+83z2pj7F0cF
+         Roww==
+X-Gm-Message-State: AOJu0YzIo/FT55wDZ6uztUQG255sbnQn4NAsq8zQUDiL4eHQkrEYvC2o
+	GwPqtIuf9ZVgFht6lXs60jwZvlp8Q73+CAXROw==
+X-Google-Smtp-Source: AGHT+IF9SRE85ngks2gCtXwLYmkhJ3/uV8+grnXvrUYQkNHVHLP3fosnqqpIA3GEUwLdiQJy9CtyqVgplrjQH9jIsA==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a05:6902:1083:b0:d9a:6007:223a with
+ SMTP id v3-20020a056902108300b00d9a6007223amr82297ybu.8.1697825697460; Fri,
+ 20 Oct 2023 11:14:57 -0700 (PDT)
+Date: Fri, 20 Oct 2023 18:14:47 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20231018-strncpy-drivers-nvme-host-fabrics-c-v1-1-b6677df40a35@google.com>
- <20231019054642.GF14346@lst.de> <202310182248.9E197FFD5@keescook>
- <20231020044645.GC11984@lst.de> <CAFhGd8o8FaD-3rkBAhEXhc8XqpUk_cLqNwyfpndVuSxDOei_gA@mail.gmail.com>
-In-Reply-To: <CAFhGd8o8FaD-3rkBAhEXhc8XqpUk_cLqNwyfpndVuSxDOei_gA@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Fri, 20 Oct 2023 10:56:31 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj4BZei4JTiX9qsAwk8PEKnPrvkG5FU0i_HNkcDpy7NGQ@mail.gmail.com>
-Message-ID: <CAHk-=wj4BZei4JTiX9qsAwk8PEKnPrvkG5FU0i_HNkcDpy7NGQ@mail.gmail.com>
-Subject: Re: the nul-terminated string helper desk chair rearrangement
-To: Justin Stitt <justinstitt@google.com>
-Cc: Christoph Hellwig <hch@lst.de>, Kees Cook <keescook@chromium.org>, Keith Busch <kbusch@kernel.org>, 
-	Jens Axboe <axboe@kernel.dk>, Sagi Grimberg <sagi@grimberg.me>, linux-nvme@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	ksummit@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAJbDMmUC/x2NUQrCQAwFr1LybWA3VUGvIiJumtaAbNekVkvp3
+ V38nAfzZgUXU3E4NyuYzOo65gpx1wA/7nkQ1K4yUKA2Bgrok2UuC3ams5hjGT9i6O9SngumF+3 jKdyqakOdGY+JOYZDz9QmqKfFpNfvP3i5btsPUwdLHoAAAAA=
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1697825696; l=2477;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=JmvkYA0HtU/j7JDgpCDudlk1OJo4lvEUsupF7z8hezA=; b=reN8ZCf+oaoqlz7W8BUFLMQjlrdg0RWOzYHkUPRlg80x9tWDd0LI/VU/0C9F7Cv4z62I3vr4S
+ MgzW8oVQ0SgAYcyQOaq0PxhkKmOjOEfBBehIC/R/ncW9Ox0M3ys31Q7
+X-Mailer: b4 0.12.3
+Message-ID: <20231020-strncpy-drivers-power-supply-bq24190_charger-c-v1-1-e896223cb795@google.com>
+Subject: [PATCH] power: supply: bq24190_charger: replace deprecated strncpy
+ with strscpy
+From: Justin Stitt <justinstitt@google.com>
+To: Sebastian Reichel <sre@kernel.org>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On Fri, 20 Oct 2023 at 10:40, Justin Stitt <justinstitt@google.com> wrote:
->
-> There's some docs at [1]. Perhaps there could be more?
->
-> [1]: https://elixir.bootlin.com/linux/v6.6-rc6/source/include/linux/fortify-string.h#L292
+strncpy() is deprecated for use on NUL-terminated destination strings
+[1] and as such we should prefer more robust and less ambiguous string
+interfaces.
 
-Note that we have so few 'strlcpy()' calls that we really should
-remove that horrid horrid interface. It's a buggy piece of sh*t.
+We expect bdi->model_name to be NUL-terminated based on its usage with
+sysfs_emit and format strings:
 
-'strlcpy()' is fundamentally unsafe BY DESIGN if you don't trust the
-source string - which is one of the alleged reasons to use it.
+val->strval is assigned to bdi->model_name in
+bq24190_charger_get_property():
+1186 | val->strval = bdi->model_name;
 
-That said, while 'strscpy()' fixes the fundamental conceptual bugs of
-strlcpy(), it's worth noting that it has *two* differences wrt
-strlcpy:
+... then in power_supply_sysfs.c we use value.strval with a format string:
+311  | ret = sysfs_emit(buf, "%s\n", value.strval);
 
- - it doesn't have the broken return value
+we assigned value.strval via:
+285  | ret = power_supply_get_property(psy, psp, &value);
+... which invokes psy->desc->get_property():
+1210 | return psy->desc->get_property(psy, psp, val);
 
- - it copies things in word-size chunks to be more efficient
+with bq24190_charger_get_property():
+1320 | static const struct power_supply_desc bq24190_charger_desc = {
+...
+1325 | 	.get_property		= bq24190_charger_get_property,
 
-And because of that word-size thing it will possibly insert more than
-one NUL character at the end of the result.
+Moreover, no NUL-padding is required as bdi is zero-allocated in
+bq24190_charger.c:
+1798 | bdi = devm_kzalloc(dev, sizeof(*bdi), GFP_KERNEL);
 
-To give an example, if you have
+Considering the above, a suitable replacement is `strscpy` [2] due to
+the fact that it guarantees NUL-termination on the destination buffer
+without unnecessarily NUL-padding.
 
-   dst[64] = "abcdefghijklmnopqrstuvwxyz";
-   src[64] = "123\0........";
-   strlcpy(dst, src, 64);
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Note: build-tested only.
 
-then the strlcpy() will return 3 (the size of the copy), but the
-destination will end up looking like
+Found with: $ rg "strncpy\("
+---
+ drivers/power/supply/bq24190_charger.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-   dst[64] = "123\0\0\0\0\0ijklmnopqrstuvwxyz...";
+diff --git a/drivers/power/supply/bq24190_charger.c b/drivers/power/supply/bq24190_charger.c
+index 3f99cb9590ba..1db290ee2591 100644
+--- a/drivers/power/supply/bq24190_charger.c
++++ b/drivers/power/supply/bq24190_charger.c
+@@ -1803,7 +1803,7 @@ static int bq24190_probe(struct i2c_client *client)
+ 
+ 	bdi->client = client;
+ 	bdi->dev = dev;
+-	strncpy(bdi->model_name, id->name, I2C_NAME_SIZE);
++	strscpy(bdi->model_name, id->name, sizeof(bdi->model_name));
+ 	mutex_init(&bdi->f_reg_lock);
+ 	bdi->charge_type = POWER_SUPPLY_CHARGE_TYPE_FAST;
+ 	bdi->f_reg = 0;
 
-This odd "possibly word padding" is basically never relevant (and it's
-obviously always also limited by the size you gave it), but *if* you
-are doing something really odd, and you expect the end of the
-destination string to not be modified at all past the final NUL of the
-copy, you need to be aware of this.
+---
+base-commit: bb55d7f7f7445abcc8db50e6a65d4315e79f75c7
+change-id: 20231020-strncpy-drivers-power-supply-bq24190_charger-c-6bcc105fc23b
 
-It does mean that if you used to have
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
 
-    dst[4];
-    strlcpy(dst, "abc", 8);
-
-then that *used* to work (because it would copy four bytes: "abc\0"
-and that fits in 'dst[]'). But
-
-   dst[4];
-   strscpy(dst, "abc", 8);
-
-will overflow dst[], because it will do a word-copy and you told
-'strscpy()' that you had a 8-byte buffer, and it will try to write
-"abc\0\0\0\0\0" into the destination.
-
-The above is insane code, but it's an example of why a blind
-strlcpy->strscpy conversion might change semantics.
-
-            Linus
