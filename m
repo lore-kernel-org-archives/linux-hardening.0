@@ -1,135 +1,121 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E3B91802E
-	for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 19:46:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D51821DDC9
+	for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 19:57:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZNgOLavC"
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A9FDD63
-	for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 12:46:12 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d9a3a38b96cso1566707276.0
-        for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 12:46:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G/vrYWot"
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49118D52
+	for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 12:57:02 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5a7af69a4baso16540057b3.0
+        for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 12:57:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697831171; x=1698435971; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1697831821; x=1698436621; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=VY26jasGvoK52ErKJqQiLhyEvSJKvdG2hTJjnfxEGsM=;
-        b=ZNgOLavC8fzTZrLtjT8LABBsjAACnBHp8y++tiCif+Z3Xa6VKsWJsEIrSBnRbITeXn
-         oMbBpSVzGVD0q7C72jAGMelMWToILzy7pf8Q9Q564+4fxxTDSFVBINmfMaUuboZXNsT0
-         JbE2r02Kxv2O9H33zAgHz+SVQji/wWScrIAt9gRvcJXHQVWvRqVD5CQT2OMLcUGC9o+R
-         QU0Rn0o1WXno6dXr8FgSCfV+6Fnevy7xPkSei+SAFQolzfraAOarhyaJmsIzc70RFq4i
-         ICVRtqjt6NgYwWQRKVKF2yA2ZT8Aob+bviA5ZwxBvo1agAOUoFSge7x5kyRWcQ9TlMBJ
-         Gkaw==
+        bh=wsBMquxJoi1c1zfpSSx0JVGoWkpT5IvUUb/lk/u2m3c=;
+        b=G/vrYWot0Ap1j5C/qKfbDn+3NuWsLdvK0/N6bpS82BQ0MH7QCleJi12x4BysFkJ35J
+         /J+fy1tzOapgz+UMdHG07x5HcuJgXBsEG55b4kffnv6YWeGIUkByngLuBTNy3v6L1lyO
+         csVY4hCt2HuhBPtSHUag0s1dp0ADtzTqaEXY4nBERC4rv8Xc5oslw8dJWvaF8Zh07NOC
+         oYykc7cqztFqc5RP4WmKy3679z+U50UGaDLsl1kItPgBdcMJ23yWm0JQaoP6P3cTQZXB
+         LQ0e1wubXqsdiwcmg3rwy8RopO4jEJ9LmAkglIFRuYP0BysH3M3nlVC+T0rbQkgW2QtM
+         f8vA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697831171; x=1698435971;
+        d=1e100.net; s=20230601; t=1697831821; x=1698436621;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=VY26jasGvoK52ErKJqQiLhyEvSJKvdG2hTJjnfxEGsM=;
-        b=bdGUHpuPPwjSQ/IcwleRdiB5xNJxmQ+/N5SBVJeS0QYWd8h7mvvx1o4F+HKeaFaZGE
-         BEvL42l8gWdXPDBHzDhMJOHBiOGsjNB8v5tq0bevVcqIxX4L7ELYpKZzg9N4AFGH5chF
-         96SX8lL5+aPz0b7+pI8rBT0EIKiKTOLQDKbxabdPXeVaNg7BQn5Dd/Pb9Y4MBAiD0xxU
-         XbW9SoN/ahP22PZgzqCB4GOgTtkdQvmaY49hiy8SIqed8tidBN5FSx0GWAFZe+JTIoxZ
-         m6vOjlTneAVrwyZrySuyQiZZg0F5fi2gXLsrarSpwFyDmM6XIBs9sT5H3PBcbBk0w9XV
-         S4/A==
-X-Gm-Message-State: AOJu0Yx2g96PBfsPRC82x2pfYB3tYj0Qu1cXXcNZbrw9a2pHGXqhtvGp
-	L81b5nXRAW+7l8H0IeC6HqxNXQbfEX6trkd0mw==
-X-Google-Smtp-Source: AGHT+IG97zohXV8c60rF/wNzxWx2VFDqrZjuW/RKQVsOoHrGomIA9J+a4stpEs9Ol6SfQRsZL3Blf2RTmc7HiEy5xQ==
+        bh=wsBMquxJoi1c1zfpSSx0JVGoWkpT5IvUUb/lk/u2m3c=;
+        b=AoQQwNKw8eVrTLlhv2SzrNIA5x1mvt+1kX3sMKriNcHWkV4/+V74+X6Aq4ogCek4nJ
+         KluDltHuDp59J7BRDZINoBp51VYspIepgplf/XyfJjEzmv95VE4SD796glatt2wEY9ys
+         IwPnFpeQq8iVCkde24RKq6ApsNhyvwmUSBJ3ick9LZnDoow8IhkomTVRaGMoNmnWlHgT
+         +SExCM4ArH8KrzosGZ2D2QkRtmPMhYBCyaE6Q2ef1woG8fEdnAnPrIx8Q7ymUAjjxTe1
+         cLWQaImROZD1JHHiLXnPfZriZMKszTMmgkRWqY0tt+r7y8FTS3pAboIqboP2C2XxI8yY
+         jfWA==
+X-Gm-Message-State: AOJu0Yzn9ovXz3+KfNTGcpd5MsDcKzt1Rw+xsAU/PElxBMaSGU/ayTE4
+	mDkHrzLLcQt5tGR9DaVE8mzi74AGsXOOH+h3Ng==
+X-Google-Smtp-Source: AGHT+IFrR5weHYnJhXHl8/JRt5e8qQi0VlpIGDVGdSatvyjTGJkvEfVcFkmPQdAfE/uzJYFihYcWQwz7QbI5gJEhtw==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a25:5008:0:b0:d77:f7c3:37db with SMTP
- id e8-20020a255008000000b00d77f7c337dbmr57402ybb.8.1697831171763; Fri, 20 Oct
- 2023 12:46:11 -0700 (PDT)
-Date: Fri, 20 Oct 2023 19:46:11 +0000
+ (user=justinstitt job=sendgmr) by 2002:a25:c5cf:0:b0:d9c:a498:c1ef with SMTP
+ id v198-20020a25c5cf000000b00d9ca498c1efmr57226ybe.9.1697831821508; Fri, 20
+ Oct 2023 12:57:01 -0700 (PDT)
+Date: Fri, 20 Oct 2023 19:56:59 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAALZMmUC/x2NUQrCQAxEr1LybWB3LUW9iojUbbYGZBuSWi2ld
- zf4NbyBN7OBkTIZXJoNlBY2nqpDPDSQn30dCXlwhhTSMYYU0GatWVYclBdSQ5k+pGhvkdfqoaX PdHdVR68ztl13TqE8YmlP4KOiVPj7P7ze9v0H31wQnoAAAAA=
+X-B4-Tracking: v=1; b=H4sIAIrbMmUC/yWNwQqDMBAFf0X23IWYIGJ/pUgJ8dXuwRh2RVrEf
+ 2+ol4G5zBxkUIHRvTlIsYvJmqu0t4bSO+YZLFN18s6H1nnHtmlO5cuTyg411rLYfPGZVgUnRvC IfRhi6DuqoaJ4yec/eYzn+QNaVw6GdAAAAA==
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1697831170; l=2331;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1697831820; l=2022;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=MoENqRWLCZfJlaomoU9I/5Gv5zHSfuvBj5Ts109QtOo=; b=AGIAqvvph99TN7o26x2Jna1GEQQbXsXDNhvBOWVmAJ4nDa1gz+pDDw6NLF4IDqEqLdmoBb7dh
- eSFv7SOqwvQDEk2QPNb16gHfi0TAPdg5TkfUSc3zf/NMuwfjv7hn8ew
+ bh=xbKvdfML9Lhch2EvPasPnGLhNiINuxHk8T8T1a03niU=; b=VN3iQrEIlCAFm02G2atoU3NZxN/Tsd8NY36yuCIPB9X7iXIHpap9Hd0s9G3zCWE+K8LLjH517
+ 6D7jh0mioyKCAZFt28Q+rD8EfJYtBJnDYNJPlagbe1/1tVg7JodQ6MT
 X-Mailer: b4 0.12.3
-Message-ID: <20231020-strncpy-drivers-power-supply-surface_charger-c-v1-1-93ddbf668e10@google.com>
-Subject: [PATCH] power: supply: surface-charger: replace deprecated strncpy
- with strscpy
+Message-ID: <20231020-strncpy-drivers-rpmsg-rpmsg_core-c-v1-1-a86b7930c1cf@google.com>
+Subject: [PATCH] rpmsg: core: replace deprecated strncpy with strscpy
 From: Justin Stitt <justinstitt@google.com>
-To: Maximilian Luz <luzmaximilian@gmail.com>, Sebastian Reichel <sre@kernel.org>
-Cc: linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Justin Stitt <justinstitt@google.com>
+To: Bjorn Andersson <andersson@kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
 
 strncpy() is deprecated for use on NUL-terminated destination strings
 [1] and as such we should prefer more robust and less ambiguous string
 interfaces.
 
-We expect ac->name to be NUL-terminated based on its usage with format
-strings:
+We expect chinfo.name to be NUL-terminated based on its usage with
+strncmp():
 
-surface_charger.c:
-190: ac->psy_desc.name = ac->name;
+rpmsg_core.c:
+389: if (strncmp(chinfo->name, rpdev->id.name, RPMSG_NAME_SIZE))
 
-...
+Moreover, NUL-padding is not required as chinfo has stack default
+initialized all fields to zero:
 
-power_supply_core.c:
-174: dev_dbg(&psy->dev, "%s: Found supply : %s\n",
-175:   psy->desc->name, epsy->desc->name);
-
-Moreover, NUL-padding is not required as ac is already zero-allocated
-before being passed to spwr_ac_init():
-
-surface_charger.c:
-240: ac = devm_kzalloc(&sdev->dev, sizeof(*ac), GFP_KERNEL);
-241: if (!ac)
-242:   return -ENOMEM;
-243:
-244: spwr_ac_init(ac, sdev, p->registry, p->name);
-
-... this means any future NUL-byte assignments (like the ones that
-strncpy() does) are redundant.
+rpmsg_core.c:
+539: struct rpmsg_channel_info chinfo = {};
 
 Considering the above, a suitable replacement is `strscpy` [2] due to
 the fact that it guarantees NUL-termination on the destination buffer
 without unnecessarily NUL-padding.
 
-Let's also opt for the more idiomatic strscpy() usage of:
-(dest, src, sizeof(dest))
+Also, favor the more idiomatic strscpy() usage of:
+(dest, src, sizeof(dest)).
 
 Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
 Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
 Link: https://github.com/KSPP/linux/issues/90
 Cc: linux-hardening@vger.kernel.org
 Signed-off-by: Justin Stitt <justinstitt@google.com>
+Similar-to: https://lore.kernel.org/all/20231018-strncpy-drivers-net-wwan-rpmsg_wwan_ctrl-c-v1-1-4e343270373a@google.com/
 ---
 Note: build-tested only.
 
 Found with: $ rg "strncpy\("
 ---
- drivers/power/supply/surface_charger.c | 2 +-
+ drivers/rpmsg/rpmsg_core.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/power/supply/surface_charger.c b/drivers/power/supply/surface_charger.c
-index cabdd8da12d0..7a6c62d6f883 100644
---- a/drivers/power/supply/surface_charger.c
-+++ b/drivers/power/supply/surface_charger.c
-@@ -175,7 +175,7 @@ static void spwr_ac_init(struct spwr_ac_device *ac, struct ssam_device *sdev,
- 			 struct ssam_event_registry registry, const char *name)
- {
- 	mutex_init(&ac->lock);
--	strncpy(ac->name, name, ARRAY_SIZE(ac->name) - 1);
-+	strscpy(ac->name, name, sizeof(ac->name));
+diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
+index 32b550c91d9f..8abc7d022ff7 100644
+--- a/drivers/rpmsg/rpmsg_core.c
++++ b/drivers/rpmsg/rpmsg_core.c
+@@ -545,7 +545,7 @@ static int rpmsg_dev_probe(struct device *dev)
+ 		goto out;
  
- 	ac->sdev = sdev;
+ 	if (rpdrv->callback) {
+-		strncpy(chinfo.name, rpdev->id.name, RPMSG_NAME_SIZE);
++		strscpy(chinfo.name, rpdev->id.name, sizeof(chinfo.name));
+ 		chinfo.src = rpdev->src;
+ 		chinfo.dst = RPMSG_ADDR_ANY;
  
 
 ---
 base-commit: bb55d7f7f7445abcc8db50e6a65d4315e79f75c7
-change-id: 20231020-strncpy-drivers-power-supply-surface_charger-c-466920fb1f48
+change-id: 20231020-strncpy-drivers-rpmsg-rpmsg_core-c-e32ea739a375
 
 Best regards,
 --
