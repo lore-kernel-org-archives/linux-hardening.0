@@ -1,61 +1,61 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CDB820327
-	for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 18:59:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 565CA208C2
+	for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 19:05:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lR0PKqHJ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EFIK5Xpz"
 Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 283B3D65
-	for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 11:59:39 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d9a5836ab12so1440436276.2
-        for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 11:59:39 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B6BB1A8
+	for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 12:05:26 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d9cfec5e73dso663098276.2
+        for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 12:05:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697828378; x=1698433178; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1697828726; x=1698433526; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=aC7KxLBec/eSA4myIMpLcsC0tK2N6BssGDn4X++BO/4=;
-        b=lR0PKqHJ0uJgeTJrrffRrc6cYcn29O+LJl0AFNCO7ByvoJqcCeJ1PP3ZEJAAMzULe1
-         NBnk9QEOzoKJa9iN85Ixim6MmHQ5lzY8dmiK1V1GMiR8/OM7wRyiCbW6rQmWiphYz8lh
-         x/bo3x/oVc3LlzMzId4F1hY6vR/sLsTNyYlYuFVDjvqDRZ7jexIetJYmyKjKIB8523JM
-         XT1QilTSnCFHbivl92ujcjn8ev3ln2QDWHXpjHAoHxKLhjLbAKeYXtI+743+cAd97HNk
-         mYsK8XUbS/zc4eo6xcnYpSGNokVzavTUNeiDBIAybBioY4BdIiknOukCMu1qchu5LkvC
-         EJ1A==
+        bh=kK3RwRQ2hFONySy7vb2rlodkP+v8D8sjNHk/2UXCQCw=;
+        b=EFIK5Xpz+34ho6bGbNYhtTTAOKRNZBChdY961KgaC3rQm/R9jtB1AvVD9VbDC579IH
+         v5hPaBylm71IcYiqZ0IsNY81y1JL5sr8p8XJ2sBt67yQpNdM00Y8ufjUOk0SCqskkQlo
+         or63JBl69lQ/jjoADt39FhCSIV4QLoxVCURrUNrM+1E3+G3n0g5AKOaCD4MVEzkHYfx6
+         7LhFSQeCc3WnZuAa0KmUIknkrXA4ftNsDH9zJFLAeTcTIsRKYmqm2vE4vo0VPLbqYRdH
+         Xmm61BhkknQDCIdqX1MbUafc537intIJnbpYjGejoo6VJSuQhwpkCj+fZKW2lZc4TS8i
+         C/7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697828378; x=1698433178;
+        d=1e100.net; s=20230601; t=1697828726; x=1698433526;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=aC7KxLBec/eSA4myIMpLcsC0tK2N6BssGDn4X++BO/4=;
-        b=EzxsoAObxjqJv6HBfXqviQ8C47CFdlc53Zx3BC9lVjKa7R+yzeUdzMHxLkk3sI6RrX
-         ILWKmsO+qjbb1KE3kRYCf+Y5tnqVI0OTohWANJp9WBfXsU/5AXgx8STihvwY8R46c1rx
-         OxCbuUwRKYFZ6Ubj0jXzRTqKpAQlol5UkcRTlmoJC/TcgUqcEGL48QnqQK6d2oyHUTM3
-         UF+lFV6zABQ6jr+8pqBqDVheYOznPP4oAjUtMvGNu6fvPN90EmpMzESXxTB4HL3lHF5p
-         qgfEsnFZPSQbolr46IKnY05doyzGh2nE+wxJ9DityBc9M2Huh4ndGIyTfj1viVzGhbUv
-         Cu6g==
-X-Gm-Message-State: AOJu0Yymj2Tg5tn2IM9Rl+zDezhxMlegdL7gc00pveV3R63M4Rbs46Q7
-	Ep61T2W8Mwr0K43k29mFS1iMc0paXd8hmPbnkA==
-X-Google-Smtp-Source: AGHT+IEQpDs7hpOqRDtFDbh4OM23K8uXHQtjIsWC4jrd/lhbtU2hEf9NOXi6sVTehUOiNBV3H+BHO3UoNbsCMYHd+g==
+        bh=kK3RwRQ2hFONySy7vb2rlodkP+v8D8sjNHk/2UXCQCw=;
+        b=XgTWcxz1EyC4lH81GiXU6cHkZ/bPltUvXqGHtpWVrzqzC6j43cO5O9yF6kujAmHdzf
+         Ct2vmKnY3W19nN5HOx8TiTDcw/WqkwAO51SKpLDugurBXk1b4nfkVo0AYdlnGn1zO2O+
+         o3EyJSvLHPQzqQHrm9XmrXQukWyKc/HNbAgrsKt8L5fGh9OuHPNd96hrEwTmvqy9u8Ms
+         7F5cMk88gRboDZuBiV6rHseMgz5XTvdVuNAjjSivM7AFkcuBrbLC6bZZU0vboP+w+/9u
+         sv28vlpVS16qOQIIckjnP4S4uayl3ppP1fE8Hboncs3ERcahE7AutC6ltZEaYt0NwNeG
+         2bsw==
+X-Gm-Message-State: AOJu0YzH2c0QAbwhSmosqCe4H3QQ9w9YjGwocZk0lVhi9OxOKsgA14kF
+	BvpjctzteKD/cXmyrQGKk1Q6mshYuM/5mQznBw==
+X-Google-Smtp-Source: AGHT+IFIgFCUI8HjqfIf+Tklc39JbTp6ZaF/+XXlfiROC7bIg7hcKRNqFinXZ9QpU3wT9cqFbgb/bHQiEOBuCbThNA==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a25:d7d8:0:b0:d9a:da03:97e8 with SMTP
- id o207-20020a25d7d8000000b00d9ada0397e8mr53942ybg.2.1697828378406; Fri, 20
- Oct 2023 11:59:38 -0700 (PDT)
-Date: Fri, 20 Oct 2023 18:59:34 +0000
+ (user=justinstitt job=sendgmr) by 2002:a25:d34e:0:b0:d9a:e3d9:99bd with SMTP
+ id e75-20020a25d34e000000b00d9ae3d999bdmr52155ybf.5.1697828725873; Fri, 20
+ Oct 2023 12:05:25 -0700 (PDT)
+Date: Fri, 20 Oct 2023 19:05:25 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIABXOMmUC/x2N0QrCMAxFf2Xk2UDTbiD+ioi4Lp0B6Wqic2Ps3
- 1d8PBfOPRsYq7DBpdlAeRaTKVegUwPx+cgjowyVwTsfyHmH9tEcy4qDysxqWKYfK9q3lNeK/dt 31C33qupY54ixT3QmCqFNHuppUU6y/IPX274foYe/1oAAAAA=
+X-B4-Tracking: v=1; b=H4sIAHTPMmUC/x2NUQrCQAwFr1LybWC70kW9iojYbawB2cZE65bSu
+ xv8nAfzZgUjZTI4NSsozWw8FYd210B+3MpIyIMzxBD3bYgB7a0ly4KD8kxqKNOXFO0j8lywf8U u1Xp1VUefM/aUjrk7pBApgZ+K0p3rP3i+bNsPsPSlOYAAAAA=
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1697828377; l=2719;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1697828724; l=2863;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=T+2bP/VZordKJivg0WULS6xpMGyCh5PEFbjppJMYDyw=; b=wfeBrFDrlPg11uAXCMlr1FrdbFjab3mH++hd8n+V8J6m4i2+5fSu+wTfIKW7ADNr0aV6HkBe9
- dAIOowSQjgXD6wkWvunWsFVJIEBXYJV97Ryx0HNqH5J9WFFJxzHyBii
+ bh=T9L+60rFiC2C22tjDxmZadYML+C8IPdvUbMCCZ+8ZV8=; b=g+KZD1lwFHNJ1xFiRWb7uqcL0Z5bEAbJH48+DOSAsG+RzN1Fpq+/0v1gC/I3Gh+CXpoyvlGbm
+ 8FNycQ/9sVEB7z1Ag9/AEX/GrjaQo1VSyvG8K+T824uWpGW7D3fSaty
 X-Mailer: b4 0.12.3
-Message-ID: <20231020-strncpy-drivers-power-supply-bq2515x_charger-c-v1-1-46664c6edf78@google.com>
-Subject: [PATCH] power: supply: bq2515x: replace deprecated strncpy with strscpy
+Message-ID: <20231020-strncpy-drivers-power-supply-bq256xx_charger-c-v1-1-2fad856124f9@google.com>
+Subject: [PATCH] power: supply: bq256xx: replace deprecated strncpy with strscpy
 From: Justin Stitt <justinstitt@google.com>
 To: Sebastian Reichel <sre@kernel.org>
 Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
@@ -66,12 +66,12 @@ strncpy() is deprecated for use on NUL-terminated destination strings
 [1] and as such we should prefer more robust and less ambiguous string
 interfaces.
 
-We expect bq2515x->model_name to be NUL-terminated based on its usage with
+We expect bq->model_name to be NUL-terminated based on its usage with
 sysfs_emit and format strings:
 
-val->strval is assigned to bq2515x->model_name in
-bq2515x_mains_get_property():
-|       val->strval = bq2515x->model_name;
+val->strval is assigned to bq->model_name in
+bq256xx_get_charger_property():
+|       val->strval = bq->model_name;
 
 ... then in power_supply_sysfs.c we use value.strval with a format string:
 |       ret = sysfs_emit(buf, "%s\n", value.strval);
@@ -81,14 +81,14 @@ we assigned value.strval via:
 ... which invokes psy->desc->get_property():
 |       return psy->desc->get_property(psy, psp, val);
 
-with bq2515x_mains_get_property():
-|       static const struct power_supply_desc bq2515x_mains_desc = {
+with bq256xx_get_charger_property():
+|       static const struct power_supply_desc bq256xx_power_supply_desc = {
 ...
-|       	.get_property		= bq2515x_mains_get_property,
+|       	.get_property = bq256xx_get_charger_property,
 
-Moreover, no NUL-padding is required as bq2515x is zero-allocated in
-bq2515x_charger.c:
-|       bq2515x = devm_kzalloc(dev, sizeof(*bq2515x), GFP_KERNEL);
+Moreover, no NUL-padding is required as bq is zero-allocated in
+bq256xx_charger.c:
+|       bq = devm_kzalloc(dev, sizeof(*bq), GFP_KERNEL);
 
 Considering the above, a suitable replacement is `strscpy` [2] due to
 the fact that it guarantees NUL-termination on the destination buffer
@@ -102,33 +102,34 @@ Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-
 Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
 Link: https://github.com/KSPP/linux/issues/90
 Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
 Similar-to: https://lore.kernel.org/all/20231020-strncpy-drivers-power-supply-bq24190_charger-c-v1-1-e896223cb795@google.com/
+Similar-to: https://lore.kernel.org/all/20231020-strncpy-drivers-power-supply-bq2515x_charger-c-v1-1-46664c6edf78@google.com/
+Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
 Note: build-tested only.
 
 Found with: $ rg "strncpy\("
 ---
- drivers/power/supply/bq2515x_charger.c | 2 +-
+ drivers/power/supply/bq256xx_charger.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/power/supply/bq2515x_charger.c b/drivers/power/supply/bq2515x_charger.c
-index 1dbacc9b015d..b4ea1707304a 100644
---- a/drivers/power/supply/bq2515x_charger.c
-+++ b/drivers/power/supply/bq2515x_charger.c
-@@ -1092,7 +1092,7 @@ static int bq2515x_probe(struct i2c_client *client)
+diff --git a/drivers/power/supply/bq256xx_charger.c b/drivers/power/supply/bq256xx_charger.c
+index 82d3cd5ee2f9..85e1185275b9 100644
+--- a/drivers/power/supply/bq256xx_charger.c
++++ b/drivers/power/supply/bq256xx_charger.c
+@@ -1706,7 +1706,7 @@ static int bq256xx_probe(struct i2c_client *client)
  
- 	bq2515x->dev = dev;
+ 	mutex_init(&bq->lock);
  
--	strncpy(bq2515x->model_name, id->name, I2C_NAME_SIZE);
-+	strscpy(bq2515x->model_name, id->name, sizeof(bq2515x->model_name));
+-	strncpy(bq->model_name, id->name, I2C_NAME_SIZE);
++	strscpy(bq->model_name, id->name, sizeof(bq->model_name));
  
- 	bq2515x->device_id = id->driver_data;
- 
+ 	bq->regmap = devm_regmap_init_i2c(client,
+ 					bq->chip_info->bq256xx_regmap_config);
 
 ---
 base-commit: bb55d7f7f7445abcc8db50e6a65d4315e79f75c7
-change-id: 20231020-strncpy-drivers-power-supply-bq2515x_charger-c-cbf1811334f2
+change-id: 20231020-strncpy-drivers-power-supply-bq256xx_charger-c-be69c58602e6
 
 Best regards,
 --
