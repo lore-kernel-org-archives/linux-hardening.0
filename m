@@ -1,66 +1,154 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB80179B5
-	for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 10:30:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9027310F4;
-	Fri, 20 Oct 2023 03:30:48 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9A28A2F4;
-	Fri, 20 Oct 2023 03:31:29 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.70.146])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 067A83F5A1;
-	Fri, 20 Oct 2023 03:30:47 -0700 (PDT)
-Date: Fri, 20 Oct 2023 11:30:38 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Kees Cook <keescook@chromium.org>
-Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: Include stackleak paths in hardening entry
-Message-ID: <ZTJWxLq4lHElmR19@FVFF77S0Q05N>
-References: <20231019004616.work.960-kees@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E6DA1A5BD
+	for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 13:56:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="GDpC5UdM"
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3482E1A8;
+	Fri, 20 Oct 2023 06:56:39 -0700 (PDT)
+Received: from [192.168.100.7] (unknown [39.34.188.12])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madras.collabora.co.uk (Postfix) with ESMTPSA id 745D56607377;
+	Fri, 20 Oct 2023 14:56:18 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1697810197;
+	bh=rKfZfpFQKx5mNZYmDoPXgE0AS8y+IyTbCZMCDsJThSQ=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=GDpC5UdMeV5DzD30TDmYalwaFxn1hMovA+uu/S5FTUYpQLOeERNorFBCv4gofox3a
+	 iQA6F5vueG5gUgX35ADJg4EOCi6jjs6eY21q/pa39yr1ZqSYjjKjCgwzGK/969TA1a
+	 ZD80vCXwVQs5QZ7Fp8hi5dCAsRZHI4VfaYNHGMy9irZC2ugHd5gAfTjUt5o2TELaLx
+	 NNSy3+jXeodA0EwNPsMgld2HFkeALd3IYhjuAw5W4vfAGAukXsH2oh+5KKR5uvcpyV
+	 TkXjWb9sHYI4Zdcyg3hHeiZAWeHy2vT1Zb1lFmlY4N/wKlCEHNVwIcv+XfwNDi95a/
+	 Plz7SPiFE6kpg==
+Message-ID: <38f132b8-4fd2-40e2-b24e-62164a0ee4e6@collabora.com>
+Date: Fri, 20 Oct 2023 18:56:07 +0500
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231019004616.work.960-kees@kernel.org>
+User-Agent: Mozilla Thunderbird
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>, jeffxu@google.com,
+ jorgelo@chromium.org, groeck@chromium.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-mm@kvack.org, surenb@google.com,
+ alex.sierra@amd.com, apopple@nvidia.com, aneesh.kumar@linux.ibm.com,
+ axelrasmussen@google.com, ben@decadent.org.uk, catalin.marinas@arm.com,
+ david@redhat.com, dwmw@amazon.co.uk, ying.huang@intel.com, hughd@google.com,
+ joey.gouly@arm.com, corbet@lwn.net, wangkefeng.wang@huawei.com,
+ Liam.Howlett@oracle.com, lstoakes@gmail.com, mawupeng1@huawei.com,
+ linmiaohe@huawei.com, namit@vmware.com, peterx@redhat.com,
+ peterz@infradead.org, ryan.roberts@arm.com, shr@devkernel.io,
+ vbabka@suse.cz, xiujianfeng@huawei.com, yu.ma@intel.com,
+ zhangpeng362@huawei.com, dave.hansen@intel.com, luto@kernel.org,
+ linux-hardening@vger.kernel.org
+Subject: Re: [RFC PATCH v2 6/8] mseal: Check seal flag for mremap(2)
+Content-Language: en-US
+To: jeffxu@chromium.org, akpm@linux-foundation.org, keescook@chromium.org,
+ jannh@google.com, sroettger@google.com, willy@infradead.org,
+ gregkh@linuxfoundation.org, torvalds@linux-foundation.org
+References: <20231017090815.1067790-1-jeffxu@chromium.org>
+ <20231017090815.1067790-7-jeffxu@chromium.org>
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <20231017090815.1067790-7-jeffxu@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Oct 18, 2023 at 05:46:20PM -0700, Kees Cook wrote:
-> While most of the gcc-plugins are self-contained in the
-> scripts/gcc-plugins directory, stackleak actually has some additional
-> files. Add those so changes are directed to the hardening list.
+On 10/17/23 2:08 PM, jeffxu@chromium.org wrote:
+> From: Jeff Xu <jeffxu@google.com>
 > 
-> Suggested-by: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> mremap(2) can shrink/expand a VMA, or move a VMA to a fixed
+> address and overwriting or existing VMA. Sealing will
+> prevent unintended mremap(2) call.
+> 
+> What this patch does:
+> When a mremap(2) is invoked, if one of its VMAs has MM_SEAL_MREMAP
+> set from previous mseal(2) call, this mremap(2) will fail, without
+> any VMA modified.
+> 
+> This patch is based on following:
+> 1. At syscall entry point: SYSCALL_DEFINE5(mremap,...)
+> There are two cases:
+Maybe we can reduce the code duplication by bringing the check if memory is
+sealed before call to mremap_to().
 
-Makes sense to me, so FWIW:
-
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-
-Mark.
-
+> a. going into mremap_to().
+> b. not going into mremap_to().
+> 
+> 2. For mremap_to() case.
+> Since mremap_to() is called only from SYSCALL_DEFINE5(mremap,..),
+> omit changing signature of mremap_to(), i.e. not passing
+> checkSeals flag.
+> In mremap_to(), it calls can_modify_mm() for src address and
+> dst address (when MREMAP_FIXED is used), before any update is
+> made to the VMAs.
+> 
+> 3. For non mremap_to() case.
+> It is still part of SYSCALL_DEFINE5(mremap,...).
+> It calls can_modify_mm() to check sealing in the src address,
+> before any update is made to src VMAs.
+> Check for dest address is not needed, because dest memory is
+> allocated in current mremap(2) call.
+> 
+> Signed-off-by: Jeff Xu <jeffxu@google.com>
 > ---
->  MAINTAINERS | 2 ++
->  1 file changed, 2 insertions(+)
+>  mm/mremap.c | 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 5f18ed0fbd42..a4de29c0036f 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8615,6 +8615,8 @@ L:	linux-hardening@vger.kernel.org
->  S:	Maintained
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/hardening
->  F:	Documentation/kbuild/gcc-plugins.rst
-> +F:	include/linux/stackleak.h
-> +F:	kernel/stackleak.c
->  F:	scripts/Makefile.gcc-plugins
->  F:	scripts/gcc-plugins/
+> diff --git a/mm/mremap.c b/mm/mremap.c
+> index ac363937f8c4..691fc32d37e4 100644
+> --- a/mm/mremap.c
+> +++ b/mm/mremap.c
+> @@ -836,7 +836,27 @@ static unsigned long mremap_to(unsigned long addr, unsigned long old_len,
+>  	if ((mm->map_count + 2) >= sysctl_max_map_count - 3)
+>  		return -ENOMEM;
 >  
-> -- 
-> 2.34.1
-> 
+> +	/*
+> +	 * Check src address for sealing.
+> +	 *
+> +	 * Note: mremap_to() currently called from one place:
+> +	 * SYSCALL_DEFINE4(pkey_mprotect, ...)
+> +	 * and not in any other places.
+> +	 * Therefore, omit changing the signature of mremap_to()
+> +	 * Otherwise, we might need to add checkSeals and pass it
+> +	 * from all callers of mremap_to().
+> +	 */
+> +	if (!can_modify_mm(mm, addr, addr + old_len, MM_SEAL_MREMAP))
+> +		return -EACCES;
+> +
+>  	if (flags & MREMAP_FIXED) {
+> +		/*
+> +		 * Check dest address for sealing.
+> +		 */
+> +		if (!can_modify_mm(mm, new_addr, new_addr + new_len,
+> +				   MM_SEAL_MREMAP))
+> +			return -EACCES;
+> +
+Move these two checks to just before call to mremap_to() in sys_mremap() or
+even earlier. Or even better move the first condition before mremap_to()
+and second condition can be checked before call to mremap_to().
+
+>  		ret = do_munmap(mm, new_addr, new_len, uf_unmap_early);
+>  		if (ret)
+>  			goto out;
+> @@ -995,6 +1015,11 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned long, old_len,
+>  		goto out;
+>  	}
+>  
+> +	if (!can_modify_mm(mm, addr, addr + old_len, MM_SEAL_MREMAP)) {
+> +		ret = -EACCES;
+> +		goto out;
+> +	}
+> +
+>  	/*
+>  	 * Always allow a shrinking remap: that just unmaps
+>  	 * the unnecessary pages..
+
+-- 
+BR,
+Muhammad Usama Anjum
