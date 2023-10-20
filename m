@@ -1,61 +1,52 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48DD7198
-	for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 00:15:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C770369
+	for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 00:16:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z8c2oT9A"
-Received: from mail-ot1-x331.google.com (mail-ot1-x331.google.com [IPv6:2607:f8b0:4864:20::331])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A14311F
-	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 17:15:57 -0700 (PDT)
-Received: by mail-ot1-x331.google.com with SMTP id 46e09a7af769-6ce2cf67be2so187065a34.2
-        for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 17:15:57 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XKNrTAcw"
+Received: from mail-oa1-x31.google.com (mail-oa1-x31.google.com [IPv6:2001:4860:4864:20::31])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD22611F
+	for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 17:16:17 -0700 (PDT)
+Received: by mail-oa1-x31.google.com with SMTP id 586e51a60fabf-1e9b6f39f9eso210746fac.2
+        for <linux-hardening@vger.kernel.org>; Thu, 19 Oct 2023 17:16:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1697760956; x=1698365756; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1697760977; x=1698365777; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KCVrvRoy4SGPWE20sLca2ThSQwQI5qn6X68QgvLEZPo=;
-        b=Z8c2oT9ABdXS4JFpoFEZXMc5FLveIg5FD1kmw/RtiibToeWIBu5R53AjQYfm7xMfap
-         uDQPfXMeufg3Z7xV1ZfPji8+K3NFQsuMz6tFzL8Nhey0UkkLOd9iMnBVeiTCcEpyu/IX
-         AQS2Bo628GnAj+2mDbiL0d8lDG/zDwg41Ca+Q=
+        bh=hEu1eSssB3T65KroddKXpWsNaV3cdGbl2CloW40p8rQ=;
+        b=XKNrTAcwUYwoz8Bm52eSAw4//iurvHowtdbKax61ZkSH5G+kc0XVvUqdb9oZNFzfEf
+         CvvOzpZ41r/vW3/dENIXtQiRIdlSOhJ+CEYeXGgc1d5BDkIbTExwo26ddSNMWBbU88lr
+         rb0LOzDSqOViqzWgvtHxOB2l80X10esI8VUcQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697760956; x=1698365756;
+        d=1e100.net; s=20230601; t=1697760977; x=1698365777;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KCVrvRoy4SGPWE20sLca2ThSQwQI5qn6X68QgvLEZPo=;
-        b=BlIND6AjNtIk9VLe6ZV2xeeZxf2hVJysp4+J7gxRhljjdFFVDokoJXOeE4jmzxNq7f
-         RWP6oWvt3eueDGxHUIufKBS84ozplBgy3DpUsgdrlNpkFYbK136Wb1XkSysN9XYzTcrn
-         NlrKOqId08FWmV0oc9pW4rj3BfSaxFXsmwDrfzvrBzMTNLx+IK7/7I65IR4tfQAkSr2N
-         L3qjBE98/A2NXt9JNaMVduU6UaDVvOK1s9MDHI+uRAPVh7OIdHdJ0+8rost/oY4uz/x5
-         hly1l4Ed1q06/OsKaAPKyZe0OvJ5HgHB3nAXS/flqGe5FUy2FrTQ0bBfD27O6yriRUzp
-         FdKw==
-X-Gm-Message-State: AOJu0Yze55OZXgmF8Y00YCON+hgGJswqCfRD8hkGzE0oc5OGwsY29IcU
-	YGgEM3l6dPS3bSzVDUy3jjAfVw==
-X-Google-Smtp-Source: AGHT+IEHLvazYVGD5+oh4u6xlbwXIAQEvzEsnULcGkmSyGkZHb+qUhJKu+91HBvjlkfySxvWpaKNQw==
-X-Received: by 2002:a05:6830:2b23:b0:6be:fe1e:c13 with SMTP id l35-20020a0568302b2300b006befe1e0c13mr503343otv.0.1697760956577;
-        Thu, 19 Oct 2023 17:15:56 -0700 (PDT)
+        bh=hEu1eSssB3T65KroddKXpWsNaV3cdGbl2CloW40p8rQ=;
+        b=TDWjsh3dBWvRZRADBZA9P6iiQYuKKpb6JoerBdmDt7cBEqMuyLOzGBKrnYBY2dolDE
+         LoFITItsCzL5+/HMm+wkH1Vk+GKHRc1iPZa4gIZEdIuRX/OczlVyZXt/AO4JOyVZqWX6
+         WJ8p2xXyNp44Ng9fqdyy2x+CuMFfuJhtCqYMWXN1Oq3WMgP6HQotr/1md2q+bXu+cqlg
+         xLqUPnpXK55qNHF5/1TTjBfTXaj46fGXUMD/Q0xoc06wwvVTsMB1Q93qbmUU1p7X07o2
+         xpAAJOCmGw0D9oo7BgGqPramcg29pAUfFSpiMwovxQfSBaNtSJllq5YfEq5AGV0Sk3TL
+         38pQ==
+X-Gm-Message-State: AOJu0YwOdfglfLnJxOhdO/A1+hwszhe00485YQK4zrwOBCfav/6Ag3Hk
+	GFs+1bOOZ5Ccv3n2604LLl9Wy/mwDGx3mrN6fXc=
+X-Google-Smtp-Source: AGHT+IGw6iGv2GrzFkRpFoUMInWaglk1pERulGhcR2sJ/wJa0yQnRA0fw/QNogG4fYsveieaqaaT/Q==
+X-Received: by 2002:a05:6870:3042:b0:1ea:206e:cb0f with SMTP id u2-20020a056870304200b001ea206ecb0fmr500951oau.34.1697760977106;
+        Thu, 19 Oct 2023 17:16:17 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id x11-20020aa78f0b000000b00690fe1c928csm351482pfr.147.2023.10.19.17.15.55
+        by smtp.gmail.com with ESMTPSA id o67-20020a634146000000b005742092c211sm311363pga.64.2023.10.19.17.16.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Oct 2023 17:15:55 -0700 (PDT)
-Date: Thu, 19 Oct 2023 17:15:55 -0700
+        Thu, 19 Oct 2023 17:16:16 -0700 (PDT)
+Date: Thu, 19 Oct 2023 17:16:16 -0700
 From: Kees Cook <keescook@chromium.org>
-To: Stephan Gerhold <stephan@gerhold.net>
-Cc: Justin Stitt <justinstitt@google.com>,
-	Loic Poulain <loic.poulain@linaro.org>,
-	Sergey Ryazanov <ryazanov.s.a@gmail.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+To: Justin Stitt <justinstitt@google.com>
+Cc: Kalle Valo <kvalo@kernel.org>, linux-wireless@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] net: wwan: replace deprecated strncpy with strscpy_pad
-Message-ID: <202310191715.5436893DD0@keescook>
-References: <20231018-strncpy-drivers-net-wwan-rpmsg_wwan_ctrl-c-v1-1-4e343270373a@google.com>
- <202310182232.A569D262@keescook>
- <ZTExfv2aHPD2B1ze@gerhold.net>
+Subject: Re: [PATCH v2] atmel: replace deprecated strncpy with strscpy
+Message-ID: <202310191716.EE2FEB5B00@keescook>
+References: <20231019-strncpy-drivers-net-wireless-atmel-atmel-c-v2-1-52e46fbea083@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -64,15 +55,38 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZTExfv2aHPD2B1ze@gerhold.net>
+In-Reply-To: <20231019-strncpy-drivers-net-wireless-atmel-atmel-c-v2-1-52e46fbea083@google.com>
 
-On Thu, Oct 19, 2023 at 03:39:10PM +0200, Stephan Gerhold wrote:
-> Hm, strscpy_pad() is neither a typical compiler builtin nor an inline
-> function, so my naive assumption would be that this could only be
-> optimized away with LTO?
+On Thu, Oct 19, 2023 at 05:29:01PM +0000, Justin Stitt wrote:
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
+> 
+> We expect priv->firmware_id to be NUL-terminated based on its usage
+> with seq_printf() and strlen() in atmel.c:
+> 1420 |       seq_printf(m, "%s loaded by host\n", priv->firmware_id);
+> ...
+> 3884 |       if (strlen(priv->firmware_id) == 0) {
+> 
+> NUL-padding is not required, which is evident by the usage of a plain
+> strcpy():
+> 3891 |   strcpy(priv->firmware_id, "atmel_at76c502.bin");
+> 
+> Considering the above, a suitable replacement is `strscpy` [2] due to
+> the fact that it guarantees NUL-termination on the destination buffer
+> without unnecessarily NUL-padding.
+> 
+> Let's also replace hard-coded lengths to be `sizeof(...)` for buffers
+> that the compiler can detect the size for as this is less error prone.
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strcpy [2]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [3]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-Oops, yes, my mistake. I'm too used to the other fortified helpers that
-are inlined...
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -- 
 Kees Cook
