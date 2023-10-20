@@ -1,61 +1,63 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C412A1DDC8
-	for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 19:35:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 930CD1802E
+	for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 19:39:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aRyQvAni"
-Received: from mail-oo1-xc49.google.com (mail-oo1-xc49.google.com [IPv6:2607:f8b0:4864:20::c49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E37ADD63
-	for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 12:35:44 -0700 (PDT)
-Received: by mail-oo1-xc49.google.com with SMTP id 006d021491bc7-581ec87fbf9so1570521eaf.1
-        for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 12:35:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fymZahB4"
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCCEA1716
+	for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 12:39:08 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5a824ef7a83so15826667b3.0
+        for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 12:39:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1697830544; x=1698435344; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1697830746; x=1698435546; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=9+iAGOL8fBcRKregm2UatJBSjxVyGVTi97qzrD87J/M=;
-        b=aRyQvAni2EHDC0yRsExYndr00a4pAr2Rtc9NCVfSzpCdgmvO5I5cL6jHXAntyhyxL2
-         FI9KRSEINv+Hs6h/g1KbBbbso/zbisELGQolS1SFa35WUNcqQ2iZ9dnMyQAqQ1/QUCF7
-         klwPq5O8MSJFKEYZ0DM3XcZwQh3+MzdWqiLmcC1ojS+1CtCn1Xw7Mek462kLySxhoc4h
-         FehbPwXpxTs61coqrVJ9RGMalTRWJN0Ymdl4kSyOZGeAJpjLzdsOzlUIta2TRhogRJve
-         +P1QXvrg5VOCNk4mHO7U2CSk6Zhiezr8zxVyhIj8LTgfHtEwoGataffKbvaUqYufSGtR
-         eGhg==
+        bh=ApgtBIwM/UT3SKqY+L+66VIK2kG5whPiTDfo769iKqE=;
+        b=fymZahB42Jt7DJG2f/jHR8IofMHwz/ta/5lRINoFiRseWXr7Pr8dG5ADbn1Ht5M7NW
+         eHTiu6zByuTlWMnSER7itpHo3wMFefGGeTg77XLxOxr/LGqqhUVlc2JJmbh4pAkSYMv6
+         cU19bMgVNtkHao5tny5U35qlnW38QKSX67XlFR0C23HGAgkAfwcTynMulRCQp0UiFKd2
+         tG589/4x0MN+/0bINH502AMfhROlGJ+liX6+Bg5Vy/DOXnQaRJed+2sCSTeglFyBa3Eh
+         OX4BC74mayd3MYNkRt8xhSU9VkiOlZ7v2o7sd89LE0slvkQFrwXSxpJejQ15OLwzvMZO
+         U7Fw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697830544; x=1698435344;
+        d=1e100.net; s=20230601; t=1697830746; x=1698435546;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=9+iAGOL8fBcRKregm2UatJBSjxVyGVTi97qzrD87J/M=;
-        b=Ocm7lV4zE0yWcmJv/oEr9pqs+ekDRp55bqOlxPilo/8BXlPd0UXizzczWwwECqzz0F
-         r/PjF7n0GclVPj8Q16zR/UYVvqX6sesKR8Q7Dy/Mki8JmVQdWWbNt9kRwqAQKYEJLgt9
-         PsQ2l9fKQ9eNV6mGM6yS1u6nPmhfAL2T9QUTWLVGGAetMz6Hoj/diaml4bNf9K3PHEEl
-         d4nR65/XpdMAeHweZWuT0STCL/ZKpGUbdZgXwidYw2BUZpOJSEe0VCnfU/zL/YH6pDUl
-         aHbZCUC2ujOV0IniUkpRHpZik7e5iyjoU/vI7PfEU6m+LJSWD6Rck5os03IJ81ufqLHV
-         aM8Q==
-X-Gm-Message-State: AOJu0Yw/lLEq0GrBpRLZUOWm4toHvVl/XZa9D3kAVWZmzr9dvFUs/4/r
-	j9oOH013wd3pcuXvZpEe7LH30NzsFYxIWD2dPA==
-X-Google-Smtp-Source: AGHT+IHZQUY9baCehYvzXAaS7x9nNF6uHCQ2/74bV2qdNWPoNwNQLv1R/Hn9zc2YRsn/RnRPDVOTLR2TZ+Z8Sxp5Ag==
+        bh=ApgtBIwM/UT3SKqY+L+66VIK2kG5whPiTDfo769iKqE=;
+        b=LaiaP2AB6q4ZG3LCp8IVn292O/r+b6tAAra1enHX8vTDfNegc3avBfNQ1Ow0IuexZJ
+         mIaOScNhEOO+0pS4iOijQOxrh02HKC3mhJ3Sfi4iV2rd2Uy29emEJtknhy/r8aOxiqtS
+         XrZ+BYoebrLnJ533K09xrl4OzArcciQM5Ns5SNEZJyy/SbV3N0PDLlDR/znYTpTOAP2g
+         7ZKw+w4GrLLgLbbkG+YfWHlXpU+yzWcM6Nmlit5VbvME0/ke3MIReCuH8a3Kibkp6o0Z
+         2hnW/LvFSLxiV/K1Y6a/aamXDRz8igVu/80Imv6JTUkAPocWufZGdmfVFpfP4MWyxEmu
+         aWcw==
+X-Gm-Message-State: AOJu0Yxo6mz31WWIAPXDed6k7QzfU23eTxZONULG5pJAJk9mOzktspA5
+	DLw8f/vMA7re8VTjDUW20rdVldDi6o4nwRkk/w==
+X-Google-Smtp-Source: AGHT+IEMURRd+a5veV8jdamkf3IjKiUnn+FpVD4h6z8O/r3QLS9fPuSYUe8nhXkO+H6BxwqrGYE3SZBBG6MGCUhKZQ==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6808:448f:b0:3ad:da36:1dd6 with
- SMTP id eq15-20020a056808448f00b003adda361dd6mr1891601oib.1.1697830544173;
- Fri, 20 Oct 2023 12:35:44 -0700 (PDT)
-Date: Fri, 20 Oct 2023 19:35:43 +0000
+ (user=justinstitt job=sendgmr) by 2002:a81:6cc3:0:b0:5a7:de61:4d9b with SMTP
+ id h186-20020a816cc3000000b005a7de614d9bmr72471ywc.3.1697830746201; Fri, 20
+ Oct 2023 12:39:06 -0700 (PDT)
+Date: Fri, 20 Oct 2023 19:39:02 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAI7WMmUC/x2N0QrCMAwAf2Xk2UBXJwx/RUTaLNOAdCWp0zL27
- ys+Hfdyt4GxChtcuw2UVzFZUpP+1AG9QnoyytQcvPPn3nmHVjRRrjiprKyGefmyon1yftcGnQP xI4ZSWCsSRkfjEN0lkB+hRbPyLL//8Hbf9wN9+HSXgAAAAA==
+X-B4-Tracking: v=1; b=H4sIAFbXMmUC/52NQQ7CIBBFr9KwdgygrY0r72EaA3TaktRCBkRJ0
+ 7uLPYKrn/cX760sIFkM7FqtjDDZYN1SQB4qZia1jAi2L8wklyfBJYcQaTE+Q082IQXw7o0E4eX
+ 9nMvQoAw+tIoRKYMBzU171rxWRrasSD3hYD978N4VnmyIjvLeT+L3/p1KAgQYpRWqmmPTXG6jc +OMR+OerNu27QtczP977QAAAA==
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1697830543; l=2313;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1697830745; l=2480;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=zmP6Agkd7BUv41JUTgaRBkw1r6Q9BZkiPWT2tLR0LAQ=; b=qUt1cyoTbXs6qmJVgPAXz5mbtcGQzIOLTkM7z8UR/GVWZ8gVAAzFiOhg9+1gcHscXS/bles5K
- Hd71E9a1vbbDBn24xeS1hMCC89N3IDNnw1W+pJJ4CZNXEiLH5v1sOMH
+ bh=zP2JAHf39kTI56frJ1mycRlDlgI+x3V8U7lKpy4JwDA=; b=8lnCfGuxm7KfO7JWZvnLM0jkO3KfBDK4t51JJ/oInHUz0BAWOE3mpSG3NT20U8vZ+oT5gyPB3
+ 3MX1Z5PX6faDN9OI7yXoH0OvrjC02jZhH08FqCPvJOVLwOuem7lHeCP
 X-Mailer: b4 0.12.3
-Message-ID: <20231020-strncpy-drivers-power-supply-surface_battery-c-v1-1-cabaea50e667@google.com>
-Subject: [PATCH] platform/surface: aggregator: replace deprecated strncpy with strscpy
+Message-ID: <20231020-strncpy-drivers-power-supply-surface_battery-c-v2-1-29ed16b2caf1@google.com>
+Subject: [PATCH v2] power: supply: surface_battery: replace deprecated strncpy
+ with strscpy
 From: Justin Stitt <justinstitt@google.com>
 To: Maximilian Luz <luzmaximilian@gmail.com>, Sebastian Reichel <sre@kernel.org>
 Cc: linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
@@ -99,6 +101,10 @@ Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
 Link: https://github.com/KSPP/linux/issues/90
 Cc: linux-hardening@vger.kernel.org
 Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Changes in v2:
+- fix subject line
+- Link to v1: https://lore.kernel.org/r/20231020-strncpy-drivers-power-supply-surface_battery-c-v1-1-cabaea50e667@google.com
 ---
 Note: build-tested only.
 
