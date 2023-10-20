@@ -1,28 +1,28 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC6241DA5F
-	for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 15:55:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA88A1D538
+	for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 16:27:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b="5uh8cM/3"
+	dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b="lDsu7por"
 Received: from cvs.openbsd.org (cvs.openbsd.org [199.185.137.3])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F99ED65;
-	Fri, 20 Oct 2023 08:55:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=selector1; bh=4Wxr8YyJBV
-	Ji9dsEnvrWsVWlX7GW5YDL5ggU4ht88YY=; h=date:references:in-reply-to:
-	subject:cc:to:from; d=openbsd.org; b=5uh8cM/3362zsHWWsOJQQ46mNmFkN73zH
-	KtMFfu5/V5BQjgUqramyy6DLokJoEDDFiTXDZ9iUmZ33ICuFYcRAWnD1u1Dy6mL5GBBpzV
-	cK0utCgesrjOUEgYntUsl8hY0EbCeuyTBqgYTMKlXmvilryrzM8byogl9HLQCThr3rMysD
-	L82kOgtwM7VU3G72B8IDyDKGiKO5YgnzU3kOkbpogCOzuEGaVauGn0Zg2M1eCSwbcPzmIM
-	GVGqBq3zKy+Lc0W0r82Inq0AQq5NBneSdFBScYh0F+MKxTGmaENtL7eSiIGg+yuhmKUFy/
-	CQE/qsUjQmJsRTTtKDVa+NXOPLbbg==
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AA8BA3;
+	Fri, 20 Oct 2023 09:27:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=selector1; bh=qn+s27bmZY
+	JOpVoNzboSU3Snd5iN0hcRbPkkiE9qcC4=; h=date:references:in-reply-to:
+	subject:cc:to:from; d=openbsd.org; b=lDsu7por9y4kJ3nZ1Bfn3ZrvcfTuzTq6D
+	i4ZGlLsZ/GX/8EK5YHqapM48NVRjDTFhavtYUAM3KZKrxr+BxrvxLIXL9mP1XkESh4ODGS
+	XXG/xGlje/ElGR82Fj5DGbfJrnVMN3QRA8Uxc0ybJUS2kJH36+5AcdwzXSYT9CVlSFr+SM
+	9q/2Zd6dHPJ1owM4MemmfTR+eTX9HhRhHDsGo6XKGEcRyF2FAafdHkmcuDKJ+3YDFtiqs/
+	srZB89voPmzg4biEZBiarNxd0hSd0OhQ3Dsa0sr0IVEICQ63/VyILvYm+4scJzbBekLxqv
+	pTYEoX74OtPds/Kud9giJQAwI6ayQ==
 Received: from cvs.openbsd.org (localhost [127.0.0.1])
-	by cvs.openbsd.org (OpenSMTPD) with ESMTP id 8d5b7bfa;
-	Fri, 20 Oct 2023 09:55:28 -0600 (MDT)
+	by cvs.openbsd.org (OpenSMTPD) with ESMTP id eeb066c3;
+	Fri, 20 Oct 2023 10:27:31 -0600 (MDT)
 From: "Theo de Raadt" <deraadt@openbsd.org>
 To: =?us-ascii?Q?=3D=3FUTF-8=3FQ=3FStephen=5FR=3DC3=3DB6ttger=3F=3D?= <sroettger@google.com>
-cc: Jeff Xu <jeffxu@google.com>, Matthew Wilcox <willy@infradead.org>,
-    Linus Torvalds <torvalds@linux-foundation.org>, jeffxu@chromium.org,
+cc: Linus Torvalds <torvalds@linux-foundation.org>,
+    Jeff Xu <jeffxu@google.com>, jeffxu@chromium.org,
     akpm@linux-foundation.org, keescook@chromium.org,
     jorgelo@chromium.org, groeck@chromium.org,
     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
@@ -32,18 +32,18 @@ cc: Jeff Xu <jeffxu@google.com>, Matthew Wilcox <willy@infradead.org>,
     catalin.marinas@arm.com, david@redhat.com, dwmw@amazon.co.uk,
     ying.huang@intel.com, hughd@google.com, joey.gouly@arm.com,
     corbet@lwn.net, wangkefeng.wang@huawei.com, Liam.Howlett@oracle.com,
-    lstoakes@gmail.com, mawupeng1@huawei.com, linmiaohe@huawei.com,
-    namit@vmware.com, peterx@redhat.com, peterz@infradead.org,
-    ryan.roberts@arm.com, shr@devkernel.io, vbabka@suse.cz,
-    xiujianfeng@huawei.com, yu.ma@intel.com, zhangpeng362@huawei.com,
-    dave.hansen@intel.com, luto@kernel.org,
+    lstoakes@gmail.com, willy@infradead.org, mawupeng1@huawei.com,
+    linmiaohe@huawei.com, namit@vmware.com, peterx@redhat.com,
+    peterz@infradead.org, ryan.roberts@arm.com, shr@devkernel.io,
+    vbabka@suse.cz, xiujianfeng@huawei.com, yu.ma@intel.com,
+    zhangpeng362@huawei.com, dave.hansen@intel.com, luto@kernel.org,
     linux-hardening@vger.kernel.org
 Subject: Re: [RFC PATCH v1 0/8] Introduce mseal() syscall
-In-reply-to: <CAEAAPHbB0yZfpXGMib4bbH8z5diKfur5M6mAfZuB6qi9UVpcPw@mail.gmail.com>
-References: <20231016143828.647848-1-jeffxu@chromium.org> <CAHk-=whFZoap+DBTYvJx6ohqPwn11Puzh7q4huFWDX9vBwXHgg@mail.gmail.com> <CALmYWFtTDAb_kpZdAe_xspqwNgK1NWJmjTxaTC=jDEMzfe297Q@mail.gmail.com> <CAHk-=wj87GMTH=5901ob=SjQqegAm2JYBE7E4J7skJzE64U-wQ@mail.gmail.com> <55960.1697566804@cvs.openbsd.org> <CALmYWFs81T=XnT=AXQTo0+9FXo=OBAV_4rrYPSn9-16O-gBTZg@mail.gmail.com> <95482.1697587015@cvs.openbsd.org> <CALmYWFtQX57Z7ttKxrdXQH4QupFn4vi5KfizUBH9NkmP-S1JDw@mail.gmail.com> <ZS/3GCKvNn5qzhC4@casper.infradead.org> <CALmYWFu_uY=cWzAQaLtS0CdNrm+cO7tKz4sY2Ff02WQ8mGUUXw@mail.gmail.com> <7071.1697661373@cvs.openbsd.org> <CAEAAPHbB0yZfpXGMib4bbH8z5diKfur5M6mAfZuB6qi9UVpcPw@mail.gmail.com>
+In-reply-to: <CAEAAPHYgg49WtpE7Jdq6HDecFp5RHPhdxtPTUaNF12RONu5aDA@mail.gmail.com>
+References: <20231016143828.647848-1-jeffxu@chromium.org> <CAHk-=whFZoap+DBTYvJx6ohqPwn11Puzh7q4huFWDX9vBwXHgg@mail.gmail.com> <CALmYWFtTDAb_kpZdAe_xspqwNgK1NWJmjTxaTC=jDEMzfe297Q@mail.gmail.com> <CAHk-=wj87GMTH=5901ob=SjQqegAm2JYBE7E4J7skJzE64U-wQ@mail.gmail.com> <55960.1697566804@cvs.openbsd.org> <CAHk-=wjS=xg12RVQdTNxEurjo21eXQBQO0D5My6Aox4LCfsO1A@mail.gmail.com> <CAEAAPHYgg49WtpE7Jdq6HDecFp5RHPhdxtPTUaNF12RONu5aDA@mail.gmail.com>
 Comments: In-reply-to =?us-ascii?Q?=3D=3FUTF-8=3FQ=3FStephen=5FR=3DC3=3DB6?=
  =?us-ascii?Q?ttger=3F=3D?= <sroettger@google.com>
-   message dated "Thu, 19 Oct 2023 10:28:32 +0200."
+   message dated "Thu, 19 Oct 2023 10:00:33 +0200."
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -52,97 +52,114 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 20 Oct 2023 09:55:28 -0600
-Message-ID: <20251.1697817328@cvs.openbsd.org>
+Date: Fri, 20 Oct 2023 10:27:31 -0600
+Message-ID: <33724.1697819251@cvs.openbsd.org>
 
 Stephen R=C3=B6ttger <sroettger@google.com> wrote:
 
-> > > IMO: The approaches mimmutable() and mseal() took are different, but
-> > > we all want to seal the memory from attackers and make the linux
-> > > application safer.
+> > I do like us starting with just "mimmutable()", since it already
+> > exists. Particularly if chrome already knows how to use it.
 > >
-> > I think you are building mseal for chrome, and chrome alone.
-> >
-> > I do not think this will work out for the rest of the application space
-> > because
-> >
-> > 1) it is too complicated
-> > 2) experience with mimmutable() says that applications don't do any of =
-it
-> >    themselves, it is all in execve(), libc initialization, and ld.so.
-> >    You don't strike me as an execve, libc, or ld.so developer.
+> > Maybe add a flag field (require it to be zero initially) just to allow
+> > any future expansion. Maybe the chrome team has *wanted* to have some
+> > finer granularity thing and currently doesn't use mimmutable() in some
+> > case?
 >=20
-> We do want to build this in a way that it can be applied automatically by=
- ld.so
-> and we appreciate all your feedback on this.
+> Yes, we do have a use case in Chrome to split the sealing into unmap and
+> mprotect which will allow us to seal additional pages that we can't seal =
+with
+> pure mimmutable().
 
-Hi Stephen,
+> For example, we have pkey-tagged RWX memory that we want to seal. Since
+> the memory is already RWX and the pkey controls write access, we don't ca=
+re
+> about permission changes but sometimes we do need to mprotect data only
+> pages.
 
-I am pretty sure your mechanism will be useable by ld.so.
+Let me try to decompose this statement.
 
-What bothers me is the complex many-bits approach may encourage people
-to set only a subset of the bits, and then believe they have a security
-primitive.
+This is clearly for the JIT. You can pivot between the a JIT generated
+code mapping being RW and RX (or X-only), the object will pivot between
+W or X to satisfy W^X policy for safety.
 
-Partial sealing is not safe.  I define partial sealing as "blocking munmap,
-but not mprotect".  Or "blocking mprotect, but not madvise or mmap".
+I think you are talking about a RWX MAP_ANON object.
 
-In Message-id <ZS/3GCKvNn5qzhC4@casper.infradead.org> Matthew stated there
-that there are two aspects being locked: which object is mapped, and the
-permission of that mapping.  When additional system calls msync() and madvi=
-se()
-are included in the picture, there are 3 actions being prevented:
+Then you use pkey_alloc() to get a PKEY.  pkey_mprotect() sets the PKEY on
+the region.  I argue you can then make it entirely immutable / sealed.
 
- - Can someone replace the object
- - Can someone change the permission
- - Can someone throw away the cached pages, reverting to original
-   content of the object (that is the madvise / msync)
+Let's say it is fully immutable / sealed.
 
-In Message-id: <CAG48ez3ShUYey+ZAFsU2i1RpQn0a5eOs2hzQ426FkcgnfUGLvA@mail.gm=
-ail.com>
-Jan reminded us of this piece.  I'm taking this as a long-standing security
-hole in some sub-operations of msync/madvise which can write to data regions
-that aren't actually writeable.  Sub-operations with this problem are MADV_=
-FREE,
-MADV_DONTNEED, POSIX_MADV_DONTNEED, MS_INVALIDATE.. on Linux MADV_WIPEONFOR=
-K,
-and probably a whole bunch of others.  I am testing OpenBSD changes which
-demand PROT_WRITE permission for these sub-operations.  Perhaps some systems
-are already careful.
+After which, you can change the in-processor PKU register (using pkey_set)
+to toggle the Write-Inhibit and eXecute-Inhibit bits on that key.
 
-If you leave any of these operators available, the object is not actually s=
-ealed
-against abuse.  I believe an attacker will simply switch to a different ope=
-rator
-(mmap, munmap, mprotect, madvise, msync) to achieve a similar objective of
-damaging the permission or contents.
+The immutable object has a dangerous RWX permission.  But the specific
+PKEY making it either RX (or X-only) or RW depending upon your context.
+The mapping is never exposed as RWX. The PKU model reduces the
+permission access of the object below the immutable permission level.
 
-Since mseal() is designed to create partial sealings, the name of the propo=
-sed
-system call really smells.
+The security depends on the PKEY WI/XI bits being difficult to control.
 
-> The intention of
-> splitting the sealing
-> by syscall was to provide flexibility while still allowing ld.so to
-> seal all operations.
+SADLY on x86, this is managed with a PKRU userland register which is change=
+ble
+without any supervisor control -- yes, it seems quite dangerous.
+Changing it requires a complicated MSR dance.  It is unfortunate that
+the pkey_set() library function is easily reachedable in the PLT via ROP
+methods.  On non-x86 cpus that have similar functionality, the register
+is privileged, but operating supporting it generally change it and
+return immediately.
 
-Yes, you will have ld.so set all the bits, and the same in C runtime
-initialization.  If you convince glibc to stop make the stack executable
-in dlopen(), the kernel could automatically do it.. With Linux backwards
-compat management, getting there would be an extremely long long long
-roadmap.  But anyways the idea would be "set all the bits".  Because otherw=
-ise
-the object or data isn't safe.
+The problem you seem to have with fully locked mseal() in chrome seems
+to be here:
 
-> Does Linus' proposal to just split munmap / mprotect sealing address your
-> complexity concerns? ld.so would always use both flags which should then =
-behave
-> similar to mimmutable().
+> about permission changes but sometimes we do need to mprotect data only
+> pages.
 
-No, I think it is weak, because it isn't sealed.
+Does that data have to be in the same region?  Can your allocator not
+put the non-code pieces of the JIT elsewhere, with a different
+permission, fully immutable / msealed -- and perhaps even managed with a
+different PKEY if neccessary?
 
-A seperate mail in the thread from you says this is about chrome wanting
-to use PKU on RWX objects.  I think that's the reason for wanting to
-seperate the sealing (I haven't heard of other applications wanting that).
-How about we explore that in the other subthread..
+May that requires a huge rearchitecture.  But isn't the root problem here
+that data and code are being handled in the same object with a shared
+permission model?
+
+> But the munmap sealing will provide protection against implicit changes o=
+f the
+> pkey in this case which would happen if a page gets unmapped and another
+> mapped in its place.
+
+That primitive feels so weird, I have a difficult time believing it will
+remain unattackable in the long term.
+
+
+But what if you could replace mprotect() with pkey_mprotect() upon a
+different key.. ?
+
+--
+
+A few more notes comparing what OpenBSD has done compared to Linux:
+
+
+In OpenBSD, we do not have the pkey library.  We have stolen one of the
+PKEY and use it for kernel support of xonly for kernel code and userland
+code.  On x86 we recognize that userland can flip the permission by whacking
+the RPKU register -- which would make xonly code readable.  (The chrome data
+you are trying to guard faces the same problem).
+
+To prevent that, a majority of traps in the kernel (page faults,
+interrupts, etc) check if the PKRU register has been modified, and kill
+the process.  It is statistically strong.
+
+We are not making pkey available as a userland feature, but if we later
+do so we would still have 15 pkeys to play with.  We would probably make
+the pkey_set() operation a system call, so the trap handler can also
+observe RPKU register modifications by the instruction.
+
+Above, I mentioned pivoting between "RW or RX (or X-only)".  On OpenBSD, ch=
+rome would be
+able to pivot between RW and X-only.
+
+When it comes to Pkey utilization, we've ended up in a very different
+place than Linux.
+
 
