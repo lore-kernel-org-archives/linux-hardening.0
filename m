@@ -1,102 +1,86 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900A51DA2F
-	for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 16:33:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76FD81D529
+	for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 17:40:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="kxIb9rhY"
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00901D5E;
-	Fri, 20 Oct 2023 09:33:47 -0700 (PDT)
-Received: from [192.168.100.7] (unknown [39.34.188.12])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: usama.anjum)
-	by madras.collabora.co.uk (Postfix) with ESMTPSA id 571ED660737B;
-	Fri, 20 Oct 2023 17:33:29 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1697819626;
-	bh=qAf3VEpznG3prdWZXqc557DgYUNT22t1DAY9WghAu+k=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=kxIb9rhY56Zh09c+xKKNsfn+CdSM2I7MVoJaUtB4doGcTTUT6bxvDoh8wQo7+qsD0
-	 K8nzYVZbmnL3/wWhcydm+ipN0T9m/0nbqKWqE52KE8BkSZt6DmGOEuLw3mvHmkpDFd
-	 /an8HY4m3/GCQQA40CRMiNZBTjb/fTpG7d8iq6sFZNvuD34ia+IctP8S4A06l/ikO+
-	 DWmmNyaaSUATq/+kUtSoUBKzpV26GHx17pgcFL8Zj+q2815xSfgV/e4NsMP1bCGyAB
-	 bI0I+4Ta5zBgOUbWQWY8J0SJRT3rkXLtZdPDWsoD6p80d/eluP6qp6BFcVOwylpd6l
-	 3WzBwuIJdq+ZA==
-Message-ID: <53fcf507-c00e-4715-bc81-082282c37c86@collabora.com>
-Date: Fri, 20 Oct 2023 21:33:23 +0500
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U6HVdGER"
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 444A9126
+	for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 10:40:27 -0700 (PDT)
+Received: by mail-lf1-x12c.google.com with SMTP id 2adb3069b0e04-5079eed8bfbso1500870e87.1
+        for <linux-hardening@vger.kernel.org>; Fri, 20 Oct 2023 10:40:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1697823625; x=1698428425; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mF0w62trqYcHCfLDfzhxkaTZFMEm0P6zCkg1/3Jkv8s=;
+        b=U6HVdGERQBUwTjwgHPHRCTgtRZk6v0bM6gVi76tzanFxli2DE+r7O3vvMgSx7UO4N/
+         SNeJgQner9QeEZHZBIGseSlcf5r8bFdP+QHL1xhckgb+R0vVmdoJsuYokOvWl5eERsrL
+         0R/IXc+oXnA/XLtjPk5M3uo4xAn8wdBi+uZDpokfi4A4Tsw+QBDn5hU9L5zKsBrQL7Kt
+         mztkXAZ4JaWSqwYbjG9B3NZZCwYA9rGJchDuf3/LUHyOzsiA+yXwahrb02LWxZyxrpr3
+         a64hkVDoFRugBqRvzdepROzc1LEs7jjvaLoF9UhhG1kgbZfSNKF/xz23qGnTre0V9DtK
+         0u4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697823625; x=1698428425;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mF0w62trqYcHCfLDfzhxkaTZFMEm0P6zCkg1/3Jkv8s=;
+        b=GjzKghfwTJZUI4EVDf8Ivr3VVdmkF6n2ZjMMlM/TnC8gXxHQVg3+U7Djxw+FSvYQol
+         PASjdiP5Gqxhu/EQZ4RxVIbHXs6n7sazo3tBncMk1zI7w3HoJB7/NTfeYHHs9Soktt/W
+         ASRx9jNFjYhNw/ceY0UtVOqt1FjaoGOWgvHW4Lwv+nT79FhnFOkuzsloVVE1wnuEtvpi
+         z2gghZ8TDgcYVJoul314YwWPfW+PQLD9b7cGR0Jejdei7t7p18WIlAyJYvCn+F2JERKc
+         YLbT9eVCwFWthQsrFDWhmNvgkf6fOeHE/06RIPJ0e5v9e60UjZBtS+mHtN8nNxCjMITe
+         VKFA==
+X-Gm-Message-State: AOJu0YxoXbe0TsOPw/ZJQ6jmK4yATMWA7UBuyr4Y5MwneQpIja/NqD7c
+	NxNR4vhdd/einPO125U7weDtz1cU54XGpyBzRptigw==
+X-Google-Smtp-Source: AGHT+IGa8/lJXmLSId1P+cwpoUCl//EotM3rxi6/MgjhAIod6PDU4OLCGZng6oGIb1YJJRHEDd4b0KgzHntGWUqAxb8=
+X-Received: by 2002:ac2:4573:0:b0:504:3807:22a4 with SMTP id
+ k19-20020ac24573000000b00504380722a4mr1925746lfm.23.1697823625262; Fri, 20
+ Oct 2023 10:40:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>, jeffxu@chromium.org,
- akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com,
- sroettger@google.com, willy@infradead.org, gregkh@linuxfoundation.org,
- torvalds@linux-foundation.org, jeffxu@google.com, jorgelo@chromium.org,
- groeck@chromium.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-mm@kvack.org, surenb@google.com,
- alex.sierra@amd.com, apopple@nvidia.com, aneesh.kumar@linux.ibm.com,
- axelrasmussen@google.com, ben@decadent.org.uk, catalin.marinas@arm.com,
- david@redhat.com, dwmw@amazon.co.uk, ying.huang@intel.com, hughd@google.com,
- joey.gouly@arm.com, corbet@lwn.net, wangkefeng.wang@huawei.com,
- Liam.Howlett@oracle.com, lstoakes@gmail.com, mawupeng1@huawei.com,
- linmiaohe@huawei.com, namit@vmware.com, peterx@redhat.com,
- ryan.roberts@arm.com, shr@devkernel.io, vbabka@suse.cz,
- xiujianfeng@huawei.com, yu.ma@intel.com, zhangpeng362@huawei.com,
- dave.hansen@intel.com, luto@kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [RFC PATCH v2 8/8] selftest mm/mseal mprotect/munmap/mremap/mmap
-Content-Language: en-US
-To: Peter Zijlstra <peterz@infradead.org>
-References: <20231017090815.1067790-1-jeffxu@chromium.org>
- <20231017090815.1067790-9-jeffxu@chromium.org>
- <3cf29cd5-8346-419f-88f1-3a5c8ddbacad@collabora.com>
- <20231020152354.GC31411@noisy.programming.kicks-ass.net>
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <20231020152354.GC31411@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20231018-strncpy-drivers-nvme-host-fabrics-c-v1-1-b6677df40a35@google.com>
+ <20231019054642.GF14346@lst.de> <202310182248.9E197FFD5@keescook> <20231020044645.GC11984@lst.de>
+In-Reply-To: <20231020044645.GC11984@lst.de>
+From: Justin Stitt <justinstitt@google.com>
+Date: Fri, 20 Oct 2023 10:40:12 -0700
+Message-ID: <CAFhGd8o8FaD-3rkBAhEXhc8XqpUk_cLqNwyfpndVuSxDOei_gA@mail.gmail.com>
+Subject: Re: the nul-terminated string helper desk chair rearrangement
+To: Christoph Hellwig <hch@lst.de>
+Cc: Kees Cook <keescook@chromium.org>, Keith Busch <kbusch@kernel.org>, 
+	Jens Axboe <axboe@kernel.dk>, Sagi Grimberg <sagi@grimberg.me>, linux-nvme@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	ksummit@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 10/20/23 8:23 PM, Peter Zijlstra wrote:
-> On Fri, Oct 20, 2023 at 07:24:03PM +0500, Muhammad Usama Anjum wrote:
-> 
->> Please remove these. These macros would be picked up from the kernel
->> headers automatically.
-> 
-> As per the previous discussions, how does that work if you have O= build
-> directories?
-Then headers should be prepared in that O= directory first.
-make headers O=abc && make -C tools/testing/selftests O=abc
+On Thu, Oct 19, 2023 at 9:46=E2=80=AFPM Christoph Hellwig <hch@lst.de> wrot=
+e:
+>
+> On Wed, Oct 18, 2023 at 11:01:54PM -0700, Kees Cook wrote:
+> > Almost all of the remaining strncpy() usage is just string to string
+> > copying, but the corner cases that are being spun out that aren't
+> > strscpy() or strscpy_pad() are covered by strtomem(), kmemdup_nul(),
+> > and memcpy(). Each of these are a clear improvement since they remove
+> > the ambiguity of the intended behavior. Using seq_buf ends up being way
+> > more overhead than is needed.
+>
+> I'm really not sure strscpy is much of an improvement.  In this particula=
+r
+> case in most other places we simply use a snprintf for nqns, which seems
+> useful here to if we don't want the full buf.
+>
+> But switching to a completely undocumented helper like strscpy seems not
+> useful at all.
 
-> 
-> I find this push to force people to do 'make headers' in order to use
-> simple selftests quite misguided. You're making it *harder* to use,
-> leading to less use.
-I'm just following what we have been doing over selftests mailing list to
-fix build issues in different use cases and kselfest.rst. Let me share the
-history:
+There's some docs at [1]. Perhaps there could be more?
 
-Around 2 years ago, selftest Makefile used to prepare kernel headers from
-source automatically and include them to build selftests. It had several
-bugs. So they separated the header preparation from selftest build. After a
-while people started getting build failures because they weren't building
-headers which were previously built automatically. So someone had written a
-patch (already in v6.6-rc6) to show informative error if headers aren't
-present. So now selftests can't be built until headers are built.
-
-The understanding here is that selftests come with kernel source and they
-should be built using in-source kernel headers as people don't always have
-updated headers. I think, if someone want to build just one selftest
-without doing make headers, he should install kernel headers from source
-before doing so instead of adding duplicate defines in the test itself. It
-helps while development to not to keep the duplicate copy of these macros
-in selftest as well.
-
-
--- 
-BR,
-Muhammad Usama Anjum
+[1]: https://elixir.bootlin.com/linux/v6.6-rc6/source/include/linux/fortify=
+-string.h#L292
