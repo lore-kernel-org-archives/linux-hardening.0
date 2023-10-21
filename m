@@ -1,42 +1,42 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35656801
-	for <linux-hardening@vger.kernel.org>; Sat, 21 Oct 2023 00:53:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0FFF7F2
+	for <linux-hardening@vger.kernel.org>; Sat, 21 Oct 2023 00:53:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="fvlq2Ap9"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="WoVUZj7A"
 Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5760D6A;
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4BEAD69;
 	Fri, 20 Oct 2023 17:53:22 -0700 (PDT)
 Received: from mercury (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
 	(No client certificate requested)
 	(Authenticated sender: sre)
-	by madras.collabora.co.uk (Postfix) with ESMTPSA id DE7956607354;
+	by madras.collabora.co.uk (Postfix) with ESMTPSA id DE8546607355;
 	Sat, 21 Oct 2023 01:53:16 +0100 (BST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
 	s=mail; t=1697849597;
-	bh=WQtMmmdfFYxzlLqdJLNkwqz7BRAwlXLZctRc3du2U0k=;
+	bh=95P2EWFUKRCbCZzx5BnicmzGP6FSI+AsQsx9+1qnEVo=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=fvlq2Ap9K9hHaUlhVNXjwcrhWDHHgXpWATJi2ha/KmS1qDYfDPdmsk2jFWUfPFza8
-	 CsXsMWu3ziYDqHUPetKg1OcEHsc7KpO2l7GYO9/V8/siNCJdaCG8clagnv3Ju+xzKz
-	 aw1SFb11b6X3BsmP6aJKLamF+vkMiriXz9QQG9EpbDBOaULSoYOBngWhuyZiWIlPOV
-	 ENtKG4/lMzhl59u/OY9qD4m8h39czyRepi7irKlcSlLENC420AsH6Z+C3L2dTR92lq
-	 tj4jZWnxAvBZvticqho2WXgOT6Tg72S1J7kV0YnuxP1iR/rF7g0ZZ5Pu4udFwSoSvm
-	 aMQF2o2nOFNrQ==
+	b=WoVUZj7Ab9vIsbbb/vgpCdm//2z2FvhRZHBzt+0paEKhVmgfsj1YHwvc8JCK9rWLA
+	 lWuah8qoeJiNPoLMkq9jpztZiYECDfkb+uF4vSqu/30DeDx9819ZYUVuGqefClWfEM
+	 yMqb6TU3AYYcIQhk81T3w2ke9OydOGRhvNsRz0BtfOpW7ThsNEFK6jLsapWffbTezI
+	 TMXXzDSxpxo6u2KA5wtpB7sXvCNbeXTRpv970fi3SCSAcn4g4EC5PUoTPMdD6eCDyV
+	 xEZj4GCmB3B56W3X7rwQQ3l1hrodYgpL/xqBZPUycRmoqJ5A8ptUX6IlXzx18Mrq5L
+	 A3c8PBPqFt0Rw==
 Received: by mercury (Postfix, from userid 1000)
-	id 3F6481066144; Sat, 21 Oct 2023 02:53:11 +0200 (CEST)
+	id 3C9C11066143; Sat, 21 Oct 2023 02:53:11 +0200 (CEST)
 From: Sebastian Reichel <sebastian.reichel@collabora.com>
 To: Maximilian Luz <luzmaximilian@gmail.com>, 
  Sebastian Reichel <sre@kernel.org>, Justin Stitt <justinstitt@google.com>
 Cc: linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
  linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-In-Reply-To: <20231020-strncpy-drivers-power-supply-surface_charger-c-v1-1-93ddbf668e10@google.com>
-References: <20231020-strncpy-drivers-power-supply-surface_charger-c-v1-1-93ddbf668e10@google.com>
-Subject: Re: [PATCH] power: supply: surface-charger: replace deprecated
+In-Reply-To: <20231020-strncpy-drivers-power-supply-surface_battery-c-v2-1-29ed16b2caf1@google.com>
+References: <20231020-strncpy-drivers-power-supply-surface_battery-c-v2-1-29ed16b2caf1@google.com>
+Subject: Re: [PATCH v2] power: supply: surface_battery: replace deprecated
  strncpy with strscpy
-Message-Id: <169784959125.1512524.2877665109633637893.b4-ty@collabora.com>
+Message-Id: <169784959123.1512524.16039657676124942354.b4-ty@collabora.com>
 Date: Sat, 21 Oct 2023 02:53:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -49,20 +49,20 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.12.3
 
 
-On Fri, 20 Oct 2023 19:46:11 +0000, Justin Stitt wrote:
+On Fri, 20 Oct 2023 19:39:02 +0000, Justin Stitt wrote:
 > strncpy() is deprecated for use on NUL-terminated destination strings
 > [1] and as such we should prefer more robust and less ambiguous string
 > interfaces.
 > 
-> We expect ac->name to be NUL-terminated based on its usage with format
-> strings:
+> We expect bat->name to be NUL-terminated based on its usage with
+> strcmp():
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] power: supply: surface-charger: replace deprecated strncpy with strscpy
-      commit: afc88dfda013970bb1e214b331e99adca2f98312
+[1/1] power: supply: surface_battery: replace deprecated strncpy with strscpy
+      commit: 81f07d2b0c4db3b6e53d90419db915c75beb6326
 
 Best regards,
 -- 
