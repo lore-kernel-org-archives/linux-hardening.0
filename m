@@ -1,70 +1,72 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0FFF7F2
-	for <linux-hardening@vger.kernel.org>; Sat, 21 Oct 2023 00:53:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9AE17F4;
+	Sat, 21 Oct 2023 02:00:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="WoVUZj7A"
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4BEAD69;
-	Fri, 20 Oct 2023 17:53:22 -0700 (PDT)
-Received: from mercury (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: sre)
-	by madras.collabora.co.uk (Postfix) with ESMTPSA id DE8546607355;
-	Sat, 21 Oct 2023 01:53:16 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1697849597;
-	bh=95P2EWFUKRCbCZzx5BnicmzGP6FSI+AsQsx9+1qnEVo=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=WoVUZj7Ab9vIsbbb/vgpCdm//2z2FvhRZHBzt+0paEKhVmgfsj1YHwvc8JCK9rWLA
-	 lWuah8qoeJiNPoLMkq9jpztZiYECDfkb+uF4vSqu/30DeDx9819ZYUVuGqefClWfEM
-	 yMqb6TU3AYYcIQhk81T3w2ke9OydOGRhvNsRz0BtfOpW7ThsNEFK6jLsapWffbTezI
-	 TMXXzDSxpxo6u2KA5wtpB7sXvCNbeXTRpv970fi3SCSAcn4g4EC5PUoTPMdD6eCDyV
-	 xEZj4GCmB3B56W3X7rwQQ3l1hrodYgpL/xqBZPUycRmoqJ5A8ptUX6IlXzx18Mrq5L
-	 A3c8PBPqFt0Rw==
-Received: by mercury (Postfix, from userid 1000)
-	id 3C9C11066143; Sat, 21 Oct 2023 02:53:11 +0200 (CEST)
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Maximilian Luz <luzmaximilian@gmail.com>, 
- Sebastian Reichel <sre@kernel.org>, Justin Stitt <justinstitt@google.com>
-Cc: linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-In-Reply-To: <20231020-strncpy-drivers-power-supply-surface_battery-c-v2-1-29ed16b2caf1@google.com>
-References: <20231020-strncpy-drivers-power-supply-surface_battery-c-v2-1-29ed16b2caf1@google.com>
-Subject: Re: [PATCH v2] power: supply: surface_battery: replace deprecated
- strncpy with strscpy
-Message-Id: <169784959123.1512524.16039657676124942354.b4-ty@collabora.com>
-Date: Sat, 21 Oct 2023 02:53:11 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JnCcOTTs"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 59597C433CC;
+	Sat, 21 Oct 2023 02:00:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1697853625;
+	bh=Ei+kODBzIVl8L3VplpOSBYmZrAv5Qvh+i3MnO6ooXWU=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=JnCcOTTsPSPFf9BB3S8uHHQcVoKWSIcIJ4ndqklYxxEdqBLzZ7180rw67KASZ/7ER
+	 uuphBaof7LPNFhTGx2O4EHiwJnm8zXwbGEHmAPeEsh0NjYdZopFP2UrBFclOGjmClM
+	 zSFlo39qp6wjyeHM5nEIiPa/Z1tww4N6kPSVJqMqQXU4snNGQHDjUFIN6zCRUYyWAH
+	 PD/Pqiym+msXr4/Wz7Iw1EZ5pwpNofwFk5Np/g/Dk6YV766GRgGlcm8l5R7+oio3K6
+	 tcuAF0LrnkYRYRYuH5W40DKLCba2NOJ4TqsOzsb48cAkgKB7WPOlq4ZXx15yDHnkqF
+	 VEgBWqfKA7l+A==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 4253AC595CB;
+	Sat, 21 Oct 2023 02:00:25 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.3
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2] net: wwan: replace deprecated strncpy with strscpy
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <169785362526.14770.3733349945703653209.git-patchwork-notify@kernel.org>
+Date: Sat, 21 Oct 2023 02:00:25 +0000
+References: <20231019-strncpy-drivers-net-wwan-rpmsg_wwan_ctrl-c-v2-1-ecf9b5a39430@google.com>
+In-Reply-To: <20231019-strncpy-drivers-net-wwan-rpmsg_wwan_ctrl-c-v2-1-ecf9b5a39430@google.com>
+To: Justin Stitt <justinstitt@google.com>
+Cc: stephan@gerhold.net, loic.poulain@linaro.org, ryazanov.s.a@gmail.com,
+ johannes@sipsolutions.net, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+ linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, keescook@chromium.org
 
+Hello:
 
-On Fri, 20 Oct 2023 19:39:02 +0000, Justin Stitt wrote:
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Thu, 19 Oct 2023 18:21:22 +0000 you wrote:
 > strncpy() is deprecated for use on NUL-terminated destination strings
 > [1] and as such we should prefer more robust and less ambiguous string
 > interfaces.
 > 
-> We expect bat->name to be NUL-terminated based on its usage with
-> strcmp():
+> We expect chinfo.name to be NUL-terminated based on its use with format
+> strings and sprintf:
+> rpmsg/rpmsg_char.c
+> 165:            dev_err(dev, "failed to open %s\n", eptdev->chinfo.name);
+> 368:    return sprintf(buf, "%s\n", eptdev->chinfo.name);
 > 
 > [...]
 
-Applied, thanks!
+Here is the summary with links:
+  - [v2] net: wwan: replace deprecated strncpy with strscpy
+    https://git.kernel.org/netdev/net-next/c/75e7d0b2d223
 
-[1/1] power: supply: surface_battery: replace deprecated strncpy with strscpy
-      commit: 81f07d2b0c4db3b6e53d90419db915c75beb6326
-
-Best regards,
+You are awesome, thank you!
 -- 
-Sebastian Reichel <sebastian.reichel@collabora.com>
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
