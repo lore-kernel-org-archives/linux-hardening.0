@@ -1,143 +1,84 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 154161110
-	for <linux-hardening@vger.kernel.org>; Sat, 21 Oct 2023 08:45:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04597D536;
+	Sat, 21 Oct 2023 10:20:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ngQKqO0h"
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45497A3;
-	Sat, 21 Oct 2023 01:45:08 -0700 (PDT)
-Received: by mail-wm1-x32d.google.com with SMTP id 5b1f17b1804b1-40853c639abso9394855e9.0;
-        Sat, 21 Oct 2023 01:45:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697877907; x=1698482707; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DbM2kehTdlvWz3ew9KyBopTdTuaDL5DOg4Ugwe/xjTU=;
-        b=ngQKqO0h5VrAac86U66PRlZ4lZKbn0C2GY5YPSS6BuW9CWC1ohdzHysZcnLA4EQGyD
-         pHZ7PPTLcM64Bd4dqKeTYfokzOSh8+a6Mh+26Sd7b563aTRz8XjUU85C/0VJCA5HVrNQ
-         2XYK4TQJ/vUJmWUKjkBdPiHsHS9maNdX949ejNPujkbCXjzPaOead/rUeDK3MmICS6nU
-         EKPOJ8oP3fIQarw8aPKPhi0pogi3jZu2lwcZWarZ0HRDomxSnlv/VYILhRZRmOVBj1lO
-         Oz0LLptUQ0pnf1LUjzgLyU7A67AkjzzI1zbJ3ytwBZJtY9oKRmcg03/hPqE6MguJ1CLk
-         epxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697877907; x=1698482707;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DbM2kehTdlvWz3ew9KyBopTdTuaDL5DOg4Ugwe/xjTU=;
-        b=OzzQwyLxMG8PwFTQLLDVg6XI2ajyN5RY9NA432lv4ChBPRRfuXqbVM130XjwxqPkJ9
-         b59J1afmjIZxzwAcEnrPyaQIkO1BktS5taVYTzld5P8awqMUYH0H+GLO0hCQyWgXAc9L
-         pke0aT6T/94VToAKOQWwdHA48hefjmtPW55IeKvHx2mruhObZ6I0AxIuuFtG7SoLUIAh
-         u7tDcabVWcuWpaOhsuY+4Y5X8Wr2yZMptaYIW41IF4TuZL/PdChMbKF3cV/nfH2s2Wza
-         vLULmwSo8nK87cvFWjWOWfyUlHOiphJYQnnxdYSI+aCACriY+lmfk9I5vp8zTG43/xOA
-         Sgkw==
-X-Gm-Message-State: AOJu0YwYW1Ujdm8mRJa90LN1xdZH7vll39e/zTB568VEpkMzUFTlUtmG
-	dnAWsxNib/0lhxks0bD4mtE=
-X-Google-Smtp-Source: AGHT+IE8DL8ZmA5tRJtZogyJFafz5UsLQjhEVC1rEoQ20i3O7PGT0P+TtpeBi4JssvLKyrXMD/tE7A==
-X-Received: by 2002:a05:6000:11c7:b0:31f:b120:143 with SMTP id i7-20020a05600011c700b0031fb1200143mr2823328wrx.59.1697877906464;
-        Sat, 21 Oct 2023 01:45:06 -0700 (PDT)
-Received: from ?IPV6:2a02:8071:b783:140:927c:82ba:d32d:99c1? ([2a02:8071:b783:140:927c:82ba:d32d:99c1])
-        by smtp.gmail.com with ESMTPSA id x17-20020a5d60d1000000b0032d8f075810sm3330391wrt.10.2023.10.21.01.45.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 21 Oct 2023 01:45:06 -0700 (PDT)
-Message-ID: <ef1c52ab-3006-4630-bbb5-9cdaa83efdcc@gmail.com>
-Date: Sat, 21 Oct 2023 10:45:05 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ks4fjY3o"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 85B1FC433C7;
+	Sat, 21 Oct 2023 10:20:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1697883645;
+	bh=G1oBArnGygsP7oyeCAvlm7sMNzau2v8kxu5F3qI3xhQ=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=ks4fjY3oW9Tzqt/g6oeNIYwVCFCxAPJpQmCUG+71ntYBFlLgS2lpK+e5zPtjHkq9N
+	 SztvnAtUmvfx4oBNp8w89NgkmBr3XKnmDMlcweVctRjs5+nMUeLeGzRnt2JV4VQeyi
+	 U7C9m8bCzklCk8nlUJujCJ+PiruhubuN2jq68GEjFDP8aU6gltqyfhnkFt3C4ZpmsN
+	 nD/X5snTFATc5DGNhTHbqNIO6SpAyrh6GfpDOvPlnw6BN+10DxTT0NMWfGyuJvgnlV
+	 GJQ8Fc9kIItqUlXEun0TSJX8WIiixq4X3GxTqxsynvkQLjZhU/P0fe1GT2kIh4d4YB
+	 rjrEMSlbF6uZw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E01C004C0;
+	Sat, 21 Oct 2023 10:20:45 +0000 (UTC)
+From: Xilin Wu via B4 Relay <devnull+wuxilin123.gmail.com@kernel.org>
+Date: Sat, 21 Oct 2023 18:20:38 +0800
+Subject: [PATCH v2 1/3] soc: qcom: pmic_glink: enable UCSI for SM8350
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] power: supply: surface_battery: replace deprecated
- strncpy with strscpy
-Content-Language: en-US
-To: Justin Stitt <justinstitt@google.com>, Sebastian Reichel <sre@kernel.org>
-Cc: linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20231020-strncpy-drivers-power-supply-surface_battery-c-v2-1-29ed16b2caf1@google.com>
-From: Maximilian Luz <luzmaximilian@gmail.com>
-In-Reply-To: <20231020-strncpy-drivers-power-supply-surface_battery-c-v2-1-29ed16b2caf1@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20231021-sakuramist-mi11u-v2-1-fa82c91ecaf0@gmail.com>
+References: <20231021-sakuramist-mi11u-v2-0-fa82c91ecaf0@gmail.com>
+In-Reply-To: <20231021-sakuramist-mi11u-v2-0-fa82c91ecaf0@gmail.com>
+To: Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Kees Cook <keescook@chromium.org>, 
+ Tony Luck <tony.luck@intel.com>, 
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ Xilin Wu <wuxilin123@gmail.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1697883643; l=945;
+ i=wuxilin123@gmail.com; s=20231021; h=from:subject:message-id;
+ bh=ww4sODm0ahT+SQ9wq+84FM3R6cXdq4VaDdGF3LcSqxc=;
+ b=9NUeGZkuoPItLn4fyrpx4XrJvrcXMpd4BsFYrPVAAUj7PWqYPFYiCWgh+l17lpMxZ7JzkugDT
+ oJr0daynNexCCixJcBv5+7MBXMyfmPSV+2PZdA/NE9T26aRt0N/9yq0
+X-Developer-Key: i=wuxilin123@gmail.com; a=ed25519;
+ pk=edoFbrGewAWr5/CxptHll7XzvXBjYiN49RrEgipi1Cg=
+X-Endpoint-Received:
+ by B4 Relay for wuxilin123@gmail.com/20231021 with auth_id=89
+X-Original-From: Xilin Wu <wuxilin123@gmail.com>
+Reply-To: <wuxilin123@gmail.com>
 
-On 10/20/23 21:39, Justin Stitt wrote:
-> strncpy() is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
-> 
-> We expect bat->name to be NUL-terminated based on its usage with
-> strcmp():
-> 
-> power_supply_core.c:
-> 445: return strcmp(psy->desc->name, name) == 0;
-> 
-> ... and also by the manual `... - 1` for the length argument of the
-> original strncpy() invocation.
-> 
-> Furthermore, no NUL-padding is needed as bat is zero-allocated before
-> calling spwr_battery_init():
-> 826: bat = devm_kzalloc(&sdev->dev, sizeof(*bat), GFP_KERNEL);
-> 827: if (!bat)
-> 828:   return -ENOMEM;
-> 829:
-> 830: spwr_battery_init(bat, sdev, p->registry, p->name);
-> 
-> ... this means any further NUL-byte assignments (like the ones that
-> strncpy() does) are redundant.
-> 
-> Considering the above, a suitable replacement is `strscpy` [2] due to
-> the fact that it guarantees NUL-termination on the destination buffer
-> without unnecessarily NUL-padding.
-> 
-> Let's also opt to use the more idiomatic strscpy() usage of:
-> (dest, src, sizeof(dest)).
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+From: Xilin Wu <wuxilin123@gmail.com>
 
-Thanks!
+UCSI is supported on SM8350. Allow it to enable USB role switch and
+altmode notifications on SM8350.
 
-Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
-Tested-by: Maximilian Luz <luzmaximilian@gmail.com>
+Signed-off-by: Xilin Wu <wuxilin123@gmail.com>
+---
+ drivers/soc/qcom/pmic_glink.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> ---
-> Changes in v2:
-> - fix subject line
-> - Link to v1: https://lore.kernel.org/r/20231020-strncpy-drivers-power-supply-surface_battery-c-v1-1-cabaea50e667@google.com
-> ---
-> Note: build-tested only.
-> 
-> Found with: $ rg "strncpy\("
-> ---
->   drivers/power/supply/surface_battery.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/power/supply/surface_battery.c b/drivers/power/supply/surface_battery.c
-> index 19d2f8834e56..196d290dc596 100644
-> --- a/drivers/power/supply/surface_battery.c
-> +++ b/drivers/power/supply/surface_battery.c
-> @@ -722,7 +722,7 @@ static void spwr_battery_init(struct spwr_battery_device *bat, struct ssam_devic
->   			      struct ssam_event_registry registry, const char *name)
->   {
->   	mutex_init(&bat->lock);
-> -	strncpy(bat->name, name, ARRAY_SIZE(bat->name) - 1);
-> +	strscpy(bat->name, name, sizeof(bat->name));
->   
->   	bat->sdev = sdev;
->   
-> 
-> ---
-> base-commit: bb55d7f7f7445abcc8db50e6a65d4315e79f75c7
-> change-id: 20231020-strncpy-drivers-power-supply-surface_battery-c-b0c84b05ac28
-> 
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
-> 
+diff --git a/drivers/soc/qcom/pmic_glink.c b/drivers/soc/qcom/pmic_glink.c
+index 914057331afd..1196e79e6fb3 100644
+--- a/drivers/soc/qcom/pmic_glink.c
++++ b/drivers/soc/qcom/pmic_glink.c
+@@ -341,6 +341,7 @@ static const unsigned long pmic_glink_sm8450_client_mask = BIT(PMIC_GLINK_CLIENT
+ 							   BIT(PMIC_GLINK_CLIENT_UCSI);
+ 
+ static const struct of_device_id pmic_glink_of_match[] = {
++	{ .compatible = "qcom,sm8350-pmic-glink", .data = &pmic_glink_sm8450_client_mask },
+ 	{ .compatible = "qcom,sm8450-pmic-glink", .data = &pmic_glink_sm8450_client_mask },
+ 	{ .compatible = "qcom,sm8550-pmic-glink", .data = &pmic_glink_sm8450_client_mask },
+ 	{ .compatible = "qcom,pmic-glink" },
+
+-- 
+2.42.0
+
