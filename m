@@ -1,63 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0180FC12;
-	Sat, 21 Oct 2023 19:59:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2C83D517;
+	Sat, 21 Oct 2023 20:18:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="aXwBQFpX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3448C433C8;
-	Sat, 21 Oct 2023 19:59:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1697918392;
-	bh=xfkUHsOxxlTRzwO2mYq/zSnnqro/eqkufhUkFk+s28U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aXwBQFpXhp/qt1n4kb+0nQmUgiLhuRg+FE7mjybK/3Ct1MQuYFZZjcu5iWBOWW1Bp
-	 bJgeZDOf2bjbZLRkeAPm1V5I6X216jcbG66rA5+B5Wm/fz6JbXkvlAQ1faMf4+tlrI
-	 KoF6C1mjGvh8Czaqtq8EgT14c3qgRrFwfm3WbMQw=
-Date: Sat, 21 Oct 2023 21:59:49 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: =?utf-8?B?0JvRg9C60LAg0J/QsNC90YzQvg==?= <lukapanio@gmail.com>
-Cc: Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mQWSzaue"
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4BDC119;
+	Sat, 21 Oct 2023 13:18:46 -0700 (PDT)
+Received: by mail-ej1-x632.google.com with SMTP id a640c23a62f3a-9ba1eb73c27so312105566b.3;
+        Sat, 21 Oct 2023 13:18:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1697919525; x=1698524325; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VHdWLz7w2mdz9CQCiFnESBGvhsi5FryatZMrtlA6/oY=;
+        b=mQWSzauemjKGv35D+DtlqhGElZfNAzFMM8VGMX03UEQHfVb5W1lyzfq5yLyhlBS5En
+         t3J38+aQRNwVxYEX7VLt7i72MuFfOssdccaqgKelmmV/SXPrib+/ImUW1Wv5PrtD+f+x
+         VCo2H8rq2TDMv2wtD3sHVSqOJXCfFHRq9tTYAxZq51de6gBbvNu+J52haMxWJuX1OxB7
+         ENEuJnpOvEiZFZFUUGDT9Q4BjUwb9fWcKXVHkLBRkHWRFiIwQAxKLfD4bAzHDK7CeAd4
+         saolUnv4iHbuzBhpHHw/s2g0qF9kwSkHI6ijkgRhZjdMnbEK68X58wyRHZxjTPvZ82x4
+         y+Sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697919525; x=1698524325;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VHdWLz7w2mdz9CQCiFnESBGvhsi5FryatZMrtlA6/oY=;
+        b=qp0rnIffGapQKF0teFDLVgJYEEyJUFtvmdG0AWNWlmKFf8M3/HgRPPwgCejhICfNfy
+         FhY+tSpkDYOfl7ImTa3JSTsm1Kbro0rBMZKnW9ljaVA6UqzHkBo+9U+cx+qLYPdvl4qj
+         8/eXhmMFWX8fdMzGpkWkvp9kOB2EMFacMUobiBdmODiD/ad07il2vrVBL4lueqVKJXj4
+         lehrahE9dA1zyAmG/Q3y3/LEFJg4Ld6K6MpDm2iE9XDC6+RoNRqM8iIbtET76zE15TG5
+         xAEPzlGy3EQIHPaNHUuVLeXiAVpUtxejxE6pyWr8mp7WEH45oTSYPbU2CB92i8nQ86pN
+         nW0A==
+X-Gm-Message-State: AOJu0YzUoerngOqknWWrPXjirne6+jHnNNWLBvy02kNoMGHRt2wh64TE
+	Jv0xLGQG6MFKGN9a/bQXGr4pJJefs55XmqrqWGM=
+X-Google-Smtp-Source: AGHT+IH+nJIx0h+gsXFxutPdjXsQRfQDI7iKVdkxkDelFP9yJATNMDOs0rkWbxrRp3xTRksajbN9Vg==
+X-Received: by 2002:a17:907:968b:b0:9bf:70ea:692e with SMTP id hd11-20020a170907968b00b009bf70ea692emr4490556ejc.60.1697919524832;
+        Sat, 21 Oct 2023 13:18:44 -0700 (PDT)
+Received: from localhost.localdomain ([145.224.104.33])
+        by smtp.gmail.com with ESMTPSA id 10-20020a170906218a00b009c0c511bd62sm4028515eju.197.2023.10.21.13.18.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Oct 2023 13:18:44 -0700 (PDT)
+From: luka177 <lukapanio@gmail.com>
+To: Andy Gross <agross@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
 	Konrad Dybcio <konrad.dybcio@linaro.org>,
 	Rob Herring <robh+dt@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
+	Kees Cook <keescook@chromium.org>,
+	Tony Luck <tony.luck@intel.com>,
 	"Guilherme G . Piccoli" <gpiccoli@igalia.com>,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] arm64: dts: qcom: sm8250-xiaomi-pipa: Add initial
- device tree
-Message-ID: <2023102135-work-mutate-a76f@gregkh>
-References: <20231021173317.185460-1-lukapanio@gmail.com>
- <20231021173317.185460-2-lukapanio@gmail.com>
- <2023102127-bash-stool-95a8@gregkh>
- <CACi=Ov4gdRwhEAo6Qm5EgQucx-1UZXXMHpA21OUDhNHEmmCJNA@mail.gmail.com>
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Cc: luka177 <lukapanio@gmail.com>
+Subject: [PATCH v3 1/2] dt-bindings: arm: qcom: Add Xiaomi Pad 6 (xiaomi-pipa)
+Date: Sat, 21 Oct 2023 22:18:39 +0200
+Message-ID: <20231021201840.210415-1-lukapanio@gmail.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACi=Ov4gdRwhEAo6Qm5EgQucx-1UZXXMHpA21OUDhNHEmmCJNA@mail.gmail.com>
 
-On Sat, Oct 21, 2023 at 09:37:16PM +0200, Лука Паньо wrote:
-> This is a new version, but there is no change for dt-bindings part.
+Add a compatible for Xiaomi Pad 6.
 
-Then you must document this.
+From: luka177 <lukapanio@gmail.com>
 
-> As for
-> "From:" submitting-patches.rst: "Note, the From: tag is optional when the
-> From: author is also the person (and
-> email) listed in the From: line of the email header."
+Signed-off-by: luka177 <lukapanio@gmail.com>
 
-Your patch had numbers in the name, but not here, so please use what you
-have used here in this email, "Лука Паньо" and you should be fine,
-right?
+---
+Add "From:" in commit message
+Nothing else compared to v2 and c1
+---
+ Documentation/devicetree/bindings/arm/qcom.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-thanks,
+diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+index adbfaea32343..1bfae1b237d2 100644
+--- a/Documentation/devicetree/bindings/arm/qcom.yaml
++++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+@@ -965,6 +965,7 @@ properties:
+               - sony,pdx203-generic
+               - sony,pdx206-generic
+               - xiaomi,elish
++              - xiaomi,pipa
+           - const: qcom,sm8250
+ 
+       - items:
+-- 
+2.42.0
 
-greg k-h
