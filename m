@@ -1,92 +1,87 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7440BA52
-	for <linux-hardening@vger.kernel.org>; Sat, 21 Oct 2023 18:04:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0734011CB0;
+	Sat, 21 Oct 2023 19:20:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="az72N/+V"
-Received: from smtp.smtpout.orange.fr (smtp-14.smtpout.orange.fr [80.12.242.14])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E949DC
-	for <linux-hardening@vger.kernel.org>; Sat, 21 Oct 2023 11:04:00 -0700 (PDT)
-Received: from pop-os.home ([86.243.2.178])
-	by smtp.orange.fr with ESMTPA
-	id uGKJqVjkbvhM3uGKKqJsb4; Sat, 21 Oct 2023 20:03:59 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1697911439;
-	bh=WGG4h3fjFFGpf7YbjWTDEm1O70pn20++HFr6LfKdydw=;
-	h=From:To:Cc:Subject:Date;
-	b=az72N/+VVqLJjQfVTcgZ4ikmpD61YAW5vF1x8FXwB4ztn4zLiyLT8trgH+bnLdIIl
-	 Kj1fX7IhGKpLllE/jz9ugHU7aeEtzbsC/qLpem930KKhixLtBl1s+96flijMwKy8hm
-	 JGH6RpVsS9NGSv6SANu0DfjDyD6a/riJs5AkiPSvD9UPehB6FBBOm9oNxIIvHtU4WU
-	 pvzQDqQYtm0+MqsPrTGPxA06EGnG5nvU3FRIEeRirCWBenTNqxDqwt9sBsicrzJLq6
-	 HKAj/kO4BiNCT2eDRw55nOzwdhFi8R02vudrIFBFn4YBB5MBvT2CMyK2r6L7O10/kP
-	 /mw23XndOpY0g==
-X-ME-Helo: pop-os.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 21 Oct 2023 20:03:59 +0200
-X-ME-IP: 86.243.2.178
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: keescook@chromium.org,
-	Michael Hennerich <michael.hennerich@analog.com>,
-	Alexander Aring <alex.aring@gmail.com>,
-	Stefan Schmidt <stefan@datenfreihafen.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Marcel Holtmann <marcel@holtmann.org>
-Cc: linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Stefan Schmidt <stefan@osg.samsung.com>,
-	linux-wpan@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH net] net: ieee802154: adf7242: Fix some potential buffer overflow in adf7242_stats_show()
-Date: Sat, 21 Oct 2023 20:03:53 +0200
-Message-Id: <7ba06db8987298f082f83a425769fe6fa6715fe7.1697911385.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="YGSV4tFO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 318DDC433C8;
+	Sat, 21 Oct 2023 19:20:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1697916016;
+	bh=nKj8aK3yWLZMRYvDNxgE4X1KMBF5HXTE3i4lzpALF0A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YGSV4tFOZ+DIvDrqjWBO/FKw31AoFM/fbYM5YZ2YsBzaDO5uDf7oSfuZANftSUdET
+	 +SAYcLNgYipAbY1MHbW0Pu/6yxbhHNCpP9VaR4b3vocKLLY3OEo6VDjIZmqI7dk1QZ
+	 3/wm1vgpyXWU+ELx4hxoV2hdXDUW8W/IobcRHLH0=
+Date: Sat, 21 Oct 2023 21:20:13 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: luka177 <lukapanio@gmail.com>
+Cc: Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
+	"Guilherme G . Piccoli" <gpiccoli@igalia.com>,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] arm64: dts: qcom: sm8250-xiaomi-pipa: Add initial
+ device tree
+Message-ID: <2023102127-bash-stool-95a8@gregkh>
+References: <20231021173317.185460-1-lukapanio@gmail.com>
+ <20231021173317.185460-2-lukapanio@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231021173317.185460-2-lukapanio@gmail.com>
 
-strncat() usage in adf7242_debugfs_init() is wrong.
-The size given to strncat() is the maximum number of bytes that can be
-written, excluding the trailing NULL.
+On Sat, Oct 21, 2023 at 07:33:17PM +0200, luka177 wrote:
+> Initial support for Xiaomi Pad 6 tablet, that have sm8250 soc.
+> 
+> Signed-off-by: luka177 <lukapanio@gmail.com>
+> ---
+>  arch/arm64/boot/dts/qcom/Makefile             |   1 +
+>  .../boot/dts/qcom/sm8250-xiaomi-pipa.dts      | 625 ++++++++++++++++++
+>  2 files changed, 626 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/sm8250-xiaomi-pipa.dts
+> 
 
-Here, the size that is passed, DNAME_INLINE_LEN, does not take into account
-the size of "adf7242-" that is already in the array.
+Hi,
 
-In order to fix it, use snprintf() instead.
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
 
-Fixes: 7302b9d90117 ("ieee802154/adf7242: Driver for ADF7242 MAC IEEE802154")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- drivers/net/ieee802154/adf7242.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+You are receiving this message because of the following common error(s)
+as indicated below:
 
-diff --git a/drivers/net/ieee802154/adf7242.c b/drivers/net/ieee802154/adf7242.c
-index a03490ba2e5b..cc7ddc40020f 100644
---- a/drivers/net/ieee802154/adf7242.c
-+++ b/drivers/net/ieee802154/adf7242.c
-@@ -1162,9 +1162,10 @@ static int adf7242_stats_show(struct seq_file *file, void *offset)
- 
- static void adf7242_debugfs_init(struct adf7242_local *lp)
- {
--	char debugfs_dir_name[DNAME_INLINE_LEN + 1] = "adf7242-";
-+	char debugfs_dir_name[DNAME_INLINE_LEN + 1];
- 
--	strncat(debugfs_dir_name, dev_name(&lp->spi->dev), DNAME_INLINE_LEN);
-+	snprintf(debugfs_dir_name, sizeof(debugfs_dir_name),
-+		 "adf7242-%s", dev_name(&lp->spi->dev));
- 
- 	lp->debugfs_root = debugfs_create_dir(debugfs_dir_name, NULL);
- 
--- 
-2.34.1
+- It looks like you did not use your name for the patch on either
+  the Signed-off-by: line, or the From: line (both of which have to
+  match).  Please read the kernel file,
+  Documentation/process/submitting-patches.rst for how to do this
+  correctly.
 
+- This looks like a new version of a previously submitted patch, but you
+  did not list below the --- line any changes from the previous version.
+  Please read the section entitled "The canonical patch format" in the
+  kernel file, Documentation/process/submitting-patches.rst for what
+  needs to be done here to properly describe this.
+
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
+
+thanks,
+
+greg k-h's patch email bot
