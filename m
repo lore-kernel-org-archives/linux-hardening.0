@@ -1,176 +1,82 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70DC54C8D
-	for <linux-hardening@vger.kernel.org>; Sat, 21 Oct 2023 17:14:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0F54F4E2
+	for <linux-hardening@vger.kernel.org>; Sat, 21 Oct 2023 17:16:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="gz/EL4aN"
-Received: from smtp.smtpout.orange.fr (smtp-27.smtpout.orange.fr [80.12.242.27])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B57A2126
-	for <linux-hardening@vger.kernel.org>; Sat, 21 Oct 2023 10:13:57 -0700 (PDT)
-Received: from pop-os.home ([86.243.2.178])
-	by smtp.orange.fr with ESMTPA
-	id uFXtq9F17aUVkuFXtqtgWE; Sat, 21 Oct 2023 19:13:56 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1697908436;
-	bh=pK3MzADyg7f3DHS0ePJyTiMBz9RdsBY2+tKOv52dh6g=;
-	h=From:To:Cc:Subject:Date;
-	b=gz/EL4aNvcCjwQ5+Uze1yQqxPlVj4WXVbvhNdIbGIBtw/+WMMHNn6imM8F2cjeYbP
-	 a+JiD10A6i//W4w7ZAixd/Zd89WrW+3qqV71LeCtLV6e77k4+6CmS+feIysr9cd+4V
-	 KKh3frWd3e7P6EZIGr7POvRZeaqyavFxafNjjnXuFZWn34Uv970dzHWnwC+E+5ba8d
-	 Ce6idAeg+S+CzMCxAJqJQVqER6Ar2FJcqjJFGnI8pVJ3T5hcQC6sTYCl4z49/T2ZJq
-	 9jv9F5Q0f7bbqPFGsxYcmXALLhN8+IOkMSvAtw8iGRg1iaTal7hdoDzkflsfwvj3Rf
-	 GxVnVS2qwRcFg==
-X-ME-Helo: pop-os.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 21 Oct 2023 19:13:56 +0200
-X-ME-IP: 86.243.2.178
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: keescook@chromium.org,
-	Robert Richter <rric@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Tony Luck <tony.luck@intel.com>,
-	James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Sergey Temerkhanov <s.temerkhanov@gmail.com>
-Cc: linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Borislav Petkov <bp@suse.de>,
-	linux-edac@vger.kernel.org
-Subject: [PATCH v2] EDAC/thunderx: Fix some potential buffer overflow in thunderx_ocx_com_threaded_isr()
-Date: Sat, 21 Oct 2023 19:13:51 +0200
-Message-Id: <91ec35cd8e2e86fa3d24c2e8ea6970e0437cdfd2.1697908406.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HHAyVisP"
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 104E413E
+	for <linux-hardening@vger.kernel.org>; Sat, 21 Oct 2023 10:16:30 -0700 (PDT)
+Received: by mail-wm1-x32d.google.com with SMTP id 5b1f17b1804b1-40836ea8cbaso13994835e9.0
+        for <linux-hardening@vger.kernel.org>; Sat, 21 Oct 2023 10:16:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1697908588; x=1698513388; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BkXQx7i5+joI99QFWucS4PtQe0BoKp/UAVRxKkG1Y/A=;
+        b=HHAyVisPz2ANh7/joQB0REWNEDV6tCoVxuGc8CiZakevlWWQExdX94XDNKnp9aF0/V
+         jd7XWYEYHjpwnQb9Fs5S9CCcZKUS1oyElWlndZJ5tmtxa4BoB0e12ITTk+LpmuerHONH
+         XHITa5jzNc0cMIp/gv0pMiEDK9pul1fEtbj6ppaI1gXV1TWf/k8qS4F0HuvNOZtcceuv
+         quDrHrWLVpVo4C2tIRt6sjeORmJnkoi3khmJbBeBrP1j7jUDAnS9Xhbfw2akDlHsIAPU
+         jHLO5aa/za9XrnNTfMWdnEjtj1mXLMGkd1LBwf8hsnrMZUuY3O5a/1R0setxdyFzqgTl
+         j3mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697908588; x=1698513388;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BkXQx7i5+joI99QFWucS4PtQe0BoKp/UAVRxKkG1Y/A=;
+        b=WR/VGxowkc5Fz+ve9gLE1cIodTYhjzhIQXz3GuE8TDLGWrEB+8sJ5+qGRQflAi92tx
+         RdJKd6jfLsWoKLOk52GVPztGAuF+n9KAHG/lz33x+KU0JNPp/wXL8nBgNf+4G8U6lJAs
+         Kwrmcu65K2YlRaki7F6V5DzubiEdyQCAKVVXOCEhA0aGi54+xLypP6iMHoq/U4b/VG93
+         61upjoE3x5FeECOCpaPtPN29V6jcjC5qoe03zbr9miV+SSLZv/M3GWCyTQgSKV2uqz6f
+         p5+ReGQG/dydIaLnAhm8llRfQvEeRlHtxtePrPPDjrEl+hkdr3MRt010h78pbPd1Y7W4
+         RU/Q==
+X-Gm-Message-State: AOJu0YxJZhevQsfQ2s9Tk9Y78vIKa/HMBNH56RRDkuhbHN+doXfasBGY
+	IzMEkgUU732dDcC7Sb2q1tBHVQ==
+X-Google-Smtp-Source: AGHT+IGPAXCjaKUWsb322iXCxKdJXTs27XmdUwvdY7ChdMh9tNV7eJ5t7QZZ+qFcMEAX0TXTuKcyCQ==
+X-Received: by 2002:a05:600c:34d0:b0:408:3f87:cba with SMTP id d16-20020a05600c34d000b004083f870cbamr3579939wmq.39.1697908588409;
+        Sat, 21 Oct 2023 10:16:28 -0700 (PDT)
+Received: from [10.66.66.3] (9.ip-51-91-159.eu. [51.91.159.9])
+        by smtp.gmail.com with ESMTPSA id 1-20020a05600c228100b0040596352951sm9597405wmf.5.2023.10.21.10.16.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 21 Oct 2023 10:16:28 -0700 (PDT)
+Message-ID: <5d537b3a-91ea-4a2b-829c-d5218041291d@linaro.org>
+Date: Sat, 21 Oct 2023 19:16:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] arm64: dts: qcom: sm8250-xiaomi-pipa: Add initial
+ device tree Initial support for Xiaomi Pad 6 tablet, that have sm8250 soc.
+Content-Language: en-US
+To: luka177 <lukapanio@gmail.com>, Andy Gross <agross@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Kees Cook <keescook@chromium.org>,
+ Tony Luck <tony.luck@intel.com>, "Guilherme G . Piccoli"
+ <gpiccoli@igalia.com>, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20231021164654.146002-1-lukapanio@gmail.com>
+ <20231021164654.146002-2-lukapanio@gmail.com>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20231021164654.146002-2-lukapanio@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-strncat() usage in thunderx_ocx_com_threaded_isr() is wrong.
-The size given to strncat() is the maximum number of bytes that can be
-written, excluding the trailing NULL.
 
-Here, the size of the 'msg' buffer is used (i.e. OCX_MESSAGE_SIZE), not
-the space that is remaining.
-The space for the ending NULL is also not taken into account.
 
-in order to fix it:
-   - call decode_register() before the snprintf() calls
-   - use scnprintf() instead of snprintf() and compute, in the 'remaining'
-     variable, the space that is still available in the 'msg' buffer
-   - add a %s at the end of the format strings and append directly the
-     result of decode_register() stored in 'other'
-   - write directly at the right position in the 'msg' buffer when
-     appending some data in the for loop.
+On 10/21/23 18:46, luka177 wrote:
+> Signed-off-by: luka177 <lukapanio@gmail.com>
+> ---
+I just noticed, you should write some sort of a commit
+message and make the title shorter (70 something chars
+is a good length)
 
-Doing so, all usages of strncat() are removed.
-
-Fixes: 41003396f932 ("EDAC, thunderx: Add Cavium ThunderX EDAC driver")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-This is cross-compile tested only.
-Review with care.
-
-v2: remove some other erroneous usage of strncat()
----
- drivers/edac/thunderx_edac.c | 44 ++++++++++++++++--------------------
- 1 file changed, 20 insertions(+), 24 deletions(-)
-
-diff --git a/drivers/edac/thunderx_edac.c b/drivers/edac/thunderx_edac.c
-index b9c5772da959..62e1e120178b 100644
---- a/drivers/edac/thunderx_edac.c
-+++ b/drivers/edac/thunderx_edac.c
-@@ -1111,6 +1111,7 @@ static irqreturn_t thunderx_ocx_com_threaded_isr(int irq, void *irq_id)
- 
- 	unsigned long tail;
- 	struct ocx_com_err_ctx *ctx;
-+	size_t remaining;
- 	int lane;
- 	char *msg;
- 	char *other;
-@@ -1127,27 +1128,26 @@ static irqreturn_t thunderx_ocx_com_threaded_isr(int irq, void *irq_id)
- 				ARRAY_SIZE(ocx->com_err_ctx));
- 		ctx = &ocx->com_err_ctx[tail];
- 
--		snprintf(msg, OCX_MESSAGE_SIZE, "%s: OCX_COM_INT: %016llx",
--			ocx->edac_dev->ctl_name, ctx->reg_com_int);
--
- 		decode_register(other, OCX_OTHER_SIZE,
- 				ocx_com_errors, ctx->reg_com_int);
- 
--		strncat(msg, other, OCX_MESSAGE_SIZE);
-+		remaining = OCX_MESSAGE_SIZE;
-+		remaining -= scnprintf(msg, remaining, "%s: OCX_COM_INT: %016llx%s",
-+				       ocx->edac_dev->ctl_name, ctx->reg_com_int,
-+				       other);
- 
- 		for (lane = 0; lane < OCX_RX_LANES; lane++)
- 			if (ctx->reg_com_int & BIT(lane)) {
--				snprintf(other, OCX_OTHER_SIZE,
--					 "\n\tOCX_LNE_INT[%02d]: %016llx OCX_LNE_STAT11[%02d]: %016llx",
--					 lane, ctx->reg_lane_int[lane],
--					 lane, ctx->reg_lane_stat11[lane]);
--
--				strncat(msg, other, OCX_MESSAGE_SIZE);
--
- 				decode_register(other, OCX_OTHER_SIZE,
- 						ocx_lane_errors,
- 						ctx->reg_lane_int[lane]);
--				strncat(msg, other, OCX_MESSAGE_SIZE);
-+
-+				remaining -= scnprintf(msg + (OCX_MESSAGE_SIZE - remaining),
-+						       remaining,
-+						       "\n\tOCX_LNE_INT[%02d]: %016llx OCX_LNE_STAT11[%02d]: %016llx%s",
-+						       lane, ctx->reg_lane_int[lane],
-+						       lane, ctx->reg_lane_stat11[lane],
-+						       other);
- 			}
- 
- 		if (ctx->reg_com_int & OCX_COM_INT_CE)
-@@ -1209,15 +1209,13 @@ static irqreturn_t thunderx_ocx_lnk_threaded_isr(int irq, void *irq_id)
- 
- 		ctx = &ocx->link_err_ctx[tail];
- 
--		snprintf(msg, OCX_MESSAGE_SIZE,
--			 "%s: OCX_COM_LINK_INT[%d]: %016llx",
--			 ocx->edac_dev->ctl_name,
--			 ctx->link, ctx->reg_com_link_int);
--
- 		decode_register(other, OCX_OTHER_SIZE,
- 				ocx_com_link_errors, ctx->reg_com_link_int);
- 
--		strncat(msg, other, OCX_MESSAGE_SIZE);
-+		snprintf(msg, OCX_MESSAGE_SIZE,
-+			 "%s: OCX_COM_LINK_INT[%d]: %016llx%s",
-+			 ocx->edac_dev->ctl_name,
-+			 ctx->link, ctx->reg_com_link_int, other);
- 
- 		if (ctx->reg_com_link_int & OCX_COM_LINK_INT_UE)
- 			edac_device_handle_ue(ocx->edac_dev, 0, 0, msg);
-@@ -1889,14 +1887,12 @@ static irqreturn_t thunderx_l2c_threaded_isr(int irq, void *irq_id)
- 
- 	while (CIRC_CNT(l2c->ring_head, l2c->ring_tail,
- 			ARRAY_SIZE(l2c->err_ctx))) {
--		snprintf(msg, L2C_MESSAGE_SIZE,
--			 "%s: %s: %016llx, %s: %016llx",
--			 l2c->edac_dev->ctl_name, reg_int_name, ctx->reg_int,
--			 ctx->reg_ext_name, ctx->reg_ext);
--
- 		decode_register(other, L2C_OTHER_SIZE, l2_errors, ctx->reg_int);
- 
--		strncat(msg, other, L2C_MESSAGE_SIZE);
-+		snprintf(msg, L2C_MESSAGE_SIZE,
-+			 "%s: %s: %016llx, %s: %016llx%s",
-+			 l2c->edac_dev->ctl_name, reg_int_name, ctx->reg_int,
-+			 ctx->reg_ext_name, ctx->reg_ext, other);
- 
- 		if (ctx->reg_int & mask_ue)
- 			edac_device_handle_ue(l2c->edac_dev, 0, 0, msg);
--- 
-2.34.1
-
+Konrad
