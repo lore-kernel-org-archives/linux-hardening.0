@@ -1,93 +1,109 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B7FA3229;
-	Sun, 22 Oct 2023 19:56:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47F0413AED;
+	Sun, 22 Oct 2023 21:47:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V+gjtb42"
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93ED2E4;
-	Sun, 22 Oct 2023 12:56:54 -0700 (PDT)
-Received: by mail-ej1-x636.google.com with SMTP id a640c23a62f3a-99c3c8adb27so375061666b.1;
-        Sun, 22 Oct 2023 12:56:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698004613; x=1698609413; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QgJstzHTImBTmTHab9BlzOH6E80ZpfiuRFtp7sNw7Uk=;
-        b=V+gjtb42a+TsCTwS4MAQvWynMMIRrl2M9vnhBy5ddlWeEennmk2H9DbdobROj85Xzs
-         F3PSd9QVHu2TRKHf0wMHohll7JdTZXM1UUqVPkvMrYgHSf8VrNRzcEU0ojnDTEktYSOO
-         VvgRC/DPvBvUHEXRPdun2eNtnLiNaknLNX6Tkt6gCoT0r/R+rNbLk/Jgll56IYk5B/g/
-         XKd8LTlvkANrkXsQ4DXMhlCX2Prp9h/le3quN5GJt09N4tniRX5KzYpmTCC9+W4eU5ad
-         SHm21fmK2NbQ34e2a0Czv60d7qREUYTEGJrRW31/KLZq4AAlEDZsmHP4D+ZyU+5BA65E
-         kNWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698004613; x=1698609413;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QgJstzHTImBTmTHab9BlzOH6E80ZpfiuRFtp7sNw7Uk=;
-        b=nLKUq3qBSew77xtpsxeuhbAtXRS/jo7M5bEJ2pj57ZD/f7JKB5Wy1Cgq0BvCmptnSZ
-         EsbocBY8wTsWgDMG9mUL5jkhqcPebFCWJZL2Q/ZDsS9db1sWL/ViCn98MnQZ7/C9EE+/
-         jUwRfMDMSRc/9HPW2JtMrNvPY0vA/vTWpqGuQzxIRBJnbilLDc2auRY3OnSw1JemIcnG
-         ll5I5pOrJNAg9MOsY1dD789DfgJ9sBxuulzztPilsIOefFWYNlh4Y40Qel5EWAKqHVBH
-         oFobhl4vdOQviYGR3hDTd3gnzFCavo9/q2cSmuSP8H0rm181Bs0fcdbHnmGhNTcI+2X6
-         dXMQ==
-X-Gm-Message-State: AOJu0YxF761QIarsw5i58OWWyIJpckqeeXw5CUi2WpfYIBeICeHTbFa1
-	R3UzNUgsCU+75cT272O82vWDSqjzEr1ItZeuZn0=
-X-Google-Smtp-Source: AGHT+IF4etjmtedAsRQejbbVP6oSb2KAZwzt8vJr0vpi1L32sbXLciToyifofwy68xYb/0dpMeuyoQA/EB++xYomCQo=
-X-Received: by 2002:a17:907:268b:b0:9bd:bbc1:1c5f with SMTP id
- bn11-20020a170907268b00b009bdbbc11c5fmr5518918ejc.35.1698004612307; Sun, 22
- Oct 2023 12:56:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PpsoXpZi"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B825E5;
+	Sun, 22 Oct 2023 14:47:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1698011237; x=1729547237;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Dx6B+Uq17MjpqqV7Z+3SvjBqDXDUCQ6dU1sRUyxAXsY=;
+  b=PpsoXpZi4E7W4NxtoZAF+MY763xcXHfoQRcjVJN8EemRe5DSrAt8mNbm
+   RLp0660Xd8JbPHUqOeGfs/Gkx2p9+RvHrtLcxeOTpB9SDUQgYyg+32Lih
+   1vbghHgs06/nEousQH12YpmzHPMkH/0WJd0pGsyhKrGRquid+rj3BC31r
+   buF3DCjIz873nrtWuNx6PTs7PXrl5K5CfSyRatKBe+MYgbLvb5iI6s12E
+   Y7PRuSa5L7X4NJQwo76uEo5EXfGS4T8DR8lCz8DqXgc/uI+aon3pglW6J
+   hUUta8amCSSq5qU1Xiwe+0jVOCvu672nBMHuyepaPwtRB8i0FeipZ+L1Q
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10871"; a="390621599"
+X-IronPort-AV: E=Sophos;i="6.03,244,1694761200"; 
+   d="scan'208";a="390621599"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2023 14:47:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10871"; a="901624719"
+X-IronPort-AV: E=Sophos;i="6.03,244,1694761200"; 
+   d="scan'208";a="901624719"
+Received: from lkp-server01.sh.intel.com (HELO 8917679a5d3e) ([10.239.97.150])
+  by fmsmga001.fm.intel.com with ESMTP; 22 Oct 2023 14:44:55 -0700
+Received: from kbuild by 8917679a5d3e with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1qugHs-0006Hg-2m;
+	Sun, 22 Oct 2023 21:47:08 +0000
+Date: Mon, 23 Oct 2023 05:46:42 +0800
+From: kernel test robot <lkp@intel.com>
+To: Duje =?utf-8?Q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Tony Lindgren <tony@atomide.com>,
+	Haojian Zhuang <haojian.zhuang@linaro.org>,
+	Lubomir Rintel <lkundrak@v3.sk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Kees Cook <keescook@chromium.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-omap@vger.kernel.org, linux-hardening@vger.kernel.org,
+	Duje =?utf-8?Q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+Subject: Re: [PATCH v6 7/9] arm64: Kconfig.platforms: Add config for Marvell
+ PXA1908 platform
+Message-ID: <202310230518.zs9Qpg3j-lkp@intel.com>
+References: <20231010-pxa1908-lkml-v6-7-b2fe09240cf8@skole.hr>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231022173811.8229-1-lukapanio@gmail.com> <20231022173811.8229-2-lukapanio@gmail.com>
- <3307fcb9-1697-4a9e-b4f6-c00c2b10ba89@linaro.org>
-In-Reply-To: <3307fcb9-1697-4a9e-b4f6-c00c2b10ba89@linaro.org>
-From: Luka Panio <lukapanio@gmail.com>
-Date: Sun, 22 Oct 2023 21:56:41 +0200
-Message-ID: <CACi=Ov58mGYT65kE2eHVx54v1g61Kpnn=pw4ETPmJBWuiJ3aOA@mail.gmail.com>
-Subject: Re: [PATCH v6 2/2] arm64: dts: qcom: sm8250-xiaomi-pipa: Add initial
- device tree
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>, 
-	"Guilherme G . Piccoli" <gpiccoli@igalia.com>, linux-arm-msm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231010-pxa1908-lkml-v6-7-b2fe09240cf8@skole.hr>
 
-On Sun, Oct 22, 2023 at 8:46=E2=80=AFPM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
+Hi Duje,
 
-> If there are no other copyrights here, why did you use BSD-3 license?
-I am by no means a licensing expert, but as sm8250.dts did use BSD-3
-and other device tree's (for example sm8250-xiaomi-elish-boe.dts) did
-use it, I thought I should do the same. Should I drop it?
+kernel test robot noticed the following build errors:
 
->
-> chassis-type
->
-> It does not look like you tested the DTS against bindings. Please run
-> `make dtbs_check W=3D1` (see
-> Documentation/devicetree/bindings/writing-schema.rst or
-> https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-sou=
-rces-with-the-devicetree-schema/
-> for instructions).
->
-Thanks, will do.
+[auto build test ERROR on 94f6f0550c625fab1f373bb86a6669b45e9748b3]
 
-> 0x34 or 34?
-Yes 0x24, should i tend to use decimal?
-Thanks,
-Luka
+url:    https://github.com/intel-lab-lkp/linux/commits/Duje-Mihanovi/clk-mmp-Switch-to-use-struct-u32_fract-instead-of-custom-one/20231011-012919
+base:   94f6f0550c625fab1f373bb86a6669b45e9748b3
+patch link:    https://lore.kernel.org/r/20231010-pxa1908-lkml-v6-7-b2fe09240cf8%40skole.hr
+patch subject: [PATCH v6 7/9] arm64: Kconfig.platforms: Add config for Marvell PXA1908 platform
+config: arm64-allyesconfig (https://download.01.org/0day-ci/archive/20231023/202310230518.zs9Qpg3j-lkp@intel.com/config)
+compiler: aarch64-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231023/202310230518.zs9Qpg3j-lkp@intel.com/reproduce)
 
-P.S. Sorry if you got duplicated email
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202310230518.zs9Qpg3j-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   /tmp/cc7DnLj6.s: Assembler messages:
+>> /tmp/cc7DnLj6.s:2851: Error: unknown mnemonic `ldmia' -- `ldmia x23,{r0,r1,r2,r3}'
+>> /tmp/cc7DnLj6.s:2852: Error: unknown mnemonic `stmia' -- `stmia x19!,{r0,r1,r2,r3}'
+>> /tmp/cc7DnLj6.s:3125: Error: unknown mnemonic `ldmia' -- `ldmia x19!,{r0,r1,r2,r3}'
+>> /tmp/cc7DnLj6.s:3126: Error: unknown mnemonic `stmia' -- `stmia x23,{r0,r1,r2,r3}'
+
+Kconfig warnings: (for reference only)
+   WARNING: unmet direct dependencies detected for SND_ARM
+   Depends on [n]: SOUND [=y] && SND [=y] && ARM
+   Selected by [y]:
+   - SND_MMP_SOC_SSPA [=y] && SOUND [=y] && SND [=y] && SND_SOC [=y] && ARCH_MMP [=y]
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
