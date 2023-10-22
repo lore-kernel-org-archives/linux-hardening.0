@@ -1,102 +1,108 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 057D528E8
-	for <linux-hardening@vger.kernel.org>; Sun, 22 Oct 2023 10:51:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD3323A8;
+	Sun, 22 Oct 2023 11:40:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NkuDTB4O"
-Received: from mail-yw1-x1130.google.com (mail-yw1-x1130.google.com [IPv6:2607:f8b0:4864:20::1130])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E87DA11B
-	for <linux-hardening@vger.kernel.org>; Sun, 22 Oct 2023 03:51:42 -0700 (PDT)
-Received: by mail-yw1-x1130.google.com with SMTP id 00721157ae682-5a7dafb659cso23638127b3.0
-        for <linux-hardening@vger.kernel.org>; Sun, 22 Oct 2023 03:51:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IF2axAcs"
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F4089EB;
+	Sun, 22 Oct 2023 04:40:40 -0700 (PDT)
+Received: by mail-pg1-x52a.google.com with SMTP id 41be03b00d2f7-578b4997decso1723415a12.0;
+        Sun, 22 Oct 2023 04:40:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1697971902; x=1698576702; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=qtBLYHItiMRAtWv2eIIyDWdvOr+sJvW/WOE9B0k2XRw=;
-        b=NkuDTB4O/Nd48Yas/JhUC6lJqnb8ZTYBFcyAFQnf58+4ERJbJNFS6EIjiKsXode/1O
-         IfkXOwBc0PNWRITMYxnSiXUNm+D5b/jYFAkz51FcLgPe47Ux9KBzHB6JyuDqu2nvU6u2
-         EeDyjQOZUZYu+AvrVhEuTdZS7Dq7wNVY3dtqDyJBE1psT4VBFsnBMDaNY2JRYYBtk/nx
-         Wz8gbaPLbQwYtD8CprBZoF8h5rqD30Qn2a9AzRTEFoJSiFSifG3hRXIc1gUd3vBaXqSY
-         Y35sK0HAdzUMlBJLIJwiJviu58678KPSerquWshltnMO33OP8Twqj8U9FuqbEMstCAP7
-         TP6Q==
+        d=gmail.com; s=20230601; t=1697974840; x=1698579640; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ljaI8yne9hbUxqHM2K9k1jzFfYFrLBrIFmHWl9mQXzA=;
+        b=IF2axAcs5O6tn01geX9QwfuHUN/2NM1DAptM3bwG8oNZY+M+/ZgDjF2U2qrSv6Smqu
+         GVt3Zvgl1EX9f76L1Z/m3kBuA58k8Q/durr7dvnbsY6XSboieVRv9ek5aDMeBTdKcHFu
+         LGZ3aNon/OD+Ugunf5UUJr05MjvGRVhFVcrVRZSkmydbxMRtavJw5FMjBnZY9Z1M8Nqt
+         qQN+92oLU/FuHQ3nos9+YnCo7sxP8FmCIfZUy4Q4GJg3YXjeuciMhJZSI6LPl7gNAiSW
+         jsIjo+Y/pbQfNCjrZv467Zmj+Iu2RhY9Hlp72R4Ni8R/pQ3BaRNLw1ZWCFgNUVFRjkBo
+         +Y6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697971902; x=1698576702;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1697974840; x=1698579640;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=qtBLYHItiMRAtWv2eIIyDWdvOr+sJvW/WOE9B0k2XRw=;
-        b=SkE9CPmfRvGyFgPsHWSh8QC6WDUDuWSNMgCz2rBYLxPKopKnS5eabC06HIL/wlsHQx
-         qbqHLyuh4W2MyT8UO3VEhEjXO6tAdHtAh4ICZGT2zCf5MPOOFfx0lrQ3ZdQegvmfyo05
-         w8LVOYB6yU6qUi3utlxPVNM7VNiUYCo5+CaTysvI1aRE4iEiEMR82g/y41o2wa/CB+26
-         i2iRwiebdCO7ZyOwyxrA/6APll8fY6H+V4LqN5ZhKcs1kGFisPElS3ZGKNXA2IPJeq/4
-         54980U6phx5InCiZUt/hvrcK7M99q4PI/skV2M2+yNnPzyh670ffir/T+fD0AFXQ28DV
-         GD/g==
-X-Gm-Message-State: AOJu0YxW5Y0Rl4EVf9Bf07k23e7b6N796ETPL1o8c69bn8nHilpyEQbG
-	GmIldIvMPFebPBTPNC9C0bktHdpvgypUAbmtDj7/Zg==
-X-Google-Smtp-Source: AGHT+IHvSGTdwWJCN+NUWfNu/iFOGpqaoQeYpFbg6MJyqmijJSTWlLgR/hV+HQSRRk+O0gguRdSlYnVT5vCX2KlXnKA=
-X-Received: by 2002:a0d:df02:0:b0:5a7:be1a:6c32 with SMTP id
- i2-20020a0ddf02000000b005a7be1a6c32mr7073499ywe.24.1697971902097; Sun, 22 Oct
- 2023 03:51:42 -0700 (PDT)
+        bh=ljaI8yne9hbUxqHM2K9k1jzFfYFrLBrIFmHWl9mQXzA=;
+        b=J93ZDv/qJIfyZOVZwbjBa+IOjLJ5P6lM1UQgLvqIULanyS8f64Ig60J3aHhasoJe7h
+         86QfTTWG5xrenKUku/7ToQ6Q8GMVSLJ01huYXKzrcUrBdRGivhij2XdXSzvz2D1muwZV
+         JUJV/70bboUelVtSdSH0cKxVQnc57DpXCtUyIIG9ZnBWvlajBZmT45liH5/Ltz32iq0O
+         BBSfyXA05mWDxePY+g64/j1PP+BoTwQvOoc6N28M/Mo4yNVYzGkuyx5XUQlu48CZizqU
+         IPY5mm2kwBJn0nx/QC64fOxtATsRS7T/voYgrBvzNUpb1adO7fKsEp6pCtFbvjcWRzA+
+         DT/g==
+X-Gm-Message-State: AOJu0Yz2KMgKtMWD2g0lNMqCwRhCfsJAvJ3Ef4O+BrHNJ11gZYkgaRar
+	m6vqANuM63M1NmbxPHvN9pUWeNSq6zY/OQ==
+X-Google-Smtp-Source: AGHT+IEUMOdRI5f0m/WLLxCApC2EsQ2VXCemwXQik4qn0vF4HdxcQf4GriQEDxoM5N8eFRRdkPvMoA==
+X-Received: by 2002:a05:6a20:394a:b0:17b:2c56:70b8 with SMTP id r10-20020a056a20394a00b0017b2c5670b8mr7740804pzg.22.1697974839695;
+        Sun, 22 Oct 2023 04:40:39 -0700 (PDT)
+Received: from localhost.localdomain ([2001:448a:20a0:ad9f:f712:ea6f:f4b9:17c2])
+        by smtp.gmail.com with ESMTPSA id x3-20020aa79563000000b006bdd7cbcf98sm4441833pfq.182.2023.10.22.04.40.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Oct 2023 04:40:39 -0700 (PDT)
+From: James Tirta Halim <tirtajames45@gmail.com>
+To: linux-hardening@vger.kernel.org,
+	bpf@vger.kernel.org
+Cc: James Tirta Halim <tirtajames45@gmail.com>
+Subject: [PATCH] strstarts: avoid calling strlen() if first char does not match
+Date: Sun, 22 Oct 2023 18:35:47 +0700
+Message-ID: <20231022113547.168081-1-tirtajames45@gmail.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231021-sakuramist-mi11u-v2-0-fa82c91ecaf0@gmail.com> <20231021-sakuramist-mi11u-v2-1-fa82c91ecaf0@gmail.com>
-In-Reply-To: <20231021-sakuramist-mi11u-v2-1-fa82c91ecaf0@gmail.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Sun, 22 Oct 2023 13:51:31 +0300
-Message-ID: <CAA8EJprtd8htkDWAvhamgEo3DWMMDYe-P6cnr6nwLnms=N0k9A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] soc: qcom: pmic_glink: enable UCSI for SM8350
-To: wuxilin123@gmail.com
-Cc: Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>, 
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, linux-arm-msm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Sat, 21 Oct 2023 at 13:20, Xilin Wu via B4 Relay
-<devnull+wuxilin123.gmail.com@kernel.org> wrote:
->
-> From: Xilin Wu <wuxilin123@gmail.com>
->
-> UCSI is supported on SM8350. Allow it to enable USB role switch and
-> altmode notifications on SM8350.
+---
+ include/linux/string.h  | 9 ++++++---
+ tools/bpf/bpftool/gen.c | 2 +-
+ 2 files changed, 7 insertions(+), 4 deletions(-)
 
-We have had troubles with UCSI on sm8350. I have a workaround for this
-(and earlier) platforms. Once it is ready to be posted, I'll include
-your patch in the series, if you don't mind.
-
->
-> Signed-off-by: Xilin Wu <wuxilin123@gmail.com>
-> ---
->  drivers/soc/qcom/pmic_glink.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/soc/qcom/pmic_glink.c b/drivers/soc/qcom/pmic_glink.c
-> index 914057331afd..1196e79e6fb3 100644
-> --- a/drivers/soc/qcom/pmic_glink.c
-> +++ b/drivers/soc/qcom/pmic_glink.c
-> @@ -341,6 +341,7 @@ static const unsigned long pmic_glink_sm8450_client_mask = BIT(PMIC_GLINK_CLIENT
->                                                            BIT(PMIC_GLINK_CLIENT_UCSI);
->
->  static const struct of_device_id pmic_glink_of_match[] = {
-> +       { .compatible = "qcom,sm8350-pmic-glink", .data = &pmic_glink_sm8450_client_mask },
->         { .compatible = "qcom,sm8450-pmic-glink", .data = &pmic_glink_sm8450_client_mask },
->         { .compatible = "qcom,sm8550-pmic-glink", .data = &pmic_glink_sm8450_client_mask },
->         { .compatible = "qcom,pmic-glink" },
->
-> --
-> 2.42.0
->
-
-
+diff --git a/include/linux/string.h b/include/linux/string.h
+index dbfc66400050..1c51039604e7 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -214,7 +214,7 @@ int ptr_to_hashval(const void *ptr, unsigned long *hashval_out);
+  */
+ static inline bool strstarts(const char *str, const char *prefix)
+ {
+-	return strncmp(str, prefix, strlen(prefix)) == 0;
++	return (*str == *prefix) ? strncmp(str, prefix, strlen(prefix)) == 0 : (*prefix == '\0');
+ }
+ 
+ size_t memweight(const void *ptr, size_t bytes);
+@@ -356,8 +356,11 @@ void memcpy_and_pad(void *dest, size_t dest_len, const void *src, size_t count,
+  */
+ static __always_inline size_t str_has_prefix(const char *str, const char *prefix)
+ {
+-	size_t len = strlen(prefix);
+-	return strncmp(str, prefix, len) == 0 ? len : 0;
++	if (*str == *prefix) {
++		size_t len = strlen(prefix);
++		return strncmp(str, prefix, len) == 0 ? len : 0;
++	}
++	return *prefix == '\0';
+ }
+ 
+ #endif /* _LINUX_STRING_H_ */
+diff --git a/tools/bpf/bpftool/gen.c b/tools/bpf/bpftool/gen.c
+index 2883660d6b67..5f8db7e517bc 100644
+--- a/tools/bpf/bpftool/gen.c
++++ b/tools/bpf/bpftool/gen.c
+@@ -36,7 +36,7 @@ static void sanitize_identifier(char *name)
+ 
+ static bool str_has_prefix(const char *str, const char *prefix)
+ {
+-	return strncmp(str, prefix, strlen(prefix)) == 0;
++	return (*str == *prefix) ? strncmp(str, prefix, strlen(prefix)) == 0 : (*prefix == '\0');
+ }
+ 
+ static bool str_has_suffix(const char *str, const char *suffix)
 -- 
-With best wishes
-Dmitry
+2.42.0
+
