@@ -1,179 +1,106 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F0301BDFE
-	for <linux-hardening@vger.kernel.org>; Mon, 23 Oct 2023 18:12:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61E1F14A91
+	for <linux-hardening@vger.kernel.org>; Mon, 23 Oct 2023 19:15:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Adi5lAvZ"
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3DC2BE
-	for <linux-hardening@vger.kernel.org>; Mon, 23 Oct 2023 11:12:32 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5a8ebc70d33so45236267b3.1
-        for <linux-hardening@vger.kernel.org>; Mon, 23 Oct 2023 11:12:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EGJLS4hs"
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA5DC10F7
+	for <linux-hardening@vger.kernel.org>; Mon, 23 Oct 2023 12:14:51 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d9cb10a5d44so2160000276.0
+        for <linux-hardening@vger.kernel.org>; Mon, 23 Oct 2023 12:14:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698084752; x=1698689552; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1698088491; x=1698693291; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=qwS6ouQjPXWDmE5P6viXZdCgm6mkNLj5gTUqMttI1Y4=;
-        b=Adi5lAvZAE7ig7zrujT3lNJOLIpxchQed7flxGpk+0/WVoGDHf0yC12EvT8iGmgMUq
-         uAPjh0tkS1sZA3u9/5XCB1co1Sdn8cclvrm9AE3PFMXUWwvicCk26/xzF7HXCGcvsW9X
-         OGG71Ns2x/uYDjtth4zHgAoFdfTBz04m3m7qMuJxywx7wi9aP+m+rfxq1ry0f8gs14SP
-         L/EMp6MKJUqVo5bomDlQmh5NR0rMlubznixkakAbIPb+zl6OU8ke9gf+LHTvSpdAVRcu
-         qUJ7j4de68h7MaKqz+RHldFEPPZZEQGVFtMiqEIIydjgRrfMh7mN1qChA/ixENv9dbpw
-         CHOQ==
+        bh=vxgSbbJcJ8k4AfzUm+i0fvFrr1WhMJ4/9BqOAlfxPD4=;
+        b=EGJLS4hsyrKQrmApbhKMoMNFbjk3sO5dXvNP5c7TpkfiFksMlw7r+uChP8fI4UHJ18
+         11VAlY81efoGiYa0RMS1Wnx7ox7ErfM6QJg3QUV9D872FLzkHdu5li4jjynaM4TOchqP
+         7PdtufYAmBYGQV/SyE69P/aLSZnjfqj6rTcTPQV1CTLpY+ZrPS1bdzU6d4N6NsJj41Lz
+         GTbzKpLWmdEradq+f5UNA1h8hPvLuMQRCBnzmXhlAqh1DaWhQHx8uvxdEZuF08CTVRp3
+         zP1m6w4hOAG0xKj/T6riWeNtmWgpWST3vkLj/vDu5n6DR8JNWzml3CA+mX3z20UC6gER
+         s9uA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698084752; x=1698689552;
+        d=1e100.net; s=20230601; t=1698088491; x=1698693291;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=qwS6ouQjPXWDmE5P6viXZdCgm6mkNLj5gTUqMttI1Y4=;
-        b=sabcpgFiPlbCu6pNqinrJaKxtOV70Cs/VbPHb9VGx2H+wUcfqBQ41r1ahUPRVPV8Tl
-         ExmL2t4b2OHjQS2qUHueJbkTDms5kSogtMM6YzOxAwD9MoML1VWA4nncGjiZ5QDAMvTK
-         99JLco0HDqlsLRbePEm0UcPiQ6WskNjA31LTQAAmXIJq1Iqn5udPuePrPH5RG1nUK/xh
-         n1CM6MuvRFaCFTz3riIB1N9SDSA5f+09zO+sbQHNZWuLJwaKGmdfSx42WI/fqs4Sqotc
-         hGeVyHMmSizrT8iSGUiCqex5HdO7xf8/iss2RJwwMz+VB/jo1ng8uymkYvivhM0LDA0y
-         4y8w==
-X-Gm-Message-State: AOJu0YzipMKoX4Q7A2ownxVlUTXdBxjCiWpGCcUYYbPCX9rknZ5/nAqA
-	AeBiNxB9sQndIQKZlKrgtXkIO6fd7vw69ixyng==
-X-Google-Smtp-Source: AGHT+IH9j1Cv+kwDdU7FgeZN5Wos1b3Cm2atxCSiXLG/t3KumY5JzFlOjMOH2W6Ivr4HTyriL/EA2H0K2FFTy0PU/g==
+        bh=vxgSbbJcJ8k4AfzUm+i0fvFrr1WhMJ4/9BqOAlfxPD4=;
+        b=DmiMBJ4BykXoOVPpMqZuCPS93gR4p4sDWO2ObbysQ3MRYAnWSE7O7TP9nrz0sUrdkX
+         cfJBdt0+QTMWRk0lLvpUGUGndDPLtoBYJamRDkQFcggHaRf4siHOsy8BqWTSLD+8utSd
+         lE2vKV4f7bBcksphXFnhTyST4WtPuOqbuNik75vpQNjyUKeXg9yyDueQBTnQ/ny+zq7+
+         JiuhFGSNZM+ybuaSLxNwZSGsn0BTU7So9G+Zsj+m4BkDz9+HUZx7+Zir0Gs+9e31pM/5
+         uvEkRG1bgz2LMJ9j1OkWWnnIXo7OY+D3gQME6Q/a2704+WoLwL41pZvEGmN0Of3w18z3
+         L4WA==
+X-Gm-Message-State: AOJu0YwvbXxwYd/BigV2YWBx3gWfRHO5gQJqfjclbfU5H12bS2MD+1cC
+	+APhxSo0SINF3l7snPVzXXxhN2A1wHpI03KzcA==
+X-Google-Smtp-Source: AGHT+IFk2+a4Nwy+lDfofeMbQ00SIqXpTu6BSVqVMj6WMyiEKt+3HATCvTqDUHblwYDVOJKzh9KBN8QLmBbu9+PP0w==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a81:4ecf:0:b0:5a8:28be:bf86 with SMTP
- id c198-20020a814ecf000000b005a828bebf86mr208457ywb.5.1698084752050; Mon, 23
- Oct 2023 11:12:32 -0700 (PDT)
-Date: Mon, 23 Oct 2023 18:12:28 +0000
+ (user=justinstitt job=sendgmr) by 2002:a05:6902:4aa:b0:d9a:4421:6ec5 with
+ SMTP id r10-20020a05690204aa00b00d9a44216ec5mr192426ybs.3.1698088491059; Mon,
+ 23 Oct 2023 12:14:51 -0700 (PDT)
+Date: Mon, 23 Oct 2023 19:14:49 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAIu3NmUC/43NQQ6CMBCF4auQrh3TVkzAlfcwhNB2hEmUkhlsJ
- IS7W0ncu/zf4n2rEmRCUZdiVYyJhOKYwx4K5Ydu7BEo5FZW25PRVoPMPPppgcCUkAV4ekoPiXi
- m2O7RupeAh+A6cw6uxKrWKt9NjHd679StyT2QzJGXXU7mu/4Q8z+SDBioOudqU3uHtrz2MfYPP Pr4VM22bR+LaEc44QAAAA==
+X-B4-Tracking: v=1; b=H4sIACjGNmUC/x2NQQqFMAwFryJZG9AKFb2KuKg1akBqSUT+R7y7w
+ cUsBob3blASJoW+uEHoYuUjmdRlAXELaSXk2Rxc5ZraQD0lxfzHWfgiUdSmq9BSQY17xojT5L1 zPrQUAthMFlr4910M4/O877gOK3IAAAA=
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1698084751; l=4380;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1698088489; l=1329;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=uxFJFrgndnGhuJLwG5frR0Qr2jirCUbgI5LoxWmqOws=; b=jNFOf966tCsvUuHyU/MIBTXbl3z+Kcy+EGf0QsL9k/KBIYEub7+MVP4EUasN0VTkfXcYjmx5b
- pzGUMZGKY5vAkF48W7C5+fenvpx/deT714CI3sUvJvdtuWIwrLJZ+fn
+ bh=EGwnKAJDKIDhDdM+Wm5gicTjSyZs8Iw8n/yqjAF6sKU=; b=hXZYoncvcCMCdrJCj2u1tX/RyKLEry7HTYxF3H64/3saG8BxaQs9lpvqUl3fHHLAOWr/VzuTB
+ OctOIGa57zRAk5zf4e/Dvn7iORD79F6Mcn9oLX2C40QC6rUOBCknrzz
 X-Mailer: b4 0.12.3
-Message-ID: <20231023-strncpy-drivers-rpmsg-virtio_rpmsg_bus-c-v2-1-dc591c36f5ed@google.com>
-Subject: [PATCH v2] rpmsg: virtio: replace deprecated strncpy with strscpy/_pad
+Message-ID: <20231023-strncpy-drivers-s390-char-sclp-c-v1-1-eaeef80522bb@google.com>
+Subject: [PATCH] s390/sclp: replace deprecated strncpy with strtomem
 From: Justin Stitt <justinstitt@google.com>
-To: Bjorn Andersson <andersson@kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+To: Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
 
-strncpy() is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous string
-interfaces.
+Let's move away from using strncpy() as it is deprecated [1].
 
-This patch replaces 3 callsites of strncpy().
+Instead use strtomem() as `e.id` is already marked as nonstring:
+|       char id[4] __nonstring;
 
-The first two populate the destination buffer `nsm.name` -- which we
-expect to be NUL-terminated based on their use with format strings.
-
-Firstly, as I understand it, virtio_rpmsg_announce_create() creates an
-rpmsg_ns_msg and sends via:
-
-virtio_rpmsg_bus.c:
-336: err = rpmsg_sendto(rpdev->ept, &nsm, sizeof(nsm), RPMSG_NS_ADDR);
-
-... which uses:
-virtio_rpmsg_sendto() -> rpmsg_send_offchannel_raw()
-
-... which copies its data into an rpmsg_hdr `msg` in virtio_rpmsg_bus.c
-618: memcpy(msg->data, data, len);
-
-This callback is invoked when a message is received from the remote
-processor:
-
-rpmsg_ns.c:
-30: /* invoked when a name service announcement arrives */
-31: static int rpmsg_ns_cb(struct rpmsg_device *rpdev, void *data, int len,
-32: 		       void *priv, u32 src)
-33: {
-34:         struct rpmsg_ns_msg *msg = data;
-...
-50:         /* don't trust the remote processor for null terminating the name */
-51:         msg->name[RPMSG_NAME_SIZE - 1] = '\0';
-
-... which leads into the use of `name` within a format string:
-rpmsg_ns.c:
-57: dev_info(dev, "%sing channel %s addr 0x%x\n",
-58:          rpmsg32_to_cpu(rpdev, msg->flags) & RPMSG_NS_DESTROY ?
-59:          "destroy" : "creat", msg->name, chinfo.dst);
-
-We can also observe that `nsm` is not zero-initialized and as such we
-should maintain the NUL-padding behavior that strncpy() provides:
-
-virtio_rpmsg_bus.c:
-330: struct rpmsg_ns_msg nsm;
-
-Considering the above, a suitable replacement is `strscpy_pad` due to
-the fact that it guarantees both NUL-termination and NUL-padding on the
-destination buffer.
-
-Now, for the third and final destination buffer rpdev->id.name we can
-just go for strscpy() (not _pad()) as rpdev points to &vch->rpdev:
-|       rpdev = &vch->rpdev;
-
-... and vch is zero-allocated:
-|       vch = kzalloc(sizeof(*vch), GFP_KERNEL);
-
-... this renders any additional NUL-byte assignments (like the ones
-strncpy() or strscpy_pad() does) redundant.
+We don't need strtomem_pad() because `e` is already memset to 0 --
+rendering any additional NUL-padding useless.
 
 Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
 Link: https://github.com/KSPP/linux/issues/90
 Cc: linux-hardening@vger.kernel.org
 Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
-Changes in v2:
-- update commit msg (thanks Mathieu)
-- Link to v1: https://lore.kernel.org/r/20231021-strncpy-drivers-rpmsg-virtio_rpmsg_bus-c-v1-1-8abb919cbe24@google.com
----
 Note: build-tested only.
 
 Found with: $ rg "strncpy\("
 ---
- drivers/rpmsg/virtio_rpmsg_bus.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/s390/char/sclp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/rpmsg/virtio_rpmsg_bus.c b/drivers/rpmsg/virtio_rpmsg_bus.c
-index 905ac7910c98..dc87965f8164 100644
---- a/drivers/rpmsg/virtio_rpmsg_bus.c
-+++ b/drivers/rpmsg/virtio_rpmsg_bus.c
-@@ -329,7 +329,7 @@ static int virtio_rpmsg_announce_create(struct rpmsg_device *rpdev)
- 	    virtio_has_feature(vrp->vdev, VIRTIO_RPMSG_F_NS)) {
- 		struct rpmsg_ns_msg nsm;
+diff --git a/drivers/s390/char/sclp.c b/drivers/s390/char/sclp.c
+index 8f74db689a0c..486cf57a1605 100644
+--- a/drivers/s390/char/sclp.c
++++ b/drivers/s390/char/sclp.c
+@@ -81,7 +81,7 @@ static inline void sclp_trace(int prio, char *id, u32 a, u64 b, bool err)
+ 	struct sclp_trace_entry e;
  
--		strncpy(nsm.name, rpdev->id.name, RPMSG_NAME_SIZE);
-+		strscpy_pad(nsm.name, rpdev->id.name, sizeof(nsm.name));
- 		nsm.addr = cpu_to_rpmsg32(rpdev, rpdev->ept->addr);
- 		nsm.flags = cpu_to_rpmsg32(rpdev, RPMSG_NS_CREATE);
- 
-@@ -353,7 +353,7 @@ static int virtio_rpmsg_announce_destroy(struct rpmsg_device *rpdev)
- 	    virtio_has_feature(vrp->vdev, VIRTIO_RPMSG_F_NS)) {
- 		struct rpmsg_ns_msg nsm;
- 
--		strncpy(nsm.name, rpdev->id.name, RPMSG_NAME_SIZE);
-+		strscpy_pad(nsm.name, rpdev->id.name, sizeof(nsm.name));
- 		nsm.addr = cpu_to_rpmsg32(rpdev, rpdev->ept->addr);
- 		nsm.flags = cpu_to_rpmsg32(rpdev, RPMSG_NS_DESTROY);
- 
-@@ -424,7 +424,7 @@ static struct rpmsg_device *__rpmsg_create_channel(struct virtproc_info *vrp,
- 	 */
- 	rpdev->announce = rpdev->src != RPMSG_ADDR_ANY;
- 
--	strncpy(rpdev->id.name, chinfo->name, RPMSG_NAME_SIZE);
-+	strscpy(rpdev->id.name, chinfo->name, sizeof(rpdev->id.name));
- 
- 	rpdev->dev.parent = &vrp->vdev->dev;
- 	rpdev->dev.release = virtio_rpmsg_release_device;
+ 	memset(&e, 0, sizeof(e));
+-	strncpy(e.id, id, sizeof(e.id));
++	strtomem(e.id, id);
+ 	e.a = a;
+ 	e.b = b;
+ 	debug_event(&sclp_debug, prio, &e, sizeof(e));
 
 ---
 base-commit: 9c5d00cb7b6bbc5a7965d9ab7d223b5402d1f02c
-change-id: 20231020-strncpy-drivers-rpmsg-virtio_rpmsg_bus-c-dba15db4e890
+change-id: 20231023-strncpy-drivers-s390-char-sclp-c-bb66226a7eaa
 
 Best regards,
 --
