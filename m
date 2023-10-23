@@ -1,129 +1,199 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9DFB210EA
-	for <linux-hardening@vger.kernel.org>; Mon, 23 Oct 2023 17:44:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B18B21340
+	for <linux-hardening@vger.kernel.org>; Mon, 23 Oct 2023 18:03:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="keG0lQJO"
-Received: from mail-oo1-xc2a.google.com (mail-oo1-xc2a.google.com [IPv6:2607:f8b0:4864:20::c2a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08664D7A
-	for <linux-hardening@vger.kernel.org>; Mon, 23 Oct 2023 10:44:28 -0700 (PDT)
-Received: by mail-oo1-xc2a.google.com with SMTP id 006d021491bc7-581f78a0206so2075016eaf.2
-        for <linux-hardening@vger.kernel.org>; Mon, 23 Oct 2023 10:44:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G2vbIiTw"
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC5CFB7
+	for <linux-hardening@vger.kernel.org>; Mon, 23 Oct 2023 11:03:14 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1bdf4752c3cso20453655ad.2
+        for <linux-hardening@vger.kernel.org>; Mon, 23 Oct 2023 11:03:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1698083068; x=1698687868; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W7G5ETqm85R+O8rjCffN/EgWaevuGBBGp+Yfy1oHvZI=;
-        b=keG0lQJOTiUGod+aXy/v/c2aUbTY+vdZYc4pxe61FZ8WdY54LwR3RrIfMox3w/599W
-         2Sbq1GnRUjQRfrUAWCL0oGQP/B5udJAMuMjh3/o3O15HgSxcVJWNiAKHtcC8v7KKJenU
-         A4PZIxhMPoVBdrRLI8kOAQTSkFrExShXLMhhM=
+        d=linaro.org; s=google; t=1698084194; x=1698688994; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=arV3WvwMGkVwizBfpgtp9qoHNsxotQwpgBb6OnpwjQI=;
+        b=G2vbIiTwgvKjW4QilPTMiM9Uz2YF2WKxk6dY6fqoDkc5Lb1WNjVBeTLPqJc/BryPdW
+         ISjJ7q8/qP2gvFYEpBEWIi+8xJi2SwrZnwdkRRXwybKZ65+TeG8eHwj41VMTv57LXoRD
+         bmyaPKEO9aPOjWMoydK/eWHQMkkLW1d5S0SHfAFv+XjjUwUvtw0c9oKQyg+PxSYX4pCo
+         uT7MnbZ2Rf77SiRfGeJnkuuJEXetHWl9P7G5FbrW3ALSwufAD2ypa8+kze9rm2Z2xIa8
+         2bvLltF6ehd5kpONCoOrxSJcfaZjaezxqVXjUQxnUMl3d8HDNdbBCSWA/U6lFRhsVlbK
+         bQPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698083068; x=1698687868;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=W7G5ETqm85R+O8rjCffN/EgWaevuGBBGp+Yfy1oHvZI=;
-        b=wXbNRo7hjqEa5LcDxlqnFHZaW7cqs5/n8WyrPz132dg3smHHJAe6CNPXLmAPj/EQLj
-         Y7+MXHIasetdXj+YJBVbfL0YaO+IytPN0bO8U6uQ3r6UM36Bbb6negmYjJq45bQBHjCV
-         SQBYfJ6I/x3gybEap7kTX2QlYgWvC+y3h3m3mlliCgSmIQrwKPh9eFM9y9rMhpKzhm9g
-         osoIEDXcb6Xf0ldo70CJjAtLeCV0D+njkoo4UcT9p44f9YYIJoeIi3dOvfN8sQVn5Xwb
-         K2hQyMCSKD3lSibesbS6sRKmYGT6lVYV7EKhVHAwQCSr6WvZRrneRwQYPi3DeJv7bg6S
-         cSsw==
-X-Gm-Message-State: AOJu0YzbDeM/5Efd7WETyKW/63CxvMudXST0t85ip19/UPdUCnucs18W
-	oI92IEt9irTWc0vfccX2EQV9EDsG8/5Nohx3RYCX6Q==
-X-Google-Smtp-Source: AGHT+IGvCbHbkUldqJVCJnA7fx4lXJtIFpqmDQAAcI0RyigJuUbtyS+AoYWMaiwgaHhWwvs/j+j1sfSzoNiHFYIFbjg=
-X-Received: by 2002:a05:6870:5312:b0:1ea:9898:c07f with SMTP id
- j18-20020a056870531200b001ea9898c07fmr12881189oan.22.1698083068251; Mon, 23
- Oct 2023 10:44:28 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1698084194; x=1698688994;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=arV3WvwMGkVwizBfpgtp9qoHNsxotQwpgBb6OnpwjQI=;
+        b=AFo2O89Q6m0lCvm6XKDGr7MBYae0vI8ui6JQqIzgZi8ISVTfSQm9z74LfUfcBc6Vei
+         Iwdc7my6p7i46+Bx5hm4lCVI984ieWY/0Ltksp/h3Y/NImVaT0bJxVXLa1R7tAQyvdOc
+         AhFobTIHoxrv7Vhwa4//DKGD6YAhoGxIZJKVAE14Ovfx/kmKhVNvJ0IHAzbdIIBOzi+C
+         JCVI5KQj3ZH0wv/uV5cxRApZ7D2pBnFhA7k2grgDcK9V9yJQrUhPfnZCjJDtbDiGCU6d
+         0nUFs75wXFwDCPZRBq4tqAid/4nF2RV4Z4ifcViz9nxOEVD8A9rfB3TiJetgsvqKr8Rm
+         k58A==
+X-Gm-Message-State: AOJu0YzJ8+mB9qH5Vg9XNlfe1qqLSSSZbEi4UHMa2ZoM8kArSGKstolG
+	+rRObv75eBlPZ0292AaraWqPgFnKrFR8tm4Eq3k=
+X-Google-Smtp-Source: AGHT+IFqDzcfSPSj6ToWBgpfG/3z9qkyMrDNHGYQJ5K5TCb2lJU2I3IY/Qp9PsSJ/FDNmIuZzk9wxA==
+X-Received: by 2002:a17:902:dac9:b0:1ca:9415:a50d with SMTP id q9-20020a170902dac900b001ca9415a50dmr9099665plx.2.1698084194201;
+        Mon, 23 Oct 2023 11:03:14 -0700 (PDT)
+Received: from p14s ([2604:3d09:148c:c800:85b7:8283:12b2:30f8])
+        by smtp.gmail.com with ESMTPSA id a8-20020a170902ecc800b001b8a2edab6asm6182119plh.244.2023.10.23.11.03.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Oct 2023 11:03:13 -0700 (PDT)
+Date: Mon, 23 Oct 2023 12:03:11 -0600
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] rpmsg: virtio: replace deprecated strncpy with
+ strscpy/_pad
+Message-ID: <ZTa1XwYnNKPH+voo@p14s>
+References: <20231021-strncpy-drivers-rpmsg-virtio_rpmsg_bus-c-v1-1-8abb919cbe24@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231016143828.647848-1-jeffxu@chromium.org> <ZS1URCBgwGGj9JtM@casper.infradead.org>
- <CAKbZUD2A+=bp_sd+Q0Yif7NJqMu8p__eb4yguq0agEcmLH8SDQ@mail.gmail.com>
- <CALmYWFtOgMAQDGNoM6k2Ev4kMHD396wwH+rVDODaSjsyVMDogg@mail.gmail.com>
- <CAKbZUD2j1jbomCAVxUX_JmG1rfa8udc=5SqVOpDgc-3GnSTbAQ@mail.gmail.com>
- <CALmYWFv7jzOj5HPcYct=UzYKPrwwvtN1EQeHioQHDPwGFvL5Ug@mail.gmail.com>
- <CALmYWFt71Vi6ySiZhW+tmE-LZL7Tnu-dQ1uMO10DUkASUTxzKA@mail.gmail.com>
- <CAKbZUD12pEaDCLysOpT3yL3064=P28Pm3c=UBqhOZYeBP026WA@mail.gmail.com> <CAHk-=wgDv5vPx2xoxNQh+kbvLsskWubGGGK69cqF_i4FkM-GCw@mail.gmail.com>
-In-Reply-To: <CAHk-=wgDv5vPx2xoxNQh+kbvLsskWubGGGK69cqF_i4FkM-GCw@mail.gmail.com>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Mon, 23 Oct 2023 10:44:16 -0700
-Message-ID: <CABi2SkVqyBgh2JpvFj3yhu8UB-p7R9euvkJAjysmn1sR_NMwsA@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 0/8] Introduce mseal() syscall
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Pedro Falcato <pedro.falcato@gmail.com>, Jeff Xu <jeffxu@google.com>, 
-	Matthew Wilcox <willy@infradead.org>, akpm@linux-foundation.org, keescook@chromium.org, 
-	sroettger@google.com, jorgelo@chromium.org, groeck@chromium.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, jannh@google.com, surenb@google.com, alex.sierra@amd.com, 
-	apopple@nvidia.com, aneesh.kumar@linux.ibm.com, axelrasmussen@google.com, 
-	ben@decadent.org.uk, catalin.marinas@arm.com, david@redhat.com, 
-	dwmw@amazon.co.uk, ying.huang@intel.com, hughd@google.com, joey.gouly@arm.com, 
-	corbet@lwn.net, wangkefeng.wang@huawei.com, Liam.Howlett@oracle.com, 
-	lstoakes@gmail.com, mawupeng1@huawei.com, linmiaohe@huawei.com, 
-	namit@vmware.com, peterx@redhat.com, peterz@infradead.org, 
-	ryan.roberts@arm.com, shr@devkernel.io, vbabka@suse.cz, 
-	xiujianfeng@huawei.com, yu.ma@intel.com, zhangpeng362@huawei.com, 
-	dave.hansen@intel.com, luto@kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231021-strncpy-drivers-rpmsg-virtio_rpmsg_bus-c-v1-1-8abb919cbe24@google.com>
 
-On Thu, Oct 19, 2023 at 4:06=E2=80=AFPM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Thu, 19 Oct 2023 at 15:47, Pedro Falcato <pedro.falcato@gmail.com> wro=
-te:
-> > >
-> > > For mprotect()/mmap(), is Linux implementation limited by POSIX ?
-> >
-> > No. POSIX works merely as a baseline that UNIX systems aim towards.
-> > You can (and very frequently do) extend POSIX interfaces (in fact,
-> > it's how most of POSIX was written, through sheer
-> > "design-by-committee" on a bunch of UNIX systems' extensions).
->
-> We can in extreme circumstances actually go further than that, and not
-> only extend on POSIX requirements, but actively even violate them.
->
-> It does need a very good reason, though, but it has happened when
-> POSIX requirements were simply actively wrong.
->
-> For example, at one point POSIX required
->
->      int accept(int s, struct sockaddr *addr, size_t *addrlen);
->
-> which was simply completely wrong. It's utter shite, and didn't
-> actually match any reality.
->
-> The 'addrlen' parameter is 'int *', and POSIX suddenly trying to make
-> it "size_t" was completely unacceptable.
->
-> So we ignored it, told POSIX people that they were full of sh*t, and
-> they eventually fixed it in the next version (by introducing a
-> "socklen_t" that had better be the same as "int").
->
-> So POSIX can simply be wrong.
->
-> Also, if it turns out that we had some ABI that wasn't
-> POSIX-compatible, the whole "don't break user space" will take
-> precedence over any POSIX concerns, and we will not "fix" our system
-> call if people already use our old semantics.
->
-> So in that case, we generally end up with a new system call (or new
-> flags) instead.
->
-> Or sometimes it just is such a small detail that nobody cares - POSIX
-> also has a notion of documenting areas of non-conformance, and people
-> who really care end up having notions like "conformance vs _strict_
-> conformance".
->
->                  Linus
+Hi Justin,
+
+On Sat, Oct 21, 2023 at 12:09:16AM +0000, Justin Stitt wrote:
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
+> 
+> This patch replaces 3 callsites of strncpy().
+> 
+> The first two populate the destination buffer `nsm.name` -- which we
+> expect to be NUL-terminated based on their use with format strings.
+> 
+> Firstly, as I understand it, virtio_rpmsg_announce_create() creates an
+> rpmsg_ns_msg and sends via:
+> 
+> virtio_rpmsg_bus.c:
+> 336: err = rpmsg_sendto(rpdev->ept, &nsm, sizeof(nsm), RPMSG_NS_ADDR);
+> 
+> ... which uses:
+> virtio_rpmsg_sendto() -> rpmsg_send_offchannel_raw()
+> 
+> ... which copies its data into an rpmsg_hdr `msg` in virtio_rpmsg_bus.c
+> 618: memcpy(msg->data, data, len);
+> 
+> ... and we end up receiving here via a callback:
 >
 
-Thanks Linus for clarifying the guidelines on POSIX in Linux.
+Function rpmsg_ns_cb() is called when a message is received from the remote
+processor and not on the downward path from rpmsg_send_offchannel_raw().  I am
+good with the code modification but the changelog needs to be amended.
 
--Jeff
+> rpmsg_ns.c:
+> 30: /* invoked when a name service announcement arrives */
+> 31: static int rpmsg_ns_cb(struct rpmsg_device *rpdev, void *data, int len,
+> 32: 		       void *priv, u32 src)
+> 33: {
+> 34:         struct rpmsg_ns_msg *msg = data;
+> ...
+> 50:         /* don't trust the remote processor for null terminating the name */
+> 51:         msg->name[RPMSG_NAME_SIZE - 1] = '\0';
+> 
+> ... which finally leads into the use of `name` within a format string:
+> rpmsg_ns.c:
+> 57: dev_info(dev, "%sing channel %s addr 0x%x\n",
+> 58:          rpmsg32_to_cpu(rpdev, msg->flags) & RPMSG_NS_DESTROY ?
+> 59:          "destroy" : "creat", msg->name, chinfo.dst);
+> 
+> Taking another look at this comment + NUL-byte assignment:
+> 50: /* don't trust the remote processor for null terminating the name */
+> 51: msg->name[RPMSG_NAME_SIZE - 1] = '\0';
+> 
+> ...  we probably _can_ trust that this string is NUL-terminated with the
+> introduction of strscpy(). However, since there might be some magic
+> happening between the announcement create and the callback that I don't
+> understand, I've opted to leave this comment and assignment alone as it
+> doesn't hurt.
+> 
+> We can also observe that `nsm` is not zero-initialized and as such we
+> should maintain the NUL-padding behavior that strncpy() provides:
+> 
+> virtio_rpmsg_bus.c:
+> 330: struct rpmsg_ns_msg nsm;
+> 
+> Considering the above, a suitable replacement is `strscpy_pad` due to
+> the fact that it guarantees both NUL-termination and NUL-padding on the
+> destination buffer.
+> 
+> Now, for the third and final destination buffer rpdev->id.name we can
+> just go for strscpy() (not _pad()) as rpdev points to &vch->rpdev:
+> |       rpdev = &vch->rpdev;
+> 
+> ... and vch is zero-allocated:
+> |       vch = kzalloc(sizeof(*vch), GFP_KERNEL);
+> 
+> ... this renders any additional NUL-byte assignments (like the ones
+> strncpy() or strscpy_pad() does) redundant.
+
+I agree with the above rational.
+
+Thanks,
+Mathieu
+
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+> Note: build-tested only.
+> 
+> Found with: $ rg "strncpy\("
+> ---
+>  drivers/rpmsg/virtio_rpmsg_bus.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/rpmsg/virtio_rpmsg_bus.c b/drivers/rpmsg/virtio_rpmsg_bus.c
+> index 905ac7910c98..dc87965f8164 100644
+> --- a/drivers/rpmsg/virtio_rpmsg_bus.c
+> +++ b/drivers/rpmsg/virtio_rpmsg_bus.c
+> @@ -329,7 +329,7 @@ static int virtio_rpmsg_announce_create(struct rpmsg_device *rpdev)
+>  	    virtio_has_feature(vrp->vdev, VIRTIO_RPMSG_F_NS)) {
+>  		struct rpmsg_ns_msg nsm;
+>  
+> -		strncpy(nsm.name, rpdev->id.name, RPMSG_NAME_SIZE);
+> +		strscpy_pad(nsm.name, rpdev->id.name, sizeof(nsm.name));
+>  		nsm.addr = cpu_to_rpmsg32(rpdev, rpdev->ept->addr);
+>  		nsm.flags = cpu_to_rpmsg32(rpdev, RPMSG_NS_CREATE);
+>  
+> @@ -353,7 +353,7 @@ static int virtio_rpmsg_announce_destroy(struct rpmsg_device *rpdev)
+>  	    virtio_has_feature(vrp->vdev, VIRTIO_RPMSG_F_NS)) {
+>  		struct rpmsg_ns_msg nsm;
+>  
+> -		strncpy(nsm.name, rpdev->id.name, RPMSG_NAME_SIZE);
+> +		strscpy_pad(nsm.name, rpdev->id.name, sizeof(nsm.name));
+>  		nsm.addr = cpu_to_rpmsg32(rpdev, rpdev->ept->addr);
+>  		nsm.flags = cpu_to_rpmsg32(rpdev, RPMSG_NS_DESTROY);
+>  
+> @@ -424,7 +424,7 @@ static struct rpmsg_device *__rpmsg_create_channel(struct virtproc_info *vrp,
+>  	 */
+>  	rpdev->announce = rpdev->src != RPMSG_ADDR_ANY;
+>  
+> -	strncpy(rpdev->id.name, chinfo->name, RPMSG_NAME_SIZE);
+> +	strscpy(rpdev->id.name, chinfo->name, sizeof(rpdev->id.name));
+>  
+>  	rpdev->dev.parent = &vrp->vdev->dev;
+>  	rpdev->dev.release = virtio_rpmsg_release_device;
+> 
+> ---
+> base-commit: 9c5d00cb7b6bbc5a7965d9ab7d223b5402d1f02c
+> change-id: 20231020-strncpy-drivers-rpmsg-virtio_rpmsg_bus-c-dba15db4e890
+> 
+> Best regards,
+> --
+> Justin Stitt <justinstitt@google.com>
+> 
