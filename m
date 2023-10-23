@@ -1,22 +1,22 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3203911726
-	for <linux-hardening@vger.kernel.org>; Mon, 23 Oct 2023 17:26:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B90181E51D
+	for <linux-hardening@vger.kernel.org>; Mon, 23 Oct 2023 17:28:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u2QXvS5I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66675C433C8;
-	Mon, 23 Oct 2023 17:26:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s5ub6U/U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20BC4C433C8;
+	Mon, 23 Oct 2023 17:28:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698082010;
-	bh=N0T7cOgCbINrOXJ2SVCDOAHG/2PRx25LOpY5Fkz1Gk4=;
+	s=k20201202; t=1698082105;
+	bh=TLivfB44UxdfVbE+MzCIog1D5VWcCwPdoKI99i6xnCE=;
 	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-	b=u2QXvS5IZazJ+Om2SJK9qimi0fz7wYBRKR6LUZODW6csSKeVGy8/V4BnRchYeyyev
-	 vHMm3Xna0eh6/tkWAVIiID7436mKW1UamEvtL3uLzOV2KU8WIf045HHchPa2NfEkwv
-	 pi8JKiaWajd5O2SQksuay03/s9Kp4nlBkXa/Mi7jq8Td/To80hquCMOiTNzIzuTmx4
-	 OpRuHqly4RVxj3yuHcPbT27a2m9PQc4VSc9UpHMHwrZCuDMBli9CAYoy6MYcTweDWA
-	 qg5XMukhS3IuXGhd/lT7fQ8dpwOB9E3I9mBrl4yzH7oTydWE66TPHUUKAS8aTQFvTa
-	 rap6oEjpmEjrA==
+	b=s5ub6U/UxLnTwuZhn8iz8TW7wK8h0v3A12hCS9WPknjxY4DuOA9IvXI2R5I5YYgO6
+	 ZVhSNkhpdNaiTdFPFO4scWc4AwhdSZ81hYsVLhun9FBkPQlpfbaiHrbL+mXtBxnh3+
+	 HWHaby7VO20pqj/Yv8veK8GpEL2tVIinqN8hqzyZYpEyORfqgLb1Y3ZbBnp/P+ER9x
+	 5Yn8DgXmLkoIAdkiEx1JxqqHRKtnYsYp4XupWlAwYYPYNvTro/wSpc7ww9bgarPX+B
+	 lKZLw5llMS7nlZq7cBKaY4LFjimipYiuv4vVhxclsRF5NWO/kISm9NfgBsGCKlzHFw
+	 xbxO4BXKeOaZw==
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -25,20 +25,18 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v2] wifi: ipw2x00: replace deprecated strncpy with
- strscpy_pad
+Subject: Re: [PATCH v2] wifi: wl1251: replace deprecated strncpy with strscpy
 From: Kalle Valo <kvalo@kernel.org>
 In-Reply-To: 
- <20231017-strncpy-drivers-net-wireless-intel-ipw2x00-ipw2200-c-v2-1-465e10dc817c@google.com>
+ <20231018-strncpy-drivers-net-wireless-ti-wl1251-main-c-v2-1-67b63dfcb1b8@google.com>
 References: 
- <20231017-strncpy-drivers-net-wireless-intel-ipw2x00-ipw2200-c-v2-1-465e10dc817c@google.com>
+ <20231018-strncpy-drivers-net-wireless-ti-wl1251-main-c-v2-1-67b63dfcb1b8@google.com>
 To: Justin Stitt <justinstitt@google.com>
-Cc: Stanislav Yakovlev <stas.yakovlev@gmail.com>,
- linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
 User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
-Message-ID: <169808200764.695306.10833187895555987178.kvalo@kernel.org>
-Date: Mon, 23 Oct 2023 17:26:49 +0000 (UTC)
+Message-ID: <169808210208.695306.1186396061221375137.kvalo@kernel.org>
+Date: Mon, 23 Oct 2023 17:28:23 +0000 (UTC)
 
 Justin Stitt <justinstitt@google.com> wrote:
 
@@ -46,31 +44,41 @@ Justin Stitt <justinstitt@google.com> wrote:
 > [1] and as such we should prefer more robust and less ambiguous string
 > interfaces.
 > 
-> `extra` is intended to be NUL-terminated which is evident by the manual
-> assignment of a NUL-byte as well as its immediate usage with strlen().
+> Based on other assignments of similar fw_version fields we can see that
+> NUL-termination is required but not NUL-padding:
+> ethernet/intel/ixgbe/ixgbe_ethtool.c
+> 1111:   strscpy(drvinfo->fw_version, adapter->eeprom_id,
+> 1112:           sizeof(drvinfo->fw_version));
 > 
-> Moreover, many of these getters and setters are NUL-padding buffers with
-> memset():
-> 2439  |	memset(&tx_power, 0, sizeof(tx_power));
-> 9998  | memset(sys_config, 0, sizeof(struct ipw_sys_config));
-> 10084 | memset(tfd, 0, sizeof(*tfd));
-> 10261 | memset(&dummystats, 0, sizeof(dummystats));
-> ... let's maintain this behavior and NUL-pad our destination buffer.
+> ethernet/intel/igc/igc_ethtool.c
+> 147:    scnprintf(adapter->fw_version,
+> 148:              sizeof(adapter->fw_version),
+> 153:    strscpy(drvinfo->fw_version, adapter->fw_version,
+> 154:            sizeof(drvinfo->fw_version));
 > 
-> Considering the above, a suitable replacement is `strscpy_pad` due to
-> the fact that it guarantees both NUL-termination and NUL-padding on the
-> destination buffer.
+> wireless/broadcom/brcm80211/brcmfmac/core.c
+> 569:    strscpy(info->fw_version, drvr->fwver, sizeof(info->fw_version));
 > 
-> To be clear, there is no bug in the current implementation as
-> MAX_WX_STRING is much larger than the size of the string literals being
-> copied from. Also, strncpy() does NUL-pad the destination buffer and
-> using strscpy_pad() simply matches that behavior. All in all, there
-> should be no functional change but we are one step closer to eliminating
-> usage of strncpy().
+> wireless/broadcom/brcm80211/brcmsmac/main.c
+> 7867:           snprintf(wlc->wiphy->fw_version,
+> 7868:                    sizeof(wlc->wiphy->fw_version), "%u.%u", rev, patch);
 > 
-> Do note that we cannot use the more idiomatic strscpy invocation of
-> (dest, src, sizeof(dest)) as the destination buffer cannot have its size
-> determined at compile time. So, let's stick with (dest, src, LEN).
+> wireless/broadcom/b43legacy/main.c
+> 1765:   snprintf(wiphy->fw_version, sizeof(wiphy->fw_version), "%u.%u",
+> 
+> wireless/broadcom/b43/main.c
+> 2730:   snprintf(wiphy->fw_version, sizeof(wiphy->fw_version), "%u.%u",
+> 
+> wireless/intel/iwlwifi/dvm/main.c
+> 1465:   snprintf(priv->hw->wiphy->fw_version,
+> 1466:            sizeof(priv->hw->wiphy->fw_version),
+> 
+> wireless/intel/ipw2x00/ipw2100.c
+> 5905:   snprintf(info->fw_version, sizeof(info->fw_version), "%s:%d:%s",
+> 
+> A suitable replacement is `strscpy` due to the fact that it guarantees
+> NUL-termination on the destination buffer without unnecessarily
+> NUL-padding.
 > 
 > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
 > Link: https://github.com/KSPP/linux/issues/90
@@ -80,10 +88,10 @@ Justin Stitt <justinstitt@google.com> wrote:
 
 Patch applied to wireless-next.git, thanks.
 
-8890b9bca38f wifi: ipw2x00: replace deprecated strncpy with strscpy_pad
+70bd8e0d01f6 wifi: wl1251: replace deprecated strncpy with strscpy
 
 -- 
-https://patchwork.kernel.org/project/linux-wireless/patch/20231017-strncpy-drivers-net-wireless-intel-ipw2x00-ipw2200-c-v2-1-465e10dc817c@google.com/
+https://patchwork.kernel.org/project/linux-wireless/patch/20231018-strncpy-drivers-net-wireless-ti-wl1251-main-c-v2-1-67b63dfcb1b8@google.com/
 
 https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
