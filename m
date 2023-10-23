@@ -1,115 +1,132 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E6FD63C0
-	for <linux-hardening@vger.kernel.org>; Mon, 23 Oct 2023 20:26:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3DF41BDEA
+	for <linux-hardening@vger.kernel.org>; Mon, 23 Oct 2023 21:36:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jwTYd0Ap"
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C21710E
-	for <linux-hardening@vger.kernel.org>; Mon, 23 Oct 2023 13:26:14 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d9a5836ab12so4389206276.2
-        for <linux-hardening@vger.kernel.org>; Mon, 23 Oct 2023 13:26:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R/rU3cEY"
+Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAFB2BD
+	for <linux-hardening@vger.kernel.org>; Mon, 23 Oct 2023 14:36:34 -0700 (PDT)
+Received: by mail-yb1-xb32.google.com with SMTP id 3f1490d57ef6-d8a000f6a51so3515773276.3
+        for <linux-hardening@vger.kernel.org>; Mon, 23 Oct 2023 14:36:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698092773; x=1698697573; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=zChXjQ3rQBurGe38Uhj4e52WCZU0FHmenFv/zcC5OdI=;
-        b=jwTYd0Ape6rySoWfd1fHI0Em5aEYQw9tCTUF4AVFVuR8O/d6J2aVcGJGeAfwyg45Az
-         D+alhVFzNBRtmRb6eOCKi0Ux+9z5gfaGXFaWIBAIcwykjElb5EQ2zbSOrpjAttadl7eM
-         otbpme40/zZo8df22ZAa1naKMAbHSnDM3XIFbksvteHwT1T+n3kXo+eu3xBojUhg33/K
-         +cG5FiGeq1TbNMwiQKjUVD5eBgyxoQxl0tQ1j2uG628Ou+WbKRGWQR1rjAVaIFcL5pfZ
-         GktMnCK/36xDteISi2hp+UCwQO52FV7z3bclk73mEyrRUk2CxrLQlQQ7qR94a8jJXch4
-         EOVg==
+        d=linaro.org; s=google; t=1698096994; x=1698701794; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dasD39M3kOdaux0g0YjT4u6dOP4/ZNPdFd3L1KQIfMs=;
+        b=R/rU3cEYS2UkifeZ6/rN64Sh/8jGbApgHPCWJuiqeoWuAds4F7OrUmW3r9/OmwDAjW
+         IO8bA13CrkqHhANtch9lN2UiajyKKXeFLDqzx+Ojvt8ZKKDYG6bE4pdGNaJ07SLCIXSt
+         Rxd/teCycFcYo8aq8Im1aG36yplPRkoaxayMEDgGhoWGyB6sYH29RohM84tUo3wv0E+V
+         tVtf/8HBuxLpcO5JDq7iZDSz8vsdDTL8/SUstPaigtpa/oSeWYMAqqbJp9KWcp4U3s//
+         rdSIpWy7k+FZ4T4sDxuj2AaSiDtaofBZlHK0OAy5rDFmDbSf706NF0rZ8qhBV3cveJTN
+         qCgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698092773; x=1698697573;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=zChXjQ3rQBurGe38Uhj4e52WCZU0FHmenFv/zcC5OdI=;
-        b=GiyjS9glJdOHzRGIrmII+cMs7L7zfJa556iYCaWb0b6JREXPvXX3njDOVSeMtJmDEz
-         HRfvWPxK2HjSmVwqyBEJgteHicCoxlcXMvgd6ciiVe+Rq46lu0BDCBCNEA2pcO76xOId
-         LVrN8bZ9BOEWzkLTntoCLWT9xomaanxJBDXxztYm3zwh5dFKxvg1DIdbzQj9jq3xvte9
-         3peJ7X+h94cA+4iovhC5bhzjMTiA0QZ0EfosS4kBeSFTvsYWHEN/ulYjb/aqDBhz13E4
-         OQc/F5VcgJUS8hkFnGZdQsOI3DMpjasKoScHzwyIp9X1sH+KudcVT91KvM/VHumqYmzr
-         e31Q==
-X-Gm-Message-State: AOJu0Ywo3F6DnBcCX4ImAblxQ0ktr07UV5cxsy9Zv0RuozZ8BCZLPRHx
-	pKRhAjfgA/c8ZTMKrelZH54vWSmn84ZvM0GK0w==
-X-Google-Smtp-Source: AGHT+IEqsrafJ1DZvc3t+zuOQLWw0wftv/ONfKaFgntqNqbR85CvuDoX26tXKyK297RDA0g61HMRGeJRcQbacAry3g==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6902:1083:b0:d9a:c3b8:4274 with
- SMTP id v3-20020a056902108300b00d9ac3b84274mr268500ybu.7.1698092773711; Mon,
- 23 Oct 2023 13:26:13 -0700 (PDT)
-Date: Mon, 23 Oct 2023 20:26:13 +0000
+        d=1e100.net; s=20230601; t=1698096994; x=1698701794;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dasD39M3kOdaux0g0YjT4u6dOP4/ZNPdFd3L1KQIfMs=;
+        b=EqmOtsqvRtVmqf2PEeinP2rVXylwxgurtjiNrYm/txtCmDIfgjrbp3A01U+ppS/e/k
+         ijXSwExt7K7RrJQGY7CZt6tarsq/hXT2zWtmeBA+lFEv8xjRzqZlggm/1Jl/yY+OcZLl
+         dholhDygpOIJsZNp3UkvXcClrkgCy1veYTOKr9CPlTPlyi85aeqamVSRv5Y6Fb9e/A6B
+         2stDv8uo9evPlsig/IjKbfT5x+g35zUvz6MxubUz6XcSsmb3j4Ue8OrKml3kTrhuGOjh
+         eQYOFKCy9BedFHs2B+y8eb6+4T3QRhNyhyApGDKdDTGBI1HsyZIfAsyRzs0imD9n3hSP
+         9fGg==
+X-Gm-Message-State: AOJu0Yz1dQE+DqSc49Woo5FwyIdUf4jphX7lyXPhs+qQgpCR7uWWeQ7d
+	fLVL/UNaWmLcu8kDonYXadae+TEgxLZtTNNVP6gUgQ==
+X-Google-Smtp-Source: AGHT+IHlLgn1OLAqclnSuM/zDgOrhFwCvQfO7GPZvzYvmpAU5h/Cn4/Oq6Vt82z2nEaemKpE/WNLXgOlWVkp81RwaQQ=
+X-Received: by 2002:a25:10d6:0:b0:d9b:dfea:bc94 with SMTP id
+ 205-20020a2510d6000000b00d9bdfeabc94mr8213463ybq.31.1698096994064; Mon, 23
+ Oct 2023 14:36:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAOTWNmUC/x2NQQqDQAxFryJZN6ApVPQqpRQbo2YzI8kginj3B
- hcP/tu8f4KLqTj01Qkmm7rmFNI8KuBlSLOgjuFANT2bAL1Y4vXA0XQTc3R2xSB7yXaPryYtyNh x9/rR1LZCBNFbTSbd76/357r+EuzluXsAAAA=
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1698092772; l=1745;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=9bXDO1Umav441y/UcVZ3FP7PbPbnlidPGSE+wWdxjYc=; b=0hpqJJX/0z59X4fF/5gjjPvrMId7qhNRePYyCg2rX7J3aRjqSyWQF9CJg1UwrVXM1VQK7V1pl
- H5Qhc4QPiCtDCj1FITDJRFf+qZcap66an0jIs/i/0vGGS0ptpwTvmt1
-X-Mailer: b4 0.12.3
-Message-ID: <20231023-strncpy-drivers-scsi-csiostor-csio_init-c-v1-1-5ea445b56864@google.com>
-Subject: [PATCH] scsi: csiostor: replace deprecated strncpy with strscpy
-From: Justin Stitt <justinstitt@google.com>
-To: "James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+References: <20231021-sakuramist-mi11u-v2-0-fa82c91ecaf0@gmail.com>
+ <20231021-sakuramist-mi11u-v2-1-fa82c91ecaf0@gmail.com> <CAA8EJprtd8htkDWAvhamgEo3DWMMDYe-P6cnr6nwLnms=N0k9A@mail.gmail.com>
+ <CAEPPPKt6fEyniHgietRcp0MYUErYfnLU-SjtsOofe8VaPiSwLg@mail.gmail.com>
+In-Reply-To: <CAEPPPKt6fEyniHgietRcp0MYUErYfnLU-SjtsOofe8VaPiSwLg@mail.gmail.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Tue, 24 Oct 2023 00:36:23 +0300
+Message-ID: <CAA8EJppuf5Jiv1NJJLvmL25DgH6U=jZS=+zS_s_aJUfQWEa2Ug@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] soc: qcom: pmic_glink: enable UCSI for SM8350
+To: Sophon Wu <wuxilin123@gmail.com>
+Cc: Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>, 
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, linux-arm-msm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-strncpy() is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous string
-interfaces.
+On Mon, 23 Oct 2023 at 08:06, Sophon Wu <wuxilin123@gmail.com> wrote:
+>
+> Dmitry Baryshkov <dmitry.baryshkov@linaro.org> =E4=BA=8E2023=E5=B9=B410=
+=E6=9C=8822=E6=97=A5=E5=91=A8=E6=97=A5 18:51=E5=86=99=E9=81=93=EF=BC=9A
+> >
+> > On Sat, 21 Oct 2023 at 13:20, Xilin Wu via B4 Relay
+> > <devnull+wuxilin123.gmail.com@kernel.org> wrote:
+> > >
+> > > From: Xilin Wu <wuxilin123@gmail.com>
+> > >
+> > > UCSI is supported on SM8350. Allow it to enable USB role switch and
+> > > altmode notifications on SM8350.
+> >
+> > We have had troubles with UCSI on sm8350. I have a workaround for this
+> > (and earlier) platforms. Once it is ready to be posted, I'll include
+> > your patch in the series, if you don't mind.
+>
+> I don't mind of course. Do I possibly need to resend the series without t=
+he
+> pmic_glink patch?
 
-`hw` is kzalloc'd just before this string assignment:
-|       hw = kzalloc(sizeof(struct csio_hw), GFP_KERNEL);
+That depends on the review of the patch 3/3. If there are any
+comments, you'll have to resend. If not, maintainers can pick it up
+separately.
 
-... which means any NUL-padding is redundant.
+> >
+> > >
+> > > Signed-off-by: Xilin Wu <wuxilin123@gmail.com>
+> > > ---
+> > >  drivers/soc/qcom/pmic_glink.c | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/drivers/soc/qcom/pmic_glink.c b/drivers/soc/qcom/pmic_gl=
+ink.c
+> > > index 914057331afd..1196e79e6fb3 100644
+> > > --- a/drivers/soc/qcom/pmic_glink.c
+> > > +++ b/drivers/soc/qcom/pmic_glink.c
+> > > @@ -341,6 +341,7 @@ static const unsigned long pmic_glink_sm8450_clie=
+nt_mask =3D BIT(PMIC_GLINK_CLIENT
+> > >                                                            BIT(PMIC_G=
+LINK_CLIENT_UCSI);
+> > >
+> > >  static const struct of_device_id pmic_glink_of_match[] =3D {
+> > > +       { .compatible =3D "qcom,sm8350-pmic-glink", .data =3D &pmic_g=
+link_sm8450_client_mask },
+> > >         { .compatible =3D "qcom,sm8450-pmic-glink", .data =3D &pmic_g=
+link_sm8450_client_mask },
+> > >         { .compatible =3D "qcom,sm8550-pmic-glink", .data =3D &pmic_g=
+link_sm8450_client_mask },
+> > >         { .compatible =3D "qcom,pmic-glink" },
+> > >
+> > > --
+> > > 2.42.0
+> > >
+> >
+> >
+> > --
+> > With best wishes
+> > Dmitry
 
-Since  CSIO_DRV_VERSION is a small string literal (smaller than
-sizeof(dest)):
 
-... there is functionally no change in this swap from strncpy() to
-strscpy(). Nonetheless, let's make the change for robustness' sake -- as
-it will ensure that drv_version is _always_ NUL-terminated.
 
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Note: build-tested only.
-
-Found with: $ rg "strncpy\("
----
- drivers/scsi/csiostor/csio_init.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/scsi/csiostor/csio_init.c b/drivers/scsi/csiostor/csio_init.c
-index 0c32faefad7c..d649b7a2a879 100644
---- a/drivers/scsi/csiostor/csio_init.c
-+++ b/drivers/scsi/csiostor/csio_init.c
-@@ -521,7 +521,8 @@ static struct csio_hw *csio_hw_alloc(struct pci_dev *pdev)
- 		goto err;
- 
- 	hw->pdev = pdev;
--	strncpy(hw->drv_version, CSIO_DRV_VERSION, 32);
-+	strscpy(hw->drv_version, CSIO_DRV_VERSION,
-+		sizeof(hw->drv_version));
- 
- 	/* memory pool/DMA pool allocation */
- 	if (csio_resource_alloc(hw))
-
----
-base-commit: 9c5d00cb7b6bbc5a7965d9ab7d223b5402d1f02c
-change-id: 20231023-strncpy-drivers-scsi-csiostor-csio_init-c-9c96b2f77e22
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
-
+--=20
+With best wishes
+Dmitry
