@@ -1,130 +1,200 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 631871C28E
-	for <linux-hardening@vger.kernel.org>; Mon, 23 Oct 2023 19:51:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C0C514281
+	for <linux-hardening@vger.kernel.org>; Mon, 23 Oct 2023 19:52:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VV3XnTVn"
-Received: from mail-ot1-x34a.google.com (mail-ot1-x34a.google.com [IPv6:2607:f8b0:4864:20::34a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 379B0D68
-	for <linux-hardening@vger.kernel.org>; Mon, 23 Oct 2023 12:50:59 -0700 (PDT)
-Received: by mail-ot1-x34a.google.com with SMTP id 46e09a7af769-6ce270bc429so6176211a34.2
-        for <linux-hardening@vger.kernel.org>; Mon, 23 Oct 2023 12:50:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JIVcUENZ"
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F18ECC
+	for <linux-hardening@vger.kernel.org>; Mon, 23 Oct 2023 12:52:38 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id 4fb4d7f45d1cf-538e8eca9c1so5419080a12.3
+        for <linux-hardening@vger.kernel.org>; Mon, 23 Oct 2023 12:52:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698090658; x=1698695458; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=bF7T0d28n9cL6YgeW2rqKNnAbndsOrdsoITtJXsJhco=;
-        b=VV3XnTVniOZXoCAAMyXAJgZvS8v42+VNeI5Jy5p7T5SzwXqUdBY8rQY3MaH/S4Uk/G
-         ekNsTdpE7mdmR+9VU2l++lBxbAPF/u6wwxxHv3jvijT6Kh/a1y4QCOAM5SFaqzi6SGGU
-         pDrgPmSWzFxbnPSRqt460d5QHzXrXDSAsGXIpYkEL4+d662ygpOuEB6hW6oShoNzU2zs
-         Rw/15fWa0uewaEnEX2WL15o+vhJMce8CEZ85emXq14bIOs/X0owBoVnHj5/kGAEzMFa7
-         pmtyNQbyR59uld+6jpJNtti+V2pTlWT9URS7rYyAjgcmI3myuq+YH4Mk81nYYqrdJzY/
-         WrEQ==
+        d=google.com; s=20230601; t=1698090757; x=1698695557; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fhcOA8/ypFkMiD8dPsvfpUQgTECypKdIAwnlUaOnBwE=;
+        b=JIVcUENZWiMfQUjVZbbgwJDD9neutBPqQcnqa2RWVSWt1xasRIxv7fyg3f5EslFqXC
+         kfOGJpzuuWkHPNLKyPQTvF3zeu6NCKcf7ndLk3UBU6izPh8VJGvfy7HCa4szuuoZ92XY
+         a5BQc9jVdKVDeR4GGUnlCi/Trr1MO0t2gnhWSPgqnCmQiIkoYplRU4D7B8ny3FqYODcV
+         n0zig/6suBVI2AIaWgedW6mXv1IkJzhWaOVn4g/9xedAEX/rI5Rp0pTlit0f4RqJjsTM
+         RmVoN7k00HLYNEpF6A74xzxD4mDB+5tFD+fTnH7bLar6etvxTxwAIVKF+AnQg7jbWsRW
+         vU2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698090658; x=1698695458;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bF7T0d28n9cL6YgeW2rqKNnAbndsOrdsoITtJXsJhco=;
-        b=Y4MrOIqCfylX5ochaEOYgz5Fi5pKMbGA4cZcuy9e9lO1mTPawvmg78nyDWV1RSC4nU
-         4UyhEnZIFP+g2uWokUJv1QnOIBsnmhiBheWHzU+FF82C0s5j79odfnsRBlIJt+080DuN
-         /ClJlHcnXwWuAwdooIApKZcL6UjU8bYjf0YNCD+wWeDXWHpTpNfFrw4rKJEFmi6jYzJ8
-         YatJYNFAEd/9pkLspF5miDVNbCqqvLRibrFHDflJA2te5QOlRr0S9PMZhQ6X4KPQkX5r
-         E6j5keW1xl6ExaPQf4azrDanUuTjvG3sxNvS8x7sXVCfjqhWufkV2irH/gsAsg9rYsp/
-         y79w==
-X-Gm-Message-State: AOJu0YwRlJFXv94AC3o4ym9f38rItDuPQh7JvHP003B/Ojgme1Porl7G
-	KP8ZsdUBXyWT5xqC2RI4RbSvsfaqYpIrWOp9Zw==
-X-Google-Smtp-Source: AGHT+IF0h+/xrakdb44PmJlTv4OdJIpOxbtE1q6VwuBoxBcow2sL1DM3RGqW5GixyjHX+YFxDwu9WN9g/oFlYuuWcQ==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6830:9:b0:6bc:f328:696a with SMTP
- id c9-20020a056830000900b006bcf328696amr2714868otp.0.1698090658533; Mon, 23
- Oct 2023 12:50:58 -0700 (PDT)
-Date: Mon, 23 Oct 2023 19:50:57 +0000
+        d=1e100.net; s=20230601; t=1698090757; x=1698695557;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fhcOA8/ypFkMiD8dPsvfpUQgTECypKdIAwnlUaOnBwE=;
+        b=s/VdNNsq+WQUobmTJAWEZTcN7aMiGRPQ9JCwF+OutzlMau499RvTVF3NLrU224zY0F
+         TwZYqLVV/EPEj4wVjScn172U5ecL7jV97nc9Nb2rfXsMFnAk/9HX0gl18Fu4sctRdJGN
+         8RSofD3ss87ypYyCf1JtBylAOGvyWqQAaxiveh6iLFyaYqLCr/RXPxQuF/BsoDhvsQCg
+         pwG3FeIJBnmc5tyCMKYrASxGW8wnVBjQNmiVq9Q3ogC0EU/GA0SRH5gj99JJjsZaIs3X
+         A8WAL4sbMuFZG7dlWIJA8Ru/kB+Zsptvj1DaQ+aK5y/xilFY371xBnTj+brOab8hXKEv
+         ghjA==
+X-Gm-Message-State: AOJu0YxmPHRwGElIIQryA7fzQKHCEgTNw2+HKBVsq499WKruhy0w7srz
+	qGX8aMNozZe6DospOZaI5+Rs7PdmmTXOUrgb2X6ESIbDr1+VNDxOkrJNYA==
+X-Google-Smtp-Source: AGHT+IFqFcj3r9VY7mJnfbiSfqlKgl7GRNrIUMcA3NQ1icF+0bJbAaA7TnIl/XWALKZP69SuvXz0FXpRh5sNfms+vA0=
+X-Received: by 2002:a05:6402:510d:b0:53e:7372:909f with SMTP id
+ m13-20020a056402510d00b0053e7372909fmr8382503edd.22.1698090756886; Mon, 23
+ Oct 2023 12:52:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAKDONmUC/x3MMQqDQBBG4avI1BlQV5B4FbHQ2TGZZiPzi1Fk7
- 54lxSu+5t0EdVPQUN3kehjskwqaR0XyntNL2WIxtXUbmhJj9yTbxdHtUAdDYBy+jBksLL1IHfr YLfKk8thcVzv//3HK+QePuh6hbwAAAA==
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1698090657; l=2555;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=7GBzrHxBfUi4U3AvyTYICsD2FUILDgUdjKwKv0QmnCY=; b=XgVC/DXR0DzmOmUA/pGXj7Oim73+vtl9EM47VYRbVwNnvy3QrTsTEi4sHRs+WdbEqHS0hunvB
- atsZa3YYQWACsuUDJze3QJQSkCf0yxVXO1e09sFqUyHmC9pCx30v7rk
-X-Mailer: b4 0.12.3
-Message-ID: <20231023-strncpy-drivers-scsi-3w-sas-c-v1-1-4c40a1e99dfc@google.com>
-Subject: [PATCH] scsi: 3w-sas: replace deprecated strncpy with strscpy
+MIME-Version: 1.0
+References: <20231023-strncpy-drivers-rpmsg-virtio_rpmsg_bus-c-v2-1-dc591c36f5ed@google.com>
+ <ZTbMQC9IhcJR3a/a@p14s>
+In-Reply-To: <ZTbMQC9IhcJR3a/a@p14s>
 From: Justin Stitt <justinstitt@google.com>
-To: Adam Radford <aradford@gmail.com>, "James E.J. Bottomley" <jejb@linux.ibm.com>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+Date: Mon, 23 Oct 2023 12:52:24 -0700
+Message-ID: <CAFhGd8rbtz9Pw_kF0Z-Ke36FiFNNAjrFknM8p-oo-af-3gH14w@mail.gmail.com>
+Subject: Re: [PATCH v2] rpmsg: virtio: replace deprecated strncpy with strscpy/_pad
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, linux-remoteproc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-strncpy() is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous string
-interfaces.
+On Mon, Oct 23, 2023 at 12:40=E2=80=AFPM Mathieu Poirier
+<mathieu.poirier@linaro.org> wrote:
+>
+> On Mon, Oct 23, 2023 at 06:12:28PM +0000, Justin Stitt wrote:
+> > strncpy() is deprecated for use on NUL-terminated destination strings
+> > [1] and as such we should prefer more robust and less ambiguous string
+> > interfaces.
+> >
+> > This patch replaces 3 callsites of strncpy().
+> >
+> > The first two populate the destination buffer `nsm.name` -- which we
+> > expect to be NUL-terminated based on their use with format strings.
+> >
+> > Firstly, as I understand it, virtio_rpmsg_announce_create() creates an
+> > rpmsg_ns_msg and sends via:
+> >
+> > virtio_rpmsg_bus.c:
+> > 336: err =3D rpmsg_sendto(rpdev->ept, &nsm, sizeof(nsm), RPMSG_NS_ADDR)=
+;
+> >
+> > ... which uses:
+> > virtio_rpmsg_sendto() -> rpmsg_send_offchannel_raw()
+> >
+> > ... which copies its data into an rpmsg_hdr `msg` in virtio_rpmsg_bus.c
+> > 618: memcpy(msg->data, data, len);
+> >
+> > This callback is invoked when a message is received from the remote
+> > processor:
+> >
+> > rpmsg_ns.c:
+> > 30: /* invoked when a name service announcement arrives */
+> > 31: static int rpmsg_ns_cb(struct rpmsg_device *rpdev, void *data, int =
+len,
+> > 32:                  void *priv, u32 src)
+> > 33: {
+> > 34:         struct rpmsg_ns_msg *msg =3D data;
+> > ...
+> > 50:         /* don't trust the remote processor for null terminating th=
+e name */
+> > 51:         msg->name[RPMSG_NAME_SIZE - 1] =3D '\0';
+> >
+> > ... which leads into the use of `name` within a format string:
+> > rpmsg_ns.c:
+> > 57: dev_info(dev, "%sing channel %s addr 0x%x\n",
+> > 58:          rpmsg32_to_cpu(rpdev, msg->flags) & RPMSG_NS_DESTROY ?
+> > 59:          "destroy" : "creat", msg->name, chinfo.dst);
+> >
+> > We can also observe that `nsm` is not zero-initialized and as such we
+> > should maintain the NUL-padding behavior that strncpy() provides:
+> >
+> > virtio_rpmsg_bus.c:
+> > 330: struct rpmsg_ns_msg nsm;
+> >
+> > Considering the above, a suitable replacement is `strscpy_pad` due to
+> > the fact that it guarantees both NUL-termination and NUL-padding on the
+> > destination buffer.
+> >
+> > Now, for the third and final destination buffer rpdev->id.name we can
+> > just go for strscpy() (not _pad()) as rpdev points to &vch->rpdev:
+> > |       rpdev =3D &vch->rpdev;
+> >
+> > ... and vch is zero-allocated:
+> > |       vch =3D kzalloc(sizeof(*vch), GFP_KERNEL);
+> >
+> > ... this renders any additional NUL-byte assignments (like the ones
+> > strncpy() or strscpy_pad() does) redundant.
+> >
+> > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#st=
+rncpy-on-nul-terminated-strings [1]
+> > Link: https://github.com/KSPP/linux/issues/90
+> > Cc: linux-hardening@vger.kernel.org
+> > Signed-off-by: Justin Stitt <justinstitt@google.com>
+> > ---
+> > Changes in v2:
+> > - update commit msg (thanks Mathieu)
+> > - Link to v1: https://lore.kernel.org/r/20231021-strncpy-drivers-rpmsg-=
+virtio_rpmsg_bus-c-v1-1-8abb919cbe24@google.com
+> > ---
+> > Note: build-tested only.
+> >
+> > Found with: $ rg "strncpy\("
+> > ---
+> >  drivers/rpmsg/virtio_rpmsg_bus.c | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> >
+>
+> I have applied all 3 of your patches.
 
-This pattern of strncpy(dest, src, strlen(src)) is extremely bug-prone.
-This pattern basically never results in NUL-terminated destination
-strings unless `dest` was zero-initialized. The current implementation
-may be accidentally correct as tw_dev is zero-allocated via:
+Cheers!
 
-	host = scsi_host_alloc(&driver_template, sizeof(TW_Device_Extension));
-        ...
-	tw_dev = shost_priv(host);
-
-... wherein scsi_host_alloc zero-allocates host:
-
-        shost = kzalloc(sizeof(struct Scsi_Host) + privsize, GFP_KERNEL);
-
-Also, further suggesting this change is worthwhile is another strscpy()
-usage in 32-9xxx.c:
-
-	strscpy(tw_dev->tw_compat_info.driver_version, TW_DRIVER_VERSION,
-		sizeof(tw_dev->tw_compat_info.driver_version));
-
-Considering the above, a suitable replacement is `strscpy` [2] due to
-the fact that it guarantees NUL-termination on the destination buffer
-without unnecessarily NUL-padding.
-
-Let's not be accidentally correct, let's be definitely correct.
-
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Note: build-tested only.
-
-Found with: $ rg "strncpy\("
----
- drivers/scsi/3w-sas.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/scsi/3w-sas.c b/drivers/scsi/3w-sas.c
-index 55989eaa2d9f..9bdb75dfdcd7 100644
---- a/drivers/scsi/3w-sas.c
-+++ b/drivers/scsi/3w-sas.c
-@@ -1326,7 +1326,8 @@ static int twl_reset_sequence(TW_Device_Extension *tw_dev, int soft_reset)
- 		}
- 
- 		/* Load rest of compatibility struct */
--		strncpy(tw_dev->tw_compat_info.driver_version, TW_DRIVER_VERSION, strlen(TW_DRIVER_VERSION));
-+		strscpy(tw_dev->tw_compat_info.driver_version, TW_DRIVER_VERSION,
-+			sizeof(tw_dev->tw_compat_info.driver_version));
- 		tw_dev->tw_compat_info.driver_srl_high = TW_CURRENT_DRIVER_SRL;
- 		tw_dev->tw_compat_info.driver_branch_high = TW_CURRENT_DRIVER_BRANCH;
- 		tw_dev->tw_compat_info.driver_build_high = TW_CURRENT_DRIVER_BUILD;
-
----
-base-commit: 9c5d00cb7b6bbc5a7965d9ab7d223b5402d1f02c
-change-id: 20231023-strncpy-drivers-scsi-3w-sas-c-c7cc037d4bc9
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
-
+>
+> Thanks,
+> Mathieu
+>
+> > diff --git a/drivers/rpmsg/virtio_rpmsg_bus.c b/drivers/rpmsg/virtio_rp=
+msg_bus.c
+> > index 905ac7910c98..dc87965f8164 100644
+> > --- a/drivers/rpmsg/virtio_rpmsg_bus.c
+> > +++ b/drivers/rpmsg/virtio_rpmsg_bus.c
+> > @@ -329,7 +329,7 @@ static int virtio_rpmsg_announce_create(struct rpms=
+g_device *rpdev)
+> >           virtio_has_feature(vrp->vdev, VIRTIO_RPMSG_F_NS)) {
+> >               struct rpmsg_ns_msg nsm;
+> >
+> > -             strncpy(nsm.name, rpdev->id.name, RPMSG_NAME_SIZE);
+> > +             strscpy_pad(nsm.name, rpdev->id.name, sizeof(nsm.name));
+> >               nsm.addr =3D cpu_to_rpmsg32(rpdev, rpdev->ept->addr);
+> >               nsm.flags =3D cpu_to_rpmsg32(rpdev, RPMSG_NS_CREATE);
+> >
+> > @@ -353,7 +353,7 @@ static int virtio_rpmsg_announce_destroy(struct rpm=
+sg_device *rpdev)
+> >           virtio_has_feature(vrp->vdev, VIRTIO_RPMSG_F_NS)) {
+> >               struct rpmsg_ns_msg nsm;
+> >
+> > -             strncpy(nsm.name, rpdev->id.name, RPMSG_NAME_SIZE);
+> > +             strscpy_pad(nsm.name, rpdev->id.name, sizeof(nsm.name));
+> >               nsm.addr =3D cpu_to_rpmsg32(rpdev, rpdev->ept->addr);
+> >               nsm.flags =3D cpu_to_rpmsg32(rpdev, RPMSG_NS_DESTROY);
+> >
+> > @@ -424,7 +424,7 @@ static struct rpmsg_device *__rpmsg_create_channel(=
+struct virtproc_info *vrp,
+> >        */
+> >       rpdev->announce =3D rpdev->src !=3D RPMSG_ADDR_ANY;
+> >
+> > -     strncpy(rpdev->id.name, chinfo->name, RPMSG_NAME_SIZE);
+> > +     strscpy(rpdev->id.name, chinfo->name, sizeof(rpdev->id.name));
+> >
+> >       rpdev->dev.parent =3D &vrp->vdev->dev;
+> >       rpdev->dev.release =3D virtio_rpmsg_release_device;
+> >
+> > ---
+> > base-commit: 9c5d00cb7b6bbc5a7965d9ab7d223b5402d1f02c
+> > change-id: 20231020-strncpy-drivers-rpmsg-virtio_rpmsg_bus-c-dba15db4e8=
+90
+> >
+> > Best regards,
+> > --
+> > Justin Stitt <justinstitt@google.com>
+> >
