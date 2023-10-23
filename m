@@ -1,65 +1,92 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E92D101F7;
-	Mon, 23 Oct 2023 07:46:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9ABC6FCF;
+	Mon, 23 Oct 2023 08:51:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pn6pqNJN"
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8486A6;
-	Mon, 23 Oct 2023 00:46:23 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id a640c23a62f3a-99bdeae1d0aso436998566b.1;
-        Mon, 23 Oct 2023 00:46:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698047182; x=1698651982; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3ihrHhV1qIWSGDUJPcmUG3Dq/nYNoW90MCo7DQQacUk=;
-        b=Pn6pqNJND3u+os1+PBKwkyN9b8EAcvDeRhnqslE3ASRfqObpuVlUBBQcvvKQ6h7/oY
-         i38y8xV2pC2CGzdvMLK/r+AX3/JcvRFmUOetEgV4bDukyesOKRhzmg4HpgM2vdGyWerV
-         bSgtirENU/w9zS6gJKqw8LZ/i0rvdvERz6UT6aMrzWgZAUxjyHab8GxDmts38yhcKGht
-         NG681Nq7qujRCFZ8wzPQmsHmdDjHNylyrDdgq+L/UGxNL4LRILcGu0w1oH0wlub1b7Q7
-         INF90QuYwROB1tKNQCujfFLalnwW01zG/3LEAKHTv04VeCVUthunA9IL+LF5v7q776cn
-         5naQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698047182; x=1698651982;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3ihrHhV1qIWSGDUJPcmUG3Dq/nYNoW90MCo7DQQacUk=;
-        b=lHWcuDAbolglD2qQrBMaIIREeenlxwhST3mwNOB1I4Ge0FtkBnUAEQghK3om07oA74
-         ZML3lMWiZ1Fv2xlsStkDQ2YWzqEz1Wt34vMxrMZuYZenniPF/7uDAzn3mZDNckVshq/2
-         pReVlVbZ5ruU9Wi3TPumOERdBqhdQWPbZyGrRcxYXnB3rL8mgFmA+x6I7G34eL46DDaS
-         VkBQiqkVUnKJ1X3OUS8Bi/9Xd9eqHxh9GxSyfYx44FmT5usKwiZN2uOIp+MV2Q74Rmxy
-         lTLFxo5lCbWzg9b4pDPDKVfWtq8Cx+HiLqsbLuX6BMCNjZU0/YIYcCVShjAGV5jPfF/7
-         cpRg==
-X-Gm-Message-State: AOJu0Yznzjk+WkV8JzeqqZ4YvmWe000FTiAeWWociPLpOHSdIycR4u6U
-	u+A80EjGdofbrzU7B2nwm2ACqK1QttnxtOaLpu8=
-X-Google-Smtp-Source: AGHT+IEmA9OHcn5Osk80Y4+FXM/A/b/CLQ/mIiAggZOS1PbCqvFL3RZBYcIk8Po6Iih5KX6fVHr1gC8OzZ2dm5V0toQ=
-X-Received: by 2002:a17:906:4fc7:b0:9be:30c2:b8ff with SMTP id
- i7-20020a1709064fc700b009be30c2b8ffmr6512097ejw.61.1698047182034; Mon, 23 Oct
- 2023 00:46:22 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="fUPoqHJD"
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2F43D79;
+	Mon, 23 Oct 2023 01:51:00 -0700 (PDT)
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id 487F31C0050; Mon, 23 Oct 2023 10:50:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1698051059;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3pSUpZDQ5vUD6HgxTJJjjap2/VmSGErzcPPCNPi0Vq4=;
+	b=fUPoqHJDI6WoN6o7F9DijeIoNAvXFi4TqcOFI2vlawYycz4nvg5INCK2+QwCYR/aigmT14
+	JEyyKMs5dsN/dyK1lxuxZRIGsn3bmttYscoIVzXa4CXElHafn+m8KbWPXEbTUdEgG/vHZK
+	eL5aLjQes1FKCgysCVN+rYvACHT9kl4=
+Date: Mon, 23 Oct 2023 10:50:58 +0200
+From: Pavel Machek <pavel@ucw.cz>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Luka Panio <lukapanio@gmail.com>, Andy Gross <agross@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
+	"Guilherme G . Piccoli" <gpiccoli@igalia.com>,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v6 2/2] arm64: dts: qcom: sm8250-xiaomi-pipa: Add initial
+ device tree
+Message-ID: <ZTYz8uvCOzMy+TE0@duo.ucw.cz>
+References: <20231022173811.8229-1-lukapanio@gmail.com>
+ <20231022173811.8229-2-lukapanio@gmail.com>
+ <3307fcb9-1697-4a9e-b4f6-c00c2b10ba89@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231023074319.14456-1-lukapanio@gmail.com>
-In-Reply-To: <20231023074319.14456-1-lukapanio@gmail.com>
-From: Luka Panio <lukapanio@gmail.com>
-Date: Mon, 23 Oct 2023 09:46:10 +0200
-Message-ID: <CACi=Ov7Ev3UNfL8Mqd0DXcURBEfM1r_RhEmKMw5gRGTKHmgdvA@mail.gmail.com>
-Subject: Re: [PATCH v7] arm64: dts: qcom: sm8250-xiaomi-pipa: Add initial
- device tree
-To: Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>, 
-	"Guilherme G . Piccoli" <gpiccoli@igalia.com>, linux-arm-msm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="OJcLppF572H4TwG4"
+Content-Disposition: inline
+In-Reply-To: <3307fcb9-1697-4a9e-b4f6-c00c2b10ba89@linaro.org>
 
-The v7 patch was sent outside of the patchset and to be ignored, sorry for that.
-Thanks,
-Luka Panio
+
+--OJcLppF572H4TwG4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+> > Initial support for Xiaomi Pad 6 tablet, that have sm8250 soc.
+> >=20
+> > Signed-off-by: Luka Panio <lukapanio@gmail.com>
+
+> > +++ b/arch/arm64/boot/dts/qcom/sm8250-xiaomi-pipa.dts
+> > @@ -0,0 +1,625 @@
+> > +// SPDX-License-Identifier: BSD-3-Clause
+>=20
+> If there are no other copyrights here, why did you use BSD-3 license?
+
+We like BSD license for dts files. (But dual GPL or BSD is more
+common. Not that it matters).
+
+> > +/*
+> > + * Copyright (c) 2023 luka177 <lukapanio@gmail.com>
+> > + */
+
+This should have real name.
+								Pavel
+--=20
+People of Russia, stop Putin before his war on Ukraine escalates.
+
+--OJcLppF572H4TwG4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZTYz8gAKCRAw5/Bqldv6
+8pPMAJ9UWSxbLwNmMlcw4piFDwYzY7c4ZACgvrp1u4Dx0f2Tacu0ekmzryB8Eqo=
+=/+v8
+-----END PGP SIGNATURE-----
+
+--OJcLppF572H4TwG4--
