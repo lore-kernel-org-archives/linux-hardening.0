@@ -1,61 +1,61 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5348023741
-	for <linux-hardening@vger.kernel.org>; Mon, 23 Oct 2023 20:20:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E6FD63C0
+	for <linux-hardening@vger.kernel.org>; Mon, 23 Oct 2023 20:26:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IsgfIm2m"
-Received: from mail-oa1-x4a.google.com (mail-oa1-x4a.google.com [IPv6:2001:4860:4864:20::4a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41AFC10E
-	for <linux-hardening@vger.kernel.org>; Mon, 23 Oct 2023 13:20:17 -0700 (PDT)
-Received: by mail-oa1-x4a.google.com with SMTP id 586e51a60fabf-1e9b6561650so5140985fac.3
-        for <linux-hardening@vger.kernel.org>; Mon, 23 Oct 2023 13:20:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jwTYd0Ap"
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C21710E
+	for <linux-hardening@vger.kernel.org>; Mon, 23 Oct 2023 13:26:14 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d9a5836ab12so4389206276.2
+        for <linux-hardening@vger.kernel.org>; Mon, 23 Oct 2023 13:26:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698092415; x=1698697215; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1698092773; x=1698697573; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=HC2YENnbBf3idqNUjad+LLWvlI/rBfsrY/3c0Jg2xIA=;
-        b=IsgfIm2mc9Q+Tt9DydoqQ0cdfhOX9jeku/ZRH69WHJBzKa4KY6kyuhwihDbTXYbAJ/
-         UkJkP5L4obeZQJVEAG9BVtK8JUs1uh6APJP3bjEwLktkhCkq45j+AyXzXYbVsN8+muYP
-         J+EaVd+zYsRE+jWmYDQjJ5PA53eCGvQMUBUvgXjilkkr++2/CNHjdoltZY6YQU5kstn5
-         ks92vNdzmToSdUhtDpGzNfyxlkfq1UPaqVUYJtuxM1Qlk9+kYgcnBdGLGgu59EDnsA2r
-         MMxAIy3C0r+MPiexD02omEMVi0O9EzVAm2OxCjEj6w91Erm5cOW1DURALWdSHdye7tSb
-         Qwww==
+        bh=zChXjQ3rQBurGe38Uhj4e52WCZU0FHmenFv/zcC5OdI=;
+        b=jwTYd0Ape6rySoWfd1fHI0Em5aEYQw9tCTUF4AVFVuR8O/d6J2aVcGJGeAfwyg45Az
+         D+alhVFzNBRtmRb6eOCKi0Ux+9z5gfaGXFaWIBAIcwykjElb5EQ2zbSOrpjAttadl7eM
+         otbpme40/zZo8df22ZAa1naKMAbHSnDM3XIFbksvteHwT1T+n3kXo+eu3xBojUhg33/K
+         +cG5FiGeq1TbNMwiQKjUVD5eBgyxoQxl0tQ1j2uG628Ou+WbKRGWQR1rjAVaIFcL5pfZ
+         GktMnCK/36xDteISi2hp+UCwQO52FV7z3bclk73mEyrRUk2CxrLQlQQ7qR94a8jJXch4
+         EOVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698092415; x=1698697215;
+        d=1e100.net; s=20230601; t=1698092773; x=1698697573;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=HC2YENnbBf3idqNUjad+LLWvlI/rBfsrY/3c0Jg2xIA=;
-        b=v/RzcmNwt6kyPBQRBNos2ttSg1+pfLa/TWfsh0zrlrKtlG9YzFoVFTyzk2+os8ssR1
-         ggbsu8SrHZIiDG8cOavRghrxqMzABZbXm1/0Wae8kF4DVEteIAhG8hfqCva1B780lOLB
-         lAip119YwN9VEOwj/+xkW59AKhJ2CVUJYfnPldfU8mQsntd7eA8njmL80f0bkVLR8U3i
-         k5oyli7njZtqiy4AqIOu49pooPpHimppg+nST/OtIFdwbBiDSV2F6LXFWm1RoUCtKzFx
-         srzbpCfzuZh/bvWHWyx1nD+/qDRDE8gXTrlh65qP99o9tR4LBcWZ1DDYSJEfMPetJ42W
-         t+5w==
-X-Gm-Message-State: AOJu0YzR3MVlLGQfu4q/vHz+5fh9lAtpRyWSKw282cAMBLew8QjvCqiq
-	137dLSdPS+/44GCdRP6Dgp0lSVxh/j1tKXhclg==
-X-Google-Smtp-Source: AGHT+IH5IFKp3etRfm/SAzbR9yOQsUDxs6BH985hBKm3ShLIcpsgqParlvRl7HqmFgFcz+ULZw/IB2wls49btAYaVA==
+        bh=zChXjQ3rQBurGe38Uhj4e52WCZU0FHmenFv/zcC5OdI=;
+        b=GiyjS9glJdOHzRGIrmII+cMs7L7zfJa556iYCaWb0b6JREXPvXX3njDOVSeMtJmDEz
+         HRfvWPxK2HjSmVwqyBEJgteHicCoxlcXMvgd6ciiVe+Rq46lu0BDCBCNEA2pcO76xOId
+         LVrN8bZ9BOEWzkLTntoCLWT9xomaanxJBDXxztYm3zwh5dFKxvg1DIdbzQj9jq3xvte9
+         3peJ7X+h94cA+4iovhC5bhzjMTiA0QZ0EfosS4kBeSFTvsYWHEN/ulYjb/aqDBhz13E4
+         OQc/F5VcgJUS8hkFnGZdQsOI3DMpjasKoScHzwyIp9X1sH+KudcVT91KvM/VHumqYmzr
+         e31Q==
+X-Gm-Message-State: AOJu0Ywo3F6DnBcCX4ImAblxQ0ktr07UV5cxsy9Zv0RuozZ8BCZLPRHx
+	pKRhAjfgA/c8ZTMKrelZH54vWSmn84ZvM0GK0w==
+X-Google-Smtp-Source: AGHT+IEqsrafJ1DZvc3t+zuOQLWw0wftv/ONfKaFgntqNqbR85CvuDoX26tXKyK297RDA0g61HMRGeJRcQbacAry3g==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6870:171d:b0:1e9:9202:20c2 with
- SMTP id h29-20020a056870171d00b001e9920220c2mr4686466oae.0.1698092415210;
- Mon, 23 Oct 2023 13:20:15 -0700 (PDT)
-Date: Mon, 23 Oct 2023 20:20:14 +0000
+ (user=justinstitt job=sendgmr) by 2002:a05:6902:1083:b0:d9a:c3b8:4274 with
+ SMTP id v3-20020a056902108300b00d9ac3b84274mr268500ybu.7.1698092773711; Mon,
+ 23 Oct 2023 13:26:13 -0700 (PDT)
+Date: Mon, 23 Oct 2023 20:26:13 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAH3VNmUC/x2MsQ6DMAwFfwV5riWSMPErqEP64oKXENkVaoX4d
- 6ION9xwd5KLqTjNw0kmh7rutUt4DIQt11VYS3eKY0yhw/6xivbjYnqIOTtcGRuDY3oFlIwpAdT 7ZvLW7/+9PK/rBviHA6drAAAA
+X-B4-Tracking: v=1; b=H4sIAOTWNmUC/x2NQQqDQAxFryJZN6ApVPQqpRQbo2YzI8kginj3B
+ hcP/tu8f4KLqTj01Qkmm7rmFNI8KuBlSLOgjuFANT2bAL1Y4vXA0XQTc3R2xSB7yXaPryYtyNh x9/rR1LZCBNFbTSbd76/357r+EuzluXsAAAA=
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1698092414; l=2576;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1698092772; l=1745;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=u26UkFA2pIT/4F5ARGnp0D+oEDN12dlRus5r6WZtCT8=; b=Ct6Uk8Ut9tGzpS3O6U9vzqDZRCJthZZmKeW5UgOFzxoK3M24GkZxicWT3gFJsfPzm9KZNClPv
- mwwAPCHwo5nCv/HfOtU+WtuThMSa6XqR6GQRXu4XZZcWh/6mHKr/yNm
+ bh=9bXDO1Umav441y/UcVZ3FP7PbPbnlidPGSE+wWdxjYc=; b=0hpqJJX/0z59X4fF/5gjjPvrMId7qhNRePYyCg2rX7J3aRjqSyWQF9CJg1UwrVXM1VQK7V1pl
+ H5Qhc4QPiCtDCj1FITDJRFf+qZcap66an0jIs/i/0vGGS0ptpwTvmt1
 X-Mailer: b4 0.12.3
-Message-ID: <20231023-strncpy-drivers-scsi-ch-c-v1-1-dc67ba8075a3@google.com>
-Subject: [PATCH] scsi: ch: replace deprecated strncpy with strscpy
+Message-ID: <20231023-strncpy-drivers-scsi-csiostor-csio_init-c-v1-1-5ea445b56864@google.com>
+Subject: [PATCH] scsi: csiostor: replace deprecated strncpy with strscpy
 From: Justin Stitt <justinstitt@google.com>
 To: "James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>
 Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, 
@@ -66,22 +66,19 @@ strncpy() is deprecated for use on NUL-terminated destination strings
 [1] and as such we should prefer more robust and less ambiguous string
 interfaces.
 
-These labels get copied out to the user so lets make sure they are
-NUL-terminated and NUL-padded.
+`hw` is kzalloc'd just before this string assignment:
+|       hw = kzalloc(sizeof(struct csio_hw), GFP_KERNEL);
 
-vparams is already memset to 0 so we don't need to do any NUL-padding
-(like what strncpy() is doing).
+... which means any NUL-padding is redundant.
 
-Considering the above, a suitable replacement is `strscpy` [2] due to
-the fact that it guarantees NUL-termination on the destination buffer
-without unnecessarily NUL-padding.
+Since  CSIO_DRV_VERSION is a small string literal (smaller than
+sizeof(dest)):
 
-Let's also opt to use the more idiomatic strscpy() usage of:
-(dest, src, sizeof(dest)) as this more closely ties the destination
-buffer to the length.
+... there is functionally no change in this swap from strncpy() to
+strscpy(). Nonetheless, let's make the change for robustness' sake -- as
+it will ensure that drv_version is _always_ NUL-terminated.
 
 Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
 Link: https://github.com/KSPP/linux/issues/90
 Cc: linux-hardening@vger.kernel.org
 Signed-off-by: Justin Stitt <justinstitt@google.com>
@@ -90,45 +87,27 @@ Note: build-tested only.
 
 Found with: $ rg "strncpy\("
 ---
- drivers/scsi/ch.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/scsi/csiostor/csio_init.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/ch.c b/drivers/scsi/ch.c
-index cb0a399be1cc..2b864061e073 100644
---- a/drivers/scsi/ch.c
-+++ b/drivers/scsi/ch.c
-@@ -659,19 +659,23 @@ static long ch_ioctl(struct file *file,
- 		memset(&vparams,0,sizeof(vparams));
- 		if (ch->counts[CHET_V1]) {
- 			vparams.cvp_n1  = ch->counts[CHET_V1];
--			strncpy(vparams.cvp_label1,vendor_labels[0],16);
-+			strscpy(vparams.cvp_label1, vendor_labels[0],
-+				sizeof(vparams.cvp_label1));
- 		}
- 		if (ch->counts[CHET_V2]) {
- 			vparams.cvp_n2  = ch->counts[CHET_V2];
--			strncpy(vparams.cvp_label2,vendor_labels[1],16);
-+			strscpy(vparams.cvp_label2, vendor_labels[1],
-+				sizeof(vparams.cvp_label2));
- 		}
- 		if (ch->counts[CHET_V3]) {
- 			vparams.cvp_n3  = ch->counts[CHET_V3];
--			strncpy(vparams.cvp_label3,vendor_labels[2],16);
-+			strscpy(vparams.cvp_label3, vendor_labels[2],
-+				sizeof(vparams.cvp_label3));
- 		}
- 		if (ch->counts[CHET_V4]) {
- 			vparams.cvp_n4  = ch->counts[CHET_V4];
--			strncpy(vparams.cvp_label4,vendor_labels[3],16);
-+			strscpy(vparams.cvp_label4, vendor_labels[3],
-+				sizeof(vparams.cvp_label4));
- 		}
- 		if (copy_to_user(argp, &vparams, sizeof(vparams)))
- 			return -EFAULT;
+diff --git a/drivers/scsi/csiostor/csio_init.c b/drivers/scsi/csiostor/csio_init.c
+index 0c32faefad7c..d649b7a2a879 100644
+--- a/drivers/scsi/csiostor/csio_init.c
++++ b/drivers/scsi/csiostor/csio_init.c
+@@ -521,7 +521,8 @@ static struct csio_hw *csio_hw_alloc(struct pci_dev *pdev)
+ 		goto err;
+ 
+ 	hw->pdev = pdev;
+-	strncpy(hw->drv_version, CSIO_DRV_VERSION, 32);
++	strscpy(hw->drv_version, CSIO_DRV_VERSION,
++		sizeof(hw->drv_version));
+ 
+ 	/* memory pool/DMA pool allocation */
+ 	if (csio_resource_alloc(hw))
 
 ---
 base-commit: 9c5d00cb7b6bbc5a7965d9ab7d223b5402d1f02c
-change-id: 20231023-strncpy-drivers-scsi-ch-c-23b1cdac43cc
+change-id: 20231023-strncpy-drivers-scsi-csiostor-csio_init-c-9c96b2f77e22
 
 Best regards,
 --
