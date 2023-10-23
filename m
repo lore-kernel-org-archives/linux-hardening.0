@@ -1,109 +1,118 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47F0413AED;
-	Sun, 22 Oct 2023 21:47:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A51AE5221;
+	Mon, 23 Oct 2023 05:06:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PpsoXpZi"
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B825E5;
-	Sun, 22 Oct 2023 14:47:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698011237; x=1729547237;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Dx6B+Uq17MjpqqV7Z+3SvjBqDXDUCQ6dU1sRUyxAXsY=;
-  b=PpsoXpZi4E7W4NxtoZAF+MY763xcXHfoQRcjVJN8EemRe5DSrAt8mNbm
-   RLp0660Xd8JbPHUqOeGfs/Gkx2p9+RvHrtLcxeOTpB9SDUQgYyg+32Lih
-   1vbghHgs06/nEousQH12YpmzHPMkH/0WJd0pGsyhKrGRquid+rj3BC31r
-   buF3DCjIz873nrtWuNx6PTs7PXrl5K5CfSyRatKBe+MYgbLvb5iI6s12E
-   Y7PRuSa5L7X4NJQwo76uEo5EXfGS4T8DR8lCz8DqXgc/uI+aon3pglW6J
-   hUUta8amCSSq5qU1Xiwe+0jVOCvu672nBMHuyepaPwtRB8i0FeipZ+L1Q
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10871"; a="390621599"
-X-IronPort-AV: E=Sophos;i="6.03,244,1694761200"; 
-   d="scan'208";a="390621599"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Oct 2023 14:47:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10871"; a="901624719"
-X-IronPort-AV: E=Sophos;i="6.03,244,1694761200"; 
-   d="scan'208";a="901624719"
-Received: from lkp-server01.sh.intel.com (HELO 8917679a5d3e) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 22 Oct 2023 14:44:55 -0700
-Received: from kbuild by 8917679a5d3e with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1qugHs-0006Hg-2m;
-	Sun, 22 Oct 2023 21:47:08 +0000
-Date: Mon, 23 Oct 2023 05:46:42 +0800
-From: kernel test robot <lkp@intel.com>
-To: Duje =?utf-8?Q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Tony Lindgren <tony@atomide.com>,
-	Haojian Zhuang <haojian.zhuang@linaro.org>,
-	Lubomir Rintel <lkundrak@v3.sk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Kees Cook <keescook@chromium.org>,
-	Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-omap@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Duje =?utf-8?Q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Subject: Re: [PATCH v6 7/9] arm64: Kconfig.platforms: Add config for Marvell
- PXA1908 platform
-Message-ID: <202310230518.zs9Qpg3j-lkp@intel.com>
-References: <20231010-pxa1908-lkml-v6-7-b2fe09240cf8@skole.hr>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OCiI4eEi"
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD8F9AF;
+	Sun, 22 Oct 2023 22:06:49 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-5079f3f3d7aso4466216e87.1;
+        Sun, 22 Oct 2023 22:06:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1698037608; x=1698642408; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=K2snDo55DI2agPH+/29PJskhQ+34fC9SgaEoBFYImQk=;
+        b=OCiI4eEii5ugYc5Aerq2IXhBHZqLLXKiBbdeMgo7PO4lCbP86DfVO4jO5FHGmiZAad
+         CTqYlPB1d8BURfaAPFIUYaKB0AfG7g1IbkcfPqVJ5Zs5Ll3+2xmUZxhZoMDDN1xEGtBc
+         MLL5uc+zlinH69a7i+l1FnWRvibjTHUz7tH4CvE6JARiytfEhzDMFztWOf5BcdK73mrL
+         E4KxlHqkeVnkicNX805s4GfyRgY2w01X9RqG9nBst8xXvkXlJESkjbDwkthhYJIGrPc6
+         dQH0Eq1P39fcjgRP36HrbtdZgv4OpEMnKotJQoqpFr524Fg8mSzTefssWNlLKak7/f9x
+         CAtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698037608; x=1698642408;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=K2snDo55DI2agPH+/29PJskhQ+34fC9SgaEoBFYImQk=;
+        b=hXSBMmciVX8ya31d7N/FjPaR3/X52JAaAqi1f0QNM/gnLKg3nWNUHRJGvQYAiHsXqu
+         VKLFZGO+jv0PikuhXgW2vdGbM3jIh4m/PW9LCy20vJGoQs49HVjiCCSgLsCKK23Jh7JR
+         Ed+r6pgewksVxQCXLvfRWGS2TvRuLqkUFFXtAGLk80OdyYaZ6nT1cCfrr/dvfSAFdA8D
+         tfQvUcwhYKYdFSw0h4W+G23UUQQbUO1291s1s4J/co/2RqVp2F2yzRYBMUxIVPZ2XTyl
+         /rp9wCN01DLTQYBXCCo6L5pD1X/LUcDtUdqMOkXy0R2//66RfaiiPO3XPL/IOvD0Waab
+         tjIQ==
+X-Gm-Message-State: AOJu0Yz8UUn8nbqKyymTLKOe069FQzPF08q9BEKdR98YoAKJam2rO1Z2
+	WKLJNKn6T4bHOxnI98yv86Q9Fva4lToHOMAcydYIAStEMaVPsgHQ
+X-Google-Smtp-Source: AGHT+IFmwZfj6vmqFsTkTZUYhAugysNnUEUShA40/lJ2qZEuj76pkMz2KJOBu+q/06eUkm17zdHFRi26u6GvM4sQ8uU=
+X-Received: by 2002:a05:6512:475:b0:4f3:9136:9cd0 with SMTP id
+ x21-20020a056512047500b004f391369cd0mr5626924lfd.44.1698037607549; Sun, 22
+ Oct 2023 22:06:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231010-pxa1908-lkml-v6-7-b2fe09240cf8@skole.hr>
+References: <20231021-sakuramist-mi11u-v2-0-fa82c91ecaf0@gmail.com>
+ <20231021-sakuramist-mi11u-v2-1-fa82c91ecaf0@gmail.com> <CAA8EJprtd8htkDWAvhamgEo3DWMMDYe-P6cnr6nwLnms=N0k9A@mail.gmail.com>
+In-Reply-To: <CAA8EJprtd8htkDWAvhamgEo3DWMMDYe-P6cnr6nwLnms=N0k9A@mail.gmail.com>
+From: Sophon Wu <wuxilin123@gmail.com>
+Date: Mon, 23 Oct 2023 13:06:37 +0800
+Message-ID: <CAEPPPKt6fEyniHgietRcp0MYUErYfnLU-SjtsOofe8VaPiSwLg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] soc: qcom: pmic_glink: enable UCSI for SM8350
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>, 
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, linux-arm-msm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Duje,
+Dmitry Baryshkov <dmitry.baryshkov@linaro.org> =E4=BA=8E2023=E5=B9=B410=E6=
+=9C=8822=E6=97=A5=E5=91=A8=E6=97=A5 18:51=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Sat, 21 Oct 2023 at 13:20, Xilin Wu via B4 Relay
+> <devnull+wuxilin123.gmail.com@kernel.org> wrote:
+> >
+> > From: Xilin Wu <wuxilin123@gmail.com>
+> >
+> > UCSI is supported on SM8350. Allow it to enable USB role switch and
+> > altmode notifications on SM8350.
+>
+> We have had troubles with UCSI on sm8350. I have a workaround for this
+> (and earlier) platforms. Once it is ready to be posted, I'll include
+> your patch in the series, if you don't mind.
 
-kernel test robot noticed the following build errors:
+I don't mind of course. Do I possibly need to resend the series without the
+pmic_glink patch?
 
-[auto build test ERROR on 94f6f0550c625fab1f373bb86a6669b45e9748b3]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Duje-Mihanovi/clk-mmp-Switch-to-use-struct-u32_fract-instead-of-custom-one/20231011-012919
-base:   94f6f0550c625fab1f373bb86a6669b45e9748b3
-patch link:    https://lore.kernel.org/r/20231010-pxa1908-lkml-v6-7-b2fe09240cf8%40skole.hr
-patch subject: [PATCH v6 7/9] arm64: Kconfig.platforms: Add config for Marvell PXA1908 platform
-config: arm64-allyesconfig (https://download.01.org/0day-ci/archive/20231023/202310230518.zs9Qpg3j-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231023/202310230518.zs9Qpg3j-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202310230518.zs9Qpg3j-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   /tmp/cc7DnLj6.s: Assembler messages:
->> /tmp/cc7DnLj6.s:2851: Error: unknown mnemonic `ldmia' -- `ldmia x23,{r0,r1,r2,r3}'
->> /tmp/cc7DnLj6.s:2852: Error: unknown mnemonic `stmia' -- `stmia x19!,{r0,r1,r2,r3}'
->> /tmp/cc7DnLj6.s:3125: Error: unknown mnemonic `ldmia' -- `ldmia x19!,{r0,r1,r2,r3}'
->> /tmp/cc7DnLj6.s:3126: Error: unknown mnemonic `stmia' -- `stmia x23,{r0,r1,r2,r3}'
-
-Kconfig warnings: (for reference only)
-   WARNING: unmet direct dependencies detected for SND_ARM
-   Depends on [n]: SOUND [=y] && SND [=y] && ARM
-   Selected by [y]:
-   - SND_MMP_SOC_SSPA [=y] && SOUND [=y] && SND [=y] && SND_SOC [=y] && ARCH_MMP [=y]
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>
+> >
+> > Signed-off-by: Xilin Wu <wuxilin123@gmail.com>
+> > ---
+> >  drivers/soc/qcom/pmic_glink.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/drivers/soc/qcom/pmic_glink.c b/drivers/soc/qcom/pmic_glin=
+k.c
+> > index 914057331afd..1196e79e6fb3 100644
+> > --- a/drivers/soc/qcom/pmic_glink.c
+> > +++ b/drivers/soc/qcom/pmic_glink.c
+> > @@ -341,6 +341,7 @@ static const unsigned long pmic_glink_sm8450_client=
+_mask =3D BIT(PMIC_GLINK_CLIENT
+> >                                                            BIT(PMIC_GLI=
+NK_CLIENT_UCSI);
+> >
+> >  static const struct of_device_id pmic_glink_of_match[] =3D {
+> > +       { .compatible =3D "qcom,sm8350-pmic-glink", .data =3D &pmic_gli=
+nk_sm8450_client_mask },
+> >         { .compatible =3D "qcom,sm8450-pmic-glink", .data =3D &pmic_gli=
+nk_sm8450_client_mask },
+> >         { .compatible =3D "qcom,sm8550-pmic-glink", .data =3D &pmic_gli=
+nk_sm8450_client_mask },
+> >         { .compatible =3D "qcom,pmic-glink" },
+> >
+> > --
+> > 2.42.0
+> >
+>
+>
+> --
+> With best wishes
+> Dmitry
