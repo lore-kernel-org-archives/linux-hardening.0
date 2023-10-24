@@ -1,92 +1,95 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7420237164;
-	Tue, 24 Oct 2023 15:27:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cRyadCB2"
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9CEB1703;
-	Tue, 24 Oct 2023 08:27:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698161267; x=1729697267;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=QFA2DdN62232OLAj/aEsT34+urZDgALMxgXqOKHV1s0=;
-  b=cRyadCB2+L3BzeZ1iEy/80ZlB/UiecLmryAiLohfbzlO1QmQuDKNQbww
-   jyfuhMkdCEVDd4IjqEMMlAhSHszPtVa5PtjbpfhO+7glxkIMug41CQ24Q
-   oAmSr9IpAR49Ngw7Fx99WoJqG0Q6tu/yhGgluhBHhU/bBt/A5J7bscWnL
-   4WS2RNFC8Eo7HVurbuJW7adgmpMhlEv4GReeZTnhWC89sOy0QLU8ftSS/
-   RzsrlQe3CKNotq17bpAQB6CM9xhIyqCz+jYVSH0E44+YSZ6Pc+Sl3A1If
-   Ag5HTL9YLxi4WlQlJJ+ZGT+2ghI4RVEpD1q2y/Nh03Nk/+qbOL6ZOx9V5
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10873"; a="451317466"
-X-IronPort-AV: E=Sophos;i="6.03,248,1694761200"; 
-   d="scan'208";a="451317466"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2023 08:24:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10873"; a="762127871"
-X-IronPort-AV: E=Sophos;i="6.03,248,1694761200"; 
-   d="scan'208";a="762127871"
-Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.74])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2023 08:24:22 -0700
-Date: Tue, 24 Oct 2023 08:24:21 -0700
-From: Tony Luck <tony.luck@intel.com>
-To: Jeshua Smith <jeshuas@nvidia.com>
-Cc: keescook@chromium.org, gpiccoli@igalia.com, rafael@kernel.org,
-	lenb@kernel.org, james.morse@arm.com, bp@alien8.de,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-tegra@vger.kernel.org,
-	treding@nvidia.com, jonathanh@nvidia.com
-Subject: Re: [PATCH V2] ACPI: APEI: Use ERST timeout for slow devices
-Message-ID: <ZTfhpRRA4bga0qSI@agluck-desk3>
-References: <20230712223448.145079-1-jeshuas@nvidia.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ED5238DED
+	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 16:07:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from mail.hallyn.com (mail.hallyn.com [178.63.66.53])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDB55A1
+	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 09:07:15 -0700 (PDT)
+Received: by mail.hallyn.com (Postfix, from userid 1001)
+	id 2A9B3B59; Tue, 24 Oct 2023 11:07:14 -0500 (CDT)
+Date: Tue, 24 Oct 2023 11:07:14 -0500
+From: "Serge E. Hallyn" <serge@hallyn.com>
+To: Paul Moore <paul@paul-moore.com>
+Cc: "Serge E. Hallyn" <serge@hallyn.com>,
+	Stefan Bavendiek <stefan.bavendiek@mailbox.org>,
+	kernel-hardening@lists.openwall.com,
+	linux-hardening@vger.kernel.org
+Subject: Re: Isolating abstract sockets
+Message-ID: <20231024160714.GA323539@mail.hallyn.com>
+References: <Y59qBh9rRDgsIHaj@mailbox.org>
+ <20231024134608.GC320399@mail.hallyn.com>
+ <CAHC9VhRCJfBRu8172=5jF_gFhv2znQXTnGs_c_ae1G3rk_Dc-g@mail.gmail.com>
+ <20231024141807.GB321218@mail.hallyn.com>
+ <CAHC9VhQaotVPGzWFFzRCgw9mDDc2tu6kmGHioMBghj-ybbYx1Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230712223448.145079-1-jeshuas@nvidia.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHC9VhQaotVPGzWFFzRCgw9mDDc2tu6kmGHioMBghj-ybbYx1Q@mail.gmail.com>
 
-On Wed, Jul 12, 2023 at 10:34:48PM +0000, Jeshua Smith wrote:
-> Slow devices such as flash may not meet the default 1ms timeout value,
-> so use the ERST max execution time value that they provide as the
-> timeout if it is larger.
+On Tue, Oct 24, 2023 at 10:29:17AM -0400, Paul Moore wrote:
+> On Tue, Oct 24, 2023 at 10:18 AM Serge E. Hallyn <serge@hallyn.com> wrote:
+> > On Tue, Oct 24, 2023 at 10:14:29AM -0400, Paul Moore wrote:
+> > > On Tue, Oct 24, 2023 at 9:46 AM Serge E. Hallyn <serge@hallyn.com> wrote:
+> > > > On Sun, Dec 18, 2022 at 08:29:10PM +0100, Stefan Bavendiek wrote:
+> > > > > When building userspace application sandboxes, one issue that does not seem trivial to solve is the isolation of abstract sockets.
+> > > >
+> > > > Veeery late reply.  Have you had any productive discussions about this in
+> > > > other threads or venues?
+> > > >
+> > > > > While most IPC mechanism can be isolated by mechanisms like mount namespaces, abstract sockets are part of the network namespace.
+> > > > > It is possible to isolate abstract sockets by using a new network namespace, however, unprivileged processes can only create a new empty network namespace, which removes network access as well and makes this useless for network clients.
+> > > > >
+> > > > > Same linux sandbox projects try to solve this by bridging the existing network interfaces into the new namespace or use something like slirp4netns to archive this, but this does not look like an ideal solution to this problem, especially since sandboxing should reduce the kernel attack surface without introducing more complexity.
+> > > > >
+> > > > > Aside from containers using namespaces, sandbox implementations based on seccomp and landlock would also run into the same problem, since landlock only provides file system isolation and seccomp cannot filter the path argument and therefore it can only be used to block new unix domain socket connections completely.
+> > > > >
+> > > > > Currently there does not seem to be any way to disable network namespaces in the kernel without also disabling unix domain sockets.
+> > > > >
+> > > > > The question is how to solve the issue of abstract socket isolation in a clean and efficient way, possibly even without namespaces.
+> > > > > What would be the ideal way to implement a mechanism to disable abstract sockets either globally or even better, in the context of a process.
+> > > > > And would such a patch have a realistic chance to make it into the kernel?
+> > > >
+> > > > Disabling them altogether would break lots of things depending on them,
+> > > > like X :)  (@/tmp/.X11-unix/X0).  The other path is to reconsider network
+> > > > namespaces.  There are several directions this could lead.  For one, as
+> > > > Dinesh Subhraveti often points out, the current "network" namespace is
+> > > > really a network device namespace.  If we instead namespace at the
+> > > > bind/connect/etc calls, we end up with much different abilities.
+> > >
+> > > The LSM layer supports access controls on abstract sockets, with at
+> > > least two (AppArmor, SELinux) providing abstract socket access
+> > > controls, other LSMs may provide controls as well.
+> >
+> > Good point.  And for Stefan that may suffice, so thanks for mentioning
+> > that.  But The LSM layer is mandatory access control for use by the
+> > admins.  That doesn't help an unprivileged user.
 > 
-> Signed-off-by: Jeshua Smith <jeshuas@nvidia.com>
+> Individual LSMs may implement mandatory access control models, but
+> that is not an inherent requirement imposed by the LSM layer.  While
+> the Landlock LSM does not (yet?) support access controls for abstract
+> sockets, it is a discretionary access control mechanism.
 
-> +/* ERST Exec max timings */
-> +#define ERST_EXEC_TIMING_MAX_MASK      0xFFFFFFFF00000000
-> +#define ERST_EXEC_TIMING_MAX_SHIFT     32
+In 2005, before namespaces were upstreamed, I posted the 'bsdjail' LSM,
+which briefly made it into the -mm kernel, but was eventually rejected as
+being an abuse of the LSM interface for OS level virtualization :)
 
-I've recently become a fan of <linux/bitfield.h> I think this would
-be easier on the eyes as:
+It's not 100% clear to me whether Stefan only wants isolation, or
+wants something closer to virtualization.
 
-#define ERST_EXEC_TIMING_MAX	GENMASK_ULL(63, 32)
+Stefan, would an LSM allowing you to isolate certain processes from
+some abstract unix socket paths (or by label, whatever0 suffice for you?
 
-> +static inline u64 erst_get_timeout(void)
-> +{
-> +	u64 timeout = FIRMWARE_TIMEOUT;
-> +
-> +	if (erst_erange.attr & ERST_RANGE_SLOW) {
-> +		timeout = ((erst_erange.timings & ERST_EXEC_TIMING_MAX_MASK) >>
-> +			ERST_EXEC_TIMING_MAX_SHIFT) * NSEC_PER_MSEC;
-
-then this becomes:
-
-		timeout = FIELD_GET(ERST_EXEC_TIMING_MAX, erst_erange.timings) *
-			  NSEC_PER_MSEC;
-
-> +		if (timeout < FIRMWARE_TIMEOUT)
-> +			timeout = FIRMWARE_TIMEOUT;
-
-But that's just a matter of style.  Otherwise the patch looks fine.
-
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-
--Tony
+> I'm not currently aware of a discretionary access control LSM that
+> supports abstract socket access control, but such a LSM should be
+> possible if someone wanted to implement one.
+> 
+> -- 
+> paul-moore.com
