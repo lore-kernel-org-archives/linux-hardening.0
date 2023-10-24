@@ -1,101 +1,187 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20B4E2420F
-	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 20:11:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D1A41173A
+	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 20:41:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="CW1rVgPN"
-Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:242:246e::2])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99CD8A2;
-	Tue, 24 Oct 2023 13:11:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ishhMPzX"
+Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47B3B10CB
+	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 13:41:11 -0700 (PDT)
+Received: from eig-obgw-6002a.ext.cloudfilter.net ([10.0.30.222])
+	by cmsmtp with ESMTPS
+	id vKlAqpPMz6nOZvOD8qJvDp; Tue, 24 Oct 2023 20:41:10 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id vOD7q8GdnGYrgvOD7qKKNu; Tue, 24 Oct 2023 20:41:09 +0000
+X-Authority-Analysis: v=2.4 cv=bYd47cDB c=1 sm=1 tr=0 ts=65382be5
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=_mNlVl-r0hj7kTaC:21 a=IkcTkHD0fZMA:10 a=bhdUkHdE2iEA:10 a=wYkD_t78qR0A:10
+ a=C7jph2E_ELmAI9JBdBgA:9 a=QEXdDO2ut3YA:10 a=N_l3Vs37sht3-TxgB6J7:22
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=nfdtctD5s+siSQUr/kengnC4iQIqyN5aDOBCjVSm0Aw=;
-	t=1698178306; x=1699387906; b=CW1rVgPN9ACYbDs9KcCyOkgT54qDYgMO+Ev59qad5F9x/xQ
-	egyesXxAAE6rTo4Dw/o/1/3ZEe/ft+CJnamQ5mYdmM69n+uEwXTTJ7wUvqIdDLKAvHedExeTbm17r
-	vrUxxXm6LZqzNYhiQ6vDpkBFNf+gfrhMztsZw/Q7XfTBFMW4Tega6OxwuECBtHol1yzlyDZ1FTEFl
-	R3FhUKoFufDFRG5PlI9W2H3OlLVprEUcJ8g1HeSn1Xyka91qRZ0cq1ycC3uDjXNol5vR1M4Tbbwgw
-	vGFUCibVGLoOOQ439aJQtRJkcpoc7cqiqU/KBto4JFn03ajqWoK1YXptuhJTzpQg==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.97-RC1)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1qvNkZ-00000001akU-3Ra3;
-	Tue, 24 Oct 2023 22:11:40 +0200
-Message-ID: <26b15f4702cef17fe70b496a62f03735874bd16a.camel@sipsolutions.net>
-Subject: Re: [RFC - is this a bug?] wifi: ath10k: Asking for some light on
- this, please :)
-From: Johannes Berg <johannes@sipsolutions.net>
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Kalle Valo
-	 <kvalo@kernel.org>, Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc: ath10k@lists.infradead.org, linux-wireless@vger.kernel.org, 
- linux-kernel@vger.kernel.org, "Gustavo A. R. Silva"
- <gustavoars@kernel.org>,  linux-hardening@vger.kernel.org
-Date: Tue, 24 Oct 2023 22:11:38 +0200
-In-Reply-To: <626ae2e7-66f8-423b-b17f-e75c1a6d29b3@embeddedor.com>
-References: <626ae2e7-66f8-423b-b17f-e75c1a6d29b3@embeddedor.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=CQP5gW2kw3OSZC7+TZyppFCRoVOXM08fLFfFCxJ9+MI=; b=ishhMPzXE+3dsqZ87wH+FzSB34
+	A3csF5Pl3r+WKLpp8EnFONjsuqkSyVHj/zTnEF3kA9lGZMroDFbnWsDp+K2yRMMOUm8cS++Z0GcMX
+	yavlkHLe12GXW4Tu4CJoRjQRoJu7SUmGFfzpvvknE5qa350TIVIE1huOxwO/KCJN0xrt21oRpRzbf
+	pjincn71KKzg99zsgDIsVIO1XMyGcZmx8rDDQsvdAt0HpgT7xBQXgoc1MRT4qSX9ohzTbc6xRI2HW
+	YJWmAqpPg+TGb45jREA2IAmqMVB+fEhjppeqpAxbf2VHsIeqdFb55/55WQ2GASMFYt+QfO76v/3pK
+	mZqQVwVQ==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:53652 helo=[192.168.15.10])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1qvOD6-002Lxr-20;
+	Tue, 24 Oct 2023 15:41:08 -0500
+Message-ID: <07e9bb04-f9fc-46d5-bfb9-a00a63a707c0@embeddedor.com>
+Date: Tue, 24 Oct 2023 14:41:07 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
-
-On Tue, 2023-10-24 at 13:50 -0600, Gustavo A. R. Silva wrote:
-> Hi all,
->=20
-> While working on tranforming one-element array `peer_chan_list` in
-> `struct wmi_tdls_peer_capabilities` into a flex-array member
->=20
-> 7187 struct wmi_tdls_peer_capabilities {
-> ...
-> 7199         struct wmi_channel peer_chan_list[1];
-> 7200 } __packed;
->=20
-> the following line caught my attention:
->=20
-> ./drivers/net/wireless/ath/ath10k/wmi.c:
-> 8920         memset(skb->data, 0, sizeof(*cmd));
->=20
-> Notice that before the flex-array transformation, we are zeroing 128
-> bytes in `skb->data` because `sizeof(*cmd) =3D=3D 128`, see below:
-
-
-> So, my question is: do we really need to zero out those extra 24 bytes in
-> `skb->data`? or is it rather a bug in the original code?
->=20
-
-If we look a step further, I _think_ even that memset is unnecessary?
-
-
-struct sk_buff *ath10k_wmi_alloc_skb(struct ath10k *ar, u32 len)
-{
-        struct sk_buff *skb;
-        u32 round_len =3D roundup(len, 4);
-
-        skb =3D ath10k_htc_alloc_skb(ar, WMI_SKB_HEADROOM + round_len);
-        if (!skb)
-                return NULL;
-
-        skb_reserve(skb, WMI_SKB_HEADROOM);
-        if (!IS_ALIGNED((unsigned long)skb->data, 4))
-                ath10k_warn(ar, "Unaligned WMI skb\n");
-
-        skb_put(skb, round_len);
-        memset(skb->data, 0, round_len);
-
-        return skb;
-}
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC - is this a bug?] wifi: ath10k: Asking for some light on
+ this, please :)
+Content-Language: en-US
+To: Johannes Berg <johannes@sipsolutions.net>, Kalle Valo <kvalo@kernel.org>,
+ Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+ linux-kernel@vger.kernel.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ linux-hardening@vger.kernel.org
+References: <626ae2e7-66f8-423b-b17f-e75c1a6d29b3@embeddedor.com>
+ <26b15f4702cef17fe70b496a62f03735874bd16a.camel@sipsolutions.net>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <26b15f4702cef17fe70b496a62f03735874bd16a.camel@sipsolutions.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.21.192
+X-Source-L: No
+X-Exim-ID: 1qvOD6-002Lxr-20
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:53652
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfMqRNSsn+SsaysW3w2toBsi48FsCuiAT/DXjiE3EVDAxH7Ga+Gva3Tg9Z4UTg0/hbcjOXfmxsqmYBf8/XZ6LSxNXNm8rORC/f1ppyY7gsD5+aKyMl1pt
+ Kp3q01YzcGGbpxkHkrjJKRXVQBYz7FV4fTEJA4rLOmmOHJDurlQEltDc+NuBL+thsDkjysH/CyWuONojTJYRtTv6nGnQbOAI3LCzRkVj8AfuoRyM6oobz/Ak
 
 
-So shouldn't the outgoing skb be exactly the same?
 
-Anyway, just looking at the code out of curiosity, I don't actually know
-anything about this driver :)
+On 10/24/23 14:11, Johannes Berg wrote:
+> On Tue, 2023-10-24 at 13:50 -0600, Gustavo A. R. Silva wrote:
+>> Hi all,
+>>
+>> While working on tranforming one-element array `peer_chan_list` in
+>> `struct wmi_tdls_peer_capabilities` into a flex-array member
+>>
+>> 7187 struct wmi_tdls_peer_capabilities {
+>> ...
+>> 7199         struct wmi_channel peer_chan_list[1];
+>> 7200 } __packed;
+>>
+>> the following line caught my attention:
+>>
+>> ./drivers/net/wireless/ath/ath10k/wmi.c:
+>> 8920         memset(skb->data, 0, sizeof(*cmd));
+>>
+>> Notice that before the flex-array transformation, we are zeroing 128
+>> bytes in `skb->data` because `sizeof(*cmd) == 128`, see below:
+> 
+> 
+>> So, my question is: do we really need to zero out those extra 24 bytes in
+>> `skb->data`? or is it rather a bug in the original code?
+>>
+> 
+> If we look a step further, I _think_ even that memset is unnecessary?
 
-johannes
+It seems we run into the same issue in the function below, even in the
+case this `memset()` is unnecessary (which it seems it's not):
+
+	8920         memset(skb->data, 0, sizeof(*cmd));
+
+Notice that if `cap->peer_chan_len == 0` or `cap->peer_chan_len == 1`,
+in the original code, we have `len == sizeof(*cmd) == 128`:
+
+drivers/net/wireless/ath/ath10k/wmi.c:
+8911         /* tdls peer update cmd has place holder for one channel*/
+8912         chan_len = cap->peer_chan_len ? (cap->peer_chan_len - 1) : 0;
+8913
+8914         len = sizeof(*cmd) + chan_len * sizeof(*chan);
+8915
+8916         skb = ath10k_wmi_alloc_skb(ar, len);
+
+> 
+> 
+> struct sk_buff *ath10k_wmi_alloc_skb(struct ath10k *ar, u32 len)
+> {
+>          struct sk_buff *skb;
+>          u32 round_len = roundup(len, 4);
+> 
+>          skb = ath10k_htc_alloc_skb(ar, WMI_SKB_HEADROOM + round_len);
+>          if (!skb)
+>                  return NULL;
+> 
+>          skb_reserve(skb, WMI_SKB_HEADROOM);
+>          if (!IS_ALIGNED((unsigned long)skb->data, 4))
+>                  ath10k_warn(ar, "Unaligned WMI skb\n");
+> 
+>          skb_put(skb, round_len);
+
+so `round_len == roundup(len, 4) == 128` at the moment of this
+`memset()` call:
+
+>          memset(skb->data, 0, round_len);
+
+which take us back to the same problem, this time in the `memset()` above,
+because after the flex-array transformation we would have:
+
+--- a/drivers/net/wireless/ath/ath10k/wmi.c
++++ b/drivers/net/wireless/ath/ath10k/wmi.c
+@@ -8905,13 +8905,10 @@ ath10k_wmi_10_4_gen_tdls_peer_update(struct ath10k *ar,
+         struct wmi_channel *chan;
+         struct sk_buff *skb;
+         u32 peer_qos;
+-       int len, chan_len;
++       size_t len;
+         int i;
+
+-       /* tdls peer update cmd has place holder for one channel*/
+-       chan_len = cap->peer_chan_len ? (cap->peer_chan_len - 1) : 0;
+-
+-       len = sizeof(*cmd) + chan_len * sizeof(*chan);
++       len = struct_size(cmd, peer_capab.peer_chan_list, cap->peer_chan_len);
+
+         skb = ath10k_wmi_alloc_skb(ar, len);
+         if (!skb)
+
+which makes `round_len == roundup(len, 4) == struct_size(cmd,...,...) == 104`
+when `cap->peer_chan_len == 0`
+
+> So shouldn't the outgoing skb be exactly the same?
+
+It seems it's not.
+
+> 
+> Anyway, just looking at the code out of curiosity, I don't actually know
+> anything about this driver :)
+> 
+> johannes
+
+--
+Gustavo
