@@ -1,95 +1,92 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11ACA224F1
-	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 18:14:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Ws4fpA3I"
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 792CE10D0;
-	Tue, 24 Oct 2023 11:14:54 -0700 (PDT)
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39OEu7ll009708;
-	Tue, 24 Oct 2023 18:14:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=cTHcP7g736rXwQ/nASzpO40/4IpTvv0Zn+p4k+C0POQ=;
- b=Ws4fpA3IktqCIJjALVBuab5OupNt9jrxE1J6ziOzdUBIsKy6xY8D+nV4vJU9NxMWRmuR
- 00NM9jv4biqjT3uj3BjX9JVfc7lwsLyc2sgY6ZwkyUExFcIgc3Vfq6FoXO9+DgyuGf5v
- rgn8jzNocBJC6/EpQ0fvqdYvevEAn+qhWvmT85myvz/AAk4k5UBZR5468M4CymNq3Any
- aLlsmhXZna318mkmnHBlEllTk+ns/POCX+vozYcCeX4koqpPu5AFerrCIdg97Q1kuPAe
- BQMLr8Zjl1tztWzAuuHzuN61DZNon7fFp9iN1k1ENvGpl4bzdWnKw83SP12aFZ+zwtJ6 6Q== 
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3tx5f59udc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 24 Oct 2023 18:14:45 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 39OIEh3K000451
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 24 Oct 2023 18:14:44 GMT
-Received: from [10.48.243.236] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.39; Tue, 24 Oct
- 2023 11:14:43 -0700
-Message-ID: <68281586-f75e-4995-a30f-130f3aa1e7a8@quicinc.com>
-Date: Tue, 24 Oct 2023 11:14:42 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBE78266AD;
+	Tue, 24 Oct 2023 18:52:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C063BA6;
+	Tue, 24 Oct 2023 11:52:08 -0700 (PDT)
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-1ea1742c1a5so1380458fac.0;
+        Tue, 24 Oct 2023 11:52:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698173528; x=1698778328;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=b47eW1W1ZA3iY9fGQWptMYQkO14e99bJy5u+/oy5i2Y=;
+        b=aZEwBny9h18y3Sexpm1gP6WTOHnyV+grEkCz6WuZVsCCwZ2JVuDM/GR3oH2n2MVgMD
+         LMBQCQfVWdV92nSSvAl2DZXuMIyxyToOV8EuiEVpohVVvZZQs0wIDl6ntkLK/jEWlva3
+         6IaMeyzOO0loI1COrMmRKa6SzTehfiZeOoRb9o6Blu6BNbO8iPIjX1rX81lZ2h/R6yQK
+         /YtksuEUYxoJM3KCIaW9z55oPKD1O5F1Hy8XmzvOgSxXYD/hBxQjZLeZiUqdr5cRlDV6
+         sBWjeBgQgbHpak/qLLWZ+7+6fbhI+pbyo9zyEbPFDDSXtrif6mpxwrR9gEt0qt4GYXSt
+         iVVA==
+X-Gm-Message-State: AOJu0Yw04wr7yV0HId29biuCd9JJWS9GVl7/RWdLVvMRccapd6clWVIQ
+	gL4fvXGmmZnXr4XK5ctYVGhDuJt0pUTfNjcawZg=
+X-Google-Smtp-Source: AGHT+IGEyL46Vaabh0PQgToQaEorF+rTwJ2e/VuAsoUSTFafddKjwzGKWYy/ed+ekhC8GDeNVIsCZEpkTFfXDb/+gKo=
+X-Received: by 2002:a05:6870:9a98:b0:1e9:9e04:1d24 with SMTP id
+ hp24-20020a0568709a9800b001e99e041d24mr16645138oab.5.1698173528060; Tue, 24
+ Oct 2023 11:52:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] wifi: ath10k: replace deprecated strncpy with memcpy
-Content-Language: en-US
-To: Justin Stitt <justinstitt@google.com>, Kalle Valo <kvalo@kernel.org>
-CC: <ath10k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>
-References: <20231024-strncpy-drivers-net-wireless-ath-ath10k-mac-c-v2-1-4c1f4cd4b4df@google.com>
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-In-Reply-To: <20231024-strncpy-drivers-net-wireless-ath-ath10k-mac-c-v2-1-4c1f4cd4b4df@google.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.49.16.6]
-X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: AHpv-gD2BPzomyaq-KFnFaBSmVhO_kBX
-X-Proofpoint-ORIG-GUID: AHpv-gD2BPzomyaq-KFnFaBSmVhO_kBX
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-24_17,2023-10-24_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- lowpriorityscore=0 phishscore=0 spamscore=0 impostorscore=0 adultscore=0
- priorityscore=1501 mlxlogscore=296 bulkscore=0 suspectscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2310170001 definitions=main-2310240156
+References: <20230712223448.145079-1-jeshuas@nvidia.com> <ZTfhpRRA4bga0qSI@agluck-desk3>
+In-Reply-To: <ZTfhpRRA4bga0qSI@agluck-desk3>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 24 Oct 2023 20:51:57 +0200
+Message-ID: <CAJZ5v0j2mbKOqDaL_31fL9ftTZRhUiURx3nubLmLUo3-R_w3gw@mail.gmail.com>
+Subject: Re: [PATCH V2] ACPI: APEI: Use ERST timeout for slow devices
+To: Tony Luck <tony.luck@intel.com>, Jeshua Smith <jeshuas@nvidia.com>
+Cc: keescook@chromium.org, gpiccoli@igalia.com, rafael@kernel.org, 
+	lenb@kernel.org, james.morse@arm.com, bp@alien8.de, 
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-tegra@vger.kernel.org, 
+	treding@nvidia.com, jonathanh@nvidia.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 10/24/2023 10:42 AM, Justin Stitt wrote:
-> strncpy() is deprecated [1] and we should prefer less ambiguous
-> interfaces.
-> 
-> In this case, arvif->u.ap.ssid has its length maintained by
-> arvif->u.ap.ssid_len which indicates it may not need to be
-> NUL-terminated. Make this explicit with __nonstring and use a plain old
-> memcpy.
-> 
-> This is also consistent with future copies into arvif->u.ap.ssid:
-> 
-> 	if (changed & BSS_CHANGED_SSID &&
-> 	    vif->type == NL80211_IFTYPE_AP) {
-> 		arvif->u.ap.ssid_len = vif->cfg.ssid_len;
-> 		if (vif->cfg.ssid_len)
-> 			memcpy(arvif->u.ap.ssid, vif->cfg.ssid,
-> 			       vif->cfg.ssid_len);
-> 		arvif->u.ap.hidden_ssid = info->hidden_ssid;
-> 	}
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-Acked-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+On Tue, Oct 24, 2023 at 5:27=E2=80=AFPM Tony Luck <tony.luck@intel.com> wro=
+te:
+>
+> On Wed, Jul 12, 2023 at 10:34:48PM +0000, Jeshua Smith wrote:
+> > Slow devices such as flash may not meet the default 1ms timeout value,
+> > so use the ERST max execution time value that they provide as the
+> > timeout if it is larger.
+> >
+> > Signed-off-by: Jeshua Smith <jeshuas@nvidia.com>
+>
+> > +/* ERST Exec max timings */
+> > +#define ERST_EXEC_TIMING_MAX_MASK      0xFFFFFFFF00000000
+> > +#define ERST_EXEC_TIMING_MAX_SHIFT     32
+>
+> I've recently become a fan of <linux/bitfield.h> I think this would
+> be easier on the eyes as:
+>
+> #define ERST_EXEC_TIMING_MAX    GENMASK_ULL(63, 32)
+>
+> > +static inline u64 erst_get_timeout(void)
+> > +{
+> > +     u64 timeout =3D FIRMWARE_TIMEOUT;
+> > +
+> > +     if (erst_erange.attr & ERST_RANGE_SLOW) {
+> > +             timeout =3D ((erst_erange.timings & ERST_EXEC_TIMING_MAX_=
+MASK) >>
+> > +                     ERST_EXEC_TIMING_MAX_SHIFT) * NSEC_PER_MSEC;
+>
+> then this becomes:
+>
+>                 timeout =3D FIELD_GET(ERST_EXEC_TIMING_MAX, erst_erange.t=
+imings) *
+>                           NSEC_PER_MSEC;
+>
+> > +             if (timeout < FIRMWARE_TIMEOUT)
+> > +                     timeout =3D FIRMWARE_TIMEOUT;
+>
+> But that's just a matter of style.  Otherwise the patch looks fine.
+>
+> Reviewed-by: Tony Luck <tony.luck@intel.com>
 
+Applied as 6.7 material, thanks!
