@@ -1,93 +1,86 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75B861173A
-	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 20:49:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FA141D692
+	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 21:19:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="bWzwrTaY"
-Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:242:246e::2])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DBD910CE;
-	Tue, 24 Oct 2023 13:49:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=n1hoWu1QQf0mXz91DzUGE4OYJa5WmwrJOSpDXP5IzqI=;
-	t=1698180576; x=1699390176; b=bWzwrTaYFO871kF17LNz7WP+SIeLlMVRtFbrMa5YBbdPF8R
-	2LJ0r4gIxXgLE6ndCjhpYXYg5MU+PsVOUiHfu4geyi8kNHXYMTO+scODdYP5Qtv+FNzSQcYarMOEf
-	xncewFLOf33lDoy9LZd7qOtrc5JF1LGVMugShLfZm2JI/42NLn5/r0QpcPa79V+wKIiGQHhC4otQJ
-	UAEkoLQxYGOW8L2ctWNa7YxnFZHPz4d82b4sfa3EmqPt1t+IiVI8WGfrLpdtXodtZAmSR8eMphr3q
-	kXtIvhXVzZ3LuBQSLYxWw4SspZCFcoZAQj2Fxk9YyjQNxA5DZVlZyeniGeiv67DQ==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.97-RC1)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1qvOLC-00000001bbh-1i2d;
-	Tue, 24 Oct 2023 22:49:30 +0200
-Message-ID: <f8daa53ee8a8019e4fd2b823c1fcb85a6cc4d806.camel@sipsolutions.net>
-Subject: Re: [RFC - is this a bug?] wifi: ath10k: Asking for some light on
- this, please :)
-From: Johannes Berg <johannes@sipsolutions.net>
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Kalle Valo
-	 <kvalo@kernel.org>, Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc: ath10k@lists.infradead.org, linux-wireless@vger.kernel.org, 
- linux-kernel@vger.kernel.org, "Gustavo A. R. Silva"
- <gustavoars@kernel.org>,  linux-hardening@vger.kernel.org
-Date: Tue, 24 Oct 2023 22:49:29 +0200
-In-Reply-To: <07e9bb04-f9fc-46d5-bfb9-a00a63a707c0@embeddedor.com>
-References: <626ae2e7-66f8-423b-b17f-e75c1a6d29b3@embeddedor.com>
-	 <26b15f4702cef17fe70b496a62f03735874bd16a.camel@sipsolutions.net>
-	 <07e9bb04-f9fc-46d5-bfb9-a00a63a707c0@embeddedor.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TIwa1Q7X"
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2BFF10D5
+	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 14:19:05 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-6bb4abb8100so4075507b3a.2
+        for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 14:19:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1698182345; x=1698787145; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=z44BPeMtE2kACzCzizrt3sSV/gaHEispvl8DNfLTFYw=;
+        b=TIwa1Q7X3jjYVUJNeubx/TLG21qBuyU/zU+FucIySGmdWBABnr2q3jmvATXm6Rb+XN
+         kK40MgjdpuwcNx4ZEKuz5OtQklHK2GOydJfpef+F7f9b/C6PGlZLAIzYa17Ye4j7pLF/
+         qpefgOmGI71QvMciI2kOOCOJN+IcChKulKSGA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698182345; x=1698787145;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=z44BPeMtE2kACzCzizrt3sSV/gaHEispvl8DNfLTFYw=;
+        b=dkj3MV4hUgmjk21eXZrchjLwCw0OL0A9PCT7YBl9+GyCWks5IFstLz8HSMrrE5Knwh
+         ESEKqoUajuRjwaKzBwFWxocFKNqnnf02ksfdF8yEmfg46tO6jlKZCMmc0LTtnAQX1FQN
+         8pszoJCw5S1rRywCc9D3/Dbrye6fX2qtEEcmDakpg2DArxUHyhJDUtmL8HJVJRM0ct2c
+         E2gGQ9313AqTy6ANslhJeiSUuSw7I7t+YB8nUrUsxVG71qD2r5DYcH1/W26nBKMfXXZ9
+         EWS1DAtOFnQWKpUbARmPyoc69kTSvxLmumNNThZCWJRxKXOB6PGJ6mavCG2uq7mEgz7P
+         Y50Q==
+X-Gm-Message-State: AOJu0Yzf6v5tPTwYiZCorV1KkhzXlkWphNGMeIdBzDBeAbzFPfZx3Yqs
+	OJGBcS/0USwuc765btDIB89tyg==
+X-Google-Smtp-Source: AGHT+IExcAVhyp7VZm2kE7JqtYW/LVhoC5XB1bnP/53gqyGSRDMgUiZJp81JNdO0o7sPap5EOURDnA==
+X-Received: by 2002:a05:6a00:1595:b0:6be:22db:7a13 with SMTP id u21-20020a056a00159500b006be22db7a13mr11429436pfk.25.1698182345417;
+        Tue, 24 Oct 2023 14:19:05 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id x12-20020aa79a4c000000b006bf536bcd23sm6081290pfj.161.2023.10.24.14.19.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Oct 2023 14:19:04 -0700 (PDT)
+From: Kees Cook <keescook@chromium.org>
+To: Alasdair Kergon <agk@redhat.com>,
+	Mike Snitzer <snitzer@kernel.org>,
+	dm-devel@redhat.com,
+	Justin Stitt <justinstitt@google.com>
+Cc: Kees Cook <keescook@chromium.org>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] dm log userspace: replace deprecated strncpy with strscpy
+Date: Tue, 24 Oct 2023 14:18:52 -0700
+Message-Id: <169818232969.2100071.1483595444634836042.b4-ty@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230925-strncpy-drivers-md-dm-log-userspace-base-c-v1-1-030d7bcf1004@google.com>
+References: <20230925-strncpy-drivers-md-dm-log-userspace-base-c-v1-1-030d7bcf1004@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, 2023-10-24 at 14:41 -0600, Gustavo A. R. Silva wrote:
->=20
-> It seems we run into the same issue in the function below, even in the
-> case this `memset()` is unnecessary (which it seems it's not):
->=20
-> 	8920         memset(skb->data, 0, sizeof(*cmd));
->=20
-> Notice that if `cap->peer_chan_len =3D=3D 0` or `cap->peer_chan_len =3D=
-=3D 1`,
-> in the original code, we have `len =3D=3D sizeof(*cmd) =3D=3D 128`:
+On Mon, 25 Sep 2023 07:06:03 +0000, Justin Stitt wrote:
+> `strncpy` is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
+> 
+> `lc` is already zero-allocated:
+> |       lc = kzalloc(sizeof(*lc), GFP_KERNEL);
+> ... as such, any future NUL-padding is superfluous.
+> 
+> [...]
 
-Right.
+Applied to for-next/hardening, thanks!
 
-> -       /* tdls peer update cmd has place holder for one channel*/
-> -       chan_len =3D cap->peer_chan_len ? (cap->peer_chan_len - 1) : 0;
-> -
-> -       len =3D sizeof(*cmd) + chan_len * sizeof(*chan);
-> +       len =3D struct_size(cmd, peer_capab.peer_chan_list, cap->peer_cha=
-n_len);
->=20
->          skb =3D ath10k_wmi_alloc_skb(ar, len);
->          if (!skb)
->=20
-> which makes `round_len =3D=3D roundup(len, 4) =3D=3D struct_size(cmd,...,=
-...) =3D=3D 104`
-> when `cap->peer_chan_len =3D=3D 0`
+[1/1] dm log userspace: replace deprecated strncpy with strscpy
+      https://git.kernel.org/kees/c/f8cff5441800
 
-And yeah, that's really the issue, it only matters for =3D=3D0. For a momen=
-t
-there I thought that doesn't even make sense, but it looks like it never
-even becomes non-zero.
+Take care,
 
-No idea then, sorry. You'd hope firmware doesn't care about the actual
-message size if the inner data says "0 entries", but who knows? And how
-many firmware versions are there? :)
+-- 
+Kees Cook
 
-So I guess you'd want to stay compatible, even if it means having a
-
-	chan_len =3D min(cap->peer_chan_len, 1);
-
-for the struct_size()?
-
-johannes
