@@ -1,80 +1,143 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9BB52D605
-	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 21:50:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39B162D63D
+	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 23:19:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ecZEhEWN"
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9670FD7A
-	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 14:50:08 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-1c9e06f058bso1818845ad.0
-        for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 14:50:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1698184208; x=1698789008; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kUk/3FUrTP2O4nxINnBvX1NoZwU7c4mrwIneHTDtXz8=;
-        b=ecZEhEWNeFWjXXZhmpUQxqgQXST3Pc9zkLw3mrVneHts2vbd/VahNRRr8KbUiSEN4g
-         zsrzSYlJvaUxjgdvNncP533jdFysu9Uv1t2Mqt7/V+ysQmbSghDEKQA+0qXpSz1FV1Yw
-         U4EKIt+Hk7tBzbH9Bw8fEYCpv7y2cxaWN5tQY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698184208; x=1698789008;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kUk/3FUrTP2O4nxINnBvX1NoZwU7c4mrwIneHTDtXz8=;
-        b=v7TgPYMFxdZW9j+1ozdqPfhc/Q0DcQQZ3uAJiGkS7dFQrH/sm5KSHNMvV16s4bR2UW
-         rKiOR8oTR/XGw7ges6OdkysGult7ZJ8HoxwpF7VO7Mw9l4tZUMhyXYWcNxOmqI9mi/5q
-         PvuPsdKWKx5bNn85fJ+SaH82qV2pkClulUxyFphKJf4WGVz4kjtV4HFqbPzgU3YL2y5K
-         Z528N3XcvHJse0GjdgahJa9Gkl4WYmrPVnKvaVQL5A62vInFRj41hXdVRUMTqKgEituj
-         mJfYz8bJlrdscfbZOeZz5Aq+Us1iryJxkVWaA6i/BAUaJLaFqmIwBDis/8GEhgT1OXLg
-         vwcg==
-X-Gm-Message-State: AOJu0YwgeuA5kMBxhOCSgrPc6SJpZLlRmPgmguKeY9UN9PNfwWImjlXd
-	MxjQkkXjlObY1TJu5kcbiYoJCw==
-X-Google-Smtp-Source: AGHT+IF9lyQ5nSycCSb10w5BnVo03pMKn2LFjJp83sLHplgq6hXesFpem/RWipRfu7bv0jUOjIuR1w==
-X-Received: by 2002:a17:902:e54e:b0:1c9:ddd8:9950 with SMTP id n14-20020a170902e54e00b001c9ddd89950mr17532154plf.21.1698184208126;
-        Tue, 24 Oct 2023 14:50:08 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id k20-20020a170902ba9400b001b891259eddsm7867560pls.197.2023.10.24.14.50.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Oct 2023 14:50:07 -0700 (PDT)
-Date: Tue, 24 Oct 2023 14:50:07 -0700
-From: Kees Cook <keescook@chromium.org>
-To: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Christoph Hellwig <hch@lst.de>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Petr Mladek <pmladek@suse.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH] powerpc: Remove initialisation of readpos
-Message-ID: <202310241449.7E91697@keescook>
-References: <20231024145600.739451-1-willy@infradead.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bFAgwGaB"
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E80A110C6;
+	Tue, 24 Oct 2023 16:19:45 -0700 (PDT)
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39OMsdIW006452;
+	Tue, 24 Oct 2023 23:19:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=GEhGl3jIF7tnr2aO8luYKeblxM/VbrTylqhHINAwWI4=;
+ b=bFAgwGaBICGObjV6aDwtMi+VHoV0YRQlHsy/sjEkziy0ZUJAvZVkQDFMBXhbVwGVp02o
+ 6tXwhQRN6lXQkfZc2n8fsvc3PJF7p7//97ZWya9ZtX0IeCGf/cN4VaARPJndd1QyXz+O
+ OiTYF7xpq3Nf0PSSVsRO3KbU9sJx2uHBCQUXmSkZoPh6vxcChDDwmz7nmLd1reUsk3N/
+ i9NGVtUfY/zQLBpgOOZ2Ie142AnK5p7hO2KI4m/DDgAhrRHAaB3SvjPqDhE3hbLBk4kF
+ JI/xNlV7/2BJMAFV2mZrHQd+6VswtOAm6pzk/F3G6sPU71TkvEbBkEKT+y+swyqxm2XT Hw== 
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3tx43hanku-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 24 Oct 2023 23:19:32 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 39ONJVI2002808
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 24 Oct 2023 23:19:31 GMT
+Received: from [10.48.243.236] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.39; Tue, 24 Oct
+ 2023 16:19:30 -0700
+Message-ID: <b85a4e54-61c7-45fe-b97d-46338b237a64@quicinc.com>
+Date: Tue, 24 Oct 2023 16:19:29 -0700
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231024145600.739451-1-willy@infradead.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] wifi: ath10k: replace deprecated strncpy with memcpy
+Content-Language: en-US
+To: Kees Cook <keescook@chromium.org>, Justin Stitt <justinstitt@google.com>
+CC: Kalle Valo <kvalo@kernel.org>, <ath10k@lists.infradead.org>,
+        <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>
+References: <20231024-strncpy-drivers-net-wireless-ath-ath10k-mac-c-v2-1-4c1f4cd4b4df@google.com>
+ <202310241428.0AA7B80@keescook>
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+In-Reply-To: <202310241428.0AA7B80@keescook>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.49.16.6]
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: EQ8VpvQKgvrSn9MAgciz5iwhaJypNltA
+X-Proofpoint-ORIG-GUID: EQ8VpvQKgvrSn9MAgciz5iwhaJypNltA
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-24_22,2023-10-24_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
+ impostorscore=0 clxscore=1015 bulkscore=0 adultscore=0 mlxlogscore=734
+ lowpriorityscore=0 phishscore=0 priorityscore=1501 mlxscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2310170001
+ definitions=main-2310240200
 
-On Tue, Oct 24, 2023 at 03:55:59PM +0100, Matthew Wilcox (Oracle) wrote:
-> While powerpc doesn't use the seq_buf readpos, it did explicitly
-> initialise it for no good reason.
+On 10/24/2023 2:34 PM, Kees Cook wrote:
+> On Tue, Oct 24, 2023 at 05:42:16PM +0000, Justin Stitt wrote:
+>> strncpy() is deprecated [1] and we should prefer less ambiguous
+>> interfaces.
+>>
+>> In this case, arvif->u.ap.ssid has its length maintained by
+>> arvif->u.ap.ssid_len which indicates it may not need to be
+>> NUL-terminated. Make this explicit with __nonstring and use a plain old
+>> memcpy.
+>>
+>> This is also consistent with future copies into arvif->u.ap.ssid:
+>>
+>> 	if (changed & BSS_CHANGED_SSID &&
+>> 	    vif->type == NL80211_IFTYPE_AP) {
+>> 		arvif->u.ap.ssid_len = vif->cfg.ssid_len;
+>> 		if (vif->cfg.ssid_len)
+>> 			memcpy(arvif->u.ap.ssid, vif->cfg.ssid,
+>> 			       vif->cfg.ssid_len);
+>> 		arvif->u.ap.hidden_ssid = info->hidden_ssid;
+>> 	}
+>>
+>> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+>> Link: https://github.com/KSPP/linux/issues/90
+>> Cc: linux-hardening@vger.kernel.org
+>> Signed-off-by: Justin Stitt <justinstitt@google.com>
+>> ---
+>> Changes in v2:
+>> - update subject to include wifi
+>> - prefer memcpy() over strtomem() (thanks Kalle, Jeff)
+>> - rebase onto 6.6-rc7 @d88520ad73b79e71
+>> - Link to v1: https://lore.kernel.org/r/20231013-strncpy-drivers-net-wireless-ath-ath10k-mac-c-v1-1-24e40201afa3@google.com
+>> ---
+>> Note: build-tested only.
+>>
+>> Found with: $ rg "strncpy\("
+>> ---
+>>   drivers/net/wireless/ath/ath10k/core.h | 2 +-
+>>   drivers/net/wireless/ath/ath10k/mac.c  | 3 +--
+>>   2 files changed, 2 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/net/wireless/ath/ath10k/core.h b/drivers/net/wireless/ath/ath10k/core.h
+>> index 4b5239de4018..ba9795a8378a 100644
+>> --- a/drivers/net/wireless/ath/ath10k/core.h
+>> +++ b/drivers/net/wireless/ath/ath10k/core.h
+>> @@ -607,7 +607,7 @@ struct ath10k_vif {
+>>   			u8 tim_bitmap[64];
+>>   			u8 tim_len;
+>>   			u32 ssid_len;
+>> -			u8 ssid[IEEE80211_MAX_SSID_LEN];
+>> +			u8 ssid[IEEE80211_MAX_SSID_LEN] __nonstring;
+>>   			bool hidden_ssid;
+>>   			/* P2P_IE with NoA attribute for P2P_GO case */
+>>   			u32 noa_len;
+>> diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
+>> index 03e7bc5b6c0b..f3f6deb354c6 100644
+>> --- a/drivers/net/wireless/ath/ath10k/mac.c
+>> +++ b/drivers/net/wireless/ath/ath10k/mac.c
+>> @@ -6125,9 +6125,8 @@ static void ath10k_bss_info_changed(struct ieee80211_hw *hw,
+>>   
+>>   		if (ieee80211_vif_is_mesh(vif)) {
+>>   			/* mesh doesn't use SSID but firmware needs it */
+>> -			strncpy(arvif->u.ap.ssid, "mesh",
+>> -				sizeof(arvif->u.ap.ssid));
+>>   			arvif->u.ap.ssid_len = 4;
+>> +			memcpy(arvif->u.ap.ssid, "mesh", arvif->u.ap.ssid_len);
 > 
-> Fixes: d0ed46b60396 ("tracing: Move readpos from seq_buf to trace_seq")
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> This is a behavior change, isn't it? i.e. arvif->u.ap.ssid is no longer
+> zero-padded. Is this actually ok for the driver?
 
-Yeah, looks right -- it'd even be right if the member still existed. :)
+yes, it is safe, and consistent with other uses of this field as noted 
+in the commit description.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--- 
-Kees Cook
