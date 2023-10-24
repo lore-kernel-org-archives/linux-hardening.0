@@ -1,171 +1,122 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5F401FD7
-	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 10:43:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A18941C20
+	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 13:03:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ls3yYkpw"
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C26F10E
-	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 03:43:17 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id a640c23a62f3a-9c3aec5f326so1129725266b.1
-        for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 03:43:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698144196; x=1698748996; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=qqbXEPfoFRyDk1b02TMTLzh4c/S5TWTcc8M77lCh+ds=;
-        b=ls3yYkpwm3WffVPALAqwSwyFNnXznOp+ZHNk3S2/ctMF8roBhMWIqf08CrTzlM2woD
-         PMPKVNwEJM5rpj3DVxUmav4i73gxlu6hBRnHgixqelx5gkdw+YecyVNsgVJ7A36zHoMY
-         aY7w8Gvbx/4ymJgQYfM4hkAsXbIIuYBAK/jUXe31Y8IIId4XWUnMsDG+QT6vIr6Rc+98
-         DKAGAvEJ9TE7a5wWz1+pZODa1xrcsJKrukdNsE6tVjS1QUfMrwwdT4VoTdRFSdY6N/UD
-         gquIUDqUWdybGk7NtunQsVlwUXZwKn7OIzSaWwjI6CdYGWHUVMF9XhzYl6MRVnakRIGA
-         Oc5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698144196; x=1698748996;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qqbXEPfoFRyDk1b02TMTLzh4c/S5TWTcc8M77lCh+ds=;
-        b=qdwFxiYXToh6rzf9DLyJ81Asxgaj+k1vIZU5S67FfW8HrmEhd6Xj2xVrGGx9FudWoJ
-         Gm2aRgBH3KQrOXw2Y0ENblQ+74SsxBOZ+7AkcBYLO0ctobZbKs8myEwNuTbmHc8ccWDg
-         /1cv2RDcSAaF09i9p6ab0aneWyJTs4aRmYupDqI5RNSJs5miCPTNiAcfdRCvRC5TyHyM
-         Dfy+yck4TvcA7pUyK5R5rhwli5CxN0oqNFPxEIQYQIcOXB3BRh9hgKGAAMZNVtgj83C/
-         Ow5HjGOCCXzvRVi7WCRhaf2ip2LS2dyCrkayqc3Db3VHz9UwK6DnUru+e7PTPDOnIXMa
-         VXsw==
-X-Gm-Message-State: AOJu0Yy20b5pCI7RUrd04GIGZ92IG/WsvyOGTAb32qt4ezNXrg0xeB8c
-	oZ6ReM4ceeCFz2ZkpXYwNArABScu6uXqKeeYlqEU0g==
-X-Google-Smtp-Source: AGHT+IHkFWQiDbUAKh+sEd0YoroALEIvrxNWNs13CtsEdA4axuefBnTEUBpAEIrsYgjMitB51T+3o0Ns9dbrTj4O+U0=
-X-Received: by 2002:a17:907:d15:b0:9bd:bdfd:e17a with SMTP id
- gn21-20020a1709070d1500b009bdbdfde17amr11002254ejc.6.1698144195749; Tue, 24
- Oct 2023 03:43:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fCWDTK1p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9E84C433C9;
+	Tue, 24 Oct 2023 13:03:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1698152605;
+	bh=I0dSpBX3t5um7hzyjuoG/wfx+Ovwc+XCo8n1ONBIcrk=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=fCWDTK1pLN1jpUbmC6WIp5dGPFWrtFA/2fMUPsTEV/HEmsmNTS9V3/BcAn2qTSRns
+	 uhJ7q0HomcAn/lr5Qqoq2zFdJ5VEEa2Al1fdw50QtTHcJVHvQ6Li2my8RaZxtfWR8q
+	 AQtgXoPZgbKjVnaMoZA56A6ete3Gre2NifTL65x6v/aM7wzz726hATJZ0rD5v1GNne
+	 HT7SMBriGccFJIRwU7H6uxdJSO1SvQAnTDexTPg16+ANWWpw4Ed5c5VM1Z5DAShu8H
+	 TxyFIy4QqLx0eoHht5uK4eV8Jis8eta+H6k6aMHFU6MguPn5w5WEmU1VmyK/+RZ5P9
+	 68Q6N2NfT3WjA==
+From: Kalle Valo <kvalo@kernel.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Jeff Johnson <quic_jjohnson@quicinc.com>,  ath10k@lists.infradead.org,
+  linux-wireless@vger.kernel.org,  linux-kernel@vger.kernel.org,
+  linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] ath10k: replace deprecated strncpy with strtomem_pad
+References: <20231013-strncpy-drivers-net-wireless-ath-ath10k-mac-c-v1-1-24e40201afa3@google.com>
+Date: Tue, 24 Oct 2023 16:03:21 +0300
+In-Reply-To: <20231013-strncpy-drivers-net-wireless-ath-ath10k-mac-c-v1-1-24e40201afa3@google.com>
+	(Justin Stitt's message of "Fri, 13 Oct 2023 20:33:48 +0000")
+Message-ID: <87wmvcxjdy.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231016143828.647848-1-jeffxu@chromium.org> <CAHk-=whFZoap+DBTYvJx6ohqPwn11Puzh7q4huFWDX9vBwXHgg@mail.gmail.com>
- <CALmYWFtTDAb_kpZdAe_xspqwNgK1NWJmjTxaTC=jDEMzfe297Q@mail.gmail.com>
- <CAHk-=wj87GMTH=5901ob=SjQqegAm2JYBE7E4J7skJzE64U-wQ@mail.gmail.com>
- <55960.1697566804@cvs.openbsd.org> <CAHk-=wjS=xg12RVQdTNxEurjo21eXQBQO0D5My6Aox4LCfsO1A@mail.gmail.com>
- <CAEAAPHYgg49WtpE7Jdq6HDecFp5RHPhdxtPTUaNF12RONu5aDA@mail.gmail.com> <33724.1697819251@cvs.openbsd.org>
-In-Reply-To: <33724.1697819251@cvs.openbsd.org>
-From: =?UTF-8?Q?Stephen_R=C3=B6ttger?= <sroettger@google.com>
-Date: Tue, 24 Oct 2023 12:42:59 +0200
-Message-ID: <CAEAAPHbJnamLELDrJ5G4_VLenfAm9WtPj49uDo0Jk4MzuwbjOA@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 0/8] Introduce mseal() syscall
-To: Theo de Raadt <deraadt@openbsd.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Jeff Xu <jeffxu@google.com>, 
-	jeffxu@chromium.org, akpm@linux-foundation.org, keescook@chromium.org, 
-	jorgelo@chromium.org, groeck@chromium.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, jannh@google.com, 
-	surenb@google.com, alex.sierra@amd.com, apopple@nvidia.com, 
-	aneesh.kumar@linux.ibm.com, axelrasmussen@google.com, ben@decadent.org.uk, 
-	catalin.marinas@arm.com, david@redhat.com, dwmw@amazon.co.uk, 
-	ying.huang@intel.com, hughd@google.com, joey.gouly@arm.com, corbet@lwn.net, 
-	wangkefeng.wang@huawei.com, Liam.Howlett@oracle.com, lstoakes@gmail.com, 
-	willy@infradead.org, mawupeng1@huawei.com, linmiaohe@huawei.com, 
-	namit@vmware.com, peterx@redhat.com, peterz@infradead.org, 
-	ryan.roberts@arm.com, shr@devkernel.io, vbabka@suse.cz, 
-	xiujianfeng@huawei.com, yu.ma@intel.com, zhangpeng362@huawei.com, 
-	dave.hansen@intel.com, luto@kernel.org, linux-hardening@vger.kernel.org
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="00000000000098e5cb060874014c"
+Content-Type: text/plain
 
---00000000000098e5cb060874014c
-Content-Type: text/plain; charset="UTF-8"
+Justin Stitt <justinstitt@google.com> writes:
 
-> The problem you seem to have with fully locked mseal() in chrome seems
-> to be here:
+> strncpy() is deprecated [1] and we should prefer less ambiguous
+> interfaces.
 >
-> > about permission changes but sometimes we do need to mprotect data only
-> > pages.
+> In this case, arvif->u.ap.ssid has its length maintained by
+> arvif->u.ap.ssid_len which indicates it may not need to be
+> NUL-terminated, although by virtue of using strtomem_pad (with NUL-byte
+> pad character) and having a destination size larger than the source,
+> ssid will, incidentally, be NUL-terminated here.
 >
-> Does that data have to be in the same region?  Can your allocator not
-> put the non-code pieces of the JIT elsewhere, with a different
-> permission, fully immutable / msealed -- and perhaps even managed with a
-> different PKEY if neccessary?
+> As strtomem_pad() docs say:
+>  * @dest: Pointer of destination character array (marked as __nonstring)
+>  * @src: Pointer to NUL-terminated string
+>  * @pad: Padding character to fill any remaining bytes of @dest after copy
+>  *
+>  * This is a replacement for strncpy() uses where the destination is not
+>  * a NUL-terminated string, but with bounds checking on the source size, and
+>  * an explicit padding character. If padding is not required, use strtomem().
+>
+> Let's also mark ath10k_vif.u.ap.ssid as __nonstring.
+>
+> It is unclear to me whether padding is strictly necessary. Perhaps we
+> should opt for just strtomem() -- padding certainly doesn't hurt,
+> though.
+>
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+> Note: build-tested only.
+>
+> Found with: $ rg "strncpy\("
+> ---
+>  drivers/net/wireless/ath/ath10k/core.h | 2 +-
+>  drivers/net/wireless/ath/ath10k/mac.c  | 3 +--
+>  2 files changed, 2 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/net/wireless/ath/ath10k/core.h b/drivers/net/wireless/ath/ath10k/core.h
+> index 4b5239de4018..ba9795a8378a 100644
+> --- a/drivers/net/wireless/ath/ath10k/core.h
+> +++ b/drivers/net/wireless/ath/ath10k/core.h
+> @@ -607,7 +607,7 @@ struct ath10k_vif {
+>  			u8 tim_bitmap[64];
+>  			u8 tim_len;
+>  			u32 ssid_len;
+> -			u8 ssid[IEEE80211_MAX_SSID_LEN];
+> +			u8 ssid[IEEE80211_MAX_SSID_LEN] __nonstring;
+>  			bool hidden_ssid;
+>  			/* P2P_IE with NoA attribute for P2P_GO case */
+>  			u32 noa_len;
+> diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
+> index 03e7bc5b6c0b..7daa007bd8b3 100644
+> --- a/drivers/net/wireless/ath/ath10k/mac.c
+> +++ b/drivers/net/wireless/ath/ath10k/mac.c
+> @@ -6125,8 +6125,7 @@ static void ath10k_bss_info_changed(struct ieee80211_hw *hw,
+>  
+>  		if (ieee80211_vif_is_mesh(vif)) {
+>  			/* mesh doesn't use SSID but firmware needs it */
+> -			strncpy(arvif->u.ap.ssid, "mesh",
+> -				sizeof(arvif->u.ap.ssid));
+> +			strtomem_pad(arvif->u.ap.ssid, "mesh", '\0');
+>  			arvif->u.ap.ssid_len = 4;
+>  		}
+>  	}
 
-No we can't. We investigated this extensively since this also poses some
-difficulties on MacOS. We implemented different approaches but any such
-change to the allocator introduces too much of a performance impact.
+Using NUL-termination with SSID makes me always cringe as back in the
+day we had so many bad implementations which didn't use SSID with
+specific length parameter. The firmware should only check for ssid_len
+(though I didn't check) so I find confusing that here we are suddenly
+NUL-terminating it.
 
---00000000000098e5cb060874014c
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+What about using just memcpy() to make it clear it's not really a proper
+string:
 
-MIIPoQYJKoZIhvcNAQcCoIIPkjCCD44CAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-ggz7MIIEtjCCA56gAwIBAgIQeAMYYHb81ngUVR0WyMTzqzANBgkqhkiG9w0BAQsFADBMMSAwHgYD
-VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
-AxMKR2xvYmFsU2lnbjAeFw0yMDA3MjgwMDAwMDBaFw0yOTAzMTgwMDAwMDBaMFQxCzAJBgNVBAYT
-AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
-IFIzIFNNSU1FIENBIDIwMjAwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCvLe9xPU9W
-dpiHLAvX7kFnaFZPuJLey7LYaMO8P/xSngB9IN73mVc7YiLov12Fekdtn5kL8PjmDBEvTYmWsuQS
-6VBo3vdlqqXZ0M9eMkjcKqijrmDRleudEoPDzTumwQ18VB/3I+vbN039HIaRQ5x+NHGiPHVfk6Rx
-c6KAbYceyeqqfuJEcq23vhTdium/Bf5hHqYUhuJwnBQ+dAUcFndUKMJrth6lHeoifkbw2bv81zxJ
-I9cvIy516+oUekqiSFGfzAqByv41OrgLV4fLGCDH3yRh1tj7EtV3l2TngqtrDLUs5R+sWIItPa/4
-AJXB1Q3nGNl2tNjVpcSn0uJ7aFPbAgMBAAGjggGKMIIBhjAOBgNVHQ8BAf8EBAMCAYYwHQYDVR0l
-BBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMBIGA1UdEwEB/wQIMAYBAf8CAQAwHQYDVR0OBBYEFHzM
-CmjXouseLHIb0c1dlW+N+/JjMB8GA1UdIwQYMBaAFI/wS3+oLkUkrk1Q+mOai97i3Ru8MHsGCCsG
-AQUFBwEBBG8wbTAuBggrBgEFBQcwAYYiaHR0cDovL29jc3AyLmdsb2JhbHNpZ24uY29tL3Jvb3Ry
-MzA7BggrBgEFBQcwAoYvaHR0cDovL3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvcm9vdC1y
-My5jcnQwNgYDVR0fBC8wLTAroCmgJ4YlaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9yb290LXIz
-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
-miiwZhqbFo3H+sN+36dVsCIwTAYDVR0gBEUwQzBBBgkrBgEEAaAyASgwNDAyBggrBgEFBQcCARYm
-aHR0cHM6Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wDAYDVR0TAQH/BAIwADCBmgYI
-KwYBBQUHAQEEgY0wgYowPgYIKwYBBQUHMAGGMmh0dHA6Ly9vY3NwLmdsb2JhbHNpZ24uY29tL2Nh
-L2dzYXRsYXNyM3NtaW1lY2EyMDIwMEgGCCsGAQUFBzAChjxodHRwOi8vc2VjdXJlLmdsb2JhbHNp
-Z24uY29tL2NhY2VydC9nc2F0bGFzcjNzbWltZWNhMjAyMC5jcnQwHwYDVR0jBBgwFoAUfMwKaNei
-6x4schvRzV2Vb4378mMwRgYDVR0fBD8wPTA7oDmgN4Y1aHR0cDovL2NybC5nbG9iYWxzaWduLmNv
-bS9jYS9nc2F0bGFzcjNzbWltZWNhMjAyMC5jcmwwDQYJKoZIhvcNAQELBQADggEBABDOrwE7xhhZ
-KPffKFRtuggfC0sfh0EHmrCzCXlyiQFmTpjm73me7rw+ibiPUnohQxkeqC9KvwDd/gF7OAY3un01
-f8y5iEmwoymOLIzkTKIMHDp6qOul60jFrAWe8EQMuBMEc9TQbOiXB4jFgLuDZX7AspyVvnmLA5sw
-msq0yrGgxTsEeZniQpdOP/qZNS2TJmvNH8a8HuQfHH/pd20lRWfTEuhSRN8cTkKihK7iO8wjCmrp
-EXefUessFdMqMUSfGI6rUaZTfU0SRfdrVHW4IE8onI30/UVurbGlFiugNF3LbDMXdqzs2/eTsLiD
-8Dv1+pt7SJqI4zNhzZFOpvBPVIkxggJqMIICZgIBATBoMFQxCzAJBgNVBAYTAkJFMRkwFwYDVQQK
-ExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFzIFIzIFNNSU1FIENB
-IDIwMjACEAFp/vXw/R/y8Lw9a5440YEwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIE
-IFfzViVpqrqSKZC4Xf/Kvt/GoyN2gya2BkDsaymk3cYsMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0B
-BwEwHAYJKoZIhvcNAQkFMQ8XDTIzMTAyNDEwNDMxNlowaQYJKoZIhvcNAQkPMVwwWjALBglghkgB
-ZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQow
-CwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQBdUs4PuEjup9XwBg2z
-Nkdp3zR9vZXBtfiXaxLCFqH79THBU5NdfXOMLxOp7jGu8BlOX4KVWbhpmo+h6YuwsEAIBxxEK/tf
-geMS1NecZUnsaAf+IXF801+CF8gkiepYot1udqPxmQPs1llGN+7QOBsLmg2VoXB03X3EsWOUBKwB
-gCsOu8zUj38rXjQAS4jJEDFCTrfLTc/fZQ5RF0q6AKjd7sGhP9CsSVKP05Dlgsw+BcaMoZ5WQQQA
-acP3r6DFZyAkhwEAh5FnB/Cixk91A7w/Z3Rtx0lkQL/Sv7MJdI16xRxuKN1eYqmCX/q+ww5w4LB/
-cNKqwMW5y50AAnG0mv4S
---00000000000098e5cb060874014c--
+arvif->u.ap.ssid_len = 4;
+memcpy(arvif->u.ap.ssid, "mesh", arvif->u.ap.ssid_len);
+
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
