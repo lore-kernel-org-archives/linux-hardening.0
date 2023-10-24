@@ -1,147 +1,167 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EB3024215
-	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 16:11:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mail.hallyn.com (mail.hallyn.com [178.63.66.53])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 734E6A6
-	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 09:11:39 -0700 (PDT)
-Received: by mail.hallyn.com (Postfix, from userid 1001)
-	id 2F87FC18; Tue, 24 Oct 2023 11:11:38 -0500 (CDT)
-Date: Tue, 24 Oct 2023 11:11:38 -0500
-From: "Serge E. Hallyn" <serge@hallyn.com>
-To: Boris Lukashev <blukashev@sempervictus.com>
-Cc: "Serge E. Hallyn" <serge@hallyn.com>,
-	kernel-hardening@lists.openwall.com,
-	Stefan Bavendiek <stefan.bavendiek@mailbox.org>,
-	linux-hardening@vger.kernel.org
-Subject: Re: Isolating abstract sockets
-Message-ID: <20231024161138.GB323539@mail.hallyn.com>
-References: <Y59qBh9rRDgsIHaj@mailbox.org>
- <20231024134608.GC320399@mail.hallyn.com>
- <BE62D2CD-63CD-435A-A290-4608CF1A46D4@sempervictus.com>
- <20231024141512.GA321218@mail.hallyn.com>
- <CAFUG7Cfzg7LaQhhN_Vk+doOzXQ_3n4aY--mK2mORsd36MWWJjQ@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8F053A27F;
+	Tue, 24 Oct 2023 16:32:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cCqt93SE"
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FF4593;
+	Tue, 24 Oct 2023 09:32:53 -0700 (PDT)
+Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39OGJfKA023175;
+	Tue, 24 Oct 2023 16:32:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=UkAO23c+2aMfodExmELLTmdZvgxFGuee6Ajbo77NV1A=;
+ b=cCqt93SENK/H+YC6+YVBf/QwswVEyBDTJkRD5/wEL08yW/3391sAXxNfKqOA+g0Vcctk
+ Mzf7/hh2juzF6P9O/l3xIeuSIVQ/QuGwpqETG+lFidTRTkISHrBRuw8bcpfxyfPqLOvG
+ ROWSGwYDqzmithCPHHdlbTyyjuznQZPllnTQi0IzEAckLTP3ujYnDDkeHHOEwDn8PCwj
+ 16oPYFghnzp7d7zr9R4pH86DwoG0RHlCA6KjTWJ+S0bAQ5kcUMc0YJ8CiBNoxFDqNt+X
+ MIdW4UQ3+04laaa8as0sWlqQfQX9mYoT1Rm8riYgu6AESoSxCy+GOr/s+jT6CzxFzmlq DQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3txhbkrgm4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 24 Oct 2023 16:32:51 +0000
+Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39OGKm0R026944;
+	Tue, 24 Oct 2023 16:32:50 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3txhbkrgkj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 24 Oct 2023 16:32:50 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 39OG1UIi010218;
+	Tue, 24 Oct 2023 16:32:49 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3tvsbygxgm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 24 Oct 2023 16:32:49 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 39OGWkGS24707744
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 24 Oct 2023 16:32:46 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6A59E20040;
+	Tue, 24 Oct 2023 16:32:46 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A97F320043;
+	Tue, 24 Oct 2023 16:32:45 +0000 (GMT)
+Received: from [9.171.57.222] (unknown [9.171.57.222])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 24 Oct 2023 16:32:45 +0000 (GMT)
+Message-ID: <6302faa1-b0f3-4405-b4c0-28d309506823@linux.ibm.com>
+Date: Tue, 24 Oct 2023 18:32:45 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] s390/ctcm: replace deprecated strncpy with strscpy
+Content-Language: en-GB
+To: Justin Stitt <justinstitt@google.com>,
+        Alexandra Winter <wintera@linux.ibm.com>,
+        Wenjia Zhang
+ <wenjia@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev
+ <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20231023-strncpy-drivers-s390-net-ctcm_main-c-v1-1-265db6e78165@google.com>
+From: Thorsten Winkler <twinkler@linux.ibm.com>
+In-Reply-To: <20231023-strncpy-drivers-s390-net-ctcm_main-c-v1-1-265db6e78165@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 3anXJQg1cO57P-0sE1YqQFOL8TGs8Bqs
+X-Proofpoint-ORIG-GUID: RB4OGPEHdMBidTDH8y5UceOR1haKTiMY
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFUG7Cfzg7LaQhhN_Vk+doOzXQ_3n4aY--mK2mORsd36MWWJjQ@mail.gmail.com>
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-24_16,2023-10-24_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 phishscore=0 mlxscore=0 impostorscore=0 malwarescore=0
+ suspectscore=0 clxscore=1011 adultscore=0 mlxlogscore=999
+ priorityscore=1501 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2310170001 definitions=main-2310240142
 
-Yeah, I think I've heard the term "socket namespaces" before, and I
-agree that changing the term 'network namespaces' in the kernel would
-probably not be practical at this point.
 
-On Tue, Oct 24, 2023 at 11:55:43AM -0400, Boris Lukashev wrote:
-> Good point: from the "resources granted to a user" perspective, that does
-> help bound their consumption. The nomenclature distinction seems like a
-> good one to have, but if "network namespaces" *change the meaning of the
-> term *and the original definition becomes "network device namespaces," then
-> there would be a period where older and newer kernels have very different
-> functions mapped to the same conceptual name. Might this make a bit more
-> sense as "network namespaces" meaning what they do now - "network device
-> namespaces," effectively; while the new concept would be "socket
-> namespaces" to account for the various socket style interfaces provided?
+
+On 23.10.23 21:35, Justin Stitt wrote:
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
 > 
-> Thanks
-> -Boris
+> We expect chid to be NUL-terminated based on its use with format
+> strings:
 > 
-> On Tue, Oct 24, 2023 at 10:15 AM Serge E. Hallyn <serge@hallyn.com> wrote:
+> 	CTCM_DBF_TEXT_(SETUP, CTC_DBF_INFO, "%s(%s) %s", CTCM_FUNTAIL,
+> 			chid, ok ? "OK" : "failed");
 > 
-> > Thanks for the reply.  Do you have any papers which came out of this r&d
-> > phase?  Sounds very interesting.
-> >
-> > > Multiple NS' sharing an IP stack would exhaust ephemeral ranges faster
-> >
-> > Yes, but that could be a feature.  I think of it as:  I'm unprivileged
-> > user serge, and I want to fire off firefox in a whatzit-namespace so
-> > that I can redirect or forbid some connections.  In this case, the
-> > admins have not agreed to let me double my resource usage, so the fact
-> > that the new namespace is sharing mine is a feature.  And this lets
-> > me use network-namespace-like features completely unprivileged, without
-> > having to use a setuid-root helper to hook up a bridge.
-> >
-> > But, I didn't send this reply to advocate this approach.  My main point
-> > was to mention that "network namespaces are network device namespaces"
-> > and hope that others would bring other suggestions for alternatives.
-> >
-> > -serge
-> >
-> > On Tue, Oct 24, 2023 at 10:05:29AM -0400, Boris Lukashev wrote:
-> > > Namespacing at OSI4 seems a bit fraught as the underlying route, mac,
-> > and physdev fall outside the callers control. Multiple NS' sharing an IP
-> > stack would exhaust ephemeral ranges faster (likely asymmetrically too) and
-> > have bound socket collisions opaque to each other requiring handling
-> > outside the NS/containers purview. We looked at this sort of thing during
-> > the r&d phase of our assured comms work (namespaces were young) and found a
-> > bunch of overhead and collision concerns. Not saying it can't be done, but
-> > getting consumers to play nice enough with such an approach may be a heavy
-> > lift.
-> > >
-> > > Thanks,
-> > > -Boris
-> > >
-> > >
-> > > On October 24, 2023 9:46:08 AM EDT, "Serge E. Hallyn" <serge@hallyn.com>
-> > wrote:
-> > > >On Sun, Dec 18, 2022 at 08:29:10PM +0100, Stefan Bavendiek wrote:
-> > > >> When building userspace application sandboxes, one issue that does
-> > not seem trivial to solve is the isolation of abstract sockets.
-> > > >
-> > > >Veeery late reply.  Have you had any productive discussions about this
-> > in
-> > > >other threads or venues?
-> > > >
-> > > >> While most IPC mechanism can be isolated by mechanisms like mount
-> > namespaces, abstract sockets are part of the network namespace.
-> > > >> It is possible to isolate abstract sockets by using a new network
-> > namespace, however, unprivileged processes can only create a new empty
-> > network namespace, which removes network access as well and makes this
-> > useless for network clients.
-> > > >>
-> > > >> Same linux sandbox projects try to solve this by bridging the
-> > existing network interfaces into the new namespace or use something like
-> > slirp4netns to archive this, but this does not look like an ideal solution
-> > to this problem, especially since sandboxing should reduce the kernel
-> > attack surface without introducing more complexity.
-> > > >>
-> > > >> Aside from containers using namespaces, sandbox implementations based
-> > on seccomp and landlock would also run into the same problem, since
-> > landlock only provides file system isolation and seccomp cannot filter the
-> > path argument and therefore it can only be used to block new unix domain
-> > socket connections completely.
-> > > >>
-> > > >> Currently there does not seem to be any way to disable network
-> > namespaces in the kernel without also disabling unix domain sockets.
-> > > >>
-> > > >> The question is how to solve the issue of abstract socket isolation
-> > in a clean and efficient way, possibly even without namespaces.
-> > > >> What would be the ideal way to implement a mechanism to disable
-> > abstract sockets either globally or even better, in the context of a
-> > process.
-> > > >> And would such a patch have a realistic chance to make it into the
-> > kernel?
-> > > >
-> > > >Disabling them altogether would break lots of things depending on them,
-> > > >like X :)  (@/tmp/.X11-unix/X0).  The other path is to reconsider
-> > network
-> > > >namespaces.  There are several directions this could lead.  For one, as
-> > > >Dinesh Subhraveti often points out, the current "network" namespace is
-> > > >really a network device namespace.  If we instead namespace at the
-> > > >bind/connect/etc calls, we end up with much different abilities.  You
-> > > >can implement something like this today using seccomp-filter.
-> > > >
-> > > >-serge
-> >
+> Moreover, NUL-padding is not required as it is _only_ used in this one
+> instance with a format string.
+> 
+> Considering the above, a suitable replacement is `strscpy` [2] due to
+> the fact that it guarantees NUL-termination on the destination buffer
+> without unnecessarily NUL-padding.
+> 
+> We can also drop the +1 from chid's declaration as we no longer need to
+> be cautious about leaving a spot for a NUL-byte. Let's use the more
+> idiomatic strscpy usage of (dest, src, sizeof(dest)) as this more
+> closely ties the destination buffer to the length.
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+
+LGTM, thank you!
+
+Reviewed-by: Thorsten Winkler <twinkler@linux.ibm.com>
+Tested-by: Thorsten Winkler <twinkler@linux.ibm.com>
+
+> ---
+> Note: build-tested only.
+> 
+> Found with: $ rg "strncpy\("
+> ---
+>   drivers/s390/net/ctcm_main.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/s390/net/ctcm_main.c b/drivers/s390/net/ctcm_main.c
+> index 6faf27136024..ac15d7c2b200 100644
+> --- a/drivers/s390/net/ctcm_main.c
+> +++ b/drivers/s390/net/ctcm_main.c
+> @@ -200,13 +200,13 @@ static void channel_free(struct channel *ch)
+>   static void channel_remove(struct channel *ch)
+>   {
+>   	struct channel **c = &channels;
+> -	char chid[CTCM_ID_SIZE+1];
+> +	char chid[CTCM_ID_SIZE];
+>   	int ok = 0;
+>   
+>   	if (ch == NULL)
+>   		return;
+>   	else
+> -		strncpy(chid, ch->id, CTCM_ID_SIZE);
+> +		strscpy(chid, ch->id, sizeof(chid));
+>   
+>   	channel_free(ch);
+>   	while (*c) {
+> 
+> ---
+> base-commit: 9c5d00cb7b6bbc5a7965d9ab7d223b5402d1f02c
+> change-id: 20231023-strncpy-drivers-s390-net-ctcm_main-c-f9180f470c69
+> 
+> Best regards,
+> --
+> Justin Stitt <justinstitt@google.com>
 > 
 > 
-> -- 
-> Boris Lukashev
-> Systems Architect
-> Semper Victus <https://www.sempervictus.com>
