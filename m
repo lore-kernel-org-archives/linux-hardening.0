@@ -1,78 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB4F23BB
-	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 03:35:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43A226AA2
+	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 05:35:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m5eAWz5f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C42F3C433C7;
-	Tue, 24 Oct 2023 03:35:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698118514;
-	bh=gEjzgitPwtEM7qPh1XxJevn3rHIvkgMhlroxDGCxJT0=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=m5eAWz5fjJpeDClOHeEV9UCBDDhj6SPS1kCs+cep4NRzF3IbQJ7RRKNgxtACzbNMx
-	 t2PdvmmThgUtvH76pTODnQ2yXi1tAic1ra6FQCaVM0FZbbJl3axUW3li1jvcHWhGVS
-	 0xV2NS6PARouI/7CBGQMucBPRbrNbVz5cCHzq3CsIkLDcAf5XrXm964xGdhoINq4WI
-	 2xqLgw8Nb1qp2kxEK678/oilKIKQglYdsPbk5QqdO2xLyXJG8utbDhuAEZM4P89ALS
-	 TLBqupAVPsuh6F3yRl8fTF/mQX6RURAY6dXN23HcMLl7Cg5Gj/7ytzc+enTbeNTqUz
-	 1P4ENwtwzv8Pg==
-Message-ID: <a46cee9468d3f6cb7e33c48e8ab70ca0.sboyd@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C5RMelYF"
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E41AF120
+	for <linux-hardening@vger.kernel.org>; Mon, 23 Oct 2023 22:35:38 -0700 (PDT)
+Received: by mail-wm1-x32d.google.com with SMTP id 5b1f17b1804b1-4084b0223ccso31775185e9.2
+        for <linux-hardening@vger.kernel.org>; Mon, 23 Oct 2023 22:35:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1698125737; x=1698730537; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=AMzU+U96Jrm5po+L9hfZsnb4xlLlkv8Neetn1c1Qi+w=;
+        b=C5RMelYFv2AJ/NffMFYA6lakp/mcmLq+A4jTz2NCEsLZxLaJi+3AX9YY0T1LEdXK8O
+         xDRSzCcR20TPRjVBqBxJL+g6aHCqa0eE/33xh3yhXUYs4VaAd+LI6zubPqn7LqTahO2L
+         kYmy4vypzJUn7y54HROv/bGMarH3pfJrMIFQRAheNySCqdELa9KK+dK19HBnqTLfUgz5
+         U9IYwb1ak11vAkBqIty5i5Ogk7K1GXRsb29oD77ZnZU7OgSKW8VlDp2uaGFvyUXTQzF1
+         UfPxULnqlHKLhjghIuxuv8xaEkUoYNM6+SiOyKxRM9l09r/KQZ53w/3MtywnEwEdvudK
+         Eu7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698125737; x=1698730537;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AMzU+U96Jrm5po+L9hfZsnb4xlLlkv8Neetn1c1Qi+w=;
+        b=KRSQi4J1ySV6dmKC0mjZ/BPz7GGzrkFqgT5PosktoyIAzRCH5pd+22eTbh9R2m+Ihl
+         5zbXCQ69R1KBWeWMcpMsZMv/lNCpYspg4hMOfHbcphBeWKT7QWaU915C/OxrLqbiwVJJ
+         1Nld8FLLcTuijWm2poJtJA/n7AzxRXcSNbOZQxHLeMBX6y/yz9vrEPMcH5Q6RebZcccN
+         gwRXWXUKWs1z/6p340V83dmGAPyfhXcPQZksr2NgenKCx2Jzb8OREEo74DPGb8OUpH9M
+         woEvLGBemKU7M5VphupRX8D7MAZr+W/XDxhpx+yJd9AQbdeKhGTrh2FTRaNdE0QakyiY
+         hdXw==
+X-Gm-Message-State: AOJu0Yzq6hMDujfTDJ6K98AxpULXUVRQj4D0n1ewUf6sKKzbRpgwyhj6
+	nU28Us+18HadTiXqKYlFwGGmWw==
+X-Google-Smtp-Source: AGHT+IEo8KiM/RFZR69QTA1j71GiZ98Rzw3Ga2dc1o6Sa78qJi5HYkvqoAQIkUVRn3xG1/AuzJPStA==
+X-Received: by 2002:a05:600c:5122:b0:408:3bbd:4a82 with SMTP id o34-20020a05600c512200b004083bbd4a82mr8534471wms.15.1698125737154;
+        Mon, 23 Oct 2023 22:35:37 -0700 (PDT)
+Received: from localhost ([102.36.222.112])
+        by smtp.gmail.com with ESMTPSA id f5-20020a056000128500b0031c6581d55esm9115663wrx.91.2023.10.23.22.35.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Oct 2023 22:35:36 -0700 (PDT)
+Date: Tue, 24 Oct 2023 08:35:33 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: keescook@chromium.org, Robert Richter <rric@kernel.org>,
+	Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
+	James Morse <james.morse@arm.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Sergey Temerkhanov <s.temerkhanov@gmail.com>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org, Borislav Petkov <bp@suse.de>,
+	linux-edac@vger.kernel.org
+Subject: Re: [PATCH v2] EDAC/thunderx: Fix some potential buffer overflow in
+ thunderx_ocx_com_threaded_isr()
+Message-ID: <70bd7480-508a-451d-bc0a-f78e652cf511@kadam.mountain>
+References: <91ec35cd8e2e86fa3d24c2e8ea6970e0437cdfd2.1697908406.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <385c516c498e07eb9a521107e16a7efd26e86ea5.1698117815.git.gustavoars@kernel.org>
-References: <cover.1698117815.git.gustavoars@kernel.org> <385c516c498e07eb9a521107e16a7efd26e86ea5.1698117815.git.gustavoars@kernel.org>
-Subject: Re: [PATCH v3 2/2][next] clk: socfpga: agilex: Add bounds-checking coverage for struct stratix10_clock_data
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org, Gustavo A. R. Silva <gustavoars@kernel.org>, linux-hardening@vger.kernel.org, linux-clk@vger.kernel.org
-To: Dinh Nguyen <dinguyen@kernel.org>, Gustavo A. R. Silva <gustavoars@kernel.org>, Michael Turquette <mturquette@baylibre.com>
-Date: Mon, 23 Oct 2023 20:35:12 -0700
-User-Agent: alot/0.10
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <91ec35cd8e2e86fa3d24c2e8ea6970e0437cdfd2.1697908406.git.christophe.jaillet@wanadoo.fr>
 
-Quoting Gustavo A. R. Silva (2023-10-23 20:31:42)
-> In order to gain the bounds-checking coverage that __counted_by provides
-> to flexible-array members at run-time via CONFIG_UBSAN_BOUNDS (for array
-> indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family functions),
-> we must make sure that the counter member, in this case `num`, is updated
-> before the first access to the flex-array member, in this case array `hws=
-`.
->=20
-> commit f316cdff8d67 ("clk: Annotate struct clk_hw_onecell_data with
-> __counted_by") introduced `__counted_by` for `struct clk_hw_onecell_data`
-> together with changes to relocate some of assignments of counter `num`
-> before `hws` is accessed:
->=20
-> include/linux/clk-provider.h:
-> 1380 struct clk_hw_onecell_data {
-> 1381         unsigned int num;
-> 1382         struct clk_hw *hws[] __counted_by(num);
-> 1383 };
->=20
-> However, this structure is used as a member in other structs, in this
-> case in `struct sstratix10_clock_data`:
->=20
-> drivers/clk/socfpga/stratix10-clk.h:
->   9 struct stratix10_clock_data {
->  10         void __iomem            *base;
->  11
->  12         /* Must be last */
->  13         struct clk_hw_onecell_data      clk_data;
->  14 };
->=20
-> Hence, we need to move the assignments to `clk_data->clk_data.num` after
-> allocations for `struct stratix10_clock_data` and before accessing the
-> flexible array `clk_data->clk_data.hws`. And, as assignments for both
-> `clk_data->clk_data.num` and `clk_data->base` are originally adjacent to
-> each other, relocate both assignments together.
->=20
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
+On Sat, Oct 21, 2023 at 07:13:51PM +0200, Christophe JAILLET wrote:
+> @@ -1127,27 +1128,26 @@ static irqreturn_t thunderx_ocx_com_threaded_isr(int irq, void *irq_id)
+>  				ARRAY_SIZE(ocx->com_err_ctx));
+>  		ctx = &ocx->com_err_ctx[tail];
+>  
+> -		snprintf(msg, OCX_MESSAGE_SIZE, "%s: OCX_COM_INT: %016llx",
+> -			ocx->edac_dev->ctl_name, ctx->reg_com_int);
+> -
+>  		decode_register(other, OCX_OTHER_SIZE,
+>  				ocx_com_errors, ctx->reg_com_int);
+>  
+> -		strncat(msg, other, OCX_MESSAGE_SIZE);
+> +		remaining = OCX_MESSAGE_SIZE;
+> +		remaining -= scnprintf(msg, remaining, "%s: OCX_COM_INT: %016llx%s",
+> +				       ocx->edac_dev->ctl_name, ctx->reg_com_int,
+> +				       other);
+>  
+>  		for (lane = 0; lane < OCX_RX_LANES; lane++)
+>  			if (ctx->reg_com_int & BIT(lane)) {
+> -				snprintf(other, OCX_OTHER_SIZE,
+> -					 "\n\tOCX_LNE_INT[%02d]: %016llx OCX_LNE_STAT11[%02d]: %016llx",
+> -					 lane, ctx->reg_lane_int[lane],
+> -					 lane, ctx->reg_lane_stat11[lane]);
+> -
+> -				strncat(msg, other, OCX_MESSAGE_SIZE);
+> -
+>  				decode_register(other, OCX_OTHER_SIZE,
+>  						ocx_lane_errors,
+>  						ctx->reg_lane_int[lane]);
+> -				strncat(msg, other, OCX_MESSAGE_SIZE);
+> +
+> +				remaining -= scnprintf(msg + (OCX_MESSAGE_SIZE - remaining),
+> +						       remaining,
 
-Applied to clk-next
+Instead of doing "remaining -=" the canonincal way is "off +=".  Then
+the snprintf() becomes:
+
+	off += scnprintf(msg + off, OCX_MESSAGE_SIZE - off, ""\n\tOCX_...
+
+Your way works but it makes my head hurt.
+
+regards,
+dan carpenter
+
