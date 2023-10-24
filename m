@@ -1,133 +1,150 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD8DC11732
-	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 14:29:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="Oobz4oxA"
-Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 355EAC4
-	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 07:29:29 -0700 (PDT)
-Received: by mail-yb1-xb2e.google.com with SMTP id 3f1490d57ef6-d9fe0a598d8so1860974276.2
-        for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 07:29:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1698157768; x=1698762568; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9St+NC+XD1HvjvLwwsYc0DGwnb1k0QyELVidz1a0GZc=;
-        b=Oobz4oxAvRhRescv5O0JMEUPyFW0bXScZyUhmfrxtOBLfHqiRxt0CANOJb5u0ONIp8
-         p3F1qZuWiMNXu5EoKGB3iwSPPYo6Z+SF4pIYm863E7TIu3cj3Gaf2WnyM4H7EcHU4lky
-         ou0Tr4xMHcP6cBlkKZvfHJht1hOt7U+0n64CMyv1Hu1YYFqtRro39d0JpKg/F90ZnVHa
-         YUsCBYiLmu9em7j2pPqytHiDhyOET6+syQFk5SvJFOhhEEgamZ/wHgh8U3yTSHj6mlpR
-         0NAe6TMw4xFube1SBJhLzYMqR8be8UQsxUgnauYAlB8GooyXzuBu+I78XdpCZlbBndEh
-         XDFw==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 587FD36AF3;
+	Tue, 24 Oct 2023 14:33:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B432B8F;
+	Tue, 24 Oct 2023 07:33:00 -0700 (PDT)
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-1e9e4636ce6so816616fac.0;
+        Tue, 24 Oct 2023 07:33:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698157768; x=1698762568;
+        d=1e100.net; s=20230601; t=1698157980; x=1698762780;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9St+NC+XD1HvjvLwwsYc0DGwnb1k0QyELVidz1a0GZc=;
-        b=P7yWe6vVqtcAX1UFhdXkVx68fTAgsVsd8M3cww/kN4U40NtP5bULUSTni2rd+zOaXV
-         nbP/8WssAxWelPHdqI7BOuzlaStVIFcW/iaQHyAY1JQytLaZgpEvm3vOGWniWT6B8H1J
-         D+Plx6qv5guQVfbq8RvpOOMEw85qrt6qa7tUf4MV6EEDhYgUzdY9gbIij1GCkXrPaPOe
-         ShoUyvTc4IndK843zlmU7XjdoiUYu30vAaMx6zbJNQEqF5K0VQN7WtfzNpyuNSehpSbC
-         zq1m09dXLYwniYlQHLKxfuQysKTdmrtbRG2iI+nqfJXIXdr9h1w511PHkYGIRVqCBieO
-         hW0Q==
-X-Gm-Message-State: AOJu0YxhYctSPEzEIhMkNtfLlh6vPf2C5bNIxrYaZlP5WMcc2Ci6HcJ9
-	vmjqgeRqa9GZExQqbRfrD4SrcnXaQvp7e7pcyxQO
-X-Google-Smtp-Source: AGHT+IFtA3/HQ2zpytfREiV5TTig4qKINm6MGhnXPuhthXB33oQqf+csIi0haSBqSrBP/+YD5LoK7hvXQEdKBYlqKfY=
-X-Received: by 2002:a25:d38d:0:b0:d9c:2a9c:3f4f with SMTP id
- e135-20020a25d38d000000b00d9c2a9c3f4fmr13007814ybf.62.1698157768313; Tue, 24
- Oct 2023 07:29:28 -0700 (PDT)
+        bh=Fbg6/Pf1XWF9qiAo/Bp62JB8vPkBgG8ganuOuh0wuf8=;
+        b=tzs9spvNuWbWclMrStZfrCtlFW6hponatDdM9HBAVCNzkEHPozhznVlKu4ewiDiHI/
+         5AhIhQzTp3fnckFdEi1Q++Njc+xm9ddHWjDV96NPkSG6cFomkXVvMoVVkjXyTSdRXwKQ
+         RmLn0yR8fGLjVgkYpvJo0Sfj6YlOvHVuPsWbqdtmG+kxjTJA2DrCd+ucc+oYTeXsZjjQ
+         0Tj/4KlTFkwV5UFdKF7EuL8oK344NQEQGmr+wJ3/KjvwGOxQEnULcQZGd8Aa4Iok6sKw
+         /zyfr8jkeFWs/FqWdqpZu6rpqPmAwSilgeTok0s5kUSjUo7rw/dz8vtdyhP/0vcT3xQ0
+         eLRQ==
+X-Gm-Message-State: AOJu0YxOfoNxF+PZ1azdXgX1ZB8FyGVvj+iepm3ha6QNzEASZaFolZi9
+	a8dclehjiRysD76e/aB4hlZFJD8az0uxqPsx3E0TpVx0
+X-Google-Smtp-Source: AGHT+IGxdYwV+5t593nxdBm55S75OJLko9wE0PsBu2QC9lWamPymlRTCxskxQktjdzG3dQGMeihta+/uXq2E5VLwAw8=
+X-Received: by 2002:a05:6871:220e:b0:1e9:adec:bf5e with SMTP id
+ sc14-20020a056871220e00b001e9adecbf5emr12630628oab.2.1698157979897; Tue, 24
+ Oct 2023 07:32:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Y59qBh9rRDgsIHaj@mailbox.org> <20231024134608.GC320399@mail.hallyn.com>
- <CAHC9VhRCJfBRu8172=5jF_gFhv2znQXTnGs_c_ae1G3rk_Dc-g@mail.gmail.com> <20231024141807.GB321218@mail.hallyn.com>
-In-Reply-To: <20231024141807.GB321218@mail.hallyn.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Tue, 24 Oct 2023 10:29:17 -0400
-Message-ID: <CAHC9VhQaotVPGzWFFzRCgw9mDDc2tu6kmGHioMBghj-ybbYx1Q@mail.gmail.com>
-Subject: Re: Isolating abstract sockets
-To: "Serge E. Hallyn" <serge@hallyn.com>
-Cc: Stefan Bavendiek <stefan.bavendiek@mailbox.org>, kernel-hardening@lists.openwall.com, 
-	linux-hardening@vger.kernel.org
+References: <20230712223448.145079-1-jeshuas@nvidia.com> <DM6PR12MB3371BA50E3B76D2266273901DB09A@DM6PR12MB3371.namprd12.prod.outlook.com>
+ <SJ1PR11MB6083426D3C663F47E707CF1AFC09A@SJ1PR11MB6083.namprd11.prod.outlook.com>
+ <DM6PR12MB3371D86F80417641B8479B28DB0EA@DM6PR12MB3371.namprd12.prod.outlook.com>
+ <DM6PR12MB3371FA3AEEA4D17D94C889D5DB1BA@DM6PR12MB3371.namprd12.prod.outlook.com>
+ <DM6PR12MB337153EE2DDDB427096446F0DBF2A@DM6PR12MB3371.namprd12.prod.outlook.com>
+ <DM6PR12MB3371083F4E6BCE4A8D2389E7DBC5A@DM6PR12MB3371.namprd12.prod.outlook.com>
+ <DM6PR12MB33710C8FE59EB3CB1404ABC0DBD8A@DM6PR12MB3371.namprd12.prod.outlook.com>
+In-Reply-To: <DM6PR12MB33710C8FE59EB3CB1404ABC0DBD8A@DM6PR12MB3371.namprd12.prod.outlook.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 24 Oct 2023 16:32:48 +0200
+Message-ID: <CAJZ5v0g2TsBo4hxsJBo5a-ggD2Cj65VS=tokpoRaNwzWbPoeNw@mail.gmail.com>
+Subject: Re: [PATCH V2] ACPI: APEI: Use ERST timeout for slow devices
+To: Jeshua Smith <jeshuas@nvidia.com>, "Luck, Tony" <tony.luck@intel.com>, 
+	"james.morse@arm.com" <james.morse@arm.com>, "bp@alien8.de" <bp@alien8.de>
+Cc: "keescook@chromium.org" <keescook@chromium.org>, "gpiccoli@igalia.com" <gpiccoli@igalia.com>, 
+	"rafael@kernel.org" <rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>, 
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>, 
+	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Thierry Reding <treding@nvidia.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 24, 2023 at 10:18=E2=80=AFAM Serge E. Hallyn <serge@hallyn.com>=
- wrote:
-> On Tue, Oct 24, 2023 at 10:14:29AM -0400, Paul Moore wrote:
-> > On Tue, Oct 24, 2023 at 9:46=E2=80=AFAM Serge E. Hallyn <serge@hallyn.c=
-om> wrote:
-> > > On Sun, Dec 18, 2022 at 08:29:10PM +0100, Stefan Bavendiek wrote:
-> > > > When building userspace application sandboxes, one issue that does =
-not seem trivial to solve is the isolation of abstract sockets.
-> > >
-> > > Veeery late reply.  Have you had any productive discussions about thi=
-s in
-> > > other threads or venues?
-> > >
-> > > > While most IPC mechanism can be isolated by mechanisms like mount n=
-amespaces, abstract sockets are part of the network namespace.
-> > > > It is possible to isolate abstract sockets by using a new network n=
-amespace, however, unprivileged processes can only create a new empty netwo=
-rk namespace, which removes network access as well and makes this useless f=
-or network clients.
-> > > >
-> > > > Same linux sandbox projects try to solve this by bridging the exist=
-ing network interfaces into the new namespace or use something like slirp4n=
-etns to archive this, but this does not look like an ideal solution to this=
- problem, especially since sandboxing should reduce the kernel attack surfa=
-ce without introducing more complexity.
-> > > >
-> > > > Aside from containers using namespaces, sandbox implementations bas=
-ed on seccomp and landlock would also run into the same problem, since land=
-lock only provides file system isolation and seccomp cannot filter the path=
- argument and therefore it can only be used to block new unix domain socket=
- connections completely.
-> > > >
-> > > > Currently there does not seem to be any way to disable network name=
-spaces in the kernel without also disabling unix domain sockets.
-> > > >
-> > > > The question is how to solve the issue of abstract socket isolation=
- in a clean and efficient way, possibly even without namespaces.
-> > > > What would be the ideal way to implement a mechanism to disable abs=
-tract sockets either globally or even better, in the context of a process.
-> > > > And would such a patch have a realistic chance to make it into the =
-kernel?
-> > >
-> > > Disabling them altogether would break lots of things depending on the=
-m,
-> > > like X :)  (@/tmp/.X11-unix/X0).  The other path is to reconsider net=
-work
-> > > namespaces.  There are several directions this could lead.  For one, =
-as
-> > > Dinesh Subhraveti often points out, the current "network" namespace i=
-s
-> > > really a network device namespace.  If we instead namespace at the
-> > > bind/connect/etc calls, we end up with much different abilities.
-> >
-> > The LSM layer supports access controls on abstract sockets, with at
-> > least two (AppArmor, SELinux) providing abstract socket access
-> > controls, other LSMs may provide controls as well.
+On Mon, Oct 23, 2023 at 5:45=E2=80=AFPM Jeshua Smith <jeshuas@nvidia.com> w=
+rote:
 >
-> Good point.  And for Stefan that may suffice, so thanks for mentioning
-> that.  But The LSM layer is mandatory access control for use by the
-> admins.  That doesn't help an unprivileged user.
+> Can we get this merged please, or at least instructions for what needs to=
+ happen to get it merged?
 
-Individual LSMs may implement mandatory access control models, but
-that is not an inherent requirement imposed by the LSM layer.  While
-the Landlock LSM does not (yet?) support access controls for abstract
-sockets, it is a discretionary access control mechanism.
+So there are 3 designated reviewers for APEI: Tony Luck, Borislav
+Petkov and James Morse.  I need an ACK or Reviewed-by from one of
+them, so I can proceed with an APEI patch.
 
-I'm not currently aware of a discretionary access control LSM that
-supports abstract socket access control, but such a LSM should be
-possible if someone wanted to implement one.
+Thanks!
 
---=20
-paul-moore.com
+> -----Original Message-----
+> From: Jeshua Smith
+> Sent: Monday, October 2, 2023 10:10 AM
+> To: Luck, Tony <tony.luck@intel.com>; keescook@chromium.org; gpiccoli@iga=
+lia.com; rafael@kernel.org; lenb@kernel.org; james.morse@arm.com; bp@alien8=
+.de
+> Cc: linux-acpi@vger.kernel.org; linux-kernel@vger.kernel.org; linux-harde=
+ning@vger.kernel.org; linux-tegra@vger.kernel.org; Thierry Reding <treding@=
+nvidia.com>; Jonathan Hunter <jonathanh@nvidia.com>
+> Subject: RE: [PATCH V2] ACPI: APEI: Use ERST timeout for slow devices
+>
+> Resending due to lack of responses.
+>
+> -----Original Message-----
+> From: Jeshua Smith
+> Sent: Monday, September 11, 2023 10:16 AM
+> To: Luck, Tony <tony.luck@intel.com>; keescook@chromium.org; gpiccoli@iga=
+lia.com; rafael@kernel.org; lenb@kernel.org; james.morse@arm.com; bp@alien8=
+.de
+> Cc: linux-acpi@vger.kernel.org; linux-kernel@vger.kernel.org; linux-harde=
+ning@vger.kernel.org; linux-tegra@vger.kernel.org; Thierry Reding <treding@=
+nvidia.com>; Jonathan Hunter <jonathanh@nvidia.com>
+> Subject: RE: [PATCH V2] ACPI: APEI: Use ERST timeout for slow devices
+>
+> Any further questions? Anything else holding up this patch?
+>
+> -----Original Message-----
+> From: Jeshua Smith <jeshuas@nvidia.com>
+> Sent: Friday, August 4, 2023 7:05 PM
+> To: Luck, Tony <tony.luck@intel.com>; keescook@chromium.org; gpiccoli@iga=
+lia.com; rafael@kernel.org; lenb@kernel.org; james.morse@arm.com; bp@alien8=
+.de
+> Cc: linux-acpi@vger.kernel.org; linux-kernel@vger.kernel.org; linux-harde=
+ning@vger.kernel.org; linux-tegra@vger.kernel.org; Thierry Reding <treding@=
+nvidia.com>; Jonathan Hunter <jonathanh@nvidia.com>
+> Subject: RE: [PATCH V2] ACPI: APEI: Use ERST timeout for slow devices
+>
+> Thanks for the reply.
+>
+> It's not very easy to see. It's just a bit down from the link you sent. I=
+t's the last possible action in the Serialization Actions table:
+> https://uefi.org/specs/ACPI/6.5/18_Platform_Error_Interfaces.html#seriali=
+zation-actions
+>
+> 18.5.1.1. Serialization Actions
+>
+> GET_EXECUTE-_OPERATION_TIMINGS
+>
+> Returns an encoded QWORD:
+> [63:32] value in microseconds that the platform expects would be the maxi=
+mum amount of time it will take to process and complete an EXECUTE_OPERATIO=
+N.
+> [31:0] value in microseconds that the platform expects would be the nomin=
+al amount of time it will take to process and complete an EXECUTE_OPERATION=
+.
+>
+> -----Original Message-----
+> From: Luck, Tony <tony.luck@intel.com>
+> Sent: Friday, August 4, 2023 10:31 AM
+> To: Jeshua Smith <jeshuas@nvidia.com>; keescook@chromium.org; gpiccoli@ig=
+alia.com; rafael@kernel.org; lenb@kernel.org; james.morse@arm.com; bp@alien=
+8.de
+> Cc: linux-acpi@vger.kernel.org; linux-kernel@vger.kernel.org; linux-harde=
+ning@vger.kernel.org; linux-tegra@vger.kernel.org; Thierry Reding <treding@=
+nvidia.com>; Jonathan Hunter <jonathanh@nvidia.com>
+> Subject: RE: [PATCH V2] ACPI: APEI: Use ERST timeout for slow devices
+>
+> External email: Use caution opening links or attachments
+>
+>
+> > Can the maintainers please respond to my patch?
+>
+> Can you give a reference to the ACPI spec where this timing information i=
+s documented? I'm looking at ACPI 6.5 and don't see anything about this.
+>
+> https://uefi.org/specs/ACPI/6.5/18_Platform_Error_Interfaces.html#error-s=
+erialization
+>
+> -Tony
