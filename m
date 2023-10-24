@@ -1,88 +1,69 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D07392773A
-	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 14:15:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3931E2773A
+	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 14:18:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 Received: from mail.hallyn.com (mail.hallyn.com [178.63.66.53])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83B52B6
-	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 07:15:13 -0700 (PDT)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF46FB6
+	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 07:18:08 -0700 (PDT)
 Received: by mail.hallyn.com (Postfix, from userid 1001)
-	id 285A3C18; Tue, 24 Oct 2023 09:15:12 -0500 (CDT)
-Date: Tue, 24 Oct 2023 09:15:12 -0500
+	id 7F1F859E; Tue, 24 Oct 2023 09:18:07 -0500 (CDT)
+Date: Tue, 24 Oct 2023 09:18:07 -0500
 From: "Serge E. Hallyn" <serge@hallyn.com>
-To: Boris Lukashev <blukashev@sempervictus.com>
-Cc: kernel-hardening@lists.openwall.com,
-	"Serge E. Hallyn" <serge@hallyn.com>,
+To: Paul Moore <paul@paul-moore.com>
+Cc: "Serge E. Hallyn" <serge@hallyn.com>,
 	Stefan Bavendiek <stefan.bavendiek@mailbox.org>,
+	kernel-hardening@lists.openwall.com,
 	linux-hardening@vger.kernel.org
 Subject: Re: Isolating abstract sockets
-Message-ID: <20231024141512.GA321218@mail.hallyn.com>
+Message-ID: <20231024141807.GB321218@mail.hallyn.com>
 References: <Y59qBh9rRDgsIHaj@mailbox.org>
  <20231024134608.GC320399@mail.hallyn.com>
- <BE62D2CD-63CD-435A-A290-4608CF1A46D4@sempervictus.com>
+ <CAHC9VhRCJfBRu8172=5jF_gFhv2znQXTnGs_c_ae1G3rk_Dc-g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <BE62D2CD-63CD-435A-A290-4608CF1A46D4@sempervictus.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHC9VhRCJfBRu8172=5jF_gFhv2znQXTnGs_c_ae1G3rk_Dc-g@mail.gmail.com>
 
-Thanks for the reply.  Do you have any papers which came out of this r&d
-phase?  Sounds very interesting.
-
-> Multiple NS' sharing an IP stack would exhaust ephemeral ranges faster
-
-Yes, but that could be a feature.  I think of it as:  I'm unprivileged
-user serge, and I want to fire off firefox in a whatzit-namespace so
-that I can redirect or forbid some connections.  In this case, the
-admins have not agreed to let me double my resource usage, so the fact
-that the new namespace is sharing mine is a feature.  And this lets
-me use network-namespace-like features completely unprivileged, without
-having to use a setuid-root helper to hook up a bridge.
-
-But, I didn't send this reply to advocate this approach.  My main point
-was to mention that "network namespaces are network device namespaces"
-and hope that others would bring other suggestions for alternatives.
-
--serge
-
-On Tue, Oct 24, 2023 at 10:05:29AM -0400, Boris Lukashev wrote:
-> Namespacing at OSI4 seems a bit fraught as the underlying route, mac, and physdev fall outside the callers control. Multiple NS' sharing an IP stack would exhaust ephemeral ranges faster (likely asymmetrically too) and have bound socket collisions opaque to each other requiring handling outside the NS/containers purview. We looked at this sort of thing during the r&d phase of our assured comms work (namespaces were young) and found a bunch of overhead and collision concerns. Not saying it can't be done, but getting consumers to play nice enough with such an approach may be a heavy lift.
+On Tue, Oct 24, 2023 at 10:14:29AM -0400, Paul Moore wrote:
+> On Tue, Oct 24, 2023 at 9:46 AM Serge E. Hallyn <serge@hallyn.com> wrote:
+> > On Sun, Dec 18, 2022 at 08:29:10PM +0100, Stefan Bavendiek wrote:
+> > > When building userspace application sandboxes, one issue that does not seem trivial to solve is the isolation of abstract sockets.
+> >
+> > Veeery late reply.  Have you had any productive discussions about this in
+> > other threads or venues?
+> >
+> > > While most IPC mechanism can be isolated by mechanisms like mount namespaces, abstract sockets are part of the network namespace.
+> > > It is possible to isolate abstract sockets by using a new network namespace, however, unprivileged processes can only create a new empty network namespace, which removes network access as well and makes this useless for network clients.
+> > >
+> > > Same linux sandbox projects try to solve this by bridging the existing network interfaces into the new namespace or use something like slirp4netns to archive this, but this does not look like an ideal solution to this problem, especially since sandboxing should reduce the kernel attack surface without introducing more complexity.
+> > >
+> > > Aside from containers using namespaces, sandbox implementations based on seccomp and landlock would also run into the same problem, since landlock only provides file system isolation and seccomp cannot filter the path argument and therefore it can only be used to block new unix domain socket connections completely.
+> > >
+> > > Currently there does not seem to be any way to disable network namespaces in the kernel without also disabling unix domain sockets.
+> > >
+> > > The question is how to solve the issue of abstract socket isolation in a clean and efficient way, possibly even without namespaces.
+> > > What would be the ideal way to implement a mechanism to disable abstract sockets either globally or even better, in the context of a process.
+> > > And would such a patch have a realistic chance to make it into the kernel?
+> >
+> > Disabling them altogether would break lots of things depending on them,
+> > like X :)  (@/tmp/.X11-unix/X0).  The other path is to reconsider network
+> > namespaces.  There are several directions this could lead.  For one, as
+> > Dinesh Subhraveti often points out, the current "network" namespace is
+> > really a network device namespace.  If we instead namespace at the
+> > bind/connect/etc calls, we end up with much different abilities.
 > 
-> Thanks,
-> -Boris
-> 
-> 
-> On October 24, 2023 9:46:08 AM EDT, "Serge E. Hallyn" <serge@hallyn.com> wrote:
-> >On Sun, Dec 18, 2022 at 08:29:10PM +0100, Stefan Bavendiek wrote:
-> >> When building userspace application sandboxes, one issue that does not seem trivial to solve is the isolation of abstract sockets.
-> >
-> >Veeery late reply.  Have you had any productive discussions about this in
-> >other threads or venues?
-> >
-> >> While most IPC mechanism can be isolated by mechanisms like mount namespaces, abstract sockets are part of the network namespace.
-> >> It is possible to isolate abstract sockets by using a new network namespace, however, unprivileged processes can only create a new empty network namespace, which removes network access as well and makes this useless for network clients.
-> >> 
-> >> Same linux sandbox projects try to solve this by bridging the existing network interfaces into the new namespace or use something like slirp4netns to archive this, but this does not look like an ideal solution to this problem, especially since sandboxing should reduce the kernel attack surface without introducing more complexity.
-> >> 
-> >> Aside from containers using namespaces, sandbox implementations based on seccomp and landlock would also run into the same problem, since landlock only provides file system isolation and seccomp cannot filter the path argument and therefore it can only be used to block new unix domain socket connections completely.
-> >> 
-> >> Currently there does not seem to be any way to disable network namespaces in the kernel without also disabling unix domain sockets.
-> >> 
-> >> The question is how to solve the issue of abstract socket isolation in a clean and efficient way, possibly even without namespaces.
-> >> What would be the ideal way to implement a mechanism to disable abstract sockets either globally or even better, in the context of a process.
-> >> And would such a patch have a realistic chance to make it into the kernel?
-> >
-> >Disabling them altogether would break lots of things depending on them,
-> >like X :)  (@/tmp/.X11-unix/X0).  The other path is to reconsider network
-> >namespaces.  There are several directions this could lead.  For one, as
-> >Dinesh Subhraveti often points out, the current "network" namespace is
-> >really a network device namespace.  If we instead namespace at the
-> >bind/connect/etc calls, we end up with much different abilities.  You
-> >can implement something like this today using seccomp-filter.
-> >
-> >-serge
+> The LSM layer supports access controls on abstract sockets, with at
+> least two (AppArmor, SELinux) providing abstract socket access
+> controls, other LSMs may provide controls as well.
+
+Good point.  And for Stefan that may suffice, so thanks for mentioning
+that.  But The LSM layer is mandatory access control for use by the
+admins.  That doesn't help an unprivileged user.
