@@ -1,45 +1,45 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADB95749D
-	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 23:46:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 659CA749D
+	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 23:57:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="d4HejUPW"
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDA9B10CF
-	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 16:46:06 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-6b1d1099a84so4825499b3a.1
-        for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 16:46:06 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dFVTLNtv"
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 527CE10CE
+	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 16:57:28 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-6b497c8575aso5039210b3a.1
+        for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 16:57:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1698191166; x=1698795966; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1698191848; x=1698796648; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SQudVLvWcmKYsHmvQvFrVCaGB2Fcdq9CCmdIycleMZc=;
-        b=d4HejUPW5ZWDx7e3B3/tc11iOAub3J1eabAz9/VwkgoG8TPj2Qv0YZsQuBMYJjRBvg
-         X6hHqM9U1RbN309fPAFxkDcMZf1ng5IILGzL5cD9MSCOfLfU1qUbRDmrnx/1jGDTvPUH
-         fbrgDenpvSVFn0l+l4x0iVebIGj2mTJWW6Wn4=
+        bh=+jb2uj/CUvYCQb1nd+7JiDUO6KWcdpkh68n2gxqAFo4=;
+        b=dFVTLNtvHQfbRipS98kn+yVzA+Agdcob15SjfGynY2TXh6lBmY5+yVtDG7YL0u2P3x
+         boX3eatRc/mV8CPlTZ3o09QO45iBV1nKsGaA5wAplbcsD8bfPpMfFUPiYzHGqb2CoDJs
+         N5hBnmo3GkAaB4reJF0hk0iIVBQA6fLl7MCfU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698191166; x=1698795966;
+        d=1e100.net; s=20230601; t=1698191848; x=1698796648;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SQudVLvWcmKYsHmvQvFrVCaGB2Fcdq9CCmdIycleMZc=;
-        b=rF+usDsztSZL9V4nr0IfASZZFkWrB0mRrqklv79cdMDNfjtNflQJwgqQrJHwii0xwi
-         vFiLL7pX4mvEG2EpT3Din/PWTBOREj1C8jVIzUCkZLOhdk20jrzrFzx3BUY4YhsQPwoN
-         3MS4ekJnQrYlRAQtSat6alrXJBNewe4mLtTaRrc2nu31AQ2+kaydLLfesEy3SqafNsdy
-         +ZDEftGTs5644Xrh77/OL3MMT/fbQ5LXVsTKjeHpEGdZqaBehSDMX7JroQJhMZd4FT8k
-         s9puVVgRzrFBCSBRhuATQO3G9GP5IAzFcMBuOgKpuHk6tpX9ZB+0LCPXzeWG17dukF4n
-         WxUg==
-X-Gm-Message-State: AOJu0YzuwkL4T9V/KjH1yfyfcaEvEGh4CHaTr5Ut1+u6JkszUC07HHsx
-	jTvS5DATUC+CpTX6t+YPG/21cX9+3PiwFUDzmxE=
-X-Google-Smtp-Source: AGHT+IG9D2Aw99ZWyxncC7MZP37o9nAmXlhaRrCgASEzu3QBvsK5SxQS81VWgUJOGHj36wsSLEIUSA==
-X-Received: by 2002:a05:6a20:7487:b0:16b:74db:8fe1 with SMTP id p7-20020a056a20748700b0016b74db8fe1mr4383675pzd.29.1698191166190;
-        Tue, 24 Oct 2023 16:46:06 -0700 (PDT)
+        bh=+jb2uj/CUvYCQb1nd+7JiDUO6KWcdpkh68n2gxqAFo4=;
+        b=Jn7+A3oMKEopnbN0sjKdqMIVq9HiqZe2Scwfx222VrEYwpx6Pu/N2CC5SU9yYtE18X
+         HenwPjAFh913S8rytt3b4DlI1A4tpEOhLMBZzuiIUOWsmdAWld5LjrRTUKKyfDud5nBN
+         w1LzTGZQ9ltGZean4v8WAMjSnuhsxGtyubILyLKYYgXr5on3sOns7SR5TfbZrTu2Hdha
+         gEx7ZEBXLDIclmGfQTQSuJCEZjcRHmjMXBtCMw7fQNgyoT8SODWClpGO6PcS9nGU82nb
+         5D+GS0a8zXp3anvQ3ePN+naCXn6lHfgWPfp8WtRgDVxEPIlx/mkPfZEnJ3WKmCvM55Ta
+         xpwg==
+X-Gm-Message-State: AOJu0Yx/tSecymxkMlqSINbB4cd126ZduCl4NEPhVqfd9BwkPkBAHV6D
+	dWUK3WuvuCQxz/l+oAGQ/mY1kQ==
+X-Google-Smtp-Source: AGHT+IHiWgIbAS3C1mTQBzLM3/k+ba7tUzB32559w73G+RDb4OoKwzd9S25AXPmtWjJ4RMWsEs69UQ==
+X-Received: by 2002:a05:6a00:10c4:b0:6b5:608d:64f6 with SMTP id d4-20020a056a0010c400b006b5608d64f6mr15661946pfu.20.1698191847785;
+        Tue, 24 Oct 2023 16:57:27 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id h10-20020a056a00000a00b00688435a9915sm8177865pfk.189.2023.10.24.16.46.05
+        by smtp.gmail.com with ESMTPSA id v13-20020aa799cd000000b006933f657db3sm8127484pfi.21.2023.10.24.16.57.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Oct 2023 16:46:05 -0700 (PDT)
-Date: Tue, 24 Oct 2023 16:46:04 -0700
+        Tue, 24 Oct 2023 16:57:27 -0700 (PDT)
+Date: Tue, 24 Oct 2023 16:57:26 -0700
 From: Kees Cook <keescook@chromium.org>
 To: Justin Stitt <justinstitt@google.com>
 Cc: Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
@@ -48,8 +48,9 @@ Cc: Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
 	Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Subject: Re: [PATCH] s390/sclp: replace deprecated strncpy with strtomem
-Message-ID: <202310241645.62B11FE65@keescook>
+Message-ID: <202310241652.0A3460C@keescook>
 References: <20231023-strncpy-drivers-s390-char-sclp-c-v1-1-eaeef80522bb@google.com>
+ <202310241645.62B11FE65@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -58,64 +59,18 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231023-strncpy-drivers-s390-char-sclp-c-v1-1-eaeef80522bb@google.com>
+In-Reply-To: <202310241645.62B11FE65@keescook>
 
-On Mon, Oct 23, 2023 at 07:14:49PM +0000, Justin Stitt wrote:
-> Let's move away from using strncpy() as it is deprecated [1].
+On Tue, Oct 24, 2023 at 04:46:04PM -0700, Kees Cook wrote:
+> > Instead use strtomem() as `e.id` is already marked as nonstring:
+> > |       char id[4] __nonstring;
 > 
-> Instead use strtomem() as `e.id` is already marked as nonstring:
-> |       char id[4] __nonstring;
+> I'm surprised the compiler didn't complain about this -- I thought that
+> was the point of the __nonstring attribute: to diagnose when used with a
+> string function. Hmpf.
 
-I'm surprised the compiler didn't complain about this -- I thought that
-was the point of the __nonstring attribute: to diagnose when used with a
-string function. Hmpf.
-
-> 
-> We don't need strtomem_pad() because `e` is already memset to 0 --
-> rendering any additional NUL-padding useless.
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
-> Note: build-tested only.
-> 
-> Found with: $ rg "strncpy\("
-> ---
->  drivers/s390/char/sclp.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/s390/char/sclp.c b/drivers/s390/char/sclp.c
-> index 8f74db689a0c..486cf57a1605 100644
-> --- a/drivers/s390/char/sclp.c
-> +++ b/drivers/s390/char/sclp.c
-> @@ -81,7 +81,7 @@ static inline void sclp_trace(int prio, char *id, u32 a, u64 b, bool err)
->  	struct sclp_trace_entry e;
->  
->  	memset(&e, 0, sizeof(e));
-> -	strncpy(e.id, id, sizeof(e.id));
-> +	strtomem(e.id, id);
-
-Looks right to me; thanks!
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--Kees
-
->  	e.a = a;
->  	e.b = b;
->  	debug_event(&sclp_debug, prio, &e, sizeof(e));
-> 
-> ---
-> base-commit: 9c5d00cb7b6bbc5a7965d9ab7d223b5402d1f02c
-> change-id: 20231023-strncpy-drivers-s390-char-sclp-c-bb66226a7eaa
-> 
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
-> 
-> 
+Wow. GCC only warns if you call strlen() on it, but literally nothing
+else... :(
 
 -- 
 Kees Cook
