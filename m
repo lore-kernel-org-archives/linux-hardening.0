@@ -1,141 +1,135 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85FF53993D
-	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 17:42:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC6321A1E
+	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 18:08:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t2S8tvDU"
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5FC410CE
-	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 10:42:18 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d9a5a3f2d4fso5481464276.3
-        for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 10:42:18 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KMSq+g5B"
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2647A10D1
+	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 11:08:21 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-6bd32d1a040so4729444b3a.3
+        for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 11:08:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698169338; x=1698774138; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=IiUyQYP0TuoT75NL7ZUXuVLk1dlI1JfFc9pMS1xuxEY=;
-        b=t2S8tvDUUejCeZ24leQtjT9hpGKC3oyQqn2VVxA/2T9M++timZ+6N76fw7Mx9if+cw
-         dhP18KcJiRHPNp1rn6pKvLSrv2l305m8UVej+yFIM7n73RUUTgfB4TXudIekTsUhDBVP
-         h5yEdUS7ybCGUQHb4TFRMwmUcDB5/s0jGjK+76OMfBXIeg2lwScjbQkkGtHCCfqOJ9YM
-         mWNcsE/PLgsxu59DVatz/ox8YiQsn36/nKAFcpclC0g7+f35iZW4KUO6zPVTKXDxGs6L
-         llHmekKdTAoi+fWQrCRloWSepECx3zPJz9fb/k6GxjMY5NimB1yxY3EWORWKyd+vmfTJ
-         8+jg==
+        d=chromium.org; s=google; t=1698170900; x=1698775700; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=k3017rfLAsmBWrjhLTGlW8FveYh7+csB/i8dPVteIyE=;
+        b=KMSq+g5B/9/mmBrXtqyNbFrp+0a6B204TjFXffcvyOjFPY0rGmqwfBWVTDiv6HtseO
+         MvfxKD0P36CPrfLAwoKQATvJPJk2T8W1WCFYc6eZCoNaSuDnsCgUoX6S4CXvqIcaKQOW
+         ChWI30wJAjUeSLvpD7ATMycS43SqfZ3ziZ9j4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698169338; x=1698774138;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IiUyQYP0TuoT75NL7ZUXuVLk1dlI1JfFc9pMS1xuxEY=;
-        b=ppl3CrY7RKVbT5dLF/329ZZBwszxLCfc80L4z45tEWoSPFwKKNf4B5s0BYN4wfvWTu
-         eOZu0R/vbweHPgzy/QxTHZb2GEtRGggJe4oqT/Ik5TcMoh25BiCchCIVOfHe//QNu5Ct
-         DQmytPdHW1d+ZX96p0k4REraHH2f2F3rblGZs8prxpTa2XM+az33hivW/QRogF80YMqS
-         XUbhVefa1tEYbL9ytv6oKH9CrCz13xIH4D437c9qK0wL0kHuaH0kF2ixvSWhaEXMBjuY
-         xCKffsbHy0rg/WzMYRzbNxRLhRdGXDCCZt4lcz3+cN+c6dCAeO0UgPYBTHrQ66KpBnKh
-         wEYA==
-X-Gm-Message-State: AOJu0Yyu5vmN4T8ikY0DOjojbw2BhDtaze3Snrm0/7VEnQLVy1nONsJ2
-	ndbGneBbIx3lEehM3EKyMTfgyzT7ArrT9y0DHw==
-X-Google-Smtp-Source: AGHT+IGxBUJ6AOf1u6czuQpcFOXKwJ3JNLy/s7RwipVOoLtmeRdVForQN5tuNUrGj1C4sbWae1Qtv6lDQzZihH6Diw==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6902:1083:b0:d9a:c3b8:4274 with
- SMTP id v3-20020a056902108300b00d9ac3b84274mr332751ybu.7.1698169337984; Tue,
- 24 Oct 2023 10:42:17 -0700 (PDT)
-Date: Tue, 24 Oct 2023 17:42:16 +0000
+        d=1e100.net; s=20230601; t=1698170900; x=1698775700;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=k3017rfLAsmBWrjhLTGlW8FveYh7+csB/i8dPVteIyE=;
+        b=uFMBPARliZjX1pYWrYG1N9qmvYvCO7Q0OXQiXm/lxafOJ53JOJCtB7v4Dtm5+zuWmA
+         Iheusu/6aIfgDb2xZiAI67aihVAF3PNO8ecYNx08pCWZMvcjTfDSFeS0qyBrvu4ea9C5
+         VQO8eiGQKQu4OVpcgO8T1lrcxd2JZFw35Vc3wVnqWtHiLBBdVAHDj7z/rFaXTiCDiKH4
+         KkoZn6IQAB9baT7uTRKML0yV0B3c93xrC2CYzLoBAIZMbZpmG9mbX2WaMfc3ftBb5bEx
+         vz8944SrNQBVjLXydCGSS1GmxVgjUDvpOr/EUd+AJ1UuhuJ5tEa0PTUTaQxTQSGZhIrM
+         UZhQ==
+X-Gm-Message-State: AOJu0Yxt9hoq11D5ewBLRcpopMKTqA/LOqxxOAtp+rvWbMurDjfQ1q58
+	oXLDsMBNiByqHUFpIO2IawRFKw==
+X-Google-Smtp-Source: AGHT+IFGxHFp5kySQjiH/D3DhnH8iCrDxB0Ra53C+jTN6JyknU2xEf0SERhhIgYYJS8DDiyE+OW6OQ==
+X-Received: by 2002:a05:6a21:7803:b0:16b:e46e:1246 with SMTP id be3-20020a056a21780300b0016be46e1246mr3564795pzc.30.1698170900569;
+        Tue, 24 Oct 2023 11:08:20 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id d15-20020a65620f000000b0057e7ae47893sm6448886pgv.47.2023.10.24.11.08.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Oct 2023 11:08:19 -0700 (PDT)
+Date: Tue, 24 Oct 2023 11:08:19 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Alexandra Winter <wintera@linux.ibm.com>,
+	Wenjia Zhang <wenjia@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] s390/qeth: replace deprecated strncpy with strscpy
+Message-ID: <202310241029.3E4A634@keescook>
+References: <20231023-strncpy-drivers-s390-net-qeth_core_main-c-v1-1-e7ce65454446@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAPcBOGUC/52NTQqDMBCFryJZd0p+NIWueo/iIsRRQ9WUmZBWx
- Ls3eoTyeIvvLd63CUYKyOJebYIwBw5xKaAvlfCjWwaE0BUWWmqjpDLAiRb/XqGjkJEYFkzwCYQ
- TMoNL41ElXzA7DyU345rGWovWifL5JuzD9/Q928Jj4BRpPfVZHeu/pqxAga6xlloq1zvzGGIcJ rz6OIt23/cfmGU7pusAAAA=
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1698169336; l=2664;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=v7X6AgaYGtLwlN3x1yqa0dzr/NEuarCPk3n9BpO0sN0=; b=t/Ub/yzQiuI1fBkkvEt7r+RmgkE6N5jCyDcKYYtcuRX0JU7I4tPXvRrsG8ukYhxbLdofgXYK5
- fRSaupgp7LWCw9dftF9BYantl62Zrfybz6X6RRUqMFlL8hHOmRxfTbl
-X-Mailer: b4 0.12.3
-Message-ID: <20231024-strncpy-drivers-net-wireless-ath-ath10k-mac-c-v2-1-4c1f4cd4b4df@google.com>
-Subject: [PATCH v2] wifi: ath10k: replace deprecated strncpy with memcpy
-From: Justin Stitt <justinstitt@google.com>
-To: Kalle Valo <kvalo@kernel.org>, Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc: ath10k@lists.infradead.org, linux-wireless@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231023-strncpy-drivers-s390-net-qeth_core_main-c-v1-1-e7ce65454446@google.com>
 
-strncpy() is deprecated [1] and we should prefer less ambiguous
-interfaces.
+On Mon, Oct 23, 2023 at 07:39:39PM +0000, Justin Stitt wrote:
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
+> 
+> We expect new_entry->dbf_name to be NUL-terminated based on its use with
+> strcmp():
+> |       if (strcmp(entry->dbf_name, name) == 0) {
+> 
+> Moreover, NUL-padding is not required as new_entry is kzalloc'd just
+> before this assignment:
+> |       new_entry = kzalloc(sizeof(struct qeth_dbf_entry), GFP_KERNEL);
+> 
+> ... rendering any future NUL-byte assignments (like the ones strncpy()
+> does) redundant.
+> 
+> Considering the above, a suitable replacement is `strscpy` [2] due to
+> the fact that it guarantees NUL-termination on the destination buffer
+> without unnecessarily NUL-padding.
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-In this case, arvif->u.ap.ssid has its length maintained by
-arvif->u.ap.ssid_len which indicates it may not need to be
-NUL-terminated. Make this explicit with __nonstring and use a plain old
-memcpy.
+struct qeth_dbf_entry {
+        char dbf_name[DBF_NAME_LEN];
 
-This is also consistent with future copies into arvif->u.ap.ssid:
+The sizeof() replace looks right to me.
 
-	if (changed & BSS_CHANGED_SSID &&
-	    vif->type == NL80211_IFTYPE_AP) {
-		arvif->u.ap.ssid_len = vif->cfg.ssid_len;
-		if (vif->cfg.ssid_len)
-			memcpy(arvif->u.ap.ssid, vif->cfg.ssid,
-			       vif->cfg.ssid_len);
-		arvif->u.ap.hidden_ssid = info->hidden_ssid;
-	}
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Changes in v2:
-- update subject to include wifi
-- prefer memcpy() over strtomem() (thanks Kalle, Jeff)
-- rebase onto 6.6-rc7 @d88520ad73b79e71
-- Link to v1: https://lore.kernel.org/r/20231013-strncpy-drivers-net-wireless-ath-ath10k-mac-c-v1-1-24e40201afa3@google.com
----
-Note: build-tested only.
+-Kees
 
-Found with: $ rg "strncpy\("
----
- drivers/net/wireless/ath/ath10k/core.h | 2 +-
- drivers/net/wireless/ath/ath10k/mac.c  | 3 +--
- 2 files changed, 2 insertions(+), 3 deletions(-)
+> ---
+> Note: build-tested only.
+> 
+> Found with: $ rg "strncpy\("
+> ---
+>  drivers/s390/net/qeth_core_main.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
+> index cd783290bde5..6af2511e070c 100644
+> --- a/drivers/s390/net/qeth_core_main.c
+> +++ b/drivers/s390/net/qeth_core_main.c
+> @@ -6226,7 +6226,7 @@ static int qeth_add_dbf_entry(struct qeth_card *card, char *name)
+>  	new_entry = kzalloc(sizeof(struct qeth_dbf_entry), GFP_KERNEL);
+>  	if (!new_entry)
+>  		goto err_dbg;
+> -	strncpy(new_entry->dbf_name, name, DBF_NAME_LEN);
+> +	strscpy(new_entry->dbf_name, name, sizeof(new_entry->dbf_name));
+>  	new_entry->dbf_info = card->debug;
+>  	mutex_lock(&qeth_dbf_list_mutex);
+>  	list_add(&new_entry->dbf_list, &qeth_dbf_list);
+> 
+> ---
+> base-commit: 9c5d00cb7b6bbc5a7965d9ab7d223b5402d1f02c
+> change-id: 20231023-strncpy-drivers-s390-net-qeth_core_main-c-0b0ee08672ec
+> 
+> Best regards,
+> --
+> Justin Stitt <justinstitt@google.com>
+> 
+> 
 
-diff --git a/drivers/net/wireless/ath/ath10k/core.h b/drivers/net/wireless/ath/ath10k/core.h
-index 4b5239de4018..ba9795a8378a 100644
---- a/drivers/net/wireless/ath/ath10k/core.h
-+++ b/drivers/net/wireless/ath/ath10k/core.h
-@@ -607,7 +607,7 @@ struct ath10k_vif {
- 			u8 tim_bitmap[64];
- 			u8 tim_len;
- 			u32 ssid_len;
--			u8 ssid[IEEE80211_MAX_SSID_LEN];
-+			u8 ssid[IEEE80211_MAX_SSID_LEN] __nonstring;
- 			bool hidden_ssid;
- 			/* P2P_IE with NoA attribute for P2P_GO case */
- 			u32 noa_len;
-diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
-index 03e7bc5b6c0b..f3f6deb354c6 100644
---- a/drivers/net/wireless/ath/ath10k/mac.c
-+++ b/drivers/net/wireless/ath/ath10k/mac.c
-@@ -6125,9 +6125,8 @@ static void ath10k_bss_info_changed(struct ieee80211_hw *hw,
- 
- 		if (ieee80211_vif_is_mesh(vif)) {
- 			/* mesh doesn't use SSID but firmware needs it */
--			strncpy(arvif->u.ap.ssid, "mesh",
--				sizeof(arvif->u.ap.ssid));
- 			arvif->u.ap.ssid_len = 4;
-+			memcpy(arvif->u.ap.ssid, "mesh", arvif->u.ap.ssid_len);
- 		}
- 	}
- 
-
----
-base-commit: d88520ad73b79e71e3ddf08de335b8520ae41c5c
-change-id: 20231013-strncpy-drivers-net-wireless-ath-ath10k-mac-c-c73a55666e6a
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
-
+-- 
+Kees Cook
