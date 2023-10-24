@@ -1,149 +1,133 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C89266A9
-	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 19:50:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB24B26E3E
+	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 19:52:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="OzZcSIgm"
-Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 891D610C9
-	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 12:50:37 -0700 (PDT)
-Received: from eig-obgw-5002a.ext.cloudfilter.net ([10.0.29.215])
-	by cmsmtp with ESMTPS
-	id vLNhqkhozWcCIvNQCqt60n; Tue, 24 Oct 2023 19:50:36 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id vNQBqvvsrF1O4vNQCqm6fw; Tue, 24 Oct 2023 19:50:36 +0000
-X-Authority-Analysis: v=2.4 cv=CcwbWZnl c=1 sm=1 tr=0 ts=6538200c
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=_mNlVl-r0hj7kTaC:21 a=IkcTkHD0fZMA:10 a=bhdUkHdE2iEA:10 a=wYkD_t78qR0A:10
- a=uwMjjtW2jUbwP7mzfGYA:9 a=QEXdDO2ut3YA:10 a=N_l3Vs37sht3-TxgB6J7:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:Cc:To:
-	Subject:From:MIME-Version:Date:Message-ID:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=g54kz6I2OxMrqzBsVAyW+xfzdHVn9xE3lpEyC5lhvJs=; b=OzZcSIgm+yEGFVLC3R0m8HijPQ
-	lhLIjWcJvlYi/ttwdT02zDdt8r9JXRcveNlKlsLuW9I7KEx90YSSUkyBAJxIasNaoBw5eXEBqryHR
-	TEfhawSfU7CSH/BkMqiMQyhXqNl3Fs58s+/XfkacYUo82q8kdpPPOM216HjPlf0GtmJqbFruaT5fA
-	mznRgRxTTfbSlBfcUdwb5pu6XgiDLRHx80NEsNF0uQF9GT1UA8/CP4SAcN926YU7vwzs0IYOE5kaz
-	qt6BR19MBBqj/VrGVPM93VlENWousMPGOcHUPdyW/6t60Vlk0T0YSHn9aFAImWY5q6MEKhderrafn
-	iSBqr1TQ==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:48784 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1qvNQB-001ZQp-1F;
-	Tue, 24 Oct 2023 14:50:35 -0500
-Message-ID: <626ae2e7-66f8-423b-b17f-e75c1a6d29b3@embeddedor.com>
-Date: Tue, 24 Oct 2023 13:50:34 -0600
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mo5et0EQ"
+Received: from mail-oa1-x4a.google.com (mail-oa1-x4a.google.com [IPv6:2001:4860:4864:20::4a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67029122
+	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 12:52:29 -0700 (PDT)
+Received: by mail-oa1-x4a.google.com with SMTP id 586e51a60fabf-1e987fa0d87so6781236fac.1
+        for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 12:52:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1698177148; x=1698781948; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=e8aQgWjy+g6rrzKEDI21tp5NK7yplRQyyhfNiiPxWK0=;
+        b=mo5et0EQNBbjn0YYf02+tHNMi5Qt8QpTnjDmOuLVZYB0UbKp9TfDe3btq2w2wPliL7
+         EeraHHLcoG/hLzSbFfqh6+y3OTE9FdUbjn6LaKGcLSYK5JR5aYI+DrmWvoOXiPoF1d1a
+         KpnlQggqhHvgEHG1SFukRaZGxughB1L1oCYupjw94amlcVhwA/waaUw/kPL7SpdIeUnF
+         jb1RRcnzItOmxt2sTAiYNcdAdFQV7/HtHJOLgV3Zssx5M4LEryZ3edxorQMK+cr+ab5r
+         +laiovkXixdEMnEv02VlmDnBq1JHhxHrdyrvVOjR1VqN65fPfCpwsQviQQBCzzy2OcsC
+         qWVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698177148; x=1698781948;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=e8aQgWjy+g6rrzKEDI21tp5NK7yplRQyyhfNiiPxWK0=;
+        b=ZYB96KkmPaD5XTeuOda2E+uDRMvOcJE8Bsgo38+sJVoTQ3l2t5v1UB2D0wRrMYwVt3
+         I/ySWA37lhCw5dWgMxtbf+XbbRfWKpCcnW9fQ0AhXOdARfc7aWXmHVMoMhhr7ym0wKJz
+         0Ec4jVO6yD5M7Gdho/iR2XBsGSV4rM5+Bf1F6sLf2fXs99DE2easzgoQT++C5PLwB4Nd
+         DCbOu/4W55MJJYzAM1A1rt1Va8hrrwSOnNAbpG2+sC9pYTmOf75WZ9NqcQDKL3rxlvCH
+         ldWpnJdg59xv1RwQxiuFZ7LXek+V4CprKj2pgG4xizgn5QfZp5JIbIrpuKzMTOZ9HFdR
+         15/g==
+X-Gm-Message-State: AOJu0Yzi3evbvxKWgHxi3bg4TTPIzeCv5rfo+gXbFaYLvl5sZcg1qaEl
+	0oDZMegWZrSPdlw8Kzo/KgbSD9EU5+fV0nm0TQ==
+X-Google-Smtp-Source: AGHT+IGGhfv6HHv8vXiL6PZflYVg3AGRykgoK0m9EB5iPd5E7rZQ1ga5+DHB0xzvTTrUTEMzpkPIvFiJFLGLMgeCwg==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a05:6870:148d:b0:1d6:5e45:3bc7 with
+ SMTP id k13-20020a056870148d00b001d65e453bc7mr6259319oab.5.1698177148786;
+ Tue, 24 Oct 2023 12:52:28 -0700 (PDT)
+Date: Tue, 24 Oct 2023 19:52:27 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [RFC - is this a bug?] wifi: ath10k: Asking for some light on this,
- please :)
-To: Kalle Valo <kvalo@kernel.org>, Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc: ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
- linux-kernel@vger.kernel.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1qvNQB-001ZQp-1F
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:48784
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfJttZ0PKxoGfqXJ8U8HphXIdTU7GgySZE7jjOXfOi9SuQgAJX3AiDuKKIdostdO7KxsTTLSe4hpuTMzB3x34tOpG5gkPy48iQfG4tZseqDarJXd+ehPB
- Opv0Gs9uoe5Lt87t0MtuDn3t7n1xEHG/EzJh7CaUV1tH1Lx3lEJqo2UwmICU30DZ4aKtQbcpZLQ0iQL8lD0cTy03WxnLWGVJyoEEJrnkaBQQGJfJJadWESxp
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAHogOGUC/x2NwQqDMBAFf0X23IUkrSD+SilFkt26lyj7ilTEf
+ 2/wMjCXmYMgbgIau4NcNoMttUm8dZTnqX6ErTSnFNI9hvRgfL3mdefitomDkWGseZELb+xQcOY gsajKkIa+pxZbXdR+1+j5Os8/ZQjSqngAAAA=
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1698177147; l=2135;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=x4lXZ/M2v+LVXy5eVUWTnpdEr6YXqOCKy8sodhN2WbQ=; b=kNvSxaD6+DzKoEiD6sLJnAjh94iZPbZ1UevGx+Ev4FErVJiOdmvYoPiz8xLD17iSe3bcC4IOa
+ Hd8masltLb4DdvVMlYaADHPOuC3Dpr7PWEcQ4FlU+zfiGwohD+QaLT2
+X-Mailer: b4 0.12.3
+Message-ID: <20231024-strncpy-drivers-scsi-fcoe-fcoe_sysfs-c-v1-1-1e0026ee032d@google.com>
+Subject: [PATCH] scsi: fcoe: replace deprecated strncpy with strscpy
+From: Justin Stitt <justinstitt@google.com>
+To: Hannes Reinecke <hare@suse.de>, "James E.J. Bottomley" <jejb@linux.ibm.com>, 
+	"Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-Hi all,
+strncpy() is deprecated for use on NUL-terminated destination strings
+[1] and as such we should prefer more robust and less ambiguous string
+interfaces.
 
-While working on tranforming one-element array `peer_chan_list` in
-`struct wmi_tdls_peer_capabilities` into a flex-array member
+We expect `mode` to be NUL-terminated based on its usage with
+strcasecmp():
 
-7187 struct wmi_tdls_peer_capabilities {
+|       ctlr->mode = fcoe_parse_mode(mode);
 ...
-7199         struct wmi_channel peer_chan_list[1];
-7200 } __packed;
+|       static enum fip_conn_type fcoe_parse_mode(const char *buf)
+|       {
+|       	int i;
+|
+|       	for (i = 0; i < ARRAY_SIZE(fip_conn_type_names); i++) {
+|       		if (strcasecmp(buf, fip_conn_type_names[i]) == 0)
+|       			return i;
+|       	}
+|
+|       	return FIP_CONN_TYPE_UNKNOWN;
+|       }
 
-the following line caught my attention:
+Considering the above, a suitable replacement is `strscpy` [2] due to
+the fact that it guarantees NUL-termination on the destination buffer
+without unnecessarily NUL-padding.
 
-./drivers/net/wireless/ath/ath10k/wmi.c:
-8920         memset(skb->data, 0, sizeof(*cmd));
+We can drop the manual NUL-byte assignment but should keep the newline
+removal so newlines don't creep into the string.
 
-Notice that before the flex-array transformation, we are zeroing 128
-bytes in `skb->data` because `sizeof(*cmd) == 128`, see below:
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Note: build-tested only.
 
-$ pahole -C wmi_10_4_tdls_peer_update_cmd drivers/net/wireless/ath/ath10k/wmi.o
-struct wmi_10_4_tdls_peer_update_cmd {
-	__le32                     vdev_id;              /*     0     4 */
-	struct wmi_mac_addr        peer_macaddr;         /*     4     8 */
-	__le32                     peer_state;           /*    12     4 */
-	__le32                     reserved[4];          /*    16    16 */
-	struct wmi_tdls_peer_capabilities peer_capab;    /*    32    96 */
+Found with: $ rg "strncpy\("
+---
+ drivers/scsi/fcoe/fcoe_sysfs.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-	/* size: 128, cachelines: 2, members: 5 */
-};
+diff --git a/drivers/scsi/fcoe/fcoe_sysfs.c b/drivers/scsi/fcoe/fcoe_sysfs.c
+index e17957f8085c..7a3ca6cd3030 100644
+--- a/drivers/scsi/fcoe/fcoe_sysfs.c
++++ b/drivers/scsi/fcoe/fcoe_sysfs.c
+@@ -279,12 +279,10 @@ static ssize_t store_ctlr_mode(struct device *dev,
+ 	if (count > FCOE_MAX_MODENAME_LEN)
+ 		return -EINVAL;
+ 
+-	strncpy(mode, buf, count);
++	strscpy(mode, buf, count);
+ 
+ 	if (mode[count - 1] == '\n')
+ 		mode[count - 1] = '\0';
+-	else
+-		mode[count] = '\0';
+ 
+ 	switch (ctlr->enabled) {
+ 	case FCOE_CTLR_ENABLED:
 
-So, after the flex-array transformation (and the necessary adjustments
-to a few other lines of code) we would be zeroing 104 bytes in
-`skb->data` because `sizeof(*cmd) == 104`, see below:
+---
+base-commit: d88520ad73b79e71e3ddf08de335b8520ae41c5c
+change-id: 20231024-strncpy-drivers-scsi-fcoe-fcoe_sysfs-c-0e1dffe82855
 
-$ pahole -C wmi_10_4_tdls_peer_update_cmd drivers/net/wireless/ath/ath10k/wmi.o
-struct wmi_10_4_tdls_peer_update_cmd {
-	__le32                     vdev_id;              /*     0     4 */
-	struct wmi_mac_addr        peer_macaddr;         /*     4     8 */
-	__le32                     peer_state;           /*    12     4 */
-	__le32                     reserved[4];          /*    16    16 */
-	struct wmi_tdls_peer_capabilities peer_capab;    /*    32    72 */
-
-	/* size: 104, cachelines: 2, members: 5 */
-	/* last cacheline: 40 bytes */
-};
-
-This difference arises because the size of the element type for the
-`peer_chan_list` array, which is `sizeof(struct wmi_channel) == 24 `
-
-$ pahole -C wmi_channel drivers/net/wireless/ath/ath10k/wmi.o
-struct wmi_channel {
-	__le32                     mhz;                  /*     0     4 */
-	__le32                     band_center_freq1;    /*     4     4 */
-	__le32                     band_center_freq2;    /*     8     4 */
-
-[..]
-                                                /*    20     4 */
-
-	/* size: 24, cachelines: 1, members: 6 */
-	/* last cacheline: 24 bytes */
-};
-
-is included in `sizeof(*cmd)` before the transformation.
-
-So, my question is: do we really need to zero out those extra 24 bytes in
-`skb->data`? or is it rather a bug in the original code?
-
-Thanks!
+Best regards,
 --
-Gustavo
+Justin Stitt <justinstitt@google.com>
 
