@@ -1,55 +1,60 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FFC63D399
-	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 21:43:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9BB52D605
+	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 21:50:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GiRR8zU/"
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3078A6
-	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 14:43:11 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1cace3e142eso31609455ad.3
-        for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 14:43:11 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ecZEhEWN"
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9670FD7A
+	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 14:50:08 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-1c9e06f058bso1818845ad.0
+        for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 14:50:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1698183791; x=1698788591; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1698184208; x=1698789008; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=frJVLA8q7CpIZN6bJ4cxEnaKNLHB5xpXe8qh07vj8Ko=;
-        b=GiRR8zU/7JNpDaokPQXBor81wyQ0QFtHCEOBlgGjzg70V5AoiMlLJQ8rV1o3ha7UwO
-         0SgZUSofr/jvqMDVKZuN8jQE4/GdCWJJgVZeo+wObU8oUNldJdFxdUj7Sy1kCO4KFVIh
-         SHtsBbSdpIwO2tA1GTJ8xI64/CWUt+z/25frE=
+        bh=kUk/3FUrTP2O4nxINnBvX1NoZwU7c4mrwIneHTDtXz8=;
+        b=ecZEhEWNeFWjXXZhmpUQxqgQXST3Pc9zkLw3mrVneHts2vbd/VahNRRr8KbUiSEN4g
+         zsrzSYlJvaUxjgdvNncP533jdFysu9Uv1t2Mqt7/V+ysQmbSghDEKQA+0qXpSz1FV1Yw
+         U4EKIt+Hk7tBzbH9Bw8fEYCpv7y2cxaWN5tQY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698183791; x=1698788591;
+        d=1e100.net; s=20230601; t=1698184208; x=1698789008;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=frJVLA8q7CpIZN6bJ4cxEnaKNLHB5xpXe8qh07vj8Ko=;
-        b=GGSKeoH+NvujNe+lS9nvtoZAzCQquLh0PoRTUw7V/+bCiDTKzUtRrbHjzHnaVvoKFe
-         +fEo6eZhA4t/Sm167aV7tfD8ocWYG4/GSsaSoDQ4AklOQ6/z06cYTQ9AQLi3pq6oE5sh
-         +ejOe6d17yz+U63BPeFiGBjBqJ6FQquUccONrK9B/iYz6k3Gk57WOTlxdJTyUjwDjRVG
-         LBoPX79ZQlp4o8n0MmOGphH8xBUD2O9w6deyrX8bUqt2EPgiwWZscxso12j+sbjB/dv3
-         0jlen0R7ZpUw+9kX/vyF25+SI5W6ik/7NHWCz5oyBLUzaSPvc5iG1V74PblvZ+GF0iad
-         2Hyw==
-X-Gm-Message-State: AOJu0YziCmWwRuV89eLIupA9YiGtFByEBqEMfPcSddXCJGsi+ItUZ5XI
-	GRDOFZVRNqR2L+7sU/VVoX49vQ==
-X-Google-Smtp-Source: AGHT+IG8jAZqjr17l2IkN2BhET8ny2FkIIjuMkCIzCSC/KN1r/G1kIQNXfVGVkoHBTaZGXVDBbwJfw==
-X-Received: by 2002:a17:902:f687:b0:1c9:cc88:5008 with SMTP id l7-20020a170902f68700b001c9cc885008mr13338416plg.43.1698183791215;
-        Tue, 24 Oct 2023 14:43:11 -0700 (PDT)
+        bh=kUk/3FUrTP2O4nxINnBvX1NoZwU7c4mrwIneHTDtXz8=;
+        b=v7TgPYMFxdZW9j+1ozdqPfhc/Q0DcQQZ3uAJiGkS7dFQrH/sm5KSHNMvV16s4bR2UW
+         rKiOR8oTR/XGw7ges6OdkysGult7ZJ8HoxwpF7VO7Mw9l4tZUMhyXYWcNxOmqI9mi/5q
+         PvuPsdKWKx5bNn85fJ+SaH82qV2pkClulUxyFphKJf4WGVz4kjtV4HFqbPzgU3YL2y5K
+         Z528N3XcvHJse0GjdgahJa9Gkl4WYmrPVnKvaVQL5A62vInFRj41hXdVRUMTqKgEituj
+         mJfYz8bJlrdscfbZOeZz5Aq+Us1iryJxkVWaA6i/BAUaJLaFqmIwBDis/8GEhgT1OXLg
+         vwcg==
+X-Gm-Message-State: AOJu0YwgeuA5kMBxhOCSgrPc6SJpZLlRmPgmguKeY9UN9PNfwWImjlXd
+	MxjQkkXjlObY1TJu5kcbiYoJCw==
+X-Google-Smtp-Source: AGHT+IF9lyQ5nSycCSb10w5BnVo03pMKn2LFjJp83sLHplgq6hXesFpem/RWipRfu7bv0jUOjIuR1w==
+X-Received: by 2002:a17:902:e54e:b0:1c9:ddd8:9950 with SMTP id n14-20020a170902e54e00b001c9ddd89950mr17532154plf.21.1698184208126;
+        Tue, 24 Oct 2023 14:50:08 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id x4-20020a170902ec8400b001bc18e579aesm7844217plg.101.2023.10.24.14.43.10
+        by smtp.gmail.com with ESMTPSA id k20-20020a170902ba9400b001b891259eddsm7867560pls.197.2023.10.24.14.50.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Oct 2023 14:43:10 -0700 (PDT)
-Date: Tue, 24 Oct 2023 14:43:09 -0700
+        Tue, 24 Oct 2023 14:50:07 -0700 (PDT)
+Date: Tue, 24 Oct 2023 14:50:07 -0700
 From: Kees Cook <keescook@chromium.org>
-To: Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc: Kalle Valo <kvalo@kernel.org>, Justin Stitt <justinstitt@google.com>,
-	ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] ath10k: replace deprecated strncpy with strtomem_pad
-Message-ID: <202310241442.0E90AB9@keescook>
-References: <20231013-strncpy-drivers-net-wireless-ath-ath10k-mac-c-v1-1-24e40201afa3@google.com>
- <87wmvcxjdy.fsf@kernel.org>
- <90328e09-5e48-4bd0-ac67-62a104b6eb76@quicinc.com>
+To: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Christoph Hellwig <hch@lst.de>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Petr Mladek <pmladek@suse.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH] powerpc: Remove initialisation of readpos
+Message-ID: <202310241449.7E91697@keescook>
+References: <20231024145600.739451-1-willy@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -58,23 +63,18 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <90328e09-5e48-4bd0-ac67-62a104b6eb76@quicinc.com>
+In-Reply-To: <20231024145600.739451-1-willy@infradead.org>
 
-On Tue, Oct 24, 2023 at 07:11:51AM -0700, Jeff Johnson wrote:
-> On 10/24/2023 6:03 AM, Kalle Valo wrote:
-> > What about using just memcpy() to make it clear it's not really a proper
-> > string:
-> > 
-> > arvif->u.ap.ssid_len = 4;
-> > memcpy(arvif->u.ap.ssid, "mesh", arvif->u.ap.ssid_len);
-> > 
+On Tue, Oct 24, 2023 at 03:55:59PM +0100, Matthew Wilcox (Oracle) wrote:
+> While powerpc doesn't use the seq_buf readpos, it did explicitly
+> initialise it for no good reason.
 > 
-> In the "changed & BSS_CHANGED_SSID" case that comes soon after this we just
-> set the length and use memcpy without clearing the rest of the buffer, so
-> doing the same here, as you suggest, would be consistent.
+> Fixes: d0ed46b60396 ("tracing: Move readpos from seq_buf to trace_seq")
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 
-Ah, please ignore my other email asking about memcpy safety -- I'm
-reading threads backwards.  :)
+Yeah, looks right -- it'd even be right if the member still existed. :)
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -- 
 Kees Cook
