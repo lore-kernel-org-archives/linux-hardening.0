@@ -1,133 +1,93 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD84DC8EA
-	for <linux-hardening@vger.kernel.org>; Wed, 25 Oct 2023 15:52:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10493F50A
+	for <linux-hardening@vger.kernel.org>; Wed, 25 Oct 2023 17:10:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bl91IHG7"
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65FEC131;
-	Wed, 25 Oct 2023 08:52:47 -0700 (PDT)
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39PFQvXl025155;
-	Wed, 25 Oct 2023 15:52:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=z/UZBVFqtVeuBuLw7/A7xA0JccB9bFqTaZBT7iungDo=;
- b=bl91IHG72VOhhTSqUdVbddkmuzn9t1NwOlyppu6meRTGw+mQu0J69lWow92cvhCmeVkL
- N0383bI5QEk7JnKdaB29spcF7Dzqjhf2lZm3eS0jaHQngk3Q+EDIrgPO/uZHzp09sP7M
- hroGdw15WXogdWbv/Uwo0XIuFOQ4cXSWaep1lTlUIhuCHLxfje8igCUROOCSwfjU2jYw
- g2eo2bcsy+1IJwWwEUk8irsB/VB389m9GQ1XgzAWecnglsN5frVTDMRj/XjJFLVXhBUI
- kqK2g+1ArPCFeela5O1HDKt+ZIbzskpUGGVrhp7WOdY8kv9gmA346vsIqVEh2/G0aLzy TQ== 
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3txwjph418-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Oct 2023 15:52:25 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 39PFqOQR028589
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Oct 2023 15:52:24 GMT
-Received: from [10.48.243.236] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.39; Wed, 25 Oct
- 2023 08:52:24 -0700
-Message-ID: <afaadf5e-556c-4fd6-bfd3-9c486a35a08f@quicinc.com>
-Date: Wed, 25 Oct 2023 08:52:23 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IraOVuCc"
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC5A713D
+	for <linux-hardening@vger.kernel.org>; Wed, 25 Oct 2023 10:10:46 -0700 (PDT)
+Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-53f98cbcd76so267a12.1
+        for <linux-hardening@vger.kernel.org>; Wed, 25 Oct 2023 10:10:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1698253845; x=1698858645; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WbCzlcs1e/xyWA1Lmpsd2IcmsRjzxcTLP4u0CYsVcpQ=;
+        b=IraOVuCcZ3m+2FDerIIswdr50P7rnMr9ozk3osfccyHttCygrmLFNu3kNW4TTZ5iRE
+         XzGDQmvFhwZ5/HA4HjsKkH8+lXfir1ok4KiQ8LM9ZTuO8h5MgKit1DkO3ao4IE8cA787
+         q/pOMRWYXuYYBS5g8spDridU+HmulpZ3+/anS/+KGZtqC8yVWzSSshzS/Ky0ALqPZ6kC
+         kDvi694rDQGHvTCQrbZ2Z4mu2pAL1qsWJfGdDUCXjEcsCbYAZixJw+b4LyaMvM+M2fbd
+         YyQl5lqY8KDG3NiKmbyYqlI35TbX7IW23r2jklXMHTcgkMJc1Db1i07NVWGwpnG+FNKI
+         jnGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698253845; x=1698858645;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WbCzlcs1e/xyWA1Lmpsd2IcmsRjzxcTLP4u0CYsVcpQ=;
+        b=Nhgm5Gg6U39ePQtYGtrzKpWXuryP5IKvJry4kKrOjSXmxl03kY18piIl/TmQI4IViQ
+         W3Rm510vNaDG/p1jUdow24BkVfrAT7h1I1eDrFL8E+g2PsRwoiq4sILQRhu90Muu3l11
+         iwIHyl+jV8cnkOblYC33ldQQ1ZhC6yyl19toPrdfMOX0BAYg8peOgGo6UIzux/NrfT4u
+         3QTbDSeipFZdDjpCDPdnRs3qkZrWmWG4AGYv/VDQW4M4h0fNaFthvM6Qi3iYfgSZK7xk
+         QBQSLvOE7EQYh3rHHcvKl7yrD76a96Ae9DTp419KiwEwoZUzEzMfPp6LI6W21dSP6y7U
+         MM9Q==
+X-Gm-Message-State: AOJu0YwJzZVbNFeguWmFl4Tpb5L62kM7M62CLeQxlhbVeWDVKxsBTFC7
+	FeRl64rxoPxLOYhtxBc6+3O+92UgD1D+qGOmfbkgb7n9056ZxtM7THy1ng==
+X-Google-Smtp-Source: AGHT+IEuT5m2F+vLsyPqrvngPEJcOV2q2E/KK4G3bQy+ECWMBZP/HzYEGV6AqI1S0zF15bbRjRPWy0jFMJv1H1qaOCI=
+X-Received: by 2002:a50:9ec5:0:b0:540:9444:222c with SMTP id
+ a63-20020a509ec5000000b005409444222cmr125835edf.6.1698253845177; Wed, 25 Oct
+ 2023 10:10:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC - is this a bug?] wifi: ath10k: Asking for some light on
- this, please :)
-Content-Language: en-US
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Johannes Berg
-	<johannes@sipsolutions.net>,
-        Kalle Valo <kvalo@kernel.org>
-CC: <ath10k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        "Gustavo A. R. Silva"
-	<gustavoars@kernel.org>,
-        <linux-hardening@vger.kernel.org>
-References: <626ae2e7-66f8-423b-b17f-e75c1a6d29b3@embeddedor.com>
- <26b15f4702cef17fe70b496a62f03735874bd16a.camel@sipsolutions.net>
- <07e9bb04-f9fc-46d5-bfb9-a00a63a707c0@embeddedor.com>
- <f8daa53ee8a8019e4fd2b823c1fcb85a6cc4d806.camel@sipsolutions.net>
- <8219c79e-0359-4136-afa4-fba76fde191a@embeddedor.com>
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-In-Reply-To: <8219c79e-0359-4136-afa4-fba76fde191a@embeddedor.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.49.16.6]
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: IqjSZNYTPG2TAHXLzYHqWLrLgXOuEM1_
-X-Proofpoint-GUID: IqjSZNYTPG2TAHXLzYHqWLrLgXOuEM1_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-25_04,2023-10-25_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- phishscore=0 mlxlogscore=673 priorityscore=1501 malwarescore=0
- suspectscore=0 impostorscore=0 adultscore=0 clxscore=1011 bulkscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2310170001 definitions=main-2310250137
+References: <Y59qBh9rRDgsIHaj@mailbox.org> <20231024134608.GC320399@mail.hallyn.com>
+In-Reply-To: <20231024134608.GC320399@mail.hallyn.com>
+From: Jann Horn <jannh@google.com>
+Date: Wed, 25 Oct 2023 19:10:07 +0200
+Message-ID: <CAG48ez2DF4unFq7wXqHVdUg+o_VYee012v0hUiGTbfnTpsPi0w@mail.gmail.com>
+Subject: Re: Isolating abstract sockets
+To: "Serge E. Hallyn" <serge@hallyn.com>
+Cc: Stefan Bavendiek <stefan.bavendiek@mailbox.org>, kernel-hardening@lists.openwall.com, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 10/24/2023 7:37 PM, Gustavo A. R. Silva wrote:
-> 
-> 
-> On 10/24/23 14:49, Johannes Berg wrote:
->> On Tue, 2023-10-24 at 14:41 -0600, Gustavo A. R. Silva wrote:
->>>
->>> It seems we run into the same issue in the function below, even in the
->>> case this `memset()` is unnecessary (which it seems it's not):
->>>
->>>     8920         memset(skb->data, 0, sizeof(*cmd));
->>>
->>> Notice that if `cap->peer_chan_len == 0` or `cap->peer_chan_len == 1`,
->>> in the original code, we have `len == sizeof(*cmd) == 128`:
->>
->> Right.
->>
->>> -       /* tdls peer update cmd has place holder for one channel*/
->>> -       chan_len = cap->peer_chan_len ? (cap->peer_chan_len - 1) : 0;
->>> -
->>> -       len = sizeof(*cmd) + chan_len * sizeof(*chan);
->>> +       len = struct_size(cmd, peer_capab.peer_chan_list, 
->>> cap->peer_chan_len);
->>>
->>>           skb = ath10k_wmi_alloc_skb(ar, len);
->>>           if (!skb)
->>>
->>> which makes `round_len == roundup(len, 4) == struct_size(cmd,...,...) 
->>> == 104`
->>> when `cap->peer_chan_len == 0`
->>
->> And yeah, that's really the issue, it only matters for ==0. For a moment
->> there I thought that doesn't even make sense, but it looks like it never
->> even becomes non-zero.
->>
->> No idea then, sorry. You'd hope firmware doesn't care about the actual
->> message size if the inner data says "0 entries", but who knows? And how
->> many firmware versions are there? :)
->>
->> So I guess you'd want to stay compatible, even if it means having a
->>
->>     chan_len = min(cap->peer_chan_len, 1);
->>
->> for the struct_size()?
-> 
-> Yeah, that's an alternative.
-> 
-> I'll wait for the maintainers to chime in and see if they have a different
-> opinion.
+On Tue, Oct 24, 2023 at 3:46=E2=80=AFPM Serge E. Hallyn <serge@hallyn.com> =
+wrote:
+> Disabling them altogether would break lots of things depending on them,
+> like X :)  (@/tmp/.X11-unix/X0).
 
-I'm seeing clarification from the development team.
+FWIW, X can connect over both filesystem-based unix domain sockets and
+abstract unix domain sockets. When a normal X client tries to connect
+to the server, it'll try a bunch of stuff, including an abstract unix
+socket address, a filesystem-based unix socket address, and TCP:
 
-/jeff
+$ DISPLAY=3D:12345 strace -f -e trace=3Dconnect xev >/dev/null
+connect(3, {sa_family=3DAF_UNIX, sun_path=3D@"/tmp/.X11-unix/X12345"}, 24)
+=3D -1 ECONNREFUSED (Connection refused)
+connect(3, {sa_family=3DAF_UNIX, sun_path=3D"/tmp/.X11-unix/X12345"}, 110)
+=3D -1 ENOENT (No such file or directory)
+[...]
+connect(3, {sa_family=3DAF_INET, sin_port=3Dhtons(18345),
+sin_addr=3Dinet_addr("127.0.0.1")}, 16) =3D 0
+connect(3, {sa_family=3DAF_INET6, sin6_port=3Dhtons(18345),
+inet_pton(AF_INET6, "::1", &sin6_addr), sin6_flowinfo=3Dhtonl(0),
+sin6_scope_id=3D0}, 28) =3D 0
+connect(3, {sa_family=3DAF_INET6, sin6_port=3Dhtons(18345),
+inet_pton(AF_INET6, "::1", &sin6_addr), sin6_flowinfo=3Dhtonl(0),
+sin6_scope_id=3D0}, 28) =3D -1 ECONNREFUSED (Connection refused)
+connect(3, {sa_family=3DAF_INET, sin_port=3Dhtons(18345),
+sin_addr=3Dinet_addr("127.0.0.1")}, 16) =3D -1 ECONNREFUSED (Connection
+refused)
 
+And the X server normally listens on both an abstract and a
+filesystem-based unix socket address (see "netstat --unix -lnp").
+
+So rejecting abstract unix socket connections shouldn't prevent an X
+client from connecting to the X server, I think.
