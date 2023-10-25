@@ -1,134 +1,138 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D81E7E2
-	for <linux-hardening@vger.kernel.org>; Wed, 25 Oct 2023 02:37:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A701944F
+	for <linux-hardening@vger.kernel.org>; Wed, 25 Oct 2023 07:36:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="A6miGOeb"
-Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 869F910D1
-	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 19:37:35 -0700 (PDT)
-Received: from eig-obgw-6009a.ext.cloudfilter.net ([10.0.30.184])
-	by cmsmtp with ESMTPS
-	id vBOXqiLPTWcCIvTm2qvRbE; Wed, 25 Oct 2023 02:37:34 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id vTm1qtE9BOk5SvTm1q0r5d; Wed, 25 Oct 2023 02:37:33 +0000
-X-Authority-Analysis: v=2.4 cv=E+DeGIRl c=1 sm=1 tr=0 ts=65387f6d
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=_mNlVl-r0hj7kTaC:21 a=IkcTkHD0fZMA:10 a=bhdUkHdE2iEA:10 a=wYkD_t78qR0A:10
- a=yiRjFQIvNRT05BO5IWcA:9 a=QEXdDO2ut3YA:10 a=N_l3Vs37sht3-TxgB6J7:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=IahuLxENwBvcQu5NawHPQqBuCWpwToxFKhWLnhbPsjA=; b=A6miGOebEelAgGO/y8Xg8CQaJ2
-	encD8KXpUYQA7Y57ewp1KWNFtAjLh0IdF7vZcMJdKh0a50bWUD68yixEX90aMwNzvTsEmGz3GoxEh
-	AIQcmyyGSlVF/ChA64778Ek8Oht/x9PZG/AMRI4kubCRbkcfQPCunXdX/qM6NeUaqcn5FnyOsiy42
-	e3ZVgbvPm5QZ9KGnMogaJ125PG3bV3rZSPAF5VbXNGPSX5VayntbfDeCN7dUHAqbwm94mt9MismLX
-	8MV0Yp01UBJoG34XnWNMIXZrJH2WiJicdU33zSLBTITiJQuEG+fPE6GOzWyOTTbBqN/JZkJAvXSTK
-	EVAt/XJA==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:56754 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1qvTm0-003HJe-2k;
-	Tue, 24 Oct 2023 21:37:32 -0500
-Message-ID: <8219c79e-0359-4136-afa4-fba76fde191a@embeddedor.com>
-Date: Tue, 24 Oct 2023 20:37:31 -0600
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nvPQfugp"
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF07B1FCA;
+	Wed, 25 Oct 2023 00:35:50 -0700 (PDT)
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39P5lajh002210;
+	Wed, 25 Oct 2023 07:35:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=zZQJyqYnoH2mzbn59fDX9/iMeNtBFAOOWV3pVH2j/QI=;
+ b=nvPQfugpHLczE4gwcBZCU+aIugpqorc4IuAPjtawzOgw1Ad+8Lq2y9zqptO0kb2SgBXr
+ l5ypbZ28ewhyT56SjqRpVImCHFfQEUHXd6YjfwhSoiNRqFQVGgbrKtqN3oT30cR5qBxs
+ llaQQX9EB3dgiUS/K6yszebzG3g7hoWMFUZSCEOj+pSOX5Rvv02OoH6NJahhRVKPDIS2
+ WNrFZr+73SlQKFDqfKMBGuFceqecBINvGUWczZEsUyAgqhQKDbDExwcVmxo24r7NrgHw
+ 9ozAbQHVALkf3ubA1Ui4VxsEdztEtjTWittRibPChhvr4mR7XK4hHKE4S2gm5AZv9jJU UQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3txw662spq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Oct 2023 07:35:48 +0000
+Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39P6eM0s004566;
+	Wed, 25 Oct 2023 07:35:45 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3txw662sgx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Oct 2023 07:35:35 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 39P73fEg010290;
+	Wed, 25 Oct 2023 07:32:51 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3tvsbyn7rj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Oct 2023 07:32:51 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 39P7WluP23003820
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 25 Oct 2023 07:32:47 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C922A20043;
+	Wed, 25 Oct 2023 07:32:47 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4955A20040;
+	Wed, 25 Oct 2023 07:32:47 +0000 (GMT)
+Received: from [9.171.33.174] (unknown [9.171.33.174])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 25 Oct 2023 07:32:47 +0000 (GMT)
+Message-ID: <a528b8ca-dde1-1cd2-19c8-be760e5de14e@linux.ibm.com>
+Date: Wed, 25 Oct 2023 09:32:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [PATCH] s390/cio: replace deprecated strncpy with strscpy
+Content-Language: en-US
+To: Justin Stitt <justinstitt@google.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+References: <20231023-strncpy-drivers-s390-cio-chsc-c-v1-1-8b76a7b83260@google.com>
+From: Vineeth Vijayan <vneethv@linux.ibm.com>
+In-Reply-To: <20231023-strncpy-drivers-s390-cio-chsc-c-v1-1-8b76a7b83260@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: xinD0Af57LbnLx_POYEuKSJBZNjhrwwR
+X-Proofpoint-GUID: 4BzELyR0UkvbYAYckLgbrc3_9b-I-vLi
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC - is this a bug?] wifi: ath10k: Asking for some light on
- this, please :)
-Content-Language: en-US
-To: Johannes Berg <johannes@sipsolutions.net>, Kalle Valo <kvalo@kernel.org>,
- Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc: ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
- linux-kernel@vger.kernel.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- linux-hardening@vger.kernel.org
-References: <626ae2e7-66f8-423b-b17f-e75c1a6d29b3@embeddedor.com>
- <26b15f4702cef17fe70b496a62f03735874bd16a.camel@sipsolutions.net>
- <07e9bb04-f9fc-46d5-bfb9-a00a63a707c0@embeddedor.com>
- <f8daa53ee8a8019e4fd2b823c1fcb85a6cc4d806.camel@sipsolutions.net>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <f8daa53ee8a8019e4fd2b823c1fcb85a6cc4d806.camel@sipsolutions.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1qvTm0-003HJe-2k
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:56754
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfES+hWMGisRisjUK6MhRPwQzEbQ/VkW2wcMqTeqRa0FP4it/pF9e9OKOizrvu1YySjrSwFq6mdmY7uyI1wrUetej3xj16aKlB99zzlrnlzrYEmoobhrD
- Ef/lDkeKnL4gu2DlOglB4TgMzuuJcrq9YaibeLCugVN7/D/7O5GVQqPYLMPQxre2CFDl+8hbVu3UkTnmhBrixLWMnU4uUvy1sBcm0jC64UXrcroR7/Uol9LS
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-25_01,2023-10-24_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
+ bulkscore=0 malwarescore=0 priorityscore=1501 lowpriorityscore=0
+ suspectscore=0 mlxlogscore=999 mlxscore=0 phishscore=0 impostorscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2310170001 definitions=main-2310250064
 
 
 
-On 10/24/23 14:49, Johannes Berg wrote:
-> On Tue, 2023-10-24 at 14:41 -0600, Gustavo A. R. Silva wrote:
->>
->> It seems we run into the same issue in the function below, even in the
->> case this `memset()` is unnecessary (which it seems it's not):
->>
->> 	8920         memset(skb->data, 0, sizeof(*cmd));
->>
->> Notice that if `cap->peer_chan_len == 0` or `cap->peer_chan_len == 1`,
->> in the original code, we have `len == sizeof(*cmd) == 128`:
+On 10/23/23 21:24, Justin Stitt wrote:
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
 > 
-> Right.
+> We expect both `params` and `id` to be NUL-terminated based on their
+> usage with format strings:
 > 
->> -       /* tdls peer update cmd has place holder for one channel*/
->> -       chan_len = cap->peer_chan_len ? (cap->peer_chan_len - 1) : 0;
->> -
->> -       len = sizeof(*cmd) + chan_len * sizeof(*chan);
->> +       len = struct_size(cmd, peer_capab.peer_chan_list, cap->peer_chan_len);
->>
->>           skb = ath10k_wmi_alloc_skb(ar, len);
->>           if (!skb)
->>
->> which makes `round_len == roundup(len, 4) == struct_size(cmd,...,...) == 104`
->> when `cap->peer_chan_len == 0`
+> 	format_node_data(iuparams, iunodeid, &lir->incident_node);
+> 	format_node_data(auparams, aunodeid, &lir->attached_node);
 > 
-> And yeah, that's really the issue, it only matters for ==0. For a moment
-> there I thought that doesn't even make sense, but it looks like it never
-> even becomes non-zero.
+> 	switch (lir->iq.class) {
+> 	case LIR_IQ_CLASS_DEGRADED:
+> 		pr_warn("Link degraded: RS=%02x RSID=%04x IC=%02x "
+> 			"IUPARAMS=%s IUNODEID=%s AUPARAMS=%s AUNODEID=%s\n",
+> 			sei_area->rs, sei_area->rsid, lir->ic, iuparams,
+> 			iunodeid, auparams, aunodeid);
 > 
-> No idea then, sorry. You'd hope firmware doesn't care about the actual
-> message size if the inner data says "0 entries", but who knows? And how
-> many firmware versions are there? :)
+> NUL-padding is not required as both `params` and `id` have been memset
+> to 0:
 > 
-> So I guess you'd want to stay compatible, even if it means having a
+> 	memset(params, 0, PARAMS_LEN);
+> 	memset(id, 0, NODEID_LEN);
 > 
-> 	chan_len = min(cap->peer_chan_len, 1);
+> Considering the above, a suitable replacement is `strscpy` [2] due to
+> the fact that it guarantees NUL-termination on the destination buffer
+> without unnecessarily NUL-padding.
 > 
-> for the struct_size()?
+> Note that there's no overread bugs in the current implementation as the
+> string literal "n/a" has a size much smaller than PARAMS_LEN or
+> NODEID_LEN. Nonetheless, let's favor strscpy().
+> 
+> Link:https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings  [1]
+> Link:https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html  [2]
+> Link:https://github.com/KSPP/linux/issues/90
+> Cc:linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt<justinstitt@google.com>
 
-Yeah, that's an alternative.
+LGTM. Thank you.
 
-I'll wait for the maintainers to chime in and see if they have a different
-opinion.
+Reviewed-by: Vineeth Vijayan <vneethv@linux.ibm.com>
 
-Thanks
---
-Gustavo
+I can push this to s390-tree and Heiko/Vasily will upstream it.
+
+---snip---
