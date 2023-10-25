@@ -1,115 +1,107 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3CD41C6B0
-	for <linux-hardening@vger.kernel.org>; Wed, 25 Oct 2023 17:41:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C65533981
+	for <linux-hardening@vger.kernel.org>; Wed, 25 Oct 2023 23:42:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KRnYSNM2"
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFB6E184
-	for <linux-hardening@vger.kernel.org>; Wed, 25 Oct 2023 10:41:43 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id 4fb4d7f45d1cf-53f647c84d4so1000a12.0
-        for <linux-hardening@vger.kernel.org>; Wed, 25 Oct 2023 10:41:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X4iZxpwW"
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 860CE184
+	for <linux-hardening@vger.kernel.org>; Wed, 25 Oct 2023 16:41:58 -0700 (PDT)
+Received: by mail-lf1-x130.google.com with SMTP id 2adb3069b0e04-507bd64814fso339658e87.1
+        for <linux-hardening@vger.kernel.org>; Wed, 25 Oct 2023 16:41:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698255702; x=1698860502; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1698277317; x=1698882117; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NAZ9nGAhH3o0erIde1hPIJrXvGELXGLaUsVfM+RSmeg=;
-        b=KRnYSNM2+dMwmpWjn3jm1bA11qwyJJpeE1MCjMWRefM7I0Snt+r4ovpri7VBzki/Sq
-         5L7YIFraTshoYASQgtGVUyj3YrQhNCEnOVcqOssOVeWO+ox8s0Auf3Z6POjZzj94c84o
-         tpiE8gfGsbNNydzUaOAexvPkrEV3oA8AetQV3GQNbPufYfE0QiT21w8KQYrF5skBn/Ca
-         QnFG8jeADdINajhMKuX9lU6xtv4qixBHhzSZxBrHF15CQ13pd5N648Cadk7auiFNp0oF
-         6EP1F44/iYOX7NLCCJII8CmvM/2DWnPxzT+UbqcVkraFHHYHYOFxn0AmQwmuM5wyQycy
-         ajTQ==
+        bh=n8VIiqLkglYqJ+Q19MxelXV/EJXHtj9elKsbPyNgJFE=;
+        b=X4iZxpwW9noy6PCl7Fek6l3YBr1XUibRBJzDmAgzP82lCayz5gergKKAzLCpu/Kq6o
+         DtfuzkoO0yo4/vuZRPQcNn4YL5P/DJJ7u/C0IpZRCTohn+pqVr68KgK+zeWZjh5b24rm
+         1tQOfnDf16ZjAs3diwlNVYQPZ9ySH2PkAoFAbilPzGQ69pxx9KidtW3mV9hc1h13tK0q
+         krp2qZD2+8mn/zePSDw4fmw9665OgUIVOnqUHF+GHy/qc4VzsLBOHIywuTWF/o2lWhNL
+         4Y2KiGLsEtyo6EP6dbyJ3gp13vxn8wUd4YOMTTZw2ue97ytaTPbrGWuBb/dCIr3QzHt6
+         ZNwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698255702; x=1698860502;
+        d=1e100.net; s=20230601; t=1698277317; x=1698882117;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NAZ9nGAhH3o0erIde1hPIJrXvGELXGLaUsVfM+RSmeg=;
-        b=vkEdOLFaA1Ompnf7deDOAL5J1LNSW+nHpy2U3yJMIDKWltnJUnmFKjzq1tubcb3BFO
-         BWkjqs/1X4+KNjb4dxEUqRkjNwxJ0LPLKDhAIwGcISnmPh0XS2B+r3nKy/X1myeH0yq3
-         gUOr0UG4ubUfm1VixWbl5NOOP2Z1eN62v+AcjcEqD26EsfbNwapgUWkWMjpBdppmGSBZ
-         rHh8e4y3hKKca5O7wIsqlKGFjs/MRr3j1LIeWLwLHXYhINAf8+493hUG+jumdUHWuwNX
-         WF42/jgS4pc/Avbtq6DWKcgevtPUiEh6UohLDmzT7WtkhRmtuqEGQCnsLtR+6xhn3Wy6
-         ctXQ==
-X-Gm-Message-State: AOJu0Yw/1/xBbYbo+Pr7Z062V0UM6obgnyLc3mJG6Ai3JQpY5jdwJlEl
-	a1Zxu+A2qexTPeqmOJgiAcwk70i/e6zSiei047Oqa6jhO2wN1pyzxIs=
-X-Google-Smtp-Source: AGHT+IGETRjieiv11ugdTejLjjbzIjSP8buXEjIFCRQqEAqn2HYOKjHiEJwZgva9XIL3KL1gydFf/zhtey/xR2xX3Xk=
-X-Received: by 2002:a50:d706:0:b0:53e:7ad7:6d47 with SMTP id
- t6-20020a50d706000000b0053e7ad76d47mr122973edi.5.1698255701707; Wed, 25 Oct
- 2023 10:41:41 -0700 (PDT)
+        bh=n8VIiqLkglYqJ+Q19MxelXV/EJXHtj9elKsbPyNgJFE=;
+        b=Syvi7kHwE5zdaAli0lm1KovAZcOKwmMOQ76BWivT7NYLKeVuo/eqxNpS0tqoXfsnT7
+         SM/qU0CoGPr7THzw+w3h/C1x0vMjS7kBKIGuWWkPBzoDnHuAI1ZmTAblsxu2JlVwtVoF
+         Tot32Ec4xsv2d3iNwxCxqJ8CA/Y/5ecQzVCkQmaKjPpY9c62GUSDB0Zdk2DPC4oJJdty
+         jWCieTj2w8wkT1L3DmvxZsesTlQzV0+1cEiT+Hl1+PrkQC+gkrCkpg4Evz9nfQ1bbUCC
+         2u8XVEIipg8jUnqSACA+XPkPmuoKLWxq+PtkfF8wpprEsfdQRygGbR5juYpyoxToQzvw
+         x1Vw==
+X-Gm-Message-State: AOJu0YxDEaEHKk5xdxj5PgdDm1IY0PKMlZA1VffxgQDKKZOvBrVe2SuV
+	bhDwDqTpGmc2GBtfUikyBVNxf6yb0ev0XlrwOfZXpQ==
+X-Google-Smtp-Source: AGHT+IFvspkBVEQcaXlvdiXLBc5/Nnce7QqmAyRawMvbFwO+bR8RKg0bupAzqNCymHeTUjheo+zdDooay+3N3QXOwCg=
+X-Received: by 2002:a19:6716:0:b0:500:9a29:bcb8 with SMTP id
+ b22-20020a196716000000b005009a29bcb8mr11657885lfc.4.1698277316604; Wed, 25
+ Oct 2023 16:41:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Y59qBh9rRDgsIHaj@mailbox.org> <20231024134608.GC320399@mail.hallyn.com>
- <CAG48ez2DF4unFq7wXqHVdUg+o_VYee012v0hUiGTbfnTpsPi0w@mail.gmail.com> <20231025172235.GA345747@mail.hallyn.com>
-In-Reply-To: <20231025172235.GA345747@mail.hallyn.com>
-From: Jann Horn <jannh@google.com>
-Date: Wed, 25 Oct 2023 19:41:03 +0200
-Message-ID: <CAG48ez06yt4NO3QnUOLBBmrjesR2eF6GUWnffuckWEemxtUYcg@mail.gmail.com>
-Subject: Re: Isolating abstract sockets
-To: "Serge E. Hallyn" <serge@hallyn.com>
-Cc: Stefan Bavendiek <stefan.bavendiek@mailbox.org>, kernel-hardening@lists.openwall.com, 
+References: <20231012-strncpy-drivers-net-phy-nxp-tja11xx-c-v1-1-5ad6c9dff5c4@google.com>
+ <15af4bc4-2066-44bc-8d2e-839ff3945663@lunn.ch> <CAFhGd8pmq3UKBE_6ZbLyvRRhXJzaWMQ2GfosvcEEeAS-n7M4aQ@mail.gmail.com>
+ <0c401bcb-70a8-47a5-bca0-0b9e8e0439a8@lunn.ch> <CAFhGd8p3WzqQu7kT0Pt8Axuv5sKdHJQOLZVEg5x8S_QNwT6bjQ@mail.gmail.com>
+ <CAFhGd8qcLARQ4GEabEvcD=HmLdikgP6J82VdT=A9hLTDNru0LQ@mail.gmail.com>
+ <202310131630.5E435AD@keescook> <a958d35e-98b6-4a95-b505-776482d1150c@lunn.ch>
+ <202310141935.B326C9E@keescook>
+In-Reply-To: <202310141935.B326C9E@keescook>
+From: Justin Stitt <justinstitt@google.com>
+Date: Wed, 25 Oct 2023 16:41:43 -0700
+Message-ID: <CAFhGd8r3=ndtYgjK3O5KV_wrd5OL+0hP6RjqBwhJXgc0jr1hDw@mail.gmail.com>
+Subject: Re: [PATCH] net: phy: tja11xx: replace deprecated strncpy with ethtool_sprintf
+To: Kees Cook <keescook@chromium.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+	Russell King <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Oct 25, 2023 at 7:22=E2=80=AFPM Serge E. Hallyn <serge@hallyn.com> =
-wrote:
+On Sat, Oct 14, 2023 at 7:36=E2=80=AFPM Kees Cook <keescook@chromium.org> w=
+rote:
 >
-> On Wed, Oct 25, 2023 at 07:10:07PM +0200, Jann Horn wrote:
-> > On Tue, Oct 24, 2023 at 3:46=E2=80=AFPM Serge E. Hallyn <serge@hallyn.c=
-om> wrote:
-> > > Disabling them altogether would break lots of things depending on the=
-m,
-> > > like X :)  (@/tmp/.X11-unix/X0).
+> On Sat, Oct 14, 2023 at 03:55:41AM +0200, Andrew Lunn wrote:
+> > > I've been told that this whole ethtool API area is considered
+> > > deprecated. If that holds, then I don't think it's worth adding new
+> > > helpers to support it when ethtool_sprintf() is sufficient.
 > >
-> > FWIW, X can connect over both filesystem-based unix domain sockets and
-> > abstract unix domain sockets. When a normal X client tries to connect
-> > to the server, it'll try a bunch of stuff, including an abstract unix
-> > socket address, a filesystem-based unix socket address, and TCP:
+> > I think deprecated is too strong. The current API is not great, so
+> > maybe with time a new API will emerge. But given there are around 160
+> > users of the API, probably over 100 drivers, it will be 20 years or
+> > more before all that hardware becomes obsolete and the drivers are
+> > removed.
 > >
-> > $ DISPLAY=3D:12345 strace -f -e trace=3Dconnect xev >/dev/null
-> > connect(3, {sa_family=3DAF_UNIX, sun_path=3D@"/tmp/.X11-unix/X12345"}, =
-24)
-> > =3D -1 ECONNREFUSED (Connection refused)
-> > connect(3, {sa_family=3DAF_UNIX, sun_path=3D"/tmp/.X11-unix/X12345"}, 1=
-10)
-> > =3D -1 ENOENT (No such file or directory)
-> > [...]
-> > connect(3, {sa_family=3DAF_INET, sin_port=3Dhtons(18345),
-> > sin_addr=3Dinet_addr("127.0.0.1")}, 16) =3D 0
-> > connect(3, {sa_family=3DAF_INET6, sin6_port=3Dhtons(18345),
-> > inet_pton(AF_INET6, "::1", &sin6_addr), sin6_flowinfo=3Dhtonl(0),
-> > sin6_scope_id=3D0}, 28) =3D 0
-> > connect(3, {sa_family=3DAF_INET6, sin6_port=3Dhtons(18345),
-> > inet_pton(AF_INET6, "::1", &sin6_addr), sin6_flowinfo=3Dhtonl(0),
-> > sin6_scope_id=3D0}, 28) =3D -1 ECONNREFUSED (Connection refused)
-> > connect(3, {sa_family=3DAF_INET, sin_port=3Dhtons(18345),
-> > sin_addr=3Dinet_addr("127.0.0.1")}, 16) =3D -1 ECONNREFUSED (Connection
-> > refused)
+> > > Once you're done with the strncpy->ethtool_sprintf conversions I thin=
+k
+> > > it would be nice to have a single patch that fixes all of these
+> > > "%s"-less instances to use "%s". (Doing per-driver fixes for that cas=
+e
+> > > seems just overly painful.)
 > >
-> > And the X server normally listens on both an abstract and a
-> > filesystem-based unix socket address (see "netstat --unix -lnp").
-> >
-> > So rejecting abstract unix socket connections shouldn't prevent an X
-> > client from connecting to the X server, I think.
+> > I guess it is the same amount of effort to replace them with
+> > ethtool_puts()?
 >
-> Well it was just an example :)  Dbus is another.  But maybe all
-> the users of abstract unix sockets will fall back gracefully to
-> something else.  That'd be nice.
+> Yup, right. If adding ethtool_puts() makes sense, then I totally agree.
 
-For what it's worth, when I try to connect to the session or system
-bus on my system (like "strace -f -e trace=3Dconnect dbus-send
---session/--system /foo foo"), the connections seem to go directly to
-a filesystem socket...
+Thanks for the discussion here.
 
-> For X, abstract really doesn't even make sense to me.  Has it always
-> supported that?
+I've sent a series [1] implementing ethtool_puts() and sending out a
+wave of replacements.
 
-No idea.
+[1]: https://lore.kernel.org/all/20231025-ethtool_puts_impl-v1-0-6a53a93d3b=
+72@google.com/
+>
+> --
+> Kees Cook
+
+Thanks
+Justin
