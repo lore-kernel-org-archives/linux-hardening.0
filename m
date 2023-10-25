@@ -1,121 +1,133 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6929E8473;
-	Wed, 25 Oct 2023 14:23:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD84DC8EA
+	for <linux-hardening@vger.kernel.org>; Wed, 25 Oct 2023 15:52:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="dIxx2lBo"
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C72A6A3;
-	Wed, 25 Oct 2023 07:23:07 -0700 (PDT)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id D5A8740E01B1;
-	Wed, 25 Oct 2023 14:23:05 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id pEKZKcsmeGeS; Wed, 25 Oct 2023 14:23:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1698243784; bh=LwW8DqCiV3GFD9iEkJnIWOh8C/eNrtUPX3dlHtbPm+Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dIxx2lBoaqa6WX5jqPE1Aq/iCWkEv6LXOV14cXrKfkGIlnNUi5RLi7D3f9BNSC4V7
-	 SRYtySNARRwiKs8HuvQnpvn12YXVRT9O33LEZ1SR6gMSWKfpPP1n4A6rc6zQEn5JW4
-	 Ig3O2h7ayarehgRf0vuUI8LFon5W+IkbHbcIFXIWzG08mo7mOjCziW2upi75gPDt5P
-	 /mWEdFzgKRWXVUpHNLQT+1kqJwusgndDQmJAuZVzOx902E4r4JWu/ZWlbX8/vuBZg9
-	 C1cPv19EKUI+1mqIA+lVXDrCaBhhKcpAx6AlpiU2p/MeXxExNuBmkMGV2Gp6Cq1XQv
-	 3wyVguZNaamnWpI8gA0apu7NLH2camDUv9Wk3YVlMhEaPqz3YucBFx9+IMT8DZ/CU/
-	 D5oTJqcp+XDRo5PlII2jzJ6P2zldSjKNe7ZmSFxdcU5Ng6nvxLaJefupkPYeBLncaw
-	 rXtKo1+c+ThtUY7GUBFek36H408y0GW7/DE9OePbUnJtDZrcrXtMoagPwLJAxfrBID
-	 umSfTpV6Faj4L7vQYPPo0510GT078E6rcs4ptvd6bGntDCwjzq/PM5gnMb1xJe/Ytn
-	 KuPrf2GtUXFuuDX3vSu7gH+KxDa6zJMOmbRPlwr+xidjIP8yI+xg7dJ2cxMTrOPD3/
-	 JnuTG3L/2J5U4tuICqwxTkl8=
-Received: from zn.tnic (pd95304da.dip0.t-ipconnect.de [217.83.4.218])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DBEF840E014B;
-	Wed, 25 Oct 2023 14:22:50 +0000 (UTC)
-Date: Wed, 25 Oct 2023 16:22:45 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Jeshua Smith <jeshuas@nvidia.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	"Luck, Tony" <tony.luck@intel.com>,
-	"james.morse@arm.com" <james.morse@arm.com>,
-	"keescook@chromium.org" <keescook@chromium.org>,
-	"gpiccoli@igalia.com" <gpiccoli@igalia.com>,
-	"lenb@kernel.org" <lenb@kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-	Thierry Reding <treding@nvidia.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH V2] ACPI: APEI: Use ERST timeout for slow devices
-Message-ID: <20231025142245.GHZTkktbRl1wjfNc15@fat_crate.local>
-References: <DM6PR12MB3371BA50E3B76D2266273901DB09A@DM6PR12MB3371.namprd12.prod.outlook.com>
- <SJ1PR11MB6083426D3C663F47E707CF1AFC09A@SJ1PR11MB6083.namprd11.prod.outlook.com>
- <DM6PR12MB3371D86F80417641B8479B28DB0EA@DM6PR12MB3371.namprd12.prod.outlook.com>
- <DM6PR12MB3371FA3AEEA4D17D94C889D5DB1BA@DM6PR12MB3371.namprd12.prod.outlook.com>
- <DM6PR12MB337153EE2DDDB427096446F0DBF2A@DM6PR12MB3371.namprd12.prod.outlook.com>
- <DM6PR12MB3371083F4E6BCE4A8D2389E7DBC5A@DM6PR12MB3371.namprd12.prod.outlook.com>
- <DM6PR12MB33710C8FE59EB3CB1404ABC0DBD8A@DM6PR12MB3371.namprd12.prod.outlook.com>
- <CAJZ5v0g2TsBo4hxsJBo5a-ggD2Cj65VS=tokpoRaNwzWbPoeNw@mail.gmail.com>
- <20231024152708.GFZTfiTL9C6onZKn99@fat_crate.local>
- <MN2PR12MB33738FA73A69BC6AEB64BD63DBDEA@MN2PR12MB3373.namprd12.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bl91IHG7"
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65FEC131;
+	Wed, 25 Oct 2023 08:52:47 -0700 (PDT)
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39PFQvXl025155;
+	Wed, 25 Oct 2023 15:52:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=z/UZBVFqtVeuBuLw7/A7xA0JccB9bFqTaZBT7iungDo=;
+ b=bl91IHG72VOhhTSqUdVbddkmuzn9t1NwOlyppu6meRTGw+mQu0J69lWow92cvhCmeVkL
+ N0383bI5QEk7JnKdaB29spcF7Dzqjhf2lZm3eS0jaHQngk3Q+EDIrgPO/uZHzp09sP7M
+ hroGdw15WXogdWbv/Uwo0XIuFOQ4cXSWaep1lTlUIhuCHLxfje8igCUROOCSwfjU2jYw
+ g2eo2bcsy+1IJwWwEUk8irsB/VB389m9GQ1XgzAWecnglsN5frVTDMRj/XjJFLVXhBUI
+ kqK2g+1ArPCFeela5O1HDKt+ZIbzskpUGGVrhp7WOdY8kv9gmA346vsIqVEh2/G0aLzy TQ== 
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3txwjph418-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Oct 2023 15:52:25 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 39PFqOQR028589
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Oct 2023 15:52:24 GMT
+Received: from [10.48.243.236] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.39; Wed, 25 Oct
+ 2023 08:52:24 -0700
+Message-ID: <afaadf5e-556c-4fd6-bfd3-9c486a35a08f@quicinc.com>
+Date: Wed, 25 Oct 2023 08:52:23 -0700
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <MN2PR12MB33738FA73A69BC6AEB64BD63DBDEA@MN2PR12MB3373.namprd12.prod.outlook.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC - is this a bug?] wifi: ath10k: Asking for some light on
+ this, please :)
+Content-Language: en-US
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Johannes Berg
+	<johannes@sipsolutions.net>,
+        Kalle Valo <kvalo@kernel.org>
+CC: <ath10k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        "Gustavo A. R. Silva"
+	<gustavoars@kernel.org>,
+        <linux-hardening@vger.kernel.org>
+References: <626ae2e7-66f8-423b-b17f-e75c1a6d29b3@embeddedor.com>
+ <26b15f4702cef17fe70b496a62f03735874bd16a.camel@sipsolutions.net>
+ <07e9bb04-f9fc-46d5-bfb9-a00a63a707c0@embeddedor.com>
+ <f8daa53ee8a8019e4fd2b823c1fcb85a6cc4d806.camel@sipsolutions.net>
+ <8219c79e-0359-4136-afa4-fba76fde191a@embeddedor.com>
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+In-Reply-To: <8219c79e-0359-4136-afa4-fba76fde191a@embeddedor.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.49.16.6]
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: IqjSZNYTPG2TAHXLzYHqWLrLgXOuEM1_
+X-Proofpoint-GUID: IqjSZNYTPG2TAHXLzYHqWLrLgXOuEM1_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-25_04,2023-10-25_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ phishscore=0 mlxlogscore=673 priorityscore=1501 malwarescore=0
+ suspectscore=0 impostorscore=0 adultscore=0 clxscore=1011 bulkscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2310170001 definitions=main-2310250137
 
-Hi,
+On 10/24/2023 7:37 PM, Gustavo A. R. Silva wrote:
+> 
+> 
+> On 10/24/23 14:49, Johannes Berg wrote:
+>> On Tue, 2023-10-24 at 14:41 -0600, Gustavo A. R. Silva wrote:
+>>>
+>>> It seems we run into the same issue in the function below, even in the
+>>> case this `memset()` is unnecessary (which it seems it's not):
+>>>
+>>>     8920         memset(skb->data, 0, sizeof(*cmd));
+>>>
+>>> Notice that if `cap->peer_chan_len == 0` or `cap->peer_chan_len == 1`,
+>>> in the original code, we have `len == sizeof(*cmd) == 128`:
+>>
+>> Right.
+>>
+>>> -       /* tdls peer update cmd has place holder for one channel*/
+>>> -       chan_len = cap->peer_chan_len ? (cap->peer_chan_len - 1) : 0;
+>>> -
+>>> -       len = sizeof(*cmd) + chan_len * sizeof(*chan);
+>>> +       len = struct_size(cmd, peer_capab.peer_chan_list, 
+>>> cap->peer_chan_len);
+>>>
+>>>           skb = ath10k_wmi_alloc_skb(ar, len);
+>>>           if (!skb)
+>>>
+>>> which makes `round_len == roundup(len, 4) == struct_size(cmd,...,...) 
+>>> == 104`
+>>> when `cap->peer_chan_len == 0`
+>>
+>> And yeah, that's really the issue, it only matters for ==0. For a moment
+>> there I thought that doesn't even make sense, but it looks like it never
+>> even becomes non-zero.
+>>
+>> No idea then, sorry. You'd hope firmware doesn't care about the actual
+>> message size if the inner data says "0 entries", but who knows? And how
+>> many firmware versions are there? :)
+>>
+>> So I guess you'd want to stay compatible, even if it means having a
+>>
+>>     chan_len = min(cap->peer_chan_len, 1);
+>>
+>> for the struct_size()?
+> 
+> Yeah, that's an alternative.
+> 
+> I'll wait for the maintainers to chime in and see if they have a different
+> opinion.
 
-On Wed, Oct 25, 2023 at 02:09:37PM +0000, Jeshua Smith wrote:
-<... snip a very detailed and good explanation... >
+I'm seeing clarification from the development team.
 
-> Writing 128 nor-flash pages would then take 120us * 128 = 15ms
-> typical, or 1800us * 128 = 230.4ms max.
+/jeff
 
-This is perfectly suitable to be in the commit message - it explains in
-exact detail why the change is needed.
-
-> Actual use case:
->
-> Kernel panic -> Pstore calls APEI's ERST code to write the ~32KB error
-> log to persistent store -> ERST code writes the error log to
-> nor-flash, which takes more than 1ms to complete. This is expected, as
-> communicated by the platform to the OS via the maximum time field in
-> the ERST table.
-
-This is actually very important and it justifies the need for that
-change even more - you want to flush out the complete panic message to
-pstore and not only the first couple of lines.
-
-> ... and therefore the extended (ERST-defined) timeout is only applied
-> for implementations that indicate that they are "slow". I assume that
-> platforms which bother to set the "slow" bit will also specify actual
-> timings, and platforms which don't are OK with the current 1ms
-> timeout.
-
-Yap, makes perfect sense to me.
-
-> Does that answer your questions?
-
-Yes, thanks for taking the time to explain this in such a detail and
-precisely. I think you should use the main bits of what you wrote here
-and add them to the commit message - after this there are no more
-questions why this patch is needed, IMO.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
