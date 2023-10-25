@@ -1,150 +1,177 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 640A1620
-	for <linux-hardening@vger.kernel.org>; Wed, 25 Oct 2023 00:42:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 736251369
+	for <linux-hardening@vger.kernel.org>; Wed, 25 Oct 2023 01:07:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AMCwj95q"
-Received: from mail-oo1-xc2d.google.com (mail-oo1-xc2d.google.com [IPv6:2607:f8b0:4864:20::c2d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18AAE128
-	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 17:42:13 -0700 (PDT)
-Received: by mail-oo1-xc2d.google.com with SMTP id 006d021491bc7-581b6b93bd1so2952215eaf.1
-        for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 17:42:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1698194532; x=1698799332; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2FnAEcz0Pm6rwXLiqbg9EQq+SejnOHmDm7vB765x6ZI=;
-        b=AMCwj95qtRLVPgrnexb179RQhCdCz2o0cpZGwf6rcclMjCYntjUf6Fw9UsDUmMo6jJ
-         bMdxVfrtPCPKTSLovlrDgYfjBJf7BkUe7E/B9O4RkqvcklIlmPUxkFHLNbum+YBzyvG4
-         eO7T7K6k9Oyzw0+PKxYqngKtJTzlbuLWU/zCE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698194532; x=1698799332;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2FnAEcz0Pm6rwXLiqbg9EQq+SejnOHmDm7vB765x6ZI=;
-        b=JwNPA4xE0Ph0w4kOQ6IAP6m+DMQFFPPOMm0bMRoHvkPPaWhKjl4kU1/u11BSn6DRaq
-         guROdMYA71EK1SQbEeKWoguQzWtWBKEaUtxwRmi4MohwZKTOgS7N24xzxl5PjckmRRFP
-         xVGBn8+B+tCr0YZ4D97PoqXLM+anvPPRubUKjbU4rd/ae8Txbg55OtwZhnXVFi35ueOp
-         HrkY89jJKkADXDC/YO6TonVFsjtbDgM9EsM4rnBp0BHM2xXm8dKntz8C0ukLB51JbaZu
-         NL/FZENuWApDVKn0HboToJI0ZqT6iup2ywbIhzWq8Tq60xv3CbBR0TyCZ2Ix+YIXnc8F
-         NU1g==
-X-Gm-Message-State: AOJu0YwvN4AVNRcqjSvns2n/90XcuZrDvYEnjjzICUY+GuABAq7mJDJo
-	sMYWl9Q5AIgxnkkfuVKvHD7M1g==
-X-Google-Smtp-Source: AGHT+IGH5gFCLNw5hepkhxKvaGvJWtvDDKqCFVy++lU1SJUYvicyfPYz5myLthfyacybbSPx7R9KDg==
-X-Received: by 2002:a05:6358:c323:b0:168:d382:1446 with SMTP id fk35-20020a056358c32300b00168d3821446mr7219249rwb.11.1698194532346;
-        Tue, 24 Oct 2023 17:42:12 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id by2-20020a056a02058200b0058c1383fa8bsm6750257pgb.0.2023.10.24.17.42.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Oct 2023 17:42:11 -0700 (PDT)
-Date: Tue, 24 Oct 2023 17:42:10 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: James Smart <james.smart@broadcom.com>,
-	Ram Vegesna <ram.vegesna@broadcom.com>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] scsi: elx: libefc: replace deprecated strncpy with
- strscpy
-Message-ID: <202310241733.9CBC2251@keescook>
-References: <20231023-strncpy-drivers-scsi-elx-libefc-efc_node-h-v1-1-8b66878b6796@google.com>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="cVl4Aqq/"
+Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E3449D
+	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 18:07:02 -0700 (PDT)
+Received: from eig-obgw-5007a.ext.cloudfilter.net ([10.0.29.141])
+	by cmsmtp with ESMTPS
+	id vQOiqlyurWcCIvSMPqv5GW; Wed, 25 Oct 2023 01:07:01 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id vSMOqGbL76uHPvSMPqkV4m; Wed, 25 Oct 2023 01:07:01 +0000
+X-Authority-Analysis: v=2.4 cv=TuH1ORbh c=1 sm=1 tr=0 ts=65386a35
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=_mNlVl-r0hj7kTaC:21 a=IkcTkHD0fZMA:10 a=bhdUkHdE2iEA:10 a=wYkD_t78qR0A:10
+ a=VwQbUJbxAAAA:8 a=stkexhm8AAAA:8 a=_Wotqz80AAAA:8 a=jR2mby-O1imw8BYHV3QA:9
+ a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22 a=pIW3pCRaVxJDc-hWtpF8:22
+ a=buJP51TR1BpY-zbLSsyS:22 a=N_l3Vs37sht3-TxgB6J7:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=jgueludWkZgknBALxo52tKnH1XcORBXqsInq+hMs+AA=; b=cVl4Aqq/QtjRsb9reVAKMjUA4b
+	JxcileGUcoYCD5yZH1ZltbFYWLZHYo+EiooYvbdsktidvQqdNwWQxu9GLFzQd2VSKbGU5AO3TmHSa
+	0OMAd7+7NRrRfcS+bDX/+jUSSb/MwVrTH7jQNRZCKEa/SXldSeJ1/H0BLtvEgyR7JGGVQ4YWnCWCJ
+	klr2NqBRUoy6vu/GSdrXewRjfTA4ifuHKV8sCelFrzmJateexgzbTw2y8/NTSAg+RwXQbR7Hynmpl
+	CyeTj6OFXGqO0PAeDC74NNODEmtLVuOiCgW7m4vZ6BeLDuPKEO6AxLmQ4HiVIRSFEreVNdZ2UUsiW
+	zXMsqVgg==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:48400 helo=[192.168.15.10])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1qvSMO-001oyw-0H;
+	Tue, 24 Oct 2023 20:07:00 -0500
+Message-ID: <e19b9dcc-99d0-414d-95ef-69149daedaa9@embeddedor.com>
+Date: Tue, 24 Oct 2023 19:06:58 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231023-strncpy-drivers-scsi-elx-libefc-efc_node-h-v1-1-8b66878b6796@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC - is this a bug?] wifi: ath10k: Asking for some light on
+ this, please :)
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To: Kalle Valo <kvalo@kernel.org>, Jeff Johnson <quic_jjohnson@quicinc.com>,
+ Manikanta Pubbisetty <quic_mpubbise@quicinc.com>
+Cc: ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+ linux-kernel@vger.kernel.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ linux-hardening@vger.kernel.org
+References: <626ae2e7-66f8-423b-b17f-e75c1a6d29b3@embeddedor.com>
+In-Reply-To: <626ae2e7-66f8-423b-b17f-e75c1a6d29b3@embeddedor.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.21.192
+X-Source-L: No
+X-Exim-ID: 1qvSMO-001oyw-0H
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:48400
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfEAboCTIzWzRSE4Wv2OmChVekYAj1hWZk7Oc6xVO6X30CTuM8iiFxvVY1yoozol6UlcCxtsc/6m1z7FzKnCR7s/b1Crx3WPT1ybCESBbzxh/tHhOp7EY
+ Jda5FTaGKwL58VCn+IqQ/1/4TIbju5PbLyzWG09Grqh2feZfGigyQ3haYa6qtT8IMB1lBSRtfR6z1Xs3cgftGhZPmRhXy1gfCGQn3qrnRewXbmevvtyI9mLQ
 
-On Mon, Oct 23, 2023 at 09:58:32PM +0000, Justin Stitt wrote:
-> strncpy() is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
-> 
-> A suitable replacement is `strscpy` [2] due to the fact that it
-> guarantees NUL-termination on the destination buffer without
-> unnecessarily NUL-padding.
-> 
-> There seems to not be any uses of `current_state_name` other than in
-> these assignments. Judging from context surrounding these assignments,
-> especially considering the string literal "invalid" being assigned, we
-> want both current_state_name and prev_state_name to be NUL-terminated
-> strings.
+[+CC Manikanta Pubbisetty ]
 
-I'm nervous that "node" may be either passed over the link or in
-IO memory, so the behavior change of not %NUL-padding these may trip
-something at run-time. Unless someone says otherwise, let's stay on the
-safe side and use strscpy_pad() for "invalid" and handler, and memcpy()
-for the swap.
+As Johannes[1] pointed out, this `memset()` is probably unnecessary:
 
-Looking at "handler", it's always less than 64, so we don't need to
-worry about early truncation -- it's always __func__, and none of them
-are very long:
+./drivers/net/wireless/ath/ath10k/wmi.c:
+8920         memset(skb->data, 0, sizeof(*cmd));
 
-$ git grep efc_node_evt_set | grep -v __func__
-drivers/scsi/elx/libefc/efc_node.h:efc_node_evt_set(struct efc_sm_ctx *ctx, enum efc_sm_event evt,
+However, the same exact issue[2] is present at the line below inside
+function `ath10k_wmi_alloc_skb()`:
 
-$ git grep efc_node_evt_set | grep __func__ | cut -d: -f1 | sort -u
-drivers/scsi/elx/libefc/efc_device.c
-drivers/scsi/elx/libefc/efc_fabric.c
-drivers/scsi/elx/libefc/efc_node.c
+drivers/net/wireless/ath/ath10k/wmi.c:
+1799         memset(skb->data, 0, round_len);
 
-$ grep -E '^_?_?efc' drivers/scsi/elx/libefc/efc_{fabric,device,node}.c \
-  | cut -d'(' -f1 | cut -d: -f2 | wc -L
-37
 
--Kees
+Thanks
+--
+Gustavo
 
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
-> Note: build-tested only.
-> 
-> Found with: $ rg "strncpy\("
-> ---
->  drivers/scsi/elx/libefc/efc_node.h | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/scsi/elx/libefc/efc_node.h b/drivers/scsi/elx/libefc/efc_node.h
-> index e9c600ac45d5..3a16703d0f97 100644
-> --- a/drivers/scsi/elx/libefc/efc_node.h
-> +++ b/drivers/scsi/elx/libefc/efc_node.h
-> @@ -26,12 +26,12 @@ efc_node_evt_set(struct efc_sm_ctx *ctx, enum efc_sm_event evt,
->  	struct efc_node *node = ctx->app;
->  
->  	if (evt == EFC_EVT_ENTER) {
-> -		strncpy(node->current_state_name, handler,
-> +		strscpy(node->current_state_name, handler,
->  			sizeof(node->current_state_name));
->  	} else if (evt == EFC_EVT_EXIT) {
-> -		strncpy(node->prev_state_name, node->current_state_name,
-> +		strscpy(node->prev_state_name, node->current_state_name,
->  			sizeof(node->prev_state_name));
-> -		strncpy(node->current_state_name, "invalid",
-> +		strscpy(node->current_state_name, "invalid",
->  			sizeof(node->current_state_name));
->  	}
->  	node->prev_evt = node->current_evt;
-> 
-> ---
-> base-commit: 9c5d00cb7b6bbc5a7965d9ab7d223b5402d1f02c
-> change-id: 20231023-strncpy-drivers-scsi-elx-libefc-efc_node-h-cbbf753197b7
-> 
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
-> 
-> 
+[1] https://lore.kernel.org/linux-hardening/26b15f4702cef17fe70b496a62f03735874bd16a.camel@sipsolutions.net/
+[2] https://lore.kernel.org/linux-hardening/07e9bb04-f9fc-46d5-bfb9-a00a63a707c0@embeddedor.com/
 
--- 
-Kees Cook
+On 10/24/23 13:50, Gustavo A. R. Silva wrote:
+> Hi all,
+> 
+> While working on tranforming one-element array `peer_chan_list` in
+> `struct wmi_tdls_peer_capabilities` into a flex-array member
+> 
+> 7187 struct wmi_tdls_peer_capabilities {
+> ...
+> 7199         struct wmi_channel peer_chan_list[1];
+> 7200 } __packed;
+> 
+> the following line caught my attention:
+> 
+> ./drivers/net/wireless/ath/ath10k/wmi.c:
+> 8920         memset(skb->data, 0, sizeof(*cmd));
+> 
+> Notice that before the flex-array transformation, we are zeroing 128
+> bytes in `skb->data` because `sizeof(*cmd) == 128`, see below:
+> 
+> $ pahole -C wmi_10_4_tdls_peer_update_cmd drivers/net/wireless/ath/ath10k/wmi.o
+> struct wmi_10_4_tdls_peer_update_cmd {
+>      __le32                     vdev_id;              /*     0     4 */
+>      struct wmi_mac_addr        peer_macaddr;         /*     4     8 */
+>      __le32                     peer_state;           /*    12     4 */
+>      __le32                     reserved[4];          /*    16    16 */
+>      struct wmi_tdls_peer_capabilities peer_capab;    /*    32    96 */
+> 
+>      /* size: 128, cachelines: 2, members: 5 */
+> };
+> 
+> So, after the flex-array transformation (and the necessary adjustments
+> to a few other lines of code) we would be zeroing 104 bytes in
+> `skb->data` because `sizeof(*cmd) == 104`, see below:
+> 
+> $ pahole -C wmi_10_4_tdls_peer_update_cmd drivers/net/wireless/ath/ath10k/wmi.o
+> struct wmi_10_4_tdls_peer_update_cmd {
+>      __le32                     vdev_id;              /*     0     4 */
+>      struct wmi_mac_addr        peer_macaddr;         /*     4     8 */
+>      __le32                     peer_state;           /*    12     4 */
+>      __le32                     reserved[4];          /*    16    16 */
+>      struct wmi_tdls_peer_capabilities peer_capab;    /*    32    72 */
+> 
+>      /* size: 104, cachelines: 2, members: 5 */
+>      /* last cacheline: 40 bytes */
+> };
+> 
+> This difference arises because the size of the element type for the
+> `peer_chan_list` array, which is `sizeof(struct wmi_channel) == 24 `
+> 
+> $ pahole -C wmi_channel drivers/net/wireless/ath/ath10k/wmi.o
+> struct wmi_channel {
+>      __le32                     mhz;                  /*     0     4 */
+>      __le32                     band_center_freq1;    /*     4     4 */
+>      __le32                     band_center_freq2;    /*     8     4 */
+> 
+> [..]
+>                                                 /*    20     4 */
+> 
+>      /* size: 24, cachelines: 1, members: 6 */
+>      /* last cacheline: 24 bytes */
+> };
+> 
+> is included in `sizeof(*cmd)` before the transformation.
+> 
+> So, my question is: do we really need to zero out those extra 24 bytes in
+> `skb->data`? or is it rather a bug in the original code?
+> 
+> Thanks!
+> -- 
+> Gustavo
+> 
+> 
