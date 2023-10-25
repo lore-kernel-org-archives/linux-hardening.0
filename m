@@ -1,133 +1,121 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A64A2566
-	for <linux-hardening@vger.kernel.org>; Wed, 25 Oct 2023 10:25:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCC80847B
+	for <linux-hardening@vger.kernel.org>; Wed, 25 Oct 2023 12:02:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="feNU6oA0"
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36A8510A;
-	Wed, 25 Oct 2023 03:25:12 -0700 (PDT)
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39PAD2o6009968;
-	Wed, 25 Oct 2023 10:25:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=pp1; bh=dkngY/uGd72QquiKqtcqhmUawOZGFn6Q2/mrRwMoXOI=;
- b=feNU6oA06+oxLvt8OVk4isxTTZrHa4ZLtcGHzCluIYfD2LYQGj11z1PPJ/ljpz9dq8RY
- g99TvP39niEGdQ2QbwfulZoz2oq/091oT228dWS6WfuEahciJrLt5aRlr94Kj9nVARtF
- 1S/Nbidw/fVZkySnLqO0TQ0KtxDI23++PI696po3k1+8HyUkKbW5GRDCvz7J35wn/H8w
- fpFC2fevnhqGobPUvkg+xu6ExGmAZumOZ8zitZzMY3Tpyj/e2yzbiSKJLdetbEbjMKxM
- 8NZZAVgt9XNRvF3xrAphwhScHyrQzJfAdHwzGMOu0hKOPi1IFY8Dm3sQ5B4wTfV0BrIW 3w== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ty12hgfbn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Oct 2023 10:25:11 +0000
-Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39PADHxR011526;
-	Wed, 25 Oct 2023 10:25:10 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ty12hgfb1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Oct 2023 10:25:10 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 39P9jwmr023804;
-	Wed, 25 Oct 2023 10:25:09 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3tvryt65fe-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Oct 2023 10:25:09 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 39PAP6N221627458
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 25 Oct 2023 10:25:06 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 609352006C;
-	Wed, 25 Oct 2023 10:25:06 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C053A2006A;
-	Wed, 25 Oct 2023 10:25:05 +0000 (GMT)
-Received: from localhost (unknown [9.171.93.15])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 25 Oct 2023 10:25:05 +0000 (GMT)
-Date: Wed, 25 Oct 2023 12:25:04 +0200
-From: Vasily Gorbik <gor@linux.ibm.com>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Vineeth Vijayan <vneethv@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] s390/cio: replace deprecated strncpy with strscpy
-Message-ID: <your-ad-here.call-01698229504-ext-3663@work.hours>
-References: <20231023-strncpy-drivers-s390-cio-chsc-c-v1-1-8b76a7b83260@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20231023-strncpy-drivers-s390-cio-chsc-c-v1-1-8b76a7b83260@google.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 3SBpjJkcNnbczjvgkGjTSrryDl5jq5VM
-X-Proofpoint-ORIG-GUID: 91nL1D4q-fQhbSJX2D92Akiq1Y2gfbsz
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="WKlVFa/X"
+X-Greylist: delayed 488 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 25 Oct 2023 05:02:33 PDT
+Received: from smtp-bc0c.mail.infomaniak.ch (smtp-bc0c.mail.infomaniak.ch [IPv6:2001:1600:4:17::bc0c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D321012A
+	for <linux-hardening@vger.kernel.org>; Wed, 25 Oct 2023 05:02:33 -0700 (PDT)
+Received: from smtp-3-0000.mail.infomaniak.ch (unknown [10.4.36.107])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4SFnQm0zRMzMpp4B;
+	Wed, 25 Oct 2023 11:54:24 +0000 (UTC)
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4SFnQk6tmVz3d;
+	Wed, 25 Oct 2023 13:54:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
+	s=20191114; t=1698234864;
+	bh=mMYv/OtCtrMkSzUGCDriDfowe8jgvj19HXrHCnj/SwM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WKlVFa/XjMXHzCCMDDthMvz02Bgem94sRhDHQNoLhGYAc/bVNvnEhiMxm5DTZHOLl
+	 mVMffrv7ck2pEkUAAHNAKJbtDBD0ZlstfQegKG4xbb+PNSOPdFyjKID1WeZlcIDlZV
+	 BPY/K3CbLj9VsfHcrIQyirsQlZ2KQs9nqznhfaRU=
+Date: Wed, 25 Oct 2023 13:54:21 +0200
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: "Serge E. Hallyn" <serge@hallyn.com>
+Cc: Paul Moore <paul@paul-moore.com>, 
+	Stefan Bavendiek <stefan.bavendiek@mailbox.org>, kernel-hardening@lists.openwall.com, 
+	linux-hardening@vger.kernel.org, =?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, 
+	linux-security-module@vger.kernel.org, Konstantin Meskhidze <konstantin.meskhidze@huawei.com>, 
+	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>
+Subject: Re: Isolating abstract sockets
+Message-ID: <20231025.eecai4uGh5Ie@digikod.net>
+References: <Y59qBh9rRDgsIHaj@mailbox.org>
+ <20231024134608.GC320399@mail.hallyn.com>
+ <CAHC9VhRCJfBRu8172=5jF_gFhv2znQXTnGs_c_ae1G3rk_Dc-g@mail.gmail.com>
+ <20231024141807.GB321218@mail.hallyn.com>
+ <CAHC9VhQaotVPGzWFFzRCgw9mDDc2tu6kmGHioMBghj-ybbYx1Q@mail.gmail.com>
+ <20231024160714.GA323539@mail.hallyn.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-25_01,2023-10-25_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- clxscore=1015 impostorscore=0 malwarescore=0 adultscore=0 mlxlogscore=823
- mlxscore=0 suspectscore=0 phishscore=0 lowpriorityscore=0 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2310170001 definitions=main-2310250089
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20231024160714.GA323539@mail.hallyn.com>
+X-Infomaniak-Routing: alpha
 
-On Mon, Oct 23, 2023 at 07:24:38PM +0000, Justin Stitt wrote:
-> strncpy() is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
-> 
-> We expect both `params` and `id` to be NUL-terminated based on their
-> usage with format strings:
-> 
-> 	format_node_data(iuparams, iunodeid, &lir->incident_node);
-> 	format_node_data(auparams, aunodeid, &lir->attached_node);
-> 
-> 	switch (lir->iq.class) {
-> 	case LIR_IQ_CLASS_DEGRADED:
-> 		pr_warn("Link degraded: RS=%02x RSID=%04x IC=%02x "
-> 			"IUPARAMS=%s IUNODEID=%s AUPARAMS=%s AUNODEID=%s\n",
-> 			sei_area->rs, sei_area->rsid, lir->ic, iuparams,
-> 			iunodeid, auparams, aunodeid);
-> 
-> NUL-padding is not required as both `params` and `id` have been memset
-> to 0:
-> 
-> 	memset(params, 0, PARAMS_LEN);
-> 	memset(id, 0, NODEID_LEN);
-> 
-> Considering the above, a suitable replacement is `strscpy` [2] due to
-> the fact that it guarantees NUL-termination on the destination buffer
-> without unnecessarily NUL-padding.
-> 
-> Note that there's no overread bugs in the current implementation as the
-> string literal "n/a" has a size much smaller than PARAMS_LEN or
-> NODEID_LEN. Nonetheless, let's favor strscpy().
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
-> Note: build-tested only.
-> 
-> Found with: $ rg "strncpy\("
-> ---
->  drivers/s390/cio/chsc.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+On Tue, Oct 24, 2023 at 11:07:14AM -0500, Serge E. Hallyn wrote:
+> On Tue, Oct 24, 2023 at 10:29:17AM -0400, Paul Moore wrote:
+> > On Tue, Oct 24, 2023 at 10:18 AM Serge E. Hallyn <serge@hallyn.com> wrote:
+> > > On Tue, Oct 24, 2023 at 10:14:29AM -0400, Paul Moore wrote:
+> > > > On Tue, Oct 24, 2023 at 9:46 AM Serge E. Hallyn <serge@hallyn.com> wrote:
+> > > > > On Sun, Dec 18, 2022 at 08:29:10PM +0100, Stefan Bavendiek wrote:
+> > > > > > When building userspace application sandboxes, one issue that does not seem trivial to solve is the isolation of abstract sockets.
+> > > > >
+> > > > > Veeery late reply.  Have you had any productive discussions about this in
+> > > > > other threads or venues?
+> > > > >
+> > > > > > While most IPC mechanism can be isolated by mechanisms like mount namespaces, abstract sockets are part of the network namespace.
+> > > > > > It is possible to isolate abstract sockets by using a new network namespace, however, unprivileged processes can only create a new empty network namespace, which removes network access as well and makes this useless for network clients.
+> > > > > >
+> > > > > > Same linux sandbox projects try to solve this by bridging the existing network interfaces into the new namespace or use something like slirp4netns to archive this, but this does not look like an ideal solution to this problem, especially since sandboxing should reduce the kernel attack surface without introducing more complexity.
+> > > > > >
+> > > > > > Aside from containers using namespaces, sandbox implementations based on seccomp and landlock would also run into the same problem, since landlock only provides file system isolation and seccomp cannot filter the path argument and therefore it can only be used to block new unix domain socket connections completely.
+> > > > > >
+> > > > > > Currently there does not seem to be any way to disable network namespaces in the kernel without also disabling unix domain sockets.
+> > > > > >
+> > > > > > The question is how to solve the issue of abstract socket isolation in a clean and efficient way, possibly even without namespaces.
+> > > > > > What would be the ideal way to implement a mechanism to disable abstract sockets either globally or even better, in the context of a process.
+> > > > > > And would such a patch have a realistic chance to make it into the kernel?
+> > > > >
+> > > > > Disabling them altogether would break lots of things depending on them,
+> > > > > like X :)  (@/tmp/.X11-unix/X0).  The other path is to reconsider network
+> > > > > namespaces.  There are several directions this could lead.  For one, as
+> > > > > Dinesh Subhraveti often points out, the current "network" namespace is
+> > > > > really a network device namespace.  If we instead namespace at the
+> > > > > bind/connect/etc calls, we end up with much different abilities.
+> > > >
+> > > > The LSM layer supports access controls on abstract sockets, with at
+> > > > least two (AppArmor, SELinux) providing abstract socket access
+> > > > controls, other LSMs may provide controls as well.
+> > >
+> > > Good point.  And for Stefan that may suffice, so thanks for mentioning
+> > > that.  But The LSM layer is mandatory access control for use by the
+> > > admins.  That doesn't help an unprivileged user.
+> > 
+> > Individual LSMs may implement mandatory access control models, but
+> > that is not an inherent requirement imposed by the LSM layer.  While
+> > the Landlock LSM does not (yet?) support access controls for abstract
+> > sockets, it is a discretionary access control mechanism.
 
-Applied, thank you!
+A recent discussion focused on this topic:
+https://lore.kernel.org/all/20231023.ahphah4Wii4v@digikod.net/
+
+I'd like Landlock to be able to scope the use of unix sockets according
+to a Landlock domain the same way it is done for ptrace. This would make
+it possible to easily isolate unix sockets to a sandbox even by
+unprivileged processes (without any namespace change). I'd be happy to
+help implement such mechanism.
+
+> 
+> In 2005, before namespaces were upstreamed, I posted the 'bsdjail' LSM,
+> which briefly made it into the -mm kernel, but was eventually rejected as
+> being an abuse of the LSM interface for OS level virtualization :)
+> 
+> It's not 100% clear to me whether Stefan only wants isolation, or
+> wants something closer to virtualization.
+> 
+> Stefan, would an LSM allowing you to isolate certain processes from
+> some abstract unix socket paths (or by label, whatever0 suffice for you?
+> 
+> > I'm not currently aware of a discretionary access control LSM that
+> > supports abstract socket access control, but such a LSM should be
+> > possible if someone wanted to implement one.
+> > 
+> > -- 
+> > paul-moore.com
