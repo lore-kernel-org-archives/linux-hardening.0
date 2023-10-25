@@ -1,177 +1,68 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 736251369
-	for <linux-hardening@vger.kernel.org>; Wed, 25 Oct 2023 01:07:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 179131369;
+	Wed, 25 Oct 2023 01:10:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="cVl4Aqq/"
-Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E3449D
-	for <linux-hardening@vger.kernel.org>; Tue, 24 Oct 2023 18:07:02 -0700 (PDT)
-Received: from eig-obgw-5007a.ext.cloudfilter.net ([10.0.29.141])
-	by cmsmtp with ESMTPS
-	id vQOiqlyurWcCIvSMPqv5GW; Wed, 25 Oct 2023 01:07:01 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id vSMOqGbL76uHPvSMPqkV4m; Wed, 25 Oct 2023 01:07:01 +0000
-X-Authority-Analysis: v=2.4 cv=TuH1ORbh c=1 sm=1 tr=0 ts=65386a35
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=_mNlVl-r0hj7kTaC:21 a=IkcTkHD0fZMA:10 a=bhdUkHdE2iEA:10 a=wYkD_t78qR0A:10
- a=VwQbUJbxAAAA:8 a=stkexhm8AAAA:8 a=_Wotqz80AAAA:8 a=jR2mby-O1imw8BYHV3QA:9
- a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22 a=pIW3pCRaVxJDc-hWtpF8:22
- a=buJP51TR1BpY-zbLSsyS:22 a=N_l3Vs37sht3-TxgB6J7:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=jgueludWkZgknBALxo52tKnH1XcORBXqsInq+hMs+AA=; b=cVl4Aqq/QtjRsb9reVAKMjUA4b
-	JxcileGUcoYCD5yZH1ZltbFYWLZHYo+EiooYvbdsktidvQqdNwWQxu9GLFzQd2VSKbGU5AO3TmHSa
-	0OMAd7+7NRrRfcS+bDX/+jUSSb/MwVrTH7jQNRZCKEa/SXldSeJ1/H0BLtvEgyR7JGGVQ4YWnCWCJ
-	klr2NqBRUoy6vu/GSdrXewRjfTA4ifuHKV8sCelFrzmJateexgzbTw2y8/NTSAg+RwXQbR7Hynmpl
-	CyeTj6OFXGqO0PAeDC74NNODEmtLVuOiCgW7m4vZ6BeLDuPKEO6AxLmQ4HiVIRSFEreVNdZ2UUsiW
-	zXMsqVgg==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:48400 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1qvSMO-001oyw-0H;
-	Tue, 24 Oct 2023 20:07:00 -0500
-Message-ID: <e19b9dcc-99d0-414d-95ef-69149daedaa9@embeddedor.com>
-Date: Tue, 24 Oct 2023 19:06:58 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KC0cDXJy"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8F5D8C433C7;
+	Wed, 25 Oct 2023 01:10:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1698196223;
+	bh=jr94RxQWR4i7cYxL/lD+f8pdGurxi1ydHIq3R2P6ijc=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=KC0cDXJy1QF1yJ4i8slHHvvWYTwGg6xp0yY2QWfdAgx020uanyxzc+/RRmSwRA0gj
+	 QaKBLZosAn+jUPvXpL/uGi1WBnx0qc42gCyZfyt2n5OEePpYrZkatrmac/excAtPDW
+	 2xDQ/Il28liuR9oeC+NOtKTQQxpPQHfCyhyqE4WEVMDB+PlJ6nVI7A25+d7h2sIPlQ
+	 0z9jEs8m1s0J8KNleYiGF5brztz8/LhrHijQFbEfmFMEqDOOZG0FC6rrELoK+A/5p2
+	 /WM1Q+ZFEAYk0rlSYQGwRfnNH/R4c0MKjcEWo3fbpgPuwvXSXi3YIVpm5iBqoCWm1y
+	 qcHbcMnuTBiUQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 7254CC41620;
+	Wed, 25 Oct 2023 01:10:23 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC - is this a bug?] wifi: ath10k: Asking for some light on
- this, please :)
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To: Kalle Valo <kvalo@kernel.org>, Jeff Johnson <quic_jjohnson@quicinc.com>,
- Manikanta Pubbisetty <quic_mpubbise@quicinc.com>
-Cc: ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
- linux-kernel@vger.kernel.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- linux-hardening@vger.kernel.org
-References: <626ae2e7-66f8-423b-b17f-e75c1a6d29b3@embeddedor.com>
-In-Reply-To: <626ae2e7-66f8-423b-b17f-e75c1a6d29b3@embeddedor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1qvSMO-001oyw-0H
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:48400
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfEAboCTIzWzRSE4Wv2OmChVekYAj1hWZk7Oc6xVO6X30CTuM8iiFxvVY1yoozol6UlcCxtsc/6m1z7FzKnCR7s/b1Crx3WPT1ybCESBbzxh/tHhOp7EY
- Jda5FTaGKwL58VCn+IqQ/1/4TIbju5PbLyzWG09Grqh2feZfGigyQ3haYa6qtT8IMB1lBSRtfR6z1Xs3cgftGhZPmRhXy1gfCGQn3qrnRewXbmevvtyI9mLQ
+Subject: Re: [PATCH] s390/ctcm: replace deprecated strncpy with strscpy
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <169819622346.20949.9173650120441533061.git-patchwork-notify@kernel.org>
+Date: Wed, 25 Oct 2023 01:10:23 +0000
+References: <20231023-strncpy-drivers-s390-net-ctcm_main-c-v1-1-265db6e78165@google.com>
+In-Reply-To: <20231023-strncpy-drivers-s390-net-ctcm_main-c-v1-1-265db6e78165@google.com>
+To: Justin Stitt <justinstitt@google.com>
+Cc: wintera@linux.ibm.com, wenjia@linux.ibm.com, hca@linux.ibm.com,
+ gor@linux.ibm.com, agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
+ svens@linux.ibm.com, linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 
-[+CC Manikanta Pubbisetty ]
+Hello:
 
-As Johannes[1] pointed out, this `memset()` is probably unnecessary:
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-./drivers/net/wireless/ath/ath10k/wmi.c:
-8920         memset(skb->data, 0, sizeof(*cmd));
+On Mon, 23 Oct 2023 19:35:07 +0000 you wrote:
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
+> 
+> We expect chid to be NUL-terminated based on its use with format
+> strings:
+> 
+> [...]
 
-However, the same exact issue[2] is present at the line below inside
-function `ath10k_wmi_alloc_skb()`:
+Here is the summary with links:
+  - s390/ctcm: replace deprecated strncpy with strscpy
+    https://git.kernel.org/netdev/net-next/c/19d1c64b7741
 
-drivers/net/wireless/ath/ath10k/wmi.c:
-1799         memset(skb->data, 0, round_len);
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
-Thanks
---
-Gustavo
-
-[1] https://lore.kernel.org/linux-hardening/26b15f4702cef17fe70b496a62f03735874bd16a.camel@sipsolutions.net/
-[2] https://lore.kernel.org/linux-hardening/07e9bb04-f9fc-46d5-bfb9-a00a63a707c0@embeddedor.com/
-
-On 10/24/23 13:50, Gustavo A. R. Silva wrote:
-> Hi all,
-> 
-> While working on tranforming one-element array `peer_chan_list` in
-> `struct wmi_tdls_peer_capabilities` into a flex-array member
-> 
-> 7187 struct wmi_tdls_peer_capabilities {
-> ...
-> 7199         struct wmi_channel peer_chan_list[1];
-> 7200 } __packed;
-> 
-> the following line caught my attention:
-> 
-> ./drivers/net/wireless/ath/ath10k/wmi.c:
-> 8920         memset(skb->data, 0, sizeof(*cmd));
-> 
-> Notice that before the flex-array transformation, we are zeroing 128
-> bytes in `skb->data` because `sizeof(*cmd) == 128`, see below:
-> 
-> $ pahole -C wmi_10_4_tdls_peer_update_cmd drivers/net/wireless/ath/ath10k/wmi.o
-> struct wmi_10_4_tdls_peer_update_cmd {
->      __le32                     vdev_id;              /*     0     4 */
->      struct wmi_mac_addr        peer_macaddr;         /*     4     8 */
->      __le32                     peer_state;           /*    12     4 */
->      __le32                     reserved[4];          /*    16    16 */
->      struct wmi_tdls_peer_capabilities peer_capab;    /*    32    96 */
-> 
->      /* size: 128, cachelines: 2, members: 5 */
-> };
-> 
-> So, after the flex-array transformation (and the necessary adjustments
-> to a few other lines of code) we would be zeroing 104 bytes in
-> `skb->data` because `sizeof(*cmd) == 104`, see below:
-> 
-> $ pahole -C wmi_10_4_tdls_peer_update_cmd drivers/net/wireless/ath/ath10k/wmi.o
-> struct wmi_10_4_tdls_peer_update_cmd {
->      __le32                     vdev_id;              /*     0     4 */
->      struct wmi_mac_addr        peer_macaddr;         /*     4     8 */
->      __le32                     peer_state;           /*    12     4 */
->      __le32                     reserved[4];          /*    16    16 */
->      struct wmi_tdls_peer_capabilities peer_capab;    /*    32    72 */
-> 
->      /* size: 104, cachelines: 2, members: 5 */
->      /* last cacheline: 40 bytes */
-> };
-> 
-> This difference arises because the size of the element type for the
-> `peer_chan_list` array, which is `sizeof(struct wmi_channel) == 24 `
-> 
-> $ pahole -C wmi_channel drivers/net/wireless/ath/ath10k/wmi.o
-> struct wmi_channel {
->      __le32                     mhz;                  /*     0     4 */
->      __le32                     band_center_freq1;    /*     4     4 */
->      __le32                     band_center_freq2;    /*     8     4 */
-> 
-> [..]
->                                                 /*    20     4 */
-> 
->      /* size: 24, cachelines: 1, members: 6 */
->      /* last cacheline: 24 bytes */
-> };
-> 
-> is included in `sizeof(*cmd)` before the transformation.
-> 
-> So, my question is: do we really need to zero out those extra 24 bytes in
-> `skb->data`? or is it rather a bug in the original code?
-> 
-> Thanks!
-> -- 
-> Gustavo
-> 
-> 
