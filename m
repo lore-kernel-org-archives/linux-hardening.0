@@ -1,127 +1,65 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D8ED469D
-	for <linux-hardening@vger.kernel.org>; Thu, 26 Oct 2023 01:53:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FU7kMCet"
-Received: from mail-oi1-x24a.google.com (mail-oi1-x24a.google.com [IPv6:2607:f8b0:4864:20::24a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8599D10E
-	for <linux-hardening@vger.kernel.org>; Wed, 25 Oct 2023 18:53:14 -0700 (PDT)
-Received: by mail-oi1-x24a.google.com with SMTP id 5614622812f47-3b2e7a8fbbdso521863b6e.1
-        for <linux-hardening@vger.kernel.org>; Wed, 25 Oct 2023 18:53:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698285194; x=1698889994; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Pjp8stIHwO7L4r2Xgqzk9PeiKrAFnh4U0H3mDy43hbM=;
-        b=FU7kMCetNBRUX2ViP60iRRv7EMg/QKvhCXlqlcSGbZQwahaxG7jXoOPTjLDdB9MlV1
-         gHghRUCtdqcKVTHlOUCPZFg0sFGk4HIWwxuydgvkDVept8v6vm99PolMiJnqdzA6dSkh
-         /hT2c3tBtEuxMyAcBtyYnLe5TjuJZpe9+/uBDbQA44StYMgq9HvhS+lmJhnngbEr/igT
-         AOIh/f8k6Kcl+0jCpSYqHTTe48NN9C69KVM5iqD3N16zbN0CFK4nLU/RBBfCD91PrFbt
-         KRmidBf+P4K9hEJC6aS8HB5aSdOxDUMlBWT24SOvI/vH8K6DYE6wfUQZHxh1I6OHjyOJ
-         8+Lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698285194; x=1698889994;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Pjp8stIHwO7L4r2Xgqzk9PeiKrAFnh4U0H3mDy43hbM=;
-        b=qOsOxPYysPNlum5b8vxqz17cssCMg6c3hfxQ3kvCuUjwYH3w5cHdbPKRL6Nh3rIl6R
-         dK9o/xvLAmZh+fNqHUEn/e1z43U7SB2E6X+4PJFv4Q9AxWgepMIacgQlHjEEhJuBjD0e
-         bxlOTfaNOFMBLBss6Q0MDUoITSTB9vw3Zfd2AkmixM56/QgWJHQDUn5Q21SiM3miJ/PW
-         lJSWQUuxbM/MEOBALyVQwmaNNC7ue/81fme4GMT9pSAXQ74hSDtFMqSZI7wXEMQ+3G6g
-         uDYXhfuqmy1FB8KdIG0lJo9uzjEMxAQYOjjEOl9ULwTKdbGfKOZmsZQ8EqCJmChI5mV8
-         vMcQ==
-X-Gm-Message-State: AOJu0YzXzvTy1q4aHdAgvR9SqeWdXU3cSeHzA95XyW6zumj4qZ2eb0A4
-	8b9UzBJEGh89n4v0wfACHWUw27G0xyNKTN32PA==
-X-Google-Smtp-Source: AGHT+IFR8bdTL15YcnhEGV4KArX2GQqck0DFHJVoxlAoubcCaDkQCxdYWrb57IiYGlWJBc9htP5vldakHxwGrWPN5Q==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6808:182a:b0:3ae:1691:c59f with
- SMTP id bh42-20020a056808182a00b003ae1691c59fmr7079317oib.1.1698285193848;
- Wed, 25 Oct 2023 18:53:13 -0700 (PDT)
-Date: Thu, 26 Oct 2023 01:53:13 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97C2726E20
+	for <linux-hardening@vger.kernel.org>; Thu, 26 Oct 2023 10:01:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B6CC18F;
+	Thu, 26 Oct 2023 03:01:54 -0700 (PDT)
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 3711867373; Thu, 26 Oct 2023 12:01:49 +0200 (CEST)
+Date: Thu, 26 Oct 2023 12:01:48 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Kees Cook <keescook@chromium.org>
+Cc: Christoph Hellwig <hch@lst.de>, Justin Stitt <justinstitt@google.com>,
+	Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+	Sagi Grimberg <sagi@grimberg.me>, linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	ksummit@lists.linux.dev
+Subject: Re: the nul-terminated string helper desk chair rearrangement
+Message-ID: <20231026100148.GA26941@lst.de>
+References: <20231018-strncpy-drivers-nvme-host-fabrics-c-v1-1-b6677df40a35@google.com> <20231019054642.GF14346@lst.de> <202310182248.9E197FFD5@keescook> <20231020044645.GC11984@lst.de> <CAFhGd8o8FaD-3rkBAhEXhc8XqpUk_cLqNwyfpndVuSxDOei_gA@mail.gmail.com> <202310201127.DA7EDAFE4D@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAIjGOWUC/52NQQqDMBBFryKz7pRGqdGuvEeR0sRRB2wiGQmKe
- PemHqGL/+H9xX87CAUmgUe2Q6DIwt4lyC8Z2PHtBkLuEkN+ywuVgrIEZ+cNu8CRgqBYYaRpxYk
- N9RZTXs53hCNaY3p9L1StjYZ0OAfqeT1lzzbxyLL4sJ3uqH7rX5qoUGFlyrLSqXVdNoP3w0RX6 z/QHsfxBYPjGdzlAAAA
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1698285193; l=2296;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=WD63y2GNp2EK1VTsmPzRbEGCPxluZOXKFCe7l0K3vCw=; b=/x030tgpsz2o7BLKx2T1XvytucXzMZiEPEPMDSyVAqw/VZ8hj5twcwH9avRjfmp3Bb6jWTx/j
- o6vcxZN394aBBS+mMtBem2lDMBgTTeqfzkGfYlPyS5SzrfDpS+TFexB
-X-Mailer: b4 0.12.3
-Message-ID: <20231026-strncpy-drivers-scsi-elx-libefc-efc_node-h-v2-1-5c083d0c13f4@google.com>
-Subject: [PATCH v2] scsi: elx: libefc: replace deprecated strncpy with strscpy_pad/memcpy
-From: Justin Stitt <justinstitt@google.com>
-To: James Smart <james.smart@broadcom.com>, Ram Vegesna <ram.vegesna@broadcom.com>, 
-	"James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: linux-scsi@vger.kernel.org, target-devel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202310201127.DA7EDAFE4D@keescook>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-strncpy() is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous string
-interfaces.
+On Fri, Oct 20, 2023 at 11:30:49AM -0700, Kees Cook wrote:
+> I'm curious where you looked and didn't find documentation -- perhaps
+> there is an improvement to be made to aim one to where the existing
+> documentation lives?
 
-To keep node->current_state_name and node->prev_state_name NUL-padded
-and NUL-terminated let's use strscpy_pad() as this implicitly provides
-both.
+My order was the following:
 
-For the swap between the two, a simple memcpy will suffice.
+ - look for kernel doc on the main function implementation in
+   lib/string.c (as found by a grep for an EXPORT_SYMBOL for it)
+ - after not finding it there, but seeing that it has an ifdef for
+   an arch override, which turns out to be unused
+ - then I grepped the Documentation/ directory for it, and while
+   there are quite a few matches for strscpy, they are largely
+   in examples, with the only text referring to strscpy being
+   Documentation/process/deprecated.rst that tells you to use it
+   instead of strcpy, but not how it actually works
+ - after that I realized that some people put the kerneldoc on
+   the declaration, so I looked at that in string.h, but couldn't
+   find it.
 
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Changes in v2:
-- use strscpy_pad (thanks Kees)
-- Link to v1: https://lore.kernel.org/r/20231023-strncpy-drivers-scsi-elx-libefc-efc_node-h-v1-1-8b66878b6796@google.com
----
-Note: build-tested only.
+> > There's some docs at [1]. Perhaps there could be more?
+> > 
+> > [1]: https://elixir.bootlin.com/linux/v6.6-rc6/source/include/linux/fortify-string.h#L292
+> 
+> Right, And it's even valid kern-doc, which gets rendered in the kernel
+> API docs, along with all the other string functions:
+> https://docs.kernel.org/core-api/kernel-api.html#c.strscpy
 
-Found with: $ rg "strncpy\("
----
- drivers/scsi/elx/libefc/efc_node.h | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/scsi/elx/libefc/efc_node.h b/drivers/scsi/elx/libefc/efc_node.h
-index e9c600ac45d5..e57579988ba4 100644
---- a/drivers/scsi/elx/libefc/efc_node.h
-+++ b/drivers/scsi/elx/libefc/efc_node.h
-@@ -26,13 +26,13 @@ efc_node_evt_set(struct efc_sm_ctx *ctx, enum efc_sm_event evt,
- 	struct efc_node *node = ctx->app;
- 
- 	if (evt == EFC_EVT_ENTER) {
--		strncpy(node->current_state_name, handler,
--			sizeof(node->current_state_name));
-+		strscpy_pad(node->current_state_name, handler,
-+			    sizeof(node->current_state_name));
- 	} else if (evt == EFC_EVT_EXIT) {
--		strncpy(node->prev_state_name, node->current_state_name,
--			sizeof(node->prev_state_name));
--		strncpy(node->current_state_name, "invalid",
--			sizeof(node->current_state_name));
-+		memcpy(node->prev_state_name, node->current_state_name,
-+		       sizeof(node->prev_state_name));
-+		strscpy_pad(node->current_state_name, "invalid",
-+			    sizeof(node->current_state_name));
- 	}
- 	node->prev_evt = node->current_evt;
- 	node->current_evt = evt;
-
----
-base-commit: 9c5d00cb7b6bbc5a7965d9ab7d223b5402d1f02c
-change-id: 20231023-strncpy-drivers-scsi-elx-libefc-efc_node-h-cbbf753197b7
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
+Well, I never use the generated kerneldoc because it's much harder than
+just grepping the tree, but indeed it exists even if it's hidden in
+the most obsfucated way.  But at least I know now!
 
