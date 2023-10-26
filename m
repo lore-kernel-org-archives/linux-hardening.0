@@ -1,226 +1,136 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C1092EAE1
-	for <linux-hardening@vger.kernel.org>; Thu, 26 Oct 2023 23:13:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36DFA3FB1F
+	for <linux-hardening@vger.kernel.org>; Thu, 26 Oct 2023 23:19:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bN4zFCBY"
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFDCB1B8
-	for <linux-hardening@vger.kernel.org>; Thu, 26 Oct 2023 16:13:43 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-da0ccfc4fc8so418616276.2
-        for <linux-hardening@vger.kernel.org>; Thu, 26 Oct 2023 16:13:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BC6d5eOU"
+Received: from mail-oo1-xc49.google.com (mail-oo1-xc49.google.com [IPv6:2607:f8b0:4864:20::c49])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9E3AD43
+	for <linux-hardening@vger.kernel.org>; Thu, 26 Oct 2023 16:19:19 -0700 (PDT)
+Received: by mail-oo1-xc49.google.com with SMTP id 006d021491bc7-581e2609a5dso2362818eaf.0
+        for <linux-hardening@vger.kernel.org>; Thu, 26 Oct 2023 16:19:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698362023; x=1698966823; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1698362359; x=1698967159; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=HFiYbHBnckwihvKNnIEzm/rfvH9bcBh1GF02ZnqdljM=;
-        b=bN4zFCBY2JVStE89J87k/8Jm1cMxIQfefsBJ2xunT7VToOgjuBzdx73ZAraKPT+5z6
-         TKJM1KmHKnajoOgoq5vajdS7vSqgVkf6GldMKRnEAw20OY3ehqBY6SbBi3HvH4iD4FtX
-         MyAacJfkCKC99gAJ4PZ/tI55WUTx5r9e7vh9yC3tzYGkQLmIlYG10A6+aSp2T/8irdhT
-         BB1lgMKQGFbU6SQckwaXNT81ClFlogDsvLEpeiz6naIY5onKQZPhFXsKZ9UacR7is1vZ
-         icRC+g3zVYnVsotB+rpSWJ4Qwz9Em8sa7WfS+vXe75ZEo50uGENyT7/8+nnxe8dP2P3F
-         p6mQ==
+        bh=rJUIaaq/oswhFA94o3ND9d9+Iexffy2MpltZ9TbSQQY=;
+        b=BC6d5eOUbpZj2EhbDkCtoVPkarvXcccoL04DzKW8pl/jhqx1Q520C4Urca1Sko4OKp
+         bavNq0XNv/2izUivQLIGWWR6M3faFCIa7rZ9ZBRM8mi8+aEFeTs5eNZzFR9nCX3wdkjF
+         uThlr63OwueeAPgi/UTizMQ3P2jeEdcjoCj1Xo3+na26rAwqxQGfEgC9UtLPv3sarxqq
+         v8LoUR9ZKTSAtLv0dBohaGBlqWXihME/P2Y9Mfis07mDh3MfCe8OfXfq2Zk1bk9hrAvQ
+         sYWc9AEJeXa16H3UgQvsmPj+ARr2tgzjj9sTZ1AB+P6NQPJxhUWYKAFxA+HRDppn/Px8
+         KzNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698362023; x=1698966823;
+        d=1e100.net; s=20230601; t=1698362359; x=1698967159;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=HFiYbHBnckwihvKNnIEzm/rfvH9bcBh1GF02ZnqdljM=;
-        b=SxI8mFqWS3k35rMOI9NMml0W/qQ8raCdRL1TcsU6G0BNI6WlOvX4G/YhSEbMC0WIoc
-         hMwi2/Q5twebILtGVPYa08uqsOWzcYzyrnhwpKy51fgDo1pxO9Bk+S1jblKpVu8SEF1y
-         BZF5a72cUOB/8XMVKgulEU4MquxEcgZWbXicv5px5stY4qWMmwpCwDdy/aZW/ONRnyRl
-         5AM+IXinfTOtV1z3xrokkJuWe6PLAvooNoDQGb11Ejvd/TAZIYVypohEBEaQnQmRzYDF
-         isIl8HF/IsBytr9IH8tXfmxAkP0S9ZaY/k+G0WxvVN+7rEHS8GuRDhaEezC+MMBMI0Kg
-         riGg==
-X-Gm-Message-State: AOJu0YxYWAUEnSIBOwebTmeOTdDD7pwbl70VFmXNizd0PWTqHoRWqanQ
-	YMBp7NZrr87FAXMouC0lssZhhnSvU57Wfd/m0Q==
-X-Google-Smtp-Source: AGHT+IEbj/4BJ8b1hPqD/NX25gwqtVhAmHTTpu9NZP2j6GhL2fKwNIRSfM1OPid7YKbd48tyWmUJ9qcmHeD3xmsLjw==
+        bh=rJUIaaq/oswhFA94o3ND9d9+Iexffy2MpltZ9TbSQQY=;
+        b=D11JgMQSERvs+O4CoVYhZYPZ5+IvVEUTFamDQmsrwP94cUivZbTdg28Ck6Okehx9Li
+         9aKvjBMLKTHy0O/olHaLtvFU/EwrKznliE/44ttxmsNUSM7/xAZUve0t4NH2HoZKFknr
+         MT74kWnZVHvPPUSiBhjsTMA8PXmBu8bt7bqfWOXZabe16btjq3LTSaMzkZSKgQXhd7M7
+         xQ2UaJsTDqwq1aFbxZBYnO58/RQBqOrFT13Pe653zE2/KXRRWvaoYEueyWV7+Ksqr56+
+         qiIqW0I2LXwRkdz9J1G8xCcsTzW7jHcoc2Q7l0qPc+6Go1Bz0LP4ZpXbDHHqoCRaUyG6
+         1yQQ==
+X-Gm-Message-State: AOJu0Yx8B7sc3fXWSgornaZcFStvKAh5I4AqxeAPh33xStD9Z8fdAnMJ
+	JUJ62LLnC1bswFtr75bgj1aQGOG5EmkpfhPrxQ==
+X-Google-Smtp-Source: AGHT+IEn/SLjvxaFs50tSZC9lk6X5MyTWbZRithyR/6U6p23lScjjTmjpQ6xvz1RXCrqGehDHbWGiifwhVwJ4bGNuw==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a25:5509:0:b0:da0:5e08:5c71 with SMTP
- id j9-20020a255509000000b00da05e085c71mr18091ybb.5.1698362023143; Thu, 26 Oct
- 2023 16:13:43 -0700 (PDT)
-Date: Thu, 26 Oct 2023 23:13:41 +0000
+ (user=justinstitt job=sendgmr) by 2002:a4a:e658:0:b0:581:dbb1:219b with SMTP
+ id q24-20020a4ae658000000b00581dbb1219bmr404827oot.0.1698362359119; Thu, 26
+ Oct 2023 16:19:19 -0700 (PDT)
+Date: Thu, 26 Oct 2023 23:19:18 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAKTyOmUC/43NQQ6CMBCF4auQrh1DK9jginsYFrQdYBKlZIY0E
- sLdrZzA5fcW/9uVIBOKehS7YkwkFOcMcymUn/p5RKCQrUxpbro0d5CVZ79sEJgSsoB4IZgW6cF
- D5Z11ocLG2UHlwsI40OesP7vsiWSNvJ1nSf/W/7pJgwZb17oJtteNdu0Y4/jCq49v1R3H8QWR1 dYsxwAAAA==
+X-B4-Tracking: v=1; b=H4sIAPXzOmUC/53NQQ6CMBCF4auQrh3TUpHoinsYFtCOMAm2ZIZUC
+ eHuVo7g8n+L921KkAlF3YtNMSYSiiFHeSqUG7swIJDPrUpdWqNNDbJwcPMKnikhCwRc4E2ME4q
+ AI3EROuIIDry+Oa8rrbsrqvw3Mz7pc1iPNvdIskReDzqZ3/qPkgwYQHvxVW/7Gm3dDDEOE55df Kl23/cvKrGXxOMAAAA=
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1698362022; l=5530;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1698362358; l=2719;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=vKXzL31/mEChO1m4jkNSZ9EryWsuWIfXEfMiSRto9RY=; b=O7JSLUVSbnMyjX4uJV6/3PWg9N26ln+o7xUz1QBQ0rsWPyyaDVCnMLpxqNtKs+loM0rh85JmI
- 8o0Q1uLmrjWA9dTB+40R6NqrT19NPe2bOO62sl4f+BLOoIbCnMfBZz3
+ bh=tC58vKAxLJm5cAdnZ9rYPmKDTa3guBZo7Oh8cfH/AXg=; b=xW/7pk2zSIdbdaANtOGtksyMjVeqD8M30IczBSFi365yP9f/D8GLqCR5vqlPF/2OcBvYQdmMr
+ CAYKpl7GFTvD4/4vGd7LbAxPSijXKO8qWqRTUeMAOjbIl15/K3OHB/C
 X-Mailer: b4 0.12.3
-Message-ID: <20231026-strncpy-drivers-scsi-hpsa-c-v2-1-2fe2d05122fd@google.com>
-Subject: [PATCH v2] scsi: hpsa: replace deprecated strncpy
+Message-ID: <20231026-strncpy-drivers-net-wireless-cisco-airo-c-v2-1-413427249e47@google.com>
+Subject: [PATCH v2] airo: replace deprecated strncpy with strscpy_pad
 From: Justin Stitt <justinstitt@google.com>
-To: Don Brace <don.brace@microchip.com>, "James E.J. Bottomley" <jejb@linux.ibm.com>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: storagedev@microchip.com, linux-scsi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Kees Cook <keescook@chromium.org>, Justin Stitt <justinstitt@google.com>
+To: Kalle Valo <kvalo@kernel.org>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
 
 strncpy() is deprecated for use on NUL-terminated destination strings
 [1] and as such we should prefer more robust and less ambiguous string
 interfaces.
 
-Instances of strncpy()'ing a string into a buffer and manually
-NUL-terminating followed by sccanf with just "%d" as the format
-specifier can be accomplished by strscpy() and kstrtoint().
+`extra` is clearly supposed to be NUL-terminated which is evident by the
+manual NUL-byte assignment as well as its immediate usage with strlen().
 
-strscpy() guarantees NUL-termination on the destination buffer and
-kstrtoint is better way of getting strings turned into ints.
+Moreover, let's NUL-pad since there is deliberate effort (48 instances)
+made elsewhere to zero-out buffers in these getters and setters:
+6050 | memset(local->config.nodeName, 0, sizeof(local->config.nodeName));
+6130 | memset(local->config.rates, 0, 8);
+6139 | memset(local->config.rates, 0, 8);
+6414 | memset(key.key, 0, MAX_KEY_SIZE);
+6497 | memset(extra, 0, 16);
+(to be clear, strncpy also NUL-padded -- we are matching that behavior)
 
-For the last two strncpy() use cases in init_driver_version(), we can
-actually drop this function entirely.
+Considering the above, a suitable replacement is `strscpy_pad` due to
+the fact that it guarantees both NUL-termination and NUL-padding on the
+destination buffer.
 
-Firstly, we are kmalloc()'ing driver_version. Then, we are calling
-init_driver_version() which memset's it to 0 followed by a strncpy().
-The pattern is 1) allocating memory for a string, 2) setting all bytes
-to NUL, 3) copy bytes from another string + ensure NUL-padded.
+We can also replace the hard-coded size of "16" to IW_ESSID_MAX_SIZE
+because this function is a wext handler.
 
-For these, we can just stack allocate driver_version and
-old_driver_version. This simplifies the code greatly as we don't have
-any malloc/free or strncpy's.
+In wext-core.c we have:
+static const struct iw_ioctl_description standard_ioctl[] = {
+...
+        [IW_IOCTL_IDX(SIOCGIWNICKN)] = {
+                .header_type    = IW_HEADER_TYPE_POINT,
+                .token_size     = 1,
+                .max_tokens     = IW_ESSID_MAX_SIZE,
+        },
+
+So the buffer size is (strangely) IW_ESSID_MAX_SIZE
 
 Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
 Link: https://github.com/KSPP/linux/issues/90
 Cc: linux-hardening@vger.kernel.org
-Cc: Kees Cook <keescook@chromium.org>
 Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
 Changes in v2:
-- use stack for buffers (thanks Kees)
-- use kstrtoint (thanks Kees)
-- Link to v1: https://lore.kernel.org/r/20231026-strncpy-drivers-scsi-hpsa-c-v1-1-75519d7a191b@google.com
+- use IW_ESSID_MAX_SIZE (thanks Jeff, Kees)
+- Link to v1: https://lore.kernel.org/r/20231017-strncpy-drivers-net-wireless-cisco-airo-c-v1-1-e34d5b3b7e37@google.com
 ---
 Note: build-tested only.
 
 Found with: $ rg "strncpy\("
 ---
- drivers/scsi/hpsa.c | 53 ++++++++++++++++++++---------------------------------
- 1 file changed, 20 insertions(+), 33 deletions(-)
+ drivers/net/wireless/cisco/airo.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
-index af18d20f3079..4d42fbb071cf 100644
---- a/drivers/scsi/hpsa.c
-+++ b/drivers/scsi/hpsa.c
-@@ -452,18 +452,18 @@ static ssize_t host_store_hp_ssd_smart_path_status(struct device *dev,
- 					 struct device_attribute *attr,
- 					 const char *buf, size_t count)
- {
--	int status, len;
-+	int status;
- 	struct ctlr_info *h;
- 	struct Scsi_Host *shost = class_to_shost(dev);
- 	char tmpbuf[10];
+diff --git a/drivers/net/wireless/cisco/airo.c b/drivers/net/wireless/cisco/airo.c
+index dbd13f7aa3e6..6a099642e854 100644
+--- a/drivers/net/wireless/cisco/airo.c
++++ b/drivers/net/wireless/cisco/airo.c
+@@ -6067,8 +6067,7 @@ static int airo_get_nick(struct net_device *dev,
+ 	struct airo_info *local = dev->ml_priv;
  
- 	if (!capable(CAP_SYS_ADMIN) || !capable(CAP_SYS_RAWIO))
- 		return -EACCES;
--	len = count > sizeof(tmpbuf) - 1 ? sizeof(tmpbuf) - 1 : count;
--	strncpy(tmpbuf, buf, len);
--	tmpbuf[len] = '\0';
--	if (sscanf(tmpbuf, "%d", &status) != 1)
-+
-+	strscpy(tmpbuf, buf, sizeof(tmpbuf));
-+	if (kstrtoint(tmpbuf, 0, &status))
- 		return -EINVAL;
-+
- 	h = shost_to_hba(shost);
- 	h->acciopath_status = !!status;
- 	dev_warn(&h->pdev->dev,
-@@ -476,18 +476,18 @@ static ssize_t host_store_raid_offload_debug(struct device *dev,
- 					 struct device_attribute *attr,
- 					 const char *buf, size_t count)
- {
--	int debug_level, len;
-+	int debug_level;
- 	struct ctlr_info *h;
- 	struct Scsi_Host *shost = class_to_shost(dev);
- 	char tmpbuf[10];
+ 	readConfigRid(local, 1);
+-	strncpy(extra, local->config.nodeName, 16);
+-	extra[16] = '\0';
++	strscpy_pad(extra, local->config.nodeName, IW_ESSID_MAX_SIZE);
+ 	dwrq->length = strlen(extra);
  
- 	if (!capable(CAP_SYS_ADMIN) || !capable(CAP_SYS_RAWIO))
- 		return -EACCES;
--	len = count > sizeof(tmpbuf) - 1 ? sizeof(tmpbuf) - 1 : count;
--	strncpy(tmpbuf, buf, len);
--	tmpbuf[len] = '\0';
--	if (sscanf(tmpbuf, "%d", &debug_level) != 1)
-+
-+	strscpy(tmpbuf, buf, sizeof(tmpbuf));
-+	if (kstrtoint(tmpbuf, 0, &debug_level))
- 		return -EINVAL;
-+
- 	if (debug_level < 0)
- 		debug_level = 0;
- 	h = shost_to_hba(shost);
-@@ -7234,25 +7234,15 @@ static int hpsa_controller_hard_reset(struct pci_dev *pdev,
  	return 0;
- }
- 
--static void init_driver_version(char *driver_version, int len)
--{
--	memset(driver_version, 0, len);
--	strncpy(driver_version, HPSA " " HPSA_DRIVER_VERSION, len - 1);
--}
--
- static int write_driver_ver_to_cfgtable(struct CfgTable __iomem *cfgtable)
- {
--	char *driver_version;
- 	int i, size = sizeof(cfgtable->driver_version);
-+	char driver_version[sizeof(cfgtable->driver_version)] =
-+						HPSA " " HPSA_DRIVER_VERSION;
- 
--	driver_version = kmalloc(size, GFP_KERNEL);
--	if (!driver_version)
--		return -ENOMEM;
--
--	init_driver_version(driver_version, size);
- 	for (i = 0; i < size; i++)
- 		writeb(driver_version[i], &cfgtable->driver_version[i]);
--	kfree(driver_version);
-+
- 	return 0;
- }
- 
-@@ -7268,21 +7258,18 @@ static void read_driver_ver_from_cfgtable(struct CfgTable __iomem *cfgtable,
- static int controller_reset_failed(struct CfgTable __iomem *cfgtable)
- {
- 
--	char *driver_ver, *old_driver_ver;
--	int rc, size = sizeof(cfgtable->driver_version);
--
--	old_driver_ver = kmalloc_array(2, size, GFP_KERNEL);
--	if (!old_driver_ver)
--		return -ENOMEM;
--	driver_ver = old_driver_ver + size;
-+	char driver_ver[sizeof(cfgtable->driver_version)] = "";
-+	char old_driver_ver[sizeof(cfgtable->driver_version)] =
-+						HPSA " " HPSA_DRIVER_VERSION;
-+	int rc;
- 
- 	/* After a reset, the 32 bytes of "driver version" in the cfgtable
- 	 * should have been changed, otherwise we know the reset failed.
- 	 */
--	init_driver_version(old_driver_ver, size);
- 	read_driver_ver_from_cfgtable(cfgtable, driver_ver);
--	rc = !memcmp(driver_ver, old_driver_ver, size);
--	kfree(old_driver_ver);
-+	rc = !memcmp(driver_ver, old_driver_ver,
-+		     sizeof(cfgtable->driver_version));
-+
- 	return rc;
- }
- /* This does a hard reset of the controller using PCI power management
 
 ---
-base-commit: d88520ad73b79e71e3ddf08de335b8520ae41c5c
-change-id: 20231026-strncpy-drivers-scsi-hpsa-c-4cb7bd4e9b7f
+base-commit: 58720809f52779dc0f08e53e54b014209d13eebb
+change-id: 20231017-strncpy-drivers-net-wireless-cisco-airo-c-d09cd0500a6e
 
 Best regards,
 --
