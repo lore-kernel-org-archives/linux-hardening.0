@@ -1,190 +1,228 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9D383E473
-	for <linux-hardening@vger.kernel.org>; Thu, 26 Oct 2023 22:03:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C1092EAE1
+	for <linux-hardening@vger.kernel.org>; Thu, 26 Oct 2023 23:13:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b6py9JZy"
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F3A091
-	for <linux-hardening@vger.kernel.org>; Thu, 26 Oct 2023 15:03:26 -0700 (PDT)
-Received: by mail-ej1-x62e.google.com with SMTP id a640c23a62f3a-99357737980so225097166b.2
-        for <linux-hardening@vger.kernel.org>; Thu, 26 Oct 2023 15:03:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bN4zFCBY"
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFDCB1B8
+	for <linux-hardening@vger.kernel.org>; Thu, 26 Oct 2023 16:13:43 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-da0ccfc4fc8so418616276.2
+        for <linux-hardening@vger.kernel.org>; Thu, 26 Oct 2023 16:13:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698357804; x=1698962604; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DEmmsMUNDXrHxbfE3Ce3REr5A6wqcO3bgGi92YBCkzI=;
-        b=b6py9JZyfVMrZlL9Jrva7w5VfIiGgteU73GfhFfG4sEaLJkxrbhpfZa81w21gz8eeW
-         en3F3GdHCHMu7EIqMWDcUXl0qOPghFnoNDPulKM+K93DeQyP98eZpO9zlmLbF0h+oZKk
-         ZPicbXWat17VSNxEdTf4WXBTxlYUelUZ65MvCdS8+M4CnwA1/yO18V+jnjFCnCw1ZR45
-         4txR3ytLNXZXOa4EJzP4IQmYGxIPbQwjjlZsmNlaZu52ZFE5A9VhjxAugf7cBifOcHwz
-         ES/+bXdZc5nzF29ZsVXdRJMEkfmNWUxOAyW/3epHKVbERIDuF18t0UAOt1RiP33TLzUu
-         WuPw==
+        d=google.com; s=20230601; t=1698362023; x=1698966823; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=HFiYbHBnckwihvKNnIEzm/rfvH9bcBh1GF02ZnqdljM=;
+        b=bN4zFCBY2JVStE89J87k/8Jm1cMxIQfefsBJ2xunT7VToOgjuBzdx73ZAraKPT+5z6
+         TKJM1KmHKnajoOgoq5vajdS7vSqgVkf6GldMKRnEAw20OY3ehqBY6SbBi3HvH4iD4FtX
+         MyAacJfkCKC99gAJ4PZ/tI55WUTx5r9e7vh9yC3tzYGkQLmIlYG10A6+aSp2T/8irdhT
+         BB1lgMKQGFbU6SQckwaXNT81ClFlogDsvLEpeiz6naIY5onKQZPhFXsKZ9UacR7is1vZ
+         icRC+g3zVYnVsotB+rpSWJ4Qwz9Em8sa7WfS+vXe75ZEo50uGENyT7/8+nnxe8dP2P3F
+         p6mQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698357804; x=1698962604;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DEmmsMUNDXrHxbfE3Ce3REr5A6wqcO3bgGi92YBCkzI=;
-        b=XwqbAkv6R8sJdqisqtfpniNMXrMBzkFeolqajnJ7ceav1hc+CIIZsw9lZXB3YNpQAy
-         Qy0tE02KH9UnggEiUdXY6Q2aD+IQWWICLKXDDBW21x1PL9B6AXGx4RbuMJANvaljaP9l
-         eGMiWC5FXQ3d5KDqjoGn6fcvxtO1X4fzV9uNe2ms8XPMhtj9dHfjSRPgxerchEj9lA/j
-         J8JXY2jhw9te33FXE+p1MNdTWIApAz5JgaT27zBue6QwAB5iO7cU9SO+wSmaZAMs2qsp
-         NtoruFvVXJ1BQAKAzlFKEt5e0YMfMk5NaJKEz8HNDcoQDHRYUFrHxIrJyDFJn9kLZjzx
-         jYIg==
-X-Gm-Message-State: AOJu0YzYHTVvFVe3DVD7SZuTUAI003C5o/8yXbcUqe4K8rk/21qsyV4R
-	C23RlNp3307BgqPWoiic80VOR0nSjyPeOA6GGXAObA==
-X-Google-Smtp-Source: AGHT+IG6agKha0G/h583YdKCsY86p8qRjxzUVJVt92aAyYP3t8wQ6XoOF+pq/EnAOsxzX746Vh6W1fwNE0cooKXSZp4=
-X-Received: by 2002:a17:906:6a24:b0:9c5:ea33:7bf9 with SMTP id
- qw36-20020a1709066a2400b009c5ea337bf9mr701118ejc.51.1698357804394; Thu, 26
- Oct 2023 15:03:24 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1698362023; x=1698966823;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HFiYbHBnckwihvKNnIEzm/rfvH9bcBh1GF02ZnqdljM=;
+        b=SxI8mFqWS3k35rMOI9NMml0W/qQ8raCdRL1TcsU6G0BNI6WlOvX4G/YhSEbMC0WIoc
+         hMwi2/Q5twebILtGVPYa08uqsOWzcYzyrnhwpKy51fgDo1pxO9Bk+S1jblKpVu8SEF1y
+         BZF5a72cUOB/8XMVKgulEU4MquxEcgZWbXicv5px5stY4qWMmwpCwDdy/aZW/ONRnyRl
+         5AM+IXinfTOtV1z3xrokkJuWe6PLAvooNoDQGb11Ejvd/TAZIYVypohEBEaQnQmRzYDF
+         isIl8HF/IsBytr9IH8tXfmxAkP0S9ZaY/k+G0WxvVN+7rEHS8GuRDhaEezC+MMBMI0Kg
+         riGg==
+X-Gm-Message-State: AOJu0YxYWAUEnSIBOwebTmeOTdDD7pwbl70VFmXNizd0PWTqHoRWqanQ
+	YMBp7NZrr87FAXMouC0lssZhhnSvU57Wfd/m0Q==
+X-Google-Smtp-Source: AGHT+IEbj/4BJ8b1hPqD/NX25gwqtVhAmHTTpu9NZP2j6GhL2fKwNIRSfM1OPid7YKbd48tyWmUJ9qcmHeD3xmsLjw==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a25:5509:0:b0:da0:5e08:5c71 with SMTP
+ id j9-20020a255509000000b00da05e085c71mr18091ybb.5.1698362023143; Thu, 26 Oct
+ 2023 16:13:43 -0700 (PDT)
+Date: Thu, 26 Oct 2023 23:13:41 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20231026171349.work.928-kees@kernel.org>
-In-Reply-To: <20231026171349.work.928-kees@kernel.org>
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAKTyOmUC/43NQQ6CMBCF4auQrh1DK9jginsYFrQdYBKlZIY0E
+ sLdrZzA5fcW/9uVIBOKehS7YkwkFOcMcymUn/p5RKCQrUxpbro0d5CVZ79sEJgSsoB4IZgW6cF
+ D5Z11ocLG2UHlwsI40OesP7vsiWSNvJ1nSf/W/7pJgwZb17oJtteNdu0Y4/jCq49v1R3H8QWR1 dYsxwAAAA==
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1698362022; l=5530;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=vKXzL31/mEChO1m4jkNSZ9EryWsuWIfXEfMiSRto9RY=; b=O7JSLUVSbnMyjX4uJV6/3PWg9N26ln+o7xUz1QBQ0rsWPyyaDVCnMLpxqNtKs+loM0rh85JmI
+ 8o0Q1uLmrjWA9dTB+40R6NqrT19NPe2bOO62sl4f+BLOoIbCnMfBZz3
+X-Mailer: b4 0.12.3
+Message-ID: <20231026-strncpy-drivers-scsi-hpsa-c-v2-1-2fe2d05122fd@google.com>
+Subject: [PATCH v2] scsi: hpsa: replace deprecated strncpy
 From: Justin Stitt <justinstitt@google.com>
-Date: Thu, 26 Oct 2023 15:03:11 -0700
-Message-ID: <CAFhGd8p8Ako1zFrUrE62OxhqGqmDVEFi3NtT754gZP_sLAZ99w@mail.gmail.com>
-Subject: Re: [RFC][PATCH] wifi: wil6210: Replace strlcat() usage with seq_buf
-To: Kees Cook <keescook@chromium.org>
-Cc: Kalle Valo <kvalo@kernel.org>, Johannes Berg <johannes.berg@intel.com>, 
-	Max Chen <mxchen@codeaurora.org>, Yang Shen <shenyang39@huawei.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
-	Christoph Hellwig <hch@lst.de>, Kent Overstreet <kent.overstreet@linux.dev>, Petr Mladek <pmladek@suse.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>, Yun Zhou <yun.zhou@windriver.com>, 
-	Jacob Keller <jacob.e.keller@intel.com>, Zhen Lei <thunder.leizhen@huawei.com>, 
-	linux-trace-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+To: Don Brace <don.brace@microchip.com>, "James E.J. Bottomley" <jejb@linux.ibm.com>, 
+	"Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: storagedev@microchip.com, linux-scsi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Kees Cook <keescook@chromium.org>, Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On Thu, Oct 26, 2023 at 10:13=E2=80=AFAM Kees Cook <keescook@chromium.org> =
-wrote:
->
-> The use of strlcat() is fragile at best, and we'd like to remove it from
-> the available string APIs in the kernel. Instead, use the safer seq_buf
-> APIs.
->
-> Cc: Kalle Valo <kvalo@kernel.org>
-> Cc: Johannes Berg <johannes.berg@intel.com>
-> Cc: Max Chen <mxchen@codeaurora.org>
-> Cc: Yang Shen <shenyang39@huawei.com>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Justin Stitt <justinstitt@google.com>
-> Cc: Kent Overstreet <kent.overstreet@linux.dev>
-> Cc: Petr Mladek <pmladek@suse.com>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: Yun Zhou <yun.zhou@windriver.com>
-> Cc: Jacob Keller <jacob.e.keller@intel.com>
-> Cc: Zhen Lei <thunder.leizhen@huawei.com>
-> Cc: linux-trace-kernel@vger.kernel.org
-> Cc: linux-wireless@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> This is mainly an example of where/how to use the ongoing seq_buf
-> refactoring happening in the tracing tree:
-> https://lore.kernel.org/lkml/20231026170722.work.638-kees@kernel.org/
+strncpy() is deprecated for use on NUL-terminated destination strings
+[1] and as such we should prefer more robust and less ambiguous string
+interfaces.
 
-I like it. C-strings and many of their associated apis are dodgy. This
-looks like a worthwhile replacement.
+Instances of strncpy()'ing a string into a buffer and manually
+NUL-terminating followed by sccanf with just "%d" as the format
+specifier can be accomplished by strscpy() and kstrtoint().
 
-I think many of my strncpy -> strscpy replacements could've easily
-been something along these lines as well.
+strscpy() guarantees NUL-termination on the destination buffer and
+kstrtoint is better way of getting strings turned into ints.
 
-Happy to see robustness increasing in the kernel by means
-of replacing sketchy C-string stuff.
+For the last two strncpy() use cases in init_driver_version(), we can
+actually drop this function entirely.
 
-> ---
->  drivers/net/wireless/ath/wil6210/wmi.c | 23 ++++++++++-------------
->  1 file changed, 10 insertions(+), 13 deletions(-)
->
-> diff --git a/drivers/net/wireless/ath/wil6210/wmi.c b/drivers/net/wireles=
-s/ath/wil6210/wmi.c
-> index 6fdb77d4c59e..45b8c651b8e2 100644
-> --- a/drivers/net/wireless/ath/wil6210/wmi.c
-> +++ b/drivers/net/wireless/ath/wil6210/wmi.c
-> @@ -3159,36 +3159,34 @@ int wmi_suspend(struct wil6210_priv *wil)
->         return rc;
->  }
->
-> -static void resume_triggers2string(u32 triggers, char *string, int str_s=
-ize)
-> +static void resume_triggers2string(u32 triggers, struct seq_buf *s)
->  {
-> -       string[0] =3D '\0';
-> -
->         if (!triggers) {
-> -               strlcat(string, " UNKNOWN", str_size);
-> +               seq_buf_puts(s, " UNKNOWN");
->                 return;
->         }
->
->         if (triggers & WMI_RESUME_TRIGGER_HOST)
-> -               strlcat(string, " HOST", str_size);
-> +               seq_buf_puts(s, " HOST")
->
->         if (triggers & WMI_RESUME_TRIGGER_UCAST_RX)
-> -               strlcat(string, " UCAST_RX", str_size);
-> +               seq_buf_puts(s, " UCAST_RX");
->
->         if (triggers & WMI_RESUME_TRIGGER_BCAST_RX)
-> -               strlcat(string, " BCAST_RX", str_size);
-> +               seq_buf_puts(s, " BCAST_RX");
->
->         if (triggers & WMI_RESUME_TRIGGER_WMI_EVT)
-> -               strlcat(string, " WMI_EVT", str_size);
-> +               seq_buf_puts(s, " WMI_EVT");
->
->         if (triggers & WMI_RESUME_TRIGGER_DISCONNECT)
-> -               strlcat(string, " DISCONNECT", str_size);
-> +               seq_buf_puts(s, " DISCONNECT");
->  }
->
->  int wmi_resume(struct wil6210_priv *wil)
->  {
->         struct wil6210_vif *vif =3D ndev_to_vif(wil->main_ndev);
->         int rc;
-> -       char string[100];
-> +       DECLARE_SEQ_BUF(s, 100);
->         struct {
->                 struct wmi_cmd_hdr wmi;
->                 struct wmi_traffic_resume_event evt;
-> @@ -3203,10 +3201,9 @@ int wmi_resume(struct wil6210_priv *wil)
->                       WIL_WAIT_FOR_SUSPEND_RESUME_COMP);
->         if (rc)
->                 return rc;
-> -       resume_triggers2string(le32_to_cpu(reply.evt.resume_triggers), st=
-ring,
-> -                              sizeof(string));
-> +       resume_triggers2string(le32_to_cpu(reply.evt.resume_triggers), s)=
-;
->         wil_dbg_pm(wil, "device resume %s, resume triggers:%s (0x%x)\n",
-> -                  reply.evt.status ? "failed" : "passed", string,
-> +                  reply.evt.status ? "failed" : "passed", seq_buf_cstr(s=
-),
->                    le32_to_cpu(reply.evt.resume_triggers));
->
->         return reply.evt.status;
-> --
-> 2.34.1
->
+Firstly, we are kmalloc()'ing driver_version. Then, we are calling
+init_driver_version() which memset's it to 0 followed by a strncpy().
+The pattern is 1) allocating memory for a string, 2) setting all bytes
+to NUL, 3) copy bytes from another string + ensure NUL-padded.
 
-Thanks
-Justin
+For these, we can just stack allocate driver_version and
+old_driver_version. This simplifies the code greatly as we don't have
+any malloc/free or strncpy's.
+
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Cc: Kees Cook <keescook@chromium.org>
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Changes in v2:
+- use stack for buffers (thanks Kees)
+- use kstrtoint (thanks Kees)
+- Link to v1: https://lore.kernel.org/r/20231026-strncpy-drivers-scsi-hpsa-c-v1-1-75519d7a191b@google.com
+---
+Note: build-tested only.
+
+Found with: $ rg "strncpy\("
+---
+ drivers/scsi/hpsa.c | 53 ++++++++++++++++++++---------------------------------
+ 1 file changed, 20 insertions(+), 33 deletions(-)
+
+diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
+index af18d20f3079..4d42fbb071cf 100644
+--- a/drivers/scsi/hpsa.c
++++ b/drivers/scsi/hpsa.c
+@@ -452,18 +452,18 @@ static ssize_t host_store_hp_ssd_smart_path_status(struct device *dev,
+ 					 struct device_attribute *attr,
+ 					 const char *buf, size_t count)
+ {
+-	int status, len;
++	int status;
+ 	struct ctlr_info *h;
+ 	struct Scsi_Host *shost = class_to_shost(dev);
+ 	char tmpbuf[10];
+ 
+ 	if (!capable(CAP_SYS_ADMIN) || !capable(CAP_SYS_RAWIO))
+ 		return -EACCES;
+-	len = count > sizeof(tmpbuf) - 1 ? sizeof(tmpbuf) - 1 : count;
+-	strncpy(tmpbuf, buf, len);
+-	tmpbuf[len] = '\0';
+-	if (sscanf(tmpbuf, "%d", &status) != 1)
++
++	strscpy(tmpbuf, buf, sizeof(tmpbuf));
++	if (kstrtoint(tmpbuf, 0, &status))
+ 		return -EINVAL;
++
+ 	h = shost_to_hba(shost);
+ 	h->acciopath_status = !!status;
+ 	dev_warn(&h->pdev->dev,
+@@ -476,18 +476,18 @@ static ssize_t host_store_raid_offload_debug(struct device *dev,
+ 					 struct device_attribute *attr,
+ 					 const char *buf, size_t count)
+ {
+-	int debug_level, len;
++	int debug_level;
+ 	struct ctlr_info *h;
+ 	struct Scsi_Host *shost = class_to_shost(dev);
+ 	char tmpbuf[10];
+ 
+ 	if (!capable(CAP_SYS_ADMIN) || !capable(CAP_SYS_RAWIO))
+ 		return -EACCES;
+-	len = count > sizeof(tmpbuf) - 1 ? sizeof(tmpbuf) - 1 : count;
+-	strncpy(tmpbuf, buf, len);
+-	tmpbuf[len] = '\0';
+-	if (sscanf(tmpbuf, "%d", &debug_level) != 1)
++
++	strscpy(tmpbuf, buf, sizeof(tmpbuf));
++	if (kstrtoint(tmpbuf, 0, &debug_level))
+ 		return -EINVAL;
++
+ 	if (debug_level < 0)
+ 		debug_level = 0;
+ 	h = shost_to_hba(shost);
+@@ -7234,25 +7234,15 @@ static int hpsa_controller_hard_reset(struct pci_dev *pdev,
+ 	return 0;
+ }
+ 
+-static void init_driver_version(char *driver_version, int len)
+-{
+-	memset(driver_version, 0, len);
+-	strncpy(driver_version, HPSA " " HPSA_DRIVER_VERSION, len - 1);
+-}
+-
+ static int write_driver_ver_to_cfgtable(struct CfgTable __iomem *cfgtable)
+ {
+-	char *driver_version;
+ 	int i, size = sizeof(cfgtable->driver_version);
++	char driver_version[sizeof(cfgtable->driver_version)] =
++						HPSA " " HPSA_DRIVER_VERSION;
+ 
+-	driver_version = kmalloc(size, GFP_KERNEL);
+-	if (!driver_version)
+-		return -ENOMEM;
+-
+-	init_driver_version(driver_version, size);
+ 	for (i = 0; i < size; i++)
+ 		writeb(driver_version[i], &cfgtable->driver_version[i]);
+-	kfree(driver_version);
++
+ 	return 0;
+ }
+ 
+@@ -7268,21 +7258,18 @@ static void read_driver_ver_from_cfgtable(struct CfgTable __iomem *cfgtable,
+ static int controller_reset_failed(struct CfgTable __iomem *cfgtable)
+ {
+ 
+-	char *driver_ver, *old_driver_ver;
+-	int rc, size = sizeof(cfgtable->driver_version);
+-
+-	old_driver_ver = kmalloc_array(2, size, GFP_KERNEL);
+-	if (!old_driver_ver)
+-		return -ENOMEM;
+-	driver_ver = old_driver_ver + size;
++	char driver_ver[sizeof(cfgtable->driver_version)] = "";
++	char old_driver_ver[sizeof(cfgtable->driver_version)] =
++						HPSA " " HPSA_DRIVER_VERSION;
++	int rc;
+ 
+ 	/* After a reset, the 32 bytes of "driver version" in the cfgtable
+ 	 * should have been changed, otherwise we know the reset failed.
+ 	 */
+-	init_driver_version(old_driver_ver, size);
+ 	read_driver_ver_from_cfgtable(cfgtable, driver_ver);
+-	rc = !memcmp(driver_ver, old_driver_ver, size);
+-	kfree(old_driver_ver);
++	rc = !memcmp(driver_ver, old_driver_ver,
++		     sizeof(cfgtable->driver_version));
++
+ 	return rc;
+ }
+ /* This does a hard reset of the controller using PCI power management
+
+---
+base-commit: d88520ad73b79e71e3ddf08de335b8520ae41c5c
+change-id: 20231026-strncpy-drivers-scsi-hpsa-c-4cb7bd4e9b7f
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
+
