@@ -1,111 +1,73 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A15E98F44
-	for <linux-hardening@vger.kernel.org>; Fri, 27 Oct 2023 00:33:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RmdH0JRr"
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED4AA1B5;
-	Thu, 26 Oct 2023 17:33:05 -0700 (PDT)
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39R0NVSQ025993;
-	Fri, 27 Oct 2023 00:33:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=0s13OFv2F6fjlgVjY49htr9zsLYqUerU5cHUE6R3sKw=;
- b=RmdH0JRrFD2LipC3Nsbl8k5KdkFhiw7up3o73DWr3XQilFA6UhiA0tl6HWuYKuWiv1nZ
- oCu7Pt4PIwO6XaA7Bkkh4mYnZTMyOi3F+gjZmox1/lmaHjcWs1km//YD5sgabXSTGR2H
- 9KE3XAHSaXaWuKtZbc/GhBp9Wemml+vD/5hX2Vs3o5tJUh4mlBzYl1ITQbuPGPjDtFwx
- CvxPqNOeYpu4ZKS6nusqSdjV88qhc1bhi6W7Xh+zEXd+oCjyTIzT8Xr7eEx2p0p69V0J
- MXEM2AhgrESYGjukzXZIJIRaXsdL/NjbQZBjsIcgjGmoS1fbQ4YeiVESetME/syBey1x lg== 
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3tyx3u8mb9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Oct 2023 00:33:00 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 39R0WxZq025199
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Oct 2023 00:32:59 GMT
-Received: from [10.48.246.67] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.39; Thu, 26 Oct
- 2023 17:32:59 -0700
-Message-ID: <37dec5a3-01b7-49e5-95ee-091d19e7e807@quicinc.com>
-Date: Thu, 26 Oct 2023 17:32:58 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A14DB5229;
+	Fri, 27 Oct 2023 04:54:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C70CB192;
+	Thu, 26 Oct 2023 21:54:56 -0700 (PDT)
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 59E8967373; Fri, 27 Oct 2023 06:54:51 +0200 (CEST)
+Date: Fri, 27 Oct 2023 06:54:51 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Kees Cook <keescook@chromium.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Justin Stitt <justinstitt@google.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Petr Mladek <pmladek@suse.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>,
+	Yun Zhou <yun.zhou@windriver.com>,
+	Jacob Keller <jacob.e.keller@intel.com>,
+	Zhen Lei <thunder.leizhen@huawei.com>,
+	linux-trace-kernel@vger.kernel.org,
+	Yosry Ahmed <yosryahmed@google.com>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] seq_buf: Introduce DECLARE_SEQ_BUF and seq_buf_str()
+Message-ID: <20231027045451.GA7838@lst.de>
+References: <20231026194033.it.702-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] airo: replace deprecated strncpy with strscpy_pad
-Content-Language: en-US
-To: Justin Stitt <justinstitt@google.com>, Kalle Valo <kvalo@kernel.org>
-CC: <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>
-References: <20231026-strncpy-drivers-net-wireless-cisco-airo-c-v2-1-413427249e47@google.com>
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-In-Reply-To: <20231026-strncpy-drivers-net-wireless-cisco-airo-c-v2-1-413427249e47@google.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.49.16.6]
-X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: qblieAJ7RQUPr4Vcgtl7-_zYRWfRfiXF
-X-Proofpoint-GUID: qblieAJ7RQUPr4Vcgtl7-_zYRWfRfiXF
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-26_22,2023-10-26_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
- mlxlogscore=950 suspectscore=0 spamscore=0 mlxscore=0 phishscore=0
- priorityscore=1501 malwarescore=0 impostorscore=0 clxscore=1015
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2310240000 definitions=main-2310270003
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231026194033.it.702-kees@kernel.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On 10/26/2023 4:19 PM, Justin Stitt wrote:
-> strncpy() is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
+On Thu, Oct 26, 2023 at 12:40:37PM -0700, Kees Cook wrote:
+> Solve two ergonomic issues with struct seq_buf;
 > 
-> `extra` is clearly supposed to be NUL-terminated which is evident by the
-> manual NUL-byte assignment as well as its immediate usage with strlen().
+> 1) Too much boilerplate is required to initialize:
 > 
-> Moreover, let's NUL-pad since there is deliberate effort (48 instances)
-> made elsewhere to zero-out buffers in these getters and setters:
-> 6050 | memset(local->config.nodeName, 0, sizeof(local->config.nodeName));
-> 6130 | memset(local->config.rates, 0, 8);
-> 6139 | memset(local->config.rates, 0, 8);
-> 6414 | memset(key.key, 0, MAX_KEY_SIZE);
-> 6497 | memset(extra, 0, 16);
-> (to be clear, strncpy also NUL-padded -- we are matching that behavior)
+> 	struct seq_buf s;
+> 	char buf[32];
 > 
-> Considering the above, a suitable replacement is `strscpy_pad` due to
-> the fact that it guarantees both NUL-termination and NUL-padding on the
-> destination buffer.
+> 	seq_buf_init(s, buf, sizeof(buf));
 > 
-> We can also replace the hard-coded size of "16" to IW_ESSID_MAX_SIZE
-> because this function is a wext handler.
+> Instead, we can build this directly on the stack. Provide
+> DECLARE_SEQ_BUF() macro to do this:
 > 
-> In wext-core.c we have:
-> static const struct iw_ioctl_description standard_ioctl[] = {
-> ...
->          [IW_IOCTL_IDX(SIOCGIWNICKN)] = {
->                  .header_type    = IW_HEADER_TYPE_POINT,
->                  .token_size     = 1,
->                  .max_tokens     = IW_ESSID_MAX_SIZE,
->          },
-> 
-> So the buffer size is (strangely) IW_ESSID_MAX_SIZE
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> 	DECLARE_SEQ_BUF(s, 32);
 
-Reviewed-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+DECLARE_SEQ_BUF_ONSTACK maybe?  But otherwise this looks like a good
+concept.
+
+> Instead, we can just return s->buffer direction after terminating it
+> in refactored seq_buf_terminate(), now known as seq_buf_str():
+> 
+> 	do_soemthing(seq_buf_str(s));
+
+Looks good.  Btw, one typical do_something would be printing it,
+so adding a format specifier that's using this helper would also
+probably be very useful.
 
