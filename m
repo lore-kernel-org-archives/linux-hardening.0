@@ -1,120 +1,233 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEBD93D3A5
-	for <linux-hardening@vger.kernel.org>; Fri, 27 Oct 2023 18:32:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB9DE39878
+	for <linux-hardening@vger.kernel.org>; Fri, 27 Oct 2023 20:00:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TfeI/fSc"
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2DA626B0;
-	Fri, 27 Oct 2023 11:32:28 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id a640c23a62f3a-99357737980so380635066b.2;
-        Fri, 27 Oct 2023 11:32:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="21cD94Gl"
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE5341B5
+	for <linux-hardening@vger.kernel.org>; Fri, 27 Oct 2023 13:00:38 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id 4fb4d7f45d1cf-542d3e46ee7so75037a12.1
+        for <linux-hardening@vger.kernel.org>; Fri, 27 Oct 2023 13:00:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698431547; x=1699036347; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=wL6rsP27kyhBgPNjGAE37z4bXgSpgcwn8+JkklueuV4=;
-        b=TfeI/fScNFSOqMUaSTf5jAQmfJLPSzNfPgYyKiDwaBL67ZJcmj9YL0kO2rCbeK92Bj
-         InDKkgD8+fMj0wfFwiJtBZYmVLBYHCfITWaudfXiYQeOMk8wFPPuQBZfQDGWbQBmOk8K
-         7DiVDvNvJHl8dBFEFxgVN6eUYqxvoXrjCRwrFNShaPSMDVGdr8w+f1UKOw1/J1RpbSln
-         MMyKQrC7cZYyE3X5tXVhYcQ51T8bVfp/n2GdFu1eBcxGGWAhUCZxWsU6Ljl0ZeY4uxud
-         B5FQdfNu+XMHLtjmFkoeERnz1Us6ppM8dTm/BIZvsV48t19VSf4hIT15M7BwCi4A6HwY
-         D1BQ==
+        d=google.com; s=20230601; t=1698436837; x=1699041637; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yobZYiTROnZbnWt97aXOIqRoozVbekmuSyrI2D0DmEQ=;
+        b=21cD94GlI92fGvgrGKcZWzvwaqs7PFcDB/jLm5qg3U87N6CWwVlL2jA1+CWwv6VkEo
+         fu7zZizsT/KJQUjYKGR3IQsGs3/VNDmYx/BzRIWinePzsG08t4DeJOIduR62HQyccEeb
+         mmlziFc44tTQgjXOxXpmTSxmVf74fMnQdbm1APu+LqCB77ZYgbECTNdNnnx2eR3CybU1
+         wtv8iOtQMD+aZqjfWE5eXxtmom3JMkEoXZnEGsRFFpSEy7UPIl6E5vtRQ5nutrUBC8IN
+         RhlspDw8v5pTpzCHoSzxCLZxLYgq1rHYwZBrMNwkD5iFaP+N2QNxlXFVGt+BccjG+Yv5
+         YZ/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698431547; x=1699036347;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wL6rsP27kyhBgPNjGAE37z4bXgSpgcwn8+JkklueuV4=;
-        b=v2xVIO/cDaBBMsEZFiBuhceoJgHajP/zAerWjxLKRFlaRXLSuir3P4naWNof9lHq+r
-         Lk9JR6QwyPVW4/uAE5Y0585uqUD+joUHguJGe8nkwSn7pnh/icos/hV8sjDGGcYPgbRx
-         0eUmuu+fFmxnWRxc29kxe91lQLdo6AdcnU24tpJBgMXlly/mDd5IlyjuOwrw2+gChdMT
-         /BC80vkjsLM1yHA8bNlg6SYg0tbDIzZOu7HhfMj2FE6jQP+bhYnka7Z9hFFiAEXq4Flw
-         4FbAj871N5cp1zTd5aKzxIlFVUAJte7KrKEYRVi1T2dVqJ3DG8IyF39L5Hd29YEt4efj
-         OJ9Q==
-X-Gm-Message-State: AOJu0YyIA189FwmlcU14kZ3ZfiS5Cwr5hNOu25XwDlCMqyJgBhxI/3Sk
-	Y44HG4AY/uPEk7j7CLn9XQ==
-X-Google-Smtp-Source: AGHT+IEseHwXORBr9sJ631o9racXkSS0mpkOkeFDiKUjuXjwWnaaKLPyzrP3KLBhmO4nUsL9dB9gVw==
-X-Received: by 2002:a17:907:31c1:b0:9bd:a165:7822 with SMTP id xf1-20020a17090731c100b009bda1657822mr2862145ejb.47.1698431546635;
-        Fri, 27 Oct 2023 11:32:26 -0700 (PDT)
-Received: from p183 ([46.53.253.206])
-        by smtp.gmail.com with ESMTPSA id gt11-20020a170906f20b00b009bd9ac83a9fsm1571360ejb.152.2023.10.27.11.32.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Oct 2023 11:32:26 -0700 (PDT)
-Date: Fri, 27 Oct 2023 21:32:24 +0300
-From: Alexey Dobriyan <adobriyan@gmail.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Christoph Hellwig <hch@lst.de>, Kees Cook <keescook@chromium.org>,
-	Justin Stitt <justinstitt@google.com>,
-	Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	Sagi Grimberg <sagi@grimberg.me>, linux-nvme@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	ksummit@lists.linux.dev
-Subject: Re: the nul-terminated string helper desk chair rearrangement
-Message-ID: <c9dd71ba-bb29-4e2d-b8cc-d49d493ffb32@p183>
-References: <20231018-strncpy-drivers-nvme-host-fabrics-c-v1-1-b6677df40a35@google.com>
- <20231019054642.GF14346@lst.de>
- <202310182248.9E197FFD5@keescook>
- <20231020044645.GC11984@lst.de>
- <CAFhGd8o8FaD-3rkBAhEXhc8XqpUk_cLqNwyfpndVuSxDOei_gA@mail.gmail.com>
- <202310201127.DA7EDAFE4D@keescook>
- <20231026100148.GA26941@lst.de>
- <710149630eb010b18b69e161d02502bc3b648173.camel@HansenPartnership.com>
- <20231026095235.760f5546@gandalf.local.home>
- <CAMuHMdV9CcjGkpF=FGe_U5XtbF08bKTEYkPSxArO1zBwnug0Wg@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1698436837; x=1699041637;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yobZYiTROnZbnWt97aXOIqRoozVbekmuSyrI2D0DmEQ=;
+        b=NxChszvZr8lNs4Qrv8KzPuNKdLZHBS9eOBxBTmmeLHKuhQQenUW7Y5b1uqeTSSAvH0
+         daWLvzXbl3JzjwTCZm+9k1AbBr1kg99yNd8EawpvzYnA2hyRlykQSn29xXaeFynB2ROj
+         y56C3KtaImqxxt6L2vf3oouKhykR5eRXh5OarnY10TyUAjnXSzUHBNu08oimeUEYlUd5
+         30P/2WOSdFwGoVRSdoYZqjfgpZ2fvFVxaYTM7akMd7YLPL2yk1ptEtl33XSPvywC8dkG
+         6SgFk6ql4gdkDThmeeBsXFGE1in97izOEd7Zx4nc42qtNAMRlIF1qI4dYnl/fVPE77sQ
+         qEeQ==
+X-Gm-Message-State: AOJu0YxIw4Wxys3IVITGUqhAMmKf7FZOhxfC7+cw1KGc+V3gSC6wSUfm
+	e16vopuVPm+xSSG31NtEzWkS2b1wHhMs0VfG6UNobw==
+X-Google-Smtp-Source: AGHT+IEECTHllrJmzv5sahl44qlCGaWHzkN+S8KPH5915KPk6hOjL1gjxgKo6qnIhYlrpIN54Jh1oJ+0er/1gULQ1H4=
+X-Received: by 2002:a17:907:26c9:b0:9c7:6fa7:586e with SMTP id
+ bp9-20020a17090726c900b009c76fa7586emr3499260ejc.1.1698436837160; Fri, 27 Oct
+ 2023 13:00:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMuHMdV9CcjGkpF=FGe_U5XtbF08bKTEYkPSxArO1zBwnug0Wg@mail.gmail.com>
+References: <20231026-strncpy-drivers-scsi-hpsa-c-v2-1-2fe2d05122fd@google.com>
+ <202310270901.B49F63CD5@keescook>
+In-Reply-To: <202310270901.B49F63CD5@keescook>
+From: Justin Stitt <justinstitt@google.com>
+Date: Fri, 27 Oct 2023 13:00:25 -0700
+Message-ID: <CAFhGd8ooYaPBXyWLTKD94-jiR0Na4qnyRT602R1tzjdF9W3BWg@mail.gmail.com>
+Subject: Re: [PATCH v2] scsi: hpsa: replace deprecated strncpy
+To: Kees Cook <keescook@chromium.org>
+Cc: Don Brace <don.brace@microchip.com>, "James E.J. Bottomley" <jejb@linux.ibm.com>, 
+	"Martin K. Petersen" <martin.petersen@oracle.com>, storagedev@microchip.com, 
+	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Oct 26, 2023 at 03:59:28PM +0200, Geert Uytterhoeven wrote:
-> Hi Steven,
-> 
-> On Thu, Oct 26, 2023 at 3:52 PM Steven Rostedt <rostedt@goodmis.org> wrote:
-> > On Thu, 26 Oct 2023 07:39:44 -0400
-> > James Bottomley <James.Bottomley@HansenPartnership.com> wrote:
+On Fri, Oct 27, 2023 at 9:04=E2=80=AFAM Kees Cook <keescook@chromium.org> w=
+rote:
+>
+> On Thu, Oct 26, 2023 at 11:13:41PM +0000, Justin Stitt wrote:
+> > strncpy() is deprecated for use on NUL-terminated destination strings
+> > [1] and as such we should prefer more robust and less ambiguous string
+> > interfaces.
 > >
-> > > While it's nice in theory to have everything documented, it's not much
-> > > use if no one can actually find the information ...
+> > Instances of strncpy()'ing a string into a buffer and manually
+> > NUL-terminating followed by sccanf with just "%d" as the format
+> > specifier can be accomplished by strscpy() and kstrtoint().
 > >
-> > Does kerneldoc provide an automated index? That is, if we had a single file
-> > that had every function in the kernel that is documented, with the path to
-> > the file that documents it, it would make finding documentation much
-> > simpler.
+> > strscpy() guarantees NUL-termination on the destination buffer and
+> > kstrtoint is better way of getting strings turned into ints.
 > >
-> > Maybe it already does? Which would mean we need a way to find the index too!
-> 
-> ctags?
+> > For the last two strncpy() use cases in init_driver_version(), we can
+> > actually drop this function entirely.
+> >
+> > Firstly, we are kmalloc()'ing driver_version. Then, we are calling
+> > init_driver_version() which memset's it to 0 followed by a strncpy().
+> > The pattern is 1) allocating memory for a string, 2) setting all bytes
+> > to NUL, 3) copy bytes from another string + ensure NUL-padded.
+> >
+> > For these, we can just stack allocate driver_version and
+> > old_driver_version. This simplifies the code greatly as we don't have
+> > any malloc/free or strncpy's.
+> >
+> > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#st=
+rncpy-on-nul-terminated-strings [1]
+> > Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en=
+.html [2]
+> > Link: https://github.com/KSPP/linux/issues/90
+> > Cc: linux-hardening@vger.kernel.org
+> > Cc: Kees Cook <keescook@chromium.org>
+> > Signed-off-by: Justin Stitt <justinstitt@google.com>
+> > ---
+> > Changes in v2:
+> > - use stack for buffers (thanks Kees)
+> > - use kstrtoint (thanks Kees)
+> > - Link to v1: https://lore.kernel.org/r/20231026-strncpy-drivers-scsi-h=
+psa-c-v1-1-75519d7a191b@google.com
+> > ---
+> > Note: build-tested only.
+> >
+> > Found with: $ rg "strncpy\("
+> > ---
+> >  drivers/scsi/hpsa.c | 53 ++++++++++++++++++++-------------------------=
+--------
+> >  1 file changed, 20 insertions(+), 33 deletions(-)
+> >
+> > diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
+> > index af18d20f3079..4d42fbb071cf 100644
+> > --- a/drivers/scsi/hpsa.c
+> > +++ b/drivers/scsi/hpsa.c
+> > @@ -452,18 +452,18 @@ static ssize_t host_store_hp_ssd_smart_path_statu=
+s(struct device *dev,
+> >                                        struct device_attribute *attr,
+> >                                        const char *buf, size_t count)
+> >  {
+> > -     int status, len;
+> > +     int status;
+> >       struct ctlr_info *h;
+> >       struct Scsi_Host *shost =3D class_to_shost(dev);
+> >       char tmpbuf[10];
+> >
+> >       if (!capable(CAP_SYS_ADMIN) || !capable(CAP_SYS_RAWIO))
+> >               return -EACCES;
+> > -     len =3D count > sizeof(tmpbuf) - 1 ? sizeof(tmpbuf) - 1 : count;
+> > -     strncpy(tmpbuf, buf, len);
+> > -     tmpbuf[len] =3D '\0';
+> > -     if (sscanf(tmpbuf, "%d", &status) !=3D 1)
+> > +
+> > +     strscpy(tmpbuf, buf, sizeof(tmpbuf));
+> > +     if (kstrtoint(tmpbuf, 0, &status))
+>
+> I actually meant:
+>
+>         if (kstrtoint(buf, 0, &status))
 
-ctags is a tool from previous century. It doesn't help that "make tags"
-is single-threaded. It needs constant babysitting (loop-like macros,
-ignore attibute annotations which masquerade as identifiers). I think
-"make tags" became much slower because ignore-list is one giant regexp
-which only grows bigger.
+How do we know `buf` is NUL-terminated as kstrtoint() demands:
 
-> Although "git grep" is faster (assumed you use the "correct" search
-> pattern, which can sometimes be challenging, indeed).
+/**
+ * kstrtoint - convert a string to an int
+ * @s: The start of the string. The string must be null-terminated, and may=
+ also
+ *  include a single newline before its terminating null. The first charact=
+er
+ *  may also be a plus sign or a minus sign.
+...
 
-I tried QT Creator indexing at some point (which is parallel), it needs
-to be told that headers are C not C++. I didn't find a way to tell it
-that .c files are C too but F2 jumped to definitions quite well.
-Also hovering over identifier/name works (being IDE it understands
-popular doc styles).
+>
+> I don't see any reason for "tmpbuf" at all.
+>
+> > @@ -7234,25 +7234,15 @@ static int hpsa_controller_hard_reset(struct pc=
+i_dev *pdev,
+> >       return 0;
+> >  }
+> >
+> > -static void init_driver_version(char *driver_version, int len)
+> > -{
+> > -     memset(driver_version, 0, len);
+> > -     strncpy(driver_version, HPSA " " HPSA_DRIVER_VERSION, len - 1);
+> > -}
+> > -
+> >  static int write_driver_ver_to_cfgtable(struct CfgTable __iomem *cfgta=
+ble)
+> >  {
+> > -     char *driver_version;
+> >       int i, size =3D sizeof(cfgtable->driver_version);
+> > +     char driver_version[sizeof(cfgtable->driver_version)] =3D
+> > +                                             HPSA " " HPSA_DRIVER_VERS=
+ION;
+> >
+> > -     driver_version =3D kmalloc(size, GFP_KERNEL);
+> > -     if (!driver_version)
+> > -             return -ENOMEM;
+> > -
+> > -     init_driver_version(driver_version, size);
+> >       for (i =3D 0; i < size; i++)
+> >               writeb(driver_version[i], &cfgtable->driver_version[i]);
+> > -     kfree(driver_version);
+> > +
+> >       return 0;
+> >  }
+> >
+> > @@ -7268,21 +7258,18 @@ static void read_driver_ver_from_cfgtable(struc=
+t CfgTable __iomem *cfgtable,
+> >  static int controller_reset_failed(struct CfgTable __iomem *cfgtable)
+> >  {
+> >
+> > -     char *driver_ver, *old_driver_ver;
+> > -     int rc, size =3D sizeof(cfgtable->driver_version);
+> > -
+> > -     old_driver_ver =3D kmalloc_array(2, size, GFP_KERNEL);
+> > -     if (!old_driver_ver)
+> > -             return -ENOMEM;
+> > -     driver_ver =3D old_driver_ver + size;
+> > +     char driver_ver[sizeof(cfgtable->driver_version)] =3D "";
+> > +     char old_driver_ver[sizeof(cfgtable->driver_version)] =3D
+> > +                                             HPSA " " HPSA_DRIVER_VERS=
+ION;
+> > +     int rc;
+> >
+> >       /* After a reset, the 32 bytes of "driver version" in the cfgtabl=
+e
+> >        * should have been changed, otherwise we know the reset failed.
+> >        */
+> > -     init_driver_version(old_driver_ver, size);
+> >       read_driver_ver_from_cfgtable(cfgtable, driver_ver);
+> > -     rc =3D !memcmp(driver_ver, old_driver_ver, size);
+> > -     kfree(old_driver_ver);
+> > +     rc =3D !memcmp(driver_ver, old_driver_ver,
+> > +                  sizeof(cfgtable->driver_version));
+> > +
+> >       return rc;
+> >  }
+> >  /* This does a hard reset of the controller using PCI power management
+>
+> These two look good now; thanks!
 
-It can be made to work reasonably well provided that you did "make
-allmodconfig" and added few header locations. clangd parses like compiler,
-not like human and kernel uses a lot of CONFIG defines so some config
-must be chosen.
+Woot!
 
-But I need to recheck all this stuff now that new version was propagated
-to distros. It should be better (and less segfaulty :-)
+>
+> -Kees
+>
+> --
+> Kees Cook
+
+Thanks
+Justin
