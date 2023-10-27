@@ -1,81 +1,100 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3335A374CC
-	for <linux-hardening@vger.kernel.org>; Fri, 27 Oct 2023 16:19:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6E7B678
+	for <linux-hardening@vger.kernel.org>; Fri, 27 Oct 2023 17:13:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OLUjGzOX"
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3BC010A
-	for <linux-hardening@vger.kernel.org>; Fri, 27 Oct 2023 09:18:58 -0700 (PDT)
-Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1cc0d0a0355so15585685ad.3
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Oct 2023 09:18:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1698423538; x=1699028338; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=twpA4kPTjPdlQanwemh5B6a0NpYFUbg/0uFl1vufWFs=;
-        b=OLUjGzOXJ2tw9AcnRVY6HY+c8Xs70HO3JLR2kVvG7dWhrTHHcnUklj2HFTNULvzvwk
-         FhFnjmSeUkeeOmZBO+1x+aRCIsJJyVNdk9+XAdWyO7dBnWuxph23C5AaQ6+ZvYkjKArS
-         lrmeuvubU+EWEmAh6j9xfqWACO8HPnDfb4UkY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698423538; x=1699028338;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=twpA4kPTjPdlQanwemh5B6a0NpYFUbg/0uFl1vufWFs=;
-        b=e3AcoLzwewuvBYQ83UuNIMIO5z6BpHoSwBJbysrw9uyOmBvBsjmf9KxRscPh+lKLa9
-         KLNagKfHAfpY+92HIwTZyYbZjJj0W7Z+ws8nK0bUVqtL+GYc8y9lNc4AWEo/5UmxBaOV
-         FS6GwQ9QQ3SX4Yyrw7K3iiLu9QtT9TOb8BX0FFgk5TYkcHVffTWkYjsHr+kdKH2xv2r8
-         Yh9bYyG1nL46dn7NME4Dyxn8pA/0cL4lK2ua/rsSFPnLNUXCXNAaC2DIGmE52+suJgMh
-         WYJ4RtSSANFEkDrJYgvuklO4KdmvOuXvw+njkugxctWp3mWeRwgc33ASshBE7YmceV/0
-         brkg==
-X-Gm-Message-State: AOJu0Yx43uWqQPkAir3JUBBcM31q7hPV7vCSiXLabtf9r8CpxBg66gdR
-	1bmJFMUGiDR7PHlWUlSEZruQ9A==
-X-Google-Smtp-Source: AGHT+IFwV7PcaIlnwoiOO9E2bXJCkNVNwxIGikMfCb5e1x9KlANhbH020bPHG4aLV7W6zssgNv+xCQ==
-X-Received: by 2002:a17:903:2309:b0:1c9:ece9:53d2 with SMTP id d9-20020a170903230900b001c9ece953d2mr3515237plh.61.1698423538314;
-        Fri, 27 Oct 2023 09:18:58 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id z5-20020a170902ee0500b001c625d6ffccsm1759643plb.129.2023.10.27.09.18.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Oct 2023 09:18:57 -0700 (PDT)
-Date: Fri, 27 Oct 2023 09:18:57 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] iio: sx9324: avoid copying property strings
-Message-ID: <202310270918.EDE919D348@keescook>
-References: <20231026-strncpy-drivers-iio-proximity-sx9324-c-v2-1-cee6e5db700c@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Psc4K6Dk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FE27C433C8;
+	Fri, 27 Oct 2023 17:13:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1698426831;
+	bh=KPuRo2bnfsBHo258rZKMPIKg4rb/dKZ3sHungljB//Y=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=Psc4K6DkTgjU7sQjh0LKAgyBoU4EP44IST1Qj8iM1j2SrrfQB/IZcy1PuxIaRqId0
+	 ET8plrgucvcgH2OoPjDkVdOdFWy8oqrzVtKvEjAyOSy0viUrKnnbBpoLasmhTI7afJ
+	 81dJQvRBwnLSP5GBjAViUFg+3oB8wmaXkht8b28T6dkUB/ko4u3vOXqsFipahmIA1m
+	 7i7kiG0W85z0IND+5c0CsZU0exVTJ5jU4whCcgNsiWYnq1fxieeHDxyoflgDF0eJOZ
+	 TvD3SlhkwbCumwhXxUaiuSLyogvvgi2u/GSmPzioZqGfsLtzsqNDG08AQ1/kl68ezH
+	 u41JYh4npAOHg==
+From: Kalle Valo <kvalo@kernel.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: Justin Stitt <justinstitt@google.com>,  linux-wireless@vger.kernel.org,
+  linux-kernel@vger.kernel.org,  linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] airo: replace deprecated strncpy with strscpy_pad
+References: <20231026-strncpy-drivers-net-wireless-cisco-airo-c-v2-1-413427249e47@google.com>
+	<202310270859.8EB5599A@keescook>
+Date: Fri, 27 Oct 2023 20:13:48 +0300
+In-Reply-To: <202310270859.8EB5599A@keescook> (Kees Cook's message of "Fri, 27
+	Oct 2023 08:59:32 -0700")
+Message-ID: <87h6mcvvhv.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231026-strncpy-drivers-iio-proximity-sx9324-c-v2-1-cee6e5db700c@google.com>
+Content-Type: text/plain
 
-On Thu, Oct 26, 2023 at 11:53:28PM +0000, Justin Stitt wrote:
-> We're doing some needless string copies when trying to assign the proper
-> `prop` string. We can make `prop` a const char* and simply assign to
-> string literals.
-> 
-> For the case where a format string is used, let's allocate some memory
-> via kasprintf() and point prop to it.
-> 
-> This also cleans up some deprecated strncpy() uses [1].
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+Kees Cook <keescook@chromium.org> writes:
 
-Looks like a reasonable way to go.
+> On Thu, Oct 26, 2023 at 11:19:18PM +0000, Justin Stitt wrote:
+>
+>> strncpy() is deprecated for use on NUL-terminated destination strings
+>> [1] and as such we should prefer more robust and less ambiguous string
+>> interfaces.
+>> 
+>> `extra` is clearly supposed to be NUL-terminated which is evident by the
+>> manual NUL-byte assignment as well as its immediate usage with strlen().
+>> 
+>> Moreover, let's NUL-pad since there is deliberate effort (48 instances)
+>> made elsewhere to zero-out buffers in these getters and setters:
+>> 6050 | memset(local->config.nodeName, 0, sizeof(local->config.nodeName));
+>> 6130 | memset(local->config.rates, 0, 8);
+>> 6139 | memset(local->config.rates, 0, 8);
+>> 6414 | memset(key.key, 0, MAX_KEY_SIZE);
+>> 6497 | memset(extra, 0, 16);
+>> (to be clear, strncpy also NUL-padded -- we are matching that behavior)
+>> 
+>> Considering the above, a suitable replacement is `strscpy_pad` due to
+>> the fact that it guarantees both NUL-termination and NUL-padding on the
+>> destination buffer.
+>> 
+>> We can also replace the hard-coded size of "16" to IW_ESSID_MAX_SIZE
+>> because this function is a wext handler.
+>> 
+>> In wext-core.c we have:
+>> static const struct iw_ioctl_description standard_ioctl[] = {
+>> ...
+>>         [IW_IOCTL_IDX(SIOCGIWNICKN)] = {
+>>                 .header_type    = IW_HEADER_TYPE_POINT,
+>>                 .token_size     = 1,
+>>                 .max_tokens     = IW_ESSID_MAX_SIZE,
+>>         },
+>> 
+>> So the buffer size is (strangely) IW_ESSID_MAX_SIZE
+>> 
+>> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+>> Link: https://github.com/KSPP/linux/issues/90
+>> Cc: linux-hardening@vger.kernel.org
+>> Signed-off-by: Justin Stitt <justinstitt@google.com>
+>
+> Looks good; thanks!
+>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+BTW most likely next week this driver and a bunch of other ancient
+drivers will removed:
+
+https://patchwork.kernel.org/project/linux-wireless/list/?series=795639&state=*&order=date
+
+So to avoid unnecessary work on already removed drivers I recommend
+using wireless-next as the baseline for wireless patches. Though I'm
+still planning to apply this patch in case we ever add the driver back
+(I hope not).
 
 -- 
-Kees Cook
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
