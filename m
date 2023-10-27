@@ -1,252 +1,105 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D2DD374C8
-	for <linux-hardening@vger.kernel.org>; Fri, 27 Oct 2023 15:56:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF03437158
+	for <linux-hardening@vger.kernel.org>; Fri, 27 Oct 2023 15:59:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CRPn1o7A"
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5C66CE
-	for <linux-hardening@vger.kernel.org>; Fri, 27 Oct 2023 08:56:40 -0700 (PDT)
-Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-6bf03b98b9bso2478944b3a.1
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Oct 2023 08:56:40 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XmMbTyk0"
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A67CAC9
+	for <linux-hardening@vger.kernel.org>; Fri, 27 Oct 2023 08:59:33 -0700 (PDT)
+Received: by mail-pj1-x1035.google.com with SMTP id 98e67ed59e1d1-2800bdf888dso615806a91.1
+        for <linux-hardening@vger.kernel.org>; Fri, 27 Oct 2023 08:59:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1698422200; x=1699027000; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=40fyXIZLWl6t+j1qK/ww8o7e/vmz8aWuQu+nEtghbIE=;
-        b=CRPn1o7AzPXlGW0pjH0nQAzz0oyjEmn+qQWozrq8tZ6viB0qSGdxO7QdNUgAxPT41S
-         +lVIeXVzXYi8eFN0yQXsVZe9MfK4Ro0HfHxGErb53v9gEMkvHeBOZJlRVTlE1kzB6Ts5
-         ow5Ud3NZ65gn+fT6CGIMW2EAV2YJElVMnCjRc=
+        d=chromium.org; s=google; t=1698422373; x=1699027173; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xIpZiRguR5ztX72Jx9GSG1nVMOc1X7wxd/73UnubI+4=;
+        b=XmMbTyk06xcZR+tb63HhYGNsnuXyNpdeD+oxiGcYlEBWG7Y8w2DJoGlW5jlDrdV51d
+         Ibj+XFKXfgG3v09VjMIpfVdZMwqxXTjJd5vgUMkjVLl8G7OaivxHRFT4X6z1Cvh+IBw5
+         HGjzV7wMw6apQn30K/22vXi6/UE3nkrKEe4DA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698422200; x=1699027000;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=40fyXIZLWl6t+j1qK/ww8o7e/vmz8aWuQu+nEtghbIE=;
-        b=kj1rJkzb4WzghXgUzGX6frQvBGIvU7LXP2CMd8R4KIzIVwf7ysgxRd4X9M9MIluGtK
-         UfavDdbnIwgEDRfMs5R2y6J0Faad/sOMlCEIIds3BmAsLLfrdKeiOIifSHVpXwMpIxWr
-         yJ7AR4MX+7iMh1Rp/z5hxjF9B9gMAd1nJDH6FjCuJcBFQlv5hi/KgqwjOwtCcHf0E5ga
-         DJhoY3qNAfylLBEJdBnuTaQc0czw8TVRGbRxyygC6TUu8HzhCHVDkZo+SY8R/J3XWTnj
-         DeNc9yDYWwgxUVko9gokv6kOhzar2M1Zsl8nFC7poGQBGKw4HzrJ5BMvbeUl6dFGYtXC
-         5WXA==
-X-Gm-Message-State: AOJu0Yw1kcMdjFt7K1zR3F2CaSVrMJFVBI1aCZVDRsdjZFIjDiN1tIa7
-	djifMOHCUJXLjvfTrHLaXSbzpQ==
-X-Google-Smtp-Source: AGHT+IENI6l4x0rUhXCb0++j2mRLJ+co5f7HRnxct20HokNEjgiWTI/oZ8VdjqfhoUx6oXd5jnCZ+A==
-X-Received: by 2002:a05:6a21:32aa:b0:17b:2c56:70bc with SMTP id yt42-20020a056a2132aa00b0017b2c5670bcmr4314236pzb.10.1698422200183;
-        Fri, 27 Oct 2023 08:56:40 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1698422373; x=1699027173;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xIpZiRguR5ztX72Jx9GSG1nVMOc1X7wxd/73UnubI+4=;
+        b=hZXPoWYol9HZGyOEkj0/jELYp0AgDwPKhHyF8/4CfI+wUV7BiKczYwgfTWymc9Z/Eu
+         MLAbFUIcRB35Tj65gCa49Hv/YZJImCo8VOSmK1zTRVGKjhXwqHPn3FZdbp7X/91b/wET
+         2wYl2IjjxA9mME3A+biEPK2dcZoaD3mJG0N7tBa1DzLD6i9D6us5kujwGZKBLAmePJkk
+         JE4h/+RKzeBbr9GPPrhpYs0vjxSZhi0A0QzX0Jmn5Ri7l3DFx8c+AMRepdOAahCt5eQ8
+         U6QhddeYsv63qQZ/oown12fHgGitCGM57RZ9NoV9tVoWsiS75Qf54l7d+EyPla+KeDhJ
+         BCjQ==
+X-Gm-Message-State: AOJu0Yxg7b6ErSkkRElvkXYaLcPpdIwtVPMwAcBVUaBNFOeOs2ANoUB5
+	l5pdXJNDn42Xc6ktn0o/8+JEZg==
+X-Google-Smtp-Source: AGHT+IHCPZdNAcRG+t1M2xwWBMvbdltKNplZZ5qGLIJGn/zQD7Qk2n9PkgKPFNuyQusVj5VdP5iidg==
+X-Received: by 2002:a17:90a:4ca5:b0:274:7db1:f50f with SMTP id k34-20020a17090a4ca500b002747db1f50fmr3784895pjh.15.1698422373079;
+        Fri, 27 Oct 2023 08:59:33 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id l6-20020a056a00140600b006be484e5b9asm1545611pfu.188.2023.10.27.08.56.39
+        by smtp.gmail.com with ESMTPSA id q2-20020a17090a2e0200b002749a99318csm1376715pjd.26.2023.10.27.08.59.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Oct 2023 08:56:39 -0700 (PDT)
+        Fri, 27 Oct 2023 08:59:32 -0700 (PDT)
+Date: Fri, 27 Oct 2023 08:59:32 -0700
 From: Kees Cook <keescook@chromium.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Kees Cook <keescook@chromium.org>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Justin Stitt <justinstitt@google.com>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Petr Mladek <pmladek@suse.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Yun Zhou <yun.zhou@windriver.com>,
-	Jacob Keller <jacob.e.keller@intel.com>,
-	Zhen Lei <thunder.leizhen@huawei.com>,
-	linux-trace-kernel@vger.kernel.org,
-	Yosry Ahmed <yosryahmed@google.com>,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v3] seq_buf: Introduce DECLARE_SEQ_BUF and seq_buf_str()
-Date: Fri, 27 Oct 2023 08:56:38 -0700
-Message-Id: <20231027155634.make.260-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+To: Justin Stitt <justinstitt@google.com>
+Cc: Kalle Valo <kvalo@kernel.org>, linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] airo: replace deprecated strncpy with strscpy_pad
+Message-ID: <202310270859.8EB5599A@keescook>
+References: <20231026-strncpy-drivers-net-wireless-cisco-airo-c-v2-1-413427249e47@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4859; i=keescook@chromium.org;
- h=from:subject:message-id; bh=3QgU2GLPGx9pQtjcPqO6cwYESMY3mYmV87vQL0flhSk=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlO922vKn2ZbYda/N+2eCxBpz/i6JD9BxvPlHI+
- EYOwNQvs8uJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZTvdtgAKCRCJcvTf3G3A
- JmNwD/9KM3Ah0jhY/I4rtDSfk6VKAxNnDNfdAb6bwxkU6i4DwTDv2m9bkpEJ8tOYI17VJM08pQP
- dqiHbBRsnaXTcjX7qSYYZkiEyvtaz1aqEqfESlMMsQlG5nm3p5ydAJ0HCTNgPsRCmqWXg7ngHkw
- U7AKCvYa8/k77glsBe2DNvwJG/iV8SxHewOBIX/RMMjXxejGUnJwcTu7WDaAoBalJSF4B6V4O+j
- TRX9ttk89GcOeEcpA86CtE4W+PPDeatAy3KkfNM3yH9dzWtryIvODc6fenHLhc5Wzfae72h5CoW
- 0oxEf4bfFEjxene1jXHBMNrro16JWBcSKXnbTxFcVG8wnbMnILi+338L74Pu04ADedq7T1GOSNp
- eRO4uwHrqbLV3FN6gfdLdVtDcuSzg7JzSh1ea9jba2TmOUxv2yCgimfAAeTAH8hKV2xYbgrA853
- hLA+F1AG58hsyZ57S3wJ5VAoXaEXaxRMozLDG+VyMp3z3729+n8oRBpfM9d+RMYm8mfi0LjoVfd
- 1Sy0aMBBB5fKUYpLuqkSTeIy1jtimZFYyTAZyBJQASoPKrmY4RXNhm+0AJ4bGB/bXDQPrw3QQl1
- BtG3KwDfQIQyK/1Bny3W7k4GSD9HheeC3xRVhJoya0NIYmUvNJj6A7wYgPPi6o/qjg+tU5+e9EX
- jZhI4NB wPewSiBQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231026-strncpy-drivers-net-wireless-cisco-airo-c-v2-1-413427249e47@google.com>
 
-Solve two ergonomic issues with struct seq_buf;
+On Thu, Oct 26, 2023 at 11:19:18PM +0000, Justin Stitt wrote:
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
+> 
+> `extra` is clearly supposed to be NUL-terminated which is evident by the
+> manual NUL-byte assignment as well as its immediate usage with strlen().
+> 
+> Moreover, let's NUL-pad since there is deliberate effort (48 instances)
+> made elsewhere to zero-out buffers in these getters and setters:
+> 6050 | memset(local->config.nodeName, 0, sizeof(local->config.nodeName));
+> 6130 | memset(local->config.rates, 0, 8);
+> 6139 | memset(local->config.rates, 0, 8);
+> 6414 | memset(key.key, 0, MAX_KEY_SIZE);
+> 6497 | memset(extra, 0, 16);
+> (to be clear, strncpy also NUL-padded -- we are matching that behavior)
+> 
+> Considering the above, a suitable replacement is `strscpy_pad` due to
+> the fact that it guarantees both NUL-termination and NUL-padding on the
+> destination buffer.
+> 
+> We can also replace the hard-coded size of "16" to IW_ESSID_MAX_SIZE
+> because this function is a wext handler.
+> 
+> In wext-core.c we have:
+> static const struct iw_ioctl_description standard_ioctl[] = {
+> ...
+>         [IW_IOCTL_IDX(SIOCGIWNICKN)] = {
+>                 .header_type    = IW_HEADER_TYPE_POINT,
+>                 .token_size     = 1,
+>                 .max_tokens     = IW_ESSID_MAX_SIZE,
+>         },
+> 
+> So the buffer size is (strangely) IW_ESSID_MAX_SIZE
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-1) Too much boilerplate is required to initialize:
+Looks good; thanks!
 
-	struct seq_buf s;
-	char buf[32];
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-	seq_buf_init(s, buf, sizeof(buf));
-
-Instead, we can build this directly on the stack. Provide
-DECLARE_SEQ_BUF() macro to do this:
-
-	DECLARE_SEQ_BUF(s, 32);
-
-2) %NUL termination is fragile and requires 2 steps to get a valid
-   C String (and is a layering violation exposing the "internals" of
-   seq_buf):
-
-	seq_buf_terminate(s);
-	do_something(s->buffer);
-
-Instead, we can just return s->buffer directly after terminating it in
-the refactored seq_buf_terminate(), now known as seq_buf_str():
-
-	do_something(seq_buf_str(s));
-
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Justin Stitt <justinstitt@google.com>
-Cc: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Yun Zhou <yun.zhou@windriver.com>
-Cc: Jacob Keller <jacob.e.keller@intel.com>
-Cc: Zhen Lei <thunder.leizhen@huawei.com>
-Cc: linux-trace-kernel@vger.kernel.org
-Link: https://lore.kernel.org/r/20231026194033.it.702-kees@kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-v3
- - fix commit log typos
- - improve code style for DECLARE_SEQ_BUF (shevchenko)
- - const-ify seq_bug_str() return (rostedt)
-v2 - https://lore.kernel.org/lkml/20231026194033.it.702-kees@kernel.org
-v1 - https://lore.kernel.org/lkml/20231026170722.work.638-kees@kernel.org
----
- include/linux/seq_buf.h | 21 +++++++++++++++++----
- kernel/trace/trace.c    | 11 +----------
- lib/seq_buf.c           |  4 +---
- 3 files changed, 19 insertions(+), 17 deletions(-)
-
-diff --git a/include/linux/seq_buf.h b/include/linux/seq_buf.h
-index 8483e4b2d0d2..5fb1f12c33f9 100644
---- a/include/linux/seq_buf.h
-+++ b/include/linux/seq_buf.h
-@@ -21,9 +21,18 @@ struct seq_buf {
- 	size_t			len;
- };
- 
-+#define DECLARE_SEQ_BUF(NAME, SIZE)			\
-+	char __ ## NAME ## _buffer[SIZE] = "";		\
-+	struct seq_buf NAME = {				\
-+		.buffer = &__ ## NAME ## _buffer,	\
-+		.size = SIZE,				\
-+	}
-+
- static inline void seq_buf_clear(struct seq_buf *s)
- {
- 	s->len = 0;
-+	if (s->size)
-+		s->buffer[0] = '\0';
- }
- 
- static inline void
-@@ -69,8 +78,8 @@ static inline unsigned int seq_buf_used(struct seq_buf *s)
- }
- 
- /**
-- * seq_buf_terminate - Make sure buffer is nul terminated
-- * @s: the seq_buf descriptor to terminate.
-+ * seq_buf_str - get %NUL-terminated C string from seq_buf
-+ * @s: the seq_buf handle
-  *
-  * This makes sure that the buffer in @s is nul terminated and
-  * safe to read as a string.
-@@ -81,16 +90,20 @@ static inline unsigned int seq_buf_used(struct seq_buf *s)
-  *
-  * After this function is called, s->buffer is safe to use
-  * in string operations.
-+ *
-+ * Returns @s->buf after making sure it is terminated.
-  */
--static inline void seq_buf_terminate(struct seq_buf *s)
-+static inline const char *seq_buf_str(struct seq_buf *s)
- {
- 	if (WARN_ON(s->size == 0))
--		return;
-+		return "";
- 
- 	if (seq_buf_buffer_left(s))
- 		s->buffer[s->len] = 0;
- 	else
- 		s->buffer[s->size - 1] = 0;
-+
-+	return s->buffer;
- }
- 
- /**
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index d629065c2383..2539cfc20a97 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -3828,15 +3828,6 @@ static bool trace_safe_str(struct trace_iterator *iter, const char *str,
- 	return false;
- }
- 
--static const char *show_buffer(struct trace_seq *s)
--{
--	struct seq_buf *seq = &s->seq;
--
--	seq_buf_terminate(seq);
--
--	return seq->buffer;
--}
--
- static DEFINE_STATIC_KEY_FALSE(trace_no_verify);
- 
- static int test_can_verify_check(const char *fmt, ...)
-@@ -3976,7 +3967,7 @@ void trace_check_vprintf(struct trace_iterator *iter, const char *fmt,
- 		 */
- 		if (WARN_ONCE(!trace_safe_str(iter, str, star, len),
- 			      "fmt: '%s' current_buffer: '%s'",
--			      fmt, show_buffer(&iter->seq))) {
-+			      fmt, seq_buf_str(&iter->seq.seq))) {
- 			int ret;
- 
- 			/* Try to safely read the string */
-diff --git a/lib/seq_buf.c b/lib/seq_buf.c
-index b7477aefff53..23518f77ea9c 100644
---- a/lib/seq_buf.c
-+++ b/lib/seq_buf.c
-@@ -109,9 +109,7 @@ void seq_buf_do_printk(struct seq_buf *s, const char *lvl)
- 	if (s->size == 0 || s->len == 0)
- 		return;
- 
--	seq_buf_terminate(s);
--
--	start = s->buffer;
-+	start = seq_buf_str(s);
- 	while ((lf = strchr(start, '\n'))) {
- 		int len = lf - start + 1;
- 
 -- 
-2.34.1
-
+Kees Cook
