@@ -1,73 +1,72 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A14DB5229;
-	Fri, 27 Oct 2023 04:54:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C70CB192;
-	Thu, 26 Oct 2023 21:54:56 -0700 (PDT)
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 59E8967373; Fri, 27 Oct 2023 06:54:51 +0200 (CEST)
-Date: Fri, 27 Oct 2023 06:54:51 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Kees Cook <keescook@chromium.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Justin Stitt <justinstitt@google.com>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Petr Mladek <pmladek@suse.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>,
-	Yun Zhou <yun.zhou@windriver.com>,
-	Jacob Keller <jacob.e.keller@intel.com>,
-	Zhen Lei <thunder.leizhen@huawei.com>,
-	linux-trace-kernel@vger.kernel.org,
-	Yosry Ahmed <yosryahmed@google.com>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] seq_buf: Introduce DECLARE_SEQ_BUF and seq_buf_str()
-Message-ID: <20231027045451.GA7838@lst.de>
-References: <20231026194033.it.702-kees@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FDB58F75;
+	Fri, 27 Oct 2023 07:08:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="djguQmPR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98FB8C433C7;
+	Fri, 27 Oct 2023 07:08:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1698390538;
+	bh=5WPvMZXHj6SnWHKzmjOCyWmBTsevR5RWBT42u2tYT6Y=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=djguQmPRxLNmjYP9HHUj67/uEd0zfx8KeWVkiz51AIIpYw2lVH8qW0B0MfbRpUIje
+	 pLMOnDUaSzl386rS4fNWyfCgOeKql4iaRefnSH/kI+FVAQpkkZCMg8hov4dFdILjul
+	 dR3cUtJP2hF2h42zhQlsXvQCJhrobipu1HPqu90ilKmuDpqKFMemvGiECLBlxdyaBC
+	 T6N1ZSbC2tYoRhhYmIbdtxYWULzyhqeqkzZzN46peCq7r9cGKFs3j2UaIgQ60dIlPg
+	 Gjn4IcKGoXoNZoHAyQJZfHbpDDcCtF60mGs4pQROGMlEwgaN1hFfZsBxI5KZa9cEJg
+	 2/5rGVP9O4Rfg==
+From: Kalle Valo <kvalo@kernel.org>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Steven Rostedt <rostedt@goodmis.org>,  James Bottomley
+ <James.Bottomley@HansenPartnership.com>,  Christoph Hellwig <hch@lst.de>,
+  Kees Cook <keescook@chromium.org>,  Justin Stitt
+ <justinstitt@google.com>,  Keith Busch <kbusch@kernel.org>,  Jens Axboe
+ <axboe@kernel.dk>,  Sagi Grimberg <sagi@grimberg.me>,
+  linux-nvme@lists.infradead.org,  linux-kernel@vger.kernel.org,
+  linux-hardening@vger.kernel.org,  ksummit@lists.linux.dev
+Subject: Re: the nul-terminated string helper desk chair rearrangement
+References: <20231018-strncpy-drivers-nvme-host-fabrics-c-v1-1-b6677df40a35@google.com>
+	<20231019054642.GF14346@lst.de> <202310182248.9E197FFD5@keescook>
+	<20231020044645.GC11984@lst.de>
+	<CAFhGd8o8FaD-3rkBAhEXhc8XqpUk_cLqNwyfpndVuSxDOei_gA@mail.gmail.com>
+	<202310201127.DA7EDAFE4D@keescook> <20231026100148.GA26941@lst.de>
+	<710149630eb010b18b69e161d02502bc3b648173.camel@HansenPartnership.com>
+	<20231026095235.760f5546@gandalf.local.home>
+	<874jid8one.fsf@meer.lwn.net>
+Date: Fri, 27 Oct 2023 10:08:53 +0300
+In-Reply-To: <874jid8one.fsf@meer.lwn.net> (Jonathan Corbet's message of "Thu,
+	26 Oct 2023 08:05:41 -0600")
+Message-ID: <87bkckczju.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231026194033.it.702-kees@kernel.org>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain
 
-On Thu, Oct 26, 2023 at 12:40:37PM -0700, Kees Cook wrote:
-> Solve two ergonomic issues with struct seq_buf;
-> 
-> 1) Too much boilerplate is required to initialize:
-> 
-> 	struct seq_buf s;
-> 	char buf[32];
-> 
-> 	seq_buf_init(s, buf, sizeof(buf));
-> 
-> Instead, we can build this directly on the stack. Provide
-> DECLARE_SEQ_BUF() macro to do this:
-> 
-> 	DECLARE_SEQ_BUF(s, 32);
+Jonathan Corbet <corbet@lwn.net> writes:
 
-DECLARE_SEQ_BUF_ONSTACK maybe?  But otherwise this looks like a good
-concept.
+> Steven Rostedt <rostedt@goodmis.org> writes:
+>
+>> On Thu, 26 Oct 2023 07:39:44 -0400
+>> James Bottomley <James.Bottomley@HansenPartnership.com> wrote:
+>>
+>>> While it's nice in theory to have everything documented, it's not much
+>>> use if no one can actually find the information ...
+>>
+>> Does kerneldoc provide an automated index?
+>
+> If you go to https://www.kernel.org/doc/html/latest/
 
-> Instead, we can just return s->buffer direction after terminating it
-> in refactored seq_buf_terminate(), now known as seq_buf_str():
-> 
-> 	do_soemthing(seq_buf_str(s));
+BTW there's now a shorter URL for this whic is really nice:
 
-Looks good.  Btw, one typical do_something would be printing it,
-so adding a format specifier that's using this helper would also
-probably be very useful.
+https://docs.kernel.org/
 
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
