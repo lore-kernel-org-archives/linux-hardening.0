@@ -1,72 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FDB58F75;
-	Fri, 27 Oct 2023 07:08:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073668489;
+	Fri, 27 Oct 2023 10:43:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="djguQmPR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98FB8C433C7;
-	Fri, 27 Oct 2023 07:08:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698390538;
-	bh=5WPvMZXHj6SnWHKzmjOCyWmBTsevR5RWBT42u2tYT6Y=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=djguQmPRxLNmjYP9HHUj67/uEd0zfx8KeWVkiz51AIIpYw2lVH8qW0B0MfbRpUIje
-	 pLMOnDUaSzl386rS4fNWyfCgOeKql4iaRefnSH/kI+FVAQpkkZCMg8hov4dFdILjul
-	 dR3cUtJP2hF2h42zhQlsXvQCJhrobipu1HPqu90ilKmuDpqKFMemvGiECLBlxdyaBC
-	 T6N1ZSbC2tYoRhhYmIbdtxYWULzyhqeqkzZzN46peCq7r9cGKFs3j2UaIgQ60dIlPg
-	 Gjn4IcKGoXoNZoHAyQJZfHbpDDcCtF60mGs4pQROGMlEwgaN1hFfZsBxI5KZa9cEJg
-	 2/5rGVP9O4Rfg==
-From: Kalle Valo <kvalo@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: Steven Rostedt <rostedt@goodmis.org>,  James Bottomley
- <James.Bottomley@HansenPartnership.com>,  Christoph Hellwig <hch@lst.de>,
-  Kees Cook <keescook@chromium.org>,  Justin Stitt
- <justinstitt@google.com>,  Keith Busch <kbusch@kernel.org>,  Jens Axboe
- <axboe@kernel.dk>,  Sagi Grimberg <sagi@grimberg.me>,
-  linux-nvme@lists.infradead.org,  linux-kernel@vger.kernel.org,
-  linux-hardening@vger.kernel.org,  ksummit@lists.linux.dev
-Subject: Re: the nul-terminated string helper desk chair rearrangement
-References: <20231018-strncpy-drivers-nvme-host-fabrics-c-v1-1-b6677df40a35@google.com>
-	<20231019054642.GF14346@lst.de> <202310182248.9E197FFD5@keescook>
-	<20231020044645.GC11984@lst.de>
-	<CAFhGd8o8FaD-3rkBAhEXhc8XqpUk_cLqNwyfpndVuSxDOei_gA@mail.gmail.com>
-	<202310201127.DA7EDAFE4D@keescook> <20231026100148.GA26941@lst.de>
-	<710149630eb010b18b69e161d02502bc3b648173.camel@HansenPartnership.com>
-	<20231026095235.760f5546@gandalf.local.home>
-	<874jid8one.fsf@meer.lwn.net>
-Date: Fri, 27 Oct 2023 10:08:53 +0300
-In-Reply-To: <874jid8one.fsf@meer.lwn.net> (Jonathan Corbet's message of "Thu,
-	26 Oct 2023 08:05:41 -0600")
-Message-ID: <87bkckczju.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Gla8Ilgr"
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C4FC18A;
+	Fri, 27 Oct 2023 03:43:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=ZP5aSdt++PfYBmmXR7K0cUYLNkK40CzBkOiwfwjBGMU=; b=Gla8Ilgri2R/a3Tls4SvnHYOiG
+	DzVhJ/dOhJFnVlcfZcoAMa4hR8UIv0lOY44zzjRvmjpBKNBx02s/+lEZ/WUdX6maSCnIQ7og+KGEq
+	XK79QIlVHoH5lmU3ujrun4sQOTe55xHj8AYv5J5cnnXZThRnPQpno/McORFnbYm3QHmHprxPpTesl
+	W8Cc41HrK+w6lbaSiOf4GeQ4ljY6kWAs73EpCFYEc7doYygVpdOUcAbl9Ya2dTM9cUCJKXwkmvKhY
+	U+/JuoiCS4m1QCwCnpznISxaDsT0sf3LXTLvKgE7EmVzqopSg8L6w+6Va2yDrfJR6y30X9qorb5Th
+	RmWQ0dhA==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1qwKJ7-002xG8-VC; Fri, 27 Oct 2023 10:43:14 +0000
+Date: Fri, 27 Oct 2023 11:43:13 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Christoph Hellwig <hch@lst.de>,
+	Justin Stitt <justinstitt@google.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Petr Mladek <pmladek@suse.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>,
+	Yun Zhou <yun.zhou@windriver.com>,
+	Jacob Keller <jacob.e.keller@intel.com>,
+	Zhen Lei <thunder.leizhen@huawei.com>,
+	linux-trace-kernel@vger.kernel.org,
+	Yosry Ahmed <yosryahmed@google.com>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] seq_buf: Introduce DECLARE_SEQ_BUF and seq_buf_cstr()
+Message-ID: <ZTuUQZSrjhXnEaT/@casper.infradead.org>
+References: <20231026170722.work.638-kees@kernel.org>
+ <20231026133850.138d5415@gandalf.local.home>
+ <202310261050.A621A7F121@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202310261050.A621A7F121@keescook>
 
-Jonathan Corbet <corbet@lwn.net> writes:
+On Thu, Oct 26, 2023 at 10:54:26AM -0700, Kees Cook wrote:
+> > > 	do_soemthing(seq_buf_cstr(s));
+> > 
+> > Do we really need to call it _cstr? Why not just have seq_buf_str() ?
+> > 
+> > I mean, this is C, do we need to state that in the name too?
+> 
+> I'm fine either way. I did that just to make the distinction between our
+> length-managed string of characters interface (seq_buf), and the
+> %NUL-terminated string of characters (traditionally called "C String" in
+> other languages). And it was still shorter than "seq_buf_terminate(s);
+> s->buffer" ;)
 
-> Steven Rostedt <rostedt@goodmis.org> writes:
->
->> On Thu, 26 Oct 2023 07:39:44 -0400
->> James Bottomley <James.Bottomley@HansenPartnership.com> wrote:
->>
->>> While it's nice in theory to have everything documented, it's not much
->>> use if no one can actually find the information ...
->>
->> Does kerneldoc provide an automated index?
->
-> If you go to https://www.kernel.org/doc/html/latest/
-
-BTW there's now a shorter URL for this whic is really nice:
-
-https://docs.kernel.org/
-
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+'cstr' might be short for 'counted string' ...
