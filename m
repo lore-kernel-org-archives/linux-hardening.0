@@ -1,32 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 710F98489;
-	Fri, 27 Oct 2023 10:54:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF1B137CA0
+	for <linux-hardening@vger.kernel.org>; Fri, 27 Oct 2023 15:46:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="xoX6gomj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D37DC433C9;
-	Fri, 27 Oct 2023 10:54:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1698404044;
-	bh=lUoVkVRWYboaXOG1iSFoxBHubtU45Ewvbk18Js/2Bg8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=xoX6gomj/9mhYXVTBg0WYsqQKuKyr/cCGDcj3ekj/ALzPQpaoQSEEMNE2DSrDnmOl
-	 N79GV9602oBVR0q38BAO2GuXqARKoN3uG2rNmUN02EFlo0E+NAeq/qTdPqZ1QzMoSo
-	 NwUqvLDPbhrGUxhpJ4nWsWrPTrDmSgJ4n3PaeXUQ=
-Date: Fri, 27 Oct 2023 12:54:02 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Xingxing Luo <xingxing.luo@unisoc.com>
-Cc: b-liu@ti.com, keescook@chromium.org, nathan@kernel.org,
-	ndesaulniers@google.com, trix@redhat.com, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	llvm@lists.linux.dev, xingxing0070.luo@gmail.com,
-	Zhiyong.Liu@unisoc.com, Cixi.Geng1@unisoc.com,
-	Orson.Zhai@unisoc.com, zhang.lyra@gmail.com
-Subject: Re: [PATCH] usb: musb: Check requset->buf before use to avoid crash
- issue
-Message-ID: <2023102742-barmaid-doorframe-3731@gregkh>
-References: <20231023093153.6748-1-xingxing.luo@unisoc.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="P237Peli"
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1192A10A
+	for <linux-hardening@vger.kernel.org>; Fri, 27 Oct 2023 08:46:18 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1cab2c24ecdso17852805ad.0
+        for <linux-hardening@vger.kernel.org>; Fri, 27 Oct 2023 08:46:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1698421577; x=1699026377; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bXwiHUF+X9lySsU8pvLVICiNMeHED6d+bcuJHhpa7Ew=;
+        b=P237PelidtcWw8WiXDkwPUhlrhdZvIsGVzdAkchjolKTLfuy0roDgRVGXmpTGvtNER
+         yO6DAxx7ehFFcsiAZUJWt4Hsii1U/+m9NMfontED91+8zliv9y/7Uul6Ba4IvMWpg+u5
+         0w1zrF7mOYMIroDDH+tSMEHYMzGKpaDXTM65Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698421577; x=1699026377;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bXwiHUF+X9lySsU8pvLVICiNMeHED6d+bcuJHhpa7Ew=;
+        b=FyWROLjK7KwnsyoC9mtJjHZUkyZWwJibLV18B3edBHEMXXZdcE5J2draA6zSMuj0XD
+         tdxdffuc+pO5UNTuiqlilp+fYdYnZugwRySwWMUyhSI+3F/hacqKz6i/TevHePrhMieu
+         dWozXtyk0GZMM8rRUDGfvlIGwMum/1p8dRojy/J5zqdUOkouftwy+pZZblZHzZ/ItXz/
+         mEgl0CD6HNkVMT/Ew0oeC1FKQJ7WGEzC6wmOE6hj5UM+GGQ/FwZIk2iaIibYWLVMcNAK
+         CzxRPVDYOh9/r6zI2OGNO+2WU6jMJZ0nV8vSEuZT4vE1EVdqJa8+8I0895D4tQz+OYAb
+         MToA==
+X-Gm-Message-State: AOJu0YzXm/45V0D7xGk4Z0o4ADiL9C0eF9QoB++Y5GdSXyjva1UlNm/Y
+	4JDxmF3zAF+af+Ee1Ri3S3FBbw==
+X-Google-Smtp-Source: AGHT+IGhmY9j5VDtwlDB7WV8OTyFMND/UgkMHgO5ObwArE+J9934qQxf7biq0pExELauYnurCtkMEw==
+X-Received: by 2002:a17:903:2448:b0:1c9:b2c1:13a3 with SMTP id l8-20020a170903244800b001c9b2c113a3mr3650635pls.49.1698421577533;
+        Fri, 27 Oct 2023 08:46:17 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id h9-20020a170902f7c900b001b8a3e2c241sm1746323plw.14.2023.10.27.08.46.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Oct 2023 08:46:17 -0700 (PDT)
+Date: Fri, 27 Oct 2023 08:46:16 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Justin Stitt <justinstitt@google.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Petr Mladek <pmladek@suse.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>,
+	Yun Zhou <yun.zhou@windriver.com>,
+	Jacob Keller <jacob.e.keller@intel.com>,
+	Zhen Lei <thunder.leizhen@huawei.com>,
+	linux-trace-kernel@vger.kernel.org,
+	Yosry Ahmed <yosryahmed@google.com>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] seq_buf: Introduce DECLARE_SEQ_BUF and seq_buf_str()
+Message-ID: <202310270845.3D1EB44@keescook>
+References: <20231026194033.it.702-kees@kernel.org>
+ <20231026154459.1603d750@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -35,77 +71,29 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231023093153.6748-1-xingxing.luo@unisoc.com>
+In-Reply-To: <20231026154459.1603d750@gandalf.local.home>
 
-On Mon, Oct 23, 2023 at 05:31:53PM +0800, Xingxing Luo wrote:
-> When connecting USB to PC, there is a very low probability of kernel
-> crash. The reason is that in ep0_txstate(), the buf member of struct
-> usb_request used may be a null pointer. Therefore, it needs to
-> determine whether it is null before using it.
+On Thu, Oct 26, 2023 at 03:44:59PM -0400, Steven Rostedt wrote:
+> On Thu, 26 Oct 2023 12:40:37 -0700
+> Kees Cook <keescook@chromium.org> wrote:
 > 
-> [ 4888.071462][T597@C0] Call trace:
-> [ 4888.071467][T597@C0]  musb_default_write_fifo+0xa0/0x1ac [musb_hdrc]
-> [ 4888.087190][T597@C0]  musb_write_fifo+0x3c/0x90 [musb_hdrc]
-> [ 4888.099826][T597@C0]  ep0_txstate+0x78/0x218 [musb_hdrc]
-> [ 4888.153918][T597@C0]  musb_g_ep0_irq+0x3c4/0xe10 [musb_hdrc]
-> [ 4888.159663][T597@C0]  musb_interrupt+0xab4/0xf1c [musb_hdrc]
-> [ 4888.165391][T597@C0]  sprd_musb_interrupt+0x1e4/0x484 [musb_sprd]
-> [ 4888.171447][T597@C0]  __handle_irq_event_percpu+0xd8/0x2f8
-> [ 4888.176901][T597@C0]  handle_irq_event+0x70/0xe4
-> [ 4888.181487][T597@C0]  handle_fasteoi_irq+0x15c/0x230
-> [ 4888.186420][T597@C0]  handle_domain_irq+0x88/0xfc
-> [ 4888.191090][T597@C0]  gic_handle_irq+0x60/0x138
-> [ 4888.195591][T597@C0]  call_on_irq_stack+0x40/0x70
-> [ 4888.200263][T597@C0]  do_interrupt_handler+0x50/0xac
-> [ 4888.205196][T597@C0]  el1_interrupt+0x34/0x64
-> [ 4888.209524][T597@C0]  el1h_64_irq_handler+0x1c/0x2c
-> [ 4888.214370][T597@C0]  el1h_64_irq+0x7c/0x80
-> [ 4888.218525][T597@C0]  __check_heap_object+0x1ac/0x1fc
-> [ 4888.223544][T597@C0]  __check_object_size+0x10c/0x20c
-> [ 4888.228563][T597@C0]  simple_copy_to_iter+0x40/0x74
-> [ 4888.233410][T597@C0]  __skb_datagram_iter+0xa0/0x310
-> [ 4888.238343][T597@C0]  skb_copy_datagram_iter+0x44/0x110
-> [ 4888.243535][T597@C0]  netlink_recvmsg+0xdc/0x364
-> [ 4888.248123][T597@C0]  ____sys_recvmsg.llvm.16749613423860851707+0x358/0x6c0
-> [ 4888.255045][T597@C0]  ___sys_recvmsg+0xe0/0x1dc
-> [ 4888.259544][T597@C0]  __arm64_sys_recvmsg+0xc4/0x10c
-> [ 4888.264478][T597@C0]  invoke_syscall+0x6c/0x15c
-> [ 4888.268976][T597@C0]  el0_svc_common.llvm.12373701176611417606+0xd4/0x120
-> [ 4888.275726][T597@C0]  do_el0_svc+0x34/0xac
-> [ 4888.279795][T597@C0]  el0_svc+0x28/0x90
-> [ 4888.283603][T597@C0]  el0t_64_sync_handler+0x88/0xec
-> [ 4888.288548][T597@C0]  el0t_64_sync+0x1b4/0x1b8
-> [ 4888.292956][T597@C0] Code: 540002c3 53027ea8 aa1303e9 71000508 (b840452a)
-> [ 4888.299789][T597@C0] ---[ end trace 14a301b7253e83cc ]---
+> > @@ -81,16 +88,20 @@ static inline unsigned int seq_buf_used(struct seq_buf *s)
+> >   *
+> >   * After this function is called, s->buffer is safe to use
+> >   * in string operations.
+> > + *
+> > + * Returns @s->buf after making sure it is terminated.
+> >   */
+> > -static inline void seq_buf_terminate(struct seq_buf *s)
+> > +static inline char *seq_buf_str(struct seq_buf *s)
 > 
-> Signed-off-by: Xingxing Luo <xingxing.luo@unisoc.com>
-> ---
->  drivers/usb/musb/musb_gadget_ep0.c | 5 +++++
->  1 file changed, 5 insertions(+)
+> Looking at show_buffer() (below), I wonder if this should be:
 > 
-> diff --git a/drivers/usb/musb/musb_gadget_ep0.c b/drivers/usb/musb/musb_gadget_ep0.c
-> index 6d7336727388..5d0629866128 100644
-> --- a/drivers/usb/musb/musb_gadget_ep0.c
-> +++ b/drivers/usb/musb/musb_gadget_ep0.c
-> @@ -531,6 +531,11 @@ static void ep0_txstate(struct musb *musb)
->  
->  	request = &req->request;
->  
-> +	if (!requset->buf) {
-> +		musb_dbg(musb, "request->buf is NULL");
-> +		return;
-> +	}
-> +
->  	/* load the data */
->  	fifo_src = (u8 *) request->buf + request->actual;
->  	fifo_count = min((unsigned) MUSB_EP0_FIFOSIZE,
-> -- 
-> 2.17.1
+> static inline const char *seq_buf_str() ?
+> 
+> I mean, it can be modified, but do we want to allow that?
 
-This patch does not even build, how did you test it?
+Yeah, good idea. I've updated this for v3.
 
-And what commit id does this fix?
-
-thanks,
-
-greg k-h
+-- 
+Kees Cook
