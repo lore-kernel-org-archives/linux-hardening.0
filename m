@@ -1,233 +1,110 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB9DE39878
-	for <linux-hardening@vger.kernel.org>; Fri, 27 Oct 2023 20:00:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD59B41759;
+	Fri, 27 Oct 2023 22:20:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="21cD94Gl"
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE5341B5
-	for <linux-hardening@vger.kernel.org>; Fri, 27 Oct 2023 13:00:38 -0700 (PDT)
-Received: by mail-ed1-x52a.google.com with SMTP id 4fb4d7f45d1cf-542d3e46ee7so75037a12.1
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Oct 2023 13:00:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698436837; x=1699041637; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yobZYiTROnZbnWt97aXOIqRoozVbekmuSyrI2D0DmEQ=;
-        b=21cD94GlI92fGvgrGKcZWzvwaqs7PFcDB/jLm5qg3U87N6CWwVlL2jA1+CWwv6VkEo
-         fu7zZizsT/KJQUjYKGR3IQsGs3/VNDmYx/BzRIWinePzsG08t4DeJOIduR62HQyccEeb
-         mmlziFc44tTQgjXOxXpmTSxmVf74fMnQdbm1APu+LqCB77ZYgbECTNdNnnx2eR3CybU1
-         wtv8iOtQMD+aZqjfWE5eXxtmom3JMkEoXZnEGsRFFpSEy7UPIl6E5vtRQ5nutrUBC8IN
-         RhlspDw8v5pTpzCHoSzxCLZxLYgq1rHYwZBrMNwkD5iFaP+N2QNxlXFVGt+BccjG+Yv5
-         YZ/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698436837; x=1699041637;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yobZYiTROnZbnWt97aXOIqRoozVbekmuSyrI2D0DmEQ=;
-        b=NxChszvZr8lNs4Qrv8KzPuNKdLZHBS9eOBxBTmmeLHKuhQQenUW7Y5b1uqeTSSAvH0
-         daWLvzXbl3JzjwTCZm+9k1AbBr1kg99yNd8EawpvzYnA2hyRlykQSn29xXaeFynB2ROj
-         y56C3KtaImqxxt6L2vf3oouKhykR5eRXh5OarnY10TyUAjnXSzUHBNu08oimeUEYlUd5
-         30P/2WOSdFwGoVRSdoYZqjfgpZ2fvFVxaYTM7akMd7YLPL2yk1ptEtl33XSPvywC8dkG
-         6SgFk6ql4gdkDThmeeBsXFGE1in97izOEd7Zx4nc42qtNAMRlIF1qI4dYnl/fVPE77sQ
-         qEeQ==
-X-Gm-Message-State: AOJu0YxIw4Wxys3IVITGUqhAMmKf7FZOhxfC7+cw1KGc+V3gSC6wSUfm
-	e16vopuVPm+xSSG31NtEzWkS2b1wHhMs0VfG6UNobw==
-X-Google-Smtp-Source: AGHT+IEECTHllrJmzv5sahl44qlCGaWHzkN+S8KPH5915KPk6hOjL1gjxgKo6qnIhYlrpIN54Jh1oJ+0er/1gULQ1H4=
-X-Received: by 2002:a17:907:26c9:b0:9c7:6fa7:586e with SMTP id
- bp9-20020a17090726c900b009c76fa7586emr3499260ejc.1.1698436837160; Fri, 27 Oct
- 2023 13:00:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FvfULbdu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 561BAC433C8;
+	Fri, 27 Oct 2023 22:20:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1698445225;
+	bh=a5TEmxZGsOjS/GgOYsqRiQG4AzGI2qCqIVQQVx91tgY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=FvfULbduwlw9q9L0mPi8rgk5SfM+cMt/rtofkgx/p4aYlVvXifqDNEnHfd92DURLA
+	 4UoH+X74XsqVk6wbuDNoaYWuXWs2GhrA6CCpJlUQd3XZRiLjYWj9XjHt3p33MBNGbm
+	 duwAlqetgAdz5ncxyiWcBlsyKSDBAb7+BkcRlf/TI7sLdQWEpjqI5aKEQ+MNS+ycrr
+	 3RTt8a9WrZvwHSR1E/wFi73x0xYJPr1guLOVXnyG0vFvqVM9gO4j2m3O6y67Ae/jQr
+	 nKVvevr33xIt4D7RYAH0DrGJajZ9U/qCsWoRv+TWKZGBxUTAixQ0+DM7ia2PMPF0QW
+	 yLSZi3KyNlJow==
+From: Saeed Mahameed <saeed@kernel.org>
+To: "David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Eric Dumazet <edumazet@google.com>
+Cc: Saeed Mahameed <saeedm@nvidia.com>,
+	netdev@vger.kernel.org,
+	Tariq Toukan <tariqt@nvidia.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-hardening@vger.kernel.org,
+	Kees Cook <keescook@chromium.org>
+Subject: [net-next 10/11] net/mlx5: simplify mlx5_set_driver_version string assignments
+Date: Fri, 27 Oct 2023 15:20:05 -0700
+Message-ID: <20231027222006.115999-11-saeed@kernel.org>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20231027222006.115999-1-saeed@kernel.org>
+References: <20231027222006.115999-1-saeed@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231026-strncpy-drivers-scsi-hpsa-c-v2-1-2fe2d05122fd@google.com>
- <202310270901.B49F63CD5@keescook>
-In-Reply-To: <202310270901.B49F63CD5@keescook>
+Content-Transfer-Encoding: 8bit
+
 From: Justin Stitt <justinstitt@google.com>
-Date: Fri, 27 Oct 2023 13:00:25 -0700
-Message-ID: <CAFhGd8ooYaPBXyWLTKD94-jiR0Na4qnyRT602R1tzjdF9W3BWg@mail.gmail.com>
-Subject: Re: [PATCH v2] scsi: hpsa: replace deprecated strncpy
-To: Kees Cook <keescook@chromium.org>
-Cc: Don Brace <don.brace@microchip.com>, "James E.J. Bottomley" <jejb@linux.ibm.com>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>, storagedev@microchip.com, 
-	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 27, 2023 at 9:04=E2=80=AFAM Kees Cook <keescook@chromium.org> w=
-rote:
->
-> On Thu, Oct 26, 2023 at 11:13:41PM +0000, Justin Stitt wrote:
-> > strncpy() is deprecated for use on NUL-terminated destination strings
-> > [1] and as such we should prefer more robust and less ambiguous string
-> > interfaces.
-> >
-> > Instances of strncpy()'ing a string into a buffer and manually
-> > NUL-terminating followed by sccanf with just "%d" as the format
-> > specifier can be accomplished by strscpy() and kstrtoint().
-> >
-> > strscpy() guarantees NUL-termination on the destination buffer and
-> > kstrtoint is better way of getting strings turned into ints.
-> >
-> > For the last two strncpy() use cases in init_driver_version(), we can
-> > actually drop this function entirely.
-> >
-> > Firstly, we are kmalloc()'ing driver_version. Then, we are calling
-> > init_driver_version() which memset's it to 0 followed by a strncpy().
-> > The pattern is 1) allocating memory for a string, 2) setting all bytes
-> > to NUL, 3) copy bytes from another string + ensure NUL-padded.
-> >
-> > For these, we can just stack allocate driver_version and
-> > old_driver_version. This simplifies the code greatly as we don't have
-> > any malloc/free or strncpy's.
-> >
-> > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#st=
-rncpy-on-nul-terminated-strings [1]
-> > Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en=
-.html [2]
-> > Link: https://github.com/KSPP/linux/issues/90
-> > Cc: linux-hardening@vger.kernel.org
-> > Cc: Kees Cook <keescook@chromium.org>
-> > Signed-off-by: Justin Stitt <justinstitt@google.com>
-> > ---
-> > Changes in v2:
-> > - use stack for buffers (thanks Kees)
-> > - use kstrtoint (thanks Kees)
-> > - Link to v1: https://lore.kernel.org/r/20231026-strncpy-drivers-scsi-h=
-psa-c-v1-1-75519d7a191b@google.com
-> > ---
-> > Note: build-tested only.
-> >
-> > Found with: $ rg "strncpy\("
-> > ---
-> >  drivers/scsi/hpsa.c | 53 ++++++++++++++++++++-------------------------=
---------
-> >  1 file changed, 20 insertions(+), 33 deletions(-)
-> >
-> > diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
-> > index af18d20f3079..4d42fbb071cf 100644
-> > --- a/drivers/scsi/hpsa.c
-> > +++ b/drivers/scsi/hpsa.c
-> > @@ -452,18 +452,18 @@ static ssize_t host_store_hp_ssd_smart_path_statu=
-s(struct device *dev,
-> >                                        struct device_attribute *attr,
-> >                                        const char *buf, size_t count)
-> >  {
-> > -     int status, len;
-> > +     int status;
-> >       struct ctlr_info *h;
-> >       struct Scsi_Host *shost =3D class_to_shost(dev);
-> >       char tmpbuf[10];
-> >
-> >       if (!capable(CAP_SYS_ADMIN) || !capable(CAP_SYS_RAWIO))
-> >               return -EACCES;
-> > -     len =3D count > sizeof(tmpbuf) - 1 ? sizeof(tmpbuf) - 1 : count;
-> > -     strncpy(tmpbuf, buf, len);
-> > -     tmpbuf[len] =3D '\0';
-> > -     if (sscanf(tmpbuf, "%d", &status) !=3D 1)
-> > +
-> > +     strscpy(tmpbuf, buf, sizeof(tmpbuf));
-> > +     if (kstrtoint(tmpbuf, 0, &status))
->
-> I actually meant:
->
->         if (kstrtoint(buf, 0, &status))
+In total, just assigning this version string takes:
+(1) strncpy()'s
+(5) strlen()'s
+(3) strncat()'s
+(1) snprintf()'s
+(4) max_t()'s
 
-How do we know `buf` is NUL-terminated as kstrtoint() demands:
+Moreover, `strncpy` is deprecated [1] and `strncat` really shouldn't be
+used either [2]. With this in mind, let's simply use a single
+`snprintf`.
 
-/**
- * kstrtoint - convert a string to an int
- * @s: The start of the string. The string must be null-terminated, and may=
- also
- *  include a single newline before its terminating null. The first charact=
-er
- *  may also be a plus sign or a minus sign.
-...
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://elixir.bootlin.com/linux/v6.6-rc5/source/include/linux/fortify-string.h#L448 [2]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Cc: Kees Cook <keescook@chromium.org>
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Saeed Mahameed <saeedm@nvidia.com>
+---
+ .../net/ethernet/mellanox/mlx5/core/main.c    | 20 +++----------------
+ 1 file changed, 3 insertions(+), 17 deletions(-)
 
->
-> I don't see any reason for "tmpbuf" at all.
->
-> > @@ -7234,25 +7234,15 @@ static int hpsa_controller_hard_reset(struct pc=
-i_dev *pdev,
-> >       return 0;
-> >  }
-> >
-> > -static void init_driver_version(char *driver_version, int len)
-> > -{
-> > -     memset(driver_version, 0, len);
-> > -     strncpy(driver_version, HPSA " " HPSA_DRIVER_VERSION, len - 1);
-> > -}
-> > -
-> >  static int write_driver_ver_to_cfgtable(struct CfgTable __iomem *cfgta=
-ble)
-> >  {
-> > -     char *driver_version;
-> >       int i, size =3D sizeof(cfgtable->driver_version);
-> > +     char driver_version[sizeof(cfgtable->driver_version)] =3D
-> > +                                             HPSA " " HPSA_DRIVER_VERS=
-ION;
-> >
-> > -     driver_version =3D kmalloc(size, GFP_KERNEL);
-> > -     if (!driver_version)
-> > -             return -ENOMEM;
-> > -
-> > -     init_driver_version(driver_version, size);
-> >       for (i =3D 0; i < size; i++)
-> >               writeb(driver_version[i], &cfgtable->driver_version[i]);
-> > -     kfree(driver_version);
-> > +
-> >       return 0;
-> >  }
-> >
-> > @@ -7268,21 +7258,18 @@ static void read_driver_ver_from_cfgtable(struc=
-t CfgTable __iomem *cfgtable,
-> >  static int controller_reset_failed(struct CfgTable __iomem *cfgtable)
-> >  {
-> >
-> > -     char *driver_ver, *old_driver_ver;
-> > -     int rc, size =3D sizeof(cfgtable->driver_version);
-> > -
-> > -     old_driver_ver =3D kmalloc_array(2, size, GFP_KERNEL);
-> > -     if (!old_driver_ver)
-> > -             return -ENOMEM;
-> > -     driver_ver =3D old_driver_ver + size;
-> > +     char driver_ver[sizeof(cfgtable->driver_version)] =3D "";
-> > +     char old_driver_ver[sizeof(cfgtable->driver_version)] =3D
-> > +                                             HPSA " " HPSA_DRIVER_VERS=
-ION;
-> > +     int rc;
-> >
-> >       /* After a reset, the 32 bytes of "driver version" in the cfgtabl=
-e
-> >        * should have been changed, otherwise we know the reset failed.
-> >        */
-> > -     init_driver_version(old_driver_ver, size);
-> >       read_driver_ver_from_cfgtable(cfgtable, driver_ver);
-> > -     rc =3D !memcmp(driver_ver, old_driver_ver, size);
-> > -     kfree(old_driver_ver);
-> > +     rc =3D !memcmp(driver_ver, old_driver_ver,
-> > +                  sizeof(cfgtable->driver_version));
-> > +
-> >       return rc;
-> >  }
-> >  /* This does a hard reset of the controller using PCI power management
->
-> These two look good now; thanks!
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/main.c b/drivers/net/ethernet/mellanox/mlx5/core/main.c
+index a17152c1cbb2..bccf6e53556c 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
+@@ -219,7 +219,6 @@ static void mlx5_set_driver_version(struct mlx5_core_dev *dev)
+ 	int driver_ver_sz = MLX5_FLD_SZ_BYTES(set_driver_version_in,
+ 					      driver_version);
+ 	u8 in[MLX5_ST_SZ_BYTES(set_driver_version_in)] = {};
+-	int remaining_size = driver_ver_sz;
+ 	char *string;
+ 
+ 	if (!MLX5_CAP_GEN(dev, driver_version))
+@@ -227,22 +226,9 @@ static void mlx5_set_driver_version(struct mlx5_core_dev *dev)
+ 
+ 	string = MLX5_ADDR_OF(set_driver_version_in, in, driver_version);
+ 
+-	strncpy(string, "Linux", remaining_size);
+-
+-	remaining_size = max_t(int, 0, driver_ver_sz - strlen(string));
+-	strncat(string, ",", remaining_size);
+-
+-	remaining_size = max_t(int, 0, driver_ver_sz - strlen(string));
+-	strncat(string, KBUILD_MODNAME, remaining_size);
+-
+-	remaining_size = max_t(int, 0, driver_ver_sz - strlen(string));
+-	strncat(string, ",", remaining_size);
+-
+-	remaining_size = max_t(int, 0, driver_ver_sz - strlen(string));
+-
+-	snprintf(string + strlen(string), remaining_size, "%u.%u.%u",
+-		LINUX_VERSION_MAJOR, LINUX_VERSION_PATCHLEVEL,
+-		LINUX_VERSION_SUBLEVEL);
++	snprintf(string, driver_ver_sz, "Linux,%s,%u.%u.%u",
++		 KBUILD_MODNAME, LINUX_VERSION_MAJOR,
++		 LINUX_VERSION_PATCHLEVEL, LINUX_VERSION_SUBLEVEL);
+ 
+ 	/*Send the command*/
+ 	MLX5_SET(set_driver_version_in, in, opcode,
+-- 
+2.41.0
 
-Woot!
-
->
-> -Kees
->
-> --
-> Kees Cook
-
-Thanks
-Justin
