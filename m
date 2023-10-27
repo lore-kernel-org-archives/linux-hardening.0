@@ -1,100 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6E7B678
-	for <linux-hardening@vger.kernel.org>; Fri, 27 Oct 2023 17:13:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEBD93D3A5
+	for <linux-hardening@vger.kernel.org>; Fri, 27 Oct 2023 18:32:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Psc4K6Dk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FE27C433C8;
-	Fri, 27 Oct 2023 17:13:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698426831;
-	bh=KPuRo2bnfsBHo258rZKMPIKg4rb/dKZ3sHungljB//Y=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=Psc4K6DkTgjU7sQjh0LKAgyBoU4EP44IST1Qj8iM1j2SrrfQB/IZcy1PuxIaRqId0
-	 ET8plrgucvcgH2OoPjDkVdOdFWy8oqrzVtKvEjAyOSy0viUrKnnbBpoLasmhTI7afJ
-	 81dJQvRBwnLSP5GBjAViUFg+3oB8wmaXkht8b28T6dkUB/ko4u3vOXqsFipahmIA1m
-	 7i7kiG0W85z0IND+5c0CsZU0exVTJ5jU4whCcgNsiWYnq1fxieeHDxyoflgDF0eJOZ
-	 TvD3SlhkwbCumwhXxUaiuSLyogvvgi2u/GSmPzioZqGfsLtzsqNDG08AQ1/kl68ezH
-	 u41JYh4npAOHg==
-From: Kalle Valo <kvalo@kernel.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: Justin Stitt <justinstitt@google.com>,  linux-wireless@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] airo: replace deprecated strncpy with strscpy_pad
-References: <20231026-strncpy-drivers-net-wireless-cisco-airo-c-v2-1-413427249e47@google.com>
-	<202310270859.8EB5599A@keescook>
-Date: Fri, 27 Oct 2023 20:13:48 +0300
-In-Reply-To: <202310270859.8EB5599A@keescook> (Kees Cook's message of "Fri, 27
-	Oct 2023 08:59:32 -0700")
-Message-ID: <87h6mcvvhv.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TfeI/fSc"
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2DA626B0;
+	Fri, 27 Oct 2023 11:32:28 -0700 (PDT)
+Received: by mail-ej1-x635.google.com with SMTP id a640c23a62f3a-99357737980so380635066b.2;
+        Fri, 27 Oct 2023 11:32:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1698431547; x=1699036347; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=wL6rsP27kyhBgPNjGAE37z4bXgSpgcwn8+JkklueuV4=;
+        b=TfeI/fScNFSOqMUaSTf5jAQmfJLPSzNfPgYyKiDwaBL67ZJcmj9YL0kO2rCbeK92Bj
+         InDKkgD8+fMj0wfFwiJtBZYmVLBYHCfITWaudfXiYQeOMk8wFPPuQBZfQDGWbQBmOk8K
+         7DiVDvNvJHl8dBFEFxgVN6eUYqxvoXrjCRwrFNShaPSMDVGdr8w+f1UKOw1/J1RpbSln
+         MMyKQrC7cZYyE3X5tXVhYcQ51T8bVfp/n2GdFu1eBcxGGWAhUCZxWsU6Ljl0ZeY4uxud
+         B5FQdfNu+XMHLtjmFkoeERnz1Us6ppM8dTm/BIZvsV48t19VSf4hIT15M7BwCi4A6HwY
+         D1BQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698431547; x=1699036347;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wL6rsP27kyhBgPNjGAE37z4bXgSpgcwn8+JkklueuV4=;
+        b=v2xVIO/cDaBBMsEZFiBuhceoJgHajP/zAerWjxLKRFlaRXLSuir3P4naWNof9lHq+r
+         Lk9JR6QwyPVW4/uAE5Y0585uqUD+joUHguJGe8nkwSn7pnh/icos/hV8sjDGGcYPgbRx
+         0eUmuu+fFmxnWRxc29kxe91lQLdo6AdcnU24tpJBgMXlly/mDd5IlyjuOwrw2+gChdMT
+         /BC80vkjsLM1yHA8bNlg6SYg0tbDIzZOu7HhfMj2FE6jQP+bhYnka7Z9hFFiAEXq4Flw
+         4FbAj871N5cp1zTd5aKzxIlFVUAJte7KrKEYRVi1T2dVqJ3DG8IyF39L5Hd29YEt4efj
+         OJ9Q==
+X-Gm-Message-State: AOJu0YyIA189FwmlcU14kZ3ZfiS5Cwr5hNOu25XwDlCMqyJgBhxI/3Sk
+	Y44HG4AY/uPEk7j7CLn9XQ==
+X-Google-Smtp-Source: AGHT+IEseHwXORBr9sJ631o9racXkSS0mpkOkeFDiKUjuXjwWnaaKLPyzrP3KLBhmO4nUsL9dB9gVw==
+X-Received: by 2002:a17:907:31c1:b0:9bd:a165:7822 with SMTP id xf1-20020a17090731c100b009bda1657822mr2862145ejb.47.1698431546635;
+        Fri, 27 Oct 2023 11:32:26 -0700 (PDT)
+Received: from p183 ([46.53.253.206])
+        by smtp.gmail.com with ESMTPSA id gt11-20020a170906f20b00b009bd9ac83a9fsm1571360ejb.152.2023.10.27.11.32.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Oct 2023 11:32:26 -0700 (PDT)
+Date: Fri, 27 Oct 2023 21:32:24 +0300
+From: Alexey Dobriyan <adobriyan@gmail.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	Christoph Hellwig <hch@lst.de>, Kees Cook <keescook@chromium.org>,
+	Justin Stitt <justinstitt@google.com>,
+	Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+	Sagi Grimberg <sagi@grimberg.me>, linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	ksummit@lists.linux.dev
+Subject: Re: the nul-terminated string helper desk chair rearrangement
+Message-ID: <c9dd71ba-bb29-4e2d-b8cc-d49d493ffb32@p183>
+References: <20231018-strncpy-drivers-nvme-host-fabrics-c-v1-1-b6677df40a35@google.com>
+ <20231019054642.GF14346@lst.de>
+ <202310182248.9E197FFD5@keescook>
+ <20231020044645.GC11984@lst.de>
+ <CAFhGd8o8FaD-3rkBAhEXhc8XqpUk_cLqNwyfpndVuSxDOei_gA@mail.gmail.com>
+ <202310201127.DA7EDAFE4D@keescook>
+ <20231026100148.GA26941@lst.de>
+ <710149630eb010b18b69e161d02502bc3b648173.camel@HansenPartnership.com>
+ <20231026095235.760f5546@gandalf.local.home>
+ <CAMuHMdV9CcjGkpF=FGe_U5XtbF08bKTEYkPSxArO1zBwnug0Wg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMuHMdV9CcjGkpF=FGe_U5XtbF08bKTEYkPSxArO1zBwnug0Wg@mail.gmail.com>
 
-Kees Cook <keescook@chromium.org> writes:
+On Thu, Oct 26, 2023 at 03:59:28PM +0200, Geert Uytterhoeven wrote:
+> Hi Steven,
+> 
+> On Thu, Oct 26, 2023 at 3:52 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+> > On Thu, 26 Oct 2023 07:39:44 -0400
+> > James Bottomley <James.Bottomley@HansenPartnership.com> wrote:
+> >
+> > > While it's nice in theory to have everything documented, it's not much
+> > > use if no one can actually find the information ...
+> >
+> > Does kerneldoc provide an automated index? That is, if we had a single file
+> > that had every function in the kernel that is documented, with the path to
+> > the file that documents it, it would make finding documentation much
+> > simpler.
+> >
+> > Maybe it already does? Which would mean we need a way to find the index too!
+> 
+> ctags?
 
-> On Thu, Oct 26, 2023 at 11:19:18PM +0000, Justin Stitt wrote:
->
->> strncpy() is deprecated for use on NUL-terminated destination strings
->> [1] and as such we should prefer more robust and less ambiguous string
->> interfaces.
->> 
->> `extra` is clearly supposed to be NUL-terminated which is evident by the
->> manual NUL-byte assignment as well as its immediate usage with strlen().
->> 
->> Moreover, let's NUL-pad since there is deliberate effort (48 instances)
->> made elsewhere to zero-out buffers in these getters and setters:
->> 6050 | memset(local->config.nodeName, 0, sizeof(local->config.nodeName));
->> 6130 | memset(local->config.rates, 0, 8);
->> 6139 | memset(local->config.rates, 0, 8);
->> 6414 | memset(key.key, 0, MAX_KEY_SIZE);
->> 6497 | memset(extra, 0, 16);
->> (to be clear, strncpy also NUL-padded -- we are matching that behavior)
->> 
->> Considering the above, a suitable replacement is `strscpy_pad` due to
->> the fact that it guarantees both NUL-termination and NUL-padding on the
->> destination buffer.
->> 
->> We can also replace the hard-coded size of "16" to IW_ESSID_MAX_SIZE
->> because this function is a wext handler.
->> 
->> In wext-core.c we have:
->> static const struct iw_ioctl_description standard_ioctl[] = {
->> ...
->>         [IW_IOCTL_IDX(SIOCGIWNICKN)] = {
->>                 .header_type    = IW_HEADER_TYPE_POINT,
->>                 .token_size     = 1,
->>                 .max_tokens     = IW_ESSID_MAX_SIZE,
->>         },
->> 
->> So the buffer size is (strangely) IW_ESSID_MAX_SIZE
->> 
->> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
->> Link: https://github.com/KSPP/linux/issues/90
->> Cc: linux-hardening@vger.kernel.org
->> Signed-off-by: Justin Stitt <justinstitt@google.com>
->
-> Looks good; thanks!
->
-> Reviewed-by: Kees Cook <keescook@chromium.org>
+ctags is a tool from previous century. It doesn't help that "make tags"
+is single-threaded. It needs constant babysitting (loop-like macros,
+ignore attibute annotations which masquerade as identifiers). I think
+"make tags" became much slower because ignore-list is one giant regexp
+which only grows bigger.
 
-BTW most likely next week this driver and a bunch of other ancient
-drivers will removed:
+> Although "git grep" is faster (assumed you use the "correct" search
+> pattern, which can sometimes be challenging, indeed).
 
-https://patchwork.kernel.org/project/linux-wireless/list/?series=795639&state=*&order=date
+I tried QT Creator indexing at some point (which is parallel), it needs
+to be told that headers are C not C++. I didn't find a way to tell it
+that .c files are C too but F2 jumped to definitions quite well.
+Also hovering over identifier/name works (being IDE it understands
+popular doc styles).
 
-So to avoid unnecessary work on already removed drivers I recommend
-using wireless-next as the baseline for wireless patches. Though I'm
-still planning to apply this patch in case we ever add the driver back
-(I hope not).
+It can be made to work reasonably well provided that you did "make
+allmodconfig" and added few header locations. clangd parses like compiler,
+not like human and kernel uses a lot of CONFIG defines so some config
+must be chosen.
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+But I need to recheck all this stuff now that new version was propagated
+to distros. It should be better (and less segfaulty :-)
