@@ -1,140 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F003D9460
-	for <linux-hardening@vger.kernel.org>; Sat, 28 Oct 2023 15:27:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5891B66F;
+	Sat, 28 Oct 2023 15:31:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DmL++fSy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 770ADC433C8;
-	Sat, 28 Oct 2023 15:26:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698506833;
-	bh=uLv5WbdZZqD76wzTbqeJg/qmp0G1/IL7KepBHWNLTB8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=DmL++fSy0y+u1Rl27tnahInvKR3esiJmVd5ydYL6v8N6yex88qr1B5xsP6HpqhFfJ
-	 bJd+PT2xDa36nz4RxOGvm3Gn15jzbCHLC+4EYamFbr/At8kk78D9J+V96aXHiSCM7x
-	 M+GLiWJiI0eWrCWiDuFDIIPsiS6YZh95QcB4lbFRhjU/9od06Hb0pVbyPZDhMYeX3g
-	 NIibfeWVM/pXSeMozlDUGKcjHGtqfYWU7RL0X1izl7cS/Zb2vr/Z1NjwYvsKqwiXCM
-	 xoGkGMBk+ExLRy6pfsQuMWYFyO8xSNSp/+OekcqYYWFSmLJSmUGTLWb5SW19JS07Yi
-	 0JdrpwU0fbkwQ==
-Date: Sat, 28 Oct 2023 16:26:38 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, Gwendal
- Grignou <gwendal@chromium.org>, Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v2] iio: sx9324: avoid copying property strings
-Message-ID: <20231028162638.5b477ded@jic23-huawei>
-In-Reply-To: <20231026-strncpy-drivers-iio-proximity-sx9324-c-v2-1-cee6e5db700c@google.com>
-References: <20231026-strncpy-drivers-iio-proximity-sx9324-c-v2-1-cee6e5db700c@google.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UQ5ewBDM"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80E7FD3;
+	Sat, 28 Oct 2023 08:31:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1698507091; x=1730043091;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=lXhBg7CyUNDTmqFAHnbpKEyoQJs4rn3WPxNcO3/MONs=;
+  b=UQ5ewBDMQ9+S0B9EYLLj3KEoWBs6Hv/kwnz2b4KliUwX4zI6JRmW751q
+   alpjHaxxTvZtpSwLcaJUZorL8C+XsQHqvD+FVuw9BanQfkY/entWUaMRT
+   cIv676P4n2KKTJ4rh3CDfzNDkr2untMrSN2z4msKixo0IsRiX4mziaiZc
+   YlYnLrUZIcfCs+VxeLecI0kHM1Vaudz9czFg19qaW3i1SEK3oIzoKSJZb
+   rswqlG0TV7DW2PGsZRqE98ueuEoEtbeLP1q0Wh0eFkLe3coOPgjI5JVum
+   V4NNwqN1aH/OeATspkwxLS5glfoZwxsVFFyIKJu9x3SE8o4HDGIxULoWE
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10877"; a="387717868"
+X-IronPort-AV: E=Sophos;i="6.03,259,1694761200"; 
+   d="scan'208";a="387717868"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2023 08:31:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.03,259,1694761200"; 
+   d="scan'208";a="1120418"
+Received: from lkp-server01.sh.intel.com (HELO 8917679a5d3e) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 28 Oct 2023 08:31:15 -0700
+Received: from kbuild by 8917679a5d3e with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1qwlHY-000Br5-3D;
+	Sat, 28 Oct 2023 15:31:25 +0000
+Date: Sat, 28 Oct 2023 23:30:28 +0800
+From: kernel test robot <lkp@intel.com>
+To: Xingxing Luo <xingxing.luo@unisoc.com>, b-liu@ti.com,
+	gregkh@linuxfoundation.org, keescook@chromium.org,
+	nathan@kernel.org, ndesaulniers@google.com, trix@redhat.com
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, xingxing0070.luo@gmail.com,
+	Zhiyong.Liu@unisoc.com, Cixi.Geng1@unisoc.com,
+	Orson.Zhai@unisoc.com, zhang.lyra@gmail.com
+Subject: Re: [PATCH] usb: musb: Check requset->buf before use to avoid crash
+ issue
+Message-ID: <202310282331.d4wx1Z6b-lkp@intel.com>
+References: <20231023093153.6748-1-xingxing.luo@unisoc.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231023093153.6748-1-xingxing.luo@unisoc.com>
 
-On Thu, 26 Oct 2023 23:53:28 +0000
-Justin Stitt <justinstitt@google.com> wrote:
+Hi Xingxing,
 
-> We're doing some needless string copies when trying to assign the proper
-> `prop` string. We can make `prop` a const char* and simply assign to
-> string literals.
-> 
-> For the case where a format string is used, let's allocate some memory
-> via kasprintf() and point prop to it.
-> 
-> This also cleans up some deprecated strncpy() uses [1].
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+kernel test robot noticed the following build errors:
 
-Seems reasonable to me.
+[auto build test ERROR on usb/usb-testing]
+[also build test ERROR on usb/usb-next usb/usb-linus linus/master v6.6-rc7 next-20231027]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-+CC Gwendal (+ Stephen) as it's Gwendal's driver and I think they are still actively
-maintaining it.
+url:    https://github.com/intel-lab-lkp/linux/commits/Xingxing-Luo/usb-musb-Check-requset-buf-before-use-to-avoid-crash-issue/20231023-173938
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
+patch link:    https://lore.kernel.org/r/20231023093153.6748-1-xingxing.luo%40unisoc.com
+patch subject: [PATCH] usb: musb: Check requset->buf before use to avoid crash issue
+config: arm-davinci_all_defconfig (https://download.01.org/0day-ci/archive/20231028/202310282331.d4wx1Z6b-lkp@intel.com/config)
+compiler: clang version 17.0.0 (https://github.com/llvm/llvm-project.git 4a5ac14ee968ff0ad5d2cc1ffa0299048db4c88a)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231028/202310282331.d4wx1Z6b-lkp@intel.com/reproduce)
 
-> ---
-> Changes in v2:
-> - make prop a const char* and do simple assignments (thanks Jonathan)
-> - rebase onto 3a568e3a961ba330
-> - Link to v1: https://lore.kernel.org/r/20230921-strncpy-drivers-iio-proximity-sx9324-c-v1-1-4e8d28fd1e7c@google.com
-> ---
-> Note: build-tested
-> ---
->  drivers/iio/proximity/sx9324.c | 17 +++++++----------
->  1 file changed, 7 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/iio/proximity/sx9324.c b/drivers/iio/proximity/sx9324.c
-> index 438f9c9aba6e..c8547035cb47 100644
-> --- a/drivers/iio/proximity/sx9324.c
-> +++ b/drivers/iio/proximity/sx9324.c
-> @@ -885,7 +885,7 @@ sx9324_get_default_reg(struct device *dev, int idx,
->  #define SX9324_RESOLUTION_DEF "semtech,ph01-resolution"
->  #define SX9324_PROXRAW_DEF "semtech,ph01-proxraw-strength"
->  	unsigned int pin_defs[SX9324_NUM_PINS];
-> -	char prop[] = SX9324_PROXRAW_DEF;
-> +	const char *prop = SX9324_PROXRAW_DEF;
->  	u32 start = 0, raw = 0, pos = 0;
->  	int ret, count, ph, pin;
->  	const char *res;
-> @@ -899,7 +899,7 @@ sx9324_get_default_reg(struct device *dev, int idx,
->  	case SX9324_REG_AFE_PH2:
->  	case SX9324_REG_AFE_PH3:
->  		ph = reg_def->reg - SX9324_REG_AFE_PH0;
-> -		snprintf(prop, ARRAY_SIZE(prop), "semtech,ph%d-pin", ph);
-> +		prop = kasprintf(GFP_KERNEL, "semtech,ph%d-pin", ph);
->  
->  		count = device_property_count_u32(dev, prop);
->  		if (count != ARRAY_SIZE(pin_defs))
-> @@ -913,6 +913,7 @@ sx9324_get_default_reg(struct device *dev, int idx,
->  			raw |= (pin_defs[pin] << (2 * pin)) &
->  			       SX9324_REG_AFE_PH0_PIN_MASK(pin);
->  		reg_def->def = raw;
-> +		kfree(prop);
->  		break;
->  	case SX9324_REG_AFE_CTRL0:
->  		ret = device_property_read_string(dev,
-> @@ -937,11 +938,9 @@ sx9324_get_default_reg(struct device *dev, int idx,
->  	case SX9324_REG_AFE_CTRL4:
->  	case SX9324_REG_AFE_CTRL7:
->  		if (reg_def->reg == SX9324_REG_AFE_CTRL4)
-> -			strncpy(prop, "semtech,ph01-resolution",
-> -				ARRAY_SIZE(prop));
-> +			prop = "semtech,ph01-resolution";
->  		else
-> -			strncpy(prop, "semtech,ph23-resolution",
-> -				ARRAY_SIZE(prop));
-> +			prop = "semtech,ph23-resolution";
->  
->  		ret = device_property_read_u32(dev, prop, &raw);
->  		if (ret)
-> @@ -1012,11 +1011,9 @@ sx9324_get_default_reg(struct device *dev, int idx,
->  	case SX9324_REG_PROX_CTRL0:
->  	case SX9324_REG_PROX_CTRL1:
->  		if (reg_def->reg == SX9324_REG_PROX_CTRL0)
-> -			strncpy(prop, "semtech,ph01-proxraw-strength",
-> -				ARRAY_SIZE(prop));
-> +			prop = "semtech,ph01-proxraw-strength";
->  		else
-> -			strncpy(prop, "semtech,ph23-proxraw-strength",
-> -				ARRAY_SIZE(prop));
-> +			prop = "semtech,ph23-proxraw-strength";
->  		ret = device_property_read_u32(dev, prop, &raw);
->  		if (ret)
->  			break;
-> 
-> ---
-> base-commit: 3a568e3a961ba330091cd031647e4c303fa0badb
-> change-id: 20230921-strncpy-drivers-iio-proximity-sx9324-c-8c3437676039
-> 
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
-> 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202310282331.d4wx1Z6b-lkp@intel.com/
 
+All errors (new ones prefixed by >>):
+
+>> drivers/usb/musb/musb_gadget_ep0.c:534:7: error: use of undeclared identifier 'requset'; did you mean 'request'?
+     534 |         if (!requset->buf) {
+         |              ^~~~~~~
+         |              request
+   drivers/usb/musb/musb_gadget_ep0.c:521:22: note: 'request' declared here
+     521 |         struct usb_request      *request;
+         |                                  ^
+   1 error generated.
+
+Kconfig warnings: (for reference only)
+   WARNING: unmet direct dependencies detected for PINCTRL_SINGLE
+   Depends on [n]: PINCTRL [=n] && OF [=y] && HAS_IOMEM [=y]
+   Selected by [y]:
+   - ARCH_DAVINCI [=y] && ARCH_MULTI_V5 [=y] && CPU_LITTLE_ENDIAN [=y]
+
+
+vim +534 drivers/usb/musb/musb_gadget_ep0.c
+
+   510	
+   511	/*
+   512	 * transmitting to the host (IN), this code might be called from IRQ
+   513	 * and from kernel thread.
+   514	 *
+   515	 * Context:  caller holds controller lock
+   516	 */
+   517	static void ep0_txstate(struct musb *musb)
+   518	{
+   519		void __iomem		*regs = musb->control_ep->regs;
+   520		struct musb_request	*req = next_ep0_request(musb);
+   521		struct usb_request	*request;
+   522		u16			csr = MUSB_CSR0_TXPKTRDY;
+   523		u8			*fifo_src;
+   524		u8			fifo_count;
+   525	
+   526		if (!req) {
+   527			/* WARN_ON(1); */
+   528			musb_dbg(musb, "odd; csr0 %04x", musb_readw(regs, MUSB_CSR0));
+   529			return;
+   530		}
+   531	
+   532		request = &req->request;
+   533	
+ > 534		if (!requset->buf) {
+   535			musb_dbg(musb, "request->buf is NULL");
+   536			return;
+   537		}
+   538	
+   539		/* load the data */
+   540		fifo_src = (u8 *) request->buf + request->actual;
+   541		fifo_count = min((unsigned) MUSB_EP0_FIFOSIZE,
+   542			request->length - request->actual);
+   543		musb_write_fifo(&musb->endpoints[0], fifo_count, fifo_src);
+   544		request->actual += fifo_count;
+   545	
+   546		/* update the flags */
+   547		if (fifo_count < MUSB_MAX_END0_PACKET
+   548				|| (request->actual == request->length
+   549					&& !request->zero)) {
+   550			musb->ep0_state = MUSB_EP0_STAGE_STATUSOUT;
+   551			csr |= MUSB_CSR0_P_DATAEND;
+   552		} else
+   553			request = NULL;
+   554	
+   555		/* report completions as soon as the fifo's loaded; there's no
+   556		 * win in waiting till this last packet gets acked.  (other than
+   557		 * very precise fault reporting, needed by USB TMC; possible with
+   558		 * this hardware, but not usable from portable gadget drivers.)
+   559		 */
+   560		if (request) {
+   561			musb->ackpend = csr;
+   562			musb_g_ep0_giveback(musb, request);
+   563			if (!musb->ackpend)
+   564				return;
+   565			musb->ackpend = 0;
+   566		}
+   567	
+   568		/* send it out, triggering a "txpktrdy cleared" irq */
+   569		musb_ep_select(musb->mregs, 0);
+   570		musb_writew(regs, MUSB_CSR0, csr);
+   571	}
+   572	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
