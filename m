@@ -1,87 +1,140 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C297FBF8;
-	Sat, 28 Oct 2023 11:06:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F003D9460
+	for <linux-hardening@vger.kernel.org>; Sat, 28 Oct 2023 15:27:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="VtY4ftls"
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC960C0;
-	Sat, 28 Oct 2023 04:06:28 -0700 (PDT)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 6F82140E0171;
-	Sat, 28 Oct 2023 11:06:26 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id kPqXeTtDDo9z; Sat, 28 Oct 2023 11:06:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1698491183; bh=EHjBb96lcMnmWWDcbNaD4wXBmqS+NphkqDuHPnHecec=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VtY4ftls8QE2bTI6UlkII5vgHpZDr946Z5wLzVI4b+EqGpZX0QOrAdqXl6GuXlsoR
-	 xYA9/F6VbaKNNhUnuKA1aI6JSePqlZrm5v9k5xoGAm40uKreUPU6WM4VTxT5Ee2nz2
-	 hFmaeo0wKpYxzoE1o3/beUTixBnskz0v+rbE6cbUAsmVFWouQ3bEykTm3MXuxGFBVG
-	 iLyHGhsQMDgS9oJ+LQ6B38Hj6iGJMM/s5LiDescjhj0kn1F+ChxNjskhu4jKjtbDnl
-	 oDoAtjt6/vvF8qPRU/NgZ7ctWREEX+OcHY3U44MbzFxDHX/0MW8I2RIVsQElTIqLju
-	 zljXPpWDJS3fRMGSkFA8MBxCpJuji8yaWvRuwHR3fByzDda2UmesgxA8DAwc0fck7J
-	 /9rs62sWTn6AsGQ4914uT3dHZP2j+KLbNCDyf2P8wtvev2Ibn1hrnP9g5GcOr6l7f8
-	 MUAYbyh0JNdr7HaREza30ZChjyVNUAI+cBWa5zFWPxsjuLgOoEqfvCa/pj/BHkXJNW
-	 CYJuySDFXF3Pk1grJBBoxYWgfTqA0aIOtfTqi5fE2Pka6Jv5Z0S0X5xElWXqG6bCPY
-	 M6en9OhQ8CAntqGN9GEorQrtCV8JovYdU6uBIHc5Wl899IK+vuILYrFLVh2ugmzfIk
-	 72ZKBG9OsUn4VrOTbzVR0Fis=
-Received: from zn.tnic (pd95304da.dip0.t-ipconnect.de [217.83.4.218])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5F7E640E018F;
-	Sat, 28 Oct 2023 11:06:10 +0000 (UTC)
-Date: Sat, 28 Oct 2023 13:06:04 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Jeshua Smith <jeshuas@nvidia.com>
-Cc: keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
-	rafael@kernel.org, lenb@kernel.org, james.morse@arm.com,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-tegra@vger.kernel.org,
-	treding@nvidia.com, jonathanh@nvidia.com
-Subject: Re: [PATCH V3] ACPI: APEI: Use ERST timeout for slow devices
-Message-ID: <20231028110604.GCZTzrHKnsDB+Dmljr@fat_crate.local>
-References: <20231027223309.22883-1-jeshuas@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DmL++fSy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 770ADC433C8;
+	Sat, 28 Oct 2023 15:26:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1698506833;
+	bh=uLv5WbdZZqD76wzTbqeJg/qmp0G1/IL7KepBHWNLTB8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=DmL++fSy0y+u1Rl27tnahInvKR3esiJmVd5ydYL6v8N6yex88qr1B5xsP6HpqhFfJ
+	 bJd+PT2xDa36nz4RxOGvm3Gn15jzbCHLC+4EYamFbr/At8kk78D9J+V96aXHiSCM7x
+	 M+GLiWJiI0eWrCWiDuFDIIPsiS6YZh95QcB4lbFRhjU/9od06Hb0pVbyPZDhMYeX3g
+	 NIibfeWVM/pXSeMozlDUGKcjHGtqfYWU7RL0X1izl7cS/Zb2vr/Z1NjwYvsKqwiXCM
+	 xoGkGMBk+ExLRy6pfsQuMWYFyO8xSNSp/+OekcqYYWFSmLJSmUGTLWb5SW19JS07Yi
+	 0JdrpwU0fbkwQ==
+Date: Sat, 28 Oct 2023 16:26:38 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, Gwendal
+ Grignou <gwendal@chromium.org>, Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v2] iio: sx9324: avoid copying property strings
+Message-ID: <20231028162638.5b477ded@jic23-huawei>
+In-Reply-To: <20231026-strncpy-drivers-iio-proximity-sx9324-c-v2-1-cee6e5db700c@google.com>
+References: <20231026-strncpy-drivers-iio-proximity-sx9324-c-v2-1-cee6e5db700c@google.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20231027223309.22883-1-jeshuas@nvidia.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Oct 27, 2023 at 10:33:09PM +0000, Jeshua Smith wrote:
-> Slow devices such as flash may not meet the default 1ms timeout value,
-> so use the ERST max execution time value as the timeout if it is larger
-> and if the ERST has the "slow" attribute set.
+On Thu, 26 Oct 2023 23:53:28 +0000
+Justin Stitt <justinstitt@google.com> wrote:
+
+> We're doing some needless string copies when trying to assign the proper
+> `prop` string. We can make `prop` a const char* and simply assign to
+> string literals.
 > 
-> Example:
-> A NOR flash spec lists "Page program time (256 bytes)" as 120us typical,
-> and 1800us max. A 32KB error log would be (32K/256) = 128 nor-flash
-> pages. Writing those 128 nor-flash pages would then take
-> 120us * 128 = 15ms typical, or 1800us * 128 = 230.4ms max.
+> For the case where a format string is used, let's allocate some memory
+> via kasprintf() and point prop to it.
 > 
-> Without this change, when pstore calls APEI's ERST code to write a 32KB
-> error log to the NOR flash in the example, the code will flag a timeout
-> after 1ms and return an error to pstore. With this change, unless the
-> max time value from the ERST table is exceeded, the code will not flag a
-> timeout and will return success to pstore after the operation completes.
+> This also cleans up some deprecated strncpy() uses [1].
 > 
-> Signed-off-by: Jeshua Smith <jeshuas@nvidia.com>
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+
+Seems reasonable to me.
+
++CC Gwendal (+ Stephen) as it's Gwendal's driver and I think they are still actively
+maintaining it.
+
 > ---
+> Changes in v2:
+> - make prop a const char* and do simple assignments (thanks Jonathan)
+> - rebase onto 3a568e3a961ba330
+> - Link to v1: https://lore.kernel.org/r/20230921-strncpy-drivers-iio-proximity-sx9324-c-v1-1-4e8d28fd1e7c@google.com
+> ---
+> Note: build-tested
+> ---
+>  drivers/iio/proximity/sx9324.c | 17 +++++++----------
+>  1 file changed, 7 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/iio/proximity/sx9324.c b/drivers/iio/proximity/sx9324.c
+> index 438f9c9aba6e..c8547035cb47 100644
+> --- a/drivers/iio/proximity/sx9324.c
+> +++ b/drivers/iio/proximity/sx9324.c
+> @@ -885,7 +885,7 @@ sx9324_get_default_reg(struct device *dev, int idx,
+>  #define SX9324_RESOLUTION_DEF "semtech,ph01-resolution"
+>  #define SX9324_PROXRAW_DEF "semtech,ph01-proxraw-strength"
+>  	unsigned int pin_defs[SX9324_NUM_PINS];
+> -	char prop[] = SX9324_PROXRAW_DEF;
+> +	const char *prop = SX9324_PROXRAW_DEF;
+>  	u32 start = 0, raw = 0, pos = 0;
+>  	int ret, count, ph, pin;
+>  	const char *res;
+> @@ -899,7 +899,7 @@ sx9324_get_default_reg(struct device *dev, int idx,
+>  	case SX9324_REG_AFE_PH2:
+>  	case SX9324_REG_AFE_PH3:
+>  		ph = reg_def->reg - SX9324_REG_AFE_PH0;
+> -		snprintf(prop, ARRAY_SIZE(prop), "semtech,ph%d-pin", ph);
+> +		prop = kasprintf(GFP_KERNEL, "semtech,ph%d-pin", ph);
+>  
+>  		count = device_property_count_u32(dev, prop);
+>  		if (count != ARRAY_SIZE(pin_defs))
+> @@ -913,6 +913,7 @@ sx9324_get_default_reg(struct device *dev, int idx,
+>  			raw |= (pin_defs[pin] << (2 * pin)) &
+>  			       SX9324_REG_AFE_PH0_PIN_MASK(pin);
+>  		reg_def->def = raw;
+> +		kfree(prop);
+>  		break;
+>  	case SX9324_REG_AFE_CTRL0:
+>  		ret = device_property_read_string(dev,
+> @@ -937,11 +938,9 @@ sx9324_get_default_reg(struct device *dev, int idx,
+>  	case SX9324_REG_AFE_CTRL4:
+>  	case SX9324_REG_AFE_CTRL7:
+>  		if (reg_def->reg == SX9324_REG_AFE_CTRL4)
+> -			strncpy(prop, "semtech,ph01-resolution",
+> -				ARRAY_SIZE(prop));
+> +			prop = "semtech,ph01-resolution";
+>  		else
+> -			strncpy(prop, "semtech,ph23-resolution",
+> -				ARRAY_SIZE(prop));
+> +			prop = "semtech,ph23-resolution";
+>  
+>  		ret = device_property_read_u32(dev, prop, &raw);
+>  		if (ret)
+> @@ -1012,11 +1011,9 @@ sx9324_get_default_reg(struct device *dev, int idx,
+>  	case SX9324_REG_PROX_CTRL0:
+>  	case SX9324_REG_PROX_CTRL1:
+>  		if (reg_def->reg == SX9324_REG_PROX_CTRL0)
+> -			strncpy(prop, "semtech,ph01-proxraw-strength",
+> -				ARRAY_SIZE(prop));
+> +			prop = "semtech,ph01-proxraw-strength";
+>  		else
+> -			strncpy(prop, "semtech,ph23-proxraw-strength",
+> -				ARRAY_SIZE(prop));
+> +			prop = "semtech,ph23-proxraw-strength";
+>  		ret = device_property_read_u32(dev, prop, &raw);
+>  		if (ret)
+>  			break;
+> 
+> ---
+> base-commit: 3a568e3a961ba330091cd031647e4c303fa0badb
+> change-id: 20230921-strncpy-drivers-iio-proximity-sx9324-c-8c3437676039
+> 
+> Best regards,
+> --
+> Justin Stitt <justinstitt@google.com>
+> 
 
-Reviewed-by: Borislav Petkov (AMD) <bp@alien8.de>
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
