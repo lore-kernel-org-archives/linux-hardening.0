@@ -1,93 +1,269 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 281CEDDA6
-	for <linux-hardening@vger.kernel.org>; Mon, 30 Oct 2023 09:45:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 644E119446
+	for <linux-hardening@vger.kernel.org>; Mon, 30 Oct 2023 17:02:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qdy4TY5T"
-Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E431E139;
-	Mon, 30 Oct 2023 02:45:40 -0700 (PDT)
-Received: by mail-lj1-x231.google.com with SMTP id 38308e7fff4ca-2c52289e900so8647631fa.0;
-        Mon, 30 Oct 2023 02:45:40 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VK0GmCIq"
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A142BB3
+	for <linux-hardening@vger.kernel.org>; Mon, 30 Oct 2023 10:02:55 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1cc34c3420bso9239565ad.3
+        for <linux-hardening@vger.kernel.org>; Mon, 30 Oct 2023 10:02:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698659139; x=1699263939; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=roNWFMRIdrA2XJQW3qCZb+P5wFturM6emUJo4E5vPqI=;
-        b=Qdy4TY5T+sQo1kfvTxNYpgmNWdFzuq5emI2aiCbKbKW6tdaCXuIis4ooVcVZ8q9ZRO
-         eoWm7AxZkczj1Ud0PZ8HkZwOkIpZMqXnpg1TaTTOcy2wQ324Vlxq9JineE/BWXYz0Q1n
-         AnanwTxueMJvB7ppgkNbVt0SDovUwp3JXcsjwKbWSGgwWSgWfUjGD1YPR2NaU+T4MzxM
-         Kp5bLjzzRO8YoMegNPMGtG1f+D0QHOQ4HXE5U2+rMYif2W/RfV3vyVRnK642ZjN2VPMq
-         qTrAn8GnADrEmp5DdhDRtW7iD14TustuF48KO2ckug59uJuDB13mKDFtmu4rC8SKOnaQ
-         8Juw==
+        d=chromium.org; s=google; t=1698685375; x=1699290175; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yXEikiGWleMG1vf5W2vMzUdql/v6NvL8kEAoxYpaxGU=;
+        b=VK0GmCIqP71zu24avvtvpELgK1nDWRPyEDcao85bHQManbbYIEmWkeOa6gb47ZmwaL
+         O3vqnpgZWnsqld8viqVyx9w8rkLq74J6uJZZMH1Sv+HAF+tN+cqTFz+ZlGjMXtRL8/HS
+         Sv29lLAUEb1RJia7bDuFvC0+x3IP/6fVP0hgs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698659139; x=1699263939;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=roNWFMRIdrA2XJQW3qCZb+P5wFturM6emUJo4E5vPqI=;
-        b=QtQHT/ecPqiIvvSc4LaUQRiCuOGEyk8YNMLsbBfqsNxGfQ2J4TrJSCDPMCjkz89AEW
-         w4DxeElpHBnHEhZ2BlhrvwAjoOCTA5wcEBqUnxixSsmRR0yfHFTuYtT150Ys7lYOAGQq
-         I1Qjvd+P6vlOawXMC2AQvriN3LAA/pXulRGHwvFBSKULAtE3pEaMAx7zBxudXxMvmQB0
-         1Ifj17Vlhtwp1bzbkYfpaBfvQTG9Wiu0KIkzr6Y6vOTyo2aLdKobh7M0dZjjH1gUtSZR
-         g39dd1CTlRhNXSu/UNPAQOnvuyShr6yxgIGvkA6Xn0W39WGVwKFKCq2DNgy+9aX2I8AI
-         grkg==
-X-Gm-Message-State: AOJu0YyDNeTfgD9wKVwIkzTm0DXIpnMMCIb7DOyq+DRqNgAXImSRqBo/
-	ypU8CqzmZ7smYjZVNyKmklbu30FPgckqwA==
-X-Google-Smtp-Source: AGHT+IFlD366l8eXN2XK8pK+fCHY69joDXkYrc265Zwn9kNPlFud5PBYeigDyU//8huZ6seoEXmCIg==
-X-Received: by 2002:a2e:b531:0:b0:2c0:1cae:dd3d with SMTP id z17-20020a2eb531000000b002c01caedd3dmr5732749ljm.4.1698659138776;
-        Mon, 30 Oct 2023 02:45:38 -0700 (PDT)
-Received: from localhost.localdomain ([94.141.255.13])
-        by smtp.googlemail.com with ESMTPSA id w16-20020a05651c103000b002bcd94f9714sm1243216ljm.126.2023.10.30.02.45.37
+        d=1e100.net; s=20230601; t=1698685375; x=1699290175;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yXEikiGWleMG1vf5W2vMzUdql/v6NvL8kEAoxYpaxGU=;
+        b=bljZ6MeEW9tBAwgFBI+K7HIpbhamcgPGDQ8LkcHidYa2RdxiVIq4dIrYyDTPnn+9Qi
+         HLqzjfTrK8z2a/ElyMdV1Hk+Mphs5JcrK/pN3YBbWN+cEtJKLP4eGgiVGD/GwQRaQOQP
+         PWEleFfa9ohd88M73EwwNFBNvj43Z9x0j/um2Knvn6jB0e2gyxLQvDxgai1kgFF5Db4P
+         xaFDVzN517/2UAIcIw5B6yGptnMfktC+qkL5aPPfui6JGXc61oYlw6ecRSlihGhlRYiN
+         DI2kvRHxyWYneP24VU/YqDhrrg7j2JXIJYenQqoqN46nVvshV0VcqDrD+M6Jct6Ozb0c
+         zBrw==
+X-Gm-Message-State: AOJu0YyokQI5IOHKRLsk9V23cRINOriPn/DmdEB7PhIWL1uXSlYho+/r
+	VeuGnGHWS6AbVDeuVGxXdXCavw==
+X-Google-Smtp-Source: AGHT+IEDfkFK/YUrGM5UVqR7nWfsnnWui07nD9uJwqnxipParAfYoa5K9tzNeGPq+fqfK/2ui1LKuA==
+X-Received: by 2002:a17:902:bf44:b0:1ca:c490:8537 with SMTP id u4-20020a170902bf4400b001cac4908537mr7821244pls.14.1698685375020;
+        Mon, 30 Oct 2023 10:02:55 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id b11-20020a170902d50b00b001c625d6ffccsm2627300plg.129.2023.10.30.10.02.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Oct 2023 02:45:38 -0700 (PDT)
-From: Konstantin Runov <runebone1@gmail.com>
-To: keescook@chromium.org
-Cc: linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Konstantin Runov <runebone1@gmail.com>
-Subject: [PATCH] Fixed typo (args -> argc) in plugin description
-Date: Mon, 30 Oct 2023 12:45:08 +0300
-Message-Id: <20231030094508.245432-1-runebone1@gmail.com>
-X-Mailer: git-send-email 2.40.1
+        Mon, 30 Oct 2023 10:02:54 -0700 (PDT)
+Date: Mon, 30 Oct 2023 10:02:53 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+	Elena Reshetova <elena.reshetova@intel.com>,
+	Ricardo =?iso-8859-1?Q?Ca=F1uelo?= <ricardo.canuelo@collabora.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Justin Stitt <justinstitt@google.com>,
+	Azeem Shaikh <azeemshaikh38@gmail.com>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	Amit Shah <amit@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Baoquan He <bhe@redhat.com>, David Windsor <dwindsor@gmail.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	Hans Liljestrand <ishkamiel@gmail.com>,
+	Joseph Qi <joseph.qi@linux.alibaba.com>,
+	Lukas Loidolt <e1634039@student.tuwien.ac.at>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Michal Simek <michal.simek@amd.com>,
+	Mimi Zohar <zohar@linux.ibm.com>,
+	Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
+	Stephen Boyd <swboyd@chromium.org>,
+	Vasant Hegde <vasant.hegde@amd.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Xiubo Li <xiubli@redhat.com>, linux-hardening@vger.kernel.org
+Subject: [GIT PULL] hardening updates for v6.7-rc1
+Message-ID: <202310300946.C0E11C5@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 
-Clearly, argc should be used
+Hi Linus,
 
-Signed-off-by: Konstantin Runov <runebone1@gmail.com>
----
- scripts/gcc-plugins/latent_entropy_plugin.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Please pull these kernel hardening updates for v6.7-rc1. As always,
+changes made outside of the more traditional kernel hardening areas of the
+tree are patches that were either explicitly asked to be carried by the
+respective maintainers or were reviewed by others but ignored by regular
+maintainers for the duration of the development window. One of the more
+voluminous set of changes is for adding the new __counted_by annotation[1]
+to gain run-time bounds checking of dynamically sized arrays with UBSan.
 
-diff --git a/scripts/gcc-plugins/latent_entropy_plugin.c b/scripts/gcc-plugins/latent_entropy_plugin.c
-index 39e86be60dd2..ff0b192be91f 100644
---- a/scripts/gcc-plugins/latent_entropy_plugin.c
-+++ b/scripts/gcc-plugins/latent_entropy_plugin.c
-@@ -17,7 +17,7 @@
-  *	if (argc <= 1)
-  *		printf("%s: no command arguments :(\n", *argv);
-  *	else
-- *		printf("%s: %d command arguments!\n", *argv, args - 1);
-+ *		printf("%s: %d command arguments!\n", *argv, argc - 1);
-  * }
-  *
-  * after:
-@@ -47,7 +47,7 @@
-  *		// perturb_local_entropy()
-  *	} else {
-  *		local_entropy ^= 3896280633962944730;
-- *		printf("%s: %d command arguments!\n", *argv, args - 1);
-+ *		printf("%s: %d command arguments!\n", *argv, argc - 1);
-  *	}
-  *
-  *	// latent_entropy_execute() 4.
+Thanks!
+
+-Kees
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/compiler_attributes.h?h=v6.6#n97
+
+The following changes since commit ce9ecca0238b140b88f43859b211c9fdfd8e5b70:
+
+  Linux 6.6-rc2 (2023-09-17 14:40:24 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/hardening-v6.7-rc1
+
+for you to fetch changes up to 9cca73d7b4bfec75b2fcef751015f31691afa792:
+
+  hwmon: (acpi_power_meter) replace open-coded kmemdup_nul (2023-10-24 14:10:53 -0700)
+
+----------------------------------------------------------------
+hardening updates for v6.7-rc1
+
+- Add LKDTM test for stuck CPUs (Mark Rutland)
+
+- Improve LKDTM selftest behavior under UBSan (Ricardo Cañuelo)
+
+- Refactor more 1-element arrays into flexible arrays (Gustavo A. R. Silva)
+
+- Analyze and replace strlcpy and strncpy uses (Justin Stitt, Azeem Shaikh)
+
+- Convert group_info.usage to refcount_t (Elena Reshetova)
+
+- Add __counted_by annotations (Kees Cook, Gustavo A. R. Silva)
+
+- Add Kconfig fragment for basic hardening options (Kees Cook, Lukas Bulwahn)
+
+- Fix randstruct GCC plugin performance mode to stay in groups (Kees Cook)
+
+- Fix strtomem() compile-time check for small sources (Kees Cook)
+
+----------------------------------------------------------------
+Azeem Shaikh (2):
+      init/version.c: Replace strlcpy with strscpy
+      kobject: Replace strlcpy with strscpy
+
+Elena Reshetova (1):
+      groups: Convert group_info.usage to refcount_t
+
+Gustavo A. R. Silva (5):
+      nouveau/svm: Replace one-element array with flexible-array member in struct nouveau_svm
+      nouveau/svm: Split assignment from if conditional
+      drm/gud: Use size_add() in call to struct_size()
+      usb: atm: Use size_add() in call to struct_size()
+      ima: Add __counted_by for struct modsig and use struct_size()
+
+Justin Stitt (13):
+      um,ethertap: Replace deprecated strncpy() with strscpy()
+      auxdisplay: panel: Replace deprecated strncpy() with strtomem_pad()
+      bus: fsl-mc: Replace deprecated strncpy() with strscpy_pad()
+      cpufreq: Replace deprecated strncpy() with strscpy()
+      cpuidle: dt: Replace deprecated strncpy() with strscpy()
+      firmware: tegra: bpmp: Replace deprecated strncpy() with strscpy_pad()
+      HID: prodikeys: Replace deprecated strncpy() with strscpy()
+      hwmon: (ibmpowernv) Replace deprecated strncpy() with memcpy()
+      hwmon: (asus_wmi_sensors) Replace deprecated strncpy() with strscpy()
+      EDAC/mc_sysfs: Replace deprecated strncpy() with memcpy()
+      isdn: replace deprecated strncpy with strscpy
+      isdn: kcapi: replace deprecated strncpy with strscpy_pad
+      hwmon: (acpi_power_meter) replace open-coded kmemdup_nul
+
+Kees Cook (32):
+      hardening: Provide Kconfig fragments for basic options
+      MAINTAINERS: hardening: Add __counted_by regex
+      accel/ivpu: Annotate struct ivpu_job with __counted_by
+      MAINTAINERS: hardening: Add Gustavo as Reviewer
+      ocfs2: Annotate struct ocfs2_slot_info with __counted_by
+      ceph: Annotate struct ceph_osd_request with __counted_by
+      afs: Annotate struct afs_permits with __counted_by
+      afs: Annotate struct afs_addr_list with __counted_by
+      usb: Annotate struct urb_priv with __counted_by
+      usb: gadget: f_fs: Annotate struct ffs_buffer with __counted_by
+      usb: gadget: f_midi: Annotate struct f_midi with __counted_by
+      drbd: Annotate struct fifo_buffer with __counted_by
+      dm raid: Annotate struct raid_set with __counted_by
+      dm crypt: Annotate struct crypt_config with __counted_by
+      dm: Annotate struct stripe_c with __counted_by
+      dm: Annotate struct dm_stat with __counted_by
+      dm: Annotate struct dm_bio_prison with __counted_by
+      nfs41: Annotate struct nfs4_file_layout_dsaddr with __counted_by
+      NFS/flexfiles: Annotate struct nfs4_ff_layout_segment with __counted_by
+      sparc: Annotate struct cpuinfo_tree with __counted_by
+      hwmon: Annotate struct gsc_hwmon_platform_data with __counted_by
+      virt: acrn: Annotate struct vm_memory_region_batch with __counted_by
+      KVM: Annotate struct kvm_irq_routing_table with __counted_by
+      irqchip/imx-intmux: Annotate struct intmux_data with __counted_by
+      drivers: thermal: tsens: Annotate struct tsens_priv with __counted_by
+      mailbox: zynqmp: Annotate struct zynqmp_ipi_pdata with __counted_by
+      randstruct: Fix gcc-plugin performance mode to stay in group
+      string: Adjust strtomem() logic to allow for smaller sources
+      MAINTAINERS: Include stackleak paths in hardening entry
+      virtio_console: Annotate struct port_buffer with __counted_by
+      kexec: Annotate struct crash_mem with __counted_by
+      reset: Annotate struct reset_control_array with __counted_by
+
+Lukas Bulwahn (1):
+      hardening: x86: drop reference to removed config AMD_IOMMU_V2
+
+Mark Rutland (1):
+      lkdtm/bugs: add test for panic() with stuck secondary CPUs
+
+Ricardo Cañuelo (1):
+      selftests/lkdtm: Disable CONFIG_UBSAN_TRAP in test config
+
+ MAINTAINERS                                   |  6 ++
+ arch/arm/configs/hardening.config             |  7 ++
+ arch/arm64/configs/hardening.config           | 22 ++++++
+ arch/powerpc/configs/hardening.config         | 10 +++
+ arch/sparc/kernel/cpumap.c                    |  2 +-
+ arch/um/os-Linux/drivers/ethertap_user.c      |  2 +-
+ arch/x86/configs/hardening.config             | 14 ++++
+ drivers/accel/ivpu/ivpu_job.h                 |  2 +-
+ drivers/auxdisplay/panel.c                    |  7 +-
+ drivers/block/drbd/drbd_int.h                 |  2 +-
+ drivers/bus/fsl-mc/dprc.c                     | 12 ++--
+ drivers/char/virtio_console.c                 |  2 +-
+ drivers/cpufreq/cpufreq.c                     |  4 +-
+ drivers/cpuidle/dt_idle_states.c              |  4 +-
+ drivers/edac/edac_mc_sysfs.c                  |  4 +-
+ drivers/firmware/tegra/bpmp-debugfs.c         |  4 +-
+ drivers/gpu/drm/gud/gud_pipe.c                |  2 +-
+ drivers/gpu/drm/nouveau/nouveau_svm.c         |  5 +-
+ drivers/hid/hid-prodikeys.c                   |  8 +--
+ drivers/hwmon/acpi_power_meter.c              |  5 +-
+ drivers/hwmon/asus_wmi_sensors.c              |  2 +-
+ drivers/hwmon/ibmpowernv.c                    |  2 +-
+ drivers/irqchip/irq-imx-intmux.c              |  2 +-
+ drivers/isdn/capi/kcapi.c                     |  4 +-
+ drivers/isdn/mISDN/clock.c                    |  2 +-
+ drivers/mailbox/zynqmp-ipi-mailbox.c          |  2 +-
+ drivers/md/dm-bio-prison-v1.c                 |  2 +-
+ drivers/md/dm-crypt.c                         |  2 +-
+ drivers/md/dm-raid.c                          |  2 +-
+ drivers/md/dm-stats.c                         |  2 +-
+ drivers/md/dm-stripe.c                        |  2 +-
+ drivers/misc/lkdtm/bugs.c                     | 30 +++++++-
+ drivers/reset/core.c                          |  4 +-
+ drivers/thermal/qcom/tsens.h                  |  2 +-
+ drivers/usb/atm/usbatm.c                      |  3 +-
+ drivers/usb/gadget/function/f_fs.c            |  2 +-
+ drivers/usb/gadget/function/f_midi.c          |  4 +-
+ drivers/usb/host/ohci.h                       |  2 +-
+ drivers/usb/host/xhci.h                       |  2 +-
+ drivers/virt/acrn/acrn_drv.h                  |  2 +-
+ drivers/virt/acrn/mm.c                        |  2 +-
+ fs/afs/internal.h                             |  4 +-
+ fs/nfs/filelayout/filelayout.h                |  2 +-
+ fs/nfs/flexfilelayout/flexfilelayout.h        |  2 +-
+ fs/ocfs2/slot_map.c                           |  2 +-
+ include/linux/ceph/osd_client.h               |  2 +-
+ include/linux/crash_core.h                    |  2 +-
+ include/linux/cred.h                          |  7 +-
+ include/linux/kvm_host.h                      |  2 +-
+ include/linux/platform_data/gsc_hwmon.h       |  2 +-
+ include/linux/string.h                        |  7 +-
+ init/version.c                                |  6 +-
+ kernel/configs/hardening.config               | 98 +++++++++++++++++++++++++++
+ kernel/cred.c                                 |  2 +-
+ kernel/groups.c                               |  2 +-
+ lib/kobject_uevent.c                          |  8 +--
+ scripts/gcc-plugins/randomize_layout_plugin.c | 11 ++-
+ security/integrity/ima/ima_modsig.c           |  6 +-
+ tools/testing/selftests/lkdtm/config          |  1 -
+ tools/testing/selftests/lkdtm/tests.txt       |  3 +-
+ 60 files changed, 280 insertions(+), 90 deletions(-)
+ create mode 100644 arch/arm/configs/hardening.config
+ create mode 100644 arch/arm64/configs/hardening.config
+ create mode 100644 arch/powerpc/configs/hardening.config
+ create mode 100644 arch/x86/configs/hardening.config
+ create mode 100644 kernel/configs/hardening.config
+
 -- 
-2.40.1
-
+Kees Cook
