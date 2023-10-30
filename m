@@ -1,269 +1,107 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 644E119446
-	for <linux-hardening@vger.kernel.org>; Mon, 30 Oct 2023 17:02:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B961419460
+	for <linux-hardening@vger.kernel.org>; Mon, 30 Oct 2023 17:20:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VK0GmCIq"
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A142BB3
-	for <linux-hardening@vger.kernel.org>; Mon, 30 Oct 2023 10:02:55 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1cc34c3420bso9239565ad.3
-        for <linux-hardening@vger.kernel.org>; Mon, 30 Oct 2023 10:02:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1698685375; x=1699290175; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yXEikiGWleMG1vf5W2vMzUdql/v6NvL8kEAoxYpaxGU=;
-        b=VK0GmCIqP71zu24avvtvpELgK1nDWRPyEDcao85bHQManbbYIEmWkeOa6gb47ZmwaL
-         O3vqnpgZWnsqld8viqVyx9w8rkLq74J6uJZZMH1Sv+HAF+tN+cqTFz+ZlGjMXtRL8/HS
-         Sv29lLAUEb1RJia7bDuFvC0+x3IP/6fVP0hgs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698685375; x=1699290175;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yXEikiGWleMG1vf5W2vMzUdql/v6NvL8kEAoxYpaxGU=;
-        b=bljZ6MeEW9tBAwgFBI+K7HIpbhamcgPGDQ8LkcHidYa2RdxiVIq4dIrYyDTPnn+9Qi
-         HLqzjfTrK8z2a/ElyMdV1Hk+Mphs5JcrK/pN3YBbWN+cEtJKLP4eGgiVGD/GwQRaQOQP
-         PWEleFfa9ohd88M73EwwNFBNvj43Z9x0j/um2Knvn6jB0e2gyxLQvDxgai1kgFF5Db4P
-         xaFDVzN517/2UAIcIw5B6yGptnMfktC+qkL5aPPfui6JGXc61oYlw6ecRSlihGhlRYiN
-         DI2kvRHxyWYneP24VU/YqDhrrg7j2JXIJYenQqoqN46nVvshV0VcqDrD+M6Jct6Ozb0c
-         zBrw==
-X-Gm-Message-State: AOJu0YyokQI5IOHKRLsk9V23cRINOriPn/DmdEB7PhIWL1uXSlYho+/r
-	VeuGnGHWS6AbVDeuVGxXdXCavw==
-X-Google-Smtp-Source: AGHT+IEDfkFK/YUrGM5UVqR7nWfsnnWui07nD9uJwqnxipParAfYoa5K9tzNeGPq+fqfK/2ui1LKuA==
-X-Received: by 2002:a17:902:bf44:b0:1ca:c490:8537 with SMTP id u4-20020a170902bf4400b001cac4908537mr7821244pls.14.1698685375020;
-        Mon, 30 Oct 2023 10:02:55 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id b11-20020a170902d50b00b001c625d6ffccsm2627300plg.129.2023.10.30.10.02.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Oct 2023 10:02:54 -0700 (PDT)
-Date: Mon, 30 Oct 2023 10:02:53 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-	Elena Reshetova <elena.reshetova@intel.com>,
-	Ricardo =?iso-8859-1?Q?Ca=F1uelo?= <ricardo.canuelo@collabora.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Justin Stitt <justinstitt@google.com>,
-	Azeem Shaikh <azeemshaikh38@gmail.com>,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-	Amit Shah <amit@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Baoquan He <bhe@redhat.com>, David Windsor <dwindsor@gmail.com>,
-	Douglas Anderson <dianders@chromium.org>,
-	Hans Liljestrand <ishkamiel@gmail.com>,
-	Joseph Qi <joseph.qi@linux.alibaba.com>,
-	Lukas Loidolt <e1634039@student.tuwien.ac.at>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Michal Simek <michal.simek@amd.com>,
-	Mimi Zohar <zohar@linux.ibm.com>,
-	Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
-	Stephen Boyd <swboyd@chromium.org>,
-	Vasant Hegde <vasant.hegde@amd.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Xiubo Li <xiubli@redhat.com>, linux-hardening@vger.kernel.org
-Subject: [GIT PULL] hardening updates for v6.7-rc1
-Message-ID: <202310300946.C0E11C5@keescook>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rde9Dv9j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3464BC433C8;
+	Mon, 30 Oct 2023 17:20:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1698686448;
+	bh=J/BDKDmt4ytWYut9+XphDd+OA2xYRaH3LWnmAbLoFQE=;
+	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+	b=Rde9Dv9j3N672wNfHkJUA0SIvXLKmsAIx2651HHsMohDpXIk6yRPthyTABuWJqL7w
+	 f5Ap7RlKuHXOqxPJmFFyk+TfPHMGPnmRezQAwe6eWsZR0WZ2rOW7e+Hmn2Gr2YRDad
+	 Q/DAoBJ6qX62/83GIuNVYlNHJx3OpOm5E2PRmI/wd5w1ZSeOd96daq/Drl1bLvIuT5
+	 VbVMISEFqX6DH1gdc70xHkV4OHXJZgEQknZ/IbYQhemtpNBXaQNvwjqxTyGzrtjn3u
+	 1KJvTE8ELQVZJDfDOK8NiBz4C/ngUgWlVV0tvfOTRI7Rj7RSMcWMFuvoTr0vNlIyzY
+	 ro/6w+2ZpJemA==
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v3 1/2] wifi: brcm80211: replace deprecated strncpy with
+ strscpy
+From: Kalle Valo <kvalo@kernel.org>
+In-Reply-To: 
+ <20231017-strncpy-drivers-net-wireless-broadcom-brcm80211-brcmfmac-cfg80211-c-v3-1-af780d74ae38@google.com>
+References: 
+ <20231017-strncpy-drivers-net-wireless-broadcom-brcm80211-brcmfmac-cfg80211-c-v3-1-af780d74ae38@google.com>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Arend van Spriel <aspriel@gmail.com>,
+ Franky Lin <franky.lin@broadcom.com>,
+ Hante Meuleman <hante.meuleman@broadcom.com>, linux-wireless@vger.kernel.org,
+ brcm80211-dev-list.pdl@broadcom.com, SHA-cyfmac-dev-list@infineon.com,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ Justin Stitt <justinstitt@google.com>
+User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
+Message-ID: <169868644429.1993746.5520695482478737730.kvalo@kernel.org>
+Date: Mon, 30 Oct 2023 17:20:45 +0000 (UTC)
 
-Hi Linus,
+Justin Stitt <justinstitt@google.com> wrote:
 
-Please pull these kernel hardening updates for v6.7-rc1. As always,
-changes made outside of the more traditional kernel hardening areas of the
-tree are patches that were either explicitly asked to be carried by the
-respective maintainers or were reviewed by others but ignored by regular
-maintainers for the duration of the development window. One of the more
-voluminous set of changes is for adding the new __counted_by annotation[1]
-to gain run-time bounds checking of dynamically sized arrays with UBSan.
+> Let's move away from using strncpy and instead favor a less ambiguous
+> and more robust interface.
+> 
+> For ifp->ndev->name, we expect ifp->ndev->name to be NUL-terminated based
+> on its use in format strings within core.c:
+> 67 |       char *brcmf_ifname(struct brcmf_if *ifp)
+> 68 |       {
+> 69 |            if (!ifp)
+> 70 |                    return "<if_null>";
+> 71 |
+> 72 |            if (ifp->ndev)
+> 73 |                    return ifp->ndev->name;
+> 74 |
+> 75 |            return "<if_none>";
+> 76 |       }
+> ...
+> 288 |       static netdev_tx_t brcmf_netdev_start_xmit(struct sk_buff *skb,
+> 289 |                                              struct net_device *ndev) {
+> ...
+> 330 |       brcmf_dbg(INFO, "%s: insufficient headroom (%d)\n",
+> 331 |                 brcmf_ifname(ifp), head_delta);
+> ...
+> 336 |       bphy_err(drvr, "%s: failed to expand headroom\n",
+> 337 |                brcmf_ifname(ifp));
+> 
+> For di->name, we expect di->name to be NUL-terminated based on its usage
+> with format strings:
+> |       brcms_dbg_dma(di->core,
+> |                     "%s: DMA64 tx doesn't have AE set\n",
+> |                     di->name);
+> 
+> Looking at its allocation we can see that it is already zero-allocated
+> which means NUL-padding is not required:
+> |       di = kzalloc(sizeof(struct dma_info), GFP_ATOMIC);
+> 
+> For wlc->modulecb[i].name, we expect each name in wlc->modulecb to be
+> NUL-terminated based on their usage with strcmp():
+> |       if (!strcmp(wlc->modulecb[i].name, name) &&
+> 
+> NUL-padding is not required as wlc is zero-allocated in:
+> brcms_c_attach_malloc() ->
+> |       wlc = kzalloc(sizeof(struct brcms_c_info), GFP_ATOMIC);
+> 
+> For all these cases, a suitable replacement is `strscpy` due to the fact
+> that it guarantees NUL-termination on the destination buffer without
+> unnecessarily NUL-padding.
+> 
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Thanks!
+2 patches applied to wireless-next.git, thanks.
 
--Kees
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/compiler_attributes.h?h=v6.6#n97
-
-The following changes since commit ce9ecca0238b140b88f43859b211c9fdfd8e5b70:
-
-  Linux 6.6-rc2 (2023-09-17 14:40:24 -0700)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/hardening-v6.7-rc1
-
-for you to fetch changes up to 9cca73d7b4bfec75b2fcef751015f31691afa792:
-
-  hwmon: (acpi_power_meter) replace open-coded kmemdup_nul (2023-10-24 14:10:53 -0700)
-
-----------------------------------------------------------------
-hardening updates for v6.7-rc1
-
-- Add LKDTM test for stuck CPUs (Mark Rutland)
-
-- Improve LKDTM selftest behavior under UBSan (Ricardo Cañuelo)
-
-- Refactor more 1-element arrays into flexible arrays (Gustavo A. R. Silva)
-
-- Analyze and replace strlcpy and strncpy uses (Justin Stitt, Azeem Shaikh)
-
-- Convert group_info.usage to refcount_t (Elena Reshetova)
-
-- Add __counted_by annotations (Kees Cook, Gustavo A. R. Silva)
-
-- Add Kconfig fragment for basic hardening options (Kees Cook, Lukas Bulwahn)
-
-- Fix randstruct GCC plugin performance mode to stay in groups (Kees Cook)
-
-- Fix strtomem() compile-time check for small sources (Kees Cook)
-
-----------------------------------------------------------------
-Azeem Shaikh (2):
-      init/version.c: Replace strlcpy with strscpy
-      kobject: Replace strlcpy with strscpy
-
-Elena Reshetova (1):
-      groups: Convert group_info.usage to refcount_t
-
-Gustavo A. R. Silva (5):
-      nouveau/svm: Replace one-element array with flexible-array member in struct nouveau_svm
-      nouveau/svm: Split assignment from if conditional
-      drm/gud: Use size_add() in call to struct_size()
-      usb: atm: Use size_add() in call to struct_size()
-      ima: Add __counted_by for struct modsig and use struct_size()
-
-Justin Stitt (13):
-      um,ethertap: Replace deprecated strncpy() with strscpy()
-      auxdisplay: panel: Replace deprecated strncpy() with strtomem_pad()
-      bus: fsl-mc: Replace deprecated strncpy() with strscpy_pad()
-      cpufreq: Replace deprecated strncpy() with strscpy()
-      cpuidle: dt: Replace deprecated strncpy() with strscpy()
-      firmware: tegra: bpmp: Replace deprecated strncpy() with strscpy_pad()
-      HID: prodikeys: Replace deprecated strncpy() with strscpy()
-      hwmon: (ibmpowernv) Replace deprecated strncpy() with memcpy()
-      hwmon: (asus_wmi_sensors) Replace deprecated strncpy() with strscpy()
-      EDAC/mc_sysfs: Replace deprecated strncpy() with memcpy()
-      isdn: replace deprecated strncpy with strscpy
-      isdn: kcapi: replace deprecated strncpy with strscpy_pad
-      hwmon: (acpi_power_meter) replace open-coded kmemdup_nul
-
-Kees Cook (32):
-      hardening: Provide Kconfig fragments for basic options
-      MAINTAINERS: hardening: Add __counted_by regex
-      accel/ivpu: Annotate struct ivpu_job with __counted_by
-      MAINTAINERS: hardening: Add Gustavo as Reviewer
-      ocfs2: Annotate struct ocfs2_slot_info with __counted_by
-      ceph: Annotate struct ceph_osd_request with __counted_by
-      afs: Annotate struct afs_permits with __counted_by
-      afs: Annotate struct afs_addr_list with __counted_by
-      usb: Annotate struct urb_priv with __counted_by
-      usb: gadget: f_fs: Annotate struct ffs_buffer with __counted_by
-      usb: gadget: f_midi: Annotate struct f_midi with __counted_by
-      drbd: Annotate struct fifo_buffer with __counted_by
-      dm raid: Annotate struct raid_set with __counted_by
-      dm crypt: Annotate struct crypt_config with __counted_by
-      dm: Annotate struct stripe_c with __counted_by
-      dm: Annotate struct dm_stat with __counted_by
-      dm: Annotate struct dm_bio_prison with __counted_by
-      nfs41: Annotate struct nfs4_file_layout_dsaddr with __counted_by
-      NFS/flexfiles: Annotate struct nfs4_ff_layout_segment with __counted_by
-      sparc: Annotate struct cpuinfo_tree with __counted_by
-      hwmon: Annotate struct gsc_hwmon_platform_data with __counted_by
-      virt: acrn: Annotate struct vm_memory_region_batch with __counted_by
-      KVM: Annotate struct kvm_irq_routing_table with __counted_by
-      irqchip/imx-intmux: Annotate struct intmux_data with __counted_by
-      drivers: thermal: tsens: Annotate struct tsens_priv with __counted_by
-      mailbox: zynqmp: Annotate struct zynqmp_ipi_pdata with __counted_by
-      randstruct: Fix gcc-plugin performance mode to stay in group
-      string: Adjust strtomem() logic to allow for smaller sources
-      MAINTAINERS: Include stackleak paths in hardening entry
-      virtio_console: Annotate struct port_buffer with __counted_by
-      kexec: Annotate struct crash_mem with __counted_by
-      reset: Annotate struct reset_control_array with __counted_by
-
-Lukas Bulwahn (1):
-      hardening: x86: drop reference to removed config AMD_IOMMU_V2
-
-Mark Rutland (1):
-      lkdtm/bugs: add test for panic() with stuck secondary CPUs
-
-Ricardo Cañuelo (1):
-      selftests/lkdtm: Disable CONFIG_UBSAN_TRAP in test config
-
- MAINTAINERS                                   |  6 ++
- arch/arm/configs/hardening.config             |  7 ++
- arch/arm64/configs/hardening.config           | 22 ++++++
- arch/powerpc/configs/hardening.config         | 10 +++
- arch/sparc/kernel/cpumap.c                    |  2 +-
- arch/um/os-Linux/drivers/ethertap_user.c      |  2 +-
- arch/x86/configs/hardening.config             | 14 ++++
- drivers/accel/ivpu/ivpu_job.h                 |  2 +-
- drivers/auxdisplay/panel.c                    |  7 +-
- drivers/block/drbd/drbd_int.h                 |  2 +-
- drivers/bus/fsl-mc/dprc.c                     | 12 ++--
- drivers/char/virtio_console.c                 |  2 +-
- drivers/cpufreq/cpufreq.c                     |  4 +-
- drivers/cpuidle/dt_idle_states.c              |  4 +-
- drivers/edac/edac_mc_sysfs.c                  |  4 +-
- drivers/firmware/tegra/bpmp-debugfs.c         |  4 +-
- drivers/gpu/drm/gud/gud_pipe.c                |  2 +-
- drivers/gpu/drm/nouveau/nouveau_svm.c         |  5 +-
- drivers/hid/hid-prodikeys.c                   |  8 +--
- drivers/hwmon/acpi_power_meter.c              |  5 +-
- drivers/hwmon/asus_wmi_sensors.c              |  2 +-
- drivers/hwmon/ibmpowernv.c                    |  2 +-
- drivers/irqchip/irq-imx-intmux.c              |  2 +-
- drivers/isdn/capi/kcapi.c                     |  4 +-
- drivers/isdn/mISDN/clock.c                    |  2 +-
- drivers/mailbox/zynqmp-ipi-mailbox.c          |  2 +-
- drivers/md/dm-bio-prison-v1.c                 |  2 +-
- drivers/md/dm-crypt.c                         |  2 +-
- drivers/md/dm-raid.c                          |  2 +-
- drivers/md/dm-stats.c                         |  2 +-
- drivers/md/dm-stripe.c                        |  2 +-
- drivers/misc/lkdtm/bugs.c                     | 30 +++++++-
- drivers/reset/core.c                          |  4 +-
- drivers/thermal/qcom/tsens.h                  |  2 +-
- drivers/usb/atm/usbatm.c                      |  3 +-
- drivers/usb/gadget/function/f_fs.c            |  2 +-
- drivers/usb/gadget/function/f_midi.c          |  4 +-
- drivers/usb/host/ohci.h                       |  2 +-
- drivers/usb/host/xhci.h                       |  2 +-
- drivers/virt/acrn/acrn_drv.h                  |  2 +-
- drivers/virt/acrn/mm.c                        |  2 +-
- fs/afs/internal.h                             |  4 +-
- fs/nfs/filelayout/filelayout.h                |  2 +-
- fs/nfs/flexfilelayout/flexfilelayout.h        |  2 +-
- fs/ocfs2/slot_map.c                           |  2 +-
- include/linux/ceph/osd_client.h               |  2 +-
- include/linux/crash_core.h                    |  2 +-
- include/linux/cred.h                          |  7 +-
- include/linux/kvm_host.h                      |  2 +-
- include/linux/platform_data/gsc_hwmon.h       |  2 +-
- include/linux/string.h                        |  7 +-
- init/version.c                                |  6 +-
- kernel/configs/hardening.config               | 98 +++++++++++++++++++++++++++
- kernel/cred.c                                 |  2 +-
- kernel/groups.c                               |  2 +-
- lib/kobject_uevent.c                          |  8 +--
- scripts/gcc-plugins/randomize_layout_plugin.c | 11 ++-
- security/integrity/ima/ima_modsig.c           |  6 +-
- tools/testing/selftests/lkdtm/config          |  1 -
- tools/testing/selftests/lkdtm/tests.txt       |  3 +-
- 60 files changed, 280 insertions(+), 90 deletions(-)
- create mode 100644 arch/arm/configs/hardening.config
- create mode 100644 arch/arm64/configs/hardening.config
- create mode 100644 arch/powerpc/configs/hardening.config
- create mode 100644 arch/x86/configs/hardening.config
- create mode 100644 kernel/configs/hardening.config
+9d0d0a207040 wifi: brcm80211: replace deprecated strncpy with strscpy
+a614f9579705 wifi: brcmsmac: replace deprecated strncpy with memcpy
 
 -- 
-Kees Cook
+https://patchwork.kernel.org/project/linux-wireless/patch/20231017-strncpy-drivers-net-wireless-broadcom-brcm80211-brcmfmac-cfg80211-c-v3-1-af780d74ae38@google.com/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
