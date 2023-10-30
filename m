@@ -1,160 +1,140 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F84523C3
-	for <linux-hardening@vger.kernel.org>; Mon, 30 Oct 2023 21:43:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 472F719442
+	for <linux-hardening@vger.kernel.org>; Mon, 30 Oct 2023 21:44:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fUFX6S1F"
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60AEDED
-	for <linux-hardening@vger.kernel.org>; Mon, 30 Oct 2023 14:43:29 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-da31ec03186so1125982276.1
-        for <linux-hardening@vger.kernel.org>; Mon, 30 Oct 2023 14:43:29 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="b8L1xxz+"
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EBD0FA
+	for <linux-hardening@vger.kernel.org>; Mon, 30 Oct 2023 14:44:44 -0700 (PDT)
+Received: by mail-lj1-x229.google.com with SMTP id 38308e7fff4ca-2c515527310so69691661fa.2
+        for <linux-hardening@vger.kernel.org>; Mon, 30 Oct 2023 14:44:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698702208; x=1699307008; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=e0/kVkiQLU+xIRwt52fqnoXoD0xR1x3vYThaNEUFKi4=;
-        b=fUFX6S1FHiL4JEaW/hEsZKmn6RQRRxqm29qviKpUAA9k7GTUgJ1a0/v2rwnhqKaOph
-         wfTsjdrhFNK5yTofrEIyb8YInqbIHYWCc11ykvkIi9dgvmATf4xiqdsruBoSTF0E1UIv
-         Guxmt97LV/78/CdsuRxH3B9Jn2T2umjDV7ildiux+tzlWSXdNqHGs3goMHLEValVZsrU
-         eVk1syHgeEIm4tTRCuQH8x7yOx3dlPanhd6cYya182BSZd1ixaVbXtfAdvzc7gvAiFtb
-         uLHXvloSKqP3B95fOW2Du8vCTgtVTdWRnPqI1QH8o3DibQz93biK3WooGjwS80R8DtHI
-         nzOA==
+        d=chromium.org; s=google; t=1698702283; x=1699307083; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:user-agent:from:references
+         :in-reply-to:mime-version:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vV6LUALjEgXum7J0cVqVp/nxnO2QeGajqSPsDE93otM=;
+        b=b8L1xxz+GnVFQNWNj7UYmBrXLMk0m8IHfDRdJO+WReo0znAtSD2f3BfZ2mIq1/qnls
+         cP553R5uoDYDDYznRvgZ9PAXiVsXlnCZEWzqexf+O5yrfuWlkymCVBRcFFx84IwdgEhw
+         YM6XvvlO4WWuDHo7uTxzMvH5zsuU4HVQJqAKo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698702208; x=1699307008;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=e0/kVkiQLU+xIRwt52fqnoXoD0xR1x3vYThaNEUFKi4=;
-        b=rAgCmoOTsOM6uAu+A5NTn4KxR+cuCsvxag9O5Wf/do0UGSAAApfukKrLlZ2qI/PaR8
-         mDbxhGFX4+rj5EYpIwVZSc4Bhh91wnZgspEF+F4Emn/Ybg3JwYbKzOyszSG0991u5Adh
-         6baIq81qF8aDECbD+GBJji95E8QmltepQ87BWLV4w3Mx2FgQiqRztPZEg+7NjcwOyHjz
-         bc75dDCcKBkCvNzQbGv7qYtMitXYIceKQe8lQLofU457BnhksaiyjXYUZc9dFrlRJAep
-         MODb6b8SjgZUi71IX350kHbU3OU+6cAebbOFoFEXnLOeqPOc1Xj4yaWHwbLKIOg+yFz+
-         uduQ==
-X-Gm-Message-State: AOJu0YzUH2J/hsaxAb+MTg/wRHIg1lJZiVBGkwJ/xd2Q3vjEPuYOzcCW
-	YOF1PCoUizxXwLwjgJEIL3p+w2V+iG/1Hr0bPw==
-X-Google-Smtp-Source: AGHT+IEXUXlPzoW8LU7PFVYlU3cL9csxmvgRBQ/QbNnZhZiLmayN6jB8H6VklsO7nx8Pl+1pBBHGDfMzZVfBBEi4PQ==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a25:a526:0:b0:da0:c924:4fdc with SMTP
- id h35-20020a25a526000000b00da0c9244fdcmr19773ybi.6.1698702208605; Mon, 30
- Oct 2023 14:43:28 -0700 (PDT)
-Date: Mon, 30 Oct 2023 21:43:20 +0000
+        d=1e100.net; s=20230601; t=1698702283; x=1699307083;
+        h=cc:to:subject:message-id:date:user-agent:from:references
+         :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vV6LUALjEgXum7J0cVqVp/nxnO2QeGajqSPsDE93otM=;
+        b=dG1/230b9kmiz8dGOEPGydg/5iYeT1jtU9hz+is9aTfIrGw0OBtudBv3OzOpW+9VWa
+         iqSHC4yuHfMcGq6qVIVCCumhdV1biDPRyhr+RVfPIk/82jBxdP9hDWrWWIptls6FRDeX
+         FMC+wI0sgyMkOsGQGURa9dT/w2B890GVz9t0RXiHZyCN4JdBKDhKUCGiC2mRvthBx8CI
+         mu0c9QXBCIWT+EXiXkV2M0+sFql2MTK4O/4ezmdFD6Rti9ssXwaabO8U/ay/Obs98T5l
+         l6jPCkFMSJQyc31VHJpforTtPmvtP1yNRk0lp8KZ+zP+HRIxZkqo83mFwwF87FQ3IRnd
+         yBAA==
+X-Gm-Message-State: AOJu0Yz0XCaciFsJ0KEtzdSOsBMzIrAwmSXG9W6UFtrFDkINq0laflCE
+	rtpA5Y038EO9K+Cp+aeH5djacFEsVToNcp72AeJAPA==
+X-Google-Smtp-Source: AGHT+IHqSIzjgZOzASsrpcTN+znEYKknuoJ5PzARcbqh9kTTYG2hb257Ok/CF0rJYa5zdY6TUg1dKd9LH/gRHKUI/po=
+X-Received: by 2002:a2e:9812:0:b0:2c5:844:9e75 with SMTP id
+ a18-20020a2e9812000000b002c508449e75mr8625502ljj.8.1698702282875; Mon, 30 Oct
+ 2023 14:44:42 -0700 (PDT)
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 30 Oct 2023 14:44:42 -0700
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAHcjQGUC/1XNQQ6CMBCF4auQWTNJAW2EqxBiSjviLChkpmk0h
- Ltb3bl73+b9BygJk8JQHSCUWXmLBU1dgX+6uBByKIbWtF1jOoOaJPr9jUE4kyiqV0ae1/wd97S kf3i8uX4Ohq4Xay2U213owa9fcpzO8wNyWWNnggAAAA==
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1698702207; l=3953;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=kOlkCIhi5msaDl4tWCdp680vEgZukUJWPpGc5Vel+XE=; b=Vh/XP+Dr4/JhN7ikIfweMhlTgzvJG5U7crnDcmM2QYApm4PKVv1/jXqzKmK5mqk409uzLD1Wg
- qe8yhsqwFwAAyBXiU35NozThSakmhUB28vdSQY/kuqTvIo/g0b8V3UV
-X-Mailer: b4 0.12.3
-Message-ID: <20231030-strncpy-drivers-scsi-ibmvscsi_tgt-ibmvscsi_tgt-c-v1-1-859b5ce257fd@google.com>
-Subject: [PATCH] scsi: ibmvscsi_tgt: replace deprecated strncpy with strscpy
-From: Justin Stitt <justinstitt@google.com>
-To: Michael Cyr <mikecyr@linux.ibm.com>, "James E.J. Bottomley" <jejb@linux.ibm.com>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: linux-scsi@vger.kernel.org, target-devel@vger.kernel.org, 
+MIME-Version: 1.0
+In-Reply-To: <20231028162638.5b477ded@jic23-huawei>
+References: <20231026-strncpy-drivers-iio-proximity-sx9324-c-v2-1-cee6e5db700c@google.com>
+ <20231028162638.5b477ded@jic23-huawei>
+From: Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.10
+Date: Mon, 30 Oct 2023 14:44:42 -0700
+Message-ID: <CAE-0n51eAH1tcqXVeReavq0US-Th2qwC_s_uAzRKTpSG-kXuwA@mail.gmail.com>
+Subject: Re: [PATCH v2] iio: sx9324: avoid copying property strings
+To: Jonathan Cameron <jic23@kernel.org>, Justin Stitt <justinstitt@google.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, linux-iio@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+	Gwendal Grignou <gwendal@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 
-strncpy() is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous string
-interfaces.
+Quoting Jonathan Cameron (2023-10-28 08:26:38)
+> On Thu, 26 Oct 2023 23:53:28 +0000
+> Justin Stitt <justinstitt@google.com> wrote:
+>
+> > We're doing some needless string copies when trying to assign the proper
+> > `prop` string. We can make `prop` a const char* and simply assign to
+> > string literals.
+> >
+> > For the case where a format string is used, let's allocate some memory
+> > via kasprintf() and point prop to it.
+> >
+> > This also cleans up some deprecated strncpy() uses [1].
+> >
+> > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> > Link: https://github.com/KSPP/linux/issues/90
+> > Cc: linux-hardening@vger.kernel.org
+> > Signed-off-by: Justin Stitt <justinstitt@google.com>
+>
+> Seems reasonable to me.
+>
+> +CC Gwendal (+ Stephen) as it's Gwendal's driver and I think they are still actively
+> maintaining it.
 
-We don't need the NUL-padding behavior that strncpy() provides as vscsi
-is NUL-allocated in ibmvscsis_probe() which proceeds to call
-ibmvscsis_adapter_info():
-|       vscsi = kzalloc(sizeof(*vscsi), GFP_KERNEL);
+Thanks! I have some review comments.
 
-ibmvscsis_probe() -> ibmvscsis_handle_crq() -> ibmvscsis_parse_command()
--> ibmvscsis_mad() -> ibmvscsis_process_mad() -> ibmvscsis_adapter_info()
+> > diff --git a/drivers/iio/proximity/sx9324.c b/drivers/iio/proximity/sx9324.c
+> > index 438f9c9aba6e..c8547035cb47 100644
+> > --- a/drivers/iio/proximity/sx9324.c
+> > +++ b/drivers/iio/proximity/sx9324.c
+> > @@ -885,7 +885,7 @@ sx9324_get_default_reg(struct device *dev, int idx,
+> >  #define SX9324_RESOLUTION_DEF "semtech,ph01-resolution"
+> >  #define SX9324_PROXRAW_DEF "semtech,ph01-proxraw-strength"
+> >       unsigned int pin_defs[SX9324_NUM_PINS];
+> > -     char prop[] = SX9324_PROXRAW_DEF;
+> > +     const char *prop = SX9324_PROXRAW_DEF;
 
-Following the same idea, `partition_name` is defiend as:
-|       static char partition_name[PARTITION_NAMELEN] = "UNKNOWN";
+Do we need this define anymore, or the initialization?
 
-... which is NUL-padded already, meaning strscpy() is the best option.
+> >       u32 start = 0, raw = 0, pos = 0;
+> >       int ret, count, ph, pin;
+> >       const char *res;
+> > @@ -899,7 +899,7 @@ sx9324_get_default_reg(struct device *dev, int idx,
+> >       case SX9324_REG_AFE_PH2:
+> >       case SX9324_REG_AFE_PH3:
+> >               ph = reg_def->reg - SX9324_REG_AFE_PH0;
+> > -             snprintf(prop, ARRAY_SIZE(prop), "semtech,ph%d-pin", ph);
+> > +             prop = kasprintf(GFP_KERNEL, "semtech,ph%d-pin", ph);
 
-Considering the above, a suitable replacement is `strscpy` [2] due to
-the fact that it guarantees NUL-termination on the destination buffer
-without unnecessarily NUL-padding.
+Do we not care if the allocation fails? We just use the default?
 
-However, for cap->name let's use strscpy_pad as cap is allocated via
-dma_alloc_coherent():
-|       cap = dma_alloc_coherent(&vscsi->dma_dev->dev, olen, &token,
-|                                GFP_ATOMIC);
+> >
+> >               count = device_property_count_u32(dev, prop);
+> >               if (count != ARRAY_SIZE(pin_defs))
+> > @@ -913,6 +913,7 @@ sx9324_get_default_reg(struct device *dev, int idx,
+> >                       raw |= (pin_defs[pin] << (2 * pin)) &
+> >                              SX9324_REG_AFE_PH0_PIN_MASK(pin);
+> >               reg_def->def = raw;
+> > +             kfree(prop);
 
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Note: build-tested only.
+We need to free it in other places too, like if the count doesn't match.
+It may be easier to extract this section and just have 4 string
+literals.
 
-Found with: $ rg "strncpy\("
----
- drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+	switch (reg_def->reg) {
+        case SX9324_REG_AFE_PH0:
+		reg_def = sx9324_parse_phase_prop(dev, reg_def, "semtech,ph0-pin");
+		break;
+        case SX9324_REG_AFE_PH1:
+		reg_def = sx9324_parse_phase_prop(dev, reg_def, "semtech,ph1-pin");
+		break;
+        case SX9324_REG_AFE_PH2:
+		reg_def = sx9324_parse_phase_prop(dev, reg_def, "semtech,ph2-pin");
+		break;
+        case SX9324_REG_AFE_PH3:
+		reg_def = sx9324_parse_phase_prop(dev, reg_def, "semtech,ph3-pin");
+		break;
 
-diff --git a/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c b/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
-index 385f812b8793..cd223ef696e5 100644
---- a/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
-+++ b/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
-@@ -1551,17 +1551,17 @@ static long ibmvscsis_adapter_info(struct scsi_info *vscsi,
- 	if (vscsi->client_data.partition_number == 0)
- 		vscsi->client_data.partition_number =
- 			be32_to_cpu(info->partition_number);
--	strncpy(vscsi->client_data.srp_version, info->srp_version,
-+	strscpy(vscsi->client_data.srp_version, info->srp_version,
- 		sizeof(vscsi->client_data.srp_version));
--	strncpy(vscsi->client_data.partition_name, info->partition_name,
-+	strscpy(vscsi->client_data.partition_name, info->partition_name,
- 		sizeof(vscsi->client_data.partition_name));
- 	vscsi->client_data.mad_version = be32_to_cpu(info->mad_version);
- 	vscsi->client_data.os_type = be32_to_cpu(info->os_type);
- 
- 	/* Copy our info */
--	strncpy(info->srp_version, SRP_VERSION,
-+	strscpy(info->srp_version, SRP_VERSION,
- 		sizeof(info->srp_version));
--	strncpy(info->partition_name, vscsi->dds.partition_name,
-+	strscpy(info->partition_name, vscsi->dds.partition_name,
- 		sizeof(info->partition_name));
- 	info->partition_number = cpu_to_be32(vscsi->dds.partition_num);
- 	info->mad_version = cpu_to_be32(MAD_VERSION_1);
-@@ -1645,8 +1645,8 @@ static int ibmvscsis_cap_mad(struct scsi_info *vscsi, struct iu_entry *iue)
- 			 be64_to_cpu(mad->buffer),
- 			 vscsi->dds.window[LOCAL].liobn, token);
- 	if (rc == H_SUCCESS) {
--		strncpy(cap->name, dev_name(&vscsi->dma_dev->dev),
--			SRP_MAX_LOC_LEN);
-+		strscpy_pad(cap->name, dev_name(&vscsi->dma_dev->dev),
-+			sizeof(cap->name));
- 
- 		len = olen - min_len;
- 		status = VIOSRP_MAD_SUCCESS;
-@@ -3650,7 +3650,7 @@ static int ibmvscsis_get_system_info(void)
- 
- 	name = of_get_property(rootdn, "ibm,partition-name", NULL);
- 	if (name)
--		strncpy(partition_name, name, sizeof(partition_name));
-+		strscpy(partition_name, name, sizeof(partition_name));
- 
- 	num = of_get_property(rootdn, "ibm,partition-no", NULL);
- 	if (num)
-
----
-base-commit: ffc253263a1375a65fa6c9f62a893e9767fbebfa
-change-id: 20231030-strncpy-drivers-scsi-ibmvscsi_tgt-ibmvscsi_tgt-c-8a9bd0e54666
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
-
+> >       case SX9324_REG_AFE_CTRL0:
+> >               ret = device_property_read_string(dev,
