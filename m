@@ -1,22 +1,22 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B961419460
-	for <linux-hardening@vger.kernel.org>; Mon, 30 Oct 2023 17:20:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D0971946E
+	for <linux-hardening@vger.kernel.org>; Mon, 30 Oct 2023 17:24:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rde9Dv9j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3464BC433C8;
-	Mon, 30 Oct 2023 17:20:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j5H8ZAaD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96856C433C7;
+	Mon, 30 Oct 2023 17:24:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698686448;
-	bh=J/BDKDmt4ytWYut9+XphDd+OA2xYRaH3LWnmAbLoFQE=;
+	s=k20201202; t=1698686698;
+	bh=PK/A8z3yZbNpKpLD9q6y6ISaFX6It4ni4b4D7mCk3SI=;
 	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-	b=Rde9Dv9j3N672wNfHkJUA0SIvXLKmsAIx2651HHsMohDpXIk6yRPthyTABuWJqL7w
-	 f5Ap7RlKuHXOqxPJmFFyk+TfPHMGPnmRezQAwe6eWsZR0WZ2rOW7e+Hmn2Gr2YRDad
-	 Q/DAoBJ6qX62/83GIuNVYlNHJx3OpOm5E2PRmI/wd5w1ZSeOd96daq/Drl1bLvIuT5
-	 VbVMISEFqX6DH1gdc70xHkV4OHXJZgEQknZ/IbYQhemtpNBXaQNvwjqxTyGzrtjn3u
-	 1KJvTE8ELQVZJDfDOK8NiBz4C/ngUgWlVV0tvfOTRI7Rj7RSMcWMFuvoTr0vNlIyzY
-	 ro/6w+2ZpJemA==
+	b=j5H8ZAaD84BLwmy67QicRyv36dH42wsdA20UkFF2a8aLZF0Fxe9xRJ0bJg0BnCkJS
+	 XtIXZgPI/7CAzoObiWFC12KpazElRzs+9DcWe5XhaErNyOnv4Q3G04Q/lkpwTSUHcj
+	 smJ7LWRJfPobgmJzENxNzM2LYJ7RT/GWSWw5RkDSVYmviwm6eqqHZB8wsJMtZd0Pyr
+	 LIw/rCnZqFivwsVuz8uNiO/tRLovFc87oJy0HpctYCGmaJEsfW6U+1S08CaphpOw4r
+	 8tjrnyTHnTK26XN95CJNpDD05VX6Kc9mx2tS9mpqIxp6TzYGOtZTcy0QFiT39U1n3e
+	 wXXKNAvOHsv9g==
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -25,83 +25,67 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v3 1/2] wifi: brcm80211: replace deprecated strncpy with
- strscpy
+Subject: Re: [v2] wifi: airo: replace deprecated strncpy with strscpy_pad
 From: Kalle Valo <kvalo@kernel.org>
 In-Reply-To: 
- <20231017-strncpy-drivers-net-wireless-broadcom-brcm80211-brcmfmac-cfg80211-c-v3-1-af780d74ae38@google.com>
+ <20231026-strncpy-drivers-net-wireless-cisco-airo-c-v2-1-413427249e47@google.com>
 References: 
- <20231017-strncpy-drivers-net-wireless-broadcom-brcm80211-brcmfmac-cfg80211-c-v3-1-af780d74ae38@google.com>
+ <20231026-strncpy-drivers-net-wireless-cisco-airo-c-v2-1-413427249e47@google.com>
 To: Justin Stitt <justinstitt@google.com>
-Cc: Arend van Spriel <aspriel@gmail.com>,
- Franky Lin <franky.lin@broadcom.com>,
- Hante Meuleman <hante.meuleman@broadcom.com>, linux-wireless@vger.kernel.org,
- brcm80211-dev-list.pdl@broadcom.com, SHA-cyfmac-dev-list@infineon.com,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- Justin Stitt <justinstitt@google.com>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
 User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
-Message-ID: <169868644429.1993746.5520695482478737730.kvalo@kernel.org>
-Date: Mon, 30 Oct 2023 17:20:45 +0000 (UTC)
+Message-ID: <169868669554.1993746.6778918340957233673.kvalo@kernel.org>
+Date: Mon, 30 Oct 2023 17:24:57 +0000 (UTC)
 
 Justin Stitt <justinstitt@google.com> wrote:
 
-> Let's move away from using strncpy and instead favor a less ambiguous
-> and more robust interface.
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
 > 
-> For ifp->ndev->name, we expect ifp->ndev->name to be NUL-terminated based
-> on its use in format strings within core.c:
-> 67 |       char *brcmf_ifname(struct brcmf_if *ifp)
-> 68 |       {
-> 69 |            if (!ifp)
-> 70 |                    return "<if_null>";
-> 71 |
-> 72 |            if (ifp->ndev)
-> 73 |                    return ifp->ndev->name;
-> 74 |
-> 75 |            return "<if_none>";
-> 76 |       }
+> `extra` is clearly supposed to be NUL-terminated which is evident by the
+> manual NUL-byte assignment as well as its immediate usage with strlen().
+> 
+> Moreover, let's NUL-pad since there is deliberate effort (48 instances)
+> made elsewhere to zero-out buffers in these getters and setters:
+> 6050 | memset(local->config.nodeName, 0, sizeof(local->config.nodeName));
+> 6130 | memset(local->config.rates, 0, 8);
+> 6139 | memset(local->config.rates, 0, 8);
+> 6414 | memset(key.key, 0, MAX_KEY_SIZE);
+> 6497 | memset(extra, 0, 16);
+> (to be clear, strncpy also NUL-padded -- we are matching that behavior)
+> 
+> Considering the above, a suitable replacement is `strscpy_pad` due to
+> the fact that it guarantees both NUL-termination and NUL-padding on the
+> destination buffer.
+> 
+> We can also replace the hard-coded size of "16" to IW_ESSID_MAX_SIZE
+> because this function is a wext handler.
+> 
+> In wext-core.c we have:
+> static const struct iw_ioctl_description standard_ioctl[] = {
 > ...
-> 288 |       static netdev_tx_t brcmf_netdev_start_xmit(struct sk_buff *skb,
-> 289 |                                              struct net_device *ndev) {
-> ...
-> 330 |       brcmf_dbg(INFO, "%s: insufficient headroom (%d)\n",
-> 331 |                 brcmf_ifname(ifp), head_delta);
-> ...
-> 336 |       bphy_err(drvr, "%s: failed to expand headroom\n",
-> 337 |                brcmf_ifname(ifp));
+>         [IW_IOCTL_IDX(SIOCGIWNICKN)] = {
+>                 .header_type    = IW_HEADER_TYPE_POINT,
+>                 .token_size     = 1,
+>                 .max_tokens     = IW_ESSID_MAX_SIZE,
+>         },
 > 
-> For di->name, we expect di->name to be NUL-terminated based on its usage
-> with format strings:
-> |       brcms_dbg_dma(di->core,
-> |                     "%s: DMA64 tx doesn't have AE set\n",
-> |                     di->name);
+> So the buffer size is (strangely) IW_ESSID_MAX_SIZE
 > 
-> Looking at its allocation we can see that it is already zero-allocated
-> which means NUL-padding is not required:
-> |       di = kzalloc(sizeof(struct dma_info), GFP_ATOMIC);
-> 
-> For wlc->modulecb[i].name, we expect each name in wlc->modulecb to be
-> NUL-terminated based on their usage with strcmp():
-> |       if (!strcmp(wlc->modulecb[i].name, name) &&
-> 
-> NUL-padding is not required as wlc is zero-allocated in:
-> brcms_c_attach_malloc() ->
-> |       wlc = kzalloc(sizeof(struct brcms_c_info), GFP_ATOMIC);
-> 
-> For all these cases, a suitable replacement is `strscpy` due to the fact
-> that it guarantees NUL-termination on the destination buffer without
-> unnecessarily NUL-padding.
-> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
 > Signed-off-by: Justin Stitt <justinstitt@google.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Reviewed-by: Jeff Johnson <quic_jjohnson@quicinc.com>
 
-2 patches applied to wireless-next.git, thanks.
+Patch applied to wireless-next.git, thanks.
 
-9d0d0a207040 wifi: brcm80211: replace deprecated strncpy with strscpy
-a614f9579705 wifi: brcmsmac: replace deprecated strncpy with memcpy
+9beac4ee4928 wifi: airo: replace deprecated strncpy with strscpy_pad
 
 -- 
-https://patchwork.kernel.org/project/linux-wireless/patch/20231017-strncpy-drivers-net-wireless-broadcom-brcm80211-brcmfmac-cfg80211-c-v3-1-af780d74ae38@google.com/
+https://patchwork.kernel.org/project/linux-wireless/patch/20231026-strncpy-drivers-net-wireless-cisco-airo-c-v2-1-413427249e47@google.com/
 
 https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
