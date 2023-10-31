@@ -1,78 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA4520E6
-	for <linux-hardening@vger.kernel.org>; Tue, 31 Oct 2023 07:46:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A8421DFE9
+	for <linux-hardening@vger.kernel.org>; Tue, 31 Oct 2023 20:41:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WGcrOe5O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78F32C433C7;
-	Tue, 31 Oct 2023 07:46:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698738392;
-	bh=g2XziSccx+MTDgQb4k51PyXlsNg5Uj2V1xR5ZbJYWag=;
-	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-	b=WGcrOe5ObTvGcRZ6pX6hkz+aPhA7kHHm0mt4/hIdYnyiW2UVQ/9FZqh3qiSEr1J7F
-	 zGxm8fgALAca4sN4K4RV3P367XQeqTSHIYgGYCwB91RArrx76cGmP5dAC1S2rCldW9
-	 9OtRU/CNsRDOqPUcqb7jwOheo7yDrvhAWQ0wkbpH6l6j7pmQEB4DNaDWa4VbH9xf8w
-	 OhbK4idB2x5uuiZSnjtu8b0BDBBjlHnO7B8p9isuy5AfUFmFiqmnnX6HOZg3Nc7dmK
-	 AluiO7zIYnKFcBxAVYHwJk2xMDIOy9Zv1P7UvzeZzWLa76iOoeeLWt14dPsNWBiSAZ
-	 WZ0IwQibD8GkA==
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="i/jv3PeM"
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FA61E4
+	for <linux-hardening@vger.kernel.org>; Tue, 31 Oct 2023 13:41:06 -0700 (PDT)
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4SKhqf1r2lz9srX;
+	Tue, 31 Oct 2023 21:41:02 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1698784862;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Hp84yni3w/m2CKBcr8zWmoOxEanjZqgFnmWK7QtuKS8=;
+	b=i/jv3PeMhFyh7wm+fl1zxdbyeMI/XAkZIyzsMyEgro+TVMubumzpYEYj3aOKHR8y3EdVxL
+	CFi2K331V7mvMDFi39iW2uAXCvNJ3VmGZZ7CP6LTJlGZ+aC1B/E0jVSpUwWt7mQXwwIzdp
+	HQ34bOmD6dgypT24HGcc+DYmC+mRIAf2oVoqQ77bR+N78VaYf9q1X4RU1lrgHa898dC61R
+	bf5bFPsHKaV1d69ATAbOgGmTcTrAI0WxA+ctPC6rQ4IvXTe28sv+wRZmz2ONIhWqEHf4gH
+	9zTT5dUzs+e1JWB/pMIHX8JITq4BKjcmdFm5LwxSmfEqCDHGFaoPxiwhIw1Ktw==
+Date: Tue, 31 Oct 2023 21:40:59 +0100
+From: Stefan Bavendiek <stefan.bavendiek@mailbox.org>
+To: "Serge E. Hallyn" <serge@hallyn.com>
+Cc: kernel-hardening@lists.openwall.com, linux-hardening@vger.kernel.org
+Subject: Re: Isolating abstract sockets
+Message-ID: <ZUFmW8DrxrhOhuVs@mailbox.org>
+References: <Y59qBh9rRDgsIHaj@mailbox.org>
+ <20231024134608.GC320399@mail.hallyn.com>
+ <CAHC9VhRCJfBRu8172=5jF_gFhv2znQXTnGs_c_ae1G3rk_Dc-g@mail.gmail.com>
+ <20231024141807.GB321218@mail.hallyn.com>
+ <CAHC9VhQaotVPGzWFFzRCgw9mDDc2tu6kmGHioMBghj-ybbYx1Q@mail.gmail.com>
+ <20231024160714.GA323539@mail.hallyn.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v2] wifi: ath10k: replace deprecated strncpy with memcpy
-From: Kalle Valo <kvalo@kernel.org>
-In-Reply-To: 
- <20231024-strncpy-drivers-net-wireless-ath-ath10k-mac-c-v2-1-4c1f4cd4b4df@google.com>
-References: 
- <20231024-strncpy-drivers-net-wireless-ath-ath10k-mac-c-v2-1-4c1f4cd4b4df@google.com>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Jeff Johnson <quic_jjohnson@quicinc.com>, ath10k@lists.infradead.org,
- linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
-User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
-Message-ID: <169873838825.2137176.1962660661621825377.kvalo@kernel.org>
-Date: Tue, 31 Oct 2023 07:46:30 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231024160714.GA323539@mail.hallyn.com>
+X-MBO-RS-META: udxo1pudytbk3n81hxb7scqspsm554uf
+X-MBO-RS-ID: b50aa093106517e0fc2
 
-Justin Stitt <justinstitt@google.com> wrote:
-
-> strncpy() is deprecated [1] and we should prefer less ambiguous
-> interfaces.
+On Tue, Oct 24, 2023 at 11:07:14AM -0500, Serge E. Hallyn wrote:
+> In 2005, before namespaces were upstreamed, I posted the 'bsdjail' LSM,
+> which briefly made it into the -mm kernel, but was eventually rejected as
+> being an abuse of the LSM interface for OS level virtualization :)
 > 
-> In this case, arvif->u.ap.ssid has its length maintained by
-> arvif->u.ap.ssid_len which indicates it may not need to be
-> NUL-terminated. Make this explicit with __nonstring and use a plain old
-> memcpy.
+> It's not 100% clear to me whether Stefan only wants isolation, or
+> wants something closer to virtualization.
 > 
-> This is also consistent with future copies into arvif->u.ap.ssid:
-> 
->         if (changed & BSS_CHANGED_SSID &&
->             vif->type == NL80211_IFTYPE_AP) {
->                 arvif->u.ap.ssid_len = vif->cfg.ssid_len;
->                 if (vif->cfg.ssid_len)
->                         memcpy(arvif->u.ap.ssid, vif->cfg.ssid,
->                                vif->cfg.ssid_len);
->                 arvif->u.ap.hidden_ssid = info->hidden_ssid;
->         }
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> Acked-by: Jeff Johnson <quic_jjohnson@quicinc.com>
-> Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
+> Stefan, would an LSM allowing you to isolate certain processes from
+> some abstract unix socket paths (or by label, whatever0 suffice for you?
+>
 
-Patch applied to ath-next branch of ath.git, thanks.
+My intention was to find a clean way to isolate abstract sockets in network
+applications without adding dependencies like LSMs. However the entire approach
+of using namespaces for this is something I have mostly abandoned. LSMs like
+Apparmor and SELinux would work fine for process isolation when you can control
+the target system, but for general deployment of sandboxed processes, I found it
+to be significantly easier (and more effective) to build this into the
+application itself by using a multi process approach with seccomp (Basically how
+OpenSSH did it)
 
-ac2f43d3d34e wifi: ath10k: replace deprecated strncpy with memcpy
-
--- 
-https://patchwork.kernel.org/project/linux-wireless/patch/20231024-strncpy-drivers-net-wireless-ath-ath10k-mac-c-v2-1-4c1f4cd4b4df@google.com/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+- Stefan
