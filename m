@@ -1,56 +1,78 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49F54D29A
-	for <linux-hardening@vger.kernel.org>; Tue, 31 Oct 2023 05:42:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA4520E6
+	for <linux-hardening@vger.kernel.org>; Tue, 31 Oct 2023 07:46:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="amK94fn4"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B5160C433B7;
-	Tue, 31 Oct 2023 05:42:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WGcrOe5O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78F32C433C7;
+	Tue, 31 Oct 2023 07:46:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698730953;
-	bh=wMKsm2bxFfPf2c84oJ8HXZxSOsEDlsYQdrnM1+U1hMc=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=amK94fn4j0ZOv2Yavumfg4ti6AcnEv0N1NURZOe0JeEWe6/vLPghWFE8LADexbKyx
-	 n6jazaflWARNAQIJojMdDWQVm/apb+euB3Ozr8YQkpBy+H8sz1TD0Es9E7NG2S4BXy
-	 mVsAsDrEkYYFULQC9b8Xt/6Tg9EmsUqEgCfHxCifDxDkeLBsR4bQZol1fszBOuRyfe
-	 aXMOSQI9xsab8gsaiho2Tip9emO2lFZ0UMxJOuetkMDe3uW2Muuu8RRwDVBb1dDcYV
-	 F+/orplP+Ve1jbfiVu1xtZo7wku412DG+MNkvDkWfib8VuVhG+ZSexrJRjRDJa5ZWr
-	 W9z+Sb/oOj0HQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9F411C4316B;
-	Tue, 31 Oct 2023 05:42:33 +0000 (UTC)
-Subject: Re: [GIT PULL] hardening updates for v6.7-rc1
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <202310300946.C0E11C5@keescook>
-References: <202310300946.C0E11C5@keescook>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <202310300946.C0E11C5@keescook>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/hardening-v6.7-rc1
-X-PR-Tracked-Commit-Id: 9cca73d7b4bfec75b2fcef751015f31691afa792
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: befaa609f4c784f505c02ea3ff036adf4f4aa814
-Message-Id: <169873095364.17204.11806766104260276539.pr-tracker-bot@kernel.org>
-Date: Tue, 31 Oct 2023 05:42:33 +0000
-To: Kees Cook <keescook@chromium.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Elena Reshetova <elena.reshetova@intel.com>, Ricardo =?iso-8859-1?Q?Ca=F1uelo?= <ricardo.canuelo@collabora.com>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, Justin Stitt <justinstitt@google.com>, Azeem Shaikh <azeemshaikh38@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>, Amit Shah <amit@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Baoquan He <bhe@redhat.com>, David Windsor <dwindsor@gmail.com>, Douglas Anderson <dianders@chromium.org>, Hans Liljestrand <ishkamiel@gmail.com>, Joseph Qi <joseph.qi@linux.alibaba.com>, Lukas Loidolt <e1634039@student.tuwien.ac.at>, Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <michal.simek@amd.com>, Mimi Zohar <zohar@linux.ibm.com>, Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>, Stephen Boyd <swboyd@chromium.org>, Vasant Hegde <vasant.hegde@amd.com>, Viresh Kumar <viresh.kumar@linaro.org>, Xiubo Li <xiubli@redhat.co
- m>, linux-hardening@vger.kernel.org
+	s=k20201202; t=1698738392;
+	bh=g2XziSccx+MTDgQb4k51PyXlsNg5Uj2V1xR5ZbJYWag=;
+	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+	b=WGcrOe5ObTvGcRZ6pX6hkz+aPhA7kHHm0mt4/hIdYnyiW2UVQ/9FZqh3qiSEr1J7F
+	 zGxm8fgALAca4sN4K4RV3P367XQeqTSHIYgGYCwB91RArrx76cGmP5dAC1S2rCldW9
+	 9OtRU/CNsRDOqPUcqb7jwOheo7yDrvhAWQ0wkbpH6l6j7pmQEB4DNaDWa4VbH9xf8w
+	 OhbK4idB2x5uuiZSnjtu8b0BDBBjlHnO7B8p9isuy5AfUFmFiqmnnX6HOZg3Nc7dmK
+	 AluiO7zIYnKFcBxAVYHwJk2xMDIOy9Zv1P7UvzeZzWLa76iOoeeLWt14dPsNWBiSAZ
+	 WZ0IwQibD8GkA==
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2] wifi: ath10k: replace deprecated strncpy with memcpy
+From: Kalle Valo <kvalo@kernel.org>
+In-Reply-To: 
+ <20231024-strncpy-drivers-net-wireless-ath-ath10k-mac-c-v2-1-4c1f4cd4b4df@google.com>
+References: 
+ <20231024-strncpy-drivers-net-wireless-ath-ath10k-mac-c-v2-1-4c1f4cd4b4df@google.com>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Jeff Johnson <quic_jjohnson@quicinc.com>, ath10k@lists.infradead.org,
+ linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
+User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
+Message-ID: <169873838825.2137176.1962660661621825377.kvalo@kernel.org>
+Date: Tue, 31 Oct 2023 07:46:30 +0000 (UTC)
 
-The pull request you sent on Mon, 30 Oct 2023 10:02:53 -0700:
+Justin Stitt <justinstitt@google.com> wrote:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/hardening-v6.7-rc1
+> strncpy() is deprecated [1] and we should prefer less ambiguous
+> interfaces.
+> 
+> In this case, arvif->u.ap.ssid has its length maintained by
+> arvif->u.ap.ssid_len which indicates it may not need to be
+> NUL-terminated. Make this explicit with __nonstring and use a plain old
+> memcpy.
+> 
+> This is also consistent with future copies into arvif->u.ap.ssid:
+> 
+>         if (changed & BSS_CHANGED_SSID &&
+>             vif->type == NL80211_IFTYPE_AP) {
+>                 arvif->u.ap.ssid_len = vif->cfg.ssid_len;
+>                 if (vif->cfg.ssid_len)
+>                         memcpy(arvif->u.ap.ssid, vif->cfg.ssid,
+>                                vif->cfg.ssid_len);
+>                 arvif->u.ap.hidden_ssid = info->hidden_ssid;
+>         }
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> Acked-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+> Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/befaa609f4c784f505c02ea3ff036adf4f4aa814
+Patch applied to ath-next branch of ath.git, thanks.
 
-Thank you!
+ac2f43d3d34e wifi: ath10k: replace deprecated strncpy with memcpy
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+https://patchwork.kernel.org/project/linux-wireless/patch/20231024-strncpy-drivers-net-wireless-ath-ath10k-mac-c-v2-1-4c1f4cd4b4df@google.com/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
