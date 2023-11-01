@@ -1,83 +1,75 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53C931850;
-	Wed,  1 Nov 2023 08:37:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C388DF;
-	Wed,  1 Nov 2023 01:37:58 -0700 (PDT)
-Received: from [192.168.1.103] (31.173.85.63) by msexch01.omp.ru (10.188.4.12)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Wed, 1 Nov
- 2023 11:37:47 +0300
-Subject: Re: [PATCH V2] usb: musb: Check requset->buf before use to avoid
- crash issue
-To: Xingxing Luo <xingxing.luo@unisoc.com>, <b-liu@ti.com>,
-	<gregkh@linuxfoundation.org>, <keescook@chromium.org>, <nathan@kernel.org>,
-	<ndesaulniers@google.com>, <trix@redhat.com>
-CC: <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-hardening@vger.kernel.org>, <llvm@lists.linux.dev>,
-	<xingxing0070.luo@gmail.com>, <Zhiyong.Liu@unisoc.com>,
-	<Cixi.Geng1@unisoc.com>, <Orson.Zhai@unisoc.com>, <zhang.lyra@gmail.com>
-References: <20231101071421.29462-1-xingxing.luo@unisoc.com>
-From: Sergey Shtylyov <s.shtylyov@omp.ru>
-Organization: Open Mobile Platform
-Message-ID: <6720b83c-e89b-6a22-e7b6-1503df7c8a0d@omp.ru>
-Date: Wed, 1 Nov 2023 11:37:46 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8326311C86
+	for <linux-hardening@vger.kernel.org>; Wed,  1 Nov 2023 11:06:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="ojxwebgj"
+X-Greylist: delayed 606 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 01 Nov 2023 04:06:52 PDT
+Received: from smtp-190b.mail.infomaniak.ch (smtp-190b.mail.infomaniak.ch [IPv6:2001:1600:3:17::190b])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 119C310D
+	for <linux-hardening@vger.kernel.org>; Wed,  1 Nov 2023 04:06:51 -0700 (PDT)
+Received: from smtp-3-0000.mail.infomaniak.ch (unknown [10.4.36.107])
+	by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4SL3py4J2tzMq5Tn;
+	Wed,  1 Nov 2023 10:56:42 +0000 (UTC)
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4SL3py0dfmz2Wh;
+	Wed,  1 Nov 2023 11:56:41 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
+	s=20191114; t=1698836202;
+	bh=2Y/ez8hqZVouVrOdZsa/L2LhER6nF7a1GqN0vlqwRvw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ojxwebgjINekqTFqAH/wfkvsKtx9UdDKpPdlSBP4dPC5WXNDw+IEMn6UNa0bG6N+V
+	 i6jEfp/mYd0yWwvGJ77234uSG8dY2LT6n5Gpch9rQEYVlqsbVB6q6LQYwsUweYlreC
+	 1KFBiSTpG4o5sjqcuUdouDuMxNe8/erwfX5674Qc=
+Date: Wed, 1 Nov 2023 11:56:38 +0100
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Stefan Bavendiek <stefan.bavendiek@mailbox.org>
+Cc: "Serge E. Hallyn" <serge@hallyn.com>, 
+	kernel-hardening@lists.openwall.com, linux-hardening@vger.kernel.org
+Subject: Re: Isolating abstract sockets
+Message-ID: <20231101.eeshae5Ahpei@digikod.net>
+References: <Y59qBh9rRDgsIHaj@mailbox.org>
+ <20231024134608.GC320399@mail.hallyn.com>
+ <CAHC9VhRCJfBRu8172=5jF_gFhv2znQXTnGs_c_ae1G3rk_Dc-g@mail.gmail.com>
+ <20231024141807.GB321218@mail.hallyn.com>
+ <CAHC9VhQaotVPGzWFFzRCgw9mDDc2tu6kmGHioMBghj-ybbYx1Q@mail.gmail.com>
+ <20231024160714.GA323539@mail.hallyn.com>
+ <ZUFmW8DrxrhOhuVs@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20231101071421.29462-1-xingxing.luo@unisoc.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [31.173.85.63]
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.0.0, Database issued on: 11/01/2023 08:21:19
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 59
-X-KSE-AntiSpam-Info: Lua profiles 181034 [Nov 01 2023]
-X-KSE-AntiSpam-Info: Version: 6.0.0.2
-X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 543 543 1e3516af5cdd92079dfeb0e292c8747a62cb1ee4
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info: {relay has no DNS name}
-X-KSE-AntiSpam-Info: {SMTP from is not routable}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 31.173.85.63 in (user)
- b.barracudacentral.org}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 31.173.85.63 in (user) dbl.spamhaus.org}
-X-KSE-AntiSpam-Info:
-	127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;omp.ru:7.1.1
-X-KSE-AntiSpam-Info: ApMailHostAddress: 31.173.85.63
-X-KSE-AntiSpam-Info: {DNS response errors}
-X-KSE-AntiSpam-Info: Rate: 59
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 11/01/2023 08:27:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 11/1/2023 5:24:00 AM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ZUFmW8DrxrhOhuVs@mailbox.org>
+X-Infomaniak-Routing: alpha
 
-Hello!
+On Tue, Oct 31, 2023 at 09:40:59PM +0100, Stefan Bavendiek wrote:
+> On Tue, Oct 24, 2023 at 11:07:14AM -0500, Serge E. Hallyn wrote:
+> > In 2005, before namespaces were upstreamed, I posted the 'bsdjail' LSM,
+> > which briefly made it into the -mm kernel, but was eventually rejected as
+> > being an abuse of the LSM interface for OS level virtualization :)
+> > 
+> > It's not 100% clear to me whether Stefan only wants isolation, or
+> > wants something closer to virtualization.
+> > 
+> > Stefan, would an LSM allowing you to isolate certain processes from
+> > some abstract unix socket paths (or by label, whatever0 suffice for you?
+> >
+> 
+> My intention was to find a clean way to isolate abstract sockets in network
+> applications without adding dependencies like LSMs. However the entire approach
+> of using namespaces for this is something I have mostly abandoned. LSMs like
+> Apparmor and SELinux would work fine for process isolation when you can control
+> the target system, but for general deployment of sandboxed processes, I found it
+> to be significantly easier (and more effective) to build this into the
+> application itself by using a multi process approach with seccomp (Basically how
+> OpenSSH did it)
 
-   You have have a typo in the subject: s/requset/request/...
-
-MBR, Sergey
+I agree that for sandbox use cases embedding such security policy into
+the application itself makes sense. Landlock works the same way as
+seccomp but it sandboxes applications according to the kernel semantic
+(e.g. process, socket). The LSM framework is just a kernel
+implementation detail. ;)
