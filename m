@@ -1,20 +1,20 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88A7E5681;
-	Wed,  1 Nov 2023 07:30:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8F26105;
+	Wed,  1 Nov 2023 07:31:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="xlU+oaen"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D441C433C8;
-	Wed,  1 Nov 2023 07:29:59 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="QLd0+jkS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2B44C433C8;
+	Wed,  1 Nov 2023 07:31:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1698823800;
-	bh=VeAKvTqavtEz9Y6S8VCa+9Li/lCoIJxJGeZcquOfX/Q=;
+	s=korg; t=1698823874;
+	bh=aLdY5UIq+nqHDS65m/fjFNnkNyiXjooji94VuobbOeg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=xlU+oaenAgZ4Pzjkhl//+DWTuWwRTojw7tjHP/L1NUNqK92BVT5p4ya7rzMhNpcaj
-	 A2K5IVAXq4p6D0yvLagWX3NSw4UdH/PesM4lhubi+4LbaNDvVpIxBQQaa1MHYuruav
-	 rNvz/q49+fkuxIuKaJKypMy9y554SNMSzFNSrMgI=
-Date: Wed, 1 Nov 2023 08:29:57 +0100
+	b=QLd0+jkSFNXqjNBQXufW56O7ZtBD2KhAtCSR0W3vdKtvRvAEr2Se9vf0vFX7HfoYI
+	 9dJP+f6siXJIbKAooj+GNxPjisxEM4f3KB16Ackxlv404Q/PN67+gAIpw4xcZfVQLf
+	 f4nzZVZucDoke9Aw0Jv+m8NpJHspCfP4ZwzMB0nE=
+Date: Wed, 1 Nov 2023 08:31:11 +0100
 From: Greg KH <gregkh@linuxfoundation.org>
 To: Xingxing Luo <xingxing.luo@unisoc.com>
 Cc: b-liu@ti.com, keescook@chromium.org, nathan@kernel.org,
@@ -25,7 +25,7 @@ Cc: b-liu@ti.com, keescook@chromium.org, nathan@kernel.org,
 	Orson.Zhai@unisoc.com, zhang.lyra@gmail.com
 Subject: Re: [PATCH V2] usb: musb: Check requset->buf before use to avoid
  crash issue
-Message-ID: <2023110144-sequence-twistable-3580@gregkh>
+Message-ID: <2023110105-saggy-gladiator-b3b0@gregkh>
 References: <20231101071421.29462-1-xingxing.luo@unisoc.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -97,43 +97,17 @@ On Wed, Nov 01, 2023 at 03:14:21PM +0800, Xingxing Luo wrote:
 >  
 > +	if (!request->buf) {
 > +		musb_dbg(musb, "request->buf is NULL");
+
+Why is this debug line needed?
+
 > +		return;
-> +	}
-> +
->  	/* load the data */
->  	fifo_src = (u8 *) request->buf + request->actual;
->  	fifo_count = min((unsigned) MUSB_EP0_FIFOSIZE,
-> -- 
-> 2.17.1
-> 
-> 
 
-Hi,
+Shouldn't we be reporting an error here somehow?
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
-
-You are receiving this message because of the following common error(s)
-as indicated below:
-
-- You have marked a patch with a "Fixes:" tag for a commit that is in an
-  older released kernel, yet you do not have a cc: stable line in the
-  signed-off-by area at all, which means that the patch will not be
-  applied to any older kernel releases.  To properly fix this, please
-  follow the documented rules in the
-  Documentation/process/stable-kernel-rules.rst file for how to resolve
-  this.
-
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
+And why has this issue never been seen before in this driver?  This is a
+very old driver, with millions, if not billions, of working systems with
+it.  What caused this to suddenly start happening?
 
 thanks,
 
-greg k-h's patch email bot
+greg k-h
