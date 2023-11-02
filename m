@@ -1,120 +1,145 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88EB27486
-	for <linux-hardening@vger.kernel.org>; Thu,  2 Nov 2023 14:50:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF9481BDE4
+	for <linux-hardening@vger.kernel.org>; Thu,  2 Nov 2023 15:04:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="zQxdPL5O"
-Received: from smtp-190b.mail.infomaniak.ch (smtp-190b.mail.infomaniak.ch [IPv6:2001:1600:3:17::190b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69392B7
-	for <linux-hardening@vger.kernel.org>; Thu,  2 Nov 2023 07:50:52 -0700 (PDT)
-Received: from smtp-3-0001.mail.infomaniak.ch (unknown [10.4.36.108])
-	by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4SLmyc4dm5zMqTws;
-	Thu,  2 Nov 2023 14:50:48 +0000 (UTC)
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4SLmyb3LQhzMppBD;
-	Thu,  2 Nov 2023 15:50:47 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1698936648;
-	bh=46MvR33ToQtq+GKZ/zeDIFhOwJkpgIN4XpvCQA5qzoI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=zQxdPL5O1P4PynsfsTd7keBW914GsYcJ7Wm+g3CZPmcYMyOkwNQYmtLyMKDadzApZ
-	 MPMK6TfngZXaAv1EwB82Hlc08m+X4G0mzwnH+VYaSNZEgwgJNwRYdC0oBSngxMEN6/
-	 +iDAanTpUhSssvYITN9+VhYh/wK+obboCBlgMbtU=
-Date: Thu, 2 Nov 2023 15:50:44 +0100
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Jann Horn <jannh@google.com>
-Cc: Stefan Bavendiek <stefan.bavendiek@mailbox.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, kernel-hardening@lists.openwall.com, 
-	linux-hardening@vger.kernel.org, Konstantin Meskhidze <konstantin.meskhidze@huawei.com>, 
-	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>
-Subject: Re: Isolating abstract sockets
-Message-ID: <20231102.MaeWaepav8nu@digikod.net>
-References: <Y59qBh9rRDgsIHaj@mailbox.org>
- <20231024134608.GC320399@mail.hallyn.com>
- <CAHC9VhRCJfBRu8172=5jF_gFhv2znQXTnGs_c_ae1G3rk_Dc-g@mail.gmail.com>
- <20231024141807.GB321218@mail.hallyn.com>
- <CAHC9VhQaotVPGzWFFzRCgw9mDDc2tu6kmGHioMBghj-ybbYx1Q@mail.gmail.com>
- <20231024160714.GA323539@mail.hallyn.com>
- <ZUFmW8DrxrhOhuVs@mailbox.org>
- <20231101.eeshae5Ahpei@digikod.net>
- <CAG48ez0wQ3LFxZ2jWj1sTZngTg4fEmx1=dXYuRbMMFk5CiYVbg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YpPHOmi+"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46D99181;
+	Thu,  2 Nov 2023 08:04:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1698937444; x=1730473444;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Cg9fqJR9fIKmGvrVxCoifHnJ6DMc/BhIrxzOVZ087yA=;
+  b=YpPHOmi+bxNPNZEyNUugMzLT9EpEGtSo5a63N1CYDgUAc85Cf+Yqzuks
+   HDKhGZIPm1OSq//733R2UuWgebH1jzifpwYFJOS1PTPosCGzyNflH4BJx
+   MnH8Xi23D/RaTwirj8zjdJckIcZqi/ZGU6ML1jWKAkkdwzdj8yU987cCC
+   /pGs/TLI7UxxxjTXjn5EyuOglN8/UrVxdwKCU90WlZy56Q+WaZnciBCk7
+   hl0NKhzYk2v7NhoQHVp8B51xQ2NNo3WFlP8/x+qAl0M362o0Vig2HcCbA
+   oaCXlU4euvIVz3OdASpYjE/6a1YPuqww2n89lbmBRs/iluihmqVwm1yKY
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10882"; a="373770355"
+X-IronPort-AV: E=Sophos;i="6.03,271,1694761200"; 
+   d="scan'208";a="373770355"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2023 08:03:49 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10882"; a="711170460"
+X-IronPort-AV: E=Sophos;i="6.03,271,1694761200"; 
+   d="scan'208";a="711170460"
+Received: from lkp-server01.sh.intel.com (HELO 17d9e85e5079) ([10.239.97.150])
+  by orsmga003.jf.intel.com with ESMTP; 02 Nov 2023 08:03:46 -0700
+Received: from kbuild by 17d9e85e5079 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1qyZEW-0001Xq-21;
+	Thu, 02 Nov 2023 15:03:44 +0000
+Date: Thu, 2 Nov 2023 23:03:40 +0800
+From: kernel test robot <lkp@intel.com>
+To: Justin Stitt <justinstitt@google.com>, Hannes Reinecke <hare@suse.de>,
+	"James E.J. Bottomley" <jejb@linux.ibm.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	Justin Stitt <justinstitt@google.com>
+Subject: Re: [PATCH] scsi: libfc: replace deprecated strncpy with memcpy
+Message-ID: <202311022256.mWiYJshd-lkp@intel.com>
+References: <20231030-strncpy-drivers-scsi-libfc-fc_encode-h-v1-1-c08c2be6befa@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAG48ez0wQ3LFxZ2jWj1sTZngTg4fEmx1=dXYuRbMMFk5CiYVbg@mail.gmail.com>
-X-Infomaniak-Routing: alpha
+In-Reply-To: <20231030-strncpy-drivers-scsi-libfc-fc_encode-h-v1-1-c08c2be6befa@google.com>
 
-On Wed, Nov 01, 2023 at 05:23:12PM +0100, Jann Horn wrote:
-> On Wed, Nov 1, 2023 at 11:57 AM Mickaël Salaün <mic@digikod.net> wrote:
-> > On Tue, Oct 31, 2023 at 09:40:59PM +0100, Stefan Bavendiek wrote:
-> > > On Tue, Oct 24, 2023 at 11:07:14AM -0500, Serge E. Hallyn wrote:
-> > > > In 2005, before namespaces were upstreamed, I posted the 'bsdjail' LSM,
-> > > > which briefly made it into the -mm kernel, but was eventually rejected as
-> > > > being an abuse of the LSM interface for OS level virtualization :)
-> > > >
-> > > > It's not 100% clear to me whether Stefan only wants isolation, or
-> > > > wants something closer to virtualization.
-> > > >
-> > > > Stefan, would an LSM allowing you to isolate certain processes from
-> > > > some abstract unix socket paths (or by label, whatever0 suffice for you?
-> > > >
-> > >
-> > > My intention was to find a clean way to isolate abstract sockets in network
-> > > applications without adding dependencies like LSMs. However the entire approach
-> > > of using namespaces for this is something I have mostly abandoned. LSMs like
-> > > Apparmor and SELinux would work fine for process isolation when you can control
-> > > the target system, but for general deployment of sandboxed processes, I found it
-> > > to be significantly easier (and more effective) to build this into the
-> > > application itself by using a multi process approach with seccomp (Basically how
-> > > OpenSSH did it)
-> >
-> > I agree that for sandbox use cases embedding such security policy into
-> > the application itself makes sense. Landlock works the same way as
-> > seccomp but it sandboxes applications according to the kernel semantic
-> > (e.g. process, socket). The LSM framework is just a kernel
-> > implementation detail. ;)
-> 
-> (Related, it might be nice if Landlock had a way to completely deny
-> access to abstract unix sockets,
+Hi Justin,
 
-I think it would make more sense to scope access to abstract unix
-sockets: https://lore.kernel.org/all/20231025.eecai4uGh5Ie@digikod.net/
+kernel test robot noticed the following build warnings:
 
-A complementary approach would be to restrict socket creation according
-to their properties:
-https://lore.kernel.org/all/b8a2045a-e7e8-d141-7c01-bf47874c7930@digikod.net/
+[auto build test WARNING on ffc253263a1375a65fa6c9f62a893e9767fbebfa]
 
-> and a way to restrict filesystem unix
-> sockets with filesystem rules... LANDLOCK_ACCESS_FS_MAKE_SOCK exists
-> for restricting bind(), but I don't think there's an analogous
-> permission for connect().
+url:    https://github.com/intel-lab-lkp/linux/commits/Justin-Stitt/scsi-libfc-replace-deprecated-strncpy-with-memcpy/20231031-063815
+base:   ffc253263a1375a65fa6c9f62a893e9767fbebfa
+patch link:    https://lore.kernel.org/r/20231030-strncpy-drivers-scsi-libfc-fc_encode-h-v1-1-c08c2be6befa%40google.com
+patch subject: [PATCH] scsi: libfc: replace deprecated strncpy with memcpy
+config: s390-defconfig (https://download.01.org/0day-ci/archive/20231102/202311022256.mWiYJshd-lkp@intel.com/config)
+compiler: s390-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231102/202311022256.mWiYJshd-lkp@intel.com/reproduce)
 
-I agree. It should not be too difficult to add a new LSM path hook for
-connect (and sendmsg) to named unix socket with the related access
-rights.  We should be careful about the impact on sendmsg calls though.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202311022256.mWiYJshd-lkp@intel.com/
 
-> 
-> Currently, when you try to sandbox an application with Landlock, you
-> have to use seccomp to completely block access to unix domain sockets,
-> or alternatively use something like the seccomp_unotify feature to
-> interactively filter connect() calls.
-> 
-> On the other hand, maybe such a feature would be a bit superfluous
-> when we have seccomp_unotify already... idk.)
+All warnings (new ones prefixed by >>):
 
-seccomp_unotify enables user space to emulate syscalls, which requires a
-service per sandbox. seccomp is useful but will always be delicate to
-use and to maintain the related filters for sandboxing use cases:
-https://www.ndss-symposium.org/ndss2003/traps-and-pitfalls-practical-problems-system-call-interposition-based-security-tools/
+   In function 'zfcp_fc_gspn',
+       inlined from 'zfcp_fc_sym_name_update' at drivers/s390/scsi/zfcp_fc.c:951:8:
+>> drivers/s390/scsi/zfcp_fc.c:877:15: warning: 'strstr' argument 1 declared attribute 'nonstring' [-Wstringop-overread]
+     877 |             !(strstr(gspn_rsp->gspn.fp_name, devno)))
+         |              ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   In file included from include/scsi/libfc.h:21,
+                    from drivers/s390/scsi/zfcp_fc.c:19:
+   include/uapi/scsi/fc/fc_ns.h: In function 'zfcp_fc_sym_name_update':
+   include/uapi/scsi/fc/fc_ns.h:148:17: note: argument 'fp_name' declared here
+     148 |         char    fp_name[] __nonstring;
+         |                 ^~~~~~~
 
-Anyway, I'd be happy to help improve Landlock with new access control
-types.
 
-FYI, TCP connect and bind access control should be part of Linux 6.7:
-https://lore.kernel.org/all/20231102131354.263678-1-mic@digikod.net/
+vim +877 drivers/s390/scsi/zfcp_fc.c
+
+cc8c282963bd25 Swen Schillig    2008-06-10  844  
+038d9446a9e601 Christof Schmitt 2011-02-22  845  static int zfcp_fc_gspn(struct zfcp_adapter *adapter,
+038d9446a9e601 Christof Schmitt 2011-02-22  846  			struct zfcp_fc_req *fc_req)
+038d9446a9e601 Christof Schmitt 2011-02-22  847  {
+038d9446a9e601 Christof Schmitt 2011-02-22  848  	DECLARE_COMPLETION_ONSTACK(completion);
+038d9446a9e601 Christof Schmitt 2011-02-22  849  	char devno[] = "DEVNO:";
+038d9446a9e601 Christof Schmitt 2011-02-22  850  	struct zfcp_fsf_ct_els *ct_els = &fc_req->ct_els;
+038d9446a9e601 Christof Schmitt 2011-02-22  851  	struct zfcp_fc_gspn_req *gspn_req = &fc_req->u.gspn.req;
+038d9446a9e601 Christof Schmitt 2011-02-22  852  	struct zfcp_fc_gspn_rsp *gspn_rsp = &fc_req->u.gspn.rsp;
+038d9446a9e601 Christof Schmitt 2011-02-22  853  	int ret;
+038d9446a9e601 Christof Schmitt 2011-02-22  854  
+038d9446a9e601 Christof Schmitt 2011-02-22  855  	zfcp_fc_ct_ns_init(&gspn_req->ct_hdr, FC_NS_GSPN_ID,
+038d9446a9e601 Christof Schmitt 2011-02-22  856  			   FC_SYMBOLIC_NAME_SIZE);
+038d9446a9e601 Christof Schmitt 2011-02-22  857  	hton24(gspn_req->gspn.fp_fid, fc_host_port_id(adapter->scsi_host));
+038d9446a9e601 Christof Schmitt 2011-02-22  858  
+038d9446a9e601 Christof Schmitt 2011-02-22  859  	sg_init_one(&fc_req->sg_req, gspn_req, sizeof(*gspn_req));
+038d9446a9e601 Christof Schmitt 2011-02-22  860  	sg_init_one(&fc_req->sg_rsp, gspn_rsp, sizeof(*gspn_rsp));
+038d9446a9e601 Christof Schmitt 2011-02-22  861  
+038d9446a9e601 Christof Schmitt 2011-02-22  862  	ct_els->handler = zfcp_fc_complete;
+038d9446a9e601 Christof Schmitt 2011-02-22  863  	ct_els->handler_data = &completion;
+038d9446a9e601 Christof Schmitt 2011-02-22  864  	ct_els->req = &fc_req->sg_req;
+038d9446a9e601 Christof Schmitt 2011-02-22  865  	ct_els->resp = &fc_req->sg_rsp;
+038d9446a9e601 Christof Schmitt 2011-02-22  866  
+038d9446a9e601 Christof Schmitt 2011-02-22  867  	ret = zfcp_fsf_send_ct(&adapter->gs->ds, ct_els, NULL,
+038d9446a9e601 Christof Schmitt 2011-02-22  868  			       ZFCP_FC_CTELS_TMO);
+038d9446a9e601 Christof Schmitt 2011-02-22  869  	if (ret)
+038d9446a9e601 Christof Schmitt 2011-02-22  870  		return ret;
+038d9446a9e601 Christof Schmitt 2011-02-22  871  
+038d9446a9e601 Christof Schmitt 2011-02-22  872  	wait_for_completion(&completion);
+038d9446a9e601 Christof Schmitt 2011-02-22  873  	if (ct_els->status)
+038d9446a9e601 Christof Schmitt 2011-02-22  874  		return ct_els->status;
+038d9446a9e601 Christof Schmitt 2011-02-22  875  
+038d9446a9e601 Christof Schmitt 2011-02-22  876  	if (fc_host_port_type(adapter->scsi_host) == FC_PORTTYPE_NPIV &&
+038d9446a9e601 Christof Schmitt 2011-02-22 @877  	    !(strstr(gspn_rsp->gspn.fp_name, devno)))
+038d9446a9e601 Christof Schmitt 2011-02-22  878  		snprintf(fc_host_symbolic_name(adapter->scsi_host),
+038d9446a9e601 Christof Schmitt 2011-02-22  879  			 FC_SYMBOLIC_NAME_SIZE, "%s%s %s NAME: %s",
+038d9446a9e601 Christof Schmitt 2011-02-22  880  			 gspn_rsp->gspn.fp_name, devno,
+038d9446a9e601 Christof Schmitt 2011-02-22  881  			 dev_name(&adapter->ccw_device->dev),
+038d9446a9e601 Christof Schmitt 2011-02-22  882  			 init_utsname()->nodename);
+038d9446a9e601 Christof Schmitt 2011-02-22  883  	else
+820109fb11f24b Wolfram Sang     2022-08-18  884  		strscpy(fc_host_symbolic_name(adapter->scsi_host),
+038d9446a9e601 Christof Schmitt 2011-02-22  885  			gspn_rsp->gspn.fp_name, FC_SYMBOLIC_NAME_SIZE);
+038d9446a9e601 Christof Schmitt 2011-02-22  886  
+038d9446a9e601 Christof Schmitt 2011-02-22  887  	return 0;
+038d9446a9e601 Christof Schmitt 2011-02-22  888  }
+038d9446a9e601 Christof Schmitt 2011-02-22  889  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
