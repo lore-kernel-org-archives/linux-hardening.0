@@ -1,94 +1,81 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE11224CA
-	for <linux-hardening@vger.kernel.org>; Thu,  2 Nov 2023 23:11:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="geAlUZ81"
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BEE4133;
-	Thu,  2 Nov 2023 16:11:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698966663; x=1730502663;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=t2dJVdoJc7fyWxD/M51aRldCu7biUnkgqQJ2sLnr7E4=;
-  b=geAlUZ81sC56p7Ui5sSDpAm+AwC8TSR95sNFOkK9gb/WS510X2gFM0Vh
-   Oqs/PgPLuzHv8yFVqDvra4eFVhntYKPb2jDKAvM7mUeX0LTkzFwhFW3EQ
-   V6BCHURdaJ/jK+r9diiNBT7BiCRRp2KC6HzCDYqUpYFPJ4HklCkoZU9So
-   U3VpjktNtQH/HqjQwDwcgvPBVIse0KAQkawS0A4+lJT/748n98/kLgY4m
-   7DYtykZB8fEaP83vQ1N3tWbqV2pMw3Q2jWLJdJit5kxIDtWSvRi0VcMRA
-   0imisFaZwzuruNkioNLRe1QS6jQWMkEG0xHJ3fDAo09Nm3WxBPIQ8NeCc
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10882"; a="373881135"
-X-IronPort-AV: E=Sophos;i="6.03,272,1694761200"; 
-   d="scan'208";a="373881135"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2023 16:11:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10882"; a="905151514"
-X-IronPort-AV: E=Sophos;i="6.03,272,1694761200"; 
-   d="scan'208";a="905151514"
-Received: from lkp-server01.sh.intel.com (HELO 17d9e85e5079) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 02 Nov 2023 16:11:00 -0700
-Received: from kbuild by 17d9e85e5079 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1qygq1-0001zE-21;
-	Thu, 02 Nov 2023 23:10:57 +0000
-Date: Fri, 3 Nov 2023 07:10:12 +0800
-From: kernel test robot <lkp@intel.com>
-To: Justin Stitt <justinstitt@google.com>, Hannes Reinecke <hare@suse.de>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Justin Stitt <justinstitt@google.com>
-Subject: Re: [PATCH] scsi: libfc: replace deprecated strncpy with memcpy
-Message-ID: <202311030603.XIHsNBru-lkp@intel.com>
-References: <20231030-strncpy-drivers-scsi-libfc-fc_encode-h-v1-1-c08c2be6befa@google.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9546D1BDC8;
+	Fri,  3 Nov 2023 15:23:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1CC58112;
+	Fri,  3 Nov 2023 08:23:38 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6AECC2F4;
+	Fri,  3 Nov 2023 08:24:20 -0700 (PDT)
+Received: from [10.57.81.32] (unknown [10.57.81.32])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A6FC03F64C;
+	Fri,  3 Nov 2023 08:23:31 -0700 (PDT)
+Message-ID: <3b4ac48b-e29d-415f-89f1-6d354f18c4a4@arm.com>
+Date: Fri, 3 Nov 2023 15:23:28 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231030-strncpy-drivers-scsi-libfc-fc_encode-h-v1-1-c08c2be6befa@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 06/10] ASoC: pxa: Suppress SSPA on ARM64
+Content-Language: en-GB
+To: Mark Brown <broonie@kernel.org>, =?UTF-8?Q?Duje_Mihanovi=C4=87?=
+ <duje.mihanovic@skole.hr>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Tony Lindgren <tony@atomide.com>,
+ Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>,
+ Robert Jarzmik <robert.jarzmik@free.fr>, Liam Girdwood
+ <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Leo Yan <leoy@marvell.com>,
+ Zhangfei Gao <zhangfei.gao@marvell.com>, Lubomir Rintel <lkundrak@v3.sk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
+ "Guilherme G . Piccoli" <gpiccoli@igalia.com>, linux-clk@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-omap@vger.kernel.org, alsa-devel@alsa-project.org,
+ linux-hardening@vger.kernel.org, phone-devel@vger.kernel.org,
+ ~postmarketos/upstreaming@lists.sr.ht, Karel Balej <balejk@matfyz.cz>,
+ kernel test robot <lkp@intel.com>
+References: <20231102152033.5511-1-duje.mihanovic@skole.hr>
+ <dc7aaff0-f767-494e-9a3a-40fcacc1674e@sirena.org.uk>
+From: Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <dc7aaff0-f767-494e-9a3a-40fcacc1674e@sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Justin,
+On 2023-11-02 3:26 pm, Mark Brown wrote:
+> On Thu, Nov 02, 2023 at 04:20:29PM +0100, Duje Mihanović wrote:
+>> The SSPA driver currently seems to generate ARM32 assembly, which causes
+>> build errors when building a kernel for an ARM64 ARCH_MMP platform.
+>>
+>> Fixes: fa375d42f0e5 ("ASoC: mmp: add sspa support")
+>> Reported-by: kernel test robot <lkp@intel.com>
+> 
+>>   	tristate "SoC Audio via MMP SSPA ports"
+>> -	depends on ARCH_MMP
+>> +	depends on ARCH_MMP && ARM
+> 
+> This isn't a fix for the existing code, AFAICT the issue here is that
+> ARCH_MMP is currently only available for arm and presumably something in
+> the rest of your series makes it available for arm64.  This would be a
+> prerequisite for that patch.
+> 
+> Please don't just insert random fixes tags just because you can.
 
-kernel test robot noticed the following build errors:
+FWIW it doesn't even seem to be the right reason either. AFACIT the 
+issue being introduced is that SND_MMP_SOC_SSPA selects SND_ARM which 
+depends on ARM, but after patch #8 ARCH_MMP itself will no longer 
+necessarily imply ARM. The fact that selecting SND_ARM with unmet 
+dependencies also allows SND_ARMAACI to be enabled (which appears to be 
+the only thing actually containing open-coded Arm asm) is tangential.
 
-[auto build test ERROR on ffc253263a1375a65fa6c9f62a893e9767fbebfa]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Justin-Stitt/scsi-libfc-replace-deprecated-strncpy-with-memcpy/20231031-063815
-base:   ffc253263a1375a65fa6c9f62a893e9767fbebfa
-patch link:    https://lore.kernel.org/r/20231030-strncpy-drivers-scsi-libfc-fc_encode-h-v1-1-c08c2be6befa%40google.com
-patch subject: [PATCH] scsi: libfc: replace deprecated strncpy with memcpy
-config: i386-randconfig-141-20231102 (https://download.01.org/0day-ci/archive/20231103/202311030603.XIHsNBru-lkp@intel.com/config)
-compiler: gcc-7 (Ubuntu 7.5.0-6ubuntu2) 7.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231103/202311030603.XIHsNBru-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202311030603.XIHsNBru-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from <command-line>:32:0:
->> ./usr/include/scsi/fc/fc_ns.h:148:17: error: expected ':', ',', ';', '}' or '__attribute__' before '__nonstring'
-     char fp_name[] __nonstring;
-                    ^~~~~~~~~~~
-   ./usr/include/scsi/fc/fc_ns.h:174:18: error: expected ':', ',', ';', '}' or '__attribute__' before '__nonstring'
-     char  fr_name[] __nonstring;
-                     ^~~~~~~~~~~
-   ./usr/include/scsi/fc/fc_ns.h:183:18: error: expected ':', ',', ';', '}' or '__attribute__' before '__nonstring'
-     char  fr_name[] __nonstring;
-                     ^~~~~~~~~~~
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Robin.
