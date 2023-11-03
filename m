@@ -1,44 +1,46 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E571C6AE;
-	Fri,  3 Nov 2023 16:58:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F08F1C6AE;
+	Fri,  3 Nov 2023 17:02:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mx.skole.hr (mx1.hosting.skole.hr [161.53.165.185])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3C19DB;
-	Fri,  3 Nov 2023 09:58:17 -0700 (PDT)
-Received: from mx1.hosting.skole.hr (localhost.localdomain [127.0.0.1])
-	by mx.skole.hr (mx.skole.hr) with ESMTP id 4974383791;
-	Fri,  3 Nov 2023 17:58:15 +0100 (CET)
+Received: from mx.skole.hr (mx2.hosting.skole.hr [161.53.165.186])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E718C1BD;
+	Fri,  3 Nov 2023 10:02:43 -0700 (PDT)
+Received: from mx2.hosting.skole.hr (localhost.localdomain [127.0.0.1])
+	by mx.skole.hr (mx.skole.hr) with ESMTP id C6CB684BE2;
+	Fri,  3 Nov 2023 18:02:41 +0100 (CET)
 From: Duje =?utf-8?B?TWloYW5vdmnEhw==?= <duje.mihanovic@skole.hr>
-To: Mark Brown <broonie@kernel.org>, Robin Murphy <robin.murphy@arm.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
+To: Michael Turquette <mturquette@baylibre.com>,
  Stephen Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
  Rob Herring <robh+dt@kernel.org>,
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
  Conor Dooley <conor+dt@kernel.org>, Tony Lindgren <tony@atomide.com>,
  Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>,
  Robert Jarzmik <robert.jarzmik@free.fr>, Liam Girdwood <lgirdwood@gmail.com>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- Leo Yan <leoy@marvell.com>, Zhangfei Gao <zhangfei.gao@marvell.com>,
- Lubomir Rintel <lkundrak@v3.sk>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Kees Cook <keescook@chromium.org>,
- Tony Luck <tony.luck@intel.com>,
- "Guilherme G . Piccoli" <gpiccoli@igalia.com>, linux-clk@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-omap@vger.kernel.org, alsa-devel@alsa-project.org,
- linux-hardening@vger.kernel.org, phone-devel@vger.kernel.org,
- ~postmarketos/upstreaming@lists.sr.ht, Karel Balej <balejk@matfyz.cz>,
- kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v7 06/10] ASoC: pxa: Suppress SSPA on ARM64
-Date: Fri, 03 Nov 2023 17:58:05 +0100
-Message-ID: <4855402.GXAFRqVoOG@radijator>
-In-Reply-To: <3b4ac48b-e29d-415f-89f1-6d354f18c4a4@arm.com>
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Leo Yan <leoy@marvell.com>,
+ Zhangfei Gao <zhangfei.gao@marvell.com>, Lubomir Rintel <lkundrak@v3.sk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
+ "Guilherme G . Piccoli" <gpiccoli@igalia.com>,
+ Robin Murphy <robin.murphy@arm.com>
+Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+ alsa-devel@alsa-project.org, linux-hardening@vger.kernel.org,
+ phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
+ Karel Balej <balejk@matfyz.cz>
+Subject:
+ Re: [PATCH v7 08/10] arm64: Kconfig.platforms: Add config for Marvell PXA1908
+ platform
+Date: Fri, 03 Nov 2023 18:02:31 +0100
+Message-ID: <2919185.e9J7NaK4W3@radijator>
+In-Reply-To: <ffb08cc2-705a-468e-b6d2-9ce591c08ab4@arm.com>
 References:
  <20231102152033.5511-1-duje.mihanovic@skole.hr>
- <dc7aaff0-f767-494e-9a3a-40fcacc1674e@sirena.org.uk>
- <3b4ac48b-e29d-415f-89f1-6d354f18c4a4@arm.com>
+ <20231102152033.5511-3-duje.mihanovic@skole.hr>
+ <ffb08cc2-705a-468e-b6d2-9ce591c08ab4@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -130,34 +132,34 @@ Autocrypt: addr=duje.mihanovic@skole.hr;
  p8AXRgtzZw2vsqERylx1Ug35G/xRIVrjf9bU2fersVWLR3JZ/rJwdjev4cJqzqJ9nBzblHky3K1
  cqiNEM/CU+JLBsZMc4jti/3tDv8VKfZiwLMIsVrfPgTM/97CCW3QDwVcreUGx81kemiAweXENWk
  MGQfJ+8rfAdLHf7iECLWLtrqyfYFQCZGhA5rPPr27TjOLaLV5ObMMBsUY=
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 
-On Friday, November 3, 2023 4:23:28 PM CET Robin Murphy wrote:
-> On 2023-11-02 3:26 pm, Mark Brown wrote:
-> > This isn't a fix for the existing code, AFAICT the issue here is that
-> > ARCH_MMP is currently only available for arm and presumably something in
-> > the rest of your series makes it available for arm64.  This would be a
-> > prerequisite for that patch.
-> > 
-> > Please don't just insert random fixes tags just because you can.
-> 
-> FWIW it doesn't even seem to be the right reason either. AFACIT the
-> issue being introduced is that SND_MMP_SOC_SSPA selects SND_ARM which
-> depends on ARM, but after patch #8 ARCH_MMP itself will no longer
-> necessarily imply ARM. The fact that selecting SND_ARM with unmet
-> dependencies also allows SND_ARMAACI to be enabled (which appears to be
-> the only thing actually containing open-coded Arm asm) is tangential.
+On Friday, November 3, 2023 4:34:54 PM CET Robin Murphy wrote:
+> On 2023-11-02 3:20 pm, Duje Mihanovi=C4=87 wrote:
+> > +config ARCH_MMP
+> > +	bool "Marvell MMP SoC Family"
+> > +	select ARM_GIC
+> > +	select ARM_ARCH_TIMER
+> > +	select ARM_SMMU
+>=20
+> NAK, not only is selecting user-visible symbols generally frowned upon,
+> and ignoring their dependencies even worse, but for a multiplatform
+> kernel the user may well want this to be a module.
+>=20
+> If having the SMMU driver built-in is somehow fundamentally required for
+> this platform to boot, that would represent much bigger problems.
 
-I just looked at it again and it looks like no code in sound/soc/pxa/* or 
-sound/arm/pxa* depends on AACI in any way. Therefore, I believe that to fix 
-this correctly, I would have to remove "select SND_ARM" from sound/soc/pxa/
-Kconfig and optionally move the PXA2xx code out of sound/arm/ and into sound/
-soc/pxa/. Is this correct? If so, I'd also split that fix into a separate 
-series.
+The SoC can boot without SMMU and PDMA, but not GIC, pinctrl or the arch=20
+timer. I see that most other SoCs still select drivers and frameworks they=
+=20
+presumably need for booting, with the exceptions of ARCH_BITMAIN, ARCH_LG1K=
+=20
+and a couple others. Which of these two options should I go for?
 
 Regards,
 Duje
+
 
 
 
