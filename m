@@ -1,125 +1,130 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 615E9399;
-	Sat,  4 Nov 2023 00:42:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4764F3C27
+	for <linux-hardening@vger.kernel.org>; Sat,  4 Nov 2023 20:43:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MaEfabsU"
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0EDCD45;
-	Fri,  3 Nov 2023 17:42:15 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id 98e67ed59e1d1-280260db156so2443288a91.2;
-        Fri, 03 Nov 2023 17:42:15 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hDDHeKXn"
+Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E764D194
+	for <linux-hardening@vger.kernel.org>; Sat,  4 Nov 2023 13:43:40 -0700 (PDT)
+Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-5a7b3d33663so38435127b3.3
+        for <linux-hardening@vger.kernel.org>; Sat, 04 Nov 2023 13:43:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699058535; x=1699663335; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ct0KYE54peQamGMSAeRpW9X9OZ/g/Ez/2j1oyOsk0pY=;
-        b=MaEfabsU6NeuBbelGuYmZAkHeNxk0NbiUd2SqQZIMO0Z/sdeLhKuu5rb112fEEi8hr
-         Sv1Gv2zjc3q8BMqvbe4ULPNFyxdKtXplY8m25fS/Wh01rEbPLPq9RIV+5aaw/IaUlzso
-         qPkC8Ve1Q2Cs8MR/kekWXu9Qm/dJ1BQDR0Ny8wfQYiMV6PWt9Aw+3BRQyJxJc8tyiGK6
-         ZsGTY2osXP5GnjJ+XvxXtG+4iH/XnZF5sm47pkctPnPJmeWRiAdov/3veukF3NAdbsR1
-         Mg2iC81bbHqRstdE06W6t/YXokMkKr0W2rAiqAqY/IXv9q4JoDUNpLT/Dj/gpwqTi31W
-         4c5Q==
+        d=chromium.org; s=google; t=1699130620; x=1699735420; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pM4iIP95/mnmbwbJH/uUs68LV5bT9obYBYBO1xuu04M=;
+        b=hDDHeKXnWNXTPAtkuxlGXsxxym+qGrtubohSZt2rBmYUMUmSo1CXQr3aFGsNIh4q0w
+         pxlOhHL+cGdIrwHyrcTlF93te5KyMqDY+1duSbMXB2Sd3JbIgy4cxvTWD2ETMoZUAGSM
+         pmn0lqBmzdGwhrmwfEvgeTj/FmOYjl7MpZijU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699058535; x=1699663335;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ct0KYE54peQamGMSAeRpW9X9OZ/g/Ez/2j1oyOsk0pY=;
-        b=DqfS8Yb0R/HmoFXtu+XxTum7N5OUgREodYE7J0D0sVGxWnXlSzORxX2pTbD/tiSXkH
-         5UAm+umqSxFDt37fFtX+0nKnx0Df6bnoErdBhGs5S/1Z7Hbt7CquAxz3zXK4Kk3hZ1Dy
-         0XyAK1lNb7hch06Ih+K4iReHgwlYBQHVm3GMVwuxGAPlqFLkJvOCGQq4b8XxBWNJRGEC
-         /MjsubHUMXIyxL1T+ZIxNarFnnsxHDV2N/dnXmqwS/aq5hEXweymLM61P1XfM3in0HVE
-         uepjna85FNP00DcLs7ZqA5XBJDJIMxE8JQP48GCmZRZhTO+6yiUWUf4XA+cT9j4Ks9ZG
-         5n9g==
-X-Gm-Message-State: AOJu0YxgU4yLs0BfMGB3pFFdA6BfOo4eTGM5/0FFce8tNsJjtPz7D7Cu
-	++szhAgxpP/gUIzzVl1m6Jk=
-X-Google-Smtp-Source: AGHT+IGIHIG4nM1J8gqqmB4uqlcw7WJlytRrYOtcAwEng2xO3AvaLqH5pRHWj2TMv4l6XM22/HFytw==
-X-Received: by 2002:a17:90a:53c3:b0:274:4161:b9dc with SMTP id y61-20020a17090a53c300b002744161b9dcmr22303484pjh.31.1699058535314;
-        Fri, 03 Nov 2023 17:42:15 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 13-20020a17090a004d00b0027782f611d1sm2139551pjb.36.2023.11.03.17.42.13
+        d=1e100.net; s=20230601; t=1699130620; x=1699735420;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pM4iIP95/mnmbwbJH/uUs68LV5bT9obYBYBO1xuu04M=;
+        b=CzorX2lLJW53Q5TnmwP1gIZp3WmfaF43Eiedv031hoyEssuV3OVDLcVj3shSYZ0UMY
+         3cuaI2nEkpAZ84495eNgBLVfHyyUNBur173lSJW2O7xt3Aqr9yIeUzRIUL+rJ6qz615p
+         jY6EbKVsO3yoExMHXAazYsNEr7Wf9uq6/ucVlbP6cVxCwFaMg+OijxxYn6N9gMRC+UoY
+         CgeWlkSpr1hQOY6aA5y2bRqiP4O6HmLsuzX/OimqPJlvj6tmMGQj/bNpKEUdRT75ku9x
+         H3kpejl0TOqZe/YA7ul2QBkVensl0CSP1U7jW8X2kW58j2W8iWx0SSW5brsgzmbqc8Sb
+         3T7w==
+X-Gm-Message-State: AOJu0Yw6rSjKB+QwAM7P9DVPsoxEhAVoWhbIN1Pu43MTW1OwSt6sLbRk
+	2rZNLEJcTk56+1ODEKN1/sUh0g==
+X-Google-Smtp-Source: AGHT+IEdSQ3IC0cAAkDzAjuud/+CMTavM6U9ZRus1BZZTmlAQnxxy1XrRq7VXLw5K3thTVWMqJSTHg==
+X-Received: by 2002:a81:a04e:0:b0:5a7:b560:12df with SMTP id x75-20020a81a04e000000b005a7b56012dfmr6552277ywg.8.1699130620090;
+        Sat, 04 Nov 2023 13:43:40 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id o20-20020a056a001b5400b006be22fde07dsm3242567pfv.106.2023.11.04.13.43.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Nov 2023 17:42:14 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Fri, 3 Nov 2023 17:42:12 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Douglas Anderson <dianders@chromium.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-watchdog@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>, swboyd@chromium.org,
-	Andy Gross <agross@kernel.org>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Kees Cook <keescook@chromium.org>,
-	Sai Prakash Ranjan <quic_saipraka@quicinc.com>,
-	Tony Luck <tony.luck@intel.com>,
-	cros-qcom-dts-watchers@chromium.org, devicetree@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/9] arm64: dts: qcom: sc7180: Make watchdog bark
- interrupt edge triggered
-Message-ID: <ae5f5cd1-504a-4ed9-9608-b448b83b23cd@roeck-us.net>
-References: <20231103163434.1.Ic7577567baff921347d423b722de8b857602efb1@changeid>
+        Sat, 04 Nov 2023 13:43:39 -0700 (PDT)
+From: Kees Cook <keescook@chromium.org>
+To: KP Singh <kpsingh@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	linux-hardening@vger.kernel.org,
+	kernel test robot <lkp@intel.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] gcc-plugins: randstruct: Only warn about true flexible arrays
+Date: Sat,  4 Nov 2023 13:43:37 -0700
+Message-Id: <20231104204334.work.160-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231103163434.1.Ic7577567baff921347d423b722de8b857602efb1@changeid>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2029; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=kR5FehWce0r7F/vvyX9p40ys7M/eeh39lUxIbhP7YkA=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlRqz5pwxXM77qFtfhXY3OYmVRSzXSB4rwX04oL
+ H9wouXg1+SJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZUas+QAKCRCJcvTf3G3A
+ JsXpEACMG2le8vL4IC9PsGB5+RwrAs2wcJH1p464aujRMT3447jlnsIImB0T+/gn4K0yS71WJE7
+ nYamPkioTBVnEN6cKKAaOkWcZjkih/bVV8LA590RyVkoQg9C6a7T7+VcZmLL8kYeV103dhU7xM/
+ /mghq9YFYbpvn5oEg0c+Q0TKcd76l9oHmBlJ+ke3aee1QM92H8sleY+60uCAEjnbjODwWhg+rWA
+ Hw7XBbdpYBb3wjbxj9zigYenIJ4k/PABrwtRv7TBBKTCVz8lWWcDarSeTgDUOuw8gE0mgg6d6qK
+ ZkK4MlxlfBGqVEC1uV9WgWGXKisdM1VYBIM4N0EgmbR7fQHtgFHK+nNtYnLb1JNVfDvRZkVS7wN
+ coYiTrfMeRMtsQ7P/JUhO/hq4cokTTNoI9tNoSWzJVkko1ErHYyvdoTNar3HFR8reKYPa7Oarop
+ kuf6q3v/WucHZKIvvvgXdPJozhtKtDYBvDFvrLn5+2zIcNPv6oAGu38GxV6Lz6l1FTSb/Lya2IN
+ a4F3LUehs4kq2ZjLqA/Fmyz1rE/AxkoKXmJ+GJ8mjd+eXooAbaa5tUIZx6KnKsqkfrw3N54vy7e
+ /BbEMV5HG1JaI2Y64ed5IbAxSGlfDHoDlC+o+cxroVztVzWinZkVTcBzl95twub6yAhlKZV8QSz
+ 89FX5+f HS57NFbQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Fri, Nov 03, 2023 at 04:34:27PM -0700, Douglas Anderson wrote:
-> On sc7180 when the watchdog timer fires your logs get filled with:
->   watchdog0: pretimeout event
->   watchdog0: pretimeout event
->   watchdog0: pretimeout event
->   ...
->   watchdog0: pretimeout event
-> 
-> If you're using console-ramoops to debug crashes the above gets quite
-> annoying since it blows away any other log messages that might have
-> been there.
-> 
-> The issue is that the "bark" interrupt (AKA the "pretimeout"
-> interrupt) remains high until the watchdog is pet. Since we've got
-> things configured as "level" triggered we'll keep getting interrupted
-> over and over.
-> 
-> Let's switch to edge triggered. Now we'll get one interrupt when the
-> "bark" interrupt goes off we'll get one interrupt and won't get
-> another one until the "bark" interrupt is cleared and asserts again.
-> 
-> This matches how many older Qualcomm SoCs have things configured.
-> 
-> Fixes: 28cc13e4060c ("arm64: dts: qcom: sc7180: Add watchdog bark interrupt")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+The randstruct GCC plugin tried to discover "fake" flexible arrays
+to issue warnings about them in randomized structs. In the future
+LSM overhead reduction series, it would be legal to have a randomized
+struct with a 1-element array, and this should _not_ be treated as a
+flexible array, especially since commit df8fc4e934c1 ("kbuild: Enable
+-fstrict-flex-arrays=3"). Disable the 0-sized and 1-element array
+discovery logic in the plugin, but keep the "true" flexible array check.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Cc: KP Singh <kpsingh@kernel.org>
+Cc: linux-hardening@vger.kernel.org
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202311021532.iBwuZUZ0-lkp@intel.com/
+Fixes: df8fc4e934c1 ("kbuild: Enable -fstrict-flex-arrays=3")
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ scripts/gcc-plugins/randomize_layout_plugin.c | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-> ---
-> 
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index 11f353d416b4..c0365832c315 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -3576,7 +3576,7 @@ watchdog@17c10000 {
->  			compatible = "qcom,apss-wdt-sc7180", "qcom,kpss-wdt";
->  			reg = <0 0x17c10000 0 0x1000>;
->  			clocks = <&sleep_clk>;
-> -			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupts = <GIC_SPI 0 IRQ_TYPE_EDGE_RISING>;
->  		};
->  
->  		timer@17c20000 {
-> -- 
-> 2.42.0.869.gea05f2083d-goog
-> 
+diff --git a/scripts/gcc-plugins/randomize_layout_plugin.c b/scripts/gcc-plugins/randomize_layout_plugin.c
+index 366395cab490..910bd21d08f4 100644
+--- a/scripts/gcc-plugins/randomize_layout_plugin.c
++++ b/scripts/gcc-plugins/randomize_layout_plugin.c
+@@ -278,8 +278,6 @@ static bool is_flexible_array(const_tree field)
+ {
+ 	const_tree fieldtype;
+ 	const_tree typesize;
+-	const_tree elemtype;
+-	const_tree elemsize;
+ 
+ 	fieldtype = TREE_TYPE(field);
+ 	typesize = TYPE_SIZE(fieldtype);
+@@ -287,20 +285,12 @@ static bool is_flexible_array(const_tree field)
+ 	if (TREE_CODE(fieldtype) != ARRAY_TYPE)
+ 		return false;
+ 
+-	elemtype = TREE_TYPE(fieldtype);
+-	elemsize = TYPE_SIZE(elemtype);
+-
+ 	/* size of type is represented in bits */
+ 
+ 	if (typesize == NULL_TREE && TYPE_DOMAIN(fieldtype) != NULL_TREE &&
+ 	    TYPE_MAX_VALUE(TYPE_DOMAIN(fieldtype)) == NULL_TREE)
+ 		return true;
+ 
+-	if (typesize != NULL_TREE &&
+-	    (TREE_CONSTANT(typesize) && (!tree_to_uhwi(typesize) ||
+-	     tree_to_uhwi(typesize) == tree_to_uhwi(elemsize))))
+-		return true;
+-
+ 	return false;
+ }
+ 
+-- 
+2.34.1
+
