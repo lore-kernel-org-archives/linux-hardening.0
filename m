@@ -1,130 +1,101 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4764F3C27
-	for <linux-hardening@vger.kernel.org>; Sat,  4 Nov 2023 20:43:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hDDHeKXn"
-Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E764D194
-	for <linux-hardening@vger.kernel.org>; Sat,  4 Nov 2023 13:43:40 -0700 (PDT)
-Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-5a7b3d33663so38435127b3.3
-        for <linux-hardening@vger.kernel.org>; Sat, 04 Nov 2023 13:43:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1699130620; x=1699735420; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=pM4iIP95/mnmbwbJH/uUs68LV5bT9obYBYBO1xuu04M=;
-        b=hDDHeKXnWNXTPAtkuxlGXsxxym+qGrtubohSZt2rBmYUMUmSo1CXQr3aFGsNIh4q0w
-         pxlOhHL+cGdIrwHyrcTlF93te5KyMqDY+1duSbMXB2Sd3JbIgy4cxvTWD2ETMoZUAGSM
-         pmn0lqBmzdGwhrmwfEvgeTj/FmOYjl7MpZijU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699130620; x=1699735420;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pM4iIP95/mnmbwbJH/uUs68LV5bT9obYBYBO1xuu04M=;
-        b=CzorX2lLJW53Q5TnmwP1gIZp3WmfaF43Eiedv031hoyEssuV3OVDLcVj3shSYZ0UMY
-         3cuaI2nEkpAZ84495eNgBLVfHyyUNBur173lSJW2O7xt3Aqr9yIeUzRIUL+rJ6qz615p
-         jY6EbKVsO3yoExMHXAazYsNEr7Wf9uq6/ucVlbP6cVxCwFaMg+OijxxYn6N9gMRC+UoY
-         CgeWlkSpr1hQOY6aA5y2bRqiP4O6HmLsuzX/OimqPJlvj6tmMGQj/bNpKEUdRT75ku9x
-         H3kpejl0TOqZe/YA7ul2QBkVensl0CSP1U7jW8X2kW58j2W8iWx0SSW5brsgzmbqc8Sb
-         3T7w==
-X-Gm-Message-State: AOJu0Yw6rSjKB+QwAM7P9DVPsoxEhAVoWhbIN1Pu43MTW1OwSt6sLbRk
-	2rZNLEJcTk56+1ODEKN1/sUh0g==
-X-Google-Smtp-Source: AGHT+IEdSQ3IC0cAAkDzAjuud/+CMTavM6U9ZRus1BZZTmlAQnxxy1XrRq7VXLw5K3thTVWMqJSTHg==
-X-Received: by 2002:a81:a04e:0:b0:5a7:b560:12df with SMTP id x75-20020a81a04e000000b005a7b56012dfmr6552277ywg.8.1699130620090;
-        Sat, 04 Nov 2023 13:43:40 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id o20-20020a056a001b5400b006be22fde07dsm3242567pfv.106.2023.11.04.13.43.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Nov 2023 13:43:39 -0700 (PDT)
-From: Kees Cook <keescook@chromium.org>
-To: KP Singh <kpsingh@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>,
-	linux-hardening@vger.kernel.org,
-	kernel test robot <lkp@intel.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] gcc-plugins: randstruct: Only warn about true flexible arrays
-Date: Sat,  4 Nov 2023 13:43:37 -0700
-Message-Id: <20231104204334.work.160-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 640F9BE6D
+	for <linux-hardening@vger.kernel.org>; Sun,  5 Nov 2023 20:29:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9D6CB8
+	for <linux-hardening@vger.kernel.org>; Sun,  5 Nov 2023 12:29:52 -0800 (PST)
+Received: from localhost.localdomain (178.176.72.158) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Sun, 5 Nov
+ 2023 23:29:42 +0300
+From: Sergey Shtylyov <s.shtylyov@omp.ru>
+To: Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	<linux-hardening@vger.kernel.org>
+Subject: [PATCH] pstore: ram_core: fix possible overflow in persistent_ram_init_ecc()
+Date: Sun, 5 Nov 2023 23:29:36 +0300
+Message-ID: <20231105202936.25694-1-s.shtylyov@omp.ru>
+X-Mailer: git-send-email 2.26.3
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2029; i=keescook@chromium.org;
- h=from:subject:message-id; bh=kR5FehWce0r7F/vvyX9p40ys7M/eeh39lUxIbhP7YkA=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlRqz5pwxXM77qFtfhXY3OYmVRSzXSB4rwX04oL
- H9wouXg1+SJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZUas+QAKCRCJcvTf3G3A
- JsXpEACMG2le8vL4IC9PsGB5+RwrAs2wcJH1p464aujRMT3447jlnsIImB0T+/gn4K0yS71WJE7
- nYamPkioTBVnEN6cKKAaOkWcZjkih/bVV8LA590RyVkoQg9C6a7T7+VcZmLL8kYeV103dhU7xM/
- /mghq9YFYbpvn5oEg0c+Q0TKcd76l9oHmBlJ+ke3aee1QM92H8sleY+60uCAEjnbjODwWhg+rWA
- Hw7XBbdpYBb3wjbxj9zigYenIJ4k/PABrwtRv7TBBKTCVz8lWWcDarSeTgDUOuw8gE0mgg6d6qK
- ZkK4MlxlfBGqVEC1uV9WgWGXKisdM1VYBIM4N0EgmbR7fQHtgFHK+nNtYnLb1JNVfDvRZkVS7wN
- coYiTrfMeRMtsQ7P/JUhO/hq4cokTTNoI9tNoSWzJVkko1ErHYyvdoTNar3HFR8reKYPa7Oarop
- kuf6q3v/WucHZKIvvvgXdPJozhtKtDYBvDFvrLn5+2zIcNPv6oAGu38GxV6Lz6l1FTSb/Lya2IN
- a4F3LUehs4kq2ZjLqA/Fmyz1rE/AxkoKXmJ+GJ8mjd+eXooAbaa5tUIZx6KnKsqkfrw3N54vy7e
- /BbEMV5HG1JaI2Y64ed5IbAxSGlfDHoDlC+o+cxroVztVzWinZkVTcBzl95twub6yAhlKZV8QSz
- 89FX5+f HS57NFbQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [178.176.72.158]
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.0.0, Database issued on: 11/05/2023 20:08:36
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 59
+X-KSE-AntiSpam-Info: Lua profiles 181122 [Nov 03 2023]
+X-KSE-AntiSpam-Info: Version: 6.0.0.2
+X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 543 543 1e3516af5cdd92079dfeb0e292c8747a62cb1ee4
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info: {relay has no DNS name}
+X-KSE-AntiSpam-Info: {SMTP from is not routable}
+X-KSE-AntiSpam-Info:
+	omp.ru:7.1.1;127.0.0.199:7.1.2;178.176.72.158:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1
+X-KSE-AntiSpam-Info: ApMailHostAddress: 178.176.72.158
+X-KSE-AntiSpam-Info: {DNS response errors}
+X-KSE-AntiSpam-Info: Rate: 59
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 11/05/2023 20:14:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 11/5/2023 6:43:00 PM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-The randstruct GCC plugin tried to discover "fake" flexible arrays
-to issue warnings about them in randomized structs. In the future
-LSM overhead reduction series, it would be legal to have a randomized
-struct with a 1-element array, and this should _not_ be treated as a
-flexible array, especially since commit df8fc4e934c1 ("kbuild: Enable
--fstrict-flex-arrays=3"). Disable the 0-sized and 1-element array
-discovery logic in the plugin, but keep the "true" flexible array check.
+In persistent_ram_init_ecc(), on 64-bit arches DIV_ROUND_UP() will return
+64-bit value since persistent_ram_zone::buffer_size has type size_t which
+is derived from the 64-bit *unsigned long*, while the ecc_blocks variable
+this value gets assigned to has (always 32-bit) *int* type.  Even if that
+value fits into *int* type, an overflow is still possible when calculating
+the size_t typed ecc_total variable further below since there's no cast to
+any 64-bit type before multiplication.  Declaring the ecc_blocks variable
+as *unsigned long* should fix this mess...
 
-Cc: KP Singh <kpsingh@kernel.org>
-Cc: linux-hardening@vger.kernel.org
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202311021532.iBwuZUZ0-lkp@intel.com/
-Fixes: df8fc4e934c1 ("kbuild: Enable -fstrict-flex-arrays=3")
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Found by Linux Verification Center (linuxtesting.org) with the SVACE static
+analysis tool.
+
+Fixes: 9cc05ad97c57 ("staging: android: persistent_ram: refactor ecc support")
+Signed-off-by: Sergey Shtylyov <s.shtylyov@omp.ru>
 ---
- scripts/gcc-plugins/randomize_layout_plugin.c | 10 ----------
- 1 file changed, 10 deletions(-)
+The patch is against the 'master' branch of Linus Torvalds' repo.
 
-diff --git a/scripts/gcc-plugins/randomize_layout_plugin.c b/scripts/gcc-plugins/randomize_layout_plugin.c
-index 366395cab490..910bd21d08f4 100644
---- a/scripts/gcc-plugins/randomize_layout_plugin.c
-+++ b/scripts/gcc-plugins/randomize_layout_plugin.c
-@@ -278,8 +278,6 @@ static bool is_flexible_array(const_tree field)
+ fs/pstore/ram_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/pstore/ram_core.c b/fs/pstore/ram_core.c
+index 650e437b55e6..131c1923b8c0 100644
+--- a/fs/pstore/ram_core.c
++++ b/fs/pstore/ram_core.c
+@@ -190,7 +190,7 @@ static int persistent_ram_init_ecc(struct persistent_ram_zone *prz,
  {
- 	const_tree fieldtype;
- 	const_tree typesize;
--	const_tree elemtype;
--	const_tree elemsize;
+ 	int numerr;
+ 	struct persistent_ram_buffer *buffer = prz->buffer;
+-	int ecc_blocks;
++	unsigned long ecc_blocks;
+ 	size_t ecc_total;
  
- 	fieldtype = TREE_TYPE(field);
- 	typesize = TYPE_SIZE(fieldtype);
-@@ -287,20 +285,12 @@ static bool is_flexible_array(const_tree field)
- 	if (TREE_CODE(fieldtype) != ARRAY_TYPE)
- 		return false;
- 
--	elemtype = TREE_TYPE(fieldtype);
--	elemsize = TYPE_SIZE(elemtype);
--
- 	/* size of type is represented in bits */
- 
- 	if (typesize == NULL_TREE && TYPE_DOMAIN(fieldtype) != NULL_TREE &&
- 	    TYPE_MAX_VALUE(TYPE_DOMAIN(fieldtype)) == NULL_TREE)
- 		return true;
- 
--	if (typesize != NULL_TREE &&
--	    (TREE_CONSTANT(typesize) && (!tree_to_uhwi(typesize) ||
--	     tree_to_uhwi(typesize) == tree_to_uhwi(elemsize))))
--		return true;
--
- 	return false;
- }
- 
+ 	if (!ecc_info || !ecc_info->ecc_size)
 -- 
-2.34.1
+2.26.3
 
