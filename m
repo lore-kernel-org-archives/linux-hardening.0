@@ -1,101 +1,89 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 640F9BE6D
-	for <linux-hardening@vger.kernel.org>; Sun,  5 Nov 2023 20:29:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9D6CB8
-	for <linux-hardening@vger.kernel.org>; Sun,  5 Nov 2023 12:29:52 -0800 (PST)
-Received: from localhost.localdomain (178.176.72.158) by msexch01.omp.ru
- (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Sun, 5 Nov
- 2023 23:29:42 +0300
-From: Sergey Shtylyov <s.shtylyov@omp.ru>
-To: Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	<linux-hardening@vger.kernel.org>
-Subject: [PATCH] pstore: ram_core: fix possible overflow in persistent_ram_init_ecc()
-Date: Sun, 5 Nov 2023 23:29:36 +0300
-Message-ID: <20231105202936.25694-1-s.shtylyov@omp.ru>
-X-Mailer: git-send-email 2.26.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC95518B00
+	for <linux-hardening@vger.kernel.org>; Sun,  5 Nov 2023 21:28:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="J6v+fcTe"
+Received: from smtp.smtpout.orange.fr (smtp-18.smtpout.orange.fr [80.12.242.18])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8774FD9
+	for <linux-hardening@vger.kernel.org>; Sun,  5 Nov 2023 13:27:58 -0800 (PST)
+Received: from [192.168.1.18] ([86.243.2.178])
+	by smtp.orange.fr with ESMTPA
+	id zkesqAuzormQMzketqBHoe; Sun, 05 Nov 2023 22:27:55 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1699219676;
+	bh=ZBxI7c/ZChbSFF3scIbmQ8sKou5OuuJXp2+47TLI3rs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=J6v+fcTecyDpqZOwya2BFcaG7NTjcE8SMRq2En1aoYFEWFQTUxdmoR3OjwMQki+sj
+	 A3G+EzSeHG4AQ7HrknhbeQucLb9iLNWw0alr1vksWl6DOct0aWWbEKw7yJVBEaojpL
+	 2ZQhq25gKfiXSGDQ7BIT8qUfFmKem/1dra+97rZuHqTLd9UWO1vd14hDgS/IxG/Jv4
+	 sQUCtoTv4voh/tUQpSO/8vOOZlkCF7+MLX65eBagf3rtzUHlARjVXkbLY7UcUSADfu
+	 bTZZnb1FNbN2v171oUpB/lmpCi+RLOrGPLVqmvPJnwqRGWfZyThSkY23NVSFnZgOS3
+	 CJ3aIqoLiErSg==
+X-ME-Helo: [192.168.1.18]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 05 Nov 2023 22:27:56 +0100
+X-ME-IP: 86.243.2.178
+Message-ID: <bcfc4079-2f50-4a7f-a4fa-65fcfb465e6f@wanadoo.fr>
+Date: Sun, 5 Nov 2023 22:27:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] comedi: Annotate struct comedi_lrange with __counted_by
+Content-Language: fr, en-US
+To: Kees Cook <keescook@chromium.org>, Julia Lawall <julia.lawall@inria.fr>
+Cc: Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva"
+ <gustavoars@kernel.org>, linux-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <5c3b7459b820e22e2ac6ce892d4aadcc119cc919.1696065263.git.christophe.jaillet@wanadoo.fr>
+ <202309301342.5B5BED40A1@keescook>
+ <alpine.DEB.2.22.394.2310010945130.3166@hadrien>
+ <90E2BBA5-8A2D-42DE-B36A-CD37BABBB433@kernel.org>
+ <alpine.DEB.2.22.394.2310012112560.3166@hadrien>
+ <202310011405.7599BA9@keescook> <202310011421.C4F19D45@keescook>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <202310011421.C4F19D45@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [178.176.72.158]
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.0.0, Database issued on: 11/05/2023 20:08:36
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 59
-X-KSE-AntiSpam-Info: Lua profiles 181122 [Nov 03 2023]
-X-KSE-AntiSpam-Info: Version: 6.0.0.2
-X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 543 543 1e3516af5cdd92079dfeb0e292c8747a62cb1ee4
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info: {relay has no DNS name}
-X-KSE-AntiSpam-Info: {SMTP from is not routable}
-X-KSE-AntiSpam-Info:
-	omp.ru:7.1.1;127.0.0.199:7.1.2;178.176.72.158:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1
-X-KSE-AntiSpam-Info: ApMailHostAddress: 178.176.72.158
-X-KSE-AntiSpam-Info: {DNS response errors}
-X-KSE-AntiSpam-Info: Rate: 59
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 11/05/2023 20:14:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 11/5/2023 6:43:00 PM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-In persistent_ram_init_ecc(), on 64-bit arches DIV_ROUND_UP() will return
-64-bit value since persistent_ram_zone::buffer_size has type size_t which
-is derived from the 64-bit *unsigned long*, while the ecc_blocks variable
-this value gets assigned to has (always 32-bit) *int* type.  Even if that
-value fits into *int* type, an overflow is still possible when calculating
-the size_t typed ecc_total variable further below since there's no cast to
-any 64-bit type before multiplication.  Declaring the ecc_blocks variable
-as *unsigned long* should fix this mess...
+Le 01/10/2023 à 23:22, Kees Cook a écrit :
+> On Sun, Oct 01, 2023 at 02:05:46PM -0700, Kees Cook wrote:
+>> On Sun, Oct 01, 2023 at 09:14:02PM +0200, Julia Lawall wrote:
+>>> Kees,
+>>>
+>>> You can try the following.
+>>
+>> Cool! Yeah, this finds the example:
+>>
+>> drivers/comedi/drivers/rti800.c:74: struct comedi_lrange: field at offset 0 is the counter for the flex array
+>> drivers/comedi/drivers/rti800.c:83: struct comedi_lrange: field at offset 0 is the counter for the flex array
+>> drivers/comedi/drivers/rti800.c:92: struct comedi_lrange: field at offset 0 is the counter for the flex array
+>>
+>> I'll run it on the whole codebase...
+> 
+> It found only the struct comedi_lrange instances, but that's good to
+> know. :)
+> 
 
-Found by Linux Verification Center (linuxtesting.org) with the SVACE static
-analysis tool.
+Hi,
 
-Fixes: 9cc05ad97c57 ("staging: android: persistent_ram: refactor ecc support")
-Signed-off-by: Sergey Shtylyov <s.shtylyov@omp.ru>
----
-The patch is against the 'master' branch of Linus Torvalds' repo.
+(removing most of people from the thread)
 
- fs/pstore/ram_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/pstore/ram_core.c b/fs/pstore/ram_core.c
-index 650e437b55e6..131c1923b8c0 100644
---- a/fs/pstore/ram_core.c
-+++ b/fs/pstore/ram_core.c
-@@ -190,7 +190,7 @@ static int persistent_ram_init_ecc(struct persistent_ram_zone *prz,
- {
- 	int numerr;
- 	struct persistent_ram_buffer *buffer = prz->buffer;
--	int ecc_blocks;
-+	unsigned long ecc_blocks;
- 	size_t ecc_total;
- 
- 	if (!ecc_info || !ecc_info->ecc_size)
--- 
-2.26.3
+I found another one.
 
+struct ocotp_devtype_data has a field 'num_entry' which is the number of 
+entries in 'entry' flex array.
+
+
+[1]: 
+https://elixir.bootlin.com/linux/v6.6/source/drivers/nvmem/imx-ocotp-ele.c#L28
+[2]: 
+https://elixir.bootlin.com/linux/v6.6/source/drivers/nvmem/imx-ocotp-ele.c#L143
+
+CJ
