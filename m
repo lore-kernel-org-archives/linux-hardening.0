@@ -1,102 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FCC618035;
-	Mon,  6 Nov 2023 10:58:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5816C28E2B
+	for <linux-hardening@vger.kernel.org>; Mon,  6 Nov 2023 15:53:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Th/nT6Ve"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AD3EC433C7;
-	Mon,  6 Nov 2023 10:58:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699268329;
-	bh=Sg8f81K8kk3/SHGG8dWL3FhrCJtkIiWJ0jEsgKtTGhg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Th/nT6VeS2zk1OlULtw+APVIYXcTssnx5cdpxe9RWD0rBicD+1gbBEBPHnoIJ2JxS
-	 y0BaJK13gBKtKqEq76LNJbcJooPSje3Rwa686by63MpTCvKZ9nW0vsP+ImT+OBHxlT
-	 /nq79xJlOCrCMBfTp/K2hw05nNLWY9683dIA1GR968Irjlhm1oNjc/Q7Rh5/ujtfpE
-	 EJyXp/JtyEqTP9GYp16IRj+3RmdFZfOV5og+MqYW5QDIk7bLhEYHgjdSpFJKPghEE1
-	 8DyuRWRhuQF5tpNI71knoBGV9foel4lRcP/XoizdI/dUMengOwxo81jAxXZMKfiSbY
-	 cDmyD6XWbes/Q==
-Date: Mon, 6 Nov 2023 10:58:46 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Duje =?utf-8?Q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Cc: Robin Murphy <robin.murphy@arm.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Tony Lindgren <tony@atomide.com>, Daniel Mack <daniel@zonque.org>,
-	Haojian Zhuang <haojian.zhuang@gmail.com>,
-	Robert Jarzmik <robert.jarzmik@free.fr>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Leo Yan <leoy@marvell.com>, Zhangfei Gao <zhangfei.gao@marvell.com>,
-	Lubomir Rintel <lkundrak@v3.sk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Kees Cook <keescook@chromium.org>,
-	Tony Luck <tony.luck@intel.com>,
-	"Guilherme G . Piccoli" <gpiccoli@igalia.com>,
-	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-	alsa-devel@alsa-project.org, linux-hardening@vger.kernel.org,
-	phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
-	Karel Balej <balejk@matfyz.cz>, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v7 06/10] ASoC: pxa: Suppress SSPA on ARM64
-Message-ID: <ZUjG5tUrBvm6PDvB@finisterre.sirena.org.uk>
-References: <20231102152033.5511-1-duje.mihanovic@skole.hr>
- <dc7aaff0-f767-494e-9a3a-40fcacc1674e@sirena.org.uk>
- <3b4ac48b-e29d-415f-89f1-6d354f18c4a4@arm.com>
- <4855402.GXAFRqVoOG@radijator>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="LruJoUjr"
+Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13FBB13E
+	for <linux-hardening@vger.kernel.org>; Mon,  6 Nov 2023 07:53:40 -0800 (PST)
+Received: from eig-obgw-6009a.ext.cloudfilter.net ([10.0.30.184])
+	by cmsmtp with ESMTPS
+	id 009GrKUhP8Hte01v1rFZdY; Mon, 06 Nov 2023 15:53:39 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id 01v0rp0ujOk5S01v0r7pow; Mon, 06 Nov 2023 15:53:38 +0000
+X-Authority-Analysis: v=2.4 cv=E+DeGIRl c=1 sm=1 tr=0 ts=65490c02
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=BNY50KLci1gA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
+ a=QyXUC8HyAAAA:8 a=cm27Pg_UAAAA:8 a=EQy5N3Hs284AOLTsN7YA:9 a=QEXdDO2ut3YA:10
+ a=AjGcO6oz07-iQ99wixmX:22 a=xmb-EsYY8bH0VWELuYED:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=eApjHkz6lNxwfvlKIIAPEUFtBUpEc7lCSax6Jlj16Gs=; b=LruJoUjrnxdwykyQx50weks1Ga
+	1Z+FG6qRzBa0Gs1n+ljrDX8MKkp2tLPpcJA0YupxHgRfe6y/hZdhU1cTGq6q7wOOKXOKoMFNtdDxF
+	Q9uLWpUcW7swAgihl2mfTXnOSbMmO5mC9+geK/AGz+UVhBu+U6uVl2+mj15xusMbWTvq89meydBAs
+	iYABVi74WtIR8AG0aynPOvt+YmxeWc5+3YHuCCqDThKS2PpPCdUS2/NaIbrHxLbugpat3nrsldGbD
+	HO41RWwfB9zebV9v2BlM6lQFx84FdapK/k1qmoJOzyprWKbbVYDdLvNg0rdR+Ty0gV524O/WS9LUL
+	h8EugYSQ==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:60964 helo=[192.168.15.10])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1r01uz-0028r1-35;
+	Mon, 06 Nov 2023 09:53:38 -0600
+Message-ID: <66a8cc44-15fb-457d-bea6-3a67a6a62630@embeddedor.com>
+Date: Mon, 6 Nov 2023 09:53:36 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="cDAfE28G8f8xdnBg"
-Content-Disposition: inline
-In-Reply-To: <4855402.GXAFRqVoOG@radijator>
-X-Cookie: Save energy:  Drive a smaller shell.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] gcc-plugins: randstruct: Only warn about true flexible
+ arrays
+Content-Language: en-US
+To: Kees Cook <keescook@chromium.org>, KP Singh <kpsingh@kernel.org>
+Cc: linux-hardening@vger.kernel.org, kernel test robot <lkp@intel.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-kernel@vger.kernel.org
+References: <20231104204334.work.160-kees@kernel.org>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20231104204334.work.160-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.21.192
+X-Source-L: No
+X-Exim-ID: 1r01uz-0028r1-35
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:60964
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 4
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfKIFcEb+HG8eiM7LiOoNE5zlC8hgtcxEGR5lkUSbDEBORUyvHRRVVtWDWz6uzyJhKqQ2WM/jctvIMUIPV8eYTTAjQ1YyMVHQ4PfGYVdN8i45Eh7Hma4J
+ 65Js8w+WZSCw5vppVrMnBynzISHXfN4j4ZMs0caumtadjz0TGak0wbXx+cBRBqdG+jsFwmGHWu1kULy/9AHRI0wVMPPpywrgO5Mxc2QKAfZmecoUVQvNA3Hc
 
 
---cDAfE28G8f8xdnBg
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 03, 2023 at 05:58:05PM +0100, Duje Mihanovi=C4=87 wrote:
+On 11/4/23 14:43, Kees Cook wrote:
+> The randstruct GCC plugin tried to discover "fake" flexible arrays
+> to issue warnings about them in randomized structs. In the future
+> LSM overhead reduction series, it would be legal to have a randomized
+> struct with a 1-element array, and this should _not_ be treated as a
+> flexible array, especially since commit df8fc4e934c1 ("kbuild: Enable
+> -fstrict-flex-arrays=3"). Disable the 0-sized and 1-element array
+> discovery logic in the plugin, but keep the "true" flexible array check.
+> 
+> Cc: KP Singh <kpsingh@kernel.org>
+> Cc: linux-hardening@vger.kernel.org
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202311021532.iBwuZUZ0-lkp@intel.com/
+> Fixes: df8fc4e934c1 ("kbuild: Enable -fstrict-flex-arrays=3")
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-> I just looked at it again and it looks like no code in sound/soc/pxa/* or=
-=20
-> sound/arm/pxa* depends on AACI in any way. Therefore, I believe that to f=
-ix=20
-> this correctly, I would have to remove "select SND_ARM" from sound/soc/px=
-a/
-> Kconfig and optionally move the PXA2xx code out of sound/arm/ and into so=
-und/
-> soc/pxa/. Is this correct? If so, I'd also split that fix into a separate=
-=20
-> series.
+Acked-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-There's the pxa-ac97 driver to consider...
+Thanks!
+--
+Gustavo
 
---cDAfE28G8f8xdnBg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmVIxuUACgkQJNaLcl1U
-h9AeGAf/c2+d+tcgxFoSAkZXFPkCaz/eMgb8h+BgUpxjiuIheHzsxvbKE0zqEpob
-LLb77Y8RJuFjRED+1HDwewAzExBafqDv6jOitYbrJDCL+ERlb72HhaWK7jrSvo9y
-OjupBMTVvmLY0W64K7Vb2NM0T2/OIxrKApBbEMUxxpEagmmM1I09erf7m1Gi0Sfl
-31oZwOnmH810ZaG0mtQuZijawmCMSuEnpl0vjhrQe0D8mSieZRdlT8IdpMVN7sm+
-IZ6qvIh644bG7uf1E9a0QV6eM9ziLMDdId1h4W3hCTssoFesy9wWw6dV2mZiKrat
-/yjpAz05qMaAFLHi45RxQYjqwdAKQw==
-=jjeN
------END PGP SIGNATURE-----
-
---cDAfE28G8f8xdnBg--
+> ---
+>   scripts/gcc-plugins/randomize_layout_plugin.c | 10 ----------
+>   1 file changed, 10 deletions(-)
+> 
+> diff --git a/scripts/gcc-plugins/randomize_layout_plugin.c b/scripts/gcc-plugins/randomize_layout_plugin.c
+> index 366395cab490..910bd21d08f4 100644
+> --- a/scripts/gcc-plugins/randomize_layout_plugin.c
+> +++ b/scripts/gcc-plugins/randomize_layout_plugin.c
+> @@ -278,8 +278,6 @@ static bool is_flexible_array(const_tree field)
+>   {
+>   	const_tree fieldtype;
+>   	const_tree typesize;
+> -	const_tree elemtype;
+> -	const_tree elemsize;
+>   
+>   	fieldtype = TREE_TYPE(field);
+>   	typesize = TYPE_SIZE(fieldtype);
+> @@ -287,20 +285,12 @@ static bool is_flexible_array(const_tree field)
+>   	if (TREE_CODE(fieldtype) != ARRAY_TYPE)
+>   		return false;
+>   
+> -	elemtype = TREE_TYPE(fieldtype);
+> -	elemsize = TYPE_SIZE(elemtype);
+> -
+>   	/* size of type is represented in bits */
+>   
+>   	if (typesize == NULL_TREE && TYPE_DOMAIN(fieldtype) != NULL_TREE &&
+>   	    TYPE_MAX_VALUE(TYPE_DOMAIN(fieldtype)) == NULL_TREE)
+>   		return true;
+>   
+> -	if (typesize != NULL_TREE &&
+> -	    (TREE_CONSTANT(typesize) && (!tree_to_uhwi(typesize) ||
+> -	     tree_to_uhwi(typesize) == tree_to_uhwi(elemsize))))
+> -		return true;
+> -
+>   	return false;
+>   }
+>   
