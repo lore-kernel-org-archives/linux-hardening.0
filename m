@@ -1,22 +1,22 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFB0530CE7
-	for <linux-hardening@vger.kernel.org>; Tue,  7 Nov 2023 12:32:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F9322FE30
+	for <linux-hardening@vger.kernel.org>; Tue,  7 Nov 2023 12:32:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AMWM1W/4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C89AC433C8;
-	Tue,  7 Nov 2023 12:32:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WXVDdEg1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F7D2C433CA;
+	Tue,  7 Nov 2023 12:32:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699360327;
-	bh=1Clw0w1MSvnROR8jtXWDK1UNctUF1Mmh9SirfaultLI=;
+	s=k20201202; t=1699360358;
+	bh=DBo+38hJzFklrsrabsiHyKcpBeb3NFKTLGXaoSm2e9Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AMWM1W/4YWHyX1hjQ3lIesbdP30zIeiyrOr/F+xzFj3zn9HMN+Yd5Dg7Y6LKuMNAJ
-	 QIeTVETtPsiBhWp5GUKVgxmdrStD4YJ1D0M6G1RguOH+iMV3E1E9ozkjVtzWxmhBMq
-	 aG/M7loxREbB8HB5HTwrYTRYBLI9pB4fAUTxAIVCqnfvJ/TKkDaiLWf+EwlDfSHM4N
-	 lUldW7Gh8TeaqSy8pC9Lzll33zzMnHfLaBo0g/+x957DzRmqxza+k2Z/vdB4HNKWNV
-	 Wv2ccAEzZUa4DA8BavDHLdZIG0dotHzFJ8dyM9C0HCyeqo6U39V1ULXZBQtDV09IoK
-	 lrmdfRkV5ABVg==
+	b=WXVDdEg1EPnBxm1EM2WkCd9ns0l/cdtp7cYInPFDVwD/VAEja57/ZGU4PkT3P+Riu
+	 RhuZHphkB9xVe0JvkB5AEg8aruzLQRwcDpIomyrVhjx0De8ThJeOpicTHubtrobQcS
+	 yaCnQ6sCkWPvIQNc6SbF+HIPu08JRdxUD1vBuRHmzETxgK7e/Jcoup+iVhGavFIIT/
+	 fXYLX6vvRSEYlOPTI0lp0KVi5Ak1AN41KS88apVibSv6s41p6JYQibIuZJpO2F1rQM
+	 sGW6Tcx/n3BAsoRrRoy5hMK5QILNAmVHAc5G8z2U0cJ9UX8KX2BBMV6rfaPx0vX9Z/
+	 9aCt/P1NFWhSg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -28,23 +28,23 @@ Cc: Qu Huang <qu.huang@linux.dev>,
 	airlied@gmail.com,
 	daniel@ffwll.ch,
 	keescook@chromium.org,
-	shashank.sharma@amd.com,
-	srinivasan.shanmugam@amd.com,
 	Hawking.Zhang@amd.com,
-	le.ma@amd.com,
+	srinivasan.shanmugam@amd.com,
+	shashank.sharma@amd.com,
+	Praful.Swarnakar@amd.com,
 	dan.carpenter@linaro.org,
-	suhui@nfschina.com,
 	tom.stdenis@amd.com,
+	le.ma@amd.com,
 	andrealmeid@igalia.com,
 	amd-gfx@lists.freedesktop.org,
 	dri-devel@lists.freedesktop.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 5/6] drm/amdgpu: Fix a null pointer access when the smc_rreg pointer is NULL
-Date: Tue,  7 Nov 2023 07:31:36 -0500
-Message-ID: <20231107123148.3763062-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 4/5] drm/amdgpu: Fix a null pointer access when the smc_rreg pointer is NULL
+Date: Tue,  7 Nov 2023 07:32:09 -0500
+Message-ID: <20231107123225.3763221-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231107123148.3763062-1-sashal@kernel.org>
-References: <20231107123148.3763062-1-sashal@kernel.org>
+In-Reply-To: <20231107123225.3763221-1-sashal@kernel.org>
+References: <20231107123225.3763221-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -53,7 +53,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.4.259
+X-stable-base: Linux 4.19.297
 Content-Transfer-Encoding: 8bit
 
 From: Qu Huang <qu.huang@linux.dev>
@@ -129,10 +129,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 6 insertions(+)
 
 diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
-index a9a81e55777bf..d81034023144a 100644
+index ee4a0b7cb452f..41a9cc9e0f9db 100644
 --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
 +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
-@@ -392,6 +392,9 @@ static ssize_t amdgpu_debugfs_regs_smc_read(struct file *f, char __user *buf,
+@@ -391,6 +391,9 @@ static ssize_t amdgpu_debugfs_regs_smc_read(struct file *f, char __user *buf,
  	ssize_t result = 0;
  	int r;
  
@@ -142,7 +142,7 @@ index a9a81e55777bf..d81034023144a 100644
  	if (size & 0x3 || *pos & 0x3)
  		return -EINVAL;
  
-@@ -431,6 +434,9 @@ static ssize_t amdgpu_debugfs_regs_smc_write(struct file *f, const char __user *
+@@ -430,6 +433,9 @@ static ssize_t amdgpu_debugfs_regs_smc_write(struct file *f, const char __user *
  	ssize_t result = 0;
  	int r;
  
