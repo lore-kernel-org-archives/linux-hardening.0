@@ -1,79 +1,81 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B39315A7
-	for <linux-hardening@vger.kernel.org>; Tue,  7 Nov 2023 16:44:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 410A1341B6
+	for <linux-hardening@vger.kernel.org>; Tue,  7 Nov 2023 17:24:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DawF0wbJ"
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33C0593;
-	Tue,  7 Nov 2023 08:44:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="naMsk9RG"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC22CDF;
+	Tue,  7 Nov 2023 09:24:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1699375451; x=1730911451;
-  h=message-id:date:subject:to:cc:references:from:
+  t=1699377854; x=1730913854;
+  h=message-id:date:subject:from:to:cc:references:
    in-reply-to:content-transfer-encoding:mime-version;
-  bh=A6QjB7g7YEfGq9Y8mgIhi0AUnnX3jzQGt7Ss1lwCVH4=;
-  b=DawF0wbJlFDb3crG3qDRKH0Zt1LkqlNGl4sIWcT/Hvl82zWWZxBhdi9t
-   Xd7aAObdbvOt5L97aw5Ya7pYx7Lww40Yx/6AVa3MLnvFzeVvEtZtTzcqb
-   9ocXXzzcszgeN9TKnFSWD2xR8mlD6UkLzhg9OqvjQit8Bj7pZPL5Y9LQZ
-   q+vim9gwqRWZ7bus4whpBEGpLam6+VwHU+sgDLJC1lrviOJ7zVqMkMxv1
-   D4o9eGACO38FtzUlqk7uUVYEutnjhDRbpychI+R7rsRloVv+aEX5UvJvc
-   nzfEaNuDJCmuTjL9bJ+RNeZixm895TZn9r9qojONaaNWbO6Va+pVW6VLR
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10887"; a="392423834"
+  bh=uUk8rqUH4aD9I44Kegkd3dW+HgyDghKN2aBKObM4/W4=;
+  b=naMsk9RG0esgK7KXyM6bawY6vI7TWPR1Vfl+L2m3Oby2V1esK4solLGX
+   +nvCfvHI5GdBFUOSSy8dMOdiTXbZIyHoZgF6BK0JFzGqB5Xf2fbvwQAl3
+   vxgDKVwh+VOa3ms2Ht6OqjsDNcT+zqqJYWCCaVJeIZ3ketg3Tgqd0lA+z
+   mElYrZ1OD9oO1W+UD5fR5hHKn7uZWKV3CraOPmC/6tPGsyfy+gYLcgr7L
+   yKAckXkxVMDEmuKDOfO4dvBwdQrU0yG2ntVlxqUsOOCAzkzweagJyuELY
+   TrBXDh+C7W3UblHuybjvgSP24NjM3IbyUI/iJHuDbLb+D0JB25K7HayYV
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10887"; a="369754124"
 X-IronPort-AV: E=Sophos;i="6.03,284,1694761200"; 
-   d="scan'208";a="392423834"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2023 08:44:10 -0800
+   d="scan'208";a="369754124"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2023 09:24:14 -0800
 X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10887"; a="833172877"
 X-IronPort-AV: E=Sophos;i="6.03,284,1694761200"; 
-   d="scan'208";a="10491113"
+   d="scan'208";a="833172877"
 Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by orviesa001.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 07 Nov 2023 08:44:11 -0800
-Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+  by fmsmga004.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 07 Nov 2023 09:24:12 -0800
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
  ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.34; Tue, 7 Nov 2023 08:44:10 -0800
-Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
- ORSMSX612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ 15.1.2507.34; Tue, 7 Nov 2023 09:24:12 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.34; Tue, 7 Nov 2023 08:44:09 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ 15.1.2507.34; Tue, 7 Nov 2023 09:24:11 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.34 via Frontend Transport; Tue, 7 Nov 2023 08:44:09 -0800
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (104.47.51.40) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ 15.1.2507.34 via Frontend Transport; Tue, 7 Nov 2023 09:24:11 -0800
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.100)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.34; Tue, 7 Nov 2023 08:44:09 -0800
+ 15.1.2507.34; Tue, 7 Nov 2023 09:24:11 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ElXRaCZ7y06LPy5jV9o5sYJHlVnIkPjO0FwpqOvGbCAAPugdfXy14Qm2aTP8v26vsy/2Hb7tx185fjlG+DyIsq9FZSdDdmbF4LRucBAu4/GmDubVH2YIFlyYCcUhv3/ztlZMuZDROlgSy0ZjsfOUCjEyGOlNZc7uG1aQqjFYs7UVZfCtjeujnMssf8Eoduxuli+eVi9H5+gzWnhzzwEFOSgP9QEzTA1ZwX0XCoW88lH1umnEZirrGasGQ+ICY21wQBbIS6lA85pCkNfwU1LbNYB4By0ybwV8jWn/+2IH8OQV0VSd8UKCS3R97+rWSOa/Xaq35+E7C9BDMVsCZnYOyA==
+ b=YUaqtaLaTjd1dQO71N79W4p1LKtQENq4SGCPjHLK5gBwaOjro40EK+hZEevFmmH1SWTN3+vblWhMWvsAiM4EsX30eNdRGK5BwBA/SBYK50FDVYq/Glslu9ok6RkecGRHt7befR4GFKgu0DK+6dAiTKZ9M8/nSQ+4OteWZLp57VTTahu8xUikrMGp1/7m+zVvOqhH3/xbbGx04QiPaGspXybJDAC4jO2fLDpBxNGz8hFI12V5zthcpE+OUMfoVD1DV8UOjcVXmy3IE9sAoE0eZsJGpSKQuGu9auStEtw9ldJ12WnNuedal5EMc2biSG51Hae5Joe9yRmyaCTRHJquFg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DBT2uBbqHKfRfIleW3qLN72ZtwPLcBl/Yw9lrMBwcFU=;
- b=LYxejLCkYMWUiCjpkxtWSy1acvb0OWO/34EOyXmafJ5jwcO2wEEAsBhKR449wUzhR6mRXoDlR9wvMemNgUtgj/o1+RiKezAvYzPWN+gprJ1dVP7o4P/HXH8ahHre+kj/L7Nmww6lR7GFuTlNGCnCX2KfR23BWk+X7Tg+PwFFNEa/6NDb5b0h+VGvujVCbhKjfj+6BMsaINHxtuWuVTsnOtDmJapC1+5SBCBHF9fbIzyZOUOP/Q234UfwFBd7LQCs0BUoCCHi41xF8WETOl5kHvrr3zo1SagZS2sRX+6RFpigVHr5FQlqbzRG2O2Hg6m6+n6CW+m4Vf7H5C6/SKPMnw==
+ bh=yib1vAu6W0oBfBkRvakDCCZVsTrSwcpYqQ0eUk7aI7s=;
+ b=WWxD37zRfYUg15RyH+V6i7rmPP70QVUZJrT5uLUxo4EjgOfmrD2mibuHHSHbV/mlBdptIHSQ01rzQXEQo6+vC3iDVAzSA2Ox28wZ8qCTHgX8VgOnS/W9f7DHb9Hhk9ZHkQV4WbJi1OoozPAlGwpDrQp/966HtbKnMbADISYhYcdFtRrFcuqwp0lywZvWSXQmkRCPDzJOoSBSgNzltkionyg6n5z/Su4Ne23LMLEniZWEXabSRGOmKnOW8cUGtuA65k9TzWb1RbGGNOGnjWsLk6Jlyz6FzI0/fjiOv/3ILG4bE42Q3Bp5CsYpy7FPrIeRlgyNvVlp+u68WyA/maf7wQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from DM6PR11MB3625.namprd11.prod.outlook.com (2603:10b6:5:13a::21)
- by BL1PR11MB5980.namprd11.prod.outlook.com (2603:10b6:208:387::18) with
+ by CO1PR11MB5027.namprd11.prod.outlook.com (2603:10b6:303:9d::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6954.21; Tue, 7 Nov
- 2023 16:44:06 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6954.29; Tue, 7 Nov
+ 2023 17:24:09 +0000
 Received: from DM6PR11MB3625.namprd11.prod.outlook.com
  ([fe80::36be:aaee:c5fe:2b80]) by DM6PR11MB3625.namprd11.prod.outlook.com
  ([fe80::36be:aaee:c5fe:2b80%7]) with mapi id 15.20.6954.029; Tue, 7 Nov 2023
- 16:44:06 +0000
-Message-ID: <ca0ad357-727b-4f41-a3d6-2c48a9dd5836@intel.com>
-Date: Tue, 7 Nov 2023 17:44:00 +0100
+ 17:24:09 +0000
+Message-ID: <e3b4b1a6-5383-4bfb-ba83-ab27d58dae29@intel.com>
+Date: Tue, 7 Nov 2023 18:24:04 +0100
 User-Agent: Mozilla Thunderbird
 Subject: Re: [alobakin:pfcp 11/19] include/linux/bitmap.h:642:17: warning:
  array subscript [1, 1024] is outside array bounds of 'long unsigned int[1]'
 Content-Language: en-US
+From: Alexander Lobakin <aleksander.lobakin@intel.com>
 To: Alexander Potapenko <glider@google.com>
 CC: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Yury Norov
 	<yury.norov@gmail.com>, Syed Nayyar Waris <syednwaris@gmail.com>, Kees Cook
@@ -85,12 +87,12 @@ References: <202310170708.fJzLlgDM-lkp@intel.com>
  <ZUkvOCxyiin_77qd@smile.fi.intel.com>
  <0a29df6b-bc27-43e9-a97d-57ecabb29a9e@intel.com>
  <CAG_fn=VtA6e3oGm4WVnxmy9yMBab780-U_4VoHSqm4tcd2UTzQ@mail.gmail.com>
-From: Alexander Lobakin <aleksander.lobakin@intel.com>
-In-Reply-To: <CAG_fn=VtA6e3oGm4WVnxmy9yMBab780-U_4VoHSqm4tcd2UTzQ@mail.gmail.com>
+ <ca0ad357-727b-4f41-a3d6-2c48a9dd5836@intel.com>
+In-Reply-To: <ca0ad357-727b-4f41-a3d6-2c48a9dd5836@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: WA2P291CA0041.POLP291.PROD.OUTLOOK.COM
- (2603:10a6:1d0:1f::27) To DM6PR11MB3625.namprd11.prod.outlook.com
+X-ClientProxiedBy: WA1P291CA0023.POLP291.PROD.OUTLOOK.COM
+ (2603:10a6:1d0:19::7) To DM6PR11MB3625.namprd11.prod.outlook.com
  (2603:10b6:5:13a::21)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -99,183 +101,143 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR11MB3625:EE_|BL1PR11MB5980:EE_
-X-MS-Office365-Filtering-Correlation-Id: ce5980e0-8e44-44d3-c7a2-08dbdfb0c187
+X-MS-TrafficTypeDiagnostic: DM6PR11MB3625:EE_|CO1PR11MB5027:EE_
+X-MS-Office365-Filtering-Correlation-Id: a20448a9-06e9-4989-7574-08dbdfb65a0f
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: hCf4zp4ccsrliNXFfKfzXj9yRboURrYWmd1m9dlqNimYrDgTHbHvIQpgOMeEofSXgljWraYv67albs8iHX4+xg/LtOU7ZTeA5a4RD4F1KId/kuP3bbq1w9KwmSb9j/EpXqkWa2/LyUWM5+6VchrQMxDCqCOabUTn+VVX8t7lIzX5qonL0ZKVlzQa7Q/K3ibc6XCwnKZBKn40d5C9XErLN0fhKxOKsEU/YQ9TmxQ240axl16j73Lbwb0B2C5CyEVvqrVbY0tyJbYlH8wZW4LfKuM+6AO4qgP3OQmJlOYnkFpPT8Gz47tACDbrIFsPriiTF04FSpur4uhmFDeJzewXJCdVxGwRfTjGscYk9YrU4ts9j+SA1NH3vEIS7qw6Jr/G0j3EHAA9XZF2BlrvCdAvll7gFp4suItlos2/pLQriopZBw2XaIsXteF4RPijFNBICjsyDOkBKKaW+pmRSzqrSTOXnGDPFdtHLOYtnRcyx4/6hNF2i75UZhx8ZdN3rEyoPAUVuxoHwPe5TF0ZwSsr4TZDfJ4SXn2pRod1q9ktDWEQ03zPug1U+DpUnmSR5FFeWrgB2CshIK9XzSLCw8LXCJRJRtzX164q2B272Oqy4tjMJpxjoJgkgfTBLPpdSOIjvbbmblBcytXb5xV1JWnfbdbrRYyqhEeqgG3hqSTtbmHoRzNZMakOeBOlU4nUiRmnt81EDzxhX6HG05ioIfPaHQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3625.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(39860400002)(366004)(136003)(396003)(346002)(230273577357003)(230173577357003)(230922051799003)(64100799003)(186009)(1800799009)(451199024)(66556008)(66476007)(8676002)(54906003)(4326008)(316002)(6916009)(66946007)(31686004)(5660300002)(8936002)(2906002)(86362001)(82960400001)(41300700001)(478600001)(966005)(83380400001)(53546011)(6512007)(2616005)(6486002)(36756003)(6506007)(26005)(38100700002)(6666004)(31696002)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: RsznJrANkPM1HtCxy/l0TWXAFfe1iK1xcC6P6NidjCnkx2KQgJNLCNXsC2uz3ph8MzcgsPwuPTtr37S5XNC7A8VwnqIkW2GfXRydFOj4/6qxTVNKtC4gp9GkedvIHgJp1zYaUqkvQaMejusLK5352IeJ8Lpmn3v61R+V0tdrl6bY933eAuw73O3PYU8moS4hHV6WlvZtfCXg/sH6JtJ+BfS/j9G9BGpT4dkK8cMa7zuZHNk4+V/F73KeJh0pWb9rvINdZE0omSbyXil+yC1ijhJi5EdG56+sTEDZtoaXAESyu2TgZlKJOXTYa0Kx9jXvrh88hMpwZQ2PGHZdcrx0OcfNwp0yzkYhrHHiIBWktWOYT+qQH2A21YH9qiu5Nw9QRxRIvoB5ppUA+zLNhzgDvxm0u/7DCEYR8F0GFJennmNjGCg6RwSUZmBMy5ioElLiznHNeX5xGWVeYTL4UZa/04btEa6LcBYzqn2uMmBO1lBwTcuLpcZKzmYpAuBdAPdItngFu2jwYXQKyw9b+NHh3DDQrnHKVgeP1Qp+vJQsj6f0MkdSSXY3YnDlTAgVWB4G4oTZbvg+K6r3d9zW+S04M41doaT7j/gq/ToytlHpb3/sqC5shSu9HI/Dgt4xcHzVlCt8nkbfXi98X2LVA37Kj00AJdVfhz/ul+JFwmzfl1DMFBdf+MCJ17XW4BhbdtUG
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3625.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(376002)(346002)(39860400002)(396003)(366004)(230273577357003)(230173577357003)(230922051799003)(451199024)(1800799009)(186009)(64100799003)(66899024)(2616005)(83380400001)(26005)(66556008)(54906003)(66476007)(66946007)(6916009)(316002)(6506007)(53546011)(2906002)(5660300002)(6512007)(31696002)(478600001)(6486002)(86362001)(38100700002)(6666004)(82960400001)(31686004)(36756003)(4326008)(8936002)(8676002)(41300700001)(45980500001)(43740500002);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WGNiNjhubjVXWFpJOXNoUDRkS1hQcjkzSmRUaitRK1VTZXh3U1dOckt2VWl1?=
- =?utf-8?B?V05HZUhRWU9OZmJnRER0bkVGSFdXMUgzM2F0NVhPS1dqSFQvcWgyK1drUlpk?=
- =?utf-8?B?emd6R0tCc0xNNi9NN25EeEFwbHl3bzFGK2JIRUNrUk9SM1JleHAxUzAzOUw0?=
- =?utf-8?B?aVd0UUQ3dTVmakNPblRmbWEyRS85cnlkOVIvdUJGZDZMdHEzNnJjQi9iTk54?=
- =?utf-8?B?RmJydUpUY2I0SE5IT3NwY0UydlppRGdlWlNjeU1xbzBId0FBNEsvMDloWjFT?=
- =?utf-8?B?ckJtRWN2czhsU215eEJRSHVjZERmNzhCMDM2dTArRHlqejlidUdhSDVaelJt?=
- =?utf-8?B?blJuUDVVa3h2OHk4RERxaUo2RXUxV2FaMldpM3JGeFNuWFZ5SkwrdU5DT3No?=
- =?utf-8?B?SEJXemxhQkNhcVlsZUt3WEdTOXlxVm1uNndYRTBxaE9zSFFScEZhV1Y2RnAw?=
- =?utf-8?B?VFlWeEhMNjFDNFFxcUtUenVFVEdNbHRiZnFaQXM0cmdJaFZlZkJPckd0dXNO?=
- =?utf-8?B?OU9sQ0x6NnFIUG8xVzdvalJjbFQzeC93bGJqWmxjdy9TbWlvNFlsWktzZzll?=
- =?utf-8?B?Uk5ZN252cUlVSDR2ZHlZbVR4YnAybm1IdklEVlVocUtjSUE1OXlpTTNJY3pT?=
- =?utf-8?B?WG5vL1NmTHRHVXQzNWpNNlAxQkhLc00xMnBMSWl6OVUwSjJONnF0Nm10OU9v?=
- =?utf-8?B?ZzFZaTU5R1JYZDRYMmdlUUdoRXhnVUdCSHIyeUtBbjZyalRVdks0VUV0ZUZP?=
- =?utf-8?B?VXNzUS8xTEVoM3BvQ2NJT1NKUjkzSXpOOXFSUXJzOHI3UXdlUU5MRndGQ1Nx?=
- =?utf-8?B?TkdNRGhvNVZ5MWxsSWRuVFdDWWppQlRJMFlHcGZGek4vaG43aWphYnpKWkxn?=
- =?utf-8?B?TEp3S0NWc3c5WDNZbHJTd3QxTnJJT3diTjhhOExUOWJlZHlIbjdWT202NkV5?=
- =?utf-8?B?YnVvM2xNS01RVTBiZlZYZmFNOGdkVmliSitUMytSRVFoNHNCWlhTVzNBYWdF?=
- =?utf-8?B?M1ZUTU5Rc2hLRDE4R1lPZWlYaG1RQ2J3ZHJ1OUo5MTdRRzd3OEc5dmQ3d0tx?=
- =?utf-8?B?VUVKOFZZVVQ1N25CNS9NVnhpRFBHbFk4T0hmOSs1dlJkQjZtcTdkTjNxdE9z?=
- =?utf-8?B?UTh2c2g1VEREY2NYTGtwRVVDRjdQc1p3bmlKYTJlc1kxOTJ1T0pJaW5GLzVr?=
- =?utf-8?B?dy9rMVU5cVl2K0t5YmQyOXdFNFFsNnR0WjdHV0RKRytWVVVWbmV4M0hZOW01?=
- =?utf-8?B?aDIrQlZiSjhFT3FyTjF0bm9GZHlLRjMrVHU3OXJXWDZKYXBCd01LOGRVdit0?=
- =?utf-8?B?b0k1Ri9TK3dXOTJETUlCaTlrdmFTZHBlZ0JTN0ZjamxxajZRNjJaaE54T2dH?=
- =?utf-8?B?MmpuYzVlTFNNQTBQOWZjQWl2RGs5TThXdytsdGQ3dko3bUhUdlpUWVcrSnFs?=
- =?utf-8?B?YzcyQ1pZTHQ4Nm9LVVZYamY4cDVZVHV2QnlVdFJ1YTJnTHFjMHBFVVJwUmg3?=
- =?utf-8?B?VlE3SU9kRXoxTTE1alZ1NWZUdGRpK1Vob3laU013eEJrc05mVG40ZC9RRDB4?=
- =?utf-8?B?WnFKZDVUYnNBOTZzRmwwbUY4Ynp4bkRkYVpnTEp6YVgyYnB2Mlh2QzRmTEdh?=
- =?utf-8?B?eEVBMFc1VG5VVkp3U1c4Z08yb1VvLzEvaDRGSVRYcHgwei92eDhOTVk0WlJX?=
- =?utf-8?B?alluWUlGYzdyWFRneU1mZkU5TW8rcmd6ZUNBUm9pWCsxR05mVjFUQ2RUQzhm?=
- =?utf-8?B?NGJxSHFwVndrSWJwMjVRbFVadmtqdG9UOXJnd0NaNFVNTEhieVc3b0c4UzZM?=
- =?utf-8?B?T3VWQ3BaSFdmc1F5ZXBodkREaEp5V2NDMElHRUlWU0o2WHFIR3F1L3BTdVpq?=
- =?utf-8?B?cG52RElLeDRXUElrdWI4UGkyaHJGaTQvSHQwaEFwS1JISWJWeUhnenBBNTdW?=
- =?utf-8?B?T0p5ZU9SRk0zTUNaOE9QYXFFNWdrckNqRGRUbzg2Z3c1b1ljeXBPWERGY1Bo?=
- =?utf-8?B?NmcyTEhMSTNCeUU4U0dDWmdyczlCTHZuZFFXNi9WYi9kY1VtbU0zdHhPVE1v?=
- =?utf-8?B?MXZZUjVIdlJJVmxFNXZKb3Z4N3hBTk8xZGNHZWdReUY5ZmY1Qy8zYmpqdHZ4?=
- =?utf-8?B?MXZIdW43YXdXa1hUaW5pMWZRWmlBN2FWN053aC9mOXVtcTZ2Uk0yaS9EcmpE?=
- =?utf-8?B?R3c9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: ce5980e0-8e44-44d3-c7a2-08dbdfb0c187
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WmlqSGlOTFhhcytVRzBmRWk3OUR2WGhmKzZGYjhDOVJzTzQ2WEVPTFVjQ3Rn?=
+ =?utf-8?B?cWprZ2lJU3R4eEEzSjBiQUFsRmFKZ2NxOFhKWThWOWp2Y25QMkd3QTJzemZp?=
+ =?utf-8?B?Nm9ieUtLK2NyZC85akg2eWhiZzJFYWFFdVgxMXY0enVsQVY2bGtNbU9HMUJJ?=
+ =?utf-8?B?NWNRNzJrMHZUL29tZ3RGSDNzaEhBd0JyQzk1Z3dXNWdIa1Z3U2pUSXk1WVRr?=
+ =?utf-8?B?WlNmQVF0MFAvUEJwMUtSTVBuMWpwdEl4VWFKa1k3RmN4L2xES0dGOWdWbktp?=
+ =?utf-8?B?bFNHcFBLN3I0UzJsT0NFWDhuRldPZ1hNejQ2VGR0SkRBbmEvOGxZaE5GbGpi?=
+ =?utf-8?B?TkRzbVlDeFF3SUsrMk9aOXFzbnJHYzZFRTJCVUFKc0ovNm9tbFoyZFhCVG9k?=
+ =?utf-8?B?aHFvTEVGSmFXTDg3ODMzV2hDL1ROU2NERHR5ZklYdGVQNWEzb2ZBWmlLdGxs?=
+ =?utf-8?B?Mk1SR2hhbCtUMXF0MXozNDQxYitvTWJJNXJJQjZCbC9ndXhKWC9tZEkxQXVi?=
+ =?utf-8?B?UHJ1dStRTnVwTjJ3aFFOSzAybjVWZU5mZGNlTmVYS3VBV2x4RHd5Tlk1Rmt4?=
+ =?utf-8?B?S2dmK2JKbk1UNmF6ek8zUjg1NElBekJ0eS9wdCtxY1ppRExCZlQwdEExYmlZ?=
+ =?utf-8?B?Qk1OYTU5dWc0RVhHcy9yNUt5Tm9YV0pwaG9KeldRSUVsMit4U0ZRWGlKUmRj?=
+ =?utf-8?B?a1Q1bm5OSENob1RwR0NuQVovdmlzTDhnRk9lbi96Q0QxOHBYSmE1WEg4d0x6?=
+ =?utf-8?B?TFFPVmJsNzJlaWFRVjdDMCtPOUtheVVIUVpZRTN4OExQVFAzNkFiVDhlNkpv?=
+ =?utf-8?B?clkxOEVRYWFRL29uc1VpRnZWc2RmMVh4SHhvSmIxL2x6RzI5anZlMGVXK1FR?=
+ =?utf-8?B?VHNueVlYUlVWMVM3S1pTWHBqS2plWnB6NlVqbVlQalNxdmV1WGVKdFZiVlE4?=
+ =?utf-8?B?dG5XeHlvYlFiZzBHVW53K2tTczlxcXRjS2ozMHRJVEE5L3BNRW9hSFZ0L3Jp?=
+ =?utf-8?B?L1V6VkJiU29jN1hyRXdHRVUzSjJJUEpwVUNXNWV3Smo4ZVZSNHJaTmppQ2R0?=
+ =?utf-8?B?N1c4c0hWcFd6UUk2ZTlHcE82Rm44dkVJYWtBVG1rN2hJNFl2OGdDUUtQSDhr?=
+ =?utf-8?B?VDNOVEFySWdxRSs2dEdHYTFBTDZ1b2xKREthZy9wc2xhNVo2WHMrNU9JS0R5?=
+ =?utf-8?B?SHAzZlBITVpCVFVCNHgrYjl2U3dsQzVBelVldzZ6b2xVQkpaVzdobC9BbTlh?=
+ =?utf-8?B?NzNzcWVKaDVXenFpMkVsNGc2aFU5NEUrT25LZzJ6a1ZFMlk5WE5KYi9PTnNa?=
+ =?utf-8?B?S201OHo0dHIyaGIrdXlybUF4MjZyQWlrTGZmak80S2ZZSWRBdSt5cExXakNM?=
+ =?utf-8?B?dDRBSTQvem82cE4wdUFUNnpHYmU2L3JrRHBDU0NrNllqSVhSb1Y0cC9xSDRk?=
+ =?utf-8?B?dG5jbTczenJVV1BYRGVubjFLTis4SnVXTkUyUlVGbG1NYVNGNnVrNDRHbkYx?=
+ =?utf-8?B?U2Jlb2JaU2ZlRXdQdlhTVzcxVnppeTdpWHo5Y3NROFlwVVVURWJCTHM3dWZK?=
+ =?utf-8?B?N3J2U3lwTll3REo2ZEZIcWoxanZaRVhoVmVuNVVyTHp4VUhrSkpSTExsa09Y?=
+ =?utf-8?B?aHZnU0FydjhpSStoMGlNaVNqWUdma1JvVUJtSlNxNnhQdVRjdnpEQjNTdHlO?=
+ =?utf-8?B?MVdldTVSUTJ2SGx6bnJ2VVV3WDhnQTdvcVVKekw1WTRqQ2FYR0FrN0ErUWl0?=
+ =?utf-8?B?Zjh2WEpNbCtSa2RodkZLNVFsL0hmSmFYRzliNW5DTXFPOGczYnBkcWs1cUlv?=
+ =?utf-8?B?c1NaSUh4YVpXY2tyMzlpZWtUOFRpd3ZZeWN0MCs4d0FvcW5SSUdDaXh6UTB1?=
+ =?utf-8?B?OHUwa0pXMmdXOXorQVVMbUh6SElyUXpTbHlwdGVDMGQyc0NYeGRYVTg0VVJv?=
+ =?utf-8?B?bnYvVEs3SDJGSmU5YkJDNGFPT2ZaT2MvM1RzS3NaU1hjYmxMeTg4RVM4dkEr?=
+ =?utf-8?B?WWlLa1V2SlhNODIzTStuN1BIMkRnVi9EYXpzNmJZSVFGUk5LbTNwaEpaRW1X?=
+ =?utf-8?B?MmRkZ2dnMTgza3VnUXU0cCtqUGx6OTk3YkFUSzBJb2FKOEcvcm1QdTFzanla?=
+ =?utf-8?B?VEszelovM01uRUNaYXBRNi85dHRpTDhKbzVNMDR5WGF5TmdpZVNEZ3p4WWYx?=
+ =?utf-8?B?a2c9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: a20448a9-06e9-4989-7574-08dbdfb65a0f
 X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3625.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Nov 2023 16:44:05.9831
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Nov 2023 17:24:09.3608
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: K4bYCHt/BJMpuJkQJCch5oWhYCf+J0DKGhcwUKdwYGkPmmG2LMTWitT8fPIMdY3Qr96/nqpoK3c6anvecj/SNy/Hv/PJA5j9bnJcynLfQ/Q=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR11MB5980
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8Zuk5YhvsN9vck4nDaPxt/be2KUrvEDXVHztffRVPJl1Jb93XFC/33+3TBtFQGU9/0PKfZi1u47kX0VkgWc8SZw7UidFitrv/q5vqJ0dh28=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB5027
 X-OriginatorOrg: intel.com
 
-From: Alexander Potapenko <glider@google.com>
-Date: Tue, 7 Nov 2023 17:33:56 +0100
+From: Alexander Lobakin <aleksander.lobakin@intel.com>
+Date: Tue, 7 Nov 2023 17:44:00 +0100
 
-> On Tue, Nov 7, 2023 at 2:23 PM Alexander Lobakin
-> <aleksander.lobakin@intel.com> wrote:
->>
->> From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->> Date: Mon, 6 Nov 2023 20:23:52 +0200
->>
->>> On Mon, Nov 06, 2023 at 05:31:34PM +0100, Alexander Lobakin wrote:
->>>
->>>>> | Reported-by: kernel test robot <lkp@intel.com>
->>>>> | Closes: https://lore.kernel.org/oe-kbuild-all/202310170708.fJzLlgDM-lkp@intel.com/
->>>
->>>> Not sure how to approach this :z It was also captured on the version you
->>>> sent 2 weeks ago, so this could've been resolved already.
->>>
->>> Is it in the repository already? if so, we should revert it.
->>> Otherwise you have time to think and fix.
->>
->> Nah, neither Alex' series nor mine. And I'd say this should rather be
->> resolved in the functions Alex introduce.
->>
->> Thanks,
->> Olek
+> From: Alexander Potapenko <glider@google.com>
+> Date: Tue, 7 Nov 2023 17:33:56 +0100
 > 
-> Sorry, I couldn't reproduce the problem using the instructions at
-> https://download.01.org/0day-ci/archive/20231017/202310170708.fJzLlgDM-lkp@intel.com/reproduce
-> locally, maybe that's because I only have gcc-11 and higher.
-> 
-> But if I'm understanding correctly what's going on, then GCC will be
-> reporting the same issue in the following code:
-> 
-> =======================================================
-> #include <stddef.h>
-> #include <stdbool.h>
-> 
-> #define BITS_PER_LONG 64
-> #define unlikely(x) x
-> #define UL(x) (x##UL)
-> #define GENMASK(h, l) \
->         (((~UL(0)) - (UL(1) << (l)) + 1) & \
->          (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
-> 
-> #define BIT_WORD(nr)            ((nr) / BITS_PER_LONG)
-> #define BITMAP_FIRST_WORD_MASK(start) (~0UL << ((start) & (BITS_PER_LONG - 1)))
-> #define BITMAP_LAST_WORD_MASK(nbits) (~0UL >> (-(nbits) & (BITS_PER_LONG - 1)))
-> 
-> inline void bitmap_write(unsigned long *map,
->                                 unsigned long value,
->                                 unsigned long start, unsigned long nbits)
-> {
->         size_t index;
->         unsigned long offset;
->         unsigned long space;
->         unsigned long mask;
->         bool fit;
-> 
->         if (unlikely(!nbits))
->                 return;
-> 
->         mask = BITMAP_LAST_WORD_MASK(nbits);
->         value &= mask;
->         offset = start % BITS_PER_LONG;
->         space = BITS_PER_LONG - offset;
->         fit = space >= nbits;
->         index = BIT_WORD(start);
-> 
->         map[index] &= (fit ? (~(mask << offset)) :
-> ~BITMAP_FIRST_WORD_MASK(start));
->         map[index] |= value << offset;
->         if (fit)
->                 return;
-> 
->         map[index + 1] &= BITMAP_FIRST_WORD_MASK(start + nbits);
->         map[index + 1] |= (value >> space);
-> }
-> 
-> unsigned long foo(unsigned int n) {
->     unsigned long bm[1] = {0};
->     bitmap_write(bm, 1, n, 2);
->     return bm[0];
-> }
-> =======================================================
-> (see also https://godbolt.org/z/GfGfYje53)
-> 
-> If so, the problem is not specific to GCC 9, trunk GCC also barks on this code:
-> 
-> =======================================================
-> In function 'bitmap_write',
->     inlined from 'bitmap_write' at <source>:15:13,
->     inlined from 'foo' at <source>:47:7:
-> <source>:40:12: warning: array subscript 1 is outside array bounds of
-> 'long unsigned int[1]' [-Warray-bounds=]
->    40 |         map[index + 1] &= BITMAP_FIRST_WORD_MASK(start + nbits);
->       |         ~~~^~~~~~~~~~~
-> =======================================================
-> 
-> If this is true for the code in drivers/gpio/gpio-pca953x.c,
-> suppressing the report for GCC 9 won't help for other versions.
-> Given that this report is isolated in a single file, we probably need
+>> On Tue, Nov 7, 2023 at 2:23 PM Alexander Lobakin
+>> <aleksander.lobakin@intel.com> wrote:
 
-I tested it on GCC 9 using modified make.cross from lkp and it triggers
-on one more file:
+[...]
 
-drivers/thermal/intel/intel_soc_dts_iosf.c: In function 'sys_get_curr_temp':
-./include/linux/bitmap.h:601:18: error: array subscript [1,
-288230376151711744] is outside array bounds of 'long unsigned int[1]'
-[-Werror=array-bounds]
+> I tested it on GCC 9 using modified make.cross from lkp and it triggers
+> on one more file:
+> 
+> drivers/thermal/intel/intel_soc_dts_iosf.c: In function 'sys_get_curr_temp':
+> ./include/linux/bitmap.h:601:18: error: array subscript [1,
+> 288230376151711744] is outside array bounds of 'long unsigned int[1]'
+> [-Werror=array-bounds]
+> 
+>> to give the compiler some hints about the range of values passed to
+>> bitmap_write() rather than suppressing the optimizations.
+> 
+> OPTIMIZER_HIDE_VAR() doesn't disable optimizations if I get it
+> correctly, rather shuts up the compiler in cases like this one.
+> 
+> I've been thinking of using __member_size() from fortify-string.h, we
+> could probably optimize the object code even a bit more while silencing
+> this warning.
+> Adding Kees, maybe he'd like to participate in sorting this out as well.
 
-> to give the compiler some hints about the range of values passed to
-> bitmap_write() rather than suppressing the optimizations.
+This one seems to work. At least previously mad GCC 9.3.0 now sits
+quietly, as if I added OPTIMIZER_HIDE_VAR() as Yury suggested.
 
-OPTIMIZER_HIDE_VAR() doesn't disable optimizations if I get it
-correctly, rather shuts up the compiler in cases like this one.
-
-I've been thinking of using __member_size() from fortify-string.h, we
-could probably optimize the object code even a bit more while silencing
-this warning.
-Adding Kees, maybe he'd like to participate in sorting this out as well.
+Note that ideally @map should be marked as `POS` in both cases to help
+Clang, but `POS` gets undefined at the end of fortify-string.h, so I
+decided to not do that within this draft.
 
 Thanks,
 Olek
+---
+diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
+index e8031a157db5..efa0a0287d7c 100644
+--- a/include/linux/bitmap.h
++++ b/include/linux/bitmap.h
+@@ -589,12 +589,14 @@ static inline unsigned long bitmap_read(const
+unsigned long *map,
+ 	size_t index = BIT_WORD(start);
+ 	unsigned long offset = start % BITS_PER_LONG;
+ 	unsigned long space = BITS_PER_LONG - offset;
++	const size_t map_size = __member_size(map);
+ 	unsigned long value_low, value_high;
+
+ 	if (unlikely(!nbits || nbits > BITS_PER_LONG))
+ 		return 0;
+
+-	if (space >= nbits)
++	if ((__builtin_constant_p(map_size) && map_size != SIZE_MAX &&
++	     index + 1 >= map_size / sizeof(long)) || space >= nbits)
+ 		return (map[index] >> offset) & BITMAP_LAST_WORD_MASK(nbits);
+
+ 	value_low = map[index] & BITMAP_FIRST_WORD_MASK(start);
+@@ -620,6 +622,7 @@ static inline unsigned long bitmap_read(const
+unsigned long *map,
+ static inline void bitmap_write(unsigned long *map, unsigned long value,
+ 				unsigned long start, unsigned long nbits)
+ {
++	const size_t map_size = __member_size(map);
+ 	size_t index;
+ 	unsigned long offset;
+ 	unsigned long space;
+@@ -638,7 +641,9 @@ static inline void bitmap_write(unsigned long *map,
+unsigned long value,
+
+ 	map[index] &= (fit ? (~(mask << offset)) :
+~BITMAP_FIRST_WORD_MASK(start));
+ 	map[index] |= value << offset;
+-	if (fit)
++
++	if ((__builtin_constant_p(map_size) && map_size != SIZE_MAX &&
++	     index + 1 >= map_size / sizeof(long)) || fit)
+ 		return;
+
+ 	map[index + 1] &= BITMAP_FIRST_WORD_MASK(start + nbits);
