@@ -1,157 +1,281 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F9322FE30
-	for <linux-hardening@vger.kernel.org>; Tue,  7 Nov 2023 12:32:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B39315A7
+	for <linux-hardening@vger.kernel.org>; Tue,  7 Nov 2023 16:44:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WXVDdEg1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F7D2C433CA;
-	Tue,  7 Nov 2023 12:32:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699360358;
-	bh=DBo+38hJzFklrsrabsiHyKcpBeb3NFKTLGXaoSm2e9Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WXVDdEg1EPnBxm1EM2WkCd9ns0l/cdtp7cYInPFDVwD/VAEja57/ZGU4PkT3P+Riu
-	 RhuZHphkB9xVe0JvkB5AEg8aruzLQRwcDpIomyrVhjx0De8ThJeOpicTHubtrobQcS
-	 yaCnQ6sCkWPvIQNc6SbF+HIPu08JRdxUD1vBuRHmzETxgK7e/Jcoup+iVhGavFIIT/
-	 fXYLX6vvRSEYlOPTI0lp0KVi5Ak1AN41KS88apVibSv6s41p6JYQibIuZJpO2F1rQM
-	 sGW6Tcx/n3BAsoRrRoy5hMK5QILNAmVHAc5G8z2U0cJ9UX8KX2BBMV6rfaPx0vX9Z/
-	 9aCt/P1NFWhSg==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Qu Huang <qu.huang@linux.dev>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Sasha Levin <sashal@kernel.org>,
-	christian.koenig@amd.com,
-	Xinhui.Pan@amd.com,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	keescook@chromium.org,
-	Hawking.Zhang@amd.com,
-	srinivasan.shanmugam@amd.com,
-	shashank.sharma@amd.com,
-	Praful.Swarnakar@amd.com,
-	dan.carpenter@linaro.org,
-	tom.stdenis@amd.com,
-	le.ma@amd.com,
-	andrealmeid@igalia.com,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 4/5] drm/amdgpu: Fix a null pointer access when the smc_rreg pointer is NULL
-Date: Tue,  7 Nov 2023 07:32:09 -0500
-Message-ID: <20231107123225.3763221-4-sashal@kernel.org>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231107123225.3763221-1-sashal@kernel.org>
-References: <20231107123225.3763221-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DawF0wbJ"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33C0593;
+	Tue,  7 Nov 2023 08:44:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1699375451; x=1730911451;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=A6QjB7g7YEfGq9Y8mgIhi0AUnnX3jzQGt7Ss1lwCVH4=;
+  b=DawF0wbJlFDb3crG3qDRKH0Zt1LkqlNGl4sIWcT/Hvl82zWWZxBhdi9t
+   Xd7aAObdbvOt5L97aw5Ya7pYx7Lww40Yx/6AVa3MLnvFzeVvEtZtTzcqb
+   9ocXXzzcszgeN9TKnFSWD2xR8mlD6UkLzhg9OqvjQit8Bj7pZPL5Y9LQZ
+   q+vim9gwqRWZ7bus4whpBEGpLam6+VwHU+sgDLJC1lrviOJ7zVqMkMxv1
+   D4o9eGACO38FtzUlqk7uUVYEutnjhDRbpychI+R7rsRloVv+aEX5UvJvc
+   nzfEaNuDJCmuTjL9bJ+RNeZixm895TZn9r9qojONaaNWbO6Va+pVW6VLR
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10887"; a="392423834"
+X-IronPort-AV: E=Sophos;i="6.03,284,1694761200"; 
+   d="scan'208";a="392423834"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2023 08:44:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.03,284,1694761200"; 
+   d="scan'208";a="10491113"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by orviesa001.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 07 Nov 2023 08:44:11 -0800
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.34; Tue, 7 Nov 2023 08:44:10 -0800
+Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
+ ORSMSX612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.34; Tue, 7 Nov 2023 08:44:09 -0800
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.34 via Frontend Transport; Tue, 7 Nov 2023 08:44:09 -0800
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (104.47.51.40) by
+ edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.34; Tue, 7 Nov 2023 08:44:09 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ElXRaCZ7y06LPy5jV9o5sYJHlVnIkPjO0FwpqOvGbCAAPugdfXy14Qm2aTP8v26vsy/2Hb7tx185fjlG+DyIsq9FZSdDdmbF4LRucBAu4/GmDubVH2YIFlyYCcUhv3/ztlZMuZDROlgSy0ZjsfOUCjEyGOlNZc7uG1aQqjFYs7UVZfCtjeujnMssf8Eoduxuli+eVi9H5+gzWnhzzwEFOSgP9QEzTA1ZwX0XCoW88lH1umnEZirrGasGQ+ICY21wQBbIS6lA85pCkNfwU1LbNYB4By0ybwV8jWn/+2IH8OQV0VSd8UKCS3R97+rWSOa/Xaq35+E7C9BDMVsCZnYOyA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DBT2uBbqHKfRfIleW3qLN72ZtwPLcBl/Yw9lrMBwcFU=;
+ b=LYxejLCkYMWUiCjpkxtWSy1acvb0OWO/34EOyXmafJ5jwcO2wEEAsBhKR449wUzhR6mRXoDlR9wvMemNgUtgj/o1+RiKezAvYzPWN+gprJ1dVP7o4P/HXH8ahHre+kj/L7Nmww6lR7GFuTlNGCnCX2KfR23BWk+X7Tg+PwFFNEa/6NDb5b0h+VGvujVCbhKjfj+6BMsaINHxtuWuVTsnOtDmJapC1+5SBCBHF9fbIzyZOUOP/Q234UfwFBd7LQCs0BUoCCHi41xF8WETOl5kHvrr3zo1SagZS2sRX+6RFpigVHr5FQlqbzRG2O2Hg6m6+n6CW+m4Vf7H5C6/SKPMnw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DM6PR11MB3625.namprd11.prod.outlook.com (2603:10b6:5:13a::21)
+ by BL1PR11MB5980.namprd11.prod.outlook.com (2603:10b6:208:387::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6954.21; Tue, 7 Nov
+ 2023 16:44:06 +0000
+Received: from DM6PR11MB3625.namprd11.prod.outlook.com
+ ([fe80::36be:aaee:c5fe:2b80]) by DM6PR11MB3625.namprd11.prod.outlook.com
+ ([fe80::36be:aaee:c5fe:2b80%7]) with mapi id 15.20.6954.029; Tue, 7 Nov 2023
+ 16:44:06 +0000
+Message-ID: <ca0ad357-727b-4f41-a3d6-2c48a9dd5836@intel.com>
+Date: Tue, 7 Nov 2023 17:44:00 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [alobakin:pfcp 11/19] include/linux/bitmap.h:642:17: warning:
+ array subscript [1, 1024] is outside array bounds of 'long unsigned int[1]'
+Content-Language: en-US
+To: Alexander Potapenko <glider@google.com>
+CC: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Yury Norov
+	<yury.norov@gmail.com>, Syed Nayyar Waris <syednwaris@gmail.com>, Kees Cook
+	<keescook@chromium.org>, kernel test robot <lkp@intel.com>,
+	<oe-kbuild-all@lists.linux.dev>, <linux-hardening@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <202310170708.fJzLlgDM-lkp@intel.com>
+ <bd7fe929-c6fc-42be-9d2f-3f53ec21fd10@intel.com>
+ <ZUkvOCxyiin_77qd@smile.fi.intel.com>
+ <0a29df6b-bc27-43e9-a97d-57ecabb29a9e@intel.com>
+ <CAG_fn=VtA6e3oGm4WVnxmy9yMBab780-U_4VoHSqm4tcd2UTzQ@mail.gmail.com>
+From: Alexander Lobakin <aleksander.lobakin@intel.com>
+In-Reply-To: <CAG_fn=VtA6e3oGm4WVnxmy9yMBab780-U_4VoHSqm4tcd2UTzQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: WA2P291CA0041.POLP291.PROD.OUTLOOK.COM
+ (2603:10a6:1d0:1f::27) To DM6PR11MB3625.namprd11.prod.outlook.com
+ (2603:10b6:5:13a::21)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 4.19.297
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR11MB3625:EE_|BL1PR11MB5980:EE_
+X-MS-Office365-Filtering-Correlation-Id: ce5980e0-8e44-44d3-c7a2-08dbdfb0c187
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: hCf4zp4ccsrliNXFfKfzXj9yRboURrYWmd1m9dlqNimYrDgTHbHvIQpgOMeEofSXgljWraYv67albs8iHX4+xg/LtOU7ZTeA5a4RD4F1KId/kuP3bbq1w9KwmSb9j/EpXqkWa2/LyUWM5+6VchrQMxDCqCOabUTn+VVX8t7lIzX5qonL0ZKVlzQa7Q/K3ibc6XCwnKZBKn40d5C9XErLN0fhKxOKsEU/YQ9TmxQ240axl16j73Lbwb0B2C5CyEVvqrVbY0tyJbYlH8wZW4LfKuM+6AO4qgP3OQmJlOYnkFpPT8Gz47tACDbrIFsPriiTF04FSpur4uhmFDeJzewXJCdVxGwRfTjGscYk9YrU4ts9j+SA1NH3vEIS7qw6Jr/G0j3EHAA9XZF2BlrvCdAvll7gFp4suItlos2/pLQriopZBw2XaIsXteF4RPijFNBICjsyDOkBKKaW+pmRSzqrSTOXnGDPFdtHLOYtnRcyx4/6hNF2i75UZhx8ZdN3rEyoPAUVuxoHwPe5TF0ZwSsr4TZDfJ4SXn2pRod1q9ktDWEQ03zPug1U+DpUnmSR5FFeWrgB2CshIK9XzSLCw8LXCJRJRtzX164q2B272Oqy4tjMJpxjoJgkgfTBLPpdSOIjvbbmblBcytXb5xV1JWnfbdbrRYyqhEeqgG3hqSTtbmHoRzNZMakOeBOlU4nUiRmnt81EDzxhX6HG05ioIfPaHQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3625.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(39860400002)(366004)(136003)(396003)(346002)(230273577357003)(230173577357003)(230922051799003)(64100799003)(186009)(1800799009)(451199024)(66556008)(66476007)(8676002)(54906003)(4326008)(316002)(6916009)(66946007)(31686004)(5660300002)(8936002)(2906002)(86362001)(82960400001)(41300700001)(478600001)(966005)(83380400001)(53546011)(6512007)(2616005)(6486002)(36756003)(6506007)(26005)(38100700002)(6666004)(31696002)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WGNiNjhubjVXWFpJOXNoUDRkS1hQcjkzSmRUaitRK1VTZXh3U1dOckt2VWl1?=
+ =?utf-8?B?V05HZUhRWU9OZmJnRER0bkVGSFdXMUgzM2F0NVhPS1dqSFQvcWgyK1drUlpk?=
+ =?utf-8?B?emd6R0tCc0xNNi9NN25EeEFwbHl3bzFGK2JIRUNrUk9SM1JleHAxUzAzOUw0?=
+ =?utf-8?B?aVd0UUQ3dTVmakNPblRmbWEyRS85cnlkOVIvdUJGZDZMdHEzNnJjQi9iTk54?=
+ =?utf-8?B?RmJydUpUY2I0SE5IT3NwY0UydlppRGdlWlNjeU1xbzBId0FBNEsvMDloWjFT?=
+ =?utf-8?B?ckJtRWN2czhsU215eEJRSHVjZERmNzhCMDM2dTArRHlqejlidUdhSDVaelJt?=
+ =?utf-8?B?blJuUDVVa3h2OHk4RERxaUo2RXUxV2FaMldpM3JGeFNuWFZ5SkwrdU5DT3No?=
+ =?utf-8?B?SEJXemxhQkNhcVlsZUt3WEdTOXlxVm1uNndYRTBxaE9zSFFScEZhV1Y2RnAw?=
+ =?utf-8?B?VFlWeEhMNjFDNFFxcUtUenVFVEdNbHRiZnFaQXM0cmdJaFZlZkJPckd0dXNO?=
+ =?utf-8?B?OU9sQ0x6NnFIUG8xVzdvalJjbFQzeC93bGJqWmxjdy9TbWlvNFlsWktzZzll?=
+ =?utf-8?B?Uk5ZN252cUlVSDR2ZHlZbVR4YnAybm1IdklEVlVocUtjSUE1OXlpTTNJY3pT?=
+ =?utf-8?B?WG5vL1NmTHRHVXQzNWpNNlAxQkhLc00xMnBMSWl6OVUwSjJONnF0Nm10OU9v?=
+ =?utf-8?B?ZzFZaTU5R1JYZDRYMmdlUUdoRXhnVUdCSHIyeUtBbjZyalRVdks0VUV0ZUZP?=
+ =?utf-8?B?VXNzUS8xTEVoM3BvQ2NJT1NKUjkzSXpOOXFSUXJzOHI3UXdlUU5MRndGQ1Nx?=
+ =?utf-8?B?TkdNRGhvNVZ5MWxsSWRuVFdDWWppQlRJMFlHcGZGek4vaG43aWphYnpKWkxn?=
+ =?utf-8?B?TEp3S0NWc3c5WDNZbHJTd3QxTnJJT3diTjhhOExUOWJlZHlIbjdWT202NkV5?=
+ =?utf-8?B?YnVvM2xNS01RVTBiZlZYZmFNOGdkVmliSitUMytSRVFoNHNCWlhTVzNBYWdF?=
+ =?utf-8?B?M1ZUTU5Rc2hLRDE4R1lPZWlYaG1RQ2J3ZHJ1OUo5MTdRRzd3OEc5dmQ3d0tx?=
+ =?utf-8?B?VUVKOFZZVVQ1N25CNS9NVnhpRFBHbFk4T0hmOSs1dlJkQjZtcTdkTjNxdE9z?=
+ =?utf-8?B?UTh2c2g1VEREY2NYTGtwRVVDRjdQc1p3bmlKYTJlc1kxOTJ1T0pJaW5GLzVr?=
+ =?utf-8?B?dy9rMVU5cVl2K0t5YmQyOXdFNFFsNnR0WjdHV0RKRytWVVVWbmV4M0hZOW01?=
+ =?utf-8?B?aDIrQlZiSjhFT3FyTjF0bm9GZHlLRjMrVHU3OXJXWDZKYXBCd01LOGRVdit0?=
+ =?utf-8?B?b0k1Ri9TK3dXOTJETUlCaTlrdmFTZHBlZ0JTN0ZjamxxajZRNjJaaE54T2dH?=
+ =?utf-8?B?MmpuYzVlTFNNQTBQOWZjQWl2RGs5TThXdytsdGQ3dko3bUhUdlpUWVcrSnFs?=
+ =?utf-8?B?YzcyQ1pZTHQ4Nm9LVVZYamY4cDVZVHV2QnlVdFJ1YTJnTHFjMHBFVVJwUmg3?=
+ =?utf-8?B?VlE3SU9kRXoxTTE1alZ1NWZUdGRpK1Vob3laU013eEJrc05mVG40ZC9RRDB4?=
+ =?utf-8?B?WnFKZDVUYnNBOTZzRmwwbUY4Ynp4bkRkYVpnTEp6YVgyYnB2Mlh2QzRmTEdh?=
+ =?utf-8?B?eEVBMFc1VG5VVkp3U1c4Z08yb1VvLzEvaDRGSVRYcHgwei92eDhOTVk0WlJX?=
+ =?utf-8?B?alluWUlGYzdyWFRneU1mZkU5TW8rcmd6ZUNBUm9pWCsxR05mVjFUQ2RUQzhm?=
+ =?utf-8?B?NGJxSHFwVndrSWJwMjVRbFVadmtqdG9UOXJnd0NaNFVNTEhieVc3b0c4UzZM?=
+ =?utf-8?B?T3VWQ3BaSFdmc1F5ZXBodkREaEp5V2NDMElHRUlWU0o2WHFIR3F1L3BTdVpq?=
+ =?utf-8?B?cG52RElLeDRXUElrdWI4UGkyaHJGaTQvSHQwaEFwS1JISWJWeUhnenBBNTdW?=
+ =?utf-8?B?T0p5ZU9SRk0zTUNaOE9QYXFFNWdrckNqRGRUbzg2Z3c1b1ljeXBPWERGY1Bo?=
+ =?utf-8?B?NmcyTEhMSTNCeUU4U0dDWmdyczlCTHZuZFFXNi9WYi9kY1VtbU0zdHhPVE1v?=
+ =?utf-8?B?MXZZUjVIdlJJVmxFNXZKb3Z4N3hBTk8xZGNHZWdReUY5ZmY1Qy8zYmpqdHZ4?=
+ =?utf-8?B?MXZIdW43YXdXa1hUaW5pMWZRWmlBN2FWN053aC9mOXVtcTZ2Uk0yaS9EcmpE?=
+ =?utf-8?B?R3c9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: ce5980e0-8e44-44d3-c7a2-08dbdfb0c187
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3625.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Nov 2023 16:44:05.9831
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: K4bYCHt/BJMpuJkQJCch5oWhYCf+J0DKGhcwUKdwYGkPmmG2LMTWitT8fPIMdY3Qr96/nqpoK3c6anvecj/SNy/Hv/PJA5j9bnJcynLfQ/Q=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR11MB5980
+X-OriginatorOrg: intel.com
 
-From: Qu Huang <qu.huang@linux.dev>
+From: Alexander Potapenko <glider@google.com>
+Date: Tue, 7 Nov 2023 17:33:56 +0100
 
-[ Upstream commit 5104fdf50d326db2c1a994f8b35dcd46e63ae4ad ]
+> On Tue, Nov 7, 2023 at 2:23 PM Alexander Lobakin
+> <aleksander.lobakin@intel.com> wrote:
+>>
+>> From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>> Date: Mon, 6 Nov 2023 20:23:52 +0200
+>>
+>>> On Mon, Nov 06, 2023 at 05:31:34PM +0100, Alexander Lobakin wrote:
+>>>
+>>>>> | Reported-by: kernel test robot <lkp@intel.com>
+>>>>> | Closes: https://lore.kernel.org/oe-kbuild-all/202310170708.fJzLlgDM-lkp@intel.com/
+>>>
+>>>> Not sure how to approach this :z It was also captured on the version you
+>>>> sent 2 weeks ago, so this could've been resolved already.
+>>>
+>>> Is it in the repository already? if so, we should revert it.
+>>> Otherwise you have time to think and fix.
+>>
+>> Nah, neither Alex' series nor mine. And I'd say this should rather be
+>> resolved in the functions Alex introduce.
+>>
+>> Thanks,
+>> Olek
+> 
+> Sorry, I couldn't reproduce the problem using the instructions at
+> https://download.01.org/0day-ci/archive/20231017/202310170708.fJzLlgDM-lkp@intel.com/reproduce
+> locally, maybe that's because I only have gcc-11 and higher.
+> 
+> But if I'm understanding correctly what's going on, then GCC will be
+> reporting the same issue in the following code:
+> 
+> =======================================================
+> #include <stddef.h>
+> #include <stdbool.h>
+> 
+> #define BITS_PER_LONG 64
+> #define unlikely(x) x
+> #define UL(x) (x##UL)
+> #define GENMASK(h, l) \
+>         (((~UL(0)) - (UL(1) << (l)) + 1) & \
+>          (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
+> 
+> #define BIT_WORD(nr)            ((nr) / BITS_PER_LONG)
+> #define BITMAP_FIRST_WORD_MASK(start) (~0UL << ((start) & (BITS_PER_LONG - 1)))
+> #define BITMAP_LAST_WORD_MASK(nbits) (~0UL >> (-(nbits) & (BITS_PER_LONG - 1)))
+> 
+> inline void bitmap_write(unsigned long *map,
+>                                 unsigned long value,
+>                                 unsigned long start, unsigned long nbits)
+> {
+>         size_t index;
+>         unsigned long offset;
+>         unsigned long space;
+>         unsigned long mask;
+>         bool fit;
+> 
+>         if (unlikely(!nbits))
+>                 return;
+> 
+>         mask = BITMAP_LAST_WORD_MASK(nbits);
+>         value &= mask;
+>         offset = start % BITS_PER_LONG;
+>         space = BITS_PER_LONG - offset;
+>         fit = space >= nbits;
+>         index = BIT_WORD(start);
+> 
+>         map[index] &= (fit ? (~(mask << offset)) :
+> ~BITMAP_FIRST_WORD_MASK(start));
+>         map[index] |= value << offset;
+>         if (fit)
+>                 return;
+> 
+>         map[index + 1] &= BITMAP_FIRST_WORD_MASK(start + nbits);
+>         map[index + 1] |= (value >> space);
+> }
+> 
+> unsigned long foo(unsigned int n) {
+>     unsigned long bm[1] = {0};
+>     bitmap_write(bm, 1, n, 2);
+>     return bm[0];
+> }
+> =======================================================
+> (see also https://godbolt.org/z/GfGfYje53)
+> 
+> If so, the problem is not specific to GCC 9, trunk GCC also barks on this code:
+> 
+> =======================================================
+> In function 'bitmap_write',
+>     inlined from 'bitmap_write' at <source>:15:13,
+>     inlined from 'foo' at <source>:47:7:
+> <source>:40:12: warning: array subscript 1 is outside array bounds of
+> 'long unsigned int[1]' [-Warray-bounds=]
+>    40 |         map[index + 1] &= BITMAP_FIRST_WORD_MASK(start + nbits);
+>       |         ~~~^~~~~~~~~~~
+> =======================================================
+> 
+> If this is true for the code in drivers/gpio/gpio-pca953x.c,
+> suppressing the report for GCC 9 won't help for other versions.
+> Given that this report is isolated in a single file, we probably need
 
-In certain types of chips, such as VEGA20, reading the amdgpu_regs_smc file could result in an abnormal null pointer access when the smc_rreg pointer is NULL. Below are the steps to reproduce this issue and the corresponding exception log:
+I tested it on GCC 9 using modified make.cross from lkp and it triggers
+on one more file:
 
-1. Navigate to the directory: /sys/kernel/debug/dri/0
-2. Execute command: cat amdgpu_regs_smc
-3. Exception Log::
-[4005007.702554] BUG: kernel NULL pointer dereference, address: 0000000000000000
-[4005007.702562] #PF: supervisor instruction fetch in kernel mode
-[4005007.702567] #PF: error_code(0x0010) - not-present page
-[4005007.702570] PGD 0 P4D 0
-[4005007.702576] Oops: 0010 [#1] SMP NOPTI
-[4005007.702581] CPU: 4 PID: 62563 Comm: cat Tainted: G           OE     5.15.0-43-generic #46-Ubunt       u
-[4005007.702590] RIP: 0010:0x0
-[4005007.702598] Code: Unable to access opcode bytes at RIP 0xffffffffffffffd6.
-[4005007.702600] RSP: 0018:ffffa82b46d27da0 EFLAGS: 00010206
-[4005007.702605] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffa82b46d27e68
-[4005007.702609] RDX: 0000000000000001 RSI: 0000000000000000 RDI: ffff9940656e0000
-[4005007.702612] RBP: ffffa82b46d27dd8 R08: 0000000000000000 R09: ffff994060c07980
-[4005007.702615] R10: 0000000000020000 R11: 0000000000000000 R12: 00007f5e06753000
-[4005007.702618] R13: ffff9940656e0000 R14: ffffa82b46d27e68 R15: 00007f5e06753000
-[4005007.702622] FS:  00007f5e0755b740(0000) GS:ffff99479d300000(0000) knlGS:0000000000000000
-[4005007.702626] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[4005007.702629] CR2: ffffffffffffffd6 CR3: 00000003253fc000 CR4: 00000000003506e0
-[4005007.702633] Call Trace:
-[4005007.702636]  <TASK>
-[4005007.702640]  amdgpu_debugfs_regs_smc_read+0xb0/0x120 [amdgpu]
-[4005007.703002]  full_proxy_read+0x5c/0x80
-[4005007.703011]  vfs_read+0x9f/0x1a0
-[4005007.703019]  ksys_read+0x67/0xe0
-[4005007.703023]  __x64_sys_read+0x19/0x20
-[4005007.703028]  do_syscall_64+0x5c/0xc0
-[4005007.703034]  ? do_user_addr_fault+0x1e3/0x670
-[4005007.703040]  ? exit_to_user_mode_prepare+0x37/0xb0
-[4005007.703047]  ? irqentry_exit_to_user_mode+0x9/0x20
-[4005007.703052]  ? irqentry_exit+0x19/0x30
-[4005007.703057]  ? exc_page_fault+0x89/0x160
-[4005007.703062]  ? asm_exc_page_fault+0x8/0x30
-[4005007.703068]  entry_SYSCALL_64_after_hwframe+0x44/0xae
-[4005007.703075] RIP: 0033:0x7f5e07672992
-[4005007.703079] Code: c0 e9 b2 fe ff ff 50 48 8d 3d fa b2 0c 00 e8 c5 1d 02 00 0f 1f 44 00 00 f3 0f        1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 0f 05 <48> 3d 00 f0 ff ff 77 56 c3 0f 1f 44 00 00 48 83 e       c 28 48 89 54 24
-[4005007.703083] RSP: 002b:00007ffe03097898 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-[4005007.703088] RAX: ffffffffffffffda RBX: 0000000000020000 RCX: 00007f5e07672992
-[4005007.703091] RDX: 0000000000020000 RSI: 00007f5e06753000 RDI: 0000000000000003
-[4005007.703094] RBP: 00007f5e06753000 R08: 00007f5e06752010 R09: 00007f5e06752010
-[4005007.703096] R10: 0000000000000022 R11: 0000000000000246 R12: 0000000000022000
-[4005007.703099] R13: 0000000000000003 R14: 0000000000020000 R15: 0000000000020000
-[4005007.703105]  </TASK>
-[4005007.703107] Modules linked in: nf_tables libcrc32c nfnetlink algif_hash af_alg binfmt_misc nls_       iso8859_1 ipmi_ssif ast intel_rapl_msr intel_rapl_common drm_vram_helper drm_ttm_helper amd64_edac t       tm edac_mce_amd kvm_amd ccp mac_hid k10temp kvm acpi_ipmi ipmi_si rapl sch_fq_codel ipmi_devintf ipm       i_msghandler msr parport_pc ppdev lp parport mtd pstore_blk efi_pstore ramoops pstore_zone reed_solo       mon ip_tables x_tables autofs4 ib_uverbs ib_core amdgpu(OE) amddrm_ttm_helper(OE) amdttm(OE) iommu_v       2 amd_sched(OE) amdkcl(OE) drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops cec rc_core        drm igb ahci xhci_pci libahci i2c_piix4 i2c_algo_bit xhci_pci_renesas dca
-[4005007.703184] CR2: 0000000000000000
-[4005007.703188] ---[ end trace ac65a538d240da39 ]---
-[4005007.800865] RIP: 0010:0x0
-[4005007.800871] Code: Unable to access opcode bytes at RIP 0xffffffffffffffd6.
-[4005007.800874] RSP: 0018:ffffa82b46d27da0 EFLAGS: 00010206
-[4005007.800878] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffa82b46d27e68
-[4005007.800881] RDX: 0000000000000001 RSI: 0000000000000000 RDI: ffff9940656e0000
-[4005007.800883] RBP: ffffa82b46d27dd8 R08: 0000000000000000 R09: ffff994060c07980
-[4005007.800886] R10: 0000000000020000 R11: 0000000000000000 R12: 00007f5e06753000
-[4005007.800888] R13: ffff9940656e0000 R14: ffffa82b46d27e68 R15: 00007f5e06753000
-[4005007.800891] FS:  00007f5e0755b740(0000) GS:ffff99479d300000(0000) knlGS:0000000000000000
-[4005007.800895] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[4005007.800898] CR2: ffffffffffffffd6 CR3: 00000003253fc000 CR4: 00000000003506e0
+drivers/thermal/intel/intel_soc_dts_iosf.c: In function 'sys_get_curr_temp':
+./include/linux/bitmap.h:601:18: error: array subscript [1,
+288230376151711744] is outside array bounds of 'long unsigned int[1]'
+[-Werror=array-bounds]
 
-Signed-off-by: Qu Huang <qu.huang@linux.dev>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+> to give the compiler some hints about the range of values passed to
+> bitmap_write() rather than suppressing the optimizations.
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
-index ee4a0b7cb452f..41a9cc9e0f9db 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
-@@ -391,6 +391,9 @@ static ssize_t amdgpu_debugfs_regs_smc_read(struct file *f, char __user *buf,
- 	ssize_t result = 0;
- 	int r;
- 
-+	if (!adev->smc_rreg)
-+		return -EPERM;
-+
- 	if (size & 0x3 || *pos & 0x3)
- 		return -EINVAL;
- 
-@@ -430,6 +433,9 @@ static ssize_t amdgpu_debugfs_regs_smc_write(struct file *f, const char __user *
- 	ssize_t result = 0;
- 	int r;
- 
-+	if (!adev->smc_wreg)
-+		return -EPERM;
-+
- 	if (size & 0x3 || *pos & 0x3)
- 		return -EINVAL;
- 
--- 
-2.42.0
+OPTIMIZER_HIDE_VAR() doesn't disable optimizations if I get it
+correctly, rather shuts up the compiler in cases like this one.
 
+I've been thinking of using __member_size() from fortify-string.h, we
+could probably optimize the object code even a bit more while silencing
+this warning.
+Adding Kees, maybe he'd like to participate in sorting this out as well.
+
+Thanks,
+Olek
