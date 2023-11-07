@@ -1,70 +1,64 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9227636AEB
-	for <linux-hardening@vger.kernel.org>; Tue,  7 Nov 2023 19:24:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25B5534558
+	for <linux-hardening@vger.kernel.org>; Tue,  7 Nov 2023 23:25:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hRmnF0Hx"
-Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26A0F8F;
-	Tue,  7 Nov 2023 11:24:53 -0800 (PST)
-Received: by mail-pg1-x52c.google.com with SMTP id 41be03b00d2f7-53fbf2c42bfso4487901a12.3;
-        Tue, 07 Nov 2023 11:24:53 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ikS1yjgW"
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2284386E
+	for <linux-hardening@vger.kernel.org>; Tue,  7 Nov 2023 15:25:02 -0800 (PST)
+Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-6b5cac99cfdso5202776b3a.2
+        for <linux-hardening@vger.kernel.org>; Tue, 07 Nov 2023 15:25:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699385092; x=1699989892; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1699399502; x=1700004302; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=Oj9MZK4wUctOna3bEFza6Z8b7j977JaPhxo3SsWBCcs=;
-        b=hRmnF0HxJQlzX2rJ/l91O1Hj/lSzJWjviXUTLNiXN+nPFMwlzHrDhu8QS5eoQYKqjR
-         x4d5+NdudTo9quXM2mRqSuVKBvCZJECOTr3oV7huyZQwqG+84od7ZPL+GAxoOnm5QwDP
-         nwMUG/hyNZx4tVqLM1hsuYoUvO62osIzkXDZmSydF6JoGfQhifvF92rKjdwdphaNjJBY
-         eu8KhRJS1kWeNMCBmj35k9JItSWJnPWqMgZCphYf6fEvcFxuGmOQFm3lsKNbz6/w+dv/
-         OjTxVJDnlp0nmxIH5f4FtMEO9uAkbnPQbtHONX5AcYOIb4iP1SDPzviYyUYGR/oLGK7M
-         uJLA==
+        bh=XDWMiq/2ClUpNf7l50C4dkGfwlleMPhjaG5SVTFskio=;
+        b=ikS1yjgWdwyu16z8b3SL4BXDWJHMxMxujSCWZB5WchgIP5POuH7ZmrLFTEFbjhBaDo
+         EJaNijQNZaTz+vzirY1YTThjktCYvHfci3w1zf+UcndDYPVYVrPPAd9Nm+xYTMebfGJn
+         UFn+hPbPeuLckcIi9nbTtrxdXkVmVoFh0OjJM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699385092; x=1699989892;
+        d=1e100.net; s=20230601; t=1699399502; x=1700004302;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Oj9MZK4wUctOna3bEFza6Z8b7j977JaPhxo3SsWBCcs=;
-        b=ETPwHFdYX6YyeMe0X7FTTgnGdy2oPTy/Z108M6ilxeHq09Kul9rgrKUsFAA0nPuMHO
-         HXFhdQ1Jbarcn/J8cC/A+DIAibJMgkcrxB3EXPmFmjgW7pr9yCyLTCnXWfLpA+k7QKwq
-         0b21ln2CWKcJXsFBUcwbEm7+C6b1U4BUCJKDQkZcpQUcIylXmNvmOJDsNBCt50IfYheX
-         shyDZ/hU+2bEiZjulvi5Y1OE94Jyrr1IfM6kxSwMUZm56n/O98HCeZ8PHw2/7GNHsq22
-         UjnjKxKEQm7+3TTxnlN2uRH/69xCce3vUS/YIHTlEQwC/F1Yp6oL5WC+gEekPIogQwPL
-         JDLQ==
-X-Gm-Message-State: AOJu0YyExpeoE6RY5I7FrK1Oq0hupIM3qSNt1nJDtqV6QYr32vslYQGj
-	cy8gk54ySmow0NF/paGLCc/8IYUgyH/L/w==
-X-Google-Smtp-Source: AGHT+IGS33QtOaJIzJHkuOlPXXHZVu17ZHfO5B5Wi3fl8+b8Sh2g+W26KPqZgEFwcz7/OXBcrsHtQw==
-X-Received: by 2002:a05:6a20:2590:b0:16b:977d:f7cf with SMTP id k16-20020a056a20259000b0016b977df7cfmr39259363pzd.36.1699385092348;
-        Tue, 07 Nov 2023 11:24:52 -0800 (PST)
-Received: from localhost ([216.228.127.128])
-        by smtp.gmail.com with ESMTPSA id kx14-20020a170902f94e00b001bc6e6069a6sm172531plb.122.2023.11.07.11.24.51
+        bh=XDWMiq/2ClUpNf7l50C4dkGfwlleMPhjaG5SVTFskio=;
+        b=GphAkju9OSHnfmgpqLOZrLVGgqMdCtZpzGn3RWmbGeySjlaxkQ/rtLbIDL0JhuX0Ax
+         YgTYNIzoIz6VW1Ve3r8KcbFTxaFSfOAslN4IaQADd3lx0myqyeRJ0uI4dmhJS7kcVJAQ
+         /CdpciQvrrpMSaalqBNgxEjyqyGlcC3ih9uWGko9mdUY3zr/gZaEijJkE0qsTjcDOES9
+         IWrtUNzf1M30pd+4pIZXX4Ga6RxBuld7noW5i8OOUvxeRVG9wXIznVv7Eufm2imPwCuA
+         3WOm9vy38RaCi/wU0DSHkWGG3jQfhIip5NRbyw1cJ0K+yAWWC/m6853VOg/aw4P7ht4N
+         QEYg==
+X-Gm-Message-State: AOJu0Yw8jvhaumqcnD01CCnA2Rvta1+o3qEg0A1xfKmWg58NxW2SwZvZ
+	yy/Q0ZYjT8902OR+9EQEwltjtg==
+X-Google-Smtp-Source: AGHT+IHKmeWdNqg8xV4LjBf3dq6jLliKT0Z15hAj2ecHLNWH3B16uFe/4vaumqd744U979GPCfPSTQ==
+X-Received: by 2002:a05:6a00:b92:b0:68b:bf33:2957 with SMTP id g18-20020a056a000b9200b0068bbf332957mr126998pfj.22.1699399502232;
+        Tue, 07 Nov 2023 15:25:02 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id e6-20020a62ee06000000b0068ff267f094sm7692689pfi.158.2023.11.07.15.25.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Nov 2023 11:24:51 -0800 (PST)
-Date: Tue, 7 Nov 2023 11:24:49 -0800
-From: Yury Norov <yury.norov@gmail.com>
+        Tue, 07 Nov 2023 15:25:01 -0800 (PST)
+Date: Tue, 7 Nov 2023 15:25:01 -0800
+From: Kees Cook <keescook@chromium.org>
 To: Alexander Lobakin <aleksander.lobakin@intel.com>
 Cc: Alexander Potapenko <glider@google.com>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Yury Norov <yury.norov@gmail.com>,
 	Syed Nayyar Waris <syednwaris@gmail.com>,
-	Kees Cook <keescook@chromium.org>,
 	kernel test robot <lkp@intel.com>, oe-kbuild-all@lists.linux.dev,
 	linux-hardening@vger.kernel.org,
 	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Subject: Re: [alobakin:pfcp 11/19] include/linux/bitmap.h:642:17: warning:
  array subscript [1, 1024] is outside array bounds of 'long unsigned int[1]'
-Message-ID: <ZUqPAZC4sS455xtx@yury-ThinkPad>
+Message-ID: <202311071521.099CAEA58@keescook>
 References: <202310170708.fJzLlgDM-lkp@intel.com>
  <bd7fe929-c6fc-42be-9d2f-3f53ec21fd10@intel.com>
  <ZUkvOCxyiin_77qd@smile.fi.intel.com>
  <0a29df6b-bc27-43e9-a97d-57ecabb29a9e@intel.com>
  <CAG_fn=VtA6e3oGm4WVnxmy9yMBab780-U_4VoHSqm4tcd2UTzQ@mail.gmail.com>
  <ca0ad357-727b-4f41-a3d6-2c48a9dd5836@intel.com>
- <e3b4b1a6-5383-4bfb-ba83-ab27d58dae29@intel.com>
- <ZUqCpmDgKFbscRgW@yury-ThinkPad>
- <457b9cbb-9a5f-47ef-9eac-3e4f135d6a96@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -74,76 +68,142 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <457b9cbb-9a5f-47ef-9eac-3e4f135d6a96@intel.com>
+In-Reply-To: <ca0ad357-727b-4f41-a3d6-2c48a9dd5836@intel.com>
 
-On Tue, Nov 07, 2023 at 07:52:19PM +0100, Alexander Lobakin wrote:
-> From: Yury Norov <yury.norov@gmail.com>
-> Date: Tue, 7 Nov 2023 10:32:06 -0800
+On Tue, Nov 07, 2023 at 05:44:00PM +0100, Alexander Lobakin wrote:
+> From: Alexander Potapenko <glider@google.com>
+> Date: Tue, 7 Nov 2023 17:33:56 +0100
 > 
-> > On Tue, Nov 07, 2023 at 06:24:04PM +0100, Alexander Lobakin wrote:
-> >> From: Alexander Lobakin <aleksander.lobakin@intel.com>
-> >> Date: Tue, 7 Nov 2023 17:44:00 +0100
+> > On Tue, Nov 7, 2023 at 2:23 PM Alexander Lobakin
+> > <aleksander.lobakin@intel.com> wrote:
 > >>
-> >>> From: Alexander Potapenko <glider@google.com>
-> >>> Date: Tue, 7 Nov 2023 17:33:56 +0100
-> >>>
-> >>>> On Tue, Nov 7, 2023 at 2:23 PM Alexander Lobakin
-> >>>> <aleksander.lobakin@intel.com> wrote:
+> >> From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> >> Date: Mon, 6 Nov 2023 20:23:52 +0200
 > >>
-> >> [...]
+> >>> On Mon, Nov 06, 2023 at 05:31:34PM +0100, Alexander Lobakin wrote:
+> >>>
+> >>>>> | Reported-by: kernel test robot <lkp@intel.com>
+> >>>>> | Closes: https://lore.kernel.org/oe-kbuild-all/202310170708.fJzLlgDM-lkp@intel.com/
+> >>>
+> >>>> Not sure how to approach this :z It was also captured on the version you
+> >>>> sent 2 weeks ago, so this could've been resolved already.
+> >>>
+> >>> Is it in the repository already? if so, we should revert it.
+> >>> Otherwise you have time to think and fix.
 > >>
-> >>> I tested it on GCC 9 using modified make.cross from lkp and it triggers
-> >>> on one more file:
-> >>>
-> >>> drivers/thermal/intel/intel_soc_dts_iosf.c: In function 'sys_get_curr_temp':
-> >>> ./include/linux/bitmap.h:601:18: error: array subscript [1,
-> >>> 288230376151711744] is outside array bounds of 'long unsigned int[1]'
-> >>> [-Werror=array-bounds]
-> >>>
-> >>>> to give the compiler some hints about the range of values passed to
-> >>>> bitmap_write() rather than suppressing the optimizations.
-> >>>
-> >>> OPTIMIZER_HIDE_VAR() doesn't disable optimizations if I get it
-> >>> correctly, rather shuts up the compiler in cases like this one.
-> >>>
-> >>> I've been thinking of using __member_size() from fortify-string.h, we
-> >>> could probably optimize the object code even a bit more while silencing
-> >>> this warning.
-> >>> Adding Kees, maybe he'd like to participate in sorting this out as well.
+> >> Nah, neither Alex' series nor mine. And I'd say this should rather be
+> >> resolved in the functions Alex introduce.
 > >>
-> >> This one seems to work. At least previously mad GCC 9.3.0 now sits
-> >> quietly, as if I added OPTIMIZER_HIDE_VAR() as Yury suggested.
-> >  
-> > What's wrong with OPTIMIZER_HIDE_VAR()? The problem is clearly on GCC
-> > side, namely - it doesn't realize that the map[index+1] fetch is
-> > conditional.
+> >> Thanks,
+> >> Olek
+> > 
+> > Sorry, I couldn't reproduce the problem using the instructions at
+> > https://download.01.org/0day-ci/archive/20231017/202310170708.fJzLlgDM-lkp@intel.com/reproduce
+> > locally, maybe that's because I only have gcc-11 and higher.
+> > 
+> > But if I'm understanding correctly what's going on, then GCC will be
+> > reporting the same issue in the following code:
+> > 
+> > =======================================================
+> > #include <stddef.h>
+> > #include <stdbool.h>
+> > 
+> > #define BITS_PER_LONG 64
+> > #define unlikely(x) x
+> > #define UL(x) (x##UL)
+> > #define GENMASK(h, l) \
+> >         (((~UL(0)) - (UL(1) << (l)) + 1) & \
+> >          (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
+> > 
+> > #define BIT_WORD(nr)            ((nr) / BITS_PER_LONG)
+> > #define BITMAP_FIRST_WORD_MASK(start) (~0UL << ((start) & (BITS_PER_LONG - 1)))
+> > #define BITMAP_LAST_WORD_MASK(nbits) (~0UL >> (-(nbits) & (BITS_PER_LONG - 1)))
+> > 
+> > inline void bitmap_write(unsigned long *map,
+> >                                 unsigned long value,
+> >                                 unsigned long start, unsigned long nbits)
+> > {
+> >         size_t index;
+> >         unsigned long offset;
+> >         unsigned long space;
+> >         unsigned long mask;
+> >         bool fit;
+> > 
+> >         if (unlikely(!nbits))
+> >                 return;
+> > 
+> >         mask = BITMAP_LAST_WORD_MASK(nbits);
+> >         value &= mask;
+> >         offset = start % BITS_PER_LONG;
+> >         space = BITS_PER_LONG - offset;
+> >         fit = space >= nbits;
+> >         index = BIT_WORD(start);
+> > 
+> >         map[index] &= (fit ? (~(mask << offset)) :
+> > ~BITMAP_FIRST_WORD_MASK(start));
+> >         map[index] |= value << offset;
+> >         if (fit)
+> >                 return;
+> > 
+> >         map[index + 1] &= BITMAP_FIRST_WORD_MASK(start + nbits);
+> >         map[index + 1] |= (value >> space);
+> > }
+> > 
+> > unsigned long foo(unsigned int n) {
+> >     unsigned long bm[1] = {0};
+> >     bitmap_write(bm, 1, n, 2);
+> >     return bm[0];
+> > }
+> > =======================================================
+> > (see also https://godbolt.org/z/GfGfYje53)
+> > 
+> > If so, the problem is not specific to GCC 9, trunk GCC also barks on this code:
+> > 
+> > =======================================================
+> > In function 'bitmap_write',
+> >     inlined from 'bitmap_write' at <source>:15:13,
+> >     inlined from 'foo' at <source>:47:7:
+> > <source>:40:12: warning: array subscript 1 is outside array bounds of
+> > 'long unsigned int[1]' [-Warray-bounds=]
+> >    40 |         map[index + 1] &= BITMAP_FIRST_WORD_MASK(start + nbits);
+> >       |         ~~~^~~~~~~~~~~
+> > =======================================================
+> > 
+> > If this is true for the code in drivers/gpio/gpio-pca953x.c,
+> > suppressing the report for GCC 9 won't help for other versions.
+> > Given that this report is isolated in a single file, we probably need
 > 
-> It's totally fine for me to use it, this one is just an alternative
-> (well, a bit broken as per below).
+> I tested it on GCC 9 using modified make.cross from lkp and it triggers
+> on one more file:
+> 
+> drivers/thermal/intel/intel_soc_dts_iosf.c: In function 'sys_get_curr_temp':
+> ./include/linux/bitmap.h:601:18: error: array subscript [1,
+> 288230376151711744] is outside array bounds of 'long unsigned int[1]'
+> [-Werror=array-bounds]
+> 
+> > to give the compiler some hints about the range of values passed to
+> > bitmap_write() rather than suppressing the optimizations.
+> 
+> OPTIMIZER_HIDE_VAR() doesn't disable optimizations if I get it
+> correctly, rather shuts up the compiler in cases like this one.
+> 
+> I've been thinking of using __member_size() from fortify-string.h, we
+> could probably optimize the object code even a bit more while silencing
+> this warning.
+> Adding Kees, maybe he'd like to participate in sorting this out as well.
 
-OK, guys, that's even worse. The 12 and 13 don't fire the warning
-because Warray-bounds is explicitly disabled for gcc-11+. Check
-0da6e5fd6c372 ("gcc: disable '-Warray-bounds' for gcc-13 too"). I'll
-test how gcc-10 builds it, and if it's broken too, it's worth to shift
-the threshold in init/Kconfig.
+I'm trying to find all the pieces for this code, so I might be working
+from the wrong version or something, but I think this is the change:
+https://github.com/alobakin/linux/commit/66808fb20fed014a522b868322d54daef14a6bd8
 
-Let me check it later today.
+and the induced warning is correctly analyzed in this thread (i.e. GCC
+can't convince itself that it'll never reach the out of bounds access).
+Does this work?
 
-[...]
+-	if (fit)
++	if (fit || index + 1 >= __member_size(map))
+ 		return;
 
-> Oh you're right, I didn't think about this. Your approach seems optimal
-> unless hardening folks have anything else.
->
-> I don't see bitmap_{read,write}() mini-series applied anywhere in your
 
-I'll not take the code unless there are real kernel users for it. Your
-compressor is still under development AFAIK, so I'm going to pull
-bitmap_read/write with ip_tunnel series, if it comes first. 
-
-> tree, maybe Alex could incorporate your patch into it and resubmit?
-
-Yes, that's what I asked him to do. But let's put it on hold while I'm
-testing different compilers.
-
-Thanks,
-Yury
+-- 
+Kees Cook
