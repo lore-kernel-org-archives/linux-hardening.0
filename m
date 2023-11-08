@@ -1,128 +1,139 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8EC81376
-	for <linux-hardening@vger.kernel.org>; Wed,  8 Nov 2023 02:31:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-X-Greylist: delayed 618 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 07 Nov 2023 18:31:09 PST
-Received: from localhost.fundacionsgae.org (salaberlanga.com [82.223.37.45])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id AE63810F8
-	for <linux-hardening@vger.kernel.org>; Tue,  7 Nov 2023 18:31:09 -0800 (PST)
-Received: by localhost.fundacionsgae.org (Postfix, from userid 48)
-	id CD31715FF4E1; Wed,  8 Nov 2023 03:19:19 +0100 (CET)
-To: linux-hardening@vger.kernel.org
-Subject: Job vacancy
-X-PHP-Originating-Script: 48:xleet.php(6) : eval()'d code
-Date: Wed, 8 Nov 2023 03:19:19 +0100
-From: "St. Thomas' Hospital UK" <stthomashospitaluk66@gmail.com>
-Reply-To: recruitment@gsttsnhsuk.online
-Message-ID: <a8a7b45af5bf7332f930433518debcfd@tarifas.sgae.eu>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFC641094F
+	for <linux-hardening@vger.kernel.org>; Wed,  8 Nov 2023 10:08:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lBAiJUAY"
+Received: from mail-qk1-x730.google.com (mail-qk1-x730.google.com [IPv6:2607:f8b0:4864:20::730])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEDD6172C
+	for <linux-hardening@vger.kernel.org>; Wed,  8 Nov 2023 02:08:25 -0800 (PST)
+Received: by mail-qk1-x730.google.com with SMTP id af79cd13be357-778925998cbso429754785a.0
+        for <linux-hardening@vger.kernel.org>; Wed, 08 Nov 2023 02:08:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1699438105; x=1700042905; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4wGGir6AVBqgYA9x3Zbac4F5sWP9OwD7U2p91KydZfY=;
+        b=lBAiJUAY8SHaLBh8iol/OPbb+Y6aDhNxTrbb8eyevPwd6WXyN7EQkBvpbD5FEXflzY
+         kMNX+y6VuYksbjQI4mAXYM/z787iZ7/glAhe8xVaBha2ihvZVNj0GxRKdcTgwnL8suef
+         2PNDwwE9ls8/1WZ9DQxB31LlnN0LTosy+SabWMmcPF3u7HQJA3L+uXhUX47lk4EoJzsH
+         3UUgD7VNP9GCXwtvrqS9HZlb+wOjcWlPo+skrDKxYGw0vqAmnrBlv6X5ynhJxXcSjTl2
+         4CZbTWJWfSG6NqN2Qs0wyledSav75y/lQT/rztMwMaTiuwDDx381my6UjU+yarrqU57V
+         YbVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699438105; x=1700042905;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4wGGir6AVBqgYA9x3Zbac4F5sWP9OwD7U2p91KydZfY=;
+        b=urt3Lk/1bEMaFSi89UMjcAgW61ohPrD0YBt5RaW5dZj8jR72kvVY+9EzH0idR0En2b
+         entTLwNJ8Yq/nB5S3RJaGg1qQEwZRLf9EjSDA0eRfUpJJdjXW+6ARBTINP+V1pgRC6m9
+         s0Gx3anNlmuk79K1N5rftsYdSF5dLVzV6ldhewEDh/xtm0MG9KaxdTDoVEUdd9RAwM6P
+         rpDv5H5eMHtzuDm+5FqrcqAk5kdcX3hNgxq4NUSt4PLsR2zlxyf3YEP+RpoeKe+8pl2C
+         DHzyiPNqxk/cl5ugbY7lizv5FVGchy0qlbGh2CGv88KxQyFmTYQb7cX8j9Gm7xCeoMtd
+         5snw==
+X-Gm-Message-State: AOJu0Yw2CyB7GWwqeAGtqg/ZUqI5UqIQ2A1FvR92OZ1vzKXN9vohTELU
+	7FA1uv7Lt2XRVLHccy8rgc6qQZhdPD6Zw/q38ZvfXw==
+X-Google-Smtp-Source: AGHT+IFhHW/0DOROPJfJKVsS+cLUcq4hLMWxKYvyzkWCZDfN04ji8RSuzBLB7GHnSU4rjlNqYKcfdwKdxSRQ2WUJvwg=
+X-Received: by 2002:a05:6214:e87:b0:673:72a4:b0bc with SMTP id
+ hf7-20020a0562140e8700b0067372a4b0bcmr1711949qvb.38.1699438104938; Wed, 08
+ Nov 2023 02:08:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <202310170708.fJzLlgDM-lkp@intel.com> <bd7fe929-c6fc-42be-9d2f-3f53ec21fd10@intel.com>
+ <ZUkvOCxyiin_77qd@smile.fi.intel.com> <0a29df6b-bc27-43e9-a97d-57ecabb29a9e@intel.com>
+ <CAG_fn=VtA6e3oGm4WVnxmy9yMBab780-U_4VoHSqm4tcd2UTzQ@mail.gmail.com>
+ <ca0ad357-727b-4f41-a3d6-2c48a9dd5836@intel.com> <e3b4b1a6-5383-4bfb-ba83-ab27d58dae29@intel.com>
+ <ZUqCpmDgKFbscRgW@yury-ThinkPad> <457b9cbb-9a5f-47ef-9eac-3e4f135d6a96@intel.com>
+ <ZUqPAZC4sS455xtx@yury-ThinkPad>
+In-Reply-To: <ZUqPAZC4sS455xtx@yury-ThinkPad>
+From: Alexander Potapenko <glider@google.com>
+Date: Wed, 8 Nov 2023 11:07:44 +0100
+Message-ID: <CAG_fn=WPNROrC4ndAa_JOoOiWYSh3gQat1fqiv+3jdvFXcpw=A@mail.gmail.com>
+Subject: Re: [alobakin:pfcp 11/19] include/linux/bitmap.h:642:17: warning:
+ array subscript [1, 1024] is outside array bounds of 'long unsigned int[1]'
+To: Yury Norov <yury.norov@gmail.com>
+Cc: Alexander Lobakin <aleksander.lobakin@intel.com>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Syed Nayyar Waris <syednwaris@gmail.com>, Kees Cook <keescook@chromium.org>, 
+	kernel test robot <lkp@intel.com>, oe-kbuild-all@lists.linux.dev, 
+	linux-hardening@vger.kernel.org, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-St. Thomas' Hospital UK
+On Tue, Nov 7, 2023 at 8:24=E2=80=AFPM Yury Norov <yury.norov@gmail.com> wr=
+ote:
+>
+> On Tue, Nov 07, 2023 at 07:52:19PM +0100, Alexander Lobakin wrote:
+> > From: Yury Norov <yury.norov@gmail.com>
+> > Date: Tue, 7 Nov 2023 10:32:06 -0800
+> >
+> > > On Tue, Nov 07, 2023 at 06:24:04PM +0100, Alexander Lobakin wrote:
+> > >> From: Alexander Lobakin <aleksander.lobakin@intel.com>
+> > >> Date: Tue, 7 Nov 2023 17:44:00 +0100
+> > >>
+> > >>> From: Alexander Potapenko <glider@google.com>
+> > >>> Date: Tue, 7 Nov 2023 17:33:56 +0100
+> > >>>
+> > >>>> On Tue, Nov 7, 2023 at 2:23=E2=80=AFPM Alexander Lobakin
+> > >>>> <aleksander.lobakin@intel.com> wrote:
+> > >>
+> > >> [...]
+> > >>
+> > >>> I tested it on GCC 9 using modified make.cross from lkp and it trig=
+gers
+> > >>> on one more file:
+> > >>>
+> > >>> drivers/thermal/intel/intel_soc_dts_iosf.c: In function 'sys_get_cu=
+rr_temp':
+> > >>> ./include/linux/bitmap.h:601:18: error: array subscript [1,
+> > >>> 288230376151711744] is outside array bounds of 'long unsigned int[1=
+]'
+> > >>> [-Werror=3Darray-bounds]
+> > >>>
+> > >>>> to give the compiler some hints about the range of values passed t=
+o
+> > >>>> bitmap_write() rather than suppressing the optimizations.
+> > >>>
+> > >>> OPTIMIZER_HIDE_VAR() doesn't disable optimizations if I get it
+> > >>> correctly, rather shuts up the compiler in cases like this one.
+> > >>>
+> > >>> I've been thinking of using __member_size() from fortify-string.h, =
+we
+> > >>> could probably optimize the object code even a bit more while silen=
+cing
+> > >>> this warning.
+> > >>> Adding Kees, maybe he'd like to participate in sorting this out as =
+well.
+> > >>
+> > >> This one seems to work. At least previously mad GCC 9.3.0 now sits
+> > >> quietly, as if I added OPTIMIZER_HIDE_VAR() as Yury suggested.
+> > >
+> > > What's wrong with OPTIMIZER_HIDE_VAR()? The problem is clearly on GCC
+> > > side, namely - it doesn't realize that the map[index+1] fetch is
+> > > conditional.
+> >
+> > It's totally fine for me to use it, this one is just an alternative
+> > (well, a bit broken as per below).
+>
+> OK, guys, that's even worse. The 12 and 13 don't fire the warning
+> because Warray-bounds is explicitly disabled for gcc-11+. Check
+> 0da6e5fd6c372 ("gcc: disable '-Warray-bounds' for gcc-13 too"). I'll
+> test how gcc-10 builds it, and if it's broken too, it's worth to shift
+> the threshold in init/Kconfig.
 
-  REF: HR/MED-004/06923
+Yes, that's my point.
+According to Godbolt, GCC versions 9.1 to 13.2 (trunk included) are
+reporting the same false positive on the code I posted above.
 
-St. Thomas' Hospital UK is a large NHS teaching hospital in Central
-London, England. It is one of the institutions that compose the King's
-Health Partners, an academic health science Center. Administratively
-part of the Guy's and St Thomas' NHS Foundation Trust, together with
-Guy's Hospital and King's College Hospital, it provides the location
-of the King's College London GKT School of Medical Education.
-
-It is ranked amongst the best Ten (10) hospitals in the United Kingdom
-with 840 beds. The hospital has provided healthcare freely or under
-charitable auspices since the 12th century. It is one of London's most
-famous hospitals, associated with names such as Sir Astley Cooper,
-William Cheselden, Florence Nightingale, Linda Richards, Edmund
-Montgomery, Agnes Elizabeth Jones and Sir Harold Ridley. It is a
-prominent London landmark =E2=80=93 largely due to its location on the
-opposite bank of the River Thames to the Houses of Parliament.
-
-The largest not-for-profit health system in the world, we provide high
-quality, personalized and compassionate care to our patients through
-our dedication to safety, rigorous self-assessment, performance
-improvement, corporate integrity and health service management. We are
-committed to being the per-eminent provider of acute inpatient and
-outpatient health care services.
-
-DESCRIPTION: Following the COVID-19 outbreak, expansion and
-development in our hospital, we are currently recruiting and employing
-the services of Medical Professionals  (Specialists, Consultants,
-General Practitioners) with relevant experiences to fill in the
-following below vacancies in our health care facility in the United
-Kingdom.
-
-AREAS OF VACANCIES:
-
-StH1. ALLERGY & IMMUNOLOGY StH2. ANAESTHESIOLOGY StH3. ANGIOLOGY StH4.
-ANTHROPOSOPHIC MEDICINE StH5. BREAST SURGERY  StH6. CARDIOLOGY StH7.
-CRANIOSACRAL PRACTITIONER / THERAPIST StH8. CARDIOTHORACIC SURGERY
-StH9. CARDIAC SURGERY
-
-StH10. CRITICAL CARE MEDICINE StH11. DENTISTS StH12. DENTAL SURGEON
-StH13. DERMATOLOGY StH14. ENDOCRINOLOGY
-
-StH15. EMERGENCY MEDICINE StH16. GASTROENTEROLOGY StH17. GENERAL
-SURGERY StH18. GENERAL PAEDIATRICS  StH19. GENERAL MEDICINE  StH20.
-HEMATOLOGY StH21. HYPERTENSION SPECIALIST StH22. INTERNAL MEDICINE
-StH23. INFECTOLOGY StH24. MORPHOLOGY StH25. NEPHROLOGY  StH26.
-NEUROSURGERY StH27. NEONATOLOGY StH28. ORTHOPAEDICS StH29. ORTHOPAEDIC
-SURGERY StH30. OTORHINOLARYNGOLOGY  StH31. ORTHODONTIST StH32.
-OCCUPATIONAL MEDICINE StH33. ORAL AND MAXILLOFACIAL SURGERY StH34.
-PATHOLOGY
-
-StH35. PLASTIC & RECONSTRUCTIVE SURGERY StH36. PNEUMOLOGY StH37.
-PAEDIATRIC SURGEON  StH38.  PSYCHOLOGIST StH39.  PHYSIOTHERAPY  StH40.
-PEDIATRICS StH41. PUBLIC HEALTH  StH42. RADIOLOGY StH43. RHEUMATOLOGY
-StH44. REHABILITATION MEDICINE StH45. RESPIRATORY MEDICINE  StH46.
-THORACIC SURGERY  StH47. TRAUMATOLOGY StH48. TRICHOLOGIST StH49.
-UROLOGY
-
-JOB LOCATION: London, United Kingdom
-
-JOB COMMENCEMENT: 2023
-
-EMPLOYMENT TYPE: Contract / Full-time
-
-EMPLOYMENT BENEFITS:
-
-Excellent Salary and Overtime Bonus, Health/life Insurance, Relocation
-expenses, Research and Educational assistance, Medical, Optical and
-Dental Care, Family/Single housing accommodation, 24/7 Official
-Vehicle, Scholarship for employee's dependent within UK schools.
-
-Interested applicants are to send a detailed attachment Resume via email: recruitment@gsttsnhsuk.online
- 
-
-NOTE: APPLICATION IS OPEN TO INTERESTED PERSONS FROM ALL INTERNATIONAL
-LOCATIONS, ALL SUCCESSFUL APPLICANTS IN OUR RECRUITMENT PROCESS MUST
-BE WILLING TO RELOCATE TO THE UK FOR WORK.
-
-Coronavirus (COVID-19)- Stay at home if you feel unwell. If you have a
-fever, cough and difficulty breathing, seek medical attention and
-call-in advance. Follow the directions of your local health authority.
-Source: World Health Organization
-
-
-Sincerely,
-
-
-Julie Screaton,
-
-St. Thomas' Hospital Uk
-
-Guy's & St. Thomas NHS Foundation Trust
-
-London, United Kingdom @2023
-
-St Thomas' Hospital UK incorporated in England, UK (Reg. No: 06160266)
-having its registered address at Westminster Bridge Rd, London SE1
-7EH, England.
-
+In 5a41237ad1d4b62008f93163af1d9b1da90729d8 ("gcc: disable
+-Warray-bounds for gcc-11 too") Linus says that "Older gcc versions
+end up being increasingly less relevant", so I think there won't be
+objections against extending this rule to GCC 9 and 10.
