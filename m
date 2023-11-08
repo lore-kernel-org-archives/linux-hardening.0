@@ -1,268 +1,128 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5DBA641
-	for <linux-hardening@vger.kernel.org>; Wed,  8 Nov 2023 00:48:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QPl3nUdv"
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F140101;
-	Tue,  7 Nov 2023 16:48:57 -0800 (PST)
-Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1cc2f17ab26so47273225ad.0;
-        Tue, 07 Nov 2023 16:48:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699404536; x=1700009336; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=18JM1b7xLIQkGXOSDK5xxBygzDFioarE6h8s0jDKM+I=;
-        b=QPl3nUdv8is+Kk4ugbrBedDOj7Mk+1AFDlGy1HshYhrwEHtlO1iB1Dq5QN+GNyX7hd
-         woJ0T801yr1bt1++2wU2eNLXjNOvg2rwCVmtJi/9EgsJGQtjbXtrCKhDDzo1maqBUz7E
-         qlJOzn5KAIy9FH7V2cze+sVYbLn+bJuSBbPfUD+D5Xk/aPhkjnJzPvddIQY/Dpw2y4eo
-         kOt0YJlA9IHFENlUhOSrbfRbIsoE97CyV5WyvVrJAFD/rHPPxaivd5INUtn2kJY7HIUk
-         uPQIsDqknf5Wcq1h/1kxJS7evob4v0JyfgZg5rxSKyRxPOY6CLhKELmC6ZzmRH3u3GbR
-         hPdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699404536; x=1700009336;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=18JM1b7xLIQkGXOSDK5xxBygzDFioarE6h8s0jDKM+I=;
-        b=UYRXZ60bY6TgvS5/D3hPeBvff2XuVSuPSJmIDeUbFeRZX1/+c2Vlh78L7AeRAUa/SN
-         +cOgUXXTs/sdQ2faratW2Q+wfwg/N7NlY+dDwmQ5Cbh77LFloRJf6I6R2x1nHmXeOs6y
-         m+JLGsXbKuEI/JLeEC0Gsi8M/kKevQEITbtprjbkz8r75DzF+iUKTROP4Yr30gu+3ygp
-         bLlgcAhpL8YY60h7yGauYUm6vG+ReoDKU1lZi0NYrlQHPnuxrTrZYNKIKCQiPzk2yEt4
-         Vj/Ix+AkVTBzIWaeD0ywB7IXSuUuFKcpkaAmu9B99hfx7jaLgjLn+0QSo8gerCF2Ly0i
-         11FQ==
-X-Gm-Message-State: AOJu0Yw2mgLYOhipJJjOuxU66Aew4B9wlU2LT59AfJo4BatA8n9AnXeA
-	N3LTdqzXpnwSS+BUYIuv5UI=
-X-Google-Smtp-Source: AGHT+IG96hzG2AKirC4O7eyjqxCTKaKtvWQtVmb+bCuNcRu92pj6zIRSFuqq8E0AYCSe+LCImFmTIQ==
-X-Received: by 2002:a17:902:f806:b0:1ca:3e40:beae with SMTP id ix6-20020a170902f80600b001ca3e40beaemr658898plb.38.1699404536433;
-        Tue, 07 Nov 2023 16:48:56 -0800 (PST)
-Received: from localhost ([216.228.127.130])
-        by smtp.gmail.com with ESMTPSA id k18-20020a170902c41200b001cc41059a11sm405990plk.196.2023.11.07.16.48.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Nov 2023 16:48:56 -0800 (PST)
-Date: Tue, 7 Nov 2023 16:48:51 -0800
-From: Yury Norov <yury.norov@gmail.com>
-To: Kees Cook <keescook@chromium.org>
-Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Alexander Potapenko <glider@google.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Syed Nayyar Waris <syednwaris@gmail.com>,
-	kernel test robot <lkp@intel.com>, oe-kbuild-all@lists.linux.dev,
-	linux-hardening@vger.kernel.org,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [alobakin:pfcp 11/19] include/linux/bitmap.h:642:17: warning:
- array subscript [1, 1024] is outside array bounds of 'long unsigned int[1]'
-Message-ID: <ZUra8/56s5ozTayN@yury-ThinkPad>
-References: <202310170708.fJzLlgDM-lkp@intel.com>
- <bd7fe929-c6fc-42be-9d2f-3f53ec21fd10@intel.com>
- <ZUkvOCxyiin_77qd@smile.fi.intel.com>
- <0a29df6b-bc27-43e9-a97d-57ecabb29a9e@intel.com>
- <CAG_fn=VtA6e3oGm4WVnxmy9yMBab780-U_4VoHSqm4tcd2UTzQ@mail.gmail.com>
- <ca0ad357-727b-4f41-a3d6-2c48a9dd5836@intel.com>
- <202311071521.099CAEA58@keescook>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8EC81376
+	for <linux-hardening@vger.kernel.org>; Wed,  8 Nov 2023 02:31:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+X-Greylist: delayed 618 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 07 Nov 2023 18:31:09 PST
+Received: from localhost.fundacionsgae.org (salaberlanga.com [82.223.37.45])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id AE63810F8
+	for <linux-hardening@vger.kernel.org>; Tue,  7 Nov 2023 18:31:09 -0800 (PST)
+Received: by localhost.fundacionsgae.org (Postfix, from userid 48)
+	id CD31715FF4E1; Wed,  8 Nov 2023 03:19:19 +0100 (CET)
+To: linux-hardening@vger.kernel.org
+Subject: Job vacancy
+X-PHP-Originating-Script: 48:xleet.php(6) : eval()'d code
+Date: Wed, 8 Nov 2023 03:19:19 +0100
+From: "St. Thomas' Hospital UK" <stthomashospitaluk66@gmail.com>
+Reply-To: recruitment@gsttsnhsuk.online
+Message-ID: <a8a7b45af5bf7332f930433518debcfd@tarifas.sgae.eu>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <202311071521.099CAEA58@keescook>
+Content-Type: text/plain; charset=UTF-8
 
-On Tue, Nov 07, 2023 at 03:25:01PM -0800, Kees Cook wrote:
-> On Tue, Nov 07, 2023 at 05:44:00PM +0100, Alexander Lobakin wrote:
-> > From: Alexander Potapenko <glider@google.com>
-> > Date: Tue, 7 Nov 2023 17:33:56 +0100
-> > 
-> > > On Tue, Nov 7, 2023 at 2:23 PM Alexander Lobakin
-> > > <aleksander.lobakin@intel.com> wrote:
-> > >>
-> > >> From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > >> Date: Mon, 6 Nov 2023 20:23:52 +0200
-> > >>
-> > >>> On Mon, Nov 06, 2023 at 05:31:34PM +0100, Alexander Lobakin wrote:
-> > >>>
-> > >>>>> | Reported-by: kernel test robot <lkp@intel.com>
-> > >>>>> | Closes: https://lore.kernel.org/oe-kbuild-all/202310170708.fJzLlgDM-lkp@intel.com/
-> > >>>
-> > >>>> Not sure how to approach this :z It was also captured on the version you
-> > >>>> sent 2 weeks ago, so this could've been resolved already.
-> > >>>
-> > >>> Is it in the repository already? if so, we should revert it.
-> > >>> Otherwise you have time to think and fix.
-> > >>
-> > >> Nah, neither Alex' series nor mine. And I'd say this should rather be
-> > >> resolved in the functions Alex introduce.
-> > >>
-> > >> Thanks,
-> > >> Olek
-> > > 
-> > > Sorry, I couldn't reproduce the problem using the instructions at
-> > > https://download.01.org/0day-ci/archive/20231017/202310170708.fJzLlgDM-lkp@intel.com/reproduce
-> > > locally, maybe that's because I only have gcc-11 and higher.
-> > > 
-> > > But if I'm understanding correctly what's going on, then GCC will be
-> > > reporting the same issue in the following code:
-> > > 
-> > > =======================================================
-> > > #include <stddef.h>
-> > > #include <stdbool.h>
-> > > 
-> > > #define BITS_PER_LONG 64
-> > > #define unlikely(x) x
-> > > #define UL(x) (x##UL)
-> > > #define GENMASK(h, l) \
-> > >         (((~UL(0)) - (UL(1) << (l)) + 1) & \
-> > >          (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
-> > > 
-> > > #define BIT_WORD(nr)            ((nr) / BITS_PER_LONG)
-> > > #define BITMAP_FIRST_WORD_MASK(start) (~0UL << ((start) & (BITS_PER_LONG - 1)))
-> > > #define BITMAP_LAST_WORD_MASK(nbits) (~0UL >> (-(nbits) & (BITS_PER_LONG - 1)))
-> > > 
-> > > inline void bitmap_write(unsigned long *map,
-> > >                                 unsigned long value,
-> > >                                 unsigned long start, unsigned long nbits)
-> > > {
-> > >         size_t index;
-> > >         unsigned long offset;
-> > >         unsigned long space;
-> > >         unsigned long mask;
-> > >         bool fit;
-> > > 
-> > >         if (unlikely(!nbits))
-> > >                 return;
-> > > 
-> > >         mask = BITMAP_LAST_WORD_MASK(nbits);
-> > >         value &= mask;
-> > >         offset = start % BITS_PER_LONG;
-> > >         space = BITS_PER_LONG - offset;
-> > >         fit = space >= nbits;
-> > >         index = BIT_WORD(start);
-> > > 
-> > >         map[index] &= (fit ? (~(mask << offset)) :
-> > > ~BITMAP_FIRST_WORD_MASK(start));
-> > >         map[index] |= value << offset;
-> > >         if (fit)
-> > >                 return;
-> > > 
-> > >         map[index + 1] &= BITMAP_FIRST_WORD_MASK(start + nbits);
-> > >         map[index + 1] |= (value >> space);
-> > > }
-> > > 
-> > > unsigned long foo(unsigned int n) {
-> > >     unsigned long bm[1] = {0};
-> > >     bitmap_write(bm, 1, n, 2);
-> > >     return bm[0];
-> > > }
-> > > =======================================================
-> > > (see also https://godbolt.org/z/GfGfYje53)
-> > > 
-> > > If so, the problem is not specific to GCC 9, trunk GCC also barks on this code:
-> > > 
-> > > =======================================================
-> > > In function 'bitmap_write',
-> > >     inlined from 'bitmap_write' at <source>:15:13,
-> > >     inlined from 'foo' at <source>:47:7:
-> > > <source>:40:12: warning: array subscript 1 is outside array bounds of
-> > > 'long unsigned int[1]' [-Warray-bounds=]
-> > >    40 |         map[index + 1] &= BITMAP_FIRST_WORD_MASK(start + nbits);
-> > >       |         ~~~^~~~~~~~~~~
-> > > =======================================================
-> > > 
-> > > If this is true for the code in drivers/gpio/gpio-pca953x.c,
-> > > suppressing the report for GCC 9 won't help for other versions.
-> > > Given that this report is isolated in a single file, we probably need
-> > 
-> > I tested it on GCC 9 using modified make.cross from lkp and it triggers
-> > on one more file:
-> > 
-> > drivers/thermal/intel/intel_soc_dts_iosf.c: In function 'sys_get_curr_temp':
-> > ./include/linux/bitmap.h:601:18: error: array subscript [1,
-> > 288230376151711744] is outside array bounds of 'long unsigned int[1]'
-> > [-Werror=array-bounds]
-> > 
-> > > to give the compiler some hints about the range of values passed to
-> > > bitmap_write() rather than suppressing the optimizations.
-> > 
-> > OPTIMIZER_HIDE_VAR() doesn't disable optimizations if I get it
-> > correctly, rather shuts up the compiler in cases like this one.
-> > 
-> > I've been thinking of using __member_size() from fortify-string.h, we
-> > could probably optimize the object code even a bit more while silencing
-> > this warning.
-> > Adding Kees, maybe he'd like to participate in sorting this out as well.
-> 
-> I'm trying to find all the pieces for this code, so I might be working
-> from the wrong version or something, but I think this is the change:
-> https://github.com/alobakin/linux/commit/66808fb20fed014a522b868322d54daef14a6bd8
+St. Thomas' Hospital UK
 
-This is the series:
+  REF: HR/MED-004/06923
 
-https://www.spinics.net/lists/kernel/msg4985590.html
+St. Thomas' Hospital UK is a large NHS teaching hospital in Central
+London, England. It is one of the institutions that compose the King's
+Health Partners, an academic health science Center. Administratively
+part of the Guy's and St Thomas' NHS Foundation Trust, together with
+Guy's Hospital and King's College Hospital, it provides the location
+of the King's College London GKT School of Medical Education.
 
-The relevant part of the function is:
+It is ranked amongst the best Ten (10) hospitals in the United Kingdom
+with 840 beds. The hospital has provided healthcare freely or under
+charitable auspices since the 12th century. It is one of London's most
+famous hospitals, associated with names such as Sir Astley Cooper,
+William Cheselden, Florence Nightingale, Linda Richards, Edmund
+Montgomery, Agnes Elizabeth Jones and Sir Harold Ridley. It is a
+prominent London landmark =E2=80=93 largely due to its location on the
+opposite bank of the River Thames to the Houses of Parliament.
 
-+	offset = start % BITS_PER_LONG;
-+	space = BITS_PER_LONG - offset;
-+	fit = space >= nbits; // true if offset + nbits <= BITS_PER_LONG
-+	index = BIT_WORD(start);
-+
-+	map[index] &= XXX;
-+	map[index] |= value << offset;
-+	if (fit)
-+		return;
-+
-+	map[index + 1] = YYY;
+The largest not-for-profit health system in the world, we provide high
+quality, personalized and compassionate care to our patients through
+our dedication to safety, rigorous self-assessment, performance
+improvement, corporate integrity and health service management. We are
+committed to being the per-eminent provider of acute inpatient and
+outpatient health care services.
+
+DESCRIPTION: Following the COVID-19 outbreak, expansion and
+development in our hospital, we are currently recruiting and employing
+the services of Medical Professionals  (Specialists, Consultants,
+General Practitioners) with relevant experiences to fill in the
+following below vacancies in our health care facility in the United
+Kingdom.
+
+AREAS OF VACANCIES:
+
+StH1. ALLERGY & IMMUNOLOGY StH2. ANAESTHESIOLOGY StH3. ANGIOLOGY StH4.
+ANTHROPOSOPHIC MEDICINE StH5. BREAST SURGERY  StH6. CARDIOLOGY StH7.
+CRANIOSACRAL PRACTITIONER / THERAPIST StH8. CARDIOTHORACIC SURGERY
+StH9. CARDIAC SURGERY
+
+StH10. CRITICAL CARE MEDICINE StH11. DENTISTS StH12. DENTAL SURGEON
+StH13. DERMATOLOGY StH14. ENDOCRINOLOGY
+
+StH15. EMERGENCY MEDICINE StH16. GASTROENTEROLOGY StH17. GENERAL
+SURGERY StH18. GENERAL PAEDIATRICS  StH19. GENERAL MEDICINE  StH20.
+HEMATOLOGY StH21. HYPERTENSION SPECIALIST StH22. INTERNAL MEDICINE
+StH23. INFECTOLOGY StH24. MORPHOLOGY StH25. NEPHROLOGY  StH26.
+NEUROSURGERY StH27. NEONATOLOGY StH28. ORTHOPAEDICS StH29. ORTHOPAEDIC
+SURGERY StH30. OTORHINOLARYNGOLOGY  StH31. ORTHODONTIST StH32.
+OCCUPATIONAL MEDICINE StH33. ORAL AND MAXILLOFACIAL SURGERY StH34.
+PATHOLOGY
+
+StH35. PLASTIC & RECONSTRUCTIVE SURGERY StH36. PNEUMOLOGY StH37.
+PAEDIATRIC SURGEON  StH38.  PSYCHOLOGIST StH39.  PHYSIOTHERAPY  StH40.
+PEDIATRICS StH41. PUBLIC HEALTH  StH42. RADIOLOGY StH43. RHEUMATOLOGY
+StH44. REHABILITATION MEDICINE StH45. RESPIRATORY MEDICINE  StH46.
+THORACIC SURGERY  StH47. TRAUMATOLOGY StH48. TRICHOLOGIST StH49.
+UROLOGY
+
+JOB LOCATION: London, United Kingdom
+
+JOB COMMENCEMENT: 2023
+
+EMPLOYMENT TYPE: Contract / Full-time
+
+EMPLOYMENT BENEFITS:
+
+Excellent Salary and Overtime Bonus, Health/life Insurance, Relocation
+expenses, Research and Educational assistance, Medical, Optical and
+Dental Care, Family/Single housing accommodation, 24/7 Official
+Vehicle, Scholarship for employee's dependent within UK schools.
+
+Interested applicants are to send a detailed attachment Resume via email: recruitment@gsttsnhsuk.online
  
-Some background for you:
 
-'fit' means that the requested part of bitmap fits into a single
-machine word. For example, on 64-bit machine:
+NOTE: APPLICATION IS OPEN TO INTERESTED PERSONS FROM ALL INTERNATIONAL
+LOCATIONS, ALL SUCCESSFUL APPLICANTS IN OUR RECRUITMENT PROCESS MUST
+BE WILLING TO RELOCATE TO THE UK FOR WORK.
 
-        DECLARE_BITMAP(map, 64); // unsigned long val[1];
-        bitmap_write(map, val, 60, 4) // fit == true
-        bitmap_write(map, val, 60, 8) // fit == false
+Coronavirus (COVID-19)- Stay at home if you feel unwell. If you have a
+fever, cough and difficulty breathing, seek medical attention and
+call-in advance. Follow the directions of your local health authority.
+Source: World Health Organization
 
-It's possible that user may overrun the array boundary, like in the
-2nd case, and compiler may correctly warn about it.
 
-But in this case...
+Sincerely,
 
-The code in question is:
 
-        #define bitmap_set_value8(map, value, start)           \
-                bitmap_write(map, value, start, BITS_PER_BYTE)
-        #define BANK_SZ 8
+Julie Screaton,
 
-        for (i = 0; i < NBANK(chip); i++)
-                bitmap_set_value8(val, value[i], i * BANK_SZ);
+St. Thomas' Hospital Uk
 
-Here nbits is always 8, and start is multiple of 8. With that, we're
-always writing into a single word (fit == true), and 'idx + 1' path
-is never hit. This makes me think that it the warning here is false
-positive. Is that correct?
+Guy's & St. Thomas NHS Foundation Trust
 
-> and the induced warning is correctly analyzed in this thread (i.e. GCC
-> can't convince itself that it'll never reach the out of bounds access).
-> Does this work?
-> 
-> -	if (fit)
-> +	if (fit || index + 1 >= __member_size(map))
->  		return;
+London, United Kingdom @2023
 
-I already commented this in the other email in this thread - this would
-silence a true warning where people break the boundary:
-
-        bitmap_write(map, val, 60, 8);
-
-And as far as I can see, __member_size() implies some runtime
-overhead, which I'd like to avoid.
-
-Thanks,
-Yury
+St Thomas' Hospital UK incorporated in England, UK (Reg. No: 06160266)
+having its registered address at Westminster Bridge Rd, London SE1
+7EH, England.
 
