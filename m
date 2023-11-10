@@ -1,45 +1,45 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D32A53B792
-	for <linux-hardening@vger.kernel.org>; Fri, 10 Nov 2023 20:08:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D98F3B788
+	for <linux-hardening@vger.kernel.org>; Fri, 10 Nov 2023 20:08:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z8z0hd3r"
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 972039D
-	for <linux-hardening@vger.kernel.org>; Fri, 10 Nov 2023 12:08:43 -0800 (PST)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-da307fb7752so3032015276.0
-        for <linux-hardening@vger.kernel.org>; Fri, 10 Nov 2023 12:08:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JAujfGHJ"
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C80E7D2
+	for <linux-hardening@vger.kernel.org>; Fri, 10 Nov 2023 12:08:47 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-daa2684f67eso1952210276.0
+        for <linux-hardening@vger.kernel.org>; Fri, 10 Nov 2023 12:08:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1699646923; x=1700251723; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1699646927; x=1700251727; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=51fJBfx3imxlXxpJCLaVZXz5cvn77oR86IbzpiZXKNs=;
-        b=Z8z0hd3rLiSBV1f7Bl/bch+Tx+/+iZQFB1vZWYMcF4yhbJ2WW9dLRvw9ghPIw3ton/
-         D7VUgsAgzqGQBQiAIu6k0HE9GiL5tw1nYVvcl88RFGE36J+f6f2VAfFQSK0/xXPEo1FN
-         AHkz61ADkq3ZlXuHSIYA15/cfCcY1CkuzJ0c93ukLURMJ9HrLb09RiKnxdX4EEktjU6G
-         Z/7yB97kcUhDBlQaLTk5E6WnGD3MGnnubTqOkyAwzRlhhEMSOZocrY7UVFbvJnbA966R
-         VTPboVNN5AdLNxUroFO4CBImuDhi1wn1dmb9SiCMdGYTMJMuerSqsJLiRJDkAXIV/2/E
-         jNKw==
+        bh=IAkJ89LUqtxG0K+MSJnco+XQD27u+TKLaVoOcPh4bOc=;
+        b=JAujfGHJ8yOYNMAj+/UzMg5ghYS5kqcl7r5wvrjHHCdl2sM8xOiTkUGnVaF+EHQjJb
+         TmJhenOTUE/qPxBsjJBqd7QjAUK89cbdB2q1c7corDKfnE2MywVyc4qjt2FMEwkQaUqA
+         JLopDWEh9Zx6/9lehNFw0qyeeunwaCl3uO2oj/yVVL6EeBZFs80cjPKM1MxFsuubgqZm
+         22YQEEAIjx0YRE7ZRv6AW7TsH4v6Bk9y2NYAkZIXYVKPKPdyCQFiz5UYFVzVbqd8ZJbg
+         nAsYZInmjMEDKXuvMtX6lr2Urrl+kIUb81TOODAcX6wlIIdlBiY4HC+oOBC3CurBJGCu
+         Ll4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699646923; x=1700251723;
+        d=1e100.net; s=20230601; t=1699646927; x=1700251727;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=51fJBfx3imxlXxpJCLaVZXz5cvn77oR86IbzpiZXKNs=;
-        b=MgTl9pxtCV28kcNbtgENhiPJF+dIrWOOwDZHpf7XbvsRqtNhWneWK4oSYPXO9NFEnW
-         ugAtPQAKVklLbzPnTmknN+l2+cVn/eKUb97CcdTPl+LDsEX6UPacKsKQ1BstZbMWSG+5
-         mak3Ml0QYiZKbbZdoZfaX0UuF7JB1Mhux90bDtlsdeZezTzRDSf/GHYIEuDBSjATxvoS
-         ViIMrzuI7PVnLE6vwWmSoMfK+QrlrwN6E0X87/e85gkNZTRWL0zTePhF4xKD+MvXZSGV
-         7lZKJ9BSXhhCz4ntEF1v+JV5Y7DN2YGPvv8n4ccGYdfY9uZwq5j34Y6kBpJ+kg0rHEMW
-         wYaA==
-X-Gm-Message-State: AOJu0YziygBF6wovMetAiCarpOt6zTUZqgZSw2TCLBr5kVvPAO/kPnM8
-	5WNzYXtJj/JaykztL5djZD4LtTZMwKoy6g==
-X-Google-Smtp-Source: AGHT+IGDK07iaPg+g9N2kLo9bN2a5OkVBolpHXkG2QTgPQJFeKS5zwURLPQj7RWzYTJuEXCxK3CW75e1iydlNQ==
+        bh=IAkJ89LUqtxG0K+MSJnco+XQD27u+TKLaVoOcPh4bOc=;
+        b=Br3QdqZYIcWX7NfZrkstsxxJPsXHV5UWrEfG4FxlGqo/83haS8WZapQrWjgFM2E1Xm
+         5STcDb1McL6VhRYga8gHneTj6xdU4bAOEOnAihO28r9B2W7PJ6roBpAugswUm7YnqkcN
+         HlDdrX1Xzwu/jimKpenTAhLHUaSnL5Hf6PYhcwu+b7KDDo5wRYb10Y5JZc3N7aD868e3
+         zWOxtPI/S23YUZ72C885zMonn8I+ZPj8yfVPv5UlmBM3NIk4WQwKfEzdc4hkFONiqv7A
+         CivahfD0MQy0hwxX/KDYLxkOrUL4D0Mk/acdILl54Tnu1wqJl7GMe11Uha6UjbSRgEBx
+         IBNQ==
+X-Gm-Message-State: AOJu0YyC415EAeTCbp6UxClLfiSkN3IPUDdCcSuMlECc8cWR/yuoNSTh
+	mEtab6w5P2rWxgcSy2h5I0bmHijbeCCBhg==
+X-Google-Smtp-Source: AGHT+IG2qICxw/Ih6W1d00Yw7wl6gZh00iMH2vxhyvW4HtVTUR9T6SIeeV3AzuFmY7j3gx/bERyrecNPMvP5+g==
 X-Received: from slicestar.c.googlers.com ([fda3:e722:ac3:cc00:4f:4b78:c0a8:20a1])
- (user=davidgow job=sendgmr) by 2002:a05:6902:182:b0:d9a:ec95:9687 with SMTP
- id t2-20020a056902018200b00d9aec959687mr3348ybh.11.1699646922890; Fri, 10 Nov
- 2023 12:08:42 -0800 (PST)
-Date: Sat, 11 Nov 2023 04:08:27 +0800
+ (user=davidgow job=sendgmr) by 2002:a05:6902:18d:b0:d89:42d7:e72d with SMTP
+ id t13-20020a056902018d00b00d8942d7e72dmr141489ybh.3.1699646927074; Fri, 10
+ Nov 2023 12:08:47 -0800 (PST)
+Date: Sat, 11 Nov 2023 04:08:28 +0800
 In-Reply-To: <20231110200830.1832556-1-davidgow@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -49,8 +49,8 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231110200830.1832556-1-davidgow@google.com>
 X-Mailer: git-send-email 2.42.0.869.gea05f2083d-goog
-Message-ID: <20231110200830.1832556-2-davidgow@google.com>
-Subject: [PATCH 2/3] drm/tests: Use KUNIT_DEFINE_ACTION_WRAPPER()
+Message-ID: <20231110200830.1832556-3-davidgow@google.com>
+Subject: [PATCH 3/3] drm/vc4: tests: Use KUNIT_DEFINE_ACTION_WRAPPER
 From: David Gow <davidgow@google.com>
 To: Nathan Chancellor <nathan@kernel.org>, Kees Cook <keescook@chromium.org>, 
 	Brendan Higgins <brendan.higgins@linux.dev>, Rae Moar <rmoar@google.com>, dlatypov@google.com, 
@@ -71,9 +71,9 @@ In order to pass functions to kunit_add_action(), they need to be of the
 kunit_action_t type. While casting the function pointer can work, it
 will break control-flow integrity.
 
-drm_kunit_helpers already defines wrappers, but we now have a macro
-which does this automatically. Using this greatly reduces the
-boilerplate needed.
+vc4_mock already defines such a wrapper for drm_dev_unregister(), but it
+involves less boilerplate to use the new macro, so replace the manual
+implementation.
 
 Signed-off-by: David Gow <davidgow@google.com>
 ---
@@ -89,50 +89,29 @@ Cheers,
 -- David
 
 ---
- drivers/gpu/drm/tests/drm_kunit_helpers.c | 30 +++++++----------------
- 1 file changed, 9 insertions(+), 21 deletions(-)
+ drivers/gpu/drm/vc4/tests/vc4_mock.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/tests/drm_kunit_helpers.c b/drivers/gpu/drm/tests/drm_kunit_helpers.c
-index bccb33b900f3..c251e6b34de0 100644
---- a/drivers/gpu/drm/tests/drm_kunit_helpers.c
-+++ b/drivers/gpu/drm/tests/drm_kunit_helpers.c
-@@ -27,27 +27,15 @@ static struct platform_driver fake_platform_driver = {
- 	},
- };
+diff --git a/drivers/gpu/drm/vc4/tests/vc4_mock.c b/drivers/gpu/drm/vc4/tests/vc4_mock.c
+index 63ca46f4cb35..becb3dbaa548 100644
+--- a/drivers/gpu/drm/vc4/tests/vc4_mock.c
++++ b/drivers/gpu/drm/vc4/tests/vc4_mock.c
+@@ -153,12 +153,9 @@ static int __build_mock(struct kunit *test, struct drm_device *drm,
+ 	return 0;
+ }
  
--static void kunit_action_platform_driver_unregister(void *ptr)
+-static void kunit_action_drm_dev_unregister(void *ptr)
 -{
--	struct platform_driver *drv = ptr;
+-	struct drm_device *drm = ptr;
 -
--	platform_driver_unregister(drv);
--
+-	drm_dev_unregister(drm);
 -}
--
--static void kunit_action_platform_device_put(void *ptr)
--{
--	struct platform_device *pdev = ptr;
--
--	platform_device_put(pdev);
--}
--
--static void kunit_action_platform_device_del(void *ptr)
--{
--	struct platform_device *pdev = ptr;
--
--	platform_device_del(pdev);
--}
-+KUNIT_DEFINE_ACTION_WRAPPER(kunit_action_platform_driver_unregister,
-+			    platform_driver_unregister,
-+			    struct platform_driver *);
-+KUNIT_DEFINE_ACTION_WRAPPER(kunit_action_platform_device_put,
-+			    platform_device_put,
-+			    struct platform_device *);
-+KUNIT_DEFINE_ACTION_WRAPPER(kunit_action_platform_device_del,
-+			    platform_device_del,
-+			    struct platform_device *);
++KUNIT_DEFINE_ACTION_WRAPPER(kunit_action_drm_dev_unregister,
++			    drm_dev_unregister,
++			    struct drm_device *);
  
- /**
-  * drm_kunit_helper_alloc_device - Allocate a mock device for a KUnit test
+ static struct vc4_dev *__mock_device(struct kunit *test, bool is_vc5)
+ {
 -- 
 2.42.0.869.gea05f2083d-goog
 
