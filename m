@@ -1,105 +1,143 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E75C15AF6;
-	Mon, 13 Nov 2023 08:55:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC7F18E1F
+	for <linux-hardening@vger.kernel.org>; Mon, 13 Nov 2023 09:25:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wROikK0F"
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC0E210D0;
-	Mon, 13 Nov 2023 00:55:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=dutrm5ccD7TaxoUTd5HetFxAB3OI7e+5hdO7Sj9SVNo=; b=wROikK0F+E/0+gQCY5aizziwZM
-	QBnqTdIASK/w4O/XE3EW5v2abecSdYkvK+1zJnluPUtnBngldSvjaMgTnd7kRGV514mvgKT2hU0vC
-	zyXBTRnb7A9gFNaBRlwjzsA4yg5tTIt5CaM1p3Y5thi2fixgzbu9gYQs2dMIhNq7ghLsDwXDjPCGW
-	c4IO6A3VhEeYayv5zlUHiiN4fSixzrzW2ZU+OFXqHfAYwdcx8Ci4e1LYOZbFbUtVyqtN+xQnmTz7h
-	4Bnr6O5PUCwR9sOreXh5yplAfAZI8hKiF8rtnUT8tx3OIE8Nkxzi4qJBpBkKgX1hESNRrFrl/uuYN
-	3iMt4jmQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1r2Shn-00DHEt-7m; Mon, 13 Nov 2023 08:54:04 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 8FD82300427; Mon, 13 Nov 2023 09:54:03 +0100 (CET)
-Date: Mon, 13 Nov 2023 09:54:03 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
-Cc: Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-	Kees Cook <keescook@chromium.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Wanpeng Li <wanpengli@tencent.com>,
-	Alexander Graf <graf@amazon.com>,
-	Chao Peng <chao.p.peng@linux.intel.com>,
-	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-	Forrest Yuan Yu <yuanyu@google.com>,
-	James Gowans <jgowans@amazon.com>,
-	James Morris <jamorris@linux.microsoft.com>,
-	John Andersen <john.s.andersen@intel.com>,
-	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
-	Marian Rotariu <marian.c.rotariu@gmail.com>,
-	Mihai =?utf-8?B?RG9uyJt1?= <mdontu@bitdefender.com>,
-	=?utf-8?B?TmljdciZb3IgQ8OuyJt1?= <nicu.citu@icloud.com>,
-	Thara Gopinath <tgopinath@microsoft.com>,
-	Trilok Soni <quic_tsoni@quicinc.com>, Wei Liu <wei.liu@kernel.org>,
-	Will Deacon <will@kernel.org>,
-	Yu Zhang <yu.c.zhang@linux.intel.com>,
-	Zahra Tarkhani <ztarkhani@microsoft.com>,
-	=?utf-8?Q?=C8=98tefan_=C8=98icleru?= <ssicleru@bitdefender.com>,
-	dev@lists.cloudhypervisor.org, kvm@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
-	qemu-devel@nongnu.org, virtualization@lists.linux-foundation.org,
-	x86@kernel.org, xen-devel@lists.xenproject.org
-Subject: Re: [RFC PATCH v2 18/19] heki: x86: Protect guest kernel memory
- using the KVM hypervisor
-Message-ID: <20231113085403.GC16138@noisy.programming.kicks-ass.net>
-References: <20231113022326.24388-1-mic@digikod.net>
- <20231113022326.24388-19-mic@digikod.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QWomP6N9"
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C57D10D2;
+	Mon, 13 Nov 2023 01:25:14 -0800 (PST)
+Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-407da05f05aso31093925e9.3;
+        Mon, 13 Nov 2023 01:25:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1699867512; x=1700472312; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=F3/evD/xaoF543UV7hJCiw9gNPQF7YDdq7P3hZjA/Xk=;
+        b=QWomP6N9eE8ZJEuetj6w2VJXi3o37A7UgBTMHeNy9wx57ObFSk/boeK75JR1kImvjc
+         jZSNkJZGgu6WWzA3in4z+3Rv9syxAahG1+BgfnN3iwx00Y9nzR1eeJfWzKDjFa4IcE3I
+         Q2vx6NQvEhfzG+twGsPper45uFQn5h7RC4jrP6c1AwDGvt20Zk8zOd7vVgqvaPxVNThX
+         C1xDelwJSD9hiiLmKE927/92C7cYEwSSbQJdE4gEoy0AUHFpl6+XrzXvY7Ou4YTtmmry
+         T8xHCLvi9oC3yyVDTnrosmrpGE84i3YveX4fqk6OJ+PcoWTLoOH6vDBl1am2VtzetTNC
+         pnUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699867512; x=1700472312;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=F3/evD/xaoF543UV7hJCiw9gNPQF7YDdq7P3hZjA/Xk=;
+        b=g3GMUllXZ+D65vk6SmBMszmo13ANgbVhD5tViuW/uohFtGlmRJ8HnkQmI69IiippX4
+         7OrWOYZfSg4/adu+/9b8aB6fidr8m/lGsYZgtH9WeboqnOjtTAmmyBkRJ8xwYXPBIDus
+         7mxRwMsyDzBVDDC7ipC166rGOiC33k+4pk0d3p+UPkQiDgzN3D/Kd3ujfzR2CpeS8FNe
+         fTV95ciuh95IehTgtfoFAwmV4NYUskXRT4mRcmA4xt39OMvPfDoqbgfXsFO1uimNK4+m
+         n7Tag9kNgjMd1/9YXyW0/jAoW2qgfWDUY0/b+iEyk/81G8TwV1rJMGzS4R8WYQkhvino
+         wfMQ==
+X-Gm-Message-State: AOJu0Yx/BZy7OyCgU2yArQgngQMJbsbMcw8tOj8AML5hfOo7FWTU8mhE
+	L2k0JZhqXhiurkqXtu/lBM42T0x8XEAAjjZJfgGMW/Gr
+X-Google-Smtp-Source: AGHT+IGG3e0ULTHpPoQfTWqsbEv9x4DhbnlAWOPX8Bv+hYP5jcQhKwySKiY/k4P5DVifDlV86kzKA4WiDh69n/qlojc=
+X-Received: by 2002:adf:a414:0:b0:32d:8872:aac8 with SMTP id
+ d20-20020adfa414000000b0032d8872aac8mr4817978wra.31.1699867512315; Mon, 13
+ Nov 2023 01:25:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231113022326.24388-19-mic@digikod.net>
+References: <20231112095353.579855-1-debug.penguin32@gmail.com> <2655833.BddDVKsqQX@oscar>
+In-Reply-To: <2655833.BddDVKsqQX@oscar>
+From: Ronald Monthero <debug.penguin32@gmail.com>
+Date: Mon, 13 Nov 2023 19:25:01 +1000
+Message-ID: <CALk6UxoRHWsJYuTcqg7zvf5rxGwMQymMpjGuSEw3d+syAVyt=g@mail.gmail.com>
+Subject: Re: [PATCH] qnx4: fix to avoid panic due to buffer overflow
+To: Anders Larsen <al@alarsen.net>
+Cc: keescook@chromium.org, gustavoars@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Niek Nooijens <nieknooijens@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Nov 12, 2023 at 09:23:25PM -0500, Mickaël Salaün wrote:
-> From: Madhavan T. Venkataraman <madvenka@linux.microsoft.com>
-> 
-> Implement a hypervisor function, kvm_protect_memory() that calls the
-> KVM_HC_PROTECT_MEMORY hypercall to request the KVM hypervisor to
-> set specified permissions on a list of guest pages.
-> 
-> Using the protect_memory() function, set proper EPT permissions for all
-> guest pages.
-> 
-> Use the MEM_ATTR_IMMUTABLE property to protect the kernel static
-> sections and the boot-time read-only sections. This enables to make sure
-> a compromised guest will not be able to change its main physical memory
-> page permissions. However, this also disable any feature that may change
-> the kernel's text section (e.g., ftrace, Kprobes), but they can still be
-> used on kernel modules.
-> 
-> Module loading/unloading, and eBPF JIT is allowed without restrictions
-> for now, but we'll need a way to authenticate these code changes to
-> really improve the guests' security. We plan to use module signatures,
-> but there is no solution yet to authenticate eBPF programs.
-> 
-> Being able to use ftrace and Kprobes in a secure way is a challenge not
-> solved yet. We're looking for ideas to make this work.
-> 
-> Likewise, the JUMP_LABEL feature cannot work because the kernel's text
-> section is read-only.
+On Mon, Nov 13, 2023 at 2:16=E2=80=AFAM Anders Larsen <al@alarsen.net> wrot=
+e:
+>
+> On 2023-11-12 10:53 Ronald Monthero wrote:
+> > qnx4 dir name length can vary to be of maximum size
+> > QNX4_NAME_MAX or QNX4_SHORT_NAME_MAX depending on whether
+> > 'link info' entry is stored and the status byte is set.
+> > So to avoid buffer overflow check di_fname length
+> > fetched from (struct qnx4_inode_entry *)
+> > before use in strlen to avoid buffer overflow.
+>
+> [snip]
+>
+> >
+> > Signed-off-by: Ronald Monthero <debug.penguin32@gmail.com>
+> > ---
+> >  fs/qnx4/namei.c | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> >
+> > diff --git a/fs/qnx4/namei.c b/fs/qnx4/namei.c
+> > index 8d72221735d7..825b891a52b3 100644
+> > --- a/fs/qnx4/namei.c
+> > +++ b/fs/qnx4/namei.c
+> > @@ -40,6 +40,13 @@ static int qnx4_match(int len, const char *name,
+> >       } else {
+> >               namelen =3D QNX4_SHORT_NAME_MAX;
+> >       }
+> > +
+> > +     /** qnx4 dir name length can vary, check the di_fname
+> > +      * fetched from (struct qnx4_inode_entry *) before use in
+> > +      * strlen to avoid panic due to buffer overflow"
+> > +      */
+> > +     if (strnlen(de->di_fname, namelen) >=3D sizeof(de->di_fname))
+> > +             return -ENAMETOOLONG;
+>
+> sizeof(de->di_fname) equals QNX4_SHORT_NAME_MAX, so this test fails as so=
+on as
+> a filename is longer than that!
 
-What is the actual problem? As is the kernel text map is already RO and
-never changed.
+I suppose de->di_fname can be QNX4_NAME_MAX or QNX4_SHORT_NAME_MAX isn't it=
+ ?
+It's set based on di_status, if di_status is set, then it will be
+QNX4_NAME_MAX and otherwise QNX4_SHORT_NAME_MAX.
+We capture that into namelen, prior to the  string length check  - if
+(strnlen(de->di_fname, namelen) >=3D sizeof(de->di_fname))
+as below:
+
+        de =3D (struct qnx4_inode_entry *) (bh->b_data + *offset);
+        *offset +=3D QNX4_DIR_ENTRY_SIZE;
+        if ((de->di_status & QNX4_FILE_LINK) !=3D 0) {
+                namelen =3D QNX4_NAME_MAX;
+        } else {
+                namelen =3D QNX4_SHORT_NAME_MAX;
+        }
+
+BR,
+Ron
+
+
+> This quick fix (untested!) should do the trick (and avoids computing the =
+length
+> of the name twice):
+>
+> diff --git a/fs/qnx4/namei.c b/fs/qnx4/namei.c
+> index 8d72221735d7..7694f86fbb2e 100644
+> --- a/fs/qnx4/namei.c
+> +++ b/fs/qnx4/namei.c
+> @@ -40,9 +40,7 @@ static int qnx4_match(int len, const char *name,
+>         } else {
+>                 namelen =3D QNX4_SHORT_NAME_MAX;
+>         }
+> -       thislen =3D strlen( de->di_fname );
+> -       if ( thislen > namelen )
+> -               thislen =3D namelen;
+> +       thislen =3D strnlen(de->di_fname, namelen);
+>         if (len !=3D thislen) {
+>                 return 0;
+>         }
+>
+> Cheers
+> Anders
+>
+>
