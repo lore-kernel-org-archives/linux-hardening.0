@@ -1,141 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94DA123753;
-	Mon, 13 Nov 2023 19:38:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5FBB3B2B5;
+	Mon, 13 Nov 2023 23:01:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GLS9dTAx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16CCBC433C7;
-	Mon, 13 Nov 2023 19:38:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i9WtHaBj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75249C433C8;
+	Mon, 13 Nov 2023 23:01:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699904296;
-	bh=9ypxMPYW+WDYaCwDSx2ywc4K+xykb9J09UJjGSMapQ0=;
-	h=Date:From:To:Cc:Subject:From;
-	b=GLS9dTAxfC37erUQoZRNm07gmEetbMSbdz21/QTHmqATocVHj+fiVqy2wC74hZNmw
-	 7IFD8yZQ2cjRhShv6szxx/Dsami6m4C9f9Y+/TaGCEDXL6VCcL8DjEXAmcKtARaPjN
-	 mPC9+hLH+MPrqEJuEN4c21The29qeOsqCLDHaPXiEWEiZ+D4MQ8eykPD7XagFSK8W7
-	 255n+Dj8RfSUDZIs3BnheuHtBqGWvb4GTZLJ0TQQZiqdh944QE0w7XadC7qM5rIfRY
-	 XjdaZObL4CPLZLjtP1aaPCy0ei1f/Zu0w7mwrGPTuDaU97ZFmj7xIwNDzb7DBgqEAU
-	 8tmHHmYelCDxg==
-Date: Mon, 13 Nov 2023 13:38:12 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
-	Joel Stanley <joel@jms.id.au>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>
-Cc: linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] hwmon: (aspeed-pwm-tacho) Fix -Wstringop-overflow
- warning in aspeed_create_fan_tach_channel()
-Message-ID: <ZVJ7JBFoULzY3VGx@work>
+	s=k20201202; t=1699916481;
+	bh=a5TEmxZGsOjS/GgOYsqRiQG4AzGI2qCqIVQQVx91tgY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=i9WtHaBjxgZNRRRepi52KJnSqhpFkrISdLnHrYri6TTUMC0dkp5hIlSswUwYY+615
+	 VJgifQy9ZECPYLd30+p2eF1w9UhA/atOKRXqnkPW0sS66wrfk3CsvVbPlymSlPFfBZ
+	 vjObbevHr7UNBilp+T3qWs9D729WNg/smkw4oz55ioITTgryiYnefHaY1HLmi4Mcw+
+	 NIQ6dKxXiYJTJM57wvZkePlPX/8OSmghlUX5Hmt1dlg1uVqeeV3fXxl0vLlNwxNnBu
+	 IGxZdGJQX73KNZdooQksc8520SiAANdLiIrqSa2c8QWbu7rmImilmh6Jj0zSeKfpMN
+	 RfSIWWOTuOZqw==
+From: Saeed Mahameed <saeed@kernel.org>
+To: "David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Eric Dumazet <edumazet@google.com>
+Cc: Saeed Mahameed <saeedm@nvidia.com>,
+	netdev@vger.kernel.org,
+	Tariq Toukan <tariqt@nvidia.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-hardening@vger.kernel.org,
+	Kees Cook <keescook@chromium.org>
+Subject: [net-next 06/14] net/mlx5: simplify mlx5_set_driver_version string assignments
+Date: Mon, 13 Nov 2023 15:00:43 -0800
+Message-ID: <20231113230051.58229-7-saeed@kernel.org>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20231113230051.58229-1-saeed@kernel.org>
+References: <20231113230051.58229-1-saeed@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 
-Based on the documentation below, the maximum number of Fan tach
-channels is 16:
+From: Justin Stitt <justinstitt@google.com>
 
-Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt:45:
- 45 - aspeed,fan-tach-ch : should specify the Fan tach input channel.
- 46                 integer value in the range 0 through 15, with 0 indicating
- 47                 Fan tach channel 0 and 15 indicating Fan tach channel 15.
- 48                 At least one Fan tach input channel is required.
+In total, just assigning this version string takes:
+(1) strncpy()'s
+(5) strlen()'s
+(3) strncat()'s
+(1) snprintf()'s
+(4) max_t()'s
 
-However, the compiler doesn't know that, and legitimaly warns about a potential
-overwrite in array `u8 fan_tach_ch_source[16]` in `struct aspeed_pwm_tacho_data`,
-in case `index` takes a value outside the boundaries of the array:
+Moreover, `strncpy` is deprecated [1] and `strncat` really shouldn't be
+used either [2]. With this in mind, let's simply use a single
+`snprintf`.
 
-drivers/hwmon/aspeed-pwm-tacho.c:
-179 struct aspeed_pwm_tacho_data {
-...
-184         bool fan_tach_present[16];
-...
-193         u8 fan_tach_ch_source[16];
-...
-196 };
-
-In function ‘aspeed_create_fan_tach_channel’,
-    inlined from ‘aspeed_create_fan’ at drivers/hwmon/aspeed-pwm-tacho.c:877:2,
-    inlined from ‘aspeed_pwm_tacho_probe’ at drivers/hwmon/aspeed-pwm-tacho.c:936:9:
-drivers/hwmon/aspeed-pwm-tacho.c:751:49: warning: writing 1 byte into a region of size 0 [-Wstringop-overflow=]
-  751 |                 priv->fan_tach_ch_source[index] = pwm_source;
-      |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
-drivers/hwmon/aspeed-pwm-tacho.c: In function ‘aspeed_pwm_tacho_probe’:
-drivers/hwmon/aspeed-pwm-tacho.c:193:12: note: at offset [48, 255] into destination object ‘fan_tach_ch_source’ of size 16
-  193 |         u8 fan_tach_ch_source[16];
-      |            ^~~~~~~~~~~~~~~~~~
-
-Fix this by sanity checking `index` before using it to index arrays of
-size 16 elements in `struct aspeed_pwm_tacho_data`. Also, and just for
-completeness, add a `pr_err()` message to display in the unlikely case
-`0 > index >= 16`.
-
-This is probably the last remaining -Wstringop-overflow issue in the
-kernel, and this patch helps with the ongoing efforts to enable such
-compiler option globally.
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://elixir.bootlin.com/linux/v6.6-rc5/source/include/linux/fortify-string.h#L448 [2]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Cc: Kees Cook <keescook@chromium.org>
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Saeed Mahameed <saeedm@nvidia.com>
 ---
- drivers/hwmon/aspeed-pwm-tacho.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ .../net/ethernet/mellanox/mlx5/core/main.c    | 20 +++----------------
+ 1 file changed, 3 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/hwmon/aspeed-pwm-tacho.c b/drivers/hwmon/aspeed-pwm-tacho.c
-index 997df4b40509..092a81916325 100644
---- a/drivers/hwmon/aspeed-pwm-tacho.c
-+++ b/drivers/hwmon/aspeed-pwm-tacho.c
-@@ -166,6 +166,8 @@
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/main.c b/drivers/net/ethernet/mellanox/mlx5/core/main.c
+index a17152c1cbb2..bccf6e53556c 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
+@@ -219,7 +219,6 @@ static void mlx5_set_driver_version(struct mlx5_core_dev *dev)
+ 	int driver_ver_sz = MLX5_FLD_SZ_BYTES(set_driver_version_in,
+ 					      driver_version);
+ 	u8 in[MLX5_ST_SZ_BYTES(set_driver_version_in)] = {};
+-	int remaining_size = driver_ver_sz;
+ 	char *string;
  
- #define MAX_CDEV_NAME_LEN 16
+ 	if (!MLX5_CAP_GEN(dev, driver_version))
+@@ -227,22 +226,9 @@ static void mlx5_set_driver_version(struct mlx5_core_dev *dev)
  
-+#define MAX_ASPEED_FAN_TACH_CHANNELS 16
-+
- struct aspeed_cooling_device {
- 	char name[16];
- 	struct aspeed_pwm_tacho_data *priv;
-@@ -181,7 +183,7 @@ struct aspeed_pwm_tacho_data {
- 	struct reset_control *rst;
- 	unsigned long clk_freq;
- 	bool pwm_present[8];
--	bool fan_tach_present[16];
-+	bool fan_tach_present[MAX_ASPEED_FAN_TACH_CHANNELS];
- 	u8 type_pwm_clock_unit[3];
- 	u8 type_pwm_clock_division_h[3];
- 	u8 type_pwm_clock_division_l[3];
-@@ -190,7 +192,7 @@ struct aspeed_pwm_tacho_data {
- 	u16 type_fan_tach_unit[3];
- 	u8 pwm_port_type[8];
- 	u8 pwm_port_fan_ctrl[8];
--	u8 fan_tach_ch_source[16];
-+	u8 fan_tach_ch_source[MAX_ASPEED_FAN_TACH_CHANNELS];
- 	struct aspeed_cooling_device *cdev[8];
- 	const struct attribute_group *groups[3];
- };
-@@ -746,10 +748,14 @@ static void aspeed_create_fan_tach_channel(struct aspeed_pwm_tacho_data *priv,
+ 	string = MLX5_ADDR_OF(set_driver_version_in, in, driver_version);
  
- 	for (val = 0; val < count; val++) {
- 		index = fan_tach_ch[val];
--		aspeed_set_fan_tach_ch_enable(priv->regmap, index, true);
--		priv->fan_tach_present[index] = true;
--		priv->fan_tach_ch_source[index] = pwm_source;
--		aspeed_set_fan_tach_ch_source(priv->regmap, index, pwm_source);
-+		if (index < MAX_ASPEED_FAN_TACH_CHANNELS) {
-+			aspeed_set_fan_tach_ch_enable(priv->regmap, index, true);
-+			priv->fan_tach_present[index] = true;
-+			priv->fan_tach_ch_source[index] = pwm_source;
-+			aspeed_set_fan_tach_ch_source(priv->regmap, index, pwm_source);
-+		} else {
-+			pr_err("Invalid Fan Tach input channel %u\n.", index);
-+		}
- 	}
- }
+-	strncpy(string, "Linux", remaining_size);
+-
+-	remaining_size = max_t(int, 0, driver_ver_sz - strlen(string));
+-	strncat(string, ",", remaining_size);
+-
+-	remaining_size = max_t(int, 0, driver_ver_sz - strlen(string));
+-	strncat(string, KBUILD_MODNAME, remaining_size);
+-
+-	remaining_size = max_t(int, 0, driver_ver_sz - strlen(string));
+-	strncat(string, ",", remaining_size);
+-
+-	remaining_size = max_t(int, 0, driver_ver_sz - strlen(string));
+-
+-	snprintf(string + strlen(string), remaining_size, "%u.%u.%u",
+-		LINUX_VERSION_MAJOR, LINUX_VERSION_PATCHLEVEL,
+-		LINUX_VERSION_SUBLEVEL);
++	snprintf(string, driver_ver_sz, "Linux,%s,%u.%u.%u",
++		 KBUILD_MODNAME, LINUX_VERSION_MAJOR,
++		 LINUX_VERSION_PATCHLEVEL, LINUX_VERSION_SUBLEVEL);
  
+ 	/*Send the command*/
+ 	MLX5_SET(set_driver_version_in, in, opcode,
 -- 
-2.34.1
+2.41.0
 
