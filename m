@@ -1,140 +1,104 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6039F2136C
-	for <linux-hardening@vger.kernel.org>; Mon, 13 Nov 2023 15:40:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 915E622EEC
+	for <linux-hardening@vger.kernel.org>; Mon, 13 Nov 2023 19:35:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=alarsen.net header.i=@alarsen.net header.b="i/DSCsEK"
-X-Greylist: delayed 84259 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 13 Nov 2023 07:40:56 PST
-Received: from mail.alarsen.net (joe.alarsen.net [IPv6:2a01:4f8:191:10e8:1::fe])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75E5610FB;
-	Mon, 13 Nov 2023 07:40:56 -0800 (PST)
-Received: from oscar.alarsen.net (unknown [IPv6:fd8b:531:bccf:96:4abe:53a7:4edc:2be2])
-	by joe.alarsen.net (Postfix) with ESMTPS id 1F5321810FA;
-	Mon, 13 Nov 2023 16:40:54 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alarsen.net; s=joe;
-	t=1699890054; bh=6h37m0Iem6DPm82r5P0FgDqnA5tsoGQsn/s7omraZyE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=i/DSCsEKFWGHTyxmsvo0Txiro4iNSvQCHLf04nK8/FGsEQa+z/8QgHYjPx3cTuIwa
-	 PSDrBUmLB5a3yXMbn/NEY2w6ugnEblXypJmN8DkpYTBeuP2AH5TJaFR0pJxk7VJSPK
-	 qJnkg2jVqOAn62XEKrC4Tutxs9zkzzlT1DtUJ9E8=
-Received: from oscar.localnet (localhost [IPv6:::1])
-	by oscar.alarsen.net (Postfix) with ESMTPS id 07DBA14ED;
-	Mon, 13 Nov 2023 16:40:54 +0100 (CET)
-From: Anders Larsen <al@alarsen.net>
-To: Ronald Monthero <debug.penguin32@gmail.com>
-Cc: keescook@chromium.org, gustavoars@kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, Niek Nooijens <nieknooijens@gmail.com>
-Subject: Re: [PATCH] qnx4: fix to avoid panic due to buffer overflow
-Date: Mon, 13 Nov 2023 16:40:53 +0100
-Message-ID: <13392533.uLZWGnKmhe@oscar>
-In-Reply-To: <CALk6UxoRHWsJYuTcqg7zvf5rxGwMQymMpjGuSEw3d+syAVyt=g@mail.gmail.com>
-References: <20231112095353.579855-1-debug.penguin32@gmail.com> <2655833.BddDVKsqQX@oscar> <CALk6UxoRHWsJYuTcqg7zvf5rxGwMQymMpjGuSEw3d+syAVyt=g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EJ1+KQXz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CA8EC433C7;
+	Mon, 13 Nov 2023 19:35:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1699904153;
+	bh=JPhKLghvGw7StGSXf9vQqvISbNEZ2A3Ksd7jEA2P43c=;
+	h=Date:From:To:Cc:Subject:From;
+	b=EJ1+KQXzxNB13oEzr4f1dnR5SV6Q3UTECdIxoz9WkICpSJpIgrKPkhzr2IlCYHnrl
+	 ls21xmpHW6HgBsgZ6vsn/hIuWP8E2abKEU7PXKZTWPONhiUMIxTHVmU0fHTsdIIdz4
+	 ZG4kN5xOngj/ORNWaxeM7KqfBDDB4XusRxMNntI6JxAyxLnQXen8W4uz5o20SEgKhu
+	 IzHB3IJaezfn8C+b1EeNgEcs2Lrs1a2i+P9zkC0ZaPDyjv6lGQobg9idKCMYHr+mJZ
+	 11COhrXciddhSaH69A5JSSfpNzUvtTCma09sbn+669i7+aelA/kMEmcbuhF71Cfk5I
+	 M0nqlCewMnUzw==
+Date: Mon, 13 Nov 2023 13:35:49 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Ping-Ke Shih <pkshih@realtek.com>, Kalle Valo <kvalo@kernel.org>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] wifi: rtw89: coex: Fix -Wstringop-overflow warnings in
+ _append_tdma()
+Message-ID: <ZVJ6lRCRaywGktxJ@work>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-On 2023-11-13 10:25 Ronald Monthero wrote:
-> On Mon, Nov 13, 2023 at 2:16=E2=80=AFAM Anders Larsen <al@alarsen.net> wr=
-ote:
-> > On 2023-11-12 10:53 Ronald Monthero wrote:
-> > > qnx4 dir name length can vary to be of maximum size
-> > > QNX4_NAME_MAX or QNX4_SHORT_NAME_MAX depending on whether
-> > > 'link info' entry is stored and the status byte is set.
-> > > So to avoid buffer overflow check di_fname length
-> > > fetched from (struct qnx4_inode_entry *)
-> > > before use in strlen to avoid buffer overflow.
-> >=20
-> > [snip]
-> >=20
-> > > Signed-off-by: Ronald Monthero <debug.penguin32@gmail.com>
-> > > ---
-> > >=20
-> > >  fs/qnx4/namei.c | 7 +++++++
-> > >  1 file changed, 7 insertions(+)
-> > >=20
-> > > diff --git a/fs/qnx4/namei.c b/fs/qnx4/namei.c
-> > > index 8d72221735d7..825b891a52b3 100644
-> > > --- a/fs/qnx4/namei.c
-> > > +++ b/fs/qnx4/namei.c
-> > > @@ -40,6 +40,13 @@ static int qnx4_match(int len, const char *name,
-> > >=20
-> > >       } else {
-> > >      =20
-> > >               namelen =3D QNX4_SHORT_NAME_MAX;
-> > >      =20
-> > >       }
-> > >=20
-> > > +
-> > > +     /** qnx4 dir name length can vary, check the di_fname
-> > > +      * fetched from (struct qnx4_inode_entry *) before use in
-> > > +      * strlen to avoid panic due to buffer overflow"
-> > > +      */
-> > > +     if (strnlen(de->di_fname, namelen) >=3D sizeof(de->di_fname))
-> > > +             return -ENAMETOOLONG;
-> >=20
-> > sizeof(de->di_fname) equals QNX4_SHORT_NAME_MAX, so this test fails as
-> > soon as a filename is longer than that!
->=20
-> I suppose de->di_fname can be QNX4_NAME_MAX or QNX4_SHORT_NAME_MAX isn't =
-it
-> ? It's set based on di_status, if di_status is set, then it will be
-> QNX4_NAME_MAX and otherwise QNX4_SHORT_NAME_MAX.
-> We capture that into namelen, prior to the  string length check  - if
-> (strnlen(de->di_fname, namelen) >=3D sizeof(de->di_fname))
-> as below:
->=20
->         de =3D (struct qnx4_inode_entry *) (bh->b_data + *offset);
->         *offset +=3D QNX4_DIR_ENTRY_SIZE;
->         if ((de->di_status & QNX4_FILE_LINK) !=3D 0) {
->                 namelen =3D QNX4_NAME_MAX;
->         } else {
->                 namelen =3D QNX4_SHORT_NAME_MAX;
->         }
->=20
-> BR,
-> Ron
+Copy a couple of structures directly, instead of using `memcpy()`.
 
-sizeof(de->di_fname) is evaluated as QNX4_SHORT_NAME_MAX already at compile=
-=20
-time, see the definition of di_fname in uapi/linux/qnx4_fs.h
+This addesses the following -Wstringop-overflow warnings:
+drivers/net/wireless/realtek/rtw89/coex.c: In function ‘_append_tdma’:
+./include/linux/fortify-string.h:57:33: warning: writing 8 bytes into a region of size 0 [-Wstringop-overflow=]
+   57 | #define __underlying_memcpy     __builtin_memcpy
+      |                                 ^
+./include/linux/fortify-string.h:644:9: note: in expansion of macro ‘__underlying_memcpy’
+  644 |         __underlying_##op(p, q, __fortify_size);                        \
+      |         ^~~~~~~~~~~~~
+./include/linux/fortify-string.h:689:26: note: in expansion of macro ‘__fortify_memcpy_chk’
+  689 | #define memcpy(p, q, s)  __fortify_memcpy_chk(p, q, s,                  \
+      |                          ^~~~~~~~~~~~~~~~~~~~
+drivers/net/wireless/realtek/rtw89/coex.c:1585:17: note: in expansion of macro ‘memcpy’
+ 1585 |                 memcpy(&v3->tdma, &dm->tdma, sizeof(v3->tdma));
+      |                 ^~~~~~
+drivers/net/wireless/realtek/rtw89/core.h:2703:37: note: at offset [5714, 71249] into destination object ‘ver’ of size 8
+ 2703 |         const struct rtw89_btc_ver *ver;
+      |                                     ^~~
+./include/linux/fortify-string.h:57:33: warning: writing 8 bytes into a region of size 0 [-Wstringop-overflow=]
+   57 | #define __underlying_memcpy     __builtin_memcpy
+      |                                 ^
+./include/linux/fortify-string.h:644:9: note: in expansion of macro ‘__underlying_memcpy’
+  644 |         __underlying_##op(p, q, __fortify_size);                        \
+      |         ^~~~~~~~~~~~~
+./include/linux/fortify-string.h:689:26: note: in expansion of macro ‘__fortify_memcpy_chk’
+  689 | #define memcpy(p, q, s)  __fortify_memcpy_chk(p, q, s,                  \
+      |                          ^~~~~~~~~~~~~~~~~~~~
+drivers/net/wireless/realtek/rtw89/coex.c:1579:17: note: in expansion of macro ‘memcpy’
+ 1579 |                 memcpy(v, &dm->tdma, sizeof(*v));
+      |                 ^~~~~~
+drivers/net/wireless/realtek/rtw89/core.h:2703:37: note: at offset [5710, 71245] into destination object ‘ver’ of size 8
+ 2703 |         const struct rtw89_btc_ver *ver;
+      |                                     ^~~
 
-I agree that the code is confusing, as 'de' is declared as a pointer to a=20
-struct qnx4_inode_entry but in reality points to a struct qnx4_link_info if=
-f=20
-QNX4_FILE_LINK is set in de->di_status.
-(Note that the corresponding field dl_status in qnx4_link_info is at the sa=
-me=20
-offset as di_status in qnx4_inode_entry - that's the disk layout.)
+This helps with the ongoing efforts to globally enable
+-Wstringop-overflow.
 
-> > This quick fix (untested!) should do the trick (and avoids computing the
-> > length of the name twice):
-> >=20
-> > diff --git a/fs/qnx4/namei.c b/fs/qnx4/namei.c
-> > index 8d72221735d7..7694f86fbb2e 100644
-> > --- a/fs/qnx4/namei.c
-> > +++ b/fs/qnx4/namei.c
-> > @@ -40,9 +40,7 @@ static int qnx4_match(int len, const char *name,
-> >         } else {
-> >                 namelen =3D QNX4_SHORT_NAME_MAX;
-> >         }
-> > -       thislen =3D strlen( de->di_fname );
-> > -       if ( thislen > namelen )
-> > -               thislen =3D namelen;
-> > +       thislen =3D strnlen(de->di_fname, namelen);
-> >         if (len !=3D thislen) {
-> >                 return 0;
-> >         }
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/net/wireless/realtek/rtw89/coex.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Niek reported that this fix improved the situation, but he later got a cras=
-h,=20
-albeit at a different place (but still within the qnx4fs).
-
-Cheers
-Anders
-
+diff --git a/drivers/net/wireless/realtek/rtw89/coex.c b/drivers/net/wireless/realtek/rtw89/coex.c
+index bdcc172639e4..b842cd9a86f8 100644
+--- a/drivers/net/wireless/realtek/rtw89/coex.c
++++ b/drivers/net/wireless/realtek/rtw89/coex.c
+@@ -1576,13 +1576,13 @@ static void _append_tdma(struct rtw89_dev *rtwdev)
+ 	if (ver->fcxtdma == 1) {
+ 		v = (struct rtw89_btc_fbtc_tdma *)&tlv->val[0];
+ 		tlv->len = sizeof(*v);
+-		memcpy(v, &dm->tdma, sizeof(*v));
++		*v = dm->tdma;
+ 		btc->policy_len += BTC_TLV_HDR_LEN + sizeof(*v);
+ 	} else {
+ 		tlv->len = sizeof(*v3);
+ 		v3 = (struct rtw89_btc_fbtc_tdma_v3 *)&tlv->val[0];
+ 		v3->fver = ver->fcxtdma;
+-		memcpy(&v3->tdma, &dm->tdma, sizeof(v3->tdma));
++		v3->tdma = dm->tdma;
+ 		btc->policy_len += BTC_TLV_HDR_LEN + sizeof(*v3);
+ 	}
+ 
+-- 
+2.34.1
 
