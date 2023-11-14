@@ -1,185 +1,107 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DDC84123B;
-	Tue, 14 Nov 2023 14:52:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E6BD2C19E
+	for <linux-hardening@vger.kernel.org>; Tue, 14 Nov 2023 17:41:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YO2lJABL"
-Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 630B61B5;
-	Tue, 14 Nov 2023 06:52:43 -0800 (PST)
-Received: by mail-vs1-xe30.google.com with SMTP id ada2fe7eead31-45da94f4b90so2449356137.3;
-        Tue, 14 Nov 2023 06:52:43 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VpcK59r5"
+Received: from mail-ot1-x329.google.com (mail-ot1-x329.google.com [IPv6:2607:f8b0:4864:20::329])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54FCA10F
+	for <linux-hardening@vger.kernel.org>; Tue, 14 Nov 2023 09:41:30 -0800 (PST)
+Received: by mail-ot1-x329.google.com with SMTP id 46e09a7af769-6ce2de8da87so3623072a34.1
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Nov 2023 09:41:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699973562; x=1700578362; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
+        d=chromium.org; s=google; t=1699983689; x=1700588489; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=LIQbkwE4qYiMmkgrrvrC/vRWElOWAUQTAZF8XUTl38o=;
-        b=YO2lJABLXhI9ES562p/w5irK8OIZx27RJYMoADNqLgD2rcUCzpHZIIfDYpqsizyQwy
-         351CiuJ866I+tqrKvOlc7UQnC0zhhtojjOGXWRyHw9Um95xkLziwEzk5doDvg0CSwGYh
-         VR3R4g+UggljBnQ9dNqgSDDUjPrAkfDKzWFpBPznZMq/5wgXWDy6zRotsBzvMtsLonuw
-         9EvgbE5D8LPBNwucKHisrosKzL/gcCSyvfByolHl3fFPdWzUcPlkTuwZJPwfvY0Qx7Ze
-         7T8lzMdQ2Il8+A4RPkJJQAI2FxtaiS5NnPzi7ZgTrG1vSVCnlw9NNEF96tnhL8Mx1xjF
-         lm6w==
+        bh=HLGvE6w2nI/I1UWxr+lpIoR/ViMo1XgqtZtp21yYr4U=;
+        b=VpcK59r5CrZ3QCH78240cjVtgXDGWCQH7bfIykn5Iviwllo8QJxqY4dQf3VOgGB51O
+         RL6mlFZCTDmoMUwTw/GAbrsx5i3FgDMP/+/ePVchDHCgfmla6bJe0pIq2XGog4s5vSSr
+         E5qA1jpbug7T8h05bcUjW2u2lR8eHdicnFicQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699973562; x=1700578362;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
+        d=1e100.net; s=20230601; t=1699983689; x=1700588489;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LIQbkwE4qYiMmkgrrvrC/vRWElOWAUQTAZF8XUTl38o=;
-        b=faQHfH8ivXiR7SY6gxcrSL1o38OeC4CpuJc1pwx1dSmlgTeOBLfnz8GGtgaptQr5IG
-         ITwuwyB+sIFyUAJFAkmKi3T77+vp5M96noMDzbvC00X2I5ZoS4GuXezW4UIIdMStzCy7
-         UhL5iFPwwj6DEb88IjeCEYms+Yw7pgKoSXEPAxM9gtg/VLjC54FEN0L19RLcWeQ6zSb8
-         5c3YzD5m+1CGHzrgphCKUD/ql3hGKjaD2NPNkbTfDCVNeWBNVmLDScP9MMHV3aXxfjeh
-         Q9Y61Bf8v+2YH+AApMJwSuXj4L2ehJQJEsuzAZ7My5lbqbWCV25/2pY0138sU5R+p/yx
-         Z5gg==
-X-Gm-Message-State: AOJu0YzW2fHMFdkuS7oBaR/o43u4UCgKmf64YaYTTAtVqBzUdf8sXrsu
-	dVIi9dIdCHZ7QT0rp68b6ct3KgfWTqY=
-X-Google-Smtp-Source: AGHT+IHAT5eAXs0OaMM9X2ywWIX9bE+jyDw4UB13bEFULtdfpf3ZE2T5zvAD66+57RF8WEXQFMTqwQ==
-X-Received: by 2002:a67:cc16:0:b0:45f:8b65:28e2 with SMTP id q22-20020a67cc16000000b0045f8b6528e2mr8060279vsl.32.1699973562333;
-        Tue, 14 Nov 2023 06:52:42 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id c4-20020a05621401c400b006754772bfd4sm2944138qvt.21.2023.11.14.06.52.40
+        bh=HLGvE6w2nI/I1UWxr+lpIoR/ViMo1XgqtZtp21yYr4U=;
+        b=QLr/EOQ3stNu3lqKUrmYlWIpFSi8aKzILKwsOn2CylKYWGd6iM0WphvLKJ0p1cgBHL
+         RkdS5vtAIPPgVuOC/a1AdOIFXmsNsipYcCxBw7TNkLLDe42thgtImWcKJ11dISdSNfb7
+         A+HMfvTeFUquS/Im9dsLAwJUZGrKQwrN9B5PTfjLoUlEh/9YNyT8N7WY6oApR5vmiJvb
+         2iLbah3Ul2WJ8NJYLf2/++6eS+5cm816y6zNfOs56YL0Ja+IZ5rIuJ5hW1T//mCMnShU
+         qpwrd3AqAO6yiuHS/qgZ8dmI8KfVE9InCKpLY/pQ8Fr08XZgMvi024l5cCxB6OCgQomH
+         w+Zw==
+X-Gm-Message-State: AOJu0YxlJqBSb2qYt3gKNiyGQLTA7pcmX6YOfKvBI6z2XxRt7njq4SCx
+	yTwGlNyYr8GojlAzJMrgCDGCxw==
+X-Google-Smtp-Source: AGHT+IGJzqjH4yljoCElrUZVFhXFzpSL5gTIxu5k3uXhgG3mqXWu6aooLTEXVEWJO+CRKYVvjAIkhg==
+X-Received: by 2002:a05:6830:41:b0:6d6:4557:bb2 with SMTP id d1-20020a056830004100b006d645570bb2mr3148326otp.30.1699983689582;
+        Tue, 14 Nov 2023 09:41:29 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id 37-20020a631365000000b00578afd8e012sm5838502pgt.92.2023.11.14.09.41.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Nov 2023 06:52:41 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Tue, 14 Nov 2023 06:52:39 -0800
-From: Guenter Roeck <linux@roeck-us.net>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Jean Delvare <jdelvare@suse.com>, Joel Stanley <joel@jms.id.au>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>,
-	linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] hwmon: (aspeed-pwm-tacho) Fix -Wstringop-overflow
- warning in aspeed_create_fan_tach_channel()
-Message-ID: <6a28c219-b047-411b-ab43-02fc8f1824db@roeck-us.net>
-References: <ZVJ7JBFoULzY3VGx@work>
+        Tue, 14 Nov 2023 09:41:29 -0800 (PST)
+Date: Tue, 14 Nov 2023 09:41:28 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	Bill Wendling <morbo@google.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Kees Cook <keescook@chromium.org>,
+	kernel test robot <lkp@intel.com>,
+	Konstantin Runov <runebone1@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, linux-hardening@vger.kernel.org
+Subject: [GIT PULL] hardening fixes for v6.7-rc2
+Message-ID: <202311140940.5D358293F0@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZVJ7JBFoULzY3VGx@work>
 
-On Mon, Nov 13, 2023 at 01:38:12PM -0600, Gustavo A. R. Silva wrote:
-> Based on the documentation below, the maximum number of Fan tach
-> channels is 16:
-> 
-> Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt:45:
->  45 - aspeed,fan-tach-ch : should specify the Fan tach input channel.
->  46                 integer value in the range 0 through 15, with 0 indicating
->  47                 Fan tach channel 0 and 15 indicating Fan tach channel 15.
->  48                 At least one Fan tach input channel is required.
-> 
-> However, the compiler doesn't know that, and legitimaly warns about a potential
-> overwrite in array `u8 fan_tach_ch_source[16]` in `struct aspeed_pwm_tacho_data`,
-> in case `index` takes a value outside the boundaries of the array:
-> 
+Hi Linus,
 
-All that doesn't warrant introducing checkpatch warnings.
+Please pull these small hardening fixes for v6.7-rc2.
 
-> drivers/hwmon/aspeed-pwm-tacho.c:
-> 179 struct aspeed_pwm_tacho_data {
-> ...
-> 184         bool fan_tach_present[16];
-> ...
-> 193         u8 fan_tach_ch_source[16];
-> ...
-> 196 };
-> 
-> In function ‘aspeed_create_fan_tach_channel’,
->     inlined from ‘aspeed_create_fan’ at drivers/hwmon/aspeed-pwm-tacho.c:877:2,
->     inlined from ‘aspeed_pwm_tacho_probe’ at drivers/hwmon/aspeed-pwm-tacho.c:936:9:
-> drivers/hwmon/aspeed-pwm-tacho.c:751:49: warning: writing 1 byte into a region of size 0 [-Wstringop-overflow=]
->   751 |                 priv->fan_tach_ch_source[index] = pwm_source;
->       |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
-> drivers/hwmon/aspeed-pwm-tacho.c: In function ‘aspeed_pwm_tacho_probe’:
-> drivers/hwmon/aspeed-pwm-tacho.c:193:12: note: at offset [48, 255] into destination object ‘fan_tach_ch_source’ of size 16
->   193 |         u8 fan_tach_ch_source[16];
->       |            ^~~~~~~~~~~~~~~~~~
-> 
-> Fix this by sanity checking `index` before using it to index arrays of
-> size 16 elements in `struct aspeed_pwm_tacho_data`. Also, and just for
-> completeness, add a `pr_err()` message to display in the unlikely case
-> `0 > index >= 16`.
-> 
-> This is probably the last remaining -Wstringop-overflow issue in the
-> kernel, and this patch helps with the ongoing efforts to enable such
-> compiler option globally.
-> 
+Thanks!
 
-I am sorry, but this description almost completely misses the point.
-The real issue is that the values in aspeed,fan-tach-ch are not range
-checked, which can cause real problems if is elements are set to values
-larger than 15. This is a real problem and has nothing to do with string
-overflows.
+-Kees
 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  drivers/hwmon/aspeed-pwm-tacho.c | 18 ++++++++++++------
->  1 file changed, 12 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/hwmon/aspeed-pwm-tacho.c b/drivers/hwmon/aspeed-pwm-tacho.c
-> index 997df4b40509..092a81916325 100644
-> --- a/drivers/hwmon/aspeed-pwm-tacho.c
-> +++ b/drivers/hwmon/aspeed-pwm-tacho.c
-> @@ -166,6 +166,8 @@
->  
->  #define MAX_CDEV_NAME_LEN 16
->  
-> +#define MAX_ASPEED_FAN_TACH_CHANNELS 16
-> +
->  struct aspeed_cooling_device {
->  	char name[16];
->  	struct aspeed_pwm_tacho_data *priv;
-> @@ -181,7 +183,7 @@ struct aspeed_pwm_tacho_data {
->  	struct reset_control *rst;
->  	unsigned long clk_freq;
->  	bool pwm_present[8];
-> -	bool fan_tach_present[16];
-> +	bool fan_tach_present[MAX_ASPEED_FAN_TACH_CHANNELS];
->  	u8 type_pwm_clock_unit[3];
->  	u8 type_pwm_clock_division_h[3];
->  	u8 type_pwm_clock_division_l[3];
-> @@ -190,7 +192,7 @@ struct aspeed_pwm_tacho_data {
->  	u16 type_fan_tach_unit[3];
->  	u8 pwm_port_type[8];
->  	u8 pwm_port_fan_ctrl[8];
-> -	u8 fan_tach_ch_source[16];
-> +	u8 fan_tach_ch_source[MAX_ASPEED_FAN_TACH_CHANNELS];
->  	struct aspeed_cooling_device *cdev[8];
->  	const struct attribute_group *groups[3];
->  };
-> @@ -746,10 +748,14 @@ static void aspeed_create_fan_tach_channel(struct aspeed_pwm_tacho_data *priv,
->  
->  	for (val = 0; val < count; val++) {
->  		index = fan_tach_ch[val];
-> -		aspeed_set_fan_tach_ch_enable(priv->regmap, index, true);
-> -		priv->fan_tach_present[index] = true;
-> -		priv->fan_tach_ch_source[index] = pwm_source;
-> -		aspeed_set_fan_tach_ch_source(priv->regmap, index, pwm_source);
-> +		if (index < MAX_ASPEED_FAN_TACH_CHANNELS) {
-> +			aspeed_set_fan_tach_ch_enable(priv->regmap, index, true);
-> +			priv->fan_tach_present[index] = true;
-> +			priv->fan_tach_ch_source[index] = pwm_source;
-> +			aspeed_set_fan_tach_ch_source(priv->regmap, index, pwm_source);
-> +		} else {
-> +			pr_err("Invalid Fan Tach input channel %u\n.", index);
+The following changes since commit 9cca73d7b4bfec75b2fcef751015f31691afa792:
 
-This should use dev_err() (and, yes, that means dev needs to be passed
-as argument), and the function should return -EINVAL if this is
-encountered. Also, error handling should come first.
+  hwmon: (acpi_power_meter) replace open-coded kmemdup_nul (2023-10-24 14:10:53 -0700)
 
-		if (index >= MAX_ASPEED_FAN_TACH_CHANNELS) {
-			dev_err(dev, "Invalid Fan Tach input channel %u\n.", index);
-			return -EINVAL;
-		}
+are available in the Git repository at:
 
-Thanks,
-Guenter
+  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/hardening-v6.7-rc2
+
+for you to fetch changes up to 782ce431613cf08c3a00dca42ad925c3b1108d09:
+
+  gcc-plugins: latent_entropy: Fix typo (args -> argc) in plugin description (2023-11-14 09:32:47 -0800)
+
+----------------------------------------------------------------
+kernel hardening fixes for v6.7-rc2
+
+- stackleak: add declarations for global functions (Arnd Bergmann)
+
+- gcc-plugins: randstruct: Only warn about true flexible arrays (Kees Cook)
+
+- gcc-plugins: latent_entropy: Fix description typo (Konstantin Runov)
+
+----------------------------------------------------------------
+Arnd Bergmann (1):
+      stackleak: add declarations for global functions
+
+Kees Cook (1):
+      gcc-plugins: randstruct: Only warn about true flexible arrays
+
+Konstantin Runov (1):
+      gcc-plugins: latent_entropy: Fix typo (args -> argc) in plugin description
+
+ include/linux/stackleak.h                     |  6 ++++++
+ scripts/gcc-plugins/latent_entropy_plugin.c   |  4 ++--
+ scripts/gcc-plugins/randomize_layout_plugin.c | 10 ----------
+ 3 files changed, 8 insertions(+), 12 deletions(-)
+
+-- 
+Kees Cook
