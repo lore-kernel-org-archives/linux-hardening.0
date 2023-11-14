@@ -1,62 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073D3125A2
-	for <linux-hardening@vger.kernel.org>; Tue, 14 Nov 2023 08:03:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A71D4174B
+	for <linux-hardening@vger.kernel.org>; Tue, 14 Nov 2023 14:38:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RNLrjbY7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C1EEC433C8;
-	Tue, 14 Nov 2023 08:03:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699949021;
-	bh=en3QOVgsWe7HU+LBcOQv05X+cpfd58h4zxSJZwEEZqM=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=RNLrjbY7hsz6H1MAKpEq1aYBxYWTS2sp4lE8aqXE0aqNjqocX2M8gCeyNnzNXe4I6
-	 5Cv4qDunlExXySHepa6L1+ItxDqN/W2XT1GNoEmTdHDVSs43uLYJtvusIakBHFnfB5
-	 +hDuXFrd0Qbvu60PGgdcUPZFHvc+g6od//sJdMQhtkeZ0BPfnq0OXL+E/cuawWAl+X
-	 mj9BTo/MSPlDKcfOS/xKaGZuOFg6Z1D6N8kUnqp66azpDeHTfuHxKj4B0DzLTofUkk
-	 vER7GkbUtwnnx2IkpDkkgV8bxeHqBLUBzKqc+Rt5+mxHpz9I/aVoy67XYCZ6ztOmve
-	 a/lxqtbMuJaKw==
-From: Kalle Valo <kvalo@kernel.org>
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: Ping-Ke Shih <pkshih@realtek.com>,  "Gustavo A. R. Silva"
- <gustavoars@kernel.org>,  "linux-wireless@vger.kernel.org"
- <linux-wireless@vger.kernel.org>,  "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>,  "linux-hardening@vger.kernel.org"
- <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH][next] wifi: rtw89: coex: Fix -Wstringop-overflow
- warnings in _append_tdma()
-References: <ZVJ6lRCRaywGktxJ@work>
-	<fd0d79048efa47868173c5fd8950b956@realtek.com>
-	<192fbb0d-f4f6-4384-98d8-b7422349dafb@embeddedor.com>
-Date: Tue, 14 Nov 2023 10:03:37 +0200
-In-Reply-To: <192fbb0d-f4f6-4384-98d8-b7422349dafb@embeddedor.com> (Gustavo A.
-	R. Silva's message of "Mon, 13 Nov 2023 19:23:49 -0600")
-Message-ID: <871qcsahie.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OyHS/uUA"
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81D91D4D;
+	Tue, 14 Nov 2023 06:38:34 -0800 (PST)
+Received: by mail-wr1-x42b.google.com with SMTP id ffacd0b85a97d-32f9268bf8cso3509354f8f.0;
+        Tue, 14 Nov 2023 06:38:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1699972713; x=1700577513; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Vorw/gu3GSENL4iOEf1h3n+d1k2FLNe0fLO0LG+3W6c=;
+        b=OyHS/uUAheVZfq33d9mXkEL8bMthKdvS02PXgisJW/QtGv4TuBDHv8150Ctp4O6eaH
+         Kb9LNn4XpGnaPxTPMTtGHftJPeNAKXDbNs/D9nYFSSkpB4SWLnc07c2Y5g0uI1LBrGwO
+         aoV0VRV1tARhgds7Qa8CVxy+s7qHeZ7Vne1Zqb/V9lEeobZBOo6g035V2s6REzYMmi0K
+         0xlMNh6EgROn1bauq6m3ZjYIQwwuDwd1xykiUK/j+ObrWmWsRgg/R4wggQI1uSS23yI7
+         N/WCS2kZp+05CEkCJc1ES2546GCQN+p/DFWJYxAfnTBOK6WVYUkjCNmRq76qxOxj4PYY
+         KEjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699972713; x=1700577513;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Vorw/gu3GSENL4iOEf1h3n+d1k2FLNe0fLO0LG+3W6c=;
+        b=w5jhK/W0znUOKfTOGbSw5rSmhtzRPVW/kwYTXWR2/5zNvGobGu29kpq18yZWTMXWE6
+         o435WgCCZC+PlwKBDnqzCzyfTOz9msdxrC32JxqctmWeIqB1fZJB83LC7IvyBO5xnmQt
+         HX6SZRxOYyBslXVBiqRjGZehDz++Q8awo+IL6vcg7EIBQw1s7OuVCtf/sTKQQlKTTJBR
+         4nV4+E2yn4QAHci1vmKCBuOHHh8O0lBAv9zc4uIf8dPIRCneoxLnVinylWjlzGHwTPUb
+         4ZEzjy7b0ezkyEhG5vDYK5O1SuMtNFjOmYJquZ0Xyxmv02L5UiS2T/NV3VdHshR5gChJ
+         uIrA==
+X-Gm-Message-State: AOJu0Ywlg/cd1y2wSEhpLHMX2wWfyUvMc/uzK6iWquei1qlcRI2IPQi7
+	me9GhmJsk76HUIl68hK8xC3YpCDT+Zg3QGEpI08=
+X-Google-Smtp-Source: AGHT+IEa3756+IK7kLn8TfUIhyxRe5b/b+mREq0xSgDtiRMc+7zmEFv+NGYQSChhd2xJgv/8L7sNxuGpwYP0239K3rE=
+X-Received: by 2002:a05:6000:184c:b0:32d:a022:8559 with SMTP id
+ c12-20020a056000184c00b0032da0228559mr6469652wri.47.1699972712797; Tue, 14
+ Nov 2023 06:38:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20231112095353.579855-1-debug.penguin32@gmail.com>
+ <2655833.BddDVKsqQX@oscar> <CALk6UxoRHWsJYuTcqg7zvf5rxGwMQymMpjGuSEw3d+syAVyt=g@mail.gmail.com>
+ <13392533.uLZWGnKmhe@oscar>
+In-Reply-To: <13392533.uLZWGnKmhe@oscar>
+From: Ronald Monthero <debug.penguin32@gmail.com>
+Date: Wed, 15 Nov 2023 00:38:21 +1000
+Message-ID: <CALk6UxqF26rpNi1wD1Q8VmX6X-woe5YuuRK-Uk7bNcwqsRFKZA@mail.gmail.com>
+Subject: Re: [PATCH] qnx4: fix to avoid panic due to buffer overflow
+To: Anders Larsen <al@alarsen.net>
+Cc: keescook@chromium.org, gustavoars@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Niek Nooijens <nieknooijens@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-"Gustavo A. R. Silva" <gustavo@embeddedor.com> writes:
-
->> wireless-next has taken my patch [1] that is identical to yours.
+On Tue, Nov 14, 2023 at 1:40=E2=80=AFAM Anders Larsen <al@alarsen.net> wrot=
+e:
 >
-> Great!
+< Snipped>
 >
-> I had mine ready on Oct 31, but I was waiting for the merge window to close
-> before sending it.
+> sizeof(de->di_fname) is evaluated as QNX4_SHORT_NAME_MAX already at compi=
+le
+> time, see the definition of di_fname in uapi/linux/qnx4_fs.h
+>
+> I agree that the code is confusing, as 'de' is declared as a pointer to a
+> struct qnx4_inode_entry but in reality points to a struct qnx4_link_info =
+iff
+> QNX4_FILE_LINK is set in de->di_status.
+> (Note that the corresponding field dl_status in qnx4_link_info is at the =
+same
+> offset as di_status in qnx4_inode_entry - that's the disk layout.)
+>
 
-BTW we keep wireless-next open also during merge windows. So no need to
-hold up wireless patches because of the merge window. I know it's
-confusing that we do differently than how net-next works but this is
-easier for us, less patch build up.
+Thanks for the details, yes in  struct qnx4_inode_entry  its size
+char di_fname[QNX4_SHORT_NAME_MAX];
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+< snipped>
+>
+> Niek reported that this fix improved the situation, but he later got a cr=
+ash,
+> albeit at a different place (but still within the qnx4fs).
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Yes I saw that Niek has shared the second crash dump stack in above email t=
+hread
+and also in [1] Bugzilla 218111.The dump stack of the crash looks to
+be doing a similar
+lookup call context, do_statx =3D> vfs_statx =3D> filename_lookup =3D>
+qn4x_lookup =3D> fortify_panic ( )
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=3D218111#c4
+
+But  I also see a softlockup also in the dump stack, so something in
+their environment
+is causing softlock ups.  And that tallies with the symptoms of system
+freeze that Niek
+mentioned " I can mount and view the directories, but after several hours
+my system froze up again."
+
+watchdog: BUG: soft lockup - CPU#7 stuck for 26s! [pool-gvfsd-admi:31952]  =
+ <<<<
+
+It's possible the softlockups were occurring on fews of the CPUs on the sys=
+tem
+for a few hours before the crash occurred that caused a system slow down.
+
+BR,
+Ronald
