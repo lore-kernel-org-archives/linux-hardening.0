@@ -1,113 +1,185 @@
 Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A71D4174B
-	for <linux-hardening@vger.kernel.org>; Tue, 14 Nov 2023 14:38:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DDC84123B;
+	Tue, 14 Nov 2023 14:52:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OyHS/uUA"
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81D91D4D;
-	Tue, 14 Nov 2023 06:38:34 -0800 (PST)
-Received: by mail-wr1-x42b.google.com with SMTP id ffacd0b85a97d-32f9268bf8cso3509354f8f.0;
-        Tue, 14 Nov 2023 06:38:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YO2lJABL"
+Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 630B61B5;
+	Tue, 14 Nov 2023 06:52:43 -0800 (PST)
+Received: by mail-vs1-xe30.google.com with SMTP id ada2fe7eead31-45da94f4b90so2449356137.3;
+        Tue, 14 Nov 2023 06:52:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699972713; x=1700577513; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Vorw/gu3GSENL4iOEf1h3n+d1k2FLNe0fLO0LG+3W6c=;
-        b=OyHS/uUAheVZfq33d9mXkEL8bMthKdvS02PXgisJW/QtGv4TuBDHv8150Ctp4O6eaH
-         Kb9LNn4XpGnaPxTPMTtGHftJPeNAKXDbNs/D9nYFSSkpB4SWLnc07c2Y5g0uI1LBrGwO
-         aoV0VRV1tARhgds7Qa8CVxy+s7qHeZ7Vne1Zqb/V9lEeobZBOo6g035V2s6REzYMmi0K
-         0xlMNh6EgROn1bauq6m3ZjYIQwwuDwd1xykiUK/j+ObrWmWsRgg/R4wggQI1uSS23yI7
-         N/WCS2kZp+05CEkCJc1ES2546GCQN+p/DFWJYxAfnTBOK6WVYUkjCNmRq76qxOxj4PYY
-         KEjA==
+        d=gmail.com; s=20230601; t=1699973562; x=1700578362; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LIQbkwE4qYiMmkgrrvrC/vRWElOWAUQTAZF8XUTl38o=;
+        b=YO2lJABLXhI9ES562p/w5irK8OIZx27RJYMoADNqLgD2rcUCzpHZIIfDYpqsizyQwy
+         351CiuJ866I+tqrKvOlc7UQnC0zhhtojjOGXWRyHw9Um95xkLziwEzk5doDvg0CSwGYh
+         VR3R4g+UggljBnQ9dNqgSDDUjPrAkfDKzWFpBPznZMq/5wgXWDy6zRotsBzvMtsLonuw
+         9EvgbE5D8LPBNwucKHisrosKzL/gcCSyvfByolHl3fFPdWzUcPlkTuwZJPwfvY0Qx7Ze
+         7T8lzMdQ2Il8+A4RPkJJQAI2FxtaiS5NnPzi7ZgTrG1vSVCnlw9NNEF96tnhL8Mx1xjF
+         lm6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699972713; x=1700577513;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Vorw/gu3GSENL4iOEf1h3n+d1k2FLNe0fLO0LG+3W6c=;
-        b=w5jhK/W0znUOKfTOGbSw5rSmhtzRPVW/kwYTXWR2/5zNvGobGu29kpq18yZWTMXWE6
-         o435WgCCZC+PlwKBDnqzCzyfTOz9msdxrC32JxqctmWeIqB1fZJB83LC7IvyBO5xnmQt
-         HX6SZRxOYyBslXVBiqRjGZehDz++Q8awo+IL6vcg7EIBQw1s7OuVCtf/sTKQQlKTTJBR
-         4nV4+E2yn4QAHci1vmKCBuOHHh8O0lBAv9zc4uIf8dPIRCneoxLnVinylWjlzGHwTPUb
-         4ZEzjy7b0ezkyEhG5vDYK5O1SuMtNFjOmYJquZ0Xyxmv02L5UiS2T/NV3VdHshR5gChJ
-         uIrA==
-X-Gm-Message-State: AOJu0Ywlg/cd1y2wSEhpLHMX2wWfyUvMc/uzK6iWquei1qlcRI2IPQi7
-	me9GhmJsk76HUIl68hK8xC3YpCDT+Zg3QGEpI08=
-X-Google-Smtp-Source: AGHT+IEa3756+IK7kLn8TfUIhyxRe5b/b+mREq0xSgDtiRMc+7zmEFv+NGYQSChhd2xJgv/8L7sNxuGpwYP0239K3rE=
-X-Received: by 2002:a05:6000:184c:b0:32d:a022:8559 with SMTP id
- c12-20020a056000184c00b0032da0228559mr6469652wri.47.1699972712797; Tue, 14
- Nov 2023 06:38:32 -0800 (PST)
+        d=1e100.net; s=20230601; t=1699973562; x=1700578362;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LIQbkwE4qYiMmkgrrvrC/vRWElOWAUQTAZF8XUTl38o=;
+        b=faQHfH8ivXiR7SY6gxcrSL1o38OeC4CpuJc1pwx1dSmlgTeOBLfnz8GGtgaptQr5IG
+         ITwuwyB+sIFyUAJFAkmKi3T77+vp5M96noMDzbvC00X2I5ZoS4GuXezW4UIIdMStzCy7
+         UhL5iFPwwj6DEb88IjeCEYms+Yw7pgKoSXEPAxM9gtg/VLjC54FEN0L19RLcWeQ6zSb8
+         5c3YzD5m+1CGHzrgphCKUD/ql3hGKjaD2NPNkbTfDCVNeWBNVmLDScP9MMHV3aXxfjeh
+         Q9Y61Bf8v+2YH+AApMJwSuXj4L2ehJQJEsuzAZ7My5lbqbWCV25/2pY0138sU5R+p/yx
+         Z5gg==
+X-Gm-Message-State: AOJu0YzW2fHMFdkuS7oBaR/o43u4UCgKmf64YaYTTAtVqBzUdf8sXrsu
+	dVIi9dIdCHZ7QT0rp68b6ct3KgfWTqY=
+X-Google-Smtp-Source: AGHT+IHAT5eAXs0OaMM9X2ywWIX9bE+jyDw4UB13bEFULtdfpf3ZE2T5zvAD66+57RF8WEXQFMTqwQ==
+X-Received: by 2002:a67:cc16:0:b0:45f:8b65:28e2 with SMTP id q22-20020a67cc16000000b0045f8b6528e2mr8060279vsl.32.1699973562333;
+        Tue, 14 Nov 2023 06:52:42 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id c4-20020a05621401c400b006754772bfd4sm2944138qvt.21.2023.11.14.06.52.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Nov 2023 06:52:41 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Tue, 14 Nov 2023 06:52:39 -0800
+From: Guenter Roeck <linux@roeck-us.net>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Jean Delvare <jdelvare@suse.com>, Joel Stanley <joel@jms.id.au>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>,
+	linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] hwmon: (aspeed-pwm-tacho) Fix -Wstringop-overflow
+ warning in aspeed_create_fan_tach_channel()
+Message-ID: <6a28c219-b047-411b-ab43-02fc8f1824db@roeck-us.net>
+References: <ZVJ7JBFoULzY3VGx@work>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231112095353.579855-1-debug.penguin32@gmail.com>
- <2655833.BddDVKsqQX@oscar> <CALk6UxoRHWsJYuTcqg7zvf5rxGwMQymMpjGuSEw3d+syAVyt=g@mail.gmail.com>
- <13392533.uLZWGnKmhe@oscar>
-In-Reply-To: <13392533.uLZWGnKmhe@oscar>
-From: Ronald Monthero <debug.penguin32@gmail.com>
-Date: Wed, 15 Nov 2023 00:38:21 +1000
-Message-ID: <CALk6UxqF26rpNi1wD1Q8VmX6X-woe5YuuRK-Uk7bNcwqsRFKZA@mail.gmail.com>
-Subject: Re: [PATCH] qnx4: fix to avoid panic due to buffer overflow
-To: Anders Larsen <al@alarsen.net>
-Cc: keescook@chromium.org, gustavoars@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Niek Nooijens <nieknooijens@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZVJ7JBFoULzY3VGx@work>
 
-On Tue, Nov 14, 2023 at 1:40=E2=80=AFAM Anders Larsen <al@alarsen.net> wrot=
-e:
->
-< Snipped>
->
-> sizeof(de->di_fname) is evaluated as QNX4_SHORT_NAME_MAX already at compi=
-le
-> time, see the definition of di_fname in uapi/linux/qnx4_fs.h
->
-> I agree that the code is confusing, as 'de' is declared as a pointer to a
-> struct qnx4_inode_entry but in reality points to a struct qnx4_link_info =
-iff
-> QNX4_FILE_LINK is set in de->di_status.
-> (Note that the corresponding field dl_status in qnx4_link_info is at the =
-same
-> offset as di_status in qnx4_inode_entry - that's the disk layout.)
->
+On Mon, Nov 13, 2023 at 01:38:12PM -0600, Gustavo A. R. Silva wrote:
+> Based on the documentation below, the maximum number of Fan tach
+> channels is 16:
+> 
+> Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt:45:
+>  45 - aspeed,fan-tach-ch : should specify the Fan tach input channel.
+>  46                 integer value in the range 0 through 15, with 0 indicating
+>  47                 Fan tach channel 0 and 15 indicating Fan tach channel 15.
+>  48                 At least one Fan tach input channel is required.
+> 
+> However, the compiler doesn't know that, and legitimaly warns about a potential
+> overwrite in array `u8 fan_tach_ch_source[16]` in `struct aspeed_pwm_tacho_data`,
+> in case `index` takes a value outside the boundaries of the array:
+> 
 
-Thanks for the details, yes in  struct qnx4_inode_entry  its size
-char di_fname[QNX4_SHORT_NAME_MAX];
+All that doesn't warrant introducing checkpatch warnings.
 
-< snipped>
->
-> Niek reported that this fix improved the situation, but he later got a cr=
-ash,
-> albeit at a different place (but still within the qnx4fs).
+> drivers/hwmon/aspeed-pwm-tacho.c:
+> 179 struct aspeed_pwm_tacho_data {
+> ...
+> 184         bool fan_tach_present[16];
+> ...
+> 193         u8 fan_tach_ch_source[16];
+> ...
+> 196 };
+> 
+> In function ‘aspeed_create_fan_tach_channel’,
+>     inlined from ‘aspeed_create_fan’ at drivers/hwmon/aspeed-pwm-tacho.c:877:2,
+>     inlined from ‘aspeed_pwm_tacho_probe’ at drivers/hwmon/aspeed-pwm-tacho.c:936:9:
+> drivers/hwmon/aspeed-pwm-tacho.c:751:49: warning: writing 1 byte into a region of size 0 [-Wstringop-overflow=]
+>   751 |                 priv->fan_tach_ch_source[index] = pwm_source;
+>       |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
+> drivers/hwmon/aspeed-pwm-tacho.c: In function ‘aspeed_pwm_tacho_probe’:
+> drivers/hwmon/aspeed-pwm-tacho.c:193:12: note: at offset [48, 255] into destination object ‘fan_tach_ch_source’ of size 16
+>   193 |         u8 fan_tach_ch_source[16];
+>       |            ^~~~~~~~~~~~~~~~~~
+> 
+> Fix this by sanity checking `index` before using it to index arrays of
+> size 16 elements in `struct aspeed_pwm_tacho_data`. Also, and just for
+> completeness, add a `pr_err()` message to display in the unlikely case
+> `0 > index >= 16`.
+> 
+> This is probably the last remaining -Wstringop-overflow issue in the
+> kernel, and this patch helps with the ongoing efforts to enable such
+> compiler option globally.
+> 
 
-Yes I saw that Niek has shared the second crash dump stack in above email t=
-hread
-and also in [1] Bugzilla 218111.The dump stack of the crash looks to
-be doing a similar
-lookup call context, do_statx =3D> vfs_statx =3D> filename_lookup =3D>
-qn4x_lookup =3D> fortify_panic ( )
-[1] https://bugzilla.kernel.org/show_bug.cgi?id=3D218111#c4
+I am sorry, but this description almost completely misses the point.
+The real issue is that the values in aspeed,fan-tach-ch are not range
+checked, which can cause real problems if is elements are set to values
+larger than 15. This is a real problem and has nothing to do with string
+overflows.
 
-But  I also see a softlockup also in the dump stack, so something in
-their environment
-is causing softlock ups.  And that tallies with the symptoms of system
-freeze that Niek
-mentioned " I can mount and view the directories, but after several hours
-my system froze up again."
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/hwmon/aspeed-pwm-tacho.c | 18 ++++++++++++------
+>  1 file changed, 12 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/hwmon/aspeed-pwm-tacho.c b/drivers/hwmon/aspeed-pwm-tacho.c
+> index 997df4b40509..092a81916325 100644
+> --- a/drivers/hwmon/aspeed-pwm-tacho.c
+> +++ b/drivers/hwmon/aspeed-pwm-tacho.c
+> @@ -166,6 +166,8 @@
+>  
+>  #define MAX_CDEV_NAME_LEN 16
+>  
+> +#define MAX_ASPEED_FAN_TACH_CHANNELS 16
+> +
+>  struct aspeed_cooling_device {
+>  	char name[16];
+>  	struct aspeed_pwm_tacho_data *priv;
+> @@ -181,7 +183,7 @@ struct aspeed_pwm_tacho_data {
+>  	struct reset_control *rst;
+>  	unsigned long clk_freq;
+>  	bool pwm_present[8];
+> -	bool fan_tach_present[16];
+> +	bool fan_tach_present[MAX_ASPEED_FAN_TACH_CHANNELS];
+>  	u8 type_pwm_clock_unit[3];
+>  	u8 type_pwm_clock_division_h[3];
+>  	u8 type_pwm_clock_division_l[3];
+> @@ -190,7 +192,7 @@ struct aspeed_pwm_tacho_data {
+>  	u16 type_fan_tach_unit[3];
+>  	u8 pwm_port_type[8];
+>  	u8 pwm_port_fan_ctrl[8];
+> -	u8 fan_tach_ch_source[16];
+> +	u8 fan_tach_ch_source[MAX_ASPEED_FAN_TACH_CHANNELS];
+>  	struct aspeed_cooling_device *cdev[8];
+>  	const struct attribute_group *groups[3];
+>  };
+> @@ -746,10 +748,14 @@ static void aspeed_create_fan_tach_channel(struct aspeed_pwm_tacho_data *priv,
+>  
+>  	for (val = 0; val < count; val++) {
+>  		index = fan_tach_ch[val];
+> -		aspeed_set_fan_tach_ch_enable(priv->regmap, index, true);
+> -		priv->fan_tach_present[index] = true;
+> -		priv->fan_tach_ch_source[index] = pwm_source;
+> -		aspeed_set_fan_tach_ch_source(priv->regmap, index, pwm_source);
+> +		if (index < MAX_ASPEED_FAN_TACH_CHANNELS) {
+> +			aspeed_set_fan_tach_ch_enable(priv->regmap, index, true);
+> +			priv->fan_tach_present[index] = true;
+> +			priv->fan_tach_ch_source[index] = pwm_source;
+> +			aspeed_set_fan_tach_ch_source(priv->regmap, index, pwm_source);
+> +		} else {
+> +			pr_err("Invalid Fan Tach input channel %u\n.", index);
 
-watchdog: BUG: soft lockup - CPU#7 stuck for 26s! [pool-gvfsd-admi:31952]  =
- <<<<
+This should use dev_err() (and, yes, that means dev needs to be passed
+as argument), and the function should return -EINVAL if this is
+encountered. Also, error handling should come first.
 
-It's possible the softlockups were occurring on fews of the CPUs on the sys=
-tem
-for a few hours before the crash occurred that caused a system slow down.
+		if (index >= MAX_ASPEED_FAN_TACH_CHANNELS) {
+			dev_err(dev, "Invalid Fan Tach input channel %u\n.", index);
+			return -EINVAL;
+		}
 
-BR,
-Ronald
+Thanks,
+Guenter
