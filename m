@@ -1,110 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5FBB3B2B5;
-	Mon, 13 Nov 2023 23:01:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i9WtHaBj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75249C433C8;
-	Mon, 13 Nov 2023 23:01:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699916481;
-	bh=a5TEmxZGsOjS/GgOYsqRiQG4AzGI2qCqIVQQVx91tgY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=i9WtHaBjxgZNRRRepi52KJnSqhpFkrISdLnHrYri6TTUMC0dkp5hIlSswUwYY+615
-	 VJgifQy9ZECPYLd30+p2eF1w9UhA/atOKRXqnkPW0sS66wrfk3CsvVbPlymSlPFfBZ
-	 vjObbevHr7UNBilp+T3qWs9D729WNg/smkw4oz55ioITTgryiYnefHaY1HLmi4Mcw+
-	 NIQ6dKxXiYJTJM57wvZkePlPX/8OSmghlUX5Hmt1dlg1uVqeeV3fXxl0vLlNwxNnBu
-	 IGxZdGJQX73KNZdooQksc8520SiAANdLiIrqSa2c8QWbu7rmImilmh6Jj0zSeKfpMN
-	 RfSIWWOTuOZqw==
-From: Saeed Mahameed <saeed@kernel.org>
-To: "David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Eric Dumazet <edumazet@google.com>
-Cc: Saeed Mahameed <saeedm@nvidia.com>,
-	netdev@vger.kernel.org,
-	Tariq Toukan <tariqt@nvidia.com>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-hardening@vger.kernel.org,
-	Kees Cook <keescook@chromium.org>
-Subject: [net-next 06/14] net/mlx5: simplify mlx5_set_driver_version string assignments
-Date: Mon, 13 Nov 2023 15:00:43 -0800
-Message-ID: <20231113230051.58229-7-saeed@kernel.org>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20231113230051.58229-1-saeed@kernel.org>
-References: <20231113230051.58229-1-saeed@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A998BBE6B
+	for <linux-hardening@vger.kernel.org>; Tue, 14 Nov 2023 00:37:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97C24D53;
+	Mon, 13 Nov 2023 16:37:20 -0800 (PST)
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 3AE0bB4V1435553, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 3AE0bB4V1435553
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 14 Nov 2023 08:37:11 +0800
+Received: from RTEXMBS06.realtek.com.tw (172.21.6.99) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.32; Tue, 14 Nov 2023 08:37:11 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXMBS06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.34; Tue, 14 Nov 2023 08:37:11 +0800
+Received: from RTEXMBS04.realtek.com.tw ([fe80::40c2:6c24:2df4:e6c7]) by
+ RTEXMBS04.realtek.com.tw ([fe80::40c2:6c24:2df4:e6c7%5]) with mapi id
+ 15.01.2375.007; Tue, 14 Nov 2023 08:37:11 +0800
+From: Ping-Ke Shih <pkshih@realtek.com>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Kalle Valo
+	<kvalo@kernel.org>
+CC: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Subject: RE: [PATCH][next] wifi: rtw89: coex: Fix -Wstringop-overflow warnings in _append_tdma()
+Thread-Topic: [PATCH][next] wifi: rtw89: coex: Fix -Wstringop-overflow
+ warnings in _append_tdma()
+Thread-Index: AQHaFmih5UyHqrARN0yPsbYpsf5i2LB4+ECQ
+Date: Tue, 14 Nov 2023 00:37:11 +0000
+Message-ID: <fd0d79048efa47868173c5fd8950b956@realtek.com>
+References: <ZVJ6lRCRaywGktxJ@work>
+In-Reply-To: <ZVJ6lRCRaywGktxJ@work>
+Accept-Language: en-US, zh-TW
+Content-Language: zh-TW
+x-originating-ip: [172.21.69.94]
+x-kse-serverinfo: RTEXMBS06.realtek.com.tw, 9
+x-kse-antispam-interceptor-info: fallback
+x-kse-antivirus-interceptor-info: fallback
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-Antivirus-Interceptor-Info: fallback
+X-KSE-AntiSpam-Interceptor-Info: fallback
 
-From: Justin Stitt <justinstitt@google.com>
-
-In total, just assigning this version string takes:
-(1) strncpy()'s
-(5) strlen()'s
-(3) strncat()'s
-(1) snprintf()'s
-(4) max_t()'s
-
-Moreover, `strncpy` is deprecated [1] and `strncat` really shouldn't be
-used either [2]. With this in mind, let's simply use a single
-`snprintf`.
-
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://elixir.bootlin.com/linux/v6.6-rc5/source/include/linux/fortify-string.h#L448 [2]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Cc: Kees Cook <keescook@chromium.org>
-Signed-off-by: Justin Stitt <justinstitt@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Saeed Mahameed <saeedm@nvidia.com>
----
- .../net/ethernet/mellanox/mlx5/core/main.c    | 20 +++----------------
- 1 file changed, 3 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/main.c b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-index a17152c1cbb2..bccf6e53556c 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-@@ -219,7 +219,6 @@ static void mlx5_set_driver_version(struct mlx5_core_dev *dev)
- 	int driver_ver_sz = MLX5_FLD_SZ_BYTES(set_driver_version_in,
- 					      driver_version);
- 	u8 in[MLX5_ST_SZ_BYTES(set_driver_version_in)] = {};
--	int remaining_size = driver_ver_sz;
- 	char *string;
- 
- 	if (!MLX5_CAP_GEN(dev, driver_version))
-@@ -227,22 +226,9 @@ static void mlx5_set_driver_version(struct mlx5_core_dev *dev)
- 
- 	string = MLX5_ADDR_OF(set_driver_version_in, in, driver_version);
- 
--	strncpy(string, "Linux", remaining_size);
--
--	remaining_size = max_t(int, 0, driver_ver_sz - strlen(string));
--	strncat(string, ",", remaining_size);
--
--	remaining_size = max_t(int, 0, driver_ver_sz - strlen(string));
--	strncat(string, KBUILD_MODNAME, remaining_size);
--
--	remaining_size = max_t(int, 0, driver_ver_sz - strlen(string));
--	strncat(string, ",", remaining_size);
--
--	remaining_size = max_t(int, 0, driver_ver_sz - strlen(string));
--
--	snprintf(string + strlen(string), remaining_size, "%u.%u.%u",
--		LINUX_VERSION_MAJOR, LINUX_VERSION_PATCHLEVEL,
--		LINUX_VERSION_SUBLEVEL);
-+	snprintf(string, driver_ver_sz, "Linux,%s,%u.%u.%u",
-+		 KBUILD_MODNAME, LINUX_VERSION_MAJOR,
-+		 LINUX_VERSION_PATCHLEVEL, LINUX_VERSION_SUBLEVEL);
- 
- 	/*Send the command*/
- 	MLX5_SET(set_driver_version_in, in, opcode,
--- 
-2.41.0
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogR3VzdGF2byBBLiBSLiBT
+aWx2YSA8Z3VzdGF2b2Fyc0BrZXJuZWwub3JnPg0KPiBTZW50OiBUdWVzZGF5LCBOb3ZlbWJlciAx
+NCwgMjAyMyAzOjM2IEFNDQo+IFRvOiBQaW5nLUtlIFNoaWggPHBrc2hpaEByZWFsdGVrLmNvbT47
+IEthbGxlIFZhbG8gPGt2YWxvQGtlcm5lbC5vcmc+DQo+IENjOiBsaW51eC13aXJlbGVzc0B2Z2Vy
+Lmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IEd1c3Rhdm8gQS4gUi4g
+U2lsdmENCj4gPGd1c3Rhdm9hcnNAa2VybmVsLm9yZz47IGxpbnV4LWhhcmRlbmluZ0B2Z2VyLmtl
+cm5lbC5vcmcNCj4gU3ViamVjdDogW1BBVENIXVtuZXh0XSB3aWZpOiBydHc4OTogY29leDogRml4
+IC1Xc3RyaW5nb3Atb3ZlcmZsb3cgd2FybmluZ3MgaW4gX2FwcGVuZF90ZG1hKCkNCj4gDQo+IENv
+cHkgYSBjb3VwbGUgb2Ygc3RydWN0dXJlcyBkaXJlY3RseSwgaW5zdGVhZCBvZiB1c2luZyBgbWVt
+Y3B5KClgLg0KPiANCg0Kd2lyZWxlc3MtbmV4dCBoYXMgdGFrZW4gbXkgcGF0Y2ggWzFdIHRoYXQg
+aXMgaWRlbnRpY2FsIHRvIHlvdXJzLg0KDQpbMV0gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvYWxs
+LzIwMjMxMTAyMDAzNzE2LjI1ODE1LTEtcGtzaGloQHJlYWx0ZWsuY29tLw0KDQoNCg==
