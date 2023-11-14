@@ -1,149 +1,165 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913352C188
-	for <linux-hardening@vger.kernel.org>; Tue, 14 Nov 2023 17:54:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8E4A26AD3;
+	Tue, 14 Nov 2023 19:53:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G0Y1WEEr"
-Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0141C10F
-	for <linux-hardening@vger.kernel.org>; Tue, 14 Nov 2023 09:54:22 -0800 (PST)
-Received: by mail-pg1-x52c.google.com with SMTP id 41be03b00d2f7-5c184b3bbc4so2111335a12.1
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Nov 2023 09:54:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1699984462; x=1700589262; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hrdY1ZR4Q+Pjc1+HNhPiQ63BW1u99aeTKPRNswitFCA=;
-        b=G0Y1WEErvqFZ5kwwfTRYJGzNXa+waDKEFT1sUQAe3DTEPWUH99hkkJkLarVDFqkWcA
-         UknWMEM39XkJR9GO0uk3g5a+/dMIwBwYCzdFZsDU02qdbUwVmvtp6K6BcXrgEe6WqAk3
-         Iv5OREkXfbWMQS/9+khFTm2CWvmzKlwrHAURY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699984462; x=1700589262;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hrdY1ZR4Q+Pjc1+HNhPiQ63BW1u99aeTKPRNswitFCA=;
-        b=R431OoDAZAqBHvtTLZLJTaicGrCRfgDP35k58943sz4Tzk6nCTjIQzn86rNv6ZpumS
-         hrxt6geEOpB0TFubBkZQOMZ+r8Hw09DV6TfAD9QWqofhhAu+vxysguhRv5HCxDW0HEFo
-         RrhxIMkxTBd+kQtLV+osJuI/3DRzPIfgXooTPXoNvLA91Xa5b8Vx57riXRrDaUpAbS2C
-         QWLqGS0M49j/WzS22mJ4K6BoH+RvFoaA/fHruuylNrJ2F6PxM5ujUqcq+1Dzd59L/IMx
-         Ii6l2yF8VyFqmhL/Fg0+MungBac/CZiHG29tTWHSEPx6OX7Q65xfda3U26uOtAHcma+e
-         3t/Q==
-X-Gm-Message-State: AOJu0YzdXwb8gRWeY7inv0Un0kQRRY318HVAi7x1AJRlZLENeXnFJW8w
-	LvNoJn7Z7NtQjSUohiJ+caViXg==
-X-Google-Smtp-Source: AGHT+IFUg+J09TcZCAJhZoHFTswXcZ10hiFJJUZnrS3jp9RzlcKeX5fyatdA/gCrVkIunDwikzW6QQ==
-X-Received: by 2002:a17:90a:9109:b0:280:3911:ae02 with SMTP id k9-20020a17090a910900b002803911ae02mr11509167pjo.16.1699984462429;
-        Tue, 14 Nov 2023 09:54:22 -0800 (PST)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id u5-20020a17090a1f0500b0026f4bb8b2casm8312670pja.6.2023.11.14.09.54.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Nov 2023 09:54:22 -0800 (PST)
-From: Kees Cook <keescook@chromium.org>
-To: Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: Kees Cook <keescook@chromium.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <kolga@netapp.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	linux-nfs@vger.kernel.org,
-	netdev@vger.kernel.org,
-	Azeem Shaikh <azeemshaikh38@gmail.com>,
-	linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xu1CUwPs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 473DBC433C8;
+	Tue, 14 Nov 2023 19:53:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1699991592;
+	bh=p5bXNYWZQPXVZtSAziETIAWqwitA5MwvAafu84FIsRc=;
+	h=Date:From:To:Cc:Subject:From;
+	b=Xu1CUwPsb8NHywQsuf0ZjveiUXv6X56buMrIIKqhntvic2H0v69ZAGSIpnJd4JGXq
+	 x62nDwx5EpPDgApZdmHcRyahh3cgVMVMcqSQuN0tHGMd5q9TjcJIwdd/AJWnvOybct
+	 BxyPFjHQ59HKLzh3aSNwATPGQCZXSmpoR6nVlFQUmAr7+xOGmRx3sX2RfXekyk5/gt
+	 +j28UfzElp+1DtYEdQl6NrFRsLL/3A9eJGxe64yy2d+x6FMpIrgIhI3mVMPK7Dt7jN
+	 wbXRG4wrJ9T76vOS1vvmbqI5iODtF/BUyde4KI/XcWhpaW/SpEkp2mTjDlnDjaMqCo
+	 VYw7dCdZvPMYQ==
+Date: Tue, 14 Nov 2023 13:53:08 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
+	Joel Stanley <joel@jms.id.au>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>
+Cc: linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] SUNRPC: Replace strlcpy() with strscpy()
-Date: Tue, 14 Nov 2023 09:54:18 -0800
-Message-Id: <20231114175407.work.410-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+Subject: [PATCH v2][next] hwmon: (aspeed-pwm-tacho) Fix -Wstringop-overflow
+ warning in aspeed_create_fan_tach_channel()
+Message-ID: <ZVPQJIP26dIzRAr6@work>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2378; i=keescook@chromium.org;
- h=from:subject:message-id; bh=N1VPITobY/yI/va1G46nkZ1pGxdXDMzA+jiQpmZmNmU=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlU7RK5LNw3u7eJ2oo5PdL/9L9IGtDYl8K0Xoal
- HDPpqOj/oWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZVO0SgAKCRCJcvTf3G3A
- Jq0iD/sFKbf7i/qmgj179OWaA7SkQjsqK3tB8NKWxC56IEin7jNT157s5tBxpsHoe85q4wwLdXd
- 5bDZy7lUuU7V7J0ohvwzqBpmTex/LrvSpybfaa3ZsfUzpIhUPpW1N+CnsepiCq1Zi2//QySsP68
- Wfr4f7fqlsmctP6WDblmEkQyLINhf86wgrvBm5jiJLtIA1ZoAo6u6btEaJG5mZt1cD1HOQoXuPz
- BmgOBw9EPbhJJZebaogHcNZJoB5EvPDecsUs1ZBNw0R3cqZ+la4e5bZbnHM/NwRM6Po16jfuV2r
- rW4ypkFb33NuOtEPUtqY7/CDJVTiSCMc5zxwT6PJLaEVbs5a5LLzQo8ipRlQKoCGeZu9I423Iua
- zlnHWrG5u5CafmpvzBfcsCL88FXrx0+xLuIb5iZ4qLl3RwQFvXONPnE2B8Lv6o3tIKXoFx7nqR+
- 49SAzhHsjtCTvpCnI/QhpjAL4k4HPdouprILdMs0t2W7CBpchwCEvdvfeCwHiATC4yVAoWgLE7i
- 5EWKQl0GLLXV8WHKkZntpXq3FGr0vJqodboDwZDQeik6mcJ9bI8qFSOyNxP4L8cI8AL9UUwpzAl
- 5p9/TnjzBNghRnm7FkDUMhQ8zTXZVRDsl1RaDZmpW9JZAl/T2VYnbRA3Eei5XkeWxD4h3zTOZC2
- xZQZEk3 At+o907Q==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 
-strlcpy() reads the entire source buffer first. This read may exceed
-the destination size limit. This is both inefficient and can lead
-to linear read overflows if a source string is not NUL-terminated[1].
-Additionally, it returns the size of the source string, not the
-resulting size of the destination string. In an effort to remove strlcpy()
-completely[2], replace strlcpy() here with strscpy().
+Based on the documentation below, the maximum number of Fan tach
+channels is 16:
 
-Explicitly handle the truncation case by returning the size of the
-resulting string.
+Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt:45:
+ 45 - aspeed,fan-tach-ch : should specify the Fan tach input channel.
+ 46                 integer value in the range 0 through 15, with 0 indicating
+ 47                 Fan tach channel 0 and 15 indicating Fan tach channel 15.
+ 48                 At least one Fan tach input channel is required.
 
-If "nodename" was ever longer than sizeof(clnt->cl_nodename) - 1, this
-change will fix a bug where clnt->cl_nodelen would end up thinking there
-were more characters in clnt->cl_nodename than there actually were,
-which might have lead to kernel memory content exposures.
+However, the compiler doesn't know that, and legitimaly warns about a potential
+overwrite in array `u8 fan_tach_ch_source[16]` in `struct aspeed_pwm_tacho_data`,
+in case `index` takes a value outside the boundaries of the array:
 
-Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: Anna Schumaker <anna@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>
-Cc: Jeff Layton <jlayton@kernel.org>
-Cc: Neil Brown <neilb@suse.de>
-Cc: Olga Kornievskaia <kolga@netapp.com>
-Cc: Dai Ngo <Dai.Ngo@oracle.com>
-Cc: Tom Talpey <tom@talpey.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: linux-nfs@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy [1]
-Link: https://github.com/KSPP/linux/issues/89 [2]
-Co-developed-by: Azeem Shaikh <azeemshaikh38@gmail.com>
-Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
+drivers/hwmon/aspeed-pwm-tacho.c:
+179 struct aspeed_pwm_tacho_data {
+...
+184         bool fan_tach_present[16];
+...
+193         u8 fan_tach_ch_source[16];
+196 };
+
+In function ‘aspeed_create_fan_tach_channel’,
+    inlined from ‘aspeed_create_fan’ at drivers/hwmon/aspeed-pwm-tacho.c:877:2,
+    inlined from ‘aspeed_pwm_tacho_probe’ at drivers/hwmon/aspeed-pwm-tacho.c:936:9:
+drivers/hwmon/aspeed-pwm-tacho.c:751:49: warning: writing 1 byte into a region of size 0 [-Wstringop-overflow=]
+  751 |                 priv->fan_tach_ch_source[index] = pwm_source;
+      |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
+drivers/hwmon/aspeed-pwm-tacho.c: In function ‘aspeed_pwm_tacho_probe’:
+drivers/hwmon/aspeed-pwm-tacho.c:193:12: note: at offset [48, 255] into destination object ‘fan_tach_ch_source’ of size 16
+  193 |         u8 fan_tach_ch_source[16];
+      |            ^~~~~~~~~~~~~~~~~~
+
+Fix this by sanity checking `index` before using it to index arrays of
+size 16 elements in `struct aspeed_pwm_tacho_data`. Also, pass `dev` as
+argument to function `aspeed_create_fan_tach_channel()`, and add an error
+message in case `index` is out-of-bounds, in which case return `-EINVAL`.
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- net/sunrpc/clnt.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+Changes in v2:
+ - Pass `dev` to function aspeed_create_fan_tach_channel() and return
+   -EINVAL in case of error. (Guenter)
+ - Update changelog text.
 
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index daa9582ec861..7afe02bdea4a 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -287,8 +287,14 @@ static struct rpc_xprt *rpc_clnt_set_transport(struct rpc_clnt *clnt,
+v1:
+ - Link: https://lore.kernel.org/linux-hardening/ZVJ7JBFoULzY3VGx@work/
+
+ drivers/hwmon/aspeed-pwm-tacho.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/hwmon/aspeed-pwm-tacho.c b/drivers/hwmon/aspeed-pwm-tacho.c
+index 997df4b40509..9a209e064e46 100644
+--- a/drivers/hwmon/aspeed-pwm-tacho.c
++++ b/drivers/hwmon/aspeed-pwm-tacho.c
+@@ -166,6 +166,8 @@
  
- static void rpc_clnt_set_nodename(struct rpc_clnt *clnt, const char *nodename)
- {
--	clnt->cl_nodelen = strlcpy(clnt->cl_nodename,
--			nodename, sizeof(clnt->cl_nodename));
-+	ssize_t copied;
+ #define MAX_CDEV_NAME_LEN 16
+ 
++#define MAX_ASPEED_FAN_TACH_CHANNELS 16
 +
-+	copied = strscpy(clnt->cl_nodename,
-+			 nodename, sizeof(clnt->cl_nodename));
-+
-+	clnt->cl_nodelen = copied < 0
-+				? sizeof(clnt->cl_nodename) - 1
-+				: copied;
+ struct aspeed_cooling_device {
+ 	char name[16];
+ 	struct aspeed_pwm_tacho_data *priv;
+@@ -181,7 +183,7 @@ struct aspeed_pwm_tacho_data {
+ 	struct reset_control *rst;
+ 	unsigned long clk_freq;
+ 	bool pwm_present[8];
+-	bool fan_tach_present[16];
++	bool fan_tach_present[MAX_ASPEED_FAN_TACH_CHANNELS];
+ 	u8 type_pwm_clock_unit[3];
+ 	u8 type_pwm_clock_division_h[3];
+ 	u8 type_pwm_clock_division_l[3];
+@@ -190,7 +192,7 @@ struct aspeed_pwm_tacho_data {
+ 	u16 type_fan_tach_unit[3];
+ 	u8 pwm_port_type[8];
+ 	u8 pwm_port_fan_ctrl[8];
+-	u8 fan_tach_ch_source[16];
++	u8 fan_tach_ch_source[MAX_ASPEED_FAN_TACH_CHANNELS];
+ 	struct aspeed_cooling_device *cdev[8];
+ 	const struct attribute_group *groups[3];
+ };
+@@ -737,7 +739,8 @@ static void aspeed_create_pwm_port(struct aspeed_pwm_tacho_data *priv,
+ 	aspeed_set_pwm_port_fan_ctrl(priv, pwm_port, INIT_FAN_CTRL);
  }
  
- static int rpc_client_register(struct rpc_clnt *clnt,
+-static void aspeed_create_fan_tach_channel(struct aspeed_pwm_tacho_data *priv,
++static int aspeed_create_fan_tach_channel(struct device *dev,
++					   struct aspeed_pwm_tacho_data *priv,
+ 					   u8 *fan_tach_ch,
+ 					   int count,
+ 					   u8 pwm_source)
+@@ -746,11 +749,17 @@ static void aspeed_create_fan_tach_channel(struct aspeed_pwm_tacho_data *priv,
+ 
+ 	for (val = 0; val < count; val++) {
+ 		index = fan_tach_ch[val];
++		if (index >= MAX_ASPEED_FAN_TACH_CHANNELS) {
++			dev_err(dev, "Invalid Fan Tach input channel %u\n.", index);
++			return -EINVAL;
++		}
+ 		aspeed_set_fan_tach_ch_enable(priv->regmap, index, true);
+ 		priv->fan_tach_present[index] = true;
+ 		priv->fan_tach_ch_source[index] = pwm_source;
+ 		aspeed_set_fan_tach_ch_source(priv->regmap, index, pwm_source);
+ 	}
++
++	return 0;
+ }
+ 
+ static int
+@@ -874,7 +883,10 @@ static int aspeed_create_fan(struct device *dev,
+ 					fan_tach_ch, count);
+ 	if (ret)
+ 		return ret;
+-	aspeed_create_fan_tach_channel(priv, fan_tach_ch, count, pwm_port);
++
++	ret = aspeed_create_fan_tach_channel(dev, priv, fan_tach_ch, count, pwm_port);
++	if (ret)
++		return ret;
+ 
+ 	return 0;
+ }
 -- 
 2.34.1
 
