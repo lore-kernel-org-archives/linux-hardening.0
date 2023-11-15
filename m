@@ -1,160 +1,249 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45E9C2C849
-	for <linux-hardening@vger.kernel.org>; Wed, 15 Nov 2023 14:46:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A908381CB;
+	Wed, 15 Nov 2023 15:23:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="q+zfKpq8";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="KEabs2NX"
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C39D7D5D;
-	Wed, 15 Nov 2023 06:46:29 -0800 (PST)
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AFE3iVJ001884;
-	Wed, 15 Nov 2023 14:46:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : message-id : references : date : in-reply-to : content-type :
- mime-version; s=corp-2023-03-30;
- bh=Yv2ln5eiDA5qUdEVtCQjLwSezGYjsJspiaAOeq8XIPU=;
- b=q+zfKpq8lwMEg+R857uJo9cb7WG//pOIsvTZv1MosXE4vOdxJbDbDVuezvfzMkWO2yVm
- T26hIE6sCWeJ0uOrBvj9ompZwPxHkbeJr+OVewmk3/nhZPhIP+ipwhy9/mmnNJqn4zWa
- i/ybbTWuvSdyAChD8liyIcCqzp7dAxLQbkKWcF/NTXCujgLtVT6MLiYaUqopeu3VpxYI
- +iORZl/c09dX6FvCrjS3DTrH7Btfno2NzuMOCjKngYWJLaEnjl0DiuDSRsXw5rroTFYw
- H792ArNl6hObaCipzU99efXGZK7Vh92ljXIeZl1XGfr3aLXJTajltgF460ynEDCr4+i7 8A== 
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ua2mdruyu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 15 Nov 2023 14:46:24 +0000
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3AFDr7rr006837;
-	Wed, 15 Nov 2023 14:46:23 GMT
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2041.outbound.protection.outlook.com [104.47.66.41])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3uaxh36uhm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 15 Nov 2023 14:46:23 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=O0bB7jwYFyVrIFddrbOoNdjXSwTtmE8zkQT2zdy0qY7mGC6hPz4N1Zzxd/lvHqEHgVMkbdmoCkFG6EBjh2q5qRFfoI7sii+OYlGowGL9VPe5kdv8iEaItLaxcvxDToNUM5qcXRWeW5zZAcPu70LsxX8w5eMnRmzt0y4WxWILMI81mPWpEsax4qoltkrWmMZ0vuxXPx7bktMk7eeKmPPdgxcUCJ/AcbtU314j+AAu3re+MeBPyuPI2PKFhg08ZeUUrWVqNjgyCSr78PzXi3+LEnGar6Rce7C9t3M6wq8PIvXE11XcUAWfOjcoVRdGjUwRQwbwGuIi/mgAxbyb2CXMRg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Yv2ln5eiDA5qUdEVtCQjLwSezGYjsJspiaAOeq8XIPU=;
- b=B9+4M5RXNwLDZI22vCx3VMTMIMx82goE8n+q5VUVGuU0tcLiIF8fBXupivR56L3YtkbfYMYnY8nPR4FC0T0Ob27UYSvsWvzpk6YH9m/C9GS5+Y6fOtxWQJ/gB8KHGLi6zUwGwzQzL6diUY9n1JLHcmbgqjXvTW1BP7cjviKkFvWP83xvZtvDsS+4r+7NeGtshdWISjutjnUpCQfyKHHsbZKyCDkFRW9LVnenQKbkMbyV0/z8CS0DydQ7okocadY8dU8C1vagtEr0o8El+DOtOhTHPNG+lyWC2e27uEmJXeO4xVkQ0jYxeud+2mWHrHfJw/hbpCJWNsqIa7u7xcG/fQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Yv2ln5eiDA5qUdEVtCQjLwSezGYjsJspiaAOeq8XIPU=;
- b=KEabs2NXAQyWvsaGroT9YrEcMlVNwzHUAastr/GKLakq08XlpsP02biVTnvvC3s3KA0dyJV3S9A8BzX+8lvTxE5gzXa3ndPUnHOGrWqrfRxUMBaprJvkTznxXSmHzHOWWNK6OXthAjkJz67cf9eEmAwJotWc9/RAdf6Tcdh0szM=
-Received: from PH0PR10MB4759.namprd10.prod.outlook.com (2603:10b6:510:3d::12)
- by BLAPR10MB5044.namprd10.prod.outlook.com (2603:10b6:208:326::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.20; Wed, 15 Nov
- 2023 14:46:21 +0000
-Received: from PH0PR10MB4759.namprd10.prod.outlook.com
- ([fe80::abe0:e274:435c:5660]) by PH0PR10MB4759.namprd10.prod.outlook.com
- ([fe80::abe0:e274:435c:5660%4]) with mapi id 15.20.6977.018; Wed, 15 Nov 2023
- 14:46:21 +0000
-To: Justin Stitt <justinstitt@google.com>
-Cc: James Smart <james.smart@broadcom.com>,
-        Ram Vegesna
- <ram.vegesna@broadcom.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] scsi: elx: libefc: replace deprecated strncpy with
- strscpy_pad/memcpy
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <yq1ttpn13d7.fsf@ca-mkp.ca.oracle.com>
-References: <20231026-strncpy-drivers-scsi-elx-libefc-efc_node-h-v2-1-5c083d0c13f4@google.com>
-Date: Wed, 15 Nov 2023 09:46:19 -0500
-In-Reply-To: <20231026-strncpy-drivers-scsi-elx-libefc-efc_node-h-v2-1-5c083d0c13f4@google.com>
-	(Justin Stitt's message of "Thu, 26 Oct 2023 01:53:13 +0000")
-Content-Type: text/plain
-X-ClientProxiedBy: PH8PR02CA0007.namprd02.prod.outlook.com
- (2603:10b6:510:2d0::18) To PH0PR10MB4759.namprd10.prod.outlook.com
- (2603:10b6:510:3d::12)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kpZZteBh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82E40C433C9;
+	Wed, 15 Nov 2023 15:23:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700061795;
+	bh=8xQ64PrJ2r1RKXD2ge4xYHHnqovHMM4KOyXknKJ04QU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kpZZteBhAL9H1KTmPyNx7ikQLfKMsMVaRL4GQcWRZZGPhrnujZQKScATqof0lddny
+	 MdWmFHCsJEQYXXL5wV3CMxKJXr2rrd903frBLnbRpkljLIhjCAvRZ5mEvw7Rc1ysi1
+	 Lb6KEvOncIF9cWGWdsuPZ/FwFevgpa4FpJeViewmLLm/YhC+BSg1JSoL04M8rPvPW5
+	 M4U6y3TeHoraU3PV/F939T5gNFeCIJpm//mTCDSid8GQ4NkXBlTLukwAccLS28sQN3
+	 3L41ZYUnq3ttFHXk0+O9y0X/Tex65d+iABwxzcGj7iXZvfFeyRTcgzUVL2WBomMrzN
+	 QqMGgCHQ69+ag==
+Date: Wed, 15 Nov 2023 08:23:12 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: David Gow <davidgow@google.com>
+Cc: Kees Cook <keescook@chromium.org>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	Rae Moar <rmoar@google.com>, dlatypov@google.com,
+	Maxime Ripard <mripard@kernel.org>,
+	Arthur Grillo <arthurgrillo@riseup.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	Sami Tolvanen <samitolvanen@google.com>, kunit-dev@googlegroups.com,
+	llvm@lists.linux.dev, linux-hardening@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	Benjamin Berg <benjamin.berg@intel.com>,
+	Richard Fitzgerald <rf@opensource.cirrus.com>,
+	linux-kernel@vger.kernel.org,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Emma Anholt <emma@anholt.net>, David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH 1/3] kunit: Add a macro to wrap a deferred action function
+Message-ID: <20231115152312.GA51310@dev-arch.thelio-3990X>
+References: <20231110200830.1832556-1-davidgow@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR10MB4759:EE_|BLAPR10MB5044:EE_
-X-MS-Office365-Filtering-Correlation-Id: 29b25f75-15f2-48dd-dbd8-08dbe5e9a238
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	qyvoi1rggAg3ogzl4EpRqjkAPVcL03EKtW8pFlscuK3nC5awXzmap1R4tAErQpYdZLlIEbdBNwkuGkqVFzPTUDqAR2ND2ghBon0K2y8/WSUrILSSplD8LCqiOE5Rz2J1ARb9NajYfqtRZ8hlcca2+UgcVw+16C7GsrFcuE2nc5OFpuF79qjUtrkJaoKDxaVrC1d9a4XvbtYkWvNGUDl7WDn+pPc+iQNRYhBllmUL/LB5TAV1A8znFkXnfn3/6RMC99SDuvKVSDrzsPFPGWgcGYizIWLiJRGaELei4pC5Urq7rlgHUToNn5QY4Ba6PChqCWMzEsapKKnSb8Sl3nVxzjbRfEM+SpSXwo6eih9Y+IGY0GDuGSrk3WyB7oC99docu3shA1sAOAfSCdoa3KIcXDkkxUd5cUOxWw1X2/olZSiw4g6Kh356++GSf+lH01wtM2x8xl3DvDJJK6kx2jOCld6hCKctssxhAVhqpQtNd1m9TvnecrrmjC1/ZkN8VE+cRujpk2VfdVT6r9ptASsLC65ucFkifbmP1dIzbbegdwjOSJk4Q8+BX2VFIwnK7LJn
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB4759.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(376002)(39860400002)(396003)(136003)(346002)(230922051799003)(64100799003)(451199024)(1800799009)(186009)(6486002)(478600001)(2906002)(6512007)(6506007)(36916002)(86362001)(5660300002)(316002)(66556008)(54906003)(66946007)(6916009)(66476007)(4326008)(8676002)(8936002)(558084003)(41300700001)(38100700002)(26005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?PyZXCHKZpvzV43NiUdXLsnScOWJMtXfeZt+vrWmqysOpz39poz3fCnsCusTZ?=
- =?us-ascii?Q?WcKycAR2TW4gaAyZIdgQ8dh8OH/Iofc2RR/Ut51wUoa1r2OhjqTSfxcPTHvP?=
- =?us-ascii?Q?y1MY9L/hnjVejQ7j2unEIJOX+y+TuPgQC+XPCSqTS0DAeVlO4rVP8R9Ey7ud?=
- =?us-ascii?Q?1sRRMb8N1j4F0EOKTNR4Jn3siEFAJ5hSX3A9YJ3iZO8l9j9HwEzsoCl5dJk9?=
- =?us-ascii?Q?sUyBEWMt0y/9G6DL9QT9C5gmNR8fJkWUadaDjhUvFmdN3u2ANxLO/NlAY5uM?=
- =?us-ascii?Q?Ysd8aYuU8ZaqNKqHsUIDBI13BGBAqAuTMp9MWOoDN+Y0ABLy+xkb/eT57MEi?=
- =?us-ascii?Q?eoXIKa8axzM3JddvVwZ8DXmuRJPHxhT7Pw66JkUOMih2VSE2RsNYsELvfVXK?=
- =?us-ascii?Q?0LYXQA0O6MV3wVsGCBagqnEGB3Owch7d5RN9SqCFvKMEq9nXwTWuvash+O9h?=
- =?us-ascii?Q?nCM/9f2ApbteSnTHOl66g0rxfBHwYoSB1KBRP4mTr/JPfTxslmztS+uNmuP/?=
- =?us-ascii?Q?nrrVoMnt0TQX2Z4y4wMeHoZOvklsjYcdLfZGeTZBrlq99hL9iDJFsFO4PVXq?=
- =?us-ascii?Q?5bGuNSMI0308SfGIM9KEaF3kF+tod0xfziotRc4GzM0mUgbKcXYo6ycO0iXf?=
- =?us-ascii?Q?vZln+L6NHuZjReuX2ljOKZ4Vy71/Vvmcz0uhF1aqm09jvNfbHI4XT3TrO23Y?=
- =?us-ascii?Q?YUyCtzw0TS7gWdwNKsS2FySqclcIWqtzRdjOFDDQORhsqqAuyzq/nxU9aOYV?=
- =?us-ascii?Q?KGlwOIIdEK88NzQmaZExkeCDc11REhNPcaILOAmf3L/hTwQGqDUFD/GcSvse?=
- =?us-ascii?Q?Ecs2LiLN08A3a4ojGgtt9yPxuEfGW/SOKNEsTqc3eBLc/omvB2bqKfyVhpky?=
- =?us-ascii?Q?zTIsgjtZV3/pMB5tKeZNfTQaQSmqVP3KsIOMuiX8h9j6iJ4a2EiOTJfCRcqj?=
- =?us-ascii?Q?COv913bWY12xYAudbG0AqD79jZg3tRioplSG/vtAIG+Y5+zBf4EYcEdYoUdY?=
- =?us-ascii?Q?YQeVZnXiU3jvSlx6RdBxH9DSHnniFbflOnZ8lDJ2XPHf8bVxjEkl+GJgphv7?=
- =?us-ascii?Q?mGAEIKmJNCHsGSbzTDe2UWfWitsQxwWAHhiZ963URrTGOdCRkjg5wAZvdGSw?=
- =?us-ascii?Q?ZjtEm5VQqdEcYQQGRUTQ5a9IduUaYybmvcmV+ZA3FLZj09YISs8gdEfYXXSg?=
- =?us-ascii?Q?cg9Z8GFs+L2jrjZGOrEcqimbSHbptuPmok/NZFyNjXD10R4J77Jr/epIuurH?=
- =?us-ascii?Q?g0oVvNDB7/ol1pMfITt3ws5aahEzBHIyjvc+g4HeJRdROMEcAUybDSwNZzDr?=
- =?us-ascii?Q?KrLHUWcV4FpFBuMWaqpw+xcbCUG+SO3vGWZJju0u35JMb3LvUuIfJEtZjqnU?=
- =?us-ascii?Q?9Yk6Nio8kDdtTmKm4zU91y9cafi1Gpl0VIKKv6Si6NS1UebRhlcGyrXasKWf?=
- =?us-ascii?Q?Wrxhq2v3osOgbKF3EdlVNNGodbCtqBOz63jXKJswRnCD7CnaFrFgIhKHiMf1?=
- =?us-ascii?Q?4DpCq60MLK3///gk+SyxnP67W//H9Qs1xDFzFdZxVBXPfg801oHWhFbgAcb7?=
- =?us-ascii?Q?v2VYZbRkIZ2wr9VXxazKhTjUPhFzb9N1WrwKWlYjIAoCoo7Yvm226XT+rB0B?=
- =?us-ascii?Q?jw=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	FSYM483te65+8R1qUq3aN9jg7lcgXsqhqY9ks77tCk6xMX4QHeTT9sQ1E/o3Qi+TM5cAL4alePpidXtv8feSVW7DOPnKw/nKKmnqZJ/rmEhlICvuaYmLS5eyd05IadzOWy286Wxj3was/v7Twgg2t9AzLx50ZM2kejAaAF80SELOIH0T47BgX2muben2WzSRn/0PtqCf71VG2KqPrzmDv0My5+xT3n4os3J4d2b18s/JQtUKhYM+h6wgwaN/xtt6JaCXV93euaSuQG+MuZuHQ8dP21iBnlGKo1K1DoEtufy6febVQvlc2BZT3SrK51S/+3TUXgBVUC1YK6oqBpTs24ME+JQe1QrXwwa8wj3EVDdWAQPUbrBFdED/GVBcBhf1sUz7DoIq+RWOzhmorL5IQt6ykD1HxC1wOVus1tuxqo70tEUYMAYSug5O5skS4F8Kq8ASziA/3p8kS9G/StNpgTDclwa6lOa76HAcdS6/xDkrhR2pZJAb1M1mKSAMKY8Ror715+YivSGXpSZxMrAXoqt81bjJOx3cIaiE9fsgUwRrVSDvyqiE7R0WuqQACh12MnZXcPo79tW4+1FodLc+9jPxuu17op1UyAro4vrVBNFKmhRPud888GCM9jxVEUETuMZcVDLqwkRu+7HvYo+frTBWJuFl854a/rXIFvyozYl9e4mrAU+Rt4gc13M+0RDJR7EFnjZubZ/g81wpLnyu7vjxB0oA2uLOMTZT916MqBVZCGfRE8UQ+WAnFXYy2WG+te56AE8hwY6Mcrk40cEya4UEU35IkZxyWRVVwb+sbMzh/F19flITqqUylCt3WjEMqffSjd0sJ6Kr/5K4WeR5RqaXJu+uaJvK7hYKVP8Luoo=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 29b25f75-15f2-48dd-dbd8-08dbe5e9a238
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB4759.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Nov 2023 14:46:21.6056
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: J+4n9uciMdiYltQ2WGpsjgG9i4MKN8KCmHBO78H8I4rvUkj+inZpjxRPH7jAGddrwhXtxUU8+siaulSUCjgIUvdAqlcC9VdxM8IsErw21DQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLAPR10MB5044
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-15_13,2023-11-15_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0
- malwarescore=0 phishscore=0 mlxlogscore=828 adultscore=0 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311060000 definitions=main-2311150113
-X-Proofpoint-GUID: Vujte0PedN_CjP3mGwTkI8ZrlG5WDkga
-X-Proofpoint-ORIG-GUID: Vujte0PedN_CjP3mGwTkI8ZrlG5WDkga
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231110200830.1832556-1-davidgow@google.com>
 
+Hi David,
 
-Justin,
+On Sat, Nov 11, 2023 at 04:08:26AM +0800, David Gow wrote:
+> KUnit's deferred action API accepts a void(*)(void *) function pointer
+> which is called when the test is exited. However, we very frequently
+> want to use existing functions which accept a single pointer, but which
+> may not be of type void*. While this is probably dodgy enough to be on
+> the wrong side of the C standard, it's been often used for similar
+> callbacks, and gcc's -Wcast-function-type seems to ignore cases where
+> the only difference is the type of the argument, assuming it's
+> compatible (i.e., they're both pointers to data).
+> 
+> However, clang 16 has introduced -Wcast-function-type-strict, which no
+> longer permits any deviation in function pointer type. This seems to be
+> because it'd break CFI, which validates the type of function calls.
+> 
+> This rather ruins our attempts to cast functions to defer them, and
+> leaves us with a few options. The one we've chosen is to implement a
+> macro which will generate a wrapper function which accepts a void*, and
+> casts the argument to the appropriate type.
+> 
+> For example, if you were trying to wrap:
+> void foo_close(struct foo *handle);
+> you could use:
+> KUNIT_DEFINE_ACTION_WRAPPER(kunit_action_foo_close,
+> 			    foo_close,
+> 			    struct foo *);
+> 
+> This would create a new kunit_action_foo_close() function, of type
+> kunit_action_t, which could be passed into kunit_add_action() and
+> similar functions.
+> 
+> In addition to defining this macro, update KUnit and its tests to use
+> it.
+> 
+> Link: https://github.com/ClangBuiltLinux/linux/issues/1750
+> Signed-off-by: David Gow <davidgow@google.com>
+> ---
+> 
+> This is a follow-up to the RFC here:
+> https://lore.kernel.org/linux-kselftest/20230915050125.3609689-1-davidgow@google.com/
+> 
+> There's no difference in the macro implementation, just an update to the
+> KUnit tests to use it. This version is intended to complement:
+> https://lore.kernel.org/all/20231106172557.2963-1-rf@opensource.cirrus.com/
+> 
+> There are also two follow-up patches in the series to use this macro in
+> various DRM tests.
+> 
+> Hopefully this will solve any CFI issues that show up with KUnit.
+> 
+> Thanks,
+> -- David
+> 
+> ---
 
-> strncpy() is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
+Prior to this series, there is indeed a crash when running the KUnit
+tests with CONFIG_CFI_CLANG=y:
 
-Applied to 6.8/scsi-staging, thanks!
+$ tools/testing/kunit/kunit.py run \
+    --alltests \
+    --arch x86_64 \
+    --kconfig_add CONFIG_CFI_CLANG=y \
+    --make_options LLVM=1 \
+    --timeout 30
+...
+[08:06:03] [ERROR] Test: sysctl_test: missing subtest result line!
+[08:06:03]     # module: sysctl_test
+[08:06:03]     1..10
+[08:06:03] CFI failure at __kunit_action_free+0x18/0x20 (target: kfree+0x0/0x80; expected type: 0xe82c6923)
+[08:06:03] invalid opcode: 0000 [#1] PREEMPT NOPTI
+[08:06:03] CPU: 0 PID: 53 Comm: kunit_try_catch Tainted: G                 N 6.7.0-rc1-00019-gc42d9eeef8e5 #3
+[08:06:03] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.2-14-g1e1da7a96300-prebuilt.qemu.org 04/01/2014
+[08:06:03] RIP: 0010:__kunit_action_free+0x18/0x20
+[08:06:03] Code: 00 00 b8 ae 55 f1 4d 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 4c 8b 5f 38 48 8b 7f 40 41 ba dd 96 d3 17 45 03 53 f1 74 02 <0f> 0b 2e e9 f0 b5 46 00 b8 fa f1 06 5e 90 90 90 90 90 90 90 90 90
+[08:06:03] RSP: 0018:ffffb0d2c00ebea0 EFLAGS: 00000292
+[08:06:03] RAX: 0000000000000001 RBX: ffff993d41949a80 RCX: ffff993d41949aa0
+[08:06:03] RDX: 0000000000000282 RSI: ffff993d41949a80 RDI: ffff993d4186b6b0
+[08:06:03] RBP: ffffb0d2c0013ad8 R08: ffffffffc9c84000 R09: 0000000000000400
+[08:06:03] R10: 00000000f707d502 R11: ffffffff8f33aa40 R12: ffff993d418d2e00
+[08:06:03] R13: ffff993d41a05600 R14: ffffb0d2c0013cc0 R15: ffff993d41949ae0
+[08:06:03] FS:  0000000000000000(0000) GS:ffffffff90049000(0000) knlGS:0000000000000000
+[08:06:03] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[08:06:03] CR2: ffff993d55c01000 CR3: 000000001563e000 CR4: 00000000000006f0
+[08:06:03] Call Trace:
+[08:06:03]  <TASK>
+[08:06:03]  ? __die+0xd6/0x120
+[08:06:03]  ? die+0x5f/0xa0
+[08:06:03]  ? do_trap+0x9b/0x180
+[08:06:03]  ? __kunit_action_free+0x18/0x20
+[08:06:03]  ? __kunit_action_free+0x18/0x20
+[08:06:03]  ? handle_invalid_op+0x64/0x80
+[08:06:03]  ? __kunit_action_free+0x18/0x20
+[08:06:03]  ? exc_invalid_op+0x38/0x60
+[08:06:03]  ? asm_exc_invalid_op+0x1a/0x20
+[08:06:03]  ? __cfi_kfree+0x10/0x10
+[08:06:03]  ? __kunit_action_free+0x18/0x20
+[08:06:03]  kunit_remove_resource+0x8f/0xf0
+[08:06:03]  kunit_cleanup+0x60/0xe0
+[08:06:03]  kunit_generic_run_threadfn_adapter+0x24/0x30
+[08:06:03]  ? __cfi_kunit_generic_run_threadfn_adapter+0x10/0x10
+[08:06:03]  kthread+0xd9/0xf0
+[08:06:03]  ? __cfi_kthread+0x10/0x10
+[08:06:03]  ret_from_fork+0x43/0x50
+[08:06:03]  ? __cfi_kthread+0x10/0x10
+[08:06:03]  ret_from_fork_asm+0x1a/0x30
+[08:06:03]  </TASK>
+[08:06:03] ---[ end trace 0000000000000000 ]---
+[08:06:03] RIP: 0010:__kunit_action_free+0x18/0x20
+...
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+With this series applied with
+https://lore.kernel.org/20231106172557.2963-1-rf@opensource.cirrus.com/,
+all the tests pass for arm64 and x86_64 on my machine. I see no
+remaining casts in the tree in this state. It seems like the
+documentation in Documentation/dev-tools/kunit/usage.rst may want to be
+updated to remove mention of casting to kunit_action_t as well?
+Regardless:
+
+Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+Tested-by: Nathan Chancellor <nathan@kernel.org>
+
+>  include/kunit/resource.h | 9 +++++++++
+>  lib/kunit/kunit-test.c   | 5 +----
+>  lib/kunit/test.c         | 6 ++++--
+>  3 files changed, 14 insertions(+), 6 deletions(-)
+> 
+> diff --git a/include/kunit/resource.h b/include/kunit/resource.h
+> index c7383e90f5c9..4110e13970dc 100644
+> --- a/include/kunit/resource.h
+> +++ b/include/kunit/resource.h
+> @@ -390,6 +390,15 @@ void kunit_remove_resource(struct kunit *test, struct kunit_resource *res);
+>  /* A 'deferred action' function to be used with kunit_add_action. */
+>  typedef void (kunit_action_t)(void *);
+>  
+> +/* We can't cast function pointers to kunit_action_t if CFI is enabled. */
+> +#define KUNIT_DEFINE_ACTION_WRAPPER(wrapper, orig, arg_type) \
+> +	static void wrapper(void *in) \
+> +	{ \
+> +		arg_type arg = (arg_type)in; \
+> +		orig(arg); \
+> +	}
+> +
+> +
+>  /**
+>   * kunit_add_action() - Call a function when the test ends.
+>   * @test: Test case to associate the action with.
+> diff --git a/lib/kunit/kunit-test.c b/lib/kunit/kunit-test.c
+> index de2113a58fa0..ee6927c60979 100644
+> --- a/lib/kunit/kunit-test.c
+> +++ b/lib/kunit/kunit-test.c
+> @@ -538,10 +538,7 @@ static struct kunit_suite kunit_resource_test_suite = {
+>  #if IS_BUILTIN(CONFIG_KUNIT_TEST)
+>  
+>  /* This avoids a cast warning if kfree() is passed direct to kunit_add_action(). */
+> -static void kfree_wrapper(void *p)
+> -{
+> -	kfree(p);
+> -}
+> +KUNIT_DEFINE_ACTION_WRAPPER(kfree_wrapper, kfree, const void *);
+>  
+>  static void kunit_log_test(struct kunit *test)
+>  {
+> diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+> index f2eb71f1a66c..0308865194bb 100644
+> --- a/lib/kunit/test.c
+> +++ b/lib/kunit/test.c
+> @@ -772,6 +772,8 @@ static struct notifier_block kunit_mod_nb = {
+>  };
+>  #endif
+>  
+> +KUNIT_DEFINE_ACTION_WRAPPER(kfree_action_wrapper, kfree, const void *)
+> +
+>  void *kunit_kmalloc_array(struct kunit *test, size_t n, size_t size, gfp_t gfp)
+>  {
+>  	void *data;
+> @@ -781,7 +783,7 @@ void *kunit_kmalloc_array(struct kunit *test, size_t n, size_t size, gfp_t gfp)
+>  	if (!data)
+>  		return NULL;
+>  
+> -	if (kunit_add_action_or_reset(test, (kunit_action_t *)kfree, data) != 0)
+> +	if (kunit_add_action_or_reset(test, kfree_action_wrapper, data) != 0)
+>  		return NULL;
+>  
+>  	return data;
+> @@ -793,7 +795,7 @@ void kunit_kfree(struct kunit *test, const void *ptr)
+>  	if (!ptr)
+>  		return;
+>  
+> -	kunit_release_action(test, (kunit_action_t *)kfree, (void *)ptr);
+> +	kunit_release_action(test, kfree_action_wrapper, (void *)ptr);
+>  }
+>  EXPORT_SYMBOL_GPL(kunit_kfree);
+>  
+> -- 
+> 2.42.0.869.gea05f2083d-goog
+> 
