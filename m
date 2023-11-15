@@ -1,39 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DAE8446AD;
-	Wed, 15 Nov 2023 19:36:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BF103A8F3;
+	Wed, 15 Nov 2023 19:52:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MU7zKnRs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3580FC433CC;
-	Wed, 15 Nov 2023 19:36:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700077017;
-	bh=a5TEmxZGsOjS/GgOYsqRiQG4AzGI2qCqIVQQVx91tgY=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="NrZXF8cg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD90AC433C9;
+	Wed, 15 Nov 2023 19:52:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1700077951;
+	bh=DqVbYuSNPmY8Fn6zZg8Lxb9JEGIBcwZW/odk8MwwSzo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MU7zKnRsr18TgRcOHpP16p92hycWZOc7/lY2ms0/b5JLGqLfoGaLCIOVFlV1upIpL
-	 /EWHmQ5hX2xpNFqDc6nCjeVKxuc+EwfWqvTAs+3n+I+UU1FeZL+uprhp4JWo+CvV33
-	 1i603fWtLQ5IRedO/PauSh1YuCQuI93yO8JO0N3ZWQLhtDAkNARFQx8J9iBoXDTV98
-	 BarLW0onVowNqa9OG6DmqNMJhwaI9jdd8g35oxsRnXwCmCYkL+gITwuACN3s6kR/w8
-	 cAuhmoSS/q7y3Iqyb5KxbCzoIE0tAAPKNR8c0+20ePMN2PcS0PzA1nfkHpwnq++6Dc
-	 QazMskP59bFfQ==
-From: Saeed Mahameed <saeed@kernel.org>
-To: "David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Eric Dumazet <edumazet@google.com>
-Cc: Saeed Mahameed <saeedm@nvidia.com>,
-	netdev@vger.kernel.org,
-	Tariq Toukan <tariqt@nvidia.com>,
-	Justin Stitt <justinstitt@google.com>,
+	b=NrZXF8cgY4+ugN+B52vzYTA55nGbfWd0Ycc+awVRyboBOF/8sIrsNOj6Gm+PZcXH9
+	 zMZNq4gRnr5ETmWQ32q1FW3dNfBAQOgY8pRfJCbRkb3wJh+/48GLO443oPSi4xEMaS
+	 WsA7g0T+bTTc2VB2HglzhegzQm+hUZNo6oP9bplw=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	Arnd Bergmann <arnd@arndb.de>,
+	Andy Shevchenko <andy@kernel.org>,
 	linux-hardening@vger.kernel.org,
-	Kees Cook <keescook@chromium.org>
-Subject: [net-next V2 06/13] net/mlx5: simplify mlx5_set_driver_version string assignments
-Date: Wed, 15 Nov 2023 11:36:42 -0800
-Message-ID: <20231115193649.8756-7-saeed@kernel.org>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20231115193649.8756-1-saeed@kernel.org>
-References: <20231115193649.8756-1-saeed@kernel.org>
+	Kees Cook <keescook@chromium.org>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.1 018/379] string: Adjust strtomem() logic to allow for smaller sources
+Date: Wed, 15 Nov 2023 14:21:33 -0500
+Message-ID: <20231115192646.235811582@linuxfoundation.org>
+X-Mailer: git-send-email 2.42.1
+In-Reply-To: <20231115192645.143643130@linuxfoundation.org>
+References: <20231115192645.143643130@linuxfoundation.org>
+User-Agent: quilt/0.67
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -42,69 +40,78 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Justin Stitt <justinstitt@google.com>
+6.1-stable review patch.  If anyone has any objections, please let me know.
 
-In total, just assigning this version string takes:
-(1) strncpy()'s
-(5) strlen()'s
-(3) strncat()'s
-(1) snprintf()'s
-(4) max_t()'s
+------------------
 
-Moreover, `strncpy` is deprecated [1] and `strncat` really shouldn't be
-used either [2]. With this in mind, let's simply use a single
-`snprintf`.
+From: Kees Cook <keescook@chromium.org>
 
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://elixir.bootlin.com/linux/v6.6-rc5/source/include/linux/fortify-string.h#L448 [2]
-Link: https://github.com/KSPP/linux/issues/90
+[ Upstream commit 0e108725f6cc5b3be9e607f89c9fbcbb236367b7 ]
+
+Arnd noticed we have a case where a shorter source string is being copied
+into a destination byte array, but this results in a strnlen() call that
+exceeds the size of the source. This is seen with -Wstringop-overread:
+
+In file included from ../include/linux/uuid.h:11,
+                 from ../include/linux/mod_devicetable.h:14,
+                 from ../include/linux/cpufeature.h:12,
+                 from ../arch/x86/coco/tdx/tdx.c:7:
+../arch/x86/coco/tdx/tdx.c: In function 'tdx_panic.constprop':
+../include/linux/string.h:284:9: error: 'strnlen' specified bound 64 exceeds source size 60 [-Werror=stringop-overread]
+  284 |         memcpy_and_pad(dest, _dest_len, src, strnlen(src, _dest_len), pad); \
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../arch/x86/coco/tdx/tdx.c:124:9: note: in expansion of macro 'strtomem_pad'
+  124 |         strtomem_pad(message.str, msg, '\0');
+      |         ^~~~~~~~~~~~
+
+Use the smaller of the two buffer sizes when calling strnlen(). When
+src length is unknown (SIZE_MAX), it is adjusted to use dest length,
+which is what the original code did.
+
+Reported-by: Arnd Bergmann <arnd@arndb.de>
+Fixes: dfbafa70bde2 ("string: Introduce strtomem() and strtomem_pad()")
+Tested-by: Arnd Bergmann <arnd@arndb.de>
+Cc: Andy Shevchenko <andy@kernel.org>
 Cc: linux-hardening@vger.kernel.org
-Cc: Kees Cook <keescook@chromium.org>
-Signed-off-by: Justin Stitt <justinstitt@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Saeed Mahameed <saeedm@nvidia.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/mellanox/mlx5/core/main.c    | 20 +++----------------
- 1 file changed, 3 insertions(+), 17 deletions(-)
+ include/linux/string.h | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/main.c b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-index a17152c1cbb2..bccf6e53556c 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-@@ -219,7 +219,6 @@ static void mlx5_set_driver_version(struct mlx5_core_dev *dev)
- 	int driver_ver_sz = MLX5_FLD_SZ_BYTES(set_driver_version_in,
- 					      driver_version);
- 	u8 in[MLX5_ST_SZ_BYTES(set_driver_version_in)] = {};
--	int remaining_size = driver_ver_sz;
- 	char *string;
+diff --git a/include/linux/string.h b/include/linux/string.h
+index cf7607b321027..26ab8928d8661 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -276,10 +276,12 @@ void memcpy_and_pad(void *dest, size_t dest_len, const void *src, size_t count,
+  */
+ #define strtomem_pad(dest, src, pad)	do {				\
+ 	const size_t _dest_len = __builtin_object_size(dest, 1);	\
++	const size_t _src_len = __builtin_object_size(src, 1);		\
+ 									\
+ 	BUILD_BUG_ON(!__builtin_constant_p(_dest_len) ||		\
+ 		     _dest_len == (size_t)-1);				\
+-	memcpy_and_pad(dest, _dest_len, src, strnlen(src, _dest_len), pad); \
++	memcpy_and_pad(dest, _dest_len, src,				\
++		       strnlen(src, min(_src_len, _dest_len)), pad);	\
+ } while (0)
  
- 	if (!MLX5_CAP_GEN(dev, driver_version))
-@@ -227,22 +226,9 @@ static void mlx5_set_driver_version(struct mlx5_core_dev *dev)
+ /**
+@@ -297,10 +299,11 @@ void memcpy_and_pad(void *dest, size_t dest_len, const void *src, size_t count,
+  */
+ #define strtomem(dest, src)	do {					\
+ 	const size_t _dest_len = __builtin_object_size(dest, 1);	\
++	const size_t _src_len = __builtin_object_size(src, 1);		\
+ 									\
+ 	BUILD_BUG_ON(!__builtin_constant_p(_dest_len) ||		\
+ 		     _dest_len == (size_t)-1);				\
+-	memcpy(dest, src, min(_dest_len, strnlen(src, _dest_len)));	\
++	memcpy(dest, src, strnlen(src, min(_src_len, _dest_len)));	\
+ } while (0)
  
- 	string = MLX5_ADDR_OF(set_driver_version_in, in, driver_version);
- 
--	strncpy(string, "Linux", remaining_size);
--
--	remaining_size = max_t(int, 0, driver_ver_sz - strlen(string));
--	strncat(string, ",", remaining_size);
--
--	remaining_size = max_t(int, 0, driver_ver_sz - strlen(string));
--	strncat(string, KBUILD_MODNAME, remaining_size);
--
--	remaining_size = max_t(int, 0, driver_ver_sz - strlen(string));
--	strncat(string, ",", remaining_size);
--
--	remaining_size = max_t(int, 0, driver_ver_sz - strlen(string));
--
--	snprintf(string + strlen(string), remaining_size, "%u.%u.%u",
--		LINUX_VERSION_MAJOR, LINUX_VERSION_PATCHLEVEL,
--		LINUX_VERSION_SUBLEVEL);
-+	snprintf(string, driver_ver_sz, "Linux,%s,%u.%u.%u",
-+		 KBUILD_MODNAME, LINUX_VERSION_MAJOR,
-+		 LINUX_VERSION_PATCHLEVEL, LINUX_VERSION_SUBLEVEL);
- 
- 	/*Send the command*/
- 	MLX5_SET(set_driver_version_in, in, opcode,
+ /**
 -- 
-2.41.0
+2.42.0
+
+
 
