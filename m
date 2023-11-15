@@ -1,55 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB327E
-	for <linux-hardening@vger.kernel.org>; Wed, 15 Nov 2023 04:52:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D092A18B1B;
+	Wed, 15 Nov 2023 13:12:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EkanIWO1"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B5705C433C7;
-	Wed, 15 Nov 2023 04:52:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700023957;
-	bh=TOROuUKbGVkHbqlD7MOJvSa09ZuXX1ZO3Dc3MLy4wXg=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=EkanIWO1xNGbYLSyBRxsdEFy1OTXQ1MqIcjIulwd2b06DoLIvJ+G9sPYBCw4JZMPf
-	 LQ7TgreU7NUvSExvM1df1lPD/qP9h+jAsmswYvDQb8tS2ISE7tMuok8/TTvSpofCQ1
-	 OF0lyxqfR2jDavvUNkBVy6v0AxX5v+XTMvBZh4p0WN53GCaHLwKxMdaqwNlKvJNUpe
-	 MV9+H75jpz6I9GS5uc/l+Xqna0Bv/eGZyp/NNXUXaz1qsrWDWfWxFR0Ah5fn87keej
-	 tkgutuM+tk5ICX+oorgouQRsKua16cSwlRyvCcRPDNipkbvMH7A1ztTFXKkxvlrFzg
-	 S66tarN/tsx4g==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A0B79E1F670;
-	Wed, 15 Nov 2023 04:52:37 +0000 (UTC)
-Subject: Re: [GIT PULL] hardening fixes for v6.7-rc2
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <202311140940.5D358293F0@keescook>
-References: <202311140940.5D358293F0@keescook>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <202311140940.5D358293F0@keescook>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/hardening-v6.7-rc2
-X-PR-Tracked-Commit-Id: 782ce431613cf08c3a00dca42ad925c3b1108d09
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: c42d9eeef8e5ba9292eda36fd8e3c11f35ee065c
-Message-Id: <170002395764.9863.2294945632318566793.pr-tracker-bot@kernel.org>
-Date: Wed, 15 Nov 2023 04:52:37 +0000
-To: Kees Cook <keescook@chromium.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Bill Wendling <morbo@google.com>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, Kees Cook <keescook@chromium.org>, kernel test robot <lkp@intel.com>, Konstantin Runov <runebone1@gmail.com>, KP Singh <kpsingh@kernel.org>, linux-hardening@vger.kernel.org
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YfCBoDa0"
+Received: from mail-qk1-x72b.google.com (mail-qk1-x72b.google.com [IPv6:2607:f8b0:4864:20::72b])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9E18121;
+	Wed, 15 Nov 2023 05:12:15 -0800 (PST)
+Received: by mail-qk1-x72b.google.com with SMTP id af79cd13be357-778940531dbso411959785a.0;
+        Wed, 15 Nov 2023 05:12:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1700053935; x=1700658735; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FYJiido5hWzDKtuGReYk+NTentFWgMjd8DEBxS+St7Y=;
+        b=YfCBoDa02I7uM0DcWWKqOBYX0ruVpHC2+AJwVkrgqMEwzpXMfvWwYqzfv5TKTBMIyA
+         PexfmTmBdUqD3cSIELR8w7auq0HZbs+IDgboSzyDWSswPOvvS8+pa4jprspz3Ub1kKpl
+         /n6bAuB29kmE4UT+o35Vsq3Ad/psZCEFfX229mLzxR4JBI98fpDLTb0Q8vESzBT56Rjx
+         zpCsPknkYcIWj5FuL0iNTK9CTKPS1sl52UiXX0v2iqaElw/L5+/ZiqpD8TX7zU4XYw/0
+         4UBc2sGi5voOgTQIsHy5FEER1Y7XMFEHECN8M4SHNJULfSSPwCMlxjzrcnAGnjcpeL0z
+         OW7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700053935; x=1700658735;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FYJiido5hWzDKtuGReYk+NTentFWgMjd8DEBxS+St7Y=;
+        b=fr+pcY+0zkYamVWly5QNuhFrKHG3vfOdKVKBrzexyxFJDYMeER8bAMtHQosc/W3q/w
+         pspGHsK82v8+UaWJ+b+LphGqmHsKA3dgUQnKiQroJp37iRGeTrNnEjeLQIjB6Jmk4hXB
+         1lchXOZZAsTqNGLPVS8I3hge2alWOyOZzV9nDW2kXBekvunU95IEOPFn9vGASHEd1Jw+
+         SaspZ5qffKxmDUEMXazpKbbyPPng/Bl0bYxN1XTj73OZEI1QeG/W4ivragK84zy3NX5q
+         cWCnxEIIZlRl9B9Q9MfeBewcw4OgUmb6DfSy9SND7HLLmIQtCXRavTSuaEF66OwUzSmo
+         SqHA==
+X-Gm-Message-State: AOJu0Yz3i0Av8/YhFKhaL5PsWM9qFfk3ZrzkfbDm6sEOfYGd8BlA5ExM
+	sdTELObpBJsY+gKy+eHGdHzFsFWP2WA=
+X-Google-Smtp-Source: AGHT+IGhIxWgPMm8wqUw4hMJ5kHDs/Trl+Fudc3+UErv6dl9+e9FP4PNtTnJqgtywEwuz9/B7UU77w==
+X-Received: by 2002:a05:620a:4552:b0:773:bf62:b274 with SMTP id u18-20020a05620a455200b00773bf62b274mr6163539qkp.61.1700053934734;
+        Wed, 15 Nov 2023 05:12:14 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id m11-20020a05620a290b00b007743382121esm3445056qkp.84.2023.11.15.05.12.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Nov 2023 05:12:14 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Wed, 15 Nov 2023 05:12:12 -0800
+From: Guenter Roeck <linux@roeck-us.net>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Jean Delvare <jdelvare@suse.com>, Joel Stanley <joel@jms.id.au>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>,
+	linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2][next] hwmon: (aspeed-pwm-tacho) Fix
+ -Wstringop-overflow warning in aspeed_create_fan_tach_channel()
+Message-ID: <9ed5116f-cf36-49f6-833e-75eeab4570b4@roeck-us.net>
+References: <ZVPQJIP26dIzRAr6@work>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZVPQJIP26dIzRAr6@work>
 
-The pull request you sent on Tue, 14 Nov 2023 09:41:28 -0800:
+On Tue, Nov 14, 2023 at 01:53:08PM -0600, Gustavo A. R. Silva wrote:
+> Based on the documentation below, the maximum number of Fan tach
+> channels is 16:
+> 
+> Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt:45:
+>  45 - aspeed,fan-tach-ch : should specify the Fan tach input channel.
+>  46                 integer value in the range 0 through 15, with 0 indicating
+>  47                 Fan tach channel 0 and 15 indicating Fan tach channel 15.
+>  48                 At least one Fan tach input channel is required.
+> 
+> However, the compiler doesn't know that, and legitimaly warns about a potential
+> overwrite in array `u8 fan_tach_ch_source[16]` in `struct aspeed_pwm_tacho_data`,
+> in case `index` takes a value outside the boundaries of the array:
+> 
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/hardening-v6.7-rc2
+Still messes the point. This isn't about "the compiler doesn't know that",
+it is a real bug which may result in out-of-bounds accesses.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/c42d9eeef8e5ba9292eda36fd8e3c11f35ee065c
+Oh, never mind, I'll just apply it.
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Guenter
