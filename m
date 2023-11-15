@@ -1,85 +1,113 @@
-Received: from lindbergh.monkeyblade.net (lindbergh.monkeyblade.net [23.128.96.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCA2A2E651
-	for <linux-hardening@vger.kernel.org>; Wed, 15 Nov 2023 16:00:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="gT6deisK"
-Received: from mail-oa1-x2a.google.com (mail-oa1-x2a.google.com [IPv6:2001:4860:4864:20::2a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD84F121
-	for <linux-hardening@vger.kernel.org>; Wed, 15 Nov 2023 08:00:46 -0800 (PST)
-Received: by mail-oa1-x2a.google.com with SMTP id 586e51a60fabf-1f48b6e0388so1154973fac.0
-        for <linux-hardening@vger.kernel.org>; Wed, 15 Nov 2023 08:00:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1700064046; x=1700668846; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=eFmbaY0oGVZ7sScVBLanmu7D2D9vxvb7T+NtcQ3NkJ4=;
-        b=gT6deisKI4WEaVwsq+NFFTt6ergwIaW4HqJ4M5a1BlMxrKIPGufiSXnGNKkhonwvBW
-         ou3uzIVEUQIbGU2kWZGyg2o4A5D9R+GbXtCrgEz5eeCymCAAR18Xwyv133Cvzyog/eaS
-         Gtd2f/DsabugquTwOGhyVYDMc6jrPt6bSHDO8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700064046; x=1700668846;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eFmbaY0oGVZ7sScVBLanmu7D2D9vxvb7T+NtcQ3NkJ4=;
-        b=Obcd3NsLXOmPF+o6jBSdMzJ24r+e7AWe0D5oGewa7cjugQXAPV7jiJsX8p91cS7DgA
-         Cg8A1QCWyVkF7OJlHWVkRiqKkxsitMaaimGfgepkiSFGRC16Dn7dj/BIZhiU9wyLCxMQ
-         Xw6kw/DeOzlLsTGMOh29TJT9o4gvItcW16/83sflR3RneQzdxbI2PgEyuRoLpoXcc2NU
-         B9c53RMmbGkAP/xPZsdRtJnwVD9F/PKu1BpLceSvzYehNBBusJus56jVqfupQnRh9tVC
-         Ej5JNts4XcIoasgafiS8tmNQB5DC9jkZHlyHJUuYpXe2rd2w1/eJIYRnL4JMj38OusDa
-         nF8Q==
-X-Gm-Message-State: AOJu0YyAZAvlFDzhgRiwQbMcg8bv2+2q8GvP/zEQ+OdJty7TCUQ5/VUD
-	cOmWy3qWVvB1tMBGs0utCZ6n/BsDoc0EJayXmByAqw==
-X-Google-Smtp-Source: AGHT+IEC7e0xzEZvfFar3WHPgtO7pOAY07ejbJf+y9ARFz7vkcAW/xxvlGk01OR2uItXzOvVmoLvaArE9Pf6m0XXx+0=
-X-Received: by 2002:a05:6871:5c47:b0:1e9:bbfe:6458 with SMTP id
- os7-20020a0568715c4700b001e9bbfe6458mr7237902oac.1.1700064046168; Wed, 15 Nov
- 2023 08:00:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="wSPavG1d"
+Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F82F1BC
+	for <linux-hardening@vger.kernel.org>; Wed, 15 Nov 2023 10:03:32 -0800 (PST)
+Received: from eig-obgw-6010a.ext.cloudfilter.net ([10.0.30.248])
+	by cmsmtp with ESMTPS
+	id 2visrpWLhgpyE3KEdrXsOx; Wed, 15 Nov 2023 18:03:31 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id 3KEcr71958vT03KEcrD7rW; Wed, 15 Nov 2023 18:03:30 +0000
+X-Authority-Analysis: v=2.4 cv=ffi+dmcF c=1 sm=1 tr=0 ts=655507f2
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=BNY50KLci1gA:10 a=wYkD_t78qR0A:10
+ a=S00qe9fmEFB4g_Oc0sEA:9 a=QEXdDO2ut3YA:10
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=d3z9OY1ASsj06BcNejAFwfI5K6xeH/UKNLHo3vm3gFw=; b=wSPavG1dD8LzP7Sj10g9wwA6x9
+	xeOnDrihtD/QS8OreY+1XsqjwNBnZiQMlytNkwpXPpsfATBHVSC0UOs/Pp+V/RRzmMbTk/pskVGnm
+	8pWYtvGvk+8uZat6N9UCAWNKQxsVJ06yAWsP1S4q+JxXQyi1QohZhTnDu1ab+CzsNiqv+iAAVhBSw
+	CVFyoFH29KZHh99tk3ojYkKA4Kov78Bx+SYKbRajtggRAT1CgXT4J8LOvMKbiNsdH74IkzJ+n623Q
+	DkX1bzpDXDThoiymiy9raUdDcvffFiDsjJx4v+RfMYlSji5QpK+muEgLdg5cUFlxAGa5MdCzm1BsL
+	OiqMUsFQ==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:37850 helo=[192.168.15.10])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1r3KEb-002hns-1z;
+	Wed, 15 Nov 2023 12:03:29 -0600
+Message-ID: <f8f106ee-bccf-4ae3-b9c2-684f6bd938f5@embeddedor.com>
+Date: Wed, 15 Nov 2023 12:03:27 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231110200830.1832556-1-davidgow@google.com> <4e0c8bb796a67af5fb901f831c5f87fe.mripard@kernel.org>
-In-Reply-To: <4e0c8bb796a67af5fb901f831c5f87fe.mripard@kernel.org>
-From: Daniel Vetter <daniel@ffwll.ch>
-Date: Wed, 15 Nov 2023 17:00:35 +0100
-Message-ID: <CAKMK7uG-FH6iLpNpQ74xXPZoyGoDGvg+L99oCK3nFZT43o6GcA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] kunit: Add a macro to wrap a deferred action function
-To: Maxime Ripard <mripard@kernel.org>
-Cc: David Gow <davidgow@google.com>, dlatypov@google.com, 
-	dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, llvm@lists.linux.dev, 
-	Arthur Grillo <arthurgrillo@riseup.net>, Benjamin Berg <benjamin.berg@intel.com>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, David Airlie <airlied@gmail.com>, 
-	Emma Anholt <emma@anholt.net>, Kees Cook <keescook@chromium.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, =?UTF-8?B?TWHDrXJhIENhbmFs?= <mairacanal@riseup.net>, 
-	Nathan Chancellor <nathan@kernel.org>, Rae Moar <rmoar@google.com>, 
-	Richard Fitzgerald <rf@opensource.cirrus.com>, Sami Tolvanen <samitolvanen@google.com>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Thomas Zimmermann <tzimmermann@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2][next] hwmon: (aspeed-pwm-tacho) Fix
+ -Wstringop-overflow warning in aspeed_create_fan_tach_channel()
+Content-Language: en-US
+To: Guenter Roeck <linux@roeck-us.net>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Jean Delvare <jdelvare@suse.com>, Joel Stanley <joel@jms.id.au>,
+ Andrew Jeffery <andrew@codeconstruct.com.au>, linux-hwmon@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <ZVPQJIP26dIzRAr6@work>
+ <9ed5116f-cf36-49f6-833e-75eeab4570b4@roeck-us.net>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <9ed5116f-cf36-49f6-833e-75eeab4570b4@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.21.192
+X-Source-L: No
+X-Exim-ID: 1r3KEb-002hns-1z
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:37850
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfHrvJtlFe2MufRSJe1WxzKLPupgR+VT156kS0gXQsNNcAhUrBBFZ0wBjAfARCi4YyNSO6Gb0IFcl6j6BuqWOXK0ENVClM4rQ9R9wV5+zatDZ5H9NbY2E
+ M/pUyC+nDCxRBDn+7VqH7JAVvTskk5UkhvO8SVvGUZ7lbtceJOCTn8plEgRiRLAWeiCqApKAd6jOBwvGdVd7XR3m4LlPcpfUPbbAASDVO5xvb3gTJH9J6qWm
 
-On Wed, 15 Nov 2023 at 16:51, Maxime Ripard <mripard@kernel.org> wrote:
->
-> On Sat, 11 Nov 2023 04:08:26 +0800, David Gow wrote:
-> > KUnit's deferred action API accepts a void(*)(void *) function pointer
-> > which is called when the test is exited. However, we very frequently
-> > want to use existing functions which accept a single pointer, but which
-> > may not be of type void*. While this is probably dodgy enough to be on
-> > the wrong side of the C standard, it's been often used for similar
-> >
-> > [ ... ]
->
-> Reviewed-by: Maxime Ripard <mripard@kernel.org>
 
-Acked-by: Daniel Vetter <daniel@ffwll.ch> for merging through kunit
-tree, since I guess that's the simplest way to land this.
 
-Cheers!
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+On 11/15/23 07:12, Guenter Roeck wrote:
+> On Tue, Nov 14, 2023 at 01:53:08PM -0600, Gustavo A. R. Silva wrote:
+>> Based on the documentation below, the maximum number of Fan tach
+>> channels is 16:
+>>
+>> Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt:45:
+>>   45 - aspeed,fan-tach-ch : should specify the Fan tach input channel.
+>>   46                 integer value in the range 0 through 15, with 0 indicating
+>>   47                 Fan tach channel 0 and 15 indicating Fan tach channel 15.
+>>   48                 At least one Fan tach input channel is required.
+>>
+>> However, the compiler doesn't know that, and legitimaly warns about a potential
+>> overwrite in array `u8 fan_tach_ch_source[16]` in `struct aspeed_pwm_tacho_data`,
+>> in case `index` takes a value outside the boundaries of the array:
+>>
+> 
+> Still messes the point. This isn't about "the compiler doesn't know that",
+> it is a real bug which may result in out-of-bounds accesses.
+
+Oh, I mentioned that in anticipation of people saying something in the tone of
+'that's never going to happen.' :p
+
+However, if this is a real bug, it should probably be tagged for -stable.
+
+> 
+> Oh, never mind, I'll just apply it.
+
+Thank you!
+
+--
+Gustavo
+
