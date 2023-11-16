@@ -1,96 +1,127 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="e3Sp0UD+"
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD12C127
-	for <linux-hardening@vger.kernel.org>; Thu, 16 Nov 2023 13:09:02 -0800 (PST)
-Received: by mail-pf1-x433.google.com with SMTP id d2e1a72fcca58-6c431b91b2aso1216500b3a.1
-        for <linux-hardening@vger.kernel.org>; Thu, 16 Nov 2023 13:09:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1700168942; x=1700773742; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xYAFY96XcFiMxIF+L4YoxaW0MbIDBtwFnVJcSIPp9Co=;
-        b=e3Sp0UD+6Xyg6NDUJEif0hrLYx0CML2C0FUMAMVe2rcdU9lm0RoZ4CwzwGgSE0gQgX
-         ns3/QTMffLN4JkMiWYdYl4tZszTywdXBDKrEKrL8Nn77J8k/iIT2a/K1glo6bdxPpdBf
-         pQ9wlLCC+kQaurxjYR6qdQ0TkxLzlbP/2nmoo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700168942; x=1700773742;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xYAFY96XcFiMxIF+L4YoxaW0MbIDBtwFnVJcSIPp9Co=;
-        b=hb/ZQZp7JIwwNrq3Kn/UnYdO0NhsUyd/txY8HLVa9i51fEJngYe85245jZ/Ow1k5vm
-         TeA+0+WKpv9FDkIQEOptqGosPOCgFpjzQMfZOYn/sb6ARR8xaNOpBM4LwGFqXmY8G5+O
-         IC1FAhP9kv6uMtSnaemZVtT+fi1jdvg8tdlFqjz/3ALG9ZOhEnIL/+RPb9HcJcZhAxku
-         TanhcbERzTAnEl7ot9FTAFmMxBaKbxriojj+AHd3WNdLl8HALbhaPcQoLApmbraGMjlT
-         uTZJwFVsrrqtWicLRqzIl4SmECpMldoiIeoyfyYvAl/FGa/AFWwEOtSsLzoiQh0/FOYG
-         xJOg==
-X-Gm-Message-State: AOJu0Yzh29GlOpsbVARV0Fm6BZ7O7v5XL2RRnrDjca2oyEjzdHcMgGI2
-	YIvhHDqDRIvRVBweMvvoXdw+oQ==
-X-Google-Smtp-Source: AGHT+IGDMJWNBh7L3/s1oXiCq33PVVTLiBNbt/MbNP2Jg71YOV8F+by6BxzlVI3bHz3WEwpQvMCriQ==
-X-Received: by 2002:a05:6a20:12c6:b0:154:b4cb:2e8c with SMTP id v6-20020a056a2012c600b00154b4cb2e8cmr18208401pzg.24.1700168942326;
-        Thu, 16 Nov 2023 13:09:02 -0800 (PST)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id j12-20020a056a00130c00b0068fece22469sm175211pfu.4.2023.11.16.13.08.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Nov 2023 13:08:59 -0800 (PST)
-Date: Thu, 16 Nov 2023 13:08:35 -0800
-From: Kees Cook <keescook@chromium.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] xen: privcmd: Replace zero-length array with
- flex-array member and use __counted_by
-Message-ID: <202311161307.9422E1896B@keescook>
-References: <ZVZlg3tPMPCRdteh@work>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="V2mSew9F"
+Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D83B5195
+	for <linux-hardening@vger.kernel.org>; Thu, 16 Nov 2023 13:18:04 -0800 (PST)
+Received: from eig-obgw-5003a.ext.cloudfilter.net ([10.0.29.159])
+	by cmsmtp with ESMTPS
+	id 3ieQr2adogpyE3jkRrk6f7; Thu, 16 Nov 2023 21:18:03 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id 3jkQr5fabnCfv3jkRrMmvp; Thu, 16 Nov 2023 21:18:03 +0000
+X-Authority-Analysis: v=2.4 cv=KKpJsXJo c=1 sm=1 tr=0 ts=6556870b
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=BNY50KLci1gA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
+ a=cm27Pg_UAAAA:8 a=CB8ylYM2jayAzffc3msA:9 a=QEXdDO2ut3YA:10
+ a=AjGcO6oz07-iQ99wixmX:22 a=xmb-EsYY8bH0VWELuYED:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=z7VN5fe7q4a712jMshNesYxaBgFBwUjNIQyqspWv/5g=; b=V2mSew9FN/FY6qQBitJwrrvBWx
+	egEJQgRKNQ7oQeoB7qzWxi8d7kDHxlcUi0laaO2uapZQn1kqX2BBhTuOi5F4Tm1aVGZ///ZTEBIao
+	Zh/9FlQMbAc5oKvjMx5lRbCAdB+GQfj+t/RPy7NAAdcTj65yoaW+AQZux7QGhiM2s/ucnU+mF+3z+
+	JTPf+oMEbE+dSkC9/CC7yC60ER+wwtRdBh5f5C6GiCKEL9ShkfsLWGLLDvIDu7UZEueYdMMjrGHMV
+	iUzAPggDiCKVY9wEC7EZT+XUCLgALD3ao9CrAMpXLZ8Ozkouxq5sF5oqVWqvDaES2kJK2fHq/02iM
+	H5a+KsZQ==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:48450 helo=[192.168.15.10])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1r3jkQ-00371x-0t;
+	Thu, 16 Nov 2023 15:18:02 -0600
+Message-ID: <43bf5965-84c4-420e-91fc-7a0973c27d76@embeddedor.com>
+Date: Thu, 16 Nov 2023 15:18:00 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZVZlg3tPMPCRdteh@work>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] xen: privcmd: Replace zero-length array with
+ flex-array member and use __counted_by
+Content-Language: en-US
+To: Kees Cook <keescook@chromium.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Juergen Gross <jgross@suse.com>,
+ Stefano Stabellini <sstabellini@kernel.org>,
+ Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+ xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <ZVZlg3tPMPCRdteh@work> <202311161307.9422E1896B@keescook>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <202311161307.9422E1896B@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.21.192
+X-Source-L: No
+X-Exim-ID: 1r3jkQ-00371x-0t
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:48450
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfObBbp04r251ZtRINt825Wmt2Vo7rUvV24jQia07uwYzYwAZQM9eYn7J40S2kgBPKFrrued9zQGki+EZ8HZeuWcShT0COQNjCp0WZwvAudatvlzD4arS
+ 99lFCkCv+6BtmY2afR5wDqqPCVHXJeIg20vzyocUyovYapq9bsO8mHuxAxodABTXjDtEHGRj2xnBlnmkTq74Jku6FiGIqNp+DsYDQwBgdYAYf0QHb9FjaoMY
 
-On Thu, Nov 16, 2023 at 12:54:59PM -0600, Gustavo A. R. Silva wrote:
-> Fake flexible arrays (zero-length and one-element arrays) are deprecated,
-> and should be replaced by flexible-array members. So, replace
-> zero-length array with a flexible-array member in `struct
-> privcmd_kernel_ioreq`.
+
+
+On 11/16/23 15:08, Kees Cook wrote:
+> On Thu, Nov 16, 2023 at 12:54:59PM -0600, Gustavo A. R. Silva wrote:
+>> Fake flexible arrays (zero-length and one-element arrays) are deprecated,
+>> and should be replaced by flexible-array members. So, replace
+>> zero-length array with a flexible-array member in `struct
+>> privcmd_kernel_ioreq`.
+>>
+>> Also annotate array `ports` with `__counted_by()` to prepare for the
+>> coming implementation by GCC and Clang of the `__counted_by` attribute.
+>> Flexible array members annotated with `__counted_by` can have their
+>> accesses bounds-checked at run-time via `CONFIG_UBSAN_BOUNDS` (for array
+>> indexing) and `CONFIG_FORTIFY_SOURCE` (for strcpy/memcpy-family functions).
+>>
+>> This fixes multiple -Warray-bounds warnings:
+>> drivers/xen/privcmd.c:1239:30: warning: array subscript i is outside array bounds of 'struct ioreq_port[0]' [-Warray-bounds=]
+>> drivers/xen/privcmd.c:1240:30: warning: array subscript i is outside array bounds of 'struct ioreq_port[0]' [-Warray-bounds=]
+>> drivers/xen/privcmd.c:1241:30: warning: array subscript i is outside array bounds of 'struct ioreq_port[0]' [-Warray-bounds=]
+>> drivers/xen/privcmd.c:1245:33: warning: array subscript i is outside array bounds of 'struct ioreq_port[0]' [-Warray-bounds=]
+>> drivers/xen/privcmd.c:1258:67: warning: array subscript i is outside array bounds of 'struct ioreq_port[0]' [-Warray-bounds=]
+>>
+>> This results in no differences in binary output.
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > 
-> Also annotate array `ports` with `__counted_by()` to prepare for the
-> coming implementation by GCC and Clang of the `__counted_by` attribute.
-> Flexible array members annotated with `__counted_by` can have their
-> accesses bounds-checked at run-time via `CONFIG_UBSAN_BOUNDS` (for array
-> indexing) and `CONFIG_FORTIFY_SOURCE` (for strcpy/memcpy-family functions).
+> Looks right to me. I can see the allocation:
+
+Yep, I always check for that; in particular, the 'counter' assignment. :)
+
+Do you want me to mention it in the changelog text?
+
 > 
-> This fixes multiple -Warray-bounds warnings:
-> drivers/xen/privcmd.c:1239:30: warning: array subscript i is outside array bounds of 'struct ioreq_port[0]' [-Warray-bounds=]
-> drivers/xen/privcmd.c:1240:30: warning: array subscript i is outside array bounds of 'struct ioreq_port[0]' [-Warray-bounds=]
-> drivers/xen/privcmd.c:1241:30: warning: array subscript i is outside array bounds of 'struct ioreq_port[0]' [-Warray-bounds=]
-> drivers/xen/privcmd.c:1245:33: warning: array subscript i is outside array bounds of 'struct ioreq_port[0]' [-Warray-bounds=]
-> drivers/xen/privcmd.c:1258:67: warning: array subscript i is outside array bounds of 'struct ioreq_port[0]' [-Warray-bounds=]
+>          size = struct_size(kioreq, ports, ioeventfd->vcpus);
+>          kioreq = kzalloc(size, GFP_KERNEL);
+>          if (!kioreq)
+>                  return ERR_PTR(-ENOMEM);
 > 
-> This results in no differences in binary output.
+>          kioreq->dom = ioeventfd->dom;
+>          kioreq->vcpus = ioeventfd->vcpus;
 > 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> 
+> Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Looks right to me. I can see the allocation:
-
-        size = struct_size(kioreq, ports, ioeventfd->vcpus);
-        kioreq = kzalloc(size, GFP_KERNEL);
-        if (!kioreq)
-                return ERR_PTR(-ENOMEM);
-
-        kioreq->dom = ioeventfd->dom;
-        kioreq->vcpus = ioeventfd->vcpus;
-
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--- 
-Kees Cook
+Thanks!
+--
+Gustavo
