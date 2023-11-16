@@ -1,236 +1,114 @@
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF996364B5
+	for <linux-hardening@vger.kernel.org>; Thu, 16 Nov 2023 18:11:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=alarsen.net header.i=@alarsen.net header.b="Th1gqvIy"
-Received: from mail.alarsen.net (joe.alarsen.net [IPv6:2a01:4f8:191:10e8:1::fe])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B52A11A8;
-	Thu, 16 Nov 2023 08:48:23 -0800 (PST)
-Received: from oscar.alarsen.net (unknown [IPv6:fd8b:531:bccf:96:86d9:db0b:6743:3184])
-	by joe.alarsen.net (Postfix) with ESMTPS id 18C661801F6;
-	Thu, 16 Nov 2023 17:48:21 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alarsen.net; s=joe;
-	t=1700153301; bh=KpehnglDQfPh9u5cwpz2ZhgkchMBYc60fXNfC1A1zgE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Th1gqvIyxImNy5XpeD1LSc2vckGSqTuWzzFtWic4hiSwR4qgf/fbomjYAaGLLEHSK
-	 eItFkDdDyVOR/FSJHp+nKJLuP3de0kpaJPKslU+OmeJ7D4FI8oOa3ZPsxZpBOFjCME
-	 JhwjsW/ypayGSPrLsLmm61Su+5hPrA/nDSxT/thE=
-Received: from oscar.localnet (localhost [IPv6:::1])
-	by oscar.alarsen.net (Postfix) with ESMTPS id 02551EE5;
-	Thu, 16 Nov 2023 17:48:21 +0100 (CET)
-From: Anders Larsen <al@alarsen.net>
-To: Kees Cook <keescook@chromium.org>
-Cc: Ronald Monthero <debug.penguin32@gmail.com>, gustavoars@kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] qnx4: fix to avoid panic due to buffer overflow
-Date: Thu, 16 Nov 2023 17:48:20 +0100
-Message-ID: <2910678.e9J7NaK4W3@oscar>
-In-Reply-To: <202311160631.5ACFB84B7C@keescook>
-References: <20231112095353.579855-1-debug.penguin32@gmail.com> <202311160612.C38BF44@keescook> <202311160631.5ACFB84B7C@keescook>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="la6R0gS4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E2C7C433C9;
+	Thu, 16 Nov 2023 18:11:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700158307;
+	bh=Ry4mQQ1q/vn/j3+Dj1Ms0K/kq2DMCGX9s61dOISwTRo=;
+	h=Date:From:To:Cc:Subject:From;
+	b=la6R0gS4A9sua9wheZyCxfbRGCUfMXibabY/Ch7ODIveMD52xRHRGABVg9QniPV3L
+	 /5Z5+C+0ck49xRi+27ggYHvoNZ3Oq4AxSk6SqMgLOYo+Q56/tu7/awDVwGKwQU3SG3
+	 VEgi/EuHhu7B8nSgTEx7dl4Q7xjz2zJL6LLENK82zgRCCPA5RZYClmRkDBA7TsP1+5
+	 8LkS2PdipAWqokVc9o8iBKQ3B0Z0al6fKdNvMtOHlA3MylPEzhnCFMQhedTPgQd9Bs
+	 ka46ygRkuiJqgbpkdHucUNQ2Vj94TTjKwtYlHTz8Wu4/J3Wm9yRZztnQU8cgsHZ9CS
+	 Jcg/Mtvj3mylA==
+Date: Thu, 16 Nov 2023 12:11:43 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
+	Danilo Krummrich <dakr@redhat.com>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] nouveau/gsp: replace zero-length array with flex-array
+ member and use __counted_by
+Message-ID: <ZVZbX7C5suLMiBf+@work>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 2023-11-16 15:58 Kees Cook wrote:
-> On Thu, Nov 16, 2023 at 06:29:59AM -0800, Kees Cook wrote:
-> > On Sun, Nov 12, 2023 at 07:53:53PM +1000, Ronald Monthero wrote:
-> > > qnx4 dir name length can vary to be of maximum size
-> > > QNX4_NAME_MAX or QNX4_SHORT_NAME_MAX depending on whether
-> > > 'link info' entry is stored and the status byte is set.
-> > > So to avoid buffer overflow check di_fname length
-> > > fetched from (struct qnx4_inode_entry *)
-> > > before use in strlen to avoid buffer overflow.
-> > > 
-> > > panic context
-> > > [ 4849.636861] detected buffer overflow in strlen
-> > > [ 4849.636897] ------------[ cut here ]------------
-> > > [ 4849.636902] kernel BUG at lib/string.c:1165!
-> > > [ 4849.636917] invalid opcode: 0000 [#2] SMP PTI
-> > > ..
-> > > [ 4849.637047] Call Trace:
-> > > [ 4849.637053]  <TASK>
-> > > [ 4849.637059]  ? show_trace_log_lvl+0x1d6/0x2ea
-> > > [ 4849.637075]  ? show_trace_log_lvl+0x1d6/0x2ea
-> > > [ 4849.637095]  ? qnx4_find_entry.cold+0xc/0x18 [qnx4]
-> > > [ 4849.637111]  ? show_regs.part.0+0x23/0x29
-> > > [ 4849.637123]  ? __die_body.cold+0x8/0xd
-> > > [ 4849.637135]  ? __die+0x2b/0x37
-> > > [ 4849.637147]  ? die+0x30/0x60
-> > > [ 4849.637161]  ? do_trap+0xbe/0x100
-> > > [ 4849.637171]  ? do_error_trap+0x6f/0xb0
-> > > [ 4849.637180]  ? fortify_panic+0x13/0x15
-> > > [ 4849.637192]  ? exc_invalid_op+0x53/0x70
-> > > [ 4849.637203]  ? fortify_panic+0x13/0x15
-> > > [ 4849.637215]  ? asm_exc_invalid_op+0x1b/0x20
-> > > [ 4849.637228]  ? fortify_panic+0x13/0x15
-> > > [ 4849.637240]  ? fortify_panic+0x13/0x15
-> > > [ 4849.637251]  qnx4_find_entry.cold+0xc/0x18 [qnx4]
-> > > [ 4849.637264]  qnx4_lookup+0x3c/0xa0 [qnx4]
-> > > [ 4849.637275]  __lookup_slow+0x85/0x150
-> > > [ 4849.637291]  walk_component+0x145/0x1c0
-> > > [ 4849.637304]  ? path_init+0x2c0/0x3f0
-> > > [ 4849.637316]  path_lookupat+0x6e/0x1c0
-> > > [ 4849.637330]  filename_lookup+0xcf/0x1d0
-> > > [ 4849.637341]  ? __check_object_size+0x1d/0x30
-> > > [ 4849.637354]  ? strncpy_from_user+0x44/0x150
-> > > [ 4849.637365]  ? getname_flags.part.0+0x4c/0x1b0
-> > > [ 4849.637375]  user_path_at_empty+0x3f/0x60
-> > > [ 4849.637383]  vfs_statx+0x7a/0x130
-> > > [ 4849.637393]  do_statx+0x45/0x80
-> > > ..
-> > > 
-> > > Signed-off-by: Ronald Monthero <debug.penguin32@gmail.com>
-> > > ---
-> > > 
-> > >  fs/qnx4/namei.c | 7 +++++++
-> > >  1 file changed, 7 insertions(+)
-> > > 
-> > > diff --git a/fs/qnx4/namei.c b/fs/qnx4/namei.c
-> > > index 8d72221735d7..825b891a52b3 100644
-> > > --- a/fs/qnx4/namei.c
-> > > +++ b/fs/qnx4/namei.c
-> > > @@ -40,6 +40,13 @@ static int qnx4_match(int len, const char *name,
-> > > 
-> > >  	} else {
-> > >  	
-> > >  		namelen = QNX4_SHORT_NAME_MAX;
-> > >  	
-> > >  	}
-> > > 
-> > > +
-> > > +	/** qnx4 dir name length can vary, check the di_fname
-> > > +	 * fetched from (struct qnx4_inode_entry *) before use in
-> > > +	 * strlen to avoid panic due to buffer overflow"
-> > > +	 */
-> > 
-> > Style nit: this comment should start with just "/*" alone, like:
-> > 	/*
-> > 	
-> > 	 * qnx4 dir name ...
-> > 	 
-> > > +	if (strnlen(de->di_fname, namelen) >= sizeof(de->di_fname))
-> > > +		return -ENAMETOOLONG;
-> > > 
-> > >  	thislen = strlen( de->di_fname );
-> > 
-> > de->di_fname is:
-> > 
-> > struct qnx4_inode_entry {
-> > 
-> >         char            di_fname[QNX4_SHORT_NAME_MAX];
-> > 	
-> > 	...
-> > 
-> > #define QNX4_SHORT_NAME_MAX     16
-> > #define QNX4_NAME_MAX           48
-> > 
-> > It's always going to have a max of QNX4_SHORT_NAME_MAX. Is any of this
-> > code correct if namelen ends up being QNX4_NAME_MAX? It'll be reading
-> > past the end of di_fname.
-> > 
-> > Is bh->b_data actually struct qnx4_inode_entry ?
-> 
-> Ah-ha, it looks like it's _not_:
-> 
->         if (!(bh = qnx4_find_entry(len, dir, name, &de, &ino)))
->                 goto out;
->         /* The entry is linked, let's get the real info */
->         if ((de->di_status & QNX4_FILE_LINK) == QNX4_FILE_LINK) {
->                 lnk = (struct qnx4_link_info *) de;
-> 
-> It seems that entries may be either struct qnx4_inode_entry or struct
-> qnx4_link_info but it's not captured in a union.
-> 
-> This needs to be fixed by not lying to the compiler about what is there.
-> 
-> How about this?
+Fake flexible arrays (zero-length and one-element arrays) are deprecated,
+and should be replaced by flexible-array members. So, replace
+zero-length array with a flexible-array member in `struct
+PACKED_REGISTRY_TABLE`.
 
-The switch won't work since the _status field is a bit-field, so we should 
-rather reuse the similar union-logic already present in fs/qnx4/dir.c
+Also annotate array `entries` with `__counted_by()` to prepare for the
+coming implementation by GCC and Clang of the `__counted_by` attribute.
+Flexible array members annotated with `__counted_by` can have their
+accesses bounds-checked at run-time via `CONFIG_UBSAN_BOUNDS` (for array
+indexing) and `CONFIG_FORTIFY_SOURCE` (for strcpy/memcpy-family functions).
 
-> diff --git a/fs/qnx4/namei.c b/fs/qnx4/namei.c
-> index 8d72221735d7..3cd20065bcfa 100644
-> --- a/fs/qnx4/namei.c
-> +++ b/fs/qnx4/namei.c
-> @@ -26,31 +26,39 @@
->  static int qnx4_match(int len, const char *name,
->  		      struct buffer_head *bh, unsigned long *offset)
->  {
-> -	struct qnx4_inode_entry *de;
-> -	int namelen, thislen;
-> +	union qnx4_dir_entry *de;
-> +	char *entry_fname;
-> +	int entry_len, entry_max_len;
-> 
->  	if (bh == NULL) {
->  		printk(KERN_WARNING "qnx4: matching unassigned buffer !
-\n");
->  		return 0;
->  	}
-> -	de = (struct qnx4_inode_entry *) (bh->b_data + *offset);
-> +	de = (union qnx4_dir_entry *) (bh->b_data + *offset);
->  	*offset += QNX4_DIR_ENTRY_SIZE;
-> -	if ((de->di_status & QNX4_FILE_LINK) != 0) {
-> -		namelen = QNX4_NAME_MAX;
-> -	} else {
-> -		namelen = QNX4_SHORT_NAME_MAX;
-> -	}
-> -	thislen = strlen( de->di_fname );
-> -	if ( thislen > namelen )
-> -		thislen = namelen;
-> -	if (len != thislen) {
-> +
-> +	switch (de->inode.di_status) {
-> +	case QNX4_FILE_LINK:
-> +		entry_fname = de->link.dl_fname;
-> +		entry_max_len = sizeof(de->link.dl_fname);
-> +		break;
-> +	case QNX4_FILE_USED:
-> +		entry_fname = de->inode.di_fname;
-> +		entry_max_len = sizeof(de->inode.di_fname);
-> +		break;
-> +	default:
->  		return 0;
->  	}
-> -	if (strncmp(name, de->di_fname, len) == 0) {
-> -		if ((de->di_status & (QNX4_FILE_USED|QNX4_FILE_LINK)) !
-= 0) {
-> -			return 1;
-> -		}
-> -	}
-> +
-> +	/* Directory entry may not be %NUL-terminated. */
-> +	entry_len = strnlen(entry_fname, entry_max_len);
-> +
-> +	if (len != entry_len)
-> +		return 0;
-> +
-> +	if (strncmp(name, entry_fname, len) == 0)
-> +		return 1;
-> +
->  	return 0;
->  }
-> 
-> diff --git a/include/uapi/linux/qnx4_fs.h b/include/uapi/linux/qnx4_fs.h
-> index 31487325d265..e033dbe1e009 100644
-> --- a/include/uapi/linux/qnx4_fs.h
-> +++ b/include/uapi/linux/qnx4_fs.h
-> @@ -68,6 +68,13 @@ struct qnx4_link_info {
->  	__u8		dl_status;
->  };
-> 
-> +union qnx4_dir_entry {
-> +	struct qnx4_inode_entry inode;
-> +	struct qnx4_link_info link;
-> +};
-> +_Static_assert(offsetof(struct qnx4_inode_entry, di_status) ==
-> +	       offsetof(struct qnx4_link_info, dl_status));
-> +
->  struct qnx4_xblk {
->  	__le32		xblk_next_xblk;
->  	__le32		xblk_prev_xblk;
+This fixes multiple -Warray-bounds warnings:
+drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c:1069:29: warning: array subscript 0 is outside array bounds of 'PACKED_REGISTRY_ENTRY[0]' [-Warray-bounds=]
+drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c:1070:29: warning: array subscript 0 is outside array bounds of 'PACKED_REGISTRY_ENTRY[0]' [-Warray-bounds=]
+drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c:1071:29: warning: array subscript 0 is outside array bounds of 'PACKED_REGISTRY_ENTRY[0]' [-Warray-bounds=]
+drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c:1072:29: warning: array subscript 0 is outside array bounds of 'PACKED_REGISTRY_ENTRY[0]' [-Warray-bounds=]
 
+While there, also make use of the struct_size() helper, and address
+checkpatch.pl warning:
+WARNING: please, no spaces at the start of a line
 
+This results in no differences in binary output.
 
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ .../nvrm/535.113.01/nvidia/generated/g_os_nvoc.h   | 14 +++++++-------
+ drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c     |  2 +-
+ 2 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/gpu/drm/nouveau/include/nvrm/535.113.01/nvidia/generated/g_os_nvoc.h b/drivers/gpu/drm/nouveau/include/nvrm/535.113.01/nvidia/generated/g_os_nvoc.h
+index 754c6af42f30..259b25c2ac6b 100644
+--- a/drivers/gpu/drm/nouveau/include/nvrm/535.113.01/nvidia/generated/g_os_nvoc.h
++++ b/drivers/gpu/drm/nouveau/include/nvrm/535.113.01/nvidia/generated/g_os_nvoc.h
+@@ -28,17 +28,17 @@
+ 
+ typedef struct PACKED_REGISTRY_ENTRY
+ {
+-    NvU32                   nameOffset;
+-    NvU8                    type;
+-    NvU32                   data;
+-    NvU32                   length;
++	NvU32                   nameOffset;
++	NvU8                    type;
++	NvU32                   data;
++	NvU32                   length;
+ } PACKED_REGISTRY_ENTRY;
+ 
+ typedef struct PACKED_REGISTRY_TABLE
+ {
+-    NvU32                   size;
+-    NvU32                   numEntries;
+-    PACKED_REGISTRY_ENTRY   entries[0];
++	NvU32                   size;
++	NvU32                   numEntries;
++	PACKED_REGISTRY_ENTRY   entries[] __counted_by(numEntries);
+ } PACKED_REGISTRY_TABLE;
+ 
+ #endif
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c b/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c
+index dc44f5c7833f..228335487af5 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c
+@@ -1048,7 +1048,7 @@ r535_gsp_rpc_set_registry(struct nvkm_gsp *gsp)
+ 	char *strings;
+ 	int str_offset;
+ 	int i;
+-	size_t rpc_size = sizeof(*rpc) + sizeof(rpc->entries[0]) * NV_GSP_REG_NUM_ENTRIES;
++	size_t rpc_size = struct_size(rpc, entries, NV_GSP_REG_NUM_ENTRIES);
+ 
+ 	/* add strings + null terminator */
+ 	for (i = 0; i < NV_GSP_REG_NUM_ENTRIES; i++)
+-- 
+2.34.1
 
