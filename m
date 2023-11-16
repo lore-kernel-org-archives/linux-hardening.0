@@ -1,144 +1,156 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="k6TzcDHr"
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B96B61724
-	for <linux-hardening@vger.kernel.org>; Thu, 16 Nov 2023 06:02:18 -0800 (PST)
-Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-6c39ad730aaso751628b3a.0
-        for <linux-hardening@vger.kernel.org>; Thu, 16 Nov 2023 06:02:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1700143338; x=1700748138; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=OqmubgxtpJpRy+t3jjLZe9v6jbuEY+k/dDeNt+y7ewk=;
-        b=k6TzcDHr+oBzspyAKHvS+3GD+SaKRY5kaHSvYQfeQ+Um/Qu/vxo9YjtbNecR9RiOGr
-         qzftvqPGazjQ8pHr7/4SGA8vTOlW2ZBWapI/RObyIfmGq45UeV+uIBdql+2sr26Q167r
-         6+TCLXlZeiyQbJ8NoQtQqitHz1Jfh3FBujcMw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700143338; x=1700748138;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OqmubgxtpJpRy+t3jjLZe9v6jbuEY+k/dDeNt+y7ewk=;
-        b=HX99meMhPXE465AnpritX2oyRtfHg0WoKZCwC5VCzGfBx8IahGCnR1DbruRLmAN/rM
-         BfvV5BnxRZy2tr0fOj5TvTXcHpS3QtpsZ9fzUa1K3o/8A5xEvU5G1BlBzc2THy41iPcv
-         ATrEjHjT+wRykgCNKwTGPU5WJeoxZMYBuVqDWeQVl1hdtfQZPg73umy7j/GIAqdHrtsq
-         seugzsVBDuOs6XUwzJFGjDjLmZwvxG+oJ9h9wscq5IZmpWrkDAmDsbvgpDvhcGhkH0EY
-         ErtNcUS7RTukinUEP1qiTSw2h39cEKOB+eRAMyUC9VMH0qg4O8eKpDd7KKl9k1A3kzYV
-         QjQA==
-X-Gm-Message-State: AOJu0YzRq/1e/m2anoSP6Ywsx7zTFdUr4u9UTDtzp+U4sS0kotLeM9UV
-	2V77zI0c6l+JhuYLqWCsh1Onww==
-X-Google-Smtp-Source: AGHT+IGZrZjuqSymisc89L4QV+JjjMZTNiIOsTyYazgRaov9rWMR5PLaervrIuX2YUjmeJ5JJqeBng==
-X-Received: by 2002:a05:6a20:7292:b0:17d:f127:d435 with SMTP id o18-20020a056a20729200b0017df127d435mr13937235pzk.45.1700143312099;
-        Thu, 16 Nov 2023 06:01:52 -0800 (PST)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id s14-20020a65690e000000b0057c44503835sm2548935pgq.65.2023.11.16.06.01.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Nov 2023 06:01:51 -0800 (PST)
-From: Kees Cook <keescook@chromium.org>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Kees Cook <keescook@chromium.org>,
-	Rob Herring <robh@kernel.org>,
-	Jean Delvare <jdelvare@suse.com>,
-	linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] hwmon: Explicitly initialize nct6775_sio_names indexes
-Date: Thu, 16 Nov 2023 06:01:47 -0800
-Message-Id: <20231116140144.work.027-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="e6oxUElr"
+Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ED55135
+	for <linux-hardening@vger.kernel.org>; Thu, 16 Nov 2023 06:18:47 -0800 (PST)
+Received: from eig-obgw-5003a.ext.cloudfilter.net ([10.0.29.159])
+	by cmsmtp with ESMTPS
+	id 3b2RrmtxoKOkL3dCgrrwkD; Thu, 16 Nov 2023 14:18:47 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id 3dCfr0tognCfv3dCgrIaqJ; Thu, 16 Nov 2023 14:18:46 +0000
+X-Authority-Analysis: v=2.4 cv=KKpJsXJo c=1 sm=1 tr=0 ts=655624c6
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=BNY50KLci1gA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
+ a=QjxsOCQfT30fdp00ze8A:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=MOuVp5lGP1M6/tw0eHZ9E5ELxXkBynPRyGwIqBxCovU=; b=e6oxUElrS6W3RP5z+BAZjOCQ1n
+	ay/qOEbo57lOUd/+S89VygFWbiXYPRewufIVQIM1NyyRciA4E918iCehewb0kiAv75cNmbgDDc0Fb
+	GvD2DS3jqqJH7gIgZPbwMr09SskeTzBmoZkQ84Wo3amGsonw+UCOnERSFUfx12fjwaHgdC/7sUFbO
+	7a4csOmE7QaZZzRndHlYPm/23q+nE13Vd+vTvOidt19rWRqrnyVOV1rzK5xZnV9qnzkUr898a3Cc0
+	90t/xi3fhz4elnjUSZnKT/13ig2TXvDEwbSL9of+JpkeFfepFKNe8PDU+q0h9XfPovkxx3VYv8Vh0
+	wqeoWMpw==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:38172 helo=[192.168.15.10])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1r3dCf-000Wnb-0W;
+	Thu, 16 Nov 2023 08:18:45 -0600
+Message-ID: <e385a095-c6ea-4db5-ab7c-7221593dc6c3@embeddedor.com>
+Date: Thu, 16 Nov 2023 08:18:43 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2480; i=keescook@chromium.org;
- h=from:subject:message-id; bh=1CBLvb2An+Ij1IqxYo9cQLowHTbR2aYsJsLLfg4xKq8=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlViDLcz9aCbUgsJCVyqbFezrdEGpNsti+B37jv
- M346jHjQDuJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZVYgywAKCRCJcvTf3G3A
- Jk2DEACUk8rhIfFZwVeiVzXN6C47wYLRjwroswyjiBUQUFOSI2KDXV6a+evv1UEZflmzu6kGZX7
- BfnurrsZklRVxiABl9d22CAQGg6So8+pohy/C2+9a75/jYo61NKNY5Z9RYj66Ky2A0Va5Ticr9o
- Dp8EyJvS0Gpmvk79+1yAhhOeCL/PRxA+rwwPbU+DMX4VjXHahrhm1t4puf2feCR9KNOVCcRo2+h
- /gGWV6rMzysaAUihtxG2mUDojfHE2L+7uISHj90ZJK9U9LHHXFQq9R8aGCKbZlo4mmlEl/ip9wQ
- AsbcXrs0Jd94j+kVkBUrtwT3CjRVn9kwxWBVzeX3SAAu77bqT/G0AN1FvE3WMcAW/0WRdKvDs7u
- eCXPjRIWpnXxVYirBaCDMPg32CGddBAHOlBTh7C2kcSXt8PHiBdumvBVB6rtTikFVwTUxTK/AL0
- sw1y4mW3SJ4cUrPzwvY+h4O8Q0TtkA0VNo4pyCqumeh2A0Bz4Xiq5hTecX/wP7YkR+hs+2WNqnL
- 2ieVu9s2tadcO73MWPGDH07liU63FlUAB7LLcz0jBvKOaGlfVxUNpzqxVMV76a8uJpKCCezpgYT
- LRvvDv/JLtVSLwYlN4lGkhs8Rq1BV5DYREPhKLNvwqURK8oitAtHMHceGljgGiMT0Gh43MZfNLx
- LDGKpPP q3yl9hlQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] Makefile: Enable -Wstringop-overflow globally
+Content-Language: en-US
+To: Masahiro Yamada <masahiroy@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>,
+ Nicolas Schier <nicolas@fjasle.eu>, linux-kbuild@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <ZVWMCZ/jb4nX3yHn@work>
+ <CAK7LNAR1i8HP8E3UmmSggZMka+UbJswU_bVMyxmRt4CbQhoTAA@mail.gmail.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <CAK7LNAR1i8HP8E3UmmSggZMka+UbJswU_bVMyxmRt4CbQhoTAA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.21.192
+X-Source-L: No
+X-Exim-ID: 1r3dCf-000Wnb-0W
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:38172
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfNzrOajOXEeW32LjoJbyohAV+S42yRcpIsl+qkKM79jEFQyFQPJyLoWVS13etmiVHP0+KmcJJLHmSQ4Z9PvLVmNJD5CuELLRggzle6yttBE57wEQnTBX
+ r9YaNZsTrkZWUuvttuPxYzM1laiNnY4rfJ2LwFB/sZbFZvKBCcZN48S1qegv+EJTtQ9b1CMa0yjuAZYv2AWshhKPokIYqu+6XiMNjTETLh28tuhx9+mQ8dPI
 
-Changing the "kinds" enum start value to be 1-indexed instead of
-0-indexed caused look-ups in nct6775_sio_namesp[] to be misaligned or
-off the end. Coverity reported:
 
-*** CID 1571052:  Memory - illegal accesses  (OVERRUN)
-drivers/hwmon/nct6775-platform.c:1075 in nct6775_find()
-1069                sio_data->kind == nct6793 || sio_data->kind == nct6795 ||
-1070                sio_data->kind == nct6796 || sio_data->kind == nct6797 ||
-1071                sio_data->kind == nct6798 || sio_data->kind == nct6799)
-1072                    nct6791_enable_io_mapping(sio_data);
-1073
-1074            sio_data->sio_exit(sio_data);
-vvv     CID 1571052:  Memory - illegal accesses  (OVERRUN)
-vvv     Overrunning array "nct6775_sio_names" of 13 8-byte elements at element index 13 (byte offset 111) using index "sio_data->kind" (which evaluates to 13).
-1075            pr_info("Found %s or compatible chip at %#x:%#x\n",
-1076                    nct6775_sio_names[sio_data->kind], sioaddr, addr);
-1077
-1078            return addr;
-1079     }
-1080
 
-Initialize the string list with explicit indexes.
+On 11/16/23 05:23, Masahiro Yamada wrote:
+> On Thu, Nov 16, 2023 at 12:27 PM Gustavo A. R. Silva
+> <gustavoars@kernel.org> wrote:
+>>
+>> It seems that we have finished addressing all the remaining
+>> issues regarding compiler option -Wstringop-overflow. So, we
+>> are now in good shape to enable this compiler option globally.
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>> ---
+>>   Makefile                   | 3 +++
+>>   scripts/Makefile.extrawarn | 2 --
+>>   2 files changed, 3 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Makefile b/Makefile
+>> index 690cde550acd..452b7d0e19e9 100644
+>> --- a/Makefile
+>> +++ b/Makefile
+>> @@ -985,6 +985,9 @@ NOSTDINC_FLAGS += -nostdinc
+>>   # perform bounds checking.
+>>   KBUILD_CFLAGS += $(call cc-option, -fstrict-flex-arrays=3)
+>>
+>> +# We are now in good shape to enable this option.
+> 
+> Please remove this comment.
+> 
+> It it fine to mention it in the commit log, but
+> not in the Makefile.
 
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Jean Delvare <jdelvare@suse.com>
-Cc: linux-hwmon@vger.kernel.org
-Fixes: 0a7093e69c1e ("hwmon: nct6775-i2c: Use i2c_get_match_data()")
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/hwmon/nct6775-platform.c | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+Sure thing. I'll change that and add this patch to my -next tree.
 
-diff --git a/drivers/hwmon/nct6775-platform.c b/drivers/hwmon/nct6775-platform.c
-index 0adeeab7ee03..9aa4dcf4a6f3 100644
---- a/drivers/hwmon/nct6775-platform.c
-+++ b/drivers/hwmon/nct6775-platform.c
-@@ -23,19 +23,19 @@
- enum sensor_access { access_direct, access_asuswmi };
- 
- static const char * const nct6775_sio_names[] __initconst = {
--	"NCT6106D",
--	"NCT6116D",
--	"NCT6775F",
--	"NCT6776D/F",
--	"NCT6779D",
--	"NCT6791D",
--	"NCT6792D",
--	"NCT6793D",
--	"NCT6795D",
--	"NCT6796D",
--	"NCT6797D",
--	"NCT6798D",
--	"NCT6796D-S/NCT6799D-R",
-+	[nct6106] = "NCT6106D",
-+	[nct6116] = "NCT6116D",
-+	[nct6775] = "NCT6775F",
-+	[nct6776] = "NCT6776D/F",
-+	[nct6779] = "NCT6779D",
-+	[nct6791] = "NCT6791D",
-+	[nct6792] = "NCT6792D",
-+	[nct6793] = "NCT6793D",
-+	[nct6795] = "NCT6795D",
-+	[nct6796] = "NCT6796D",
-+	[nct6797] = "NCT6797D",
-+	[nct6798] = "NCT6798D",
-+	[nct6799] = "NCT6796D-S/NCT6799D-R",
- };
- 
- static unsigned short force_id;
--- 
-2.34.1
+> 
+> 
+> 
+> I hope somebody will double-check this patch in CI infrastructure.
 
+I'll take care of that.
+
+Thanks
+--
+Gustavo
+
+> 
+> 
+> 
+> 
+>> +KBUILD_CFLAGS += $(call cc-option, -Wstringop-overflow)
+>> +
+>>   # disable invalid "can't wrap" optimizations for signed / pointers
+>>   KBUILD_CFLAGS  += -fno-strict-overflow
+>>
+>> diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
+>> index 2fe6f2828d37..1527199161d7 100644
+>> --- a/scripts/Makefile.extrawarn
+>> +++ b/scripts/Makefile.extrawarn
+>> @@ -106,7 +106,6 @@ KBUILD_CFLAGS += $(call cc-option, -Wunused-const-variable)
+>>   KBUILD_CFLAGS += $(call cc-option, -Wpacked-not-aligned)
+>>   KBUILD_CFLAGS += $(call cc-option, -Wformat-overflow)
+>>   KBUILD_CFLAGS += $(call cc-option, -Wformat-truncation)
+>> -KBUILD_CFLAGS += $(call cc-option, -Wstringop-overflow)
+>>   KBUILD_CFLAGS += $(call cc-option, -Wstringop-truncation)
+>>
+>>   KBUILD_CPPFLAGS += -Wundef
+>> @@ -122,7 +121,6 @@ KBUILD_CFLAGS += $(call cc-disable-warning, restrict)
+>>   KBUILD_CFLAGS += $(call cc-disable-warning, packed-not-aligned)
+>>   KBUILD_CFLAGS += $(call cc-disable-warning, format-overflow)
+>>   KBUILD_CFLAGS += $(call cc-disable-warning, format-truncation)
+>> -KBUILD_CFLAGS += $(call cc-disable-warning, stringop-overflow)
+>>   KBUILD_CFLAGS += $(call cc-disable-warning, stringop-truncation)
+>>
+>>   ifdef CONFIG_CC_IS_CLANG
+>> --
+>> 2.34.1
+>>
+> 
+> 
