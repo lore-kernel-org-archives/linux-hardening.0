@@ -1,156 +1,153 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="e6oxUElr"
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ED55135
-	for <linux-hardening@vger.kernel.org>; Thu, 16 Nov 2023 06:18:47 -0800 (PST)
-Received: from eig-obgw-5003a.ext.cloudfilter.net ([10.0.29.159])
-	by cmsmtp with ESMTPS
-	id 3b2RrmtxoKOkL3dCgrrwkD; Thu, 16 Nov 2023 14:18:47 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id 3dCfr0tognCfv3dCgrIaqJ; Thu, 16 Nov 2023 14:18:46 +0000
-X-Authority-Analysis: v=2.4 cv=KKpJsXJo c=1 sm=1 tr=0 ts=655624c6
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=BNY50KLci1gA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=QjxsOCQfT30fdp00ze8A:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=MOuVp5lGP1M6/tw0eHZ9E5ELxXkBynPRyGwIqBxCovU=; b=e6oxUElrS6W3RP5z+BAZjOCQ1n
-	ay/qOEbo57lOUd/+S89VygFWbiXYPRewufIVQIM1NyyRciA4E918iCehewb0kiAv75cNmbgDDc0Fb
-	GvD2DS3jqqJH7gIgZPbwMr09SskeTzBmoZkQ84Wo3amGsonw+UCOnERSFUfx12fjwaHgdC/7sUFbO
-	7a4csOmE7QaZZzRndHlYPm/23q+nE13Vd+vTvOidt19rWRqrnyVOV1rzK5xZnV9qnzkUr898a3Cc0
-	90t/xi3fhz4elnjUSZnKT/13ig2TXvDEwbSL9of+JpkeFfepFKNe8PDU+q0h9XfPovkxx3VYv8Vh0
-	wqeoWMpw==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:38172 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1r3dCf-000Wnb-0W;
-	Thu, 16 Nov 2023 08:18:45 -0600
-Message-ID: <e385a095-c6ea-4db5-ab7c-7221593dc6c3@embeddedor.com>
-Date: Thu, 16 Nov 2023 08:18:43 -0600
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R3AEqaSZ"
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FD9198
+	for <linux-hardening@vger.kernel.org>; Thu, 16 Nov 2023 06:30:01 -0800 (PST)
+Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1cc921a4632so7938785ad.1
+        for <linux-hardening@vger.kernel.org>; Thu, 16 Nov 2023 06:30:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1700145001; x=1700749801; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=T5CFIZMwZsIi1w6Tq3EafFzryCHHlKPpfY4zDkytZ7U=;
+        b=R3AEqaSZVMIMjjddqI4j6NlcKknYaIrFrVGEqEcMQwcBU8DgIbnVyqQSrDcYbEYncJ
+         sVUsdCqAN+/0SPB4QheAyNhquxo3VQGzAuUZkwGZ/zfVLk2cw84wlxdEyI9NHgB4Twep
+         7dlv/1ASPG6x9tuWPca9T9e3A80ta4Sa08XTA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700145001; x=1700749801;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=T5CFIZMwZsIi1w6Tq3EafFzryCHHlKPpfY4zDkytZ7U=;
+        b=o2cOwH6PcJr1KN6ORtyIpjPxwXpaJvfPcia7aQcOQhdksSxg/bRCKrzWWsEAIm1+hw
+         VsHte+F7UT6fUdbG00Uz8Y4yS8bMLCVYgZwXtA36P8ggZWW8OjRKjgr0nYIkXULrQDZ6
+         dghnnWNKS0ewZTIY0nhpXrGxYcJ1/wsXOWvgBaGwMIhj2JytOzZlhJd5SN+IjkLcecs2
+         Xvcg/NkBv/R7yTpqRWB4xx/0FT64JpjRZzdc/33CzEYLrelg0GH2s7J3BCUAZGAuEKyB
+         VVbZi1J+acMODPrzEQ3hOdH+DadQvwu7q79WOWgdqrRSeDq3Vjh2/2owVE+yFUAoV0Dn
+         mH/g==
+X-Gm-Message-State: AOJu0YwxbqizLbz9r+hyAErdtORu2GokwiY7A+gxqnbj2cMppOz2Pawe
+	OS2XFM3cBn4JsdPkFmjERwU7fg==
+X-Google-Smtp-Source: AGHT+IG6V5T+0h2/o/qC5yOwsFvHS/29nOKkQVfCxV97Mw1JK0y5UuHXg3KrPJuJB7pX6mYEVsJa4Q==
+X-Received: by 2002:a17:903:1108:b0:1c3:c687:478c with SMTP id n8-20020a170903110800b001c3c687478cmr11031354plh.8.1700145001063;
+        Thu, 16 Nov 2023 06:30:01 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id t16-20020a170902e85000b001c46d04d001sm9301552plg.87.2023.11.16.06.30.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Nov 2023 06:30:00 -0800 (PST)
+Date: Thu, 16 Nov 2023 06:29:59 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Ronald Monthero <debug.penguin32@gmail.com>
+Cc: al@alarsen.net, gustavoars@kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] qnx4: fix to avoid panic due to buffer overflow
+Message-ID: <202311160612.C38BF44@keescook>
+References: <20231112095353.579855-1-debug.penguin32@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] Makefile: Enable -Wstringop-overflow globally
-Content-Language: en-US
-To: Masahiro Yamada <masahiroy@kernel.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>,
- Nicolas Schier <nicolas@fjasle.eu>, linux-kbuild@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <ZVWMCZ/jb4nX3yHn@work>
- <CAK7LNAR1i8HP8E3UmmSggZMka+UbJswU_bVMyxmRt4CbQhoTAA@mail.gmail.com>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <CAK7LNAR1i8HP8E3UmmSggZMka+UbJswU_bVMyxmRt4CbQhoTAA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1r3dCf-000Wnb-0W
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:38172
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfNzrOajOXEeW32LjoJbyohAV+S42yRcpIsl+qkKM79jEFQyFQPJyLoWVS13etmiVHP0+KmcJJLHmSQ4Z9PvLVmNJD5CuELLRggzle6yttBE57wEQnTBX
- r9YaNZsTrkZWUuvttuPxYzM1laiNnY4rfJ2LwFB/sZbFZvKBCcZN48S1qegv+EJTtQ9b1CMa0yjuAZYv2AWshhKPokIYqu+6XiMNjTETLh28tuhx9+mQ8dPI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231112095353.579855-1-debug.penguin32@gmail.com>
 
+On Sun, Nov 12, 2023 at 07:53:53PM +1000, Ronald Monthero wrote:
+> qnx4 dir name length can vary to be of maximum size
+> QNX4_NAME_MAX or QNX4_SHORT_NAME_MAX depending on whether
+> 'link info' entry is stored and the status byte is set.
+> So to avoid buffer overflow check di_fname length
+> fetched from (struct qnx4_inode_entry *)
+> before use in strlen to avoid buffer overflow.
+> 
+> panic context
+> [ 4849.636861] detected buffer overflow in strlen
+> [ 4849.636897] ------------[ cut here ]------------
+> [ 4849.636902] kernel BUG at lib/string.c:1165!
+> [ 4849.636917] invalid opcode: 0000 [#2] SMP PTI
+> ..
+> [ 4849.637047] Call Trace:
+> [ 4849.637053]  <TASK>
+> [ 4849.637059]  ? show_trace_log_lvl+0x1d6/0x2ea
+> [ 4849.637075]  ? show_trace_log_lvl+0x1d6/0x2ea
+> [ 4849.637095]  ? qnx4_find_entry.cold+0xc/0x18 [qnx4]
+> [ 4849.637111]  ? show_regs.part.0+0x23/0x29
+> [ 4849.637123]  ? __die_body.cold+0x8/0xd
+> [ 4849.637135]  ? __die+0x2b/0x37
+> [ 4849.637147]  ? die+0x30/0x60
+> [ 4849.637161]  ? do_trap+0xbe/0x100
+> [ 4849.637171]  ? do_error_trap+0x6f/0xb0
+> [ 4849.637180]  ? fortify_panic+0x13/0x15
+> [ 4849.637192]  ? exc_invalid_op+0x53/0x70
+> [ 4849.637203]  ? fortify_panic+0x13/0x15
+> [ 4849.637215]  ? asm_exc_invalid_op+0x1b/0x20
+> [ 4849.637228]  ? fortify_panic+0x13/0x15
+> [ 4849.637240]  ? fortify_panic+0x13/0x15
+> [ 4849.637251]  qnx4_find_entry.cold+0xc/0x18 [qnx4]
+> [ 4849.637264]  qnx4_lookup+0x3c/0xa0 [qnx4]
+> [ 4849.637275]  __lookup_slow+0x85/0x150
+> [ 4849.637291]  walk_component+0x145/0x1c0
+> [ 4849.637304]  ? path_init+0x2c0/0x3f0
+> [ 4849.637316]  path_lookupat+0x6e/0x1c0
+> [ 4849.637330]  filename_lookup+0xcf/0x1d0
+> [ 4849.637341]  ? __check_object_size+0x1d/0x30
+> [ 4849.637354]  ? strncpy_from_user+0x44/0x150
+> [ 4849.637365]  ? getname_flags.part.0+0x4c/0x1b0
+> [ 4849.637375]  user_path_at_empty+0x3f/0x60
+> [ 4849.637383]  vfs_statx+0x7a/0x130
+> [ 4849.637393]  do_statx+0x45/0x80
+> ..
+> 
+> Signed-off-by: Ronald Monthero <debug.penguin32@gmail.com>
+> ---
+>  fs/qnx4/namei.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/fs/qnx4/namei.c b/fs/qnx4/namei.c
+> index 8d72221735d7..825b891a52b3 100644
+> --- a/fs/qnx4/namei.c
+> +++ b/fs/qnx4/namei.c
+> @@ -40,6 +40,13 @@ static int qnx4_match(int len, const char *name,
+>  	} else {
+>  		namelen = QNX4_SHORT_NAME_MAX;
+>  	}
+> +
+> +	/** qnx4 dir name length can vary, check the di_fname
+> +	 * fetched from (struct qnx4_inode_entry *) before use in
+> +	 * strlen to avoid panic due to buffer overflow"
+> +	 */
 
+Style nit: this comment should start with just "/*" alone, like:
 
-On 11/16/23 05:23, Masahiro Yamada wrote:
-> On Thu, Nov 16, 2023 at 12:27 PM Gustavo A. R. Silva
-> <gustavoars@kernel.org> wrote:
->>
->> It seems that we have finished addressing all the remaining
->> issues regarding compiler option -Wstringop-overflow. So, we
->> are now in good shape to enable this compiler option globally.
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->> ---
->>   Makefile                   | 3 +++
->>   scripts/Makefile.extrawarn | 2 --
->>   2 files changed, 3 insertions(+), 2 deletions(-)
->>
->> diff --git a/Makefile b/Makefile
->> index 690cde550acd..452b7d0e19e9 100644
->> --- a/Makefile
->> +++ b/Makefile
->> @@ -985,6 +985,9 @@ NOSTDINC_FLAGS += -nostdinc
->>   # perform bounds checking.
->>   KBUILD_CFLAGS += $(call cc-option, -fstrict-flex-arrays=3)
->>
->> +# We are now in good shape to enable this option.
-> 
-> Please remove this comment.
-> 
-> It it fine to mention it in the commit log, but
-> not in the Makefile.
+	/*
+	 * qnx4 dir name ...
 
-Sure thing. I'll change that and add this patch to my -next tree.
+> +	if (strnlen(de->di_fname, namelen) >= sizeof(de->di_fname))
+> +		return -ENAMETOOLONG;
+>  	thislen = strlen( de->di_fname );
 
-> 
-> 
-> 
-> I hope somebody will double-check this patch in CI infrastructure.
+de->di_fname is:
 
-I'll take care of that.
+struct qnx4_inode_entry {
+        char            di_fname[QNX4_SHORT_NAME_MAX];
+	...
 
-Thanks
---
-Gustavo
+#define QNX4_SHORT_NAME_MAX     16
+#define QNX4_NAME_MAX           48
 
+It's always going to have a max of QNX4_SHORT_NAME_MAX. Is any of this
+code correct if namelen ends up being QNX4_NAME_MAX? It'll be reading
+past the end of di_fname.
+
+Is bh->b_data actually struct qnx4_inode_entry ?
+
+-Kees
+
+>  	if ( thislen > namelen )
+>  		thislen = namelen;
+> -- 
+> 2.34.1
 > 
-> 
-> 
-> 
->> +KBUILD_CFLAGS += $(call cc-option, -Wstringop-overflow)
->> +
->>   # disable invalid "can't wrap" optimizations for signed / pointers
->>   KBUILD_CFLAGS  += -fno-strict-overflow
->>
->> diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
->> index 2fe6f2828d37..1527199161d7 100644
->> --- a/scripts/Makefile.extrawarn
->> +++ b/scripts/Makefile.extrawarn
->> @@ -106,7 +106,6 @@ KBUILD_CFLAGS += $(call cc-option, -Wunused-const-variable)
->>   KBUILD_CFLAGS += $(call cc-option, -Wpacked-not-aligned)
->>   KBUILD_CFLAGS += $(call cc-option, -Wformat-overflow)
->>   KBUILD_CFLAGS += $(call cc-option, -Wformat-truncation)
->> -KBUILD_CFLAGS += $(call cc-option, -Wstringop-overflow)
->>   KBUILD_CFLAGS += $(call cc-option, -Wstringop-truncation)
->>
->>   KBUILD_CPPFLAGS += -Wundef
->> @@ -122,7 +121,6 @@ KBUILD_CFLAGS += $(call cc-disable-warning, restrict)
->>   KBUILD_CFLAGS += $(call cc-disable-warning, packed-not-aligned)
->>   KBUILD_CFLAGS += $(call cc-disable-warning, format-overflow)
->>   KBUILD_CFLAGS += $(call cc-disable-warning, format-truncation)
->> -KBUILD_CFLAGS += $(call cc-disable-warning, stringop-overflow)
->>   KBUILD_CFLAGS += $(call cc-disable-warning, stringop-truncation)
->>
->>   ifdef CONFIG_CC_IS_CLANG
->> --
->> 2.34.1
->>
-> 
-> 
+
+-- 
+Kees Cook
