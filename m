@@ -1,50 +1,51 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Slh+eTSd"
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9D151AD
-	for <linux-hardening@vger.kernel.org>; Thu, 16 Nov 2023 10:26:56 -0800 (PST)
-Received: by mail-pj1-x1036.google.com with SMTP id 98e67ed59e1d1-28396255b81so127489a91.0
-        for <linux-hardening@vger.kernel.org>; Thu, 16 Nov 2023 10:26:56 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Bw1+HklB"
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3FA41AD
+	for <linux-hardening@vger.kernel.org>; Thu, 16 Nov 2023 10:28:38 -0800 (PST)
+Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1cc30bf9e22so8578025ad.1
+        for <linux-hardening@vger.kernel.org>; Thu, 16 Nov 2023 10:28:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1700159216; x=1700764016; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1700159318; x=1700764118; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ryv7O7n+GCzs6Fr4SKSqmKTxgqUPHr5PV33Ybnp7npk=;
-        b=Slh+eTSdagDiBtU28Js3FC0N5BysKpZq8sKzI2WbqNuCLAExohIQqOqQF/Sz6mBgg+
-         jkXwq8A/OC//9MbEbqP2dheNNvdN2FbeBsQFu4n3wm+do1Rio4HAlkuCluQNLMJnL1u8
-         GiNwMobngoYKKu7Gh4w/fXYh7Lifkyarny6Pw=
+        bh=7reBGJiccGvFEPh84DNhsMy+d8d0VEfZ803Vs8wYx6A=;
+        b=Bw1+HklBx24qQvlrxlGvf87SNTxgtB2H7RSTrdsZR2AFH/KEUZU6rNkusOea1sCbaZ
+         6s+REsEmrGSJdW+777sPyeSg/94oYl4/QHj/FAyXh8+M8PfDWi6pDCAEIkfxgQFMh9np
+         TfsUBXnvkRI3p21iy2fFS/mz0lThRZHYoOrjM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700159216; x=1700764016;
+        d=1e100.net; s=20230601; t=1700159318; x=1700764118;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ryv7O7n+GCzs6Fr4SKSqmKTxgqUPHr5PV33Ybnp7npk=;
-        b=IEqEPhaedfPugnGX6zIyxqCCaPT4Apn0kua1J0eila22g4La5u/I94pqJ6T509rnGO
-         EK3q94zLtjee4SgBfj9al8gZCumn3MchO1/D3D89pMVPjXTOOkFPlSymji+WNxPz1muC
-         aCPQahQ/paxBYhWLDPL49o+Ty4Hsokkb7bkcr3abBcaqakcrmc7REjog0umk8K9neZB1
-         CZh7oPWjJ1XDjpZRQnrCLeUIPJVsBbL720kYVpRkp/GZBliHUYvNlrbDGn6xUgaHoDWI
-         gKL1AMca3KTbBfbHaDz7LT6ubLjFa90TQTwVXEv0lk8uGNZJXokH10IJqqyaMOSQgmb0
-         NXdw==
-X-Gm-Message-State: AOJu0YyVkipNy3EGzZl4fCoxXd2JN88Q9E8ZFUFINbM3H9Ut+frP8ddn
-	kIQpZLmimHeQuDGH+4v19PCTaTCVcuaMfQOY0y7v8g==
-X-Google-Smtp-Source: AGHT+IHAgz6D04wSTUtxFQ/+pV7DvqhYbB4ucCOzSI+UsoyqYbzNG79z0FTVHTIWqtYeVVIQkxDXCQ==
-X-Received: by 2002:a17:90b:33c3:b0:27f:bd9e:5a19 with SMTP id lk3-20020a17090b33c300b0027fbd9e5a19mr14077505pjb.25.1700159216203;
-        Thu, 16 Nov 2023 10:26:56 -0800 (PST)
+        bh=7reBGJiccGvFEPh84DNhsMy+d8d0VEfZ803Vs8wYx6A=;
+        b=I6vErTgJY6ZK3bx8MjACEKDIdAAWeGjV3/32YX6ir+jRQQvDFkRT9qpW0k/s6qUe1/
+         yY4PwqdSd+Hg3cf4Qkzfbf9gOCBGHw5LjK92G7zDig9bcIdPyZmykmwDcZJ5Iu4ozQbv
+         SpVaio9JEiNFSwWGEkcQ9i1uIzyO3kpK36UeMuZ5E2AFrDfiJ4TiCCUSXKyIX9Hz3ZBR
+         eYsstvG/57oYdRwfnMlsY0/V2KftSf13oOK2frOMgzrVirzFcsaaYhKKHu/psTEfJsCc
+         9bVNKT6Wt/MReNyNfLHZoV40z48bA+6kGoLb92fwrYYdbPDO7fsvSaviEBLVNmKAugsq
+         qtew==
+X-Gm-Message-State: AOJu0YzSJDfxOKf3wQbysgrffAnDNO/BgYVuxC5B6tGE/nXy1AhXQEIQ
+	aO2wjjKuYB/rxl92cqvoMK2q/Q==
+X-Google-Smtp-Source: AGHT+IGAIJ1flNjVNFt30991BeOzVwdm7nFOpSj7aipBLifSRgBzIDb+/MN7TcTVw7PDSnp4FgwR1Q==
+X-Received: by 2002:a17:903:485:b0:1cc:38e6:f097 with SMTP id jj5-20020a170903048500b001cc38e6f097mr3076987plb.7.1700159318125;
+        Thu, 16 Nov 2023 10:28:38 -0800 (PST)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id m1-20020a17090a7f8100b0027d0c3507fcsm1849274pjl.9.2023.11.16.10.26.55
+        by smtp.gmail.com with ESMTPSA id t18-20020a1709028c9200b001bdeedd8579sm9514614plo.252.2023.11.16.10.28.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Nov 2023 10:26:55 -0800 (PST)
-Date: Thu, 16 Nov 2023 10:26:55 -0800
+        Thu, 16 Nov 2023 10:28:37 -0800 (PST)
+Date: Thu, 16 Nov 2023 10:28:37 -0800
 From: Kees Cook <keescook@chromium.org>
-To: Anders Larsen <al@alarsen.net>
-Cc: Ronald Monthero <debug.penguin32@gmail.com>, gustavoars@kernel.org,
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
+	Danilo Krummrich <dakr@redhat.com>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] qnx4: fix to avoid panic due to buffer overflow
-Message-ID: <202311161022.6B34F00641@keescook>
-References: <20231112095353.579855-1-debug.penguin32@gmail.com>
- <202311160612.C38BF44@keescook>
- <202311160631.5ACFB84B7C@keescook>
- <2910678.e9J7NaK4W3@oscar>
+Subject: Re: [PATCH][next] nouveau/gsp: replace zero-length array with
+ flex-array member and use __counted_by
+Message-ID: <202311161028.E780FBB146@keescook>
+References: <ZVZbX7C5suLMiBf+@work>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -53,114 +54,37 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2910678.e9J7NaK4W3@oscar>
+In-Reply-To: <ZVZbX7C5suLMiBf+@work>
 
-On Thu, Nov 16, 2023 at 05:48:20PM +0100, Anders Larsen wrote:
-> On 2023-11-16 15:58 Kees Cook wrote:
-> >         if ((de->di_status & QNX4_FILE_LINK) == QNX4_FILE_LINK) {
-> >                 lnk = (struct qnx4_link_info *) de;
-> > 
-> > It seems that entries may be either struct qnx4_inode_entry or struct
-> > qnx4_link_info but it's not captured in a union.
-> > 
-> > This needs to be fixed by not lying to the compiler about what is there.
-> > 
-> > How about this?
+On Thu, Nov 16, 2023 at 12:11:43PM -0600, Gustavo A. R. Silva wrote:
+> Fake flexible arrays (zero-length and one-element arrays) are deprecated,
+> and should be replaced by flexible-array members. So, replace
+> zero-length array with a flexible-array member in `struct
+> PACKED_REGISTRY_TABLE`.
 > 
-> > diff --git a/fs/qnx4/namei.c b/fs/qnx4/namei.c
-> > index 8d72221735d7..3cd20065bcfa 100644
-> > --- a/fs/qnx4/namei.c
-> > +++ b/fs/qnx4/namei.c
-> > @@ -26,31 +26,39 @@
-> >  static int qnx4_match(int len, const char *name,
-> >  		      struct buffer_head *bh, unsigned long *offset)
-> >  {
-> > -	struct qnx4_inode_entry *de;
-> > -	int namelen, thislen;
-> > +	union qnx4_dir_entry *de;
-> > +	char *entry_fname;
-> > +	int entry_len, entry_max_len;
-> > 
-> >  	if (bh == NULL) {
-> >  		printk(KERN_WARNING "qnx4: matching unassigned buffer !
-> \n");
-> >  		return 0;
-> >  	}
-> > -	de = (struct qnx4_inode_entry *) (bh->b_data + *offset);
-> > +	de = (union qnx4_dir_entry *) (bh->b_data + *offset);
-> >  	*offset += QNX4_DIR_ENTRY_SIZE;
-> > -	if ((de->di_status & QNX4_FILE_LINK) != 0) {
-> > -		namelen = QNX4_NAME_MAX;
-> > -	} else {
-> > -		namelen = QNX4_SHORT_NAME_MAX;
-> > -	}
-> > -	thislen = strlen( de->di_fname );
-> > -	if ( thislen > namelen )
-> > -		thislen = namelen;
-> > -	if (len != thislen) {
-> > +
-> > +	switch (de->inode.di_status) {
-> > +	case QNX4_FILE_LINK:
-> > +		entry_fname = de->link.dl_fname;
-> > +		entry_max_len = sizeof(de->link.dl_fname);
-> > +		break;
-> > +	case QNX4_FILE_USED:
-> > +		entry_fname = de->inode.di_fname;
-> > +		entry_max_len = sizeof(de->inode.di_fname);
-> > +		break;
-> > +	default:
-> >  		return 0;
-> >  	}
+> Also annotate array `entries` with `__counted_by()` to prepare for the
+> coming implementation by GCC and Clang of the `__counted_by` attribute.
+> Flexible array members annotated with `__counted_by` can have their
+> accesses bounds-checked at run-time via `CONFIG_UBSAN_BOUNDS` (for array
+> indexing) and `CONFIG_FORTIFY_SOURCE` (for strcpy/memcpy-family functions).
 > 
-> The switch won't work since the _status field is a bit-field, so we should 
-> rather reuse the similar union-logic already present in fs/qnx4/dir.c
+> This fixes multiple -Warray-bounds warnings:
+> drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c:1069:29: warning: array subscript 0 is outside array bounds of 'PACKED_REGISTRY_ENTRY[0]' [-Warray-bounds=]
+> drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c:1070:29: warning: array subscript 0 is outside array bounds of 'PACKED_REGISTRY_ENTRY[0]' [-Warray-bounds=]
+> drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c:1071:29: warning: array subscript 0 is outside array bounds of 'PACKED_REGISTRY_ENTRY[0]' [-Warray-bounds=]
+> drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c:1072:29: warning: array subscript 0 is outside array bounds of 'PACKED_REGISTRY_ENTRY[0]' [-Warray-bounds=]
+> 
+> While there, also make use of the struct_size() helper, and address
+> checkpatch.pl warning:
+> WARNING: please, no spaces at the start of a line
+> 
+> This results in no differences in binary output.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Ah, okay, LINK and USED might both be there. And perfect, yes, it looks
-like the union qnx4_directory_entry in fs/qnx4/dir.c would be perfect.
+Looks nice to me.
 
--Kees
-
-> > -	if (strncmp(name, de->di_fname, len) == 0) {
-> > -		if ((de->di_status & (QNX4_FILE_USED|QNX4_FILE_LINK)) !
-> = 0) {
-> > -			return 1;
-> > -		}
-> > -	}
-> > +
-> > +	/* Directory entry may not be %NUL-terminated. */
-> > +	entry_len = strnlen(entry_fname, entry_max_len);
-> > +
-> > +	if (len != entry_len)
-> > +		return 0;
-> > +
-> > +	if (strncmp(name, entry_fname, len) == 0)
-> > +		return 1;
-> > +
-> >  	return 0;
-> >  }
-> > 
-> > diff --git a/include/uapi/linux/qnx4_fs.h b/include/uapi/linux/qnx4_fs.h
-> > index 31487325d265..e033dbe1e009 100644
-> > --- a/include/uapi/linux/qnx4_fs.h
-> > +++ b/include/uapi/linux/qnx4_fs.h
-> > @@ -68,6 +68,13 @@ struct qnx4_link_info {
-> >  	__u8		dl_status;
-> >  };
-> > 
-> > +union qnx4_dir_entry {
-> > +	struct qnx4_inode_entry inode;
-> > +	struct qnx4_link_info link;
-> > +};
-> > +_Static_assert(offsetof(struct qnx4_inode_entry, di_status) ==
-> > +	       offsetof(struct qnx4_link_info, dl_status));
-> > +
-> >  struct qnx4_xblk {
-> >  	__le32		xblk_next_xblk;
-> >  	__le32		xblk_prev_xblk;
-> 
-> 
-> 
-> 
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -- 
 Kees Cook
