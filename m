@@ -1,165 +1,108 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FWhcCpMD"
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 933C3D50
-	for <linux-hardening@vger.kernel.org>; Thu, 16 Nov 2023 11:45:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1700163940;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sPv6+1Sa94rgfObfXMphmchW6ouivMuvY1saNAx/w4Q=;
-	b=FWhcCpMD3ejjS2BYpUofqsqAusy9F94CxXkEeGo4AGHq64mZXpSIZLYDuwHou7cBgxYzVD
-	fN5deP89YCb819GBRnpNzGM1rxMir8MA2zNZa+NXp+QGR0HkDT4Z//ReOEIpS/ssFe3U7v
-	xfpP63pn7WyYJ46XWdbMzFbdSCAWN9g=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-447-gXRtofQ5MFWcGRIF-QZ8ow-1; Thu, 16 Nov 2023 14:45:39 -0500
-X-MC-Unique: gXRtofQ5MFWcGRIF-QZ8ow-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-9e1fb0308d6so85586166b.1
-        for <linux-hardening@vger.kernel.org>; Thu, 16 Nov 2023 11:45:39 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MzesG7g3"
+Received: from mail-oi1-x231.google.com (mail-oi1-x231.google.com [IPv6:2607:f8b0:4864:20::231])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C26F131
+	for <linux-hardening@vger.kernel.org>; Thu, 16 Nov 2023 12:11:54 -0800 (PST)
+Received: by mail-oi1-x231.google.com with SMTP id 5614622812f47-3b40d5ea323so773425b6e.0
+        for <linux-hardening@vger.kernel.org>; Thu, 16 Nov 2023 12:11:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1700165513; x=1700770313; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=w2peqo+SYVQgbTF6odymZNSu+sZ00cIgIYlcjFlppWM=;
+        b=MzesG7g3i8qt5IBoUzsxdwY7I600BmpV87GNM5DQhg0hA+cSya0lonorx7/kcl8Jc0
+         yWaAoEHI+tlGAwqjobJh8WHP0axD94ET+YATbdCfT/vphU8d72sh2vtmHQ7uiDvIPIsv
+         fysrbH51sTFSLrk9UMQAohFWF5rR9hQBB6W8E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700163938; x=1700768738;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sPv6+1Sa94rgfObfXMphmchW6ouivMuvY1saNAx/w4Q=;
-        b=kSW31v6YM65UMyNNtLD3EPIr/IK3ckniVuAUpBC6Sah0hnVBws2CIH2SWcxSEOF29Y
-         LtGzK6jDoq+uRa4sr9Rpes/O2asp9HZCFyh3XcPVlxgSx2N5MY1oLg5EWhywD2z9TWhn
-         RbfrOCUDbGTSK/Vhi18hhL0APgXgw5YWjejBiudi91VDNjI0s/NiNHnXh0AbnfiKH4Iy
-         yGijhe446Cu2FApJF/zAQrQ86ogJlfXuZWdJnXFZBYIBwS1Gk3XU8L1fWtTOsEViPk9B
-         CNVvUBYL2mWeCNwONJVdryOsNuPkcHcmHc5pbAaFhNhy78pTuNKGh10eUhrpgkpIvvxW
-         DxdQ==
-X-Gm-Message-State: AOJu0Yy/wfHTY+bgS5duOYn+QNK/72wBKy1rvrqCkXQEQWl1keXo85xi
-	6lh36O5L2SvHY4aXj7+BOH0eGTg3fsihuryAOTCCvK3pbhO0LgFWt/X8MGS1njC+pnnpuqFNPj0
-	kB7cch/N5WimH4z2IfI/aj73KLOW2
-X-Received: by 2002:a17:906:6d4e:b0:9ba:1d08:ad43 with SMTP id a14-20020a1709066d4e00b009ba1d08ad43mr12608767ejt.70.1700163937811;
-        Thu, 16 Nov 2023 11:45:37 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHq5/tnfwnzHJdeqlubHm24XqYASLf5h9KV93zPhLD7kixnisyCvTTF1mPX7goyJbwx62HiBA==
-X-Received: by 2002:a17:906:6d4e:b0:9ba:1d08:ad43 with SMTP id a14-20020a1709066d4e00b009ba1d08ad43mr12608750ejt.70.1700163937326;
-        Thu, 16 Nov 2023 11:45:37 -0800 (PST)
-Received: from pollux ([2a02:810d:4b3f:de9c:abf:b8ff:feee:998b])
-        by smtp.gmail.com with ESMTPSA id y3-20020a17090629c300b009b94fe3fc47sm8733916eje.159.2023.11.16.11.45.36
+        d=1e100.net; s=20230601; t=1700165513; x=1700770313;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=w2peqo+SYVQgbTF6odymZNSu+sZ00cIgIYlcjFlppWM=;
+        b=sgf6ypQvS/IBBi/mNEMmhjh7h5o7hS96qYK6j/BC08qrUaKsMr0ET85WV7sj6+6ppH
+         g0oYwkBlEY4Vu5zp//ylIP6P86UydZA9RuV4urrIvsJLlujvcmdHqMrLmxEACHRwPH5Y
+         kKqYrNgaWi5l35QtMzZ0OFzUowgTfeyrgl6ahFMfC3986bvDAmXmSARadwyuIHNV/vhc
+         qLuebOae9LbmehOiYA2HlkX9h7uXZAJpifhNkyY5CCzLvVWorQXeiWExsvQ1M/wZmZCu
+         zWMCuzCx1sKxt1Bqy1iQZ6j8NMfVyq2JJfqWp/IaHVL9YsRMKLYXs1+12FNwNM51H13+
+         BoAA==
+X-Gm-Message-State: AOJu0Yw3JQ2X4pJBDMBpoMqT29uJ3pb1VbLG7slmJka4KzdrbTJhl/H4
+	4lwgTzCJ6yajDelxVtEW6s+wgg==
+X-Google-Smtp-Source: AGHT+IHHS27q9Zol1WZfao+OWS6LqfHtSOy7auNOYxNNvA5QCM5TNvcbBs4bj/jenhCC5LoEFl+7MQ==
+X-Received: by 2002:a05:6808:202a:b0:3ae:a81:55a9 with SMTP id q42-20020a056808202a00b003ae0a8155a9mr23090946oiw.24.1700165513547;
+        Thu, 16 Nov 2023 12:11:53 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id j26-20020a63551a000000b005b529d633b7sm101355pgb.14.2023.11.16.12.11.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Nov 2023 11:45:36 -0800 (PST)
-Date: Thu, 16 Nov 2023 20:45:34 +0100
-From: Danilo Krummrich <dakr@redhat.com>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	nouveau@lists.freedesktop.org, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH][next] nouveau/gsp: replace zero-length array with
- flex-array member and use __counted_by
-Message-ID: <ZVZxXiXYIzEwUE3N@pollux>
-References: <ZVZbX7C5suLMiBf+@work>
+        Thu, 16 Nov 2023 12:11:52 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] MAINTAINERS: Add netdev subsystem profile link
+Date: Thu, 16 Nov 2023 12:11:51 -0800
+Message-Id: <20231116201147.work.668-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <ZVZbX7C5suLMiBf+@work>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1313; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=ix3E5+mpX2+wWYY/dmA26qPFSe5TqgzyFgYbY0i+LqA=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlVneHMkrUTIl41b1SKNI4TkufbDe3uul9AZl+q
+ /WfNMumb3yJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZVZ3hwAKCRCJcvTf3G3A
+ Jh0oD/wNsSPwMniWu2bzU9OJhEovajw1GN8hxsOmemJsLBYKdg9R9zO1l7UKgyPjnKJMt5n86IM
+ 02541MKA1uWNwInV6KZqFiiLB/+6gCJUzsY7DZ06BIDH+z6oDh8kqLw3KGMvPc9CGuhXwBSLeL7
+ JunGL2wtooeHHXbsmzqyJRQtY++gfAWDsrMBuudMc41i4TlbBDVxJi9ZrGcrPv/ObKlsK3AdFH0
+ m2SEHxhp5aLBn0iYiYKzdNe9XaCQRhY7SrkxaU40R6RooUocbn++yJ/0MnPfVo4JDmwrcBjgmxX
+ rYEvPoJSgzUtFp9nrUVbdVzFrbBho7+xAmxnmTZl1FPSrifk3Aka39/BTDfzEvJZHf7u5S0IW4i
+ BGm0iMDUvZjO7Gf5VKFW/96pplKslQ5zSEShPQr6+QNL7a5k5aZQyUGC76Vb7vtiTNSt8w8pF2O
+ pTRmoutNr8UvyWEIFuhKzWq2fUVRRibVSLmjHRcVd3kTCoiivuKyvzhDVzyx1YtjTLBhRtgjDKk
+ HzYRCRDeDXwNvc9yeaKutTpJx1tSiEWbVE8nSPlUx6JckhQpHs3QIXFRKeQSFGhj8dvPK8LNsTh
+ 6t6hGmbqC4SxSt7aKNpTyW1PPLDP5f1due559QlUJn+m5B3PqVlu+Tj9NRqpGdkKvqp4QjETdkz
+ dM3T2Rz vv9xN20Q==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-Hi Gustavo,
+The netdev subsystem has had a subsystem process document for a while
+now. Link it appropriately in MAINTAINERS with the P: tag.
 
-On Thu, Nov 16, 2023 at 12:11:43PM -0600, Gustavo A. R. Silva wrote:
-> Fake flexible arrays (zero-length and one-element arrays) are deprecated,
-> and should be replaced by flexible-array members. So, replace
-> zero-length array with a flexible-array member in `struct
-> PACKED_REGISTRY_TABLE`.
-> 
-> Also annotate array `entries` with `__counted_by()` to prepare for the
-> coming implementation by GCC and Clang of the `__counted_by` attribute.
-> Flexible array members annotated with `__counted_by` can have their
-> accesses bounds-checked at run-time via `CONFIG_UBSAN_BOUNDS` (for array
-> indexing) and `CONFIG_FORTIFY_SOURCE` (for strcpy/memcpy-family functions).
-> 
-> This fixes multiple -Warray-bounds warnings:
-> drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c:1069:29: warning: array subscript 0 is outside array bounds of 'PACKED_REGISTRY_ENTRY[0]' [-Warray-bounds=]
-> drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c:1070:29: warning: array subscript 0 is outside array bounds of 'PACKED_REGISTRY_ENTRY[0]' [-Warray-bounds=]
-> drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c:1071:29: warning: array subscript 0 is outside array bounds of 'PACKED_REGISTRY_ENTRY[0]' [-Warray-bounds=]
-> drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c:1072:29: warning: array subscript 0 is outside array bounds of 'PACKED_REGISTRY_ENTRY[0]' [-Warray-bounds=]
-> 
-> While there, also make use of the struct_size() helper, and address
-> checkpatch.pl warning:
-> WARNING: please, no spaces at the start of a line
-> 
-> This results in no differences in binary output.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  .../nvrm/535.113.01/nvidia/generated/g_os_nvoc.h   | 14 +++++++-------
->  drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c     |  2 +-
->  2 files changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/nouveau/include/nvrm/535.113.01/nvidia/generated/g_os_nvoc.h b/drivers/gpu/drm/nouveau/include/nvrm/535.113.01/nvidia/generated/g_os_nvoc.h
-> index 754c6af42f30..259b25c2ac6b 100644
-> --- a/drivers/gpu/drm/nouveau/include/nvrm/535.113.01/nvidia/generated/g_os_nvoc.h
-> +++ b/drivers/gpu/drm/nouveau/include/nvrm/535.113.01/nvidia/generated/g_os_nvoc.h
-> @@ -28,17 +28,17 @@
->  
->  typedef struct PACKED_REGISTRY_ENTRY
->  {
-> -    NvU32                   nameOffset;
-> -    NvU8                    type;
-> -    NvU32                   data;
-> -    NvU32                   length;
-> +	NvU32                   nameOffset;
-> +	NvU8                    type;
-> +	NvU32                   data;
-> +	NvU32                   length;
->  } PACKED_REGISTRY_ENTRY;
->  
->  typedef struct PACKED_REGISTRY_TABLE
->  {
-> -    NvU32                   size;
-> -    NvU32                   numEntries;
-> -    PACKED_REGISTRY_ENTRY   entries[0];
-> +	NvU32                   size;
-> +	NvU32                   numEntries;
-> +	PACKED_REGISTRY_ENTRY   entries[] __counted_by(numEntries);
->  } PACKED_REGISTRY_TABLE;
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Thanks for the fix!
-
-However, I have some concerns about changing those header files, since they're
-just copied over from Nvidia's driver [1].
-
-Once we add the header files for a new firmware revision, we'd potentially run
-into the same issue, applying the same fix again.
-
-As I already mentioned for Timur's patch [2], I'd prefer to get a fix upstream
-(meaning [1] in this case). Of course, that's probably more up to Timur to tell
-if this will work out.
-
-If we can't get a fix upstream, I'd probably prefer to silence warning
-elsewhere.
-
-[1] https://github.com/NVIDIA/open-gpu-kernel-modules
-[2] https://lore.kernel.org/all/20231107234726.854248-1-ttabi@nvidia.com/T/
-
->  
->  #endif
-> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c b/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c
-> index dc44f5c7833f..228335487af5 100644
-> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c
-> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c
-> @@ -1048,7 +1048,7 @@ r535_gsp_rpc_set_registry(struct nvkm_gsp *gsp)
->  	char *strings;
->  	int str_offset;
->  	int i;
-> -	size_t rpc_size = sizeof(*rpc) + sizeof(rpc->entries[0]) * NV_GSP_REG_NUM_ENTRIES;
-> +	size_t rpc_size = struct_size(rpc, entries, NV_GSP_REG_NUM_ENTRIES);
->  
->  	/* add strings + null terminator */
->  	for (i = 0; i < NV_GSP_REG_NUM_ENTRIES; i++)
-> -- 
-> 2.34.1
-> 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 97f51d5ec1cf..b6d570c4eda6 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14995,6 +14995,7 @@ M:	Jakub Kicinski <kuba@kernel.org>
+ M:	Paolo Abeni <pabeni@redhat.com>
+ L:	netdev@vger.kernel.org
+ S:	Maintained
++P:	Documentation/process/maintainer-netdev.rst
+ Q:	https://patchwork.kernel.org/project/netdevbpf/list/
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git
+@@ -15046,6 +15047,7 @@ M:	Jakub Kicinski <kuba@kernel.org>
+ M:	Paolo Abeni <pabeni@redhat.com>
+ L:	netdev@vger.kernel.org
+ S:	Maintained
++P:	Documentation/process/maintainer-netdev.rst
+ Q:	https://patchwork.kernel.org/project/netdevbpf/list/
+ B:	mailto:netdev@vger.kernel.org
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git
+-- 
+2.34.1
 
