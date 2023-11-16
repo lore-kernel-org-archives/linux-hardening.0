@@ -1,80 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F2D2328B6
-	for <linux-hardening@vger.kernel.org>; Thu, 16 Nov 2023 18:55:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q2KeOstZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BBB8C433C8;
-	Thu, 16 Nov 2023 18:55:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700160902;
-	bh=JwQgKXdyVFHDeYy2JqIrcrbfOB3OycZsBTQgBU7qjPM=;
-	h=Date:From:To:Cc:Subject:From;
-	b=Q2KeOstZqpSdN4JhKTSNmJecY3BmKrmxV0TKxlDYtF5gv7UBoA9ki8l+3oU7WT0Hx
-	 SGmSc3VfEncIDsy7g1gUdu/dUurdmxWoNKqVqXpNG0JIQn/9CRKtLj4EZby3gR0ebM
-	 W29DzH+9f5rXc4ky/j82PuHjBZxanaXp2OXpLgfdOeYwEyc8H6InT7BIuTjYwI2twZ
-	 K2Q59QirBuKsjjD1uHuCUq6Vt0CT0Ut1+Mc3R70pFEkwWmeLddoRJdAqfYUx+Un6j7
-	 onTVWGPMm6W16RlorLGNo7T/80qIpz+vuwThsSHkscF6lBwIA6x+UPnUOlCQ+Gw8al
-	 9yTiFS6TTIGSg==
-Date: Thu, 16 Nov 2023 12:54:59 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-Cc: xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VooWjFQE"
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F4FBD4B
+	for <linux-hardening@vger.kernel.org>; Thu, 16 Nov 2023 11:13:45 -0800 (PST)
+Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-6c3363a2b93so1121564b3a.3
+        for <linux-hardening@vger.kernel.org>; Thu, 16 Nov 2023 11:13:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1700162025; x=1700766825; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YYlw/v9GVrPaC0s5UN9J8tYY4w/hsJ/PA3URh3Q8lJ8=;
+        b=VooWjFQEZrJhPPuYBpbhtwGwIQgYGz6kH0inZ+g8mS1ynD+fdwb6NjYBvWs9iWLgRA
+         9ik1hqeGW392s0wHuBgzAVv4Xio9IUo+99d0h2n98vq8bpiwCBIJ/zqooC//Mm0N22HC
+         L067ds04wmKvRFf/0yGr9nxObGiDNf+s7KhrQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700162025; x=1700766825;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YYlw/v9GVrPaC0s5UN9J8tYY4w/hsJ/PA3URh3Q8lJ8=;
+        b=MmHtsgCreO6+BmokkmZhFudbljKjjHFMCBFkYT0Q8zQbRBzbzb2nWAQ0gydvB54pyL
+         Ny6WsRqr4LYo/e8+sdoekslt1z0F70tpxErrSHwBmqmtwQl7GA3FvKhHn90mG2Lvqrfe
+         9gN3lPqASlIDMEeOTI5cw+PXixKERcgY/+qmR6lU2scjht9zpB0LeoROf/Y/HheoFCqs
+         6DB/hnJaGvpjyGIZaFYjT0oSkVMV3jQBa/JF80TezlrD5Pmgr7smSLqzMlnBKjD0Bn+b
+         /Oaw6D6sTwi90ut8I0Y+c+EKfev/O4Rdfvymp8YErQEfh6QeLAEHDkrbMVyaZ3YRgKOr
+         TQNA==
+X-Gm-Message-State: AOJu0YzIL6TeD0PMNycRPqGQbMTMbCsEwiXl9LBQ4eRJiYCKCHw0gYg7
+	rWEplIbLvfAfCF+MsoYD+c6yog==
+X-Google-Smtp-Source: AGHT+IFgcVG7tXCPsOyhSSlGhDJFcKq7oCg9wEnCj3YoT8Jr/uvJFGRO8OknbrQ7So0WvGIkyFeWIQ==
+X-Received: by 2002:a05:6a00:4099:b0:6b4:231b:a45c with SMTP id bw25-20020a056a00409900b006b4231ba45cmr21865074pfb.26.1700162024994;
+        Thu, 16 Nov 2023 11:13:44 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id p11-20020a056a000a0b00b0068fb8e18971sm77330pfh.130.2023.11.16.11.13.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Nov 2023 11:13:44 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+Cc: Kees Cook <keescook@chromium.org>,
+	Helge Deller <deller@gmx.de>,
+	Azeem Shaikh <azeemshaikh38@gmail.com>,
+	linux-parisc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] xen: privcmd: Replace zero-length array with
- flex-array member and use __counted_by
-Message-ID: <ZVZlg3tPMPCRdteh@work>
+Subject: [PATCH] parisc: Replace strlcpy() with strscpy()
+Date: Thu, 16 Nov 2023 11:13:40 -0800
+Message-Id: <20231116191336.work.986-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1424; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=BzD7pn1JfYRhaoY80hkyIKEr+mEu4xES2K8u21WGIyk=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlVmnklqIN5lZaW0f7xYsyH3WQSBx8zE4Qk3JQ/
+ qbccTS4bEWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZVZp5AAKCRCJcvTf3G3A
+ Jnc2EACuCUkbrGx9lSJGiaQGUafTwnelfTeuI404evq3xhBAjJHJhJCJ+uvTDfi1Pckk2n1LUMD
+ QXo8pj48wa+jy9NQ0Q5+RSxyunjEvpbMaTRjmoVF1rlSMM42iCMihT/xBpWAm7LC8Gxr1551HxM
+ eJ9I0uEQz+/MdFjBtxRO7YC2HAcwGsvuIrD5hHXD2mm4PbdQ8KdnoGY7iSWBpXd59Dwc+2V3DsC
+ GrZTQ7LpjjsfziVRhVi7NmwSKE3FfcSd8fv3prm/DJl3SUAABh7IZFP3JvaSOG6oh3cP5lM2VzV
+ 2JKNorakX5VGe0Lq9GYpFGY4+XEkLljxIvYXYkgxjnbhM0KtRzB3mySyTAVMiRWOGzh0cJX2+KA
+ 8648KnwAHCIQKaOiY4wmF9YraK4DvjN8PTn38IXBQHipgJRXnXzbnDV9FybPxIeGdGYWPddV0/t
+ SW8RXJ1Hv45wcANMdcpQ0g/6ZefeupFqVhrooMYOtnDIJUPAI0zSTLY44X1g/p5+LDIcT3VRyKz
+ tqDDQx4/rU0UKiq1Y7V1vV2XtRJUHOIzJFdrSFaZCR655E2EaMqtHJdA612nQpspQl00NFCnmuH
+ lBR2AZwCTYXLXJM2ia3p+h88JWMY+EGFjyBzF9P0yPp/IlqVr1v/sTnCrjdHTArUtOo51sDYTUm
+ GjKamcX 6VghP7eg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-Fake flexible arrays (zero-length and one-element arrays) are deprecated,
-and should be replaced by flexible-array members. So, replace
-zero-length array with a flexible-array member in `struct
-privcmd_kernel_ioreq`.
+strlcpy() reads the entire source buffer first. This read may exceed
+the destination size limit. This is both inefficient and can lead
+to linear read overflows if a source string is not NUL-terminated[1].
+Additionally, it returns the size of the source string, not the
+resulting size of the destination string. In an effort to remove strlcpy()
+completely[2], replace strlcpy() here with strscpy().
 
-Also annotate array `ports` with `__counted_by()` to prepare for the
-coming implementation by GCC and Clang of the `__counted_by` attribute.
-Flexible array members annotated with `__counted_by` can have their
-accesses bounds-checked at run-time via `CONFIG_UBSAN_BOUNDS` (for array
-indexing) and `CONFIG_FORTIFY_SOURCE` (for strcpy/memcpy-family functions).
-
-This fixes multiple -Warray-bounds warnings:
-drivers/xen/privcmd.c:1239:30: warning: array subscript i is outside array bounds of 'struct ioreq_port[0]' [-Warray-bounds=]
-drivers/xen/privcmd.c:1240:30: warning: array subscript i is outside array bounds of 'struct ioreq_port[0]' [-Warray-bounds=]
-drivers/xen/privcmd.c:1241:30: warning: array subscript i is outside array bounds of 'struct ioreq_port[0]' [-Warray-bounds=]
-drivers/xen/privcmd.c:1245:33: warning: array subscript i is outside array bounds of 'struct ioreq_port[0]' [-Warray-bounds=]
-drivers/xen/privcmd.c:1258:67: warning: array subscript i is outside array bounds of 'struct ioreq_port[0]' [-Warray-bounds=]
-
-This results in no differences in binary output.
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy [1]
+Link: https://github.com/KSPP/linux/issues/89 [2]
+Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+Cc: Helge Deller <deller@gmx.de>
+Cc: Azeem Shaikh <azeemshaikh38@gmail.com>
+Cc: linux-parisc@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/xen/privcmd.c | 2 +-
+ arch/parisc/kernel/processor.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/xen/privcmd.c b/drivers/xen/privcmd.c
-index 1ce7f3c7a950..0eb337a8ec0f 100644
---- a/drivers/xen/privcmd.c
-+++ b/drivers/xen/privcmd.c
-@@ -1115,7 +1115,7 @@ struct privcmd_kernel_ioreq {
- 	spinlock_t lock; /* Protects ioeventfds list */
- 	struct list_head ioeventfds;
- 	struct list_head list;
--	struct ioreq_port ports[0];
-+	struct ioreq_port ports[] __counted_by(vcpus);
- };
+diff --git a/arch/parisc/kernel/processor.c b/arch/parisc/kernel/processor.c
+index 29e2750f86a4..e95a977ba5f3 100644
+--- a/arch/parisc/kernel/processor.c
++++ b/arch/parisc/kernel/processor.c
+@@ -383,7 +383,7 @@ show_cpuinfo (struct seq_file *m, void *v)
+ 	char cpu_name[60], *p;
  
- static irqreturn_t ioeventfd_interrupt(int irq, void *dev_id)
+ 	/* strip PA path from CPU name to not confuse lscpu */
+-	strlcpy(cpu_name, per_cpu(cpu_data, 0).dev->name, sizeof(cpu_name));
++	strscpy(cpu_name, per_cpu(cpu_data, 0).dev->name, sizeof(cpu_name));
+ 	p = strrchr(cpu_name, '[');
+ 	if (p)
+ 		*(--p) = 0;
 -- 
 2.34.1
 
