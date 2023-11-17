@@ -1,24 +1,27 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A2491EA7A
-	for <linux-hardening@vger.kernel.org>; Fri, 17 Nov 2023 13:33:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EDBC31593;
+	Fri, 17 Nov 2023 13:48:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2016DC433C7;
-	Fri, 17 Nov 2023 13:33:34 +0000 (UTC)
-Date: Fri, 17 Nov 2023 08:33:31 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5A0EC433C7;
+	Fri, 17 Nov 2023 13:47:59 +0000 (UTC)
+Date: Fri, 17 Nov 2023 08:47:57 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Kees Cook <keescook@chromium.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Valentin Schneider
- <vschneid@redhat.com>, Chuck Lever <chuck.lever@oracle.com>, Geliang Tang
- <geliang.tang@suse.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Thomas Gleixner
- <tglx@linutronix.de>, Arnd Bergmann <arnd@arndb.de>,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] samples: Replace strlcpy() with strscpy()
-Message-ID: <20231117083331.06f49852@rorschach.local.home>
-In-Reply-To: <20231116191510.work.550-kees@kernel.org>
-References: <20231116191510.work.550-kees@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tejun Heo
+ <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>, Johannes Weiner
+ <hannes@cmpxchg.org>, Waiman Long <longman@redhat.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, cgroups@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Azeem Shaikh <azeemshaikh38@gmail.com>,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 3/3] kernfs: Convert kernfs_path_from_node_locked() from
+ strlcpy() to strscpy()
+Message-ID: <20231117084757.150724ed@rorschach.local.home>
+In-Reply-To: <20231116192127.1558276-3-keescook@chromium.org>
+References: <20231116191718.work.246-kees@kernel.org>
+	<20231116192127.1558276-3-keescook@chromium.org>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -29,23 +32,80 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 16 Nov 2023 11:15:10 -0800
+On Thu, 16 Nov 2023 11:21:25 -0800
 Kees Cook <keescook@chromium.org> wrote:
 
-> diff --git a/samples/trace_events/trace-events-sample.h b/samples/trace_events/trace-events-sample.h
-> index 1c6b843b8c4e..23f923ccd529 100644
-> --- a/samples/trace_events/trace-events-sample.h
-> +++ b/samples/trace_events/trace-events-sample.h
-> @@ -305,7 +305,7 @@ TRACE_EVENT(foo_bar,
->  	),
->  
->  	TP_fast_assign(
-> -		strlcpy(__entry->foo, foo, 10);
-> +		strscpy(__entry->foo, foo, 10);
->  		__entry->bar	= bar;
->  		memcpy(__get_dynamic_array(list), lst,
->  		       __length_of(lst) * sizeof(int));
+> One of the last remaining users of strlcpy() in the kernel is
+> kernfs_path_from_node_locked(), which passes back the problematic "length
+> we _would_ have copied" return value to indicate truncation.  Convert the
+> chain of all callers to use the negative return value (some of which
+> already doing this explicitly). All callers were already also checking
+> for negative return values, so the risk to missed checks looks very low.
+> 
+> In this analysis, it was found that cgroup1_release_agent() actually
+> didn't handle the "too large" condition, so this is technically also a
+> bug fix. :)
+> 
+> Here's the chain of callers, and resolution identifying each one as now
+> handling the correct return value:
+> 
+> kernfs_path_from_node_locked()
+>         kernfs_path_from_node()
+>                 pr_cont_kernfs_path()
+>                         returns void
+>                 kernfs_path()
+>                         sysfs_warn_dup()
+>                                 return value ignored
+>                         cgroup_path()
+>                                 blkg_path()
+>                                         bfq_bic_update_cgroup()
+>                                                 return value ignored
+>                                 TRACE_IOCG_PATH()
+>                                         return value ignored
+>                                 TRACE_CGROUP_PATH()
+>                                         return value ignored
+>                                 perf_event_cgroup()
+>                                         return value ignored
+>                                 task_group_path()
+>                                         return value ignored
+>                                 damon_sysfs_memcg_path_eq()
+>                                         return value ignored
+>                                 get_mm_memcg_path()
+>                                         return value ignored
+>                                 lru_gen_seq_show()
+>                                         return value ignored
+>                         cgroup_path_from_kernfs_id()
+>                                 return value ignored
+>                 cgroup_show_path()
+>                         already converted "too large" error to negative value
+>                 cgroup_path_ns_locked()
+>                         cgroup_path_ns()
+>                                 bpf_iter_cgroup_show_fdinfo()
+>                                         return value ignored
+>                                 cgroup1_release_agent()
+>                                         wasn't checking "too large" error
+>                         proc_cgroup_show()
+>                                 already converted "too large" to negative value
+> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Tejun Heo <tj@kernel.org>
+> Cc: Zefan Li <lizefan.x@bytedance.com>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Waiman Long <longman@redhat.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: cgroups@vger.kernel.org
+> Cc: linux-trace-kernel@vger.kernel.org
+> Co-developed-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  fs/kernfs/dir.c             | 37 ++++++++++++++++++++-----------------
+>  kernel/cgroup/cgroup-v1.c   |  2 +-
+>  kernel/cgroup/cgroup.c      |  4 ++--
+>  kernel/cgroup/cpuset.c      |  2 +-
+>  kernel/trace/trace_uprobe.c |  2 +-
 
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+trace_uprobe.c seems out of scope for this patch.
 
 -- Steve
