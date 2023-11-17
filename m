@@ -1,127 +1,168 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="V2mSew9F"
-Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D83B5195
-	for <linux-hardening@vger.kernel.org>; Thu, 16 Nov 2023 13:18:04 -0800 (PST)
-Received: from eig-obgw-5003a.ext.cloudfilter.net ([10.0.29.159])
-	by cmsmtp with ESMTPS
-	id 3ieQr2adogpyE3jkRrk6f7; Thu, 16 Nov 2023 21:18:03 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id 3jkQr5fabnCfv3jkRrMmvp; Thu, 16 Nov 2023 21:18:03 +0000
-X-Authority-Analysis: v=2.4 cv=KKpJsXJo c=1 sm=1 tr=0 ts=6556870b
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=BNY50KLci1gA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=cm27Pg_UAAAA:8 a=CB8ylYM2jayAzffc3msA:9 a=QEXdDO2ut3YA:10
- a=AjGcO6oz07-iQ99wixmX:22 a=xmb-EsYY8bH0VWELuYED:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=z7VN5fe7q4a712jMshNesYxaBgFBwUjNIQyqspWv/5g=; b=V2mSew9FN/FY6qQBitJwrrvBWx
-	egEJQgRKNQ7oQeoB7qzWxi8d7kDHxlcUi0laaO2uapZQn1kqX2BBhTuOi5F4Tm1aVGZ///ZTEBIao
-	Zh/9FlQMbAc5oKvjMx5lRbCAdB+GQfj+t/RPy7NAAdcTj65yoaW+AQZux7QGhiM2s/ucnU+mF+3z+
-	JTPf+oMEbE+dSkC9/CC7yC60ER+wwtRdBh5f5C6GiCKEL9ShkfsLWGLLDvIDu7UZEueYdMMjrGHMV
-	iUzAPggDiCKVY9wEC7EZT+XUCLgALD3ao9CrAMpXLZ8Ozkouxq5sF5oqVWqvDaES2kJK2fHq/02iM
-	H5a+KsZQ==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:48450 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1r3jkQ-00371x-0t;
-	Thu, 16 Nov 2023 15:18:02 -0600
-Message-ID: <43bf5965-84c4-420e-91fc-7a0973c27d76@embeddedor.com>
-Date: Thu, 16 Nov 2023 15:18:00 -0600
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="jHAdBLIR";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="2AKk8dTd"
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1147F1AD;
+	Thu, 16 Nov 2023 18:53:29 -0800 (PST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 2C52120509;
+	Fri, 17 Nov 2023 02:53:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1700189607; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NB0T88Bz1NkBEV9ckcMVtoKdeQngpB+JyIHTJiYvV70=;
+	b=jHAdBLIRbfzQq8Gmlqm/J6T+Mauv7ot6uVBlU/wWNcDnrxV6j0H3firPzLMPvXbQ//jmN3
+	MxQoa0Hf2+o+lxlaWWNCSs8JpifnxjF7kmUfEqEuJevtxOrXJW5riSSe5AVN+Mm2RehFxW
+	dKwR3OCllt5mjtQ6JkBqIo99Fs3gYAg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1700189607;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NB0T88Bz1NkBEV9ckcMVtoKdeQngpB+JyIHTJiYvV70=;
+	b=2AKk8dTdSP/fjn1Wn9gMYObr7YOoz30ARm724J07GUv2q0qWecZOtfdANO+DYYQKWxudNa
+	aMQmjZ2R1zWo8tCw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id C87F61341F;
+	Fri, 17 Nov 2023 02:53:19 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id blGFGZ/VVmWSHwAAMHmgww
+	(envelope-from <neilb@suse.de>); Fri, 17 Nov 2023 02:53:19 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] xen: privcmd: Replace zero-length array with
- flex-array member and use __counted_by
-Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Juergen Gross <jgross@suse.com>,
- Stefano Stabellini <sstabellini@kernel.org>,
- Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
- xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <ZVZlg3tPMPCRdteh@work> <202311161307.9422E1896B@keescook>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <202311161307.9422E1896B@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1r3jkQ-00371x-0t
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:48450
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfObBbp04r251ZtRINt825Wmt2Vo7rUvV24jQia07uwYzYwAZQM9eYn7J40S2kgBPKFrrued9zQGki+EZ8HZeuWcShT0COQNjCp0WZwvAudatvlzD4arS
- 99lFCkCv+6BtmY2afR5wDqqPCVHXJeIg20vzyocUyovYapq9bsO8mHuxAxodABTXjDtEHGRj2xnBlnmkTq74Jku6FiGIqNp+DsYDQwBgdYAYf0QHb9FjaoMY
+From: "NeilBrown" <neilb@suse.de>
+To: "Kees Cook" <keescook@chromium.org>
+Cc: "Trond Myklebust" <trond.myklebust@hammerspace.com>,
+ "Kees Cook" <keescook@chromium.org>, "Anna Schumaker" <anna@kernel.org>,
+ "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ "Olga Kornievskaia" <kolga@netapp.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
+ "Tom Talpey" <tom@talpey.com>, "David S. Miller" <davem@davemloft.net>,
+ "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
+ "Paolo Abeni" <pabeni@redhat.com>, linux-nfs@vger.kernel.org,
+ netdev@vger.kernel.org, "Azeem Shaikh" <azeemshaikh38@gmail.com>,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] SUNRPC: Replace strlcpy() with strscpy()
+In-reply-to: <20231114175407.work.410-kees@kernel.org>
+References: <20231114175407.work.410-kees@kernel.org>
+Date: Fri, 17 Nov 2023 13:53:15 +1100
+Message-id: <170018959595.19300.7615621918111285329@noble.neil.brown.name>
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCPT_COUNT_TWELVE(0.00)[18];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FREEMAIL_CC(0.00)[hammerspace.com,chromium.org,kernel.org,oracle.com,netapp.com,talpey.com,davemloft.net,google.com,redhat.com,vger.kernel.org,gmail.com];
+	 RCVD_COUNT_TWO(0.00)[2];
+	 RCVD_TLS_ALL(0.00)[]
+
+On Wed, 15 Nov 2023, Kees Cook wrote:
+> strlcpy() reads the entire source buffer first. This read may exceed
+> the destination size limit. This is both inefficient and can lead
+> to linear read overflows if a source string is not NUL-terminated[1].
+> Additionally, it returns the size of the source string, not the
+> resulting size of the destination string. In an effort to remove strlcpy()
+> completely[2], replace strlcpy() here with strscpy().
+>=20
+> Explicitly handle the truncation case by returning the size of the
+> resulting string.
+>=20
+> If "nodename" was ever longer than sizeof(clnt->cl_nodename) - 1, this
+> change will fix a bug where clnt->cl_nodelen would end up thinking there
+> were more characters in clnt->cl_nodename than there actually were,
+> which might have lead to kernel memory content exposures.
+>=20
+> Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
+> Cc: Anna Schumaker <anna@kernel.org>
+> Cc: Chuck Lever <chuck.lever@oracle.com>
+> Cc: Jeff Layton <jlayton@kernel.org>
+> Cc: Neil Brown <neilb@suse.de>
+> Cc: Olga Kornievskaia <kolga@netapp.com>
+> Cc: Dai Ngo <Dai.Ngo@oracle.com>
+> Cc: Tom Talpey <tom@talpey.com>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: linux-nfs@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcp=
+y [1]
+> Link: https://github.com/KSPP/linux/issues/89 [2]
+> Co-developed-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  net/sunrpc/clnt.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+> index daa9582ec861..7afe02bdea4a 100644
+> --- a/net/sunrpc/clnt.c
+> +++ b/net/sunrpc/clnt.c
+> @@ -287,8 +287,14 @@ static struct rpc_xprt *rpc_clnt_set_transport(struct =
+rpc_clnt *clnt,
+> =20
+>  static void rpc_clnt_set_nodename(struct rpc_clnt *clnt, const char *noden=
+ame)
+>  {
+> -	clnt->cl_nodelen =3D strlcpy(clnt->cl_nodename,
+> -			nodename, sizeof(clnt->cl_nodename));
+> +	ssize_t copied;
+> +
+> +	copied =3D strscpy(clnt->cl_nodename,
+> +			 nodename, sizeof(clnt->cl_nodename));
+> +
+> +	clnt->cl_nodelen =3D copied < 0
+> +				? sizeof(clnt->cl_nodename) - 1
+> +				: copied;
+>  }
+
+Reviewed-by: NeilBrown <neilb@suse.de>
+
+If it were "copied =3D=3D -E2BIG" instead of "copied < 0" it would be more
+obvious why sizeof(...) is used in that case.
+But we really want to do something sensible for *any* error message that
+might be added in the future.. I guess.
+
+Thanks,
+NeilBrown
 
 
+> =20
+>  static int rpc_client_register(struct rpc_clnt *clnt,
+> --=20
+> 2.34.1
+>=20
+>=20
 
-On 11/16/23 15:08, Kees Cook wrote:
-> On Thu, Nov 16, 2023 at 12:54:59PM -0600, Gustavo A. R. Silva wrote:
->> Fake flexible arrays (zero-length and one-element arrays) are deprecated,
->> and should be replaced by flexible-array members. So, replace
->> zero-length array with a flexible-array member in `struct
->> privcmd_kernel_ioreq`.
->>
->> Also annotate array `ports` with `__counted_by()` to prepare for the
->> coming implementation by GCC and Clang of the `__counted_by` attribute.
->> Flexible array members annotated with `__counted_by` can have their
->> accesses bounds-checked at run-time via `CONFIG_UBSAN_BOUNDS` (for array
->> indexing) and `CONFIG_FORTIFY_SOURCE` (for strcpy/memcpy-family functions).
->>
->> This fixes multiple -Warray-bounds warnings:
->> drivers/xen/privcmd.c:1239:30: warning: array subscript i is outside array bounds of 'struct ioreq_port[0]' [-Warray-bounds=]
->> drivers/xen/privcmd.c:1240:30: warning: array subscript i is outside array bounds of 'struct ioreq_port[0]' [-Warray-bounds=]
->> drivers/xen/privcmd.c:1241:30: warning: array subscript i is outside array bounds of 'struct ioreq_port[0]' [-Warray-bounds=]
->> drivers/xen/privcmd.c:1245:33: warning: array subscript i is outside array bounds of 'struct ioreq_port[0]' [-Warray-bounds=]
->> drivers/xen/privcmd.c:1258:67: warning: array subscript i is outside array bounds of 'struct ioreq_port[0]' [-Warray-bounds=]
->>
->> This results in no differences in binary output.
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> 
-> Looks right to me. I can see the allocation:
-
-Yep, I always check for that; in particular, the 'counter' assignment. :)
-
-Do you want me to mention it in the changelog text?
-
-> 
->          size = struct_size(kioreq, ports, ioeventfd->vcpus);
->          kioreq = kzalloc(size, GFP_KERNEL);
->          if (!kioreq)
->                  return ERR_PTR(-ENOMEM);
-> 
->          kioreq->dom = ioeventfd->dom;
->          kioreq->vcpus = ioeventfd->vcpus;
-> 
-> 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-
-Thanks!
---
-Gustavo
