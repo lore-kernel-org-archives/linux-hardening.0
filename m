@@ -1,112 +1,86 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="kHmczCcS"
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10155AA;
-	Fri, 17 Nov 2023 10:19:54 -0800 (PST)
-Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AHIEwvQ011834;
-	Fri, 17 Nov 2023 18:19:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=1L8Q24kr/qoZtRFffr6tjC4KNExzi4YYSRiTIwu6veo=;
- b=kHmczCcSNffDIrXKSJdlsWgmXNJZaJkkhRlWbt30w8GtKWTwW7ESbR8hQtrnOQPCFRV3
- UHe2nC5Hxyc53V3JnwqzZ9mnWk2cpQxeBSASyOm/fuR9h6gZDM0uDKpyOcFNjNE+dlco
- 74VT51OIy6ILJ/4AW6yO9n9aOH7/OkjU9h2cKT9vTUg41Y2gjxveXQ+4YK5iMS5f23qe
- 6tTXt7p+xr6cwCwopxhTNtAX1qmFBSM+mpE/q7zm3BBkx11AWQW5ZzySYzwzNGnV35ki
- WLe2Xn5jBxPqhs+Av+oar7UXLjfwThZVcBTpWIzayNQWIiaTeaCh6HrTDraQxMirVeKm sA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ued9ag415-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 17 Nov 2023 18:19:52 +0000
-Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3AHIEvnl011815;
-	Fri, 17 Nov 2023 18:19:52 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ued9ag40w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 17 Nov 2023 18:19:52 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3AHG48vs014752;
-	Fri, 17 Nov 2023 18:19:51 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3uap5kqf4m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 17 Nov 2023 18:19:51 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3AHIJmlx39191124
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 17 Nov 2023 18:19:48 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 82AA020043;
-	Fri, 17 Nov 2023 18:19:48 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 852FE20040;
-	Fri, 17 Nov 2023 18:19:47 +0000 (GMT)
-Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.171.53.3])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri, 17 Nov 2023 18:19:47 +0000 (GMT)
-Date: Fri, 17 Nov 2023 19:19:45 +0100
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Kees Cook <keescook@chromium.org>
-Cc: Steffen Maier <maier@linux.ibm.com>, Benjamin Block <bblock@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Azeem Shaikh <azeemshaikh38@gmail.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] scsi: zfcp: Replace strlcpy() with strscpy()
-Message-ID: <ZVeuwT1rhMT5UWGB@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-References: <20231116191435.work.581-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ox7GGa5l"
+Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3677C5
+	for <linux-hardening@vger.kernel.org>; Fri, 17 Nov 2023 10:50:34 -0800 (PST)
+Received: by mail-yb1-xb2f.google.com with SMTP id 3f1490d57ef6-da41e70e334so2245408276.3
+        for <linux-hardening@vger.kernel.org>; Fri, 17 Nov 2023 10:50:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1700247034; x=1700851834; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DtpYAOIzka1JBZk8iAppwwSnkzFLFfJkyz+jdr3nWyE=;
+        b=Ox7GGa5lvbFsB6OFCm0JduYejFsWng/7QAbNYILaxQzOXw5ryZ3gGXcohJnUYwqWxI
+         M387O6Kg/0IfGXTIMDiHLv6FBYWoTfXXnYSLLxKIjBekczh0xAy9qzedb6iR70xIvWeJ
+         pAjtmwMPBczU6mxPBXsiJKDby1FcPFTsMXWhiknnuUAzJ+FNNewzkdCPHhjlKJcramvU
+         ek3c6QlXCPixHT6ke5QJ0DH1z9wLHRZ+A5dPVml1VeLhvxD+rzU5h48lTanmF4TWUP0+
+         /Lfhe7st7tHvqGK2BHdOc3wZR4oigDrnGHJUUykNsNTokUmWl8eahgsj7Dhwm4MldZfx
+         gXaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700247034; x=1700851834;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DtpYAOIzka1JBZk8iAppwwSnkzFLFfJkyz+jdr3nWyE=;
+        b=LZuiNxaVymozcJJ35z6o7cll8L1CvxrKofoZgqwHRl3NrxVSa9WjJSW64MHhjayzFr
+         +nLLNYqQbccBesJOOg4I+LsKFG16aMFESNryZoAYEo5kp16nwl02wkwBTh2MnmCVAUoD
+         RPpd3bQAtBd7TckMknRLsWBAfWmUMYyW8pXTOnNvkF2ubZTc3sJlNHNBmU4iunBN2S29
+         W+xGMaclxbGd2K6Wu2cr5uYtgkg2ofS0g0Ekp8OFG183X6Ht0CzMsPZra8veCj2THKvZ
+         UhtYjebcl4uhfwfwputCz+6dNc7qN/ygMUbi6g+ux7t7RMVTlOJCwTNSQeAyopjKRuRj
+         D3YA==
+X-Gm-Message-State: AOJu0YzId6qjyDC4/ST2FOXUDHAUqX0hD83ebJOyLVsJD/WPzPWzl8aA
+	0r2nPbr9z0rtSGM5qlmURvzjJMCMpbwcVz3zQ6pCEA==
+X-Google-Smtp-Source: AGHT+IFi5dwlJjXKeALdkQ3r7NL6Ns0Vqtg+0GbT2TnyYHl6vrk7ylgtgCrw4Xy73kvNJHON7kCIdI2uoaIh9nEMUls=
+X-Received: by 2002:a05:6902:1508:b0:d91:c3fe:6144 with SMTP id
+ q8-20020a056902150800b00d91c3fe6144mr286813ybu.3.1700247033764; Fri, 17 Nov
+ 2023 10:50:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231116191435.work.581-kees@kernel.org>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: maESwB1EAdoeU8RWF2zU727eC3-w3W6G
-X-Proofpoint-ORIG-GUID: 1LYYqnlCuehy9DM5_O13BK4b2dszfG4z
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-17_17,2023-11-17_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
- malwarescore=0 adultscore=0 mlxlogscore=885 spamscore=0 clxscore=1011
- suspectscore=0 priorityscore=1501 bulkscore=0 lowpriorityscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311060000 definitions=main-2311170137
+References: <20231116191409.work.634-kees@kernel.org>
+In-Reply-To: <20231116191409.work.634-kees@kernel.org>
+From: "T.J. Mercier" <tjmercier@google.com>
+Date: Fri, 17 Nov 2023 10:50:21 -0800
+Message-ID: <CABdmKX1oNw+quAd+ALcgGoz-PPsvy=O6YM4f2_SmP+dQBddzAA@mail.gmail.com>
+Subject: Re: [PATCH] dma-buf: Replace strlcpy() with strscpy()
+To: Kees Cook <keescook@chromium.org>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>, linux-kernel@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, Azeem Shaikh <azeemshaikh38@gmail.com>, 
+	linaro-mm-sig@lists.linaro.org, linux-hardening@vger.kernel.org, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 16, 2023 at 11:14:35AM -0800, Kees Cook wrote:
+On Thu, Nov 16, 2023 at 11:14=E2=80=AFAM Kees Cook <keescook@chromium.org> =
+wrote:
+>
+> strlcpy() reads the entire source buffer first. This read may exceed
+> the destination size limit. This is both inefficient and can lead
+> to linear read overflows if a source string is not NUL-terminated[1].
+> Additionally, it returns the size of the source string, not the
+> resulting size of the destination string. In an effort to remove strlcpy(=
+)
+> completely[2], replace strlcpy() here with strscpy().
+>
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strl=
+cpy [1]
+> Link: https://github.com/KSPP/linux/issues/89 [2]
+> Cc: Sumit Semwal <sumit.semwal@linaro.org>
+> Cc: "Christian K=C3=B6nig" <christian.koenig@amd.com>
+> Cc: Azeem Shaikh <azeemshaikh38@gmail.com>
+> Cc: linux-media@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linaro-mm-sig@lists.linaro.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Hi Kees,
+Reviewed-by: T.J. Mercier <tjmercier@google.com>
 
-> diff --git a/drivers/s390/scsi/zfcp_fc.c b/drivers/s390/scsi/zfcp_fc.c
-> index 4f0d0e55f0d4..1a29f10767fc 100644
-> --- a/drivers/s390/scsi/zfcp_fc.c
-> +++ b/drivers/s390/scsi/zfcp_fc.c
-> @@ -900,8 +900,15 @@ static void zfcp_fc_rspn(struct zfcp_adapter *adapter,
->  	zfcp_fc_ct_ns_init(&rspn_req->ct_hdr, FC_NS_RSPN_ID,
->  			   FC_SYMBOLIC_NAME_SIZE);
->  	hton24(rspn_req->rspn.fr_fid.fp_fid, fc_host_port_id(shost));
-> -	len = strlcpy(rspn_req->rspn.fr_name, fc_host_symbolic_name(shost),
-> -		      FC_SYMBOLIC_NAME_SIZE);
-> +	len = strscpy(rspn_req->name, fc_host_symbolic_name(shost),
-> +		      sizeof(rspn_req->name));
-
-Could you please explain why do you copy to rspn_req->name instead
-of rspn_req->rspn.fr_name?
-
-> +	/*
-> +	 * It should be impossible for this to truncate, as
-> +	 * sizeof(rspn_req->name) is equal to max size of
-> +	 * fc_host_symbolic_name(shost), but check anyway.
-> +	 */
-> +	if (len < 0)
-> +		len = sizeof(rspn_req->name) - 1;
->  	rspn_req->rspn.fr_name_len = len;
->  
->  	sg_init_one(&fc_req->sg_req, rspn_req, sizeof(*rspn_req));
-
-Thanks!
+strscpy returns -E2BIG when it truncates / force null-terminates which
+would provide the wrong argument for dynamic_dname, but
+dma_buf_set_name{_user} makes sure we have a null-terminated string of
+the appropriate maximum size in dmabuf->name.
