@@ -1,145 +1,112 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b="QuXEvFwS"
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A31A93;
-	Fri, 17 Nov 2023 06:48:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1700232504; x=1700837304; i=deller@gmx.de;
-	bh=Rhzr/tXislpaEcjUqBvx/o590da//8yYsjL1uA8Urh0=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=QuXEvFwSt4rzdi/fXlKMesz96+8DL21zBrJu8qBlX2z1772pZa5h9U1OXeClaVBF
-	 qjZetUZogJ/RW5CNY46WEzR2kWJWakcXZ5zeGWlKHr8CldNQX8k7cm/YG8TxcAWY8
-	 1MUkRkhfK6N1xWbYsb9R5NsCDspW4DnMyzKegYqd+DwVDMapMf0dCmWsPCTSo3tBn
-	 dyCI+8fSzzak47OBQhIMc+sm5AMABTmSTNEUFMai8+ozmFrWFciX2w7fMEFReWoQp
-	 gKmx9R0GjE9PaW89j8/5nkNKzrf2gy9YIRRtujr5RS5yLukHuHPuFdt/2MTzvOM5h
-	 tFdGOcdu67ArpIUFGA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.20.60] ([94.134.147.146]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1M8ykW-1qxvri2BfC-0068y0; Fri, 17
- Nov 2023 15:48:24 +0100
-Message-ID: <cbfda101-9ba6-4130-88e8-be49e15df642@gmx.de>
-Date: Fri, 17 Nov 2023 15:48:21 +0100
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="kHmczCcS"
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10155AA;
+	Fri, 17 Nov 2023 10:19:54 -0800 (PST)
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AHIEwvQ011834;
+	Fri, 17 Nov 2023 18:19:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=1L8Q24kr/qoZtRFffr6tjC4KNExzi4YYSRiTIwu6veo=;
+ b=kHmczCcSNffDIrXKSJdlsWgmXNJZaJkkhRlWbt30w8GtKWTwW7ESbR8hQtrnOQPCFRV3
+ UHe2nC5Hxyc53V3JnwqzZ9mnWk2cpQxeBSASyOm/fuR9h6gZDM0uDKpyOcFNjNE+dlco
+ 74VT51OIy6ILJ/4AW6yO9n9aOH7/OkjU9h2cKT9vTUg41Y2gjxveXQ+4YK5iMS5f23qe
+ 6tTXt7p+xr6cwCwopxhTNtAX1qmFBSM+mpE/q7zm3BBkx11AWQW5ZzySYzwzNGnV35ki
+ WLe2Xn5jBxPqhs+Av+oar7UXLjfwThZVcBTpWIzayNQWIiaTeaCh6HrTDraQxMirVeKm sA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ued9ag415-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 17 Nov 2023 18:19:52 +0000
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3AHIEvnl011815;
+	Fri, 17 Nov 2023 18:19:52 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ued9ag40w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 17 Nov 2023 18:19:52 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3AHG48vs014752;
+	Fri, 17 Nov 2023 18:19:51 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3uap5kqf4m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 17 Nov 2023 18:19:51 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3AHIJmlx39191124
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 17 Nov 2023 18:19:48 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 82AA020043;
+	Fri, 17 Nov 2023 18:19:48 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 852FE20040;
+	Fri, 17 Nov 2023 18:19:47 +0000 (GMT)
+Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.171.53.3])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri, 17 Nov 2023 18:19:47 +0000 (GMT)
+Date: Fri, 17 Nov 2023 19:19:45 +0100
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Kees Cook <keescook@chromium.org>
+Cc: Steffen Maier <maier@linux.ibm.com>, Benjamin Block <bblock@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Azeem Shaikh <azeemshaikh38@gmail.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] scsi: zfcp: Replace strlcpy() with strscpy()
+Message-ID: <ZVeuwT1rhMT5UWGB@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+References: <20231116191435.work.581-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] parisc: Replace strlcpy() with strscpy()
-Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-Cc: Azeem Shaikh <azeemshaikh38@gmail.com>, linux-parisc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20231116191336.work.986-kees@kernel.org>
-From: Helge Deller <deller@gmx.de>
-Autocrypt: addr=deller@gmx.de; keydata=
- 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
-In-Reply-To: <20231116191336.work.986-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:r3Rwf/595U6LU+stnCdyFJu9RcB2mdBe2iKZMzKmyliSUm2uqVl
- meG/8Q5gWsvKQaayqV2ZZIDJj40x5i/wq4aHy/0vpG89QvJ7vLT9XvsKYNYh4Ohtzv93iOV
- OTpWcJlv7reBLBQ23k9CxVj4Tl1bln27eqg8ko6I0rghoETc4tN1cEQviKdcG9KO6moesQO
- +J38gTi4FvC8sAypm2goQ==
-UI-OutboundReport: notjunk:1;M01:P0:cbNoU/VWvvE=;xqXuioAPBeoc5hSy71OfIm6IQ2Q
- o6ZMvUCKs/4BYoZuVa1ju8E5EIhKL1ztUOfYJVBPPEaB53hDFirgkrLyS3+BvE9iHdJAmnSh3
- Rdb6Xi+9BkeFrONpzHmACUUpdruccX52msOa7UNlm64nem6My0wMeJGr1lLE7Ybn77CX7l8bg
- gxzamyammX8udf1nGy9jCjpzkrSQKq1yCaX3lEI+ZYJ3UuMLjIHzM2ynNyySR3MorNj1aRJRg
- WxjzHY4a8EnAXdwtK7verWVgyC64N2yjAlKQSUfDbNmAi+6uT5SOO3Uem7Q24APxilKSt1tvD
- wLOyB/yGMOPib1UgvPTia5Xpb5IT+Z80SH5DKq1axEHafTF7ou2OapjGzukUZ7i6tw6hG8JTf
- j46qq3vfhvifzzMioBzfKpZZQCY9f+ZwWBGmiwk6fxHkQoFWQavZ1lxeJVCwWn2KvV2T3Nt1U
- F0ZLZuJ0ZqSdTi09P/c5GjZAP4K0dMZFdSKyxaXVG21m5IDpfkG8BVkT5xA6EwbC2gzXkmURJ
- sg4/Pka06LrAaNEFCr6VzB72jkqeAsxeHKlZkRJih/wQbPMxQGSivq1/rgcMao6RQ/T3lSyE8
- OlwtMTNREb3ikqQYFZDKizWr05ojc/9G3nP+kbOlpYYYDi/oavqb4UORGDYDnxfpePKDmeIfo
- fIAiEl1XtUbnJAvRXRR5aabQf9gGRsxNgherpcElLIfqYZmAVHJYkcMAm0OV2r1b75RflGOFy
- Q/XTsw8E+qp/3PD+rzHOhJWDz8WGEaVKFPG3piEcVaFf49uIahc9toGLf3X2myTTKJ4ydNa3a
- Yvy8QdZnRK85u6SpLqB7EtF2go+lQmTdsrk/dpBYstAXnTT8PU+c0X/3kPn/ciJrUktmtelCV
- /n20uFGuDmL4URtcvOyMJkdUAdp60vF3ajEoXSIBggo1Vmq3R9xGUUkQV9ULOzhuMRxBc9vJq
- hS8rcQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231116191435.work.581-kees@kernel.org>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: maESwB1EAdoeU8RWF2zU727eC3-w3W6G
+X-Proofpoint-ORIG-GUID: 1LYYqnlCuehy9DM5_O13BK4b2dszfG4z
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-11-17_17,2023-11-17_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
+ malwarescore=0 adultscore=0 mlxlogscore=885 spamscore=0 clxscore=1011
+ suspectscore=0 priorityscore=1501 bulkscore=0 lowpriorityscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311060000 definitions=main-2311170137
 
-On 11/16/23 20:13, Kees Cook wrote:
-> strlcpy() reads the entire source buffer first. This read may exceed
-> the destination size limit. This is both inefficient and can lead
-> to linear read overflows if a source string is not NUL-terminated[1].
-> Additionally, it returns the size of the source string, not the
-> resulting size of the destination string. In an effort to remove strlcpy=
-()
-> completely[2], replace strlcpy() here with strscpy().
->
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#str=
-lcpy [1]
-> Link: https://github.com/KSPP/linux/issues/89 [2]
-> Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-> Cc: Helge Deller <deller@gmx.de>
-> Cc: Azeem Shaikh <azeemshaikh38@gmail.com>
-> Cc: linux-parisc@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+On Thu, Nov 16, 2023 at 11:14:35AM -0800, Kees Cook wrote:
 
-applied.
+Hi Kees,
+
+> diff --git a/drivers/s390/scsi/zfcp_fc.c b/drivers/s390/scsi/zfcp_fc.c
+> index 4f0d0e55f0d4..1a29f10767fc 100644
+> --- a/drivers/s390/scsi/zfcp_fc.c
+> +++ b/drivers/s390/scsi/zfcp_fc.c
+> @@ -900,8 +900,15 @@ static void zfcp_fc_rspn(struct zfcp_adapter *adapter,
+>  	zfcp_fc_ct_ns_init(&rspn_req->ct_hdr, FC_NS_RSPN_ID,
+>  			   FC_SYMBOLIC_NAME_SIZE);
+>  	hton24(rspn_req->rspn.fr_fid.fp_fid, fc_host_port_id(shost));
+> -	len = strlcpy(rspn_req->rspn.fr_name, fc_host_symbolic_name(shost),
+> -		      FC_SYMBOLIC_NAME_SIZE);
+> +	len = strscpy(rspn_req->name, fc_host_symbolic_name(shost),
+> +		      sizeof(rspn_req->name));
+
+Could you please explain why do you copy to rspn_req->name instead
+of rspn_req->rspn.fr_name?
+
+> +	/*
+> +	 * It should be impossible for this to truncate, as
+> +	 * sizeof(rspn_req->name) is equal to max size of
+> +	 * fc_host_symbolic_name(shost), but check anyway.
+> +	 */
+> +	if (len < 0)
+> +		len = sizeof(rspn_req->name) - 1;
+>  	rspn_req->rspn.fr_name_len = len;
+>  
+>  	sg_init_one(&fc_req->sg_req, rspn_req, sizeof(*rspn_req));
 
 Thanks!
-Helge
-
-> ---
->   arch/parisc/kernel/processor.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/parisc/kernel/processor.c b/arch/parisc/kernel/process=
-or.c
-> index 29e2750f86a4..e95a977ba5f3 100644
-> --- a/arch/parisc/kernel/processor.c
-> +++ b/arch/parisc/kernel/processor.c
-> @@ -383,7 +383,7 @@ show_cpuinfo (struct seq_file *m, void *v)
->   	char cpu_name[60], *p;
->
->   	/* strip PA path from CPU name to not confuse lscpu */
-> -	strlcpy(cpu_name, per_cpu(cpu_data, 0).dev->name, sizeof(cpu_name));
-> +	strscpy(cpu_name, per_cpu(cpu_data, 0).dev->name, sizeof(cpu_name));
->   	p =3D strrchr(cpu_name, '[');
->   	if (p)
->   		*(--p) =3D 0;
-
