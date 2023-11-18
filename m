@@ -1,37 +1,38 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IxlGyFRW"
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C1E7D7E
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LIl7Imyg"
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2832D79
 	for <linux-hardening@vger.kernel.org>; Fri, 17 Nov 2023 19:32:29 -0800 (PST)
-Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-6ba54c3ed97so2737364b3a.2
+Received: by mail-pg1-x52f.google.com with SMTP id 41be03b00d2f7-5c18a3387f5so1834890a12.1
         for <linux-hardening@vger.kernel.org>; Fri, 17 Nov 2023 19:32:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1700278348; x=1700883148; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yiER6+GNhM8NqF28QHJqC7UhszFlWWtCYJC8eU1ccH8=;
-        b=IxlGyFRWhGxkHRMcp73W9+Iv+1K2kyWlOMOFcN3vVwUE4MgCsmMoJERdxTfouup9kl
-         O1w+yjn0vvDANgJqaJvGQ5GHEZjsFhqR5TPNLWxpiTGi/Odhsyjl+sPABnXXq3L1GE7i
-         fjwEZMxwc3eti1RiOKzzpjYYtlGwQEeXjrg+A=
+        d=chromium.org; s=google; t=1700278349; x=1700883149; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hUNX4Pr0e63GOp5Q1i8+8pUFIEK3hETBMWLJLAQNpAU=;
+        b=LIl7ImygH4QE78Jnvt+8VjpRoBbEt0RybWpiIkGZSYockNCRcmOIH5adk9WuQ5CYWS
+         RADZ7ULcmEVAalURw4bprUX+feuPDCPHSoMSZJiyFsCBLS4h6c7MvwS/hDeHTwLmdl8t
+         yud28OFYY2+s/ohY0ZIbzVtpBS4UFvQMFjRwg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700278348; x=1700883148;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yiER6+GNhM8NqF28QHJqC7UhszFlWWtCYJC8eU1ccH8=;
-        b=v+urHZIyBX3OWzGSH7dxt596m1Y93N0YjPFjx69QW6HRAfLx4XKkmPKN9gf56rq9WS
-         o3lyhjtmdzTb7ZQZLwDTxVDswKIm17cb4LMeYrYgnO+d4XRJz/wGfG2Pa2AM3DL/0Kk0
-         i9KCrHDYmZa56GXntK8gGvFoh0p1jQljwkny87+6/TlpGXKVCjc/2oFZV8U6vnaHiu0c
-         N35h6SxAlh8PtcgP+SvNLH2aAQ0jU58IVBJKHfUVQaH+cCYbshwL/2Zm2Nb54eH24a4D
-         0cNOK50rAE5bWS7Gja8OH9vhKPDcojF6F3/4KBAzwis+PHjWRadLTCnIOUO4CaMreMBO
-         ghQA==
-X-Gm-Message-State: AOJu0YzkdHWILpVR2+Cb78kS+jp+OIbrLT0fcgfrs96VY9l4Z3r1Rebs
-	S/J3PKaNz0TTc22AyimTNx9WbA==
-X-Google-Smtp-Source: AGHT+IElC4nlkdRBYCPskViEJXuZO3rJQiaQ0pjZMGGYDmFJR4zN8M2X3/kauDNjipobGyDxda48Sw==
-X-Received: by 2002:a05:6a00:93a4:b0:68e:4303:edb8 with SMTP id ka36-20020a056a0093a400b0068e4303edb8mr1659893pfb.30.1700278348601;
-        Fri, 17 Nov 2023 19:32:28 -0800 (PST)
+        d=1e100.net; s=20230601; t=1700278349; x=1700883149;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hUNX4Pr0e63GOp5Q1i8+8pUFIEK3hETBMWLJLAQNpAU=;
+        b=QKv0fpBKaUb7KofMVv83SQMCG0eoXM/UzZKBsHJE8YjrpeJauZNdTFjqpr9U9ioBy3
+         Sml/4zWwOVN75pK/b4PlJ4fvr7DgOLHGsAH7MFGmnYogMHVMEc7N5+oYSVleeb7HWT/8
+         /8XO0HRF3SrWO6fzXltyGH3bc+ulmGL99DQSPNvGg5bhynH5iMOsj4+/fyM8WNx4cr4f
+         ySqo7wQvn+8WxNcxY4vkJipDM0Nsg9juaV74QC3lK8jmwFGDgBGgYf2ZRHUaPyu5til+
+         eAojhJ1v2TI4O1ReQVHatw6NHLIM6BckQUyMMnaK2Z7Q7KAj9MZHTnXcBRwX9KHa1V0T
+         hAbQ==
+X-Gm-Message-State: AOJu0YzA4sh5/YkA92/FcW7c06SRJlxNJVNYIgZo0UnoByGJHvt00RHs
+	FPOm9pYX0QBNjt+JMBXjaqL2uA==
+X-Google-Smtp-Source: AGHT+IHn5W15vaMMMeZcjnHp9mCYupUevMqRAJPExmNc/p1BHGjN0FU7nrwoV0mUh0XdiZuO73B7YQ==
+X-Received: by 2002:a05:6a20:3e16:b0:187:1015:bf88 with SMTP id m22-20020a056a203e1600b001871015bf88mr803069pzc.29.1700278349034;
+        Fri, 17 Nov 2023 19:32:29 -0800 (PST)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id q2-20020a63cc42000000b005657495b03bsm2145144pgi.38.2023.11.17.19.32.26
+        by smtp.gmail.com with ESMTPSA id ja5-20020a170902efc500b001c60a2b5c61sm2068173plb.134.2023.11.17.19.32.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 17 Nov 2023 19:32:26 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
@@ -40,52 +41,102 @@ Cc: Kees Cook <keescook@chromium.org>,
 	Ronald Monthero <debug.penguin32@gmail.com>,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH 0/2] qnx4: Avoid confusing compiler about buffer lengths
-Date: Fri, 17 Nov 2023 19:32:21 -0800
-Message-Id: <20231118032638.work.955-kees@kernel.org>
+Subject: [PATCH 2/2] qnx4: Use get_directory_fname() in qnx4_match()
+Date: Fri, 17 Nov 2023 19:32:23 -0800
+Message-Id: <20231118033225.2181299-2-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231118032638.work.955-kees@kernel.org>
+References: <20231118032638.work.955-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=649; i=keescook@chromium.org;
- h=from:subject:message-id; bh=OMCLpZGQCXtDrFtSkwPrEvTz65pZ01+xbtIVOPQFtnA=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlWDBGj6KV93xXmd7bqlrjS6DRqhDkK533J9F4U
- Xqp5Vjhc+mJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZVgwRgAKCRCJcvTf3G3A
- JsaID/9LJTAd4OyUK7Sv5F2BQlJx7xBQDMCck87P/+EqLsaPZPhMgexI14/dvnE36YR63MTGAQe
- jc/WTfRpxi2vn7T4S3+Y9xpqIkqT+6t0DuKZ+lG8LMPuaXfH4FXKf0qJ3jAJ45kpjW6dqQW8x38
- pd+1DpMh2/sXecHgv1gx2BuUgnUX2O0zCq1mllM61OgKVdtB1U2eq4KFNdixXU/GaozjiRz6dWg
- w/q0i32LumgYnN0cIecZKr6pfp7eIluXBkThjMkMC6h+o8gxr1w2Wrd+KPsayJt2M9E9tqJ0Tpi
- CrhQa68PUZpk0GM1aPXalSarCaJxDK/ox13vvUOnNO45uHzFRuZo0+I4jilsWujnDeUDp6E6cpz
- o7ynfot8hgByy2p3LpIQqblI3G/q/vnrNHUlFg9HUI/ZevijcXuaop+YrTI6tSiNo9IpiHl01r+
- uqaZsRL3tsJNkJ453t8c9Ww+4uUdBzozmeW9w+6/Csnsvm4qW9wRQGaVrLmJTB1ZSYEpdb3hbjk
- /cyPUXIzwZn9/dQnSaPBOpL1LZt0oMkqQXeNWBKG57loKutLemyJk1WXeaP8CbsGxSo8xVqlTyL
- jb2C4ENFU/8s50B6Rk20z8Rxwx83pzMtjiHqyPTXnbTg6hU7RM4/s+htVPwaoosHrzpymFRwyqT
- 6wpwAow2 k+a2s4g==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2057; i=keescook@chromium.org;
+ h=from:subject; bh=OhI/ZifeBTDlKg1Qzh7oz3gDWu25PlWJzlLQLPT3/7Y=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlWDBHYnwwXN6DifyScJCDU1k4klZEHrQeAbVxO
+ WPackvO556JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZVgwRwAKCRCJcvTf3G3A
+ JghJD/9FcggML2h6nM/xEZ50lWpdxVZnBj1oQhkTQJtXykLeD4GhH3Fo7k4wqHPGNt3NHcOjxDz
+ 8wc9HYXWEdWEhBhR2IFQE+iETopUHDNGJ+Z2qpnCRUgFiwCJML4VvMjs/OLU1WsDtvvXmmtSApA
+ j1dggGXIm1aDFES3WZj7MLbICqDNORhV1AB0/2kOyIVDdy0f/lLHNArhA4H1jwc80maFqJAQsna
+ mHOCblm6l1RbytvX53le+z8IXhcOlEnVvQNKlJ2ljWpElpTRl3fHEIReyTkwfiVVUrWFAbG/Laa
+ zo2KNadtfSTwLxBDv2rodZSDt4TTvdqw413rAGeQi/EmSbRjfA0kGuy5FnU9yOu8czTWentFWTB
+ sE4FLVY3uR8To4VIRPuXX+bokslF1pCD/EcFiJRU3hcEZPeNmiCP9nFd186ToTxhpulkNCatmlM
+ l4YAogd+8vgEhUuEK3skqO9VcnpUw1EyUo0uM8agp5K7Sc1VHhDjIAaeEr+v6Rq7KfrtoxUIZGj
+ d77dTo1pMyiCAYIoh7ZeG8j4qemCL2ndbDN+Eo1XyXnVbqgDBoXEpVtd5td3biUTIJ6ig5hiDF+
+ D4WXLfkY1OSZWAIw/1lAwHrT0eiUqa3ZhKvcKr6OyTNppZ1Q6xKQdd8QSHbZmFcrsw6YS/Khswq v5xIgGNbr5C5aJA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Hi,
+Use the new common directory entry name accessor helper to avoid
+confusing the compiler about over-running the file name buffer. Avoids
+false positive buffer overflow warning:
 
-This attempts to fix the issue Ronald Monthero found[1]. Avoids using a
-too-short struct buffer when reading the string, by using the existing
-struct union.
+[ 4849.636861] detected buffer overflow in strlen
+[ 4849.636897] ------------[ cut here ]------------
+[ 4849.636902] kernel BUG at lib/string.c:1165!
+...
+[ 4849.637047] Call Trace:
+...
+[ 4849.637251]  qnx4_find_entry.cold+0xc/0x18 [qnx4]
+[ 4849.637264]  qnx4_lookup+0x3c/0xa0 [qnx4]
 
--Kees
+Cc: Anders Larsen <al@alarsen.net>
+Reported-by: Ronald Monthero <debug.penguin32@gmail.com>
+Closes: https://lore.kernel.org/lkml/20231112095353.579855-1-debug.penguin32@gmail.com/
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ fs/qnx4/namei.c | 29 +++++++++++------------------
+ 1 file changed, 11 insertions(+), 18 deletions(-)
 
-[1] https://lore.kernel.org/lkml/20231112095353.579855-1-debug.penguin32@gmail.com/
-
-Kees Cook (2):
-  qnx4: Extract dir entry filename processing into helper
-  qnx4: Use get_directory_fname() in qnx4_match()
-
- fs/qnx4/dir.c   | 52 ++++++-------------------------------------
- fs/qnx4/namei.c | 29 +++++++++---------------
- fs/qnx4/qnx4.h  | 59 +++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 77 insertions(+), 63 deletions(-)
-
+diff --git a/fs/qnx4/namei.c b/fs/qnx4/namei.c
+index 8d72221735d7..bb8db6550ca5 100644
+--- a/fs/qnx4/namei.c
++++ b/fs/qnx4/namei.c
+@@ -26,31 +26,24 @@
+ static int qnx4_match(int len, const char *name,
+ 		      struct buffer_head *bh, unsigned long *offset)
+ {
+-	struct qnx4_inode_entry *de;
+-	int namelen, thislen;
++	union qnx4_directory_entry *de;
++	const char *fname;
++	int fnamelen;
+ 
+ 	if (bh == NULL) {
+ 		printk(KERN_WARNING "qnx4: matching unassigned buffer !\n");
+ 		return 0;
+ 	}
+-	de = (struct qnx4_inode_entry *) (bh->b_data + *offset);
++	de = (union qnx4_directory_entry *) (bh->b_data + *offset);
+ 	*offset += QNX4_DIR_ENTRY_SIZE;
+-	if ((de->di_status & QNX4_FILE_LINK) != 0) {
+-		namelen = QNX4_NAME_MAX;
+-	} else {
+-		namelen = QNX4_SHORT_NAME_MAX;
+-	}
+-	thislen = strlen( de->di_fname );
+-	if ( thislen > namelen )
+-		thislen = namelen;
+-	if (len != thislen) {
++
++	fname = get_entry_fname(de, &fnamelen);
++	if (!fname || len != fnamelen)
+ 		return 0;
+-	}
+-	if (strncmp(name, de->di_fname, len) == 0) {
+-		if ((de->di_status & (QNX4_FILE_USED|QNX4_FILE_LINK)) != 0) {
+-			return 1;
+-		}
+-	}
++
++	if (strncmp(name, fname, len) == 0)
++		return 1;
++
+ 	return 0;
+ }
+ 
 -- 
 2.34.1
 
