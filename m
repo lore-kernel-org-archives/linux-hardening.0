@@ -1,73 +1,177 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FOaCSrb8"
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A83D1D7E
-	for <linux-hardening@vger.kernel.org>; Fri, 17 Nov 2023 19:33:55 -0800 (PST)
-Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-1cc1ee2d8dfso23555025ad.3
-        for <linux-hardening@vger.kernel.org>; Fri, 17 Nov 2023 19:33:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iuCus+3m"
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CB5CB9;
+	Sat, 18 Nov 2023 00:38:51 -0800 (PST)
+Received: by mail-wr1-x42c.google.com with SMTP id ffacd0b85a97d-32deb2809daso1796953f8f.3;
+        Sat, 18 Nov 2023 00:38:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1700278435; x=1700883235; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dF27M13Q5uIXKU9SuRFjuyiZuatrs8pB1vllLX+2P7M=;
-        b=FOaCSrb8llwD112mZusnkMkAgqb83MPZihaaO3g6rzb+kSoU8PpZxvEoWVw7q1OTU6
-         /g6WJJ5L7cb12/gacJfSb9lN49TnLWuJWnfzGHIKGYS/wRZH4oziKeEEYXciz4kiveDV
-         UdvwtQAVLQpz6jTn50ujtowZiKtuwbG0g8YRw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700278435; x=1700883235;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1700296729; x=1700901529; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dF27M13Q5uIXKU9SuRFjuyiZuatrs8pB1vllLX+2P7M=;
-        b=TuwWVO3Xac9OvePxIuo4Ceq0QOTYM2k6ibAeAgNQQmva8Cdtfj/839+R046yAOsuic
-         rTTW7EWTHSXW5QQ2gb1/EFYWPhFQk3j297x+GI2ED6UFN/VY4NrG9nVGldrgfFowZyZD
-         TyxZ1lsqgEeLkbNNzQjaHY1NyQoRIXuBn0XyT1f08T5Ys4JrW6KezvR46CUIu3XjPKVZ
-         oOUbxfFxha6OJ68Yj/GrXxY87a7Y8G6j24iNBiiSiXDz6L2pVI3TB31NT+OcHGwLylHA
-         V5zyUEQACo5s2OF5eUx000L1KF9IZhLPtKwgKCMvPyA4mB9pyARxKr41o8d7RRLNmUai
-         v2Gg==
-X-Gm-Message-State: AOJu0YxsJJywk6dR2xJysfxQ0pJZOl860lsehqm39ll/3ljy+7yL4o6f
-	cRN7xJOrTBwKK/PvrIKyZHSwcw==
-X-Google-Smtp-Source: AGHT+IFiVXVkJA1L9nXFiQfIL0/MD9bacMDG55+9sSwrswN9Mzf/813jB6DUKoAwLgRaC0LvRmDoEQ==
-X-Received: by 2002:a17:902:cec8:b0:1ce:5b21:5c2e with SMTP id d8-20020a170902cec800b001ce5b215c2emr1703535plg.17.1700278435110;
-        Fri, 17 Nov 2023 19:33:55 -0800 (PST)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id h10-20020a170902f7ca00b001c8836a3795sm2052356plw.271.2023.11.17.19.33.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Nov 2023 19:33:54 -0800 (PST)
-Date: Fri, 17 Nov 2023 19:33:54 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Waiman Long <longman@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>, cgroups@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Azeem Shaikh <azeemshaikh38@gmail.com>,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 3/3] kernfs: Convert kernfs_path_from_node_locked() from
- strlcpy() to strscpy()
-Message-ID: <202311171933.5792E9FFFE@keescook>
-References: <20231116191718.work.246-kees@kernel.org>
- <20231116192127.1558276-3-keescook@chromium.org>
- <20231117084757.150724ed@rorschach.local.home>
+        bh=X+i0KfW6No8nTtUxfF3SBkoQohwSEclHyK7ryzwdT8c=;
+        b=iuCus+3m61jKZMUzCL52yflh7Y6ehOdmYLZ/ewww3tMYMl562yg2/10OGM94GxUM2U
+         pGDXf9jcgSguj7YL5aBIuSdPu001H/YosQwYbE5v+yfBWTJDNsXXjoT0cNBlzEQnPrJy
+         RqoQexjvQWwFYT2PrE2exTbEHZF2eq/uhluKzSzOeSZKtumhDB0IRqwm5uZz8JoBTfH1
+         VyyPp56SaIB8Z2Pv6EiY7lKRT8prUvTdLqxw3wXQRffv0py8pU10dp5aqPNOIjJj642l
+         s3uot6TBXLJGPHlBIe2gLsN6XcMz9dKruoQyvzqEoeRuD2Fj2jk+uoiUujDwKrDIQ5W7
+         Z5lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700296729; x=1700901529;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=X+i0KfW6No8nTtUxfF3SBkoQohwSEclHyK7ryzwdT8c=;
+        b=aS1jadXTqvAWfC4aDjv+zgJi7mlTSXTZDt/gWhR3Rc9Lpqcxt2UfA+kcRUg9JiwDBk
+         9DJ5CZ5u7aymc50mAKf93qll6W0+2a7MGy02eZdNjjbs95XjPo/6uFcDoKnnd2EHdPpS
+         J3y1bUX+UBATL+CSrS1mEfhsd/uPKCX8JwPlaju9rBO4xtBDm2wLw1ImWHcHd9Eo3poP
+         +1oWIrHHAXOyEIItXdJX4wUZyrLKqyhdLWN1tf1T6tsvamMA3UpssvBxiGa1PAfrPdKT
+         1thwP+XrR26luoGSuemtkMAtF0nwwT9oP3bVgieC7HKVik2wWIdzXlDaF14F8B8lhNnK
+         EvMQ==
+X-Gm-Message-State: AOJu0Yx8KCoBMHVd01e53aSsdl2L2iCbj+OnXmlsedqoFbuChj9QIoX8
+	TIb6Fbmd7nilV4wHtfovzTZRA4PuMlTg+gwa1zc=
+X-Google-Smtp-Source: AGHT+IEoQrJ6KymHk1iFGh/E1XP19GUQo18VJ8jQaGfTADdIiZuy6Hyj6FugkfPQyBAurDODmiBfbZe3/TxtV+6mOGo=
+X-Received: by 2002:adf:ea08:0:b0:32f:7c15:2ad7 with SMTP id
+ q8-20020adfea08000000b0032f7c152ad7mr893788wrm.38.1700296728821; Sat, 18 Nov
+ 2023 00:38:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231117084757.150724ed@rorschach.local.home>
+References: <20231112095353.579855-1-debug.penguin32@gmail.com>
+ <202311160612.C38BF44@keescook> <202311160631.5ACFB84B7C@keescook>
+ <2910678.e9J7NaK4W3@oscar> <202311161022.6B34F00641@keescook>
+In-Reply-To: <202311161022.6B34F00641@keescook>
+From: Ronald Monthero <debug.penguin32@gmail.com>
+Date: Sat, 18 Nov 2023 18:38:37 +1000
+Message-ID: <CALk6UxqugQ_8piS6oNr4XdwRTo9dROJ6U-iU_OHUmQC_J_-VWw@mail.gmail.com>
+Subject: Re: [PATCH] qnx4: fix to avoid panic due to buffer overflow
+To: Kees Cook <keescook@chromium.org>
+Cc: Anders Larsen <al@alarsen.net>, gustavoars@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 17, 2023 at 08:47:57AM -0500, Steven Rostedt wrote:
-> >  kernel/trace/trace_uprobe.c |  2 +-
-> 
-> trace_uprobe.c seems out of scope for this patch.
+Thank you Kees and Anders, Cheers
 
-Oops. Yes, that's in the wrong patch. I will respin the series...
+BR,
+Ronald
 
--- 
-Kees Cook
+On Fri, Nov 17, 2023 at 4:26=E2=80=AFAM Kees Cook <keescook@chromium.org> w=
+rote:
+>
+> On Thu, Nov 16, 2023 at 05:48:20PM +0100, Anders Larsen wrote:
+> > On 2023-11-16 15:58 Kees Cook wrote:
+> > >         if ((de->di_status & QNX4_FILE_LINK) =3D=3D QNX4_FILE_LINK) {
+> > >                 lnk =3D (struct qnx4_link_info *) de;
+> > >
+> > > It seems that entries may be either struct qnx4_inode_entry or struct
+> > > qnx4_link_info but it's not captured in a union.
+> > >
+> > > This needs to be fixed by not lying to the compiler about what is the=
+re.
+> > >
+> > > How about this?
+> >
+> > > diff --git a/fs/qnx4/namei.c b/fs/qnx4/namei.c
+> > > index 8d72221735d7..3cd20065bcfa 100644
+> > > --- a/fs/qnx4/namei.c
+> > > +++ b/fs/qnx4/namei.c
+> > > @@ -26,31 +26,39 @@
+> > >  static int qnx4_match(int len, const char *name,
+> > >                   struct buffer_head *bh, unsigned long *offset)
+> > >  {
+> > > -   struct qnx4_inode_entry *de;
+> > > -   int namelen, thislen;
+> > > +   union qnx4_dir_entry *de;
+> > > +   char *entry_fname;
+> > > +   int entry_len, entry_max_len;
+> > >
+> > >     if (bh =3D=3D NULL) {
+> > >             printk(KERN_WARNING "qnx4: matching unassigned buffer !
+> > \n");
+> > >             return 0;
+> > >     }
+> > > -   de =3D (struct qnx4_inode_entry *) (bh->b_data + *offset);
+> > > +   de =3D (union qnx4_dir_entry *) (bh->b_data + *offset);
+> > >     *offset +=3D QNX4_DIR_ENTRY_SIZE;
+> > > -   if ((de->di_status & QNX4_FILE_LINK) !=3D 0) {
+> > > -           namelen =3D QNX4_NAME_MAX;
+> > > -   } else {
+> > > -           namelen =3D QNX4_SHORT_NAME_MAX;
+> > > -   }
+> > > -   thislen =3D strlen( de->di_fname );
+> > > -   if ( thislen > namelen )
+> > > -           thislen =3D namelen;
+> > > -   if (len !=3D thislen) {
+> > > +
+> > > +   switch (de->inode.di_status) {
+> > > +   case QNX4_FILE_LINK:
+> > > +           entry_fname =3D de->link.dl_fname;
+> > > +           entry_max_len =3D sizeof(de->link.dl_fname);
+> > > +           break;
+> > > +   case QNX4_FILE_USED:
+> > > +           entry_fname =3D de->inode.di_fname;
+> > > +           entry_max_len =3D sizeof(de->inode.di_fname);
+> > > +           break;
+> > > +   default:
+> > >             return 0;
+> > >     }
+> >
+> > The switch won't work since the _status field is a bit-field, so we sho=
+uld
+> > rather reuse the similar union-logic already present in fs/qnx4/dir.c
+>
+> Ah, okay, LINK and USED might both be there. And perfect, yes, it looks
+> like the union qnx4_directory_entry in fs/qnx4/dir.c would be perfect.
+>
+> -Kees
+>
+> > > -   if (strncmp(name, de->di_fname, len) =3D=3D 0) {
+> > > -           if ((de->di_status & (QNX4_FILE_USED|QNX4_FILE_LINK)) !
+> > =3D 0) {
+> > > -                   return 1;
+> > > -           }
+> > > -   }
+> > > +
+> > > +   /* Directory entry may not be %NUL-terminated. */
+> > > +   entry_len =3D strnlen(entry_fname, entry_max_len);
+> > > +
+> > > +   if (len !=3D entry_len)
+> > > +           return 0;
+> > > +
+> > > +   if (strncmp(name, entry_fname, len) =3D=3D 0)
+> > > +           return 1;
+> > > +
+> > >     return 0;
+> > >  }
+> > >
+> > > diff --git a/include/uapi/linux/qnx4_fs.h b/include/uapi/linux/qnx4_f=
+s.h
+> > > index 31487325d265..e033dbe1e009 100644
+> > > --- a/include/uapi/linux/qnx4_fs.h
+> > > +++ b/include/uapi/linux/qnx4_fs.h
+> > > @@ -68,6 +68,13 @@ struct qnx4_link_info {
+> > >     __u8            dl_status;
+> > >  };
+> > >
+> > > +union qnx4_dir_entry {
+> > > +   struct qnx4_inode_entry inode;
+> > > +   struct qnx4_link_info link;
+> > > +};
+> > > +_Static_assert(offsetof(struct qnx4_inode_entry, di_status) =3D=3D
+> > > +          offsetof(struct qnx4_link_info, dl_status));
+> > > +
+> > >  struct qnx4_xblk {
+> > >     __le32          xblk_next_xblk;
+> > >     __le32          xblk_prev_xblk;
+> >
+> >
+> >
+> >
+>
+> --
+> Kees Cook
