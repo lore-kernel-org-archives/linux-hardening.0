@@ -1,45 +1,46 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C/t4pQ9N"
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 880AB12B;
-	Sat, 18 Nov 2023 07:04:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HUsZEnQW"
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E755FD5;
+	Sat, 18 Nov 2023 10:01:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700319874; x=1731855874;
+  t=1700330468; x=1731866468;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=g94IAzBaDrXXBM3wde18BakVdeksJK1Q+O3n3qhmQCg=;
-  b=C/t4pQ9Nxpdf7H01BFsGTH6Inx52ALpjFX7K6zZNBjRYxTLP57unJTNu
-   gjvVAAmYVhG8jCGvb0JwI3PDS7bqpVos8cgRRqYGU22Plg6VOD6gKvqJi
-   eJVoinitoIQoKcnhTeyqhCPpq2J3WCgeazcRToPEwoNlecFtnO+UHybtK
-   AhGB7Co7h2v7bOMtYUdXB9wCJIKCszhOrn++3pzvY3ZfPY+XAEhrlAnxh
-   98037jtgpLXdHE/XK0i10fXOHWuRKY5z1Z8IMASLhzcK6eqmZIOWwKefY
-   bbRzdZ11TGkhoiACW/Rcv4m8DvPD9REznaRzlyrikOySi1JCKDyuP+7E/
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10898"; a="455727717"
+  bh=64HG6dl3P1Ll0SEzEuCELqJoNOAHRtrFe3DtZhTKbGw=;
+  b=HUsZEnQW3tC9zZKA0Et2PZreWar8arWNdvQw8m+6oGXf1fTVi4sOZu/i
+   sxV77YeTgQ+v0EC3uoXX60FeBAGhoLdTFn8Ck0na/ycBa5IPtYhvspiC8
+   Kd096A69bAe8B+GF9rKSbGjSH1nMrPkUJZ1J+CGa3kDMHymdEKscvbNl7
+   HK1ZgJzwO9DYCTF6BB05RjswDTwagfWRd3uDyIRGYUlyg/95AxcSsNaVN
+   RpG/5DOyOVCZNe6gkiUPPRZ7EUZUyRc8R2IzMrHL6LuRu1i6JbdxX0Xy8
+   29V0JT8SFdIZbMcCm7FdZrnL/+fdsoGkYi95vIahakjLO3BW5BV6gZgY6
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10898"; a="4546133"
 X-IronPort-AV: E=Sophos;i="6.04,209,1695711600"; 
-   d="scan'208";a="455727717"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2023 07:04:27 -0800
+   d="scan'208";a="4546133"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2023 10:01:08 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10898"; a="1013195108"
+X-IronPort-AV: E=McAfee;i="6600,9927,10898"; a="759442522"
 X-IronPort-AV: E=Sophos;i="6.04,209,1695711600"; 
-   d="scan'208";a="1013195108"
+   d="scan'208";a="759442522"
 Received: from lkp-server02.sh.intel.com (HELO b8de5498638e) ([10.239.97.151])
-  by fmsmga006.fm.intel.com with ESMTP; 18 Nov 2023 07:04:24 -0800
+  by orsmga007.jf.intel.com with ESMTP; 18 Nov 2023 10:01:05 -0800
 Received: from kbuild by b8de5498638e with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1r4Mru-0003zv-18;
-	Sat, 18 Nov 2023 15:04:22 +0000
-Date: Sat, 18 Nov 2023 23:01:09 +0800
+	id 1r4Pcs-0004A9-2m;
+	Sat, 18 Nov 2023 18:01:02 +0000
+Date: Sun, 19 Nov 2023 02:00:17 +0800
 From: kernel test robot <lkp@intel.com>
 To: Kees Cook <keescook@chromium.org>, Anders Larsen <al@alarsen.net>
-Cc: oe-kbuild-all@lists.linux.dev, Kees Cook <keescook@chromium.org>,
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Kees Cook <keescook@chromium.org>,
 	Ronald Monthero <debug.penguin32@gmail.com>,
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Subject: Re: [PATCH 1/2] qnx4: Extract dir entry filename processing into
  helper
-Message-ID: <202311182210.gREgIbSb-lkp@intel.com>
+Message-ID: <202311190108.LDeSe9Lj-lkp@intel.com>
 References: <20231118033225.2181299-1-keescook@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -53,10 +54,10 @@ In-Reply-To: <20231118033225.2181299-1-keescook@chromium.org>
 
 Hi Kees,
 
-kernel test robot noticed the following build errors:
+kernel test robot noticed the following build warnings:
 
-[auto build test ERROR on linus/master]
-[also build test ERROR on v6.7-rc1 next-20231117]
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.7-rc1 next-20231117]
 [If your patch is applied to the wrong git tree, kindly drop us a note.
 And when submitting patch, we suggest to use '--base' as documented in
 https://git-scm.com/docs/git-format-patch#_base_tree_information]
@@ -65,27 +66,81 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Kees-Cook/qnx4-Extract-di
 base:   linus/master
 patch link:    https://lore.kernel.org/r/20231118033225.2181299-1-keescook%40chromium.org
 patch subject: [PATCH 1/2] qnx4: Extract dir entry filename processing into helper
-config: i386-randconfig-011-20231118 (https://download.01.org/0day-ci/archive/20231118/202311182210.gREgIbSb-lkp@intel.com/config)
-compiler: gcc-7 (Ubuntu 7.5.0-6ubuntu2) 7.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231118/202311182210.gREgIbSb-lkp@intel.com/reproduce)
+config: hexagon-allmodconfig (https://download.01.org/0day-ci/archive/20231119/202311190108.LDeSe9Lj-lkp@intel.com/config)
+compiler: clang version 17.0.0 (https://github.com/llvm/llvm-project.git 4a5ac14ee968ff0ad5d2cc1ffa0299048db4c88a)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231119/202311190108.LDeSe9Lj-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202311182210.gREgIbSb-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202311190108.LDeSe9Lj-lkp@intel.com/
 
-All errors (new ones prefixed by >>):
+All warnings (new ones prefixed by >>):
 
-   In file included from fs/qnx4/dir.c:16:0:
->> fs/qnx4/qnx4.h:86:51: error: expected ',' before ')' token
-            offsetof(struct qnx4_link_info, dl_status));
-                                                      ^
-   fs/qnx4/qnx4.h:88:56: error: expected ',' before ')' token
-            offsetof(union qnx4_directory_entry, de_status));
-                                                           ^
+   In file included from fs/qnx4/inode.c:20:
+   In file included from include/linux/pagemap.h:11:
+   In file included from include/linux/highmem.h:12:
+   In file included from include/linux/hardirq.h:11:
+   In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
+   In file included from include/asm-generic/hardirq.h:17:
+   In file included from include/linux/irq.h:20:
+   In file included from include/linux/io.h:13:
+   In file included from arch/hexagon/include/asm/io.h:337:
+   include/asm-generic/io.h:547:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     547 |         val = __raw_readb(PCI_IOBASE + addr);
+         |                           ~~~~~~~~~~ ^
+   include/asm-generic/io.h:560:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     560 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
+         |                                                         ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/little_endian.h:37:51: note: expanded from macro '__le16_to_cpu'
+      37 | #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
+         |                                                   ^
+   In file included from fs/qnx4/inode.c:20:
+   In file included from include/linux/pagemap.h:11:
+   In file included from include/linux/highmem.h:12:
+   In file included from include/linux/hardirq.h:11:
+   In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
+   In file included from include/asm-generic/hardirq.h:17:
+   In file included from include/linux/irq.h:20:
+   In file included from include/linux/io.h:13:
+   In file included from arch/hexagon/include/asm/io.h:337:
+   include/asm-generic/io.h:573:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     573 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
+         |                                                         ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/little_endian.h:35:51: note: expanded from macro '__le32_to_cpu'
+      35 | #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
+         |                                                   ^
+   In file included from fs/qnx4/inode.c:20:
+   In file included from include/linux/pagemap.h:11:
+   In file included from include/linux/highmem.h:12:
+   In file included from include/linux/hardirq.h:11:
+   In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
+   In file included from include/asm-generic/hardirq.h:17:
+   In file included from include/linux/irq.h:20:
+   In file included from include/linux/io.h:13:
+   In file included from arch/hexagon/include/asm/io.h:337:
+   include/asm-generic/io.h:584:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     584 |         __raw_writeb(value, PCI_IOBASE + addr);
+         |                             ~~~~~~~~~~ ^
+   include/asm-generic/io.h:594:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     594 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
+         |                                                       ~~~~~~~~~~ ^
+   include/asm-generic/io.h:604:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     604 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
+         |                                                       ~~~~~~~~~~ ^
+   In file included from fs/qnx4/inode.c:24:
+>> fs/qnx4/qnx4.h:86:51: warning: '_Static_assert' with no message is a C2x extension [-Wc2x-extensions]
+      86 |                offsetof(struct qnx4_link_info, dl_status));
+         |                                                          ^
+         |                                                          , ""
+   fs/qnx4/qnx4.h:88:56: warning: '_Static_assert' with no message is a C2x extension [-Wc2x-extensions]
+      88 |                offsetof(union qnx4_directory_entry, de_status));
+         |                                                               ^
+         |                                                               , ""
+   8 warnings generated.
 
 
-vim +86 fs/qnx4/qnx4.h
+vim +/_Static_assert +86 fs/qnx4/qnx4.h
 
     47	
     48	/*
