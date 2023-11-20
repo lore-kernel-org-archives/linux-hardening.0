@@ -1,47 +1,47 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="UYk+nbOd";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="q32ZDjRb"
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A99CCD9;
-	Mon, 20 Nov 2023 10:34:42 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="0iQJa2PO";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="BIMyuvT2"
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2412CED;
+	Mon, 20 Nov 2023 10:34:44 -0800 (PST)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 2B5711F8A8;
-	Mon, 20 Nov 2023 18:34:41 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id C512221940;
+	Mon, 20 Nov 2023 18:34:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1700505281; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1700505282; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=f1ToxzDptD57b6Vsib7GAjPh04DR/y9DB96sNqNT2KE=;
-	b=UYk+nbOdpwt7lTEROM4R9R/VybWxUsZNmkJ6xbBvRHIlibYVyjKf0xMYUUD5mRAxzZ1nYm
-	8YuyVrnDdN/4r8f2BpnRbBT9UOibhIk2oeEW/xMg4iUETJa6r240JQQlVhh/+wrO5nMNaz
-	GGaxETZpNTnVjpcdQee4/bZSKagO6iw=
+	bh=o4aibseo8uvIfZF2g6BXwYSpSGkKoIdwIMMXWbU0crw=;
+	b=0iQJa2POOv5EIkuwCyRwiYGNnxqkYd5v34RFM2+fBSkmsByZGxoKowZ6Z4Um62ySQdQ8Zu
+	y8BIQskUp7Gyw84uMjtTTXcXPcNhZrHyB6pD9SXpluLCnXJ6Z7OYrMiOpqirDwJ8m1RBxE
+	FNYlCwDPbIToJsYYjEA7TfaxP6+/ZdM=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1700505281;
+	s=susede2_ed25519; t=1700505282;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=f1ToxzDptD57b6Vsib7GAjPh04DR/y9DB96sNqNT2KE=;
-	b=q32ZDjRbFefawcKstIaTcDIBwhSahPd7d0kPJGhClVzYjFjtGumHVTj08Yz7Fh3lMJpylO
-	PItDrslB5HufLZCw==
+	bh=o4aibseo8uvIfZF2g6BXwYSpSGkKoIdwIMMXWbU0crw=;
+	b=BIMyuvT2hiVxoBSghoGdLFG5q3OKSpv9iOEZ1gGMNFOEKD6PUh67GQgFjCH5ewbCe9wua3
+	cqlfEPQNCNGwDMDg==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id ED71413499;
-	Mon, 20 Nov 2023 18:34:40 +0000 (UTC)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 8048613499;
+	Mon, 20 Nov 2023 18:34:42 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
 	by imap2.suse-dmz.suse.de with ESMTPSA
-	id mOKCOcCmW2UUMgAAMHmgww
-	(envelope-from <vbabka@suse.cz>); Mon, 20 Nov 2023 18:34:40 +0000
+	id 6HPaHsKmW2UUMgAAMHmgww
+	(envelope-from <vbabka@suse.cz>); Mon, 20 Nov 2023 18:34:42 +0000
 From: Vlastimil Babka <vbabka@suse.cz>
-Date: Mon, 20 Nov 2023 19:34:18 +0100
-Subject: [PATCH v2 07/21] mm/slab: remove CONFIG_SLAB code from slab common
- code
+Date: Mon, 20 Nov 2023 19:34:25 +0100
+Subject: [PATCH v2 14/21] mm/slab: move memcg related functions from slab.h
+ to slub.c
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20231120-slab-remove-slab-v2-7-9c9c70177183@suse.cz>
+Message-Id: <20231120-slab-remove-slab-v2-14-9c9c70177183@suse.cz>
 References: <20231120-slab-remove-slab-v2-0-9c9c70177183@suse.cz>
 In-Reply-To: <20231120-slab-remove-slab-v2-0-9c9c70177183@suse.cz>
 To: David Rientjes <rientjes@google.com>, Christoph Lameter <cl@linux.com>, 
@@ -67,9 +67,10 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
  Muchun Song <muchun.song@linux.dev>, Kees Cook <keescook@chromium.org>, 
  linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
  kasan-dev@googlegroups.com, cgroups@vger.kernel.org, 
- linux-hardening@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>
+ linux-hardening@vger.kernel.org, Michal Hocko <mhocko@suse.com>, 
+ Vlastimil Babka <vbabka@suse.cz>
 X-Mailer: b4 0.12.4
-Authentication-Results: smtp-out2.suse.de;
+Authentication-Results: smtp-out1.suse.de;
 	none
 X-Spam-Score: 1.30
 X-Spamd-Result: default: False [1.30 / 50.00];
@@ -89,293 +90,493 @@ X-Spamd-Result: default: False [1.30 / 50.00];
 	 BAYES_SPAM(5.10)[100.00%];
 	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
 	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCPT_COUNT_TWELVE(0.00)[24];
+	 RCPT_COUNT_TWELVE(0.00)[25];
 	 FUZZY_BLOCKED(0.00)[rspamd.com];
 	 FROM_EQ_ENVFROM(0.00)[];
 	 MIME_TRACE(0.00)[0:+];
-	 FREEMAIL_CC(0.00)[linux-foundation.org,gmail.com,linux.dev,google.com,arm.com,cmpxchg.org,kernel.org,chromium.org,kvack.org,vger.kernel.org,googlegroups.com,suse.cz];
+	 FREEMAIL_CC(0.00)[linux-foundation.org,gmail.com,linux.dev,google.com,arm.com,cmpxchg.org,kernel.org,chromium.org,kvack.org,vger.kernel.org,googlegroups.com,suse.com,suse.cz];
 	 RCVD_COUNT_TWO(0.00)[2];
 	 SUSPICIOUS_RECIPS(1.50)[]
 
-In slab_common.c and slab.h headers, we can now remove all code behind
-CONFIG_SLAB and CONFIG_DEBUG_SLAB ifdefs, and remove all CONFIG_SLUB
-ifdefs.
+We don't share those between SLAB and SLUB anymore, so most memcg
+related functions can be moved to slub.c proper.
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
+Acked-by: Michal Hocko <mhocko@suse.com>
 Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 ---
- include/linux/slab.h | 14 ++---------
- mm/slab.h            | 69 ++++------------------------------------------------
- mm/slab_common.c     | 22 ++---------------
- 3 files changed, 9 insertions(+), 96 deletions(-)
+ mm/slab.h | 206 --------------------------------------------------------------
+ mm/slub.c | 205 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 205 insertions(+), 206 deletions(-)
 
-diff --git a/include/linux/slab.h b/include/linux/slab.h
-index 34e43cddc520..b2015d0e01ad 100644
---- a/include/linux/slab.h
-+++ b/include/linux/slab.h
-@@ -24,7 +24,7 @@
- 
- /*
-  * Flags to pass to kmem_cache_create().
-- * The ones marked DEBUG are only valid if CONFIG_DEBUG_SLAB is set.
-+ * The ones marked DEBUG need CONFIG_SLUB_DEBUG enabled, otherwise are no-op
-  */
- /* DEBUG: Perform (expensive) checks on alloc/free */
- #define SLAB_CONSISTENCY_CHECKS	((slab_flags_t __force)0x00000100U)
-@@ -302,25 +302,15 @@ static inline unsigned int arch_slab_minalign(void)
-  * Kmalloc array related definitions
-  */
- 
--#ifdef CONFIG_SLAB
- /*
-- * SLAB and SLUB directly allocates requests fitting in to an order-1 page
-+ * SLUB directly allocates requests fitting in to an order-1 page
-  * (PAGE_SIZE*2).  Larger requests are passed to the page allocator.
-  */
- #define KMALLOC_SHIFT_HIGH	(PAGE_SHIFT + 1)
- #define KMALLOC_SHIFT_MAX	(MAX_ORDER + PAGE_SHIFT)
- #ifndef KMALLOC_SHIFT_LOW
--#define KMALLOC_SHIFT_LOW	5
--#endif
--#endif
--
--#ifdef CONFIG_SLUB
--#define KMALLOC_SHIFT_HIGH	(PAGE_SHIFT + 1)
--#define KMALLOC_SHIFT_MAX	(MAX_ORDER + PAGE_SHIFT)
--#ifndef KMALLOC_SHIFT_LOW
- #define KMALLOC_SHIFT_LOW	3
- #endif
--#endif
- 
- /* Maximum allocatable size */
- #define KMALLOC_MAX_SIZE	(1UL << KMALLOC_SHIFT_MAX)
 diff --git a/mm/slab.h b/mm/slab.h
-index 3d07fb428393..014c36ea51fa 100644
+index 65ebf86b3fe9..a81ef7c9282d 100644
 --- a/mm/slab.h
 +++ b/mm/slab.h
-@@ -42,21 +42,6 @@ typedef union {
- struct slab {
- 	unsigned long __page_flags;
+@@ -486,12 +486,6 @@ void slabinfo_show_stats(struct seq_file *m, struct kmem_cache *s);
+ ssize_t slabinfo_write(struct file *file, const char __user *buffer,
+ 		       size_t count, loff_t *ppos);
  
--#if defined(CONFIG_SLAB)
+-static inline enum node_stat_item cache_vmstat_idx(struct kmem_cache *s)
+-{
+-	return (s->flags & SLAB_RECLAIM_ACCOUNT) ?
+-		NR_SLAB_RECLAIMABLE_B : NR_SLAB_UNRECLAIMABLE_B;
+-}
 -
--	struct kmem_cache *slab_cache;
--	union {
--		struct {
--			struct list_head slab_list;
--			void *freelist;	/* array of free object indexes */
--			void *s_mem;	/* first object */
--		};
--		struct rcu_head rcu_head;
--	};
--	unsigned int active;
+ #ifdef CONFIG_SLUB_DEBUG
+ #ifdef CONFIG_SLUB_DEBUG_ON
+ DECLARE_STATIC_KEY_TRUE(slub_debug_enabled);
+@@ -551,220 +545,20 @@ int memcg_alloc_slab_cgroups(struct slab *slab, struct kmem_cache *s,
+ 				 gfp_t gfp, bool new_slab);
+ void mod_objcg_state(struct obj_cgroup *objcg, struct pglist_data *pgdat,
+ 		     enum node_stat_item idx, int nr);
 -
--#elif defined(CONFIG_SLUB)
+-static inline void memcg_free_slab_cgroups(struct slab *slab)
+-{
+-	kfree(slab_objcgs(slab));
+-	slab->memcg_data = 0;
+-}
 -
- 	struct kmem_cache *slab_cache;
- 	union {
- 		struct {
-@@ -91,10 +76,6 @@ struct slab {
- 	};
- 	unsigned int __unused;
- 
--#else
--#error "Unexpected slab allocator configured"
--#endif
+-static inline size_t obj_full_size(struct kmem_cache *s)
+-{
+-	/*
+-	 * For each accounted object there is an extra space which is used
+-	 * to store obj_cgroup membership. Charge it too.
+-	 */
+-	return s->size + sizeof(struct obj_cgroup *);
+-}
 -
- 	atomic_t __page_refcount;
- #ifdef CONFIG_MEMCG
- 	unsigned long memcg_data;
-@@ -111,7 +92,7 @@ SLAB_MATCH(memcg_data, memcg_data);
- #endif
- #undef SLAB_MATCH
- static_assert(sizeof(struct slab) <= sizeof(struct page));
--#if defined(system_has_freelist_aba) && defined(CONFIG_SLUB)
-+#if defined(system_has_freelist_aba)
- static_assert(IS_ALIGNED(offsetof(struct slab, freelist), sizeof(freelist_aba_t)));
- #endif
- 
-@@ -228,13 +209,7 @@ static inline size_t slab_size(const struct slab *slab)
- 	return PAGE_SIZE << slab_order(slab);
- }
- 
--#ifdef CONFIG_SLAB
--#include <linux/slab_def.h>
--#endif
+-/*
+- * Returns false if the allocation should fail.
+- */
+-static inline bool memcg_slab_pre_alloc_hook(struct kmem_cache *s,
+-					     struct list_lru *lru,
+-					     struct obj_cgroup **objcgp,
+-					     size_t objects, gfp_t flags)
+-{
+-	struct obj_cgroup *objcg;
 -
--#ifdef CONFIG_SLUB
- #include <linux/slub_def.h>
--#endif
- 
- #include <linux/memcontrol.h>
- #include <linux/fault-inject.h>
-@@ -320,26 +295,16 @@ static inline bool is_kmalloc_cache(struct kmem_cache *s)
- 			 SLAB_CACHE_DMA32 | SLAB_PANIC | \
- 			 SLAB_TYPESAFE_BY_RCU | SLAB_DEBUG_OBJECTS )
- 
--#if defined(CONFIG_DEBUG_SLAB)
--#define SLAB_DEBUG_FLAGS (SLAB_RED_ZONE | SLAB_POISON | SLAB_STORE_USER)
--#elif defined(CONFIG_SLUB_DEBUG)
-+#ifdef CONFIG_SLUB_DEBUG
- #define SLAB_DEBUG_FLAGS (SLAB_RED_ZONE | SLAB_POISON | SLAB_STORE_USER | \
- 			  SLAB_TRACE | SLAB_CONSISTENCY_CHECKS)
- #else
- #define SLAB_DEBUG_FLAGS (0)
- #endif
- 
--#if defined(CONFIG_SLAB)
--#define SLAB_CACHE_FLAGS (SLAB_MEM_SPREAD | SLAB_NOLEAKTRACE | \
--			  SLAB_RECLAIM_ACCOUNT | SLAB_TEMPORARY | \
--			  SLAB_ACCOUNT | SLAB_NO_MERGE)
--#elif defined(CONFIG_SLUB)
- #define SLAB_CACHE_FLAGS (SLAB_NOLEAKTRACE | SLAB_RECLAIM_ACCOUNT | \
- 			  SLAB_TEMPORARY | SLAB_ACCOUNT | \
- 			  SLAB_NO_USER_FLAGS | SLAB_KMALLOC | SLAB_NO_MERGE)
--#else
--#define SLAB_CACHE_FLAGS (SLAB_NOLEAKTRACE)
--#endif
- 
- /* Common flags available with current configuration */
- #define CACHE_CREATE_MASK (SLAB_CORE_FLAGS | SLAB_DEBUG_FLAGS | SLAB_CACHE_FLAGS)
-@@ -672,18 +637,14 @@ size_t __ksize(const void *objp);
- 
- static inline size_t slab_ksize(const struct kmem_cache *s)
- {
--#ifndef CONFIG_SLUB
--	return s->object_size;
+-	if (!memcg_kmem_online())
+-		return true;
 -
--#else /* CONFIG_SLUB */
--# ifdef CONFIG_SLUB_DEBUG
-+#ifdef CONFIG_SLUB_DEBUG
- 	/*
- 	 * Debugging requires use of the padding between object
- 	 * and whatever may come after it.
- 	 */
- 	if (s->flags & (SLAB_RED_ZONE | SLAB_POISON))
- 		return s->object_size;
--# endif
-+#endif
- 	if (s->flags & SLAB_KASAN)
- 		return s->object_size;
- 	/*
-@@ -697,7 +658,6 @@ static inline size_t slab_ksize(const struct kmem_cache *s)
- 	 * Else we can use all the padding etc for the allocation
- 	 */
- 	return s->size;
--#endif
- }
- 
- static inline struct kmem_cache *slab_pre_alloc_hook(struct kmem_cache *s,
-@@ -775,23 +735,6 @@ static inline void slab_post_alloc_hook(struct kmem_cache *s,
-  * The slab lists for all objects.
-  */
- struct kmem_cache_node {
--#ifdef CONFIG_SLAB
--	raw_spinlock_t list_lock;
--	struct list_head slabs_partial;	/* partial list first, better asm code */
--	struct list_head slabs_full;
--	struct list_head slabs_free;
--	unsigned long total_slabs;	/* length of all slab lists */
--	unsigned long free_slabs;	/* length of free slab list only */
--	unsigned long free_objects;
--	unsigned int free_limit;
--	unsigned int colour_next;	/* Per-node cache coloring */
--	struct array_cache *shared;	/* shared per node */
--	struct alien_cache **alien;	/* on other nodes */
--	unsigned long next_reap;	/* updated without locking */
--	int free_touched;		/* updated without locking */
--#endif
+-	if (!(flags & __GFP_ACCOUNT) && !(s->flags & SLAB_ACCOUNT))
+-		return true;
 -
--#ifdef CONFIG_SLUB
- 	spinlock_t list_lock;
- 	unsigned long nr_partial;
- 	struct list_head partial;
-@@ -800,8 +743,6 @@ struct kmem_cache_node {
- 	atomic_long_t total_objects;
- 	struct list_head full;
- #endif
--#endif
+-	/*
+-	 * The obtained objcg pointer is safe to use within the current scope,
+-	 * defined by current task or set_active_memcg() pair.
+-	 * obj_cgroup_get() is used to get a permanent reference.
+-	 */
+-	objcg = current_obj_cgroup();
+-	if (!objcg)
+-		return true;
 -
- };
- 
- static inline struct kmem_cache_node *get_node(struct kmem_cache *s, int node)
-@@ -818,7 +759,7 @@ static inline struct kmem_cache_node *get_node(struct kmem_cache *s, int node)
- 		 if ((__n = get_node(__s, __node)))
- 
- 
--#if defined(CONFIG_SLAB) || defined(CONFIG_SLUB_DEBUG)
-+#ifdef CONFIG_SLUB_DEBUG
- void dump_unreclaimable_slab(void);
- #else
- static inline void dump_unreclaimable_slab(void)
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index 8d431193c273..63b8411db7ce 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -71,10 +71,8 @@ static int __init setup_slab_merge(char *str)
- 	return 1;
- }
- 
--#ifdef CONFIG_SLUB
- __setup_param("slub_nomerge", slub_nomerge, setup_slab_nomerge, 0);
- __setup_param("slub_merge", slub_merge, setup_slab_merge, 0);
--#endif
- 
- __setup("slab_nomerge", setup_slab_nomerge);
- __setup("slab_merge", setup_slab_merge);
-@@ -197,10 +195,6 @@ struct kmem_cache *find_mergeable(unsigned int size, unsigned int align,
- 		if (s->size - size >= sizeof(void *))
- 			continue;
- 
--		if (IS_ENABLED(CONFIG_SLAB) && align &&
--			(align > s->align || s->align % align))
+-	if (lru) {
+-		int ret;
+-		struct mem_cgroup *memcg;
+-
+-		memcg = get_mem_cgroup_from_objcg(objcg);
+-		ret = memcg_list_lru_alloc(memcg, lru, flags);
+-		css_put(&memcg->css);
+-
+-		if (ret)
+-			return false;
+-	}
+-
+-	if (obj_cgroup_charge(objcg, flags, objects * obj_full_size(s)))
+-		return false;
+-
+-	*objcgp = objcg;
+-	return true;
+-}
+-
+-static inline void memcg_slab_post_alloc_hook(struct kmem_cache *s,
+-					      struct obj_cgroup *objcg,
+-					      gfp_t flags, size_t size,
+-					      void **p)
+-{
+-	struct slab *slab;
+-	unsigned long off;
+-	size_t i;
+-
+-	if (!memcg_kmem_online() || !objcg)
+-		return;
+-
+-	for (i = 0; i < size; i++) {
+-		if (likely(p[i])) {
+-			slab = virt_to_slab(p[i]);
+-
+-			if (!slab_objcgs(slab) &&
+-			    memcg_alloc_slab_cgroups(slab, s, flags,
+-							 false)) {
+-				obj_cgroup_uncharge(objcg, obj_full_size(s));
+-				continue;
+-			}
+-
+-			off = obj_to_index(s, slab, p[i]);
+-			obj_cgroup_get(objcg);
+-			slab_objcgs(slab)[off] = objcg;
+-			mod_objcg_state(objcg, slab_pgdat(slab),
+-					cache_vmstat_idx(s), obj_full_size(s));
+-		} else {
+-			obj_cgroup_uncharge(objcg, obj_full_size(s));
+-		}
+-	}
+-}
+-
+-static inline void memcg_slab_free_hook(struct kmem_cache *s, struct slab *slab,
+-					void **p, int objects)
+-{
+-	struct obj_cgroup **objcgs;
+-	int i;
+-
+-	if (!memcg_kmem_online())
+-		return;
+-
+-	objcgs = slab_objcgs(slab);
+-	if (!objcgs)
+-		return;
+-
+-	for (i = 0; i < objects; i++) {
+-		struct obj_cgroup *objcg;
+-		unsigned int off;
+-
+-		off = obj_to_index(s, slab, p[i]);
+-		objcg = objcgs[off];
+-		if (!objcg)
 -			continue;
 -
- 		return s;
- 	}
+-		objcgs[off] = NULL;
+-		obj_cgroup_uncharge(objcg, obj_full_size(s));
+-		mod_objcg_state(objcg, slab_pgdat(slab), cache_vmstat_idx(s),
+-				-obj_full_size(s));
+-		obj_cgroup_put(objcg);
+-	}
+-}
+-
+ #else /* CONFIG_MEMCG_KMEM */
+ static inline struct obj_cgroup **slab_objcgs(struct slab *slab)
+ {
  	return NULL;
-@@ -1222,12 +1216,8 @@ void cache_random_seq_destroy(struct kmem_cache *cachep)
+ }
+ 
+-static inline struct mem_cgroup *memcg_from_slab_obj(void *ptr)
+-{
+-	return NULL;
+-}
+-
+ static inline int memcg_alloc_slab_cgroups(struct slab *slab,
+ 					       struct kmem_cache *s, gfp_t gfp,
+ 					       bool new_slab)
+ {
+ 	return 0;
+ }
+-
+-static inline void memcg_free_slab_cgroups(struct slab *slab)
+-{
+-}
+-
+-static inline bool memcg_slab_pre_alloc_hook(struct kmem_cache *s,
+-					     struct list_lru *lru,
+-					     struct obj_cgroup **objcgp,
+-					     size_t objects, gfp_t flags)
+-{
+-	return true;
+-}
+-
+-static inline void memcg_slab_post_alloc_hook(struct kmem_cache *s,
+-					      struct obj_cgroup *objcg,
+-					      gfp_t flags, size_t size,
+-					      void **p)
+-{
+-}
+-
+-static inline void memcg_slab_free_hook(struct kmem_cache *s, struct slab *slab,
+-					void **p, int objects)
+-{
+-}
+ #endif /* CONFIG_MEMCG_KMEM */
+ 
+-static inline struct kmem_cache *virt_to_cache(const void *obj)
+-{
+-	struct slab *slab;
+-
+-	slab = virt_to_slab(obj);
+-	if (WARN_ONCE(!slab, "%s: Object is not a Slab page!\n",
+-					__func__))
+-		return NULL;
+-	return slab->slab_cache;
+-}
+-
+-static __always_inline void account_slab(struct slab *slab, int order,
+-					 struct kmem_cache *s, gfp_t gfp)
+-{
+-	if (memcg_kmem_online() && (s->flags & SLAB_ACCOUNT))
+-		memcg_alloc_slab_cgroups(slab, s, gfp, true);
+-
+-	mod_node_page_state(slab_pgdat(slab), cache_vmstat_idx(s),
+-			    PAGE_SIZE << order);
+-}
+-
+-static __always_inline void unaccount_slab(struct slab *slab, int order,
+-					   struct kmem_cache *s)
+-{
+-	if (memcg_kmem_online())
+-		memcg_free_slab_cgroups(slab);
+-
+-	mod_node_page_state(slab_pgdat(slab), cache_vmstat_idx(s),
+-			    -(PAGE_SIZE << order));
+-}
+-
+-static inline struct kmem_cache *cache_from_obj(struct kmem_cache *s, void *x)
+-{
+-	struct kmem_cache *cachep;
+-
+-	if (!IS_ENABLED(CONFIG_SLAB_FREELIST_HARDENED) &&
+-	    !kmem_cache_debug_flags(s, SLAB_CONSISTENCY_CHECKS))
+-		return s;
+-
+-	cachep = virt_to_cache(x);
+-	if (WARN(cachep && cachep != s,
+-		  "%s: Wrong slab cache. %s but object is from %s\n",
+-		  __func__, s->name, cachep->name))
+-		print_tracking(cachep, x);
+-	return cachep;
+-}
+-
+ void free_large_kmalloc(struct folio *folio, void *object);
+ 
+ size_t __ksize(const void *objp);
+diff --git a/mm/slub.c b/mm/slub.c
+index 9eb6508152c2..844e0beb84ee 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -1814,6 +1814,165 @@ static bool freelist_corrupted(struct kmem_cache *s, struct slab *slab,
+ #endif
+ #endif /* CONFIG_SLUB_DEBUG */
+ 
++static inline enum node_stat_item cache_vmstat_idx(struct kmem_cache *s)
++{
++	return (s->flags & SLAB_RECLAIM_ACCOUNT) ?
++		NR_SLAB_RECLAIMABLE_B : NR_SLAB_UNRECLAIMABLE_B;
++}
++
++#ifdef CONFIG_MEMCG_KMEM
++static inline void memcg_free_slab_cgroups(struct slab *slab)
++{
++	kfree(slab_objcgs(slab));
++	slab->memcg_data = 0;
++}
++
++static inline size_t obj_full_size(struct kmem_cache *s)
++{
++	/*
++	 * For each accounted object there is an extra space which is used
++	 * to store obj_cgroup membership. Charge it too.
++	 */
++	return s->size + sizeof(struct obj_cgroup *);
++}
++
++/*
++ * Returns false if the allocation should fail.
++ */
++static inline bool memcg_slab_pre_alloc_hook(struct kmem_cache *s,
++					     struct list_lru *lru,
++					     struct obj_cgroup **objcgp,
++					     size_t objects, gfp_t flags)
++{
++	struct obj_cgroup *objcg;
++
++	if (!memcg_kmem_online())
++		return true;
++
++	if (!(flags & __GFP_ACCOUNT) && !(s->flags & SLAB_ACCOUNT))
++		return true;
++
++	/*
++	 * The obtained objcg pointer is safe to use within the current scope,
++	 * defined by current task or set_active_memcg() pair.
++	 * obj_cgroup_get() is used to get a permanent reference.
++	 */
++	objcg = current_obj_cgroup();
++	if (!objcg)
++		return true;
++
++	if (lru) {
++		int ret;
++		struct mem_cgroup *memcg;
++
++		memcg = get_mem_cgroup_from_objcg(objcg);
++		ret = memcg_list_lru_alloc(memcg, lru, flags);
++		css_put(&memcg->css);
++
++		if (ret)
++			return false;
++	}
++
++	if (obj_cgroup_charge(objcg, flags, objects * obj_full_size(s)))
++		return false;
++
++	*objcgp = objcg;
++	return true;
++}
++
++static inline void memcg_slab_post_alloc_hook(struct kmem_cache *s,
++					      struct obj_cgroup *objcg,
++					      gfp_t flags, size_t size,
++					      void **p)
++{
++	struct slab *slab;
++	unsigned long off;
++	size_t i;
++
++	if (!memcg_kmem_online() || !objcg)
++		return;
++
++	for (i = 0; i < size; i++) {
++		if (likely(p[i])) {
++			slab = virt_to_slab(p[i]);
++
++			if (!slab_objcgs(slab) &&
++			    memcg_alloc_slab_cgroups(slab, s, flags, false)) {
++				obj_cgroup_uncharge(objcg, obj_full_size(s));
++				continue;
++			}
++
++			off = obj_to_index(s, slab, p[i]);
++			obj_cgroup_get(objcg);
++			slab_objcgs(slab)[off] = objcg;
++			mod_objcg_state(objcg, slab_pgdat(slab),
++					cache_vmstat_idx(s), obj_full_size(s));
++		} else {
++			obj_cgroup_uncharge(objcg, obj_full_size(s));
++		}
++	}
++}
++
++static inline void memcg_slab_free_hook(struct kmem_cache *s, struct slab *slab,
++					void **p, int objects)
++{
++	struct obj_cgroup **objcgs;
++	int i;
++
++	if (!memcg_kmem_online())
++		return;
++
++	objcgs = slab_objcgs(slab);
++	if (!objcgs)
++		return;
++
++	for (i = 0; i < objects; i++) {
++		struct obj_cgroup *objcg;
++		unsigned int off;
++
++		off = obj_to_index(s, slab, p[i]);
++		objcg = objcgs[off];
++		if (!objcg)
++			continue;
++
++		objcgs[off] = NULL;
++		obj_cgroup_uncharge(objcg, obj_full_size(s));
++		mod_objcg_state(objcg, slab_pgdat(slab), cache_vmstat_idx(s),
++				-obj_full_size(s));
++		obj_cgroup_put(objcg);
++	}
++}
++#else /* CONFIG_MEMCG_KMEM */
++static inline struct mem_cgroup *memcg_from_slab_obj(void *ptr)
++{
++	return NULL;
++}
++
++static inline void memcg_free_slab_cgroups(struct slab *slab)
++{
++}
++
++static inline bool memcg_slab_pre_alloc_hook(struct kmem_cache *s,
++					     struct list_lru *lru,
++					     struct obj_cgroup **objcgp,
++					     size_t objects, gfp_t flags)
++{
++	return true;
++}
++
++static inline void memcg_slab_post_alloc_hook(struct kmem_cache *s,
++					      struct obj_cgroup *objcg,
++					      gfp_t flags, size_t size,
++					      void **p)
++{
++}
++
++static inline void memcg_slab_free_hook(struct kmem_cache *s, struct slab *slab,
++					void **p, int objects)
++{
++}
++#endif /* CONFIG_MEMCG_KMEM */
++
+ /*
+  * Hooks for other subsystems that check memory allocations. In a typical
+  * production configuration these hooks all should produce no code at all.
+@@ -2048,6 +2207,26 @@ static inline bool shuffle_freelist(struct kmem_cache *s, struct slab *slab)
  }
  #endif /* CONFIG_SLAB_FREELIST_RANDOM */
  
--#if defined(CONFIG_SLAB) || defined(CONFIG_SLUB_DEBUG)
--#ifdef CONFIG_SLAB
--#define SLABINFO_RIGHTS (0600)
--#else
-+#ifdef CONFIG_SLUB_DEBUG
- #define SLABINFO_RIGHTS (0400)
--#endif
- 
- static void print_slabinfo_header(struct seq_file *m)
++static __always_inline void account_slab(struct slab *slab, int order,
++					 struct kmem_cache *s, gfp_t gfp)
++{
++	if (memcg_kmem_online() && (s->flags & SLAB_ACCOUNT))
++		memcg_alloc_slab_cgroups(slab, s, gfp, true);
++
++	mod_node_page_state(slab_pgdat(slab), cache_vmstat_idx(s),
++			    PAGE_SIZE << order);
++}
++
++static __always_inline void unaccount_slab(struct slab *slab, int order,
++					   struct kmem_cache *s)
++{
++	if (memcg_kmem_online())
++		memcg_free_slab_cgroups(slab);
++
++	mod_node_page_state(slab_pgdat(slab), cache_vmstat_idx(s),
++			    -(PAGE_SIZE << order));
++}
++
+ static struct slab *allocate_slab(struct kmem_cache *s, gfp_t flags, int node)
  {
-@@ -1235,18 +1225,10 @@ static void print_slabinfo_header(struct seq_file *m)
- 	 * Output format version, so at least we can change it
- 	 * without _too_ many complaints.
- 	 */
--#ifdef CONFIG_DEBUG_SLAB
--	seq_puts(m, "slabinfo - version: 2.1 (statistics)\n");
--#else
- 	seq_puts(m, "slabinfo - version: 2.1\n");
--#endif
- 	seq_puts(m, "# name            <active_objs> <num_objs> <objsize> <objperslab> <pagesperslab>");
- 	seq_puts(m, " : tunables <limit> <batchcount> <sharedfactor>");
- 	seq_puts(m, " : slabdata <active_slabs> <num_slabs> <sharedavail>");
--#ifdef CONFIG_DEBUG_SLAB
--	seq_puts(m, " : globalstat <listallocs> <maxobjs> <grown> <reaped> <error> <maxfreeable> <nodeallocs> <remotefrees> <alienoverflow>");
--	seq_puts(m, " : cpustat <allochit> <allocmiss> <freehit> <freemiss>");
--#endif
- 	seq_putc(m, '\n');
+ 	struct slab *slab;
+@@ -3965,6 +4144,32 @@ void ___cache_free(struct kmem_cache *cache, void *x, unsigned long addr)
  }
+ #endif
  
-@@ -1370,7 +1352,7 @@ static int __init slab_proc_init(void)
- }
- module_init(slab_proc_init);
- 
--#endif /* CONFIG_SLAB || CONFIG_SLUB_DEBUG */
-+#endif /* CONFIG_SLUB_DEBUG */
- 
- static __always_inline __realloc_size(2) void *
- __do_krealloc(const void *p, size_t new_size, gfp_t flags)
++static inline struct kmem_cache *virt_to_cache(const void *obj)
++{
++	struct slab *slab;
++
++	slab = virt_to_slab(obj);
++	if (WARN_ONCE(!slab, "%s: Object is not a Slab page!\n", __func__))
++		return NULL;
++	return slab->slab_cache;
++}
++
++static inline struct kmem_cache *cache_from_obj(struct kmem_cache *s, void *x)
++{
++	struct kmem_cache *cachep;
++
++	if (!IS_ENABLED(CONFIG_SLAB_FREELIST_HARDENED) &&
++	    !kmem_cache_debug_flags(s, SLAB_CONSISTENCY_CHECKS))
++		return s;
++
++	cachep = virt_to_cache(x);
++	if (WARN(cachep && cachep != s,
++		 "%s: Wrong slab cache. %s but object is from %s\n",
++		 __func__, s->name, cachep->name))
++		print_tracking(cachep, x);
++	return cachep;
++}
++
+ void __kmem_cache_free(struct kmem_cache *s, void *x, unsigned long caller)
+ {
+ 	slab_free(s, virt_to_slab(x), x, NULL, &x, 1, caller);
 
 -- 
 2.42.1
