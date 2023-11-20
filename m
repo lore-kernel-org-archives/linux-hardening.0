@@ -1,182 +1,209 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wLqIKqSc"
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DDF698
-	for <linux-hardening@vger.kernel.org>; Mon, 20 Nov 2023 06:33:04 -0800 (PST)
-Received: by mail-ej1-x636.google.com with SMTP id a640c23a62f3a-9ae2cc4d17eso605567466b.1
-        for <linux-hardening@vger.kernel.org>; Mon, 20 Nov 2023 06:33:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1700490783; x=1701095583; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=zoAiFNMN3MBx2kHhT1jADxR7MaRBLjkeeIjTHILsATg=;
-        b=wLqIKqScIYCcun3mCJz1P+jobA3v7+iwXVMhRayzBO2SdVveMDYpag2OG5YOPpPR7I
-         fAWz1F6oog/OuUn8hevDFJ1gkMJkCp/AlqFQQBfuGVD7ZGgqMurJvOErSkokwpU+Pdz3
-         wLICwLDuLHkGEsakeIAY3JUZzeAmVFId92byMfO5aC7RB/9gsN5ROoWdk/d5MUhRb3bA
-         wkPPlt/XDHEW3u64L8MHUoxobod4w0Lk8fQKQw8hkZFiQR4d35gLlxC5XVs6hEOatcdc
-         nrjvoQ9An1s45wa75Guuje7CdjuLJJpCX6OeAeirpi1tkPXxC2PiLkzwHUsWPtc+cWlL
-         CLRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700490783; x=1701095583;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zoAiFNMN3MBx2kHhT1jADxR7MaRBLjkeeIjTHILsATg=;
-        b=VSfM3eC48Z0FQFvzVRZhUFXwt6MFyFIcKL9mVBlJcK8KoDwxbASF69nTmOZ46431Py
-         oMe+GFdiepL+bZBfSzJhwGxUSV2JiKcdMjQh/lr0Ibia+FF5HCVMDsK5obF/IvHwPsiC
-         yM+vm36z1l9zptr+xwMCFea+kqR7tBScO1ip4QIxAlzWZEzxUXdh6IO14my9WX2rNAo8
-         3nZTYOFxwKew6TZMYjWH96PNGcM7ZIy6W2ukEV28PAHwtFVD9RNtpNF95OJFA+aPVy74
-         Iy8zf2ATlFhGWaIlwT3hfY1QKtJ9uKWlQPBTrKbKndCpFmJ4sFGHccNpeE4mWqHBrSr9
-         OraQ==
-X-Gm-Message-State: AOJu0Yyuzv2mHr5bGKp4nm10dZLarHUCvy21djZJ6EcubTfT07lHGtm5
-	LNSaRjI5gvk4tPNt9YAR0N9IxA==
-X-Google-Smtp-Source: AGHT+IFAMWl0QerxVsat39nC28l4EF18a1qHEyIom86ybr3an1vksCf9F2MVXxZmkPjLduswTGu+IQ==
-X-Received: by 2002:a17:906:2b56:b0:9d3:8d1e:cf0 with SMTP id b22-20020a1709062b5600b009d38d1e0cf0mr4432264ejg.54.1700490782974;
-        Mon, 20 Nov 2023 06:33:02 -0800 (PST)
-Received: from [192.168.201.100] (178235187204.dynamic-4-waw-k-2-3-0.vectranet.pl. [178.235.187.204])
-        by smtp.gmail.com with ESMTPSA id mf3-20020a170906cb8300b009f28db2b702sm3912586ejb.209.2023.11.20.06.33.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Nov 2023 06:33:02 -0800 (PST)
-Message-ID: <2085c7a2-046a-4ef0-99b7-1beef0d8d2cb@linaro.org>
-Date: Mon, 20 Nov 2023 15:33:00 +0100
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="A/zYVT7F";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="OJDT17ry"
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36C94C4;
+	Mon, 20 Nov 2023 10:34:41 -0800 (PST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id C8EED218F8;
+	Mon, 20 Nov 2023 18:34:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1700505279; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XDePevE9GX1BKoA1NhlhcvLNyMlxXLyXeY5y95pZ5hE=;
+	b=A/zYVT7Fx820C4tzi8eSuAucdooX4h6FC927L+IjA54Qe9YvxrByaTCTlXa499SCJcpQDX
+	DCaaH924radXAEy2h8t6f0+s3rWY58/vJtLAuP2x1p6bn2FHQfgH3oiiHBXi7PxdwyXbtn
+	MGTGou1b3lHqR0DtoIePDQhuSYDJ/30=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1700505279;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XDePevE9GX1BKoA1NhlhcvLNyMlxXLyXeY5y95pZ5hE=;
+	b=OJDT17ry6C/LwnJ27TILex6mGaKTCUp7y6Oix12iBRNVJTSAyohHfQY/cpHEPL9Av5Wgk1
+	F7BjUrQcvf9LrVDg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 7F7D213912;
+	Mon, 20 Nov 2023 18:34:39 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id +I10Hr+mW2UUMgAAMHmgww
+	(envelope-from <vbabka@suse.cz>); Mon, 20 Nov 2023 18:34:39 +0000
+From: Vlastimil Babka <vbabka@suse.cz>
+Date: Mon, 20 Nov 2023 19:34:12 +0100
+Subject: [PATCH v2 01/21] mm/slab, docs: switch mm-api docs generation from
+ slab.c to slub.c
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] arm64: dts: qcom: Add device tree for Xiaomi Mi 11
- Ultra
-Content-Language: en-US
-To: wuxilin123@gmail.com, Andy Gross <agross@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Kees Cook <keescook@chromium.org>,
- Tony Luck <tony.luck@intel.com>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20231021-sakuramist-mi11u-v2-0-fa82c91ecaf0@gmail.com>
- <20231021-sakuramist-mi11u-v2-3-fa82c91ecaf0@gmail.com>
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
- 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
- izWDgYvmBE8=
-In-Reply-To: <20231021-sakuramist-mi11u-v2-3-fa82c91ecaf0@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20231120-slab-remove-slab-v2-1-9c9c70177183@suse.cz>
+References: <20231120-slab-remove-slab-v2-0-9c9c70177183@suse.cz>
+In-Reply-To: <20231120-slab-remove-slab-v2-0-9c9c70177183@suse.cz>
+To: David Rientjes <rientjes@google.com>, Christoph Lameter <cl@linux.com>, 
+ Pekka Enberg <penberg@kernel.org>, Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+ Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
+ Roman Gushchin <roman.gushchin@linux.dev>, 
+ Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
+ Alexander Potapenko <glider@google.com>, 
+ Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>, 
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, 
+ Marco Elver <elver@google.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+ Michal Hocko <mhocko@kernel.org>, Shakeel Butt <shakeelb@google.com>, 
+ Muchun Song <muchun.song@linux.dev>, Kees Cook <keescook@chromium.org>, 
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+ kasan-dev@googlegroups.com, cgroups@vger.kernel.org, 
+ linux-hardening@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>
+X-Mailer: b4 0.12.4
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -6.45
+X-Spamd-Result: default: False [-6.45 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 REPLY(-4.00)[];
+	 MID_RHS_MATCH_FROM(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 R_RATELIMIT(0.00)[to_ip_from(RL563rtnmcmc9sawm86hmgtctc)];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 BAYES_HAM(-2.65)[98.46%];
+	 RCPT_COUNT_TWELVE(0.00)[24];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FREEMAIL_CC(0.00)[linux-foundation.org,gmail.com,linux.dev,google.com,arm.com,cmpxchg.org,kernel.org,chromium.org,kvack.org,vger.kernel.org,googlegroups.com,suse.cz];
+	 RCVD_COUNT_TWO(0.00)[2];
+	 SUSPICIOUS_RECIPS(1.50)[]
 
-On 21.10.2023 12:20, Xilin Wu via B4 Relay wrote:
-> From: Xilin Wu <wuxilin123@gmail.com>
-> 
-> Add support for Xiaomi Mi 11 Ultra. This commit brings support for:
-> * Front and rear display panels (initialized by bootloader)
-> * USB
-> * UFS
-> * PCIe0
-> * Thermistor sensors
-> * ADSP/CDSP/Modem/SLPI
-> * IR Transmitter
-> * RTC provided by PMK8350
-> * Buttons
-> 
-> To create a working boot image, you need to run:
-> cat arch/arm64/boot/Image.gz arch/arm64/boot/dts/qcom/sm8350-xiaomi-\
-> star.dtb > .Image.gz-dtb
-> 
-> mkbootimg \
-> --kernel .Image.gz-dtb \
-> --ramdisk some_initrd.img \
-> --pagesize 4096 \
-> --base 0x0 \
-> --kernel_offset 0x8000 \
-> --ramdisk_offset 0x1000000 \
-> --tags_offset 0x100 \
-> --cmdline "SOME_CMDLINE" \
-> --dtb_offset 0x1f00000 \
-> --header_version 1 \
-> --os_version 14.0.0 \
-> --os_patch_level 2099-12 \
-> -o boot.img-xiaomi-star
-> 
-> Then, you can flash it to slot b on the device:
-> 
-> // You have to either pull vbmeta{"","_system"} from
-> // /dev/block/bootdevice/by-name/ or build one as a part of AOSP build process
-> fastboot --disable-verity --disable-verification flash vbmeta_b vbmeta.img
-> fastboot --disable-verity --disable-verification flash vbmeta_system_b \
-> vbmeta_system.img
-> 
-> fastboot flash boot_b boot.img-xiaomi-star
-> fastboot erase dtbo_b
-> fastboot set_active b
-> fastboot reboot
-> 
-> Signed-off-by: Xilin Wu <wuxilin123@gmail.com>
-> ---
-[...]
+The SLAB implementation is going to be removed, and mm-api.rst currently
+uses mm/slab.c to obtain kerneldocs for some API functions. Switch it to
+mm/slub.c and move the relevant kerneldocs of exported functions from
+one to the other. The rest of kerneldocs in slab.c is for static SLAB
+implementation-specific functions that don't have counterparts in slub.c
+and thus can be simply removed with the implementation.
 
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+---
+ Documentation/core-api/mm-api.rst |  2 +-
+ mm/slab.c                         | 21 ---------------------
+ mm/slub.c                         | 21 +++++++++++++++++++++
+ 3 files changed, 22 insertions(+), 22 deletions(-)
 
-> +		pmr735a_s1: smps1 {
-> +			regulator-name = "pmr735a_s1";
-> +			regulator-min-microvolt = <1200000>;
-> +			regulator-max-microvolt = <1280000>;
-> +		};
-You probably want initial mode on this pmic too
+diff --git a/Documentation/core-api/mm-api.rst b/Documentation/core-api/mm-api.rst
+index 2d091c873d1e..af8151db88b2 100644
+--- a/Documentation/core-api/mm-api.rst
++++ b/Documentation/core-api/mm-api.rst
+@@ -37,7 +37,7 @@ The Slab Cache
+ .. kernel-doc:: include/linux/slab.h
+    :internal:
+ 
+-.. kernel-doc:: mm/slab.c
++.. kernel-doc:: mm/slub.c
+    :export:
+ 
+ .. kernel-doc:: mm/slab_common.c
+diff --git a/mm/slab.c b/mm/slab.c
+index 9ad3d0f2d1a5..37efe3241f9c 100644
+--- a/mm/slab.c
++++ b/mm/slab.c
+@@ -3491,19 +3491,6 @@ int kmem_cache_alloc_bulk(struct kmem_cache *s, gfp_t flags, size_t size,
+ }
+ EXPORT_SYMBOL(kmem_cache_alloc_bulk);
+ 
+-/**
+- * kmem_cache_alloc_node - Allocate an object on the specified node
+- * @cachep: The cache to allocate from.
+- * @flags: See kmalloc().
+- * @nodeid: node number of the target node.
+- *
+- * Identical to kmem_cache_alloc but it will allocate memory on the given
+- * node, which can improve the performance for cpu bound structures.
+- *
+- * Fallback to other node is possible if __GFP_THISNODE is not set.
+- *
+- * Return: pointer to the new object or %NULL in case of error
+- */
+ void *kmem_cache_alloc_node(struct kmem_cache *cachep, gfp_t flags, int nodeid)
+ {
+ 	void *ret = slab_alloc_node(cachep, NULL, flags, nodeid, cachep->object_size, _RET_IP_);
+@@ -3564,14 +3551,6 @@ void __kmem_cache_free(struct kmem_cache *cachep, void *objp,
+ 	__do_kmem_cache_free(cachep, objp, caller);
+ }
+ 
+-/**
+- * kmem_cache_free - Deallocate an object
+- * @cachep: The cache the allocation was from.
+- * @objp: The previously allocated object.
+- *
+- * Free an object which was previously allocated from this
+- * cache.
+- */
+ void kmem_cache_free(struct kmem_cache *cachep, void *objp)
+ {
+ 	cachep = cache_from_obj(cachep, objp);
+diff --git a/mm/slub.c b/mm/slub.c
+index 63d281dfacdb..3e01731783df 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -3518,6 +3518,19 @@ void *__kmem_cache_alloc_node(struct kmem_cache *s, gfp_t gfpflags,
+ 			       caller, orig_size);
+ }
+ 
++/**
++ * kmem_cache_alloc_node - Allocate an object on the specified node
++ * @s: The cache to allocate from.
++ * @gfpflags: See kmalloc().
++ * @node: node number of the target node.
++ *
++ * Identical to kmem_cache_alloc but it will allocate memory on the given
++ * node, which can improve the performance for cpu bound structures.
++ *
++ * Fallback to other node is possible if __GFP_THISNODE is not set.
++ *
++ * Return: pointer to the new object or %NULL in case of error
++ */
+ void *kmem_cache_alloc_node(struct kmem_cache *s, gfp_t gfpflags, int node)
+ {
+ 	void *ret = slab_alloc_node(s, NULL, gfpflags, node, _RET_IP_, s->object_size);
+@@ -3822,6 +3835,14 @@ void __kmem_cache_free(struct kmem_cache *s, void *x, unsigned long caller)
+ 	slab_free(s, virt_to_slab(x), x, NULL, &x, 1, caller);
+ }
+ 
++/**
++ * kmem_cache_free - Deallocate an object
++ * @s: The cache the allocation was from.
++ * @x: The previously allocated object.
++ *
++ * Free an object which was previously allocated from this
++ * cache.
++ */
+ void kmem_cache_free(struct kmem_cache *s, void *x)
+ {
+ 	s = cache_from_obj(s, x);
 
-[...]
+-- 
+2.42.1
 
-> +
-> +&ufs_mem_hc {
-> +	reset-gpios = <&tlmm 203 GPIO_ACTIVE_LOW>;
-> +	vcc-supply = <&vreg_l7b_2p96>;
-> +	vcc-max-microamp = <800000>;
-> +	vccq-supply = <&vreg_l9b_1p2>;
-> +	vccq-max-microamp = <900000>;
-> +	vdd-hba-supply = <&vreg_l9b_1p2>;
-These regulators need regulator-allow-set-mode and allowed-modes
-
-Konrad
-
-[...]
-
-> \ No newline at end of file
-> 
-And this needs to be fixed
-
-looks good otherwise, I think!
-
-Konrad
