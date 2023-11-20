@@ -1,152 +1,179 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ZXDVaxP/"
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2071.outbound.protection.outlook.com [40.107.94.71])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65CAC95;
-	Mon, 20 Nov 2023 01:59:54 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KSNoqBDHIQ7VRGPH3wrOZh78CCxdqKAiCa49ky/Z0OOjUhIIBrhRqtxZp0kofZnPWTIywZ0IZuGo8cmX/OCQvhpMn/uyF5p2l38MYnznc3pY1QK+ype5jk/y8y0ol1q6mXXqq85xG3gTPYMCzzJrb+r8v1+6znzCYGjNkGlA/1rfx0OkEtttv7pLB/MdCiFzTNS7TnLGB0TMWwh2HbPKJE343gXr6kfpHYYIns5fGduX08oZtsD+JXwn/KlQzj61ij1+GctlOgrTU4HPQznc/k1BK4v3IbkSMg4HFSBtdMVlZgtmTUMDdLbdP4JCSHR8WF64ByDINp8rpVHWOqPvFQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AFrh/sC7ndqdMaGUxMamCl3xy+XKX/8AaSQFawSJf2c=;
- b=hZouQWpLBmO+SZcFwSsHnxZjaPkx68RIDQpPmPCG3XneW3vuEd77FFmAoNvRzjsFx/8osje9c7cCzEOj4mmEdCy2CMZI9YE61dguO/SiKq2p5Y9b5Td97458DWLHQAPOyLQMqnhfB1tkODkvnixadloVaCwCv4aE6wEbcT2D5kgSZydKHlGlGc1qPJ/si+2nd75OC3gGVfq6t8rzFjCXMkk+7w6tpMF+WiijDnuQ47Wa/QLJ38dT2MfMNXvpCzhFE2ipQFoAOaHLiiX8lqCxtW6ldJ50+rSuwWzTeM8OA1P1HYvbCJsPuvUzDU96sipMVolwL25uh9Fr5MXZGT7rHA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AFrh/sC7ndqdMaGUxMamCl3xy+XKX/8AaSQFawSJf2c=;
- b=ZXDVaxP/IDbd7mUlciA5kKraxuIUlZIWqmTJ3O7irmcqdvERKi5yyqMAZKUkbcZygAkjVqCYRu76YlUoXZKMO7EeUTF+cXVXthQ+0k4hc/WmV0dzOT7kA3Gy+JcR3JxJAVvNOo5rESyd5Qg7hcyAYDMGE7ogT/6PyQwAWJhiW48=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BN8PR12MB3587.namprd12.prod.outlook.com (2603:10b6:408:43::13)
- by MW3PR12MB4523.namprd12.prod.outlook.com (2603:10b6:303:5b::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.27; Mon, 20 Nov
- 2023 09:59:50 +0000
-Received: from BN8PR12MB3587.namprd12.prod.outlook.com
- ([fe80::ca80:8f1c:c11:ded3]) by BN8PR12MB3587.namprd12.prod.outlook.com
- ([fe80::ca80:8f1c:c11:ded3%7]) with mapi id 15.20.7002.027; Mon, 20 Nov 2023
- 09:59:50 +0000
-Message-ID: <4ff92772-9194-42db-b8af-8024e1fdf59f@amd.com>
-Date: Mon, 20 Nov 2023 10:59:45 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dma-buf: Replace strlcpy() with strscpy()
-Content-Language: en-US
-To: "T.J. Mercier" <tjmercier@google.com>, Kees Cook <keescook@chromium.org>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, Azeem Shaikh <azeemshaikh38@gmail.com>,
- linaro-mm-sig@lists.linaro.org, linux-hardening@vger.kernel.org,
- linux-media@vger.kernel.org
-References: <20231116191409.work.634-kees@kernel.org>
- <CABdmKX1oNw+quAd+ALcgGoz-PPsvy=O6YM4f2_SmP+dQBddzAA@mail.gmail.com>
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-In-Reply-To: <CABdmKX1oNw+quAd+ALcgGoz-PPsvy=O6YM4f2_SmP+dQBddzAA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="AiOXUd3m"
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 917F3F2;
+	Mon, 20 Nov 2023 04:40:57 -0800 (PST)
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AKCRTA6020937;
+	Mon, 20 Nov 2023 12:40:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to : sender :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=1+HhEt9+VzVP+gvV72c+hoGVjZxonRZpoYZ9ixdDD0U=;
+ b=AiOXUd3mLfsZOSEnNSYR7x0nXcghVBEWCg+ufk+sUdP/eHCDYTfkdU8VNwyqUqPxkx2Z
+ w62rPJcvIn9F5Znz/8n3irBFETgElLeL9/1zkgRvOAw/BqyV8173JBEXQ436mDyD2QJ+
+ Z0wJ/1jYz+Fj8mIeZVIcC38SVfc+fSdDPbge5zdwXqK/+MrID6TIZA+RVneQvGTIwK7/
+ 9lWNFmYpwgePwSE5z2QJNMv8xOuXTUMX3icHfT65PT5bgYGd/Wr3X7MhkL1SHN11UDzR
+ vUQWkxmNZfnqd9dlEK40VAhG8GdKbRXqTdr6lGBLStJm2ccIRpikNFmm/PvSaUViF4sW YQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ug7fkgcv3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 20 Nov 2023 12:40:55 +0000
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3AKCShnj027175;
+	Mon, 20 Nov 2023 12:40:55 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ug7fkgcug-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 20 Nov 2023 12:40:55 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3AKAPmLN010137;
+	Mon, 20 Nov 2023 12:40:54 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3uf8knh42x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 20 Nov 2023 12:40:54 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3AKCepRG28181092
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 20 Nov 2023 12:40:51 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0BE4120043;
+	Mon, 20 Nov 2023 12:40:51 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DFA8520040;
+	Mon, 20 Nov 2023 12:40:50 +0000 (GMT)
+Received: from p1gen4-pw042f0m (unknown [9.171.78.204])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon, 20 Nov 2023 12:40:50 +0000 (GMT)
+Received: from bblock by p1gen4-pw042f0m with local (Exim 4.96.2)
+	(envelope-from <bblock@linux.ibm.com>)
+	id 1r53a5-000IhD-3D;
+	Mon, 20 Nov 2023 13:40:50 +0100
+Date: Mon, 20 Nov 2023 13:40:49 +0100
+From: Benjamin Block <bblock@linux.ibm.com>
+To: Kees Cook <keescook@chromium.org>, Steffen Maier <maier@linux.ibm.com>
+Cc: Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Azeem Shaikh <azeemshaikh38@gmail.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Mailing List linux-scsi <linux-scsi@vger.kernel.org>
+Subject: Re: [PATCH] scsi: zfcp: Replace strlcpy() with strscpy()
+Message-ID: <20231120124049.GB18672@p1gen4-pw042f0m.fritz.box>
+References: <20231116191435.work.581-kees@kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <20231116191435.work.581-kees@kernel.org>
+Sender: Benjamin Block <bblock@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: xEpWiVxcG4O-iU7h3w1PBw3O7Bse4y4g
+X-Proofpoint-GUID: nqq-clRy7zOMtGGo6E33j85YGlVLG0Ep
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR3P281CA0154.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:a2::7) To BN8PR12MB3587.namprd12.prod.outlook.com
- (2603:10b6:408:43::13)
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8PR12MB3587:EE_|MW3PR12MB4523:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8fd0e950-2d36-4e28-a66b-08dbe9af6f43
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	jvhKcHeoH3d+DNh2eztHUQeuZdT67txD0KPKCwosdqLqoWYGcKuisRlvSOB1EhGcTXXRLGOLHMoCiLeF6+kXMg9q1h1nH38KuqmMPuqMLboH9RXD6KL267RDH81CLjLn4bS5tkAaeWJbSG9DkO8TxqRd60dmgjtkMMbfA5HTwBGw+aLGf7xkJol59/jhlgyk0G0NW4ElT7fOS4YEwL6Lbrl4QD/CU7wGMNnuQAUtDobBW+YlqlVhxUDnm/SI+tUbxYRoEQtkEbZcmqQyGaLZsPm518UrI7UJsqKWUAC61FS8mD/9g5mzq+MXNDp4+K7a+R0w7ClaVfnMexdsvyjLRvqk21Euz2hf2/r/Zz6d32TdUTKhYotGDcRFgScp/I46w324BldTRqMT7kDtZDkFl/ZFIIhsiO2corWHMQenD/8FPgwWA0W5RD/Wtse8JwyRavCXWBU+noaQm+Y2hEhmfIUcMocSGc8LHAifX1ujrapkf6jQABQRtBnRWroG0WIHpiM+YdSoPTggM+EhhIjESCCQHTvycZSXXSHXFlY9FZ3jn6yb8gbGM//NYZmoxcji4mZYB4Xm+3IHeHtVSBXYPXDg3Qfs/5FUEcDdcSqfyxNXkki3FrnphSxkEbnRNg7dKTblCAC05oBkSfUQAieSlZbZHIVtQxcy2vVZJSHh7MeRUzr1ORyBFQJbERxO9Ju6
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3587.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(366004)(136003)(396003)(376002)(39860400002)(230922051799003)(64100799003)(451199024)(186009)(1800799012)(2906002)(8936002)(4326008)(8676002)(5660300002)(38100700002)(86362001)(31696002)(41300700001)(36756003)(2616005)(6512007)(26005)(6666004)(53546011)(6506007)(31686004)(83380400001)(66574015)(478600001)(66556008)(66946007)(66476007)(54906003)(110136005)(316002)(966005)(6486002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MjA2ekIwZDhNemZFYVArYmNkdWVwZ3EvYWswek83eGpDYi8xUUM2MWJlWndt?=
- =?utf-8?B?bXZBV0szeU9Yb1dKbjVNTDhWRDI0SnBjT0VKMVdFRGVNUVBXU3NuaGtqM0ly?=
- =?utf-8?B?a0ZYRzZmU1ZVSmFhbmhwL2dPcmRhS3pRZktoUHAzbVZGamR6Z0crbXNUZHR6?=
- =?utf-8?B?SVQ2SWxsZ3NCQ2p3alkrOU15R3lLN24xb0hhWnpLVE9ZajdKMGE2NzlVbDRS?=
- =?utf-8?B?Nkl5WnNPeURHSFFuSkpBLzM2MU8wRUNqYUVPc1YrQ0s0eXNFdnQwanpoT1NC?=
- =?utf-8?B?NCtuM0VVMGZJb29FN2QzYkltdHhZdzM2RDdWVG1KY3ZWRGFSSG5ZdTlqcSt5?=
- =?utf-8?B?QVlMc3Axd3NKcmdwUVloa0VLanZHSkpDRldvSWR6SUNCQUtscGl5SWVCOUR2?=
- =?utf-8?B?M3RURE1PeHJjcXBnSWtNVmpaeWdzWDFETmIzQkJNMzhZcVRTbklSMHg1Y3py?=
- =?utf-8?B?L2lvbzJjZlFDK0lCcGorYzdhTHpmaVYvZUNIcWpnYkd0clBYeXJSclJDQ2Nk?=
- =?utf-8?B?Yk1xcWFrd3o4djhTQjloNHlBZUZHNHpXazlyTTdiMUtnZUp1OFhQc3p2YVRk?=
- =?utf-8?B?RDUrZTRXUXJBUXNWVlIvT2NVM09UMGJ0TWFiVEdpRmNVZG1SOExMVWpUK3ho?=
- =?utf-8?B?OTdzcmI4MklwSTJxaGIyUEhQYTU0MCtYOFJLN2JhV3kyaEMwdzIyZ3BlcnIw?=
- =?utf-8?B?aTJUOEdqU3ZEU0JJMWFDUkxjZHUrRW5tMitZVDcvdngwdnRHTHZITHl5b0s0?=
- =?utf-8?B?R2EvOVVvc0pjRTdCMXRPQWtFVktNMmdoSmNsbVRNTFlsRC9xZTd4NmxXbkl4?=
- =?utf-8?B?eVZVYURucXNnMTY2QVZGSXlyeUkrVkcyYUN0VGdjWG1kUlZwUkdqNW90UWZI?=
- =?utf-8?B?Wk1BQ2xXSjZTRVBWUTQ0bk45TmkwNTk5cUdFb3BOVUdFaDd2VlRCSWJZQk43?=
- =?utf-8?B?aGRCZGJiZXNhVWZoWDQ0MjlEbFh0S3grVkRwVG5GSFRBQ0k1NzROaGVYU1l1?=
- =?utf-8?B?UU5VZUY5YVI3RCthY0ZPL0Yxekg4YkdoaVVPbXNDNzh5YkZkZ2NMVzhkcEJY?=
- =?utf-8?B?VUFpR05wWTBYTTFjYlRpR0NsUXNRaVRHUjFrNmxRSmk0Z2lweXhOOVBwTTI0?=
- =?utf-8?B?YUF5U1VpSjBhZW1MaU9qcXY2V3dMSnN1bFRjUmkxKzhQTXNUUEdnZXRRemUv?=
- =?utf-8?B?ZDcrUE8yYkt0cmh5WFJXWS9tT3YrdmEyRE9wRkY5TEw2M1pLREVZcGJnK2FS?=
- =?utf-8?B?anRjOTZzeEhGOFVTT0VqWG0xcURNTCszZjRXK2JwTlFUcFZjR2VDM1ljbmdo?=
- =?utf-8?B?YjU0VUtZYnJCd1V5WGNRWnRHNFprTzhKQU9pN3J5dEdQYjVSK3lEVGpFdSs4?=
- =?utf-8?B?MlRSK0lzOExsVzljdEJ1K3NwQ1B2ZzJ4VEJQeTZjL2h4OTlpU3ZoZEpxcnA3?=
- =?utf-8?B?dzlPb1dMY3N2WE1hNWlaOWxuZ2NNMnQxS1dxTUZTS0VkUVJzZFNrQmh1TkRs?=
- =?utf-8?B?WlQvQ01nVFZUNE0zeFBLUmpQWlZlRG9yM3h0eUQxK1ZQY3RrM0gxNTdyYUl1?=
- =?utf-8?B?dU5PMHVvZVBqZlplaUFDSUJmWHp5QVhETUdUWlcyWEtyYzVrWTloUVVqUlhw?=
- =?utf-8?B?N3ZCZnd6MklaNlNwTlRUUE1sMERWOE1RQm11MmVabUVtVmM5QUZXYVB2eHVN?=
- =?utf-8?B?aGcwZTl5ZGp5a01jWTdPeGE0NHpRVlU1Q2RwN1ZsKzFjbk9lcDhoOVFlcHpG?=
- =?utf-8?B?OUFMaThzcVpVajFNcWFOblN2Yjk4MXRLeVhvalpRVks4aUU3UGlTNERxRXVw?=
- =?utf-8?B?dTBMbEJxdVl3ZWEzb0lNVi8rVzgzYnp1TDczR29SRW5hc2c2L1ZQRUEzSUh4?=
- =?utf-8?B?a04xL0dxYkl3KzNUUjVHbGFFK0w3WEszOW8wZ1kxU3JId3cvTGg4elBhYlls?=
- =?utf-8?B?QVhpMXFlS2IybmhqRUZRTnpMVFdTNFBvRFdDTkRWR1o4MDdudnkrZFdpYnBE?=
- =?utf-8?B?azJOQUZKNWkvM1VxanVmZWFrVmdPbEw0YWZUNDloaEV6cVBhSWxYRnhBUDA3?=
- =?utf-8?B?K1VmTWduTU41ZHhkTE16MkRKRjMyOE5zdFZxOGpwYkUzQ0I0TVBtOWNpQUJt?=
- =?utf-8?Q?2lhY=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8fd0e950-2d36-4e28-a66b-08dbe9af6f43
-X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3587.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Nov 2023 09:59:50.0857
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YivVTmkAJGrSyJapH69LLPoAr4pkBBTerGKFYT/cSU663UBMeAQMIDt+MwVkPc45
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR12MB4523
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-11-20_11,2023-11-20_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ malwarescore=0 priorityscore=1501 clxscore=1011 impostorscore=0 mlxscore=0
+ mlxlogscore=999 adultscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311060000
+ definitions=main-2311200087
 
-Am 17.11.23 um 19:50 schrieb T.J. Mercier:
-> On Thu, Nov 16, 2023 at 11:14â€¯AM Kees Cook <keescook@chromium.org> wrote:
->> strlcpy() reads the entire source buffer first. This read may exceed
->> the destination size limit. This is both inefficient and can lead
->> to linear read overflows if a source string is not NUL-terminated[1].
->> Additionally, it returns the size of the source string, not the
->> resulting size of the destination string. In an effort to remove strlcpy()
->> completely[2], replace strlcpy() here with strscpy().
->>
->> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy [1]
->> Link: https://github.com/KSPP/linux/issues/89 [2]
->> Cc: Sumit Semwal <sumit.semwal@linaro.org>
->> Cc: "Christian KÃ¶nig" <christian.koenig@amd.com>
->> Cc: Azeem Shaikh <azeemshaikh38@gmail.com>
->> Cc: linux-media@vger.kernel.org
->> Cc: dri-devel@lists.freedesktop.org
->> Cc: linaro-mm-sig@lists.linaro.org
->> Signed-off-by: Kees Cook <keescook@chromium.org>
-> Reviewed-by: T.J. Mercier <tjmercier@google.com>
->
-> strscpy returns -E2BIG when it truncates / force null-terminates which
-> would provide the wrong argument for dynamic_dname, but
-> dma_buf_set_name{_user} makes sure we have a null-terminated string of
-> the appropriate maximum size in dmabuf->name.
+Hey Kees,
 
-Thanks for that background check, I was about to note that this might 
-not be a good idea.
+thanks for the patch.
 
-Linus pretty clearly stated that he doesn't want to see patches like 
-that one here, see this article as well. https://lwn.net/Articles/659214/
+can you please send this patch to linux-scsi and CC the SCSI Maintainers
+(Martin and James) instead (having linux-s390 on CC is fine)? zFCP doesn't go
+via s390, being a SCSI driver.
 
-I think the commit message gives enough reason to merge the patch, so 
-I'm going to push it to drm-misc-next. But please make sure to triple 
-check stuff like this before sending.
+On Thu, Nov 16, 2023 at 11:14:35AM -0800, Kees Cook wrote:
+> strlcpy() reads the entire source buffer first. This read may exceed
+> the destination size limit. This is both inefficient and can lead
+> to linear read overflows if a source string is not NUL-terminated[1].
+> Additionally, it returns the size of the source string, not the
+> resulting size of the destination string. In an effort to remove strlcpy()
+> completely[2], replace strlcpy() here with strscpy().
+> 
+> Be explicitly robust in the face of truncation, which should be an
+> impossible state.
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy [1]
+> Link: https://github.com/KSPP/linux/issues/89 [2]
+> Cc: Steffen Maier <maier@linux.ibm.com>
+> Cc: Benjamin Block <bblock@linux.ibm.com>
+> Cc: Heiko Carstens <hca@linux.ibm.com>
+> Cc: Vasily Gorbik <gor@linux.ibm.com>
+> Cc: Alexander Gordeev <agordeev@linux.ibm.com>
+> Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
+> Cc: Sven Schnelle <svens@linux.ibm.com>
+> Cc: Azeem Shaikh <azeemshaikh38@gmail.com>
+> Cc: linux-s390@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  drivers/s390/scsi/zfcp_fc.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/s390/scsi/zfcp_fc.c b/drivers/s390/scsi/zfcp_fc.c
+> index 4f0d0e55f0d4..1a29f10767fc 100644
+> --- a/drivers/s390/scsi/zfcp_fc.c
+> +++ b/drivers/s390/scsi/zfcp_fc.c
+> @@ -900,8 +900,15 @@ static void zfcp_fc_rspn(struct zfcp_adapter *adapter,
+>	zfcp_fc_ct_ns_init(&rspn_req->ct_hdr, FC_NS_RSPN_ID,
+>			   FC_SYMBOLIC_NAME_SIZE);
+>	hton24(rspn_req->rspn.fr_fid.fp_fid, fc_host_port_id(shost));
+> -	len = strlcpy(rspn_req->rspn.fr_name, fc_host_symbolic_name(shost),
+> -		      FC_SYMBOLIC_NAME_SIZE);
+> +	len = strscpy(rspn_req->name, fc_host_symbolic_name(shost),
+> +		      sizeof(rspn_req->name));
 
-Thanks,
-Christian.
+This is corrct.
+
+> +	/*
+> +	 * It should be impossible for this to truncate, as
+> +	 * sizeof(rspn_req->name) is equal to max size of
+> +	 * fc_host_symbolic_name(shost), but check anyway.
+> +	 */
+> +	if (len < 0)
+> +		len = sizeof(rspn_req->name) - 1;
+
+I'd rather have a compile-time check, whether the array sizes of
+`rspn_req->name` and `fc_host_symbolic_name(shost)` run out of sync, or
+against our expectations.
+
+Something like:
+
+	len = strscpy(rspn_req->name, fc_host_symbolic_name(shost),
+		      sizeof(rspn_req->name));
+	BUILD_BUG_ON(sizeof(rspn_req->name) !=
+			     sizeof(fc_host_symbolic_name(shost)) ||
+		     sizeof(rspn_req->name) !=
+			     1 << sizeof(rspn_req->rspn.fr_name_len) * 8);
+	rspn_req->rspn.fr_name_len = len;
+
+Then the last assignment should also be correct; and if something changes -
+unexpectedly, because this follows a FC standard - we need to adapt the code
+anyway I'd think.
+
+Or am I missing something?
+
+>	rspn_req->rspn.fr_name_len = len;
+>  
+>	sg_init_one(&fc_req->sg_req, rspn_req, sizeof(*rspn_req));
+> -- 
+> 2.34.1
+> 
+
+-- 
+Best Regards, Benjamin Block        /        Linux on IBM Z Kernel Development
+IBM Deutschland Research & Development GmbH    /   https://www.ibm.com/privacy
+Vors. Aufs.-R.: Gregor Pillen         /         Geschäftsführung: David Faller
+Sitz der Ges.: Böblingen     /    Registergericht: AmtsG Stuttgart, HRB 243294
