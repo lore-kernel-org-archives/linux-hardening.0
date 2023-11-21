@@ -1,179 +1,88 @@
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2262528394;
+	Tue, 21 Nov 2023 18:52:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DzxB0nT8"
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60FF6100;
-	Tue, 21 Nov 2023 08:47:15 -0800 (PST)
-Received: by mail-pg1-x52b.google.com with SMTP id 41be03b00d2f7-5bde80aad05so4518816a12.2;
-        Tue, 21 Nov 2023 08:47:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700585235; x=1701190035; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4pN2u4fGcywnuJpGPzQlph9Q+P1Toihu44zlYs+cFFQ=;
-        b=DzxB0nT8p4NyIUu5ZtyBP5LEh8DnTN2KVJL5FLUCbVf5q5ovC7zgcJol4TBTRCXb2o
-         7SSQlDq9vPWcYSkWsk141E+Vmm4w+Hnwd1nOMkd0RKZEa2SIhsd+oXaU3QqB4VGkCTIU
-         5nQhZW/+dmG/p0L8f6+AlaFXwVxAdJx5nsGXAxt1JNiQF+8cHcndF0T9MagiDsMc47cT
-         Bdi4sQubI5zt+eGRlU18z9tkzmiLUZTGZYS9O1tYFCbancpswn66M4zh1FmcnqSQI6Sm
-         1ET82DcJGjh/6bY8GQ2T193dPEPm3Dgt04/K6TWeqWMXTVUwuZp/ovQw5H2q0nctmVEv
-         MpOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700585235; x=1701190035;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4pN2u4fGcywnuJpGPzQlph9Q+P1Toihu44zlYs+cFFQ=;
-        b=a3ig5k9fgIlUoWRhFi57mhhjeldpHY6Oc48+r44lVN/y/ATw7HzrKFCv32rXJ47NSk
-         gcGS5P19PqTYDE0ZFlc5l7i1P3Oeq2Tn3PI+23oWNd7xJM7jd/J2G08oHeto46TIQH7G
-         KLKvmxiwNSLotlqgjW3biw6I6hB6PvCkuI3a2CnChwHipLkJMwvHfHFpNAYoZhTpVjnX
-         3XaOFGOxUY8Dqa31U29o++Wdd5vOl/aZBXHo75cHoyZd39Aw5SyZi/M9MNsRuzX5IRZw
-         YjQHaVZ0Z59w5KyT8vZwGDn9Fr2BW04u6Cj9WXBsYKGn+KWBwPnpQyWx8HG5uZkgdgnA
-         FUww==
-X-Gm-Message-State: AOJu0YxjBnNYLaFsLgR0/L6eoFjsYwPbT/JA4mD0IiSH7FPiqRNnuHjD
-	tPZsQtAEpb0tfRFZIJvW5FD7zToPA5gWOXBL2DM=
-X-Google-Smtp-Source: AGHT+IEgB8wdH50KpUTsCwM7hxb8hnHbggXC75EKjN4In3uMlNFDFNmIEv3gFB7XElvbm6ezJrT/0+1/Sj7dKS+3aBM=
-X-Received: by 2002:a17:90a:4411:b0:280:18bd:ffe7 with SMTP id
- s17-20020a17090a441100b0028018bdffe7mr9875785pjg.48.1700585234819; Tue, 21
- Nov 2023 08:47:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="POVK2c2w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9422EC433C8;
+	Tue, 21 Nov 2023 18:52:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700592767;
+	bh=5RbPe9Jo0Kx3jw4qthF98qjBS4eZ7mQNCwFgjLRcjnI=;
+	h=Date:From:To:Cc:Subject:From;
+	b=POVK2c2wUB2WPyUQZ1NtanCPyJem4EWudfnE4UYZaZ0vaiCOrIS/HI8x2cXwXfwVb
+	 0MXJ8q+hnv02iCqaJQ2ZZkkJRfA4Q6dYuo6hON2+9iCHeYTYixTHVI5eWbDKuVF/JW
+	 41F0ZeT4rNZer1RONY+r6xxSrHp1QSPCU9ntqIptnX2hY4dAojK6ucWB1HMMb+qMpr
+	 rePbvv2uzJiY6cxlhubAa5tyRExehUcMwP/773+vC4QUvT4pB1iW5eGE6XPv2g7klm
+	 fvzObIfzE3FmkuqyX8hCfHdZmLwKsi36JJVYy8lez7sGa1w+cvvyRV+MMt+YNDgjqM
+	 xOSzs7obbDfUQ==
+Date: Tue, 21 Nov 2023 12:52:44 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] powerpc/crypto: Avoid -Wstringop-overflow warnings
+Message-ID: <ZVz8fLtrYTz+YSjn@work>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231120-slab-remove-slab-v2-0-9c9c70177183@suse.cz> <20231120-slab-remove-slab-v2-3-9c9c70177183@suse.cz>
-In-Reply-To: <20231120-slab-remove-slab-v2-3-9c9c70177183@suse.cz>
-From: Andrey Konovalov <andreyknvl@gmail.com>
-Date: Tue, 21 Nov 2023 17:47:03 +0100
-Message-ID: <CA+fCnZdwLn_h3rsamXZMPcjcvqY3TwDmd+3gRUtjkfEad445Nw@mail.gmail.com>
-Subject: Re: [PATCH v2 03/21] KASAN: remove code paths guarded by CONFIG_SLAB
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: David Rientjes <rientjes@google.com>, Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>, 
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>, Alexander Potapenko <glider@google.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
-	Marco Elver <elver@google.com>, Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
-	Shakeel Butt <shakeelb@google.com>, Muchun Song <muchun.song@linux.dev>, 
-	Kees Cook <keescook@chromium.org>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	kasan-dev@googlegroups.com, cgroups@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Mon, Nov 20, 2023 at 7:34=E2=80=AFPM Vlastimil Babka <vbabka@suse.cz> wr=
-ote:
->
-> With SLAB removed and SLUB the only remaining allocator, we can clean up
-> some code that was depending on the choice.
->
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Reviewed-by: Marco Elver <elver@google.com>
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-> ---
->  mm/kasan/common.c     | 13 ++-----------
->  mm/kasan/kasan.h      |  3 +--
->  mm/kasan/quarantine.c |  7 -------
->  3 files changed, 3 insertions(+), 20 deletions(-)
->
-> diff --git a/mm/kasan/common.c b/mm/kasan/common.c
-> index 256930da578a..5d95219e69d7 100644
-> --- a/mm/kasan/common.c
-> +++ b/mm/kasan/common.c
-> @@ -153,10 +153,6 @@ void __kasan_poison_object_data(struct kmem_cache *c=
-ache, void *object)
->   * 2. A cache might be SLAB_TYPESAFE_BY_RCU, which means objects can be
->   *    accessed after being freed. We preassign tags for objects in these
->   *    caches as well.
-> - * 3. For SLAB allocator we can't preassign tags randomly since the free=
-list
-> - *    is stored as an array of indexes instead of a linked list. Assign =
-tags
-> - *    based on objects indexes, so that objects that are next to each ot=
-her
-> - *    get different tags.
->   */
->  static inline u8 assign_tag(struct kmem_cache *cache,
->                                         const void *object, bool init)
-> @@ -171,17 +167,12 @@ static inline u8 assign_tag(struct kmem_cache *cach=
-e,
->         if (!cache->ctor && !(cache->flags & SLAB_TYPESAFE_BY_RCU))
->                 return init ? KASAN_TAG_KERNEL : kasan_random_tag();
->
-> -       /* For caches that either have a constructor or SLAB_TYPESAFE_BY_=
-RCU: */
-> -#ifdef CONFIG_SLAB
-> -       /* For SLAB assign tags based on the object index in the freelist=
-. */
-> -       return (u8)obj_to_index(cache, virt_to_slab(object), (void *)obje=
-ct);
-> -#else
->         /*
-> -        * For SLUB assign a random tag during slab creation, otherwise r=
-euse
-> +        * For caches that either have a constructor or SLAB_TYPESAFE_BY_=
-RCU,
-> +        * assign a random tag during slab creation, otherwise reuse
->          * the already assigned tag.
->          */
->         return init ? kasan_random_tag() : get_tag(object);
-> -#endif
->  }
->
->  void * __must_check __kasan_init_slab_obj(struct kmem_cache *cache,
-> diff --git a/mm/kasan/kasan.h b/mm/kasan/kasan.h
-> index 8b06bab5c406..eef50233640a 100644
-> --- a/mm/kasan/kasan.h
-> +++ b/mm/kasan/kasan.h
-> @@ -373,8 +373,7 @@ void kasan_set_track(struct kasan_track *track, gfp_t=
- flags);
->  void kasan_save_alloc_info(struct kmem_cache *cache, void *object, gfp_t=
- flags);
->  void kasan_save_free_info(struct kmem_cache *cache, void *object);
->
-> -#if defined(CONFIG_KASAN_GENERIC) && \
-> -       (defined(CONFIG_SLAB) || defined(CONFIG_SLUB))
-> +#ifdef CONFIG_KASAN_GENERIC
->  bool kasan_quarantine_put(struct kmem_cache *cache, void *object);
->  void kasan_quarantine_reduce(void);
->  void kasan_quarantine_remove_cache(struct kmem_cache *cache);
-> diff --git a/mm/kasan/quarantine.c b/mm/kasan/quarantine.c
-> index ca4529156735..138c57b836f2 100644
-> --- a/mm/kasan/quarantine.c
-> +++ b/mm/kasan/quarantine.c
-> @@ -144,10 +144,6 @@ static void qlink_free(struct qlist_node *qlink, str=
-uct kmem_cache *cache)
->  {
->         void *object =3D qlink_to_object(qlink, cache);
->         struct kasan_free_meta *meta =3D kasan_get_free_meta(cache, objec=
-t);
-> -       unsigned long flags;
-> -
-> -       if (IS_ENABLED(CONFIG_SLAB))
-> -               local_irq_save(flags);
->
->         /*
->          * If init_on_free is enabled and KASAN's free metadata is stored=
- in
-> @@ -166,9 +162,6 @@ static void qlink_free(struct qlist_node *qlink, stru=
-ct kmem_cache *cache)
->         *(u8 *)kasan_mem_to_shadow(object) =3D KASAN_SLAB_FREE;
->
->         ___cache_free(cache, object, _THIS_IP_);
-> -
-> -       if (IS_ENABLED(CONFIG_SLAB))
-> -               local_irq_restore(flags);
->  }
->
->  static void qlist_free_all(struct qlist_head *q, struct kmem_cache *cach=
-e)
->
-> --
-> 2.42.1
->
+The compiler doesn't know that `32` is an offset into the Hash table:
 
-Reviewed-by: Andrey Konovalov <andreyknvl@gmail.com>
+ 56 struct Hash_ctx {
+ 57         u8 H[16];       /* subkey */
+ 58         u8 Htable[256]; /* Xi, Hash table(offset 32) */
+ 59 };
 
-Very nice to see SLAB-induced complexity being gone :)
+So, it legitimately complains about a potential out-of-bounds issue
+if `256 bytes` are accessed in `htable` (this implies going
+`32 bytes` beyond the boundaries of `Htable`):
 
-Thank you!
+arch/powerpc/crypto/aes-gcm-p10-glue.c: In function 'gcmp10_init':
+arch/powerpc/crypto/aes-gcm-p10-glue.c:120:9: error: 'gcm_init_htable' accessing 256 bytes in a region of size 224 [-Werror=stringop-overflow=]
+  120 |         gcm_init_htable(hash->Htable+32, hash->H);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/powerpc/crypto/aes-gcm-p10-glue.c:120:9: note: referencing argument 1 of type 'unsigned char[256]'
+arch/powerpc/crypto/aes-gcm-p10-glue.c:120:9: note: referencing argument 2 of type 'unsigned char[16]'
+arch/powerpc/crypto/aes-gcm-p10-glue.c:40:17: note: in a call to function 'gcm_init_htable'
+   40 | asmlinkage void gcm_init_htable(unsigned char htable[256], unsigned char Xi[16]);
+      |                 ^~~~~~~~~~~~~~~
+
+Address this by avoiding specifying the size of `htable` in the function
+prototype; and just for consistency, do the same for parameter `Xi`.
+
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Closes: https://lore.kernel.org/linux-next/20231121131903.68a37932@canb.auug.org.au/
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ arch/powerpc/crypto/aes-gcm-p10-glue.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/powerpc/crypto/aes-gcm-p10-glue.c b/arch/powerpc/crypto/aes-gcm-p10-glue.c
+index 4b6e899895e7..f62ee54076c0 100644
+--- a/arch/powerpc/crypto/aes-gcm-p10-glue.c
++++ b/arch/powerpc/crypto/aes-gcm-p10-glue.c
+@@ -37,7 +37,7 @@ asmlinkage void aes_p10_gcm_encrypt(u8 *in, u8 *out, size_t len,
+ 				    void *rkey, u8 *iv, void *Xi);
+ asmlinkage void aes_p10_gcm_decrypt(u8 *in, u8 *out, size_t len,
+ 				    void *rkey, u8 *iv, void *Xi);
+-asmlinkage void gcm_init_htable(unsigned char htable[256], unsigned char Xi[16]);
++asmlinkage void gcm_init_htable(unsigned char htable[], unsigned char Xi[]);
+ asmlinkage void gcm_ghash_p10(unsigned char *Xi, unsigned char *Htable,
+ 		unsigned char *aad, unsigned int alen);
+ 
+-- 
+2.34.1
+
