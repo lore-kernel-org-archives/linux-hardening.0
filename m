@@ -1,197 +1,179 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="MHr2G5PV"
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A690132
-	for <linux-hardening@vger.kernel.org>; Tue, 21 Nov 2023 07:53:59 -0800 (PST)
-Received: from eig-obgw-6005a.ext.cloudfilter.net ([10.0.30.201])
-	by cmsmtp with ESMTPS
-	id 5SJwrBjtyKOkL5T4ZrYXHU; Tue, 21 Nov 2023 15:53:59 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id 5T4YrbjGh8KNv5T4YrBSkH; Tue, 21 Nov 2023 15:53:58 +0000
-X-Authority-Analysis: v=2.4 cv=dp3Itns4 c=1 sm=1 tr=0 ts=655cd296
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=BNY50KLci1gA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=VYRiMrDiN7h3fOvPrbAA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=n2o1uBXnp8cT9rrlINVcMDQE2oVTgADdskLt+ItqQP8=; b=MHr2G5PVD/2R2YbNbLWNAuPSIl
-	XQ+E7j39R9JkwjjWqypfTNU/lWzEPG2um97PTNcdG3n3AJQn/+2KrLy1BmC0D1cfjRP59KYZVXuiV
-	NtvjTL9fWvQ5H7FqZhXk+IfKzL4NFT9jxil2o4FvHaejMYuzaLb+qQjM9RU29sKJFXpA/HdQtlNgG
-	MNF+ZEq68Ff8EalaPmqCwhmaV8oiY+dBNqnGetf7SCUBEOIGIpn/5l4AChMGaSK2FhHONVOHOLbHz
-	i6h5WEG3+tafYCoSdG4c6KW+CCI5/Ba28vVp1dM2rQv0o2oOU/E05FfCBwQ1YtwqZa5mzsZkGVy13
-	b1q7YAnA==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:46436 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1r5T4X-002AxH-2D;
-	Tue, 21 Nov 2023 09:53:57 -0600
-Message-ID: <b44c4a7d-4f86-4d53-8f11-ffeef91e1407@embeddedor.com>
-Date: Tue, 21 Nov 2023 09:53:56 -0600
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DzxB0nT8"
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60FF6100;
+	Tue, 21 Nov 2023 08:47:15 -0800 (PST)
+Received: by mail-pg1-x52b.google.com with SMTP id 41be03b00d2f7-5bde80aad05so4518816a12.2;
+        Tue, 21 Nov 2023 08:47:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1700585235; x=1701190035; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4pN2u4fGcywnuJpGPzQlph9Q+P1Toihu44zlYs+cFFQ=;
+        b=DzxB0nT8p4NyIUu5ZtyBP5LEh8DnTN2KVJL5FLUCbVf5q5ovC7zgcJol4TBTRCXb2o
+         7SSQlDq9vPWcYSkWsk141E+Vmm4w+Hnwd1nOMkd0RKZEa2SIhsd+oXaU3QqB4VGkCTIU
+         5nQhZW/+dmG/p0L8f6+AlaFXwVxAdJx5nsGXAxt1JNiQF+8cHcndF0T9MagiDsMc47cT
+         Bdi4sQubI5zt+eGRlU18z9tkzmiLUZTGZYS9O1tYFCbancpswn66M4zh1FmcnqSQI6Sm
+         1ET82DcJGjh/6bY8GQ2T193dPEPm3Dgt04/K6TWeqWMXTVUwuZp/ovQw5H2q0nctmVEv
+         MpOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700585235; x=1701190035;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4pN2u4fGcywnuJpGPzQlph9Q+P1Toihu44zlYs+cFFQ=;
+        b=a3ig5k9fgIlUoWRhFi57mhhjeldpHY6Oc48+r44lVN/y/ATw7HzrKFCv32rXJ47NSk
+         gcGS5P19PqTYDE0ZFlc5l7i1P3Oeq2Tn3PI+23oWNd7xJM7jd/J2G08oHeto46TIQH7G
+         KLKvmxiwNSLotlqgjW3biw6I6hB6PvCkuI3a2CnChwHipLkJMwvHfHFpNAYoZhTpVjnX
+         3XaOFGOxUY8Dqa31U29o++Wdd5vOl/aZBXHo75cHoyZd39Aw5SyZi/M9MNsRuzX5IRZw
+         YjQHaVZ0Z59w5KyT8vZwGDn9Fr2BW04u6Cj9WXBsYKGn+KWBwPnpQyWx8HG5uZkgdgnA
+         FUww==
+X-Gm-Message-State: AOJu0YxjBnNYLaFsLgR0/L6eoFjsYwPbT/JA4mD0IiSH7FPiqRNnuHjD
+	tPZsQtAEpb0tfRFZIJvW5FD7zToPA5gWOXBL2DM=
+X-Google-Smtp-Source: AGHT+IEgB8wdH50KpUTsCwM7hxb8hnHbggXC75EKjN4In3uMlNFDFNmIEv3gFB7XElvbm6ezJrT/0+1/Sj7dKS+3aBM=
+X-Received: by 2002:a17:90a:4411:b0:280:18bd:ffe7 with SMTP id
+ s17-20020a17090a441100b0028018bdffe7mr9875785pjg.48.1700585234819; Tue, 21
+ Nov 2023 08:47:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 105/108] pwm: Ensure a struct pwm has the same lifetime
- as its pwm_chip
-Content-Language: en-US
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Thierry Reding <thierry.reding@gmail.com>, Kees Cook <keescook@chromium.org>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-pwm@vger.kernel.org,
- kernel@pengutronix.de, linux-hardening@vger.kernel.org
-References: <20231121134901.208535-1-u.kleine-koenig@pengutronix.de>
- <20231121134901.208535-106-u.kleine-koenig@pengutronix.de>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20231121134901.208535-106-u.kleine-koenig@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1r5T4X-002AxH-2D
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:46436
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfLceyhZo9eRLR1ERccS52yBbf9KuVw0+7eqSOtK9k6iC448nv//I7fYvsGbwLcbuDo1+27d5tfdQHm8RVEnZXKOrT4oLf9R88ZshfN0Tfz+ttxVvFRvA
- Bb/DPGsD14Rmsvtvtbd6MC0cf1obTK0tqCzVPQ6O0yndbipuWM/l5EN6Rx2Mi5X1lRi0G0m7yOXjKtCKilruYPLL9ZxlyhkwXouFEHif8mY8ImIxxCFrhply
+References: <20231120-slab-remove-slab-v2-0-9c9c70177183@suse.cz> <20231120-slab-remove-slab-v2-3-9c9c70177183@suse.cz>
+In-Reply-To: <20231120-slab-remove-slab-v2-3-9c9c70177183@suse.cz>
+From: Andrey Konovalov <andreyknvl@gmail.com>
+Date: Tue, 21 Nov 2023 17:47:03 +0100
+Message-ID: <CA+fCnZdwLn_h3rsamXZMPcjcvqY3TwDmd+3gRUtjkfEad445Nw@mail.gmail.com>
+Subject: Re: [PATCH v2 03/21] KASAN: remove code paths guarded by CONFIG_SLAB
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: David Rientjes <rientjes@google.com>, Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>, 
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>, Alexander Potapenko <glider@google.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
+	Marco Elver <elver@google.com>, Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
+	Shakeel Butt <shakeelb@google.com>, Muchun Song <muchun.song@linux.dev>, 
+	Kees Cook <keescook@chromium.org>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	kasan-dev@googlegroups.com, cgroups@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 11/21/23 07:50, Uwe Kleine-König wrote:
-> It's required to not free the memory underlying a requested PWM
-> while a consumer still has a reference to it. While currently a pwm_chip
-> doesn't life long enough in all cases, linking the struct pwm to the
-> pwm_chip results in the right lifetime as soon as the pwmchip is living
-> long enough. This happens with the following commits.
-> 
-> Note this is a breaking change for all pwm drivers that don't use
-> pwmchip_alloc().
-> 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org> # for struct_size() and __counted_by()
-
-Thanks for including __counted_by(). :)
---
-Gustavo
-
+On Mon, Nov 20, 2023 at 7:34=E2=80=AFPM Vlastimil Babka <vbabka@suse.cz> wr=
+ote:
+>
+> With SLAB removed and SLUB the only remaining allocator, we can clean up
+> some code that was depending on the choice.
+>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Reviewed-by: Marco Elver <elver@google.com>
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 > ---
->   drivers/pwm/core.c  | 26 ++++++++++----------------
->   include/linux/pwm.h |  2 +-
->   2 files changed, 11 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-> index 15942210aa08..029aa1c69591 100644
-> --- a/drivers/pwm/core.c
-> +++ b/drivers/pwm/core.c
-> @@ -198,7 +198,7 @@ static bool pwm_ops_check(const struct pwm_chip *chip)
->   
->   void *pwmchip_priv(struct pwm_chip *chip)
->   {
-> -	return (void *)chip + sizeof(*chip);
-> +	return (void *)chip + struct_size(chip, pwms, chip->npwm);
->   }
->   EXPORT_SYMBOL_GPL(pwmchip_priv);
->   
-> @@ -206,8 +206,9 @@ struct pwm_chip *devm_pwmchip_alloc(struct device *parent, unsigned int npwm, si
->   {
->   	struct pwm_chip *chip;
->   	size_t alloc_size;
-> +	unsigned int i;
->   
-> -	alloc_size = size_add(sizeof(*chip), sizeof_priv);
-> +	alloc_size = size_add(struct_size(chip, pwms, npwm), sizeof_priv);
->   
->   	chip = devm_kzalloc(parent, alloc_size, GFP_KERNEL);
->   	if (!chip)
-> @@ -217,6 +218,13 @@ struct pwm_chip *devm_pwmchip_alloc(struct device *parent, unsigned int npwm, si
->   	chip->npwm = npwm;
->   	chip->uses_pwmchip_alloc = true;
->   
-> +	for (i = 0; i < chip->npwm; i++) {
-> +		struct pwm_device *pwm = &chip->pwms[i];
-> +
-> +		pwm->chip = chip;
-> +		pwm->hwpwm = i;
-> +	}
-> +
->   	return chip;
->   }
->   EXPORT_SYMBOL_GPL(devm_pwmchip_alloc);
-> @@ -234,7 +242,6 @@ EXPORT_SYMBOL_GPL(devm_pwmchip_alloc);
->   int __pwmchip_add(struct pwm_chip *chip, struct module *owner)
->   {
->   	int ret;
-> -	unsigned i;
->   
->   	if (!chip || !chip->dev || !chip->ops || !chip->npwm)
->   		return -EINVAL;
-> @@ -253,26 +260,15 @@ int __pwmchip_add(struct pwm_chip *chip, struct module *owner)
->   
->   	chip->owner = owner;
->   
-> -	chip->pwms = kcalloc(chip->npwm, sizeof(*chip->pwms), GFP_KERNEL);
-> -	if (!chip->pwms)
-> -		return -ENOMEM;
+>  mm/kasan/common.c     | 13 ++-----------
+>  mm/kasan/kasan.h      |  3 +--
+>  mm/kasan/quarantine.c |  7 -------
+>  3 files changed, 3 insertions(+), 20 deletions(-)
+>
+> diff --git a/mm/kasan/common.c b/mm/kasan/common.c
+> index 256930da578a..5d95219e69d7 100644
+> --- a/mm/kasan/common.c
+> +++ b/mm/kasan/common.c
+> @@ -153,10 +153,6 @@ void __kasan_poison_object_data(struct kmem_cache *c=
+ache, void *object)
+>   * 2. A cache might be SLAB_TYPESAFE_BY_RCU, which means objects can be
+>   *    accessed after being freed. We preassign tags for objects in these
+>   *    caches as well.
+> - * 3. For SLAB allocator we can't preassign tags randomly since the free=
+list
+> - *    is stored as an array of indexes instead of a linked list. Assign =
+tags
+> - *    based on objects indexes, so that objects that are next to each ot=
+her
+> - *    get different tags.
+>   */
+>  static inline u8 assign_tag(struct kmem_cache *cache,
+>                                         const void *object, bool init)
+> @@ -171,17 +167,12 @@ static inline u8 assign_tag(struct kmem_cache *cach=
+e,
+>         if (!cache->ctor && !(cache->flags & SLAB_TYPESAFE_BY_RCU))
+>                 return init ? KASAN_TAG_KERNEL : kasan_random_tag();
+>
+> -       /* For caches that either have a constructor or SLAB_TYPESAFE_BY_=
+RCU: */
+> -#ifdef CONFIG_SLAB
+> -       /* For SLAB assign tags based on the object index in the freelist=
+. */
+> -       return (u8)obj_to_index(cache, virt_to_slab(object), (void *)obje=
+ct);
+> -#else
+>         /*
+> -        * For SLUB assign a random tag during slab creation, otherwise r=
+euse
+> +        * For caches that either have a constructor or SLAB_TYPESAFE_BY_=
+RCU,
+> +        * assign a random tag during slab creation, otherwise reuse
+>          * the already assigned tag.
+>          */
+>         return init ? kasan_random_tag() : get_tag(object);
+> -#endif
+>  }
+>
+>  void * __must_check __kasan_init_slab_obj(struct kmem_cache *cache,
+> diff --git a/mm/kasan/kasan.h b/mm/kasan/kasan.h
+> index 8b06bab5c406..eef50233640a 100644
+> --- a/mm/kasan/kasan.h
+> +++ b/mm/kasan/kasan.h
+> @@ -373,8 +373,7 @@ void kasan_set_track(struct kasan_track *track, gfp_t=
+ flags);
+>  void kasan_save_alloc_info(struct kmem_cache *cache, void *object, gfp_t=
+ flags);
+>  void kasan_save_free_info(struct kmem_cache *cache, void *object);
+>
+> -#if defined(CONFIG_KASAN_GENERIC) && \
+> -       (defined(CONFIG_SLAB) || defined(CONFIG_SLUB))
+> +#ifdef CONFIG_KASAN_GENERIC
+>  bool kasan_quarantine_put(struct kmem_cache *cache, void *object);
+>  void kasan_quarantine_reduce(void);
+>  void kasan_quarantine_remove_cache(struct kmem_cache *cache);
+> diff --git a/mm/kasan/quarantine.c b/mm/kasan/quarantine.c
+> index ca4529156735..138c57b836f2 100644
+> --- a/mm/kasan/quarantine.c
+> +++ b/mm/kasan/quarantine.c
+> @@ -144,10 +144,6 @@ static void qlink_free(struct qlist_node *qlink, str=
+uct kmem_cache *cache)
+>  {
+>         void *object =3D qlink_to_object(qlink, cache);
+>         struct kasan_free_meta *meta =3D kasan_get_free_meta(cache, objec=
+t);
+> -       unsigned long flags;
 > -
->   	mutex_lock(&pwm_lock);
->   
->   	ret = idr_alloc(&pwmchip_idr, chip, 0, 0, GFP_KERNEL);
->   	if (ret < 0) {
->   		mutex_unlock(&pwm_lock);
-> -		kfree(chip->pwms);
->   		return ret;
->   	}
->   
->   	chip->id = ret;
-> -	for (i = 0; i < chip->npwm; i++) {
-> -		struct pwm_device *pwm = &chip->pwms[i];
+> -       if (IS_ENABLED(CONFIG_SLAB))
+> -               local_irq_save(flags);
+>
+>         /*
+>          * If init_on_free is enabled and KASAN's free metadata is stored=
+ in
+> @@ -166,9 +162,6 @@ static void qlink_free(struct qlist_node *qlink, stru=
+ct kmem_cache *cache)
+>         *(u8 *)kasan_mem_to_shadow(object) =3D KASAN_SLAB_FREE;
+>
+>         ___cache_free(cache, object, _THIS_IP_);
 > -
-> -		pwm->chip = chip;
-> -		pwm->hwpwm = i;
-> -	}
->   
->   	mutex_unlock(&pwm_lock);
->   
-> @@ -303,8 +299,6 @@ void pwmchip_remove(struct pwm_chip *chip)
->   	idr_remove(&pwmchip_idr, chip->id);
->   
->   	mutex_unlock(&pwm_lock);
-> -
-> -	kfree(chip->pwms);
->   }
->   EXPORT_SYMBOL_GPL(pwmchip_remove);
->   
-> diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-> index b8e70ee01d31..a7294ef1495d 100644
-> --- a/include/linux/pwm.h
-> +++ b/include/linux/pwm.h
-> @@ -302,7 +302,7 @@ struct pwm_chip {
->   
->   	/* only used internally by the PWM framework */
->   	bool uses_pwmchip_alloc;
-> -	struct pwm_device *pwms;
-> +	struct pwm_device pwms[] __counted_by(npwm);
->   };
->   
->   static inline struct device *pwmchip_parent(struct pwm_chip *chip)
+> -       if (IS_ENABLED(CONFIG_SLAB))
+> -               local_irq_restore(flags);
+>  }
+>
+>  static void qlist_free_all(struct qlist_head *q, struct kmem_cache *cach=
+e)
+>
+> --
+> 2.42.1
+>
+
+Reviewed-by: Andrey Konovalov <andreyknvl@gmail.com>
+
+Very nice to see SLAB-induced complexity being gone :)
+
+Thank you!
