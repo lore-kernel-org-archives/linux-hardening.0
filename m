@@ -1,35 +1,62 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7CDA2511F;
-	Fri, 24 Nov 2023 19:25:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="aesNrUiD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0AD4C433C7;
-	Fri, 24 Nov 2023 19:25:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1700853943;
-	bh=I/ZmqpcYb+0sD880xun09+KD5SlI5d36j8XczSJJ9yw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aesNrUiDMXdVL/DtyCc9hTGIlPyy4CKChaZDm/l1GXvO1Eo01Rr2bY8GZQN0xJWgn
-	 HaZTRf8uvg/jUfVsMqz2O8cdBuUT2fKojGDweOUfdPwLsWkrQRMqUq4U2kEeVNcGb4
-	 rDiX4obK4FDFkPDIzJI2eaGLTSX/+gIPqtmLQd+w=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	linux-hardening@vger.kernel.org,
-	Lukas Loidolt <e1634039@student.tuwien.ac.at>,
-	Kees Cook <keescook@chromium.org>
-Subject: [PATCH 5.4 068/159] randstruct: Fix gcc-plugin performance mode to stay in group
-Date: Fri, 24 Nov 2023 17:54:45 +0000
-Message-ID: <20231124171944.785943949@linuxfoundation.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231124171941.909624388@linuxfoundation.org>
-References: <20231124171941.909624388@linuxfoundation.org>
-User-Agent: quilt/0.67
-X-stable: review
-X-Patchwork-Hint: ignore
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A36MXDXj"
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80B4AD41;
+	Fri, 24 Nov 2023 13:28:29 -0800 (PST)
+Received: by mail-ej1-x62e.google.com with SMTP id a640c23a62f3a-a013d22effcso319356566b.2;
+        Fri, 24 Nov 2023 13:28:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1700861308; x=1701466108; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=EgxFuLlgH3HM3q2BEScFWv/UaGPrTtpxNJHVYrNWfFY=;
+        b=A36MXDXjdH8vLdc+3JwdHBmBWAqtulHau3qnl8WhgCat54zQUWYcR0edlgrFN9nYsr
+         6xMO5YsT1fCtHTaqAnvRRjWpzPoYrWlIQpzABzrLy7USxC+yXzJs93tgSc8u+2JbLmEh
+         ymnFvyGQG1OmOq+oJ1IW3XMZz/4dU5iHdYid7BuaecbzSZo4GLMyIjRvoyf0c6UJfFza
+         PvwH0Cyx3fGnXotVPx5kTxTc4znMpFU72SIBNxBeGrFfR7DRH8FficC4JX9YxGSwDpk+
+         YBRJ062xmwKXit3VD22b6V8aIKlrbOTSDFqmiy16zjTFgBZXrReGM7msitVLcI1wFxyj
+         M/Xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700861308; x=1701466108;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EgxFuLlgH3HM3q2BEScFWv/UaGPrTtpxNJHVYrNWfFY=;
+        b=LL/3fI0ht0NNUE3EnemtzDuoU/R4FsYYWr+JTJrN8DoTmR2ANzGMXxlZqsfo68It2g
+         REzU5K1m22ux4+AG3/qCAT28T0Tmq1wW/E5ZfO+/jFLm1ZUHfd4AE4epmEUi6csYWLBl
+         lycw/jR7O9dZ0PmvuJUn1MbqJ/ob17t6u4MxE/rEoVQ3CXkac++xBwgtvsK3PTpRL2Gb
+         sh1EHSFtXet7rN210L6FcJg7G5TzBOj5iq+/kuwfCAJ+w2aSHuR1JWTE6xScuY/0UsE1
+         BRf6FTly6wNBoSXNB7adxkhKeEkXDSh3Tiu3Wv1a9CcCgMG7edq9k0OQSiS6QSvYce2c
+         SCag==
+X-Gm-Message-State: AOJu0YzGRxA0JjOKS66xkiKyVGcFnrrh7HLRn8WIy92QjP/9av17usD5
+	tw+7EwjBzJNfOsaBnPjUYug=
+X-Google-Smtp-Source: AGHT+IFeiagFA7FwlKDnDbRYuXKqW6azCJ0MnV15PtiuWdZrap2O9HO/Q2I73Q+h0vB/O9HIpQd3DA==
+X-Received: by 2002:a17:906:73c4:b0:a01:f06b:77c8 with SMTP id n4-20020a17090673c400b00a01f06b77c8mr3314784ejl.2.1700861307436;
+        Fri, 24 Nov 2023 13:28:27 -0800 (PST)
+Received: from StrangerPC.home.arpa ([2a0d:3344:1730:e300::11a1])
+        by smtp.gmail.com with ESMTPSA id n20-20020a170906119400b009fbdacf9363sm2520849eja.21.2023.11.24.13.28.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Nov 2023 13:28:27 -0800 (PST)
+From: Luka Panio <lukapanio@gmail.com>
+To: Andy Gross <agross@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kees Cook <keescook@chromium.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G . Piccoli" <gpiccoli@igalia.com>,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Cc: Luka Panio <lukapanio@gmail.com>,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: [PATCH v10 1/2] Add a compatible for Xiaomi Pad 6.
+Date: Fri, 24 Nov 2023 22:27:31 +0100
+Message-ID: <20231124212732.731419-1-lukapanio@gmail.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -38,63 +65,40 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-5.4-stable review patch.  If anyone has any objections, please let me know.
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Signed-off-by: Luka Panio <lukapanio@gmail.com>
 
-------------------
-
-From: Kees Cook <keescook@chromium.org>
-
-commit 381fdb73d1e2a48244de7260550e453d1003bb8e upstream.
-
-The performance mode of the gcc-plugin randstruct was shuffling struct
-members outside of the cache-line groups. Limit the range to the
-specified group indexes.
-
-Cc: linux-hardening@vger.kernel.org
-Cc: stable@vger.kernel.org
-Reported-by: Lukas Loidolt <e1634039@student.tuwien.ac.at>
-Closes: https://lore.kernel.org/all/f3ca77f0-e414-4065-83a5-ae4c4d25545d@student.tuwien.ac.at
-Fixes: 313dd1b62921 ("gcc-plugins: Add the randstruct plugin")
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- scripts/gcc-plugins/randomize_layout_plugin.c |   11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+v2:
+Update commit message
 
---- a/scripts/gcc-plugins/randomize_layout_plugin.c
-+++ b/scripts/gcc-plugins/randomize_layout_plugin.c
-@@ -209,12 +209,14 @@ static void partition_struct(tree *field
- 
- static void performance_shuffle(tree *newtree, unsigned long length, ranctx *prng_state)
- {
--	unsigned long i, x;
-+	unsigned long i, x, index;
- 	struct partition_group size_group[length];
- 	unsigned long num_groups = 0;
- 	unsigned long randnum;
- 
- 	partition_struct(newtree, length, (struct partition_group *)&size_group, &num_groups);
-+
-+	/* FIXME: this group shuffle is currently a no-op. */
- 	for (i = num_groups - 1; i > 0; i--) {
- 		struct partition_group tmp;
- 		randnum = ranval(prng_state) % (i + 1);
-@@ -224,11 +226,14 @@ static void performance_shuffle(tree *ne
- 	}
- 
- 	for (x = 0; x < num_groups; x++) {
--		for (i = size_group[x].start + size_group[x].length - 1; i > size_group[x].start; i--) {
-+		for (index = size_group[x].length - 1; index > 0; index--) {
- 			tree tmp;
-+
-+			i = size_group[x].start + index;
- 			if (DECL_BIT_FIELD_TYPE(newtree[i]))
- 				continue;
--			randnum = ranval(prng_state) % (i + 1);
-+			randnum = ranval(prng_state) % (index + 1);
-+			randnum += size_group[x].start;
- 			// we could handle this case differently if desired
- 			if (DECL_BIT_FIELD_TYPE(newtree[randnum]))
- 				continue;
+v3:
+Update commit message
 
+v4:
+Update commit message
+
+v5:
+Update commit message
+
+v6:
+Update commit message
+---
+ Documentation/devicetree/bindings/arm/qcom.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+index adbfaea32343..1bfae1b237d2 100644
+--- a/Documentation/devicetree/bindings/arm/qcom.yaml
++++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+@@ -965,6 +965,7 @@ properties:
+               - sony,pdx203-generic
+               - sony,pdx206-generic
+               - xiaomi,elish
++              - xiaomi,pipa
+           - const: qcom,sm8250
+ 
+       - items:
+-- 
+2.42.0
 
