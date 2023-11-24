@@ -1,19 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48E4A14F7B;
-	Fri, 24 Nov 2023 18:53:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A5234189;
+	Fri, 24 Nov 2023 19:06:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="2F1EFEBa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AC29C433C7;
-	Fri, 24 Nov 2023 18:53:46 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="pxdgPcy9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C999C433C8;
+	Fri, 24 Nov 2023 19:06:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1700852026;
-	bh=e00VFAct0iHEBH8QuOFkm5ZWWdncL55IAO5XGY580ak=;
+	s=korg; t=1700852769;
+	bh=qBM8iPe989n4S22Vy/tJ5427yWtLAsZjhakQg9rvrKs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=2F1EFEBaOOEumDgnRnL8FCgE6cDJ+EHze5IbYyQ7C7dxnD+CQs9fUF8zb6s9gTbIX
-	 324aGVk42ZV9qILLWgy99d1vxX88WOxAL2GDBTewof7r5OjxkTdiTHWEcgIXOUiK1a
-	 IFtIMB7fyyODvWUx/6iJ2nkMMSdeIqnok7OIrRBs=
+	b=pxdgPcy9MszRmIJ3IDxonx0uULlKangNyVqsmFghTLQUXRav+bUwmjEnmolqDObfT
+	 WGTHoW9CHM7kiGz5jYC+tn43mwGkGXmJwDcY/TaTH6cQCi54yHXyBvYyKjxgIfGpv2
+	 Hqw2Ftd2vG+vxE4FEn6BidL5aWKxEJrSS4nQIlWE=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: stable@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -21,12 +21,12 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	linux-hardening@vger.kernel.org,
 	Lukas Loidolt <e1634039@student.tuwien.ac.at>,
 	Kees Cook <keescook@chromium.org>
-Subject: [PATCH 6.1 166/372] randstruct: Fix gcc-plugin performance mode to stay in group
-Date: Fri, 24 Nov 2023 17:49:13 +0000
-Message-ID: <20231124172016.021201457@linuxfoundation.org>
+Subject: [PATCH 5.10 091/193] randstruct: Fix gcc-plugin performance mode to stay in group
+Date: Fri, 24 Nov 2023 17:53:38 +0000
+Message-ID: <20231124171950.894665873@linuxfoundation.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231124172010.413667921@linuxfoundation.org>
-References: <20231124172010.413667921@linuxfoundation.org>
+In-Reply-To: <20231124171947.127438872@linuxfoundation.org>
+References: <20231124171947.127438872@linuxfoundation.org>
 User-Agent: quilt/0.67
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -38,7 +38,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-6.1-stable review patch.  If anyone has any objections, please let me know.
+5.10-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
@@ -63,7 +63,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/scripts/gcc-plugins/randomize_layout_plugin.c
 +++ b/scripts/gcc-plugins/randomize_layout_plugin.c
-@@ -191,12 +191,14 @@ static void partition_struct(tree *field
+@@ -209,12 +209,14 @@ static void partition_struct(tree *field
  
  static void performance_shuffle(tree *newtree, unsigned long length, ranctx *prng_state)
  {
@@ -79,7 +79,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  	for (i = num_groups - 1; i > 0; i--) {
  		struct partition_group tmp;
  		randnum = ranval(prng_state) % (i + 1);
-@@ -206,11 +208,14 @@ static void performance_shuffle(tree *ne
+@@ -224,11 +226,14 @@ static void performance_shuffle(tree *ne
  	}
  
  	for (x = 0; x < num_groups; x++) {
