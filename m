@@ -1,85 +1,137 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DBUVo17z"
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CFEB9A
-	for <linux-hardening@vger.kernel.org>; Thu, 23 Nov 2023 16:46:15 -0800 (PST)
-Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1cf5ceadfd8so246725ad.0
-        for <linux-hardening@vger.kernel.org>; Thu, 23 Nov 2023 16:46:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1700786775; x=1701391575; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dyESJhHP/pA7tKXWx5D4jkhxltBcaPXfc9yFdB3lYZU=;
-        b=DBUVo17z86SRMOOBFdHp2cYmFZYNHdOjvB2rZUe66ncJqD+NhueRu2xLfhqStXg6p3
-         WzXwV4J1F9Zj4qw5HrhYh1X8+dv6cPemftNkVkPo6eWGzt6tIE+c/5crxOV0PNDLv0aR
-         70XVWtbs+FCrpInWFk6sr4YFUymi/anQZzBp61IO0ogo3MeYeiuN75kZ0aTmobav19ad
-         uT60zBIfTdVNyH+Y7oU11PwUm01h/b1j+ZR2Mb0JGZsssY4oiXF0xtPS3OEWQc0gQiHp
-         ZWUg3g1FzAkPF/XIBseq8baAc5PFvS/A6HRIKS+7n/zCby7gZz0PIdJ63SnvAAKZ6GiD
-         KJhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700786775; x=1701391575;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dyESJhHP/pA7tKXWx5D4jkhxltBcaPXfc9yFdB3lYZU=;
-        b=M24XZW6G0ugW+hWZ7Ev35pDfvw8GYtpxy0IebuvodmRSBcd8LIcEdpBJBmgZyNarfo
-         PTwxGknJUj+SkDA7UYlaRZHgXIp9zedSbpBM3CN7DYwDugMR3kqnuuVJCgjHATQGqF9z
-         7xlV5PbAcGGGMuuPi7MDkr5J3YLeTciJAz7klnhj9DAXbRxPFifMyUfotJJ68P6oqxu/
-         B/6RRil8BVbQUHWuftYDRc1ol61rWCFXQKa8nwDndMoN6ODcGF8Ekq82MEmFkE3xnxE/
-         XBJfMPGQCPK/Nvnp3Kwq4acKwU3cjyWe7z9UVRRdkJ6MfX8AL5/UlJkBvlUYOXgw4UtQ
-         1/sA==
-X-Gm-Message-State: AOJu0YwVDnJOLAonOia/WUuKtPdGmi9ro+jHR/MikJ6tCINMWm1TRIx4
-	r5qCT9YgBM75ZYRrJU0NNdaixQ==
-X-Google-Smtp-Source: AGHT+IG9L5wkvJ9LV55yMZVFmvH9BcaUHyRQbnf/LCI7b+GigUlq7H9pPPL4PRM5AdlOR0f0KUTRiw==
-X-Received: by 2002:a17:903:1245:b0:1cf:6573:9fe0 with SMTP id u5-20020a170903124500b001cf65739fe0mr609687plh.16.1700786774750;
-        Thu, 23 Nov 2023 16:46:14 -0800 (PST)
-Received: from [2620:0:1008:15:ab09:50a5:ec6d:7b5c] ([2620:0:1008:15:ab09:50a5:ec6d:7b5c])
-        by smtp.gmail.com with ESMTPSA id c1-20020a170902724100b001bde6fa0a39sm1951963pll.167.2023.11.23.16.46.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Nov 2023 16:46:13 -0800 (PST)
-Date: Thu, 23 Nov 2023 16:46:13 -0800 (PST)
-From: David Rientjes <rientjes@google.com>
-To: Vlastimil Babka <vbabka@suse.cz>
-cc: Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>, 
-    Joonsoo Kim <iamjoonsoo.kim@lge.com>, 
-    Andrew Morton <akpm@linux-foundation.org>, 
-    Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
-    Roman Gushchin <roman.gushchin@linux.dev>, 
-    Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
-    Alexander Potapenko <glider@google.com>, 
-    Andrey Konovalov <andreyknvl@gmail.com>, 
-    Dmitry Vyukov <dvyukov@google.com>, 
-    Vincenzo Frascino <vincenzo.frascino@arm.com>, 
-    Marco Elver <elver@google.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-    Michal Hocko <mhocko@kernel.org>, Shakeel Butt <shakeelb@google.com>, 
-    Muchun Song <muchun.song@linux.dev>, Kees Cook <keescook@chromium.org>, 
-    linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-    kasan-dev@googlegroups.com, cgroups@vger.kernel.org, 
-    linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 01/21] mm/slab, docs: switch mm-api docs generation
- from slab.c to slub.c
-In-Reply-To: <20231120-slab-remove-slab-v2-1-9c9c70177183@suse.cz>
-Message-ID: <ea6d3060-1517-6eac-8939-1f3d004cef1a@google.com>
-References: <20231120-slab-remove-slab-v2-0-9c9c70177183@suse.cz> <20231120-slab-remove-slab-v2-1-9c9c70177183@suse.cz>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="wi7zjCRT";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="0W5OjFqN"
+X-Greylist: delayed 510 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 24 Nov 2023 01:35:07 PST
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2a07:de40:b251:101:10:150:64:1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB26FD54;
+	Fri, 24 Nov 2023 01:35:07 -0800 (PST)
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 05E2E21CC1;
+	Fri, 24 Nov 2023 09:26:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1700817996; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9LgMMddRm1Z0VKUmKvdY8oWuzJ6UIJ2B5WVeljH1gzY=;
+	b=wi7zjCRTJoJFYmrOSrFq1Fu/59T4P6MokqaDJsIPGxE68UXGgkFGQUmtbemkvLqIBDUosD
+	6dbZDPN8N2wtenWqevFy2J+IbBFPl8h6rN6B6dHYWvVhjUR97kDZI9KJ+AaQyUQUgNRW28
+	PQNluc8R7uZOseUGFVzaemA8aiyqifg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1700817996;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9LgMMddRm1Z0VKUmKvdY8oWuzJ6UIJ2B5WVeljH1gzY=;
+	b=0W5OjFqNGkfGKKXJaWmpdCXySuZEq4uZZiDFlis8GjNTJepSeVMo/29CF/7SB4OGNMiPS+
+	xd3ALVU+Ukwt5XCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CB51D13A98;
+	Fri, 24 Nov 2023 09:26:35 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 739GMUtsYGVxZQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Fri, 24 Nov 2023 09:26:35 +0000
+Message-ID: <2d0626b2-793c-315f-dc93-af021bd5cb85@suse.cz>
+Date: Fri, 24 Nov 2023 10:26:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v2 00/21] remove the SLAB allocator
+Content-Language: en-US
+To: David Rientjes <rientjes@google.com>
+Cc: Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
+ Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+ Alexander Potapenko <glider@google.com>,
+ Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, Marco Elver
+ <elver@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ Michal Hocko <mhocko@kernel.org>, Shakeel Butt <shakeelb@google.com>,
+ Muchun Song <muchun.song@linux.dev>, Kees Cook <keescook@chromium.org>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ kasan-dev@googlegroups.com, cgroups@vger.kernel.org,
+ linux-hardening@vger.kernel.org, Michal Hocko <mhocko@suse.com>
+References: <20231120-slab-remove-slab-v2-0-9c9c70177183@suse.cz>
+ <b4d53ec4-482d-23ec-b73f-dfbc58ccc149@google.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <b4d53ec4-482d-23ec-b73f-dfbc58ccc149@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spam-Score: 0.20
+X-Spam-Level: 
+X-Spamd-Result: default: False [0.20 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 MID_RHS_MATCH_FROM(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 BAYES_SPAM(0.00)[35.47%];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCPT_COUNT_TWELVE(0.00)[24];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FREEMAIL_CC(0.00)[linux.com,kernel.org,lge.com,linux-foundation.org,gmail.com,linux.dev,google.com,arm.com,cmpxchg.org,chromium.org,kvack.org,vger.kernel.org,googlegroups.com,suse.com];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[]
 
-On Mon, 20 Nov 2023, Vlastimil Babka wrote:
-
-> The SLAB implementation is going to be removed, and mm-api.rst currently
-> uses mm/slab.c to obtain kerneldocs for some API functions. Switch it to
-> mm/slub.c and move the relevant kerneldocs of exported functions from
-> one to the other. The rest of kerneldocs in slab.c is for static SLAB
-> implementation-specific functions that don't have counterparts in slub.c
-> and thus can be simply removed with the implementation.
+On 11/24/23 01:45, David Rientjes wrote:
+> On Mon, 20 Nov 2023, Vlastimil Babka wrote:
 > 
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+>> Changes from v1:
+>> - Added new Patch 01 to fix up kernel docs build (thanks Marco Elver)
+>> - Additional changes to Kconfig user visible texts in Patch 02 (thanks Kees
+>>   Cook)
+>> - Whitespace fixes and other fixups (thanks Kees)
+>> 
+>> The SLAB allocator has been deprecated since 6.5 and nobody has objected
+>> so far. As we agreed at LSF/MM, we should wait with the removal until
+>> the next LTS kernel is released. This is now determined to be 6.6, and
+>> we just missed 6.7, so now we can aim for 6.8 and start exposing the
+>> removal to linux-next during the 6.7 cycle. If nothing substantial pops
+>> up, will start including this in slab-next later this week.
+>> 
+> 
+> I agree with the decision to remove the SLAB allocator, same as at LSF/MM.  
+> Thanks for doing this, Vlastimil!
+> 
+> And thanks for deferring this until the next LTS kernel, it will give any 
+> last minute hold outs a full year to raise any issues in their switch to 
+> SLUB if they only only upgrade to LTS kernels at which point we'll have 
+> done our due diligence to make people aware of SLAB's deprecation in 6.6.
+> 
+> I've completed testing on v1 of the series, so feel free to add
+> 
+> Acked-by: David Rientjes <rientjes@google.com>
+> Tested-by: David Rientjes <rientjes@google.com>
 
-This is new to v2 so I didn't technically get to test it.  But no testing 
-required on this one :)
+Thanks! And others too.
 
-Acked-by: David Rientjes <rientjes@google.com>
+I've now pushed this series to slab/for-6.8/slab-removal and slab/for-next
+
+
