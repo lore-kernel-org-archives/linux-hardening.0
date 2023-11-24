@@ -1,19 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A5234189;
-	Fri, 24 Nov 2023 19:06:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 858DC3418E;
+	Fri, 24 Nov 2023 19:17:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="pxdgPcy9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C999C433C8;
-	Fri, 24 Nov 2023 19:06:09 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="bvgoEujh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15555C433C8;
+	Fri, 24 Nov 2023 19:17:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1700852769;
-	bh=qBM8iPe989n4S22Vy/tJ5427yWtLAsZjhakQg9rvrKs=;
+	s=korg; t=1700853429;
+	bh=ppSUsD17P+ezGAHpr4RY2el5QlCf2Dno/kfGqdPzKtk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pxdgPcy9MszRmIJ3IDxonx0uULlKangNyVqsmFghTLQUXRav+bUwmjEnmolqDObfT
-	 WGTHoW9CHM7kiGz5jYC+tn43mwGkGXmJwDcY/TaTH6cQCi54yHXyBvYyKjxgIfGpv2
-	 Hqw2Ftd2vG+vxE4FEn6BidL5aWKxEJrSS4nQIlWE=
+	b=bvgoEujhNgcsnDjsUqHl5ymBxzZ9QmNAVfyGhzX3aqlHIHPxL8qHErBbUK2bQQXNy
+	 BWNXKtGmV1pukqaB+URJkq0L30cxDTQSe8U6vZ6RFfZ0KpAU8vD/zUAkLZwsA3RmRn
+	 doDkur0ZDXff9FkCrq3bWtSfKoLswZSxavJG2Pb0=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: stable@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -21,12 +21,12 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	linux-hardening@vger.kernel.org,
 	Lukas Loidolt <e1634039@student.tuwien.ac.at>,
 	Kees Cook <keescook@chromium.org>
-Subject: [PATCH 5.10 091/193] randstruct: Fix gcc-plugin performance mode to stay in group
-Date: Fri, 24 Nov 2023 17:53:38 +0000
-Message-ID: <20231124171950.894665873@linuxfoundation.org>
+Subject: [PATCH 5.15 158/297] randstruct: Fix gcc-plugin performance mode to stay in group
+Date: Fri, 24 Nov 2023 17:53:20 +0000
+Message-ID: <20231124172005.782899542@linuxfoundation.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231124171947.127438872@linuxfoundation.org>
-References: <20231124171947.127438872@linuxfoundation.org>
+In-Reply-To: <20231124172000.087816911@linuxfoundation.org>
+References: <20231124172000.087816911@linuxfoundation.org>
 User-Agent: quilt/0.67
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -38,7 +38,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-5.10-stable review patch.  If anyone has any objections, please let me know.
+5.15-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
