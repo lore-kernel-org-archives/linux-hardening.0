@@ -1,137 +1,108 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="wi7zjCRT";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="0W5OjFqN"
-X-Greylist: delayed 510 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 24 Nov 2023 01:35:07 PST
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2a07:de40:b251:101:10:150:64:1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB26FD54;
-	Fri, 24 Nov 2023 01:35:07 -0800 (PST)
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 05E2E21CC1;
-	Fri, 24 Nov 2023 09:26:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1700817996; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9LgMMddRm1Z0VKUmKvdY8oWuzJ6UIJ2B5WVeljH1gzY=;
-	b=wi7zjCRTJoJFYmrOSrFq1Fu/59T4P6MokqaDJsIPGxE68UXGgkFGQUmtbemkvLqIBDUosD
-	6dbZDPN8N2wtenWqevFy2J+IbBFPl8h6rN6B6dHYWvVhjUR97kDZI9KJ+AaQyUQUgNRW28
-	PQNluc8R7uZOseUGFVzaemA8aiyqifg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1700817996;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9LgMMddRm1Z0VKUmKvdY8oWuzJ6UIJ2B5WVeljH1gzY=;
-	b=0W5OjFqNGkfGKKXJaWmpdCXySuZEq4uZZiDFlis8GjNTJepSeVMo/29CF/7SB4OGNMiPS+
-	xd3ALVU+Ukwt5XCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CB51D13A98;
-	Fri, 24 Nov 2023 09:26:35 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 739GMUtsYGVxZQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Fri, 24 Nov 2023 09:26:35 +0000
-Message-ID: <2d0626b2-793c-315f-dc93-af021bd5cb85@suse.cz>
-Date: Fri, 24 Nov 2023 10:26:35 +0100
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7A9D992;
+	Fri, 24 Nov 2023 02:25:02 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A70841063;
+	Fri, 24 Nov 2023 02:25:48 -0800 (PST)
+Received: from e124191.cambridge.arm.com (e124191.cambridge.arm.com [10.1.197.45])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 030A83F7A6;
+	Fri, 24 Nov 2023 02:25:00 -0800 (PST)
+Date: Fri, 24 Nov 2023 10:24:58 +0000
+From: Joey Gouly <joey.gouly@arm.com>
+To: linux-hardening@vger.kernel.org, netdev@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [BUG] Boot crash on v6.7-rc2
+Message-ID: <20231124102458.GB1503258@e124191.cambridge.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v2 00/21] remove the SLAB allocator
-Content-Language: en-US
-To: David Rientjes <rientjes@google.com>
-Cc: Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
- Joonsoo Kim <iamjoonsoo.kim@lge.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Hyeonggon Yoo <42.hyeyoo@gmail.com>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Andrey Ryabinin <ryabinin.a.a@gmail.com>,
- Alexander Potapenko <glider@google.com>,
- Andrey Konovalov <andreyknvl@gmail.com>, Dmitry Vyukov <dvyukov@google.com>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>, Marco Elver
- <elver@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
- Michal Hocko <mhocko@kernel.org>, Shakeel Butt <shakeelb@google.com>,
- Muchun Song <muchun.song@linux.dev>, Kees Cook <keescook@chromium.org>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- kasan-dev@googlegroups.com, cgroups@vger.kernel.org,
- linux-hardening@vger.kernel.org, Michal Hocko <mhocko@suse.com>
-References: <20231120-slab-remove-slab-v2-0-9c9c70177183@suse.cz>
- <b4d53ec4-482d-23ec-b73f-dfbc58ccc149@google.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <b4d53ec4-482d-23ec-b73f-dfbc58ccc149@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Score: 0.20
-X-Spam-Level: 
-X-Spamd-Result: default: False [0.20 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 MID_RHS_MATCH_FROM(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 TAGGED_RCPT(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 BAYES_SPAM(0.00)[35.47%];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCPT_COUNT_TWELVE(0.00)[24];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 FREEMAIL_CC(0.00)[linux.com,kernel.org,lge.com,linux-foundation.org,gmail.com,linux.dev,google.com,arm.com,cmpxchg.org,chromium.org,kvack.org,vger.kernel.org,googlegroups.com,suse.com];
-	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 11/24/23 01:45, David Rientjes wrote:
-> On Mon, 20 Nov 2023, Vlastimil Babka wrote:
-> 
->> Changes from v1:
->> - Added new Patch 01 to fix up kernel docs build (thanks Marco Elver)
->> - Additional changes to Kconfig user visible texts in Patch 02 (thanks Kees
->>   Cook)
->> - Whitespace fixes and other fixups (thanks Kees)
->> 
->> The SLAB allocator has been deprecated since 6.5 and nobody has objected
->> so far. As we agreed at LSF/MM, we should wait with the removal until
->> the next LTS kernel is released. This is now determined to be 6.6, and
->> we just missed 6.7, so now we can aim for 6.8 and start exposing the
->> removal to linux-next during the 6.7 cycle. If nothing substantial pops
->> up, will start including this in slab-next later this week.
->> 
-> 
-> I agree with the decision to remove the SLAB allocator, same as at LSF/MM.  
-> Thanks for doing this, Vlastimil!
-> 
-> And thanks for deferring this until the next LTS kernel, it will give any 
-> last minute hold outs a full year to raise any issues in their switch to 
-> SLUB if they only only upgrade to LTS kernels at which point we'll have 
-> done our due diligence to make people aware of SLAB's deprecation in 6.6.
-> 
-> I've completed testing on v1 of the series, so feel free to add
-> 
-> Acked-by: David Rientjes <rientjes@google.com>
-> Tested-by: David Rientjes <rientjes@google.com>
+Hi all,
 
-Thanks! And others too.
+I just hit a boot crash on v6.7-rc2 (arm64, FVP model):
 
-I've now pushed this series to slab/for-6.8/slab-removal and slab/for-next
+[    1.418845] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000517
+[    1.418855] Mem abort info:
+[    1.418860]   ESR = 0x0000000096000004
+[    1.418867]   EC = 0x25: DABT (current EL), IL = 32 bits
+[    1.418876]   SET = 0, FnV = 0
+[    1.418882]   EA = 0, S1PTW = 0
+[    1.418889]   FSC = 0x04: level 0 translation fault
+[    1.418897] Data abort info:
+[    1.418902]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+[    1.418910]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+[    1.418919]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+[    1.418928] user pgtable: 4k pages, 48-bit VAs, pgdp=0000000881835000
+[    1.418938] [0000000000000517] pgd=0000000000000000, p4d=0000000000000000
+[    1.418952] Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
+[    1.418961] Modules linked in:
+[    1.418969] CPU: 0 PID: 8 Comm: kworker/0:0 Tainted: G                T  6.7.0-rc2-dirty #4191 40d10cdc812c74fd5dc5d91e2452ff6f1e5f4b4a
+[    1.418984] Hardware name: FVP Base RevC (DT)
+[    1.418992] Workqueue: mld mld_ifc_work
+[    1.419003] pstate: 101402005 (nzcv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
+[    1.419016] pc : ___neigh_create+0x790/0x9c8
+[    1.419028] lr : ___neigh_create+0x270/0x9c8
+[    1.419041] sp : ffff8000800c3a20
+[    1.419048] x29: ffff8000800c3a20 x28: ffffd7c64c921078 x27: ffff00080188bd50
+[    1.419066] x26: ffff00080183a30c x25: ffff00080188bda0 x24: ffff00080183a300
+[    1.419084] x23: 0000000000000000 x22: 0000000000000010 x21: ffff00080188bcc0
+[    1.419102] x20: 0000000000000000 x19: ffff0008003ef000 x18: 0000000000000014
+[    1.419119] x17: 00000000cf0f2572 x16: 0000000080faa78d x15: 00000000b79921ac
+[    1.419137] x14: ffff00087ff332c0 x13: 1600000000000000 x12: 00000000000002ff
+[    1.419155] x11: 000000007c2c4dbd x10: 0000000000000003 x9 : 0000000000000000
+[    1.419172] x8 : ffff00080188bd80 x7 : 00000000be3df655 x6 : 00000000f1691d6f
+[    1.419190] x5 : 000000007c2c4dbd x4 : 0000000000000000 x3 : 000000008eb8ab5b
+[    1.419207] x2 : 000000000000050f x1 : 000000000000001d x0 : 00000000000002ff
+[    1.419225] Call trace:
+[    1.419230]  ___neigh_create+0x790/0x9c8
+[    1.419243]  __neigh_create+0x18/0x20
+[    1.419255]  ip6_finish_output2+0x5f8/0x8c4
+[    1.419267]  ip6_finish_output+0x1f0/0x258
+[    1.419279]  ip6_output+0x70/0x1cc
+[    1.419291]  NF_HOOK.constprop.0+0x4c/0xd8
+[    1.419302]  mld_sendpack+0x1b4/0x394
+[    1.419313]  mld_ifc_work+0x1d4/0x4b4
 
+I tracked it down to the following line in net/core/neighbour.c ___neigh_create:
+	memcpy(n->primary_key, pkey, key_len);
 
+I did this by surrounding the memcpy with BUG():
+	BUG_ON(n->tbl != tbl);
+	memcpy(n->primary_key, pkey, key_len);
+	BUG_ON(n->tbl != tbl);
+
+And it was crashing on the second one.
+
+Checking `struct neighbour`:
+
+	struct neighbour {
+		struct neighbour __rcu	*next;
+		struct neigh_table	*tbl;
+	.. fields ..
+		u8			primary_key[0];
+	} __randomize_layout;
+
+Due to the `__randomize_layout`, `primary_key` field is being placed before `tbl` (actually it's the same address since it's a 0 length array). That means the memcpy() corrupts the tbl pointer.
+
+I think I just got unlucky with my CONFIG_RANDSTRUCT seed (I can provide it if needed), it doesn't look as if it's a new issue.
+
+I couldn't reproduce directly on v6.6 (the offsets for `tbl` and `primary_key` didn't overlap).
+However I tried changing the zero-length-array to a flexible one:
+
+	+	DECLARE_FLEX_ARRAY(u8, primary_key);
+	+	u8		primary_key[0];
+
+Then the field offsets ended up overlapping, and I also got the same crash on v6.6.
+
+Thanks,
+Joey
