@@ -1,96 +1,235 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="jGxtCFew"
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40D93173D;
-	Fri, 24 Nov 2023 13:43:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=5Op8b0I8io/cQDemiwtxI1Z5ZjO+RqtdJ3vH9IjLNJc=; b=jGxtCFewdD+ATRtqBWnzy5/xU6
-	l0e1EzcPpJQdrGpTLz0wqtsqL8X64FvuDSlyT0bkasNXw6z7dwmtrkOE1rEWheCcyQCEVLJtsM2Ia
-	aZhfpjye5j1Zne9sn+N6S4w/RZYU/BVJV50irOefBUui+d4uCneLRN4WmPXIKUtu5QLRpEICMc6lV
-	xUtSZmMUfletzSrI3znctClNB+D6ePslFfIz6rXT1X2TuM4FtSoWzUZ+v0hVdzXNwqru/bM0CopES
-	L5w2sWlnWGH+o2R+PE1ITW+vsoLSKVv8gL7xEKgINclf9Wn+4GZTKUht4ugPnXDqbGmjW7wk43zRb
-	LZoiyrXA==;
-Received: from 201-92-23-238.dsl.telesp.net.br ([201.92.23.238] helo=[192.168.1.60])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1r6dxC-006pom-Bo; Fri, 24 Nov 2023 22:43:14 +0100
-Message-ID: <66ab7a03-6794-28c5-5a92-548c8700ae7c@igalia.com>
-Date: Fri, 24 Nov 2023 18:43:08 -0300
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="kwwrGA9D"
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E84E810F4;
+	Fri, 24 Nov 2023 14:21:18 -0800 (PST)
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AOM3lUr002248;
+	Fri, 24 Nov 2023 22:20:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=qcppdkim1;
+ bh=HPKadZG1DvLbRRtA37U95Imcvsned4UOnigF1RUkjoQ=;
+ b=kwwrGA9DewX5E+5veMkV7aCnZkbzRQ5H2Of6UHa3BMG5Ic+GMYLP6UQFulO/Bz5rfWpL
+ mYJaJD/mh+BLoJKafAHQKxBnZdo9kfwZp7Wq9ZAlUSC/CAZBofDApI+4Uf6ZZ6gTvDBD
+ kUSAxp9r1kSIbL9PE+55so+S1nQIPyrQ4ONhfTbhbONTrdQVOGmLZumSSTAOIV5MxVVf
+ qDz0Et/laGgJ2DuwtxATWDFKjqD5O9WmFPFUh6Zu2KmUDDCEJy7wciIm/SKNHgmKH1aK
+ 2CljKAoT8UVFA/5vfSb+n/QHpC53OZ5wSD/R793BpDQqep8+oTI7FjzDJeB7QYdaGKla 6Q== 
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ujyatghf7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 24 Nov 2023 22:20:52 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3AOMKYAa017556
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 24 Nov 2023 22:20:34 GMT
+Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Fri, 24 Nov 2023 14:20:24 -0800
+From: Mukesh Ojha <quic_mojha@quicinc.com>
+To: <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <keescook@chromium.org>, <tony.luck@intel.com>, <gpiccoli@igalia.com>,
+        <mathieu.poirier@linaro.org>, <vigneshr@ti.com>, <nm@ti.com>,
+        <matthias.bgg@gmail.com>, <kgene@kernel.org>,
+        <alim.akhtar@samsung.com>, <bmasney@redhat.com>
+CC: <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-samsung-soc@vger.kernel.org>, <kernel@quicinc.com>,
+        Mukesh Ojha <quic_mojha@quicinc.com>
+Subject: [Patch v6 01/12] firmware: qcom_scm: Refactor code to support multiple dload mode
+Date: Sat, 25 Nov 2023 03:49:44 +0530
+Message-ID: <1700864395-1479-2-git-send-email-quic_mojha@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1700864395-1479-1-git-send-email-quic_mojha@quicinc.com>
+References: <1700864395-1479-1-git-send-email-quic_mojha@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.0
-Subject: Re: [PATCH 0/5] pstore: add tty frontend and multi-backend
-Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>, Yuanhe Shu <xiangzao@linux.alibaba.com>
-Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org, tony.luck@intel.com,
- shuah@kernel.org, linux-kernel@vger.kernel.org,
- linux-serial@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-References: <20230928024244.257687-1-xiangzao@linux.alibaba.com>
- <202309282030.8CE179EBB@keescook>
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <202309282030.8CE179EBB@keescook>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: wc0Gr8K0RC2Bw-bbwhMle23Qbuv5BA8B
+X-Proofpoint-ORIG-GUID: wc0Gr8K0RC2Bw-bbwhMle23Qbuv5BA8B
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-11-24_09,2023-11-22_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
+ phishscore=0 suspectscore=0 adultscore=0 clxscore=1015 mlxlogscore=999
+ mlxscore=0 malwarescore=0 priorityscore=1501 spamscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311060000 definitions=main-2311240174
 
-Hi Yuanhe / Kees.
+Currently on Qualcomm SoC, download_mode is enabled if
+CONFIG_QCOM_SCM_DOWNLOAD_MODE_DEFAULT is selected.
 
-My apologies (and embarrassment) for responding almost 2mo later...
+Refactor the code such that it supports multiple download
+modes and drop CONFIG_QCOM_SCM_DOWNLOAD_MODE_DEFAULT config
+instead, give interface to set the download mode from
+module parameter.
 
+Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+---
+ drivers/firmware/qcom/Kconfig    | 11 --------
+ drivers/firmware/qcom/qcom_scm.c | 58 +++++++++++++++++++++++++++++++++-------
+ 2 files changed, 49 insertions(+), 20 deletions(-)
 
-On 29/09/2023 00:49, Kees Cook wrote:
-> [...]
->> Another problem is that currently pstore only supports a single backend.
->> For debugging kdump problems, we hope to save the console logs and tty
->> logs to the ramoops backend of pstore, as it will not be lost after
->> rebooting. If the user has enabled another backend, the ramoops backend
->> will not be registered. To this end, we add the multi-backend function
->> to support simultaneous registration of multiple backends.
-> 
-> Ah very cool; I really like this idea. I'd wanted to do it for a while
-> just to make testing easier, but I hadn't had time to attempt it.
+diff --git a/drivers/firmware/qcom/Kconfig b/drivers/firmware/qcom/Kconfig
+index 3f05d9854ddf..3bbbaef145ad 100644
+--- a/drivers/firmware/qcom/Kconfig
++++ b/drivers/firmware/qcom/Kconfig
+@@ -9,17 +9,6 @@ menu "Qualcomm firmware drivers"
+ config QCOM_SCM
+ 	tristate
+ 
+-config QCOM_SCM_DOWNLOAD_MODE_DEFAULT
+-	bool "Qualcomm download mode enabled by default"
+-	depends on QCOM_SCM
+-	help
+-	  A device with "download mode" enabled will upon an unexpected
+-	  warm-restart enter a special debug mode that allows the user to
+-	  "download" memory content over USB for offline postmortem analysis.
+-	  The feature can be enabled/disabled on the kernel command line.
+-
+-	  Say Y here to enable "download mode" by default.
+-
+ config QCOM_QSEECOM
+ 	bool "Qualcomm QSEECOM interface driver"
+ 	depends on QCOM_SCM=y
+diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
+index 87bcd5c02f2b..c5878c38f378 100644
+--- a/drivers/firmware/qcom/qcom_scm.c
++++ b/drivers/firmware/qcom/qcom_scm.c
+@@ -15,6 +15,7 @@
+ #include <linux/init.h>
+ #include <linux/interconnect.h>
+ #include <linux/interrupt.h>
++#include <linux/kstrtox.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+@@ -27,8 +28,7 @@
+ 
+ #include "qcom_scm.h"
+ 
+-static bool download_mode = IS_ENABLED(CONFIG_QCOM_SCM_DOWNLOAD_MODE_DEFAULT);
+-module_param(download_mode, bool, 0);
++static u32 download_mode;
+ 
+ struct qcom_scm {
+ 	struct device *dev;
+@@ -132,6 +132,11 @@ static const char * const qcom_scm_convention_names[] = {
+ 	[SMC_CONVENTION_LEGACY] = "smc legacy",
+ };
+ 
++static const char * const download_mode_name[] = {
++	[QCOM_DLOAD_NODUMP]	= "off",
++	[QCOM_DLOAD_FULLDUMP]	= "full",
++};
++
+ static struct qcom_scm *__scm;
+ 
+ static int qcom_scm_clk_enable(void)
+@@ -529,19 +534,18 @@ static int __qcom_scm_set_dload_mode(struct device *dev, bool enable)
+ 	return qcom_scm_call_atomic(__scm->dev, &desc, NULL);
+ }
+ 
+-static void qcom_scm_set_download_mode(bool enable)
++static void qcom_scm_set_download_mode(u32 download_mode)
+ {
+-	u32 val = enable ? QCOM_DLOAD_FULLDUMP : QCOM_DLOAD_NODUMP;
+ 	int ret = 0;
+ 
+ 	if (__scm->dload_mode_addr) {
+ 		ret = qcom_scm_io_rmw(__scm->dload_mode_addr,
+ 				      QCOM_DLOAD_MASK,
+-				      FIELD_PREP(QCOM_DLOAD_MASK, val));
++				      FIELD_PREP(QCOM_DLOAD_MASK, download_mode));
+ 	} else if (__qcom_scm_is_call_available(__scm->dev,
+ 						QCOM_SCM_SVC_BOOT,
+ 						QCOM_SCM_BOOT_SET_DLOAD_MODE)) {
+-		ret = __qcom_scm_set_dload_mode(__scm->dev, enable);
++		ret = __qcom_scm_set_dload_mode(__scm->dev, !!download_mode);
+ 	} else {
+ 		dev_err(__scm->dev,
+ 			"No available mechanism for setting download mode\n");
+@@ -1843,6 +1847,42 @@ static irqreturn_t qcom_scm_irq_handler(int irq, void *data)
+ 	return IRQ_HANDLED;
+ }
+ 
++static int get_download_mode(char *buffer, const struct kernel_param *kp)
++{
++	if (download_mode >= ARRAY_SIZE(download_mode_name))
++		return sysfs_emit(buffer, "unknown mode\n");
++
++	return sysfs_emit(buffer, "%s\n", download_mode_name[download_mode]);
++}
++
++static int set_download_mode(const char *val, const struct kernel_param *kp)
++{
++	u32 old = download_mode;
++	int ret;
++
++	ret = sysfs_match_string(download_mode_name, val);
++	if (ret < 0) {
++		download_mode = old;
++		pr_err("qcom_scm: unknown download mode: %s\n", val);
++		return -EINVAL;
++	}
++
++	download_mode = ret;
++	if (__scm)
++		qcom_scm_set_download_mode(download_mode);
++
++	return 0;
++}
++
++static const struct kernel_param_ops download_mode_param_ops = {
++	.get = get_download_mode,
++	.set = set_download_mode,
++};
++
++module_param_cb(download_mode, &download_mode_param_ops, NULL, 0644);
++MODULE_PARM_DESC(download_mode,
++		"download mode: off/full are acceptable values");
++
+ static int qcom_scm_probe(struct platform_device *pdev)
+ {
+ 	struct qcom_scm *scm;
+@@ -1907,12 +1947,12 @@ static int qcom_scm_probe(struct platform_device *pdev)
+ 	__get_convention();
+ 
+ 	/*
+-	 * If requested enable "download mode", from this point on warmboot
++	 * If "download mode" is requested, from this point on warmboot
+ 	 * will cause the boot stages to enter download mode, unless
+ 	 * disabled below by a clean shutdown/reboot.
+ 	 */
+ 	if (download_mode)
+-		qcom_scm_set_download_mode(true);
++		qcom_scm_set_download_mode(download_mode);
+ 
+ 
+ 	/*
+@@ -1940,7 +1980,7 @@ static int qcom_scm_probe(struct platform_device *pdev)
+ static void qcom_scm_shutdown(struct platform_device *pdev)
+ {
+ 	/* Clean shutdown, disable download mode to allow normal restart */
+-	qcom_scm_set_download_mode(false);
++	qcom_scm_set_download_mode(QCOM_DLOAD_NODUMP);
+ }
+ 
+ static const struct of_device_id qcom_scm_dt_match[] = {
+-- 
+2.7.4
 
-I found the idea of multi-backend quite interesting, thanks for that!!!
-And to add on what's Kees mentioned, not sure others' opinions but seems
-to me this is a bit more straightforward / path-of-less-resistance than
-the the tty frontend, so I'd suggest split the series and focus first on
-this and once accepted, hook the tty thingy.
-
-Not that the series can't be sent altogether, reviews could work in
-parallel...I just see them as a bit tangential one to the other, personally.
-
-> [...]
-> - The multi-backend will enable _all possible_ backends, and that's a
->   big change that will do weird things for some pstore users. I would
->   prefer a pstore option to opt-in to enabling all backends. Perhaps
->   have "pstore.backend=" be parsed with commas, so a list of backends
->   can be provided, or "all" for the "all backends" behavior.
-> 
-> - Moving the pstorefs files into a subdirectory will break userspace
->   immediately (e.g. systemd-pstore expects very specifically named
->   files). Using subdirectories seems like a good idea, but perhaps
->   we need hardlinks into the root pstorefs for the "first" backend,
->   or some other creative solution here.
->
-
-Big +1 in these two, commas are a very nice idea and changing the sysfs
-current way of exposing pstore logs would break at least kdumpst (the
-Steam Deck/Arch pstore / kdump tool), besides systemd-pstore that was
-already mentioned (and who knows what more tools / scripts out in the
-field).
-
-Overall, thanks a bunch for this work Yuanhe!
-Cheers,
-
-
-Guilherme
