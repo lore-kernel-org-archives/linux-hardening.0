@@ -1,108 +1,140 @@
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7A9D992;
-	Fri, 24 Nov 2023 02:25:02 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A70841063;
-	Fri, 24 Nov 2023 02:25:48 -0800 (PST)
-Received: from e124191.cambridge.arm.com (e124191.cambridge.arm.com [10.1.197.45])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 030A83F7A6;
-	Fri, 24 Nov 2023 02:25:00 -0800 (PST)
-Date: Fri, 24 Nov 2023 10:24:58 +0000
-From: Joey Gouly <joey.gouly@arm.com>
-To: linux-hardening@vger.kernel.org, netdev@vger.kernel.org
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [BUG] Boot crash on v6.7-rc2
-Message-ID: <20231124102458.GB1503258@e124191.cambridge.arm.com>
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="DEI9u1RI"
+Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3040F172A
+	for <linux-hardening@vger.kernel.org>; Fri, 24 Nov 2023 07:29:04 -0800 (PST)
+Received: from eig-obgw-5008a.ext.cloudfilter.net ([10.0.29.246])
+	by cmsmtp with ESMTPS
+	id 6TgVrlVYt8Hte6Y75rrAac; Fri, 24 Nov 2023 15:29:03 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id 6Y74r8Nc0kUbt6Y74rGedK; Fri, 24 Nov 2023 15:29:03 +0000
+X-Authority-Analysis: v=2.4 cv=WpU4jPTv c=1 sm=1 tr=0 ts=6560c13f
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=yGeM7+xMb5a5VK1DGQx1ew==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=BNY50KLci1gA:10 a=wYkD_t78qR0A:10
+ a=YArfMqtJ7KKBon4Yl2AA:9 a=QEXdDO2ut3YA:10
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=TaoInkAh2k51qqNVjJ8mEGKxHgoSLe6W4K886QPYJ9c=; b=DEI9u1RIERU3SpLf+ZKYclwtwE
+	a1B0c2iDk+Z/PnhZd6ICkvDKvjlyXeDArogw/v50ewvDHwZ4me8RpTaA8r6irG3QTExxr5W3hpgeN
+	jyDQy3iUpa7LhDf88HzzWQPn0joJpMcn38HgkplPElVqQTmDEJ7y+p94hYYMY+jlx4u2Cm5wuKtB5
+	pttWre2tXuCjGKR9yWFYq1XLpSy8xu3Ke/Yvc6l9sMqeYe+qtz1Sr76EWBTeMG2Atj8BRXrSMs898
+	M4by6TxN4WIjHd2cweARSaMPrc4Cku7ZG8018Tfv4Mf1uQlw8iGfwIK+A5ZSrzoiqnXmVdm8NuGMP
+	g3bNJkcQ==;
+Received: from 187.184.157.122.cable.dyn.cableonline.com.mx ([187.184.157.122]:29540 helo=[192.168.0.25])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1r6Y73-000sai-2D;
+	Fri, 24 Nov 2023 09:29:01 -0600
+Message-ID: <7086f60f-9f74-4118-a10c-d98b9c6cc8eb@embeddedor.com>
+Date: Fri, 24 Nov 2023 09:28:48 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [BUG] Boot crash on v6.7-rc2
+To: Joey Gouly <joey.gouly@arm.com>, linux-hardening@vger.kernel.org,
+ netdev@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, linux-kernel@vger.kernel.org,
+ Kees Cook <keescook@chromium.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+References: <20231124102458.GB1503258@e124191.cambridge.arm.com>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20231124102458.GB1503258@e124191.cambridge.arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.184.157.122
+X-Source-L: No
+X-Exim-ID: 1r6Y73-000sai-2D
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187.184.157.122.cable.dyn.cableonline.com.mx ([192.168.0.25]) [187.184.157.122]:29540
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 9
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfDF7/s2QvIMPuD+NVamOxAdnK6U+FxQxKQVCkuMpM8lDdML2nEblI8PfTMNFA0qxqdCiiWpqenLrpQPxc1FWqtLE2uN+LmAyTNo9yY7Kv5QM1TahVO0Q
+ GhQ6n0fcSlNSghnI+FEby9q7ilEHd1djIZxfXi3sjXn9UTdNjPilz6ZbaDFqbCYlBcurT5mbLSbZwAJmG93w8vbkQkyqlnkNN8RnupIh6tdQwdqHjGeFHNXK
+X-Spam-Level: *
 
-Hi all,
 
-I just hit a boot crash on v6.7-rc2 (arm64, FVP model):
 
-[    1.418845] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000517
-[    1.418855] Mem abort info:
-[    1.418860]   ESR = 0x0000000096000004
-[    1.418867]   EC = 0x25: DABT (current EL), IL = 32 bits
-[    1.418876]   SET = 0, FnV = 0
-[    1.418882]   EA = 0, S1PTW = 0
-[    1.418889]   FSC = 0x04: level 0 translation fault
-[    1.418897] Data abort info:
-[    1.418902]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
-[    1.418910]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-[    1.418919]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-[    1.418928] user pgtable: 4k pages, 48-bit VAs, pgdp=0000000881835000
-[    1.418938] [0000000000000517] pgd=0000000000000000, p4d=0000000000000000
-[    1.418952] Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
-[    1.418961] Modules linked in:
-[    1.418969] CPU: 0 PID: 8 Comm: kworker/0:0 Tainted: G                T  6.7.0-rc2-dirty #4191 40d10cdc812c74fd5dc5d91e2452ff6f1e5f4b4a
-[    1.418984] Hardware name: FVP Base RevC (DT)
-[    1.418992] Workqueue: mld mld_ifc_work
-[    1.419003] pstate: 101402005 (nzcv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
-[    1.419016] pc : ___neigh_create+0x790/0x9c8
-[    1.419028] lr : ___neigh_create+0x270/0x9c8
-[    1.419041] sp : ffff8000800c3a20
-[    1.419048] x29: ffff8000800c3a20 x28: ffffd7c64c921078 x27: ffff00080188bd50
-[    1.419066] x26: ffff00080183a30c x25: ffff00080188bda0 x24: ffff00080183a300
-[    1.419084] x23: 0000000000000000 x22: 0000000000000010 x21: ffff00080188bcc0
-[    1.419102] x20: 0000000000000000 x19: ffff0008003ef000 x18: 0000000000000014
-[    1.419119] x17: 00000000cf0f2572 x16: 0000000080faa78d x15: 00000000b79921ac
-[    1.419137] x14: ffff00087ff332c0 x13: 1600000000000000 x12: 00000000000002ff
-[    1.419155] x11: 000000007c2c4dbd x10: 0000000000000003 x9 : 0000000000000000
-[    1.419172] x8 : ffff00080188bd80 x7 : 00000000be3df655 x6 : 00000000f1691d6f
-[    1.419190] x5 : 000000007c2c4dbd x4 : 0000000000000000 x3 : 000000008eb8ab5b
-[    1.419207] x2 : 000000000000050f x1 : 000000000000001d x0 : 00000000000002ff
-[    1.419225] Call trace:
-[    1.419230]  ___neigh_create+0x790/0x9c8
-[    1.419243]  __neigh_create+0x18/0x20
-[    1.419255]  ip6_finish_output2+0x5f8/0x8c4
-[    1.419267]  ip6_finish_output+0x1f0/0x258
-[    1.419279]  ip6_output+0x70/0x1cc
-[    1.419291]  NF_HOOK.constprop.0+0x4c/0xd8
-[    1.419302]  mld_sendpack+0x1b4/0x394
-[    1.419313]  mld_ifc_work+0x1d4/0x4b4
+On 11/24/23 04:24, Joey Gouly wrote:
+> Hi all,
+> 
+> I just hit a boot crash on v6.7-rc2 (arm64, FVP model):
 
-I tracked it down to the following line in net/core/neighbour.c ___neigh_create:
-	memcpy(n->primary_key, pkey, key_len);
+[..]
 
-I did this by surrounding the memcpy with BUG():
-	BUG_ON(n->tbl != tbl);
-	memcpy(n->primary_key, pkey, key_len);
-	BUG_ON(n->tbl != tbl);
+> Checking `struct neighbour`:
+> 
+> 	struct neighbour {
+> 		struct neighbour __rcu	*next;
+> 		struct neigh_table	*tbl;
+> 	.. fields ..
+> 		u8			primary_key[0];
+> 	} __randomize_layout;
+> 
+> Due to the `__randomize_layout`, `primary_key` field is being placed before `tbl` (actually it's the same address since it's a 0 length array). That means the memcpy() corrupts the tbl pointer.
+> 
+> I think I just got unlucky with my CONFIG_RANDSTRUCT seed (I can provide it if needed), it doesn't look as if it's a new issue.
 
-And it was crashing on the second one.
+It seems the issue is caused by this change that was recently added to -rc2:
 
-Checking `struct neighbour`:
+commit 1ee60356c2dc ("gcc-plugins: randstruct: Only warn about true flexible arrays")
 
-	struct neighbour {
-		struct neighbour __rcu	*next;
-		struct neigh_table	*tbl;
-	.. fields ..
-		u8			primary_key[0];
-	} __randomize_layout;
+Previously, one-element and zero-length arrays were treated as true flexible arrays
+(however, they are "fake" flex arrays), and __randomize_layout would leave them
+untouched at the end of the struct; the same for proper C99 flex-array members. But
+after the commit above, that's no longer the case: Only C99 flex-array members will
+behave correctly (remaining untouched at end of the struct), and the other two types
+of arrays will be randomized.
 
-Due to the `__randomize_layout`, `primary_key` field is being placed before `tbl` (actually it's the same address since it's a 0 length array). That means the memcpy() corrupts the tbl pointer.
+> 
+> I couldn't reproduce directly on v6.6 (the offsets for `tbl` and `primary_key` didn't overlap).
+> However I tried changing the zero-length-array to a flexible one:
+> 
+> 	+	DECLARE_FLEX_ARRAY(u8, primary_key);
+> 	+	u8		primary_key[0];
+> 
+> Then the field offsets ended up overlapping, and I also got the same crash on v6.6.
 
-I think I just got unlucky with my CONFIG_RANDSTRUCT seed (I can provide it if needed), it doesn't look as if it's a new issue.
+The right approach is to transform the zero-length array into a C99 flex-array member,
+like this:
 
-I couldn't reproduce directly on v6.6 (the offsets for `tbl` and `primary_key` didn't overlap).
-However I tried changing the zero-length-array to a flexible one:
+diff --git a/include/net/neighbour.h b/include/net/neighbour.h
+index 07022bb0d44d..0d28172193fa 100644
+--- a/include/net/neighbour.h
++++ b/include/net/neighbour.h
+@@ -162,7 +162,7 @@ struct neighbour {
+         struct rcu_head         rcu;
+         struct net_device       *dev;
+         netdevice_tracker       dev_tracker;
+-       u8                      primary_key[0];
++       u8                      primary_key[];
+  } __randomize_layout;
 
-	+	DECLARE_FLEX_ARRAY(u8, primary_key);
-	+	u8		primary_key[0];
+  struct neigh_ops {
 
-Then the field offsets ended up overlapping, and I also got the same crash on v6.6.
-
-Thanks,
-Joey
+--
+Gustavo
