@@ -1,19 +1,19 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="I8SiL3KL"
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="ruCv9eFB"
 Received: from todd.t-8ch.de (todd.t-8ch.de [IPv6:2a01:4f8:c010:41de::1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C476B8;
-	Sat, 25 Nov 2023 04:52:59 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3C34EA;
+	Sat, 25 Nov 2023 04:53:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1700916776;
-	bh=8RBixFRBTmKUrLM1q1IL2B0QZNBqk4iPlBDUCbp6lfA=;
-	h=From:Subject:Date:To:Cc:From;
-	b=I8SiL3KL/XYeDM0VPw9zjtesa2gYkLoHvkBcnTC3TsJr2k7NNfsoyNj+C9j9og+56
-	 AkX+gId2Yz6MztTTHIohQIY9gqR9Y9xgd3/bj+gpodmrkmlSpmtGdYd1uIPeTdBMg+
-	 PTaEITi9y7n3HQj7sMX05fg2kfZV8MHEYebhPjw0=
+	s=mail; t=1700916777;
+	bh=eBhOR2st0kYur9zVJzF7EyOPAu0FRzljdghuY8XBOWo=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=ruCv9eFB2WE77RMf3vbBpk3bVkniSFw8IzlWE7Fz17sBjZveEjpMX/8aQzd/joQC4
+	 GZXSqv+GOalkDZJhIn4RnxKmGIpU6yxvpQLSJ/+T1d7/sNmHooD6FNhIAtqRE6DJin
+	 cl4L4Ub8SOMaXprr1Hvc8BN9KOB6cNfx/dSGUBMM=
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Subject: [PATCH RFC 0/7] sysctl: constify sysctl ctl_tables
-Date: Sat, 25 Nov 2023 13:52:49 +0100
-Message-Id: <20231125-const-sysctl-v1-0-5e881b0e0290@weissschuh.net>
+Date: Sat, 25 Nov 2023 13:52:55 +0100
+Subject: [PATCH RFC 6/7] treewide: sysctl: migrate proc_dobool to
+ proc_handler_new
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -22,9 +22,9 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIACHuYWUC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI2NDQ0Mz3eT8vOIS3eLK4uSSHN1UQxMzI5M0QyNL02QloJaCotS0zAqwcdF
- KQW7OSrG1tQBowj1BYwAAAA==
+Message-Id: <20231125-const-sysctl-v1-6-5e881b0e0290@weissschuh.net>
+References: <20231125-const-sysctl-v1-0-5e881b0e0290@weissschuh.net>
+In-Reply-To: <20231125-const-sysctl-v1-0-5e881b0e0290@weissschuh.net>
 To: Kees Cook <keescook@chromium.org>, 
  "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
  Luis Chamberlain <mcgrof@kernel.org>, Iurii Zaikin <yzaikin@google.com>, 
@@ -34,136 +34,138 @@ Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-fsdevel@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1700916776; l=5646;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1700916776; l=4649;
  i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=8RBixFRBTmKUrLM1q1IL2B0QZNBqk4iPlBDUCbp6lfA=;
- b=yn5sxyWjNwIg3MCvIyTri53+1hRNy7eWYmeevr24Fh4Kc7YwoBmv6NGIzQUUIsojWtpS2yIxz
- YWKOMvwkGzZBhqyeOcBcPzisZFK8vH7qkMSjnXwToIQTAgKc1b6fkec
+ bh=eBhOR2st0kYur9zVJzF7EyOPAu0FRzljdghuY8XBOWo=;
+ b=TFErwepsPpof08h6PaKYFgDvwr7V8L6MNxWawrT6FywU47nmnGgngRZWo7O9VIC6e33pJRYvE
+ Sbzhxjkb1MYBkiG8Yh7Iyu7dSbhzCyWNshcdo390tV38npbE01v1uDT
 X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
  pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-Problem description:
+proc_handler_new() prevents the handler function from modifying the
+ctl_table which then can be put into .rodata.
 
-The kernel contains a lot of struct ctl_table throught the tree.
-These are very often 'static' definitions.
-It would be good to mark these tables const to avoid accidental or
-malicious modifications.
-Unfortunately the tables can not be made const because the core
-registration functions expect mutable tables.
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ arch/riscv/kernel/vector.c | 2 +-
+ drivers/tty/tty_io.c       | 2 +-
+ fs/lockd/svc.c             | 2 +-
+ fs/proc/proc_sysctl.c      | 4 ++--
+ include/linux/sysctl.h     | 2 +-
+ kernel/sysctl.c            | 4 ++--
+ mm/hugetlb_vmemmap.c       | 2 +-
+ 7 files changed, 9 insertions(+), 9 deletions(-)
 
-This is for two reasons:
-
-1) sysctl_{set,clear}_perm_empty_ctl_header in the sysctl core modify
-   the table. This should be fixable by only modifying the header
-   instead of the table itself.
-2) The table is passed to the handler function as a non-const pointer.
-
-This series is an aproach on fixing reason 2).
-
-Full process:
-
-* Introduce field proc_handler_new for const handlers (this series)
-* Migrate all core handlers to proc_handler_new (this series, partial)
-  This can hopefully be done in a big switch, as it only involves
-  functions and structures owned by the core sysctl code.
-* Migrate all other sysctl handlers to proc_handler_new.
-* Drop the old proc_handler_field.
-* Fix the sysctl core to not modify the tables anymore.
-* Adapt public sysctl APIs to take "const struct ctl_table *".
-* Teach checkpatch.pl to warn on non-const "struct ctl_table"
-  definitions.
-* Migrate definitions of "struct ctl_table" to "const" where applicable.
+diff --git a/arch/riscv/kernel/vector.c b/arch/riscv/kernel/vector.c
+index 578b6292487e..d2a37fe88174 100644
+--- a/arch/riscv/kernel/vector.c
++++ b/arch/riscv/kernel/vector.c
+@@ -253,7 +253,7 @@ static struct ctl_table riscv_v_default_vstate_table[] = {
+ 		.data		= &riscv_v_implicit_uacc,
+ 		.maxlen		= sizeof(riscv_v_implicit_uacc),
+ 		.mode		= 0644,
+-		.proc_handler	= proc_dobool,
++		.proc_handler_new	= proc_dobool,
+ 	},
+ };
  
+diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
+index 06414e43e0b5..a7bcc22fdae9 100644
+--- a/drivers/tty/tty_io.c
++++ b/drivers/tty/tty_io.c
+@@ -3601,7 +3601,7 @@ static struct ctl_table tty_table[] = {
+ 		.data		= &tty_legacy_tiocsti,
+ 		.maxlen		= sizeof(tty_legacy_tiocsti),
+ 		.mode		= 0644,
+-		.proc_handler	= proc_dobool,
++		.proc_handler_new	= proc_dobool,
+ 	},
+ 	{
+ 		.procname	= "ldisc_autoload",
+diff --git a/fs/lockd/svc.c b/fs/lockd/svc.c
+index 81be07c1d3d1..90ea8cd382d3 100644
+--- a/fs/lockd/svc.c
++++ b/fs/lockd/svc.c
+@@ -466,7 +466,7 @@ static struct ctl_table nlm_sysctls[] = {
+ 		.data		= &nsm_use_hostnames,
+ 		.maxlen		= sizeof(bool),
+ 		.mode		= 0644,
+-		.proc_handler	= proc_dobool,
++		.proc_handler_new	= proc_dobool,
+ 	},
+ 	{
+ 		.procname	= "nsm_local_state",
+diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+index 0817d315fa36..742a99540f2b 100644
+--- a/fs/proc/proc_sysctl.c
++++ b/fs/proc/proc_sysctl.c
+@@ -1119,7 +1119,7 @@ static int sysctl_check_table_array(const char *path, struct ctl_table *table)
+ 			err |= sysctl_err(path, table, "array not allowed");
+ 	}
+ 
+-	if (table->proc_handler == proc_dobool) {
++	if (table->proc_handler_new == proc_dobool) {
+ 		if (table->maxlen != sizeof(bool))
+ 			err |= sysctl_err(path, table, "array not allowed");
+ 	}
+@@ -1133,7 +1133,7 @@ static int sysctl_check_table(const char *path, struct ctl_table_header *header)
+ 	int err = 0;
+ 	list_for_each_table_entry(entry, header) {
+ 		if ((entry->proc_handler_new == proc_dostring) ||
+-		    (entry->proc_handler == proc_dobool) ||
++		    (entry->proc_handler_new == proc_dobool) ||
+ 		    (entry->proc_handler == proc_dointvec) ||
+ 		    (entry->proc_handler == proc_douintvec) ||
+ 		    (entry->proc_handler == proc_douintvec_minmax) ||
+diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
+index 2699605c5da5..2dfaf718a21b 100644
+--- a/include/linux/sysctl.h
++++ b/include/linux/sysctl.h
+@@ -67,7 +67,7 @@ typedef int proc_handler_new(const struct ctl_table *ctl, int write,
+ 		void *buffer, size_t *lenp, loff_t *ppos);
+ 
+ int proc_dostring(const struct ctl_table *, int, void *, size_t *, loff_t *);
+-int proc_dobool(struct ctl_table *table, int write, void *buffer,
++int proc_dobool(const struct ctl_table *table, int write, void *buffer,
+ 		size_t *lenp, loff_t *ppos);
+ int proc_dointvec(struct ctl_table *, int, void *, size_t *, loff_t *);
+ int proc_douintvec(struct ctl_table *, int, void *, size_t *, loff_t *);
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 7acd1cde0a5c..c76668f47bcc 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -702,7 +702,7 @@ int do_proc_douintvec(struct ctl_table *table, int write,
+  *
+  * Returns 0 on success.
+  */
+-int proc_dobool(struct ctl_table *table, int write, void *buffer,
++int proc_dobool(const struct ctl_table *table, int write, void *buffer,
+ 		size_t *lenp, loff_t *ppos)
+ {
+ 	struct ctl_table tmp;
+@@ -1504,7 +1504,7 @@ int proc_dostring(const struct ctl_table *table, int write,
+ 	return -ENOSYS;
+ }
+ 
+-int proc_dobool(struct ctl_table *table, int write,
++int proc_dobool(const struct ctl_table *table, int write,
+ 		void *buffer, size_t *lenp, loff_t *ppos)
+ {
+ 	return -ENOSYS;
+diff --git a/mm/hugetlb_vmemmap.c b/mm/hugetlb_vmemmap.c
+index 87818ee7f01d..e61e9fbfd639 100644
+--- a/mm/hugetlb_vmemmap.c
++++ b/mm/hugetlb_vmemmap.c
+@@ -779,7 +779,7 @@ static struct ctl_table hugetlb_vmemmap_sysctls[] = {
+ 		.data		= &vmemmap_optimize_enabled,
+ 		.maxlen		= sizeof(vmemmap_optimize_enabled),
+ 		.mode		= 0644,
+-		.proc_handler	= proc_dobool,
++		.proc_handler_new	= proc_dobool,
+ 	},
+ 	{ }
+ };
 
-Notes:
-
-Just casting the function pointers around would trigger
-CFI (control flow integrity) warnings.
-
-The name of the new handler "proc_handler_new" is a bit too long messing
-up the alignment of the table definitions.
-Maybe "proc_handler2" or "proc_handler_c" for (const) would be better.
-
----
-Thomas Weißschuh (7):
-      sysctl: add helper sysctl_run_handler
-      bpf: cgroup: call proc handler through helper
-      sysctl: add proc_handler_new to struct ctl_table
-      net: sysctl: add new sysctl table handler to debug message
-      treewide: sysctl: migrate proc_dostring to proc_handler_new
-      treewide: sysctl: migrate proc_dobool to proc_handler_new
-      treewide: sysctl: migrate proc_dointvec to proc_handler_new
-
- arch/arm/kernel/isa.c                   |  6 +--
- arch/csky/abiv1/alignment.c             |  8 ++--
- arch/powerpc/kernel/idle.c              |  2 +-
- arch/riscv/kernel/vector.c              |  2 +-
- arch/s390/kernel/debug.c                |  2 +-
- crypto/fips.c                           |  6 +--
- drivers/char/hpet.c                     |  2 +-
- drivers/char/random.c                   |  4 +-
- drivers/infiniband/core/iwcm.c          |  2 +-
- drivers/infiniband/core/ucma.c          |  2 +-
- drivers/macintosh/mac_hid.c             |  4 +-
- drivers/md/md.c                         |  4 +-
- drivers/scsi/sg.c                       |  2 +-
- drivers/tty/tty_io.c                    |  4 +-
- fs/coda/sysctl.c                        |  6 +--
- fs/coredump.c                           |  6 +--
- fs/devpts/inode.c                       |  2 +-
- fs/lockd/svc.c                          |  4 +-
- fs/locks.c                              |  4 +-
- fs/nfs/nfs4sysctl.c                     |  2 +-
- fs/nfs/sysctl.c                         |  2 +-
- fs/notify/dnotify/dnotify.c             |  2 +-
- fs/ntfs/sysctl.c                        |  2 +-
- fs/ocfs2/stackglue.c                    |  2 +-
- fs/proc/proc_sysctl.c                   | 16 ++++---
- fs/quota/dquot.c                        |  2 +-
- include/linux/sysctl.h                  | 29 +++++++++---
- init/do_mounts_initrd.c                 |  2 +-
- io_uring/io_uring.c                     |  2 +-
- ipc/mq_sysctl.c                         |  2 +-
- kernel/acct.c                           |  2 +-
- kernel/bpf/cgroup.c                     |  2 +-
- kernel/locking/lockdep.c                |  4 +-
- kernel/printk/sysctl.c                  |  4 +-
- kernel/reboot.c                         |  4 +-
- kernel/seccomp.c                        |  2 +-
- kernel/signal.c                         |  2 +-
- kernel/sysctl-test.c                    | 20 ++++-----
- kernel/sysctl.c                         | 80 ++++++++++++++++-----------------
- lib/test_sysctl.c                       | 10 ++---
- mm/hugetlb.c                            |  2 +-
- mm/hugetlb_vmemmap.c                    |  2 +-
- mm/oom_kill.c                           |  4 +-
- net/appletalk/sysctl_net_atalk.c        |  2 +-
- net/core/sysctl_net_core.c              | 12 ++---
- net/ipv4/route.c                        | 18 ++++----
- net/ipv4/sysctl_net_ipv4.c              | 38 ++++++++--------
- net/ipv4/xfrm4_policy.c                 |  2 +-
- net/ipv6/addrconf.c                     | 72 ++++++++++++++---------------
- net/ipv6/route.c                        |  8 ++--
- net/ipv6/sysctl_net_ipv6.c              | 18 ++++----
- net/ipv6/xfrm6_policy.c                 |  2 +-
- net/mptcp/ctrl.c                        |  2 +-
- net/netfilter/ipvs/ip_vs_ctl.c          | 36 +++++++--------
- net/netfilter/nf_conntrack_standalone.c |  8 ++--
- net/netfilter/nf_log.c                  |  2 +-
- net/rds/ib_sysctl.c                     |  2 +-
- net/rds/sysctl.c                        |  6 +--
- net/sctp/sysctl.c                       | 26 +++++------
- net/sunrpc/xprtrdma/transport.c         |  2 +-
- net/sysctl_net.c                        |  5 ++-
- net/unix/sysctl_net_unix.c              |  2 +-
- net/x25/sysctl_net_x25.c                |  2 +-
- net/xfrm/xfrm_sysctl.c                  |  4 +-
- 64 files changed, 280 insertions(+), 262 deletions(-)
----
-base-commit: 0f5cc96c367f2e780eb492cc9cab84e3b2ca88da
-change-id: 20231116-const-sysctl-e14624f1295c
-
-Best regards,
 -- 
-Thomas Weißschuh <linux@weissschuh.net>
+2.43.0
 
