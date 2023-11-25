@@ -1,35 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253D59442;
-	Sat, 25 Nov 2023 21:34:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 740702FC31
+	for <linux-hardening@vger.kernel.org>; Sat, 25 Nov 2023 21:49:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bDyPWWzF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 676D7C433C8;
-	Sat, 25 Nov 2023 21:34:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p5EdWPOv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65BBFC433C7;
+	Sat, 25 Nov 2023 21:49:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700948043;
-	bh=3PJWnPCtKl6PvabTELl1ZdWeU0rVXun3osxxXR2Cv+U=;
+	s=k20201202; t=1700948956;
+	bh=p01SNS2qZBDCVzSPkDLOFpFyded+GzvCX/9pasvl/5c=;
 	h=Date:From:To:Cc:Subject:From;
-	b=bDyPWWzFS+Iqm5I3epM/lwGJhMeAsCxIjgyskeMt0jEuMbAGth62cljmUcdWUx9iM
-	 JypYTyhoJ6iMx/wb6yoVWr8kUxaw5+e9neIAfbqcI57AFbhhZeoY76b7n/ibdcnwm7
-	 EzlNYKuzwVi5Eu8L6FPM1BokSaXvhnAwypKVM5RTLy9xuvrzv4Ez0gQXYXz3CgBGN6
-	 Z93kxIJJyn9HpcCWkX1GK512DeV76WomS7TNJtK6J+3gF9o9x1YKSktir9jHDuEt1R
-	 DDFvFUP68E+VPd2/l30IqiSlq/mri3uSxbRIMnPfQA8ncyroAzsaB8Vfg7pdyx4C7x
-	 NvVCTXUDY8IZQ==
-Date: Sat, 25 Nov 2023 15:33:58 -0600
+	b=p5EdWPOv9u1qJKMRE6lTDg9F6QiT6VyEGHnF+Dw7bajfbIxE1aBNMa0pu3hCgJeHy
+	 uO+wXDbs6TC7LsZfDiQK/yGaL77QXcrH0ik5rJdbdFiVnjTTqLKfne2hQcV8UIBQZ3
+	 1Cp5pPT+FXaP7AgvT7AnRJLgVhz4tQIzFu/X8j7NzTVP9jPKEFjrMgjm53gHDg1xxG
+	 SV/6GuBLu3j1u9jjN+/yNHvMrU2t3zSHRMHlFgfrm1WvX/C+LsRDKN1hv+TrJ0GHfm
+	 xnsIBiTzc5m8Nrn9GWPiXQvp89uCxZm00UmC7mMUQI+a8pnSPZOHzlPWgf6LohPEmS
+	 HFwZaNWeT8Zzg==
+Date: Sat, 25 Nov 2023 15:49:12 -0600
 From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Joey Gouly <joey.gouly@arm.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Bill Wendling <morbo@google.com>, Kees Cook <keescook@chromium.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] neighbour: Fix __randomize_layout crash in struct neighbour
-Message-ID: <ZWJoRsJGnCPdJ3+2@work>
+To: Kees Cook <keescook@chromium.org>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH][next] gcc-plugins: randstruct: Update code comment in
+ relayout_struct()
+Message-ID: <ZWJr2MWDjXLHE8ap@work>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -39,39 +34,30 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-Previously, one-element and zero-length arrays were treated as true
-flexible arrays, even though they are actually "fake" flex arrays.
-The __randomize_layout would leave them untouched at the end of the
-struct, similarly to proper C99 flex-array members.
+Update code comment to clarify that the only element whose layout is
+not randomized is a proper C99 flexible-array member. This update is
+complementary to commit 1ee60356c2dc ("gcc-plugins: randstruct: Only
+warn about true flexible arrays")
 
-However, this approach changed with commit 1ee60356c2dc ("gcc-plugins:
-randstruct: Only warn about true flexible arrays"). Now, only C99
-flexible-array members will remain untouched at the end of the struct,
-while one-element and zero-length arrays will be subject to randomization.
-
-Fix a `__randomize_layout` crash in `struct neighbour` by transforming
-zero-length array `primary_key` into a proper C99 flexible-array member.
-
-Fixes: 1ee60356c2dc ("gcc-plugins: randstruct: Only warn about true flexible arrays")
-Closes: https://lore.kernel.org/linux-hardening/20231124102458.GB1503258@e124191.cambridge.arm.com/
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- include/net/neighbour.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ scripts/gcc-plugins/randomize_layout_plugin.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/include/net/neighbour.h b/include/net/neighbour.h
-index 07022bb0d44d..0d28172193fa 100644
---- a/include/net/neighbour.h
-+++ b/include/net/neighbour.h
-@@ -162,7 +162,7 @@ struct neighbour {
- 	struct rcu_head		rcu;
- 	struct net_device	*dev;
- 	netdevice_tracker	dev_tracker;
--	u8			primary_key[0];
-+	u8			primary_key[];
- } __randomize_layout;
+diff --git a/scripts/gcc-plugins/randomize_layout_plugin.c b/scripts/gcc-plugins/randomize_layout_plugin.c
+index 910bd21d08f4..746ff2d272f2 100644
+--- a/scripts/gcc-plugins/randomize_layout_plugin.c
++++ b/scripts/gcc-plugins/randomize_layout_plugin.c
+@@ -339,8 +339,7 @@ static int relayout_struct(tree type)
  
- struct neigh_ops {
+ 	/*
+ 	 * enforce that we don't randomize the layout of the last
+-	 * element of a struct if it's a 0 or 1-length array
+-	 * or a proper flexible array
++	 * element of a struct if it's a proper flexible array
+ 	 */
+ 	if (is_flexible_array(newtree[num_fields - 1])) {
+ 		has_flexarray = true;
 -- 
 2.34.1
 
