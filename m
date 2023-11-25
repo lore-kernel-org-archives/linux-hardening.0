@@ -1,162 +1,168 @@
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB54D2F840;
+	Sat, 25 Nov 2023 18:32:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="bRBdEzaw"
-Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0517511F
-	for <linux-hardening@vger.kernel.org>; Sat, 25 Nov 2023 09:54:38 -0800 (PST)
-Received: from eig-obgw-6006a.ext.cloudfilter.net ([10.0.30.182])
-	by cmsmtp with ESMTPS
-	id 6tHXr4qyihqFd6wrWrLe2C; Sat, 25 Nov 2023 17:54:38 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id 6wrVrWDe5GKIc6wrVr3gAO; Sat, 25 Nov 2023 17:54:37 +0000
-X-Authority-Analysis: v=2.4 cv=E+beGIRl c=1 sm=1 tr=0 ts=656234dd
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=yGeM7+xMb5a5VK1DGQx1ew==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=BNY50KLci1gA:10 a=wYkD_t78qR0A:10
- a=6mUrkXxl0K-UJ-lciFYA:9 a=QEXdDO2ut3YA:10
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=fQ6gkAIpegcRMWjhELvU1rTB6lMBEW1z2DgZ25eNdo0=; b=bRBdEzawFlxZI6RfftSz5OGGHW
-	z0dZeVUJfzQWuG5en1b8FHMQV64h0L/nqbMfs1ICF2ClihuEB5tdHWEllGs2HoSBvakVdJy7EtCJA
-	7VT2d2wrnpYxOr9wx+6w3OB4a5BZ7j/DQJ5ZLnZFvlB4mkA9Sv0rYsIVzFnfLs/z+0fIsx16pkESP
-	EigUzMG5Bj8r7dHO6vR5niEJMExQ6CmE6c9DSrbSaBdwwoWPzPyNcd0ovdbsh682p8kfjh1pCVRtx
-	TWXY/M26fKScoz8f2HLGEe5Lkfx64NI008IBAyBm1U7270CHv3fTSYnXxSCW2jCb/EdqYzAIUqBTG
-	2q6Hu3Wg==;
-Received: from 187.184.157.122.cable.dyn.cableonline.com.mx ([187.184.157.122]:46244 helo=[192.168.0.25])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1r6wrU-001o7P-2I;
-	Sat, 25 Nov 2023 11:54:36 -0600
-Message-ID: <d7294586-04a4-49f7-8f5f-2dd66c8b4cde@embeddedor.com>
-Date: Sat, 25 Nov 2023 11:54:28 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YofFKFHm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DDEAC433C8;
+	Sat, 25 Nov 2023 18:32:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700937124;
+	bh=QELuRHVQ8QvisUNbMPPKmMoHXkay24CtnhYonlpSLP0=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=YofFKFHmpJ/tyt1h7P2riHKi3FBCJkChIECWBNF4my74A8npLFWoj4QQs8iFAw95D
+	 5qSc32zakdyAo5d+johcJcp8LWT/x8qOoWetDUzRhjgOkIx6ZU8BAguLERFd7aZsdg
+	 pQNzdsaJINbJuqIuNraH90cST6iBBRCFkVjfzLkkT99gw9bQ1Fow5ZE+kMScMQnzbr
+	 V8I7OfuHLChiKoVjtyY4DFwQ9XG08vQrIDL5R8QQEcgMd/FTarWRwPQ5l3LCXUpNcc
+	 lY5wfIbF2bhNtlSeraugQkynPhuAjPPU5yoz+yVQEndX0enjYMaIvITF/JNYi2ylRM
+	 pk9sU9S5rdjag==
+Date: Sat, 25 Nov 2023 10:31:56 -0800
+From: Kees Cook <kees@kernel.org>
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+ Joey Gouly <joey.gouly@arm.com>, Kees Cook <keescook@chromium.org>,
+ linux-hardening@vger.kernel.org, netdev@vger.kernel.org
+CC: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ linux-kernel@vger.kernel.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: Re: [BUG] Boot crash on v6.7-rc2
+User-Agent: K-9 Mail for Android
+In-Reply-To: <d7294586-04a4-49f7-8f5f-2dd66c8b4cde@embeddedor.com>
+References: <20231124102458.GB1503258@e124191.cambridge.arm.com> <7086f60f-9f74-4118-a10c-d98b9c6cc8eb@embeddedor.com> <d7294586-04a4-49f7-8f5f-2dd66c8b4cde@embeddedor.com>
+Message-ID: <05D345C3-BAFB-4658-8F78-4BC674A764DB@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [BUG] Boot crash on v6.7-rc2
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To: Joey Gouly <joey.gouly@arm.com>, Kees Cook <keescook@chromium.org>,
- linux-hardening@vger.kernel.org, netdev@vger.kernel.org
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, linux-kernel@vger.kernel.org,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-References: <20231124102458.GB1503258@e124191.cambridge.arm.com>
- <7086f60f-9f74-4118-a10c-d98b9c6cc8eb@embeddedor.com>
-Content-Language: en-US
-In-Reply-To: <7086f60f-9f74-4118-a10c-d98b9c6cc8eb@embeddedor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.184.157.122
-X-Source-L: No
-X-Exim-ID: 1r6wrU-001o7P-2I
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187.184.157.122.cable.dyn.cableonline.com.mx ([192.168.0.25]) [187.184.157.122]:46244
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 8
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfA+rgIYC+qbevPoC+QBUkdz87vuwqWQrOYZ4mBaGyKJb5w1H94hfDnIK5rPSLWTmxfxzA1+cjILyO2claIWsGJD2wfhb2th6HDTDAE568SuPacamqlU/
- FVN4zWoyDb2xkny7hB/+6tlRuODN0+vwD6LCVNR+xmD0u2nucQ3JhcAT/xxcsLxbklbhGpOvUpbuhkzK1fNchkzM97gMmLMv506hNQX/OgW3h8QWbudVg1j1
-X-Spam-Level: *
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
 
 
-On 11/24/23 09:28, Gustavo A. R. Silva wrote:
-> 
-> 
-> On 11/24/23 04:24, Joey Gouly wrote:
->> Hi all,
->>
->> I just hit a boot crash on v6.7-rc2 (arm64, FVP model):
-> 
-> [..]
-> 
->> Checking `struct neighbour`:
->>
->>     struct neighbour {
->>         struct neighbour __rcu    *next;
->>         struct neigh_table    *tbl;
->>     .. fields ..
->>         u8            primary_key[0];
->>     } __randomize_layout;
->>
->> Due to the `__randomize_layout`, `primary_key` field is being placed before `tbl` (actually it's the same address since it's a 0 length array). That means the 
->> memcpy() corrupts the tbl pointer.
->>
->> I think I just got unlucky with my CONFIG_RANDSTRUCT seed (I can provide it if needed), it doesn't look as if it's a new issue.
-> 
-> It seems the issue is caused by this change that was recently added to -rc2:
-> 
-> commit 1ee60356c2dc ("gcc-plugins: randstruct: Only warn about true flexible arrays")
-> 
-> Previously, one-element and zero-length arrays were treated as true flexible arrays
-> (however, they are "fake" flex arrays), and __randomize_layout would leave them
-> untouched at the end of the struct; the same for proper C99 flex-array members. But
-> after the commit above, that's no longer the case: Only C99 flex-array members will
-> behave correctly (remaining untouched at end of the struct), and the other two types
-> of arrays will be randomized.
+On November 25, 2023 9:54:28 AM PST, "Gustavo A=2E R=2E Silva" <gustavo@em=
+beddedor=2Ecom> wrote:
+>
+>
+>On 11/24/23 09:28, Gustavo A=2E R=2E Silva wrote:
+>>=20
+>>=20
+>> On 11/24/23 04:24, Joey Gouly wrote:
+>>> Hi all,
+>>>=20
+>>> I just hit a boot crash on v6=2E7-rc2 (arm64, FVP model):
+>>=20
+>> [=2E=2E]
+>>=20
+>>> Checking `struct neighbour`:
+>>>=20
+>>> =C2=A0=C2=A0=C2=A0=C2=A0struct neighbour {
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct neighbour __rcu=C2=
+=A0=C2=A0=C2=A0 *next;
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct neigh_table=C2=A0=C2=
+=A0=C2=A0 *tbl;
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=2E=2E fields =2E=2E
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u8=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 primary_key[0];
+>>> =C2=A0=C2=A0=C2=A0=C2=A0} __randomize_layout;
+>>>=20
+>>> Due to the `__randomize_layout`, `primary_key` field is being placed b=
+efore `tbl` (actually it's the same address since it's a 0 length array)=2E=
+ That means the memcpy() corrupts the tbl pointer=2E
+>>>=20
+>>> I think I just got unlucky with my CONFIG_RANDSTRUCT seed (I can provi=
+de it if needed), it doesn't look as if it's a new issue=2E
+>>=20
+>> It seems the issue is caused by this change that was recently added to =
+-rc2:
+>>=20
+>> commit 1ee60356c2dc ("gcc-plugins: randstruct: Only warn about true fle=
+xible arrays")
+>>=20
+>> Previously, one-element and zero-length arrays were treated as true fle=
+xible arrays
+>> (however, they are "fake" flex arrays), and __randomize_layout would le=
+ave them
+>> untouched at the end of the struct; the same for proper C99 flex-array =
+members=2E But
+>> after the commit above, that's no longer the case: Only C99 flex-array =
+members will
+>> behave correctly (remaining untouched at end of the struct), and the ot=
+her two types
+>> of arrays will be randomized=2E
+>
+>mmh=2E=2E=2E it seems that commit 1ee60356c2dc only prevents one-element =
+arrays from being
+>treated as flex arrays, while the code should still keep zero-length arra=
+ys untouched:
+>
+>        if (typesize =3D=3D NULL_TREE && TYPE_DOMAIN(fieldtype) !=3D NULL=
+_TREE &&
+>            TYPE_MAX_VALUE(TYPE_DOMAIN(fieldtype)) =3D=3D NULL_TREE)
+>                return true;
+>
+>-       if (typesize !=3D NULL_TREE &&
+>-           (TREE_CONSTANT(typesize) && (!tree_to_uhwi(typesize) ||
+>-            tree_to_uhwi(typesize) =3D=3D tree_to_uhwi(elemsize))))
+>-               return true;
+>-
 
-mmh... it seems that commit 1ee60356c2dc only prevents one-element arrays from being
-treated as flex arrays, while the code should still keep zero-length arrays untouched:
+This should be both the 0 and 1 checks=2E I think the original fix is corr=
+ect: switch to a true flex array=2E
 
-         if (typesize == NULL_TREE && TYPE_DOMAIN(fieldtype) != NULL_TREE &&
-             TYPE_MAX_VALUE(TYPE_DOMAIN(fieldtype)) == NULL_TREE)
-                 return true;
+>
+>Sorry about the confusion=2E
+>
+>>=20
+>>>=20
+>>> I couldn't reproduce directly on v6=2E6 (the offsets for `tbl` and `pr=
+imary_key` didn't overlap)=2E
+>>> However I tried changing the zero-length-array to a flexible one:
+>>>=20
+>>> =C2=A0=C2=A0=C2=A0=C2=A0+=C2=A0=C2=A0=C2=A0 DECLARE_FLEX_ARRAY(u8, pri=
+mary_key);
+>>> =C2=A0=C2=A0=C2=A0=C2=A0+=C2=A0=C2=A0=C2=A0 u8=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 primary_key[0];
 
--       if (typesize != NULL_TREE &&
--           (TREE_CONSTANT(typesize) && (!tree_to_uhwi(typesize) ||
--            tree_to_uhwi(typesize) == tree_to_uhwi(elemsize))))
--               return true;
--
+Was this line supposed to be "-"?
 
-Sorry about the confusion.
+>>>=20
+>>> Then the field offsets ended up overlapping, and I also got the same c=
+rash on v6=2E6=2E
+>>=20
+>> The right approach is to transform the zero-length array into a C99 fle=
+x-array member,
+>> like this:
+>>=20
+>> diff --git a/include/net/neighbour=2Eh b/include/net/neighbour=2Eh
+>> index 07022bb0d44d=2E=2E0d28172193fa 100644
+>> --- a/include/net/neighbour=2Eh
+>> +++ b/include/net/neighbour=2Eh
+>> @@ -162,7 +162,7 @@ struct neighbour {
+>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct rcu_head=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rcu;
+>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct net_device=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 *dev;
+>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 netdevice_tracker=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_tracker;
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u8=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 primary_key[0];
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u8=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 primary_key[];
+>>  =C2=A0} __randomize_layout;
+>>=20
+>>  =C2=A0struct neigh_ops {
+>
+>In any case, I think we still should convert [0] to [ ]=2E
 
-> 
->>
->> I couldn't reproduce directly on v6.6 (the offsets for `tbl` and `primary_key` didn't overlap).
->> However I tried changing the zero-length-array to a flexible one:
->>
->>     +    DECLARE_FLEX_ARRAY(u8, primary_key);
->>     +    u8        primary_key[0];
->>
->> Then the field offsets ended up overlapping, and I also got the same crash on v6.6.
-> 
-> The right approach is to transform the zero-length array into a C99 flex-array member,
-> like this:
-> 
-> diff --git a/include/net/neighbour.h b/include/net/neighbour.h
-> index 07022bb0d44d..0d28172193fa 100644
-> --- a/include/net/neighbour.h
-> +++ b/include/net/neighbour.h
-> @@ -162,7 +162,7 @@ struct neighbour {
->          struct rcu_head         rcu;
->          struct net_device       *dev;
->          netdevice_tracker       dev_tracker;
-> -       u8                      primary_key[0];
-> +       u8                      primary_key[];
->   } __randomize_layout;
-> 
->   struct neigh_ops {
+I would expect the above to fix the problem=2E If it doesn't I'll need to =
+take a closer look at the plugin=2E=2E=2E
 
-In any case, I think we still should convert [0] to [ ].
+-Kees
 
---
-Gustavo
+--=20
+Kees Cook
