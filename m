@@ -1,61 +1,27 @@
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 373882106;
+	Sat, 25 Nov 2023 11:06:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="BZvX8XH7";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CiBJ9uxs"
-X-Greylist: delayed 491 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 24 Nov 2023 23:40:47 PST
-Received: from new2-smtp.messagingengine.com (new2-smtp.messagingengine.com [66.111.4.224])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD48310F4;
-	Fri, 24 Nov 2023 23:40:47 -0800 (PST)
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-	by mailnew.nyi.internal (Postfix) with ESMTP id CF7215801B4;
-	Sat, 25 Nov 2023 02:32:33 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Sat, 25 Nov 2023 02:32:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:sender
-	:subject:subject:to:to; s=fm1; t=1700897553; x=1700904753; bh=ex
-	qZesM4aQu3oVWnJphA5Nu6nKdj7qrJMiTqCcJpx00=; b=BZvX8XH73FmM0r9DS/
-	HjBV6jHbJpIE0yM2JA7gePhM1fpVTjuLRIJHmHJNvQ+tHjsGBau1XGtrmJjblDzy
-	WuchxuqNzEgvn59HhX6osfpe0uFexP3juHcSotJp7DhXl4MPg3DOVpURHZmrfwMF
-	lfPeFmdg5opz29t9CRs0SK9PiZ7lyqTl/c5TLHMbcfZrKY7rco4YLnfLfBFs1tR+
-	H/ytKd8C9aabbnYaocz8ZtZ8CuT3gfA3f1mtLldAqw5NdZTtBHNPty7ZSRaZBApd
-	pglzVSNh5megitIMaAjSG6hnTNIRCrM7+/FXJo3rkUN2j8TdusjMhWC3zKbYEqpK
-	h4LA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm1; t=1700897553; x=1700904753; bh=exqZesM4aQu3o
-	VWnJphA5Nu6nKdj7qrJMiTqCcJpx00=; b=CiBJ9uxswgds8SICK0mvW8+D+HDJ4
-	paAcWTr/+HvV1BAvQVH/uYuCfy9ScjbRWUjqaGjSNM4gVmiucXTLMDtCt6B4OqoJ
-	JPAjksJ2P35LYOP9XbF187xfUbfnbYKCuodR0OYaFtZiRsc0rX5H5w51KUSwi2V2
-	LapQZ9Zh/89bWDSqkgRdQC4oUB5gpFT5nriUdYLZ25UA3rzxNLEhznsQNp6dqeHm
-	Jjour1Vkqw/iRzrvB7iTQIgo051oEF3fRutX6Ils8KIsBLI+05IABocW4IpS7lKr
-	zSYlF5uBkuyveUjZMavS9CilUA4HWYtg3swmfkse+wVv/tQcgSyFXhRLQ==
-X-ME-Sender: <xms:EaNhZXCbTaoROGZjkL8hVpyufJBAEz3ItuWYs4YqDfqANA050Eki3w>
-    <xme:EaNhZdjq5-_Td17d9pA2jdZf49-AUa5qT998njzYUFsz9X1Ik8AeyVv9MxiGUeE5W
-    5a-bO04l2QuAw>
-X-ME-Received: <xmr:EaNhZSlmPUlPsmGeFWbPgiD81GO6EwR7WooenZoBYVQmv_8-mLb_NA_WAuV3rbsJngPq5SGfqtDAiyLlmWBnU5bcxqx2mUq03ojmRyah0g3ZO4_vD4-UeJA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrudehiedgudduudcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgv
-    ghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeehge
-    dvvedvleejuefgtdduudfhkeeltdeihfevjeekjeeuhfdtueefhffgheekteenucevlhhu
-    shhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhroh
-    grhhdrtghomh
-X-ME-Proxy: <xmx:EaNhZZzBnFlTu4Nvj8xB4db2CIOsSf-E3rWRn5tgb_gt9TwK2lG9fA>
-    <xmx:EaNhZcRbxP2sARaJ9rdt5evwS4kzO6zzT48m-ZpBnf8t7xa3HIhdaA>
-    <xmx:EaNhZcbGo4iMigsDujJUA6n9bs9PeDoE3gYXR_SGAMglyw7UjFGHzw>
-    <xmx:EaNhZf_6MLVTDl3azaHQsBsddLrdXmgGsOZWIjVZUzjE9eafEZ_umA>
-Feedback-ID: i787e41f1:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 25 Nov 2023 02:32:32 -0500 (EST)
-Date: Sat, 25 Nov 2023 06:53:34 +0000
-From: Greg KH <greg@kroah.com>
-To: Luka Panio <lukapanio@gmail.com>
-Cc: Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GzQAqc91"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1A55C433C7;
+	Sat, 25 Nov 2023 11:06:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700910378;
+	bh=a10BKOzNP25vy7u3Wr900/nhqUYn6t0HQHvCMFsPHXM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GzQAqc91AzXTfJr0YMNQk4Fb8ANi3UGp7ws1OpgA134zeMmi16feg/71FpWu/RRad
+	 hgEimPRXrCBFQPja2QUhaktDDe0g3JTP7Lo6sH9/6GXqTybrAoNZWQgTPqocAWw2fR
+	 xKpaN6KhvfkenJnRasNXc+kpv4jHsOpPhVY1FVzjEJd1tKA3A/K2P7enxMj4c18BuT
+	 tP1yhNA8lq5FHA/nmG1RTwfrAROJVllv6hM6Zy7Y+WDjCqFF2YaROv+/jgV6bjtTmH
+	 4JDccMs4Puqv94kUHM+nK/wfz90JM/BkkbRmxra8goAAA6NCb6to4+fU9GVktRb6RR
+	 yv5TIhyGpq7aQ==
+Date: Sat, 25 Nov 2023 11:06:13 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Luka Panio <lukapanio@gmail.com>, Andy Gross <agross@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
 	Konrad Dybcio <konrad.dybcio@linaro.org>,
 	Rob Herring <robh+dt@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
@@ -64,33 +30,51 @@ Cc: Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
 	"Guilherme G . Piccoli" <gpiccoli@igalia.com>,
 	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v10 2/2] Initial support for Xiaomi Pad 6 tablet, that
- have sm8250 soc.
-Message-ID: <2023112511-pavestone-satin-3b3e@gregkh>
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH v10 1/2] Add a compatible for Xiaomi Pad 6.
+Message-ID: <20231125-scientist-autograph-a574e56ea955@spud>
 References: <20231124212732.731419-1-lukapanio@gmail.com>
- <20231124212732.731419-2-lukapanio@gmail.com>
+ <2023112529-fetch-unwritten-bdbd@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ZAE8VA0RYnei4ICF"
+Content-Disposition: inline
+In-Reply-To: <2023112529-fetch-unwritten-bdbd@gregkh>
+
+
+--ZAE8VA0RYnei4ICF
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231124212732.731419-2-lukapanio@gmail.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Nov 24, 2023 at 10:27:32PM +0100, Luka Panio wrote:
-> Signed-off-by: Luka Panio <lukapanio@gmail.com>
-> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Acked-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-> 
-> ---
-> v2:
-> Update commit message. Drop reserved gpio's as this device in reality do not have gpio, and pins are not protected.
+On Sat, Nov 25, 2023 at 06:53:05AM +0000, Greg KH wrote:
+> On Fri, Nov 24, 2023 at 10:27:31PM +0100, Luka Panio wrote:
+> > Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> > Signed-off-by: Luka Panio <lukapanio@gmail.com>
+> >=20
+> > ---
+> > v2:
+> > Update commit message
+>=20
+> What commit message?  I know I can't take patches without any changelog
+> text, maybe other maintainers are more loose?
 
-Again, I see no commit message here, did something go wrong?
+It had one when I acked it.
 
-thanks,
+--ZAE8VA0RYnei4ICF
+Content-Type: application/pgp-signature; name="signature.asc"
 
-greg k-h
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZWHVJQAKCRB4tDGHoIJi
+0u6wAQDJyRyc1NwXIbDW0Y1VdQakWopuCXfjrBNh84wm0Zyt7AD/QNDxBjigVIUH
+AoGUgSjTd+6ukjv5UhZUnzuMhVXs3gs=
+=xDZq
+-----END PGP SIGNATURE-----
+
+--ZAE8VA0RYnei4ICF--
