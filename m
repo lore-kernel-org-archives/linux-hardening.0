@@ -1,19 +1,18 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="ruCv9eFB"
-Received: from todd.t-8ch.de (todd.t-8ch.de [IPv6:2a01:4f8:c010:41de::1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3C34EA;
-	Sat, 25 Nov 2023 04:53:01 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="fC4/kcbE"
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 932558F;
+	Sat, 25 Nov 2023 04:52:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1700916777;
-	bh=eBhOR2st0kYur9zVJzF7EyOPAu0FRzljdghuY8XBOWo=;
+	s=mail; t=1700916776;
+	bh=TvazAFFGE0otnXYiwQcMdxMBACDm5WWzmf21WwSH3Jk=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=ruCv9eFB2WE77RMf3vbBpk3bVkniSFw8IzlWE7Fz17sBjZveEjpMX/8aQzd/joQC4
-	 GZXSqv+GOalkDZJhIn4RnxKmGIpU6yxvpQLSJ/+T1d7/sNmHooD6FNhIAtqRE6DJin
-	 cl4L4Ub8SOMaXprr1Hvc8BN9KOB6cNfx/dSGUBMM=
+	b=fC4/kcbE39t3cktG8KvZ2tjeXuGXOswHwzsR9Gbqe2FNKM8mZv2a+fLAb/OkUoGQl
+	 Ct/I3PU+OUB6zbRuI69jF5cGRu7dywPWwb2ewjxr+wSLSHc7HJdYyMbfjqrPEGja3h
+	 89Rxn9tr6/tsHgNX0DJeeLmHsqiKHK5+aomenuXY=
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Sat, 25 Nov 2023 13:52:55 +0100
-Subject: [PATCH RFC 6/7] treewide: sysctl: migrate proc_dobool to
- proc_handler_new
+Date: Sat, 25 Nov 2023 13:52:51 +0100
+Subject: [PATCH RFC 2/7] bpf: cgroup: call proc handler through helper
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -22,7 +21,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20231125-const-sysctl-v1-6-5e881b0e0290@weissschuh.net>
+Message-Id: <20231125-const-sysctl-v1-2-5e881b0e0290@weissschuh.net>
 References: <20231125-const-sysctl-v1-0-5e881b0e0290@weissschuh.net>
 In-Reply-To: <20231125-const-sysctl-v1-0-5e881b0e0290@weissschuh.net>
 To: Kees Cook <keescook@chromium.org>, 
@@ -34,137 +33,36 @@ Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-fsdevel@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1700916776; l=4649;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1700916776; l=855;
  i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=eBhOR2st0kYur9zVJzF7EyOPAu0FRzljdghuY8XBOWo=;
- b=TFErwepsPpof08h6PaKYFgDvwr7V8L6MNxWawrT6FywU47nmnGgngRZWo7O9VIC6e33pJRYvE
- Sbzhxjkb1MYBkiG8Yh7Iyu7dSbhzCyWNshcdo390tV38npbE01v1uDT
+ bh=TvazAFFGE0otnXYiwQcMdxMBACDm5WWzmf21WwSH3Jk=;
+ b=YdEbKegum1nk5186ZhIPwqPFp/VAJDdMZA4InijjRqP/7NAbrS1Qk9V7T+OhbslhbSi4ispVx
+ jKuxCmX8CtFDorBAPbKAyM+pny1qZQU2W6Xbolh5PbFIiyaTYTPoO6C
 X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
  pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-proc_handler_new() prevents the handler function from modifying the
-ctl_table which then can be put into .rodata.
+The sysctl core will introduce a second handler function.
+To prepare for this use the provided helper function to call either
+handler function.
 
 Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
- arch/riscv/kernel/vector.c | 2 +-
- drivers/tty/tty_io.c       | 2 +-
- fs/lockd/svc.c             | 2 +-
- fs/proc/proc_sysctl.c      | 4 ++--
- include/linux/sysctl.h     | 2 +-
- kernel/sysctl.c            | 4 ++--
- mm/hugetlb_vmemmap.c       | 2 +-
- 7 files changed, 9 insertions(+), 9 deletions(-)
+ kernel/bpf/cgroup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/riscv/kernel/vector.c b/arch/riscv/kernel/vector.c
-index 578b6292487e..d2a37fe88174 100644
---- a/arch/riscv/kernel/vector.c
-+++ b/arch/riscv/kernel/vector.c
-@@ -253,7 +253,7 @@ static struct ctl_table riscv_v_default_vstate_table[] = {
- 		.data		= &riscv_v_implicit_uacc,
- 		.maxlen		= sizeof(riscv_v_implicit_uacc),
- 		.mode		= 0644,
--		.proc_handler	= proc_dobool,
-+		.proc_handler_new	= proc_dobool,
- 	},
- };
+diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
+index 491d20038cbe..d537b1c80a36 100644
+--- a/kernel/bpf/cgroup.c
++++ b/kernel/bpf/cgroup.c
+@@ -1715,7 +1715,7 @@ int __cgroup_bpf_run_filter_sysctl(struct ctl_table_header *head,
  
-diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
-index 06414e43e0b5..a7bcc22fdae9 100644
---- a/drivers/tty/tty_io.c
-+++ b/drivers/tty/tty_io.c
-@@ -3601,7 +3601,7 @@ static struct ctl_table tty_table[] = {
- 		.data		= &tty_legacy_tiocsti,
- 		.maxlen		= sizeof(tty_legacy_tiocsti),
- 		.mode		= 0644,
--		.proc_handler	= proc_dobool,
-+		.proc_handler_new	= proc_dobool,
- 	},
- 	{
- 		.procname	= "ldisc_autoload",
-diff --git a/fs/lockd/svc.c b/fs/lockd/svc.c
-index 81be07c1d3d1..90ea8cd382d3 100644
---- a/fs/lockd/svc.c
-+++ b/fs/lockd/svc.c
-@@ -466,7 +466,7 @@ static struct ctl_table nlm_sysctls[] = {
- 		.data		= &nsm_use_hostnames,
- 		.maxlen		= sizeof(bool),
- 		.mode		= 0644,
--		.proc_handler	= proc_dobool,
-+		.proc_handler_new	= proc_dobool,
- 	},
- 	{
- 		.procname	= "nsm_local_state",
-diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-index 0817d315fa36..742a99540f2b 100644
---- a/fs/proc/proc_sysctl.c
-+++ b/fs/proc/proc_sysctl.c
-@@ -1119,7 +1119,7 @@ static int sysctl_check_table_array(const char *path, struct ctl_table *table)
- 			err |= sysctl_err(path, table, "array not allowed");
+ 	ctx.cur_val = kmalloc_track_caller(ctx.cur_len, GFP_KERNEL);
+ 	if (!ctx.cur_val ||
+-	    table->proc_handler(table, 0, ctx.cur_val, &ctx.cur_len, &pos)) {
++	    sysctl_run_handler(table, 0, ctx.cur_val, &ctx.cur_len, &pos)) {
+ 		/* Let BPF program decide how to proceed. */
+ 		ctx.cur_len = 0;
  	}
- 
--	if (table->proc_handler == proc_dobool) {
-+	if (table->proc_handler_new == proc_dobool) {
- 		if (table->maxlen != sizeof(bool))
- 			err |= sysctl_err(path, table, "array not allowed");
- 	}
-@@ -1133,7 +1133,7 @@ static int sysctl_check_table(const char *path, struct ctl_table_header *header)
- 	int err = 0;
- 	list_for_each_table_entry(entry, header) {
- 		if ((entry->proc_handler_new == proc_dostring) ||
--		    (entry->proc_handler == proc_dobool) ||
-+		    (entry->proc_handler_new == proc_dobool) ||
- 		    (entry->proc_handler == proc_dointvec) ||
- 		    (entry->proc_handler == proc_douintvec) ||
- 		    (entry->proc_handler == proc_douintvec_minmax) ||
-diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
-index 2699605c5da5..2dfaf718a21b 100644
---- a/include/linux/sysctl.h
-+++ b/include/linux/sysctl.h
-@@ -67,7 +67,7 @@ typedef int proc_handler_new(const struct ctl_table *ctl, int write,
- 		void *buffer, size_t *lenp, loff_t *ppos);
- 
- int proc_dostring(const struct ctl_table *, int, void *, size_t *, loff_t *);
--int proc_dobool(struct ctl_table *table, int write, void *buffer,
-+int proc_dobool(const struct ctl_table *table, int write, void *buffer,
- 		size_t *lenp, loff_t *ppos);
- int proc_dointvec(struct ctl_table *, int, void *, size_t *, loff_t *);
- int proc_douintvec(struct ctl_table *, int, void *, size_t *, loff_t *);
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 7acd1cde0a5c..c76668f47bcc 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -702,7 +702,7 @@ int do_proc_douintvec(struct ctl_table *table, int write,
-  *
-  * Returns 0 on success.
-  */
--int proc_dobool(struct ctl_table *table, int write, void *buffer,
-+int proc_dobool(const struct ctl_table *table, int write, void *buffer,
- 		size_t *lenp, loff_t *ppos)
- {
- 	struct ctl_table tmp;
-@@ -1504,7 +1504,7 @@ int proc_dostring(const struct ctl_table *table, int write,
- 	return -ENOSYS;
- }
- 
--int proc_dobool(struct ctl_table *table, int write,
-+int proc_dobool(const struct ctl_table *table, int write,
- 		void *buffer, size_t *lenp, loff_t *ppos)
- {
- 	return -ENOSYS;
-diff --git a/mm/hugetlb_vmemmap.c b/mm/hugetlb_vmemmap.c
-index 87818ee7f01d..e61e9fbfd639 100644
---- a/mm/hugetlb_vmemmap.c
-+++ b/mm/hugetlb_vmemmap.c
-@@ -779,7 +779,7 @@ static struct ctl_table hugetlb_vmemmap_sysctls[] = {
- 		.data		= &vmemmap_optimize_enabled,
- 		.maxlen		= sizeof(vmemmap_optimize_enabled),
- 		.mode		= 0644,
--		.proc_handler	= proc_dobool,
-+		.proc_handler_new	= proc_dobool,
- 	},
- 	{ }
- };
 
 -- 
 2.43.0
