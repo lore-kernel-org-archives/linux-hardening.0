@@ -1,113 +1,129 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="rJ8cBOmh"
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 933F52706;
-	Mon, 27 Nov 2023 09:05:26 -0800 (PST)
-Received: from [192.168.4.26] (unknown [47.186.13.91])
-	by linux.microsoft.com (Postfix) with ESMTPSA id D60A120B74C0;
-	Mon, 27 Nov 2023 09:05:23 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D60A120B74C0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1701104726;
-	bh=hQp9k1xmzkhJv53kIi+fGz0Bm7C0uUgSE5lwBZUzRAE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=rJ8cBOmhMjU1LJ0/8Jcu8Zs0D7K0IoJJgYpooleweR4JPTx8RVu3i076OKuSc40H8
-	 vQyhttx9sRNbXZhKrbp4uy9amwle/wkhxSgx+XSVVJGrDjkKV6ziAkv22z1oJr2gBV
-	 BrN8A1ek3f3VLgDmEE47gJhsasnKPJeYvbYTTmRg=
-Message-ID: <b1dc0963-ab99-4a79-af19-ef5ed981fa60@linux.microsoft.com>
-Date: Mon, 27 Nov 2023 11:05:23 -0600
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VlhbNNJt"
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43520C2;
+	Mon, 27 Nov 2023 12:04:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=HKdTKht77swWp6IqbMhOYILRR0g0Evek+a+XDBEGFI4=; b=VlhbNNJtOQjRl9xNXhif3pyBI3
+	Yp697PDT+1EY5w8uqPMVRgSViNRDlwsEBioaXw3hqY3eTB8lhCbqt0zd3cnGZiqHwqP840guPwjV2
+	oriE6LXZ82ilVLw6slHwTwphcRMD/0Nd1NsiEuOe9r4lBzOcT6SSF2nX3osd+EUhPcnLH6Ranfo9H
+	Bv1hzhp/gFFn6ry0jRZXH/H0Gc8LitSNJ60ue7C967EBwiz7XA/OdUI9oaNSFUlcKQNcT7WMTubkf
+	R85oEhWPha2wXYJ4yiCw7hSoq1yPIGJKgfABhWmW6p9IKG8obBpzJRziZFbyBKuL64aiz/cSiRsQN
+	YX0jqE5A==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1r7hp0-00BhJQ-Ds; Mon, 27 Nov 2023 20:03:10 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id B60BD3002F1; Mon, 27 Nov 2023 21:03:08 +0100 (CET)
+Date: Mon, 27 Nov 2023 21:03:08 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
+Cc: =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+	Kees Cook <keescook@chromium.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Wanpeng Li <wanpengli@tencent.com>,
+	Alexander Graf <graf@amazon.com>,
+	Chao Peng <chao.p.peng@linux.intel.com>,
+	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+	Forrest Yuan Yu <yuanyu@google.com>,
+	James Gowans <jgowans@amazon.com>,
+	James Morris <jamorris@linux.microsoft.com>,
+	John Andersen <john.s.andersen@intel.com>,
+	Marian Rotariu <marian.c.rotariu@gmail.com>,
+	Mihai =?utf-8?B?RG9uyJt1?= <mdontu@bitdefender.com>,
+	=?utf-8?B?TmljdciZb3IgQ8OuyJt1?= <nicu.citu@icloud.com>,
+	Thara Gopinath <tgopinath@microsoft.com>,
+	Trilok Soni <quic_tsoni@quicinc.com>, Wei Liu <wei.liu@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	Yu Zhang <yu.c.zhang@linux.intel.com>,
+	Zahra Tarkhani <ztarkhani@microsoft.com>,
+	=?utf-8?Q?=C8=98tefan_=C8=98icleru?= <ssicleru@bitdefender.com>,
+	dev@lists.cloudhypervisor.org, kvm@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
+	qemu-devel@nongnu.org, virtualization@lists.linux-foundation.org,
+	x86@kernel.org, xen-devel@lists.xenproject.org
+Subject: Re: [RFC PATCH v2 18/19] heki: x86: Protect guest kernel memory
+ using the KVM hypervisor
+Message-ID: <20231127200308.GY3818@noisy.programming.kicks-ass.net>
+References: <20231113022326.24388-1-mic@digikod.net>
+ <20231113022326.24388-19-mic@digikod.net>
+ <20231113085403.GC16138@noisy.programming.kicks-ass.net>
+ <b1dc0963-ab99-4a79-af19-ef5ed981fa60@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 18/19] heki: x86: Protect guest kernel memory using
- the KVM hypervisor
-Content-Language: en-US
-To: Peter Zijlstra <peterz@infradead.org>, =?UTF-8?B?TWlja2HDq2wgU2FsYcO8?=
- =?UTF-8?Q?n?= <mic@digikod.net>
-Cc: Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>,
- Ingo Molnar <mingo@redhat.com>, Kees Cook <keescook@chromium.org>,
- Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
- <seanjc@google.com>, Thomas Gleixner <tglx@linutronix.de>,
- Vitaly Kuznetsov <vkuznets@redhat.com>, Wanpeng Li <wanpengli@tencent.com>,
- Alexander Graf <graf@amazon.com>, Chao Peng <chao.p.peng@linux.intel.com>,
- "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
- Forrest Yuan Yu <yuanyu@google.com>, James Gowans <jgowans@amazon.com>,
- James Morris <jamorris@linux.microsoft.com>,
- John Andersen <john.s.andersen@intel.com>,
- Marian Rotariu <marian.c.rotariu@gmail.com>,
- =?UTF-8?Q?Mihai_Don=C8=9Bu?= <mdontu@bitdefender.com>,
- =?UTF-8?B?TmljdciZb3IgQ8OuyJt1?= <nicu.citu@icloud.com>,
- Thara Gopinath <tgopinath@microsoft.com>,
- Trilok Soni <quic_tsoni@quicinc.com>, Wei Liu <wei.liu@kernel.org>,
- Will Deacon <will@kernel.org>, Yu Zhang <yu.c.zhang@linux.intel.com>,
- Zahra Tarkhani <ztarkhani@microsoft.com>,
- =?UTF-8?Q?=C8=98tefan_=C8=98icleru?= <ssicleru@bitdefender.com>,
- dev@lists.cloudhypervisor.org, kvm@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
- qemu-devel@nongnu.org, virtualization@lists.linux-foundation.org,
- x86@kernel.org, xen-devel@lists.xenproject.org
-References: <20231113022326.24388-1-mic@digikod.net>
- <20231113022326.24388-19-mic@digikod.net>
- <20231113085403.GC16138@noisy.programming.kicks-ass.net>
-From: "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
-In-Reply-To: <20231113085403.GC16138@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <b1dc0963-ab99-4a79-af19-ef5ed981fa60@linux.microsoft.com>
 
-Apologies for the late reply. I was on vacation. Please see my response below:
-
-On 11/13/23 02:54, Peter Zijlstra wrote:
-> On Sun, Nov 12, 2023 at 09:23:25PM -0500, MickaÃ«l SalaÃ¼n wrote:
->> From: Madhavan T. Venkataraman <madvenka@linux.microsoft.com>
->>
->> Implement a hypervisor function, kvm_protect_memory() that calls the
->> KVM_HC_PROTECT_MEMORY hypercall to request the KVM hypervisor to
->> set specified permissions on a list of guest pages.
->>
->> Using the protect_memory() function, set proper EPT permissions for all
->> guest pages.
->>
->> Use the MEM_ATTR_IMMUTABLE property to protect the kernel static
->> sections and the boot-time read-only sections. This enables to make sure
->> a compromised guest will not be able to change its main physical memory
->> page permissions. However, this also disable any feature that may change
->> the kernel's text section (e.g., ftrace, Kprobes), but they can still be
->> used on kernel modules.
->>
->> Module loading/unloading, and eBPF JIT is allowed without restrictions
->> for now, but we'll need a way to authenticate these code changes to
->> really improve the guests' security. We plan to use module signatures,
->> but there is no solution yet to authenticate eBPF programs.
->>
->> Being able to use ftrace and Kprobes in a secure way is a challenge not
->> solved yet. We're looking for ideas to make this work.
->>
->> Likewise, the JUMP_LABEL feature cannot work because the kernel's text
->> section is read-only.
+On Mon, Nov 27, 2023 at 11:05:23AM -0600, Madhavan T. Venkataraman wrote:
+> Apologies for the late reply. I was on vacation. Please see my response below:
 > 
-> What is the actual problem? As is the kernel text map is already RO and
-> never changed.
+> On 11/13/23 02:54, Peter Zijlstra wrote:
+> > On Sun, Nov 12, 2023 at 09:23:25PM -0500, Mickaël Salaün wrote:
+> >> From: Madhavan T. Venkataraman <madvenka@linux.microsoft.com>
+> >>
+> >> Implement a hypervisor function, kvm_protect_memory() that calls the
+> >> KVM_HC_PROTECT_MEMORY hypercall to request the KVM hypervisor to
+> >> set specified permissions on a list of guest pages.
+> >>
+> >> Using the protect_memory() function, set proper EPT permissions for all
+> >> guest pages.
+> >>
+> >> Use the MEM_ATTR_IMMUTABLE property to protect the kernel static
+> >> sections and the boot-time read-only sections. This enables to make sure
+> >> a compromised guest will not be able to change its main physical memory
+> >> page permissions. However, this also disable any feature that may change
+> >> the kernel's text section (e.g., ftrace, Kprobes), but they can still be
+> >> used on kernel modules.
+> >>
+> >> Module loading/unloading, and eBPF JIT is allowed without restrictions
+> >> for now, but we'll need a way to authenticate these code changes to
+> >> really improve the guests' security. We plan to use module signatures,
+> >> but there is no solution yet to authenticate eBPF programs.
+> >>
+> >> Being able to use ftrace and Kprobes in a secure way is a challenge not
+> >> solved yet. We're looking for ideas to make this work.
+> >>
+> >> Likewise, the JUMP_LABEL feature cannot work because the kernel's text
+> >> section is read-only.
+> > 
+> > What is the actual problem? As is the kernel text map is already RO and
+> > never changed.
+> 
+> For the JUMP_LABEL optimization, the text needs to be patched at some point.
+> That patching requires a writable mapping of the text page at the time of
+> patching.
+> 
+> In this Heki feature, we currently lock down the kernel text at the end of
+> kernel boot just before kicking off the init process. The lockdown is
+> implemented by setting the permissions of a text page to R_X in the extended
+> page table and not allowing write permissions in the EPT after that. So, jump label
+> patching during kernel boot is not a problem. But doing it after kernel
+> boot is a problem.
 
-For the JUMP_LABEL optimization, the text needs to be patched at some point.
-That patching requires a writable mapping of the text page at the time of
-patching.
+But you see, that's exactly what the kernel already does with the normal
+permissions. They get set to RX after init and are never changed.
 
-In this Heki feature, we currently lock down the kernel text at the end of
-kernel boot just before kicking off the init process. The lockdown is
-implemented by setting the permissions of a text page to R_X in the extended
-page table and not allowing write permissions in the EPT after that. So, jump label
-patching during kernel boot is not a problem. But doing it after kernel
-boot is a problem.
+See the previous patch, we establish a read-write alias and write there.
 
-The lockdown is just for the current Heki implementation. In the future, we plan
-to have a way of authenticating guest requests to change permissions on a text page.
-Once that is in place, permissions on text pages can be changed on the fly to
-support features that depend on text patching - FTrace, KProbes, etc.
+You seem to lack basic understanding of how the kernel works in this
+regard, which makes me very nervous about you touching any of this.
 
-Madhavan
+I must also say I really dislike your extra/random permssion calls all
+over the place. They don't really get us anything afaict. Why can't you
+plumb into the existing set_memory_*() family?
