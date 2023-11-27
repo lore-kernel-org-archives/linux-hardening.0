@@ -1,97 +1,203 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xMae0OGa"
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13E8E124
-	for <linux-hardening@vger.kernel.org>; Mon, 27 Nov 2023 00:30:00 -0800 (PST)
-Received: by mail-wr1-x434.google.com with SMTP id ffacd0b85a97d-332e42469f0so2441254f8f.1
-        for <linux-hardening@vger.kernel.org>; Mon, 27 Nov 2023 00:29:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701073798; x=1701678598; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2CdZagPBNXqbD/b1Zs1TWZBKxImZV6/P7uarWOkiV20=;
-        b=xMae0OGarg23UsAdbLH5y+CDMD0rquxSioFprZC/RurORG+2uUwKnYXh0zNrNi5Tyg
-         DKlZo2BYuVphBisaRSf+8nWH3YD+W2Tz4GHIEW3+n6mneCwZeGScD9qY/0F6BDEPbRH6
-         j3eRuVmvo4j/WCvVVdr+Yaay//4jJY02DM6maN+QM2DxZysjZuGF68J3Zh6kX7WVDYc6
-         2ZPOY19UVir3PGQ4edq1isdYeRBfmPdIZjJCNbzJ74ubm2GWHgcPJ/ulACux+xFry37r
-         +PwCfztGKM4vWLmx9l8+5/9tRqBONaT+RjC08HOKx19MBnjMZSmBa1NmrdaMBPhnL1kz
-         kuiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701073798; x=1701678598;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2CdZagPBNXqbD/b1Zs1TWZBKxImZV6/P7uarWOkiV20=;
-        b=pS3Zva9UHhJdb8PoPHWeQy69HIt275LtsQfmzx5/rGe5UQ1t5nwJ9Dy4t47oxqM2wM
-         LnTL590+SvfAnfq9FJcmdh70+T/1n8wPsusu3K7WDFP6ylaEAglhj51E69e09ahAujsA
-         2ATL2fKCsazvexFxe6RFkILB4MUp1S63qwMlsvTKrBco3klkGEQzfvBQYhMsSWZQXR7S
-         mPbKrK6jsEiDlulYU1slwXU9tKI0AYaBVAdAUHVJqyFyft3RPkTCJyn8nq2F+FGJlnMk
-         Fi9rxCZG4MilyGCmau6M7NjCgpr92TmFVM46fTEGDsiDVG6mssOq2lNxwzQqfLtskN+I
-         Hw+g==
-X-Gm-Message-State: AOJu0YwGZCZfO55WtAceHSl/eljQOOVsjnw6X4eE3/oJqsECCfHsktd1
-	iCszfxmUCFeLmvlHhvtGXQehKg==
-X-Google-Smtp-Source: AGHT+IHwm8g6hZ3Vl9KSBq7O269APfEEEnP5IbVc0hpRh7KvLTRgo5PytufR1YXdZhec67eFvPpDng==
-X-Received: by 2002:adf:f48d:0:b0:332:e4cc:6a38 with SMTP id l13-20020adff48d000000b00332e4cc6a38mr6966002wro.57.1701073798517;
-        Mon, 27 Nov 2023 00:29:58 -0800 (PST)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id o10-20020adfcf0a000000b00332cda91c85sm11225013wrj.12.2023.11.27.00.29.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Nov 2023 00:29:58 -0800 (PST)
-Date: Mon, 27 Nov 2023 11:29:55 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Peter Rosin <peda@axentia.se>, Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 1/2] mux: Turn 'mux' into a flexible array in 'struct
- mux_chip'
-Message-ID: <19d7ddce-f911-481e-ac89-bc942e40fbe1@suswa.mountain>
-References: <d17bd9b622dbe3f7cb2f18736ef3138a6927f86c.1700986053.git.christophe.jaillet@wanadoo.fr>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dgyZ8Azr"
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55590E1;
+	Mon, 27 Nov 2023 02:11:37 -0800 (PST)
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AR7vNnT021251;
+	Mon, 27 Nov 2023 10:11:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=date : from : to :
+ cc : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=qcppdkim1; bh=EY/c6/Ci98EonGSNUz6fVfm6jLBxiwZHNUrcbJIhhUc=;
+ b=dgyZ8AzrEPdMj/muYfIY6vmUUgXJ221mbT63cmMQh6IWmaPLdMtfQkcM8HkdYM1Y91Vm
+ e+Eaa7XDLPLUlXzCFdJf8g/Xp6+ILKhodQb38KqIGqseMEabwkqPFmtUbQ0fEfxZa6/X
+ rGhH4S8ArhNtC4HGmEDp7qtcSp8nrEC5478A8GQwRJfvnq6MOJnMYsaqLa7BcAe2q23W
+ f0LplwPmfHnQrstICNVYEIMiYOr6+u639WhfKJZIQet/fOSSJcwixOH9ssYBcjYGi5+7
+ qzeZBGVubFQlS3Z1D0MF7jfJzZCAxgg2e7O0Smxzvdq7wgQCVeNxvKUCckM3QKdp5wzI WA== 
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3uk69uc435-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 27 Nov 2023 10:11:11 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3ARABACA005140
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 27 Nov 2023 10:11:10 GMT
+Received: from hu-pkondeti-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Mon, 27 Nov 2023 02:11:00 -0800
+Date: Mon, 27 Nov 2023 15:40:57 +0530
+From: Pavan Kondeti <quic_pkondeti@quicinc.com>
+To: Mukesh Ojha <quic_mojha@quicinc.com>
+CC: <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <keescook@chromium.org>, <tony.luck@intel.com>, <gpiccoli@igalia.com>,
+        <mathieu.poirier@linaro.org>, <vigneshr@ti.com>, <nm@ti.com>,
+        <matthias.bgg@gmail.com>, <kgene@kernel.org>,
+        <alim.akhtar@samsung.com>, <bmasney@redhat.com>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-samsung-soc@vger.kernel.org>, <kernel@quicinc.com>
+Subject: Re: [Patch v6 11/12] pstore/ram: Add ramoops ready notifier support
+Message-ID: <3636dc3a-b62b-4ff9-bdc3-fec496a804b7@quicinc.com>
+References: <1700864395-1479-1-git-send-email-quic_mojha@quicinc.com>
+ <1700864395-1479-12-git-send-email-quic_mojha@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <d17bd9b622dbe3f7cb2f18736ef3138a6927f86c.1700986053.git.christophe.jaillet@wanadoo.fr>
+In-Reply-To: <1700864395-1479-12-git-send-email-quic_mojha@quicinc.com>
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 1IOVxm-ZeU_nBthYVKeJDrGdxnOedH7K
+X-Proofpoint-GUID: 1IOVxm-ZeU_nBthYVKeJDrGdxnOedH7K
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-11-27_08,2023-11-22_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ adultscore=0 spamscore=0 mlxlogscore=999 mlxscore=0 phishscore=0
+ priorityscore=1501 suspectscore=0 lowpriorityscore=0 impostorscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311060000 definitions=main-2311270070
 
-On Sun, Nov 26, 2023 at 09:08:11AM +0100, Christophe JAILLET wrote:
-> The 'mux' array stored in 'struct mux_chip' can be changed into a flexible
-> array.
+On Sat, Nov 25, 2023 at 03:49:54AM +0530, Mukesh Ojha wrote:
+> Client like minidump, is only interested in ramoops
+> region addresses/size so that it could register them
+> with its table and also it is only deals with ram
+> backend and does not use pstorefs to read the records.
+> Let's introduce a client notifier in ramoops which
+> gets called when ramoops driver probes successfully
+> and it passes the ramoops region information to the
+> passed callback by the client and If the call for
+> ramoops ready register comes after ramoops probe
+> than call the callback directly.
 > 
-> This saves:
->    - a pointer in the structure
->    - an indirection when accessing the array
->    - some pointer arithmetic when computing and storing the address in
->      'mux'
-> 
-> It is also now possible to use __counted_by() and struct_size() for
-> additional safety.
-> 
-> The address for the 'priv' memory is computed with mux_chip_priv(). It
-> should work as good with a flexible array.
-> 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
 > ---
-> The struct_size() goodies only work if sizeof_priv is 0. Adding an
-> additional size_add() would make it safe in all cases but would make code
-> less readable (IMHO).
+>  fs/pstore/ram.c            | 77 ++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/pstore_ram.h |  6 ++++
+>  2 files changed, 83 insertions(+)
+> 
+> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+> index a6c0da8cfdd4..72341fd21aec 100644
+> --- a/fs/pstore/ram.c
+> +++ b/fs/pstore/ram.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/of_address.h>
+>  #include <linux/memblock.h>
+>  #include <linux/mm.h>
+> +#include <linux/mutex.h>
+>  
+>  #include "internal.h"
+>  #include "ram_internal.h"
+> @@ -101,6 +102,14 @@ struct ramoops_context {
+>  	unsigned int ftrace_read_cnt;
+>  	unsigned int pmsg_read_cnt;
+>  	struct pstore_info pstore;
+> +	/*
+> +	 * Lock to serialize calls to register_ramoops_ready_notifier,
+> +	 * ramoops_ready_notifier and read/modification of 'ramoops_ready'.
+> +	 */
+> +	struct mutex lock;
+> +	bool ramoops_ready;
+> +	int (*callback)(const char *name, int id, void *vaddr,
+> +			phys_addr_t paddr, size_t size);
+>  };
+>  
+>  static struct platform_device *dummy;
+> @@ -488,6 +497,7 @@ static int ramoops_pstore_erase(struct pstore_record *record)
+>  }
+>  
+>  static struct ramoops_context oops_cxt = {
+> +	.lock   = __MUTEX_INITIALIZER(oops_cxt.lock),
+>  	.pstore = {
+>  		.owner	= THIS_MODULE,
+>  		.name	= "ramoops",
+> @@ -662,6 +672,68 @@ static int ramoops_init_prz(const char *name,
+>  	return 0;
+>  }
+>  
+> +void ramoops_ready_notifier(struct ramoops_context *cxt)
+> +{
+> +	struct persistent_ram_zone *prz;
+> +	int i;
+> +
+> +	if (!cxt->callback)
+> +		return;
+> +
+> +	for (i = 0; i < cxt->max_dump_cnt; i++) {
+> +		prz = cxt->dprzs[i];
+> +		cxt->callback("dmesg", i, prz->vaddr, prz->paddr, prz->size);
+> +	}
+> +
+> +	if (cxt->console_size) {
+> +		prz = cxt->cprz;
+> +		cxt->callback("console", 0, prz->vaddr, prz->paddr, prz->size);
+> +	}
+> +
+> +	for (i = 0; i < cxt->max_ftrace_cnt; i++) {
+> +		prz = cxt->fprzs[i];
+> +		cxt->callback("ftrace", i, prz->vaddr, prz->paddr, prz->size);
+> +	}
+> +
+> +	if (cxt->pmsg_size) {
+> +		prz = cxt->mprz;
+> +		cxt->callback("pmsg", 0, prz->vaddr, prz->paddr, prz->size);
+> +	}
+> +}
+> +
+> +int register_ramoops_ready_notifier(int (*fn)(const char *, int,
+> +				   void *, phys_addr_t, size_t))
+> +{
+> +	struct ramoops_context *cxt = &oops_cxt;
+> +
+> +	mutex_lock(&cxt->lock);
+> +	if (cxt->callback) {
+> +		mutex_unlock(&cxt->lock);
+> +		return -EEXIST;
+> +	}
+> +
+> +	cxt->callback = fn;
+> +	if (cxt->ramoops_ready)
+> +		ramoops_ready_notifier(cxt);
+> +
+> +	mutex_unlock(&cxt->lock);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(register_ramoops_ready_notifier);
+> +
 
-Once people start using size_add() then we'll get used to reading it.
+Can you please elaborate on why do we need this custom notifier logic? 
 
-The controllers value comes from device tree.  For example, in
-mux_mmio_probe().
+why would not a standard notifier (include/linux/notifier.h) work here? 
+The notifier_call callback can recieve custom data from the 
+notifier chain implementer. All we need is to define a custom struct like
 
-	ret = of_property_count_u32_elems(np, "mux-reg-masks");
+struct pstore_ramoops_zone_data {
+	const char *name;
+	int id;
+	void *vaddr;
+	phys_addr_t paddr;
+	size_t size;
+};
 
-I should make Smatch parse device trees.  So that it will know the
-correct range for ret in that assignment.  Eventually, I will.
+and pass the pointer to array of this struct. 
 
-KTODO: make Smatch understand device tree values
 
-regards,
-dan carpenter
+btw, the current logic only supports just one client and this limitation
+is not highlighted any where.
+
+Thanks,
+Pavan
 
