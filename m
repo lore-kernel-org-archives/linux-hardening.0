@@ -1,289 +1,250 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="IdKAmu4X"
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78B83C0;
-	Mon, 27 Nov 2023 02:13:29 -0800 (PST)
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20231127101326euoutp01b0b182f6bc34d3b6173f936366385f9a~bc0C908XE0235902359euoutp01V;
-	Mon, 27 Nov 2023 10:13:26 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20231127101326euoutp01b0b182f6bc34d3b6173f936366385f9a~bc0C908XE0235902359euoutp01V
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1701080006;
-	bh=NQH5aPVZVe18Khb5fqSqA2OlfX7SEHlpgFddfPgDbuI=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=IdKAmu4Xk0Un30nNt6XDtfvzWE9rLkF8zGmdQQ5ct8XMVOokzAK1ZCSY8492jbO/M
-	 5bxyg5DRAE4gomRlwbWENfFVZdPKS39haEet8ikwD8tplWgP//Pb24COQ7XVud7hW+
-	 ieTkFJJwbMxfJsSrmoo6SlTV7gSCVbzxAouQBRl0=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20231127101325eucas1p140cf8a8f9fd8fecb3dbe36c1413c71ff~bc0CxIB_22043720437eucas1p1Y;
-	Mon, 27 Nov 2023 10:13:25 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges2new.samsung.com (EUCPMTA) with SMTP id 71.C3.09814.5CB64656; Mon, 27
-	Nov 2023 10:13:25 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20231127101325eucas1p23fdfc293d4ef5ff7c730f99a1efa184f~bc0CRanYo2415524155eucas1p2T;
-	Mon, 27 Nov 2023 10:13:25 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20231127101325eusmtrp19ea17127d320389bd9b61c6f52321c6b~bc0CQqAXA1967919679eusmtrp1x;
-	Mon, 27 Nov 2023 10:13:25 +0000 (GMT)
-X-AuditID: cbfec7f4-711ff70000002656-f6-65646bc5ea0e
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id 07.00.09274.5CB64656; Mon, 27
-	Nov 2023 10:13:25 +0000 (GMT)
-Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20231127101325eusmtip11d0746c15cf59d05b42c668f7a7f3358~bc0CAn3No0812208122eusmtip1L;
-	Mon, 27 Nov 2023 10:13:25 +0000 (GMT)
-Received: from localhost (106.110.32.133) by CAMSVWEXC02.scsc.local
-	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
-	Mon, 27 Nov 2023 10:13:24 +0000
-Date: Mon, 27 Nov 2023 11:13:23 +0100
-From: Joel Granados <j.granados@samsung.com>
-To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-CC: Kees Cook <keescook@chromium.org>, "Gustavo A. R. Silva"
-	<gustavoars@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, Iurii Zaikin
-	<yzaikin@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	<linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH RFC 0/7] sysctl: constify sysctl ctl_tables
-Message-ID: <20231127101323.sdnibmf7c3d5ovye@localhost>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pzOCb5Wh"
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5951133;
+	Mon, 27 Nov 2023 03:35:40 -0800 (PST)
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3ARAv6rW024162;
+	Mon, 27 Nov 2023 11:35:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=date : from : to :
+ cc : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=qcppdkim1; bh=thltlNEte7wqIEWzvgJuzPrT0P4hiM4udr7oHuK7vgY=;
+ b=pzOCb5WhOzIYaaP5AGgRNCQeuYwj3DkeOfkB4UUWEPqiEy/gFifVHP03+miYQ3a40kaP
+ Ln8MbJx2X5/Sug37juSuUKVfu+JX3o8Qu+bKrK/ZLOfbmUrkiOAFzH10wuX6/1Hg69hp
+ lrQuU7+1QxG7Q0NMwwRIvoU5Up5XIXdx1py4gQePscDLh8vj+ti8r+u04ui28v/WoxAX
+ afl80q0dVRrcF6tCEJchm1tpwqdd1Ip83IykXBbBLV5j3bg7uFO34KoZ5PB2Fe1LVFtv
+ rizOqtfSVyOTJ5M2pbSc0R9yg87LBsGigPCjjS8tddwnXebYro9jjO/7+2xRo4/2QZK0 SA== 
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3uk95cc1nx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 27 Nov 2023 11:35:13 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3ARBZCvS005980
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 27 Nov 2023 11:35:12 GMT
+Received: from hu-pkondeti-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Mon, 27 Nov 2023 03:35:02 -0800
+Date: Mon, 27 Nov 2023 17:04:59 +0530
+From: Pavan Kondeti <quic_pkondeti@quicinc.com>
+To: Mukesh Ojha <quic_mojha@quicinc.com>
+CC: <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <keescook@chromium.org>, <tony.luck@intel.com>, <gpiccoli@igalia.com>,
+        <mathieu.poirier@linaro.org>, <vigneshr@ti.com>, <nm@ti.com>,
+        <matthias.bgg@gmail.com>, <kgene@kernel.org>,
+        <alim.akhtar@samsung.com>, <bmasney@redhat.com>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-samsung-soc@vger.kernel.org>, <kernel@quicinc.com>
+Subject: Re: [Patch v6 10/12] pstore/ram: Add dynamic ramoops region support
+ through commandline
+Message-ID: <ad38fb23-e2a2-448e-bdea-fa0985f82b50@quicinc.com>
+References: <1700864395-1479-1-git-send-email-quic_mojha@quicinc.com>
+ <1700864395-1479-11-git-send-email-quic_mojha@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="zn4hpd3vbxzf3eak"
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20231125-const-sysctl-v1-0-5e881b0e0290@weissschuh.net>
-X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
-	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrNKsWRmVeSWpSXmKPExsWy7djP87pHs1NSDa7N0bdoXryezeLXxWms
-	Fme6cy327D3JYjFv/U9Gi8u75rBZ/P7xjMnixoSnjBbLdvo5cHrMbrjI4rFgU6nHplWdbB77
-	565h9/i8Sc6jv/sYewBbFJdNSmpOZllqkb5dAlfGtLb3TAVT7CqmTbzC0sD4XauLkZNDQsBE
-	4tnOP6xdjFwcQgIrGCUebbnJBuF8YZSYMOksE0iVkMBnRomHO6xgOrZ0nmKCKFoO1NG8jB3C
-	ASpqXPiIEcLZwijx5fdpRpAWFgFViS2rprKD2GwCOhLn39xhBrFFBGwkVn77DNbNLLCLSeLx
-	w7lg+4QF7CV6Dq5jA7F5Bcwl1l47yQRhC0qcnPmEBcRmFqiQ6Dt2HOhyDiBbWmL5Pw6QMKeA
-	q8SbG92MEKcqSXx908sKYddKnNpyC+xsCYHVnBKHd5+FKnKRWPL3HwuELSzx6vgWdghbRuL0
-	5B4WiIbJjBL7/31gh+pmlFjW+JUJospaouXKE6gOR4mev2sZQS6SEOCTuPFWEOJQPolJ26Yz
-	Q4R5JTrahCCq1SRW33vDMoFReRaS12YheW0WwmsQYT2JG1OnsGEIa0ssW/iaGcK2lVi37j3L
-	Akb2VYziqaXFuempxUZ5qeV6xYm5xaV56XrJ+bmbGIFp7vS/4192MC5/9VHvECMTB+MhRhWg
-	5kcbVl9glGLJy89LVRLh1fuYnCrEm5JYWZValB9fVJqTWnyIUZqDRUmcVzVFPlVIID2xJDU7
-	NbUgtQgmy8TBKdXAFBTZtH627BuNF838JRrRD/doxC+cLNLnPbPu8rna4GYJg3XrXU8UHX3Z
-	vsOXwe7A77Me3E/uHjvp/U6xWPtkunWYTNzpwg0bRR2mCG5jFD346nokv7Kxxw9XTd3gS09q
-	Hh1XPHS1a5my8zX3z29XcL8ur6hkY54kOped4XFTwe+0Q4Zps91FNjfveSctxJL8k2N1mMKp
-	VXrbOVcX7b1ZFZi1wPLatsR7c7PK4vsT10pZMH9g/vJ9pdG39ztb0jwnvzVV7J3L91S+NaA3
-	Kds3Yu9at+xl1W7vq+sP3psx7zaXPK/SoVX/C42rKjaoR8s927BXdG7EHKmpIabye7RaSlke
-	/uOcqdUlmS63fReXEktxRqKhFnNRcSIAM52RqO4DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrGIsWRmVeSWpSXmKPExsVy+t/xu7pHs1NSDY5e57doXryezeLXxWms
-	Fme6cy327D3JYjFv/U9Gi8u75rBZ/P7xjMnixoSnjBbLdvo5cHrMbrjI4rFgU6nHplWdbB77
-	565h9/i8Sc6jv/sYewBblJ5NUX5pSapCRn5xia1StKGFkZ6hpYWekYmlnqGxeayVkamSvp1N
-	SmpOZllqkb5dgl7GpyULmAom2VVs+nuEvYHxq1YXIyeHhICJxJbOU0xdjFwcQgJLGSWmvtjJ
-	ApGQkdj45SorhC0s8edaFxtE0UdGibWnJrNCOFsYJW733wbrYBFQldiyaio7iM0moCNx/s0d
-	ZhBbRMBGYuW3z+wgDcwCu5gkHj+cywSSEBawl+g5uI4NxOYVMJdYe+0k1B0zGCWWrD/PApEQ
-	lDg58wmQzQHUXSZxf5MOhCktsfwfB0gFp4CrxJsb3YwQlypJfH3TC3V1rcTnv88YJzAKz0Iy
-	aBbCoFkIg0AqmIGO3rn1DhuGsLbEsoWvmSFsW4l1696zLGBkX8UoklpanJueW2ykV5yYW1ya
-	l66XnJ+7iREY6duO/dyyg3Hlq496hxiZOBgPMaoAdT7asPoCoxRLXn5eqpIIr97H5FQh3pTE
-	yqrUovz4otKc1OJDjKbAQJzILCWanA9MQXkl8YZmBqaGJmaWBqaWZsZK4ryeBR2JQgLpiSWp
-	2ampBalFMH1MHJxSDUxabWozHZi2GjW8aDzoaWiwWL9zysONl/g+af6x/+Cg0Ji2nJVXyCWv
-	qF9z8i4Hfecnt369EdLziTdIVvyno7DQ56ncjXNT91vx58YxySy39NXRPX3XSdS34PWL+QXN
-	jZ/PZqxZ6bNVObD0hUqpIceM04JNV07X1/OrXmxrXveted20Xh2LtrWztKZbx7zgUt2z+WF6
-	PvdaHrNbN/axRNk+av0070dVlBGP5+8zf8NDTBhFJu1f8/+ijcOUWr+Sf8fqq1LXZXWUvlhn
-	sv6H7NFZa7e4PX8233G+qfjGqWd/WL7bueZdy93NryR2h6ee5rop/t8ztjZXJ/fIbgvmbpl1
-	+6a5OBn9P31lff7iEHslluKMREMt5qLiRAA3pGtoiQMAAA==
-X-CMS-MailID: 20231127101325eucas1p23fdfc293d4ef5ff7c730f99a1efa184f
-X-Msg-Generator: CA
-X-RootMTR: 20231125125305eucas1p2ebdf870dd8ef46ea9d346f727b832439
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20231125125305eucas1p2ebdf870dd8ef46ea9d346f727b832439
-References: <CGME20231125125305eucas1p2ebdf870dd8ef46ea9d346f727b832439@eucas1p2.samsung.com>
-	<20231125-const-sysctl-v1-0-5e881b0e0290@weissschuh.net>
+In-Reply-To: <1700864395-1479-11-git-send-email-quic_mojha@quicinc.com>
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: gSQpbWT7UNoVWbbqsLNJRqn82Dqqebju
+X-Proofpoint-ORIG-GUID: gSQpbWT7UNoVWbbqsLNJRqn82Dqqebju
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-11-27_09,2023-11-27_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1015
+ adultscore=0 bulkscore=0 suspectscore=0 mlxlogscore=999 spamscore=0
+ lowpriorityscore=0 phishscore=0 mlxscore=0 priorityscore=1501
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311060000 definitions=main-2311270079
 
---zn4hpd3vbxzf3eak
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hey Thomas
-
-In general I would like to see more clarity with the motivation and I
-would also expect some system testing. My comments inline:
-
-On Sat, Nov 25, 2023 at 01:52:49PM +0100, Thomas Wei=DFschuh wrote:
-> Problem description:
->=20
-> The kernel contains a lot of struct ctl_table throught the tree.
-> These are very often 'static' definitions.
-> It would be good to mark these tables const to avoid accidental or
-> malicious modifications.
-It is unclear to me what you mean here with accidental or malicious
-modifications. Do you have a specific attack vector in mind? Do you
-have an example of how this could happen maliciously? With
-accidental, do you mean in proc/sysctl.c? Can you expand more on the
-accidental part?
-
-What happens with the code that modifies these outside the sysctl core?
-Like for example in sysctl_route_net_init where the table is modified
-depending on the net->user_ns? Would these non-const ctl_table pointers
-be ok? would they be handled differently?
-
-> Unfortunately the tables can not be made const because the core
-> registration functions expect mutable tables.
->=20
-> This is for two reasons:
->=20
-> 1) sysctl_{set,clear}_perm_empty_ctl_header in the sysctl core modify
->    the table. This should be fixable by only modifying the header
->    instead of the table itself.
-> 2) The table is passed to the handler function as a non-const pointer.
->=20
-> This series is an aproach on fixing reason 2).
-So number 2 will be sent in another set?
-
->=20
-> Full process:
->=20
-> * Introduce field proc_handler_new for const handlers (this series)
-> * Migrate all core handlers to proc_handler_new (this series, partial)
->   This can hopefully be done in a big switch, as it only involves
->   functions and structures owned by the core sysctl code.
-> * Migrate all other sysctl handlers to proc_handler_new.
-> * Drop the old proc_handler_field.
-> * Fix the sysctl core to not modify the tables anymore.
-> * Adapt public sysctl APIs to take "const struct ctl_table *".
-> * Teach checkpatch.pl to warn on non-const "struct ctl_table"
->   definitions.
-> * Migrate definitions of "struct ctl_table" to "const" where applicable.
-> =20
->=20
-> Notes:
->=20
-> Just casting the function pointers around would trigger
-> CFI (control flow integrity) warnings.
->=20
-> The name of the new handler "proc_handler_new" is a bit too long messing
-> up the alignment of the table definitions.
-> Maybe "proc_handler2" or "proc_handler_c" for (const) would be better.
-indeed the name does not say much. "_new" looses its meaning quite fast
-:)
-
-In my experience these tree wide modifications are quite tricky. Have you
-run any tests to see that everything is as it was? sysctl selftests and
-0-day come to mind.
-
-Best
->=20
+On Sat, Nov 25, 2023 at 03:49:53AM +0530, Mukesh Ojha wrote:
+> The reserved memory region for ramoops is assumed to be at a fixed
+> and known location when read from the devicetree. This may not be
+> required for something like Qualcomm's minidump which is interested
+> in knowing addresses of ramoops region but it does not put hard
+> requirement of address being fixed as most of it's SoC does not
+> support warm reset and does not use pstorefs at all instead it has
+> firmware way of collecting ramoops region if it gets to know the
+> address and register it with apss minidump table which is sitting
+> in shared memory region in DDR and firmware will have access to
+> these table during reset and collects it on crash of SoC.
+> 
+> So, add the support of reserving ramoops region to be dynamically
+> allocated early during boot if it is request through command line
+> via 'dyn_ramoops_size=<size>' and fill up reserved resource structure
+> and export the structure, so that it can be read by ramoops driver.
+> 
+> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
 > ---
-> Thomas Wei=DFschuh (7):
->       sysctl: add helper sysctl_run_handler
->       bpf: cgroup: call proc handler through helper
->       sysctl: add proc_handler_new to struct ctl_table
->       net: sysctl: add new sysctl table handler to debug message
->       treewide: sysctl: migrate proc_dostring to proc_handler_new
->       treewide: sysctl: migrate proc_dobool to proc_handler_new
->       treewide: sysctl: migrate proc_dointvec to proc_handler_new
->=20
->  arch/arm/kernel/isa.c                   |  6 +--
->  arch/csky/abiv1/alignment.c             |  8 ++--
->  arch/powerpc/kernel/idle.c              |  2 +-
->  arch/riscv/kernel/vector.c              |  2 +-
->  arch/s390/kernel/debug.c                |  2 +-
->  crypto/fips.c                           |  6 +--
->  drivers/char/hpet.c                     |  2 +-
->  drivers/char/random.c                   |  4 +-
->  drivers/infiniband/core/iwcm.c          |  2 +-
->  drivers/infiniband/core/ucma.c          |  2 +-
->  drivers/macintosh/mac_hid.c             |  4 +-
->  drivers/md/md.c                         |  4 +-
->  drivers/scsi/sg.c                       |  2 +-
->  drivers/tty/tty_io.c                    |  4 +-
->  fs/coda/sysctl.c                        |  6 +--
->  fs/coredump.c                           |  6 +--
->  fs/devpts/inode.c                       |  2 +-
->  fs/lockd/svc.c                          |  4 +-
->  fs/locks.c                              |  4 +-
->  fs/nfs/nfs4sysctl.c                     |  2 +-
->  fs/nfs/sysctl.c                         |  2 +-
->  fs/notify/dnotify/dnotify.c             |  2 +-
->  fs/ntfs/sysctl.c                        |  2 +-
->  fs/ocfs2/stackglue.c                    |  2 +-
->  fs/proc/proc_sysctl.c                   | 16 ++++---
->  fs/quota/dquot.c                        |  2 +-
->  include/linux/sysctl.h                  | 29 +++++++++---
->  init/do_mounts_initrd.c                 |  2 +-
->  io_uring/io_uring.c                     |  2 +-
->  ipc/mq_sysctl.c                         |  2 +-
->  kernel/acct.c                           |  2 +-
->  kernel/bpf/cgroup.c                     |  2 +-
->  kernel/locking/lockdep.c                |  4 +-
->  kernel/printk/sysctl.c                  |  4 +-
->  kernel/reboot.c                         |  4 +-
->  kernel/seccomp.c                        |  2 +-
->  kernel/signal.c                         |  2 +-
->  kernel/sysctl-test.c                    | 20 ++++-----
->  kernel/sysctl.c                         | 80 ++++++++++++++++-----------=
-------
->  lib/test_sysctl.c                       | 10 ++---
->  mm/hugetlb.c                            |  2 +-
->  mm/hugetlb_vmemmap.c                    |  2 +-
->  mm/oom_kill.c                           |  4 +-
->  net/appletalk/sysctl_net_atalk.c        |  2 +-
->  net/core/sysctl_net_core.c              | 12 ++---
->  net/ipv4/route.c                        | 18 ++++----
->  net/ipv4/sysctl_net_ipv4.c              | 38 ++++++++--------
->  net/ipv4/xfrm4_policy.c                 |  2 +-
->  net/ipv6/addrconf.c                     | 72 ++++++++++++++-------------=
---
->  net/ipv6/route.c                        |  8 ++--
->  net/ipv6/sysctl_net_ipv6.c              | 18 ++++----
->  net/ipv6/xfrm6_policy.c                 |  2 +-
->  net/mptcp/ctrl.c                        |  2 +-
->  net/netfilter/ipvs/ip_vs_ctl.c          | 36 +++++++--------
->  net/netfilter/nf_conntrack_standalone.c |  8 ++--
->  net/netfilter/nf_log.c                  |  2 +-
->  net/rds/ib_sysctl.c                     |  2 +-
->  net/rds/sysctl.c                        |  6 +--
->  net/sctp/sysctl.c                       | 26 +++++------
->  net/sunrpc/xprtrdma/transport.c         |  2 +-
->  net/sysctl_net.c                        |  5 ++-
->  net/unix/sysctl_net_unix.c              |  2 +-
->  net/x25/sysctl_net_x25.c                |  2 +-
->  net/xfrm/xfrm_sysctl.c                  |  4 +-
->  64 files changed, 280 insertions(+), 262 deletions(-)
-> ---
-> base-commit: 0f5cc96c367f2e780eb492cc9cab84e3b2ca88da
-> change-id: 20231116-const-sysctl-e14624f1295c
->=20
-> Best regards,
-> --=20
-> Thomas Wei=DFschuh <linux@weissschuh.net>
->=20
+>  Documentation/admin-guide/ramoops.rst |  7 ++++
+>  fs/pstore/Kconfig                     | 15 +++++++++
+>  fs/pstore/ram.c                       | 62 ++++++++++++++++++++++++++++++++---
+>  include/linux/pstore_ram.h            |  5 +++
+>  init/main.c                           |  2 ++
+>  5 files changed, 87 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/ramoops.rst b/Documentation/admin-guide/ramoops.rst
+> index e9f85142182d..af737adbf079 100644
+> --- a/Documentation/admin-guide/ramoops.rst
+> +++ b/Documentation/admin-guide/ramoops.rst
+> @@ -33,6 +33,13 @@ memory are implementation defined, and won't work on many ARMs such as omaps.
+>  Setting ``mem_type=2`` attempts to treat the memory region as normal memory,
+>  which enables full cache on it. This can improve the performance.
+>  
+> +Ramoops memory region can also be allocated dynamically for a special case where
+> +there is no requirement to access the logs from pstorefs on next boot instead there
+> +is separate backend mechanism like minidump present which has awareness about the
+> +dynamic ramoops region and can recover the logs. This is enabled via command line
+> +parameter ``dyn_ramoops_size=<size>`` and should not be used in absence of
+> +separate backend which knows how to recover this dynamic region.
+> +
+>  The memory area is divided into ``record_size`` chunks (also rounded down to
+>  power of two) and each kmesg dump writes a ``record_size`` chunk of
+>  information.
+> diff --git a/fs/pstore/Kconfig b/fs/pstore/Kconfig
+> index 3acc38600cd1..e13e53d7a225 100644
+> --- a/fs/pstore/Kconfig
+> +++ b/fs/pstore/Kconfig
+> @@ -81,6 +81,21 @@ config PSTORE_RAM
+>  
+>  	  For more information, see Documentation/admin-guide/ramoops.rst.
+>  
+> +config PSTORE_DYNAMIC_RAMOOPS_REGION_RESERVATION
+> +	bool "Reserve ramoops region dynamically"
+> +	select PSTORE_RAM
+> +	help
+> +	  This enables the dynamic reservation of ramoops region for a special case
+> +	  where there is no requirement to access the logs from pstorefs on next boot
+> +	  instead there is separate backend mechanism like minidump present which has
+> +	  awareness about the dynamic ramoops region and can recover the logs. This is
+> +	  enabled via command line parameter dyn_ramoops_size=<size> and should not be
+> +	  used in absence of separate backend which knows how to recover this dynamic
+> +	  region.
+> +
+> +	  Note whenever this config is selected ramoops driver will be build statically
+> +	  into kernel.
+> +
 
---=20
+Is there any advantage if we decouple this memory reservation from
+pstore ram so that pstore ram can still be compiled as module? Asking
+because you explicitly mentioned this limitation.
 
-Joel Granados
+>  config PSTORE_ZONE
+>  	tristate
+>  	depends on PSTORE
+> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+> index 88b34fdbf759..a6c0da8cfdd4 100644
+> --- a/fs/pstore/ram.c
+> +++ b/fs/pstore/ram.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/compiler.h>
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+> +#include <linux/memblock.h>
+>  #include <linux/mm.h>
+>  
+>  #include "internal.h"
+> @@ -103,6 +104,55 @@ struct ramoops_context {
+>  };
+>  
+>  static struct platform_device *dummy;
+> +static int dyn_ramoops_size;
+> +/* Location of the reserved area for the dynamic ramoops */
+> +static struct resource dyn_ramoops_res = {
+> +	.name  = "ramoops",
+> +	.start = 0,
+> +	.end   = 0,
+> +	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
+> +	.desc  = IORES_DESC_NONE,
+> +};
+> +
+> +static int __init parse_dyn_ramoops_size(char *p)
+> +{
+> +	char *tmp;
+> +
+> +	dyn_ramoops_size = memparse(p, &tmp);
+> +	if (p == tmp) {
+> +		pr_err("ramoops: memory size expected\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +early_param("dyn_ramoops_size", parse_dyn_ramoops_size);
 
---zn4hpd3vbxzf3eak
-Content-Type: application/pgp-signature; name="signature.asc"
+should not this code be under
+CONFIG_PSTORE_DYNAMIC_RAMOOPS_REGION_RESERVATION?
 
------BEGIN PGP SIGNATURE-----
+> +
+> +#ifdef CONFIG_PSTORE_DYNAMIC_RAMOOPS_REGION_RESERVATION
+> +/*
+> + * setup_dynamic_ramoops() - reserves memory for dynamic ramoops
+> + *
+> + * This enable dynamic reserve memory support for ramoops through
+> + * command line.
+> + */
+> +void __init setup_dynamic_ramoops(void)
+> +{
+> +	unsigned long long ramoops_base;
+> +	unsigned long long ramoops_size;
+> +
+> +	ramoops_base = memblock_phys_alloc_range(dyn_ramoops_size, SMP_CACHE_BYTES,
+> +						 0, MEMBLOCK_ALLOC_NOLEAKTRACE);
+> +	if (!ramoops_base) {
+> +		pr_err("cannot allocate ramoops dynamic memory (size:0x%llx).\n",
+> +			ramoops_size);
+> +		return;
+> +	}
 
-iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmVka60ACgkQupfNUreW
-QU+Hkgv/fsX1aDSSa8URhpWfgcWFNkt8gE1/YrLUf5bWFX84VcsLpNNFV7ugOfHF
-z0U/ZhgJejIQ5VmcDhi8Un86x2YxQ6OQE5LD1Zbk2MKd1W49RGwAR8MRh0qlyHo+
-poVDU8p+uf6yPSCUnXLgZlCa+hfohzKy/gbCZw/dQCNoRnfqTDq74vicXvs9pksB
-4PM7fRQSyjwibHZeH/LVI2QsgR1rFXcYUHz6AMIYEMCmnQft79TaHwKQXSFLneXW
-6H1uyxVsqQIhGhfM7Vxa40bLNyJ6uUoD2Gddf0o5wtALGds8B0aOhQepLbbVWgTw
-lX35EnOW9HQg0MW4uR23KUQmMEf15GIdKXO1AJQfWRVKnBCM3U82oTMD0YWjL4oU
-m7T/FW87L1eF2xxr+j1RQJqFnLf9Kd4i335UUrcbVKPCzhSQfWFSpy82pw0cq7Wk
-4l2yqTSJSB14SzyKBudrciy4rQmF5QAn/SxmbPl9x2svw33umu+N2pjprBiPvSLX
-wGXylbx9
-=UfF8
------END PGP SIGNATURE-----
+This error needs to be propagated to ramoops_register_dummy() since it
+rely on !dyn_ramoops_size . one way is to set dyn_ramoops_size to 0.
 
---zn4hpd3vbxzf3eak--
+> +
+> +	dyn_ramoops_res.start = ramoops_base;
+> +	dyn_ramoops_res.end = ramoops_base + dyn_ramoops_size - 1;
+> +	insert_resource(&iomem_resource, &dyn_ramoops_res);
+> +}
+> +#endif
+>  
+>  static int ramoops_pstore_open(struct pstore_info *psi)
+>  {
+> @@ -915,14 +965,18 @@ static void __init ramoops_register_dummy(void)
+>  
+>  	/*
+>  	 * Prepare a dummy platform data structure to carry the module
+> -	 * parameters. If mem_size isn't set, then there are no module
+> -	 * parameters, and we can skip this.
+> +	 * parameters. If mem_size isn't set, check for dynamic ramoops
+> +	 * size and use if it is set.
+>  	 */
+> -	if (!mem_size)
+> +	if (!mem_size && !dyn_ramoops_size)
+>  		return;
+>  
+
+If mem_size and dyn_ramoops_size are set, you are taking
+dyn_ramoops_size precedence here. The comment is a bit confusing, pls
+review it once.
+
+> -	pr_info("using module parameters\n");
+> +	if (dyn_ramoops_size) {
+> +		mem_size = dyn_ramoops_size;
+> +		mem_address = dyn_ramoops_res.start;
+> +	}
+>  
+
+Overall it Looks good to me. Thanks.
