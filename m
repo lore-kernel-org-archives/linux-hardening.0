@@ -1,149 +1,282 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="W2yx2WsK"
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19095B0;
-	Tue, 28 Nov 2023 00:18:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1701159511;
-	bh=bALKkCMp4lwFvbZNSnYUsuxiPjBZcOtLPTfv5JH7kEI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=W2yx2WsKSKX+OxGDFmsqxigPuTgF7gXV5uUuM1cjTjiMJJPTck/FA5tPFo/sJKb36
-	 1mbhhZfmKMRRb9N0vtU1BV0SzPDGW6lmu1Tex4fcrh7kV4Qf3z6Vjk5OibJPIdVwai
-	 Ccq9HpQqWDDyeLlcWeZ3SdowZByoz58cE27ue6lg=
-Date: Tue, 28 Nov 2023 09:18:30 +0100
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Joel Granados <j.granados@samsung.com>
-Cc: Kees Cook <keescook@chromium.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Iurii Zaikin <yzaikin@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH RFC 0/7] sysctl: constify sysctl ctl_tables
-Message-ID: <475cd5fa-f0cc-4b8b-9e04-458f6d143178@t-8ch.de>
-References: <CGME20231125125305eucas1p2ebdf870dd8ef46ea9d346f727b832439@eucas1p2.samsung.com>
- <20231125-const-sysctl-v1-0-5e881b0e0290@weissschuh.net>
- <20231127101323.sdnibmf7c3d5ovye@localhost>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="oyKSQb4y"
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C764ED6D;
+	Tue, 28 Nov 2023 02:33:18 -0800 (PST)
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AS9IOKA030987;
+	Tue, 28 Nov 2023 10:32:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=6WJrDs6aXBvRV/cHzyTFtHB3cjvoU5uFPQPLuXGwXh4=;
+ b=oyKSQb4yUVsiTvtgVlnCchbcwTqCsKms8gp+pNTQQ+dka3v/ZaReHN4opnVCpE7nP3CF
+ 6SBKSdBj+Z/xQLOAXFoOc2mGRme+GYGCYO85PVD0YqaATHIg0s/FQgOnHTOCS1HB5wrZ
+ rixDvAMBLXBapiEx++tWW218UIBUqSqhhD93s/wysZmrj/eEYS7hYzIYYc5tzKtpePz8
+ QV6hPgrZdkJLYqTlAmO/RunKvHwgEzREDOe8rMLxFltU3wbQYO6biEANVX4PyzpYwdTl
+ gdCg4Q3EX3OlrCha7+9PSsLlHa5TNLcxkvpTbKGl06czSfrt7bUl8pfuIkG/OhuUYlTR Hw== 
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3un02h1xbj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 28 Nov 2023 10:32:53 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3ASAWp99022084
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 28 Nov 2023 10:32:51 GMT
+Received: from [10.214.66.81] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 28 Nov
+ 2023 02:32:40 -0800
+Message-ID: <d5fa95e7-ad2a-0dc7-5c79-6a9a789dad5f@quicinc.com>
+Date: Tue, 28 Nov 2023 16:02:33 +0530
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231127101323.sdnibmf7c3d5ovye@localhost>
-
-Hi Joel,
-
-On 2023-11-27 11:13:23+0100, Joel Granados wrote:
-> In general I would like to see more clarity with the motivation and I
-> would also expect some system testing. My comments inline:
-
-Thanks for your feedback, response are below.
-
-> On Sat, Nov 25, 2023 at 01:52:49PM +0100, Thomas Weißschuh wrote:
-> > Problem description:
-> > 
-> > The kernel contains a lot of struct ctl_table throught the tree.
-> > These are very often 'static' definitions.
-> > It would be good to mark these tables const to avoid accidental or
-> > malicious modifications.
-
-> It is unclear to me what you mean here with accidental or malicious
-> modifications. Do you have a specific attack vector in mind? Do you
-> have an example of how this could happen maliciously? With
-> accidental, do you mean in proc/sysctl.c? Can you expand more on the
-> accidental part?
-
-There is no specific attack vector I have in mind. The goal is to remove
-mutable data, especially if it contains pointers, that could be used by
-an attacker as a step in an exploit. See for example [0], [1].
-
-Accidental can be any out-of-bounds write throughout the kernel.
-
-> What happens with the code that modifies these outside the sysctl core?
-> Like for example in sysctl_route_net_init where the table is modified
-> depending on the net->user_ns? Would these non-const ctl_table pointers
-> be ok? would they be handled differently?
-
-It is still completely fine to modify the tables before registering,
-like sysctl_route_net_init is doing. That code should not need any
-changes.
-
-Modifying the table inside the handler function would bypass the
-validation done when registering so sounds like a bad idea in general.
-It would still be possible however for a subsystem to do so by just not
-making their sysctl table const and then modifying the table directly.
- 
-> > Unfortunately the tables can not be made const because the core
-> > registration functions expect mutable tables.
-> > 
-> > This is for two reasons:
-> > 
-> > 1) sysctl_{set,clear}_perm_empty_ctl_header in the sysctl core modify
-> >    the table. This should be fixable by only modifying the header
-> >    instead of the table itself.
-> > 2) The table is passed to the handler function as a non-const pointer.
-> > 
-> > This series is an aproach on fixing reason 2).
-
-> So number 2 will be sent in another set?
-
-If the initial feedback to the RFC and general process is positive, yes.
-
-> > 
-> > Full process:
-> > 
-> > * Introduce field proc_handler_new for const handlers (this series)
-> > * Migrate all core handlers to proc_handler_new (this series, partial)
-> >   This can hopefully be done in a big switch, as it only involves
-> >   functions and structures owned by the core sysctl code.
-> > * Migrate all other sysctl handlers to proc_handler_new.
-> > * Drop the old proc_handler_field.
-> > * Fix the sysctl core to not modify the tables anymore.
-> > * Adapt public sysctl APIs to take "const struct ctl_table *".
-> > * Teach checkpatch.pl to warn on non-const "struct ctl_table"
-> >   definitions.
-> > * Migrate definitions of "struct ctl_table" to "const" where applicable.
-> >  
-> > 
-> > Notes:
-> > 
-> > Just casting the function pointers around would trigger
-> > CFI (control flow integrity) warnings.
-> > 
-> > The name of the new handler "proc_handler_new" is a bit too long messing
-> > up the alignment of the table definitions.
-> > Maybe "proc_handler2" or "proc_handler_c" for (const) would be better.
-
-> indeed the name does not say much. "_new" looses its meaning quite fast
-> :)
-
-Hopefully somebody comes up with a better name!
-
-> In my experience these tree wide modifications are quite tricky. Have you
-> run any tests to see that everything is as it was? sysctl selftests and
-> 0-day come to mind.
-
-I managed to miss one change in my initial submission:
-With the hunk below selftests and typing emails work.
-
---- a/fs/proc/proc_sysctl.c
-+++ b/fs/proc/proc_sysctl.c
-@@ -1151,7 +1151,7 @@ static int sysctl_check_table(const char *path, struct ctl_table_header *header)
-                        else
-                                err |= sysctl_check_table_array(path, entry);
-                }
--               if (!entry->proc_handler)
-+               if (!entry->proc_handler && !entry->proc_handler_new)
-                        err |= sysctl_err(path, entry, "No proc_handler");
- 
-                if ((entry->mode & (S_IRUGO|S_IWUGO)) != entry->mode)
-
-> [..]
-
-[0] 43a7206b0963 ("driver core: class: make class_register() take a const *")
-[1] https://lore.kernel.org/lkml/20230930050033.41174-1-wedsonaf@gmail.com/
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [Patch v6 10/12] pstore/ram: Add dynamic ramoops region support
+ through commandline
+To: Pavan Kondeti <quic_pkondeti@quicinc.com>
+CC: <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <keescook@chromium.org>, <tony.luck@intel.com>, <gpiccoli@igalia.com>,
+        <mathieu.poirier@linaro.org>, <vigneshr@ti.com>, <nm@ti.com>,
+        <matthias.bgg@gmail.com>, <kgene@kernel.org>,
+        <alim.akhtar@samsung.com>, <bmasney@redhat.com>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-samsung-soc@vger.kernel.org>, <kernel@quicinc.com>
+References: <1700864395-1479-1-git-send-email-quic_mojha@quicinc.com>
+ <1700864395-1479-11-git-send-email-quic_mojha@quicinc.com>
+ <ad38fb23-e2a2-448e-bdea-fa0985f82b50@quicinc.com>
+Content-Language: en-US
+From: Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <ad38fb23-e2a2-448e-bdea-fa0985f82b50@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 51E3dRmfj17vx50XeFUlt--L527HdirG
+X-Proofpoint-ORIG-GUID: 51E3dRmfj17vx50XeFUlt--L527HdirG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-11-28_08,2023-11-27_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ priorityscore=1501 malwarescore=0 adultscore=0 lowpriorityscore=0
+ impostorscore=0 spamscore=0 mlxscore=0 phishscore=0 bulkscore=0
+ mlxlogscore=999 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2311060000 definitions=main-2311280083
 
 
-Thomas
+
+On 11/27/2023 5:04 PM, Pavan Kondeti wrote:
+> On Sat, Nov 25, 2023 at 03:49:53AM +0530, Mukesh Ojha wrote:
+>> The reserved memory region for ramoops is assumed to be at a fixed
+>> and known location when read from the devicetree. This may not be
+>> required for something like Qualcomm's minidump which is interested
+>> in knowing addresses of ramoops region but it does not put hard
+>> requirement of address being fixed as most of it's SoC does not
+>> support warm reset and does not use pstorefs at all instead it has
+>> firmware way of collecting ramoops region if it gets to know the
+>> address and register it with apss minidump table which is sitting
+>> in shared memory region in DDR and firmware will have access to
+>> these table during reset and collects it on crash of SoC.
+>>
+>> So, add the support of reserving ramoops region to be dynamically
+>> allocated early during boot if it is request through command line
+>> via 'dyn_ramoops_size=<size>' and fill up reserved resource structure
+>> and export the structure, so that it can be read by ramoops driver.
+>>
+>> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+>> ---
+>>   Documentation/admin-guide/ramoops.rst |  7 ++++
+>>   fs/pstore/Kconfig                     | 15 +++++++++
+>>   fs/pstore/ram.c                       | 62 ++++++++++++++++++++++++++++++++---
+>>   include/linux/pstore_ram.h            |  5 +++
+>>   init/main.c                           |  2 ++
+>>   5 files changed, 87 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/Documentation/admin-guide/ramoops.rst b/Documentation/admin-guide/ramoops.rst
+>> index e9f85142182d..af737adbf079 100644
+>> --- a/Documentation/admin-guide/ramoops.rst
+>> +++ b/Documentation/admin-guide/ramoops.rst
+>> @@ -33,6 +33,13 @@ memory are implementation defined, and won't work on many ARMs such as omaps.
+>>   Setting ``mem_type=2`` attempts to treat the memory region as normal memory,
+>>   which enables full cache on it. This can improve the performance.
+>>   
+>> +Ramoops memory region can also be allocated dynamically for a special case where
+>> +there is no requirement to access the logs from pstorefs on next boot instead there
+>> +is separate backend mechanism like minidump present which has awareness about the
+>> +dynamic ramoops region and can recover the logs. This is enabled via command line
+>> +parameter ``dyn_ramoops_size=<size>`` and should not be used in absence of
+>> +separate backend which knows how to recover this dynamic region.
+>> +
+>>   The memory area is divided into ``record_size`` chunks (also rounded down to
+>>   power of two) and each kmesg dump writes a ``record_size`` chunk of
+>>   information.
+>> diff --git a/fs/pstore/Kconfig b/fs/pstore/Kconfig
+>> index 3acc38600cd1..e13e53d7a225 100644
+>> --- a/fs/pstore/Kconfig
+>> +++ b/fs/pstore/Kconfig
+>> @@ -81,6 +81,21 @@ config PSTORE_RAM
+>>   
+>>   	  For more information, see Documentation/admin-guide/ramoops.rst.
+>>   
+>> +config PSTORE_DYNAMIC_RAMOOPS_REGION_RESERVATION
+>> +	bool "Reserve ramoops region dynamically"
+>> +	select PSTORE_RAM
+>> +	help
+>> +	  This enables the dynamic reservation of ramoops region for a special case
+>> +	  where there is no requirement to access the logs from pstorefs on next boot
+>> +	  instead there is separate backend mechanism like minidump present which has
+>> +	  awareness about the dynamic ramoops region and can recover the logs. This is
+>> +	  enabled via command line parameter dyn_ramoops_size=<size> and should not be
+>> +	  used in absence of separate backend which knows how to recover this dynamic
+>> +	  region.
+>> +
+>> +	  Note whenever this config is selected ramoops driver will be build statically
+>> +	  into kernel.
+>> +
+> 
+> Is there any advantage if we decouple this memory reservation from
+> pstore ram so that pstore ram can still be compiled as module? Asking
+> because you explicitly mentioned this limitation.
+
+This is doable and it will be needing export(may be _NS) of
+ramoops resource if ramoops needs to be build as modules.
+
+Thanks for suggestion.
+But Let's hear it from other people as well if they have something
+to add otherwise, will do it next series.
+
+> 
+>>   config PSTORE_ZONE
+>>   	tristate
+>>   	depends on PSTORE
+>> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+>> index 88b34fdbf759..a6c0da8cfdd4 100644
+>> --- a/fs/pstore/ram.c
+>> +++ b/fs/pstore/ram.c
+>> @@ -20,6 +20,7 @@
+>>   #include <linux/compiler.h>
+>>   #include <linux/of.h>
+>>   #include <linux/of_address.h>
+>> +#include <linux/memblock.h>
+>>   #include <linux/mm.h>
+>>   
+>>   #include "internal.h"
+>> @@ -103,6 +104,55 @@ struct ramoops_context {
+>>   };
+>>   
+>>   static struct platform_device *dummy;
+>> +static int dyn_ramoops_size;
+>> +/* Location of the reserved area for the dynamic ramoops */
+>> +static struct resource dyn_ramoops_res = {
+>> +	.name  = "ramoops",
+>> +	.start = 0,
+>> +	.end   = 0,
+>> +	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
+>> +	.desc  = IORES_DESC_NONE,
+>> +};
+>> +
+>> +static int __init parse_dyn_ramoops_size(char *p)
+>> +{
+>> +	char *tmp;
+>> +
+>> +	dyn_ramoops_size = memparse(p, &tmp);
+>> +	if (p == tmp) {
+>> +		pr_err("ramoops: memory size expected\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +early_param("dyn_ramoops_size", parse_dyn_ramoops_size);
+> 
+> should not this code be under
+> CONFIG_PSTORE_DYNAMIC_RAMOOPS_REGION_RESERVATION?
+
+Yeah, looks to be miss., thanks again..
+
+> 
+>> +
+>> +#ifdef CONFIG_PSTORE_DYNAMIC_RAMOOPS_REGION_RESERVATION
+>> +/*
+>> + * setup_dynamic_ramoops() - reserves memory for dynamic ramoops
+>> + *
+>> + * This enable dynamic reserve memory support for ramoops through
+>> + * command line.
+>> + */
+>> +void __init setup_dynamic_ramoops(void)
+>> +{
+>> +	unsigned long long ramoops_base;
+>> +	unsigned long long ramoops_size;
+>> +
+>> +	ramoops_base = memblock_phys_alloc_range(dyn_ramoops_size, SMP_CACHE_BYTES,
+>> +						 0, MEMBLOCK_ALLOC_NOLEAKTRACE);
+>> +	if (!ramoops_base) {
+>> +		pr_err("cannot allocate ramoops dynamic memory (size:0x%llx).\n",
+>> +			ramoops_size);
+>> +		return;
+>> +	}
+> 
+> This error needs to be propagated to ramoops_register_dummy() since it
+> rely on !dyn_ramoops_size . one way is to set dyn_ramoops_size to 0.
+
+Good point, will do that..
+
+> 
+>> +
+>> +	dyn_ramoops_res.start = ramoops_base;
+>> +	dyn_ramoops_res.end = ramoops_base + dyn_ramoops_size - 1;
+>> +	insert_resource(&iomem_resource, &dyn_ramoops_res);
+>> +}
+>> +#endif
+>>   
+>>   static int ramoops_pstore_open(struct pstore_info *psi)
+>>   {
+>> @@ -915,14 +965,18 @@ static void __init ramoops_register_dummy(void)
+>>   
+>>   	/*
+>>   	 * Prepare a dummy platform data structure to carry the module
+>> -	 * parameters. If mem_size isn't set, then there are no module
+>> -	 * parameters, and we can skip this.
+>> +	 * parameters. If mem_size isn't set, check for dynamic ramoops
+>> +	 * size and use if it is set.
+>>   	 */
+>> -	if (!mem_size)
+>> +	if (!mem_size && !dyn_ramoops_size)
+>>   		return;
+>>   
+> 
+> If mem_size and dyn_ramoops_size are set, you are taking
+> dyn_ramoops_size precedence here. The comment is a bit confusing, pls
+> review it once.
+
+Ideally, both should not be set and there will always be
+confusion.
+
+Do you think, if we use mem_size a single variable both for earlier
+and dynamic ramoops where based on dyn_ramoops_size=true/on a boolean
+it will take dynamic ramoops path and if not mentioned it will take 
+older path.
+
+-Mukesh
+> 
+>> -	pr_info("using module parameters\n");
+>> +	if (dyn_ramoops_size) {
+>> +		mem_size = dyn_ramoops_size;
+>> +		mem_address = dyn_ramoops_res.start;
+>> +	}
+>>   
+> 
+> Overall it Looks good to me. Thanks.
