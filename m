@@ -1,75 +1,82 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AYy7QYf+"
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C8B11BD
-	for <linux-hardening@vger.kernel.org>; Mon, 27 Nov 2023 16:34:41 -0800 (PST)
-Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-6cb4d366248so4084914b3a.0
-        for <linux-hardening@vger.kernel.org>; Mon, 27 Nov 2023 16:34:41 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CHoMmJqx"
+Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A6001BD
+	for <linux-hardening@vger.kernel.org>; Mon, 27 Nov 2023 16:38:29 -0800 (PST)
+Received: by mail-pg1-x536.google.com with SMTP id 41be03b00d2f7-5aa7172bafdso3281930a12.1
+        for <linux-hardening@vger.kernel.org>; Mon, 27 Nov 2023 16:38:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1701131680; x=1701736480; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AhnUEdFFWqGuqKk7HcQygs9znr/gnHSS65isK2aLNIQ=;
-        b=AYy7QYf+oxjKLHl7ebER8TWBRE7sFj2W3Ya6tRqK/J4hi9ekwxJfIzRe805o0RyRri
-         iYTOy3iuOqf9qcARwoQhMl2gwz4wO0t+nNiIrGGfVBvYhuxdsPAmoJd1fq99qwl5C3y1
-         F82e49ZcFss0zdDxcrQWu+JX031MpUN6C3EZ4=
+        d=chromium.org; s=google; t=1701131908; x=1701736708; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1fNw2eIUtbhcx1uJXLJPbzj/JB70v0tFbSwe06tS98E=;
+        b=CHoMmJqx2jS7RlyJHItzIsplrhkC7rN3aK85plOL2Lw2gY+KncgWnls7PVO1wvMEVq
+         4aYi5rZbGcaErAxVkuJzQfUjp5xN0qoVe5b4FOh+F+ut/KvxZVVh2oyBIFWYzwGDfMVo
+         rfrW6qRFOMcCC5wqPKSovamCLNZYzVlIikCKU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701131680; x=1701736480;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AhnUEdFFWqGuqKk7HcQygs9znr/gnHSS65isK2aLNIQ=;
-        b=AL4CBL47i8Vcl16dL4gOOdwMJZb8eSxg/rmLkdLtv4rJdhXl/8p4hArwgTr4IJVBm9
-         eW5aJTyqqJ/X2uvmVOxoQkHSzDfJR0ryIN+wZnWt3+fm40Mssvu0qVQ1al7Xh7s0RbrK
-         IntatiY9rSK4viuT7u956Xvj82YItISjhcv1FUf7c/j2NjFOgjYjSJqMLpGkRERmSeq0
-         2pkdGGUE64SGKd/jfOTXYHiKrLPWfg4LoQkm/k3lwuVZMreT2UVfQDCOAC1gBukmI0aG
-         FgQ1WXXPne9gA4Gf3vFqKJzgb7taILBQphzEd3FQb7/L+oTsDpHgyEQsUlqZYKKacKQ5
-         wLiA==
-X-Gm-Message-State: AOJu0YwomQaMWX3ZSrWOPM7Hh9FLQ/sZK7tG0g+841kWVW/ojMrdkaDo
-	MiHuxLSiBZdJmFj2DnWUN5MnOQ==
-X-Google-Smtp-Source: AGHT+IH8yKr0KWQ8B1QkVC6xlixaU8xQM4arSGv8CqVXdwMbGLUcg+jOsXYMMokJ9vwGI04H0p1cVw==
-X-Received: by 2002:a05:6a21:a5a0:b0:18a:e40c:682f with SMTP id gd32-20020a056a21a5a000b0018ae40c682fmr15260148pzc.41.1701131680675;
-        Mon, 27 Nov 2023 16:34:40 -0800 (PST)
+        d=1e100.net; s=20230601; t=1701131908; x=1701736708;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1fNw2eIUtbhcx1uJXLJPbzj/JB70v0tFbSwe06tS98E=;
+        b=smZjgrw+YcIab3pPhgYw8mif+n56WoC+QXD3Jdx4o6epz3b7x/PP2hR3T0/BhCQXBb
+         jfbcgnX+NcachZ9B5OBKMATmGqSilBBSDpxUsNXLM8EGAnWf1VW03jgWoyobSlN+j6CV
+         QwHmStxoc2B0CdBT/B0E6MfCNhyBJZrEW20HAkamhRj5bPqF5cpl5brYpqcW97q57hAd
+         2zOuFMW4WaL19yA6tTmV7e1hJRpVJ+82K67dgSeYKyNJVB+6pPvp1zR916389CPoDMoX
+         OZd11d07zSPFCbsf50ErvG7LbY6XUrWc7eMS7AUziaJfSaEgrJGO5AwazsOtLxg1uU/x
+         Hx+A==
+X-Gm-Message-State: AOJu0Yypm47UL5/SpAiPtxwKCNyS+f9xsgVdaCcfp9Ab1CrAeR1U2Tcq
+	udviOKaGwEs42B7QHzeTdsE+kw==
+X-Google-Smtp-Source: AGHT+IHAitSTcXoIZlZjvSV2TgClAiDRvzC+m7Xe4lYvQu41xQFuy0SB9v8Un1QuYXWLLWDiwFuTWw==
+X-Received: by 2002:a05:6a21:3514:b0:188:1df7:9afe with SMTP id zc20-20020a056a21351400b001881df79afemr15530469pzb.30.1701131908573;
+        Mon, 27 Nov 2023 16:38:28 -0800 (PST)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id i23-20020aa787d7000000b006cb4b7ffe2bsm7647456pfo.195.2023.11.27.16.34.40
+        by smtp.gmail.com with ESMTPSA id x8-20020aa79188000000b00686b649cdd0sm7815539pfa.86.2023.11.27.16.38.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Nov 2023 16:34:40 -0800 (PST)
+        Mon, 27 Nov 2023 16:38:28 -0800 (PST)
+Date: Mon, 27 Nov 2023 16:38:27 -0800
 From: Kees Cook <keescook@chromium.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] gcc-plugins: randstruct: Update code comment in relayout_struct()
-Date: Mon, 27 Nov 2023 16:34:36 -0800
-Message-Id: <170113167459.1670911.15084763564199264156.b4-ty@chromium.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <ZWJr2MWDjXLHE8ap@work>
-References: <ZWJr2MWDjXLHE8ap@work>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Tejun Heo <tj@kernel.org>, Azeem Shaikh <azeemshaikh38@gmail.com>,
+	Zefan Li <lizefan.x@bytedance.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Waiman Long <longman@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 0/3] kernfs: Convert from strlcpy() to strscpy()
+Message-ID: <202311271637.38C4FD46@keescook>
+References: <20231116191718.work.246-kees@kernel.org>
+ <2023112751-cozy-dangle-3f5a@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2023112751-cozy-dangle-3f5a@gregkh>
 
-On Sat, 25 Nov 2023 15:49:12 -0600, Gustavo A. R. Silva wrote:
-> Update code comment to clarify that the only element whose layout is
-> not randomized is a proper C99 flexible-array member. This update is
-> complementary to commit 1ee60356c2dc ("gcc-plugins: randstruct: Only
-> warn about true flexible arrays")
+On Mon, Nov 27, 2023 at 01:43:57PM +0000, Greg Kroah-Hartman wrote:
+> On Thu, Nov 16, 2023 at 11:21:22AM -0800, Kees Cook wrote:
+> > Hi,
+> > 
+> > One of the last users of strlcpy() is kernfs, which has some complex
+> > calling hierarchies that needed to be carefully examined. This series
+> > refactors the strlcpy() calls into strscpy() calls, and bubbles up all
+> > changes in return value checking for callers.
 > 
-> 
+> Why not work instead to convert kernfs (and by proxy cgroups) to use the
+> "safe" string functions based on seq_file?  This should be a simpler
+> patch series to review, and implement on a per-function basis, and then
+> we would not have any string functions in kernfs anymore.
 
-Applied to for-linus/hardening, thanks!
-
-[1/1] gcc-plugins: randstruct: Update code comment in relayout_struct()
-      https://git.kernel.org/kees/c/d71f22365a9c
-
-Take care,
+One thing at a time. :) This lets us finish the strlcpy() removal. But
+yes, replacing all of kernfs/sysfs to pass a seq_buf instead of a char *
+is on the list. :) I think I see a way to transition to it, too.
 
 -- 
 Kees Cook
-
