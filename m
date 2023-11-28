@@ -1,111 +1,116 @@
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8F2D41C67;
+	Tue, 28 Nov 2023 18:22:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="YrbHLVG3"
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFAE41BC;
-	Tue, 28 Nov 2023 08:04:12 -0800 (PST)
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3ASDdhdK023933;
-	Tue, 28 Nov 2023 16:03:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=date : from : to :
- cc : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=qcppdkim1; bh=eBET9G2bCaKagPynknSarM0Xj1wEnoFY3gIdPhKqZ3M=;
- b=YrbHLVG3bniSciK9Ii8KPcKTKqc0TCJ6wP8aKMdeUmKI9S0KVckUZ8D1LArJ/DOc4H/i
- clP9zcoXGMESuuKV7w4+LqH9+b+wbREWtz/nkumoBYMYs78EM0Qw2MXlZcpv5hmBJ9Qr
- 46UW36oUgM8F7r5YvXkiHharr/45HLHqC75Xt4dc90RkYHfmLwEcq9NhpeoZnQT9Dhwt
- 2vr9yS2l4HrMw4Ls0dLP2ppafcd+dxm8v+HGSm6gglp9btcZdtkFDlCObrLWfrSF67c8
- Y8/evBXuwNb2mFYc5jVUdfclPfVk3YMTqtVkCDb9yTS+knHc+Q9WJ9lyoSJFFnNKOwr4 1A== 
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3undc5976m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 Nov 2023 16:03:45 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3ASG3ikU009014
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 Nov 2023 16:03:44 GMT
-Received: from hu-pkondeti-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 28 Nov 2023 08:03:33 -0800
-Date: Tue, 28 Nov 2023 21:33:30 +0530
-From: Pavan Kondeti <quic_pkondeti@quicinc.com>
-To: Mukesh Ojha <quic_mojha@quicinc.com>
-CC: Pavan Kondeti <quic_pkondeti@quicinc.com>, <corbet@lwn.net>,
-        <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <keescook@chromium.org>, <tony.luck@intel.com>, <gpiccoli@igalia.com>,
-        <mathieu.poirier@linaro.org>, <vigneshr@ti.com>, <nm@ti.com>,
-        <matthias.bgg@gmail.com>, <kgene@kernel.org>,
-        <alim.akhtar@samsung.com>, <bmasney@redhat.com>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>, <kernel@quicinc.com>
-Subject: Re: [Patch v6 10/12] pstore/ram: Add dynamic ramoops region support
- through commandline
-Message-ID: <9d8911dd-408a-4d78-b3d1-c5ee23dbf3fc@quicinc.com>
-References: <1700864395-1479-1-git-send-email-quic_mojha@quicinc.com>
- <1700864395-1479-11-git-send-email-quic_mojha@quicinc.com>
- <ad38fb23-e2a2-448e-bdea-fa0985f82b50@quicinc.com>
- <d5fa95e7-ad2a-0dc7-5c79-6a9a789dad5f@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CI/yy0Um"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93A02C433C8;
+	Tue, 28 Nov 2023 18:22:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701195778;
+	bh=cmXLCB6F0Jpxz1dOg+AMECgAoHmZ4123tddCyGivbbE=;
+	h=Date:From:To:Cc:Subject:From;
+	b=CI/yy0Umi/PpzvRt1FlzsEM7nnYvzJwqE3X5Im7HmTJPnRHmYCTu0qONSLZUIPjxz
+	 J5F3P6b0AlI5jyvlE2NiIVMHqRXZQwCj/j5JWL8rk2GAv5FugU/wU2EzqPrkqth0l4
+	 yOxmslgztj+TA7ToNy4NQURj1YZZVKLKTpq6VbgRpFxBUz8Hv1xC0CAlN1/0Tacsxs
+	 FLtFehfOUXF3Pz0Lcutrq2hjsyifyOdE6rn+OWTjD7hE2JBbG/V5sl8SDKgK4xKdw0
+	 k671ZdXQY73LErhZ22jaDgyYdY9XU7FyYalV5va1aE4UbOrezjSC3izJnDSijy9mJ9
+	 pfJkPvZmLQzJg==
+Date: Tue, 28 Nov 2023 12:22:55 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Kent Overstreet <kent.overstreet@linux.dev>,
+	Brian Foster <bfoster@redhat.com>
+Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] bcachefs: Replace zero-length arrays with
+ flexible-array members
+Message-ID: <ZWYv/ywR/qxUhVSU@work>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d5fa95e7-ad2a-0dc7-5c79-6a9a789dad5f@quicinc.com>
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: NJx0-Qc6aJzPGSPq5GgnwW0hoiOg-yyA
-X-Proofpoint-ORIG-GUID: NJx0-Qc6aJzPGSPq5GgnwW0hoiOg-yyA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-28_18,2023-11-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
- impostorscore=0 lowpriorityscore=0 malwarescore=0 bulkscore=0 spamscore=0
- priorityscore=1501 mlxlogscore=914 mlxscore=0 suspectscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311060000
- definitions=main-2311280128
 
-On Tue, Nov 28, 2023 at 04:02:33PM +0530, Mukesh Ojha wrote:
-> > >   static int ramoops_pstore_open(struct pstore_info *psi)
-> > >   {
-> > > @@ -915,14 +965,18 @@ static void __init ramoops_register_dummy(void)
-> > >   	/*
-> > >   	 * Prepare a dummy platform data structure to carry the module
-> > > -	 * parameters. If mem_size isn't set, then there are no module
-> > > -	 * parameters, and we can skip this.
-> > > +	 * parameters. If mem_size isn't set, check for dynamic ramoops
-> > > +	 * size and use if it is set.
-> > >   	 */
-> > > -	if (!mem_size)
-> > > +	if (!mem_size && !dyn_ramoops_size)
-> > >   		return;
-> > 
-> > If mem_size and dyn_ramoops_size are set, you are taking
-> > dyn_ramoops_size precedence here. The comment is a bit confusing, pls
-> > review it once.
-> 
-> Ideally, both should not be set and there will always be
-> confusion.
-> 
-> Do you think, if we use mem_size a single variable both for earlier
-> and dynamic ramoops where based on dyn_ramoops_size=true/on a boolean
-> it will take dynamic ramoops path and if not mentioned it will take older
-> path.
-> 
+Fake flexible arrays (zero-length and one-element arrays) are
+deprecated, and should be replaced by flexible-array members.
 
-Sounds like a good idea to me. You would need a callback for mem_size 
-module param handling. Because dyn_ramoops can be passed before mem_size
-parameter. Also, we can't make pstore ram as module i.e decoupling
-dynamic ramoops from pstore ram module.
+So, replace zero-length arrays with flexible-array members
+in multiple structures.
 
-Thanks,
-Pavan
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ fs/bcachefs/bcachefs_ioctl.h | 4 ++--
+ fs/bcachefs/io_read.c        | 2 +-
+ fs/bcachefs/move.c           | 2 +-
+ fs/bcachefs/replicas_types.h | 2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/fs/bcachefs/bcachefs_ioctl.h b/fs/bcachefs/bcachefs_ioctl.h
+index 44ba7a87aea7..43822c17297c 100644
+--- a/fs/bcachefs/bcachefs_ioctl.h
++++ b/fs/bcachefs/bcachefs_ioctl.h
+@@ -276,7 +276,7 @@ struct bch_ioctl_fs_usage {
+ 	__u32			replica_entries_bytes;
+ 	__u32			pad;
+ 
+-	struct bch_replicas_usage replicas[0];
++	struct bch_replicas_usage replicas[];
+ };
+ 
+ /*
+@@ -313,7 +313,7 @@ struct bch_ioctl_dev_usage_v2 {
+ 	__u32			bucket_size;
+ 	__u64			nr_buckets;
+ 
+-	struct bch_ioctl_dev_usage_type  d[0];
++	struct bch_ioctl_dev_usage_type d[];
+ };
+ 
+ /*
+diff --git a/fs/bcachefs/io_read.c b/fs/bcachefs/io_read.c
+index 3281c4dd1d52..4c9eaf7cea8d 100644
+--- a/fs/bcachefs/io_read.c
++++ b/fs/bcachefs/io_read.c
+@@ -80,7 +80,7 @@ struct promote_op {
+ 	struct bpos		pos;
+ 
+ 	struct data_update	write;
+-	struct bio_vec		bi_inline_vecs[0]; /* must be last */
++	struct bio_vec		bi_inline_vecs[]; /* must be last */
+ };
+ 
+ static const struct rhashtable_params bch_promote_params = {
+diff --git a/fs/bcachefs/move.c b/fs/bcachefs/move.c
+index c5518a866276..5a693c3e2ed2 100644
+--- a/fs/bcachefs/move.c
++++ b/fs/bcachefs/move.c
+@@ -81,7 +81,7 @@ struct moving_io {
+ 
+ 	struct data_update		write;
+ 	/* Must be last since it is variable size */
+-	struct bio_vec			bi_inline_vecs[0];
++	struct bio_vec			bi_inline_vecs[];
+ };
+ 
+ static void move_free(struct moving_io *io)
+diff --git a/fs/bcachefs/replicas_types.h b/fs/bcachefs/replicas_types.h
+index 030324078bba..ac90d142c4e8 100644
+--- a/fs/bcachefs/replicas_types.h
++++ b/fs/bcachefs/replicas_types.h
+@@ -21,7 +21,7 @@ struct replicas_delta_list {
+ 	u64			nr_inodes;
+ 	u64			persistent_reserved[BCH_REPLICAS_MAX];
+ 	struct			{} memset_end;
+-	struct replicas_delta	d[0];
++	struct replicas_delta	d[];
+ };
+ 
+ #endif /* _BCACHEFS_REPLICAS_TYPES_H */
+-- 
+2.34.1
+
