@@ -1,26 +1,63 @@
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1819894;
-	Tue, 28 Nov 2023 13:42:44 -0800 (PST)
-User-agent: mu4e 1.10.8; emacs 30.0.50
-From: Sam James <sam@gentoo.org>
-To: dan@danm.net
-Cc: linux-kernel@vger.kernel.org,stable@vger.kernel.org,toralf.foerster@gmx.de,linux-hardening@vger.kernel.org
-Subject: Re: 6.5.13 regression: BUG: kernel NULL pointer dereference,
- address: 0000000000000020
-In-Reply-To: <20231128213018.6896-1-dan@danm.net>
-Date: Tue, 28 Nov 2023 21:42:03 +0000
-Organization: Gentoo
-Message-ID: <87jzq1lflc.fsf@gentoo.org>
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=danm.net header.i=@danm.net header.b="fNukShFf"
+X-Greylist: delayed 576 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 28 Nov 2023 14:58:06 PST
+Received: from mr85p00im-hyfv06011401.me.com (mr85p00im-hyfv06011401.me.com [17.58.23.191])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E1FC83
+	for <linux-hardening@vger.kernel.org>; Tue, 28 Nov 2023 14:58:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=danm.net; s=sig1;
+	t=1701211709; bh=sqhOH7HDksvDaeNqmw8j4S6QM8peZMro746b6naa7vg=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=fNukShFfmOS+40vu5jj+975abPHCxKE2Y0UdYZ6Lhq4XF3BiHqutQX6FTiIZF9apP
+	 OsYEbW8/2WNgKuuDvDhBsQEcBlAezs0W2HiHSGFT+02bOM+IG+eIOWCGZni2qlFCUW
+	 DtX0iJ1PzKEgWwg2yY9igjN3bsB+EGWeOc079l/2pJStpRTmdl/WSzw8AWbddKM8nJ
+	 gLhABa1o87aW/bm6GtWMy7DOaWxBYfk8t/AEqtah8cq6GIjn/vOEi+MHN3LihR+PsL
+	 WJcsU8QUnnzLEHY+GSpLkE9MG9v8JwD4PIbGsbb65Ad8Ppyl/xTWy2fOq5HkBImsqT
+	 1o50lyjrtLdfA==
+Received: from hitch.danm.net (mr38p00im-dlb-asmtp-mailmevip.me.com [17.57.152.18])
+	by mr85p00im-hyfv06011401.me.com (Postfix) with ESMTPSA id E42E8357AEC5;
+	Tue, 28 Nov 2023 22:48:25 +0000 (UTC)
+From: Dan Moulding <dan@danm.net>
+To: sam@gentoo.org
+Cc: dan@danm.net,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	toralf.foerster@gmx.de
+Subject: Re: 6.5.13 regression: BUG: kernel NULL pointer dereference, address: 0000000000000020
+Date: Tue, 28 Nov 2023 15:48:16 -0700
+Message-ID: <20231128224816.6563-1-dan@danm.net>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <87jzq1lflc.fsf@gentoo.org>
+References: <87jzq1lflc.fsf@gentoo.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: BzPu9jSF4Hw21U6xu4xtvi1w9T--vBIs
+X-Proofpoint-ORIG-GUID: BzPu9jSF4Hw21U6xu4xtvi1w9T--vBIs
+X-Proofpoint-Virus-Version: =?UTF-8?Q?vendor=3Dfsecure_engine=3D1.1.170-22c6f66c430a71ce266a39bfe25bc?=
+ =?UTF-8?Q?2903e8d5c8f:6.0.138,18.0.572,17.0.605.474.0000000_definitions?=
+ =?UTF-8?Q?=3D2020-02-14=5F11:2020-02-14=5F02,2020-02-14=5F11,2020-01-23?=
+ =?UTF-8?Q?=5F02_signatures=3D0?=
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 bulkscore=0
+ mlxscore=0 suspectscore=0 malwarescore=0 mlxlogscore=338 adultscore=0
+ clxscore=1030 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2308100000 definitions=main-2311280179
 
-I suspect this is https://lore.kernel.org/linux-hardening/20231124102458.GB1503258@e124191.cambridge.arm.com/
-and the patch at
-https://lore.kernel.org/linux-hardening/170117162434.28731.12930304842635897908.git-patchwork-notify@kernel.org/T/#t
-may help.
+Thanks, Sam. Yes it does look like that's the same issue.
+
+I applied that patch to v6.6.3 instead of reverting the change to the
+randomize_layout plugin and the problem also goes away with the patch
+applied.
+
+In that thread with the patch, Gustavo does mention that many other
+zero-length arrays, besides this one in struct neighbor, were found in
+the kernel source. But a quick (and possibly imperfect) grepping seems
+to show that struct neighbor was the only one used with
+__randomize_layout. So, I *think* it might be the only one that could
+cause a problem with the recent change to the randomize_layout plugin.
+
+-- Dan
