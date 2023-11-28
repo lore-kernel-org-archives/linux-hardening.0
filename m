@@ -1,115 +1,218 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ehl7wSFx"
-Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0D1DE6
-	for <linux-hardening@vger.kernel.org>; Mon, 27 Nov 2023 17:33:46 -0800 (PST)
-Received: from eig-obgw-5010a.ext.cloudfilter.net ([10.0.29.199])
-	by cmsmtp with ESMTPS
-	id 7mUyr1uoYjtZ37mz2rZ1He; Tue, 28 Nov 2023 01:33:52 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id 7myurajG2hDny7myvrBAWx; Tue, 28 Nov 2023 01:33:45 +0000
-X-Authority-Analysis: v=2.4 cv=fda+dmcF c=1 sm=1 tr=0 ts=65654379
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=HVNVOb/M/amC2CTWMSx8Ww==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=BNY50KLci1gA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=7CQSdrXTAAAA:8 a=cm27Pg_UAAAA:8 a=aWmxygetOS5ii7RLA1gA:9 a=QEXdDO2ut3YA:10
- a=AjGcO6oz07-iQ99wixmX:22 a=a-qgeE7W1pNrGK8U0ZQC:22 a=xmb-EsYY8bH0VWELuYED:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=lxeUuAdRv0cewlSQL8H3OIc5kjQQHP1pS/0W9XhmLDM=; b=ehl7wSFxUV0Q82yli+Bbxifr8P
-	Q8KEfVl2kswV5NRFtqxnuTM89wZzGqbTXiq3zF1PlH2DluLrBAEs4XZfkzSA6kAPfd6fRdgD3oLbb
-	eCTR+MJQRMzabs4H90nNWaRBF4dcAAYmwfIsUwsVdQhcctjUf2YxyTJRYcX2u0r3SV7GIuxbyE1le
-	l44Mr1oJ96542f220yu6i5DBcT2ZETrwf+SCWe+8ShBtm7Qv1bjNR6wTAW1W9qoTAVTtht8ZH19rz
-	xjlVH6351zsHDeuQooxTfFqfhMzl6K59UGc/f3GgGgkR3D5KP6ndVuRZVaJ57b0j5mebzIsgKOhU8
-	FHbG2c5w==;
-Received: from 189.215.210.122.cable.dyn.cableonline.com.mx ([189.215.210.122]:40189 helo=[192.168.0.9])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1r7myt-002rhf-0O;
-	Mon, 27 Nov 2023 19:33:43 -0600
-Message-ID: <a6dc78b1-8ae4-4530-acf6-2931e1863e77@embeddedor.com>
-Date: Mon, 27 Nov 2023 19:33:40 -0600
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EDSpIpnd"
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AED7D4B
+	for <linux-hardening@vger.kernel.org>; Mon, 27 Nov 2023 23:24:26 -0800 (PST)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5cbfcf3ae48so41373557b3.1
+        for <linux-hardening@vger.kernel.org>; Mon, 27 Nov 2023 23:24:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1701156265; x=1701761065; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=dvx2P3RlbyRadhNqdVh/rq/P7n3DUdzfAYi6/zso4eU=;
+        b=EDSpIpndYxcQnE/+ALcHOFLIJSTX13TbdW/tJYXvWQBX4IZ3+fKbzIVT2AYoVJh7Py
+         QfVA06aAQ81/oqv77USWIY0B+Fk2Gcq5SuaUmcBN9/xDBTfmXlwWnacXLmvM8VFwpjID
+         RU2iqhf8xvWrBM6MsXbKnAFPd5FCPV2uQWX84oMNjhqvQkXz5BEjt1JwkbtgV2BIRCMY
+         EBLFc8afttcyWoBVOTsxfWlKEamf63C4w0KLxWBoZCK8G6mKhBSs/0NFqksW/uiBAVxh
+         yXXEIFU+CpYwivuQ3jZdZlrcGdehebycP6sZ6AH1nwAGMVScRuClE648EsKmWRndyOLW
+         6r4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701156265; x=1701761065;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dvx2P3RlbyRadhNqdVh/rq/P7n3DUdzfAYi6/zso4eU=;
+        b=LD3gog7W4MQcryCxUvWp7h5+BLCg605eA1KTzRBC0JzC8UA9UXjkwJHNsuIprkkSKE
+         CZGjjbmfl36FtiV0B+cbIHELFv86ZsZ6X9jHCgJB8J1SjFEmAbFgf6Suxi7dse88LNcK
+         NwbY0eEY/cT0jcfIeCcsBWSCjJVRsUnUMwg3t+1/iDbticenBwXuMUZSfQKgZGK5ymhX
+         xq9oWPyk1h9Z/+1LEQ9aupYWkvhTevm4FhUkTdjCaEpuo3ma8FW6iY4hPuPxr7jAXU9y
+         lRlYARhfmUzTvlc1miDIMLe4TpUT3sKp1AsB/FlLNggeqQt5uLHIMDEoKk6ny2nkGftG
+         FZVw==
+X-Gm-Message-State: AOJu0YyIUXPaBu9f82+TYuvptpoUDnhrouE3h3CsIyd1KUjzso3L/cCq
+	mwj0swlfxryRTTOR792cXWEY9+NQ7xiypA==
+X-Google-Smtp-Source: AGHT+IFCWZKfFAeCOUzJQoMqiA3WNtBjsLMP38UcQK2Ohu2ghv3SrS0a6Zu87OoFuUvbxbOdjliN7STeoHt5sw==
+X-Received: from slicestar.c.googlers.com ([fda3:e722:ac3:cc00:4f:4b78:c0a8:20a1])
+ (user=davidgow job=sendgmr) by 2002:a25:6949:0:b0:da0:c924:4fdc with SMTP id
+ e70-20020a256949000000b00da0c9244fdcmr614120ybc.6.1701156265389; Mon, 27 Nov
+ 2023 23:24:25 -0800 (PST)
+Date: Tue, 28 Nov 2023 15:24:05 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] neighbour: Fix __randomize_layout crash in struct
- neighbour
-Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Joey Gouly <joey.gouly@arm.com>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Bill Wendling <morbo@google.com>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <ZWJoRsJGnCPdJ3+2@work> <202311271628.E5EED48@keescook>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <202311271628.E5EED48@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.215.210.122
-X-Source-L: No
-X-Exim-ID: 1r7myt-002rhf-0O
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 189.215.210.122.cable.dyn.cableonline.com.mx ([192.168.0.9]) [189.215.210.122]:40189
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfMVUJkb+9ePLmi2fqWFhSp4SUsStSiLnEkJ+Q7fqSdIUrOaNi7U+AFTZpJAcUxV5zUk8ZsvUxbneJDhaQYYg7+g/nYTYvyGo3Cwt1XEHn+F9R3Oq/T7s
- I2huaPEDg74f2YTjGasPa4DaLEm5gKpbDJ66dl1kFY9wrVEkExybRIFPgiqhKY4jHkFmZCIbBRyqzYi7BHmloY9AXFsvXcQrFXtOtubEgG9UO8ZoaChr+PoO
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.rc1.413.gea7ed67945-goog
+Message-ID: <20231128072410.952662-1-davidgow@google.com>
+Subject: [PATCH v2 1/3] kunit: Add a macro to wrap a deferred action function
+From: David Gow <davidgow@google.com>
+To: Nathan Chancellor <nathan@kernel.org>, Kees Cook <keescook@chromium.org>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, Rae Moar <rmoar@google.com>, dlatypov@google.com
+Cc: David Gow <davidgow@google.com>, Benjamin Berg <benjamin.berg@intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Richard Fitzgerald <rf@opensource.cirrus.com>, llvm@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com, 
+	linux-kselftest@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>, 
+	Daniel Vetter <daniel@ffwll.ch>
+Content-Type: text/plain; charset="UTF-8"
 
+KUnit's deferred action API accepts a void(*)(void *) function pointer
+which is called when the test is exited. However, we very frequently
+want to use existing functions which accept a single pointer, but which
+may not be of type void*. While this is probably dodgy enough to be on
+the wrong side of the C standard, it's been often used for similar
+callbacks, and gcc's -Wcast-function-type seems to ignore cases where
+the only difference is the type of the argument, assuming it's
+compatible (i.e., they're both pointers to data).
 
+However, clang 16 has introduced -Wcast-function-type-strict, which no
+longer permits any deviation in function pointer type. This seems to be
+because it'd break CFI, which validates the type of function calls.
 
-On 11/27/23 18:29, Kees Cook wrote:
-> On Sat, Nov 25, 2023 at 03:33:58PM -0600, Gustavo A. R. Silva wrote:
->> Previously, one-element and zero-length arrays were treated as true
->> flexible arrays, even though they are actually "fake" flex arrays.
->> The __randomize_layout would leave them untouched at the end of the
->> struct, similarly to proper C99 flex-array members.
->>
->> However, this approach changed with commit 1ee60356c2dc ("gcc-plugins:
->> randstruct: Only warn about true flexible arrays"). Now, only C99
->> flexible-array members will remain untouched at the end of the struct,
->> while one-element and zero-length arrays will be subject to randomization.
->>
->> Fix a `__randomize_layout` crash in `struct neighbour` by transforming
->> zero-length array `primary_key` into a proper C99 flexible-array member.
->>
->> Fixes: 1ee60356c2dc ("gcc-plugins: randstruct: Only warn about true flexible arrays")
->> Closes: https://lore.kernel.org/linux-hardening/20231124102458.GB1503258@e124191.cambridge.arm.com/
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> 
-> Yes, please. Do we have any other 0-sized arrays hiding out in the
-> kernel? We need to get these all cleared...
+This rather ruins our attempts to cast functions to defer them, and
+leaves us with a few options. The one we've chosen is to implement a
+macro which will generate a wrapper function which accepts a void*, and
+casts the argument to the appropriate type.
 
-I've found 27 instances of zero-length fake-flex arrays in next-20231127.
+For example, if you were trying to wrap:
+void foo_close(struct foo *handle);
+you could use:
+KUNIT_DEFINE_ACTION_WRAPPER(kunit_action_foo_close,
+			    foo_close,
+			    struct foo *);
 
-I'll send a patch series to transform all of them.
+This would create a new kunit_action_foo_close() function, of type
+kunit_action_t, which could be passed into kunit_add_action() and
+similar functions.
 
-> 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> 
+In addition to defining this macro, update KUnit and its tests to use
+it.
 
-Thanks!
---
-Gustavo
+Link: https://github.com/ClangBuiltLinux/linux/issues/1750
+Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+Tested-by: Nathan Chancellor <nathan@kernel.org>
+Acked-by: Daniel Vetter <daniel@ffwll.ch>
+Reviewed-by: Maxime Ripard <mripard@kernel.org>
+Signed-off-by: David Gow <davidgow@google.com>
+---
+
+Thanks everyone for testing v1 of this: this update only changes
+documentation.
+
+Changes since v1:
+https://lore.kernel.org/linux-kselftest/20231110200830.1832556-1-davidgow@google.com/
+- Update the usage.rst documentation (Thanks, Nathan)
+- Add a better doc comment for KUNIT_DEFINE_ACTION_WRAPPER()
+
+---
+ Documentation/dev-tools/kunit/usage.rst | 10 +++++++---
+ include/kunit/resource.h                | 21 +++++++++++++++++++++
+ lib/kunit/kunit-test.c                  |  5 +----
+ lib/kunit/test.c                        |  6 ++++--
+ 4 files changed, 33 insertions(+), 9 deletions(-)
+
+diff --git a/Documentation/dev-tools/kunit/usage.rst b/Documentation/dev-tools/kunit/usage.rst
+index c27e1646ecd9..9db12e91668e 100644
+--- a/Documentation/dev-tools/kunit/usage.rst
++++ b/Documentation/dev-tools/kunit/usage.rst
+@@ -651,12 +651,16 @@ For example:
+ 	}
+ 
+ Note that, for functions like device_unregister which only accept a single
+-pointer-sized argument, it's possible to directly cast that function to
+-a ``kunit_action_t`` rather than writing a wrapper function, for example:
++pointer-sized argument, it's possible to automatically generate a wrapper
++with the ``KUNIT_DEFINE_ACTION_WRAPPER()`` macro, for example:
+ 
+ .. code-block:: C
+ 
+-	kunit_add_action(test, (kunit_action_t *)&device_unregister, &dev);
++	KUNIT_DEFINE_ACTION_WRAPPER(device_unregister, device_unregister_wrapper, struct device *);
++	kunit_add_action(test, &device_unregister_wrapper, &dev);
++
++You should do this in preference to manually casting to the ``kunit_action_t`` type,
++as casting function pointers will break Control Flow Integrity (CFI).
+ 
+ ``kunit_add_action`` can fail if, for example, the system is out of memory.
+ You can use ``kunit_add_action_or_reset`` instead which runs the action
+diff --git a/include/kunit/resource.h b/include/kunit/resource.h
+index c7383e90f5c9..4ad69a2642a5 100644
+--- a/include/kunit/resource.h
++++ b/include/kunit/resource.h
+@@ -390,6 +390,27 @@ void kunit_remove_resource(struct kunit *test, struct kunit_resource *res);
+ /* A 'deferred action' function to be used with kunit_add_action. */
+ typedef void (kunit_action_t)(void *);
+ 
++/**
++ * KUNIT_DEFINE_ACTION_WRAPPER() - Wrap a function for use as a deferred action.
++ *
++ * @wrapper: The name of the new wrapper function define.
++ * @orig: The original function to wrap.
++ * @arg_type: The type of the argument accepted by @orig.
++ *
++ * Defines a wrapper for a function which accepts a single, pointer-sized
++ * argument. This wrapper can then be passed to kunit_add_action() and
++ * similar. This should be used in preference to casting a function
++ * directly to kunit_action_t, as casting function pointers will break
++ * control flow integrity (CFI), leading to crashes.
++ */
++#define KUNIT_DEFINE_ACTION_WRAPPER(wrapper, orig, arg_type)	\
++	static void wrapper(void *in)				\
++	{							\
++		arg_type arg = (arg_type)in;			\
++		orig(arg);					\
++	}
++
++
+ /**
+  * kunit_add_action() - Call a function when the test ends.
+  * @test: Test case to associate the action with.
+diff --git a/lib/kunit/kunit-test.c b/lib/kunit/kunit-test.c
+index 99d2a3a528e1..3e9c5192d095 100644
+--- a/lib/kunit/kunit-test.c
++++ b/lib/kunit/kunit-test.c
+@@ -538,10 +538,7 @@ static struct kunit_suite kunit_resource_test_suite = {
+ #if IS_BUILTIN(CONFIG_KUNIT_TEST)
+ 
+ /* This avoids a cast warning if kfree() is passed direct to kunit_add_action(). */
+-static void kfree_wrapper(void *p)
+-{
+-	kfree(p);
+-}
++KUNIT_DEFINE_ACTION_WRAPPER(kfree_wrapper, kfree, const void *);
+ 
+ static void kunit_log_test(struct kunit *test)
+ {
+diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+index f2eb71f1a66c..0308865194bb 100644
+--- a/lib/kunit/test.c
++++ b/lib/kunit/test.c
+@@ -772,6 +772,8 @@ static struct notifier_block kunit_mod_nb = {
+ };
+ #endif
+ 
++KUNIT_DEFINE_ACTION_WRAPPER(kfree_action_wrapper, kfree, const void *)
++
+ void *kunit_kmalloc_array(struct kunit *test, size_t n, size_t size, gfp_t gfp)
+ {
+ 	void *data;
+@@ -781,7 +783,7 @@ void *kunit_kmalloc_array(struct kunit *test, size_t n, size_t size, gfp_t gfp)
+ 	if (!data)
+ 		return NULL;
+ 
+-	if (kunit_add_action_or_reset(test, (kunit_action_t *)kfree, data) != 0)
++	if (kunit_add_action_or_reset(test, kfree_action_wrapper, data) != 0)
+ 		return NULL;
+ 
+ 	return data;
+@@ -793,7 +795,7 @@ void kunit_kfree(struct kunit *test, const void *ptr)
+ 	if (!ptr)
+ 		return;
+ 
+-	kunit_release_action(test, (kunit_action_t *)kfree, (void *)ptr);
++	kunit_release_action(test, kfree_action_wrapper, (void *)ptr);
+ }
+ EXPORT_SYMBOL_GPL(kunit_kfree);
+ 
+-- 
+2.43.0.rc1.413.gea7ed67945-goog
+
