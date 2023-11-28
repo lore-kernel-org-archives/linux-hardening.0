@@ -1,282 +1,73 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="oyKSQb4y"
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C764ED6D;
-	Tue, 28 Nov 2023 02:33:18 -0800 (PST)
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AS9IOKA030987;
-	Tue, 28 Nov 2023 10:32:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=6WJrDs6aXBvRV/cHzyTFtHB3cjvoU5uFPQPLuXGwXh4=;
- b=oyKSQb4yUVsiTvtgVlnCchbcwTqCsKms8gp+pNTQQ+dka3v/ZaReHN4opnVCpE7nP3CF
- 6SBKSdBj+Z/xQLOAXFoOc2mGRme+GYGCYO85PVD0YqaATHIg0s/FQgOnHTOCS1HB5wrZ
- rixDvAMBLXBapiEx++tWW218UIBUqSqhhD93s/wysZmrj/eEYS7hYzIYYc5tzKtpePz8
- QV6hPgrZdkJLYqTlAmO/RunKvHwgEzREDOe8rMLxFltU3wbQYO6biEANVX4PyzpYwdTl
- gdCg4Q3EX3OlrCha7+9PSsLlHa5TNLcxkvpTbKGl06czSfrt7bUl8pfuIkG/OhuUYlTR Hw== 
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3un02h1xbj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 Nov 2023 10:32:53 +0000
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3ASAWp99022084
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 Nov 2023 10:32:51 GMT
-Received: from [10.214.66.81] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 28 Nov
- 2023 02:32:40 -0800
-Message-ID: <d5fa95e7-ad2a-0dc7-5c79-6a9a789dad5f@quicinc.com>
-Date: Tue, 28 Nov 2023 16:02:33 +0530
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id CD5C0D45;
+	Tue, 28 Nov 2023 03:10:34 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1B019C15;
+	Tue, 28 Nov 2023 03:11:22 -0800 (PST)
+Received: from e124191.cambridge.arm.com (e124191.cambridge.arm.com [10.1.197.45])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 431303F73F;
+	Tue, 28 Nov 2023 03:10:33 -0800 (PST)
+Date: Tue, 28 Nov 2023 11:10:28 +0000
+From: Joey Gouly <joey.gouly@arm.com>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Bill Wendling <morbo@google.com>, Kees Cook <keescook@chromium.org>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] neighbour: Fix __randomize_layout crash in struct
+ neighbour
+Message-ID: <20231128111028.GA2382233@e124191.cambridge.arm.com>
+References: <ZWJoRsJGnCPdJ3+2@work>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [Patch v6 10/12] pstore/ram: Add dynamic ramoops region support
- through commandline
-To: Pavan Kondeti <quic_pkondeti@quicinc.com>
-CC: <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <keescook@chromium.org>, <tony.luck@intel.com>, <gpiccoli@igalia.com>,
-        <mathieu.poirier@linaro.org>, <vigneshr@ti.com>, <nm@ti.com>,
-        <matthias.bgg@gmail.com>, <kgene@kernel.org>,
-        <alim.akhtar@samsung.com>, <bmasney@redhat.com>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>, <kernel@quicinc.com>
-References: <1700864395-1479-1-git-send-email-quic_mojha@quicinc.com>
- <1700864395-1479-11-git-send-email-quic_mojha@quicinc.com>
- <ad38fb23-e2a2-448e-bdea-fa0985f82b50@quicinc.com>
-Content-Language: en-US
-From: Mukesh Ojha <quic_mojha@quicinc.com>
-In-Reply-To: <ad38fb23-e2a2-448e-bdea-fa0985f82b50@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 51E3dRmfj17vx50XeFUlt--L527HdirG
-X-Proofpoint-ORIG-GUID: 51E3dRmfj17vx50XeFUlt--L527HdirG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-28_08,2023-11-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 malwarescore=0 adultscore=0 lowpriorityscore=0
- impostorscore=0 spamscore=0 mlxscore=0 phishscore=0 bulkscore=0
- mlxlogscore=999 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2311060000 definitions=main-2311280083
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZWJoRsJGnCPdJ3+2@work>
 
+Hi,
 
-
-On 11/27/2023 5:04 PM, Pavan Kondeti wrote:
-> On Sat, Nov 25, 2023 at 03:49:53AM +0530, Mukesh Ojha wrote:
->> The reserved memory region for ramoops is assumed to be at a fixed
->> and known location when read from the devicetree. This may not be
->> required for something like Qualcomm's minidump which is interested
->> in knowing addresses of ramoops region but it does not put hard
->> requirement of address being fixed as most of it's SoC does not
->> support warm reset and does not use pstorefs at all instead it has
->> firmware way of collecting ramoops region if it gets to know the
->> address and register it with apss minidump table which is sitting
->> in shared memory region in DDR and firmware will have access to
->> these table during reset and collects it on crash of SoC.
->>
->> So, add the support of reserving ramoops region to be dynamically
->> allocated early during boot if it is request through command line
->> via 'dyn_ramoops_size=<size>' and fill up reserved resource structure
->> and export the structure, so that it can be read by ramoops driver.
->>
->> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
->> ---
->>   Documentation/admin-guide/ramoops.rst |  7 ++++
->>   fs/pstore/Kconfig                     | 15 +++++++++
->>   fs/pstore/ram.c                       | 62 ++++++++++++++++++++++++++++++++---
->>   include/linux/pstore_ram.h            |  5 +++
->>   init/main.c                           |  2 ++
->>   5 files changed, 87 insertions(+), 4 deletions(-)
->>
->> diff --git a/Documentation/admin-guide/ramoops.rst b/Documentation/admin-guide/ramoops.rst
->> index e9f85142182d..af737adbf079 100644
->> --- a/Documentation/admin-guide/ramoops.rst
->> +++ b/Documentation/admin-guide/ramoops.rst
->> @@ -33,6 +33,13 @@ memory are implementation defined, and won't work on many ARMs such as omaps.
->>   Setting ``mem_type=2`` attempts to treat the memory region as normal memory,
->>   which enables full cache on it. This can improve the performance.
->>   
->> +Ramoops memory region can also be allocated dynamically for a special case where
->> +there is no requirement to access the logs from pstorefs on next boot instead there
->> +is separate backend mechanism like minidump present which has awareness about the
->> +dynamic ramoops region and can recover the logs. This is enabled via command line
->> +parameter ``dyn_ramoops_size=<size>`` and should not be used in absence of
->> +separate backend which knows how to recover this dynamic region.
->> +
->>   The memory area is divided into ``record_size`` chunks (also rounded down to
->>   power of two) and each kmesg dump writes a ``record_size`` chunk of
->>   information.
->> diff --git a/fs/pstore/Kconfig b/fs/pstore/Kconfig
->> index 3acc38600cd1..e13e53d7a225 100644
->> --- a/fs/pstore/Kconfig
->> +++ b/fs/pstore/Kconfig
->> @@ -81,6 +81,21 @@ config PSTORE_RAM
->>   
->>   	  For more information, see Documentation/admin-guide/ramoops.rst.
->>   
->> +config PSTORE_DYNAMIC_RAMOOPS_REGION_RESERVATION
->> +	bool "Reserve ramoops region dynamically"
->> +	select PSTORE_RAM
->> +	help
->> +	  This enables the dynamic reservation of ramoops region for a special case
->> +	  where there is no requirement to access the logs from pstorefs on next boot
->> +	  instead there is separate backend mechanism like minidump present which has
->> +	  awareness about the dynamic ramoops region and can recover the logs. This is
->> +	  enabled via command line parameter dyn_ramoops_size=<size> and should not be
->> +	  used in absence of separate backend which knows how to recover this dynamic
->> +	  region.
->> +
->> +	  Note whenever this config is selected ramoops driver will be build statically
->> +	  into kernel.
->> +
+On Sat, Nov 25, 2023 at 03:33:58PM -0600, Gustavo A. R. Silva wrote:
+> Previously, one-element and zero-length arrays were treated as true
+> flexible arrays, even though they are actually "fake" flex arrays.
+> The __randomize_layout would leave them untouched at the end of the
+> struct, similarly to proper C99 flex-array members.
 > 
-> Is there any advantage if we decouple this memory reservation from
-> pstore ram so that pstore ram can still be compiled as module? Asking
-> because you explicitly mentioned this limitation.
-
-This is doable and it will be needing export(may be _NS) of
-ramoops resource if ramoops needs to be build as modules.
-
-Thanks for suggestion.
-But Let's hear it from other people as well if they have something
-to add otherwise, will do it next series.
-
+> However, this approach changed with commit 1ee60356c2dc ("gcc-plugins:
+> randstruct: Only warn about true flexible arrays"). Now, only C99
+> flexible-array members will remain untouched at the end of the struct,
+> while one-element and zero-length arrays will be subject to randomization.
 > 
->>   config PSTORE_ZONE
->>   	tristate
->>   	depends on PSTORE
->> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
->> index 88b34fdbf759..a6c0da8cfdd4 100644
->> --- a/fs/pstore/ram.c
->> +++ b/fs/pstore/ram.c
->> @@ -20,6 +20,7 @@
->>   #include <linux/compiler.h>
->>   #include <linux/of.h>
->>   #include <linux/of_address.h>
->> +#include <linux/memblock.h>
->>   #include <linux/mm.h>
->>   
->>   #include "internal.h"
->> @@ -103,6 +104,55 @@ struct ramoops_context {
->>   };
->>   
->>   static struct platform_device *dummy;
->> +static int dyn_ramoops_size;
->> +/* Location of the reserved area for the dynamic ramoops */
->> +static struct resource dyn_ramoops_res = {
->> +	.name  = "ramoops",
->> +	.start = 0,
->> +	.end   = 0,
->> +	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
->> +	.desc  = IORES_DESC_NONE,
->> +};
->> +
->> +static int __init parse_dyn_ramoops_size(char *p)
->> +{
->> +	char *tmp;
->> +
->> +	dyn_ramoops_size = memparse(p, &tmp);
->> +	if (p == tmp) {
->> +		pr_err("ramoops: memory size expected\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	return 0;
->> +}
->> +early_param("dyn_ramoops_size", parse_dyn_ramoops_size);
+> Fix a `__randomize_layout` crash in `struct neighbour` by transforming
+> zero-length array `primary_key` into a proper C99 flexible-array member.
 > 
-> should not this code be under
-> CONFIG_PSTORE_DYNAMIC_RAMOOPS_REGION_RESERVATION?
-
-Yeah, looks to be miss., thanks again..
-
+> Fixes: 1ee60356c2dc ("gcc-plugins: randstruct: Only warn about true flexible arrays")
+> Closes: https://lore.kernel.org/linux-hardening/20231124102458.GB1503258@e124191.cambridge.arm.com/
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  include/net/neighbour.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
->> +
->> +#ifdef CONFIG_PSTORE_DYNAMIC_RAMOOPS_REGION_RESERVATION
->> +/*
->> + * setup_dynamic_ramoops() - reserves memory for dynamic ramoops
->> + *
->> + * This enable dynamic reserve memory support for ramoops through
->> + * command line.
->> + */
->> +void __init setup_dynamic_ramoops(void)
->> +{
->> +	unsigned long long ramoops_base;
->> +	unsigned long long ramoops_size;
->> +
->> +	ramoops_base = memblock_phys_alloc_range(dyn_ramoops_size, SMP_CACHE_BYTES,
->> +						 0, MEMBLOCK_ALLOC_NOLEAKTRACE);
->> +	if (!ramoops_base) {
->> +		pr_err("cannot allocate ramoops dynamic memory (size:0x%llx).\n",
->> +			ramoops_size);
->> +		return;
->> +	}
-> 
-> This error needs to be propagated to ramoops_register_dummy() since it
-> rely on !dyn_ramoops_size . one way is to set dyn_ramoops_size to 0.
+> diff --git a/include/net/neighbour.h b/include/net/neighbour.h
+> index 07022bb0d44d..0d28172193fa 100644
+> --- a/include/net/neighbour.h
+> +++ b/include/net/neighbour.h
+> @@ -162,7 +162,7 @@ struct neighbour {
+>  	struct rcu_head		rcu;
+>  	struct net_device	*dev;
+>  	netdevice_tracker	dev_tracker;
+> -	u8			primary_key[0];
+> +	u8			primary_key[];
+>  } __randomize_layout;
+>  
+>  struct neigh_ops {
 
-Good point, will do that..
+Fixes the crash for me!
 
-> 
->> +
->> +	dyn_ramoops_res.start = ramoops_base;
->> +	dyn_ramoops_res.end = ramoops_base + dyn_ramoops_size - 1;
->> +	insert_resource(&iomem_resource, &dyn_ramoops_res);
->> +}
->> +#endif
->>   
->>   static int ramoops_pstore_open(struct pstore_info *psi)
->>   {
->> @@ -915,14 +965,18 @@ static void __init ramoops_register_dummy(void)
->>   
->>   	/*
->>   	 * Prepare a dummy platform data structure to carry the module
->> -	 * parameters. If mem_size isn't set, then there are no module
->> -	 * parameters, and we can skip this.
->> +	 * parameters. If mem_size isn't set, check for dynamic ramoops
->> +	 * size and use if it is set.
->>   	 */
->> -	if (!mem_size)
->> +	if (!mem_size && !dyn_ramoops_size)
->>   		return;
->>   
-> 
-> If mem_size and dyn_ramoops_size are set, you are taking
-> dyn_ramoops_size precedence here. The comment is a bit confusing, pls
-> review it once.
-
-Ideally, both should not be set and there will always be
-confusion.
-
-Do you think, if we use mem_size a single variable both for earlier
-and dynamic ramoops where based on dyn_ramoops_size=true/on a boolean
-it will take dynamic ramoops path and if not mentioned it will take 
-older path.
-
--Mukesh
-> 
->> -	pr_info("using module parameters\n");
->> +	if (dyn_ramoops_size) {
->> +		mem_size = dyn_ramoops_size;
->> +		mem_address = dyn_ramoops_res.start;
->> +	}
->>   
-> 
-> Overall it Looks good to me. Thanks.
+Tested-by: Joey Gouly <joey.gouly@arm.com>
