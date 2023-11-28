@@ -1,168 +1,84 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eDWXIpgR"
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0905C2;
-	Mon, 27 Nov 2023 12:09:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=0g8rmOmWV3gIvWc7PsUFJZCK/mjDmfDlEjIfQZ9fLpw=; b=eDWXIpgRHK0l6Kp1zvM8AozfOF
-	C6Od0RZKcBiM1TpdWu2XQUTQBZigv/lVFcp4wmzQVJpUa30ta0VAtD86zKeO0v7pZOLiVWQRr4KN8
-	hk4FOzx8yGdiIasjtANlRLndmWRJMvBdSEMGCKmqSYLag0ay+cj9SgXrs1vld5SS+8dkv6bWq3SV5
-	MDYEEFDnBglQijN9WYMxBEuwTpC4pfbqpYLSGbfh3mrMun861qNxt0UbAxZ6eZUufig+63zyL2qSO
-	J7adiJq4wNyrGWs8soFqK96nVJbz6xxEW1NnrEo4DM5u7kBaGizRWOoC4Gn534kdhjeQxjkmw2wur
-	fASu7jhg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1r7huM-00Bhd4-E7; Mon, 27 Nov 2023 20:08:42 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 12A193002F1; Mon, 27 Nov 2023 21:08:42 +0100 (CET)
-Date: Mon, 27 Nov 2023 21:08:41 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
-Cc: =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-	Kees Cook <keescook@chromium.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Wanpeng Li <wanpengli@tencent.com>,
-	Alexander Graf <graf@amazon.com>,
-	Chao Peng <chao.p.peng@linux.intel.com>,
-	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-	Forrest Yuan Yu <yuanyu@google.com>,
-	James Gowans <jgowans@amazon.com>,
-	James Morris <jamorris@linux.microsoft.com>,
-	John Andersen <john.s.andersen@intel.com>,
-	Marian Rotariu <marian.c.rotariu@gmail.com>,
-	Mihai =?utf-8?B?RG9uyJt1?= <mdontu@bitdefender.com>,
-	=?utf-8?B?TmljdciZb3IgQ8OuyJt1?= <nicu.citu@icloud.com>,
-	Thara Gopinath <tgopinath@microsoft.com>,
-	Trilok Soni <quic_tsoni@quicinc.com>, Wei Liu <wei.liu@kernel.org>,
-	Will Deacon <will@kernel.org>,
-	Yu Zhang <yu.c.zhang@linux.intel.com>,
-	Zahra Tarkhani <ztarkhani@microsoft.com>,
-	=?utf-8?Q?=C8=98tefan_=C8=98icleru?= <ssicleru@bitdefender.com>,
-	dev@lists.cloudhypervisor.org, kvm@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
-	qemu-devel@nongnu.org, virtualization@lists.linux-foundation.org,
-	x86@kernel.org, xen-devel@lists.xenproject.org
-Subject: Re: [RFC PATCH v2 17/19] heki: x86: Update permissions counters
- during text patching
-Message-ID: <20231127200841.GZ3818@noisy.programming.kicks-ass.net>
-References: <20231113022326.24388-1-mic@digikod.net>
- <20231113022326.24388-18-mic@digikod.net>
- <20231113081929.GA16138@noisy.programming.kicks-ass.net>
- <a52d8885-43cc-4a4e-bb47-9a800070779e@linux.microsoft.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PyEgxNWL"
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8384A1A1
+	for <linux-hardening@vger.kernel.org>; Mon, 27 Nov 2023 16:29:27 -0800 (PST)
+Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1cfb83211b9so19492545ad.3
+        for <linux-hardening@vger.kernel.org>; Mon, 27 Nov 2023 16:29:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1701131367; x=1701736167; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zBhH3SH8gSBwN/mjOaVSdplaO4ytPruThkgoguaYPkk=;
+        b=PyEgxNWLeJ3KP8hUS7Ok5YSMoLLYB/ml3itP1fDeV5zzMq6GeWq7Yk+5qYJFlWMz3N
+         M2hG48me0XDZH/2YaYA5EuA2ZUobganXhFT3/he5pdHZkDEvHVXNsvUG/6vZqdcAiPmu
+         s5ehbXKbSfdq40VxQneA98J3UKPHGyCYYXQcI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701131367; x=1701736167;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zBhH3SH8gSBwN/mjOaVSdplaO4ytPruThkgoguaYPkk=;
+        b=BHDNsQcWNNkAE8n5Vl8UctwN/xUNXGFUovo+Xvv9oYPud+4VfcOMUUFQ9OoCHlP/vr
+         XFjsINLwJ3Hr0Py2NYkH5/vbFjVOpZlHIV0k+XOaiXOauGa+rpxN2nzFz0SX7eAJh8kO
+         UbSMNduw6P3gy5X6YnALuyFGxyIYj95caR5pM6uGjV8sMSjK0TcYcD1blpiE+mdjq+dm
+         3n97+t2FLA3p8Opnier2OIbqwwPxa9x1A7Q1LIv6e+Sz0YRzzCIM8I1UTh4/WXz61Ubl
+         PuBwnNxCwEFbklQxGi8J1Gx2D3aR1qVkL7HnBSDD6DOT6We5B4xO4HXGBZNQiispR+BX
+         1e6w==
+X-Gm-Message-State: AOJu0Yyqr8XNGhc+kHAEGdag7BV0wm01ecMqIcDawdmTdpdJEgr5DEFR
+	APbwwJ1dQ0SXBrjywoP2sYmBW5vfvusy/7mYoifsaA==
+X-Google-Smtp-Source: AGHT+IHfOT26JhpsCCRBM96VOFEk0SgWcQnWOKyzAiCxrKsjcBUu975ao2LlZFeKW0Hd0NQIfUCkxA==
+X-Received: by 2002:a17:903:22d2:b0:1cc:c273:603 with SMTP id y18-20020a17090322d200b001ccc2730603mr14361492plg.42.1701131366965;
+        Mon, 27 Nov 2023 16:29:26 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id h7-20020a170902b94700b001cc2ebd2c2csm8824250pls.256.2023.11.27.16.29.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Nov 2023 16:29:26 -0800 (PST)
+Date: Mon, 27 Nov 2023 16:29:25 -0800
+From: Kees Cook <keescook@chromium.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Joey Gouly <joey.gouly@arm.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Bill Wendling <morbo@google.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] neighbour: Fix __randomize_layout crash in struct
+ neighbour
+Message-ID: <202311271628.E5EED48@keescook>
+References: <ZWJoRsJGnCPdJ3+2@work>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a52d8885-43cc-4a4e-bb47-9a800070779e@linux.microsoft.com>
+In-Reply-To: <ZWJoRsJGnCPdJ3+2@work>
 
-On Mon, Nov 27, 2023 at 10:48:29AM -0600, Madhavan T. Venkataraman wrote:
-> Apologies for the late reply. I was on vacation. Please see my response below:
+On Sat, Nov 25, 2023 at 03:33:58PM -0600, Gustavo A. R. Silva wrote:
+> Previously, one-element and zero-length arrays were treated as true
+> flexible arrays, even though they are actually "fake" flex arrays.
+> The __randomize_layout would leave them untouched at the end of the
+> struct, similarly to proper C99 flex-array members.
 > 
-> On 11/13/23 02:19, Peter Zijlstra wrote:
-> > On Sun, Nov 12, 2023 at 09:23:24PM -0500, Mickaël Salaün wrote:
-> >> From: Madhavan T. Venkataraman <madvenka@linux.microsoft.com>
-> >>
-> >> X86 uses a function called __text_poke() to modify executable code. This
-> >> patching function is used by many features such as KProbes and FTrace.
-> >>
-> >> Update the permissions counters for the text page so that write
-> >> permissions can be temporarily established in the EPT to modify the
-> >> instructions in that page.
-> >>
-> >> Cc: Borislav Petkov <bp@alien8.de>
-> >> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> >> Cc: H. Peter Anvin <hpa@zytor.com>
-> >> Cc: Ingo Molnar <mingo@redhat.com>
-> >> Cc: Kees Cook <keescook@chromium.org>
-> >> Cc: Madhavan T. Venkataraman <madvenka@linux.microsoft.com>
-> >> Cc: Mickaël Salaün <mic@digikod.net>
-> >> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> >> Cc: Sean Christopherson <seanjc@google.com>
-> >> Cc: Thomas Gleixner <tglx@linutronix.de>
-> >> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-> >> Cc: Wanpeng Li <wanpengli@tencent.com>
-> >> Signed-off-by: Madhavan T. Venkataraman <madvenka@linux.microsoft.com>
-> >> ---
-> >>
-> >> Changes since v1:
-> >> * New patch
-> >> ---
-> >>  arch/x86/kernel/alternative.c |  5 ++++
-> >>  arch/x86/mm/heki.c            | 49 +++++++++++++++++++++++++++++++++++
-> >>  include/linux/heki.h          | 14 ++++++++++
-> >>  3 files changed, 68 insertions(+)
-> >>
-> >> diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-> >> index 517ee01503be..64fd8757ba5c 100644
-> >> --- a/arch/x86/kernel/alternative.c
-> >> +++ b/arch/x86/kernel/alternative.c
-> >> @@ -18,6 +18,7 @@
-> >>  #include <linux/mmu_context.h>
-> >>  #include <linux/bsearch.h>
-> >>  #include <linux/sync_core.h>
-> >> +#include <linux/heki.h>
-> >>  #include <asm/text-patching.h>
-> >>  #include <asm/alternative.h>
-> >>  #include <asm/sections.h>
-> >> @@ -1801,6 +1802,7 @@ static void *__text_poke(text_poke_f func, void *addr, const void *src, size_t l
-> >>  	 */
-> >>  	pgprot = __pgprot(pgprot_val(PAGE_KERNEL) & ~_PAGE_GLOBAL);
-> >>  
-> >> +	heki_text_poke_start(pages, cross_page_boundary ? 2 : 1, pgprot);
-> >>  	/*
-> >>  	 * The lock is not really needed, but this allows to avoid open-coding.
-> >>  	 */
-> >> @@ -1865,7 +1867,10 @@ static void *__text_poke(text_poke_f func, void *addr, const void *src, size_t l
-> >>  	}
-> >>  
-> >>  	local_irq_restore(flags);
-> >> +
-> >>  	pte_unmap_unlock(ptep, ptl);
-> >> +	heki_text_poke_end(pages, cross_page_boundary ? 2 : 1, pgprot);
-> >> +
-> >>  	return addr;
-> >>  }
-> > 
-> > This makes no sense, we already use a custom CR3 with userspace alias
-> > for the actual pages to write to, why are you then frobbing permissions
-> > on that *again* ?
+> However, this approach changed with commit 1ee60356c2dc ("gcc-plugins:
+> randstruct: Only warn about true flexible arrays"). Now, only C99
+> flexible-array members will remain untouched at the end of the struct,
+> while one-element and zero-length arrays will be subject to randomization.
 > 
-> Today, the permissions for a guest page in the extended page table
-> (EPT) are RWX (unless permissions are restricted for some specific
-> reason like for shadow page table pages). In this Heki feature, we
-> don't allow RWX by default in the EPT. We only allow those permissions
-> in the EPT that the guest page actually needs.  E.g., for a text page,
-> it is R_X in both the guest page table and the EPT.
-
-To what end? If you always mirror what the guest does, you've not
-actually gained anything.
-
-> For text patching, the above code establishes an alternate mapping in
-> the guest page table that is RW_ so that the text can be patched. That
-> needs to be reflected in the EPT so that the EPT permissions will
-> change from R_X to RWX. In other words, RWX is allowed only as
-> necessary. At the end of patching, the EPT permissions are restored to
-> R_X.
+> Fix a `__randomize_layout` crash in `struct neighbour` by transforming
+> zero-length array `primary_key` into a proper C99 flexible-array member.
 > 
-> Does that address your comment?
+> Fixes: 1ee60356c2dc ("gcc-plugins: randstruct: Only warn about true flexible arrays")
+> Closes: https://lore.kernel.org/linux-hardening/20231124102458.GB1503258@e124191.cambridge.arm.com/
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-No, if you want to mirror the native PTEs why don't you hook into the
-paravirt page-table muck and get all that for free?
+Yes, please. Do we have any other 0-sized arrays hiding out in the
+kernel? We need to get these all cleared...
 
-Also, this is the user range, are you saying you're also playing these
-daft games with user maps?
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-- 
+Kees Cook
