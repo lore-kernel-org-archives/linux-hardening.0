@@ -1,99 +1,149 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R3O79Cw8"
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40836182
-	for <linux-hardening@vger.kernel.org>; Mon, 27 Nov 2023 23:24:35 -0800 (PST)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5cef61289fdso45140837b3.1
-        for <linux-hardening@vger.kernel.org>; Mon, 27 Nov 2023 23:24:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701156274; x=1701761074; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hL9Tqag7AJX6zAdbbkbaDwLX0iVjHOEY+HYssYNlBSs=;
-        b=R3O79Cw8aWGA1Ko2Wlpc7FUaut6rEhvk3H35RBLLYZqFbPxBL3pU8Q0gTRsoUhnH8Z
-         odE5pA+ErI5frmKIGo2WNviooWT9caTN/vNtcclMttrIS3k9rn+WiTqcwH5xODKd3Z6a
-         c8DlSj+6t7PR7zsE9yZWnCCswQT5QqzcnAbQd2dwIu5r/3z9YPCs2LdZVumjKq5xedDz
-         4NXI2jz71GhRJBN5Wl2j3Ggo/sQcBqmipjCNQFWMnCh1dRumkxhXMwY2u14EA8/GkXah
-         nuDbZB1+MAbNUpxf6TEC2lVi2BqAF9I/RdQDxC4/NlEcYJpcDBXDcYa+zlkvHFVzmVE2
-         /mog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701156274; x=1701761074;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hL9Tqag7AJX6zAdbbkbaDwLX0iVjHOEY+HYssYNlBSs=;
-        b=buN/yb18kj4U6DyBlEiWS/OjEVUZKp2+pg6+hfczj1vEYuhHR/fo/IsLjQIlm7R53N
-         tD3LV2ToxAe22KucExbB1o3pzZunwX2lOtX0jsoZ3cAlccGenltvT/+UE0RCydy6OxUu
-         YG5vuMPWrTX8aP/+ggHjDsdhDJTvsCVgAGHf6Ve9dd8ATpLgg5H08kw7qmouU1oTaxpr
-         AzIEjlKkZGQjTk56uIpjNtKKhSCGeKICt5VohFoVFSUMwBYbW11y5mMgvhSMlvEoUehI
-         pwfQdyzbKIScTgWP0/embVB/OP9DWZ1RIkan2PG9+PWHBR73CWvLSnSIJsbelNrAno89
-         pVhQ==
-X-Gm-Message-State: AOJu0Yw9d7XbdcoZxVaznbjgMHyF0eM0BpkbxPHcBgv6y/fWKo8OCjfS
-	OC75LEYeIEEujMMrakY1J9RLaARr6sK3bA==
-X-Google-Smtp-Source: AGHT+IGoRIHKr3JyrbM3tkKrf0PmKkWlRFIRiSnxD6FAHnrPxKsZM4C/FRkjkDW0SuhziYxtsE89EeXxGNnLEA==
-X-Received: from slicestar.c.googlers.com ([fda3:e722:ac3:cc00:4f:4b78:c0a8:20a1])
- (user=davidgow job=sendgmr) by 2002:a25:3741:0:b0:db5:2a4:aef1 with SMTP id
- e62-20020a253741000000b00db502a4aef1mr30191yba.13.1701156274525; Mon, 27 Nov
- 2023 23:24:34 -0800 (PST)
-Date: Tue, 28 Nov 2023 15:24:07 +0800
-In-Reply-To: <20231128072410.952662-1-davidgow@google.com>
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="W2yx2WsK"
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19095B0;
+	Tue, 28 Nov 2023 00:18:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1701159511;
+	bh=bALKkCMp4lwFvbZNSnYUsuxiPjBZcOtLPTfv5JH7kEI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=W2yx2WsKSKX+OxGDFmsqxigPuTgF7gXV5uUuM1cjTjiMJJPTck/FA5tPFo/sJKb36
+	 1mbhhZfmKMRRb9N0vtU1BV0SzPDGW6lmu1Tex4fcrh7kV4Qf3z6Vjk5OibJPIdVwai
+	 Ccq9HpQqWDDyeLlcWeZ3SdowZByoz58cE27ue6lg=
+Date: Tue, 28 Nov 2023 09:18:30 +0100
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Joel Granados <j.granados@samsung.com>
+Cc: Kees Cook <keescook@chromium.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Iurii Zaikin <yzaikin@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH RFC 0/7] sysctl: constify sysctl ctl_tables
+Message-ID: <475cd5fa-f0cc-4b8b-9e04-458f6d143178@t-8ch.de>
+References: <CGME20231125125305eucas1p2ebdf870dd8ef46ea9d346f727b832439@eucas1p2.samsung.com>
+ <20231125-const-sysctl-v1-0-5e881b0e0290@weissschuh.net>
+ <20231127101323.sdnibmf7c3d5ovye@localhost>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20231128072410.952662-1-davidgow@google.com>
-X-Mailer: git-send-email 2.43.0.rc1.413.gea7ed67945-goog
-Message-ID: <20231128072410.952662-3-davidgow@google.com>
-Subject: [PATCH v2 3/3] drm/vc4: tests: Use KUNIT_DEFINE_ACTION_WRAPPER
-From: David Gow <davidgow@google.com>
-To: Nathan Chancellor <nathan@kernel.org>, Kees Cook <keescook@chromium.org>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, Rae Moar <rmoar@google.com>, dlatypov@google.com
-Cc: David Gow <davidgow@google.com>, Benjamin Berg <benjamin.berg@intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Richard Fitzgerald <rf@opensource.cirrus.com>, llvm@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-kselftest@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20231127101323.sdnibmf7c3d5ovye@localhost>
 
-In order to pass functions to kunit_add_action(), they need to be of the
-kunit_action_t type. While casting the function pointer can work, it
-will break control-flow integrity.
+Hi Joel,
 
-vc4_mock already defines such a wrapper for drm_dev_unregister(), but it
-involves less boilerplate to use the new macro, so replace the manual
-implementation.
+On 2023-11-27 11:13:23+0100, Joel Granados wrote:
+> In general I would like to see more clarity with the motivation and I
+> would also expect some system testing. My comments inline:
 
-Signed-off-by: David Gow <davidgow@google.com>
----
+Thanks for your feedback, response are below.
 
-No changes since v1:
-https://lore.kernel.org/linux-kselftest/20231110200830.1832556-3-davidgow@google.com/
+> On Sat, Nov 25, 2023 at 01:52:49PM +0100, Thomas Weißschuh wrote:
+> > Problem description:
+> > 
+> > The kernel contains a lot of struct ctl_table throught the tree.
+> > These are very often 'static' definitions.
+> > It would be good to mark these tables const to avoid accidental or
+> > malicious modifications.
 
----
- drivers/gpu/drm/vc4/tests/vc4_mock.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+> It is unclear to me what you mean here with accidental or malicious
+> modifications. Do you have a specific attack vector in mind? Do you
+> have an example of how this could happen maliciously? With
+> accidental, do you mean in proc/sysctl.c? Can you expand more on the
+> accidental part?
 
-diff --git a/drivers/gpu/drm/vc4/tests/vc4_mock.c b/drivers/gpu/drm/vc4/tests/vc4_mock.c
-index 63ca46f4cb35..becb3dbaa548 100644
---- a/drivers/gpu/drm/vc4/tests/vc4_mock.c
-+++ b/drivers/gpu/drm/vc4/tests/vc4_mock.c
-@@ -153,12 +153,9 @@ static int __build_mock(struct kunit *test, struct drm_device *drm,
- 	return 0;
- }
+There is no specific attack vector I have in mind. The goal is to remove
+mutable data, especially if it contains pointers, that could be used by
+an attacker as a step in an exploit. See for example [0], [1].
+
+Accidental can be any out-of-bounds write throughout the kernel.
+
+> What happens with the code that modifies these outside the sysctl core?
+> Like for example in sysctl_route_net_init where the table is modified
+> depending on the net->user_ns? Would these non-const ctl_table pointers
+> be ok? would they be handled differently?
+
+It is still completely fine to modify the tables before registering,
+like sysctl_route_net_init is doing. That code should not need any
+changes.
+
+Modifying the table inside the handler function would bypass the
+validation done when registering so sounds like a bad idea in general.
+It would still be possible however for a subsystem to do so by just not
+making their sysctl table const and then modifying the table directly.
  
--static void kunit_action_drm_dev_unregister(void *ptr)
--{
--	struct drm_device *drm = ptr;
--
--	drm_dev_unregister(drm);
--}
-+KUNIT_DEFINE_ACTION_WRAPPER(kunit_action_drm_dev_unregister,
-+			    drm_dev_unregister,
-+			    struct drm_device *);
- 
- static struct vc4_dev *__mock_device(struct kunit *test, bool is_vc5)
- {
--- 
-2.43.0.rc1.413.gea7ed67945-goog
+> > Unfortunately the tables can not be made const because the core
+> > registration functions expect mutable tables.
+> > 
+> > This is for two reasons:
+> > 
+> > 1) sysctl_{set,clear}_perm_empty_ctl_header in the sysctl core modify
+> >    the table. This should be fixable by only modifying the header
+> >    instead of the table itself.
+> > 2) The table is passed to the handler function as a non-const pointer.
+> > 
+> > This series is an aproach on fixing reason 2).
 
+> So number 2 will be sent in another set?
+
+If the initial feedback to the RFC and general process is positive, yes.
+
+> > 
+> > Full process:
+> > 
+> > * Introduce field proc_handler_new for const handlers (this series)
+> > * Migrate all core handlers to proc_handler_new (this series, partial)
+> >   This can hopefully be done in a big switch, as it only involves
+> >   functions and structures owned by the core sysctl code.
+> > * Migrate all other sysctl handlers to proc_handler_new.
+> > * Drop the old proc_handler_field.
+> > * Fix the sysctl core to not modify the tables anymore.
+> > * Adapt public sysctl APIs to take "const struct ctl_table *".
+> > * Teach checkpatch.pl to warn on non-const "struct ctl_table"
+> >   definitions.
+> > * Migrate definitions of "struct ctl_table" to "const" where applicable.
+> >  
+> > 
+> > Notes:
+> > 
+> > Just casting the function pointers around would trigger
+> > CFI (control flow integrity) warnings.
+> > 
+> > The name of the new handler "proc_handler_new" is a bit too long messing
+> > up the alignment of the table definitions.
+> > Maybe "proc_handler2" or "proc_handler_c" for (const) would be better.
+
+> indeed the name does not say much. "_new" looses its meaning quite fast
+> :)
+
+Hopefully somebody comes up with a better name!
+
+> In my experience these tree wide modifications are quite tricky. Have you
+> run any tests to see that everything is as it was? sysctl selftests and
+> 0-day come to mind.
+
+I managed to miss one change in my initial submission:
+With the hunk below selftests and typing emails work.
+
+--- a/fs/proc/proc_sysctl.c
++++ b/fs/proc/proc_sysctl.c
+@@ -1151,7 +1151,7 @@ static int sysctl_check_table(const char *path, struct ctl_table_header *header)
+                        else
+                                err |= sysctl_check_table_array(path, entry);
+                }
+-               if (!entry->proc_handler)
++               if (!entry->proc_handler && !entry->proc_handler_new)
+                        err |= sysctl_err(path, entry, "No proc_handler");
+ 
+                if ((entry->mode & (S_IRUGO|S_IWUGO)) != entry->mode)
+
+> [..]
+
+[0] 43a7206b0963 ("driver core: class: make class_register() take a const *")
+[1] https://lore.kernel.org/lkml/20230930050033.41174-1-wedsonaf@gmail.com/
+
+
+Thomas
