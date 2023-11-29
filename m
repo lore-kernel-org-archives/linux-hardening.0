@@ -1,39 +1,21 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="o7QqF0Tb"
-Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E102010CE
-	for <linux-hardening@vger.kernel.org>; Wed, 29 Nov 2023 10:59:23 -0800 (PST)
-Received: from eig-obgw-6006a.ext.cloudfilter.net ([10.0.30.182])
-	by cmsmtp with ESMTPS
-	id 8L6hrY5FKWcCI8PmMruWci; Wed, 29 Nov 2023 18:59:23 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id 8PmLrcXnNGKIc8PmMr05Ry; Wed, 29 Nov 2023 18:59:22 +0000
-X-Authority-Analysis: v=2.4 cv=E+beGIRl c=1 sm=1 tr=0 ts=65678a0a
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=7m0pAUNwt3ppyxJkgzeoew==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=BNY50KLci1gA:10 a=wYkD_t78qR0A:10
- a=-ubsauMo1vhQ0g-4glIA:9 a=QEXdDO2ut3YA:10 a=zZCYzV9kfG8A:10
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=7OI9D0eyAxHKpZTaNiARRfZBik1LQdu0fxFr+ZBYUKY=; b=o7QqF0TbfUWmnTNpbRbOD0FKmE
-	XxBedNgtDThkbqTmx9RPT3YGhbug1lHYZ6yjmflddwTUikk07lTPqND2yl2U+5pKs/XBgQHLjuP+f
-	gJjYczf5mW3iMd8268mMcupsn7pjclY38K1KwOSmVifcdUS/GCQEJizf8rKsjI86fCLeG+H55E3UF
-	Am9Fq2vkVWju31xE5gqh8qGzc/OBqiNOyqIBryKfHQh23pSW/J3VdY6ppTBAIgOEn3xhkjlqKV545
-	fMOY/7CScJLh4PUFQgP7kNVGChaVZ9ZYAhF8yZhY/3uz1BXvjzCRV6BiRqKfkfC7k19+PEcrfjPM6
-	TzJZBYsQ==;
-Received: from 187.184.156.122.cable.dyn.cableonline.com.mx ([187.184.156.122]:1245 helo=[192.168.0.28])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1r8PmL-001xh8-1J;
-	Wed, 29 Nov 2023 12:59:21 -0600
-Message-ID: <a4890aae-2be8-42e3-9aa1-ee62f892553f@embeddedor.com>
-Date: Wed, 29 Nov 2023 12:59:19 -0600
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="m2zcYwwK"
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id 38715E6;
+	Wed, 29 Nov 2023 11:47:11 -0800 (PST)
+Received: from [192.168.4.26] (unknown [47.186.13.91])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 170A820B74C0;
+	Wed, 29 Nov 2023 11:47:08 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 170A820B74C0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1701287230;
+	bh=/AE04joHGbexNg6/1EM+o2YovtZhSbAJbfvFr6KppsI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=m2zcYwwKjEICCbmm6pNwRqAhVUCXZ16/8j+Rm7KklfOt+2Ayb4zeushfGcTbZxznq
+	 3hN7N2zKM0A0/gQ44k2UL+nPl6XrqJsEKFGafJpDqPaapCdFHry5gFf1f4pq+6pJ/l
+	 apo4cqq0Sd+X0a18QxRWb+mfxOTM3r6ttMVsuAlE=
+Message-ID: <e430efa3-6a7a-44c8-a1d2-9943c76f748e@linux.microsoft.com>
+Date: Wed, 29 Nov 2023 13:47:07 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -41,46 +23,109 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: 6.5.13 regression: BUG: kernel NULL pointer dereference, address:
- 0000000000000020
+Subject: Re: [RFC PATCH v2 18/19] heki: x86: Protect guest kernel memory using
+ the KVM hypervisor
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+ Kees Cook <keescook@chromium.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ Sean Christopherson <seanjc@google.com>, Thomas Gleixner
+ <tglx@linutronix.de>, Vitaly Kuznetsov <vkuznets@redhat.com>,
+ Wanpeng Li <wanpengli@tencent.com>, Alexander Graf <graf@amazon.com>,
+ Chao Peng <chao.p.peng@linux.intel.com>,
+ "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+ Forrest Yuan Yu <yuanyu@google.com>, James Gowans <jgowans@amazon.com>,
+ James Morris <jamorris@linux.microsoft.com>,
+ John Andersen <john.s.andersen@intel.com>,
+ Marian Rotariu <marian.c.rotariu@gmail.com>,
+ =?UTF-8?Q?Mihai_Don=C8=9Bu?= <mdontu@bitdefender.com>,
+ =?UTF-8?B?TmljdciZb3IgQ8OuyJt1?= <nicu.citu@icloud.com>,
+ Thara Gopinath <tgopinath@microsoft.com>,
+ Trilok Soni <quic_tsoni@quicinc.com>, Wei Liu <wei.liu@kernel.org>,
+ Will Deacon <will@kernel.org>, Yu Zhang <yu.c.zhang@linux.intel.com>,
+ Zahra Tarkhani <ztarkhani@microsoft.com>,
+ =?UTF-8?Q?=C8=98tefan_=C8=98icleru?= <ssicleru@bitdefender.com>,
+ dev@lists.cloudhypervisor.org, kvm@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
+ qemu-devel@nongnu.org, virtualization@lists.linux-foundation.org,
+ x86@kernel.org, xen-devel@lists.xenproject.org
+References: <20231113022326.24388-1-mic@digikod.net>
+ <20231113022326.24388-19-mic@digikod.net>
+ <20231113085403.GC16138@noisy.programming.kicks-ass.net>
+ <b1dc0963-ab99-4a79-af19-ef5ed981fa60@linux.microsoft.com>
+ <20231127200308.GY3818@noisy.programming.kicks-ass.net>
 Content-Language: en-US
-To: Dan Moulding <dan@danm.net>, sam@gentoo.org
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, toralf.foerster@gmx.de
-References: <87jzq1lflc.fsf@gentoo.org> <20231128224816.6563-1-dan@danm.net>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20231128224816.6563-1-dan@danm.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.184.156.122
-X-Source-L: No
-X-Exim-ID: 1r8PmL-001xh8-1J
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187.184.156.122.cable.dyn.cableonline.com.mx ([192.168.0.28]) [187.184.156.122]:1245
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 4
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfGlDIhsU1ns7ro1OZeKXN+k4Zu/uvwB3AF7CWkCO+iwr28JlQ9nweY0Oas7cFSCAPo982yh1Fd4uuJwNfgsQPFATaAfCirUeSmr7NPROFi3PjhpG2gVB
- YG6N0mvqXkTSWSn4hPRjozhNNbQhR5lv/eaPnTDCFUG1JDmSCzTyjGKt7bJeMoUyo1IImX7qD0KstylKpNR/y6gsYHVMT2lGbmVJFJFOPvERbAKtJUtPiOBA
+From: "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
+In-Reply-To: <20231127200308.GY3818@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
-> the kernel source. But a quick (and possibly imperfect) grepping seems
-> to show that struct neighbor was the only one used with
-> __randomize_layout. So, I *think* it might be the only one that could
-> cause a problem with the recent change to the randomize_layout plugin.
 
-Yeah, I can confirm we don't currently have any other fake flex array
-in a struct with __randomize_layout. :)
+On 11/27/23 14:03, Peter Zijlstra wrote:
+> On Mon, Nov 27, 2023 at 11:05:23AM -0600, Madhavan T. Venkataraman wrote:
+>> Apologies for the late reply. I was on vacation. Please see my response below:
+>>
+>> On 11/13/23 02:54, Peter Zijlstra wrote:
+>>> On Sun, Nov 12, 2023 at 09:23:25PM -0500, Mickaël Salaün wrote:
+>>>> From: Madhavan T. Venkataraman <madvenka@linux.microsoft.com>
+>>>>
+>>>> Implement a hypervisor function, kvm_protect_memory() that calls the
+>>>> KVM_HC_PROTECT_MEMORY hypercall to request the KVM hypervisor to
+>>>> set specified permissions on a list of guest pages.
+>>>>
+>>>> Using the protect_memory() function, set proper EPT permissions for all
+>>>> guest pages.
+>>>>
+>>>> Use the MEM_ATTR_IMMUTABLE property to protect the kernel static
+>>>> sections and the boot-time read-only sections. This enables to make sure
+>>>> a compromised guest will not be able to change its main physical memory
+>>>> page permissions. However, this also disable any feature that may change
+>>>> the kernel's text section (e.g., ftrace, Kprobes), but they can still be
+>>>> used on kernel modules.
+>>>>
+>>>> Module loading/unloading, and eBPF JIT is allowed without restrictions
+>>>> for now, but we'll need a way to authenticate these code changes to
+>>>> really improve the guests' security. We plan to use module signatures,
+>>>> but there is no solution yet to authenticate eBPF programs.
+>>>>
+>>>> Being able to use ftrace and Kprobes in a secure way is a challenge not
+>>>> solved yet. We're looking for ideas to make this work.
+>>>>
+>>>> Likewise, the JUMP_LABEL feature cannot work because the kernel's text
+>>>> section is read-only.
+>>>
+>>> What is the actual problem? As is the kernel text map is already RO and
+>>> never changed.
+>>
+>> For the JUMP_LABEL optimization, the text needs to be patched at some point.
+>> That patching requires a writable mapping of the text page at the time of
+>> patching.
+>>
+>> In this Heki feature, we currently lock down the kernel text at the end of
+>> kernel boot just before kicking off the init process. The lockdown is
+>> implemented by setting the permissions of a text page to R_X in the extended
+>> page table and not allowing write permissions in the EPT after that. So, jump label
+>> patching during kernel boot is not a problem. But doing it after kernel
+>> boot is a problem.
+> 
+> But you see, that's exactly what the kernel already does with the normal
+> permissions. They get set to RX after init and are never changed.
+> 
+> See the previous patch, we establish a read-write alias and write there.
+> 
+> You seem to lack basic understanding of how the kernel works in this
+> regard, which makes me very nervous about you touching any of this.
+> 
+> I must also say I really dislike your extra/random permssion calls all
+> over the place. They don't really get us anything afaict. Why can't you
+> plumb into the existing set_memory_*() family?
 
---
-Gustavo
+I have responded to your comments on your other email. Please read my
+response there.
+
+Thanks.
+
+Madhavan
