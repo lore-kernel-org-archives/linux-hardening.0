@@ -1,63 +1,86 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=danm.net header.i=@danm.net header.b="fNukShFf"
-X-Greylist: delayed 576 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 28 Nov 2023 14:58:06 PST
-Received: from mr85p00im-hyfv06011401.me.com (mr85p00im-hyfv06011401.me.com [17.58.23.191])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E1FC83
-	for <linux-hardening@vger.kernel.org>; Tue, 28 Nov 2023 14:58:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=danm.net; s=sig1;
-	t=1701211709; bh=sqhOH7HDksvDaeNqmw8j4S6QM8peZMro746b6naa7vg=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=fNukShFfmOS+40vu5jj+975abPHCxKE2Y0UdYZ6Lhq4XF3BiHqutQX6FTiIZF9apP
-	 OsYEbW8/2WNgKuuDvDhBsQEcBlAezs0W2HiHSGFT+02bOM+IG+eIOWCGZni2qlFCUW
-	 DtX0iJ1PzKEgWwg2yY9igjN3bsB+EGWeOc079l/2pJStpRTmdl/WSzw8AWbddKM8nJ
-	 gLhABa1o87aW/bm6GtWMy7DOaWxBYfk8t/AEqtah8cq6GIjn/vOEi+MHN3LihR+PsL
-	 WJcsU8QUnnzLEHY+GSpLkE9MG9v8JwD4PIbGsbb65Ad8Ppyl/xTWy2fOq5HkBImsqT
-	 1o50lyjrtLdfA==
-Received: from hitch.danm.net (mr38p00im-dlb-asmtp-mailmevip.me.com [17.57.152.18])
-	by mr85p00im-hyfv06011401.me.com (Postfix) with ESMTPSA id E42E8357AEC5;
-	Tue, 28 Nov 2023 22:48:25 +0000 (UTC)
-From: Dan Moulding <dan@danm.net>
-To: sam@gentoo.org
-Cc: dan@danm.net,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	toralf.foerster@gmx.de
-Subject: Re: 6.5.13 regression: BUG: kernel NULL pointer dereference, address: 0000000000000020
-Date: Tue, 28 Nov 2023 15:48:16 -0700
-Message-ID: <20231128224816.6563-1-dan@danm.net>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <87jzq1lflc.fsf@gentoo.org>
-References: <87jzq1lflc.fsf@gentoo.org>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="o7QqF0Tb"
+Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E102010CE
+	for <linux-hardening@vger.kernel.org>; Wed, 29 Nov 2023 10:59:23 -0800 (PST)
+Received: from eig-obgw-6006a.ext.cloudfilter.net ([10.0.30.182])
+	by cmsmtp with ESMTPS
+	id 8L6hrY5FKWcCI8PmMruWci; Wed, 29 Nov 2023 18:59:23 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id 8PmLrcXnNGKIc8PmMr05Ry; Wed, 29 Nov 2023 18:59:22 +0000
+X-Authority-Analysis: v=2.4 cv=E+beGIRl c=1 sm=1 tr=0 ts=65678a0a
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=7m0pAUNwt3ppyxJkgzeoew==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=BNY50KLci1gA:10 a=wYkD_t78qR0A:10
+ a=-ubsauMo1vhQ0g-4glIA:9 a=QEXdDO2ut3YA:10 a=zZCYzV9kfG8A:10
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=7OI9D0eyAxHKpZTaNiARRfZBik1LQdu0fxFr+ZBYUKY=; b=o7QqF0TbfUWmnTNpbRbOD0FKmE
+	XxBedNgtDThkbqTmx9RPT3YGhbug1lHYZ6yjmflddwTUikk07lTPqND2yl2U+5pKs/XBgQHLjuP+f
+	gJjYczf5mW3iMd8268mMcupsn7pjclY38K1KwOSmVifcdUS/GCQEJizf8rKsjI86fCLeG+H55E3UF
+	Am9Fq2vkVWju31xE5gqh8qGzc/OBqiNOyqIBryKfHQh23pSW/J3VdY6ppTBAIgOEn3xhkjlqKV545
+	fMOY/7CScJLh4PUFQgP7kNVGChaVZ9ZYAhF8yZhY/3uz1BXvjzCRV6BiRqKfkfC7k19+PEcrfjPM6
+	TzJZBYsQ==;
+Received: from 187.184.156.122.cable.dyn.cableonline.com.mx ([187.184.156.122]:1245 helo=[192.168.0.28])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1r8PmL-001xh8-1J;
+	Wed, 29 Nov 2023 12:59:21 -0600
+Message-ID: <a4890aae-2be8-42e3-9aa1-ee62f892553f@embeddedor.com>
+Date: Wed, 29 Nov 2023 12:59:19 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: BzPu9jSF4Hw21U6xu4xtvi1w9T--vBIs
-X-Proofpoint-ORIG-GUID: BzPu9jSF4Hw21U6xu4xtvi1w9T--vBIs
-X-Proofpoint-Virus-Version: =?UTF-8?Q?vendor=3Dfsecure_engine=3D1.1.170-22c6f66c430a71ce266a39bfe25bc?=
- =?UTF-8?Q?2903e8d5c8f:6.0.138,18.0.572,17.0.605.474.0000000_definitions?=
- =?UTF-8?Q?=3D2020-02-14=5F11:2020-02-14=5F02,2020-02-14=5F11,2020-01-23?=
- =?UTF-8?Q?=5F02_signatures=3D0?=
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 bulkscore=0
- mlxscore=0 suspectscore=0 malwarescore=0 mlxlogscore=338 adultscore=0
- clxscore=1030 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2308100000 definitions=main-2311280179
+User-Agent: Mozilla Thunderbird
+Subject: Re: 6.5.13 regression: BUG: kernel NULL pointer dereference, address:
+ 0000000000000020
+Content-Language: en-US
+To: Dan Moulding <dan@danm.net>, sam@gentoo.org
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, toralf.foerster@gmx.de
+References: <87jzq1lflc.fsf@gentoo.org> <20231128224816.6563-1-dan@danm.net>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20231128224816.6563-1-dan@danm.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.184.156.122
+X-Source-L: No
+X-Exim-ID: 1r8PmL-001xh8-1J
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187.184.156.122.cable.dyn.cableonline.com.mx ([192.168.0.28]) [187.184.156.122]:1245
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 4
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfGlDIhsU1ns7ro1OZeKXN+k4Zu/uvwB3AF7CWkCO+iwr28JlQ9nweY0Oas7cFSCAPo982yh1Fd4uuJwNfgsQPFATaAfCirUeSmr7NPROFi3PjhpG2gVB
+ YG6N0mvqXkTSWSn4hPRjozhNNbQhR5lv/eaPnTDCFUG1JDmSCzTyjGKt7bJeMoUyo1IImX7qD0KstylKpNR/y6gsYHVMT2lGbmVJFJFOPvERbAKtJUtPiOBA
 
-Thanks, Sam. Yes it does look like that's the same issue.
 
-I applied that patch to v6.6.3 instead of reverting the change to the
-randomize_layout plugin and the problem also goes away with the patch
-applied.
+> the kernel source. But a quick (and possibly imperfect) grepping seems
+> to show that struct neighbor was the only one used with
+> __randomize_layout. So, I *think* it might be the only one that could
+> cause a problem with the recent change to the randomize_layout plugin.
 
-In that thread with the patch, Gustavo does mention that many other
-zero-length arrays, besides this one in struct neighbor, were found in
-the kernel source. But a quick (and possibly imperfect) grepping seems
-to show that struct neighbor was the only one used with
-__randomize_layout. So, I *think* it might be the only one that could
-cause a problem with the recent change to the randomize_layout plugin.
+Yeah, I can confirm we don't currently have any other fake flex array
+in a struct with __randomize_layout. :)
 
--- Dan
+--
+Gustavo
