@@ -1,51 +1,53 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kQ/Te5zA"
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A857693
-	for <linux-hardening@vger.kernel.org>; Thu, 30 Nov 2023 13:07:14 -0800 (PST)
-Received: by mail-pj1-x1036.google.com with SMTP id 98e67ed59e1d1-285a64dcf3eso1272816a91.1
-        for <linux-hardening@vger.kernel.org>; Thu, 30 Nov 2023 13:07:14 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZxjbbZ7v"
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE58F133
+	for <linux-hardening@vger.kernel.org>; Thu, 30 Nov 2023 13:12:49 -0800 (PST)
+Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-1ce28faa92dso13117945ad.2
+        for <linux-hardening@vger.kernel.org>; Thu, 30 Nov 2023 13:12:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1701378434; x=1701983234; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1701378769; x=1701983569; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TbIZvkmLDHjuqC1Cwkdf1lYVKO4lsiVt6+GTqmsC6fc=;
-        b=kQ/Te5zAg9tH0VOfkVIPix7dtbWBpPaJb4OxFopu3MfRwYpikD3CxatKPPlkODP5k6
-         /dBER9ypWI8ZhurDdtAci2UxsOHz0WADU2f+0XEwy8647nqnzn44V+2hWz0PyXb4HQd9
-         rLrBK7QFYISCEkO04a7DIR+E1QOmA2nTTWtPg=
+        bh=oMtD4zdAr6X+H2Qpe4emJrdJbxSyHd1ONAvar3QH9oM=;
+        b=ZxjbbZ7v3ERljlXrOCR6AGCmGn3s2F6tauVzLoYjiY0soTCy1vwYq32XAVwpWoNXuQ
+         ayN+Hxaag9GIbyNfTLpN6FG8FNmJcfpDgp5OVjn74F58oaaEdnQsoD8T2vQmGPE7tA+r
+         KfQ9L/DHX8gJi8oTPVlyb0SLAuSrjJrd2TB04=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701378434; x=1701983234;
+        d=1e100.net; s=20230601; t=1701378769; x=1701983569;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TbIZvkmLDHjuqC1Cwkdf1lYVKO4lsiVt6+GTqmsC6fc=;
-        b=UUHTkKknWTfA+BWUYwx9iob5oJnojZjZaRp72idhvxcnhC13mpXfvjVhR4311CaWN5
-         thsMJK+nE15XDEZm/bN4nd4JskGMq0HN1NnMfz04gbJXnN61trsN0S2jb/8o676ERq10
-         oW6rzh/VJVeuy/5E2Tabm5QMejYHmHQadAcJaKNOAZl3KU4+GovdwYMkfRMUu4LhCGEW
-         v1P/BO3EiisX6NM/UzYzUtbuqPUnd3StJpapgNN/v7rGtgysR44IWrlZ39Ml/ZvWu48K
-         bzrnWR4K2Qd+pd+F0TD4ZIRlx6y7Le5Tn5N0E5/FxeGA4+ZQaaFsoZlk4IXzsTG63yb0
-         be9A==
-X-Gm-Message-State: AOJu0YyJ0q18+81T2daHrv489DmdNDPmZGDo6PLZWzHdh8ijMDFCCk/J
-	ipyrRv/JBjS37DogzuC89Z/xQg==
-X-Google-Smtp-Source: AGHT+IEJgJAEtudsVkOaUX/5ItBV95aXss2DqhWCaxPJGVs0Ullk1uwZ0w8Y4goJlNpEFPj2g4aaIw==
-X-Received: by 2002:a17:90b:1e02:b0:285:b08a:780d with SMTP id pg2-20020a17090b1e0200b00285b08a780dmr16762443pjb.23.1701378434172;
-        Thu, 30 Nov 2023 13:07:14 -0800 (PST)
+        bh=oMtD4zdAr6X+H2Qpe4emJrdJbxSyHd1ONAvar3QH9oM=;
+        b=J1ugdPi/Fyv93h/0VKXCPxK9RC83hPLJYHmqT45NwI9+LJk3eqDgoD+DB/fhf/5sw6
+         /FOJiXDSlVEQNBoWur50Yo2faEBilvFkFgqgMDBMa8iM0fVKPc6eauy9RnRv6WPG2vQg
+         +TmkIMaHpBg/9jXozxahc3iNJlwKliRbnCtoSUCQ8fAkV4bVUbtkKPy5NxyGJKamPGol
+         tLsSHu7tTvE+oWTL8o7i0FvN2BwO45xATtJKDSIPyXsjlshr6qb3vVKIqdK455vW8jzv
+         j6rQkr8ggOunc7ji727WIUZxt6J6XnbQRu8Rfv81NlplhbcEJl1BnvsyXrPFgEdaeJVs
+         iNKA==
+X-Gm-Message-State: AOJu0YxUqmiWoFSRwzR4ErV6BqIWWQ8TP04clcIKFP0Am7qb6rx9V5uk
+	kYHACJ4BKEGsqmHbtdbzRJyzwA==
+X-Google-Smtp-Source: AGHT+IHMg694k+Ua8hT0yYfpkQVJFEGdgYslaiV8JFgLgJF7PWf5jrslfVimHv+aZAMpIBLCJYRxCQ==
+X-Received: by 2002:a17:902:7409:b0:1cf:a2e7:f851 with SMTP id g9-20020a170902740900b001cfa2e7f851mr23180716pll.32.1701378769265;
+        Thu, 30 Nov 2023 13:12:49 -0800 (PST)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id bk8-20020a17090b080800b00285a17f9da1sm3705287pjb.43.2023.11.30.13.07.13
+        by smtp.gmail.com with ESMTPSA id y9-20020a170902b48900b001bf044dc1a6sm1867755plr.39.2023.11.30.13.12.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Nov 2023 13:07:13 -0800 (PST)
-Date: Thu, 30 Nov 2023 13:07:13 -0800
+        Thu, 30 Nov 2023 13:12:48 -0800 (PST)
+Date: Thu, 30 Nov 2023 13:12:48 -0800
 From: Kees Cook <keescook@chromium.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Nicolas Schier <nicolas@fjasle.eu>, linux-kbuild@vger.kernel.org,
+To: Justin Stitt <justinstitt@google.com>
+Cc: Tyrel Datwyler <tyreld@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"James E.J. Bottomley" <jejb@linux.ibm.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-scsi@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] init: Kconfig: Disable -Wstringop-overflow for
- GCC-11
-Message-ID: <202311301304.28F0C52BA@keescook>
-References: <ZWj1+jkweEDWbmAR@work>
+Subject: Re: [PATCH] scsi: ibmvfc: replace deprecated strncpy with strscpy
+Message-ID: <202311301311.717549FB@keescook>
+References: <20231030-strncpy-drivers-scsi-ibmvscsi-ibmvfc-c-v1-1-5a4909688435@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -54,75 +56,116 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZWj1+jkweEDWbmAR@work>
+In-Reply-To: <20231030-strncpy-drivers-scsi-ibmvscsi-ibmvfc-c-v1-1-5a4909688435@google.com>
 
-On Thu, Nov 30, 2023 at 02:52:10PM -0600, Gustavo A. R. Silva wrote:
-> -Wstringop-overflow is buggy in GCC-11. Therefore, we should disable
-
-Can you add some links for this? For example, maybe this?
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=97490
-
-Or discussions from -next builds?
-
-> this option specifically for that compiler version. To achieve this,
-> we introduce a new configuration option: GCC11_NO_STRINGOP_OVERFLOW.
+On Mon, Oct 30, 2023 at 07:04:33PM +0000, Justin Stitt wrote:
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
 > 
-> The compiler option related to string operation overflow is now managed
-> under configuration CC_STRINGOP_OVERFLOW. This option is enabled by
-> default for all other versions of GCC that support it.
+> We expect these fields to be NUL-terminated as the property names from
+> which they are derived are also NUL-terminated.
 > 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Moreover, NUL-padding is not required as our destination buffers are
+> already NUL-allocated and any future NUL-byte assignments are redundant
+> (like the ones that strncpy() does).
+> ibmvfc_probe() ->
+> |       struct ibmvfc_host *vhost;
+> |       struct Scsi_Host *shost;
+> ...
+> | 	shost = scsi_host_alloc(&driver_template, sizeof(*vhost));
+> ... **side note: is this a bug? Looks like a type to me   ^^^^^**
 
-But yeah, let's get this landed to keep new warnings from appearing...
+I think this is the "privsize", so *vhost is correct, IIUC.
+
+> ...
+> |	vhost = shost_priv(shost);
+
+I.e. vhost is a part of the shost allocation
+
+> 
+> ... where shost_priv() is:
+> |       static inline void *shost_priv(struct Scsi_Host *shost)
+> |       {
+> |       	return (void *)shost->hostdata;
+> |       }
+> 
+> .. and:
+> scsi_host_alloc() ->
+> | 	shost = kzalloc(sizeof(struct Scsi_Host) + privsize, GFP_KERNEL);
+
+As seen here. :)
+
+> 
+> And for login_info->..., NUL-padding is also not required as it is
+> explicitly memset to 0:
+> |	memset(login_info, 0, sizeof(*login_info));
+> 
+> Considering the above, a suitable replacement is `strscpy` [2] due to
+> the fact that it guarantees NUL-termination on the destination buffer
+> without unnecessarily NUL-padding.
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+
+Yeah, this conversion looks correct to me too.
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
 
+-Kees
 
 > ---
->  Makefile     |  4 +++-
->  init/Kconfig | 12 ++++++++++++
->  2 files changed, 15 insertions(+), 1 deletion(-)
+> Note: build-tested only.
 > 
-> diff --git a/Makefile b/Makefile
-> index 2cfd71ae3a86..8adc611fb611 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -982,7 +982,9 @@ NOSTDINC_FLAGS += -nostdinc
->  # perform bounds checking.
->  KBUILD_CFLAGS += $(call cc-option, -fstrict-flex-arrays=3)
+> Found with: $ rg "strncpy\("
+> ---
+>  drivers/scsi/ibmvscsi/ibmvfc.c | 12 +++++++-----
+>  1 file changed, 7 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/scsi/ibmvscsi/ibmvfc.c b/drivers/scsi/ibmvscsi/ibmvfc.c
+> index ce9eb00e2ca0..e73a39b1c832 100644
+> --- a/drivers/scsi/ibmvscsi/ibmvfc.c
+> +++ b/drivers/scsi/ibmvscsi/ibmvfc.c
+> @@ -1455,7 +1455,7 @@ static void ibmvfc_gather_partition_info(struct ibmvfc_host *vhost)
 >  
-> -KBUILD_CFLAGS += $(call cc-option, -Wstringop-overflow)
-> +#Currently, disable -Wstringop-overflow for GCC 11, globally.
-> +KBUILD_CFLAGS-$(CONFIG_CC_NO_STRINGOP_OVERFLOW) += $(call cc-option, -Wno-stringop-overflow)
-> +KBUILD_CFLAGS-$(CONFIG_CC_STRINGOP_OVERFLOW) += $(call cc-option, -Wstringop-overflow)
+>  	name = of_get_property(rootdn, "ibm,partition-name", NULL);
+>  	if (name)
+> -		strncpy(vhost->partition_name, name, sizeof(vhost->partition_name));
+> +		strscpy(vhost->partition_name, name, sizeof(vhost->partition_name));
+>  	num = of_get_property(rootdn, "ibm,partition-no", NULL);
+>  	if (num)
+>  		vhost->partition_number = *num;
+> @@ -1498,13 +1498,15 @@ static void ibmvfc_set_login_info(struct ibmvfc_host *vhost)
+>  	login_info->async.va = cpu_to_be64(vhost->async_crq.msg_token);
+>  	login_info->async.len = cpu_to_be32(async_crq->size *
+>  					    sizeof(*async_crq->msgs.async));
+> -	strncpy(login_info->partition_name, vhost->partition_name, IBMVFC_MAX_NAME);
+> -	strncpy(login_info->device_name,
+> -		dev_name(&vhost->host->shost_gendev), IBMVFC_MAX_NAME);
+> +	strscpy(login_info->partition_name, vhost->partition_name,
+> +		sizeof(login_info->partition_name));
+> +
+> +	strscpy(login_info->device_name,
+> +		dev_name(&vhost->host->shost_gendev), sizeof(login_info->device_name));
 >  
->  # disable invalid "can't wrap" optimizations for signed / pointers
->  KBUILD_CFLAGS	+= -fno-strict-overflow
-> diff --git a/init/Kconfig b/init/Kconfig
-> index 9ffb103fc927..aaaa99a5d2a9 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -876,6 +876,18 @@ config CC_NO_ARRAY_BOUNDS
->  	bool
->  	default y if CC_IS_GCC && GCC_VERSION >= 110000 && GCC11_NO_ARRAY_BOUNDS
+>  	location = of_get_property(of_node, "ibm,loc-code", NULL);
+>  	location = location ? location : dev_name(vhost->dev);
+> -	strncpy(login_info->drc_name, location, IBMVFC_MAX_NAME);
+> +	strscpy(login_info->drc_name, location, sizeof(login_info->drc_name));
+>  }
 >  
-> +# Currently, disable -Wstringop-overflow for GCC 11, globally.
-> +config GCC11_NO_STRINGOP_OVERFLOW
-> +	def_bool y
-> +
-> +config CC_NO_STRINGOP_OVERFLOW
-> +	bool
-> +	default y if CC_IS_GCC && GCC_VERSION >= 110000 && GCC_VERSION < 120000 && GCC11_NO_STRINGOP_OVERFLOW
-> +
-> +config CC_STRINGOP_OVERFLOW
-> +	bool
-> +	default y if CC_IS_GCC && !CC_NO_STRINGOP_OVERFLOW
-> +
->  #
->  # For architectures that know their GCC __int128 support is sound
->  #
-> -- 
-> 2.34.1
+>  /**
+> 
+> ---
+> base-commit: ffc253263a1375a65fa6c9f62a893e9767fbebfa
+> change-id: 20231030-strncpy-drivers-scsi-ibmvscsi-ibmvfc-c-ccfce3255d58
+> 
+> Best regards,
+> --
+> Justin Stitt <justinstitt@google.com>
 > 
 
 -- 
