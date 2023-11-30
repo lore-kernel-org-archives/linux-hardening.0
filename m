@@ -1,106 +1,110 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dhoUccPU"
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 433CC170D
-	for <linux-hardening@vger.kernel.org>; Thu, 30 Nov 2023 12:56:10 -0800 (PST)
-Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-6cd89f2af9dso1411554b3a.1
-        for <linux-hardening@vger.kernel.org>; Thu, 30 Nov 2023 12:56:10 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c4iP/X4y"
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0810B10E4
+	for <linux-hardening@vger.kernel.org>; Thu, 30 Nov 2023 13:02:34 -0800 (PST)
+Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-6cddc59e731so1296535b3a.1
+        for <linux-hardening@vger.kernel.org>; Thu, 30 Nov 2023 13:02:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1701377770; x=1701982570; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2mqH2Bu8VDSZQl/oVmtaFk1bQrPnLFzomfRgzjPU9ug=;
-        b=dhoUccPUzLdedFmR72dBLBBf1AwWJCbZWRG/C11ZKHT5/v2loNjYwqyQHWCR/NFqzx
-         rGBGX7d51mgrdd6Y3J0GDjJJkU6T6nc8sCL3krUHBrvKyMqmP0Th6gCrBljtEhaoaJyA
-         rs747QpY0EkW5QjvDmo1KWIZxDlllhNBVS0qI=
+        d=chromium.org; s=google; t=1701378153; x=1701982953; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=NyeHJWiLdFo7I9JRqXuJBHQL2k3baSzOcxFT8tS/iws=;
+        b=c4iP/X4yHnygKgxRG6y3Jq0EuNnH+e/MjnLJkY+x+XbFSZ4uinvEAgkP9QmN32wXVI
+         kcW19abkTTdXK8RsFxkg/YZVWv3Y2f9gnyIAxFnhcGD3SwtfhOlbLK6HnqVsG+yCA+A6
+         Rs4452K4JBcfAAaIarZCQHHxUTADGZDAlq2U4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701377770; x=1701982570;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2mqH2Bu8VDSZQl/oVmtaFk1bQrPnLFzomfRgzjPU9ug=;
-        b=FEmVWEK3krzZ+xn8x1D2wqaXmFa1PLf0RxSVCMQ/3Qcs6GW85zypjkX6IzxP5QHciP
-         bgX7UjLz8bA/eKkhW62giRHsO01q/8fJImz0z6ZFBkJOnNdb4V01gR4C1cFXFU/Gqcw1
-         DpOA2jHYiS6igHzB8BTS2cb3xPLBkZTJL22UzGwWbpHqoEGCTLOcWVMg3013dvoguUSV
-         hu/KCJcyYu5LzwPsJfd3NZ+pX9XwN268nhUQVmLPXlEi1NLjpOuNcVotQIjIXY4ZMrAa
-         VUyhdJHPnuUEpmb5v45UG1frFRGyAhZ5DRg9nFd6ZZ+2AlBH4OQjqB6obqHUhwfiNOkh
-         nqgw==
-X-Gm-Message-State: AOJu0YyME5BKHGu7/r/c3xglv2K5oZvjTvhsY43l3BaJ8b25i7IycfDf
-	BJFTfjEp1qciAUsVBr8Ys1HLoA==
-X-Google-Smtp-Source: AGHT+IF/p/yWidHm/LXNmEns/hCrvoFxobs9OIzRQhwApsdqdtIkzzRmCesyaYJ3JlISWVm6Hx6nSA==
-X-Received: by 2002:a05:6a00:3907:b0:6c4:d76a:68ff with SMTP id fh7-20020a056a00390700b006c4d76a68ffmr28870071pfb.17.1701377769742;
-        Thu, 30 Nov 2023 12:56:09 -0800 (PST)
+        d=1e100.net; s=20230601; t=1701378153; x=1701982953;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NyeHJWiLdFo7I9JRqXuJBHQL2k3baSzOcxFT8tS/iws=;
+        b=o/CmOIVPBOwu1TwrEfxfnBsyy8JrOfbE4Oz6nZIvMJhNiPsaSRR8vHqzkrNzIbQiNv
+         TLRByGGEAp24FLGmOorvcOnFTUyjdhzaU6FDx91ExQ/hoa8x7/JC6QbMo8jOi+V6/6UH
+         CjNF//kqjxk9zPk0TB0KssdRVJtSwAfVgzLfOAn8vYdWJw/5Ypb60AgL2OKKE4j1DTeP
+         mjWLfTeX+GkBX3B0MH5ImYbbLB95NZKhpZsiwm6SAnHgFJQjqD3CXolF5lHy+9sOxObf
+         +7wshrpc+QbAmsJmjevOzIQJ0keKCAY5oHYBXHPJPVui6csCrPUkutBgST4ED2QOPUwu
+         NJqw==
+X-Gm-Message-State: AOJu0YyJed6DqMh7b9JjuUqKIvWcczhQgwr9o/+VY7MgADBQHV1cH4XR
+	ybxRMKZSoC6pYJU2EXGwKRHovA==
+X-Google-Smtp-Source: AGHT+IFPqOtCQKaiIkfNERoPXQRP8a11ba8grcvFLj1169pKYiYb6nm2g+juLHikzSkTaUhFgcumtw==
+X-Received: by 2002:a05:6a20:daa8:b0:18b:914a:a81 with SMTP id iy40-20020a056a20daa800b0018b914a0a81mr28046510pzb.52.1701378153297;
+        Thu, 30 Nov 2023 13:02:33 -0800 (PST)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id r8-20020aa78b88000000b006889511ab14sm1649631pfd.37.2023.11.30.12.56.09
+        by smtp.gmail.com with ESMTPSA id k187-20020a6324c4000000b005b7e803e672sm1726803pgk.5.2023.11.30.13.02.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Nov 2023 12:56:09 -0800 (PST)
+        Thu, 30 Nov 2023 13:02:32 -0800 (PST)
+Date: Thu, 30 Nov 2023 13:02:32 -0800
 From: Kees Cook <keescook@chromium.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Kees Cook <keescook@chromium.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Waiman Long <longman@redhat.com>, cgroups@vger.kernel.org,
+	Azeem Shaikh <azeemshaikh38@gmail.com>,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] tracing/uprobe: Replace strlcpy() with strscpy()
-Date: Thu, 30 Nov 2023 12:56:08 -0800
-Message-Id: <20231130205607.work.463-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+Subject: Re: [PATCH v2 3/3] kernfs: Convert kernfs_path_from_node_locked()
+ from strlcpy() to strscpy()
+Message-ID: <202311301300.6BAB981@keescook>
+References: <20231130200937.it.424-kees@kernel.org>
+ <20231130201222.3613535-3-keescook@chromium.org>
+ <40b65db9-1b37-45b6-8afe-7be2df11cfa9@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1408; i=keescook@chromium.org;
- h=from:subject:message-id; bh=VAQ/FNnq8v9CzAsxQVG8VOQQl1gkuhbx7/nJ2nLij24=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlaPbn40MW2pI606YFnUzI2iau9NKfIMFA3hhNz
- i9rV8Xp0L+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZWj25wAKCRCJcvTf3G3A
- JphxD/0ccMJyONx88iMeiVBBxhpQxMXLZ3/cgij/f1NWWQtky8CiRVSnmiHuwuHEGRkZvv2H9zH
- /0t6VYWUDc0KsaXIYuf2zRKW2rexz7CdRO+C/HB4EKf0u7AyY1hly2yTRFmSJfIm5iOg9oGmmVR
- ejxK8/epLSsTFuKcCcfcnSGiTrsM8zOGSAAB35wKUazI7JepId+k3bpipXDdTK01v8fpIkabwa1
- KSfC2JLVya7CdOm3kF0fNNu8GEcuYeNGLCVloi1RxLNsey1ND0XZ0wPiL3HDkSp8+Lzm9wpoXQ0
- jQrOQidOcEUCwsHvQ/xMoGzHIq5DgU5S5Xey3WFjPKyVq3EsNs6YRkN/y2AqQxc4CtJIDA7D6nv
- bZkIiEGjX2Aafqf7GYMD6bsqhdQsHccbU7/RbFc6rW2fRcmHnT6h44ht8zPAhXhx28b5+y76JaU
- mOgqxXBxGfOU2H3soJFvAcP5ESM9uT7Zlwq2HDx1RlT74wKg7S9ddsXxQBXKhcn9FopV+VKXYVD
- B+is63bPLIcijjEk0m6B5/UdHl4OwEkRABa+TUEGSBTCCXg8CZxTzOrvVtKbdK9b/R4u3LvH22M
- ZL60zhmY8Cl8gvldvxIQk2CJJRXoyJYkIKcgKDl5e6ej1i9ahR+mrgUGsovY1tzdZKz3TDrGb0p
- bjYwntr ZIx4iwLQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <40b65db9-1b37-45b6-8afe-7be2df11cfa9@wanadoo.fr>
 
-strlcpy() reads the entire source buffer first. This read may exceed
-the destination size limit. This is both inefficient and can lead
-to linear read overflows if a source string is not NUL-terminated[1].
-Additionally, it returns the size of the source string, not the
-resulting size of the destination string. In an effort to remove strlcpy()
-completely[2], replace strlcpy() here with strscpy().
+On Thu, Nov 30, 2023 at 09:38:11PM +0100, Christophe JAILLET wrote:
+> Le 30/11/2023 à 21:12, Kees Cook a écrit :
+> [...]
+> > diff --git a/fs/kernfs/dir.c b/fs/kernfs/dir.c
+> > index 8c0e5442597e..183f353b3852 100644
+> > --- a/fs/kernfs/dir.c
+> > +++ b/fs/kernfs/dir.c
+> [...]
+> > @@ -158,18 +159,22 @@ static int kernfs_path_from_node_locked(struct kernfs_node *kn_to,
+> >   	buf[0] = '\0';
+> > -	for (i = 0; i < depth_from; i++)
+> > -		len += strlcpy(buf + len, parent_str,
+> > -			       len < buflen ? buflen - len : 0);
+> > +	for (i = 0; i < depth_from; i++) {
+> > +		copied = strscpy(buf + len, parent_str, buflen - len);
+> > +		if (copied < 0)
+> > +			return copied;
+> > +		len += copied;
+> > +	}
+> >   	/* Calculate how many bytes we need for the rest */
+> >   	for (i = depth_to - 1; i >= 0; i--) {
+> >   		for (kn = kn_to, j = 0; j < i; j++)
+> >   			kn = kn->parent;
+> > -		len += strlcpy(buf + len, "/",
+> > -			       len < buflen ? buflen - len : 0);
+> > -		len += strlcpy(buf + len, kn->name,
+> > -			       len < buflen ? buflen - len : 0);
+> > +
+> > +		copied = scnprintf(buf + len, buflen - len, "/%s", kn->name);
+> > +		if (copied < 0)
+> 
+> Can scnprintf() return <0 ?
 
-The negative return value is already handled by this code so no new
-handling is needed here.
+Ah, yeah, it's can't at all[1]. I forgot! :) Honestly, that function
+should return size_t, not int...
 
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy [1]
-Link: https://github.com/KSPP/linux/issues/89 [2]
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- kernel/trace/trace_uprobe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I will send a v3 with this adjusted, but I'll wait for more review...
 
-diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-index 99c051de412a..a84b85d8aac1 100644
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -151,7 +151,7 @@ fetch_store_string(unsigned long addr, void *dest, void *base)
- 		return -ENOMEM;
- 
- 	if (addr == FETCH_TOKEN_COMM)
--		ret = strlcpy(dst, current->comm, maxlen);
-+		ret = strscpy(dst, current->comm, maxlen);
- 	else
- 		ret = strncpy_from_user(dst, src, maxlen);
- 	if (ret >= 0) {
+Thanks!
+
+-Kees
+
+[1] https://docs.kernel.org/core-api/kernel-api.html#c.scnprintf
+
 -- 
-2.34.1
-
+Kees Cook
