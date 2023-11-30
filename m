@@ -1,55 +1,60 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="djT7O9N6"
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C575B1711
-	for <linux-hardening@vger.kernel.org>; Thu, 30 Nov 2023 13:59:32 -0800 (PST)
-Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-1d01c45ffebso14094675ad.1
-        for <linux-hardening@vger.kernel.org>; Thu, 30 Nov 2023 13:59:32 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="N2/jxy/C"
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 361B610DC
+	for <linux-hardening@vger.kernel.org>; Thu, 30 Nov 2023 13:59:45 -0800 (PST)
+Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-6cbe716b511so1459674b3a.3
+        for <linux-hardening@vger.kernel.org>; Thu, 30 Nov 2023 13:59:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1701381572; x=1701986372; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1701381584; x=1701986384; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Y2djO/hdtCxAj05SEfvtxt5bZ+8AqtE0qahmFssCkkc=;
-        b=djT7O9N6REoqSZVNeKNk7HsbcgKR1m7xBCj0NavMtLIS9E00YVcNGXA6O2IiRRKaiN
-         xpa/umUXDGc/H0mhg99SuIRh8BpFdQNVt3wRyKK51FJu7SrRuPWAmP/HUHdJIFHXCsJO
-         YbbJhA+Z4FtvVPYXykHP7DGn2TNKq5nQL+m1k=
+        bh=E+MjKIfeA6c7V+SkVK7ESwNu4zKp4IlbbMa3hRtTv3E=;
+        b=N2/jxy/CKVwt902heLKJ/9RkwWIO9NF5/UWrAhqO2YzddpXpIr089+xPHNARO4wj0d
+         Xt1g9n0Gs7fuNnNEGNYYKinblwJozKqfB31UPWP/01ogmvDUiosP+4SB3yBmuFvBttRc
+         8/tLblPYi+DEweOrleF+tSH6qbRfbv06dkdYs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701381572; x=1701986372;
+        d=1e100.net; s=20230601; t=1701381584; x=1701986384;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Y2djO/hdtCxAj05SEfvtxt5bZ+8AqtE0qahmFssCkkc=;
-        b=DNMD67T7+fyFvVCjxTnJuQctSlaOciwH1sXIPTjxofvIz5oEVmm4Z0fIcfHCCmjOa1
-         JGKU+uNoOu0QoV22KXmLuCNTQV5fZqQ6p+R7xgA0EVYCiteVWykBSGmwXiMS1x49Xzf+
-         0ZS3DJ5vOdEZmTtHc7sk4WvhrxDRHt658hTNh5rNvIoAnh5nRl2ji9XCwea9OeZ2+X22
-         oGJolwMvh/UmgLwBycOlEiC/nReULHaHybx5h++IOVSJDB0JvOt0bUpZxbH0ur7foC5o
-         oRDXg4ZQn+HoVaJjgKQrFyCauzlp2Vj32aJLFO0qTXBrEpjnKrDzNB/Octldm+hEb0XO
-         lBiQ==
-X-Gm-Message-State: AOJu0YwOI2nkERUmk5zqIpYeM1+t8VhADoeTF+v9nbbz52r6LBBNm79p
-	oD/OA6QxMCmkrmLj+DvZOZSQ2A==
-X-Google-Smtp-Source: AGHT+IHXL7uU6vw5k8AVrhFvY+svGvoQDBSX/vpE7HPes6CB4/gBu3LXDtFLard2ILDOkQ1JOieQdQ==
-X-Received: by 2002:a17:902:ab86:b0:1cf:bdc4:bb43 with SMTP id f6-20020a170902ab8600b001cfbdc4bb43mr16177885plr.54.1701381572319;
-        Thu, 30 Nov 2023 13:59:32 -0800 (PST)
+        bh=E+MjKIfeA6c7V+SkVK7ESwNu4zKp4IlbbMa3hRtTv3E=;
+        b=Mru6kdRHnxlwq1wfA8T0WBTMz5LY7cyv/mW9MsjkmGIl0T89l1LgvaKvl5RMHcRwWC
+         SYNnZ9vOCTrfWBvfmlFZ1Gg7zGONUDaRFdYaNgy3FFDLJCRbOA+USGcK5wqxp8zfha+b
+         IfTdiWlSf+LFUE5Oa4VsKZJv1NVfJv3Sy0TlfiVCZQQOrqO5JCtDLpC1URNsNam5xqw9
+         ymCcDfRTFkSMVq0O0jE0bGG0onkrbXQe+50nxODR+qna1LWd1vas5/jFgSRGjhKhCcuS
+         uVyABZhTg07O9HBRW3aeaw6F0VRiezpEAQmkeQ1ldC3VNqVyvjgk1phKUFVA1R+M/0Vp
+         wnUw==
+X-Gm-Message-State: AOJu0Yz6p4xI3hvGjtLEV6g46WgBAYRMGdinyYWk4Dccr7VADW/5xYo5
+	dxoNZDgXBAwGhT1LemHz2h1b/A==
+X-Google-Smtp-Source: AGHT+IHnOCwCjzZBfKxzRTjC4fQ8XP/8fQObomS+nCckrMFuuQt1ZNZTYjBCrPSpglsbSfTmpIMqEQ==
+X-Received: by 2002:a05:6a00:2d95:b0:6cd:dece:b73d with SMTP id fb21-20020a056a002d9500b006cddeceb73dmr6204554pfb.18.1701381584754;
+        Thu, 30 Nov 2023 13:59:44 -0800 (PST)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id y21-20020a170902ed5500b001d04c097d32sm329328plb.270.2023.11.30.13.59.31
+        by smtp.gmail.com with ESMTPSA id k5-20020aa79d05000000b006cbcd08ed56sm1683994pfp.56.2023.11.30.13.59.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Nov 2023 13:59:31 -0800 (PST)
+        Thu, 30 Nov 2023 13:59:44 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
-To: David Rheinsberg <david@readahead.eu>,
-	Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-	Justin Stitt <justinstitt@google.com>
-Cc: Kees Cook <keescook@chromium.org>,
-	linux-input@vger.kernel.org,
+To: Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Kees Cook <keescook@chromium.org>
+Cc: Shiraz Saleem <shiraz.saleem@intel.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	Gurucharan G <gurucharanx.g@intel.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Tom Rix <trix@redhat.com>,
 	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] HID: uhid: replace deprecated strncpy with strscpy
-Date: Thu, 30 Nov 2023 13:59:24 -0800
-Message-Id: <170138156214.3648538.12067944211375143947.b4-ty@chromium.org>
+	linux-hardening@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH] i40e: Annotate struct i40e_qvlist_info with __counted_by
+Date: Thu, 30 Nov 2023 13:59:37 -0800
+Message-Id: <170138157431.3648624.12161951188288893323.b4-ty@chromium.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231003-strncpy-drivers-hid-uhid-c-v2-1-6a501402581e@google.com>
-References: <20231003-strncpy-drivers-hid-uhid-c-v2-1-6a501402581e@google.com>
+In-Reply-To: <20231003231838.work.510-kees@kernel.org>
+References: <20231003231838.work.510-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -59,21 +64,21 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Tue, 03 Oct 2023 21:01:58 +0000, Justin Stitt wrote:
-> `strncpy` is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
+On Tue, 03 Oct 2023 16:18:38 -0700, Kees Cook wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
+> array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
 > 
-> A suitable replacement is `strscpy` [2] due to the fact that it
-> guarantees NUL-termination on the destination buffer without
-> unnecessarily NUL-padding.
+> As found with Coccinelle[1], add __counted_by for struct i40e_qvlist_info.
 > 
 > [...]
 
 Applied to for-next/hardening, thanks!
 
-[1/1] HID: uhid: replace deprecated strncpy with strscpy
-      https://git.kernel.org/kees/c/d4011f6817ae
+[1/1] i40e: Annotate struct i40e_qvlist_info with __counted_by
+      https://git.kernel.org/kees/c/da2e08d4630a
 
 Take care,
 
