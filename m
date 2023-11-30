@@ -1,110 +1,129 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c4iP/X4y"
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0810B10E4
-	for <linux-hardening@vger.kernel.org>; Thu, 30 Nov 2023 13:02:34 -0800 (PST)
-Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-6cddc59e731so1296535b3a.1
-        for <linux-hardening@vger.kernel.org>; Thu, 30 Nov 2023 13:02:34 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kQ/Te5zA"
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A857693
+	for <linux-hardening@vger.kernel.org>; Thu, 30 Nov 2023 13:07:14 -0800 (PST)
+Received: by mail-pj1-x1036.google.com with SMTP id 98e67ed59e1d1-285a64dcf3eso1272816a91.1
+        for <linux-hardening@vger.kernel.org>; Thu, 30 Nov 2023 13:07:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1701378153; x=1701982953; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=NyeHJWiLdFo7I9JRqXuJBHQL2k3baSzOcxFT8tS/iws=;
-        b=c4iP/X4yHnygKgxRG6y3Jq0EuNnH+e/MjnLJkY+x+XbFSZ4uinvEAgkP9QmN32wXVI
-         kcW19abkTTdXK8RsFxkg/YZVWv3Y2f9gnyIAxFnhcGD3SwtfhOlbLK6HnqVsG+yCA+A6
-         Rs4452K4JBcfAAaIarZCQHHxUTADGZDAlq2U4=
+        d=chromium.org; s=google; t=1701378434; x=1701983234; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=TbIZvkmLDHjuqC1Cwkdf1lYVKO4lsiVt6+GTqmsC6fc=;
+        b=kQ/Te5zAg9tH0VOfkVIPix7dtbWBpPaJb4OxFopu3MfRwYpikD3CxatKPPlkODP5k6
+         /dBER9ypWI8ZhurDdtAci2UxsOHz0WADU2f+0XEwy8647nqnzn44V+2hWz0PyXb4HQd9
+         rLrBK7QFYISCEkO04a7DIR+E1QOmA2nTTWtPg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701378153; x=1701982953;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NyeHJWiLdFo7I9JRqXuJBHQL2k3baSzOcxFT8tS/iws=;
-        b=o/CmOIVPBOwu1TwrEfxfnBsyy8JrOfbE4Oz6nZIvMJhNiPsaSRR8vHqzkrNzIbQiNv
-         TLRByGGEAp24FLGmOorvcOnFTUyjdhzaU6FDx91ExQ/hoa8x7/JC6QbMo8jOi+V6/6UH
-         CjNF//kqjxk9zPk0TB0KssdRVJtSwAfVgzLfOAn8vYdWJw/5Ypb60AgL2OKKE4j1DTeP
-         mjWLfTeX+GkBX3B0MH5ImYbbLB95NZKhpZsiwm6SAnHgFJQjqD3CXolF5lHy+9sOxObf
-         +7wshrpc+QbAmsJmjevOzIQJ0keKCAY5oHYBXHPJPVui6csCrPUkutBgST4ED2QOPUwu
-         NJqw==
-X-Gm-Message-State: AOJu0YyJed6DqMh7b9JjuUqKIvWcczhQgwr9o/+VY7MgADBQHV1cH4XR
-	ybxRMKZSoC6pYJU2EXGwKRHovA==
-X-Google-Smtp-Source: AGHT+IFPqOtCQKaiIkfNERoPXQRP8a11ba8grcvFLj1169pKYiYb6nm2g+juLHikzSkTaUhFgcumtw==
-X-Received: by 2002:a05:6a20:daa8:b0:18b:914a:a81 with SMTP id iy40-20020a056a20daa800b0018b914a0a81mr28046510pzb.52.1701378153297;
-        Thu, 30 Nov 2023 13:02:33 -0800 (PST)
+        d=1e100.net; s=20230601; t=1701378434; x=1701983234;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TbIZvkmLDHjuqC1Cwkdf1lYVKO4lsiVt6+GTqmsC6fc=;
+        b=UUHTkKknWTfA+BWUYwx9iob5oJnojZjZaRp72idhvxcnhC13mpXfvjVhR4311CaWN5
+         thsMJK+nE15XDEZm/bN4nd4JskGMq0HN1NnMfz04gbJXnN61trsN0S2jb/8o676ERq10
+         oW6rzh/VJVeuy/5E2Tabm5QMejYHmHQadAcJaKNOAZl3KU4+GovdwYMkfRMUu4LhCGEW
+         v1P/BO3EiisX6NM/UzYzUtbuqPUnd3StJpapgNN/v7rGtgysR44IWrlZ39Ml/ZvWu48K
+         bzrnWR4K2Qd+pd+F0TD4ZIRlx6y7Le5Tn5N0E5/FxeGA4+ZQaaFsoZlk4IXzsTG63yb0
+         be9A==
+X-Gm-Message-State: AOJu0YyJ0q18+81T2daHrv489DmdNDPmZGDo6PLZWzHdh8ijMDFCCk/J
+	ipyrRv/JBjS37DogzuC89Z/xQg==
+X-Google-Smtp-Source: AGHT+IEJgJAEtudsVkOaUX/5ItBV95aXss2DqhWCaxPJGVs0Ullk1uwZ0w8Y4goJlNpEFPj2g4aaIw==
+X-Received: by 2002:a17:90b:1e02:b0:285:b08a:780d with SMTP id pg2-20020a17090b1e0200b00285b08a780dmr16762443pjb.23.1701378434172;
+        Thu, 30 Nov 2023 13:07:14 -0800 (PST)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id k187-20020a6324c4000000b005b7e803e672sm1726803pgk.5.2023.11.30.13.02.32
+        by smtp.gmail.com with ESMTPSA id bk8-20020a17090b080800b00285a17f9da1sm3705287pjb.43.2023.11.30.13.07.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Nov 2023 13:02:32 -0800 (PST)
-Date: Thu, 30 Nov 2023 13:02:32 -0800
+        Thu, 30 Nov 2023 13:07:13 -0800 (PST)
+Date: Thu, 30 Nov 2023 13:07:13 -0800
 From: Kees Cook <keescook@chromium.org>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Waiman Long <longman@redhat.com>, cgroups@vger.kernel.org,
-	Azeem Shaikh <azeemshaikh38@gmail.com>,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] kernfs: Convert kernfs_path_from_node_locked()
- from strlcpy() to strscpy()
-Message-ID: <202311301300.6BAB981@keescook>
-References: <20231130200937.it.424-kees@kernel.org>
- <20231130201222.3613535-3-keescook@chromium.org>
- <40b65db9-1b37-45b6-8afe-7be2df11cfa9@wanadoo.fr>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Nicolas Schier <nicolas@fjasle.eu>, linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] init: Kconfig: Disable -Wstringop-overflow for
+ GCC-11
+Message-ID: <202311301304.28F0C52BA@keescook>
+References: <ZWj1+jkweEDWbmAR@work>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <40b65db9-1b37-45b6-8afe-7be2df11cfa9@wanadoo.fr>
+In-Reply-To: <ZWj1+jkweEDWbmAR@work>
 
-On Thu, Nov 30, 2023 at 09:38:11PM +0100, Christophe JAILLET wrote:
-> Le 30/11/2023 à 21:12, Kees Cook a écrit :
-> [...]
-> > diff --git a/fs/kernfs/dir.c b/fs/kernfs/dir.c
-> > index 8c0e5442597e..183f353b3852 100644
-> > --- a/fs/kernfs/dir.c
-> > +++ b/fs/kernfs/dir.c
-> [...]
-> > @@ -158,18 +159,22 @@ static int kernfs_path_from_node_locked(struct kernfs_node *kn_to,
-> >   	buf[0] = '\0';
-> > -	for (i = 0; i < depth_from; i++)
-> > -		len += strlcpy(buf + len, parent_str,
-> > -			       len < buflen ? buflen - len : 0);
-> > +	for (i = 0; i < depth_from; i++) {
-> > +		copied = strscpy(buf + len, parent_str, buflen - len);
-> > +		if (copied < 0)
-> > +			return copied;
-> > +		len += copied;
-> > +	}
-> >   	/* Calculate how many bytes we need for the rest */
-> >   	for (i = depth_to - 1; i >= 0; i--) {
-> >   		for (kn = kn_to, j = 0; j < i; j++)
-> >   			kn = kn->parent;
-> > -		len += strlcpy(buf + len, "/",
-> > -			       len < buflen ? buflen - len : 0);
-> > -		len += strlcpy(buf + len, kn->name,
-> > -			       len < buflen ? buflen - len : 0);
-> > +
-> > +		copied = scnprintf(buf + len, buflen - len, "/%s", kn->name);
-> > +		if (copied < 0)
+On Thu, Nov 30, 2023 at 02:52:10PM -0600, Gustavo A. R. Silva wrote:
+> -Wstringop-overflow is buggy in GCC-11. Therefore, we should disable
+
+Can you add some links for this? For example, maybe this?
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=97490
+
+Or discussions from -next builds?
+
+> this option specifically for that compiler version. To achieve this,
+> we introduce a new configuration option: GCC11_NO_STRINGOP_OVERFLOW.
 > 
-> Can scnprintf() return <0 ?
+> The compiler option related to string operation overflow is now managed
+> under configuration CC_STRINGOP_OVERFLOW. This option is enabled by
+> default for all other versions of GCC that support it.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Ah, yeah, it's can't at all[1]. I forgot! :) Honestly, that function
-should return size_t, not int...
+But yeah, let's get this landed to keep new warnings from appearing...
 
-I will send a v3 with this adjusted, but I'll wait for more review...
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Thanks!
 
--Kees
-
-[1] https://docs.kernel.org/core-api/kernel-api.html#c.scnprintf
+> ---
+>  Makefile     |  4 +++-
+>  init/Kconfig | 12 ++++++++++++
+>  2 files changed, 15 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Makefile b/Makefile
+> index 2cfd71ae3a86..8adc611fb611 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -982,7 +982,9 @@ NOSTDINC_FLAGS += -nostdinc
+>  # perform bounds checking.
+>  KBUILD_CFLAGS += $(call cc-option, -fstrict-flex-arrays=3)
+>  
+> -KBUILD_CFLAGS += $(call cc-option, -Wstringop-overflow)
+> +#Currently, disable -Wstringop-overflow for GCC 11, globally.
+> +KBUILD_CFLAGS-$(CONFIG_CC_NO_STRINGOP_OVERFLOW) += $(call cc-option, -Wno-stringop-overflow)
+> +KBUILD_CFLAGS-$(CONFIG_CC_STRINGOP_OVERFLOW) += $(call cc-option, -Wstringop-overflow)
+>  
+>  # disable invalid "can't wrap" optimizations for signed / pointers
+>  KBUILD_CFLAGS	+= -fno-strict-overflow
+> diff --git a/init/Kconfig b/init/Kconfig
+> index 9ffb103fc927..aaaa99a5d2a9 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -876,6 +876,18 @@ config CC_NO_ARRAY_BOUNDS
+>  	bool
+>  	default y if CC_IS_GCC && GCC_VERSION >= 110000 && GCC11_NO_ARRAY_BOUNDS
+>  
+> +# Currently, disable -Wstringop-overflow for GCC 11, globally.
+> +config GCC11_NO_STRINGOP_OVERFLOW
+> +	def_bool y
+> +
+> +config CC_NO_STRINGOP_OVERFLOW
+> +	bool
+> +	default y if CC_IS_GCC && GCC_VERSION >= 110000 && GCC_VERSION < 120000 && GCC11_NO_STRINGOP_OVERFLOW
+> +
+> +config CC_STRINGOP_OVERFLOW
+> +	bool
+> +	default y if CC_IS_GCC && !CC_NO_STRINGOP_OVERFLOW
+> +
+>  #
+>  # For architectures that know their GCC __int128 support is sound
+>  #
+> -- 
+> 2.34.1
+> 
 
 -- 
 Kees Cook
