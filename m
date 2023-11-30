@@ -1,51 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kTJ5AfD1"
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFC121B4
-	for <linux-hardening@vger.kernel.org>; Thu, 30 Nov 2023 13:25:34 -0800 (PST)
-Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1d048d38881so5068495ad.2
-        for <linux-hardening@vger.kernel.org>; Thu, 30 Nov 2023 13:25:34 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GHEGZawk"
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66EB110DE
+	for <linux-hardening@vger.kernel.org>; Thu, 30 Nov 2023 13:55:06 -0800 (PST)
+Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-1cfcc9b3b5cso13956015ad.0
+        for <linux-hardening@vger.kernel.org>; Thu, 30 Nov 2023 13:55:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1701379534; x=1701984334; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1701381306; x=1701986106; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=a85qT15pDzdpel5gAuB/Pf8iqGvsBNG0rw6z7GTZ+18=;
-        b=kTJ5AfD1oyJZ5xgrDlZ1wWqUF4X2MHy59XeBZO1G+MQvTgxp690SglGE2GDstdGNxg
-         adSryWlfdXZXmcA+Xq4n6e72AH60lYqYhvQ9M2Yrk0L/l+j5hLVRCooCVPsv2Haepeix
-         HcwReOShiQW2KJEaYHs7ojwRUXVahzvGbIRz4=
+        bh=Ec58TXbgvOF1VJEyaIIIq5ozr+88I6s94LR1x+GzWU0=;
+        b=GHEGZawkG+YEHM22bGO+Wv1uRcyNO4qv/rLKB0DEKxMwGX64mNFdV0k5rUCgfU6u+1
+         xXfjKqgveUmhrhItfA4U77hqv4elPQH57IUXViePHnzNFlDxCzQRZQo+638Im42kpX87
+         1Pm2mAPVrT6S1GRe7SdOTnmPFy7sESsiQkmI8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701379534; x=1701984334;
+        d=1e100.net; s=20230601; t=1701381306; x=1701986106;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=a85qT15pDzdpel5gAuB/Pf8iqGvsBNG0rw6z7GTZ+18=;
-        b=OXXts7F091w3Ur8RMK8vuqEdGf8dN5UCswPJoUYriaYB23Jsi1PJVGWnGn1og+blJ2
-         p/tDt13IVr4B1dUtnhh3YQoQWyTg7TZyM7EWOL6BSTwSwyMbqGq60RForN1caQqZY/rl
-         +4Z5Ywcq4rEfjjuJe8g++lGPLIVlZprRkuPUyhpuOAzy1ICv4UXv4ra+GOQBQUEaYmoj
-         J2mk3++ottby1IO1/b2p7haA8S6QjREjSnpZFGtAUBJY3Eqwx7Z+Yqz7KUK0hNvngr2N
-         AMr+S+VnDXfNSIbu4U9HLMytDaAUEGA2LxOqseKfSqRJtE/bnmZCxJ9pCev7cuSIvqnA
-         CyQw==
-X-Gm-Message-State: AOJu0YxXQw5KPoHIFxomte2J4WipRfCYLcfWjq8CpmPKHj7HgttHxJ4H
-	/JEAMUNib5TicTGpfVujrg27EQ==
-X-Google-Smtp-Source: AGHT+IGiYA7iwc3ReI+OQGlKYslymufSwvsJah4H2gMq04CzpdkKFgR/kZAc5Za9Ltu7ai3/MUS0Yw==
-X-Received: by 2002:a17:902:e88b:b0:1cf:d404:5e7c with SMTP id w11-20020a170902e88b00b001cfd4045e7cmr18459112plg.42.1701379534271;
-        Thu, 30 Nov 2023 13:25:34 -0800 (PST)
+        bh=Ec58TXbgvOF1VJEyaIIIq5ozr+88I6s94LR1x+GzWU0=;
+        b=rIMILK3Km89qw9Sj1bbbQYAxu3JKWmUqyRXJH/hoGMsesguPIPbmecWZ5xl8zr3ccX
+         44PQDkBZtl/+yyOsP/MDJPhbE/NLkMVkT10Iif/J9VKKrbnMfxaPUbwZWlU4XECsO5Iq
+         0gM4gZcBgOo2SA12eaP7TP9ssZ+2Mk9O7ZoOSf3tFXMEQ0FyHyim+gRnHODpMk65GC6U
+         ZaNUi9BjSWrQ9P/hU+niAsGyJjNAKtbOD749gKGUrcdYKtYXukSbfhGaWwbk14C2fu+q
+         XAlMZN0RxfAEZzAeKo2BGU4ddEfJgvaMnIX8gNXPWAbMbLOdt20qcpIFXbp5h/1cYoJn
+         NP7A==
+X-Gm-Message-State: AOJu0YyJgWA6sxLul8JICeTpqXhlpcPsIJvkX2eS2OICb/23yCaF6/6r
+	6V8jelFeJXS6AJDe0ZvtJshb4A==
+X-Google-Smtp-Source: AGHT+IHCY4czfywkANHTsCYBSUHuXcP9OHpxs/rSKhmXqfephZQVfxjWeOEEDd54uCq4zLIB1i+6Cw==
+X-Received: by 2002:a17:902:d303:b0:1cc:4e81:36a4 with SMTP id b3-20020a170902d30300b001cc4e8136a4mr25857013plc.5.1701381305897;
+        Thu, 30 Nov 2023 13:55:05 -0800 (PST)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id ja17-20020a170902efd100b001cf7c07be50sm1869304plb.58.2023.11.30.13.25.33
+        by smtp.gmail.com with ESMTPSA id t13-20020a1709028c8d00b001cfd35ec1d7sm1867953plo.243.2023.11.30.13.55.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Nov 2023 13:25:33 -0800 (PST)
-Date: Thu, 30 Nov 2023 13:25:33 -0800
+        Thu, 30 Nov 2023 13:55:05 -0800 (PST)
+Date: Thu, 30 Nov 2023 13:55:04 -0800
 From: Kees Cook <keescook@chromium.org>
 To: Justin Stitt <justinstitt@google.com>
-Cc: Michael Cyr <mikecyr@linux.ibm.com>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+Cc: Gregory Greenman <gregory.greenman@intel.com>,
+	Kalle Valo <kvalo@kernel.org>, linux-wireless@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] scsi: ibmvscsi_tgt: replace deprecated strncpy with
- strscpy
-Message-ID: <202311301315.BAB096926@keescook>
-References: <20231030-strncpy-drivers-scsi-ibmvscsi_tgt-ibmvscsi_tgt-c-v1-1-859b5ce257fd@google.com>
+Subject: Re: [PATCH v2] wifi: iwlwifi: fw: replace deprecated strncpy with
+ strscpy_pad
+Message-ID: <202311301354.0DAC97C@keescook>
+References: <20231019-strncpy-drivers-net-wireless-intel-iwlwifi-fw-dbg-c-v2-1-179b211a374b@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -54,111 +52,74 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231030-strncpy-drivers-scsi-ibmvscsi_tgt-ibmvscsi_tgt-c-v1-1-859b5ce257fd@google.com>
+In-Reply-To: <20231019-strncpy-drivers-net-wireless-intel-iwlwifi-fw-dbg-c-v2-1-179b211a374b@google.com>
 
-On Mon, Oct 30, 2023 at 09:43:20PM +0000, Justin Stitt wrote:
+On Thu, Oct 19, 2023 at 05:44:59PM +0000, Justin Stitt wrote:
 > strncpy() is deprecated for use on NUL-terminated destination strings
 > [1] and as such we should prefer more robust and less ambiguous string
 > interfaces.
 > 
-> We don't need the NUL-padding behavior that strncpy() provides as vscsi
-> is NUL-allocated in ibmvscsis_probe() which proceeds to call
-> ibmvscsis_adapter_info():
-> |       vscsi = kzalloc(sizeof(*vscsi), GFP_KERNEL);
+> Based on the deliberate `sizeof(dest) ... - 1` pattern we can see that
+> both dump_info->dev_human_readable and dump_info->bus_human_readable are
+> intended to be NUL-terminated.
 > 
-> ibmvscsis_probe() -> ibmvscsis_handle_crq() -> ibmvscsis_parse_command()
-> -> ibmvscsis_mad() -> ibmvscsis_process_mad() -> ibmvscsis_adapter_info()
+> Moreover, since this seems to cross the file boundary let's NUL-pad to
+> ensure no behavior change.
 > 
-> Following the same idea, `partition_name` is defiend as:
-> |       static char partition_name[PARTITION_NAMELEN] = "UNKNOWN";
-> 
-> ... which is NUL-padded already, meaning strscpy() is the best option.
-> 
-> Considering the above, a suitable replacement is `strscpy` [2] due to
-> the fact that it guarantees NUL-termination on the destination buffer
-> without unnecessarily NUL-padding.
-
-My only worry here is that I don't see if %NUL termination is _required_
-for these variables. (i.e. do we run the risk of truncating these by 1
-byte if they're right at the limit?) Are they __nonstring?
-
-I *think* they're %NUL terminated since they follow the same sizing as
-the global "partition_name", but I'm not sure.
-
-Can any of the SCSI authors comment on this?
-
-> 
-> However, for cap->name let's use strscpy_pad as cap is allocated via
-> dma_alloc_coherent():
-> |       cap = dma_alloc_coherent(&vscsi->dma_dev->dev, olen, &token,
-> |                                GFP_ATOMIC);
-
-This is also true for the "info" allocation (it comes out of DMA).
-
+> strscpy_pad() covers both the NUL-termination and NUL-padding, let's use
+> it.
 > 
 > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
 > Link: https://github.com/KSPP/linux/issues/90
 > Cc: linux-hardening@vger.kernel.org
 > Signed-off-by: Justin Stitt <justinstitt@google.com>
+
+Thread ping. Can the wireless folks please pick this up?
+
+Thanks!
+
+-Kees
+
+> ---
+> Changes in v2:
+> - prefer strscpy_pad (thanks Kees)
+> - Link to v1: https://lore.kernel.org/r/20231017-strncpy-drivers-net-wireless-intel-iwlwifi-fw-dbg-c-v1-1-bf69ec7d1b97@google.com
 > ---
 > Note: build-tested only.
 > 
 > Found with: $ rg "strncpy\("
 > ---
->  drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
+>  drivers/net/wireless/intel/iwlwifi/fw/dbg.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c b/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
-> index 385f812b8793..cd223ef696e5 100644
-> --- a/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
-> +++ b/drivers/scsi/ibmvscsi_tgt/ibmvscsi_tgt.c
-> @@ -1551,17 +1551,17 @@ static long ibmvscsis_adapter_info(struct scsi_info *vscsi,
->  	if (vscsi->client_data.partition_number == 0)
->  		vscsi->client_data.partition_number =
->  			be32_to_cpu(info->partition_number);
-> -	strncpy(vscsi->client_data.srp_version, info->srp_version,
-> +	strscpy(vscsi->client_data.srp_version, info->srp_version,
->  		sizeof(vscsi->client_data.srp_version));
-> -	strncpy(vscsi->client_data.partition_name, info->partition_name,
-> +	strscpy(vscsi->client_data.partition_name, info->partition_name,
->  		sizeof(vscsi->client_data.partition_name));
->  	vscsi->client_data.mad_version = be32_to_cpu(info->mad_version);
->  	vscsi->client_data.os_type = be32_to_cpu(info->os_type);
->  
->  	/* Copy our info */
-> -	strncpy(info->srp_version, SRP_VERSION,
-> +	strscpy(info->srp_version, SRP_VERSION,
->  		sizeof(info->srp_version));
-> -	strncpy(info->partition_name, vscsi->dds.partition_name,
-> +	strscpy(info->partition_name, vscsi->dds.partition_name,
->  		sizeof(info->partition_name));
-
-Since "info" is from DMA, let's use the _pad variant here just to be
-safe.
-
->  	info->partition_number = cpu_to_be32(vscsi->dds.partition_num);
->  	info->mad_version = cpu_to_be32(MAD_VERSION_1);
-> @@ -1645,8 +1645,8 @@ static int ibmvscsis_cap_mad(struct scsi_info *vscsi, struct iu_entry *iue)
->  			 be64_to_cpu(mad->buffer),
->  			 vscsi->dds.window[LOCAL].liobn, token);
->  	if (rc == H_SUCCESS) {
-> -		strncpy(cap->name, dev_name(&vscsi->dma_dev->dev),
-> -			SRP_MAX_LOC_LEN);
-> +		strscpy_pad(cap->name, dev_name(&vscsi->dma_dev->dev),
-> +			sizeof(cap->name));
-
-And this is a safe conversion to sizeof():
-
-struct capabilities {
-	...
-        char name[SRP_MAX_LOC_LEN];
-
-
-If we can convince ourselves that non of these are __nonstring types,
-then I think with the "info" change above, this should be good.
-
--Kees
+> diff --git a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
+> index 3ab6a68f1e9f..7aa282592cdc 100644
+> --- a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
+> +++ b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
+> @@ -880,10 +880,10 @@ iwl_fw_error_dump_file(struct iwl_fw_runtime *fwrt,
+>  			cpu_to_le32(fwrt->trans->hw_rev_step);
+>  		memcpy(dump_info->fw_human_readable, fwrt->fw->human_readable,
+>  		       sizeof(dump_info->fw_human_readable));
+> -		strncpy(dump_info->dev_human_readable, fwrt->trans->name,
+> -			sizeof(dump_info->dev_human_readable) - 1);
+> -		strncpy(dump_info->bus_human_readable, fwrt->dev->bus->name,
+> -			sizeof(dump_info->bus_human_readable) - 1);
+> +		strscpy_pad(dump_info->dev_human_readable, fwrt->trans->name,
+> +			sizeof(dump_info->dev_human_readable));
+> +		strscpy_pad(dump_info->bus_human_readable, fwrt->dev->bus->name,
+> +			sizeof(dump_info->bus_human_readable));
+>  		dump_info->num_of_lmacs = fwrt->smem_cfg.num_lmacs;
+>  		dump_info->lmac_err_id[0] =
+>  			cpu_to_le32(fwrt->dump.lmac_err_id[0]);
+> 
+> ---
+> base-commit: 58720809f52779dc0f08e53e54b014209d13eebb
+> change-id: 20231017-strncpy-drivers-net-wireless-intel-iwlwifi-fw-dbg-c-1f49f00b8a2e
+> 
+> Best regards,
+> --
+> Justin Stitt <justinstitt@google.com>
+> 
 
 -- 
 Kees Cook
