@@ -1,128 +1,313 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kvYIC9LL"
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84C4B10E3;
-	Thu, 30 Nov 2023 03:34:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=LyNe9cq/euZtRPSb3aioeZtMybHFVA3zxzbs+Z/bjGA=; b=kvYIC9LL0g1DtJPaX0R6PB3Hzs
-	WJoc77vbRw4by7nd4F36TBnJ3T4MI9wdD7aXSPOehJlXlC/pWK+8n2z0lyxmIeom49Fq14fiWDLPi
-	aeXJavXkXYJ5TXk3JFMiuM5yCmh3Z1fNGfwOqorYOzov6OJHhvEfGC6J2W+k21Mb2d45DW/SJjG55
-	hXNSu7aJ+ccY2N3V7hGH5qNtY48YsH1Ay2pRTRGIIC7nAr6OzIV4MUebHtOW2bJ8WohvfYFEEkA36
-	B5JdK+v24H1zWokWmH+erLMEiMEIgHVmGKZCY7RaZV+99vWq5oBYrsMdSM9TFbIUPH+2WK6BZszLl
-	ZhGhcUHQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1r8fIC-00EON3-R9; Thu, 30 Nov 2023 11:33:17 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id EE982300293; Thu, 30 Nov 2023 12:33:15 +0100 (CET)
-Date: Thu, 30 Nov 2023 12:33:15 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
-Cc: =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-	Kees Cook <keescook@chromium.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Wanpeng Li <wanpengli@tencent.com>,
-	Alexander Graf <graf@amazon.com>,
-	Chao Peng <chao.p.peng@linux.intel.com>,
-	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-	Forrest Yuan Yu <yuanyu@google.com>,
-	James Gowans <jgowans@amazon.com>,
-	James Morris <jamorris@linux.microsoft.com>,
-	John Andersen <john.s.andersen@intel.com>,
-	Marian Rotariu <marian.c.rotariu@gmail.com>,
-	Mihai =?utf-8?B?RG9uyJt1?= <mdontu@bitdefender.com>,
-	=?utf-8?B?TmljdciZb3IgQ8OuyJt1?= <nicu.citu@icloud.com>,
-	Thara Gopinath <tgopinath@microsoft.com>,
-	Trilok Soni <quic_tsoni@quicinc.com>, Wei Liu <wei.liu@kernel.org>,
-	Will Deacon <will@kernel.org>,
-	Yu Zhang <yu.c.zhang@linux.intel.com>,
-	Zahra Tarkhani <ztarkhani@microsoft.com>,
-	=?utf-8?Q?=C8=98tefan_=C8=98icleru?= <ssicleru@bitdefender.com>,
-	dev@lists.cloudhypervisor.org, kvm@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
-	qemu-devel@nongnu.org, virtualization@lists.linux-foundation.org,
-	x86@kernel.org, xen-devel@lists.xenproject.org
-Subject: Re: [RFC PATCH v2 17/19] heki: x86: Update permissions counters
- during text patching
-Message-ID: <20231130113315.GE20191@noisy.programming.kicks-ass.net>
-References: <20231113022326.24388-1-mic@digikod.net>
- <20231113022326.24388-18-mic@digikod.net>
- <20231113081929.GA16138@noisy.programming.kicks-ass.net>
- <a52d8885-43cc-4a4e-bb47-9a800070779e@linux.microsoft.com>
- <20231127200841.GZ3818@noisy.programming.kicks-ass.net>
- <ea63ae4e-e8ea-4fbf-9383-499e14de2f5e@linux.microsoft.com>
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
+Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2534B5;
+	Thu, 30 Nov 2023 05:21:54 -0800 (PST)
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-58db15c68f3so30333eaf.0;
+        Thu, 30 Nov 2023 05:21:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701350513; x=1701955313;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZvNfFwEaJe35P7DHOxBfctgrV0f0ocDgk3MHXYzHo/M=;
+        b=QJJXP0HxTNT45WJg58i7cl5X59xhb4koqTLeTMWU6EbER3R8YKga8GeNAVpmiAnskL
+         KnkWGfO9f+xSSbruJ+2UtHD7mJ48SqhqVxTEXeykhcm9G9pxTzEwoS0Ves8HOdbypD2o
+         NWV+YbSsFtku5Oan+UBuygin+mzQjmSsm6DZKn7sliXotnFoI1cudnzC71ydV1k1vd/a
+         xwg1Wq9cTR6fKAySPNpX6vPzN/JiVELaP1H/Wlqbtnc+SXVm9/DUMm/LncfdRrreTdrF
+         Gi5UeFzbmaRZpq9rVB5RPc1JV8cDD5us8UYzTICs3fLRi6cX938pjupP3XImae4MvBpz
+         zQww==
+X-Gm-Message-State: AOJu0YyvFu5CGAurBjpCwZsvyDtAUrjkxfAVI8N00II31HLD8vx+YEAp
+	jj4tPuMh5Y4d5kueZp+9XEGP53xs6Q1cEiARycQ=
+X-Google-Smtp-Source: AGHT+IHVXAHNIVex42KnwULFjGZK2tI3TPh5OlhmRjJZ4u6dNoVNOqThLGV/PQYjRCTwh4xYmS9IrHBLkf2HUiQDDjI=
+X-Received: by 2002:a4a:a2c8:0:b0:58d:ddcb:db1a with SMTP id
+ r8-20020a4aa2c8000000b0058dddcbdb1amr1875278ool.1.1701350513014; Thu, 30 Nov
+ 2023 05:21:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ea63ae4e-e8ea-4fbf-9383-499e14de2f5e@linux.microsoft.com>
+References: <0-v1-f82a05539a64+5042-iommu_fwspec_p2_jgg@nvidia.com> <3-v1-f82a05539a64+5042-iommu_fwspec_p2_jgg@nvidia.com>
+In-Reply-To: <3-v1-f82a05539a64+5042-iommu_fwspec_p2_jgg@nvidia.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 30 Nov 2023 14:21:41 +0100
+Message-ID: <CAJZ5v0h2=qHgG8qV0Yjm_mZSKBZcYZMfQYiFZF18RcmHM-+oMA@mail.gmail.com>
+Subject: Re: [PATCH 03/30] ACPI: IORT: Make a iort_iommu_for_each_id()
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: acpica-devel@lists.linux.dev, Andy Gross <agross@kernel.org>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
+	Bjorn Andersson <andersson@kernel.org>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, asahi@lists.linux.dev, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, devicetree@vger.kernel.org, 
+	Frank Rowand <frowand.list@gmail.com>, Hanjun Guo <guohanjun@huawei.com>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Heiko Stuebner <heiko@sntech.de>, iommu@lists.linux.dev, 
+	Jean-Philippe Brucker <jean-philippe@linaro.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, Joerg Roedel <joro@8bytes.org>, 
+	Kees Cook <keescook@chromium.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Len Brown <lenb@kernel.org>, 
+	linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-mediatek@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+	linux-samsung-soc@vger.kernel.org, linux-sunxi@lists.linux.dev, 
+	linux-tegra@vger.kernel.org, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, Hector Martin <marcan@marcan.st>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, Orson Zhai <orsonzhai@gmail.com>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Rob Clark <robdclark@gmail.com>, 
+	Robert Moore <robert.moore@intel.com>, Rob Herring <robh+dt@kernel.org>, 
+	Robin Murphy <robin.murphy@arm.com>, Samuel Holland <samuel@sholland.org>, 
+	Sudeep Holla <sudeep.holla@arm.com>, Sven Peter <sven@svenpeter.dev>, 
+	Thierry Reding <thierry.reding@gmail.com>, Krishna Reddy <vdumpa@nvidia.com>, 
+	virtualization@lists.linux.dev, Chen-Yu Tsai <wens@csie.org>, 
+	Will Deacon <will@kernel.org>, Yong Wu <yong.wu@mediatek.com>, 
+	Chunyan Zhang <zhang.lyra@gmail.com>, =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>, 
+	patches@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 29, 2023 at 03:07:15PM -0600, Madhavan T. Venkataraman wrote:
+On Thu, Nov 30, 2023 at 2:11=E2=80=AFAM Jason Gunthorpe <jgg@nvidia.com> wr=
+ote:
+>
+> Similar to of_iommu_for_each_id() this parses the IORT ACPI description
+> and invokes a function over each entry in the table.
+>
+> Have iort_iommu_configure_id() use the new function to call
+> iort_iommu_xlate().
+>
+> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
 
-> Kernel Lockdown
-> ---------------
-> 
-> But, we must provide at least some security in V2. Otherwise, it is useless.
-> 
-> So, we have implemented what we call a kernel lockdown. At the end of kernel
-> boot, Heki establishes permissions in the extended page table as mentioned
-> before. Also, it adds an immutable attribute for kernel text and kernel RO data.
-> Beyond that point, guest requests that attempt to modify permissions on any of
-> the immutable pages will be denied.
-> 
-> This means that features like FTrace and KProbes will not work on kernel text
-> in V2. This is a temporary limitation. Once authentication is in place, the
-> limitation will go away.
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-So either you're saying your patch 17 / text_poke is broken (so why
-include it ?!?) or your statement above is incorrect. Pick one.
-
-
-> __text_poke()
-> 	This function is called by various features to patch text.
-> 	This calls heki_text_poke_start() and heki_text_poke_end().
-> 
-> 	heki_text_poke_start() is called to add write permissions to the
-> 	extended page table so that text can be patched. heki_text_poke_end()
-> 	is called to revert write permissions in the extended page table.
-
-This, if text_poke works, then static_call / jump_label / ftrace and
-everything else should work, they all rely on this.
-
-
-> Peter mentioned the following:
-> 
-> "if you want to mirror the native PTEs why don't you hook into the
-> paravirt page-table muck and get all that for free?"
-> 
-> We did consider using a shadow page table kind of approach so that guest page table
-> modifications can be intercepted and reflected in the page table entry. We did not
-> do this for two reasons:
-> 
-> - there are bits in the page table entry that are not permission bits. We would like
->   the guest kernel to be able to modify them directly.
-
-This statement makes no sense.
-
-> - we cannot tell a genuine request from an attack.
-
-Why not? How is an explicit call different from an explicit call in a
-paravirt hook?
-
-From a maintenance pov we already hate paravirt with a passion, but it
-is ever so much better than sprinkling yet another pile of crap
-(heki_*) around.
+> ---
+>  drivers/acpi/arm64/iort.c | 118 ++++++++++++++++++++++++--------------
+>  include/linux/acpi_iort.h |  12 ++++
+>  2 files changed, 86 insertions(+), 44 deletions(-)
+>
+> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+> index bdaf9256870d92..5c9b4c23f96a87 100644
+> --- a/drivers/acpi/arm64/iort.c
+> +++ b/drivers/acpi/arm64/iort.c
+> @@ -1218,9 +1218,10 @@ static bool iort_pci_rc_supports_ats(struct acpi_i=
+ort_node *node)
+>         return pci_rc->ats_attribute & ACPI_IORT_ATS_SUPPORTED;
+>  }
+>
+> -static int iort_iommu_xlate(struct device *dev, struct acpi_iort_node *n=
+ode,
+> -                           u32 streamid)
+> +static int iort_iommu_xlate(struct acpi_iort_node *node, u32 streamid,
+> +                           void *info)
+>  {
+> +       struct device *dev =3D info;
+>         const struct iommu_ops *ops;
+>         struct fwnode_handle *iort_fwnode;
+>
+> @@ -1250,9 +1251,11 @@ static int iort_iommu_xlate(struct device *dev, st=
+ruct acpi_iort_node *node,
+>  struct iort_pci_alias_info {
+>         struct device *dev;
+>         struct acpi_iort_node *node;
+> +       iort_for_each_fn fn;
+> +       void *info;
+>  };
+>
+> -static int iort_pci_iommu_init(struct pci_dev *pdev, u16 alias, void *da=
+ta)
+> +static int __for_each_pci_alias(struct pci_dev *pdev, u16 alias, void *d=
+ata)
+>  {
+>         struct iort_pci_alias_info *info =3D data;
+>         struct acpi_iort_node *parent;
+> @@ -1260,7 +1263,7 @@ static int iort_pci_iommu_init(struct pci_dev *pdev=
+, u16 alias, void *data)
+>
+>         parent =3D iort_node_map_id(info->node, alias, &streamid,
+>                                   IORT_IOMMU_TYPE);
+> -       return iort_iommu_xlate(info->dev, parent, streamid);
+> +       return info->fn(parent, streamid, info->info);
+>  }
+>
+>  static void iort_named_component_init(struct device *dev,
+> @@ -1280,7 +1283,8 @@ static void iort_named_component_init(struct device=
+ *dev,
+>                 dev_warn(dev, "Could not add device properties\n");
+>  }
+>
+> -static int iort_nc_iommu_map(struct device *dev, struct acpi_iort_node *=
+node)
+> +static int __for_each_platform(struct acpi_iort_node *node, iort_for_eac=
+h_fn fn,
+> +                              void *info)
+>  {
+>         struct acpi_iort_node *parent;
+>         int err =3D -ENODEV, i =3D 0;
+> @@ -1293,27 +1297,71 @@ static int iort_nc_iommu_map(struct device *dev, =
+struct acpi_iort_node *node)
+>                                                    i++);
+>
+>                 if (parent)
+> -                       err =3D iort_iommu_xlate(dev, parent, streamid);
+> +                       err =3D fn(parent, streamid, info);
+>         } while (parent && !err);
+>
+>         return err;
+>  }
+>
+> -static int iort_nc_iommu_map_id(struct device *dev,
+> -                               struct acpi_iort_node *node,
+> -                               const u32 *in_id)
+> +int iort_iommu_for_each_id(struct device *dev, const u32 *id_in,
+> +                          struct iort_params *params, iort_for_each_fn f=
+n,
+> +                          void *info)
+>  {
+> -       struct acpi_iort_node *parent;
+> -       u32 streamid;
+> +       struct acpi_iort_named_component *nc;
+> +       struct acpi_iort_node *node;
+> +       int err =3D -ENODEV;
+>
+> -       parent =3D iort_node_map_id(node, *in_id, &streamid, IORT_IOMMU_T=
+YPE);
+> -       if (parent)
+> -               return iort_iommu_xlate(dev, parent, streamid);
+> +       memset(params, 0, sizeof(*params));
+> +       if (dev_is_pci(dev)) {
+> +               struct pci_bus *bus =3D to_pci_dev(dev)->bus;
+> +               struct iort_pci_alias_info pci_info =3D { .dev =3D dev,
+> +                                                       .fn =3D fn,
+> +                                                       .info =3D info };
+>
+> -       return -ENODEV;
+> +               node =3D iort_scan_node(ACPI_IORT_NODE_PCI_ROOT_COMPLEX,
+> +                                     iort_match_node_callback, &bus->dev=
+);
+> +               if (!node)
+> +                       return -ENODEV;
+> +
+> +               pci_info.node =3D node;
+> +               err =3D pci_for_each_dma_alias(to_pci_dev(dev),
+> +                                            __for_each_pci_alias, &pci_i=
+nfo);
+> +
+> +               if (iort_pci_rc_supports_ats(node))
+> +                       params->pci_rc_ats =3D true;
+> +               return 0;
+> +       }
+> +
+> +       node =3D iort_scan_node(ACPI_IORT_NODE_NAMED_COMPONENT,
+> +                             iort_match_node_callback, dev);
+> +       if (!node)
+> +               return -ENODEV;
+> +
+> +       if (id_in) {
+> +               struct acpi_iort_node *parent;
+> +               u32 streamid;
+> +
+> +               parent =3D iort_node_map_id(node, *id_in, &streamid,
+> +                                         IORT_IOMMU_TYPE);
+> +               if (!parent)
+> +                       return -ENODEV;
+> +               err =3D fn(parent, streamid, info);
+> +       } else {
+> +               err =3D __for_each_platform(node, fn, info);
+> +       }
+> +       if (err)
+> +               return err;
+> +
+> +       nc =3D (struct acpi_iort_named_component *)node->node_data;
+> +       params->pasid_num_bits =3D FIELD_GET(ACPI_IORT_NC_PASID_BITS,
+> +                                               nc->node_flags);
+> +       if (nc->node_flags & ACPI_IORT_NC_STALL_SUPPORTED)
+> +               params->dma_can_stall =3D true;
+> +
+> +       iort_named_component_init(dev, node);
+> +       return 0;
+>  }
+>
+> -
+>  /**
+>   * iort_iommu_configure_id - Set-up IOMMU configuration for a device.
+>   *
+> @@ -1324,40 +1372,22 @@ static int iort_nc_iommu_map_id(struct device *de=
+v,
+>   */
+>  int iort_iommu_configure_id(struct device *dev, const u32 *id_in)
+>  {
+> -       struct acpi_iort_node *node;
+> -       int err =3D -ENODEV;
+> +       struct iort_params params;
+> +       int err;
+>
+> -       if (dev_is_pci(dev)) {
+> +       err =3D iort_iommu_for_each_id(dev, id_in, &params, &iort_iommu_x=
+late,
+> +                                    dev);
+> +       if (err)
+> +               return err;
+> +
+> +       if (params.pci_rc_ats) {
+>                 struct iommu_fwspec *fwspec;
+> -               struct pci_bus *bus =3D to_pci_dev(dev)->bus;
+> -               struct iort_pci_alias_info info =3D { .dev =3D dev };
+> -
+> -               node =3D iort_scan_node(ACPI_IORT_NODE_PCI_ROOT_COMPLEX,
+> -                                     iort_match_node_callback, &bus->dev=
+);
+> -               if (!node)
+> -                       return -ENODEV;
+> -
+> -               info.node =3D node;
+> -               err =3D pci_for_each_dma_alias(to_pci_dev(dev),
+> -                                            iort_pci_iommu_init, &info);
+>
+>                 fwspec =3D dev_iommu_fwspec_get(dev);
+> -               if (fwspec && iort_pci_rc_supports_ats(node))
+> +               if (fwspec)
+>                         fwspec->flags |=3D IOMMU_FWSPEC_PCI_RC_ATS;
+> -       } else {
+> -               node =3D iort_scan_node(ACPI_IORT_NODE_NAMED_COMPONENT,
+> -                                     iort_match_node_callback, dev);
+> -               if (!node)
+> -                       return -ENODEV;
+> -
+> -               err =3D id_in ? iort_nc_iommu_map_id(dev, node, id_in) :
+> -                             iort_nc_iommu_map(dev, node);
+> -
+> -               if (!err)
+> -                       iort_named_component_init(dev, node);
+>         }
+> -
+> -       return err;
+> +       return 0;
+>  }
+>
+>  #else
+> diff --git a/include/linux/acpi_iort.h b/include/linux/acpi_iort.h
+> index 1cb65592c95dd3..5423abff9b6b09 100644
+> --- a/include/linux/acpi_iort.h
+> +++ b/include/linux/acpi_iort.h
+> @@ -29,6 +29,18 @@ void iort_deregister_domain_token(int trans_id);
+>  struct fwnode_handle *iort_find_domain_token(int trans_id);
+>  int iort_pmsi_get_dev_id(struct device *dev, u32 *dev_id);
+>
+> +struct iort_params {
+> +       unsigned int pasid_num_bits;
+> +       bool dma_can_stall : 1;
+> +       bool pci_rc_ats : 1;
+> +};
+> +
+> +typedef int (*iort_for_each_fn)(struct acpi_iort_node *iommu, u32 stream=
+id,
+> +                               void *info);
+> +int iort_iommu_for_each_id(struct device *dev, const u32 *id_in,
+> +                          struct iort_params *params, iort_for_each_fn f=
+n,
+> +                          void *info);
+> +
+>  #ifdef CONFIG_ACPI_IORT
+>  u32 iort_msi_map_id(struct device *dev, u32 id);
+>  struct irq_domain *iort_get_device_domain(struct device *dev, u32 id,
+> --
+> 2.42.0
+>
