@@ -1,95 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD6D42B9D6;
-	Thu, 30 Nov 2023 20:52:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PH9L32LD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64B17C433C7;
-	Thu, 30 Nov 2023 20:52:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701377534;
-	bh=R7LNuLwRzlt/17e18V7R1EEOuUFGqpcWy3MHGj0x6iM=;
-	h=Date:From:To:Cc:Subject:From;
-	b=PH9L32LDTUo5YBVfdO+i974H6l5nZItyapR+AsLpeoGzf/+dGCu1c+X+ivz0qgAhv
-	 +ubaCZfQPmAeHFtWPvxjrYsyh8V0OvLWxCfqKemE0TiBLk02sCZqL65asc3cPEz/9t
-	 KAT/mFR7jEEK8re5RUp3wiVeqEIDk9V9LU9zz17+5drCadHLfMdB18Q9ndgkdF+uku
-	 ImJYlkGfUNJvFioVreeYdyiVIcczEMuV+ZhFF6y1+hSwDx5p+IrMUcF8X7vDRt51M5
-	 6JB4ng2ylWAtNJxDcQGXioxeERJhmYABsjgkx2EecpJs0NnW2DCHpRgTUUN5u38X3l
-	 IpQI2NCEwvZlA==
-Date: Thu, 30 Nov 2023 14:52:10 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	Kees Cook <keescook@chromium.org>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dhoUccPU"
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 433CC170D
+	for <linux-hardening@vger.kernel.org>; Thu, 30 Nov 2023 12:56:10 -0800 (PST)
+Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-6cd89f2af9dso1411554b3a.1
+        for <linux-hardening@vger.kernel.org>; Thu, 30 Nov 2023 12:56:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1701377770; x=1701982570; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2mqH2Bu8VDSZQl/oVmtaFk1bQrPnLFzomfRgzjPU9ug=;
+        b=dhoUccPUzLdedFmR72dBLBBf1AwWJCbZWRG/C11ZKHT5/v2loNjYwqyQHWCR/NFqzx
+         rGBGX7d51mgrdd6Y3J0GDjJJkU6T6nc8sCL3krUHBrvKyMqmP0Th6gCrBljtEhaoaJyA
+         rs747QpY0EkW5QjvDmo1KWIZxDlllhNBVS0qI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701377770; x=1701982570;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2mqH2Bu8VDSZQl/oVmtaFk1bQrPnLFzomfRgzjPU9ug=;
+        b=FEmVWEK3krzZ+xn8x1D2wqaXmFa1PLf0RxSVCMQ/3Qcs6GW85zypjkX6IzxP5QHciP
+         bgX7UjLz8bA/eKkhW62giRHsO01q/8fJImz0z6ZFBkJOnNdb4V01gR4C1cFXFU/Gqcw1
+         DpOA2jHYiS6igHzB8BTS2cb3xPLBkZTJL22UzGwWbpHqoEGCTLOcWVMg3013dvoguUSV
+         hu/KCJcyYu5LzwPsJfd3NZ+pX9XwN268nhUQVmLPXlEi1NLjpOuNcVotQIjIXY4ZMrAa
+         VUyhdJHPnuUEpmb5v45UG1frFRGyAhZ5DRg9nFd6ZZ+2AlBH4OQjqB6obqHUhwfiNOkh
+         nqgw==
+X-Gm-Message-State: AOJu0YyME5BKHGu7/r/c3xglv2K5oZvjTvhsY43l3BaJ8b25i7IycfDf
+	BJFTfjEp1qciAUsVBr8Ys1HLoA==
+X-Google-Smtp-Source: AGHT+IF/p/yWidHm/LXNmEns/hCrvoFxobs9OIzRQhwApsdqdtIkzzRmCesyaYJ3JlISWVm6Hx6nSA==
+X-Received: by 2002:a05:6a00:3907:b0:6c4:d76a:68ff with SMTP id fh7-20020a056a00390700b006c4d76a68ffmr28870071pfb.17.1701377769742;
+        Thu, 30 Nov 2023 12:56:09 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id r8-20020aa78b88000000b006889511ab14sm1649631pfd.37.2023.11.30.12.56.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Nov 2023 12:56:09 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] init: Kconfig: Disable -Wstringop-overflow for GCC-11
-Message-ID: <ZWj1+jkweEDWbmAR@work>
+Subject: [PATCH] tracing/uprobe: Replace strlcpy() with strscpy()
+Date: Thu, 30 Nov 2023 12:56:08 -0800
+Message-Id: <20231130205607.work.463-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1408; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=VAQ/FNnq8v9CzAsxQVG8VOQQl1gkuhbx7/nJ2nLij24=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlaPbn40MW2pI606YFnUzI2iau9NKfIMFA3hhNz
+ i9rV8Xp0L+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZWj25wAKCRCJcvTf3G3A
+ JphxD/0ccMJyONx88iMeiVBBxhpQxMXLZ3/cgij/f1NWWQtky8CiRVSnmiHuwuHEGRkZvv2H9zH
+ /0t6VYWUDc0KsaXIYuf2zRKW2rexz7CdRO+C/HB4EKf0u7AyY1hly2yTRFmSJfIm5iOg9oGmmVR
+ ejxK8/epLSsTFuKcCcfcnSGiTrsM8zOGSAAB35wKUazI7JepId+k3bpipXDdTK01v8fpIkabwa1
+ KSfC2JLVya7CdOm3kF0fNNu8GEcuYeNGLCVloi1RxLNsey1ND0XZ0wPiL3HDkSp8+Lzm9wpoXQ0
+ jQrOQidOcEUCwsHvQ/xMoGzHIq5DgU5S5Xey3WFjPKyVq3EsNs6YRkN/y2AqQxc4CtJIDA7D6nv
+ bZkIiEGjX2Aafqf7GYMD6bsqhdQsHccbU7/RbFc6rW2fRcmHnT6h44ht8zPAhXhx28b5+y76JaU
+ mOgqxXBxGfOU2H3soJFvAcP5ESM9uT7Zlwq2HDx1RlT74wKg7S9ddsXxQBXKhcn9FopV+VKXYVD
+ B+is63bPLIcijjEk0m6B5/UdHl4OwEkRABa+TUEGSBTCCXg8CZxTzOrvVtKbdK9b/R4u3LvH22M
+ ZL60zhmY8Cl8gvldvxIQk2CJJRXoyJYkIKcgKDl5e6ej1i9ahR+mrgUGsovY1tzdZKz3TDrGb0p
+ bjYwntr ZIx4iwLQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
--Wstringop-overflow is buggy in GCC-11. Therefore, we should disable
-this option specifically for that compiler version. To achieve this,
-we introduce a new configuration option: GCC11_NO_STRINGOP_OVERFLOW.
+strlcpy() reads the entire source buffer first. This read may exceed
+the destination size limit. This is both inefficient and can lead
+to linear read overflows if a source string is not NUL-terminated[1].
+Additionally, it returns the size of the source string, not the
+resulting size of the destination string. In an effort to remove strlcpy()
+completely[2], replace strlcpy() here with strscpy().
 
-The compiler option related to string operation overflow is now managed
-under configuration CC_STRINGOP_OVERFLOW. This option is enabled by
-default for all other versions of GCC that support it.
+The negative return value is already handled by this code so no new
+handling is needed here.
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy [1]
+Link: https://github.com/KSPP/linux/issues/89 [2]
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- Makefile     |  4 +++-
- init/Kconfig | 12 ++++++++++++
- 2 files changed, 15 insertions(+), 1 deletion(-)
+ kernel/trace/trace_uprobe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Makefile b/Makefile
-index 2cfd71ae3a86..8adc611fb611 100644
---- a/Makefile
-+++ b/Makefile
-@@ -982,7 +982,9 @@ NOSTDINC_FLAGS += -nostdinc
- # perform bounds checking.
- KBUILD_CFLAGS += $(call cc-option, -fstrict-flex-arrays=3)
+diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+index 99c051de412a..a84b85d8aac1 100644
+--- a/kernel/trace/trace_uprobe.c
++++ b/kernel/trace/trace_uprobe.c
+@@ -151,7 +151,7 @@ fetch_store_string(unsigned long addr, void *dest, void *base)
+ 		return -ENOMEM;
  
--KBUILD_CFLAGS += $(call cc-option, -Wstringop-overflow)
-+#Currently, disable -Wstringop-overflow for GCC 11, globally.
-+KBUILD_CFLAGS-$(CONFIG_CC_NO_STRINGOP_OVERFLOW) += $(call cc-option, -Wno-stringop-overflow)
-+KBUILD_CFLAGS-$(CONFIG_CC_STRINGOP_OVERFLOW) += $(call cc-option, -Wstringop-overflow)
- 
- # disable invalid "can't wrap" optimizations for signed / pointers
- KBUILD_CFLAGS	+= -fno-strict-overflow
-diff --git a/init/Kconfig b/init/Kconfig
-index 9ffb103fc927..aaaa99a5d2a9 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -876,6 +876,18 @@ config CC_NO_ARRAY_BOUNDS
- 	bool
- 	default y if CC_IS_GCC && GCC_VERSION >= 110000 && GCC11_NO_ARRAY_BOUNDS
- 
-+# Currently, disable -Wstringop-overflow for GCC 11, globally.
-+config GCC11_NO_STRINGOP_OVERFLOW
-+	def_bool y
-+
-+config CC_NO_STRINGOP_OVERFLOW
-+	bool
-+	default y if CC_IS_GCC && GCC_VERSION >= 110000 && GCC_VERSION < 120000 && GCC11_NO_STRINGOP_OVERFLOW
-+
-+config CC_STRINGOP_OVERFLOW
-+	bool
-+	default y if CC_IS_GCC && !CC_NO_STRINGOP_OVERFLOW
-+
- #
- # For architectures that know their GCC __int128 support is sound
- #
+ 	if (addr == FETCH_TOKEN_COMM)
+-		ret = strlcpy(dst, current->comm, maxlen);
++		ret = strscpy(dst, current->comm, maxlen);
+ 	else
+ 		ret = strncpy_from_user(dst, src, maxlen);
+ 	if (ret >= 0) {
 -- 
 2.34.1
 
