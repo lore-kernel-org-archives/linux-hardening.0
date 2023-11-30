@@ -1,113 +1,82 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="exbIDVb2"
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 648FE10DC
-	for <linux-hardening@vger.kernel.org>; Thu, 30 Nov 2023 13:57:59 -0800 (PST)
-Received: from eig-obgw-6002a.ext.cloudfilter.net ([10.0.30.222])
-	by cmsmtp with ESMTPS
-	id 8ompr13v1KOkL8p2lr0XDf; Thu, 30 Nov 2023 21:57:59 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id 8p2kroSaEM0U28p2krxtUw; Thu, 30 Nov 2023 21:57:58 +0000
-X-Authority-Analysis: v=2.4 cv=BuKOfKb5 c=1 sm=1 tr=0 ts=65690566
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=8XV0R0IcXUXM6S+KMni/4w==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=BNY50KLci1gA:10 a=wYkD_t78qR0A:10 a=mDV3o1hIAAAA:8
- a=VwQbUJbxAAAA:8 a=cm27Pg_UAAAA:8 a=mtVZSKp5H8FKAB1gxMEA:9 a=QEXdDO2ut3YA:10
- a=_FVE-zBwftR9WsbkzFJk:22 a=AjGcO6oz07-iQ99wixmX:22 a=xmb-EsYY8bH0VWELuYED:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=dDGFLF6PkeETmU0fsnSFV5Rw/e4Y+bpJ1D8hQqlmxIU=; b=exbIDVb2LgL3FR4rjH2ZSLMgq3
-	Bu9tnX5DD9QWxG18FQBDIHOv+1DzOJSZWLGXlCgDzE/oohV1JcoLjwLn0FSiS1X2SceCTT9wJQ5VK
-	PWVgVH2Z6ZhjSdoYWdf0IMySCfz+uB+YnP6E9s3ProD0jPzWNREZmK0gAzGXzQHHzaI9MH5LHw2Mi
-	YuOECKsZhgqGFOKK46LP8jscqVvwLOLEGCDVeFSHp8ibNYgSu7f63RTTF8BgWpOVkNIKbOX+d1XIm
-	6H6R4YmEyttMLoe/hmLRAhsMZGbpoe/OVrdEFxZ3pRKEGIPIQL5Jxre64aBqpsImq4cem9Fq8OeZR
-	E5zMgaBw==;
-Received: from 189.215.208.186.cable.dyn.cableonline.com.mx ([189.215.208.186]:45574 helo=[192.168.0.28])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1r8p2j-003kks-2M;
-	Thu, 30 Nov 2023 15:57:57 -0600
-Message-ID: <041335a9-32f6-4b3b-8512-0ab462334af1@embeddedor.com>
-Date: Thu, 30 Nov 2023 15:57:55 -0600
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="djT7O9N6"
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C575B1711
+	for <linux-hardening@vger.kernel.org>; Thu, 30 Nov 2023 13:59:32 -0800 (PST)
+Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-1d01c45ffebso14094675ad.1
+        for <linux-hardening@vger.kernel.org>; Thu, 30 Nov 2023 13:59:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1701381572; x=1701986372; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Y2djO/hdtCxAj05SEfvtxt5bZ+8AqtE0qahmFssCkkc=;
+        b=djT7O9N6REoqSZVNeKNk7HsbcgKR1m7xBCj0NavMtLIS9E00YVcNGXA6O2IiRRKaiN
+         xpa/umUXDGc/H0mhg99SuIRh8BpFdQNVt3wRyKK51FJu7SrRuPWAmP/HUHdJIFHXCsJO
+         YbbJhA+Z4FtvVPYXykHP7DGn2TNKq5nQL+m1k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701381572; x=1701986372;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Y2djO/hdtCxAj05SEfvtxt5bZ+8AqtE0qahmFssCkkc=;
+        b=DNMD67T7+fyFvVCjxTnJuQctSlaOciwH1sXIPTjxofvIz5oEVmm4Z0fIcfHCCmjOa1
+         JGKU+uNoOu0QoV22KXmLuCNTQV5fZqQ6p+R7xgA0EVYCiteVWykBSGmwXiMS1x49Xzf+
+         0ZS3DJ5vOdEZmTtHc7sk4WvhrxDRHt658hTNh5rNvIoAnh5nRl2ji9XCwea9OeZ2+X22
+         oGJolwMvh/UmgLwBycOlEiC/nReULHaHybx5h++IOVSJDB0JvOt0bUpZxbH0ur7foC5o
+         oRDXg4ZQn+HoVaJjgKQrFyCauzlp2Vj32aJLFO0qTXBrEpjnKrDzNB/Octldm+hEb0XO
+         lBiQ==
+X-Gm-Message-State: AOJu0YwOI2nkERUmk5zqIpYeM1+t8VhADoeTF+v9nbbz52r6LBBNm79p
+	oD/OA6QxMCmkrmLj+DvZOZSQ2A==
+X-Google-Smtp-Source: AGHT+IHXL7uU6vw5k8AVrhFvY+svGvoQDBSX/vpE7HPes6CB4/gBu3LXDtFLard2ILDOkQ1JOieQdQ==
+X-Received: by 2002:a17:902:ab86:b0:1cf:bdc4:bb43 with SMTP id f6-20020a170902ab8600b001cfbdc4bb43mr16177885plr.54.1701381572319;
+        Thu, 30 Nov 2023 13:59:32 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id y21-20020a170902ed5500b001d04c097d32sm329328plb.270.2023.11.30.13.59.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Nov 2023 13:59:31 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: David Rheinsberg <david@readahead.eu>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+	Justin Stitt <justinstitt@google.com>
+Cc: Kees Cook <keescook@chromium.org>,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] HID: uhid: replace deprecated strncpy with strscpy
+Date: Thu, 30 Nov 2023 13:59:24 -0800
+Message-Id: <170138156214.3648538.12067944211375143947.b4-ty@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231003-strncpy-drivers-hid-uhid-c-v2-1-6a501402581e@google.com>
+References: <20231003-strncpy-drivers-hid-uhid-c-v2-1-6a501402581e@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] init: Kconfig: Disable -Wstringop-overflow for
- GCC-11
-Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>,
- Nicolas Schier <nicolas@fjasle.eu>, linux-kbuild@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <ZWj1+jkweEDWbmAR@work> <202311301304.28F0C52BA@keescook>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <202311301304.28F0C52BA@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.215.208.186
-X-Source-L: No
-X-Exim-ID: 1r8p2j-003kks-2M
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 189.215.208.186.cable.dyn.cableonline.com.mx ([192.168.0.28]) [189.215.208.186]:45574
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfKDtD+yKlLWZx9rMj6Q0FIfVWzrsHt3AcUpHgwdRihxfOxCXUll6Q3sihp9bSt/MmYl4izs5o2y71CcnJkdJpEy8+7pl14aBKYJfkIOQUe2Jj6/HpdEm
- UJLXWNBBgIdhZ0x3diGsmHvV7Xmd0G9X+v30aYVBdT2xbMZnlUhtbf9AD/VhQhoNi1pwwRjxlZQ0E+cqK9kDbP+QeflqWrz46vC6ShfwczutAZ5MwoGthwjT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-
-
-On 11/30/23 15:07, Kees Cook wrote:
-> On Thu, Nov 30, 2023 at 02:52:10PM -0600, Gustavo A. R. Silva wrote:
->> -Wstringop-overflow is buggy in GCC-11. Therefore, we should disable
+On Tue, 03 Oct 2023 21:01:58 +0000, Justin Stitt wrote:
+> `strncpy` is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
 > 
-> Can you add some links for this? For example, maybe this?
-> https://gcc.gnu.org/bugzilla/show_bug.cgi?id=97490
+> A suitable replacement is `strscpy` [2] due to the fact that it
+> guarantees NUL-termination on the destination buffer without
+> unnecessarily NUL-padding.
 > 
-> Or discussions from -next builds?
+> [...]
 
-Done. :)
+Applied to for-next/hardening, thanks!
 
-> 
->> this option specifically for that compiler version. To achieve this,
->> we introduce a new configuration option: GCC11_NO_STRINGOP_OVERFLOW.
->>
->> The compiler option related to string operation overflow is now managed
->> under configuration CC_STRINGOP_OVERFLOW. This option is enabled by
->> default for all other versions of GCC that support it.
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> 
-> But yeah, let's get this landed to keep new warnings from appearing...
-> 
+[1/1] HID: uhid: replace deprecated strncpy with strscpy
+      https://git.kernel.org/kees/c/d4011f6817ae
 
-I just applied this to my -next tree.
+Take care,
 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
+-- 
+Kees Cook
 
-Thanks!
---
-Gustavo
