@@ -1,125 +1,113 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GHEGZawk"
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66EB110DE
-	for <linux-hardening@vger.kernel.org>; Thu, 30 Nov 2023 13:55:06 -0800 (PST)
-Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-1cfcc9b3b5cso13956015ad.0
-        for <linux-hardening@vger.kernel.org>; Thu, 30 Nov 2023 13:55:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1701381306; x=1701986106; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ec58TXbgvOF1VJEyaIIIq5ozr+88I6s94LR1x+GzWU0=;
-        b=GHEGZawkG+YEHM22bGO+Wv1uRcyNO4qv/rLKB0DEKxMwGX64mNFdV0k5rUCgfU6u+1
-         xXfjKqgveUmhrhItfA4U77hqv4elPQH57IUXViePHnzNFlDxCzQRZQo+638Im42kpX87
-         1Pm2mAPVrT6S1GRe7SdOTnmPFy7sESsiQkmI8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701381306; x=1701986106;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ec58TXbgvOF1VJEyaIIIq5ozr+88I6s94LR1x+GzWU0=;
-        b=rIMILK3Km89qw9Sj1bbbQYAxu3JKWmUqyRXJH/hoGMsesguPIPbmecWZ5xl8zr3ccX
-         44PQDkBZtl/+yyOsP/MDJPhbE/NLkMVkT10Iif/J9VKKrbnMfxaPUbwZWlU4XECsO5Iq
-         0gM4gZcBgOo2SA12eaP7TP9ssZ+2Mk9O7ZoOSf3tFXMEQ0FyHyim+gRnHODpMk65GC6U
-         ZaNUi9BjSWrQ9P/hU+niAsGyJjNAKtbOD749gKGUrcdYKtYXukSbfhGaWwbk14C2fu+q
-         XAlMZN0RxfAEZzAeKo2BGU4ddEfJgvaMnIX8gNXPWAbMbLOdt20qcpIFXbp5h/1cYoJn
-         NP7A==
-X-Gm-Message-State: AOJu0YyJgWA6sxLul8JICeTpqXhlpcPsIJvkX2eS2OICb/23yCaF6/6r
-	6V8jelFeJXS6AJDe0ZvtJshb4A==
-X-Google-Smtp-Source: AGHT+IHCY4czfywkANHTsCYBSUHuXcP9OHpxs/rSKhmXqfephZQVfxjWeOEEDd54uCq4zLIB1i+6Cw==
-X-Received: by 2002:a17:902:d303:b0:1cc:4e81:36a4 with SMTP id b3-20020a170902d30300b001cc4e8136a4mr25857013plc.5.1701381305897;
-        Thu, 30 Nov 2023 13:55:05 -0800 (PST)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id t13-20020a1709028c8d00b001cfd35ec1d7sm1867953plo.243.2023.11.30.13.55.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Nov 2023 13:55:05 -0800 (PST)
-Date: Thu, 30 Nov 2023 13:55:04 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Gregory Greenman <gregory.greenman@intel.com>,
-	Kalle Valo <kvalo@kernel.org>, linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] wifi: iwlwifi: fw: replace deprecated strncpy with
- strscpy_pad
-Message-ID: <202311301354.0DAC97C@keescook>
-References: <20231019-strncpy-drivers-net-wireless-intel-iwlwifi-fw-dbg-c-v2-1-179b211a374b@google.com>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="exbIDVb2"
+Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 648FE10DC
+	for <linux-hardening@vger.kernel.org>; Thu, 30 Nov 2023 13:57:59 -0800 (PST)
+Received: from eig-obgw-6002a.ext.cloudfilter.net ([10.0.30.222])
+	by cmsmtp with ESMTPS
+	id 8ompr13v1KOkL8p2lr0XDf; Thu, 30 Nov 2023 21:57:59 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id 8p2kroSaEM0U28p2krxtUw; Thu, 30 Nov 2023 21:57:58 +0000
+X-Authority-Analysis: v=2.4 cv=BuKOfKb5 c=1 sm=1 tr=0 ts=65690566
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=8XV0R0IcXUXM6S+KMni/4w==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=BNY50KLci1gA:10 a=wYkD_t78qR0A:10 a=mDV3o1hIAAAA:8
+ a=VwQbUJbxAAAA:8 a=cm27Pg_UAAAA:8 a=mtVZSKp5H8FKAB1gxMEA:9 a=QEXdDO2ut3YA:10
+ a=_FVE-zBwftR9WsbkzFJk:22 a=AjGcO6oz07-iQ99wixmX:22 a=xmb-EsYY8bH0VWELuYED:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=dDGFLF6PkeETmU0fsnSFV5Rw/e4Y+bpJ1D8hQqlmxIU=; b=exbIDVb2LgL3FR4rjH2ZSLMgq3
+	Bu9tnX5DD9QWxG18FQBDIHOv+1DzOJSZWLGXlCgDzE/oohV1JcoLjwLn0FSiS1X2SceCTT9wJQ5VK
+	PWVgVH2Z6ZhjSdoYWdf0IMySCfz+uB+YnP6E9s3ProD0jPzWNREZmK0gAzGXzQHHzaI9MH5LHw2Mi
+	YuOECKsZhgqGFOKK46LP8jscqVvwLOLEGCDVeFSHp8ibNYgSu7f63RTTF8BgWpOVkNIKbOX+d1XIm
+	6H6R4YmEyttMLoe/hmLRAhsMZGbpoe/OVrdEFxZ3pRKEGIPIQL5Jxre64aBqpsImq4cem9Fq8OeZR
+	E5zMgaBw==;
+Received: from 189.215.208.186.cable.dyn.cableonline.com.mx ([189.215.208.186]:45574 helo=[192.168.0.28])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1r8p2j-003kks-2M;
+	Thu, 30 Nov 2023 15:57:57 -0600
+Message-ID: <041335a9-32f6-4b3b-8512-0ab462334af1@embeddedor.com>
+Date: Thu, 30 Nov 2023 15:57:55 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231019-strncpy-drivers-net-wireless-intel-iwlwifi-fw-dbg-c-v2-1-179b211a374b@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] init: Kconfig: Disable -Wstringop-overflow for
+ GCC-11
+Content-Language: en-US
+To: Kees Cook <keescook@chromium.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>,
+ Nicolas Schier <nicolas@fjasle.eu>, linux-kbuild@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <ZWj1+jkweEDWbmAR@work> <202311301304.28F0C52BA@keescook>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <202311301304.28F0C52BA@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.215.208.186
+X-Source-L: No
+X-Exim-ID: 1r8p2j-003kks-2M
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 189.215.208.186.cable.dyn.cableonline.com.mx ([192.168.0.28]) [189.215.208.186]:45574
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 5
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfKDtD+yKlLWZx9rMj6Q0FIfVWzrsHt3AcUpHgwdRihxfOxCXUll6Q3sihp9bSt/MmYl4izs5o2y71CcnJkdJpEy8+7pl14aBKYJfkIOQUe2Jj6/HpdEm
+ UJLXWNBBgIdhZ0x3diGsmHvV7Xmd0G9X+v30aYVBdT2xbMZnlUhtbf9AD/VhQhoNi1pwwRjxlZQ0E+cqK9kDbP+QeflqWrz46vC6ShfwczutAZ5MwoGthwjT
 
-On Thu, Oct 19, 2023 at 05:44:59PM +0000, Justin Stitt wrote:
-> strncpy() is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
-> 
-> Based on the deliberate `sizeof(dest) ... - 1` pattern we can see that
-> both dump_info->dev_human_readable and dump_info->bus_human_readable are
-> intended to be NUL-terminated.
-> 
-> Moreover, since this seems to cross the file boundary let's NUL-pad to
-> ensure no behavior change.
-> 
-> strscpy_pad() covers both the NUL-termination and NUL-padding, let's use
-> it.
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-Thread ping. Can the wireless folks please pick this up?
+
+On 11/30/23 15:07, Kees Cook wrote:
+> On Thu, Nov 30, 2023 at 02:52:10PM -0600, Gustavo A. R. Silva wrote:
+>> -Wstringop-overflow is buggy in GCC-11. Therefore, we should disable
+> 
+> Can you add some links for this? For example, maybe this?
+> https://gcc.gnu.org/bugzilla/show_bug.cgi?id=97490
+> 
+> Or discussions from -next builds?
+
+Done. :)
+
+> 
+>> this option specifically for that compiler version. To achieve this,
+>> we introduce a new configuration option: GCC11_NO_STRINGOP_OVERFLOW.
+>>
+>> The compiler option related to string operation overflow is now managed
+>> under configuration CC_STRINGOP_OVERFLOW. This option is enabled by
+>> default for all other versions of GCC that support it.
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> 
+> But yeah, let's get this landed to keep new warnings from appearing...
+> 
+
+I just applied this to my -next tree.
+
+> Reviewed-by: Kees Cook <keescook@chromium.org>
 
 Thanks!
-
--Kees
-
-> ---
-> Changes in v2:
-> - prefer strscpy_pad (thanks Kees)
-> - Link to v1: https://lore.kernel.org/r/20231017-strncpy-drivers-net-wireless-intel-iwlwifi-fw-dbg-c-v1-1-bf69ec7d1b97@google.com
-> ---
-> Note: build-tested only.
-> 
-> Found with: $ rg "strncpy\("
-> ---
->  drivers/net/wireless/intel/iwlwifi/fw/dbg.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
-> index 3ab6a68f1e9f..7aa282592cdc 100644
-> --- a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
-> +++ b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
-> @@ -880,10 +880,10 @@ iwl_fw_error_dump_file(struct iwl_fw_runtime *fwrt,
->  			cpu_to_le32(fwrt->trans->hw_rev_step);
->  		memcpy(dump_info->fw_human_readable, fwrt->fw->human_readable,
->  		       sizeof(dump_info->fw_human_readable));
-> -		strncpy(dump_info->dev_human_readable, fwrt->trans->name,
-> -			sizeof(dump_info->dev_human_readable) - 1);
-> -		strncpy(dump_info->bus_human_readable, fwrt->dev->bus->name,
-> -			sizeof(dump_info->bus_human_readable) - 1);
-> +		strscpy_pad(dump_info->dev_human_readable, fwrt->trans->name,
-> +			sizeof(dump_info->dev_human_readable));
-> +		strscpy_pad(dump_info->bus_human_readable, fwrt->dev->bus->name,
-> +			sizeof(dump_info->bus_human_readable));
->  		dump_info->num_of_lmacs = fwrt->smem_cfg.num_lmacs;
->  		dump_info->lmac_err_id[0] =
->  			cpu_to_le32(fwrt->dump.lmac_err_id[0]);
-> 
-> ---
-> base-commit: 58720809f52779dc0f08e53e54b014209d13eebb
-> change-id: 20231017-strncpy-drivers-net-wireless-intel-iwlwifi-fw-dbg-c-1f49f00b8a2e
-> 
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
-> 
-
--- 
-Kees Cook
+--
+Gustavo
