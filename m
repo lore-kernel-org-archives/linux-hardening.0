@@ -1,128 +1,122 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="d+Jj3VDN"
-Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A92B1700
-	for <linux-hardening@vger.kernel.org>; Thu, 30 Nov 2023 12:11:52 -0800 (PST)
-Received: from eig-obgw-5003a.ext.cloudfilter.net ([10.0.29.159])
-	by cmsmtp with ESMTPS
-	id 8ctyrVIg2hqFd8nO3r9O2X; Thu, 30 Nov 2023 20:11:51 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id 8nO2rtbrsnCfv8nO3rcUts; Thu, 30 Nov 2023 20:11:51 +0000
-X-Authority-Analysis: v=2.4 cv=KKpJsXJo c=1 sm=1 tr=0 ts=6568ec87
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=8XV0R0IcXUXM6S+KMni/4w==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=BNY50KLci1gA:10 a=wYkD_t78qR0A:10 a=pGLkceISAAAA:8
- a=iox4zFpeAAAA:8 a=_jlGtV7tAAAA:8 a=VwQbUJbxAAAA:8 a=cm27Pg_UAAAA:8
- a=D_DyhH66oRLAoVLZ2qgA:9 a=QEXdDO2ut3YA:10 a=WzC6qhA0u3u7Ye7llzcV:22
- a=nlm17XC03S6CtCLSeiRr:22 a=AjGcO6oz07-iQ99wixmX:22 a=xmb-EsYY8bH0VWELuYED:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=VioC3Ta8ap+RuX1rn3nglyiT8PrIagtDDhEB/ESidJs=; b=d+Jj3VDNDyhm02DfgebKbxqgHA
-	DhqFvPrhcDGjsr72KVOh3vt29CTvIWrC/gepfmjYbNBC9uOJlr+DhVDDKImA0ZXZ7rqkIK7SbJ9oa
-	TIUpDnTZtIVSHoVe/CrpLCe9nSGTM0o1taLh4SNXlTfEpUrHOaiSnNIe5vYPmxk1A3XFrpT0EaF6X
-	WPm9NAXuLrqHEt3uWAZ12GKz0Yb13sFZQeGzFSWx1zueMol6iliMsNytnHxpWITv+MdAhY7P2iePS
-	B2wCCG4Ukhg1EGWh2D9r4QbNIbF9vdzsGbpnr8lGERrVwz2ShuyS8fMvRnjW2NR1I8NSmS6bklxfZ
-	EjYFc4bw==;
-Received: from 189.215.208.186.cable.dyn.cableonline.com.mx ([189.215.208.186]:2120 helo=[192.168.0.28])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1r8nO2-0021Hn-0d;
-	Thu, 30 Nov 2023 14:11:50 -0600
-Message-ID: <cdc00899-cf44-44dd-b708-6cf7dc4b8375@embeddedor.com>
-Date: Thu, 30 Nov 2023 14:11:49 -0600
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OQ9rBmLH"
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A3F410FD
+	for <linux-hardening@vger.kernel.org>; Thu, 30 Nov 2023 12:12:24 -0800 (PST)
+Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1cfc35090b0so12744645ad.1
+        for <linux-hardening@vger.kernel.org>; Thu, 30 Nov 2023 12:12:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1701375143; x=1701979943; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f0qCHVo7XzgiM/gOkeUKMtC009iJZbF6DLauLv10AR0=;
+        b=OQ9rBmLHsdjdQ294mwxh7moyfDaokLIaUc1KpfSs9Ja/kLPTTSyqzZHbJqhIK77DME
+         mC9T1C0MP5SECbGGKeeAMqq1fHoE2yJSxHoujE45USwHqx7NI2Wnpd6x3AyDEi9RUqxF
+         VoZd3HAMZ9ZUK9XGjSxdSwCzxOuqHNwH33k90=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701375143; x=1701979943;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=f0qCHVo7XzgiM/gOkeUKMtC009iJZbF6DLauLv10AR0=;
+        b=pwXDbDDwRRCvxzUL2LuWE7hQEZvoVOqHvdbgMxqKSqnyQmKkSnJq1Di2rYMiKd1tP1
+         /dH3pVj6Xx6VRzy7aeOcjF9fwVaZ6Ko5YYtzDiap5KvmsSqwc20/F8O+kokgFmFteBVc
+         lu3IDx/XLix3OgCuGlvSnVly+SRDDq8WQggWuzoBb8jk2P181VyY29Rtcp6IZvq4gpdX
+         95sLn9iEUWek7crpkFQtdHM9hjHrBdKMudeSWletE/0v54whUXFo7ayK2tMI/rt/6636
+         s5HdmNHyteqoc0H63skaSeSNCloOiL1gt9I51Bng9KwpPrHzcz6NRkDaKSBiSmCvUYln
+         /Tqg==
+X-Gm-Message-State: AOJu0YwCK2LphWeahCTkoiduXB7ws13JIYeSFCptbm5NysqMCpTnpeW2
+	DaO/umm/tuKS89MRLCOMPJDwIw==
+X-Google-Smtp-Source: AGHT+IG7GB1EAs6x6BGig4Qdnq8J7tH7U+ck4TUN97KpzMVewKtuS3lBCHehX3Fj143SB3P6el4zJA==
+X-Received: by 2002:a17:902:be12:b0:1cf:9e9f:fddf with SMTP id r18-20020a170902be1200b001cf9e9ffddfmr22774377pls.44.1701375143633;
+        Thu, 30 Nov 2023 12:12:23 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id v1-20020a1709029a0100b001cfb573674fsm1800131plp.30.2023.11.30.12.12.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Nov 2023 12:12:23 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	Tejun Heo <tj@kernel.org>,
+	Azeem Shaikh <azeemshaikh38@gmail.com>,
+	Zefan Li <lizefan.x@bytedance.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Waiman Long <longman@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	cgroups@vger.kernel.org,
+	bpf@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2 1/3] kernfs: Convert kernfs_walk_ns() from strlcpy() to strscpy()
+Date: Thu, 30 Nov 2023 12:12:17 -0800
+Message-Id: <20231130201222.3613535-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231130200937.it.424-kees@kernel.org>
+References: <20231130200937.it.424-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] hwmon: (pc87360) Bounds check data->innr usage
-Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>, Jim Cromie <jim.cromie@gmail.com>
-Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
- linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20231130200207.work.679-kees@kernel.org>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20231130200207.work.679-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.215.208.186
-X-Source-L: No
-X-Exim-ID: 1r8nO2-0021Hn-0d
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 189.215.208.186.cable.dyn.cableonline.com.mx ([192.168.0.28]) [189.215.208.186]:2120
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 15
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfHONlMZ3h+c61xCHM8sOfg8coWZ89S6OIoyXJVpp8OKXS9o9SLhssqUx2YGu1CRGdD/0TdopjUYdpDhOFuA6BIL5rSStkjzvO4/79+2x0M3tNYR5Xw05
- N8MwIgxEO9MSbCjoHxGScmTKzZVz8O9GYaIGYfA97rqV0q5xJr6JdBGWEla5QLnT46JLBHwe6KxrbOFL0XExbdkaJ7Gjp+FwiKgAXufkdLB+/myrz7dcBRv4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1627; i=keescook@chromium.org;
+ h=from:subject; bh=KaMikVVf9IlMYxhWSymwvYJ80Grx9jhkkXD92Gcwols=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlaOyjg8fq+Kgz91M5MgN0iGKTEy9c1pTW6k2g3
+ Om7gwyq3vSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZWjsowAKCRCJcvTf3G3A
+ JvipD/9bZ1YWV76igC9fhSpnzKbHHp6551cCO3pInR0GeFHntgT5F19ANIOxgzmIBPsQZGJzh+S
+ YT33if7BAW5mJS6SW0/JwpmKCMt8jUN5Dw4H+uwr/lSO2v1JBLUv65KaJHbKxOuKYhf/K8m+KeC
+ G15UFTVEgDW8PCfT6tFshli/Pl5byyOhNZEAfR5ojzzeErfO0NoGkBPtn2kmyDnE1ttT+Eo1dZd
+ bYa7mFWYeoYxpu2W/8DvsErrwskB2vYVPqSDoJrl2frQE+xkzNZCO5ru8Vjw7GXgE+t0DiYt8hg
+ F7iw8uygmx11wG/5naWBwc/NsxsKeqPK6yeHqXtYWRU4ACZEC0D3eoa0n5sHaNjE9no1jRL5yub
+ Br09TCk7VxJLPDv+qbH2QMY/ebs2zICGc+P+E04Ee8r3TuzfEI1NARDnNLfY0s2n9g6qy2jZYfy
+ trVptzxRK9qS8DEBJtkRYr8LOD7nEwBM3xsmLANcgWYAcxDR4zGMlHRPuqg2YNHYqR5OGl4jEGq
+ Y/a19aWEub4yvainVlv8qmZzWncVUktEIvBYR8tKuVcO6HxIlp9LsRTeTfYZsOmM5/EN1piG0yR
+ RKr/6Sg6QBCZuCORc73txJPy9xzWq24oCIWbt3xq7SBvSQhoxYgbp9sJ/sTC4nO0ZlN0uBjgqTc gLWikxOalpnj9pA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
+strlcpy() reads the entire source buffer first. This read may exceed
+the destination size limit. This is both inefficient and can lead
+to linear read overflows if a source string is not NUL-terminated[1].
+Additionally, it returns the size of the source string, not the
+resulting size of the destination string. In an effort to remove strlcpy()
+completely[2], replace strlcpy() here with strscpy().
 
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy [1]
+Link: https://github.com/KSPP/linux/issues/89 [2]
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Azeem Shaikh <azeemshaikh38@gmail.com>
+Link: https://lore.kernel.org/r/20231116192127.1558276-1-keescook@chromium.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ fs/kernfs/dir.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-On 11/30/23 14:02, Kees Cook wrote:
-> Without visibility into the initializers for data->innr, GCC suspects
-> using it as an index could walk off the end of the various 14-element
-> arrays in data. Perform an explicit clamp to the array size. Silences
-> the following warning with GCC 12+:
-> 
-> ../drivers/hwmon/pc87360.c: In function 'pc87360_update_device':
-> ../drivers/hwmon/pc87360.c:341:49: warning: writing 1 byte into a region of size 0 [-Wstringop-overflow=]
->    341 |                                 data->in_max[i] = pc87360_read_value(data,
->        |                                 ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
->    342 |                                                   LD_IN, i,
->        |                                                   ~~~~~~~~~
->    343 |                                                   PC87365_REG_IN_MAX);
->        |                                                   ~~~~~~~~~~~~~~~~~~~
-> ../drivers/hwmon/pc87360.c:209:12: note: at offset 255 into destination object 'in_max' of size 14
->    209 |         u8 in_max[14];          /* Register value */
->        |            ^~~~~~
-> 
-> Cc: Jim Cromie <jim.cromie@gmail.com>
-> Cc: Jean Delvare <jdelvare@suse.com>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: linux-hwmon@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+diff --git a/fs/kernfs/dir.c b/fs/kernfs/dir.c
+index 8b2bd65d70e7..37353901ede1 100644
+--- a/fs/kernfs/dir.c
++++ b/fs/kernfs/dir.c
+@@ -850,16 +850,16 @@ static struct kernfs_node *kernfs_walk_ns(struct kernfs_node *parent,
+ 					  const unsigned char *path,
+ 					  const void *ns)
+ {
+-	size_t len;
++	ssize_t len;
+ 	char *p, *name;
+ 
+ 	lockdep_assert_held_read(&kernfs_root(parent)->kernfs_rwsem);
+ 
+ 	spin_lock_irq(&kernfs_pr_cont_lock);
+ 
+-	len = strlcpy(kernfs_pr_cont_buf, path, sizeof(kernfs_pr_cont_buf));
++	len = strscpy(kernfs_pr_cont_buf, path, sizeof(kernfs_pr_cont_buf));
+ 
+-	if (len >= sizeof(kernfs_pr_cont_buf)) {
++	if (len < 0) {
+ 		spin_unlock_irq(&kernfs_pr_cont_lock);
+ 		return NULL;
+ 	}
+-- 
+2.34.1
 
-Looks good to me.
-
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Thanks!
---
-Gustavo
-
-> ---
->   drivers/hwmon/pc87360.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/hwmon/pc87360.c b/drivers/hwmon/pc87360.c
-> index 926ea1fe133c..db80394ba854 100644
-> --- a/drivers/hwmon/pc87360.c
-> +++ b/drivers/hwmon/pc87360.c
-> @@ -323,7 +323,7 @@ static struct pc87360_data *pc87360_update_device(struct device *dev)
->   		}
->   
->   		/* Voltages */
-> -		for (i = 0; i < data->innr; i++) {
-> +		for (i = 0; i < min(data->innr, ARRAY_SIZE(data->in)); i++) {
->   			data->in_status[i] = pc87360_read_value(data, LD_IN, i,
->   					     PC87365_REG_IN_STATUS);
->   			/* Clear bits */
