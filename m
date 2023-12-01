@@ -1,67 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A627117D9;
-	Fri,  1 Dec 2023 01:25:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6706883B;
+	Fri,  1 Dec 2023 05:51:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qXgn6AmB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92C4FC433C8;
-	Fri,  1 Dec 2023 01:25:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j9ftvqxc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A89C3C433C7;
+	Fri,  1 Dec 2023 05:51:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701393922;
-	bh=pA9obsUKkI3gLtmE5e/MIgsUKhFNUSwkoGABXxOXVu4=;
+	s=k20201202; t=1701409893;
+	bh=u4fezI674MfIiRcaNlHhXBBvjWBXFe/Vu9dKNlCWKL8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=qXgn6AmBfQ/Zd6RVRJTPsZAbwENL/P5ChNB5zVXW0us7mhGHTnTM9sNNTsCC9XQxN
-	 L1uGh4x2n2RNCNp1RMfq9bjsLjHILqLsFEDBfDoRuu5RbUweF3Qn4DCOZPuUtfOC/W
-	 cgLl/hy6IQQTBfTywH4xH6a7Ijlk+gb4RALHriraRg/4+zauwSA3WB9jIBHc6UvEMK
-	 pve1ll983tzlpGE+05zeqz0RtkS54rsaP4JSXJoyKf4BX+eaGsmizKzq1dj0/9ks0B
-	 AJIe6Qexsgf9KACjBa6OjE70PNGpb1hiWU6Y0mWHs9fPVNfTs8PGu3yaeu8pMQBDFs
-	 wTU9Lq7vBbWSw==
-Date: Thu, 30 Nov 2023 17:25:20 -0800
-From: Jakub Kicinski <kuba@kernel.org>
+	b=j9ftvqxc9QdhdMf9LvQAOFNLl5/DfDGD+5eO1gkcTof4dlFfhaa/DxzCv/MlYci2K
+	 nVKKlUNYr/rvetf5rUY7HUvCQGKpO3AnsFXhajtth5JZ4z12/acd/VY0f8acKdgHiD
+	 6FtrGZZneu8RZrC7lz9q/61uZv6kRVQ/SlX9Bs1p11qCa3h5SQ8oM8d9Txch0ST9a/
+	 Z0NMn0ggsiueRagWdsunV+KemTtgT63qU80cn26YguBY/2HicuBnGAqH/Nn+YeuRI3
+	 g0kTrHFXrxSRhhzLl7NOlqB54QtPToPdTZ74TkajfvJ5fMY0x4JwHOmyD4GP1e5h5u
+	 pM05lgAImQnaA==
+Date: Fri, 1 Dec 2023 14:51:29 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Kees Cook <keescook@chromium.org>
-Cc: kernel test robot <lkp@intel.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Johannes Berg <johannes@sipsolutions.net>, Jeff
- Johnson <quic_jjohnson@quicinc.com>, Michael Walle <mwalle@kernel.org>, Max
- Schulze <max.schulze@online.de>, netdev@vger.kernel.org,
- linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] netlink: Return unsigned value for nla_len()
-Message-ID: <20231130172520.5a56ae50@kernel.org>
-In-Reply-To: <20231130200058.work.520-kees@kernel.org>
-References: <20231130200058.work.520-kees@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] tracing/uprobe: Replace strlcpy() with strscpy()
+Message-Id: <20231201145129.30fcaf1b762a9b496ac44a2f@kernel.org>
+In-Reply-To: <20231130205607.work.463-kees@kernel.org>
+References: <20231130205607.work.463-kees@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 30 Nov 2023 12:01:01 -0800 Kees Cook wrote:
-> This has the additional benefit of being defensive in the face of nlattr
-> corruption or logic errors (i.e. nla_len being set smaller than
-> NLA_HDRLEN).
+On Thu, 30 Nov 2023 12:56:08 -0800
+Kees Cook <keescook@chromium.org> wrote:
 
-As Johannes predicted I'd rather not :(
+> strlcpy() reads the entire source buffer first. This read may exceed
+> the destination size limit. This is both inefficient and can lead
+> to linear read overflows if a source string is not NUL-terminated[1].
+> Additionally, it returns the size of the source string, not the
+> resulting size of the destination string. In an effort to remove strlcpy()
+> completely[2], replace strlcpy() here with strscpy().
+> 
+> The negative return value is already handled by this code so no new
+> handling is needed here.
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy [1]
+> Link: https://github.com/KSPP/linux/issues/89 [2]
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: linux-trace-kernel@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-The callers should put the nlattr thru nla_ok() during validation
-(nla_validate()), or walking (nla_for_each_* call nla_ok()).
+Thanks for reporting! Let me pick this.
 
-> -static inline int nla_len(const struct nlattr *nla)
-> +static inline u16 nla_len(const struct nlattr *nla)
->  {
-> -	return nla->nla_len - NLA_HDRLEN;
-> +	return nla->nla_len > NLA_HDRLEN ? nla->nla_len - NLA_HDRLEN : 0;
->  }
+Thanks!
 
-Note the the NLA_HDRLEN is the length of struct nlattr.
-I mean of the @nla object that gets passed in as argument here.
-So accepting that nla->nla_len may be < NLA_HDRLEN means
-that we are okay with dereferencing a truncated object...
+> ---
+>  kernel/trace/trace_uprobe.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+> index 99c051de412a..a84b85d8aac1 100644
+> --- a/kernel/trace/trace_uprobe.c
+> +++ b/kernel/trace/trace_uprobe.c
+> @@ -151,7 +151,7 @@ fetch_store_string(unsigned long addr, void *dest, void *base)
+>  		return -ENOMEM;
+>  
+>  	if (addr == FETCH_TOKEN_COMM)
+> -		ret = strlcpy(dst, current->comm, maxlen);
+> +		ret = strscpy(dst, current->comm, maxlen);
+>  	else
+>  		ret = strncpy_from_user(dst, src, maxlen);
+>  	if (ret >= 0) {
+> -- 
+> 2.34.1
+> 
 
-We can consider making the return unsinged without the condition maybe?
+
 -- 
-pw-bot: cr
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
