@@ -1,55 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ME+7xuSh"
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C0D8115
-	for <linux-hardening@vger.kernel.org>; Fri,  1 Dec 2023 10:17:04 -0800 (PST)
-Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1cfcc9b3b5cso7362995ad.0
-        for <linux-hardening@vger.kernel.org>; Fri, 01 Dec 2023 10:17:04 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZTUi7WpS"
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C47212A
+	for <linux-hardening@vger.kernel.org>; Fri,  1 Dec 2023 10:19:06 -0800 (PST)
+Received: by mail-pj1-x1029.google.com with SMTP id 98e67ed59e1d1-28555b0c7afso2314465a91.1
+        for <linux-hardening@vger.kernel.org>; Fri, 01 Dec 2023 10:19:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1701454624; x=1702059424; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1701454745; x=1702059545; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=80BOfbzU3jRYQRqKUun9qybGXNm0Ak9QPhMAb8Oq5lY=;
-        b=ME+7xuShkkCd0062a9EL0L48UcVgl2XNVW5BRL6HrY/mg3DiShxSdpn7IJmQxj/w1W
-         y6Kih+9DYWaLfoqYp+5pe938En1UXK6dzqyoieMKZZnN5wPV/Uq1I9TVzm7jMnnSzyry
-         5cZjnWvfXpQLdgXob0ttJuENteq2/BltyHmws=
+        bh=/r/b5wB85MlFGGxmClGr6DvtbRffHHrqFc2cNWTq5OA=;
+        b=ZTUi7WpSDb9JrgxXhR8Mn9De27rOF3QKwQKZ+qrR1VXDKAoBP83teE3Po6dHcfAHY6
+         8ATW/ZwWC57obYIuy+PzzUuc/2Dq6T472DJRAUXHXxC04/IJJzH3DAOVDOfksqnCKTo1
+         B6VqqlTW7gov/di+ENcFu/St39frG+D2VwxAA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701454624; x=1702059424;
+        d=1e100.net; s=20230601; t=1701454745; x=1702059545;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=80BOfbzU3jRYQRqKUun9qybGXNm0Ak9QPhMAb8Oq5lY=;
-        b=v9Otf6f8k5lf9hTgx600wT/UmbFPjd8hsiczB0R3Izd3VBgwKX3IOlzV0zeOHRY13P
-         agpTvTptNMUdCFy/tv3QVloBMlk4TxrR2qUmYrfydqcjQ53er1FP6X0CmbA0wiCHoRue
-         2k1iBuk8uvVpeiBg+HVFFxds6mr4iXV9Fq7SyxhG4x6W/HVrc3tKFPsU/fucEdW/zE7A
-         ZYYUHvhp0gSa9HNXmbztTK+mr0St05I2i2YusHXiaBeyajaL8eow8ZoGPgdkG4oE0TkV
-         /SLxDh630h43PQpJPwgpt+/OfbWjp1DpAWgMvHRVykVRB1UxvjK0W8cxDo2tqDLJO+bM
-         6S9Q==
-X-Gm-Message-State: AOJu0YzGzKYHZkfguDeV85uh7P8dJhuNWpAHGxUjvfWO2L3E4/yrCAj5
-	dvd46Riv0d+SIvcJhBRf9Z9zzw==
-X-Google-Smtp-Source: AGHT+IHL4QH3wU1zQC3wiy9r3528WOQq1iSHFfDCieTdatztPnIyrMoq50t3CKZORUjazAX/9P8zkg==
-X-Received: by 2002:a17:902:db06:b0:1cf:c376:6d7f with SMTP id m6-20020a170902db0600b001cfc3766d7fmr26246754plx.42.1701454623948;
-        Fri, 01 Dec 2023 10:17:03 -0800 (PST)
+        bh=/r/b5wB85MlFGGxmClGr6DvtbRffHHrqFc2cNWTq5OA=;
+        b=ovlS+ECBgE+nC1ocbOsnYyX1EJ5sDEFhbC7tBiYLp6gRwD4Ukyd+fnTSx/4dQt1ghp
+         9y1kVww54ixLljdP7qkZHGqsxfjDRh35dzjMTSxYs0LsrsZSxTxivcUa0N+mtY8hpzZj
+         R9ApF/KWzoqiStkI4ZCYyUibno+ULY2I2qvTSklU7cBKkPaoh3j4vfmaug1RP7Uyc66P
+         UL5kCyJE3vA8LkJ1XPMZIAGp3EPhnmxMjuuFQ/1zsjYMhEfGbmE1W1WcbUgyBuJgpK0Q
+         aDgMJWNq3qhVzke9SKP7rB/I6SIoR3ZeAAy0KmxNQVHzTa1t9IHWiIlRn7gIcRMf6cBo
+         GbDA==
+X-Gm-Message-State: AOJu0Yw/jpUnYZct9Os8OlVEa3XA7MoFGIZMJCH4jabN/x5pIcjwm5B5
+	IrYFSnoqLKF/knL6mIKoiXCa1A==
+X-Google-Smtp-Source: AGHT+IH5qSt9M18U01kU6sw+qA2MJgSEFcLkf+LsZsRTecXMRfrV5OLB5yPRo3yAJ5pGP5A3jCWsgg==
+X-Received: by 2002:a17:90b:80b:b0:285:8673:450d with SMTP id bk11-20020a17090b080b00b002858673450dmr26239658pjb.40.1701454745518;
+        Fri, 01 Dec 2023 10:19:05 -0800 (PST)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id l6-20020a170902d34600b001cfb99d8b82sm1570921plk.136.2023.12.01.10.17.03
+        by smtp.gmail.com with ESMTPSA id q32-20020a17090a17a300b002860a7acca1sm3780052pja.10.2023.12.01.10.19.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Dec 2023 10:17:03 -0800 (PST)
-Date: Fri, 1 Dec 2023 10:17:02 -0800
+        Fri, 01 Dec 2023 10:19:04 -0800 (PST)
+Date: Fri, 1 Dec 2023 10:19:04 -0800
 From: Kees Cook <keescook@chromium.org>
 To: Jakub Kicinski <kuba@kernel.org>
-Cc: kernel test robot <lkp@intel.com>,
+Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
 	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Jeff Johnson <quic_jjohnson@quicinc.com>,
-	Michael Walle <mwalle@kernel.org>,
-	Max Schulze <max.schulze@online.de>, netdev@vger.kernel.org,
-	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] netlink: Return unsigned value for nla_len()
-Message-ID: <202312010953.BEDC06111@keescook>
-References: <20231130200058.work.520-kees@kernel.org>
- <20231130172520.5a56ae50@kernel.org>
+	Justin Stitt <justinstitt@google.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	Alexander Lobakin <aleksander.lobakin@intel.com>
+Subject: Re: [PATCH v2] net: dsa: lan9303: use ethtool_sprintf() for
+ lan9303_get_strings()
+Message-ID: <202312011018.478B0E750@keescook>
+References: <20231005-strncpy-drivers-net-dsa-lan9303-core-c-v2-1-feb452a532db@google.com>
+ <170138159609.3648803.17052375712894034660.b4-ty@chromium.org>
+ <20231130224021.41d1d453@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -58,49 +58,20 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231130172520.5a56ae50@kernel.org>
+In-Reply-To: <20231130224021.41d1d453@kernel.org>
 
-On Thu, Nov 30, 2023 at 05:25:20PM -0800, Jakub Kicinski wrote:
-> On Thu, 30 Nov 2023 12:01:01 -0800 Kees Cook wrote:
-> > This has the additional benefit of being defensive in the face of nlattr
-> > corruption or logic errors (i.e. nla_len being set smaller than
-> > NLA_HDRLEN).
+On Thu, Nov 30, 2023 at 10:40:21PM -0800, Jakub Kicinski wrote:
+> On Thu, 30 Nov 2023 13:59:58 -0800 Kees Cook wrote:
+> > Applied to for-next/hardening, thanks!
+> > 
+> > [1/1] net: dsa: lan9303: use ethtool_sprintf() for lan9303_get_strings()
+> >       https://git.kernel.org/kees/c/f1c7720549bf
 > 
-> As Johannes predicted I'd rather not :(
-> 
-> The callers should put the nlattr thru nla_ok() during validation
-> (nla_validate()), or walking (nla_for_each_* call nla_ok()).
-> 
-> > -static inline int nla_len(const struct nlattr *nla)
-> > +static inline u16 nla_len(const struct nlattr *nla)
-> >  {
-> > -	return nla->nla_len - NLA_HDRLEN;
-> > +	return nla->nla_len > NLA_HDRLEN ? nla->nla_len - NLA_HDRLEN : 0;
-> >  }
-> 
-> Note the the NLA_HDRLEN is the length of struct nlattr.
-> I mean of the @nla object that gets passed in as argument here.
-> So accepting that nla->nla_len may be < NLA_HDRLEN means
-> that we are okay with dereferencing a truncated object...
-> 
-> We can consider making the return unsinged without the condition maybe?
+> Please drop this, it got changes requested on our end because
+> I figured Alexander's comment is worth addressing.
 
-Yes, if we did it without the check, it'd do "less" damage on
-wrap-around. (i.e. off by U16_MAX instead off by INT_MAX).
-
-But I'd like to understand: what's the harm in adding the clamp? The
-changes to the assembly are tiny:
-https://godbolt.org/z/Ecvbzn1a1
-
-i.e. a likely dropped-from-the-pipeline xor and a "free" cmov (checking
-the bit from the subtraction). I don't think it could even get measured
-in real-world cycle counts. This is much like the refcount_t work:
-checking for the overflow condition has almost 0 overhead.
-
-(It looks like I should use __builtin_sub_overflow() to correctly hint
-GCC, but Clang gets it right without such hinting. Also I changed
-NLA_HDRLEN to u16 to get the best result, which suggests there might be
-larger savings throughout the code base just from that change...)
+Done. Justin, can you please refresh this patch (or, actually, make sure
+the ethtool_puts() series lands?)
 
 -- 
 Kees Cook
