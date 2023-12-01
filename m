@@ -1,66 +1,63 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E6BA84;
-	Fri,  1 Dec 2023 02:13:05 -0800 (PST)
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
-	id 1r90Vp-005hmD-EH; Fri, 01 Dec 2023 18:12:46 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 01 Dec 2023 18:12:54 +0800
-Date: Fri, 1 Dec 2023 18:12:54 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] powerpc/crypto: Avoid -Wstringop-overflow warnings
-Message-ID: <ZWmxpmuBcAhsE1wf@gondor.apana.org.au>
-References: <ZVz8fLtrYTz+YSjn@work>
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AtU97WuW";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qd/Hkafc"
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57D30CF;
+	Fri,  1 Dec 2023 03:28:44 -0800 (PST)
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1701430122;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kxBXQG/f8kU5v0EK+ncURnwi12nHyxr77nDpaGQa42Y=;
+	b=AtU97WuWe4IF4u/AOHjTBbTRVKwBw93eRxWv8WhB3zCFMCDmgmr+dgtLqCEYjoa5E7fHXP
+	zzUpOmfPz3lDPCaYsOdRpEVVWgfJEQEWWJ76JhPQar9deQQGFzAXxOZRpe41MSrf3kYphx
+	YcaDy3CxUt+2//MyKV4M3wPreT7u/GT2W9/Z+00HXC/Tr8h/OJdTOzay8mfBYUik9kXTT4
+	L9bGC8KIWdPRNAKS8B/ij/HRzYgGo+WuYNYjQkeS4ruamqoZwFIrF7gCrcRjtRW9TwWDM8
+	fgb9pCJtKIQR465KaqxjEOA5+HmboM4l0aIMo53XGN9amKFmCCH7dCM+YHVdbw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1701430122;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kxBXQG/f8kU5v0EK+ncURnwi12nHyxr77nDpaGQa42Y=;
+	b=qd/HkafcWYHXHFYCQMVbiHc+ZmtzQRiF4LgZ9uk4bfggE/cqqFpEvaN4pBeHm0TmVjoOhM
+	PV7ASivB+78rMNCA==
+To: Vlastimil Babka <vbabka@suse.cz>, David Rientjes <rientjes@google.com>,
+ Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
+ Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Hyeonggon Yoo
+ <42.hyeyoo@gmail.com>, Roman Gushchin <roman.gushchin@linux.dev>, Andrey
+ Ryabinin <ryabinin.a.a@gmail.com>, Alexander Potapenko
+ <glider@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, Dmitry
+ Vyukov <dvyukov@google.com>, Vincenzo Frascino
+ <vincenzo.frascino@arm.com>, Marco Elver <elver@google.com>, Johannes
+ Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, Shakeel
+ Butt <shakeelb@google.com>, Muchun Song <muchun.song@linux.dev>, Kees Cook
+ <keescook@chromium.org>, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ kasan-dev@googlegroups.com, cgroups@vger.kernel.org,
+ linux-hardening@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH v2 06/21] cpu/hotplug: remove CPUHP_SLAB_PREPARE hooks
+In-Reply-To: <20231120-slab-remove-slab-v2-6-9c9c70177183@suse.cz>
+References: <20231120-slab-remove-slab-v2-0-9c9c70177183@suse.cz>
+ <20231120-slab-remove-slab-v2-6-9c9c70177183@suse.cz>
+Date: Fri, 01 Dec 2023 12:28:42 +0100
+Message-ID: <87msuuxitx.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZVz8fLtrYTz+YSjn@work>
+Content-Type: text/plain
 
-On Tue, Nov 21, 2023 at 12:52:44PM -0600, Gustavo A. R. Silva wrote:
-> The compiler doesn't know that `32` is an offset into the Hash table:
-> 
->  56 struct Hash_ctx {
->  57         u8 H[16];       /* subkey */
->  58         u8 Htable[256]; /* Xi, Hash table(offset 32) */
->  59 };
-> 
-> So, it legitimately complains about a potential out-of-bounds issue
-> if `256 bytes` are accessed in `htable` (this implies going
-> `32 bytes` beyond the boundaries of `Htable`):
-> 
-> arch/powerpc/crypto/aes-gcm-p10-glue.c: In function 'gcmp10_init':
-> arch/powerpc/crypto/aes-gcm-p10-glue.c:120:9: error: 'gcm_init_htable' accessing 256 bytes in a region of size 224 [-Werror=stringop-overflow=]
->   120 |         gcm_init_htable(hash->Htable+32, hash->H);
->       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> arch/powerpc/crypto/aes-gcm-p10-glue.c:120:9: note: referencing argument 1 of type 'unsigned char[256]'
-> arch/powerpc/crypto/aes-gcm-p10-glue.c:120:9: note: referencing argument 2 of type 'unsigned char[16]'
-> arch/powerpc/crypto/aes-gcm-p10-glue.c:40:17: note: in a call to function 'gcm_init_htable'
->    40 | asmlinkage void gcm_init_htable(unsigned char htable[256], unsigned char Xi[16]);
->       |                 ^~~~~~~~~~~~~~~
-> 
-> Address this by avoiding specifying the size of `htable` in the function
-> prototype; and just for consistency, do the same for parameter `Xi`.
-> 
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Closes: https://lore.kernel.org/linux-next/20231121131903.68a37932@canb.auug.org.au/
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  arch/powerpc/crypto/aes-gcm-p10-glue.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Mon, Nov 20 2023 at 19:34, Vlastimil Babka wrote:
 
-Patch applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+> The CPUHP_SLAB_PREPARE hooks are only used by SLAB which is removed.
+> SLUB defines them as NULL, so we can remove those altogether.
+>
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
+
