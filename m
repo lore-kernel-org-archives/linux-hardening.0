@@ -1,82 +1,66 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="IIfeYu5L"
-Received: from gandalf.ozlabs.org (mail.ozlabs.org [IPv6:2404:9400:2221:ea00::3])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70DB710FA;
-	Fri,  1 Dec 2023 01:41:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1701423678;
-	bh=SCXwSfrAxD/vcI+luNSFDB5IfnqNmy8gsBQXv6JPB3w=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=IIfeYu5L/5RzK2f/xIVe9akYSPr9OUtIDCqF0ZSWukqAoxSbGvI47Q/IMUaFCc5NX
-	 eR0adi7iztkf7mgm/uta3inz5/CWd/gu+euafba3GosMPRgAuIf+MHDBOWn574T1m6
-	 PjCMFpmeKFP4y0D2qWqpIjaaAdVksQf4SK2EngcfmtagQ472NxbKD9ofpGm7ssHsXN
-	 4pDDGQsscGpo0FjRxRFNGMAu5QKkFlmzJfpiaREE4EP7sP+tKswZAMF7WsFSdcefnw
-	 dFCIRPMk7U2ojLzveYhueAfmIcBFapD5wEBdvAzBe7rqBptKMbPNXcD/enUkqJ/sRr
-	 tkny6rYrj9JMA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ShSk61ydCz4xVP;
-	Fri,  1 Dec 2023 20:41:18 +1100 (AEDT)
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Justin Stitt <justinstitt@google.com>, Tyrel Datwyler
- <tyreld@linux.ibm.com>, Nicholas Piggin <npiggin@gmail.com>, Christophe
- Leroy <christophe.leroy@csgroup.eu>, "James E.J. Bottomley"
- <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: linux-scsi@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, Justin
- Stitt <justinstitt@google.com>
-Subject: Re: [PATCH] scsi: ibmvscsi: replace deprecated strncpy with strscpy
-In-Reply-To: <20231030-strncpy-drivers-scsi-ibmvscsi-ibmvscsi-c-v1-1-f8b06ae9e3d5@google.com>
-References: <20231030-strncpy-drivers-scsi-ibmvscsi-ibmvscsi-c-v1-1-f8b06ae9e3d5@google.com>
-Date: Fri, 01 Dec 2023 20:41:10 +1100
-Message-ID: <87jzpy1cqx.fsf@mail.lhotse>
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E6BA84;
+	Fri,  1 Dec 2023 02:13:05 -0800 (PST)
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
+	id 1r90Vp-005hmD-EH; Fri, 01 Dec 2023 18:12:46 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 01 Dec 2023 18:12:54 +0800
+Date: Fri, 1 Dec 2023 18:12:54 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] powerpc/crypto: Avoid -Wstringop-overflow warnings
+Message-ID: <ZWmxpmuBcAhsE1wf@gondor.apana.org.au>
+References: <ZVz8fLtrYTz+YSjn@work>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZVz8fLtrYTz+YSjn@work>
 
-Justin Stitt <justinstitt@google.com> writes:
-> strncpy() is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
->
-> We expect partition_name to be NUL-terminated based on its usage with
-> format strings:
-> |       dev_info(hostdata->dev, "host srp version: %s, "
-> |                "host partition %s (%d), OS %d, max io %u\n",
-> |                hostdata->madapter_info.srp_version,
-> |                hostdata->madapter_info.partition_name,
-> |                be32_to_cpu(hostdata->madapter_info.partition_number),
-> |                be32_to_cpu(hostdata->madapter_info.os_type),
-> |                be32_to_cpu(hostdata->madapter_info.port_max_txu[0]));
-> ...
-> |       len = snprintf(buf, PAGE_SIZE, "%s\n",
-> |                hostdata->madapter_info.partition_name);
->
-> Moreover, NUL-padding is not required as madapter_info is explicitly
-> memset to 0:
-> |       memset(&hostdata->madapter_info, 0x00,
-> |                       sizeof(hostdata->madapter_info));
->
-> Considering the above, a suitable replacement is `strscpy` [2] due to
-> the fact that it guarantees NUL-termination on the destination buffer
-> without unnecessarily NUL-padding.
->
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+On Tue, Nov 21, 2023 at 12:52:44PM -0600, Gustavo A. R. Silva wrote:
+> The compiler doesn't know that `32` is an offset into the Hash table:
+> 
+>  56 struct Hash_ctx {
+>  57         u8 H[16];       /* subkey */
+>  58         u8 Htable[256]; /* Xi, Hash table(offset 32) */
+>  59 };
+> 
+> So, it legitimately complains about a potential out-of-bounds issue
+> if `256 bytes` are accessed in `htable` (this implies going
+> `32 bytes` beyond the boundaries of `Htable`):
+> 
+> arch/powerpc/crypto/aes-gcm-p10-glue.c: In function 'gcmp10_init':
+> arch/powerpc/crypto/aes-gcm-p10-glue.c:120:9: error: 'gcm_init_htable' accessing 256 bytes in a region of size 224 [-Werror=stringop-overflow=]
+>   120 |         gcm_init_htable(hash->Htable+32, hash->H);
+>       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> arch/powerpc/crypto/aes-gcm-p10-glue.c:120:9: note: referencing argument 1 of type 'unsigned char[256]'
+> arch/powerpc/crypto/aes-gcm-p10-glue.c:120:9: note: referencing argument 2 of type 'unsigned char[16]'
+> arch/powerpc/crypto/aes-gcm-p10-glue.c:40:17: note: in a call to function 'gcm_init_htable'
+>    40 | asmlinkage void gcm_init_htable(unsigned char htable[256], unsigned char Xi[16]);
+>       |                 ^~~~~~~~~~~~~~~
+> 
+> Address this by avoiding specifying the size of `htable` in the function
+> prototype; and just for consistency, do the same for parameter `Xi`.
+> 
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Closes: https://lore.kernel.org/linux-next/20231121131903.68a37932@canb.auug.org.au/
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > ---
-> Note: build-tested only.
+>  arch/powerpc/crypto/aes-gcm-p10-glue.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-I gave it a quick boot, no issues.
-
-Tested-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
-
-cheers
+Patch applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
