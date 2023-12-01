@@ -1,79 +1,100 @@
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEED554BD0;
+	Fri,  1 Dec 2023 18:45:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EIW98yMk"
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9013E115
-	for <linux-hardening@vger.kernel.org>; Fri,  1 Dec 2023 10:25:57 -0800 (PST)
-Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1cfc3f50504so7353645ad.3
-        for <linux-hardening@vger.kernel.org>; Fri, 01 Dec 2023 10:25:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1701455157; x=1702059957; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=orj9kF5e+hUcR28yOOxjlUg2Ej6Q6UVVNyYtII2f8D8=;
-        b=EIW98yMkqWGv6NAbMULA46eyhHZ6XfRcZOPmJDtyo6oHeUqpiaZWieLOrRQ9GRjWuV
-         1eC029v54Ia4Ka6R0A5OJkLS/MMt4sbEUTrs1kAd7fIU7Dswu0Qj96MOH3r0VTWIPGs7
-         VVIrd+p7KJe2KwSY/prKQKEzn+Svwh3bywAzQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701455157; x=1702059957;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=orj9kF5e+hUcR28yOOxjlUg2Ej6Q6UVVNyYtII2f8D8=;
-        b=uggjTEUtPe4XRZYJDdN12HQl9hlyKG3xAnDC1G1VxWnWL3BlOhQGQd6GWAlLuzSxUi
-         GFBzgr2K9mQhP0Q3+n1K0vsUThSp9oHw1fx9rbxDN1gnWOvG1y+HTe1Y948YutHqD4GU
-         pSFyUcfj5ZwfgvbV2VdQo449AL/dBM+74ZpLtx2+F8Rci63AlTIBX+MS/8irFI7WYh4L
-         /VzLM9G0vEVHsin5PLdX2VthJgNgTQr6PQULdv9ALnffiMo09IIR2qra6Ara4g9Bb6up
-         GxthQsHB5RTrOM7Uw15fuSNsSc+efXCPP0NIdIOG2UWVrR5UsUWRDN7ko7xqMdfAS2TP
-         Xaqg==
-X-Gm-Message-State: AOJu0Yw4OXVoPPc8XMpr9em3GGOEFFCreWdVYy6zCqxqIN7LReZNwg+N
-	ScaMEimLCqttLMn2WXe9gPa8zA==
-X-Google-Smtp-Source: AGHT+IEbUvlE58eT2LaLFiL7khlyUcE1aUZwyJ3/wHK55llArs7nB+pjInhr6ocqQcgHJVujAr2xgA==
-X-Received: by 2002:a17:903:2302:b0:1cf:c649:61a3 with SMTP id d2-20020a170903230200b001cfc64961a3mr21194686plh.52.1701455157079;
-        Fri, 01 Dec 2023 10:25:57 -0800 (PST)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id d9-20020a170902aa8900b001cfc50e5ae9sm3667469plr.78.2023.12.01.10.25.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Dec 2023 10:25:56 -0800 (PST)
-From: Kees Cook <keescook@chromium.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Kees Cook <keescook@chromium.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] tracing/uprobe: Replace strlcpy() with strscpy()
-Date: Fri,  1 Dec 2023 10:25:49 -0800
-Message-Id: <170145514843.55310.746207226357478640.b4-ty@chromium.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231130205607.work.463-kees@kernel.org>
-References: <20231130205607.work.463-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FcqG69kP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAF83C433C7;
+	Fri,  1 Dec 2023 18:45:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701456307;
+	bh=6ayoBSJy6iihyBHwxLrx8Luk1kVUOImElJUsiwGZ0Z0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=FcqG69kPysYDU470FPhnMo9aFkTzh5UFfSP+GB7jG1Kq2MgYkKkO9/7xS41/QItmY
+	 GKebXgxqnFcpvOyfbJxBjKyr9N5A9UjF5UCcyDgiSAxUIUp9IvwZ+ix+on+62kKSLA
+	 F7mloqInbrkRAX4DPZUL3VG/kZayO0kR6UoLgpzcdpDbW+qF62RXqVpn+LTW8v/oW8
+	 vpsqubTRa1P6t/SiRDNShl1ShpFTrhT8bF9vrbcOzAIqFCFq6tgs9GLLlbvPi9r6QQ
+	 niQ7PdyMU5YSJWJzwrDgR+MFlC8rvJC0pglI1Zk9VSYE7cGdU6bIzoMCDY/dLyS5qS
+	 1v1SjukglLfEg==
+Date: Fri, 1 Dec 2023 10:45:05 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: kernel test robot <lkp@intel.com>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Johannes Berg <johannes@sipsolutions.net>, Jeff
+ Johnson <quic_jjohnson@quicinc.com>, Michael Walle <mwalle@kernel.org>, Max
+ Schulze <max.schulze@online.de>, netdev@vger.kernel.org,
+ linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] netlink: Return unsigned value for nla_len()
+Message-ID: <20231201104505.44ec5c89@kernel.org>
+In-Reply-To: <202312010953.BEDC06111@keescook>
+References: <20231130200058.work.520-kees@kernel.org>
+	<20231130172520.5a56ae50@kernel.org>
+	<202312010953.BEDC06111@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 30 Nov 2023 12:56:08 -0800, Kees Cook wrote:
-> strlcpy() reads the entire source buffer first. This read may exceed
-> the destination size limit. This is both inefficient and can lead
-> to linear read overflows if a source string is not NUL-terminated[1].
-> Additionally, it returns the size of the source string, not the
-> resulting size of the destination string. In an effort to remove strlcpy()
-> completely[2], replace strlcpy() here with strscpy().
-> 
-> [...]
+On Fri, 1 Dec 2023 10:17:02 -0800 Kees Cook wrote:
+> > > -static inline int nla_len(const struct nlattr *nla)
+> > > +static inline u16 nla_len(const struct nlattr *nla)
+> > >  {
+> > > -	return nla->nla_len - NLA_HDRLEN;
+> > > +	return nla->nla_len > NLA_HDRLEN ? nla->nla_len - NLA_HDRLEN : 0;
+> > >  } =20
+> >=20
+> > Note the the NLA_HDRLEN is the length of struct nlattr.
+> > I mean of the @nla object that gets passed in as argument here.
+> > So accepting that nla->nla_len may be < NLA_HDRLEN means
+> > that we are okay with dereferencing a truncated object...
+> >=20
+> > We can consider making the return unsinged without the condition maybe?=
+ =20
+>=20
+> Yes, if we did it without the check, it'd do "less" damage on
+> wrap-around. (i.e. off by U16_MAX instead off by INT_MAX).
+>=20
+> But I'd like to understand: what's the harm in adding the clamp? The
+> changes to the assembly are tiny:
+> https://godbolt.org/z/Ecvbzn1a1
 
-Applied to for-next/hardening, thanks!
+Hm, I wonder if my explanation was unclear or you disagree..
 
-[1/1] tracing/uprobe: Replace strlcpy() with strscpy()
-      https://git.kernel.org/kees/c/8a3750ecf810
+This is the structure:
 
-Take care,
+struct nlattr {
+	__u16           nla_len; // attr len, incl. this header
+	__u16           nla_type;
+};
 
--- 
-Kees Cook
+and (removing no-op wrappers):
+
+#define NLA_HDRLEN	sizeof(struct nlattr)
+
+So going back to the code:
+
+	return nla->nla_len > NLA_HDRLEN ? nla->nla_len - NLA_HDRLEN...
+
+We are reading nla->nla_len, which is the first 2 bytes of the structure.
+And then we check if the structure is... there?
+
+If we don't trust that struct nlattr which gets passed here is at least
+NLA_HDRLEN (4B) then why do we think it's safe to read nla_len (the
+first 2B of it)?
+
+That's why I was pointing at nla_ok(). nla_ok() takes the size of the
+buffer / message as an arg, so that it can also check if looking at
+nla_len itself is not going to be an OOB access. 99% of netlink buffers
+we parse come from user space. So it's not like someone could have
+mis-initialized the nla_len in the kernel and being graceful is helpful.
+
+The extra conditional is just a minor thing. The major thing is that
+unless I'm missing something the check makes me go =F0=9F=A4=A8=EF=B8=8F
 
