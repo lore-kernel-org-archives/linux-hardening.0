@@ -1,89 +1,82 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="QjecOg2F"
-Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:242:246e::2])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8FDB10F3;
-	Thu, 30 Nov 2023 23:45:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=Fze+dSazAwvNZzKpBF9Q5uOjyS8ti7UuRJvbkjk9hxY=;
-	t=1701416738; x=1702626338; b=QjecOg2FLIWGgodx+Yy28HYl4ITWCTbF7UY37KY2dsMogzv
-	d3W4iP/7q/VhxJ6j6B8iOKzEniI+H35k95JG6iwjJRLKz0DMkSEZVPVl3+MDNI7AerH05stwSN6nw
-	to7cNqD52F+h26sVMXsVbdYYb9h48KNC4fg1VlvdoVySsRA2dmSmMYFbND5Vqvs7Wp7d6+HQx7ze0
-	4A5aFkJmjApNLyEfUy/q8U2Fks7vapRBrw15RXb7gTyKIxVs9zc2riHjlSz/lT3tt2tak2FLXGH/L
-	7q1kEWW/syr94aKYmLHei0S3AvcbUbBHNEpGnXyjkdpvjHdf6u2MVnAKd1NwJPtQ==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.97)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1r8yDJ-0000000B6CO-20Qj;
-	Fri, 01 Dec 2023 08:45:29 +0100
-Message-ID: <313903974b14e94a2fb0dd5962362dba39bb3dea.camel@sipsolutions.net>
-Subject: Re: [PATCH] netlink: Return unsigned value for nla_len()
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Jakub Kicinski <kuba@kernel.org>, Kees Cook <keescook@chromium.org>
-Cc: kernel test robot <lkp@intel.com>, "David S. Miller"
- <davem@davemloft.net>,  Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Jeff Johnson <quic_jjohnson@quicinc.com>,  Michael
- Walle <mwalle@kernel.org>, Max Schulze <max.schulze@online.de>,
- netdev@vger.kernel.org,  linux-wireless@vger.kernel.org,
- linux-kernel@vger.kernel.org,  linux-hardening@vger.kernel.org
-Date: Fri, 01 Dec 2023 08:45:28 +0100
-In-Reply-To: <20231130172520.5a56ae50@kernel.org>
-References: <20231130200058.work.520-kees@kernel.org>
-	 <20231130172520.5a56ae50@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="IIfeYu5L"
+Received: from gandalf.ozlabs.org (mail.ozlabs.org [IPv6:2404:9400:2221:ea00::3])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70DB710FA;
+	Fri,  1 Dec 2023 01:41:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+	s=201909; t=1701423678;
+	bh=SCXwSfrAxD/vcI+luNSFDB5IfnqNmy8gsBQXv6JPB3w=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=IIfeYu5L/5RzK2f/xIVe9akYSPr9OUtIDCqF0ZSWukqAoxSbGvI47Q/IMUaFCc5NX
+	 eR0adi7iztkf7mgm/uta3inz5/CWd/gu+euafba3GosMPRgAuIf+MHDBOWn574T1m6
+	 PjCMFpmeKFP4y0D2qWqpIjaaAdVksQf4SK2EngcfmtagQ472NxbKD9ofpGm7ssHsXN
+	 4pDDGQsscGpo0FjRxRFNGMAu5QKkFlmzJfpiaREE4EP7sP+tKswZAMF7WsFSdcefnw
+	 dFCIRPMk7U2ojLzveYhueAfmIcBFapD5wEBdvAzBe7rqBptKMbPNXcD/enUkqJ/sRr
+	 tkny6rYrj9JMA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ShSk61ydCz4xVP;
+	Fri,  1 Dec 2023 20:41:18 +1100 (AEDT)
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: Justin Stitt <justinstitt@google.com>, Tyrel Datwyler
+ <tyreld@linux.ibm.com>, Nicholas Piggin <npiggin@gmail.com>, Christophe
+ Leroy <christophe.leroy@csgroup.eu>, "James E.J. Bottomley"
+ <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: linux-scsi@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, Justin
+ Stitt <justinstitt@google.com>
+Subject: Re: [PATCH] scsi: ibmvscsi: replace deprecated strncpy with strscpy
+In-Reply-To: <20231030-strncpy-drivers-scsi-ibmvscsi-ibmvscsi-c-v1-1-f8b06ae9e3d5@google.com>
+References: <20231030-strncpy-drivers-scsi-ibmvscsi-ibmvscsi-c-v1-1-f8b06ae9e3d5@google.com>
+Date: Fri, 01 Dec 2023 20:41:10 +1100
+Message-ID: <87jzpy1cqx.fsf@mail.lhotse>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Type: text/plain
 
-On Thu, 2023-11-30 at 17:25 -0800, Jakub Kicinski wrote:
-> On Thu, 30 Nov 2023 12:01:01 -0800 Kees Cook wrote:
-> > This has the additional benefit of being defensive in the face of nlatt=
-r
-> > corruption or logic errors (i.e. nla_len being set smaller than
-> > NLA_HDRLEN).
->=20
-> As Johannes predicted I'd rather not :(
+Justin Stitt <justinstitt@google.com> writes:
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
+>
+> We expect partition_name to be NUL-terminated based on its usage with
+> format strings:
+> |       dev_info(hostdata->dev, "host srp version: %s, "
+> |                "host partition %s (%d), OS %d, max io %u\n",
+> |                hostdata->madapter_info.srp_version,
+> |                hostdata->madapter_info.partition_name,
+> |                be32_to_cpu(hostdata->madapter_info.partition_number),
+> |                be32_to_cpu(hostdata->madapter_info.os_type),
+> |                be32_to_cpu(hostdata->madapter_info.port_max_txu[0]));
+> ...
+> |       len = snprintf(buf, PAGE_SIZE, "%s\n",
+> |                hostdata->madapter_info.partition_name);
+>
+> Moreover, NUL-padding is not required as madapter_info is explicitly
+> memset to 0:
+> |       memset(&hostdata->madapter_info, 0x00,
+> |                       sizeof(hostdata->madapter_info));
+>
+> Considering the above, a suitable replacement is `strscpy` [2] due to
+> the fact that it guarantees NUL-termination on the destination buffer
+> without unnecessarily NUL-padding.
+>
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+> Note: build-tested only.
 
-:)
+I gave it a quick boot, no issues.
 
-> The callers should put the nlattr thru nla_ok() during validation
-> (nla_validate()), or walking (nla_for_each_* call nla_ok()).
+Tested-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
 
-Which we do, since we have just normal input validation on generic
-netlink. Actually nla_validate() only does it via walking either ;-)
-
-The thing is that's something the compiler can't really see, it happens
-out-of-line in completely different code (generic netlink) before you
-even get into nl80211.
-
-> > -static inline int nla_len(const struct nlattr *nla)
-> > +static inline u16 nla_len(const struct nlattr *nla)
-> >  {
-> > -	return nla->nla_len - NLA_HDRLEN;
-> > +	return nla->nla_len > NLA_HDRLEN ? nla->nla_len - NLA_HDRLEN : 0;
-> >  }
->=20
-> Note the the NLA_HDRLEN is the length of struct nlattr.
-> I mean of the @nla object that gets passed in as argument here.
-> So accepting that nla->nla_len may be < NLA_HDRLEN means
-> that we are okay with dereferencing a truncated object...
->=20
-> We can consider making the return unsinged without the condition maybe?
-
-That seems problematic too though - better for an (unvalidated)
-attribute with a bad size to actually show up with a negative payload
-length rather than an underflow to a really big size.
-
-Anyway I really don't mind the workaround in nl80211 (which was to make
-the variables holding this unsigned), since we *do* know that we
-validated there, that's not an issue wrt. the length.
-
-johannes
+cheers
