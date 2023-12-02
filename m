@@ -1,53 +1,52 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SanzOGBp"
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 231B7118
-	for <linux-hardening@vger.kernel.org>; Sat,  2 Dec 2023 12:32:28 -0800 (PST)
-Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1d07aaba357so3936825ad.2
-        for <linux-hardening@vger.kernel.org>; Sat, 02 Dec 2023 12:32:28 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ahpW2z93"
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BD8D118
+	for <linux-hardening@vger.kernel.org>; Sat,  2 Dec 2023 12:47:49 -0800 (PST)
+Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-1ce3084c2d1so15741445ad.3
+        for <linux-hardening@vger.kernel.org>; Sat, 02 Dec 2023 12:47:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1701549147; x=1702153947; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1701550068; x=1702154868; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cIRYAecgaHbUJDf55/ejmjsQC15v1f8iGHg4Qn4ZBz4=;
-        b=SanzOGBpwNTC6VTLCh69gALRlSulW1/AN7r4ENlVvQmD2TezbsfYMkNzSgwHBr7Q+J
-         bW+LgZ577/nJWRTLi1OFtdTSb6IMcGZM+O4XSbQ6Mu1olyeTm3EgDetuwgcX1/SVlug+
-         jnt1j1u61fogU7WIEE2qoyjo2iivUc7ib5h+U=
+        bh=p0aqSqPWlKb+jtA5F4LHMBcDnLf0J9EYiCL05v23tWA=;
+        b=ahpW2z937uml6d/hTclPjdHURiaY4371JoD6Lvw0+yPtFAgoqovyg+qJItXhRZ+Ygw
+         IRz+Wt+uSxJS5D5UlBNGQLpMu7vAI7Q3mQYYSeVjl52c9Ea0DH9a+1lcxe1hKhLgPP7p
+         V3ZbAV5KnHIr4b3E7Q+Ho3bp94bfiANocTwMQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701549147; x=1702153947;
+        d=1e100.net; s=20230601; t=1701550068; x=1702154868;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=cIRYAecgaHbUJDf55/ejmjsQC15v1f8iGHg4Qn4ZBz4=;
-        b=pRP0738L9yg8G7PxhbizICHvgRaqihiVTlW42akCHPTpaYTlw8nmGVThp/z3f31DBR
-         iZoPltdklv5R0F93DSgI6clEVh7miSiP02Uv4ZIrvSV7LqDKFIvm6tweCa9C2MstMqPT
-         WXpkuxRLXyKtIdZlEwwAkUV3ZbZuLoztqrK4BPUgTfCDATaLfNTPZqRLmR93CYdIdpqE
-         qLfivl/M2PvdeBiFGxtiFAlcNCe0ghNDc6j8rMAr+o/uRMBusEv4ohSzxuU8D9hbDUk/
-         KJ9pDqxtiFOBX3GQZsGOFraaZ5Zez6BIle+OmomUe90uuhMYs12t7xznBKZMyQFIs2No
-         igJw==
-X-Gm-Message-State: AOJu0Yy81G0b2N3ovBpjnwmJOd5r/FS6cxhYnnXAf8fkIr5aEg0c0ISt
-	AynFyF2JZsOt92DG9kGlMj+tcObnKRTZXcPoLW4=
-X-Google-Smtp-Source: AGHT+IEY6utxOUbDKc+di3tmLd74oi8V97niSTk0Xt6LAXsff7fKHxfMr75/hRpID77r698HIGAC0w==
-X-Received: by 2002:a17:903:11c4:b0:1cf:f3a0:3c8e with SMTP id q4-20020a17090311c400b001cff3a03c8emr1868973plh.28.1701549147645;
-        Sat, 02 Dec 2023 12:32:27 -0800 (PST)
+        bh=p0aqSqPWlKb+jtA5F4LHMBcDnLf0J9EYiCL05v23tWA=;
+        b=B0ujx+xeeC0J/5ihnuQ34jDO8LTE5JD5Wdm7cf/jk8BSwBH6FFs3rARUK3vlkrAEhg
+         r1CaTeGT+T++7mzV8RJIdve1+4JDzUJo6fDDJk7e0299uCvtQOU4GnOSXYLbTl+HgqU+
+         YI0FMnOSoklBPmIlOI8nPUcMYkIC5PGHCUVHP0s3uqNzX8ELpvT3IoKuaMy6Xm6wQL+z
+         pTJfMRgnRWmMlpqAKup8Exey/+D+BQF/WC3garh7S+DLbaiAUD80i9CdpHnI7Jxo2b/0
+         wUUPlMRuzmPazidr5xfrY78KMHrGounqOve7rVVuvxjNJbwqmErsPHbRoHH6bwIu2K2R
+         Yd8Q==
+X-Gm-Message-State: AOJu0YyZDZL2mMNJzzXInJbgnyWV9ftQobTA6UKSt5lkiJs/ndf5mw8v
+	HR1onvw6VGIWeKTPott3y13lKg==
+X-Google-Smtp-Source: AGHT+IHgbtAlw9VJor5JJ08NkYdAzGvkAbo2d//Fi6pmcG1MfGXvH6uWcg+3/k82YL+iZ/Qnx91FiA==
+X-Received: by 2002:a17:902:ca05:b0:1d0:8761:4c45 with SMTP id w5-20020a170902ca0500b001d087614c45mr263770pld.2.1701550068537;
+        Sat, 02 Dec 2023 12:47:48 -0800 (PST)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id u8-20020a170902e5c800b001d05efd8198sm3022690plf.197.2023.12.02.12.32.26
+        by smtp.gmail.com with ESMTPSA id a5-20020a170902ee8500b001cfc42ccfcasm3873136pld.152.2023.12.02.12.47.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 Dec 2023 12:32:27 -0800 (PST)
+        Sat, 02 Dec 2023 12:47:47 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
-To: Russell King <linux@armlinux.org.uk>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] atags_proc: Add __counted_by for struct buffer and use struct_size()
-Date: Sat,  2 Dec 2023 12:32:23 -0800
-Message-Id: <170154914064.179444.11376018592445133931.b4-ty@chromium.org>
+To: Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	linux-hardening@vger.kernel.org,
+	Sergey Shtylyov <s.shtylyov@omp.ru>
+Cc: Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] pstore: ram_core: fix possible overflow in persistent_ram_init_ecc()
+Date: Sat,  2 Dec 2023 12:47:23 -0800
+Message-Id: <170155004188.180877.9632245955503394490.b4-ty@chromium.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <ZSVHurzo/4aFQcT3@work>
-References: <ZSVHurzo/4aFQcT3@work>
+In-Reply-To: <20231105202936.25694-1-s.shtylyov@omp.ru>
+References: <20231105202936.25694-1-s.shtylyov@omp.ru>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -57,23 +56,24 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Tue, 10 Oct 2023 06:46:50 -0600, Gustavo A. R. Silva wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
-> array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
-> 
-> While there, use struct_size() helper, instead of the open-coded
-> version, to calculate the size for the allocation of the whole
-> flexible structure, including of course, the flexible-array member.
+On Sun, 05 Nov 2023 23:29:36 +0300, Sergey Shtylyov wrote:
+> In persistent_ram_init_ecc(), on 64-bit arches DIV_ROUND_UP() will return
+> 64-bit value since persistent_ram_zone::buffer_size has type size_t which
+> is derived from the 64-bit *unsigned long*, while the ecc_blocks variable
+> this value gets assigned to has (always 32-bit) *int* type.  Even if that
+> value fits into *int* type, an overflow is still possible when calculating
+> the size_t typed ecc_total variable further below since there's no cast to
+> any 64-bit type before multiplication.  Declaring the ecc_blocks variable
+> as *unsigned long* should fix this mess...
 > 
 > [...]
 
-Applied to for-next/hardening, thanks!
+I changed this from unsigned long to size_t, which will do the same thing.
 
-[1/1] atags_proc: Add __counted_by for struct buffer and use struct_size()
-      https://git.kernel.org/kees/c/ac7110d883ff
+Applied to for-linus/pstore, thanks!
+
+[1/1] pstore: ram_core: fix possible overflow in persistent_ram_init_ecc()
+      https://git.kernel.org/kees/c/c92116e01d32
 
 Take care,
 
