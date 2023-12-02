@@ -1,36 +1,34 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="Z1FoUWKO"
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="Q66e2ozh"
 Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C97BE8;
-	Sat,  2 Dec 2023 13:45:10 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CB64107;
+	Sat,  2 Dec 2023 14:27:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=4Rwyik1Cyaf8rPAzDwFjNdQAfgF5Q1clOrCxMqMQ94o=; b=Z1FoUWKOMFkaUPPOx1TpIBqZYj
-	oE/rw6p6G0Gdbrxv1xh+gWe62MwcSRjvo66FsO/w+Y0rbVbvivKZ8F5dlKiE11g9E3j9mwDfoz7zN
-	HJgQyvOwilDkm4U5MxnnAmc5fKMpI4fhp8h4CtxvxtIV2fS0eB1FAIPvTc2a9UxQlLNFSQCGXFTja
-	4xSL1DjiYZLcOIC8lBMtb0KacxdxNt7dPRvugTbkKLVicFsWzGTo62N+PcjFPWkRpeGw3P4kaBNz6
-	prVtjHDOySrh1PSdPhho5ImtrQ6w0uwx5Wa2fkn1LVb8lXYTJfDoSZYn5ls50lnnw5fpdRlyihuBw
-	LnFtuiOg==;
+	bh=NjbNFGRIsxm13NIq7QOlU0+7el0vqRk7wXDZtiulYNM=; b=Q66e2ozhslYFy6IZJBTKhUwLJD
+	tUSedC7mVh5eeVXeJAW6cZJ3vDKnxWvy4q3BAanpfHjn8wGd2PlIuBQuYYB2WuffAqVmM81q8Bs4P
+	QkNm9qT+mX8OzUw05W8kcWAOdjd23IDKPgXHC9y/Umuln0Z1DHUTR4cfjrlbRQc6dMEyU6DPTyp2O
+	+V0yKhIDBxMfYGKOflC47npu6f4e7VRU0sGsjL+oWvImoAdz4hBbc0rVl+Ezb6eSftIPTPEsGNZF+
+	hbsz2exqEUt2pgsT+p/eLnlIT0ROABgloY7FuIQQdiFW2riTh7hWpAIf0jpk4BdMepKByyb5Ajjkt
+	NTE5TF1Q==;
 Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1r9XnK-006OGD-15;
-	Sat, 02 Dec 2023 21:45:02 +0000
-Date: Sat, 2 Dec 2023 21:45:02 +0000
+	id 1r9YS2-006OsI-1h;
+	Sat, 02 Dec 2023 22:27:06 +0000
+Date: Sat, 2 Dec 2023 22:27:06 +0000
 From: Al Viro <viro@zeniv.linux.org.uk>
 To: Kees Cook <keescook@chromium.org>
 Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Tony Luck <tony.luck@intel.com>, linux-hardening@vger.kernel.org,
 	Christian Brauner <brauner@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	linux-fsdevel@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 3/5] fs: Add DEFINE_FREE for struct inode
-Message-ID: <20231202214502.GS38156@ZenIV>
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 5/5] pstore: inode: Use cleanup.h for struct
+ pstore_private
+Message-ID: <20231202222706.GT38156@ZenIV>
 References: <20231202211535.work.571-kees@kernel.org>
- <20231202212217.243710-3-keescook@chromium.org>
- <20231202212846.GQ38156@ZenIV>
- <202312021331.D2DFBF153@keescook>
- <20231202214212.GR38156@ZenIV>
+ <20231202212217.243710-5-keescook@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -39,14 +37,51 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231202214212.GR38156@ZenIV>
+In-Reply-To: <20231202212217.243710-5-keescook@chromium.org>
 Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Sat, Dec 02, 2023 at 09:42:12PM +0000, Al Viro wrote:
+On Sat, Dec 02, 2023 at 01:22:15PM -0800, Kees Cook wrote:
 
-> I'll poke around and see what I can suggest; said that, one thing I have
-> spotted there on the quick look is that you are exposing hashed dentry associated
-> with your inode before you set its ->i_private.
+>  static void *pstore_ftrace_seq_start(struct seq_file *s, loff_t *pos)
+>  {
+> @@ -338,9 +339,8 @@ int pstore_mkfile(struct dentry *root, struct pstore_record *record)
+>  {
+>  	struct dentry		*dentry;
+>  	struct inode		*inode __free(iput) = NULL;
+> -	int			rc = 0;
+>  	char			name[PSTORE_NAMELEN];
+> -	struct pstore_private	*private, *pos;
+> +	struct pstore_private	*private __free(pstore_private) = NULL, *pos;
+>  	size_t			size = record->size + record->ecc_notice_size;
+>  
+>  	if (WARN_ON(!inode_is_locked(d_inode(root))))
+> @@ -356,7 +356,6 @@ int pstore_mkfile(struct dentry *root, struct pstore_record *record)
+>  			return -EEXIST;
+>  	}
+>  
+> -	rc = -ENOMEM;
+>  	inode = pstore_get_inode(root->d_sb);
+>  	if (!inode)
+>  		return -ENOMEM;
+> @@ -373,7 +372,7 @@ int pstore_mkfile(struct dentry *root, struct pstore_record *record)
+>  
+>  	dentry = d_alloc_name(root, name);
+>  	if (!dentry)
+> -		goto fail_private;
+> +		return -ENOMEM;
+>  
+>  	private->dentry = dentry;
+>  	private->record = record;
+> @@ -386,13 +385,9 @@ int pstore_mkfile(struct dentry *root, struct pstore_record *record)
+>  
+>  	d_add(dentry, no_free_ptr(inode));
+>  
+> -	list_add(&private->list, &records_list);
+> +	list_add(&(no_free_ptr(private))->list, &records_list);
 
-... and on the second look, no, you do not do anything of that sort.
-My apologies...
+That's really brittle.  It critically depends upon having no failure
+exits past the assignment to ->i_private; once you've done that,
+you have transferred the ownership of that thing to the inode
+(look at your ->evict_inode()).  But you can't say
+        inode->i_private = no_free_ptr(private);
+since you are using private past that point.
