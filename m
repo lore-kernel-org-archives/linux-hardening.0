@@ -1,98 +1,90 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kHs9wlop"
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA9E111F
-	for <linux-hardening@vger.kernel.org>; Sat,  2 Dec 2023 13:22:19 -0800 (PST)
-Received: by mail-pj1-x1034.google.com with SMTP id 98e67ed59e1d1-2866951b6e0so1038457a91.2
-        for <linux-hardening@vger.kernel.org>; Sat, 02 Dec 2023 13:22:19 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YA5NcrkM"
+Received: from mail-io1-xd36.google.com (mail-io1-xd36.google.com [IPv6:2607:f8b0:4864:20::d36])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E33C9134
+	for <linux-hardening@vger.kernel.org>; Sat,  2 Dec 2023 13:22:21 -0800 (PST)
+Received: by mail-io1-xd36.google.com with SMTP id ca18e2360f4ac-7b34c5d7ecdso124256539f.0
+        for <linux-hardening@vger.kernel.org>; Sat, 02 Dec 2023 13:22:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1701552139; x=1702156939; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6q9rxKV/doUXKLjycqqgPKowk2OvJvKvEALIpKz5kcY=;
-        b=kHs9wlopJ9gWPHAgN+0LZcpZoEF1b2s6VHwOD8or5m8w60stKKdekaLU279U/0tvvl
-         nlzDo714yQgH9eYTWO3gtSRt6/mi3Q8iEcMBOTrXt/7FuZ/ToLytKnm9IEqd7K3MppnR
-         aXc30wKNGyUaygFgAbyeUi0IiN5ms8GbnaMUA=
+        d=chromium.org; s=google; t=1701552141; x=1702156941; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aLvxvckvyomlZOIIg4Wjwswvgj0BL428CVO+nAzlFtE=;
+        b=YA5NcrkM5udEWaHHh2G+rmz62ChxvRvmbuIaxK6S0HmU0dsnoYprOaEiaJ+Bbj/pE0
+         X8/WCK0HfL43CDLXxWRUeqCFrVa9Xk5RwQEO79zs3ktain0CD+LqjL6cCUM3uEcRVFcX
+         ADZbHiYgQnmAcZWmNncFbgqi6QMwCHkKl+XgY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701552139; x=1702156939;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6q9rxKV/doUXKLjycqqgPKowk2OvJvKvEALIpKz5kcY=;
-        b=ZFMdxMaNoAX06niJwJx/Li/FaN55K5kbqk/i+8cnHxgfmchQiQfHx6A/aYtclIohYt
-         9eHJ0uB2eZeYg2Sykp1BNPVg5ZSM3s9HShKPxS6o4snW/6xnu2v0nueAJ1nyYWpqxtxT
-         kjGEd7tpQzkGD4z6vr64vt/C10peFa+kDrQqiE9rbYJITWdRq9JIqhevxEsZua6rBOqR
-         Jgekn0Cwy5CP2JaVkgVIuc2LBhogvtLzYne5neImAvPH6V7uaNjMilV2fFmvOdMwrrmP
-         HMyLuEbVmthDo3nYOLjorTxPQhvkODYtE+KIOb0zGeDdpkxbEDR/4JIsYVxHAfdg9Xeb
-         OBXw==
-X-Gm-Message-State: AOJu0Yw1m55d+6026LQUW0YXt4jcE3z8eCNDijt1AcyBlzcXSYF0GHR/
-	52ZQNuUmHaxTTgXU7TeBcD4akw==
-X-Google-Smtp-Source: AGHT+IGwdZyNrYkF0JkXUehoyBhB49FcgaPQH5ljbn8bJURYFny7K2GwkFNcA9nQkamR1wf/yUNoHQ==
-X-Received: by 2002:a17:90a:4dc7:b0:286:6cc0:cae8 with SMTP id r7-20020a17090a4dc700b002866cc0cae8mr1174330pjl.95.1701552139339;
-        Sat, 02 Dec 2023 13:22:19 -0800 (PST)
+        d=1e100.net; s=20230601; t=1701552141; x=1702156941;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aLvxvckvyomlZOIIg4Wjwswvgj0BL428CVO+nAzlFtE=;
+        b=Fct4B7Lrle/vkkk4MgERonMpE+m67oBS9oTL7mI0xCabo2g1l7bBtQ/gxRjM4448p4
+         OP8YT61wGidtFu0riPK05Uje10JCKvSGPVmUqWVL/SAmgZO/6azsDGPcpSTt8z25ob7p
+         GuVBeF2SwL0lCuJn37qV5lv1lX2ca7q2q5hIWODL2N8h5pQtQMmOhle067Sr6EH7X5EH
+         BpusOxonjbpfAPy3NL2pkUb+BcIImT9dGyMuQXGXes9mHTIl7/DARLmSFrc0Wqx6wIZF
+         NZehjuugsw98uA1n+u8jPZvaWiKhdKjsoVx/osbm/sJuzp/eHbEQEzaGjks51rL8QY6c
+         oMIA==
+X-Gm-Message-State: AOJu0Yzed8C9af9rBCNibo+UYqEbJiIA1s8BZ/9oJERd3wfhpiwicLB/
+	20MKwyPlZqaVvvo7sQv5bphpXQ==
+X-Google-Smtp-Source: AGHT+IGtRLKSAKTdisrEu2j2CjbfWn28z6XUA+T3NZsmq5+CR4/UtQweJAgLKCPRmDEaHRBtmwe+zA==
+X-Received: by 2002:a5d:894b:0:b0:7b3:9256:628f with SMTP id b11-20020a5d894b000000b007b39256628fmr2310006iot.15.1701552141318;
+        Sat, 02 Dec 2023 13:22:21 -0800 (PST)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id h8-20020a170902748800b001c9d6923e7dsm1825013pll.222.2023.12.02.13.22.18
+        by smtp.gmail.com with ESMTPSA id j6-20020a170902c3c600b001cfd049528esm348997plj.110.2023.12.02.13.22.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Sat, 02 Dec 2023 13:22:18 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
 To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
 Cc: Kees Cook <keescook@chromium.org>,
-	Tony Luck <tony.luck@intel.com>,
 	Christian Brauner <brauner@kernel.org>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	Al Viro <viro@zeniv.linux.org.uk>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	linux-fsdevel@vger.kernel.org,
+	Tony Luck <tony.luck@intel.com>,
 	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Subject: [PATCH 0/5] pstore: Initial use of cleanup.h
-Date: Sat,  2 Dec 2023 13:22:10 -0800
-Message-Id: <20231202211535.work.571-kees@kernel.org>
+	linux-hardening@vger.kernel.org
+Subject: [PATCH 3/5] fs: Add DEFINE_FREE for struct inode
+Date: Sat,  2 Dec 2023 13:22:13 -0800
+Message-Id: <20231202212217.243710-3-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231202211535.work.571-kees@kernel.org>
+References: <20231202211535.work.571-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=764; i=keescook@chromium.org;
- h=from:subject:message-id; bh=OkDdOwhG1YDg/PhDeGCQ9MLDBDYk/GZl+EOkqpfwlJY=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBla6AGcFq7mh0j/SHF6DRy6dTOljcIUt/3e8KiD
- O4m31aHYA6JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZWugBgAKCRCJcvTf3G3A
- JrS0EACDNa5cDFv8v98syV/CLw45XT9+6rkHlsnLPV6CO+qqH3XWas/PukrFwEtySggzDLfJSVO
- KMG1z1EhLkxTZ0yEZSb8MPm/gPAVBgorAHz+XxvwVvnd7AK93xAywzkoJJdKlVhw9dwTwnC68wg
- ocH77HFxf0URgyLGb1o83VKRWc0C7lwcHAjYCFfdj7IhVzAyWTIAclxdIj9A6B0MkMPZH68hKcA
- HJoMt1GUIvh1/JZvMXedDEC50I/yvOxfvaQQSV1xAIJGbxIsFYCRftyx2RAEn9exGmlOAOKIKOx
- NGTJTJZokqBFTZUvnv9v3scP9NtfpC2H3xvH0cGgHtC3UszM8Z0X+HIZW2AL8AlI9uz1WcXh69w
- RjiAzLTbByaoAroGs4Al0Imk2lPjgQ8wEEzsWRpRl+Uff4hKOeEK0F5qex9i245ZUvZg/65ugNK
- X1rZArEyldUwLgtO58KLapZ9WYAMzCkxOwLq2GjMqT4wazJ1vNCvP72m5odQyMEm3UGN45Qbkot
- oooPjw0Jpctobyq9xCglh/gJEAu0AJX/artOjUYjLAgXpQ/71dj9QQfn7GD2sLMSFHyk8uy0fWJ
- ydg392bMXkgv6tAbniE6m6aMoiGi0+Y1kzj0J05WDQsZvnfYj7jJM3rbZszjLwkOJ+aKdo9sw0G
- l3EdSM5K iUdlLSA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=835; i=keescook@chromium.org; h=from:subject; bh=Vr7BZE93w9hrA2pgUGte2wnKY/rdltDnNWxbve4aQVs=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBla6AGSav5RcGFsYqI8ZI6gPChQFnsbC+3nI/Sq AQMSCvSeJuJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZWugBgAKCRCJcvTf3G3A Ji1PD/97nsFeEYnRWCY5ijYm3HvFHnw2xsSeLfCgNERlEsvkDTZnVu32g862lrZ6hmNnj1/2WLY q5BTXJyqzwbbUg83+V4Z7IWpauoICvmh5nWCVw+d1swRjKLklznh+kH+lxKH782U5N+1W/bPv70 NdRhJBCPVOIeyBMGaFNtfbgw7Q7/MKTOSU/62VCry3sVE9fgDWP9DnB0W9/AVEf5mttk4aI+XJP Jf0b1606ZtWwo4iih+TPjLRID9WD2cRTVsaeRdH6h2sVpbIWtLfBMYm7MUT4xvIE/X34XC1XbGH /mFyNY6PyZyWNI/tRahhMjKTPtLuV+I51o3tpDU6ScYTIbUYyvn1SktT2ZE2PeBRIK7UUg8Kekf uMNNH7+hll0EcFYUEBOQ4ErCJ6guTCAIxc+68VotsoujHUSgriM/jZWU+UdawDQmyw5w2Zxt2fH io2IkOg0NktS5Lz/oNbESXSgqAIcAsWZYdpz8f5sULzKfDAWY9NZCkKawVLDlwQ3EVVq3ugJ4nO /+MhL408XJIGHI6nAbKY8QyfaPWyUeqbflROQiQEI6UVXEYbPuKogAFFyNGXqSlpZfzWjwQM12w tqybXEWAcWdB/zgRVWCl3j9u393bvwCn78YpxLSABa2mDjF9niWPVYIK3247bi3TGEcoqVKm7/q lL7bpxiJe0Uvk7A==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Hi,
+Allow __free(iput) markings for easier cleanup on inode allocations.
 
-Mostly as practice for myself, I rewrote a bunch of the error handling
-paths in pstore to use the new cleanup.h routines. Notably, this meant
-adding a DEFINE_FREE() for struct inode. Notably, I'm enjoying this
-part: "44 insertions(+), 65 deletions(-)"
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: linux-fsdevel@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ include/linux/fs.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-It also passes basic testing. :)
-
--Kees
-
-Kees Cook (5):
-  pstore: inode: Convert kfree() usage to __free(kfree)
-  pstore: inode: Convert mutex usage to guard(mutex)
-  fs: Add DEFINE_FREE for struct inode
-  pstore: inode: Use __free(iput) for inode allocations
-  pstore: inode: Use cleanup.h for struct pstore_private
-
- fs/pstore/inode.c  | 107 ++++++++++++++++++---------------------------
- include/linux/fs.h |   2 +
- 2 files changed, 44 insertions(+), 65 deletions(-)
-
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 98b7a7a8c42e..7c3eed3dd1bf 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -2459,6 +2459,8 @@ extern int current_umask(void);
+ 
+ extern void ihold(struct inode * inode);
+ extern void iput(struct inode *);
++DEFINE_FREE(iput, struct inode *, if (_T) iput(_T))
++
+ int inode_update_timestamps(struct inode *inode, int flags);
+ int generic_update_time(struct inode *, int);
+ 
 -- 
 2.34.1
 
