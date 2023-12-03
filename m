@@ -1,87 +1,98 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="Q66e2ozh"
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CB64107;
-	Sat,  2 Dec 2023 14:27:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=NjbNFGRIsxm13NIq7QOlU0+7el0vqRk7wXDZtiulYNM=; b=Q66e2ozhslYFy6IZJBTKhUwLJD
-	tUSedC7mVh5eeVXeJAW6cZJ3vDKnxWvy4q3BAanpfHjn8wGd2PlIuBQuYYB2WuffAqVmM81q8Bs4P
-	QkNm9qT+mX8OzUw05W8kcWAOdjd23IDKPgXHC9y/Umuln0Z1DHUTR4cfjrlbRQc6dMEyU6DPTyp2O
-	+V0yKhIDBxMfYGKOflC47npu6f4e7VRU0sGsjL+oWvImoAdz4hBbc0rVl+Ezb6eSftIPTPEsGNZF+
-	hbsz2exqEUt2pgsT+p/eLnlIT0ROABgloY7FuIQQdiFW2riTh7hWpAIf0jpk4BdMepKByyb5Ajjkt
-	NTE5TF1Q==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1r9YS2-006OsI-1h;
-	Sat, 02 Dec 2023 22:27:06 +0000
-Date: Sat, 2 Dec 2023 22:27:06 +0000
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Kees Cook <keescook@chromium.org>
-Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Tony Luck <tony.luck@intel.com>, linux-hardening@vger.kernel.org,
-	Christian Brauner <brauner@kernel.org>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 5/5] pstore: inode: Use cleanup.h for struct
- pstore_private
-Message-ID: <20231202222706.GT38156@ZenIV>
-References: <20231202211535.work.571-kees@kernel.org>
- <20231202212217.243710-5-keescook@chromium.org>
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 371B5C1
+	for <linux-hardening@vger.kernel.org>; Sun,  3 Dec 2023 01:00:03 -0800 (PST)
+Received: from [192.168.1.104] (31.173.83.161) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Sun, 3 Dec
+ 2023 11:59:53 +0300
+Subject: Re: [PATCH] pstore: ram_core: fix possible overflow in
+ persistent_ram_init_ecc()
+To: Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	<linux-hardening@vger.kernel.org>
+References: <20231105202936.25694-1-s.shtylyov@omp.ru>
+ <170155004188.180877.9632245955503394490.b4-ty@chromium.org>
+From: Sergey Shtylyov <s.shtylyov@omp.ru>
+Organization: Open Mobile Platform
+Message-ID: <6f0ae1ff-2503-fb42-2df3-4ba2cb0edd69@omp.ru>
+Date: Sun, 3 Dec 2023 11:59:52 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231202212217.243710-5-keescook@chromium.org>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+In-Reply-To: <170155004188.180877.9632245955503394490.b4-ty@chromium.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.0.0, Database issued on: 12/03/2023 08:41:00
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 59
+X-KSE-AntiSpam-Info: Lua profiles 181783 [Dec 03 2023]
+X-KSE-AntiSpam-Info: Version: 6.0.0.2
+X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 5 0.3.5 98d108ddd984cca1d7e65e595eac546a62b0144b
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_uf_ne_domains}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info: {relay has no DNS name}
+X-KSE-AntiSpam-Info: {SMTP from is not routable}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 31.173.83.161 in (user)
+ b.barracudacentral.org}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 31.173.83.161 in (user)
+ dbl.spamhaus.org}
+X-KSE-AntiSpam-Info:
+	d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;git.kernel.org:7.1.1;127.0.0.199:7.1.2;omp.ru:7.1.1
+X-KSE-AntiSpam-Info: ApMailHostAddress: 31.173.83.161
+X-KSE-AntiSpam-Info: {DNS response errors}
+X-KSE-AntiSpam-Info: Rate: 59
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 12/03/2023 08:47:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 12/3/2023 7:13:00 AM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-On Sat, Dec 02, 2023 at 01:22:15PM -0800, Kees Cook wrote:
+On 12/2/23 11:47 PM, Kees Cook wrote:
+[...]
+>> In persistent_ram_init_ecc(), on 64-bit arches DIV_ROUND_UP() will return
+>> 64-bit value since persistent_ram_zone::buffer_size has type size_t which
+>> is derived from the 64-bit *unsigned long*, while the ecc_blocks variable
+>> this value gets assigned to has (always 32-bit) *int* type.  Even if that
+>> value fits into *int* type, an overflow is still possible when calculating
+>> the size_t typed ecc_total variable further below since there's no cast to
+>> any 64-bit type before multiplication.  Declaring the ecc_blocks variable
+>> as *unsigned long* should fix this mess...
+>>
+>> [...]
+> 
+> I changed this from unsigned long to size_t, which will do the same thing.
 
->  static void *pstore_ftrace_seq_start(struct seq_file *s, loff_t *pos)
->  {
-> @@ -338,9 +339,8 @@ int pstore_mkfile(struct dentry *root, struct pstore_record *record)
->  {
->  	struct dentry		*dentry;
->  	struct inode		*inode __free(iput) = NULL;
-> -	int			rc = 0;
->  	char			name[PSTORE_NAMELEN];
-> -	struct pstore_private	*private, *pos;
-> +	struct pstore_private	*private __free(pstore_private) = NULL, *pos;
->  	size_t			size = record->size + record->ecc_notice_size;
->  
->  	if (WARN_ON(!inode_is_locked(d_inode(root))))
-> @@ -356,7 +356,6 @@ int pstore_mkfile(struct dentry *root, struct pstore_record *record)
->  			return -EEXIST;
->  	}
->  
-> -	rc = -ENOMEM;
->  	inode = pstore_get_inode(root->d_sb);
->  	if (!inode)
->  		return -ENOMEM;
-> @@ -373,7 +372,7 @@ int pstore_mkfile(struct dentry *root, struct pstore_record *record)
->  
->  	dentry = d_alloc_name(root, name);
->  	if (!dentry)
-> -		goto fail_private;
-> +		return -ENOMEM;
->  
->  	private->dentry = dentry;
->  	private->record = record;
-> @@ -386,13 +385,9 @@ int pstore_mkfile(struct dentry *root, struct pstore_record *record)
->  
->  	d_add(dentry, no_free_ptr(inode));
->  
-> -	list_add(&private->list, &records_list);
-> +	list_add(&(no_free_ptr(private))->list, &records_list);
+   Not quite the same. And ecc_blocks is a block count, not a byte count, so
+size_t doesn't seem appropriate...
 
-That's really brittle.  It critically depends upon having no failure
-exits past the assignment to ->i_private; once you've done that,
-you have transferred the ownership of that thing to the inode
-(look at your ->evict_inode()).  But you can't say
-        inode->i_private = no_free_ptr(private);
-since you are using private past that point.
+> Applied to for-linus/pstore, thanks!
+> 
+> [1/1] pstore: ram_core: fix possible overflow in persistent_ram_init_ecc()
+>       https://git.kernel.org/kees/c/c92116e01d32
+> 
+> Take care,
+
+   Thanks anyway. :-)
+
+MBR, Sergey
