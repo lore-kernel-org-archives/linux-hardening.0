@@ -1,18 +1,18 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="STO8kui6"
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="hfVmBXDq"
 Received: from todd.t-8ch.de (todd.t-8ch.de [IPv6:2a01:4f8:c010:41de::1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 989AA1A7;
-	Sun,  3 Dec 2023 23:52:38 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B27771B1;
+	Sun,  3 Dec 2023 23:52:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
 	s=mail; t=1701676352;
-	bh=iOBuDxNgWayHfZg8ll4jl4+gQO+POEL5ZSXO0IYskQo=;
+	bh=qsEBHDax+s7znxB3EesnA+Cx/J6JWc+CwYaqV7C/mz4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=STO8kui6mbh1g6598MiaxLRX5mQc341d0YjLWS7Nqws1kfRzH1lwxwoSt5ziD1VFK
-	 aSwpZnNYfLd9cTApCGEXs0XYNCcDuD8ICVixi2JcvAH+kMfhWhB0uQW14hHfUy14Br
-	 1s7Tge5tpoCyCqnF10AtWRGzNJCAb5+Q0gLsx8Ms=
+	b=hfVmBXDqoE2YJJldVofqpz/WfcE44RA5hrjOLjKrsSgg8+Vqz84+o+k8l9htgRRuh
+	 GNgCzJ2F8uqa8XxJuyz10kUjmac79RpTKqgK2TP3AAPjAx7N0rDGu3MpOebqHilblI
+	 e96AYqMrxRiH3i0WeQj0kc2hdK4B6hopDMqYiW6c=
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Mon, 04 Dec 2023 08:52:31 +0100
-Subject: [PATCH v2 18/18] sysctl: constify standard sysctl tables
+Date: Mon, 04 Dec 2023 08:52:26 +0100
+Subject: [PATCH v2 13/18] sysctl: move sysctl type to ctl_table_header
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -21,7 +21,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20231204-const-sysctl-v2-18-7a5060b11447@weissschuh.net>
+Message-Id: <20231204-const-sysctl-v2-13-7a5060b11447@weissschuh.net>
 References: <20231204-const-sysctl-v2-0-7a5060b11447@weissschuh.net>
 In-Reply-To: <20231204-const-sysctl-v2-0-7a5060b11447@weissschuh.net>
 To: Kees Cook <keescook@chromium.org>, 
@@ -33,34 +33,105 @@ Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-fsdevel@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1701676350; l=624;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1701676350; l=3565;
  i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=iOBuDxNgWayHfZg8ll4jl4+gQO+POEL5ZSXO0IYskQo=;
- b=bcxZcbAl3IUbAiyq3MmFXuykvVpQnzM+YWbExIJXohNBpBz3JEWJo7sT7X/oXLjwCNCq/Uf7w
- /af+RETE8JFBNjQumlPQ165901a6AM1OKKo8JHVeUGKYxVfkiX6XZfN
+ bh=qsEBHDax+s7znxB3EesnA+Cx/J6JWc+CwYaqV7C/mz4=;
+ b=tMIii9ffAADr2UzePskIfAqvkha4rSZzcbOgaBFMjvqiqSSnOcNxY/LJgEC+njVgyCMiCAdq9
+ SW3QXP7NxdDA0aQiXdPhxD49iCJoOupbeLO1zlHRwAauVfNse8Y++Ct
 X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
  pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-Recent changes in the sysctl allow sysctl tables to be put into .rodata.
+In a future commit the sysctl core will only use
+"const struct ctl_table". As a preparation for that move this mutable
+field from "struct ctl_table" to "struct ctl_table_header".
+
+This is also more correct in general as this is in fact a property of
+the header and not the table itself.
 
 Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
- kernel/sysctl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/proc/proc_sysctl.c  | 11 ++++++-----
+ include/linux/sysctl.h | 22 +++++++++++-----------
+ 2 files changed, 17 insertions(+), 16 deletions(-)
 
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index d60daa4e36fc..e48a60887c7e 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -1615,7 +1615,7 @@ int proc_do_static_key(const struct ctl_table *table, int write,
- 	return ret;
- }
+diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+index 689a30196d0c..a398cc77637f 100644
+--- a/fs/proc/proc_sysctl.c
++++ b/fs/proc/proc_sysctl.c
+@@ -31,7 +31,7 @@ static const struct inode_operations proc_sys_dir_operations;
  
--static struct ctl_table kern_table[] = {
-+static const struct ctl_table kern_table[] = {
- 	{
- 		.procname	= "panic",
- 		.data		= &panic_timeout,
+ /* Support for permanently empty directories */
+ static struct ctl_table sysctl_mount_point[] = {
+-	{.type = SYSCTL_TABLE_TYPE_PERMANENTLY_EMPTY }
++	{ }
+ };
+ 
+ /**
+@@ -49,11 +49,11 @@ struct ctl_table_header *register_sysctl_mount_point(const char *path)
+ EXPORT_SYMBOL(register_sysctl_mount_point);
+ 
+ #define sysctl_is_perm_empty_ctl_header(hptr)		\
+-	(hptr->ctl_table[0].type == SYSCTL_TABLE_TYPE_PERMANENTLY_EMPTY)
++	(hptr->type == SYSCTL_TABLE_TYPE_PERMANENTLY_EMPTY)
+ #define sysctl_set_perm_empty_ctl_header(hptr)		\
+-	(hptr->ctl_table[0].type = SYSCTL_TABLE_TYPE_PERMANENTLY_EMPTY)
++	(hptr->type = SYSCTL_TABLE_TYPE_PERMANENTLY_EMPTY)
+ #define sysctl_clear_perm_empty_ctl_header(hptr)	\
+-	(hptr->ctl_table[0].type = SYSCTL_TABLE_TYPE_DEFAULT)
++	(hptr->type = SYSCTL_TABLE_TYPE_DEFAULT)
+ 
+ void proc_sys_poll_notify(struct ctl_table_poll *poll)
+ {
+@@ -231,7 +231,8 @@ static int insert_header(struct ctl_dir *dir, struct ctl_table_header *header)
+ 		return -EROFS;
+ 
+ 	/* Am I creating a permanently empty directory? */
+-	if (sysctl_is_perm_empty_ctl_header(header)) {
++	if (header->ctl_table == sysctl_mount_point ||
++	    sysctl_is_perm_empty_ctl_header(header)) {
+ 		if (!RB_EMPTY_ROOT(&dir->root))
+ 			return -EINVAL;
+ 		sysctl_set_perm_empty_ctl_header(dir_h);
+diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
+index ada36ef8cecb..061ea65104be 100644
+--- a/include/linux/sysctl.h
++++ b/include/linux/sysctl.h
+@@ -137,17 +137,6 @@ struct ctl_table {
+ 	void *data;
+ 	int maxlen;
+ 	umode_t mode;
+-	/**
+-	 * enum type - Enumeration to differentiate between ctl target types
+-	 * @SYSCTL_TABLE_TYPE_DEFAULT: ctl target with no special considerations
+-	 * @SYSCTL_TABLE_TYPE_PERMANENTLY_EMPTY: Used to identify a permanently
+-	 *                                       empty directory target to serve
+-	 *                                       as mount point.
+-	 */
+-	enum {
+-		SYSCTL_TABLE_TYPE_DEFAULT,
+-		SYSCTL_TABLE_TYPE_PERMANENTLY_EMPTY
+-	} type;
+ 	proc_handler *proc_handler;	/* Callback for text formatting */
+ 	struct ctl_table_poll *poll;
+ 	void *extra1;
+@@ -188,6 +177,17 @@ struct ctl_table_header {
+ 	struct ctl_dir *parent;
+ 	struct ctl_node *node;
+ 	struct hlist_head inodes; /* head for proc_inode->sysctl_inodes */
++	/**
++	 * enum type - Enumeration to differentiate between ctl target types
++	 * @SYSCTL_TABLE_TYPE_DEFAULT: ctl target with no special considerations
++	 * @SYSCTL_TABLE_TYPE_PERMANENTLY_EMPTY: Used to identify a permanently
++	 *                                       empty directory target to serve
++	 *                                       as mount point.
++	 */
++	enum {
++		SYSCTL_TABLE_TYPE_DEFAULT,
++		SYSCTL_TABLE_TYPE_PERMANENTLY_EMPTY
++	} type;
+ };
+ 
+ struct ctl_dir {
 
 -- 
 2.43.0
