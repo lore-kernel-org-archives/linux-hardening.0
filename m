@@ -1,212 +1,81 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="MS4EngJt"
-Received: from smtp.smtpout.orange.fr (smtp-16.smtpout.orange.fr [80.12.242.16])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B404CAA
-	for <linux-hardening@vger.kernel.org>; Sun,  3 Dec 2023 11:48:15 -0800 (PST)
-Received: from pop-os.home ([92.140.202.140])
-	by smtp.orange.fr with ESMTPA
-	id 9sRor2SAvaCTP9sRprMITc; Sun, 03 Dec 2023 20:48:14 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1701632894;
-	bh=TtuieOqB3d5/4LucYB7b5rnfDifiCNhm6IjslDyNUYo=;
-	h=From:To:Cc:Subject:Date;
-	b=MS4EngJtRAiKHXOhDy56XDRMvJvD38MihZwlUI9BM1bvLFwWgSWqc7ARwSYqGx4+M
-	 9aUEU2XHOXW/zTqWH9JCKxmxNHJqJOi6GyXM8jZA6tdC9Cm0RpQRZC/vKOThwNyhkc
-	 Kk4pdzOxdqhd3Z16ftNUZtK0cgW9wgUHfqwoAFiG2A6AlCS/+r0dl0Bc4h1rKonw3P
-	 83axw2HhH/MCu290ZmatMZIFnHJCOjU4SZEmumRe7klgCZ2mtKqQ1s4+9T34CmsWr7
-	 54WEOyacF3tDZjfJ25dy/AyUsd4z/ETkLBuXJ6B3tHjWfObNnjv3GCNEWKLe5t5wmg
-	 5uqzNG4j/Cthg==
-X-ME-Helo: pop-os.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 03 Dec 2023 20:48:14 +0100
-X-ME-IP: 92.140.202.140
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Song Liu <song@kernel.org>,
-	Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-raid@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] md/md-multipath: Convert "struct mpconf" to flexible array
-Date: Sun,  3 Dec 2023 20:48:06 +0100
-Message-Id: <03dd7de1cecdb7084814f2fab300c9bc716aff3e.1701632867.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="SQ4c4OJg"
+Received: from todd.t-8ch.de (todd.t-8ch.de [IPv6:2a01:4f8:c010:41de::1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73167F3;
+	Sun,  3 Dec 2023 23:52:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1701676351;
+	bh=IyP3fTXp1SAs7UkxiJUA9xlgTpZMUTTPQdr1Z8WPbb0=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=SQ4c4OJgJJCnisETb9hXUF5YYUf7C0UKd6c5Mww/aO3s77s0vnJ0BYmhq9jI56SXo
+	 ZOeCfh0d6Oci9O5gxeD87hctfl1w06lqiP3cEdVC5pjMtWexivDvWbYfte4WFes+8e
+	 nV0fUg21Ob0hYeGT65jveRMunFejdMDZjaDXK1Ak=
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Mon, 04 Dec 2023 08:52:16 +0100
+Subject: [PATCH v2 03/18] sysctl: drop sysctl_is_perm_empty_ctl_table
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Message-Id: <20231204-const-sysctl-v2-3-7a5060b11447@weissschuh.net>
+References: <20231204-const-sysctl-v2-0-7a5060b11447@weissschuh.net>
+In-Reply-To: <20231204-const-sysctl-v2-0-7a5060b11447@weissschuh.net>
+To: Kees Cook <keescook@chromium.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+ Luis Chamberlain <mcgrof@kernel.org>, Iurii Zaikin <yzaikin@google.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Joel Granados <j.granados@samsung.com>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-fsdevel@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1701676350; l=1435;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=IyP3fTXp1SAs7UkxiJUA9xlgTpZMUTTPQdr1Z8WPbb0=;
+ b=+ngBpUV2SiwicZA4ds9XMOzk5Pbxi+vGaZjien+LXgMroK7KKieP5OaWIcOCF+WqNuE4vgwZP
+ xT40W0mgomqCFiuD3TvBSNW81r50LHid1h8Ji7pYWOHqATHnrdOYQdq
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-The 'multipaths' field of 'struct mpconf' can be declared as a flexible
-array.
+It is used only once and that caller would be simpler with
+sysctl_is_perm_empty_ctl_header().
+So use this sibling function.
 
-The advantages are:
-   - 1 less indirection when accessing to the 'multipaths' array
-   - save 1 pointer in the structure
-   - improve memory usage
-   - give the opportunity to use __counted_by() for additional safety
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
-On my x86_64 system, with configured with allmodconfig, I have:
+ fs/proc/proc_sysctl.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-Before the change:
-=================
-struct mpconf {
-	struct mddev *             mddev;                /*     0     8 */
-	struct multipath_info *    multipaths;           /*     8     8 */
-	int                        raid_disks;           /*    16     4 */
-
-	/* XXX 4 bytes hole, try to pack */
-
-	spinlock_t                 device_lock;          /*    24    72 */
-	/* --- cacheline 1 boundary (64 bytes) was 32 bytes ago --- */
-	struct list_head           retry_list;           /*    96    16 */
-	mempool_t                  pool;                 /*   112   200 */
-
-	/* size: 312, cachelines: 5, members: 6 */
-	/* sum members: 308, holes: 1, sum holes: 4 */
-	/* last cacheline: 56 bytes */
-};
-
-struct multipath_info {
-	struct md_rdev *           rdev;                 /*     0     8 */
-
-	/* size: 8, cachelines: 1, members: 1 */
-	/* last cacheline: 8 bytes */
-};
-
-size drivers/md/md-multipath.o
-   text	   data	    bss	    dec	    hex	filename
-  12863	   1041	     16	  13920	   3660	drivers/md/md-multipath.o
-
-
-After the change:
-================
-struct mpconf {
-	struct mddev *             mddev;                /*     0     8 */
-	int                        raid_disks;           /*     8     4 */
-
-	/* XXX 4 bytes hole, try to pack */
-
-	spinlock_t                 device_lock;          /*    16    72 */
-	/* --- cacheline 1 boundary (64 bytes) was 24 bytes ago --- */
-	struct list_head           retry_list;           /*    88    16 */
-	mempool_t                  pool;                 /*   104   200 */
-	/* --- cacheline 4 boundary (256 bytes) was 48 bytes ago --- */
-	struct multipath_info      multipaths[];         /*   304     0 */
-
-	/* size: 304, cachelines: 5, members: 6 */
-	/* sum members: 300, holes: 1, sum holes: 4 */
-	/* last cacheline: 48 bytes */
-};
-
-struct multipath_info {
-	struct md_rdev *           rdev;                 /*     0     8 */
-
-	/* size: 8, cachelines: 1, members: 1 */
-	/* last cacheline: 8 bytes */
-};
-
-size drivers/md/md-multipath.o
-   text	   data	    bss	    dec	    hex	filename
-  12470	   1041	     16	  13527	   34d7	drivers/md/md-multipath.o
-
-
-So:
-  - about 400 bytes of code are saved.
-  - because of the way memory allocation works, 'struct mpconf' really
-    uses 512 bytes of memory when allocated. So the "extra" memory that is
-    allocated (512-304 = 208) can be used to store up to 26 multipaths,
-    for free.
-
-Finally, several places use pointer arithmetic to access the desired
-structure, such as:
-	for (i = 0; i < conf->raid_disks; i++) {
-		tmp = conf->multipaths + i;
-		if (tmp->rdev)
-
-Should this be rewritten as:
-	for (i = 0; i < conf->raid_disks; i++) {
-		if (tmpconf->multipaths[i]->rdev)
-in order to have the compiler be able to check boundaries defined by
-__counted_by()?
----
- drivers/md/md-multipath.c | 12 +++---------
- drivers/md/md-multipath.h |  3 ++-
- 2 files changed, 5 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/md/md-multipath.c b/drivers/md/md-multipath.c
-index d22276870283..6a23065a65f7 100644
---- a/drivers/md/md-multipath.c
-+++ b/drivers/md/md-multipath.c
-@@ -357,16 +357,13 @@ static int multipath_run (struct mddev *mddev)
- 	 * should be freed in multipath_free()]
- 	 */
- 
--	conf = kzalloc(sizeof(struct mpconf), GFP_KERNEL);
-+	conf = kzalloc(struct_size(conf, multipaths, mddev->raid_disks),
-+		       GFP_KERNEL);
- 	mddev->private = conf;
- 	if (!conf)
- 		goto out;
- 
--	conf->multipaths = kcalloc(mddev->raid_disks,
--				   sizeof(struct multipath_info),
--				   GFP_KERNEL);
--	if (!conf->multipaths)
--		goto out_free_conf;
-+	conf->raid_disks = mddev->raid_disks;
- 
- 	working_disks = 0;
- 	rdev_for_each(rdev, mddev) {
-@@ -384,7 +381,6 @@ static int multipath_run (struct mddev *mddev)
- 			working_disks++;
- 	}
- 
--	conf->raid_disks = mddev->raid_disks;
- 	conf->mddev = mddev;
- 	spin_lock_init(&conf->device_lock);
- 	INIT_LIST_HEAD(&conf->retry_list);
-@@ -421,7 +417,6 @@ static int multipath_run (struct mddev *mddev)
- 
- out_free_conf:
- 	mempool_exit(&conf->pool);
--	kfree(conf->multipaths);
- 	kfree(conf);
- 	mddev->private = NULL;
- out:
-@@ -433,7 +428,6 @@ static void multipath_free(struct mddev *mddev, void *priv)
- 	struct mpconf *conf = priv;
- 
- 	mempool_exit(&conf->pool);
--	kfree(conf->multipaths);
- 	kfree(conf);
+diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+index 8064ea76f80b..689a30196d0c 100644
+--- a/fs/proc/proc_sysctl.c
++++ b/fs/proc/proc_sysctl.c
+@@ -48,10 +48,8 @@ struct ctl_table_header *register_sysctl_mount_point(const char *path)
  }
+ EXPORT_SYMBOL(register_sysctl_mount_point);
  
-diff --git a/drivers/md/md-multipath.h b/drivers/md/md-multipath.h
-index b3099e5fc4d7..fb49e151ac94 100644
---- a/drivers/md/md-multipath.h
-+++ b/drivers/md/md-multipath.h
-@@ -8,12 +8,13 @@ struct multipath_info {
+-#define sysctl_is_perm_empty_ctl_table(tptr)		\
+-	(tptr[0].type == SYSCTL_TABLE_TYPE_PERMANENTLY_EMPTY)
+ #define sysctl_is_perm_empty_ctl_header(hptr)		\
+-	(sysctl_is_perm_empty_ctl_table(hptr->ctl_table))
++	(hptr->ctl_table[0].type == SYSCTL_TABLE_TYPE_PERMANENTLY_EMPTY)
+ #define sysctl_set_perm_empty_ctl_header(hptr)		\
+ 	(hptr->ctl_table[0].type = SYSCTL_TABLE_TYPE_PERMANENTLY_EMPTY)
+ #define sysctl_clear_perm_empty_ctl_header(hptr)	\
+@@ -233,7 +231,7 @@ static int insert_header(struct ctl_dir *dir, struct ctl_table_header *header)
+ 		return -EROFS;
  
- struct mpconf {
- 	struct mddev			*mddev;
--	struct multipath_info	*multipaths;
- 	int			raid_disks;
- 	spinlock_t		device_lock;
- 	struct list_head	retry_list;
- 
- 	mempool_t		pool;
-+
-+	struct multipath_info	multipaths[] __counted_by(raid_disks);
- };
- 
- /*
+ 	/* Am I creating a permanently empty directory? */
+-	if (sysctl_is_perm_empty_ctl_table(header->ctl_table)) {
++	if (sysctl_is_perm_empty_ctl_header(header)) {
+ 		if (!RB_EMPTY_ROOT(&dir->root))
+ 			return -EINVAL;
+ 		sysctl_set_perm_empty_ctl_header(dir_h);
+
 -- 
-2.34.1
+2.43.0
 
