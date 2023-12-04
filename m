@@ -1,19 +1,18 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="hS+KtsOG"
-Received: from todd.t-8ch.de (todd.t-8ch.de [IPv6:2a01:4f8:c010:41de::1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B8471BE;
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="rRkFq96C"
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACF72D45;
 	Sun,  3 Dec 2023 23:52:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
 	s=mail; t=1701676352;
-	bh=Bgwfb+pVaZrTgWleM6LMFvhfRSLvAMWx6yDuVgjieRE=;
+	bh=zByUx3Gq6P8LcvcqSjdgxm/5wuG+rVoanucvNQrnBwQ=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=hS+KtsOGw+GkISuRELYWbCR6vRk45wcNHZKHpo4XsB5+XM3eXIrVJpfiK0t8zlEQI
-	 mIt3XWEubn3fTpXUeuFj8Yo1pDmok1buwCVfburMkLyYAOmG3cjdeIJ7NzYK4hRJY6
-	 UDnZrzYSCHhBMv1pgPXBF30Vu3at8PTzvtgbHQkc=
+	b=rRkFq96C53W4Qa03A41B32MvmVyDQRkTNCbQcM+Xuz/1K/4p2IVfE2RJFXISV9AT8
+	 +m2cFw8KOv+tWlhuOzE6u2hMX6VCaCZMEltICxc898tMWOwUHR0wapekUgvvel1l/P
+	 8jLMdDolwt2ssl4Gs0CMz+V1cUJtzZejX/mM8hrk=
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Mon, 04 Dec 2023 08:52:28 +0100
-Subject: [PATCH v2 15/18] sysctl: allow registration of const struct
- ctl_table
+Date: Mon, 04 Dec 2023 08:52:30 +0100
+Subject: [PATCH v2 17/18] sysctl: make ctl_table sysctl_mount_point const
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -22,7 +21,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20231204-const-sysctl-v2-15-7a5060b11447@weissschuh.net>
+Message-Id: <20231204-const-sysctl-v2-17-7a5060b11447@weissschuh.net>
 References: <20231204-const-sysctl-v2-0-7a5060b11447@weissschuh.net>
 In-Reply-To: <20231204-const-sysctl-v2-0-7a5060b11447@weissschuh.net>
 To: Kees Cook <keescook@chromium.org>, 
@@ -34,92 +33,34 @@ Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-fsdevel@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1701676350; l=3419;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1701676350; l=707;
  i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=Bgwfb+pVaZrTgWleM6LMFvhfRSLvAMWx6yDuVgjieRE=;
- b=hS2QmFvAg4VXxquXbstpDfzCkvr3rvB9crvRKmffiTA7i23BVWn4ObMCxEzeZPYrUhn2F4IbL
- N8KOruqBeCPCRkK62ZIkp4Hmw1w2oAsG+SM7NulyfuKFMlSyp2QJtZl
+ bh=zByUx3Gq6P8LcvcqSjdgxm/5wuG+rVoanucvNQrnBwQ=;
+ b=T4fe4Y4H+z9NMgxNToLMvDIdzWzUsQ1ROmqM+wleaFzcaGQIwqyaLjcqz7LoArGFd6dKvGI3b
+ rnc8VQL+TsKC8bU/mHopWYEMAy89LdgzfJW/9Gr5m8N/9iOqPxqaHiW
 X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
  pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-This allows sysctl table to be put into read-only data.
+This is a first example on how to use const struct ctl_table.
 
 Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
- fs/proc/proc_sysctl.c  |  6 +++---
- include/linux/sysctl.h | 10 +++++-----
- 2 files changed, 8 insertions(+), 8 deletions(-)
+ fs/proc/proc_sysctl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-index e7fd1680d479..d09107a5b43f 100644
+index d09107a5b43f..f2b663e0be33 100644
 --- a/fs/proc/proc_sysctl.c
 +++ b/fs/proc/proc_sysctl.c
-@@ -1356,7 +1356,7 @@ static struct ctl_dir *sysctl_mkdir_p(struct ctl_dir *dir, const char *path)
-  */
- struct ctl_table_header *__register_sysctl_table(
- 	struct ctl_table_set *set,
--	const char *path, struct ctl_table *table, size_t table_size)
-+	const char *path, const struct ctl_table *table, size_t table_size)
- {
- 	struct ctl_table_root *root = set->dir.header.root;
- 	struct ctl_table_header *header;
-@@ -1417,7 +1417,7 @@ struct ctl_table_header *__register_sysctl_table(
-  *
-  * See __register_sysctl_table for more details.
-  */
--struct ctl_table_header *register_sysctl_sz(const char *path, struct ctl_table *table,
-+struct ctl_table_header *register_sysctl_sz(const char *path, const struct ctl_table *table,
- 					    size_t table_size)
- {
- 	return __register_sysctl_table(&sysctl_table_root.default_set,
-@@ -1446,7 +1446,7 @@ EXPORT_SYMBOL(register_sysctl_sz);
-  *
-  * Context: if your base directory does not exist it will be created for you.
-  */
--void __init __register_sysctl_init(const char *path, struct ctl_table *table,
-+void __init __register_sysctl_init(const char *path, const struct ctl_table *table,
- 				 const char *table_name, size_t table_size)
- {
- 	struct ctl_table_header *hdr = register_sysctl_sz(path, table, table_size);
-diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
-index 2f4d577f2e93..7c96d5abafc7 100644
---- a/include/linux/sysctl.h
-+++ b/include/linux/sysctl.h
-@@ -229,13 +229,13 @@ extern void retire_sysctl_set(struct ctl_table_set *set);
+@@ -30,7 +30,7 @@ static const struct file_operations proc_sys_dir_file_operations;
+ static const struct inode_operations proc_sys_dir_operations;
  
- struct ctl_table_header *__register_sysctl_table(
- 	struct ctl_table_set *set,
--	const char *path, struct ctl_table *table, size_t table_size);
--struct ctl_table_header *register_sysctl_sz(const char *path, struct ctl_table *table,
-+	const char *path, const struct ctl_table *table, size_t table_size);
-+struct ctl_table_header *register_sysctl_sz(const char *path, const struct ctl_table *table,
- 					    size_t table_size);
- void unregister_sysctl_table(struct ctl_table_header * table);
+ /* Support for permanently empty directories */
+-static struct ctl_table sysctl_mount_point[] = {
++static const struct ctl_table sysctl_mount_point[] = {
+ 	{ }
+ };
  
- extern int sysctl_init_bases(void);
--extern void __register_sysctl_init(const char *path, struct ctl_table *table,
-+extern void __register_sysctl_init(const char *path, const struct ctl_table *table,
- 				 const char *table_name, size_t table_size);
- #define register_sysctl_init(path, table)	\
- 	__register_sysctl_init(path, table, #table, ARRAY_SIZE(table))
-@@ -257,7 +257,7 @@ extern int no_unaligned_warning;
- 
- #else /* CONFIG_SYSCTL */
- 
--static inline void register_sysctl_init(const char *path, struct ctl_table *table)
-+static inline void register_sysctl_init(const char *path, const struct ctl_table *table)
- {
- }
- 
-@@ -267,7 +267,7 @@ static inline struct ctl_table_header *register_sysctl_mount_point(const char *p
- }
- 
- static inline struct ctl_table_header *register_sysctl_sz(const char *path,
--							  struct ctl_table *table,
-+							  const struct ctl_table *table,
- 							  size_t table_size)
- {
- 	return NULL;
 
 -- 
 2.43.0
