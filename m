@@ -1,18 +1,18 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="ci3b+tBl"
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="STO8kui6"
 Received: from todd.t-8ch.de (todd.t-8ch.de [IPv6:2a01:4f8:c010:41de::1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A430FF;
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 989AA1A7;
 	Sun,  3 Dec 2023 23:52:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
 	s=mail; t=1701676352;
-	bh=IxovWkSQa7nkG31gg70HY4PZ86eNzdXLGZdnYvGdlOk=;
+	bh=iOBuDxNgWayHfZg8ll4jl4+gQO+POEL5ZSXO0IYskQo=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=ci3b+tBlQJ2I4Tnz6Uq8xCRvClO69u71LCh7Jwtj+5JsnWUJoaWhvTg3js+PuZNVW
-	 tirBQ8o0jdqrYvHi8MAckWJ8O/mudw3ffSFWracoTmFkEf2CtxM9hp7OXWuLsgmKJf
-	 8DARgLvu9Mjh2qEXOkDlubwYy0CivYcuPoJ8UMQo=
+	b=STO8kui6mbh1g6598MiaxLRX5mQc341d0YjLWS7Nqws1kfRzH1lwxwoSt5ziD1VFK
+	 aSwpZnNYfLd9cTApCGEXs0XYNCcDuD8ICVixi2JcvAH+kMfhWhB0uQW14hHfUy14Br
+	 1s7Tge5tpoCyCqnF10AtWRGzNJCAb5+Q0gLsx8Ms=
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Mon, 04 Dec 2023 08:52:21 +0100
-Subject: [PATCH v2 08/18] stackleak: don't modify ctl_table argument
+Date: Mon, 04 Dec 2023 08:52:31 +0100
+Subject: [PATCH v2 18/18] sysctl: constify standard sysctl tables
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -21,7 +21,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20231204-const-sysctl-v2-8-7a5060b11447@weissschuh.net>
+Message-Id: <20231204-const-sysctl-v2-18-7a5060b11447@weissschuh.net>
 References: <20231204-const-sysctl-v2-0-7a5060b11447@weissschuh.net>
 In-Reply-To: <20231204-const-sysctl-v2-0-7a5060b11447@weissschuh.net>
 To: Kees Cook <keescook@chromium.org>, 
@@ -33,43 +33,34 @@ Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-fsdevel@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1701676350; l=1076;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1701676350; l=624;
  i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=IxovWkSQa7nkG31gg70HY4PZ86eNzdXLGZdnYvGdlOk=;
- b=qMyrGJ0w/4+XhOWDiE66KEjMCj0gweurC/6oQwk/Krqtt1DIpUqZeI5jGJHKrmVOFeGke54pt
- YQi71Ea3sghBwYXo0q8Kz3ZhIgB+zOH6G6jdpErT6vSnyCISy0KxjSU
+ bh=iOBuDxNgWayHfZg8ll4jl4+gQO+POEL5ZSXO0IYskQo=;
+ b=bcxZcbAl3IUbAiyq3MmFXuykvVpQnzM+YWbExIJXohNBpBz3JEWJo7sT7X/oXLjwCNCq/Uf7w
+ /af+RETE8JFBNjQumlPQ165901a6AM1OKKo8JHVeUGKYxVfkiX6XZfN
 X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
  pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-In a future commit the proc_handlers will change to
-"const struct ctl_table".
-As a preparation for that adapt the logic to work with a temporary
-variable, similar to how it is done in other parts of the kernel.
+Recent changes in the sysctl allow sysctl tables to be put into .rodata.
 
 Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
- kernel/stackleak.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ kernel/sysctl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/stackleak.c b/kernel/stackleak.c
-index 34c9d81eea94..b292e5ca0b7d 100644
---- a/kernel/stackleak.c
-+++ b/kernel/stackleak.c
-@@ -27,10 +27,11 @@ static int stack_erasing_sysctl(struct ctl_table *table, int write,
- 	int ret = 0;
- 	int state = !static_branch_unlikely(&stack_erasing_bypass);
- 	int prev_state = state;
-+	struct ctl_table tmp = *table;
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index d60daa4e36fc..e48a60887c7e 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -1615,7 +1615,7 @@ int proc_do_static_key(const struct ctl_table *table, int write,
+ 	return ret;
+ }
  
--	table->data = &state;
--	table->maxlen = sizeof(int);
--	ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
-+	tmp.data = &state;
-+	tmp.maxlen = sizeof(int);
-+	ret = proc_dointvec_minmax(&tmp, write, buffer, lenp, ppos);
- 	state = !!state;
- 	if (ret || !write || state == prev_state)
- 		return ret;
+-static struct ctl_table kern_table[] = {
++static const struct ctl_table kern_table[] = {
+ 	{
+ 		.procname	= "panic",
+ 		.data		= &panic_timeout,
 
 -- 
 2.43.0
