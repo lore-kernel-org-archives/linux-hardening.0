@@ -1,19 +1,19 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="Az7F8rfS"
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="NpAknuE+"
 Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79B79136;
-	Sun,  3 Dec 2023 23:52:36 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F0A7198;
+	Sun,  3 Dec 2023 23:52:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
 	s=mail; t=1701676352;
-	bh=TZdNqn1SiSNc5YcuC4mCIk7Ynn2gUU/Or228atMtaJs=;
+	bh=v0MXLGIsisRjyz+2q8S4lNJCjp7Kc1OsT9OWJgMTDC0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Az7F8rfSpThZ1n25BdEvJp2p9E/AzY0X3wozV/MY1/PAa1/Qj0RAhj7z6fiRqI7kK
-	 7HDAJXx5XOu/S6imHwuojXsRcbfmd6OiQSZzb0GGBpHVT+IA2v6TKvAaAa/d2HWf+4
-	 /NehtYiQxYEIopU8YBWhQpz/RtDsgc+T9zG7k1jA=
+	b=NpAknuE+SwTyR4zjPUm2h6dHi5u3Il/bBsvGZ3mlpPxjGYT2t7M7Y6Un/IYoB0iMK
+	 ReELEAwm3nZ5LEAMS3pGHH6hUh0PA0DFKWC8yDLs/wr4zGuRlSqCiFv1jPLY3p3kgC
+	 VDAFEp/kkHjLix6w3AIf0+hmrAH5OnqMB4G+JvZQ=
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Mon, 04 Dec 2023 08:52:18 +0100
-Subject: [PATCH v2 05/18] seccomp: constify ctl_table arguments of utility
- functions
+Date: Mon, 04 Dec 2023 08:52:22 +0100
+Subject: [PATCH v2 09/18] sysctl: treewide: constify
+ ctl_table_root::set_ownership
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -22,7 +22,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20231204-const-sysctl-v2-5-7a5060b11447@weissschuh.net>
+Message-Id: <20231204-const-sysctl-v2-9-7a5060b11447@weissschuh.net>
 References: <20231204-const-sysctl-v2-0-7a5060b11447@weissschuh.net>
 In-Reply-To: <20231204-const-sysctl-v2-0-7a5060b11447@weissschuh.net>
 To: Kees Cook <keescook@chromium.org>, 
@@ -34,45 +34,50 @@ Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-fsdevel@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1701676350; l=1238;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1701676350; l=1372;
  i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=TZdNqn1SiSNc5YcuC4mCIk7Ynn2gUU/Or228atMtaJs=;
- b=+bb7R1dzvflk2V91q1B3apYuSZNzsswX5hsEfkK3Q7Bi6c2nVr2JfTll1pVlMP5bZS2K4J5GB
- XaPAF3lxcvpDah0XCW1ntvvsW9fI5ifFd/kDIevoOjVDZbSHl4zCMEZ
+ bh=v0MXLGIsisRjyz+2q8S4lNJCjp7Kc1OsT9OWJgMTDC0=;
+ b=36piJllEmuNADES2V+irUyjSXbQwWiVHfuHvaVtX4ZUFuaW3bGFv0NxakonPgvNZa1veydxZy
+ r6beTa7NJ3SCdG+Ab8rKNLOvH7rjBf1WSb68bEFxJ4QKHESQJbBmCiq
 X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
  pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-In a future commit the proc_handlers themselves will change to
-"const struct ctl_table". As a preparation for that adapt the internal
-helpers.
+In a future commit the sysctl core will only use
+"const struct ctl_table". As a preparation for that adapt the
+set_ownership callbacks.
 
 Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
- kernel/seccomp.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/sysctl.h | 2 +-
+ net/sysctl_net.c       | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-index 255999ba9190..a23672674ff6 100644
---- a/kernel/seccomp.c
-+++ b/kernel/seccomp.c
-@@ -2334,7 +2334,7 @@ static bool seccomp_actions_logged_from_names(u32 *actions_logged, char *names)
- 	return true;
+diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
+index 26a38161c28f..800154e1ff88 100644
+--- a/include/linux/sysctl.h
++++ b/include/linux/sysctl.h
+@@ -205,7 +205,7 @@ struct ctl_table_root {
+ 	struct ctl_table_set default_set;
+ 	struct ctl_table_set *(*lookup)(struct ctl_table_root *root);
+ 	void (*set_ownership)(struct ctl_table_header *head,
+-			      struct ctl_table *table,
++			      const struct ctl_table *table,
+ 			      kuid_t *uid, kgid_t *gid);
+ 	int (*permissions)(struct ctl_table_header *head, struct ctl_table *table);
+ };
+diff --git a/net/sysctl_net.c b/net/sysctl_net.c
+index 051ed5f6fc93..1310ef8f0958 100644
+--- a/net/sysctl_net.c
++++ b/net/sysctl_net.c
+@@ -54,7 +54,7 @@ static int net_ctl_permissions(struct ctl_table_header *head,
  }
  
--static int read_actions_logged(struct ctl_table *ro_table, void *buffer,
-+static int read_actions_logged(const struct ctl_table *ro_table, void *buffer,
- 			       size_t *lenp, loff_t *ppos)
+ static void net_ctl_set_ownership(struct ctl_table_header *head,
+-				  struct ctl_table *table,
++				  const struct ctl_table *table,
+ 				  kuid_t *uid, kgid_t *gid)
  {
- 	char names[sizeof(seccomp_actions_avail)];
-@@ -2352,7 +2352,7 @@ static int read_actions_logged(struct ctl_table *ro_table, void *buffer,
- 	return proc_dostring(&table, 0, buffer, lenp, ppos);
- }
- 
--static int write_actions_logged(struct ctl_table *ro_table, void *buffer,
-+static int write_actions_logged(const struct ctl_table *ro_table, void *buffer,
- 				size_t *lenp, loff_t *ppos, u32 *actions_logged)
- {
- 	char names[sizeof(seccomp_actions_avail)];
+ 	struct net *net = container_of(head->set, struct net, sysctls);
 
 -- 
 2.43.0
