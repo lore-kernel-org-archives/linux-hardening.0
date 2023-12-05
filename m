@@ -1,122 +1,121 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D20vB1XU"
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A03618C
-	for <linux-hardening@vger.kernel.org>; Tue,  5 Dec 2023 10:26:28 -0800 (PST)
-Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1d048d38881so27749105ad.2
-        for <linux-hardening@vger.kernel.org>; Tue, 05 Dec 2023 10:26:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bSbhY2ad"
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD0361A5
+	for <linux-hardening@vger.kernel.org>; Tue,  5 Dec 2023 12:59:11 -0800 (PST)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5d942a656b7so29103747b3.1
+        for <linux-hardening@vger.kernel.org>; Tue, 05 Dec 2023 12:59:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1701800787; x=1702405587; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Gj+Y/6VXeJ+r0pgecRkRsTt5zcHlqOxutguYUyMKTVU=;
-        b=D20vB1XU6llsWmRtYeRb+7tHyyu03VkhL4zTEBRbYPx3qnUQ6kXjgv1j5jPc4T0PK8
-         6HVDbi73p0GTLNlU79dknLYL8pZ3aeo31e2k7XyQowrU4MfkkHrJq0zJ4DPpkF6Gn/5j
-         GniI1EAPn4ZeArqCsLQUBpCelH8gXtnw0IGEk=
+        d=google.com; s=20230601; t=1701809951; x=1702414751; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=W7RafG7nAWDAAGrW/jUsNIHCRJDj/ZzkUDLX/nKv/hI=;
+        b=bSbhY2ad88ELW9pZX6M9AVWET1WR1YpZt6ZhCraQIsAHFtR6oNI766yKez9B63i7mx
+         xJWbbWx3qgK3UijO9Pygn/w4RBZtjT6kZgqav6NczRR9WBTQUjh48ShBfnf40Owp5KHM
+         QYT5AK4ajSMzwUCXJdeN5zK1LqO/LTPg71Qlla74G5prsTGhz1hDqDaQm7ye+oaWIuOU
+         iqzwVNZVFjSDp2blKgrGvKdBJnz3ZJNOVDbmKsf+fhdLISkiXAO0M+eaPYPkZQSIC/HW
+         PxFb76uCZwNNfQVYCcLAXSKwnfNui6H3yfOB2uR4QMusQtgpTVjfReVg9Fivp+73jDZi
+         Vdag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701800787; x=1702405587;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Gj+Y/6VXeJ+r0pgecRkRsTt5zcHlqOxutguYUyMKTVU=;
-        b=tLJ0BpLG1uTDp7YAUA84xi4CxwbALn18k8pdRm5fkd2M+EF0YGG/cnBCfoM6SF1/YB
-         DYmhMZOVOtEBYBl8Fv3M5tx79evzCiGCNQNVtc0pjef7o5wbhbKGMeo0fOLLdOcDUFzS
-         f1aAaOq4Gm1I2cfBo/kFdKP6OPOwf9TeIBmt0Md4JKVqt1OIE/B6NDeScl2KG21geiB+
-         I1R9LecOnk8vsSX73P+qwTxzpuBwwJK1EVWiRLqci7aOQtGDoEBFdEqGbwOxj7mEuQ1b
-         7z6BabTOz14ksc63YgnMCnsunWXJmuazyaCaJhaCdEGYpi50Grh9jt55ZNO7uYY1pqDa
-         km8w==
-X-Gm-Message-State: AOJu0YxhV1LwlEBgXdgzJoR7l61EOG5MNzf+d1D8RQe2QibCC9V6Q/r2
-	Nip+FaWr4FyCWqb1TluFiza+6w==
-X-Google-Smtp-Source: AGHT+IH2Uowmzrvs0/hFAJeLe2bBRPGCrI+wFvyd3EPO+VDeMZnOhPy9LvBZ3OyihXLzXpiRCc2yuQ==
-X-Received: by 2002:a17:903:22d1:b0:1d0:83bc:5649 with SMTP id y17-20020a17090322d100b001d083bc5649mr3507541plg.33.1701800787406;
-        Tue, 05 Dec 2023 10:26:27 -0800 (PST)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id q1-20020a17090311c100b001cfc9c926b7sm6932210plh.75.2023.12.05.10.26.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Dec 2023 10:26:23 -0800 (PST)
-From: Kees Cook <keescook@chromium.org>
-To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: Kees Cook <keescook@chromium.org>,
-	Tony Luck <tony.luck@intel.com>,
-	linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/4] pstore: inode: Convert kfree() usage to __free(kfree)
-Date: Tue,  5 Dec 2023 10:26:14 -0800
-Message-Id: <20231205182622.1329923-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231205175449.work.110-kees@kernel.org>
-References: <20231205175449.work.110-kees@kernel.org>
+        d=1e100.net; s=20230601; t=1701809951; x=1702414751;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=W7RafG7nAWDAAGrW/jUsNIHCRJDj/ZzkUDLX/nKv/hI=;
+        b=XNzf6HS8MulmD/miIJ74grVqV4uosDp7iJMRGBUp14FDihr5SNLeyXEvbp/zJ3qMmE
+         mJ0tUUqsNCP74hp1Dm1JKHzPsOEJ/7f/Ln9tNCQjwVtPrlN7/l71pG9QamxFkFfJUolA
+         KXN71XYmE2Rqvt81cw0nd9XNejztuZoUduz/EHgO1rSKo3ezwjGB2TxRUjgMM+2nALiw
+         Y7eWPmDzdifOnJJQoJhyw+eod3MHmxK2a8IwvyzfBJHmW1sX/sMurUITlWkWuv4PdSfB
+         4FRY7+kLa5rkY70thkBMTHMwOMxIBzbKcP2ZfPRtSrDmYCHOF5v4HxXO6+h/Mch5+qE2
+         WUpw==
+X-Gm-Message-State: AOJu0YyWmPMP+34C+b472MV0wRrO0a8vfPOKdGtFzrUuiQZ+aMNOGcxe
+	Nzuj3ILVofHf3jKLD2VMP1gMWGcKV8bP
+X-Google-Smtp-Source: AGHT+IEOHHHkQHCm04ytFMnKqd50M5Z2PyFwnofksHuvbSlF0wfs0twpe2H4x1KbIfv/MfMzuensmACLCWaX
+X-Received: from tanz.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:c4a])
+ (user=tanzirh job=sendgmr) by 2002:a81:6d91:0:b0:5d8:39ca:4824 with SMTP id
+ i139-20020a816d91000000b005d839ca4824mr138285ywc.4.1701809950939; Tue, 05 Dec
+ 2023 12:59:10 -0800 (PST)
+Date: Tue, 05 Dec 2023 20:58:53 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1508; i=keescook@chromium.org;
- h=from:subject; bh=FqMfSJ9tnf+E4NKsMDABD4Hv9XWcLEDAeeuD1HVeW1g=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlb2tIUcAUjxMoJ6U4X0vLxi+fYt1AWVqAhC5g3
- 8R9qQmTZrCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZW9rSAAKCRCJcvTf3G3A
- JjghD/wIsxOIyOzMtLfhNlUVRahUTySDQm9IoANjLGPQpTM0t1M8cwKeOjqfoL6alstZ4SNMEtX
- aJRZ28bbOztu6npnVmPlUtnUB4WVY2Bz7k4tpXjWx33VDzP5Z0HTcofBhJHGnv6441jMZIoBxdq
- kJOTFjwX9aMXL04GktAdix5olQ9MlRXUPPfBVITMabidz3zl4uWgxPYLOJvTdVdHHX+6iFdvyAQ
- u2csi5n6tzxerwZgHQDP7ETWPo61URuwGJcVZBxrCZ9VC+NrvOwx7aawthLBtWuF43TkpD2tguH
- ZgLJp7jma2D7WzIsJLrYSWrTlABHt1mACNT/u4FPIYsY/VA/Xk9j36ks1rKr+SqGRA4cWfIEYbw
- Ak40uD77bKYKRhdToOqk2W9Zt9cAR/QGCniYHsGveA958RkKZbkvm8zRmlrdnnhDeq2Pryyrcwe
- ExJAhOk1Y3nGeKC82pXbWX7lBazYlywHADTscKEz5hedwrJp0URz8E9ZWnfvXzh+lOGzE4zGm3a
- 4usnTUGodSc8P2ax00DqkMuGzVUfZScxELHGfdki5KoeeigEQNKF0DAE54BJTMEIYnq8Ul1EoJH
- Ajo4h7C54I3kOS5qQ6clsgyIDejsoQQWoMRRW1JkkuTcDVRO2xHlIBrPN/bJIronulIZcSob3xZ ZlAj3lFpzoj3VkA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAAyPb2UC/4XSS2rDMBCA4asEreuiGT2nq9yjdGFJI0eQxMEOp
+ iXk7pWzaetQtBzB9wsNuomZp8KzeNvdxMRLmct4rgO87EQ89OeBu5LqLFCiApS6O5YwX6dyHg7
+ cJ546RuUZ+2yYo6jqMnEun4/i+0edD2W+jtPX44IF1tP/Wwt00EWblLY9BnK0H8ZxOPJrHE9ij
+ S3YCOAaCFm5iBqk0fvh1Jfjj1cNr6rXxjvpU/YUzNbrhterzwF0BHI689abhjfV5wyeNAUL2m6
+ 9/e3Ns7erR8uYQWYfaetdw7vq2UoEZcFzTFvvG95Xj30kip4gxKf3U8NT9VJlhLo7pSluPchGA GQtkO0JrbSerX8qQKuwfkLrTWDjZEjpzw7u9/s33ZJMGjMDAAA=
+X-Developer-Key: i=tanzirhasanhasan@gmail.com; a=ed25519; pk=UeRjcUcv5W9AeLGEbAe2+0LptQpcY+o1Zg0LHHo7VN4=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1701809949; l=1597;
+ i=tanzirhasanhasan@gmail.com; s=20231204; h=from:subject:message-id;
+ bh=OpBF4JO9qEH0eFq9aQn9Qy1e2TtS+Dvl+rfyupEM/hU=; b=G2C30+8JBiyLP+brqVYCFRKKsEOwWYcODMl+8oBzBX4I1wKHBpcIzqzsZmbtSf8ei4tm2bXDd
+ 3Pj/70/QYYoBhZTVzJcLoI/enQ4fP7Pa/1o5uPYJUjjXNAO3gnbLJiY
+X-Mailer: b4 0.12.3
+Message-ID: <20231205-libstringheader-v1-1-7f9c573053a7@gmail.com>
+Subject: [PATCH] lib/string: shrink lib/string.i via IWYU
+From: tanzirh@google.com
+To: Kees Cook <keescook@chromium.org>
+Cc: Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Nick DeSaulniers <nnn@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, llvm@lists.linux.dev, 
+	Tanzir Hasan <tanzirh@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-Mostly as an example to myself, replace a simple allocation pattern with
-the automatic kfree cleanup features now exposed by cleanup.h.
+This diff uses an open source tool include-what-you-use (IWYU) to modify
+the include list changing indirect includes to direct includes.
+IWYU is implemented using the IWYUScripts github repository which is a tool that is
+currently undergoing development. These changes seek to improve build times.
 
-Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
+This change to lib/string.c resulted in a preprocessed size of
+lib/string.i from 26371 lines to 5232 lines (-80%).
+
+If there are any problems with the output of the tool please raise an
+issue on the github.
+
+Link: https://github.com/ClangBuiltLinux/IWYUScripts
+
+Signed-off-by: Tanzir Hasan <tanzirh@google.com>
 ---
- fs/pstore/inode.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/fs/pstore/inode.c b/fs/pstore/inode.c
-index d41c20d1b5e8..20f3452c8196 100644
---- a/fs/pstore/inode.c
-+++ b/fs/pstore/inode.c
-@@ -23,6 +23,7 @@
- #include <linux/pstore.h>
- #include <linux/slab.h>
- #include <linux/uaccess.h>
-+#include <linux/cleanup.h>
+---
+ lib/string.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/lib/string.c b/lib/string.c
+index be26623953d2..aff066e9da9f 100644
+--- a/lib/string.c
++++ b/lib/string.c
+@@ -16,16 +16,16 @@
  
- #include "internal.h"
- 
-@@ -64,7 +65,7 @@ static void free_pstore_private(struct pstore_private *private)
- static void *pstore_ftrace_seq_start(struct seq_file *s, loff_t *pos)
- {
- 	struct pstore_private *ps = s->private;
--	struct pstore_ftrace_seq_data *data;
-+	struct pstore_ftrace_seq_data *data __free(kfree) = NULL;
- 
- 	data = kzalloc(sizeof(*data), GFP_KERNEL);
- 	if (!data)
-@@ -72,13 +73,10 @@ static void *pstore_ftrace_seq_start(struct seq_file *s, loff_t *pos)
- 
- 	data->off = ps->total_size % REC_SIZE;
- 	data->off += *pos * REC_SIZE;
--	if (data->off + REC_SIZE > ps->total_size) {
--		kfree(data);
-+	if (data->off + REC_SIZE > ps->total_size)
- 		return NULL;
--	}
+ #define __NO_FORTIFY
+ #include <linux/types.h>
++#include <asm/bitsperlong.h>
++#include <asm/bug.h>
++#include <asm/errno.h>
++#include <asm/rwonce.h>
++#include <linux/linkage.h>
++#include <linux/stddef.h>
++#include <vdso/limits.h>
+ #include <linux/string.h>
+ #include <linux/ctype.h>
+-#include <linux/kernel.h>
+-#include <linux/export.h>
+-#include <linux/bug.h>
+-#include <linux/errno.h>
+-#include <linux/slab.h>
 -
--	return data;
+ #include <asm/unaligned.h>
+-#include <asm/byteorder.h>
+ #include <asm/word-at-a-time.h>
+ #include <asm/page.h>
  
-+	return_ptr(data);
- }
- 
- static void pstore_ftrace_seq_stop(struct seq_file *s, void *v)
+
+---
+base-commit: 33cc938e65a98f1d29d0a18403dbbee050dcad9a
+change-id: 20231204-libstringheader-e238e2af5eec
+
+Best regards,
 -- 
-2.34.1
+Tanzir Hasan <tanzirhasanhasan@gmail.com>
 
