@@ -1,91 +1,95 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hWbA1Hj0"
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D00D4188
-	for <linux-hardening@vger.kernel.org>; Tue,  5 Dec 2023 14:25:55 -0800 (PST)
-Received: by mail-wr1-x434.google.com with SMTP id ffacd0b85a97d-3316bb1303bso125283f8f.0
-        for <linux-hardening@vger.kernel.org>; Tue, 05 Dec 2023 14:25:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701815154; x=1702419954; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tlRvcm7L+cBAIszdYTxuMdD16SmRomd1bg4ss68VhyI=;
-        b=hWbA1Hj0zQde/j+2EwawUBS0XHnLSu/c82WtM7myLO+MXlqhjJHhTSNFyKTEqgvgDR
-         aZPAa4Dgd9Gys0QrX/SYaXHHndDSEYUfHp9gl3hBYWKr1SOtcu9hL5pdAAf3N8x8f4oV
-         Gr5x+pMoW6F/nNJ6EhSgHliJY1OoISW3LHsK8Z1/7wxPFe9dscWJfB4LTYz2/RF6elTp
-         Qk8DpnxlYtsOsTSEt07QZCHkR3VOrLeLPPpTGvxayqCrh3EitqO//zuambyQTrl3Lk4T
-         6RIa6AGNzWHws4pIdszu6NvX8fLiXTtDmDG2KcQ88GRvXk2kPB90PwxQFsN80cr8YZIO
-         NlYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701815154; x=1702419954;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tlRvcm7L+cBAIszdYTxuMdD16SmRomd1bg4ss68VhyI=;
-        b=wo1RAPBSfEELF6i79ov5CUs56f78SDHuP/4ePrtBegn7EgX7Ca8ev8ik3m2nneCdv8
-         ncMHAkNZ7x5wB7bs/6bllyKAXWAIlTPi3ygSXXo8z8G3/TPtkhe5pHhYJpKQMOEsNICA
-         0UG5RGTyXsMwdVLk2CJpNEXzIHakJQEeiipv7P04kcSFU9Aq65rx+nnh/a2RVfB2Ue6c
-         8v8rryHgbHYjr9AraGQpXwT5pkbek/0gfTdnpNlnTFiBvpmFsD3CVxOfmTq4HMUc1UYA
-         w2eMWZY+E0XWzqyFq/+5/dYyfd/63Z4wARpe0fey0M3bO4qqVhTFnPeEoovX1YlGeFMr
-         lHOw==
-X-Gm-Message-State: AOJu0Yz3LxdS3hUMq3S4NIA5EcDWv3ynwJOsd09h/KBmZfYynRVNoycY
-	ggt7DlboIBPysVAJDQjGHWYjWz6uFdzE8biHpJ7XTQ==
-X-Google-Smtp-Source: AGHT+IHF7C4eMuQFihFrv8+8ynBjYGzdmiqKV5qMKe3JCWHAeoQ6T/vXYIaLbgU2DeTIXJ8mWuYYqhOravlOhhfavug=
-X-Received: by 2002:adf:ed12:0:b0:333:2fd2:813d with SMTP id
- a18-20020adfed12000000b003332fd2813dmr4815585wro.90.1701815154097; Tue, 05
- Dec 2023 14:25:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="zY4U6y6l"
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63F91188;
+	Tue,  5 Dec 2023 14:27:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description;
+	bh=E7AglM1sNrEzVXvgP3Pr0r6mYMdRh2+F/SBHIShk58c=; b=zY4U6y6lQoUZxswY4qHKuuGtMg
+	sJixHP0HaCF1NRUNLbKQx1Rts5JMMIgCdPSJbRfX00//4xM6Rse/f/usqrGcuYKcMVvwuLbL61DbH
+	r9U6ocd0dSC2Vwn77w3LWy3ggQ5Dadje/DKxf7gV9zlQQDQU85DTEjlt8pXW0Age0oNooGsLvm0Tl
+	owIo817B6mI00r8rk7Z13PhEpztn1kflJRzQimIIEOrXsFQxN9FBrtW7thGCgsrDmJkrZnIq7FBKa
+	n9UL5MU4XbUSdbAI5KwcRyLsoK/2MT7NP3vE9nJ0EJFBzkiVWUKrHByR86Lo0l2B5wJcnoUGi1poy
+	DJ8rTlUQ==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1rAdse-008Vj3-0o;
+	Tue, 05 Dec 2023 22:27:04 +0000
+Date: Tue, 5 Dec 2023 14:27:04 -0800
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: Joel Granados <j.granados@samsung.com>,
+	Kees Cook <keescook@chromium.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Iurii Zaikin <yzaikin@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 00/18] sysctl: constify sysctl ctl_tables
+Message-ID: <ZW+juEWLSTybbujk@bombadil.infradead.org>
+References: <20231204-const-sysctl-v2-0-7a5060b11447@weissschuh.net>
+ <ZW66FhWx7W67Y9rP@bombadil.infradead.org>
+ <b4b0b7ea-d8b3-4538-a5b9-87a23bbdac5f@t-8ch.de>
+ <d50978d8-d4e7-4767-8ea7-5849f05d3be1@t-8ch.de>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231205-libstringheader-v1-1-7f9c573053a7@gmail.com>
- <20231205213807.GE1674809@ZenIV> <CAKwvOd=2VASkaLvjU+7kkbvhu2CimYn5KUGJBDRePyUhtrNK2Q@mail.gmail.com>
- <ZW-d1NZRIvmJlfcW@smile.fi.intel.com> <34e27c57-fc18-4918-bf44-4f8a53825361@infradead.org>
-In-Reply-To: <34e27c57-fc18-4918-bf44-4f8a53825361@infradead.org>
-From: Nick Desaulniers <ndesaulniers@google.com>
-Date: Tue, 5 Dec 2023 14:25:43 -0800
-Message-ID: <CAKwvOd=bZvLz4yRqet6Hv2O9iZYfGr=xiwfk+-MAasPjK7XnWA@mail.gmail.com>
-Subject: Re: [PATCH] lib/string: shrink lib/string.i via IWYU
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Andy Shevchenko <andy@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, tanzirh@google.com, 
-	Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Nick DeSaulniers <nnn@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d50978d8-d4e7-4767-8ea7-5849f05d3be1@t-8ch.de>
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-On Tue, Dec 5, 2023 at 2:10=E2=80=AFPM Randy Dunlap <rdunlap@infradead.org>=
- wrote:
->
-> I have an unpublished Linux Best Known Practices txt file with
-> this "rule" and some other info that I have collected over a few
-> years. I wouldn't say that it's up to date. Anyway, it's copied below
-> FWIW.
-> Generic drivers should not (do not) #include header files from
-> <asm-generic>. Only arch code and arch-specific drivers do that.
+On Tue, Dec 05, 2023 at 06:16:53PM +0100, Thomas Weißschuh wrote:
+> Hi Luis, Joel,
+> 
+> On 2023-12-05 09:04:08+0100, Thomas Weißschuh wrote:
+> > On 2023-12-04 21:50:14-0800, Luis Chamberlain wrote:
+> > > On Mon, Dec 04, 2023 at 08:52:13AM +0100, Thomas Weißschuh wrote:
+> > > > Tested by booting and with the sysctl selftests on x86.
+> > > 
+> > > Can I trouble you to rebase on sysctl-next?
+> > > 
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/mcgrof/linux.git/log/?h=sysctl-next
+> > 
+> > Will do.
+> 
+> The rebased series is now available at
+> https://git.sr.ht/~t-8ch/linux b4/const-sysctl
 
-Ok, that confirms my understanding.  We had picked up on that
-convention, but had missed the one below.
+I've applied this to sysctl-next as this all looks very sensible to me,
+except one patch which I'll chime in on, but I'm merging it to
+sysctl-next now without a promise to get this in as I really would like
+this to soak in on linux-next for a bit even if it does not get merged
+in the next kernel release. Exposing it on linux-next will surely
+iron out run time issues fast.
 
->
-> Don't use <asm/header.h> in generic driver code. Instead use
-> some <linux/header.h> that then #includes <asm/header.h>.
-> asm/ headers are implementation; linux/ headers are API.
+> Nothing much has changed in contrast to v2.
+> The only functional change so far is the initialization of
+> ctl_table_header::type in init_header().
+> 
+> I'll wait for Joels and maybe some more reviews before resending it.
 
-Ah, yeah, that's what we missed.
+It all is very trivial stuff, except a few patches, but it all is making
+sense, so my ask is to address feedback this week and post next week
+a new set so we can have changes merged as-is for Linux in case this
+really doesn't break anything.
 
----
-You should publish you doc somewhere, it can be helpful to refer back
-to them when you're on a different machine or to point someone else
-to.
+For some reason I raccall seeing som hacky sysclts that shared and
+modified an entry somewhere but the exact sysctl phases me, and I just
+cannot recall.
 
-I keep notes like this myself for debugging LLVM:
-https://github.com/ClangBuiltLinux/llvm-dev-conf-2020/issues/3 (and
-recently gcc: https://github.com/ClangBuiltLinux/llvm-dev-conf-2020/issues/=
-4)
---=20
-Thanks,
-~Nick Desaulniers
+> > [..]
+> 
+> For the future I think it would make sense to combine the tree-wide constification
+> of the structs with the removal of the sentinel values.
+> 
+> This would reduce the impacts of the maintainers.
+
+Indeed.
+
+  Luis
