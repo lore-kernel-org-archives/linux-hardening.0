@@ -1,92 +1,55 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=6wind.com header.i=@6wind.com header.b="hLPLGfwW"
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30EE2124
-	for <linux-hardening@vger.kernel.org>; Mon,  4 Dec 2023 23:58:48 -0800 (PST)
-Received: by mail-wr1-x434.google.com with SMTP id ffacd0b85a97d-33349b3f99aso1458449f8f.0
-        for <linux-hardening@vger.kernel.org>; Mon, 04 Dec 2023 23:58:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=6wind.com; s=google; t=1701763126; x=1702367926; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:from:references
-         :cc:to:content-language:subject:reply-to:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=g7FpkghBvKrwkpwGugGld407jjY5p4c/xbnuRbVmo3M=;
-        b=hLPLGfwW6c2v6Kho23LseK8L2lF+eua2pXpLm83bwYrKsK4RVhFP/Va2QnHmsV4jde
-         +FpbfflTFjlH3Ws5eGxdNYrM4rGM2HfeI9xcwgS+3qLb4ZrA+CLsnOMgRB1/GBCEzdrO
-         nQcwF7qe6HElv0wyVChb7/lKqEMy7xbGEYrwvlRxoeKA1N5mPC+JuoZZaXyEsm6qo78v
-         0QGRpbCukyQYkZvb9GCT+zb8Y45Sqx1kQ6Pxck42kptVX+2Nm1HCBaSFOGylD+5L7CC1
-         HX8Dgwhtn6uR1SjI8nYU3kYLkIgj0/duZ1ymtFCrWs2EjwQH5LPpA2fWiYCfXMCe/RBL
-         cakw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701763126; x=1702367926;
-        h=content-transfer-encoding:in-reply-to:organization:from:references
-         :cc:to:content-language:subject:reply-to:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=g7FpkghBvKrwkpwGugGld407jjY5p4c/xbnuRbVmo3M=;
-        b=sCAVIlUY/IB2AH5ljM6cvLL1QZXE1sFHFRMbC95FPhUEpEeawo57sm1+IEFe0pFn46
-         APUX8TE1zU29BBIN2vKaF4jTXBkuFjilC50fVe8O/gldvJdsryuV8EmmL5CoguTpVoFT
-         HurHYkR7U61/4ipmM6Bn6U6e1Ohdo+wekZpReFCa8jbvcUVS6PoWBDilPNIcjdza+tIz
-         ER1QfnvEkzyyY7pPPtRJgCLMVnrsm2fxR2M0RIFpPanCJhzUBFTTFDOzlCYVWfMtTju7
-         Xr7+pHnLvd0IyAqfQYkRvcz64TdZonLHtFRxJDT9w9oRtbY3NA1df3+1TF6J2GF+EJbZ
-         2M6g==
-X-Gm-Message-State: AOJu0Yz3EHhAaT/P0YY1K3l9T7OFPhOWVrKFj2aWz+v/Fg13XHNR+z2A
-	qnVQelI1SKK4kcOL3QhVUXGVdg==
-X-Google-Smtp-Source: AGHT+IF0WcZBXfMmBhWKPfp1EXfUTOotIxbbEXjRjIn3xrmPFKEbABwnOm4z9SZDfBvjEsjFHau4YA==
-X-Received: by 2002:a05:600c:1907:b0:40b:4c39:b4e with SMTP id j7-20020a05600c190700b0040b4c390b4emr204745wmq.1.1701763126671;
-        Mon, 04 Dec 2023 23:58:46 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:b41:c160:3e2e:5141:80dd:488f? ([2a01:e0a:b41:c160:3e2e:5141:80dd:488f])
-        by smtp.gmail.com with ESMTPSA id h9-20020a05600c314900b0040b3d8907fesm17817224wmo.29.2023.12.04.23.58.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Dec 2023 23:58:46 -0800 (PST)
-Message-ID: <10737d34-0070-41f5-8903-dcae30ee7ba5@6wind.com>
-Date: Tue, 5 Dec 2023 08:58:45 +0100
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="toBtk2dg"
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3DDD83;
+	Tue,  5 Dec 2023 00:04:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1701763449;
+	bh=uVveZGVaZUbRnOAutlrO+8dx/i4swMQhmAWYmf7MjJc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=toBtk2dg3zME3NTivyV0eIcnfHFayW+Sj63QXxP2KybGsXPcb/EP9BYJDDBdYy+C2
+	 qJqStQ03416apxhNdj0VmgT1esI/H0K4OO4HGu0Ks+pTM9G5ih/ZzDAgRvZD9VtB4j
+	 7r1MiRQPUt/QOE1kSP3fmQgtpoV4QvN9atqH1MpU=
+Date: Tue, 5 Dec 2023 09:04:08 +0100
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Iurii Zaikin <yzaikin@google.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joel Granados <j.granados@samsung.com>, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 00/18] sysctl: constify sysctl ctl_tables
+Message-ID: <b4b0b7ea-d8b3-4538-a5b9-87a23bbdac5f@t-8ch.de>
+References: <20231204-const-sysctl-v2-0-7a5060b11447@weissschuh.net>
+ <ZW66FhWx7W67Y9rP@bombadil.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: nicolas.dichtel@6wind.com
-Subject: Re: [PATCH v2] netlink: Return unsigned value for nla_len()
-Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>
-Cc: Jakub Kicinski <kuba@kernel.org>, kernel test robot <lkp@intel.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>, Johannes Berg <johannes@sipsolutions.net>,
- Jeff Johnson <quic_jjohnson@quicinc.com>, Michael Walle <mwalle@kernel.org>,
- Max Schulze <max.schulze@online.de>, netdev@vger.kernel.org,
- linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20231202202539.it.704-kees@kernel.org>
- <95924d9e-b373-40fd-993c-25b0bae55e61@6wind.com>
- <202312041420.886C9F3@keescook>
-From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Organization: 6WIND
-In-Reply-To: <202312041420.886C9F3@keescook>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZW66FhWx7W67Y9rP@bombadil.infradead.org>
 
-Le 04/12/2023 à 23:21, Kees Cook a écrit :
-[snip]
->>> diff --git a/include/uapi/linux/netlink.h b/include/uapi/linux/netlink.h
->>> index f87aaf28a649..270feed9fd63 100644
->>> --- a/include/uapi/linux/netlink.h
->>> +++ b/include/uapi/linux/netlink.h
->>> @@ -247,7 +247,7 @@ struct nlattr {
->>>  
->>>  #define NLA_ALIGNTO		4
->>>  #define NLA_ALIGN(len)		(((len) + NLA_ALIGNTO - 1) & ~(NLA_ALIGNTO - 1))
->>> -#define NLA_HDRLEN		((int) NLA_ALIGN(sizeof(struct nlattr)))
->>> +#define NLA_HDRLEN		((__u16) NLA_ALIGN(sizeof(struct nlattr)))
->> I wonder if this may break the compilation of some userspace tools with errors
->> like comparing signed and unsigned values.
+On 2023-12-04 21:50:14-0800, Luis Chamberlain wrote:
+> On Mon, Dec 04, 2023 at 08:52:13AM +0100, Thomas Weißschuh wrote:
+> > Tested by booting and with the sysctl selftests on x86.
 > 
-> Should I drop this part, then?
+> Can I trouble you to rebase on sysctl-next?
 > 
-Yes please.
+> https://git.kernel.org/pub/scm/linux/kernel/git/mcgrof/linux.git/log/?h=sysctl-next
 
+Will do.
 
-Thank you,
-Nicolas
+Note:
+
+I noticed that patch "sysctl: move sysctl type to ctl_table_header" from
+this series seems to be the better alternative to
+commit fd696ee2395755a ("sysctl: Fix out of bounds access for empty sysctl registers")
+which is currently on sysctl-next.
+
+The patch from the series should only depend on
+"sysctl: drop sysctl_is_perm_empty_ctl_table" from my series.
+
+Thomas
