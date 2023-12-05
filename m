@@ -1,68 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C91856E590;
-	Tue,  5 Dec 2023 21:24:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="eA4NeptR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CD60C433C8;
-	Tue,  5 Dec 2023 21:24:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1701811493;
-	bh=ziKcsiIBH+rVgZNoT8/bVPVFDuiUG8Ohd3nbih5ZSno=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=eA4NeptRfWGP7RLlgV6CwB/RCO8zJvjm+FnpVCfH/n2QN2xI21GwNZG5xrmz3d3O3
-	 1FgZpw89cd+LbAipWDBToGBVvr27rX6YcPXkXC81dWlzwt7Entb+gzzVSvi2WBZzH6
-	 qJOPUZ+SGN30v32YbnJeUXj+oZC/8QeIb7h3XVMM=
-Date: Tue, 5 Dec 2023 13:24:52 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Nick Desaulniers <ndesaulniers@google.com>
-Cc: tanzirh@google.com, Kees Cook <keescook@chromium.org>, Andy Shevchenko
- <andy@kernel.org>, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org, Nick DeSaulniers <nnn@google.com>,
- llvm@lists.linux.dev
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="YnhA+Lw6"
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DEFAD3;
+	Tue,  5 Dec 2023 13:38:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=HKW4QFdw1SLSy+SkuqSHdm3s7yV1a+qPMBI8CTnpIIQ=; b=YnhA+Lw601956o/BXGvoJwVs6b
+	HJ/ruVA7o7YK8GsFiaU8pesx1TY1HZe1YgvI/ZNQpHpMBDU1HidBuw3Kug5y5Z8Oys6bgmCguEvDr
+	MhBtL7J+wjd/TtYdnXZt1YFqpBQbN0xHEt0ohsYHTviT3X8TcdUj6b6B7VGrkd4Btgr7vUCxP0fLQ
+	WI97i5i8K2w8RdHp73Gq3qQb8+t2H73w2SbEWYijKjHabtCMOokySCrhY0UI/i9cvJHpuI4DzyrZN
+	TbR3KybOl1fMP5diqdjKNvn7tcSi9twOa7taauWBAPPv6yKEQp9/3QvK2reorfJe4Hhfq65+pD7JO
+	UTb3UfQw==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1rAd7H-007TNt-26;
+	Tue, 05 Dec 2023 21:38:07 +0000
+Date: Tue, 5 Dec 2023 21:38:07 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: tanzirh@google.com
+Cc: Kees Cook <keescook@chromium.org>, Andy Shevchenko <andy@kernel.org>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Nick DeSaulniers <nnn@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>, llvm@lists.linux.dev
 Subject: Re: [PATCH] lib/string: shrink lib/string.i via IWYU
-Message-Id: <20231205132452.418722bea8f6878dca88142a@linux-foundation.org>
-In-Reply-To: <CAKwvOdn+VTM+LY6ALcgaZTL57JpiKt5rBPMSPNXsgS3MCENhDQ@mail.gmail.com>
+Message-ID: <20231205213807.GE1674809@ZenIV>
 References: <20231205-libstringheader-v1-1-7f9c573053a7@gmail.com>
-	<20231205130449.8e330a26ecbed1f7b5ad5d7a@linux-foundation.org>
-	<CAKwvOdn+VTM+LY6ALcgaZTL57JpiKt5rBPMSPNXsgS3MCENhDQ@mail.gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231205-libstringheader-v1-1-7f9c573053a7@gmail.com>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Tue, 5 Dec 2023 13:14:16 -0800 Nick Desaulniers <ndesaulniers@google.com> wrote:
+On Tue, Dec 05, 2023 at 08:58:53PM +0000, tanzirh@google.com wrote:
+> This diff uses an open source tool include-what-you-use (IWYU) to modify
+> the include list changing indirect includes to direct includes.
 
-> >
-> > The preferred way to import bit-fiddling stuff is to include
-> > <linux/bits.h>.  Under the hood this may include asm/bitsperlong.h.  Or
-> > it may not, depending on Kconfig settings (particularly architecture).
-> >
+How does it account for arch- and config-dependent indirect includes?
+
+In particular, on sh this patch breaks, since there word-at-a-time.h does not
+contain an include of kernel.h, even though it uses REPEAT_BYTE.  This is
+a very simple case (they really ought to include kernel.h, same as all other
+instances of word-at-a-time.h), but I would expect arseloads of more subtle
+breakage in anything less trivial.
+
+And I'm not at all sure that there's no config-dependent breakage as well -
+this had been caught by quick make allmodconfig + make lib/string.o on
+a bunch of architectures; the graph of indirects includes (as well as the
+set of symbols needed for given header) is very much config-dependent.
+
+> IWYU is implemented using the IWYUScripts github repository which is a tool that is
+> currently undergoing development. These changes seek to improve build times.
 > 
-> Just triple checking my understanding; it looks like
-> include/linux/bits.h unconditionally includes asm/bitsperlong.h (which
-> is implemented per arch) most of which seem to include
-> asm-generic/bitsperlong.h.
-> 
-> include/linux/bits.h also defines a few macros (BIT_MASK, BIT_WORD,
-> BITS_PER_BYTE, GENMASK, etc).  If lib/string.c is not using any of
-> those, why can't we go straight to #including asm/bitsperlong.h?  That
-> should resolve to the arch specific impl which may include
-> asm-generic/bitsperlong.h?
+> This change to lib/string.c resulted in a preprocessed size of
+> lib/string.i from 26371 lines to 5232 lines (-80%).
 
-It's just a general rule.  If the higher-level include is present, use
-that.  Because of the above, plus I guess things might change in the
-future.
+It also breeds includes of asm/*.h, by the look of the output, which is
+not a good thing in general ;-/  E.g. #include <asm/uaccess.h> *anywhere*
+outside of linux/uaccess.h is a bad idea.
 
-We've been getting better about irregular asm/include files.
+> If there are any problems with the output of the tool please raise an
+> issue on the github.
 
-But bits.h is a poor example.  A better case to study is spinlock.h. 
-If this tool recommended including asm/spinlock.h then that won't work
-on any architecture which doesn't implement SMP (there is no
-arch/nios2/include/asm/spinlock.h).
+Sorry, no.  Your tool, your workflow, of course, but I don't do github issues.
+You are welcome to the contents of this reply, but I'm not using browser-based
+UI without very strong reasons; this one isn't.
