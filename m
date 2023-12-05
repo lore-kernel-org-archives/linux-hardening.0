@@ -1,56 +1,52 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HYsgfAnn"
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16659B2;
-	Tue,  5 Dec 2023 07:11:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nygmyjgJ"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B526C3;
+	Tue,  5 Dec 2023 08:05:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701789097; x=1733325097;
+  t=1701792352; x=1733328352;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=NCKQrIJCsPPNg0e7E2xvPRKgQ8JPMHmTUcO7tybYGaQ=;
-  b=HYsgfAnnd43NWQa3qN9fg3F1a8oEgucaBzm2eAIztC3T+GCjoSddx7nU
-   D9+VJF2dR5XEl9koXImSuwkrH55sUdfrNsla767zx6pVQRzVhrhY6E0eC
-   ldg3iHUHcHKu+iaIbPobKhavQFI41YSseJbp0ZlfqSG3ksmJQEig48NKd
-   4zhLRpOA1MjsyNKYehUpFE2WGsY2/vV2EoMMOCBFQCVqIsazAqVIjKQHB
-   ju3a4nnvlLgbAhGTESqRlS+6JHOMdecpRw2yRv/l8D+3iicRVbL4IiA0n
-   Ql6vsTSpjhS2KOEsg+ZNjP4gtMnBhN8ETuKM3bZdxtKKxo76Jt64gvHpC
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="800195"
+  bh=ZyDR6sy6u4w5UFUiRqO9kTsbMr6QFgnbKsI56jM9xb8=;
+  b=nygmyjgJcnqF2Svek4Xb1byV8HsayTcHnEYxdttCY2Zi6NriAoD61jhZ
+   RAElcBNRbS8BNiMINItc4KdZtO1FneuTr7HM7CCs87iO0uI4mNKkNvSRN
+   +4l62nETKlcTW6kBR7DylxVcWfbLZ3Q1cY4UxOX/GF89ENFLZJoPFu3yy
+   3vlk6ZHv5Ag+fedKxfBXyj3MP5Z65TvgxJ7rrQ1tzxHRbV2E+tyuCawKx
+   +RCzLxKVU3yfwOZJqYhLZPFHbnRjxqzseEgihntPNeZ+N7Lv7vypWL23E
+   kD/mLUrkS5mMhoZzPHrl2gLrY2uY1hnZX92nckyqSMAGnn/MrZ9HBrfBq
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="425071429"
 X-IronPort-AV: E=Sophos;i="6.04,252,1695711600"; 
-   d="scan'208";a="800195"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 07:11:37 -0800
+   d="scan'208";a="425071429"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 08:05:51 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="841490869"
+X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="720754060"
 X-IronPort-AV: E=Sophos;i="6.04,252,1695711600"; 
-   d="scan'208";a="841490869"
+   d="scan'208";a="720754060"
 Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by fmsmga004.fm.intel.com with ESMTP; 05 Dec 2023 07:11:31 -0800
+  by orsmga003.jf.intel.com with ESMTP; 05 Dec 2023 08:05:47 -0800
 Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1rAX56-0009Dy-0c;
-	Tue, 05 Dec 2023 15:11:28 +0000
-Date: Tue, 5 Dec 2023 23:10:33 +0800
+	id 1rAXvb-0009Iu-2D;
+	Tue, 05 Dec 2023 16:05:43 +0000
+Date: Wed, 6 Dec 2023 00:05:03 +0800
 From: kernel test robot <lkp@intel.com>
-To: davidgow@google.com, Rae Moar <rmoar@google.com>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	Kees Cook <keescook@chromium.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Iurii Zaikin <yzaikin@google.com>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Jonathan Corbet <corbet@lwn.net>, Kees Cook <keescook@chromium.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>, Maxime Ripard <mripard@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kselftest@vger.kernel.org,
-	kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-sound@vger.kernel.org, David Gow <davidgow@google.com>
-Subject: Re: [PATCH 1/4] kunit: Add APIs for managing devices
-Message-ID: <202312052210.IGXJP7wU-lkp@intel.com>
-References: <20231205-kunit_bus-v1-1-635036d3bc13@google.com>
+	Joel Granados <j.granados@samsung.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Subject: Re: [PATCH v2 12/18] sysctl: treewide: constify the ctl_table
+ argument of handlers
+Message-ID: <202312052324.nGsOnPtj-lkp@intel.com>
+References: <20231204-const-sysctl-v2-12-7a5060b11447@weissschuh.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -59,70 +55,156 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231205-kunit_bus-v1-1-635036d3bc13@google.com>
+In-Reply-To: <20231204-const-sysctl-v2-12-7a5060b11447@weissschuh.net>
 
-Hi,
+Hi Thomas,
 
-kernel test robot noticed the following build warnings:
+kernel test robot noticed the following build errors:
 
-[auto build test WARNING on c8613be119892ccceffbc550b9b9d7d68b995c9e]
+[auto build test ERROR on netfilter-nf/main]
+[also build test ERROR on akpm-mm/mm-everything linus/master v6.7-rc4]
+[cannot apply to nf-next/master next-20231205]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-url:    https://github.com/intel-lab-lkp/linux/commits/davidgow-google-com/kunit-Add-APIs-for-managing-devices/20231205-153349
-base:   c8613be119892ccceffbc550b9b9d7d68b995c9e
-patch link:    https://lore.kernel.org/r/20231205-kunit_bus-v1-1-635036d3bc13%40google.com
-patch subject: [PATCH 1/4] kunit: Add APIs for managing devices
-config: x86_64-randconfig-122-20231205 (https://download.01.org/0day-ci/archive/20231205/202312052210.IGXJP7wU-lkp@intel.com/config)
-compiler: clang version 16.0.4 (https://github.com/llvm/llvm-project.git ae42196bc493ffe877a7e3dff8be32035dea4d07)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231205/202312052210.IGXJP7wU-lkp@intel.com/reproduce)
+url:    https://github.com/intel-lab-lkp/linux/commits/Thomas-Wei-schuh/sysctl-delete-unused-define-SYSCTL_PERM_EMPTY_DIR/20231204-165306
+base:   git://git.kernel.org/pub/scm/linux/kernel/git/netfilter/nf.git main
+patch link:    https://lore.kernel.org/r/20231204-const-sysctl-v2-12-7a5060b11447%40weissschuh.net
+patch subject: [PATCH v2 12/18] sysctl: treewide: constify the ctl_table argument of handlers
+config: arm64-defconfig (https://download.01.org/0day-ci/archive/20231205/202312052324.nGsOnPtj-lkp@intel.com/config)
+compiler: aarch64-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231205/202312052324.nGsOnPtj-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202312052210.IGXJP7wU-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202312052324.nGsOnPtj-lkp@intel.com/
 
-sparse warnings: (new ones prefixed by >>)
->> lib/kunit/device.c:100:21: sparse: sparse: symbol '__kunit_device_register_internal' was not declared. Should it be static?
+All errors (new ones prefixed by >>):
 
-vim +/__kunit_device_register_internal +100 lib/kunit/device.c
+         |                                                                 ^~~~~~
+   drivers/perf/arm_pmuv3.c:144:51: note: in expansion of macro 'ARMV8_IMPDEF_PERFCTR_L1D_CACHE_REFILL_RD'
+     144 |         [C(L1D)][C(OP_READ)][C(RESULT_MISS)]    = ARMV8_IMPDEF_PERFCTR_L1D_CACHE_REFILL_RD,
+         |                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmuv3.h:122:65: warning: initialized field overwritten [-Woverride-init]
+     122 | #define ARMV8_IMPDEF_PERFCTR_L1D_CACHE_WR                       0x0041
+         |                                                                 ^~~~~~
+   drivers/perf/arm_pmuv3.c:145:51: note: in expansion of macro 'ARMV8_IMPDEF_PERFCTR_L1D_CACHE_WR'
+     145 |         [C(L1D)][C(OP_WRITE)][C(RESULT_ACCESS)] = ARMV8_IMPDEF_PERFCTR_L1D_CACHE_WR,
+         |                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmuv3.h:122:65: note: (near initialization for 'armv8_vulcan_perf_cache_map[0][1][0]')
+     122 | #define ARMV8_IMPDEF_PERFCTR_L1D_CACHE_WR                       0x0041
+         |                                                                 ^~~~~~
+   drivers/perf/arm_pmuv3.c:145:51: note: in expansion of macro 'ARMV8_IMPDEF_PERFCTR_L1D_CACHE_WR'
+     145 |         [C(L1D)][C(OP_WRITE)][C(RESULT_ACCESS)] = ARMV8_IMPDEF_PERFCTR_L1D_CACHE_WR,
+         |                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmuv3.h:124:65: warning: initialized field overwritten [-Woverride-init]
+     124 | #define ARMV8_IMPDEF_PERFCTR_L1D_CACHE_REFILL_WR                0x0043
+         |                                                                 ^~~~~~
+   drivers/perf/arm_pmuv3.c:146:51: note: in expansion of macro 'ARMV8_IMPDEF_PERFCTR_L1D_CACHE_REFILL_WR'
+     146 |         [C(L1D)][C(OP_WRITE)][C(RESULT_MISS)]   = ARMV8_IMPDEF_PERFCTR_L1D_CACHE_REFILL_WR,
+         |                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmuv3.h:124:65: note: (near initialization for 'armv8_vulcan_perf_cache_map[0][1][1]')
+     124 | #define ARMV8_IMPDEF_PERFCTR_L1D_CACHE_REFILL_WR                0x0043
+         |                                                                 ^~~~~~
+   drivers/perf/arm_pmuv3.c:146:51: note: in expansion of macro 'ARMV8_IMPDEF_PERFCTR_L1D_CACHE_REFILL_WR'
+     146 |         [C(L1D)][C(OP_WRITE)][C(RESULT_MISS)]   = ARMV8_IMPDEF_PERFCTR_L1D_CACHE_REFILL_WR,
+         |                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmuv3.h:133:65: warning: initialized field overwritten [-Woverride-init]
+     133 | #define ARMV8_IMPDEF_PERFCTR_L1D_TLB_RD                         0x004E
+         |                                                                 ^~~~~~
+   drivers/perf/arm_pmuv3.c:148:51: note: in expansion of macro 'ARMV8_IMPDEF_PERFCTR_L1D_TLB_RD'
+     148 |         [C(DTLB)][C(OP_READ)][C(RESULT_ACCESS)] = ARMV8_IMPDEF_PERFCTR_L1D_TLB_RD,
+         |                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmuv3.h:133:65: note: (near initialization for 'armv8_vulcan_perf_cache_map[3][0][0]')
+     133 | #define ARMV8_IMPDEF_PERFCTR_L1D_TLB_RD                         0x004E
+         |                                                                 ^~~~~~
+   drivers/perf/arm_pmuv3.c:148:51: note: in expansion of macro 'ARMV8_IMPDEF_PERFCTR_L1D_TLB_RD'
+     148 |         [C(DTLB)][C(OP_READ)][C(RESULT_ACCESS)] = ARMV8_IMPDEF_PERFCTR_L1D_TLB_RD,
+         |                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmuv3.h:134:65: warning: initialized field overwritten [-Woverride-init]
+     134 | #define ARMV8_IMPDEF_PERFCTR_L1D_TLB_WR                         0x004F
+         |                                                                 ^~~~~~
+   drivers/perf/arm_pmuv3.c:149:52: note: in expansion of macro 'ARMV8_IMPDEF_PERFCTR_L1D_TLB_WR'
+     149 |         [C(DTLB)][C(OP_WRITE)][C(RESULT_ACCESS)] = ARMV8_IMPDEF_PERFCTR_L1D_TLB_WR,
+         |                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmuv3.h:134:65: note: (near initialization for 'armv8_vulcan_perf_cache_map[3][1][0]')
+     134 | #define ARMV8_IMPDEF_PERFCTR_L1D_TLB_WR                         0x004F
+         |                                                                 ^~~~~~
+   drivers/perf/arm_pmuv3.c:149:52: note: in expansion of macro 'ARMV8_IMPDEF_PERFCTR_L1D_TLB_WR'
+     149 |         [C(DTLB)][C(OP_WRITE)][C(RESULT_ACCESS)] = ARMV8_IMPDEF_PERFCTR_L1D_TLB_WR,
+         |                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmuv3.h:131:65: warning: initialized field overwritten [-Woverride-init]
+     131 | #define ARMV8_IMPDEF_PERFCTR_L1D_TLB_REFILL_RD                  0x004C
+         |                                                                 ^~~~~~
+   drivers/perf/arm_pmuv3.c:150:51: note: in expansion of macro 'ARMV8_IMPDEF_PERFCTR_L1D_TLB_REFILL_RD'
+     150 |         [C(DTLB)][C(OP_READ)][C(RESULT_MISS)]   = ARMV8_IMPDEF_PERFCTR_L1D_TLB_REFILL_RD,
+         |                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmuv3.h:131:65: note: (near initialization for 'armv8_vulcan_perf_cache_map[3][0][1]')
+     131 | #define ARMV8_IMPDEF_PERFCTR_L1D_TLB_REFILL_RD                  0x004C
+         |                                                                 ^~~~~~
+   drivers/perf/arm_pmuv3.c:150:51: note: in expansion of macro 'ARMV8_IMPDEF_PERFCTR_L1D_TLB_REFILL_RD'
+     150 |         [C(DTLB)][C(OP_READ)][C(RESULT_MISS)]   = ARMV8_IMPDEF_PERFCTR_L1D_TLB_REFILL_RD,
+         |                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmuv3.h:132:65: warning: initialized field overwritten [-Woverride-init]
+     132 | #define ARMV8_IMPDEF_PERFCTR_L1D_TLB_REFILL_WR                  0x004D
+         |                                                                 ^~~~~~
+   drivers/perf/arm_pmuv3.c:151:51: note: in expansion of macro 'ARMV8_IMPDEF_PERFCTR_L1D_TLB_REFILL_WR'
+     151 |         [C(DTLB)][C(OP_WRITE)][C(RESULT_MISS)]  = ARMV8_IMPDEF_PERFCTR_L1D_TLB_REFILL_WR,
+         |                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmuv3.h:132:65: note: (near initialization for 'armv8_vulcan_perf_cache_map[3][1][1]')
+     132 | #define ARMV8_IMPDEF_PERFCTR_L1D_TLB_REFILL_WR                  0x004D
+         |                                                                 ^~~~~~
+   drivers/perf/arm_pmuv3.c:151:51: note: in expansion of macro 'ARMV8_IMPDEF_PERFCTR_L1D_TLB_REFILL_WR'
+     151 |         [C(DTLB)][C(OP_WRITE)][C(RESULT_MISS)]  = ARMV8_IMPDEF_PERFCTR_L1D_TLB_REFILL_WR,
+         |                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmuv3.h:148:65: warning: initialized field overwritten [-Woverride-init]
+     148 | #define ARMV8_IMPDEF_PERFCTR_BUS_ACCESS_RD                      0x0060
+         |                                                                 ^~~~~~
+   drivers/perf/arm_pmuv3.c:153:51: note: in expansion of macro 'ARMV8_IMPDEF_PERFCTR_BUS_ACCESS_RD'
+     153 |         [C(NODE)][C(OP_READ)][C(RESULT_ACCESS)] = ARMV8_IMPDEF_PERFCTR_BUS_ACCESS_RD,
+         |                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmuv3.h:148:65: note: (near initialization for 'armv8_vulcan_perf_cache_map[6][0][0]')
+     148 | #define ARMV8_IMPDEF_PERFCTR_BUS_ACCESS_RD                      0x0060
+         |                                                                 ^~~~~~
+   drivers/perf/arm_pmuv3.c:153:51: note: in expansion of macro 'ARMV8_IMPDEF_PERFCTR_BUS_ACCESS_RD'
+     153 |         [C(NODE)][C(OP_READ)][C(RESULT_ACCESS)] = ARMV8_IMPDEF_PERFCTR_BUS_ACCESS_RD,
+         |                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmuv3.h:149:65: warning: initialized field overwritten [-Woverride-init]
+     149 | #define ARMV8_IMPDEF_PERFCTR_BUS_ACCESS_WR                      0x0061
+         |                                                                 ^~~~~~
+   drivers/perf/arm_pmuv3.c:154:52: note: in expansion of macro 'ARMV8_IMPDEF_PERFCTR_BUS_ACCESS_WR'
+     154 |         [C(NODE)][C(OP_WRITE)][C(RESULT_ACCESS)] = ARMV8_IMPDEF_PERFCTR_BUS_ACCESS_WR,
+         |                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmuv3.h:149:65: note: (near initialization for 'armv8_vulcan_perf_cache_map[6][1][0]')
+     149 | #define ARMV8_IMPDEF_PERFCTR_BUS_ACCESS_WR                      0x0061
+         |                                                                 ^~~~~~
+   drivers/perf/arm_pmuv3.c:154:52: note: in expansion of macro 'ARMV8_IMPDEF_PERFCTR_BUS_ACCESS_WR'
+     154 |         [C(NODE)][C(OP_WRITE)][C(RESULT_ACCESS)] = ARMV8_IMPDEF_PERFCTR_BUS_ACCESS_WR,
+         |                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/perf/arm_pmuv3.c:1174:35: error: initialization of 'int (*)(const struct ctl_table *, int,  void *, size_t *, loff_t *)' {aka 'int (*)(const struct ctl_table *, int,  void *, long unsigned int *, long long int *)'} from incompatible pointer type 'int (*)(struct ctl_table *, int,  void *, size_t *, loff_t *)' {aka 'int (*)(struct ctl_table *, int,  void *, long unsigned int *, long long int *)'} [-Werror=incompatible-pointer-types]
+    1174 |                 .proc_handler   = armv8pmu_proc_user_access_handler,
+         |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/perf/arm_pmuv3.c:1174:35: note: (near initialization for 'armv8_pmu_sysctl_table[0].proc_handler')
+   cc1: some warnings being treated as errors
 
-    99	
- > 100	struct kunit_device *__kunit_device_register_internal(struct kunit *test,
-   101							      const char *name,
-   102							      struct device_driver *drv)
-   103	{
-   104		struct kunit_device *kunit_dev;
-   105		int err = -ENOMEM;
-   106	
-   107		kunit_dev = kzalloc(sizeof(struct kunit_device), GFP_KERNEL);
-   108		if (!kunit_dev)
-   109			return ERR_PTR(err);
-   110	
-   111		kunit_dev->owner = test;
-   112	
-   113		err = dev_set_name(&kunit_dev->dev, "%s.%s", test->name, name);
-   114		if (err) {
-   115			kfree(kunit_dev);
-   116			return ERR_PTR(err);
-   117		}
-   118	
-   119		/* Set the expected driver pointer, so we match. */
-   120		kunit_dev->driver = drv;
-   121	
-   122		kunit_dev->dev.release = kunit_device_release;
-   123		kunit_dev->dev.bus = &kunit_bus_type;
-   124		kunit_dev->dev.parent = &kunit_bus;
-   125	
-   126		err = device_register(&kunit_dev->dev);
-   127		if (err) {
-   128			put_device(&kunit_dev->dev);
-   129			return ERR_PTR(err);
-   130		}
-   131	
-   132		kunit_add_action(test, device_unregister_wrapper, &kunit_dev->dev);
-   133	
-   134		return kunit_dev;
-   135	}
-   136	
+
+vim +1174 drivers/perf/arm_pmuv3.c
+
+83a7a4d643d33a arch/arm64/kernel/perf_event.c Rob Herring 2021-12-08  1167  
+e2012600810c9d arch/arm64/kernel/perf_event.c Rob Herring 2021-12-08  1168  static struct ctl_table armv8_pmu_sysctl_table[] = {
+e2012600810c9d arch/arm64/kernel/perf_event.c Rob Herring 2021-12-08  1169  	{
+e2012600810c9d arch/arm64/kernel/perf_event.c Rob Herring 2021-12-08  1170  		.procname       = "perf_user_access",
+e2012600810c9d arch/arm64/kernel/perf_event.c Rob Herring 2021-12-08  1171  		.data		= &sysctl_perf_user_access,
+e2012600810c9d arch/arm64/kernel/perf_event.c Rob Herring 2021-12-08  1172  		.maxlen		= sizeof(unsigned int),
+e2012600810c9d arch/arm64/kernel/perf_event.c Rob Herring 2021-12-08  1173  		.mode           = 0644,
+83a7a4d643d33a arch/arm64/kernel/perf_event.c Rob Herring 2021-12-08 @1174  		.proc_handler	= armv8pmu_proc_user_access_handler,
+e2012600810c9d arch/arm64/kernel/perf_event.c Rob Herring 2021-12-08  1175  		.extra1		= SYSCTL_ZERO,
+e2012600810c9d arch/arm64/kernel/perf_event.c Rob Herring 2021-12-08  1176  		.extra2		= SYSCTL_ONE,
+e2012600810c9d arch/arm64/kernel/perf_event.c Rob Herring 2021-12-08  1177  	},
+e2012600810c9d arch/arm64/kernel/perf_event.c Rob Herring 2021-12-08  1178  };
+e2012600810c9d arch/arm64/kernel/perf_event.c Rob Herring 2021-12-08  1179  
 
 -- 
 0-DAY CI Kernel Test Service
