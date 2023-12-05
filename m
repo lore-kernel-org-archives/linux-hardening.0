@@ -1,100 +1,63 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E84E8C3;
-	Tue,  5 Dec 2023 13:53:50 -0800 (PST)
-X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="460453461"
-X-IronPort-AV: E=Sophos;i="6.04,253,1695711600"; 
-   d="scan'208";a="460453461"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 13:53:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="841615284"
-X-IronPort-AV: E=Sophos;i="6.04,253,1695711600"; 
-   d="scan'208";a="841615284"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 13:53:41 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andy@kernel.org>)
-	id 1rAdMJ-00000002Bv4-03UG;
-	Tue, 05 Dec 2023 23:53:39 +0200
-Date: Tue, 5 Dec 2023 23:53:38 +0200
-From: Andy Shevchenko <andy@kernel.org>
-To: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, tanzirh@google.com,
-	Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Nick DeSaulniers <nnn@google.com>,
-	llvm@lists.linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="qlh/FNeD"
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 801961B8;
+	Tue,  5 Dec 2023 13:57:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=4R8XorxoFVOpovwERfSrloKkn2fMEhR5jZoBji1BSzM=; b=qlh/FNeDT4RM5b8OO4gTtNwyyw
+	Yj566rfENDUFrZyrSODB7/RDqkMAoxkYS6Kqmvz/6ib39OUcGVHBY2AdXtFHtOrWZMpAmntVEYmeq
+	Q4ox4UkGCyDPct/YjeoqTVzAak1qLHfUSr9eHYzJgCGeaSv/ofdJavh6WHUxRUviF/KOMiAeXuHxx
+	cjvhQlTkXKiQ53swhQP37deCDEWQT51eQYoWRVjm+ZboLMI1xvqJT8iHwcV73gQGDV35Gccz1AUGz
+	LGYZmNwp1qXNNKD2M9l634UMZw0J2f7EEHy8VVTMz28+ht0YI6Xh6xz2sEm6PBrlsNsU6Kl7peIep
+	16Q8aXKQ==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1rAdQ1-007Tjl-1a;
+	Tue, 05 Dec 2023 21:57:29 +0000
+Date: Tue, 5 Dec 2023 21:57:29 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: tanzirh@google.com
+Cc: Kees Cook <keescook@chromium.org>, Andy Shevchenko <andy@kernel.org>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Nick DeSaulniers <nnn@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>, llvm@lists.linux.dev
 Subject: Re: [PATCH] lib/string: shrink lib/string.i via IWYU
-Message-ID: <ZW-b4l1llqPXW-el@smile.fi.intel.com>
+Message-ID: <20231205215729.GG1674809@ZenIV>
 References: <20231205-libstringheader-v1-1-7f9c573053a7@gmail.com>
- <20231205130449.8e330a26ecbed1f7b5ad5d7a@linux-foundation.org>
- <CAKwvOdn+VTM+LY6ALcgaZTL57JpiKt5rBPMSPNXsgS3MCENhDQ@mail.gmail.com>
- <20231205132452.418722bea8f6878dca88142a@linux-foundation.org>
- <CAKwvOdn=og6h5gVdDCjFDANs3MN-_CD4OZ9oRM=o9YAvoTzkzw@mail.gmail.com>
+ <20231205213807.GE1674809@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKwvOdn=og6h5gVdDCjFDANs3MN-_CD4OZ9oRM=o9YAvoTzkzw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20231205213807.GE1674809@ZenIV>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Tue, Dec 05, 2023 at 01:39:47PM -0800, Nick Desaulniers wrote:
-> On Tue, Dec 5, 2023 at 1:24 PM Andrew Morton <akpm@linux-foundation.org> wrote:
-> > On Tue, 5 Dec 2023 13:14:16 -0800 Nick Desaulniers <ndesaulniers@google.com> wrote:
-> > > > The preferred way to import bit-fiddling stuff is to include
-> > > > <linux/bits.h>.  Under the hood this may include asm/bitsperlong.h.  Or
-> > > > it may not, depending on Kconfig settings (particularly architecture).
-> > >
-> > > Just triple checking my understanding; it looks like
-> > > include/linux/bits.h unconditionally includes asm/bitsperlong.h (which
-> > > is implemented per arch) most of which seem to include
-> > > asm-generic/bitsperlong.h.
-> > >
-> > > include/linux/bits.h also defines a few macros (BIT_MASK, BIT_WORD,
-> > > BITS_PER_BYTE, GENMASK, etc).  If lib/string.c is not using any of
-> > > those, why can't we go straight to #including asm/bitsperlong.h?  That
-> > > should resolve to the arch specific impl which may include
-> > > asm-generic/bitsperlong.h?
-> >
-> > It's just a general rule.  If the higher-level include is present, use
-> > that.  Because of the above, plus I guess things might change in the
-> > future.
-> 
-> Hmm...how does one know that linux/bits.h is the higher-level include
-> of asm/bitsperlong.h?
-> 
-> Do we mention these conventions anywhere under Documentation?
+On Tue, Dec 05, 2023 at 09:38:07PM +0000, Al Viro wrote:
 
-Unfortunately it comes with an experience. The problem here is the absence of
-Documentation for the headers that guarantee inclusion of other headers. In
-general linux/* are preferred over asm/* but sometimes things are complicated
-(when some asm ones include linux ones via architectural code and circling
-around).
+> It also breeds includes of asm/*.h, by the look of the output, which is
+> not a good thing in general ;-/  E.g. #include <asm/uaccess.h> *anywhere*
+> outside of linux/uaccess.h is a bad idea.
 
-> > We've been getting better about irregular asm/include files.
-> >
-> > But bits.h is a poor example.  A better case to study is spinlock.h.
-> > If this tool recommended including asm/spinlock.h then that won't work
-> > on any architecture which doesn't implement SMP (there is no
-> > arch/nios2/include/asm/spinlock.h).
-> 
-> The tooling Tanzir is working on does wrap IWYU, and does support such
-> mapping (of 'low level' to 'high level' headers; more so, if it
-> recommends X you can override to suggest Y instead).
-> 
-> arch/nios/ also doesn't provide a bug.h, which this patch is
-> suggesting we include directly.  I guess the same goes for
-> asm/rwonce.h.
+Let me elaborate a bit:
 
-Have you checked Ingo Molnar's gigantic series (2k+ patches) for the header
-hell clean up? Perhaps we need to apply that first.
+Consider e.g. a situation when we have linux/foo.h pulling asm/foo.h;
+among the things declared there is foo_bar(), which is identical in
+18 instances of asm/foo.h (out of current 21).
 
--- 
-With Best Regards,
-Andy Shevchenko
+At some point we notice that; the obvious approach would be to have
+3 unusual architectures have their asm/foo.h define _ARCH_HAS_ODD_FOO_BAR
+and put the common variant in linux/foo.h under ifndef _ARCH_HAS_ODD_FOO_BAR.
 
+Except that any file that pulls asm/foo.h will get broken by that.
+And something like your tool might convert the users of linux/foo.h to
+asm/foo.h - all it takes is using only the primitives that currently
+happen to be in asm/foo.h on all architectures.
 
+This is not an artifical example, BTW - look at the history of uaccess.h and
+checksum.h...
