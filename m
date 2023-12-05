@@ -1,37 +1,37 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e9dEpWsW"
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1192D188;
-	Tue,  5 Dec 2023 06:59:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HYsgfAnn"
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16659B2;
+	Tue,  5 Dec 2023 07:11:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701788372; x=1733324372;
+  t=1701789097; x=1733325097;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=VZDh21/Ig8AXYrMCD18ioZIyJdzTpoel4Yv9mfI1z6Q=;
-  b=e9dEpWsWa7GANAIdFYw2tFvEvlrhgQ1pm3fxzyZMeSsm+r/XGRDHdaSW
-   DA+hVb3syqfpXDS6J8W6tVkhBowJaEJjRBh8IkTW0/e/LVRPww3WyzCJL
-   sEUwOTbwcz0a/m/cEBIzOaNrB83XprKQtnNa8ILHow/7Qdxf8+l8rbKym
-   qu/ZMsa71hIVGRSvnMVdrpXYX9GCxMzntpnJj7/ICoDUtiwTUU/TlHYDA
-   Rdths1sfOl0HNKe46LBHTbbie43bHsLTUx/bD4VhbRpo8Cs2P8wAiABnL
-   OryYuCsqeiQvox5UUnFX11Q9uTLgrDcHqvzMHxUjHUFYhyAmDCeqBUKQM
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="7250408"
+  bh=NCKQrIJCsPPNg0e7E2xvPRKgQ8JPMHmTUcO7tybYGaQ=;
+  b=HYsgfAnnd43NWQa3qN9fg3F1a8oEgucaBzm2eAIztC3T+GCjoSddx7nU
+   D9+VJF2dR5XEl9koXImSuwkrH55sUdfrNsla767zx6pVQRzVhrhY6E0eC
+   ldg3iHUHcHKu+iaIbPobKhavQFI41YSseJbp0ZlfqSG3ksmJQEig48NKd
+   4zhLRpOA1MjsyNKYehUpFE2WGsY2/vV2EoMMOCBFQCVqIsazAqVIjKQHB
+   ju3a4nnvlLgbAhGTESqRlS+6JHOMdecpRw2yRv/l8D+3iicRVbL4IiA0n
+   Ql6vsTSpjhS2KOEsg+ZNjP4gtMnBhN8ETuKM3bZdxtKKxo76Jt64gvHpC
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="800195"
 X-IronPort-AV: E=Sophos;i="6.04,252,1695711600"; 
-   d="scan'208";a="7250408"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 06:59:31 -0800
+   d="scan'208";a="800195"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 07:11:37 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="944283594"
+X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="841490869"
 X-IronPort-AV: E=Sophos;i="6.04,252,1695711600"; 
-   d="scan'208";a="944283594"
+   d="scan'208";a="841490869"
 Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga005.jf.intel.com with ESMTP; 05 Dec 2023 06:59:24 -0800
+  by fmsmga004.fm.intel.com with ESMTP; 05 Dec 2023 07:11:31 -0800
 Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1rAWtO-0009DG-02;
-	Tue, 05 Dec 2023 14:59:22 +0000
-Date: Tue, 5 Dec 2023 22:59:20 +0800
+	id 1rAX56-0009Dy-0c;
+	Tue, 05 Dec 2023 15:11:28 +0000
+Date: Tue, 5 Dec 2023 23:10:33 +0800
 From: kernel test robot <lkp@intel.com>
 To: davidgow@google.com, Rae Moar <rmoar@google.com>,
 	Brendan Higgins <brendan.higgins@linux.dev>,
@@ -49,7 +49,7 @@ Cc: oe-kbuild-all@lists.linux.dev, linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
 	linux-sound@vger.kernel.org, David Gow <davidgow@google.com>
 Subject: Re: [PATCH 1/4] kunit: Add APIs for managing devices
-Message-ID: <202312052230.ic1pg0uo-lkp@intel.com>
+Message-ID: <202312052210.IGXJP7wU-lkp@intel.com>
 References: <20231205-kunit_bus-v1-1-635036d3bc13@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -71,27 +71,17 @@ url:    https://github.com/intel-lab-lkp/linux/commits/davidgow-google-com/kunit
 base:   c8613be119892ccceffbc550b9b9d7d68b995c9e
 patch link:    https://lore.kernel.org/r/20231205-kunit_bus-v1-1-635036d3bc13%40google.com
 patch subject: [PATCH 1/4] kunit: Add APIs for managing devices
-config: i386-randconfig-141-20231205 (https://download.01.org/0day-ci/archive/20231205/202312052230.ic1pg0uo-lkp@intel.com/config)
-compiler: gcc-9 (Debian 9.3.0-22) 9.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231205/202312052230.ic1pg0uo-lkp@intel.com/reproduce)
+config: x86_64-randconfig-122-20231205 (https://download.01.org/0day-ci/archive/20231205/202312052210.IGXJP7wU-lkp@intel.com/config)
+compiler: clang version 16.0.4 (https://github.com/llvm/llvm-project.git ae42196bc493ffe877a7e3dff8be32035dea4d07)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231205/202312052210.IGXJP7wU-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202312052230.ic1pg0uo-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202312052210.IGXJP7wU-lkp@intel.com/
 
-All warnings (new ones prefixed by >>):
-
->> lib/kunit/device.c:100:22: warning: no previous prototype for '__kunit_device_register_internal' [-Wmissing-prototypes]
-     100 | struct kunit_device *__kunit_device_register_internal(struct kunit *test,
-         |                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Kconfig warnings: (for reference only)
-   WARNING: unmet direct dependencies detected for DRM_I915_DEBUG_GEM
-   Depends on [n]: HAS_IOMEM [=y] && DRM_I915 [=m] && EXPERT [=y] && DRM_I915_WERROR [=n]
-   Selected by [m]:
-   - DRM_I915_DEBUG [=y] && HAS_IOMEM [=y] && DRM_I915 [=m] && EXPERT [=y] && !COMPILE_TEST [=n]
-
+sparse warnings: (new ones prefixed by >>)
+>> lib/kunit/device.c:100:21: sparse: sparse: symbol '__kunit_device_register_internal' was not declared. Should it be static?
 
 vim +/__kunit_device_register_internal +100 lib/kunit/device.c
 
