@@ -1,90 +1,67 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Scb8CJZR"
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A6CDBA;
-	Tue,  5 Dec 2023 08:05:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701792354; x=1733328354;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=o9heeCnQAsdaiKjUskI2g/hhm4Nd3ui2lad9PWcZgjQ=;
-  b=Scb8CJZRtKeYBx9gKlD+T87KjctZnjavrcP/GEJTBheo0MKdQtDB9vED
-   VcY3DkJRiLY11Gi37j76SFwgY3j0jAeELP+fiYDMBw0izt9xHUe6CTBF2
-   7CUt1zFTXcu1vOopxyBONKbTqMQx2nTdxL072dp1+otoWrv/8caev/Dja
-   4285TtNZl2+xsqT10TUpJzJZVP/V182rrwdRpHkkk5rXE8XmVzCe9JHHk
-   YDuiJ+0raim638rGnhN4B9PYNroSBvzAay3PMxB6mjILKSvoPGn1gvOXw
-   PEA92+MO24/hwEsqT2bZM2NNGtsgbhsTMgLuIMIYAx0UnvnRMMPoBWQKI
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="425071433"
-X-IronPort-AV: E=Sophos;i="6.04,252,1695711600"; 
-   d="scan'208";a="425071433"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 08:05:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="720754059"
-X-IronPort-AV: E=Sophos;i="6.04,252,1695711600"; 
-   d="scan'208";a="720754059"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga003.jf.intel.com with ESMTP; 05 Dec 2023 08:05:47 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rAXvb-0009Io-1x;
-	Tue, 05 Dec 2023 16:05:43 +0000
-Date: Wed, 6 Dec 2023 00:05:04 +0800
-From: kernel test robot <lkp@intel.com>
-To: davidgow@google.com, Rae Moar <rmoar@google.com>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Jonathan Corbet <corbet@lwn.net>, Kees Cook <keescook@chromium.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>, Maxime Ripard <mripard@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kselftest@vger.kernel.org,
-	kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-sound@vger.kernel.org, David Gow <davidgow@google.com>
-Subject: Re: [PATCH 1/4] kunit: Add APIs for managing devices
-Message-ID: <202312052341.fEujgbbC-lkp@intel.com>
-References: <20231205-kunit_bus-v1-1-635036d3bc13@google.com>
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="WC7mZ97G"
+Received: from todd.t-8ch.de (todd.t-8ch.de [IPv6:2a01:4f8:c010:41de::1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 408491B6;
+	Tue,  5 Dec 2023 09:16:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1701796614;
+	bh=KWkP8n96GGXrhKo85Rj+ALey16KlZtODcw3/5xOWFUI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WC7mZ97GSAfwxIHjGKbWqUNzqRKjIzPKv4na8of1+OwLef5DrPCxhT+cUnDu6POxt
+	 yJ67y2cWp9Z3RouyCc8hqX9EIgUPCF0RA41Sks/2Psj0iqfB1SACIzzM2rsPQ7EWnW
+	 jWIiuWwR/Ud/4YsEqJUbAKEC3hNmnL1nhhqz4nac=
+Date: Tue, 5 Dec 2023 18:16:53 +0100
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Luis Chamberlain <mcgrof@kernel.org>, 
+	Joel Granados <j.granados@samsung.com>
+Cc: Kees Cook <keescook@chromium.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Iurii Zaikin <yzaikin@google.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Joel Granados <j.granados@samsung.com>, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 00/18] sysctl: constify sysctl ctl_tables
+Message-ID: <d50978d8-d4e7-4767-8ea7-5849f05d3be1@t-8ch.de>
+References: <20231204-const-sysctl-v2-0-7a5060b11447@weissschuh.net>
+ <ZW66FhWx7W67Y9rP@bombadil.infradead.org>
+ <b4b0b7ea-d8b3-4538-a5b9-87a23bbdac5f@t-8ch.de>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20231205-kunit_bus-v1-1-635036d3bc13@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b4b0b7ea-d8b3-4538-a5b9-87a23bbdac5f@t-8ch.de>
 
-Hi,
+Hi Luis, Joel,
 
-kernel test robot noticed the following build errors:
+On 2023-12-05 09:04:08+0100, Thomas Weißschuh wrote:
+> On 2023-12-04 21:50:14-0800, Luis Chamberlain wrote:
+> > On Mon, Dec 04, 2023 at 08:52:13AM +0100, Thomas Weißschuh wrote:
+> > > Tested by booting and with the sysctl selftests on x86.
+> > 
+> > Can I trouble you to rebase on sysctl-next?
+> > 
+> > https://git.kernel.org/pub/scm/linux/kernel/git/mcgrof/linux.git/log/?h=sysctl-next
+> 
+> Will do.
 
-[auto build test ERROR on c8613be119892ccceffbc550b9b9d7d68b995c9e]
+The rebased series is now available at
+https://git.sr.ht/~t-8ch/linux b4/const-sysctl
 
-url:    https://github.com/intel-lab-lkp/linux/commits/davidgow-google-com/kunit-Add-APIs-for-managing-devices/20231205-153349
-base:   c8613be119892ccceffbc550b9b9d7d68b995c9e
-patch link:    https://lore.kernel.org/r/20231205-kunit_bus-v1-1-635036d3bc13%40google.com
-patch subject: [PATCH 1/4] kunit: Add APIs for managing devices
-config: x86_64-buildonly-randconfig-001-20231205 (https://download.01.org/0day-ci/archive/20231205/202312052341.fEujgbbC-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-12) 11.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231205/202312052341.fEujgbbC-lkp@intel.com/reproduce)
+Nothing much has changed in contrast to v2.
+The only functional change so far is the initialization of
+ctl_table_header::type in init_header().
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202312052341.fEujgbbC-lkp@intel.com/
+I'll wait for Joels and maybe some more reviews before resending it.
 
-All errors (new ones prefixed by >>):
+> [..]
 
-   ld: lib/kunit/device.o: in function `kunit_bus_init':
->> device.c:(.text+0x40): multiple definition of `init_module'; lib/kunit/test.o:test.c:(.init.text+0x0): first defined here
+For the future I think it would make sense to combine the tree-wide constification
+of the structs with the removal of the sentinel values.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+This would reduce the impacts of the maintainers.
+
+
+Thomas
