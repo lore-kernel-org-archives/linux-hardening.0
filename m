@@ -1,140 +1,133 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CHiBSIMt"
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1555A19B6
-	for <linux-hardening@vger.kernel.org>; Mon,  4 Dec 2023 14:21:06 -0800 (PST)
-Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1cfb30ce241so32307555ad.0
-        for <linux-hardening@vger.kernel.org>; Mon, 04 Dec 2023 14:21:06 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Pks3Qzni"
+Received: from mail-oo1-xc34.google.com (mail-oo1-xc34.google.com [IPv6:2607:f8b0:4864:20::c34])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58207101
+	for <linux-hardening@vger.kernel.org>; Mon,  4 Dec 2023 16:54:27 -0800 (PST)
+Received: by mail-oo1-xc34.google.com with SMTP id 006d021491bc7-58cecfb4412so3483119eaf.3
+        for <linux-hardening@vger.kernel.org>; Mon, 04 Dec 2023 16:54:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1701728465; x=1702333265; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ehtQUXwRDZKnRhPirJrr51oPYToKsRQq0IW02tneMYk=;
-        b=CHiBSIMt7cCtjE0xahD6goP/Gv2seDpXWIKksbEDlzNJeAQCuE1BBt6O85BOvlICpU
-         vfrZeMw6uynrOsRr1LdVB7XQd7EjPP7hw0A+NGdDKOTqPjRjcibLluM/rfLl4iNoFcV5
-         r2rspn6wt0bzeTU1qwfxfnF8bWzbBo9lbzw3s=
+        d=chromium.org; s=google; t=1701737666; x=1702342466; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hgxh5iAkQdyDmjH/EP5y66lB0goZgK4wS9PHcerNRI0=;
+        b=Pks3QznimLGKgOlVmoOSK1Hg2E87f//xAmPKOlD3N8faGNH/ZgaZQML5/7/6KiEBrf
+         FvQVIemBTDzkWLTCya9boBSPl9ESBlDq7kriwCp8tjPmhvN3MnOHdsfmFJrnoJnboXlm
+         6Zwyo5nkezqMEMa50AymaVyv/aEsnuA5shTpQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701728465; x=1702333265;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ehtQUXwRDZKnRhPirJrr51oPYToKsRQq0IW02tneMYk=;
-        b=QggDHfuNnvN6V7km7ngIaEDcvR5jo2lBH7niiEJUeyBlT6IlSCmX3Wn+eBbeP9NasU
-         8cID3eJQte8TUUrVqCwkp5nl6PuQ2qD56oBOnFTZE61g986p5ySkReGf8PGomJsUexqq
-         q/1cGxwtBfkFBNPNFBy/J49gWajVdNQBa/MdxTiYyfVYNJRHM6vVPUQgblWtdCMMXhUI
-         Q+4K2GQPfTajnWHlmqwKcbGYcPSvAUAEmLzCoy89tKA5OeK6xmA8PkdRcbViYYfeFwIG
-         0gm3bUIYBAs3x4iJNB7Fum3B5uxeRSxj48ZboIrW2KEqiAuaUjymluoj0pjEja4zyTIb
-         B3Bw==
-X-Gm-Message-State: AOJu0YzHetHuDF5af+DuUx1JjT9T+z+pbj7+ZZ/lqvXCm5d4ZscmXYNi
-	wDZn3vt/j4ckEcOmozhcfpxApRHwHkvLX/QjeMQ=
-X-Google-Smtp-Source: AGHT+IEClAA5AROgHOJAOd4Gtv6KL71/ZWQlR+Vg9YJXC8KdewByNC/42QtAGDPVsAEKARgH/jvh5w==
-X-Received: by 2002:a17:902:f544:b0:1cf:c649:529c with SMTP id h4-20020a170902f54400b001cfc649529cmr6001552plf.18.1701728465486;
-        Mon, 04 Dec 2023 14:21:05 -0800 (PST)
+        d=1e100.net; s=20230601; t=1701737666; x=1702342466;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hgxh5iAkQdyDmjH/EP5y66lB0goZgK4wS9PHcerNRI0=;
+        b=PtswgwdQTdaozm5a0mR0kFoooBLIjSKSfQrfjKzfQcToruRLaBIe80brJ4PTLX7QBP
+         NJc+hXUyvVX9kik1AboWWZ93p7/HXhLXswM/T0boprqCL8WweMFS9F3Vq8GOJVO21Ni7
+         yeptj9EqdeHsaAQ42yhJJ/VtLXoWCN72+nEyrtpWrWi4IDjTET1lDlFcclHji2W1pV1z
+         FfEaBSc3kEp+Irv4bjoLr0r1ymTMM09Hu9Nw0DkYm1ijayFmSIqlGT1mtyLsjvI8Cx7n
+         f5PQj3YEJPA0Okt4zA306ZbvIgz6gQZz3nITVVdQb1c0ql7NyU2aaCfiqg5D1joqEEiE
+         Qa1A==
+X-Gm-Message-State: AOJu0YyvvDC1jPcFHjC8dD7RTOASGF7UJK8lSOVZJoZBtmUEwhiYVa3m
+	nFWWmo4WeVSgpbSdhGRemCIkbg==
+X-Google-Smtp-Source: AGHT+IHk7lmDVGKtnQfm4mq3bULDVD35esNQMJLK9nUyooFioS0fzVXAMAhL7+5oYc0V/vLwpRuwzA==
+X-Received: by 2002:a05:6358:7205:b0:16d:f46f:16a9 with SMTP id h5-20020a056358720500b0016df46f16a9mr8361301rwa.17.1701737666267;
+        Mon, 04 Dec 2023 16:54:26 -0800 (PST)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id m3-20020a170902c44300b001d084f4fad5sm3707362plm.2.2023.12.04.14.21.04
+        by smtp.gmail.com with ESMTPSA id b67-20020a633446000000b005c67ca3c2c2sm3188911pga.21.2023.12.04.16.54.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Dec 2023 14:21:04 -0800 (PST)
-Date: Mon, 4 Dec 2023 14:21:04 -0800
+        Mon, 04 Dec 2023 16:54:25 -0800 (PST)
+Date: Mon, 4 Dec 2023 16:54:25 -0800
 From: Kees Cook <keescook@chromium.org>
-To: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, kernel test robot <lkp@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Jeff Johnson <quic_jjohnson@quicinc.com>,
-	Michael Walle <mwalle@kernel.org>,
-	Max Schulze <max.schulze@online.de>, netdev@vger.kernel.org,
-	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] netlink: Return unsigned value for nla_len()
-Message-ID: <202312041420.886C9F3@keescook>
-References: <20231202202539.it.704-kees@kernel.org>
- <95924d9e-b373-40fd-993c-25b0bae55e61@6wind.com>
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Tony Luck <tony.luck@intel.com>, linux-hardening@vger.kernel.org,
+	Christian Brauner <brauner@kernel.org>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 5/5] pstore: inode: Use cleanup.h for struct
+ pstore_private
+Message-ID: <202312041649.C14F139F9@keescook>
+References: <20231202211535.work.571-kees@kernel.org>
+ <20231202212217.243710-5-keescook@chromium.org>
+ <20231202222706.GT38156@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <95924d9e-b373-40fd-993c-25b0bae55e61@6wind.com>
+In-Reply-To: <20231202222706.GT38156@ZenIV>
 
-On Mon, Dec 04, 2023 at 10:22:25AM +0100, Nicolas Dichtel wrote:
-> Le 02/12/2023 à 21:25, Kees Cook a écrit :
-> > The return value from nla_len() is never expected to be negative, and can
-> > never be more than struct nlattr::nla_len (a u16). Adjust the prototype
-> > on the function. This will let GCC's value range optimization passes
-> > know that the return can never be negative, and can never be larger than
-> > u16. As recently discussed[1], this silences the following warning in
-> > GCC 12+:
-> > 
-> > net/wireless/nl80211.c: In function 'nl80211_set_cqm_rssi.isra':
-> > net/wireless/nl80211.c:12892:17: warning: 'memcpy' specified bound 18446744073709551615 exceeds maximum object size 9223372036854775807 [-Wstringop-overflow=]
-> > 12892 |                 memcpy(cqm_config->rssi_thresholds, thresholds,
-> >       |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > 12893 |                        flex_array_size(cqm_config, rssi_thresholds,
-> >       |                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > 12894 |                                        n_thresholds));
-> >       |                                        ~~~~~~~~~~~~~~
-> > 
-> > A future change would be to clamp the subtraction to make sure it never
-> > wraps around if nla_len is somehow less than NLA_HDRLEN, which would
-> > have the additional benefit of being defensive in the face of nlattr
-> > corruption or logic errors.
-> > 
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Closes: https://lore.kernel.org/oe-kbuild-all/202311090752.hWcJWAHL-lkp@intel.com/ [1]
-> > Cc: Jakub Kicinski <kuba@kernel.org>
-> > Cc: "David S. Miller" <davem@davemloft.net>
-> > Cc: Eric Dumazet <edumazet@google.com>
-> > Cc: Paolo Abeni <pabeni@redhat.com>
-> > Cc: Johannes Berg <johannes@sipsolutions.net>
-> > Cc: Jeff Johnson <quic_jjohnson@quicinc.com>
-> > Cc: Michael Walle <mwalle@kernel.org>
-> > Cc: Max Schulze <max.schulze@online.de>
-> > Cc: netdev@vger.kernel.org
-> > Cc: linux-wireless@vger.kernel.org
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  v2:
-> >  - do not clamp return value (kuba)
-> >  - adjust NLA_HDRLEN to be u16 also
-> >  v1: https://lore.kernel.org/all/20231130200058.work.520-kees@kernel.org/
-> > ---
-> >  include/net/netlink.h        | 2 +-
-> >  include/uapi/linux/netlink.h | 2 +-
-> >  2 files changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/include/net/netlink.h b/include/net/netlink.h
-> > index 83bdf787aeee..7678a596a86b 100644
-> > --- a/include/net/netlink.h
-> > +++ b/include/net/netlink.h
-> > @@ -1200,7 +1200,7 @@ static inline void *nla_data(const struct nlattr *nla)
-> >   * nla_len - length of payload
-> >   * @nla: netlink attribute
-> >   */
-> > -static inline int nla_len(const struct nlattr *nla)
-> > +static inline u16 nla_len(const struct nlattr *nla)
+On Sat, Dec 02, 2023 at 10:27:06PM +0000, Al Viro wrote:
+> On Sat, Dec 02, 2023 at 01:22:15PM -0800, Kees Cook wrote:
+> 
+> >  static void *pstore_ftrace_seq_start(struct seq_file *s, loff_t *pos)
 > >  {
-> >  	return nla->nla_len - NLA_HDRLEN;
-> >  }
-> > diff --git a/include/uapi/linux/netlink.h b/include/uapi/linux/netlink.h
-> > index f87aaf28a649..270feed9fd63 100644
-> > --- a/include/uapi/linux/netlink.h
-> > +++ b/include/uapi/linux/netlink.h
-> > @@ -247,7 +247,7 @@ struct nlattr {
+> > @@ -338,9 +339,8 @@ int pstore_mkfile(struct dentry *root, struct pstore_record *record)
+> >  {
+> >  	struct dentry		*dentry;
+> >  	struct inode		*inode __free(iput) = NULL;
+> > -	int			rc = 0;
+> >  	char			name[PSTORE_NAMELEN];
+> > -	struct pstore_private	*private, *pos;
+> > +	struct pstore_private	*private __free(pstore_private) = NULL, *pos;
+> >  	size_t			size = record->size + record->ecc_notice_size;
 > >  
-> >  #define NLA_ALIGNTO		4
-> >  #define NLA_ALIGN(len)		(((len) + NLA_ALIGNTO - 1) & ~(NLA_ALIGNTO - 1))
-> > -#define NLA_HDRLEN		((int) NLA_ALIGN(sizeof(struct nlattr)))
-> > +#define NLA_HDRLEN		((__u16) NLA_ALIGN(sizeof(struct nlattr)))
-> I wonder if this may break the compilation of some userspace tools with errors
-> like comparing signed and unsigned values.
+> >  	if (WARN_ON(!inode_is_locked(d_inode(root))))
+> > @@ -356,7 +356,6 @@ int pstore_mkfile(struct dentry *root, struct pstore_record *record)
+> >  			return -EEXIST;
+> >  	}
+> >  
+> > -	rc = -ENOMEM;
+> >  	inode = pstore_get_inode(root->d_sb);
+> >  	if (!inode)
+> >  		return -ENOMEM;
+> > @@ -373,7 +372,7 @@ int pstore_mkfile(struct dentry *root, struct pstore_record *record)
+> >  
+> >  	dentry = d_alloc_name(root, name);
+> >  	if (!dentry)
+> > -		goto fail_private;
+> > +		return -ENOMEM;
+> >  
+> >  	private->dentry = dentry;
+> >  	private->record = record;
+> > @@ -386,13 +385,9 @@ int pstore_mkfile(struct dentry *root, struct pstore_record *record)
+> >  
+> >  	d_add(dentry, no_free_ptr(inode));
+> >  
+> > -	list_add(&private->list, &records_list);
+> > +	list_add(&(no_free_ptr(private))->list, &records_list);
+> 
+> That's really brittle.  It critically depends upon having no failure
+> exits past the assignment to ->i_private; once you've done that,
+> you have transferred the ownership of that thing to the inode
+> (look at your ->evict_inode()).
 
-Should I drop this part, then?
+I guess so, but it was already that way, and it isn't assignment to
+i_private until everything else is "done", apart from adding to the
+dentry and the pstore internal list.
+
+> But you can't say
+>         inode->i_private = no_free_ptr(private);
+> since you are using private past that point.
+
+True. How about this reordering:
+
+        if (record->time.tv_sec)
+                inode_set_mtime_to_ts(inode,
+                                      inode_set_ctime_to_ts(inode, record->time));
+
+        list_add(&private->list, &records_list);
+        inode->i_private = no_free_ptr(private);
+
+        d_add(dentry, no_free_ptr(inode));
+
+
+But none of this gets into how you'd like to see the iput handled. If
+you'd prefer, I can just define a pstore_iput handler and you don't have
+to look at it at all. :)
+
+-Kees
 
 -- 
 Kees Cook
