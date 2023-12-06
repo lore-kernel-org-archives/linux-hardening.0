@@ -1,179 +1,238 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ii5Hidwq";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="bBOtSXcK"
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A75F8181;
-	Tue,  5 Dec 2023 17:58:20 -0800 (PST)
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B61Y6bT011286;
-	Wed, 6 Dec 2023 01:58:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : message-id : references : date : in-reply-to : content-type :
- mime-version; s=corp-2023-11-20;
- bh=F2ZqlFM3XH8srMLCcSEB3mgrNznqyjCnP+WgnBfVMd0=;
- b=ii5HidwqHkmB+La5SCvDs3pRsM4CsrtpReHEGtJG4KuQpI6wx/6FlECLaG21D83c4zAY
- a+PxXuS8n+spc6+l879kKQBP9sJCrs0qfBudmr/gszaw0TDUpEUnJeKrjdTaDSp/2zQk
- KYDrssGuFhiPe4cAi3Z2HG9FftKk8zK5AucjGtiugwS6EANp1LXjAbxZAWoSQiUL+EmY
- Kr8PPwmM4t00K3X+amP/j4DzuNp9oKc7VnhYNTuubMghIhgcCLvhXWdnqIT6wublwlfm
- p1JgHov2YXhGabF84RyizCkQKNa8i9m1JZomdGgJvKoJPrdpHfjK7qU+k/9n8GmiwBGi xA== 
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3utdc184td-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 06 Dec 2023 01:58:04 +0000
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3B606rl2039939;
-	Wed, 6 Dec 2023 01:58:04 GMT
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2101.outbound.protection.outlook.com [104.47.58.101])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3utan541kq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 06 Dec 2023 01:58:04 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=m/rrShZiOZhiTMzAh1YbjflkLrFk28lzatY1FxDjNo56GCdPq3vJrYLvmCUutK2eWk6hXdCtCW9BD/XsNMgNdMqadddb2K+G/nDz4/T0SSOZLStuCmS8AR5jeV2p3G0QQaWlh4WkNBU9SlrPo1NvPuUNCqPnQxRgTr1bqBnLYtdZ3BEFxTvT4cGMzU8YD94tdbyYwIbRXXWHyRz2BUfhYZV7uLqCzYBv1e8mklKiItirbcisARAab+Vz/dbSpZZBXgvwzlGu8+z3QslUp071Kh+9pjY6YHjAc1WBnEGdzhYh1UyCuDjT2iYGUcuFHAeSgLOKA4LfKv7oLZejHR+TiA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=F2ZqlFM3XH8srMLCcSEB3mgrNznqyjCnP+WgnBfVMd0=;
- b=VBscAWP7gIH9BjCRJXNb8rOv/quP//f0nDU1Z0YEAmuWdyE6EQVAlGvZgpFHSpARuLtJbq6nmQwKlrHzsq2VtNsXtcygbHiU1tiah7Q43AWvZHCfFZS2ILsI2OHKCNguoBYJLty4r56UMSGXfKXXo6XbLmo9ZJOX6lug0L8ZDD8PopsU77hqf79C6YRx1s9Yi9KpJ4pd6DmAbGqLxrB1i0aSTFWzwMAZ7GP8+doSKogmaNtBQc4s4EPgRdlHErOSXH2ZBlKJHRMxiq5a+U8vGudGIPcvVKYNbbwGFBmzhUvaXwW8xtLEJ/kOTwwFrLLesu/DQKw0cpizifgKjEVkXA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=F2ZqlFM3XH8srMLCcSEB3mgrNznqyjCnP+WgnBfVMd0=;
- b=bBOtSXcKz/M6DQx+9AEJS0e+yXP8tD5VOu2zdvZ42YH5/OHRHwrAAJyAToRBhk3xJ3CePSWRzDYKzb6UJxDXxRzVyCOXCAK9ddw7jYy5Z6PVdqtiJFul+j24GIGGaU7+/y7lt17y/vFFLl4zXfTA2wRGOY2ZvKzmL3O/BeamysQ=
-Received: from PH0PR10MB4759.namprd10.prod.outlook.com (2603:10b6:510:3d::12)
- by SJ0PR10MB7690.namprd10.prod.outlook.com (2603:10b6:a03:51a::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7046.34; Wed, 6 Dec
- 2023 01:58:01 +0000
-Received: from PH0PR10MB4759.namprd10.prod.outlook.com
- ([fe80::2b0c:62b3:f9a9:5972]) by PH0PR10MB4759.namprd10.prod.outlook.com
- ([fe80::2b0c:62b3:f9a9:5972%3]) with mapi id 15.20.7046.034; Wed, 6 Dec 2023
- 01:58:01 +0000
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Justin Stitt <justinstitt@google.com>,
-        Tyrel Datwyler
- <tyreld@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe
- Leroy <christophe.leroy@csgroup.eu>,
-        "James E.J. Bottomley"
- <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] scsi: ibmvscsi: replace deprecated strncpy with strscpy
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <yq1plzknld5.fsf@ca-mkp.ca.oracle.com>
-References: <20231030-strncpy-drivers-scsi-ibmvscsi-ibmvscsi-c-v1-1-f8b06ae9e3d5@google.com>
-	<87jzpy1cqx.fsf@mail.lhotse>
-Date: Tue, 05 Dec 2023 20:58:00 -0500
-In-Reply-To: <87jzpy1cqx.fsf@mail.lhotse> (Michael Ellerman's message of "Fri,
-	01 Dec 2023 20:41:10 +1100")
-Content-Type: text/plain
-X-ClientProxiedBy: PH0PR07CA0093.namprd07.prod.outlook.com
- (2603:10b6:510:4::8) To PH0PR10MB4759.namprd10.prod.outlook.com
- (2603:10b6:510:3d::12)
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="UGCB/HMx"
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B79F1AA;
+	Tue,  5 Dec 2023 19:00:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=CRYeTAu4svuvDJpTKsWkQ36MOqp3Y1tO+HPMsezk7QU=; b=UGCB/HMxCuoH0kFgL4hrI3koRN
+	ATSArs23UpdraQQVBBYMojJjygn1M1gqfoTIlWDBwto1vZDJhu7MgpKz4D4+Xudb3C1Rpp+3pGN6k
+	FD4NljAXVHQq7905LuDDH5T34DBSZa8NGrfJOalyKhAMplJM7FUGPNVZxtapsE1DP4wrT1PpGMe+R
+	17NDxSvSIzv1DGg41XUagyV+JVvsIvjk19blOHoeFWDJT3WZTos+LJE4iZiKRqnW+uN3/q9uOtSAD
+	ICFYUVuT1SkRdC3xKwHSPHd3ZZDEuO8TvG6SYoZJx48PNXw5/c3R7wi7cCXF/JYG+zyzEmgXS8Wce
+	l3MlFD7g==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1rAi9X-007Yl3-1L;
+	Wed, 06 Dec 2023 03:00:47 +0000
+Date: Wed, 6 Dec 2023 03:00:47 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Greg KH <greg@kroah.com>
+Cc: Nick Desaulniers <ndesaulniers@google.com>, tanzirh@google.com,
+	Kees Cook <keescook@chromium.org>,
+	Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Nick DeSaulniers <nnn@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>, llvm@lists.linux.dev
+Subject: Re: [PATCH] lib/string: shrink lib/string.i via IWYU
+Message-ID: <20231206030047.GL1674809@ZenIV>
+References: <20231205-libstringheader-v1-1-7f9c573053a7@gmail.com>
+ <20231205213807.GE1674809@ZenIV>
+ <CAKwvOd=2VASkaLvjU+7kkbvhu2CimYn5KUGJBDRePyUhtrNK2Q@mail.gmail.com>
+ <2023120608-ivy-snowdrop-890d@gregkh>
+ <CAKwvOdmFJ=ZGN8ZScS5oQpXnAL0wwtTDCeNNGpBKZXzQ4kRAVA@mail.gmail.com>
+ <2023120657-henna-spongy-9ef6@gregkh>
+ <20231206005542.GJ1674809@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR10MB4759:EE_|SJ0PR10MB7690:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9d2a6757-cdb6-4b79-2a16-08dbf5fec74d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	Wp1Hz9McCuwsRDP4nTxQiPqaJ+gKwTIkr1ZT5zvandm2iUHLr2Hc0bkbAu4b7HhEOm4gaZscfh0VOSfG9PEZBuQsMSQQC9/ptSmr97XxDi9SPb2YQaCU4TDw08af73uW6u9MiExxNjY7zanU3pyOEL7y0Ee78XOZsPY5tbOtdrZsnprmUtvF3snQy7KOOJYCul4IIjxlB2IZVv/5OjrCMLNg9Z5OD/HKOuuLzxdYXl5zZ6RbW7HUV2Gdn5mUnTCjRYJWP98ADtJiHBcwN5GvpfApSn6PVAM+KzAH30cPKyVqHOpFTWi6oAHmaaFWODjy2c92bRkdYtNa4KgawUJTVjHP+6gFerLRSjEWZr2iE17n7TfnUoqEoG1THEd0J3CG8zBRnRph5cAInfl+kNuAulsxc8DVWOC0/bK/BkstXgO0/kuuXPn5/R6c7iPbf8V4YvnLAeAKXY5ogq0hOUesGoRRa9lFNpIew1WqrBJCNFgRGsRSryU91uYjMfNtsWfvYCOPCRS24pLT2OIhj2B76VTkt+qQ1tPSc2Uw66iW/cddc/w3wFrmdxIon+PwdcZUUFyj6DySQo6mPUG2PBfeOaOI+gqeaJAfAJ4cRJUW1r5vzXCmKG4jpJ4ywCuLw/Mw
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB4759.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(366004)(136003)(39860400002)(346002)(376002)(230922051799003)(64100799003)(451199024)(1800799012)(186009)(2906002)(5660300002)(7416002)(4744005)(86362001)(41300700001)(36916002)(6506007)(478600001)(6486002)(6512007)(38100700002)(26005)(8676002)(4326008)(8936002)(6916009)(66946007)(66476007)(66556008)(54906003)(316002)(156123004);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?jY70zGQeypkmQRvFg2iNV62adkJuBblt+Wk4bLvXgj63ucGMwbZnbtl92Gf3?=
- =?us-ascii?Q?troyniCEQu9NfTpjkY4dswdxYEHCOGtmlwk/8DEypTuOl4dJpgnWXDnxuQZ5?=
- =?us-ascii?Q?ZXXTlXuEnNpM5PUQTOQofxDdiehbi4+52pEcwtpuriTnsInX5Cduh0IhP3+A?=
- =?us-ascii?Q?xnOaQCSK4FSgb/5UwnDlCpOmZW8pqSdOLgpmrD34z1eiE7jjDAlNLyGdJUH7?=
- =?us-ascii?Q?ctwXbilhCKsEsYfCl6vtwbUTUlv1KEBv3Fd7R+rc+0oyPaSP4HbQK29wqFdT?=
- =?us-ascii?Q?gfp388D20PuizCWE9kk7d2oV8VlE4e0ziOTWSJSK23AxLav5twbp7UHAvQFu?=
- =?us-ascii?Q?yfSUi9S9GnzzUwvDNW6Z0HCB1ye8GcF/Ftznzxz7eiG+o8kZt3zrSZcAeCrv?=
- =?us-ascii?Q?+HVEFyLgZWgU0C+N4fpVVV+947gii201Mk+yx/Q8JKoo06RdaIDTgVtbgpLF?=
- =?us-ascii?Q?HUuvVfS2E/DnSzNZtjdXpy9YvktmFLdlAnZD8A9XEDNJ3e+ST0vys7BRLD2G?=
- =?us-ascii?Q?HQsuxwvuSnU8CWXlUBKIljm9djX/RwGA9VI/Uw4Jue6eQf/o/CEM9LZUtZO4?=
- =?us-ascii?Q?cB636/PoH8BhJplmd2L/Dn83a9WP8S13WWlOm9psBNZ3ijwRxGzuAvSJ7zX8?=
- =?us-ascii?Q?yXLrcyy1LHBktVdGLZbheWZBoVtUKBGJjI56E20hEcdhKlxlcxGnRmiK20nR?=
- =?us-ascii?Q?/E43oijInvB94cJjNo6h+b/SzDb5/wsb5Z5hEN3TP1u7zu3ByWGVE2T8iKIy?=
- =?us-ascii?Q?oU+v4abjEFyeAGou9vCskk+ZLdfyWMSShBRZ2ibX3mRe/uhK4i8nin/ILwtN?=
- =?us-ascii?Q?v8GnnPOTiOyqpRJWqyWChFlExxXDLE5XhyT3TzzjUbu4i5lITW9pMFvVmGhO?=
- =?us-ascii?Q?Bqr6fxSumSjuL5Hi1zpPAh0xmzrb2mPtDy9c0kH724goGypw2j2mRoU9m2iI?=
- =?us-ascii?Q?/39S//NOdG19EMhJmhnEvco+yJzEqTVDpdyxJcyh21KW+xs3bB16TPORGhGf?=
- =?us-ascii?Q?xgg9XzUQ549/bR9YTRZKV5ML7lM98hHMi0sYp/Pskaz/YFqVDVz5g+PvYjrm?=
- =?us-ascii?Q?lYO5s2uF6PXF9O1zoI3V1262aYsRzMnFCsnGqpsXcJGAZe7hgx26357zey2z?=
- =?us-ascii?Q?JKuj4CJhqizi8FpEnkG0XaRWmMXXW7B4p96MdSkU1HvVY3PC1aq/OQ9K3PT4?=
- =?us-ascii?Q?MIcqjuxuMbf0xZyjE0wLPal0jKAuhPGMTMzPZpRAi536CdlvL/Wdn1ASbCsL?=
- =?us-ascii?Q?1GeJGSjSkbEYmVRC58eRgYlx61Utk6lW0ZkmEezQZHHfzIUFwz0bpVDV0yQ4?=
- =?us-ascii?Q?xKVusss0qK87rJOAfskztaRMUwZeq3OxYNEYp2A/V0UGHPYKy/UPULZhmfi3?=
- =?us-ascii?Q?fsuIr6YtWACngjNlFywV02TVjhitYh1FNTLVdAPDm8RgymzS9IAM8v1gdF07?=
- =?us-ascii?Q?kXmzkDiQf21ZyRRfFxc0owCsBsir8O2M8UY6rs9UMivnFBtr9pDwVKO6N7UV?=
- =?us-ascii?Q?phad7Ue1hV3ZvyOqIZnd0nHm0Gg7EMX3bTpSxYhh9/vLw7esmPn28ye3S5aV?=
- =?us-ascii?Q?+rOWmPIYvDqxRw8bp8Tm+4ZmPZNSN7X0rwKARi7Sxqx/5EnEMTtW3n+LRgqk?=
- =?us-ascii?Q?JA=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	=?us-ascii?Q?n0wKJ1u9lLgdHW0fTDNdAho5F5n4skhPm1hrAxi3TtSUS23U0rqUgE5R4Nml?=
- =?us-ascii?Q?nXJfgXsHYGzezGrnBUGn5iPj7AKHvaafF5PKX6WW8pv726Vy96MCwMYIjtfN?=
- =?us-ascii?Q?AWbNDYAQcaGWbfZ8W3JpKYVx0/xOsA4BRJi90XVHXkvwgV4u51Q7LVjEYSr8?=
- =?us-ascii?Q?ZOsE2WG2DvV/1ezcqGbGmgqXfQuet49+2CgYULUFLVHAhfxglmM59CeZclGU?=
- =?us-ascii?Q?nsnJFrtrAa+zN75Qop/v73fKiLfUUB/+YeBZNyxVzge9rT7k2w6d/04tlYS/?=
- =?us-ascii?Q?5J6+v3sefXoXRronC8aHuKmE+T4R8r1G7fbPuLGz8/3MHP4Pe6XR9Bx+/etI?=
- =?us-ascii?Q?IBa6rM2BKgJ2b9Y9jtsI5EcEThYy6lmvBVrIrlw9wJDxxwvzpAPSaqINUjH1?=
- =?us-ascii?Q?eU0BjfQu9eoK5LsT3lL/wJH4PEJLW1zhaJu7+meazGv4OxMltC59PXhkEcxv?=
- =?us-ascii?Q?Uq9xyn/7N3I4dfT+W6qzthu+fYxOJfvBOQWX+dN1ke6AYjl0wYI9u+E7EyD5?=
- =?us-ascii?Q?Gh4INMveBBhaZZnSloXOTbXpOFsp+Y7W8I2+zJUAW63IAOtMpRcfN4vnQDu+?=
- =?us-ascii?Q?9+cnvn0UEAIvIjdiUrSXWewUqnmH+jYMy7hZgLr0iRMlxf9yfOFzbrlmpBxz?=
- =?us-ascii?Q?nBdFtCatpjdwMWoBYjGdbLFXzLS0ipH9PLX124cCHEw9/pl8kofA3r8rVR69?=
- =?us-ascii?Q?Fc9jDHKUZZrWKmfNmrrjLXdnqjdS9Li+4utIHnHvZSqzP3vQvT1xla9facr6?=
- =?us-ascii?Q?+gzfTZKc5BVOKAIgsWzkArGuNNrkGYzrFvW6QrtYITGtK3YGrfa1CWIp0a1d?=
- =?us-ascii?Q?C0xjELT9BgQ6YCBTtSGpHtBCLgSrn8b5MzxDJNLUxQ8nI+KrSxydKoniCW+W?=
- =?us-ascii?Q?DWanvAIYDdVUrUOxhRRVq+8pYyNGKK59zs6LKWz43kQY2+y6uj67GPFhXvrP?=
- =?us-ascii?Q?tdYNQbzyDu5f+OwHnCa42Q=3D=3D?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9d2a6757-cdb6-4b79-2a16-08dbf5fec74d
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB4759.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Dec 2023 01:58:01.8391
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OGYQ7NOHqp6F5DFBEdUGThknxxLpiRcDVeRR3jJdiE3I5ejOtjJ9N3wwlNmNIUOtw8lJ3mIqIuuEiOM9B9METzYaFOagYncj9I79sK26aAc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB7690
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-06_01,2023-12-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 phishscore=0
- bulkscore=0 adultscore=0 spamscore=0 suspectscore=0 mlxlogscore=784
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2312060014
-X-Proofpoint-GUID: cEukIiCq6OHiIvhwa5PZ2dGuYZ8yr_ts
-X-Proofpoint-ORIG-GUID: cEukIiCq6OHiIvhwa5PZ2dGuYZ8yr_ts
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231206005542.GJ1674809@ZenIV>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
+On Wed, Dec 06, 2023 at 12:55:42AM +0000, Al Viro wrote:
+> On Wed, Dec 06, 2023 at 08:46:50AM +0900, Greg KH wrote:
+> > > >
+> > > > But of course, it doesn't always hold true, there are a few minor
+> > > > exceptions, but they are rare.
+> > > 
+> > > $ grep -r \\#include lib | grep asm
+> > > 
+> > > shows quite a few exceptions, and just in lib/.
+> > > 
+> > > For example, lib/math/int_log.c includes asm/bug.h.  Is that a case
+> > > where lib/math/int_log.c should be #include 'ing linux/bug.h rather
+> > > than asm/bug.h?
+> > 
+> > Probably yes, but we don't normally go back and take coding style fixes
+> > for old files like this as it doesn't make much sense to do so.
+> > 
+> > But, if you are cleaning up the headers for large portions with the goal
+> > of faster builds, that's a good reason.
+> 
+> FWIW, the most common (by far - about 13% of such includes, over drivers/, fs/,
+> mm/, net/ and sound/) is asm/unaligned.h.
 
-Michael,
+Why the hell is unaligned.h in asm/*, anyway?
 
->> strncpy() is deprecated for use on NUL-terminated destination strings
->> [1] and as such we should prefer more robust and less ambiguous string
->> interfaces.
+We have 3 variants: arc, parisc and generic (== everything else).
+Both arc and parisc instances have an explicit include of
+asm-generic/unaligned.h (i.e. the generic variant).
 
-> I gave it a quick boot, no issues.
->
-> Tested-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
+On arc there's also misaligned_fixup() extern or stub, with exactly
+one user (in arch/arc/kernel/traps.c).  On parisc there are
+externs for handle_unaligned() and check_unaligned() (3 call sites,
+all in arch/parisc/kernel/traps.c).
 
-Applied to 6.8/scsi-staging, thanks!
+How about we take those into arch/{arc,parisc}/kernel/unaligned.h,
+slap #include "unaligned.h" into their traps.c and unaligned.c
+(callers and definitions resp.) and strip those from asm/unaligned.h?
+At that point we can remove arch/{arc,parisc}/asm/unaligned.h - everything
+will pick include/asm-generic/unaligned.h.
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+Then the next cycle we ask Linus to run the following:
+for i in `git grep -l -w asm/unaligned.h`; do
+	sed -i -e "s/asm\/unaligned.h/linux\/unaligned.h/" $i
+done
+git mv include/asm-generic/unaligned.h include/linux/unaligned.h
+sed -i -e "/unaligned.h/d" include/asm-generic/Kbuild
+right before releasing -rc1 and asm/unaligned.h is gone...
+
+Completely untested delta (for the non-automatic parts, that is) follows:
+------------------
+arc, parisc: get rid of private asm/unaligned.h
+
+Declarations local to arch/*/kernel/*.c are better off *not* in a public
+header - arch/{arc,parisc}/kernel/unaligned.h is just fine for those
+bits.
+
+With that done these asm/unaligned.h instances are reduced to include
+of asm-generic/unaligned.h and can be removed - unaligned.h is in
+mandatory-y in include/asm-generic/Kbuild.
+    
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+---
+diff --git a/arch/arc/include/asm/unaligned.h b/arch/arc/include/asm/unaligned.h
+deleted file mode 100644
+index cf5a02382e0e..000000000000
+--- a/arch/arc/include/asm/unaligned.h
++++ /dev/null
+@@ -1,27 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-only */
+-/*
+- * Copyright (C) 2004, 2007-2010, 2011-2012 Synopsys, Inc. (www.synopsys.com)
+- */
+-
+-#ifndef _ASM_ARC_UNALIGNED_H
+-#define _ASM_ARC_UNALIGNED_H
+-
+-/* ARC700 can't handle unaligned Data accesses. */
+-
+-#include <asm-generic/unaligned.h>
+-#include <asm/ptrace.h>
+-
+-#ifdef CONFIG_ARC_EMUL_UNALIGNED
+-int misaligned_fixup(unsigned long address, struct pt_regs *regs,
+-		     struct callee_regs *cregs);
+-#else
+-static inline int
+-misaligned_fixup(unsigned long address, struct pt_regs *regs,
+-		 struct callee_regs *cregs)
+-{
+-	/* Not fixed */
+-	return 1;
+-}
+-#endif
+-
+-#endif /* _ASM_ARC_UNALIGNED_H */
+diff --git a/arch/arc/kernel/traps.c b/arch/arc/kernel/traps.c
+index 9b9570b79362..8e40f0881e02 100644
+--- a/arch/arc/kernel/traps.c
++++ b/arch/arc/kernel/traps.c
+@@ -20,6 +20,7 @@
+ #include <asm/setup.h>
+ #include <asm/unaligned.h>
+ #include <asm/kprobes.h>
++#include "unaligned.h"
+ 
+ void die(const char *str, struct pt_regs *regs, unsigned long address)
+ {
+diff --git a/arch/arc/kernel/unaligned.c b/arch/arc/kernel/unaligned.c
+index 99a9b92ed98d..d2f5ceaaed1b 100644
+--- a/arch/arc/kernel/unaligned.c
++++ b/arch/arc/kernel/unaligned.c
+@@ -12,6 +12,7 @@
+ #include <linux/ptrace.h>
+ #include <linux/uaccess.h>
+ #include <asm/disasm.h>
++#include "unaligned.h"
+ 
+ #ifdef CONFIG_CPU_BIG_ENDIAN
+ #define BE		1
+diff --git a/arch/arc/kernel/unaligned.h b/arch/arc/kernel/unaligned.h
+new file mode 100644
+index 000000000000..5244453bb85f
+--- /dev/null
++++ b/arch/arc/kernel/unaligned.h
+@@ -0,0 +1,16 @@
++struct pt_regs;
++struct callee_regs;
++
++#ifdef CONFIG_ARC_EMUL_UNALIGNED
++int misaligned_fixup(unsigned long address, struct pt_regs *regs,
++		     struct callee_regs *cregs);
++#else
++static inline int
++misaligned_fixup(unsigned long address, struct pt_regs *regs,
++		 struct callee_regs *cregs)
++{
++	/* Not fixed */
++	return 1;
++}
++#endif
++
+diff --git a/arch/parisc/include/asm/unaligned.h b/arch/parisc/include/asm/unaligned.h
+deleted file mode 100644
+index c0621295100d..000000000000
+--- a/arch/parisc/include/asm/unaligned.h
++++ /dev/null
+@@ -1,11 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef _ASM_PARISC_UNALIGNED_H
+-#define _ASM_PARISC_UNALIGNED_H
+-
+-#include <asm-generic/unaligned.h>
+-
+-struct pt_regs;
+-void handle_unaligned(struct pt_regs *regs);
+-int check_unaligned(struct pt_regs *regs);
+-
+-#endif /* _ASM_PARISC_UNALIGNED_H */
+diff --git a/arch/parisc/kernel/traps.c b/arch/parisc/kernel/traps.c
+index 1107ca819ac8..7ab0d44ef698 100644
+--- a/arch/parisc/kernel/traps.c
++++ b/arch/parisc/kernel/traps.c
+@@ -47,6 +47,8 @@
+ #include <linux/kgdb.h>
+ #include <linux/kprobes.h>
+ 
++#include "unaligned.h"
++
+ #if defined(CONFIG_LIGHTWEIGHT_SPINLOCK_CHECK)
+ #include <asm/spinlock.h>
+ #endif
+diff --git a/arch/parisc/kernel/unaligned.c b/arch/parisc/kernel/unaligned.c
+index ce25acfe4889..39cd222366bb 100644
+--- a/arch/parisc/kernel/unaligned.c
++++ b/arch/parisc/kernel/unaligned.c
+@@ -15,6 +15,7 @@
+ #include <asm/unaligned.h>
+ #include <asm/hardirq.h>
+ #include <asm/traps.h>
++#include "unaligned.h"
+ 
+ /* #define DEBUG_UNALIGNED 1 */
+ 
+diff --git a/arch/parisc/kernel/unaligned.h b/arch/parisc/kernel/unaligned.h
+new file mode 100644
+index 000000000000..c1aa4b12e284
+--- /dev/null
++++ b/arch/parisc/kernel/unaligned.h
+@@ -0,0 +1,3 @@
++struct pt_regs;
++void handle_unaligned(struct pt_regs *regs);
++int check_unaligned(struct pt_regs *regs);
