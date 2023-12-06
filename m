@@ -1,107 +1,137 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B5DPzN5J"
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F17F311F;
-	Wed,  6 Dec 2023 10:52:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=TgX+PmuAr5QRkCmSx0BsqqI+xnwWnFusCDa4CHApM4Y=; b=B5DPzN5JWKoYuSlpoDnvFq5zOY
-	dzy+/0VlFQNrT2wh4LgPvSRluDKGcHlGhouKPTNRY/3vVEEFJ+IKrhPccE1kFE7jLARo3gHWsRE+m
-	hyfobf0yCSUyHM9U1jb0+6DpKrPKsPx7L/YNpn8cKZHkYmiUO8SIvkZZWuqobDpGSal/sOYVBv7Vm
-	XT8/adblz9WvVW6ebYI03bIYngMaLuIkVlBSScKOXh19/Mb231q3/GTdydkZEPlwte5TTgs3iRX+0
-	AJ5UeGPpggFN+1gIc3zDpXpuIDmBzRjbLYup40yo3omwimvD2/V3tK6zybuhECjs7PtpcykiFidbn
-	db/iU80A==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1rAwzg-003AJI-8e; Wed, 06 Dec 2023 18:51:36 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id E0501300451; Wed,  6 Dec 2023 19:51:34 +0100 (CET)
-Date: Wed, 6 Dec 2023 19:51:34 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
-Cc: =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-	Kees Cook <keescook@chromium.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Wanpeng Li <wanpengli@tencent.com>,
-	Alexander Graf <graf@amazon.com>,
-	Chao Peng <chao.p.peng@linux.intel.com>,
-	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-	Forrest Yuan Yu <yuanyu@google.com>,
-	James Gowans <jgowans@amazon.com>,
-	James Morris <jamorris@linux.microsoft.com>,
-	John Andersen <john.s.andersen@intel.com>,
-	Marian Rotariu <marian.c.rotariu@gmail.com>,
-	Mihai =?utf-8?B?RG9uyJt1?= <mdontu@bitdefender.com>,
-	=?utf-8?B?TmljdciZb3IgQ8OuyJt1?= <nicu.citu@icloud.com>,
-	Thara Gopinath <tgopinath@microsoft.com>,
-	Trilok Soni <quic_tsoni@quicinc.com>, Wei Liu <wei.liu@kernel.org>,
-	Will Deacon <will@kernel.org>,
-	Yu Zhang <yu.c.zhang@linux.intel.com>,
-	Zahra Tarkhani <ztarkhani@microsoft.com>,
-	=?utf-8?Q?=C8=98tefan_=C8=98icleru?= <ssicleru@bitdefender.com>,
-	dev@lists.cloudhypervisor.org, kvm@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
-	qemu-devel@nongnu.org, virtualization@lists.linux-foundation.org,
-	x86@kernel.org, xen-devel@lists.xenproject.org
-Subject: Re: [RFC PATCH v2 17/19] heki: x86: Update permissions counters
- during text patching
-Message-ID: <20231206185134.GA9899@noisy.programming.kicks-ass.net>
-References: <20231113022326.24388-1-mic@digikod.net>
- <20231113022326.24388-18-mic@digikod.net>
- <20231113081929.GA16138@noisy.programming.kicks-ass.net>
- <a52d8885-43cc-4a4e-bb47-9a800070779e@linux.microsoft.com>
- <20231127200841.GZ3818@noisy.programming.kicks-ass.net>
- <ea63ae4e-e8ea-4fbf-9383-499e14de2f5e@linux.microsoft.com>
- <20231130113315.GE20191@noisy.programming.kicks-ass.net>
- <624a310b-c0d2-406c-a4a7-d851b3cc68f5@linux.microsoft.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jZZw9mI7"
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 583BC1A5
+	for <linux-hardening@vger.kernel.org>; Wed,  6 Dec 2023 12:59:12 -0800 (PST)
+Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1d0a5422c80so1634075ad.3
+        for <linux-hardening@vger.kernel.org>; Wed, 06 Dec 2023 12:59:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1701896352; x=1702501152; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=J93fduvsJM9IBDskoI9RKo4tnycXW8hW3zH9yUjvMQk=;
+        b=jZZw9mI7YrxEPgI+aIObpwp94vnWw09sNo7OJ/9O8MwgjocHUrmcfZpMxhmTZjk3CF
+         SZ0XlZj4Tt8IneivqQgFUq6XcOuf9wDJds7WEv3FQKLaytYyPTknLrpB1dfzqRfHHL4X
+         kXCU7iBrV3JBcbRr1LsgX3tMkuE4Y+1zGEvic=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701896352; x=1702501152;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=J93fduvsJM9IBDskoI9RKo4tnycXW8hW3zH9yUjvMQk=;
+        b=NKVtI3wwoH+g2Q6rVXZ4umCXJauPkL/F4NJTQyDomh7kHMJXG4qAgzk3qKaLRKlgnU
+         m2VUHQxByCNDy8eD15cu+UQlK1m29PibiyJKD5izljOFH74O5yZm5a7Pj3iM7lWtSzfn
+         jFQ9HbBXJgNBDYM4cM0twzpJyrWPyltYqnWWUjwLEaquLzFL8h9YSOsSnlti2N11Tq8s
+         cRx2goQI4oNMzUja0q+wR20h52YoLsm2pEqYLXfKrNr4X9WDY64DVUzH0nQ4zdXAQVRT
+         u7lwlJqtnKMAjSQg62WjK5UJ7C0DR+whVBzO6M/neY4P9FVo6DRjCxyHQT68KDlp/VbG
+         rbaA==
+X-Gm-Message-State: AOJu0YxPsoKPSQsA4gBaDoKXgX1b5sl9y4OnpS/7kJZHJTUoLk/kUPiE
+	xr512LMos4sKz9icL5x0v20tPg==
+X-Google-Smtp-Source: AGHT+IFvswkhjo/IRJgksME8nSDfGlm3ijJw/G6gOtT77V36Y3AGjjCCSiF/AeJmBG3/ZUhfEybY+w==
+X-Received: by 2002:a17:902:ce8c:b0:1d0:5efb:852e with SMTP id f12-20020a170902ce8c00b001d05efb852emr1894519plg.40.1701896351898;
+        Wed, 06 Dec 2023 12:59:11 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id g15-20020a1709029f8f00b001cffe1e7374sm241121plq.214.2023.12.06.12.59.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Dec 2023 12:59:11 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	kernel test robot <lkp@intel.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Jeff Johnson <quic_jjohnson@quicinc.com>,
+	Michael Walle <mwalle@kernel.org>,
+	Max Schulze <max.schulze@online.de>,
+	netdev@vger.kernel.org,
+	linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v3] netlink: Return unsigned value for nla_len()
+Date: Wed,  6 Dec 2023 12:59:07 -0800
+Message-Id: <20231206205904.make.018-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <624a310b-c0d2-406c-a4a7-d851b3cc68f5@linux.microsoft.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2690; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=pLbf9+8/Dl6ABNGi9y3vSm6UF9GJMzpseYPTOTsyx3s=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlcOCb/xqKImyOG8B5tSBdCnmYR3X3y0Fpi6OPz
+ +IJ//WINgGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZXDgmwAKCRCJcvTf3G3A
+ Jla8D/4u3zQcCSzbtxkzBPPv06VCqIqEjWUmThCDWb+7VGajZMflRwumsBIenZhrHpN5F5aclOO
+ 4VuHTW8AM5MPLgfRnMQ4JvuUp2Upru5NZQjfGbfMVR8helKPFcBr9hc04VO1f92ifYptZRN/LKb
+ jOKQWB3KCZMuQasgWFlbpupkYVvuSZVid0v4uHPmr+XPVJHMHShYG5uojmi79M+Ublpsz9iH88S
+ lbfK82rcT0UN8FROEBI2dTwMS5WlKw4KrykUQbatRuSyFrU7vSM2SFxoT55PrI419GzCH35Rvqc
+ gz7Zap2Sr3KnVwn21KhkpdXtzjiX8Y/hOeWFpfSnhS/PlKtOUWwS84KMSfBCuqIWqBo62i0+zGT
+ tyELRq341AAVcM5zvGvxbytPFkyPSbNR7dZJ2STXBR6LM0NKhVEqnpQXcXn2zq5bhpj25epO8cJ
+ 5rHqEuJaVlT0U7t1RHlp3tkdieB2VJpkHjx9vnAMrB7aXV+30hKEZZvtgIpv6UXRdfnBYXufLpw
+ hPjF2ZyQ7BEW3wi3OqKe0Hw0rZrzOYmCRZ5s/oUW5icBLeD2zNyTioD8elQ+oFohpwdafgXuy/v
+ 9qOsRL44DGAAZ+T1MUSWBz+xvuCU2vKWiUkQWVbeT+otZYhXiojiclK7j+OVH8jbd3TIghZHF6P
+ 3UCxxmr ZBhWuGBg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Wed, Dec 06, 2023 at 10:37:33AM -0600, Madhavan T. Venkataraman wrote:
-> 
-> 
-> On 11/30/23 05:33, Peter Zijlstra wrote:
-> > On Wed, Nov 29, 2023 at 03:07:15PM -0600, Madhavan T. Venkataraman wrote:
-> > 
-> >> Kernel Lockdown
-> >> ---------------
-> >>
-> >> But, we must provide at least some security in V2. Otherwise, it is useless.
-> >>
-> >> So, we have implemented what we call a kernel lockdown. At the end of kernel
-> >> boot, Heki establishes permissions in the extended page table as mentioned
-> >> before. Also, it adds an immutable attribute for kernel text and kernel RO data.
-> >> Beyond that point, guest requests that attempt to modify permissions on any of
-> >> the immutable pages will be denied.
-> >>
-> >> This means that features like FTrace and KProbes will not work on kernel text
-> >> in V2. This is a temporary limitation. Once authentication is in place, the
-> >> limitation will go away.
-> > 
-> > So either you're saying your patch 17 / text_poke is broken (so why
-> > include it ?!?) or your statement above is incorrect. Pick one.
-> > 
-> 
-> It has been included so that people can be aware of the changes.
-> 
-> I will remove the text_poke() changes from the patchset and send it later when
-> I have some authentication in place. It will make sense then.
+The return value from nla_len() is never expected to be negative, and can
+never be more than struct nlattr::nla_len (a u16). Adjust the prototype
+on the function. This will let GCC's value range optimization passes
+know that the return can never be negative, and can never be larger than
+u16. As recently discussed[1], this silences the following warning in
+GCC 12+:
 
-If you know its broken then fucking say so in the Changelog instead of
-wasting everybody's time.. OMG.
+net/wireless/nl80211.c: In function 'nl80211_set_cqm_rssi.isra':
+net/wireless/nl80211.c:12892:17: warning: 'memcpy' specified bound 18446744073709551615 exceeds maximum object size 9223372036854775807 [-Wstringop-overflow=]
+12892 |                 memcpy(cqm_config->rssi_thresholds, thresholds,
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+12893 |                        flex_array_size(cqm_config, rssi_thresholds,
+      |                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+12894 |                                        n_thresholds));
+      |                                        ~~~~~~~~~~~~~~
+
+A future change would be to clamp the subtraction to make sure it never
+wraps around if nla_len is somehow less than NLA_HDRLEN, which would
+have the additional benefit of being defensive in the face of nlattr
+corruption or logic errors.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202311090752.hWcJWAHL-lkp@intel.com/ [1]
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: Johannes Berg <johannes@sipsolutions.net>
+Cc: Jeff Johnson <quic_jjohnson@quicinc.com>
+Cc: Michael Walle <mwalle@kernel.org>
+Cc: Max Schulze <max.schulze@online.de>
+Cc: netdev@vger.kernel.org
+Cc: linux-wireless@vger.kernel.org
+Link: https://lore.kernel.org/r/20231202202539.it.704-kees@kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ v3: do not cast NLA_HDRLEN to u16 (nicolas.dichtel)
+ v2: https://lore.kernel.org/all/20231202202539.it.704-kees@kernel.org/
+ v1: https://lore.kernel.org/all/20231130200058.work.520-kees@kernel.org/
+---
+ include/net/netlink.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/net/netlink.h b/include/net/netlink.h
+index 83bdf787aeee..7678a596a86b 100644
+--- a/include/net/netlink.h
++++ b/include/net/netlink.h
+@@ -1200,7 +1200,7 @@ static inline void *nla_data(const struct nlattr *nla)
+  * nla_len - length of payload
+  * @nla: netlink attribute
+  */
+-static inline int nla_len(const struct nlattr *nla)
++static inline u16 nla_len(const struct nlattr *nla)
+ {
+ 	return nla->nla_len - NLA_HDRLEN;
+ }
+-- 
+2.34.1
+
