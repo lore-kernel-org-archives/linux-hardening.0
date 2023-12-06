@@ -1,137 +1,113 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jZZw9mI7"
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 583BC1A5
-	for <linux-hardening@vger.kernel.org>; Wed,  6 Dec 2023 12:59:12 -0800 (PST)
-Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1d0a5422c80so1634075ad.3
-        for <linux-hardening@vger.kernel.org>; Wed, 06 Dec 2023 12:59:12 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="e6l8tHe2"
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 764FAD68
+	for <linux-hardening@vger.kernel.org>; Wed,  6 Dec 2023 13:07:29 -0800 (PST)
+Received: by mail-pj1-x1029.google.com with SMTP id 98e67ed59e1d1-286e57fde73so246468a91.1
+        for <linux-hardening@vger.kernel.org>; Wed, 06 Dec 2023 13:07:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1701896352; x=1702501152; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=J93fduvsJM9IBDskoI9RKo4tnycXW8hW3zH9yUjvMQk=;
-        b=jZZw9mI7YrxEPgI+aIObpwp94vnWw09sNo7OJ/9O8MwgjocHUrmcfZpMxhmTZjk3CF
-         SZ0XlZj4Tt8IneivqQgFUq6XcOuf9wDJds7WEv3FQKLaytYyPTknLrpB1dfzqRfHHL4X
-         kXCU7iBrV3JBcbRr1LsgX3tMkuE4Y+1zGEvic=
+        d=chromium.org; s=google; t=1701896849; x=1702501649; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZqFC5ji57tlGOgcDGhYR3koXkffw9V8OUgIHws4y0Ik=;
+        b=e6l8tHe2M5qlVEEJ1DCYVDM88akxop4k1yonzqkenLnFE/utNe9Bp5mC9NOsOGgnA5
+         O5w0JXVSD3uXLZZqhnCj6F/vR7z1GY9hnwE+/DmSxzjYUa0PV/ul/xOhoiUF3jTL/67C
+         VqD15G+/LwwV/KhYRoLPrLxDwBW9Z6UQsZixc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701896352; x=1702501152;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=J93fduvsJM9IBDskoI9RKo4tnycXW8hW3zH9yUjvMQk=;
-        b=NKVtI3wwoH+g2Q6rVXZ4umCXJauPkL/F4NJTQyDomh7kHMJXG4qAgzk3qKaLRKlgnU
-         m2VUHQxByCNDy8eD15cu+UQlK1m29PibiyJKD5izljOFH74O5yZm5a7Pj3iM7lWtSzfn
-         jFQ9HbBXJgNBDYM4cM0twzpJyrWPyltYqnWWUjwLEaquLzFL8h9YSOsSnlti2N11Tq8s
-         cRx2goQI4oNMzUja0q+wR20h52YoLsm2pEqYLXfKrNr4X9WDY64DVUzH0nQ4zdXAQVRT
-         u7lwlJqtnKMAjSQg62WjK5UJ7C0DR+whVBzO6M/neY4P9FVo6DRjCxyHQT68KDlp/VbG
-         rbaA==
-X-Gm-Message-State: AOJu0YxPsoKPSQsA4gBaDoKXgX1b5sl9y4OnpS/7kJZHJTUoLk/kUPiE
-	xr512LMos4sKz9icL5x0v20tPg==
-X-Google-Smtp-Source: AGHT+IFvswkhjo/IRJgksME8nSDfGlm3ijJw/G6gOtT77V36Y3AGjjCCSiF/AeJmBG3/ZUhfEybY+w==
-X-Received: by 2002:a17:902:ce8c:b0:1d0:5efb:852e with SMTP id f12-20020a170902ce8c00b001d05efb852emr1894519plg.40.1701896351898;
-        Wed, 06 Dec 2023 12:59:11 -0800 (PST)
+        d=1e100.net; s=20230601; t=1701896849; x=1702501649;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZqFC5ji57tlGOgcDGhYR3koXkffw9V8OUgIHws4y0Ik=;
+        b=T9OWema+yIfiAdIr9ZzL6v4PDYf5Fitc4b+BFmuAb/5fus8bIiHxuiqxL5/rprtuky
+         OZBfhAyV6HBJ52HNojy2+n+hOyvp83PaxG5iChi7B79XsHqZkmeIw1it9LpbY64Qh3Gc
+         uFP9X4ufubk4yK1wlP061Rbt2TeIehjAlVl+ok2bpAPsiyW61915yEDZlYHbhDnl1Opy
+         pvRrYYoYfPdEyVx9Mm+jdtNCYT5Ng9Qe1VCHhOQTyCBA/o6urXOJxdz+OS9jqvYBNYLO
+         SIIzDDbh0fIg/xEaJBMbeBLwOzzeUIBMvXWdETKrXGaxtI6B+hAJjmim+9N3zRkqRI/E
+         MLZg==
+X-Gm-Message-State: AOJu0Yw3Jjomad7F4EQEARfDOgNa+IENTb39QX/c8zWtEXMiteeSQhHQ
+	rFILKu/+WGuPQdmLB6juOezkFQ==
+X-Google-Smtp-Source: AGHT+IEAbbzSLQbJ/Rm3HnAGHG3fVDh0lRG/dixqNMZ39AimVhzfCgt99eehqSCc5SMeKCYoDAW9gw==
+X-Received: by 2002:a17:90b:5281:b0:286:6cc0:b920 with SMTP id si1-20020a17090b528100b002866cc0b920mr1089720pjb.87.1701896848897;
+        Wed, 06 Dec 2023 13:07:28 -0800 (PST)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id g15-20020a1709029f8f00b001cffe1e7374sm241121plq.214.2023.12.06.12.59.11
+        by smtp.gmail.com with ESMTPSA id gq7-20020a17090b104700b0028571e2a759sm296227pjb.48.2023.12.06.13.07.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Dec 2023 12:59:11 -0800 (PST)
+        Wed, 06 Dec 2023 13:07:28 -0800 (PST)
+Date: Wed, 6 Dec 2023 13:07:27 -0800
 From: Kees Cook <keescook@chromium.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>,
-	kernel test robot <lkp@intel.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Jeff Johnson <quic_jjohnson@quicinc.com>,
-	Michael Walle <mwalle@kernel.org>,
-	Max Schulze <max.schulze@online.de>,
-	netdev@vger.kernel.org,
-	linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v3] netlink: Return unsigned value for nla_len()
-Date: Wed,  6 Dec 2023 12:59:07 -0800
-Message-Id: <20231206205904.make.018-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+To: davidgow@google.com
+Cc: Rae Moar <rmoar@google.com>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Matti Vaittinen <mazziesaccount@gmail.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>, Maxime Ripard <mripard@kernel.org>,
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-sound@vger.kernel.org
+Subject: Re: [PATCH 2/4] fortify: test: Use kunit_device
+Message-ID: <202312061306.98DA6D275D@keescook>
+References: <20231205-kunit_bus-v1-0-635036d3bc13@google.com>
+ <20231205-kunit_bus-v1-2-635036d3bc13@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2690; i=keescook@chromium.org;
- h=from:subject:message-id; bh=pLbf9+8/Dl6ABNGi9y3vSm6UF9GJMzpseYPTOTsyx3s=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlcOCb/xqKImyOG8B5tSBdCnmYR3X3y0Fpi6OPz
- +IJ//WINgGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZXDgmwAKCRCJcvTf3G3A
- Jla8D/4u3zQcCSzbtxkzBPPv06VCqIqEjWUmThCDWb+7VGajZMflRwumsBIenZhrHpN5F5aclOO
- 4VuHTW8AM5MPLgfRnMQ4JvuUp2Upru5NZQjfGbfMVR8helKPFcBr9hc04VO1f92ifYptZRN/LKb
- jOKQWB3KCZMuQasgWFlbpupkYVvuSZVid0v4uHPmr+XPVJHMHShYG5uojmi79M+Ublpsz9iH88S
- lbfK82rcT0UN8FROEBI2dTwMS5WlKw4KrykUQbatRuSyFrU7vSM2SFxoT55PrI419GzCH35Rvqc
- gz7Zap2Sr3KnVwn21KhkpdXtzjiX8Y/hOeWFpfSnhS/PlKtOUWwS84KMSfBCuqIWqBo62i0+zGT
- tyELRq341AAVcM5zvGvxbytPFkyPSbNR7dZJ2STXBR6LM0NKhVEqnpQXcXn2zq5bhpj25epO8cJ
- 5rHqEuJaVlT0U7t1RHlp3tkdieB2VJpkHjx9vnAMrB7aXV+30hKEZZvtgIpv6UXRdfnBYXufLpw
- hPjF2ZyQ7BEW3wi3OqKe0Hw0rZrzOYmCRZ5s/oUW5icBLeD2zNyTioD8elQ+oFohpwdafgXuy/v
- 9qOsRL44DGAAZ+T1MUSWBz+xvuCU2vKWiUkQWVbeT+otZYhXiojiclK7j+OVH8jbd3TIghZHF6P
- 3UCxxmr ZBhWuGBg==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231205-kunit_bus-v1-2-635036d3bc13@google.com>
 
-The return value from nla_len() is never expected to be negative, and can
-never be more than struct nlattr::nla_len (a u16). Adjust the prototype
-on the function. This will let GCC's value range optimization passes
-know that the return can never be negative, and can never be larger than
-u16. As recently discussed[1], this silences the following warning in
-GCC 12+:
+On Tue, Dec 05, 2023 at 03:31:34PM +0800, davidgow@google.com wrote:
+> Using struct root_device to create fake devices for tests is something
+> of a hack. The new struct kunit_device is meant for this purpose, so use
+> it instead.
+> 
+> Signed-off-by: David Gow <davidgow@google.com>
+> ---
+>  lib/fortify_kunit.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/lib/fortify_kunit.c b/lib/fortify_kunit.c
+> index c8c33cbaae9e..f7a1fce8849b 100644
+> --- a/lib/fortify_kunit.c
+> +++ b/lib/fortify_kunit.c
+> @@ -16,6 +16,7 @@
+>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>  
+>  #include <kunit/test.h>
+> +#include <kunit/device.h>
+>  #include <linux/device.h>
+>  #include <linux/slab.h>
+>  #include <linux/string.h>
+> @@ -269,7 +270,7 @@ DEFINE_ALLOC_SIZE_TEST_PAIR(kvmalloc)
+>  	size_t len;							\
+>  									\
+>  	/* Create dummy device for devm_kmalloc()-family tests. */	\
+> -	dev = root_device_register(dev_name);				\
+> +	dev = kunit_device_register(test, dev_name);			\
+>  	KUNIT_ASSERT_FALSE_MSG(test, IS_ERR(dev),			\
+>  			       "Cannot register test device\n");	\
+>  									\
+> @@ -303,7 +304,7 @@ DEFINE_ALLOC_SIZE_TEST_PAIR(kvmalloc)
+>  	checker(len, devm_kmemdup(dev, "Ohai", len, gfp),		\
+>  		devm_kfree(dev, p));					\
+>  									\
+> -	device_unregister(dev);						\
+> +	kunit_device_unregister(test, dev);				\
+>  } while (0)
+>  DEFINE_ALLOC_SIZE_TEST_PAIR(devm_kmalloc)
 
-net/wireless/nl80211.c: In function 'nl80211_set_cqm_rssi.isra':
-net/wireless/nl80211.c:12892:17: warning: 'memcpy' specified bound 18446744073709551615 exceeds maximum object size 9223372036854775807 [-Wstringop-overflow=]
-12892 |                 memcpy(cqm_config->rssi_thresholds, thresholds,
-      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-12893 |                        flex_array_size(cqm_config, rssi_thresholds,
-      |                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-12894 |                                        n_thresholds));
-      |                                        ~~~~~~~~~~~~~~
+Acked-by: Kees Cook <keescook@chromium.org>
 
-A future change would be to clamp the subtraction to make sure it never
-wraps around if nla_len is somehow less than NLA_HDRLEN, which would
-have the additional benefit of being defensive in the face of nlattr
-corruption or logic errors.
+(As an aside; shouldn't this get automatically cleaned up like other
+kunit resources, though?)
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202311090752.hWcJWAHL-lkp@intel.com/ [1]
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: Johannes Berg <johannes@sipsolutions.net>
-Cc: Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc: Michael Walle <mwalle@kernel.org>
-Cc: Max Schulze <max.schulze@online.de>
-Cc: netdev@vger.kernel.org
-Cc: linux-wireless@vger.kernel.org
-Link: https://lore.kernel.org/r/20231202202539.it.704-kees@kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- v3: do not cast NLA_HDRLEN to u16 (nicolas.dichtel)
- v2: https://lore.kernel.org/all/20231202202539.it.704-kees@kernel.org/
- v1: https://lore.kernel.org/all/20231130200058.work.520-kees@kernel.org/
----
- include/net/netlink.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/net/netlink.h b/include/net/netlink.h
-index 83bdf787aeee..7678a596a86b 100644
---- a/include/net/netlink.h
-+++ b/include/net/netlink.h
-@@ -1200,7 +1200,7 @@ static inline void *nla_data(const struct nlattr *nla)
-  * nla_len - length of payload
-  * @nla: netlink attribute
-  */
--static inline int nla_len(const struct nlattr *nla)
-+static inline u16 nla_len(const struct nlattr *nla)
- {
- 	return nla->nla_len - NLA_HDRLEN;
- }
 -- 
-2.34.1
-
+Kees Cook
