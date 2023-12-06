@@ -1,75 +1,166 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="iJ9aLbum"
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD948C6;
-	Tue,  5 Dec 2023 16:55:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=X8KK4VSJFZP6TzOCTWGDStmgVhNuLq23YhUpuTUXAQ4=; b=iJ9aLbum3b2L5pwcfpjDF8tL5c
-	Qw2bPrYFGW7a5lznqCq8i9u3nNWRbvjN7WQUj4HYjv6+sNjh+kog7kBKCGMuLYgbQHzHzVqjklWes
-	UuXdI2UR8wvKVkuhilt+p67cLOZpSpo2vc/9RhZGBI+/z06wkrKxktMjKalVjP2Zew4/wwWNj/ebc
-	0n8EUyr9K3F1qFsFA0VDlCv79YGqzTBJBbEfxeGDgECMPvZ5Ez9CzP87q/S6IA3sQmlrakoL8RifS
-	4nyrx9wCeSUL6aRFTMjPFvamsyEihswzbbTInErnbgjJWEx/rmLQHAAYV9weWJtKXu9ynsbxsqAPH
-	N+Q1KODw==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1rAgCU-007Wc9-2y;
-	Wed, 06 Dec 2023 00:55:42 +0000
-Date: Wed, 6 Dec 2023 00:55:42 +0000
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Greg KH <greg@kroah.com>
-Cc: Nick Desaulniers <ndesaulniers@google.com>, tanzirh@google.com,
-	Kees Cook <keescook@chromium.org>,
-	Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Nick DeSaulniers <nnn@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>, llvm@lists.linux.dev
-Subject: Re: [PATCH] lib/string: shrink lib/string.i via IWYU
-Message-ID: <20231206005542.GJ1674809@ZenIV>
-References: <20231205-libstringheader-v1-1-7f9c573053a7@gmail.com>
- <20231205213807.GE1674809@ZenIV>
- <CAKwvOd=2VASkaLvjU+7kkbvhu2CimYn5KUGJBDRePyUhtrNK2Q@mail.gmail.com>
- <2023120608-ivy-snowdrop-890d@gregkh>
- <CAKwvOdmFJ=ZGN8ZScS5oQpXnAL0wwtTDCeNNGpBKZXzQ4kRAVA@mail.gmail.com>
- <2023120657-henna-spongy-9ef6@gregkh>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kQ+i3KlE";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="Kp1ZudE+"
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A8DD1BC;
+	Tue,  5 Dec 2023 17:54:00 -0800 (PST)
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B61aBCU014937;
+	Wed, 6 Dec 2023 01:53:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : message-id : references : date : in-reply-to : content-type :
+ mime-version; s=corp-2023-11-20;
+ bh=23hKHmbbALm+t8Psdu5EM4lKkNtNMEctJJNYUfuNo70=;
+ b=kQ+i3KlEujnkD8Xzday87jUjAWXQL+2pv0fWK1BcffRzsu6mGMM4eGxrmyHO+sp8J/sY
+ AVnfspOdIDh1AYQS+0zgBCgwdPeOijT0qpSmpskxeBigPtvNGhpBjsnKDJzPBEfmNOT6
+ 3fm1tESv7nVoDbbuaTob7QY4SK6z6oWmhWi5TXI0vVoR3HlmDe6G02JecadQ14wLBgHZ
+ iipQdxoYEwYUCc/AQM145Eq+yfIuuP56hgAF1J6ATyP3NpvvHVgoMJ9BtjoriQ1TbVib
+ 2wfA0USANqklihTGvysj7GRoQP7jPEgY+In59aeBvFdFydmeS2jfRqP6gQRQ6/eBoowG KQ== 
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3utdmbg4aj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 06 Dec 2023 01:53:52 +0000
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3B608wCa032249;
+	Wed, 6 Dec 2023 01:53:52 GMT
+Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2168.outbound.protection.outlook.com [104.47.59.168])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3utan8buxw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 06 Dec 2023 01:53:52 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dtjU8JfXx4WCxsUCKeYIBWuoDaiCninOeVNi5gPcv4mvnOAdWHAb3dvXs/0F25WWhxehMfAZ2G9fDuUlRoXO2yp5eF8AbK73VpAGYYp/owBkqr/4fR634IoB9w/BhD/XhuG5KA1wAiVGAtQjWM6MWTyOjZ42/goi3AEihFdDVhbkyMxKHI2eGdcMNmShyAlLr0DhrTnAKP+qPDuyXKVEgl9juqT+S+XEjUC848bMK4q3WwmPIpYQuyoV1af8Gd1U/N2p5+lKAkRFjcRkSlblgHKn2NNgZnyGvf7IUP2BFO9beyuuwdTliRjESyQcbmgcG2nRyV8hBKj0ymiA4hYlHQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=23hKHmbbALm+t8Psdu5EM4lKkNtNMEctJJNYUfuNo70=;
+ b=YtP5VGQpYWCrWazRP/H+plzTTOteZN6ekifsrnnM2lC81BxYUizUjhHcR3XB1IexHLFd7zV9GkcvqPykCK2L4d6ddwDPjInubgQ4y1udpqwuiTeF6tQdhjmhvECRNdcY2BmU3FkAEhpH8Rp0BWjCFrP3otv6Y0ffOrnDzwbHENeeVo4Cvvfay8n3nv4bzeE6Akq3znHWw/jxGVEJMPu0bhBi6x9YNf0ZLwPqjinwiaB7Iv/miGSFyWUgY+bZQsU5nt6juM3UQNb6eK1jmEUPB2/T8KllvR/PgCzsbMJAByXVG7dtb8Bn/mzpmOPVI4FSZ1OgqRwNeBue/W+aWgQZuA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=23hKHmbbALm+t8Psdu5EM4lKkNtNMEctJJNYUfuNo70=;
+ b=Kp1ZudE+SUIxV+kfaXg9Ek+402sf3HWrx+B5I4E6HfvO8N+ir706vbkyfXw94FDXlNfJUGnYpLOPbKC0btlnc30OvYvslD/T+jIbdrusYshpwYcLMbZj5dvceKBwoip7EhDRy58frIzkEJfl1FBZ35gcF/P4JiZJFtXGXD46L30=
+Received: from PH0PR10MB4759.namprd10.prod.outlook.com (2603:10b6:510:3d::12)
+ by CY5PR10MB6096.namprd10.prod.outlook.com (2603:10b6:930:37::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7046.27; Wed, 6 Dec
+ 2023 01:53:50 +0000
+Received: from PH0PR10MB4759.namprd10.prod.outlook.com
+ ([fe80::2b0c:62b3:f9a9:5972]) by PH0PR10MB4759.namprd10.prod.outlook.com
+ ([fe80::2b0c:62b3:f9a9:5972%3]) with mapi id 15.20.7046.034; Wed, 6 Dec 2023
+ 01:53:50 +0000
+To: Kees Cook <keescook@chromium.org>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "James E.J.
+ Bottomley" <jejb@linux.ibm.com>,
+        Steffen Maier <maier@linux.ibm.com>,
+        Benjamin Block <bblock@linux.ibm.com>,
+        Heiko Carstens
+ <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander
+ Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger
+ <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Azeem
+ Shaikh <azeemshaikh38@gmail.com>, linux-s390@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] scsi: zfcp: Replace strlcpy() with strscpy()
+From: "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <yq11qc0p04d.fsf@ca-mkp.ca.oracle.com>
+References: <20231130204056.it.978-kees@kernel.org>
+Date: Tue, 05 Dec 2023 20:53:48 -0500
+In-Reply-To: <20231130204056.it.978-kees@kernel.org> (Kees Cook's message of
+	"Thu, 30 Nov 2023 12:41:00 -0800")
+Content-Type: text/plain
+X-ClientProxiedBy: BY3PR10CA0017.namprd10.prod.outlook.com
+ (2603:10b6:a03:255::22) To PH0PR10MB4759.namprd10.prod.outlook.com
+ (2603:10b6:510:3d::12)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2023120657-henna-spongy-9ef6@gregkh>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR10MB4759:EE_|CY5PR10MB6096:EE_
+X-MS-Office365-Filtering-Correlation-Id: 34df966b-6130-475a-d718-08dbf5fe3156
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	zPMdVMG41y7KlDgIWNXahi6qsEgeb6oCJkzsKDiIssDnHRjoCv1IfyOiwT/5M2YNQuHRky/qWw3Y9lPB3+USS/2SPqvSDbxlfzfFEe596UP4dFW6jvdrOLbsF+kPe9RQpgkG5GWLoTkIHglSM+Nncs48pqrP8Q2aDqsljkc+QeIKDdD4bRQGhjnnoDzEMx6hRTNaF94Cjpqrfyphx+aJ/oqzPfcCc09XYmelhz5yPS8uEY+4XBwmEJXK26WLFT8PyMgJZwbiq3M44eYXbOesO7hAD0rch01g36RiqYClGBMZxRO3XbNKNpXO/mJgRhOMbEIXhSRfLgOEiOB8Kz5EbfAF6P84DOgXKfw0+llEp0GhBO8ZGwWlHlwb/Z39fbyrp1pMMrwseIfH/DrcjCEwakOWvjXmzOYjirAX1Ce2i8BdLggGuld9LQoaaQ7F/6x5M+w4CS4tdjzI67vk9dTerAwlqz4PF/gzDk3bejtgeJdw/3wdvcTu3ODjW2fH8U14GK8jcoG7CBbEFCLH6Qp+YOV9XlRChaiojMFcWasKaWFOfkogH2pf9ly9h1N+f29L
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB4759.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(396003)(346002)(136003)(39860400002)(366004)(230922051799003)(64100799003)(451199024)(1800799012)(186009)(6486002)(8936002)(6916009)(4326008)(66556008)(54906003)(66476007)(316002)(66946007)(8676002)(478600001)(7416002)(41300700001)(86362001)(4744005)(2906002)(5660300002)(6506007)(26005)(38100700002)(83380400001)(36916002)(6512007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?8b8LPoksWDVJ7ckCiOhBVJk5FPCXZXgf92+qV/TCNowrB+B7oAbRDjzuGQn0?=
+ =?us-ascii?Q?MqK6SvYPxe5Um4Up6pDD2RzoflrG3/w8/ZPP/+SWpoRzM6vQHsAbgVld9sys?=
+ =?us-ascii?Q?c1DI/4FLFtNrWpwdiQvq/XrkmVVXNQD5L7fnY8aYE4Qg/4zoYtC3GyJFhGc3?=
+ =?us-ascii?Q?z+oxL5v2EGB7JuoZkEj4okmay/4xOUh/JFB1wMEtLqaap6PsBHE4K4o6yu9j?=
+ =?us-ascii?Q?M3YieuTZEbCbkruMxk3NSmLObDNxlAqHbu9IlatPmMjlz83Ka4Sp6IJDN0Md?=
+ =?us-ascii?Q?zuijSDqbQL7it8SYaWyeJB9YNPR2Z6HJM8G2VzRrk/OPwuUWEHEXslvM8NE9?=
+ =?us-ascii?Q?EkzAMvTDbY6mbT9WqhQQJ79oOoY8heFhCvZQDdKgTbQyTQ6+7LXm4wSMIMrc?=
+ =?us-ascii?Q?zhfDHB0xu9WHtSxcwYYRvSUS4t3FGzGS+a9K4dYRC6u0bGXkDZLEGkof+hkQ?=
+ =?us-ascii?Q?lYXYAtChLfpeVYzXMJmN7DSyRTD/7/yae6rnlooKCjlfyvk0wEtIie5zommB?=
+ =?us-ascii?Q?w544xOwronqjvfH+Skmd1I0PFYu9hv8c8Eo7f89RW6o8NSx7q2YjUQyxf0xm?=
+ =?us-ascii?Q?PSktHepYcafsg2CYvOS8wJ7T1WZaezOBJwh8ypB87xXaFeaTADwvkKhKTX2d?=
+ =?us-ascii?Q?am3LSWFr6CP2r1veqz0RBier1F4sEl32wz1eowp2xNicjhnrrGcQlPMYaVI8?=
+ =?us-ascii?Q?Chu4BKIVD20whMZjRLUpfwtrBCag8p9dmAdWSG5z0wJNH2oKgK3bp4UPq0Wq?=
+ =?us-ascii?Q?WnWyFpT4IG+EYVEsP4pxmmKDEXke0+x8gYsVdGoHOJ4cERjRAv+ITa6u/tKe?=
+ =?us-ascii?Q?rjlL/wnEbyt1UJz0rFoUaia6GNzzJY4HYaSCetdLJJzyEJ1puxJDiWhJaVT5?=
+ =?us-ascii?Q?kQ/COjBApBpE8aRoHj6AJP7s9Fz6bxR/gae9HlElR6cCWEvMbKPGQD9raipN?=
+ =?us-ascii?Q?igBvSaYLvqWFH42KbtkS9Uj0SL05SxTYGdM6djsJiSi9VAE1idDUUE+FnaW2?=
+ =?us-ascii?Q?hKZSRNBeV1fiUEX/Tg7CnvyPnVZEtmiTuSzFmf0RwvQVl4urbbXUKIaKvOvG?=
+ =?us-ascii?Q?9nhdy6VfkaHHdqhmiLYO+DHV6HQoEqVWCgXHFaVo9XSkJQ3sNWfvux9bm2pj?=
+ =?us-ascii?Q?uv33A4BB8kMpWxeX+8774LkZQZ/RDK+0Rwa7cZUCDl1tqiLGt87ZGb5UHWtn?=
+ =?us-ascii?Q?1H+cEphaHFu1pP/A/iMFyYAl2Y4ar5SXRhV+3Q3GyoEYxMCePKA5f9V42xJW?=
+ =?us-ascii?Q?7E7ekbaxbQWfFJL3r5GCrxrR8qkibbGj2rQ7X0faPY2Lq0GUYXvXQUF2ApMs?=
+ =?us-ascii?Q?CHGqrEUd0aWP4FqPp6LUosknHxFUJ0mOWMdfz/mRIEP1d4cYYC0VV6TG9wCF?=
+ =?us-ascii?Q?a5ci8rM+WdpttEOtLAM8dRcQjl+gBjGF0FXqh7iN3f1ZeaR8G24yATzTj4hh?=
+ =?us-ascii?Q?sS1Aaf3q1h6q0T2QAXuTxSEQHnG2UzbYUDq5nGwRsvL/cvm9glyXWKzz1cEe?=
+ =?us-ascii?Q?vlkdfSasJoan91CysOAuR0pucObLntcTuVB1bEcSPKbc97cECUD42ffInMuH?=
+ =?us-ascii?Q?7oplahcSbGGsKickGLdUGczQcmThk/wGg0WN3Rzw09M03STxe/3yGiZ8cBem?=
+ =?us-ascii?Q?iA=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	i0CFhaEYNBztQd1CRTNaCQIeuPI337G7OetcP39wWwMxEEUMILpaF+X5ozAxj5fjx9Jo2XaQpvovJhEyYt0oJly/GCb7nT7gwdzy0BhmQ/gWXDczX6Myw1yLbz3DaM3bcUKT91RTV6frzqLOLoCYec3rrifLLcWfyB7I4WeXnjtAsOttNpslYpFXUmPXu33py9h56XaUhVrC/42CZ4OT4XLb6DEFpqYVUYhUL68jGc2t0/RkU2aNgX5Yw/TGsRNSvyp5yID3XcelBiu3vIcvhUj647VDIAdGyQ1WYa1m+y1omseXqOgMRnpIknyweLvcFF9Yp3WVhCP+E+2hRSAtRaEkGvZTch1BxgP3pmZXp7fVoDUmJfrIEoxsSNgHKSO+8QJt9/Uva+/mhwe6A5eEUKd4j8Iu6gohc8ZWJRQNsccQkWql8Bh8pHzAemcFcA1zZVB81DXPbSWO2Y0vFySSnF02tOdqEV0wdk1Zfttc8vxHm9cluSsni5P1/Z3AsPH2VvkcUoHKP374SPLEYvIlH4xKd7BZyLb0NjtlMWMoSh23uI3LRuj2TrN+XkHMAmrGpELrUesZEXDZZrtHSdSchVpMS3xHRthugGB3at0bpQjFEt4nqA6eHzHKcw7dq9Lo7FqmWrlKqzdCKOvaycfAKCQM++SMClp016dkv1fEScgdAGqzFRkFpnH7kbvV0HIExh99EL51VnB5pPBCiJHkr4P8Z259QDQU3vMLfU067uxIC8ZsmyVtzE8CSRIbgnhJ9jH6WTl8KXTTUWm7sAydWBfcy4gabzdVXPSQ6R76zjonj3zT8IjXJmwOCeOvGRK051I8LtSD703+oh4T7UgIRja/0cJAW9IsD9K2eP5BWUc=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 34df966b-6130-475a-d718-08dbf5fe3156
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB4759.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Dec 2023 01:53:50.2647
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: B+8/BiShufQ4AjWPhZV4MUGS+8yefqxQgJB0VzGa0enwaxyp1k7MrTOgD1//sTSvS66/eoMKjj0kFXTf3AL6PPLH+Ak3fAhNlPjd0M0oUlo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR10MB6096
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-06_01,2023-12-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 suspectscore=0
+ mlxscore=0 bulkscore=0 mlxlogscore=999 adultscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2312060014
+X-Proofpoint-ORIG-GUID: auxKadd7K4NR7815_xHwW4hVXKyH4BIu
+X-Proofpoint-GUID: auxKadd7K4NR7815_xHwW4hVXKyH4BIu
 
-On Wed, Dec 06, 2023 at 08:46:50AM +0900, Greg KH wrote:
-> > >
-> > > But of course, it doesn't always hold true, there are a few minor
-> > > exceptions, but they are rare.
-> > 
-> > $ grep -r \\#include lib | grep asm
-> > 
-> > shows quite a few exceptions, and just in lib/.
-> > 
-> > For example, lib/math/int_log.c includes asm/bug.h.  Is that a case
-> > where lib/math/int_log.c should be #include 'ing linux/bug.h rather
-> > than asm/bug.h?
-> 
-> Probably yes, but we don't normally go back and take coding style fixes
-> for old files like this as it doesn't make much sense to do so.
-> 
-> But, if you are cleaning up the headers for large portions with the goal
-> of faster builds, that's a good reason.
 
-FWIW, the most common (by far - about 13% of such includes, over drivers/, fs/,
-mm/, net/ and sound/) is asm/unaligned.h.
+Kees,
 
-The next are asm/io.h (10%), asm/byteorder.h (6%), asm/irq.h (5%), asm/div64.h (3%),
-asm/page.h and asm/dma.h (2% each).  The rest is below that (the next is a bit over
-1%).
+> strlcpy() reads the entire source buffer first. This read may exceed
+> the destination size limit. This is both inefficient and can lead to
+> linear read overflows if a source string is not NUL-terminated[1].
+> Additionally, it returns the size of the source string, not the
+> resulting size of the destination string. In an effort to remove
+> strlcpy() completely[2], replace strlcpy() here with strscpy().
 
-In fs/* unaligned.h is again the top one (37 out of 139), followed by
-byteorder.h (30 out of 139), div64.h (12), page.h (10) and then comes random
-shite - I do not believe that fs/coda/psdev.c might have a legitimate
-reason to pull asm/io.h, for one thing...
+Applied to 6.8/scsi-staging, thanks!
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
