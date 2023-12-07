@@ -1,204 +1,363 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6545113AED;
-	Thu,  7 Dec 2023 06:52:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ZCxkGoVt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AA06C433C9;
-	Thu,  7 Dec 2023 06:52:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1701931924;
-	bh=Jgvkdt55R4jwOTmeK7TgfLh1AEzeBbcP2a+N+0WhhKc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZCxkGoVtrKOxBDYbFXzbEwUrQaBkI55Mm1b+Pb1HCoor+OHtpzpFaJLxyDN339xgl
-	 svPqHzGtbUt8E5XKS/+UEvC2DJgk9VkzjktF5sVtRSEAfeyubq4qWFcm09cDcYLDXY
-	 rNdQa6gFxEdWWj51AMU9Y/LChTU74ukQcuaBesQA=
-Date: Thu, 7 Dec 2023 11:29:22 +0900
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: David Gow <davidgow@google.com>
-Cc: Rae Moar <rmoar@google.com>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Jonathan Corbet <corbet@lwn.net>, Kees Cook <keescook@chromium.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>, Maxime Ripard <mripard@kernel.org>,
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-sound@vger.kernel.org
-Subject: Re: [PATCH 1/4] kunit: Add APIs for managing devices
-Message-ID: <2023120717-dangle-wrath-7bb3@gregkh>
-References: <20231205-kunit_bus-v1-0-635036d3bc13@google.com>
- <20231205-kunit_bus-v1-1-635036d3bc13@google.com>
- <2023120602-vaguely-primarily-b6b2@gregkh>
- <CABVgOSnW7et1aonnsSLcS1LHHztXVyagAFe-U3=JX7c7xi2P4g@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="acsBDU74"
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A5DBD4B;
+	Thu,  7 Dec 2023 02:44:04 -0800 (PST)
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20231207104400euoutp01727275761e93f8749fd8e1c5ebf15eae~ehrlvWbNy1164011640euoutp01T;
+	Thu,  7 Dec 2023 10:44:00 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20231207104400euoutp01727275761e93f8749fd8e1c5ebf15eae~ehrlvWbNy1164011640euoutp01T
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1701945840;
+	bh=zNERQmKVM3J0wJDaJhwXBxSpaX0PETpZi4lQDqCU9SY=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=acsBDU74aBdYeDXY6ngky3hI4T5gVuGXxxcIGmVFMJGJmjm97Y5yMQYlCVW8uifM8
+	 AcDpz5E26Zn/MR+NouYh3FkW1es7WKi7xWKtTWrmMePyJJ9gPnGoembpsyH4aChyjS
+	 DXySnxm3JQRzP/MLTBrpyaFGrDMJkIicityiyQU0=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+	20231207104359eucas1p14f136aa02ca2b1b5bf125cc88be58157~ehrlZNgNr2918229182eucas1p1g;
+	Thu,  7 Dec 2023 10:43:59 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+	eusmges3new.samsung.com (EUCPMTA) with SMTP id ED.CE.09552.FE1A1756; Thu,  7
+	Dec 2023 10:43:59 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20231207104359eucas1p1f79f29d05b60116469be45492bf11643~ehrk6_xi01594315943eucas1p1B;
+	Thu,  7 Dec 2023 10:43:59 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20231207104359eusmtrp190e2f95c9151072cb749876723af6530~ehrk6OK4O3019030190eusmtrp1Y;
+	Thu,  7 Dec 2023 10:43:59 +0000 (GMT)
+X-AuditID: cbfec7f5-83dff70000002550-d3-6571a1efeb9c
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+	eusmgms1.samsung.com (EUCPMTA) with SMTP id 43.FE.09146.FE1A1756; Thu,  7
+	Dec 2023 10:43:59 +0000 (GMT)
+Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20231207104359eusmtip17e9120b4fcfd007493086e25c8a7eae7~ehrkqgZop1635216352eusmtip1p;
+	Thu,  7 Dec 2023 10:43:59 +0000 (GMT)
+Received: from localhost (106.210.248.38) by CAMSVWEXC02.scsc.local
+	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
+	Thu, 7 Dec 2023 10:43:58 +0000
+Date: Thu, 7 Dec 2023 11:43:57 +0100
+From: Joel Granados <j.granados@samsung.com>
+To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+CC: Kees Cook <keescook@chromium.org>, "Gustavo A. R. Silva"
+	<gustavoars@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, Iurii Zaikin
+	<yzaikin@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	<linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH v2 00/18] sysctl: constify sysctl ctl_tables
+Message-ID: <20231207104357.kndqvzkhxqkwkkjo@localhost>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="qyay55f3fbjgslmy"
 Content-Disposition: inline
-In-Reply-To: <CABVgOSnW7et1aonnsSLcS1LHHztXVyagAFe-U3=JX7c7xi2P4g@mail.gmail.com>
+In-Reply-To: <20231204-const-sysctl-v2-0-7a5060b11447@weissschuh.net>
+X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
+	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrFKsWRmVeSWpSXmKPExsWy7djPc7rvFxamGvx5oGHRvHg9m8Wvi9NY
+	Lc5051rs2XuSxWLe+p+MFpd3zWGz+P3jGZPFjQlPGS2W7fRz4PSY3XCRxWPBplKPTas62Tz2
+	z13D7vF5k5xHf/cx9gC2KC6blNSczLLUIn27BK6MOZ8jC37GVhz//4CpgfGRTRcjJ4eEgInE
+	lad7mLoYuTiEBFYwShzuusIG4XxhlNj77QojhPOZUeL3gRWMMC3nNs9jhkgsZ5S4NnMeG1xV
+	690+VghnM6PEpc/72EFaWARUJK6umMQEYrMJ6Eicf3OHGcQWEbCRWPntMztIA7PALiaJxw/n
+	AhVxcAgLOEhsa5IEqeEVMJe4uGoSC4QtKHFy5hMwm1mgQmJjRyMbSDmzgLTE8n8cIGFOAVeJ
+	t4+72SEuVZI4PPkzM4RdK3Fqyy2wRyUE1nNKvL83EeodF4nX625C2cISr45vgWqWkTg9uYcF
+	omEyo8T+fx/YIZzVjBLLGr8yQVRZS7RceQLV4Sixbu5SVpCLJAT4JG68FYQ4lE9i0rbpzBBh
+	XomONiGIajWJ1ffesExgVJ6F5LVZSF6bhfAaRFhP4sbUKZjC2hLLFr5mhrBtJdate8+ygJF9
+	FaN4amlxbnpqsXFearlecWJucWleul5yfu4mRmCSO/3v+NcdjCtefdQ7xMjEwXiIUQWo+dGG
+	1RcYpVjy8vNSlUR4c87npwrxpiRWVqUW5ccXleakFh9ilOZgURLnVU2RTxUSSE8sSc1OTS1I
+	LYLJMnFwSjUwddlw32mZsDDw8RVJjdoO1aUJCUm5jE2O3x4Eys1RdH4Ydu2gc5FJ/rqi+jKD
+	rFVez4QfT8kV1uzt+fV7hvLESHWzBp6aby/tAwxvLPlkHP/Ya11Y3ewLMb1HA1bqWDUw18VM
+	nBJqUXFDpsnR/u3XWPMHfNJ/bV+/Tj3guG1Bmfay7d1/997+fZo/LZbjdmxUjJzxDpOD80PS
+	i87K/eR8t8/iz5WuzY8j254Ynl/QUF4TvSBSS7J968x64c+sP2+IX0xKUPfZV5qTm/Jjt7ih
+	tb3XsYbONb6213WFXSV6NZTnH9yS5fUt5+6n0s59yl4/Pj453d75fqXp5Ehp1t+vmC88PLZ6
+	9YVjKn5nTc8osRRnJBpqMRcVJwIAapkEX+0DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrKIsWRmVeSWpSXmKPExsVy+t/xu7rvFxamGqy7x2nRvHg9m8Wvi9NY
+	Lc5051rs2XuSxWLe+p+MFpd3zWGz+P3jGZPFjQlPGS2W7fRz4PSY3XCRxWPBplKPTas62Tz2
+	z13D7vF5k5xHf/cx9gC2KD2bovzSklSFjPziElulaEMLIz1DSws9IxNLPUNj81grI1MlfTub
+	lNSczLLUIn27BL2MFYu9Cr7HVnTumcPewPjApouRk0NCwETi3OZ5zF2MXBxCAksZJV7fvc4K
+	kZCR2PjlKpQtLPHnWhcbiC0k8JFR4teueIiGzYwSizcdYQRJsAioSFxdMYkJxGYT0JE4/+YO
+	M4gtImAjsfLbZ3aQBmaBXUwSjx/OBSri4BAWcJDY1iQJUsMrYC5xcdUkFoihMxglZl69zgiR
+	EJQ4OfMJC4jNLFAmMWfHejaQXmYBaYnl/zhAwpwCrhJvH3ezQxyqJHF48mdmCLtW4vPfZ4wT
+	GIVnIZk0C8mkWQiTIMI6Eju33sEU1pZYtvA1M4RtK7Fu3XuWBYzsqxhFUkuLc9Nziw31ihNz
+	i0vz0vWS83M3MQLjfNuxn5t3MM579VHvECMTB+MhRhWgzkcbVl9glGLJy89LVRLhzTmfnyrE
+	m5JYWZValB9fVJqTWnyI0RQYihOZpUST84EJKK8k3tDMwNTQxMzSwNTSzFhJnNezoCNRSCA9
+	sSQ1OzW1ILUIpo+Jg1Oqganh2rfyPOdOw/WtQQs0tKY9aHD6sGj+gw+CpXnTb85aP8W0IXtJ
+	zS1Dxfm/u55zbTts/+9/ivslfVNlB415CRumlHEGTZ35rkd6ZbD/juiqvyYrPGTjpr7pKzlR
+	nmvobCSWl1Ri8EGkUXY97x4G/cLlZWrTr/mk9peYNHko2l8x/riErd3yu9qtlNMmirc/hmu6
+	1f//d9o1/tzTlq1ccbcSdW5dvjjhlPyTk+8LdszW/Gase+O0tuMXNS+hPpu5j15c5IyoubPl
+	qOBlV5apQerX7vl/lM71dJ5SP1Pf9rG0gemdmbfqv1rWSJfmPLqmPNv0fVNnVcvZ0L+Gr15X
+	Lr55yKN9ru9cL4aLs396rVBiKc5INNRiLipOBABFpJgWiAMAAA==
+X-CMS-MailID: 20231207104359eucas1p1f79f29d05b60116469be45492bf11643
+X-Msg-Generator: CA
+X-RootMTR: 20231204075237eucas1p27966f7e7da014b5992d3eef89a8fde25
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20231204075237eucas1p27966f7e7da014b5992d3eef89a8fde25
+References: <CGME20231204075237eucas1p27966f7e7da014b5992d3eef89a8fde25@eucas1p2.samsung.com>
+	<20231204-const-sysctl-v2-0-7a5060b11447@weissschuh.net>
 
-On Wed, Dec 06, 2023 at 03:44:08PM +0800, David Gow wrote:
-> > But really, why is this a "raw" device_driver pointer and not a pointer
-> > to the driver type for your bus?
-> 
-> So, this is where the more difficult questions start (and where my
-> knowledge of the driver model gets a bit shakier).
-> 
-> At the moment, there's no struct kunit_driver; the goal was to have
-> whatever the minimal amount of infrastructure needed to get a 'struct
-> device *' that could be plumbed through existing code which accepts
-> it. (Read: mostly devres resource management stuff, get_device(),
-> etc.)
-> 
-> So, in this version, there's no:
-> - struct kunit_driver: we've no extra data to store / function
-> pointers other than what's in struct device_driver.
-> - The kunit_bus is as minimal as I could get it: each device matches
-> exactly one driver pointer (which is passed as struct
-> kunit_device->driver).
-> - The 'struct kunit_device' type is kept private, and 'struct device'
-> is used instead, as this is supposed to only be passed to generic
-> device functions (KUnit is just managing its lifecycle).
-> 
-> I've no problem adding these extra types to flesh this out into a more
-> 'normal' setup, though I'd rather keep the boilerplate on the user
-> side minimal if possible. I suspect if we were to return a struct
-> kunit_device, everyone would be quickly grabbing and passing around a
-> raw 'struct device *' anyway, which is what the existing tests with
-> fake devices do (via root_device_register, which returns struct
-> device, or by returning &platform_device->dev from a helper).
-> 
-> Similarly, the kunit_bus is not ever exposed to test code, nor really
-> is the driver (except via kunit_device_register_with_driver(), which
-> isn't actually being used anywhere yet, so it may make sense to cut it
-> out from the next version). So, ideally tests won't even be aware that
-> their devices are attached to the kunit_bus, nor that they have
-> drivers attached: it's mostly just to make these normal enough that
-> they show up nicely in sysfs and play well with the devm_ resource
-> management functions.
+--qyay55f3fbjgslmy
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Ok, this makes more sense, thank you for the detailed explaination.
-Making this "generic" like you have done here seems reasonable for now.
+Hey Thomas
 
-> > > -                                     attributes.o
-> > > +                                     attributes.o \
-> > > +                                     device.o
-> >
-> > Shouldn't this file be "bus.c" as you are creating a kunit bus?
-> >
-> 
-> I've sort-of grouped this as "device helpers", as it handles KUnit
-> devices, drivers, and the kunit_bus, but devices are the most
-> user-facing part. Indeed, the bus feels like an 'implementation
-> detail'. Happy to rename it if that makes things more consistent,
-> though.
+You have a couple of test bot issues for your 12/18 patch. Can you
+please address those for your next version.
 
-Nah, device.o makes sense for now, thanks.
+On Mon, Dec 04, 2023 at 08:52:13AM +0100, Thomas Wei=DFschuh wrote:
+> Problem description:
+>=20
+> The kernel contains a lot of struct ctl_table throught the tree.
+> These are very often 'static' definitions.
+> It would be good to make the tables unmodifiable by marking them "const"
+Here I would remove "It would be good to". Just state it: "Make the
+tables unmodifiable...."
 
-> > >  ifeq ($(CONFIG_KUNIT_DEBUGFS),y)
-> > >  kunit-objs +=                                debugfs.o
-> > > diff --git a/lib/kunit/device.c b/lib/kunit/device.c
-> > > new file mode 100644
-> > > index 000000000000..93ace1a2297d
-> > > --- /dev/null
-> > > +++ b/lib/kunit/device.c
-> > > @@ -0,0 +1,176 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * KUnit basic device implementation
-> >
-> > "basic bus/driver implementation", not device, right?
-> >
-> 
-> Given that the users of this really only care about getting their
-> "device", and the bus/driver are more implementation details, I'd
-> rather go with something like "KUnit-managed device implementation" or
-> "KUnit device-model helpers". How do those sound?
+> to avoid accidental or malicious modifications.
+> This is in line with a general effort to move as much data as possible
+> into .rodata. (See for example[0] and [1])
+If you could find more examples, it would make a better case.
 
-Either would be good, thanks.
+>=20
+> Unfortunately the tables can not be made const right now because the
+> core registration functions expect mutable tables.
+>=20
+> This is for two main reasons:
+>=20
+> 1) sysctl_{set,clear}_perm_empty_ctl_header in the sysctl core modify
+>    the table.
+> 2) The table is passed to the handler function as a non-const pointer.
+>=20
+> This series migrates the core and all handlers.
+awesome!
 
-> > > + *
-> > > + * Implementation of struct kunit_device helpers.
-> > > + *
-> > > + * Copyright (C) 2023, Google LLC.
-> > > + * Author: David Gow <davidgow@google.com>
-> > > + */
-> > > +
-> > > +#include <linux/device.h>
-> > > +
-> > > +#include <kunit/test.h>
-> > > +#include <kunit/device.h>
-> > > +#include <kunit/resource.h>
-> > > +
-> > > +
-> > > +/* Wrappers for use with kunit_add_action() */
-> > > +KUNIT_DEFINE_ACTION_WRAPPER(device_unregister_wrapper, device_unregister, struct device *);
-> > > +KUNIT_DEFINE_ACTION_WRAPPER(driver_unregister_wrapper, driver_unregister, struct device_driver *);
-> > > +
-> > > +static struct device kunit_bus = {
-> > > +     .init_name = "kunit"
-> > > +};
-> >
-> > A static device as a bus?  This feels wrong, what is it for?  And where
-> > does this live?  If you _REALLY_ want a single device for the root of
-> > your bus (which is a good idea), then make it a dynamic variable (as it
-> > is reference counted), NOT a static struct device which should not be
-> > done if at all possible.
-> 
-> Will do. Would root_device_register() make more sense here?
+>=20
+> Structure of the series:
+>=20
+> Patch 1-3:   Cleanup patches
+> Patch 4-7:   Non-logic preparation patches
+> Patch 8:     Preparation patch changing a bit of logic
+> Patch 9-12:  Treewide changes to handler function signature
+> Patch 13-14: Adaption of the sysctl core implementation
+> Patch 15:    Adaption of the sysctl core interface
+> Patch 16:    New entry for checkpatch
+> Patch 17-18: Constification of existing "struct ctl_table"s
+>=20
+> Tested by booting and with the sysctl selftests on x86.
+>=20
+> Note:
+>=20
+> This is intentionally sent only to a small number of people as I'd like
+> to get some more sysctl core-maintainer feedback before sending this to
+> essentially everybody.
+When you do send it to the broader audience, you should chunk up your big
+patches (12/18 and 11/18) and this is why:
+1. To avoid mail rejections from lists:
+   You have to tell a lot of people about the changes in one mail. That
+   will make mail header too big for some lists and it will be rejected.
+   This happened to me with [3]
+2. Avoid being rejected for the wrong reasons :)
+   Maintainers are busy ppl and sending them a set with so many files
+   may elicit a rejection on the grounds that it involves too many
+   subsystems at the same time.
+I suggest you chunk it up with directories in mind. Something similar to
+what I did for [4] where I divided stuff that when for fs/*, kernel/*,
+net/*, arch/* and drivers/*. That will complicate your patch a tad
+because you have to ensure that the tree can be compiled/run for every
+commit. But it will pay off once you push it to the broader public.
 
-Yes.
+[3] https://lore.kernel.org/all/20230621091000.424843-1-j.granados@samsung.=
+com
+[4] https://lore.kernel.org/all/20230726140635.2059334-1-j.granados@samsung=
+=2Ecom
+>=20
+> [0] 43a7206b0963 ("driver core: class: make class_register() take a const=
+ *")
+> [1] https://lore.kernel.org/lkml/20230930050033.41174-1-wedsonaf@gmail.co=
+m/
+>=20
+> ---
+> Changes in v2:
+> - Migrate all handlers.
+> - Remove intermediate "proc_handler_new" step (Thanks Joel).
+> - Drop RFC status.
+> - Prepare other parts of the tree.
+> - Link to v1: https://lore.kernel.org/r/20231125-const-sysctl-v1-0-5e881b=
+0e0290@weissschuh.net
+>=20
+> ---
+> Thomas Wei=DFschuh (18):
+>       watchdog/core: remove sysctl handlers from public header
+>       sysctl: delete unused define SYSCTL_PERM_EMPTY_DIR
+>       sysctl: drop sysctl_is_perm_empty_ctl_table
+>       cgroup: bpf: constify ctl_table arguments and fields
+>       seccomp: constify ctl_table arguments of utility functions
+>       hugetlb: constify ctl_table arguments of utility functions
+>       utsname: constify ctl_table arguments of utility function
+>       stackleak: don't modify ctl_table argument
+>       sysctl: treewide: constify ctl_table_root::set_ownership
+>       sysctl: treewide: constify ctl_table_root::permissions
+>       sysctl: treewide: constify ctl_table_header::ctl_table_arg
+>       sysctl: treewide: constify the ctl_table argument of handlers
+>       sysctl: move sysctl type to ctl_table_header
+>       sysctl: move internal interfaces to const struct ctl_table
+>       sysctl: allow registration of const struct ctl_table
+>       const_structs.checkpatch: add ctl_table
+>       sysctl: make ctl_table sysctl_mount_point const
+>       sysctl: constify standard sysctl tables
+>=20
+>  arch/arm64/kernel/armv8_deprecated.c      |   2 +-
+>  arch/arm64/kernel/fpsimd.c                |   2 +-
+>  arch/s390/appldata/appldata_base.c        |   8 +--
+>  arch/s390/kernel/debug.c                  |   2 +-
+>  arch/s390/kernel/topology.c               |   2 +-
+>  arch/s390/mm/cmm.c                        |   6 +-
+>  arch/x86/kernel/itmt.c                    |   2 +-
+>  drivers/cdrom/cdrom.c                     |   4 +-
+>  drivers/char/random.c                     |   4 +-
+>  drivers/macintosh/mac_hid.c               |   2 +-
+>  drivers/net/vrf.c                         |   4 +-
+>  drivers/parport/procfs.c                  |  12 ++--
+>  fs/coredump.c                             |   2 +-
+>  fs/dcache.c                               |   4 +-
+>  fs/drop_caches.c                          |   2 +-
+>  fs/exec.c                                 |   4 +-
+>  fs/file_table.c                           |   2 +-
+>  fs/fs-writeback.c                         |   2 +-
+>  fs/inode.c                                |   4 +-
+>  fs/pipe.c                                 |   2 +-
+>  fs/proc/internal.h                        |   2 +-
+>  fs/proc/proc_sysctl.c                     | 102 +++++++++++++++---------=
+------
+>  fs/quota/dquot.c                          |   2 +-
+>  fs/xfs/xfs_sysctl.c                       |   6 +-
+>  include/linux/bpf-cgroup.h                |   2 +-
+>  include/linux/filter.h                    |   2 +-
+>  include/linux/ftrace.h                    |   4 +-
+>  include/linux/mm.h                        |   8 +--
+>  include/linux/nmi.h                       |   7 --
+>  include/linux/perf_event.h                |   6 +-
+>  include/linux/security.h                  |   2 +-
+>  include/linux/sysctl.h                    |  78 +++++++++++------------
+>  include/linux/vmstat.h                    |   6 +-
+>  include/linux/writeback.h                 |   2 +-
+>  include/net/ndisc.h                       |   2 +-
+>  include/net/neighbour.h                   |   6 +-
+>  include/net/netfilter/nf_hooks_lwtunnel.h |   2 +-
+>  ipc/ipc_sysctl.c                          |  12 ++--
+>  ipc/mq_sysctl.c                           |   2 +-
+>  kernel/bpf/cgroup.c                       |   2 +-
+>  kernel/bpf/syscall.c                      |   4 +-
+>  kernel/delayacct.c                        |   4 +-
+>  kernel/events/callchain.c                 |   2 +-
+>  kernel/events/core.c                      |   4 +-
+>  kernel/fork.c                             |   2 +-
+>  kernel/hung_task.c                        |   4 +-
+>  kernel/kexec_core.c                       |   2 +-
+>  kernel/kprobes.c                          |   2 +-
+>  kernel/latencytop.c                       |   4 +-
+>  kernel/pid_namespace.c                    |   2 +-
+>  kernel/pid_sysctl.h                       |   2 +-
+>  kernel/printk/internal.h                  |   2 +-
+>  kernel/printk/printk.c                    |   2 +-
+>  kernel/printk/sysctl.c                    |   5 +-
+>  kernel/sched/core.c                       |   8 +--
+>  kernel/sched/rt.c                         |  12 ++--
+>  kernel/sched/topology.c                   |   2 +-
+>  kernel/seccomp.c                          |   8 +--
+>  kernel/stackleak.c                        |   9 +--
+>  kernel/sysctl.c                           |  84 ++++++++++++------------
+>  kernel/time/timer.c                       |   2 +-
+>  kernel/trace/ftrace.c                     |   2 +-
+>  kernel/trace/trace.c                      |   2 +-
+>  kernel/trace/trace_events_user.c          |   2 +-
+>  kernel/trace/trace_stack.c                |   2 +-
+>  kernel/ucount.c                           |   4 +-
+>  kernel/umh.c                              |   2 +-
+>  kernel/utsname_sysctl.c                   |   4 +-
+>  kernel/watchdog.c                         |  15 +++--
+>  mm/compaction.c                           |   8 +--
+>  mm/hugetlb.c                              |  10 +--
+>  mm/page-writeback.c                       |  18 +++---
+>  mm/page_alloc.c                           |  22 +++----
+>  mm/util.c                                 |  12 ++--
+>  mm/vmstat.c                               |   4 +-
+>  net/ax25/sysctl_net_ax25.c                |   2 +-
+>  net/bridge/br_netfilter_hooks.c           |   6 +-
+>  net/core/neighbour.c                      |  24 +++----
+>  net/core/sysctl_net_core.c                |  22 +++----
+>  net/ieee802154/6lowpan/reassembly.c       |   2 +-
+>  net/ipv4/devinet.c                        |   8 +--
+>  net/ipv4/ip_fragment.c                    |   2 +-
+>  net/ipv4/route.c                          |   4 +-
+>  net/ipv4/sysctl_net_ipv4.c                |  35 +++++-----
+>  net/ipv4/xfrm4_policy.c                   |   2 +-
+>  net/ipv6/addrconf.c                       |  29 +++++----
+>  net/ipv6/ndisc.c                          |   4 +-
+>  net/ipv6/netfilter/nf_conntrack_reasm.c   |   2 +-
+>  net/ipv6/reassembly.c                     |   2 +-
+>  net/ipv6/route.c                          |   2 +-
+>  net/ipv6/sysctl_net_ipv6.c                |  10 +--
+>  net/ipv6/xfrm6_policy.c                   |   2 +-
+>  net/mpls/af_mpls.c                        |   8 +--
+>  net/mptcp/ctrl.c                          |   2 +-
+>  net/netfilter/ipvs/ip_vs_ctl.c            |  16 ++---
+>  net/netfilter/nf_conntrack_standalone.c   |   4 +-
+>  net/netfilter/nf_hooks_lwtunnel.c         |   2 +-
+>  net/netfilter/nf_log.c                    |   4 +-
+>  net/phonet/sysctl.c                       |   2 +-
+>  net/rds/tcp.c                             |   4 +-
+>  net/sctp/sysctl.c                         |  30 ++++-----
+>  net/smc/smc_sysctl.c                      |   2 +-
+>  net/sunrpc/sysctl.c                       |   6 +-
+>  net/sunrpc/xprtrdma/svc_rdma.c            |   2 +-
+>  net/sysctl_net.c                          |   4 +-
+>  net/unix/sysctl_net_unix.c                |   2 +-
+>  net/xfrm/xfrm_sysctl.c                    |   2 +-
+>  scripts/const_structs.checkpatch          |   1 +
+>  security/apparmor/lsm.c                   |   2 +-
+>  security/min_addr.c                       |   2 +-
+>  security/yama/yama_lsm.c                  |   2 +-
+>  111 files changed, 427 insertions(+), 428 deletions(-)
+> ---
+> base-commit: 33cc938e65a98f1d29d0a18403dbbee050dcad9a
+> change-id: 20231116-const-sysctl-e14624f1295c
+>=20
+> Best regards,
+> --=20
+> Thomas Wei=DFschuh <linux@weissschuh.net>
+>=20
 
-> > > +
-> > > +/* A device owned by a KUnit test. */
-> > > +struct kunit_device {
-> > > +     struct device dev;
-> > > +     struct kunit *owner;
-> > > +     /* Force binding to a specific driver. */
-> > > +     struct device_driver *driver;
-> > > +     /* The driver is managed by KUnit and unique to this device. */
-> > > +     bool cleanup_driver;
-> > > +};
-> >
-> > Wait, why isn't your "kunit" device above a struct kunit_device
-> > structure?  Why is it ok to be a "raw" struct device (hint, that's
-> > almost never a good idea.)
-> >
-> > > +static inline struct kunit_device *to_kunit_device(struct device *d)
-> > > +{
-> > > +     return container_of(d, struct kunit_device, dev);
-> >
-> > container_of_const()?  And to use that properly, why not make this a #define?
-> >
-> > > +}
-> > > +
-> > > +static int kunit_bus_match(struct device *dev, struct device_driver *driver)
-> > > +{
-> > > +     struct kunit_device *kunit_dev = to_kunit_device(dev);
-> > > +
-> > > +     if (kunit_dev->driver == driver)
-> > > +             return 1;
-> > > +
-> > > +     return 0;
-> >
-> > I don't understand, what are you trying to match here?
-> >
-> 
-> This is just to make sure that the match function will use whatever
-> driver is passed through. When I originally started writing this,
-> there were some resource cleanup problems if there was no driver
-> associated with a device, though that's fixed now.
+--=20
 
-As it's fixed, no need for this, so let's not be confused going forward :)
+Joel Granados
 
-thanks,
+--qyay55f3fbjgslmy
+Content-Type: application/pgp-signature; name="signature.asc"
 
-greg k-h
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmVxoesACgkQupfNUreW
+QU9jdQv/fuoqjk7HVhxO4PfN7Nx9mFcuXiE0BBcfQvX2sddH6652M+xHymNCZ98o
+e7aWeM/8qRsd2eYbSdskcNK8ojAVULzMDi1QfO3UDoNm1Qn3lsZ2zDxnv4BN1Xft
+c94jv5ZMJsIjf1ANwvWH2+GAVav5/vd3KarnDlp0AFJsxVbMIISfReTwzPWzKPFu
+gy8OZQHI4WW3Xx78dPU1RLnvFu5PVYiuSpJpyKqTzpfm9W96q5SCdIMF1DvnynpK
+U8u636u9L4sVVs7GVzPwQG7kF43rl25vuNuYLDTU2gAbhsgfTw6DBpcQvc2wAeqP
+fztmyPXg/Vyo9pA00FZ+1sbmkp0EvxzF+nrjW/5aitKFVDSnvPUXlTift60I6ysL
+wKCe3skKOyD0JVv4pQSbCmSBp49SVw8S+cJ7FCQrZQRvbgUMsKOLHQ8kDBPaP18t
+tLt9lUyZFBpnYGM2wZ8uNmvqbsiAcanEIe3mKWaiIXqV36WShyV9Jl4gYXYYVBrR
+m02mbYq9
+=5y2l
+-----END PGP SIGNATURE-----
+
+--qyay55f3fbjgslmy--
