@@ -1,86 +1,68 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 588E9122;
-	Thu,  7 Dec 2023 04:52:47 -0800 (PST)
-X-IronPort-AV: E=McAfee;i="6600,9927,10916"; a="398105685"
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F88F10D9;
+	Thu,  7 Dec 2023 04:55:08 -0800 (PST)
+X-IronPort-AV: E=McAfee;i="6600,9927,10916"; a="1092427"
 X-IronPort-AV: E=Sophos;i="6.04,256,1695711600"; 
-   d="scan'208";a="398105685"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 04:52:46 -0800
+   d="scan'208";a="1092427"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 04:55:07 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10916"; a="771724258"
+X-IronPort-AV: E=McAfee;i="6600,9927,10916"; a="945023202"
 X-IronPort-AV: E=Sophos;i="6.04,256,1695711600"; 
-   d="scan'208";a="771724258"
+   d="scan'208";a="945023202"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 04:52:44 -0800
+  by orsmga005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 04:55:04 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.97)
 	(envelope-from <andy@kernel.org>)
-	id 1rBDrs-00000002bPB-40QR;
-	Thu, 07 Dec 2023 14:52:40 +0200
-Date: Thu, 7 Dec 2023 14:52:40 +0200
+	id 1rBDu9-00000002bQn-0y5W;
+	Thu, 07 Dec 2023 14:55:01 +0200
+Date: Thu, 7 Dec 2023 14:55:00 +0200
 From: Andy Shevchenko <andy@kernel.org>
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Nick Desaulniers <ndesaulniers@google.com>, tanzirh@google.com,
-	Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
+To: kernel test robot <lkp@intel.com>
+Cc: tanzirh@google.com, Kees Cook <keescook@chromium.org>,
+	oe-kbuild-all@lists.linux.dev, linux-hardening@vger.kernel.org,
 	linux-kernel@vger.kernel.org, Nick DeSaulniers <nnn@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>, llvm@lists.linux.dev
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	llvm@lists.linux.dev
 Subject: Re: [PATCH] lib/string: shrink lib/string.i via IWYU
-Message-ID: <ZXHAGDy_KcwElsLP@smile.fi.intel.com>
+Message-ID: <ZXHApFX1mXZnP5lz@smile.fi.intel.com>
 References: <20231205-libstringheader-v1-1-7f9c573053a7@gmail.com>
- <20231205213807.GE1674809@ZenIV>
- <CAKwvOd=2VASkaLvjU+7kkbvhu2CimYn5KUGJBDRePyUhtrNK2Q@mail.gmail.com>
- <ZW-d1NZRIvmJlfcW@smile.fi.intel.com>
- <20231205221521.GH1674809@ZenIV>
+ <202312061429.BJ7GrHnt-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231205221521.GH1674809@ZenIV>
+In-Reply-To: <202312061429.BJ7GrHnt-lkp@intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Dec 05, 2023 at 10:15:21PM +0000, Al Viro wrote:
-> On Wed, Dec 06, 2023 at 12:01:56AM +0200, Andy Shevchenko wrote:
-> > On Tue, Dec 05, 2023 at 01:51:10PM -0800, Nick Desaulniers wrote:
-> > > On Tue, Dec 5, 2023 at 1:38 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
-> > > > On Tue, Dec 05, 2023 at 08:58:53PM +0000, tanzirh@google.com wrote:
+On Wed, Dec 06, 2023 at 03:10:46PM +0800, kernel test robot wrote:
+> Hi,
+> 
+> kernel test robot noticed the following build errors:
+> 
+> [auto build test ERROR on 33cc938e65a98f1d29d0a18403dbbee050dcad9a]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/tanzirh-google-com/lib-string-shrink-lib-string-i-via-IWYU/20231206-050121
+> base:   33cc938e65a98f1d29d0a18403dbbee050dcad9a
+> patch link:    https://lore.kernel.org/r/20231205-libstringheader-v1-1-7f9c573053a7%40gmail.com
+> patch subject: [PATCH] lib/string: shrink lib/string.i via IWYU
+> config: sh-allmodconfig (https://download.01.org/0day-ci/archive/20231206/202312061429.BJ7GrHnt-lkp@intel.com/config)
+> compiler: sh4-linux-gcc (GCC) 13.2.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231206/202312061429.BJ7GrHnt-lkp@intel.com/reproduce)
 
 ...
 
-> > > > > IWYU is implemented using the IWYUScripts github repository which is a tool that is
-> > > > > currently undergoing development. These changes seek to improve build times.
-> > > > >
-> > > > > This change to lib/string.c resulted in a preprocessed size of
-> > > > > lib/string.i from 26371 lines to 5232 lines (-80%).
-> > > >
-> > > > It also breeds includes of asm/*.h, by the look of the output, which is
-> > > > not a good thing in general ;-/  E.g. #include <asm/uaccess.h> *anywhere*
-> > > > outside of linux/uaccess.h is a bad idea.
-> > > 
-> > > It's not clear to me when it's ok to #include <asm/*.h>.  Is there a
-> > > convention here that I'm missing?
-> > 
-> > The mandatory ones can be used, but not all of them.
-> > In some cases you even must include asm and not linux
-> > (unaligned.h, byteorder.h, maybe others...).
-> > 
-> > As I told, it comes with experience, we lack of the
-> > respective documentation (or file which is good for
-> > automation checks, like with IWYU).
-> 
-> It would certainly be nice to have such information in the tree;
-> "where should I pick $SYMBOL from?" is something one needs to
-> find out often enough.  To a large extent it's covered by "where
-> in include/*.h do we have it defined?", but that's not all there
-> is to it.  E.g. "get_user() => use linux/uaccess.h".
-> 
-> There's also stuff like "$SYMBOL should not be used outside of arch/*
-> and include/*, better use $OTHER_SYMBOL", etc.
+>    lib/string.c:124:49: note: in expansion of macro 'WORD_AT_A_TIME_CONSTANTS'
+>      124 |         const struct word_at_a_time constants = WORD_AT_A_TIME_CONSTANTS;
 
-Precisely! That's what many developers will benefit from!
+> cba8df4be3bdf1 Paul Mundt 2012-06-04 @15  #define WORD_AT_A_TIME_CONSTANTS { REPEAT_BYTE(0x01), REPEAT_BYTE(0x80) }
+
+REPEAT_BYTE() shouldn't be even in kernel.h to begin with!
 
 -- 
 With Best Regards,
