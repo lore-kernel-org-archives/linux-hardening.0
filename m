@@ -1,43 +1,43 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NPOCQtJ1"
-Received: from mail-oa1-x35.google.com (mail-oa1-x35.google.com [IPv6:2001:4860:4864:20::35])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 522E4D4B;
-	Wed,  6 Dec 2023 18:32:37 -0800 (PST)
-Received: by mail-oa1-x35.google.com with SMTP id 586e51a60fabf-1f5bd86ceb3so307917fac.2;
-        Wed, 06 Dec 2023 18:32:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FgiFiSVI"
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06FFAD5E;
+	Wed,  6 Dec 2023 18:40:15 -0800 (PST)
+Received: by mail-pf1-x436.google.com with SMTP id d2e1a72fcca58-6ce6caedce6so147486b3a.3;
+        Wed, 06 Dec 2023 18:40:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1701916356; x=1702521156; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1701916814; x=1702521614; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ETvtz3rEq8y5ZHvBBRevwO8n4qMHcpeDzavyr8b+04g=;
-        b=NPOCQtJ130mVhb5Vy+YoeByJRP0B4YaFkCIU8yHpKMNZ9i4hPrWgDkVjRnfwol3iRr
-         bM/d0Ro1VzZPEviNAfSs8dAb49jpGX9XeBQUjB/m0xIvBaziQ7asicPfIv3JUkbaNFQ6
-         RjuOVZpDfmXbPJwpMxasG27x+UFjOnyeYPesXLANWbO/pqP++xjMN/M66wEmb7FAr8R3
-         x+qBZ3khjQ5/PyZOTK4eaBD+GYnlcyvTmiitGqLTWKtyXJuQGXlkto0//G6nys4W8dF9
-         5Ko6T/lUBIbqCwHJ6HMKZk9r5DugJrJ7Gm2vsNpuChVC97/y/Gj9869tAH7nMMQ7D7Sk
-         /gfw==
+        bh=CjGR+gix1XQRxaJ5p7IMY1S7CLbhofOgFFoOucSld8k=;
+        b=FgiFiSVIWYuZAXOi9ywgWfJl2OcRi3OVnj4BY4f1INUoulTPxFtwsYLZAtx1oAhTPR
+         CuFVDDHYus/RIP0/nDDMSjxWTVK+REDu5P+6fpicNdwLNMXawtje0+1d+xpztLNvVRjy
+         58R2O0+9tW6G8SPCTE474skVXMOePlMbYV1LTR3yNQRpJtpbYELZAcycx+hgZNUu6ZoB
+         LlV7PvdY/huazd3H1QUntLaanccCFLLLch9EhR39XBxszty5h7I8Vl00n/9H7q7/fFIY
+         9ZEzt1WtuLPXdKZEYjXo6eoX6r8xUhh0J0HUYgHKHHmUUN2Rx6BDkFhQizx67xyYzIgK
+         sVIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701916356; x=1702521156;
+        d=1e100.net; s=20230601; t=1701916814; x=1702521614;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ETvtz3rEq8y5ZHvBBRevwO8n4qMHcpeDzavyr8b+04g=;
-        b=uFN9SQ+lF7drT8tfuUdY0g0NuXxpobeS2sVCAC95LrPlBVl4YVD0lLY149LkToR8/Y
-         pyV5J0Nsv6Uqxbtqx91DuyL/z3d+0AfdP0P9/dOiw2b718XyosX5jk+dEfb+euCyv2si
-         XeEfLOxjuqdrykQ/kq7aEJ/6hsOPw7I0nK2Jv66ur7azHnfwxlssk3PJ16GOLseCQR43
-         WmhBeQnmBveu0f66KFhs5ProDuRMjqVy25XUwFYihMYa4heeFYSjgxtywqhHQ0b6OmhZ
-         LbkisRkdmK8FNRdCATLMyG4DQ88a0jwuimXyZ9aAx6EFqNvjTA3EqUaag8BVfiBOFCAp
-         kmeQ==
-X-Gm-Message-State: AOJu0Yyst8CHg4jpMVsXLxcQMj2cX62CREuMkaWZ1CXDdbiEO1d5BM0C
-	afzEkonuAERKrJ8g1jAg6e8=
-X-Google-Smtp-Source: AGHT+IFhomdac9DZ2rxPUWMaIR1/wt3h2XJFmm+ErXjfJhRGagXQaC+OJI0pfIyYTN+084ixsrR/wQ==
-X-Received: by 2002:a05:6870:d93:b0:1fb:75b:2fd1 with SMTP id mj19-20020a0568700d9300b001fb075b2fd1mr2039607oab.104.1701916356157;
-        Wed, 06 Dec 2023 18:32:36 -0800 (PST)
+        bh=CjGR+gix1XQRxaJ5p7IMY1S7CLbhofOgFFoOucSld8k=;
+        b=Zq3pv92HmRtTvmdcmG8sxPDrVNz3CIxz6pUP//0IHWxyNuBvTskvenQAx58F9mYikE
+         fiosgOuoiYGSH4wOUt97IC5/U2zrwZRhMwgJa3Wd2BnIr66GceuN9Epmj1c3IOgbMIzE
+         KAY9agetFj9/2akjYrGPNx+TjTfmSAmUerXdDvKkZ+sEN4PQ94f/YBSYQSOavVIjsrxE
+         L46+EA+LBhMRW4L6XxlvjX6Nh1lCTFIu+yS+vj0UPpXGruop44i7LTaAe2SvUQ+L1yWT
+         vcfy3TIkOXFONq/4StWDQ1QduaOJsWReFyVwYnNTST86X9tWEhVti9mKGL4b3LiKaizf
+         ojFw==
+X-Gm-Message-State: AOJu0Yzj+/qc9U5M2LA6bArebTOH1uCSMnZqZuMmRHlRM2VrfhSoyYq8
+	IOu+anD4bQJ6eQVsgMMEaew=
+X-Google-Smtp-Source: AGHT+IG4OHX+SeQcJYhn0alXQOImary9hj1xbJZTveWssuMvLq90907J7Mp6IPQ+vyVQWr7sJuLFKw==
+X-Received: by 2002:a05:6a20:1593:b0:18f:97c:4f3b with SMTP id h19-20020a056a20159300b0018f097c4f3bmr1673961pzj.71.1701916814237;
+        Wed, 06 Dec 2023 18:40:14 -0800 (PST)
 Received: from localhost.localdomain ([1.245.180.67])
-        by smtp.gmail.com with ESMTPSA id c192-20020a6335c9000000b005c60ad6c4absm168730pga.4.2023.12.06.18.32.30
+        by smtp.gmail.com with ESMTPSA id pl16-20020a17090b269000b0028652f98978sm121526pjb.8.2023.12.06.18.40.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Dec 2023 18:32:35 -0800 (PST)
-Date: Thu, 7 Dec 2023 11:32:12 +0900
+        Wed, 06 Dec 2023 18:40:13 -0800 (PST)
+Date: Thu, 7 Dec 2023 11:40:05 +0900
 From: Hyeonggon Yoo <42.hyeyoo@gmail.com>
 To: Vlastimil Babka <vbabka@suse.cz>
 Cc: David Rientjes <rientjes@google.com>, Christoph Lameter <cl@linux.com>,
@@ -58,10 +58,10 @@ Cc: David Rientjes <rientjes@google.com>, Christoph Lameter <cl@linux.com>,
 	Kees Cook <keescook@chromium.org>, linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
 	cgroups@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 20/21] mm/slub: optimize alloc fastpath code layout
-Message-ID: <ZXEurG+jk62uNgRK@localhost.localdomain>
+Subject: Re: [PATCH v2 21/21] mm/slub: optimize free fast path code layout
+Message-ID: <ZXEwhbDgESjPs/vh@localhost.localdomain>
 References: <20231120-slab-remove-slab-v2-0-9c9c70177183@suse.cz>
- <20231120-slab-remove-slab-v2-20-9c9c70177183@suse.cz>
+ <20231120-slab-remove-slab-v2-21-9c9c70177183@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -70,219 +70,113 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231120-slab-remove-slab-v2-20-9c9c70177183@suse.cz>
+In-Reply-To: <20231120-slab-remove-slab-v2-21-9c9c70177183@suse.cz>
 
-On Mon, Nov 20, 2023 at 07:34:31PM +0100, Vlastimil Babka wrote:
-> With allocation fastpaths no longer divided between two .c files, we
-> have better inlining, however checking the disassembly of
-> kmem_cache_alloc() reveals we can do better to make the fastpaths
-> smaller and move the less common situations out of line or to separate
-> functions, to reduce instruction cache pressure.
+On Mon, Nov 20, 2023 at 07:34:32PM +0100, Vlastimil Babka wrote:
+> Inspection of kmem_cache_free() disassembly showed we could make the
+> fast path smaller by providing few more hints to the compiler, and
+> splitting the memcg_slab_free_hook() into an inline part that only
+> checks if there's work to do, and an out of line part doing the actual
+> uncharge.
 > 
-> - split memcg pre/post alloc hooks to inlined checks that use likely()
->   to assume there will be no objcg handling necessary, and non-inline
->   functions doing the actual handling
-> 
-> - add some more likely/unlikely() to pre/post alloc hooks to indicate
->   which scenarios should be out of line
-> 
-> - change gfp_allowed_mask handling in slab_post_alloc_hook() so the
->   code can be optimized away when kasan/kmsan/kmemleak is configured out
-> 
-> bloat-o-meter shows:
-> add/remove: 4/2 grow/shrink: 1/8 up/down: 521/-2924 (-2403)
+> bloat-o-meter results:
+> add/remove: 2/0 grow/shrink: 0/3 up/down: 286/-554 (-268)
 > Function                                     old     new   delta
-> __memcg_slab_post_alloc_hook                   -     461    +461
-> kmem_cache_alloc_bulk                        775     791     +16
-> __pfx_should_failslab.constprop                -      16     +16
-> __pfx___memcg_slab_post_alloc_hook             -      16     +16
-> should_failslab.constprop                      -      12     +12
-> __pfx_memcg_slab_post_alloc_hook              16       -     -16
-> kmem_cache_alloc_lru                        1295    1023    -272
-> kmem_cache_alloc_node                       1118     817    -301
-> kmem_cache_alloc                            1076     772    -304
-> kmalloc_node_trace                          1149     838    -311
-> kmalloc_trace                               1102     789    -313
-> __kmalloc_node_track_caller                 1393    1080    -313
-> __kmalloc_node                              1397    1082    -315
-> __kmalloc                                   1374    1059    -315
-> memcg_slab_post_alloc_hook                   464       -    -464
+> __memcg_slab_free_hook                         -     270    +270
+> __pfx___memcg_slab_free_hook                   -      16     +16
+> kfree                                        828     665    -163
+> kmem_cache_free                             1116     948    -168
+> kmem_cache_free_bulk.part                   1701    1478    -223
 > 
-> Note that gcc still decided to inline __memcg_pre_alloc_hook(), but the
-> code is out of line. Forcing noinline did not improve the results. As a
-> result the fastpaths are shorter and overal code size is reduced.
+> Checking kmem_cache_free() disassembly now shows the non-fastpath
+> cases are handled out of line, which should reduce instruction cache
+> usage.
 > 
 > Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 > ---
->  mm/slub.c | 89 ++++++++++++++++++++++++++++++++++++++-------------------------
->  1 file changed, 54 insertions(+), 35 deletions(-)
+>  mm/slub.c | 40 ++++++++++++++++++++++++----------------
+>  1 file changed, 24 insertions(+), 16 deletions(-)
 > 
 > diff --git a/mm/slub.c b/mm/slub.c
-> index 5683f1d02e4f..77d259f3d592 100644
+> index 77d259f3d592..3f8b95757106 100644
 > --- a/mm/slub.c
 > +++ b/mm/slub.c
-> @@ -1866,25 +1866,17 @@ static inline size_t obj_full_size(struct kmem_cache *s)
->  /*
->   * Returns false if the allocation should fail.
->   */
-> -static inline bool memcg_slab_pre_alloc_hook(struct kmem_cache *s,
-> -					     struct list_lru *lru,
-> -					     struct obj_cgroup **objcgp,
-> -					     size_t objects, gfp_t flags)
-> +static bool __memcg_slab_pre_alloc_hook(struct kmem_cache *s,
-> +					struct list_lru *lru,
-> +					struct obj_cgroup **objcgp,
-> +					size_t objects, gfp_t flags)
+> @@ -1959,20 +1959,11 @@ void memcg_slab_post_alloc_hook(struct kmem_cache *s, struct obj_cgroup *objcg,
+>  	return __memcg_slab_post_alloc_hook(s, objcg, flags, size, p);
+>  }
+>  
+> -static inline void memcg_slab_free_hook(struct kmem_cache *s, struct slab *slab,
+> -					void **p, int objects)
+> +static void __memcg_slab_free_hook(struct kmem_cache *s, struct slab *slab,
+> +				   void **p, int objects,
+> +				   struct obj_cgroup **objcgs)
 >  {
-> -	struct obj_cgroup *objcg;
+> -	struct obj_cgroup **objcgs;
+> -	int i;
 > -
 > -	if (!memcg_kmem_online())
-> -		return true;
-> -
-> -	if (!(flags & __GFP_ACCOUNT) && !(s->flags & SLAB_ACCOUNT))
-> -		return true;
-> -
->  	/*
->  	 * The obtained objcg pointer is safe to use within the current scope,
->  	 * defined by current task or set_active_memcg() pair.
->  	 * obj_cgroup_get() is used to get a permanent reference.
->  	 */
-> -	objcg = current_obj_cgroup();
-> +	struct obj_cgroup *objcg = current_obj_cgroup();
->  	if (!objcg)
->  		return true;
->  
-> @@ -1907,17 +1899,34 @@ static inline bool memcg_slab_pre_alloc_hook(struct kmem_cache *s,
->  	return true;
->  }
->  
-> -static inline void memcg_slab_post_alloc_hook(struct kmem_cache *s,
-> -					      struct obj_cgroup *objcg,
-> -					      gfp_t flags, size_t size,
-> -					      void **p)
-> +/*
-> + * Returns false if the allocation should fail.
-> + */
-> +static __fastpath_inline
-> +bool memcg_slab_pre_alloc_hook(struct kmem_cache *s, struct list_lru *lru,
-> +			       struct obj_cgroup **objcgp, size_t objects,
-> +			       gfp_t flags)
-> +{
-> +	if (!memcg_kmem_online())
-> +		return true;
-> +
-> +	if (likely(!(flags & __GFP_ACCOUNT) && !(s->flags & SLAB_ACCOUNT)))
-> +		return true;
-> +
-> +	return likely(__memcg_slab_pre_alloc_hook(s, lru, objcgp, objects,
-> +						  flags));
-> +}
-> +
-> +static void __memcg_slab_post_alloc_hook(struct kmem_cache *s,
-> +					 struct obj_cgroup *objcg,
-> +					 gfp_t flags, size_t size,
-> +					 void **p)
->  {
->  	struct slab *slab;
->  	unsigned long off;
->  	size_t i;
->  
-> -	if (!memcg_kmem_online() || !objcg)
 > -		return;
-> +	flags &= gfp_allowed_mask;
+> -
+> -	objcgs = slab_objcgs(slab);
+> -	if (!objcgs)
+> -		return;
+> -
+> -	for (i = 0; i < objects; i++) {
+> +	for (int i = 0; i < objects; i++) {
+>  		struct obj_cgroup *objcg;
+>  		unsigned int off;
 >  
->  	for (i = 0; i < size; i++) {
->  		if (likely(p[i])) {
-> @@ -1940,6 +1949,16 @@ static inline void memcg_slab_post_alloc_hook(struct kmem_cache *s,
+> @@ -1988,6 +1979,22 @@ static inline void memcg_slab_free_hook(struct kmem_cache *s, struct slab *slab,
+>  		obj_cgroup_put(objcg);
 >  	}
 >  }
->  
+> +
 > +static __fastpath_inline
-> +void memcg_slab_post_alloc_hook(struct kmem_cache *s, struct obj_cgroup *objcg,
-> +				gfp_t flags, size_t size, void **p)
+> +void memcg_slab_free_hook(struct kmem_cache *s, struct slab *slab, void **p,
+> +			  int objects)
 > +{
-> +	if (likely(!memcg_kmem_online() || !objcg))
+> +	struct obj_cgroup **objcgs;
+> +
+> +	if (!memcg_kmem_online())
 > +		return;
 > +
-> +	return __memcg_slab_post_alloc_hook(s, objcg, flags, size, p);
-> +}
+> +	objcgs = slab_objcgs(slab);
+> +	if (likely(!objcgs))
+> +		return;
 > +
->  static inline void memcg_slab_free_hook(struct kmem_cache *s, struct slab *slab,
->  					void **p, int objects)
+> +	__memcg_slab_free_hook(s, slab, p, objects, objcgs);
+> +}
+>  #else /* CONFIG_MEMCG_KMEM */
+>  static inline struct mem_cgroup *memcg_from_slab_obj(void *ptr)
 >  {
-> @@ -3709,34 +3728,34 @@ noinline int should_failslab(struct kmem_cache *s, gfp_t gfpflags)
->  }
->  ALLOW_ERROR_INJECTION(should_failslab, ERRNO);
->  
-> -static inline struct kmem_cache *slab_pre_alloc_hook(struct kmem_cache *s,
-> -						     struct list_lru *lru,
-> -						     struct obj_cgroup **objcgp,
-> -						     size_t size, gfp_t flags)
-> +static __fastpath_inline
-> +struct kmem_cache *slab_pre_alloc_hook(struct kmem_cache *s,
-> +				       struct list_lru *lru,
-> +				       struct obj_cgroup **objcgp,
-> +				       size_t size, gfp_t flags)
->  {
->  	flags &= gfp_allowed_mask;
->  
->  	might_alloc(flags);
->  
-> -	if (should_failslab(s, flags))
-> +	if (unlikely(should_failslab(s, flags)))
->  		return NULL;
->  
-> -	if (!memcg_slab_pre_alloc_hook(s, lru, objcgp, size, flags))
-> +	if (unlikely(!memcg_slab_pre_alloc_hook(s, lru, objcgp, size, flags)))
->  		return NULL;
->  
->  	return s;
->  }
->  
-> -static inline void slab_post_alloc_hook(struct kmem_cache *s,
-> -					struct obj_cgroup *objcg, gfp_t flags,
-> -					size_t size, void **p, bool init,
-> -					unsigned int orig_size)
-> +static __fastpath_inline
-> +void slab_post_alloc_hook(struct kmem_cache *s,	struct obj_cgroup *objcg,
-> +			  gfp_t flags, size_t size, void **p, bool init,
-> +			  unsigned int orig_size)
->  {
->  	unsigned int zero_size = s->object_size;
->  	bool kasan_init = init;
->  	size_t i;
-> -
-> -	flags &= gfp_allowed_mask;
-> +	gfp_t init_flags = flags & gfp_allowed_mask;
->  
->  	/*
->  	 * For kmalloc object, the allocated memory size(object_size) is likely
-> @@ -3769,13 +3788,13 @@ static inline void slab_post_alloc_hook(struct kmem_cache *s,
->  	 * As p[i] might get tagged, memset and kmemleak hook come after KASAN.
+> @@ -2047,7 +2054,7 @@ static __always_inline bool slab_free_hook(struct kmem_cache *s,
+>  	 * The initialization memset's clear the object and the metadata,
+>  	 * but don't touch the SLAB redzone.
 >  	 */
->  	for (i = 0; i < size; i++) {
-> -		p[i] = kasan_slab_alloc(s, p[i], flags, kasan_init);
-> +		p[i] = kasan_slab_alloc(s, p[i], init_flags, kasan_init);
->  		if (p[i] && init && (!kasan_init ||
->  				     !kasan_has_integrated_init()))
->  			memset(p[i], 0, zero_size);
->  		kmemleak_alloc_recursive(p[i], s->object_size, 1,
-> -					 s->flags, flags);
-> -		kmsan_slab_alloc(s, p[i], flags);
-> +					 s->flags, init_flags);
-> +		kmsan_slab_alloc(s, p[i], init_flags);
->  	}
+> -	if (init) {
+> +	if (unlikely(init)) {
+>  		int rsize;
 >  
->  	memcg_slab_post_alloc_hook(s, objcg, flags, size, p);
-> @@ -3799,7 +3818,7 @@ static __fastpath_inline void *slab_alloc_node(struct kmem_cache *s, struct list
->  	bool init = false;
+>  		if (!kasan_has_integrated_init())
+> @@ -2083,7 +2090,8 @@ static inline bool slab_free_freelist_hook(struct kmem_cache *s,
+>  		next = get_freepointer(s, object);
 >  
->  	s = slab_pre_alloc_hook(s, lru, &objcg, 1, gfpflags);
-> -	if (!s)
-> +	if (unlikely(!s))
->  		return NULL;
+>  		/* If object's reuse doesn't have to be delayed */
+> -		if (!slab_free_hook(s, object, slab_want_init_on_free(s))) {
+> +		if (likely(!slab_free_hook(s, object,
+> +					   slab_want_init_on_free(s)))) {
+>  			/* Move object to the new freelist */
+>  			set_freepointer(s, object, *head);
+>  			*head = object;
+> @@ -4282,7 +4290,7 @@ static __fastpath_inline void slab_free(struct kmem_cache *s, struct slab *slab,
+>  	 * With KASAN enabled slab_free_freelist_hook modifies the freelist
+>  	 * to remove objects, whose reuse must be delayed.
+>  	 */
+> -	if (slab_free_freelist_hook(s, &head, &tail, &cnt))
+> +	if (likely(slab_free_freelist_hook(s, &head, &tail, &cnt)))
+>  		do_slab_free(s, slab, head, tail, cnt, addr);
+>  }
 >  
->  	object = kfence_alloc(s, orig_size, gfpflags);
 > 
 > -- 
 
