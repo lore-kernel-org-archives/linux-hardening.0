@@ -1,144 +1,98 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I6d86M7H"
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 871C31728
-	for <linux-hardening@vger.kernel.org>; Thu,  7 Dec 2023 13:42:24 -0800 (PST)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-db3ef4c7094so1847983276.1
-        for <linux-hardening@vger.kernel.org>; Thu, 07 Dec 2023 13:42:24 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="j35b7ekv"
+Received: from smtp-fw-33001.amazon.com (smtp-fw-33001.amazon.com [207.171.190.10])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EA4F19BA;
+	Thu,  7 Dec 2023 13:48:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1701985343; x=1702590143; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=cXooN35iBzAeNwLGwjaiKNH4Ne5XKWGQIuv5jnegq+c=;
-        b=I6d86M7HjYJCDS0WvA8RUxJK4e7SCqyWcP0u6en/boXSyvEOIS3fbMCLqa890nttnv
-         CgyMPyaGE7WOdRBeGpiP+DleEVLg9C2qs6eO5QjR/fZDz70ZCs5BZTjGO9XgulIehJhH
-         Eu0/WcxSQCKlNDTAPnDYE+krCPXwbeYPEnxdBLkG7SlUi/6Jeq637hNE67JFVavSkc0M
-         R0Hrh1cCvrxAtV5y2MdP9YROtu4KzL1G4bHYC0Au88EL7MihpNWf/9Q4WFTor6zHDiBA
-         jnUIyoJyJ1OMd2ELQdwrBIjFniZhXHDRAdXGo6XCI3eYINaRvH6M9DubBJdlDBECTJqM
-         Qsfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701985343; x=1702590143;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cXooN35iBzAeNwLGwjaiKNH4Ne5XKWGQIuv5jnegq+c=;
-        b=rbIC3MTaGKYUwgF56LsTfDt1pQm982fNSbQiFsmkDuOvQ05KCTfQQ5SxDu5JqbRxyz
-         Wwhf6X2ynxZdXaTg51z/JfIT6rK7AjZ4cP7LurcKI462rpmgWt7qmogrQ+zls4fyUUaY
-         Fg1hInRZcZRe/66Qc7xf47K4ke7rN7W0chMCJS4xttHHwvDGPo7ZYNxmvFSYTFr4zI4T
-         WEfGXwHi2+GvYpXt4UKtB2cv0YV0efNks1MuqrR177AwTTv4NfEG0X7oJT+QMsMwtoSF
-         ACnPdbLGeWrIlL/Ksg3vQFL5NB3ChcfDg3NfUFQTSdZOOmhNjNXm3pQk5bOiKQ3jIRoB
-         +x5w==
-X-Gm-Message-State: AOJu0YwovX/k3KcM84nDSP1DUotGwakDo+BDQX95GTMUc2R8Y+aS1QJO
-	ieX27bcuMjjBLTjrtIx8xCX2Srudw4iD5xMYNA==
-X-Google-Smtp-Source: AGHT+IHq7cnfGhS5kWGB92EkWvDF38ii4Kr82JtwvvglH7Drxa0FH5GqwrlG85VNZGEWG7j5QIDwKgpUeUUc95Q4lg==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a25:cc4b:0:b0:db5:3bdf:ff55 with SMTP
- id l72-20020a25cc4b000000b00db53bdfff55mr38164ybf.6.1701985343690; Thu, 07
- Dec 2023 13:42:23 -0800 (PST)
-Date: Thu, 07 Dec 2023 21:42:22 +0000
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1701985719; x=1733521719;
+  h=from:to:cc:date:message-id:references:in-reply-to:
+   content-transfer-encoding:mime-version:subject;
+  bh=K169VXreRi6H4lnj1dEVrgLV13RhfHVhA/+/vZMR56I=;
+  b=j35b7ekvAQIPgI5FBT+7uGLRFTPHNSHzN/RJu7hlyn0tYzfGeB4kHzj/
+   BGqH+u5tirYnhND2zJW2t++ASJyNfEnZOs/hCbI7GLfSlx1DmwFhB2HAC
+   OUj0XKYedVTVeOtwwXOpr18fqpkrYo5P2H0eY1ogZIfUIkl4VribKShBR
+   k=;
+X-IronPort-AV: E=Sophos;i="6.04,258,1695686400"; 
+   d="scan'208";a="316204563"
+Subject: RE: [PATCH v2] net: ena: replace deprecated strncpy with strscpy
+Thread-Topic: [PATCH v2] net: ena: replace deprecated strncpy with strscpy
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-iad-1a-m6i4x-96feee09.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-33001.sea14.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 21:48:33 +0000
+Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (iad7-ws-svc-p70-lb3-vlan2.iad.amazon.com [10.32.235.34])
+	by email-inbound-relay-iad-1a-m6i4x-96feee09.us-east-1.amazon.com (Postfix) with ESMTPS id 516A849827;
+	Thu,  7 Dec 2023 21:48:30 +0000 (UTC)
+Received: from EX19MTAEUB001.ant.amazon.com [10.0.43.254:57188]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.31.244:2525] with esmtp (Farcaster)
+ id 122fada5-91a6-401d-b104-935b0fdf78da; Thu, 7 Dec 2023 21:48:28 +0000 (UTC)
+X-Farcaster-Flow-ID: 122fada5-91a6-401d-b104-935b0fdf78da
+Received: from EX19D006EUA003.ant.amazon.com (10.252.50.176) by
+ EX19MTAEUB001.ant.amazon.com (10.252.51.28) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Thu, 7 Dec 2023 21:48:28 +0000
+Received: from EX19D022EUA002.ant.amazon.com (10.252.50.201) by
+ EX19D006EUA003.ant.amazon.com (10.252.50.176) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Thu, 7 Dec 2023 21:48:27 +0000
+Received: from EX19D022EUA002.ant.amazon.com ([fe80::7f87:7d63:def0:157d]) by
+ EX19D022EUA002.ant.amazon.com ([fe80::7f87:7d63:def0:157d%3]) with mapi id
+ 15.02.1118.040; Thu, 7 Dec 2023 21:48:27 +0000
+From: "Kiyanovski, Arthur" <akiyano@amazon.com>
+To: "justinstitt@google.com" <justinstitt@google.com>, "Agroskin, Shay"
+	<shayagr@amazon.com>, "Arinzon, David" <darinzon@amazon.com>, "Dagan, Noam"
+	<ndagan@amazon.com>, "Bshara, Saeed" <saeedb@amazon.com>, "David S. Miller"
+	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+CC: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Thread-Index: AQHaKVVUExdEyzhvpEiCt53EwtaXNLCeWhlQ
+Date: Thu, 7 Dec 2023 21:48:23 +0000
+Deferred-Delivery: Thu, 7 Dec 2023 21:47:21 +0000
+Message-ID: <6a877c080404447c8f715c614b276bef@amazon.com>
+References: <20231207-strncpy-drivers-net-ethernet-amazon-ena-ena_netdev-c-v2-1-a1f2893d1b70@google.com>
+In-Reply-To: <20231207-strncpy-drivers-net-ethernet-amazon-ena-ena_netdev-c-v2-1-a1f2893d1b70@google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAD08cmUC/62OTQ6CMBSEr2K69pn+SKyuvIchRNsHvARbbJsGQ
- ri7hYUncDXzzeabhUUMhJHdDgsLmCmSdwXk8cBM/3QdAtnCTHKpBBcSYgrOjDPYQBlDBIcJMPU
- YtvIZfEemhHG/aLSapoYcJTBw0ZXm4mpNpRUrjjFgS9Puf9SFe4rJh3m/k8W2/sucBQhoOefaV nhWL7x33ncDnox/s3pd1y8H5qObCwEAAA==
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1701985342; l=3363;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=arW5/NshuDKnzlGPsdZ6VG016W07pYtyXnB5penkACQ=; b=Y+w93P3+97VcZk0K+Ib4bcU9zZBeUNMTZ3FduqPc+Jwb6Y61xtrpf8x0x+gaXm4EE1hafjk/s
- vet9G1k0/55DVqURJqdlUdIhtzP78WQNj/Vrtx9i2gvws3WK6mO2k/V
-X-Mailer: b4 0.12.3
-Message-ID: <20231207-strncpy-drivers-net-ethernet-qlogic-qlcnic-qlcnic_83xx_init-c-v2-1-eb1a20a91b2a@google.com>
-Subject: [PATCH v2] qlcnic: replace deprecated strncpy with strscpy
-From: Justin Stitt <justinstitt@google.com>
-To: Shahed Shaikh <shshaikh@marvell.com>, Manish Chopra <manishc@marvell.com>, 
-	GR-Linux-NIC-Dev@marvell.com, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Precedence: Bulk
 
-strncpy() is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous string
-interfaces.
-
-We expect fw_info->fw_file_name to be NUL-terminated based on its use
-within _request_firmware_prepare() wherein `name` refers to it:
-|       if (firmware_request_builtin_buf(firmware, name, dbuf, size)) {
-|               dev_dbg(device, "using built-in %s\n", name);
-|               return 0; /* assigned */
-|       }
-... and with firmware_request_builtin() also via `name`:
-|       if (strcmp(name, b_fw->name) == 0) {
-
-There is no evidence that NUL-padding is required.
-
-Additionally replace size macro (QLC_FW_FILE_NAME_LEN) with
-sizeof(fw_info->fw_file_name) to more directly tie the maximum buffer
-size to the destination buffer:
-
-Considering the above, a suitable replacement is `strscpy` [2] due to
-the fact that it guarantees NUL-termination on the destination buffer
-without unnecessarily NUL-padding.
-
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Changes in v2:
-- update commit msg with sizeof() rationale (thanks Kees)
-- rebase onto mainline bee0e7762ad2c602
-- Link to v1: https://lore.kernel.org/r/20231012-strncpy-drivers-net-ethernet-qlogic-qlcnic-qlcnic_83xx_init-c-v1-1-f0008d5e43be@google.com
----
-Note: build-tested only.
-
-Found with: $ rg "strncpy\("
----
- drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
-index c95d56e56c59..b733374b4dc5 100644
---- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
-+++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
-@@ -2092,8 +2092,8 @@ static int qlcnic_83xx_run_post(struct qlcnic_adapter *adapter)
- 		return -EINVAL;
- 	}
- 
--	strncpy(fw_info->fw_file_name, QLC_83XX_POST_FW_FILE_NAME,
--		QLC_FW_FILE_NAME_LEN);
-+	strscpy(fw_info->fw_file_name, QLC_83XX_POST_FW_FILE_NAME,
-+		sizeof(fw_info->fw_file_name));
- 
- 	ret = request_firmware(&fw_info->fw, fw_info->fw_file_name, dev);
- 	if (ret) {
-@@ -2396,12 +2396,12 @@ static int qlcnic_83xx_get_fw_info(struct qlcnic_adapter *adapter)
- 		switch (pdev->device) {
- 		case PCI_DEVICE_ID_QLOGIC_QLE834X:
- 		case PCI_DEVICE_ID_QLOGIC_QLE8830:
--			strncpy(fw_info->fw_file_name, QLC_83XX_FW_FILE_NAME,
--				QLC_FW_FILE_NAME_LEN);
-+			strscpy(fw_info->fw_file_name, QLC_83XX_FW_FILE_NAME,
-+				sizeof(fw_info->fw_file_name));
- 			break;
- 		case PCI_DEVICE_ID_QLOGIC_QLE844X:
--			strncpy(fw_info->fw_file_name, QLC_84XX_FW_FILE_NAME,
--				QLC_FW_FILE_NAME_LEN);
-+			strscpy(fw_info->fw_file_name, QLC_84XX_FW_FILE_NAME,
-+				sizeof(fw_info->fw_file_name));
- 			break;
- 		default:
- 			dev_err(&pdev->dev, "%s: Invalid device id\n",
-
----
-base-commit: bee0e7762ad2c6025b9f5245c040fcc36ef2bde8
-change-id: 20231012-strncpy-drivers-net-ethernet-qlogic-qlcnic-qlcnic_83xx_init-c-7858019dc583
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBqdXN0aW5zdGl0dEBnb29nbGUu
+Y29tIDxqdXN0aW5zdGl0dEBnb29nbGUuY29tPg0KPiANCj4gYHN0cm5jcHlgIGlzIGRlcHJlY2F0
+ZWQgZm9yIHVzZSBvbiBOVUwtdGVybWluYXRlZCBkZXN0aW5hdGlvbiBzdHJpbmdzIFsxXSBhbmQg
+YXMNCj4gc3VjaCB3ZSBzaG91bGQgcHJlZmVyIG1vcmUgcm9idXN0IGFuZCBsZXNzIGFtYmlndW91
+cyBzdHJpbmcgaW50ZXJmYWNlcy4NCj4gDQo+IEEgc3VpdGFibGUgcmVwbGFjZW1lbnQgaXMgYHN0
+cnNjcHlgIFsyXSBkdWUgdG8gdGhlIGZhY3QgdGhhdCBpdCBndWFyYW50ZWVzIE5VTC0NCj4gdGVy
+bWluYXRpb24gb24gdGhlIGRlc3RpbmF0aW9uIGJ1ZmZlciB3aXRob3V0IHVubmVjZXNzYXJpbHkg
+TlVMLXBhZGRpbmcuDQo+IA0KPiBob3N0X2luZm8gYWxsb2NhdGlvbiBpcyBkb25lIGluIGVuYV9j
+b21fYWxsb2NhdGVfaG9zdF9pbmZvKCkgdmlhDQo+IGRtYV9hbGxvY19jb2hlcmVudCgpIGFuZCBp
+cyBub3QgemVybyBpbml0aWFsaXplZCBieSBhbGxvY19ldGhlcmRldl9tcSgpLg0KPiANCj4gSG93
+ZXZlciB6ZXJvIGluaXRpYWxpemF0aW9uIG9mIHRoZSBkZXN0aW5hdGlvbiBkb2Vzbid0IG1hdHRl
+ciBpbiB0aGlzIGNhc2UsDQo+IGJlY2F1c2Ugc3Ryc2NweSgpIGd1YXJhbnRlZXMgYSBOVUxMIHRl
+cm1pbmF0aW9uLg0KPiANCj4gTGluazoNCj4gaHR0cHM6Ly93d3cua2VybmVsLm9yZy9kb2MvaHRt
+bC9sYXRlc3QvcHJvY2Vzcy9kZXByZWNhdGVkLmh0bWwjc3RybmNweS1vbi0NCj4gbnVsLXRlcm1p
+bmF0ZWQtc3RyaW5ncyBbMV0NCj4gTGluazogaHR0cHM6Ly9tYW5wYWdlcy5kZWJpYW4ub3JnL3Rl
+c3RpbmcvbGludXgtbWFudWFsLTQuOC9zdHJzY3B5LjkuZW4uaHRtbA0KPiBbMl0NCj4gTGluazog
+aHR0cHM6Ly9naXRodWIuY29tL0tTUFAvbGludXgvaXNzdWVzLzkwDQo+IENjOiBsaW51eC1oYXJk
+ZW5pbmdAdmdlci5rZXJuZWwub3JnDQo+IFNpZ25lZC1vZmYtYnk6IEp1c3RpbiBTdGl0dCA8anVz
+dGluc3RpdHRAZ29vZ2xlLmNvbT4NCj4gLS0tDQo+IENoYW5nZXMgaW4gdjI6DQo+IC0gdXBkYXRl
+IGNvbW1pdCBtZXNzYWdlLCBkcm9wcGluZyBpbmFjY3VyYXRlIHN0YXRlbWVudCBhYm91dCBhbGxv
+Y2F0aW9uDQo+ICAgKHRoYW5rcyBBcnRodXIpDQo+IC0gY29weS9wYXN0ZSBBcnRodXIncyBleHBs
+YW5hdGlvbiByZWdhcmRpbmcgaG9zdF9pbmZvIGFsbG9jYXRpb24gaW50bw0KPiAtIHJlYmFzZWQg
+b250byBtYWlubGluZQ0KPiAtIExpbmsgdG8gdjE6IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL3Iv
+MjAyMzEwMDUtc3RybmNweS1kcml2ZXJzLW5ldC1ldGhlcm5ldC0NCj4gYW1hem9uLWVuYS1lbmFf
+bmV0ZGV2LWMtdjEtMS1iYTQ4Nzk5NzQxNjBAZ29vZ2xlLmNvbQ0KPiAtLS0NCj4gTm90ZTogYnVp
+bGQtdGVzdGVkIG9ubHkuDQo+IC0tLQ0KPiAgLi4uLi4uLi4uLi4uLi4uLi4uDQo+IEJlc3QgcmVn
+YXJkcywNCj4gLS0NCj4gSnVzdGluIFN0aXR0IDxqdXN0aW5zdGl0dEBnb29nbGUuY29tPg0KDQpU
+aGFua3MgZm9yIG1ha2luZyB0aGUgbmVjZXNzYXJ5IGNoYW5nZXMgdG8gdGhlIGNvbW1pdCBtZXNz
+YWdlIEp1c3Rpbi4NCkxvb2tzIGdvb2QuDQoNCkFja2VkLWJ5OiBBcnRodXIgS2l5YW5vdnNraSA8
+YWtpeWFub0BhbWF6b24uY29tPg0KDQoNCg==
