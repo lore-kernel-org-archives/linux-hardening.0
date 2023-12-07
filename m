@@ -1,36 +1,40 @@
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6545113AED;
+	Thu,  7 Dec 2023 06:52:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="b7qtNXQA"
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99545D4B;
-	Wed,  6 Dec 2023 22:25:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=oErw/cP3v6K5Ya8MvRoT24q1uLCEk2UvmxpABeanB3I=; b=b7qtNXQAzmhYhQLy1jF6GCwRCH
-	QjW3MqinvyJQYA6bgI1bw6zpavs66kYaLy1RrSXUUGZWbRZFOWm57k0vGU1uMa8W1V5TwQHsvoLlz
-	8V2tlia9l/FQn58wQKDf6RmDPdmv6Aod5UAAnluBwN50VmzWBeZlqcvt8JW5dn7T4Ir4N4ZT+eAjC
-	YqwIg3arRxfy+SN26sSTMoKO0XvyvfUdnmTNUOT9/VPuUvMl2558RWSer1HMtNSnONbwZuoVR6Rfv
-	EVBM5vCbrAZojOfmzLZKUYL4y729A4j1WAFr03gocNmYnmeYz15rkDam7nFKFNLefbjO0lWMgrhIF
-	zsmoRM9w==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1rB7pW-00Byao-2U;
-	Thu, 07 Dec 2023 06:25:50 +0000
-Date: Wed, 6 Dec 2023 22:25:50 -0800
-From: Christoph Hellwig <hch@infradead.org>
-To: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, tanzirh@google.com,
-	Kees Cook <keescook@chromium.org>,
-	Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Nick DeSaulniers <nnn@google.com>,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH] lib/string: shrink lib/string.i via IWYU
-Message-ID: <ZXFlbn8oaTAS8PaZ@infradead.org>
-References: <20231205-libstringheader-v1-1-7f9c573053a7@gmail.com>
- <20231205130449.8e330a26ecbed1f7b5ad5d7a@linux-foundation.org>
- <CAKwvOdn+VTM+LY6ALcgaZTL57JpiKt5rBPMSPNXsgS3MCENhDQ@mail.gmail.com>
- <20231205132452.418722bea8f6878dca88142a@linux-foundation.org>
- <CAKwvOdn=og6h5gVdDCjFDANs3MN-_CD4OZ9oRM=o9YAvoTzkzw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ZCxkGoVt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AA06C433C9;
+	Thu,  7 Dec 2023 06:52:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1701931924;
+	bh=Jgvkdt55R4jwOTmeK7TgfLh1AEzeBbcP2a+N+0WhhKc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZCxkGoVtrKOxBDYbFXzbEwUrQaBkI55Mm1b+Pb1HCoor+OHtpzpFaJLxyDN339xgl
+	 svPqHzGtbUt8E5XKS/+UEvC2DJgk9VkzjktF5sVtRSEAfeyubq4qWFcm09cDcYLDXY
+	 rNdQa6gFxEdWWj51AMU9Y/LChTU74ukQcuaBesQA=
+Date: Thu, 7 Dec 2023 11:29:22 +0900
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: David Gow <davidgow@google.com>
+Cc: Rae Moar <rmoar@google.com>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	Matti Vaittinen <mazziesaccount@gmail.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Jonathan Corbet <corbet@lwn.net>, Kees Cook <keescook@chromium.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>, Maxime Ripard <mripard@kernel.org>,
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-sound@vger.kernel.org
+Subject: Re: [PATCH 1/4] kunit: Add APIs for managing devices
+Message-ID: <2023120717-dangle-wrath-7bb3@gregkh>
+References: <20231205-kunit_bus-v1-0-635036d3bc13@google.com>
+ <20231205-kunit_bus-v1-1-635036d3bc13@google.com>
+ <2023120602-vaguely-primarily-b6b2@gregkh>
+ <CABVgOSnW7et1aonnsSLcS1LHHztXVyagAFe-U3=JX7c7xi2P4g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -39,17 +43,162 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKwvOdn=og6h5gVdDCjFDANs3MN-_CD4OZ9oRM=o9YAvoTzkzw@mail.gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <CABVgOSnW7et1aonnsSLcS1LHHztXVyagAFe-U3=JX7c7xi2P4g@mail.gmail.com>
 
-On Tue, Dec 05, 2023 at 01:39:47PM -0800, Nick Desaulniers wrote:
-> Hmm...how does one know that linux/bits.h is the higher-level include
-> of asm/bitsperlong.h?
+On Wed, Dec 06, 2023 at 03:44:08PM +0800, David Gow wrote:
+> > But really, why is this a "raw" device_driver pointer and not a pointer
+> > to the driver type for your bus?
+> 
+> So, this is where the more difficult questions start (and where my
+> knowledge of the driver model gets a bit shakier).
+> 
+> At the moment, there's no struct kunit_driver; the goal was to have
+> whatever the minimal amount of infrastructure needed to get a 'struct
+> device *' that could be plumbed through existing code which accepts
+> it. (Read: mostly devres resource management stuff, get_device(),
+> etc.)
+> 
+> So, in this version, there's no:
+> - struct kunit_driver: we've no extra data to store / function
+> pointers other than what's in struct device_driver.
+> - The kunit_bus is as minimal as I could get it: each device matches
+> exactly one driver pointer (which is passed as struct
+> kunit_device->driver).
+> - The 'struct kunit_device' type is kept private, and 'struct device'
+> is used instead, as this is supposed to only be passed to generic
+> device functions (KUnit is just managing its lifecycle).
+> 
+> I've no problem adding these extra types to flesh this out into a more
+> 'normal' setup, though I'd rather keep the boilerplate on the user
+> side minimal if possible. I suspect if we were to return a struct
+> kunit_device, everyone would be quickly grabbing and passing around a
+> raw 'struct device *' anyway, which is what the existing tests with
+> fake devices do (via root_device_register, which returns struct
+> device, or by returning &platform_device->dev from a helper).
+> 
+> Similarly, the kunit_bus is not ever exposed to test code, nor really
+> is the driver (except via kunit_device_register_with_driver(), which
+> isn't actually being used anywhere yet, so it may make sense to cut it
+> out from the next version). So, ideally tests won't even be aware that
+> their devices are attached to the kunit_bus, nor that they have
+> drivers attached: it's mostly just to make these normal enough that
+> they show up nicely in sysfs and play well with the devm_ resource
+> management functions.
 
-I think this the wrong way of thinking.  In general we should always
-avoid including asm/ headers unless there is no other way.  No other
-way is not formalized right now, but I think the answer is roughly if
-no linux/ headers includes that asm header.  This will probably give
-a few wrong results at the moment, but it's probably worth fixing
-them up.
+Ok, this makes more sense, thank you for the detailed explaination.
+Making this "generic" like you have done here seems reasonable for now.
 
+> > > -                                     attributes.o
+> > > +                                     attributes.o \
+> > > +                                     device.o
+> >
+> > Shouldn't this file be "bus.c" as you are creating a kunit bus?
+> >
+> 
+> I've sort-of grouped this as "device helpers", as it handles KUnit
+> devices, drivers, and the kunit_bus, but devices are the most
+> user-facing part. Indeed, the bus feels like an 'implementation
+> detail'. Happy to rename it if that makes things more consistent,
+> though.
+
+Nah, device.o makes sense for now, thanks.
+
+> > >  ifeq ($(CONFIG_KUNIT_DEBUGFS),y)
+> > >  kunit-objs +=                                debugfs.o
+> > > diff --git a/lib/kunit/device.c b/lib/kunit/device.c
+> > > new file mode 100644
+> > > index 000000000000..93ace1a2297d
+> > > --- /dev/null
+> > > +++ b/lib/kunit/device.c
+> > > @@ -0,0 +1,176 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * KUnit basic device implementation
+> >
+> > "basic bus/driver implementation", not device, right?
+> >
+> 
+> Given that the users of this really only care about getting their
+> "device", and the bus/driver are more implementation details, I'd
+> rather go with something like "KUnit-managed device implementation" or
+> "KUnit device-model helpers". How do those sound?
+
+Either would be good, thanks.
+
+> > > + *
+> > > + * Implementation of struct kunit_device helpers.
+> > > + *
+> > > + * Copyright (C) 2023, Google LLC.
+> > > + * Author: David Gow <davidgow@google.com>
+> > > + */
+> > > +
+> > > +#include <linux/device.h>
+> > > +
+> > > +#include <kunit/test.h>
+> > > +#include <kunit/device.h>
+> > > +#include <kunit/resource.h>
+> > > +
+> > > +
+> > > +/* Wrappers for use with kunit_add_action() */
+> > > +KUNIT_DEFINE_ACTION_WRAPPER(device_unregister_wrapper, device_unregister, struct device *);
+> > > +KUNIT_DEFINE_ACTION_WRAPPER(driver_unregister_wrapper, driver_unregister, struct device_driver *);
+> > > +
+> > > +static struct device kunit_bus = {
+> > > +     .init_name = "kunit"
+> > > +};
+> >
+> > A static device as a bus?  This feels wrong, what is it for?  And where
+> > does this live?  If you _REALLY_ want a single device for the root of
+> > your bus (which is a good idea), then make it a dynamic variable (as it
+> > is reference counted), NOT a static struct device which should not be
+> > done if at all possible.
+> 
+> Will do. Would root_device_register() make more sense here?
+
+Yes.
+
+> > > +
+> > > +/* A device owned by a KUnit test. */
+> > > +struct kunit_device {
+> > > +     struct device dev;
+> > > +     struct kunit *owner;
+> > > +     /* Force binding to a specific driver. */
+> > > +     struct device_driver *driver;
+> > > +     /* The driver is managed by KUnit and unique to this device. */
+> > > +     bool cleanup_driver;
+> > > +};
+> >
+> > Wait, why isn't your "kunit" device above a struct kunit_device
+> > structure?  Why is it ok to be a "raw" struct device (hint, that's
+> > almost never a good idea.)
+> >
+> > > +static inline struct kunit_device *to_kunit_device(struct device *d)
+> > > +{
+> > > +     return container_of(d, struct kunit_device, dev);
+> >
+> > container_of_const()?  And to use that properly, why not make this a #define?
+> >
+> > > +}
+> > > +
+> > > +static int kunit_bus_match(struct device *dev, struct device_driver *driver)
+> > > +{
+> > > +     struct kunit_device *kunit_dev = to_kunit_device(dev);
+> > > +
+> > > +     if (kunit_dev->driver == driver)
+> > > +             return 1;
+> > > +
+> > > +     return 0;
+> >
+> > I don't understand, what are you trying to match here?
+> >
+> 
+> This is just to make sure that the match function will use whatever
+> driver is passed through. When I originally started writing this,
+> there were some resource cleanup problems if there was no driver
+> associated with a device, though that's fixed now.
+
+As it's fixed, no need for this, so let's not be confused going forward :)
+
+thanks,
+
+greg k-h
