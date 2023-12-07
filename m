@@ -1,59 +1,68 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="e6l8tHe2"
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 764FAD68
-	for <linux-hardening@vger.kernel.org>; Wed,  6 Dec 2023 13:07:29 -0800 (PST)
-Received: by mail-pj1-x1029.google.com with SMTP id 98e67ed59e1d1-286e57fde73so246468a91.1
-        for <linux-hardening@vger.kernel.org>; Wed, 06 Dec 2023 13:07:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UVkDLPJY"
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 329091736;
+	Wed,  6 Dec 2023 16:30:31 -0800 (PST)
+Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-6cbd24d9557so78150b3a.1;
+        Wed, 06 Dec 2023 16:30:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1701896849; x=1702501649; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1701909030; x=1702513830; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZqFC5ji57tlGOgcDGhYR3koXkffw9V8OUgIHws4y0Ik=;
-        b=e6l8tHe2M5qlVEEJ1DCYVDM88akxop4k1yonzqkenLnFE/utNe9Bp5mC9NOsOGgnA5
-         O5w0JXVSD3uXLZZqhnCj6F/vR7z1GY9hnwE+/DmSxzjYUa0PV/ul/xOhoiUF3jTL/67C
-         VqD15G+/LwwV/KhYRoLPrLxDwBW9Z6UQsZixc=
+        bh=pUILdXO0fAmIum4i0LjaIhGHTq4M4euUAAZGlBJTfMI=;
+        b=UVkDLPJYiku3Z/fo/QgPMrxc6kDRoov/cHWzBBepkOK/TFxjbFqDA+3SlZC8Lga89h
+         kp/9lKXuMzTjHUDJmYT3I7KvO9+/D/cdqGBcO1mD1zFg67X3BslaEdgZNbZS9bqmjQMZ
+         oWZEG/AgshzfdwLVGk2tB4cSqrLg/mvays2NhZ3KMXJy3S5Dd8XIC8WoXhcEydYpBlb2
+         b2NzUC6n2sYnAv5SGyciV2GAQxQU3qDueyRzj2uBK/x/l8s+QA4xkm5KEh/mMXNTwEfu
+         +pH/oEuGsWzWm5EsVxt8wxgCbI2f8YV2YrLhQjWp4rAIVOnP9Y6ceApY6KPOaCCgv2Bs
+         B5Xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701896849; x=1702501649;
+        d=1e100.net; s=20230601; t=1701909030; x=1702513830;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZqFC5ji57tlGOgcDGhYR3koXkffw9V8OUgIHws4y0Ik=;
-        b=T9OWema+yIfiAdIr9ZzL6v4PDYf5Fitc4b+BFmuAb/5fus8bIiHxuiqxL5/rprtuky
-         OZBfhAyV6HBJ52HNojy2+n+hOyvp83PaxG5iChi7B79XsHqZkmeIw1it9LpbY64Qh3Gc
-         uFP9X4ufubk4yK1wlP061Rbt2TeIehjAlVl+ok2bpAPsiyW61915yEDZlYHbhDnl1Opy
-         pvRrYYoYfPdEyVx9Mm+jdtNCYT5Ng9Qe1VCHhOQTyCBA/o6urXOJxdz+OS9jqvYBNYLO
-         SIIzDDbh0fIg/xEaJBMbeBLwOzzeUIBMvXWdETKrXGaxtI6B+hAJjmim+9N3zRkqRI/E
-         MLZg==
-X-Gm-Message-State: AOJu0Yw3Jjomad7F4EQEARfDOgNa+IENTb39QX/c8zWtEXMiteeSQhHQ
-	rFILKu/+WGuPQdmLB6juOezkFQ==
-X-Google-Smtp-Source: AGHT+IEAbbzSLQbJ/Rm3HnAGHG3fVDh0lRG/dixqNMZ39AimVhzfCgt99eehqSCc5SMeKCYoDAW9gw==
-X-Received: by 2002:a17:90b:5281:b0:286:6cc0:b920 with SMTP id si1-20020a17090b528100b002866cc0b920mr1089720pjb.87.1701896848897;
-        Wed, 06 Dec 2023 13:07:28 -0800 (PST)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id gq7-20020a17090b104700b0028571e2a759sm296227pjb.48.2023.12.06.13.07.28
+        bh=pUILdXO0fAmIum4i0LjaIhGHTq4M4euUAAZGlBJTfMI=;
+        b=E7Qabj6S23/cy9FIOC9DvMjGtGU12+FhIIymtrlV3RKb9v4tMY9e75zgUFj9pXgu6/
+         +fWAS7thFtNxX1rx3LPncxJcygrv6oI/h7RvyGmMDRZeLKOsB5qOPtGmc11YWYhTC2xm
+         UIGL/DegYmA3nVVB3yBtSKAj/0SU3dwOMWZDTFmTSw3QCEOKbI70hpYWcim4GCJ1czFm
+         ugZueyBRWqHDIYle51TyYSa+Vg8chpvV4osupfdBdrzFIuhiwkAft07jO2SKF0SPh7On
+         2oRJ3vKqSxRNygZ0njPcCJPReQQTQtBMiTR1FyBTwSEkfuW+BW6Z71ova6ANoVTQVKmc
+         veXg==
+X-Gm-Message-State: AOJu0Yzsu8kD9E1L4tQ43UfPp67Z71TxDWiv38zIkEDlO9IrRZiE/3ji
+	LRMDc+Z3+aQRqdbESWRjcTU=
+X-Google-Smtp-Source: AGHT+IGNdRr4yYn8X8E8TUhLrtQlJNH4KI21LBAMZQqyY0t/4ywu4K0f2WjEAimk9RqDqbbbR0tJkQ==
+X-Received: by 2002:a05:6a00:3a1a:b0:68f:a92a:8509 with SMTP id fj26-20020a056a003a1a00b0068fa92a8509mr4897945pfb.7.1701909030344;
+        Wed, 06 Dec 2023 16:30:30 -0800 (PST)
+Received: from localhost.localdomain ([1.245.180.67])
+        by smtp.gmail.com with ESMTPSA id n19-20020aa78a53000000b006ce7d0d2590sm120723pfa.0.2023.12.06.16.30.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Dec 2023 13:07:28 -0800 (PST)
-Date: Wed, 6 Dec 2023 13:07:27 -0800
-From: Kees Cook <keescook@chromium.org>
-To: davidgow@google.com
-Cc: Rae Moar <rmoar@google.com>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>, Maxime Ripard <mripard@kernel.org>,
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-sound@vger.kernel.org
-Subject: Re: [PATCH 2/4] fortify: test: Use kunit_device
-Message-ID: <202312061306.98DA6D275D@keescook>
-References: <20231205-kunit_bus-v1-0-635036d3bc13@google.com>
- <20231205-kunit_bus-v1-2-635036d3bc13@google.com>
+        Wed, 06 Dec 2023 16:30:29 -0800 (PST)
+Date: Thu, 7 Dec 2023 09:30:15 +0900
+From: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: David Rientjes <rientjes@google.com>, Christoph Lameter <cl@linux.com>,
+	Pekka Enberg <penberg@kernel.org>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Alexander Potapenko <glider@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Marco Elver <elver@google.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Shakeel Butt <shakeelb@google.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Kees Cook <keescook@chromium.org>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+	cgroups@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 12/21] mm/slab: consolidate includes in the internal
+ mm/slab.h
+Message-ID: <ZXESF2kgL93SjEgl@localhost.localdomain>
+References: <20231120-slab-remove-slab-v2-0-9c9c70177183@suse.cz>
+ <20231120-slab-remove-slab-v2-12-9c9c70177183@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -62,52 +71,88 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231205-kunit_bus-v1-2-635036d3bc13@google.com>
+In-Reply-To: <20231120-slab-remove-slab-v2-12-9c9c70177183@suse.cz>
 
-On Tue, Dec 05, 2023 at 03:31:34PM +0800, davidgow@google.com wrote:
-> Using struct root_device to create fake devices for tests is something
-> of a hack. The new struct kunit_device is meant for this purpose, so use
-> it instead.
+On Mon, Nov 20, 2023 at 07:34:23PM +0100, Vlastimil Babka wrote:
+> The #include's are scattered at several places of the file, but it does
+> not seem this is needed to prevent any include loops (anymore?) so
+> consolidate them at the top. Also move the misplaced kmem_cache_init()
+> declaration away from the top.
 > 
-> Signed-off-by: David Gow <davidgow@google.com>
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 > ---
->  lib/fortify_kunit.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  mm/slab.h | 28 ++++++++++++++--------------
+>  1 file changed, 14 insertions(+), 14 deletions(-)
 > 
-> diff --git a/lib/fortify_kunit.c b/lib/fortify_kunit.c
-> index c8c33cbaae9e..f7a1fce8849b 100644
-> --- a/lib/fortify_kunit.c
-> +++ b/lib/fortify_kunit.c
-> @@ -16,6 +16,7 @@
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> diff --git a/mm/slab.h b/mm/slab.h
+> index 3a8d13c099fa..1ac3a2f8d4c0 100644
+> --- a/mm/slab.h
+> +++ b/mm/slab.h
+> @@ -1,10 +1,22 @@
+>  /* SPDX-License-Identifier: GPL-2.0 */
+>  #ifndef MM_SLAB_H
+>  #define MM_SLAB_H
+> +
+> +#include <linux/reciprocal_div.h>
+> +#include <linux/list_lru.h>
+> +#include <linux/local_lock.h>
+> +#include <linux/random.h>
+> +#include <linux/kobject.h>
+> +#include <linux/sched/mm.h>
+> +#include <linux/memcontrol.h>
+> +#include <linux/fault-inject.h>
+> +#include <linux/kmemleak.h>
+> +#include <linux/kfence.h>
+> +#include <linux/kasan.h>
+> +
+>  /*
+>   * Internal slab definitions
+>   */
+> -void __init kmem_cache_init(void);
 >  
->  #include <kunit/test.h>
-> +#include <kunit/device.h>
->  #include <linux/device.h>
->  #include <linux/slab.h>
->  #include <linux/string.h>
-> @@ -269,7 +270,7 @@ DEFINE_ALLOC_SIZE_TEST_PAIR(kvmalloc)
->  	size_t len;							\
->  									\
->  	/* Create dummy device for devm_kmalloc()-family tests. */	\
-> -	dev = root_device_register(dev_name);				\
-> +	dev = kunit_device_register(test, dev_name);			\
->  	KUNIT_ASSERT_FALSE_MSG(test, IS_ERR(dev),			\
->  			       "Cannot register test device\n");	\
->  									\
-> @@ -303,7 +304,7 @@ DEFINE_ALLOC_SIZE_TEST_PAIR(kvmalloc)
->  	checker(len, devm_kmemdup(dev, "Ohai", len, gfp),		\
->  		devm_kfree(dev, p));					\
->  									\
-> -	device_unregister(dev);						\
-> +	kunit_device_unregister(test, dev);				\
->  } while (0)
->  DEFINE_ALLOC_SIZE_TEST_PAIR(devm_kmalloc)
+>  #ifdef CONFIG_64BIT
+>  # ifdef system_has_cmpxchg128
+> @@ -209,11 +221,6 @@ static inline size_t slab_size(const struct slab *slab)
+>  	return PAGE_SIZE << slab_order(slab);
+>  }
+>  
+> -#include <linux/kfence.h>
+> -#include <linux/kobject.h>
+> -#include <linux/reciprocal_div.h>
+> -#include <linux/local_lock.h>
+> -
+>  #ifdef CONFIG_SLUB_CPU_PARTIAL
+>  #define slub_percpu_partial(c)			((c)->partial)
+>  
+> @@ -347,14 +354,6 @@ static inline int objs_per_slab(const struct kmem_cache *cache,
+>  	return slab->objects;
+>  }
+>  
+> -#include <linux/memcontrol.h>
+> -#include <linux/fault-inject.h>
+> -#include <linux/kasan.h>
+> -#include <linux/kmemleak.h>
+> -#include <linux/random.h>
+> -#include <linux/sched/mm.h>
+> -#include <linux/list_lru.h>
+> -
+>  /*
+>   * State of the slab allocator.
+>   *
+> @@ -405,6 +404,7 @@ gfp_t kmalloc_fix_flags(gfp_t flags);
+>  /* Functions provided by the slab allocators */
+>  int __kmem_cache_create(struct kmem_cache *, slab_flags_t flags);
+>  
+> +void __init kmem_cache_init(void);
+>  void __init new_kmalloc_cache(int idx, enum kmalloc_cache_type type,
+>  			      slab_flags_t flags);
+>  extern void create_boot_cache(struct kmem_cache *, const char *name,
 
-Acked-by: Kees Cook <keescook@chromium.org>
+Looks good to me,
+Reviewed-by: Hyeonggon Yoo <42.hyeyoo@gmail.com>
 
-(As an aside; shouldn't this get automatically cleaned up like other
-kunit resources, though?)
-
--- 
-Kees Cook
+> 
+> -- 
+> 2.42.1
+> 
+> 
