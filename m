@@ -1,88 +1,91 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bjVfEERi"
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 726DD137
-	for <linux-hardening@vger.kernel.org>; Fri,  8 Dec 2023 09:23:53 -0800 (PST)
-Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1d0bcc0c313so17534115ad.3
-        for <linux-hardening@vger.kernel.org>; Fri, 08 Dec 2023 09:23:53 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J/8eZJQr"
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0BB4137
+	for <linux-hardening@vger.kernel.org>; Fri,  8 Dec 2023 09:27:57 -0800 (PST)
+Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1d06fffdb65so18319585ad.2
+        for <linux-hardening@vger.kernel.org>; Fri, 08 Dec 2023 09:27:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1702056233; x=1702661033; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cfBRrQiDkLBq4kbSWxx91dS9hun2XcIUpOw4uVoRhJU=;
-        b=bjVfEERimN0gSZtQLetYbKdUOJykosXkQPNL+eoZeNSL9d0ZwIVoOMJPSWH5SRPuDz
-         iSEEcn802Dqb0TzwNCcOVkE2pjAy5pujXmgfRRA96KSSETfRdA9Ss/3Hrz0bGPsCqkXi
-         FcBqLB5j4QvlAIgKbsiIXvzhKFn4hpcwUU96g=
+        d=chromium.org; s=google; t=1702056477; x=1702661277; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Hg6fUEZXStGBp771sMyuxFL70vLJ5BeYI/ptmqsolcE=;
+        b=J/8eZJQrQDM9h9GBp+AfyI/b1z5mDYebqC3SXKnipDtex0OzNu0uKwiv/Z8BSQVsNd
+         a+ZlnbvYo9jqDhuYJQj22iUTpJzsF9UR+iMBNinz8hEtqGOlGREc5YhW5lfGzzc3OWnC
+         xrIJofD9kwr5NSIdzsKD/dicz3JqaQ28UehDg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702056233; x=1702661033;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cfBRrQiDkLBq4kbSWxx91dS9hun2XcIUpOw4uVoRhJU=;
-        b=flQRMyeph1tFm020AQo+YW+0T/ADvVcpGlIDHOBjcOSndR/THngRYdlVq3Us1WQL4k
-         h9xnWPyKlS9qVtGLklphdNrkqXHSpc38UO47q+CKdsHlL5sBQmdlj1+p6RjN3S1A2EIl
-         QVFvtTJO9ilUxT/McLbV8lhTLdgFX6rZeimIiBeWhmf+F9GQYAAjiwp/X0UVxJvD/+YT
-         CO8VSXOMCkYW8v1KN/M5ufJLOeKHc2MsezOIr1xo7+ZZb97ZjuyR+KP0bZzmDmJnfHPG
-         4x3sA9xDmW/kztEm7XbwHgbqNxldmLJn7lowSGwvyu2hYRtC+ryeXG7rWSF0ZT8u5dcg
-         CR0w==
-X-Gm-Message-State: AOJu0YzLcWxQHZupu79yaaVz2Ey5JkaFa/VtXhiHhaFlSuTJupWDRydG
-	hZRrZ8bW5XOD3v6bf6pLIpfuPw==
-X-Google-Smtp-Source: AGHT+IE8qHxrXclJCxSH/90CYFEd1XJpiKFOZCPJsqVWaeyT4CeJLS6LsiCrvRpWVTVUVOL23Yqu1g==
-X-Received: by 2002:a17:902:ab01:b0:1d0:c738:73b5 with SMTP id ik1-20020a170902ab0100b001d0c73873b5mr325670plb.0.1702056232945;
-        Fri, 08 Dec 2023 09:23:52 -0800 (PST)
+        d=1e100.net; s=20230601; t=1702056477; x=1702661277;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Hg6fUEZXStGBp771sMyuxFL70vLJ5BeYI/ptmqsolcE=;
+        b=XRQuI0CUYzFF0APjGLsjwOv4McNufaklQMzRjznkeFsNic2bnQbs9myz2JTTErj8cb
+         MK8XsIZb2DKZSTpb3/PxT9DiyCd9kES0tRwCLeFW9mY5CSIu6ZJP3NFruhwmHZcl20xN
+         6AMaUJc7rsF6eHNY9XWb5dRn83KIa6oI+DG0n08sOClhjDu15tri04xOctF9Bp0vElZH
+         zAld4CH3c5W8gT2CGF31YnnCEcTbXH2cgiRS8t+o11c1Vr5Oio1O6SJ/V8/lemoIF+v2
+         Ph3qc6g8QOvV3TIVzFBcLjfQh1AOE7bNQAtWwzG4Rrs5cAmpSPRxWh3EAqzTcJwsSmA6
+         3yxA==
+X-Gm-Message-State: AOJu0YwJ2C0tgoX+Yu4bR0isc3PHEN7BcrsupezpczRmVCV3uhCJuI+A
+	ybHiqr1VDrb28exlqC5L9KUXYQ==
+X-Google-Smtp-Source: AGHT+IHVTw89wrkKxW6H+y85uDNqkr3bSCVArfzo6yB6zlvvZsJ6ez9TxBemFCSY+J8FoNDku+7DiA==
+X-Received: by 2002:a17:902:6848:b0:1d0:8383:742d with SMTP id f8-20020a170902684800b001d08383742dmr364617pln.37.1702056477358;
+        Fri, 08 Dec 2023 09:27:57 -0800 (PST)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id p18-20020a170902ead200b001d053ec1992sm1961580pld.83.2023.12.08.09.23.52
+        by smtp.gmail.com with ESMTPSA id 12-20020a170902ee4c00b001d0c134dc2dsm1955222plo.77.2023.12.08.09.27.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Dec 2023 09:23:52 -0800 (PST)
-Date: Fri, 8 Dec 2023 09:23:51 -0800
+        Fri, 08 Dec 2023 09:27:56 -0800 (PST)
+Date: Fri, 8 Dec 2023 09:27:56 -0800
 From: Kees Cook <keescook@chromium.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] net: mdio_bus: replace deprecated strncpy with strscpy
-Message-ID: <202312080923.7F537BE03D@keescook>
-References: <20231207-strncpy-drivers-net-phy-mdio_bus-c-v2-1-fbe941fff345@google.com>
+To: Song Liu <song@kernel.org>
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	linux-raid@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] md/md-multipath: Convert "struct mpconf" to flexible
+ array
+Message-ID: <202312080926.FBF7A2DDD2@keescook>
+References: <03dd7de1cecdb7084814f2fab300c9bc716aff3e.1701632867.git.christophe.jaillet@wanadoo.fr>
+ <202312041419.81EF03F7B7@keescook>
+ <CAPhsuW43g-M+xvzD0N1JsJ_zGnvZQOw2Bi1TEqoHKanPnvMHLQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20231207-strncpy-drivers-net-phy-mdio_bus-c-v2-1-fbe941fff345@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPhsuW43g-M+xvzD0N1JsJ_zGnvZQOw2Bi1TEqoHKanPnvMHLQ@mail.gmail.com>
 
-On Thu, Dec 07, 2023 at 09:57:50PM +0000, Justin Stitt wrote:
-> strncpy() is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
+On Thu, Dec 07, 2023 at 09:33:17PM -0800, Song Liu wrote:
+> On Mon, Dec 4, 2023 at 2:20 PM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > On Sun, Dec 03, 2023 at 08:48:06PM +0100, Christophe JAILLET wrote:
+> > > The 'multipaths' field of 'struct mpconf' can be declared as a flexible
+> > > array.
+> > >
+> > > The advantages are:
+> > >    - 1 less indirection when accessing to the 'multipaths' array
+> > >    - save 1 pointer in the structure
+> > >    - improve memory usage
+> > >    - give the opportunity to use __counted_by() for additional safety
+> > >
+> > > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> >
+> > This looks like a really nice conversion. I haven't run-tested this, but
+> > it reads correct to me.
 > 
-> We expect mdiodev->modalias to be NUL-terminated based on its usage with
-> strcmp():
-> |       return strcmp(mdiodev->modalias, drv->name) == 0;
-> 
-> Moreover, mdiodev->modalias is already zero-allocated:
-> |       mdiodev = kzalloc(sizeof(*mdiodev), GFP_KERNEL);
-> ... which means the NUL-padding strncpy provides is not necessary.
-> 
-> Considering the above, a suitable replacement is `strscpy` [2] due to
-> the fact that it guarantees NUL-termination on the destination buffer
-> without unnecessarily NUL-padding.
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> Agreed this is a good optimization. However, since MD_MULTIPATH is
+> already marked as deprecated. I don't think we should ship further
+> changes to it.
 
-Yeah, the subject is distinct now. :)
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Hm, that seems like a weird catch-22 to me. I would say we should
+continue to improve any code in the kernel that people spend time to
+work on, or we should remove that code entirely. Should MD_MULTIPATH be
+removed? How long has it been deprecated? (We just had an LTS release,
+so doing removal now is a good time...)
 
 -- 
 Kees Cook
