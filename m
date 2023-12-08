@@ -1,73 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B22164C6F;
-	Fri,  8 Dec 2023 05:33:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N8tLFs81"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F38AC433C8;
-	Fri,  8 Dec 2023 05:33:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702013610;
-	bh=57Iuychu+Y6HJndFxVGj0xwfUq2O94hJGtPFq6Hs3bE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=N8tLFs818LJj90WRN8s0XJpAyMFajluMii8/dZUCGN26Sp99+yFxIluN2oqv5k1Fo
-	 0zK5XjSQFFhqDiI3yabEQaA0LC0bLYo4i5k+kPQknF+u2HeVSC3IbX4OdIKw+sn4OU
-	 eKX6+D6u+Bp5/p3tnBRM8NIHK0G0J5CmqKDlGQMOUMixsn/595AzvSSBDMVwBj+r4A
-	 QLfUgtZbDpzG8vPUfCEPJ+hEnmM6Wb3l5Xa8/2kXrWQYzLNnbDL/Epcdcyc5OakQgS
-	 id9PK+dBcukWAPJP8WLmG0F50J3sErIQQTyaMPVcpMjkws/pKM90WXMmpBqqMPvada
-	 YY4i+LlElWWDg==
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-50be03cc8a3so2090305e87.1;
-        Thu, 07 Dec 2023 21:33:30 -0800 (PST)
-X-Gm-Message-State: AOJu0YxC7vgwggckZWPC56gyuPTxQdk6shoKUrjONZ4KV2i4/g66+EP+
-	WFeaLzMsekthuRUWIdcbghZ3VSWqSfCz4XmmMjg=
-X-Google-Smtp-Source: AGHT+IGrWYKEARpYyha5a0BZLMItMM50RLahl12IkQVgDAvW13+O6qc+CP0Wak/gkrsYjmUNkbytn6ssAaOvZubz3jo=
-X-Received: by 2002:a05:6512:12c2:b0:50c:1bc5:6a65 with SMTP id
- p2-20020a05651212c200b0050c1bc56a65mr1563713lfg.53.1702013608490; Thu, 07 Dec
- 2023 21:33:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AxHsxAZ/"
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 223B8DD
+	for <linux-hardening@vger.kernel.org>; Thu,  7 Dec 2023 23:39:11 -0800 (PST)
+Received: by mail-wm1-x32f.google.com with SMTP id 5b1f17b1804b1-40b367a0a12so29045e9.1
+        for <linux-hardening@vger.kernel.org>; Thu, 07 Dec 2023 23:39:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1702021149; x=1702625949; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=FCkP1UOSFN/6Yv9hZtznqIMqYxp7IUc2r86Qofpf4h4=;
+        b=AxHsxAZ/xykqhTKH/4qrAOMgBFMUS6FtjwtZwCt2FJ107pcqxjfJe2TEmC7LTkxXb+
+         rRmw6jAe31h2VQyMtb2IUDm9t9P8hrzRDhIMDR+J+geyyFoOI9QMhR/rJto3YQ3JvgDy
+         Ufli6jeAosTAEhRXe0fviP6h189aLa9SqcyguZfuhLnGIlIoiqGGcPi1xcUedPItOGir
+         Lv1pgYf/N7vI5EcUchnsnJ0JFQtQNtPk1pbSFVOCLY+Cf+v6TCQbmkcNgADIPKzUFL7S
+         zUIvUz1xuWyZakmWucGiOHHSlqoCwv8gIdK2OhGdIefeoGq5TX3WHo8YX/wPtYQPZRk6
+         OK3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702021149; x=1702625949;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FCkP1UOSFN/6Yv9hZtznqIMqYxp7IUc2r86Qofpf4h4=;
+        b=vitkmFPhlYE22IpY0iOQXM4mRHLQuL9CnF+Kny/2WpTG/bCmY103ZjEykTRBymG6o9
+         CuAR5/3uG2WLJ/Yo55BoNrUXvzLRYeN50RPNz56yqrHkb0neJ97WVL7LQlf9gymAfkEP
+         8qFxHdnJfjegAPidZJTAEc2RpVpyWRKVsPruPGUSl2aXFuyiD2M3Me93/Ftvl1/K26Ek
+         0A/at+v6EFcgHc6JnFIjGjC0LaE0Bi7/A3uIpfYYhGwJ+z0Sld77B6nACoF8/pchw9Kf
+         RLtiJbQP4nArrBGt8v9a1+cuzL2DC9KhzE0AHEWXPtfqFVnl8hUoOi3NSyR8Aw5uze/n
+         /mBw==
+X-Gm-Message-State: AOJu0YzuRPP3L4S+OgYyJEyzmhKoAtJL5kd6wR5aSJYav1BTI92ew5GQ
+	f7xaZKAenBG302QwAy9IDiKvmkb4aDgocm7bLMNeww==
+X-Google-Smtp-Source: AGHT+IHtwp5+Xh1T0DDbMixGMxkesvV/WAZ7PB8oqKgeYis6tuJvGlc9TtYOL/dGIFuzzX0bR0zNC49Q9Vw6vStVMM0=
+X-Received: by 2002:a05:600c:2941:b0:405:320a:44f9 with SMTP id
+ n1-20020a05600c294100b00405320a44f9mr25035wmd.5.1702021149395; Thu, 07 Dec
+ 2023 23:39:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <03dd7de1cecdb7084814f2fab300c9bc716aff3e.1701632867.git.christophe.jaillet@wanadoo.fr>
- <202312041419.81EF03F7B7@keescook>
-In-Reply-To: <202312041419.81EF03F7B7@keescook>
-From: Song Liu <song@kernel.org>
-Date: Thu, 7 Dec 2023 21:33:17 -0800
-X-Gmail-Original-Message-ID: <CAPhsuW43g-M+xvzD0N1JsJ_zGnvZQOw2Bi1TEqoHKanPnvMHLQ@mail.gmail.com>
-Message-ID: <CAPhsuW43g-M+xvzD0N1JsJ_zGnvZQOw2Bi1TEqoHKanPnvMHLQ@mail.gmail.com>
-Subject: Re: [PATCH] md/md-multipath: Convert "struct mpconf" to flexible array
+References: <20231205-kunit_bus-v1-0-635036d3bc13@google.com>
+ <20231205-kunit_bus-v1-2-635036d3bc13@google.com> <202312061306.98DA6D275D@keescook>
+In-Reply-To: <202312061306.98DA6D275D@keescook>
+From: David Gow <davidgow@google.com>
+Date: Fri, 8 Dec 2023 15:38:56 +0800
+Message-ID: <CABVgOSnTJFeso-=if=2Vs31xoCKNGvN2vM9nCJ37eJNEd=dRYw@mail.gmail.com>
+Subject: Re: [PATCH 2/4] fortify: test: Use kunit_device
 To: Kees Cook <keescook@chromium.org>
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-kernel@vger.kernel.org, 
-	kernel-janitors@vger.kernel.org, linux-raid@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
+Cc: Rae Moar <rmoar@google.com>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matti Vaittinen <mazziesaccount@gmail.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Maxime Ripard <mripard@kernel.org>, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-sound@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 4, 2023 at 2:20=E2=80=AFPM Kees Cook <keescook@chromium.org> wr=
-ote:
+On Thu, 7 Dec 2023 at 05:07, Kees Cook <keescook@chromium.org> wrote:
 >
-> On Sun, Dec 03, 2023 at 08:48:06PM +0100, Christophe JAILLET wrote:
-> > The 'multipaths' field of 'struct mpconf' can be declared as a flexible
-> > array.
+> On Tue, Dec 05, 2023 at 03:31:34PM +0800, davidgow@google.com wrote:
+> > Using struct root_device to create fake devices for tests is something
+> > of a hack. The new struct kunit_device is meant for this purpose, so use
+> > it instead.
 > >
-> > The advantages are:
-> >    - 1 less indirection when accessing to the 'multipaths' array
-> >    - save 1 pointer in the structure
-> >    - improve memory usage
-> >    - give the opportunity to use __counted_by() for additional safety
+> > Signed-off-by: David Gow <davidgow@google.com>
+> > ---
+> >  lib/fortify_kunit.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
 > >
-> > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> > diff --git a/lib/fortify_kunit.c b/lib/fortify_kunit.c
+> > index c8c33cbaae9e..f7a1fce8849b 100644
+> > --- a/lib/fortify_kunit.c
+> > +++ b/lib/fortify_kunit.c
+> > @@ -16,6 +16,7 @@
+> >  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> >
+> >  #include <kunit/test.h>
+> > +#include <kunit/device.h>
+> >  #include <linux/device.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/string.h>
+> > @@ -269,7 +270,7 @@ DEFINE_ALLOC_SIZE_TEST_PAIR(kvmalloc)
+> >       size_t len;                                                     \
+> >                                                                       \
+> >       /* Create dummy device for devm_kmalloc()-family tests. */      \
+> > -     dev = root_device_register(dev_name);                           \
+> > +     dev = kunit_device_register(test, dev_name);                    \
+> >       KUNIT_ASSERT_FALSE_MSG(test, IS_ERR(dev),                       \
+> >                              "Cannot register test device\n");        \
+> >                                                                       \
+> > @@ -303,7 +304,7 @@ DEFINE_ALLOC_SIZE_TEST_PAIR(kvmalloc)
+> >       checker(len, devm_kmemdup(dev, "Ohai", len, gfp),               \
+> >               devm_kfree(dev, p));                                    \
+> >                                                                       \
+> > -     device_unregister(dev);                                         \
+> > +     kunit_device_unregister(test, dev);                             \
+> >  } while (0)
+> >  DEFINE_ALLOC_SIZE_TEST_PAIR(devm_kmalloc)
 >
-> This looks like a really nice conversion. I haven't run-tested this, but
-> it reads correct to me.
+> Acked-by: Kees Cook <keescook@chromium.org>
+>
+> (As an aside; shouldn't this get automatically cleaned up like other
+> kunit resources, though?)
+>
 
-Agreed this is a good optimization. However, since MD_MULTIPATH is
-already marked as deprecated. I don't think we should ship further
-changes to it.
+We can't just get rid of the {kunit_,}device_unregister() here,
+because otherwise we'd have several devices with the same name during
+the test.
 
-Thanks,
-Song
+So, yes, these get automatically cleaned up, but the test would have
+to be restructured to either give each device a different name, or
+split the tests up further.
+
+-- David
