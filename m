@@ -1,104 +1,179 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aZWfVsi0"
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98E52E9
-	for <linux-hardening@vger.kernel.org>; Mon, 11 Dec 2023 11:11:39 -0800 (PST)
-Received: by mail-ed1-x52a.google.com with SMTP id 4fb4d7f45d1cf-54c5d041c23so6749742a12.2
-        for <linux-hardening@vger.kernel.org>; Mon, 11 Dec 2023 11:11:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Jo1gSyWK"
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60546DB
+	for <linux-hardening@vger.kernel.org>; Mon, 11 Dec 2023 12:06:53 -0800 (PST)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-dbca591b8deso1008463276.3
+        for <linux-hardening@vger.kernel.org>; Mon, 11 Dec 2023 12:06:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1702321898; x=1702926698; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=53+GQ9DSChkfFqfGSXLQ0QMyql+oTK4NA8OXD5BIsZM=;
-        b=aZWfVsi0nhc27jgWVTLOn5u5JI7n/FejXbGaYxrlG9ZYP57iGMBuWw/3c+6ABQFN0t
-         /IIap0t111JzD/rBOv574CoJefv9C4xr8851F9HnUkwWVjUmTAwmFx2GiYCtyqw01iPN
-         1yaEqSA5Fr5cxOf0XOJ2QqlDYbutU+J2+IZkGocCN37wwRwB/bJQoXVf3bGixpPidEQz
-         PugIscb+bt7JblMgLidAqvJ5QB3veg9Xui3L8wo51+zgEfdzKZtIw/m5OsMKUkDL0eRD
-         ni3eOEFGGQnAnaN42P9hEodtgq+jPjnZXKH3yTewWCskzh8NPLed0HfDJP/AGD5UUNhm
-         RBmA==
+        d=google.com; s=20230601; t=1702325212; x=1702930012; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=H/z0Ss5XFyvJoTs661LIBp6cShTF2gRz4qVPuHESwH4=;
+        b=Jo1gSyWKpASbLjCcWOztaHALyapm3/+VnyckApDHpgz7xb7A/XrcStCgRaAreOnf3P
+         pZDDQPIi2OeVWK7E3TAkFqY/7bgMl6OUx0B14Kh87YF/tMEoIwwE+GiqPvDarjLGeKjU
+         +z+eW2EybjrRSE/NBS9BlVuE2dLjII3J/l8e3Z4qnvdIpCYXZZdn65s4hyQTod4oBPIN
+         3j9vN+WCM9k/pUZhiV6ZT3XFzJRBGXlnKEZnJ20KcTOa6K7D83HfcfSk8ygUTnijak/a
+         5/arALioS+gfgwo6K4zl2cY/p4Qw/RUchGhpz5PIcVOxYeF9w2Jv52wiaxbgeEMhmTho
+         LBFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702321898; x=1702926698;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=53+GQ9DSChkfFqfGSXLQ0QMyql+oTK4NA8OXD5BIsZM=;
-        b=mcc3D10nTYtXSi52x312MfxyfrlHLzvrCod9YvZbhQdkzSEAlhJoSsQV8Zve7nDj+i
-         kai5nq2js8wyDQFF5JCxAYLCZ7laYdG79b06pX78Kas6o7SRH+Ld7Pa3tddB1WjbEm4/
-         BHL+mHdD4HvSigWavZ22Ix3ScxbftpL+XpuA8BK3mUs4Z8pw6L3Phb3rXRdmqS0FOzYi
-         tkDGRSr5PFYH5hZYpgCyZlzSJDectXdHvw8q5nIb1pMxOaJtx0gc5UuAUCWgaxXIvkuM
-         75Jx1Gapf4uZjyZ5Vp3w0GnKZxO1ROmppLY0LDQAEMuZZv29Rc60nHPcX+0QFNrWp2Aa
-         Nmpg==
-X-Gm-Message-State: AOJu0Yw1EL3hqCYKuJ4f92aLkWXimmjL97CVhZWch2uUA47CHjkDCauJ
-	kEds/ncTPPlWxNIsP4VsJ8PmvRBkivkIzglLMQ+m8g==
-X-Google-Smtp-Source: AGHT+IFvmTrqFmb3KMd/5xiFQbhGpELJ/arHQLgqbMwaN7GGJJxxJmDMIqQ2CDnleZexNcIu6ZMsfzm7/A6/dIyFIGQ=
-X-Received: by 2002:a17:906:c141:b0:a12:7a14:5355 with SMTP id
- dp1-20020a170906c14100b00a127a145355mr1440878ejc.39.1702321897853; Mon, 11
- Dec 2023 11:11:37 -0800 (PST)
+        d=1e100.net; s=20230601; t=1702325212; x=1702930012;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=H/z0Ss5XFyvJoTs661LIBp6cShTF2gRz4qVPuHESwH4=;
+        b=s882RPvK+H3mu4Z8qwfzNJfVNVwDQiDJm1of7s2AAX76zgsOaIr5mrmZLDdc7fJGTb
+         TRHSy5po4xdnVUdsztKQiBYmZ7yRwium3Otp3JaTlceWkl7NzS0gs8U7UY9PiWWzecxC
+         J2cEaY11YBqjA626wDfYR2S5+8DytHJLozeyzQLmUBmyEr5K7OohZ8VceuIs5g6Wgv6r
+         lLHyLaKqSr61RtY0JLGWpEFEQpzVXwQC+JYkvGmzTff/fEQaw1C8dYCXiXT21A1KDGOJ
+         Z+vlmrMzO9m/OwPka9ocHuP0eBCsGnla+FOa66xuIcXivZbHoLaDEdCqw6l5vTGoT8mz
+         LOKw==
+X-Gm-Message-State: AOJu0YyL65/CnJCd6w+j/MUT7BtcXS1hWomtdyXooezP5WHpLL3TCP8i
+	s0pWFgfZskKDOf9irA+kchZu7/JNs+lZoNAJnQ==
+X-Google-Smtp-Source: AGHT+IHi7DG+3EuXdHK5kIVsRK1zQwJY0+cr+9QAn+IL/5jWC8TAFEd1H552VSUKLgOSUkaLfOFRXQZzJtR7rQmH7g==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a25:f803:0:b0:db4:868a:7fdd with SMTP
+ id u3-20020a25f803000000b00db4868a7fddmr34903ybd.7.1702325212490; Mon, 11 Dec
+ 2023 12:06:52 -0800 (PST)
+Date: Mon, 11 Dec 2023 20:06:28 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20231207-strncpy-drivers-net-mdio-mdio-gpio-c-v2-1-c28d52dd3dfe@google.com>
- <ZXJNwrcSfgUFhaz6@shell.armlinux.org.uk>
-In-Reply-To: <ZXJNwrcSfgUFhaz6@shell.armlinux.org.uk>
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAMNrd2UC/5WNUQqDMBBEryL73S1JrEX61XuIlJJsdKE1siuhI
+ t69qTcoAwNvPuZtoCRMCrdqA6HMymkqYE8V+PE5DYQcCoMzrrbGXVAXmfy8YhDOJIrqlTH6REc
+ 9dNWo6NGQDTFS69qmgXI2C0X+HKKuLzyyLknWw5vtb/1bkS2WkDHuSmRqF+5DSsOLzj69od/3/ Qv/yJDj3QAAAA==
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1702325211; l=3841;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=rZMZkomkudUsfqwyDRixYeQW5ARfhWOfNshuF+j5KFg=; b=Khn6RMul5mGMMQgX2HtgBJxmEdbICK7Jkloq1RCDq5aClSb8YlhOXhAz7X788sUUloB6KKHOb
+ M7IWjerhyGaAgjLX9/wWgqCslM9+SytVUD3iI6vuPVwT1wgAbEIEk0V
+X-Mailer: b4 0.12.3
+Message-ID: <20231211-strncpy-drivers-scsi-fcoe-fcoe_sysfs-c-v1-1-73b942238396@google.com>
+Subject: [PATCH] scsi: fcoe: use sysfs_match_string over fcoe_parse_mode
 From: Justin Stitt <justinstitt@google.com>
-Date: Mon, 11 Dec 2023 11:11:25 -0800
-Message-ID: <CAFhGd8r1t8Gs5_idKiLqWL8Aicj1A_hTuqvO0075TP23rvjxJg@mail.gmail.com>
-Subject: Re: [PATCH v2] net: mdio-gpio: replace deprecated strncpy with strscpy
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+To: Hannes Reinecke <hare@suse.de>, "James E.J. Bottomley" <jejb@linux.ibm.com>, 
+	"Martin K. Petersen" <martin.petersen@oracle.com>, Bart Van Assche <bvanassche@acm.org>
+Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On Thu, Dec 7, 2023 at 2:57=E2=80=AFPM Russell King (Oracle)
-<linux@armlinux.org.uk> wrote:
->
-> On Thu, Dec 07, 2023 at 09:54:31PM +0000, Justin Stitt wrote:
-> > We expect new_bus->id to be NUL-terminated but not NUL-padded based on
-> > its prior assignment through snprintf:
-> > |       snprintf(new_bus->id, MII_BUS_ID_SIZE, "gpio-%x", bus_id);
-> >
-> > We can also use sizeof() instead of a length macro as this more closely
-> > ties the maximum buffer size to the destination buffer.
->
-> Honestly, this looks machine generated and unreviewed by the submitter,
-> because...
->
+Instead of copying @buf into a new buffer and carefully managing its
+newline/null-terminating status, we can just use sysfs_match_string()
+as it uses sysfs_streq() internally which handles newline/null-term:
 
-Not machine generated.
+|  /**
+|   * sysfs_streq - return true if strings are equal, modulo trailing newline
+|   * @s1: one string
+|   * @s2: another string
+|   *
+|   * This routine returns true iff two strings are equal, treating both
+|   * NUL and newline-then-NUL as equivalent string terminations.  It's
+|   * geared for use with sysfs input strings, which generally terminate
+|   * with newlines but are compared against values without newlines.
+|   */
+|  bool sysfs_streq(const char *s1, const char *s2)
+|  ...
 
-Was just trying to keep my change as small as possible towards the
-goal of replacing strncpy.
+Then entirely drop the now unused fcoe_parse_mode, being careful to
+change if condition from checking for FIP_CONN_TYPE_UNKNOWN to < 0 as
+sysfs_match_string can return -EINVAL.
 
-However, you're right. It's literally the line right above it and now
-it looks inconsistent .
+To get the compiler not to complain, make fip_conn_type_names
+const char * const. Perhaps, this should also be done for
+fcf_state_names.
 
-> >       if (bus_id !=3D -1)
-> >               snprintf(new_bus->id, MII_BUS_ID_SIZE, "gpio-%x", bus_id)=
-;
-> >       else
-> > -             strncpy(new_bus->id, "gpio", MII_BUS_ID_SIZE);
-> > +             strscpy(new_bus->id, "gpio", sizeof(new_bus->id));
->
-> If there is an argument for not using MII_BUS_ID_SIZE in one place,
-> then the very same argument applies to snprintf(). If one place
-> changes the other also needs to be changed.
->
+This also removes an instance of strncpy() which helps [1].
 
-Gotcha, I've sent a [v3].
+Link: https://github.com/KSPP/linux/issues/90 [1]
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Builds upon patch and feedback from [2]:
 
-> --
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+However, this is different enough to warrant its own patch and not be a
+continuation.
 
-[v3]: https://lore.kernel.org/all/20231211-strncpy-drivers-net-mdio-mdio-gp=
-io-c-v3-1-76dea53a1a52@google.com/
+[2]: https://lore.kernel.org/all/9f38f4aa-c6b5-4786-a641-d02d8bd92f7f@acm.org/
+---
+ drivers/scsi/fcoe/fcoe_sysfs.c | 26 ++++----------------------
+ 1 file changed, 4 insertions(+), 22 deletions(-)
 
-Thanks
-Justin
+diff --git a/drivers/scsi/fcoe/fcoe_sysfs.c b/drivers/scsi/fcoe/fcoe_sysfs.c
+index e17957f8085c..f9c5d00f658a 100644
+--- a/drivers/scsi/fcoe/fcoe_sysfs.c
++++ b/drivers/scsi/fcoe/fcoe_sysfs.c
+@@ -10,6 +10,7 @@
+ #include <linux/kernel.h>
+ #include <linux/etherdevice.h>
+ #include <linux/ctype.h>
++#include <linux/string.h>
+ 
+ #include <scsi/fcoe_sysfs.h>
+ #include <scsi/libfcoe.h>
+@@ -214,25 +215,13 @@ static const char *get_fcoe_##title##_name(enum table_type table_key)	\
+ 	return table[table_key];					\
+ }
+ 
+-static char *fip_conn_type_names[] = {
++static const char * const fip_conn_type_names[] = {
+ 	[ FIP_CONN_TYPE_UNKNOWN ] = "Unknown",
+ 	[ FIP_CONN_TYPE_FABRIC ]  = "Fabric",
+ 	[ FIP_CONN_TYPE_VN2VN ]   = "VN2VN",
+ };
+ fcoe_enum_name_search(ctlr_mode, fip_conn_type, fip_conn_type_names)
+ 
+-static enum fip_conn_type fcoe_parse_mode(const char *buf)
+-{
+-	int i;
+-
+-	for (i = 0; i < ARRAY_SIZE(fip_conn_type_names); i++) {
+-		if (strcasecmp(buf, fip_conn_type_names[i]) == 0)
+-			return i;
+-	}
+-
+-	return FIP_CONN_TYPE_UNKNOWN;
+-}
+-
+ static char *fcf_state_names[] = {
+ 	[ FCOE_FCF_STATE_UNKNOWN ]      = "Unknown",
+ 	[ FCOE_FCF_STATE_DISCONNECTED ] = "Disconnected",
+@@ -274,17 +263,10 @@ static ssize_t store_ctlr_mode(struct device *dev,
+ 			       const char *buf, size_t count)
+ {
+ 	struct fcoe_ctlr_device *ctlr = dev_to_ctlr(dev);
+-	char mode[FCOE_MAX_MODENAME_LEN + 1];
+ 
+ 	if (count > FCOE_MAX_MODENAME_LEN)
+ 		return -EINVAL;
+ 
+-	strncpy(mode, buf, count);
+-
+-	if (mode[count - 1] == '\n')
+-		mode[count - 1] = '\0';
+-	else
+-		mode[count] = '\0';
+ 
+ 	switch (ctlr->enabled) {
+ 	case FCOE_CTLR_ENABLED:
+@@ -297,8 +279,8 @@ static ssize_t store_ctlr_mode(struct device *dev,
+ 			return -ENOTSUPP;
+ 		}
+ 
+-		ctlr->mode = fcoe_parse_mode(mode);
+-		if (ctlr->mode == FIP_CONN_TYPE_UNKNOWN) {
++		ctlr->mode = sysfs_match_string(fip_conn_type_names, buf);
++		if (ctlr->mode < 0) {
+ 			LIBFCOE_SYSFS_DBG(ctlr, "Unknown mode %s provided.\n",
+ 					  buf);
+ 			return -EINVAL;
+
+---
+base-commit: bee0e7762ad2c6025b9f5245c040fcc36ef2bde8
+change-id: 20231024-strncpy-drivers-scsi-fcoe-fcoe_sysfs-c-0e1dffe82855
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
+
