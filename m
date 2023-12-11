@@ -1,129 +1,104 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DXZXHnvW"
-Received: from mail-oa1-x49.google.com (mail-oa1-x49.google.com [IPv6:2001:4860:4864:20::49])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1019DCD
-	for <linux-hardening@vger.kernel.org>; Mon, 11 Dec 2023 11:10:04 -0800 (PST)
-Received: by mail-oa1-x49.google.com with SMTP id 586e51a60fabf-1fb1c742f0bso7396752fac.0
-        for <linux-hardening@vger.kernel.org>; Mon, 11 Dec 2023 11:10:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aZWfVsi0"
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98E52E9
+	for <linux-hardening@vger.kernel.org>; Mon, 11 Dec 2023 11:11:39 -0800 (PST)
+Received: by mail-ed1-x52a.google.com with SMTP id 4fb4d7f45d1cf-54c5d041c23so6749742a12.2
+        for <linux-hardening@vger.kernel.org>; Mon, 11 Dec 2023 11:11:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1702321803; x=1702926603; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=pLJuiH0afxkaD2YOLBf8rgHfrGxhKASBgMKSWQ9l3mE=;
-        b=DXZXHnvWDv1GI9kRvrmRjIx3m4w0oTSRYgeKHGm4CwXW/tMsCg/+wi861aOf8Sgf7R
-         EfwTiB/u9o3jZYKgDVsLxHNgoQlclQM8Q9oB2zjj5uP4WXafk+AAS5w+1+rZiHLy/VMd
-         yGJ8WGJCdPYaYy8b+Q1fIKmxwoAXQO9go0xtIkcpYXffAdyTq+ClrG7If+nEbURcov3C
-         YN2iqYt/ymSkBL3b4QVuHaqOGyIEq/g1vuaoytBAYcizwy1flPTYkStBjKadZ72tn58F
-         igw70YImFR9E7k68vHr0d4oO9CRbDgPHldWj4Zqr9wj4cD4E9BAQGxFmfswK9wtX1Ng5
-         EZ8Q==
+        d=google.com; s=20230601; t=1702321898; x=1702926698; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=53+GQ9DSChkfFqfGSXLQ0QMyql+oTK4NA8OXD5BIsZM=;
+        b=aZWfVsi0nhc27jgWVTLOn5u5JI7n/FejXbGaYxrlG9ZYP57iGMBuWw/3c+6ABQFN0t
+         /IIap0t111JzD/rBOv574CoJefv9C4xr8851F9HnUkwWVjUmTAwmFx2GiYCtyqw01iPN
+         1yaEqSA5Fr5cxOf0XOJ2QqlDYbutU+J2+IZkGocCN37wwRwB/bJQoXVf3bGixpPidEQz
+         PugIscb+bt7JblMgLidAqvJ5QB3veg9Xui3L8wo51+zgEfdzKZtIw/m5OsMKUkDL0eRD
+         ni3eOEFGGQnAnaN42P9hEodtgq+jPjnZXKH3yTewWCskzh8NPLed0HfDJP/AGD5UUNhm
+         RBmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702321803; x=1702926603;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pLJuiH0afxkaD2YOLBf8rgHfrGxhKASBgMKSWQ9l3mE=;
-        b=E4ngeDna3YrfwIc36g7Xeghx1V9kz2x8EfoZ4tsmKfGA85Cj1TZaXGxiAmDFN0iyZL
-         0dvT2caQg0ShB3wTL0NnCw2jEUGWbzuctjx8WlKIiz3+3FnnuxKJNxydXUST5PjM4azc
-         LrJ3CqlZwiUSlBoUtYU4wjBDx5n6Jcfn7aagjZKx7+oyc8E2G0i8NeUZZeuzwSyyR3GI
-         /1jmxxlcN75hxKuTUWXN6xPcHUl7dW7ECcTgW1st3A/veGYCXTdXsQtziSl4Ex/5S6wn
-         h7JaZ284RqET/x92SKe2iNhigzoChQChkudezKxAB+4nNHmjU2cHcz4XSbPwHNu2eZGR
-         jWZw==
-X-Gm-Message-State: AOJu0YwUtnhY8ztRQ06CCBfCveCc8qcXra7LAsSMuwc90+iDXQ32qNol
-	Et4PpjoPN/d6kqJPjK2TinhAzhEZrmpumiyCgQ==
-X-Google-Smtp-Source: AGHT+IHvKqZP7f3jQfiI7xCBWbc5qtLEWaeWmYvrD28lL4j/tV/o+OHKvd7szRecAtwyGcYAOPdL5mAJDugJ7cETuQ==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6870:e415:b0:1fb:1176:50ff with
- SMTP id n21-20020a056870e41500b001fb117650ffmr5427291oag.6.1702321803322;
- Mon, 11 Dec 2023 11:10:03 -0800 (PST)
-Date: Mon, 11 Dec 2023 19:10:00 +0000
+        d=1e100.net; s=20230601; t=1702321898; x=1702926698;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=53+GQ9DSChkfFqfGSXLQ0QMyql+oTK4NA8OXD5BIsZM=;
+        b=mcc3D10nTYtXSi52x312MfxyfrlHLzvrCod9YvZbhQdkzSEAlhJoSsQV8Zve7nDj+i
+         kai5nq2js8wyDQFF5JCxAYLCZ7laYdG79b06pX78Kas6o7SRH+Ld7Pa3tddB1WjbEm4/
+         BHL+mHdD4HvSigWavZ22Ix3ScxbftpL+XpuA8BK3mUs4Z8pw6L3Phb3rXRdmqS0FOzYi
+         tkDGRSr5PFYH5hZYpgCyZlzSJDectXdHvw8q5nIb1pMxOaJtx0gc5UuAUCWgaxXIvkuM
+         75Jx1Gapf4uZjyZ5Vp3w0GnKZxO1ROmppLY0LDQAEMuZZv29Rc60nHPcX+0QFNrWp2Aa
+         Nmpg==
+X-Gm-Message-State: AOJu0Yw1EL3hqCYKuJ4f92aLkWXimmjL97CVhZWch2uUA47CHjkDCauJ
+	kEds/ncTPPlWxNIsP4VsJ8PmvRBkivkIzglLMQ+m8g==
+X-Google-Smtp-Source: AGHT+IFvmTrqFmb3KMd/5xiFQbhGpELJ/arHQLgqbMwaN7GGJJxxJmDMIqQ2CDnleZexNcIu6ZMsfzm7/A6/dIyFIGQ=
+X-Received: by 2002:a17:906:c141:b0:a12:7a14:5355 with SMTP id
+ dp1-20020a170906c14100b00a127a145355mr1440878ejc.39.1702321897853; Mon, 11
+ Dec 2023 11:11:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAIded2UC/5WNvQrCMBRGX0UyG8kPVuvke4hDc+9tGrBJSUqwl
- L67aR3ETZcPzjecM7NE0VFil93MImWXXPAF9H7HoGu8Je6wMFNCaSmk4mmMHoaJY3SZYuKeRt6
- jC++xQxngBhFrQgGVFqyohkite26Z271w59IY4rRVs1zfPwNZcskbUxtRQQvYmKsNwT7oAKFna yGrj1WJ049WVaygznhUiBpb+rIuy/ICm7kPhi8BAAA=
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1702321802; l=2882;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=eLgUSsGRn6KvttCFjRNfTegIE4/MfMaKpVwBfZ9Mjyw=; b=4k3Sy8wCNWvA4Zo9ZylXCECbUz9MlMkk4n1/lpfkHH9mPOzfccsgiWsA7pNu7eVmRvk5OA8R3
- ZGAN8m2trIxBVgmT/c0T+5IdaK9w5hrN5MwA5ExGe5c9OEfdps0SHAN
-X-Mailer: b4 0.12.3
-Message-ID: <20231211-strncpy-drivers-net-mdio-mdio-gpio-c-v3-1-76dea53a1a52@google.com>
-Subject: [PATCH v3] net: mdio-gpio: replace deprecated strncpy with strscpy
+MIME-Version: 1.0
+References: <20231207-strncpy-drivers-net-mdio-mdio-gpio-c-v2-1-c28d52dd3dfe@google.com>
+ <ZXJNwrcSfgUFhaz6@shell.armlinux.org.uk>
+In-Reply-To: <ZXJNwrcSfgUFhaz6@shell.armlinux.org.uk>
 From: Justin Stitt <justinstitt@google.com>
-To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
-	Russell King <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+Date: Mon, 11 Dec 2023 11:11:25 -0800
+Message-ID: <CAFhGd8r1t8Gs5_idKiLqWL8Aicj1A_hTuqvO0075TP23rvjxJg@mail.gmail.com>
+Subject: Re: [PATCH v2] net: mdio-gpio: replace deprecated strncpy with strscpy
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-strncpy() is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous string
-interfaces.
+On Thu, Dec 7, 2023 at 2:57=E2=80=AFPM Russell King (Oracle)
+<linux@armlinux.org.uk> wrote:
+>
+> On Thu, Dec 07, 2023 at 09:54:31PM +0000, Justin Stitt wrote:
+> > We expect new_bus->id to be NUL-terminated but not NUL-padded based on
+> > its prior assignment through snprintf:
+> > |       snprintf(new_bus->id, MII_BUS_ID_SIZE, "gpio-%x", bus_id);
+> >
+> > We can also use sizeof() instead of a length macro as this more closely
+> > ties the maximum buffer size to the destination buffer.
+>
+> Honestly, this looks machine generated and unreviewed by the submitter,
+> because...
+>
 
-We expect new_bus->id to be NUL-terminated but not NUL-padded based on
-its prior assignment through snprintf:
-|       snprintf(new_bus->id, MII_BUS_ID_SIZE, "gpio-%x", bus_id);
+Not machine generated.
 
-Due to this, a suitable replacement is `strscpy` [2] due to the fact
-that it guarantees NUL-termination on the destination buffer without
-unnecessarily NUL-padding.
+Was just trying to keep my change as small as possible towards the
+goal of replacing strncpy.
 
-We can also use sizeof() instead of a length macro as this more closely
-ties the maximum buffer size to the destination buffer. Do this for two
-instances.
+However, you're right. It's literally the line right above it and now
+it looks inconsistent .
 
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Changes in v3:
-- swap another instance of MII_BUS_ID_SIZE to sizeof() (thanks Russell)
-- rebase onto mainline bee0e7762ad2c602
-- Link to v2: https://lore.kernel.org/r/20231207-strncpy-drivers-net-mdio-mdio-gpio-c-v2-1-c28d52dd3dfe@google.com
+> >       if (bus_id !=3D -1)
+> >               snprintf(new_bus->id, MII_BUS_ID_SIZE, "gpio-%x", bus_id)=
+;
+> >       else
+> > -             strncpy(new_bus->id, "gpio", MII_BUS_ID_SIZE);
+> > +             strscpy(new_bus->id, "gpio", sizeof(new_bus->id));
+>
+> If there is an argument for not using MII_BUS_ID_SIZE in one place,
+> then the very same argument applies to snprintf(). If one place
+> changes the other also needs to be changed.
+>
 
-Changes in v2:
-- change subject line as it was causing problems in patchwork with
-  "superseded" label being improperly applied.
-- update commit msg with rationale around sizeof() (thanks Kees)
-- Link to v1 (lore): https://lore.kernel.org/r/20231012-strncpy-drivers-net-mdio-mdio-gpio-c-v1-1-ab9b06cfcdab@google.com
-- Link to v1 (patchwork): https://patchwork.kernel.org/project/netdevbpf/patch/20231012-strncpy-drivers-net-mdio-mdio-gpio-c-v1-1-ab9b06cfcdab@google.com/
-- Link to other patch with same subject message: https://patchwork.kernel.org/project/netdevbpf/patch/20231012-strncpy-drivers-net-phy-mdio_bus-c-v1-1-15242e6f9ec4@google.com/
----
-Note: build-tested only.
+Gotcha, I've sent a [v3].
 
-Found with: $ rg "strncpy\("
----
- drivers/net/mdio/mdio-gpio.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> --
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
 
-diff --git a/drivers/net/mdio/mdio-gpio.c b/drivers/net/mdio/mdio-gpio.c
-index 897b88c50bbb..778db310a28d 100644
---- a/drivers/net/mdio/mdio-gpio.c
-+++ b/drivers/net/mdio/mdio-gpio.c
-@@ -123,9 +123,9 @@ static struct mii_bus *mdio_gpio_bus_init(struct device *dev,
- 	new_bus->parent = dev;
- 
- 	if (bus_id != -1)
--		snprintf(new_bus->id, MII_BUS_ID_SIZE, "gpio-%x", bus_id);
-+		snprintf(new_bus->id, sizeof(new_bus->id), "gpio-%x", bus_id);
- 	else
--		strncpy(new_bus->id, "gpio", MII_BUS_ID_SIZE);
-+		strscpy(new_bus->id, "gpio", sizeof(new_bus->id));
- 
- 	if (pdata) {
- 		new_bus->phy_mask = pdata->phy_mask;
+[v3]: https://lore.kernel.org/all/20231211-strncpy-drivers-net-mdio-mdio-gp=
+io-c-v3-1-76dea53a1a52@google.com/
 
----
-base-commit: bee0e7762ad2c6025b9f5245c040fcc36ef2bde8
-change-id: 20231012-strncpy-drivers-net-mdio-mdio-gpio-c-bddd9ed0c630
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
-
+Thanks
+Justin
