@@ -1,51 +1,53 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="caREJv3q"
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD99BB7
-	for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 13:47:45 -0800 (PST)
-Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1d32c5ce32eso16598535ad.0
-        for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 13:47:45 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="K9hX+p2U"
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67755CE
+	for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 14:10:00 -0800 (PST)
+Received: by mail-pg1-x534.google.com with SMTP id 41be03b00d2f7-5c68b5cf14bso3528131a12.0
+        for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 14:10:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1702417665; x=1703022465; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1702419000; x=1703023800; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=AGmY1Uvusz9KRM1ewzjAcFGoyvGtvutXac/XpSMvAOA=;
-        b=caREJv3qFPyKTE3hXh33HZswLmCRKzRyqUZkaXZbBkVmLcuxWYm5g+UE6fCVS1miui
-         xDJdJLZtIPDCeOw2CRq1brq1uQdOjb8Qtb1vn1t2ZTM1F+zUP8rc44VhxhOa6n5fTJVu
-         8M31H4XOfBFfJDhNrgxEuJFBIeeH7eu0gG8WY=
+        bh=6AUQroc3YD1KExvZg7CZoKlnozDJQ13H2P0qin79AMs=;
+        b=K9hX+p2UoWn+0LgirSssfSrjwvLWHcyyrZQL992KJ8Epw8COFLUDzK+z5eOp4nGcpL
+         G5nGIi564ReabHJpSJNRTLCXkFedyxOnTPdXahUE73R+RkmU7pcykPSKznjdZW4ybSdR
+         QEjfQB8KsPar2JZy/k58VmpUqeZ3SbS9oT2pQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702417665; x=1703022465;
+        d=1e100.net; s=20230601; t=1702419000; x=1703023800;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=AGmY1Uvusz9KRM1ewzjAcFGoyvGtvutXac/XpSMvAOA=;
-        b=GZ88L3+aa6Xz3OX5w/OHXAxDfP2bMKXPmmMcKmt88OE6ITx8A7jcKOIUmWnqtIOvQK
-         FXhQtlt70OrwTJQujgLJW51LUeljGxRPmgi6BO/Fe3zf2hFhzpVCLLrMA///k0tkhVwX
-         pDUwqN9lzPbMhOc/IhvGvn9C/AfAzRFMSHuj2PM9pvW8oMz5Imgm0PEeti/+SyhczPvL
-         AzrHhWt0s/gX0JYNCCrsGkXDtSTp+EjefaSntMoF48nUXpYVdkVQRYNc7L+zzp04BaWA
-         ASfx30P5sUH8WH1HzfOLGyHcKeiCsj9BecMVI9M8CxsOr6fh2hKGKBjX2QWwS8MH+VVD
-         WvHQ==
-X-Gm-Message-State: AOJu0Yz8XeMxbE8li4rqNmopTc8r6OlwmxWjpqXoqwTpqbVovKSvRlXn
-	JVCbuWPCXgW3REtgf7r6zz/5vvSb6O6WvWQb7hg=
-X-Google-Smtp-Source: AGHT+IE61nVVxmRTcPG4VnpIimwru4O29PFp3Lw+eViuTU60sOFywAgCOIn3AH6tjTVblBEJ+C+GXA==
-X-Received: by 2002:a17:903:28c:b0:1d3:2a94:cb4f with SMTP id j12-20020a170903028c00b001d32a94cb4fmr4090795plr.56.1702417665346;
-        Tue, 12 Dec 2023 13:47:45 -0800 (PST)
+        bh=6AUQroc3YD1KExvZg7CZoKlnozDJQ13H2P0qin79AMs=;
+        b=MVyQ8uc3WOxo++KF4ldiuQeOiMg13zmRo+tBAeBTt5neAoBA7Gw1t6olRRozjRIlHb
+         puz4PRcBkb5QWV5iU3699aNmiqfRHjsQ4FphZEYsWVJRWVbNW6Xj0KmgkGfP9FIbhCc8
+         0ljQ7e/87CwkpczlMQmJyy2HHuCK/8KaOWHoZ1/kSrnPmiCSMptTvNewoeJG4dGnBJI8
+         14CsYEau3g/rAqTLU9jMQYyQ7NDwM3VWXM6Xc0FjCb85tAEYrr4+TZyWDzmWOYN3yePG
+         57OYIWcymIt961jmO+0BgjfMFYfRs5JPngCIcuNm5AJR8QebLbWu9bNTvOunN0870kzB
+         /Llw==
+X-Gm-Message-State: AOJu0YzF6ERZnfvz2H5vOIEbIBb3iMJ+JcUfKLvNFhRjeQ8CBYWNVwZj
+	A5TLMtrwLhrjAVeVEqJmn6ohgQ==
+X-Google-Smtp-Source: AGHT+IFf+R1A/XR8Jt/9Fz875DIYyIaNu91bfQZimMKleNPgzgfwmHSBFbbtlfKJAsRdJ8rj8kU4YA==
+X-Received: by 2002:a05:6a21:1f20:b0:190:2973:5132 with SMTP id ry32-20020a056a211f2000b0019029735132mr3660108pzb.107.1702418999822;
+        Tue, 12 Dec 2023 14:09:59 -0800 (PST)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id m2-20020a170902bb8200b001c62b9a51a4sm9047963pls.239.2023.12.12.13.47.44
+        by smtp.gmail.com with ESMTPSA id l15-20020a170902f68f00b001c9c5a1b477sm9139392plg.169.2023.12.12.14.09.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Dec 2023 13:47:44 -0800 (PST)
+        Tue, 12 Dec 2023 14:09:59 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
-To: "Md. Haris Iqbal" <haris.iqbal@ionos.com>
+To: Raju Rangoju <rajur@chelsio.com>
 Cc: Kees Cook <keescook@chromium.org>,
 	kernel test robot <lkp@intel.com>,
-	Jack Wang <jinpu.wang@ionos.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	linux-block@vger.kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] block/rnbd-srv: Check for unlikely string overflow
-Date: Tue, 12 Dec 2023 13:47:42 -0800
-Message-Id: <20231212214738.work.169-kees@kernel.org>
+Subject: [PATCH] cxgb3: Avoid potential string truncation in desc
+Date: Tue, 12 Dec 2023 14:09:57 -0800
+Message-Id: <20231212220954.work.219-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -53,94 +55,98 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3054; i=keescook@chromium.org;
- h=from:subject:message-id; bh=/mi3nc0g4oRgX5N+DxHSOijZJP8DaKE9s4ZcfEAmc4A=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBleNT+/+fQJv8lD/CzfZ+wBFsIWTKuuP6Ea0qKz
- lTeGvIjCMqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZXjU/gAKCRCJcvTf3G3A
- JgA+D/4iqIh/WEw2wL1eibi6OzbrGUOQTWd4ba9CTzyJ92esQQBSmozPvfzLFGV2UXj1OrKpEmH
- AMtBgNeaaA49Ug8x0M4g+fyZkvJEssUE6+9jB9ZNelIdig7FRZwcrIrz6+T/hJM/KMFTuRVsSvJ
- ldT2r11YMrPuxzk9+GRn0QlZLvKtZ+HyW4LAql58XrsGKUtwE/0AUSDhnyE4ehih+2/cDb8mSIT
- RgMqSW8ItO/+yvawzZoijSkXhKliUga/AwRxq9Xky8mML6up32c7adVodyE6g64g98TfQmpl3RN
- 442LKZUr1e1YLpXA4WGRReuOzB455vMhsYcwZFrFXA/CnmGBSf7JknovE6JpPxF4xFqk1uxIJS8
- /sZg1XlURnnmbMAna+VCwNaIcq+cwfxrX9nz3YFseA9aS+vjfG8ZGa6/Vasti5D0Mv//ylrQd7m
- Q96mW9Dr/L3zo6Wy56e/w35rOsObQK1fA+omKvNaYb+1wrwlC76hjtZLYpsA7UwGWz5+Upjyuxn
- NcBjg+MGB5zPph5Is914gk6mOcb5LoMBbnf6e9T6TEcStcBNjax4SfLSU0kaa+IPdNpIZ5vtH7L
- HqApoH2gXrCiag0vHQCMCdS16bVXMgRM4XWt/qL1M//Y7ty8r5DHq7Wh+iSxREGhBZJd9eWRXmK
- 8h1PKYy 3SmBCBQw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3659; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=21c8W8WpyGXddpdivNfij9Z1UgBS9gpwm3BMCk5vJXE=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBleNo1YdSK7BzSkz1ECFrVzjTTKZu017tFXk7P2
+ MuIZKMu6B+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZXjaNQAKCRCJcvTf3G3A
+ JrU6EACVuFlSTH8lVGBKuS1i7DgrLCjEdSotDiCDkaaC5uHjvNymaLN3etMW/BIzpqALRP1VXQe
+ +BvMKtmUKXuNjHll4E7H6ZWn6Kma7bX+MaEiZFqCLrr3SKj2GpKBCe3k+9ajHJLxL6MrghA1nlT
+ nudc/lmnJeT+ujiOIGLgzMqasPIwcD82I4kuMcDssolDzdPoh0LBAb2ZuxlLiX8CluyR/f1cz5u
+ T4NCzvqNNEUDMCiqADL31XkQbMs2NsLVa8xpcBkBYTWwyvjOss3bbagakrYrMGGCEJQBiAHttJz
+ 1NGygZ9pCL/CSfVnJiTosCA5woY14NI19hTegJlcHd9NT+fnuSBMO3JLs0FDBSjnPnFv9jxB9t5
+ ROWEUKlb9PQaQTI2EOOzen8AvyrzZA3t8DDef1Tf2lLMbJ8zSlPswymr2TIFLUAcH5gJg6t8Sil
+ Hl8zGlTTzkQoz5CBZ3EdjA0xhuOO1EKLuLKUwAbQ5NPI4W8KV1WMNGk8I5p8kELLmjlDmTsMtmw
+ xyUVwFHINyu5yD5VSUxTGAnJDcVM56uX1IuLYRtBHfriKRBwKv7CZ9BAYKTYqATeZKRIAKfe+Y9
+ KXP4u+c1c668QPpD99DQMb2n0Zf3z2iF76/vR2JA8ac3BljgNHdUD61MOfF7oHj8qBpFoV6G+Xu
+ 6LouMnn auXbTADA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Since "dev_search_path" can technically be as large as PATH_MAX,
-there was a risk of truncation when copying it and a second string
-into "full_path" since it was also PATH_MAX sized. The W=1 builds were
-reporting this warning:
+Builds with W=1 were warning about potential string truncations:
 
-drivers/block/rnbd/rnbd-srv.c: In function 'process_msg_open.isra':
-drivers/block/rnbd/rnbd-srv.c:616:51: warning: '%s' directive output may be truncated writing up to 254 bytes into a region of size between 0 and 4095 [-Wformat-truncation=]
-  616 |                 snprintf(full_path, PATH_MAX, "%s/%s",
-      |                                                   ^~
-In function 'rnbd_srv_get_full_path',
-    inlined from 'process_msg_open.isra' at drivers/block/rnbd/rnbd-srv.c:721:14: drivers/block/rnbd/rnbd-srv.c:616:17: note: 'snprintf' output between 2 and 4351 bytes into a destination of size 4096
-  616 |                 snprintf(full_path, PATH_MAX, "%s/%s",
-      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  617 |                          dev_search_path, dev_name);
-      |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c: In function 'cxgb_up':
+drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c:394:38: warning: '%d' directive output may be truncated writing between 1 and 11 bytes into a region of size between 5 and 20 [-Wformat-truncation=]
+  394 |                                  "%s-%d", d->name, pi->first_qset + i);
+      |                                      ^~
+In function 'name_msix_vecs',
+    inlined from 'cxgb_up' at drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c:1264:3: drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c:394:34: note: directive argument in the range [-2147483641, 509]
+  394 |                                  "%s-%d", d->name, pi->first_qset + i);
+      |                                  ^~~~~~~
+drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c:393:25: note: 'snprintf' output between 3 and 28 bytes into a destination of size 21
+  393 |                         snprintf(adap->msix_info[msi_idx].desc, n,
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  394 |                                  "%s-%d", d->name, pi->first_qset + i);
+      |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To fix this, unconditionally check for truncation (as was already done
-for the case where "%SESSNAME%" was present).
+Avoid open-coded %NUL-termination (this code was assuming snprintf
+wasn't %NUL terminating when it does -- likely thinking of strncpy),
+and grow the size of the string to handle a maximal value.
 
 Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202312100355.lHoJPgKy-lkp@intel.com/
-Cc: "Md. Haris Iqbal" <haris.iqbal@ionos.com>
-Cc: Jack Wang <jinpu.wang@ionos.com>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: linux-block@vger.kernel.org
+Closes: https://lore.kernel.org/oe-kbuild-all/202312100937.ZPZCARhB-lkp@intel.com/
+Cc: Raju Rangoju <rajur@chelsio.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/block/rnbd/rnbd-srv.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ drivers/net/ethernet/chelsio/cxgb3/adapter.h    | 2 +-
+ drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c | 9 ++++-----
+ 2 files changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/block/rnbd/rnbd-srv.c b/drivers/block/rnbd/rnbd-srv.c
-index 65de51f3dfd9..ab78eab97d98 100644
---- a/drivers/block/rnbd/rnbd-srv.c
-+++ b/drivers/block/rnbd/rnbd-srv.c
-@@ -585,6 +585,7 @@ static char *rnbd_srv_get_full_path(struct rnbd_srv_session *srv_sess,
+diff --git a/drivers/net/ethernet/chelsio/cxgb3/adapter.h b/drivers/net/ethernet/chelsio/cxgb3/adapter.h
+index 6d682b7c7aac..9d11e55981a0 100644
+--- a/drivers/net/ethernet/chelsio/cxgb3/adapter.h
++++ b/drivers/net/ethernet/chelsio/cxgb3/adapter.h
+@@ -237,7 +237,7 @@ struct adapter {
+ 	int msix_nvectors;
+ 	struct {
+ 		unsigned short vec;
+-		char desc[22];
++		char desc[IFNAMSIZ + 1 + 12];	/* Needs space for "%s-%d" */
+ 	} msix_info[SGE_QSETS + 1];
+ 
+ 	/* T3 modules */
+diff --git a/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c b/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
+index d117022d15d7..2236f1d35f2b 100644
+--- a/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
++++ b/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
+@@ -380,19 +380,18 @@ static irqreturn_t t3_async_intr_handler(int irq, void *cookie)
+  */
+ static void name_msix_vecs(struct adapter *adap)
  {
- 	char *full_path;
- 	char *a, *b;
-+	int len;
+-	int i, j, msi_idx = 1, n = sizeof(adap->msix_info[0].desc) - 1;
++	int i, j, msi_idx = 1;
  
- 	full_path = kmalloc(PATH_MAX, GFP_KERNEL);
- 	if (!full_path)
-@@ -596,19 +597,19 @@ static char *rnbd_srv_get_full_path(struct rnbd_srv_session *srv_sess,
- 	 */
- 	a = strnstr(dev_search_path, "%SESSNAME%", sizeof(dev_search_path));
- 	if (a) {
--		int len = a - dev_search_path;
-+		len = a - dev_search_path;
+-	snprintf(adap->msix_info[0].desc, n, "%s", adap->name);
+-	adap->msix_info[0].desc[n] = 0;
++	strscpy(adap->msix_info[0].desc, adap->name, sizeof(adap->msix_info[0].desc));
  
- 		len = snprintf(full_path, PATH_MAX, "%.*s/%s/%s", len,
- 			       dev_search_path, srv_sess->sessname, dev_name);
--		if (len >= PATH_MAX) {
--			pr_err("Too long path: %s, %s, %s\n",
--			       dev_search_path, srv_sess->sessname, dev_name);
--			kfree(full_path);
--			return ERR_PTR(-EINVAL);
--		}
- 	} else {
--		snprintf(full_path, PATH_MAX, "%s/%s",
--			 dev_search_path, dev_name);
-+		len = snprintf(full_path, PATH_MAX, "%s/%s",
-+			       dev_search_path, dev_name);
-+	}
-+	if (len >= PATH_MAX) {
-+		pr_err("Too long path: %s, %s, %s\n",
-+		       dev_search_path, srv_sess->sessname, dev_name);
-+		kfree(full_path);
-+		return ERR_PTR(-EINVAL);
+ 	for_each_port(adap, j) {
+ 		struct net_device *d = adap->port[j];
+ 		const struct port_info *pi = netdev_priv(d);
+ 
+ 		for (i = 0; i < pi->nqsets; i++, msi_idx++) {
+-			snprintf(adap->msix_info[msi_idx].desc, n,
++			snprintf(adap->msix_info[msi_idx].desc,
++				 sizeof(adap->msix_info[0].desc),
+ 				 "%s-%d", d->name, pi->first_qset + i);
+-			adap->msix_info[msi_idx].desc[n] = 0;
+ 		}
  	}
- 
- 	/* eliminitate duplicated slashes */
+ }
 -- 
 2.34.1
 
