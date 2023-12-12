@@ -1,192 +1,146 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ixmc1hdX"
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3A0AB3
-	for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 13:34:11 -0800 (PST)
-Received: by mail-pf1-x435.google.com with SMTP id d2e1a72fcca58-6d099d316a8so2208643b3a.0
-        for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 13:34:11 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="caREJv3q"
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD99BB7
+	for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 13:47:45 -0800 (PST)
+Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1d32c5ce32eso16598535ad.0
+        for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 13:47:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1702416851; x=1703021651; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BUBXCMgW8IRc4vkm7/izJLiVwvVVMNu8qOIh1J5boU8=;
-        b=ixmc1hdXiCVXM3eKXWlbOid0djUpVNi7m3rTzzqaS2gqAibgXUqZmJ6x9vSXiezYPd
-         k0J49kCxVo9svRTDafWND7Nh6BNt2FS6OEnGjrERvIdarplUylodWhf3Fkwozxmcr47S
-         phJTsXk0VVCrq/Hi+V5RpiHlZozV7m8Z9qyMA=
+        d=chromium.org; s=google; t=1702417665; x=1703022465; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AGmY1Uvusz9KRM1ewzjAcFGoyvGtvutXac/XpSMvAOA=;
+        b=caREJv3qFPyKTE3hXh33HZswLmCRKzRyqUZkaXZbBkVmLcuxWYm5g+UE6fCVS1miui
+         xDJdJLZtIPDCeOw2CRq1brq1uQdOjb8Qtb1vn1t2ZTM1F+zUP8rc44VhxhOa6n5fTJVu
+         8M31H4XOfBFfJDhNrgxEuJFBIeeH7eu0gG8WY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702416851; x=1703021651;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BUBXCMgW8IRc4vkm7/izJLiVwvVVMNu8qOIh1J5boU8=;
-        b=Azi7EIRAwnujYa/IrBxwuYVNN0EDYtqQ/Qhi4i7z9Xgw4dxwvBvCSqLqjqJjsE5ECf
-         1O3rE6B0AezNGYnNYlP2hN6ILN2KV68seosdkgHKOnSzjhRFYdTgROxbI3m8ptLVyA+0
-         rjFUxZQfNE8ICKsCTaUEP+Yu7JONJgWScej+jL+eVkPMHbX4C9cI74UJsg/3xz76MYtj
-         WwW5GBRtldemKg9PdtPH37/ucuIiF3JVznkMmEJyVSjueeclqLKI3/o3TM/sE0O0xZU5
-         1MWntrOxGb5JvFcUtFEBt3bUnKoeFfCAYKwI/7nJpllDD54jAoxPwMM4XhmwLiP8HHbJ
-         m/AA==
-X-Gm-Message-State: AOJu0Yz0et64EQOZK3fiVjJ3lpjyOTLFwTr3NR+JxJQtgILK3+qDDE1+
-	3u/BgsHwbzm9nqucSQxm+EQVYw==
-X-Google-Smtp-Source: AGHT+IFjOA5OyEhfv3ZEaJ2ntXMaFYPXBjpMdJB7JxNYpSO1j7kBSU8jL07cqpqSKP1PenK7ylyWxA==
-X-Received: by 2002:a05:6a00:8cb:b0:6ce:2e7b:55fa with SMTP id s11-20020a056a0008cb00b006ce2e7b55famr7820685pfu.39.1702416851123;
-        Tue, 12 Dec 2023 13:34:11 -0800 (PST)
+        d=1e100.net; s=20230601; t=1702417665; x=1703022465;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AGmY1Uvusz9KRM1ewzjAcFGoyvGtvutXac/XpSMvAOA=;
+        b=GZ88L3+aa6Xz3OX5w/OHXAxDfP2bMKXPmmMcKmt88OE6ITx8A7jcKOIUmWnqtIOvQK
+         FXhQtlt70OrwTJQujgLJW51LUeljGxRPmgi6BO/Fe3zf2hFhzpVCLLrMA///k0tkhVwX
+         pDUwqN9lzPbMhOc/IhvGvn9C/AfAzRFMSHuj2PM9pvW8oMz5Imgm0PEeti/+SyhczPvL
+         AzrHhWt0s/gX0JYNCCrsGkXDtSTp+EjefaSntMoF48nUXpYVdkVQRYNc7L+zzp04BaWA
+         ASfx30P5sUH8WH1HzfOLGyHcKeiCsj9BecMVI9M8CxsOr6fh2hKGKBjX2QWwS8MH+VVD
+         WvHQ==
+X-Gm-Message-State: AOJu0Yz8XeMxbE8li4rqNmopTc8r6OlwmxWjpqXoqwTpqbVovKSvRlXn
+	JVCbuWPCXgW3REtgf7r6zz/5vvSb6O6WvWQb7hg=
+X-Google-Smtp-Source: AGHT+IE61nVVxmRTcPG4VnpIimwru4O29PFp3Lw+eViuTU60sOFywAgCOIn3AH6tjTVblBEJ+C+GXA==
+X-Received: by 2002:a17:903:28c:b0:1d3:2a94:cb4f with SMTP id j12-20020a170903028c00b001d32a94cb4fmr4090795plr.56.1702417665346;
+        Tue, 12 Dec 2023 13:47:45 -0800 (PST)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id x3-20020a056a000bc300b006cea17d08ebsm8594307pfu.120.2023.12.12.13.34.10
+        by smtp.gmail.com with ESMTPSA id m2-20020a170902bb8200b001c62b9a51a4sm9047963pls.239.2023.12.12.13.47.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Dec 2023 13:34:10 -0800 (PST)
-Date: Tue, 12 Dec 2023 13:34:10 -0800
+        Tue, 12 Dec 2023 13:47:44 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Hannes Reinecke <hare@suse.de>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Bart Van Assche <bvanassche@acm.org>, linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] scsi: fcoe: use sysfs_match_string over fcoe_parse_mode
-Message-ID: <202312121330.2210A26@keescook>
-References: <20231211-strncpy-drivers-scsi-fcoe-fcoe_sysfs-c-v1-1-73b942238396@google.com>
+To: "Md. Haris Iqbal" <haris.iqbal@ionos.com>
+Cc: Kees Cook <keescook@chromium.org>,
+	kernel test robot <lkp@intel.com>,
+	Jack Wang <jinpu.wang@ionos.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] block/rnbd-srv: Check for unlikely string overflow
+Date: Tue, 12 Dec 2023 13:47:42 -0800
+Message-Id: <20231212214738.work.169-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231211-strncpy-drivers-scsi-fcoe-fcoe_sysfs-c-v1-1-73b942238396@google.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3054; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=/mi3nc0g4oRgX5N+DxHSOijZJP8DaKE9s4ZcfEAmc4A=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBleNT+/+fQJv8lD/CzfZ+wBFsIWTKuuP6Ea0qKz
+ lTeGvIjCMqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZXjU/gAKCRCJcvTf3G3A
+ JgA+D/4iqIh/WEw2wL1eibi6OzbrGUOQTWd4ba9CTzyJ92esQQBSmozPvfzLFGV2UXj1OrKpEmH
+ AMtBgNeaaA49Ug8x0M4g+fyZkvJEssUE6+9jB9ZNelIdig7FRZwcrIrz6+T/hJM/KMFTuRVsSvJ
+ ldT2r11YMrPuxzk9+GRn0QlZLvKtZ+HyW4LAql58XrsGKUtwE/0AUSDhnyE4ehih+2/cDb8mSIT
+ RgMqSW8ItO/+yvawzZoijSkXhKliUga/AwRxq9Xky8mML6up32c7adVodyE6g64g98TfQmpl3RN
+ 442LKZUr1e1YLpXA4WGRReuOzB455vMhsYcwZFrFXA/CnmGBSf7JknovE6JpPxF4xFqk1uxIJS8
+ /sZg1XlURnnmbMAna+VCwNaIcq+cwfxrX9nz3YFseA9aS+vjfG8ZGa6/Vasti5D0Mv//ylrQd7m
+ Q96mW9Dr/L3zo6Wy56e/w35rOsObQK1fA+omKvNaYb+1wrwlC76hjtZLYpsA7UwGWz5+Upjyuxn
+ NcBjg+MGB5zPph5Is914gk6mOcb5LoMBbnf6e9T6TEcStcBNjax4SfLSU0kaa+IPdNpIZ5vtH7L
+ HqApoH2gXrCiag0vHQCMCdS16bVXMgRM4XWt/qL1M//Y7ty8r5DHq7Wh+iSxREGhBZJd9eWRXmK
+ 8h1PKYy 3SmBCBQw==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Mon, Dec 11, 2023 at 08:06:28PM +0000, Justin Stitt wrote:
-> Instead of copying @buf into a new buffer and carefully managing its
-> newline/null-terminating status, we can just use sysfs_match_string()
-> as it uses sysfs_streq() internally which handles newline/null-term:
-> 
-> |  /**
-> |   * sysfs_streq - return true if strings are equal, modulo trailing newline
-> |   * @s1: one string
-> |   * @s2: another string
-> |   *
-> |   * This routine returns true iff two strings are equal, treating both
-> |   * NUL and newline-then-NUL as equivalent string terminations.  It's
-> |   * geared for use with sysfs input strings, which generally terminate
-> |   * with newlines but are compared against values without newlines.
-> |   */
-> |  bool sysfs_streq(const char *s1, const char *s2)
-> |  ...
-> 
-> Then entirely drop the now unused fcoe_parse_mode, being careful to
-> change if condition from checking for FIP_CONN_TYPE_UNKNOWN to < 0 as
-> sysfs_match_string can return -EINVAL.
-> 
-> To get the compiler not to complain, make fip_conn_type_names
-> const char * const. Perhaps, this should also be done for
-> fcf_state_names.
-> 
-> This also removes an instance of strncpy() which helps [1].
-> 
-> Link: https://github.com/KSPP/linux/issues/90 [1]
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
-> Builds upon patch and feedback from [2]:
-> 
-> However, this is different enough to warrant its own patch and not be a
-> continuation.
-> 
-> [2]: https://lore.kernel.org/all/9f38f4aa-c6b5-4786-a641-d02d8bd92f7f@acm.org/
-> ---
->  drivers/scsi/fcoe/fcoe_sysfs.c | 26 ++++----------------------
->  1 file changed, 4 insertions(+), 22 deletions(-)
+Since "dev_search_path" can technically be as large as PATH_MAX,
+there was a risk of truncation when copying it and a second string
+into "full_path" since it was also PATH_MAX sized. The W=1 builds were
+reporting this warning:
 
-My favorite kind of insert/delete ratio! :)
+drivers/block/rnbd/rnbd-srv.c: In function 'process_msg_open.isra':
+drivers/block/rnbd/rnbd-srv.c:616:51: warning: '%s' directive output may be truncated writing up to 254 bytes into a region of size between 0 and 4095 [-Wformat-truncation=]
+  616 |                 snprintf(full_path, PATH_MAX, "%s/%s",
+      |                                                   ^~
+In function 'rnbd_srv_get_full_path',
+    inlined from 'process_msg_open.isra' at drivers/block/rnbd/rnbd-srv.c:721:14: drivers/block/rnbd/rnbd-srv.c:616:17: note: 'snprintf' output between 2 and 4351 bytes into a destination of size 4096
+  616 |                 snprintf(full_path, PATH_MAX, "%s/%s",
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  617 |                          dev_search_path, dev_name);
+      |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-> 
-> diff --git a/drivers/scsi/fcoe/fcoe_sysfs.c b/drivers/scsi/fcoe/fcoe_sysfs.c
-> index e17957f8085c..f9c5d00f658a 100644
-> --- a/drivers/scsi/fcoe/fcoe_sysfs.c
-> +++ b/drivers/scsi/fcoe/fcoe_sysfs.c
-> @@ -10,6 +10,7 @@
->  #include <linux/kernel.h>
->  #include <linux/etherdevice.h>
->  #include <linux/ctype.h>
-> +#include <linux/string.h>
->  
->  #include <scsi/fcoe_sysfs.h>
->  #include <scsi/libfcoe.h>
-> @@ -214,25 +215,13 @@ static const char *get_fcoe_##title##_name(enum table_type table_key)	\
->  	return table[table_key];					\
->  }
->  
-> -static char *fip_conn_type_names[] = {
-> +static const char * const fip_conn_type_names[] = {
->  	[ FIP_CONN_TYPE_UNKNOWN ] = "Unknown",
->  	[ FIP_CONN_TYPE_FABRIC ]  = "Fabric",
->  	[ FIP_CONN_TYPE_VN2VN ]   = "VN2VN",
->  };
->  fcoe_enum_name_search(ctlr_mode, fip_conn_type, fip_conn_type_names)
->  
-> -static enum fip_conn_type fcoe_parse_mode(const char *buf)
-> -{
-> -	int i;
-> -
-> -	for (i = 0; i < ARRAY_SIZE(fip_conn_type_names); i++) {
-> -		if (strcasecmp(buf, fip_conn_type_names[i]) == 0)
-> -			return i;
-> -	}
-> -
-> -	return FIP_CONN_TYPE_UNKNOWN;
-> -}
-> -
->  static char *fcf_state_names[] = {
->  	[ FCOE_FCF_STATE_UNKNOWN ]      = "Unknown",
->  	[ FCOE_FCF_STATE_DISCONNECTED ] = "Disconnected",
-> @@ -274,17 +263,10 @@ static ssize_t store_ctlr_mode(struct device *dev,
->  			       const char *buf, size_t count)
->  {
->  	struct fcoe_ctlr_device *ctlr = dev_to_ctlr(dev);
-> -	char mode[FCOE_MAX_MODENAME_LEN + 1];
->  
->  	if (count > FCOE_MAX_MODENAME_LEN)
->  		return -EINVAL;
->  
-> -	strncpy(mode, buf, count);
-> -
-> -	if (mode[count - 1] == '\n')
-> -		mode[count - 1] = '\0';
-> -	else
-> -		mode[count] = '\0';
->  
->  	switch (ctlr->enabled) {
->  	case FCOE_CTLR_ENABLED:
-> @@ -297,8 +279,8 @@ static ssize_t store_ctlr_mode(struct device *dev,
->  			return -ENOTSUPP;
->  		}
->  
-> -		ctlr->mode = fcoe_parse_mode(mode);
-> -		if (ctlr->mode == FIP_CONN_TYPE_UNKNOWN) {
-> +		ctlr->mode = sysfs_match_string(fip_conn_type_names, buf);
-> +		if (ctlr->mode < 0) {
+To fix this, unconditionally check for truncation (as was already done
+for the case where "%SESSNAME%" was present).
 
-I think this needs to include FIP_CONN_TYPE_UNKNOWN to keep the logic
-the same? (i.e. it could match the string "Unknown", so it would return
-the enum value for that, 0 in this case.)
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202312100355.lHoJPgKy-lkp@intel.com/
+Cc: "Md. Haris Iqbal" <haris.iqbal@ionos.com>
+Cc: Jack Wang <jinpu.wang@ionos.com>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: linux-block@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/block/rnbd/rnbd-srv.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-Otherwise, yeah, this looks good.
-
--Kees
-
->  			LIBFCOE_SYSFS_DBG(ctlr, "Unknown mode %s provided.\n",
->  					  buf);
->  			return -EINVAL;
-> 
-> ---
-> base-commit: bee0e7762ad2c6025b9f5245c040fcc36ef2bde8
-> change-id: 20231024-strncpy-drivers-scsi-fcoe-fcoe_sysfs-c-0e1dffe82855
-> 
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
-> 
-> 
-
+diff --git a/drivers/block/rnbd/rnbd-srv.c b/drivers/block/rnbd/rnbd-srv.c
+index 65de51f3dfd9..ab78eab97d98 100644
+--- a/drivers/block/rnbd/rnbd-srv.c
++++ b/drivers/block/rnbd/rnbd-srv.c
+@@ -585,6 +585,7 @@ static char *rnbd_srv_get_full_path(struct rnbd_srv_session *srv_sess,
+ {
+ 	char *full_path;
+ 	char *a, *b;
++	int len;
+ 
+ 	full_path = kmalloc(PATH_MAX, GFP_KERNEL);
+ 	if (!full_path)
+@@ -596,19 +597,19 @@ static char *rnbd_srv_get_full_path(struct rnbd_srv_session *srv_sess,
+ 	 */
+ 	a = strnstr(dev_search_path, "%SESSNAME%", sizeof(dev_search_path));
+ 	if (a) {
+-		int len = a - dev_search_path;
++		len = a - dev_search_path;
+ 
+ 		len = snprintf(full_path, PATH_MAX, "%.*s/%s/%s", len,
+ 			       dev_search_path, srv_sess->sessname, dev_name);
+-		if (len >= PATH_MAX) {
+-			pr_err("Too long path: %s, %s, %s\n",
+-			       dev_search_path, srv_sess->sessname, dev_name);
+-			kfree(full_path);
+-			return ERR_PTR(-EINVAL);
+-		}
+ 	} else {
+-		snprintf(full_path, PATH_MAX, "%s/%s",
+-			 dev_search_path, dev_name);
++		len = snprintf(full_path, PATH_MAX, "%s/%s",
++			       dev_search_path, dev_name);
++	}
++	if (len >= PATH_MAX) {
++		pr_err("Too long path: %s, %s, %s\n",
++		       dev_search_path, srv_sess->sessname, dev_name);
++		kfree(full_path);
++		return ERR_PTR(-EINVAL);
+ 	}
+ 
+ 	/* eliminitate duplicated slashes */
 -- 
-Kees Cook
+2.34.1
+
