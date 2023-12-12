@@ -1,186 +1,138 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T0IgtaJB"
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19B02E9
-	for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 15:19:08 -0800 (PST)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5e16d7537bcso24933267b3.3
-        for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 15:19:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1702423147; x=1703027947; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=/YmSdHW0YnrgQyxCZCfpHUpcVYgfb1QxvP3xvZamGAg=;
-        b=T0IgtaJB2ly20lZB2MHikNj+HcKJKO2+Y6NXtlLuNyFF92RdVOXjPx9PkOldabIBAK
-         herFA6ZFzq6TMmaMoD9o1UlnuqdefWd8dSE5qdgswnzGNrIpMpOyY+bWMXl3+lJ8oM39
-         3ZE8UA6zhINly1tf364Ju+LLyMXdRBfJwyRiOpq3Su67n3rr1PZiwM5bk5tYdB5AfBFN
-         z/2slIL/OcmfcHIvcW3BGU3HyVrWx9S+Fnc+PHbbs/zdFYqaMUdqkoULagpXmKz6O9Vx
-         gzBjacsWZsoJz98N7xd0qLeluBvd/58qLCXYD7YOOcKnZVY+g0QajHnDGzPslWJ14T+h
-         pn3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702423147; x=1703027947;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/YmSdHW0YnrgQyxCZCfpHUpcVYgfb1QxvP3xvZamGAg=;
-        b=eX55dtAYSaQoQ4H/9T1LFyJAijF/2k/zojsdyOBGIOb+bwKe2tKb8zEJl5OkIDprHX
-         MXCmuqoS0SjCc7je265dsiE0uVzicPUAFqKwg6muyem+BQPrAfNLSfpLg4QzsFTT8R2d
-         1JPM9vk1DRjdJWQHc1HeckrLLEVhGl4+oAol/aUu9Ox9KWuHtDjMwWIVSPLwAEax6nMI
-         RQVgZ7T8Uz6lINUbJ7OnLJZy+ApQ8RcRF/0SJuwm0VdB1uIVnvpHldMxQi5XbZtREAh3
-         4Z5k1nOFybBlnVeRuH/zNkA9PSKELOck1/VLFee+fLv7p5eJT48Z1nLNQNrCjDw3itEV
-         l+9g==
-X-Gm-Message-State: AOJu0YxEw838P1PFBO/0qyRlVYOVIEtBQFD9Uk+QI2DxRHBpCYDmArFE
-	z+FiNO03BJcqO8ySrIPgF+5WMCq5Fev03u78cw==
-X-Google-Smtp-Source: AGHT+IEpLi0Rm/0x6D0ko9SJaw0nsb4I84pLyrEFP8w1pM+ISdP1wxAh6qDWor2wI6KeyuvP6T8XV9dzFXyb/rXUVQ==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:690c:b8d:b0:5d4:2ff3:d280 with
- SMTP id ck13-20020a05690c0b8d00b005d42ff3d280mr63466ywb.7.1702423147099; Tue,
- 12 Dec 2023 15:19:07 -0800 (PST)
-Date: Tue, 12 Dec 2023 23:19:06 +0000
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Cdw8Bx7J"
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAFF9FD;
+	Tue, 12 Dec 2023 15:27:27 -0800 (PST)
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BCH5n9c013622;
+	Tue, 12 Dec 2023 23:27:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:from:to:cc:references
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=SWhMvNaoYsP+58utWELVB8tF6xTUlOKZmRPgNdYB/MM=; b=Cd
+	w8Bx7J27a3PIgZ4Ea88ItRJ5WCvxIj5nSccJKHeTsVu4XmD3MOPJ2LjaZriSb7yV
+	iQ6ryUW/I4N+6jBRCzS5IX9hGhh5+IeJJ9WVsMsEKrJwOt8/sn8QB/v4T8Kpggqx
+	fwIrYC9fWCmdTCMvryB2DbEsdj32GN4aOy5L4b6UZJmsXlvgocCcANbP2pvfuxNR
+	9EY/5yCH6msj43h9w9RlrfRpWSnn0D8NUwCpRrKunzPa+x87wU3/09sk66XfEDM8
+	iAHpQ3LmiDMRyIc2siukc+zOfCuFAUf0J7Tby33lSgbBJUOSKggOID8TORraEC4J
+	FUI+epEv7MhrcDQCOqsw==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3uxctatx5g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 12 Dec 2023 23:27:02 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3BCNR1VO024896
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 12 Dec 2023 23:27:01 GMT
+Received: from [10.110.106.103] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 12 Dec
+ 2023 15:27:00 -0800
+Message-ID: <ada88ef1-d290-441a-b6f1-97d7f478cccc@quicinc.com>
+Date: Tue, 12 Dec 2023 15:26:59 -0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAGnqeGUC/5WNQQqDMBBFryJZNyWZqNWueo8ipU0mGmiNZCRUx
- Ls3ZtWtDAy8v3hvZYTBIbFrsbKA0ZHzYwI4FUwPz7FH7kxiBgKUFFBymsOop4Wb4CIG4qTJcas
- 95veghSxxzQVKYy020FQVS7IpoHXfHLp3iQdHsw9L7ka5r4cTUfJ0KATUiEKBufXe9288a//Zk 9kHUh7yXdSrLQFUo9r639dt2/YDe0N+py0BAAA=
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1702423146; l=4253;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=YiBU+J66ZaYx7q1aD7BISZtA4pcTkaCKnD8Tq9532Dc=; b=qaycx8xPm6Y1bhVtOlCyfrYYpwIzDp8dE+H1QlGhA1uuN5u5JDihjUla+CzhLRbk00RO80gRk
- yTiIV4l3Z3HCtuOp0xW65fVh9g+EjUXg1EuEn2oht/+IoHbtLzb70wk
-X-Mailer: b4 0.12.3
-Message-ID: <20231212-strncpy-drivers-scsi-fcoe-fcoe_sysfs-c-v2-1-1f2d6b2fc409@google.com>
-Subject: [PATCH v2] scsi: fcoe: use sysfs_match_string over fcoe_parse_mode
-From: Justin Stitt <justinstitt@google.com>
-To: Hannes Reinecke <hare@suse.de>, "James E.J. Bottomley" <jejb@linux.ibm.com>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>, Bart Van Assche <bvanassche@acm.org>
-Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC - is this a bug?] wifi: ath10k: Asking for some light on
+ this, please :)
+Content-Language: en-US
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Johannes Berg
+	<johannes@sipsolutions.net>,
+        Kalle Valo <kvalo@kernel.org>
+CC: <ath10k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        "Gustavo A. R. Silva"
+	<gustavoars@kernel.org>,
+        <linux-hardening@vger.kernel.org>
+References: <626ae2e7-66f8-423b-b17f-e75c1a6d29b3@embeddedor.com>
+ <26b15f4702cef17fe70b496a62f03735874bd16a.camel@sipsolutions.net>
+ <07e9bb04-f9fc-46d5-bfb9-a00a63a707c0@embeddedor.com>
+ <f8daa53ee8a8019e4fd2b823c1fcb85a6cc4d806.camel@sipsolutions.net>
+ <8219c79e-0359-4136-afa4-fba76fde191a@embeddedor.com>
+ <afaadf5e-556c-4fd6-bfd3-9c486a35a08f@quicinc.com>
+In-Reply-To: <afaadf5e-556c-4fd6-bfd3-9c486a35a08f@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 5ea7PuvC2gPKd5hS6zoaxzmbgueU3cQu
+X-Proofpoint-ORIG-GUID: 5ea7PuvC2gPKd5hS6zoaxzmbgueU3cQu
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 malwarescore=0
+ lowpriorityscore=0 phishscore=0 impostorscore=0 bulkscore=0 mlxscore=0
+ adultscore=0 suspectscore=0 priorityscore=1501 clxscore=1011
+ mlxlogscore=789 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2312120183
 
-Instead of copying @buf into a new buffer and carefully managing its
-newline/null-terminating status, we can just use sysfs_match_string()
-as it uses sysfs_streq() internally which handles newline/null-term:
+On 10/25/2023 8:52 AM, Jeff Johnson wrote:
+> On 10/24/2023 7:37 PM, Gustavo A. R. Silva wrote:
+>>
+>>
+>> On 10/24/23 14:49, Johannes Berg wrote:
+>>> On Tue, 2023-10-24 at 14:41 -0600, Gustavo A. R. Silva wrote:
+>>>>
+>>>> It seems we run into the same issue in the function below, even in the
+>>>> case this `memset()` is unnecessary (which it seems it's not):
+>>>>
+>>>>     8920         memset(skb->data, 0, sizeof(*cmd));
+>>>>
+>>>> Notice that if `cap->peer_chan_len == 0` or `cap->peer_chan_len == 1`,
+>>>> in the original code, we have `len == sizeof(*cmd) == 128`:
+>>>
+>>> Right.
+>>>
+>>>> -       /* tdls peer update cmd has place holder for one channel*/
+>>>> -       chan_len = cap->peer_chan_len ? (cap->peer_chan_len - 1) : 0;
+>>>> -
+>>>> -       len = sizeof(*cmd) + chan_len * sizeof(*chan);
+>>>> +       len = struct_size(cmd, peer_capab.peer_chan_list, 
+>>>> cap->peer_chan_len);
+>>>>
+>>>>           skb = ath10k_wmi_alloc_skb(ar, len);
+>>>>           if (!skb)
+>>>>
+>>>> which makes `round_len == roundup(len, 4) == struct_size(cmd,...,...) 
+>>>> == 104`
+>>>> when `cap->peer_chan_len == 0`
+>>>
+>>> And yeah, that's really the issue, it only matters for ==0. For a moment
+>>> there I thought that doesn't even make sense, but it looks like it never
+>>> even becomes non-zero.
+>>>
+>>> No idea then, sorry. You'd hope firmware doesn't care about the actual
+>>> message size if the inner data says "0 entries", but who knows? And how
+>>> many firmware versions are there? :)
+>>>
+>>> So I guess you'd want to stay compatible, even if it means having a
+>>>
+>>>     chan_len = min(cap->peer_chan_len, 1);
+>>>
+>>> for the struct_size()?
+>>
+>> Yeah, that's an alternative.
+>>
+>> I'll wait for the maintainers to chime in and see if they have a different
+>> opinion.
+> 
+> I'm seeing clarification from the development team.
+> 
+> /jeff
+> 
 
-|  /**
-|   * sysfs_streq - return true if strings are equal, modulo trailing newline
-|   * @s1: one string
-|   * @s2: another string
-|   *
-|   * This routine returns true iff two strings are equal, treating both
-|   * NUL and newline-then-NUL as equivalent string terminations.  It's
-|   * geared for use with sysfs input strings, which generally terminate
-|   * with newlines but are compared against values without newlines.
-|   */
-|  bool sysfs_streq(const char *s1, const char *s2)
-|  ...
+I was not able to get a response from the firmware team.
 
-Then entirely drop the now unused fcoe_parse_mode, being careful to
-change if condition from checking for FIP_CONN_TYPE_UNKNOWN to < 0 as
-sysfs_match_string can return -EINVAL. Also check explicitly if
-ctlr->mode is equal to FIP_CONN_TYPE_UNKNOWN -- this is probably
-preferred to "<=" as the behavior is more obvious while maintaining
-functionality.
+I have gone ahead and created a series of patches to fix the remaining
+flexible array issues in ath10k including the one discussed here. I
+should be able to post those sometime this week.
 
-To get the compiler not to complain, make fip_conn_type_names
-const char * const. Perhaps, this should also be done for
-fcf_state_names.
-
-This also removes an instance of strncpy() which helps [1].
-
-Link: https://github.com/KSPP/linux/issues/90 [1]
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Changes in v2:
-- update if-cond to check for unknown type (thanks Kees)
-- Link to v1: https://lore.kernel.org/r/20231211-strncpy-drivers-scsi-fcoe-fcoe_sysfs-c-v1-1-73b942238396@google.com
----
-Builds upon patch and feedback from [2]:
-
-However, this is different enough to warrant its own patch and not be a
-continuation.
-
-[2]: https://lore.kernel.org/all/9f38f4aa-c6b5-4786-a641-d02d8bd92f7f@acm.org/
----
- drivers/scsi/fcoe/fcoe_sysfs.c | 26 ++++----------------------
- 1 file changed, 4 insertions(+), 22 deletions(-)
-
-diff --git a/drivers/scsi/fcoe/fcoe_sysfs.c b/drivers/scsi/fcoe/fcoe_sysfs.c
-index e17957f8085c..408a806bf4c2 100644
---- a/drivers/scsi/fcoe/fcoe_sysfs.c
-+++ b/drivers/scsi/fcoe/fcoe_sysfs.c
-@@ -10,6 +10,7 @@
- #include <linux/kernel.h>
- #include <linux/etherdevice.h>
- #include <linux/ctype.h>
-+#include <linux/string.h>
- 
- #include <scsi/fcoe_sysfs.h>
- #include <scsi/libfcoe.h>
-@@ -214,25 +215,13 @@ static const char *get_fcoe_##title##_name(enum table_type table_key)	\
- 	return table[table_key];					\
- }
- 
--static char *fip_conn_type_names[] = {
-+static const char * const fip_conn_type_names[] = {
- 	[ FIP_CONN_TYPE_UNKNOWN ] = "Unknown",
- 	[ FIP_CONN_TYPE_FABRIC ]  = "Fabric",
- 	[ FIP_CONN_TYPE_VN2VN ]   = "VN2VN",
- };
- fcoe_enum_name_search(ctlr_mode, fip_conn_type, fip_conn_type_names)
- 
--static enum fip_conn_type fcoe_parse_mode(const char *buf)
--{
--	int i;
--
--	for (i = 0; i < ARRAY_SIZE(fip_conn_type_names); i++) {
--		if (strcasecmp(buf, fip_conn_type_names[i]) == 0)
--			return i;
--	}
--
--	return FIP_CONN_TYPE_UNKNOWN;
--}
--
- static char *fcf_state_names[] = {
- 	[ FCOE_FCF_STATE_UNKNOWN ]      = "Unknown",
- 	[ FCOE_FCF_STATE_DISCONNECTED ] = "Disconnected",
-@@ -274,17 +263,10 @@ static ssize_t store_ctlr_mode(struct device *dev,
- 			       const char *buf, size_t count)
- {
- 	struct fcoe_ctlr_device *ctlr = dev_to_ctlr(dev);
--	char mode[FCOE_MAX_MODENAME_LEN + 1];
- 
- 	if (count > FCOE_MAX_MODENAME_LEN)
- 		return -EINVAL;
- 
--	strncpy(mode, buf, count);
--
--	if (mode[count - 1] == '\n')
--		mode[count - 1] = '\0';
--	else
--		mode[count] = '\0';
- 
- 	switch (ctlr->enabled) {
- 	case FCOE_CTLR_ENABLED:
-@@ -297,8 +279,8 @@ static ssize_t store_ctlr_mode(struct device *dev,
- 			return -ENOTSUPP;
- 		}
- 
--		ctlr->mode = fcoe_parse_mode(mode);
--		if (ctlr->mode == FIP_CONN_TYPE_UNKNOWN) {
-+		ctlr->mode = sysfs_match_string(fip_conn_type_names, buf);
-+		if (ctlr->mode < 0 || ctlr->mode == FIP_CONN_TYPE_UNKNOWN) {
- 			LIBFCOE_SYSFS_DBG(ctlr, "Unknown mode %s provided.\n",
- 					  buf);
- 			return -EINVAL;
-
----
-base-commit: bee0e7762ad2c6025b9f5245c040fcc36ef2bde8
-change-id: 20231024-strncpy-drivers-scsi-fcoe-fcoe_sysfs-c-0e1dffe82855
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
-
+/jeff
