@@ -1,183 +1,127 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hERGBRR+"
-Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A8CEEB
-	for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 12:26:37 -0800 (PST)
-Received: by mail-wm1-x335.google.com with SMTP id 5b1f17b1804b1-40c3f68b69aso33858075e9.1
-        for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 12:26:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1702412795; x=1703017595; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hgxv7EF4Irll71B8Hw+ZNuQf2aAKASeN0rbDIOWc5pE=;
-        b=hERGBRR+lL8HmQwAP+AM2yKHA9/mmXGrOYbMQVcKKKIdVeZNFZQnM3E57lc00fdVi/
-         71j5ef5s2b7Ddb4zWRcU5jboydH9Ud1kQP/tyjMcA093zV4hEwwlcGJkjcLHk+jk+TnX
-         ZYVCV/k/HrElWQycPH12WRHXxWKUZGB5dEbAddIyaQnsnosflbpDo2NNomYvF1BIEi/J
-         ga1gu4p1aDc/BiMsKtocj3eOGhnylyUF0D1JeSRvRlSI29U3S5qvXy8BdKz7HwkeHQha
-         M4kHcW3bxsE7YE3fwYCn4zCGz3VP1GRFOWBBSsJCoXxNFhBzzlltAWuvPh1KQp0qwIWO
-         e1IQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702412795; x=1703017595;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hgxv7EF4Irll71B8Hw+ZNuQf2aAKASeN0rbDIOWc5pE=;
-        b=BQ/uPq1Ab6yOOn/lWgvdNBidAQvfckOrtze3LZFIv6EoOkOwrAH7P/HX4NCgvpnI1f
-         2JwYwT0tW/57j97AnVUXKYPa6EKFhSSPN36MvJJkANRxRZPwmrlH06RqjpkInhImu6O3
-         b1btL/iKArXTVKhy+1HOD9Mwwtp27R/Hp4tQPj14qmk/dskwr6afHTcV7SSjCKwonYKj
-         VyqKGg9XBfeAiJx7OOuocJtIzeOEJv/DThnrWJ3UyYTrSYdM5aylLoiNJ1IMWm37DTf4
-         lzlHsbqj45VkgpNemX84VIJWNla80LYNp8V5AcjjNuOEcu8fgaT9oxhao5gT/CP2Y2qj
-         gnBA==
-X-Gm-Message-State: AOJu0YyVq716GA2YOIBwJrWajrITq2UNbYPvj+s0wJtQOR2RpS+BWPKr
-	n1E7IAVJXuiZgF+/4CBUBoPITA==
-X-Google-Smtp-Source: AGHT+IGWv/YdluhtwVphE7CoDTj82BpgPHXdubShtukPi5QX8GCQ6dewT+kR6iaFEQFQPaMMh7Vcgw==
-X-Received: by 2002:a7b:c3d8:0:b0:40c:3820:eff0 with SMTP id t24-20020a7bc3d8000000b0040c3820eff0mr3489292wmj.105.1702412795584;
-        Tue, 12 Dec 2023 12:26:35 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.218.27])
-        by smtp.gmail.com with ESMTPSA id w6-20020a5d6806000000b00336103442d2sm10177965wru.76.2023.12.12.12.26.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Dec 2023 12:26:35 -0800 (PST)
-Message-ID: <5b98538a-8ffe-42ec-b020-514dcfcebba3@linaro.org>
-Date: Tue, 12 Dec 2023 21:26:32 +0100
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1238FA7
+	for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 13:05:26 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rD9wF-0001Oy-5K; Tue, 12 Dec 2023 22:05:11 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rD9wE-00FQEY-2C; Tue, 12 Dec 2023 22:05:10 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rD9wD-001snP-Ol; Tue, 12 Dec 2023 22:05:09 +0100
+Date: Tue, 12 Dec 2023 22:05:09 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: linux-doc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	platform-driver-x86@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-leds@vger.kernel.org, chrome-platform@lists.linux.dev,
+	linux-samsung-soc@vger.kernel.org,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-staging@lists.linux.dev,
+	linux-rockchip@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	linux-pwm@vger.kernel.org, greybus-dev@lists.linaro.org,
+	linux-mediatek@lists.infradead.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	asahi@lists.linux.dev, kernel@pengutronix.de
+Subject: Re: [PATCH v4 000/115] pwm: Fix lifetime issues for pwm_chips
+Message-ID: <20231212210509.focpb63fbmahqij3@pengutronix.de>
+References: <cover.1701860672.git.u.kleine-koenig@pengutronix.de>
+ <ZXM4CdJxg-XrYhkn@orome.fritz.box>
+ <20231208185033.e6ty2cajcfle6dgk@pengutronix.de>
+ <ZXbzcFTnDTKoZAta@orome.fritz.box>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 8/8] ARM: dts: aspeed: System1: PS, sensor and more
-Content-Language: en-US
-To: Ninad Palsule <ninad@linux.ibm.com>, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, joel@jms.id.au,
- andrew@codeconstruct.com.au, peterhuewe@gmx.de, jarkko@kernel.org,
- jgg@ziepe.ca, keescook@chromium.org, tony.luck@intel.com,
- gpiccoli@igalia.com, johannes.holland@infineon.com, linux@roeck-us.net,
- broonie@kernel.org
-Cc: patrick.rudolph@9elements.com, vincent@vtremblay.dev,
- peteryin.openbmc@gmail.com, lakshmiy@us.ibm.com, bhelgaas@google.com,
- naresh.solanki@9elements.com, alexander.stein@ew.tq-group.com,
- festevam@denx.de, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
- linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
- linux-hardening@vger.kernel.org, geissonator@yahoo.com
-References: <20231212164004.1683589-1-ninad@linux.ibm.com>
- <20231212164004.1683589-9-ninad@linux.ibm.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20231212164004.1683589-9-ninad@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-
-On 12/12/2023 17:40, Ninad Palsule wrote:
-> This drop adds following devices in the device tree.
-> - EEPROM/VPD
-> - Power supplies
-> - Humidity, pressure and temperature sensors.
-> - Trusted platform module(TPM) chip
-> 
-> Tested:
->     This board is tested using the simics simulator.
-> 
-> Signed-off-by: Ninad Palsule <ninad@linux.ibm.com>
-> ---
-
-Don't mix DTS with drivers. DTS and drivers go via different subsystems
-and cannot have dependencies, so why DTS is patch #6, then driver #7 and
-now again DTS #7?
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="gyt34nc3mm25zmmf"
+Content-Disposition: inline
+In-Reply-To: <ZXbzcFTnDTKoZAta@orome.fritz.box>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-hardening@vger.kernel.org
 
 
->  .../dts/aspeed/aspeed-bmc-ibm-system1.dts     | 76 +++++++++++++++++++
->  1 file changed, 76 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts
-> index 75562aa63701..d960b938fe8d 100644
-> --- a/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts
-> +++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts
-> @@ -461,6 +461,11 @@ &kcs3 {
->  &i2c0 {
->  	status = "okay";
->  
-> +	eeprom@50 {
-> +		compatible = "atmel,24c64";
-> +		reg = <0x50>;
-> +	};
-> +
->  	regulator@60 {
->  		compatible = "maxim,max8952";
->  		reg = <0x60>;
-> @@ -655,6 +660,25 @@ pca0: pca9539@74 {
->  
->  &i2c2 {
->  	status = "okay";
-> +
-> +	power-supply@58 {
-> +		compatible = "ibm,cffps";
-> +		reg = <0x58>;
-> +	};
-> +
-> +	power-supply@59 {
-> +		compatible = "ibm,cffps";
-> +		reg = <0x59>;
-> +	};
-> +
-> +	power-supply@5a {
-> +		compatible = "ibm,cffps";
-> +		reg = <0x5a>;
-> +	};
+--gyt34nc3mm25zmmf
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Missing blank line
+Hello Thierry,
 
-> +	power-supply@5b {
-> +		compatible = "ibm,cffps";
-> +		reg = <0x5b>;
-> +	};
+On Mon, Dec 11, 2023 at 12:33:04PM +0100, Thierry Reding wrote:
+> On Fri, Dec 08, 2023 at 07:50:33PM +0100, Uwe Kleine-K=F6nig wrote:
+> > You don't need to touch all drivers because you didn't change struct
+> > pwm_chip::dev yet. (If you really want, you don't need to change that,
+> > but then you have some duplication as chip->dev holds the same value as
+> > priv->dev.parent in the end.)
+>=20
+> I don't think that's a problem. These are for two logically separate
+> things, after all.
 
+How are they different? I'd say one is the initializer for the other and
+(ideally) unused after that. With that interpretation they are indeed
+different, but then it's ugly that the initializer keeps staying around.
 
-Best regards,
-Krzysztof
+> Duplication can also sometimes be useful to simplify
+> things. There are plently of cases where we use local variables for the
+> same reason.
 
+local variables go away though after the respective function is left.
+chip->dev and its copy priv->dev.parent stay around for the full
+lifetime of the chip.
+
+> > > @@ -58,23 +60,24 @@ static struct pwm_chip *pwmchip_find_by_name(cons=
+t char *name)
+> > > =20
+> > >  static int pwm_device_request(struct pwm_device *pwm, const char *la=
+bel)
+> > >  {
+> > > +	struct pwm_chip *chip =3D pwm->priv->chip;
+> >=20
+> > With my approach getting the chip of a struct pwm_device is only one
+> > pointer dereference away. You need two.
+>=20
+> None of the functions here are called very often, so even if this isn't
+> optimized away it would hardly matter.
+
+I'd say pwm_apply_state() at least matters. Also I think that making a
+slow path quicker is a good thing.=20
+
+I wonder how we'll converge to an approach that can go into the
+mainline given that we both have our strong opinions.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--gyt34nc3mm25zmmf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmV4ywQACgkQj4D7WH0S
+/k4AOQf/Rn+1it6Pa2jcb+shcSHEefw76NASZ1jTJwzdnczaZca+4/TdY0/HLE/V
+27TLO93Qd9e4o0E4uFjg/T9KbZy+cu9WxiCJ9LgBEhgPaLIWe9opiDarsy2BNLJi
+e6lERFOmyBoG3USP7t/iEQn5C+0+gC6/pcPVWk8TJO/mc2kr8ioQRsaHtaE0AsX0
+hpZS0GH+ypW5d1saF+TMkSDV4QUzmTaXxsSDqG9/vnXhjln6wlriyIo2gJI2qQ6R
+gBrGVWoz8SnG3OjfGZwo9KhL+KPTbjIba4erb1KbE9j9Ul7c3xF/nA6GcTwU/IcQ
+6WQMUp7Ez5oG8txpknnsR9R2Iimimw==
+=APXJ
+-----END PGP SIGNATURE-----
+
+--gyt34nc3mm25zmmf--
