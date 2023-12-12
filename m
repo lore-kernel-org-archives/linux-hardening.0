@@ -1,56 +1,201 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rVXrIHDI"
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AAE999;
-	Mon, 11 Dec 2023 21:46:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=rswgQXutE23EE2adeFRVlY8v1PLpQypzn/gMfnKSSok=; b=rVXrIHDIzJhF4HMqm4VfVY00IB
-	sIqfR/Cd+JP6Xs2v0k2Eme38qoI8mUEYTXbnrhQSzfO379TtdKtZbTYHUM9Ca6gRyKluTOeJ1hmNS
-	iCkRmLgFdJ8Gej8fBoQ1FJ7AzpJ43A25+Ns42U7EORWN+pNex0CrBQj4nFY1kaZqc6P6xODVp29DO
-	f8Zt/9N7UrsGkzSpo65wBeqSJBlQdYaElxXLwr5vnUvV206qfmR3HLnS5cYiMSVJmZvZfsWmdgzwn
-	A1Q9PxnlbZd/s2wbROi+Vu7dyQdsfq/oc0XvSh6udsVR+XHC4pT1Che7NVCQHGx2mePothYZ/St6i
-	42qTB2rg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1rCvb0-00Ap6A-0r;
-	Tue, 12 Dec 2023 05:46:18 +0000
-Date: Mon, 11 Dec 2023 21:46:18 -0800
-From: Christoph Hellwig <hch@infradead.org>
-To: Song Liu <song@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	linux-raid@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] md/md-multipath: Convert "struct mpconf" to flexible
- array
-Message-ID: <ZXfzqsstA6tTPpF8@infradead.org>
-References: <03dd7de1cecdb7084814f2fab300c9bc716aff3e.1701632867.git.christophe.jaillet@wanadoo.fr>
- <202312041419.81EF03F7B7@keescook>
- <CAPhsuW43g-M+xvzD0N1JsJ_zGnvZQOw2Bi1TEqoHKanPnvMHLQ@mail.gmail.com>
- <202312080926.FBF7A2DDD2@keescook>
- <CAPhsuW5F1aRrCRW-ad5Sq=cgxHX+QgXgYZyMX17Zj4Mj=Jnhjw@mail.gmail.com>
+X-Greylist: delayed 574 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 11 Dec 2023 22:39:51 PST
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D445FB8
+	for <linux-hardening@vger.kernel.org>; Mon, 11 Dec 2023 22:39:51 -0800 (PST)
+Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 18D8AC08D4;
+	Tue, 12 Dec 2023 06:30:16 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf10.hostedemail.com (Postfix) with ESMTPA id 77F9A32;
+	Tue, 12 Dec 2023 06:30:13 +0000 (UTC)
+Message-ID: <f03d372a282712dee8412e47aff9bb54f181efd9.camel@perches.com>
+Subject: Re: [PATCH v3] iio: sx9324: avoid copying property strings
+From: Joe Perches <joe@perches.com>
+To: Justin Stitt <justinstitt@google.com>, Jonathan Cameron
+ <jic23@kernel.org>,  Lars-Peter Clausen <lars@metafoo.de>
+Cc: Stephen Boyd <swboyd@chromium.org>, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Date: Mon, 11 Dec 2023 22:30:12 -0800
+In-Reply-To: <20231212-strncpy-drivers-iio-proximity-sx9324-c-v3-1-b8ae12fc8a5d@google.com>
+References: 
+	<20231212-strncpy-drivers-iio-proximity-sx9324-c-v3-1-b8ae12fc8a5d@google.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPhsuW5F1aRrCRW-ad5Sq=cgxHX+QgXgYZyMX17Zj4Mj=Jnhjw@mail.gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Stat-Signature: phty865o753pcccfgobmbjixq886ngut
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 77F9A32
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX19KB/KFUBqn8Mv2AYKskQceelw0LpRgeF8=
+X-HE-Tag: 1702362613-104366
+X-HE-Meta: U2FsdGVkX1/Rm4DJ1kl4WgyqfPYbh3ciIzLs0+/i1MmIHs710d6iZ3iVuY2VSxAN51cu5/6F8ymqllhraoJox4+clD3FQTrULWI8Jis3sEu4Ok5I163X9ZvBX+O5mq8bq0E0z1XQhwKuPg4xT9Xg++Wb/uLzuxn9qZeFi6zJLJD6dKoq9K9m4V0zFgqHdt1Dn67J1smEJnBCU0bhRTWGB0ExvHozZdCsk9v6pVBlobrOC8RnMzgdtwQVfiRdiklTsdCXCkhGQa1/+QEemCB7SoAfquPUR6O+fFi0QS6wleZFHQHkaPQXuGNJCI3TTm2e
 
-On Fri, Dec 08, 2023 at 10:11:10AM -0800, Song Liu wrote:
-> We marked it as deprecated about 2.5 years ago. But to be honest,
-> I currently don't have a plan to remove it. I guess I should start thinking
-> about it.
+On Tue, 2023-12-12 at 00:42 +0000, Justin Stitt wrote:
+> We're doing some needless string copies when trying to assign the proper
+> `prop` string. We can make `prop` a const char* and simply assign to
+> string literals.
 
-Let's just kill it off ASAP.  It never had a large user base and based
-by dm-multipath not long after it has been added.  It also doesn't
-support any uniqueue hardware and has no on-disk format.
+trivia:
 
-If you want any blame deflected from you I'd be happy to send the patch
-to remove it.
+I would have updated it like this moving the
+various declarations into the case blocks
+where they are used and removing a few unused
+#defines
+
+---
+ drivers/iio/proximity/sx9324.c | 69 +++++++++++++++++++++++++-------------=
+----
+ 1 file changed, 41 insertions(+), 28 deletions(-)
+
+diff --git a/drivers/iio/proximity/sx9324.c b/drivers/iio/proximity/sx9324.=
+c
+index ac2ed2da21ccc..c50c1108a69cc 100644
+--- a/drivers/iio/proximity/sx9324.c
++++ b/drivers/iio/proximity/sx9324.c
+@@ -877,17 +877,8 @@ static const struct sx_common_reg_default *
+ sx9324_get_default_reg(struct device *dev, int idx,
+ 		       struct sx_common_reg_default *reg_def)
+ {
+-	static const char * const sx9324_rints[] =3D { "lowest", "low", "high",
+-		"highest" };
+-	static const char * const sx9324_csidle[] =3D { "hi-z", "hi-z", "gnd",
+-		"vdd" };
+-#define SX9324_PIN_DEF "semtech,ph0-pin"
+-#define SX9324_RESOLUTION_DEF "semtech,ph01-resolution"
+-#define SX9324_PROXRAW_DEF "semtech,ph01-proxraw-strength"
+-	unsigned int pin_defs[SX9324_NUM_PINS];
+-	char prop[] =3D SX9324_PROXRAW_DEF;
+-	u32 start =3D 0, raw =3D 0, pos =3D 0;
+-	int ret, count, ph, pin;
++	u32 raw =3D 0;
++	int ret;
+=20
+ 	memcpy(reg_def, &sx9324_default_regs[idx], sizeof(*reg_def));
+=20
+@@ -896,7 +887,13 @@ sx9324_get_default_reg(struct device *dev, int idx,
+ 	case SX9324_REG_AFE_PH0:
+ 	case SX9324_REG_AFE_PH1:
+ 	case SX9324_REG_AFE_PH2:
+-	case SX9324_REG_AFE_PH3:
++	case SX9324_REG_AFE_PH3: {
++		unsigned int pin_defs[SX9324_NUM_PINS];
++		int count;
++		int pin;
++		int ph;
++		char prop[32];
++
+ 		ph =3D reg_def->reg - SX9324_REG_AFE_PH0;
+ 		snprintf(prop, ARRAY_SIZE(prop), "semtech,ph%d-pin", ph);
+=20
+@@ -913,7 +910,15 @@ sx9324_get_default_reg(struct device *dev, int idx,
+ 			       SX9324_REG_AFE_PH0_PIN_MASK(pin);
+ 		reg_def->def =3D raw;
+ 		break;
+-	case SX9324_REG_AFE_CTRL0:
++	}
++	case SX9324_REG_AFE_CTRL0: {
++		static const char * const sx9324_csidle[] =3D {
++			"hi-z", "hi-z", "gnd", "vdd"
++		};
++		static const char * const sx9324_rints[] =3D {
++			"lowest", "low", "high", "highest"
++		};
++
+ 		ret =3D device_property_match_property_string(dev, "semtech,cs-idle-slee=
+p",
+ 							    sx9324_csidle,
+ 							    ARRAY_SIZE(sx9324_csidle));
+@@ -930,16 +935,17 @@ sx9324_get_default_reg(struct device *dev, int idx,
+ 			reg_def->def |=3D ret << SX9324_REG_AFE_CTRL0_RINT_SHIFT;
+ 		}
+ 		break;
++	}
+ 	case SX9324_REG_AFE_CTRL4:
+-	case SX9324_REG_AFE_CTRL7:
++	case SX9324_REG_AFE_CTRL7: {
++		const char *type;
++
+ 		if (reg_def->reg =3D=3D SX9324_REG_AFE_CTRL4)
+-			strncpy(prop, "semtech,ph01-resolution",
+-				ARRAY_SIZE(prop));
++			type =3D "semtech,ph01-resolution";
+ 		else
+-			strncpy(prop, "semtech,ph23-resolution",
+-				ARRAY_SIZE(prop));
++			type =3D "semtech,ph23-resolution";
+=20
+-		ret =3D device_property_read_u32(dev, prop, &raw);
++		ret =3D device_property_read_u32(dev, type, &raw);
+ 		if (ret)
+ 			break;
+=20
+@@ -949,6 +955,7 @@ sx9324_get_default_reg(struct device *dev, int idx,
+ 		reg_def->def |=3D FIELD_PREP(SX9324_REG_AFE_CTRL4_RESOLUTION_MASK,
+ 					   raw);
+ 		break;
++	}
+ 	case SX9324_REG_AFE_CTRL8:
+ 		ret =3D device_property_read_u32(dev,
+ 				"semtech,input-precharge-resistor-ohms",
+@@ -982,17 +989,21 @@ sx9324_get_default_reg(struct device *dev, int idx,
+ 					   6 + raw * (raw + 3) / 2);
+ 		break;
+=20
+-	case SX9324_REG_ADV_CTRL5:
++	case SX9324_REG_ADV_CTRL5: {
++		u32 start =3D 0;
++
+ 		ret =3D device_property_read_u32(dev, "semtech,startup-sensor",
+ 					       &start);
+ 		if (ret)
+ 			break;
+-
+ 		reg_def->def &=3D ~SX9324_REG_ADV_CTRL5_STARTUPSENS_MASK;
+ 		reg_def->def |=3D FIELD_PREP(SX9324_REG_ADV_CTRL5_STARTUPSENS_MASK,
+ 					   start);
+ 		break;
+-	case SX9324_REG_PROX_CTRL4:
++	}
++	case SX9324_REG_PROX_CTRL4: {
++		u32 pos =3D 0;
++
+ 		ret =3D device_property_read_u32(dev, "semtech,avg-pos-strength",
+ 					       &pos);
+ 		if (ret)
+@@ -1005,15 +1016,16 @@ sx9324_get_default_reg(struct device *dev, int idx,
+ 		reg_def->def |=3D FIELD_PREP(SX9324_REG_PROX_CTRL4_AVGPOSFILT_MASK,
+ 					   raw);
+ 		break;
++	}
+ 	case SX9324_REG_PROX_CTRL0:
+-	case SX9324_REG_PROX_CTRL1:
++	case SX9324_REG_PROX_CTRL1: {
++		const char *type;
++
+ 		if (reg_def->reg =3D=3D SX9324_REG_PROX_CTRL0)
+-			strncpy(prop, "semtech,ph01-proxraw-strength",
+-				ARRAY_SIZE(prop));
++			type =3D "semtech,ph01-proxraw-strength";
+ 		else
+-			strncpy(prop, "semtech,ph23-proxraw-strength",
+-				ARRAY_SIZE(prop));
+-		ret =3D device_property_read_u32(dev, prop, &raw);
++			type =3D "semtech,ph23-proxraw-strength";
++		ret =3D device_property_read_u32(dev, type, &raw);
+ 		if (ret)
+ 			break;
+=20
+@@ -1022,6 +1034,7 @@ sx9324_get_default_reg(struct device *dev, int idx,
+ 					   raw);
+ 		break;
+ 	}
++	}
+ 	return reg_def;
+ }
+=20
+
