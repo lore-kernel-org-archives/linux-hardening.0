@@ -1,41 +1,41 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="K9hX+p2U"
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67755CE
-	for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 14:10:00 -0800 (PST)
-Received: by mail-pg1-x534.google.com with SMTP id 41be03b00d2f7-5c68b5cf14bso3528131a12.0
-        for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 14:10:00 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GPB73mA3"
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B60E6BC
+	for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 14:13:15 -0800 (PST)
+Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-6ce26a03d9eso4162736b3a.0
+        for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 14:13:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1702419000; x=1703023800; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1702419195; x=1703023995; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6AUQroc3YD1KExvZg7CZoKlnozDJQ13H2P0qin79AMs=;
-        b=K9hX+p2UoWn+0LgirSssfSrjwvLWHcyyrZQL992KJ8Epw8COFLUDzK+z5eOp4nGcpL
-         G5nGIi564ReabHJpSJNRTLCXkFedyxOnTPdXahUE73R+RkmU7pcykPSKznjdZW4ybSdR
-         QEjfQB8KsPar2JZy/k58VmpUqeZ3SbS9oT2pQ=
+        bh=zz+Y7OFi5O5xALvZiSlWGcTk94UQ+2tG5uPBEil1mKc=;
+        b=GPB73mA3KLi4f9uNLtezlYvZ8bMAJ9GNgzvIGJjvSHR3t5bv/uh4JktQXcEwHLYIXk
+         y177Hs4uMQQg2Y3iJ6UnOhmF2p1qAw9A0ZgTEOYk7nap0QsS5N/aBGJ7Q2THHNVBwcAD
+         waO+FYSd2lyrG8hF4LTFiRsWlIfJJwPLT/K6U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702419000; x=1703023800;
+        d=1e100.net; s=20230601; t=1702419195; x=1703023995;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=6AUQroc3YD1KExvZg7CZoKlnozDJQ13H2P0qin79AMs=;
-        b=MVyQ8uc3WOxo++KF4ldiuQeOiMg13zmRo+tBAeBTt5neAoBA7Gw1t6olRRozjRIlHb
-         puz4PRcBkb5QWV5iU3699aNmiqfRHjsQ4FphZEYsWVJRWVbNW6Xj0KmgkGfP9FIbhCc8
-         0ljQ7e/87CwkpczlMQmJyy2HHuCK/8KaOWHoZ1/kSrnPmiCSMptTvNewoeJG4dGnBJI8
-         14CsYEau3g/rAqTLU9jMQYyQ7NDwM3VWXM6Xc0FjCb85tAEYrr4+TZyWDzmWOYN3yePG
-         57OYIWcymIt961jmO+0BgjfMFYfRs5JPngCIcuNm5AJR8QebLbWu9bNTvOunN0870kzB
-         /Llw==
-X-Gm-Message-State: AOJu0YzF6ERZnfvz2H5vOIEbIBb3iMJ+JcUfKLvNFhRjeQ8CBYWNVwZj
-	A5TLMtrwLhrjAVeVEqJmn6ohgQ==
-X-Google-Smtp-Source: AGHT+IFf+R1A/XR8Jt/9Fz875DIYyIaNu91bfQZimMKleNPgzgfwmHSBFbbtlfKJAsRdJ8rj8kU4YA==
-X-Received: by 2002:a05:6a21:1f20:b0:190:2973:5132 with SMTP id ry32-20020a056a211f2000b0019029735132mr3660108pzb.107.1702418999822;
-        Tue, 12 Dec 2023 14:09:59 -0800 (PST)
+        bh=zz+Y7OFi5O5xALvZiSlWGcTk94UQ+2tG5uPBEil1mKc=;
+        b=dP7YnKTiPxzGRWvA2l97l+QN9cXqDiRZg9aaIIoARmoCzqIS2KVHPUv+ICO9dCMUt+
+         2BF4h2lpdE0vEeFrbxO3OyxEkub8mmo7u5UOac326TMHsmxpGq6qOivlAOtQ6hmdjAKP
+         JkKxRD+bFOFAul76CA7+AJ8ceRhk9dzTMvJm56qbQGJsr2k43QiH9L3fHnowJDvbBj0j
+         1qLy7zpvUxSxf+tut7KOrneApgs0Sz9RJVBuaDklBZAHaGY8+uqKTj9K2elreBJVyHYs
+         YFnNuHZTBSwWyohHGMNieOg+bxgbj620qVPHnwrLBGuURwq+ay4V6RbpbokNZJmGovBN
+         Rbcg==
+X-Gm-Message-State: AOJu0YwS83sINFWh/ImOy/jT9f3/b5TNN+udtmXMSdN9D5XQJ7fVkCZC
+	R/F1bz0I9uoRMwyS8ESavDJgNGjpCi+lu0iG7M8=
+X-Google-Smtp-Source: AGHT+IEWBKRXGUYKGQlw/ie1e8izpaxG2e22iJf+rKDEmrtEqp67ZIhooSrIcuGmEgZ+sAjKFUS5Uw==
+X-Received: by 2002:a05:6a00:398c:b0:6d0:99da:3d35 with SMTP id fi12-20020a056a00398c00b006d099da3d35mr2585995pfb.42.1702419195217;
+        Tue, 12 Dec 2023 14:13:15 -0800 (PST)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id l15-20020a170902f68f00b001c9c5a1b477sm9139392plg.169.2023.12.12.14.09.59
+        by smtp.gmail.com with ESMTPSA id t27-20020a056a00139b00b006cd08377a13sm8588242pfg.190.2023.12.12.14.13.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Dec 2023 14:09:59 -0800 (PST)
+        Tue, 12 Dec 2023 14:13:14 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
-To: Raju Rangoju <rajur@chelsio.com>
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 Cc: Kees Cook <keescook@chromium.org>,
 	kernel test robot <lkp@intel.com>,
 	"David S. Miller" <davem@davemloft.net>,
@@ -45,9 +45,9 @@ Cc: Kees Cook <keescook@chromium.org>,
 	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] cxgb3: Avoid potential string truncation in desc
-Date: Tue, 12 Dec 2023 14:09:57 -0800
-Message-Id: <20231212220954.work.219-kees@kernel.org>
+Subject: [PATCH] amd-xgbe: Avoid potential string truncation in name
+Date: Tue, 12 Dec 2023 14:13:12 -0800
+Message-Id: <20231212221312.work.830-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -55,46 +55,41 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3659; i=keescook@chromium.org;
- h=from:subject:message-id; bh=21c8W8WpyGXddpdivNfij9Z1UgBS9gpwm3BMCk5vJXE=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBleNo1YdSK7BzSkz1ECFrVzjTTKZu017tFXk7P2
- MuIZKMu6B+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZXjaNQAKCRCJcvTf3G3A
- JrU6EACVuFlSTH8lVGBKuS1i7DgrLCjEdSotDiCDkaaC5uHjvNymaLN3etMW/BIzpqALRP1VXQe
- +BvMKtmUKXuNjHll4E7H6ZWn6Kma7bX+MaEiZFqCLrr3SKj2GpKBCe3k+9ajHJLxL6MrghA1nlT
- nudc/lmnJeT+ujiOIGLgzMqasPIwcD82I4kuMcDssolDzdPoh0LBAb2ZuxlLiX8CluyR/f1cz5u
- T4NCzvqNNEUDMCiqADL31XkQbMs2NsLVa8xpcBkBYTWwyvjOss3bbagakrYrMGGCEJQBiAHttJz
- 1NGygZ9pCL/CSfVnJiTosCA5woY14NI19hTegJlcHd9NT+fnuSBMO3JLs0FDBSjnPnFv9jxB9t5
- ROWEUKlb9PQaQTI2EOOzen8AvyrzZA3t8DDef1Tf2lLMbJ8zSlPswymr2TIFLUAcH5gJg6t8Sil
- Hl8zGlTTzkQoz5CBZ3EdjA0xhuOO1EKLuLKUwAbQ5NPI4W8KV1WMNGk8I5p8kELLmjlDmTsMtmw
- xyUVwFHINyu5yD5VSUxTGAnJDcVM56uX1IuLYRtBHfriKRBwKv7CZ9BAYKTYqATeZKRIAKfe+Y9
- KXP4u+c1c668QPpD99DQMb2n0Zf3z2iF76/vR2JA8ac3BljgNHdUD61MOfF7oHj8qBpFoV6G+Xu
- 6LouMnn auXbTADA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2121; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=0SDaP7ngg2pX0pwKb/HXuBG4QGzcvWu5mlfJ4RHu8Zk=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBleNr4UaAfdD0Y2y5yQf7Jeyn1JWreRU2mq7NQo
+ QbLQgl8hTmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZXja+AAKCRCJcvTf3G3A
+ JghBD/4uiMgovzu3/1hYGRlACubDv9q2+Kux+qaJ3L5hFEg9NnCi4mRKBDkQ6Bn+/NIwUV+xhUy
+ 0fx2ZmBMdIp6hclimldAs8Jiw0QnsFR4J4/4LMalltpdilZvi8Rwjz0/H66WbE8/Ny2Qz9EUZsg
+ xChbel3UWk/FB4EVyXZe1mGSeY4ZaNr/LF5JMKm5x34+7VOzDq7N2SxixbkG+HNm8VexdHhCNrV
+ 6XZmUB4YKCO4DIZMGHo/wn3RVlAfTjmJghAqLvNyePo+mt5SYaH6xmxBfvme39P0l3l1it+EGI6
+ ieWT3a/jpcr6laME+sdkAGhX85Hn4aw79ke7KcS/v2fvuLsrQDM/XwWjATeuDIMVYIxSFYDWoZN
+ tgUgxO6a2RwtcmC9JB35mAIheKAtHL8KZmffQc6fHORc0xQpdacJfM94B6/JP6r9VFU/MKMbd2J
+ CUwUSb1Kka684PSvO1BhDA7+Jnztn3Vf0czVDI11LqtiBl5W76AaRenfpL584xGlTyaA3TzA3Wf
+ JpCQdoFmhtK95c4AHPTOU4yFKi7/PXJSmqUOT9ahKsYoRuyH2/wS+8FhENxqHP1q4kI1nF2+k1g
+ e51oAMUeMr5X+CHKYekW6k2Rw2bt/zbTviYO0pgr7W2iDuK9r4tRVMJ0iApYeozQQ41+JmAUGrB
+ U+jyEDr hdGGCquw==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Builds with W=1 were warning about potential string truncations:
+Build with W=1 were warning about a potential string truncation:
 
-drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c: In function 'cxgb_up':
-drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c:394:38: warning: '%d' directive output may be truncated writing between 1 and 11 bytes into a region of size between 5 and 20 [-Wformat-truncation=]
-  394 |                                  "%s-%d", d->name, pi->first_qset + i);
-      |                                      ^~
-In function 'name_msix_vecs',
-    inlined from 'cxgb_up' at drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c:1264:3: drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c:394:34: note: directive argument in the range [-2147483641, 509]
-  394 |                                  "%s-%d", d->name, pi->first_qset + i);
-      |                                  ^~~~~~~
-drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c:393:25: note: 'snprintf' output between 3 and 28 bytes into a destination of size 21
-  393 |                         snprintf(adap->msix_info[msi_idx].desc, n,
-      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  394 |                                  "%s-%d", d->name, pi->first_qset + i);
-      |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/ethernet/amd/xgbe/xgbe-drv.c: In function 'xgbe_alloc_channels':
+drivers/net/ethernet/amd/xgbe/xgbe-drv.c:211:73: warning: '%u' directive output may be truncated writing between 1 and 10 bytes into a region of size 8 [-Wformat-truncation=]
+  211 |                 snprintf(channel->name, sizeof(channel->name), "channel-%u", i);
+      |                                                                         ^~
+drivers/net/ethernet/amd/xgbe/xgbe-drv.c:211:64: note: directive argument in the range [0, 4294967294]
+  211 |                 snprintf(channel->name, sizeof(channel->name), "channel-%u", i);
+      |                                                                ^~~~~~~~~~~~
+drivers/net/ethernet/amd/xgbe/xgbe-drv.c:211:17: note: 'snprintf' output between 10 and 19 bytes into a destination of size 16
+  211 |                 snprintf(channel->name, sizeof(channel->name), "channel-%u", i);
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Avoid open-coded %NUL-termination (this code was assuming snprintf
-wasn't %NUL terminating when it does -- likely thinking of strncpy),
-and grow the size of the string to handle a maximal value.
+Increase the size of the "name" buffer to handle the full format range.
 
 Reported-by: kernel test robot <lkp@intel.com>
 Closes: https://lore.kernel.org/oe-kbuild-all/202312100937.ZPZCARhB-lkp@intel.com/
-Cc: Raju Rangoju <rajur@chelsio.com>
+Cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 Cc: "David S. Miller" <davem@davemloft.net>
 Cc: Eric Dumazet <edumazet@google.com>
 Cc: Jakub Kicinski <kuba@kernel.org>
@@ -102,51 +97,22 @@ Cc: Paolo Abeni <pabeni@redhat.com>
 Cc: netdev@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/net/ethernet/chelsio/cxgb3/adapter.h    | 2 +-
- drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c | 9 ++++-----
- 2 files changed, 5 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/amd/xgbe/xgbe.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb3/adapter.h b/drivers/net/ethernet/chelsio/cxgb3/adapter.h
-index 6d682b7c7aac..9d11e55981a0 100644
---- a/drivers/net/ethernet/chelsio/cxgb3/adapter.h
-+++ b/drivers/net/ethernet/chelsio/cxgb3/adapter.h
-@@ -237,7 +237,7 @@ struct adapter {
- 	int msix_nvectors;
- 	struct {
- 		unsigned short vec;
--		char desc[22];
-+		char desc[IFNAMSIZ + 1 + 12];	/* Needs space for "%s-%d" */
- 	} msix_info[SGE_QSETS + 1];
- 
- 	/* T3 modules */
-diff --git a/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c b/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
-index d117022d15d7..2236f1d35f2b 100644
---- a/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
-+++ b/drivers/net/ethernet/chelsio/cxgb3/cxgb3_main.c
-@@ -380,19 +380,18 @@ static irqreturn_t t3_async_intr_handler(int irq, void *cookie)
+diff --git a/drivers/net/ethernet/amd/xgbe/xgbe.h b/drivers/net/ethernet/amd/xgbe/xgbe.h
+index ad136ed493ed..f01a1e566da6 100644
+--- a/drivers/net/ethernet/amd/xgbe/xgbe.h
++++ b/drivers/net/ethernet/amd/xgbe/xgbe.h
+@@ -495,7 +495,7 @@ struct xgbe_ring {
+  * a DMA channel.
   */
- static void name_msix_vecs(struct adapter *adap)
- {
--	int i, j, msi_idx = 1, n = sizeof(adap->msix_info[0].desc) - 1;
-+	int i, j, msi_idx = 1;
+ struct xgbe_channel {
+-	char name[16];
++	char name[20];
  
--	snprintf(adap->msix_info[0].desc, n, "%s", adap->name);
--	adap->msix_info[0].desc[n] = 0;
-+	strscpy(adap->msix_info[0].desc, adap->name, sizeof(adap->msix_info[0].desc));
- 
- 	for_each_port(adap, j) {
- 		struct net_device *d = adap->port[j];
- 		const struct port_info *pi = netdev_priv(d);
- 
- 		for (i = 0; i < pi->nqsets; i++, msi_idx++) {
--			snprintf(adap->msix_info[msi_idx].desc, n,
-+			snprintf(adap->msix_info[msi_idx].desc,
-+				 sizeof(adap->msix_info[0].desc),
- 				 "%s-%d", d->name, pi->first_qset + i);
--			adap->msix_info[msi_idx].desc[n] = 0;
- 		}
- 	}
- }
+ 	/* Address of private data area for device */
+ 	struct xgbe_prv_data *pdata;
 -- 
 2.34.1
 
