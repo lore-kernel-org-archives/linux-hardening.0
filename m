@@ -1,51 +1,49 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mxWuZrxJ"
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE9D3CF
-	for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 13:23:02 -0800 (PST)
-Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-6ce72730548so5472287b3a.1
-        for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 13:23:02 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KUf5Hivl"
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82839CA
+	for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 13:26:16 -0800 (PST)
+Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-6cda22140f2so5581010b3a.1
+        for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 13:26:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1702416182; x=1703020982; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1702416376; x=1703021176; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wxuP6rH0bpJQdehhJhYTsKOeIoxa8S/XV7TnZO98Xd8=;
-        b=mxWuZrxJdj5bxzeN0YMXVqGpbHbz1nYi4FUG1QpdzI4N9XYOcPH5rnNxNxdtm+ZNLp
-         kXqAL6axnAXTby/KaAJBMQcsQ1uvrrBoWNQwTwvMrU9F7k51SMf00lMl2+us5tV0Rhyd
-         Hl8fW5++UU5chmaZ2SuFlgp+dwjPkj/9od8c8=
+        bh=m5PlYZzo9vfTv/yv9EMUjQKbKWWq7A3gpV1Plw7Ax/Y=;
+        b=KUf5HivlYL4ctCdp+SW+aRt+SMv/QY70kRXFLFAk41qCRZyj208eQV+tNJTJXFf44N
+         UwWxEFLGWu1UskPYvENoFXxrz2T94Xs/qjlrTN68HVOAKnDaz0SX6oEPcgQD/jVoJnFc
+         v+EfcOAyxQyAUYX/vnRufNDnMY3MVfHf91cq4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702416182; x=1703020982;
+        d=1e100.net; s=20230601; t=1702416376; x=1703021176;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wxuP6rH0bpJQdehhJhYTsKOeIoxa8S/XV7TnZO98Xd8=;
-        b=uqTE60wscHHWOAOvg74Yud16S6pnKpF24kSDaU+Od2mp4RNL1ythCr/uvM6RvskL+h
-         LuxRO9weWHBnzea+IPeLRfAxnYBtP3qnGzFLjN4lErf+c2Is4aLT/ef+Psi0ZOjD7lNC
-         Z/IddyH3sYVD+FaakawGB+wHHHPPk/kGkscKru/C7mRoOds19HHRVVATNec/xSVC27I3
-         Rd2b8luenJRqSqGCwlQlIGrQ06puowmVBxHjyoQJsjWCafhrlcov5ur9G99Y0KJhOlSk
-         vwLUQ2wY5MeC+/yW+34j0ITpbnffmLpUx24wLDhUqcyrX0pSFo5CCh8M+gbBySuqOric
-         nnkA==
-X-Gm-Message-State: AOJu0Ywfn+by8FEnbLWm58KqhvBYEJD23tZTJZRWomRGw/5bgw35lxTK
-	ZYuOMyfoq8bLbweLs3CjAezx1w==
-X-Google-Smtp-Source: AGHT+IGIhzGATDu3oBFvEwndykUJEdWlX+8RRQcdHx5e6X9Trh/t8PqWSN3lz74zp+LOsTuYbP5pCA==
-X-Received: by 2002:a05:6a00:b53:b0:6ce:6c54:24a7 with SMTP id p19-20020a056a000b5300b006ce6c5424a7mr7792476pfo.1.1702416182255;
-        Tue, 12 Dec 2023 13:23:02 -0800 (PST)
+        bh=m5PlYZzo9vfTv/yv9EMUjQKbKWWq7A3gpV1Plw7Ax/Y=;
+        b=STGEAVYiW0aSf/VzDlq+mmQ+ziKbij7vRNTb31amFtgza9hwjfLWbcUhUCvafB751s
+         /YjR4CnwLw6ota8Ym3DOCcOlit/mGisvBiuIWGL/Tf5vTQ8hqoostyxLQN+Qp6OEoAqV
+         YaeFwudK+SlWVJE/LDxAFc0kjJ4GtTsSzjzFjoeWYbb0i+fpoPMCO3QoiVlfA3Ph6+Mu
+         dlz3jtL3wmncgVCuGnxiwoyPSNw+rUplIfM/WePcnlriNmKbSfYG0H20vS8A8Rzofca6
+         Cjpe/KzZLWngd4qgBAfrjxzPHvDEHDFa546FbvAdsXnQRW4LmkjZ9kH5ioJZr4hwvESr
+         H7/g==
+X-Gm-Message-State: AOJu0YwynsHN0PEaNdDDNLZEa4fWxSJ8COlnBG57YMXX5m8DeCq/Ak9i
+	FrBkqfq2F8DFGHBRWWU4lXx2kQ==
+X-Google-Smtp-Source: AGHT+IECqwmYAGxNju9XRpHNOvS5qlW6o+Z0/xSSH+d6V94jzZqBhGBRMbJv+vZJSerO98ZHSCjsqQ==
+X-Received: by 2002:a05:6a00:4601:b0:6cd:f91e:dfe4 with SMTP id ko1-20020a056a00460100b006cdf91edfe4mr6874221pfb.2.1702416375774;
+        Tue, 12 Dec 2023 13:26:15 -0800 (PST)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id x20-20020aa793b4000000b006ce4c7ba448sm8592223pff.25.2023.12.12.13.23.01
+        by smtp.gmail.com with ESMTPSA id d12-20020a056a0010cc00b006ce61c9495fsm8571312pfu.206.2023.12.12.13.26.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Dec 2023 13:23:01 -0800 (PST)
-Date: Tue, 12 Dec 2023 13:23:01 -0800
+        Tue, 12 Dec 2023 13:26:15 -0800 (PST)
+Date: Tue, 12 Dec 2023 13:26:14 -0800
 From: Kees Cook <keescook@chromium.org>
 To: Justin Stitt <justinstitt@google.com>
-Cc: Michael Cyr <mikecyr@linux.ibm.com>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Stephen Boyd <swboyd@chromium.org>, linux-iio@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] scsi: ibmvscsi_tgt: replace deprecated strncpy with
- strscpy
-Message-ID: <202312121321.E15E09BF@keescook>
-References: <20231212-strncpy-drivers-scsi-ibmvscsi_tgt-ibmvscsi_tgt-c-v2-1-bdb9a7cd96c8@google.com>
+Subject: Re: [PATCH v3] iio: sx9324: avoid copying property strings
+Message-ID: <202312121325.E29472E0C0@keescook>
+References: <20231212-strncpy-drivers-iio-proximity-sx9324-c-v3-1-b8ae12fc8a5d@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -54,50 +52,31 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231212-strncpy-drivers-scsi-ibmvscsi_tgt-ibmvscsi_tgt-c-v2-1-bdb9a7cd96c8@google.com>
+In-Reply-To: <20231212-strncpy-drivers-iio-proximity-sx9324-c-v3-1-b8ae12fc8a5d@google.com>
 
-On Tue, Dec 12, 2023 at 01:20:20AM +0000, Justin Stitt wrote:
-> strncpy() is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
+On Tue, Dec 12, 2023 at 12:42:52AM +0000, Justin Stitt wrote:
+> We're doing some needless string copies when trying to assign the proper
+> `prop` string. We can make `prop` a const char* and simply assign to
+> string literals.
 > 
-> We don't need the NUL-padding behavior that strncpy() provides as vscsi
-> is NUL-allocated in ibmvscsis_probe() which proceeds to call
-> ibmvscsis_adapter_info():
-> |       vscsi = kzalloc(sizeof(*vscsi), GFP_KERNEL);
+> For the case where a format string is used, let's extract the parsing
+> logic out into sx9324_parse_phase_prop(). We no longer need to create
+> copies or allocate new memory.
 > 
-> ibmvscsis_probe() -> ibmvscsis_handle_crq() -> ibmvscsis_parse_command()
-> -> ibmvscsis_mad() -> ibmvscsis_process_mad() -> ibmvscsis_adapter_info()
+> sx9324_parse_phase_prop() will simply return the default def value if it
+> fails.
 > 
-> Following the same idea, `partition_name` is defiend as:
-> |       static char partition_name[PARTITION_NAMELEN] = "UNKNOWN";
-> ... which is NUL-padded already, meaning strscpy() is the best option.
-> 
-> Considering the above, a suitable replacement is `strscpy` [2] due to
-> the fact that it guarantees NUL-termination on the destination buffer
-> without unnecessarily NUL-padding.
-> 
-> However, for cap->name and info let's use strscpy_pad as they are
-> allocated via dma_alloc_coherent():
-> |       cap = dma_alloc_coherent(&vscsi->dma_dev->dev, olen, &token,
-> |                                GFP_ATOMIC);
-> &
-> |       info = dma_alloc_coherent(&vscsi->dma_dev->dev, sizeof(*info), &token,
-> |                                 GFP_ATOMIC);
+> This also cleans up some deprecated strncpy() uses [1].
 > 
 > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
 > Link: https://github.com/KSPP/linux/issues/90
 > Cc: linux-hardening@vger.kernel.org
 > Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-This looks good to me. The only question that I haven't seen an answer
-to from the maintainers is whether this is a __nonstring or not. It
-really looks like it should be a C String, so with that assumption:
+Yeah, I like this approach. Totally removes the string copying and
+creates a helper that does the "heavy lifting". :)
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
-
--Kees
 
 -- 
 Kees Cook
