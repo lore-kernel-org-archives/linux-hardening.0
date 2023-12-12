@@ -1,49 +1,53 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KUf5Hivl"
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82839CA
-	for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 13:26:16 -0800 (PST)
-Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-6cda22140f2so5581010b3a.1
-        for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 13:26:16 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YjG2mwyE"
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E8FCFE
+	for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 13:27:38 -0800 (PST)
+Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-1d069b1d127so37886135ad.0
+        for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 13:27:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1702416376; x=1703021176; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1702416457; x=1703021257; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=m5PlYZzo9vfTv/yv9EMUjQKbKWWq7A3gpV1Plw7Ax/Y=;
-        b=KUf5HivlYL4ctCdp+SW+aRt+SMv/QY70kRXFLFAk41qCRZyj208eQV+tNJTJXFf44N
-         UwWxEFLGWu1UskPYvENoFXxrz2T94Xs/qjlrTN68HVOAKnDaz0SX6oEPcgQD/jVoJnFc
-         v+EfcOAyxQyAUYX/vnRufNDnMY3MVfHf91cq4=
+        bh=xMWCFeEilpyi5Ac7Brep5JSzMOQ0AtnLLpOVe467uSo=;
+        b=YjG2mwyEofdEFA+8fIhlpT2lC2Ie4VWo3Ue9ae+Gy1Kq24N5K4jfDYZYARfuSS0t9k
+         jGkl0R0llkYoZrMi3JrOUUXriAMIAPX0x+bY4a1MCqkHNIuGZLITki/d9bfKjj4QmkH6
+         5W1OHshD/bc+xc0a3ouSMReLdcp19iQfdIYZE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702416376; x=1703021176;
+        d=1e100.net; s=20230601; t=1702416457; x=1703021257;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=m5PlYZzo9vfTv/yv9EMUjQKbKWWq7A3gpV1Plw7Ax/Y=;
-        b=STGEAVYiW0aSf/VzDlq+mmQ+ziKbij7vRNTb31amFtgza9hwjfLWbcUhUCvafB751s
-         /YjR4CnwLw6ota8Ym3DOCcOlit/mGisvBiuIWGL/Tf5vTQ8hqoostyxLQN+Qp6OEoAqV
-         YaeFwudK+SlWVJE/LDxAFc0kjJ4GtTsSzjzFjoeWYbb0i+fpoPMCO3QoiVlfA3Ph6+Mu
-         dlz3jtL3wmncgVCuGnxiwoyPSNw+rUplIfM/WePcnlriNmKbSfYG0H20vS8A8Rzofca6
-         Cjpe/KzZLWngd4qgBAfrjxzPHvDEHDFa546FbvAdsXnQRW4LmkjZ9kH5ioJZr4hwvESr
-         H7/g==
-X-Gm-Message-State: AOJu0YwynsHN0PEaNdDDNLZEa4fWxSJ8COlnBG57YMXX5m8DeCq/Ak9i
-	FrBkqfq2F8DFGHBRWWU4lXx2kQ==
-X-Google-Smtp-Source: AGHT+IECqwmYAGxNju9XRpHNOvS5qlW6o+Z0/xSSH+d6V94jzZqBhGBRMbJv+vZJSerO98ZHSCjsqQ==
-X-Received: by 2002:a05:6a00:4601:b0:6cd:f91e:dfe4 with SMTP id ko1-20020a056a00460100b006cdf91edfe4mr6874221pfb.2.1702416375774;
-        Tue, 12 Dec 2023 13:26:15 -0800 (PST)
+        bh=xMWCFeEilpyi5Ac7Brep5JSzMOQ0AtnLLpOVe467uSo=;
+        b=IPjguDe0uM7juxRyf7wCcrRh5c6okBdOYtxXF1XhVKhtZnUfpPKxNhy0gAaHKVCNvB
+         QUsTukm+RTRkzGNI+HsevHS1nLTbFNMhRSXkyCO3Ftm9XY91taiEA/u+1X0M7aFFuvLZ
+         QBuqQP0Ulq+QiVkwtZVy/gE0grcYUm3l5o9M0R9xncWMe8KzHo9FQNZVQ5Ki0F1lidsQ
+         SSbvVe2bI+nkfuF4PoORpWIzKOzmAHQi+QQR4oUKiOqeqRACAfUhnRpf07Kpwa05wLhY
+         yiKocxqF8XP/n6qV+7dMikKFu086f21JfRlFcAUNy0x5I+XnLc80PMKrj6Ch58S55rta
+         21lw==
+X-Gm-Message-State: AOJu0YzsPpy/PL3yFHzrDmS9vprTtN/71+8mpP29h+xnVAJfki+p0WxJ
+	HT4ElJYvw1q0iMpXnaRGPmtqmg==
+X-Google-Smtp-Source: AGHT+IFsjK/4jl3htSAqRzNOqZiI1jZZt9gjZFvHm2rukC0crml0pXcWxmpZQRnGChnn1/ujf3LPnA==
+X-Received: by 2002:a17:902:cec5:b0:1d0:6ffd:f217 with SMTP id d5-20020a170902cec500b001d06ffdf217mr4199501plg.109.1702416457607;
+        Tue, 12 Dec 2023 13:27:37 -0800 (PST)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id d12-20020a056a0010cc00b006ce61c9495fsm8571312pfu.206.2023.12.12.13.26.15
+        by smtp.gmail.com with ESMTPSA id be3-20020a170902aa0300b001cfc6838e30sm9003034plb.308.2023.12.12.13.27.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Dec 2023 13:26:15 -0800 (PST)
-Date: Tue, 12 Dec 2023 13:26:14 -0800
+        Tue, 12 Dec 2023 13:27:37 -0800 (PST)
+Date: Tue, 12 Dec 2023 13:27:36 -0800
 From: Kees Cook <keescook@chromium.org>
 To: Justin Stitt <justinstitt@google.com>
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Stephen Boyd <swboyd@chromium.org>, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3] iio: sx9324: avoid copying property strings
-Message-ID: <202312121325.E29472E0C0@keescook>
-References: <20231212-strncpy-drivers-iio-proximity-sx9324-c-v3-1-b8ae12fc8a5d@google.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3] net: mdio-gpio: replace deprecated strncpy with
+ strscpy
+Message-ID: <202312121327.3A71BECDF1@keescook>
+References: <20231211-strncpy-drivers-net-mdio-mdio-gpio-c-v3-1-76dea53a1a52@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -52,29 +56,32 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231212-strncpy-drivers-iio-proximity-sx9324-c-v3-1-b8ae12fc8a5d@google.com>
+In-Reply-To: <20231211-strncpy-drivers-net-mdio-mdio-gpio-c-v3-1-76dea53a1a52@google.com>
 
-On Tue, Dec 12, 2023 at 12:42:52AM +0000, Justin Stitt wrote:
-> We're doing some needless string copies when trying to assign the proper
-> `prop` string. We can make `prop` a const char* and simply assign to
-> string literals.
+On Mon, Dec 11, 2023 at 07:10:00PM +0000, Justin Stitt wrote:
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
 > 
-> For the case where a format string is used, let's extract the parsing
-> logic out into sx9324_parse_phase_prop(). We no longer need to create
-> copies or allocate new memory.
+> We expect new_bus->id to be NUL-terminated but not NUL-padded based on
+> its prior assignment through snprintf:
+> |       snprintf(new_bus->id, MII_BUS_ID_SIZE, "gpio-%x", bus_id);
 > 
-> sx9324_parse_phase_prop() will simply return the default def value if it
-> fails.
+> Due to this, a suitable replacement is `strscpy` [2] due to the fact
+> that it guarantees NUL-termination on the destination buffer without
+> unnecessarily NUL-padding.
 > 
-> This also cleans up some deprecated strncpy() uses [1].
+> We can also use sizeof() instead of a length macro as this more closely
+> ties the maximum buffer size to the destination buffer. Do this for two
+> instances.
 > 
 > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
 > Link: https://github.com/KSPP/linux/issues/90
 > Cc: linux-hardening@vger.kernel.org
 > Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-Yeah, I like this approach. Totally removes the string copying and
-creates a helper that does the "heavy lifting". :)
+Looks like a clean replacement. (And a nice sizeof cleanup.)
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
 
