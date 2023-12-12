@@ -1,40 +1,40 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AlrxvD/t"
-Received: from mail-oo1-xc2b.google.com (mail-oo1-xc2b.google.com [IPv6:2607:f8b0:4864:20::c2b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCF7BCF
-	for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 15:17:20 -0800 (PST)
-Received: by mail-oo1-xc2b.google.com with SMTP id 006d021491bc7-591487a1941so292631eaf.3
-        for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 15:17:20 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UVi8MmUb"
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BB74E4
+	for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 15:17:17 -0800 (PST)
+Received: by mail-pl1-x636.google.com with SMTP id d9443c01a7336-1d2f1cecf89so22794555ad.1
+        for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 15:17:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1702423040; x=1703027840; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1702423037; x=1703027837; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cZjoMoZfbLgYK7cJaZ0EBpgFOBwo/12832X2C7MVeuk=;
-        b=AlrxvD/tb29EN8sl2PtfN9xifrh6UOw7clLmq9lNivZ0Dqs8vq6wKTn2zeYOFUlILc
-         S2dBS4mxoSJBA6Mnery4qzDfMCUCRxK7Lq3zZ5kcRuALSUm2rvHG++KypBTac2ckuM29
-         WDhFPLbF8fT6+rp94pGR1suK8Ep6uwTY1MrPE=
+        bh=D0KleV6o3T8VwIpW2LkN+EL0QO50pQ5bkLoTJyBRonk=;
+        b=UVi8MmUbHi0kNmSZ3GTDUM9D8DkaJTGkCEL2dbPQ0c2m9U/F/dZ2Sd89oztK1KW+OS
+         SmE11kWukVcJXlgVH1mBBwmpD/8kX8qTm4YzCAl427EblT8kfxN4p3Uv3JVke1Ygzvr0
+         y9MnTZdXv61odrB09tA71ICC7wjyNSI2bDRq0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702423040; x=1703027840;
+        d=1e100.net; s=20230601; t=1702423037; x=1703027837;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=cZjoMoZfbLgYK7cJaZ0EBpgFOBwo/12832X2C7MVeuk=;
-        b=dQEYTqGVcjZKKmYhjI61Ua/KXGuBc6Qdh2Gl+IcIyf2AaMYbM9NZTMN6pu+4rQZn20
-         IMPp3Gpk6G6D/NNA4LdUHIjvjd/WCw8M+laBHupV+45sBdHmMYR6H8NbunJ9KVkPuXqb
-         wEP93DZqbO7kK5GwyJX0UK4hOAOhuvFv0al/CQAzn/XhSnItbpwaXLCOjR57WpwGGx3R
-         7oES/7zk5uRwr7XQydO/7MAe25qAbEL1ZIucXQ3JQPGN7IP4PuiB7ELwjRiamS8WCDGA
-         Nrz5US1ew0978ykZ1CFHcOgehbXyMG0g5+C3/qCTqqYI3iZtt+OvZjQm53SaedCJWv8Y
-         btZA==
-X-Gm-Message-State: AOJu0Yx50xa3whw0kkv7RY3qc0IMdt788ai0t5svPJTT5+TBZwm5zj6i
-	eMXuCwoDBYF6faHia7KD0eOJ6Q==
-X-Google-Smtp-Source: AGHT+IGRI96+S8G+Wu1lZ2r1WtnFErIwHP6EFRT0QHSV6FRdjptIOjAkrTcn5HdK1GH4IA0qfPmw5g==
-X-Received: by 2002:a05:6358:7296:b0:170:17eb:2039 with SMTP id w22-20020a056358729600b0017017eb2039mr9338350rwf.34.1702423039955;
-        Tue, 12 Dec 2023 15:17:19 -0800 (PST)
+        bh=D0KleV6o3T8VwIpW2LkN+EL0QO50pQ5bkLoTJyBRonk=;
+        b=rKu+xgQSzdyPQq8PiiZ8RInPm51UjNusmOAlsBl/tFgYxdbUIb5AQdahQyfoIkOQUw
+         W+WIBqcfPJr+y/0fL3MWyxmep6TEOpx7r6vg6xKSBBKUJswBFzpsgWyBz3VSACMib3WM
+         s2c7zuZfRFu0LzAwnvAK2qpkxF1oHLT1VT2tmv6wJroxi8m4rwrBrNPUp5nNDFqZ6g9i
+         Wq0674PX36lcWZJO12NN0+5TjXyX4vOvFBZyHnXp3YOrw2ZA8YYblnyxY17d82n/u4ML
+         o2+AcnYNXX3c4jnWyWogUVLQxd2yX/3jOOcNhC3dY/tvqaxpTzcljlABm+gfedleCSOH
+         V97Q==
+X-Gm-Message-State: AOJu0YzGR46//LxJpdITxukDIt8nclq/m+k5vRqccfRVJTxSjfXjeB3q
+	PPPjajJGAoIwos/e/PdmHoRXIw==
+X-Google-Smtp-Source: AGHT+IGxR0oJJr0EjsRByUJbUwGXJ3kDSLTggQ7aP2NMz7xXn0QhhIQ1l2eHY3b5MujUVGQNKRdT6g==
+X-Received: by 2002:a17:902:d4d2:b0:1d3:4aab:194d with SMTP id o18-20020a170902d4d200b001d34aab194dmr281091plg.72.1702423036672;
+        Tue, 12 Dec 2023 15:17:16 -0800 (PST)
 Received: from localhost (34.133.83.34.bc.googleusercontent.com. [34.83.133.34])
-        by smtp.gmail.com with UTF8SMTPSA id z17-20020aa785d1000000b006ce5bb61a5fsm8749920pfn.3.2023.12.12.15.17.19
+        by smtp.gmail.com with UTF8SMTPSA id e1-20020a17090301c100b001d33e65b3cdsm1661489plh.112.2023.12.12.15.17.15
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Dec 2023 15:17:19 -0800 (PST)
+        Tue, 12 Dec 2023 15:17:16 -0800 (PST)
 From: jeffxu@chromium.org
 To: akpm@linux-foundation.org,
 	keescook@chromium.org,
@@ -54,9 +54,9 @@ Cc: jeffxu@google.com,
 	linux-hardening@vger.kernel.org,
 	deraadt@openbsd.org,
 	Jeff Xu <jeffxu@chromium.org>
-Subject: [RFC PATCH v3 09/11] mseal: add MAP_SEALABLE to mmap()
-Date: Tue, 12 Dec 2023 23:17:03 +0000
-Message-ID: <20231212231706.2680890-10-jeffxu@chromium.org>
+Subject: [RFC PATCH v3 06/11] mseal: add sealing support for mmap
+Date: Tue, 12 Dec 2023 23:17:00 +0000
+Message-ID: <20231212231706.2680890-7-jeffxu@chromium.org>
 X-Mailer: git-send-email 2.43.0.472.g3155946c3a-goog
 In-Reply-To: <20231212231706.2680890-1-jeffxu@chromium.org>
 References: <20231212231706.2680890-1-jeffxu@chromium.org>
@@ -70,196 +70,268 @@ Content-Transfer-Encoding: 8bit
 
 From: Jeff Xu <jeffxu@chromium.org>
 
-The MAP_SEALABLE flag is added to the flags field of mmap().
-When present, it marks the map as sealable. A map created
-without MAP_SEALABLE will not support sealing; In other words,
-mseal() will fail for such a map.
+Allow mmap() to set the sealing type when creating a mapping. This is
+useful for optimization because it avoids having to make two system
+calls: one for mmap() and one for mseal(). With this change, mmap()
+can take an input that specifies the sealing type, so only one system
+call is needed.
 
-Applications that don't care about sealing will expect their
-behavior unchanged. For those that need sealing support, opt-in
-by adding MAP_SEALABLE when creating the map.
+This patch uses the "prot" field of mmap() to set the sealing.
+Three sealing types are added to match with MM_SEAL_xyz in mseal().
+PROT_SEAL_SEAL
+PROT_SEAL_BASE
+PROT_SEAL_PROT_PKEY
+
+We also thought about using MAP_SEAL_xyz, which is a field in the
+mmap() function called "flags". However, this field is more about the
+type of mapping, such as MAP_FIXED_NOREPLACE. The "prot" field seems
+more appropriate for our case.
+
+It's worth noting that even though the sealing type is set via the
+"prot" field in mmap(), we don't require it to be set in the "prot"
+field in later mprotect() call. This is unlike the PROT_READ,
+PROT_WRITE, PROT_EXEC bits, e.g. if PROT_WRITE is not set in
+mprotect(), it means that the region is not writable. In other words,
+if you set PROT_SEAL_PROT_PKEY in mmap(), you don't need to set it in
+mprotect(). In fact, with the current approach, mseal() is used to set
+sealing on existing VMA.
 
 Signed-off-by: Jeff Xu <jeffxu@chromium.org>
+Suggested-by: Pedro Falcato <pedro.falcato@gmail.com>
 ---
- include/linux/mm.h                     | 52 ++++++++++++++++++++++++--
- include/linux/mm_types.h               |  1 +
- include/uapi/asm-generic/mman-common.h |  1 +
- mm/mmap.c                              |  2 +-
- mm/mseal.c                             |  7 +++-
- 5 files changed, 57 insertions(+), 6 deletions(-)
+ arch/mips/kernel/vdso.c                | 10 +++-
+ include/linux/mm.h                     | 63 +++++++++++++++++++++++++-
+ include/uapi/asm-generic/mman-common.h | 13 ++++++
+ mm/mmap.c                              | 25 ++++++++--
+ 4 files changed, 105 insertions(+), 6 deletions(-)
 
+diff --git a/arch/mips/kernel/vdso.c b/arch/mips/kernel/vdso.c
+index f6d40e43f108..6d1103d36af1 100644
+--- a/arch/mips/kernel/vdso.c
++++ b/arch/mips/kernel/vdso.c
+@@ -98,11 +98,17 @@ int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
+ 		return -EINTR;
+ 
+ 	if (IS_ENABLED(CONFIG_MIPS_FP_SUPPORT)) {
+-		/* Map delay slot emulation page */
++		/*
++		 * Map delay slot emulation page.
++		 *
++		 * Note: passing vm_seals = 0
++		 * Don't support sealing for vdso for now.
++		 * This might change when we add sealing support for vdso.
++		 */
+ 		base = mmap_region(NULL, STACK_TOP, PAGE_SIZE,
+ 				VM_READ | VM_EXEC |
+ 				VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC,
+-				0, NULL);
++				0, NULL, 0);
+ 		if (IS_ERR_VALUE(base)) {
+ 			ret = base;
+ 			goto out;
 diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 50dda474acc2..6f5dba9fbe21 100644
+index 2435acc1f44f..5d3ee79f1438 100644
 --- a/include/linux/mm.h
 +++ b/include/linux/mm.h
-@@ -267,6 +267,17 @@ extern unsigned int kobjsize(const void *objp);
- 	MM_SEAL_PROT_PKEY | \
- 	MM_SEAL_DISCARD_RO_ANON)
+@@ -266,6 +266,15 @@ extern unsigned int kobjsize(const void *objp);
+ 	MM_SEAL_BASE | \
+ 	MM_SEAL_PROT_PKEY)
  
-+/* define VM_SEALABLE in vm_seals of vm_area_struct. */
-+#define VM_SEALABLE	_BITUL(31)
-+
 +/*
-+ * VM_SEALS_BITS_ALL marks the bits used for
-+ * sealing in vm_seals of vm_area_structure.
++ * PROT_SEAL_ALL is all supported flags in mmap().
++ * See include/uapi/asm-generic/mman-common.h.
 + */
-+#define VM_SEALS_BITS_ALL ( \
-+	MM_SEAL_ALL | \
-+	VM_SEALABLE)
++#define PROT_SEAL_ALL ( \
++	PROT_SEAL_SEAL | \
++	PROT_SEAL_BASE | \
++	PROT_SEAL_PROT_PKEY)
 +
  /*
-  * PROT_SEAL_ALL is all supported flags in mmap().
-  * See include/uapi/asm-generic/mman-common.h.
-@@ -3330,9 +3341,17 @@ static inline void mm_populate(unsigned long addr, unsigned long len) {}
+  * vm_flags in vm_area_struct, see mm_types.h.
+  * When changing, update also include/trace/events/mmflags.h.
+@@ -3290,7 +3299,7 @@ extern unsigned long get_unmapped_area(struct file *, unsigned long, unsigned lo
  
- #ifdef CONFIG_MSEAL
- /*
-- * return the valid sealing (after mask).
-+ * return the valid sealing (after mask), this includes sealable bit.
-  */
- static inline unsigned long vma_seals(struct vm_area_struct *vma)
-+{
-+	return (vma->vm_seals & VM_SEALS_BITS_ALL);
-+}
-+
-+/*
-+ * return the enabled sealing type (after mask), without sealable bit.
-+ */
-+static inline unsigned long vma_enabled_seals(struct vm_area_struct *vma)
- {
+ extern unsigned long mmap_region(struct file *file, unsigned long addr,
+ 	unsigned long len, vm_flags_t vm_flags, unsigned long pgoff,
+-	struct list_head *uf);
++	struct list_head *uf, unsigned long vm_seals);
+ extern unsigned long do_mmap(struct file *file, unsigned long addr,
+ 	unsigned long len, unsigned long prot, unsigned long flags,
+ 	vm_flags_t vm_flags, unsigned long pgoff, unsigned long *populate,
+@@ -3339,12 +3348,47 @@ static inline unsigned long vma_seals(struct vm_area_struct *vma)
  	return (vma->vm_seals & MM_SEAL_ALL);
  }
-@@ -3342,9 +3361,14 @@ static inline void update_vma_seals(struct vm_area_struct *vma, unsigned long vm
- 	vma->vm_seals |= vm_seals;
- }
  
-+static inline bool is_vma_sealable(struct vm_area_struct *vma)
++static inline void update_vma_seals(struct vm_area_struct *vma, unsigned long vm_seals)
 +{
-+	return vma->vm_seals & VM_SEALABLE;
++	vma->vm_seals |= vm_seals;
 +}
 +
- static inline bool check_vma_seals_mergeable(unsigned long vm_seals1, unsigned long vm_seals2)
- {
--	if ((vm_seals1 & MM_SEAL_ALL) != (vm_seals2 & MM_SEAL_ALL))
-+	if ((vm_seals1 & VM_SEALS_BITS_ALL) != (vm_seals2 & VM_SEALS_BITS_ALL))
- 		return false;
+ extern bool can_modify_mm(struct mm_struct *mm, unsigned long start,
+ 		unsigned long end, unsigned long checkSeals);
  
- 	return true;
-@@ -3384,9 +3408,15 @@ static inline unsigned long convert_mmap_seals(unsigned long prot)
-  * check input sealing type from the "prot" field of mmap().
-  * for CONFIG_MSEAL case, this always return 0 (successful).
-  */
--static inline int check_mmap_seals(unsigned long prot, unsigned long *vm_seals)
-+static inline int check_mmap_seals(unsigned long prot, unsigned long *vm_seals,
-+	unsigned long flags)
- {
- 	*vm_seals = convert_mmap_seals(prot);
-+	if (*vm_seals)
-+	/* setting one of MM_SEAL_XX means the map is sealable. */
-+		*vm_seals |= VM_SEALABLE;
-+	else
-+		*vm_seals |= (flags & MAP_SEALABLE) ? VM_SEALABLE:0;
- 	return 0;
- }
- #else
-@@ -3395,6 +3425,16 @@ static inline unsigned long vma_seals(struct vm_area_struct *vma)
- 	return 0;
- }
+ extern bool can_modify_vma(struct vm_area_struct *vma,
+ 		unsigned long checkSeals);
  
-+static inline unsigned long vma_enabled_seals(struct vm_area_struct *vma)
++/*
++ * Convert prot field of mmap to vm_seals type.
++ */
++static inline unsigned long convert_mmap_seals(unsigned long prot)
 +{
++	unsigned long seals = 0;
++
++	/*
++	 * set SEAL_PROT_PKEY implies SEAL_BASE.
++	 */
++	if (prot & PROT_SEAL_PROT_PKEY)
++		prot |= PROT_SEAL_BASE;
++
++	/*
++	 * The seal bits start from bit 26 of the "prot" field of mmap.
++	 * see comments in include/uapi/asm-generic/mman-common.h.
++	 */
++	seals = (prot & PROT_SEAL_ALL) >> PROT_SEAL_BIT_BEGIN;
++	return seals;
++}
++
++/*
++ * check input sealing type from the "prot" field of mmap().
++ * for CONFIG_MSEAL case, this always return 0 (successful).
++ */
++static inline int check_mmap_seals(unsigned long prot, unsigned long *vm_seals)
++{
++	*vm_seals = convert_mmap_seals(prot);
++	return 0;
++}
+ #else
+ static inline bool check_vma_seals_mergeable(unsigned long vm_seals1)
+ {
+@@ -3367,6 +3411,23 @@ static inline bool can_modify_vma(struct vm_area_struct *vma,
+ {
+ 	return true;
+ }
++
++static inline void update_vma_seals(struct vm_area_struct *vma, unsigned long vm_seals)
++{
++}
++
++/*
++ * check input sealing type from the "prot" field of mmap().
++ * For not CONFIG_MSEAL, if SEAL flag is set, it will return failure.
++ */
++static inline int check_mmap_seals(unsigned long prot, unsigned long *vm_seals)
++{
++	if (prot & PROT_SEAL_ALL)
++		return -EINVAL;
++
 +	return 0;
 +}
 +
-+static inline bool is_vma_sealable(struct vm_area_struct *vma)
-+{
-+	return false;
-+}
-+
- static inline bool check_vma_seals_mergeable(unsigned long vm_seals1, unsigned long vm_seals2)
- {
- 	return true;
-@@ -3426,11 +3466,15 @@ static inline void update_vma_seals(struct vm_area_struct *vma, unsigned long vm
-  * check input sealing type from the "prot" field of mmap().
-  * For not CONFIG_MSEAL, if SEAL flag is set, it will return failure.
-  */
--static inline int check_mmap_seals(unsigned long prot, unsigned long *vm_seals)
-+static inline int check_mmap_seals(unsigned long prot, unsigned long *vm_seals,
-+	unsigned long flags)
- {
- 	if (prot & PROT_SEAL_ALL)
- 		return -EINVAL;
- 
-+	if (flags & MAP_SEALABLE)
-+		return -EINVAL;
-+
- 	return 0;
- }
- 
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 052799173c86..c9b04c545f39 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -691,6 +691,7 @@ struct vm_area_struct {
- 	/*
- 	 * bit masks for seal.
- 	 * need this since vm_flags is full.
-+	 * We could merge this into vm_flags if vm_flags ever get expanded.
- 	 */
- 	unsigned long vm_seals;		/* seal flags, see mm.h. */
  #endif
+ 
+ /* These take the mm semaphore themselves */
 diff --git a/include/uapi/asm-generic/mman-common.h b/include/uapi/asm-generic/mman-common.h
-index bf503962409a..57ef4507c00b 100644
+index 6ce1f1ceb432..f07ad9e70b3a 100644
 --- a/include/uapi/asm-generic/mman-common.h
 +++ b/include/uapi/asm-generic/mman-common.h
-@@ -47,6 +47,7 @@
+@@ -17,6 +17,19 @@
+ #define PROT_GROWSDOWN	0x01000000	/* mprotect flag: extend change to start of growsdown vma */
+ #define PROT_GROWSUP	0x02000000	/* mprotect flag: extend change to end of growsup vma */
  
- #define MAP_UNINITIALIZED 0x4000000	/* For anonymous mmap, memory could be
- 					 * uninitialized */
-+#define MAP_SEALABLE	0x8000000	/* map is sealable. */
- 
- /*
-  * Flags for mlock
++/*
++ * The PROT_SEAL_XX defines memory sealings flags in the prot argument
++ * of mmap(). The bits currently take consecutive bits and match
++ * the same sequence as MM_SEAL_XX type, this allows convert_mmap_seals()
++ * to convert prot to MM_SEAL_XX type using bit operations.
++ * The include/uapi/linux/mman.h header file defines the MM_SEAL_XX type,
++ * which is used by the mseal() system call.
++ */
++#define PROT_SEAL_BIT_BEGIN	26
++#define PROT_SEAL_SEAL	_BITUL(PROT_SEAL_BIT_BEGIN)	/* 0x04000000 seal seal */
++#define PROT_SEAL_BASE	_BITUL(PROT_SEAL_BIT_BEGIN + 1)	/* 0x08000000 base for all sealing types */
++#define PROT_SEAL_PROT_PKEY	_BITUL(PROT_SEAL_BIT_BEGIN + 2)	/* 0x10000000 seal prot and pkey */
++
+ /* 0x01 - 0x03 are defined in linux/mman.h */
+ #define MAP_TYPE	0x0f		/* Mask for type of mapping */
+ #define MAP_FIXED	0x10		/* Interpret addr exactly */
 diff --git a/mm/mmap.c b/mm/mmap.c
-index 6da8d83f2e66..6e35e2070060 100644
+index dbc557bd460c..3e1bf5a131b0 100644
 --- a/mm/mmap.c
 +++ b/mm/mmap.c
-@@ -1235,7 +1235,7 @@ unsigned long do_mmap(struct file *file, unsigned long addr,
+@@ -1211,6 +1211,7 @@ unsigned long do_mmap(struct file *file, unsigned long addr,
+ {
+ 	struct mm_struct *mm = current->mm;
+ 	int pkey = 0;
++	unsigned long vm_seals = 0;
+ 
+ 	*populate = 0;
+ 
+@@ -1231,6 +1232,9 @@ unsigned long do_mmap(struct file *file, unsigned long addr,
  	if (flags & MAP_FIXED_NOREPLACE)
  		flags |= MAP_FIXED;
  
--	if (check_mmap_seals(prot, &vm_seals) < 0)
-+	if (check_mmap_seals(prot, &vm_seals, flags) < 0)
- 		return -EINVAL;
- 
- 	if (!(flags & MAP_FIXED))
-diff --git a/mm/mseal.c b/mm/mseal.c
-index 294f48d33db6..5d4cf71b497e 100644
---- a/mm/mseal.c
-+++ b/mm/mseal.c
-@@ -121,9 +121,13 @@ bool can_modify_mm_madv(struct mm_struct *mm, unsigned long start, unsigned long
-  */
- static bool can_add_vma_seals(struct vm_area_struct *vma, unsigned long newSeals)
- {
-+	/* if map is not sealable, reject. */
-+	if (!is_vma_sealable(vma))
-+		return false;
++	if (check_mmap_seals(prot, &vm_seals) < 0)
++		return -EINVAL;
 +
- 	/* When SEAL_MSEAL is set, reject if a new type of seal is added. */
- 	if ((vma->vm_seals & MM_SEAL_SEAL) &&
--	    (newSeals & ~(vma_seals(vma))))
-+	    (newSeals & ~(vma_enabled_seals(vma))))
- 		return false;
+ 	if (!(flags & MAP_FIXED))
+ 		addr = round_hint_to_min(addr);
  
- 	/*
-@@ -185,6 +189,7 @@ static int mseal_fixup(struct vma_iterator *vmi, struct vm_area_struct *vma,
-  * 2> end is part of a valid vma.
-  * 3> No gap (unallocated address) between start and end.
-  * 4> requested seal type can be added in given address range.
-+ * 5> map is sealable.
-  */
- static int check_mm_seal(unsigned long start, unsigned long end,
- 			 unsigned long newtypes)
+@@ -1381,7 +1385,7 @@ unsigned long do_mmap(struct file *file, unsigned long addr,
+ 			vm_flags |= VM_NORESERVE;
+ 	}
+ 
+-	addr = mmap_region(file, addr, len, vm_flags, pgoff, uf);
++	addr = mmap_region(file, addr, len, vm_flags, pgoff, uf, vm_seals);
+ 	if (!IS_ERR_VALUE(addr) &&
+ 	    ((vm_flags & VM_LOCKED) ||
+ 	     (flags & (MAP_POPULATE | MAP_NONBLOCK)) == MAP_POPULATE))
+@@ -2679,7 +2683,7 @@ int do_munmap(struct mm_struct *mm, unsigned long start, size_t len,
+ 
+ unsigned long mmap_region(struct file *file, unsigned long addr,
+ 		unsigned long len, vm_flags_t vm_flags, unsigned long pgoff,
+-		struct list_head *uf)
++		struct list_head *uf, unsigned long vm_seals)
+ {
+ 	struct mm_struct *mm = current->mm;
+ 	struct vm_area_struct *vma = NULL;
+@@ -2723,7 +2727,13 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
+ 
+ 	next = vma_next(&vmi);
+ 	prev = vma_prev(&vmi);
+-	if (vm_flags & VM_SPECIAL) {
++	/*
++	 * For now, sealed VMA doesn't merge with other VMA,
++	 * Will change this in later commit when we make sealed VMA
++	 * also mergeable.
++	 */
++	if ((vm_flags & VM_SPECIAL) ||
++		(vm_seals & MM_SEAL_ALL)) {
+ 		if (prev)
+ 			vma_iter_next_range(&vmi);
+ 		goto cannot_expand;
+@@ -2781,6 +2791,8 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
+ 	vma->vm_page_prot = vm_get_page_prot(vm_flags);
+ 	vma->vm_pgoff = pgoff;
+ 
++	update_vma_seals(vma, vm_seals);
++
+ 	if (file) {
+ 		if (vm_flags & VM_SHARED) {
+ 			error = mapping_map_writable(file->f_mapping);
+@@ -2992,6 +3004,13 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
+ 	if (pgoff + (size >> PAGE_SHIFT) < pgoff)
+ 		return ret;
+ 
++	/*
++	 * Do not support sealing in remap_file_page.
++	 * sealing is set via mmap() and mseal().
++	 */
++	if (prot & PROT_SEAL_ALL)
++		return ret;
++
+ 	if (mmap_write_lock_killable(mm))
+ 		return -EINTR;
+ 
 -- 
 2.43.0.472.g3155946c3a-goog
 
