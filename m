@@ -1,87 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6075B75401;
-	Tue, 12 Dec 2023 15:09:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EknqhJ48"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F0F8C433C7;
-	Tue, 12 Dec 2023 15:09:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702393770;
-	bh=Dd+Z9g8Wy9pE/XbicCpt6HzoSR2qPgHCFARthzdpVJ0=;
-	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-	b=EknqhJ48zdty/TvXxhQhjINVvNz70LWWe1nCJ0hC3o5SwQu1v3g9NkkLvmYnpntZq
-	 kuTTu54aL6cCpME7W5w/OZ4ynNorUF6jL6GACwmTP7vGG3lxzUuSODN88EKpcuMyG6
-	 ckCtYRAfESJXYsK/bFIqBYNYxbNTw7jTKFrYNcldjNFSUgvs60t6cvLzWuJpxNKFcF
-	 TmOZimDPKkM32RGWMHrGXNg4kxDAIqdrfezpQ+EB3ydFBBOSqKxlnW2C2W+iqWXozO
-	 ggAKjG6e/TFBzY/QppVqhjy99DQweo9FJbK8t44OMPq0gdvgBB57AecJ3WyUNR208b
-	 OPwuiWsNz1M3w==
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="DaoTitMh"
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42051A8;
+	Tue, 12 Dec 2023 08:40:46 -0800 (PST)
+Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BCFqrOE010678;
+	Tue, 12 Dec 2023 16:40:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : content-transfer-encoding
+ : mime-version; s=pp1; bh=R2ZvyGmXnPPNYRQg2UvIIy4NXqkVhsr36/b1Jlex5oo=;
+ b=DaoTitMhVYTtHkdvv62+RyGbqjVjtegKtGvqRywcRDF0sw590wG8Ro+D+NTNDx49H0Hm
+ mTx4nkVDjIosrecOR49tGaV+LAzqlfrLtsV4ypNzgKo1BDK7tuEE858/R2Lv43LWr0tI
+ twrosXBff2rQcKlshLiWJlL/1018+yOszoqmAdWtggBftEmH3Y0VP0Llodkj+tYHz1gv
+ SK2WZE91OSB4sWQX0fMmoWAjttSF7uYFYjwnxzbhmBMbuJJDJiNjx46VYvkYqrYj+jzD
+ EBIQT/DnTfuR9ipeTw652AFFFERitNeoPtHOJanOFDwrxgksN8UBlN3mo1PWhySOQGVu hg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uxtj11kgn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 12 Dec 2023 16:40:29 +0000
+Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3BCGFhSt015432;
+	Tue, 12 Dec 2023 16:40:28 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uxtj11kg1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 12 Dec 2023 16:40:28 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3BCGN4gF013869;
+	Tue, 12 Dec 2023 16:40:27 GMT
+Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3uw5921t5g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 12 Dec 2023 16:40:27 +0000
+Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
+	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3BCGeRgp42860960
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 12 Dec 2023 16:40:27 GMT
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E3FE658059;
+	Tue, 12 Dec 2023 16:40:26 +0000 (GMT)
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3D10858053;
+	Tue, 12 Dec 2023 16:40:25 +0000 (GMT)
+Received: from gfwa153.aus.stglabs.ibm.com (unknown [9.3.84.127])
+	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 12 Dec 2023 16:40:25 +0000 (GMT)
+From: Ninad Palsule <ninad@linux.ibm.com>
+To: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        joel@jms.id.au, andrew@codeconstruct.com.au, peterhuewe@gmx.de,
+        jarkko@kernel.org, jgg@ziepe.ca, keescook@chromium.org,
+        tony.luck@intel.com, gpiccoli@igalia.com, ninad@linux.ibm.com,
+        johannes.holland@infineon.com, linux@roeck-us.net, broonie@kernel.org
+Cc: patrick.rudolph@9elements.com, vincent@vtremblay.dev,
+        peteryin.openbmc@gmail.com, lakshmiy@us.ibm.com, bhelgaas@google.com,
+        naresh.solanki@9elements.com, alexander.stein@ew.tq-group.com,
+        festevam@denx.de, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-hardening@vger.kernel.org, geissonator@yahoo.com
+Subject: [PATCH v1 7/8] tpm: tis-i2c: Add more compatible strings
+Date: Tue, 12 Dec 2023 10:40:03 -0600
+Message-Id: <20231212164004.1683589-8-ninad@linux.ibm.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20231212164004.1683589-1-ninad@linux.ibm.com>
+References: <20231212164004.1683589-1-ninad@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: q_0o2gxhRbmM75pPMGzEmo-uLp8nnzdS
+X-Proofpoint-ORIG-GUID: 1TicZk_omyb0OwjuP4oIfXPW82ih_7Mf
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH][next] wifi: mt76: mt7996: Use DECLARE_FLEX_ARRAY() and
- fix
- -Warray-bounds warnings
-From: Kalle Valo <kvalo@kernel.org>
-In-Reply-To: <ZVaCNAohuieMmdq9@work>
-References: <ZVaCNAohuieMmdq9@work>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
- Ryder Lee <ryder.lee@mediatek.com>, Shayne Chen <shayne.chen@mediatek.com>,
- Sean Wang <sean.wang@mediatek.com>,
- Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-        <angelogioacchino.delregno@collabora.com>,
- linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- linux-hardening@vger.kernel.org
-User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
-Message-ID: <170239376588.306086.11901816078975577906.kvalo@kernel.org>
-Date: Tue, 12 Dec 2023 15:09:27 +0000 (UTC)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-12_10,2023-12-12_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ lowpriorityscore=0 priorityscore=1501 malwarescore=0 adultscore=0
+ suspectscore=0 mlxlogscore=999 spamscore=0 bulkscore=0 phishscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2312120128
 
-"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
+From: Joel Stanley <joel@jms.id.au>
 
-> Transform zero-length arrays `adm_stat` and `msdu_cnt` into proper
-> flexible-array members in anonymous union in `struct
-> mt7996_mcu_all_sta_info_event` via the DECLARE_FLEX_ARRAY()
-> helper; and fix multiple -Warray-bounds warnings:
-> 
-> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:483:61: warning: array subscript <unknown> is outside array bounds of 'struct <anonymous>[0]' [-Warray-bounds=]
-> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:490:58: warning: array subscript <unknown> is outside array bounds of 'struct <anonymous>[0]' [-Warray-bounds=]
-> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:492:58: warning: array subscript <unknown> is outside array bounds of 'struct <anonymous>[0]' [-Warray-bounds=]
-> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:469:61: warning: array subscript <unknown> is outside array bounds of 'struct <anonymous>[0]' [-Warray-bounds=]
-> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:477:66: warning: array subscript <unknown> is outside array bounds of 'struct <anonymous>[0]' [-Warray-bounds=]
-> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:479:66: warning: array subscript <unknown> is outside array bounds of 'struct <anonymous>[0]' [-Warray-bounds=]
-> 
-> This results in no differences in binary output, helps with the ongoing
-> efforts to globally enable -Warray-bounds.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
+The NPCT75x TPM is TIS compatible. It has an I2C and SPI interface.
 
-Fails to apply, please rebase on top of wireless-next.
+https://www.nuvoton.com/products/cloud-computing/security/trusted-platform-module-tpm/
 
-Recorded preimage for 'drivers/net/wireless/mediatek/mt76/mt7996/mcu.h'
-error: Failed to merge in the changes.
-hint: Use 'git am --show-current-patch=diff' to see the failed patch
-Applying: wifi: mt76: mt7996: Use DECLARE_FLEX_ARRAY() and fix -Warray-bounds warnings
-Using index info to reconstruct a base tree...
-M	drivers/net/wireless/mediatek/mt76/mt7996/mcu.h
-Falling back to patching base and 3-way merge...
-Auto-merging drivers/net/wireless/mediatek/mt76/mt7996/mcu.h
-CONFLICT (content): Merge conflict in drivers/net/wireless/mediatek/mt76/mt7996/mcu.h
-Patch failed at 0001 wifi: mt76: mt7996: Use DECLARE_FLEX_ARRAY() and fix -Warray-bounds warnings
+Add a compatible string for it, and the generic compatible.
 
-Patch set to Changes Requested.
+OpenBMC-Staging-Count: 3
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+Acked-by: Jarkko Sakkinen <jarkko@kernel.org>
+Link: https://lore.kernel.org/r/20220928043957.2636877-4-joel@jms.id.au
+Signed-off-by: Ninad Palsule <ninad@linux.ibm.com>
+---
+ drivers/char/tpm/tpm_tis_i2c.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
+diff --git a/drivers/char/tpm/tpm_tis_i2c.c b/drivers/char/tpm/tpm_tis_i2c.c
+index a897402cc36a..9511c0d50185 100644
+--- a/drivers/char/tpm/tpm_tis_i2c.c
++++ b/drivers/char/tpm/tpm_tis_i2c.c
+@@ -383,6 +383,8 @@ MODULE_DEVICE_TABLE(i2c, tpm_tis_i2c_id);
+ #ifdef CONFIG_OF
+ static const struct of_device_id of_tis_i2c_match[] = {
+ 	{ .compatible = "infineon,slb9673", },
++	{ .compatible = "nuvoton,npct75x", },
++	{ .compatible = "tcg,tpm-tis-i2c", },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, of_tis_i2c_match);
 -- 
-https://patchwork.kernel.org/project/linux-wireless/patch/ZVaCNAohuieMmdq9@work/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.39.2
 
