@@ -1,127 +1,284 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1238FA7
-	for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 13:05:26 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rD9wF-0001Oy-5K; Tue, 12 Dec 2023 22:05:11 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rD9wE-00FQEY-2C; Tue, 12 Dec 2023 22:05:10 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rD9wD-001snP-Ol; Tue, 12 Dec 2023 22:05:09 +0100
-Date: Tue, 12 Dec 2023 22:05:09 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: linux-doc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-leds@vger.kernel.org, chrome-platform@lists.linux.dev,
-	linux-samsung-soc@vger.kernel.org,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-staging@lists.linux.dev,
-	linux-rockchip@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-pwm@vger.kernel.org, greybus-dev@lists.linaro.org,
-	linux-mediatek@lists.infradead.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	asahi@lists.linux.dev, kernel@pengutronix.de
-Subject: Re: [PATCH v4 000/115] pwm: Fix lifetime issues for pwm_chips
-Message-ID: <20231212210509.focpb63fbmahqij3@pengutronix.de>
-References: <cover.1701860672.git.u.kleine-koenig@pengutronix.de>
- <ZXM4CdJxg-XrYhkn@orome.fritz.box>
- <20231208185033.e6ty2cajcfle6dgk@pengutronix.de>
- <ZXbzcFTnDTKoZAta@orome.fritz.box>
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EBII8CWq"
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C590CB3
+	for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 13:17:42 -0800 (PST)
+Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1d053c45897so54848215ad.2
+        for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 13:17:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1702415862; x=1703020662; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YgP6QDGYW90+EPtUKh6hhExTw/nr/8L1WXYuh71GNlI=;
+        b=EBII8CWqTewHCYUKQvaukG1zWeJjB2pl/RbMg+j8fFcvUq11md9ygurXaQ0F8RZJRd
+         QN9d/19YNp3UbZ8oh9br9LCWCn2S3HP6xRQ592cXogzBEjuqKMlAo7D2tjJgS0BmhQwY
+         x3edF44sbx8FhzObBflU+lF0Lssb3eOq3JnHc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702415862; x=1703020662;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YgP6QDGYW90+EPtUKh6hhExTw/nr/8L1WXYuh71GNlI=;
+        b=OSFwRusGKR5Jfw/5k1+Qhb+sKj1OYhPJGLcLX3LI+S/lRymc3CL+LP8NX5P8kOQLmt
+         /huEms/nHRIGzNUaJEgLb66jvJBu7HWijwLB1OySYMR27hWNMx23EHaxpsm2BqPaYWw5
+         28g9ns7idfsi3PUb0V1pu+y5hMJClDp/4RNF/vCuT7Ylnoe7o59pu+8RJ7/6ZG3NHaa0
+         dimf8dWPJ1UjqoTfEe/mS2888Ifl83Vf3Agy4vfMhAN20l7Z3F6ag76v0YFw8hatonGt
+         GPMtlugj3p8UjrcDHTJ6SiSHJBWuRTCh92WqGVd7/DkzfV3EZPPd1AarsdLdIp+imNc3
+         YSoQ==
+X-Gm-Message-State: AOJu0Yw9h1RgQ0z+z6J0W2cy0DUyIpIQy9x0IInIPrK6NabEPRs5k6R+
+	P2A6o/sCGH8e2t9IWrb7K5xUjg==
+X-Google-Smtp-Source: AGHT+IFjDgIDgEDyV0NYMtC7wrznCUmiU5/lWSweOP8HyZzQAO0+By9K4rXrnLgAr+Ii7qKKdIvgKg==
+X-Received: by 2002:a17:902:e74e:b0:1cc:5e1b:98b5 with SMTP id p14-20020a170902e74e00b001cc5e1b98b5mr7270093plf.66.1702415862230;
+        Tue, 12 Dec 2023 13:17:42 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id g14-20020a1709029f8e00b001cf7c07be50sm9052322plq.58.2023.12.12.13.17.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Dec 2023 13:17:41 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	Tejun Heo <tj@kernel.org>,
+	Zefan Li <lizefan.x@bytedance.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Waiman Long <longman@redhat.com>,
+	cgroups@vger.kernel.org,
+	Azeem Shaikh <azeemshaikh38@gmail.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v3 3/3] kernfs: Convert kernfs_path_from_node_locked() from strlcpy() to strscpy()
+Date: Tue, 12 Dec 2023 13:17:40 -0800
+Message-Id: <20231212211741.164376-3-keescook@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231212211606.make.155-kees@kernel.org>
+References: <20231212211606.make.155-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="gyt34nc3mm25zmmf"
-Content-Disposition: inline
-In-Reply-To: <ZXbzcFTnDTKoZAta@orome.fritz.box>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-hardening@vger.kernel.org
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8042; i=keescook@chromium.org;
+ h=from:subject; bh=shZXUYfHvcn83JB9rTJeaRzUZqZ1UgzjWRrQTVCVtxU=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBleM30G+t8NV/vyHSFzjkC+K+Zj47yXA4kAs33K
+ S4H3DoxNmuJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZXjN9AAKCRCJcvTf3G3A
+ JkyTEAConGhiBLHsocQ8sbSwq6RTnjeVAFv2A72J5kJK8MHW3sFiydk6ragXK0H4NjhddAT6k9R
+ Iwpc+sAMeXtC5LSHlbkxzwxmAmTpvdZ0+HkpGNofYnO1GRBS2tNZQBx2xovmaBZGLhI3uL1S2Mf
+ uFy1jEp7IRjwOUbM1zHWV4bM+TLIxRHQDtwtec7aUCS9kz92muBO+LZI8wOqu3//0chhPA/oJYK
+ OmIQjfULUR5a/IzcHJAYVXdcRoDKXwclSWSFPM/lbR+ZX7XOdatfwteancUB7mA3VqMASoK6jzD
+ /WWodvOyGvMywKDybb9iVwPwLdcDqi6f6YRwUsKHrO1PU0X/vaRreWv0AW+McpdjcGDDak159n5
+ dLG/EkNlTRggxw61NNRmjuUIplvXSnvWAMjv1qumw8iiEzajnLTxs+d3rF7yWOneFFWz8cuucBs
+ T6q984RP+2VM4dWIU9dRcdMhF4+sfRiXBnCq95xZcrcakrbEqaZ1G6JMiaKn+pTpTGFBrSw9CAT
+ 91oa2XERahlLlqpV8VMm0QS8tptziqLPqdU3+jQq45xdbDLw4g26B01O8G9PkgXEBkYxNXi2CfE
+ mc85dyxzgFB/wBjBPh0kEN9HaDc4FwRSQ25SkObRCYaStboeynzw51FRZV/pJz/aF6MJJlMUqNu aYQ0Cy79yRW6wZg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
+One of the last remaining users of strlcpy() in the kernel is
+kernfs_path_from_node_locked(), which passes back the problematic "length
+we _would_ have copied" return value to indicate truncation.  Convert the
+chain of all callers to use the negative return value (some of which
+already doing this explicitly). All callers were already also checking
+for negative return values, so the risk to missed checks looks very low.
 
---gyt34nc3mm25zmmf
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In this analysis, it was found that cgroup1_release_agent() actually
+didn't handle the "too large" condition, so this is technically also a
+bug fix. :)
 
-Hello Thierry,
+Here's the chain of callers, and resolution identifying each one as now
+handling the correct return value:
 
-On Mon, Dec 11, 2023 at 12:33:04PM +0100, Thierry Reding wrote:
-> On Fri, Dec 08, 2023 at 07:50:33PM +0100, Uwe Kleine-K=F6nig wrote:
-> > You don't need to touch all drivers because you didn't change struct
-> > pwm_chip::dev yet. (If you really want, you don't need to change that,
-> > but then you have some duplication as chip->dev holds the same value as
-> > priv->dev.parent in the end.)
->=20
-> I don't think that's a problem. These are for two logically separate
-> things, after all.
+kernfs_path_from_node_locked()
+        kernfs_path_from_node()
+                pr_cont_kernfs_path()
+                        returns void
+                kernfs_path()
+                        sysfs_warn_dup()
+                                return value ignored
+                        cgroup_path()
+                                blkg_path()
+                                        bfq_bic_update_cgroup()
+                                                return value ignored
+                                TRACE_IOCG_PATH()
+                                        return value ignored
+                                TRACE_CGROUP_PATH()
+                                        return value ignored
+                                perf_event_cgroup()
+                                        return value ignored
+                                task_group_path()
+                                        return value ignored
+                                damon_sysfs_memcg_path_eq()
+                                        return value ignored
+                                get_mm_memcg_path()
+                                        return value ignored
+                                lru_gen_seq_show()
+                                        return value ignored
+                        cgroup_path_from_kernfs_id()
+                                return value ignored
+                cgroup_show_path()
+                        already converted "too large" error to negative value
+                cgroup_path_ns_locked()
+                        cgroup_path_ns()
+                                bpf_iter_cgroup_show_fdinfo()
+                                        return value ignored
+                                cgroup1_release_agent()
+                                        wasn't checking "too large" error
+                        proc_cgroup_show()
+                                already converted "too large" to negative value
 
-How are they different? I'd say one is the initializer for the other and
-(ideally) unused after that. With that interpretation they are indeed
-different, but then it's ugly that the initializer keeps staying around.
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Zefan Li <lizefan.x@bytedance.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Waiman Long <longman@redhat.com>
+Cc: cgroups@vger.kernel.org
+Co-developed-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+Link: https://lore.kernel.org/r/20231116192127.1558276-3-keescook@chromium.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ fs/kernfs/dir.c           | 34 +++++++++++++++++-----------------
+ kernel/cgroup/cgroup-v1.c |  2 +-
+ kernel/cgroup/cgroup.c    |  4 ++--
+ kernel/cgroup/cpuset.c    |  2 +-
+ 4 files changed, 21 insertions(+), 21 deletions(-)
 
-> Duplication can also sometimes be useful to simplify
-> things. There are plently of cases where we use local variables for the
-> same reason.
+diff --git a/fs/kernfs/dir.c b/fs/kernfs/dir.c
+index 8c0e5442597e..8ec73f6cf6ec 100644
+--- a/fs/kernfs/dir.c
++++ b/fs/kernfs/dir.c
+@@ -127,7 +127,7 @@ static struct kernfs_node *kernfs_common_ancestor(struct kernfs_node *a,
+  *
+  * [3] when @kn_to is %NULL result will be "(null)"
+  *
+- * Return: the length of the full path.  If the full length is equal to or
++ * Return: the length of the constructed path.  If the path would have been
+  * greater than @buflen, @buf contains the truncated path with the trailing
+  * '\0'.  On error, -errno is returned.
+  */
+@@ -138,16 +138,17 @@ static int kernfs_path_from_node_locked(struct kernfs_node *kn_to,
+ 	struct kernfs_node *kn, *common;
+ 	const char parent_str[] = "/..";
+ 	size_t depth_from, depth_to, len = 0;
++	ssize_t copied;
+ 	int i, j;
+ 
+ 	if (!kn_to)
+-		return strlcpy(buf, "(null)", buflen);
++		return strscpy(buf, "(null)", buflen);
+ 
+ 	if (!kn_from)
+ 		kn_from = kernfs_root(kn_to)->kn;
+ 
+ 	if (kn_from == kn_to)
+-		return strlcpy(buf, "/", buflen);
++		return strscpy(buf, "/", buflen);
+ 
+ 	common = kernfs_common_ancestor(kn_from, kn_to);
+ 	if (WARN_ON(!common))
+@@ -158,18 +159,19 @@ static int kernfs_path_from_node_locked(struct kernfs_node *kn_to,
+ 
+ 	buf[0] = '\0';
+ 
+-	for (i = 0; i < depth_from; i++)
+-		len += strlcpy(buf + len, parent_str,
+-			       len < buflen ? buflen - len : 0);
++	for (i = 0; i < depth_from; i++) {
++		copied = strscpy(buf + len, parent_str, buflen - len);
++		if (copied < 0)
++			return copied;
++		len += copied;
++	}
+ 
+ 	/* Calculate how many bytes we need for the rest */
+ 	for (i = depth_to - 1; i >= 0; i--) {
+ 		for (kn = kn_to, j = 0; j < i; j++)
+ 			kn = kn->parent;
+-		len += strlcpy(buf + len, "/",
+-			       len < buflen ? buflen - len : 0);
+-		len += strlcpy(buf + len, kn->name,
+-			       len < buflen ? buflen - len : 0);
++
++		len += scnprintf(buf + len, buflen - len, "/%s", kn->name);
+ 	}
+ 
+ 	return len;
+@@ -214,7 +216,7 @@ int kernfs_name(struct kernfs_node *kn, char *buf, size_t buflen)
+  * path (which includes '..'s) as needed to reach from @from to @to is
+  * returned.
+  *
+- * Return: the length of the full path.  If the full length is equal to or
++ * Return: the length of the constructed path.  If the path would have been
+  * greater than @buflen, @buf contains the truncated path with the trailing
+  * '\0'.  On error, -errno is returned.
+  */
+@@ -265,12 +267,10 @@ void pr_cont_kernfs_path(struct kernfs_node *kn)
+ 	sz = kernfs_path_from_node(kn, NULL, kernfs_pr_cont_buf,
+ 				   sizeof(kernfs_pr_cont_buf));
+ 	if (sz < 0) {
+-		pr_cont("(error)");
+-		goto out;
+-	}
+-
+-	if (sz >= sizeof(kernfs_pr_cont_buf)) {
+-		pr_cont("(name too long)");
++		if (sz == -E2BIG)
++			pr_cont("(name too long)");
++		else
++			pr_cont("(error)");
+ 		goto out;
+ 	}
+ 
+diff --git a/kernel/cgroup/cgroup-v1.c b/kernel/cgroup/cgroup-v1.c
+index 76db6c67e39a..9cb00ebe9ac6 100644
+--- a/kernel/cgroup/cgroup-v1.c
++++ b/kernel/cgroup/cgroup-v1.c
+@@ -802,7 +802,7 @@ void cgroup1_release_agent(struct work_struct *work)
+ 		goto out_free;
+ 
+ 	ret = cgroup_path_ns(cgrp, pathbuf, PATH_MAX, &init_cgroup_ns);
+-	if (ret < 0 || ret >= PATH_MAX)
++	if (ret < 0)
+ 		goto out_free;
+ 
+ 	argv[0] = agentbuf;
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index 4b9ff41ca603..8d2674c6aaef 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -1893,7 +1893,7 @@ int cgroup_show_path(struct seq_file *sf, struct kernfs_node *kf_node,
+ 	len = kernfs_path_from_node(kf_node, ns_cgroup->kn, buf, PATH_MAX);
+ 	spin_unlock_irq(&css_set_lock);
+ 
+-	if (len >= PATH_MAX)
++	if (len == -E2BIG)
+ 		len = -ERANGE;
+ 	else if (len > 0) {
+ 		seq_escape(sf, buf, " \t\n\\");
+@@ -6301,7 +6301,7 @@ int proc_cgroup_show(struct seq_file *m, struct pid_namespace *ns,
+ 		if (cgroup_on_dfl(cgrp) || !(tsk->flags & PF_EXITING)) {
+ 			retval = cgroup_path_ns_locked(cgrp, buf, PATH_MAX,
+ 						current->nsproxy->cgroup_ns);
+-			if (retval >= PATH_MAX)
++			if (retval == -E2BIG)
+ 				retval = -ENAMETOOLONG;
+ 			if (retval < 0)
+ 				goto out_unlock;
+diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+index 615daaf87f1f..fb29158ae825 100644
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -4941,7 +4941,7 @@ int proc_cpuset_show(struct seq_file *m, struct pid_namespace *ns,
+ 	retval = cgroup_path_ns(css->cgroup, buf, PATH_MAX,
+ 				current->nsproxy->cgroup_ns);
+ 	css_put(css);
+-	if (retval >= PATH_MAX)
++	if (retval == -E2BIG)
+ 		retval = -ENAMETOOLONG;
+ 	if (retval < 0)
+ 		goto out_free;
+-- 
+2.34.1
 
-local variables go away though after the respective function is left.
-chip->dev and its copy priv->dev.parent stay around for the full
-lifetime of the chip.
-
-> > > @@ -58,23 +60,24 @@ static struct pwm_chip *pwmchip_find_by_name(cons=
-t char *name)
-> > > =20
-> > >  static int pwm_device_request(struct pwm_device *pwm, const char *la=
-bel)
-> > >  {
-> > > +	struct pwm_chip *chip =3D pwm->priv->chip;
-> >=20
-> > With my approach getting the chip of a struct pwm_device is only one
-> > pointer dereference away. You need two.
->=20
-> None of the functions here are called very often, so even if this isn't
-> optimized away it would hardly matter.
-
-I'd say pwm_apply_state() at least matters. Also I think that making a
-slow path quicker is a good thing.=20
-
-I wonder how we'll converge to an approach that can go into the
-mainline given that we both have our strong opinions.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---gyt34nc3mm25zmmf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmV4ywQACgkQj4D7WH0S
-/k4AOQf/Rn+1it6Pa2jcb+shcSHEefw76NASZ1jTJwzdnczaZca+4/TdY0/HLE/V
-27TLO93Qd9e4o0E4uFjg/T9KbZy+cu9WxiCJ9LgBEhgPaLIWe9opiDarsy2BNLJi
-e6lERFOmyBoG3USP7t/iEQn5C+0+gC6/pcPVWk8TJO/mc2kr8ioQRsaHtaE0AsX0
-hpZS0GH+ypW5d1saF+TMkSDV4QUzmTaXxsSDqG9/vnXhjln6wlriyIo2gJI2qQ6R
-gBrGVWoz8SnG3OjfGZwo9KhL+KPTbjIba4erb1KbE9j9Ul7c3xF/nA6GcTwU/IcQ
-6WQMUp7Ez5oG8txpknnsR9R2Iimimw==
-=APXJ
------END PGP SIGNATURE-----
-
---gyt34nc3mm25zmmf--
