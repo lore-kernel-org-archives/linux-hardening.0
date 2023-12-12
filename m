@@ -1,40 +1,40 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lX1FHusX"
-Received: from mail-ot1-x333.google.com (mail-ot1-x333.google.com [IPv6:2607:f8b0:4864:20::333])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E3C0B0
-	for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 15:17:12 -0800 (PST)
-Received: by mail-ot1-x333.google.com with SMTP id 46e09a7af769-6d9f4eed60eso3600118a34.1
-        for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 15:17:12 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SVnvx4Kv"
+Received: from mail-ot1-x32a.google.com (mail-ot1-x32a.google.com [IPv6:2607:f8b0:4864:20::32a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A3E0AA
+	for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 15:17:18 -0800 (PST)
+Received: by mail-ot1-x32a.google.com with SMTP id 46e09a7af769-6d9f879f784so3384946a34.2
+        for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 15:17:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1702423032; x=1703027832; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1702423038; x=1703027838; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DmouMMuL78gKzcDFfbVzkzXE8UDTo3Q4rwqrYea/myQ=;
-        b=lX1FHusXWCgacqtjr4amN5wcHfC3jsH9j08xBbFV+d/o/JAuCEJymeuO3F+i6aVb6u
-         2aH9ytcBN6Dr1ePRno5TSIhR62rt0pjMlPLjRdO7I1Lq/D35erfiH5gLJBF+MwP9LPf5
-         Z3vhD8hrveQ7OybEF7hZ94uP9vVNzyH98m614=
+        bh=9hi31AjxJtNZjlJknX0J3BHnj/VEX2GCu7NwkPG/5ME=;
+        b=SVnvx4Kv7VfUbtzFewZaPKducGIyowYGkR4SRcsDB29q2C800rgrYLWJMuNJmy1VGP
+         qtFqp6amVjfGe8Q0UKjLhnvZPIrJ7BGyRFe9K+J4uAc7y3+KhuzC/qushJhxYiFiChP5
+         mDu6LxxYTM7gBfvxZFkXJU7A8YZm8+3Z3TKQE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702423032; x=1703027832;
+        d=1e100.net; s=20230601; t=1702423038; x=1703027838;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DmouMMuL78gKzcDFfbVzkzXE8UDTo3Q4rwqrYea/myQ=;
-        b=INqAhRT1WtIc8gMu7uyNOVg47idihczXX1eKlK2y8ukhyCx9yI3JTCrCOtyEn5nOlc
-         tBM3Q9Qy1Hjl+cISqv366q4RUIyyTr4lvJ321df8jS+NJdMit8U5qhbPh7dO2p6esp6X
-         mEHtx/LCv6BuIiY62FnHibCzHDRbb3QeIq5Srn5ixXkbu7vvnAoNMvolRU+OmHUPcKJN
-         U02840Kiny1CVTzlR4n4SVfewd+W8t9ObP9XhHFGLZNguBfFzbHBKNwFqkq4t3n3viAv
-         QnADsFqOQhBnng/flgmPujPLQCmc249m+bDHXZ8lzOVtm0QJaR4ViK7Qv0xEnlw4A2+K
-         YMGw==
-X-Gm-Message-State: AOJu0YxmHcViX9n520yxCcfIqexI2EWvCylfQ9zLA/sOTZsw7eAbaZAp
-	WPL6eRVGKv7P7TaOmqFC+ovC8Q==
-X-Google-Smtp-Source: AGHT+IHWRbxCpkSD3Z0OA1+KEQM7Nb43rRei8W5sZbD56ePXA6pfN1fHTdnYRm+1Er/WpLM8j3G00Q==
-X-Received: by 2002:a05:6871:b06:b0:1fb:337c:402c with SMTP id fq6-20020a0568710b0600b001fb337c402cmr8802265oab.37.1702423031712;
-        Tue, 12 Dec 2023 15:17:11 -0800 (PST)
+        bh=9hi31AjxJtNZjlJknX0J3BHnj/VEX2GCu7NwkPG/5ME=;
+        b=sx2KicAqxrWGNRf6zm0Y7f6Uv+yrW/Tx+fnWSwboCHPldNFXJ8NVhMJPRG9MgbAhQ7
+         iMnVtZdRSdmFL0HAwNGGD48hl7JcC4Sf7t2/U9SToNuXWb8aFR5v0jXviBHyaPPUEAfm
+         1qk5l5HLJgEZTme9fpOV0rcGMyqFg1BSbowjKtnnfc1Uf7aCTVCdZWByFNyXHv8E1lB8
+         m8tkZdw8Tt6M1knI0Rj+F+SC6VehO2rCVilaAk2+1vp7qnFcXvM/TkBz2LbdDomVmKA6
+         ujpYHB8hkZdfO/uhyCV/KosROPNY/VAhh9cXYxNZJ10R370Ih8EKTwue4yM+xxHRkqza
+         n2Xg==
+X-Gm-Message-State: AOJu0YzWE/3upwGvJpnZuezCOq4aNKEK8kbrySsRwhe7fCyqF7qo5B+4
+	g8ZIjPqCVo8bGiu//qK0ujjB6WsLI1xyhWp3pWo=
+X-Google-Smtp-Source: AGHT+IHQHtOqaKUE81zeaJCn2q6SFy9/JngG9UEh+z5j67n5lmwKX/FrsIt4S5/AHC8z+ShhO7V8gw==
+X-Received: by 2002:a05:6358:9394:b0:170:5200:e1b2 with SMTP id h20-20020a056358939400b001705200e1b2mr7564052rwb.4.1702423037735;
+        Tue, 12 Dec 2023 15:17:17 -0800 (PST)
 Received: from localhost (34.133.83.34.bc.googleusercontent.com. [34.83.133.34])
-        by smtp.gmail.com with UTF8SMTPSA id p2-20020aa78602000000b006ce691a1419sm8646308pfn.186.2023.12.12.15.17.11
+        by smtp.gmail.com with UTF8SMTPSA id w5-20020a056a0014c500b006ce2e77ec4csm8687959pfu.193.2023.12.12.15.17.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Dec 2023 15:17:11 -0800 (PST)
+        Tue, 12 Dec 2023 15:17:17 -0800 (PST)
 From: jeffxu@chromium.org
 To: akpm@linux-foundation.org,
 	keescook@chromium.org,
@@ -54,9 +54,9 @@ Cc: jeffxu@google.com,
 	linux-hardening@vger.kernel.org,
 	deraadt@openbsd.org,
 	Jeff Xu <jeffxu@chromium.org>
-Subject: [RFC PATCH v3 01/11] mseal: Add mseal syscall.
-Date: Tue, 12 Dec 2023 23:16:55 +0000
-Message-ID: <20231212231706.2680890-2-jeffxu@chromium.org>
+Subject: [RFC PATCH v3 07/11] mseal: make sealed VMA mergeable.
+Date: Tue, 12 Dec 2023 23:17:01 +0000
+Message-ID: <20231212231706.2680890-8-jeffxu@chromium.org>
 X-Mailer: git-send-email 2.43.0.472.g3155946c3a-goog
 In-Reply-To: <20231212231706.2680890-1-jeffxu@chromium.org>
 References: <20231212231706.2680890-1-jeffxu@chromium.org>
@@ -66,519 +66,397 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Jeff Xu <jeffxu@chromium.org>
 
-The new mseal() is an architecture independent syscall, and with
-following signature:
+Add merge/split handling for mlock/madvice/mprotect/mmap case.
+Make sealed VMA mergeable with adjacent VMAs.
 
-mseal(void addr, size_t len, unsigned long types, unsigned long flags)
-
-addr/len: memory range.  Must be continuous/allocated memory, or else
-mseal() will fail and no VMA is updated. For details on acceptable
-arguments, please refer to comments in mseal.c. Those are also covered
-by the selftest.
-
-This CL adds three sealing types.
-MM_SEAL_BASE
-MM_SEAL_PROT_PKEY
-MM_SEAL_SEAL
-
-The MM_SEAL_BASE:
-The base package includes the features common to all VMA sealing
-types. It prevents sealed VMAs from:
-1> Unmapping, moving to another location, and shrinking the size, via
-munmap() and mremap(), can leave an empty space, therefore can be
-replaced with a VMA with a new set of attributes.
-2> Move or expand a different vma into the current location, via mremap().
-3> Modifying sealed VMA via mmap(MAP_FIXED).
-4> Size expansion, via mremap(), does not appear to pose any specific
-risks to sealed VMAs. It is included anyway because the use case is
-unclear. In any case, users can rely on merging to expand a sealed
-VMA.
-
-We consider the MM_SEAL_BASE feature, on which other sealing features
-will depend. For instance, it probably does not make sense to seal
-PROT_PKEY without sealing the BASE, and the kernel will implicitly add
-SEAL_BASE for SEAL_PROT_PKEY. (If the application wants to relax this
-in future, we could use the “flags” field  in mseal() to overwrite
-this the behavior of implicitly adding SEAL_BASE.)
-
-The MM_SEAL_PROT_PKEY:
-Seal PROT and PKEY of the address range, in other words, mprotect()
-and pkey_mprotect() will be denied if the memory is sealed with
-MM_SEAL_PROT_PKEY.
-
-The MM_SEAL_SEAL
-MM_SEAL_SEAL denies adding a new seal for an VMA.
-The kernel will remember which seal types are applied, and the
-application doesn’t need to repeat all existing seal types in the next
-mseal().  Once a seal type is applied, it can’t be unsealed. Call
-mseal() on an existing seal type is a no-action, not a failure.
-
-Data structure:
-Internally, the vm_area_struct adds a new field, vm_seals, to store
-the bit masks. The vm_seals field is added because the existing
-vm_flags field is full in 32-bit CPUs. The vm_seals field can be
-merged into vm_flags in the future if the size of vm_flags is ever
-expanded.
-
-TODO: Sealed VMA won't merge with other VMA in this patch, merging
-support will be added in later patch.
+This is so that we don't run out of VMAs, i.e. there is a max
+number of VMA per process.
 
 Signed-off-by: Jeff Xu <jeffxu@chromium.org>
+Suggested-by: Jann Horn <jannh@google.com>
 ---
- include/linux/mm.h        |  45 ++++++-
- include/linux/mm_types.h  |   7 ++
- include/linux/syscalls.h  |   2 +
- include/uapi/linux/mman.h |   4 +
- kernel/sys_ni.c           |   1 +
- mm/Kconfig                |   9 ++
- mm/Makefile               |   1 +
- mm/mmap.c                 |   3 +
- mm/mseal.c                | 257 ++++++++++++++++++++++++++++++++++++++
- 9 files changed, 328 insertions(+), 1 deletion(-)
- create mode 100644 mm/mseal.c
+ fs/userfaultfd.c   |  8 +++++---
+ include/linux/mm.h | 31 +++++++++++++------------------
+ mm/madvise.c       |  2 +-
+ mm/mempolicy.c     |  2 +-
+ mm/mlock.c         |  2 +-
+ mm/mmap.c          | 44 +++++++++++++++++++++-----------------------
+ mm/mprotect.c      |  2 +-
+ mm/mremap.c        |  2 +-
+ mm/mseal.c         | 23 ++++++++++++++++++-----
+ 9 files changed, 62 insertions(+), 54 deletions(-)
 
+diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+index 56eaae9dac1a..8ebee7c1c6cf 100644
+--- a/fs/userfaultfd.c
++++ b/fs/userfaultfd.c
+@@ -926,7 +926,8 @@ static int userfaultfd_release(struct inode *inode, struct file *file)
+ 				 new_flags, vma->anon_vma,
+ 				 vma->vm_file, vma->vm_pgoff,
+ 				 vma_policy(vma),
+-				 NULL_VM_UFFD_CTX, anon_vma_name(vma));
++				 NULL_VM_UFFD_CTX, anon_vma_name(vma),
++				vma_seals(vma));
+ 		if (prev) {
+ 			vma = prev;
+ 		} else {
+@@ -1483,7 +1484,7 @@ static int userfaultfd_register(struct userfaultfd_ctx *ctx,
+ 				 vma->anon_vma, vma->vm_file, pgoff,
+ 				 vma_policy(vma),
+ 				 ((struct vm_userfaultfd_ctx){ ctx }),
+-				 anon_vma_name(vma));
++				 anon_vma_name(vma), vma_seals(vma));
+ 		if (prev) {
+ 			/* vma_merge() invalidated the mas */
+ 			vma = prev;
+@@ -1668,7 +1669,8 @@ static int userfaultfd_unregister(struct userfaultfd_ctx *ctx,
+ 		prev = vma_merge(&vmi, mm, prev, start, vma_end, new_flags,
+ 				 vma->anon_vma, vma->vm_file, pgoff,
+ 				 vma_policy(vma),
+-				 NULL_VM_UFFD_CTX, anon_vma_name(vma));
++				 NULL_VM_UFFD_CTX, anon_vma_name(vma),
++				vma_seals(vma));
+ 		if (prev) {
+ 			vma = prev;
+ 			goto next;
 diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 19fc73b02c9f..3d1120570de5 100644
+index 5d3ee79f1438..1f162bb5b38d 100644
 --- a/include/linux/mm.h
 +++ b/include/linux/mm.h
-@@ -30,6 +30,7 @@
- #include <linux/kasan.h>
- #include <linux/memremap.h>
- #include <linux/slab.h>
-+#include <uapi/linux/mman.h>
- 
- struct mempolicy;
- struct anon_vma;
-@@ -257,9 +258,17 @@ extern struct rw_semaphore nommu_region_sem;
- extern unsigned int kobjsize(const void *objp);
+@@ -3243,7 +3243,7 @@ extern struct vm_area_struct *vma_merge(struct vma_iterator *vmi,
+ 	struct mm_struct *, struct vm_area_struct *prev, unsigned long addr,
+ 	unsigned long end, unsigned long vm_flags, struct anon_vma *,
+ 	struct file *, pgoff_t, struct mempolicy *, struct vm_userfaultfd_ctx,
+-	struct anon_vma_name *);
++	struct anon_vma_name *, unsigned long vm_seals);
+ extern struct anon_vma *find_mergeable_anon_vma(struct vm_area_struct *);
+ extern int __split_vma(struct vma_iterator *vmi, struct vm_area_struct *,
+ 		       unsigned long addr, int new_below);
+@@ -3327,19 +3327,6 @@ static inline void mm_populate(unsigned long addr, unsigned long len) {}
  #endif
  
-+/*
-+ * MM_SEAL_ALL is all supported flags in mseal().
-+ */
-+#define MM_SEAL_ALL ( \
-+	MM_SEAL_SEAL | \
-+	MM_SEAL_BASE | \
-+	MM_SEAL_PROT_PKEY)
-+
+ #ifdef CONFIG_MSEAL
+-static inline bool check_vma_seals_mergeable(unsigned long vm_seals)
+-{
+-	/*
+-	 * Set sealed VMA not mergeable with another VMA for now.
+-	 * This will be changed in later commit to make sealed
+-	 * VMA also mergeable.
+-	 */
+-	if (vm_seals & MM_SEAL_ALL)
+-		return false;
+-
+-	return true;
+-}
+-
  /*
-  * vm_flags in vm_area_struct, see mm_types.h.
-- * When changing, update also include/trace/events/mmflags.h
-+ * When changing, update also include/trace/events/mmflags.h.
+  * return the valid sealing (after mask).
   */
- #define VM_NONE		0x00000000
+@@ -3353,6 +3340,14 @@ static inline void update_vma_seals(struct vm_area_struct *vma, unsigned long vm
+ 	vma->vm_seals |= vm_seals;
+ }
  
-@@ -3308,6 +3317,40 @@ static inline void mm_populate(unsigned long addr, unsigned long len)
- static inline void mm_populate(unsigned long addr, unsigned long len) {}
- #endif
- 
-+#ifdef CONFIG_MSEAL
-+static inline bool check_vma_seals_mergeable(unsigned long vm_seals)
++static inline bool check_vma_seals_mergeable(unsigned long vm_seals1, unsigned long vm_seals2)
 +{
-+	/*
-+	 * Set sealed VMA not mergeable with another VMA for now.
-+	 * This will be changed in later commit to make sealed
-+	 * VMA also mergeable.
-+	 */
-+	if (vm_seals & MM_SEAL_ALL)
++	if ((vm_seals1 & MM_SEAL_ALL) != (vm_seals2 & MM_SEAL_ALL))
 +		return false;
 +
 +	return true;
 +}
 +
-+/*
-+ * return the valid sealing (after mask).
-+ */
+ extern bool can_modify_mm(struct mm_struct *mm, unsigned long start,
+ 		unsigned long end, unsigned long checkSeals);
+ 
+@@ -3390,14 +3385,14 @@ static inline int check_mmap_seals(unsigned long prot, unsigned long *vm_seals)
+ 	return 0;
+ }
+ #else
+-static inline bool check_vma_seals_mergeable(unsigned long vm_seals1)
 +static inline unsigned long vma_seals(struct vm_area_struct *vma)
-+{
-+	return (vma->vm_seals & MM_SEAL_ALL);
-+}
-+
-+#else
-+static inline bool check_vma_seals_mergeable(unsigned long vm_seals1)
-+{
-+	return true;
-+}
-+
-+static inline unsigned long vma_seals(struct vm_area_struct *vma)
-+{
+ {
+-	return true;
 +	return 0;
-+}
-+#endif
-+
- /* These take the mm semaphore themselves */
- extern int __must_check vm_brk(unsigned long, unsigned long);
- extern int __must_check vm_brk_flags(unsigned long, unsigned long, unsigned long);
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 589f31ef2e84..052799173c86 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -687,6 +687,13 @@ struct vm_area_struct {
- 	struct vma_numab_state *numab_state;	/* NUMA Balancing state */
- #endif
- 	struct vm_userfaultfd_ctx vm_userfaultfd_ctx;
-+#ifdef CONFIG_MSEAL
-+	/*
-+	 * bit masks for seal.
-+	 * need this since vm_flags is full.
-+	 */
-+	unsigned long vm_seals;		/* seal flags, see mm.h. */
-+#endif
- } __randomize_layout;
+ }
  
- #ifdef CONFIG_SCHED_MM_CID
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index 0901af60d971..b1c766b74765 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -812,6 +812,8 @@ asmlinkage long sys_process_mrelease(int pidfd, unsigned int flags);
- asmlinkage long sys_remap_file_pages(unsigned long start, unsigned long size,
- 			unsigned long prot, unsigned long pgoff,
- 			unsigned long flags);
-+asmlinkage long sys_mseal(unsigned long start, size_t len, unsigned long types,
-+			  unsigned long flags);
- asmlinkage long sys_mbind(unsigned long start, unsigned long len,
- 				unsigned long mode,
- 				const unsigned long __user *nmask,
-diff --git a/include/uapi/linux/mman.h b/include/uapi/linux/mman.h
-index a246e11988d5..f561652886c4 100644
---- a/include/uapi/linux/mman.h
-+++ b/include/uapi/linux/mman.h
-@@ -55,4 +55,8 @@ struct cachestat {
- 	__u64 nr_recently_evicted;
- };
+-static inline unsigned long vma_seals(struct vm_area_struct *vma)
++static inline bool check_vma_seals_mergeable(unsigned long vm_seals1, unsigned long vm_seals2)
+ {
+-	return 0;
++	return true;
+ }
  
-+#define MM_SEAL_SEAL		_BITUL(0)
-+#define MM_SEAL_BASE		_BITUL(1)
-+#define MM_SEAL_PROT_PKEY	_BITUL(2)
-+
- #endif /* _UAPI_LINUX_MMAN_H */
-diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
-index 9db51ea373b0..716d64df522d 100644
---- a/kernel/sys_ni.c
-+++ b/kernel/sys_ni.c
-@@ -195,6 +195,7 @@ COND_SYSCALL(migrate_pages);
- COND_SYSCALL(move_pages);
- COND_SYSCALL(set_mempolicy_home_node);
- COND_SYSCALL(cachestat);
-+COND_SYSCALL(mseal);
- 
- COND_SYSCALL(perf_event_open);
- COND_SYSCALL(accept4);
-diff --git a/mm/Kconfig b/mm/Kconfig
-index 264a2df5ecf5..63972d476d19 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -1258,6 +1258,15 @@ config LOCK_MM_AND_FIND_VMA
- 	bool
- 	depends on !STACK_GROWSUP
- 
-+config MSEAL
-+	default n
-+	bool "Enable mseal() system call"
-+	depends on MMU
-+	help
-+	  Enable the virtual memory sealing.
-+	  This feature allows sealing each virtual memory area separately with
-+	  multiple sealing types.
-+
- source "mm/damon/Kconfig"
- 
- endmenu
-diff --git a/mm/Makefile b/mm/Makefile
-index ec65984e2ade..643d8518dac0 100644
---- a/mm/Makefile
-+++ b/mm/Makefile
-@@ -120,6 +120,7 @@ obj-$(CONFIG_PAGE_EXTENSION) += page_ext.o
- obj-$(CONFIG_PAGE_TABLE_CHECK) += page_table_check.o
- obj-$(CONFIG_CMA_DEBUGFS) += cma_debug.o
- obj-$(CONFIG_SECRETMEM) += secretmem.o
-+obj-$(CONFIG_MSEAL) += mseal.o
- obj-$(CONFIG_CMA_SYSFS) += cma_sysfs.o
- obj-$(CONFIG_USERFAULTFD) += userfaultfd.o
- obj-$(CONFIG_IDLE_PAGE_TRACKING) += page_idle.o
+ static inline bool can_modify_mm(struct mm_struct *mm, unsigned long start,
+diff --git a/mm/madvise.c b/mm/madvise.c
+index 4dded5d27e7e..e2d219a4b6ef 100644
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -152,7 +152,7 @@ static int madvise_update_vma(struct vm_area_struct *vma,
+ 	pgoff = vma->vm_pgoff + ((start - vma->vm_start) >> PAGE_SHIFT);
+ 	*prev = vma_merge(&vmi, mm, *prev, start, end, new_flags,
+ 			  vma->anon_vma, vma->vm_file, pgoff, vma_policy(vma),
+-			  vma->vm_userfaultfd_ctx, anon_name);
++			  vma->vm_userfaultfd_ctx, anon_name, vma_seals(vma));
+ 	if (*prev) {
+ 		vma = *prev;
+ 		goto success;
+diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+index e52e3a0b8f2e..e70b69c64564 100644
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -836,7 +836,7 @@ static int mbind_range(struct vma_iterator *vmi, struct vm_area_struct *vma,
+ 	pgoff = vma->vm_pgoff + ((vmstart - vma->vm_start) >> PAGE_SHIFT);
+ 	merged = vma_merge(vmi, vma->vm_mm, *prev, vmstart, vmend, vma->vm_flags,
+ 			 vma->anon_vma, vma->vm_file, pgoff, new_pol,
+-			 vma->vm_userfaultfd_ctx, anon_vma_name(vma));
++			 vma->vm_userfaultfd_ctx, anon_vma_name(vma), vma_seals(vma));
+ 	if (merged) {
+ 		*prev = merged;
+ 		return vma_replace_policy(merged, new_pol);
+diff --git a/mm/mlock.c b/mm/mlock.c
+index 06bdfab83b58..b537a2cbd337 100644
+--- a/mm/mlock.c
++++ b/mm/mlock.c
+@@ -428,7 +428,7 @@ static int mlock_fixup(struct vma_iterator *vmi, struct vm_area_struct *vma,
+ 	pgoff = vma->vm_pgoff + ((start - vma->vm_start) >> PAGE_SHIFT);
+ 	*prev = vma_merge(vmi, mm, *prev, start, end, newflags,
+ 			vma->anon_vma, vma->vm_file, pgoff, vma_policy(vma),
+-			vma->vm_userfaultfd_ctx, anon_vma_name(vma));
++			vma->vm_userfaultfd_ctx, anon_vma_name(vma), vma_seals(vma));
+ 	if (*prev) {
+ 		vma = *prev;
+ 		goto success;
 diff --git a/mm/mmap.c b/mm/mmap.c
-index 9e018d8dd7d6..42462c2a0c35 100644
+index 3e1bf5a131b0..6da8d83f2e66 100644
 --- a/mm/mmap.c
 +++ b/mm/mmap.c
-@@ -740,6 +740,9 @@ static inline bool is_mergeable_vma(struct vm_area_struct *vma,
+@@ -720,7 +720,8 @@ int vma_shrink(struct vma_iterator *vmi, struct vm_area_struct *vma,
+ static inline bool is_mergeable_vma(struct vm_area_struct *vma,
+ 		struct file *file, unsigned long vm_flags,
+ 		struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
+-		struct anon_vma_name *anon_name, bool may_remove_vma)
++		struct anon_vma_name *anon_name, bool may_remove_vma,
++		unsigned long vm_seals)
+ {
+ 	/*
+ 	 * VM_SOFTDIRTY should not prevent from VMA merging, if we
+@@ -740,7 +741,7 @@ static inline bool is_mergeable_vma(struct vm_area_struct *vma,
  		return false;
  	if (!anon_vma_name_eq(anon_vma_name(vma), anon_name))
  		return false;
-+	if (!check_vma_seals_mergeable(vma_seals(vma)))
-+		return false;
-+
- 	return true;
- }
+-	if (!check_vma_seals_mergeable(vma_seals(vma)))
++	if (!check_vma_seals_mergeable(vma_seals(vma), vm_seals))
+ 		return false;
  
+ 	return true;
+@@ -776,9 +777,10 @@ static bool
+ can_vma_merge_before(struct vm_area_struct *vma, unsigned long vm_flags,
+ 		struct anon_vma *anon_vma, struct file *file,
+ 		pgoff_t vm_pgoff, struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
+-		struct anon_vma_name *anon_name)
++		struct anon_vma_name *anon_name, unsigned long vm_seals)
+ {
+-	if (is_mergeable_vma(vma, file, vm_flags, vm_userfaultfd_ctx, anon_name, true) &&
++	if (is_mergeable_vma(vma, file, vm_flags, vm_userfaultfd_ctx,
++		anon_name, true, vm_seals) &&
+ 	    is_mergeable_anon_vma(anon_vma, vma->anon_vma, vma)) {
+ 		if (vma->vm_pgoff == vm_pgoff)
+ 			return true;
+@@ -799,9 +801,10 @@ static bool
+ can_vma_merge_after(struct vm_area_struct *vma, unsigned long vm_flags,
+ 		struct anon_vma *anon_vma, struct file *file,
+ 		pgoff_t vm_pgoff, struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
+-		struct anon_vma_name *anon_name)
++		struct anon_vma_name *anon_name, unsigned long vm_seals)
+ {
+-	if (is_mergeable_vma(vma, file, vm_flags, vm_userfaultfd_ctx, anon_name, false) &&
++	if (is_mergeable_vma(vma, file, vm_flags, vm_userfaultfd_ctx,
++		anon_name, false, vm_seals) &&
+ 	    is_mergeable_anon_vma(anon_vma, vma->anon_vma, vma)) {
+ 		pgoff_t vm_pglen;
+ 		vm_pglen = vma_pages(vma);
+@@ -869,7 +872,7 @@ struct vm_area_struct *vma_merge(struct vma_iterator *vmi, struct mm_struct *mm,
+ 			struct anon_vma *anon_vma, struct file *file,
+ 			pgoff_t pgoff, struct mempolicy *policy,
+ 			struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
+-			struct anon_vma_name *anon_name)
++			struct anon_vma_name *anon_name, unsigned long vm_seals)
+ {
+ 	struct vm_area_struct *curr, *next, *res;
+ 	struct vm_area_struct *vma, *adjust, *remove, *remove2;
+@@ -908,7 +911,7 @@ struct vm_area_struct *vma_merge(struct vma_iterator *vmi, struct mm_struct *mm,
+ 		/* Can we merge the predecessor? */
+ 		if (addr == prev->vm_end && mpol_equal(vma_policy(prev), policy)
+ 		    && can_vma_merge_after(prev, vm_flags, anon_vma, file,
+-					   pgoff, vm_userfaultfd_ctx, anon_name)) {
++			pgoff, vm_userfaultfd_ctx, anon_name, vm_seals)) {
+ 			merge_prev = true;
+ 			vma_prev(vmi);
+ 		}
+@@ -917,7 +920,7 @@ struct vm_area_struct *vma_merge(struct vma_iterator *vmi, struct mm_struct *mm,
+ 	/* Can we merge the successor? */
+ 	if (next && mpol_equal(policy, vma_policy(next)) &&
+ 	    can_vma_merge_before(next, vm_flags, anon_vma, file, pgoff+pglen,
+-				 vm_userfaultfd_ctx, anon_name)) {
++			vm_userfaultfd_ctx, anon_name, vm_seals)) {
+ 		merge_next = true;
+ 	}
+ 
+@@ -2727,13 +2730,8 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
+ 
+ 	next = vma_next(&vmi);
+ 	prev = vma_prev(&vmi);
+-	/*
+-	 * For now, sealed VMA doesn't merge with other VMA,
+-	 * Will change this in later commit when we make sealed VMA
+-	 * also mergeable.
+-	 */
+-	if ((vm_flags & VM_SPECIAL) ||
+-		(vm_seals & MM_SEAL_ALL)) {
++
++	if (vm_flags & VM_SPECIAL) {
+ 		if (prev)
+ 			vma_iter_next_range(&vmi);
+ 		goto cannot_expand;
+@@ -2743,7 +2741,7 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
+ 	/* Check next */
+ 	if (next && next->vm_start == end && !vma_policy(next) &&
+ 	    can_vma_merge_before(next, vm_flags, NULL, file, pgoff+pglen,
+-				 NULL_VM_UFFD_CTX, NULL)) {
++			NULL_VM_UFFD_CTX, NULL, vm_seals)) {
+ 		merge_end = next->vm_end;
+ 		vma = next;
+ 		vm_pgoff = next->vm_pgoff - pglen;
+@@ -2752,9 +2750,9 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
+ 	/* Check prev */
+ 	if (prev && prev->vm_end == addr && !vma_policy(prev) &&
+ 	    (vma ? can_vma_merge_after(prev, vm_flags, vma->anon_vma, file,
+-				       pgoff, vma->vm_userfaultfd_ctx, NULL) :
++			pgoff, vma->vm_userfaultfd_ctx, NULL, vm_seals) :
+ 		   can_vma_merge_after(prev, vm_flags, NULL, file, pgoff,
+-				       NULL_VM_UFFD_CTX, NULL))) {
++			NULL_VM_UFFD_CTX, NULL, vm_seals))) {
+ 		merge_start = prev->vm_start;
+ 		vma = prev;
+ 		vm_pgoff = prev->vm_pgoff;
+@@ -2822,7 +2820,7 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
+ 			merge = vma_merge(&vmi, mm, prev, vma->vm_start,
+ 				    vma->vm_end, vma->vm_flags, NULL,
+ 				    vma->vm_file, vma->vm_pgoff, NULL,
+-				    NULL_VM_UFFD_CTX, NULL);
++				    NULL_VM_UFFD_CTX, NULL, vma_seals(vma));
+ 			if (merge) {
+ 				/*
+ 				 * ->mmap() can change vma->vm_file and fput
+@@ -3130,14 +3128,14 @@ static int do_brk_flags(struct vma_iterator *vmi, struct vm_area_struct *vma,
+ 
+ 	if (security_vm_enough_memory_mm(mm, len >> PAGE_SHIFT))
+ 		return -ENOMEM;
+-
+ 	/*
+ 	 * Expand the existing vma if possible; Note that singular lists do not
+ 	 * occur after forking, so the expand will only happen on new VMAs.
+ 	 */
+ 	if (vma && vma->vm_end == addr && !vma_policy(vma) &&
+ 	    can_vma_merge_after(vma, flags, NULL, NULL,
+-				addr >> PAGE_SHIFT, NULL_VM_UFFD_CTX, NULL)) {
++			addr >> PAGE_SHIFT, NULL_VM_UFFD_CTX, NULL,
++			vma_seals(vma))) {
+ 		vma_iter_config(vmi, vma->vm_start, addr + len);
+ 		if (vma_iter_prealloc(vmi, vma))
+ 			goto unacct_fail;
+@@ -3380,7 +3378,7 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
+ 
+ 	new_vma = vma_merge(&vmi, mm, prev, addr, addr + len, vma->vm_flags,
+ 			    vma->anon_vma, vma->vm_file, pgoff, vma_policy(vma),
+-			    vma->vm_userfaultfd_ctx, anon_vma_name(vma));
++			    vma->vm_userfaultfd_ctx, anon_vma_name(vma), vma_seals(vma));
+ 	if (new_vma) {
+ 		/*
+ 		 * Source vma may have been merged into new_vma
+diff --git a/mm/mprotect.c b/mm/mprotect.c
+index 1527188b1e92..a4c90e71607b 100644
+--- a/mm/mprotect.c
++++ b/mm/mprotect.c
+@@ -632,7 +632,7 @@ mprotect_fixup(struct vma_iterator *vmi, struct mmu_gather *tlb,
+ 	pgoff = vma->vm_pgoff + ((start - vma->vm_start) >> PAGE_SHIFT);
+ 	*pprev = vma_merge(vmi, mm, *pprev, start, end, newflags,
+ 			   vma->anon_vma, vma->vm_file, pgoff, vma_policy(vma),
+-			   vma->vm_userfaultfd_ctx, anon_vma_name(vma));
++			   vma->vm_userfaultfd_ctx, anon_vma_name(vma), vma_seals(vma));
+ 	if (*pprev) {
+ 		vma = *pprev;
+ 		VM_WARN_ON((vma->vm_flags ^ newflags) & ~VM_SOFTDIRTY);
+diff --git a/mm/mremap.c b/mm/mremap.c
+index ff7429bfbbe1..357efd6b48b9 100644
+--- a/mm/mremap.c
++++ b/mm/mremap.c
+@@ -1098,7 +1098,7 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned long, old_len,
+ 			vma = vma_merge(&vmi, mm, vma, extension_start,
+ 				extension_end, vma->vm_flags, vma->anon_vma,
+ 				vma->vm_file, extension_pgoff, vma_policy(vma),
+-				vma->vm_userfaultfd_ctx, anon_vma_name(vma));
++				vma->vm_userfaultfd_ctx, anon_vma_name(vma), vma_seals(vma));
+ 			if (!vma) {
+ 				vm_unacct_memory(pages);
+ 				ret = -ENOMEM;
 diff --git a/mm/mseal.c b/mm/mseal.c
-new file mode 100644
-index 000000000000..13bbe9ef5883
---- /dev/null
+index d12aa628ebdc..3b90dce7d20e 100644
+--- a/mm/mseal.c
 +++ b/mm/mseal.c
-@@ -0,0 +1,257 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *  Implement mseal() syscall.
-+ *
-+ *  Copyright (c) 2023 Google, Inc.
-+ *
-+ *  Author: Jeff Xu <jeffxu@chromium.org>
-+ */
+@@ -7,8 +7,10 @@
+  *  Author: Jeff Xu <jeffxu@chromium.org>
+  */
+ 
++#include <linux/mempolicy.h>
+ #include <linux/mman.h>
+ #include <linux/mm.h>
++#include <linux/mm_inline.h>
+ #include <linux/syscalls.h>
+ #include <linux/sched.h>
+ #include "internal.h"
+@@ -81,14 +83,25 @@ static int mseal_fixup(struct vma_iterator *vmi, struct vm_area_struct *vma,
+ 		struct vm_area_struct **prev, unsigned long start,
+ 		unsigned long end, unsigned long addtypes)
+ {
++	pgoff_t pgoff;
+ 	int ret = 0;
++	unsigned long newtypes =  vma_seals(vma) | addtypes;
 +
-+#include <linux/mman.h>
-+#include <linux/mm.h>
-+#include <linux/syscalls.h>
-+#include <linux/sched.h>
-+#include "internal.h"
-+
-+static bool can_do_mseal(unsigned long types, unsigned long flags)
-+{
-+	/* check types is a valid bitmap. */
-+	if (types & ~MM_SEAL_ALL)
-+		return false;
-+
-+	/* flags isn't used for now. */
-+	if (flags)
-+		return false;
-+
-+	return true;
-+}
-+
-+/*
-+ * Check if a seal type can be added to VMA.
-+ */
-+static bool can_add_vma_seals(struct vm_area_struct *vma, unsigned long newSeals)
-+{
-+	/* When SEAL_MSEAL is set, reject if a new type of seal is added. */
-+	if ((vma->vm_seals & MM_SEAL_SEAL) &&
-+	    (newSeals & ~(vma_seals(vma))))
-+		return false;
-+
-+	return true;
-+}
-+
-+static int mseal_fixup(struct vma_iterator *vmi, struct vm_area_struct *vma,
-+		struct vm_area_struct **prev, unsigned long start,
-+		unsigned long end, unsigned long addtypes)
-+{
-+	int ret = 0;
-+
-+	if (addtypes & ~(vma_seals(vma))) {
++	if (newtypes != vma_seals(vma)) {
 +		/*
-+		 * Handle split at start and end.
-+		 * For now sealed VMA doesn't merge with other VMAs.
-+		 * This will be updated in later commit to make
-+		 * sealed VMA also mergeable.
++		 * Attempt to merge with prev and next vma.
 +		 */
-+		if (start != vma->vm_start) {
-+			ret = split_vma(vmi, vma, start, 1);
-+			if (ret)
-+				goto out;
++		pgoff = vma->vm_pgoff + ((start - vma->vm_start) >> PAGE_SHIFT);
++		*prev = vma_merge(vmi, vma->vm_mm, *prev, start, end, vma->vm_flags,
++				vma->anon_vma, vma->vm_file, pgoff, vma_policy(vma),
++				vma->vm_userfaultfd_ctx, anon_vma_name(vma), newtypes);
++		if (*prev) {
++			vma = *prev;
++			goto out;
 +		}
-+
-+		if (end != vma->vm_end) {
-+			ret = split_vma(vmi, vma, end, 0);
-+			if (ret)
-+				goto out;
-+		}
-+
-+		vma->vm_seals |= addtypes;
-+	}
-+
-+out:
-+	*prev = vma;
-+	return ret;
-+}
-+
-+/*
-+ * Check for do_mseal:
-+ * 1> start is part of a valid vma.
-+ * 2> end is part of a valid vma.
-+ * 3> No gap (unallocated address) between start and end.
-+ * 4> requested seal type can be added in given address range.
-+ */
-+static int check_mm_seal(unsigned long start, unsigned long end,
-+			 unsigned long newtypes)
-+{
-+	struct vm_area_struct *vma;
-+	unsigned long nstart = start;
-+
-+	VMA_ITERATOR(vmi, current->mm, start);
-+
-+	/* going through each vma to check. */
-+	for_each_vma_range(vmi, vma, end) {
-+		if (vma->vm_start > nstart)
-+			/* unallocated memory found. */
-+			return -ENOMEM;
-+
-+		if (!can_add_vma_seals(vma, newtypes))
-+			return -EACCES;
-+
-+		if (vma->vm_end >= end)
-+			return 0;
-+
-+		nstart = vma->vm_end;
-+	}
-+
-+	return -ENOMEM;
-+}
-+
-+/*
-+ * Apply sealing.
-+ */
-+static int apply_mm_seal(unsigned long start, unsigned long end,
-+			 unsigned long newtypes)
-+{
-+	unsigned long nstart, nend;
-+	struct vm_area_struct *vma, *prev = NULL;
-+	struct vma_iterator vmi;
-+	int error = 0;
-+
-+	vma_iter_init(&vmi, current->mm, start);
-+	vma = vma_find(&vmi, end);
-+
-+	prev = vma_prev(&vmi);
-+	if (start > vma->vm_start)
-+		prev = vma;
-+
-+	nstart = start;
-+
-+	/* going through each vma to update. */
-+	for_each_vma_range(vmi, vma, end) {
-+		nend = vma->vm_end;
-+		if (nend > end)
-+			nend = end;
-+
-+		error = mseal_fixup(&vmi, vma, &prev, nstart, nend, newtypes);
-+		if (error)
-+			break;
-+
-+		nstart = vma->vm_end;
-+	}
-+
-+	return error;
-+}
-+
-+/*
-+ * mseal(2) seals the VM's meta data from
-+ * selected syscalls.
-+ *
-+ * addr/len: VM address range.
-+ *
-+ *  The address range by addr/len must meet:
-+ *   start (addr) must be in a valid VMA.
-+ *   end (addr + len) must be in a valid VMA.
-+ *   no gap (unallocated memory) between start and end.
-+ *   start (addr) must be page aligned.
-+ *
-+ *  len: len will be page aligned implicitly.
-+ *
-+ *  types: bit mask for sealed syscalls.
-+ *   MM_SEAL_BASE: prevent VMA from:
-+ *   1> Unmapping, moving to another location, and shrinking
-+ *	the size, via munmap() and mremap(), can leave an empty
-+ *	space, therefore can be replaced with a VMA with a new
-+ *	set of attributes.
-+ *   2> Move or expand a different vma into the current location,
-+ *	via mremap().
-+ *   3> Modifying sealed VMA via mmap(MAP_FIXED).
-+ *   4> Size expansion, via mremap(), does not appear to pose any
-+ *	specific risks to sealed VMAs. It is included anyway because
-+ *	the use case is unclear. In any case, users can rely on
-+ *	merging to expand a sealed VMA.
-+ *
-+ *   The MM_SEAL_PROT_PKEY:
-+ *	Seal PROT and PKEY of the address range, in other words,
-+ *	mprotect() and pkey_mprotect() will be denied if the memory is
-+ *	sealed with MM_SEAL_PROT_PKEY.
-+ *
-+ *   The MM_SEAL_SEAL
-+ *	MM_SEAL_SEAL denies adding a new seal for an VMA.
-+ *
-+ *	The kernel will remember which seal types are applied, and the
-+ *	application doesn’t need to repeat all existing seal types in
-+ *	the next mseal(). Once a seal type is applied, it can’t be
-+ *	unsealed. Call mseal() on an existing seal type is a no-action,
-+ *	not a failure.
-+ *
-+ *  flags: reserved.
-+ *
-+ * return values:
-+ *  zero: success.
-+ *  -EINVAL:
-+ *   invalid seal type.
-+ *   invalid input flags.
-+ *   addr is not page aligned.
-+ *   addr + len overflow.
-+ *  -ENOMEM:
-+ *   addr is not a valid address (not allocated).
-+ *   end (addr + len) is not a valid address.
-+ *   a gap (unallocated memory) between start and end.
-+ *  -EACCES:
-+ *   MM_SEAL_SEAL is set, adding a new seal is rejected.
-+ *
-+ * Note:
-+ *  user can call mseal(2) multiple times to add new seal types.
-+ *  adding an already added seal type is a no-action (no error).
-+ *  adding a new seal type after MM_SEAL_SEAL will be rejected.
-+ *  unseal() or removing a seal type is not supported.
-+ */
-+static int do_mseal(unsigned long start, size_t len_in, unsigned long types,
-+		    unsigned long flags)
-+{
-+	int ret = 0;
-+	unsigned long end;
-+	struct mm_struct *mm = current->mm;
-+	size_t len;
-+
-+	/* MM_SEAL_BASE is set when other seal types are set. */
-+	if (types & MM_SEAL_PROT_PKEY)
-+		types |= MM_SEAL_BASE;
-+
-+	if (!can_do_mseal(types, flags))
-+		return -EINVAL;
-+
-+	start = untagged_addr(start);
-+	if (!PAGE_ALIGNED(start))
-+		return -EINVAL;
-+
-+	len = PAGE_ALIGN(len_in);
-+	/* Check to see whether len was rounded up from small -ve to zero. */
-+	if (len_in && !len)
-+		return -EINVAL;
-+
-+	end = start + len;
-+	if (end < start)
-+		return -EINVAL;
-+
-+	if (end == start)
-+		return 0;
-+
-+	if (mmap_write_lock_killable(mm))
-+		return -EINTR;
-+
-+	ret = check_mm_seal(start, end, types);
-+	if (ret)
-+		goto out;
-+
-+	ret = apply_mm_seal(start, end, types);
-+
-+out:
-+	mmap_write_unlock(current->mm);
-+	return ret;
-+}
-+
-+SYSCALL_DEFINE4(mseal, unsigned long, start, size_t, len, unsigned long, types, unsigned long,
-+		flags)
-+{
-+	return do_mseal(start, len, types, flags);
-+}
+ 
+-	if (addtypes & ~(vma_seals(vma))) {
+ 		/*
+ 		 * Handle split at start and end.
+-		 * For now sealed VMA doesn't merge with other VMAs.
+-		 * This will be updated in later commit to make
+-		 * sealed VMA also mergeable.
+ 		 */
+ 		if (start != vma->vm_start) {
+ 			ret = split_vma(vmi, vma, start, 1);
+@@ -102,7 +115,7 @@ static int mseal_fixup(struct vma_iterator *vmi, struct vm_area_struct *vma,
+ 				goto out;
+ 		}
+ 
+-		vma->vm_seals |= addtypes;
++		vma->vm_seals = newtypes;
+ 	}
+ 
+ out:
 -- 
 2.43.0.472.g3155946c3a-goog
 
