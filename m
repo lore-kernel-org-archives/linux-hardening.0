@@ -1,98 +1,69 @@
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8269910EA;
+	Wed, 13 Dec 2023 00:10:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CacnCAzw"
-Received: from mail-vk1-xa36.google.com (mail-vk1-xa36.google.com [IPv6:2607:f8b0:4864:20::a36])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02CC7A5
-	for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 15:51:16 -0800 (PST)
-Received: by mail-vk1-xa36.google.com with SMTP id 71dfb90a1353d-4b2cdf382d9so1556810e0c.0
-        for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 15:51:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1702425075; x=1703029875; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iDJv/MdPWACPkzPDU+UdHfxT6bKwGCJYIve5sJRmC4w=;
-        b=CacnCAzwSbudmwwYJOMgYdksuVWzV/PGJjKuKG4M3a615cLK/lglaxwE9zk5hFFLo5
-         +CqOmBQkgfnp+8zkSWZPaEYV2GPASHFAN0D/DVDYAcvWKYf6BsFnTuqXOIo5xD1gxawY
-         JHRdJIBcuHHuqOuh2uRLB5L1jEmpvSNMxTbVM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702425075; x=1703029875;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iDJv/MdPWACPkzPDU+UdHfxT6bKwGCJYIve5sJRmC4w=;
-        b=FtaNptSCPfwvZXO5LzWM7DjHNQPYsZXBYbNABbKBdLn78uw5b0sXQrevcxG5u8Ub9j
-         OfyUED1riD5tfRPewbx+MQrj8JQgSwMlhyiaGwPa29DpE1rS81YuOcM+gWyJf3j4KVCG
-         P+6YVBR4/ABeDI5pDFGMqoVMGhu+uKJ+GUswTnXq4tlEh2EKIIZv6o/icOT9oB9KYssQ
-         UKAdVnBX5gbmM6zvSDX0HLwI8IJeecSwLUouXPZ0v6qOeH7Kxha4H4JHiemhKABYxM/0
-         4RxVEtD6nSasssmb27g7iYppFZER1zxP5aGn7/AXFjqt6s0Mu4OGuoRUS5oGOpv4RyUX
-         MGmQ==
-X-Gm-Message-State: AOJu0YxA5Qxs/p6Z9Hr4e6UJIKstkOj8qPuWoc488ew167GYBF+9ZmpW
-	CRl11wD/ca4mqg8hEz+9AIUyt3cOKv2XFlKJK2XfLA==
-X-Google-Smtp-Source: AGHT+IHgzY6TxuyoNkpl2aQeyRJYTpGY2b/Uli21Z+t7hU04lfjLJQ/88/mR7DldxbjQ1RCBksHpytK1u9KPLiGxHEI=
-X-Received: by 2002:a05:6122:31a:b0:4b2:a7a9:b2a with SMTP id
- c26-20020a056122031a00b004b2a7a90b2amr5285959vko.11.1702425075124; Tue, 12
- Dec 2023 15:51:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oicnRBSE"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 256BCC43395;
+	Wed, 13 Dec 2023 00:10:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702426229;
+	bh=VXosqkC/e3GEGFUuiG+gcRBbUiW7ZCrLw2sUasKp4+I=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=oicnRBSEmUG3ZpI42PyXQAtLa6H7MTNb2FnNttW3Oo+i7JxTulntzLvQF3YxPIl8O
+	 1P6q3MjBRXcKMjx0PFm6YKCnnvdznvaTF/cuALk6s1Uf8HwEgVkB5Wciydb1XojQcC
+	 Chk41fY9PcquLLZszFpAZIhyFRcSoEUDKb+w06fWMm/B6toQ+eqeTHicNiXMVzhWHL
+	 dYhe2ET4YqmVKhlErTpWw3/EwWEm0nWWwZL8i9rzN9ElMpuTmfcxH7T1LD83oYEYU+
+	 U9E2skaETZ6Qbw/uYxxSGQqAKBwDPRu1R/qhKnYduLlC6L5plNgxzt1Ah3GeEB2AJw
+	 nEPbcF85jdajQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 11808DFC907;
+	Wed, 13 Dec 2023 00:10:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231026-strncpy-drivers-iio-proximity-sx9324-c-v2-1-cee6e5db700c@google.com>
- <20231028162638.5b477ded@jic23-huawei> <CAE-0n51eAH1tcqXVeReavq0US-Th2qwC_s_uAzRKTpSG-kXuwA@mail.gmail.com>
- <CAFhGd8p76R-oaPWR0G6wESe7kgM--2bzU88j2vz4QGy8wKNffg@mail.gmail.com>
-In-Reply-To: <CAFhGd8p76R-oaPWR0G6wESe7kgM--2bzU88j2vz4QGy8wKNffg@mail.gmail.com>
-From: Gwendal Grignou <gwendal@chromium.org>
-Date: Tue, 12 Dec 2023 15:51:04 -0800
-Message-ID: <CAPUE2ut0gbSyzUQ+m=760kXeOqKoi+9OwaExXTSgg8S=bWhUvg@mail.gmail.com>
-Subject: Re: [PATCH v2] iio: sx9324: avoid copying property strings
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v3] net: mdio-gpio: replace deprecated strncpy with strscpy
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <170242622906.31821.7118921876028610861.git-patchwork-notify@kernel.org>
+Date: Wed, 13 Dec 2023 00:10:29 +0000
+References: <20231211-strncpy-drivers-net-mdio-mdio-gpio-c-v3-1-76dea53a1a52@google.com>
+In-Reply-To: <20231211-strncpy-drivers-net-mdio-mdio-gpio-c-v3-1-76dea53a1a52@google.com>
 To: Justin Stitt <justinstitt@google.com>
-Cc: Stephen Boyd <swboyd@chromium.org>, Jonathan Cameron <jic23@kernel.org>, 
-	Lars-Peter Clausen <lars@metafoo.de>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Cc: andrew@lunn.ch, hkallweit1@gmail.com, linux@armlinux.org.uk,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
 
-Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
+Hello:
 
-On Mon, Dec 11, 2023 at 4:46=E2=80=AFPM Justin Stitt <justinstitt@google.co=
-m> wrote:
->
-> Hi,
->
-> On Mon, Oct 30, 2023 at 2:44=E2=80=AFPM Stephen Boyd <swboyd@chromium.org=
-> wrote:
-> >
-> >
-> > We need to free it in other places too, like if the count doesn't match=
-.
-> > It may be easier to extract this section and just have 4 string
-> > literals.
-> >
-> >         switch (reg_def->reg) {
-> >         case SX9324_REG_AFE_PH0:
-> >                 reg_def =3D sx9324_parse_phase_prop(dev, reg_def, "semt=
-ech,ph0-pin");
-> >                 break;
-> >         case SX9324_REG_AFE_PH1:
-> >                 reg_def =3D sx9324_parse_phase_prop(dev, reg_def, "semt=
-ech,ph1-pin");
-> >                 break;
-> >         case SX9324_REG_AFE_PH2:
-> >                 reg_def =3D sx9324_parse_phase_prop(dev, reg_def, "semt=
-ech,ph2-pin");
-> >                 break;
-> >         case SX9324_REG_AFE_PH3:
-> >                 reg_def =3D sx9324_parse_phase_prop(dev, reg_def, "semt=
-ech,ph3-pin");
-> >                 break;
-> >
->
-> I've submitted v3 of this patch [1] trying out Stephen's idea. I'd
-> appreciate feedback.
->
-> [1]: https://lore.kernel.org/all/20231212-strncpy-drivers-iio-proximity-s=
-x9324-c-v3-1-b8ae12fc8a5d@google.com/
->
-> Thanks
-> Justin
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Mon, 11 Dec 2023 19:10:00 +0000 you wrote:
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
+> 
+> We expect new_bus->id to be NUL-terminated but not NUL-padded based on
+> its prior assignment through snprintf:
+> |       snprintf(new_bus->id, MII_BUS_ID_SIZE, "gpio-%x", bus_id);
+> 
+> [...]
+
+Here is the summary with links:
+  - [v3] net: mdio-gpio: replace deprecated strncpy with strscpy
+    https://git.kernel.org/netdev/net-next/c/79ac11393328
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
