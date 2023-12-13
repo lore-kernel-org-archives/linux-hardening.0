@@ -1,69 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8269910EA;
-	Wed, 13 Dec 2023 00:10:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oicnRBSE"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 256BCC43395;
-	Wed, 13 Dec 2023 00:10:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702426229;
-	bh=VXosqkC/e3GEGFUuiG+gcRBbUiW7ZCrLw2sUasKp4+I=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=oicnRBSEmUG3ZpI42PyXQAtLa6H7MTNb2FnNttW3Oo+i7JxTulntzLvQF3YxPIl8O
-	 1P6q3MjBRXcKMjx0PFm6YKCnnvdznvaTF/cuALk6s1Uf8HwEgVkB5Wciydb1XojQcC
-	 Chk41fY9PcquLLZszFpAZIhyFRcSoEUDKb+w06fWMm/B6toQ+eqeTHicNiXMVzhWHL
-	 dYhe2ET4YqmVKhlErTpWw3/EwWEm0nWWwZL8i9rzN9ElMpuTmfcxH7T1LD83oYEYU+
-	 U9E2skaETZ6Qbw/uYxxSGQqAKBwDPRu1R/qhKnYduLlC6L5plNgxzt1Ah3GeEB2AJw
-	 nEPbcF85jdajQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 11808DFC907;
-	Wed, 13 Dec 2023 00:10:29 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="RS3q3rzJ"
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92D4799
+	for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 16:39:51 -0800 (PST)
+Received: by mail-ej1-x62a.google.com with SMTP id a640c23a62f3a-a1e2ded3d9fso762816366b.0
+        for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 16:39:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1702427990; x=1703032790; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=vbEQ0KJGdaL7UqnKRRl9MeOERVPcRtBuLGCRgVFRaFo=;
+        b=RS3q3rzJCyhcnyzMr2m8Z4vXoplUUBN/ICrefzhXuaJp6FDaiOL/uTlKgewk5oEREv
+         +4pQiXG+HKU9YWgngbBilth4FSldf+ONMNYie4PV7BVu0F2csyFrmIfhcHu5txYfhXp+
+         NpxYk0WQbqCHHafh5YLSfjloQz0p07QlCh0Aw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702427990; x=1703032790;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vbEQ0KJGdaL7UqnKRRl9MeOERVPcRtBuLGCRgVFRaFo=;
+        b=tZAAIjTWD4A3ZtfazVi14g3k3ogrktmy5Xoql6fbv6UG7sgVjCU0pc/JjkHXWAwIdO
+         zJ3dRBHYOtpkwMhqXIAyXVax7d26ZrgqRXQBGjviD3HsvSO9b4GiinYIjz3DA2H/E709
+         siV/roBZA3l5HJV8k3+aoHHp2zM5VzPbE8Y+ykuLhq8ZXTszc2bZwNwgEzCXZywvniZO
+         ViDLrFgHspkK/koM5KX/oYZJdzw6Qnm23XjlnebNxDzVUJ4YCmehzl3+Qys011Lit0i/
+         ohOLYxXeZyWNxGr0OXWpscvuoBt3w19FyeO7rgjjg/72KeBQJYaYuBPKQDv3B92rCdh3
+         JiOQ==
+X-Gm-Message-State: AOJu0Yz4v2YUmOODMeFo/Xgk4m2QaC4K5WuGiRe09HLOXS5qHFA64ZZe
+	DvqqzBJTcOMOJpoazSmBbUHCNuxt2y/1qc80TgkJB+Ju
+X-Google-Smtp-Source: AGHT+IFAT3n0vz48hNQeF/VeuQIZnt0bucZHCs9pxH9pExo7U9FKHtCdDRkH8X3/dI66GnbmBYgDsg==
+X-Received: by 2002:a17:906:1742:b0:a1d:c2bc:9e4d with SMTP id d2-20020a170906174200b00a1dc2bc9e4dmr3417778eje.97.1702427989951;
+        Tue, 12 Dec 2023 16:39:49 -0800 (PST)
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com. [209.85.218.44])
+        by smtp.gmail.com with ESMTPSA id kv18-20020a17090778d200b00a1dfc541282sm6939213ejc.225.2023.12.12.16.39.48
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Dec 2023 16:39:48 -0800 (PST)
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a1e2ded3d9fso762814266b.0
+        for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 16:39:48 -0800 (PST)
+X-Received: by 2002:a17:906:d8cd:b0:a19:a19b:78bb with SMTP id
+ re13-20020a170906d8cd00b00a19a19b78bbmr3094683ejb.126.1702427988541; Tue, 12
+ Dec 2023 16:39:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v3] net: mdio-gpio: replace deprecated strncpy with strscpy
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <170242622906.31821.7118921876028610861.git-patchwork-notify@kernel.org>
-Date: Wed, 13 Dec 2023 00:10:29 +0000
-References: <20231211-strncpy-drivers-net-mdio-mdio-gpio-c-v3-1-76dea53a1a52@google.com>
-In-Reply-To: <20231211-strncpy-drivers-net-mdio-mdio-gpio-c-v3-1-76dea53a1a52@google.com>
-To: Justin Stitt <justinstitt@google.com>
-Cc: andrew@lunn.ch, hkallweit1@gmail.com, linux@armlinux.org.uk,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
+References: <20231212231706.2680890-1-jeffxu@chromium.org> <20231212231706.2680890-12-jeffxu@chromium.org>
+In-Reply-To: <20231212231706.2680890-12-jeffxu@chromium.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 12 Dec 2023 16:39:31 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgn02cpoFEDQGgS+5BUqA2z-=Ks9+PNd-pEJy8h+NOs5g@mail.gmail.com>
+Message-ID: <CAHk-=wgn02cpoFEDQGgS+5BUqA2z-=Ks9+PNd-pEJy8h+NOs5g@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 11/11] mseal:add documentation
+To: jeffxu@chromium.org
+Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com, 
+	sroettger@google.com, willy@infradead.org, gregkh@linuxfoundation.org, 
+	jeffxu@google.com, jorgelo@chromium.org, groeck@chromium.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-mm@kvack.org, pedro.falcato@gmail.com, dave.hansen@intel.com, 
+	linux-hardening@vger.kernel.org, deraadt@openbsd.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hello:
+On Tue, 12 Dec 2023 at 15:17, <jeffxu@chromium.org> wrote:
+> +
+> +**types**: bit mask to specify the sealing types, they are:
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+I really want a real-life use-case for more than one bit of "don't modify".
 
-On Mon, 11 Dec 2023 19:10:00 +0000 you wrote:
-> strncpy() is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
-> 
-> We expect new_bus->id to be NUL-terminated but not NUL-padded based on
-> its prior assignment through snprintf:
-> |       snprintf(new_bus->id, MII_BUS_ID_SIZE, "gpio-%x", bus_id);
-> 
-> [...]
+IOW, when would you *ever* say "seal this area, but MADV_DONTNEED is ok"?
 
-Here is the summary with links:
-  - [v3] net: mdio-gpio: replace deprecated strncpy with strscpy
-    https://git.kernel.org/netdev/net-next/c/79ac11393328
+Or when would you *ever* say "seal this area, but mprotect()" is ok.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+IOW, I want to know why we don't just do the BSD immutable thing, and
+why we need this multi-level sealing thing.
 
-
+               Linus
