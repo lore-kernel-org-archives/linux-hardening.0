@@ -1,63 +1,96 @@
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7495C3173D;
+	Wed, 13 Dec 2023 18:18:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=alarsen.net header.i=@alarsen.net header.b="J/krViSp"
-Received: from mail.alarsen.net (mail.alarsen.net [144.76.18.233])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF215182;
-	Wed, 13 Dec 2023 08:43:11 -0800 (PST)
-Received: from oscar.alarsen.net (unknown [IPv6:fd8b:531:bccf:96:1d3c:7bb8:afc9:c861])
-	by joe.alarsen.net (Postfix) with ESMTPS id 3F50118053D;
-	Wed, 13 Dec 2023 17:43:09 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alarsen.net; s=joe;
-	t=1702485789; bh=R+zOwHXfxGLUiGFVYN3h/JK/ygMXJQiQ4IPI6Z/ElbE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=J/krViSp5LGEjsvcsVeI7/JtvIMP9EyvgAZT8TqCRVzlCoGZOYj7griiHetYo8X6s
-	 SfKcfFH2D2tyI8iBkp4WldadooHOuLfCFhywNYLv5f3FByNcy5zbrRe/G12500cz17
-	 yYIHT1qdEos3JgqVgHPS47E+jyD0O8rwd3OWeKc4=
-Received: from oscar.localnet (localhost [IPv6:::1])
-	by oscar.alarsen.net (Postfix) with ESMTPS id 16F21A7E;
-	Wed, 13 Dec 2023 17:43:09 +0100 (CET)
-From: Anders Larsen <al@alarsen.net>
-To: Kees Cook <keescook@chromium.org>, Ronald Monthero <debug.penguin32@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] qnx4: Avoid confusing compiler about buffer lengths
-Date: Wed, 13 Dec 2023 17:43:08 +0100
-Message-ID: <12341921.O9o76ZdvQC@oscar>
-In-Reply-To: <170241597608.164694.1762861756800879766.b4-ty@chromium.org>
-References: <20231130205010.it.412-kees@kernel.org> <170241597608.164694.1762861756800879766.b4-ty@chromium.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X2P92Cgd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 670E5C433C7;
+	Wed, 13 Dec 2023 18:18:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702491524;
+	bh=VmD4PSEal/Oz36jy5f+5kaRai9u7pyp8fynzdDmI2do=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=X2P92CgdOxQRlOF6Y/p2g5JD1pkpHumiiu9p5GDFPCiLmujjHvpYytSN41+m+dFbM
+	 LPf5Fcv5lFuMzDJb7YIYytx5y3jShptvJAUD3lox1shQM+eGRGvAK/IWDCNsbqpKCq
+	 nF191Vv4/8qxf+i5UjcXUNEjGbZqMPoLzvXAQpnbV9BFN7vlzDMtZMVx4SMZ8fIuNs
+	 Ffws+/iE/wjlT7ufm7QnqblkO7NomQZk22M6/MWNlp0dgUgn1EbrPkfoFgtuWTTx/2
+	 oSb2w4EBkFOXrY4I/yfFIbRQ5KloinB/P3cxzOrlhbN+W5DKTgSPHVLlw1RzW6T92Q
+	 +o/7nl5bbZt8A==
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 13 Dec 2023 20:18:35 +0200
+Message-Id: <CXNEVH8BZUJT.1UHVUI66SZMTE@suppilovahvero>
+Cc: <patrick.rudolph@9elements.com>, <vincent@vtremblay.dev>,
+ <peteryin.openbmc@gmail.com>, <lakshmiy@us.ibm.com>, <bhelgaas@google.com>,
+ <naresh.solanki@9elements.com>, <alexander.stein@ew.tq-group.com>,
+ <festevam@denx.de>, <devicetree@vger.kernel.org>,
+ <linux-arm-kernel@lists.infradead.org>, <linux-aspeed@lists.ozlabs.org>,
+ <linux-kernel@vger.kernel.org>, <linux-integrity@vger.kernel.org>,
+ <linux-hardening@vger.kernel.org>, <geissonator@yahoo.com>
+Subject: Re: [PATCH v1 1/8] dt-bindings: arm: aspeed: add IBM system1-bmc
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Ninad Palsule" <ninad@linux.ibm.com>, <robh+dt@kernel.org>,
+ <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+ <joel@jms.id.au>, <andrew@codeconstruct.com.au>, <peterhuewe@gmx.de>,
+ <jgg@ziepe.ca>, <keescook@chromium.org>, <tony.luck@intel.com>,
+ <gpiccoli@igalia.com>, <johannes.holland@infineon.com>,
+ <linux@roeck-us.net>, <broonie@kernel.org>
+X-Mailer: aerc 0.15.2
+References: <20231212164004.1683589-1-ninad@linux.ibm.com>
+ <20231212164004.1683589-2-ninad@linux.ibm.com>
+In-Reply-To: <20231212164004.1683589-2-ninad@linux.ibm.com>
 
-Hi Kees,
+On Tue Dec 12, 2023 at 6:39 PM EET, Ninad Palsule wrote:
+> Document the new compatibles used on IBM system1-bmc
+>
+> Tested:
 
-On 2023-12-12 22:19 Kees Cook wrote:
-> On Thu, 30 Nov 2023 12:51:17 -0800, Kees Cook wrote:
-> > This attempts to fix the issue Ronald Monthero found[1]. Avoids using a
-> > too-short struct buffer when reading the string, by using the existing
-> > struct union.
-> > 
-> > -Kees
-> > 
-> > [1]
-> > https://lore.kernel.org/lkml/20231112095353.579855-1-debug.penguin32@gmai
-> > l.com/
-> > 
-> > [...]
-> 
-> I'll put these in -next since there's been no more discussion on it.
-> 
-> Applied to for-next/hardening, thanks!
+this not very useful line :-) (nit)
 
-thanks for taking care of this (and apologies for me being unresponsive)
+>     This board is tested using the simics simulator.
 
-If it's not too late, feel free to add
-Acked-by: Anders Larsen <al@alarsen.net>
+Just leave this (w/o indentation)
 
-Cheers
-Anders
+>
+> Signed-off-by: Ninad Palsule <ninad@linux.ibm.com>
+> ---
+>  Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml | 1 +
+>  Documentation/devicetree/bindings/trivial-devices.yaml   | 2 ++
+>  2 files changed, 3 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml b/D=
+ocumentation/devicetree/bindings/arm/aspeed/aspeed.yaml
+> index 6f7543463d89..ebebe14c42aa 100644
+> --- a/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
+> +++ b/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
+> @@ -85,6 +85,7 @@ properties:
+>                - facebook,yosemite4-bmc
+>                - ibm,everest-bmc
+>                - ibm,rainier-bmc
+> +              - ibm,system1-bmc
+>                - ibm,tacoma-bmc
+>                - inventec,starscream-bmc
+>                - inventec,transformer-bmc
+> diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Doc=
+umentation/devicetree/bindings/trivial-devices.yaml
+> index 441b55723675..b12a60d2eb0f 100644
+> --- a/Documentation/devicetree/bindings/trivial-devices.yaml
+> +++ b/Documentation/devicetree/bindings/trivial-devices.yaml
+> @@ -135,6 +135,8 @@ properties:
+>            - ibm,cffps1
+>              # IBM Common Form Factor Power Supply Versions 2
+>            - ibm,cffps2
+> +            # Infineon barometric pressure and temperature sensor
+> +          - infineon,dps310
+>              # Infineon IR36021 digital POL buck controller
+>            - infineon,ir36021
+>              # Infineon IR38060 Voltage Regulator
 
-
+BR, Jarkko
