@@ -1,99 +1,146 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="L63DWHSy"
-Received: from mail-oa1-x30.google.com (mail-oa1-x30.google.com [IPv6:2001:4860:4864:20::30])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E20DC9C
-	for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 18:33:19 -0800 (PST)
-Received: by mail-oa1-x30.google.com with SMTP id 586e51a60fabf-2030fbc2417so580706fac.3
-        for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 18:33:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="BfbtAoAN"
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B43EE3
+	for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 22:12:52 -0800 (PST)
+Received: by mail-lf1-x12c.google.com with SMTP id 2adb3069b0e04-50be24167efso7497670e87.3
+        for <linux-hardening@vger.kernel.org>; Tue, 12 Dec 2023 22:12:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1702434799; x=1703039599; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=E3Z9JoyfzsY5Msgpk7J3xKwjEP4qsoLvyMDzNBboZxQ=;
-        b=L63DWHSyw764lh5KFe1pB7SH3T/tPvsOkWuRvhOUWXJUbmDh54hBIgUaV6pF9O5zjJ
-         7ApfXQlI2R/60ll3Uu9I9kYwxKmAD+Tlix5N3DsSk3plaLycVl5hjFECLDJAgSS75ztE
-         qwo/IFy+vsv/dgM3qO8vSUi5S9ABmQizUkQSM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702434799; x=1703039599;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=ionos.com; s=google; t=1702447970; x=1703052770; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=E3Z9JoyfzsY5Msgpk7J3xKwjEP4qsoLvyMDzNBboZxQ=;
-        b=mMWCd95diE3KxXyY6jbHUBcvsGOY6Ixge6ot1Yptd4ZNPVE77ZM8ITnqa8hqKZbnto
-         2CxfDstp/LzhHKmfA3czxmeP+NHeisetz7Aw4aV12/qgGoSxuvOlU+q59+SfNXqEODfe
-         neVNmifLoZ5nPhXOr7AK7XS3Xqjw4WBWRu9gpamLmtK7kWl7ruPRNz397HKAv5b/NSbJ
-         zOv/kNwGkoYzEQPMq2suHOL2IxCUemrQ9FdSUx+QGOs2zShClDtu/XpoYDmYIWzNSrL9
-         Y4YeH45+p17YGfaapzIcdyOlY+/gNPAkeE8BOtz85pxeXy3KSqFpABI8DeaER4q61XIc
-         Ptww==
-X-Gm-Message-State: AOJu0YwOQ3I11A9RNH19bye3M3ADxn58I/D/kcVvWJhZt6lkO2nQGWoU
-	qJr1r6GU7HQTUjfSZsn/Tw2fOC7THrvbs1GbKsw=
-X-Google-Smtp-Source: AGHT+IE3whrRDNDQUcDGajjH0b22bNpJJTgCXoMQv6lkdzkXPDL1WhDozwCrzDj3USG8zDbkzGRDYQ==
-X-Received: by 2002:a05:6870:d0c:b0:1fb:32a0:41ce with SMTP id mk12-20020a0568700d0c00b001fb32a041cemr9848854oab.0.1702434799232;
-        Tue, 12 Dec 2023 18:33:19 -0800 (PST)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id o17-20020a656151000000b005c2420fb198sm7667429pgv.37.2023.12.12.18.33.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Dec 2023 18:33:18 -0800 (PST)
-Date: Tue, 12 Dec 2023 18:33:17 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Hannes Reinecke <hare@suse.de>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Bart Van Assche <bvanassche@acm.org>, linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] scsi: fcoe: use sysfs_match_string over
- fcoe_parse_mode
-Message-ID: <202312121833.E5062A3126@keescook>
-References: <20231212-strncpy-drivers-scsi-fcoe-fcoe_sysfs-c-v2-1-1f2d6b2fc409@google.com>
+        bh=TTT65wA8EIe8/ctM3MiQnQZOYGeIHXCjEWPQ3P2f/hI=;
+        b=BfbtAoANjXTKCvTkJlLv61ykeu1JCwqw6kmcJuk3RJYnEWVt77F5gKl3QEjb2wfbNf
+         6xUx7vudnhtyctjcPInjWAGy+cC6/vyJfVUh6rZzHqeTd1mCdeDG/69LyThhm55TqwYZ
+         HoshbOITQZEpMt6lyf7GiWmo4eD5WdOCJPYMIP6AZoT4otyihhnk2nQW4BXdE5lmLOn+
+         sbjm4UKtBHm2LGuI9o6fwPbJljbDMS/+OHIuDFXMeQycgutVEcQlfxCEvidMyN7BmnOG
+         H0O7ZaWee/FbFgBQRsVj0p6eQ/GAGT+TmpjpxnaG5eAC35/qHHYK/j/lxMkv8YAjGxmo
+         5BwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702447970; x=1703052770;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TTT65wA8EIe8/ctM3MiQnQZOYGeIHXCjEWPQ3P2f/hI=;
+        b=Tmvf+q2SqC8GfFpcN35nozrxWGKBXZzXyuZH0yC4Uv55MPyCnYfPaJemrGC1GYp0Xc
+         A+d0IiZMbZbEul28WajSEq2lhEbZmxCfnfWFUIvbsIhDNU2Xnve/wEjGpdDf22tAHbe1
+         GgR+fqUNlDfhTMnWadMwpHXEPluMccIPaFHY8xDFQUj+mFqN1t0CGacZTfHd6vXJtWhY
+         kks8XWPvcgAi55vW42wwe116c9Pgd0MWIDyI90xc3y0cAJn8O8RokAj0kMc0qYAaAYwk
+         QjnU9lJWQk8qMSNNiD35PlOsCo2U8aKDOWTtH0B4AHoewpGd28R4cRFgJSFrr4LvwoAn
+         kc+g==
+X-Gm-Message-State: AOJu0YxiCgSsEQvc5zE2lRGE/id3d4JrwmAtGzyaQVXsxuR3vS2gVjAC
+	2+NXbG2T4E+FV5coHM6oB3piI4mi7nHsENBOrC3lvg==
+X-Google-Smtp-Source: AGHT+IEcUkNKCZHN8Bp4pT2kYElut7LoUcMXapFH67UcXjx4Ss1cRjj6euMSoOvv2uED2517MvQNOWxGhcxjsF9Ez5E=
+X-Received: by 2002:ac2:5fd1:0:b0:50d:ddc:806f with SMTP id
+ q17-20020ac25fd1000000b0050d0ddc806fmr1310071lfg.279.1702447970612; Tue, 12
+ Dec 2023 22:12:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231212-strncpy-drivers-scsi-fcoe-fcoe_sysfs-c-v2-1-1f2d6b2fc409@google.com>
+References: <20231212214738.work.169-kees@kernel.org>
+In-Reply-To: <20231212214738.work.169-kees@kernel.org>
+From: Jinpu Wang <jinpu.wang@ionos.com>
+Date: Wed, 13 Dec 2023 07:12:39 +0100
+Message-ID: <CAMGffEn3eUhMb-RO5eq8gtSqrF3rtf7rEjZAf1XQ6S-goifVZg@mail.gmail.com>
+Subject: Re: [PATCH] block/rnbd-srv: Check for unlikely string overflow
+To: Kees Cook <keescook@chromium.org>
+Cc: "Md. Haris Iqbal" <haris.iqbal@ionos.com>, kernel test robot <lkp@intel.com>, Jens Axboe <axboe@kernel.dk>, 
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 12, 2023 at 11:19:06PM +0000, Justin Stitt wrote:
-> Instead of copying @buf into a new buffer and carefully managing its
-> newline/null-terminating status, we can just use sysfs_match_string()
-> as it uses sysfs_streq() internally which handles newline/null-term:
-> 
-> |  /**
-> |   * sysfs_streq - return true if strings are equal, modulo trailing newline
-> |   * @s1: one string
-> |   * @s2: another string
-> |   *
-> |   * This routine returns true iff two strings are equal, treating both
-> |   * NUL and newline-then-NUL as equivalent string terminations.  It's
-> |   * geared for use with sysfs input strings, which generally terminate
-> |   * with newlines but are compared against values without newlines.
-> |   */
-> |  bool sysfs_streq(const char *s1, const char *s2)
-> |  ...
-> 
-> Then entirely drop the now unused fcoe_parse_mode, being careful to
-> change if condition from checking for FIP_CONN_TYPE_UNKNOWN to < 0 as
-> sysfs_match_string can return -EINVAL. Also check explicitly if
-> ctlr->mode is equal to FIP_CONN_TYPE_UNKNOWN -- this is probably
-> preferred to "<=" as the behavior is more obvious while maintaining
-> functionality.
-> 
-> To get the compiler not to complain, make fip_conn_type_names
-> const char * const. Perhaps, this should also be done for
-> fcf_state_names.
-> 
-> This also removes an instance of strncpy() which helps [1].
-> 
-> Link: https://github.com/KSPP/linux/issues/90 [1]
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-
-Looks great; thanks!
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--- 
-Kees Cook
+On Tue, Dec 12, 2023 at 10:47=E2=80=AFPM Kees Cook <keescook@chromium.org> =
+wrote:
+>
+> Since "dev_search_path" can technically be as large as PATH_MAX,
+> there was a risk of truncation when copying it and a second string
+> into "full_path" since it was also PATH_MAX sized. The W=3D1 builds were
+> reporting this warning:
+>
+> drivers/block/rnbd/rnbd-srv.c: In function 'process_msg_open.isra':
+> drivers/block/rnbd/rnbd-srv.c:616:51: warning: '%s' directive output may =
+be truncated writing up to 254 bytes into a region of size between 0 and 40=
+95 [-Wformat-truncation=3D]
+>   616 |                 snprintf(full_path, PATH_MAX, "%s/%s",
+>       |                                                   ^~
+> In function 'rnbd_srv_get_full_path',
+>     inlined from 'process_msg_open.isra' at drivers/block/rnbd/rnbd-srv.c=
+:721:14: drivers/block/rnbd/rnbd-srv.c:616:17: note: 'snprintf' output betw=
+een 2 and 4351 bytes into a destination of size 4096
+>   616 |                 snprintf(full_path, PATH_MAX, "%s/%s",
+>       |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>   617 |                          dev_search_path, dev_name);
+>       |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~
+>
+> To fix this, unconditionally check for truncation (as was already done
+> for the case where "%SESSNAME%" was present).
+>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202312100355.lHoJPgKy-lkp@i=
+ntel.com/
+> Cc: "Md. Haris Iqbal" <haris.iqbal@ionos.com>
+> Cc: Jack Wang <jinpu.wang@ionos.com>
+> Cc: Jens Axboe <axboe@kernel.dk>
+> Cc: linux-block@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+lgtm.
+Acked-by: Jack Wang <jinpu.wang@ionos.com>
+> ---
+>  drivers/block/rnbd/rnbd-srv.c | 19 ++++++++++---------
+>  1 file changed, 10 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/block/rnbd/rnbd-srv.c b/drivers/block/rnbd/rnbd-srv.=
+c
+> index 65de51f3dfd9..ab78eab97d98 100644
+> --- a/drivers/block/rnbd/rnbd-srv.c
+> +++ b/drivers/block/rnbd/rnbd-srv.c
+> @@ -585,6 +585,7 @@ static char *rnbd_srv_get_full_path(struct rnbd_srv_s=
+ession *srv_sess,
+>  {
+>         char *full_path;
+>         char *a, *b;
+> +       int len;
+>
+>         full_path =3D kmalloc(PATH_MAX, GFP_KERNEL);
+>         if (!full_path)
+> @@ -596,19 +597,19 @@ static char *rnbd_srv_get_full_path(struct rnbd_srv=
+_session *srv_sess,
+>          */
+>         a =3D strnstr(dev_search_path, "%SESSNAME%", sizeof(dev_search_pa=
+th));
+>         if (a) {
+> -               int len =3D a - dev_search_path;
+> +               len =3D a - dev_search_path;
+>
+>                 len =3D snprintf(full_path, PATH_MAX, "%.*s/%s/%s", len,
+>                                dev_search_path, srv_sess->sessname, dev_n=
+ame);
+> -               if (len >=3D PATH_MAX) {
+> -                       pr_err("Too long path: %s, %s, %s\n",
+> -                              dev_search_path, srv_sess->sessname, dev_n=
+ame);
+> -                       kfree(full_path);
+> -                       return ERR_PTR(-EINVAL);
+> -               }
+>         } else {
+> -               snprintf(full_path, PATH_MAX, "%s/%s",
+> -                        dev_search_path, dev_name);
+> +               len =3D snprintf(full_path, PATH_MAX, "%s/%s",
+> +                              dev_search_path, dev_name);
+> +       }
+> +       if (len >=3D PATH_MAX) {
+> +               pr_err("Too long path: %s, %s, %s\n",
+> +                      dev_search_path, srv_sess->sessname, dev_name);
+> +               kfree(full_path);
+> +               return ERR_PTR(-EINVAL);
+>         }
+>
+>         /* eliminitate duplicated slashes */
+> --
+> 2.34.1
+>
