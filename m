@@ -1,61 +1,63 @@
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FF5810C;
-	Wed, 13 Dec 2023 08:13:50 -0800 (PST)
-Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-6d84ddd642fso5401517a34.0;
-        Wed, 13 Dec 2023 08:13:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702484030; x=1703088830;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yKFwCtE90EPD9y2XJTF44lWNSwXrZ/Ik0w5o/94t9wo=;
-        b=rLZ6s6hq/+A38IhIqZVpVkgN+VX8AoxjGU3N+/LbhM25VpWREgQRJtSHby3lCgobnx
-         nX/9Lj1F0oYr88SSYoDDRPsBp616pYKM/KV+lh6Qc1NKyTpXosVV3mMJhIMbUTObiGIb
-         qXN3TQt4yqMdltmAs6WfvORcYJgM1i1doHR9cnHs1VzAJ+bVb8ClN1U/CevilJ+LLZod
-         wa47GVOU5+NddKS8Obp5UFTsUtrmVbyBWr/iyxyXd4dK8AaqRcc2xCXPrCz9tK2coygw
-         NLuWi3zkS4UPXjpGp1mBKaGMh+eJ0Jwpg2Yn9aEM9IdP3vM7sIW7no9oJkBKBnVp6WyD
-         fvqw==
-X-Gm-Message-State: AOJu0Yx/oYmJxqOTsLOMMRqP96FcxL8ovJlR6rWNiAg2LOVb65qdc/0B
-	x9xP/8njEvAX9s+MrifTLw==
-X-Google-Smtp-Source: AGHT+IHvwtas0Wz/5QoHKT/kRL+DgeC/VW8MvnUtSILOIvJ0GIakLipYqdQA3Ql3Vum+yJU0aDi0bQ==
-X-Received: by 2002:a05:6871:6b90:b0:1fa:ff63:2d3b with SMTP id zh16-20020a0568716b9000b001faff632d3bmr7032507oab.44.1702484029822;
-        Wed, 13 Dec 2023 08:13:49 -0800 (PST)
-Received: from herring.priv (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id zl10-20020a0568716d8a00b001fb42001fa7sm3978002oab.36.2023.12.13.08.13.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Dec 2023 08:13:49 -0800 (PST)
-Received: (nullmailer pid 1207750 invoked by uid 1000);
-	Wed, 13 Dec 2023 16:13:47 -0000
-Date: Wed, 13 Dec 2023 10:13:47 -0600
-From: Rob Herring <robh@kernel.org>
-To: Ninad Palsule <ninad@linux.ibm.com>
-Cc: krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au, peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com, johannes.holland@infineon.com, linux@roeck-us.net, broonie@kernel.org, patrick.rudolph@9elements.com, vincent@vtremblay.dev, peteryin.openbmc@gmail.com, lakshmiy@us.ibm.com, bhelgaas@google.com, naresh.solanki@9elements.com, alexander.stein@ew.tq-group.com, festevam@denx.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org, linux-hardening@vger.kernel.org, geissonator@yahoo.com
-Subject: Re: [PATCH v1 2/8] dt-bindings: tpm: Add schema for TIS I2C devices
-Message-ID: <20231213161347.GA1204384-robh@kernel.org>
-References: <20231212164004.1683589-1-ninad@linux.ibm.com>
- <20231212164004.1683589-3-ninad@linux.ibm.com>
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=alarsen.net header.i=@alarsen.net header.b="J/krViSp"
+Received: from mail.alarsen.net (mail.alarsen.net [144.76.18.233])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF215182;
+	Wed, 13 Dec 2023 08:43:11 -0800 (PST)
+Received: from oscar.alarsen.net (unknown [IPv6:fd8b:531:bccf:96:1d3c:7bb8:afc9:c861])
+	by joe.alarsen.net (Postfix) with ESMTPS id 3F50118053D;
+	Wed, 13 Dec 2023 17:43:09 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alarsen.net; s=joe;
+	t=1702485789; bh=R+zOwHXfxGLUiGFVYN3h/JK/ygMXJQiQ4IPI6Z/ElbE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=J/krViSp5LGEjsvcsVeI7/JtvIMP9EyvgAZT8TqCRVzlCoGZOYj7griiHetYo8X6s
+	 SfKcfFH2D2tyI8iBkp4WldadooHOuLfCFhywNYLv5f3FByNcy5zbrRe/G12500cz17
+	 yYIHT1qdEos3JgqVgHPS47E+jyD0O8rwd3OWeKc4=
+Received: from oscar.localnet (localhost [IPv6:::1])
+	by oscar.alarsen.net (Postfix) with ESMTPS id 16F21A7E;
+	Wed, 13 Dec 2023 17:43:09 +0100 (CET)
+From: Anders Larsen <al@alarsen.net>
+To: Kees Cook <keescook@chromium.org>, Ronald Monthero <debug.penguin32@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] qnx4: Avoid confusing compiler about buffer lengths
+Date: Wed, 13 Dec 2023 17:43:08 +0100
+Message-ID: <12341921.O9o76ZdvQC@oscar>
+In-Reply-To: <170241597608.164694.1762861756800879766.b4-ty@chromium.org>
+References: <20231130205010.it.412-kees@kernel.org> <170241597608.164694.1762861756800879766.b4-ty@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231212164004.1683589-3-ninad@linux.ibm.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Tue, Dec 12, 2023 at 10:39:58AM -0600, Ninad Palsule wrote:
-> From: Johannes Holland <johannes.holland@infineon.com>
+Hi Kees,
+
+On 2023-12-12 22:19 Kees Cook wrote:
+> On Thu, 30 Nov 2023 12:51:17 -0800, Kees Cook wrote:
+> > This attempts to fix the issue Ronald Monthero found[1]. Avoids using a
+> > too-short struct buffer when reading the string, by using the existing
+> > struct union.
+> > 
+> > -Kees
+> > 
+> > [1]
+> > https://lore.kernel.org/lkml/20231112095353.579855-1-debug.penguin32@gmai
+> > l.com/
+> > 
+> > [...]
 > 
-> Add a dt schema to support device tree bindings for the generic I2C
-> physical layer. Refer to the TCG PC Client Platform TPM Profile (PTP)
-> Specification for TPM 2.0 v1.04 Revision 14.
+> I'll put these in -next since there's been no more discussion on it.
 > 
-> This includes descriptions for the Nuvoton and Infineon devices.
+> Applied to for-next/hardening, thanks!
 
-This is incomplete and conflicts with this series[1]. Please help 
-review and make sure it works for the cases you care about.
+thanks for taking care of this (and apologies for me being unresponsive)
 
-Rob
+If it's not too late, feel free to add
+Acked-by: Anders Larsen <al@alarsen.net>
 
-[1] https://lore.kernel.org/all/cover.1701093036.git.lukas@wunner.de/
+Cheers
+Anders
+
+
