@@ -1,87 +1,109 @@
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lZz9CcOG"
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C82099
-	for <linux-hardening@vger.kernel.org>; Wed, 13 Dec 2023 11:18:20 -0800 (PST)
-Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1d0b2752dc6so64959035ad.3
-        for <linux-hardening@vger.kernel.org>; Wed, 13 Dec 2023 11:18:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1702495099; x=1703099899; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=P4zCTjl8Zj5OEvodPkRWE7USQTKPwsDssLjsj8FI8bA=;
-        b=lZz9CcOGQ28jt/M2KoCb8vMde8vGPhufwRb8bQuaSl436TZ9tXXsG9DAgyUwShg/Bn
-         DSaROe7fmupWCKjwUTHAIa18mivqYHDb0JmqCq6i7MOQoDLZW6UGsJi3Tmd+eZotmUJE
-         qlYgX3eIPGAIXsTXSS4MSFAkakwlxjQlqLRPs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702495099; x=1703099899;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=P4zCTjl8Zj5OEvodPkRWE7USQTKPwsDssLjsj8FI8bA=;
-        b=H+vZk53HTW1my8GdRJQSX9hIWLQean5nt6LKcVTXzqEceP+pSRoD9rPUwOXyM1C5gK
-         NyHu/duBqPB38N3qTmxcNAWYGPV7XY7EbGVutstoi5fu3ktjm+uRU80KbqdM0DyRy5Gd
-         Heal2WdwySdsQp6eVjvvI1EKXvTu4ylYiNKC3DQCr0asTSIRr8VjU4IsKfxdWl0Cjr8U
-         GnS9+i+qzXcQe55/8cCtWYNW77gZwY3FkR577qNFfE1lpt6EE832zwODWxrLfLuzrjPi
-         i2qSRZtWmcKX8PZPmJLrX7GH6KjCB3NjL/0GHH1pi+9Bgjj+hnvLU5iSp4irenbUMoVW
-         ZuPA==
-X-Gm-Message-State: AOJu0YxwK71IzDSzojA5XoV/Zh+aAT/OYsE/W7Os70m8iVPXgxZ43ZfV
-	iB0GiYkyCfqhpg8SvWWdTJoZOA==
-X-Google-Smtp-Source: AGHT+IEydW4l2gH+402jkdTt5SLR7TQ0ZIFYTA0HY674vt3HsfTPJnNPjcvD142Vjxqu4HfEnqVnrQ==
-X-Received: by 2002:a17:902:e74e:b0:1cf:9c44:62e with SMTP id p14-20020a170902e74e00b001cf9c44062emr9894221plf.34.1702495099627;
-        Wed, 13 Dec 2023 11:18:19 -0800 (PST)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id a8-20020a170902b58800b001d05bb77b43sm10882454pls.19.2023.12.13.11.18.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Dec 2023 11:18:19 -0800 (PST)
-Date: Wed, 13 Dec 2023 11:18:18 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Anders Larsen <al@alarsen.net>
-Cc: Ronald Monthero <debug.penguin32@gmail.com>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] qnx4: Avoid confusing compiler about buffer
- lengths
-Message-ID: <202312131118.F350E56D@keescook>
-References: <20231130205010.it.412-kees@kernel.org>
- <170241597608.164694.1762861756800879766.b4-ty@chromium.org>
- <12341921.O9o76ZdvQC@oscar>
+X-Greylist: delayed 4184 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 13 Dec 2023 11:27:56 PST
+Received: from out03.mta.xmission.com (out03.mta.xmission.com [166.70.13.233])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D965C9
+	for <linux-hardening@vger.kernel.org>; Wed, 13 Dec 2023 11:27:56 -0800 (PST)
+Received: from in01.mta.xmission.com ([166.70.13.51]:55092)
+	by out03.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1rDToA-000YZK-3k; Wed, 13 Dec 2023 11:18:10 -0700
+Received: from ip68-227-168-167.om.om.cox.net ([68.227.168.167]:53124 helo=email.froward.int.ebiederm.org.xmission.com)
+	by in01.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1rDTo9-007oxM-1R; Wed, 13 Dec 2023 11:18:09 -0700
+From: "Eric W. Biederman" <ebiederm@xmission.com>
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,  Joel Granados
+ <j.granados@samsung.com>,  Kees Cook <keescook@chromium.org>,  "Gustavo A.
+ R. Silva" <gustavoars@kernel.org>,  Iurii Zaikin <yzaikin@google.com>,
+  Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+  linux-hardening@vger.kernel.org,  linux-kernel@vger.kernel.org,
+  linux-fsdevel@vger.kernel.org
+References: <CGME20231204075237eucas1p27966f7e7da014b5992d3eef89a8fde25@eucas1p2.samsung.com>
+	<20231204-const-sysctl-v2-0-7a5060b11447@weissschuh.net>
+	<20231207104357.kndqvzkhxqkwkkjo@localhost>
+	<fa911908-a14d-4746-a58e-caa7e1d4b8d4@t-8ch.de>
+	<20231208095926.aavsjrtqbb5rygmb@localhost>
+	<8509a36b-ac23-4fcd-b797-f8915662d5e1@t-8ch.de>
+	<ZXlhkJm2KjCymcqu@bombadil.infradead.org>
+Date: Wed, 13 Dec 2023 12:18:00 -0600
+In-Reply-To: <ZXlhkJm2KjCymcqu@bombadil.infradead.org> (Luis Chamberlain's
+	message of "Tue, 12 Dec 2023 23:47:28 -0800")
+Message-ID: <87v8927yqv.fsf@email.froward.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <12341921.O9o76ZdvQC@oscar>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-XM-SPF: eid=1rDTo9-007oxM-1R;;;mid=<87v8927yqv.fsf@email.froward.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.168.167;;;frm=ebiederm@xmission.com;;;spf=pass
+X-XM-AID: U2FsdGVkX19i6qfGdObJtlqwV73cM5HlVuthNRxr54M=
+X-SA-Exim-Connect-IP: 68.227.168.167
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+X-Spam-Level: 
+X-Spam-DCC: XMission; sa07 1397; Body=1 Fuz1=1 Fuz2=1 
+X-Spam-Combo: ;Luis Chamberlain <mcgrof@kernel.org>
+X-Spam-Relay-Country: 
+X-Spam-Timing: total 472 ms - load_scoreonly_sql: 0.04 (0.0%),
+	signal_user_changed: 11 (2.4%), b_tie_ro: 10 (2.1%), parse: 1.41
+	(0.3%), extract_message_metadata: 26 (5.5%), get_uri_detail_list: 2.4
+	(0.5%), tests_pri_-2000: 39 (8.3%), tests_pri_-1000: 4.2 (0.9%),
+	tests_pri_-950: 1.79 (0.4%), tests_pri_-900: 1.50 (0.3%),
+	tests_pri_-90: 133 (28.2%), check_bayes: 132 (27.9%), b_tokenize: 12
+	(2.6%), b_tok_get_all: 9 (2.0%), b_comp_prob: 4.2 (0.9%),
+	b_tok_touch_all: 102 (21.6%), b_finish: 0.96 (0.2%), tests_pri_0: 238
+	(50.4%), check_dkim_signature: 0.50 (0.1%), check_dkim_adsp: 2.8
+	(0.6%), poll_dns_idle: 1.21 (0.3%), tests_pri_10: 2.3 (0.5%),
+	tests_pri_500: 9 (1.9%), rewrite_mail: 0.00 (0.0%)
+Subject: Re: [PATCH v2 00/18] sysctl: constify sysctl ctl_tables
+X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 
-On Wed, Dec 13, 2023 at 05:43:08PM +0100, Anders Larsen wrote:
-> Hi Kees,
-> 
-> On 2023-12-12 22:19 Kees Cook wrote:
-> > On Thu, 30 Nov 2023 12:51:17 -0800, Kees Cook wrote:
-> > > This attempts to fix the issue Ronald Monthero found[1]. Avoids using a
-> > > too-short struct buffer when reading the string, by using the existing
-> > > struct union.
-> > > 
-> > > -Kees
-> > > 
-> > > [1]
-> > > https://lore.kernel.org/lkml/20231112095353.579855-1-debug.penguin32@gmai
-> > > l.com/
-> > > 
-> > > [...]
-> > 
-> > I'll put these in -next since there's been no more discussion on it.
-> > 
-> > Applied to for-next/hardening, thanks!
-> 
-> thanks for taking care of this (and apologies for me being unresponsive)
-> 
-> If it's not too late, feel free to add
-> Acked-by: Anders Larsen <al@alarsen.net>
+Luis Chamberlain <mcgrof@kernel.org> writes:
 
-Thanks! I'll update the tags. :)
+> On Mon, Dec 11, 2023 at 12:25:10PM +0100, Thomas Wei=C3=9Fschuh wrote:
+>> Before sending it I'd like to get feedback on the internal rework of the
+>> is_empty detection from you and/or Luis.
+>>=20
+>> https://git.sr.ht/~t-8ch/linux/commit/ea27507070f3c47be6febebe451bbb88f6=
+ea707e
+>> or the attached patch.
+>
+> Please send as a new patch as RFC and please ensure on the To field is
+> first "Eric W. Biederman" <ebiederm@xmission.com> with a bit more
+> elaborate commit log as suggested from my review below. If there are
+> any hidden things me and Joel could probably miss I'm sure Eric will
+> be easily able to spot it.
+>
+>> From ea27507070f3c47be6febebe451bbb88f6ea707e Mon Sep 17 00:00:00 2001
+>> From: =3D?UTF-8?q?Thomas=3D20Wei=3DC3=3D9Fschuh?=3D <linux@weissschuh.ne=
+t>
+>> Date: Sun, 3 Dec 2023 21:56:46 +0100
+>> Subject: [PATCH] sysctl: move permanently empty flag to ctl_dir
+>> MIME-Version: 1.0
+>> Content-Type: text/plain; charset=3DUTF-8
+>> Content-Transfer-Encoding: 8bit
+>>=20
+>> Simplify the logic by always keeping the permanently_empty flag on the
+>> ctl_dir.
+>> The previous logic kept the flag in the leaf ctl_table and from there
+>> transferred it to the ctl_table from the directory.
+>>=20
+>> This also removes the need to have a mutable ctl_table and will allow
+>> the constification of those structs.
 
--- 
-Kees Cook
+> Please elaborate a bit more on this here in your next RFC.
+
+> It's a pretty aggressive cleanup, specially with the new hipster guard()
+> call but I'd love Eric's eyeballs on a proper v2.
+
+I will look at a v2 time permitting.
+
+My sense is that changing the locking probably make sense as a separate
+patch.
+
+Eric
