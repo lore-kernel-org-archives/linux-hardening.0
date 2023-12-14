@@ -1,109 +1,94 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HcpwYmj6"
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0A50109
-	for <linux-hardening@vger.kernel.org>; Thu, 14 Dec 2023 00:52:09 -0800 (PST)
-Received: by mail-ed1-x52c.google.com with SMTP id 4fb4d7f45d1cf-548ae9a5eeaso6395a12.1
-        for <linux-hardening@vger.kernel.org>; Thu, 14 Dec 2023 00:52:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cxiUuQpM"
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C184811D
+	for <linux-hardening@vger.kernel.org>; Thu, 14 Dec 2023 04:26:24 -0800 (PST)
+Received: by mail-ed1-x533.google.com with SMTP id 4fb4d7f45d1cf-54c77d011acso8414a12.1
+        for <linux-hardening@vger.kernel.org>; Thu, 14 Dec 2023 04:26:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1702543928; x=1703148728; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1702556783; x=1703161583; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=j6m1pnDUv9i4DcB9NREALoLBq+4cG7aqS9+vnYscUmI=;
-        b=HcpwYmj6dYgykuKQpqYcdMBW6Up5Vv8Dfk9V6L43d7MniGDVYjE30VFsV61WZndEGC
-         TDAx3CY/dz/hgPeDhDZxlPu8wNUGSwz0cn+0muy6tAR5fggC9L3jjdZcvQF+IPAmWqEr
-         7RVt+SklWfGt30mqEa5pAbdn9IOgJN7nAWDTGdjS43ZxBc7F2OytdYSXRZzu5asxy8hx
-         E93fx3xGSaKaiL+19twVDQKTgjTJf0/irpwcnacM1RNtzocTsGDfHRQUBKRUricEQ/6V
-         S4nUg8+7IQUrjlD1H5uTHPSkbOftgWl8iS/cxohbN9v0GkCpezlLNaU/QuVYTgIS6ytU
-         iPLQ==
+        bh=LmyOc0o4jiCh639QVRyShxR/TrinbOqk0Bga9CjtgfA=;
+        b=cxiUuQpMRBGPg9thtBQMwTRf26+OgxNyYfnmKpxtm/cjv4IaWA8z5Cx6EtiYvHmoXH
+         9bIot2+4ei70K/3FQqWPRVadWNYGUQUO3GfPeoDFRt5wJOlvio9XGRIdHVH86Jl4FuVD
+         YuzD0BXoNT7SuBdr3mkTmYsw5uDQxEs8DilbsNkY4lzNt7mmwo9Y+TA7x30NPqoh6LdP
+         bjUV/UJC+cbto9APtvoeA1wzj/x9Q4j98TFkr2m4WETjAYFr+sOvt7ZhjiA+R0mi/MSx
+         wpzXIUoOeYQcU2kwThpG1eIaZpRs1LaotkaECc2YqVOW5RA7ZoUJZw9FAItiwbmXu0/p
+         uiZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702543928; x=1703148728;
+        d=1e100.net; s=20230601; t=1702556783; x=1703161583;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=j6m1pnDUv9i4DcB9NREALoLBq+4cG7aqS9+vnYscUmI=;
-        b=A47FQJUaeYLn6MudA8EU9u9sxTNYnlVprWPPwa0CzGleim27Yo7t+jSDtvu09i8zK+
-         V2x69S8Ae8TWVlYy2r1buoDRMw2BP7YWFBIseBGFIw3JpLGuEfHWNynnJlI7/pCTJ1jg
-         cbu9YyCn+/DTS+2QZFPUjORx/tUD5F3ZiaaC38zHZ6foYTZXzoOhO4dOrX7FCW3cHCh1
-         6fmcOpfVfMFBqFa0mLHh8Gupax2fL4w+nklYP3rRuj/sRXVgnVY7uegQTcM5vdG7MVXs
-         EgxurvPjoyfo94OPqOQV9V6jyyGuOyWUGHxr4xwtQf3FPjYye/LeONvzHGEbCg+hTnAE
-         /Cqw==
-X-Gm-Message-State: AOJu0YyhtHEITDcMDtD1PkheqkmvuDhlQXkZoG/O15YLLG7bdQZHWa3w
-	FYnJGfEAdGhWB/PU0WjbAsNHrCj+0BQHWabySI4kTA==
-X-Google-Smtp-Source: AGHT+IGr7SURlrVqQjCd6Nbh6tM7k/YJj+gzxCpSmMn1ZluV7ILkdLH+8yeuqAiwZK1QSvDikUGGHogQ3hlOPDeMG/U=
-X-Received: by 2002:a50:d7ca:0:b0:54a:ee8b:7a8c with SMTP id
- m10-20020a50d7ca000000b0054aee8b7a8cmr598463edj.0.1702543928070; Thu, 14 Dec
- 2023 00:52:08 -0800 (PST)
+        bh=LmyOc0o4jiCh639QVRyShxR/TrinbOqk0Bga9CjtgfA=;
+        b=brizxGD9D6xFNXhAiHc1UXKHiKa04tFg9QiIPx8LuXt0DN1vqsgjLHDBfBIRS0yQai
+         JmuRwJKTI1wwvNA+Eampjyb7kYaoadxX6JeTRtwUYtawxRzQLAkQrbuo3bM2I8CkHqXZ
+         VxZjD2/yma7abI6qZqJzPxzAzgul7uxsYvWWz0jR4ik2JrRG1RxeS2bFK/x03ZaChyh7
+         CrFMnPrKG/HuLB1EYjtUdJnVnpjfpJpkPVd65I7Ptbo1PZdSqG35KEuFT8Rwrud7Eko5
+         cclD/A76cK4nXWyJNuvqPNNsp3m5XvEkd9Inj6uftCPB6ksvU1xwtuuZfmNJDBHhGXru
+         jIEQ==
+X-Gm-Message-State: AOJu0YzXwOJl/prbZCCiy7ukX6nLFK1anNKknUOPD+on0Fcxt6GE4xv6
+	hSlPNuAm7Czgg4r4KyHTG9c/9O2PFIR07K6ozDPpaw==
+X-Google-Smtp-Source: AGHT+IHR0nELiMI3+6Emp9k7wISJ7lPZs/cIkCJWNq/zm022pEHSFFcgvSpLKJNDn5t4G1fJmLrI2MzV+KTwzl2VGrQ=
+X-Received: by 2002:a50:d7c3:0:b0:54a:ee8b:7a99 with SMTP id
+ m3-20020a50d7c3000000b0054aee8b7a99mr625309edj.0.1702556783088; Thu, 14 Dec
+ 2023 04:26:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231208-kunit_bus-v2-0-e95905d9b325@google.com> <7rgeotye4grxdtbxip53fykjm4a3sudochsfzdvkmyqltvj7zv@qekkt42x2j25>
-In-Reply-To: <7rgeotye4grxdtbxip53fykjm4a3sudochsfzdvkmyqltvj7zv@qekkt42x2j25>
+References: <20231214-kunit_bus-v3-0-7e9a287d3048@google.com> <20231214-kunit_bus-v3-5-7e9a287d3048@google.com>
+In-Reply-To: <20231214-kunit_bus-v3-5-7e9a287d3048@google.com>
 From: David Gow <davidgow@google.com>
-Date: Thu, 14 Dec 2023 16:51:54 +0800
-Message-ID: <CABVgOSmnf8XbS92f4=-ZX8Of6JUwCy7U2wz2-3udvByDKxXABg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] kunit: Add helpers for creating test-managed devices
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Rae Moar <rmoar@google.com>, Brendan Higgins <brendan.higgins@linux.dev>, 
+Date: Thu, 14 Dec 2023 04:26:10 -0800
+Message-ID: <CABVgOSmmg4zd+44fpxRHGr_vcveSSYg3WXKO+9yN9aP4-uiHMQ@mail.gmail.com>
+Subject: Re: [PATCH v3 5/5] drm/tests: Switch to kunit devices
+To: Rae Moar <rmoar@google.com>, Brendan Higgins <brendan.higgins@linux.dev>, 
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matti Vaittinen <mazziesaccount@gmail.com>, 
 	Stephen Boyd <sboyd@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, 
 	Jonathan Corbet <corbet@lwn.net>, Kees Cook <keescook@chromium.org>, 
 	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-sound@vger.kernel.org
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Maxime Ripard <mripard@kernel.org>
+Cc: linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-sound@vger.kernel.org
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000136db5060c746688"
+	boundary="0000000000004b2078060c776409"
 
---000000000000136db5060c746688
+--0000000000004b2078060c776409
 Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 13 Dec 2023 at 23:04, Maxime Ripard <mripard@kernel.org> wrote:
+On Thu, 14 Dec 2023 at 16:49, <davidgow@google.com> wrote:
 >
-> Hi David,
+> From: Maxime Ripard <mripard@kernel.org>
 >
-> On Fri, Dec 08, 2023 at 06:09:28PM +0800, davidgow@google.com wrote:
-> > KUnit tests often need to provide a struct device, and thus far have
-> > mostly been using root_device_register() or platform devices to create
-> > a 'fake device' for use with, e.g., code which uses device-managed
-> > resources. This has several disadvantages, including not being designed
-> > for test use, scattering files in sysfs, and requiring manual teardown
-> > on test exit, which may not always be possible in case of failure.
-> >
-> > Instead, introduce a set of helper functions which allow devices
-> > (internally a struct kunit_device) to be created and managed by KUnit --
-> > i.e., they will be automatically unregistered on test exit. These
-> > helpers can either use a user-provided struct device_driver, or have one
-> > automatically created and managed by KUnit. In both cases, the device
-> > lives on a new kunit_bus.
-> >
-> > This is a follow-up to a previous proposal here:
-> > https://lore.kernel.org/linux-kselftest/20230325043104.3761770-1-davidgow@google.com/
-> >
-> > (The kunit_defer() function in the first patch there has since been
-> > merged as the 'deferred actions' feature.)
-> >
-> > My intention is to take this whole series in via the kselftest/kunit
-> > branch, but I'm equally okay with splitting up the later patches which
-> > use this to go via the various subsystem trees in case there are merge
-> > conflicts.
+> Kunit recently gained helpers to create test managed devices. This means
+> that we no longer have to roll our own helpers in KMS and we can reuse
+> them.
 >
-> Could you take (and apply eventually) that patch as part of your series?
-> https://lore.kernel.org/linux-kselftest/20231205090405.153140-1-mripard@kernel.org/
->
+> Signed-off-by: Maxime Ripard <mripard@kernel.org>
+> ---
 
-Thanks -- I've included it in v3 (which fixes a few other issues), and
-will take it along with the rest of the series:
-https://lore.kernel.org/linux-kselftest/20231214-kunit_bus-v3-0-7e9a287d3048@google.com/T/
+I've tested this over a few different architectures and configs, and
+it works fine.
 
-Cheers,
+Tested-by: David Gow <davidgow@google.com>
+
+And whoops -- forgot to add my Signed-off-by above.
+
+Signed-off-by: David Gow <davidgow@google.com>
+
+It's identical to the version here, anyway -- I didn't make any
+changes, just included it in this series to have everything in one
+place:
+https://lore.kernel.org/linux-kselftest/20231205090405.153140-1-mripard@kernel.org/
+
 -- David
 
---000000000000136db5060c746688
+--0000000000004b2078060c776409
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -170,14 +155,14 @@ impZAng7ccvvK09K3ZuhwTIxJMsPXCZYsrXWORTw5sczRAP6XvKbPBJnsJoSTe5dFBPBHOQJOGhU
 qWfEfWnWMJPF3LxSGLpLFQXO3RwQqmxv08avwXfVPouh1xuB3FX7rpDabT8YDhu9JgIZkLEKko7L
 yQt6zWwng7k8YF/jGbiAta6VMYICajCCAmYCAQEwaDBUMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQ
 R2xvYmFsU2lnbiBudi1zYTEqMCgGA1UEAxMhR2xvYmFsU2lnbiBBdGxhcyBSMyBTTUlNRSBDQSAy
-MDIwAhABzgV+4+mJnUzG7XDy6d2uMA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCDm
-F4Ic9SffzyaDMQPCLkKQW+taWwYpJm+BECAkfDyJnzAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcB
-MBwGCSqGSIb3DQEJBTEPFw0yMzEyMTQwODUyMDhaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUD
+MDIwAhABzgV+4+mJnUzG7XDy6d2uMA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCCc
+/4y3L+QgO8cUp1KOI6upYw6pHirq12NvVIDl1I6BpDAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcB
+MBwGCSqGSIb3DQEJBTEPFw0yMzEyMTQxMjI2MjNaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUD
 BAEqMAsGCWCGSAFlAwQBFjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsG
-CSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEARS3tFy1kAs0G8X3o4TWH
-oEKuwTgMnhZ5fz7z9rQ6YlIk+yhp9dnsyqKFp/VpdGCO5av2Yv834BDTZtRjp3hZFvnI8x6ay5rx
-LcSpX/6ebX/U/QLMsyj9+Mx0Vwcu6++9ycv3W2ffL+oRa2kGEIi3bHvi2aLU9ObTJc/pBW6luEVV
-1uXNtvMAmpBarA6NQvo38j5dPt5ypLXSJtoIXnVdNqGXqAnqJq1xYxJBTzooY5mQB04E9NKm4dVT
-OMz4ot55/KLmY14DLuJBF+8FlqKa48uA4p3nLyOJFC9C0A5G7ejA4TwCOPDc6Hj9KZEqbqPCag+q
-ohe82MUWiZzz47sOyA==
---000000000000136db5060c746688--
+CSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEADXv//G1GFwpoanL3ShTx
+BTG5ba1DwGNIA6Z3vPGeTqQhsr0ij+baTuh6iAnoM/ymGtQ8XlwbYq9PGg4McxrLZRXzaajgcmSj
+r0lazW1ULtr6hjMw6jD06Hyp2MPtH1lBbseotlcVVwk6Jt0RunqrFKIn2NXKZjh9Q9TwHu97Irqs
+U1rSlFK45mpMHWAxkH1kVFG5GXQAHPj3tooG+0YpdJ0KeUjkaKEeHcLr7jT52qU/qn2YDujY7mU2
+Mu7H4ah444un4TjQk8gizbJa4Hb9D7lIoVyC/j//7lAPnAAkxgB1pjO1+hrfKuB+/HgTdV+sH7eU
+CVT/5zCIYB8MdrwvdQ==
+--0000000000004b2078060c776409--
