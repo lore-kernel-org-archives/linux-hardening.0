@@ -1,142 +1,137 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="FaBbWCzk"
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ED26C9;
-	Wed, 13 Dec 2023 11:50:38 -0800 (PST)
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BDJ7B7j012884;
-	Wed, 13 Dec 2023 19:49:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=L1dGX3bAr3L6MVW5M70dQtsQ2pdKDwOrjjPgZmZ9Nss=;
- b=FaBbWCzkxjdeqtrv+Eyh6JPEdTAC1incrbMiODjMZ5LdIgkOMSg0aM8wu118JoB+uF0g
- yVPGPG92U7Y2OZZmQLpfngXLAZ39HYBmh4u4zWOk7h62WpQyYAQ1zMoviixSGClP7BQh
- tkuvQZ6c3VzW+6D3FPnZ0KGdfe14nsTIGurBgbWGI2gmqi3ItvMApMj0pOYFuVzOqEBw
- 6U0HOfxk1PLvGnTTBMCKoeIi1MV2rodl2/wpia1G4XKZ+ddhjOW5GKuwkaQkNcFlnGGq
- w6v9P03ZlrS8zfR6FNRTxwsn7K0dgplQ2nNUHYCVHTCpaa/gK41ekqj5l7nyObynANoE KQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uyjg30xdy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 13 Dec 2023 19:49:26 +0000
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3BDJmEa8010165;
-	Wed, 13 Dec 2023 19:49:25 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uyjg30xdb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 13 Dec 2023 19:49:25 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3BDI0FAI004101;
-	Wed, 13 Dec 2023 19:49:24 GMT
-Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3uw4skk2au-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 13 Dec 2023 19:49:24 +0000
-Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
-	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3BDJnNYp27591270
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 13 Dec 2023 19:49:23 GMT
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8138F58055;
-	Wed, 13 Dec 2023 19:49:23 +0000 (GMT)
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0FAA45803F;
-	Wed, 13 Dec 2023 19:49:22 +0000 (GMT)
-Received: from [9.24.12.86] (unknown [9.24.12.86])
-	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 13 Dec 2023 19:49:21 +0000 (GMT)
-Message-ID: <edcdcea2-febc-4859-9ccf-b8c59b794f01@linux.ibm.com>
-Date: Wed, 13 Dec 2023 13:49:21 -0600
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zugocgvm"
+Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5AA9107
+	for <linux-hardening@vger.kernel.org>; Wed, 13 Dec 2023 16:36:05 -0800 (PST)
+Received: by mail-qt1-x834.google.com with SMTP id d75a77b69052e-4258b6df295so140121cf.0
+        for <linux-hardening@vger.kernel.org>; Wed, 13 Dec 2023 16:36:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1702514164; x=1703118964; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Rh/JIPLuSc5XTJsnIXetpV5afhDLqc5qWgt+ZxYeVCQ=;
+        b=zugocgvmf1lxu84yfv4X9DbDntLR0AzZNqnReBvdS2ZE8OIoEw93XOQHmlvBQ0TZUn
+         857KK9j5mIUY3RRJspg+5g/UO/nyZR4x0W7oBG53ARP+Th6LvdCQhNm3lVTD14GqjNhW
+         VkGFrYefsMSFtfiQjVsFypCX4azcnrMif+HBWhdbf9p6wk8LqkBDBIFPj/qhvI07TsTW
+         XwodgsLBUWbZMpE4ZlglFfU0eQApAafb1wh4721RL7hl/pFxr8HTSCO7AqKeo3b4LLXf
+         BxIlqususmWl76ubddE7o8dq48aSKph0oKJxDUX9aKBeu3Buy0fqyi97CNfhoQJSG14G
+         KSsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702514164; x=1703118964;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Rh/JIPLuSc5XTJsnIXetpV5afhDLqc5qWgt+ZxYeVCQ=;
+        b=eF9gi8joMm600XRg3+Ddd55iO3xLCioIKw0gkmscT0Uwo8Ap3H6x6I70zHPYFOHk9E
+         pse8R29j8W/EOaheZhvkbAfuhSvG42WvBF1rwSkVJM2rZ05KAYkPCPMerknj8uRP4AiW
+         Cj6xeOX6qTLfjaXAOE1N7BxhJxBhqxixszqrqy8FwI2beLO6mK0k4vJH8ZW1vX50ZGHE
+         CELrQ5gYf/pT0etZuwOVn0p2zMvqg/2m+8Kt56grN8CLR6ZztOG+Iv5XiVZp6wCXUhOm
+         SKwx5ct0QJrrH0dTggQW6ygKLxNIGNAXEr9RP7Q6D/yiPOdPEANdiCsvmMFiSCi/N7nL
+         OLgA==
+X-Gm-Message-State: AOJu0Yz42rnisAqaHHGXYelT+LOO+erf9kqREe/+F3f8LQ9iSQ3zKF4P
+	EDWTPHfG4KciE5qjt4z68HDdFecnm8OcE6/odT6Ulg==
+X-Google-Smtp-Source: AGHT+IFV9mswBOSTplU3GbpxbWwY83oDLBB8lfMgKwsXIlFx4/MATC30VcWkHbqFp7WCIuN5thSLGmaeWN2qqtvo+f4=
+X-Received: by 2002:a05:622a:1a15:b0:425:47fc:e6e6 with SMTP id
+ f21-20020a05622a1a1500b0042547fce6e6mr1655213qtb.4.1702514164149; Wed, 13 Dec
+ 2023 16:36:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 8/8] ARM: dts: aspeed: System1: PS, sensor and more
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, joel@jms.id.au,
-        andrew@codeconstruct.com.au, peterhuewe@gmx.de, jarkko@kernel.org,
-        jgg@ziepe.ca, keescook@chromium.org, tony.luck@intel.com,
-        gpiccoli@igalia.com, johannes.holland@infineon.com, linux@roeck-us.net,
-        broonie@kernel.org
-Cc: patrick.rudolph@9elements.com, vincent@vtremblay.dev,
-        peteryin.openbmc@gmail.com, lakshmiy@us.ibm.com, bhelgaas@google.com,
-        naresh.solanki@9elements.com, alexander.stein@ew.tq-group.com,
-        festevam@denx.de, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-hardening@vger.kernel.org, geissonator@yahoo.com
-References: <20231212164004.1683589-1-ninad@linux.ibm.com>
- <20231212164004.1683589-9-ninad@linux.ibm.com>
- <5b98538a-8ffe-42ec-b020-514dcfcebba3@linaro.org>
- <44abff4a-0a8e-499b-8b98-a4a1680cb431@linux.ibm.com>
- <427fa99c-764c-4d6a-b9f1-cd9089710d5e@linaro.org>
-From: Ninad Palsule <ninad@linux.ibm.com>
-In-Reply-To: <427fa99c-764c-4d6a-b9f1-cd9089710d5e@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: -lbtKMmRARtMlAJmbObK1QI6-3y3Nw92
-X-Proofpoint-GUID: HhWJUytBbixy7UlL0_Fe2zPrr42jTffk
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-13_13,2023-12-13_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
- priorityscore=1501 suspectscore=0 spamscore=0 phishscore=0 bulkscore=0
- lowpriorityscore=0 mlxscore=0 mlxlogscore=999 adultscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2312130141
+References: <20231212231706.2680890-1-jeffxu@chromium.org> <20231212231706.2680890-12-jeffxu@chromium.org>
+ <CAHk-=wgn02cpoFEDQGgS+5BUqA2z-=Ks9+PNd-pEJy8h+NOs5g@mail.gmail.com>
+In-Reply-To: <CAHk-=wgn02cpoFEDQGgS+5BUqA2z-=Ks9+PNd-pEJy8h+NOs5g@mail.gmail.com>
+From: Jeff Xu <jeffxu@google.com>
+Date: Wed, 13 Dec 2023 16:35:26 -0800
+Message-ID: <CALmYWFu39nzHvBmRsA326GcmV9u=eM-2aCGOvLK31rrb2R9NEw@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 11/11] mseal:add documentation
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: jeffxu@chromium.org, akpm@linux-foundation.org, keescook@chromium.org, 
+	jannh@google.com, sroettger@google.com, willy@infradead.org, 
+	gregkh@linuxfoundation.org, jorgelo@chromium.org, groeck@chromium.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-mm@kvack.org, pedro.falcato@gmail.com, dave.hansen@intel.com, 
+	linux-hardening@vger.kernel.org, deraadt@openbsd.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello Krzysztof,
-
-On 12/13/23 13:37, Krzysztof Kozlowski wrote:
-> On 13/12/2023 20:02, Ninad Palsule wrote:
->> Hello Krzysztof,
->>
->> On 12/12/23 14:26, Krzysztof Kozlowski wrote:
->>> On 12/12/2023 17:40, Ninad Palsule wrote:
->>>> This drop adds following devices in the device tree.
->>>> - EEPROM/VPD
->>>> - Power supplies
->>>> - Humidity, pressure and temperature sensors.
->>>> - Trusted platform module(TPM) chip
->>>>
->>>> Tested:
->>>>       This board is tested using the simics simulator.
->>>>
->>>> Signed-off-by: Ninad Palsule <ninad@linux.ibm.com>
->>>> ---
->>> Don't mix DTS with drivers. DTS and drivers go via different subsystems
->>> and cannot have dependencies, so why DTS is patch #6, then driver #7 and
->>> now again DTS #7?
->> There is a dependency on driver code as patch #8 uses the compatibility
->> string added in driver patch #7.  I have now moved driver patch at the
->> start. Is that ok? OR you are suggesting something else?
-> First, there is no dependency. Second, except confusing order anyway DTS
-> will go via separate trees. Third, again, there is no dependency. If
-> there is, your patchset is broken and this needs to be fixed. Although I
-> don't understand how new hardware can depend on driver... it's really odd.
-
-Thanks for the quick response.
-
-This board uses the nuvoton TPM device. The tpm devices uses 
-"nuvoton,npct75x" driver hence we added it in the device tree. If the 
-driver doesn't have this compatibility string then it won't load. So if 
-someone tries to use this board then tpm won't work unless the 
-compatibility string is added in the driver. That is the dependency I am 
-talking about.
-
-Please let me know.
-
-Regards,
-
-Ninad
-
+On Tue, Dec 12, 2023 at 4:39=E2=80=AFPM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 >
-> Best regards,
-> Krzysztof
+> On Tue, 12 Dec 2023 at 15:17, <jeffxu@chromium.org> wrote:
+> > +
+> > +**types**: bit mask to specify the sealing types, they are:
 >
+> I really want a real-life use-case for more than one bit of "don't modify=
+".
+>
+For the real-life use case question, Stephen R=C3=B6ttger and I put
+description in the cover letter as well as the open discussion section
+(mseal() vs immutable()) of patch 0/11.  Perhaps you are looking for more
+details in chrome usage of the API, e.g. code-wise ?
+
+> IOW, when would you *ever* say "seal this area, but MADV_DONTNEED is ok"?
+>
+The MADV_DONTNEED is OK for file-backed mapping.
+As state in man page of madvise: [1]
+
+"subsequent accesses of pages in the range will succeed,  but will
+result in either repopulating the memory contents from the up-to-date
+contents of the underlying mapped file"
+
+> Or when would you *ever* say "seal this area, but mprotect()" is ok.
+>
+The fact  that openBSD allows RW=3D>RO transaction, as in its man page [2]
+
+ "  At present, mprotect(2) may reduce permissions on immutable pages
+  marked PROT_READ | PROT_WRITE to the less permissive PROT_READ."
+
+suggests application might desire multiple ways to seal the "PROT" bits.
+
+E.g.
+Applications that wants a full lockdown of PROT and PKEY might use
+SEAL_PROT_PKEY (Chrome case and implemented in this patch)
+
+Application that desires RW=3D>RO transaction, might implement
+SEAL_PROT_DOWNGRADEABLE, or specifically allow RW=3D>RO.
+(not implemented but can be added in future as extension if  needed.)
+
+> IOW, I want to know why we don't just do the BSD immutable thing, and
+> why we need this multi-level sealing thing.
+>
+The details are discussed in mseal() vs immutable()) of the cover letter
+(patch 0/11)
+
+In short, BSD's immutable is designed specific for libc case, and Chrome
+case is just different (e.g. the lifetime of those mappings and requirement=
+ of
+free/discard unused memory).
+
+Single bit vs multi-bits are still up for discussion.
+If there are strong opinions on the multiple-bits approach, (and
+no objection on applying MM_SEAL_DISCARD_RO_ANON to the .text part
+during libc dynamic loading, which has no effect anyway because it is
+file backed.), we could combine all three bits into one. A side note is tha=
+t we
+could not add something such as SEAL_PROT_DOWNGRADEABLE later,
+since pkey_mprotect is sealed.
+
+I'm open to one bit approach. If we took that approach,
+We might consider the following:
+
+mseal() or
+mseal(flags), flags are reserved for future use.
+
+I appreciate a direction on this.
+
+ [1] https://man7.org/linux/man-pages/man2/madvise.2.html
+ [2] https://man.openbsd.org/mimmutable.2
+
+-Jeff
+
+
+
+>                Linus
