@@ -1,53 +1,56 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FD836A34D
-	for <linux-hardening@vger.kernel.org>; Thu, 14 Dec 2023 21:39:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC0D2C688
+	for <linux-hardening@vger.kernel.org>; Thu, 14 Dec 2023 21:50:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NkoL1B81"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1d3470496e2so28317905ad.1
-        for <linux-hardening@vger.kernel.org>; Thu, 14 Dec 2023 13:39:11 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="O7Rt2W2/"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-28b0071ae32so1263896a91.0
+        for <linux-hardening@vger.kernel.org>; Thu, 14 Dec 2023 13:50:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1702589951; x=1703194751; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1702590606; x=1703195406; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=e9p8Ajf3tFQXbwC42EgP/DdM/mZur4gEPrUVHC58JLk=;
-        b=NkoL1B812AhnfwtL7DSfU4lFuIy9AvKrpEdo6WxTSeg70wXMdYo8BejFrKl5mwkgXr
-         CoiaMKY+91+hQBQyj19hRCpw2NaLwL/4xycLOBTwuGjCYMFU95FjKBj0PipVAPmdXH+T
-         Uv/E9iRxMGgBGOLQFvu5z35z4cc2d6jk0FHOg=
+        bh=q3uvOl5I1K5LVZjTbvdk6O6AI3UzMwrE4ysaxYUe9kI=;
+        b=O7Rt2W2/umRxANgZyktz+eyA5O6bnAtP2wUk4AJZpw6CiELu3Tz7E0LFpU+JzbyI29
+         YCUwFaF/hC9TOlrRXj8sxTpriwMOi+S8ORMLX3U6ERBiyTSAPLW1HqabHIAoUcO53ugO
+         WgE/tpPMp7D5cKHD9BKc7h6o/ZMSWI2r8YtWA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702589951; x=1703194751;
+        d=1e100.net; s=20230601; t=1702590606; x=1703195406;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=e9p8Ajf3tFQXbwC42EgP/DdM/mZur4gEPrUVHC58JLk=;
-        b=rzO7Jj6iwQdfy1jglDHjUW7IySv1DFb3Ardx5C5zA0OId7GQ7YeV2vUPeut6DYr4JA
-         jsvTmkqWHYlo8p7g04cRrKbPvSaCW3mvc89RqIoRN2aoFFiHhbyejsMqhfBxkoK13d0D
-         PFZcDB6BiJqK/g49LspHYUgi3uHlwTj1AZjGsmnMWMv6u76ikxCxLyso0L0lDSCP8xsj
-         sEHZuPybDeIvbagt2e4XiVtlg9g2gem3V3k79EpeG2sSfm1eOcfPFhFudMkmcFd1yeUr
-         7T7SweoKn/bmJWO8Q6w0kGWDuyCbwTswYlQFZD+NbD1KgTm4Pg/cPKE75PiNWvJaDOFR
-         W5Cg==
-X-Gm-Message-State: AOJu0YwrKW7oskYY+5kq7SQ5csWC4feMV27S6pIJ3FoYrho+QrOKBhVv
-	g21pu1ebotgvSz+M1B9f1Qg/cg==
-X-Google-Smtp-Source: AGHT+IEU6ftrI0VMvvVDF5jJLD9KtjtMPRzjUvkB4CgdFRkuRurVj+l8UJlY1TjY65o9czmfNcLAvQ==
-X-Received: by 2002:a17:902:ecc4:b0:1d3:6b17:67c0 with SMTP id a4-20020a170902ecc400b001d36b1767c0mr1775536plh.75.1702589950824;
-        Thu, 14 Dec 2023 13:39:10 -0800 (PST)
+        bh=q3uvOl5I1K5LVZjTbvdk6O6AI3UzMwrE4ysaxYUe9kI=;
+        b=CQB/jPywdFhiE2CDU8/SeFXkPoB/Xn9q9biKoY+GcTC6AZOmtr1zLaIKuMlVmZMG+q
+         XrOIrWdWDnijM8tJHnU9i2vuzF+EMqhGhtchHKyJ4R+HHv1iArcSBRzDfiYl038pyM3S
+         69Vt9A9rWDYRPv6XHuw2htLUTNG4fpbsr2oEL0rvoRsGCZV54meh68S94j6ShPQGqt0p
+         xbz998RHddjRWdDGAh4ChOm71xrq+oPS3n9opLTj/MpwYSQLfjnu5+hnamJJv66YOkb1
+         gZFq2NW4KjDqXpTH9eVeATN6KFbI2/gp1UZVKePrKpTua4rIKYZJG+JSI1yBgaEcEEF1
+         FpOw==
+X-Gm-Message-State: AOJu0YyEeEggf4bMuEw1JwXFs5DPBwzDmV6emhG/56SE9wjhlH5/I/Lk
+	gRcOZ6EOJAKhIdzWvRyj2c+S0w==
+X-Google-Smtp-Source: AGHT+IH8XIX3Um1NiC6K2GNJEyKljGfB96y9SWgXPf2JeECrD6rGe9/j6ZSa0NVjliiYfaX/MzK2Aw==
+X-Received: by 2002:a17:90a:aa8b:b0:288:76d7:4227 with SMTP id l11-20020a17090aaa8b00b0028876d74227mr4749010pjq.52.1702590606645;
+        Thu, 14 Dec 2023 13:50:06 -0800 (PST)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id g16-20020a1709029f9000b001d3561680aasm3191596plq.82.2023.12.14.13.39.10
+        by smtp.gmail.com with ESMTPSA id j8-20020a17090a734800b0028ae9cb6ce0sm3740633pjs.6.2023.12.14.13.50.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Dec 2023 13:39:10 -0800 (PST)
-Date: Thu, 14 Dec 2023 13:39:09 -0800
+        Thu, 14 Dec 2023 13:50:06 -0800 (PST)
+Date: Thu, 14 Dec 2023 13:50:05 -0800
 From: Kees Cook <keescook@chromium.org>
-To: tanzirh@google.com
-Cc: Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Nick DeSaulniers <nnn@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>, llvm@lists.linux.dev
-Subject: Re: [PATCH v2 2/2] lib/string: shrink lib/string.i via IWYU
-Message-ID: <202312141338.CAA7708BC4@keescook>
-References: <20231214-libstringheader-v2-0-0f195dcff204@google.com>
- <20231214-libstringheader-v2-2-0f195dcff204@google.com>
+To: kernel test robot <lkp@intel.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Peter Oberparleiter <oberpar@linux.ibm.com>,
+	linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: kernel/gcov/fs.c:103: warning: Excess struct member 'buffer'
+ description in 'gcov_iterator'
+Message-ID: <202312141344.9E41E46584@keescook>
+References: <202312150432.oBngC94A-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -56,29 +59,48 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231214-libstringheader-v2-2-0f195dcff204@google.com>
+In-Reply-To: <202312150432.oBngC94A-lkp@intel.com>
 
-On Thu, Dec 14, 2023 at 09:06:13PM +0000, tanzirh@google.com wrote:
-> This diff uses an open source tool include-what-you-use (IWYU) to modify
-> the include list changing indirect includes to direct includes.
-> IWYU is implemented using the IWYUScripts github repository which is a tool that is
-> currently undergoing development. These changes seek to improve build times.
+On Fri, Dec 15, 2023 at 04:53:19AM +0800, kernel test robot wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   5bd7ef53ffe5ca580e93e74eb8c81ed191ddc4bd
+> commit: fbd126f5a658b92c7f6af986a6d89cf5e5693268 gcov: annotate struct gcov_iterator with __counted_by
+> date:   8 weeks ago
+> config: i386-buildonly-randconfig-001-20231214 (https://download.01.org/0day-ci/archive/20231215/202312150432.oBngC94A-lkp@intel.com/config)
+> compiler: gcc-11 (Debian 11.3.0-12) 11.3.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231215/202312150432.oBngC94A-lkp@intel.com/reproduce)
 > 
-> This change to lib/string.c resulted in a preprocessed size of
-> lib/string.i from 26371 lines to 5259 lines (-80%) for the x86
-> defconfig.
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202312150432.oBngC94A-lkp@intel.com/
 > 
-> Link: https://github.com/ClangBuiltLinux/IWYUScripts
+> All warnings (new ones prefixed by >>):
 > 
+> >> kernel/gcov/fs.c:103: warning: Excess struct member 'buffer' description in 'gcov_iterator'
+> 
+> 
+> vim +103 kernel/gcov/fs.c
+> 
+> 7a1d55b987dfcb Johannes Berg 2021-05-06   90  
+> 7a1d55b987dfcb Johannes Berg 2021-05-06   91  /**
+> 7a1d55b987dfcb Johannes Berg 2021-05-06   92   * struct gcov_iterator - specifies current file position in logical records
+> 7a1d55b987dfcb Johannes Berg 2021-05-06   93   * @info: associated profiling data
+> 7a1d55b987dfcb Johannes Berg 2021-05-06   94   * @buffer: buffer containing file data
+> 7a1d55b987dfcb Johannes Berg 2021-05-06   95   * @size: size of buffer
+> 7a1d55b987dfcb Johannes Berg 2021-05-06   96   * @pos: current position in file
+> 7a1d55b987dfcb Johannes Berg 2021-05-06   97   */
+> 7a1d55b987dfcb Johannes Berg 2021-05-06   98  struct gcov_iterator {
+> 7a1d55b987dfcb Johannes Berg 2021-05-06   99  	struct gcov_info *info;
+> 7a1d55b987dfcb Johannes Berg 2021-05-06  100  	size_t size;
+> 7a1d55b987dfcb Johannes Berg 2021-05-06  101  	loff_t pos;
+> fbd126f5a658b9 Kees Cook     2023-09-22  102  	char buffer[] __counted_by(size);
+> 7a1d55b987dfcb Johannes Berg 2021-05-06 @103  };
+> 7a1d55b987dfcb Johannes Berg 2021-05-06  104  
 
-nit: Please drop this blank line to keep your tags together.
-
-> Signed-off-by: Tanzir Hasan <tanzirh@google.com>
-
-I'm glad to see such a big difference with just a little header
-tweaking. I look forward to more like this!
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
+It looks like whatever produces that error is not parsing attributes
+correctly. I suspect this is the "htmldocs" target and "__counted_by" is
+missing from Documentation/conf.py. I'll investigate...
 
 -- 
 Kees Cook
