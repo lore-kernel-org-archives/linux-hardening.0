@@ -1,136 +1,99 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D10897494;
-	Thu, 14 Dec 2023 21:04:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5747554277
+	for <linux-hardening@vger.kernel.org>; Thu, 14 Dec 2023 21:07:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--tanzirh.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="vHqwe+0C"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=7FrhxwWPxjd1nrVnDhmOIzmALWzUB7ji13bBSfV+Dm4=; b=vHqwe+0C8DVTzGY92KpnnNrZ61
-	9AjwcGxoG3Z+B6DxOIX8VQEGOmuosBI6oPZmY2zpXNULYfiyLkl8djZ+AEFgYzpt49vAy0GAniFJ4
-	5v9WbrwDHC97+uhc5/D/1PUPO2LYNKGAKJLMZgDVPQ754lKyl15E4c1FP5wSBXJZudT/yt5i6qp3n
-	jv3eydn+WQiJ1sz6nQKrPf0OjctP6s90DUcXuzC6eD9aKqYJNiVlsX/6snjTx5Umg7anTdjOFQBYR
-	GBSvFcFbH9466jNlUaKxsFV6HabQYMdWsSOiXmhYhq/qmoMnr8kVAmrjAPgPtA8VackjJOvkA/lzl
-	vf07MJPA==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1rDssC-00CS2n-1P;
-	Thu, 14 Dec 2023 21:04:00 +0000
-Date: Thu, 14 Dec 2023 21:04:00 +0000
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Greg KH <greg@kroah.com>
-Cc: Nick Desaulniers <ndesaulniers@google.com>, tanzirh@google.com,
-	Kees Cook <keescook@chromium.org>,
-	Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Nick DeSaulniers <nnn@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>, llvm@lists.linux.dev
-Subject: Re: [PATCH] lib/string: shrink lib/string.i via IWYU
-Message-ID: <20231214210400.GR1674809@ZenIV>
-References: <20231205-libstringheader-v1-1-7f9c573053a7@gmail.com>
- <20231205213807.GE1674809@ZenIV>
- <CAKwvOd=2VASkaLvjU+7kkbvhu2CimYn5KUGJBDRePyUhtrNK2Q@mail.gmail.com>
- <2023120608-ivy-snowdrop-890d@gregkh>
- <CAKwvOdmFJ=ZGN8ZScS5oQpXnAL0wwtTDCeNNGpBKZXzQ4kRAVA@mail.gmail.com>
- <2023120657-henna-spongy-9ef6@gregkh>
- <20231206005542.GJ1674809@ZenIV>
- <20231206030047.GL1674809@ZenIV>
- <2023120650-faucet-palpable-f1a3@gregkh>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zK/oBF4S"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dbcd721b366so930271276.0
+        for <linux-hardening@vger.kernel.org>; Thu, 14 Dec 2023 13:07:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1702588042; x=1703192842; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=89BRmpC4+tGVLj0OdN3wgdyTYPw2O8NyPVJ2rVYBYWo=;
+        b=zK/oBF4SgkYQ5xaW59MHa2kqg31OwdfD1DHqHDOx9Y0QEbHNeBrUS81VD29icpPb7A
+         +jXEut6P3DVktbrTyVETejtaoJsOFoVHpyqtT2HUtDhVf+rql66BkA13xT0RhwmUo4Md
+         vVoEjYh43XiBEePnhyiTBLFdwYK39rlFxHnhZFrj8Ka/+DLei6NKq9XLqPz5vLoyyjKR
+         /mYXL/ubOoZ1nn4r6xXzQJOfw5RB8s2zFqb9IHHcP4F1fSrwpIezyh/k/zJLZCd/UMXc
+         rVbDoRTxyUTkNaRrXEw5CQARUBAX6SIVjx+7XMA3XWIsMc+3Q0cqqX8lXD96kSF8ukPX
+         kgFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702588042; x=1703192842;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=89BRmpC4+tGVLj0OdN3wgdyTYPw2O8NyPVJ2rVYBYWo=;
+        b=X8by+3WyUW4laWOhdwN/OyF6TCpvng4dM1+noM4zcy20q9JG2fJk+OShSwCXXPTAMA
+         BFoLMGtpn7bt6STEKHzVFf77mM6A7dnhlXi+zE1byRN8ONUltm7Hf94HOrFUdBLJoQla
+         Y2FVnssdBBY7s/3dVI/qn1US1WfGtYrD7EQ+N3tsfMTG1ZdynizZc/tJBASLeQJx8n+V
+         vb6mH3RvJueUcGfpIV0QOkrQXWAH5EThY9I4GcdcDpC1Vm7YXdmydQcxB7vSy3Exiytp
+         y9X4RuIhXtR1Ujkxtv4+hnY56DaHTBK8g2FSnRKm5kQAU07hKsNjatMNnTcb4c/6LsfB
+         6hRQ==
+X-Gm-Message-State: AOJu0Yx/rFePWXYBHA8oxnISh6rMWV/R5mWegzdm84LTiQyquLV6+enH
+	ynTX25HestYvqkyIvz7x7rD0hXCDK1U0
+X-Google-Smtp-Source: AGHT+IEak763aS1pPeNAnQmbROsMYYd/NkIf8EJCbCwXKVTEc2nsI06I4KxK9BsEah7aSYwzYu2IrKAJ3sKL
+X-Received: from tanz.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:c4a])
+ (user=tanzirh job=sendgmr) by 2002:a05:6902:81:b0:dbc:5587:a079 with SMTP id
+ h1-20020a056902008100b00dbc5587a079mr192237ybs.4.1702588042049; Thu, 14 Dec
+ 2023 13:07:22 -0800 (PST)
+Date: Thu, 14 Dec 2023 21:06:11 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2023120650-faucet-palpable-f1a3@gregkh>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAENue2UC/4XSTWrDMBAF4KsEr+ui0c9I01XuUbqQ5JEjSOJiB
+ 9MScvfKoZTESdFyDN97I8nnZuIx89S8bc7NyHOe8nAsg3zZNHHnjz23uStzI4VUIIVu9zlMpzE
+ f+x37jseWpXIsfTLMsSnqc+SUv66J7x9l3uXpNIzf14IZlq//Z83QQhuxUxq9DGRp2w9Dv+fXO
+ ByW7F9onkObKBqrhFHebvuDz/urW5aYZaVYLsUhKRulBmH0jf/rhadOtCoky1YFBLxb+FqsKsW
+ qFGvjrHBdchTMenFd8XrxKYCOQFYnXntT8ab4lMCRpnIAjWuPt/7JxePiJbJMIJKLtPa24m3xj
+ EKCQnAcu7V3Fe+Klz4SRUcQ4sP5qeKpeKFSedzESlNcexCVABAlgdCTRIGO0T0kQC1h+XnRmcD GitB1d3dwuVx+AMor9c6kAwAA
+X-Developer-Key: i=tanzirh@google.com; a=ed25519; pk=UeRjcUcv5W9AeLGEbAe2+0LptQpcY+o1Zg0LHHo7VN4=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1702588040; l=922;
+ i=tanzirh@google.com; s=20231204; h=from:subject:message-id;
+ bh=nZp1XvZPyepFJiRIjWff+689JRuWK2jeokDFwb+Pi2g=; b=yfdKwq1qTjzEfhbEEXr5IeMJ/rmRQ4DlYIo+Nul0PS3tzNUos1O7TrQ3BjAxNCL7XeJ3I7Xmt
+ GTka5JhU0eSCsswrfahAS7Z3dPLTiceY8Q/arMYPCqqlHpuyexd/7Fr
+X-Mailer: b4 0.12.3
+Message-ID: <20231214-libstringheader-v2-0-0f195dcff204@google.com>
+Subject: [PATCH v2 0/2] shrink lib/string.i via IWYU
+From: tanzirh@google.com
+To: Kees Cook <keescook@chromium.org>
+Cc: Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Nick DeSaulniers <nnn@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, llvm@lists.linux.dev, 
+	Al Viro <viro@zeniv.linux.org.uk>, Tanzir Hasan <tanzirh@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On Wed, Dec 06, 2023 at 12:09:17PM +0900, Greg KH wrote:
-> > slap #include "unaligned.h" into their traps.c and unaligned.c
-> > (callers and definitions resp.) and strip those from asm/unaligned.h?
-> > At that point we can remove arch/{arc,parisc}/asm/unaligned.h - everything
-> > will pick include/asm-generic/unaligned.h.
-> > 
-> > Then the next cycle we ask Linus to run the following:
-> > for i in `git grep -l -w asm/unaligned.h`; do
-> > 	sed -i -e "s/asm\/unaligned.h/linux\/unaligned.h/" $i
-> > done
-> > git mv include/asm-generic/unaligned.h include/linux/unaligned.h
-> > sed -i -e "/unaligned.h/d" include/asm-generic/Kbuild
-> > right before releasing -rc1 and asm/unaligned.h is gone...
-> 
-> Please do, it's really annoying and would be great to fix up.
+This patch series changes the include list of string.c to minimize
+the preprocessing size. The patch series intends to remove kernel.h
+which causes problems in the sh architecture because kernel.h is 
+not properly declared in asm/word-at-a-time.h
 
-	FWIW, turns out that we have several places in drivers/* that pull
-asm-generic/unaligned.h.  IMO that's completely wrong - not just in this
-case (it's a matter of trivially adjusting the script), but I think that
-as a matter of policy we should *NOT* have includes of asm-generic/*.h
-anywhere in drivers/ fs/ io_uring/ kernel/ mm/ net/ sound/
+---
 
-	Current situation (outside of arch, include, scripts and tools,
-with asm-generic/unaligned.h cases already taken out):
+---
+Changes in v2:
+- Transformed into a patch series
+- Changed asm inclusions to linux inclusions
+- added a patch to sh
+- Link to v1: https://lore.kernel.org/r/20231205-libstringheader-v1-1-7f9c573053a7@gmail.com
 
-drivers/android/binderfs.c:32:#include <uapi/asm-generic/errno-base.h>
-drivers/clk/microchip/clk-mpfs-ccc.c:7:#include "asm-generic/errno-base.h"
-drivers/firmware/arm_scmi/shmem.c:13:#include <asm-generic/bug.h>
-drivers/irqchip/irq-ti-sci-inta.c:24:#include <asm-generic/msi.h>
-drivers/mtd/nand/raw/ingenic/ingenic_ecc.h:9:#include <uapi/asm-generic/errno-base.h>
-drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c:10:#include <asm-generic/posix_types.h>
-io_uring/uring_cmd.c:10:#include <uapi/asm-generic/ioctls.h>
-lib/trace_readwrite.c:10:#include <asm-generic/io.h>
-mm/damon/vaddr.c:10:#include <asm-generic/mman-common.h>
-net/sunrpc/xprtrdma/verbs.c:58:#include <asm-generic/barrier.h>
-rust/uapi/uapi_helper.h:9:#include <uapi/asm-generic/ioctl.h>
+---
+Tanzir Hasan (2):
+      sh: Added kernel.h to word-at-a-time
+      lib/string: shrink lib/string.i via IWYU
 
-That's it.  asm-generic/errno-base.h cases - just use linux/errno.h and
-be done with it.  Anyone who goes "I've got ENOENT and ENOMEM in my driver,
-but those two are covered by errno-base.h and I can be clever and use
-just that" is wrong.
+ arch/sh/include/asm/word-at-a-time.h |  1 +
+ lib/string.c                         | 14 +++++++-------
+ 2 files changed, 8 insertions(+), 7 deletions(-)
+---
+base-commit: 33cc938e65a98f1d29d0a18403dbbee050dcad9a
+change-id: 20231204-libstringheader-e238e2af5eec
 
-asm-generic/mman-common.h - and linux/mman.h would not serve why, exactly?
-uapi/linux/linux/mman.h, if one really feels like it...
+Best regards,
+-- 
+Tanzir Hasan <tanzirh@google.com>
 
-asm-generic/ioctls.h in io_uring - definitely wrong; SIOCINQ is what
-it's brought for, but that's in sockios.h.  It expands to FIONREAD, which
-*is* in ioctls.h, but...
-
-arch/alpha/include/uapi/asm/ioctls.h:11:#define FIONREAD        _IOR('f', 127, int)
-arch/mips/include/uapi/asm/ioctls.h:64:#define FIONREAD 0x467f
-arch/parisc/include/uapi/asm/ioctls.h:35:#define FIONREAD       0x541B
-arch/powerpc/include/uapi/asm/ioctls.h:11:#define FIONREAD      _IOR('f', 127, int)
-arch/sh/include/uapi/asm/ioctls.h:11:#define FIONREAD   _IOR('f', 127, int)
-arch/sparc/include/uapi/asm/ioctls.h:101:#define FIONREAD       _IOR('f', 127, int)
-arch/xtensa/include/uapi/asm/ioctls.h:23:#define FIONREAD       _IOR('f', 127, int)
-include/uapi/asm-generic/ioctls.h:46:#define FIONREAD   0x541B
-
-See the problem?  On mips the value is not 0x541B - it's 0x467F; on
-alpha, powerpc and sparc it's 0x4004667F, on sh and xtensa - 0x8004667F
-(different expansions of _IOR).
-
-The only thing that has any business including asm-generic/ioctls.h is
-arch/*/include/uapi/asm/ioctls.h - if it feels like doing so.  Anywhere
-else it ought to be asm/ioctls.h.
-
-asm-generic/msi.h - looks bogus; there's an include of linux/msi.h several lines
-above, and that pulls asm/msi.h.  Which makes it either a no-op or a build bug
-(the latter - if that driver can be built on x86 with CONFIG_GENERIC_MSI_IRQ
-defined;
-typedef struct irq_alloc_info msi_alloc_info_t;
-in asm/msi.h vs.
-typedef struct msi_alloc_info {
-        struct msi_desc                 *desc;
-        irq_hw_number_t                 hwirq;
-        unsigned long                   flags;
-        union {
-                unsigned long           ul;
-                void                    *ptr;
-        } scratchpad[NUM_MSI_ALLOC_SCRATCHPAD_REGS];
-} msi_alloc_info_t;
-in asm-generic/msi.h).
-
-Hell knows about the rest, but they all look very dubious...
