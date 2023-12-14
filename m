@@ -1,168 +1,153 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cxiUuQpM"
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C184811D
-	for <linux-hardening@vger.kernel.org>; Thu, 14 Dec 2023 04:26:24 -0800 (PST)
-Received: by mail-ed1-x533.google.com with SMTP id 4fb4d7f45d1cf-54c77d011acso8414a12.1
-        for <linux-hardening@vger.kernel.org>; Thu, 14 Dec 2023 04:26:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1702556783; x=1703161583; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=LmyOc0o4jiCh639QVRyShxR/TrinbOqk0Bga9CjtgfA=;
-        b=cxiUuQpMRBGPg9thtBQMwTRf26+OgxNyYfnmKpxtm/cjv4IaWA8z5Cx6EtiYvHmoXH
-         9bIot2+4ei70K/3FQqWPRVadWNYGUQUO3GfPeoDFRt5wJOlvio9XGRIdHVH86Jl4FuVD
-         YuzD0BXoNT7SuBdr3mkTmYsw5uDQxEs8DilbsNkY4lzNt7mmwo9Y+TA7x30NPqoh6LdP
-         bjUV/UJC+cbto9APtvoeA1wzj/x9Q4j98TFkr2m4WETjAYFr+sOvt7ZhjiA+R0mi/MSx
-         wpzXIUoOeYQcU2kwThpG1eIaZpRs1LaotkaECc2YqVOW5RA7ZoUJZw9FAItiwbmXu0/p
-         uiZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702556783; x=1703161583;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LmyOc0o4jiCh639QVRyShxR/TrinbOqk0Bga9CjtgfA=;
-        b=brizxGD9D6xFNXhAiHc1UXKHiKa04tFg9QiIPx8LuXt0DN1vqsgjLHDBfBIRS0yQai
-         JmuRwJKTI1wwvNA+Eampjyb7kYaoadxX6JeTRtwUYtawxRzQLAkQrbuo3bM2I8CkHqXZ
-         VxZjD2/yma7abI6qZqJzPxzAzgul7uxsYvWWz0jR4ik2JrRG1RxeS2bFK/x03ZaChyh7
-         CrFMnPrKG/HuLB1EYjtUdJnVnpjfpJpkPVd65I7Ptbo1PZdSqG35KEuFT8Rwrud7Eko5
-         cclD/A76cK4nXWyJNuvqPNNsp3m5XvEkd9Inj6uftCPB6ksvU1xwtuuZfmNJDBHhGXru
-         jIEQ==
-X-Gm-Message-State: AOJu0YzXwOJl/prbZCCiy7ukX6nLFK1anNKknUOPD+on0Fcxt6GE4xv6
-	hSlPNuAm7Czgg4r4KyHTG9c/9O2PFIR07K6ozDPpaw==
-X-Google-Smtp-Source: AGHT+IHR0nELiMI3+6Emp9k7wISJ7lPZs/cIkCJWNq/zm022pEHSFFcgvSpLKJNDn5t4G1fJmLrI2MzV+KTwzl2VGrQ=
-X-Received: by 2002:a50:d7c3:0:b0:54a:ee8b:7a99 with SMTP id
- m3-20020a50d7c3000000b0054aee8b7a99mr625309edj.0.1702556783088; Thu, 14 Dec
- 2023 04:26:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="iC5jqNZg"
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC5A6B2;
+	Thu, 14 Dec 2023 06:25:07 -0800 (PST)
+Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BEEGqWA026264;
+	Thu, 14 Dec 2023 14:24:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=lqgfGZSL02s12bV+EZPiVU/q0lVJ2wM7GttJMZHSMg4=;
+ b=iC5jqNZg7M5Qeg4VQrkpX2zE+6knUtAznit82kJGdiwdlU3HmcA5VrM/e110No9xaS0F
+ UR/Z2LGtFIQ9K0bnOB/DY+QRhusp4wpqxTZSlVslMTCmxomNkWHCwoDkTCS3jeDX5soQ
+ rd4EPfAaJLQ7x8lAP3GD0o8jj9j5nDr2dfdX4Yj+6OQrkPOve2Nx9AVa6U5nVuKVrFDY
+ dRsYWrGAOghCzKbgS+vwXsnHTDm4WwrQJ5pGJwVexMLsEEhw+XQiHjR6wI5sKjgXjmmV
+ +Re+J+KHBL6LeDuqXCLkv9PSrsSgurFClvmSs2NvkrL80Ye9SMcaX1JIqtyWxI/4ACRO dQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3v03b307wr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 14 Dec 2023 14:24:17 +0000
+Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3BEEHkNK029961;
+	Thu, 14 Dec 2023 14:24:16 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3v03b307w5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 14 Dec 2023 14:24:15 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3BED9jOp012620;
+	Thu, 14 Dec 2023 14:24:14 GMT
+Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3uw3jp90pk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 14 Dec 2023 14:24:14 +0000
+Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
+	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3BEEODRr33358310
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 14 Dec 2023 14:24:13 GMT
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 644605805F;
+	Thu, 14 Dec 2023 14:24:13 +0000 (GMT)
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D15B558051;
+	Thu, 14 Dec 2023 14:24:09 +0000 (GMT)
+Received: from [9.67.23.198] (unknown [9.67.23.198])
+	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 14 Dec 2023 14:24:09 +0000 (GMT)
+Message-ID: <f9f95e8d-02e5-454e-8075-1e4231d385bb@linux.ibm.com>
+Date: Thu, 14 Dec 2023 08:24:09 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231214-kunit_bus-v3-0-7e9a287d3048@google.com> <20231214-kunit_bus-v3-5-7e9a287d3048@google.com>
-In-Reply-To: <20231214-kunit_bus-v3-5-7e9a287d3048@google.com>
-From: David Gow <davidgow@google.com>
-Date: Thu, 14 Dec 2023 04:26:10 -0800
-Message-ID: <CABVgOSmmg4zd+44fpxRHGr_vcveSSYg3WXKO+9yN9aP4-uiHMQ@mail.gmail.com>
-Subject: Re: [PATCH v3 5/5] drm/tests: Switch to kunit devices
-To: Rae Moar <rmoar@google.com>, Brendan Higgins <brendan.higgins@linux.dev>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matti Vaittinen <mazziesaccount@gmail.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Kees Cook <keescook@chromium.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Maxime Ripard <mripard@kernel.org>
-Cc: linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-sound@vger.kernel.org
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="0000000000004b2078060c776409"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 8/8] ARM: dts: aspeed: System1: PS, sensor and more
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, joel@jms.id.au,
+        andrew@codeconstruct.com.au, peterhuewe@gmx.de, jarkko@kernel.org,
+        jgg@ziepe.ca, keescook@chromium.org, tony.luck@intel.com,
+        gpiccoli@igalia.com, johannes.holland@infineon.com, linux@roeck-us.net,
+        broonie@kernel.org
+Cc: patrick.rudolph@9elements.com, vincent@vtremblay.dev,
+        peteryin.openbmc@gmail.com, lakshmiy@us.ibm.com, bhelgaas@google.com,
+        naresh.solanki@9elements.com, alexander.stein@ew.tq-group.com,
+        festevam@denx.de, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-hardening@vger.kernel.org, geissonator@yahoo.com
+References: <20231212164004.1683589-1-ninad@linux.ibm.com>
+ <20231212164004.1683589-9-ninad@linux.ibm.com>
+ <5b98538a-8ffe-42ec-b020-514dcfcebba3@linaro.org>
+ <44abff4a-0a8e-499b-8b98-a4a1680cb431@linux.ibm.com>
+ <427fa99c-764c-4d6a-b9f1-cd9089710d5e@linaro.org>
+ <edcdcea2-febc-4859-9ccf-b8c59b794f01@linux.ibm.com>
+ <1c5ace65-2fd8-4503-b22f-e0f564d1c83f@linaro.org>
+Content-Language: en-US
+From: Ninad Palsule <ninad@linux.ibm.com>
+In-Reply-To: <1c5ace65-2fd8-4503-b22f-e0f564d1c83f@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: Dw6P0YguG2FsdSKN_nlMIhXcu-QkMI3x
+X-Proofpoint-GUID: Fa1OsjgEvz5G5Q94M6u6-pMLI18_E7rH
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-14_09,2023-12-14_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
+ suspectscore=0 phishscore=0 priorityscore=1501 malwarescore=0
+ impostorscore=0 mlxlogscore=999 clxscore=1015 bulkscore=0 adultscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2312140100
 
---0000000000004b2078060c776409
-Content-Type: text/plain; charset="UTF-8"
+Hello Krzysztof,
 
-On Thu, 14 Dec 2023 at 16:49, <davidgow@google.com> wrote:
+
+On 12/14/23 01:24, Krzysztof Kozlowski wrote:
+> On 13/12/2023 20:49, Ninad Palsule wrote:
+>> Hello Krzysztof,
+>>
+>> On 12/13/23 13:37, Krzysztof Kozlowski wrote:
+>>> On 13/12/2023 20:02, Ninad Palsule wrote:
+>>>> Hello Krzysztof,
+>>>>
+>>>> On 12/12/23 14:26, Krzysztof Kozlowski wrote:
+>>>>> On 12/12/2023 17:40, Ninad Palsule wrote:
+>>>>>> This drop adds following devices in the device tree.
+>>>>>> - EEPROM/VPD
+>>>>>> - Power supplies
+>>>>>> - Humidity, pressure and temperature sensors.
+>>>>>> - Trusted platform module(TPM) chip
+>>>>>>
+>>>>>> Tested:
+>>>>>>        This board is tested using the simics simulator.
+>>>>>>
+>>>>>> Signed-off-by: Ninad Palsule <ninad@linux.ibm.com>
+>>>>>> ---
+>>>>> Don't mix DTS with drivers. DTS and drivers go via different subsystems
+>>>>> and cannot have dependencies, so why DTS is patch #6, then driver #7 and
+>>>>> now again DTS #7?
+>>>> There is a dependency on driver code as patch #8 uses the compatibility
+>>>> string added in driver patch #7.  I have now moved driver patch at the
+>>>> start. Is that ok? OR you are suggesting something else?
+>>> First, there is no dependency. Second, except confusing order anyway DTS
+>>> will go via separate trees. Third, again, there is no dependency. If
+>>> there is, your patchset is broken and this needs to be fixed. Although I
+>>> don't understand how new hardware can depend on driver... it's really odd.
+>> Thanks for the quick response.
+>>
+>> This board uses the nuvoton TPM device. The tpm devices uses
+>> "nuvoton,npct75x" driver hence we added it in the device tree. If the
+>> driver doesn't have this compatibility string then it won't load. So if
+>> someone tries to use this board then tpm won't work unless the
+> ... and if there is no board it also fails to load.
 >
-> From: Maxime Ripard <mripard@kernel.org>
+>> compatibility string is added in the driver. That is the dependency I am
+>> talking about.
+> This is not a dependency! It's unrelated.
+
+ok, I will send it as a separate patch.
+
+Thanks for the prompt reply.
+
+Regards,
+
+Ninad
+
 >
-> Kunit recently gained helpers to create test managed devices. This means
-> that we no longer have to roll our own helpers in KMS and we can reuse
-> them.
+> Best regards,
+> Krzysztof
 >
-> Signed-off-by: Maxime Ripard <mripard@kernel.org>
-> ---
-
-I've tested this over a few different architectures and configs, and
-it works fine.
-
-Tested-by: David Gow <davidgow@google.com>
-
-And whoops -- forgot to add my Signed-off-by above.
-
-Signed-off-by: David Gow <davidgow@google.com>
-
-It's identical to the version here, anyway -- I didn't make any
-changes, just included it in this series to have everything in one
-place:
-https://lore.kernel.org/linux-kselftest/20231205090405.153140-1-mripard@kernel.org/
-
--- David
-
---0000000000004b2078060c776409
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-MIIPnwYJKoZIhvcNAQcCoIIPkDCCD4wCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-ggz5MIIEtjCCA56gAwIBAgIQeAMYYHb81ngUVR0WyMTzqzANBgkqhkiG9w0BAQsFADBMMSAwHgYD
-VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
-AxMKR2xvYmFsU2lnbjAeFw0yMDA3MjgwMDAwMDBaFw0yOTAzMTgwMDAwMDBaMFQxCzAJBgNVBAYT
-AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
-IFIzIFNNSU1FIENBIDIwMjAwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCvLe9xPU9W
-dpiHLAvX7kFnaFZPuJLey7LYaMO8P/xSngB9IN73mVc7YiLov12Fekdtn5kL8PjmDBEvTYmWsuQS
-6VBo3vdlqqXZ0M9eMkjcKqijrmDRleudEoPDzTumwQ18VB/3I+vbN039HIaRQ5x+NHGiPHVfk6Rx
-c6KAbYceyeqqfuJEcq23vhTdium/Bf5hHqYUhuJwnBQ+dAUcFndUKMJrth6lHeoifkbw2bv81zxJ
-I9cvIy516+oUekqiSFGfzAqByv41OrgLV4fLGCDH3yRh1tj7EtV3l2TngqtrDLUs5R+sWIItPa/4
-AJXB1Q3nGNl2tNjVpcSn0uJ7aFPbAgMBAAGjggGKMIIBhjAOBgNVHQ8BAf8EBAMCAYYwHQYDVR0l
-BBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMBIGA1UdEwEB/wQIMAYBAf8CAQAwHQYDVR0OBBYEFHzM
-CmjXouseLHIb0c1dlW+N+/JjMB8GA1UdIwQYMBaAFI/wS3+oLkUkrk1Q+mOai97i3Ru8MHsGCCsG
-AQUFBwEBBG8wbTAuBggrBgEFBQcwAYYiaHR0cDovL29jc3AyLmdsb2JhbHNpZ24uY29tL3Jvb3Ry
-MzA7BggrBgEFBQcwAoYvaHR0cDovL3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvcm9vdC1y
-My5jcnQwNgYDVR0fBC8wLTAroCmgJ4YlaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9yb290LXIz
-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
-ddIn9n5Jt6Z1o79zxraLMEwGA1UdIARFMEMwQQYJKwYBBAGgMgEoMDQwMgYIKwYBBQUHAgEWJmh0
-dHBzOi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAwGA1UdEwEB/wQCMAAwgZoGCCsG
-AQUFBwEBBIGNMIGKMD4GCCsGAQUFBzABhjJodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9jYS9n
-c2F0bGFzcjNzbWltZWNhMjAyMDBIBggrBgEFBQcwAoY8aHR0cDovL3NlY3VyZS5nbG9iYWxzaWdu
-LmNvbS9jYWNlcnQvZ3NhdGxhc3Izc21pbWVjYTIwMjAuY3J0MB8GA1UdIwQYMBaAFHzMCmjXouse
-LHIb0c1dlW+N+/JjMEYGA1UdHwQ/MD0wO6A5oDeGNWh0dHA6Ly9jcmwuZ2xvYmFsc2lnbi5jb20v
-Y2EvZ3NhdGxhc3Izc21pbWVjYTIwMjAuY3JsMA0GCSqGSIb3DQEBCwUAA4IBAQBtHFwIgQZjer5K
-H+4Q+wns10k7qN+4wN2Uf+JsyOYjukaMEgdLErfA1wwtQ9uHkoYQZcWBuVVkQFa5hI+sqI2m1Weq
-riMCFSiU38s1tADdMX12IMfJRN60Nznhrw+nPyDRZqRhUTW24TwnHorkDnFPW8PHo7fAw4FrpI0n
-impZAng7ccvvK09K3ZuhwTIxJMsPXCZYsrXWORTw5sczRAP6XvKbPBJnsJoSTe5dFBPBHOQJOGhU
-qWfEfWnWMJPF3LxSGLpLFQXO3RwQqmxv08avwXfVPouh1xuB3FX7rpDabT8YDhu9JgIZkLEKko7L
-yQt6zWwng7k8YF/jGbiAta6VMYICajCCAmYCAQEwaDBUMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQ
-R2xvYmFsU2lnbiBudi1zYTEqMCgGA1UEAxMhR2xvYmFsU2lnbiBBdGxhcyBSMyBTTUlNRSBDQSAy
-MDIwAhABzgV+4+mJnUzG7XDy6d2uMA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCCc
-/4y3L+QgO8cUp1KOI6upYw6pHirq12NvVIDl1I6BpDAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcB
-MBwGCSqGSIb3DQEJBTEPFw0yMzEyMTQxMjI2MjNaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUD
-BAEqMAsGCWCGSAFlAwQBFjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsG
-CSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEADXv//G1GFwpoanL3ShTx
-BTG5ba1DwGNIA6Z3vPGeTqQhsr0ij+baTuh6iAnoM/ymGtQ8XlwbYq9PGg4McxrLZRXzaajgcmSj
-r0lazW1ULtr6hjMw6jD06Hyp2MPtH1lBbseotlcVVwk6Jt0RunqrFKIn2NXKZjh9Q9TwHu97Irqs
-U1rSlFK45mpMHWAxkH1kVFG5GXQAHPj3tooG+0YpdJ0KeUjkaKEeHcLr7jT52qU/qn2YDujY7mU2
-Mu7H4ah444un4TjQk8gizbJa4Hb9D7lIoVyC/j//7lAPnAAkxgB1pjO1+hrfKuB+/HgTdV+sH7eU
-CVT/5zCIYB8MdrwvdQ==
---0000000000004b2078060c776409--
