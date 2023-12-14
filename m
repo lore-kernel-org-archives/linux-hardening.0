@@ -1,79 +1,151 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZkSvzWFe"
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 453D810F
-	for <linux-hardening@vger.kernel.org>; Thu, 14 Dec 2023 08:15:05 -0800 (PST)
-Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1d0aaa979f0so48788745ad.0
-        for <linux-hardening@vger.kernel.org>; Thu, 14 Dec 2023 08:15:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1702570505; x=1703175305; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=z1Ou2BN/NSSGCNvRe4VvolyrUm7oUAf2oh76V3K9T9M=;
-        b=ZkSvzWFe4GfrTmBb8iUOsSMZShHZoC/6pFizlZJfB9ONOgN3UTUwkKgX7kuJyqDJbT
-         kavajsdaTI6rnXuGy85d33h+u8VKloOrALanp91z+RAAw++psw1KGHgu8zFL0gR5oymo
-         S2PjEMBmoHCB52+2P6XENFdmySM51D5bZWxYQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702570505; x=1703175305;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z1Ou2BN/NSSGCNvRe4VvolyrUm7oUAf2oh76V3K9T9M=;
-        b=hvSS+HBWtERaNnY4oURoo7KgZ4Rx47UJJqhfBffhHtKrpYRvVzzAjzPFogV3TfnKa3
-         zafdW1Qu+dWisYYtLWGT1Sj4Ya96pkqwOlQOiHEuo03QweV2yI3IKfHn9b5xN+e9Q9UP
-         Vu/vHYHEmoFhHebVeJ2pRWMj20NidvCe6nWXLgQa80XDLJGvVu2SXTfSRLI7JU+ldDzZ
-         PHxqET6t22LBqgX4Awnld0+AxOMxhNvBPbT4+muUp4kMdQnFAnl+b0vphyGTcm6Tdo0A
-         zEOSG8eaXrMQFCSYaqAI3KytZ6uerPZ4QOMPB2nQhyx1XY++61ysPvTvYRFYCMwIbKo4
-         YoIA==
-X-Gm-Message-State: AOJu0YxqG9LZG7zTJYRajR2QbN708j8a3a4C0zBlVYh0QwXqMA/xHFml
-	MyW0kiSlA9f8YrqPef/o14yAtg==
-X-Google-Smtp-Source: AGHT+IH+ytQj5wa72LYKC5YIjqTselzMKodTANBeg8JotZhzXxmhWvXBDTQzTxLBsP0QwKZwCFxenA==
-X-Received: by 2002:a17:902:eb82:b0:1d3:4c35:17a0 with SMTP id q2-20020a170902eb8200b001d34c3517a0mr1926746plg.120.1702570504783;
-        Thu, 14 Dec 2023 08:15:04 -0800 (PST)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id n6-20020a170902e54600b001d1cd7e4ad2sm12549781plf.125.2023.12.14.08.15.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Dec 2023 08:15:04 -0800 (PST)
-Date: Thu, 14 Dec 2023 08:15:03 -0800
-From: Kees Cook <keescook@chromium.org>
-To: davidgow@google.com
-Cc: Rae Moar <rmoar@google.com>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>, Maxime Ripard <mripard@kernel.org>,
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-sound@vger.kernel.org
-Subject: Re: [PATCH v3 3/5] overflow: Replace fake root_device with
- kunit_device
-Message-ID: <202312140814.314B59CD@keescook>
-References: <20231214-kunit_bus-v3-0-7e9a287d3048@google.com>
- <20231214-kunit_bus-v3-3-7e9a287d3048@google.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="WbnAA5Ni"
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4D36A6;
+	Thu, 14 Dec 2023 08:33:29 -0800 (PST)
+Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BEGNpfb010000;
+	Thu, 14 Dec 2023 16:32:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=k0KaS28pCt49kw9+p3L44QcYWFnIp+iPqyK7JQMB9g8=;
+ b=WbnAA5NiNCBVwTq/DRIYImrYFEPSxxVbIoEeLXgDg52nN3jp3kXnLiVm2CfnCh/xC0XS
+ uqs4M2/57DXguWWOAHtgWlmqGaA9hSlPoxgHvOtYEessd/axv6/g2QbqQ4pLd50W3BLR
+ nJRDs41b8XU6a4fOOlrte6HQ7ygk2NAyhXkvD7fCuw2ZNTdawzqataNh/UdXhQ0tzCpT
+ uxllSKmVqsvpmtaig+gq/UrTa0/WQ9f8+oW9p10hz0N2UFOM+YfAt3EjDH/37KDGLcTh
+ YtsqXqHX/YDEXd+Nxb7KXcxXDlPjXBSguoe82WDU97HldaVhWfjENixBjMyjS+IbOQ+n hQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3v03b34rc8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 14 Dec 2023 16:32:47 +0000
+Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3BEGO45B012186;
+	Thu, 14 Dec 2023 16:32:46 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3v03b34qmg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 14 Dec 2023 16:32:45 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3BECe18w014799;
+	Thu, 14 Dec 2023 16:31:00 GMT
+Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3uw42khd6b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 14 Dec 2023 16:31:00 +0000
+Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
+	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3BEGUxZf10551814
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 14 Dec 2023 16:30:59 GMT
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9026358065;
+	Thu, 14 Dec 2023 16:30:59 +0000 (GMT)
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BC26458052;
+	Thu, 14 Dec 2023 16:30:55 +0000 (GMT)
+Received: from [9.67.23.198] (unknown [9.67.23.198])
+	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 14 Dec 2023 16:30:55 +0000 (GMT)
+Message-ID: <e1ec02cf-072b-4678-8986-336c1cb8ca92@linux.ibm.com>
+Date: Thu, 14 Dec 2023 10:30:55 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231214-kunit_bus-v3-3-7e9a287d3048@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 5/8] ARM: dts: aspeed: System1: Voltage regulators
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, joel@jms.id.au,
+        andrew@codeconstruct.com.au, peterhuewe@gmx.de, jarkko@kernel.org,
+        jgg@ziepe.ca, keescook@chromium.org, tony.luck@intel.com,
+        gpiccoli@igalia.com, johannes.holland@infineon.com, linux@roeck-us.net,
+        broonie@kernel.org
+Cc: patrick.rudolph@9elements.com, vincent@vtremblay.dev,
+        peteryin.openbmc@gmail.com, lakshmiy@us.ibm.com, bhelgaas@google.com,
+        naresh.solanki@9elements.com, alexander.stein@ew.tq-group.com,
+        festevam@denx.de, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-hardening@vger.kernel.org, geissonator@yahoo.com
+References: <20231212164004.1683589-1-ninad@linux.ibm.com>
+ <20231212164004.1683589-6-ninad@linux.ibm.com>
+ <6a3d4551-66a2-411a-9d5f-cffb57ee0ce2@linaro.org>
+From: Ninad Palsule <ninad@linux.ibm.com>
+In-Reply-To: <6a3d4551-66a2-411a-9d5f-cffb57ee0ce2@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: kuNvJNdtavC_dao6iJnMFctwdS96DrLO
+X-Proofpoint-GUID: Tzj1hExUyDRdIPxL0IVPxnja4Z1KmH3A
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-14_11,2023-12-14_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
+ suspectscore=0 phishscore=0 priorityscore=1501 malwarescore=0
+ impostorscore=0 mlxlogscore=999 clxscore=1015 bulkscore=0 adultscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2312140117
 
-On Thu, Dec 14, 2023 at 04:49:17PM +0800, davidgow@google.com wrote:
-> Using struct root_device to create fake devices for tests is something
-> of a hack. The new struct kunit_device is meant for this purpose, so use
-> it instead.
-> 
-> Reviewed-by: Matti Vaittinen <mazziesaccount@gmail.com>
-> Signed-off-by: David Gow <davidgow@google.com>
+Hello Krzysztof,
 
-Acked-by: Kees Cook <keescook@chromium.org>
+On 12/12/23 14:22, Krzysztof Kozlowski wrote:
+> On 12/12/2023 17:40, Ninad Palsule wrote:
+>> This commit adds different voltage regulators.
+>>
+>> Tested:
+>>      This board is tested using the simics simulator.
+>>
+>> Signed-off-by: Ninad Palsule <ninad@linux.ibm.com>
+>> ---
+>>   .../dts/aspeed/aspeed-bmc-ibm-system1.dts     | 266 ++++++++++++++++++
+> Squash it.
+Done.
+>
+>>   1 file changed, 266 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts
+>> index 0557bff9f36a..b8e7e52d4600 100644
+>> --- a/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts
+>> +++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts
+>> @@ -114,10 +114,127 @@ vga_memory: region@bf000000 {
+>>   		};
+>>   	};
+>>   
+>> +	iio-hwmon {
+>> +		compatible = "iio-hwmon";
+>> +		io-channels = <&p12v_vd 0>, <&p5v_aux_vd 0>,
+>> +			<&p5v_bmc_aux_vd 0>, <&p3v3_aux_vd 0>,
+>> +			<&p3v3_bmc_aux_vd 0>, <&p1v8_bmc_aux_vd 0>,
+>> +			<&adc1 4>, <&adc0 2>, <&adc1 0>,
+>> +			<&p2V5_aux_vd 0>, <&adc1 7>;
+>> +	};
+>> +
+>> +	p12v_vd: voltage_divider1 {
+> Same comments as in other patches.
+Fixed.
+>
+>> +		compatible = "voltage-divider";
+>> +		io-channels = <&adc1 3>;
+>> +		#io-channel-cells = <1>;
+>> +
+>> +		/* Scale the system voltage by 1127/127 to fit the ADC range.
+> Use Linux coding style comments. /* and blank line
 
--- 
-Kees Cook
+Fixed.
+
+Thanks for the review.
+
+Regards,
+
+Ninad
+
+>
+>
+> ....
+>
+> Best regards,
+> Krzysztof
+>
