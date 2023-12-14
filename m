@@ -1,101 +1,124 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b="f8EJnL1p"
-X-Greylist: delayed 399 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 13 Dec 2023 17:16:18 PST
-Received: from cvs.openbsd.org (cvs.openbsd.org [199.185.137.3])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEA1CE4;
-	Wed, 13 Dec 2023 17:16:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=selector1; bh=whGKbpn2mK
-	dixz+7VYNABz/psNG/LtxK3IfpFNItFm0=; h=date:references:in-reply-to:
-	subject:cc:to:from; d=openbsd.org; b=f8EJnL1pM686HWnsDZ2MM+QERZ5fn5hkB
-	jS2UEz9O0HQ3CMCPdqYpqvgemPzK/k3sYnnneBkmxRB2mwcLGksMDxQUepWmAMwQXOZWow
-	UnukNeZTT7/fyuRPG/vc6WY0665nhjTCzO3swQTttAdyYfO+ykooxNcn7hq9Jif7k877Zg
-	NzTQhv5fS8QmQ1kODqjycmd0+HMFk6tqn25KWRfbvwutgEQ8WduyIIyF5VupOqoooaYpMm
-	PcMkj3UvHwRNaSIbk8cWjCxE4kuZUOGfwXj+Pof8/c4Lkak7sNxM8KgYhPRr+6RT7pTSqL
-	cfcNtU11WwqUAXQZzouEGgjK2Ln1A==
-Received: from cvs.openbsd.org (localhost [127.0.0.1])
-	by cvs.openbsd.org (OpenSMTPD) with ESMTP id 3f9af318;
-	Wed, 13 Dec 2023 18:09:38 -0700 (MST)
-From: "Theo de Raadt" <deraadt@openbsd.org>
-To: Jeff Xu <jeffxu@google.com>
-cc: Linus Torvalds <torvalds@linux-foundation.org>, jeffxu@chromium.org,
-    akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com,
-    sroettger@google.com, willy@infradead.org,
-    gregkh@linuxfoundation.org, jorgelo@chromium.org,
-    groeck@chromium.org, linux-kernel@vger.kernel.org,
-    linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
-    pedro.falcato@gmail.com, dave.hansen@intel.com,
-    linux-hardening@vger.kernel.org
-Subject: Re: [RFC PATCH v3 11/11] mseal:add documentation
-In-reply-to: <CALmYWFu39nzHvBmRsA326GcmV9u=eM-2aCGOvLK31rrb2R9NEw@mail.gmail.com>
-References: <20231212231706.2680890-1-jeffxu@chromium.org> <20231212231706.2680890-12-jeffxu@chromium.org> <CAHk-=wgn02cpoFEDQGgS+5BUqA2z-=Ks9+PNd-pEJy8h+NOs5g@mail.gmail.com> <CALmYWFu39nzHvBmRsA326GcmV9u=eM-2aCGOvLK31rrb2R9NEw@mail.gmail.com>
-Comments: In-reply-to Jeff Xu <jeffxu@google.com>
-   message dated "Wed, 13 Dec 2023 16:35:26 -0800."
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="h2s59+EP"
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C040D5
+	for <linux-hardening@vger.kernel.org>; Wed, 13 Dec 2023 17:31:59 -0800 (PST)
+Received: by mail-wm1-x344.google.com with SMTP id 5b1f17b1804b1-40c3fe6c08fso52159525e9.1
+        for <linux-hardening@vger.kernel.org>; Wed, 13 Dec 2023 17:31:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1702517517; x=1703122317; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=8Bu41HfL0rPJ5dM5yXqa7CgHUFFdONYm5ZwaUE4WWVI=;
+        b=h2s59+EPWVzWaqCXPmHRCZzhYbTL/HDh7sOASvPyS9uG6XcONyiAR5iH3MnvosVBFU
+         j+GLXc5m97XZ+FrdOuy8Ekx6bXtkHaNQ3BHAioqzow12coeiw2vlilQkgIQGiM8LBxPd
+         Kr4OW9ft+0NO8k31l6HWS6gWhmJH5qKTnAkFk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702517517; x=1703122317;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8Bu41HfL0rPJ5dM5yXqa7CgHUFFdONYm5ZwaUE4WWVI=;
+        b=cOPmuo5QPX+HbNQ7K+++TaFCTR1wrdydtEx4H5UFyrYFeXBMWEt+QffwpZIOIM6Chl
+         AYzlibHdHbDPKhhBrEsq9dFmqkd1cbnnWAKeiYCvl/yrJs6cwqWaM2isUJSmo8JEMaZw
+         auTNZj3MLXHfxQHKC7dQeY6dZNvSFJngHwTTNZIIl5sMGKJp1llY5AnQ5PtG578gNNBJ
+         9RODI6M6tuX6p8cXs86yYuPg76I/D9h/2zL/CfliDsGs54lk5I2LPbIUVw6C8hvIGGdW
+         hZNKDc2dHprQvqoQPtBftZCK3T//GNQ3owfA676TpdoQKCsCBz074dvTjB286xDxMTDt
+         tt3Q==
+X-Gm-Message-State: AOJu0YzZJh1ExsMDJk6dDkeDIkRRdsodHpFRUmTZjDuo9mMitsTSwrBE
+	TZth2okbjC5pDJ4UX11pJuk7zcrWPoKjFQZlJs7tO5jMJXU=
+X-Google-Smtp-Source: AGHT+IEDFHQs/jfcScuiuudHPtvjWi03KzxUg6afNEbrq/t1oqQlSHTA58a3pIrXSCr0rtetz3RQgA==
+X-Received: by 2002:a05:600c:4d0e:b0:40b:5e1a:db89 with SMTP id u14-20020a05600c4d0e00b0040b5e1adb89mr2878400wmp.42.1702517517550;
+        Wed, 13 Dec 2023 17:31:57 -0800 (PST)
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com. [209.85.208.45])
+        by smtp.gmail.com with ESMTPSA id j8-20020a1709064b4800b00a1e377ea782sm8557257ejv.196.2023.12.13.17.31.57
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 Dec 2023 17:31:57 -0800 (PST)
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-55114c073b8so5636714a12.1
+        for <linux-hardening@vger.kernel.org>; Wed, 13 Dec 2023 17:31:57 -0800 (PST)
+X-Received: by 2002:a50:d592:0:b0:54c:4837:7d1e with SMTP id
+ v18-20020a50d592000000b0054c48377d1emr3150337edi.93.1702517516946; Wed, 13
+ Dec 2023 17:31:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <45779.1702516178.1@cvs.openbsd.org>
-Date: Wed, 13 Dec 2023 18:09:38 -0700
-Message-ID: <58421.1702516178@cvs.openbsd.org>
+References: <20231212231706.2680890-1-jeffxu@chromium.org> <20231212231706.2680890-12-jeffxu@chromium.org>
+ <CAHk-=wgn02cpoFEDQGgS+5BUqA2z-=Ks9+PNd-pEJy8h+NOs5g@mail.gmail.com> <CALmYWFu39nzHvBmRsA326GcmV9u=eM-2aCGOvLK31rrb2R9NEw@mail.gmail.com>
+In-Reply-To: <CALmYWFu39nzHvBmRsA326GcmV9u=eM-2aCGOvLK31rrb2R9NEw@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 13 Dec 2023 17:31:39 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wh_VViVZxjiQ5jtB0q=p=JtJMj2R24UAmj-fL-RNLWxNw@mail.gmail.com>
+Message-ID: <CAHk-=wh_VViVZxjiQ5jtB0q=p=JtJMj2R24UAmj-fL-RNLWxNw@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 11/11] mseal:add documentation
+To: Jeff Xu <jeffxu@google.com>
+Cc: jeffxu@chromium.org, akpm@linux-foundation.org, keescook@chromium.org, 
+	jannh@google.com, sroettger@google.com, willy@infradead.org, 
+	gregkh@linuxfoundation.org, jorgelo@chromium.org, groeck@chromium.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-mm@kvack.org, pedro.falcato@gmail.com, dave.hansen@intel.com, 
+	linux-hardening@vger.kernel.org, deraadt@openbsd.org
+Content-Type: text/plain; charset="UTF-8"
 
-Jeff Xu <jeffxu@google.com> wrote:
-
-> > Or when would you *ever* say "seal this area, but mprotect()" is ok.
+On Wed, 13 Dec 2023 at 16:36, Jeff Xu <jeffxu@google.com> wrote:
+>
+>
+> > IOW, when would you *ever* say "seal this area, but MADV_DONTNEED is ok"?
 > >
-> The fact  that openBSD allows RW=>RO transaction, as in its man page [2]
-> 
->  "  At present, mprotect(2) may reduce permissions on immutable pages
->   marked PROT_READ | PROT_WRITE to the less permissive PROT_READ."
+> The MADV_DONTNEED is OK for file-backed mapping.
 
-Let me explain this.
+Right. It makes no semantic difference. So there's no point to it.
 
-We encountered two places that needed this less-permission-transition.
+My point was that you added this magic flag for "not ok for RO anon mapping".
 
-Both of these problems were found in either .data or bss, which the
-kernel makes immutable by default.  The OpenBSD kernel makes those
-regions immutable BY DEFAULT, and there is no way to turn that off.
+It's such a *completely* random flag, that I go "that's just crazy
+random - make sealing _always_ disallow that case".
 
-One was in our libc malloc, which after initialization, wants to protect
-a control data structure from being written in the future.
+So what I object to in this series is basically random small details
+that should just eb part of the basic act of sealing.
 
-The other was in chrome v8, for the v8_flags variable, this is
-similarily mprotected to less permission after initialization to avoid
-tampering (because it's an amazing relative-address located control
-gadget).
+I think sealing should just mean "you can't do any operations that
+have semantic meaning for the mapping, because it is SEALED".
 
-We introduced a different mechanism to solve these problem.
+So I think sealing should automatically mean "can't do MADV_DONTNEED
+on anon memory", because that's basically equivalent to a munmap/remap
+operation.
 
-So we added a new ELF section which annotates objects you need to be
-MUTABLE.  If these are .data or .bss, they are placed in the MUTABLE
-region annotated with the following Program Header:
+I also think that sealing should just automatically mean "can't do
+mprotect any more".
 
-Program Headers:
-  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align
-  OPENBSD_MUTABLE 0x0e9000 0x00000000000ec000 0x00000000000ec000 0x001000 0x001000 RW  0x1000
+And yes, the OpenBSD semantics of "immutable" apparently allowed
+reducing permissions, but even the openbsd man-page seems to think
+that was a bug, so we should just not allow it. And the openbsd case
+seems to be because of how they made certain things immutable by
+default, which is different from what this mseal() thing is.
 
-associated with this Section Header
+End result: I'd really like to make the thing conceptually simpler,
+rather than add all those random (*very* random in case of
+MADV_DONTNEED) special cases.
 
-  [20] .openbsd.mutable  PROGBITS        00000000000ec000 0e9000 001000 00  WA  0   0 4096
+Is there any actual practical example of why you'd want a half-sealed thing?
 
-(It is vaguely similar to RELRO).
+And no, I didn't read the pdf that was attached. If it can't just be
+explained in plain language, it's not an explanation.
 
-You can place objects there using the a compiler __attribute__((section
-declaration, like this example from our libc/malloc.c code
+I'd love for "sealed" to be just a single bit in the vm_flags things
+that we already have. Not a config option. Not some complicated thing
+that is hard to explain. A simple "I have set up this mapping, you
+can't change it any more".
 
-static union {
-        struct malloc_readonly mopts;
-        u_char _pad[MALLOC_PAGESIZE];
-} malloc_readonly __attribute__((aligned(MALLOC_PAGESIZE)))
-                __attribute__((section(".openbsd.mutable")));
+And if it cannot be that kind of thing, I want to have clear and
+obvious examples of why it can't be that simple thing.
 
-During startup the code can set the protection and then the immutability
-of the object correctly.
+Not a pdf file that describes some google-chrome design. Something
+down-to-earth and practical (and not a "we might want this in the
+future" thing either).
 
-Since we have no purpose left for this permission reduction semantic
-upon immutable mappings, we may be deleting that behaviour in the
-future.  I wrote that code, because I needed it to make progress with some
-difficult pieces of code.  But we found a better way.
+IOW, what is wrong with "THIS VMA SETUP CANNOT BE CHANGED ANY MORE"?
 
+Nothing less, but also nothing more. No random odd bits that need explaining.
+
+              Linus
