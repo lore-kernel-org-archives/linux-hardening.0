@@ -1,113 +1,121 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NqCXb7sx"
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1AAB11B
-	for <linux-hardening@vger.kernel.org>; Thu, 14 Dec 2023 08:55:21 -0800 (PST)
-Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1d08a924fcfso79038075ad.2
-        for <linux-hardening@vger.kernel.org>; Thu, 14 Dec 2023 08:55:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NsDlk9J5"
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2CBCA7;
+	Thu, 14 Dec 2023 09:08:33 -0800 (PST)
+Received: by mail-wr1-x433.google.com with SMTP id ffacd0b85a97d-3363aa1b7d2so1790258f8f.0;
+        Thu, 14 Dec 2023 09:08:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1702572921; x=1703177721; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RT0eLBOuatp2ygshln82AgJR3wQooxj/VsT49bwyvIQ=;
-        b=NqCXb7sxhjz9xGUDoz/1gi/ekPJY2bMnBJ3YBqJKjwueWblzuqBXNcL6vWX86nyHJJ
-         KUnz/sheGaEYuzZDWorHryYTdx0dII9NHv2ZYdit3etmk7+7zoT007vw5S4hsxyTaKpN
-         CJZtOmTstanLHisPf7Tg+DCrVV/SLt2WZeLBg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702572921; x=1703177721;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1702573712; x=1703178512; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RT0eLBOuatp2ygshln82AgJR3wQooxj/VsT49bwyvIQ=;
-        b=jhgLiCGdPdU0qpdUjacAVLe8zhMP5JA8jS3Kr2YAXR56v7HyVVh1vRF+BYHSCRABzj
-         o9psxoQmchHyOGA7YJzi2oSoQtDOkrB3KCDDTtrCNqfaUol86MS/PW60+Xg61tjclD1b
-         qmogV6c7+qw6zS9e8zGWXic1jp2ho5q/jwHQQXRGHCkQVxOQEdPAt64Vb5aESQxotT4/
-         t3IBqgwWqcbqzMJFLltLnPSGFMXUw7rbc5WBiW/QeJq1kEFx1gQAvI+FT2SEz2T3LQkp
-         PvasGrSgTB0VmT3Dkw58UTXG19VmDWfVRncGmtjYN7xJkaY46ucnDjEgyuMFIkMVgvq1
-         EK0A==
-X-Gm-Message-State: AOJu0YxWuiSiwzElQIZmZsXZQy1RyA3xdbT1AaYR9nk53U1VZ9Uh1JEB
-	tf3jqLj4QXd5+osc2mEDVoGmuw==
-X-Google-Smtp-Source: AGHT+IG4XvFgs67+AtS9EHL/SznNMa+1UOsCgnL3cqhhPLl/kUPt3YMZFxwHRgtaH6dXWE/wh2zlOw==
-X-Received: by 2002:a17:902:e54a:b0:1d0:ab0e:9154 with SMTP id n10-20020a170902e54a00b001d0ab0e9154mr12216205plf.125.1702572921180;
-        Thu, 14 Dec 2023 08:55:21 -0800 (PST)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id k10-20020a170902694a00b001cc311ef152sm12601924plt.286.2023.12.14.08.55.20
+        bh=8OE/8mXjrMU0VRAVo2/zTiAmO3H3nOr6wGjTnBkrh1Y=;
+        b=NsDlk9J5olvYaC4Rh4NKLu8zhjr+AJus3QeUsLXhhG0S3CjYhfXaNB0FTvqFVuu0/h
+         SaPe6Hu62u0meKlAAq+atGI9sWytsH9u9+LCSNe82gHHzt7tUOLaZYxU1mVsYGke0KEo
+         tE8kZEfdlxL8xmdNwAC1dgGWRoivViEMHL4hcAcRHv3sg4vbxflF6M5VvYD0YV9MuIsp
+         FFnty0g6Pc/v5kp1E1XfzrcBOLJrc5JStpCl70fZrn8lbrs1Z77uEeic+wCqU/ZIKVlV
+         0OIGcbJCRVmPvbmKXAcdJz/Bs56ZYARMYVE/c02Oe8hOp7eIwBgdhkWaJ0/Pbet9NFF2
+         +bWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702573712; x=1703178512;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8OE/8mXjrMU0VRAVo2/zTiAmO3H3nOr6wGjTnBkrh1Y=;
+        b=wBPf2Alk1BzUmczD4IQqXSoLtNpLEDOuEHQ1dDW8y3GzSUj8R2KGP9OX5TavtqL2Ny
+         0IHl+1Ad3+VikEFqMpjnd0vN4sfyypbWZf8a9WOl4wrVLyQJEdxgwzU8Vg3XpWIdQydZ
+         YzgECigtDWmLRFdxoCbmzj3TJnKxkh2asE752ehjDNa4dYwk8Fy0OwzN0TgViunoL1N/
+         f16cnh9IxZgEcwL80YORS7hBubjyxlmW8Hn9DMdmTo/iMOMlrewH0qVR+9KYHxAiUDSD
+         HuLu1tqj7bZ5IDIfZ3PBxqoEX6fnP2VtbPBc4/wh4aFW6NpqGJf14+vhx4iyba2km6BE
+         06jA==
+X-Gm-Message-State: AOJu0YzMtAz3oAvNXjkx4LdV4O0m5wJEPZtTxciUoR0qOdMI/wRrsTiC
+	yvRhuZ+R+Q1d6lqATB8VWt0=
+X-Google-Smtp-Source: AGHT+IEAUYfOBXYYnc2yQqqz71wshDGUNQnukfsm5O9xbU1g8r/c72f5CCNKZoJCbdtbW9F8wDuiQg==
+X-Received: by 2002:adf:cc92:0:b0:336:4c79:3236 with SMTP id p18-20020adfcc92000000b003364c793236mr156665wrj.38.1702573712021;
+        Thu, 14 Dec 2023 09:08:32 -0800 (PST)
+Received: from orome.fritz.box (p200300e41f0fa600f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f0f:a600:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id r8-20020a056000014800b003364360839esm3372357wrx.81.2023.12.14.09.08.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Dec 2023 08:55:20 -0800 (PST)
-Date: Thu, 14 Dec 2023 08:55:19 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Xin Long <lucien.xin@gmail.com>, network dev <netdev@vger.kernel.org>,
-	linux-sctp@vger.kernel.org, davem@davemloft.net,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH net-next 0/6] sctp: fix a plenty of flexible-array-nested
- warnings
-Message-ID: <202312140839.18D3593E9F@keescook>
-References: <cover.1681917361.git.lucien.xin@gmail.com>
- <20230419181824.10119070@kernel.org>
+        Thu, 14 Dec 2023 09:08:31 -0800 (PST)
+Date: Thu, 14 Dec 2023 18:08:29 +0100
+From: Thierry Reding <thierry.reding@gmail.com>
+To: Kartik <kkartik@nvidia.com>
+Cc: jonathanh@nvidia.com, keescook@chromium.org, andy@kernel.org,
+	akpm@linux-foundation.org, arnd@arndb.de, ulf.hansson@linaro.org,
+	linus.walleij@linaro.org, pshete@nvidia.com, petlozup@nvidia.com,
+	frank.li@vivo.com, robh@kernel.org, stefank@nvidia.com,
+	pdeschrijver@nvidia.com, christophe.jaillet@wanadoo.fr,
+	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v7 0/8] soc/tegra: fuse: Add ACPI support
+Message-ID: <ZXs2jVeQtzU7668I@orome.fritz.box>
+References: <20231017052322.2636-1-kkartik@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="7ihAXFEyzJFczZOQ"
+Content-Disposition: inline
+In-Reply-To: <20231017052322.2636-1-kkartik@nvidia.com>
+User-Agent: Mutt/2.2.12 (2023-09-09)
+
+
+--7ihAXFEyzJFczZOQ
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230419181824.10119070@kernel.org>
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 19, 2023 at 06:18:24PM -0700, Jakub Kicinski wrote:
-> On Wed, 19 Apr 2023 11:16:27 -0400 Xin Long wrote:
-> > Paolo noticed a compile warning in SCTP,
-> > 
-> > ../net/sctp/stream_sched_fc.c: note: in included file (through ../include/net/sctp/sctp.h):
-> > ../include/net/sctp/structs.h:335:41: warning: array of flexible structures
-> > 
-> > But not only this, there are actually quite a lot of such warnings in
-> > some SCTP structs. This patchset fixes most of warnings by deleting
-> > these nested flexible array members.
-> > 
-> > After this patchset, there are still some warnings left:
-> > 
-> >   # make C=2 CF="-Wflexible-array-nested" M=./net/sctp/
-> >   ./include/net/sctp/structs.h:1145:41: warning: nested flexible array
-> >   ./include/uapi/linux/sctp.h:641:34: warning: nested flexible array
-> >   ./include/uapi/linux/sctp.h:643:34: warning: nested flexible array
-> >   ./include/uapi/linux/sctp.h:644:33: warning: nested flexible array
-> >   ./include/uapi/linux/sctp.h:650:40: warning: nested flexible array
-> >   ./include/uapi/linux/sctp.h:653:39: warning: nested flexible array
-> > 
-> > the 1st is caused by __data[] in struct ip_options, not in SCTP;
-> > the others are in uapi, and we should not touch them.
-> > 
-> > Note that instead of completely deleting it, we just leave it as a
-> > comment in the struct, signalling to the reader that we do expect
-> > such variable parameters over there, as Marcelo suggested.
-> 
-> Hi Kees, is there no workaround for nested flexible arrays within 
-> the kernel?  Any recommendations?
-> 
-> https://lore.kernel.org/all/cover.1681917361.git.lucien.xin@gmail.com/
+On Tue, Oct 17, 2023 at 10:53:14AM +0530, Kartik wrote:
+> This series of patches add ACPI support for Tegra194 and Tegra234 in
+> Tegra fuse and apbmisc drivers. It also adds support for Tegra241
+> which uses ACPI boot.
+>=20
+> Kartik (8):
+>   mm/util: Introduce kmemdup_array()
+>   soc/tegra: fuse: Use dev_err_probe for probe failures
+>   soc/tegra: fuse: Refactor resource mapping
+>   soc/tegra: fuse: Add tegra_acpi_init_apbmisc()
+>   soc/tegra: fuse: Add function to add lookups
+>   soc/tegra: fuse: Add function to print SKU info
+>   soc/tegra: fuse: Add ACPI support for Tegra194 and Tegra234
+>   soc/tegra: fuse: Add support for Tegra241
+>=20
+>  drivers/soc/tegra/Kconfig              |   5 ++
+>  drivers/soc/tegra/fuse/fuse-tegra.c    | 112 ++++++++++++++++++-------
+>  drivers/soc/tegra/fuse/fuse-tegra30.c  |  20 +++++
+>  drivers/soc/tegra/fuse/fuse.h          |   5 ++
+>  drivers/soc/tegra/fuse/tegra-apbmisc.c | 110 ++++++++++++++++++++----
+>  include/linux/string.h                 |   1 +
+>  include/soc/tegra/fuse.h               |   1 +
+>  mm/util.c                              |  17 ++++
+>  8 files changed, 227 insertions(+), 44 deletions(-)
 
-*thread necromancy*
+Applied, thanks.
 
-Hi, I apologize for missing this thread back in April!
+Thierry
 
-There's no need for a work-around: this situation isn't a problem.
-Composite structures that end with a flexible array are perfectly valid
-(the compiler can unambiguously reason about sizes). So none of these
-patches are needed (and actually reduce the compiler's ability to reason
-about object sizes). We shouldn't run sparse with -Wflexible-array-nested
-as this isn't an actual problem.
+--7ihAXFEyzJFczZOQ
+Content-Type: application/pgp-signature; name="signature.asc"
 
-The only problem that can happen like this is when a flex array
-ends up in the _middle_ of a composite structure, in which
-case yes, this needs to be fixed. This check is supported by
-GCC 14+ with -Wflex-array-member-not-at-end. For example, see:
-https://lore.kernel.org/all/1da736106d8e0806aeafa6e471a13ced490eae22.1698117815.git.gustavoars@kernel.org/
+-----BEGIN PGP SIGNATURE-----
 
--Kees
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmV7No0ACgkQ3SOs138+
+s6HdXg/9FA/vYnQmXMQe06CT1xhFNbKB6aJgVm5DTwnTHPo0dBQNy3x2dgMK5DT3
+j+jmOJcl53GaKXKwUbA6u0nnebvP3kmLJWxbLnuAw3TcJdPJLzrzrRyynvwWAwM7
+Nxi13gAVW/YV039w4As0c8IoTIfwcswNJzXjfPDnw5vokT6FkzKOx4YutiCWGfFo
+QcxOD8PbxPAAHvsuJmP/BEBtpHxGS+Yl9pd/CTS42uRkaGvHJq/DflviF38aTcXE
+6Qczt0rfVZRRncz5rc0RMNJT54eMrbKd2PVMu8VjFuKsCz29Hfk/A2CahJ0XZn5K
+bbzWgMCTgyaBQu+1/L1tY++t6eeC8tVY0JUqs9vykJqOwukp6uOOZy2wv4hJ5i86
+BZ106BkBaBUyA7uKz00cOBoxSTJwNRuyrQZ8kZ1+sb4aZAlQ5Hbsn8tKRij7yvBa
+WmDngH/DwqjnHp3YHtegotb9pjwG2MBoPHuNFftT4xnaI+rWbDIsW1pOmxAx6lmp
+r1oljZt8p0+g09O4iylPNGrDzebW5X0KdB1uZqa8t4TAwsjN/pEKDdx9SdoIhOA5
+BGMHyXgIbVFv7xktVZcwHXu459g4yalCgq+GZrd/3OTt0rdwfY/iJwn6Lp5GiDvu
+39Pb9kuWKwpUdW48lkCSIET6gzy6omQry42gAscqFTW7m2nxrA0=
+=dqlZ
+-----END PGP SIGNATURE-----
 
--- 
-Kees Cook
+--7ihAXFEyzJFczZOQ--
