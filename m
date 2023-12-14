@@ -1,225 +1,193 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6499D65EB5;
-	Thu, 14 Dec 2023 17:16:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ApmZLNNP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8915EC433C7;
-	Thu, 14 Dec 2023 17:16:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702574184;
-	bh=bwu2w4zW//jHMjIvWeXohjLIYznHWt798OK1QLHQP+E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=ApmZLNNPCWjt45Cil7/WhQKoCwSbzsvi+W1c94IM9h7LaLjgspNrA4/TR6wyhetnE
-	 NJbG7FZmQSKfYb6swKJgX336iWnfWym7mgtpNkiC20NVCsmZIssdB36Y2mvKyC6adK
-	 DaB/nskKji6OUqWtqRAzVlwSXAViL+YcT/f/x/JZ9lt6uJEJGmNxfmE4pna+KcP+BE
-	 ZHcfY5qd3B0kj8AYbWLcDa3rLEBmUytLP8/KvA5tSgZ76hRXZ/wBkX3S8aVjEZx75T
-	 bqMz3p+Y+p2eTbk02i/6RdSTLotxxvKOOV5IGfAkU4N5bgft7fCo/RkDXHtc2a/CpW
-	 sv38fX7s2KGDg==
-Date: Thu, 14 Dec 2023 11:16:22 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc: bhelgaas@google.com, linux-pm@vger.kernel.org,
-	linux-mmc@vger.kernel.org, Ricky Wu <ricky_wu@realtek.com>,
-	Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, bpf@vger.kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v2] PCI: Prevent device from doing RPM when it's unplugged
-Message-ID: <20231214171622.GA1023469@bhelgaas>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1vJo1c4a"
+Received: from mail-qv1-xf2c.google.com (mail-qv1-xf2c.google.com [IPv6:2607:f8b0:4864:20::f2c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCC5810A
+	for <linux-hardening@vger.kernel.org>; Thu, 14 Dec 2023 10:07:15 -0800 (PST)
+Received: by mail-qv1-xf2c.google.com with SMTP id 6a1803df08f44-67ab16c38caso53639286d6.1
+        for <linux-hardening@vger.kernel.org>; Thu, 14 Dec 2023 10:07:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1702577235; x=1703182035; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=tA1AMSjse8er2nYSvLg8QMQCegnjZF0QPacreYMDVz4=;
+        b=1vJo1c4abYkT0ppyWNBOWOPWytKcD6gbHnd5VnIzRWj/hyLcQnMpl2Xr1lplgCsn7+
+         9pvgTHXLMmtTFC0wMfl3YrKX8hNdIZVqHYMhcC5Cx93sf/lvhAr2pmBK59MK8eaWUbgD
+         3y7VFrcifCC94dE8c581eVRm+Wm9ZVqiyRktg4U5zFa8xN0t9QGqEh0z+gX1V4AUzd6H
+         s2uxcUvVpuVM0BRMCFCMmLWEHcLU2dEPuwy/4AkNVvlXLYkoG9Iv+4uh6sOZZ/8bEFnz
+         bww4MmZUvW3EACAqJWY0gUjiOh4yLXaC+rYGqtk0tCTX56Y5zyPEq5eMJCeIbFamGb0T
+         lrHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702577235; x=1703182035;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tA1AMSjse8er2nYSvLg8QMQCegnjZF0QPacreYMDVz4=;
+        b=GqgqvuoAXnan0Csguw/DkGTGYLKS8xDJ1JJkuY/9WkpS1O+0Xe+HIzxzp7rN/WL9f/
+         vRqt+hMxzd1eb2vuqcjqsG6Xvv0h7tRFIYby6rEhpw725x4/Zda48YkYS6tt+wBkR6B9
+         saxBz1BFWoV5o1zxNQxdL5seFwdYNHWKITZQqhmQYDD7eq/Vbmjq5onECuqYHzotzn84
+         BpeLEMQxruITM7TAqRHxIoa/ejO9y1595FLI2H1/bxGFzqylmdy1/t4QDTOPYfDehs7W
+         9pxNOSzdbXieYyaXPFTFrGeXE3x98jTpKflNjB3MXZLR45g+DV3qn0pnfAUIynbDNP3U
+         9VPA==
+X-Gm-Message-State: AOJu0YwZl/cXVO6W+qsPY6S8AgijBmFfGQJCRarLik6DQS858QaVg7K6
+	YXBsrjmHTSMtWHaIUVOxL3YYk2OctjpmjvVmZYPX1w==
+X-Google-Smtp-Source: AGHT+IFwNSzZ0G7xHpcJXHZ4FRw8EVTJygkGWuFoYiSzxK7sPEYUVi0cGsOSRNLzHPbCptg0JCTAkZol4v5CgRSez9Q=
+X-Received: by 2002:ad4:5e8a:0:b0:67f:13af:385b with SMTP id
+ jl10-20020ad45e8a000000b0067f13af385bmr381360qvb.66.1702577234734; Thu, 14
+ Dec 2023 10:07:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20231212231706.2680890-1-jeffxu@chromium.org> <20231212231706.2680890-12-jeffxu@chromium.org>
+ <CAHk-=wgn02cpoFEDQGgS+5BUqA2z-=Ks9+PNd-pEJy8h+NOs5g@mail.gmail.com>
+ <CALmYWFu39nzHvBmRsA326GcmV9u=eM-2aCGOvLK31rrb2R9NEw@mail.gmail.com> <CAHk-=wh_VViVZxjiQ5jtB0q=p=JtJMj2R24UAmj-fL-RNLWxNw@mail.gmail.com>
+In-Reply-To: <CAHk-=wh_VViVZxjiQ5jtB0q=p=JtJMj2R24UAmj-fL-RNLWxNw@mail.gmail.com>
+From: =?UTF-8?Q?Stephen_R=C3=B6ttger?= <sroettger@google.com>
+Date: Thu, 14 Dec 2023 19:06:55 +0100
+Message-ID: <CAEAAPHZpYXHNPdca+xfj77bwYaL6PY-c_oQ54r+=wtJa6_hmCA@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 11/11] mseal:add documentation
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Jeff Xu <jeffxu@google.com>, jeffxu@chromium.org, akpm@linux-foundation.org, 
+	keescook@chromium.org, jannh@google.com, willy@infradead.org, 
+	gregkh@linuxfoundation.org, jorgelo@chromium.org, groeck@chromium.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-mm@kvack.org, pedro.falcato@gmail.com, dave.hansen@intel.com, 
+	linux-hardening@vger.kernel.org, deraadt@openbsd.org
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="0000000000004e6017060c7c27ff"
+
+--0000000000004e6017060c7c27ff
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20231212043808.212754-1-kai.heng.feng@canonical.com>
 
-[+cc Rafael, runtime PM expert :)]
-
-On Tue, Dec 12, 2023 at 12:38:07PM +0800, Kai-Heng Feng wrote:
-> When inserting an SD7.0 card to Realtek card reader, the card reader
-> unplugs itself and morph into a NVMe device. The slot Link down on hot
-> unplugged can cause the following error:
-
-A page fault in a driver following a link down event sounds like
-either a driver defect or a PCI core defect that could affect any
-driver.  The rtsx power and ASPM management is very unusual, so I
-don't feel super confident in it.
-
-I guess the theory here is that while we're running
-rtsx_pci_runtime_idle(), the link down event happens and we run
-rtsx_pci_remove(), which unmaps the pcr->remap_addr page, and then
-rtsx_pci_readl(RTSX_HAIMR) in the rtsx_pci_runtime_idle() path
-references that unmapped page?
-
-I looked through other drivers that use runtime PM.  The typical
-pattern is:
-
-  *_probe()
-    pm_runtime_put
-    pm_runtime_allow
-
-  *_remove()
-    pm_runtime_forbid
-    pm_runtime_get
-
-rtsx does the put/allow and forbid/get in the reverse order:
-
-  rtsx_pci_probe()
-    pm_runtime_allow
-    pm_runtime_put
-
-  rtsx_pci_remove()
-    pm_runtime_get_sync
-    pm_runtime_forbid
-    iounmap(pcr->remap_addr)               # <-- unmap the page
-
-  rtsx_pci_runtime_idle()
-    ...
-      ioread32(pcr->remap_addr + reg)      # <-- read from unmapped page
-
-I don't know whether this is an issue, and isp_probe() and nhi_probe()
-also use this reverse order, so maybe it's all fine.  But I do wonder
-whether there's a reason to do it differently.
-
-> [   63.898861] pcieport 0000:00:1c.0: pciehp: Slot(8): Link Down
-> [   63.912118] BUG: unable to handle page fault for address: ffffb24d403e=
-5010
-> [   63.912122] #PF: supervisor read access in kernel mode
-> [   63.912125] #PF: error_code(0x0000) - not-present page
-> [   63.912126] PGD 100000067 P4D 100000067 PUD 1001fe067 PMD 100d97067 PT=
-E 0
-> [   63.912131] Oops: 0000 [#1] PREEMPT SMP PTI
-> [   63.912134] CPU: 3 PID: 534 Comm: kworker/3:10 Not tainted 6.4.0 #6
-> [   63.912137] Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.=
-M./H370M Pro4, BIOS P3.40 10/25/2018
-> [   63.912138] Workqueue: pm pm_runtime_work
-> [   63.912144] RIP: 0010:ioread32+0x2e/0x70
-> [   63.912148] Code: ff 03 00 77 25 48 81 ff 00 00 01 00 77 14 8b 15 08 d=
-9 54 01 b8 ff ff ff ff 85 d2 75 14 c3 cc cc cc cc 89 fa ed c3 cc cc cc cc <=
-8b> 07 c3 cc cc cc cc 55 83 ea 01 48 89 fe 48 c7 c7 98 6f 15 99 48
-> [   63.912150] RSP: 0018:ffffb24d40a5bd78 EFLAGS: 00010296
-> [   63.912152] RAX: ffffb24d403e5000 RBX: 0000000000000152 RCX: 000000000=
-000007f
-> [   63.912153] RDX: 000000000000ff00 RSI: ffffb24d403e5010 RDI: ffffb24d4=
-03e5010
-> [   63.912155] RBP: ffffb24d40a5bd98 R08: ffffb24d403e5010 R09: 000000000=
-0000000
-> [   63.912156] R10: ffff9074cd95e7f4 R11: 0000000000000003 R12: 000000000=
-000007f
-> [   63.912158] R13: ffff9074e1a68c00 R14: ffff9074e1a68d00 R15: 000000000=
-0009003
-> [   63.912159] FS:  0000000000000000(0000) GS:ffff90752a180000(0000) knlG=
-S:0000000000000000
-> [   63.912161] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   63.912162] CR2: ffffb24d403e5010 CR3: 0000000152832006 CR4: 000000000=
-03706e0
-> [   63.912164] Call Trace:
-> [   63.912165]  <TASK>
-> [   63.912167]  ? show_regs+0x68/0x70
-> [   63.912171]  ? __die_body+0x20/0x70
-> [   63.912173]  ? __die+0x2b/0x40
-> [   63.912175]  ? page_fault_oops+0x160/0x480
-> [   63.912177]  ? search_bpf_extables+0x63/0x90
-> [   63.912180]  ? ioread32+0x2e/0x70
-> [   63.912183]  ? search_exception_tables+0x5f/0x70
-> [   63.912186]  ? kernelmode_fixup_or_oops+0xa2/0x120
-> [   63.912189]  ? __bad_area_nosemaphore+0x179/0x230
-> [   63.912191]  ? bad_area_nosemaphore+0x16/0x20
-> [   63.912193]  ? do_kern_addr_fault+0x8b/0xa0
-> [   63.912195]  ? exc_page_fault+0xe5/0x180
-> [   63.912198]  ? asm_exc_page_fault+0x27/0x30
-> [   63.912203]  ? ioread32+0x2e/0x70
-> [   63.912206]  ? rtsx_pci_write_register+0x5b/0x90 [rtsx_pci]
-> [   63.912217]  rtsx_set_l1off_sub+0x1c/0x30 [rtsx_pci]
-> [   63.912226]  rts5261_set_l1off_cfg_sub_d0+0x36/0x40 [rtsx_pci]
-> [   63.912234]  rtsx_pci_runtime_idle+0xc7/0x160 [rtsx_pci]
-> [   63.912243]  ? __pfx_pci_pm_runtime_idle+0x10/0x10
-> [   63.912246]  pci_pm_runtime_idle+0x34/0x70
-> [   63.912248]  rpm_idle+0xc4/0x2b0
-> [   63.912251]  pm_runtime_work+0x93/0xc0
-> [   63.912254]  process_one_work+0x21a/0x430
-> [   63.912258]  worker_thread+0x4a/0x3c0
-> [   63.912261]  ? __pfx_worker_thread+0x10/0x10
-> [   63.912263]  kthread+0x106/0x140
-> [   63.912266]  ? __pfx_kthread+0x10/0x10
-> [   63.912268]  ret_from_fork+0x29/0x50
-> [   63.912273]  </TASK>
-
-Can you strip out the call trace stuff that's not relevant so the call
-path is clear?  I'm guessing we're in ioread32(), and nothing above
-do_kern_addr_fault() or below worker_thread() is relevant.
-
-> [   63.912274] Modules linked in: nvme nvme_core snd_hda_codec_hdmi snd_s=
-of_pci_intel_cnl snd_sof_intel_hda_common snd_hda_codec_realtek snd_hda_cod=
-ec_generic snd_soc_hdac_hda soundwire_intel ledtrig_audio nls_iso8859_1 sou=
-ndwire_generic_allocation soundwire_cadence snd_sof_intel_hda_mlink snd_sof=
-_intel_hda snd_sof_pci snd_sof_xtensa_dsp snd_sof snd_sof_utils snd_hda_ext=
-_core snd_soc_acpi_intel_match snd_soc_acpi soundwire_bus snd_soc_core snd_=
-compress ac97_bus snd_pcm_dmaengine snd_hda_intel i915 snd_intel_dspcfg snd=
-_intel_sdw_acpi intel_rapl_msr snd_hda_codec intel_rapl_common snd_hda_core=
- x86_pkg_temp_thermal intel_powerclamp snd_hwdep coretemp snd_pcm kvm_intel=
- drm_buddy ttm mei_hdcp kvm drm_display_helper snd_seq_midi snd_seq_midi_ev=
-ent cec crct10dif_pclmul ghash_clmulni_intel sha512_ssse3 aesni_intel crypt=
-o_simd rc_core cryptd rapl snd_rawmidi drm_kms_helper binfmt_misc intel_cst=
-ate i2c_algo_bit joydev snd_seq snd_seq_device syscopyarea wmi_bmof snd_tim=
-er sysfillrect input_leds snd ee1004 sysimgblt mei_me soundcore
-> [   63.912324]  mei intel_pch_thermal mac_hid acpi_tad acpi_pad sch_fq_co=
-del msr parport_pc ppdev lp ramoops drm parport reed_solomon efi_pstore ip_=
-tables x_tables autofs4 hid_generic usbhid hid rtsx_pci_sdmmc crc32_pclmul =
-ahci e1000e i2c_i801 i2c_smbus rtsx_pci xhci_pci libahci xhci_pci_renesas v=
-ideo wmi
-
-The module list doesn't look relevant here.  Nor the timestamps.
-
-> [   63.912346] CR2: ffffb24d403e5010
-> [   63.912348] ---[ end trace 0000000000000000 ]---
->=20
-> This happens because scheduled pm_runtime_idle() is not cancelled.
->=20
-> So before releasing the device, stop all runtime power managements by
-> using pm_runtime_barrier() to fix the issue.
+On Thu, Dec 14, 2023 at 2:31=E2=80=AFAM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 >
-> Link: https://lore.kernel.org/all/2ce258f371234b1f8a1a470d5488d00e@realte=
-k.com/
-> Tested-by: Ricky Wu <ricky_wu@realtek.com>
-> ---
-> v2:
->   Cover more cases than just pciehp.
-> =20
->  drivers/pci/remove.c | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
-> index d749ea8250d6..c69b4ce5dbfd 100644
-> --- a/drivers/pci/remove.c
-> +++ b/drivers/pci/remove.c
-> @@ -1,6 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include <linux/pci.h>
->  #include <linux/module.h>
-> +#include <linux/pm_runtime.h>
->  #include "pci.h"
-> =20
->  static void pci_free_resources(struct pci_dev *dev)
-> @@ -18,6 +19,7 @@ static void pci_stop_dev(struct pci_dev *dev)
->  	pci_pme_active(dev, false);
-> =20
->  	if (pci_dev_is_added(dev)) {
-> +		pm_runtime_barrier(&dev->dev);
+> On Wed, 13 Dec 2023 at 16:36, Jeff Xu <jeffxu@google.com> wrote:
+> >
+> >
+> > > IOW, when would you *ever* say "seal this area, but MADV_DONTNEED is =
+ok"?
+> > >
+> > The MADV_DONTNEED is OK for file-backed mapping.
+>
+> Right. It makes no semantic difference. So there's no point to it.
+>
+> My point was that you added this magic flag for "not ok for RO anon mappi=
+ng".
+>
+> It's such a *completely* random flag, that I go "that's just crazy
+> random - make sealing _always_ disallow that case".
+>
+> So what I object to in this series is basically random small details
+> that should just eb part of the basic act of sealing.
+>
+> I think sealing should just mean "you can't do any operations that
+> have semantic meaning for the mapping, because it is SEALED".
+>
+> So I think sealing should automatically mean "can't do MADV_DONTNEED
+> on anon memory", because that's basically equivalent to a munmap/remap
+> operation.
 
-If pm_runtime_barrier() is really the solution, it seems like this
-should go somewhere in pci-driver.c where we call the driver PM
-callbacks.
+In Chrome, we have a use case to allow MADV_DONTNEED on sealed memory.
+We have a pkey-tagged heap and code region for JIT code. The regions are
+writable by page permissions, but we use the pkey to control write access.
+These regions are mmapped at process startup and we want to seal them to en=
+sure
+that the pkey and page permissions can't change.
+Since these regions are used for dynamic allocations, we still need a way t=
+o
+release unneeded resources, i.e. madvise(DONTNEED) unused pages on free().
 
->  		device_release_driver(&dev->dev);
->  		pci_proc_detach_device(dev);
-> --=20
-> 2.34.1
->=20
+AIUI, the madvise(DONTNEED) should effectively only change the content of
+anonymous pages, i.e. it's similar to a memset(0) in that case. That's why =
+we
+added this special case: if you want to madvise(DONTNEED) an anonymous page=
+,
+you should have write permissions to the page.
+
+In our allocator, on free we can then release resources via:
+* allow pkey writes
+* madvise(DONTNEED)
+* disallow pkey writes
+
+--0000000000004e6017060c7c27ff
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIIPoQYJKoZIhvcNAQcCoIIPkjCCD44CAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
+ggz7MIIEtjCCA56gAwIBAgIQeAMYYHb81ngUVR0WyMTzqzANBgkqhkiG9w0BAQsFADBMMSAwHgYD
+VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
+AxMKR2xvYmFsU2lnbjAeFw0yMDA3MjgwMDAwMDBaFw0yOTAzMTgwMDAwMDBaMFQxCzAJBgNVBAYT
+AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
+IFIzIFNNSU1FIENBIDIwMjAwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCvLe9xPU9W
+dpiHLAvX7kFnaFZPuJLey7LYaMO8P/xSngB9IN73mVc7YiLov12Fekdtn5kL8PjmDBEvTYmWsuQS
+6VBo3vdlqqXZ0M9eMkjcKqijrmDRleudEoPDzTumwQ18VB/3I+vbN039HIaRQ5x+NHGiPHVfk6Rx
+c6KAbYceyeqqfuJEcq23vhTdium/Bf5hHqYUhuJwnBQ+dAUcFndUKMJrth6lHeoifkbw2bv81zxJ
+I9cvIy516+oUekqiSFGfzAqByv41OrgLV4fLGCDH3yRh1tj7EtV3l2TngqtrDLUs5R+sWIItPa/4
+AJXB1Q3nGNl2tNjVpcSn0uJ7aFPbAgMBAAGjggGKMIIBhjAOBgNVHQ8BAf8EBAMCAYYwHQYDVR0l
+BBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMBIGA1UdEwEB/wQIMAYBAf8CAQAwHQYDVR0OBBYEFHzM
+CmjXouseLHIb0c1dlW+N+/JjMB8GA1UdIwQYMBaAFI/wS3+oLkUkrk1Q+mOai97i3Ru8MHsGCCsG
+AQUFBwEBBG8wbTAuBggrBgEFBQcwAYYiaHR0cDovL29jc3AyLmdsb2JhbHNpZ24uY29tL3Jvb3Ry
+MzA7BggrBgEFBQcwAoYvaHR0cDovL3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvcm9vdC1y
+My5jcnQwNgYDVR0fBC8wLTAroCmgJ4YlaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9yb290LXIz
+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
+miiwZhqbFo3H+sN+36dVsCIwTAYDVR0gBEUwQzBBBgkrBgEEAaAyASgwNDAyBggrBgEFBQcCARYm
+aHR0cHM6Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wDAYDVR0TAQH/BAIwADCBmgYI
+KwYBBQUHAQEEgY0wgYowPgYIKwYBBQUHMAGGMmh0dHA6Ly9vY3NwLmdsb2JhbHNpZ24uY29tL2Nh
+L2dzYXRsYXNyM3NtaW1lY2EyMDIwMEgGCCsGAQUFBzAChjxodHRwOi8vc2VjdXJlLmdsb2JhbHNp
+Z24uY29tL2NhY2VydC9nc2F0bGFzcjNzbWltZWNhMjAyMC5jcnQwHwYDVR0jBBgwFoAUfMwKaNei
+6x4schvRzV2Vb4378mMwRgYDVR0fBD8wPTA7oDmgN4Y1aHR0cDovL2NybC5nbG9iYWxzaWduLmNv
+bS9jYS9nc2F0bGFzcjNzbWltZWNhMjAyMC5jcmwwDQYJKoZIhvcNAQELBQADggEBABDOrwE7xhhZ
+KPffKFRtuggfC0sfh0EHmrCzCXlyiQFmTpjm73me7rw+ibiPUnohQxkeqC9KvwDd/gF7OAY3un01
+f8y5iEmwoymOLIzkTKIMHDp6qOul60jFrAWe8EQMuBMEc9TQbOiXB4jFgLuDZX7AspyVvnmLA5sw
+msq0yrGgxTsEeZniQpdOP/qZNS2TJmvNH8a8HuQfHH/pd20lRWfTEuhSRN8cTkKihK7iO8wjCmrp
+EXefUessFdMqMUSfGI6rUaZTfU0SRfdrVHW4IE8onI30/UVurbGlFiugNF3LbDMXdqzs2/eTsLiD
+8Dv1+pt7SJqI4zNhzZFOpvBPVIkxggJqMIICZgIBATBoMFQxCzAJBgNVBAYTAkJFMRkwFwYDVQQK
+ExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFzIFIzIFNNSU1FIENB
+IDIwMjACEAFp/vXw/R/y8Lw9a5440YEwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIE
+IM8/A9cP2NNPis2KNHiRb446CfrNa20wSpXiVFfLImAvMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0B
+BwEwHAYJKoZIhvcNAQkFMQ8XDTIzMTIxNDE4MDcxNVowaQYJKoZIhvcNAQkPMVwwWjALBglghkgB
+ZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQow
+CwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQBdKqebtGmCYqfk8i92
+Tbih5wr2OCj7bSuhQ30OLyYtZkEZJuiAuU1sueW5itmExb93/oy7vM5xG8RxQHmH6Rs1fO/S4b4N
+ACsB3vvwONkaOWsb5SvgwS5aMM1SQRH3p2YfIsfmo/vENC4N6q0euP7+l9ld8Q8cOHml/qvACu3c
+mv4VQtj6Hzo652oV3maIJ6gtt43Gi5K3L9POz1+4ZyDSGajnHnur5tKAH1XDKQBjAro6YCE6BcXd
+LyTjJpMJ5lgQ6obKw83+qNV5vmli6bVRU1SwKZ7sO2vDR3ovIESUzjBR36QEt5XVDaOEdi6Os3ln
+97V+qbMt63pzVda/e2eS
+--0000000000004e6017060c7c27ff--
