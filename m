@@ -1,109 +1,111 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GCJi+iSK"
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 668E111A
-	for <linux-hardening@vger.kernel.org>; Thu, 14 Dec 2023 08:37:15 -0800 (PST)
-Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-6ce6d926f76so638843b3a.1
-        for <linux-hardening@vger.kernel.org>; Thu, 14 Dec 2023 08:37:15 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NqCXb7sx"
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1AAB11B
+	for <linux-hardening@vger.kernel.org>; Thu, 14 Dec 2023 08:55:21 -0800 (PST)
+Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1d08a924fcfso79038075ad.2
+        for <linux-hardening@vger.kernel.org>; Thu, 14 Dec 2023 08:55:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1702571835; x=1703176635; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ytGugjo0G0b+BPvqCI62+RFEO79iMDy6vjEWkwFFqNo=;
-        b=GCJi+iSKpjqkkNglOX7WPB7/8KITsstZp0kPuEDUMvK0hDP8P5OlgM3DvnT1kZ+Ht3
-         qD4TydnzFsFH4nERqqpXyGSovEHKbC72lFZVKreji5eX4kcfOz5hXq9m14gDXYNVVeji
-         /lRcyO7zCIbtqFnCH78mjwSjhqOdfo3BNPNoA=
+        d=chromium.org; s=google; t=1702572921; x=1703177721; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=RT0eLBOuatp2ygshln82AgJR3wQooxj/VsT49bwyvIQ=;
+        b=NqCXb7sxhjz9xGUDoz/1gi/ekPJY2bMnBJ3YBqJKjwueWblzuqBXNcL6vWX86nyHJJ
+         KUnz/sheGaEYuzZDWorHryYTdx0dII9NHv2ZYdit3etmk7+7zoT007vw5S4hsxyTaKpN
+         CJZtOmTstanLHisPf7Tg+DCrVV/SLt2WZeLBg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702571835; x=1703176635;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ytGugjo0G0b+BPvqCI62+RFEO79iMDy6vjEWkwFFqNo=;
-        b=JiiKNlf6JJPxmGaeCh8puvMZF77ry0lyLhTUp5uuT1Inn83KiOS4Lv4wBMwlvsvHAQ
-         T9tGs0CwBF9vB/TM5U6SUTJxa+gEUIIbtA9vHQSoh8goB4+pASmpibZOSlfrDvwFNate
-         H/KAdhNBi4qT0tc4+p8l/vDGsCnWOCwBpBgYkub46uKnNnUpAds0YOIIJHDGE+JsTagC
-         gKkbwjb8MjQfGm/gPQ2MyamD0LjBUuh+zuHYQyJd3lLxdr2sP8r+Fc5j/RzCaAh9N6Pl
-         nx3DFGYzDL9W+FI/EcQfOv0kBjcLNf2na9vZilXKX/HL8hYsko+S0D9slOjC0LCV4Xj/
-         bw1w==
-X-Gm-Message-State: AOJu0YwMGFrKGRoHDJqglMHgijISTeQknrNrL3cH2wnoa/Y9wsHUz2eR
-	TixR062G9W3J7hcC2SH1BlQFhw==
-X-Google-Smtp-Source: AGHT+IHCcgxq6RgAT4BqOXPUetDHHLYdNS0fny6BFi7+klsE9cZ2F0ubu4OKof7NjbKXCrj/xdfJ9g==
-X-Received: by 2002:a05:6a00:2d9e:b0:6cd:fda4:b57c with SMTP id fb30-20020a056a002d9e00b006cdfda4b57cmr12902654pfb.15.1702571834799;
-        Thu, 14 Dec 2023 08:37:14 -0800 (PST)
+        d=1e100.net; s=20230601; t=1702572921; x=1703177721;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RT0eLBOuatp2ygshln82AgJR3wQooxj/VsT49bwyvIQ=;
+        b=jhgLiCGdPdU0qpdUjacAVLe8zhMP5JA8jS3Kr2YAXR56v7HyVVh1vRF+BYHSCRABzj
+         o9psxoQmchHyOGA7YJzi2oSoQtDOkrB3KCDDTtrCNqfaUol86MS/PW60+Xg61tjclD1b
+         qmogV6c7+qw6zS9e8zGWXic1jp2ho5q/jwHQQXRGHCkQVxOQEdPAt64Vb5aESQxotT4/
+         t3IBqgwWqcbqzMJFLltLnPSGFMXUw7rbc5WBiW/QeJq1kEFx1gQAvI+FT2SEz2T3LQkp
+         PvasGrSgTB0VmT3Dkw58UTXG19VmDWfVRncGmtjYN7xJkaY46ucnDjEgyuMFIkMVgvq1
+         EK0A==
+X-Gm-Message-State: AOJu0YxWuiSiwzElQIZmZsXZQy1RyA3xdbT1AaYR9nk53U1VZ9Uh1JEB
+	tf3jqLj4QXd5+osc2mEDVoGmuw==
+X-Google-Smtp-Source: AGHT+IG4XvFgs67+AtS9EHL/SznNMa+1UOsCgnL3cqhhPLl/kUPt3YMZFxwHRgtaH6dXWE/wh2zlOw==
+X-Received: by 2002:a17:902:e54a:b0:1d0:ab0e:9154 with SMTP id n10-20020a170902e54a00b001d0ab0e9154mr12216205plf.125.1702572921180;
+        Thu, 14 Dec 2023 08:55:21 -0800 (PST)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id gx4-20020a056a001e0400b006cbb71186f7sm11945039pfb.29.2023.12.14.08.37.14
+        by smtp.gmail.com with ESMTPSA id k10-20020a170902694a00b001cc311ef152sm12601924plt.286.2023.12.14.08.55.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Dec 2023 08:37:14 -0800 (PST)
-Date: Thu, 14 Dec 2023 08:37:13 -0800
+        Thu, 14 Dec 2023 08:55:20 -0800 (PST)
+Date: Thu, 14 Dec 2023 08:55:19 -0800
 From: Kees Cook <keescook@chromium.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>,
-	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Xin Long <lucien.xin@gmail.com>, network dev <netdev@vger.kernel.org>,
+	linux-sctp@vger.kernel.org, davem@davemloft.net,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] platform/chrome: Fix -Warray-bounds warnings
-Message-ID: <202312140836.5AB528D54F@keescook>
-References: <ZCTrutoN+9TiJM8u@work>
+Subject: Re: [PATCH net-next 0/6] sctp: fix a plenty of flexible-array-nested
+ warnings
+Message-ID: <202312140839.18D3593E9F@keescook>
+References: <cover.1681917361.git.lucien.xin@gmail.com>
+ <20230419181824.10119070@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZCTrutoN+9TiJM8u@work>
+In-Reply-To: <20230419181824.10119070@kernel.org>
 
-On Wed, Mar 29, 2023 at 07:54:02PM -0600, Gustavo A. R. Silva wrote:
-> GCC-13 (and Clang) does not like having a partially allocated object,
-> since it cannot reason about it for bounds checking.
+On Wed, Apr 19, 2023 at 06:18:24PM -0700, Jakub Kicinski wrote:
+> On Wed, 19 Apr 2023 11:16:27 -0400 Xin Long wrote:
+> > Paolo noticed a compile warning in SCTP,
+> > 
+> > ../net/sctp/stream_sched_fc.c: note: in included file (through ../include/net/sctp/sctp.h):
+> > ../include/net/sctp/structs.h:335:41: warning: array of flexible structures
+> > 
+> > But not only this, there are actually quite a lot of such warnings in
+> > some SCTP structs. This patchset fixes most of warnings by deleting
+> > these nested flexible array members.
+> > 
+> > After this patchset, there are still some warnings left:
+> > 
+> >   # make C=2 CF="-Wflexible-array-nested" M=./net/sctp/
+> >   ./include/net/sctp/structs.h:1145:41: warning: nested flexible array
+> >   ./include/uapi/linux/sctp.h:641:34: warning: nested flexible array
+> >   ./include/uapi/linux/sctp.h:643:34: warning: nested flexible array
+> >   ./include/uapi/linux/sctp.h:644:33: warning: nested flexible array
+> >   ./include/uapi/linux/sctp.h:650:40: warning: nested flexible array
+> >   ./include/uapi/linux/sctp.h:653:39: warning: nested flexible array
+> > 
+> > the 1st is caused by __data[] in struct ip_options, not in SCTP;
+> > the others are in uapi, and we should not touch them.
+> > 
+> > Note that instead of completely deleting it, we just leave it as a
+> > comment in the struct, signalling to the reader that we do expect
+> > such variable parameters over there, as Marcelo suggested.
 > 
-> Notice that the compiler is legitimately complaining about accessing
-> an object (params, in this case) for which not enough memory was
-> allocated.
+> Hi Kees, is there no workaround for nested flexible arrays within 
+> the kernel?  Any recommendations?
 > 
-> The object is of size 20 bytes:
-> 
-> struct ec_params_vbnvcontext {
-> 	uint32_t                   op;                   /*     0     4 */
-> 	uint8_t                    block[16];            /*     4    16 */
-> 
-> 	/* size: 20, cachelines: 1, members: 2 */
-> 	/* last cacheline: 20 bytes */
-> };
-> 
-> but only 16 bytes are allocated:
-> 
-> sizeof(struct ec_response_vbnvcontext) == 16
-> 
-> In this case, as only enough space for the op field is allocated,
-> we can use an object of type uint32_t instead of a whole
-> struct ec_params_vbnvcontext (for which not enough memory is
-> allocated).
-> 
-> Fix the following warning seen under GCC 13:
-> drivers/platform/chrome/cros_ec_vbc.c: In function ‘vboot_context_read’:
-> drivers/platform/chrome/cros_ec_vbc.c:36:15: warning: array subscript ‘struct ec_params_vbnvcontext[1]’ is partly outside array bounds of ‘unsigned char[36]’ [-Warray-bounds=]
->    36 |         params->op = EC_VBNV_CONTEXT_OP_READ;
->       |               ^~
-> In file included from drivers/platform/chrome/cros_ec_vbc.c:12:
-> In function ‘kmalloc’,
->     inlined from ‘vboot_context_read’ at drivers/platform/chrome/cros_ec_vbc.c:30:8:
-> ./include/linux/slab.h:580:24: note: at offset 20 into object of size 36 allocated by ‘kmalloc_trace’
->   580 |                 return kmalloc_trace(
->       |                        ^~~~~~~~~~~~~~
->   581 |                                 kmalloc_caches[kmalloc_type(flags)][index],
->       |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->   582 |                                 flags, size);
->       |                                 ~~~~~~~~~~~~
-> 
-> Link: https://github.com/KSPP/linux/issues/278
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> https://lore.kernel.org/all/cover.1681917361.git.lucien.xin@gmail.com/
 
-FWIW, I think this is the right change that disrupts the code the least.
+*thread necromancy*
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Hi, I apologize for missing this thread back in April!
+
+There's no need for a work-around: this situation isn't a problem.
+Composite structures that end with a flexible array are perfectly valid
+(the compiler can unambiguously reason about sizes). So none of these
+patches are needed (and actually reduce the compiler's ability to reason
+about object sizes). We shouldn't run sparse with -Wflexible-array-nested
+as this isn't an actual problem.
+
+The only problem that can happen like this is when a flex array
+ends up in the _middle_ of a composite structure, in which
+case yes, this needs to be fixed. This check is supported by
+GCC 14+ with -Wflex-array-member-not-at-end. For example, see:
+https://lore.kernel.org/all/1da736106d8e0806aeafa6e471a13ced490eae22.1698117815.git.gustavoars@kernel.org/
 
 -Kees
 
