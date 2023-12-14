@@ -1,153 +1,136 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 704CD6A02A
-	for <linux-hardening@vger.kernel.org>; Thu, 14 Dec 2023 20:14:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D10897494;
+	Thu, 14 Dec 2023 21:04:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="IJNzUxzC"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-50bfa5a6cffso10049959e87.0
-        for <linux-hardening@vger.kernel.org>; Thu, 14 Dec 2023 12:14:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1702584868; x=1703189668; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BzpbUH5EkrEm9i3H+vtEmgiPJGsbQVnri/dVuua/oQA=;
-        b=IJNzUxzC8DzdWkRv8FuYrR67/tcBkEZV6fNIO8Eh2ZmO36EuazQqyuWLYxNveqFIIx
-         XbBeUlWdcq9RstaPKgLvvRnEd6NFw3MwrNkDjpxbzrJ3lp+O5ttoZxrOnHp9uVIGL01d
-         ZAKsnsPiDirYa7bhZ2iv3UXsSKFy/ihWoTe2s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702584868; x=1703189668;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BzpbUH5EkrEm9i3H+vtEmgiPJGsbQVnri/dVuua/oQA=;
-        b=KSkfraZq72zaaoOUpkSaCzNyjiiYH+Z4YqfoJ3UiwaQ7eHuRc+73mKFarX2sOiJAy4
-         3HEL90UvqzEn64DnAtSim3uJQDy60SYPyG03AGNJixyZby83WvuX9SyBukZRso4m3bcw
-         xwRJjwfcLwkzUIg0c4kVZTkplH1oNOy1Ybb/WNk3GzH9zO9ocXx+nloFUmqzbVIfr9lC
-         bPZ7PzWlYKf3rxVF2/yZlQFI1pXASI2jJOIDNTgc1BFVxcLb5nA7jXvBiB4Xa7YKwIWL
-         +aeNsKXFKsLqQhDYNbeKgAY+oaOlHKhERyYrmK25nlwV/vtemsTOcJtKskjX43dU0f3G
-         eXpg==
-X-Gm-Message-State: AOJu0YyljIX87Lz2R1yHXyucmJ9EvvJ0FmjxgV/Dy7H8CFrOTzhh0SUM
-	UmfZBgVUIk7Ag2IzxcwOjV3GR8YVUCKaMzU+cYP7V1Up
-X-Google-Smtp-Source: AGHT+IG00K82nIZMWyt5DCjT5Rv6wvOBAT7ULzTO40TBFwuTKhMHz4Mpt7SN8D+tU/clH6QagVy3qw==
-X-Received: by 2002:ac2:5e69:0:b0:50b:fce6:26e8 with SMTP id a9-20020ac25e69000000b0050bfce626e8mr3894099lfr.112.1702584868037;
-        Thu, 14 Dec 2023 12:14:28 -0800 (PST)
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
-        by smtp.gmail.com with ESMTPSA id dx7-20020a0565122c0700b0050d12fa98fesm1913289lfb.300.2023.12.14.12.14.26
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Dec 2023 12:14:27 -0800 (PST)
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-50c0f13ea11so10040877e87.3
-        for <linux-hardening@vger.kernel.org>; Thu, 14 Dec 2023 12:14:26 -0800 (PST)
-X-Received: by 2002:a2e:b80d:0:b0:2cc:3f14:405d with SMTP id
- u13-20020a2eb80d000000b002cc3f14405dmr1108832ljo.102.1702584866181; Thu, 14
- Dec 2023 12:14:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="vHqwe+0C"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=7FrhxwWPxjd1nrVnDhmOIzmALWzUB7ji13bBSfV+Dm4=; b=vHqwe+0C8DVTzGY92KpnnNrZ61
+	9AjwcGxoG3Z+B6DxOIX8VQEGOmuosBI6oPZmY2zpXNULYfiyLkl8djZ+AEFgYzpt49vAy0GAniFJ4
+	5v9WbrwDHC97+uhc5/D/1PUPO2LYNKGAKJLMZgDVPQ754lKyl15E4c1FP5wSBXJZudT/yt5i6qp3n
+	jv3eydn+WQiJ1sz6nQKrPf0OjctP6s90DUcXuzC6eD9aKqYJNiVlsX/6snjTx5Umg7anTdjOFQBYR
+	GBSvFcFbH9466jNlUaKxsFV6HabQYMdWsSOiXmhYhq/qmoMnr8kVAmrjAPgPtA8VackjJOvkA/lzl
+	vf07MJPA==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1rDssC-00CS2n-1P;
+	Thu, 14 Dec 2023 21:04:00 +0000
+Date: Thu, 14 Dec 2023 21:04:00 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Greg KH <greg@kroah.com>
+Cc: Nick Desaulniers <ndesaulniers@google.com>, tanzirh@google.com,
+	Kees Cook <keescook@chromium.org>,
+	Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Nick DeSaulniers <nnn@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>, llvm@lists.linux.dev
+Subject: Re: [PATCH] lib/string: shrink lib/string.i via IWYU
+Message-ID: <20231214210400.GR1674809@ZenIV>
+References: <20231205-libstringheader-v1-1-7f9c573053a7@gmail.com>
+ <20231205213807.GE1674809@ZenIV>
+ <CAKwvOd=2VASkaLvjU+7kkbvhu2CimYn5KUGJBDRePyUhtrNK2Q@mail.gmail.com>
+ <2023120608-ivy-snowdrop-890d@gregkh>
+ <CAKwvOdmFJ=ZGN8ZScS5oQpXnAL0wwtTDCeNNGpBKZXzQ4kRAVA@mail.gmail.com>
+ <2023120657-henna-spongy-9ef6@gregkh>
+ <20231206005542.GJ1674809@ZenIV>
+ <20231206030047.GL1674809@ZenIV>
+ <2023120650-faucet-palpable-f1a3@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231212231706.2680890-1-jeffxu@chromium.org> <20231212231706.2680890-12-jeffxu@chromium.org>
- <CAHk-=wgn02cpoFEDQGgS+5BUqA2z-=Ks9+PNd-pEJy8h+NOs5g@mail.gmail.com>
- <CALmYWFu39nzHvBmRsA326GcmV9u=eM-2aCGOvLK31rrb2R9NEw@mail.gmail.com>
- <CAHk-=wh_VViVZxjiQ5jtB0q=p=JtJMj2R24UAmj-fL-RNLWxNw@mail.gmail.com> <CAEAAPHZpYXHNPdca+xfj77bwYaL6PY-c_oQ54r+=wtJa6_hmCA@mail.gmail.com>
-In-Reply-To: <CAEAAPHZpYXHNPdca+xfj77bwYaL6PY-c_oQ54r+=wtJa6_hmCA@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 14 Dec 2023 12:14:09 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wiVhHmnXviy1xqStLRozC4ziSugTk=1JOc8ORWd2_0h7g@mail.gmail.com>
-Message-ID: <CAHk-=wiVhHmnXviy1xqStLRozC4ziSugTk=1JOc8ORWd2_0h7g@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 11/11] mseal:add documentation
-To: =?UTF-8?Q?Stephen_R=C3=B6ttger?= <sroettger@google.com>
-Cc: Jeff Xu <jeffxu@google.com>, jeffxu@chromium.org, akpm@linux-foundation.org, 
-	keescook@chromium.org, jannh@google.com, willy@infradead.org, 
-	gregkh@linuxfoundation.org, jorgelo@chromium.org, groeck@chromium.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, pedro.falcato@gmail.com, dave.hansen@intel.com, 
-	linux-hardening@vger.kernel.org, deraadt@openbsd.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2023120650-faucet-palpable-f1a3@gregkh>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Thu, 14 Dec 2023 at 10:07, Stephen R=C3=B6ttger <sroettger@google.com> w=
-rote:
->
-> AIUI, the madvise(DONTNEED) should effectively only change the content of
-> anonymous pages, i.e. it's similar to a memset(0) in that case. That's wh=
-y we
-> added this special case: if you want to madvise(DONTNEED) an anonymous pa=
-ge,
-> you should have write permissions to the page.
+On Wed, Dec 06, 2023 at 12:09:17PM +0900, Greg KH wrote:
+> > slap #include "unaligned.h" into their traps.c and unaligned.c
+> > (callers and definitions resp.) and strip those from asm/unaligned.h?
+> > At that point we can remove arch/{arc,parisc}/asm/unaligned.h - everything
+> > will pick include/asm-generic/unaligned.h.
+> > 
+> > Then the next cycle we ask Linus to run the following:
+> > for i in `git grep -l -w asm/unaligned.h`; do
+> > 	sed -i -e "s/asm\/unaligned.h/linux\/unaligned.h/" $i
+> > done
+> > git mv include/asm-generic/unaligned.h include/linux/unaligned.h
+> > sed -i -e "/unaligned.h/d" include/asm-generic/Kbuild
+> > right before releasing -rc1 and asm/unaligned.h is gone...
+> 
+> Please do, it's really annoying and would be great to fix up.
 
-Hmm. I actually would be happier if we just made that change in
-general. Maybe even without sealing, but I agree that it *definitely*
-makes sense in general as a sealing thing.
+	FWIW, turns out that we have several places in drivers/* that pull
+asm-generic/unaligned.h.  IMO that's completely wrong - not just in this
+case (it's a matter of trivially adjusting the script), but I think that
+as a matter of policy we should *NOT* have includes of asm-generic/*.h
+anywhere in drivers/ fs/ io_uring/ kernel/ mm/ net/ sound/
 
-IOW, just saying
+	Current situation (outside of arch, include, scripts and tools,
+with asm-generic/unaligned.h cases already taken out):
 
- "madvise(DONTNEED) needs write permissions to an anonymous mapping when se=
-aled"
+drivers/android/binderfs.c:32:#include <uapi/asm-generic/errno-base.h>
+drivers/clk/microchip/clk-mpfs-ccc.c:7:#include "asm-generic/errno-base.h"
+drivers/firmware/arm_scmi/shmem.c:13:#include <asm-generic/bug.h>
+drivers/irqchip/irq-ti-sci-inta.c:24:#include <asm-generic/msi.h>
+drivers/mtd/nand/raw/ingenic/ingenic_ecc.h:9:#include <uapi/asm-generic/errno-base.h>
+drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c:10:#include <asm-generic/posix_types.h>
+io_uring/uring_cmd.c:10:#include <uapi/asm-generic/ioctls.h>
+lib/trace_readwrite.c:10:#include <asm-generic/io.h>
+mm/damon/vaddr.c:10:#include <asm-generic/mman-common.h>
+net/sunrpc/xprtrdma/verbs.c:58:#include <asm-generic/barrier.h>
+rust/uapi/uapi_helper.h:9:#include <uapi/asm-generic/ioctl.h>
 
-makes 100% sense to me. Having a separate _flag_ to give sensible
-semantics is just odd.
+That's it.  asm-generic/errno-base.h cases - just use linux/errno.h and
+be done with it.  Anyone who goes "I've got ENOENT and ENOMEM in my driver,
+but those two are covered by errno-base.h and I can be clever and use
+just that" is wrong.
 
-IOW, what I really want is exactly that "sensible semantics, not random fla=
-gs".
+asm-generic/mman-common.h - and linux/mman.h would not serve why, exactly?
+uapi/linux/linux/mman.h, if one really feels like it...
 
-Particularly for new system calls with fairly specialized use, I think
-it's very important that the semantics are sensible on a conceptual
-level, and that we do not add system calls that are based on "random
-implementation issue of the day".
+asm-generic/ioctls.h in io_uring - definitely wrong; SIOCINQ is what
+it's brought for, but that's in sockios.h.  It expands to FIONREAD, which
+*is* in ioctls.h, but...
 
-Yes, yes, then as we have to maintain things long-term, and we hit
-some compatibility issue, at *THAT* point we'll end up facing nasty
-"we had an implementation that had these semantics in practice, so now
-we're stuck with it", but when introducing a new system call, let's
-try really hard to start off from those kinds of random things.
+arch/alpha/include/uapi/asm/ioctls.h:11:#define FIONREAD        _IOR('f', 127, int)
+arch/mips/include/uapi/asm/ioctls.h:64:#define FIONREAD 0x467f
+arch/parisc/include/uapi/asm/ioctls.h:35:#define FIONREAD       0x541B
+arch/powerpc/include/uapi/asm/ioctls.h:11:#define FIONREAD      _IOR('f', 127, int)
+arch/sh/include/uapi/asm/ioctls.h:11:#define FIONREAD   _IOR('f', 127, int)
+arch/sparc/include/uapi/asm/ioctls.h:101:#define FIONREAD       _IOR('f', 127, int)
+arch/xtensa/include/uapi/asm/ioctls.h:23:#define FIONREAD       _IOR('f', 127, int)
+include/uapi/asm-generic/ioctls.h:46:#define FIONREAD   0x541B
 
-Wouldn't it be lovely if we can just come up with a sane set of "this
-is what it means to seal a vma", and enumerate those, and make those
-sane conceptual rules be the initial definition. By all means have a
-"flags" argument for future cases when we figure out there was
-something wrong or the notion needed to be extended, but if we already
-*start* with random extensions, I feel there's something wrong with
-the whole concept.
+See the problem?  On mips the value is not 0x541B - it's 0x467F; on
+alpha, powerpc and sparc it's 0x4004667F, on sh and xtensa - 0x8004667F
+(different expansions of _IOR).
 
-So I would really wish for the first version of
+The only thing that has any business including asm-generic/ioctls.h is
+arch/*/include/uapi/asm/ioctls.h - if it feels like doing so.  Anywhere
+else it ought to be asm/ioctls.h.
 
-     mseal(start, len, flags);
+asm-generic/msi.h - looks bogus; there's an include of linux/msi.h several lines
+above, and that pulls asm/msi.h.  Which makes it either a no-op or a build bug
+(the latter - if that driver can be built on x86 with CONFIG_GENERIC_MSI_IRQ
+defined;
+typedef struct irq_alloc_info msi_alloc_info_t;
+in asm/msi.h vs.
+typedef struct msi_alloc_info {
+        struct msi_desc                 *desc;
+        irq_hw_number_t                 hwirq;
+        unsigned long                   flags;
+        union {
+                unsigned long           ul;
+                void                    *ptr;
+        } scratchpad[NUM_MSI_ALLOC_SCRATCHPAD_REGS];
+} msi_alloc_info_t;
+in asm-generic/msi.h).
 
-to have "flags=3D0" be the one and only case we actually handle
-initially, and only add a single PROT_SEAL flag to mmap() that says
-"create this mapping already pre-sealed".
-
-Strive very hard to make sealing be a single VM_SEALED flag in the
-vma->vm_flags that we already have, just admit that none of this
-matters on 32-bit architectures, so that VM_SEALED can just use one of
-the high flags that we have several free of (and that pkeys already
-depends on), and make this a standard feature with no #ifdef's.
-
-Can chrome live with that? And what would the required semantics be?
-I'll start the list:
-
- - you can't unmap or remap in any way (including over-mapping)
-
- - you can't change protections (but with architecture support like
-pkey, you can obviously change the protections indirectly with PKRU
-etc)
-
- - you can't do VM operations that change data without the area being
-writable (so the DONTNEED case - maybe there are others)
-
- - anything else?
-
-Wouldn't it be lovely to have just a single notion of sealing that is
-well-documented and makes sense, and doesn't require people to worry
-about odd special cases?
-
-And yes, we'd have the 'flags' argument for future special cases, and
-hope really hard that it's never needed.
-
-           Linus
+Hell knows about the rest, but they all look very dubious...
