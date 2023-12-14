@@ -1,151 +1,152 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="WbnAA5Ni"
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4D36A6;
-	Thu, 14 Dec 2023 08:33:29 -0800 (PST)
-Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BEGNpfb010000;
-	Thu, 14 Dec 2023 16:32:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=k0KaS28pCt49kw9+p3L44QcYWFnIp+iPqyK7JQMB9g8=;
- b=WbnAA5NiNCBVwTq/DRIYImrYFEPSxxVbIoEeLXgDg52nN3jp3kXnLiVm2CfnCh/xC0XS
- uqs4M2/57DXguWWOAHtgWlmqGaA9hSlPoxgHvOtYEessd/axv6/g2QbqQ4pLd50W3BLR
- nJRDs41b8XU6a4fOOlrte6HQ7ygk2NAyhXkvD7fCuw2ZNTdawzqataNh/UdXhQ0tzCpT
- uxllSKmVqsvpmtaig+gq/UrTa0/WQ9f8+oW9p10hz0N2UFOM+YfAt3EjDH/37KDGLcTh
- YtsqXqHX/YDEXd+Nxb7KXcxXDlPjXBSguoe82WDU97HldaVhWfjENixBjMyjS+IbOQ+n hQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3v03b34rc8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 14 Dec 2023 16:32:47 +0000
-Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3BEGO45B012186;
-	Thu, 14 Dec 2023 16:32:46 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3v03b34qmg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 14 Dec 2023 16:32:45 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3BECe18w014799;
-	Thu, 14 Dec 2023 16:31:00 GMT
-Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3uw42khd6b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 14 Dec 2023 16:31:00 +0000
-Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
-	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3BEGUxZf10551814
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 14 Dec 2023 16:30:59 GMT
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9026358065;
-	Thu, 14 Dec 2023 16:30:59 +0000 (GMT)
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BC26458052;
-	Thu, 14 Dec 2023 16:30:55 +0000 (GMT)
-Received: from [9.67.23.198] (unknown [9.67.23.198])
-	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 14 Dec 2023 16:30:55 +0000 (GMT)
-Message-ID: <e1ec02cf-072b-4678-8986-336c1cb8ca92@linux.ibm.com>
-Date: Thu, 14 Dec 2023 10:30:55 -0600
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RUWcVQ1Y"
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2608A11B
+	for <linux-hardening@vger.kernel.org>; Thu, 14 Dec 2023 08:35:19 -0800 (PST)
+Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1d04c097e34so6673875ad.0
+        for <linux-hardening@vger.kernel.org>; Thu, 14 Dec 2023 08:35:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1702571718; x=1703176518; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=luawVzpNb+QxL668ocEaZVPjlwFQcIxmSlMsAYgwWS4=;
+        b=RUWcVQ1YHbWs+RsKvjl8kD81OtgOmQQEWEY8Ku88pfAnPQpxkdAGcGz5HjlACheAQD
+         GtcmqQUJpqJWMRNAJacLGcTqsBx4PEUKIsiqspW9WJZSc/o9WCKxT6IS5P/n9M/qgezj
+         FBh/AHGLiKM4OPwAcI81S6Nx6Gru5pdkTUdQA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702571718; x=1703176518;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=luawVzpNb+QxL668ocEaZVPjlwFQcIxmSlMsAYgwWS4=;
+        b=rvg9HChxQF3PUlkCqczTaHoSrtALqM8qfU9SnIiXVBtwdEYqIsjWYdkmFSRyILcica
+         1lKc+VC8iW/WGd1ljlBajcAtfuN+ciUxV79HHvrPUH846D+UTeIJXWJwTDZgAMty0dyi
+         3XvkR0HBb6MTJXgTXDYXm4sG/QFYM5bfsFctaWmv7785k/DkmAi9ig8mNQi7InrblCLF
+         /7kw069N4Bhb0Ffg92DzXq/chki5qbsKvEvb0AD3zKgvXdo1RcA5hfxITNIG2/oBxnmI
+         iM8DV8wHUudn0Jo4u05imEPbYkKDeooYclBun/qy9tgKdASp0ZMYDCTJ7P/q9ZZgjBbC
+         6w+g==
+X-Gm-Message-State: AOJu0Yx0IVeQgnSbknmDC5dZmRfltCXILRtA9GG6vdl80ctOMRNRzUEI
+	0he/4G26pNffzqUPq+HgK6DPZQ==
+X-Google-Smtp-Source: AGHT+IGMWhJzEdepoAGmiKRWvixiMXZQ5VqwgLuRg6NDcnO9mPPEhzlmlU+yN2Yxf/7Q1lbZjCM1dg==
+X-Received: by 2002:a17:902:f283:b0:1d3:3676:c9d with SMTP id k3-20020a170902f28300b001d336760c9dmr4808777plc.19.1702571718563;
+        Thu, 14 Dec 2023 08:35:18 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id c2-20020a170902d48200b001cfb4d36eb1sm12611665plg.215.2023.12.14.08.35.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Dec 2023 08:35:17 -0800 (PST)
+Date: Thu, 14 Dec 2023 08:35:17 -0800
+From: Kees Cook <keescook@chromium.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>,
+	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] platform/chrome: Fix -Warray-bounds warnings
+Message-ID: <202312140830.953C55AC9@keescook>
+References: <ZCTrutoN+9TiJM8u@work>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 5/8] ARM: dts: aspeed: System1: Voltage regulators
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, joel@jms.id.au,
-        andrew@codeconstruct.com.au, peterhuewe@gmx.de, jarkko@kernel.org,
-        jgg@ziepe.ca, keescook@chromium.org, tony.luck@intel.com,
-        gpiccoli@igalia.com, johannes.holland@infineon.com, linux@roeck-us.net,
-        broonie@kernel.org
-Cc: patrick.rudolph@9elements.com, vincent@vtremblay.dev,
-        peteryin.openbmc@gmail.com, lakshmiy@us.ibm.com, bhelgaas@google.com,
-        naresh.solanki@9elements.com, alexander.stein@ew.tq-group.com,
-        festevam@denx.de, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-hardening@vger.kernel.org, geissonator@yahoo.com
-References: <20231212164004.1683589-1-ninad@linux.ibm.com>
- <20231212164004.1683589-6-ninad@linux.ibm.com>
- <6a3d4551-66a2-411a-9d5f-cffb57ee0ce2@linaro.org>
-From: Ninad Palsule <ninad@linux.ibm.com>
-In-Reply-To: <6a3d4551-66a2-411a-9d5f-cffb57ee0ce2@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: kuNvJNdtavC_dao6iJnMFctwdS96DrLO
-X-Proofpoint-GUID: Tzj1hExUyDRdIPxL0IVPxnja4Z1KmH3A
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-14_11,2023-12-14_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
- suspectscore=0 phishscore=0 priorityscore=1501 malwarescore=0
- impostorscore=0 mlxlogscore=999 clxscore=1015 bulkscore=0 adultscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2312140117
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZCTrutoN+9TiJM8u@work>
 
-Hello Krzysztof,
+On Wed, Mar 29, 2023 at 07:54:02PM -0600, Gustavo A. R. Silva wrote:
+> GCC-13 (and Clang) does not like having a partially allocated object,
+> since it cannot reason about it for bounds checking.
+> 
+> Notice that the compiler is legitimately complaining about accessing
+> an object (params, in this case) for which not enough memory was
+> allocated.
+> 
+> The object is of size 20 bytes:
+> 
+> struct ec_params_vbnvcontext {
+> 	uint32_t                   op;                   /*     0     4 */
+> 	uint8_t                    block[16];            /*     4    16 */
+> 
+> 	/* size: 20, cachelines: 1, members: 2 */
+> 	/* last cacheline: 20 bytes */
+> };
+> 
+> but only 16 bytes are allocated:
+> 
+> sizeof(struct ec_response_vbnvcontext) == 16
+> 
+> In this case, as only enough space for the op field is allocated,
+> we can use an object of type uint32_t instead of a whole
+> struct ec_params_vbnvcontext (for which not enough memory is
+> allocated).
+> 
+> Fix the following warning seen under GCC 13:
+> drivers/platform/chrome/cros_ec_vbc.c: In function ‘vboot_context_read’:
+> drivers/platform/chrome/cros_ec_vbc.c:36:15: warning: array subscript ‘struct ec_params_vbnvcontext[1]’ is partly outside array bounds of ‘unsigned char[36]’ [-Warray-bounds=]
+>    36 |         params->op = EC_VBNV_CONTEXT_OP_READ;
+>       |               ^~
+> In file included from drivers/platform/chrome/cros_ec_vbc.c:12:
+> In function ‘kmalloc’,
+>     inlined from ‘vboot_context_read’ at drivers/platform/chrome/cros_ec_vbc.c:30:8:
+> ./include/linux/slab.h:580:24: note: at offset 20 into object of size 36 allocated by ‘kmalloc_trace’
+>   580 |                 return kmalloc_trace(
+>       |                        ^~~~~~~~~~~~~~
+>   581 |                                 kmalloc_caches[kmalloc_type(flags)][index],
+>       |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>   582 |                                 flags, size);
+>       |                                 ~~~~~~~~~~~~
+> 
+> Link: https://github.com/KSPP/linux/issues/278
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-On 12/12/23 14:22, Krzysztof Kozlowski wrote:
-> On 12/12/2023 17:40, Ninad Palsule wrote:
->> This commit adds different voltage regulators.
->>
->> Tested:
->>      This board is tested using the simics simulator.
->>
->> Signed-off-by: Ninad Palsule <ninad@linux.ibm.com>
->> ---
->>   .../dts/aspeed/aspeed-bmc-ibm-system1.dts     | 266 ++++++++++++++++++
-> Squash it.
-Done.
->
->>   1 file changed, 266 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts
->> index 0557bff9f36a..b8e7e52d4600 100644
->> --- a/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts
->> +++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts
->> @@ -114,10 +114,127 @@ vga_memory: region@bf000000 {
->>   		};
->>   	};
->>   
->> +	iio-hwmon {
->> +		compatible = "iio-hwmon";
->> +		io-channels = <&p12v_vd 0>, <&p5v_aux_vd 0>,
->> +			<&p5v_bmc_aux_vd 0>, <&p3v3_aux_vd 0>,
->> +			<&p3v3_bmc_aux_vd 0>, <&p1v8_bmc_aux_vd 0>,
->> +			<&adc1 4>, <&adc0 2>, <&adc1 0>,
->> +			<&p2V5_aux_vd 0>, <&adc1 7>;
->> +	};
->> +
->> +	p12v_vd: voltage_divider1 {
-> Same comments as in other patches.
-Fixed.
->
->> +		compatible = "voltage-divider";
->> +		io-channels = <&adc1 3>;
->> +		#io-channel-cells = <1>;
->> +
->> +		/* Scale the system voltage by 1127/127 to fit the ADC range.
-> Use Linux coding style comments. /* and blank line
+This patch seems to have gotten lost? Looking at the conversation, I
+think it should land as-is rather than changing the allocation size.
 
-Fixed.
+I can pick this up via my tree if that helps...
 
-Thanks for the review.
+-Kees
 
-Regards,
+> ---
+>  drivers/platform/chrome/cros_ec_vbc.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/platform/chrome/cros_ec_vbc.c b/drivers/platform/chrome/cros_ec_vbc.c
+> index c859c862d7ac..b5a584f5469a 100644
+> --- a/drivers/platform/chrome/cros_ec_vbc.c
+> +++ b/drivers/platform/chrome/cros_ec_vbc.c
+> @@ -20,10 +20,14 @@ static ssize_t vboot_context_read(struct file *filp, struct kobject *kobj,
+>  	struct device *dev = kobj_to_dev(kobj);
+>  	struct cros_ec_dev *ec = to_cros_ec_dev(dev);
+>  	struct cros_ec_device *ecdev = ec->ec_dev;
+> -	struct ec_params_vbnvcontext *params;
+>  	struct cros_ec_command *msg;
+> +	/*
+> +	 * This should be a pointer to the same type as op field in
+> +	 * struct ec_params_vbnvcontext.
+> +	 */
+> +	uint32_t *params_op;
+>  	int err;
+> -	const size_t para_sz = sizeof(params->op);
+> +	const size_t para_sz = sizeof(*params_op);
+>  	const size_t resp_sz = sizeof(struct ec_response_vbnvcontext);
+>  	const size_t payload = max(para_sz, resp_sz);
+>  
+> @@ -32,8 +36,8 @@ static ssize_t vboot_context_read(struct file *filp, struct kobject *kobj,
+>  		return -ENOMEM;
+>  
+>  	/* NB: we only kmalloc()ated enough space for the op field */
+> -	params = (struct ec_params_vbnvcontext *)msg->data;
+> -	params->op = EC_VBNV_CONTEXT_OP_READ;
+> +	params_op = (uint32_t *)msg->data;
+> +	*params_op = EC_VBNV_CONTEXT_OP_READ;
+>  
+>  	msg->version = EC_VER_VBNV_CONTEXT;
+>  	msg->command = EC_CMD_VBNV_CONTEXT;
+> -- 
+> 2.34.1
+> 
 
-Ninad
-
->
->
-> ....
->
-> Best regards,
-> Krzysztof
->
+-- 
+Kees Cook
