@@ -1,137 +1,122 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zugocgvm"
-Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5AA9107
-	for <linux-hardening@vger.kernel.org>; Wed, 13 Dec 2023 16:36:05 -0800 (PST)
-Received: by mail-qt1-x834.google.com with SMTP id d75a77b69052e-4258b6df295so140121cf.0
-        for <linux-hardening@vger.kernel.org>; Wed, 13 Dec 2023 16:36:05 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H+HCa4Du"
+Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67AA1D0
+	for <linux-hardening@vger.kernel.org>; Wed, 13 Dec 2023 16:59:06 -0800 (PST)
+Received: by mail-lj1-x231.google.com with SMTP id 38308e7fff4ca-2ca0715f0faso105240281fa.0
+        for <linux-hardening@vger.kernel.org>; Wed, 13 Dec 2023 16:59:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1702514164; x=1703118964; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Rh/JIPLuSc5XTJsnIXetpV5afhDLqc5qWgt+ZxYeVCQ=;
-        b=zugocgvmf1lxu84yfv4X9DbDntLR0AzZNqnReBvdS2ZE8OIoEw93XOQHmlvBQ0TZUn
-         857KK9j5mIUY3RRJspg+5g/UO/nyZR4x0W7oBG53ARP+Th6LvdCQhNm3lVTD14GqjNhW
-         VkGFrYefsMSFtfiQjVsFypCX4azcnrMif+HBWhdbf9p6wk8LqkBDBIFPj/qhvI07TsTW
-         XwodgsLBUWbZMpE4ZlglFfU0eQApAafb1wh4721RL7hl/pFxr8HTSCO7AqKeo3b4LLXf
-         BxIlqususmWl76ubddE7o8dq48aSKph0oKJxDUX9aKBeu3Buy0fqyi97CNfhoQJSG14G
-         KSsQ==
+        d=chromium.org; s=google; t=1702515544; x=1703120344; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:user-agent:from:references
+         :in-reply-to:mime-version:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TLPQRFERPZKZe4sP96FP5UOkMogbBRWOBLXtIS+wgKA=;
+        b=H+HCa4Dum7Yqt6M+Vya5PNZ9+zhC6v6nSGCkjXiZNSJL8vobmRR9jQwjxW9HeiWm6H
+         SeWzH4GxlydbCrGFArGv7H1LSq0cu1QFXCQsoQ8RV8qH00V/rvt2NhGll4r2mMlY8KJV
+         khPbSsqL01hzPqoON5GpJEB1bXDyXt7eVLVB4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702514164; x=1703118964;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Rh/JIPLuSc5XTJsnIXetpV5afhDLqc5qWgt+ZxYeVCQ=;
-        b=eF9gi8joMm600XRg3+Ddd55iO3xLCioIKw0gkmscT0Uwo8Ap3H6x6I70zHPYFOHk9E
-         pse8R29j8W/EOaheZhvkbAfuhSvG42WvBF1rwSkVJM2rZ05KAYkPCPMerknj8uRP4AiW
-         Cj6xeOX6qTLfjaXAOE1N7BxhJxBhqxixszqrqy8FwI2beLO6mK0k4vJH8ZW1vX50ZGHE
-         CELrQ5gYf/pT0etZuwOVn0p2zMvqg/2m+8Kt56grN8CLR6ZztOG+Iv5XiVZp6wCXUhOm
-         SKwx5ct0QJrrH0dTggQW6ygKLxNIGNAXEr9RP7Q6D/yiPOdPEANdiCsvmMFiSCi/N7nL
-         OLgA==
-X-Gm-Message-State: AOJu0Yz42rnisAqaHHGXYelT+LOO+erf9kqREe/+F3f8LQ9iSQ3zKF4P
-	EDWTPHfG4KciE5qjt4z68HDdFecnm8OcE6/odT6Ulg==
-X-Google-Smtp-Source: AGHT+IFV9mswBOSTplU3GbpxbWwY83oDLBB8lfMgKwsXIlFx4/MATC30VcWkHbqFp7WCIuN5thSLGmaeWN2qqtvo+f4=
-X-Received: by 2002:a05:622a:1a15:b0:425:47fc:e6e6 with SMTP id
- f21-20020a05622a1a1500b0042547fce6e6mr1655213qtb.4.1702514164149; Wed, 13 Dec
- 2023 16:36:04 -0800 (PST)
+        d=1e100.net; s=20230601; t=1702515544; x=1703120344;
+        h=cc:to:subject:message-id:date:user-agent:from:references
+         :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TLPQRFERPZKZe4sP96FP5UOkMogbBRWOBLXtIS+wgKA=;
+        b=OXH41opQyjnaVBeWIF5RfeKl5+1HoYquMmce4nkT9ccEcBlzgmA9wPVYvX3ftFqYvP
+         9gVg5wAIlNB5AWetebhKyfRmG8OV+hVpotGTwjrMjJzdJOxpNK0iYXNNuiIdThQie7Xt
+         h3m1owKyB1I05W05axYP1uCg5ZHZ2c08fJA3VHTzaxCUWrKHtTnLNXyq2qVwzx/j+MiF
+         43BKirDbjxe9JlYywzNDJXbdUC8R6UAvq1PExhAaK0oESHpYZEpb90bT8u1yiRh66Yrl
+         Dnk0+gC5B4bGoKXmBm/A2opvdqtYYpLHjU7qoYZRF6oi3OAfwhc2sJgKT8WggWrYzDC8
+         M5Kg==
+X-Gm-Message-State: AOJu0Yzq6M/qDUCeKTdAUBAxjLmutdyoqaeXUmqu+oSd2xGeaGFcMB+B
+	awny3r9zp7H9olgNCPrR1QDP6IklfhXoVry3p/jdrw==
+X-Google-Smtp-Source: AGHT+IEunZGd9tNek4p895u1vSnibbU895Lddmz8b+pc8eZ7RAYfA5ccHN3CMRjZTHj2uRjOAKt0XYWsogRcyShRfeY=
+X-Received: by 2002:a2e:a4b8:0:b0:2cc:1d91:83fc with SMTP id
+ g24-20020a2ea4b8000000b002cc1d9183fcmr2754449ljm.30.1702515544589; Wed, 13
+ Dec 2023 16:59:04 -0800 (PST)
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 13 Dec 2023 16:59:04 -0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231212231706.2680890-1-jeffxu@chromium.org> <20231212231706.2680890-12-jeffxu@chromium.org>
- <CAHk-=wgn02cpoFEDQGgS+5BUqA2z-=Ks9+PNd-pEJy8h+NOs5g@mail.gmail.com>
-In-Reply-To: <CAHk-=wgn02cpoFEDQGgS+5BUqA2z-=Ks9+PNd-pEJy8h+NOs5g@mail.gmail.com>
-From: Jeff Xu <jeffxu@google.com>
-Date: Wed, 13 Dec 2023 16:35:26 -0800
-Message-ID: <CALmYWFu39nzHvBmRsA326GcmV9u=eM-2aCGOvLK31rrb2R9NEw@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 11/11] mseal:add documentation
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: jeffxu@chromium.org, akpm@linux-foundation.org, keescook@chromium.org, 
-	jannh@google.com, sroettger@google.com, willy@infradead.org, 
-	gregkh@linuxfoundation.org, jorgelo@chromium.org, groeck@chromium.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, pedro.falcato@gmail.com, dave.hansen@intel.com, 
-	linux-hardening@vger.kernel.org, deraadt@openbsd.org
+In-Reply-To: <20231212-strncpy-drivers-iio-proximity-sx9324-c-v3-1-b8ae12fc8a5d@google.com>
+References: <20231212-strncpy-drivers-iio-proximity-sx9324-c-v3-1-b8ae12fc8a5d@google.com>
+From: Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.10
+Date: Wed, 13 Dec 2023 16:59:04 -0800
+Message-ID: <CAE-0n50U47OKs50bOf91HoOayVJEj=H6P-cpyZ_46pX8CVZ4BQ@mail.gmail.com>
+Subject: Re: [PATCH v3] iio: sx9324: avoid copying property strings
+To: Jonathan Cameron <jic23@kernel.org>, Justin Stitt <justinstitt@google.com>, 
+	Lars-Peter Clausen <lars@metafoo.de>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 12, 2023 at 4:39=E2=80=AFPM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+Quoting Justin Stitt (2023-12-11 16:42:52)
+> diff --git a/drivers/iio/proximity/sx9324.c b/drivers/iio/proximity/sx9324.c
+> index 438f9c9aba6e..e3bc30b57b19 100644
+> --- a/drivers/iio/proximity/sx9324.c
+> +++ b/drivers/iio/proximity/sx9324.c
+> @@ -873,6 +873,32 @@ static int sx9324_init_compensation(struct iio_dev *indio_dev)
+>                                         20000, 2000000);
+>  }
 >
-> On Tue, 12 Dec 2023 at 15:17, <jeffxu@chromium.org> wrote:
-> > +
-> > +**types**: bit mask to specify the sealing types, they are:
->
-> I really want a real-life use-case for more than one bit of "don't modify=
-".
->
-For the real-life use case question, Stephen R=C3=B6ttger and I put
-description in the cover letter as well as the open discussion section
-(mseal() vs immutable()) of patch 0/11.  Perhaps you are looking for more
-details in chrome usage of the API, e.g. code-wise ?
+> +static u32 sx9324_parse_phase_prop(struct device *dev,
 
-> IOW, when would you *ever* say "seal this area, but MADV_DONTNEED is ok"?
->
-The MADV_DONTNEED is OK for file-backed mapping.
-As state in man page of madvise: [1]
+return u8? because that's the type of struct sx_common_reg_default::def.
 
-"subsequent accesses of pages in the range will succeed,  but will
-result in either repopulating the memory contents from the up-to-date
-contents of the underlying mapped file"
+> +                                  struct sx_common_reg_default *reg_def,
+> +                                  int idx, const char *prop)
+> +{
+> +       unsigned int pin_defs[SX9324_NUM_PINS];
+> +       int count, ret, pin;
+> +       u8 default_def;
+> +       u32 raw = 0;
+> +
+> +       default_def = sx9324_default_regs[idx].def;
 
-> Or when would you *ever* say "seal this area, but mprotect()" is ok.
->
-The fact  that openBSD allows RW=3D>RO transaction, as in its man page [2]
+Do we need to do this? Isn't this reg_def->def?
 
- "  At present, mprotect(2) may reduce permissions on immutable pages
-  marked PROT_READ | PROT_WRITE to the less permissive PROT_READ."
+> +
+> +       count = device_property_count_u32(dev, prop);
+> +       if (count != ARRAY_SIZE(pin_defs))
+> +               return default_def;
 
-suggests application might desire multiple ways to seal the "PROT" bits.
+return reg_def->def?
 
-E.g.
-Applications that wants a full lockdown of PROT and PKEY might use
-SEAL_PROT_PKEY (Chrome case and implemented in this patch)
+> +       ret = device_property_read_u32_array(dev, prop, pin_defs,
+> +                                            ARRAY_SIZE(pin_defs));
+> +       if (ret)
+> +               return default_def;
 
-Application that desires RW=3D>RO transaction, might implement
-SEAL_PROT_DOWNGRADEABLE, or specifically allow RW=3D>RO.
-(not implemented but can be added in future as extension if  needed.)
+return reg_def->def?
 
-> IOW, I want to know why we don't just do the BSD immutable thing, and
-> why we need this multi-level sealing thing.
->
-The details are discussed in mseal() vs immutable()) of the cover letter
-(patch 0/11)
+> +
+> +       for (pin = 0; pin < SX9324_NUM_PINS; pin++)
+> +               raw |= (pin_defs[pin] << (2 * pin)) &
+> +                      SX9324_REG_AFE_PH0_PIN_MASK(pin);
+> +
+> +       return raw;
+> +}
+> +
+>  static const struct sx_common_reg_default *
+>  sx9324_get_default_reg(struct device *dev, int idx,
+>                        struct sx_common_reg_default *reg_def)
+> @@ -884,35 +910,30 @@ sx9324_get_default_reg(struct device *dev, int idx,
+>  #define SX9324_PIN_DEF "semtech,ph0-pin"
+>  #define SX9324_RESOLUTION_DEF "semtech,ph01-resolution"
+>  #define SX9324_PROXRAW_DEF "semtech,ph01-proxraw-strength"
 
-In short, BSD's immutable is designed specific for libc case, and Chrome
-case is just different (e.g. the lifetime of those mappings and requirement=
- of
-free/discard unused memory).
+Can you send a followup to remove these defines?
 
-Single bit vs multi-bits are still up for discussion.
-If there are strong opinions on the multiple-bits approach, (and
-no objection on applying MM_SEAL_DISCARD_RO_ANON to the .text part
-during libc dynamic loading, which has no effect anyway because it is
-file backed.), we could combine all three bits into one. A side note is tha=
-t we
-could not add something such as SEAL_PROT_DOWNGRADEABLE later,
-since pkey_mprotect is sealed.
+> -       unsigned int pin_defs[SX9324_NUM_PINS];
+> -       char prop[] = SX9324_PROXRAW_DEF;
+> +       const char *prop = SX9324_PROXRAW_DEF;
 
-I'm open to one bit approach. If we took that approach,
-We might consider the following:
+This can be left unassigned now, right?
 
-mseal() or
-mseal(flags), flags are reserved for future use.
-
-I appreciate a direction on this.
-
- [1] https://man7.org/linux/man-pages/man2/madvise.2.html
- [2] https://man.openbsd.org/mimmutable.2
-
--Jeff
-
-
-
->                Linus
+>         u32 start = 0, raw = 0, pos = 0;
+> -       int ret, count, ph, pin;
+>         const char *res;
+> +       int ret;
