@@ -1,94 +1,112 @@
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EED86A006;
+	Thu, 14 Dec 2023 20:11:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="v6h+6mtn";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="EBqUYNS/"
-Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8146B112;
-	Thu, 14 Dec 2023 10:44:08 -0800 (PST)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.nyi.internal (Postfix) with ESMTP id B015E5C00C5;
-	Thu, 14 Dec 2023 13:44:07 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Thu, 14 Dec 2023 13:44:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1702579447; x=1702665847; bh=X7rphW4VDo
-	ZT8qg4z5kE8QsYzJauPYLpJpQftgurR88=; b=v6h+6mtncNMb4KnQJq5252fQhu
-	edQcz5SLLee88IUDTtBPxn6i9wHU5LozeoKNMWgy9Y67YOO+wVyX9B8KMQ1td8K7
-	epLzVPacsZN8X341znVv8Cwhxh451LYmKtBNoKvpSwbl0xU6FhI9uEfB6p3Tk7bc
-	QpaJcLI+tftYM0jwzLLkBXUWgtzqCjsUoBiZAhaq7TBWo6AGhs6jFNJiVh128W9V
-	ZEJlVf/VO4TQ0QFFClz8A2aqtxXWlsTNEmR00VfCGcJASufffOyu6X2gAysjVHzY
-	e4f3yvrCrETJpyMGmAujFBCKbwDdbj0o2PVLzkq3Y9+BnefxGrWEkRZdlqWQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1702579447; x=1702665847; bh=X7rphW4VDoZT8qg4z5kE8QsYzJau
-	PYLpJpQftgurR88=; b=EBqUYNS/hO3pSLPpAnEpJ6Sn2UwfzL5OLMaX9yGHqnDA
-	E4z9s4Q2HVgM69AvG6vLlhpqiOllUMqULjHolQsAZq7kXNvgqV6sw/qwf1G2GSZ/
-	7+l7RN0RAY645LCwbVN8EZiLBP1ZOH9dR6deGfyq/QVzXTA1plvZqLceH6xkziBa
-	y9GosBdZLAMwtM9ZPF5SNCe13szDXWSjNL5onBjwQxruUnIsXzK14dZf5J1QsXsk
-	7JN4aJaDElR4bpMxxlkGSJbylC8d65lTYB7RUr588Oib7fg2m49jmWCudUEPUXyt
-	MILregVlkfcazQ50v2YPHlEFwNx2lLMBcN9TEqZSrw==
-X-ME-Sender: <xms:90x7ZeNVvEAh0rNpZgCVuhTmbe6jajCo-mVArzBBioux1AVoVwwkKw>
-    <xme:90x7Zc-flBTeKvTqXq1ezA6-RYiF2DL6jQzCxVEqB4yyfNmw4cip45RPqwPeMTFX0
-    iajgftMZoSsX_XRPNg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrudelledgudduhecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
-    keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:90x7ZVRdEBeWr78om2hpUGSvTDt7J8NTmC0itahInRb23UCIT39ynQ>
-    <xmx:90x7ZeugJKxHg-XX26zTF2ITjfVJ4_B9e0sq2nE4n7ZG45Q0R1b0Vw>
-    <xmx:90x7ZWdqE5OfXs7PpO6D7Duws9hgh6v6CVaAYkidbU0Dn7Sv34CT4Q>
-    <xmx:90x7ZZuswon83KhNY6jQslMLhOZMBGdXdpwk6NsdEipo6ErvSF8gTA>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 656A1B6008D; Thu, 14 Dec 2023 13:44:07 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-1283-g327e3ec917-fm-20231207.002-g327e3ec9
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dka7iRwj"
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3b9f727d94cso2331719b6e.1;
+        Thu, 14 Dec 2023 12:11:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1702584704; x=1703189504; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Kfh8Dy6cQrhts0Y+UCJGg173DSLFoHSRig78lNgd6Fg=;
+        b=Dka7iRwjqy3XnAaS8QUUWkywJDET06cor2wo8xod1fSukvDJhMmtCSP9lYgHPROffT
+         l4isFcvnZkZahKSlvTXBToQ3YXAPpmM+E+72jLVaqrdxydicjFfsQ+aLCkfStZMOesvt
+         Lx+IyW4BeeSUzUzEBB2oauywMiQVTkoeflGX79GK4p/eYAKxYNow4KUa25B0dczXJXVS
+         iSII0Wn82S6CRPKALbbwg7qfHy2fU6AcFjsNW2vb0mvgkFaxH30XFsTLrGW3waG5Q5pX
+         FfAmedMffsnbT5M1dWIwJWbI9hbhiLM97wh6KiBsG7wd7q2R4GHBdeAkR6Ki+pLFQhvq
+         MyAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702584704; x=1703189504;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Kfh8Dy6cQrhts0Y+UCJGg173DSLFoHSRig78lNgd6Fg=;
+        b=TN2NxRhCDJZZxVlPeDurQOL3rAt0cSRb0LU53gztzNiWHkOy5kHJdZcvOFDQo1ibQ8
+         3xUm8TNJCBcSOnEybJy26zweCLBO4X9evsMUQrX6mObk9kCa9QfZ0pqKfJmxaQuKKWDq
+         FYmVDEJ2Yfp54X9ksQWNdRd9h7rIX4ZC4oudp3bU2Zr84CydD2DdLtIzHDMT1rvJwfio
+         fvigWYJ7ozaFd3OmmEkEiFUx4WiGKJYM2OcqKu60XIdDFtABkkL8uO/XgNXjDpoBMG+Z
+         y9dI2bCek+3YD1y1GtrwGkvRuu+0/sG6YFlHQGxSKdGTommJw0Z/sUif/YXO6Jc2Ccb0
+         05QA==
+X-Gm-Message-State: AOJu0YxzUIoH/n3PaIU04beB4ulbaofvEq7ninchLooOnfXJuNSemFA1
+	FI6tZdOE/w0sN7elnSWGwd1XsvkmAhrzkTL6A1coFag3
+X-Google-Smtp-Source: AGHT+IE5OtfH6BmGn7Qjmv1Kb5hVv+UX/aLg+H3qizYtKhsIVRhRCc9OkzMWNCWsZ1PQBkFFBiPeRwTjP8svWjT4CCo=
+X-Received: by 2002:a05:6808:3849:b0:3ba:c52:7245 with SMTP id
+ ej9-20020a056808384900b003ba0c527245mr9035807oib.95.1702584704448; Thu, 14
+ Dec 2023 12:11:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <d84156ff-897c-440a-bafa-75933203a3f1@app.fastmail.com>
-In-Reply-To: <ZXs2jVeQtzU7668I@orome.fritz.box>
-References: <20231017052322.2636-1-kkartik@nvidia.com>
- <ZXs2jVeQtzU7668I@orome.fritz.box>
-Date: Thu, 14 Dec 2023 18:43:47 +0000
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Thierry Reding" <thierry.reding@gmail.com>, Kartik <kkartik@nvidia.com>
-Cc: "Jon Hunter" <jonathanh@nvidia.com>, "Kees Cook" <keescook@chromium.org>,
- "Andy Shevchenko" <andy@kernel.org>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Ulf Hansson" <ulf.hansson@linaro.org>,
- "Linus Walleij" <linus.walleij@linaro.org>, pshete@nvidia.com,
- petlozup@nvidia.com, "Yangtao Li" <frank.li@vivo.com>,
- "Rob Herring" <robh@kernel.org>, stefank@nvidia.com, pdeschrijver@nvidia.com,
- "Christophe JAILLET" <christophe.jaillet@wanadoo.fr>,
- linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v7 0/8] soc/tegra: fuse: Add ACPI support
-Content-Type: text/plain
+References: <20231212231706.2680890-1-jeffxu@chromium.org> <20231212231706.2680890-12-jeffxu@chromium.org>
+ <CAHk-=wgn02cpoFEDQGgS+5BUqA2z-=Ks9+PNd-pEJy8h+NOs5g@mail.gmail.com>
+ <CALmYWFu39nzHvBmRsA326GcmV9u=eM-2aCGOvLK31rrb2R9NEw@mail.gmail.com>
+ <CAHk-=wh_VViVZxjiQ5jtB0q=p=JtJMj2R24UAmj-fL-RNLWxNw@mail.gmail.com> <CAEAAPHZpYXHNPdca+xfj77bwYaL6PY-c_oQ54r+=wtJa6_hmCA@mail.gmail.com>
+In-Reply-To: <CAEAAPHZpYXHNPdca+xfj77bwYaL6PY-c_oQ54r+=wtJa6_hmCA@mail.gmail.com>
+From: Pedro Falcato <pedro.falcato@gmail.com>
+Date: Thu, 14 Dec 2023 20:11:32 +0000
+Message-ID: <CAKbZUD09VKfxsz4VCp+0-Y-cWJ-n=dV+t45Aan10HEhFCjxWdQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 11/11] mseal:add documentation
+To: =?UTF-8?Q?Stephen_R=C3=B6ttger?= <sroettger@google.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Jeff Xu <jeffxu@google.com>, 
+	jeffxu@chromium.org, akpm@linux-foundation.org, keescook@chromium.org, 
+	jannh@google.com, willy@infradead.org, gregkh@linuxfoundation.org, 
+	jorgelo@chromium.org, groeck@chromium.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, dave.hansen@intel.com, 
+	linux-hardening@vger.kernel.org, deraadt@openbsd.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Dec 14, 2023, at 17:08, Thierry Reding wrote:
-> On Tue, Oct 17, 2023 at 10:53:14AM +0530, Kartik wrote:
->> This series of patches add ACPI support for Tegra194 and Tegra234 in
->> Tegra fuse and apbmisc drivers. It also adds support for Tegra241
->> which uses ACPI boot.
+On Thu, Dec 14, 2023 at 6:07=E2=80=AFPM Stephen R=C3=B6ttger <sroettger@goo=
+gle.com> wrote:
 >
-> Applied, thanks.
+> On Thu, Dec 14, 2023 at 2:31=E2=80=AFAM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > On Wed, 13 Dec 2023 at 16:36, Jeff Xu <jeffxu@google.com> wrote:
+> > >
+> > >
+> > > > IOW, when would you *ever* say "seal this area, but MADV_DONTNEED i=
+s ok"?
+> > > >
+> > > The MADV_DONTNEED is OK for file-backed mapping.
+> >
+> > Right. It makes no semantic difference. So there's no point to it.
+> >
+> > My point was that you added this magic flag for "not ok for RO anon map=
+ping".
+> >
+> > It's such a *completely* random flag, that I go "that's just crazy
+> > random - make sealing _always_ disallow that case".
+> >
+> > So what I object to in this series is basically random small details
+> > that should just eb part of the basic act of sealing.
+> >
+> > I think sealing should just mean "you can't do any operations that
+> > have semantic meaning for the mapping, because it is SEALED".
+> >
+> > So I think sealing should automatically mean "can't do MADV_DONTNEED
+> > on anon memory", because that's basically equivalent to a munmap/remap
+> > operation.
+>
+> In Chrome, we have a use case to allow MADV_DONTNEED on sealed memory.
 
-I'm still a bit puzzled by this series, can you provide some more background?
+I don't want to be that guy (*believe me*), but what if there was a
+way to attach BPF programs to mm's? Such that you could handle 'seal
+failures' in BPF, and thus allow for this sort of weird semantics?
+e.g: madvise(MADV_DONTNEED) on a sealed region fails, kernel invokes
+the BPF program (that chrome loaded), BPF program sees it was a
+MADV_DONTNEED and allows it to proceed.
 
-Why does an ACPI based system require access to SoC drivers? Shouldn't
-this all be abstracted by the BIOS in some form so the device drivers
-can work standalone rather than calling into this driver?
+It requires BPF but sounds like a good compromise in order to not get
+an ugly API?
 
-      Arnd
+--=20
+Pedro
