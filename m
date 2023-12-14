@@ -1,122 +1,101 @@
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H+HCa4Du"
-Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67AA1D0
-	for <linux-hardening@vger.kernel.org>; Wed, 13 Dec 2023 16:59:06 -0800 (PST)
-Received: by mail-lj1-x231.google.com with SMTP id 38308e7fff4ca-2ca0715f0faso105240281fa.0
-        for <linux-hardening@vger.kernel.org>; Wed, 13 Dec 2023 16:59:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1702515544; x=1703120344; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:user-agent:from:references
-         :in-reply-to:mime-version:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TLPQRFERPZKZe4sP96FP5UOkMogbBRWOBLXtIS+wgKA=;
-        b=H+HCa4Dum7Yqt6M+Vya5PNZ9+zhC6v6nSGCkjXiZNSJL8vobmRR9jQwjxW9HeiWm6H
-         SeWzH4GxlydbCrGFArGv7H1LSq0cu1QFXCQsoQ8RV8qH00V/rvt2NhGll4r2mMlY8KJV
-         khPbSsqL01hzPqoON5GpJEB1bXDyXt7eVLVB4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702515544; x=1703120344;
-        h=cc:to:subject:message-id:date:user-agent:from:references
-         :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TLPQRFERPZKZe4sP96FP5UOkMogbBRWOBLXtIS+wgKA=;
-        b=OXH41opQyjnaVBeWIF5RfeKl5+1HoYquMmce4nkT9ccEcBlzgmA9wPVYvX3ftFqYvP
-         9gVg5wAIlNB5AWetebhKyfRmG8OV+hVpotGTwjrMjJzdJOxpNK0iYXNNuiIdThQie7Xt
-         h3m1owKyB1I05W05axYP1uCg5ZHZ2c08fJA3VHTzaxCUWrKHtTnLNXyq2qVwzx/j+MiF
-         43BKirDbjxe9JlYywzNDJXbdUC8R6UAvq1PExhAaK0oESHpYZEpb90bT8u1yiRh66Yrl
-         Dnk0+gC5B4bGoKXmBm/A2opvdqtYYpLHjU7qoYZRF6oi3OAfwhc2sJgKT8WggWrYzDC8
-         M5Kg==
-X-Gm-Message-State: AOJu0Yzq6M/qDUCeKTdAUBAxjLmutdyoqaeXUmqu+oSd2xGeaGFcMB+B
-	awny3r9zp7H9olgNCPrR1QDP6IklfhXoVry3p/jdrw==
-X-Google-Smtp-Source: AGHT+IEunZGd9tNek4p895u1vSnibbU895Lddmz8b+pc8eZ7RAYfA5ccHN3CMRjZTHj2uRjOAKt0XYWsogRcyShRfeY=
-X-Received: by 2002:a2e:a4b8:0:b0:2cc:1d91:83fc with SMTP id
- g24-20020a2ea4b8000000b002cc1d9183fcmr2754449ljm.30.1702515544589; Wed, 13
- Dec 2023 16:59:04 -0800 (PST)
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 13 Dec 2023 16:59:04 -0800
+	dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b="f8EJnL1p"
+X-Greylist: delayed 399 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 13 Dec 2023 17:16:18 PST
+Received: from cvs.openbsd.org (cvs.openbsd.org [199.185.137.3])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEA1CE4;
+	Wed, 13 Dec 2023 17:16:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=selector1; bh=whGKbpn2mK
+	dixz+7VYNABz/psNG/LtxK3IfpFNItFm0=; h=date:references:in-reply-to:
+	subject:cc:to:from; d=openbsd.org; b=f8EJnL1pM686HWnsDZ2MM+QERZ5fn5hkB
+	jS2UEz9O0HQ3CMCPdqYpqvgemPzK/k3sYnnneBkmxRB2mwcLGksMDxQUepWmAMwQXOZWow
+	UnukNeZTT7/fyuRPG/vc6WY0665nhjTCzO3swQTttAdyYfO+ykooxNcn7hq9Jif7k877Zg
+	NzTQhv5fS8QmQ1kODqjycmd0+HMFk6tqn25KWRfbvwutgEQ8WduyIIyF5VupOqoooaYpMm
+	PcMkj3UvHwRNaSIbk8cWjCxE4kuZUOGfwXj+Pof8/c4Lkak7sNxM8KgYhPRr+6RT7pTSqL
+	cfcNtU11WwqUAXQZzouEGgjK2Ln1A==
+Received: from cvs.openbsd.org (localhost [127.0.0.1])
+	by cvs.openbsd.org (OpenSMTPD) with ESMTP id 3f9af318;
+	Wed, 13 Dec 2023 18:09:38 -0700 (MST)
+From: "Theo de Raadt" <deraadt@openbsd.org>
+To: Jeff Xu <jeffxu@google.com>
+cc: Linus Torvalds <torvalds@linux-foundation.org>, jeffxu@chromium.org,
+    akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com,
+    sroettger@google.com, willy@infradead.org,
+    gregkh@linuxfoundation.org, jorgelo@chromium.org,
+    groeck@chromium.org, linux-kernel@vger.kernel.org,
+    linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+    pedro.falcato@gmail.com, dave.hansen@intel.com,
+    linux-hardening@vger.kernel.org
+Subject: Re: [RFC PATCH v3 11/11] mseal:add documentation
+In-reply-to: <CALmYWFu39nzHvBmRsA326GcmV9u=eM-2aCGOvLK31rrb2R9NEw@mail.gmail.com>
+References: <20231212231706.2680890-1-jeffxu@chromium.org> <20231212231706.2680890-12-jeffxu@chromium.org> <CAHk-=wgn02cpoFEDQGgS+5BUqA2z-=Ks9+PNd-pEJy8h+NOs5g@mail.gmail.com> <CALmYWFu39nzHvBmRsA326GcmV9u=eM-2aCGOvLK31rrb2R9NEw@mail.gmail.com>
+Comments: In-reply-to Jeff Xu <jeffxu@google.com>
+   message dated "Wed, 13 Dec 2023 16:35:26 -0800."
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20231212-strncpy-drivers-iio-proximity-sx9324-c-v3-1-b8ae12fc8a5d@google.com>
-References: <20231212-strncpy-drivers-iio-proximity-sx9324-c-v3-1-b8ae12fc8a5d@google.com>
-From: Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.10
-Date: Wed, 13 Dec 2023 16:59:04 -0800
-Message-ID: <CAE-0n50U47OKs50bOf91HoOayVJEj=H6P-cpyZ_46pX8CVZ4BQ@mail.gmail.com>
-Subject: Re: [PATCH v3] iio: sx9324: avoid copying property strings
-To: Jonathan Cameron <jic23@kernel.org>, Justin Stitt <justinstitt@google.com>, 
-	Lars-Peter Clausen <lars@metafoo.de>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <45779.1702516178.1@cvs.openbsd.org>
+Date: Wed, 13 Dec 2023 18:09:38 -0700
+Message-ID: <58421.1702516178@cvs.openbsd.org>
 
-Quoting Justin Stitt (2023-12-11 16:42:52)
-> diff --git a/drivers/iio/proximity/sx9324.c b/drivers/iio/proximity/sx9324.c
-> index 438f9c9aba6e..e3bc30b57b19 100644
-> --- a/drivers/iio/proximity/sx9324.c
-> +++ b/drivers/iio/proximity/sx9324.c
-> @@ -873,6 +873,32 @@ static int sx9324_init_compensation(struct iio_dev *indio_dev)
->                                         20000, 2000000);
->  }
->
-> +static u32 sx9324_parse_phase_prop(struct device *dev,
+Jeff Xu <jeffxu@google.com> wrote:
 
-return u8? because that's the type of struct sx_common_reg_default::def.
+> > Or when would you *ever* say "seal this area, but mprotect()" is ok.
+> >
+> The fact  that openBSD allows RW=>RO transaction, as in its man page [2]
+> 
+>  "  At present, mprotect(2) may reduce permissions on immutable pages
+>   marked PROT_READ | PROT_WRITE to the less permissive PROT_READ."
 
-> +                                  struct sx_common_reg_default *reg_def,
-> +                                  int idx, const char *prop)
-> +{
-> +       unsigned int pin_defs[SX9324_NUM_PINS];
-> +       int count, ret, pin;
-> +       u8 default_def;
-> +       u32 raw = 0;
-> +
-> +       default_def = sx9324_default_regs[idx].def;
+Let me explain this.
 
-Do we need to do this? Isn't this reg_def->def?
+We encountered two places that needed this less-permission-transition.
 
-> +
-> +       count = device_property_count_u32(dev, prop);
-> +       if (count != ARRAY_SIZE(pin_defs))
-> +               return default_def;
+Both of these problems were found in either .data or bss, which the
+kernel makes immutable by default.  The OpenBSD kernel makes those
+regions immutable BY DEFAULT, and there is no way to turn that off.
 
-return reg_def->def?
+One was in our libc malloc, which after initialization, wants to protect
+a control data structure from being written in the future.
 
-> +       ret = device_property_read_u32_array(dev, prop, pin_defs,
-> +                                            ARRAY_SIZE(pin_defs));
-> +       if (ret)
-> +               return default_def;
+The other was in chrome v8, for the v8_flags variable, this is
+similarily mprotected to less permission after initialization to avoid
+tampering (because it's an amazing relative-address located control
+gadget).
 
-return reg_def->def?
+We introduced a different mechanism to solve these problem.
 
-> +
-> +       for (pin = 0; pin < SX9324_NUM_PINS; pin++)
-> +               raw |= (pin_defs[pin] << (2 * pin)) &
-> +                      SX9324_REG_AFE_PH0_PIN_MASK(pin);
-> +
-> +       return raw;
-> +}
-> +
->  static const struct sx_common_reg_default *
->  sx9324_get_default_reg(struct device *dev, int idx,
->                        struct sx_common_reg_default *reg_def)
-> @@ -884,35 +910,30 @@ sx9324_get_default_reg(struct device *dev, int idx,
->  #define SX9324_PIN_DEF "semtech,ph0-pin"
->  #define SX9324_RESOLUTION_DEF "semtech,ph01-resolution"
->  #define SX9324_PROXRAW_DEF "semtech,ph01-proxraw-strength"
+So we added a new ELF section which annotates objects you need to be
+MUTABLE.  If these are .data or .bss, they are placed in the MUTABLE
+region annotated with the following Program Header:
 
-Can you send a followup to remove these defines?
+Program Headers:
+  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align
+  OPENBSD_MUTABLE 0x0e9000 0x00000000000ec000 0x00000000000ec000 0x001000 0x001000 RW  0x1000
 
-> -       unsigned int pin_defs[SX9324_NUM_PINS];
-> -       char prop[] = SX9324_PROXRAW_DEF;
-> +       const char *prop = SX9324_PROXRAW_DEF;
+associated with this Section Header
 
-This can be left unassigned now, right?
+  [20] .openbsd.mutable  PROGBITS        00000000000ec000 0e9000 001000 00  WA  0   0 4096
 
->         u32 start = 0, raw = 0, pos = 0;
-> -       int ret, count, ph, pin;
->         const char *res;
-> +       int ret;
+(It is vaguely similar to RELRO).
+
+You can place objects there using the a compiler __attribute__((section
+declaration, like this example from our libc/malloc.c code
+
+static union {
+        struct malloc_readonly mopts;
+        u_char _pad[MALLOC_PAGESIZE];
+} malloc_readonly __attribute__((aligned(MALLOC_PAGESIZE)))
+                __attribute__((section(".openbsd.mutable")));
+
+During startup the code can set the protection and then the immutability
+of the object correctly.
+
+Since we have no purpose left for this permission reduction semantic
+upon immutable mappings, we may be deleting that behaviour in the
+future.  I wrote that code, because I needed it to make progress with some
+difficult pieces of code.  But we found a better way.
+
