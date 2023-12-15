@@ -1,114 +1,193 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C26A363
-	for <linux-hardening@vger.kernel.org>; Fri, 15 Dec 2023 01:03:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 720C8EBC;
+	Fri, 15 Dec 2023 01:10:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BYekMJ3h"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-286f22c52c7so26028a91.2
-        for <linux-hardening@vger.kernel.org>; Thu, 14 Dec 2023 17:03:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1702602218; x=1703207018; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TJfZoktJfBhaqxhrtP3TtINYf1lM0VcG2eYQT5MkNfc=;
-        b=BYekMJ3hfyVkB0gZj32qdT0Hmpu/IWXOitneHf71cLJo0qpnpmySs54FdBBW7uiKIe
-         fkF7s7wV9Bg3OlJov4GsRmMw/0wilXoKADS8VlW+qdvr4iySC4JHFXUknMT5lrrmsybU
-         28H3Opd2epwYvTBcyXhM2lmPeMcEq1r1VN4hQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702602218; x=1703207018;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TJfZoktJfBhaqxhrtP3TtINYf1lM0VcG2eYQT5MkNfc=;
-        b=SJsg6/70gn5A7nsomeUE59qYKzt4d7WzWhFdE42JDjj8cDn2xaOVseIAPcjfsqHo+e
-         VOYOdm2zxGDXmv7HLU0PKA4ablie+YgG7lNBEBz+XUt3xnBNQ1vu0w0ZpgexF0A+JkdG
-         sFFW6ENkJWLKXydrTWn+NnV63VZ3rTJInaNrSaA6e319EU1Z7Cg0jy9w2vJAF8x4eeWK
-         XPnQXtZ3P3DzUQMpFTJuo9ovXtyQ5XZuujkXCdsHMg8cyrVNYZUKCi+fV3/t9N1sNRLN
-         D3frPZAoa4WPjoSkAHCJVYnlBc0A2Aq4M0tOk74IHHYEdFIhG3nre8s9AsSmA8FW9Jgl
-         CjPA==
-X-Gm-Message-State: AOJu0Yy7H/yClkS5zk7DCzJZXifUaYJRzF1MfUqW6883kkO9ppxTbkUf
-	/T5F9oolE9NqZwlX8WOvBS16eP2xtaf/IjLTxa8=
-X-Google-Smtp-Source: AGHT+IFnd1ZmlTfwFaDdtmaRXbsRH6CYedM8C7nkVG+wUbMQ3IWigllbuf+tAqZ5/ar08ZiRYS3Ceg==
-X-Received: by 2002:a17:902:6806:b0:1d3:5879:d591 with SMTP id h6-20020a170902680600b001d35879d591mr2109540plk.20.1702602218386;
-        Thu, 14 Dec 2023 17:03:38 -0800 (PST)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id 13-20020a170902c24d00b001d35d62b066sm2854431plg.283.2023.12.14.17.03.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Dec 2023 17:03:37 -0800 (PST)
-Date: Thu, 14 Dec 2023 17:03:37 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, kernel test robot <lkp@intel.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs: conf.py: Ignore __counted_by attribute
-Message-ID: <202312141702.F33A94F8D@keescook>
-References: <20231215001347.work.151-kees@kernel.org>
- <a65e9a7a-b5f1-4397-a953-cafb79a10fba@infradead.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ed0R0PL9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1702602639; x=1734138639;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=hGHT2xFDPW1irjXpqDgB580PM8cj5c5cGBO8HS7HH4g=;
+  b=ed0R0PL904eV69rXv1dR/S6WqBnDOgeWLfAiMoscBx9ShRncS3N2wfRp
+   oNW2u6d3iS7kh/J9AtD4KKk+NjiyrfCMvX3NFWDn4Y4hOo41UDH0oK60w
+   KfNdvDhe8t+2lvexnzg8mCLiFnpSjwTt002FFZvMvQLoxH3C9vl8PAC3x
+   mxieHIeoL2u5JhK15Z3J5XzNbrStNLulqHPRplQGNe4VLDYf69nQG2ulh
+   H2bE2RF+48nv/qRSqSwSDUTUSmVcG3HE9t51Cn1fyjSAfpsEy1GtPmLKJ
+   4guwDPnYLfWFJ6miAREO0YUpsr9xiYdhd8h83e6TGIYSU1qusPGDBK4zT
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="2302330"
+X-IronPort-AV: E=Sophos;i="6.04,277,1695711600"; 
+   d="scan'208";a="2302330"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2023 17:10:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="897953816"
+X-IronPort-AV: E=Sophos;i="6.04,277,1695711600"; 
+   d="scan'208";a="897953816"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by orsmga004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 14 Dec 2023 17:10:37 -0800
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 14 Dec 2023 17:10:37 -0800
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Thu, 14 Dec 2023 17:10:37 -0800
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.101)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 14 Dec 2023 17:10:37 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GNJbjfn1QldXtGtJ18uydr2lHOdB2+RiOsTYoTaHmNtijJOhjnAYZSoT1+VLi13gEYLMD3JSWSpbAZP7wJsWQtJt7s/nlBDBXU8ZOG6cy54W6Rw3Y0uPaBM8GgZOm0T8mFnF3a8FsSqNilQOUDuZVv6FMjOOLZdmliDKHr+WkVD3ZgP6pT5wptQIfuJQ1Dcdq1besra5518Efc+QDMkaOvDCbMjcL6YQh0IY9fxepjIDyTFcVSIy4aHNN664gJ3ieyu3Nl/F1Mmf2xfYIY7yh8c8jFLZtyOPCe3FWP6odhfTtFLqEpvCCeynJxhXSmygeBMDL8TCn0aTbXsYaHZudQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uMiCaJqOpwBsJ9OvFVNJ3e+QyfG2TRG5c4rkTH6u1yc=;
+ b=LKWnii507ZGy3//hA5mVJ0VnZsd1m4J52x3zhSmyfabu8acN/USryfUVNh31xxvX/tS9WQvEMs2l1JzPWdvmvoEKZp1cYJgMc+T8imcOeTKQrrwe7Y/Uc/BEdHSci5K0ea7uRjndQBk+aCCxdKrVnkuvCYOosklF9Tapb+lqvheWbOr13NVaysWZXkBA5gCmLXqRq8q7Fw9UYry58AwXR9CLms4/3t44K+1D+U1Oo23jhrzaFWijj5lYRjoLNDF2WMuTBqfkKv1/Ch8iG7RvBXs/2hFF31odCNqRVmiz7WDMCUDzigx+zC8wy7BpdjZHPf+cDbjj7TG07WBgH2BGjA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SN6PR11MB3006.namprd11.prod.outlook.com (2603:10b6:805:d1::24)
+ by DM4PR11MB5343.namprd11.prod.outlook.com (2603:10b6:5:392::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7091.28; Fri, 15 Dec
+ 2023 01:10:30 +0000
+Received: from SN6PR11MB3006.namprd11.prod.outlook.com
+ ([fe80::7f2d:3448:d474:f74e]) by SN6PR11MB3006.namprd11.prod.outlook.com
+ ([fe80::7f2d:3448:d474:f74e%5]) with mapi id 15.20.7091.028; Fri, 15 Dec 2023
+ 01:10:30 +0000
+Date: Fri, 15 Dec 2023 09:10:21 +0800
+From: Philip Li <philip.li@intel.com>
+To: Kees Cook <keescook@chromium.org>
+CC: kernel test robot <lkp@intel.com>, <oe-kbuild-all@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>, "Gustavo A. R. Silva"
+	<gustavoars@kernel.org>, Peter Oberparleiter <oberpar@linux.ibm.com>,
+	<linux-doc@vger.kernel.org>, <linux-hardening@vger.kernel.org>
+Subject: Re: kernel/gcov/fs.c:103: warning: Excess struct member 'buffer'
+ description in 'gcov_iterator'
+Message-ID: <ZXunfWqei+vXUCnp@rli9-mobl>
+References: <202312150432.oBngC94A-lkp@intel.com>
+ <202312141344.9E41E46584@keescook>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <202312141344.9E41E46584@keescook>
+X-ClientProxiedBy: SG2PR04CA0154.apcprd04.prod.outlook.com (2603:1096:4::16)
+ To SN6PR11MB3006.namprd11.prod.outlook.com (2603:10b6:805:d1::24)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a65e9a7a-b5f1-4397-a953-cafb79a10fba@infradead.org>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN6PR11MB3006:EE_|DM4PR11MB5343:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1efa25bb-c372-4a2b-8230-08dbfd0aa147
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: KdgjXarX4CD07FyyyKexWQ+65tUGmPH3IO5EOfahTFqED+NsAGDMKBsxgzHwGsLPrNG4bev9pxlCldVYHlOANL5gtB3mOaIxF7DEKd143DSQcfsyq9ANWm2TJwLKrmbIvYFOpWrOWTl/rhp7oKNxicZ13yEaSdJE2sE4WlkHWQFpEmKYNttmwRZLg0fMlBS9ZOIlcsGkE7N+0xsMDGx/6wi16tILMbB578UwubOJQcQ7WGu2HBldflsrN8KLS50mfC9xzeVQBEMHcim1/0QrtWUVrde/Xdonzf4Ex5Ph7lkg2FpE6VvXGnYM9SrbAggvTC7tUy8N0GDM3FQMdZnpaQzCNixs3ZRYKNj9EobV10YuMpBupiuV3zbHffMW0V7lNKS2Mt3gX/A/zZcccZN1mJKFUW1D0ORJxf5EUDU8RY7O28kvzntqNAk9n31YNkeC5HtN5LIADaqqH9ZqxtDXHBWld8w7QLuqIwEF6vugJfhR/US1V6X2CJanHzoVmsn+x+RistsSQK0m9ltyKt1wHdXaxrG6Tg5nfvXYcAY/kWLiiacgTWMzEI7U/qQZMl68qliHB4vMjBDmU3WZZiL139X/Zgc7nwRuKjBp3XVOI/hOlvs9Dxv9gbaMOtxfQNO+Fvvp5N4+n5TmyqtLYGxHoUMdsFgAiu+O46u3/Ud6AW1+wrhX/5wE+xNAfTkQeRGS
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB3006.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(376002)(136003)(39860400002)(366004)(346002)(396003)(230922051799003)(230173577357003)(230273577357003)(1800799012)(186009)(451199024)(64100799003)(86362001)(82960400001)(41300700001)(6666004)(478600001)(6506007)(66946007)(54906003)(6916009)(66556008)(66476007)(26005)(9686003)(6512007)(33716001)(38100700002)(83380400001)(2906002)(966005)(6486002)(316002)(44832011)(5660300002)(8936002)(4326008)(8676002)(67856001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?EdmHb60UR1MBqtdsiXCiZs3h/163beFThmL/aDaGItKDvxgzAWgKGixuNEKb?=
+ =?us-ascii?Q?5bTaWxngblW2b+7LORmfHi5Qmlks1zW2yHQwc7Ug5c4qms6fVRcda2vHrIXt?=
+ =?us-ascii?Q?ba5kLxQbS3uEaB2Dhixt9CwvKnfGAskTNRPRr7F8t531lKWcI7en0U+pPgVC?=
+ =?us-ascii?Q?WFT0ygP1RDzcQ2lbmg2Ee/yWel2Dd4hsLE9Vhy/XdSerixrCLob84ejjYv+M?=
+ =?us-ascii?Q?oHP2W0XEYG+HMx4+/EFSDu/0LGMGwgPzz6oD6iBA8Dy4QLdypFTzJvgRogE/?=
+ =?us-ascii?Q?t7pA1XHeiLKlXb8qTTLfM8Q94J8IlSQg2XVVKlaJa67DlEc7Y5eitaNZ+frV?=
+ =?us-ascii?Q?ofIClG0rr/TnK4UFXkrgDubbYK4B+VvQSflDBvcU6tOUgizdnNmwy0UfQOrS?=
+ =?us-ascii?Q?FH1kzPnrivuAzTORfMFOc9O/JTtzbRnL3dHabWa2PtKAJtHSAnGwSCj7UiJM?=
+ =?us-ascii?Q?umnuLXvbQb0s0bW/ttILjmYHbDwjZ4Mor42q+gSAkXHitcdOMUtup/5wTcQG?=
+ =?us-ascii?Q?ESyehpP36m27RhstqcdwZqcXVsEOWMgaqWyCw00zxdb0PPAK06QRWwJ8r5jY?=
+ =?us-ascii?Q?upm5PJga8QJtgQSfWegZa+o4eSqKTG+Ef9J7MLKc64tsT50r1UtSzZHMwEnu?=
+ =?us-ascii?Q?vqvYiUpRUQoUZcImCqMu5+VWr5sYbk5CC0NDnxBc/TF4GfuXdpypAjrWvXVl?=
+ =?us-ascii?Q?AvxTkKzvGr4e28o78MH7qlCi2mHRS3GES73FXQgnVl+8bwLF8sXkCr92weYP?=
+ =?us-ascii?Q?owdQMo4VIWISrqdX/v5hmU3ZRr5oVNQac19W9XwF+5sb+0nibW+BGsKtcOn4?=
+ =?us-ascii?Q?BAjHqqyfu7uQiHs9MyEwH8PmsxcJ8xAcs4uD4OARPSp4Qy4NoeKBsYkIjW5E?=
+ =?us-ascii?Q?wDjQopvvhD3BaXui/2/aMU9aKlgOdAQLGSXH7LW+x+3kmugRZdjKOU8s6yXY?=
+ =?us-ascii?Q?pWdM4GX6WWaBuFXk5cXN9Ihcj5HhgHooD7fbjivVwa4CFIqPpVDhZ+zslEic?=
+ =?us-ascii?Q?CLSPvu50uR1h5vRzjfEW8icrZGRdXf7IWVn7U2rMFTY/XRb+hGxHzlwKG5Lp?=
+ =?us-ascii?Q?9OZMbaNTrrCoaRpNplUeJyYBn1385+FyHfFRCa8R1Qa2GyJpXA5nPNO1c1hB?=
+ =?us-ascii?Q?iEFdis5F2bT7MdmlSFB/GZJRPtiUU8GJ3FFv2PfxnoFHnJZZ2ygX6Axpa22A?=
+ =?us-ascii?Q?1kb0m2EiXJgS4JWYj0IUwKt4NXadVID+V0zX38GfB9f6Gk9iq8QWYIJ4peGo?=
+ =?us-ascii?Q?gYTEl/orkY5eqp9RdwQn5/R8k513oB9D+vMB/4qFL1ATRNygMZCk7VTxs3Hg?=
+ =?us-ascii?Q?iO4xPrilTZm/ng6H0UsIbikYHMz9WbHOoV0RxctU1g4NWel22CrllTCDhMuQ?=
+ =?us-ascii?Q?fcsKA4lOK3NbvRtYL4e0dRVsGMUs3zj2Ica1sxj+4MyhNCDHxyuZi+85rSlD?=
+ =?us-ascii?Q?Ccn0WGjiuhfnJpeySnv9frsP6J87VcWmcFxblhPf0lbp7kd4oK0zCU5zZfCT?=
+ =?us-ascii?Q?/XYAEQOr7Lv/7iqfwk1xzz1boxQ6mtn5BVKgZYODWL5wrvb17SEsA3NyTtZJ?=
+ =?us-ascii?Q?l0Wx+nfcHlZmKYprE0wu9stlDECTZdwSGkS4ep2w?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1efa25bb-c372-4a2b-8230-08dbfd0aa147
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR11MB3006.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Dec 2023 01:10:30.3223
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: WYc6EufxFFk8I2laln6E87QUbo9676njXOZeY4IdW32L6PdijXVw+FYmaWG+SW5XPPVxAY0wHCXB9Uhzc8Fl5Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB5343
+X-OriginatorOrg: intel.com
 
-On Thu, Dec 14, 2023 at 04:25:01PM -0800, Randy Dunlap wrote:
-> 
-> 
-> On 12/14/23 16:13, Kees Cook wrote:
-> > It seems that Sphinx is confused by the __counted_by attribute on struct
-> > members. Add it to the list of known attributes.
+On Thu, Dec 14, 2023 at 01:50:05PM -0800, Kees Cook wrote:
+> On Fri, Dec 15, 2023 at 04:53:19AM +0800, kernel test robot wrote:
+> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> > head:   5bd7ef53ffe5ca580e93e74eb8c81ed191ddc4bd
+> > commit: fbd126f5a658b92c7f6af986a6d89cf5e5693268 gcov: annotate struct gcov_iterator with __counted_by
+> > date:   8 weeks ago
+> > config: i386-buildonly-randconfig-001-20231214 (https://download.01.org/0day-ci/archive/20231215/202312150432.oBngC94A-lkp@intel.com/config)
+> > compiler: gcc-11 (Debian 11.3.0-12) 11.3.0
+> > reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231215/202312150432.oBngC94A-lkp@intel.com/reproduce)
 > > 
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Closes: https://lore.kernel.org/oe-kbuild-all/202312150614.kOx8xUkr-lkp@intel.com/
-> > Cc: Jonathan Corbet <corbet@lwn.net>
-> > Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> > Cc: linux-doc@vger.kernel.org
-> > Cc: linux-hardening@vger.kernel.org
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  Documentation/conf.py | 1 +
-> >  1 file changed, 1 insertion(+)
+> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> > the same patch/commit), kindly add following tags
+> > | Reported-by: kernel test robot <lkp@intel.com>
+> > | Closes: https://lore.kernel.org/oe-kbuild-all/202312150432.oBngC94A-lkp@intel.com/
 > > 
-> > diff --git a/Documentation/conf.py b/Documentation/conf.py
-> > index d4fdf6a3875a..5898c74b96fb 100644
-> > --- a/Documentation/conf.py
-> > +++ b/Documentation/conf.py
-> > @@ -106,6 +106,7 @@ if major >= 3:
-> >              "__weak",
-> >              "noinline",
-> >              "__fix_address",
-> > +            "__counted_by",
-> >  
-> >              # include/linux/memblock.h:
-> >              "__init_memblock",
+> > All warnings (new ones prefixed by >>):
+> > 
+> > >> kernel/gcov/fs.c:103: warning: Excess struct member 'buffer' description in 'gcov_iterator'
+> > 
+> > 
+> > vim +103 kernel/gcov/fs.c
+> > 
+> > 7a1d55b987dfcb Johannes Berg 2021-05-06   90  
+> > 7a1d55b987dfcb Johannes Berg 2021-05-06   91  /**
+> > 7a1d55b987dfcb Johannes Berg 2021-05-06   92   * struct gcov_iterator - specifies current file position in logical records
+> > 7a1d55b987dfcb Johannes Berg 2021-05-06   93   * @info: associated profiling data
+> > 7a1d55b987dfcb Johannes Berg 2021-05-06   94   * @buffer: buffer containing file data
+> > 7a1d55b987dfcb Johannes Berg 2021-05-06   95   * @size: size of buffer
+> > 7a1d55b987dfcb Johannes Berg 2021-05-06   96   * @pos: current position in file
+> > 7a1d55b987dfcb Johannes Berg 2021-05-06   97   */
+> > 7a1d55b987dfcb Johannes Berg 2021-05-06   98  struct gcov_iterator {
+> > 7a1d55b987dfcb Johannes Berg 2021-05-06   99  	struct gcov_info *info;
+> > 7a1d55b987dfcb Johannes Berg 2021-05-06  100  	size_t size;
+> > 7a1d55b987dfcb Johannes Berg 2021-05-06  101  	loff_t pos;
+> > fbd126f5a658b9 Kees Cook     2023-09-22  102  	char buffer[] __counted_by(size);
+> > 7a1d55b987dfcb Johannes Berg 2021-05-06 @103  };
+> > 7a1d55b987dfcb Johannes Berg 2021-05-06  104  
 > 
-> If Sphinx needs to know about that, then fine. OTOH, for scripts/kernel-doc,
+> It looks like whatever produces that error is not parsing attributes
+> correctly. I suspect this is the "htmldocs" target and "__counted_by" is
+> missing from Documentation/conf.py. I'll investigate...
 
-I *think* it does -- I can't reproduce the robot warnings myself.
+This is triggered by W=1 build
 
-> a similar change could have been made to dump_struct(), along with these
-> others:
+        make W=1 O=build_dir ARCH=i386 olddefconfig
+        make W=1 O=build_dir ARCH=i386 SHELL=/bin/bash kernel/gcov/
+
+The detail step is at [1], hope it can help reproduce the issue
+
+[1] https://download.01.org/0day-ci/archive/20231215/202312150432.oBngC94A-lkp@intel.com/reproduce
+
 > 
-> 	# strip attributes
-> 	$members =~ s/\s*$attribute/ /gi;
-> 	$members =~ s/\s*__aligned\s*\([^;]*\)/ /gos;
-> 	$members =~ s/\s*__packed\s*/ /gos;
-> 	$members =~ s/\s*CRYPTO_MINALIGN_ATTR/ /gos;
-> 	$members =~ s/\s*____cacheline_aligned_in_smp/ /gos;
-> 	$members =~ s/\s*____cacheline_aligned/ /gos;
-
-scripts/kernel-doc doesn't actually need this -- it already processes
-struct members in a way that seems to ignore trailing attributes.
-
--Kees
-
--- 
-Kees Cook
+> -- 
+> Kees Cook
+> 
