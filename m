@@ -1,78 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CBA72DB75;
-	Fri, 15 Dec 2023 13:29:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A51E1374E9;
+	Fri, 15 Dec 2023 15:13:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JXsLTunK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0408EC433C7;
-	Fri, 15 Dec 2023 13:29:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702646980;
-	bh=rpyS4v8W+CuN4+EjjXEahB1+6g1qTTqMvB9+ugujzJg=;
-	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-	b=JXsLTunKMBBISI4ECLjoovakgd/auY72meweT5jEaGxWUmWWMPpUZ0/zdNwREoc2g
-	 2aS2ZNCm1VcCgKfG9UUbi1WD7ytS5cCUCgEypqXTrz2rzw7bDJr566wVPY4/Pny+JZ
-	 9e+Ey7VpBE4EOB0iIPpVVjiFfWnmnA44lv/DdIN36uMLpGqTXCll4jaanDarSgmOP2
-	 ZKcszw82ho2s3UYGfr7Wgo8tVp1rJ/hNwk1umGZv2WpM+73haNqFR0Rz01Xs04Y/af
-	 xJEUIKZhkdybjvF/4OYAtLELSFBU4uAHRvGWHL0FUfH+95hDrJL/ICpWFM3DS5YP2S
-	 sCWwwaOTG5JxQ==
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="JzQggL4l"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1702653207; x=1734189207;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=7FkxHPKCkGpKFOZSD5EQ8Rk+gyt82kYlBUNX8Qhpy1U=;
+  b=JzQggL4l+Luguc0u1irfLzkM+uMngdBvXeMlByxX5MHegZ5pjVH1zGIC
+   MVTMEm1rsh3snUgGMJvyYptwSgd2S8IX0th/gLIWcDo6jEdqP2V4TzH6W
+   5eC7JJchRlgyR4db9EyzjZGL7ZDrQBftnhOWxswvGJOfvlSPSIsweeg29
+   m9agNXOA1yusvTlUA/rAMnoNI4+l2SYLxsM7jwSMlsBl2tcshrKmlYEp6
+   wVOnls87GHcsnHVC88YSCJZzAvf8em5xGFli5M/T/t7IuvonXy/tvGNnN
+   lHLv0GoEF4FV/Qagn6RIbSVgAHpmV42yjvIghgezdnkhcvTPvhbH985wc
+   w==;
+X-CSE-ConnectionGUID: /Moh9OXQQmOyPN9c02EGlg==
+X-CSE-MsgGUID: EkXUut2XSam2/OWku67UOg==
+X-ThreatScanner-Verdict: Negative
+X-IronPort-AV: E=Sophos;i="6.04,279,1695711600"; 
+   d="scan'208";a="180577316"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 15 Dec 2023 08:13:20 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 15 Dec 2023 08:13:15 -0700
+Received: from che-dk-ungapp03lx.microchip.com (10.10.85.11) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Fri, 15 Dec 2023 08:13:11 -0700
+From: Rengarajan S <rengarajan.s@microchip.com>
+To: <kumaravel.thiagarajan@microchip.com>,
+	<tharunkumar.pasumarthi@microchip.com>, <gregkh@linuxfoundation.org>,
+	<jirislaby@kernel.org>, <keescook@chromium.org>, <gustavoars@kernel.org>,
+	<linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-hardening@vger.kernel.org>
+CC: <unglinuxdriver@microchip.com>
+Subject: [PATCH v1 tty-next 1/4] 8250: microchip: pci1xxxx: Rearranging the structure declarations
+Date: Fri, 15 Dec 2023 20:41:20 +0530
+Message-ID: <20231215151123.41812-2-rengarajan.s@microchip.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20231215151123.41812-1-rengarajan.s@microchip.com>
+References: <20231215151123.41812-1-rengarajan.s@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v2][wireless-next/for-next] wifi: mt76: mt7996: Use
- DECLARE_FLEX_ARRAY() and fix -Warray-bounds warnings
-From: Kalle Valo <kvalo@kernel.org>
-In-Reply-To: <ZXiU9ayVCslt3qiI@work>
-References: <ZXiU9ayVCslt3qiI@work>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
- Ryder Lee <ryder.lee@mediatek.com>, Shayne Chen <shayne.chen@mediatek.com>,
- Sean Wang <sean.wang@mediatek.com>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- linux-hardening@vger.kernel.org
-User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
-Message-ID: <170264697580.1759617.6397953788753678096.kvalo@kernel.org>
-Date: Fri, 15 Dec 2023 13:29:37 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
+Structure declarations in 8250_pci1xxxx.c have been moved above
+the functions for code readability.
 
-> Transform zero-length arrays `rate`, `adm_stat` and `msdu_cnt` into
-> proper flexible-array members in anonymous union in `struct
-> mt7996_mcu_all_sta_info_event` via the DECLARE_FLEX_ARRAY()
-> helper; and fix multiple -Warray-bounds warnings:
-> 
-> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:544:61: warning: array subscript <unknown> is outside array bounds of 'struct <anonymous>[0]' [-Warray-bounds=]
-> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:551:58: warning: array subscript <unknown> is outside array bounds of 'struct <anonymous>[0]' [-Warray-bounds=]
-> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:553:58: warning: array subscript <unknown> is outside array bounds of 'struct <anonymous>[0]' [-Warray-bounds=]
-> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:530:61: warning: array subscript <unknown> is outside array bounds of 'struct <anonymous>[0]' [-Warray-bounds=]
-> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:538:66: warning: array subscript <unknown> is outside array bounds of 'struct <anonymous>[0]' [-Warray-bounds=]
-> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:540:66: warning: array subscript <unknown> is outside array bounds of 'struct <anonymous>[0]' [-Warray-bounds=]
-> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:520:57: warning: array subscript <unknown> is outside array bounds of 'struct all_sta_trx_rate[0]' [-Warray-bounds=]
-> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:526:76: warning: array subscript <unknown> is outside array bounds of 'struct all_sta_trx_rate[0]' [-Warray-bounds=]
-> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:526:76: warning: array subscript <unknown> is outside array bounds of 'struct all_sta_trx_rate[0]' [-Warray-bounds=]
-> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:526:76: warning: array subscript <unknown> is outside array bounds of 'struct all_sta_trx_rate[0]' [-Warray-bounds=]
-> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:526:76: warning: array subscript <unknown> is outside array bounds of 'struct all_sta_trx_rate[0]' [-Warray-bounds=]
-> 
-> This results in no differences in binary output, helps with the ongoing
-> efforts to globally enable -Warray-bounds.
-> 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Signed-off-by: Rengarajan S <rengarajan.s@microchip.com>
+---
+ drivers/tty/serial/8250/8250_pci1xxxx.c | 26 ++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-I'll take this directly wireless-next, ok?
-
+diff --git a/drivers/tty/serial/8250/8250_pci1xxxx.c b/drivers/tty/serial/8250/8250_pci1xxxx.c
+index 9f9e21981929..48bd2f3a287d 100644
+--- a/drivers/tty/serial/8250/8250_pci1xxxx.c
++++ b/drivers/tty/serial/8250/8250_pci1xxxx.c
+@@ -85,6 +85,19 @@
+ #define MAX_PORTS				4
+ #define PORT_OFFSET				0x100
+ 
++struct pci1xxxx_8250 {
++	unsigned int nr;
++	void __iomem *membase;
++	int line[] __counted_by(nr);
++};
++
++static const struct serial_rs485 pci1xxxx_rs485_supported = {
++	.flags = SER_RS485_ENABLED | SER_RS485_RTS_ON_SEND |
++		 SER_RS485_RTS_AFTER_SEND,
++	.delay_rts_after_send = 1,
++	/* Delay RTS before send is not supported */
++};
++
+ static const int logical_to_physical_port_idx[][MAX_PORTS] = {
+ 	{0,  1,  2,  3}, /* PCI12000, PCI11010, PCI11101, PCI11400, PCI11414 */
+ 	{0,  1,  2,  3}, /* PCI4p */
+@@ -104,12 +117,6 @@ static const int logical_to_physical_port_idx[][MAX_PORTS] = {
+ 	{3, -1, -1, -1}, /* PCI1p3 */
+ };
+ 
+-struct pci1xxxx_8250 {
+-	unsigned int nr;
+-	void __iomem *membase;
+-	int line[] __counted_by(nr);
+-};
+-
+ static int pci1xxxx_get_num_ports(struct pci_dev *dev)
+ {
+ 	switch (dev->subsystem_device) {
+@@ -205,13 +212,6 @@ static int pci1xxxx_rs485_config(struct uart_port *port,
+ 	return 0;
+ }
+ 
+-static const struct serial_rs485 pci1xxxx_rs485_supported = {
+-	.flags = SER_RS485_ENABLED | SER_RS485_RTS_ON_SEND |
+-		 SER_RS485_RTS_AFTER_SEND,
+-	.delay_rts_after_send = 1,
+-	/* Delay RTS before send is not supported */
+-};
+-
+ static bool pci1xxxx_port_suspend(int line)
+ {
+ 	struct uart_8250_port *up = serial8250_get_port(line);
 -- 
-https://patchwork.kernel.org/project/linux-wireless/patch/ZXiU9ayVCslt3qiI@work/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.25.1
 
