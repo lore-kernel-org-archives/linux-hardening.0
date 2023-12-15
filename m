@@ -1,115 +1,93 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 657844653B
-	for <linux-hardening@vger.kernel.org>; Fri, 15 Dec 2023 17:50:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A145C4184F;
+	Fri, 15 Dec 2023 19:09:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="crtf2yis"
-Received: from eig-obgw-6005a.ext.cloudfilter.net ([10.0.30.201])
-	by cmsmtp with ESMTPS
-	id E8RUrpGRVVly7ECJIrJxw7; Fri, 15 Dec 2023 17:49:16 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id ECJHrBzcy8KNvECJIro7Gr; Fri, 15 Dec 2023 17:49:16 +0000
-X-Authority-Analysis: v=2.4 cv=dp3Itns4 c=1 sm=1 tr=0 ts=657c919c
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=e2cXIFwxEfEA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=cm27Pg_UAAAA:8 a=P7lGutExLh3arObF5LoA:9 a=QEXdDO2ut3YA:10
- a=AjGcO6oz07-iQ99wixmX:22 a=xmb-EsYY8bH0VWELuYED:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=C0tnBmLizhtV85bV989C1Q4/ieQl62idw3Pu9c+Cx9M=; b=crtf2yisBKNPe9TrXtivlGknCo
-	WiKn9uFrv56/hhXNlXfmZMjUyURv+tU5kiJfMn7gYFcFc7PrIA6ud/a3ORBClxFgxjQfZows+bUqp
-	/J5t73FuvX4LTNzvLjTBuQaQDW0F2iqJ6uUIpnkbbzQwmZ7rw39BmoPi/isuBO0uUPzt01qVKfpTW
-	neWZTSmtucr4UAF7+hBnjhgqNo5BLuTDViHw+jtg6GsdtAHjYrvK5Za/S2DEBDuGa89nKEzqu3pZ3
-	kSq/SxXdHo+aC14hNQ5fJBPwcMJgtrphR7ic+ezCO4b8/APQQdiv7nbwNklAGCAAR1PHnNRgEuWKj
-	BTgQfK1Q==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:45694 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rECJF-004Kas-26;
-	Fri, 15 Dec 2023 11:49:13 -0600
-Message-ID: <6681b643-464d-44d9-b01a-420e543d19d6@embeddedor.com>
-Date: Fri, 15 Dec 2023 11:49:07 -0600
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AuZdQhH1"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-67ac0ef6bb8so6080096d6.1;
+        Fri, 15 Dec 2023 11:09:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1702667382; x=1703272182; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KWbxY3Q+EoYq5mueLiLO42QJaTQBT+r4FmqbmlCjarw=;
+        b=AuZdQhH1P5VAEYsXf5q11XaZrV0ndVOspTvuZwGLeFOcJ0YYGqLx2fBV9gn7QcBC8o
+         P6UqHzTG32ddJjKMtYqKC7aST+zgop9y2fdQMhSOACQQmy+Lf865ei99Sw+j6+oMqw2A
+         Seit9afdoH5M06c2qllY+5Gf1sZ6T6h5S/sz9L3BIKKP4A29VoD3IG92Z4ReFllEwQUF
+         +ggIpIZ4DtkuhsF4W0Q7BdPxN9siwg6jlpNqzh7RwgAgWlV74a5cRa8RQDrWKjbeAAWZ
+         CB81pugVgj8/M7iOtD6uIPVH3KgBOraJBslIYytEsXhAlkOwByk1X2m01v/Ozz3Uu17s
+         ZX/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702667382; x=1703272182;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KWbxY3Q+EoYq5mueLiLO42QJaTQBT+r4FmqbmlCjarw=;
+        b=TgiP46+sgvEFao6OYATxQwfA+y4TJlwXXzjShGEgnPlF1Ul+F9rR6zzaegXsdpNNig
+         PU3/twK6KTu7L3/7DCqrF81Qc1D1md/D1qvGC0Xfy6q336ZfI4SdHVgGjC3jRP8m/Cg5
+         Ys51swEYE/z5uW6OqZk81nLj7W93pUmbm4Y2wpbs95+QPRNhRV9O/QcG5PN6NC1FjGnK
+         B4ZkxNzIjyfyEsFQEwwahsHdiiKaV7aPOngAGGttGPndBFmGJ/x0Ot2HHmTDgWvnydV8
+         kq46OhsjAF/7lY/tUf3jE+xESRK85QW2lf6k6i6T2gSp6rnC4zVT4tlJVWb1nAsin+4U
+         vCjA==
+X-Gm-Message-State: AOJu0YxJLOXjGKC+HK9iZ8vMx6g8GMK4cb6RjxVU17ucrntFENEH6gy/
+	H5ZpIktrieQvuCPI6f28LnSD2qi6An75NU03C/k=
+X-Google-Smtp-Source: AGHT+IGRu4Yn+bj/EYigKT4CfJMHoTJnMispB2cjumjYp7+2ke+qfRMcDdJG/cL79FzU5aowwE2g1m0EgVLQmvaKh6M=
+X-Received: by 2002:a05:6214:1023:b0:67a:bce4:e2e3 with SMTP id
+ k3-20020a056214102300b0067abce4e2e3mr10532467qvr.5.1702667382352; Fri, 15 Dec
+ 2023 11:09:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2][wireless-next/for-next] wifi: mt76: mt7996: Use
- DECLARE_FLEX_ARRAY() and fix -Warray-bounds warnings
-To: Kalle Valo <kvalo@kernel.org>, "Gustavo A. R. Silva"
- <gustavoars@kernel.org>
-Cc: Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
- Ryder Lee <ryder.lee@mediatek.com>, Shayne Chen <shayne.chen@mediatek.com>,
- Sean Wang <sean.wang@mediatek.com>, Matthias Brugger
- <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-hardening@vger.kernel.org
-References: <ZXiU9ayVCslt3qiI@work>
- <170264697580.1759617.6397953788753678096.kvalo@kernel.org>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <170264697580.1759617.6397953788753678096.kvalo@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1rECJF-004Kas-26
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:45694
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfJjUYLstoM6V8rL62lXCA6m11mGXD2DQhwf90CfcFuZsJBNBb5u7hG1ON+RukUIsK7Q3LmwsLPWB7jtbXq5G82yZ+pXE6fkMQC8+LXIAbV/2SwVnHhrY
- Q/TZtlRNdNphDafrqnjp8VuMHRdD7AGdPtYzRsV8YW3bhvq2iHPis3qAatatgDtwWsWDC37FdIsfibGSrlSlAJH6UgXwUB0XoGkZN3CCkgoUaCaH+9UrBL+I
+References: <20231214-libstringheader-v2-0-0f195dcff204@google.com>
+ <20231214-libstringheader-v2-1-0f195dcff204@google.com> <ZXx5DyidpHFhRevy@smile.fi.intel.com>
+ <CAE-cH4p5VJ_A91BAkURBN67ACA0_u7T8UhApUYLQDWeeRY6FWA@mail.gmail.com>
+In-Reply-To: <CAE-cH4p5VJ_A91BAkURBN67ACA0_u7T8UhApUYLQDWeeRY6FWA@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 15 Dec 2023 21:09:05 +0200
+Message-ID: <CAHp75Vdo=g7ZBAuk79PtLOYs-YHo5sCTp1WVFESHA0xN0zGEmQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] sh: Added kernel.h to word-at-a-time
+To: Tanzir Hasan <tanzirh@google.com>
+Cc: Andy Shevchenko <andy@kernel.org>, Kees Cook <keescook@chromium.org>, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Nick DeSaulniers <nnn@google.com>, Andrew Morton <akpm@linux-foundation.org>, llvm@lists.linux.dev, 
+	Al Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Dec 15, 2023 at 8:31=E2=80=AFPM Tanzir Hasan <tanzirh@google.com> w=
+rote:
+> On Fri, Dec 15, 2023 at 8:04=E2=80=AFAM Andy Shevchenko <andy@kernel.org>=
+ wrote:
+>> On Thu, Dec 14, 2023 at 09:06:12PM +0000, tanzirh@google.com wrote:
 
+...
 
-On 12/15/23 07:29, Kalle Valo wrote:
-> "Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
-> 
->> Transform zero-length arrays `rate`, `adm_stat` and `msdu_cnt` into
->> proper flexible-array members in anonymous union in `struct
->> mt7996_mcu_all_sta_info_event` via the DECLARE_FLEX_ARRAY()
->> helper; and fix multiple -Warray-bounds warnings:
-
-[..]
-
+>> > +#include <linux/kernel.h>
 >>
->> This results in no differences in binary output, helps with the ongoing
->> efforts to globally enable -Warray-bounds.
->>
->> Reviewed-by: Kees Cook <keescook@chromium.org>
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> 
-> I'll take this directly wireless-next, ok?
-> 
+>> I highly discourage from doing that. Instead, split what is needed to
+>> the separate (new) header and include that one.
+>
+>
+> I think it would make the most sense to do this in a separate patch.
+> What word-at-a-time.h needs from kernel.h is REPEAT_BYTE and to my knowle=
+dge,
+> almost every other version of word-at-a-time.h includes kernel.h gets thi=
+s by
+> including kernel.h. A future change could be removing REPEAT_BYTE
+> out of kernel.h
 
-Yep, sounds good.
+Just create a patch that either moves that macro (along with upper_*()
+and lower_*() APIs) to a more distinguishable header
+(maybe bytes.h or words.h or wordpart.h, etc) and use it in your case
+and fix others.
 
-Thanks!
---
-Gustavo
+--=20
+With Best Regards,
+Andy Shevchenko
