@@ -1,101 +1,115 @@
-Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
+Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C993FB30;
-	Fri, 15 Dec 2023 17:05:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 657844653B
+	for <linux-hardening@vger.kernel.org>; Fri, 15 Dec 2023 17:50:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="LOQXWakv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=b1r61txkB9I8VrHQEVInIZpLPckdP0rJJDvEIPWqnEc=;
-  b=LOQXWakvBy71xew3ASNMm74HJhXhtZmGAWww6FCy4WhqGrbYOkvEXM4a
-   jhWMjanSBJoz+2nppCXYM5oKMZWx0CGF5sk8M8F3MSacN05AhGcRBx45+
-   Y2rLF835GG08AE8+Sep1xKrSZSpyMR0LZlDFp4clPo2WHVVS3kpcLkE0h
-   c=;
-Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="6.04,279,1695679200"; 
-   d="scan'208";a="74574559"
-Received: from dt-lawall.paris.inria.fr ([128.93.67.65])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2023 18:05:04 +0100
-Date: Fri, 15 Dec 2023 18:05:02 +0100 (CET)
-From: Julia Lawall <julia.lawall@inria.fr>
-To: =?ISO-8859-15?Q?Thomas_Wei=DFschuh?= <linux@weissschuh.net>
-cc: Luis Chamberlain <mcgrof@kernel.org>, 
-    Joel Granados <j.granados@samsung.com>, 
-    Dan Carpenter <dan.carpenter@linaro.org>, 
-    Julia Lawall <julia.lawall@inria.fr>, Kees Cook <keescook@chromium.org>, 
-    "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-    Iurii Zaikin <yzaikin@google.com>, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-    linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 00/18] sysctl: constify sysctl ctl_tables
-In-Reply-To: <46d68741-0ac8-47cc-a28f-bf43575e68a1@t-8ch.de>
-Message-ID: <10ea8782-5eea-879-e31e-278bb2fe73a5@inria.fr>
-References: <CGME20231204075237eucas1p27966f7e7da014b5992d3eef89a8fde25@eucas1p2.samsung.com> <20231204-const-sysctl-v2-0-7a5060b11447@weissschuh.net> <20231207104357.kndqvzkhxqkwkkjo@localhost> <fa911908-a14d-4746-a58e-caa7e1d4b8d4@t-8ch.de>
- <20231208095926.aavsjrtqbb5rygmb@localhost> <8509a36b-ac23-4fcd-b797-f8915662d5e1@t-8ch.de> <20231212090930.y4omk62wenxgo5by@localhost> <ZXligolK0ekZ+Zuf@bombadil.infradead.org> <46d68741-0ac8-47cc-a28f-bf43575e68a1@t-8ch.de>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="crtf2yis"
+Received: from eig-obgw-6005a.ext.cloudfilter.net ([10.0.30.201])
+	by cmsmtp with ESMTPS
+	id E8RUrpGRVVly7ECJIrJxw7; Fri, 15 Dec 2023 17:49:16 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id ECJHrBzcy8KNvECJIro7Gr; Fri, 15 Dec 2023 17:49:16 +0000
+X-Authority-Analysis: v=2.4 cv=dp3Itns4 c=1 sm=1 tr=0 ts=657c919c
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=e2cXIFwxEfEA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
+ a=cm27Pg_UAAAA:8 a=P7lGutExLh3arObF5LoA:9 a=QEXdDO2ut3YA:10
+ a=AjGcO6oz07-iQ99wixmX:22 a=xmb-EsYY8bH0VWELuYED:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=C0tnBmLizhtV85bV989C1Q4/ieQl62idw3Pu9c+Cx9M=; b=crtf2yisBKNPe9TrXtivlGknCo
+	WiKn9uFrv56/hhXNlXfmZMjUyURv+tU5kiJfMn7gYFcFc7PrIA6ud/a3ORBClxFgxjQfZows+bUqp
+	/J5t73FuvX4LTNzvLjTBuQaQDW0F2iqJ6uUIpnkbbzQwmZ7rw39BmoPi/isuBO0uUPzt01qVKfpTW
+	neWZTSmtucr4UAF7+hBnjhgqNo5BLuTDViHw+jtg6GsdtAHjYrvK5Za/S2DEBDuGa89nKEzqu3pZ3
+	kSq/SxXdHo+aC14hNQ5fJBPwcMJgtrphR7ic+ezCO4b8/APQQdiv7nbwNklAGCAAR1PHnNRgEuWKj
+	BTgQfK1Q==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:45694 helo=[192.168.15.10])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1rECJF-004Kas-26;
+	Fri, 15 Dec 2023 11:49:13 -0600
+Message-ID: <6681b643-464d-44d9-b01a-420e543d19d6@embeddedor.com>
+Date: Fri, 15 Dec 2023 11:49:07 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1238573808-1702659903=:10294"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2][wireless-next/for-next] wifi: mt76: mt7996: Use
+ DECLARE_FLEX_ARRAY() and fix -Warray-bounds warnings
+To: Kalle Valo <kvalo@kernel.org>, "Gustavo A. R. Silva"
+ <gustavoars@kernel.org>
+Cc: Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
+ Ryder Lee <ryder.lee@mediatek.com>, Shayne Chen <shayne.chen@mediatek.com>,
+ Sean Wang <sean.wang@mediatek.com>, Matthias Brugger
+ <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ linux-hardening@vger.kernel.org
+References: <ZXiU9ayVCslt3qiI@work>
+ <170264697580.1759617.6397953788753678096.kvalo@kernel.org>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <170264697580.1759617.6397953788753678096.kvalo@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.21.192
+X-Source-L: No
+X-Exim-ID: 1rECJF-004Kas-26
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:45694
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfJjUYLstoM6V8rL62lXCA6m11mGXD2DQhwf90CfcFuZsJBNBb5u7hG1ON+RukUIsK7Q3LmwsLPWB7jtbXq5G82yZ+pXE6fkMQC8+LXIAbV/2SwVnHhrY
+ Q/TZtlRNdNphDafrqnjp8VuMHRdD7AGdPtYzRsV8YW3bhvq2iHPis3qAatatgDtwWsWDC37FdIsfibGSrlSlAJH6UgXwUB0XoGkZN3CCkgoUaCaH+9UrBL+I
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323329-1238573808-1702659903=:10294
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
 
 
+On 12/15/23 07:29, Kalle Valo wrote:
+> "Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
+> 
+>> Transform zero-length arrays `rate`, `adm_stat` and `msdu_cnt` into
+>> proper flexible-array members in anonymous union in `struct
+>> mt7996_mcu_all_sta_info_event` via the DECLARE_FLEX_ARRAY()
+>> helper; and fix multiple -Warray-bounds warnings:
 
-On Fri, 15 Dec 2023, Thomas Weißschuh wrote:
+[..]
 
-> On 2023-12-12 23:51:30-0800, Luis Chamberlain wrote:
-> > On Tue, Dec 12, 2023 at 10:09:30AM +0100, Joel Granados wrote:
-> > > My idea was to do something similar to your originl RFC, where you have
-> > > an temporary proc_handler something like proc_hdlr_const (we would need
-> > > to work on the name) and move each subsystem to the new handler while
-> > > the others stay with the non-const one. At the end, the old proc_handler
-> > > function name would disapear and would be completely replaced by the new
-> > > proc_hdlr_const.
-> > >
-> > > This is of course extra work and might not be worth it if you don't get
-> > > negative feedback related to tree-wide changes. Therefore I stick to my
-> > > previous suggestion. Send the big tree-wide patches and only explore
-> > > this option if someone screams.
-> >
-> > I think we can do better, can't we just increase confidence in that we
-> > don't *need* muttable ctl_cables with something like smatch or
-> > coccinelle so that we can just make them const?
->
-> The fact that the code compiles should be enough, no?
-> Any funky casting that would trick the compiler to accept it would
-> probably also confuse any other tool.
+>>
+>> This results in no differences in binary output, helps with the ongoing
+>> efforts to globally enable -Warray-bounds.
+>>
+>> Reviewed-by: Kees Cook <keescook@chromium.org>
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> 
+> I'll take this directly wireless-next, ok?
+> 
 
-I don't know the context, but the fact that a particular file compiles
-doesn't mean that all of the lines in the file have been subjected to the
-compiler, due to ifdefs.
+Yep, sounds good.
 
-julia
-
->
-> > Seems like a noble endeavor for us to generalize.
-> >
-> > Then we just breeze through by first fixing those that *are* using
-> > mutable tables by having it just de-register and then re-register
-> > new tables if they need to be changed, and then a new series is sent
-> > once we fix all those muttable tables.
->
-> Ack. But I think the actual constification should really only be started
-> after the first series for the infrastructure is in.
->
-> Thomas
->
---8323329-1238573808-1702659903=:10294--
+Thanks!
+--
+Gustavo
