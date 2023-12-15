@@ -1,35 +1,38 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C2183A8C3;
-	Fri, 15 Dec 2023 16:08:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="380291053"
-X-IronPort-AV: E=Sophos;i="6.04,279,1695711600"; 
-   d="scan'208";a="380291053"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2023 08:08:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="898189055"
-X-IronPort-AV: E=Sophos;i="6.04,279,1695711600"; 
-   d="scan'208";a="898189055"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2023 08:08:26 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andy@kernel.org>)
-	id 1rEAjf-00000006AFZ-3TgL;
-	Fri, 15 Dec 2023 18:08:23 +0200
-Date: Fri, 15 Dec 2023 18:08:23 +0200
-From: Andy Shevchenko <andy@kernel.org>
-To: tanzirh@google.com
-Cc: Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Nick DeSaulniers <nnn@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>, llvm@lists.linux.dev
-Subject: Re: [PATCH v2 2/2] lib/string: shrink lib/string.i via IWYU
-Message-ID: <ZXx594P0pdS8vpVt@smile.fi.intel.com>
-References: <20231214-libstringheader-v2-0-0f195dcff204@google.com>
- <20231214-libstringheader-v2-2-0f195dcff204@google.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C0C53BB2E;
+	Fri, 15 Dec 2023 16:24:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="1ecKLawn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DA47C433C8;
+	Fri, 15 Dec 2023 16:24:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1702657465;
+	bh=3ivctDNpxY6QN16Fx9iYaWrSP3bP36OnVGA1x0bMy7w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=1ecKLawnXRWIdI/i7mKpw840sXuWr4k8MRWaZ3qDBAoNDxF8hp4n/Y/EQqig5ct6M
+	 q3OSxVI3cODnARqGoa06xs6iFe//H657653/uumd4qLZ+YQFrZOffqDlsFmJBcUHQx
+	 U5FChq/bAohwoFx5J3qjTOrzqkAYQaSITTgejdcw=
+Date: Fri, 15 Dec 2023 17:24:22 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: davidgow@google.com
+Cc: Rae Moar <rmoar@google.com>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	Matti Vaittinen <mazziesaccount@gmail.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Jonathan Corbet <corbet@lwn.net>, Kees Cook <keescook@chromium.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>, Maxime Ripard <mripard@kernel.org>,
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-sound@vger.kernel.org
+Subject: Re: [PATCH v4 1/5] kunit: Add APIs for managing devices
+Message-ID: <2023121512-handcuff-unstable-63ed@gregkh>
+References: <20231215-kunit_bus-v4-0-4f5160e2f95e@google.com>
+ <20231215-kunit_bus-v4-1-4f5160e2f95e@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -38,61 +41,33 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231214-libstringheader-v2-2-0f195dcff204@google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20231215-kunit_bus-v4-1-4f5160e2f95e@google.com>
 
-On Thu, Dec 14, 2023 at 09:06:13PM +0000, tanzirh@google.com wrote:
-> This diff uses an open source tool include-what-you-use (IWYU) to modify
-> the include list changing indirect includes to direct includes.
-> IWYU is implemented using the IWYUScripts github repository which is a tool that is
-> currently undergoing development. These changes seek to improve build times.
+On Fri, Dec 15, 2023 at 03:39:08PM +0800, davidgow@google.com wrote:
+> Tests for drivers often require a struct device to pass to other
+> functions. While it's possible to create these with
+> root_device_register(), or to use something like a platform device, this
+> is both a misuse of those APIs, and can be difficult to clean up after,
+> for example, a failed assertion.
 > 
-> This change to lib/string.c resulted in a preprocessed size of
-> lib/string.i from 26371 lines to 5259 lines (-80%) for the x86
-> defconfig.
-
-> Link: https://github.com/ClangBuiltLinux/IWYUScripts
+> Add some KUnit-specific functions for registering and unregistering a
+> struct device:
+> - kunit_device_register()
+> - kunit_device_register_with_driver()
+> - kunit_device_unregister()
 > 
-> Signed-off-by: Tanzir Hasan <tanzirh@google.com>
+> These helpers allocate a on a 'kunit' bus which will either probe the
+> driver passed in (kunit_device_register_with_driver), or will create a
+> stub driver (kunit_device_register) which is cleaned up on test shutdown.
+> 
+> Devices are automatically unregistered on test shutdown, but can be
+> manually unregistered earlier with kunit_device_unregister() in order
+> to, for example, test device release code.
+> 
+> Reviewed-by: Matti Vaittinen <mazziesaccount@gmail.com>
+> Reviewed-by: Maxime Ripard <mripard@kernel.org>
+> Signed-off-by: David Gow <davidgow@google.com>
 
-Tag block should not have blank line(s).
+Nice work!
 
->  #include <linux/types.h>
-> -#include <linux/string.h>
-> -#include <linux/ctype.h>
-> -#include <linux/kernel.h>
-> -#include <linux/export.h>
-> +#include <linux/bits.h>
->  #include <linux/bug.h>
->  #include <linux/errno.h>
-> -#include <linux/slab.h>
-> -
-> +#include <asm/rwonce.h>
-> +#include <linux/linkage.h>
-> +#include <linux/stddef.h>
-> +#include <vdso/limits.h>
-> +#include <linux/string.h>
-> +#include <linux/ctype.h>
->  #include <asm/unaligned.h>
-> -#include <asm/byteorder.h>
->  #include <asm/word-at-a-time.h>
->  #include <asm/page.h>
-
-My gosh, this becomes unreadable!
-
-Please make sure you go with groups of headers from more generic to more
-particular, i.e.
-
-linux/*
-
-asm/*
-
-vdso/*
-
-BUT, why the heck vdso? It should be rather uapi/ or regular linux/.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
