@@ -1,36 +1,35 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18B28381D5;
-	Fri, 15 Dec 2023 16:04:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C2183A8C3;
+	Fri, 15 Dec 2023 16:08:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="398084157"
+X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="380291053"
 X-IronPort-AV: E=Sophos;i="6.04,279,1695711600"; 
-   d="scan'208";a="398084157"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2023 08:04:37 -0800
+   d="scan'208";a="380291053"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2023 08:08:28 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="865445044"
+X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="898189055"
 X-IronPort-AV: E=Sophos;i="6.04,279,1695711600"; 
-   d="scan'208";a="865445044"
+   d="scan'208";a="898189055"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by FMSMGA003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2023 08:04:35 -0800
+  by orsmga004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2023 08:08:26 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.97)
 	(envelope-from <andy@kernel.org>)
-	id 1rEAfw-00000006ACe-1HeD;
-	Fri, 15 Dec 2023 18:04:32 +0200
-Date: Fri, 15 Dec 2023 18:04:31 +0200
+	id 1rEAjf-00000006AFZ-3TgL;
+	Fri, 15 Dec 2023 18:08:23 +0200
+Date: Fri, 15 Dec 2023 18:08:23 +0200
 From: Andy Shevchenko <andy@kernel.org>
 To: tanzirh@google.com
 Cc: Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
 	linux-kernel@vger.kernel.org, Nick DeSaulniers <nnn@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>, llvm@lists.linux.dev,
-	Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH v2 1/2] sh: Added kernel.h to word-at-a-time
-Message-ID: <ZXx5DyidpHFhRevy@smile.fi.intel.com>
+	Andrew Morton <akpm@linux-foundation.org>, llvm@lists.linux.dev
+Subject: Re: [PATCH v2 2/2] lib/string: shrink lib/string.i via IWYU
+Message-ID: <ZXx594P0pdS8vpVt@smile.fi.intel.com>
 References: <20231214-libstringheader-v2-0-0f195dcff204@google.com>
- <20231214-libstringheader-v2-1-0f195dcff204@google.com>
+ <20231214-libstringheader-v2-2-0f195dcff204@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -39,32 +38,58 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231214-libstringheader-v2-1-0f195dcff204@google.com>
+In-Reply-To: <20231214-libstringheader-v2-2-0f195dcff204@google.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Dec 14, 2023 at 09:06:12PM +0000, tanzirh@google.com wrote:
-> This patch includes linux/kernel.h in asm/word-at-a-time.h for the
-> sh architecture. WORD_AT_A_TIME_CONSTANTS depends on kernel.h.
-> Making this implicit dependancy explicit allows for later improvements
-> in the lib/string.c inclusion list.
+On Thu, Dec 14, 2023 at 09:06:13PM +0000, tanzirh@google.com wrote:
+> This diff uses an open source tool include-what-you-use (IWYU) to modify
+> the include list changing indirect includes to direct includes.
+> IWYU is implemented using the IWYUScripts github repository which is a tool that is
+> currently undergoing development. These changes seek to improve build times.
 > 
-> Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
+> This change to lib/string.c resulted in a preprocessed size of
+> lib/string.i from 26371 lines to 5259 lines (-80%) for the x86
+> defconfig.
 
-You forgot your SoB, but...
+> Link: https://github.com/ClangBuiltLinux/IWYUScripts
+> 
+> Signed-off-by: Tanzir Hasan <tanzirh@google.com>
 
-...
+Tag block should not have blank line(s).
 
->  #ifdef CONFIG_CPU_BIG_ENDIAN
->  # include <asm-generic/word-at-a-time.h>
->  #else
-> +#include <linux/kernel.h>
+>  #include <linux/types.h>
+> -#include <linux/string.h>
+> -#include <linux/ctype.h>
+> -#include <linux/kernel.h>
+> -#include <linux/export.h>
+> +#include <linux/bits.h>
+>  #include <linux/bug.h>
+>  #include <linux/errno.h>
+> -#include <linux/slab.h>
+> -
+> +#include <asm/rwonce.h>
+> +#include <linux/linkage.h>
+> +#include <linux/stddef.h>
+> +#include <vdso/limits.h>
+> +#include <linux/string.h>
+> +#include <linux/ctype.h>
+>  #include <asm/unaligned.h>
+> -#include <asm/byteorder.h>
+>  #include <asm/word-at-a-time.h>
+>  #include <asm/page.h>
 
-I highly discourage from doing that. Instead, split what is needed to
-the separate (new) header and include that one.
+My gosh, this becomes unreadable!
 
->  /*
->   * Little-endian version cribbed from x86.
->   */
+Please make sure you go with groups of headers from more generic to more
+particular, i.e.
+
+linux/*
+
+asm/*
+
+vdso/*
+
+BUT, why the heck vdso? It should be rather uapi/ or regular linux/.
 
 -- 
 With Best Regards,
