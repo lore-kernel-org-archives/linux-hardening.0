@@ -1,52 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66D3B125C4;
-	Fri, 15 Dec 2023 08:17:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6522A18AEE;
+	Fri, 15 Dec 2023 09:30:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SJP4Q6Qo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88EA8C433C8;
-	Fri, 15 Dec 2023 08:17:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702628243;
-	bh=Szh2cQjdpxKS6gSz+C98N2jF+H6JysxMy+DDeDo3Pm8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SJP4Q6Qog2O0bEZ//nO9Y8OfwqZ9Ju9gbSuJRSLS41rCiCjC67Oa+kdAF+JZqf0yv
-	 dCYr/WCt3WRctBj5kxFDot+RjjdcRH7HWhgZ5pcSAmQig2ZMwBbGu7p8QIW2PFA88p
-	 36Dv+NCaCxZXUp9tP87Iql9vRFXVxIaOL2khS0CrHf/aT5xzsThNps6mT15MG6wVbn
-	 yvRbaemQZcGjEGWftuKB/k0MV6t+tZzYpW8SR3IFIjojFCrWklvqWJEEKGuU8raXcm
-	 cHf8CxvQMzd3m3ikedEoMB/tiInpsl2jlYhn3haJERP143Vp/41UlH/4BiXW3MoI6I
-	 iZh+M/mNiTNzg==
-Date: Fri, 15 Dec 2023 16:17:20 +0800
-From: Tzung-Bi Shih <tzungbi@kernel.org>
-To: Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, keescook@chromium.org
-Subject: Re: [PATCH][next] platform/chrome: Fix -Warray-bounds warnings
-Message-ID: <170262781699.2920569.9996465840798538664.b4-ty@kernel.org>
-References: <ZCTrutoN+9TiJM8u@work>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BC/YVVYX"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-33635d11d92so214936f8f.1;
+        Fri, 15 Dec 2023 01:30:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1702632606; x=1703237406; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=79zIBD/UbRI07OJHltfEg+QZ50+Tf9xaWKrxNDztd8Y=;
+        b=BC/YVVYXjg8E6eGlx7EK7/GdXAJzt51YX77jotQe3MiYoCF7NL4InQ9jE9ypMaQJBy
+         GFes0g6hr451Vovm7U9QPstS7kTIxEga7hta3TNMuzoRmjHbHV7RwEem45Oi8n9i37z4
+         KHQjEZtDJ7+reVMOvDjUolGj2YGm/HtirmvQB9AD8WcdFExgzJV+OnDr1GTTIiABxF72
+         +SWPC8sNP6Ked4eAVTpNHT7w08YLK9goRQZcH2pUGw9a5X8dPT4RaLpr702qApEULRbn
+         stDK+IvDOG3ONZiXtHhT+3T1tlm7Twv6oOaxZK0b1glwnuqjFJXZvT23NIxuN2papMv3
+         /ENA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702632606; x=1703237406;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=79zIBD/UbRI07OJHltfEg+QZ50+Tf9xaWKrxNDztd8Y=;
+        b=Xk4x+A1rITqLyxYGwC/Ed6GNXeBQuSf29tKZVJiHIPGrW5FL4VHArtdhL6ZnFyaCDb
+         vRYNdjO3+uB6nPIC9RJekEN0iSLvWiVF54PWVWZX6fmzW1UV+mvGV4rIlG3abrbfDLcn
+         fKww5ACH3U/uuF3bYrsqdQyMr21vWxoUTDkuxDu35lLJQqkMovrg1YogBKHZskhH6Jad
+         RT7mHMpwN+BJvy7wnmS/ib5JQ0TBqgFgbwEwRo1Imn16ff35EH679hDFweIsz+iztLZ8
+         EqyyASnxxBTAdS2ejlj6pNXLM/jqa9AW2qMAnsAIAB9N6WvhLM0WPJlWcaWnrCeSXtQj
+         sm0Q==
+X-Gm-Message-State: AOJu0Yzyf6klpy6MHUX+y5S64I011z9EmIbJzvgJ6G1rHsMzWXKA4FS6
+	DW689iREB1SXZKMtbRtcO2WMUVZo3IoWuour5ZI=
+X-Google-Smtp-Source: AGHT+IFj9Oxq2ZNCrDN3sSVeAs7luB7+TOGeuBPoBWPEkMisMgUlrt9UE0OuW0ZNoImUBtwhT+KCmSsbUoqwCS0vefM=
+X-Received: by 2002:a5d:4acd:0:b0:336:4939:2c97 with SMTP id
+ y13-20020a5d4acd000000b0033649392c97mr1343786wrs.47.1702632606414; Fri, 15
+ Dec 2023 01:30:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZCTrutoN+9TiJM8u@work>
+References: <20231130205010.it.412-kees@kernel.org> <CALk6UxrWjHAfUXQZF4UcA-iwW92gpmfc41LBETC5_wDXn4zWww@mail.gmail.com>
+ <202312041410.708A1416AD@keescook>
+In-Reply-To: <202312041410.708A1416AD@keescook>
+From: Ronald Monthero <debug.penguin32@gmail.com>
+Date: Fri, 15 Dec 2023 19:29:29 +1000
+Message-ID: <CALk6Uxo8GYBpowV7osvAYZaGMAkVVM+spdCv0rQYgVntbxQO5Q@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] qnx4: Avoid confusing compiler about buffer lengths
+To: Kees Cook <keescook@chromium.org>
+Cc: Anders Larsen <al@alarsen.net>, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 29 Mar 2023 19:54:02 -0600, Gustavo A. R. Silva wrote:
-> GCC-13 (and Clang) does not like having a partially allocated object,
-> since it cannot reason about it for bounds checking.
-> 
-> Notice that the compiler is legitimately complaining about accessing
-> an object (params, in this case) for which not enough memory was
-> allocated.
-> 
-> [...]
+On Tue, Dec 5, 2023 at 8:10=E2=80=AFAM Kees Cook <keescook@chromium.org> wr=
+ote:
+>
+> On Tue, Dec 05, 2023 at 01:46:27AM +1000, Ronald Monthero wrote:
+> > Cheers Kees,
+> > BR,
+> > ronald
+>
+> Is this a "Tested-by"? :)
 
-Applied, thanks!
+Oh sorry Kees I have somehow missed this conversation.
+Yes ack the tests which were earlier causing oops, now pass with the 2 patc=
+hes.
 
-[1/1] platform/chrome: Fix -Warray-bounds warnings
-      commit: 59a9ccf19ee03179faf047822bbec76cac7467a4
+BR,
+ronald
