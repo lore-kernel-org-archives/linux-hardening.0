@@ -1,157 +1,104 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 739216C6D0
-	for <linux-hardening@vger.kernel.org>; Thu, 14 Dec 2023 23:18:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E560710EC
+	for <linux-hardening@vger.kernel.org>; Fri, 15 Dec 2023 00:13:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bMaii2t2"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-77f8dd477fcso6813185a.0
-        for <linux-hardening@vger.kernel.org>; Thu, 14 Dec 2023 15:18:01 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OxqsLOZa"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1d30141d108so139255ad.2
+        for <linux-hardening@vger.kernel.org>; Thu, 14 Dec 2023 16:13:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1702595880; x=1703200680; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qmbndnjcrhmBBoxS6pcuDX2mGwfUQXEv+7vBpDoTDrg=;
-        b=bMaii2t2ztNa/euJQp1EMwZzdMRv2RORXGW86Ct15pUzUOwQiBnJc8/A7TruO8r6n/
-         /J8jO3SruRnd2OBgrVlF4XrZIkEi1KxcA71gZbqZwx2+8AetXHVsRKavZuqbsfnNlXG1
-         b9dgrfrv4ktk1AuOjXpzc/r4sOi328SMLqKG4=
+        d=chromium.org; s=google; t=1702599236; x=1703204036; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cHIT4/zAOsjoCOmWaVZrUI8chkh81MpK3rRyl2+SwGk=;
+        b=OxqsLOZaRjzy0Xhbsa24tmzk1Ln3aImW0Ng/IaxjTr1V3OV91TaCNyaRFX9N1lBo6t
+         VYQT4/DQZDdQCFmC6e3dQI3FEOBXuCU3HK9CWI/UWMKIJus6N8Qk1frP7DaslyOiVipu
+         uwtUX1qFjhLzg1GRbtJ4zxMyCGIo5ujUJaXxY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702595880; x=1703200680;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qmbndnjcrhmBBoxS6pcuDX2mGwfUQXEv+7vBpDoTDrg=;
-        b=olvwzsHP4Bzoz8rvDtg1BkuoJ0si29VOYtRNNGrZZghc7Bm6Wnqs/9c/wy1T3tIYIp
-         hIWErqMjzSSd2UtXlUNhmaJJjo7/3xCfd3WsT5P5nb3OrMS3ySosl/N6hTV/lbv/9n4q
-         SKeZum+nH7rKBDYdq/j08H54ZkK1kguty+z8TWkeKD/+96G8UgjExbxyabHYX4PO4M7U
-         n8Qw2dtwCrhOETy64jkzDPfiIyiVEBM4bw6A/NAsuQKNj3Xc9YBxwNHJHGguKbZExj3/
-         kg9kN7rNDuU6ILVZO0d0rrrHOBO01V4zc5M0UckeHgviJaD4Xadagrqc4Sc/8jGkK2w4
-         BZIg==
-X-Gm-Message-State: AOJu0Yzi4UGUCZ1LdT7zk56MqW3BrPiQchxlrf2geEOO+d9GQETBfhXr
-	o+LsLZdNUK8HoMpaRFAHMaT0/PLEM9YpXdpxVsQR0eegAaA+6iD+5WU=
-X-Google-Smtp-Source: AGHT+IFJ3y2PMmXoZvkDVH8ICFf94qmbkoc3S1Oy8RrT8fx8p95Ie2no/+Omtw/FDZnEY3SV+ywQp6V5BnIOf2HtW54=
-X-Received: by 2002:a05:6870:41cc:b0:203:4c85:562f with SMTP id
- z12-20020a05687041cc00b002034c85562fmr1695983oac.59.1702594390274; Thu, 14
- Dec 2023 14:53:10 -0800 (PST)
+        d=1e100.net; s=20230601; t=1702599236; x=1703204036;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cHIT4/zAOsjoCOmWaVZrUI8chkh81MpK3rRyl2+SwGk=;
+        b=IzMdk4/tZ5AjjAEJNCXIaYBQ0851pyc/gDRh6l4nbW4NRYaEOIBrHkkdAt18d86uVN
+         bcMpVbfkq3WWVcTM6cyEM6Xr2LGiHw0/flqmUhbvbhOdaEReCZ6he+BKkfDWBrDPUtVe
+         k4Qii9v0xuLIz5JhZkWWqO25/Ag35FY76LmrBliY9TSvBj9EHDVCzpdmNuVVb4zXnvks
+         KtPu2YXYq9zTotwX1x7xeRy67U1tzEm2e95BBe/raniE5TfH6imK252O/tdzqzQNOq92
+         p9OpIVXvWAyMhEojw2zjGToo1rZUZe4WAEBJ70+TEWYpL8AiMjz1PMgjTVlg8dl9BO8u
+         4Kog==
+X-Gm-Message-State: AOJu0Yz7PSjoYoeIstxKjpL6DUfwTZIKfTxpeKVLbwc2KeZt6KivT+1L
+	X2uByVzF0Rf4VAkjzYoxSmhXaA==
+X-Google-Smtp-Source: AGHT+IFqYwTy/BdDggnEbc0pQ5/tR/p0topWm9Bn0nmNH3t4LjpE7I5FtQpsSLTeJGpG/xwpUd8QSg==
+X-Received: by 2002:a17:903:1206:b0:1cc:70dd:62c3 with SMTP id l6-20020a170903120600b001cc70dd62c3mr6192101plh.30.1702599236263;
+        Thu, 14 Dec 2023 16:13:56 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id 13-20020a170902e9cd00b001d33369bd86sm6043400plk.194.2023.12.14.16.13.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Dec 2023 16:13:55 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Kees Cook <keescook@chromium.org>,
+	kernel test robot <lkp@intel.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-doc@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] docs: conf.py: Ignore __counted_by attribute
+Date: Thu, 14 Dec 2023 16:13:54 -0800
+Message-Id: <20231215001347.work.151-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231212231706.2680890-1-jeffxu@chromium.org> <20231212231706.2680890-12-jeffxu@chromium.org>
- <CAHk-=wgn02cpoFEDQGgS+5BUqA2z-=Ks9+PNd-pEJy8h+NOs5g@mail.gmail.com>
- <CALmYWFu39nzHvBmRsA326GcmV9u=eM-2aCGOvLK31rrb2R9NEw@mail.gmail.com>
- <CAHk-=wh_VViVZxjiQ5jtB0q=p=JtJMj2R24UAmj-fL-RNLWxNw@mail.gmail.com>
- <CAEAAPHZpYXHNPdca+xfj77bwYaL6PY-c_oQ54r+=wtJa6_hmCA@mail.gmail.com> <CAHk-=wiVhHmnXviy1xqStLRozC4ziSugTk=1JOc8ORWd2_0h7g@mail.gmail.com>
-In-Reply-To: <CAHk-=wiVhHmnXviy1xqStLRozC4ziSugTk=1JOc8ORWd2_0h7g@mail.gmail.com>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Thu, 14 Dec 2023 14:52:58 -0800
-Message-ID: <CABi2SkUTdF6PHrudHTZZ0oWK-oU+T-5+7Eqnei4yCj2fsW2jHg@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 11/11] mseal:add documentation
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: =?UTF-8?Q?Stephen_R=C3=B6ttger?= <sroettger@google.com>, 
-	Jeff Xu <jeffxu@google.com>, akpm@linux-foundation.org, keescook@chromium.org, 
-	jannh@google.com, willy@infradead.org, gregkh@linuxfoundation.org, 
-	jorgelo@chromium.org, groeck@chromium.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, pedro.falcato@gmail.com, 
-	dave.hansen@intel.com, linux-hardening@vger.kernel.org, deraadt@openbsd.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=932; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=B2tqTdN1yLmid/EvyON0m6Bfx8ewzrdTGIvQQwD+wX0=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBle5pB94LTh/NaR3Tal7Cmsx2UUklX8ibKe88nW
+ Ri1Cv3sHM2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZXuaQQAKCRCJcvTf3G3A
+ JmLJD/wMo4+veMXHS0H1dNZxX0gG8ziwAaIX0G6s5TbvI34upjeUlVz7mg7moCz5hBpc2Vvds3R
+ NjflzseoIBGU+WKdpikTaDKH7Nx/sv5mRQumrFCQHkBe8axEBRer/616+QRNUo3HLsV1SkOALjv
+ i4s2F2J+FHW/JoY5YjhRAAKuSog/xKoVEXoh8AvvBgzExTt0l02MDrAEUeZps1HffepMjtPvMXW
+ xYvpN7XHS5tOT9jz46YPqQbmAHT7ji8LEvA7VbYLWZHn4gYBj/Vla18GaVe8dQRVmitQ7nnWuxf
+ A/vupnFw0Ah0m4FX5E1hBbtJi43lrWIEc4u6aOKUnnim6HgAZtzYQ8aEFAwbXm9jhInkFvNx4yP
+ mYvcqWlIvuKC5aVC2yiOCRvBVMoRStj4KK3+BH+hAA+tk8i4n6ApgQzHTu4gJHBpRhiwMwytRH3
+ TNjvydi9A+MMkSLz1+2ISiYZy+lfw/yfs75+992QKXZT27DaI3ZXiBNhQk51QXoLQ7TONfYGS3y
+ oc+GFG5qHO7es33mud4hZ2PuHMLmbItow+duptqdBBcst/THrfhNPj22T20O3JQRXn8RnSPNhKY
+ 4K0e7FsC52XIuRl3NAdeuIOaRY6QNIP7xvt22K2d7RloHaCg5AxWViFiKb0t+lS+24LXg7p/2J1
+ LzSBUzZe 9aquL5A==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Thu, Dec 14, 2023 at 12:14=E2=80=AFPM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Thu, 14 Dec 2023 at 10:07, Stephen R=C3=B6ttger <sroettger@google.com>=
- wrote:
-> >
-> > AIUI, the madvise(DONTNEED) should effectively only change the content =
-of
-> > anonymous pages, i.e. it's similar to a memset(0) in that case. That's =
-why we
-> > added this special case: if you want to madvise(DONTNEED) an anonymous =
-page,
-> > you should have write permissions to the page.
->
-> Hmm. I actually would be happier if we just made that change in
-> general. Maybe even without sealing, but I agree that it *definitely*
-> makes sense in general as a sealing thing.
->
-> IOW, just saying
->
->  "madvise(DONTNEED) needs write permissions to an anonymous mapping when =
-sealed"
->
-> makes 100% sense to me. Having a separate _flag_ to give sensible
-> semantics is just odd.
->
-> IOW, what I really want is exactly that "sensible semantics, not random f=
-lags".
->
-> Particularly for new system calls with fairly specialized use, I think
-> it's very important that the semantics are sensible on a conceptual
-> level, and that we do not add system calls that are based on "random
-> implementation issue of the day".
->
-> Yes, yes, then as we have to maintain things long-term, and we hit
-> some compatibility issue, at *THAT* point we'll end up facing nasty
-> "we had an implementation that had these semantics in practice, so now
-> we're stuck with it", but when introducing a new system call, let's
-> try really hard to start off from those kinds of random things.
->
-> Wouldn't it be lovely if we can just come up with a sane set of "this
-> is what it means to seal a vma", and enumerate those, and make those
-> sane conceptual rules be the initial definition. By all means have a
-> "flags" argument for future cases when we figure out there was
-> something wrong or the notion needed to be extended, but if we already
-> *start* with random extensions, I feel there's something wrong with
-> the whole concept.
->
-> So I would really wish for the first version of
->
->      mseal(start, len, flags);
->
-> to have "flags=3D0" be the one and only case we actually handle
-> initially, and only add a single PROT_SEAL flag to mmap() that says
-> "create this mapping already pre-sealed".
->
-> Strive very hard to make sealing be a single VM_SEALED flag in the
-> vma->vm_flags that we already have, just admit that none of this
-> matters on 32-bit architectures, so that VM_SEALED can just use one of
-> the high flags that we have several free of (and that pkeys already
-> depends on), and make this a standard feature with no #ifdef's.
->
-> Can chrome live with that? And what would the required semantics be?
-> I'll start the list:
->
->  - you can't unmap or remap in any way (including over-mapping)
->
->  - you can't change protections (but with architecture support like
-> pkey, you can obviously change the protections indirectly with PKRU
-> etc)
->
->  - you can't do VM operations that change data without the area being
-> writable (so the DONTNEED case - maybe there are others)
->
->  - anything else?
->
-> Wouldn't it be lovely to have just a single notion of sealing that is
-> well-documented and makes sense, and doesn't require people to worry
-> about odd special cases?
->
-> And yes, we'd have the 'flags' argument for future special cases, and
-> hope really hard that it's never needed.
->
+It seems that Sphinx is confused by the __counted_by attribute on struct
+members. Add it to the list of known attributes.
 
-Yes, those inputs make a lot of sense !
-I will start the next version. In the meantime, if there are more
-comments, please continue to post, I appreciate those to make the API
-better and simple to use.
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202312150614.kOx8xUkr-lkp@intel.com/
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-doc@vger.kernel.org
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ Documentation/conf.py | 1 +
+ 1 file changed, 1 insertion(+)
 
--Jeff
+diff --git a/Documentation/conf.py b/Documentation/conf.py
+index d4fdf6a3875a..5898c74b96fb 100644
+--- a/Documentation/conf.py
++++ b/Documentation/conf.py
+@@ -106,6 +106,7 @@ if major >= 3:
+             "__weak",
+             "noinline",
+             "__fix_address",
++            "__counted_by",
+ 
+             # include/linux/memblock.h:
+             "__init_memblock",
+-- 
+2.34.1
 
->            Linus
->
