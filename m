@@ -1,44 +1,44 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 807A114284
-	for <linux-hardening@vger.kernel.org>; Fri, 15 Dec 2023 07:39:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEF02107B4
+	for <linux-hardening@vger.kernel.org>; Fri, 15 Dec 2023 07:39:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--davidgow.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G0lx2l5I"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-5d10f5bf5d9so2224787b3.3
-        for <linux-hardening@vger.kernel.org>; Thu, 14 Dec 2023 23:39:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YWaT0kCC"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-5d1b2153ba1so2239407b3.2
+        for <linux-hardening@vger.kernel.org>; Thu, 14 Dec 2023 23:39:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1702625972; x=1703230772; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1702625977; x=1703230777; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=d4MXXH5cbPxzFQMx+eKCBMLxcs0KvqjK2kPkW0nLFkA=;
-        b=G0lx2l5I+vav3thN3cKmD1WWSs6NF6uQsEFdCIAH7M3r0whgeoX1BdfWBCcFBIg8+q
-         xJzQPxnh05VFerTIyBUweR48mVScGreqo6WDxM5INYStE7T2Y0SdupOba1AkSMKpTcE+
-         oLdp3cg0yZLyDmyRLP5J/3WCUkFE1cRbAmI040dr7WOwn0xtzqponnIzdVLIQ3a05xrZ
-         I77xdlKl0CO4+KPcdkR33lnEEEzCZ44LQKjmcyw+Bft8K7tg1De6NOhpl4c4W+SXNxpC
-         IKdxyaBDMivHmwaI5XgX9wfcqHFkjyptHj8Ju3kepZvEeNWzVTIT8J+Y+09DYdjiXiyX
-         cTqQ==
+        bh=DEdD2ZFpDj7jGQ6MNzamPllkdSHgzBRafHvZdTTxiEM=;
+        b=YWaT0kCCSY2z+sO8smD4w8l2PGHMn86TtY3Td6m8YY3iVeR9q6aRwoVGL3Awm+5jmM
+         5s0Sl/nD7k92EuuWBQhfDhzPykdqmZXQF1LsHMZwKHIRqtyqS9ucDxGwhZRDCtQTePbI
+         qeT2aiG3fGm54Vn9w/ZIBqCRM2scNyMxNTZHWERaJq38LrbnUmjKkWYoIVM1ZeXBODoo
+         nht4AVQZLxpZ7y2NAQicw4mQ7aPkO8SF73Js5tDTiNV7/R7XV5ATbKW8wPTsIzwSBVD3
+         AU7vUTDjSR7cMWzu0XL3yGKsGimpsOKcmve6n83hGIX0KOfe5vm3q7ieXYOQcBsmK2lP
+         NT/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702625972; x=1703230772;
+        d=1e100.net; s=20230601; t=1702625977; x=1703230777;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=d4MXXH5cbPxzFQMx+eKCBMLxcs0KvqjK2kPkW0nLFkA=;
-        b=eAaSO3p7IOUhYfWVKRoHFVKM41yD+uTkBcA/rXQkWHHb9048b24+K2mALYZIrRJDan
-         LzZr3P+ZSKFAcjVLNUkIo0BKbcz+bzzQ7NBcI+eq4j52fozYu/sPFpbDCwrEeGgeVjVb
-         u0gDh7gEy4kj53zry2J1K5CK9ARA20PL3OY49CtvASYFInynuD1VYdm9sTQr/Vux9r0T
-         BzrzxKTuALZs85Sxt54yy5FiVoWZz7Mt0NsQi3hqTlqFUBKnWcR5xwV4hg0NxpqOxp8I
-         cwftLyyTjjlZPkH65ZDlsSunlSFQpUD26oNDelQ1OSKIZhzAFguYTeUZtDwwXakxBZM4
-         z+vw==
-X-Gm-Message-State: AOJu0YyEi35iNNNAozMzMqEv6oQPYlCbpsEvsZeMwme1qy32XsxP3tD8
-	psB6lGS7Up9iWhpI9PkgCBJpJi9u5BCdEA==
-X-Google-Smtp-Source: AGHT+IHFhhWMR/kJRqTx6WHoW1Cw50Apf42JCOhF6MR/ULXu4wBRUQj91kJR8wij5MUTOYH+2REhYsHY7wVTEg==
+        bh=DEdD2ZFpDj7jGQ6MNzamPllkdSHgzBRafHvZdTTxiEM=;
+        b=prECmYL34saIOFf/iYSysHut8XD8YJ+Kt5YhbW7xzVnxHc93X5Ei00t+XcDn7ePObK
+         Pg6EEek7worqvIVfA2WBOpzCrO+GG0L9aZsXdSItYUl69v6MO4zk6FLA0vb/r3BPeXU8
+         dPPcXbSEDbsMWasdw7zePENvYlMneswfYuUnKvM+OF7kNjN1QJVU7NBE8V3SZx9dpYvD
+         dczLceMUszih8LAV+6nF5tB594m2orGikCjCCO1DCxJRfwy3V9If1/34zKCA/OHqIJ1u
+         GjzC4ijIGokfsK672q06EYw7Yd3xUWXlVs13IjSuAUZHaQ2QmntrnLmeW/5h2dkkEcqN
+         8OQQ==
+X-Gm-Message-State: AOJu0Yw9JdGlfCF7aWzkqSInelR9YIclxBr+/caYZWSpV9CJ6r0mi7Bo
+	YPKViOZfh+vMgzlaL26EZnEdLoxQbPwg0g==
+X-Google-Smtp-Source: AGHT+IGuliGc1x7ZG0hmVGtlZI8HEIuCYqjmpfGoxBzPzTU8nz0wyUB0pw1fP4D1TpgUQwqGYAf5edyyW5sP3A==
 X-Received: from slicestar.c.googlers.com ([fda3:e722:ac3:cc00:4f:4b78:c0a8:20a1])
- (user=davidgow job=sendgmr) by 2002:a25:ab8c:0:b0:dbc:c82d:7f0a with SMTP id
- v12-20020a25ab8c000000b00dbcc82d7f0amr53140ybi.9.1702625972472; Thu, 14 Dec
- 2023 23:39:32 -0800 (PST)
-Date: Fri, 15 Dec 2023 15:39:11 +0800
+ (user=davidgow job=sendgmr) by 2002:a05:690c:e0b:b0:5d3:b449:e58e with SMTP
+ id cp11-20020a05690c0e0b00b005d3b449e58emr127478ywb.6.1702625977034; Thu, 14
+ Dec 2023 23:39:37 -0800 (PST)
+Date: Fri, 15 Dec 2023 15:39:12 +0800
 In-Reply-To: <20231215-kunit_bus-v4-0-4f5160e2f95e@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -48,9 +48,8 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20231215-kunit_bus-v4-0-4f5160e2f95e@google.com>
 X-Mailer: b4 0.13-dev-099c9
-Message-ID: <20231215-kunit_bus-v4-4-4f5160e2f95e@google.com>
-Subject: [PATCH v4 4/5] ASoC: topology: Replace fake root_device with
- kunit_device in tests
+Message-ID: <20231215-kunit_bus-v4-5-4f5160e2f95e@google.com>
+Subject: [PATCH v4 5/5] drm/tests: Switch to kunit devices
 From: davidgow@google.com
 To: Rae Moar <rmoar@google.com>, Brendan Higgins <brendan.higgins@linux.dev>, 
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matti Vaittinen <mazziesaccount@gmail.com>, 
@@ -61,59 +60,120 @@ To: Rae Moar <rmoar@google.com>, Brendan Higgins <brendan.higgins@linux.dev>,
 Cc: linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
 	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-hardening@vger.kernel.org, linux-sound@vger.kernel.org, 
-	David Gow <davidgow@google.com>
+	David Gow <davidgow@google.com>, Maxime Ripard <mripard@kernel.org>
 Content-Type: text/plain; charset="utf-8"
 
-Using struct root_device to create fake devices for tests is something
-of a hack. The new struct kunit_device is meant for this purpose, so use
-it instead.
+From: Maxime Ripard <mripard@kernel.org>
 
-Acked-by: Mark Brown <broonie@kernel.org>
+Kunit recently gained helpers to create test managed devices. This means
+that we no longer have to roll our own helpers in KMS and we can reuse
+them.
+
+Signed-off-by: Maxime Ripard <mripard@kernel.org>
+Tested-by: David Gow <davidgow@google.com>
 Signed-off-by: David Gow <davidgow@google.com>
 ---
- sound/soc/soc-topology-test.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+ drivers/gpu/drm/tests/drm_kunit_helpers.c | 66 ++-----------------------------
+ 1 file changed, 3 insertions(+), 63 deletions(-)
 
-diff --git a/sound/soc/soc-topology-test.c b/sound/soc/soc-topology-test.c
-index 2cd3540cec04..70cbccc42a42 100644
---- a/sound/soc/soc-topology-test.c
-+++ b/sound/soc/soc-topology-test.c
-@@ -9,6 +9,7 @@
- #include <sound/core.h>
- #include <sound/soc.h>
- #include <sound/soc-topology.h>
+diff --git a/drivers/gpu/drm/tests/drm_kunit_helpers.c b/drivers/gpu/drm/tests/drm_kunit_helpers.c
+index c251e6b34de0..ca4f8e4c5d5d 100644
+--- a/drivers/gpu/drm/tests/drm_kunit_helpers.c
++++ b/drivers/gpu/drm/tests/drm_kunit_helpers.c
+@@ -5,6 +5,7 @@
+ #include <drm/drm_kunit_helpers.h>
+ #include <drm/drm_managed.h>
+ 
 +#include <kunit/device.h>
- #include <kunit/test.h>
+ #include <kunit/resource.h>
  
- /* ===== HELPER FUNCTIONS =================================================== */
-@@ -21,26 +22,19 @@
-  */
- static struct device *test_dev;
+ #include <linux/device.h>
+@@ -15,28 +16,6 @@
+ static const struct drm_mode_config_funcs drm_mode_config_funcs = {
+ };
  
--static struct device_driver test_drv = {
--	.name = "sound-soc-topology-test-driver",
+-static int fake_probe(struct platform_device *pdev)
+-{
+-	return 0;
+-}
+-
+-static struct platform_driver fake_platform_driver = {
+-	.probe	= fake_probe,
+-	.driver = {
+-		.name	= KUNIT_DEVICE_NAME,
+-	},
 -};
 -
- static int snd_soc_tplg_test_init(struct kunit *test)
- {
--	test_dev = root_device_register("sound-soc-topology-test");
-+	test_dev = kunit_device_register(test, "sound-soc-topology-test");
- 	test_dev = get_device(test_dev);
- 	if (!test_dev)
- 		return -ENODEV;
- 
--	test_dev->driver = &test_drv;
+-KUNIT_DEFINE_ACTION_WRAPPER(kunit_action_platform_driver_unregister,
+-			    platform_driver_unregister,
+-			    struct platform_driver *);
+-KUNIT_DEFINE_ACTION_WRAPPER(kunit_action_platform_device_put,
+-			    platform_device_put,
+-			    struct platform_device *);
+-KUNIT_DEFINE_ACTION_WRAPPER(kunit_action_platform_device_del,
+-			    platform_device_del,
+-			    struct platform_device *);
 -
- 	return 0;
- }
- 
- static void snd_soc_tplg_test_exit(struct kunit *test)
+ /**
+  * drm_kunit_helper_alloc_device - Allocate a mock device for a KUnit test
+  * @test: The test context object
+@@ -54,34 +33,7 @@ KUNIT_DEFINE_ACTION_WRAPPER(kunit_action_platform_device_del,
+  */
+ struct device *drm_kunit_helper_alloc_device(struct kunit *test)
  {
- 	put_device(test_dev);
--	root_device_unregister(test_dev);
+-	struct platform_device *pdev;
+-	int ret;
+-
+-	ret = platform_driver_register(&fake_platform_driver);
+-	KUNIT_ASSERT_EQ(test, ret, 0);
+-
+-	ret = kunit_add_action_or_reset(test,
+-					kunit_action_platform_driver_unregister,
+-					&fake_platform_driver);
+-	KUNIT_ASSERT_EQ(test, ret, 0);
+-
+-	pdev = platform_device_alloc(KUNIT_DEVICE_NAME, PLATFORM_DEVID_NONE);
+-	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, pdev);
+-
+-	ret = kunit_add_action_or_reset(test,
+-					kunit_action_platform_device_put,
+-					pdev);
+-	KUNIT_ASSERT_EQ(test, ret, 0);
+-
+-	ret = platform_device_add(pdev);
+-	KUNIT_ASSERT_EQ(test, ret, 0);
+-
+-	ret = kunit_add_action_or_reset(test,
+-					kunit_action_platform_device_del,
+-					pdev);
+-	KUNIT_ASSERT_EQ(test, ret, 0);
+-
+-	return &pdev->dev;
++	return kunit_device_register(test, KUNIT_DEVICE_NAME);
  }
+ EXPORT_SYMBOL_GPL(drm_kunit_helper_alloc_device);
  
- /*
+@@ -94,19 +46,7 @@ EXPORT_SYMBOL_GPL(drm_kunit_helper_alloc_device);
+  */
+ void drm_kunit_helper_free_device(struct kunit *test, struct device *dev)
+ {
+-	struct platform_device *pdev = to_platform_device(dev);
+-
+-	kunit_release_action(test,
+-			     kunit_action_platform_device_del,
+-			     pdev);
+-
+-	kunit_release_action(test,
+-			     kunit_action_platform_device_put,
+-			     pdev);
+-
+-	kunit_release_action(test,
+-			     kunit_action_platform_driver_unregister,
+-			     &fake_platform_driver);
++	kunit_device_unregister(test, dev);
+ }
+ EXPORT_SYMBOL_GPL(drm_kunit_helper_free_device);
+ 
 
 -- 
 2.43.0.472.g3155946c3a-goog
