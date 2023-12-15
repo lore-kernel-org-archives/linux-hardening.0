@@ -1,91 +1,83 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF24920F7;
-	Fri, 15 Dec 2023 00:25:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45B481856
+	for <linux-hardening@vger.kernel.org>; Fri, 15 Dec 2023 01:00:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HyzXi8PA"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=JFWfhbeTwDASZ337P19lefmMmN0AmzjVJlFATdWyObU=; b=HyzXi8PAmRO/+DNsjoC+lMtqvO
-	t6IjeWDC1uIlZiahXutT4wahuT599cofu+3DjUOHEYAeh4I+LAJX0pB5i+617GTXO/JnhytUibKFI
-	jFLQWgSXU+sEgUl4koCW8Ob3Yne36UmElcfypDwQ5JGjrHKosvrs+7ku6SllMPiwIofi+cHxzFrQa
-	EzTXADwZVNUmHpoCjdTubcu7F0cCJ86eJFV0n9LgyN59kZ1I4KlhSsmkHzyjLK1Ok0hkfXIWcYinV
-	E4k88qMn0m/awPz96EV+DbMoPNzFQoL3t97Vxr8uw6DBSAhwyqMBjDQxBt/r7BkveUKZsdsoR6xIe
-	/v/IrbHg==;
-Received: from [50.53.46.231] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1rDw0k-001dLv-23;
-	Fri, 15 Dec 2023 00:25:02 +0000
-Message-ID: <a65e9a7a-b5f1-4397-a953-cafb79a10fba@infradead.org>
-Date: Thu, 14 Dec 2023 16:25:01 -0800
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Wc4WOIZC"
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-1fab887fab8so138757fac.0
+        for <linux-hardening@vger.kernel.org>; Thu, 14 Dec 2023 17:00:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1702602009; x=1703206809; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=trQkv00mtfGAqfYN2kxyaymJn3A93RCw6IDqXYBNgGw=;
+        b=Wc4WOIZCFo6jTOFDnqrhGeKUCKyVlhkBMYlMZ+E/7DBUHpY7zXnt097/5w3mH1MZG5
+         k4iUdqOCQ/q8O1/z56mStQTiCeyEcGaE/iXP6c6AtUbPKUDWRfhg3wVz8m5UCxL/Sd/C
+         hJ6NhJ5iO2w6QiET0sL289GlC/diwxfGNtNbc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702602009; x=1703206809;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=trQkv00mtfGAqfYN2kxyaymJn3A93RCw6IDqXYBNgGw=;
+        b=U4a2DpGFOZ8iJoWM+X8EsqC+oGITQUdkqDVaehyZLl6sO3J4o96F+oLMVrFVlJb0Du
+         fkly6nAwfU62gsnQLT3M9izR/a7Z28vhAqxukDPlwgbEmRPiqshX9dkVLO9eSxE6KYiT
+         frWihLWxSJNRTvXYoREr+DK5kKGa4YRRewPA3+Y/EMMf/AcT0X9ZcDWYzioLucBNmzDt
+         02Any0CNtEaERgvHU5XSTz6TW5lXBORdgofhnxuegOcWPs2Smd57K7S6wC+kDzPYlN0u
+         nemQsNmOYiXBaDBiNnXQ92kTYeFziz4obqLYsxHrFU1ZOp94v2fLsNmqN1JSkB2dr/Dw
+         y+Wg==
+X-Gm-Message-State: AOJu0Yw/CUKw+IwaDKfQF33uL8/8faXgueenIw79oaRZdfKmL4PwooRn
+	q/rERLvfPNozTcxbNa9JqG0l/g==
+X-Google-Smtp-Source: AGHT+IH1iYwOvtkU1tCwxzK2MoeKckHqrYHL/1xyI36wn6QKPTJ8lEz/wgjo+Db3jReJOhtWvRhY+Q==
+X-Received: by 2002:a05:6358:6f14:b0:170:5b7c:26ac with SMTP id r20-20020a0563586f1400b001705b7c26acmr15172894rwn.59.1702602009087;
+        Thu, 14 Dec 2023 17:00:09 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id pb7-20020a17090b3c0700b0028aea6c24bcsm2537pjb.53.2023.12.14.17.00.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Dec 2023 17:00:08 -0800 (PST)
+Date: Thu, 14 Dec 2023 17:00:07 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Matthew Wilcox <willy@infradead.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] scripts: kernel-doc: Disambiguate origin of warnings
+Message-ID: <202312141659.56017364EA@keescook>
+References: <20231215001535.work.434-kees@kernel.org>
+ <6d8d2001-ea9e-4e3d-9e6d-8192064556a5@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] docs: conf.py: Ignore __counted_by attribute
-Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>, Jonathan Corbet <corbet@lwn.net>
-Cc: kernel test robot <lkp@intel.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-doc@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20231215001347.work.151-kees@kernel.org>
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20231215001347.work.151-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6d8d2001-ea9e-4e3d-9e6d-8192064556a5@infradead.org>
 
-
-
-On 12/14/23 16:13, Kees Cook wrote:
-> It seems that Sphinx is confused by the __counted_by attribute on struct
-> members. Add it to the list of known attributes.
+On Thu, Dec 14, 2023 at 04:19:34PM -0800, Randy Dunlap wrote:
 > 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202312150614.kOx8xUkr-lkp@intel.com/
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: linux-doc@vger.kernel.org
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  Documentation/conf.py | 1 +
->  1 file changed, 1 insertion(+)
 > 
-> diff --git a/Documentation/conf.py b/Documentation/conf.py
-> index d4fdf6a3875a..5898c74b96fb 100644
-> --- a/Documentation/conf.py
-> +++ b/Documentation/conf.py
-> @@ -106,6 +106,7 @@ if major >= 3:
->              "__weak",
->              "noinline",
->              "__fix_address",
-> +            "__counted_by",
->  
->              # include/linux/memblock.h:
->              "__init_memblock",
+> On 12/14/23 16:15, Kees Cook wrote:
+> > There's no prefix to warnings and errors reported by scripts/kernel-doc
+> > which makes it frustrating to isolate errors reported from CI systems.
+> > Add a "$0: " prefix to all the STDERR output.
+> > 
+> > Cc: Jonathan Corbet <corbet@lwn.net>
+> > Cc: linux-doc@vger.kernel.org
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> 
+> Matthew's reply to my patch with similar functionality, which I agree with:
+> 
+> https://lore.kernel.org/linux-doc/ZQke26HX9Am3k2sh@casper.infradead.org/
 
-If Sphinx needs to know about that, then fine. OTOH, for scripts/kernel-doc,
-a similar change could have been made to dump_struct(), along with these
-others:
+I guess that's true, but it's really confusing to figure out if it's
+kernel-doc or Sphinx reporting errors. Ah well! I can live without it.
 
-	# strip attributes
-	$members =~ s/\s*$attribute/ /gi;
-	$members =~ s/\s*__aligned\s*\([^;]*\)/ /gos;
-	$members =~ s/\s*__packed\s*/ /gos;
-	$members =~ s/\s*CRYPTO_MINALIGN_ATTR/ /gos;
-	$members =~ s/\s*____cacheline_aligned_in_smp/ /gos;
-	$members =~ s/\s*____cacheline_aligned/ /gos;
-
+-Kees
 
 -- 
-#Randy
-https://people.kernel.org/tglx/notes-about-netiquette
-https://subspace.kernel.org/etiquette.html
+Kees Cook
