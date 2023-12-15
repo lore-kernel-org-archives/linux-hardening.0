@@ -1,37 +1,37 @@
 Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8427D3DBB1;
-	Fri, 15 Dec 2023 16:31:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED8E43EA80;
+	Fri, 15 Dec 2023 16:32:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lwn.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="QYQMTncq"
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="m/GBrl5i"
 Received: from localhost (unknown [IPv6:2601:280:5e00:7e19::646])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 9AF472ED;
-	Fri, 15 Dec 2023 16:31:30 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 9AF472ED
+	by ms.lwn.net (Postfix) with ESMTPSA id 3A20B46A;
+	Fri, 15 Dec 2023 16:32:43 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 3A20B46A
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1702657890; bh=MOGN08AAxPtXYlfatBeq3Ua29jRUGnUBoCfFPOWMpcY=;
+	t=1702657963; bh=KjM0uDHwoedhIhQVgnSasUQJXO8rGVyBZqDNKz1WErA=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=QYQMTncqCC3ycU6OLwKc3wuqaApQ8kGpraPH5WeaEOF1SetEFXQ/6nZC/98pG3fw7
-	 VE1081/ZC9OpaF3/30rSbzEzfiFWEOHAzRJWTzuwUPTtphLRuWES9oEmdfJcD6/pXJ
-	 C4iupHPPb7l7Ras9/MpWwgzWjxe5SS4SX7Ls0/9s5jwzj6QZppvwNSKTcnV/xxDzZo
-	 UWM9Kq2+D2p+bC7UQ3jtRFDbmvrZ86n4UowPERSAYg9us7+PkIifx3TNH4olaixOI4
-	 Gw0WcGizXegAntOEP8s1H2+zIMCXbrzAgQeQoG30CmoWkMpSjnMJXZHwrdkjvgs8bm
-	 vSq29HvLP9kzA==
+	b=m/GBrl5i2R05TWh1mwjks7R8qBSB+XZhb7G4JkGOjRe8NAPT11IcuDBd2hib+SeMz
+	 b6TvYlQiveUH5Tvr9Foikreg5HBivWZFkqf/o1hLwm8++z4RTfp0wUi/B2iHmI94f2
+	 Hl0dCZClKvqk4UjgGVIdhoqzuIL8UipVttkBYN3YcU/PhpdnzbaA8eZd7dSzMUcKd/
+	 YaQWV5hNL8vjkxvHKKBCpu8PhbVh1uFO04m1iu8zRqHgBCx8bspsQkCoW5xNv8gqun
+	 Lwq+9IC9+Yzaaq3klVIR0BLyT5urKtxFux1EBomdKsonlWPXkmhLYM5f3NpGQUanxx
+	 kr2p0nMECY2xw==
 From: Jonathan Corbet <corbet@lwn.net>
 To: Kees Cook <keescook@chromium.org>
-Cc: Kees Cook <keescook@chromium.org>, kernel test robot <lkp@intel.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-doc@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs: conf.py: Ignore __counted_by attribute
-In-Reply-To: <20231215001347.work.151-kees@kernel.org>
-References: <20231215001347.work.151-kees@kernel.org>
-Date: Fri, 15 Dec 2023 09:31:29 -0700
-Message-ID: <87wmtfpgv2.fsf@meer.lwn.net>
+Cc: Kees Cook <keescook@chromium.org>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] scripts: kernel-doc: Clarify missing struct member
+ description
+In-Reply-To: <20231215001513.work.563-kees@kernel.org>
+References: <20231215001513.work.563-kees@kernel.org>
+Date: Fri, 15 Dec 2023 09:32:42 -0700
+Message-ID: <87sf43pgt1.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -42,29 +42,27 @@ Content-Type: text/plain
 
 Kees Cook <keescook@chromium.org> writes:
 
-> It seems that Sphinx is confused by the __counted_by attribute on struct
-> members. Add it to the list of known attributes.
+> The output "or member" should be more specific, instead saying "struct
+> member".
 >
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202312150614.kOx8xUkr-lkp@intel.com/
 > Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
 > Cc: linux-doc@vger.kernel.org
-> Cc: linux-hardening@vger.kernel.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
->  Documentation/conf.py | 1 +
->  1 file changed, 1 insertion(+)
+>  scripts/kernel-doc | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/Documentation/conf.py b/Documentation/conf.py
-> index d4fdf6a3875a..5898c74b96fb 100644
-> --- a/Documentation/conf.py
-> +++ b/Documentation/conf.py
-> @@ -106,6 +106,7 @@ if major >= 3:
->              "__weak",
->              "noinline",
->              "__fix_address",
-> +            "__counted_by",
+> diff --git a/scripts/kernel-doc b/scripts/kernel-doc
+> index 39e730ee1fef..41f838042364 100755
+> --- a/scripts/kernel-doc
+> +++ b/scripts/kernel-doc
+> @@ -1613,7 +1613,7 @@ sub push_parameter($$$$$) {
+>  		$parameterdescs{$param} = $undescribed;
+>  
+>  	        if (show_warnings($type, $declaration_name) && $param !~ /\./) {
+> -			emit_warning("${file}:$.", "Function parameter or member '$param' not described in '$declaration_name'\n");
+> +			emit_warning("${file}:$.", "Function parameter or struct member '$param' not described in '$declaration_name'\n");
+>  		}
 
 Applied, thanks.
 
