@@ -1,129 +1,199 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 838FE4777D;
-	Fri, 15 Dec 2023 21:03:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A17441DDF1
+	for <linux-hardening@vger.kernel.org>; Fri, 15 Dec 2023 22:48:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="RSHEuCkD"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=3sddRRvwk/fTKF7doym0HPnBmsg/UatU52NDddZvLeM=; b=RSHEuCkD54S7yVRnkkdRcJRhGB
-	CCGEmrAERKHDC9A23+dPZdarY6qX1xEXD04Fd6FYVZ2haVIn4+aWT4QIFjld3w02jGzgMq+UXLQDG
-	uB1rFook2rv0QRa21NRESCSJtqiU4skicVFf4JN/Z3SHmGp63xgpextFd2ddlJIoxsIcje2EDRlKi
-	qLZL3dYhDnG1LkYaTy/ZPivcDvPAKMfuhgGQnW+nUZfmyimzpIEnv3dmIciv5FIvxBB7bkqL0KQgA
-	RkNS86h1OL0o04t8ROx7kJP6ownxFmdArQXSB+7HnT/NsLrGq5KSFJ3v475DsRLOdCBama76TWRf1
-	junaDkpw==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1rEFLU-00D57W-27;
-	Fri, 15 Dec 2023 21:03:44 +0000
-Date: Fri, 15 Dec 2023 21:03:44 +0000
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Greg KH <greg@kroah.com>
-Cc: Nick Desaulniers <ndesaulniers@google.com>, tanzirh@google.com,
-	Kees Cook <keescook@chromium.org>,
-	Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Nick DeSaulniers <nnn@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>, llvm@lists.linux.dev
-Subject: Re: [PATCH] lib/string: shrink lib/string.i via IWYU
-Message-ID: <20231215210344.GA3096493@ZenIV>
-References: <20231205-libstringheader-v1-1-7f9c573053a7@gmail.com>
- <20231205213807.GE1674809@ZenIV>
- <CAKwvOd=2VASkaLvjU+7kkbvhu2CimYn5KUGJBDRePyUhtrNK2Q@mail.gmail.com>
- <2023120608-ivy-snowdrop-890d@gregkh>
- <CAKwvOdmFJ=ZGN8ZScS5oQpXnAL0wwtTDCeNNGpBKZXzQ4kRAVA@mail.gmail.com>
- <2023120657-henna-spongy-9ef6@gregkh>
- <20231206005542.GJ1674809@ZenIV>
- <20231206030047.GL1674809@ZenIV>
- <2023120650-faucet-palpable-f1a3@gregkh>
- <20231214210400.GR1674809@ZenIV>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2x7HTmy/"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-40c32bea30dso20105e9.0
+        for <linux-hardening@vger.kernel.org>; Fri, 15 Dec 2023 14:48:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1702680511; x=1703285311; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nbI008FwkAGh6OQKmN5oST6SiRX3AZBUL7LLv+QG9V0=;
+        b=2x7HTmy/Y0wkJsdO8FH2y/FOE6L/xsfTjUTDHTYgcuzoM/fSetZVC4X/FNCHQ/NLaJ
+         sdf3aPoD/jH+nO8zmiuf8dkrsdd8eX7aSO+Cm7iN9eusGEKYW/BCisKFY+OC5tFO+BzN
+         B56nT91cWFgPKDHBnixf1z4bKzoWLhfZHd3EXkOaHIEJA6eQ+6vT8PkCDkg75xVnEoxN
+         rQ/sd0JW4Z6/94Fw1ksF/Nm5NX9QpXO9mQdLzYqymZ6rL1zEiG/SfeHUJ6XhaAd6SuJa
+         kx/2HmN5Krrff9bDE6CRUDkGhFRqoqR9Z7n2Svh+FOJl3qxxPKwDb9JT3R3x5U+7eNsC
+         Tpnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702680511; x=1703285311;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nbI008FwkAGh6OQKmN5oST6SiRX3AZBUL7LLv+QG9V0=;
+        b=Mn/C7FrCGAPN0m8ZXIO2IgCMRTJYyvWsSKcASODvHH4MLIop0dkbFtqmeXtxgExVB8
+         BYPKYP/cWk2TQntusByCF6sqIOHn8d8dI7UsYx8qOLa/EPfCup0buGIog2EFUhQyv1mq
+         xigKQZDCmHsKSeca6tjxOqHIfY8yDUz7qRbxqIAI4yYWSCAFiXoKdAquikQ1u/zlunaS
+         vtyzjpQX+UH43rqTTiVT6EM0v764FkVk+PXokwn8f42GRZm4BhWxbuMZ9Htdbz2gouIY
+         aKKMRFKh5gbbsZuyfdVojyNSSUPfNFd1oCWJG1277NqQ74VY0K+ZcwXGahOb6Ff6va12
+         BIoQ==
+X-Gm-Message-State: AOJu0Yw4s0Szy/aJvGlqutFdZ6dwZSZaqURv9gbO+ZNO2J/DJsUa+2l4
+	TqCscAqyssvf4dafWbjXTg1ohRzYNTsi9n3bHPBM9txJ5X2q
+X-Google-Smtp-Source: AGHT+IEH+Qv9RSKhq/9jfnZdW9wTtoZNpMp0oTYJLHBu5gyf33Rz+fOC//89NFuG+KLCZxxYdvGGUhPx3em0gRZM++U=
+X-Received: by 2002:a05:600c:1c28:b0:40a:483f:f828 with SMTP id
+ j40-20020a05600c1c2800b0040a483ff828mr46852wms.4.1702680510823; Fri, 15 Dec
+ 2023 14:48:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231214210400.GR1674809@ZenIV>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+References: <20231215-kunit_bus-v4-0-4f5160e2f95e@google.com> <20231215-kunit_bus-v4-5-4f5160e2f95e@google.com>
+In-Reply-To: <20231215-kunit_bus-v4-5-4f5160e2f95e@google.com>
+From: Rae Moar <rmoar@google.com>
+Date: Fri, 15 Dec 2023 17:48:18 -0500
+Message-ID: <CA+GJov5k35_SLnDXdTOAyrRUStc-fk__u0b6HXshfzLQovOhtQ@mail.gmail.com>
+Subject: Re: [PATCH v4 5/5] drm/tests: Switch to kunit devices
+To: davidgow@google.com
+Cc: Brendan Higgins <brendan.higgins@linux.dev>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matti Vaittinen <mazziesaccount@gmail.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Kees Cook <keescook@chromium.org>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Maxime Ripard <mripard@kernel.org>, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-sound@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Dec 14, 2023 at 09:04:00PM +0000, Al Viro wrote:
+On Fri, Dec 15, 2023 at 2:39=E2=80=AFAM <davidgow@google.com> wrote:
+>
+> From: Maxime Ripard <mripard@kernel.org>
+>
+> Kunit recently gained helpers to create test managed devices. This means
+> that we no longer have to roll our own helpers in KMS and we can reuse
+> them.
 
-> drivers/firmware/arm_scmi/shmem.c:13:#include <asm-generic/bug.h>
+Hello!
 
-Should just use linux/bug.h and be done with that.
+This looks good to me. Thanks!
 
-> drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c:10:#include <asm-generic/posix_types.h>
+Reviewed-by: Rae Moar <rmoar@google.com>
 
-Completely pointless; not to mention that none of the types defined
-there are used anywhere in that file, the previous line pulls their
-private header, which explicitly pulls linux/types.h.
+-Rae
 
-> lib/trace_readwrite.c:10:#include <asm-generic/io.h>
-
-Yeccchhh...  This is just plain wrong.
-
-What happens here is that hooks are added to writeb() et.al., to
-allow ftrace to play with those.  By default these are empty
-inlines; with CONFIG_TRACE_MMIO_ACCESS they are real function
-calls, the functions living in lib/trace_readwrite.c
-
-asm-generic/io.h is pulled by all asm/io.h instances, so that's
-where the externs went.  That would've made sense, except that
-asm-generic/io.h is used as a backstop for architectures that
-had not bothered to define e.g. readl() of their own.  And *that*
-is where the calls of those hooks had gone.  IOW, if architecture
-has readl()/writeb()/whatnot of its own, it won't get those hooks
-at all.
-
-It smells like a conversion in progress, stalled after the first
-(and only) architecture where that thing is selectable.  In effect,
-it's arm64-specific.
-
-> net/sunrpc/xprtrdma/verbs.c:58:#include <asm-generic/barrier.h>
-
-Bogus, same as the include of asm/bitops.h immediately before that
-line (the latter would've blown up if we hadn't already pulled
-linux/bitops.h - which needs asm/barrier.h and pulls it, TYVM).
-
-> rust/uapi/uapi_helper.h:9:#include <uapi/asm-generic/ioctl.h>
-
-To the rust crowd, that...  It's wrong for e.g. powerpc -
-uapi/asm/ioctl.h in there does pull asm-generic/ioctl.h, but
-only after
-#define _IOC_SIZEBITS   13
-#define _IOC_DIRBITS    3
-
-#define _IOC_NONE       1U
-#define _IOC_READ       2U
-#define _IOC_WRITE      4U
-
-which means that trying to use asm-generic/ioctl.h directly
-will yield the wrong numbers out of _IOC() et.al.
-
-
-So...
-in arch headers (..../asm/.../*.h and similar):
-	OK, that's what asm-generic is for
-in asm-generic headers themselves (..../asm-generic/.../*.h):
-	OK
-in linker scripts (*/*.lds{,.S}):
-	asm-generic/vmlinux.lds.h is fine in those (and nowhere else)
-in */*audit*.c:
-	asm-generic/audit_*.h is OK there (ugly, but...)
-in drivers,fs,init,io_uring,ipc,kernel,mm,net,sound,virt and probably rust:
-	100% bollocks, not a single valid use
-in lib/trace_readwrite.c:
-	asm-generic/io.h is an exception; complicated story.
-
-That leaves several instances in arch/, tools/ and include/linux, plus
-some oddities in makefiles, scripts, etc.  And include/linux ones are
-also not obviously correct - e.g. linux/bug.h pulls asm/bug.h, then
-(under ifdef CONFIG_BUG) asm-generic/bug.h.  AFAICS on all architectures
-we have asm/bug.h pulling asm-generic/bug.h (the ones that don't have
-asm/bug.h of their own get it generated with just such an include in
-it).  So do we need that include in linux/bug.h these days?
+>
+> Signed-off-by: Maxime Ripard <mripard@kernel.org>
+> Tested-by: David Gow <davidgow@google.com>
+> Signed-off-by: David Gow <davidgow@google.com>
+> ---
+>  drivers/gpu/drm/tests/drm_kunit_helpers.c | 66 ++-----------------------=
+------
+>  1 file changed, 3 insertions(+), 63 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/tests/drm_kunit_helpers.c b/drivers/gpu/drm/=
+tests/drm_kunit_helpers.c
+> index c251e6b34de0..ca4f8e4c5d5d 100644
+> --- a/drivers/gpu/drm/tests/drm_kunit_helpers.c
+> +++ b/drivers/gpu/drm/tests/drm_kunit_helpers.c
+> @@ -5,6 +5,7 @@
+>  #include <drm/drm_kunit_helpers.h>
+>  #include <drm/drm_managed.h>
+>
+> +#include <kunit/device.h>
+>  #include <kunit/resource.h>
+>
+>  #include <linux/device.h>
+> @@ -15,28 +16,6 @@
+>  static const struct drm_mode_config_funcs drm_mode_config_funcs =3D {
+>  };
+>
+> -static int fake_probe(struct platform_device *pdev)
+> -{
+> -       return 0;
+> -}
+> -
+> -static struct platform_driver fake_platform_driver =3D {
+> -       .probe  =3D fake_probe,
+> -       .driver =3D {
+> -               .name   =3D KUNIT_DEVICE_NAME,
+> -       },
+> -};
+> -
+> -KUNIT_DEFINE_ACTION_WRAPPER(kunit_action_platform_driver_unregister,
+> -                           platform_driver_unregister,
+> -                           struct platform_driver *);
+> -KUNIT_DEFINE_ACTION_WRAPPER(kunit_action_platform_device_put,
+> -                           platform_device_put,
+> -                           struct platform_device *);
+> -KUNIT_DEFINE_ACTION_WRAPPER(kunit_action_platform_device_del,
+> -                           platform_device_del,
+> -                           struct platform_device *);
+> -
+>  /**
+>   * drm_kunit_helper_alloc_device - Allocate a mock device for a KUnit te=
+st
+>   * @test: The test context object
+> @@ -54,34 +33,7 @@ KUNIT_DEFINE_ACTION_WRAPPER(kunit_action_platform_devi=
+ce_del,
+>   */
+>  struct device *drm_kunit_helper_alloc_device(struct kunit *test)
+>  {
+> -       struct platform_device *pdev;
+> -       int ret;
+> -
+> -       ret =3D platform_driver_register(&fake_platform_driver);
+> -       KUNIT_ASSERT_EQ(test, ret, 0);
+> -
+> -       ret =3D kunit_add_action_or_reset(test,
+> -                                       kunit_action_platform_driver_unre=
+gister,
+> -                                       &fake_platform_driver);
+> -       KUNIT_ASSERT_EQ(test, ret, 0);
+> -
+> -       pdev =3D platform_device_alloc(KUNIT_DEVICE_NAME, PLATFORM_DEVID_=
+NONE);
+> -       KUNIT_ASSERT_NOT_ERR_OR_NULL(test, pdev);
+> -
+> -       ret =3D kunit_add_action_or_reset(test,
+> -                                       kunit_action_platform_device_put,
+> -                                       pdev);
+> -       KUNIT_ASSERT_EQ(test, ret, 0);
+> -
+> -       ret =3D platform_device_add(pdev);
+> -       KUNIT_ASSERT_EQ(test, ret, 0);
+> -
+> -       ret =3D kunit_add_action_or_reset(test,
+> -                                       kunit_action_platform_device_del,
+> -                                       pdev);
+> -       KUNIT_ASSERT_EQ(test, ret, 0);
+> -
+> -       return &pdev->dev;
+> +       return kunit_device_register(test, KUNIT_DEVICE_NAME);
+>  }
+>  EXPORT_SYMBOL_GPL(drm_kunit_helper_alloc_device);
+>
+> @@ -94,19 +46,7 @@ EXPORT_SYMBOL_GPL(drm_kunit_helper_alloc_device);
+>   */
+>  void drm_kunit_helper_free_device(struct kunit *test, struct device *dev=
+)
+>  {
+> -       struct platform_device *pdev =3D to_platform_device(dev);
+> -
+> -       kunit_release_action(test,
+> -                            kunit_action_platform_device_del,
+> -                            pdev);
+> -
+> -       kunit_release_action(test,
+> -                            kunit_action_platform_device_put,
+> -                            pdev);
+> -
+> -       kunit_release_action(test,
+> -                            kunit_action_platform_driver_unregister,
+> -                            &fake_platform_driver);
+> +       kunit_device_unregister(test, dev);
+>  }
+>  EXPORT_SYMBOL_GPL(drm_kunit_helper_free_device);
+>
+>
+> --
+> 2.43.0.472.g3155946c3a-goog
+>
