@@ -1,76 +1,78 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6522A18AEE;
-	Fri, 15 Dec 2023 09:30:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CBA72DB75;
+	Fri, 15 Dec 2023 13:29:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BC/YVVYX"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-33635d11d92so214936f8f.1;
-        Fri, 15 Dec 2023 01:30:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702632606; x=1703237406; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=79zIBD/UbRI07OJHltfEg+QZ50+Tf9xaWKrxNDztd8Y=;
-        b=BC/YVVYXjg8E6eGlx7EK7/GdXAJzt51YX77jotQe3MiYoCF7NL4InQ9jE9ypMaQJBy
-         GFes0g6hr451Vovm7U9QPstS7kTIxEga7hta3TNMuzoRmjHbHV7RwEem45Oi8n9i37z4
-         KHQjEZtDJ7+reVMOvDjUolGj2YGm/HtirmvQB9AD8WcdFExgzJV+OnDr1GTTIiABxF72
-         +SWPC8sNP6Ked4eAVTpNHT7w08YLK9goRQZcH2pUGw9a5X8dPT4RaLpr702qApEULRbn
-         stDK+IvDOG3ONZiXtHhT+3T1tlm7Twv6oOaxZK0b1glwnuqjFJXZvT23NIxuN2papMv3
-         /ENA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702632606; x=1703237406;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=79zIBD/UbRI07OJHltfEg+QZ50+Tf9xaWKrxNDztd8Y=;
-        b=Xk4x+A1rITqLyxYGwC/Ed6GNXeBQuSf29tKZVJiHIPGrW5FL4VHArtdhL6ZnFyaCDb
-         vRYNdjO3+uB6nPIC9RJekEN0iSLvWiVF54PWVWZX6fmzW1UV+mvGV4rIlG3abrbfDLcn
-         fKww5ACH3U/uuF3bYrsqdQyMr21vWxoUTDkuxDu35lLJQqkMovrg1YogBKHZskhH6Jad
-         RT7mHMpwN+BJvy7wnmS/ib5JQ0TBqgFgbwEwRo1Imn16ff35EH679hDFweIsz+iztLZ8
-         EqyyASnxxBTAdS2ejlj6pNXLM/jqa9AW2qMAnsAIAB9N6WvhLM0WPJlWcaWnrCeSXtQj
-         sm0Q==
-X-Gm-Message-State: AOJu0Yzyf6klpy6MHUX+y5S64I011z9EmIbJzvgJ6G1rHsMzWXKA4FS6
-	DW689iREB1SXZKMtbRtcO2WMUVZo3IoWuour5ZI=
-X-Google-Smtp-Source: AGHT+IFj9Oxq2ZNCrDN3sSVeAs7luB7+TOGeuBPoBWPEkMisMgUlrt9UE0OuW0ZNoImUBtwhT+KCmSsbUoqwCS0vefM=
-X-Received: by 2002:a5d:4acd:0:b0:336:4939:2c97 with SMTP id
- y13-20020a5d4acd000000b0033649392c97mr1343786wrs.47.1702632606414; Fri, 15
- Dec 2023 01:30:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JXsLTunK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0408EC433C7;
+	Fri, 15 Dec 2023 13:29:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702646980;
+	bh=rpyS4v8W+CuN4+EjjXEahB1+6g1qTTqMvB9+ugujzJg=;
+	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+	b=JXsLTunKMBBISI4ECLjoovakgd/auY72meweT5jEaGxWUmWWMPpUZ0/zdNwREoc2g
+	 2aS2ZNCm1VcCgKfG9UUbi1WD7ytS5cCUCgEypqXTrz2rzw7bDJr566wVPY4/Pny+JZ
+	 9e+Ey7VpBE4EOB0iIPpVVjiFfWnmnA44lv/DdIN36uMLpGqTXCll4jaanDarSgmOP2
+	 ZKcszw82ho2s3UYGfr7Wgo8tVp1rJ/hNwk1umGZv2WpM+73haNqFR0Rz01Xs04Y/af
+	 xJEUIKZhkdybjvF/4OYAtLELSFBU4uAHRvGWHL0FUfH+95hDrJL/ICpWFM3DS5YP2S
+	 sCWwwaOTG5JxQ==
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231130205010.it.412-kees@kernel.org> <CALk6UxrWjHAfUXQZF4UcA-iwW92gpmfc41LBETC5_wDXn4zWww@mail.gmail.com>
- <202312041410.708A1416AD@keescook>
-In-Reply-To: <202312041410.708A1416AD@keescook>
-From: Ronald Monthero <debug.penguin32@gmail.com>
-Date: Fri, 15 Dec 2023 19:29:29 +1000
-Message-ID: <CALk6Uxo8GYBpowV7osvAYZaGMAkVVM+spdCv0rQYgVntbxQO5Q@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] qnx4: Avoid confusing compiler about buffer lengths
-To: Kees Cook <keescook@chromium.org>
-Cc: Anders Larsen <al@alarsen.net>, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2][wireless-next/for-next] wifi: mt76: mt7996: Use
+ DECLARE_FLEX_ARRAY() and fix -Warray-bounds warnings
+From: Kalle Valo <kvalo@kernel.org>
+In-Reply-To: <ZXiU9ayVCslt3qiI@work>
+References: <ZXiU9ayVCslt3qiI@work>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
+ Ryder Lee <ryder.lee@mediatek.com>, Shayne Chen <shayne.chen@mediatek.com>,
+ Sean Wang <sean.wang@mediatek.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ linux-hardening@vger.kernel.org
+User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
+Message-ID: <170264697580.1759617.6397953788753678096.kvalo@kernel.org>
+Date: Fri, 15 Dec 2023 13:29:37 +0000 (UTC)
 
-On Tue, Dec 5, 2023 at 8:10=E2=80=AFAM Kees Cook <keescook@chromium.org> wr=
-ote:
->
-> On Tue, Dec 05, 2023 at 01:46:27AM +1000, Ronald Monthero wrote:
-> > Cheers Kees,
-> > BR,
-> > ronald
->
-> Is this a "Tested-by"? :)
+"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
 
-Oh sorry Kees I have somehow missed this conversation.
-Yes ack the tests which were earlier causing oops, now pass with the 2 patc=
-hes.
+> Transform zero-length arrays `rate`, `adm_stat` and `msdu_cnt` into
+> proper flexible-array members in anonymous union in `struct
+> mt7996_mcu_all_sta_info_event` via the DECLARE_FLEX_ARRAY()
+> helper; and fix multiple -Warray-bounds warnings:
+> 
+> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:544:61: warning: array subscript <unknown> is outside array bounds of 'struct <anonymous>[0]' [-Warray-bounds=]
+> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:551:58: warning: array subscript <unknown> is outside array bounds of 'struct <anonymous>[0]' [-Warray-bounds=]
+> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:553:58: warning: array subscript <unknown> is outside array bounds of 'struct <anonymous>[0]' [-Warray-bounds=]
+> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:530:61: warning: array subscript <unknown> is outside array bounds of 'struct <anonymous>[0]' [-Warray-bounds=]
+> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:538:66: warning: array subscript <unknown> is outside array bounds of 'struct <anonymous>[0]' [-Warray-bounds=]
+> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:540:66: warning: array subscript <unknown> is outside array bounds of 'struct <anonymous>[0]' [-Warray-bounds=]
+> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:520:57: warning: array subscript <unknown> is outside array bounds of 'struct all_sta_trx_rate[0]' [-Warray-bounds=]
+> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:526:76: warning: array subscript <unknown> is outside array bounds of 'struct all_sta_trx_rate[0]' [-Warray-bounds=]
+> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:526:76: warning: array subscript <unknown> is outside array bounds of 'struct all_sta_trx_rate[0]' [-Warray-bounds=]
+> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:526:76: warning: array subscript <unknown> is outside array bounds of 'struct all_sta_trx_rate[0]' [-Warray-bounds=]
+> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:526:76: warning: array subscript <unknown> is outside array bounds of 'struct all_sta_trx_rate[0]' [-Warray-bounds=]
+> 
+> This results in no differences in binary output, helps with the ongoing
+> efforts to globally enable -Warray-bounds.
+> 
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-BR,
-ronald
+I'll take this directly wireless-next, ok?
+
+-- 
+https://patchwork.kernel.org/project/linux-wireless/patch/ZXiU9ayVCslt3qiI@work/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
