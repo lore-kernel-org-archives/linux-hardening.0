@@ -1,93 +1,129 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A145C4184F;
-	Fri, 15 Dec 2023 19:09:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 838FE4777D;
+	Fri, 15 Dec 2023 21:03:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AuZdQhH1"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-67ac0ef6bb8so6080096d6.1;
-        Fri, 15 Dec 2023 11:09:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702667382; x=1703272182; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KWbxY3Q+EoYq5mueLiLO42QJaTQBT+r4FmqbmlCjarw=;
-        b=AuZdQhH1P5VAEYsXf5q11XaZrV0ndVOspTvuZwGLeFOcJ0YYGqLx2fBV9gn7QcBC8o
-         P6UqHzTG32ddJjKMtYqKC7aST+zgop9y2fdQMhSOACQQmy+Lf865ei99Sw+j6+oMqw2A
-         Seit9afdoH5M06c2qllY+5Gf1sZ6T6h5S/sz9L3BIKKP4A29VoD3IG92Z4ReFllEwQUF
-         +ggIpIZ4DtkuhsF4W0Q7BdPxN9siwg6jlpNqzh7RwgAgWlV74a5cRa8RQDrWKjbeAAWZ
-         CB81pugVgj8/M7iOtD6uIPVH3KgBOraJBslIYytEsXhAlkOwByk1X2m01v/Ozz3Uu17s
-         ZX/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702667382; x=1703272182;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KWbxY3Q+EoYq5mueLiLO42QJaTQBT+r4FmqbmlCjarw=;
-        b=TgiP46+sgvEFao6OYATxQwfA+y4TJlwXXzjShGEgnPlF1Ul+F9rR6zzaegXsdpNNig
-         PU3/twK6KTu7L3/7DCqrF81Qc1D1md/D1qvGC0Xfy6q336ZfI4SdHVgGjC3jRP8m/Cg5
-         Ys51swEYE/z5uW6OqZk81nLj7W93pUmbm4Y2wpbs95+QPRNhRV9O/QcG5PN6NC1FjGnK
-         B4ZkxNzIjyfyEsFQEwwahsHdiiKaV7aPOngAGGttGPndBFmGJ/x0Ot2HHmTDgWvnydV8
-         kq46OhsjAF/7lY/tUf3jE+xESRK85QW2lf6k6i6T2gSp6rnC4zVT4tlJVWb1nAsin+4U
-         vCjA==
-X-Gm-Message-State: AOJu0YxJLOXjGKC+HK9iZ8vMx6g8GMK4cb6RjxVU17ucrntFENEH6gy/
-	H5ZpIktrieQvuCPI6f28LnSD2qi6An75NU03C/k=
-X-Google-Smtp-Source: AGHT+IGRu4Yn+bj/EYigKT4CfJMHoTJnMispB2cjumjYp7+2ke+qfRMcDdJG/cL79FzU5aowwE2g1m0EgVLQmvaKh6M=
-X-Received: by 2002:a05:6214:1023:b0:67a:bce4:e2e3 with SMTP id
- k3-20020a056214102300b0067abce4e2e3mr10532467qvr.5.1702667382352; Fri, 15 Dec
- 2023 11:09:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="RSHEuCkD"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=3sddRRvwk/fTKF7doym0HPnBmsg/UatU52NDddZvLeM=; b=RSHEuCkD54S7yVRnkkdRcJRhGB
+	CCGEmrAERKHDC9A23+dPZdarY6qX1xEXD04Fd6FYVZ2haVIn4+aWT4QIFjld3w02jGzgMq+UXLQDG
+	uB1rFook2rv0QRa21NRESCSJtqiU4skicVFf4JN/Z3SHmGp63xgpextFd2ddlJIoxsIcje2EDRlKi
+	qLZL3dYhDnG1LkYaTy/ZPivcDvPAKMfuhgGQnW+nUZfmyimzpIEnv3dmIciv5FIvxBB7bkqL0KQgA
+	RkNS86h1OL0o04t8ROx7kJP6ownxFmdArQXSB+7HnT/NsLrGq5KSFJ3v475DsRLOdCBama76TWRf1
+	junaDkpw==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1rEFLU-00D57W-27;
+	Fri, 15 Dec 2023 21:03:44 +0000
+Date: Fri, 15 Dec 2023 21:03:44 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Greg KH <greg@kroah.com>
+Cc: Nick Desaulniers <ndesaulniers@google.com>, tanzirh@google.com,
+	Kees Cook <keescook@chromium.org>,
+	Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Nick DeSaulniers <nnn@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>, llvm@lists.linux.dev
+Subject: Re: [PATCH] lib/string: shrink lib/string.i via IWYU
+Message-ID: <20231215210344.GA3096493@ZenIV>
+References: <20231205-libstringheader-v1-1-7f9c573053a7@gmail.com>
+ <20231205213807.GE1674809@ZenIV>
+ <CAKwvOd=2VASkaLvjU+7kkbvhu2CimYn5KUGJBDRePyUhtrNK2Q@mail.gmail.com>
+ <2023120608-ivy-snowdrop-890d@gregkh>
+ <CAKwvOdmFJ=ZGN8ZScS5oQpXnAL0wwtTDCeNNGpBKZXzQ4kRAVA@mail.gmail.com>
+ <2023120657-henna-spongy-9ef6@gregkh>
+ <20231206005542.GJ1674809@ZenIV>
+ <20231206030047.GL1674809@ZenIV>
+ <2023120650-faucet-palpable-f1a3@gregkh>
+ <20231214210400.GR1674809@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231214-libstringheader-v2-0-0f195dcff204@google.com>
- <20231214-libstringheader-v2-1-0f195dcff204@google.com> <ZXx5DyidpHFhRevy@smile.fi.intel.com>
- <CAE-cH4p5VJ_A91BAkURBN67ACA0_u7T8UhApUYLQDWeeRY6FWA@mail.gmail.com>
-In-Reply-To: <CAE-cH4p5VJ_A91BAkURBN67ACA0_u7T8UhApUYLQDWeeRY6FWA@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 15 Dec 2023 21:09:05 +0200
-Message-ID: <CAHp75Vdo=g7ZBAuk79PtLOYs-YHo5sCTp1WVFESHA0xN0zGEmQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] sh: Added kernel.h to word-at-a-time
-To: Tanzir Hasan <tanzirh@google.com>
-Cc: Andy Shevchenko <andy@kernel.org>, Kees Cook <keescook@chromium.org>, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Nick DeSaulniers <nnn@google.com>, Andrew Morton <akpm@linux-foundation.org>, llvm@lists.linux.dev, 
-	Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231214210400.GR1674809@ZenIV>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Fri, Dec 15, 2023 at 8:31=E2=80=AFPM Tanzir Hasan <tanzirh@google.com> w=
-rote:
-> On Fri, Dec 15, 2023 at 8:04=E2=80=AFAM Andy Shevchenko <andy@kernel.org>=
- wrote:
->> On Thu, Dec 14, 2023 at 09:06:12PM +0000, tanzirh@google.com wrote:
+On Thu, Dec 14, 2023 at 09:04:00PM +0000, Al Viro wrote:
 
-...
+> drivers/firmware/arm_scmi/shmem.c:13:#include <asm-generic/bug.h>
 
->> > +#include <linux/kernel.h>
->>
->> I highly discourage from doing that. Instead, split what is needed to
->> the separate (new) header and include that one.
->
->
-> I think it would make the most sense to do this in a separate patch.
-> What word-at-a-time.h needs from kernel.h is REPEAT_BYTE and to my knowle=
-dge,
-> almost every other version of word-at-a-time.h includes kernel.h gets thi=
-s by
-> including kernel.h. A future change could be removing REPEAT_BYTE
-> out of kernel.h
+Should just use linux/bug.h and be done with that.
 
-Just create a patch that either moves that macro (along with upper_*()
-and lower_*() APIs) to a more distinguishable header
-(maybe bytes.h or words.h or wordpart.h, etc) and use it in your case
-and fix others.
+> drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c:10:#include <asm-generic/posix_types.h>
 
---=20
-With Best Regards,
-Andy Shevchenko
+Completely pointless; not to mention that none of the types defined
+there are used anywhere in that file, the previous line pulls their
+private header, which explicitly pulls linux/types.h.
+
+> lib/trace_readwrite.c:10:#include <asm-generic/io.h>
+
+Yeccchhh...  This is just plain wrong.
+
+What happens here is that hooks are added to writeb() et.al., to
+allow ftrace to play with those.  By default these are empty
+inlines; with CONFIG_TRACE_MMIO_ACCESS they are real function
+calls, the functions living in lib/trace_readwrite.c
+
+asm-generic/io.h is pulled by all asm/io.h instances, so that's
+where the externs went.  That would've made sense, except that
+asm-generic/io.h is used as a backstop for architectures that
+had not bothered to define e.g. readl() of their own.  And *that*
+is where the calls of those hooks had gone.  IOW, if architecture
+has readl()/writeb()/whatnot of its own, it won't get those hooks
+at all.
+
+It smells like a conversion in progress, stalled after the first
+(and only) architecture where that thing is selectable.  In effect,
+it's arm64-specific.
+
+> net/sunrpc/xprtrdma/verbs.c:58:#include <asm-generic/barrier.h>
+
+Bogus, same as the include of asm/bitops.h immediately before that
+line (the latter would've blown up if we hadn't already pulled
+linux/bitops.h - which needs asm/barrier.h and pulls it, TYVM).
+
+> rust/uapi/uapi_helper.h:9:#include <uapi/asm-generic/ioctl.h>
+
+To the rust crowd, that...  It's wrong for e.g. powerpc -
+uapi/asm/ioctl.h in there does pull asm-generic/ioctl.h, but
+only after
+#define _IOC_SIZEBITS   13
+#define _IOC_DIRBITS    3
+
+#define _IOC_NONE       1U
+#define _IOC_READ       2U
+#define _IOC_WRITE      4U
+
+which means that trying to use asm-generic/ioctl.h directly
+will yield the wrong numbers out of _IOC() et.al.
+
+
+So...
+in arch headers (..../asm/.../*.h and similar):
+	OK, that's what asm-generic is for
+in asm-generic headers themselves (..../asm-generic/.../*.h):
+	OK
+in linker scripts (*/*.lds{,.S}):
+	asm-generic/vmlinux.lds.h is fine in those (and nowhere else)
+in */*audit*.c:
+	asm-generic/audit_*.h is OK there (ugly, but...)
+in drivers,fs,init,io_uring,ipc,kernel,mm,net,sound,virt and probably rust:
+	100% bollocks, not a single valid use
+in lib/trace_readwrite.c:
+	asm-generic/io.h is an exception; complicated story.
+
+That leaves several instances in arch/, tools/ and include/linux, plus
+some oddities in makefiles, scripts, etc.  And include/linux ones are
+also not obviously correct - e.g. linux/bug.h pulls asm/bug.h, then
+(under ifdef CONFIG_BUG) asm-generic/bug.h.  AFAICS on all architectures
+we have asm/bug.h pulling asm-generic/bug.h (the ones that don't have
+asm/bug.h of their own get it generated with just such an include in
+it).  So do we need that include in linux/bug.h these days?
