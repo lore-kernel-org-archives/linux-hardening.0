@@ -1,80 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0937F12B8C;
-	Sun, 17 Dec 2023 11:17:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 805623308A;
+	Sun, 17 Dec 2023 13:00:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nilvsnOw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DE04C433C7;
-	Sun, 17 Dec 2023 11:17:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U6+N/5b5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFD61C433C7;
+	Sun, 17 Dec 2023 13:00:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702811839;
-	bh=Sk2qe/uIHfzrqXwB7Gd/4Uel6P7DxOF+HQ9SsHoeciY=;
-	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-	b=nilvsnOw4ynfGElnT481GCb04X9uZGXegbEKJs11zjB03awEgRdsiInGe9prJyfnN
-	 nSFKipw2g85ljD9h0ZElOgR2f71CzM6ruVZQ/+TOlM0gYOY8Ujq5dQdyyViNOrOYhF
-	 r1Ii5TB2+5Mcbkv8ECSSstKtcKSTudEDX8igiXRipOcUVH0INVrW9/Jf88quofTdZc
-	 4tEnt16Tnv7IX+vHwKKXTDPMkYa2D83se/ZY5VOe8/QSlO8RbTJ6BKB3LYq2fI2BPr
-	 mYfhnVPQvcaPdh2KFID7rFWHAxQycy0yAT+W9MkxLuNYOvQYogb21zUNaSezubzU5X
-	 ETiKqqthhx6DA==
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1702818047;
+	bh=ceURb/yin7nwojjm8+LwtekPtcFpkviBi0xv8iONU88=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=U6+N/5b5iLgxIysBZAhqwbeBjRXfaIQjnbntFC88Cpc+wZ4nkU7YgVvFhKswURIHs
+	 hu7JOfmDiXGR+lLtm2U2Q4MbffLOH+4WFRLOIhqJDsUz5ZJPKSyWjXl370oRzpP/e8
+	 75gyoCqrqhHXjbgucBM5+5wfPoTCl+14axw6juMKHJGuJ4arvggF5qTQagSTUzfLTO
+	 6/iDzvbqaj+bzbwcPBs9Mf/5Kv/h9U0zmR1SihUohrXSq+pGY0zMS/HZy0kHUN/fy+
+	 Nv9c45/kp5Ql8JV+Jlvqlo78jlW//WbfGqQ3+ORCQhK/no2kxIvRVaqj62Alge0XuY
+	 GSipfc3xAu6Nw==
+Date: Sun, 17 Dec 2023 13:00:33 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Gwendal Grignou <gwendal@chromium.org>
+Cc: Justin Stitt <justinstitt@google.com>, Stephen Boyd
+ <swboyd@chromium.org>, Lars-Peter Clausen <lars@metafoo.de>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] iio: sx9324: avoid copying property strings
+Message-ID: <20231217130033.0b3a5ac6@jic23-huawei>
+In-Reply-To: <CAPUE2ut0gbSyzUQ+m=760kXeOqKoi+9OwaExXTSgg8S=bWhUvg@mail.gmail.com>
+References: <20231026-strncpy-drivers-iio-proximity-sx9324-c-v2-1-cee6e5db700c@google.com>
+	<20231028162638.5b477ded@jic23-huawei>
+	<CAE-0n51eAH1tcqXVeReavq0US-Th2qwC_s_uAzRKTpSG-kXuwA@mail.gmail.com>
+	<CAFhGd8p76R-oaPWR0G6wESe7kgM--2bzU88j2vz4QGy8wKNffg@mail.gmail.com>
+	<CAPUE2ut0gbSyzUQ+m=760kXeOqKoi+9OwaExXTSgg8S=bWhUvg@mail.gmail.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v2][wireless-next/for-next] wifi: mt76: mt7996: Use
- DECLARE_FLEX_ARRAY() and fix -Warray-bounds warnings
-From: Kalle Valo <kvalo@kernel.org>
-In-Reply-To: <ZXiU9ayVCslt3qiI@work>
-References: <ZXiU9ayVCslt3qiI@work>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
- Ryder Lee <ryder.lee@mediatek.com>, Shayne Chen <shayne.chen@mediatek.com>,
- Sean Wang <sean.wang@mediatek.com>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- linux-hardening@vger.kernel.org
-User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
-Message-ID: <170281183364.2255653.11348778745254559115.kvalo@kernel.org>
-Date: Sun, 17 Dec 2023 11:17:16 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
+On Tue, 12 Dec 2023 15:51:04 -0800
+Gwendal Grignou <gwendal@chromium.org> wrote:
 
-> Transform zero-length arrays `rate`, `adm_stat` and `msdu_cnt` into
-> proper flexible-array members in anonymous union in `struct
-> mt7996_mcu_all_sta_info_event` via the DECLARE_FLEX_ARRAY()
-> helper; and fix multiple -Warray-bounds warnings:
-> 
-> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:544:61: warning: array subscript <unknown> is outside array bounds of 'struct <anonymous>[0]' [-Warray-bounds=]
-> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:551:58: warning: array subscript <unknown> is outside array bounds of 'struct <anonymous>[0]' [-Warray-bounds=]
-> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:553:58: warning: array subscript <unknown> is outside array bounds of 'struct <anonymous>[0]' [-Warray-bounds=]
-> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:530:61: warning: array subscript <unknown> is outside array bounds of 'struct <anonymous>[0]' [-Warray-bounds=]
-> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:538:66: warning: array subscript <unknown> is outside array bounds of 'struct <anonymous>[0]' [-Warray-bounds=]
-> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:540:66: warning: array subscript <unknown> is outside array bounds of 'struct <anonymous>[0]' [-Warray-bounds=]
-> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:520:57: warning: array subscript <unknown> is outside array bounds of 'struct all_sta_trx_rate[0]' [-Warray-bounds=]
-> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:526:76: warning: array subscript <unknown> is outside array bounds of 'struct all_sta_trx_rate[0]' [-Warray-bounds=]
-> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:526:76: warning: array subscript <unknown> is outside array bounds of 'struct all_sta_trx_rate[0]' [-Warray-bounds=]
-> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:526:76: warning: array subscript <unknown> is outside array bounds of 'struct all_sta_trx_rate[0]' [-Warray-bounds=]
-> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:526:76: warning: array subscript <unknown> is outside array bounds of 'struct all_sta_trx_rate[0]' [-Warray-bounds=]
-> 
-> This results in no differences in binary output, helps with the ongoing
-> efforts to globally enable -Warray-bounds.
-> 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
+Hi Gwendal
 
-Patch applied to wireless-next.git, thanks.
+I'll ignore this tag given the email you've replied to says there is a diff=
+erent
+implementation. Please take a look at that version instead.
 
-40d51f70f082 wifi: mt76: mt7996: Use DECLARE_FLEX_ARRAY() and fix -Warray-bounds warnings
+Jonathan
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/patch/ZXiU9ayVCslt3qiI@work/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+>=20
+> On Mon, Dec 11, 2023 at 4:46=E2=80=AFPM Justin Stitt <justinstitt@google.=
+com> wrote:
+> >
+> > Hi,
+> >
+> > On Mon, Oct 30, 2023 at 2:44=E2=80=AFPM Stephen Boyd <swboyd@chromium.o=
+rg> wrote: =20
+> > >
+> > >
+> > > We need to free it in other places too, like if the count doesn't mat=
+ch.
+> > > It may be easier to extract this section and just have 4 string
+> > > literals.
+> > >
+> > >         switch (reg_def->reg) {
+> > >         case SX9324_REG_AFE_PH0:
+> > >                 reg_def =3D sx9324_parse_phase_prop(dev, reg_def, "se=
+mtech,ph0-pin");
+> > >                 break;
+> > >         case SX9324_REG_AFE_PH1:
+> > >                 reg_def =3D sx9324_parse_phase_prop(dev, reg_def, "se=
+mtech,ph1-pin");
+> > >                 break;
+> > >         case SX9324_REG_AFE_PH2:
+> > >                 reg_def =3D sx9324_parse_phase_prop(dev, reg_def, "se=
+mtech,ph2-pin");
+> > >                 break;
+> > >         case SX9324_REG_AFE_PH3:
+> > >                 reg_def =3D sx9324_parse_phase_prop(dev, reg_def, "se=
+mtech,ph3-pin");
+> > >                 break;
+> > > =20
+> >
+> > I've submitted v3 of this patch [1] trying out Stephen's idea. I'd
+> > appreciate feedback.
+> >
+> > [1]: https://lore.kernel.org/all/20231212-strncpy-drivers-iio-proximity=
+-sx9324-c-v3-1-b8ae12fc8a5d@google.com/
+> >
+> > Thanks
+> > Justin =20
 
