@@ -1,199 +1,80 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A17441DDF1
-	for <linux-hardening@vger.kernel.org>; Fri, 15 Dec 2023 22:48:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0937F12B8C;
+	Sun, 17 Dec 2023 11:17:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2x7HTmy/"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-40c32bea30dso20105e9.0
-        for <linux-hardening@vger.kernel.org>; Fri, 15 Dec 2023 14:48:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1702680511; x=1703285311; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nbI008FwkAGh6OQKmN5oST6SiRX3AZBUL7LLv+QG9V0=;
-        b=2x7HTmy/Y0wkJsdO8FH2y/FOE6L/xsfTjUTDHTYgcuzoM/fSetZVC4X/FNCHQ/NLaJ
-         sdf3aPoD/jH+nO8zmiuf8dkrsdd8eX7aSO+Cm7iN9eusGEKYW/BCisKFY+OC5tFO+BzN
-         B56nT91cWFgPKDHBnixf1z4bKzoWLhfZHd3EXkOaHIEJA6eQ+6vT8PkCDkg75xVnEoxN
-         rQ/sd0JW4Z6/94Fw1ksF/Nm5NX9QpXO9mQdLzYqymZ6rL1zEiG/SfeHUJ6XhaAd6SuJa
-         kx/2HmN5Krrff9bDE6CRUDkGhFRqoqR9Z7n2Svh+FOJl3qxxPKwDb9JT3R3x5U+7eNsC
-         Tpnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702680511; x=1703285311;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nbI008FwkAGh6OQKmN5oST6SiRX3AZBUL7LLv+QG9V0=;
-        b=Mn/C7FrCGAPN0m8ZXIO2IgCMRTJYyvWsSKcASODvHH4MLIop0dkbFtqmeXtxgExVB8
-         BYPKYP/cWk2TQntusByCF6sqIOHn8d8dI7UsYx8qOLa/EPfCup0buGIog2EFUhQyv1mq
-         xigKQZDCmHsKSeca6tjxOqHIfY8yDUz7qRbxqIAI4yYWSCAFiXoKdAquikQ1u/zlunaS
-         vtyzjpQX+UH43rqTTiVT6EM0v764FkVk+PXokwn8f42GRZm4BhWxbuMZ9Htdbz2gouIY
-         aKKMRFKh5gbbsZuyfdVojyNSSUPfNFd1oCWJG1277NqQ74VY0K+ZcwXGahOb6Ff6va12
-         BIoQ==
-X-Gm-Message-State: AOJu0Yw4s0Szy/aJvGlqutFdZ6dwZSZaqURv9gbO+ZNO2J/DJsUa+2l4
-	TqCscAqyssvf4dafWbjXTg1ohRzYNTsi9n3bHPBM9txJ5X2q
-X-Google-Smtp-Source: AGHT+IEH+Qv9RSKhq/9jfnZdW9wTtoZNpMp0oTYJLHBu5gyf33Rz+fOC//89NFuG+KLCZxxYdvGGUhPx3em0gRZM++U=
-X-Received: by 2002:a05:600c:1c28:b0:40a:483f:f828 with SMTP id
- j40-20020a05600c1c2800b0040a483ff828mr46852wms.4.1702680510823; Fri, 15 Dec
- 2023 14:48:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nilvsnOw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DE04C433C7;
+	Sun, 17 Dec 2023 11:17:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702811839;
+	bh=Sk2qe/uIHfzrqXwB7Gd/4Uel6P7DxOF+HQ9SsHoeciY=;
+	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+	b=nilvsnOw4ynfGElnT481GCb04X9uZGXegbEKJs11zjB03awEgRdsiInGe9prJyfnN
+	 nSFKipw2g85ljD9h0ZElOgR2f71CzM6ruVZQ/+TOlM0gYOY8Ujq5dQdyyViNOrOYhF
+	 r1Ii5TB2+5Mcbkv8ECSSstKtcKSTudEDX8igiXRipOcUVH0INVrW9/Jf88quofTdZc
+	 4tEnt16Tnv7IX+vHwKKXTDPMkYa2D83se/ZY5VOe8/QSlO8RbTJ6BKB3LYq2fI2BPr
+	 mYfhnVPQvcaPdh2KFID7rFWHAxQycy0yAT+W9MkxLuNYOvQYogb21zUNaSezubzU5X
+	 ETiKqqthhx6DA==
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231215-kunit_bus-v4-0-4f5160e2f95e@google.com> <20231215-kunit_bus-v4-5-4f5160e2f95e@google.com>
-In-Reply-To: <20231215-kunit_bus-v4-5-4f5160e2f95e@google.com>
-From: Rae Moar <rmoar@google.com>
-Date: Fri, 15 Dec 2023 17:48:18 -0500
-Message-ID: <CA+GJov5k35_SLnDXdTOAyrRUStc-fk__u0b6HXshfzLQovOhtQ@mail.gmail.com>
-Subject: Re: [PATCH v4 5/5] drm/tests: Switch to kunit devices
-To: davidgow@google.com
-Cc: Brendan Higgins <brendan.higgins@linux.dev>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matti Vaittinen <mazziesaccount@gmail.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Kees Cook <keescook@chromium.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Maxime Ripard <mripard@kernel.org>, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-sound@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2][wireless-next/for-next] wifi: mt76: mt7996: Use
+ DECLARE_FLEX_ARRAY() and fix -Warray-bounds warnings
+From: Kalle Valo <kvalo@kernel.org>
+In-Reply-To: <ZXiU9ayVCslt3qiI@work>
+References: <ZXiU9ayVCslt3qiI@work>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
+ Ryder Lee <ryder.lee@mediatek.com>, Shayne Chen <shayne.chen@mediatek.com>,
+ Sean Wang <sean.wang@mediatek.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ linux-hardening@vger.kernel.org
+User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
+Message-ID: <170281183364.2255653.11348778745254559115.kvalo@kernel.org>
+Date: Sun, 17 Dec 2023 11:17:16 +0000 (UTC)
 
-On Fri, Dec 15, 2023 at 2:39=E2=80=AFAM <davidgow@google.com> wrote:
->
-> From: Maxime Ripard <mripard@kernel.org>
->
-> Kunit recently gained helpers to create test managed devices. This means
-> that we no longer have to roll our own helpers in KMS and we can reuse
-> them.
+"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
 
-Hello!
+> Transform zero-length arrays `rate`, `adm_stat` and `msdu_cnt` into
+> proper flexible-array members in anonymous union in `struct
+> mt7996_mcu_all_sta_info_event` via the DECLARE_FLEX_ARRAY()
+> helper; and fix multiple -Warray-bounds warnings:
+> 
+> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:544:61: warning: array subscript <unknown> is outside array bounds of 'struct <anonymous>[0]' [-Warray-bounds=]
+> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:551:58: warning: array subscript <unknown> is outside array bounds of 'struct <anonymous>[0]' [-Warray-bounds=]
+> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:553:58: warning: array subscript <unknown> is outside array bounds of 'struct <anonymous>[0]' [-Warray-bounds=]
+> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:530:61: warning: array subscript <unknown> is outside array bounds of 'struct <anonymous>[0]' [-Warray-bounds=]
+> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:538:66: warning: array subscript <unknown> is outside array bounds of 'struct <anonymous>[0]' [-Warray-bounds=]
+> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:540:66: warning: array subscript <unknown> is outside array bounds of 'struct <anonymous>[0]' [-Warray-bounds=]
+> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:520:57: warning: array subscript <unknown> is outside array bounds of 'struct all_sta_trx_rate[0]' [-Warray-bounds=]
+> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:526:76: warning: array subscript <unknown> is outside array bounds of 'struct all_sta_trx_rate[0]' [-Warray-bounds=]
+> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:526:76: warning: array subscript <unknown> is outside array bounds of 'struct all_sta_trx_rate[0]' [-Warray-bounds=]
+> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:526:76: warning: array subscript <unknown> is outside array bounds of 'struct all_sta_trx_rate[0]' [-Warray-bounds=]
+> drivers/net/wireless/mediatek/mt76/mt7996/mcu.c:526:76: warning: array subscript <unknown> is outside array bounds of 'struct all_sta_trx_rate[0]' [-Warray-bounds=]
+> 
+> This results in no differences in binary output, helps with the ongoing
+> efforts to globally enable -Warray-bounds.
+> 
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-This looks good to me. Thanks!
+Patch applied to wireless-next.git, thanks.
 
-Reviewed-by: Rae Moar <rmoar@google.com>
+40d51f70f082 wifi: mt76: mt7996: Use DECLARE_FLEX_ARRAY() and fix -Warray-bounds warnings
 
--Rae
+-- 
+https://patchwork.kernel.org/project/linux-wireless/patch/ZXiU9ayVCslt3qiI@work/
 
->
-> Signed-off-by: Maxime Ripard <mripard@kernel.org>
-> Tested-by: David Gow <davidgow@google.com>
-> Signed-off-by: David Gow <davidgow@google.com>
-> ---
->  drivers/gpu/drm/tests/drm_kunit_helpers.c | 66 ++-----------------------=
-------
->  1 file changed, 3 insertions(+), 63 deletions(-)
->
-> diff --git a/drivers/gpu/drm/tests/drm_kunit_helpers.c b/drivers/gpu/drm/=
-tests/drm_kunit_helpers.c
-> index c251e6b34de0..ca4f8e4c5d5d 100644
-> --- a/drivers/gpu/drm/tests/drm_kunit_helpers.c
-> +++ b/drivers/gpu/drm/tests/drm_kunit_helpers.c
-> @@ -5,6 +5,7 @@
->  #include <drm/drm_kunit_helpers.h>
->  #include <drm/drm_managed.h>
->
-> +#include <kunit/device.h>
->  #include <kunit/resource.h>
->
->  #include <linux/device.h>
-> @@ -15,28 +16,6 @@
->  static const struct drm_mode_config_funcs drm_mode_config_funcs =3D {
->  };
->
-> -static int fake_probe(struct platform_device *pdev)
-> -{
-> -       return 0;
-> -}
-> -
-> -static struct platform_driver fake_platform_driver =3D {
-> -       .probe  =3D fake_probe,
-> -       .driver =3D {
-> -               .name   =3D KUNIT_DEVICE_NAME,
-> -       },
-> -};
-> -
-> -KUNIT_DEFINE_ACTION_WRAPPER(kunit_action_platform_driver_unregister,
-> -                           platform_driver_unregister,
-> -                           struct platform_driver *);
-> -KUNIT_DEFINE_ACTION_WRAPPER(kunit_action_platform_device_put,
-> -                           platform_device_put,
-> -                           struct platform_device *);
-> -KUNIT_DEFINE_ACTION_WRAPPER(kunit_action_platform_device_del,
-> -                           platform_device_del,
-> -                           struct platform_device *);
-> -
->  /**
->   * drm_kunit_helper_alloc_device - Allocate a mock device for a KUnit te=
-st
->   * @test: The test context object
-> @@ -54,34 +33,7 @@ KUNIT_DEFINE_ACTION_WRAPPER(kunit_action_platform_devi=
-ce_del,
->   */
->  struct device *drm_kunit_helper_alloc_device(struct kunit *test)
->  {
-> -       struct platform_device *pdev;
-> -       int ret;
-> -
-> -       ret =3D platform_driver_register(&fake_platform_driver);
-> -       KUNIT_ASSERT_EQ(test, ret, 0);
-> -
-> -       ret =3D kunit_add_action_or_reset(test,
-> -                                       kunit_action_platform_driver_unre=
-gister,
-> -                                       &fake_platform_driver);
-> -       KUNIT_ASSERT_EQ(test, ret, 0);
-> -
-> -       pdev =3D platform_device_alloc(KUNIT_DEVICE_NAME, PLATFORM_DEVID_=
-NONE);
-> -       KUNIT_ASSERT_NOT_ERR_OR_NULL(test, pdev);
-> -
-> -       ret =3D kunit_add_action_or_reset(test,
-> -                                       kunit_action_platform_device_put,
-> -                                       pdev);
-> -       KUNIT_ASSERT_EQ(test, ret, 0);
-> -
-> -       ret =3D platform_device_add(pdev);
-> -       KUNIT_ASSERT_EQ(test, ret, 0);
-> -
-> -       ret =3D kunit_add_action_or_reset(test,
-> -                                       kunit_action_platform_device_del,
-> -                                       pdev);
-> -       KUNIT_ASSERT_EQ(test, ret, 0);
-> -
-> -       return &pdev->dev;
-> +       return kunit_device_register(test, KUNIT_DEVICE_NAME);
->  }
->  EXPORT_SYMBOL_GPL(drm_kunit_helper_alloc_device);
->
-> @@ -94,19 +46,7 @@ EXPORT_SYMBOL_GPL(drm_kunit_helper_alloc_device);
->   */
->  void drm_kunit_helper_free_device(struct kunit *test, struct device *dev=
-)
->  {
-> -       struct platform_device *pdev =3D to_platform_device(dev);
-> -
-> -       kunit_release_action(test,
-> -                            kunit_action_platform_device_del,
-> -                            pdev);
-> -
-> -       kunit_release_action(test,
-> -                            kunit_action_platform_device_put,
-> -                            pdev);
-> -
-> -       kunit_release_action(test,
-> -                            kunit_action_platform_driver_unregister,
-> -                            &fake_platform_driver);
-> +       kunit_device_unregister(test, dev);
->  }
->  EXPORT_SYMBOL_GPL(drm_kunit_helper_free_device);
->
->
-> --
-> 2.43.0.472.g3155946c3a-goog
->
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
