@@ -1,44 +1,43 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E59D4237E
-	for <linux-hardening@vger.kernel.org>; Mon, 18 Dec 2023 16:58:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2598D5A872
+	for <linux-hardening@vger.kernel.org>; Mon, 18 Dec 2023 17:06:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YqkW/uJa"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3365752934bso2648016f8f.2
-        for <linux-hardening@vger.kernel.org>; Mon, 18 Dec 2023 08:58:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ji60oT4V"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-425928c24easo650921cf.0
+        for <linux-hardening@vger.kernel.org>; Mon, 18 Dec 2023 09:06:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1702918691; x=1703523491; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=d+zh+2q3MwXuVdLRjXTJZI4JkIaqitTixEyhaPMNfTc=;
-        b=YqkW/uJaHkOZdMfcdlmgvRNQgzJIKSeZx9AHqDX4tW6XnJxt3fnoJ8pU64DoDFBFun
-         1tQZBB2nyFmjQIuAPa4U+O96YTF6F6l9MjVZNDM1xfoOXT2FSLifG8R0dD7b/UtiNmv/
-         rTVPjMfpD94H0JfuGXKRY8En08HeheOXVYQaL4NjatcIrwI/MyrwBNObYW/1AvHVvovO
-         y4Nu/vxk/ozCDeYaF8owD1NAhljq0P8lSyuY9F+7RTL+ydenHghs11b6FnECURgEYmIa
-         9n/ZvBj9pT3g0m0g1SQFNAVmbZQI438uyJ9106BMekE5+ThWlXqd+5bu59wwIcWoWpl5
-         m6yQ==
+        d=google.com; s=20230601; t=1702919169; x=1703523969; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=x29irrX3xXEqtqEYM+OJ0BBAXCsgyxR+RF6i+7rkCJM=;
+        b=ji60oT4Vcsqo7jzTWIo6QJ6uerOj4XZVpVEHrcAoMWqX9g+CkG+gY3CRs2mUgvwbhq
+         nCBmW/7KBihr0qqrB35aTAkJbbUO/+SZ+XFoqtqAH7sn2iC0eJzvhTxyzx0RzDVWxuw5
+         qgOneRa/P3a3YwgEoH5nX+wT1Uc75IumOLZxXtHqWB96DmTTZ2khsouYndU0L8QGE+r1
+         3flJGYKCOfQi/nkDTrraFZyG3Ux+dFi7Rw4FmfRDm7R0B2i473VoYnVqug4QnJJamkUM
+         1Dxj3lvP+3aiTIICZYTjBc/LKMcYuyN68Llj3E8SSWBysrgeCR7i4HdIVWtnXSpkQKkn
+         +U+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702918691; x=1703523491;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=d+zh+2q3MwXuVdLRjXTJZI4JkIaqitTixEyhaPMNfTc=;
-        b=DUgvYvEUpWLxRBRngh/K/OLryFcJQ8fDnD3Njd6HjMrQO92TXs4kj/yFqBWsTmyB00
-         E4MfGlH/Uo0cXGfqfnrY0VPpH6Cobogjsxksjfhye1k3KkXwBongzSHO2EBABaiLz2Wn
-         12yQ8j9jIoOTauesx2mZDr6sMhNORJoeIhDjT/VGt8omin6Np11i1Xo4yIBTDUQke6zy
-         0/NzgbVKP4a3laGvNXh3duZ35UCOUc7aBmfDLdTlrZquLWneUWmlvfb0A59agY48tfDE
-         b7ft0VM0une5G74bIngpUGd0Cx4XGBU/3RyBTBi2st0F5yF/87GClJaqDJUjRkywpSfI
-         35sQ==
-X-Gm-Message-State: AOJu0Yyr9xSzyRXcbk1w6+AMCdFmIhm2jFwS9CESFPZSVoTKUVaxvfhx
-	m0Fzw/dv77BFJqy55grzrkMgjCA1/3C0cbMJjexUfQ==
-X-Google-Smtp-Source: AGHT+IFChuEHlZwlMDTWLGHUh6HXy10BpvXeAadBWV8pWnZyYA1TdhfpH2w2v0z8e/FNeEuXgwglDmYDNbTy1g+Wmz0=
-X-Received: by 2002:a05:6000:cd1:b0:332:e2b0:c217 with SMTP id
- dq17-20020a0560000cd100b00332e2b0c217mr8371467wrb.62.1702918691137; Mon, 18
- Dec 2023 08:58:11 -0800 (PST)
+        d=1e100.net; s=20230601; t=1702919169; x=1703523969;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=x29irrX3xXEqtqEYM+OJ0BBAXCsgyxR+RF6i+7rkCJM=;
+        b=nUBaMHQct3zA20rFaGXddwPusRNA4+8L96t47TJ1bwrJ6S/YyZBPdiFvpe0+BDupcE
+         7xFZPGtHncB8szSvXOG5gVIw8gn4IyAEziTTBKMGUZ0NohJfxQVJY0bGUM1A7514wq/P
+         n2gxGoeoDQNwf1UX//3qAlgUMfACNEmgIR2Lh+Iy1Bac1NQTS2eQltFfXFZ30JsW8TdC
+         el99z7mNxhj0E8BYpITUHFINelfsPwgm+u8I5CoaEX4+DMZQSy5NE8QC4YxIriJtq7uN
+         Hk0tSZA7Bdf/SDbY8zQm/IEjSRbPjFDH/X/2P7yD5Vb7+GuNYi4caHg2VvrpMyWoT6Kw
+         3P1A==
+X-Gm-Message-State: AOJu0YwBVo27BUpe6gRm2C6+fbDUv8Z4183Fmy0it06bhZp8DBC4IpUY
+	o14suzoFt0e2o+IgGswzn3U14x0rIDk7hmkXRgkkRf0ljO6aUshdyTq8xbkIOj/J
+X-Google-Smtp-Source: AGHT+IHDcKVJi48DWxUiRF0cSlxxE9luXr2JxmQw2R42ge6ILA0VXUS7myKPno4BTplV6A8qHqw1BOYXjCT3w8L6d/E=
+X-Received: by 2002:ac8:570e:0:b0:423:8dd5:338 with SMTP id
+ 14-20020ac8570e000000b004238dd50338mr451777qtw.14.1702919168821; Mon, 18 Dec
+ 2023 09:06:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -47,74 +46,34 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20231214-libstringheader-v2-0-0f195dcff204@google.com>
  <20231214-libstringheader-v2-1-0f195dcff204@google.com> <ZXx5DyidpHFhRevy@smile.fi.intel.com>
- <CAE-cH4p5VJ_A91BAkURBN67ACA0_u7T8UhApUYLQDWeeRY6FWA@mail.gmail.com> <CAHp75Vdo=g7ZBAuk79PtLOYs-YHo5sCTp1WVFESHA0xN0zGEmQ@mail.gmail.com>
-In-Reply-To: <CAHp75Vdo=g7ZBAuk79PtLOYs-YHo5sCTp1WVFESHA0xN0zGEmQ@mail.gmail.com>
-From: Nick Desaulniers <ndesaulniers@google.com>
-Date: Mon, 18 Dec 2023 08:57:59 -0800
-Message-ID: <CAKwvOdmMqJacYRfwohY-DXBbmNmz_M4EKUL1KuTv=tT2dO_p1g@mail.gmail.com>
+ <CAE-cH4p5VJ_A91BAkURBN67ACA0_u7T8UhApUYLQDWeeRY6FWA@mail.gmail.com>
+ <CAHp75Vdo=g7ZBAuk79PtLOYs-YHo5sCTp1WVFESHA0xN0zGEmQ@mail.gmail.com> <CAKwvOdmMqJacYRfwohY-DXBbmNmz_M4EKUL1KuTv=tT2dO_p1g@mail.gmail.com>
+In-Reply-To: <CAKwvOdmMqJacYRfwohY-DXBbmNmz_M4EKUL1KuTv=tT2dO_p1g@mail.gmail.com>
+From: Tanzir Hasan <tanzirh@google.com>
+Date: Mon, 18 Dec 2023 09:05:56 -0800
+Message-ID: <CAE-cH4oQ+nM6G897PaUwd8zaaAvqq3QL77=4739sZovVgkG9XA@mail.gmail.com>
 Subject: Re: [PATCH v2 1/2] sh: Added kernel.h to word-at-a-time
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Tanzir Hasan <tanzirh@google.com>, Andy Shevchenko <andy@kernel.org>, 
+To: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Andy Shevchenko <andy@kernel.org>, 
 	Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, Nick DeSaulniers <nnn@google.com>, 
 	Andrew Morton <akpm@linux-foundation.org>, llvm@lists.linux.dev, 
 	Al Viro <viro@zeniv.linux.org.uk>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Dec 15, 2023 at 11:09=E2=80=AFAM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Fri, Dec 15, 2023 at 8:31=E2=80=AFPM Tanzir Hasan <tanzirh@google.com>=
- wrote:
-> > On Fri, Dec 15, 2023 at 8:04=E2=80=AFAM Andy Shevchenko <andy@kernel.or=
-g> wrote:
-> >> On Thu, Dec 14, 2023 at 09:06:12PM +0000, tanzirh@google.com wrote:
->
-> ...
->
-> >> > +#include <linux/kernel.h>
-> >>
-> >> I highly discourage from doing that. Instead, split what is needed to
-> >> the separate (new) header and include that one.
-> >
-> >
-> > I think it would make the most sense to do this in a separate patch.
-> > What word-at-a-time.h needs from kernel.h is REPEAT_BYTE and to my know=
-ledge,
-> > almost every other version of word-at-a-time.h includes kernel.h gets t=
-his by
-> > including kernel.h. A future change could be removing REPEAT_BYTE
-> > out of kernel.h
->
-> Just create a patch that either moves that macro (along with upper_*()
-> and lower_*() APIs) to a more distinguishable header
-> (maybe bytes.h or words.h or wordpart.h, etc) and use it in your case
-> and fix others.
+> While REPEAT_BYTE has a manageable number of users, upper_* and
+> lower_* have significantly more; I worry about moving those causing
+> regressions.  We can move them, but such changes would need
+> significantly more soak time than this series IMO.  Tanzir is also
+> working on statistical analysis; I suspect if he analyzes
+> include/linux/kernel.h, he can comment on whether the usage of
+> REPEAT_BYTE is correlated with the usage of upper_* and lower_* in
+> order to inform whether they should be grouped together or not.
 
-Andy,
-These are good suggestions and we should do them...
+Removing REPEAT_BYTE is manageable and I have already moved it. I will
+be pushing a patch that moves just that into another file called wordpart.h.
+There are too many instances of the other functions for it to make sense to
+remove them all in this patch.
 
-...and Tanzir only has 3 weeks left of his internship.  I don't want
-him to get bogged down chasing build regressions from modifying the
-headers themselves.  I think what's best for him from here through the
-remainder of his internship is to stay focused on applying suggestions
-from IWYU to just modify the #include list of .c files, and not start
-splitting .h files.  Splitting the .h files will be the next step, and
-is made easier by having the codebase not have so many indirect
-includes (via IWYU), but we need time to soak header changes, and time
-Tanzir does not have.  Please can we keep the suggestions focused on
-whether the modifications to the header includes (and the tangential
-cleanups) are correct?
-
-While REPEAT_BYTE has a manageable number of users, upper_* and
-lower_* have significantly more; I worry about moving those causing
-regressions.  We can move them, but such changes would need
-significantly more soak time than this series IMO.  Tanzir is also
-working on statistical analysis; I suspect if he analyzes
-include/linux/kernel.h, he can comment on whether the usage of
-REPEAT_BYTE is correlated with the usage of upper_* and lower_* in
-order to inform whether they should be grouped together or not.
---=20
-Thanks,
-~Nick Desaulniers
+Best,
+Tanzir
