@@ -1,179 +1,122 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61A8B2031E
-	for <linux-hardening@vger.kernel.org>; Tue, 19 Dec 2023 16:43:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967744B132
+	for <linux-hardening@vger.kernel.org>; Tue, 19 Dec 2023 18:10:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--tanzirh.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jfB9vtnv"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-40d12ade25dso34153735e9.2
-        for <linux-hardening@vger.kernel.org>; Tue, 19 Dec 2023 08:43:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fBZLZ5Vj"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dbd71de3c94so693050276.1
+        for <linux-hardening@vger.kernel.org>; Tue, 19 Dec 2023 10:10:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1703004197; x=1703608997; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7yZxJx1cWmHeTwDIsoftViKVMbEIpjqlvBdK4HE8zHY=;
-        b=jfB9vtnvcxj8y5BP99AVIfHK4kzBlutWbHv3trS/tqamUjt5F2iZMxkFrDWuIv85LY
-         VhS8UzVmzDDiL/Bpa4LkFM82DsCL74V2N5G50zvqRgx2hN9f1f/v7xewbvvXXVTXIcdT
-         8OSWJBhKOuP+kIeiPrPgjW9h6R9kf8Y93I/btevJqHpn4KX7Rh86q78iHSkytE3+tpaB
-         fDKuM1gfOk5TNmvUJhnuTQrc1h6+7O3fQUemlEeP7IlFAjPFlHA2BwHc4lPgg5LBJNC0
-         mpGhHc/NRm0GdrdVkrZ/9OhEBfteKYStjQrypmr8RhA0cPu7znMzpw8BVGxb9EUvAfB7
-         bKIw==
+        d=google.com; s=20230601; t=1703009408; x=1703614208; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=6YimShC/XWREZWbimdIHfWtB7p6pALlpTQBZ3gNvoJM=;
+        b=fBZLZ5VjOeaSZ9OiujWWhcNVrqYIh3Dxu4NSMLhwai8j2HNg8yRvFLR4gy+SveaGZq
+         aq86GjcYC6fHhn1Up8yF/3dkOddy6IFYUWiyZDxjO1EqcfsdPRZVT3bfY10ZjQGtw5+I
+         Z6/smr/vvIcI8ZKejf5Zo1CjiFai5NGH9rZvwzUtQ+RxxsjZ+RqkB8DGJDC95tUqoXJx
+         f7GGIFGccskpcRUm2/avki+09krriSC6hnE+X5jP80hpGH5sDQy1M7gtlP4w7K+tfQUi
+         4MqjhJJZhfI0UwnzhJF5cX/dRAgfzvXqOG46Xj4HC5eavKKsGQKuNGBPFJipKe3ZvN0K
+         pEbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703004197; x=1703608997;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7yZxJx1cWmHeTwDIsoftViKVMbEIpjqlvBdK4HE8zHY=;
-        b=W+2hBhn5f+PmkHEoWwsDRmh66Hg3Mk0jh3fB7r0EVz1v1gB6389rlTi68aVZAAC1Uc
-         qK3v7kcCr5+WBIgdpnK7h6EAtlFZGa0eyuBkRaUxYHC4JAX9BzHe6Xe6mtSVS31gTtdC
-         NHT5b7+BN3OQppx9r9LTrVRuG2KfUBuyeOHNdytbwIGmDUzHO+LzKiIhyXltAs2zdqFw
-         6mHOa1+7vKHk6KRHeU3DwZbk7mxTDNnEr9pYX9P1n1HkwgpRPKmy7ybgEtWDoKULbjyR
-         Np4ulZ6KnTiFyq32baAGzl8OJIBpmLfiRlFTP3m/E/jz/yLC5YeQSqOSRzQJbAr6aC1y
-         q4Jg==
-X-Gm-Message-State: AOJu0Yz+tj2qzAO18EZ7K3hbc8frM+6akayQOP7nBGlkH/q61oSQX8gd
-	6xtywXLLELgsyl7Aoh5Ll23GgiLQZhk1bTuewvyhWA==
-X-Google-Smtp-Source: AGHT+IFCEwQvWYi051sDKnZS/vCosn8IFK6NHq4Z3M2iWFR1+/WyPMNdvfFI1SH/zh+bt6YmFxNQvnhuIahxA/po9/w=
-X-Received: by 2002:a05:600c:35c5:b0:40d:2399:e8ab with SMTP id
- r5-20020a05600c35c500b0040d2399e8abmr720646wmq.119.1703004197354; Tue, 19 Dec
- 2023 08:43:17 -0800 (PST)
+        d=1e100.net; s=20230601; t=1703009408; x=1703614208;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6YimShC/XWREZWbimdIHfWtB7p6pALlpTQBZ3gNvoJM=;
+        b=VD0JUKuFo8fE2m/nTEGjN7thmjq0hsMqSxHPcmFKPu9T1wZYnz5VZUJ0kWbn0bRtqt
+         qrHebUEAPreGp0P2lqiwe48F9tuiwvyTwpYWPjCOuLGfx/KuNJD78AJBF/Z2wmvSp7nO
+         BXElete1hUQ5ADpCz+z1fvFrvlRFCCIm8Kyh3RKR7ouiST3U/szG1oyKWRwBWejr3OmM
+         FtSgyVqYENbFmvEaWfDzt1BaxB9oaw8uN0LF1TTimbWj0vsHp1lOtdDz0gI+9MOor87m
+         KsBDB0H4RNdHNDVUzPpubVWFdlWIMBwmQEHLAaUpYUUG19vOxUkIhgJxr+kW94dJxbAR
+         97Vw==
+X-Gm-Message-State: AOJu0YyweEoCWcLiDqkyxk2X61Md5Fe8QXvJksgno3dVeWb7sNQUnhlm
+	h6h1+aeNHAUBp7j990iqgVPq+nfWyvri
+X-Google-Smtp-Source: AGHT+IE0LVzd1vIXn2iPSd7+2GWc6vaG1+AA4mD7m5oG/N4X0o6afACq67YqgCScWtq13tbE4o/PXfHybrHM
+X-Received: from tanz.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:c4a])
+ (user=tanzirh job=sendgmr) by 2002:a25:8a09:0:b0:db5:3676:74dd with SMTP id
+ g9-20020a258a09000000b00db5367674ddmr2252608ybl.3.1703009408385; Tue, 19 Dec
+ 2023 10:10:08 -0800 (PST)
+Date: Tue, 19 Dec 2023 18:09:50 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20231218-libstringheader-v3-0-500bd58f0f75@google.com>
- <20231218-libstringheader-v3-2-500bd58f0f75@google.com> <ZYG83l5AW_zVw2aR@smile.fi.intel.com>
-In-Reply-To: <ZYG83l5AW_zVw2aR@smile.fi.intel.com>
-From: Nick Desaulniers <ndesaulniers@google.com>
-Date: Tue, 19 Dec 2023 08:43:01 -0800
-Message-ID: <CAKwvOd=OXOHAiwue98jfqZ=TJSe21ecfgtf6jEihy8F=0EvWnA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] lib/string: shrink lib/string.i via IWYU
-To: Andy Shevchenko <andy@kernel.org>
-Cc: tanzirh@google.com, Kees Cook <keescook@chromium.org>, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Nick DeSaulniers <nnn@google.com>, Andrew Morton <akpm@linux-foundation.org>, llvm@lists.linux.dev, 
-	Greg KH <gregkh@linuxfoundation.org>, Alexander Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAG7cgWUC/42T3WrjMBBGX6X4ul5m9DvqVd9j2QtJnnEEaVzsE
+ nYpefeVw7KksYtyOYLznY9h9NktPBdeupenz27mc1nKdKqDeX7q8iGeRu7LUOdOgdKowPTHkpa
+ PuZzGA8eB556VJlZRLHPuKvU+s5Tf18Sfv+p8KMvHNP+5Cs64vn6fdcYe++wGbVxUKfjwOk7Te
+ OQfeXpbs/+Bdh/0ErL1GqyO/nV8i+V45dYSZ9UQq1WcRPusDII1N/x/L+5y0Osknr1ODt1+4e9
+ AEAx2yCK10i14bawbjXVtbCx5oEEoJLvbmPY46C1AGiwJiLcbsWmIzSqWhCZj8Eb4UbGpYueFv
+ AFM4PVGbBtiW8UiSMGEumvjHhXbddVRCKxiIQobsbsV7xyXW8XKsRIEoRweFbsqFi/1JpGii2k
+ j9g2xr2J2oFA7JM7D/VVTg6fKq5hDyBQwZb7nQ4MPlQct9YCFtQn5nkdoBCDUhOBiUA4csaNNA rYS1p/tyCa2vh7t8GUHl8vlL641c+bBBAAA
+X-Developer-Key: i=tanzirh@google.com; a=ed25519; pk=UeRjcUcv5W9AeLGEbAe2+0LptQpcY+o1Zg0LHHo7VN4=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1703009406; l=2043;
+ i=tanzirh@google.com; s=20231204; h=from:subject:message-id;
+ bh=8piwcHlVOU33cOMSn+USqF0MHaHhYcY6fc7RoBv6vb8=; b=DWx0jSzRsHu9oVM1my/TMXQUlg/ncE79Qk8lLVoLyXs9r1PQc7h6ga1/+5cC8yDeQ+ziG9PNP
+ sgO6ATbiY2hBpIJ/6/i+u4CA9YRsKBR8o91tjOu4mN5XgaebduJRFhR
+X-Mailer: b4 0.12.4
+Message-ID: <20231219-libstringheader-v4-0-aaeb26495d2f@google.com>
+Subject: [PATCH v4 0/2] shrink lib/string.i via IWYU
+From: Tanzir Hasan <tanzirh@google.com>
+To: Kees Cook <keescook@chromium.org>, Nick DeSaulniers <nnn@google.com>
+Cc: Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
+	llvm@lists.linux.dev, Al Viro <viro@zeniv.linux.org.uk>, 
+	Andy Shevchenko <andy.shevchenko@gmail.com>, Tanzir Hasan <tanzirh@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On Tue, Dec 19, 2023 at 7:55=E2=80=AFAM Andy Shevchenko <andy@kernel.org> w=
-rote:
->
-> On Mon, Dec 18, 2023 at 06:44:48PM +0000, tanzirh@google.com wrote:
-> > This diff uses an open source tool include-what-you-use (IWYU) to modif=
-y
-> > the include list changing indirect includes to direct includes.
-> > IWYU is implemented using the IWYUScripts github repository which is a =
-tool that is
-> > currently undergoing development. These changes seek to improve build t=
-imes.
-> >
-> > This change to lib/string.c resulted in a preprocessed size of
-> > lib/string.i from 26371 lines to 5263 lines (-80%) for the x86
-> > defconfig.
->
-> ...
->
-> >  #define __NO_FORTIFY
-> >  #include <linux/types.h>
-> > -#include <linux/string.h>
-> > -#include <linux/ctype.h>
-> > -#include <linux/kernel.h>
-> > -#include <linux/export.h>
-> > +#include <linux/bits.h>
-> >  #include <linux/bug.h>
-> >  #include <linux/errno.h>
-> > -#include <linux/slab.h>
->
-> > -
->
-> Why this blank is removed?
+This patch series changes the include list of string.c to minimize
+the preprocessing size. The patch series intends to remove REPEAT_BYE
+from kernel.h and move it into its own header file because
+word-at-a-time.h has an implicit dependancy on it but it is declared
+in kernel.h which is bloated.
 
-The automation isn't aware of any convention around having blank lines
-separate linux/* vs asm/*.  Is that a convention we have throughout
-the kernel, or just this file?
+---
 
-If we rerun the automation on this file after Tanzir's patch here, we
-get no further changes.  If we manually touch up the results, then
-rerun the automation, it will undo the manual touch ups.
+---
+Changes in v4:
+- Fixed personal email client so name appears instead of just email
+- Removed kernel.h where not needed.
+- Sorted include list in lib/string.c and used linux/limits.h
+- Link to v3: https://lore.kernel.org/r/20231218-libstringheader-v3-0-500bd58f0f75@google.com
 
-I don't mind saying "you might have to manually touch up the results
-of the automation to comply with <link to documentation on stated
-kernel policy/style guide>" but on the other hand I also think it
-would be nice if other folks run the automation so that they don't get
-additional changes.  I'd like to avoid drive-by patches that just undo
-any manual touch ups.
+Changes in v3:
+- Moved REPEAT_BYTE out of kernel.h and into wordpart.h.
+- Included wordpart.h where REPEAT_BYTE was necessary.
+- Link to v2: https://lore.kernel.org/r/20231214-libstringheader-v2-0-0f195dcff204@google.com
 
->
-> > +#include <linux/linkage.h>
-> > +#include <linux/stddef.h>
-> > +#include <linux/string.h>
-> > +#include <linux/ctype.h>
-> >  #include <asm/unaligned.h>
-> > -#include <asm/byteorder.h>
-> > +#include <asm/rwonce.h>
-> >  #include <asm/word-at-a-time.h>
-> >  #include <asm/page.h>
->
-> Sort this group alphabetically as well.
+Changes in v2:
+- Transformed into a patch series
+- Changed asm inclusions to linux inclusions
+- added a patch to sh
+- Link to v1: https://lore.kernel.org/r/20231205-libstringheader-v1-1-7f9c573053a7@gmail.com
 
-By default the automation sorts the result.  I asked Tanzir to
-explicitly disable that; otherwise the resulting diffstat is hard to
-tell precisely what was removed/added vs simply moved.
+---
+Tanzir Hasan (2):
+      kernel.h: removed REPEAT_BYTE from kernel.h
+      lib/string: shrink lib/string.i via IWYU
 
-If he kept the default behavior, I highly suspect the feedback would
-have been along the lines of "please don't sort the result; I can't
-tell what moved vs was added or removed."
+ arch/arm/include/asm/word-at-a-time.h     |  2 +-
+ arch/arm64/include/asm/word-at-a-time.h   |  2 +-
+ arch/powerpc/include/asm/word-at-a-time.h |  2 +-
+ arch/riscv/include/asm/word-at-a-time.h   |  2 +-
+ arch/s390/include/asm/word-at-a-time.h    |  2 +-
+ arch/sh/include/asm/word-at-a-time.h      |  1 +
+ arch/x86/include/asm/word-at-a-time.h     |  1 +
+ fs/namei.c                                |  2 +-
+ include/asm-generic/word-at-a-time.h      |  2 +-
+ include/linux/kernel.h                    |  7 -------
+ include/linux/wordpart.h                  | 17 +++++++++++++++++
+ lib/string.c                              | 17 +++++++++--------
+ 12 files changed, 35 insertions(+), 22 deletions(-)
+---
+base-commit: ceb6a6f023fd3e8b07761ed900352ef574010bcb
+change-id: 20231204-libstringheader-e238e2af5eec
 
-Perhaps we should add another commit on the series that manually sorts
-the results _after_ the automation?
+Best regards,
+-- 
+Tanzir Hasan <tanzirh@google.com>
 
-Do we have anything in Documentation/process/coding-style.rst about
-sorting headers? There's a blip about clang-format sorting them, but
-we don't have strong guidance along the lines of "you ought to sort
-your includes (when you don't have special cases like x-macros)."
-
->
-> > +#include <vdso/limits.h>
->
-> Just use linux/limits.h.
->
-> VDSO is a very special UAPI case. So it's even stricter rule
-> than for asm/ for using anything from there.
-
-We can add a special rule for this, Tanzir, please add. And remember
-to re-measure the results of that change for this patch's commit
-message.
-
->
-> Expected result:
->
-> #include <linux/bits.h>
-> #include <linux/bug.h>
-> #include <linux/ctype.h>
-> #include <linux/errno.h>
-> #include <linux/limits.h>
-> #include <linux/linkage.h>
-> #include <linux/stddef.h>
-> #include <linux/string.h>
-> #include <linux/types.h>
->
-> #include <asm/page.h>
-> #include <asm/rwonce.h>
-> #include <asm/unaligned.h>
-> #include <asm/word-at-a-time.h>
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
-
-
---=20
-Thanks,
-~Nick Desaulniers
