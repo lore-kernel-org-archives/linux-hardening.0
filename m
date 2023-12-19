@@ -1,234 +1,135 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59ACD3A8DB
-	for <linux-hardening@vger.kernel.org>; Tue, 19 Dec 2023 21:34:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EBAF3B194;
+	Tue, 19 Dec 2023 21:48:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IidnZyUz"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-5ca26c07848so66140027b3.0
-        for <linux-hardening@vger.kernel.org>; Tue, 19 Dec 2023 13:34:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ixkhdDCP"
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-67ee17ab697so39276186d6.0;
+        Tue, 19 Dec 2023 13:48:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1703021658; x=1703626458; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=zwUh/psHh6P+Upw6vf+C67rCFJVu4fC5VMYu2ZcViuI=;
-        b=IidnZyUzF7CTa0ZKvy/4GlNK7tP6vMag1X2nRqoa3sZIeR4Jh7v4eqTP+wHDJcuPRj
-         L98WZPdzp9FWXH0cfm3v6riQlakGR9rZrhHJStfPQCQfen/0FEHx4MkAoQsxukeQiTt5
-         SyjQ+D226LqErd50PaITcBl7/DnygpBUwBkIcK+AnzJhMpdEAQ2/Nu3bRY38zTYbrKR2
-         KtBxokZRQjnbPNuyx2LmJm0zhYGX1qGrPr3s+ohn2dQA4oFeZL/LQn1UKT+frmX39qeA
-         rBA0oJZEjdpUNEuHi5/k/bdlDtAQzsGPjkZUjyARNr2cbbNRV8G6AUC0bFhJs1tDXRdL
-         L6eQ==
+        d=gmail.com; s=20230601; t=1703022498; x=1703627298; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r1JR2619YMG5mo1u6s9CGtT+m7a20YcNHq4R9VhkzMY=;
+        b=ixkhdDCP4RnxpzsQK2x09S32X3/9FaX5/m88WERcvoWDEiWgc/432tr+iVV6mI5zpT
+         AyuoT0NwPsZMrpbEz0M+FYhToRKOrtzFyjAc5zrfjiP5qh0KVRi+v+QQis8Uov1wZuA3
+         VlcPIakQZrmOt4uWACxq5AIbKZjFMsHreCWVvVmV3TVnDA+2xjBMFJb/bKOyKJN33mhY
+         2+BFvoBRwZDht89RRXaZjeiW9SIb9EZNQMOgpvxYU4/0SIrzUAJlAOw3Y2kI/dvsZXX9
+         gVF1e3SDeaZV60mw8GvqJW8z4USMos/79ESotR9C3iyzVLm+aVlr6zQ7dCz9T50ET+lZ
+         7Zvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703021658; x=1703626458;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=zwUh/psHh6P+Upw6vf+C67rCFJVu4fC5VMYu2ZcViuI=;
-        b=uhTmYA1L1tn/COFWfZsDiXWp7ajZU+epRcCA/n6l9T5Jl/xPnuc1Sv3eYkMhWJMVJX
-         te/y9xRRH74U3FwH/RpAi8cwSo2eBGK2y74hBi7ANaesJ3E0W+Hft6C889/syDO3XpPQ
-         fh92xV2B+4qDOvNDYGCdQAsQi/KtWjiKrGf6GwFmXjgmm5GJBY31t2wqZMR6S0iMbx6M
-         WRF9EJzCz1h/GtdcdzE/JC7hnuTLLk6hqDNaPPSAOuw1w2k+ThSTEJQuOfCU/kockkBs
-         QuTyfhxgzZ+7cXtowe253GFTNh1+5ClIIueDFdQgWFJarYcTfZyQcPfIoSZazl2Qymls
-         WrZg==
-X-Gm-Message-State: AOJu0YznIwARXY0aAt1TNxY/GTtN0uXZq4H61BSeX2J1s8cOIpVf5Re8
-	0/z6XllG/Dbvl/o33VIPjTeRtLMC0nBmjtvdpw==
-X-Google-Smtp-Source: AGHT+IFfWmrwvJ+LQE/+3L58Im6RK0bH8l2Luf5pEP/hNf0sGSRgxZVXWy3OWx7eYylbwxOUqOGEzrLuQfcmLj4PEQ==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:690c:3507:b0:5e8:885:ae15 with
- SMTP id fq7-20020a05690c350700b005e80885ae15mr500864ywb.10.1703021658435;
- Tue, 19 Dec 2023 13:34:18 -0800 (PST)
-Date: Tue, 19 Dec 2023 21:34:15 +0000
+        d=1e100.net; s=20230601; t=1703022498; x=1703627298;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=r1JR2619YMG5mo1u6s9CGtT+m7a20YcNHq4R9VhkzMY=;
+        b=Ft0YLNtQu3hg8EInzFG4u2oe6uW57fKarB6RcmaxdoO2EY/RNKxn4g4FhdSm9xsxbB
+         y9mNP9oXnE43kWML86Um9FLQ3dxOFpQmknI/ys8b3kCdyzS/uh+mRWcG7MUvNUeVcVTn
+         oCWw3yibK2LaxlBAUJex6Z8ealFA4GoY2oQuqtPOnjzKLck3tGn3l2pM7IKmyT4HBGy/
+         ef5SDKzWXZmfxWYWnL5DQuhRHEkf8fsGxe+1yq2VzHHTG9Bpv58MGTS0dk9LAN6d9Zy6
+         TZgcE9ZpSR3e6SbvewqSm4Ia18l3KbUeg6rX0TB6fIXncHU8sfNQCkKsXjbW2fOYg6MN
+         wEnw==
+X-Gm-Message-State: AOJu0YzWaBYmrxxFt7Cjlf5AOvROGpbbZBrEr6J/8c/6QjlLJLlD1PMb
+	TevJD1X9pcUUojxNKYX+eM6JKglHvN705l3GIP4=
+X-Google-Smtp-Source: AGHT+IEuvOxivrGVKXoBh8W4o6i+lQHNJN5ZZNaEp5+HZ5Cw1Mu1UB3uQjBUlayK5Rax9O7HaOG6biGrh8l54QSI5PE=
+X-Received: by 2002:a05:6214:1c09:b0:67f:30ad:26c0 with SMTP id
+ u9-20020a0562141c0900b0067f30ad26c0mr7483675qvc.55.1703022498521; Tue, 19 Dec
+ 2023 13:48:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAFYMgmUC/5XNQQ6CMBCF4auYrh3TThGKK+9hXGA74CRKSUsai
- OHuVhca40aX7y2+/yYiBaYodqubCJQ4su/zKNYrYc9N3xGwy1ugRC1rVBDH0NthBhc4UYjA7GE
- IfuIrjzPEqdZYgAVjdaGrsiqlrkXGhkAtT8/Q4Zj3mePow/zsJvV4/04kBQoKMg5N6xRVdt953
- 11oY/1VPBoJX66SWP7sYnYtUUlbd6qk/Hb120WFP7s6uyfTkMLWmmbrPtxlWe6aYjCEjQEAAA= =
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1703021657; l=5996;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=zV8ob/kKeQOCUbTGD4IgUwF1RW2GLaqMgJg6k7u3Ffw=; b=cMMYIbX/ROmR2FxtRFigqf4i65Cb6JavIys72kWHi4zVnvBBVxNg7xh2rRhoIr1s6OuNLenWC
- QexnKn6MD5CAckUhrZtwSEc1pUyJ9Vh0RG6bzsg7cf5QcXGheJLqbvd
-X-Mailer: b4 0.12.3
-Message-ID: <20231219-strncpy-drivers-iio-proximity-sx9324-c-v4-1-d49ed29ee952@google.com>
-Subject: [PATCH v4] iio: sx9324: avoid copying property strings
-From: Justin Stitt <justinstitt@google.com>
-To: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>
-Cc: Stephen Boyd <swboyd@chromium.org>, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+References: <20231219-libstringheader-v4-0-aaeb26495d2f@google.com> <20231219-libstringheader-v4-1-aaeb26495d2f@google.com>
+In-Reply-To: <20231219-libstringheader-v4-1-aaeb26495d2f@google.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 19 Dec 2023 23:47:42 +0200
+Message-ID: <CAHp75VdCb7FX31LkaJg3+a6mttvRGECPt6JS9fNp0SCxqbuqJQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] kernel.h: removed REPEAT_BYTE from kernel.h
+To: Tanzir Hasan <tanzirh@google.com>
+Cc: Kees Cook <keescook@chromium.org>, Nick DeSaulniers <nnn@google.com>, 
+	Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
+	llvm@lists.linux.dev, Al Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-We're doing some needless string copies when trying to assign the proper
-`prop` string. We can make `prop` a const char* and simply assign to
-string literals.
+On Tue, Dec 19, 2023 at 8:10=E2=80=AFPM Tanzir Hasan <tanzirh@google.com> w=
+rote:
+>
+> This patch creates wordpart.h and includes it in asm/word-at-a-time.h
+> for the all architectures. WORD_AT_A_TIME_CONSTANTS depends on kernel.h
 
-For the case where a format string is used, let's extract the parsing
-logic out into sx9324_parse_phase_prop(). We no longer need to create
-copies or allocate new memory.
+for all
 
-sx9324_parse_phase_prop() will simply return the default def value if it
-fails.
+("all" doesn't go with article)
 
-This also cleans up some deprecated strncpy() uses [1].
+> because of REPEAT_BYTE. Moving this to another header and including it
+> where necessary allows us to not include the bloated kernel.h. Making
+> this implicit dependency on REPEAT_BYTE explicit allows for later
+> improvements in the lib/string.c inclusion list.
 
-Furthermore, let's clean up this code further by removing some unused
-defines:
-|  #define SX9324_PIN_DEF "semtech,ph0-pin"
-|  #define SX9324_RESOLUTION_DEF "semtech,ph01-resolution"
-|  #define SX9324_PROXRAW_DEF "semtech,ph01-proxraw-strength"
+...
 
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Changes in v4:
-- use u8 return type (thanks Stephen)
-- remove unused defines (thanks Stephen et al.)
-- tweaks to sx9324_parse_phase_prop related to defaults (thanks Stephen)
-- Link to v3: https://lore.kernel.org/r/20231212-strncpy-drivers-iio-proximity-sx9324-c-v3-1-b8ae12fc8a5d@google.com
+> --- a/arch/arm/include/asm/word-at-a-time.h
+> +++ b/arch/arm/include/asm/word-at-a-time.h
 
-Changes in v3:
-- extract logic into sx9324_parse_phase_prop() and use string literals
-  (thanks Stephen)
-- rebase onto mainline bee0e7762ad2c602
-- Link to v2: https://lore.kernel.org/r/20231026-strncpy-drivers-iio-proximity-sx9324-c-v2-1-cee6e5db700c@google.com
+> -#include <linux/kernel.h>
+> +#include <linux/wordpart.h>
 
-Changes in v2:
-- make prop a const char* and do simple assignments (thanks Jonathan)
-- rebase onto 3a568e3a961ba330
-- Link to v1: https://lore.kernel.org/r/20230921-strncpy-drivers-iio-proximity-sx9324-c-v1-1-4e8d28fd1e7c@google.com
----
----
- drivers/iio/proximity/sx9324.c | 70 ++++++++++++++++++++++++------------------
- 1 file changed, 40 insertions(+), 30 deletions(-)
+No, please, read what I told you carefully.
 
-diff --git a/drivers/iio/proximity/sx9324.c b/drivers/iio/proximity/sx9324.c
-index 438f9c9aba6e..3daad7167c63 100644
---- a/drivers/iio/proximity/sx9324.c
-+++ b/drivers/iio/proximity/sx9324.c
-@@ -873,6 +873,29 @@ static int sx9324_init_compensation(struct iio_dev *indio_dev)
- 					20000, 2000000);
- }
- 
-+static u8 sx9324_parse_phase_prop(struct device *dev,
-+				  struct sx_common_reg_default *reg_def,
-+				  const char *prop)
-+{
-+	unsigned int pin_defs[SX9324_NUM_PINS];
-+	int count, ret, pin;
-+	u32 raw = 0;
-+
-+	count = device_property_count_u32(dev, prop);
-+	if (count != ARRAY_SIZE(pin_defs))
-+		return reg_def->def;
-+	ret = device_property_read_u32_array(dev, prop, pin_defs,
-+					     ARRAY_SIZE(pin_defs));
-+	if (ret)
-+		return reg_def->def;
-+
-+	for (pin = 0; pin < SX9324_NUM_PINS; pin++)
-+		raw |= (pin_defs[pin] << (2 * pin)) &
-+		       SX9324_REG_AFE_PH0_PIN_MASK(pin);
-+
-+	return raw;
-+}
-+
- static const struct sx_common_reg_default *
- sx9324_get_default_reg(struct device *dev, int idx,
- 		       struct sx_common_reg_default *reg_def)
-@@ -881,38 +904,29 @@ sx9324_get_default_reg(struct device *dev, int idx,
- 		"highest" };
- 	static const char * const sx9324_csidle[] = { "hi-z", "hi-z", "gnd",
- 		"vdd" };
--#define SX9324_PIN_DEF "semtech,ph0-pin"
--#define SX9324_RESOLUTION_DEF "semtech,ph01-resolution"
--#define SX9324_PROXRAW_DEF "semtech,ph01-proxraw-strength"
--	unsigned int pin_defs[SX9324_NUM_PINS];
--	char prop[] = SX9324_PROXRAW_DEF;
- 	u32 start = 0, raw = 0, pos = 0;
--	int ret, count, ph, pin;
--	const char *res;
-+	const char *prop, *res;
-+	int ret;
- 
- 	memcpy(reg_def, &sx9324_default_regs[idx], sizeof(*reg_def));
- 
- 	sx_common_get_raw_register_config(dev, reg_def);
- 	switch (reg_def->reg) {
- 	case SX9324_REG_AFE_PH0:
-+		reg_def->def = sx9324_parse_phase_prop(dev, reg_def,
-+						       "semtech,ph0-pin");
-+		break;
- 	case SX9324_REG_AFE_PH1:
-+		reg_def->def = sx9324_parse_phase_prop(dev, reg_def,
-+						       "semtech,ph1-pin");
-+		break;
- 	case SX9324_REG_AFE_PH2:
-+		reg_def->def = sx9324_parse_phase_prop(dev, reg_def,
-+						       "semtech,ph2-pin");
-+		break;
- 	case SX9324_REG_AFE_PH3:
--		ph = reg_def->reg - SX9324_REG_AFE_PH0;
--		snprintf(prop, ARRAY_SIZE(prop), "semtech,ph%d-pin", ph);
--
--		count = device_property_count_u32(dev, prop);
--		if (count != ARRAY_SIZE(pin_defs))
--			break;
--		ret = device_property_read_u32_array(dev, prop, pin_defs,
--						     ARRAY_SIZE(pin_defs));
--		if (ret)
--			break;
--
--		for (pin = 0; pin < SX9324_NUM_PINS; pin++)
--			raw |= (pin_defs[pin] << (2 * pin)) &
--			       SX9324_REG_AFE_PH0_PIN_MASK(pin);
--		reg_def->def = raw;
-+		reg_def->def = sx9324_parse_phase_prop(dev, reg_def,
-+						       "semtech,ph3-pin");
- 		break;
- 	case SX9324_REG_AFE_CTRL0:
- 		ret = device_property_read_string(dev,
-@@ -937,11 +951,9 @@ sx9324_get_default_reg(struct device *dev, int idx,
- 	case SX9324_REG_AFE_CTRL4:
- 	case SX9324_REG_AFE_CTRL7:
- 		if (reg_def->reg == SX9324_REG_AFE_CTRL4)
--			strncpy(prop, "semtech,ph01-resolution",
--				ARRAY_SIZE(prop));
-+			prop = "semtech,ph01-resolution";
- 		else
--			strncpy(prop, "semtech,ph23-resolution",
--				ARRAY_SIZE(prop));
-+			prop = "semtech,ph23-resolution";
- 
- 		ret = device_property_read_u32(dev, prop, &raw);
- 		if (ret)
-@@ -1012,11 +1024,9 @@ sx9324_get_default_reg(struct device *dev, int idx,
- 	case SX9324_REG_PROX_CTRL0:
- 	case SX9324_REG_PROX_CTRL1:
- 		if (reg_def->reg == SX9324_REG_PROX_CTRL0)
--			strncpy(prop, "semtech,ph01-proxraw-strength",
--				ARRAY_SIZE(prop));
-+			prop = "semtech,ph01-proxraw-strength";
- 		else
--			strncpy(prop, "semtech,ph23-proxraw-strength",
--				ARRAY_SIZE(prop));
-+			prop = "semtech,ph23-proxraw-strength";
- 		ret = device_property_read_u32(dev, prop, &raw);
- 		if (ret)
- 			break;
+...
 
----
-base-commit: bee0e7762ad2c6025b9f5245c040fcc36ef2bde8
-change-id: 20230921-strncpy-drivers-iio-proximity-sx9324-c-8c3437676039
+> --- a/arch/x86/include/asm/word-at-a-time.h
+> +++ b/arch/x86/include/asm/word-at-a-time.h
+> @@ -3,6 +3,7 @@
+>  #define _ASM_WORD_AT_A_TIME_H
+>
+>  #include <linux/kernel.h>
 
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
+No, the macros used in this file doesn't require (after your patch)
+the kernel.h, these are in particular in asm/asm.h and
+asm/extable_fixup_types.h. I haven't looked at this closely to find a
+common header that kinda guarantees those two to be included.
+Otherwise we can use them directly.
 
+> +#include <linux/wordpart.h>
+
+...
+
+>  #include <linux/init.h>
+>  #include <linux/export.h>
+> -#include <linux/kernel.h>
+> +#include <linux/wordpart.h>
+
+Try to keep it more or less ordered. At list with given context it
+goes either after the slab.h or below (after those starting with 'f').
+
+>  #include <linux/slab.h>
+>  #include <linux/fs.h>
+>  #include <linux/filelock.h>
+
+...
+
+> --- a/include/asm-generic/word-at-a-time.h
+> +++ b/include/asm-generic/word-at-a-time.h
+> @@ -2,7 +2,7 @@
+>  #ifndef _ASM_WORD_AT_A_TIME_H
+>  #define _ASM_WORD_AT_A_TIME_H
+>
+> -#include <linux/kernel.h>
+> +#include <linux/wordpart.h>
+>  #include <asm/byteorder.h>
+
+Same as in the above remark, read what I said in the previous round of revi=
+ews.
+
+--=20
+With Best Regards,
+Andy Shevchenko
