@@ -1,65 +1,60 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967744B132
-	for <linux-hardening@vger.kernel.org>; Tue, 19 Dec 2023 18:10:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B6654B15C
+	for <linux-hardening@vger.kernel.org>; Tue, 19 Dec 2023 18:10:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--tanzirh.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fBZLZ5Vj"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dbd71de3c94so693050276.1
-        for <linux-hardening@vger.kernel.org>; Tue, 19 Dec 2023 10:10:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cndmlsTY"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-5d0c4ba7081so53583227b3.0
+        for <linux-hardening@vger.kernel.org>; Tue, 19 Dec 2023 10:10:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1703009408; x=1703614208; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=6YimShC/XWREZWbimdIHfWtB7p6pALlpTQBZ3gNvoJM=;
-        b=fBZLZ5VjOeaSZ9OiujWWhcNVrqYIh3Dxu4NSMLhwai8j2HNg8yRvFLR4gy+SveaGZq
-         aq86GjcYC6fHhn1Up8yF/3dkOddy6IFYUWiyZDxjO1EqcfsdPRZVT3bfY10ZjQGtw5+I
-         Z6/smr/vvIcI8ZKejf5Zo1CjiFai5NGH9rZvwzUtQ+RxxsjZ+RqkB8DGJDC95tUqoXJx
-         f7GGIFGccskpcRUm2/avki+09krriSC6hnE+X5jP80hpGH5sDQy1M7gtlP4w7K+tfQUi
-         4MqjhJJZhfI0UwnzhJF5cX/dRAgfzvXqOG46Xj4HC5eavKKsGQKuNGBPFJipKe3ZvN0K
-         pEbQ==
+        d=google.com; s=20230601; t=1703009410; x=1703614210; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5q99le1AaGsVZEd/+OCGExk8m8NTWTf8iBQd3NIkOvU=;
+        b=cndmlsTYWlurGLEF6mXhOSharZ9c1Hzl/JqyM8uTL4Bu6EOs39c7/PVHuNj5Ah+XxG
+         MN2DC0ixVfDOEWdYpAG4swXUU7SW46hPzWMyUmnndh0ionssW8BsvsQ+ZTd+D5RdDFQA
+         rrfowW3sGV088gjUZpi+QURqX65icBzkI76wUl+DnQ81/RSYP9/BiRu5EDFMLkcZYoQ8
+         l/R6/JUwjiqnb5qGM9rG8mXR167qj6ajdQ39AErxvZY1oQ7vrQwLYX8Xyxip3QW10NW4
+         RT/NAJ7i672gMzH6Q5jYBlVN2ksc7CaS79wR4MYdb/kyD7kQdoGQI7zyA9AdNZ9mhMp8
+         iaSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703009408; x=1703614208;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6YimShC/XWREZWbimdIHfWtB7p6pALlpTQBZ3gNvoJM=;
-        b=VD0JUKuFo8fE2m/nTEGjN7thmjq0hsMqSxHPcmFKPu9T1wZYnz5VZUJ0kWbn0bRtqt
-         qrHebUEAPreGp0P2lqiwe48F9tuiwvyTwpYWPjCOuLGfx/KuNJD78AJBF/Z2wmvSp7nO
-         BXElete1hUQ5ADpCz+z1fvFrvlRFCCIm8Kyh3RKR7ouiST3U/szG1oyKWRwBWejr3OmM
-         FtSgyVqYENbFmvEaWfDzt1BaxB9oaw8uN0LF1TTimbWj0vsHp1lOtdDz0gI+9MOor87m
-         KsBDB0H4RNdHNDVUzPpubVWFdlWIMBwmQEHLAaUpYUUG19vOxUkIhgJxr+kW94dJxbAR
-         97Vw==
-X-Gm-Message-State: AOJu0YyweEoCWcLiDqkyxk2X61Md5Fe8QXvJksgno3dVeWb7sNQUnhlm
-	h6h1+aeNHAUBp7j990iqgVPq+nfWyvri
-X-Google-Smtp-Source: AGHT+IE0LVzd1vIXn2iPSd7+2GWc6vaG1+AA4mD7m5oG/N4X0o6afACq67YqgCScWtq13tbE4o/PXfHybrHM
+        d=1e100.net; s=20230601; t=1703009410; x=1703614210;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5q99le1AaGsVZEd/+OCGExk8m8NTWTf8iBQd3NIkOvU=;
+        b=wjQK2NhxfgEFWVvC2l0XmbNVOVghFZMbkzHSot1zcaprO2ZzCopge01/VdH/xCVYHO
+         xlyDEK+pmH/c256lkkNOU+cgUP4OYd/hf7lCVnYLasGNuPVwKPn8fyS4tPxvnqYoExR3
+         FHYQsMEfZnoOA4AiXlFAyIvVKQP3tsGUdiBQjufaU+eSA8FMupKsTSUZxSRoxwBgt2o9
+         s2DGadjfP+NcjKBeJ1eZkT6CDjz9Hhs0gRa98ENiJVXG0FPMOsVxzSmTSyWTrRKz9sAg
+         Hnbn5l0oS4+Jlwxzm3MT/ER8D5dd6CQzB1Fz+dFsEIXgu+G/KTav+nNG0ghqgRF52JOY
+         wh0g==
+X-Gm-Message-State: AOJu0Yw8cEDeO/vppsT2xlQgZDSHUT+t4T/+YmjUmc4uAcWgV/ae+2h9
+	rMzITln+XRhRPyMPAaxM6PGbBUm23AUJ
+X-Google-Smtp-Source: AGHT+IEhjyEKPX1b8J6ILSwg1/IAmDPf/6+2bbll0QtMpDR7Zwz7TdruPWzCpa7ZTRleAW91TEBQ5uofRVzE
 X-Received: from tanz.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:c4a])
- (user=tanzirh job=sendgmr) by 2002:a25:8a09:0:b0:db5:3676:74dd with SMTP id
- g9-20020a258a09000000b00db5367674ddmr2252608ybl.3.1703009408385; Tue, 19 Dec
- 2023 10:10:08 -0800 (PST)
-Date: Tue, 19 Dec 2023 18:09:50 +0000
+ (user=tanzirh job=sendgmr) by 2002:a05:690c:101:b0:5e7:62e:75db with SMTP id
+ bd1-20020a05690c010100b005e7062e75dbmr1130156ywb.1.1703009410264; Tue, 19 Dec
+ 2023 10:10:10 -0800 (PST)
+Date: Tue, 19 Dec 2023 18:09:51 +0000
+In-Reply-To: <20231219-libstringheader-v4-0-aaeb26495d2f@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAG7cgWUC/42T3WrjMBBGX6X4ul5m9DvqVd9j2QtJnnEEaVzsE
- nYpefeVw7KksYtyOYLznY9h9NktPBdeupenz27mc1nKdKqDeX7q8iGeRu7LUOdOgdKowPTHkpa
- PuZzGA8eB556VJlZRLHPuKvU+s5Tf18Sfv+p8KMvHNP+5Cs64vn6fdcYe++wGbVxUKfjwOk7Te
- OQfeXpbs/+Bdh/0ErL1GqyO/nV8i+V45dYSZ9UQq1WcRPusDII1N/x/L+5y0Osknr1ODt1+4e9
- AEAx2yCK10i14bawbjXVtbCx5oEEoJLvbmPY46C1AGiwJiLcbsWmIzSqWhCZj8Eb4UbGpYueFv
- AFM4PVGbBtiW8UiSMGEumvjHhXbddVRCKxiIQobsbsV7xyXW8XKsRIEoRweFbsqFi/1JpGii2k
- j9g2xr2J2oFA7JM7D/VVTg6fKq5hDyBQwZb7nQ4MPlQct9YCFtQn5nkdoBCDUhOBiUA4csaNNA rYS1p/tyCa2vh7t8GUHl8vlL641c+bBBAAA
+References: <20231219-libstringheader-v4-0-aaeb26495d2f@google.com>
 X-Developer-Key: i=tanzirh@google.com; a=ed25519; pk=UeRjcUcv5W9AeLGEbAe2+0LptQpcY+o1Zg0LHHo7VN4=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1703009406; l=2043;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1703009406; l=6137;
  i=tanzirh@google.com; s=20231204; h=from:subject:message-id;
- bh=8piwcHlVOU33cOMSn+USqF0MHaHhYcY6fc7RoBv6vb8=; b=DWx0jSzRsHu9oVM1my/TMXQUlg/ncE79Qk8lLVoLyXs9r1PQc7h6ga1/+5cC8yDeQ+ziG9PNP
- sgO6ATbiY2hBpIJ/6/i+u4CA9YRsKBR8o91tjOu4mN5XgaebduJRFhR
+ bh=ojERQMahrvSc9Fi/LrhnUSIbNNxrxWKsIbZJzzfv7FA=; b=GmFPmuyyCmcfb3blcy1nA3M57IJ9vlYOb9VLkVBhHV4576pMmWy7NJPZkXcXSitvgrPeEpvFk
+ HB/+xee/CDWB4Mi2itdsRMSIAlUPz53cQDNoNmQL822BGx0S7yJFY4w
 X-Mailer: b4 0.12.4
-Message-ID: <20231219-libstringheader-v4-0-aaeb26495d2f@google.com>
-Subject: [PATCH v4 0/2] shrink lib/string.i via IWYU
+Message-ID: <20231219-libstringheader-v4-1-aaeb26495d2f@google.com>
+Subject: [PATCH v4 1/2] kernel.h: removed REPEAT_BYTE from kernel.h
 From: Tanzir Hasan <tanzirh@google.com>
 To: Kees Cook <keescook@chromium.org>, Nick DeSaulniers <nnn@google.com>
 Cc: Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org, 
@@ -68,37 +63,17 @@ Cc: Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org,
 	Andy Shevchenko <andy.shevchenko@gmail.com>, Tanzir Hasan <tanzirh@google.com>
 Content-Type: text/plain; charset="utf-8"
 
-This patch series changes the include list of string.c to minimize
-the preprocessing size. The patch series intends to remove REPEAT_BYE
-from kernel.h and move it into its own header file because
-word-at-a-time.h has an implicit dependancy on it but it is declared
-in kernel.h which is bloated.
+This patch creates wordpart.h and includes it in asm/word-at-a-time.h
+for the all architectures. WORD_AT_A_TIME_CONSTANTS depends on kernel.h
+because of REPEAT_BYTE. Moving this to another header and including it
+where necessary allows us to not include the bloated kernel.h. Making
+this implicit dependency on REPEAT_BYTE explicit allows for later
+improvements in the lib/string.c inclusion list.
 
+Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
+Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Tanzir Hasan <tanzirh@google.com>
 ---
-
----
-Changes in v4:
-- Fixed personal email client so name appears instead of just email
-- Removed kernel.h where not needed.
-- Sorted include list in lib/string.c and used linux/limits.h
-- Link to v3: https://lore.kernel.org/r/20231218-libstringheader-v3-0-500bd58f0f75@google.com
-
-Changes in v3:
-- Moved REPEAT_BYTE out of kernel.h and into wordpart.h.
-- Included wordpart.h where REPEAT_BYTE was necessary.
-- Link to v2: https://lore.kernel.org/r/20231214-libstringheader-v2-0-0f195dcff204@google.com
-
-Changes in v2:
-- Transformed into a patch series
-- Changed asm inclusions to linux inclusions
-- added a patch to sh
-- Link to v1: https://lore.kernel.org/r/20231205-libstringheader-v1-1-7f9c573053a7@gmail.com
-
----
-Tanzir Hasan (2):
-      kernel.h: removed REPEAT_BYTE from kernel.h
-      lib/string: shrink lib/string.i via IWYU
-
  arch/arm/include/asm/word-at-a-time.h     |  2 +-
  arch/arm64/include/asm/word-at-a-time.h   |  2 +-
  arch/powerpc/include/asm/word-at-a-time.h |  2 +-
@@ -110,13 +85,165 @@ Tanzir Hasan (2):
  include/asm-generic/word-at-a-time.h      |  2 +-
  include/linux/kernel.h                    |  7 -------
  include/linux/wordpart.h                  | 17 +++++++++++++++++
- lib/string.c                              | 17 +++++++++--------
- 12 files changed, 35 insertions(+), 22 deletions(-)
----
-base-commit: ceb6a6f023fd3e8b07761ed900352ef574010bcb
-change-id: 20231204-libstringheader-e238e2af5eec
+ 11 files changed, 26 insertions(+), 14 deletions(-)
 
-Best regards,
+diff --git a/arch/arm/include/asm/word-at-a-time.h b/arch/arm/include/asm/word-at-a-time.h
+index 352ab213520d..e08304996121 100644
+--- a/arch/arm/include/asm/word-at-a-time.h
++++ b/arch/arm/include/asm/word-at-a-time.h
+@@ -8,7 +8,7 @@
+  * Little-endian word-at-a-time zero byte handling.
+  * Heavily based on the x86 algorithm.
+  */
+-#include <linux/kernel.h>
++#include <linux/wordpart.h>
+ 
+ struct word_at_a_time {
+ 	const unsigned long one_bits, high_bits;
+diff --git a/arch/arm64/include/asm/word-at-a-time.h b/arch/arm64/include/asm/word-at-a-time.h
+index f3b151ed0d7a..bd8cfbc2b9c3 100644
+--- a/arch/arm64/include/asm/word-at-a-time.h
++++ b/arch/arm64/include/asm/word-at-a-time.h
+@@ -9,7 +9,7 @@
+ 
+ #ifndef __AARCH64EB__
+ 
+-#include <linux/kernel.h>
++#include <linux/wordpart.h>
+ 
+ struct word_at_a_time {
+ 	const unsigned long one_bits, high_bits;
+diff --git a/arch/powerpc/include/asm/word-at-a-time.h b/arch/powerpc/include/asm/word-at-a-time.h
+index 30a12d208687..26e4f718a674 100644
+--- a/arch/powerpc/include/asm/word-at-a-time.h
++++ b/arch/powerpc/include/asm/word-at-a-time.h
+@@ -5,7 +5,7 @@
+  * Word-at-a-time interfaces for PowerPC.
+  */
+ 
+-#include <linux/kernel.h>
++#include <linux/wordpart.h>
+ #include <asm/asm-compat.h>
+ #include <asm/extable.h>
+ 
+diff --git a/arch/riscv/include/asm/word-at-a-time.h b/arch/riscv/include/asm/word-at-a-time.h
+index 7c086ac6ecd4..94bec2f7ba53 100644
+--- a/arch/riscv/include/asm/word-at-a-time.h
++++ b/arch/riscv/include/asm/word-at-a-time.h
+@@ -9,7 +9,7 @@
+ #define _ASM_RISCV_WORD_AT_A_TIME_H
+ 
+ 
+-#include <linux/kernel.h>
++#include <linux/wordpart.h>
+ 
+ struct word_at_a_time {
+ 	const unsigned long one_bits, high_bits;
+diff --git a/arch/s390/include/asm/word-at-a-time.h b/arch/s390/include/asm/word-at-a-time.h
+index 2579f1694b82..55e66d9371d6 100644
+--- a/arch/s390/include/asm/word-at-a-time.h
++++ b/arch/s390/include/asm/word-at-a-time.h
+@@ -2,7 +2,7 @@
+ #ifndef _ASM_WORD_AT_A_TIME_H
+ #define _ASM_WORD_AT_A_TIME_H
+ 
+-#include <linux/kernel.h>
++#include <linux/wordpart.h>
+ #include <asm/asm-extable.h>
+ #include <asm/bitsperlong.h>
+ 
+diff --git a/arch/sh/include/asm/word-at-a-time.h b/arch/sh/include/asm/word-at-a-time.h
+index 4aa398455b94..663658cea69a 100644
+--- a/arch/sh/include/asm/word-at-a-time.h
++++ b/arch/sh/include/asm/word-at-a-time.h
+@@ -5,6 +5,7 @@
+ #ifdef CONFIG_CPU_BIG_ENDIAN
+ # include <asm-generic/word-at-a-time.h>
+ #else
++#include <linux/wordpart.h>
+ /*
+  * Little-endian version cribbed from x86.
+  */
+diff --git a/arch/x86/include/asm/word-at-a-time.h b/arch/x86/include/asm/word-at-a-time.h
+index 46b4f1f7f354..c002c864a63e 100644
+--- a/arch/x86/include/asm/word-at-a-time.h
++++ b/arch/x86/include/asm/word-at-a-time.h
+@@ -3,6 +3,7 @@
+ #define _ASM_WORD_AT_A_TIME_H
+ 
+ #include <linux/kernel.h>
++#include <linux/wordpart.h>
+ 
+ /*
+  * This is largely generic for little-endian machines, but the
+diff --git a/fs/namei.c b/fs/namei.c
+index 71c13b2990b4..03db8ca3f394 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -17,7 +17,7 @@
+ 
+ #include <linux/init.h>
+ #include <linux/export.h>
+-#include <linux/kernel.h>
++#include <linux/wordpart.h>
+ #include <linux/slab.h>
+ #include <linux/fs.h>
+ #include <linux/filelock.h>
+diff --git a/include/asm-generic/word-at-a-time.h b/include/asm-generic/word-at-a-time.h
+index 95a1d214108a..6f088b2b0b03 100644
+--- a/include/asm-generic/word-at-a-time.h
++++ b/include/asm-generic/word-at-a-time.h
+@@ -2,7 +2,7 @@
+ #ifndef _ASM_WORD_AT_A_TIME_H
+ #define _ASM_WORD_AT_A_TIME_H
+ 
+-#include <linux/kernel.h>
++#include <linux/wordpart.h>
+ #include <asm/byteorder.h>
+ 
+ #ifdef __BIG_ENDIAN
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index d9ad21058eed..162660af5b7d 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -39,13 +39,6 @@
+ 
+ #define STACK_MAGIC	0xdeadbeef
+ 
+-/**
+- * REPEAT_BYTE - repeat the value @x multiple times as an unsigned long value
+- * @x: value to repeat
+- *
+- * NOTE: @x is not checked for > 0xff; larger values produce odd results.
+- */
+-#define REPEAT_BYTE(x)	((~0ul / 0xff) * (x))
+ 
+ /* generic data direction definitions */
+ #define READ			0
+diff --git a/include/linux/wordpart.h b/include/linux/wordpart.h
+new file mode 100644
+index 000000000000..6a5ed5d54ba2
+--- /dev/null
++++ b/include/linux/wordpart.h
+@@ -0,0 +1,17 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) 2023 Google LLC <tanzirh@google.com>
++ */
++
++#ifndef _LINUX_WORDPART_H
++#define _LINUX_WORDPART_H
++/**
++ * REPEAT_BYTE - repeat the value @x multiple times as an unsigned long value
++ * @x: value to repeat
++ *
++ * NOTE: @x is not checked for > 0xff; larger values produce odd results.
++ */
++#define REPEAT_BYTE(x)	((~0ul / 0xff) * (x))
++
++#endif // _LINUX_WORDPART_H
++
+
 -- 
-Tanzir Hasan <tanzirh@google.com>
+2.43.0.472.g3155946c3a-goog
 
