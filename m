@@ -1,119 +1,65 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7400837D3C
-	for <linux-hardening@vger.kernel.org>; Tue, 19 Dec 2023 18:48:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--tanzirh.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F03D839AD1;
+	Tue, 19 Dec 2023 19:10:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RunE1/9+"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dbd4806205fso1524717276.0
-        for <linux-hardening@vger.kernel.org>; Tue, 19 Dec 2023 10:48:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1703011687; x=1703616487; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GQnopqwXCPJwf1o31D0QkbeUw9iOW+EHq9+aREsG9fw=;
-        b=RunE1/9+CTYXmKrJpmkGpJ8E3KqXHpu56BPWX8/0TXWRu2wM8yd88OX0z9GUBWnIf0
-         Wwxlc9NEJG6DbWYniUPrDDgiIDyZOA56bmluFz82k58PjOpS7C90ObamA4lprFIj747x
-         rCPqLnZ1ExkRsTil4Sjkxs8iGL4JIxtPsy4CVQlM/Yb+lfVbG4B0QS+EU4jhEx+x7qvD
-         9QbgoIacH++xBY6I/OOU9mJYIGD00TDpG8j66R80ULtYFE5f31r2qOaDBRqkFlGv/Aom
-         sNGlHoZIGXAJKJRj6MMRtR07l77FNK1Jn75hG8ZjMdzAYS6/tM3l9hXScPGNMC6I37lc
-         FG2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703011687; x=1703616487;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GQnopqwXCPJwf1o31D0QkbeUw9iOW+EHq9+aREsG9fw=;
-        b=aroKrmqc5vR2IC6QIlpRf2kecB6QLnqOO5Eeelo0Ogf4dZflKnRLxJC+51Evimu42D
-         fw3iVRSitd2l6OugFOjlOd1i/LvD0POLnAWuKkMsDpo+LjgxGINDXYgbEpDHA1Uj/lxs
-         DfWf5DsWtiI5gpSFsDs5VmLcBAaUl/1sCnBi5bmAE84VRQFa8uhz1oPhynqGUc/JmR6J
-         tlikaK1kIMBt7mLfH8SJ18Zuh7raec5JdaWxZs/llGGyKJPMA6Qj3rdg19KODHav4Ecf
-         Cb/oIbedEkvZqg5M+PLMzCCkV9VS0an6ji37egA63E1f4JSpNHS1pRbh256o66dMZz8a
-         maYg==
-X-Gm-Message-State: AOJu0Yy7iZXMnFwoxScbbtieyYhAAohLzVOsg4awnTi2oJ0lNkapFSJX
-	LSuvZdH72oneS/gGFLFJ44y8Q97B3mOq
-X-Google-Smtp-Source: AGHT+IHBA+KH6ttcAcCFFF4DpkEvaI+VOlFNhCHPim/Q48y/kMnBB99Abloesqsd9Mz74KHJnLFXqzFVhpxC
-X-Received: from tanz.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:c4a])
- (user=tanzirh job=sendgmr) by 2002:a25:ef0c:0:b0:dbc:d4c9:bbcc with SMTP id
- g12-20020a25ef0c000000b00dbcd4c9bbccmr173651ybd.8.1703011687539; Tue, 19 Dec
- 2023 10:48:07 -0800 (PST)
-Date: Tue, 19 Dec 2023 18:47:54 +0000
-In-Reply-To: <20231219-libstringheader-v5-0-206d4afd309a@google.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="IdzX9CEQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3E03C433C8;
+	Tue, 19 Dec 2023 19:10:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1703013056;
+	bh=/rG2E/TZNUgrQqdmZq7A5rdxeb0Ivy93L+M55L5o9+s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IdzX9CEQWfUleGznBf/Sv2ylanAKdM8bLKfeNZl83nKdC+bvv3wrditxfCVHCu9lr
+	 OIgKIupw93HNK+v6PmHhW/6E2J+69jZ02SnkQo6ZsQ96q1orv9t8cKoD5TOT3mKjpd
+	 zO/TD6xi2hlobV61cVMnjdHVexLolzUViu1yRrGw=
+Date: Tue, 19 Dec 2023 20:10:53 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Tanzir Hasan <tanzirh@google.com>
+Cc: Kees Cook <keescook@chromium.org>, Nick DeSaulniers <nnn@google.com>,
+	Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>, llvm@lists.linux.dev,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v4 1/2] kernel.h: removed REPEAT_BYTE from kernel.h
+Message-ID: <2023121928-propose-florist-5898@gregkh>
+References: <20231219-libstringheader-v4-0-aaeb26495d2f@google.com>
+ <20231219-libstringheader-v4-1-aaeb26495d2f@google.com>
+ <2023121938-stargazer-purse-0dc1@gregkh>
+ <CAE-cH4p-TzH3zyJfmSg3r=fw78j8y-0t0dp-NvaLyVYAMULw1w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20231219-libstringheader-v5-0-206d4afd309a@google.com>
-X-Developer-Key: i=tanzirh@google.com; a=ed25519; pk=UeRjcUcv5W9AeLGEbAe2+0LptQpcY+o1Zg0LHHo7VN4=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1703011682; l=1528;
- i=tanzirh@google.com; s=20231204; h=from:subject:message-id;
- bh=kLkju4pFci+nx2b0Vi+mSe3j1L2n+dGn+lmNlbPb2hw=; b=b0jsU9dP77fa4yf1ZBmjDzAgZG7P8A4zLkwrshRlIytJsSBs6DmwQmw8P9xNcLRozgOVkFZKB
- c9540TlKe4QDsPqQQGaAoMFGfuUGIw9TqLNSGRIYgTfRJd1i6ynudEf
-X-Mailer: b4 0.12.4
-Message-ID: <20231219-libstringheader-v5-2-206d4afd309a@google.com>
-Subject: [PATCH v5 2/2] lib/string: shrink lib/string.i via IWYU
-From: Tanzir Hasan <tanzirh@google.com>
-To: Kees Cook <keescook@chromium.org>, Nick Desaulniers <nnn@google.com>
-Cc: Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-	Greg KH <gregkh@linuxfoundation.org>, llvm@lists.linux.dev, 
-	Tanzir Hasan <tanzirh@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAE-cH4p-TzH3zyJfmSg3r=fw78j8y-0t0dp-NvaLyVYAMULw1w@mail.gmail.com>
 
-This diff uses an open source tool include-what-you-use (IWYU) to modify
-the include list, changing indirect includes to direct includes. IWYU is
-implemented using the IWYUScripts github repository which is a tool that
-is currently undergoing development. These changes seek to improve build
-times.
+On Tue, Dec 19, 2023 at 10:35:55AM -0800, Tanzir Hasan wrote:
+> > Legal note, this file is NOT copyright Google as no Google employe
+> > actually wrote the logcal contents of it.
+> >
+> > Please be VERY careful when doing stuff like this, it has potentially
+> > big repercussions, and you don't want to have to talk to lots of
+> > lawyers a few years from now and explain how you messed it all up :(
+> 
+> Ah, sorry, I didn't realize. Will change right away.
+> 
+> > Nick, odds are there's a Google copyright class that Tanzir should take
+> > here, if not, I recommend the free LF one that anyone can take online
+> > that explains the issues here:
+> >         https://training.linuxfoundation.org/training/open-source-licensing-basics-for-software-developers/
+> 
+> I will take a look, thanks!
 
-This change to lib/string.c resulted in a preprocessed size of
-lib/string.i from 26371 lines to 5321 lines (-80%) for the x86
-defconfig.
+Please take the time to either learn what the Google-specific rules are,
+or take the above training, before submitting a new version of the
+patch.
 
-Link: https://github.com/ClangBuiltLinux/IWYUScripts
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Tanzir Hasan <tanzirh@google.com>
----
- lib/string.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+thanks,
 
-diff --git a/lib/string.c b/lib/string.c
-index be26623953d2..06d9b46875ef 100644
---- a/lib/string.c
-+++ b/lib/string.c
-@@ -15,19 +15,20 @@
-  */
- 
- #define __NO_FORTIFY
--#include <linux/types.h>
--#include <linux/string.h>
--#include <linux/ctype.h>
--#include <linux/kernel.h>
--#include <linux/export.h>
-+#include <linux/bits.h>
- #include <linux/bug.h>
-+#include <linux/ctype.h>
- #include <linux/errno.h>
--#include <linux/slab.h>
-+#include <linux/limits.h>
-+#include <linux/linkage.h>
-+#include <linux/stddef.h>
-+#include <linux/string.h>
-+#include <linux/types.h>
- 
-+#include <asm/page.h>
-+#include <asm/rwonce.h>
- #include <asm/unaligned.h>
--#include <asm/byteorder.h>
- #include <asm/word-at-a-time.h>
--#include <asm/page.h>
- 
- #ifndef __HAVE_ARCH_STRNCASECMP
- /**
-
--- 
-2.43.0.472.g3155946c3a-goog
-
+greg k-h
