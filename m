@@ -1,85 +1,79 @@
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC1063D0B0;
-	Tue, 19 Dec 2023 21:52:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9C0B3D0A2;
+	Tue, 19 Dec 2023 21:53:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fv8d9YE4"
-Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3ba4850f65dso2809271b6e.2;
-        Tue, 19 Dec 2023 13:52:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="esjuyzrO"
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-77f524597c3so344232685a.3;
+        Tue, 19 Dec 2023 13:53:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703022740; x=1703627540; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1703022838; x=1703627638; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=h/HELoxRBihubnQTIbfT46yyuCF92jjoc5j2WnCAxMg=;
-        b=fv8d9YE4jjzwa9pobauF+LktaPrWbOyWqFtWHYxi0I4noweJfbMFeiC3i7Wo/eEWkZ
-         najZ+n42kfZxF2QviCmiH0G4kgeniEIGpEkHU98vAwoa4CZx60LLd01tjN4AFcpO3Qyn
-         T+KpSc6RwBFZJmRoboLhVgOHBpDUZhCXEf/sOIZON28KvYq7GGnirpjR53mY54frmEDD
-         C+SlycOrdDGxJoHZHDTu+7VQ0rNA+8+W46apOE+pktdAjL6sn3Pc1ssKyTc/ijD1ihBj
-         9BAWdgdh69KBhfyAEAqKkBcHhDatH0Q5tBl2HBopryvV7O8+5L/ssueVi5ZAfJbj1xKY
-         l7mA==
+        bh=uorEIJa1wV7XcN84uUF/pYn1OAptdc3n7/u41DV37lo=;
+        b=esjuyzrO1H79P9gr7EyLlC2wD3UVUL7dTM606m/WeU0GlfEAgbBGv5yrS9mcTcLzV2
+         gKKE5eYIX5KPPW6+isrHzvdcGsDjFapEtR8sl63xYemL6I+Se22DZxCJO55Nne/lK8ng
+         bn54ue1yhDMAB2ogAmioEBEHb7K3l1dPGIsH0W478l01Mtd748+MhJh+zEBGfKcrCUKm
+         QXz6k1xZETGfOxtR2aWGm1FAVtysTIIykhPwplYbeC1nUqOmdPYkAgBjx9msav7NLcau
+         L59jhjJB+m/wIdV/SIsY+vtcpfajYlzpR5nxqT+6GUAPl/dwtzqNKe0oCOtlHwYf/Iak
+         QNxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703022740; x=1703627540;
+        d=1e100.net; s=20230601; t=1703022838; x=1703627638;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=h/HELoxRBihubnQTIbfT46yyuCF92jjoc5j2WnCAxMg=;
-        b=UwPHggbZw3heVYuoJnxGd6oenTdF3UEd47AypBFARlApYKgq4opBovxqc/lbFO+RQq
-         T0KykHMwkqTqklOyGCG7mp4DasLBSlYjrRM5MTVo3PCyxvixshLiuPC32GMy32L0o1o/
-         2SqgW3TzZ9us0G6l57B/nbwsKlgNkHlyAL1k4jJH/yhYbpP89W0+WOqLdRfWdP67HNoZ
-         QaLEMisNT9GAcKjcdzqvi81gH25Jp27meLqnqzi+ooJAO4spTOwjtlQLOyN5D8Thfn3C
-         ZSpP42z5dG0fX5IMgGf6iF8E3cZ6BNlLGGrlI+Qe8G/zQP1DCqY/VnUsVfxfeJelRHkO
-         HWQg==
-X-Gm-Message-State: AOJu0YwVeTyxs785u5dY+5AKVVdvdJdDgvHgON/fZ8GUeGh5I2oYgQki
-	CAvQSRu3DK1K493x/qYRJu9i3M0QaXA5oiKMiiU=
-X-Google-Smtp-Source: AGHT+IEYMovugHC3Wx2wWk978fWVMiH69UO6ZUgo0IecWqN29PEQku+lqbLZS9m5zTdKhg7b9KpHO8lfRDjZN6HORQs=
-X-Received: by 2002:a05:6808:10d4:b0:3bb:67fb:a451 with SMTP id
- s20-20020a05680810d400b003bb67fba451mr1114878ois.114.1703022739808; Tue, 19
- Dec 2023 13:52:19 -0800 (PST)
+        bh=uorEIJa1wV7XcN84uUF/pYn1OAptdc3n7/u41DV37lo=;
+        b=Fk4TWyHmCXMoMPG6hKNIBDnYlR8ul5IenYYs3wFwA9hZXeViNuCIYtTOSyiGb0QwUf
+         gEeieKlTPJhUSqPg/p8avFwAR/tI/GAsheO+GOO5nN+8Tu0dhH7hda2nra3xwo+RpKO/
+         Ar5+Yce9ECXroiiWa9V23s9cofzv31XGivIWoDLeMoqVk6urR36ZMT6q5oI1bRSoqklE
+         eshV8EYzN2+OEqsHz6cL2iKciie7UHYaLPCZU4GYtLOnFXxfhYi+rXXgm5hHCpoFwAbO
+         GQaUHuDwfFrfOD2WqdC1040ICrKu5GqF06Xhdp6Jeg/vthOpObQVNisTVntBJrBgp9BW
+         i8yA==
+X-Gm-Message-State: AOJu0YySUoa7IwFiMUs7VVz9zBHsiXdrgBr+Tm5e5rp3P35GEPVtWQ4g
+	K7spC++YCnNwPaSyiNf5lhWhxwE+kNKFjOLOkEc=
+X-Google-Smtp-Source: AGHT+IGVPnDmY+8hb2F5TdHpkLPk45ReDmKcW3M5DxmIqEZDxtJbur3DLguyhg1Ml6F5fd55X0PrxkRtZRmV13wCLiY=
+X-Received: by 2002:a05:6214:1416:b0:67a:a496:4a39 with SMTP id
+ pr22-20020a056214141600b0067aa4964a39mr18464073qvb.18.1703022838662; Tue, 19
+ Dec 2023 13:53:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231219-libstringheader-v5-0-206d4afd309a@google.com> <20231219-libstringheader-v5-1-206d4afd309a@google.com>
-In-Reply-To: <20231219-libstringheader-v5-1-206d4afd309a@google.com>
+References: <20231219-libstringheader-v5-0-206d4afd309a@google.com> <20231219-libstringheader-v5-2-206d4afd309a@google.com>
+In-Reply-To: <20231219-libstringheader-v5-2-206d4afd309a@google.com>
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 19 Dec 2023 23:51:43 +0200
-Message-ID: <CAHp75VfS7rYZwRP50cm5vYq_EO9ozA=_qrEm4u7jB1WMwOVc0A@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] kernel.h: removed REPEAT_BYTE from kernel.h
+Date: Tue, 19 Dec 2023 23:53:22 +0200
+Message-ID: <CAHp75VeLAip50O9YYcgX7nceYc4JpWjYX0aAve0sT7KkMNR0CA@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] lib/string: shrink lib/string.i via IWYU
 To: Tanzir Hasan <tanzirh@google.com>
 Cc: Kees Cook <keescook@chromium.org>, Nick Desaulniers <nnn@google.com>, 
 	Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-	Greg KH <gregkh@linuxfoundation.org>, llvm@lists.linux.dev, 
-	Al Viro <viro@zeniv.linux.org.uk>
+	Greg KH <gregkh@linuxfoundation.org>, llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Tue, Dec 19, 2023 at 8:48=E2=80=AFPM Tanzir Hasan <tanzirh@google.com> w=
 rote:
 >
-> This patch creates wordpart.h and includes it in asm/word-at-a-time.h
-> for the all architectures. WORD_AT_A_TIME_CONSTANTS depends on kernel.h
-> because of REPEAT_BYTE. Moving this to another header and including it
-> where necessary allows us to not include the bloated kernel.h. Making
-> this implicit dependency on REPEAT_BYTE explicit allows for later
-> improvements in the lib/string.c inclusion list.
+> This diff uses an open source tool include-what-you-use (IWYU) to modify
+> the include list, changing indirect includes to direct includes. IWYU is
+> implemented using the IWYUScripts github repository which is a tool that
+> is currently undergoing development. These changes seek to improve build
+> times.
+>
+> This change to lib/string.c resulted in a preprocessed size of
+> lib/string.i from 26371 lines to 5321 lines (-80%) for the x86
+> defconfig.
 
-Same comments as per v4 apply here.
-According to the Submitting Patches the best time between versions is
-~1w. I understand your desire to close this quicker, but the result is
-actually the opposite. Take your time and check carefully what others
-commented and recommended. With this series it's fine to send a couple
-of times per (working) week. It sounds to me balanced between the
-complexity of the change and the people's willingness (having time?)
-to review.
-
-Otherwise it's a good start!
+This LGTM now,
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
 --=20
 With Best Regards,
