@@ -1,140 +1,106 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 714E6273FD
-	for <linux-hardening@vger.kernel.org>; Tue, 19 Dec 2023 23:00:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0D323FB21;
+	Tue, 19 Dec 2023 23:04:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nI3bK0KZ"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-40c29f7b068so56087755e9.0
-        for <linux-hardening@vger.kernel.org>; Tue, 19 Dec 2023 15:00:44 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="GFjBVzq3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1703026842; x=1703631642; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fZwm6JZ4sNLkRRVAKkvheMbMEQKEA6/K7E70Hl7Hv90=;
-        b=nI3bK0KZHuuYrQYjZ4Ui3o7Qn6H1AvP7cyIHFSj7XWv1ykGLB6EWaFvRFywRG5r087
-         5+rnc6ZhxbmXjRGm6n0zZYJUCiyWVX4kfySvWKhHZw2gBFsyZqSEnGu0PcnH/ytz64Lq
-         1oERebigTAx5qYhL+HvF7zVURd8nGIqJ2nf6Hdu9EfPyZ0T19EHnQ1T8Zc7q8sGCKWU3
-         S9Aaay9CncZVMYht/J2+m/l85y90XcFXLp0OCgisokaim7k+yZOxXVrQWcQY9yw0MvzG
-         JnFxPl1saIALU8Sky/zNKC2G+sZnJgs/bvM8p1s4ex7RQD2cyCk99tXY3klTui6R3Pg/
-         CF4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703026842; x=1703631642;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fZwm6JZ4sNLkRRVAKkvheMbMEQKEA6/K7E70Hl7Hv90=;
-        b=r3Ds+o1WU0Jw13J1dBW9tmoi6Suy0TEHpFhJu2ZhYmf65hILssEasrEPgu97oO9g5B
-         k1diGAgroLvolUsZlY/Ib9FbpmWND6xxTMcsnS9z2gbBRcSyOB02ejg+LTrVC8lYMGAk
-         mgHXG8aChZpYveF8nArwKl2jpL6QN1JrP0dRjppWNICl5VfyTWasuaCaGDauDJJJPbGW
-         Pps3zKKRWcPvBsuONJO+bfRnhvdzTcvszbTD8KswHPnGuDFEbptYuuVG3rPN7jDPO8lb
-         Hb10MWfbpm7Y5zl87eF9c541dTpzano3MJ84HXTprIwrbCIsozD9DX42j/Yg6u+c9OfB
-         unmA==
-X-Gm-Message-State: AOJu0YyePAdrZAVVv/nVbRiJU/0YQTurovYVso89ScN773jWf1BCpxYH
-	bh90UknsL97y2AhuMZN/zrVAqq/AOsWkJ0R9vLxboA==
-X-Google-Smtp-Source: AGHT+IFDk+YH98DmlhP5rDwghASFHtsZ/cHCbLg8dD2/9C72D6slrbK8ZNqM/SwdSooilIR08O9ljo3i9+rmU7rlaP4=
-X-Received: by 2002:a05:600c:5486:b0:40c:6e0b:69e4 with SMTP id
- iv6-20020a05600c548600b0040c6e0b69e4mr4366526wmb.18.1703026842524; Tue, 19
- Dec 2023 15:00:42 -0800 (PST)
+  d=inria.fr; s=dc;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=deXv4lVWUMilBoHHp3w75/hwr/YXbvS5EAOYrGm50ic=;
+  b=GFjBVzq3UEyJCplsoXruB0h1ovFTW98nX14OvI9oetApWxfKE7sGGgFO
+   1NjM2xaL3m+1otjrLN1wusNIqhIF21wg08GVaucCR/4Hwz+ByuKjtpl3K
+   q/exQW1D1Yw8KTlpQfMblBOQTlQHrgLuDVoTzL1huBprh/HC5+9RS//sr
+   0=;
+Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="6.04,289,1695679200"; 
+   d="scan'208";a="74900283"
+Received: from 231.85.89.92.rev.sfr.net (HELO hadrien) ([92.89.85.231])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2023 00:04:48 +0100
+Date: Wed, 20 Dec 2023 00:04:47 +0100 (CET)
+From: Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To: Luis Chamberlain <mcgrof@kernel.org>
+cc: =?ISO-8859-15?Q?Thomas_Wei=DFschuh?= <linux@weissschuh.net>, 
+    Joel Granados <j.granados@samsung.com>, 
+    Dan Carpenter <dan.carpenter@linaro.org>, 
+    Kees Cook <keescook@chromium.org>, 
+    "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+    Iurii Zaikin <yzaikin@google.com>, 
+    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+    linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 00/18] sysctl: constify sysctl ctl_tables
+In-Reply-To: <ZYIGi9Gf7oVI7ksf@bombadil.infradead.org>
+Message-ID: <alpine.DEB.2.22.394.2312192358500.3196@hadrien>
+References: <20231207104357.kndqvzkhxqkwkkjo@localhost> <fa911908-a14d-4746-a58e-caa7e1d4b8d4@t-8ch.de> <20231208095926.aavsjrtqbb5rygmb@localhost> <8509a36b-ac23-4fcd-b797-f8915662d5e1@t-8ch.de> <20231212090930.y4omk62wenxgo5by@localhost>
+ <ZXligolK0ekZ+Zuf@bombadil.infradead.org> <20231217120201.z4gr3ksjd4ai2nlk@localhost> <908dc370-7cf6-4b2b-b7c9-066779bc48eb@t-8ch.de> <ZYC37Vco1p4vD8ji@bombadil.infradead.org> <a0d96e7b-544f-42d5-b8da-85bc4ca087a9@t-8ch.de>
+ <ZYIGi9Gf7oVI7ksf@bombadil.infradead.org>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231219-libstringheader-v4-0-aaeb26495d2f@google.com>
- <20231219-libstringheader-v4-1-aaeb26495d2f@google.com> <2023121938-stargazer-purse-0dc1@gregkh>
- <CAE-cH4p-TzH3zyJfmSg3r=fw78j8y-0t0dp-NvaLyVYAMULw1w@mail.gmail.com> <2023121928-propose-florist-5898@gregkh>
-In-Reply-To: <2023121928-propose-florist-5898@gregkh>
-From: Nick Desaulniers <ndesaulniers@google.com>
-Date: Tue, 19 Dec 2023 15:00:22 -0800
-Message-ID: <CAKwvOdnW_vZyiO3BE=Vce4OrcX4+pb6QrEFbmeya0Z+w_5d=zw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] kernel.h: removed REPEAT_BYTE from kernel.h
-To: Greg KH <gregkh@linuxfoundation.org>, Tanzir Hasan <tanzirh@google.com>, 
-	Ingo Molnar <mingo@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>, Andy Shevchenko <andy@kernel.org>, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Andrew Morton <akpm@linux-foundation.org>, llvm@lists.linux.dev, 
-	Al Viro <viro@zeniv.linux.org.uk>, Andy Shevchenko <andy.shevchenko@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-On Tue, Dec 19, 2023 at 11:10=E2=80=AFAM Greg KH <gregkh@linuxfoundation.or=
-g> wrote:
->
-> > > Legal note, this file is NOT copyright Google as no Google employe
-> > > actually wrote the logcal contents of it.
-> > >
-> > > Please be VERY careful when doing stuff like this, it has potentially
-> > > big repercussions, and you don't want to have to talk to lots of
-> > > lawyers a few years from now and explain how you messed it all up :(
-> > >
-> > > Nick, odds are there's a Google copyright class that Tanzir should ta=
-ke
-> > > here, if not, I recommend the free LF one that anyone can take online
-> > > that explains the issues here:
-> > >         https://training.linuxfoundation.org/training/open-source-lic=
-ensing-basics-for-software-developers/
->
-> Please take the time to either learn what the Google-specific rules are,
-> or take the above training, before submitting a new version of the
-> patch.
+I came up with the following:
 
-It was my mistake to suggest to Tanzir to add his copyright to this
-newly created header. I'm sorry; we do have such resources available
-and I should have reviewed them.
+@@
+type t;
+const t *x;
+identifier y,z;
+expression a;
+assignment operator aop;
+@@
 
-I've:
-1. reviewed our internal training materials on copyright assignment
-  - go/gti-os-self-study
-  - go/patching#license-headers-and-copyright-notices
-2. reviewed kernel docs:
-  - Documentation/process/1.Intro.rst
-  - Documentation/process/kernel-enforcement-statement.rst
-3. asked Tanzir to do the same
-4. discovered who to ask internally for further questions
-<opensource-licensing@google.com>
+(
+  (<+...(<+...x->y...+>)[...]...+>) aop a
+|
+  (<+...(<+...x->y...+>)->z...+>) aop a
+|
+* (<+...x->y...+>) aop a
+)
 
-Is there further due diligence you would like to see?
+@fn disable optional_qualifier@
+identifier f,x;
+type t;
+parameter list[n] ps;
+@@
 
----
+f(ps,t *x,...) { ... }
 
-For Google specific guidance, I'll quote what they have:
+@@
+identifier fn.f;
+expression list[fn.n] es;
+type t;
+const t *e;
+@@
 
-> License Headers and Copyright Notices
-> Googlers should add Google's copyright notice (or a "The Project Authors"=
- style copyright notice) to new files being added to the library if permitt=
-ed by the project maintainers.
+*f(es,e,...)
 
-Then the relevant section of 1.Intro.rst:
+---------------
 
-> Copyright assignments are not required (or requested) for code contribute=
-d
-> to the kernel.
+The first rule takes care of assignments, while the remaining rules check
+function calls.
 
-Shall I interpret those together to mean that the "project
-maintainers" don't permit copyright assignments for "new files being
-added," and thus Tanzir SHOULD NOT be adding a copyright assignment to
-the newly created header?
+This is not extensively tested and has false positives.  One case is when
+you have a->b[x->y] = 12; and it is x not a that is const.  Maybe I can
+improve it to avoid this problem.
 
-Or shall I leave the interpretation up to an explicit discussion with
-opensource-licensing@google.com?
+I would suggest to replace the occurrences of t by your specific type of
+interest (and then drop the occurrences type t;), to reduce the amount of
+work to be done and the chance of false positives.
 
----
+This is also limited in that it only works on a single file.  Thus in
+particular the last rule on function calls will only be triggered when the
+called function is defined in the same file.
 
-While I think we have the answer for Tanzir's patch, I don't think we
-do for if we intend to split other header files in the future if those
-have explicit copyright assignments.  I wonder if this question has
-come up in Ingo's header refactoring work, and if so, what the
-guidance is there?
+Despite the current limitations, maybe it will find something useful.
 
-For example, consider include/linux/sysfs.h.  It's 600+ lines long and
-contains 4 copyright assignments explicitly in sources. If we split
-that header file in half, which copyright assignments do we transfer
-to the new half, if any?
---=20
-Thanks,
-~Nick Desaulniers
+julia
