@@ -1,106 +1,82 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE527349B;
-	Mon, 18 Dec 2023 21:22:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8814A1872;
+	Tue, 19 Dec 2023 00:24:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RwnBpBPE"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description;
-	bh=VC+L7rFKG6X8C4ZiU4wNQCGzHwKND4zyyzshhUNrvTo=; b=RwnBpBPEKSObuehHd52kglOds7
-	qRfWT1wCChbj2oeUHWIWeqzisKj1mREJxbjq2QEsBC2yr5XUaU4f8Vdj6ZiLTCAm1cxrHwtpTKI9l
-	zaJgt0I7Ma2n+WA+1BRtSgVuHkO109xFu242d+OS0gajDklSLZWo6CEyyDcsT9broqoorbK/8loIP
-	6O9K7Q2nlyIu5BsDDGvxfLkPH0mCpY2fou3I2RTC3GBehV90FzFJAIUyOXbWQt0TrQ9KTeD232vYa
-	/188RCbwPKHr2eBMwNhaHRTjRiaio+4sKm6JcPlXAMxvP2HE/Q+L/aoTNsW89BEKsTX+Vh7cwGO7t
-	VU/1yU7A==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1rFL3d-00C7Bt-0W;
-	Mon, 18 Dec 2023 21:21:49 +0000
-Date: Mon, 18 Dec 2023 13:21:49 -0800
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Joel Granados <j.granados@samsung.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Julia Lawall <julia.lawall@inria.fr>,
-	Kees Cook <keescook@chromium.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L6LPmx9k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6469DC433C8;
+	Tue, 19 Dec 2023 00:24:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702945496;
+	bh=nA9/a7919dPKMYYw5KWRsWrqeemlp+0/WOnVbITGovA=;
+	h=Date:From:To:Cc:Subject:From;
+	b=L6LPmx9kTw0B4hbMomnqLSv4v1LiFIl5o7dvjeP7kX4xsrxOf5Z8fCNAz9mSQrGjs
+	 kxJdkvtTxNX3Jo3NgBv8olBjMLd85TbAO2dbqLgub4aihd/CPj8k7K45Oy8YW7hCFk
+	 +oHSaN8GJlS0getphbAFGOanV3rG3cPw9Jk2Nk+5Xu45CDAM623ORXlHB/x0B7P08K
+	 cShjKpfA8h9oPZVY3Xzq5JQ108iVu2S9oiUj0bxb/W2y0BfLogUx+cg36UAdHMtyEn
+	 VKhXZTLM7diAFpNBDzsAjJRpumC0b8JZuqDjdBj0d0RSEv4lAmch7hH7kDg52dK0VZ
+	 1pSPn3KZ4IbpA==
+Date: Mon, 18 Dec 2023 18:24:53 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Kent Overstreet <kent.overstreet@linux.dev>,
+	Brian Foster <bfoster@redhat.com>
+Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Iurii Zaikin <yzaikin@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 00/18] sysctl: constify sysctl ctl_tables
-Message-ID: <ZYC37Vco1p4vD8ji@bombadil.infradead.org>
-References: <CGME20231204075237eucas1p27966f7e7da014b5992d3eef89a8fde25@eucas1p2.samsung.com>
- <20231204-const-sysctl-v2-0-7a5060b11447@weissschuh.net>
- <20231207104357.kndqvzkhxqkwkkjo@localhost>
- <fa911908-a14d-4746-a58e-caa7e1d4b8d4@t-8ch.de>
- <20231208095926.aavsjrtqbb5rygmb@localhost>
- <8509a36b-ac23-4fcd-b797-f8915662d5e1@t-8ch.de>
- <20231212090930.y4omk62wenxgo5by@localhost>
- <ZXligolK0ekZ+Zuf@bombadil.infradead.org>
- <20231217120201.z4gr3ksjd4ai2nlk@localhost>
- <908dc370-7cf6-4b2b-b7c9-066779bc48eb@t-8ch.de>
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] bcachefs: Replace zero-length array with flex-array
+ member and use __counted_by
+Message-ID: <ZYDi1bWIKRSs2NpH@work>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <908dc370-7cf6-4b2b-b7c9-066779bc48eb@t-8ch.de>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-So we can split this up concentually in two:
+Fake flexible arrays (zero-length and one-element arrays) are
+deprecated, and should be replaced by flexible-array members.
+So, replace zero-length array with a flexible-array member in
+`struct bch_ioctl_fsck_offline`.
 
- * constificaiton of the table handlers
- * constification of the table struct itself
+Also annotate array `devs` with `__counted_by()` to prepare for the
+coming implementation by GCC and Clang of the `__counted_by` attribute.
+Flexible array members annotated with `__counted_by` can have their
+accesses bounds-checked at run-time via `CONFIG_UBSAN_BOUNDS` (for
+array indexing) and `CONFIG_FORTIFY_SOURCE` (for strcpy/memcpy-family
+functions).
 
-On Sun, Dec 17, 2023 at 11:10:15PM +0100, Thomas Weißschuh wrote:
-> The handlers can already be made const as shown in this series,
+This fixes the following -Warray-bounds warnings:
+fs/bcachefs/chardev.c: In function 'bch2_ioctl_fsck_offline':
+fs/bcachefs/chardev.c:363:34: warning: array subscript 0 is outside array bounds of '__u64[0]' {aka 'long long unsigned int[]'} [-Warray-bounds=]
+  363 |         if (copy_from_user(devs, &user_arg->devs[0], sizeof(user_arg->devs[0]) * arg.nr_devs)) {
+      |                                  ^~~~~~~~~~~~~~~~~~
+In file included from fs/bcachefs/chardev.c:5:
+fs/bcachefs/bcachefs_ioctl.h:400:33: note: while referencing 'devs'
+  400 |         __u64                   devs[0];
 
-The series did already produce issues with some builds, and so
-Julia's point is confirmed that the series only proves hanlders
-which you did build and for which 0-day has coverage for.
+This results in no differences in binary output.
 
-The challenge here was to see if we could draw up a test case
-that would prove this without build tests, and what occurred to
-me was coccinelle or smatch.
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ fs/bcachefs/bcachefs_ioctl.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > If that is indeed what you are proposing, you might not even need the
-> > un-register step as all the mutability that I have seen occurs before
-> > the register. So maybe instead of re-registering it, you can so a copy
-> > (of the changed ctl_table) to a const pointer and then pass that along
-> > to the register function.
-> 
-> Tables that are modified, but *not* through the handler, would crop
-> during the constification of the table structs.
-> Which should be a second step.
+diff --git a/fs/bcachefs/bcachefs_ioctl.h b/fs/bcachefs/bcachefs_ioctl.h
+index 21f81b16f24e..4b8fba754b1c 100644
+--- a/fs/bcachefs/bcachefs_ioctl.h
++++ b/fs/bcachefs/bcachefs_ioctl.h
+@@ -397,7 +397,7 @@ struct bch_ioctl_fsck_offline {
+ 	__u64			flags;
+ 	__u64			opts;		/* string */
+ 	__u64			nr_devs;
+-	__u64			devs[0];
++	__u64			devs[] __counted_by(nr_devs);
+ };
+ 
+ /*
+-- 
+2.34.1
 
-Instead of "croping up" at build time again, I wonder if we can do
-better with coccinelle / smatch.
-
-Joel, and yes, what you described is what I was suggesting, that is to
-avoid having to add a non-const handler a first step, instead we modify
-those callers which do require to modify the table by first a
-deregistration and later a registration. In fact to make this even
-easier a new call would be nice so to aslo be able to git grep when
-this is done in the kernel.
-
-But if what you suggest is true that there are no registrations which
-later modify the table, we don't need that. It is the uncertainty that
-we might have that this is a true statment that I wanted to challenge
-to see if we could do better. Can we avoid this being a stupid
-regression later by doing code analysis with coccinelle / smatch?
-
-The template of the above endeavor seems useful not only to this use
-case but to any place in the kernel where this previously has been done
-before, and hence my suggestion that this seems like a sensible thing
-to think over to see if we could generalize.
-
-  Luis
