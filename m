@@ -1,106 +1,86 @@
-Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0D323FB21;
-	Tue, 19 Dec 2023 23:04:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F70340BF5
+	for <linux-hardening@vger.kernel.org>; Tue, 19 Dec 2023 23:27:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="GFjBVzq3"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iXgzLxqi"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-50e34a72660so3907989e87.1
+        for <linux-hardening@vger.kernel.org>; Tue, 19 Dec 2023 15:27:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=deXv4lVWUMilBoHHp3w75/hwr/YXbvS5EAOYrGm50ic=;
-  b=GFjBVzq3UEyJCplsoXruB0h1ovFTW98nX14OvI9oetApWxfKE7sGGgFO
-   1NjM2xaL3m+1otjrLN1wusNIqhIF21wg08GVaucCR/4Hwz+ByuKjtpl3K
-   q/exQW1D1Yw8KTlpQfMblBOQTlQHrgLuDVoTzL1huBprh/HC5+9RS//sr
-   0=;
-Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="6.04,289,1695679200"; 
-   d="scan'208";a="74900283"
-Received: from 231.85.89.92.rev.sfr.net (HELO hadrien) ([92.89.85.231])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2023 00:04:48 +0100
-Date: Wed, 20 Dec 2023 00:04:47 +0100 (CET)
-From: Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To: Luis Chamberlain <mcgrof@kernel.org>
-cc: =?ISO-8859-15?Q?Thomas_Wei=DFschuh?= <linux@weissschuh.net>, 
-    Joel Granados <j.granados@samsung.com>, 
-    Dan Carpenter <dan.carpenter@linaro.org>, 
-    Kees Cook <keescook@chromium.org>, 
-    "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-    Iurii Zaikin <yzaikin@google.com>, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-    linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 00/18] sysctl: constify sysctl ctl_tables
-In-Reply-To: <ZYIGi9Gf7oVI7ksf@bombadil.infradead.org>
-Message-ID: <alpine.DEB.2.22.394.2312192358500.3196@hadrien>
-References: <20231207104357.kndqvzkhxqkwkkjo@localhost> <fa911908-a14d-4746-a58e-caa7e1d4b8d4@t-8ch.de> <20231208095926.aavsjrtqbb5rygmb@localhost> <8509a36b-ac23-4fcd-b797-f8915662d5e1@t-8ch.de> <20231212090930.y4omk62wenxgo5by@localhost>
- <ZXligolK0ekZ+Zuf@bombadil.infradead.org> <20231217120201.z4gr3ksjd4ai2nlk@localhost> <908dc370-7cf6-4b2b-b7c9-066779bc48eb@t-8ch.de> <ZYC37Vco1p4vD8ji@bombadil.infradead.org> <a0d96e7b-544f-42d5-b8da-85bc4ca087a9@t-8ch.de>
- <ZYIGi9Gf7oVI7ksf@bombadil.infradead.org>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        d=chromium.org; s=google; t=1703028467; x=1703633267; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:user-agent:from:references
+         :in-reply-to:mime-version:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wib2+T/twwwN/3BXe0yj7pCHfEZ8cIQ5+MZvHiZViLk=;
+        b=iXgzLxqiePhff7jKystdfcjwNzwYmsPy/Pk/gYPA27zSG9G2ScITsc+zl4iJfsr/8j
+         iF991C6eO9svijDDeqIYGaEyseTUoamip0QWjBcn+D5dOee0YIc4WGqvxxSqXpI+Hxby
+         jRYRV1JyUe9dV+xC8e5DrR/uekUVQmPriVjQg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703028467; x=1703633267;
+        h=cc:to:subject:message-id:date:user-agent:from:references
+         :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wib2+T/twwwN/3BXe0yj7pCHfEZ8cIQ5+MZvHiZViLk=;
+        b=V4orRtH5xBYBG7u78LNbwO8VO5gdBeqhdrsAqR/kW3rZiT7w3m4mYwMS90LJqCkdK+
+         jpWZzX/Zx08jF/S8QlcFadZ5m4Tzua1ShzdICNSklxRTKAgk9BvT7V/fm8aB5zdFdwJA
+         XyKGQDIh3LLtXx5sEmwrLxUYQgXIuqDbJu/IsHbwAUzkwH2SVNemKqL/qt99xstm6Aq/
+         kxVZcwZErWtYnN1DzZ2yVinyUu/6kXjgGloqtzgVp59k5Elf6r2gMquWYZX3OT/YZmNC
+         R2rCACu1cotW3YUA6U+jj0b+9W6yHVbbrNf5yvM6keS7kJRqUPGGNbryMDprxaY7zCP2
+         pfHw==
+X-Gm-Message-State: AOJu0YzwlLPk4qTveCuOn35rQWF/Bf6jQEAKQO6V8zGr8Bm7hVy0rKz1
+	gBjqcWOY5OT5LSPqe3XB5fyziI/y1aqQzYcRqU8FsA==
+X-Google-Smtp-Source: AGHT+IFBw5KCb5vU7xJ+p2XS9GXuGS9FPMpi3yVFSCqsm9B6ldHxBfroB02RYzx+7K3tU1KZsZQ1ww5PdMu7JffeLOA=
+X-Received: by 2002:a05:6512:102c:b0:50c:e98:1ded with SMTP id
+ r12-20020a056512102c00b0050c0e981dedmr7072856lfr.132.1703028467520; Tue, 19
+ Dec 2023 15:27:47 -0800 (PST)
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Tue, 19 Dec 2023 15:27:47 -0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20231219-strncpy-drivers-iio-proximity-sx9324-c-v4-1-d49ed29ee952@google.com>
+References: <20231219-strncpy-drivers-iio-proximity-sx9324-c-v4-1-d49ed29ee952@google.com>
+From: Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.10
+Date: Tue, 19 Dec 2023 15:27:46 -0800
+Message-ID: <CAE-0n515WA34B1ZJvz6dkvFiErmT0PL0K9bPWeV9JhkzXPxOGw@mail.gmail.com>
+Subject: Re: [PATCH v4] iio: sx9324: avoid copying property strings
+To: Jonathan Cameron <jic23@kernel.org>, Justin Stitt <justinstitt@google.com>, 
+	Lars-Peter Clausen <lars@metafoo.de>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-I came up with the following:
+Quoting Justin Stitt (2023-12-19 13:34:15)
+> We're doing some needless string copies when trying to assign the proper
+> `prop` string. We can make `prop` a const char* and simply assign to
+> string literals.
+>
+> For the case where a format string is used, let's extract the parsing
+> logic out into sx9324_parse_phase_prop(). We no longer need to create
+> copies or allocate new memory.
+>
+> sx9324_parse_phase_prop() will simply return the default def value if it
+> fails.
+>
+> This also cleans up some deprecated strncpy() uses [1].
+>
+> Furthermore, let's clean up this code further by removing some unused
+> defines:
+> |  #define SX9324_PIN_DEF "semtech,ph0-pin"
+> |  #define SX9324_RESOLUTION_DEF "semtech,ph01-resolution"
+> |  #define SX9324_PROXRAW_DEF "semtech,ph01-proxraw-strength"
+>
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
 
-@@
-type t;
-const t *x;
-identifier y,z;
-expression a;
-assignment operator aop;
-@@
-
-(
-  (<+...(<+...x->y...+>)[...]...+>) aop a
-|
-  (<+...(<+...x->y...+>)->z...+>) aop a
-|
-* (<+...x->y...+>) aop a
-)
-
-@fn disable optional_qualifier@
-identifier f,x;
-type t;
-parameter list[n] ps;
-@@
-
-f(ps,t *x,...) { ... }
-
-@@
-identifier fn.f;
-expression list[fn.n] es;
-type t;
-const t *e;
-@@
-
-*f(es,e,...)
-
----------------
-
-The first rule takes care of assignments, while the remaining rules check
-function calls.
-
-This is not extensively tested and has false positives.  One case is when
-you have a->b[x->y] = 12; and it is x not a that is const.  Maybe I can
-improve it to avoid this problem.
-
-I would suggest to replace the occurrences of t by your specific type of
-interest (and then drop the occurrences type t;), to reduce the amount of
-work to be done and the chance of false positives.
-
-This is also limited in that it only works on a single file.  Thus in
-particular the last rule on function calls will only be triggered when the
-called function is defined in the same file.
-
-Despite the current limitations, maybe it will find something useful.
-
-julia
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
