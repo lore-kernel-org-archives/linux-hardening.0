@@ -1,32 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20F7539844;
-	Tue, 19 Dec 2023 18:22:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0A9239AC4;
+	Tue, 19 Dec 2023 18:24:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="sjSIBeIJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06FFBC433C8;
-	Tue, 19 Dec 2023 18:22:41 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="grLsKsOY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D66D1C433C7;
+	Tue, 19 Dec 2023 18:24:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1703010162;
-	bh=wSkiNjun2WCZD0RxVXQmuAD/N273lzHSG6FvzoIS+ks=;
+	s=korg; t=1703010267;
+	bh=yc5uKat7NtissNxZpaWjGwzUpSciT3vGWCPKFGRf70M=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sjSIBeIJAPebdHDxXCC1d7uqA9GkNF23p1NHcKoyn30cPzw/xCTjaxvq3+TrTXwUv
-	 fsiw5vrzcaO1Y80EfN89YXyAZK9OLCTY/ip86xesQodMfPLkZjzidg5Aem01zlR6HO
-	 zc/A0JQt8csDafBQBDpk4xZ6Prf7wJQruSRaD/S0=
-Date: Tue, 19 Dec 2023 19:22:39 +0100
+	b=grLsKsOYe2YYeK7firvhqaoeiFCCwhVpkVLyqdshoeHbL7uSX3l5rVO28pKDBEZ+8
+	 uhkPcqKCn1HNFlQdA+iPqfRVqfXI0Bf7GTlYMhhxj3s1b5fn07PsG1xId7iM9FJl3I
+	 LLkuhWcnZUtor8jjWo09Aj624PrKHd0rnPq6F0VQ=
+Date: Tue, 19 Dec 2023 19:24:24 +0100
 From: Greg KH <gregkh@linuxfoundation.org>
 To: Tanzir Hasan <tanzirh@google.com>
 Cc: Kees Cook <keescook@chromium.org>, Nick DeSaulniers <nnn@google.com>,
 	Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>, llvm@lists.linux.dev,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v4 1/2] kernel.h: removed REPEAT_BYTE from kernel.h
-Message-ID: <2023121938-stargazer-purse-0dc1@gregkh>
+	Andrew Morton <akpm@linux-foundation.org>, llvm@lists.linux.dev
+Subject: Re: [PATCH v4 2/2] lib/string: shrink lib/string.i via IWYU
+Message-ID: <2023121926-mummy-gondola-0a56@gregkh>
 References: <20231219-libstringheader-v4-0-aaeb26495d2f@google.com>
- <20231219-libstringheader-v4-1-aaeb26495d2f@google.com>
+ <20231219-libstringheader-v4-2-aaeb26495d2f@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -35,59 +33,22 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231219-libstringheader-v4-1-aaeb26495d2f@google.com>
+In-Reply-To: <20231219-libstringheader-v4-2-aaeb26495d2f@google.com>
 
-On Tue, Dec 19, 2023 at 06:09:51PM +0000, Tanzir Hasan wrote:
-> --- a/include/linux/kernel.h
-> +++ b/include/linux/kernel.h
-> @@ -39,13 +39,6 @@
->  
->  #define STACK_MAGIC	0xdeadbeef
->  
-> -/**
-> - * REPEAT_BYTE - repeat the value @x multiple times as an unsigned long value
-> - * @x: value to repeat
-> - *
-> - * NOTE: @x is not checked for > 0xff; larger values produce odd results.
-> - */
-> -#define REPEAT_BYTE(x)	((~0ul / 0xff) * (x))
->  
->  /* generic data direction definitions */
->  #define READ			0
-> diff --git a/include/linux/wordpart.h b/include/linux/wordpart.h
-> new file mode 100644
-> index 000000000000..6a5ed5d54ba2
-> --- /dev/null
-> +++ b/include/linux/wordpart.h
-> @@ -0,0 +1,17 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2023 Google LLC <tanzirh@google.com>
-> + */
-> +
-> +#ifndef _LINUX_WORDPART_H
-> +#define _LINUX_WORDPART_H
-> +/**
-> + * REPEAT_BYTE - repeat the value @x multiple times as an unsigned long value
-> + * @x: value to repeat
-> + *
-> + * NOTE: @x is not checked for > 0xff; larger values produce odd results.
-> + */
-> +#define REPEAT_BYTE(x)	((~0ul / 0xff) * (x))
+On Tue, Dec 19, 2023 at 06:09:52PM +0000, Tanzir Hasan wrote:
+> This diff uses an open source tool include-what-you-use (IWYU) to modify
+> the include list changing indirect includes to direct includes.
+> IWYU is implemented using the IWYUScripts github repository which is a tool that is
+> currently undergoing development. These changes seek to improve build times.
+> 
+> This change to lib/string.c resulted in a preprocessed size of
+> lib/string.i from 26371 lines to 5321 lines (-80%) for the x86
+> defconfig.
 
-Legal note, this file is NOT copyright Google as no Google employe
-actually wrote the logcal contents of it.
+Nit, use 72 columns like your editor is trying to force on you when you
+write a git commit.  As is, these line-ends are all over the place.
 
-Please be VERY careful when doing stuff like this, it has potentially
-big repercussions, and you don't want to have to talk to lots of
-lawyers a few years from now and explain how you messed it all up :(
-
-Nick, odds are there's a Google copyright class that Tanzir should take
-here, if not, I recommend the free LF one that anyone can take online
-that explains the issues here:
-	https://training.linuxfoundation.org/training/open-source-licensing-basics-for-software-developers/
-
-As-is, this change is STRONGLY Nacked by me.
+It's the stuff around the actual change that is hard to get right...
 
 thanks,
 
