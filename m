@@ -1,82 +1,127 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2EA81DDE0
-	for <linux-hardening@vger.kernel.org>; Tue, 19 Dec 2023 18:36:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E444B3C6A6
+	for <linux-hardening@vger.kernel.org>; Tue, 19 Dec 2023 18:48:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--tanzirh.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KiNflcK5"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-425928c24easo24541cf.0
-        for <linux-hardening@vger.kernel.org>; Tue, 19 Dec 2023 10:36:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RWASHrIn"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dbccc6dfa6cso5999586276.1
+        for <linux-hardening@vger.kernel.org>; Tue, 19 Dec 2023 10:48:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1703010967; x=1703615767; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=cdlfGRn9Pik/X1WCRvEtMyeQFE6g33e6UHtZ+YZ/+mU=;
-        b=KiNflcK5VEZUW6/Z5uZaxJ2uz5n1dgrqsB+YYoTxEG1LMxMFFXveUDca/Mv9xCHtmD
-         e7B5zCOleYNTNWHQ6fJWibVe1jXECmnlWLjMglt441FtrSXORfZE32jhGxbHvGJxdq+B
-         eMfWnC5+zhsj5Yd/Vd+C4p2eEYSJOAAqBwd/r4IBUOSBe2XVOdqwaMAwWVuuW1S/dn7R
-         vyCpvZfUe9PrZeWJSjTp6LdHMREGu26DE+KfuqGonkGm+XqjNPVvqlzLotZ3djNrj3MC
-         GvBMGx/gcksFimHUE+CrZhVVvzy4SD2+Fl+uIRnKpShl9Ckn7p40548fnAUVxa3n5Wzj
-         W4ag==
+        d=google.com; s=20230601; t=1703011684; x=1703616484; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=AH7uJyoYvXfA7ti80+MOcTI9tFmh1yE9F3ak/L9o5YU=;
+        b=RWASHrIn3kAs92Xf7MZqKRKxUUiOL31fD5CSJ2+EGbyoTopYQmnzFPO8XZuh1mU1wd
+         WGkk5HHkB4R1Bp8FWMj4jodfBZiaSxBP4ZuuXKlb8QRpTAZwGGCAhg6MxpG90dBH1Cl5
+         3jpf4BgDrOV6M0otQUiiyvswptcOBjKccI3yDyVQj0Zuju198Cdb/OaSdCNynBoVwZmK
+         h979Q4t0KEz0uPD/XxDUArjHXssSzmZwsFx5d3Q1oK+yBc/Xr0paWGhsJ8JVVKFXm081
+         UqVy9z2Zc8Nm/ZWI1RdRFJqHDsf11h/zOobAM3vzhE94qIDywg9f9o8QXDry6VH9Zznt
+         0jtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703010967; x=1703615767;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cdlfGRn9Pik/X1WCRvEtMyeQFE6g33e6UHtZ+YZ/+mU=;
-        b=jKThtzl88WPiemY4LxoSHiu0t2REDzX/er75/T8oFgBDUwMgP7aAgCQKhLRUYsdiKz
-         oke66Z2ZtqQrRtfjb88CsPJlrvCb4SVJ8fXQK2eSv/mAVrI8YSsP827jesDYfAJFS741
-         P9rVUapSioHUNyfCf/mogJU9c4qoXQX3O+yyQZh0zn0OyieD4MbxFuUgqItDXFGzTXUl
-         qrOsuNmeLlgVLePeQlqdTne3IjWJtEOCKxaGN8mRm3pY3eO6nT2nGGfHzVCy3O34HROS
-         O8Hye985ydHh2bE7OdZyuRYr6uJjEx1cn2Awo/bp+JrKgu+awa+7Y85K4RwbtSYUnQ8W
-         gFDA==
-X-Gm-Message-State: AOJu0Yx3jGwBeaJZXHOHi9+R2VuC7eRoFX0EoqFeKwFonxYZeFkpol3J
-	GyOZEuoWBKU4rNwtovnCyxEKamSw/NoyljQdc/N2iQEeBAWo
-X-Google-Smtp-Source: AGHT+IEBLCNdsO/90AJuMfJS1bbNyublmOBRFluX1ANBAWNG5IR6t4QBsmCeBb7+ZRef/sCDxlO6WJZbnp1+cFls3p8=
-X-Received: by 2002:ac8:5d0f:0:b0:425:8bbf:f6b0 with SMTP id
- f15-20020ac85d0f000000b004258bbff6b0mr13822qtx.29.1703010967554; Tue, 19 Dec
- 2023 10:36:07 -0800 (PST)
+        d=1e100.net; s=20230601; t=1703011684; x=1703616484;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=AH7uJyoYvXfA7ti80+MOcTI9tFmh1yE9F3ak/L9o5YU=;
+        b=o+dbnmPkTDhiDjeUp8q3auR/7O59eUdXK1yOfLbgPNS7pUJmEX7tNUeuwyifQuPDuD
+         XhfY0yT0xA5gngo6ySXuM9yENJQ094LJBSbBtXfO6Yh2b8Ihxj2JaIHNnAlPBZZq4XU1
+         zZgX0Ct3FpSaPzM9tGAcwAiChOsWU3zgurJ81dj1WBq/MP+T8pqDebQkn8z/XPxj/a0X
+         Zgz/48VC09aM4Y1Qnkp+5qeYgPB1MmlCO0Ejzh1RsaEhm5uLlKHROVVcpgUQHqbx6u7X
+         DHswQe2Up8jqGLEJ7MkI3RdIP6TLxcU7Hv3QYWLOSrbYegoCP/4/mlhWlRfuzJ2E4g3q
+         beFA==
+X-Gm-Message-State: AOJu0YxAkcwzUerr6QGCd2HMp9Nopf3GZQ3kw5QDNWkJCJjLgli4+8QO
+	is2kuo3YWVpAlHEaQeFQXLVnIoQ9vqsl
+X-Google-Smtp-Source: AGHT+IGRwQkV/1lt+ej3ziev5gc0fbKJoRnteDzvkQztfb3qTo0Aj5J9t0oNYrAHZ41NuVMoMqlvL1V5fBR/
+X-Received: from tanz.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:c4a])
+ (user=tanzirh job=sendgmr) by 2002:a25:be92:0:b0:dbd:2c5a:6c53 with SMTP id
+ i18-20020a25be92000000b00dbd2c5a6c53mr565316ybk.6.1703011684012; Tue, 19 Dec
+ 2023 10:48:04 -0800 (PST)
+Date: Tue, 19 Dec 2023 18:47:52 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20231219-libstringheader-v4-0-aaeb26495d2f@google.com>
- <20231219-libstringheader-v4-1-aaeb26495d2f@google.com> <2023121938-stargazer-purse-0dc1@gregkh>
-In-Reply-To: <2023121938-stargazer-purse-0dc1@gregkh>
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAFjlgWUC/42U3WrjMBBGX6X4ul5m9DMa9arvseyFJM84hjQud
+ gm7lLz7ymFZ0tjFuRzD+c6HNPJnM8s0yNy8PH02k5yHeRhPdfDPT005pFMv7dDVuTFgLBpw7XH
+ I88c0nPqDpE6mVoxlMUm9SGkq9T6JDr+viT9/1fkwzB/j9OcqOOPy9fusM7bYFuqso2RyDPG1H
+ 8f+KD/K+LZk/wP9Nhg0Fh8seJvCa/+WhuOVW0qczY7YLOKsNhTjELy74f97cZOD1mYNEmwmpO3
+ C34GgGH1XVGulW/Da2O40trWx8xyAO+WY/WZj3uKg9QC586ygwa/EbkfsFrFmdAVjcCqPil0VU
+ 1AODjBDsNtHFbfBlCQbcvW4jK4a+53GvjZWRY4u1kty9Ghjv9xRUgZvRJnjSky34o2tpEVsSIw
+ iKJf4qJiqWIPWZUZOlPJKHHbEoYqFwKAlZCnd/XPgHZ4rb1KJsXDEXOSejzt8rDxYrZuvYl0s9 zzCTgBCTYiUoiEgFuJVAu4lLL8EYp/Fh7rt3ZczuFwufwEJ9zqx+gQAAA==
+X-Developer-Key: i=tanzirh@google.com; a=ed25519; pk=UeRjcUcv5W9AeLGEbAe2+0LptQpcY+o1Zg0LHHo7VN4=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1703011682; l=2179;
+ i=tanzirh@google.com; s=20231204; h=from:subject:message-id;
+ bh=43BPgdbj/Ms3cbxr1wobnwnr0jH7BWniivgiGR2rpqc=; b=coinp79Ec0TAuh3fiFjsDVNEqMFsREd1n2Mt0feZKhSdtKEaXxLqyVStXKcahXivUexhHkdMi
+ bJMQGmZWzlzDrK/7mRiG4DzabmHFPttI3RUcew83zYCphbMi7L0UfF2
+X-Mailer: b4 0.12.4
+Message-ID: <20231219-libstringheader-v5-0-206d4afd309a@google.com>
+Subject: [PATCH v5 0/2] shrink lib/string.i via IWYU
 From: Tanzir Hasan <tanzirh@google.com>
-Date: Tue, 19 Dec 2023 10:35:55 -0800
-Message-ID: <CAE-cH4p-TzH3zyJfmSg3r=fw78j8y-0t0dp-NvaLyVYAMULw1w@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] kernel.h: removed REPEAT_BYTE from kernel.h
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Kees Cook <keescook@chromium.org>, Nick DeSaulniers <nnn@google.com>, 
-	Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org, 
+To: Kees Cook <keescook@chromium.org>, Nick Desaulniers <nnn@google.com>
+Cc: Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-	llvm@lists.linux.dev, Al Viro <viro@zeniv.linux.org.uk>, 
-	Andy Shevchenko <andy.shevchenko@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+	Greg KH <gregkh@linuxfoundation.org>, llvm@lists.linux.dev, 
+	Al Viro <viro@zeniv.linux.org.uk>, Andy Shevchenko <andy.shevchenko@gmail.com>, 
+	Tanzir Hasan <tanzirh@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-> Legal note, this file is NOT copyright Google as no Google employe
-> actually wrote the logcal contents of it.
->
-> Please be VERY careful when doing stuff like this, it has potentially
-> big repercussions, and you don't want to have to talk to lots of
-> lawyers a few years from now and explain how you messed it all up :(
+This patch series changes the include list of string.c to minimize
+the preprocessing size. The patch series intends to remove REPEAT_BYE
+from kernel.h and move it into its own header file because
+word-at-a-time.h has an implicit dependancy on it but it is declared
+in kernel.h which is bloated.
 
-Ah, sorry, I didn't realize. Will change right away.
+---
 
-> Nick, odds are there's a Google copyright class that Tanzir should take
-> here, if not, I recommend the free LF one that anyone can take online
-> that explains the issues here:
->         https://training.linuxfoundation.org/training/open-source-licensing-basics-for-software-developers/
+---
+Changes in v5:
+- Removed bad copyright.
+- Link to v4: https://lore.kernel.org/r/20231219-libstringheader-v4-0-aaeb26495d2f@google.com
 
-I will take a look, thanks!
+Changes in v4:
+- Fixed personal email client so name appears instead of just email
+- Removed kernel.h where not needed.
+- Sorted include list in lib/string.c and used linux/limits.h
+- Link to v3: https://lore.kernel.org/r/20231218-libstringheader-v3-0-500bd58f0f75@google.com
 
-> As-is, this change is STRONGLY Nacked by me.
->
+Changes in v3:
+- Moved REPEAT_BYTE out of kernel.h and into wordpart.h.
+- Included wordpart.h where REPEAT_BYTE was necessary.
+- Link to v2: https://lore.kernel.org/r/20231214-libstringheader-v2-0-0f195dcff204@google.com
 
-Best,
-Tanzir Hasan
+Changes in v2:
+- Transformed into a patch series
+- Changed asm inclusions to linux inclusions
+- added a patch to sh
+- Link to v1: https://lore.kernel.org/r/20231205-libstringheader-v1-1-7f9c573053a7@gmail.com
+
+---
+Tanzir Hasan (2):
+      kernel.h: removed REPEAT_BYTE from kernel.h
+      lib/string: shrink lib/string.i via IWYU
+
+ arch/arm/include/asm/word-at-a-time.h     |  2 +-
+ arch/arm64/include/asm/word-at-a-time.h   |  2 +-
+ arch/powerpc/include/asm/word-at-a-time.h |  2 +-
+ arch/riscv/include/asm/word-at-a-time.h   |  2 +-
+ arch/s390/include/asm/word-at-a-time.h    |  2 +-
+ arch/sh/include/asm/word-at-a-time.h      |  1 +
+ arch/x86/include/asm/word-at-a-time.h     |  1 +
+ fs/namei.c                                |  2 +-
+ include/asm-generic/word-at-a-time.h      |  2 +-
+ include/linux/kernel.h                    |  7 -------
+ include/linux/wordpart.h                  | 14 ++++++++++++++
+ lib/string.c                              | 17 +++++++++--------
+ 12 files changed, 32 insertions(+), 22 deletions(-)
+---
+base-commit: ceb6a6f023fd3e8b07761ed900352ef574010bcb
+change-id: 20231204-libstringheader-e238e2af5eec
+
+Best regards,
+-- 
+Tanzir Hasan <tanzirh@google.com>
+
