@@ -1,109 +1,104 @@
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 313D51640D;
-	Wed, 20 Dec 2023 06:36:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84729168C4;
+	Wed, 20 Dec 2023 06:49:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fPuP8cNp"
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-67f47b15fa3so19535956d6.1;
-        Tue, 19 Dec 2023 22:36:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703054169; x=1703658969; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2MP0HTmjFL5ipgW8+FrullXm00FRbon6aH9dRUBk9dk=;
-        b=fPuP8cNpUwG4H28bQXqOZQADG9QKkZCaOScTKikESSJWlEKvlFV4XcCY71yJ4gUBZp
-         ULubZ7VlKK5xU9K7BZmdDUclh1rWodKfo+at4k5sK22l+nM/ONDcUIKCO0WLVVmmV6Wj
-         IB4hz85mOQg7L12NNIh7JXX1QGuj3EQOFRH7mX0J1AaTWrZFU7OrN4bob38VsCns1Sbj
-         GMwOnPjLet2h/NNQsM9p08vUniz7LnCjNwE9DBgigwwXPQ0nB8SQFzyv/Pb48qKZV85G
-         1kx+vwi1Z+V5kdhJtSifUZqcbNDVC5AfAR5+t775a72BtBMJ2EAF792Fdqrme/kPpjxS
-         cU1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703054169; x=1703658969;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2MP0HTmjFL5ipgW8+FrullXm00FRbon6aH9dRUBk9dk=;
-        b=UfePdz87kJuQeSxtZ9DvF5CUnyW16Xv+2z+nelJ25wq8vPg8NcW/Fq84CmjzkhDc6x
-         +jBJHXHz3Z5m0jGAPKkPQEhPwpQeaIVXFSSGco7EKJf7lzSBsRgqQFwcIEKCx+r5AbGe
-         kdGm8ry7aLbA/RjRry2Ovb893U6UuW9bJjna4ghmhsfSjQ7H75YJWrBTNRZZAz/cAy0S
-         aJGOP/B2UnJ3Sg6UYoLpRP2JvJScUJiQYHkEzuNqxT91rsJWoHePT6D2SDiRQTybbPOj
-         yZSOtHbfgBWTO0qRcy6LnL3RJxyC7fweGSGhMYMD/llmp/BBYwKWe9o24Mr/t+cJy/1Q
-         Z6GQ==
-X-Gm-Message-State: AOJu0Yw6zIaOfOWUlimxOfBWNcEZ4Yh4YPyPu0ay6Vi4BdLF0CplqDqf
-	j+9ZGA2NcSNS1fZN6jWuPsXGtZWUZfOsBddq247opGp4h/gM/g==
-X-Google-Smtp-Source: AGHT+IHIx9Sh6g+/2+1c0JEPFUM7ITb2mqzwWusSVWgJzf/URstRIrCzy4sDiQwyr3tYJDL5RYA0wtl4IOD95NttVn0=
-X-Received: by 2002:ad4:4301:0:b0:67e:aa04:ddcd with SMTP id
- c1-20020ad44301000000b0067eaa04ddcdmr19455514qvs.62.1703054169024; Tue, 19
- Dec 2023 22:36:09 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CpwZpYqj"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=CLJcevJg8ePh6WU3ddptLA4N7F3zd833b6TMvJ3Gz4o=; b=CpwZpYqjLJSEUWoJzmtt/m5BTK
+	ZzcaZe9X0HGRtBtlP11C0DiUVPgr2IQ0lXpJ2cbYyBLSJEJuttvlArFm9SvZ2xpwwrhKFhQrTrCRP
+	SAx2xkjsFSZPS/x37e5gI+bDjwNZUXGjHjXZuyn7yyfjLya29GSW7oU7TPlAYi/7m01Bi+KRqGkk9
+	HTvL6ZiCG45+jOTWLBWExjjuIm5hUdyPBLkcLyvMUIjU/0FHofjB/jOym4AxtlWCE/aEyifBYzZqG
+	bkeKuP7afS7OZqRDoEt4pkh2uvlc4+EKoc2H6dcXAe4Bf3wTn0KilgOsqotFyUIpftLhND8ZuUdCN
+	WeSKKtlg==;
+Received: from [50.53.46.231] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1rFqOw-00GKeE-1R;
+	Wed, 20 Dec 2023 06:49:54 +0000
+Message-ID: <ddd30bb6-20d1-4b7f-bcee-6b204d0858fb@infradead.org>
+Date: Tue, 19 Dec 2023 22:49:54 -0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231220062446.14511-1-muzammil@dreambigsemi.com> <4155c90e-cdb1-4645-8bcc-fed4ea01ac83@infradead.org>
-In-Reply-To: <4155c90e-cdb1-4645-8bcc-fed4ea01ac83@infradead.org>
-From: Muhammad Muzammil <m.muzzammilashraf@gmail.com>
-Date: Wed, 20 Dec 2023 11:35:58 +0500
-Message-ID: <CAJHePoabyUCxwS_hTjhR+MEJ+JBm+kr2MdbP4zP_54t_geRqwQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH] scripts: kernel-doc: Bug fixed for erroneous warning
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: corbet@lwn.net, gustavoars@kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+To: Muhammad Muzammil <m.muzzammilashraf@gmail.com>
+Cc: corbet@lwn.net, gustavoars@kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20231220062446.14511-1-muzammil@dreambigsemi.com>
+ <4155c90e-cdb1-4645-8bcc-fed4ea01ac83@infradead.org>
+ <CAJHePoabyUCxwS_hTjhR+MEJ+JBm+kr2MdbP4zP_54t_geRqwQ@mail.gmail.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <CAJHePoabyUCxwS_hTjhR+MEJ+JBm+kr2MdbP4zP_54t_geRqwQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-HI,
 
-1) I already have the below patch but it does not work.
-https://lore.kernel.org/linux-doc/20231215001347.work.151-kees@kernel.org/
 
-2) When I applied the below patch. It works.
-https://lore.kernel.org/linux-doc/87le9rjb4y.fsf@meer.lwn.net/
-
-On Wed, Dec 20, 2023 at 11:29=E2=80=AFAM Randy Dunlap <rdunlap@infradead.or=
-g> wrote:
->
-> Hi,
->
-> On 12/19/23 22:24, Muhammad Muzammil wrote:
-> > From: Muzammil Ashraf <m.muzzammilashraf@gmail.com>
-> >
-> > kernel-doc: fixed erroneous warning generated by '__counted_by'
-> >
-> > Signed-off-by: Muzammil Ashraf <m.muzzammilashraf@gmail.com>
-> > ---
-> >  scripts/kernel-doc | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/scripts/kernel-doc b/scripts/kernel-doc
-> > index 1484127db104..ea9688df0e93 100755
-> > --- a/scripts/kernel-doc
-> > +++ b/scripts/kernel-doc
-> > @@ -1661,6 +1661,7 @@ sub check_sections($$$$$) {
-> >                       }
-> >                       elsif (($decl_type eq "struct") or
-> >                              ($decl_type eq "union")) {
-> > +                next if (index("@_", "__counted_by") !=3D -1);
-> >                               emit_warning("${file}:$.",
-> >                                       "Excess $decl_type member " .
-> >                                       "'$sects[$sx]' " .
->
-> One of both of these patches should be enough. Can you test these
-> instead of your patch, please?
->
-> https://lore.kernel.org/linux-doc/20231215001347.work.151-kees@kernel.org=
-/
->
+On 12/19/23 22:35, Muhammad Muzammil wrote:
+> HI,
+> 
+> 1) I already have the below patch but it does not work.
+> https://lore.kernel.org/linux-doc/20231215001347.work.151-kees@kernel.org/
+> 
+> 2) When I applied the below patch. It works.
 > https://lore.kernel.org/linux-doc/87le9rjb4y.fsf@meer.lwn.net/
->
-> Thanks.
->
-> --
-> #Randy
-> https://people.kernel.org/tglx/notes-about-netiquette
-> https://subspace.kernel.org/etiquette.html
+
+Thanks!
+
+
+> On Wed, Dec 20, 2023 at 11:29 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+>>
+>> Hi,
+>>
+>> On 12/19/23 22:24, Muhammad Muzammil wrote:
+>>> From: Muzammil Ashraf <m.muzzammilashraf@gmail.com>
+>>>
+>>> kernel-doc: fixed erroneous warning generated by '__counted_by'
+>>>
+>>> Signed-off-by: Muzammil Ashraf <m.muzzammilashraf@gmail.com>
+>>> ---
+>>>  scripts/kernel-doc | 1 +
+>>>  1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/scripts/kernel-doc b/scripts/kernel-doc
+>>> index 1484127db104..ea9688df0e93 100755
+>>> --- a/scripts/kernel-doc
+>>> +++ b/scripts/kernel-doc
+>>> @@ -1661,6 +1661,7 @@ sub check_sections($$$$$) {
+>>>                       }
+>>>                       elsif (($decl_type eq "struct") or
+>>>                              ($decl_type eq "union")) {
+>>> +                next if (index("@_", "__counted_by") != -1);
+>>>                               emit_warning("${file}:$.",
+>>>                                       "Excess $decl_type member " .
+>>>                                       "'$sects[$sx]' " .
+>>
+>> One of both of these patches should be enough. Can you test these
+>> instead of your patch, please?
+>>
+>> https://lore.kernel.org/linux-doc/20231215001347.work.151-kees@kernel.org/
+>>
+>> https://lore.kernel.org/linux-doc/87le9rjb4y.fsf@meer.lwn.net/
+>>
+>> Thanks.
+>>
+>> --
+>> #Randy
+>> https://people.kernel.org/tglx/notes-about-netiquette
+>> https://subspace.kernel.org/etiquette.html
+
+-- 
+#Randy
+https://people.kernel.org/tglx/notes-about-netiquette
+https://subspace.kernel.org/etiquette.html
