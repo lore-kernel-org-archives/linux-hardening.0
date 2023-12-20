@@ -1,92 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF6614F7F;
-	Wed, 20 Dec 2023 06:03:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7919914A8D;
+	Wed, 20 Dec 2023 06:24:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="AwJHPLXP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38F3BC433C9;
-	Wed, 20 Dec 2023 06:03:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1703052214;
-	bh=caqI3j25my7HSQ3UGShfhpSfMjHkWvireTit8gq0UK4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AwJHPLXPF4L2EPRaveASgxrYYMqcYPglna+W1L8pljl4v70ImLPxswEbeJ2mN7oL8
-	 PyZd8U16HYOfVhMCBChGJI6u6CJB9Cg2boGHSgp8AXcEA4W6Qtz7TQ1a4TcxfsoNjT
-	 AnWE+BuJe73snbtGnM8zBJXjgODj79ZI0SbZ9gjM=
-Date: Wed, 20 Dec 2023 07:03:32 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Tanzir Hasan <tanzirh@google.com>, Ingo Molnar <mingo@kernel.org>,
-	Kees Cook <keescook@chromium.org>,
-	Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RwV8dcQT"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6d47bb467a9so305290b3a.1;
+        Tue, 19 Dec 2023 22:24:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703053498; x=1703658298; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=M+Gywa6hos2k92mPKfc1Jr7T/X9o9bZ/INu1pAC6uQc=;
+        b=RwV8dcQTVmRXqfsGZphhChrbjAbYE/NAjRcEzt+U7IRlP/QRhsW405E/ULI0RblWoh
+         /QqjVkMKNBJzwU/bsjrT08NSLTc8junE+QtGIN2bCIwgiI/ulqFjwadLt8cWa33iZoWX
+         WqYUBzOVlInETLnGjhFlE2Hc3wW/AvRpD31cnOYpz3XE7U21Dt2THUPdtMptOoMu2SZe
+         myeSg/Cqy6P2rzvKwfd2Xoi3qaXxtUYHPvtkOAi0Fj09yWhRUHEQf/AvxIExShQ4kK5T
+         HhU7LQohkPDsmr5C+txCt+azwHEnBy+t1ShRtJ6VxDHsKCpX4q9kLdawqMhDV81Y5avM
+         6mNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703053498; x=1703658298;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=M+Gywa6hos2k92mPKfc1Jr7T/X9o9bZ/INu1pAC6uQc=;
+        b=LZZ9nZPnBcJLT2Lga7zuoESq3QZKSlBnG1LQjRYxXc4vDQn+X9JzY69LaL40MB46KR
+         4DZjaa/INxjMwlLygVtlNpAqfI7Jtsl3YFhQ6hBT//VyKiAfmRSmV+9xIzcc+gK71E6n
+         xovJTgfFcJ4Ko6zIcZKvbAfah/VPI0Qnicf/VlsliZnVQgPLn9lY97J93dHuDI+WqGg/
+         Zzw+EhDatdX8Wa7/zbErhoQ28m5nD2HCcstzh4KX6yrEDgzjA8uALffC37I86eQQswCf
+         zzCSHiou+H4Wc+GjLJShxwBqiDHilnEw/Wv0Q+1hIdRtfunujCvjNINsBIrU6vnRjYeo
+         bOgA==
+X-Gm-Message-State: AOJu0YyN8kZvIKodVphXJb9hYO1vwxTl5nwN86f+hqXvveZ+iW5eypjU
+	GpGJVVSSdulat9KQuKQpOHirugG+JBdBO6+B
+X-Google-Smtp-Source: AGHT+IHDqa1wvVE1/rDngwKohpTQVr0wR38rdYzcr4/wzebcnvxcCmR6HiPTENMqAWwMucNp7QEXSQ==
+X-Received: by 2002:a05:6a20:ba02:b0:194:1d9:aafc with SMTP id fa2-20020a056a20ba0200b0019401d9aafcmr2393121pzb.46.1703053497591;
+        Tue, 19 Dec 2023 22:24:57 -0800 (PST)
+Received: from dreambig.dreambig.corp ([58.27.187.115])
+        by smtp.gmail.com with ESMTPSA id f16-20020a631f10000000b005cdc081bd2asm1824405pgf.24.2023.12.19.22.24.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Dec 2023 22:24:57 -0800 (PST)
+From: Muhammad Muzammil <m.muzzammilashraf@gmail.com>
+X-Google-Original-From: Muhammad Muzammil <muzammil@dreambigsemi.com>
+To: rdunlap@infradead.org,
+	corbet@lwn.net,
+	gustavoars@kernel.org
+Cc: linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>, llvm@lists.linux.dev,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v4 1/2] kernel.h: removed REPEAT_BYTE from kernel.h
-Message-ID: <2023122051-scholar-scribble-26da@gregkh>
-References: <20231219-libstringheader-v4-0-aaeb26495d2f@google.com>
- <20231219-libstringheader-v4-1-aaeb26495d2f@google.com>
- <2023121938-stargazer-purse-0dc1@gregkh>
- <CAE-cH4p-TzH3zyJfmSg3r=fw78j8y-0t0dp-NvaLyVYAMULw1w@mail.gmail.com>
- <2023121928-propose-florist-5898@gregkh>
- <CAKwvOdnW_vZyiO3BE=Vce4OrcX4+pb6QrEFbmeya0Z+w_5d=zw@mail.gmail.com>
+	linux-hardening@vger.kernel.org,
+	Muzammil Ashraf <m.muzzammilashraf@gmail.com>
+Subject: [PATCH] scripts: kernel-doc: Bug fixed for erroneous warning
+Date: Wed, 20 Dec 2023 11:24:46 +0500
+Message-Id: <20231220062446.14511-1-muzammil@dreambigsemi.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdnW_vZyiO3BE=Vce4OrcX4+pb6QrEFbmeya0Z+w_5d=zw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Dec 19, 2023 at 03:00:22PM -0800, Nick Desaulniers wrote:
-> ---
-> 
-> For Google specific guidance, I'll quote what they have:
-> 
-> > License Headers and Copyright Notices
-> > Googlers should add Google's copyright notice (or a "The Project Authors" style copyright notice) to new files being added to the library if permitted by the project maintainers.
-> 
-> Then the relevant section of 1.Intro.rst:
-> 
-> > Copyright assignments are not required (or requested) for code contributed
-> > to the kernel.
-> 
-> Shall I interpret those together to mean that the "project
-> maintainers" don't permit copyright assignments for "new files being
-> added," and thus Tanzir SHOULD NOT be adding a copyright assignment to
-> the newly created header?
+From: Muzammil Ashraf <m.muzzammilashraf@gmail.com>
 
-You can add a copyright header, as long as it is the CORRECT copyright
-header.
+kernel-doc: fixed erroneous warning generated by '__counted_by'
 
-Look at what this patch did, it attempted to claim that Google now owned
-the copyright on the whole file, when in fact, that is obviously not the
-case as a Google employee did not write the actual code that was added
-to that file.
+Signed-off-by: Muzammil Ashraf <m.muzzammilashraf@gmail.com>
+---
+ scripts/kernel-doc | 1 +
+ 1 file changed, 1 insertion(+)
 
-> Or shall I leave the interpretation up to an explicit discussion with
-> opensource-licensing@google.com?
+diff --git a/scripts/kernel-doc b/scripts/kernel-doc
+index 1484127db104..ea9688df0e93 100755
+--- a/scripts/kernel-doc
++++ b/scripts/kernel-doc
+@@ -1661,6 +1661,7 @@ sub check_sections($$$$$) {
+ 			}
+ 			elsif (($decl_type eq "struct") or
+ 		       	       ($decl_type eq "union")) {
++                next if (index("@_", "__counted_by") != -1);
+ 				emit_warning("${file}:$.",
+ 					"Excess $decl_type member " .
+ 					"'$sects[$sx]' " .
+-- 
+2.27.0
 
-I think you should talk to them and get their clarification as to when
-copyright headers should be added, AND what they should contain when
-moving code around from other copyrighted files.
-
-> For example, consider include/linux/sysfs.h.  It's 600+ lines long and
-> contains 4 copyright assignments explicitly in sources. If we split
-> that header file in half, which copyright assignments do we transfer
-> to the new half, if any?
-
-That's up to you to figure out, I'm not the one doing the work :)
-
-Perhaps run it by your corporate lawyers to ensure that you get it
-correct with what they think is right first, if you have any questions
-about what to do here, as in the end, they are the ones that will care
-the most, right?
-
-good luck!
-
-greg k-h
