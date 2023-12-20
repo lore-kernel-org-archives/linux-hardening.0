@@ -1,86 +1,79 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F70340BF5
-	for <linux-hardening@vger.kernel.org>; Tue, 19 Dec 2023 23:27:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 226DE28EA;
+	Wed, 20 Dec 2023 00:09:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iXgzLxqi"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-50e34a72660so3907989e87.1
-        for <linux-hardening@vger.kernel.org>; Tue, 19 Dec 2023 15:27:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1703028467; x=1703633267; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:user-agent:from:references
-         :in-reply-to:mime-version:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wib2+T/twwwN/3BXe0yj7pCHfEZ8cIQ5+MZvHiZViLk=;
-        b=iXgzLxqiePhff7jKystdfcjwNzwYmsPy/Pk/gYPA27zSG9G2ScITsc+zl4iJfsr/8j
-         iF991C6eO9svijDDeqIYGaEyseTUoamip0QWjBcn+D5dOee0YIc4WGqvxxSqXpI+Hxby
-         jRYRV1JyUe9dV+xC8e5DrR/uekUVQmPriVjQg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703028467; x=1703633267;
-        h=cc:to:subject:message-id:date:user-agent:from:references
-         :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wib2+T/twwwN/3BXe0yj7pCHfEZ8cIQ5+MZvHiZViLk=;
-        b=V4orRtH5xBYBG7u78LNbwO8VO5gdBeqhdrsAqR/kW3rZiT7w3m4mYwMS90LJqCkdK+
-         jpWZzX/Zx08jF/S8QlcFadZ5m4Tzua1ShzdICNSklxRTKAgk9BvT7V/fm8aB5zdFdwJA
-         XyKGQDIh3LLtXx5sEmwrLxUYQgXIuqDbJu/IsHbwAUzkwH2SVNemKqL/qt99xstm6Aq/
-         kxVZcwZErWtYnN1DzZ2yVinyUu/6kXjgGloqtzgVp59k5Elf6r2gMquWYZX3OT/YZmNC
-         R2rCACu1cotW3YUA6U+jj0b+9W6yHVbbrNf5yvM6keS7kJRqUPGGNbryMDprxaY7zCP2
-         pfHw==
-X-Gm-Message-State: AOJu0YzwlLPk4qTveCuOn35rQWF/Bf6jQEAKQO6V8zGr8Bm7hVy0rKz1
-	gBjqcWOY5OT5LSPqe3XB5fyziI/y1aqQzYcRqU8FsA==
-X-Google-Smtp-Source: AGHT+IFBw5KCb5vU7xJ+p2XS9GXuGS9FPMpi3yVFSCqsm9B6ldHxBfroB02RYzx+7K3tU1KZsZQ1ww5PdMu7JffeLOA=
-X-Received: by 2002:a05:6512:102c:b0:50c:e98:1ded with SMTP id
- r12-20020a056512102c00b0050c0e981dedmr7072856lfr.132.1703028467520; Tue, 19
- Dec 2023 15:27:47 -0800 (PST)
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 19 Dec 2023 15:27:47 -0800
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WFFjoKNd"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=SOfn9nF2j9WVhkT4iazg2mOWZYi27n9v0LAXi5A+lGI=; b=WFFjoKNdluVrShYbfz6lNh4XvZ
+	+sNCv0vXzmnqkuXmVLhCUV8i5eZGHhOaQKPUFOJiOu7ch4s9YSURPGie2d3Mi3OvGnNGP2xNfA/MV
+	ui20waemijB/Kjk2U7dXWnTb1i3MmIJlcOeEk6yKN+/7HzDRQaZE40yYvFBEHr+G0VdCyrthY0oYk
+	CPjltBrYyhIgq+d1jp57Bbk2md+Yzl4nhkfV5dH3bk9G7zltvynZfoMFopz8DI11NCAwXPeRsUNQz
+	MLAOmvNnCGYsUNuMWH1ENx5cQRBr7f3d2iQkCUIi9iR/4RFU56lDMFuA5Iwd7QsvibV4wgCjzK5Mk
+	23xmTl7A==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1rFk96-00Fk2R-2s;
+	Wed, 20 Dec 2023 00:09:08 +0000
+Date: Tue, 19 Dec 2023 16:09:08 -0800
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: Julia Lawall <julia.lawall@inria.fr>
+Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	Joel Granados <j.granados@samsung.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Kees Cook <keescook@chromium.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Iurii Zaikin <yzaikin@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 00/18] sysctl: constify sysctl ctl_tables
+Message-ID: <ZYIwpHXkqBkMB8zl@bombadil.infradead.org>
+References: <20231208095926.aavsjrtqbb5rygmb@localhost>
+ <8509a36b-ac23-4fcd-b797-f8915662d5e1@t-8ch.de>
+ <20231212090930.y4omk62wenxgo5by@localhost>
+ <ZXligolK0ekZ+Zuf@bombadil.infradead.org>
+ <20231217120201.z4gr3ksjd4ai2nlk@localhost>
+ <908dc370-7cf6-4b2b-b7c9-066779bc48eb@t-8ch.de>
+ <ZYC37Vco1p4vD8ji@bombadil.infradead.org>
+ <a0d96e7b-544f-42d5-b8da-85bc4ca087a9@t-8ch.de>
+ <ZYIGi9Gf7oVI7ksf@bombadil.infradead.org>
+ <alpine.DEB.2.22.394.2312192218050.3196@hadrien>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20231219-strncpy-drivers-iio-proximity-sx9324-c-v4-1-d49ed29ee952@google.com>
-References: <20231219-strncpy-drivers-iio-proximity-sx9324-c-v4-1-d49ed29ee952@google.com>
-From: Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.10
-Date: Tue, 19 Dec 2023 15:27:46 -0800
-Message-ID: <CAE-0n515WA34B1ZJvz6dkvFiErmT0PL0K9bPWeV9JhkzXPxOGw@mail.gmail.com>
-Subject: Re: [PATCH v4] iio: sx9324: avoid copying property strings
-To: Jonathan Cameron <jic23@kernel.org>, Justin Stitt <justinstitt@google.com>, 
-	Lars-Peter Clausen <lars@metafoo.de>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.22.394.2312192218050.3196@hadrien>
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-Quoting Justin Stitt (2023-12-19 13:34:15)
-> We're doing some needless string copies when trying to assign the proper
-> `prop` string. We can make `prop` a const char* and simply assign to
-> string literals.
->
-> For the case where a format string is used, let's extract the parsing
-> logic out into sx9324_parse_phase_prop(). We no longer need to create
-> copies or allocate new memory.
->
-> sx9324_parse_phase_prop() will simply return the default def value if it
-> fails.
->
-> This also cleans up some deprecated strncpy() uses [1].
->
-> Furthermore, let's clean up this code further by removing some unused
-> defines:
-> |  #define SX9324_PIN_DEF "semtech,ph0-pin"
-> |  #define SX9324_RESOLUTION_DEF "semtech,ph01-resolution"
-> |  #define SX9324_PROXRAW_DEF "semtech,ph01-proxraw-strength"
->
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
+On Tue, Dec 19, 2023 at 10:21:25PM +0100, Julia Lawall wrote:
+> > As I noted, I think this is a generically neat endeavor and so I think
+> > it would be nice to shorthand *any* member of the struct. ctl->any.
+> > Julia, is that possible?
+> 
+> What do you mean by *any* member?
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+I meant when any code tries to assign a new variable to any of the
+members of the struct ctl_table *foo, so any foo->*any*
+
+> If any is an identifier typed
+> metavariable then that would get any immediate member.  But maybe you want
+> something like
+> 
+> <+...ctl->any...+>
+> 
+> that will match anything that has ctl->any as a subexpression?
+
+If as just an expression, then no, we really want this to be tied to
+the data struture in question we want to modify.
+
+  Luis
