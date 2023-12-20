@@ -1,92 +1,74 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F244D3B2A7;
-	Wed, 20 Dec 2023 14:34:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C5AC40BF6;
+	Wed, 20 Dec 2023 15:30:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BHF2GqHW"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=KxkjqpiRhDDXCtVOxBcLzEwoOuA/MLwLsDAq8dy0YWY=; b=BHF2GqHWuAnU1Twu9UvJy9agEU
-	h4yAoWEeR2Hw1DpM5opy5WX4q6fw++idDTVF1sB4CAeT4yznSiudWA4EpjCe3E9EZ0TiIp1LEAngB
-	K4yZ/HEWpv8vTDgAvoDY/N2MkXNEW+qxNYw00E/7p1EQvhFF7U9/GT/z8qWE20A9SoAMVpqTuM0ZU
-	bOgbjq5bxutfk98c8NCtJt6nMHGFlYVAcpUPWgjzsc4yneh8yC4isK1X2E2teOsVvdHYaraQjNYp7
-	g9rHmoB6tgPmd8u34US9uEqD1xqEZSP2wCO0NBNraq3r/4czSlfwFdwrhpIBxW3sZsIyrmdQ4U7bs
-	mh4fyu2w==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1rFxen-0006FK-1M;
-	Wed, 20 Dec 2023 14:34:45 +0000
-Date: Wed, 20 Dec 2023 06:34:45 -0800
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: Julia Lawall <julia.lawall@inria.fr>
-Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	Joel Granados <j.granados@samsung.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Iurii Zaikin <yzaikin@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 00/18] sysctl: constify sysctl ctl_tables
-Message-ID: <ZYL7hS1ARS6ygPBP@bombadil.infradead.org>
-References: <20231212090930.y4omk62wenxgo5by@localhost>
- <ZXligolK0ekZ+Zuf@bombadil.infradead.org>
- <20231217120201.z4gr3ksjd4ai2nlk@localhost>
- <908dc370-7cf6-4b2b-b7c9-066779bc48eb@t-8ch.de>
- <ZYC37Vco1p4vD8ji@bombadil.infradead.org>
- <a0d96e7b-544f-42d5-b8da-85bc4ca087a9@t-8ch.de>
- <ZYIGi9Gf7oVI7ksf@bombadil.infradead.org>
- <alpine.DEB.2.22.394.2312192218050.3196@hadrien>
- <ZYIwpHXkqBkMB8zl@bombadil.infradead.org>
- <alpine.DEB.2.22.394.2312200838160.3151@hadrien>
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="Kw1wxf67"
+Received: from localhost (unknown [IPv6:2601:280:5e00:7e19::646])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id A081E7F5;
+	Wed, 20 Dec 2023 15:30:04 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net A081E7F5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1703086204; bh=YawMH4mnDVp5dlJ1MoqNij8zTvIQj/L8VFRVp62WP78=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=Kw1wxf67x71WyVA+qkcLF6GASINccn4wPs592qctDPGgBLTCu7lcUV7Lvdk7pnNXG
+	 4lC8ohk4+CulvBA/7JGMB2yo/otNdj48oCt1bjvBxRkFxvReiIqGYkiIWc5CipoW5F
+	 /7DxBZZ8KHl9yydBo87VBVwozWDNMPeQpMCS7alNVSCp4OGzQYj2OzqtYzx0oVNZjK
+	 s+hq3zbWNm5gHtX46smLuATkM82Q58NY8Ug08OfcIFkfpE67XrTXGRwVhDMaDY5hJq
+	 QTHgZR5EUOyPjx8WUEFP25/QwZZQWW2rsWcms3VuVe6UseQOtvs0id+k0htFmo3VKw
+	 5KRSJP7v0eOuQ==
+From: Jonathan Corbet <corbet@lwn.net>
+To: Muhammad Muzammil <m.muzzammilashraf@gmail.com>, rdunlap@infradead.org,
+ gustavoars@kernel.org
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, Muzammil Ashraf
+ <m.muzzammilashraf@gmail.com>
+Subject: Re: [PATCH] scripts: kernel-doc: Bug fixed for erroneous warning
+In-Reply-To: <20231220062446.14511-1-muzammil@dreambigsemi.com>
+References: <20231220062446.14511-1-muzammil@dreambigsemi.com>
+Date: Wed, 20 Dec 2023 08:30:03 -0700
+Message-ID: <87edfggadg.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.22.394.2312200838160.3151@hadrien>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+Content-Type: text/plain
 
-On Wed, Dec 20, 2023 at 08:39:20AM +0100, Julia Lawall wrote:
-> 
-> 
-> On Tue, 19 Dec 2023, Luis Chamberlain wrote:
-> 
-> > On Tue, Dec 19, 2023 at 10:21:25PM +0100, Julia Lawall wrote:
-> > > > As I noted, I think this is a generically neat endeavor and so I think
-> > > > it would be nice to shorthand *any* member of the struct. ctl->any.
-> > > > Julia, is that possible?
-> > >
-> > > What do you mean by *any* member?
-> >
-> > I meant when any code tries to assign a new variable to any of the
-> > members of the struct ctl_table *foo, so any foo->*any*
-> 
-> Declaring any to be an identifier metavariable would be sufficient.
+Muhammad Muzammil <m.muzzammilashraf@gmail.com> writes:
 
-Fantastic thanks!
+> From: Muzammil Ashraf <m.muzzammilashraf@gmail.com>
+>
+> kernel-doc: fixed erroneous warning generated by '__counted_by'
+>
+> Signed-off-by: Muzammil Ashraf <m.muzzammilashraf@gmail.com>
+> ---
+>  scripts/kernel-doc | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/scripts/kernel-doc b/scripts/kernel-doc
+> index 1484127db104..ea9688df0e93 100755
+> --- a/scripts/kernel-doc
+> +++ b/scripts/kernel-doc
+> @@ -1661,6 +1661,7 @@ sub check_sections($$$$$) {
+>  			}
+>  			elsif (($decl_type eq "struct") or
+>  		       	       ($decl_type eq "union")) {
+> +                next if (index("@_", "__counted_by") != -1);
+>  				emit_warning("${file}:$.",
+>  					"Excess $decl_type member " .
+>  					"'$sects[$sx]' " .
 
-> > > If any is an identifier typed
-> > > metavariable then that would get any immediate member.  But maybe you want
-> > > something like
-> > >
-> > > <+...ctl->any...+>
-> > >
-> > > that will match anything that has ctl->any as a subexpression?
-> >
-> > If as just an expression, then no, we really want this to be tied to
-> > the data struture in question we want to modify.
-> 
-> What about foo->a.b?  Or maybe that doesn't occur in your structure?
+Could you give an example of the warnings that this patch addresses?
+I've not seen any caused by __counted_by since f600c77aeaff was applied
+to docs-next.  What did it miss?
 
-We'll consider that too, good idea!
+Thanks,
 
-  Luis
+jon
