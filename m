@@ -1,104 +1,82 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84729168C4;
-	Wed, 20 Dec 2023 06:49:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434032135D;
+	Wed, 20 Dec 2023 07:39:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CpwZpYqj"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=CLJcevJg8ePh6WU3ddptLA4N7F3zd833b6TMvJ3Gz4o=; b=CpwZpYqjLJSEUWoJzmtt/m5BTK
-	ZzcaZe9X0HGRtBtlP11C0DiUVPgr2IQ0lXpJ2cbYyBLSJEJuttvlArFm9SvZ2xpwwrhKFhQrTrCRP
-	SAx2xkjsFSZPS/x37e5gI+bDjwNZUXGjHjXZuyn7yyfjLya29GSW7oU7TPlAYi/7m01Bi+KRqGkk9
-	HTvL6ZiCG45+jOTWLBWExjjuIm5hUdyPBLkcLyvMUIjU/0FHofjB/jOym4AxtlWCE/aEyifBYzZqG
-	bkeKuP7afS7OZqRDoEt4pkh2uvlc4+EKoc2H6dcXAe4Bf3wTn0KilgOsqotFyUIpftLhND8ZuUdCN
-	WeSKKtlg==;
-Received: from [50.53.46.231] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1rFqOw-00GKeE-1R;
-	Wed, 20 Dec 2023 06:49:54 +0000
-Message-ID: <ddd30bb6-20d1-4b7f-bcee-6b204d0858fb@infradead.org>
-Date: Tue, 19 Dec 2023 22:49:54 -0800
+	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="qy7Cmt9O"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=inria.fr; s=dc;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=ngYO8w4xEMeyVxDuDZMJoLOL2uVoOjZGaa0n4KABU6c=;
+  b=qy7Cmt9O1QYf0vjHyuwJw3P+qhTDMvpEMzlir3AJxAjLzUS2dre6bV9D
+   SzXdnvC/AVxnoHe79EsDsNHOfRgtEIjsJCg2Cbd8U8QT47ADsw1iNBcN4
+   rE24mYdFEJWM2YJPk50LyiwQUxEfo4eQqGPTVIJmQ5lC/2z/GHC4+PKPd
+   8=;
+Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="6.04,290,1695679200"; 
+   d="scan'208";a="143245362"
+Received: from 231.85.89.92.rev.sfr.net (HELO hadrien) ([92.89.85.231])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2023 08:39:20 +0100
+Date: Wed, 20 Dec 2023 08:39:20 +0100 (CET)
+From: Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To: Luis Chamberlain <mcgrof@kernel.org>
+cc: =?ISO-8859-15?Q?Thomas_Wei=DFschuh?= <linux@weissschuh.net>, 
+    Joel Granados <j.granados@samsung.com>, 
+    Dan Carpenter <dan.carpenter@linaro.org>, 
+    Kees Cook <keescook@chromium.org>, 
+    "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+    Iurii Zaikin <yzaikin@google.com>, 
+    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+    linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 00/18] sysctl: constify sysctl ctl_tables
+In-Reply-To: <ZYIwpHXkqBkMB8zl@bombadil.infradead.org>
+Message-ID: <alpine.DEB.2.22.394.2312200838160.3151@hadrien>
+References: <20231208095926.aavsjrtqbb5rygmb@localhost> <8509a36b-ac23-4fcd-b797-f8915662d5e1@t-8ch.de> <20231212090930.y4omk62wenxgo5by@localhost> <ZXligolK0ekZ+Zuf@bombadil.infradead.org> <20231217120201.z4gr3ksjd4ai2nlk@localhost>
+ <908dc370-7cf6-4b2b-b7c9-066779bc48eb@t-8ch.de> <ZYC37Vco1p4vD8ji@bombadil.infradead.org> <a0d96e7b-544f-42d5-b8da-85bc4ca087a9@t-8ch.de> <ZYIGi9Gf7oVI7ksf@bombadil.infradead.org> <alpine.DEB.2.22.394.2312192218050.3196@hadrien>
+ <ZYIwpHXkqBkMB8zl@bombadil.infradead.org>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] scripts: kernel-doc: Bug fixed for erroneous warning
-Content-Language: en-US
-To: Muhammad Muzammil <m.muzzammilashraf@gmail.com>
-Cc: corbet@lwn.net, gustavoars@kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20231220062446.14511-1-muzammil@dreambigsemi.com>
- <4155c90e-cdb1-4645-8bcc-fed4ea01ac83@infradead.org>
- <CAJHePoabyUCxwS_hTjhR+MEJ+JBm+kr2MdbP4zP_54t_geRqwQ@mail.gmail.com>
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <CAJHePoabyUCxwS_hTjhR+MEJ+JBm+kr2MdbP4zP_54t_geRqwQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
 
 
-On 12/19/23 22:35, Muhammad Muzammil wrote:
-> HI,
-> 
-> 1) I already have the below patch but it does not work.
-> https://lore.kernel.org/linux-doc/20231215001347.work.151-kees@kernel.org/
-> 
-> 2) When I applied the below patch. It works.
-> https://lore.kernel.org/linux-doc/87le9rjb4y.fsf@meer.lwn.net/
+On Tue, 19 Dec 2023, Luis Chamberlain wrote:
 
-Thanks!
+> On Tue, Dec 19, 2023 at 10:21:25PM +0100, Julia Lawall wrote:
+> > > As I noted, I think this is a generically neat endeavor and so I think
+> > > it would be nice to shorthand *any* member of the struct. ctl->any.
+> > > Julia, is that possible?
+> >
+> > What do you mean by *any* member?
+>
+> I meant when any code tries to assign a new variable to any of the
+> members of the struct ctl_table *foo, so any foo->*any*
 
+Declaring any to be an identifier metavariable would be sufficient.
 
-> On Wed, Dec 20, 2023 at 11:29 AM Randy Dunlap <rdunlap@infradead.org> wrote:
->>
->> Hi,
->>
->> On 12/19/23 22:24, Muhammad Muzammil wrote:
->>> From: Muzammil Ashraf <m.muzzammilashraf@gmail.com>
->>>
->>> kernel-doc: fixed erroneous warning generated by '__counted_by'
->>>
->>> Signed-off-by: Muzammil Ashraf <m.muzzammilashraf@gmail.com>
->>> ---
->>>  scripts/kernel-doc | 1 +
->>>  1 file changed, 1 insertion(+)
->>>
->>> diff --git a/scripts/kernel-doc b/scripts/kernel-doc
->>> index 1484127db104..ea9688df0e93 100755
->>> --- a/scripts/kernel-doc
->>> +++ b/scripts/kernel-doc
->>> @@ -1661,6 +1661,7 @@ sub check_sections($$$$$) {
->>>                       }
->>>                       elsif (($decl_type eq "struct") or
->>>                              ($decl_type eq "union")) {
->>> +                next if (index("@_", "__counted_by") != -1);
->>>                               emit_warning("${file}:$.",
->>>                                       "Excess $decl_type member " .
->>>                                       "'$sects[$sx]' " .
->>
->> One of both of these patches should be enough. Can you test these
->> instead of your patch, please?
->>
->> https://lore.kernel.org/linux-doc/20231215001347.work.151-kees@kernel.org/
->>
->> https://lore.kernel.org/linux-doc/87le9rjb4y.fsf@meer.lwn.net/
->>
->> Thanks.
->>
->> --
->> #Randy
->> https://people.kernel.org/tglx/notes-about-netiquette
->> https://subspace.kernel.org/etiquette.html
+>
+> > If any is an identifier typed
+> > metavariable then that would get any immediate member.  But maybe you want
+> > something like
+> >
+> > <+...ctl->any...+>
+> >
+> > that will match anything that has ctl->any as a subexpression?
+>
+> If as just an expression, then no, we really want this to be tied to
+> the data struture in question we want to modify.
 
--- 
-#Randy
-https://people.kernel.org/tglx/notes-about-netiquette
-https://subspace.kernel.org/etiquette.html
+What about foo->a.b?  Or maybe that doesn't occur in your structure?
+
+julia
