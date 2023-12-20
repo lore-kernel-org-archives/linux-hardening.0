@@ -1,49 +1,37 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 226DE28EA;
-	Wed, 20 Dec 2023 00:09:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF6614F7F;
+	Wed, 20 Dec 2023 06:03:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WFFjoKNd"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=SOfn9nF2j9WVhkT4iazg2mOWZYi27n9v0LAXi5A+lGI=; b=WFFjoKNdluVrShYbfz6lNh4XvZ
-	+sNCv0vXzmnqkuXmVLhCUV8i5eZGHhOaQKPUFOJiOu7ch4s9YSURPGie2d3Mi3OvGnNGP2xNfA/MV
-	ui20waemijB/Kjk2U7dXWnTb1i3MmIJlcOeEk6yKN+/7HzDRQaZE40yYvFBEHr+G0VdCyrthY0oYk
-	CPjltBrYyhIgq+d1jp57Bbk2md+Yzl4nhkfV5dH3bk9G7zltvynZfoMFopz8DI11NCAwXPeRsUNQz
-	MLAOmvNnCGYsUNuMWH1ENx5cQRBr7f3d2iQkCUIi9iR/4RFU56lDMFuA5Iwd7QsvibV4wgCjzK5Mk
-	23xmTl7A==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1rFk96-00Fk2R-2s;
-	Wed, 20 Dec 2023 00:09:08 +0000
-Date: Tue, 19 Dec 2023 16:09:08 -0800
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: Julia Lawall <julia.lawall@inria.fr>
-Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	Joel Granados <j.granados@samsung.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="AwJHPLXP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38F3BC433C9;
+	Wed, 20 Dec 2023 06:03:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1703052214;
+	bh=caqI3j25my7HSQ3UGShfhpSfMjHkWvireTit8gq0UK4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AwJHPLXPF4L2EPRaveASgxrYYMqcYPglna+W1L8pljl4v70ImLPxswEbeJ2mN7oL8
+	 PyZd8U16HYOfVhMCBChGJI6u6CJB9Cg2boGHSgp8AXcEA4W6Qtz7TQ1a4TcxfsoNjT
+	 AnWE+BuJe73snbtGnM8zBJXjgODj79ZI0SbZ9gjM=
+Date: Wed, 20 Dec 2023 07:03:32 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Tanzir Hasan <tanzirh@google.com>, Ingo Molnar <mingo@kernel.org>,
 	Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Iurii Zaikin <yzaikin@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 00/18] sysctl: constify sysctl ctl_tables
-Message-ID: <ZYIwpHXkqBkMB8zl@bombadil.infradead.org>
-References: <20231208095926.aavsjrtqbb5rygmb@localhost>
- <8509a36b-ac23-4fcd-b797-f8915662d5e1@t-8ch.de>
- <20231212090930.y4omk62wenxgo5by@localhost>
- <ZXligolK0ekZ+Zuf@bombadil.infradead.org>
- <20231217120201.z4gr3ksjd4ai2nlk@localhost>
- <908dc370-7cf6-4b2b-b7c9-066779bc48eb@t-8ch.de>
- <ZYC37Vco1p4vD8ji@bombadil.infradead.org>
- <a0d96e7b-544f-42d5-b8da-85bc4ca087a9@t-8ch.de>
- <ZYIGi9Gf7oVI7ksf@bombadil.infradead.org>
- <alpine.DEB.2.22.394.2312192218050.3196@hadrien>
+	Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>, llvm@lists.linux.dev,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v4 1/2] kernel.h: removed REPEAT_BYTE from kernel.h
+Message-ID: <2023122051-scholar-scribble-26da@gregkh>
+References: <20231219-libstringheader-v4-0-aaeb26495d2f@google.com>
+ <20231219-libstringheader-v4-1-aaeb26495d2f@google.com>
+ <2023121938-stargazer-purse-0dc1@gregkh>
+ <CAE-cH4p-TzH3zyJfmSg3r=fw78j8y-0t0dp-NvaLyVYAMULw1w@mail.gmail.com>
+ <2023121928-propose-florist-5898@gregkh>
+ <CAKwvOdnW_vZyiO3BE=Vce4OrcX4+pb6QrEFbmeya0Z+w_5d=zw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -52,28 +40,53 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.22.394.2312192218050.3196@hadrien>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+In-Reply-To: <CAKwvOdnW_vZyiO3BE=Vce4OrcX4+pb6QrEFbmeya0Z+w_5d=zw@mail.gmail.com>
 
-On Tue, Dec 19, 2023 at 10:21:25PM +0100, Julia Lawall wrote:
-> > As I noted, I think this is a generically neat endeavor and so I think
-> > it would be nice to shorthand *any* member of the struct. ctl->any.
-> > Julia, is that possible?
+On Tue, Dec 19, 2023 at 03:00:22PM -0800, Nick Desaulniers wrote:
+> ---
 > 
-> What do you mean by *any* member?
-
-I meant when any code tries to assign a new variable to any of the
-members of the struct ctl_table *foo, so any foo->*any*
-
-> If any is an identifier typed
-> metavariable then that would get any immediate member.  But maybe you want
-> something like
+> For Google specific guidance, I'll quote what they have:
 > 
-> <+...ctl->any...+>
+> > License Headers and Copyright Notices
+> > Googlers should add Google's copyright notice (or a "The Project Authors" style copyright notice) to new files being added to the library if permitted by the project maintainers.
 > 
-> that will match anything that has ctl->any as a subexpression?
+> Then the relevant section of 1.Intro.rst:
+> 
+> > Copyright assignments are not required (or requested) for code contributed
+> > to the kernel.
+> 
+> Shall I interpret those together to mean that the "project
+> maintainers" don't permit copyright assignments for "new files being
+> added," and thus Tanzir SHOULD NOT be adding a copyright assignment to
+> the newly created header?
 
-If as just an expression, then no, we really want this to be tied to
-the data struture in question we want to modify.
+You can add a copyright header, as long as it is the CORRECT copyright
+header.
 
-  Luis
+Look at what this patch did, it attempted to claim that Google now owned
+the copyright on the whole file, when in fact, that is obviously not the
+case as a Google employee did not write the actual code that was added
+to that file.
+
+> Or shall I leave the interpretation up to an explicit discussion with
+> opensource-licensing@google.com?
+
+I think you should talk to them and get their clarification as to when
+copyright headers should be added, AND what they should contain when
+moving code around from other copyrighted files.
+
+> For example, consider include/linux/sysfs.h.  It's 600+ lines long and
+> contains 4 copyright assignments explicitly in sources. If we split
+> that header file in half, which copyright assignments do we transfer
+> to the new half, if any?
+
+That's up to you to figure out, I'm not the one doing the work :)
+
+Perhaps run it by your corporate lawyers to ensure that you get it
+correct with what they think is right first, if you have any questions
+about what to do here, as in the end, they are the ones that will care
+the most, right?
+
+good luck!
+
+greg k-h
