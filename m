@@ -1,88 +1,82 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7919914A8D;
-	Wed, 20 Dec 2023 06:24:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0E67125AB;
+	Wed, 20 Dec 2023 06:29:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RwV8dcQT"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6d47bb467a9so305290b3a.1;
-        Tue, 19 Dec 2023 22:24:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703053498; x=1703658298; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=M+Gywa6hos2k92mPKfc1Jr7T/X9o9bZ/INu1pAC6uQc=;
-        b=RwV8dcQTVmRXqfsGZphhChrbjAbYE/NAjRcEzt+U7IRlP/QRhsW405E/ULI0RblWoh
-         /QqjVkMKNBJzwU/bsjrT08NSLTc8junE+QtGIN2bCIwgiI/ulqFjwadLt8cWa33iZoWX
-         WqYUBzOVlInETLnGjhFlE2Hc3wW/AvRpD31cnOYpz3XE7U21Dt2THUPdtMptOoMu2SZe
-         myeSg/Cqy6P2rzvKwfd2Xoi3qaXxtUYHPvtkOAi0Fj09yWhRUHEQf/AvxIExShQ4kK5T
-         HhU7LQohkPDsmr5C+txCt+azwHEnBy+t1ShRtJ6VxDHsKCpX4q9kLdawqMhDV81Y5avM
-         6mNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703053498; x=1703658298;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=M+Gywa6hos2k92mPKfc1Jr7T/X9o9bZ/INu1pAC6uQc=;
-        b=LZZ9nZPnBcJLT2Lga7zuoESq3QZKSlBnG1LQjRYxXc4vDQn+X9JzY69LaL40MB46KR
-         4DZjaa/INxjMwlLygVtlNpAqfI7Jtsl3YFhQ6hBT//VyKiAfmRSmV+9xIzcc+gK71E6n
-         xovJTgfFcJ4Ko6zIcZKvbAfah/VPI0Qnicf/VlsliZnVQgPLn9lY97J93dHuDI+WqGg/
-         Zzw+EhDatdX8Wa7/zbErhoQ28m5nD2HCcstzh4KX6yrEDgzjA8uALffC37I86eQQswCf
-         zzCSHiou+H4Wc+GjLJShxwBqiDHilnEw/Wv0Q+1hIdRtfunujCvjNINsBIrU6vnRjYeo
-         bOgA==
-X-Gm-Message-State: AOJu0YyN8kZvIKodVphXJb9hYO1vwxTl5nwN86f+hqXvveZ+iW5eypjU
-	GpGJVVSSdulat9KQuKQpOHirugG+JBdBO6+B
-X-Google-Smtp-Source: AGHT+IHDqa1wvVE1/rDngwKohpTQVr0wR38rdYzcr4/wzebcnvxcCmR6HiPTENMqAWwMucNp7QEXSQ==
-X-Received: by 2002:a05:6a20:ba02:b0:194:1d9:aafc with SMTP id fa2-20020a056a20ba0200b0019401d9aafcmr2393121pzb.46.1703053497591;
-        Tue, 19 Dec 2023 22:24:57 -0800 (PST)
-Received: from dreambig.dreambig.corp ([58.27.187.115])
-        by smtp.gmail.com with ESMTPSA id f16-20020a631f10000000b005cdc081bd2asm1824405pgf.24.2023.12.19.22.24.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Dec 2023 22:24:57 -0800 (PST)
-From: Muhammad Muzammil <m.muzzammilashraf@gmail.com>
-X-Google-Original-From: Muhammad Muzammil <muzammil@dreambigsemi.com>
-To: rdunlap@infradead.org,
-	corbet@lwn.net,
-	gustavoars@kernel.org
-Cc: linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	Muzammil Ashraf <m.muzzammilashraf@gmail.com>
-Subject: [PATCH] scripts: kernel-doc: Bug fixed for erroneous warning
-Date: Wed, 20 Dec 2023 11:24:46 +0500
-Message-Id: <20231220062446.14511-1-muzammil@dreambigsemi.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TmEm8E62"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=hqMzQcL9dCaPS/BWjMsw8duUh/43SjPceygtauigPfw=; b=TmEm8E62f1+FgD45iP1MRou1+B
+	4h38XHxYisTW8Kft69E9UrX/nREJXC6jBAj7zKqcZbh3uco3uuN1iSrChhEs2FLj/jfALCQkyqxvR
+	7fmWXb2S/7lzWvepQvU4h5QHYDtc3ZID1l5RDeK9mM4dlXzdbCMXr2ebutwD2j7nnqjg8roRm7n93
+	f+XONdmbO6IQL5XCHF9BV/jLSXB8DHzq6UYDS8cqetgV5eUnuFldB9Jd6tWWoi69FWwc917868hv9
+	X7ZVRwenOazTeDt9Xjhu0KPRQMPD82CAMqyg4h8RNXcrJaXsw3oXSLNEbMwuFL0uBE729E4hvs23r
+	QoFB4gtQ==;
+Received: from [50.53.46.231] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1rFq4p-00GIZn-1A;
+	Wed, 20 Dec 2023 06:29:07 +0000
+Message-ID: <4155c90e-cdb1-4645-8bcc-fed4ea01ac83@infradead.org>
+Date: Tue, 19 Dec 2023 22:29:06 -0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] scripts: kernel-doc: Bug fixed for erroneous warning
+Content-Language: en-US
+To: Muhammad Muzammil <m.muzzammilashraf@gmail.com>, corbet@lwn.net,
+ gustavoars@kernel.org
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20231220062446.14511-1-muzammil@dreambigsemi.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20231220062446.14511-1-muzammil@dreambigsemi.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Muzammil Ashraf <m.muzzammilashraf@gmail.com>
+Hi,
 
-kernel-doc: fixed erroneous warning generated by '__counted_by'
+On 12/19/23 22:24, Muhammad Muzammil wrote:
+> From: Muzammil Ashraf <m.muzzammilashraf@gmail.com>
+> 
+> kernel-doc: fixed erroneous warning generated by '__counted_by'
+> 
+> Signed-off-by: Muzammil Ashraf <m.muzzammilashraf@gmail.com>
+> ---
+>  scripts/kernel-doc | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/scripts/kernel-doc b/scripts/kernel-doc
+> index 1484127db104..ea9688df0e93 100755
+> --- a/scripts/kernel-doc
+> +++ b/scripts/kernel-doc
+> @@ -1661,6 +1661,7 @@ sub check_sections($$$$$) {
+>  			}
+>  			elsif (($decl_type eq "struct") or
+>  		       	       ($decl_type eq "union")) {
+> +                next if (index("@_", "__counted_by") != -1);
+>  				emit_warning("${file}:$.",
+>  					"Excess $decl_type member " .
+>  					"'$sects[$sx]' " .
 
-Signed-off-by: Muzammil Ashraf <m.muzzammilashraf@gmail.com>
----
- scripts/kernel-doc | 1 +
- 1 file changed, 1 insertion(+)
+One of both of these patches should be enough. Can you test these
+instead of your patch, please?
 
-diff --git a/scripts/kernel-doc b/scripts/kernel-doc
-index 1484127db104..ea9688df0e93 100755
---- a/scripts/kernel-doc
-+++ b/scripts/kernel-doc
-@@ -1661,6 +1661,7 @@ sub check_sections($$$$$) {
- 			}
- 			elsif (($decl_type eq "struct") or
- 		       	       ($decl_type eq "union")) {
-+                next if (index("@_", "__counted_by") != -1);
- 				emit_warning("${file}:$.",
- 					"Excess $decl_type member " .
- 					"'$sects[$sx]' " .
+https://lore.kernel.org/linux-doc/20231215001347.work.151-kees@kernel.org/
+
+https://lore.kernel.org/linux-doc/87le9rjb4y.fsf@meer.lwn.net/
+
+Thanks.
+
 -- 
-2.27.0
-
+#Randy
+https://people.kernel.org/tglx/notes-about-netiquette
+https://subspace.kernel.org/etiquette.html
