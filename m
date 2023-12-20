@@ -1,61 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0F693D86;
-	Wed, 20 Dec 2023 06:30:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 313D51640D;
+	Wed, 20 Dec 2023 06:36:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="YWPKOw9i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 935C4C433C7;
-	Wed, 20 Dec 2023 06:30:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1703053828;
-	bh=VH/9MOpR3fFnxqYouqNXKsbQTywKgOvD11JxAGjn4ds=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YWPKOw9ifRhFdbdqq4B4WEqoOXgNLkZP4Xfo35LK1h/pQChwspUPWIBz5lamqV1Nv
-	 b1NPU2gnYFHzl7sMYjfS2r3t4Mwj7utyznvZZwyPYYbOCGPk5F9mnar/tQrljiZ+4C
-	 SMhYFsOZdn0DPo3pS+/SSyWdBJ8sEqjKsLRNMJOE=
-Date: Wed, 20 Dec 2023 07:30:25 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Muhammad Muzammil <m.muzzammilashraf@gmail.com>
-Cc: rdunlap@infradead.org, corbet@lwn.net, gustavoars@kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] scripts: kernel-doc: Bug fixed for erroneous warning
-Message-ID: <2023122059-wick-ransack-1cfb@gregkh>
-References: <20231220062446.14511-1-muzammil@dreambigsemi.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fPuP8cNp"
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-67f47b15fa3so19535956d6.1;
+        Tue, 19 Dec 2023 22:36:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703054169; x=1703658969; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2MP0HTmjFL5ipgW8+FrullXm00FRbon6aH9dRUBk9dk=;
+        b=fPuP8cNpUwG4H28bQXqOZQADG9QKkZCaOScTKikESSJWlEKvlFV4XcCY71yJ4gUBZp
+         ULubZ7VlKK5xU9K7BZmdDUclh1rWodKfo+at4k5sK22l+nM/ONDcUIKCO0WLVVmmV6Wj
+         IB4hz85mOQg7L12NNIh7JXX1QGuj3EQOFRH7mX0J1AaTWrZFU7OrN4bob38VsCns1Sbj
+         GMwOnPjLet2h/NNQsM9p08vUniz7LnCjNwE9DBgigwwXPQ0nB8SQFzyv/Pb48qKZV85G
+         1kx+vwi1Z+V5kdhJtSifUZqcbNDVC5AfAR5+t775a72BtBMJ2EAF792Fdqrme/kPpjxS
+         cU1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703054169; x=1703658969;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2MP0HTmjFL5ipgW8+FrullXm00FRbon6aH9dRUBk9dk=;
+        b=UfePdz87kJuQeSxtZ9DvF5CUnyW16Xv+2z+nelJ25wq8vPg8NcW/Fq84CmjzkhDc6x
+         +jBJHXHz3Z5m0jGAPKkPQEhPwpQeaIVXFSSGco7EKJf7lzSBsRgqQFwcIEKCx+r5AbGe
+         kdGm8ry7aLbA/RjRry2Ovb893U6UuW9bJjna4ghmhsfSjQ7H75YJWrBTNRZZAz/cAy0S
+         aJGOP/B2UnJ3Sg6UYoLpRP2JvJScUJiQYHkEzuNqxT91rsJWoHePT6D2SDiRQTybbPOj
+         yZSOtHbfgBWTO0qRcy6LnL3RJxyC7fweGSGhMYMD/llmp/BBYwKWe9o24Mr/t+cJy/1Q
+         Z6GQ==
+X-Gm-Message-State: AOJu0Yw6zIaOfOWUlimxOfBWNcEZ4Yh4YPyPu0ay6Vi4BdLF0CplqDqf
+	j+9ZGA2NcSNS1fZN6jWuPsXGtZWUZfOsBddq247opGp4h/gM/g==
+X-Google-Smtp-Source: AGHT+IHIx9Sh6g+/2+1c0JEPFUM7ITb2mqzwWusSVWgJzf/URstRIrCzy4sDiQwyr3tYJDL5RYA0wtl4IOD95NttVn0=
+X-Received: by 2002:ad4:4301:0:b0:67e:aa04:ddcd with SMTP id
+ c1-20020ad44301000000b0067eaa04ddcdmr19455514qvs.62.1703054169024; Tue, 19
+ Dec 2023 22:36:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231220062446.14511-1-muzammil@dreambigsemi.com>
+References: <20231220062446.14511-1-muzammil@dreambigsemi.com> <4155c90e-cdb1-4645-8bcc-fed4ea01ac83@infradead.org>
+In-Reply-To: <4155c90e-cdb1-4645-8bcc-fed4ea01ac83@infradead.org>
+From: Muhammad Muzammil <m.muzzammilashraf@gmail.com>
+Date: Wed, 20 Dec 2023 11:35:58 +0500
+Message-ID: <CAJHePoabyUCxwS_hTjhR+MEJ+JBm+kr2MdbP4zP_54t_geRqwQ@mail.gmail.com>
+Subject: Re: [PATCH] scripts: kernel-doc: Bug fixed for erroneous warning
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: corbet@lwn.net, gustavoars@kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 20, 2023 at 11:24:46AM +0500, Muhammad Muzammil wrote:
-> From: Muzammil Ashraf <m.muzzammilashraf@gmail.com>
-> 
-> kernel-doc: fixed erroneous warning generated by '__counted_by'
-> 
-> Signed-off-by: Muzammil Ashraf <m.muzzammilashraf@gmail.com>
-> ---
->  scripts/kernel-doc | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/scripts/kernel-doc b/scripts/kernel-doc
-> index 1484127db104..ea9688df0e93 100755
-> --- a/scripts/kernel-doc
-> +++ b/scripts/kernel-doc
-> @@ -1661,6 +1661,7 @@ sub check_sections($$$$$) {
->  			}
->  			elsif (($decl_type eq "struct") or
->  		       	       ($decl_type eq "union")) {
-> +                next if (index("@_", "__counted_by") != -1);
+HI,
 
-Please fix your editor to properly use tabs, and to set them to the
-correct 8 column spacing.
+1) I already have the below patch but it does not work.
+https://lore.kernel.org/linux-doc/20231215001347.work.151-kees@kernel.org/
 
-thanks,
+2) When I applied the below patch. It works.
+https://lore.kernel.org/linux-doc/87le9rjb4y.fsf@meer.lwn.net/
 
-greg k-h
+On Wed, Dec 20, 2023 at 11:29=E2=80=AFAM Randy Dunlap <rdunlap@infradead.or=
+g> wrote:
+>
+> Hi,
+>
+> On 12/19/23 22:24, Muhammad Muzammil wrote:
+> > From: Muzammil Ashraf <m.muzzammilashraf@gmail.com>
+> >
+> > kernel-doc: fixed erroneous warning generated by '__counted_by'
+> >
+> > Signed-off-by: Muzammil Ashraf <m.muzzammilashraf@gmail.com>
+> > ---
+> >  scripts/kernel-doc | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/scripts/kernel-doc b/scripts/kernel-doc
+> > index 1484127db104..ea9688df0e93 100755
+> > --- a/scripts/kernel-doc
+> > +++ b/scripts/kernel-doc
+> > @@ -1661,6 +1661,7 @@ sub check_sections($$$$$) {
+> >                       }
+> >                       elsif (($decl_type eq "struct") or
+> >                              ($decl_type eq "union")) {
+> > +                next if (index("@_", "__counted_by") !=3D -1);
+> >                               emit_warning("${file}:$.",
+> >                                       "Excess $decl_type member " .
+> >                                       "'$sects[$sx]' " .
+>
+> One of both of these patches should be enough. Can you test these
+> instead of your patch, please?
+>
+> https://lore.kernel.org/linux-doc/20231215001347.work.151-kees@kernel.org=
+/
+>
+> https://lore.kernel.org/linux-doc/87le9rjb4y.fsf@meer.lwn.net/
+>
+> Thanks.
+>
+> --
+> #Randy
+> https://people.kernel.org/tglx/notes-about-netiquette
+> https://subspace.kernel.org/etiquette.html
