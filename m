@@ -1,98 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55F4423740;
-	Fri, 22 Dec 2023 14:54:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 814882EAE2
+	for <linux-hardening@vger.kernel.org>; Fri, 22 Dec 2023 23:00:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BmE7+o7x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDC2BC433C7;
-	Fri, 22 Dec 2023 14:54:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703256882;
-	bh=Tf6r9+dOJakriookGkExO9gdNVREb4CJwWTm93Lq6B8=;
-	h=From:Date:Subject:To:Cc:From;
-	b=BmE7+o7xibvyL1cPsn3sUQEc2K7uvqtKiHB8ZEUmzHqC1V0M3gJGUhBUv9/gUtDAa
-	 OhikQutGcBJikPIH1PWNSh3W0fe8nusKNfELhZPkRhR0SdCH9ctEuUp+BoaJaZ90/b
-	 cUcea556r653aV87getayQiU2dP26arQlVz3xukFLSdbyCnm6gY1oHKlSl7kr3zJv5
-	 EtPpqvTJAYYukwNFSortNLXTXOwbStMINfpR+GFzMpLPtei7rVqiimH0W9RxgHL61h
-	 yTSp/aOiBCEi1nBaU67U5VSg5cVEE3KjOzzwcvPq9xXWuOQaV2v0bV5U6QqOcZOGCt
-	 yWl9+6/K/FTeA==
-From: Mark Brown <broonie@kernel.org>
-Date: Fri, 22 Dec 2023 14:54:37 +0000
-Subject: [PATCH v2] lsm: Add a __counted_by() annotation to lsm_ctx.ctx
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="UZoXtwIP"
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-67f8d9fe99fso10267606d6.2
+        for <linux-hardening@vger.kernel.org>; Fri, 22 Dec 2023 15:00:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1703286037; x=1703890837; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=/Nv8uNR8r1UabDDakzpv0NQNOYjWk2eK87n1dr2BSJU=;
+        b=UZoXtwIPPBN4jxnGNdjqq10h9URLS9Oc+z4/A104jqlVQPYwSuuuYdzrvgbDH08yrj
+         TzBNaoopap0iS/EuXA9vyztlGpenH2lPP3OqHvd2HhBdjEzYtrNpnT44edJqrRIhJDAc
+         qbmIuCYQeG/Heg5bGcFfgBD5OpgtzKTmvHATrrt8XS9d5SEoBol4RpgNzG5TmmK0n3Rt
+         wd9p+kDXsyfQ1jPBrQMlhugAfbZ0wM/879lfpUufODrto+Wo9cOiZPXcvJsama6mSq+q
+         WM1zH0+7did29T5a0o5zGVslzOV1PoLXziS3Eub5LXX/z5na/MS0GoxnX8hawY1nn1OC
+         vy4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703286037; x=1703890837;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/Nv8uNR8r1UabDDakzpv0NQNOYjWk2eK87n1dr2BSJU=;
+        b=vP2CKyMBK+drCwBo2x/DfR/4BRwE09lRW6pNoA6m9ams8qmIe5Odv/xXJwxtMypG7Z
+         oNhs9aNTftXeqIjxg+XJ5OiqcvkzP7J84ITUEiOKZC8EZWiz/DOPj1oOevX2fGvXZP+7
+         H1JSdkwhLGPsCcn/lyl0nhfTvph2Gy7ZRholmmmjYXgMqM8XQWmYqrkWKfiSIg/cQ0zd
+         sczYTiYjKDy4h0Q3YJylnA78fXEAZHgoTHHX3s/ohcfqqQmGIl9ljEUpAqAswOADLN1H
+         t/rc3xFDHrEjIIs7pCmzeGY4EN1njqhM3ABBCgHmLc5HlpUdOfLFXlx0qFd/+XCOeIFh
+         0wJA==
+X-Gm-Message-State: AOJu0YwWM/XCSy5FjzfxRqLIYTtCmp0YC7JU5QeOYdvKdhRz50B8KmcT
+	lLdPs63pci/Q0ho3tKktBRo1WjedbKt2MbLR0+MyQUNBBw==
+X-Google-Smtp-Source: AGHT+IHivcNUvBnzEx1PO0wcH1I3uu81Ge/gxr8GBgGSKKGUOuY0mpc9lGmKUUYqeh3Coi61ReIVhw==
+X-Received: by 2002:a05:6214:490:b0:67f:6b04:4262 with SMTP id pt16-20020a056214049000b0067f6b044262mr2917715qvb.20.1703286037382;
+        Fri, 22 Dec 2023 15:00:37 -0800 (PST)
+Received: from localhost ([70.22.175.108])
+        by smtp.gmail.com with ESMTPSA id ff10-20020a05622a4d8a00b00421c31faf05sm2239485qtb.1.2023.12.22.15.00.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Dec 2023 15:00:36 -0800 (PST)
+Date: Fri, 22 Dec 2023 18:00:36 -0500
+Message-ID: <a977371e5b88391866ea55f200db8ac0@paul-moore.com>
+From: Paul Moore <paul@paul-moore.com>
+To: Mark Brown <broonie@kernel.org>, James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Kees Cook <keescook@chromium.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, Aishwarya TCV <aishwarya.tcv@arm.com>, Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2] lsm: Add a __counted_by() annotation to lsm_ctx.ctx
+References: <20231222-lsm-fix-counted-by-v2-1-f1237a095bdc@kernel.org>
+In-Reply-To: <20231222-lsm-fix-counted-by-v2-1-f1237a095bdc@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20231222-lsm-fix-counted-by-v2-1-f1237a095bdc@kernel.org>
-X-B4-Tracking: v=1; b=H4sIACyjhWUC/32NTQ7CIBCFr9LM2jEyRrGuvIfpAmFoiRUaqMSm4
- e5iD2De6nt5Pyskjo4TXJsVImeXXPAVaNeAHpTvGZ2pDHSgoyASOKYXWvdBHd5+ZoOPBW1rzYU
- k01kpqMUpck1so/eu8uDSHOKyfWTxc//OZYFVpDXJUyu1sbcnR8/jPsQeulLKF+dZ4DO1AAAA
-To: Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
- "Serge E. Hallyn" <serge@hallyn.com>, Kees Cook <keescook@chromium.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-hardening@vger.kernel.org, Aishwarya TCV <aishwarya.tcv@arm.com>, 
- Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.13-dev-5c066
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1237; i=broonie@kernel.org;
- h=from:subject:message-id; bh=Tf6r9+dOJakriookGkExO9gdNVREb4CJwWTm93Lq6B8=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBlhaMv/ELUVrM0GuXyutYsNbqAiTiWGM2DJYFEcwQ8
- cfgmv++JATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZYWjLwAKCRAk1otyXVSH0LQZB/
- sEPxe44AsrwfISPQhOJQqpoDU08dBpuIpRT3OXE0oJFqhXeSccZBba0BM3U10GzFS2UK9FLlGjoIbh
- FKz6IXXIKUgZu+z8XyyDQk9Z73+Feex94HtfaQL4qpgAIwELqP6ff0jScbiK6E6swF9JDo28aqjLjh
- v2S/sBBc+OEu8iLFA9V5eT+Qi6I1XfJhYxH8+/ZrdJ6d3CDSjSJ4FvNc9E0L0UQB7neJf8TcjqvnOr
- Cmv/ebG5qqNhnkW46R5Mafbeb+pWTWJg4uRrXH9DlRag5nIAtGanyCy+cocIk9DMx0/MhhFOWJr/3h
- c/VbPTFugX9+OqPEOcoHnwf8rRbqn/
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-The ctx in struct lsm_ctx is an array of size ctx_len, tell the compiler
-about this using __counted_by() where supported to improve the ability to
-detect overflow issues.
+On Dec 22, 2023 Mark Brown <broonie@kernel.org> wrote:
+> 
+> The ctx in struct lsm_ctx is an array of size ctx_len, tell the compiler
+> about this using __counted_by() where supported to improve the ability to
+> detect overflow issues.
+> 
+> Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+> ---
+> Changes in v2:
+> - Add explicit stddef.h inclusion in case __counted_by() definition
+>   isn't otherwise pulled in.
+> - Link to v1: https://lore.kernel.org/r/20231221-lsm-fix-counted-by-v1-1-12cc27597cdf@kernel.org
+> ---
+>  include/uapi/linux/lsm.h | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
-Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
-Changes in v2:
-- Add explicit stddef.h inclusion in case __counted_by() definition
-  isn't otherwise pulled in.
-- Link to v1: https://lore.kernel.org/r/20231221-lsm-fix-counted-by-v1-1-12cc27597cdf@kernel.org
----
- include/uapi/linux/lsm.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Applied to lsm/dev, thanks!
 
-diff --git a/include/uapi/linux/lsm.h b/include/uapi/linux/lsm.h
-index f0386880a78e..f8aef9ade549 100644
---- a/include/uapi/linux/lsm.h
-+++ b/include/uapi/linux/lsm.h
-@@ -9,6 +9,7 @@
- #ifndef _UAPI_LINUX_LSM_H
- #define _UAPI_LINUX_LSM_H
- 
-+#include <linux/stddef.h>
- #include <linux/types.h>
- #include <linux/unistd.h>
- 
-@@ -36,7 +37,7 @@ struct lsm_ctx {
- 	__u64 flags;
- 	__u64 len;
- 	__u64 ctx_len;
--	__u8 ctx[];
-+	__u8 ctx[] __counted_by(ctx_len);
- };
- 
- /*
-
----
-base-commit: ec4e9d630a64df500641892f4e259e8149594a99
-change-id: 20231221-lsm-fix-counted-by-f9fd827e26aa
-
-Best regards,
--- 
-Mark Brown <broonie@kernel.org>
-
+--
+paul-moore.com
