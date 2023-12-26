@@ -1,222 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7D2E4F207;
-	Tue, 26 Dec 2023 15:52:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A451E4F8B0
+	for <linux-hardening@vger.kernel.org>; Tue, 26 Dec 2023 18:00:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--tanzirh.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rUUa26yc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62EFDC433C7;
-	Tue, 26 Dec 2023 15:52:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703605930;
-	bh=jzVP4Y4JhZWGkkFHmLQvr5y6pdDNLeWEKoXU+39nmKE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=rUUa26ycei86jgk4JYf9+fzt63DO9IASM8HD11qwPTDtEI5PPbEUGQI/+6jDgNNLn
-	 92rGDw5BpS24yJLn0LKDozuhRJyVmeLNLQne+bvfQpP/KzN2OakDUYKdTv4H729iZR
-	 C1q8J2JFgCi1x6SpEPnrTT6BlXsSg2dxp/QWNbw6BW8Xy0SN5ufIdZQhJh6fD/ouE4
-	 /UpgBO63hpY7PveeLlSOuaDffn60gFlAq0/iKMka2qA/ShRTmtCHrnmgcQf8NfAAwi
-	 7X17/PjspuptqQvbECK+TAOmGtwWWHzGaECJvFZj03YaPctI2QQWu8i63TOyN5fMoT
-	 fIDOFLI7QlfpA==
-Date: Tue, 26 Dec 2023 15:51:57 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Stephen Boyd
- <swboyd@chromium.org>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v4] iio: sx9324: avoid copying property strings
-Message-ID: <20231226155157.6f49b6f9@jic23-huawei>
-In-Reply-To: <20231219-strncpy-drivers-iio-proximity-sx9324-c-v4-1-d49ed29ee952@google.com>
-References: <20231219-strncpy-drivers-iio-proximity-sx9324-c-v4-1-d49ed29ee952@google.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KeNFWTQT"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-1d455b34723so19417035ad.0
+        for <linux-hardening@vger.kernel.org>; Tue, 26 Dec 2023 10:00:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1703613649; x=1704218449; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=uL68m7/nloxAmVxHBhyXARaUNsJ4FqLRMv7smk0VXkU=;
+        b=KeNFWTQTn/Gy3ABudQCerTHTVaR6j/S/Z5sXYjm2u/W8O4hdUIPhL34HOVv3xQH4la
+         ZKKOgoNN6CO/9oJycYu7MYQ//OwlEinisljxbyUfvT32OImi1m1K/qL+32+T0T5cHT7x
+         JeLe+tJCCGP0OjMv2GrecLziXS1mfrVsAb2UzllcqJBtb/H/Oaq/q3MpPAxXqmnhfRsx
+         bToL3LU554YggCgxX0X3gHK47SqhWlULJ4ZZdxpGkSUrhOfcWQuGBEw6JQQzAQeCltxf
+         8zmoC6IzHQEkkNWDULjHsXUgT/XhDCWkp39ayo+alpTUYQo2Nv75mAB2CTHOlRV5/n0V
+         sGQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703613649; x=1704218449;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uL68m7/nloxAmVxHBhyXARaUNsJ4FqLRMv7smk0VXkU=;
+        b=NtdI0mYq2S0rGFlCEQMbiFVvk/fI/eVhLlb973HrWREW9gKun0TI5SVq1JiNvJJW7A
+         oekXicolkAWVKKaslRypNLaVb/snveYFK6QIXJiXnWIHqXIdyTeKzsVxrdQ4GzGeVTZZ
+         OfgxEZPYZVvvYsbILF8f4yV/X4LHfVe+VVdsqj+EesUYEyW1+Ve/E7xDa/ed1Aw/IjS9
+         f3kTDgYfARjN4rcElh3o9u9tNa+/JhTsJvC0tuI6Ro/8gNfUnDJ+Q/tOTwvAvclitkX5
+         ZMrd+c5c0U+mRKpN8Hp2k6gcSz6hGyjM1r6xc0EP462s620uQbInNCn1W4UDc8cM2KU4
+         lyCQ==
+X-Gm-Message-State: AOJu0Yw8fhL7Sx4kERqBDaG6OYB/m21UUsNkw8BHn/vTmuY3S15jU6/L
+	fgtqP44Dfj+VhzyZEDuZEcPRxlDLVVCVeI15Vus=
+X-Google-Smtp-Source: AGHT+IHvB4n72zhphWG0KAwIt3BqQtmNnGxtZajtuTZQqOlIgqHluySRRvP5+OuOqf07zfouccipiRqRDjXP
+X-Received: from tanz.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:c4a])
+ (user=tanzirh job=sendgmr) by 2002:a17:903:1c2:b0:1d4:3bcd:4317 with SMTP id
+ e2-20020a17090301c200b001d43bcd4317mr228480plh.7.1703613648926; Tue, 26 Dec
+ 2023 10:00:48 -0800 (PST)
+Date: Tue, 26 Dec 2023 17:59:59 +0000
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAJ8Ui2UC/42Uy4rbQBBFf2XQOgpV/ajuymr+I2TRjypb4LGCN
+ JiEwf+elgnBsTTIyxKcew/dXfroZpkGmbtvLx/dJJdhHsZzG+jLS1eO6XyQfqht7gwYiwZcfxr
+ y/D4N58NRUpWpF2OjmKRepHSN+jmJDr9uid9/tPk4zO/j9PtWcMHl6+dZF+yxL1Sto2QyB349j
+ OPhJF/L+LZk/wX9NhiUiw8WvE3h9fCWhtONWyQuZqfYLMVZbSjGIXh3x//rxU0Oeps1SLCZkLa
+ FPwNBkX0tqk3pHrwZ2x1j24ydjwFi1cjZbxrHLQ56D5Crjwoa/KrY7RS7pVgzuoIcnMqzxa4VU
+ 9AYHGCGYLePirfBlCQbcu24jK6M/Y6xb8aqGNlxuyRHzxr75Y6SRvBGNEZ+2ngBDVB1SasFTit
+ jujfeeM60GBsSowgaCz9rTK1Yg7YtwJgo5VVx2CkOrVgIDFrCKKU+7lHc4WPjTSrMJTLmIo887 /DceLDaVkbFOi6PPMJOAEJLYEpsCCgKxVUC7iUs/xKKPosPbU3qf2dwvV7/AAPVY7szBQAA
+X-Developer-Key: i=tanzirh@google.com; a=ed25519; pk=UeRjcUcv5W9AeLGEbAe2+0LptQpcY+o1Zg0LHHo7VN4=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1703613647; l=2420;
+ i=tanzirh@google.com; s=20231204; h=from:subject:message-id;
+ bh=vEaBhflrd5vMapldmscLIaaJ/z8U/1AZB7sFpnB7nVk=; b=eCLsBksk7Ew4KMhKgVxOJ0lTDMKkj1WQmj/2pbxoPN3s8KVL4V+lNNy2NA433QAJhnskjoZ0u
+ eB9DdT/PIVNC0Ci9WXitVLr3qccFXLHfRaaVpgh8L22m9iS0ZeiY82L
+X-Mailer: b4 0.12.4
+Message-ID: <20231226-libstringheader-v6-0-80aa08c7652c@google.com>
+Subject: [PATCH v6 0/2] shrink lib/string.i via IWYU
+From: Tanzir Hasan <tanzirh@google.com>
+To: Kees Cook <keescook@chromium.org>, Nick Desaulniers <nnn@google.com>
+Cc: Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
+	Greg KH <gregkh@linuxfoundation.org>, llvm@lists.linux.dev, 
+	Al Viro <viro@zeniv.linux.org.uk>, Andy Shevchenko <andy.shevchenko@gmail.com>, 
+	Tanzir Hasan <tanzirh@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On Tue, 19 Dec 2023 21:34:15 +0000
-Justin Stitt <justinstitt@google.com> wrote:
+This patch series changes the include list of string.c to minimize
+the preprocessing size. The patch series intends to remove REPEAT_BYE
+from kernel.h and move it into its own header file because
+word-at-a-time.h has an implicit dependancy on it but it is declared
+in kernel.h which is bloated.
 
-> We're doing some needless string copies when trying to assign the proper
-> `prop` string. We can make `prop` a const char* and simply assign to
-> string literals.
-> 
-> For the case where a format string is used, let's extract the parsing
-> logic out into sx9324_parse_phase_prop(). We no longer need to create
-> copies or allocate new memory.
-> 
-> sx9324_parse_phase_prop() will simply return the default def value if it
-> fails.
-> 
-> This also cleans up some deprecated strncpy() uses [1].
-> 
-> Furthermore, let's clean up this code further by removing some unused
-> defines:
-> |  #define SX9324_PIN_DEF "semtech,ph0-pin"
-> |  #define SX9324_RESOLUTION_DEF "semtech,ph01-resolution"
-> |  #define SX9324_PROXRAW_DEF "semtech,ph01-proxraw-strength"
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-This clashes with a patch from Andy Shevchenko 
-iio: proximity: sx9324: Switch to device_property_match_property_string()
-https://lore.kernel.org/all/20230808162800.61651-7-andriy.shevchenko@linux.intel.com/
+---
 
-Would you mind rebasing on top of that (it should be in linux-next
-or my togreg branch of iio.git).
+---
+Changes in v6:
+- added linux/bitops.h to wordpart.h
+- removed kernel.h from x86
+- Link to v5: https://lore.kernel.org/r/20231219-libstringheader-v5-0-206d4afd309a@google.com
 
-Might be easier to rebase on rc1 once it's available in about 3.5 weeks time.
+Changes in v5:
+- Removed bad copyright.
+- Link to v4: https://lore.kernel.org/r/20231219-libstringheader-v4-0-aaeb26495d2f@google.com
 
-Jonathan
+Changes in v4:
+- Fixed personal email client so name appears instead of just email
+- Removed kernel.h where not needed.
+- Sorted include list in lib/string.c and used linux/limits.h
+- Link to v3: https://lore.kernel.org/r/20231218-libstringheader-v3-0-500bd58f0f75@google.com
 
-> ---
-> Changes in v4:
-> - use u8 return type (thanks Stephen)
-> - remove unused defines (thanks Stephen et al.)
-> - tweaks to sx9324_parse_phase_prop related to defaults (thanks Stephen)
-> - Link to v3: https://lore.kernel.org/r/20231212-strncpy-drivers-iio-proximity-sx9324-c-v3-1-b8ae12fc8a5d@google.com
-> 
-> Changes in v3:
-> - extract logic into sx9324_parse_phase_prop() and use string literals
->   (thanks Stephen)
-> - rebase onto mainline bee0e7762ad2c602
-> - Link to v2: https://lore.kernel.org/r/20231026-strncpy-drivers-iio-proximity-sx9324-c-v2-1-cee6e5db700c@google.com
-> 
-> Changes in v2:
-> - make prop a const char* and do simple assignments (thanks Jonathan)
-> - rebase onto 3a568e3a961ba330
-> - Link to v1: https://lore.kernel.org/r/20230921-strncpy-drivers-iio-proximity-sx9324-c-v1-1-4e8d28fd1e7c@google.com
-> ---
-> ---
->  drivers/iio/proximity/sx9324.c | 70 ++++++++++++++++++++++++------------------
->  1 file changed, 40 insertions(+), 30 deletions(-)
-> 
-> diff --git a/drivers/iio/proximity/sx9324.c b/drivers/iio/proximity/sx9324.c
-> index 438f9c9aba6e..3daad7167c63 100644
-> --- a/drivers/iio/proximity/sx9324.c
-> +++ b/drivers/iio/proximity/sx9324.c
-> @@ -873,6 +873,29 @@ static int sx9324_init_compensation(struct iio_dev *indio_dev)
->  					20000, 2000000);
->  }
->  
-> +static u8 sx9324_parse_phase_prop(struct device *dev,
-> +				  struct sx_common_reg_default *reg_def,
-> +				  const char *prop)
-> +{
-> +	unsigned int pin_defs[SX9324_NUM_PINS];
-> +	int count, ret, pin;
-> +	u32 raw = 0;
-> +
-> +	count = device_property_count_u32(dev, prop);
-> +	if (count != ARRAY_SIZE(pin_defs))
-> +		return reg_def->def;
-> +	ret = device_property_read_u32_array(dev, prop, pin_defs,
-> +					     ARRAY_SIZE(pin_defs));
-> +	if (ret)
-> +		return reg_def->def;
-> +
-> +	for (pin = 0; pin < SX9324_NUM_PINS; pin++)
-> +		raw |= (pin_defs[pin] << (2 * pin)) &
-> +		       SX9324_REG_AFE_PH0_PIN_MASK(pin);
-> +
-> +	return raw;
-> +}
-> +
->  static const struct sx_common_reg_default *
->  sx9324_get_default_reg(struct device *dev, int idx,
->  		       struct sx_common_reg_default *reg_def)
-> @@ -881,38 +904,29 @@ sx9324_get_default_reg(struct device *dev, int idx,
->  		"highest" };
->  	static const char * const sx9324_csidle[] = { "hi-z", "hi-z", "gnd",
->  		"vdd" };
-> -#define SX9324_PIN_DEF "semtech,ph0-pin"
-> -#define SX9324_RESOLUTION_DEF "semtech,ph01-resolution"
-> -#define SX9324_PROXRAW_DEF "semtech,ph01-proxraw-strength"
-> -	unsigned int pin_defs[SX9324_NUM_PINS];
-> -	char prop[] = SX9324_PROXRAW_DEF;
->  	u32 start = 0, raw = 0, pos = 0;
-> -	int ret, count, ph, pin;
-> -	const char *res;
-> +	const char *prop, *res;
-> +	int ret;
->  
->  	memcpy(reg_def, &sx9324_default_regs[idx], sizeof(*reg_def));
->  
->  	sx_common_get_raw_register_config(dev, reg_def);
->  	switch (reg_def->reg) {
->  	case SX9324_REG_AFE_PH0:
-> +		reg_def->def = sx9324_parse_phase_prop(dev, reg_def,
-> +						       "semtech,ph0-pin");
-> +		break;
->  	case SX9324_REG_AFE_PH1:
-> +		reg_def->def = sx9324_parse_phase_prop(dev, reg_def,
-> +						       "semtech,ph1-pin");
-> +		break;
->  	case SX9324_REG_AFE_PH2:
-> +		reg_def->def = sx9324_parse_phase_prop(dev, reg_def,
-> +						       "semtech,ph2-pin");
-> +		break;
->  	case SX9324_REG_AFE_PH3:
-> -		ph = reg_def->reg - SX9324_REG_AFE_PH0;
-> -		snprintf(prop, ARRAY_SIZE(prop), "semtech,ph%d-pin", ph);
-> -
-> -		count = device_property_count_u32(dev, prop);
-> -		if (count != ARRAY_SIZE(pin_defs))
-> -			break;
-> -		ret = device_property_read_u32_array(dev, prop, pin_defs,
-> -						     ARRAY_SIZE(pin_defs));
-> -		if (ret)
-> -			break;
-> -
-> -		for (pin = 0; pin < SX9324_NUM_PINS; pin++)
-> -			raw |= (pin_defs[pin] << (2 * pin)) &
-> -			       SX9324_REG_AFE_PH0_PIN_MASK(pin);
-> -		reg_def->def = raw;
-> +		reg_def->def = sx9324_parse_phase_prop(dev, reg_def,
-> +						       "semtech,ph3-pin");
->  		break;
->  	case SX9324_REG_AFE_CTRL0:
->  		ret = device_property_read_string(dev,
-> @@ -937,11 +951,9 @@ sx9324_get_default_reg(struct device *dev, int idx,
->  	case SX9324_REG_AFE_CTRL4:
->  	case SX9324_REG_AFE_CTRL7:
->  		if (reg_def->reg == SX9324_REG_AFE_CTRL4)
-> -			strncpy(prop, "semtech,ph01-resolution",
-> -				ARRAY_SIZE(prop));
-> +			prop = "semtech,ph01-resolution";
->  		else
-> -			strncpy(prop, "semtech,ph23-resolution",
-> -				ARRAY_SIZE(prop));
-> +			prop = "semtech,ph23-resolution";
->  
->  		ret = device_property_read_u32(dev, prop, &raw);
->  		if (ret)
-> @@ -1012,11 +1024,9 @@ sx9324_get_default_reg(struct device *dev, int idx,
->  	case SX9324_REG_PROX_CTRL0:
->  	case SX9324_REG_PROX_CTRL1:
->  		if (reg_def->reg == SX9324_REG_PROX_CTRL0)
-> -			strncpy(prop, "semtech,ph01-proxraw-strength",
-> -				ARRAY_SIZE(prop));
-> +			prop = "semtech,ph01-proxraw-strength";
->  		else
-> -			strncpy(prop, "semtech,ph23-proxraw-strength",
-> -				ARRAY_SIZE(prop));
-> +			prop = "semtech,ph23-proxraw-strength";
->  		ret = device_property_read_u32(dev, prop, &raw);
->  		if (ret)
->  			break;
-> 
-> ---
-> base-commit: bee0e7762ad2c6025b9f5245c040fcc36ef2bde8
-> change-id: 20230921-strncpy-drivers-iio-proximity-sx9324-c-8c3437676039
-> 
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
-> 
+Changes in v3:
+- Moved REPEAT_BYTE out of kernel.h and into wordpart.h.
+- Included wordpart.h where REPEAT_BYTE was necessary.
+- Link to v2: https://lore.kernel.org/r/20231214-libstringheader-v2-0-0f195dcff204@google.com
+
+Changes in v2:
+- Transformed into a patch series
+- Changed asm inclusions to linux inclusions
+- added a patch to sh
+- Link to v1: https://lore.kernel.org/r/20231205-libstringheader-v1-1-7f9c573053a7@gmail.com
+
+---
+Tanzir Hasan (2):
+      kernel.h: removed REPEAT_BYTE from kernel.h
+      lib/string: shrink lib/string.i via IWYU
+
+ arch/arm/include/asm/word-at-a-time.h     |  3 ++-
+ arch/arm64/include/asm/word-at-a-time.h   |  3 ++-
+ arch/powerpc/include/asm/word-at-a-time.h |  4 ++--
+ arch/riscv/include/asm/word-at-a-time.h   |  3 ++-
+ arch/s390/include/asm/word-at-a-time.h    |  3 ++-
+ arch/sh/include/asm/word-at-a-time.h      |  2 ++
+ arch/x86/include/asm/word-at-a-time.h     |  3 ++-
+ arch/x86/kvm/mmu/mmu.c                    |  1 +
+ fs/namei.c                                |  2 +-
+ include/asm-generic/word-at-a-time.h      |  3 ++-
+ include/linux/kernel.h                    |  7 -------
+ include/linux/wordpart.h                  | 14 ++++++++++++++
+ lib/string.c                              | 17 +++++++++--------
+ 13 files changed, 41 insertions(+), 24 deletions(-)
+---
+base-commit: ceb6a6f023fd3e8b07761ed900352ef574010bcb
+change-id: 20231204-libstringheader-e238e2af5eec
+
+Best regards,
+-- 
+Tanzir Hasan <tanzirh@google.com>
 
