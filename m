@@ -1,90 +1,83 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77099110A
-	for <linux-hardening@vger.kernel.org>; Tue, 26 Dec 2023 18:47:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bFE04khS"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4279c2ada00so973971cf.1
-        for <linux-hardening@vger.kernel.org>; Tue, 26 Dec 2023 10:47:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1703616440; x=1704221240; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FiJwBW/7K1qBcXH+9J8bQ7mf/uov1uwXgkCpJ4/LnIE=;
-        b=bFE04khSXwR1SSMM0Qk0csE4053YaCFK5VCruP2J5XN5XMjk4ZKZTMUt91v13q3wE+
-         PuJeNCBQR3BCQtR9h8kNtwsPA8zyu89/96B9Fcb99A5la+8uH6wDQH/p+wKY2W+s9kL8
-         BsGCVNn06aMr6GAWXGDp3QVfu1bOg/ec3oRH0TVJpYSvvnFX9234qbMcRleSx6JfAma+
-         9IJEkfwdkPCCVc9ubQkiGLmgcqtzGet1qmcm8O2gzf5BGztb+9gIJDc6OXQgUNjfpfr3
-         eE1X8ZkUiEAbVWeJwQwFSAWpV4taIfLPhGhlfnK99iiGS2cegpAZ3plDqWmj9ZK2qGWk
-         /7Zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703616440; x=1704221240;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FiJwBW/7K1qBcXH+9J8bQ7mf/uov1uwXgkCpJ4/LnIE=;
-        b=gsjgYnECmS9QfYLJIDZj6LW8QCrSs788jusJa/W6WGOJ3s0ynZJZzE8JfLad4NM3E/
-         XUp7jenBWik559KhrYoDAZPH0c34kFvhvMOMXKTll8q6qrY7LKAYeHfLkzSWZ6XQwEow
-         y6Hqi16ZHGtySVLRBnDFawC9P7g3uYmCQK+HuptRvOzh3BEsutZY4+phqEitXE7Vaot9
-         arGnovKA0gjqhfDAXLl0YwBHjuhSbqpU+u3MnrnWUjjeTKZKdrwp1iiM1fyFvdxYdoBA
-         qNpczRfC+BVnJy2/Q3srFUljeGbDSCWoNVD3ENgdqdATTSGns+amJrWpycaHPwlppUWz
-         0uEw==
-X-Gm-Message-State: AOJu0YxBRcjQ0a/0jOBwICocCjGgqcLuNM2FAtICgxFyFLLz/QZ5Hjk7
-	J9vkMO9hZXb95mMnUkmI+W8DsakTaIuBpcLWuuup6XBLU/ky
-X-Google-Smtp-Source: AGHT+IEYBwyPvzBQv8GdFUrmTLbOocq9WgF0k2bz6g2BBEu2Eob8+NO71K+QvEgSeux3dfF6mm5LchW+yBQf+nVfP6c=
-X-Received: by 2002:a05:622a:1b8d:b0:425:758d:7279 with SMTP id
- bp13-20020a05622a1b8d00b00425758d7279mr624418qtb.0.1703616440295; Tue, 26 Dec
- 2023 10:47:20 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07F3C45030;
+	Wed, 27 Dec 2023 16:54:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="3296718"
+X-IronPort-AV: E=Sophos;i="6.04,309,1695711600"; 
+   d="scan'208";a="3296718"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2023 08:53:56 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="951539808"
+X-IronPort-AV: E=Sophos;i="6.04,309,1695711600"; 
+   d="scan'208";a="951539808"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2023 08:53:52 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andy@kernel.org>)
+	id 1rIXAC-00000009T4e-2oGN;
+	Wed, 27 Dec 2023 18:53:48 +0200
+Date: Wed, 27 Dec 2023 18:53:48 +0200
+From: Andy Shevchenko <andy@kernel.org>
+To: Tanzir Hasan <tanzirh@google.com>
+Cc: Kees Cook <keescook@chromium.org>, Nick Desaulniers <nnn@google.com>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Greg KH <gregkh@linuxfoundation.org>, llvm@lists.linux.dev,
+	Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH v6 1/2] kernel.h: removed REPEAT_BYTE from kernel.h
+Message-ID: <ZYxWnC5KEIx0XO5q@smile.fi.intel.com>
+References: <20231226-libstringheader-v6-0-80aa08c7652c@google.com>
+ <20231226-libstringheader-v6-1-80aa08c7652c@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231226-libstringheader-v6-0-80aa08c7652c@google.com>
- <20231226-libstringheader-v6-2-80aa08c7652c@google.com> <CAHp75VfXWev7Z-tHRPAuWzaLj7ogiECW2arFc4CdcxUE87Ld0A@mail.gmail.com>
-In-Reply-To: <CAHp75VfXWev7Z-tHRPAuWzaLj7ogiECW2arFc4CdcxUE87Ld0A@mail.gmail.com>
-From: Tanzir Hasan <tanzirh@google.com>
-Date: Tue, 26 Dec 2023 10:47:08 -0800
-Message-ID: <CAE-cH4rche0dbKWXHQ89YUZzs6Q6XwRPrfdy5+uox9YnQ-5VXA@mail.gmail.com>
-Subject: Re: [PATCH v6 2/2] lib/string: shrink lib/string.i via IWYU
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Kees Cook <keescook@chromium.org>, Nick Desaulniers <nnn@google.com>, 
-	Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-	Greg KH <gregkh@linuxfoundation.org>, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231226-libstringheader-v6-1-80aa08c7652c@google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Dec 26, 2023 at 10:35=E2=80=AFAM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Tue, Dec 26, 2023 at 8:00=E2=80=AFPM Tanzir Hasan <tanzirh@google.com>=
- wrote:
-> >
-> > This diff uses an open source tool include-what-you-use (IWYU) to modif=
-y
-> > the include list, changing indirect includes to direct includes. IWYU i=
-s
-> > implemented using the IWYUScripts github repository which is a tool tha=
-t
-> > is currently undergoing development. These changes seek to improve buil=
-d
-> > times.
-> >
-> > This change to lib/string.c resulted in a preprocessed size of
-> > lib/string.i from 26371 lines to 5321 lines (-80%) for the x86
-> > defconfig.
->
-> Why did you ignore my tag?
+On Tue, Dec 26, 2023 at 06:00:00PM +0000, Tanzir Hasan wrote:
+> This patch creates wordpart.h and includes it in asm/word-at-a-time.h
+> for all architectures. WORD_AT_A_TIME_CONSTANTS depends on kernel.h
+> because of REPEAT_BYTE. Moving this to another header and including it
+> where necessary allows us to not include the bloated kernel.h. Making
+> this implicit dependency on REPEAT_BYTE explicit allows for later
+> improvements in the lib/string.c inclusion list.
 
-I'm sorry. I forgot you had already reviewed this one. In a future
-revision I will include this:
+LGTM, and I hope this will not trigger CIs and other build checkers.
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Best,
-Tanzir
+...
+
+> --- a/arch/powerpc/include/asm/word-at-a-time.h
+> +++ b/arch/powerpc/include/asm/word-at-a-time.h
+> @@ -4,8 +4,8 @@
+>  /*
+>   * Word-at-a-time interfaces for PowerPC.
+>   */
+
+> -
+
+You can preserve this blank line...
+
+> -#include <linux/kernel.h>
+> +#include <linux/bitops.h>
+> +#include <linux/wordpart.h>
+
+...here.
+
+>  #include <asm/asm-compat.h>
+>  #include <asm/extable.h>
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
