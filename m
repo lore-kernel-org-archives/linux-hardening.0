@@ -1,193 +1,151 @@
-Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 983878F4E
-	for <linux-hardening@vger.kernel.org>; Mon,  1 Jan 2024 17:43:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF45F1426A
+	for <linux-hardening@vger.kernel.org>; Tue,  2 Jan 2024 14:06:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="CXEJS0rK"
-Received: from eig-obgw-5008a.ext.cloudfilter.net ([10.0.29.246])
-	by cmsmtp with ESMTPS
-	id KHaYrdek3jtZ3KMKWr9z8N; Mon, 01 Jan 2024 17:44:00 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id KMKIrTwnMkUbtKMKJrVffZ; Mon, 01 Jan 2024 17:43:47 +0000
-X-Authority-Analysis: v=2.4 cv=WpU4jPTv c=1 sm=1 tr=0 ts=6592f9d3
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=GfQleyYEO+cc22AUyTT7qQ==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=dEuoMetlWLkA:10 a=wYkD_t78qR0A:10 a=4RBUngkUAAAA:8
- a=yPCof4ZbAAAA:8 a=s-YHb6lbn-Xrcz-ehpMA:9 a=QEXdDO2ut3YA:10
- a=_sbA2Q-Kp09kWB8D3iXc:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=huackJ8jZzDmN0sqCQfiharq0gTzy0SAIzq039inA2o=; b=CXEJS0rKPiVtT0jkmsZb232rnJ
-	2+WW4RY+4KPwgyCD2zH5QJFt53/kD82w6Rp5uen9NUtZ49P8M8HASTOL56IYlZMWSi1D5ws7RuDHZ
-	vKGXdwvPnSEGKKzTd2kCUbhNIpIvH4Z205mNYsMFcDl26ImPEHYR4bDn4scPJJnIGjAUvfbgr79kB
-	VkK/l36AumOzmYgg+1qHnZoa2RkATQtftLxLsR1EQ6K2GaY8Y/nTxDJpw9VTEfVtZRidkedRdC9a7
-	4t8fSkMI/WmMbzwM3BTSa9Z+Kq4NPaRxZokXMtRvKkmcZ6Q9/2mvt1bwuvS+xUC4qDQUDR5E7eaUK
-	wUE14Tmg==;
-Received: from 187.184.157.186.cable.dyn.cableonline.com.mx ([187.184.157.186]:10555 helo=[192.168.0.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rKMKH-002ID1-2h;
-	Mon, 01 Jan 2024 11:43:45 -0600
-Message-ID: <cc8d5ac1-99b6-480d-86ca-f76ed9c324c3@embeddedor.com>
-Date: Mon, 1 Jan 2024 11:43:42 -0600
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PF8S3tHk"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3367f8f8cb0so9679538f8f.2
+        for <linux-hardening@vger.kernel.org>; Tue, 02 Jan 2024 06:06:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704204384; x=1704809184; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GeuSBJ4NRsOQvgljA4+5PVaR3yqbK0REG/oik1vcoTs=;
+        b=PF8S3tHkC6HADuMN/KiSJXOsSXRgp8SV7YozcCcQPZuSYeY3ihHRGSq8uBEFuTzJWZ
+         PciNd1040t1kL/F5pJsg1Su68tzDodYM0gG6vGOuQgYWy8TfwqzIyaaStH2jFhHer3O1
+         7OThcFSGanOlPQYSQO74Oc2zZPppEF9qKBXTLVGfvqYDxnUzyPBhUfF1A14pzEbDu7R9
+         qCMBlkIyeSc3yzBva9qFadRvVj5PE1rFSTVh4OoQp/3RI9tDzRvms/nHYPAO24kQGry7
+         XBIWxRKr9+134OyjnXAo9gs2oOK7x0NtntGSL67A7BTQ07a/+ajcBBZUy4sq55fY5q/R
+         G3mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704204384; x=1704809184;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GeuSBJ4NRsOQvgljA4+5PVaR3yqbK0REG/oik1vcoTs=;
+        b=AQffH85ZmjL4ulsJO0ZzhUoazcV3DM536Vr8ilnuElmkxwtKIw0IwOwtJdU6ZU+N/j
+         INap1G8Z0s8BRBfCrJfaDn+L2SShy4G5rSipwrJ8keDFwDubnu45TM+Wuts5eTqQnido
+         q47R1W6vktCfxtL1W8oh9wK9jQ80ITBO668AHZv9lKXs9vYDz74OvbyWKSLDsyYPBI15
+         OOhiCnEdhjHMRGJfff/pX+vD3zVIu0EaYqZ+Xx5Ny+DLB1KuVGFqP6a8GMIzXFqIaLby
+         XFmTVY/wMulpmosTcmGiB5Atr1IZtFdlby1oghspTu/zWd/filn9V+z0plmXnmXuI1kE
+         NA7g==
+X-Gm-Message-State: AOJu0Yw7qI2FAkUUQ85vgdD3821TtJEDclJ9//PemWvWNwxYGkRNMneu
+	HmykIDZ1FZiNVI2cXPFQ0mPZFDlqrIJ/vA==
+X-Google-Smtp-Source: AGHT+IGk6b7xxbrOOdBOhoJZTfY5o2MxcgOf7EHNUFLzzXCVFaBSNQcBJgEQ81jRR1EiHtDu86iDWQ==
+X-Received: by 2002:a5d:4bd0:0:b0:336:7790:6a36 with SMTP id l16-20020a5d4bd0000000b0033677906a36mr9667662wrt.129.1704204383955;
+        Tue, 02 Jan 2024 06:06:23 -0800 (PST)
+Received: from localhost ([102.140.209.237])
+        by smtp.gmail.com with ESMTPSA id a7-20020a5d4d47000000b00333404e9935sm28651254wru.54.2024.01.02.06.06.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jan 2024 06:06:23 -0800 (PST)
+Date: Tue, 2 Jan 2024 17:06:16 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: oe-kbuild@lists.linux.dev, Rengarajan S <rengarajan.s@microchip.com>,
+	kumaravel.thiagarajan@microchip.com,
+	tharunkumar.pasumarthi@microchip.com, gregkh@linuxfoundation.org,
+	jirislaby@kernel.org, keescook@chromium.org, gustavoars@kernel.org,
+	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev,
+	unglinuxdriver@microchip.com
+Subject: Re: [PATCH v1 tty-next 4/4] 8250: microchip: pci1xxxx: Add Burst
+ mode transmission support in uart driver for reading from FIFO
+Message-ID: <5d46ad8f-6537-4c53-8a81-85dca7bfbd9e@suswa.mountain>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] VMCI: Silence memcpy() run-time false positive
- warning
-Content-Language: en-US
-To: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
- linux-hardening@vger.kernel.org, keescook@chromium.org,
- gustavoars@kernel.org, Bryan Tan <bryantan@vmware.com>,
- Vishnu Dasa <vdasa@vmware.com>,
- VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
- Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org
-Cc: vegard.nossum@oracle.com, darren.kenny@oracle.com,
- syzkaller <syzkaller@googlegroups.com>
-References: <20240101130828.3666251-1-harshit.m.mogalapalli@oracle.com>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240101130828.3666251-1-harshit.m.mogalapalli@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.184.157.186
-X-Source-L: No
-X-Exim-ID: 1rKMKH-002ID1-2h
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187.184.157.186.cable.dyn.cableonline.com.mx ([192.168.0.10]) [187.184.157.186]:10555
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 12
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfClJbOBq0emgja1hC9z8o8oE2ViT6IOxQgHwfrIzefwGXxNb33UvARiEF09BKWR9hkVa6340uLrawtgrWx/uPiGLBhsfIPT69xtsMQGSSX8af7zw3vuC
- jvP9BySBvlhqhiROhWuPdofvljVd4XfKVqoH6A0vRT2Iq8pElEVNJGSEhjmmsoO5zu3qelHBs/2ozPqU0ZaxBX3P2acGH0ZeSDc+ARrPlzkiWpYX20/TIlzn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231215151123.41812-5-rengarajan.s@microchip.com>
 
+Hi Rengarajan,
 
+kernel test robot noticed the following build warnings:
 
-On 1/1/24 07:08, Harshit Mogalapalli wrote:
-> Syzkaller hit 'WARNING in dg_dispatch_as_host' bug.
-> 
-> memcpy: detected field-spanning write (size 56) of single field "&dg_info->msg"
-> at drivers/misc/vmw_vmci/vmci_datagram.c:237 (size 24)
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-This is not a 'false postive warning.' This is a legitimately warning
-coming from the fortified memcpy().
+url:    https://github.com/intel-lab-lkp/linux/commits/Rengarajan-S/8250-microchip-pci1xxxx-Rearranging-the-structure-declarations/20231215-234606
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tty-testing
+patch link:    https://lore.kernel.org/r/20231215151123.41812-5-rengarajan.s%40microchip.com
+patch subject: [PATCH v1 tty-next 4/4] 8250: microchip: pci1xxxx: Add Burst mode transmission support in uart driver for reading from FIFO
+config: i386-randconfig-141-20231216 (https://download.01.org/0day-ci/archive/20231216/202312161205.f6EpLZln-lkp@intel.com/config)
+compiler: gcc-7 (Ubuntu 7.5.0-6ubuntu2) 7.5.0
 
-Under FORTIFY_SOURCE we should not copy data across multiple members
-in a structure. For that we alternatives like struct_group(), or as
-in this case, splitting memcpy(), or as I suggest below, a mix of
-direct assignment and memcpy().
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+| Closes: https://lore.kernel.org/r/202312161205.f6EpLZln-lkp@intel.com/
 
+smatch warnings:
+drivers/tty/serial/8250/8250_pci1xxxx.c:395 pci1xxxx_process_write_data() warn: should this be 'valid_burst_count == -1'
 
-> 
-> WARNING: CPU: 0 PID: 1555 at drivers/misc/vmw_vmci/vmci_datagram.c:237
-> dg_dispatch_as_host+0x88e/0xa60 drivers/misc/vmw_vmci/vmci_datagram.c:237
-> 
-> Some code commentry, based on my understanding:
-> 
-> 544 #define VMCI_DG_SIZE(_dg) (VMCI_DG_HEADERSIZE + (size_t)(_dg)->payload_size)
-> /// This is 24 + payload_size
-> 
-> memcpy(&dg_info->msg, dg, dg_size);
-> 	Destination = dg_info->msg ---> this is a 24 byte
-> 					structure(struct vmci_datagram)
-> 	Source = dg --> this is a 24 byte structure (struct vmci_datagram)
-> 	Size = dg_size = 24 + payload_size
-> 
-> 
-> {payload_size = 56-24 =32} -- Syzkaller managed to set payload_size to 32.
-> 
->   35 struct delayed_datagram_info {
->   36         struct datagram_entry *entry;
->   37         struct work_struct work;
->   38         bool in_dg_host_queue;
->   39         /* msg and msg_payload must be together. */
->   40         struct vmci_datagram msg;
->   41         u8 msg_payload[];
->   42 };
-> 
-> So those extra bytes of payload are copied into msg_payload[], so there
-> is no bug, but a run time warning is seen while fuzzing with Syzkaller.
-> 
-> One possible way to silence the warning is to split the memcpy() into
-> two parts -- one -- copying the msg and second taking care of payload.
-> 
-> Reported-by: syzkaller <syzkaller@googlegroups.com>
-> Suggested-by: Vegard Nossum <vegard.nossum@oracle.com>
-> Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-> ---
-> This patch is only tested with the C reproducer, not any testing
-> specific to driver is done.
-> ---
->   drivers/misc/vmw_vmci/vmci_datagram.c | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/misc/vmw_vmci/vmci_datagram.c b/drivers/misc/vmw_vmci/vmci_datagram.c
-> index f50d22882476..b43661590f56 100644
-> --- a/drivers/misc/vmw_vmci/vmci_datagram.c
-> +++ b/drivers/misc/vmw_vmci/vmci_datagram.c
-> @@ -216,6 +216,7 @@ static int dg_dispatch_as_host(u32 context_id, struct vmci_datagram *dg)
->   		if (dst_entry->run_delayed ||
->   		    dg->src.context == VMCI_HOST_CONTEXT_ID) {
->   			struct delayed_datagram_info *dg_info;
-> +			size_t payload_size = dg_size - VMCI_DG_HEADERSIZE;
+vim +395 drivers/tty/serial/8250/8250_pci1xxxx.c
 
-This seems to be the same as `dg->payload_size`, so I don't think a new
-variable is necessary.
+eeaa9176002041 Rengarajan S 2023-12-15  351  static void pci1xxxx_process_write_data(struct uart_port *port,
+eeaa9176002041 Rengarajan S 2023-12-15  352  					struct circ_buf *xmit,
+eeaa9176002041 Rengarajan S 2023-12-15  353  					int *data_empty_count,
+eeaa9176002041 Rengarajan S 2023-12-15  354  					u32 *valid_byte_count)
+eeaa9176002041 Rengarajan S 2023-12-15  355  {
+eeaa9176002041 Rengarajan S 2023-12-15  356  	u32 valid_burst_count = *valid_byte_count / UART_BURST_SIZE;
+eeaa9176002041 Rengarajan S 2023-12-15  357  
+eeaa9176002041 Rengarajan S 2023-12-15  358  	/*
+eeaa9176002041 Rengarajan S 2023-12-15  359  	 * Each transaction transfers data in DWORDs. If there are less than
+eeaa9176002041 Rengarajan S 2023-12-15  360  	 * four remaining valid_byte_count to transfer or if the circular
+eeaa9176002041 Rengarajan S 2023-12-15  361  	 * buffer has insufficient space for a DWORD, the data is transferred
+eeaa9176002041 Rengarajan S 2023-12-15  362  	 * one byte at a time.
+eeaa9176002041 Rengarajan S 2023-12-15  363  	 */
+eeaa9176002041 Rengarajan S 2023-12-15  364  	while (valid_burst_count--) {
 
->   
->   			if (atomic_add_return(1, &delayed_dg_host_queue_size)
->   			    == VMCI_MAX_DELAYED_DG_HOST_QUEUE_SIZE) {
-> @@ -234,7 +235,8 @@ static int dg_dispatch_as_host(u32 context_id, struct vmci_datagram *dg)
->   
->   			dg_info->in_dg_host_queue = true;
->   			dg_info->entry = dst_entry;
-> -			memcpy(&dg_info->msg, dg, dg_size);
-> +			memcpy(&dg_info->msg, dg, VMCI_DG_HEADERSIZE);
-> +			memcpy(&dg_info->msg_payload, dg + 1, payload_size);
+This loop ends with valid_burst_count set to -1.  (Post operation).
 
-I think a direct assignment and a call to memcpy() is better in this case,
-something like this:
+eeaa9176002041 Rengarajan S 2023-12-15  365  		if (*data_empty_count - UART_BURST_SIZE < 0)
+eeaa9176002041 Rengarajan S 2023-12-15  366  			break;
+eeaa9176002041 Rengarajan S 2023-12-15  367  		if (xmit->tail > (UART_XMIT_SIZE - UART_BURST_SIZE))
+eeaa9176002041 Rengarajan S 2023-12-15  368  			break;
+eeaa9176002041 Rengarajan S 2023-12-15  369  		writel(*(unsigned int *)&xmit->buf[xmit->tail],
+eeaa9176002041 Rengarajan S 2023-12-15  370  		       port->membase + UART_TX_BURST_FIFO);
+eeaa9176002041 Rengarajan S 2023-12-15  371  		*valid_byte_count -= UART_BURST_SIZE;
+eeaa9176002041 Rengarajan S 2023-12-15  372  		*data_empty_count -= UART_BURST_SIZE;
+eeaa9176002041 Rengarajan S 2023-12-15  373  		xmit->tail = (xmit->tail + UART_BURST_SIZE) &
+eeaa9176002041 Rengarajan S 2023-12-15  374  			     (UART_XMIT_SIZE - 1);
+eeaa9176002041 Rengarajan S 2023-12-15  375  	}
+eeaa9176002041 Rengarajan S 2023-12-15  376  
+eeaa9176002041 Rengarajan S 2023-12-15  377  	while (*valid_byte_count--) {
+eeaa9176002041 Rengarajan S 2023-12-15  378  		if (*data_empty_count - UART_BYTE_SIZE < 0)
+eeaa9176002041 Rengarajan S 2023-12-15  379  			break;
+eeaa9176002041 Rengarajan S 2023-12-15  380  		writeb(xmit->buf[xmit->tail], port->membase +
+eeaa9176002041 Rengarajan S 2023-12-15  381  		       UART_TX_BYTE_FIFO);
+eeaa9176002041 Rengarajan S 2023-12-15  382  		*data_empty_count -= UART_BYTE_SIZE;
+eeaa9176002041 Rengarajan S 2023-12-15  383  
+eeaa9176002041 Rengarajan S 2023-12-15  384  		/*
+eeaa9176002041 Rengarajan S 2023-12-15  385  		 * When the tail of the circular buffer is reached, the next
+eeaa9176002041 Rengarajan S 2023-12-15  386  		 * byte is transferred to the beginning of the buffer.
+eeaa9176002041 Rengarajan S 2023-12-15  387  		 */
+eeaa9176002041 Rengarajan S 2023-12-15  388  		xmit->tail = (xmit->tail + UART_BYTE_SIZE) &
+eeaa9176002041 Rengarajan S 2023-12-15  389  			     (UART_XMIT_SIZE - 1);
+eeaa9176002041 Rengarajan S 2023-12-15  390  
+eeaa9176002041 Rengarajan S 2023-12-15  391  		/*
+eeaa9176002041 Rengarajan S 2023-12-15  392  		 * If there are any pending burst count, data is handled by
+eeaa9176002041 Rengarajan S 2023-12-15  393  		 * transmitting DWORDs at a time.
+eeaa9176002041 Rengarajan S 2023-12-15  394  		 */
+eeaa9176002041 Rengarajan S 2023-12-15 @395  		if (valid_burst_count && (xmit->tail <
+                                                            ^^^^^^^^^^^^^^^^^
+So this test should be if valid_burst_count != -1.  Or if
+valid_burst_count != UINT_MAX because it's unsigned...
 
-dg_info->msg = *dg;
-memcpy(&dg_info->msg_payload, dg + 1, dg->payload_size);
+eeaa9176002041 Rengarajan S 2023-12-15  396  		   (UART_XMIT_SIZE - UART_BURST_SIZE)))
+eeaa9176002041 Rengarajan S 2023-12-15  397  			break;
+eeaa9176002041 Rengarajan S 2023-12-15  398  	}
+eeaa9176002041 Rengarajan S 2023-12-15  399  }
 
-However, that `dg + 1` thing is making my eyes twitch. Where exactly are we
-making sure that `dg` actually points to an area in memory bigger than
-`sizeof(*dg)`?...
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
-Also, we could also use struct_size() during allocation, some lines above:
-
--                       dg_info = kmalloc(sizeof(*dg_info) +
--                                   (size_t) dg->payload_size, GFP_ATOMIC);
-+                       dg_info = kmalloc(struct_size(dg_info, msg_payload, dg->payload_size),
-+                                         GFP_ATOMIC);
-
---
-Gustavo
-
->   
->   			INIT_WORK(&dg_info->work, dg_delayed_dispatch);
->   			schedule_work(&dg_info->work);
