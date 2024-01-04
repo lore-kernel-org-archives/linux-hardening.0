@@ -1,149 +1,116 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C878C1CA89;
-	Wed,  3 Jan 2024 19:00:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0C9A20B01
+	for <linux-hardening@vger.kernel.org>; Thu,  4 Jan 2024 09:43:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="i6R47X4u"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
-	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=vMknRd2IeAkhytegZh++FkiNzCsbQVcssck3V7umEBM=; b=i6R47X4utC8GiDtInju3x5Qy4/
-	M7a+qp7J0+4yapChPdXFiYvMnjKO+6Ag+qM8MElwzN3XYQ6dHNHj2DkFlbPYENi/YFOLdcCrpWTTH
-	zBx0ErhvwYqIPp0p9tTvn2MRv803XYlDuVXH/JYyGr1bDI3e61FOiV+eBMDK7ysrwufi2QKkFp3Zo
-	3fhLk59maOy5mJynXf3HfcyEU6QDgvzSnJwsRbnIJhA9f6hocsESYCwmTUGHFFKHRLxuU0RvWGwDq
-	yCKHgf4AsEHQkVYL3oO+A+exdvUfwGLDOp1DXvZKfNAF633oTEp6GpiMz5T8WVOdomS8vjye8fBDA
-	z/wChw8w==;
-Received: from [191.193.161.120] (helo=localhost)
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1rL6Ar-002o6C-Sm; Wed, 03 Jan 2024 19:41:06 +0100
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-To: ardb@kernel.org,
-	linux-efi@vger.kernel.org
-Cc: keescook@chromium.org,
-	tony.luck@intel.com,
-	linux-hardening@vger.kernel.org,
-	kernel@gpiccoli.net,
-	kernel-dev@igalia.com,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Subject: [PATCH] efi: pstore: Allow dynamic initialization based on module parameter
-Date: Wed,  3 Jan 2024 15:40:32 -0300
-Message-ID: <20240103184053.226203-1-gpiccoli@igalia.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="TUQSBwR8"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-556275957ccso360442a12.0
+        for <linux-hardening@vger.kernel.org>; Thu, 04 Jan 2024 01:43:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1704361436; x=1704966236; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=0k/z1kHRXAj+s1mF7P6s03dINlUIqtFEs2jXJMTBDZI=;
+        b=TUQSBwR8sQGT3wnpSJGJv7vtD3ZUmkw/2ryI7R18cYlIxkWWLWcNg0kIXd1AndwIpA
+         /3w66Cm8dzkMsOvRVDIc4FAV8Qii7S4Mw5Wy85s5HKP+3wZjKIn5G30uxeyH+QcKQDU8
+         DY0a5AETFZd8Xv2xedHXrq+yGRhFtFMN5MH2I7ABUgEk3srNOGzokl2NZmkjoVcRaVbp
+         ESL9+CHjVAi6tWnptaofPNLF6gWL1KBVYBmhX+eejCsJubQtyT5NFI8/Z1na30XmKdvg
+         X3ScHDtggMQL5jnJWsnlvv6w1yzDio0/Gm2nw1oFgzIR+87Xm03MKO90bH11O0mnnqAN
+         13PQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704361436; x=1704966236;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0k/z1kHRXAj+s1mF7P6s03dINlUIqtFEs2jXJMTBDZI=;
+        b=RV3M61Y6iaDTFm8rQb+hrPz6ZGMd48iuSRN3IuTVJsn3nlP/bs2/XDcD6IkEJ6AkUI
+         DmT9hZu+VXgI6fMwcGBC51nlEi635+CnRSl2bKJpj3+ZIW3t4h9Mv5UPivKiARKy8OUQ
+         t1ZlOSoNnXK/QmDDSFJcJFztiAETooTT62zqrXvHdLF4L2tLJZteSgwtoRl26PiLtNzS
+         ymidERY3DI3Us5SDFIyIVO6gicFlBDr13EKMhUwKrycjb10ymbXFBG42qp2ocvciB6o4
+         /BfBzlVVxOD4B0sbU+UvVm/2DoWfAEbRTWkgJIIdOAqiwOQ6fJF+SSIzE9NevQFDVb3Y
+         ZAZQ==
+X-Gm-Message-State: AOJu0YzONjUktyVpF3+GxpZyFMbtZhStSHZTvJN2Z5VW0mP4brxz4biG
+	2M/ddk3kEqSo+Gunc/OYzC12aVCGfAvxqg==
+X-Google-Smtp-Source: AGHT+IHfVlPtwC/KzQNpaimOtGq2TpUjCqX8fa9Kd9t+GLONYbPV8ozr2kGk6Q0ofmyRvRrjuCLI+A==
+X-Received: by 2002:a50:bae4:0:b0:552:39d9:ec4d with SMTP id x91-20020a50bae4000000b0055239d9ec4dmr101781ede.72.1704361436228;
+        Thu, 04 Jan 2024 01:43:56 -0800 (PST)
+Received: from alley ([176.114.240.50])
+        by smtp.gmail.com with ESMTPSA id r14-20020a056402018e00b00556d13abcc7sm1966617edv.85.2024.01.04.01.43.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jan 2024 01:43:55 -0800 (PST)
+Date: Thu, 4 Jan 2024 10:43:53 +0100
+From: Petr Mladek <pmladek@suse.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: =?utf-8?B?5a2f5pWs5ae/?= <mengjingzi@iie.ac.cn>, rostedt@goodmis.org,
+	john.ogness@linutronix.de, senozhatsky@chromium.org,
+	keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Linus Torvalds <torvalds@linuxfoundation.org>
+Subject: Re: Suggestion for Capability Check Refinement in
+ check_syslog_permissions()
+Message-ID: <ZZZ92cjhyr_CgLRJ@alley>
+References: <1ee10aa6.d064.18ccdb23971.Coremail.mengjingzi@iie.ac.cn>
+ <2024010306-tweezers-skinhead-083e@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <2024010306-tweezers-skinhead-083e@gregkh>
 
-The efi-pstore module parameter "pstore_disable" warrants that users
-are able to deactivate such backend. There is also a Kconfig option
-for the default value of this parameter. It was originally added due
-to some bad UEFI FW implementations that could break with many variables
-written.
+On Wed 2024-01-03 07:59:18, Greg KH wrote:
+> On Wed, Jan 03, 2024 at 01:00:58PM +0800, 孟敬姿 wrote:
+> > Hi, we suggest revisiting the capability checks in
+> > check_syslog_permissions(). Currently CAP_SYSLOG is checked first, and
+> > if it’s not there but there is a CAP_SYS_ADMIN, it can also pass the
+> > check. We recommend refining this check to exclusively use CAP_SYSLOG.
+> > Here's our reasoning for this suggestion:
+> 
+> Again, have you tested this?
 
-Some distros (such as Arch Linux) set this in their config file still
-nowadays. And once it is set, even being a writable module parameter,
-there is effectively no way to make use of efi-pstore anymore.
-If "pstore_disable" is set to true, the init function of the module exits
-early and is never called again after the initcall processing.
+I guess that Meng is right. The current code looks like:
 
-Let's switch this module parameter to have a callback and perform the
-pstore backend registration again each time it's set from Y->N (and
-vice-versa). With this, the writable nature of the parameter starts to
-make sense, given that users now can switch back to using efi-pstore
-or not during runtime by writing into it.
+static int check_syslog_permissions(int type, int source)
+{
+	/*
+	 * If this is from /proc/kmsg and we've already opened it, then we've
+	 * already done the capabilities checks at open time.
+	 */
+	if (source == SYSLOG_FROM_PROC && type != SYSLOG_ACTION_OPEN)
+		goto ok;
 
-Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
----
- drivers/firmware/efi/efi-pstore.c | 43 +++++++++++++++++++++++++------
- 1 file changed, 35 insertions(+), 8 deletions(-)
+	if (syslog_action_restricted(type)) {
+		if (capable(CAP_SYSLOG))
+			goto ok;
+		/*
+		 * For historical reasons, accept CAP_SYS_ADMIN too, with
+		 * a warning.
+		 */
+		if (capable(CAP_SYS_ADMIN)) {
+			pr_warn_once("%s (%d): Attempt to access syslog with "
+				     "CAP_SYS_ADMIN but no CAP_SYSLOG "
+				     "(deprecated).\n",
+				 current->comm, task_pid_nr(current));
+			goto ok;
+		}
+		return -EPERM;
+	}
+ok:
+	return security_syslog(type);
+}
 
-diff --git a/drivers/firmware/efi/efi-pstore.c b/drivers/firmware/efi/efi-pstore.c
-index e7b9ec6f8a86..833cbb995dd3 100644
---- a/drivers/firmware/efi/efi-pstore.c
-+++ b/drivers/firmware/efi/efi-pstore.c
-@@ -14,16 +14,43 @@ static unsigned int record_size = 1024;
- module_param(record_size, uint, 0444);
- MODULE_PARM_DESC(record_size, "size of each pstore UEFI var (in bytes, min/default=1024)");
- 
--static bool efivars_pstore_disable =
--	IS_ENABLED(CONFIG_EFI_VARS_PSTORE_DEFAULT_DISABLE);
--
--module_param_named(pstore_disable, efivars_pstore_disable, bool, 0644);
--
- #define PSTORE_EFI_ATTRIBUTES \
- 	(EFI_VARIABLE_NON_VOLATILE | \
- 	 EFI_VARIABLE_BOOTSERVICE_ACCESS | \
- 	 EFI_VARIABLE_RUNTIME_ACCESS)
- 
-+static bool pstore_disable = IS_ENABLED(CONFIG_EFI_VARS_PSTORE_DEFAULT_DISABLE);
-+
-+static int efivars_pstore_init(void);
-+static void efivars_pstore_exit(void);
-+
-+static int efi_pstore_disable_set(const char *val, const struct kernel_param *kp)
-+{
-+	int err;
-+	bool old_pstore_disable = pstore_disable;
-+
-+	err = param_set_bool(val, kp);
-+	if (err)
-+		return err;
-+
-+	if (old_pstore_disable != pstore_disable) {
-+		if (pstore_disable)
-+			efivars_pstore_exit();
-+		else
-+			efivars_pstore_init();
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct kernel_param_ops pstore_disable_ops = {
-+	.set	= efi_pstore_disable_set,
-+	.get	= param_get_bool,
-+};
-+
-+module_param_cb(pstore_disable, &pstore_disable_ops, &pstore_disable, 0644);
-+__MODULE_PARM_TYPE(pstore_disable, "bool");
-+
- static int efi_pstore_open(struct pstore_info *psi)
- {
- 	int err;
-@@ -218,12 +245,12 @@ static struct pstore_info efi_pstore_info = {
- 	.erase		= efi_pstore_erase,
- };
- 
--static __init int efivars_pstore_init(void)
-+static int efivars_pstore_init(void)
- {
- 	if (!efivar_supports_writes())
- 		return 0;
- 
--	if (efivars_pstore_disable)
-+	if (pstore_disable)
- 		return 0;
- 
- 	/*
-@@ -250,7 +277,7 @@ static __init int efivars_pstore_init(void)
- 	return 0;
- }
- 
--static __exit void efivars_pstore_exit(void)
-+static void efivars_pstore_exit(void)
- {
- 	if (!efi_pstore_info.bufsize)
- 		return;
--- 
-2.43.0
+And CAP_SYS_ADMIN has really been deprecated last 13 years, see the
+commit ee24aebffb75a7f940cf ("cap_syslog: accept CAP_SYS_ADMIN for now").
 
+Maybe, it is really time to remove it.
+
+Best Regards,
+Petr
