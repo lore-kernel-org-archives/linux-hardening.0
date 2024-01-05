@@ -1,94 +1,117 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A6531A9D;
-	Fri,  5 Jan 2024 16:47:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C26B63218B
+	for <linux-hardening@vger.kernel.org>; Fri,  5 Jan 2024 16:57:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ORqlR1ML"
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 405GAdea015401;
-	Fri, 5 Jan 2024 16:47:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2023-11-20; bh=gUFjJnldcCaXe2pdA55QFTTausQXLS6J9u68Q5ncGio=;
- b=ORqlR1MLCCOIG3+daQXHeCYON933hpPYh1ILuhU9wykDfFhUV1aZvhxhaVDrx1p9D6fM
- 2aOJ1h4hYvfz4DAwvprwtZmJ2jHZnGqqsAJOzW4DoqUIeh+ahTsnTlrkWOeQsxEDEBH+
- 58mvhVBxMkClJada3G5MCHNPLvif8uekBuHnVPl0uTPPIshFvsyZJcb9swErMvQ/Ilte
- Jdig8AWksgxJW7NYXu360LlrWwbGhya4QPR6ysxkOa6sTgWPydKrGfQx90NCFwTYfdSP
- ljhvsM94B+9YdMumhgqDZV77kleNfrvyRaUUMZXLQyjF1y4Pd1DIhkxNUHPHiMO3Fjn6 4A== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ven25g3h4-16
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 05 Jan 2024 16:47:28 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 405G5Uiw009401;
-	Fri, 5 Jan 2024 16:40:17 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3ve12hxey5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 05 Jan 2024 16:40:17 +0000
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 405GeGlf009736;
-	Fri, 5 Jan 2024 16:40:17 GMT
-Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3ve12hxewn-1;
-	Fri, 05 Jan 2024 16:40:16 +0000
-From: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-To: linux-hardening@vger.kernel.org, keescook@chromium.org, error27@gmail.com,
-        gustavoars@kernel.org, Bryan Tan <bryantan@vmware.com>,
-        Vishnu Dasa <vdasa@vmware.com>,
-        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc: vegard.nossum@oracle.com, darren.kenny@oracle.com,
-        harshit.m.mogalapalli@oracle.com
-Subject: [PATCH v2 1/2] VMCI: Use struct_size() in kmalloc()
-Date: Fri,  5 Jan 2024 08:39:59 -0800
-Message-ID: <20240105164001.2129796-1-harshit.m.mogalapalli@oracle.com>
-X-Mailer: git-send-email 2.42.0
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="tJnDb4XG"
+Received: from eig-obgw-5008a.ext.cloudfilter.net ([10.0.29.246])
+	by cmsmtp with ESMTPS
+	id LlIYrIg3Q9gG6LnVerm5Wt; Fri, 05 Jan 2024 16:57:26 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id LnVdrygwLL3AmLnVdr68Zr; Fri, 05 Jan 2024 16:57:25 +0000
+X-Authority-Analysis: v=2.4 cv=Sdrky9du c=1 sm=1 tr=0 ts=659834f5
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=GfQleyYEO+cc22AUyTT7qQ==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=dEuoMetlWLkA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
+ a=yPCof4ZbAAAA:8 a=48sfuStoL9JXZ_Dqu6YA:9 a=QEXdDO2ut3YA:10
+ a=AjGcO6oz07-iQ99wixmX:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=I92cwQ2M/ukJXYyLK/8tnkWQfwmfCkto22shFNhUE+0=; b=tJnDb4XGok36sMRvy7Be4/SrBN
+	a/bf3/kYa2z3Qyal/FpKQL6fD3/rKmVKsegD/0JlH4XqPcTvSwucVLOV8UbXRFgo0O4fyfB0UYzOq
+	HBgJqMtYIlKTDl1yCG5toTaIN4lsPHhSJClx72owRO3iKkepgd5FRpPAiQbJanyRW1yBeo/eUl9Ay
+	NekhlR+Z91RXfsobY2XQMjHWSKtaIdzJMky1a/fgkPA/A6KE/p62uYAi4w1AISaDoFRBTVK3CVQxr
+	80OBvop7xNyla4K9xhy3AUgRl8eX8/KAnRhXB7sn/GgUBd58dk+rDeTYyNrTR0kNkkC8TkAcjrOgY
+	Ve7W++oQ==;
+Received: from 187.184.157.186.cable.dyn.cableonline.com.mx ([187.184.157.186]:37427 helo=[192.168.0.10])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1rLnVc-001rsQ-01;
+	Fri, 05 Jan 2024 10:57:24 -0600
+Message-ID: <923c1008-3571-4383-95f3-ebbbef7271ae@embeddedor.com>
+Date: Fri, 5 Jan 2024 10:57:20 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-05_08,2024-01-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- suspectscore=0 phishscore=0 adultscore=0 spamscore=0 bulkscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2401050137
-X-Proofpoint-ORIG-GUID: kgrNTprd204Py8fGpk9BJG_QYnC6j41a
-X-Proofpoint-GUID: kgrNTprd204Py8fGpk9BJG_QYnC6j41a
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] VMCI: Use struct_size() in kmalloc()
+Content-Language: en-US
+To: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
+ linux-hardening@vger.kernel.org, keescook@chromium.org, error27@gmail.com,
+ gustavoars@kernel.org, Bryan Tan <bryantan@vmware.com>,
+ Vishnu Dasa <vdasa@vmware.com>,
+ VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org
+Cc: vegard.nossum@oracle.com, darren.kenny@oracle.com
+References: <20240105164001.2129796-1-harshit.m.mogalapalli@oracle.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20240105164001.2129796-1-harshit.m.mogalapalli@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.184.157.186
+X-Source-L: No
+X-Exim-ID: 1rLnVc-001rsQ-01
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187.184.157.186.cable.dyn.cableonline.com.mx ([192.168.0.10]) [187.184.157.186]:37427
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 12
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfBUpwp4mZGqYVLo0En9dE7t8gw6Xray7oohKyenzkS3/E7lnocS90fR+2jt5ug2uhN9HOvbR0shf2Syo7dcZ+EQjeqll9U/DR7wGczNonS/aQWevisSr
+ fi7gLa2zCIqeyNqc6/cB+xcg2xIiHN0NrWwkeKQcovP9EqqXq2cKaBMrlripXs2/n96369lFvK0mdA+o56MvaY40Umwc95HTbSXKkXG/n0B4g+y+8WKK1blr
 
-Use struct_size() instead of open coding.
 
-Suggested-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
----
- drivers/misc/vmw_vmci/vmci_datagram.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/misc/vmw_vmci/vmci_datagram.c b/drivers/misc/vmw_vmci/vmci_datagram.c
-index f50d22882476..ac6cb0c8d99b 100644
---- a/drivers/misc/vmw_vmci/vmci_datagram.c
-+++ b/drivers/misc/vmw_vmci/vmci_datagram.c
-@@ -224,8 +224,8 @@ static int dg_dispatch_as_host(u32 context_id, struct vmci_datagram *dg)
- 				return VMCI_ERROR_NO_MEM;
- 			}
- 
--			dg_info = kmalloc(sizeof(*dg_info) +
--				    (size_t) dg->payload_size, GFP_ATOMIC);
-+			dg_info = kmalloc(struct_size(dg_info, msg_payload, dg->payload_size),
-+					  GFP_ATOMIC);
- 			if (!dg_info) {
- 				atomic_dec(&delayed_dg_host_queue_size);
- 				vmci_resource_put(resource);
--- 
-2.42.0
+On 1/5/24 10:39, Harshit Mogalapalli wrote:
+> Use struct_size() instead of open coding.
+> 
+> Suggested-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
 
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Thanks!
+--
+Gustavo
+
+> ---
+>   drivers/misc/vmw_vmci/vmci_datagram.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/misc/vmw_vmci/vmci_datagram.c b/drivers/misc/vmw_vmci/vmci_datagram.c
+> index f50d22882476..ac6cb0c8d99b 100644
+> --- a/drivers/misc/vmw_vmci/vmci_datagram.c
+> +++ b/drivers/misc/vmw_vmci/vmci_datagram.c
+> @@ -224,8 +224,8 @@ static int dg_dispatch_as_host(u32 context_id, struct vmci_datagram *dg)
+>   				return VMCI_ERROR_NO_MEM;
+>   			}
+>   
+> -			dg_info = kmalloc(sizeof(*dg_info) +
+> -				    (size_t) dg->payload_size, GFP_ATOMIC);
+> +			dg_info = kmalloc(struct_size(dg_info, msg_payload, dg->payload_size),
+> +					  GFP_ATOMIC);
+>   			if (!dg_info) {
+>   				atomic_dec(&delayed_dg_host_queue_size);
+>   				vmci_resource_put(resource);
