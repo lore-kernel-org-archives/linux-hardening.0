@@ -1,118 +1,153 @@
-Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E35C434CD5
-	for <linux-hardening@vger.kernel.org>; Fri,  5 Jan 2024 18:17:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53FBC35F04
+	for <linux-hardening@vger.kernel.org>; Fri,  5 Jan 2024 19:37:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="rB3BJ+l/"
-Received: from eig-obgw-6003a.ext.cloudfilter.net ([10.0.30.151])
-	by cmsmtp with ESMTPS
-	id LctPrB5D08uLRLol0r3kAL; Fri, 05 Jan 2024 18:17:23 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id Lol0rMeCotzh2Lol0rv5wZ; Fri, 05 Jan 2024 18:17:22 +0000
-X-Authority-Analysis: v=2.4 cv=Ra6Dtnhv c=1 sm=1 tr=0 ts=659847b2
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=GfQleyYEO+cc22AUyTT7qQ==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=dEuoMetlWLkA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
- a=7YfXLusrAAAA:8 a=VwQbUJbxAAAA:8 a=_MUxwH_1hrhzMBYmUHsA:9 a=QEXdDO2ut3YA:10
- a=SLz71HocmBbuEhFRYD3r:22 a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=9I/V4bfaoYSOxFfnj8JFSrOi1wVdUSbRrkSkeRTBjnw=; b=rB3BJ+l/ZQSDA8Sk9VwkRFJRzb
-	aL/dkDOCl3UtoelOYMsMkSTz99aqaeRy4nLtWrM967qj/lud31V+W0CNMQcpbqcxd3OjM4JCzGIMq
-	fQnNAQrjqhqKYBclf9DkyzGkeY17MLkN2/9QpteCRMFmJ9OjyOY/tvO3VpVpz2XoAuYBdsjsgtUkm
-	mSDw8GtnSYpKWV7ojECsJ/Th3BboRCRtjDJ5Q4S6UpuSHpd5L3ejHbCGE5XNMW2nihes1DfEatELx
-	BufUr+kuV9tpeayqKRX9rqOkuQ5OZnWGhpB9lr7OIvmZnwjXhC4/Fwqb6yp1E5dWFE/XmGOhi+Yav
-	ItP2PGzw==;
-Received: from 187.184.157.186.cable.dyn.cableonline.com.mx ([187.184.157.186]:13689 helo=[192.168.0.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rLokz-003FGW-0q;
-	Fri, 05 Jan 2024 12:17:21 -0600
-Message-ID: <b12b56a9-2d20-4802-bbc8-43f4831b3113@embeddedor.com>
-Date: Fri, 5 Jan 2024 12:17:18 -0600
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AwPpw0Tp"
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-204fdd685fdso1231644fac.2
+        for <linux-hardening@vger.kernel.org>; Fri, 05 Jan 2024 11:37:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1704483465; x=1705088265; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vrOZywRVHYQrwYA4rEvbQOcCE+oYGeNQVUbfflcP1O8=;
+        b=AwPpw0Tphp3fbFYYPoIYS3l2fzwPI7FZuvaKt+ycRxz2VmTgh4ojp1DLrZSdTOnJ6g
+         BtAeHYG/qwzoZnRxTOKSvh4m6j/lDY8vLErNY19GAmguko+y2KQcsAtykqbMZFDgDXen
+         MQnDnjpT+xrvYfR3UAaEm2g6v1W8nj2Oo76a4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704483465; x=1705088265;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vrOZywRVHYQrwYA4rEvbQOcCE+oYGeNQVUbfflcP1O8=;
+        b=TnMsaxAygBX0ybpDLB5joelvltfbZ/OLIv2JkZnBNpD6oDz35HRQJNOL6dAu3tsOvm
+         AauHXp4li/5fSqPem82ikaPntwsCd83WmGtF4I9PI781abFxoGr+nzb8z750fiTKA2Oe
+         /cy1fnieIESlA8yL0fI+f/FHZbjo0+kS2mLevkji+ftF4dGsZ4OpUqK0eil5EkdggbwX
+         NH1hC3kKGfAB/tHlFBO1H7q50wpGacM5xTCCVOG6kdJ6jwX7J7d1SDXJqLeD0mPRlXOp
+         d5enDaBaMM67x5LBdM9O1DTRbRRkdISh3d8v65+oN7PRHeI0gGeFfgjzSCXz5rQ/e0lU
+         bwUw==
+X-Gm-Message-State: AOJu0YxKZXqC8i12wyW4mL+EueZATTnfGfrxOkbcV2+rKTN18gd9WM56
+	orzWpOTWPoPQfffvTlibBkJuc8ErJGnIsNi9PhBvbKOjKs7P
+X-Google-Smtp-Source: AGHT+IF+iHC1gEAXC43HF3ocZtXJBAdcsjjaDe5rzg2X0p+MIUjbNDmhc5uxVg01loIn0VUHcHP25gmmMl2GNf+rx+4=
+X-Received: by 2002:a05:6870:a19f:b0:203:c869:cd44 with SMTP id
+ a31-20020a056870a19f00b00203c869cd44mr2937532oaf.92.1704483465420; Fri, 05
+ Jan 2024 11:37:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PM / QOS: Use kcalloc() instead of kzalloc()
-Content-Language: en-US
-To: Erick Archer <erick.archer@gmx.com>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Len Brown <len.brown@intel.com>,
- Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20240105181118.116292-1-erick.archer@gmx.com>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240105181118.116292-1-erick.archer@gmx.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.184.157.186
-X-Source-L: No
-X-Exim-ID: 1rLokz-003FGW-0q
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187.184.157.186.cable.dyn.cableonline.com.mx ([192.168.0.10]) [187.184.157.186]:13689
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfLfiuUjhChdVrzzn8k7P5TtEYband3zHAITPD8habYY9MOEEu93Oymiza7teZ6509FUXnYkwYalJwUNgqOW5+j+9jzZLRNTj7fKjVY/6uXkE9nk3GThC
- DMn/EeoZW+RI28Apwbx3JcxtgCNEb5etSvm5yxErFpoFTByeIVhSJ4WQ87lN57HAiURhJlZ7jW4yuDMncBBPFe3rHmna5pCqCPRkovxUfZp4qYHljjDhiO+b
+References: <20240104185138.169307-1-jeffxu@chromium.org> <20240104185138.169307-5-jeffxu@chromium.org>
+ <796b6877-0548-4d2a-a484-ba4156104a20@infradead.org>
+In-Reply-To: <796b6877-0548-4d2a-a484-ba4156104a20@infradead.org>
+From: Jeff Xu <jeffxu@chromium.org>
+Date: Fri, 5 Jan 2024 11:37:34 -0800
+Message-ID: <CABi2SkWF8sVeqjOar8MMftEv-piZuLtb8Pt5Bz7dNTekcwzByg@mail.gmail.com>
+Subject: Re: [RFC PATCH v4 4/4] mseal:add documentation
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com, 
+	sroettger@google.com, willy@infradead.org, gregkh@linuxfoundation.org, 
+	torvalds@linux-foundation.org, usama.anjum@collabora.com, jeffxu@google.com, 
+	jorgelo@chromium.org, groeck@chromium.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, pedro.falcato@gmail.com, 
+	dave.hansen@intel.com, linux-hardening@vger.kernel.org, deraadt@openbsd.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Jan 4, 2024 at 3:47=E2=80=AFPM Randy Dunlap <rdunlap@infradead.org>=
+ wrote:
+>
+>
+>
+> On 1/4/24 10:51, jeffxu@chromium.org wrote:
+> > From: Jeff Xu <jeffxu@chromium.org>
+> >
+> > Add documentation for mseal().
+> >
+> > Signed-off-by: Jeff Xu <jeffxu@chromium.org>
+> > ---
+> >  Documentation/userspace-api/mseal.rst | 181 ++++++++++++++++++++++++++
+> >  1 file changed, 181 insertions(+)
+> >  create mode 100644 Documentation/userspace-api/mseal.rst
+> >
+> > diff --git a/Documentation/userspace-api/mseal.rst b/Documentation/user=
+space-api/mseal.rst
+> > new file mode 100644
+> > index 000000000000..1700ce5af218
+> > --- /dev/null
+> > +++ b/Documentation/userspace-api/mseal.rst
+> > @@ -0,0 +1,181 @@
+> > +.. SPDX-License-Identifier: GPL-2.0
+> > +
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > +Introduction of mseal
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > +
+> > +:Author: Jeff Xu <jeffxu@chromium.org>
+> > +
+> > +Modern CPUs support memory permissions such as RW and NX bits. The mem=
+ory
+> > +permission feature improves security stance on memory corruption bugs,=
+ i.e.
+> > +the attacker can=E2=80=99t just write to arbitrary memory and point th=
+e code to it,
+> > +the memory has to be marked with X bit, or else an exception will happ=
+en.
+> > +
+> > +Memory sealing additionally protects the mapping itself against
+> > +modifications. This is useful to mitigate memory corruption issues whe=
+re a
+> > +corrupted pointer is passed to a memory management system. For example=
+,
+> > +such an attacker primitive can break control-flow integrity guarantees
+> > +since read-only memory that is supposed to be trusted can become writa=
+ble
+> > +or .text pages can get remapped. Memory sealing can automatically be
+> > +applied by the runtime loader to seal .text and .rodata pages and
+> > +applications can additionally seal security critical data at runtime.
+> > +
+> > +A similar feature already exists in the XNU kernel with the
+> > +VM_FLAGS_PERMANENT flag [1] and on OpenBSD with the mimmutable syscall=
+ [2].
+> > +
+> > +User API
+> > +=3D=3D=3D=3D=3D=3D=3D=3D
+> > +Two system calls are involved in virtual memory sealing, mseal() and m=
+map().
+> > +
+> > +mseal()
+> > +-----------
+> > +The mseal() syscall has following signature:
+> > +
+> > +``int mseal(void addr, size_t len, unsigned long flags)``
+> > +
+> > +**addr/len**: virtual memory address range.
+> > +
+> > +The address range set by ``addr``/``len`` must meet:
+> > +   - The start address must be in an allocated VMA.
+> > +   - The start address must be page aligned.
+> > +   - The end address (``addr`` + ``len``) must be in an allocated VMA.
+> > +   - no gap (unallocated memory) between start and end address.
+> > +
+> > +The ``len`` will be paged aligned implicitly by the kernel.
+>
+> Does that mean that the <len> will be extended to be page aligned
+> if it's not already page aligned?
+>
+Yes.
+the code (do_mseal) calls PAGE_ALIGNED(len).
+mprotect() also has this.
 
+Two test cases cover this part.
+test_seal_mprotect_unalign_len
+test_seal_mprotect_unalign_len_variant_2
 
-On 1/5/24 12:11, Erick Archer wrote:
-> Use 2-factor multiplication argument form kcalloc() instead
-> of kzalloc().
-> 
-> Link: https://github.com/KSPP/linux/issues/162
-> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+-Jeff
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Thanks!
--- 
-Gustavo
-
-> ---
->   drivers/base/power/qos.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/base/power/qos.c b/drivers/base/power/qos.c
-> index 8e93167f1783..bd77f6734f14 100644
-> --- a/drivers/base/power/qos.c
-> +++ b/drivers/base/power/qos.c
-> @@ -201,7 +201,7 @@ static int dev_pm_qos_constraints_allocate(struct device *dev)
->   	if (!qos)
->   		return -ENOMEM;
-> 
-> -	n = kzalloc(3 * sizeof(*n), GFP_KERNEL);
-> +	n = kcalloc(3, sizeof(*n), GFP_KERNEL);
->   	if (!n) {
->   		kfree(qos);
->   		return -ENOMEM;
 > --
-> 2.42.0
-> 
-> 
+> #Randy
