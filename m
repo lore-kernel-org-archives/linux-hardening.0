@@ -1,114 +1,146 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF1612E626
-	for <linux-hardening@vger.kernel.org>; Fri,  5 Jan 2024 15:23:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38A5F2E3EB;
+	Fri,  5 Jan 2024 16:45:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="g7t5q+CV"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a28a6cef709so185881966b.1
-        for <linux-hardening@vger.kernel.org>; Fri, 05 Jan 2024 07:23:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1704468236; x=1705073036; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=C8cTJ9cF7f7kjCtZvPbtjoizYwOtu5qwKSGBqgmK7tc=;
-        b=g7t5q+CVqeZp1q4d83VHDDjnuwIBAiBJJjV4Sr7gPQsJS7bzTEEl20LI8afEGjKo1i
-         MDu2pj902Xuq4iRgVsDwxyYsztBc9d+kOtU3mRJo5VKEhaasltrirbXliDAabdsa+emo
-         sLe/L2Bqt9h/97mCPgI0kDzu23Q+3Mo6RirhS4hN7SeXMuflG2YOJTl1cle86Qh9pEi6
-         ME23YGG3ihPwcbw8e9x9LSdbvQcYk+zXQ5tt0tRLzw+ThPxJULA+TFoCMOLZlMVYErf0
-         3ZC7pbu39JKSW56zSX9XsoPmJXzXiuQjSVNyRrwngDW5nb/oVZt00oFa8tLn+HVpZWK4
-         N1wA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704468236; x=1705073036;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=C8cTJ9cF7f7kjCtZvPbtjoizYwOtu5qwKSGBqgmK7tc=;
-        b=F9x2X/El0lhODgE8JXWMJjswl+X3GzvGQD9AJT22voiyiOJl2BC/3jUxw4DVq9TdyW
-         7RCMa32xeYpf1Vji8aE6AymE6RpPBfxunXL7un8ozADo+IVBo8Oj3WVAgpxqGH+wa1RR
-         BwuBjcAVAEyr5NSt1sCCwiLGHKxVOYulvT3WeNH9wGHInm2b0i3KxFcAmUcFBRm+Izqq
-         UArUPUkrb0p2qDTmIDi0b0EvPJGjC60Ip8iF7QD7XTJuNVA9j5QO1bqGOlz9pFEE7pqb
-         7oQ0parCpTZPTS6nKDJ3WYcrgzVvSwUPBiBlW18y5kiB/vQnuk96uhwBXw5swGP6KsvS
-         Tnmg==
-X-Gm-Message-State: AOJu0YxFWm3EgGW/5A1dOCLZuLN39DLaFBeuZjeyk15TBBxSpD6ytjc6
-	nMeOBzS+pnBy9VvbCBGWeE3k2pJcE/hpdg==
-X-Google-Smtp-Source: AGHT+IF/AVMkZdTEK7dBssPlRgpCIZizx+1xhClxtSNldAJa4a7E/wC2JkLpvL+QSwvvBaItTWdiBQ==
-X-Received: by 2002:a17:907:928b:b0:a27:5343:d3e8 with SMTP id bw11-20020a170907928b00b00a275343d3e8mr1511305ejc.97.1704468235960;
-        Fri, 05 Jan 2024 07:23:55 -0800 (PST)
-Received: from alley ([176.114.240.50])
-        by smtp.gmail.com with ESMTPSA id h26-20020a1709066d9a00b00a26aea4942dsm966126ejt.123.2024.01.05.07.23.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jan 2024 07:23:55 -0800 (PST)
-Date: Fri, 5 Jan 2024 16:23:53 +0100
-From: Petr Mladek <pmladek@suse.com>
-To: Theodore Ts'o <tytso@mit.edu>
-Cc: Jingzi Meng <mengjingzi@iie.ac.cn>, gregkh@linuxfoundation.org,
-	gpiccoli@igalia.com, john.ogness@linutronix.de,
-	keescook@chromium.org, linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-	senozhatsky@chromium.org, tony.luck@intel.com
-Subject: Re: [PATCH] cap_syslog: remove CAP_SYS_ADMIN when dmesg_restrict
-Message-ID: <ZZgfCZKho2Dsv7VM@alley>
-References: <2024010306-tweezers-skinhead-083e@gregkh>
- <20240105062007.26965-1-mengjingzi@iie.ac.cn>
- <20240105144944.GA246367@mit.edu>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TQ8oIF5V"
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 405GAUJH015360;
+	Fri, 5 Jan 2024 16:45:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2023-11-20;
+ bh=KTdriLE86+maLYzNTAkNF/rMwcWwOzamLeAdvgeFGlk=;
+ b=TQ8oIF5VhKAAHF+q8w51rxwv+IE8k0RuplV5eE4s/yAFjxA4ivUReRYLf3pfiKKQvz+q
+ vigFA4v2zsqEHY5SxGB3fKAhD3Ar3WkKzFtys7F5qmbO3CjKrTVLlO+OA2LZt0+zddat
+ xvaRx7LvqnV6k8c1egrybs60NdqGershznzp1G381l/53vSwYOSj6Kgbkbj8Drzbeo0p
+ aM+Ae12Hvzr9a/uLW2RzExPyrzoqjvxIzazUXFyfzn+remO5NLIbwyE6x0CdzddF+lRx
+ DK5URuNfoI23vGhrN08PI4FJQL/aYbwxdi5gagV0WJzOG5lb2FyIOLLdqHO0K2Hztjmw zQ== 
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ven25g3h5-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 05 Jan 2024 16:44:56 +0000
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 405G6NHg009571;
+	Fri, 5 Jan 2024 16:40:21 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3ve12hxf1e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 05 Jan 2024 16:40:20 +0000
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 405GeGlh009736;
+	Fri, 5 Jan 2024 16:40:20 GMT
+Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3ve12hxewn-2;
+	Fri, 05 Jan 2024 16:40:20 +0000
+From: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+To: linux-hardening@vger.kernel.org, keescook@chromium.org, error27@gmail.com,
+        gustavoars@kernel.org, Bryan Tan <bryantan@vmware.com>,
+        Vishnu Dasa <vdasa@vmware.com>,
+        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc: vegard.nossum@oracle.com, darren.kenny@oracle.com,
+        harshit.m.mogalapalli@oracle.com,
+        syzkaller <syzkaller@googlegroups.com>
+Subject: [PATCH v2 2/2] VMCI: Fix memcpy() run-time warning in dg_dispatch_as_host()
+Date: Fri,  5 Jan 2024 08:40:00 -0800
+Message-ID: <20240105164001.2129796-2-harshit.m.mogalapalli@oracle.com>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20240105164001.2129796-1-harshit.m.mogalapalli@oracle.com>
+References: <20240105164001.2129796-1-harshit.m.mogalapalli@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240105144944.GA246367@mit.edu>
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-05_08,2024-01-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ suspectscore=0 phishscore=0 adultscore=0 spamscore=0 bulkscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2401050137
+X-Proofpoint-ORIG-GUID: jLRv-kY0KnD9ryXTYtmDkm-7wTLBVS4z
+X-Proofpoint-GUID: jLRv-kY0KnD9ryXTYtmDkm-7wTLBVS4z
 
-On Fri 2024-01-05 09:49:44, Theodore Ts'o wrote:
-> On Fri, Jan 05, 2024 at 02:20:07PM +0800, Jingzi Meng wrote:
-> > CAP_SYSLOG was separated from CAP_SYS_ADMIN and introduced in Linux
-> > 2.6.37 (2010-11). For a long time, certain syslog actions required
-> > CAP_SYS_ADMIN or CAP_SYSLOG. Maybe it’s time to officially remove
-> > CAP_SYS_ADMIN for more fine-grained control.
-> > 
-> > CAP_SYS_ADMIN was once removed but added back for backwards
-> > compatibility reasons. In commit 38ef4c2e437d ("syslog: check cap_syslog
-> > when dmesg_restrict") (2010-12), CAP_SYS_ADMIN was no longer needed. And
-> > in commit ee24aebffb75 ("cap_syslog: accept CAP_SYS_ADMIN for now")
-> > (2011-02), it was accepted again. Since then, CAP_SYS_ADMIN has been
-> > preserved.
-> > 
-> > Now that almost 13 years have passed, the legacy application may have
-> > had enough time to be updated.
-> 
-> What testing have you done to make sure that this is OK?  "May have
-> had enough time"?  That's not very reassuring?
-> 
-> Also, note that we can't actually reuse the bit position of
-> CAP_SYS_ADMIN since it's likely that there may be pre-existing
-> capability masks that are still using that position.  So there isn't
-> all that much upside in trying to retire CAP_SYS_ADMIN --- if you as a
-> system administrator think it's not too course, then just don't use
-> it.
-> 
-> It's unclear to me what goal you have in trying to mess with the
-> capability definitions?  Perhaps it might be useful if you were to
-> explicitly state your goals in these proposals?
+Syzkaller hit 'WARNING in dg_dispatch_as_host' bug.
 
-My understanding is that this patch is about reducing overlap of
-capabilities.
+memcpy: detected field-spanning write (size 56) of single field "&dg_info->msg"
+at drivers/misc/vmw_vmci/vmci_datagram.c:237 (size 24)
 
-Allowing the same thing with more capabilities seems to go against
-the idea of separate capabilities.
+WARNING: CPU: 0 PID: 1555 at drivers/misc/vmw_vmci/vmci_datagram.c:237
+dg_dispatch_as_host+0x88e/0xa60 drivers/misc/vmw_vmci/vmci_datagram.c:237
 
-Kernel has printed the warning for 13 years. It is a long
-time to fix configuration for newly installed systems. And I doubt
-that anyone is installing a new kernel on 13 year's old system.
+Some code commentry, based on my understanding:
 
-IMHO, this fits into the category that it should be OK until
-anyone complains. But I might miss something.
+544 #define VMCI_DG_SIZE(_dg) (VMCI_DG_HEADERSIZE + (size_t)(_dg)->payload_size)
+/// This is 24 + payload_size
 
-Best Regards,
-Petr
+memcpy(&dg_info->msg, dg, dg_size);
+	Destination = dg_info->msg ---> this is a 24 byte
+					structure(struct vmci_datagram)
+	Source = dg --> this is a 24 byte structure (struct vmci_datagram)
+	Size = dg_size = 24 + payload_size
+
+{payload_size = 56-24 =32} -- Syzkaller managed to set payload_size to 32.
+
+ 35 struct delayed_datagram_info {
+ 36         struct datagram_entry *entry;
+ 37         struct work_struct work;
+ 38         bool in_dg_host_queue;
+ 39         /* msg and msg_payload must be together. */
+ 40         struct vmci_datagram msg;
+ 41         u8 msg_payload[];
+ 42 };
+
+So those extra bytes of payload are copied into msg_payload[], a run time
+warning is seen while fuzzing with Syzkaller.
+
+One possible way to fix the warning is to split the memcpy() into
+two parts -- one -- direct assignment of msg and second taking care of payload.
+
+Gustavo quoted:
+"Under FORTIFY_SOURCE we should not copy data across multiple members
+in a structure."
+
+Reported-by: syzkaller <syzkaller@googlegroups.com>
+Suggested-by: Vegard Nossum <vegard.nossum@oracle.com>
+Suggested-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+---
+This patch is only tested with the C reproducer, not any testing
+specific to driver is done.
+
+v1->v2: ( Suggestions from Gustavo )
+        1. Change the commit message false positive --> legitimate
+           warning.
+        2. Remove unneeded payload_size variable.
+        3. Replace first memcpy() with direct assignment.
+---
+ drivers/misc/vmw_vmci/vmci_datagram.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/misc/vmw_vmci/vmci_datagram.c b/drivers/misc/vmw_vmci/vmci_datagram.c
+index ac6cb0c8d99b..ba379cd6d054 100644
+--- a/drivers/misc/vmw_vmci/vmci_datagram.c
++++ b/drivers/misc/vmw_vmci/vmci_datagram.c
+@@ -234,7 +234,8 @@ static int dg_dispatch_as_host(u32 context_id, struct vmci_datagram *dg)
+ 
+ 			dg_info->in_dg_host_queue = true;
+ 			dg_info->entry = dst_entry;
+-			memcpy(&dg_info->msg, dg, dg_size);
++			dg_info->msg = *dg;
++			memcpy(&dg_info->msg_payload, dg + 1, dg->payload_size);
+ 
+ 			INIT_WORK(&dg_info->work, dg_delayed_dispatch);
+ 			schedule_work(&dg_info->work);
+-- 
+2.42.0
+
