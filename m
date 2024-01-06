@@ -1,84 +1,103 @@
-Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178CB36098
-	for <linux-hardening@vger.kernel.org>; Fri,  5 Jan 2024 19:37:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5453847E;
+	Sat,  6 Jan 2024 16:28:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QiA22JfZ"
-Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-595d24ad466so897710eaf.0
-        for <linux-hardening@vger.kernel.org>; Fri, 05 Jan 2024 11:37:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1704483472; x=1705088272; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ysJtfL7xn4mw2/JhRDtFdZIwWQRHRrqhzNonJ4C4q6o=;
-        b=QiA22JfZPLskyBiltFkXNu1FJhr9q+96EtiywnsTv2kq5gqfVpg4AMPZ59pFtrb4hG
-         Jwa+Ef8i/jLJjrBbd3qsslSbcTNFsIy2KstFnjssJA44L3eKesTI0TAsYDBhxNrwU+F1
-         pExjuZPGRgc9cS/b8HjSOaMypOXbCEJ+Q14ms=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704483472; x=1705088272;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ysJtfL7xn4mw2/JhRDtFdZIwWQRHRrqhzNonJ4C4q6o=;
-        b=qACFmBhxccr6orWRCA8PDdIEYkRsY3lA+X2XrXz4wK9DQsgokfCjYNh+TqAbgOafd0
-         V5a4wF9i+kwddbdHzWrG6p84USqeF0RHgSgMPuj0vntCYDomcqeRiJKWC9i4O+HLgPGZ
-         Yx0wu0mUDzV5Em+8kYnC6gP50AFZcw/RnrpfhesHsPyQDLDGhqN9LzIBn7XHdzEz2YWd
-         IkP1ZEsM49cIWBTyVuHczV+JGaIS47qwoVsK9Hh96Ud3b6BO3jWtUiFewJy4sK5OLmSP
-         hXTaYm9iEcTRJDATZxY2R+hNeL+TK1uXBd72vK7STyvrwF1yJHOq6hkPtH2zo+8PRBTU
-         MQRQ==
-X-Gm-Message-State: AOJu0YxgVQeqLa2T1fFFlMIZDFQ7A/Z5aAAaoBSPu4T56e5DsHUo8LFF
-	g1mMoPvwJw5k/AttKs8FedZQM+cXxog3wBZ9aBD+ety6X8TX
-X-Google-Smtp-Source: AGHT+IHyJ08At1xbQtvdZtqNHioDPsQ8FF5EAPZvWfoKWTr4xfM1rd0KIRxTNuZ+Ldep8MpXwH14+oALsgE8ne8CIQs=
-X-Received: by 2002:a05:6870:c18b:b0:203:fb8c:587f with SMTP id
- h11-20020a056870c18b00b00203fb8c587fmr2814912oad.17.1704483472236; Fri, 05
- Jan 2024 11:37:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="o5Q2aPRI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
+	s=s31663417; t=1704558513; x=1705163313; i=erick.archer@gmx.com;
+	bh=e0hTcOOsR2RlK2Db6LVueiP/okSfxGYoljbOBYdnEEc=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=o5Q2aPRIR0doNwIOWKP7y3nN7/7K0nX6kqVVjAgqHBDfTyb9LDtmoU6H0tU6r2R/
+	 6NaA3TPwqnnrpUNWiQrvbXPhwbOKDBXTwMlV3RuA857vk4+Qxc9VCVVmwZ0svJw9y
+	 7ckioRsuoA0+nHXHSge1o5rcmVHybJQvT6/kCmim0wav+GtTPij++zaBHepTgIfci
+	 ksArFuktycokVf9aAYqmCTpt/nUkzG3UfYvAuFYEc3fUhg6oJgs3zn+tQAXDy73TK
+	 NY0U0sobHB2FbGYCqJVewxjMmHt8akxumqgSzd8eXEb0yv57Tn4rFXXoLMDWiAikY
+	 Y2G3B/2pnVDZcql+cA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from localhost.localdomain ([79.157.194.183]) by mail.gmx.net
+ (mrgmx104 [212.227.17.174]) with ESMTPSA (Nemesis) id
+ 1N2V4J-1rCXvz3Vlf-013sJX; Sat, 06 Jan 2024 17:28:33 +0100
+From: Erick Archer <erick.archer@gmx.com>
+To: Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Erick Archer <erick.archer@gmx.com>,
+	alsa-devel@alsa-project.org,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] ASoC: ti: Use devm_kcalloc() instead of devm_kzalloc()
+Date: Sat,  6 Jan 2024 17:27:52 +0100
+Message-Id: <20240106162752.18599-1-erick.archer@gmx.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240104185138.169307-1-jeffxu@chromium.org> <20240104185138.169307-2-jeffxu@chromium.org>
- <2024010509-pretty-proclaim-78e5@gregkh>
-In-Reply-To: <2024010509-pretty-proclaim-78e5@gregkh>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Fri, 5 Jan 2024 11:37:41 -0800
-Message-ID: <CABi2SkWrZzxob3j6X_e24-dYw8o3-pSJKh2QDqVDJKVOK4cu=Q@mail.gmail.com>
-Subject: Re: [RFC PATCH v4 1/4] mseal: Wire up mseal syscall
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com, 
-	sroettger@google.com, willy@infradead.org, torvalds@linux-foundation.org, 
-	usama.anjum@collabora.com, jeffxu@google.com, jorgelo@chromium.org, 
-	groeck@chromium.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, pedro.falcato@gmail.com, 
-	dave.hansen@intel.com, linux-hardening@vger.kernel.org, deraadt@openbsd.org
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:J9Z2yJ/wHte/ThnemlRGX6DPdngNYkEu5Qmuu/TGsQ8JKiVmBNd
+ 6q6JnJK6keaY+rBVn7TTtmK84OcBNuF5vnT5G4jvLwLJSfAO7jWJpnGhEvk08CTPfHOQPmX
+ Lto0JUk1oMdf/wEimKI8LglRKgqilAChkvBcQd6ACUhECvTMZ7IKbnyxbh3WrcAiyuLJdP4
+ jCvhm6oCcV8RBB1Ji+4qg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Tg/f7GjQ5YU=;TdqW4FC/+MrquMk23XdxfWu2lHR
+ g2MLe95BV+DYAwonE0gIbvxdJwOShhn7OswR9fwILcCN615FOmEGuIWjFVhyln4ew5g/sFYHX
+ wHzpfjy9cLiiDivcPgw9Swmn/vu1JTazYOUQX36WDVlodE6d3wtZxn0Y1aOJ7gL9gg8Kdj8f9
+ mW+YIEq2oONNCgApI3u1d7XsWae0n5touxq35HqRLZ9pt7VFBD+qqD5HDjHHDB3x6vBX5Tq99
+ QTgf0uBwibbfNfq1MP8FaeKlesNR7vLvTwt/TrTN6ysYRj9hZPHfVWNY4Ae+2fH1jTv8awFKQ
+ QmfxdjrQorKxTvjD25nAIAYIrQBBslz2sFxHVJov2rY4xYx5rghjbvCPnQMopZ/jfxS7xCYQ2
+ mpLgRv5sK/bx5ddfHwAV2nWarOTuumbkFnOyh74sOTFem9le672UaeTcRHBXVDz+3EXEoDBQq
+ eKo03gewcOALgtOsJn00iD7ZyrdqXFc0kVn6R9s9agi5IFxLnLW2Iy/xxZJzb4bDaSg751BOb
+ BipGzoC8llWXessJW+2ZBBPZYVHy57O0fqLHHoGMqUlPek2WXLwndXztaqfClTvPFMpdetoqy
+ EvvX0Hm01m41He1YupvZuRuVhJEy8LAjkblGWrvKLHnCcl2JH34cNasBNsxF2eqVpiThEMi7v
+ +gYhf3SLvWmY2TfWH2vYhcOTUxpg1UhC8LulFXNz+3EyGAOifXTwC9T5DbuoR/j5iOuCpUirC
+ yuCPIscCKNvq/QhfcWJmK0F9iMegD1cht3eVOy2NHvrYTir6kVHYP6atbv1sINvHrZ1IcGjDc
+ S76zz7+mTU1SO40/bd1S4LBeSMU0NaeIBbnQ41GRAS4RgMNkeGmheo9lLexV3dJz8qy5H9b0j
+ tS9JmCtdJTkAAa7zesMUtftS5MYzG76IyxSsQ9YZ+RBquMnXG5QGOM44EYlWS6noq5ODfRTN5
+ 48bciHh1M6tSaOrBBqqZ2d9xFUs=
 
-On Thu, Jan 4, 2024 at 11:44=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org=
-> wrote:
->
-> On Thu, Jan 04, 2024 at 06:51:34PM +0000, jeffxu@chromium.org wrote:
-> > From: Jeff Xu <jeffxu@chromium.org>
-> >
-> > Wire up mseal syscall for all architectures.
-> >
-> > Signed-off-by: Jeff Xu <jeffxu@chromium.org>
->
-> Doesn't this break the build at this point in the patch series?
->
-Yes.
+Use 2-factor multiplication argument form devm_kcalloc() instead
+of devm_kzalloc().
 
-> Normally you add the code for the syscall first, and then you wire it
-> up.
->
-Thanks. Will update in the next version.
--Jeff
+Link: https://github.com/KSPP/linux/issues/162
+Signed-off-by: Erick Archer <erick.archer@gmx.com>
+=2D--
+ sound/soc/ti/j721e-evm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> thanks,
->
-> greg k-h
+diff --git a/sound/soc/ti/j721e-evm.c b/sound/soc/ti/j721e-evm.c
+index b4b158dc736e..d9d1e021f5b2 100644
+=2D-- a/sound/soc/ti/j721e-evm.c
++++ b/sound/soc/ti/j721e-evm.c
+@@ -649,7 +649,7 @@ static int j721e_soc_probe_cpb(struct j721e_priv *priv=
+, int *link_idx,
+ 	 * Link 2: McASP10 <- pcm3168a_1 ADC
+ 	 */
+ 	comp_count =3D 6;
+-	compnent =3D devm_kzalloc(priv->dev, comp_count * sizeof(*compnent),
++	compnent =3D devm_kcalloc(priv->dev, comp_count, sizeof(*compnent),
+ 				GFP_KERNEL);
+ 	if (!compnent) {
+ 		ret =3D -ENOMEM;
+@@ -763,7 +763,7 @@ static int j721e_soc_probe_ivi(struct j721e_priv *priv=
+, int *link_idx,
+ 	 *		   \ pcm3168a_b ADC
+ 	 */
+ 	comp_count =3D 8;
+-	compnent =3D devm_kzalloc(priv->dev, comp_count * sizeof(*compnent),
++	compnent =3D devm_kcalloc(priv->dev, comp_count, sizeof(*compnent),
+ 				GFP_KERNEL);
+ 	if (!compnent) {
+ 		ret =3D -ENOMEM;
+=2D-
+2.25.1
+
