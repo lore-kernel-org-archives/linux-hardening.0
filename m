@@ -1,93 +1,128 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 753EBC12A;
-	Sat,  6 Jan 2024 17:17:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC35FC150
+	for <linux-hardening@vger.kernel.org>; Sat,  6 Jan 2024 17:28:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="aoZPsGMF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
-	s=s31663417; t=1704561417; x=1705166217; i=erick.archer@gmx.com;
-	bh=ehawtbA1G6P8hgV9kX0SSq4hQvp6gdhNC80SxSlC0AE=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-	b=aoZPsGMF6ZMfBEoL2/qHofT2uOjiPgFUqG5wk1Vy/8CEMW1oVszREPdcrHj0zIP5
-	 9za3BitnciTds2PyGVDnLtEN2lNqC4fT3G+hqa2gIB7WQVT9jFMtVZbQhdDrYXrtV
-	 2mfzhlhSM6q6f+bZ3/J2CBBEjQi3LUtdwfepQIxIDrllBVH7Ck1Sf5j8WurgzAfQS
-	 hsp8NTjzKVTf8dGA/qBgUBVtZeWcJo7G+pGbzcx3qLZ2w/jEKIgRJZvMIS9rLv4ZR
-	 /9xSG/VBJX7TP+xriI/DEomFLZ4ri+ujDqxXmXbZXiXJgYaiJ7PdsI9QX+PjbUymN
-	 rTPEir7w0/jJSD0GxQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from localhost.localdomain ([79.157.194.183]) by mail.gmx.net
- (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1N6bfw-1r8ORT1GJi-0182oO; Sat, 06 Jan 2024 18:16:57 +0100
-From: Erick Archer <erick.archer@gmx.com>
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Banajit Goswami <bgoswami@quicinc.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Erick Archer <erick.archer@gmx.com>,
-	alsa-devel@alsa-project.org,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] ASoC: qcom: Use devm_kcalloc() instead of devm_kzalloc()
-Date: Sat,  6 Jan 2024 18:16:35 +0100
-Message-Id: <20240106171635.19881-1-erick.archer@gmx.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="gowa6Gk2"
+Received: from eig-obgw-6002a.ext.cloudfilter.net ([10.0.30.222])
+	by cmsmtp with ESMTPS
+	id M7tMrLfQpMVQiMATNrTEu6; Sat, 06 Jan 2024 17:28:37 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id MATMrpaQxD6lhMATMrJcGa; Sat, 06 Jan 2024 17:28:36 +0000
+X-Authority-Analysis: v=2.4 cv=LNR1/ba9 c=1 sm=1 tr=0 ts=65998dc4
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=GfQleyYEO+cc22AUyTT7qQ==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=dEuoMetlWLkA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
+ a=7YfXLusrAAAA:8 a=VwQbUJbxAAAA:8 a=3gf6MFcAdpgbip9PbcIA:9 a=QEXdDO2ut3YA:10
+ a=SLz71HocmBbuEhFRYD3r:22 a=AjGcO6oz07-iQ99wixmX:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=jqbX15IrQLQ95FamULlsdlZsBzcnY9l7VxFlPvs2xck=; b=gowa6Gk2iiQNWan/JlPXQpunW0
+	JPEGeHxCpmxiNUaJFG1hrEEL/H+UHDClk6YUK04blgYe6y3ls55iWqSbiOjE8jM+nsH8lmDf64A2B
+	EU/Bptw8Qn09Itv9E2lA9R2z4zzu55/jNPz4VvpdMqLMKj5jK1uHylWgtlReif2G0u6BkJNAfWTw5
+	u05V4MCK5ymyXYbnrnEN+plo/imTUq4UBGloGM2TL5Zde9Yjt5yiwK/mv5xWLkwtITAo6XovpAElG
+	F9Nm1KHOze/dLMH9zkk6qf0qrU1kDjWntuijVFA7aUEc7rz4VlwW2vVAKJ3A3B+TS7e2egImVjxqB
+	cu2xrHAQ==;
+Received: from 187.184.157.186.cable.dyn.cableonline.com.mx ([187.184.157.186]:54571 helo=[192.168.0.10])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1rMATK-002YaE-2e;
+	Sat, 06 Jan 2024 11:28:34 -0600
+Message-ID: <1b3c3242-d239-465b-990c-33680291ec46@embeddedor.com>
+Date: Sat, 6 Jan 2024 11:28:32 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:YRX4UVilIzmkB5A8GIVf10FiBsGh6WtPr5VToXbmFOaw0S2ugbb
- z2dkXSIyYbYgrRi1oVJTiH6xqePO/kv4eP7B6QISv2/3THWf8OGgTmtl+sXddgC4m17w4OW
- +pdh2oIH1MK0DRvyNRcxhycFxsLv67BIwUbDDJdxTMoNxpwccvn77hQsJChFG340ZyNiVvZ
- KHlI8VftKZqtJs8frTCKQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:dhj4uTJ6JLU=;HTpuL9fUftftpUlblsMaGyxbzUB
- 9hSH8hjNOg6tGgETMAD32HmYfZqIAGNd5zc5vzHkcOCDo6p3INnNa6PCN31ICKU7Q+lnTwRfY
- ayTByhpaANvXVTrDyPKA0AZWcCFDwJQ+755rbAKvgN83jW1ZwcN9PukO3qJpnOuYVI/aBw4dI
- wLqkKcBvdGQficN5FQlt1N50vHvkaf3cs90FbHX/FBZjmlA2wBb/MtgjOxv3go+w6ptC46gjN
- xu6QdFqm74J0qWdbv1YVRwf5GX/LIZk/R52K7aTj1NGwBHlUyq3f0443IOvu/DZ4dqDVOw4tj
- sWT+ExWRijtse2TgXQ/M3Sm03TWp2vwNrIYjL0fmY227P+TXUPpnrE2w+kgUji7uNu86q8Xh+
- gzNgsVUFBIlhP0nKdGq0gaO+FhCyFEvsxEwYPAP6IQD1R0SEMd2jbwl/fFAwzion45/KAPGik
- Jjmu9cVWNEufoa5EGGmSTw2s7raIkatHKsyR9itZXruxPRAKKtyvom5hJhlKjrv+tDcRMhiq7
- b2PzbXNzkTrD63pdLkYmmP8xd6Ctp0oVs+6JDblL8UrrBorKHCge2UtXjYmluZhBma750wXgi
- 3s/AsHaebWbn/jGYgxcBV3VklTiGtRDtPfRoRTmvMKD2rEpJW57gz4GSftNjWsJzj8rqV5o0f
- cKfPtTZ/urXBVZoxBuMUntQW4bv89UUPkq7n4gVJNsT7F5Fb1yBMZuAEAj7uNa8G64tHM5shi
- 5HdhlsZ/j2xcmKAOf4rgCFWRfoVU57WDKiXA6qkKfQ1EjTVW1wN16EKFEMgClvi1lzSNQ6Dxf
- IhQemX8pVrmTI08KraB2iW/LX/q74Q0TSSBJEoevE55Xd4Il1bj7vE2HEAxzjlI2t7eFIgPmt
- 7lNsIJOvDBckGfP9ErALrixKyFgfrXaZ6ZAfMJVOJ7r5iT0Tk0xUx0Zbo2CZvx5jrETLkfQ/o
- PBjU/g44i8aaV2uxQSIzC9ivgc4=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ASoC: ti: Use devm_kcalloc() instead of devm_kzalloc()
+Content-Language: en-US
+To: Erick Archer <erick.archer@gmx.com>,
+ Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20240106162752.18599-1-erick.archer@gmx.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20240106162752.18599-1-erick.archer@gmx.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.184.157.186
+X-Source-L: No
+X-Exim-ID: 1rMATK-002YaE-2e
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187.184.157.186.cable.dyn.cableonline.com.mx ([192.168.0.10]) [187.184.157.186]:54571
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfCpMklXlhdEWzt8WFE61s8Gn6F4IFTKlO4CO+Qj7xwlnd5voz6y7aExNNJP1TFPHGo0EpXIvpAn107tGxZbAcelh7Uhx33eeZX61w64hPJUyiWPhCFHb
+ PyUK/LeHt+ROkAkxEHp/P62Djw0pRv/UvdZnYJNM7m7FsB5Pfiw20LWhSrdQ2Jk/mpy82p0uxBwGfbbKiEleMshRToE2h46q2wMKbIPM0nCc0SznlSWNLiiZ
 
-Use 2-factor multiplication argument form devm_kcalloc() instead
-of devm_kzalloc().
 
-Link: https://github.com/KSPP/linux/issues/162
-Signed-off-by: Erick Archer <erick.archer@gmx.com>
-=2D--
- sound/soc/qcom/common.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/qcom/common.c b/sound/soc/qcom/common.c
-index 756706d5b493..747041fa7866 100644
-=2D-- a/sound/soc/qcom/common.c
-+++ b/sound/soc/qcom/common.c
-@@ -73,7 +73,7 @@ int qcom_snd_parse_of(struct snd_soc_card *card)
- 	link =3D card->dai_link;
+On 1/6/24 10:27, Erick Archer wrote:
+> Use 2-factor multiplication argument form devm_kcalloc() instead
+> of devm_kzalloc().
+> 
+> Link: https://github.com/KSPP/linux/issues/162
+> Signed-off-by: Erick Archer <erick.archer@gmx.com>
 
- 	for_each_available_child_of_node(dev->of_node, np) {
--		dlc =3D devm_kzalloc(dev, 2 * sizeof(*dlc), GFP_KERNEL);
-+		dlc =3D devm_kcalloc(dev, 2, sizeof(*dlc), GFP_KERNEL);
- 		if (!dlc) {
- 			ret =3D -ENOMEM;
- 			goto err_put_np;
-=2D-
-2.25.1
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
+Thanks!
+-- 
+Gustavo
+
+> ---
+>   sound/soc/ti/j721e-evm.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/sound/soc/ti/j721e-evm.c b/sound/soc/ti/j721e-evm.c
+> index b4b158dc736e..d9d1e021f5b2 100644
+> --- a/sound/soc/ti/j721e-evm.c
+> +++ b/sound/soc/ti/j721e-evm.c
+> @@ -649,7 +649,7 @@ static int j721e_soc_probe_cpb(struct j721e_priv *priv, int *link_idx,
+>   	 * Link 2: McASP10 <- pcm3168a_1 ADC
+>   	 */
+>   	comp_count = 6;
+> -	compnent = devm_kzalloc(priv->dev, comp_count * sizeof(*compnent),
+> +	compnent = devm_kcalloc(priv->dev, comp_count, sizeof(*compnent),
+>   				GFP_KERNEL);
+>   	if (!compnent) {
+>   		ret = -ENOMEM;
+> @@ -763,7 +763,7 @@ static int j721e_soc_probe_ivi(struct j721e_priv *priv, int *link_idx,
+>   	 *		   \ pcm3168a_b ADC
+>   	 */
+>   	comp_count = 8;
+> -	compnent = devm_kzalloc(priv->dev, comp_count * sizeof(*compnent),
+> +	compnent = devm_kcalloc(priv->dev, comp_count, sizeof(*compnent),
+>   				GFP_KERNEL);
+>   	if (!compnent) {
+>   		ret = -ENOMEM;
+> --
+> 2.25.1
+> 
+> 
