@@ -1,119 +1,90 @@
-Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 544C7DDB2
-	for <linux-hardening@vger.kernel.org>; Sat,  6 Jan 2024 17:29:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8185410A17
+	for <linux-hardening@vger.kernel.org>; Sun,  7 Jan 2024 18:42:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="hGTQHy+d"
-Received: from eig-obgw-5004a.ext.cloudfilter.net ([10.0.29.221])
-	by cmsmtp with ESMTPS
-	id M7LorLZiEMVQiMAUWrTF91; Sat, 06 Jan 2024 17:29:49 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id MAUVrxlCuKleDMAUWrvViV; Sat, 06 Jan 2024 17:29:48 +0000
-X-Authority-Analysis: v=2.4 cv=KcbBDCUD c=1 sm=1 tr=0 ts=65998e0c
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=GfQleyYEO+cc22AUyTT7qQ==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=dEuoMetlWLkA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
- a=7YfXLusrAAAA:8 a=VwQbUJbxAAAA:8 a=Xv5lit1u7inJFwG0Rj4A:9 a=QEXdDO2ut3YA:10
- a=zgiPjhLxNE0A:10 a=SLz71HocmBbuEhFRYD3r:22 a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Kp3nPAn0Jw9fdBJE8vaNu80tZr2D5BJIDgFDgQoUEQY=; b=hGTQHy+dR2LgB/mfwf+U3j5CEh
-	k2lZZ4G2/Ubiw82MjKPvrdgU039R6nWl9t2rDbx5vzqELlRMadSf3ZQCmxmb3+tg7DuWUF9UJoRqs
-	S7H/+4Ovwmu76rrnrlcwIhHvnofT0Tp4M+7Hv17AxtifNJgIJ8GN+mwsFemkbAA4tLmW3gH0tsaVN
-	3bFco1r8ElQN+fanpPvv40PBFZ4AD9PvxcjgriO4gKBQC0CM9vfHHTmWCcnSl6K1vnfzCOoqDdPt9
-	S2FpaWAr5kXdgZmd41jp5lLvQiJMxNjmUg9jcuOEIhzVkX4gQfAypfqptbcLeGskGsutHXFhMjaP8
-	n78pEEhg==;
-Received: from 187.184.157.186.cable.dyn.cableonline.com.mx ([187.184.157.186]:54571 helo=[192.168.0.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rMAUU-002YaE-1R;
-	Sat, 06 Jan 2024 11:29:46 -0600
-Message-ID: <ea9d5db7-6be7-4cda-85d2-6039483eabb4@embeddedor.com>
-Date: Sat, 6 Jan 2024 11:29:44 -0600
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="bStquiGf"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-50ea8fbf261so1104141e87.2
+        for <linux-hardening@vger.kernel.org>; Sun, 07 Jan 2024 10:42:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1704652929; x=1705257729; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=s0prdEAj89MfCO6uINX9NF3GFv49wanD+YL5iJFREZs=;
+        b=bStquiGfXB78TOKeTSMx6QP5PWm5mQgB2XAtLeCaNGkEJMxqJAfakmzbF2iMETpI8S
+         Ga02jpnDeLrhIlGA3lFrFAdDyPLQumYYj2uqYlrLsvnUNc742Xa+PaNw9pbCJ0fjb2Yi
+         up0yAiTAwkCqEJBkFDKLqFwQo2CdrAfyqQ3XU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704652929; x=1705257729;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=s0prdEAj89MfCO6uINX9NF3GFv49wanD+YL5iJFREZs=;
+        b=OZlJ5X1yny7cXH/wmwHFydjAYWm2lccvsfDoBiABxvU6h22+XoCsHc7KEedw+qS/Md
+         7MNYBZDRfJp1vQ2ef35IK4TWwKMBjvjLFjsTTbUr8K6xWr4PtlSO5OA8IU10TChoafR0
+         UPpCnrXbBvffbiEKFZ5dVu9XL2Iv1jvlH+m0wYKkaBGNzeNRAaOMPiBkuog33/A8IeYa
+         1H40AdQep4sYmBcLAnG5FMcr1RU9bN06AE8XpnO6GUHFgSTHL+O4aNzwaVflFie4SSLL
+         ht2gNOkIfycRtarqAjpgXbkBebRUbtOVpCbj9/Tfw5RKAAZNLcM/mewJEadpN7eQCbr/
+         KYeQ==
+X-Gm-Message-State: AOJu0Yyt8PtMbYMhQ45a4rAFSPrdddInYNmbcQJ6CpONB3jZH6Mi2NzC
+	ByxzbH3uMOi+B8JFNmJInbYQaJxiz9pXaauwXJ7E/3FTG3zHxIT0
+X-Google-Smtp-Source: AGHT+IF3U+Rfu9DGjonXk96g+MfeZt+DR5ZGU22Js9MkNv+NMp5bFwyZfB092hIp7bUANnAC7MErhw==
+X-Received: by 2002:ac2:4142:0:b0:50e:69ea:1264 with SMTP id c2-20020ac24142000000b0050e69ea1264mr773282lfi.43.1704652929334;
+        Sun, 07 Jan 2024 10:42:09 -0800 (PST)
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
+        by smtp.gmail.com with ESMTPSA id dx4-20020a0565122c0400b0050eb79db2e6sm629811lfb.280.2024.01.07.10.42.08
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 07 Jan 2024 10:42:08 -0800 (PST)
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2cd3f7e2aa1so11697161fa.3
+        for <linux-hardening@vger.kernel.org>; Sun, 07 Jan 2024 10:42:08 -0800 (PST)
+X-Received: by 2002:ac2:548b:0:b0:50e:7dca:7f93 with SMTP id
+ t11-20020ac2548b000000b0050e7dca7f93mr823836lfk.77.1704652927542; Sun, 07 Jan
+ 2024 10:42:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ASoC: qcom: Use devm_kcalloc() instead of devm_kzalloc()
-Content-Language: en-US
-To: Erick Archer <erick.archer@gmx.com>,
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
- Banajit Goswami <bgoswami@quicinc.com>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20240106171635.19881-1-erick.archer@gmx.com>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240106171635.19881-1-erick.archer@gmx.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.184.157.186
-X-Source-L: No
-X-Exim-ID: 1rMAUU-002YaE-1R
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187.184.157.186.cable.dyn.cableonline.com.mx ([192.168.0.10]) [187.184.157.186]:54571
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 12
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfMLbjqPppFfKR1Mjg2m+hPrtoE4RP6V3yr/Y3NlSO2OMdqgXnRkhMalqYGb/tFt6GiULmWQhnEScOoIQ9DwnN78LTycTTg0QhtkbYX/UZv9GFtfgC5ry
- hOCVvjAL2h+eE5e2VURzWDaMa/Y8mM8NQFWdlBr3bDNKxiCQwI0i1q9Iw2CNvSdf2EVXXXn5heyFKutDwRhD1jPcWbJk/gb72/Gs+i2shdFzXYpQpaXGmmTo
+References: <20240104185138.169307-1-jeffxu@chromium.org> <20240104185138.169307-3-jeffxu@chromium.org>
+In-Reply-To: <20240104185138.169307-3-jeffxu@chromium.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sun, 7 Jan 2024 10:41:50 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wiy0nHG9+3rXzQa=W8gM8F6-MhsHrs_ZqWaHtjmPK4=FA@mail.gmail.com>
+Message-ID: <CAHk-=wiy0nHG9+3rXzQa=W8gM8F6-MhsHrs_ZqWaHtjmPK4=FA@mail.gmail.com>
+Subject: Re: [RFC PATCH v4 2/4] mseal: add mseal syscall
+To: jeffxu@chromium.org
+Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com, 
+	sroettger@google.com, willy@infradead.org, gregkh@linuxfoundation.org, 
+	usama.anjum@collabora.com, jeffxu@google.com, jorgelo@chromium.org, 
+	groeck@chromium.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, pedro.falcato@gmail.com, 
+	dave.hansen@intel.com, linux-hardening@vger.kernel.org, deraadt@openbsd.org
+Content-Type: text/plain; charset="UTF-8"
 
+One comment:
 
+On Thu, 4 Jan 2024 at 10:51, <jeffxu@chromium.org> wrote:
+>
+> diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
+> index 9a846439b36a..02280199069b 100644
+> --- a/kernel/sys_ni.c
+> +++ b/kernel/sys_ni.c
+> @@ -193,6 +193,7 @@ COND_SYSCALL(migrate_pages);
+>  COND_SYSCALL(move_pages);
+>  COND_SYSCALL(set_mempolicy_home_node);
+>  COND_SYSCALL(cachestat);
+> +COND_SYSCALL(mseal);
+>
+>  COND_SYSCALL(perf_event_open);
+>  COND_SYSCALL(accept4);
 
-On 1/6/24 11:16, Erick Archer wrote:
-> Use 2-factor multiplication argument form devm_kcalloc() instead
-> of devm_kzalloc().
-> 
-> Link: https://github.com/KSPP/linux/issues/162
-> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+Move this part to PATCH 1/1, so that it all builds cleanly.
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Other than that, this seems all reasonable to me now.
 
-Thanks!
--- 
-Gustavo
-
-> ---
->   sound/soc/qcom/common.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/sound/soc/qcom/common.c b/sound/soc/qcom/common.c
-> index 756706d5b493..747041fa7866 100644
-> --- a/sound/soc/qcom/common.c
-> +++ b/sound/soc/qcom/common.c
-> @@ -73,7 +73,7 @@ int qcom_snd_parse_of(struct snd_soc_card *card)
->   	link = card->dai_link;
-> 
->   	for_each_available_child_of_node(dev->of_node, np) {
-> -		dlc = devm_kzalloc(dev, 2 * sizeof(*dlc), GFP_KERNEL);
-> +		dlc = devm_kcalloc(dev, 2, sizeof(*dlc), GFP_KERNEL);
->   		if (!dlc) {
->   			ret = -ENOMEM;
->   			goto err_put_np;
-> --
-> 2.25.1
-> 
-> 
+                  Linus
