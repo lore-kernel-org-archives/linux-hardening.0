@@ -1,104 +1,95 @@
-Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD79D56444
-	for <linux-hardening@vger.kernel.org>; Mon,  8 Jan 2024 17:38:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9797B55E67
+	for <linux-hardening@vger.kernel.org>; Mon,  8 Jan 2024 17:57:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="jLz2of3V"
-Received: from eig-obgw-6007a.ext.cloudfilter.net ([10.0.30.247])
-	by cmsmtp with ESMTPS
-	id MkYGrT0CS9gG6MtaJr6tlr; Mon, 08 Jan 2024 17:38:47 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id MtaIr9oWEyxR5MtaIrCx9S; Mon, 08 Jan 2024 17:38:46 +0000
-X-Authority-Analysis: v=2.4 cv=JYOvEGGV c=1 sm=1 tr=0 ts=659c3326
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=GfQleyYEO+cc22AUyTT7qQ==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=dEuoMetlWLkA:10 a=wYkD_t78qR0A:10
- a=ic43B64CF9VcJqpiiBIA:9 a=QEXdDO2ut3YA:10
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Co6guZYByp4kdojxfU2irqToohe93bbVbLlOGGL1NZw=; b=jLz2of3VyaBSe/9M9xNFKptdMz
-	vt9kIpSMNfwwSo4FKv9LHvj5rHV8HnPms9MeP/+kX4BONZRZEs86nxsACg2DN29U5YWHQAE54BNTO
-	6QKmb1vsMg55TD7QOb6fw1YFBVkYGkVuBes2QU7vM7sn/HOQQ/jQ8Ii1cyiKRfjAiQYTT/dvS8Qfl
-	lNe2dW+e2u0wit2526MRyTUU4cNXydf7ro0jiqLqsyJ5SHaa9tSwgzglhZOQxhGYATAocsV3mpu66
-	dJYmrag6HyUOjmZChxqxl9TUF6ZIpKbkJa/mi+JaV6rAehzqYlJQ/sgBKAdsrgGpGcXQfXt85nVwN
-	ZVI7aDJA==;
-Received: from 187.184.157.186.cable.dyn.cableonline.com.mx ([187.184.157.186]:17540 helo=[192.168.0.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rMtaH-0032b8-0n;
-	Mon, 08 Jan 2024 11:38:45 -0600
-Message-ID: <eacdc1fe-df5c-472f-9e83-971bbe36e8b5@embeddedor.com>
-Date: Mon, 8 Jan 2024 11:38:41 -0600
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="btZUj6hu"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-5bdbe2de25fso1613566a12.3
+        for <linux-hardening@vger.kernel.org>; Mon, 08 Jan 2024 09:57:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1704736677; x=1705341477; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=GvMazmgKoWsnbBpLVotpsngL1oQ/K5uRYIxujPwKFyo=;
+        b=btZUj6huR1TasDu5KvFVxrCcA5Cm2gdcQ+BiuJOFoeDqAkmyS9e3wtLmI/m8TAxNnG
+         jXDZHK0csCiac7llVS6fLWwZAs/tcybxf+ajdert0LvQ4MIWF84kCXeHwLw1pS/3R8ty
+         Am3ID93IVSBA8vgb1ou02G3UWIlVd/RRGcVFQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704736677; x=1705341477;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GvMazmgKoWsnbBpLVotpsngL1oQ/K5uRYIxujPwKFyo=;
+        b=fJP8KopIXC6TgXjEaCmozDZiBeIsrE36bQGb7V9IXl1CshYLAe/CWeoK97B4upm8wo
+         pWmIdG+VUCndNDt8XVAj4ErBZx27ddrojXwKhxVcXM/FH6D1BbtK+tm88n06nrD3iex2
+         KUKvsU0AhZWf55gTnfHpr7EaiPHNKlomX3+bxgVBxD82k8Hmes2zn2fcQ0CHCqX7jeNu
+         k7f0s8uzt0W8ioOZFB5VpbIZxYdrE+6F93bCDK0GPEcxHzDcs+VFi+zzYNfDQDvcrI1A
+         LlAq7K3KA5/7M8hYLxrt6/ORMXfLcFy9YueyVePT3AMNPgedaNUc2HQ35w3ctdH/PgX9
+         dfbA==
+X-Gm-Message-State: AOJu0YzKT+/uL7B12xJnjVcCwJQygpUc6hQ50rD2dPKP4GVUCS98K6WU
+	xo2YTc8Dq5HrRjqMFKfU7kj83rIjjmVo
+X-Google-Smtp-Source: AGHT+IGwtRPXwmYzpN85L0M4dhNyX8jGEFxMDSCpkMmD+9xGIVhAjN4ikUgXAVStQmAFziY7f1bV8g==
+X-Received: by 2002:a17:90a:7566:b0:28c:287b:dd96 with SMTP id q93-20020a17090a756600b0028c287bdd96mr2073284pjk.8.1704736676908;
+        Mon, 08 Jan 2024 09:57:56 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id w7-20020a17090a4f4700b0028c8a4fb12fsm240139pjl.49.2024.01.08.09.57.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jan 2024 09:57:56 -0800 (PST)
+Date: Mon, 8 Jan 2024 09:57:55 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Jingzi Meng <mengjingzi@iie.ac.cn>
+Cc: gregkh@linuxfoundation.org, gpiccoli@igalia.com,
+	john.ogness@linutronix.de, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org, pmladek@suse.com, rostedt@goodmis.org,
+	senozhatsky@chromium.org, tony.luck@intel.com
+Subject: Re: [PATCH] cap_syslog: remove CAP_SYS_ADMIN when dmesg_restrict
+Message-ID: <202401080956.7FBE02F54C@keescook>
+References: <2024010306-tweezers-skinhead-083e@gregkh>
+ <20240105062007.26965-1-mengjingzi@iie.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] VMCI: Fix memcpy() run-time warning in
- dg_dispatch_as_host()
-Content-Language: en-US
-To: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
- Dan Carpenter <dan.carpenter@linaro.org>
-Cc: linux-hardening@vger.kernel.org, keescook@chromium.org,
- error27@gmail.com, gustavoars@kernel.org, Bryan Tan <bryantan@vmware.com>,
- Vishnu Dasa <vdasa@vmware.com>,
- VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
- Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-kernel@vger.kernel.org, vegard.nossum@oracle.com,
- darren.kenny@oracle.com, syzkaller <syzkaller@googlegroups.com>
-References: <20240105164001.2129796-1-harshit.m.mogalapalli@oracle.com>
- <20240105164001.2129796-2-harshit.m.mogalapalli@oracle.com>
- <fc132bde-d42d-4aac-ba91-7a939a18091a@moroto.mountain>
- <7826922a-d642-424e-bede-bfc45be9254d@embeddedor.com>
- <c9aff51d-918a-49d7-ae31-395cc6a5881b@oracle.com>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <c9aff51d-918a-49d7-ae31-395cc6a5881b@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.184.157.186
-X-Source-L: No
-X-Exim-ID: 1rMtaH-0032b8-0n
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187.184.157.186.cable.dyn.cableonline.com.mx ([192.168.0.10]) [187.184.157.186]:17540
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 28
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfA49JJu85p9cz8g3hofzFWY1ckUDkEZzcZqxxsuP8Kjdg7VA0U815iJGDf7jNClVcifpLft14FpBSKQgW+3Cixd228ln41nyiF/TOmOtyJjOKJL5yllE
- cwITIsSU32gRrUkvacmjhaYhMgL7YQocnAZZI3dqJ6khgs+/BnWoxTQpXV0xdQLRICe809MYZAgBs508oOpY03vvEbT3NUdja0cvC+z7YNyuaDxwgd5kSLAp
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240105062007.26965-1-mengjingzi@iie.ac.cn>
 
-
-
-On 1/8/24 11:31, Harshit Mogalapalli wrote:
-
->> BTW, is this _warning_ really causing a crash?
->>
+On Fri, Jan 05, 2024 at 02:20:07PM +0800, Jingzi Meng wrote:
+> CAP_SYSLOG was separated from CAP_SYS_ADMIN and introduced in Linux
+> 2.6.37 (2010-11). For a long time, certain syslog actions required
+> CAP_SYS_ADMIN or CAP_SYSLOG. Maybe it’s time to officially remove
+> CAP_SYS_ADMIN for more fine-grained control.
 > 
-> I think we can say this can cause a crash in a way, WARN_ONCE() is still a WARNING and we can have systems with panic_on_warn set.
+> CAP_SYS_ADMIN was once removed but added back for backwards
+> compatibility reasons. In commit 38ef4c2e437d ("syslog: check cap_syslog
+> when dmesg_restrict") (2010-12), CAP_SYS_ADMIN was no longer needed. And
+> in commit ee24aebffb75 ("cap_syslog: accept CAP_SYS_ADMIN for now")
+> (2011-02), it was accepted again. Since then, CAP_SYS_ADMIN has been
+> preserved.
 > 
+> Now that almost 13 years have passed, the legacy application may have
+> had enough time to be updated.
 
-Oh yes! thanks for the clarification. :)
+I can't find anything mention this warning in recent times except this:
+https://sysdig.com/blog/container-escape-capabilities-falco-detection/
+which is mainly an example about how to apply Capabilities, not a
+software failure.
 
---
-Gustavo
+> Signed-off-by: Jingzi Meng <mengjingzi@iie.ac.cn>
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+If you can boot a few stock modern distros and verify nothing emits this
+warning any more should be sufficient evidence that this can be dropped.
+
+-Kees
+
+-- 
+Kees Cook
