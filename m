@@ -1,94 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B35A5644F;
-	Mon,  8 Jan 2024 21:34:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E7B556464
+	for <linux-hardening@vger.kernel.org>; Mon,  8 Jan 2024 22:28:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oGw7zeYl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64B1DC433C7;
-	Mon,  8 Jan 2024 21:34:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704749696;
-	bh=TbKhcaDX991KzdmgWtOOMq+69pB52opa1WG/z42fjVw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oGw7zeYlNKuhfc3QbUjT9b3DZcn4DgXX75R4CKVqbjUrumGlB1OBnzGdSUABVGIDs
-	 QHiDoWscn6mTQfo2BE2e9PNDIWT1SKuDGH+ter0CuPZMVFcl8rtaMykN4Km8xn1YLq
-	 hUVSIzxMTEqjjeOGYprtLQFq3nRE6Z+tFVxCnjiKPgiSkA0LDZ4+YyJUUT6SvEeY/i
-	 noKtgG1bg3V4t7xoJwQ76yzhFWHs8lnjxFMgyFS33hGdW5ai6tI0I0ySOMLsQZX40C
-	 ZIT5lcRYrXC3C3GFl5OJbjXkcVs9BfBFpz9ttaD8Ua51wBwNVyMlBx0pUAlozbBX5D
-	 cFRnk5Qm/wmVQ==
-Date: Mon, 8 Jan 2024 21:34:47 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Ninad Palsule <ninad@linux.ibm.com>
-Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au,
-	peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca,
-	keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
-	johannes.holland@infineon.com, linux@roeck-us.net,
-	andre.werner@systec-electronic.com,
-	Andrew Geissler <geissonator@yahoo.com>,
-	patrick.rudolph@9elements.com, vincent@vtremblay.dev,
-	peteryin.openbmc@gmail.com, lakshmiy@us.ibm.com,
-	bhelgaas@google.com, naresh.solanki@9elements.com,
-	alexander.stein@ew.tq-group.com, festevam@denx.de,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-	linux-integrity@vger.kernel.org, linux-hardening@vger.kernel.org,
-	geert+renesas@glider.be, luca.ceresoli@bootlin.com
-Subject: Re: [PATCH v2 3/3] ARM: dts: aspeed: System1: IBM system1 BMC board
-Message-ID: <b09d6e54-66e9-482f-8f45-38381fa6b62e@sirena.org.uk>
-References: <20240108204114.1041390-1-ninad@linux.ibm.com>
- <20240108204114.1041390-4-ninad@linux.ibm.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Yb8RtHfE"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-5ce9555d42eso1798156a12.2
+        for <linux-hardening@vger.kernel.org>; Mon, 08 Jan 2024 14:28:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1704752912; x=1705357712; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XIz5GdX77lFb9OhsM/0GWdi8bxP1o8+l8qU3iYNTkSE=;
+        b=Yb8RtHfEoYjzjdKO1D/wsgNTBukl8fQvr4jlvb9SNUSDR1jtZ+4NKxCf+MlzSqax3f
+         sGKOiq2ndM5uL2102g2cFSftnInPGvEjhgAXgyXrSW69x4RhVQ9YUo+bigRpSBKdVdQP
+         niCZJwFjvD7rs9DOVDhPTPQZP4okiebXlM9Ng=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704752912; x=1705357712;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XIz5GdX77lFb9OhsM/0GWdi8bxP1o8+l8qU3iYNTkSE=;
+        b=Gfuw6Wrxz6k7dbyDHpBT+w6jXDj3FP2bSRPEV48XWTVZfgPMMrx19GE6MqZ4drNhS7
+         /15XxdB1zE2t1UG2Vwh0Ekb6khd2zG4fu1sAHLU1x/Pdex2cUqKUbTY8FQofYJwf4ScX
+         zFbGKBUHGnGFMX5h/QwF44sSVjGKKWtP3BxTPN7CamzA3e8S5qxjuRwZ+RTciYMqY/Yi
+         qRW4rV8dl0ru6I6+Zj9uMc12yGj4rTEzYJNdWKhKQES3LtiUuZXhNIRYZl+3fWGUpe5D
+         XfUU4AnKG3nUBLAvRB+rXvaj09LIT77z9g5lpGv+MXjApFHYQbNQ3y0aLjXOBmxkut1E
+         II3Q==
+X-Gm-Message-State: AOJu0YyWfmj3fi5swWweBNhTWrpBnUH0YfOZ/Eyuqz5C1HDXukpeVlRi
+	2fJJSY157T1lsQGj8hd80/Y+F9r/FIwP
+X-Google-Smtp-Source: AGHT+IFtKmKYgClXz3t7LX7s+lUEissTL9t51VE4k00tztjPyrp7lFr66tearov/dGpx4eZr9Vy+dA==
+X-Received: by 2002:a05:6a20:2589:b0:199:dd55:1459 with SMTP id k9-20020a056a20258900b00199dd551459mr934233pzd.81.1704752912438;
+        Mon, 08 Jan 2024 14:28:32 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id q17-20020a62ae11000000b006d9361fcfc8sm367358pff.177.2024.01.08.14.28.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Jan 2024 14:28:31 -0800 (PST)
+Date: Mon, 8 Jan 2024 14:28:30 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+Cc: linux-hardening@vger.kernel.org, error27@gmail.com,
+	gustavoars@kernel.org, Bryan Tan <bryantan@vmware.com>,
+	Vishnu Dasa <vdasa@vmware.com>,
+	VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org, vegard.nossum@oracle.com,
+	darren.kenny@oracle.com
+Subject: Re: [PATCH v2 1/2] VMCI: Use struct_size() in kmalloc()
+Message-ID: <202401081428.F7A80008D2@keescook>
+References: <20240105164001.2129796-1-harshit.m.mogalapalli@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="rIaTAIoZgSKW9gCu"
-Content-Disposition: inline
-In-Reply-To: <20240108204114.1041390-4-ninad@linux.ibm.com>
-X-Cookie: Best if used before date on carton.
-
-
---rIaTAIoZgSKW9gCu
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20240105164001.2129796-1-harshit.m.mogalapalli@oracle.com>
 
-On Mon, Jan 08, 2024 at 02:41:14PM -0600, Ninad Palsule wrote:
+On Fri, Jan 05, 2024 at 08:39:59AM -0800, Harshit Mogalapalli wrote:
+> Use struct_size() instead of open coding.
+> 
+> Suggested-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
 
-> +	regulator@60 {
-> +		compatible = "maxim,max8952";
-> +		reg = <0x60>;
-> +
-> +		max8952,default-mode = <0>;
-> +		max8952,dvs-mode-microvolt = <1250000>, <1200000>,
-> +						<1050000>, <950000>;
-> +		max8952,sync-freq = <0>;
-> +		max8952,ramp-speed = <0>;
-> +
-> +		regulator-name = "VR_1.0V";
-> +		regulator-min-microvolt = <770000>;
-> +		regulator-max-microvolt = <1400000>;
+Yeah, clear replacement.
 
-A regulator labelled VR_1.0V can vary between 0.77V and 1.4V and has
-exactly the same configuration as another regulator labelled VR_1.2V?
-That seems...  odd?
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
---rIaTAIoZgSKW9gCu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmWcanYACgkQJNaLcl1U
-h9AQvAf/bBzl7TOXhykZugaGhrwTqbgUhCIJlcRYOC0WPtwpbxLratLbeJHqcSUj
-29OZ0OuopB/FwVtUC2KBORlRBMEQRb/GUCZwNxjtqhrC3Bp9CYOTqJs/0jUD9ZCZ
-IuvRBEKet3+4RpOyOgwplSHhCwwH1XmWfBb9xWNbCKd7r6NxrZ5z4+LiIrJT8Y/s
-fopj53Dmk7MqpK1xl9yBW2CaHAPI2QiA3/Zbh5CJUNJu0zAfw7bASSjseh2pfre9
-50Xg+lhn1TDW2Azid2S9Uzcmefsz1dScLfC4fCsblsSLomp1VJ6VNSJUDApod54N
-xWK8ruqdyGOmlTQ5yd18SEwzEkM3WA==
-=j/GH
------END PGP SIGNATURE-----
-
---rIaTAIoZgSKW9gCu--
+-- 
+Kees Cook
