@@ -1,141 +1,113 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CCDFB647
-	for <linux-hardening@vger.kernel.org>; Mon,  8 Jan 2024 07:33:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1123F8BF9;
+	Mon,  8 Jan 2024 07:51:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e9f8nQHZ"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-40e45504006so4201775e9.1
-        for <linux-hardening@vger.kernel.org>; Sun, 07 Jan 2024 23:33:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BKRlJNEt"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-50e7d6565b5so1479489e87.0;
+        Sun, 07 Jan 2024 23:51:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704699208; x=1705304008; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VsT49imzj00s7Yll7mY42k837UkAbQah3cdA20IzaIY=;
-        b=e9f8nQHZBzZH4C2cMvbRd881dsgqU9IP1r/38dI6m6mex4LH4v7m19OWwgYH/z5Dgx
-         ruC8nKsLUfz+7Mo0+XJuJMHwzb1HQtJgMzhvcyYRE0jM4qgdRv27EUtNoSd/PR4+0OS8
-         PeLXOP2857FJTinYK2wHt8DKJt4JMoHLj2JXJ9rCxTK1hXq4vRXPryjsDiZyMxv9k+rZ
-         R4SilUbCiEaHO0fHbVqWfgf43Vhh/UeRIB/HHyoLF/l7Wc29PQLPQMzYLLtg9NehAUpT
-         y8W3yFwOCkSwJrGrbt34/ID7H9RoEjpi21pL0lpZyb3UHrNevQ1eSqz4BJsorus4xLDq
-         q8+w==
+        d=gmail.com; s=20230601; t=1704700301; x=1705305101; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xB6dTmy7PPONUEqk9zrc11jGA1ahX/VsK6NLrJv8Ibo=;
+        b=BKRlJNEtsvPUNZqxMDLldvZ2I9yer42F1wk1zk2OGsPvzgcyZ0OFzXi59a/VtulcD+
+         2TZxNEQcodsHICX2wWDVrCnimvEjjngqYgTOOges0lE0DUgemupWAKkq9o2DVW8dbZxY
+         ojHI/mnfy3hvM9EDglJCDqOpXGKV5g1Dkx8eBgn9ArHNfrWOmZnSYYakzReVNw9rjWtR
+         MNYsV9Edoiyk5lzNp6OnO8vUUvcztmzG0/PhqkUOMtwF+yvrb7WZyUAUBGgh5HfbR7MS
+         TmyzFLzO+vH0qoW5bGnAIHf7yTBX7YD8/DiwqGf2zvZDmM/5v9yQlNuTDHBnBOnDdGgF
+         WQzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704699208; x=1705304008;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VsT49imzj00s7Yll7mY42k837UkAbQah3cdA20IzaIY=;
-        b=wPILCLKJc0yk7s4Yg46+3uCpUgB8mtVV+kx84rm3LTgwXQ5hQ7qYumNm99LpwDIB0J
-         SAVG8x7+9q33UaYHdrdnewpRBxel56ukb0GoO6h/qiH7ECwgpjhu2HxbdzyHAwqq0jG6
-         W9VHOMU64s+5c5LRA0+Es9Gae4x6HB/CBLFSL3wF/+zzgJsmjjIEi69iDfkxM+IM4ArZ
-         rmla7X02f30KKrehyJMRCEPzUbc/kF15B+nD2A+TCBV11YV779dPBOH2eQTxresuuajV
-         hc7aDLY9zA7neLdw+fNYoy8oSLTmscZ9MfgeR6A+ZicybpRLByqBEbiywuo52l4XPvWW
-         pesQ==
-X-Gm-Message-State: AOJu0Yzfvp4L7Qf8EMfnEpxxwVEHD2Wg6XfnBCs3EMLYh6aXnHCvd79v
-	05L7JRFF03f2enAt7CqUEJ3t9YFQsB5D9g==
-X-Google-Smtp-Source: AGHT+IFEon0WJ044xjZRsrBXv1jCnpkHNL4f/KhLfxPPOLM0AFbplbDzxkpS+LR9wL8/p34pMOxh9Q==
-X-Received: by 2002:a05:600c:1c92:b0:40d:8f0c:db84 with SMTP id k18-20020a05600c1c9200b0040d8f0cdb84mr1437440wms.184.1704699208301;
-        Sun, 07 Jan 2024 23:33:28 -0800 (PST)
-Received: from localhost ([102.140.209.237])
-        by smtp.gmail.com with ESMTPSA id e9-20020a05600c4e4900b0040e38859c47sm9998015wmq.16.2024.01.07.23.33.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jan 2024 23:33:27 -0800 (PST)
-Date: Mon, 8 Jan 2024 10:33:23 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-Cc: linux-hardening@vger.kernel.org, keescook@chromium.org,
-	error27@gmail.com, gustavoars@kernel.org,
-	Bryan Tan <bryantan@vmware.com>, Vishnu Dasa <vdasa@vmware.com>,
-	VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org, vegard.nossum@oracle.com,
-	darren.kenny@oracle.com, syzkaller <syzkaller@googlegroups.com>
-Subject: Re: [PATCH v2 2/2] VMCI: Fix memcpy() run-time warning in
- dg_dispatch_as_host()
-Message-ID: <fc132bde-d42d-4aac-ba91-7a939a18091a@moroto.mountain>
-References: <20240105164001.2129796-1-harshit.m.mogalapalli@oracle.com>
- <20240105164001.2129796-2-harshit.m.mogalapalli@oracle.com>
+        d=1e100.net; s=20230601; t=1704700301; x=1705305101;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xB6dTmy7PPONUEqk9zrc11jGA1ahX/VsK6NLrJv8Ibo=;
+        b=e9eSY0V0+YSadMZUeE69lJXAzJaomJaEsNwTFAVUrIKtCejd1/j5dWbyGBsnedBxPc
+         EO6QIMCIVSWC3yaP50JdnaL/eFxuWktJGRfmsCtltoPxAVzCVEto+XSMMV0xoCCEMtPZ
+         MRbprn9LrbnA8V1PamZWhYuh6x9Bd9QbbqGHYJq7DSky3364SUXnbjZ1iAzh2ORRSRrr
+         3CYPxUe1DSkmFqdCvs5ZN4HJMdzy34NeKenzgDV8GGZa9yOwDBbVsUCRUJjafo8awTCl
+         Wr7XWAm+KAEwI6Vje/bTQVmv+CYoQJxnpcICFIm9GPIdl78O7sSg1lOyVqP2ZieGveTU
+         OI5g==
+X-Gm-Message-State: AOJu0YwVSxJPyybbZMu5HeJvw/xNRAFv4l0qPg+R83vbBzFeWF6dn0xf
+	2UDQ3JcXPE/zzpVud2CRTLw=
+X-Google-Smtp-Source: AGHT+IFgZcByQqbr97652HkUV9fLE574WgqqSfXCYtLKE0ke5xjsGHFQbJJlJSSp27L/fI7gvAQaBQ==
+X-Received: by 2002:a05:6512:48d1:b0:50e:7a04:2229 with SMTP id er17-20020a05651248d100b0050e7a042229mr1196568lfb.25.1704700300833;
+        Sun, 07 Jan 2024 23:51:40 -0800 (PST)
+Received: from [10.0.0.100] (host-213-145-197-219.kaisa-laajakaista.fi. [213.145.197.219])
+        by smtp.gmail.com with ESMTPSA id f26-20020ac2533a000000b0050e7a97ae32sm1062227lfh.78.2024.01.07.23.51.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 07 Jan 2024 23:51:40 -0800 (PST)
+Message-ID: <20894f38-2e35-40c7-9e6c-f1b7f375a030@gmail.com>
+Date: Mon, 8 Jan 2024 09:52:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240105164001.2129796-2-harshit.m.mogalapalli@oracle.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ASoC: ti: Use devm_kcalloc() instead of devm_kzalloc()
+To: Erick Archer <erick.archer@gmx.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20240106162752.18599-1-erick.archer@gmx.com>
+Content-Language: en-US
+From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
+In-Reply-To: <20240106162752.18599-1-erick.archer@gmx.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jan 05, 2024 at 08:40:00AM -0800, Harshit Mogalapalli wrote:
-> Syzkaller hit 'WARNING in dg_dispatch_as_host' bug.
+
+
+On 06/01/2024 18:27, Erick Archer wrote:
+> Use 2-factor multiplication argument form devm_kcalloc() instead
+> of devm_kzalloc().
 > 
-> memcpy: detected field-spanning write (size 56) of single field "&dg_info->msg"
-> at drivers/misc/vmw_vmci/vmci_datagram.c:237 (size 24)
-> 
-> WARNING: CPU: 0 PID: 1555 at drivers/misc/vmw_vmci/vmci_datagram.c:237
-> dg_dispatch_as_host+0x88e/0xa60 drivers/misc/vmw_vmci/vmci_datagram.c:237
-> 
-> Some code commentry, based on my understanding:
-> 
-> 544 #define VMCI_DG_SIZE(_dg) (VMCI_DG_HEADERSIZE + (size_t)(_dg)->payload_size)
-> /// This is 24 + payload_size
-> 
-> memcpy(&dg_info->msg, dg, dg_size);
-> 	Destination = dg_info->msg ---> this is a 24 byte
-> 					structure(struct vmci_datagram)
-> 	Source = dg --> this is a 24 byte structure (struct vmci_datagram)
-> 	Size = dg_size = 24 + payload_size
-> 
-> {payload_size = 56-24 =32} -- Syzkaller managed to set payload_size to 32.
-> 
->  35 struct delayed_datagram_info {
->  36         struct datagram_entry *entry;
->  37         struct work_struct work;
->  38         bool in_dg_host_queue;
->  39         /* msg and msg_payload must be together. */
->  40         struct vmci_datagram msg;
->  41         u8 msg_payload[];
->  42 };
-> 
-> So those extra bytes of payload are copied into msg_payload[], a run time
-> warning is seen while fuzzing with Syzkaller.
-> 
-> One possible way to fix the warning is to split the memcpy() into
-> two parts -- one -- direct assignment of msg and second taking care of payload.
-> 
-> Gustavo quoted:
-> "Under FORTIFY_SOURCE we should not copy data across multiple members
-> in a structure."
-> 
-> Reported-by: syzkaller <syzkaller@googlegroups.com>
-> Suggested-by: Vegard Nossum <vegard.nossum@oracle.com>
-> Suggested-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+> Link: https://github.com/KSPP/linux/issues/162
+> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+
+Can you fix the commit title to:
+ASoC: ti: j721e-evm.: Use devm_kcalloc() instead of devm_kzalloc()
+
+and send v2 with my:
+Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+
 > ---
-> This patch is only tested with the C reproducer, not any testing
-> specific to driver is done.
+>  sound/soc/ti/j721e-evm.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> v1->v2: ( Suggestions from Gustavo )
->         1. Change the commit message false positive --> legitimate
->            warning.
+> diff --git a/sound/soc/ti/j721e-evm.c b/sound/soc/ti/j721e-evm.c
+> index b4b158dc736e..d9d1e021f5b2 100644
+> --- a/sound/soc/ti/j721e-evm.c
+> +++ b/sound/soc/ti/j721e-evm.c
+> @@ -649,7 +649,7 @@ static int j721e_soc_probe_cpb(struct j721e_priv *priv, int *link_idx,
+>  	 * Link 2: McASP10 <- pcm3168a_1 ADC
+>  	 */
+>  	comp_count = 6;
+> -	compnent = devm_kzalloc(priv->dev, comp_count * sizeof(*compnent),
+> +	compnent = devm_kcalloc(priv->dev, comp_count, sizeof(*compnent),
+>  				GFP_KERNEL);
+>  	if (!compnent) {
+>  		ret = -ENOMEM;
+> @@ -763,7 +763,7 @@ static int j721e_soc_probe_ivi(struct j721e_priv *priv, int *link_idx,
+>  	 *		   \ pcm3168a_b ADC
+>  	 */
+>  	comp_count = 8;
+> -	compnent = devm_kzalloc(priv->dev, comp_count * sizeof(*compnent),
+> +	compnent = devm_kcalloc(priv->dev, comp_count, sizeof(*compnent),
+>  				GFP_KERNEL);
+>  	if (!compnent) {
+>  		ret = -ENOMEM;
+> --
+> 2.25.1
+> 
 
-The commit message is fine.
-
-Reviewed-by: Dan Carpenter <dan.carpenter@linaro.org>
-
-But, I mean, it's not really "legitimate".  It meets the fortify source
-heuristic, but it's still a false positive.  Fortify source is
-*supposed* to find memory corruption bugs and this is not a memory
-corruption bug.  It's just that these days we have to treat foritify
-false positives as crashing bugs because people enable it and we have to
-fix it.
-
-Let's not pretend that fortify has helped us in this situation, it has
-caused us a problem.  It has taken valid code and created a crashing
-bug.  I'm not saying that the cost isn't worth it, but let's not pretend.
-
-regards,
-dan carpenter
-
-
+-- 
+Péter
