@@ -1,90 +1,74 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp85.cstnet.cn [159.226.251.85])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8185410A17
-	for <linux-hardening@vger.kernel.org>; Sun,  7 Jan 2024 18:42:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="bStquiGf"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-50ea8fbf261so1104141e87.2
-        for <linux-hardening@vger.kernel.org>; Sun, 07 Jan 2024 10:42:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1704652929; x=1705257729; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=s0prdEAj89MfCO6uINX9NF3GFv49wanD+YL5iJFREZs=;
-        b=bStquiGfXB78TOKeTSMx6QP5PWm5mQgB2XAtLeCaNGkEJMxqJAfakmzbF2iMETpI8S
-         Ga02jpnDeLrhIlGA3lFrFAdDyPLQumYYj2uqYlrLsvnUNc742Xa+PaNw9pbCJ0fjb2Yi
-         up0yAiTAwkCqEJBkFDKLqFwQo2CdrAfyqQ3XU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704652929; x=1705257729;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=s0prdEAj89MfCO6uINX9NF3GFv49wanD+YL5iJFREZs=;
-        b=OZlJ5X1yny7cXH/wmwHFydjAYWm2lccvsfDoBiABxvU6h22+XoCsHc7KEedw+qS/Md
-         7MNYBZDRfJp1vQ2ef35IK4TWwKMBjvjLFjsTTbUr8K6xWr4PtlSO5OA8IU10TChoafR0
-         UPpCnrXbBvffbiEKFZ5dVu9XL2Iv1jvlH+m0wYKkaBGNzeNRAaOMPiBkuog33/A8IeYa
-         1H40AdQep4sYmBcLAnG5FMcr1RU9bN06AE8XpnO6GUHFgSTHL+O4aNzwaVflFie4SSLL
-         ht2gNOkIfycRtarqAjpgXbkBebRUbtOVpCbj9/Tfw5RKAAZNLcM/mewJEadpN7eQCbr/
-         KYeQ==
-X-Gm-Message-State: AOJu0Yyt8PtMbYMhQ45a4rAFSPrdddInYNmbcQJ6CpONB3jZH6Mi2NzC
-	ByxzbH3uMOi+B8JFNmJInbYQaJxiz9pXaauwXJ7E/3FTG3zHxIT0
-X-Google-Smtp-Source: AGHT+IF3U+Rfu9DGjonXk96g+MfeZt+DR5ZGU22Js9MkNv+NMp5bFwyZfB092hIp7bUANnAC7MErhw==
-X-Received: by 2002:ac2:4142:0:b0:50e:69ea:1264 with SMTP id c2-20020ac24142000000b0050e69ea1264mr773282lfi.43.1704652929334;
-        Sun, 07 Jan 2024 10:42:09 -0800 (PST)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
-        by smtp.gmail.com with ESMTPSA id dx4-20020a0565122c0400b0050eb79db2e6sm629811lfb.280.2024.01.07.10.42.08
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 07 Jan 2024 10:42:08 -0800 (PST)
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2cd3f7e2aa1so11697161fa.3
-        for <linux-hardening@vger.kernel.org>; Sun, 07 Jan 2024 10:42:08 -0800 (PST)
-X-Received: by 2002:ac2:548b:0:b0:50e:7dca:7f93 with SMTP id
- t11-20020ac2548b000000b0050e7dca7f93mr823836lfk.77.1704652927542; Sun, 07 Jan
- 2024 10:42:07 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 208138F6D;
+	Mon,  8 Jan 2024 06:40:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iie.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iie.ac.cn
+Received: from mengjingzi$iie.ac.cn ( [159.226.94.107] ) by
+ ajax-webmail-APP-13 (Coremail) ; Mon, 8 Jan 2024 14:32:12 +0800 (GMT+08:00)
+Date: Mon, 8 Jan 2024 14:32:12 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: =?UTF-8?B?5a2f5pWs5ae/?= <mengjingzi@iie.ac.cn>
+To: "Theodore Ts'o" <tytso@mit.edu>
+Cc: gregkh@linuxfoundation.org, gpiccoli@igalia.com, 
+	john.ogness@linutronix.de, keescook@chromium.org, 
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	pmladek@suse.com, rostedt@goodmis.org, senozhatsky@chromium.org, 
+	tony.luck@intel.com
+Subject: Re: [PATCH] cap_syslog: remove CAP_SYS_ADMIN when dmesg_restrict
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.15 build 20230921(8ad33efc)
+ Copyright (c) 2002-2024 www.mailtech.cn cnic.cn
+In-Reply-To: <20240105144944.GA246367@mit.edu>
+References: <2024010306-tweezers-skinhead-083e@gregkh>
+ <20240105062007.26965-1-mengjingzi@iie.ac.cn>
+ <20240105144944.GA246367@mit.edu>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240104185138.169307-1-jeffxu@chromium.org> <20240104185138.169307-3-jeffxu@chromium.org>
-In-Reply-To: <20240104185138.169307-3-jeffxu@chromium.org>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sun, 7 Jan 2024 10:41:50 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wiy0nHG9+3rXzQa=W8gM8F6-MhsHrs_ZqWaHtjmPK4=FA@mail.gmail.com>
-Message-ID: <CAHk-=wiy0nHG9+3rXzQa=W8gM8F6-MhsHrs_ZqWaHtjmPK4=FA@mail.gmail.com>
-Subject: Re: [RFC PATCH v4 2/4] mseal: add mseal syscall
-To: jeffxu@chromium.org
-Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com, 
-	sroettger@google.com, willy@infradead.org, gregkh@linuxfoundation.org, 
-	usama.anjum@collabora.com, jeffxu@google.com, jorgelo@chromium.org, 
-	groeck@chromium.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, pedro.falcato@gmail.com, 
-	dave.hansen@intel.com, linux-hardening@vger.kernel.org, deraadt@openbsd.org
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <4b5ac92c.1086b.18ce7c58a95.Coremail.mengjingzi@iie.ac.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:twCowACHj8_slptlZdEEAA--.50409W
+X-CM-SenderInfo: pphqwyxlqj6xo6llvhldfou0/1tbiCRAKE2WbUw7IpAABsO
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VW3Jw
+	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
+	daVFxhVjvjDU=
 
-One comment:
-
-On Thu, 4 Jan 2024 at 10:51, <jeffxu@chromium.org> wrote:
->
-> diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
-> index 9a846439b36a..02280199069b 100644
-> --- a/kernel/sys_ni.c
-> +++ b/kernel/sys_ni.c
-> @@ -193,6 +193,7 @@ COND_SYSCALL(migrate_pages);
->  COND_SYSCALL(move_pages);
->  COND_SYSCALL(set_mempolicy_home_node);
->  COND_SYSCALL(cachestat);
-> +COND_SYSCALL(mseal);
->
->  COND_SYSCALL(perf_event_open);
->  COND_SYSCALL(accept4);
-
-Move this part to PATCH 1/1, so that it all builds cleanly.
-
-Other than that, this seems all reasonable to me now.
-
-                  Linus
+Ck9uIEZyaSAyMDI0LTAxLTA1IDA5OjQ5OjQ0LCBUaGVvZG9yZSBUcydvIHdyb3RlOgomZ3Q7IEl0
+J3MgdW5jbGVhciB0byBtZSB3aGF0IGdvYWwgeW91IGhhdmUgaW4gdHJ5aW5nIHRvIG1lc3Mgd2l0
+aCB0aGUKJmd0OyBjYXBhYmlsaXR5IGRlZmluaXRpb25zPyAgUGVyaGFwcyBpdCBtaWdodCBiZSB1
+c2VmdWwgaWYgeW91IHdlcmUgdG8KJmd0OyBleHBsaWNpdGx5IHN0YXRlIHlvdXIgZ29hbHMgaW4g
+dGhlc2UgcHJvcG9zYWxzPwoKUGV0ciBpcyByaWdodCwgd2UgYXJlIHRyeWluZyB0byByZXNvbHZl
+IHRoZSBvdmVybGFwIHByb2JsZW0gb2YgY2FwYWJpbGl0eS4gCgpDYXBhYmlsaXR5IGlzIGFib3V0
+IHRvIHNlcGFyYXRlIHN1cGVydXNlciBwcml2aWxlZ2VzIGludG8gZGlzdGluY3QgdW5pdHMgZm9y
+IApmaW5lci1ncmFpbmVkIGFjY2VzcyBjb250cm9sLiBJdOKAmXMgZWZmZWN0aXZlIHdvcmsgcmVx
+dWlyZXMgdGhlIGtlcm5lbCB0byB1c2UgCnByb3BlciBjYXBhYmlsaXR5IGZvciBzZW5zaXRpdmUg
+cmVzb3VyY2VzIGFuZCB0aGUgdXNlciBwcm9ncmFtcyB0byBjaG9vc2UgdGhlIApyaWdodCBjYXBh
+YmlsaXR5IGluc3RlYWQgb2YgUk9PVCB0byBleGVjdXRlLiBBbmQgd2Ugd2FudCB0byBwcm9tb3Rl
+IHRoZSAKc3RhbmRhcmRpemVkIHVzZSBvZiBjYXBhYmlsaXR5LgoKCiZndDsgU28gdGhlcmUgaXNu
+J3QgYWxsIHRoYXQgbXVjaCB1cHNpZGUgaW4gdHJ5aW5nIHRvIHJldGlyZSBDQVBfU1lTX0FETUlO
+IAoKV2UgYXJlIG5vdCBnb2luZyB0byByZXRpcmUgQ0FQX1NZU19BRE1JTiwgYnV0IHNheWluZyB0
+aGF0IENBUF9TWVNMT0cgaXMgdGhlCm1vcmUgYXBwcm9wcmlhdGUgY2FwYWJpbGl0eSB3aGVuIGl0
+IGNvbWVzIHRvIHByb3RlY3Rpbmcgc3lzbG9nIGZ1bmN0aW9uYWxpdHkuIApDQVBfU1lTX0FETUlO
+IGlzIGFscmVhZHkgb3ZlcmxvYWRlZCwgY2hlY2sgb3V0IHRoZSBsaW5rWzFdLCBuYXJyb3dpbmcg
+ZG93biBpdHMgCmRlZmluaXRpb25zIHdpbGwgZmFjaWxpdGF0ZSB0aGUgaW1wbGVtZW50YXRpb24g
+b2YgbGVhc3QgcHJpdmlsZWdlLiBUaGlzIGFkanVzdG1lbnQgCm1ha2VzIGl0IGNsZWFyZXIgZm9y
+IGEgdXNlciBwcm9ncmFtIHJlcXVpcmluZyBzeXNsb2cgYWNjZXNzIHRvIHNwZWNpZnkgb25seSB0
+aGUgCm5lY2Vzc2FyeSBjYXBhYmlsaXR5LCBDQVBfU1lTTE9HLCBpbnN0ZWFkIG9mIHJlbHlpbmcg
+b24gdGhlIGJyb2FkZXIgQ0FQX1NZU19BRE1JTi4KCiZndDsgV2hhdCB0ZXN0aW5nIGhhdmUgeW91
+IGRvbmUgdG8gbWFrZSBzdXJlIHRoYXQgdGhpcyBpcyBPSz8KCldlIGJvb3RlZCB0aGUgbW9kaWZp
+ZWQga2VybmVsIGFuZCBjb25maXJtZWQgdGhhdCBDQVBfU1lTX0FETUlOIG5vIGxvbmdlciBoYXMg
+YWNjZXNzIAp0byBzeXNsb2cgd2hlbiBkbWVzZyBpcyBzZXQuCgpXaGlsZSBjZXJ0YWluIHVzZXIg
+cHJvZ3JhbXMgcmVseWluZyBvbiBDQVBfU1lTX0FETUlOIGZvciBzeXNsb2cgYWNjZXNzIG1pZ2h0
+IGJlIGltcGFjdGVkLCAKdGhleSBjYW4gYWRqdXN0IHRoZWlyIGNhcGFiaWxpdHkgY29uZmlndXJh
+dGlvbiB1c2luZyB0aGUg4oCYc2V0Y2Fw4oCZIGNvbW1hbmQuIERlY3JlYXNpbmcgdGhlIApyZWxp
+YW5jZSBvbiBDQVBfU1lTX0FETUlOIGFjcm9zcyBhcHBsaWNhdGlvbnMgY29udHJpYnV0ZXMgdG8g
+bWluaW1pemluZyBzZWN1cml0eSByaXNrcyBpbiAKdGhlIHN5c3RlbS4gQ3VycmVudGx5LCBpdCdz
+IHVuY2VydGFpbiBpZiBhbnkgc3VjaCBwcm9ncmFtcyBleGlzdC4KCgpCZXN0IHJlZ3JhZHMsCkpp
+bmd6aQoKWzFdOiBodHRwczovL2x3bi5uZXQvQXJ0aWNsZXMvNDg2MzA2LwoKCg==
