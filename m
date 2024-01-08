@@ -1,74 +1,141 @@
-Received: from cstnet.cn (smtp85.cstnet.cn [159.226.251.85])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 208138F6D;
-	Mon,  8 Jan 2024 06:40:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iie.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iie.ac.cn
-Received: from mengjingzi$iie.ac.cn ( [159.226.94.107] ) by
- ajax-webmail-APP-13 (Coremail) ; Mon, 8 Jan 2024 14:32:12 +0800 (GMT+08:00)
-Date: Mon, 8 Jan 2024 14:32:12 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: =?UTF-8?B?5a2f5pWs5ae/?= <mengjingzi@iie.ac.cn>
-To: "Theodore Ts'o" <tytso@mit.edu>
-Cc: gregkh@linuxfoundation.org, gpiccoli@igalia.com, 
-	john.ogness@linutronix.de, keescook@chromium.org, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	pmladek@suse.com, rostedt@goodmis.org, senozhatsky@chromium.org, 
-	tony.luck@intel.com
-Subject: Re: [PATCH] cap_syslog: remove CAP_SYS_ADMIN when dmesg_restrict
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.15 build 20230921(8ad33efc)
- Copyright (c) 2002-2024 www.mailtech.cn cnic.cn
-In-Reply-To: <20240105144944.GA246367@mit.edu>
-References: <2024010306-tweezers-skinhead-083e@gregkh>
- <20240105062007.26965-1-mengjingzi@iie.ac.cn>
- <20240105144944.GA246367@mit.edu>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CCDFB647
+	for <linux-hardening@vger.kernel.org>; Mon,  8 Jan 2024 07:33:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e9f8nQHZ"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-40e45504006so4201775e9.1
+        for <linux-hardening@vger.kernel.org>; Sun, 07 Jan 2024 23:33:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1704699208; x=1705304008; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VsT49imzj00s7Yll7mY42k837UkAbQah3cdA20IzaIY=;
+        b=e9f8nQHZBzZH4C2cMvbRd881dsgqU9IP1r/38dI6m6mex4LH4v7m19OWwgYH/z5Dgx
+         ruC8nKsLUfz+7Mo0+XJuJMHwzb1HQtJgMzhvcyYRE0jM4qgdRv27EUtNoSd/PR4+0OS8
+         PeLXOP2857FJTinYK2wHt8DKJt4JMoHLj2JXJ9rCxTK1hXq4vRXPryjsDiZyMxv9k+rZ
+         R4SilUbCiEaHO0fHbVqWfgf43Vhh/UeRIB/HHyoLF/l7Wc29PQLPQMzYLLtg9NehAUpT
+         y8W3yFwOCkSwJrGrbt34/ID7H9RoEjpi21pL0lpZyb3UHrNevQ1eSqz4BJsorus4xLDq
+         q8+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704699208; x=1705304008;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VsT49imzj00s7Yll7mY42k837UkAbQah3cdA20IzaIY=;
+        b=wPILCLKJc0yk7s4Yg46+3uCpUgB8mtVV+kx84rm3LTgwXQ5hQ7qYumNm99LpwDIB0J
+         SAVG8x7+9q33UaYHdrdnewpRBxel56ukb0GoO6h/qiH7ECwgpjhu2HxbdzyHAwqq0jG6
+         W9VHOMU64s+5c5LRA0+Es9Gae4x6HB/CBLFSL3wF/+zzgJsmjjIEi69iDfkxM+IM4ArZ
+         rmla7X02f30KKrehyJMRCEPzUbc/kF15B+nD2A+TCBV11YV779dPBOH2eQTxresuuajV
+         hc7aDLY9zA7neLdw+fNYoy8oSLTmscZ9MfgeR6A+ZicybpRLByqBEbiywuo52l4XPvWW
+         pesQ==
+X-Gm-Message-State: AOJu0Yzfvp4L7Qf8EMfnEpxxwVEHD2Wg6XfnBCs3EMLYh6aXnHCvd79v
+	05L7JRFF03f2enAt7CqUEJ3t9YFQsB5D9g==
+X-Google-Smtp-Source: AGHT+IFEon0WJ044xjZRsrBXv1jCnpkHNL4f/KhLfxPPOLM0AFbplbDzxkpS+LR9wL8/p34pMOxh9Q==
+X-Received: by 2002:a05:600c:1c92:b0:40d:8f0c:db84 with SMTP id k18-20020a05600c1c9200b0040d8f0cdb84mr1437440wms.184.1704699208301;
+        Sun, 07 Jan 2024 23:33:28 -0800 (PST)
+Received: from localhost ([102.140.209.237])
+        by smtp.gmail.com with ESMTPSA id e9-20020a05600c4e4900b0040e38859c47sm9998015wmq.16.2024.01.07.23.33.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Jan 2024 23:33:27 -0800 (PST)
+Date: Mon, 8 Jan 2024 10:33:23 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+Cc: linux-hardening@vger.kernel.org, keescook@chromium.org,
+	error27@gmail.com, gustavoars@kernel.org,
+	Bryan Tan <bryantan@vmware.com>, Vishnu Dasa <vdasa@vmware.com>,
+	VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org, vegard.nossum@oracle.com,
+	darren.kenny@oracle.com, syzkaller <syzkaller@googlegroups.com>
+Subject: Re: [PATCH v2 2/2] VMCI: Fix memcpy() run-time warning in
+ dg_dispatch_as_host()
+Message-ID: <fc132bde-d42d-4aac-ba91-7a939a18091a@moroto.mountain>
+References: <20240105164001.2129796-1-harshit.m.mogalapalli@oracle.com>
+ <20240105164001.2129796-2-harshit.m.mogalapalli@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <4b5ac92c.1086b.18ce7c58a95.Coremail.mengjingzi@iie.ac.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:twCowACHj8_slptlZdEEAA--.50409W
-X-CM-SenderInfo: pphqwyxlqj6xo6llvhldfou0/1tbiCRAKE2WbUw7IpAABsO
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VW3Jw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240105164001.2129796-2-harshit.m.mogalapalli@oracle.com>
 
-Ck9uIEZyaSAyMDI0LTAxLTA1IDA5OjQ5OjQ0LCBUaGVvZG9yZSBUcydvIHdyb3RlOgomZ3Q7IEl0
-J3MgdW5jbGVhciB0byBtZSB3aGF0IGdvYWwgeW91IGhhdmUgaW4gdHJ5aW5nIHRvIG1lc3Mgd2l0
-aCB0aGUKJmd0OyBjYXBhYmlsaXR5IGRlZmluaXRpb25zPyAgUGVyaGFwcyBpdCBtaWdodCBiZSB1
-c2VmdWwgaWYgeW91IHdlcmUgdG8KJmd0OyBleHBsaWNpdGx5IHN0YXRlIHlvdXIgZ29hbHMgaW4g
-dGhlc2UgcHJvcG9zYWxzPwoKUGV0ciBpcyByaWdodCwgd2UgYXJlIHRyeWluZyB0byByZXNvbHZl
-IHRoZSBvdmVybGFwIHByb2JsZW0gb2YgY2FwYWJpbGl0eS4gCgpDYXBhYmlsaXR5IGlzIGFib3V0
-IHRvIHNlcGFyYXRlIHN1cGVydXNlciBwcml2aWxlZ2VzIGludG8gZGlzdGluY3QgdW5pdHMgZm9y
-IApmaW5lci1ncmFpbmVkIGFjY2VzcyBjb250cm9sLiBJdOKAmXMgZWZmZWN0aXZlIHdvcmsgcmVx
-dWlyZXMgdGhlIGtlcm5lbCB0byB1c2UgCnByb3BlciBjYXBhYmlsaXR5IGZvciBzZW5zaXRpdmUg
-cmVzb3VyY2VzIGFuZCB0aGUgdXNlciBwcm9ncmFtcyB0byBjaG9vc2UgdGhlIApyaWdodCBjYXBh
-YmlsaXR5IGluc3RlYWQgb2YgUk9PVCB0byBleGVjdXRlLiBBbmQgd2Ugd2FudCB0byBwcm9tb3Rl
-IHRoZSAKc3RhbmRhcmRpemVkIHVzZSBvZiBjYXBhYmlsaXR5LgoKCiZndDsgU28gdGhlcmUgaXNu
-J3QgYWxsIHRoYXQgbXVjaCB1cHNpZGUgaW4gdHJ5aW5nIHRvIHJldGlyZSBDQVBfU1lTX0FETUlO
-IAoKV2UgYXJlIG5vdCBnb2luZyB0byByZXRpcmUgQ0FQX1NZU19BRE1JTiwgYnV0IHNheWluZyB0
-aGF0IENBUF9TWVNMT0cgaXMgdGhlCm1vcmUgYXBwcm9wcmlhdGUgY2FwYWJpbGl0eSB3aGVuIGl0
-IGNvbWVzIHRvIHByb3RlY3Rpbmcgc3lzbG9nIGZ1bmN0aW9uYWxpdHkuIApDQVBfU1lTX0FETUlO
-IGlzIGFscmVhZHkgb3ZlcmxvYWRlZCwgY2hlY2sgb3V0IHRoZSBsaW5rWzFdLCBuYXJyb3dpbmcg
-ZG93biBpdHMgCmRlZmluaXRpb25zIHdpbGwgZmFjaWxpdGF0ZSB0aGUgaW1wbGVtZW50YXRpb24g
-b2YgbGVhc3QgcHJpdmlsZWdlLiBUaGlzIGFkanVzdG1lbnQgCm1ha2VzIGl0IGNsZWFyZXIgZm9y
-IGEgdXNlciBwcm9ncmFtIHJlcXVpcmluZyBzeXNsb2cgYWNjZXNzIHRvIHNwZWNpZnkgb25seSB0
-aGUgCm5lY2Vzc2FyeSBjYXBhYmlsaXR5LCBDQVBfU1lTTE9HLCBpbnN0ZWFkIG9mIHJlbHlpbmcg
-b24gdGhlIGJyb2FkZXIgQ0FQX1NZU19BRE1JTi4KCiZndDsgV2hhdCB0ZXN0aW5nIGhhdmUgeW91
-IGRvbmUgdG8gbWFrZSBzdXJlIHRoYXQgdGhpcyBpcyBPSz8KCldlIGJvb3RlZCB0aGUgbW9kaWZp
-ZWQga2VybmVsIGFuZCBjb25maXJtZWQgdGhhdCBDQVBfU1lTX0FETUlOIG5vIGxvbmdlciBoYXMg
-YWNjZXNzIAp0byBzeXNsb2cgd2hlbiBkbWVzZyBpcyBzZXQuCgpXaGlsZSBjZXJ0YWluIHVzZXIg
-cHJvZ3JhbXMgcmVseWluZyBvbiBDQVBfU1lTX0FETUlOIGZvciBzeXNsb2cgYWNjZXNzIG1pZ2h0
-IGJlIGltcGFjdGVkLCAKdGhleSBjYW4gYWRqdXN0IHRoZWlyIGNhcGFiaWxpdHkgY29uZmlndXJh
-dGlvbiB1c2luZyB0aGUg4oCYc2V0Y2Fw4oCZIGNvbW1hbmQuIERlY3JlYXNpbmcgdGhlIApyZWxp
-YW5jZSBvbiBDQVBfU1lTX0FETUlOIGFjcm9zcyBhcHBsaWNhdGlvbnMgY29udHJpYnV0ZXMgdG8g
-bWluaW1pemluZyBzZWN1cml0eSByaXNrcyBpbiAKdGhlIHN5c3RlbS4gQ3VycmVudGx5LCBpdCdz
-IHVuY2VydGFpbiBpZiBhbnkgc3VjaCBwcm9ncmFtcyBleGlzdC4KCgpCZXN0IHJlZ3JhZHMsCkpp
-bmd6aQoKWzFdOiBodHRwczovL2x3bi5uZXQvQXJ0aWNsZXMvNDg2MzA2LwoKCg==
+On Fri, Jan 05, 2024 at 08:40:00AM -0800, Harshit Mogalapalli wrote:
+> Syzkaller hit 'WARNING in dg_dispatch_as_host' bug.
+> 
+> memcpy: detected field-spanning write (size 56) of single field "&dg_info->msg"
+> at drivers/misc/vmw_vmci/vmci_datagram.c:237 (size 24)
+> 
+> WARNING: CPU: 0 PID: 1555 at drivers/misc/vmw_vmci/vmci_datagram.c:237
+> dg_dispatch_as_host+0x88e/0xa60 drivers/misc/vmw_vmci/vmci_datagram.c:237
+> 
+> Some code commentry, based on my understanding:
+> 
+> 544 #define VMCI_DG_SIZE(_dg) (VMCI_DG_HEADERSIZE + (size_t)(_dg)->payload_size)
+> /// This is 24 + payload_size
+> 
+> memcpy(&dg_info->msg, dg, dg_size);
+> 	Destination = dg_info->msg ---> this is a 24 byte
+> 					structure(struct vmci_datagram)
+> 	Source = dg --> this is a 24 byte structure (struct vmci_datagram)
+> 	Size = dg_size = 24 + payload_size
+> 
+> {payload_size = 56-24 =32} -- Syzkaller managed to set payload_size to 32.
+> 
+>  35 struct delayed_datagram_info {
+>  36         struct datagram_entry *entry;
+>  37         struct work_struct work;
+>  38         bool in_dg_host_queue;
+>  39         /* msg and msg_payload must be together. */
+>  40         struct vmci_datagram msg;
+>  41         u8 msg_payload[];
+>  42 };
+> 
+> So those extra bytes of payload are copied into msg_payload[], a run time
+> warning is seen while fuzzing with Syzkaller.
+> 
+> One possible way to fix the warning is to split the memcpy() into
+> two parts -- one -- direct assignment of msg and second taking care of payload.
+> 
+> Gustavo quoted:
+> "Under FORTIFY_SOURCE we should not copy data across multiple members
+> in a structure."
+> 
+> Reported-by: syzkaller <syzkaller@googlegroups.com>
+> Suggested-by: Vegard Nossum <vegard.nossum@oracle.com>
+> Suggested-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+> ---
+> This patch is only tested with the C reproducer, not any testing
+> specific to driver is done.
+> 
+> v1->v2: ( Suggestions from Gustavo )
+>         1. Change the commit message false positive --> legitimate
+>            warning.
+
+The commit message is fine.
+
+Reviewed-by: Dan Carpenter <dan.carpenter@linaro.org>
+
+But, I mean, it's not really "legitimate".  It meets the fortify source
+heuristic, but it's still a false positive.  Fortify source is
+*supposed* to find memory corruption bugs and this is not a memory
+corruption bug.  It's just that these days we have to treat foritify
+false positives as crashing bugs because people enable it and we have to
+fix it.
+
+Let's not pretend that fortify has helped us in this situation, it has
+caused us a problem.  It has taken valid code and created a crashing
+bug.  I'm not saying that the cost isn't worth it, but let's not pretend.
+
+regards,
+dan carpenter
+
+
