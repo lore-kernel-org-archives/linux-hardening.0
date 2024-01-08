@@ -1,213 +1,123 @@
-Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 356D054FB5
-	for <linux-hardening@vger.kernel.org>; Mon,  8 Jan 2024 19:21:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81E16537F3;
+	Mon,  8 Jan 2024 19:46:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="UcuRE8b/"
-Received: from eig-obgw-6010a.ext.cloudfilter.net ([10.0.30.248])
-	by cmsmtp with ESMTPS
-	id MqAerYALeTHHuMvBorcMFN; Mon, 08 Jan 2024 19:21:36 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id MvBnrLD7FfPByMvBnrkTbR; Mon, 08 Jan 2024 19:21:35 +0000
-X-Authority-Analysis: v=2.4 cv=T+af8tGQ c=1 sm=1 tr=0 ts=659c4b3f
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=GfQleyYEO+cc22AUyTT7qQ==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=dEuoMetlWLkA:10 a=wYkD_t78qR0A:10 a=4RBUngkUAAAA:8
- a=yPCof4ZbAAAA:8 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=xBSaC5TXKjcKYkrMF84A:9
- a=QEXdDO2ut3YA:10 a=_sbA2Q-Kp09kWB8D3iXc:22 a=AjGcO6oz07-iQ99wixmX:22
- a=cvBusfyB2V15izCimMoJ:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=rxv1zyBPmROyH3ODikrSiXesbgEjrba4VMOwSjsq8Bs=; b=UcuRE8b/Z8LikqSXkz82gnemfo
-	5s0zrEyCNtKTDjk6HHrqCtfDwBPPlrdxtnwO21fRoyfMO8z+THBoyTPbOBjbuDEtlaVbu1P7DC6D7
-	PcBPVl0ER3Osiw2Enn6lqQC+3NhDSMMyRFWFyjRCvM1K6ovQdchituyy86QeUQ6awQn6Tkp/6oXyz
-	CklilmjSS+JJYzvyyR0yRsmyJwHbq2LqnQx0Sthz8QQpggBcobS/75iJzybv+JAeUttaDhSufLhE0
-	iyE2ZNVnk2tfYejn9JUJ9Q4Ohj63go4LPd/qqq3tZT9k4X7relp63HU//hpuhzzVgCK/6qgee2H2O
-	5ehjGSag==;
-Received: from 187.184.157.186.cable.dyn.cableonline.com.mx ([187.184.157.186]:32462 helo=[192.168.0.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rMvBm-000aMY-0G;
-	Mon, 08 Jan 2024 13:21:34 -0600
-Message-ID: <7be0e5cc-058e-474e-bca9-f1c5b9a5f507@embeddedor.com>
-Date: Mon, 8 Jan 2024 13:21:30 -0600
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gYlyPH/S"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 408IxDxV004556;
+	Mon, 8 Jan 2024 19:44:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=HQMWlmhGCI0gqIzD3pTcfRRdTKO/pXigIEMbMJBUbps=;
+ b=gYlyPH/S4ZZPETPD828r+fCJMMeXZRoA6GVidkXKqIM2YTQKtEtLh1VOm9tR2xXlEtak
+ gb8+P8g3GA1SIgmbM5QcAl8RB13LBJjMzvWcj1YWI4FaqFMCWMcIj9t+MJ8zDNizpgmU
+ GcqAcbX2KJ8M4wmzibsAENr27KCB963+iN/5aha2yIyq0cvZMqVdGOs2WZ72kLIvy7Rd
+ vxt3h6oPVALxFrSsm0uXDCfgu9X/LNCGMarI7XOPvMEwUhRtCx2iY0qvEhgqdh3Fg+Si
+ fvszzXvgUH6495MwYuXQm0Bo7DfOmqR0dj2fTjE1+2hajPdwtlLiWxDN+jpoi0KmnkLg pA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vgjsrg9ba-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 08 Jan 2024 19:44:38 +0000
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 408JUABl009175;
+	Mon, 8 Jan 2024 19:44:37 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vgjsrg9aj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 08 Jan 2024 19:44:37 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 408HGBKD000400;
+	Mon, 8 Jan 2024 19:44:35 GMT
+Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3vfh6stf3n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 08 Jan 2024 19:44:35 +0000
+Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
+	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 408JiZA438404384
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 8 Jan 2024 19:44:35 GMT
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F187058045;
+	Mon,  8 Jan 2024 19:44:34 +0000 (GMT)
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2048258052;
+	Mon,  8 Jan 2024 19:44:33 +0000 (GMT)
+Received: from [9.61.145.235] (unknown [9.61.145.235])
+	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  8 Jan 2024 19:44:33 +0000 (GMT)
+Message-ID: <a2732262-2078-45e9-ab4b-f913ef68211a@linux.ibm.com>
+Date: Mon, 8 Jan 2024 13:44:32 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/8] dt-bindings: tpm: Add schema for TIS I2C devices
+Content-Language: en-US
+To: Rob Herring <robh@kernel.org>
+Cc: krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, joel@jms.id.au,
+        andrew@codeconstruct.com.au, peterhuewe@gmx.de, jarkko@kernel.org,
+        jgg@ziepe.ca, keescook@chromium.org, tony.luck@intel.com,
+        gpiccoli@igalia.com, johannes.holland@infineon.com, linux@roeck-us.net,
+        broonie@kernel.org, patrick.rudolph@9elements.com,
+        vincent@vtremblay.dev, peteryin.openbmc@gmail.com, lakshmiy@us.ibm.com,
+        bhelgaas@google.com, naresh.solanki@9elements.com,
+        alexander.stein@ew.tq-group.com, festevam@denx.de,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-hardening@vger.kernel.org,
+        geissonator@yahoo.com
+References: <20231212164004.1683589-1-ninad@linux.ibm.com>
+ <20231212164004.1683589-3-ninad@linux.ibm.com>
+ <20231213161347.GA1204384-robh@kernel.org>
+From: Ninad Palsule <ninad@linux.ibm.com>
+In-Reply-To: <20231213161347.GA1204384-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 5jHxyaT-zAgHLIcN9cmGSD4rg_rsIi2W
+X-Proofpoint-ORIG-GUID: Cma1fBCfpUOX8LEvDKc8aTniKKcx3aAf
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] VMCI: Fix memcpy() run-time warning in
- dg_dispatch_as_host()
-Content-Language: en-US
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
- linux-hardening@vger.kernel.org, keescook@chromium.org, error27@gmail.com,
- gustavoars@kernel.org, Bryan Tan <bryantan@vmware.com>,
- Vishnu Dasa <vdasa@vmware.com>,
- VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
- Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-kernel@vger.kernel.org, vegard.nossum@oracle.com,
- darren.kenny@oracle.com, syzkaller <syzkaller@googlegroups.com>
-References: <20240105164001.2129796-1-harshit.m.mogalapalli@oracle.com>
- <20240105164001.2129796-2-harshit.m.mogalapalli@oracle.com>
- <fc132bde-d42d-4aac-ba91-7a939a18091a@moroto.mountain>
- <7826922a-d642-424e-bede-bfc45be9254d@embeddedor.com>
- <8023e9f4-c14b-453a-8071-ef94bba0d0d3@moroto.mountain>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <8023e9f4-c14b-453a-8071-ef94bba0d0d3@moroto.mountain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.184.157.186
-X-Source-L: No
-X-Exim-ID: 1rMvBm-000aMY-0G
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187.184.157.186.cable.dyn.cableonline.com.mx ([192.168.0.10]) [187.184.157.186]:32462
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 13
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfOKTQgGdeWdFgcjxvsy8fCpSP4dyV+O2KecaWf/dRUXptac9nIaidoO6Uh2rO1+htid40R9u+7f6pC51w7+l+O5o4Soh8nKJMkTgcgesyaNdsOTHngC7
- 9TWln02fRlbh75GXz0KQ24DXJYwJFoI3T8u+1AdQXoYm7Ztck5fKKBw30Zuy7+0WRgoqjaLQqYirKJ++20zQSihedCID3LtMelXXBI2sjvP4W51plJxayuSW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-08_08,2024-01-08_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ lowpriorityscore=0 clxscore=1011 priorityscore=1501 impostorscore=0
+ adultscore=0 suspectscore=0 phishscore=0 spamscore=0 mlxlogscore=999
+ malwarescore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2401080163
 
+Hi Rob,
 
-
-On 1/8/24 12:36, Dan Carpenter wrote:
-> On Mon, Jan 08, 2024 at 11:03:51AM -0600, Gustavo A. R. Silva wrote:
+On 12/13/23 10:13, Rob Herring wrote:
+> On Tue, Dec 12, 2023 at 10:39:58AM -0600, Ninad Palsule wrote:
+>> From: Johannes Holland <johannes.holland@infineon.com>
 >>
+>> Add a dt schema to support device tree bindings for the generic I2C
+>> physical layer. Refer to the TCG PC Client Platform TPM Profile (PTP)
+>> Specification for TPM 2.0 v1.04 Revision 14.
 >>
->> On 1/8/24 01:33, Dan Carpenter wrote:
->>> On Fri, Jan 05, 2024 at 08:40:00AM -0800, Harshit Mogalapalli wrote:
->>>> Syzkaller hit 'WARNING in dg_dispatch_as_host' bug.
->>>>
->>>> memcpy: detected field-spanning write (size 56) of single field "&dg_info->msg"
->>>> at drivers/misc/vmw_vmci/vmci_datagram.c:237 (size 24)
->>>>
->>>> WARNING: CPU: 0 PID: 1555 at drivers/misc/vmw_vmci/vmci_datagram.c:237
->>>> dg_dispatch_as_host+0x88e/0xa60 drivers/misc/vmw_vmci/vmci_datagram.c:237
->>>>
->>>> Some code commentry, based on my understanding:
->>>>
->>>> 544 #define VMCI_DG_SIZE(_dg) (VMCI_DG_HEADERSIZE + (size_t)(_dg)->payload_size)
->>>> /// This is 24 + payload_size
->>>>
->>>> memcpy(&dg_info->msg, dg, dg_size);
->>>> 	Destination = dg_info->msg ---> this is a 24 byte
->>>> 					structure(struct vmci_datagram)
->>>> 	Source = dg --> this is a 24 byte structure (struct vmci_datagram)
->>>> 	Size = dg_size = 24 + payload_size
->>>>
->>>> {payload_size = 56-24 =32} -- Syzkaller managed to set payload_size to 32.
->>>>
->>>>    35 struct delayed_datagram_info {
->>>>    36         struct datagram_entry *entry;
->>>>    37         struct work_struct work;
->>>>    38         bool in_dg_host_queue;
->>>>    39         /* msg and msg_payload must be together. */
->>>>    40         struct vmci_datagram msg;
->>>>    41         u8 msg_payload[];
->>>>    42 };
->>>>
->>>> So those extra bytes of payload are copied into msg_payload[], a run time
->>>> warning is seen while fuzzing with Syzkaller.
->>>>
->>>> One possible way to fix the warning is to split the memcpy() into
->>>> two parts -- one -- direct assignment of msg and second taking care of payload.
->>>>
->>>> Gustavo quoted:
->>>> "Under FORTIFY_SOURCE we should not copy data across multiple members
->>>> in a structure."
->>>>
->>>> Reported-by: syzkaller <syzkaller@googlegroups.com>
->>>> Suggested-by: Vegard Nossum <vegard.nossum@oracle.com>
->>>> Suggested-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->>>> Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
->>>> ---
->>>> This patch is only tested with the C reproducer, not any testing
->>>> specific to driver is done.
->>>>
->>>> v1->v2: ( Suggestions from Gustavo )
->>>>           1. Change the commit message false positive --> legitimate
->>>>              warning.
->>>
->>> The commit message is fine.
->>>
->>> Reviewed-by: Dan Carpenter <dan.carpenter@linaro.org>
->>>
->>> But, I mean, it's not really "legitimate".  It meets the fortify source
->>> heuristic, but it's still a false positive.  Fortify source is
->>> *supposed* to find memory corruption bugs and this is not a memory
->>> corruption bug.  It's just that these days we have to treat foritify
->>> false positives as crashing bugs because people enable it and we have to
->>> fix it.
->>>
->>> Let's not pretend that fortify has helped us in this situation, it has
->>> caused us a problem.  It has taken valid code and created a crashing
->>> bug.  I'm not saying that the cost isn't worth it, but let's not pretend.
->>>
->>
->> It's a "legitimate warning" (which differs from a "legitimate memory
->> corruption bug") in the sense that the feature is doing what it's
->> supposed to do: reporting a write beyond the boundaries of a field/member
->> in a structure.
->>
->> Is that simple.  I don't see the "pretense" here.
->>
->> BTW, is this _warning_ really causing a crash?
-> 
-> I don't know how many people have Reboot on Warn enabled but I've heard
-> it's a shocking high number of people.
-> 
-> My problem with "legitimate" is that it's a biased word which imples
-> "good".  A more neutral way to describe it would be "acceptable" or
-> "matches the heuristic".
-> 
-> Generally, we get a lot of patches which are to make a tool happy and
-> sometimes like here it's probably an acceptable cost.  But I think
-> other times people lose sight of what it's all about and confuse good
-> and bad.  In some kind of very literal and narrow sense this warning is
-> bad.  It takes perfectly okay code and turns it into a crashing bug.  In
-> the larger sense and long term view then, sure, the heuristic is useful,
-> but right here, in this situation, it's bad.
+>> This includes descriptions for the Nuvoton and Infineon devices.
+> This is incomplete and conflicts with this series[1]. Please help
+> review and make sure it works for the cases you care about.
+>
+> Rob
+>
+> [1] https://lore.kernel.org/all/cover.1701093036.git.lukas@wunner.de/
 
+Looks like my patch "dt-bindings: tpm: Add schema for TIS I2C devices" 
+is not required. I am removing it.
 
-This is right on point:
+Thanks for the review.
 
-"In some kind of very literal and narrow sense this warning is bad."
+Regards,
 
-Let's say the vast majority of people is of this opinion. Thus, they
-engage in never-ending discussions, and end up disregarding this sort
-of warning, deciding to ignore it completely. Then, a lot more of these
-warnings go unfixed. Then, a couple of actual memory corruption bugs
-are introduced. Then, people don't notice them. Then, the hardening
-feature ends up becoming useless.
+Ninad
 
-Why insist on disregarding something that is clearly beneficial to
-acknowledge and worth correcting right on the spot?
-
-This is real work that must be done if we want the feature to help us
-detect bugs and potential vulnerabilities.
-
-Thanks
---
-Gustavo
