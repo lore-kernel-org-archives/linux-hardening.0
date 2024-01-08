@@ -1,113 +1,112 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1123F8BF9;
-	Mon,  8 Jan 2024 07:51:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 211DF51037;
+	Mon,  8 Jan 2024 15:35:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BKRlJNEt"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-50e7d6565b5so1479489e87.0;
-        Sun, 07 Jan 2024 23:51:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xw4uyfIo"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3376ead25e1so623632f8f.3;
+        Mon, 08 Jan 2024 07:35:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704700301; x=1705305101; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xB6dTmy7PPONUEqk9zrc11jGA1ahX/VsK6NLrJv8Ibo=;
-        b=BKRlJNEtsvPUNZqxMDLldvZ2I9yer42F1wk1zk2OGsPvzgcyZ0OFzXi59a/VtulcD+
-         2TZxNEQcodsHICX2wWDVrCnimvEjjngqYgTOOges0lE0DUgemupWAKkq9o2DVW8dbZxY
-         ojHI/mnfy3hvM9EDglJCDqOpXGKV5g1Dkx8eBgn9ArHNfrWOmZnSYYakzReVNw9rjWtR
-         MNYsV9Edoiyk5lzNp6OnO8vUUvcztmzG0/PhqkUOMtwF+yvrb7WZyUAUBGgh5HfbR7MS
-         TmyzFLzO+vH0qoW5bGnAIHf7yTBX7YD8/DiwqGf2zvZDmM/5v9yQlNuTDHBnBOnDdGgF
-         WQzQ==
+        d=gmail.com; s=20230601; t=1704728101; x=1705332901; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0dSkJ2ZiJqHanlAP+HAK0y6zusm5LzCHKOPBAF01RGI=;
+        b=Xw4uyfIoslfLqcwYTa5Fp5lyDdT6ZJ+ZvZO78hDXPQ5kjj8YNUt5mKPPG4iVdUO6Xe
+         dEjjLm5gr8mgFUCzsMgoa1WxgCbq63B90vFpPse1Ag+KvOrT8YIcDhBUbutTJDpKAk7L
+         NcL4pDRNZwm99wpRiGJyxLpHp4scVAk2s47HnHbx5pMr2yus9vtVXv5y35eZBQjkg3QD
+         PCXobg/OffJNTbRkIRyj+kcfBVTSPSfpnYe3ZBYHwS+F3WeZ5Q6PB/hU+d3N0zclLNI6
+         mobOT92LM2dmIez80EjOQ41xd3ZDgmzESYeb1mMrHNRHoruwdSXG92cC7Xs1Gk4uy/Pc
+         vBXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704700301; x=1705305101;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xB6dTmy7PPONUEqk9zrc11jGA1ahX/VsK6NLrJv8Ibo=;
-        b=e9eSY0V0+YSadMZUeE69lJXAzJaomJaEsNwTFAVUrIKtCejd1/j5dWbyGBsnedBxPc
-         EO6QIMCIVSWC3yaP50JdnaL/eFxuWktJGRfmsCtltoPxAVzCVEto+XSMMV0xoCCEMtPZ
-         MRbprn9LrbnA8V1PamZWhYuh6x9Bd9QbbqGHYJq7DSky3364SUXnbjZ1iAzh2ORRSRrr
-         3CYPxUe1DSkmFqdCvs5ZN4HJMdzy34NeKenzgDV8GGZa9yOwDBbVsUCRUJjafo8awTCl
-         Wr7XWAm+KAEwI6Vje/bTQVmv+CYoQJxnpcICFIm9GPIdl78O7sSg1lOyVqP2ZieGveTU
-         OI5g==
-X-Gm-Message-State: AOJu0YwVSxJPyybbZMu5HeJvw/xNRAFv4l0qPg+R83vbBzFeWF6dn0xf
-	2UDQ3JcXPE/zzpVud2CRTLw=
-X-Google-Smtp-Source: AGHT+IFgZcByQqbr97652HkUV9fLE574WgqqSfXCYtLKE0ke5xjsGHFQbJJlJSSp27L/fI7gvAQaBQ==
-X-Received: by 2002:a05:6512:48d1:b0:50e:7a04:2229 with SMTP id er17-20020a05651248d100b0050e7a042229mr1196568lfb.25.1704700300833;
-        Sun, 07 Jan 2024 23:51:40 -0800 (PST)
-Received: from [10.0.0.100] (host-213-145-197-219.kaisa-laajakaista.fi. [213.145.197.219])
-        by smtp.gmail.com with ESMTPSA id f26-20020ac2533a000000b0050e7a97ae32sm1062227lfh.78.2024.01.07.23.51.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 07 Jan 2024 23:51:40 -0800 (PST)
-Message-ID: <20894f38-2e35-40c7-9e6c-f1b7f375a030@gmail.com>
-Date: Mon, 8 Jan 2024 09:52:14 +0200
+        d=1e100.net; s=20230601; t=1704728101; x=1705332901;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0dSkJ2ZiJqHanlAP+HAK0y6zusm5LzCHKOPBAF01RGI=;
+        b=pto6BW95nCWoaA3MXBQbD5krY0UrsSrPNFqAeCFi9k4jWHJffjaQdug8BGrM+REGqn
+         A1h8rcHGnQ4xmgHYG5mlWvTjm40kFfX9lVVQCwrjqi2TELiCWHq6xz3KSDSJAsS8d9m/
+         4dUmOAVvyj7iGA+7Z2HWKgfwksW0ZVzv7n0bxbFhkwNfAxNiZ+6sQIG/mI+48RUQieZ5
+         Tsjon/HNtZ+kGPiUAyMatQ1AEDmUFifOwL2JoRh9xsiG89EOXgKKi4kfs1o3kpoFX+3j
+         ArQ/zqbl5UG+P3goiLd+4Rlaf4da3W43uxL/xXRe7nTo/+ematrHVTe7L9UCpugI6Dlv
+         +v/w==
+X-Gm-Message-State: AOJu0YyFA8pLD4q8tPOgOmfrRnl1y7bx2DoBfFwOvH12uSkFskUhk/cK
+	LbMfYjQZHQCaaA4swuooRhNlwKFAt2iaAb6ps5w=
+X-Google-Smtp-Source: AGHT+IEDyiUE/fCZgQ2fiflpohBhP714EYsyUDi/vkkXfWWGgss80RDHy8tK389zVkT20aui+pSoTQyf4TXc3l08ehI=
+X-Received: by 2002:adf:f0d2:0:b0:337:4c69:d6b with SMTP id
+ x18-20020adff0d2000000b003374c690d6bmr1755895wro.6.1704728101148; Mon, 08 Jan
+ 2024 07:35:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ASoC: ti: Use devm_kcalloc() instead of devm_kzalloc()
-To: Erick Archer <erick.archer@gmx.com>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20240106162752.18599-1-erick.archer@gmx.com>
-Content-Language: en-US
-From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
-In-Reply-To: <20240106162752.18599-1-erick.archer@gmx.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <1700864395-1479-4-git-send-email-quic_mojha@quicinc.com>
+ <20231225135542.1789-1-ruipengqi7@gmail.com> <520e377d-e990-c185-4a20-07806873e506@quicinc.com>
+In-Reply-To: <520e377d-e990-c185-4a20-07806873e506@quicinc.com>
+From: Ruipeng Qi <ruipengqi7@gmail.com>
+Date: Mon, 8 Jan 2024 23:34:50 +0800
+Message-ID: <CADHLONEn4oyRFrNWEbt2mxMczyc8FrDLMzaZ7fsijzm9Y8VTBA@mail.gmail.com>
+Subject: Re: RESEND: Re: [Patch v6 03/12] docs: qcom: Add qualcomm minidump guide
+To: Mukesh Ojha <quic_mojha@quicinc.com>
+Cc: agross@kernel.org, alim.akhtar@samsung.com, andersson@kernel.org, 
+	bmasney@redhat.com, conor+dt@kernel.org, corbet@lwn.net, gpiccoli@igalia.com, 
+	keescook@chromium.org, kernel@quicinc.com, kgene@kernel.org, 
+	konrad.dybcio@linaro.org, krzysztof.kozlowski+dt@linaro.org, 
+	linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, 
+	linux-remoteproc@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
+	mathieu.poirier@linaro.org, matthias.bgg@gmail.com, nm@ti.com, 
+	robh+dt@kernel.org, tony.luck@intel.com, vigneshr@ti.com, 
+	qiruipeng@lixiang.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Jan 3, 2024 at 11:27=E2=80=AFPM Mukesh Ojha <quic_mojha@quicinc.com=
+> wrote:
+>
+>
+> One more thing, kernel part of minidump, we are calling it APSS Minidump
+> has limitation of no of entries so it will be difficult to dump
+> non-continuous regions after a certain number of registration ~200. Howev=
+er,
+> we do have a solution in downstream kernel for it like to create a big
+> CMA buffer and register this buffer with Minidump so that whatever gets
+> dumped in that buffer gets captured during crash and fill up this buffer
+> and create elf during panic. I think, similar thing you are also doing
+> with your OS-minidump.
+>
+> I have just glanced into your implementation of OS-minidump, it
+> more of relying on basic concept of RAM content preserved
+> across boot and later reading it through procfs but this basic
+> stuff is common to pstore(ram) as well and pstore has file system
+> support why don't you make your driver as one of pstore record and that
+> way Qualcomm minidump also gets benefited where entire OS-minidump
+> record gets registered with Qualcomm minidump and we get this on panic
+> and you get this via pstorefs.
+>
+Thanks Mukesh=EF=BC=81It is a good suggestion to move OS-minidump forward!
+By the way, I have some questions here for which I need your assistance.
 
+Firstly,I can reimplement OS-minidump as one of the pstore records to
+dump data. The resulting dump file would contain thousands of
+non-contiguous memory regions, each with only the virtual address and
+size recorded. As far as I know, Qualcomm's minidump can handle
+several memory regions, each with a physical address and size.
+This seems to be a difference, and I'm curious as to how you deal with
+data dumped by OS-minidump. I would really appreciate it if you could
+provide more details on your approach.
 
-On 06/01/2024 18:27, Erick Archer wrote:
-> Use 2-factor multiplication argument form devm_kcalloc() instead
-> of devm_kzalloc().
-> 
-> Link: https://github.com/KSPP/linux/issues/162
-> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+Secondly, what tools do you use to analyze the dump data, and does it
+support crash tool?
 
-Can you fix the commit title to:
-ASoC: ti: j721e-evm.: Use devm_kcalloc() instead of devm_kzalloc()
+Lastly, is Qualcomm minidump compatible with non-Qualcomm SoCs,
+and if so, how can one use it?
 
-and send v2 with my:
-Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
-
-> ---
->  sound/soc/ti/j721e-evm.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/sound/soc/ti/j721e-evm.c b/sound/soc/ti/j721e-evm.c
-> index b4b158dc736e..d9d1e021f5b2 100644
-> --- a/sound/soc/ti/j721e-evm.c
-> +++ b/sound/soc/ti/j721e-evm.c
-> @@ -649,7 +649,7 @@ static int j721e_soc_probe_cpb(struct j721e_priv *priv, int *link_idx,
->  	 * Link 2: McASP10 <- pcm3168a_1 ADC
->  	 */
->  	comp_count = 6;
-> -	compnent = devm_kzalloc(priv->dev, comp_count * sizeof(*compnent),
-> +	compnent = devm_kcalloc(priv->dev, comp_count, sizeof(*compnent),
->  				GFP_KERNEL);
->  	if (!compnent) {
->  		ret = -ENOMEM;
-> @@ -763,7 +763,7 @@ static int j721e_soc_probe_ivi(struct j721e_priv *priv, int *link_idx,
->  	 *		   \ pcm3168a_b ADC
->  	 */
->  	comp_count = 8;
-> -	compnent = devm_kzalloc(priv->dev, comp_count * sizeof(*compnent),
-> +	compnent = devm_kcalloc(priv->dev, comp_count, sizeof(*compnent),
->  				GFP_KERNEL);
->  	if (!compnent) {
->  		ret = -ENOMEM;
-> --
-> 2.25.1
-> 
-
--- 
-Péter
+Best Regards
+Ruipeng Qi
