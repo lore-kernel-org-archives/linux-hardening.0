@@ -1,90 +1,175 @@
-Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3950524A1
-	for <linux-hardening@vger.kernel.org>; Mon,  8 Jan 2024 16:00:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC35854729
+	for <linux-hardening@vger.kernel.org>; Mon,  8 Jan 2024 17:04:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QxDQStCP"
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-2041ed74956so1371897fac.0
-        for <linux-hardening@vger.kernel.org>; Mon, 08 Jan 2024 08:00:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1704729635; x=1705334435; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LhaTWMM1J7fnFC4m0/Is2MdvAgnd3Gn355pGFsoQhag=;
-        b=QxDQStCP5glLeIpZn44jkXG3qKRpmBNJBKB4/kB3BTYUt/Ui8YnkpF8saGG+7eGe2p
-         eOrIh/07sYSts8OmQNcUir6Bl6qjh92CUZ+mXOBNE7QtASo5dlM2pgmN5vUTzjsZ/3kC
-         7AGQo/BgT8Q1NCFiB41d7zGVjVNSLSXDRNb8Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704729635; x=1705334435;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LhaTWMM1J7fnFC4m0/Is2MdvAgnd3Gn355pGFsoQhag=;
-        b=OkIEV1bZ5M34mIQ5VB4WyROgv4/GDgtsa/UgzKjxl2WM0g0a2bLphrSm4rN6REDpib
-         KNBcoY9rGtcUxtBnBWLSi6ZB6mGhrYopor60+ByNkjKUkaLw4AzpxVBE3egMoZ+PkcWP
-         MaeHKgmLV9KSIgBM61NbyKsuGtW1ntBuqk0kwehWRnGO+FPgco3wNGNe4rww7c8vi2fb
-         +rC7XdtxbZGonaklNcxwHDfm7gvPXWf3nIChOEuq7I3+XOWqBwZ8WwabPmGJ1PzGRNpq
-         9nBaw1Z19JY/wiEvxj3SaLsD2Nvl2GD6c5wJnpq9NZMokIK+pHAzzdXRpP1DhqZ9+p1C
-         a71w==
-X-Gm-Message-State: AOJu0YyomZWlhwrJ/121KFf+pbDQqpv+z5mUDxqUAEITAjDw8WTvm3No
-	I8BA4WL7+VcSWjllhpzZTp3uep3VSe7jBJ7Ucl4BiT+qrPeh
-X-Google-Smtp-Source: AGHT+IFsyr9PipomN50qTzZSjGmht0Y6LotO8i5wTx1ikP902yVEMEd9iRDf0Klegy5vhidUtbKEgst4FKgIVlgOddc=
-X-Received: by 2002:a05:6870:1587:b0:206:3c53:65b9 with SMTP id
- j7-20020a056870158700b002063c5365b9mr487892oab.52.1704729635730; Mon, 08 Jan
- 2024 08:00:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="TK/BHEQB"
+Received: from eig-obgw-5007a.ext.cloudfilter.net ([10.0.29.141])
+	by cmsmtp with ESMTPS
+	id Ms34rBox5AxAkMt2prsWde; Mon, 08 Jan 2024 17:04:11 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id Mt2ZrCPldPwzWMt2arokE7; Mon, 08 Jan 2024 17:03:56 +0000
+X-Authority-Analysis: v=2.4 cv=T8yf8tGQ c=1 sm=1 tr=0 ts=659c2afc
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=GfQleyYEO+cc22AUyTT7qQ==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=dEuoMetlWLkA:10 a=wYkD_t78qR0A:10 a=4RBUngkUAAAA:8
+ a=yPCof4ZbAAAA:8 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=ZvJPU1clwQC8LSIsbNEA:9
+ a=QEXdDO2ut3YA:10 a=_sbA2Q-Kp09kWB8D3iXc:22 a=AjGcO6oz07-iQ99wixmX:22
+ a=cvBusfyB2V15izCimMoJ:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=zVnMDgYqQIW31yhlq5X+5vjFVCRFGlx7qcSQZAIaikw=; b=TK/BHEQBl2MBSv1vTxi/fBTG6w
+	5P6o+PbNfRxLqQrNMSF9Yn0LkA01bzddDvZcFe9XL4llxXTfRxNpqkqkyeQzZmUObGzTDFvEAnT7z
+	VbxZtkYqOY1dCwlUgFar7Y7W+fwWUNhCr/rBYuNZfognJFTEFSCqwJXNeDYbzTMIbA+HxQ+k2nwR5
+	kGkFm/d2R9t3tpVJqViO+yovW6PdS3YUuVUgn5bccLQKpCHdyfhJaWtHX6t3gvhDYPz4ew2Xw1lDa
+	7L1GqRX9wLI6aMeCz0QJi4y6tBbqjNQ/YSh9KPTQGahoxX9ObnQAe7+pf4kzpr9Xrn9XWFVueez+s
+	88YDv9jg==;
+Received: from 187.184.157.186.cable.dyn.cableonline.com.mx ([187.184.157.186]:18340 helo=[192.168.0.10])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1rMt2Y-002LqS-1z;
+	Mon, 08 Jan 2024 11:03:54 -0600
+Message-ID: <7826922a-d642-424e-bede-bfc45be9254d@embeddedor.com>
+Date: Mon, 8 Jan 2024 11:03:51 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240104185138.169307-1-jeffxu@chromium.org> <20240104185138.169307-3-jeffxu@chromium.org>
- <CAHk-=wiy0nHG9+3rXzQa=W8gM8F6-MhsHrs_ZqWaHtjmPK4=FA@mail.gmail.com>
-In-Reply-To: <CAHk-=wiy0nHG9+3rXzQa=W8gM8F6-MhsHrs_ZqWaHtjmPK4=FA@mail.gmail.com>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Mon, 8 Jan 2024 08:00:00 -0800
-Message-ID: <CABi2SkXx0bWeqMTb1TRwya6_Hx6NGnMEtycQ56g9S5ORpz7u=Q@mail.gmail.com>
-Subject: Re: [RFC PATCH v4 2/4] mseal: add mseal syscall
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com, 
-	sroettger@google.com, willy@infradead.org, gregkh@linuxfoundation.org, 
-	usama.anjum@collabora.com, jeffxu@google.com, jorgelo@chromium.org, 
-	groeck@chromium.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, pedro.falcato@gmail.com, 
-	dave.hansen@intel.com, linux-hardening@vger.kernel.org, deraadt@openbsd.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] VMCI: Fix memcpy() run-time warning in
+ dg_dispatch_as_host()
+Content-Language: en-US
+To: Dan Carpenter <dan.carpenter@linaro.org>,
+ Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+Cc: linux-hardening@vger.kernel.org, keescook@chromium.org,
+ error27@gmail.com, gustavoars@kernel.org, Bryan Tan <bryantan@vmware.com>,
+ Vishnu Dasa <vdasa@vmware.com>,
+ VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ linux-kernel@vger.kernel.org, vegard.nossum@oracle.com,
+ darren.kenny@oracle.com, syzkaller <syzkaller@googlegroups.com>
+References: <20240105164001.2129796-1-harshit.m.mogalapalli@oracle.com>
+ <20240105164001.2129796-2-harshit.m.mogalapalli@oracle.com>
+ <fc132bde-d42d-4aac-ba91-7a939a18091a@moroto.mountain>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <fc132bde-d42d-4aac-ba91-7a939a18091a@moroto.mountain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.184.157.186
+X-Source-L: No
+X-Exim-ID: 1rMt2Y-002LqS-1z
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187.184.157.186.cable.dyn.cableonline.com.mx ([192.168.0.10]) [187.184.157.186]:18340
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 13
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfLIg5fIsjHNXLpU/3FpEgCiDqgeaFz8uB8//ddB36WUhkk149/YonB13rkbJPlDhSHtyZm/KrwrK1lYPKJKox4EOjyNHl7SFCXUgG1iR2oR+2qHSjp9q
+ Zjg1WdJY8rQTpQPvH0yQQuyI4wD/qVJxf8lNhgQ1CHV8gQOkok3reJoDpMHv/8i2xfPyT9mfL0ZFpnU0++xtSl1yf5gO10Aq29CmhAfeiwqIa9Xh6YBTJFAC
 
-On Sun, Jan 7, 2024 at 10:42=E2=80=AFAM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> One comment:
->
-> On Thu, 4 Jan 2024 at 10:51, <jeffxu@chromium.org> wrote:
-> >
-> > diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
-> > index 9a846439b36a..02280199069b 100644
-> > --- a/kernel/sys_ni.c
-> > +++ b/kernel/sys_ni.c
-> > @@ -193,6 +193,7 @@ COND_SYSCALL(migrate_pages);
-> >  COND_SYSCALL(move_pages);
-> >  COND_SYSCALL(set_mempolicy_home_node);
-> >  COND_SYSCALL(cachestat);
-> > +COND_SYSCALL(mseal);
-> >
-> >  COND_SYSCALL(perf_event_open);
-> >  COND_SYSCALL(accept4);
->
-> Move this part to PATCH 1/1, so that it all builds cleanly.
->
-Sure, thanks!
 
--Jeff
 
-> Other than that, this seems all reasonable to me now.
->
->                   Linus
+On 1/8/24 01:33, Dan Carpenter wrote:
+> On Fri, Jan 05, 2024 at 08:40:00AM -0800, Harshit Mogalapalli wrote:
+>> Syzkaller hit 'WARNING in dg_dispatch_as_host' bug.
+>>
+>> memcpy: detected field-spanning write (size 56) of single field "&dg_info->msg"
+>> at drivers/misc/vmw_vmci/vmci_datagram.c:237 (size 24)
+>>
+>> WARNING: CPU: 0 PID: 1555 at drivers/misc/vmw_vmci/vmci_datagram.c:237
+>> dg_dispatch_as_host+0x88e/0xa60 drivers/misc/vmw_vmci/vmci_datagram.c:237
+>>
+>> Some code commentry, based on my understanding:
+>>
+>> 544 #define VMCI_DG_SIZE(_dg) (VMCI_DG_HEADERSIZE + (size_t)(_dg)->payload_size)
+>> /// This is 24 + payload_size
+>>
+>> memcpy(&dg_info->msg, dg, dg_size);
+>> 	Destination = dg_info->msg ---> this is a 24 byte
+>> 					structure(struct vmci_datagram)
+>> 	Source = dg --> this is a 24 byte structure (struct vmci_datagram)
+>> 	Size = dg_size = 24 + payload_size
+>>
+>> {payload_size = 56-24 =32} -- Syzkaller managed to set payload_size to 32.
+>>
+>>   35 struct delayed_datagram_info {
+>>   36         struct datagram_entry *entry;
+>>   37         struct work_struct work;
+>>   38         bool in_dg_host_queue;
+>>   39         /* msg and msg_payload must be together. */
+>>   40         struct vmci_datagram msg;
+>>   41         u8 msg_payload[];
+>>   42 };
+>>
+>> So those extra bytes of payload are copied into msg_payload[], a run time
+>> warning is seen while fuzzing with Syzkaller.
+>>
+>> One possible way to fix the warning is to split the memcpy() into
+>> two parts -- one -- direct assignment of msg and second taking care of payload.
+>>
+>> Gustavo quoted:
+>> "Under FORTIFY_SOURCE we should not copy data across multiple members
+>> in a structure."
+>>
+>> Reported-by: syzkaller <syzkaller@googlegroups.com>
+>> Suggested-by: Vegard Nossum <vegard.nossum@oracle.com>
+>> Suggested-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>> Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+>> ---
+>> This patch is only tested with the C reproducer, not any testing
+>> specific to driver is done.
+>>
+>> v1->v2: ( Suggestions from Gustavo )
+>>          1. Change the commit message false positive --> legitimate
+>>             warning.
+> 
+> The commit message is fine.
+> 
+> Reviewed-by: Dan Carpenter <dan.carpenter@linaro.org>
+> 
+> But, I mean, it's not really "legitimate".  It meets the fortify source
+> heuristic, but it's still a false positive.  Fortify source is
+> *supposed* to find memory corruption bugs and this is not a memory
+> corruption bug.  It's just that these days we have to treat foritify
+> false positives as crashing bugs because people enable it and we have to
+> fix it.
+> 
+> Let's not pretend that fortify has helped us in this situation, it has
+> caused us a problem.  It has taken valid code and created a crashing
+> bug.  I'm not saying that the cost isn't worth it, but let's not pretend.
+> 
+
+It's a "legitimate warning" (which differs from a "legitimate memory
+corruption bug") in the sense that the feature is doing what it's
+supposed to do: reporting a write beyond the boundaries of a field/member
+in a structure.
+
+Is that simple.  I don't see the "pretense" here.
+
+BTW, is this _warning_ really causing a crash?
+
+Thanks
+--
+Gustavo
+
