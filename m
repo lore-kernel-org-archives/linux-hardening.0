@@ -1,56 +1,38 @@
-Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4420E3D559
-	for <linux-hardening@vger.kernel.org>; Tue,  9 Jan 2024 19:47:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90CA3A8E3;
+	Tue,  9 Jan 2024 20:36:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WmFMijfi"
-Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-7ba903342c2so247497739f.3
-        for <linux-hardening@vger.kernel.org>; Tue, 09 Jan 2024 11:47:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1704829634; x=1705434434; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jp3sPNgDn5/w+4+SQ1Qzo5FCSJIVAu5zu+xhNcaS+RE=;
-        b=WmFMijfiyoN4iXHXnNTgp9SZ3FGgajoebCBzBn2+XT8eXw9KYXXP8u8n8RWp5u3U8S
-         diK0rc0TIrU/3540+ag3pm3B4Vzkz0c6ZWHcpVKmtvKbWKCAdU+2fvc8beCJ+M5g07Aa
-         ZutY43ahCZPDU7Wt/qgCxAGFrx9ACN6CryvJk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704829634; x=1705434434;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jp3sPNgDn5/w+4+SQ1Qzo5FCSJIVAu5zu+xhNcaS+RE=;
-        b=IXpMT/zs1X/tVUnA3+uSknjtuThhLgMkUNFAshDKfm9pe+dIxruqmVhP/aCSQuUGBP
-         Cg9mTByhQgCQsHySt42vZ8DcFh/Lgx1n9F+bOeZc8wqWV5j5HfElw+B1CEzCOKd/hVNy
-         OEMFd62h+Yx+kG9d5/dX81ZS2IFILVEwTV3Zg6cRjsCO5ZCkyQ58x+o3fjw/FrS4g9kg
-         /d7nlueThxaf57wXEP86BFuwTv0VqjSpOeeXsx+JaMzlWBLN7bMPM9pQXMWV8rFlTI9l
-         ybNMh2yhYFDBTIWQCuwvsA6aIwzfmtFIovSO/VwgJE016FSPwKZAYgHvZ8KTmmo/qrsS
-         yoeQ==
-X-Gm-Message-State: AOJu0YzkpRICW+cmG4Mt3xb8wKCqQgoy/t0+kGXZGIhyAQmqBW+oHQ8v
-	pV/yAepNiQycRrrvYNXRNvh37l8v0jzS
-X-Google-Smtp-Source: AGHT+IF2+p52+a/uGcKh/I7JeXkJJoDrdwxg8dNkuNsj9eVicHWq61t6V8lQJDA2Rjq6uoJanlNaeg==
-X-Received: by 2002:a05:6e02:1989:b0:360:637:f64d with SMTP id g9-20020a056e02198900b003600637f64dmr9062346ilf.6.1704829634495;
-        Tue, 09 Jan 2024 11:47:14 -0800 (PST)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id n68-20020a632747000000b005cd8044c6fesm2019222pgn.23.2024.01.09.11.47.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jan 2024 11:47:14 -0800 (PST)
-Date: Tue, 9 Jan 2024 11:47:13 -0800
-From: Kees Cook <keescook@chromium.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ceez6eWN"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=b2HomVXY7FzMXkiwOxrMKlwOQEHDYNZAL5sKCtuBtfk=; b=Ceez6eWNOAP75GYM7O6sxoxLMK
+	sEyjYspnASHzv4goTZkwM3Azj9T0S7OArOGxOU0BOxqwe41T54sximqesBg7tYZ2EljvmUQbzuqfs
+	HtwprQ1pepzRo3YWq4OU0ZII2MeOfSxGvO9mWRXg+B1f4bGSCsXK93nokeodRy1CNMbURutmgvIXr
+	0KZ+RyDs4RA8S5DouFLHfXW22t6qXMqJWoS2/KlDbl+InFqT8xmW7WSXCHnEoq+Zz7ODVYHdpWcbX
+	4+8Ux7WmXEdCstEG7wBE3mnDIhmtbpiK7ct9wzwe/d/z5PliZNsv5D0yOj0TOzGJyppNW3vNYrnVF
+	herDEtbw==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1rNIq7-00AIGa-4i; Tue, 09 Jan 2024 20:36:47 +0000
+Date: Tue, 9 Jan 2024 20:36:47 +0000
+From: Matthew Wilcox <willy@infradead.org>
 To: jeffxu@chromium.org
-Cc: akpm@linux-foundation.org, jannh@google.com, sroettger@google.com,
-	willy@infradead.org, gregkh@linuxfoundation.org,
+Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com,
+	sroettger@google.com, gregkh@linuxfoundation.org,
 	torvalds@linux-foundation.org, usama.anjum@collabora.com,
 	jeffxu@google.com, jorgelo@chromium.org, groeck@chromium.org,
 	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
 	linux-mm@kvack.org, pedro.falcato@gmail.com, dave.hansen@intel.com,
 	linux-hardening@vger.kernel.org, deraadt@openbsd.org
-Subject: Re: [RFC PATCH v5 0/4] Introduce mseal()
-Message-ID: <202401091144.2C203AA7@keescook>
+Subject: Re: [RFC PATCH v5 2/4] mseal: add mseal syscall
+Message-ID: <ZZ2uXyPCE+l2Uccr@casper.infradead.org>
 References: <20240109154547.1839886-1-jeffxu@chromium.org>
+ <20240109154547.1839886-3-jeffxu@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -59,20 +41,47 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240109154547.1839886-1-jeffxu@chromium.org>
+In-Reply-To: <20240109154547.1839886-3-jeffxu@chromium.org>
 
-On Tue, Jan 09, 2024 at 03:45:38PM +0000, jeffxu@chromium.org wrote:
-> This patchset proposes a new mseal() syscall for the Linux kernel.
+On Tue, Jan 09, 2024 at 03:45:40PM +0000, jeffxu@chromium.org wrote:
+> +extern bool can_modify_mm(struct mm_struct *mm, unsigned long start,
+> +		unsigned long end);
+> +extern bool can_modify_mm_madv(struct mm_struct *mm, unsigned long start,
+> +		unsigned long end, int behavior);
 
-Thanks for continuing to work on this! Given Linus's general approval
-on the v4, I think this series can also drop the "RFC" part -- this code
-is looking to land. :)
+unnecessary use of extern.
 
-Since we're in the merge window right now, it'll likely be a couple
-weeks before akpm will consider putting this in -next. But given timing,
-this means it'll have a long time to bake in -next, which is good.
+> +static inline unsigned long get_mmap_seals(unsigned long prot,
+> +	unsigned long flags)
 
--Kees
+needs more than one tab indent so it doesn't look like part of the body.
 
--- 
-Kees Cook
+> +{
+> +	unsigned long vm_seals;
+> +
+> +	if (prot & PROT_SEAL)
+> +		vm_seals = VM_SEALED | VM_SEALABLE;
+> +	else
+> +		vm_seals = (flags & MAP_SEALABLE) ? VM_SEALABLE:0;
+
+need spaces around the :
+
+> +++ b/include/uapi/asm-generic/mman-common.h
+> @@ -17,6 +17,11 @@
+>  #define PROT_GROWSDOWN	0x01000000	/* mprotect flag: extend change to start of growsdown vma */
+>  #define PROT_GROWSUP	0x02000000	/* mprotect flag: extend change to end of growsup vma */
+>  
+> +/*
+> + * The PROT_SEAL defines memory sealing in the prot argument of mmap().
+> + */
+> +#define PROT_SEAL	_BITUL(26)	/* 0x04000000 */
+
+why not follow the existing style?
+
+> +static inline void set_vma_sealed(struct vm_area_struct *vma)
+> +{
+> +	vma->__vm_flags |= VM_SEALED;
+> +}
+
+uhh ... vm_flags_set() ?
+
