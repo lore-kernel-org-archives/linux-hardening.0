@@ -1,101 +1,131 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E56381CB
-	for <linux-hardening@vger.kernel.org>; Tue,  9 Jan 2024 12:40:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CtqOLqJw"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-28d80eddc63so1018790a91.3
-        for <linux-hardening@vger.kernel.org>; Tue, 09 Jan 2024 04:40:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1704804032; x=1705408832; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+K+iBGf5qDJUPXHd12KoLyityxUnYoSVawKfBzB7oKM=;
-        b=CtqOLqJwMUwEbgcD4NnJmGg+ciLhVp3uBmR95Zs7DejavkHVzl/aPvf88XD8RWTGgk
-         GAZDUnoDGvbEOqnRqDb1OML2635DyAmsT/ofckD5xVDSXhSXM44GZlmJHquCKDlsGIcm
-         x1j1M9quKbukzfY1koFcCHnwyH+jQlk9N2440=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704804032; x=1705408832;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+K+iBGf5qDJUPXHd12KoLyityxUnYoSVawKfBzB7oKM=;
-        b=pBG7jbeajiGemQtu7qvDRVnDarShc6LTtSbin1j+eK381WtptCFtgyoMb3ha8YaGTs
-         7koITUoYj+2bfzzJKtve5CgSPjfJ+9yNdeuEsNd2SVsNsTKlj+wjQcaRjEzEpUseEtzi
-         mCZz+4oKnbqm7H8v/kX3JgVlM2Kph+kNpIMfvsrHsBDU8c2DoVxsSG5cTrW3QzHqZH+k
-         hPhIobbwl0WVi3bzR0uHqdoUVVBrrOGWd2zR9Axtf2K7BhfuCSbYUMlBYz5yKuCdn8PM
-         n/+ly7u9JDdiZIU+6ktYpPWvb0J9H1h2aDe27yaj73CMOGid2FtPOM+nNqyjD6QO1/Lt
-         xrAA==
-X-Gm-Message-State: AOJu0Yy7vTTvFaWgGgzboPv7GAO3T5vaJqUF0WUSSmBJ//Zcq61OSVru
-	Gl56+jnYoUtmQK3Hcebkq3PGtndOx/d8
-X-Google-Smtp-Source: AGHT+IH2offlfMdPACFUtIsHxeVqe+6Gd+f44kMTmBAtYNCgy/GtMy0D3GBgDlzNju2HOn9Ag3ajUA==
-X-Received: by 2002:a17:90a:62c4:b0:28c:843c:105b with SMTP id k4-20020a17090a62c400b0028c843c105bmr2285019pjs.27.1704804032290;
-        Tue, 09 Jan 2024 04:40:32 -0800 (PST)
-Received: from google.com (KD124209171220.ppp-bb.dion.ne.jp. [124.209.171.220])
-        by smtp.gmail.com with ESMTPSA id f89-20020a17090a706200b0028c2b4f5f32sm2027011pjk.3.2024.01.09.04.40.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jan 2024 04:40:31 -0800 (PST)
-Date: Tue, 9 Jan 2024 21:40:26 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
-	Vikash Garodia <quic_vgarodia@quicinc.com>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Andy Gross <agross@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] media: venus: hfi_cmds: Replace one-element array
- with flex-array member and use __counted_by
-Message-ID: <20240109124026.GA1012017@google.com>
-References: <ZSRJfRdUXQOzagKr@work>
- <202310091252.660CFA9@keescook>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D8F5364AE;
+	Tue,  9 Jan 2024 12:50:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4T8VHN1DB7z9v5M;
+	Tue,  9 Jan 2024 13:14:56 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 3UZY3QTji_ou; Tue,  9 Jan 2024 13:14:56 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4T8VHN0Hfvz9v2V;
+	Tue,  9 Jan 2024 13:14:56 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 003308B77D;
+	Tue,  9 Jan 2024 13:14:55 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id HBR04NexVvw3; Tue,  9 Jan 2024 13:14:55 +0100 (CET)
+Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.233.126])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 6EFF18B774;
+	Tue,  9 Jan 2024 13:14:54 +0100 (CET)
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: linux-hardening@vger.kernel.org,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Kees Cook <keescook@chromium.org>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-mm@kvack.org,
+	steven.price@arm.com,
+	Phong Tran <tranmanphong@gmail.com>,
+	mark.rutland@arm.com,
+	Greg KH <greg@kroah.com>
+Subject: [PATCH 0/4] Refactor CONFIG_DEBUG_WX and check_wx_pages debugfs attribute
+Date: Tue,  9 Jan 2024 13:14:34 +0100
+Message-ID: <cover.1704800524.git.christophe.leroy@csgroup.eu>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202310091252.660CFA9@keescook>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1704802473; l=2144; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=Rosrc8SJ5lP3rVnXrjZMc3fjClOukQO/LV2fzgZVpQs=; b=s3Okt6I7tVLtHH9cIsW0wOp8leAGxF9lRsidic0YqOYcxb/GPUWk/wsLaGOrOrDVlBeQJRl4d A3TZyNi11uFDTOsNtgCv9Dd/0t2LrUpaUdzKjfrAy93UgJ/oTqyg9E5
+X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
+Content-Transfer-Encoding: 8bit
 
-On (23/10/09 12:52), Kees Cook wrote:
-> On Mon, Oct 09, 2023 at 12:42:05PM -0600, Gustavo A. R. Silva wrote:
-> > Array `data` in `struct hfi_sfr` is being used as a fake flexible array
-> > at run-time:
-> > 
-> > drivers/media/platform/qcom/venus/hfi_venus.c:
-> > 1033         p = memchr(sfr->data, '\0', sfr->buf_size);
-> > 1034         /*
-> > 1035          * SFR isn't guaranteed to be NULL terminated since SYS_ERROR indicates
-> > 1036          * that Venus is in the process of crashing.
-> > 1037          */
-> > 1038         if (!p)
-> > 1039                 sfr->data[sfr->buf_size - 1] = '\0';
-> > 1040
-> > 1041         dev_err_ratelimited(dev, "SFR message from FW: %s\n", sfr->data);
-> > 
-> > Fake flexible arrays are deprecated, and should be replaced by
-> > flexible-array members. So, replace one-element array with a
-> > flexible-array member in `struct hfi_sfr`.
-> > 
-> > While there, also annotate array `data` with __counted_by() to prepare
-> > for the coming implementation by GCC and Clang of the __counted_by
-> > attribute. Flexible array members annotated with __counted_by can have
-> > their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
-> > array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> > functions).
-> > 
-> > This results in no differences in binary output.
-> 
-> Thanks for checking!
+Refer old discussion at https://lore.kernel.org/lkml/20200422152656.GF676@willie-the-truck/T/#m802eaf33efd6f8d575939d157301b35ac0d4a64f
+And https://github.com/KSPP/linux/issues/35
 
-Sorry for shameless plug, a quick question: has any compiler implemented
-support for counted_by() at this point?
+This series refactors CONFIG_DEBUG_WX for the 5 architectures
+implementing CONFIG_GENERIC_PTDUMP
+
+First rename stuff in ARM which uses similar names while not
+implementing CONFIG_GENERIC_PTDUMP.
+
+Then define a generic version of debug_checkwx() that calls
+ptdump_check_wx() when CONFIG_DEBUG_WX is set. Call it immediately
+after calling mark_rodata_ro() instead of calling it at the end of
+every mark_rodata_ro().
+
+Then implement a debugfs attribute that can be used to trigger
+a W^X test at anytime and regardless of CONFIG_DEBUG_WX
+
+Christophe Leroy (4):
+  arm: ptdump: Rename CONFIG_DEBUG_WX to CONFIG_ARM_DEBUG_WX
+  arm64, powerpc, riscv, s390, x86: Refactor CONFIG_DEBUG_WX
+  powerpc,s390: Define ptdump_check_wx() regardless of CONFIG_DEBUG_WX
+  ptdump: add check_wx_pages debugfs attribute
+
+ arch/arm/Kconfig.debug          |  2 +-
+ arch/arm/include/asm/ptdump.h   |  6 +++---
+ arch/arm64/include/asm/ptdump.h |  7 -------
+ arch/arm64/mm/mmu.c             |  2 --
+ arch/powerpc/mm/mmu_decl.h      |  6 ------
+ arch/powerpc/mm/pgtable_32.c    |  4 ----
+ arch/powerpc/mm/pgtable_64.c    |  3 ---
+ arch/powerpc/mm/ptdump/ptdump.c | 10 ++++++----
+ arch/riscv/include/asm/ptdump.h | 22 ----------------------
+ arch/riscv/mm/init.c            |  3 ---
+ arch/riscv/mm/ptdump.c          |  1 -
+ arch/s390/include/asm/ptdump.h  | 14 --------------
+ arch/s390/mm/dump_pagetables.c  |  8 ++------
+ arch/s390/mm/init.c             |  2 --
+ arch/x86/include/asm/pgtable.h  |  3 +--
+ arch/x86/mm/dump_pagetables.c   |  3 +++
+ arch/x86/mm/init_32.c           |  2 --
+ arch/x86/mm/init_64.c           |  2 --
+ include/linux/ptdump.h          |  7 +++++++
+ init/main.c                     |  2 ++
+ mm/ptdump.c                     | 19 +++++++++++++++++++
+ 21 files changed, 44 insertions(+), 84 deletions(-)
+ delete mode 100644 arch/riscv/include/asm/ptdump.h
+ delete mode 100644 arch/s390/include/asm/ptdump.h
+
+-- 
+2.41.0
+
