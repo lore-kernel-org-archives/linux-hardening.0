@@ -1,66 +1,55 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08CDA2E834
-	for <linux-hardening@vger.kernel.org>; Tue,  9 Jan 2024 09:08:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 011AC364C8
+	for <linux-hardening@vger.kernel.org>; Tue,  9 Jan 2024 09:17:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AwCvysMn"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-40e461c1f5bso20320745e9.3
-        for <linux-hardening@vger.kernel.org>; Tue, 09 Jan 2024 01:08:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KtaSPU3a"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-40e5280a381so906205e9.2
+        for <linux-hardening@vger.kernel.org>; Tue, 09 Jan 2024 01:17:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704791282; x=1705396082; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Jj5iNAb0vOYUNWOsVLfq/Kug7eJUVIVzh2hyRWQ9KUw=;
-        b=AwCvysMnVtsr48eVgqGW/PjoXAEIMAVqxjxtgNU488yAk3Emg2FaAirTIL4vF99jKy
-         GVbJqP44qutP2j8L+QCu1D080k9cedMcScSVuwrmtLIXgbyVRY0U4mousSVKDs3/GVHN
-         8X7103W4uytsOMZwextInwpNvHJk5eBqmunefOKluAsiFwiVo45XlV3AmzSS4GiNYKnA
-         6daDPp35WIl6ZX9IHNImLnErQKkm6RZLp6saf4eCSUoCG3ULYePG7XEFQh9FHtE+Qif7
-         AsTQ/uWNvYyB27unCU3ieThkecAocXcQLZ69kChQ78mSrBCajfNPzJiN2fNyJLr7fjvf
-         Lv5g==
+        d=linaro.org; s=google; t=1704791869; x=1705396669; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XVkEFOHlWwhz7Duf5BVOmjNadYwqkcetos6KSo/cdnI=;
+        b=KtaSPU3admSSTznyrbTGSe4AywOc1aWqXJT0TLPFVWy6NPDroebDX/Ywz4YVEY7jbD
+         PvrdY1w7o2jHWmr1NwyEnywV+wff+woe9xgYhUwqBsrsxMPM43W9BUOkW97IW+LbVXsy
+         yy5WJjbJcvg6B45euacHnKJepU0x6hQHaLUGq3nLPoNH79ifZbyz1M+nZg2tyIxgglib
+         HmJFyy5Moxey5o8xCwtfI+TX+OC3jBC4EnjO8CUAuXsCrgVf+asCuWNONnxMDvU+jhrg
+         mwkXwpFb+5JCsB02GW2ogfZaYhRKs/HcAzF94BR2BUHlMQppGACptzDAwJIusY4xHdlZ
+         hE8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704791282; x=1705396082;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Jj5iNAb0vOYUNWOsVLfq/Kug7eJUVIVzh2hyRWQ9KUw=;
-        b=UDlqM7WMOgZn4XrFadK7z8DLbDIuB1HaztJI7IfERizaO+eMvt0qo4J98ZIpL8UyUo
-         6X2rn7b6R5xkz56Jo6lVt0LZ48/UGx3pnK5sWdpb5bWp1F4eKbgjqLXlXC1SFjByjLN9
-         ZNdeaZRF4i5j3j2BOfc6huMyn+2+EtESuiqb33CvEZa/1sewk7MaEkklFjonJBXHbPia
-         QcBiN0sTo++ouSvi6NWAwj1kJv5QpLXHf/rT3Qw3axSV912H5Vl6pohKj9koVp8U/Myk
-         GfetEdHKVxn1qo8DMW3pXECVWhcNxkajiqLvsSpe1nbkXj0W90rfaluNuDW7iT3fNhOe
-         JUnw==
-X-Gm-Message-State: AOJu0YzdxXRENCUbVEFJ5KV7St1MMssHDD8C/eeIb55od6cLBT3IOq0C
-	LZWF6d0po6WfKz5kZNMeC0LS10m/gYRo+g==
-X-Google-Smtp-Source: AGHT+IFHr1mJqGahwdyos7RzxqemoTzawy21RafqWjIQm4z1Kiyj0E+rFrxLMMz8BuQYnHZmcXR9dQ==
-X-Received: by 2002:a7b:c34d:0:b0:40d:88c8:25ac with SMTP id l13-20020a7bc34d000000b0040d88c825acmr2507343wmj.48.1704791282280;
-        Tue, 09 Jan 2024 01:08:02 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704791869; x=1705396669;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XVkEFOHlWwhz7Duf5BVOmjNadYwqkcetos6KSo/cdnI=;
+        b=oBB0MCGQ/G0U22zxvvtPDzd6ThnMG0ZM2GwsAamIQNg+BFz9ACAgjOXPzh6tbqKTav
+         Knzuy2bF38VYcL5hWzDrd3MwO//chPYU4qNsE1JYzEUKsRJ5hxnO4m8aJOXzcmHpwX8K
+         1SPe4xtB1pRAYoLuBn+nIQTda1Jt9eEC+hJnHbtXhOU3IlHD5m4+iWSZB/F518KgLGDV
+         BwSGVij+gnPnk1qjzdUFvrJPw9VZKXxiWcIjPBma5b1dUQh/MFTuMMfln4/coEWOjN4w
+         QRVC++afMLdIJFF1Z9qexPyobAa/X11AVrhH63+wrr5FPctbblnrrPg0ew2fAqvrOmHr
+         oi7A==
+X-Gm-Message-State: AOJu0YwfbQAi2DaggJjt9na1u3wFXCnnJyamqncXXiaa5JHb4Rh40uIx
+	wfL6r3pjjohCDpbVFiBlmhKvTJhDUYMz+g==
+X-Google-Smtp-Source: AGHT+IHYDtHCq2FubxD8DvGMVoVJReXJUMNuiPN38ZL3R7ASH6fd/DpawvPETlmROnrMCjzV/bj0UQ==
+X-Received: by 2002:a05:600c:470a:b0:40d:3864:a2af with SMTP id v10-20020a05600c470a00b0040d3864a2afmr2589128wmo.82.1704791869219;
+        Tue, 09 Jan 2024 01:17:49 -0800 (PST)
 Received: from localhost ([102.140.209.237])
-        by smtp.gmail.com with ESMTPSA id cw16-20020a056000091000b0033753a61e96sm1828362wrb.108.2024.01.09.01.08.01
+        by smtp.gmail.com with ESMTPSA id h17-20020a05600c351100b0040d839e7bb3sm13920978wmq.19.2024.01.09.01.17.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jan 2024 01:08:02 -0800 (PST)
-Date: Tue, 9 Jan 2024 12:07:58 +0300
+        Tue, 09 Jan 2024 01:17:48 -0800 (PST)
+Date: Tue, 9 Jan 2024 12:17:45 +0300
 From: Dan Carpenter <dan.carpenter@linaro.org>
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: Kees Cook <keescook@chromium.org>,
-	Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
-	linux-hardening@vger.kernel.org, error27@gmail.com,
-	gustavoars@kernel.org, Bryan Tan <bryantan@vmware.com>,
-	Vishnu Dasa <vdasa@vmware.com>,
-	VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org, vegard.nossum@oracle.com,
-	darren.kenny@oracle.com, syzkaller <syzkaller@googlegroups.com>
-Subject: Re: [PATCH v2 2/2] VMCI: Fix memcpy() run-time warning in
- dg_dispatch_as_host()
-Message-ID: <79ca2f85-1f8d-4a12-aa5a-09137033605f@moroto.mountain>
-References: <20240105164001.2129796-1-harshit.m.mogalapalli@oracle.com>
- <20240105164001.2129796-2-harshit.m.mogalapalli@oracle.com>
- <202401081430.9DAB37B46@keescook>
- <9c742547-0021-464b-b7a8-7af46b0a4afa@embeddedor.com>
+To: oe-kbuild@lists.linux.dev,
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+	"Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: fs/ntfs3/fsntfs.c:2661 ntfs_set_label() error: __builtin_memcpy()
+ 'uni->name' too small (20 vs 256)
+Message-ID: <70b13673-23ce-4bb9-9842-65828650e563@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -69,40 +58,68 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9c742547-0021-464b-b7a8-7af46b0a4afa@embeddedor.com>
 
-On Mon, Jan 08, 2024 at 08:05:38PM -0600, Gustavo A. R. Silva wrote:
-> > > Gustavo quoted:
-> > > "Under FORTIFY_SOURCE we should not copy data across multiple members
-> > > in a structure."
-> > > 
-> > > Reported-by: syzkaller <syzkaller@googlegroups.com>
-> > > Suggested-by: Vegard Nossum <vegard.nossum@oracle.com>
-> > > Suggested-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> > > Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-> > 
-> > Thanks for getting this fixed!
-> > 
-> > Yeah, it's a "false positive" in the sense that the code was expecting
-> 
-> It's a false positive _bug_, and a legitimate _warning_ coming from fortified
-> memcpy().
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   9f8413c4a66f2fb776d3dc3c9ed20bf435eb305e
+commit: 7832e123490ac39f85ab5befc2ceee7b25b03acb fs/ntfs3: Add support /proc/fs/ntfs3/<dev>/volinfo and /proc/fs/ntfs3/<dev>/label
+config: i386-randconfig-141-20240107 (https://download.01.org/0day-ci/archive/20240109/202401091421.3RJ24Mn3-lkp@intel.com/config)
+compiler: ClangBuiltLinux clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
 
-It really feels like you're trying to sell the cost of this as a good
-thing...  We've already merged fortify so why are you still fighting
-about this?  Now that it's merged, let's just all admit that false
-positives are bad.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+| Closes: https://lore.kernel.org/r/202401091421.3RJ24Mn3-lkp@intel.com/
 
-I feel like once we recognize that actually false positives are bad as
-opposed to good then that's when we start looking for solutions.  In
-Smatch, I have code that silences warnings about cross member writes
-because it was a common source of false positives...
+New smatch warnings:
+fs/ntfs3/fsntfs.c:2661 ntfs_set_label() error: __builtin_memcpy() 'uni->name' too small (20 vs 256)
 
-The Kconfig entry does not mention the risk of false positives at all
-and it doesn't say anything about turning on fortify along with
-CONFIG_PANIC_ON_OOPS is probably bad.  There are simple things we could
-do to make this less risky.
+vim +2661 fs/ntfs3/fsntfs.c
 
-regards,
-dan carpenter
+7832e123490ac3 Konstantin Komarov 2023-05-08  2627  int ntfs_set_label(struct ntfs_sb_info *sbi, u8 *label, int len)
+7832e123490ac3 Konstantin Komarov 2023-05-08  2628  {
+7832e123490ac3 Konstantin Komarov 2023-05-08  2629  	int err;
+7832e123490ac3 Konstantin Komarov 2023-05-08  2630  	struct ATTRIB *attr;
+7832e123490ac3 Konstantin Komarov 2023-05-08  2631  	struct ntfs_inode *ni = sbi->volume.ni;
+7832e123490ac3 Konstantin Komarov 2023-05-08  2632  	const u8 max_ulen = 0x80; /* TODO: use attrdef to get maximum length */
+7832e123490ac3 Konstantin Komarov 2023-05-08  2633  	/* Allocate PATH_MAX bytes. */
+7832e123490ac3 Konstantin Komarov 2023-05-08  2634  	struct cpu_str *uni = __getname();
+7832e123490ac3 Konstantin Komarov 2023-05-08  2635  
+7832e123490ac3 Konstantin Komarov 2023-05-08  2636  	if (!uni)
+7832e123490ac3 Konstantin Komarov 2023-05-08  2637  		return -ENOMEM;
+7832e123490ac3 Konstantin Komarov 2023-05-08  2638  
+7832e123490ac3 Konstantin Komarov 2023-05-08  2639  	err = ntfs_nls_to_utf16(sbi, label, len, uni, (PATH_MAX - 2) / 2,
+7832e123490ac3 Konstantin Komarov 2023-05-08  2640  				UTF16_LITTLE_ENDIAN);
+7832e123490ac3 Konstantin Komarov 2023-05-08  2641  	if (err < 0)
+7832e123490ac3 Konstantin Komarov 2023-05-08  2642  		goto out;
+7832e123490ac3 Konstantin Komarov 2023-05-08  2643  
+7832e123490ac3 Konstantin Komarov 2023-05-08  2644  	if (uni->len > max_ulen) {
+
+uni->name is defined as 10 elements long.  So allowing PATH_MAX is
+weird.
+
+7832e123490ac3 Konstantin Komarov 2023-05-08  2645  		ntfs_warn(sbi->sb, "new label is too long");
+7832e123490ac3 Konstantin Komarov 2023-05-08  2646  		err = -EFBIG;
+7832e123490ac3 Konstantin Komarov 2023-05-08  2647  		goto out;
+7832e123490ac3 Konstantin Komarov 2023-05-08  2648  	}
+7832e123490ac3 Konstantin Komarov 2023-05-08  2649  
+7832e123490ac3 Konstantin Komarov 2023-05-08  2650  	ni_lock(ni);
+7832e123490ac3 Konstantin Komarov 2023-05-08  2651  
+7832e123490ac3 Konstantin Komarov 2023-05-08  2652  	/* Ignore any errors. */
+7832e123490ac3 Konstantin Komarov 2023-05-08  2653  	ni_remove_attr(ni, ATTR_LABEL, NULL, 0, false, NULL);
+7832e123490ac3 Konstantin Komarov 2023-05-08  2654  
+7832e123490ac3 Konstantin Komarov 2023-05-08  2655  	err = ni_insert_resident(ni, uni->len * sizeof(u16), ATTR_LABEL, NULL,
+7832e123490ac3 Konstantin Komarov 2023-05-08  2656  				 0, &attr, NULL, NULL);
+7832e123490ac3 Konstantin Komarov 2023-05-08  2657  	if (err < 0)
+7832e123490ac3 Konstantin Komarov 2023-05-08  2658  		goto unlock_out;
+7832e123490ac3 Konstantin Komarov 2023-05-08  2659  
+7832e123490ac3 Konstantin Komarov 2023-05-08  2660  	/* write new label in on-disk struct. */
+7832e123490ac3 Konstantin Komarov 2023-05-08 @2661  	memcpy(resident_data(attr), uni->name, uni->len * sizeof(u16));
+                                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Btw, I feel like if CONFIG_FORTIFY_SOURCE is enabled this will be a
+runtime issue but I don't know for sure.
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
