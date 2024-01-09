@@ -1,38 +1,57 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90CA3A8E3;
-	Tue,  9 Jan 2024 20:36:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F17AA3DB98
+	for <linux-hardening@vger.kernel.org>; Tue,  9 Jan 2024 21:49:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ceez6eWN"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=b2HomVXY7FzMXkiwOxrMKlwOQEHDYNZAL5sKCtuBtfk=; b=Ceez6eWNOAP75GYM7O6sxoxLMK
-	sEyjYspnASHzv4goTZkwM3Azj9T0S7OArOGxOU0BOxqwe41T54sximqesBg7tYZ2EljvmUQbzuqfs
-	HtwprQ1pepzRo3YWq4OU0ZII2MeOfSxGvO9mWRXg+B1f4bGSCsXK93nokeodRy1CNMbURutmgvIXr
-	0KZ+RyDs4RA8S5DouFLHfXW22t6qXMqJWoS2/KlDbl+InFqT8xmW7WSXCHnEoq+Zz7ODVYHdpWcbX
-	4+8Ux7WmXEdCstEG7wBE3mnDIhmtbpiK7ct9wzwe/d/z5PliZNsv5D0yOj0TOzGJyppNW3vNYrnVF
-	herDEtbw==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1rNIq7-00AIGa-4i; Tue, 09 Jan 2024 20:36:47 +0000
-Date: Tue, 9 Jan 2024 20:36:47 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: jeffxu@chromium.org
-Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com,
-	sroettger@google.com, gregkh@linuxfoundation.org,
-	torvalds@linux-foundation.org, usama.anjum@collabora.com,
-	jeffxu@google.com, jorgelo@chromium.org, groeck@chromium.org,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-mm@kvack.org, pedro.falcato@gmail.com, dave.hansen@intel.com,
-	linux-hardening@vger.kernel.org, deraadt@openbsd.org
-Subject: Re: [RFC PATCH v5 2/4] mseal: add mseal syscall
-Message-ID: <ZZ2uXyPCE+l2Uccr@casper.infradead.org>
-References: <20240109154547.1839886-1-jeffxu@chromium.org>
- <20240109154547.1839886-3-jeffxu@chromium.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pSgQggyx"
+Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-7bed9f5d35dso50264839f.3
+        for <linux-hardening@vger.kernel.org>; Tue, 09 Jan 2024 13:49:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1704836955; x=1705441755; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=wo7A9qf9LB8OT3yWghmU76DKbvJhNKbcUKlH0RAw79k=;
+        b=pSgQggyxqdrOEfbKTdGt9A1dJvBEFb3VsNIPstbgBt70UhU6+tp6jucTnrJ1Iiz5Q7
+         Fh1Qq6Kaj/LOVAJsgHPIu1X7Ulo/ruzhLKFRJqiUiPyLGK7WBh/f+LztRTbH1wjuxH+P
+         wx6eEDav1UP/U98UaVmfNu9/5nLJbnla3z6Oeq2MJ5g9f1JQndUJYV7/eoqdgaj04k1h
+         TFNdmclHNWpDRLWF3DSqcANXORykBT0i2ylsz4SDd6c9o6Iqgwkqx5t+sdyQazEXlWB5
+         3lDu/KjFURBjiN91utW/6raS1V80NiG61OU/DJVXbvWqAuTHUuH4Iic+M1ePVSVNUqiK
+         wiPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704836955; x=1705441755;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wo7A9qf9LB8OT3yWghmU76DKbvJhNKbcUKlH0RAw79k=;
+        b=Xz3xR7mWC+aL5YWtbm5QBF2xvgfP2DT0sUdQCJMZ1bg/pX8YLxseVNGeoO0i3bvqYc
+         sAuuAaeeop5hazY3CQ4xm/g1Kwopn7pTY2tjSvswlkiDsSvC5ODPWQ4yS1bGxbMCRhpP
+         rjKMpPBi5HHoHagZNZVzL070oKEEaaNHKH7+9OmpK8dwUgGGzBW8ExItREegikpon1vS
+         0DTJEKIAadbp9IgKcDUcz7o9q3VSjtFqShpTAv6CUXBIDN8waiaILjRr14qy4BrpAnzA
+         lQIAeSRB3ThSj1FCUlRgo1Diug21WFcISrf4DpUUHQNZjsr5o/82/YvAhk6RctXs3WzG
+         5iPw==
+X-Gm-Message-State: AOJu0YytibBQdGKPovUVy7p93TIaW418aHDuXK5HI4xwnhoJaKQlH9x8
+	/+zwDKR6f89TyVqDDfXLtF3plpUzPGQi
+X-Google-Smtp-Source: AGHT+IGL4IMYm3sze+Q8vWqEdPeDAvIFBsLjeBFO7fQBnNQmpX0zX+Ih0rK6+6Vtp61CZ8WVjAKCVA==
+X-Received: by 2002:a05:6e02:168c:b0:360:5d99:65b5 with SMTP id f12-20020a056e02168c00b003605d9965b5mr132829ila.21.1704836955117;
+        Tue, 09 Jan 2024 13:49:15 -0800 (PST)
+Received: from google.com (194.225.68.34.bc.googleusercontent.com. [34.68.225.194])
+        by smtp.gmail.com with ESMTPSA id y4-20020a92c984000000b0035ff9825323sm838799iln.30.2024.01.09.13.49.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jan 2024 13:49:14 -0800 (PST)
+Date: Tue, 9 Jan 2024 21:49:10 +0000
+From: Justin Stitt <justinstitt@google.com>
+To: Tanzir Hasan <tanzhasanwork@gmail.com>
+Cc: Kees Cook <keescook@chromium.org>, Andy Shevchenko <andy@kernel.org>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Nick DeSaulniers <nnn@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>, llvm@lists.linux.dev
+Subject: Re: [PATCH v2 2/2] lib/string: shrink lib/string.i via IWYU
+Message-ID: <20240109214910.oeopqq5j2gyl33dc@google.com>
+References: <20231214-libstringheader-v2-0-0f195dcff204@google.com>
+ <20231214-libstringheader-v2-2-0f195dcff204@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -41,47 +60,85 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240109154547.1839886-3-jeffxu@chromium.org>
+In-Reply-To: <20231214-libstringheader-v2-2-0f195dcff204@google.com>
 
-On Tue, Jan 09, 2024 at 03:45:40PM +0000, jeffxu@chromium.org wrote:
-> +extern bool can_modify_mm(struct mm_struct *mm, unsigned long start,
-> +		unsigned long end);
-> +extern bool can_modify_mm_madv(struct mm_struct *mm, unsigned long start,
-> +		unsigned long end, int behavior);
+Hi,
 
-unnecessary use of extern.
+On Thu, Dec 14, 2023 at 09:06:13PM +0000, tanzirh@google.com wrote:
+> This diff uses an open source tool include-what-you-use (IWYU) to modify
+> the include list changing indirect includes to direct includes.
+> IWYU is implemented using the IWYUScripts github repository which is a tool that is
+> currently undergoing development. These changes seek to improve build times.
+>
+> This change to lib/string.c resulted in a preprocessed size of
+> lib/string.i from 26371 lines to 5259 lines (-80%) for the x86
+> defconfig.
+>
 
-> +static inline unsigned long get_mmap_seals(unsigned long prot,
-> +	unsigned long flags)
+Tanzir, I wonder if you could include some of the symbol names used for
+some of these more esoteric headers. Let me describe what I mean:
 
-needs more than one tab indent so it doesn't look like part of the body.
+Andy talks about "why <vdso/...>" and perhaps some comments (in your
+patch message, not in the source itself) about which symbols are being
+used from these headers would serve useful. I believe IWYU can generate
+this information and should clear up some confusion or lead to better
+suggestions from reviewers if we understand why a header is being
+included.
 
-> +{
-> +	unsigned long vm_seals;
-> +
-> +	if (prot & PROT_SEAL)
-> +		vm_seals = VM_SEALED | VM_SEALABLE;
-> +	else
-> +		vm_seals = (flags & MAP_SEALABLE) ? VM_SEALABLE:0;
+At any rate, this builds for me doing randconfigs on x86_64 with these
+KCONFIG_SEEDs
+1: 0x3DD9D136
+2: 0xB4440EE4
+3: 0x98778270
+4: 0x8C237F26
+5: 0x244F8A64
+6: 0x5A5C5E5C
+7: 0xA77896BC
+8: 0x9B5FF0D5
+9: 0x24F23F6A
+10: 0x35C0A107
 
-need spaces around the :
+I applied your patch on top of 5db8752c3b81bd33.
 
-> +++ b/include/uapi/asm-generic/mman-common.h
-> @@ -17,6 +17,11 @@
->  #define PROT_GROWSDOWN	0x01000000	/* mprotect flag: extend change to start of growsdown vma */
->  #define PROT_GROWSUP	0x02000000	/* mprotect flag: extend change to end of growsup vma */
->  
-> +/*
-> + * The PROT_SEAL defines memory sealing in the prot argument of mmap().
-> + */
-> +#define PROT_SEAL	_BITUL(26)	/* 0x04000000 */
-
-why not follow the existing style?
-
-> +static inline void set_vma_sealed(struct vm_area_struct *vma)
-> +{
-> +	vma->__vm_flags |= VM_SEALED;
-> +}
-
-uhh ... vm_flags_set() ?
-
+Tested-by: Justin Stitt <justinstitt@google.com>
+> Link: https://github.com/ClangBuiltLinux/IWYUScripts
+>
+> Signed-off-by: Tanzir Hasan <tanzirh@google.com>
+> ---
+>  lib/string.c | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+>
+> diff --git a/lib/string.c b/lib/string.c
+> index be26623953d2..7fe1acefb1a1 100644
+> --- a/lib/string.c
+> +++ b/lib/string.c
+> @@ -16,16 +16,16 @@
+>
+>  #define __NO_FORTIFY
+>  #include <linux/types.h>
+> -#include <linux/string.h>
+> -#include <linux/ctype.h>
+> -#include <linux/kernel.h>
+> -#include <linux/export.h>
+> +#include <linux/bits.h>
+>  #include <linux/bug.h>
+>  #include <linux/errno.h>
+> -#include <linux/slab.h>
+> -
+> +#include <asm/rwonce.h>
+> +#include <linux/linkage.h>
+> +#include <linux/stddef.h>
+> +#include <vdso/limits.h>
+> +#include <linux/string.h>
+> +#include <linux/ctype.h>
+>  #include <asm/unaligned.h>
+> -#include <asm/byteorder.h>
+>  #include <asm/word-at-a-time.h>
+>  #include <asm/page.h>
+>
+>
+> --
+> 2.43.0.472.g3155946c3a-goog
+>
+Thanks
+Justin
