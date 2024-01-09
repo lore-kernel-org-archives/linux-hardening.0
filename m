@@ -1,132 +1,101 @@
-Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1796826AF7
-	for <linux-hardening@vger.kernel.org>; Tue,  9 Jan 2024 12:31:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E56381CB
+	for <linux-hardening@vger.kernel.org>; Tue,  9 Jan 2024 12:40:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Hl3iDqxp"
-Received: from eig-obgw-6005a.ext.cloudfilter.net ([10.0.30.201])
-	by cmsmtp with ESMTPS
-	id N94wrixAp80oiNBGlrZYsN; Tue, 09 Jan 2024 12:31:47 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id NBGkrgXjV1UTRNBGlryhJT; Tue, 09 Jan 2024 12:31:47 +0000
-X-Authority-Analysis: v=2.4 cv=ZOXEJF3b c=1 sm=1 tr=0 ts=659d3cb3
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=GfQleyYEO+cc22AUyTT7qQ==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=dEuoMetlWLkA:10 a=wYkD_t78qR0A:10 a=4RBUngkUAAAA:8
- a=yPCof4ZbAAAA:8 a=VwQbUJbxAAAA:8 a=_Wotqz80AAAA:8 a=5WGr0wUqv5Qhd2XfCJMA:9
- a=QEXdDO2ut3YA:10 a=_sbA2Q-Kp09kWB8D3iXc:22 a=AjGcO6oz07-iQ99wixmX:22
- a=buJP51TR1BpY-zbLSsyS:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=MBKpXdgddFW+bxlw7X3WpJuwrJAjPBx5xfSRSdZ8pQY=; b=Hl3iDqxpvb198LtPOQ7+NwtxDd
-	pApqMGH68v8rXXc3UAxIluKYdYfFG1IszgLON5bh/cNebOqFDNRFH1qKN0gqrM4QGWqWQQ3TSzpe2
-	MmXss/chKCDFdthjLl4WOksGCJ6kW5w1VyyKVD69ce4RFHPpIa3R0hHDSj4glkOG02kqrtwK1X7sq
-	ZbwAzGlWirIMrIYxrk5ce/K6cX/eGLI16Udsuv4jKbEndnv/q0SNqJ0YCvzzl6XK0DD2GmFo2gMBQ
-	qUqHi8wjsnoWQOET4Yimx21+VdIcR92WJdYEG70piXvOMHCDwx2rXRO9ssEnljUz+th+L9b3gMM1K
-	WF752VqA==;
-Received: from 187.184.157.186.cable.dyn.cableonline.com.mx ([187.184.157.186]:42673 helo=[192.168.0.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rNBGj-002U7o-23;
-	Tue, 09 Jan 2024 06:31:45 -0600
-Message-ID: <7d7b94ba-9a1f-44de-8491-dc4864338f80@embeddedor.com>
-Date: Tue, 9 Jan 2024 06:31:41 -0600
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CtqOLqJw"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-28d80eddc63so1018790a91.3
+        for <linux-hardening@vger.kernel.org>; Tue, 09 Jan 2024 04:40:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1704804032; x=1705408832; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+K+iBGf5qDJUPXHd12KoLyityxUnYoSVawKfBzB7oKM=;
+        b=CtqOLqJwMUwEbgcD4NnJmGg+ciLhVp3uBmR95Zs7DejavkHVzl/aPvf88XD8RWTGgk
+         GAZDUnoDGvbEOqnRqDb1OML2635DyAmsT/ofckD5xVDSXhSXM44GZlmJHquCKDlsGIcm
+         x1j1M9quKbukzfY1koFcCHnwyH+jQlk9N2440=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704804032; x=1705408832;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+K+iBGf5qDJUPXHd12KoLyityxUnYoSVawKfBzB7oKM=;
+        b=pBG7jbeajiGemQtu7qvDRVnDarShc6LTtSbin1j+eK381WtptCFtgyoMb3ha8YaGTs
+         7koITUoYj+2bfzzJKtve5CgSPjfJ+9yNdeuEsNd2SVsNsTKlj+wjQcaRjEzEpUseEtzi
+         mCZz+4oKnbqm7H8v/kX3JgVlM2Kph+kNpIMfvsrHsBDU8c2DoVxsSG5cTrW3QzHqZH+k
+         hPhIobbwl0WVi3bzR0uHqdoUVVBrrOGWd2zR9Axtf2K7BhfuCSbYUMlBYz5yKuCdn8PM
+         n/+ly7u9JDdiZIU+6ktYpPWvb0J9H1h2aDe27yaj73CMOGid2FtPOM+nNqyjD6QO1/Lt
+         xrAA==
+X-Gm-Message-State: AOJu0Yy7vTTvFaWgGgzboPv7GAO3T5vaJqUF0WUSSmBJ//Zcq61OSVru
+	Gl56+jnYoUtmQK3Hcebkq3PGtndOx/d8
+X-Google-Smtp-Source: AGHT+IH2offlfMdPACFUtIsHxeVqe+6Gd+f44kMTmBAtYNCgy/GtMy0D3GBgDlzNju2HOn9Ag3ajUA==
+X-Received: by 2002:a17:90a:62c4:b0:28c:843c:105b with SMTP id k4-20020a17090a62c400b0028c843c105bmr2285019pjs.27.1704804032290;
+        Tue, 09 Jan 2024 04:40:32 -0800 (PST)
+Received: from google.com (KD124209171220.ppp-bb.dion.ne.jp. [124.209.171.220])
+        by smtp.gmail.com with ESMTPSA id f89-20020a17090a706200b0028c2b4f5f32sm2027011pjk.3.2024.01.09.04.40.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jan 2024 04:40:31 -0800 (PST)
+Date: Tue, 9 Jan 2024 21:40:26 +0900
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
+	Vikash Garodia <quic_vgarodia@quicinc.com>,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	Andy Gross <agross@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] media: venus: hfi_cmds: Replace one-element array
+ with flex-array member and use __counted_by
+Message-ID: <20240109124026.GA1012017@google.com>
+References: <ZSRJfRdUXQOzagKr@work>
+ <202310091252.660CFA9@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] VMCI: Fix memcpy() run-time warning in
- dg_dispatch_as_host()
-Content-Language: en-US
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Kees Cook <keescook@chromium.org>,
- Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
- linux-hardening@vger.kernel.org, error27@gmail.com, gustavoars@kernel.org,
- Bryan Tan <bryantan@vmware.com>, Vishnu Dasa <vdasa@vmware.com>,
- VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
- Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-kernel@vger.kernel.org, vegard.nossum@oracle.com,
- darren.kenny@oracle.com, syzkaller <syzkaller@googlegroups.com>
-References: <20240105164001.2129796-1-harshit.m.mogalapalli@oracle.com>
- <20240105164001.2129796-2-harshit.m.mogalapalli@oracle.com>
- <202401081430.9DAB37B46@keescook>
- <9c742547-0021-464b-b7a8-7af46b0a4afa@embeddedor.com>
- <79ca2f85-1f8d-4a12-aa5a-09137033605f@moroto.mountain>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <79ca2f85-1f8d-4a12-aa5a-09137033605f@moroto.mountain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.184.157.186
-X-Source-L: No
-X-Exim-ID: 1rNBGj-002U7o-23
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187.184.157.186.cable.dyn.cableonline.com.mx ([192.168.0.10]) [187.184.157.186]:42673
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 12
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfKCwuLm11sbI3gOZ6IZpCU6Tm7lRLyHv24GJKVIGjQS07u3aUT51WuKzqMLGal7ihX96A9mTipKbMj5a07j7u25UapuIJ1IEvoPtNTSnHyvhFLocfNUB
- ePJwCTFL4MF9Y69W9jc93wp6sfInx2wW79pcO3Sk6R6ztOIDnQ+JACyyPXisc1FYPsPcGNZQZG9vrIRJMJfqNSTFVCNtbPEatKbe7MiFbYoKhwaT01Qi8dnr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202310091252.660CFA9@keescook>
 
-
-
-On 1/9/24 03:07, Dan Carpenter wrote:
-> On Mon, Jan 08, 2024 at 08:05:38PM -0600, Gustavo A. R. Silva wrote:
->>>> Gustavo quoted:
->>>> "Under FORTIFY_SOURCE we should not copy data across multiple members
->>>> in a structure."
->>>>
->>>> Reported-by: syzkaller <syzkaller@googlegroups.com>
->>>> Suggested-by: Vegard Nossum <vegard.nossum@oracle.com>
->>>> Suggested-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->>>> Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
->>>
->>> Thanks for getting this fixed!
->>>
->>> Yeah, it's a "false positive" in the sense that the code was expecting
->>
->> It's a false positive _bug_, and a legitimate _warning_ coming from fortified
->> memcpy().
+On (23/10/09 12:52), Kees Cook wrote:
+> On Mon, Oct 09, 2023 at 12:42:05PM -0600, Gustavo A. R. Silva wrote:
+> > Array `data` in `struct hfi_sfr` is being used as a fake flexible array
+> > at run-time:
+> > 
+> > drivers/media/platform/qcom/venus/hfi_venus.c:
+> > 1033         p = memchr(sfr->data, '\0', sfr->buf_size);
+> > 1034         /*
+> > 1035          * SFR isn't guaranteed to be NULL terminated since SYS_ERROR indicates
+> > 1036          * that Venus is in the process of crashing.
+> > 1037          */
+> > 1038         if (!p)
+> > 1039                 sfr->data[sfr->buf_size - 1] = '\0';
+> > 1040
+> > 1041         dev_err_ratelimited(dev, "SFR message from FW: %s\n", sfr->data);
+> > 
+> > Fake flexible arrays are deprecated, and should be replaced by
+> > flexible-array members. So, replace one-element array with a
+> > flexible-array member in `struct hfi_sfr`.
+> > 
+> > While there, also annotate array `data` with __counted_by() to prepare
+> > for the coming implementation by GCC and Clang of the __counted_by
+> > attribute. Flexible array members annotated with __counted_by can have
+> > their accesses bounds-checked at run-time via CONFIG_UBSAN_BOUNDS (for
+> > array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> > functions).
+> > 
+> > This results in no differences in binary output.
 > 
-> It really feels like you're trying to sell the cost of this as a good
-> thing...  We've already merged fortify so why are you still fighting
+> Thanks for checking!
 
-No, I'm just describing (here[1] and below), clear and concise, what fortify
-is doing in this particular case, in response to your first intervention
-in this thread[3].
-
-"The warning is triggered because of a write beyond the boundaries of
-`dg_info->msg`."[2]
-
-You're arguing that fortify caused a problem. I'm describing the reason
-why the feature triggered the warning. That's it, I guess.
-
-Thanks
---
-Gustavo
-
-[1] https://lore.kernel.org/linux-hardening/9c742547-0021-464b-b7a8-7af46b0a4afa@embeddedor.com/
-[2] https://lore.kernel.org/linux-hardening/7826922a-d642-424e-bede-bfc45be9254d@embeddedor.com/
-[3] https://lore.kernel.org/linux-hardening/fc132bde-d42d-4aac-ba91-7a939a18091a@moroto.mountain/
+Sorry for shameless plug, a quick question: has any compiler implemented
+support for counted_by() at this point?
