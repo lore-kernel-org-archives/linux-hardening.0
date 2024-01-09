@@ -1,137 +1,298 @@
-Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4067839AC5
-	for <linux-hardening@vger.kernel.org>; Tue,  9 Jan 2024 14:35:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB98839FE6
+	for <linux-hardening@vger.kernel.org>; Tue,  9 Jan 2024 15:46:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="oSmz2Qe5"
-Received: from eig-obgw-6007a.ext.cloudfilter.net ([10.0.30.247])
-	by cmsmtp with ESMTPS
-	id NBJrrXfbjMVQiNDCmroyur; Tue, 09 Jan 2024 14:35:48 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id NDCmrQnL6yxR5NDCmrQ5SN; Tue, 09 Jan 2024 14:35:48 +0000
-X-Authority-Analysis: v=2.4 cv=JYOvEGGV c=1 sm=1 tr=0 ts=659d59c4
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=GfQleyYEO+cc22AUyTT7qQ==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=dEuoMetlWLkA:10 a=wYkD_t78qR0A:10
- a=4tGuUO7FMUkCr9MuFAcA:9 a=QEXdDO2ut3YA:10
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=KXjAbIiafMI8Sanzb/fkeo5iWhzB478LPXEZMnXq5CM=; b=oSmz2Qe543rszavCY24Ct54hWb
-	c9v8pNeI4L5wGjtmRB1MjccXK4NWwZpkc2w5xVm7kA7ugstm8F9pg3cMN5X+Ki+YCWj1+Jp3u9m/d
-	gcEg0SvpgEaNCAeeTKRTrptzXQef4AZaEnssiNhtqC4hA6wXX6ZAFM34Ce5R7BvMMl8Y+fIfiaufw
-	ErSwCmVM9YJQgXFvG/SD4W3Wri/kAbNGc2P5xpABlTQWs1wVltT1JeEOv3AINgsHXThO4Hm7NfR70
-	ebBpc2N1oNrqK+LudgQ4t1RS1en5k2SlePxkbPzZ2bnfGelqFWk0KlKBTb7p4yYdppy3jqNSYi2AT
-	S/CjoVmw==;
-Received: from 187.184.157.186.cable.dyn.cableonline.com.mx ([187.184.157.186]:58650 helo=[192.168.0.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rNDCk-000iaD-1s;
-	Tue, 09 Jan 2024 08:35:47 -0600
-Message-ID: <4603630c-3bb2-42b6-b0dd-79d500460ab4@embeddedor.com>
-Date: Tue, 9 Jan 2024 08:35:37 -0600
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NCjpjh/i"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1d3f2985425so14117225ad.3
+        for <linux-hardening@vger.kernel.org>; Tue, 09 Jan 2024 07:46:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1704815162; x=1705419962; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ig3ohwHzq/4+GvsXCviFQR9Ej/i5Rnl+U+9CFpvV1sg=;
+        b=NCjpjh/iCaA3heLvOS3B4E7Fe4On1CzMaoruY7djqUt71I5ikyNI9ZNgp2VObGucxQ
+         0XhtPKF5oh/VANmRcpxV0xZ5/fwZpQJodMgonyro7eoJbSTq7tFrHWBj0z7NhRw4dTCB
+         uzFkzgURPuiwWHjzEVeVVk/HjeQiRP9Xn83MQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704815162; x=1705419962;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ig3ohwHzq/4+GvsXCviFQR9Ej/i5Rnl+U+9CFpvV1sg=;
+        b=pA/tPhAlzlxUUTaIrgk5zpI+WKlIPN8b0zOtnpWOhqQ/HzeFlJeMksjSYSlMe2Cju4
+         a1VHiJSn6f0LhU+rosV7AC6+keE+578xlNSu8afLRiNLcp93HVHtMr6mJQ+94419oYEW
+         2I3IRAO2uNk0FlyVtorhvkQUHhPLouuDIbMceglikEQOFSwG3X5fc6EGNT6jOWbc9l8m
+         eSc85oiEE4EXpsUGd8jGQzBYS+MaNRSbNaP7S88/on4CG+YFTIJxi0BC103iJWIZTu7I
+         P9Sq21FSaC66yQ+6UFAppwTxCz0my3rW0hMShde/v6BVbCGNT5J0gpuMHW5VRSJgnyMD
+         UDeg==
+X-Gm-Message-State: AOJu0Yxj/nObylozPYmPzGqiTdlw7lFDK4DdOAodtCHDWRudXVSqzZiK
+	eOG6NMJextySyC6/RDib9VJ+C07aJrIJ
+X-Google-Smtp-Source: AGHT+IH4k0ufyA+hoVXReRKZGJVZrKy5Y1nbuBoicBfPXBbSt8cSLBYs3HNIHxmv1p7vZ518XLU4cw==
+X-Received: by 2002:a17:902:b405:b0:1d4:133d:6ace with SMTP id x5-20020a170902b40500b001d4133d6acemr2714492plr.7.1704815162231;
+        Tue, 09 Jan 2024 07:46:02 -0800 (PST)
+Received: from localhost (34.85.168.34.bc.googleusercontent.com. [34.168.85.34])
+        by smtp.gmail.com with UTF8SMTPSA id j9-20020a170902690900b001d403969b65sm1939344plk.187.2024.01.09.07.46.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Jan 2024 07:46:01 -0800 (PST)
+From: jeffxu@chromium.org
+To: akpm@linux-foundation.org,
+	keescook@chromium.org,
+	jannh@google.com,
+	sroettger@google.com,
+	willy@infradead.org,
+	gregkh@linuxfoundation.org,
+	torvalds@linux-foundation.org,
+	usama.anjum@collabora.com
+Cc: jeffxu@google.com,
+	jorgelo@chromium.org,
+	groeck@chromium.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org,
+	pedro.falcato@gmail.com,
+	dave.hansen@intel.com,
+	linux-hardening@vger.kernel.org,
+	deraadt@openbsd.org,
+	Jeff Xu <jeffxu@chromium.org>
+Subject: [RFC PATCH v5 1/4] mseal: Wire up mseal syscall
+Date: Tue,  9 Jan 2024 15:45:39 +0000
+Message-ID: <20240109154547.1839886-2-jeffxu@chromium.org>
+X-Mailer: git-send-email 2.43.0.195.gebba966016-goog
+In-Reply-To: <20240109154547.1839886-1-jeffxu@chromium.org>
+References: <20240109154547.1839886-1-jeffxu@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] VMCI: Fix memcpy() run-time warning in
- dg_dispatch_as_host()
-Content-Language: en-US
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Kees Cook <keescook@chromium.org>,
- Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
- linux-hardening@vger.kernel.org, error27@gmail.com, gustavoars@kernel.org,
- Bryan Tan <bryantan@vmware.com>, Vishnu Dasa <vdasa@vmware.com>,
- VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
- Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-kernel@vger.kernel.org, vegard.nossum@oracle.com,
- darren.kenny@oracle.com, syzkaller <syzkaller@googlegroups.com>
-References: <20240105164001.2129796-1-harshit.m.mogalapalli@oracle.com>
- <20240105164001.2129796-2-harshit.m.mogalapalli@oracle.com>
- <202401081430.9DAB37B46@keescook>
- <9c742547-0021-464b-b7a8-7af46b0a4afa@embeddedor.com>
- <79ca2f85-1f8d-4a12-aa5a-09137033605f@moroto.mountain>
- <7d7b94ba-9a1f-44de-8491-dc4864338f80@embeddedor.com>
- <36aecc9a-ac30-436f-b42b-39f63513d743@moroto.mountain>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <36aecc9a-ac30-436f-b42b-39f63513d743@moroto.mountain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.184.157.186
-X-Source-L: No
-X-Exim-ID: 1rNDCk-000iaD-1s
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187.184.157.186.cable.dyn.cableonline.com.mx ([192.168.0.10]) [187.184.157.186]:58650
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 21
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfHw+IAc/DfrA+qeZoAu7cPi3duu+hH5+uQcFHI6uaZ2Z2W5Ws9E4bvpUh+7EubB4AVYfZjKYbExPI/FeR9fgiMZDvErQdjRARYLiBZsoTk2XtJJI2jSz
- 4zauu9vHHXg54eABYpIhI5NgxEJy7LT33F3i9Wi1jQdpjNJU5H+SNbTZCtbdcZg4Khq8LTAc3ibS9sfbRG/oGXSXXj/HGYU+svu5fqwz86I59FmTI2RdLDqx
+Content-Transfer-Encoding: 8bit
 
+From: Jeff Xu <jeffxu@chromium.org>
 
+Wire up mseal syscall for all architectures.
 
-On 1/9/24 07:22, Dan Carpenter wrote:
-> On Tue, Jan 09, 2024 at 06:31:41AM -0600, Gustavo A. R. Silva wrote:
->>
->> You're arguing that fortify caused a problem.
-> 
-> Yes.
-> 
-> Before: Code working correctly
-> After: Kernel Panic
-> 
-> At first, I started to question if I was going mad, but then I looked
-> through the email thread and Harshit tested it and proved that the
-> kernel does actually panic depending on the .config.
-> 
-> I mean realistically we should backport this patch to old kernels,
-> right?  And if we had to assign a Fixes tag to this it would need to be
-> the commit which adds Fortify to the kernel.  Prior to that commit the
-> code was fine.
-> 
-> Again, I'm not saying that Fortify is bad overall.  Probably in DnD it
-> would be Chaotic Good where it's overall good but sometimes a pain.
-> 
+Signed-off-by: Jeff Xu <jeffxu@chromium.org>
+---
+ arch/alpha/kernel/syscalls/syscall.tbl      | 1 +
+ arch/arm/tools/syscall.tbl                  | 1 +
+ arch/arm64/include/asm/unistd.h             | 2 +-
+ arch/arm64/include/asm/unistd32.h           | 2 ++
+ arch/m68k/kernel/syscalls/syscall.tbl       | 1 +
+ arch/microblaze/kernel/syscalls/syscall.tbl | 1 +
+ arch/mips/kernel/syscalls/syscall_n32.tbl   | 1 +
+ arch/mips/kernel/syscalls/syscall_n64.tbl   | 1 +
+ arch/mips/kernel/syscalls/syscall_o32.tbl   | 1 +
+ arch/parisc/kernel/syscalls/syscall.tbl     | 1 +
+ arch/powerpc/kernel/syscalls/syscall.tbl    | 1 +
+ arch/s390/kernel/syscalls/syscall.tbl       | 1 +
+ arch/sh/kernel/syscalls/syscall.tbl         | 1 +
+ arch/sparc/kernel/syscalls/syscall.tbl      | 1 +
+ arch/x86/entry/syscalls/syscall_32.tbl      | 1 +
+ arch/x86/entry/syscalls/syscall_64.tbl      | 1 +
+ arch/xtensa/kernel/syscalls/syscall.tbl     | 1 +
+ include/uapi/asm-generic/unistd.h           | 5 ++++-
+ kernel/sys_ni.c                             | 1 +
+ 19 files changed, 23 insertions(+), 2 deletions(-)
 
-You know what, I think the discrepancy here lies in the fact that, before,
-fortify didn't complain about writes across multiple members in the same
-struct, as long as we remained between the boundaries of the struct. This
-was done via __builtin_object_size(p, 0).
+diff --git a/arch/alpha/kernel/syscalls/syscall.tbl b/arch/alpha/kernel/syscalls/syscall.tbl
+index 18c842ca6c32..dd92e2639a03 100644
+--- a/arch/alpha/kernel/syscalls/syscall.tbl
++++ b/arch/alpha/kernel/syscalls/syscall.tbl
+@@ -496,3 +496,4 @@
+ 564	common	futex_wake			sys_futex_wake
+ 565	common	futex_wait			sys_futex_wait
+ 566	common	futex_requeue			sys_futex_requeue
++567	common  mseal				sys_mseal
+diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
+index 584f9528c996..d96461ee1ebe 100644
+--- a/arch/arm/tools/syscall.tbl
++++ b/arch/arm/tools/syscall.tbl
+@@ -470,3 +470,4 @@
+ 454	common	futex_wake			sys_futex_wake
+ 455	common	futex_wait			sys_futex_wait
+ 456	common	futex_requeue			sys_futex_requeue
++457	common	mseal				sys_mseal
+diff --git a/arch/arm64/include/asm/unistd.h b/arch/arm64/include/asm/unistd.h
+index 531effca5f1f..298313d2e0af 100644
+--- a/arch/arm64/include/asm/unistd.h
++++ b/arch/arm64/include/asm/unistd.h
+@@ -39,7 +39,7 @@
+ #define __ARM_NR_compat_set_tls		(__ARM_NR_COMPAT_BASE + 5)
+ #define __ARM_NR_COMPAT_END		(__ARM_NR_COMPAT_BASE + 0x800)
+ 
+-#define __NR_compat_syscalls		457
++#define __NR_compat_syscalls		458
+ #endif
+ 
+ #define __ARCH_WANT_SYS_CLONE
+diff --git a/arch/arm64/include/asm/unistd32.h b/arch/arm64/include/asm/unistd32.h
+index 9f7c1bf99526..e3118e0327c7 100644
+--- a/arch/arm64/include/asm/unistd32.h
++++ b/arch/arm64/include/asm/unistd32.h
+@@ -919,6 +919,8 @@ __SYSCALL(__NR_futex_wake, sys_futex_wake)
+ __SYSCALL(__NR_futex_wait, sys_futex_wait)
+ #define __NR_futex_requeue 456
+ __SYSCALL(__NR_futex_requeue, sys_futex_requeue)
++#define __NR_mseal 457
++__SYSCALL(__NR_mseal, sys_mseal)
+ 
+ /*
+  * Please add new compat syscalls above this comment and update
+diff --git a/arch/m68k/kernel/syscalls/syscall.tbl b/arch/m68k/kernel/syscalls/syscall.tbl
+index 7a4b780e82cb..105e966db655 100644
+--- a/arch/m68k/kernel/syscalls/syscall.tbl
++++ b/arch/m68k/kernel/syscalls/syscall.tbl
+@@ -456,3 +456,4 @@
+ 454	common	futex_wake			sys_futex_wake
+ 455	common	futex_wait			sys_futex_wait
+ 456	common	futex_requeue			sys_futex_requeue
++457	common	mseal				sys_mseal
+diff --git a/arch/microblaze/kernel/syscalls/syscall.tbl b/arch/microblaze/kernel/syscalls/syscall.tbl
+index 5b6a0b02b7de..18956345d348 100644
+--- a/arch/microblaze/kernel/syscalls/syscall.tbl
++++ b/arch/microblaze/kernel/syscalls/syscall.tbl
+@@ -462,3 +462,4 @@
+ 454	common	futex_wake			sys_futex_wake
+ 455	common	futex_wait			sys_futex_wait
+ 456	common	futex_requeue			sys_futex_requeue
++457	common	mseal				sys_mseal
+diff --git a/arch/mips/kernel/syscalls/syscall_n32.tbl b/arch/mips/kernel/syscalls/syscall_n32.tbl
+index a842b41c8e06..06cac28209d2 100644
+--- a/arch/mips/kernel/syscalls/syscall_n32.tbl
++++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
+@@ -395,3 +395,4 @@
+ 454	n32	futex_wake			sys_futex_wake
+ 455	n32	futex_wait			sys_futex_wait
+ 456	n32	futex_requeue			sys_futex_requeue
++457	n32	mseal				sys_mseal
+diff --git a/arch/mips/kernel/syscalls/syscall_n64.tbl b/arch/mips/kernel/syscalls/syscall_n64.tbl
+index 116ff501bf92..bb8270588953 100644
+--- a/arch/mips/kernel/syscalls/syscall_n64.tbl
++++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
+@@ -371,3 +371,4 @@
+ 454	n64	futex_wake			sys_futex_wake
+ 455	n64	futex_wait			sys_futex_wait
+ 456	n64	futex_requeue			sys_futex_requeue
++457	n64	mseal				sys_mseal
+diff --git a/arch/mips/kernel/syscalls/syscall_o32.tbl b/arch/mips/kernel/syscalls/syscall_o32.tbl
+index 525cc54bc63b..93958f063c3f 100644
+--- a/arch/mips/kernel/syscalls/syscall_o32.tbl
++++ b/arch/mips/kernel/syscalls/syscall_o32.tbl
+@@ -444,3 +444,4 @@
+ 454	o32	futex_wake			sys_futex_wake
+ 455	o32	futex_wait			sys_futex_wait
+ 456	o32	futex_requeue			sys_futex_requeue
++457	o32	mseal				sys_mseal
+diff --git a/arch/parisc/kernel/syscalls/syscall.tbl b/arch/parisc/kernel/syscalls/syscall.tbl
+index a47798fed54e..c6bc9277dcd7 100644
+--- a/arch/parisc/kernel/syscalls/syscall.tbl
++++ b/arch/parisc/kernel/syscalls/syscall.tbl
+@@ -455,3 +455,4 @@
+ 454	common	futex_wake			sys_futex_wake
+ 455	common	futex_wait			sys_futex_wait
+ 456	common	futex_requeue			sys_futex_requeue
++457	common	mseal				sys_mseal
+diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
+index 7fab411378f2..2947c4caf22e 100644
+--- a/arch/powerpc/kernel/syscalls/syscall.tbl
++++ b/arch/powerpc/kernel/syscalls/syscall.tbl
+@@ -543,3 +543,4 @@
+ 454	common	futex_wake			sys_futex_wake
+ 455	common	futex_wait			sys_futex_wait
+ 456	common	futex_requeue			sys_futex_requeue
++457	common	mseal				sys_mseal
+diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
+index 86fec9b080f6..2400a0e91883 100644
+--- a/arch/s390/kernel/syscalls/syscall.tbl
++++ b/arch/s390/kernel/syscalls/syscall.tbl
+@@ -459,3 +459,4 @@
+ 454  common	futex_wake		sys_futex_wake			sys_futex_wake
+ 455  common	futex_wait		sys_futex_wait			sys_futex_wait
+ 456  common	futex_requeue		sys_futex_requeue		sys_futex_requeue
++457  common	mseal			sys_mseal			sys_mseal
+diff --git a/arch/sh/kernel/syscalls/syscall.tbl b/arch/sh/kernel/syscalls/syscall.tbl
+index 363fae0fe9bf..6768e43c5d23 100644
+--- a/arch/sh/kernel/syscalls/syscall.tbl
++++ b/arch/sh/kernel/syscalls/syscall.tbl
+@@ -459,3 +459,4 @@
+ 454	common	futex_wake			sys_futex_wake
+ 455	common	futex_wait			sys_futex_wait
+ 456	common	futex_requeue			sys_futex_requeue
++457	common	mseal				sys_mseal
+diff --git a/arch/sparc/kernel/syscalls/syscall.tbl b/arch/sparc/kernel/syscalls/syscall.tbl
+index 7bcaa3d5ea44..4285465f7e4b 100644
+--- a/arch/sparc/kernel/syscalls/syscall.tbl
++++ b/arch/sparc/kernel/syscalls/syscall.tbl
+@@ -502,3 +502,4 @@
+ 454	common	futex_wake			sys_futex_wake
+ 455	common	futex_wait			sys_futex_wait
+ 456	common	futex_requeue			sys_futex_requeue
++457	common	mseal 				sys_mseal
+diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
+index c8fac5205803..e4e3b2097658 100644
+--- a/arch/x86/entry/syscalls/syscall_32.tbl
++++ b/arch/x86/entry/syscalls/syscall_32.tbl
+@@ -461,3 +461,4 @@
+ 454	i386	futex_wake		sys_futex_wake
+ 455	i386	futex_wait		sys_futex_wait
+ 456	i386	futex_requeue		sys_futex_requeue
++457	i386	mseal 			sys_mseal
+diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
+index 8cb8bf68721c..03cff8a24726 100644
+--- a/arch/x86/entry/syscalls/syscall_64.tbl
++++ b/arch/x86/entry/syscalls/syscall_64.tbl
+@@ -378,6 +378,7 @@
+ 454	common	futex_wake		sys_futex_wake
+ 455	common	futex_wait		sys_futex_wait
+ 456	common	futex_requeue		sys_futex_requeue
++457 	common  mseal			sys_mseal
+ 
+ #
+ # Due to a historical design error, certain syscalls are numbered differently
+diff --git a/arch/xtensa/kernel/syscalls/syscall.tbl b/arch/xtensa/kernel/syscalls/syscall.tbl
+index 06eefa9c1458..3c87cf0424c8 100644
+--- a/arch/xtensa/kernel/syscalls/syscall.tbl
++++ b/arch/xtensa/kernel/syscalls/syscall.tbl
+@@ -427,3 +427,4 @@
+ 454	common	futex_wake			sys_futex_wake
+ 455	common	futex_wait			sys_futex_wait
+ 456	common	futex_requeue			sys_futex_requeue
++457	common	mseal 				sys_mseal
+diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
+index 756b013fb832..9b2b6a4a80b6 100644
+--- a/include/uapi/asm-generic/unistd.h
++++ b/include/uapi/asm-generic/unistd.h
+@@ -829,8 +829,11 @@ __SYSCALL(__NR_futex_wait, sys_futex_wait)
+ #define __NR_futex_requeue 456
+ __SYSCALL(__NR_futex_requeue, sys_futex_requeue)
+ 
++#define __NR_mseal 457
++__SYSCALL(__NR_mseal, sys_mseal)
++
+ #undef __NR_syscalls
+-#define __NR_syscalls 457
++#define __NR_syscalls 458
+ 
+ /*
+  * 32 bit systems traditionally used different
+diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
+index 9a846439b36a..02280199069b 100644
+--- a/kernel/sys_ni.c
++++ b/kernel/sys_ni.c
+@@ -193,6 +193,7 @@ COND_SYSCALL(migrate_pages);
+ COND_SYSCALL(move_pages);
+ COND_SYSCALL(set_mempolicy_home_node);
+ COND_SYSCALL(cachestat);
++COND_SYSCALL(mseal);
+ 
+ COND_SYSCALL(perf_event_open);
+ COND_SYSCALL(accept4);
+-- 
+2.43.0.195.gebba966016-goog
 
-In recent times, that has changed, and now fortify has been tightened to warn
-about writes beyond the boundaries of a single object. This is now done via
-__builtin_dynamic_object_size(p, 1)/__builtin_object_size(p, 1).
-
-And, if this patch is to be backported, _technically_, the Fixes tag should
-probably be assigned to that change from __bos(p, 0) to __bos(p, 1):
-
-commit f68f2ff91512 ("fortify: Detect struct member overflows in memcpy() at compile-time")
-
-In any case, fortify should now emit this sort of warning, and that adds
-an extra layer of hardening to the kernel.
-
-Thanks
---
-Gustavo
