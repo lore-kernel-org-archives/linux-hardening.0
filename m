@@ -1,44 +1,44 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8D8439FEF
-	for <linux-hardening@vger.kernel.org>; Tue,  9 Jan 2024 15:46:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C402E3A1A4
+	for <linux-hardening@vger.kernel.org>; Tue,  9 Jan 2024 15:46:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RkJ4leqh"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-28c179bf45cso2745748a91.1
-        for <linux-hardening@vger.kernel.org>; Tue, 09 Jan 2024 07:46:03 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ljU2DP2M"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1d426ad4433so15285815ad.0
+        for <linux-hardening@vger.kernel.org>; Tue, 09 Jan 2024 07:46:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1704815163; x=1705419963; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1704815165; x=1705419965; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EvWcFUixyK3QCdkFzOfsuoapZZn9Bz//VzyuiOKMTpc=;
-        b=RkJ4leqhwr69twI+r3KvtD3s4wJc5D2YYxK6W9fcx83yPboQMhrJy1yVAdZX8U1x7J
-         N0HCSukcdnHSEk9PLsu4MB+g6btvdVsECVlSaQ0HYrLDMPFRIQtQSCtY3fSg0NfrmmFP
-         v+Bbk1WtU/gewZR2RJUhh/3IMQgWZsiGPPjn0=
+        bh=Jycb6hYHwyiIhFY8GEZ+4HXYhrCSpdkd/0XeHo/twrU=;
+        b=ljU2DP2M1b4IobHnDy6QRiZHwoIzOwLPuCL89PAtNelPRas3YgL1fuYIiiHK0IPBCp
+         PCOJtztM25KLWTfxl8YfWSK4dbJyxVFrVSwCPx+fqIeS045Sd5F0rvfrxcytm1dKfCsx
+         3iqkeH3R/zkJQvBlQ3+xTXocvOQcBk72/SeQU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704815163; x=1705419963;
+        d=1e100.net; s=20230601; t=1704815165; x=1705419965;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=EvWcFUixyK3QCdkFzOfsuoapZZn9Bz//VzyuiOKMTpc=;
-        b=ggHLPc/aQ1PEtM1xn/2MHNT5f8VFbi3KNYAU6HJHDHtag9I3qaCGqCIt9L3N+AbMYA
-         UiTK4/PpQAH9IgJmWWXhraCE5LRYiMfA23CNiyVF+5ywdagLTZid0HHe9QmCY9nIVQ/L
-         ZhUvpIOOnekYRAHCI6l1L7CZD1y01iGQ10ByS+/ysEGsd6QyZKsArWszRv5d8/YxlhRz
-         xdZcgwHcQNqaCqKZly01CMHJS2/2TuZsn3PsAkjtI783XKKvmcRswh8HS5ouFuthsYvK
-         6wQn5Jd0NEA0U2I7BleIS1dEiETVE+d/CblknC/Iien89KNuy1iPn/C91EoxoylPJpYm
-         kJwg==
-X-Gm-Message-State: AOJu0YyERDJ6C3S/QW93561fpUC6x0IOlan7delxCCqwbkOCaDiJIdKs
-	WwBS7RS56vNiIysd0K/IonsQLOUUmIzx
-X-Google-Smtp-Source: AGHT+IEuGA0Xvghpm9pEgQbGHik11LaPLOQD8bf52U9u32UJLJ1QDVbTA/hjp8GoLHP3SWj6537GDw==
-X-Received: by 2002:a17:90a:d513:b0:28c:fa4f:2282 with SMTP id t19-20020a17090ad51300b0028cfa4f2282mr3351835pju.91.1704815163049;
-        Tue, 09 Jan 2024 07:46:03 -0800 (PST)
+        bh=Jycb6hYHwyiIhFY8GEZ+4HXYhrCSpdkd/0XeHo/twrU=;
+        b=GTYrDpwf2wEafsqAYq1iXQlwu4fy2iacfKzu9vC7qNtY1ydcb57OmIhqReacQKuVk/
+         NjIfOQUslvSNdY52m51/ADnpHzNuuGQZ4Gywq9IbF30Rp3PotOTz6GdJrh0yVRdv8Roy
+         gPiUctpEsw0Mspf4aoE9dZqMFgdSitp5DQbkFz0IRxNaECC3THLLYs031NBq6qfjW3zv
+         MfcSePKlErsOtWZFX8B1ckj6icWHEhgkQUNiBVCF00K0v/HVIY0Wolu9jvkLoHPqdzvX
+         gjv0j0coEx0/C5E+qVQVDNcqgWBjSSIX7s5j/fnUapwpKO6PBwHWna7lRtlXzgkQf49J
+         WtnQ==
+X-Gm-Message-State: AOJu0YxOMfbbIp5hMJjumWPCCbDGcKtFwIYt1OCyMcAptNVemevU29pI
+	H1iOYQysHsvgM/HFr/wnWb2y8DZW5Kni
+X-Google-Smtp-Source: AGHT+IF2Hp+30LVgBqzpG5ABJ24nVs2S8m6pU7B+HXzD5Q7hgY+HfkPtpFPsAMpNMu3VF8po1GaWxQ==
+X-Received: by 2002:a17:903:98d:b0:1d5:36ea:f63e with SMTP id mb13-20020a170903098d00b001d536eaf63emr3163984plb.22.1704815164990;
+        Tue, 09 Jan 2024 07:46:04 -0800 (PST)
 Received: from localhost (34.85.168.34.bc.googleusercontent.com. [34.168.85.34])
-        by smtp.gmail.com with UTF8SMTPSA id o1-20020a17090aac0100b0028bd303dc58sm2138600pjq.11.2024.01.09.07.46.02
+        by smtp.gmail.com with UTF8SMTPSA id z12-20020a1709028f8c00b001cc2ebd2c2csm1932782plo.256.2024.01.09.07.46.04
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jan 2024 07:46:02 -0800 (PST)
+        Tue, 09 Jan 2024 07:46:04 -0800 (PST)
 From: jeffxu@chromium.org
 To: akpm@linux-foundation.org,
 	keescook@chromium.org,
@@ -59,9 +59,9 @@ Cc: jeffxu@google.com,
 	linux-hardening@vger.kernel.org,
 	deraadt@openbsd.org,
 	Jeff Xu <jeffxu@chromium.org>
-Subject: [RFC PATCH v5 2/4] mseal: add mseal syscall
-Date: Tue,  9 Jan 2024 15:45:40 +0000
-Message-ID: <20240109154547.1839886-3-jeffxu@chromium.org>
+Subject: [RFC PATCH v5 4/4] mseal:add documentation
+Date: Tue,  9 Jan 2024 15:45:42 +0000
+Message-ID: <20240109154547.1839886-5-jeffxu@chromium.org>
 X-Mailer: git-send-email 2.43.0.195.gebba966016-goog
 In-Reply-To: <20240109154547.1839886-1-jeffxu@chromium.org>
 References: <20240109154547.1839886-1-jeffxu@chromium.org>
@@ -71,722 +71,206 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Jeff Xu <jeffxu@chromium.org>
 
-The new mseal() is an syscall on 64 bit CPU, and with
-following signature:
-
-int mseal(void addr, size_t len, unsigned long flags)
-addr/len: memory range.
-flags: reserved.
-
-mseal() blocks following operations for the given memory range.
-
-1> Unmapping, moving to another location, and shrinking the size,
-   via munmap() and mremap(), can leave an empty space, therefore can
-   be replaced with a VMA with a new set of attributes.
-
-2> Moving or expanding a different VMA into the current location,
-   via mremap().
-
-3> Modifying a VMA via mmap(MAP_FIXED).
-
-4> Size expansion, via mremap(), does not appear to pose any specific
-   risks to sealed VMAs. It is included anyway because the use case is
-   unclear. In any case, users can rely on merging to expand a sealed VMA.
-
-5> mprotect() and pkey_mprotect().
-
-6> Some destructive madvice() behaviors (e.g. MADV_DONTNEED) for anonymous
-   memory, when users don't have write permission to the memory. Those
-   behaviors can alter region contents by discarding pages, effectively a
-   memset(0) for anonymous memory.
-
-In addition: mmap() has two related changes.
-
-The PROT_SEAL bit in prot field of mmap(). When present, it marks
-the map sealed since creation.
-
-The MAP_SEALABLE bit in the flags field of mmap(). When present, it marks
-the map as sealable. A map created without MAP_SEALABLE will not support
-sealing, i.e. mseal() will fail.
-
-Applications that don't care about sealing will expect their behavior
-unchanged. For those that need sealing support, opt-in by adding
-MAP_SEALABLE in mmap().
+Add documentation for mseal().
 
 Signed-off-by: Jeff Xu <jeffxu@chromium.org>
 ---
- include/linux/mm.h                     |  60 +++++
- include/linux/syscalls.h               |   1 +
- include/uapi/asm-generic/mman-common.h |   7 +
- mm/Makefile                            |   4 +
- mm/madvise.c                           |  12 +
- mm/mmap.c                              |  27 ++
- mm/mprotect.c                          |  10 +
- mm/mremap.c                            |  31 +++
- mm/mseal.c                             | 330 +++++++++++++++++++++++++
- 9 files changed, 482 insertions(+)
- create mode 100644 mm/mseal.c
+ Documentation/userspace-api/mseal.rst | 181 ++++++++++++++++++++++++++
+ 1 file changed, 181 insertions(+)
+ create mode 100644 Documentation/userspace-api/mseal.rst
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index da5219b48d52..50d6613ec352 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -30,6 +30,7 @@
- #include <linux/kasan.h>
- #include <linux/memremap.h>
- #include <linux/slab.h>
-+#include <uapi/linux/mman.h>
- 
- struct mempolicy;
- struct anon_vma;
-@@ -328,6 +329,14 @@ extern unsigned int kobjsize(const void *objp);
- #define VM_HIGH_ARCH_5	BIT(VM_HIGH_ARCH_BIT_5)
- #endif /* CONFIG_ARCH_USES_HIGH_VMA_FLAGS */
- 
-+#ifdef CONFIG_64BIT
-+/* VM is sealable, in vm_flags */
-+#define VM_SEALABLE	_BITUL(63)
-+
-+/* VM is sealed, in vm_flags */
-+#define VM_SEALED	_BITUL(62)
-+#endif
-+
- #ifdef CONFIG_ARCH_HAS_PKEYS
- # define VM_PKEY_SHIFT	VM_HIGH_ARCH_BIT_0
- # define VM_PKEY_BIT0	VM_HIGH_ARCH_0	/* A protection key is a 4-bit value */
-@@ -4143,4 +4152,55 @@ static inline bool pfn_is_unaccepted_memory(unsigned long pfn)
- 	return range_contains_unaccepted_memory(paddr, paddr + PAGE_SIZE);
- }
- 
-+#ifdef CONFIG_64BIT
-+static inline int can_do_mseal(unsigned long flags)
-+{
-+	if (flags)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+extern bool can_modify_mm(struct mm_struct *mm, unsigned long start,
-+		unsigned long end);
-+extern bool can_modify_mm_madv(struct mm_struct *mm, unsigned long start,
-+		unsigned long end, int behavior);
-+
-+static inline unsigned long get_mmap_seals(unsigned long prot,
-+	unsigned long flags)
-+{
-+	unsigned long vm_seals;
-+
-+	if (prot & PROT_SEAL)
-+		vm_seals = VM_SEALED | VM_SEALABLE;
-+	else
-+		vm_seals = (flags & MAP_SEALABLE) ? VM_SEALABLE:0;
-+
-+	return vm_seals;
-+}
-+#else
-+static inline int can_do_mseal(unsigned long flags)
-+{
-+	return -EPERM;
-+}
-+
-+static inline bool can_modify_mm(struct mm_struct *mm, unsigned long start,
-+		unsigned long end)
-+{
-+	return true;
-+}
-+
-+static inline bool can_modify_mm_madv(struct mm_struct *mm, unsigned long start,
-+		unsigned long end, int behavior)
-+{
-+	return true;
-+}
-+
-+static inline unsigned long get_mmap_seals(unsigned long prot,
-+	unsigned long flags)
-+{
-+	return 0;
-+}
-+#endif
-+
- #endif /* _LINUX_MM_H */
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index fd9d12de7e92..60a2cf0f6bb5 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -811,6 +811,7 @@ asmlinkage long sys_process_mrelease(int pidfd, unsigned int flags);
- asmlinkage long sys_remap_file_pages(unsigned long start, unsigned long size,
- 			unsigned long prot, unsigned long pgoff,
- 			unsigned long flags);
-+asmlinkage long sys_mseal(unsigned long start, size_t len, unsigned long flags);
- asmlinkage long sys_mbind(unsigned long start, unsigned long len,
- 				unsigned long mode,
- 				const unsigned long __user *nmask,
-diff --git a/include/uapi/asm-generic/mman-common.h b/include/uapi/asm-generic/mman-common.h
-index 6ce1f1ceb432..4a135eb3fe7e 100644
---- a/include/uapi/asm-generic/mman-common.h
-+++ b/include/uapi/asm-generic/mman-common.h
-@@ -17,6 +17,11 @@
- #define PROT_GROWSDOWN	0x01000000	/* mprotect flag: extend change to start of growsdown vma */
- #define PROT_GROWSUP	0x02000000	/* mprotect flag: extend change to end of growsup vma */
- 
-+/*
-+ * The PROT_SEAL defines memory sealing in the prot argument of mmap().
-+ */
-+#define PROT_SEAL	_BITUL(26)	/* 0x04000000 */
-+
- /* 0x01 - 0x03 are defined in linux/mman.h */
- #define MAP_TYPE	0x0f		/* Mask for type of mapping */
- #define MAP_FIXED	0x10		/* Interpret addr exactly */
-@@ -33,6 +38,8 @@
- #define MAP_UNINITIALIZED 0x4000000	/* For anonymous mmap, memory could be
- 					 * uninitialized */
- 
-+#define MAP_SEALABLE	_BITUL(27)	/* 0x8000000, map is sealable */
-+
- /*
-  * Flags for mlock
-  */
-diff --git a/mm/Makefile b/mm/Makefile
-index 33873c8aedb3..ba03c09a0519 100644
---- a/mm/Makefile
-+++ b/mm/Makefile
-@@ -46,6 +46,10 @@ ifdef CONFIG_CROSS_MEMORY_ATTACH
- mmu-$(CONFIG_MMU)	+= process_vm_access.o
- endif
- 
-+ifdef CONFIG_64BIT
-+mmu-$(CONFIG_MMU)	+= mseal.o
-+endif
-+
- obj-y			:= filemap.o mempool.o oom_kill.o fadvise.o \
- 			   maccess.o page-writeback.o folio-compat.o \
- 			   readahead.o swap.o truncate.o vmscan.o shrinker.o \
-diff --git a/mm/madvise.c b/mm/madvise.c
-index 6214a1ab5654..1d4cd41bad23 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -1393,6 +1393,7 @@ int madvise_set_anon_name(struct mm_struct *mm, unsigned long start,
-  *  -EIO    - an I/O error occurred while paging in data.
-  *  -EBADF  - map exists, but area maps something that isn't a file.
-  *  -EAGAIN - a kernel resource was temporarily unavailable.
-+ *  -EACCES - memory is sealed.
-  */
- int do_madvise(struct mm_struct *mm, unsigned long start, size_t len_in, int behavior)
- {
-@@ -1436,10 +1437,21 @@ int do_madvise(struct mm_struct *mm, unsigned long start, size_t len_in, int beh
- 	start = untagged_addr_remote(mm, start);
- 	end = start + len;
- 
-+	/*
-+	 * Check if the address range is sealed for do_madvise().
-+	 * can_modify_mm_madv assumes we have acquired the lock on MM.
-+	 */
-+	if (!can_modify_mm_madv(mm, start, end, behavior)) {
-+		error = -EACCES;
-+		goto out;
-+	}
-+
- 	blk_start_plug(&plug);
- 	error = madvise_walk_vmas(mm, start, end, behavior,
- 			madvise_vma_behavior);
- 	blk_finish_plug(&plug);
-+
-+out:
- 	if (write)
- 		mmap_write_unlock(mm);
- 	else
-diff --git a/mm/mmap.c b/mm/mmap.c
-index 1971bfffcc03..54a38b11a305 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -1213,6 +1213,7 @@ unsigned long do_mmap(struct file *file, unsigned long addr,
- {
- 	struct mm_struct *mm = current->mm;
- 	int pkey = 0;
-+	unsigned long vm_seals;
- 
- 	*populate = 0;
- 
-@@ -1233,6 +1234,8 @@ unsigned long do_mmap(struct file *file, unsigned long addr,
- 	if (flags & MAP_FIXED_NOREPLACE)
- 		flags |= MAP_FIXED;
- 
-+	vm_seals = get_mmap_seals(prot, flags);
-+
- 	if (!(flags & MAP_FIXED))
- 		addr = round_hint_to_min(addr);
- 
-@@ -1261,6 +1264,13 @@ unsigned long do_mmap(struct file *file, unsigned long addr,
- 			return -EEXIST;
- 	}
- 
-+	/*
-+	 * Check if the address range is sealed for do_mmap().
-+	 * can_modify_mm assumes we have acquired the lock on MM.
-+	 */
-+	if (!can_modify_mm(mm, addr, addr + len))
-+		return -EACCES;
-+
- 	if (prot == PROT_EXEC) {
- 		pkey = execute_only_pkey(mm);
- 		if (pkey < 0)
-@@ -1376,6 +1386,7 @@ unsigned long do_mmap(struct file *file, unsigned long addr,
- 			vm_flags |= VM_NORESERVE;
- 	}
- 
-+	vm_flags |= vm_seals;
- 	addr = mmap_region(file, addr, len, vm_flags, pgoff, uf);
- 	if (!IS_ERR_VALUE(addr) &&
- 	    ((vm_flags & VM_LOCKED) ||
-@@ -2711,6 +2722,14 @@ int do_vmi_munmap(struct vma_iterator *vmi, struct mm_struct *mm,
- 	if (end == start)
- 		return -EINVAL;
- 
-+	/*
-+	 * Check if memory is sealed before arch_unmap.
-+	 * Prevent unmapping a sealed VMA.
-+	 * can_modify_mm assumes we have acquired the lock on MM.
-+	 */
-+	if (!can_modify_mm(mm, start, end))
-+		return -EACCES;
-+
- 	 /* arch_unmap() might do unmaps itself.  */
- 	arch_unmap(mm, start, end);
- 
-@@ -3134,6 +3153,14 @@ int do_vma_munmap(struct vma_iterator *vmi, struct vm_area_struct *vma,
- {
- 	struct mm_struct *mm = vma->vm_mm;
- 
-+	/*
-+	 * Check if memory is sealed before arch_unmap.
-+	 * Prevent unmapping a sealed VMA.
-+	 * can_modify_mm assumes we have acquired the lock on MM.
-+	 */
-+	if (!can_modify_mm(mm, start, end))
-+		return -EACCES;
-+
- 	arch_unmap(mm, start, end);
- 	return do_vmi_align_munmap(vmi, vma, mm, start, end, uf, unlock);
- }
-diff --git a/mm/mprotect.c b/mm/mprotect.c
-index 81991102f785..eaa356ff3099 100644
---- a/mm/mprotect.c
-+++ b/mm/mprotect.c
-@@ -32,6 +32,7 @@
- #include <linux/sched/sysctl.h>
- #include <linux/userfaultfd_k.h>
- #include <linux/memory-tiers.h>
-+#include <uapi/linux/mman.h>
- #include <asm/cacheflush.h>
- #include <asm/mmu_context.h>
- #include <asm/tlbflush.h>
-@@ -743,6 +744,15 @@ static int do_mprotect_pkey(unsigned long start, size_t len,
- 		}
- 	}
- 
-+	/*
-+	 * checking if memory is sealed.
-+	 * can_modify_mm assumes we have acquired the lock on MM.
-+	 */
-+	if (!can_modify_mm(current->mm, start, end)) {
-+		error = -EACCES;
-+		goto out;
-+	}
-+
- 	prev = vma_prev(&vmi);
- 	if (start > vma->vm_start)
- 		prev = vma;
-diff --git a/mm/mremap.c b/mm/mremap.c
-index 38d98465f3d8..81db7d05dbe0 100644
---- a/mm/mremap.c
-+++ b/mm/mremap.c
-@@ -902,7 +902,25 @@ static unsigned long mremap_to(unsigned long addr, unsigned long old_len,
- 	if ((mm->map_count + 2) >= sysctl_max_map_count - 3)
- 		return -ENOMEM;
- 
-+	/*
-+	 * In mremap_to().
-+	 * Move a VMA to another location, check if src addr is sealed.
-+	 *
-+	 * Place can_modify_mm here because mremap_to()
-+	 * does its own checking for address range, and we only
-+	 * check the sealing after passing those checks.
-+	 *
-+	 * can_modify_mm assumes we have acquired the lock on MM.
-+	 */
-+	if (!can_modify_mm(mm, addr, addr + old_len))
-+		return -EACCES;
-+
- 	if (flags & MREMAP_FIXED) {
-+		/*
-+		 * In mremap_to().
-+		 * VMA is moved to dst address, and munmap dst first.
-+		 * do_munmap will check if dst is sealed.
-+		 */
- 		ret = do_munmap(mm, new_addr, new_len, uf_unmap_early);
- 		if (ret)
- 			goto out;
-@@ -1061,6 +1079,19 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned long, old_len,
- 		goto out;
- 	}
- 
-+	/*
-+	 * Below is shrink/expand case (not mremap_to())
-+	 * Check if src address is sealed, if so, reject.
-+	 * In other words, prevent shrinking or expanding a sealed VMA.
-+	 *
-+	 * Place can_modify_mm here so we can keep the logic related to
-+	 * shrink/expand together.
-+	 */
-+	if (!can_modify_mm(mm, addr, addr + old_len)) {
-+		ret = -EACCES;
-+		goto out;
-+	}
-+
- 	/*
- 	 * Always allow a shrinking remap: that just unmaps
- 	 * the unnecessary pages..
-diff --git a/mm/mseal.c b/mm/mseal.c
+diff --git a/Documentation/userspace-api/mseal.rst b/Documentation/userspace-api/mseal.rst
 new file mode 100644
-index 000000000000..397a7b4cc7b3
+index 000000000000..1700ce5af218
 --- /dev/null
-+++ b/mm/mseal.c
-@@ -0,0 +1,330 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *  Implement mseal() syscall.
-+ *
-+ *  Copyright (c) 2023,2024 Google, Inc.
-+ *
-+ *  Author: Jeff Xu <jeffxu@chromium.org>
-+ */
++++ b/Documentation/userspace-api/mseal.rst
+@@ -0,0 +1,181 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+#include <linux/mempolicy.h>
-+#include <linux/mman.h>
-+#include <linux/mm.h>
-+#include <linux/mm_inline.h>
-+#include <linux/mmu_context.h>
-+#include <linux/syscalls.h>
-+#include <linux/sched.h>
-+#include "internal.h"
++=====================
++Introduction of mseal
++=====================
 +
-+static inline bool vma_is_sealed(struct vm_area_struct *vma)
-+{
-+	return (vma->vm_flags & VM_SEALED);
-+}
++:Author: Jeff Xu <jeffxu@chromium.org>
 +
-+static inline bool vma_is_sealable(struct vm_area_struct *vma)
-+{
-+	return vma->vm_flags & VM_SEALABLE;
-+}
++Modern CPUs support memory permissions such as RW and NX bits. The memory
++permission feature improves security stance on memory corruption bugs, i.e.
++the attacker can’t just write to arbitrary memory and point the code to it,
++the memory has to be marked with X bit, or else an exception will happen.
 +
-+static inline void set_vma_sealed(struct vm_area_struct *vma)
-+{
-+	vma->__vm_flags |= VM_SEALED;
-+}
++Memory sealing additionally protects the mapping itself against
++modifications. This is useful to mitigate memory corruption issues where a
++corrupted pointer is passed to a memory management system. For example,
++such an attacker primitive can break control-flow integrity guarantees
++since read-only memory that is supposed to be trusted can become writable
++or .text pages can get remapped. Memory sealing can automatically be
++applied by the runtime loader to seal .text and .rodata pages and
++applications can additionally seal security critical data at runtime.
 +
-+/*
-+ * check if a vma is sealed for modification.
-+ * return true, if modification is allowed.
-+ */
-+bool can_modify_vma(struct vm_area_struct *vma)
-+{
-+	if (vma_is_sealed(vma))
-+		return false;
++A similar feature already exists in the XNU kernel with the
++VM_FLAGS_PERMANENT flag [1] and on OpenBSD with the mimmutable syscall [2].
 +
-+	return true;
-+}
++User API
++========
++Two system calls are involved in virtual memory sealing, mseal() and mmap().
 +
-+static bool is_madv_discard(int behavior)
-+{
-+	return	behavior &
-+		(MADV_FREE | MADV_DONTNEED | MADV_DONTNEED_LOCKED |
-+		 MADV_REMOVE | MADV_DONTFORK | MADV_WIPEONFORK);
-+}
++mseal()
++-----------
++The mseal() syscall has following signature:
 +
-+static bool is_ro_anon(struct vm_area_struct *vma)
-+{
-+	/* check anonymous mapping. */
-+	if (vma->vm_file || vma->vm_flags & VM_SHARED)
-+		return false;
++``int mseal(void addr, size_t len, unsigned long flags)``
 +
-+	/*
-+	 * check for non-writable:
-+	 * PROT=RO or PKRU is not writeable.
-+	 */
-+	if (!(vma->vm_flags & VM_WRITE) ||
-+		!arch_vma_access_permitted(vma, true, false, false))
-+		return true;
++**addr/len**: virtual memory address range.
 +
-+	return false;
-+}
++The address range set by ``addr``/``len`` must meet:
++   - The start address must be in an allocated VMA.
++   - The start address must be page aligned.
++   - The end address (``addr`` + ``len``) must be in an allocated VMA.
++   - no gap (unallocated memory) between start and end address.
 +
-+/*
-+ * Check if the vmas of a memory range are allowed to be modified.
-+ * the memory ranger can have a gap (unallocated memory).
-+ * return true, if it is allowed.
-+ */
-+bool can_modify_mm(struct mm_struct *mm, unsigned long start, unsigned long end)
-+{
-+	struct vm_area_struct *vma;
++The ``len`` will be paged aligned implicitly by the kernel.
 +
-+	VMA_ITERATOR(vmi, mm, start);
++**flags**: reserved for future use.
 +
-+	/* going through each vma to check. */
-+	for_each_vma_range(vmi, vma, end) {
-+		if (!can_modify_vma(vma))
-+			return false;
-+	}
++**return values**:
 +
-+	/* Allow by default. */
-+	return true;
-+}
++- ``0``: Success.
 +
-+/*
-+ * Check if the vmas of a memory range are allowed to be modified by madvise.
-+ * the memory ranger can have a gap (unallocated memory).
-+ * return true, if it is allowed.
-+ */
-+bool can_modify_mm_madv(struct mm_struct *mm, unsigned long start, unsigned long end,
-+		int behavior)
-+{
-+	struct vm_area_struct *vma;
++- ``-EINVAL``:
++    - Invalid input ``flags``.
++    - The start address (``addr``) is not page aligned.
++    - Address range (``addr`` + ``len``) overflow.
 +
-+	VMA_ITERATOR(vmi, mm, start);
++- ``-ENOMEM``:
++    - The start address (``addr``) is not allocated.
++    - The end address (``addr`` + ``len``) is not allocated.
++    - A gap (unallocated memory) between start and end address.
 +
-+	if (!is_madv_discard(behavior))
-+		return true;
++- ``-EACCES``:
++    - ``MAP_SEALABLE`` is not set during mmap().
 +
-+	/* going through each vma to check. */
-+	for_each_vma_range(vmi, vma, end)
-+		if (is_ro_anon(vma) && !can_modify_vma(vma))
-+			return false;
++- ``-EPERM``:
++    - sealing is supported only on 64 bit CPUs, 32-bit is not supported.
 +
-+	/* Allow by default. */
-+	return true;
-+}
++- For above error cases, users can expect the given memory range is
++  unmodified, i.e. no partial update.
 +
-+/*
-+ * Check if a seal type can be added to VMA.
-+ */
-+static bool can_add_vma_seal(struct vm_area_struct *vma)
-+{
-+	/* if map is not sealable, reject. */
-+	if (!vma_is_sealable(vma))
-+		return false;
++- There might be other internal errors/cases not listed here, e.g.
++  error during merging/splitting VMAs, or the process reaching the max
++  number of supported VMAs. In those cases, partial updates to the given
++  memory range could happen. However, those cases shall be rare.
 +
-+	return true;
-+}
++**Blocked operations after sealing**:
++    Unmapping, moving to another location, and shrinking the size,
++    via munmap() and mremap(), can leave an empty space, therefore
++    can be replaced with a VMA with a new set of attributes.
 +
-+static int mseal_fixup(struct vma_iterator *vmi, struct vm_area_struct *vma,
-+		struct vm_area_struct **prev, unsigned long start,
-+		unsigned long end, vm_flags_t newflags)
-+{
-+	int ret = 0;
-+	vm_flags_t oldflags = vma->vm_flags;
++    Moving or expanding a different VMA into the current location,
++    via mremap().
 +
-+	if (newflags == oldflags)
-+		goto out;
++    Modifying a VMA via mmap(MAP_FIXED).
 +
-+	vma = vma_modify_flags(vmi, *prev, vma, start, end, newflags);
-+	if (IS_ERR(vma)) {
-+		ret = PTR_ERR(vma);
-+		goto out;
-+	}
++    Size expansion, via mremap(), does not appear to pose any
++    specific risks to sealed VMAs. It is included anyway because
++    the use case is unclear. In any case, users can rely on
++    merging to expand a sealed VMA.
 +
-+	set_vma_sealed(vma);
-+out:
-+	*prev = vma;
-+	return ret;
-+}
++    mprotect() and pkey_mprotect().
 +
-+/*
-+ * Check for do_mseal:
-+ * 1> start is part of a valid vma.
-+ * 2> end is part of a valid vma.
-+ * 3> No gap (unallocated address) between start and end.
-+ * 4> map is sealable.
-+ */
-+static int check_mm_seal(unsigned long start, unsigned long end)
-+{
-+	struct vm_area_struct *vma;
-+	unsigned long nstart = start;
++    Some destructive madvice() behaviors (e.g. MADV_DONTNEED)
++    for anonymous memory, when users don't have write permission to the
++    memory. Those behaviors can alter region contents by discarding pages,
++    effectively a memset(0) for anonymous memory.
 +
-+	VMA_ITERATOR(vmi, current->mm, start);
++**Note**:
 +
-+	/* going through each vma to check. */
-+	for_each_vma_range(vmi, vma, end) {
-+		if (vma->vm_start > nstart)
-+			/* unallocated memory found. */
-+			return -ENOMEM;
++- mseal() only works on 64-bit CPUs, not 32-bit CPU.
 +
-+		if (!can_add_vma_seal(vma))
-+			return -EACCES;
++- users can call mseal() multiple times, mseal() on an already sealed memory
++  is a no-action (not error).
 +
-+		if (vma->vm_end >= end)
-+			return 0;
++- munseal() is not supported.
 +
-+		nstart = vma->vm_end;
-+	}
++mmap()
++----------
++``void *mmap(void* addr, size_t length, int prot, int flags, int fd,
++off_t offset);``
 +
-+	return -ENOMEM;
-+}
++We add two changes in ``prot`` and ``flags`` of  mmap() related to
++memory sealing.
 +
-+/*
-+ * Apply sealing.
-+ */
-+static int apply_mm_seal(unsigned long start, unsigned long end)
-+{
-+	unsigned long nstart;
-+	struct vm_area_struct *vma, *prev;
++**prot**
 +
-+	VMA_ITERATOR(vmi, current->mm, start);
++The ``PROT_SEAL`` bit in ``prot`` field of mmap().
 +
-+	vma = vma_iter_load(&vmi);
-+	/*
-+	 * Note: check_mm_seal should already checked ENOMEM case.
-+	 * so vma should not be null, same for the other ENOMEM cases.
-+	 */
-+	prev = vma_prev(&vmi);
-+	if (start > vma->vm_start)
-+		prev = vma;
++When present, it marks the memory is sealed since creation.
 +
-+	nstart = start;
-+	for_each_vma_range(vmi, vma, end) {
-+		int error;
-+		unsigned long tmp;
-+		vm_flags_t newflags;
++This is useful as optimization because it avoids having to make two
++system calls: one for mmap() and one for mseal().
 +
-+		newflags = vma->vm_flags | VM_SEALED;
-+		tmp = vma->vm_end;
-+		if (tmp > end)
-+			tmp = end;
-+		error = mseal_fixup(&vmi, vma, &prev, nstart, tmp, newflags);
-+		if (error)
-+			return error;
-+		tmp = vma_iter_end(&vmi);
-+		nstart = tmp;
-+	}
++It's worth noting that even though the sealing is set via the
++``prot`` field in mmap(), it can't be set in the ``prot``
++field in later mprotect(). This is unlike the ``PROT_READ``,
++``PROT_WRITE``, ``PROT_EXEC`` bits, e.g. if ``PROT_WRITE`` is not set in
++mprotect(), it means that the region is not writable.
 +
-+	return 0;
-+}
++Setting ``PROT_SEAL`` implies setting ``MAP_SEALABLE`` below.
 +
-+/*
-+ * mseal(2) seals the VM's meta data from
-+ * selected syscalls.
-+ *
-+ * addr/len: VM address range.
-+ *
-+ *  The address range by addr/len must meet:
-+ *   start (addr) must be in a valid VMA.
-+ *   end (addr + len) must be in a valid VMA.
-+ *   no gap (unallocated memory) between start and end.
-+ *   start (addr) must be page aligned.
-+ *
-+ *  len: len will be page aligned implicitly.
-+ *
-+ *   Below VMA operations are blocked after sealing.
-+ *   1> Unmapping, moving to another location, and shrinking
-+ *	the size, via munmap() and mremap(), can leave an empty
-+ *	space, therefore can be replaced with a VMA with a new
-+ *	set of attributes.
-+ *   2> Moving or expanding a different vma into the current location,
-+ *	via mremap().
-+ *   3> Modifying a VMA via mmap(MAP_FIXED).
-+ *   4> Size expansion, via mremap(), does not appear to pose any
-+ *	specific risks to sealed VMAs. It is included anyway because
-+ *	the use case is unclear. In any case, users can rely on
-+ *	merging to expand a sealed VMA.
-+ *   5> mprotect and pkey_mprotect.
-+ *   6> Some destructive madvice() behavior (e.g. MADV_DONTNEED)
-+ *      for anonymous memory, when users don't have write permission to the
-+ *	memory. Those behaviors can alter region contents by discarding pages,
-+ *	effectively a memset(0) for anonymous memory.
-+ *
-+ *  flags: reserved.
-+ *
-+ * return values:
-+ *  zero: success.
-+ *  -EINVAL:
-+ *   invalid input flags.
-+ *   start address is not page aligned.
-+ *   Address arange (start + len) overflow.
-+ *  -ENOMEM:
-+ *   addr is not a valid address (not allocated).
-+ *   end (start + len) is not a valid address.
-+ *   a gap (unallocated memory) between start and end.
-+ *  -EACCES:
-+ *   MAP_SEALABLE is not set.
-+ *  -EPERM:
-+ *  - In 32 bit architecture, sealing is not supported.
-+ * Note:
-+ *  user can call mseal(2) multiple times, adding a seal on an
-+ *  already sealed memory is a no-action (no error).
-+ *
-+ *  unseal() is not supported.
-+ */
-+static int do_mseal(unsigned long start, size_t len_in, unsigned long flags)
-+{
-+	size_t len;
-+	int ret = 0;
-+	unsigned long end;
-+	struct mm_struct *mm = current->mm;
++**flags**
 +
-+	ret = can_do_mseal(flags);
-+	if (ret)
-+		return ret;
++The ``MAP_SEALABLE`` bit in the ``flags`` field of mmap().
 +
-+	start = untagged_addr(start);
-+	if (!PAGE_ALIGNED(start))
-+		return -EINVAL;
++When present, it marks the map as sealable. A map created
++without ``MAP_SEALABLE`` will not support sealing; In other words,
++mseal() will fail for such a map.
 +
-+	len = PAGE_ALIGN(len_in);
-+	/* Check to see whether len was rounded up from small -ve to zero. */
-+	if (len_in && !len)
-+		return -EINVAL;
 +
-+	end = start + len;
-+	if (end < start)
-+		return -EINVAL;
++Applications that don't care about sealing will expect their
++behavior unchanged. For those that need sealing support, opt-in
++by adding ``MAP_SEALABLE`` in mmap().
 +
-+	if (end == start)
-+		return 0;
++Note: for a map created without ``MAP_SEALABLE`` or a map created
++with ``MAP_SEALABLE`` but not sealed yet, mmap(MAP_FIXED) can
++change the sealable or sealing bit.
 +
-+	if (mmap_write_lock_killable(mm))
-+		return -EINTR;
++Use Case:
++=========
++- glibc:
++  The dynamic linker, during loading ELF executables, can apply sealing to
++  non-writable memory segments.
 +
-+	/*
-+	 * First pass, this helps to avoid
-+	 * partial sealing in case of error in input address range,
-+	 * e.g. ENOMEM and EACCESS error.
-+	 */
-+	ret = check_mm_seal(start, end);
-+	if (ret)
-+		goto out;
++- Chrome browser: protect some security sensitive data-structures.
 +
-+	/*
-+	 * Second pass, this should success, unless there are errors
-+	 * from vma_modify_flags, e.g. merge/split error, or process
-+	 * reaching the max supported VMAs, however, those cases shall
-+	 * be rare.
-+	 */
-+	ret = apply_mm_seal(start, end);
++Additional notes:
++=================
++As Jann Horn pointed out in [3], there are still a few ways to write
++to RO memory, which is, in a way, by design. Those cases are not covered
++by mseal(). If applications want to block such cases, sandbox tools (such as
++seccomp, LSM, etc) might be considered.
 +
-+out:
-+	mmap_write_unlock(current->mm);
-+	return ret;
-+}
++Those cases are:
 +
-+SYSCALL_DEFINE3(mseal, unsigned long, start, size_t, len, unsigned long,
-+		flags)
-+{
-+	return do_mseal(start, len, flags);
-+}
++- Write to read-only memory through /proc/self/mem interface.
++- Write to read-only memory through ptrace (such as PTRACE_POKETEXT).
++- userfaultfd.
++
++The idea that inspired this patch comes from Stephen Röttger’s work in V8
++CFI [4]. Chrome browser in ChromeOS will be the first user of this API.
++
++Reference:
++==========
++[1] https://github.com/apple-oss-distributions/xnu/blob/1031c584a5e37aff177559b9f69dbd3c8c3fd30a/osfmk/mach/vm_statistics.h#L274
++
++[2] https://man.openbsd.org/mimmutable.2
++
++[3] https://lore.kernel.org/lkml/CAG48ez3ShUYey+ZAFsU2i1RpQn0a5eOs2hzQ426FkcgnfUGLvA@mail.gmail.com
++
++[4] https://docs.google.com/document/d/1O2jwK4dxI3nRcOJuPYkonhTkNQfbmwdvxQMyXgeaRHo/edit#heading=h.bvaojj9fu6hc
 -- 
 2.43.0.195.gebba966016-goog
 
