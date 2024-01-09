@@ -1,131 +1,127 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9FD333CE6
-	for <linux-hardening@vger.kernel.org>; Tue,  9 Jan 2024 09:25:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kBRDQ5+/"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-55642663ac4so3035564a12.1
-        for <linux-hardening@vger.kernel.org>; Tue, 09 Jan 2024 01:25:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704792351; x=1705397151; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hLAQ0XbkOQ9pBOvAMM5d4aYPnzhy2IEgHHWyMPd2+80=;
-        b=kBRDQ5+/KH7CzOQPqu/OUs9BbnareX7K4xHPThwESBHv65uRGcmLUq8Bg87o7szzQC
-         rU5N7BGFsx5SRDUQaoPtHLm5uXlCYIaHq0YCC9Ec+uwRDws4wt5+dcoq/OBbymRXVde8
-         UIkqDEzDc+hu7zEt7+ScKDru0aBw9j6OLbtiyEsJ8ACpwvTgVfdY7U8G59jUuEJzFMNc
-         nFJEhHXyVxWaGt36Pp1PDUGDHhmL/XYkK4je4yqITKH2NQ0d9aDADue0IeRxkLA0IoYP
-         YCKZxPKuhLX6jU5655bi5tvjXmH+l+2B6w93Tuxnj4Pjq4iQe2mIpMNPL8znmRrtZ59X
-         Lecg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704792351; x=1705397151;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hLAQ0XbkOQ9pBOvAMM5d4aYPnzhy2IEgHHWyMPd2+80=;
-        b=b31cVumhHROSZUQhgb1JxfgMwUmj7Vg3/EWHP65B0qxBFQCD5bk60JHFsKCjeR/6uS
-         ZfAn3gV6hisudzTTl+hEoA7RoNeyD1ZDRpVeTyXnQPGDUY8UO3w9oKNLAAHFkLcckriZ
-         RGSPIZTWdgiXWPYHkytS8nIxym2mOli3Tk8sSSx9gFEO/lug7b1r6vmSdEHfQUL3bCzQ
-         65tWImUoUDWbllAb8imcYhiYgGGnCzZHSri2OTpyDbhAXGeQaNwHeo72udhp8b7YaCcF
-         yhL8+/fme9sznv09pT337yBf/NYCo6aWP14BKdinMkKuCq+Bm9ScMAnC0x8Mn7qRR7mw
-         VcSw==
-X-Gm-Message-State: AOJu0Yw38lmis4NAjtgvlu4aktAd8DWv1JHVc92OXBwsL5QsRzu3Rjzj
-	2HaxcmhvyVE/6T8m2MCJvoOBEKgWRta62w==
-X-Google-Smtp-Source: AGHT+IHn51OKXc47+wSrI6jDGUtNAI2rvBsuf7vr1vNWFX1eaEhPYK/aGnz3PyJ9fs0Gw2P0rPciWA==
-X-Received: by 2002:a17:907:3e8a:b0:a2a:23a7:1a79 with SMTP id hs10-20020a1709073e8a00b00a2a23a71a79mr388065ejc.100.1704792351273;
-        Tue, 09 Jan 2024 01:25:51 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.223.112])
-        by smtp.gmail.com with ESMTPSA id l25-20020a1709061c5900b00a28956cf75esm813989ejg.130.2024.01.09.01.25.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Jan 2024 01:25:50 -0800 (PST)
-Message-ID: <0f3e0819-b23f-4a84-abc9-f213f08c013a@linaro.org>
-Date: Tue, 9 Jan 2024 10:25:48 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56CE7374CA;
+	Tue,  9 Jan 2024 12:15:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4T8VHS157Qz9v6Y;
+	Tue,  9 Jan 2024 13:15:00 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id jdK_Jc1jqNjy; Tue,  9 Jan 2024 13:15:00 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4T8VHS0HC2z9v2V;
+	Tue,  9 Jan 2024 13:15:00 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id F1DFE8B77D;
+	Tue,  9 Jan 2024 13:14:59 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id 7pM4OD5n-ewz; Tue,  9 Jan 2024 13:14:59 +0100 (CET)
+Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.233.126])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 26ACE8B774;
+	Tue,  9 Jan 2024 13:14:58 +0100 (CET)
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: linux-hardening@vger.kernel.org,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Kees Cook <keescook@chromium.org>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	linux-mm@kvack.org,
+	steven.price@arm.com,
+	Phong Tran <tranmanphong@gmail.com>,
+	mark.rutland@arm.com,
+	Greg KH <greg@kroah.com>
+Subject: [PATCH 1/4] arm: ptdump: Rename CONFIG_DEBUG_WX to CONFIG_ARM_DEBUG_WX
+Date: Tue,  9 Jan 2024 13:14:35 +0100
+Message-ID: <d651269a681150f9bdca8103434fb3f4b509f784.1704800524.git.christophe.leroy@csgroup.eu>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <cover.1704800524.git.christophe.leroy@csgroup.eu>
+References: <cover.1704800524.git.christophe.leroy@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] dt-bindings: Add DPS310 as trivial device
-Content-Language: en-US
-To: Ninad Palsule <ninad@linux.ibm.com>, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, joel@jms.id.au,
- andrew@codeconstruct.com.au, peterhuewe@gmx.de, jarkko@kernel.org,
- jgg@ziepe.ca, keescook@chromium.org, tony.luck@intel.com,
- gpiccoli@igalia.com, johannes.holland@infineon.com, linux@roeck-us.net,
- broonie@kernel.org, andre.werner@systec-electronic.com
-Cc: patrick.rudolph@9elements.com, vincent@vtremblay.dev,
- peteryin.openbmc@gmail.com, lakshmiy@us.ibm.com, bhelgaas@google.com,
- naresh.solanki@9elements.com, alexander.stein@ew.tq-group.com,
- festevam@denx.de, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
- linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
- linux-hardening@vger.kernel.org, geissonator@yahoo.com,
- geert+renesas@glider.be, luca.ceresoli@bootlin.com
-References: <20240108204114.1041390-1-ninad@linux.ibm.com>
- <20240108204114.1041390-3-ninad@linux.ibm.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240108204114.1041390-3-ninad@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1704802473; l=1302; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=SZmJpW4kyN4zUs+MdMT6CDyMhbW9dyNyADl5ScxgQbU=; b=ZRUK6aNuwLf82oScWI/2o5V02OBwPHgNwHRpA6tH0OpUPTRtOVcXbXukUs0gIeW4L5Tm9Mi8E t1ySRzRI5ipD9FZVb5uHd+bEWidm7yIlzdJbDqOzk/F2uTz/mSpvamx
+X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
+Content-Transfer-Encoding: 8bit
 
-On 08/01/2024 21:41, Ninad Palsule wrote:
-> Infineon DPS310 is a barometric pressure and temperature sensor.
-> 
-> Signed-off-by: Ninad Palsule <ninad@linux.ibm.com>
-> ---
+CONFIG_DEBUG_WX is a core option defined in mm/Kconfig.debug
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To avoid any future conflict, rename ARM version
+into CONFIG_ARM_DEBUG_WX.
 
-Best regards,
-Krzysztof
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+---
+ arch/arm/Kconfig.debug        | 2 +-
+ arch/arm/include/asm/ptdump.h | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+index fc2b41d41447..141151d632f6 100644
+--- a/arch/arm/Kconfig.debug
++++ b/arch/arm/Kconfig.debug
+@@ -17,7 +17,7 @@ config ARM_PTDUMP_DEBUGFS
+ 	  kernel.
+ 	  If in doubt, say "N"
+ 
+-config DEBUG_WX
++config ARM_DEBUG_WX
+ 	bool "Warn on W+X mappings at boot"
+ 	depends on MMU
+ 	select ARM_PTDUMP_CORE
+diff --git a/arch/arm/include/asm/ptdump.h b/arch/arm/include/asm/ptdump.h
+index aad1d034136c..46a4575146ee 100644
+--- a/arch/arm/include/asm/ptdump.h
++++ b/arch/arm/include/asm/ptdump.h
+@@ -32,10 +32,10 @@ void ptdump_check_wx(void);
+ 
+ #endif /* CONFIG_ARM_PTDUMP_CORE */
+ 
+-#ifdef CONFIG_DEBUG_WX
+-#define debug_checkwx() ptdump_check_wx()
++#ifdef CONFIG_ARM_DEBUG_WX
++#define arm_debug_checkwx() ptdump_check_wx()
+ #else
+-#define debug_checkwx() do { } while (0)
++#define arm_debug_checkwx() do { } while (0)
+ #endif
+ 
+ #endif /* __ASM_PTDUMP_H */
+-- 
+2.41.0
 
