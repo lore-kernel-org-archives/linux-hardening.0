@@ -1,85 +1,116 @@
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7142538FA3;
-	Tue,  9 Jan 2024 13:57:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3bbe78dbd1aso348611b6e.1;
-        Tue, 09 Jan 2024 05:57:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704808660; x=1705413460;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JJHgvOFzSW+JX3OnOy35lWmNxPoI3R11S86tQorDHH0=;
-        b=DLrKJHtVG5KsYRHf2FQJXiI7N+CvxcwwV2lrZIxDDYaupXYtwFgr5+U4ImvI9QtAuW
-         g/qBFqd1+LqrHTHjrMGQhMzEfX94kZIUVrnou+KfD+rRgKkGbUwmLpyQudvH72JPUNsu
-         rtb7WPTSjKudrYCkuk9+iB1wN/AO3qb9V1En51rUPYfs3PEwwtW5YIuogkO1L2Lgv80Y
-         hgKVDPvoUYXMcbBgPbm6Ez+9RH5dsXqVAFodKN1KT2IwvGhBxB4c77KrA4tW3x0GDykq
-         bmXUP/aeTqx6ztpDI3oy+4ho3vPwo03rjW5nXr6vN948pLt66jpnzNaPpPuFts9uJo0B
-         HWaQ==
-X-Gm-Message-State: AOJu0YyJ3ntPXy7SpbNyRNgd3gqGybkftZLVxBnekkW0c2g+xu3zIMT5
-	a6G3/muyHb4ebT3rD8STJB/J/k7KEH38w0VbnK8=
-X-Google-Smtp-Source: AGHT+IEFYMQhUKEmFNS7nfNb1EAhYvSqIBMprKgVBkg9Vy+ACaB3INvDtbMYdXs1Ax8YyGBm5pfYkEsl24hSW3bH8X0=
-X-Received: by 2002:a05:6870:65aa:b0:206:5411:f97b with SMTP id
- fp42-20020a05687065aa00b002065411f97bmr2250765oab.4.1704808660361; Tue, 09
- Jan 2024 05:57:40 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2352339AC7
+	for <linux-hardening@vger.kernel.org>; Tue,  9 Jan 2024 13:59:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="r5WFhP2+"
+Received: from eig-obgw-5005a.ext.cloudfilter.net ([10.0.29.234])
+	by cmsmtp with ESMTPS
+	id NAFUrd3PkTHHuNCdorjUov; Tue, 09 Jan 2024 13:59:40 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id NCdnrpu5lfs4hNCdnr8BZr; Tue, 09 Jan 2024 13:59:39 +0000
+X-Authority-Analysis: v=2.4 cv=Q6TBXq6a c=1 sm=1 tr=0 ts=659d514b
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=GfQleyYEO+cc22AUyTT7qQ==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=dEuoMetlWLkA:10 a=wYkD_t78qR0A:10
+ a=jCw2ex66E_5x05uIvzYA:9 a=QEXdDO2ut3YA:10
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=Y2CE/Hs6RAOXjZmVqnvf/IR9hVOQliV1xVMEpOaNeSM=; b=r5WFhP2+75l5rixF+KzySrozXk
+	Em5yzbvm+7Ph8FfkFi1jYJqU1p7OjImbmmn69lEkRzQGLCpnX0ZjBI5fyeVORQXekDp1QsE3VejGI
+	LDIOp1zMKjqde7+a+sAeVwIE4zjQhornHY4VzgVxDmefdWOAWfZjDOLpRLjJoVpVG2jACjt59CiQ6
+	A3U1GJ+betZgIhQjgCJRuelB5T6k5a1udLstM3MifyPgChl79UZcp7KtdRawCN4eobptrE6RKaMqj
+	PcwOgDWaPUOuMeQTvEjB+zO+VgD6l9SQh0xr3CvsOz3fFOUG2YmqB18aVcIxkabyyh5IurA2tNG/g
+	XigtOfQw==;
+Received: from 187.184.157.186.cable.dyn.cableonline.com.mx ([187.184.157.186]:12259 helo=[192.168.0.10])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1rNCdl-004NMd-01;
+	Tue, 09 Jan 2024 07:59:37 -0600
+Message-ID: <d7ac4bae-3ab5-446b-9230-58dd01637375@embeddedor.com>
+Date: Tue, 9 Jan 2024 07:59:33 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240105181118.116292-1-erick.archer@gmx.com> <b12b56a9-2d20-4802-bbc8-43f4831b3113@embeddedor.com>
-In-Reply-To: <b12b56a9-2d20-4802-bbc8-43f4831b3113@embeddedor.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 9 Jan 2024 14:57:29 +0100
-Message-ID: <CAJZ5v0iXindsbwBJsiknXxLrq=94rq3p=H_ux2pGpqzmjyRWkA@mail.gmail.com>
-Subject: Re: [PATCH] PM / QOS: Use kcalloc() instead of kzalloc()
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Erick Archer <erick.archer@gmx.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] media: venus: hfi_cmds: Replace one-element array
+ with flex-array member and use __counted_by
+Content-Language: en-US
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Kees Cook <keescook@chromium.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
+ Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Andy Gross
+ <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <ZSRJfRdUXQOzagKr@work> <202310091252.660CFA9@keescook>
+ <20240109124026.GA1012017@google.com>
+ <b8686724-9351-4f40-a587-fcbba5b0eb14@embeddedor.com>
+ <20240109132831.GD1012017@google.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20240109132831.GD1012017@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.184.157.186
+X-Source-L: No
+X-Exim-ID: 1rNCdl-004NMd-01
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187.184.157.186.cable.dyn.cableonline.com.mx ([192.168.0.10]) [187.184.157.186]:12259
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 15
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfKSywhzO6W0Xg2Jp1+bntvZWXPZy4oCKpWgASQUb7aVRM9EnjOKrqsfzzRGB5kU5lmsiJFXV4F79BRYpQYVTRI/7ysj3MZ48wlaK2/Ybif71/3Y60zex
+ kYfqnVtTU51ZYqzeaIkipYcgk0z9klNzx8E+hutJP7g2ywactqnjJAYpsvwP1Nw02RQnhqGznV/MWUM25VKVSdc+NUKt4ci2z9qdLFjcBv8lrEeG+DSIaACe
 
-On Fri, Jan 5, 2024 at 7:17=E2=80=AFPM Gustavo A. R. Silva
-<gustavo@embeddedor.com> wrote:
->
->
->
-> On 1/5/24 12:11, Erick Archer wrote:
-> > Use 2-factor multiplication argument form kcalloc() instead
-> > of kzalloc().
-> >
-> > Link: https://github.com/KSPP/linux/issues/162
-> > Signed-off-by: Erick Archer <erick.archer@gmx.com>
->
-> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Applied as 6.8-rc1 material, thanks!
 
-> > ---
-> >   drivers/base/power/qos.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/base/power/qos.c b/drivers/base/power/qos.c
-> > index 8e93167f1783..bd77f6734f14 100644
-> > --- a/drivers/base/power/qos.c
-> > +++ b/drivers/base/power/qos.c
-> > @@ -201,7 +201,7 @@ static int dev_pm_qos_constraints_allocate(struct d=
-evice *dev)
-> >       if (!qos)
-> >               return -ENOMEM;
-> >
-> > -     n =3D kzalloc(3 * sizeof(*n), GFP_KERNEL);
-> > +     n =3D kcalloc(3, sizeof(*n), GFP_KERNEL);
-> >       if (!n) {
-> >               kfree(qos);
-> >               return -ENOMEM;
-> > --
-> > 2.42.0
-> >
-> >
+On 1/9/24 07:28, Sergey Senozhatsky wrote:
+> On (24/01/09 07:17), Gustavo A. R. Silva wrote:
+>>
+>>> Sorry for shameless plug, a quick question: has any compiler implemented
+>>> support for counted_by() at this point?
+>>>
+>>
+>> Not yet. And at least for GCC, it's expected to be released in v15.
+> 
+> I see. Thank you.
+> 
+> I got confused by include/linux/compiler_attributes.h comment, as I'm on
+> clang-18 currently, seems that we need to bump min compilers version.
+
+Ah yes, compiler devs have been running into some issues, and they had to
+postpone the release of the attribute.
+
+> Oh, and clang link 404-s on me. I'll send a quick patch, I guess.
+> 
+
+You're right, ick!
+
+--
+Gustavo
