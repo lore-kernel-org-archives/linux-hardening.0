@@ -1,108 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D6BF3A8C7;
-	Tue,  9 Jan 2024 17:14:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A4E33C466;
+	Tue,  9 Jan 2024 18:11:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SbN6CCuK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 548BCC433C7;
-	Tue,  9 Jan 2024 17:14:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704820476;
-	bh=siOZC4wOuNDoVWsdLiyPsbZnkPF7a7ofovZKE/nAX/k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SbN6CCuK5NChl9458MDDbcbs1SdUAG1Fd/5ItykQxgrlxYOt8DA2J14s9SYA8usPM
-	 m5ylQNkriV3WnFbF7c+AFAqUyUAktzZbK3wZoEFB2gKpzmpeF0rHc7zyicWESv7X7n
-	 dFWPf/MH+vgH1EU05HcjMtBdgGFIcA6QVLQ3Zn0XdIe4dg9+PM0H4lp6ZCNA14vqCf
-	 K/XKUGrO0ohFsnTQfU0uJ8mF4pDjRqdZdIN0U0URwMfdzjeGtd6+Jr23csiXdPwDN/
-	 UtmTiCgQlFnX6thWpQcgXP0b9vy5yRfx4+iNclwxUJ8xcjZnZYEPVHPpBX19d0ZaiH
-	 M9/ChPwWdY3CQ==
-Date: Tue, 9 Jan 2024 17:14:29 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Ninad Palsule <ninad@linux.ibm.com>
-Cc: Guenter Roeck <linux@roeck-us.net>, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	joel@jms.id.au, andrew@codeconstruct.com.au, peterhuewe@gmx.de,
-	jarkko@kernel.org, jgg@ziepe.ca, keescook@chromium.org,
-	tony.luck@intel.com, gpiccoli@igalia.com,
-	johannes.holland@infineon.com, broonie@kernel.org,
-	patrick.rudolph@9elements.com, vincent@vtremblay.dev,
-	peteryin.openbmc@gmail.com, lakshmiy@us.ibm.com,
-	bhelgaas@google.com, naresh.solanki@9elements.com,
-	alexander.stein@ew.tq-group.com, festevam@denx.de,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-	linux-integrity@vger.kernel.org, linux-hardening@vger.kernel.org,
-	geissonator@yahoo.com
-Subject: Re: [PATCH v1 7/8] tpm: tis-i2c: Add more compatible strings
-Message-ID: <20240109-pep-coerce-2a86ae88753d@spud>
-References: <20231212164004.1683589-1-ninad@linux.ibm.com>
- <20231212164004.1683589-8-ninad@linux.ibm.com>
- <20231212-avid-grill-dbead068fac8@spud>
- <73381bb0-7fa7-4a9e-88df-ab0063058e26@roeck-us.net>
- <20231212-mouth-choice-40a83caa34ec@spud>
- <2946fbb1-2a47-4d21-83dc-8e45bf6ba5a9@roeck-us.net>
- <60c8bbdb-4e08-44f0-88d4-ab164d4843b5@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="B29xcGD9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
+	s=s31663417; t=1704823897; x=1705428697; i=erick.archer@gmx.com;
+	bh=PZABZvFu6YfewBVsfWRIsRfRTNc3fsB6tyPmtxoCWCw=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=B29xcGD9pJnrAoiLFpmOkfTFB/SsYMSIyA5nwqm9eVATIxvpptcEVeM98ngs2bES
+	 pD1uHMpJ5ljFpXEhGCPMExkAnOBH/dY0Wiw0EwtMovH+k7OJtMrfl5PyFPqH1M+1V
+	 b6s8y/tIDgaJZCnBBQmu9kj1Ovinw7ZmvRoWVqKFEW6djOjOCsJep/kPOjqoiPx6K
+	 tOn2YukORtnKB/zZJLFG3nLZnubmy2x+FMsAYD+Lgn5DP1bTf+mOkuSC4PQJmsAZ9
+	 wmPHBXgJack0D08nkI51jCgot4RJyqgHL9iij66K8ZrY/xYs0bSVxqFHIZxd3dKwx
+	 Z1qPyn23mPZFHVqoSQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from localhost.localdomain ([79.157.194.183]) by mail.gmx.net
+ (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1N33Ed-1rAqX60qfl-013JkH; Tue, 09 Jan 2024 19:11:37 +0100
+From: Erick Archer <erick.archer@gmx.com>
+To: Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Erick Archer <erick.archer@gmx.com>,
+	alsa-devel@alsa-project.org,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2] ASoC: ti: j721e-evm: Use devm_kcalloc() instead of devm_kzalloc()
+Date: Tue,  9 Jan 2024 19:11:01 +0100
+Message-Id: <20240109181101.3806-1-erick.archer@gmx.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="OEamGw2PREjDYnc1"
-Content-Disposition: inline
-In-Reply-To: <60c8bbdb-4e08-44f0-88d4-ab164d4843b5@linux.ibm.com>
-
-
---OEamGw2PREjDYnc1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:+FQsFrpfyWYIKyTGfUr8bMQdMIgv0XDftz8xSNidl484g0foWv3
+ QsSRpMhc5PM5K1X/QVF3MPErICODTv70QT4510g408rqnzAbuoEQiZR1vcelqJuQF4iPOmT
+ J3q307fdOBJKiUQoTeX1O6wQbN5NXKwMbEjbo1uixPcJDUbrk10gHSclH/F1e+qOExIpIUq
+ BMNRsVYowKU35EuYzwL1w==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:HqM7Q25+xKA=;ZvHEBSr7KNi6TYu4C+KGhvAVlGP
+ s4H5lD02JyV2eVDZIryDMPxkDN4wch7uGmKBucRuWBvCX5Km9GPVjpfyJ1+MDyPq9O5sEiDR5
+ Co9Tvtz9GY8FisLl8famEPEwNTp50nsujR+9JS3NTNLmuBOlB0d0fdKrOt+M6qlPyxIiJMMEo
+ rJ/o0NpJ4tu+E/aSLJ6sMI70KQPAaTSTRugOVtFLqC7D3M8mfFYEYS5Qsk2Hwax4UgeMNcDqN
+ Y60c/TDS0GgxbmgxhWluzfpWIcNR0MmlHyhx1QL1NhuYeBBBWKdrfAHV7qJRmtGKe3VPdf5m8
+ co/kioq+0lyGYTzRJ50/CPMvkcVTEc6sJKKGpF/5VQoL9N8LHJgyVQAm+GEL5RBVl0kg64BS9
+ zmM3n41TymExB7k0851H3juNGz3APx10CTHTbC9uIa3cnkaKnQKDB0trKXpv+GOY9FKKjafBk
+ +zqI9heJT2FKE2RTOmcM/91qiKS0Xq1zV+exknAnh/AeoJUAdgZOJMMkoEJJkgfJ4xvQTTyxi
+ DIQpWvkIjuzySdtWl8Uv4gAdMhJTuGrblab2g+ExrpdJxNeb9L0TxDU9vC/XSGwMrE0NTUkCb
+ vRGOk2rxZ88XOlJr7DXqLLiW6uIXEz4kTiwZNSJSLtbgJV3HM+giJrLRhqtNiTdcLzc2Xwczs
+ 7/JMc9NJT0vcjGevcBUbEgpx+lO2GHkuhvIgoeGyO+NevhzJPephji6vg3T7pXEmvuGVM2OTg
+ WSgZ0AQsVp9XK0sviU3z/3NQIxtJKIO/VwAMgwSVfHhCCaTIxGspThmvovRSXBBuZVrXOcjY0
+ rv2x77IOJRMU20Qiv9guHs1b29h35202a9Ov7C4S9nVr59yn1QBoCHew7Sg8zjchZ0ekYkmtn
+ DUZq5E4n+0h5JcEjnD4e69Udeu/dYvxnPhUzMqbzVYG5rO0YUHnMPPv7NhbiJTJ9UIPbH8Xcm
+ KkHCdL/Xd5Qc/5RPsv5zlcoGkPQ=
 
-On Mon, Jan 08, 2024 at 02:05:53PM -0600, Ninad Palsule wrote:
-> Hello Guenter,
->=20
-> On 12/12/23 13:50, Guenter Roeck wrote:
-> > On 12/12/23 10:51, Conor Dooley wrote:
-> > > On Tue, Dec 12, 2023 at 10:00:39AM -0800, Guenter Roeck wrote:
-> > > > On Tue, Dec 12, 2023 at 05:15:51PM +0000, Conor Dooley wrote:
-> > > > > On Tue, Dec 12, 2023 at 10:40:03AM -0600, Ninad Palsule wrote:
-> > > > > > From: Joel Stanley <joel@jms.id.au>
-> > > > > >=20
-> > > > > > The NPCT75x TPM is TIS compatible. It has an I2C and SPI interf=
-ace.
-> > > > > >=20
-> > > > > > https://www.nuvoton.com/products/cloud-computing/security/trust=
-ed-platform-module-tpm/
-> > > > > >=20
-> > > > > >=20
-> > > > > > Add a compatible string for it, and the generic compatible.
-> > > > > >=20
-> > > > > > OpenBMC-Staging-Count: 3
-> > > > >=20
-> > > > > Delete this from every patch that it appears from.
->=20
->=20
-> I have send it as a separate commit. https://lore.kernel.org/linux-kernel=
-/20231214144954.3833998-1-ninad@linux.ibm.com/
+Use 2-factor multiplication argument form devm_kcalloc() instead
+of devm_kzalloc().
 
-Why did you do that? It now just adds undocumented compatibles to the
-driver. Please, as Rob requested, work with Lukas on his series to make
-sure that these devices are documented.
+Link: https://github.com/KSPP/linux/issues/162
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+Signed-off-by: Erick Archer <erick.archer@gmx.com>
+=2D--
+Changes in v2:
+- Fix the commit title adding "j721e-evm"
+=2D--
+ sound/soc/ti/j721e-evm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thanks,
-Conor.
+diff --git a/sound/soc/ti/j721e-evm.c b/sound/soc/ti/j721e-evm.c
+index b4b158dc736e..d9d1e021f5b2 100644
+=2D-- a/sound/soc/ti/j721e-evm.c
++++ b/sound/soc/ti/j721e-evm.c
+@@ -649,7 +649,7 @@ static int j721e_soc_probe_cpb(struct j721e_priv *priv=
+, int *link_idx,
+ 	 * Link 2: McASP10 <- pcm3168a_1 ADC
+ 	 */
+ 	comp_count =3D 6;
+-	compnent =3D devm_kzalloc(priv->dev, comp_count * sizeof(*compnent),
++	compnent =3D devm_kcalloc(priv->dev, comp_count, sizeof(*compnent),
+ 				GFP_KERNEL);
+ 	if (!compnent) {
+ 		ret =3D -ENOMEM;
+@@ -763,7 +763,7 @@ static int j721e_soc_probe_ivi(struct j721e_priv *priv=
+, int *link_idx,
+ 	 *		   \ pcm3168a_b ADC
+ 	 */
+ 	comp_count =3D 8;
+-	compnent =3D devm_kzalloc(priv->dev, comp_count * sizeof(*compnent),
++	compnent =3D devm_kcalloc(priv->dev, comp_count, sizeof(*compnent),
+ 				GFP_KERNEL);
+ 	if (!compnent) {
+ 		ret =3D -ENOMEM;
+=2D-
+2.25.1
 
---OEamGw2PREjDYnc1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZZ1+9AAKCRB4tDGHoIJi
-0htZAP9a2iXLaNyt9gp80dOzXMKedooH9x1JxCeLqDSn/jQ4FAD7BmzWTG2ck+GX
-6HtPX7JRe5C0eqmAl9taPHOuxon4HQw=
-=q6NZ
------END PGP SIGNATURE-----
-
---OEamGw2PREjDYnc1--
