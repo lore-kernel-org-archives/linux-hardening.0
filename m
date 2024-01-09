@@ -1,144 +1,127 @@
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F17AA3DB98
-	for <linux-hardening@vger.kernel.org>; Tue,  9 Jan 2024 21:49:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A618D322B;
+	Tue,  9 Jan 2024 23:37:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pSgQggyx"
-Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-7bed9f5d35dso50264839f.3
-        for <linux-hardening@vger.kernel.org>; Tue, 09 Jan 2024 13:49:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1704836955; x=1705441755; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wo7A9qf9LB8OT3yWghmU76DKbvJhNKbcUKlH0RAw79k=;
-        b=pSgQggyxqdrOEfbKTdGt9A1dJvBEFb3VsNIPstbgBt70UhU6+tp6jucTnrJ1Iiz5Q7
-         Fh1Qq6Kaj/LOVAJsgHPIu1X7Ulo/ruzhLKFRJqiUiPyLGK7WBh/f+LztRTbH1wjuxH+P
-         wx6eEDav1UP/U98UaVmfNu9/5nLJbnla3z6Oeq2MJ5g9f1JQndUJYV7/eoqdgaj04k1h
-         TFNdmclHNWpDRLWF3DSqcANXORykBT0i2ylsz4SDd6c9o6Iqgwkqx5t+sdyQazEXlWB5
-         3lDu/KjFURBjiN91utW/6raS1V80NiG61OU/DJVXbvWqAuTHUuH4Iic+M1ePVSVNUqiK
-         wiPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704836955; x=1705441755;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wo7A9qf9LB8OT3yWghmU76DKbvJhNKbcUKlH0RAw79k=;
-        b=Xz3xR7mWC+aL5YWtbm5QBF2xvgfP2DT0sUdQCJMZ1bg/pX8YLxseVNGeoO0i3bvqYc
-         sAuuAaeeop5hazY3CQ4xm/g1Kwopn7pTY2tjSvswlkiDsSvC5ODPWQ4yS1bGxbMCRhpP
-         rjKMpPBi5HHoHagZNZVzL070oKEEaaNHKH7+9OmpK8dwUgGGzBW8ExItREegikpon1vS
-         0DTJEKIAadbp9IgKcDUcz7o9q3VSjtFqShpTAv6CUXBIDN8waiaILjRr14qy4BrpAnzA
-         lQIAeSRB3ThSj1FCUlRgo1Diug21WFcISrf4DpUUHQNZjsr5o/82/YvAhk6RctXs3WzG
-         5iPw==
-X-Gm-Message-State: AOJu0YytibBQdGKPovUVy7p93TIaW418aHDuXK5HI4xwnhoJaKQlH9x8
-	/+zwDKR6f89TyVqDDfXLtF3plpUzPGQi
-X-Google-Smtp-Source: AGHT+IGL4IMYm3sze+Q8vWqEdPeDAvIFBsLjeBFO7fQBnNQmpX0zX+Ih0rK6+6Vtp61CZ8WVjAKCVA==
-X-Received: by 2002:a05:6e02:168c:b0:360:5d99:65b5 with SMTP id f12-20020a056e02168c00b003605d9965b5mr132829ila.21.1704836955117;
-        Tue, 09 Jan 2024 13:49:15 -0800 (PST)
-Received: from google.com (194.225.68.34.bc.googleusercontent.com. [34.68.225.194])
-        by smtp.gmail.com with ESMTPSA id y4-20020a92c984000000b0035ff9825323sm838799iln.30.2024.01.09.13.49.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jan 2024 13:49:14 -0800 (PST)
-Date: Tue, 9 Jan 2024 21:49:10 +0000
-From: Justin Stitt <justinstitt@google.com>
-To: Tanzir Hasan <tanzhasanwork@gmail.com>
-Cc: Kees Cook <keescook@chromium.org>, Andy Shevchenko <andy@kernel.org>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Nick DeSaulniers <nnn@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>, llvm@lists.linux.dev
-Subject: Re: [PATCH v2 2/2] lib/string: shrink lib/string.i via IWYU
-Message-ID: <20240109214910.oeopqq5j2gyl33dc@google.com>
-References: <20231214-libstringheader-v2-0-0f195dcff204@google.com>
- <20231214-libstringheader-v2-2-0f195dcff204@google.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pOdUdYW8"
+Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 409NMimc018171;
+	Tue, 9 Jan 2024 23:36:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=YroQre9O4C8ma+wtdWOu5rcN3Uuco8nK9qLhogwQT7E=;
+ b=pOdUdYW8LTr5pNPicdzTJ8uFoVleDhyN9m5xPRF/jP9fNeAJ1GSLnmeo2zpfuDhvcXy+
+ azPWPQLvJTbtNRi2Z8Fhdj+Y8F5oLvKPUpRKnStzuKcaHtTgXObDaWDLelwbCuYZBKR1
+ 26qOsBDM/PnNQxmM3p53ol1n/M3Ezhq13C+kPoZlUVaq1IjGzQBwBku0SlWtKGoX5ZvV
+ gpk794rpmrV5eTngciRxth7zXgH03qmIi+H+r0dHIjNpzJD7AhuBI1GbXdCPwrchgUnZ
+ DThdBMQHY1PCKCE5FMoBSmoMo5DwTiO+SvJIk27VbAV+f8RuHh4n6Y7+OXC/9N9inNRW ww== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vhfrtr9e2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 09 Jan 2024 23:36:09 +0000
+Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 409NSfab031576;
+	Tue, 9 Jan 2024 23:36:09 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vhfrtr9de-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 09 Jan 2024 23:36:08 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 409LvUAi022793;
+	Tue, 9 Jan 2024 23:36:07 GMT
+Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vfhjyj0r6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 09 Jan 2024 23:36:07 +0000
+Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
+	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 409Na74f12452600
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 9 Jan 2024 23:36:07 GMT
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2DFB258056;
+	Tue,  9 Jan 2024 23:36:07 +0000 (GMT)
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 356CB5805D;
+	Tue,  9 Jan 2024 23:36:06 +0000 (GMT)
+Received: from [9.61.145.235] (unknown [9.61.145.235])
+	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  9 Jan 2024 23:36:06 +0000 (GMT)
+Message-ID: <aeabec28-a3a8-4ce1-b95b-a548cd27d626@linux.ibm.com>
+Date: Tue, 9 Jan 2024 17:36:05 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231214-libstringheader-v2-2-0f195dcff204@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/3] ARM: dts: aspeed: System1: IBM system1 BMC board
+Content-Language: en-US
+To: Mark Brown <broonie@kernel.org>
+Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        joel@jms.id.au, andrew@codeconstruct.com.au, peterhuewe@gmx.de,
+        jarkko@kernel.org, jgg@ziepe.ca, keescook@chromium.org,
+        tony.luck@intel.com, gpiccoli@igalia.com,
+        johannes.holland@infineon.com, linux@roeck-us.net,
+        andre.werner@systec-electronic.com,
+        Andrew Geissler <geissonator@yahoo.com>, patrick.rudolph@9elements.com,
+        vincent@vtremblay.dev, peteryin.openbmc@gmail.com, lakshmiy@us.ibm.com,
+        bhelgaas@google.com, naresh.solanki@9elements.com,
+        alexander.stein@ew.tq-group.com, festevam@denx.de,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-hardening@vger.kernel.org,
+        geert+renesas@glider.be, luca.ceresoli@bootlin.com
+References: <20240108204114.1041390-1-ninad@linux.ibm.com>
+ <20240108204114.1041390-4-ninad@linux.ibm.com>
+ <b09d6e54-66e9-482f-8f45-38381fa6b62e@sirena.org.uk>
+From: Ninad Palsule <ninad@linux.ibm.com>
+In-Reply-To: <b09d6e54-66e9-482f-8f45-38381fa6b62e@sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 5rN_NU02dIQynFsCqZCTop0K698RzYDf
+X-Proofpoint-GUID: VhY3YfXllaRNZKSksK6AniEH2tMu_0Oq
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-09_11,2024-01-09_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ priorityscore=1501 suspectscore=0 spamscore=0 adultscore=0
+ lowpriorityscore=0 mlxlogscore=999 clxscore=1015 mlxscore=0 bulkscore=0
+ impostorscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2311290000 definitions=main-2401090189
 
-Hi,
+Hello Mark,
 
-On Thu, Dec 14, 2023 at 09:06:13PM +0000, tanzirh@google.com wrote:
-> This diff uses an open source tool include-what-you-use (IWYU) to modify
-> the include list changing indirect includes to direct includes.
-> IWYU is implemented using the IWYUScripts github repository which is a tool that is
-> currently undergoing development. These changes seek to improve build times.
+On 1/8/24 15:34, Mark Brown wrote:
+> On Mon, Jan 08, 2024 at 02:41:14PM -0600, Ninad Palsule wrote:
 >
-> This change to lib/string.c resulted in a preprocessed size of
-> lib/string.i from 26371 lines to 5259 lines (-80%) for the x86
-> defconfig.
->
+>> +	regulator@60 {
+>> +		compatible = "maxim,max8952";
+>> +		reg = <0x60>;
+>> +
+>> +		max8952,default-mode = <0>;
+>> +		max8952,dvs-mode-microvolt = <1250000>, <1200000>,
+>> +						<1050000>, <950000>;
+>> +		max8952,sync-freq = <0>;
+>> +		max8952,ramp-speed = <0>;
+>> +
+>> +		regulator-name = "VR_1.0V";
+>> +		regulator-min-microvolt = <770000>;
+>> +		regulator-max-microvolt = <1400000>;
+> A regulator labelled VR_1.0V can vary between 0.77V and 1.4V and has
+> exactly the same configuration as another regulator labelled VR_1.2V?
+> That seems...  odd?
 
-Tanzir, I wonder if you could include some of the symbol names used for
-some of these more esoteric headers. Let me describe what I mean:
+That was a typo. I fixed it.
 
-Andy talks about "why <vdso/...>" and perhaps some comments (in your
-patch message, not in the source itself) about which symbols are being
-used from these headers would serve useful. I believe IWYU can generate
-this information and should clear up some confusion or lead to better
-suggestions from reviewers if we understand why a header is being
-included.
+Thanks for the review.
 
-At any rate, this builds for me doing randconfigs on x86_64 with these
-KCONFIG_SEEDs
-1: 0x3DD9D136
-2: 0xB4440EE4
-3: 0x98778270
-4: 0x8C237F26
-5: 0x244F8A64
-6: 0x5A5C5E5C
-7: 0xA77896BC
-8: 0x9B5FF0D5
-9: 0x24F23F6A
-10: 0x35C0A107
+Regards,
 
-I applied your patch on top of 5db8752c3b81bd33.
+Ninad
 
-Tested-by: Justin Stitt <justinstitt@google.com>
-> Link: https://github.com/ClangBuiltLinux/IWYUScripts
->
-> Signed-off-by: Tanzir Hasan <tanzirh@google.com>
-> ---
->  lib/string.c | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
->
-> diff --git a/lib/string.c b/lib/string.c
-> index be26623953d2..7fe1acefb1a1 100644
-> --- a/lib/string.c
-> +++ b/lib/string.c
-> @@ -16,16 +16,16 @@
->
->  #define __NO_FORTIFY
->  #include <linux/types.h>
-> -#include <linux/string.h>
-> -#include <linux/ctype.h>
-> -#include <linux/kernel.h>
-> -#include <linux/export.h>
-> +#include <linux/bits.h>
->  #include <linux/bug.h>
->  #include <linux/errno.h>
-> -#include <linux/slab.h>
-> -
-> +#include <asm/rwonce.h>
-> +#include <linux/linkage.h>
-> +#include <linux/stddef.h>
-> +#include <vdso/limits.h>
-> +#include <linux/string.h>
-> +#include <linux/ctype.h>
->  #include <asm/unaligned.h>
-> -#include <asm/byteorder.h>
->  #include <asm/word-at-a-time.h>
->  #include <asm/page.h>
->
->
-> --
-> 2.43.0.472.g3155946c3a-goog
->
-Thanks
-Justin
