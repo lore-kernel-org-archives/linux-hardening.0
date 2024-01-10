@@ -1,55 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECD9F524A9;
-	Wed, 10 Jan 2024 20:38:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6EDC4F5E8;
+	Wed, 10 Jan 2024 21:08:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pHrC1r7l"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B8AD4C433C7;
-	Wed, 10 Jan 2024 20:38:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704919125;
-	bh=hIIl02LDTgUOTzfDEJ6Jjc4s6++7dnOR+E6k7BHeUPE=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=pHrC1r7lGsDOK7v9Q2OSIlbx4J6g5dTIL6YDG5ZhzyyhH5U4IHmX9CWFAMoUzvGXG
-	 Y7GTtilUu34uBMH6/CLERRmcKB9HJNuxbuYLx/dnYvR7pSQD5wJ3Sn5XM6vvVU++wl
-	 BjdZAjC/Lp6iTOeaO6IsgN7CLpFJNz84f0woqkPWX61Paxgmp6+YpX72Y0Wfpqb3hh
-	 IN1P1m0D2+ERmBA53gvm++kC2qaT0WEAFkxdIliL8ycq52zrWKKldjPdGhBk+16M/M
-	 6PN6parxGYjMqQpWak8DB0f/BBJxcDdZXDZuVe0QW93DdeTTeyRsVQJMScAuYjTRws
-	 Q1awNJeBkoLlQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A29ADD8C97A;
-	Wed, 10 Jan 2024 20:38:45 +0000 (UTC)
-Subject: Re: [GIT PULL] pstore updates for v6.8-rc1
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <202401081022.31D251086@keescook>
-References: <202401081022.31D251086@keescook>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <202401081022.31D251086@keescook>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/pstore-v6.8-rc1
-X-PR-Tracked-Commit-Id: 24a0b5e196cf70ccff97bc0add6fa7178ad50cc4
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 72116efd6307077546c93e0432a197876cedff70
-Message-Id: <170491912566.22036.5061179809330425876.pr-tracker-bot@kernel.org>
-Date: Wed, 10 Jan 2024 20:38:45 +0000
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="JjKgFda3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1704920889;
+	bh=FBy4JaNYah3EAa7vsotPhU5x1QVsgRyszaVKUcXB1cA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=JjKgFda3Y8qtFXfrmwQD1XLw4+chmXgGcgs8NRaeCQ5l8QK2g/dCtMkdw+A3Jikrs
+	 olDjwDFughlQYHQrjKGXIxcNl4FJ9pkOV4VLU/SrVpROTIIV2OYsYcx7sySvXsy4Jv
+	 ZjxbKI9SZwYKPV84R1sPm+R+Z2+Pdbs+PjHuDrdEtXaXecblSPmzU6Jkniy8LeKMMu
+	 GhRks25sFGDzUTS5B7mbdfkwjr3OD/fuN2wD8M0K1b0dLqTDFLTYZAmhe6SyuqzNm7
+	 LcNKn9AL3pRU3WG1e5QVK7G7LSA+DF3n6WOBsb4FIt4Z/lqn07pFmJigfr6u6UVowl
+	 UyIcKmMys2cXQ==
+Received: from localhost.localdomain (zone.collabora.co.uk [167.235.23.81])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nfraprado)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id C63823781469;
+	Wed, 10 Jan 2024 21:08:03 +0000 (UTC)
+From: =?UTF-8?q?N=C3=ADcolas=20F=2E=20R=2E=20A=2E=20Prado?= <nfraprado@collabora.com>
 To: Kees Cook <keescook@chromium.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, "Guilherme G. Piccoli" <gpiccoli@igalia.com>, Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, Sergey Shtylyov <s.shtylyov@omp.ru>, Tony Luck <tony.luck@intel.com>, Weichen Chen <weichen.chen@mediatek.com>
+Cc: kernel@collabora.com,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	=?UTF-8?q?N=C3=ADcolas=20F=2E=20R=2E=20A=2E=20Prado?= <nfraprado@collabora.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Bjorn Andersson <quic_bjorande@quicinc.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Tony Luck <tony.luck@intel.com>,
+	Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] Enable PSTORE_RAM as a module in the arm64 defconfig
+Date: Wed, 10 Jan 2024 18:05:01 -0300
+Message-ID: <20240110210600.787703-1-nfraprado@collabora.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-The pull request you sent on Mon, 8 Jan 2024 10:24:29 -0800:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/pstore-v6.8-rc1
+This series enables the PSTORE_RAM config, aka the ramoops driver, in
+the defconfig.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/72116efd6307077546c93e0432a197876cedff70
 
-Thank you!
+Nícolas F. R. A. Prado (2):
+  pstore/ram: Register to module device table
+  arm64: defconfig: Enable PSTORE_RAM
+
+ arch/arm64/configs/defconfig | 1 +
+ fs/pstore/ram.c              | 1 +
+ 2 files changed, 2 insertions(+)
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.43.0
+
