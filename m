@@ -1,41 +1,41 @@
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32D4929433
-	for <linux-hardening@vger.kernel.org>; Wed, 10 Jan 2024 06:48:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29FB032C72
+	for <linux-hardening@vger.kernel.org>; Wed, 10 Jan 2024 06:48:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dFy9fmEH"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fRw+yDNd"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704869335; x=1736405335;
+  t=1704869337; x=1736405337;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=8ikySU9oHyyYA/ejUAVCGaQPSVfY4FaBmlyZgZw7wk8=;
-  b=dFy9fmEHG6yD97wD7Up/FkxY4N2imp+D1+oRP/vS3tX98DNUBMUWLGmY
-   0Y/B10qnI6HIViLTwvZR4D37aBNG6slOuYwEhN/9lJakfY43mkWYT9EHw
-   CNa+AcvpMpzmLfAVcy5wbbNohv2W7L6cbanNTINfzAopI0wFpz0cFPnj/
-   TxJZq1cpsYAtkB3GgoLS2LjAV7jkKghhEWsR7JJymmjtVaoDQNrSlBMx9
-   bb5LJfhOnaOzYQxvAOLZTPLQ6hMQ0h9HqNaf3+nvk/j+Axbbknox6sMxM
-   cgrjdGmnS5yFwdnFK8BpBOtznTXyahIF1xbuArLlS4abPnk7lhah1UMb9
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="402211510"
+  bh=3vTGunAtkYNhd4N3lVQDEaGZzAaCrsjpWGbFLf6RbUE=;
+  b=fRw+yDNdVJQEpXS5lMYJZfar02cgExmuXHmmwlCwLLCEBE/sEGa/YImP
+   V7VOlB0jP8vpqdaVmiMo6cCKlD04dg6JJ/fgbODcAoeEVA1s2epdWl285
+   KHG/7Ktn59vQv1hRnFtf1CGmNKnapELBTUoQh9NYVTgNva+W9F5TWE51c
+   wUFNzx0e8Iz/YLE9Pz43HyYFCXTBGya+I/2b79NhTCMSUVQuUJriNyqkO
+   Qy/RBYfymLNfj1PVA9sEsbw/dSZ+BI9XPWc6ooFCGVRpHkI7eFkeY7Bqj
+   zKeQYFW4hO0o/lFIX4600QmwPMgHBtHBSNeur4/LdxLbel+JoP+/HsttK
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="402211532"
 X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
-   d="scan'208";a="402211510"
+   d="scan'208";a="402211532"
 Received: from fmsmga007.fm.intel.com ([10.253.24.52])
   by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2024 22:48:54 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="785503361"
+X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="785503350"
 X-IronPort-AV: E=Sophos;i="6.04,184,1695711600"; 
-   d="scan'208";a="785503361"
+   d="scan'208";a="785503350"
 Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by fmsmga007.fm.intel.com with ESMTP; 09 Jan 2024 22:48:45 -0800
+  by fmsmga007.fm.intel.com with ESMTP; 09 Jan 2024 22:48:43 -0800
 Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1rNSOJ-0006hY-0H;
-	Wed, 10 Jan 2024 06:48:43 +0000
-Date: Wed, 10 Jan 2024 14:34:56 +0800
+	id 1rNSCv-0006h8-21;
+	Wed, 10 Jan 2024 06:39:27 +0000
+Date: Wed, 10 Jan 2024 14:34:54 +0800
 From: kernel test robot <lkp@intel.com>
 To: Christophe Leroy <christophe.leroy@csgroup.eu>,
 	linux-hardening@vger.kernel.org,
@@ -68,7 +68,7 @@ Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
 	linux-arm-kernel@lists.infradead.org
 Subject: Re: [PATCH 1/4] arm: ptdump: Rename CONFIG_DEBUG_WX to
  CONFIG_ARM_DEBUG_WX
-Message-ID: <202401101436.2juWuJ02-lkp@intel.com>
+Message-ID: <202401101442.H0AGuwzu-lkp@intel.com>
 References: <d651269a681150f9bdca8103434fb3f4b509f784.1704800524.git.christophe.leroy@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -94,20 +94,20 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Christophe-Leroy/arm-ptdu
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git next
 patch link:    https://lore.kernel.org/r/d651269a681150f9bdca8103434fb3f4b509f784.1704800524.git.christophe.leroy%40csgroup.eu
 patch subject: [PATCH 1/4] arm: ptdump: Rename CONFIG_DEBUG_WX to CONFIG_ARM_DEBUG_WX
-config: arm-defconfig (https://download.01.org/0day-ci/archive/20240110/202401101436.2juWuJ02-lkp@intel.com/config)
-compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project.git f28c006a5895fc0e329fe15fead81e37457cb1d1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240110/202401101436.2juWuJ02-lkp@intel.com/reproduce)
+config: arm-randconfig-003-20240110 (https://download.01.org/0day-ci/archive/20240110/202401101442.H0AGuwzu-lkp@intel.com/config)
+compiler: clang version 18.0.0git (https://github.com/llvm/llvm-project 7e186d366d6c7def0543acc255931f617e76dff0)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240110/202401101442.H0AGuwzu-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401101436.2juWuJ02-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202401101442.H0AGuwzu-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
->> arch/arm/mm/init.c:461:2: error: implicit declaration of function 'debug_checkwx' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
-           debug_checkwx();
-           ^
+>> arch/arm/mm/init.c:461:2: error: call to undeclared function 'debug_checkwx'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     461 |         debug_checkwx();
+         |         ^
    1 error generated.
 
 
