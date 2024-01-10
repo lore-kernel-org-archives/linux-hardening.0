@@ -1,220 +1,167 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A04D82AE69;
-	Wed, 10 Jan 2024 21:41:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 207DE4E1DD
+	for <linux-hardening@vger.kernel.org>; Wed, 10 Jan 2024 21:56:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kz/HacDN"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1d3ed1ca402so42090065ad.2;
-        Wed, 10 Jan 2024 13:41:49 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="i3azVk9c"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-28bf1410e37so3994042a91.2
+        for <linux-hardening@vger.kernel.org>; Wed, 10 Jan 2024 13:56:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704922909; x=1705527709; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=HId8f3hkvGtnDismZhBcVXhWd29HmilwtOOYjG3JP0w=;
-        b=Kz/HacDNbt/0Q6FD3hgLYDM22yMP5h0bcCn8b12Ebr9YMjn2ZvxtsXJFvz5ocUVc4Q
-         sSwWln1I2SAL/D7kue/ad3AtE6EJ3bdvLYddOXoR8UYKBkPIuhc1kb/ww+od/mvo0am0
-         qi3HxJO+D8/gBvQK768A3jCAlliuTGgxIy7FaZFNNSdsGOfD8VbhGDJ1Gjui/hvLiECa
-         8rY4QbtFeJbnP4JVvPiWtviGMPouLNpMMBxeExPeJtSrSlnthqwK/ar26rbh8jKERiV0
-         /DNPhPHdBBM0+bK5UOipcaGbzg03kpM9nEMV1Rad/273kZ6eT1T5eWlG1FvIWG+SDoET
-         ftBQ==
+        d=chromium.org; s=google; t=1704923763; x=1705528563; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UE7RP3C8HDn4Er6YTFEjRqxJbAFevtcwVndsQRkg/dE=;
+        b=i3azVk9cSHxfHW6ECV7E12/ODJfYM5VfPsxKj6m1G35dY21rKzqgKsxIuULk4LR9ct
+         TPLhU7/paPWPnQUnqBahmrXZHgj8JBACC1TFJ6fNL5W8DIIvmO1cBe/HqMEH1nQ43Hjp
+         /gjcGIOFt7bTvGWDxxUiIUajJWo5tHeGU/hMs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704922909; x=1705527709;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1704923763; x=1705528563;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=HId8f3hkvGtnDismZhBcVXhWd29HmilwtOOYjG3JP0w=;
-        b=jnX39YKR5RQhph7yTuXE9Ke++ID3VQMk3JjxyiuCMqRjN1tc+s09L1YAuaZdBF0cFp
-         cieSXAvWlMGzP7wWeW0wqplC/GE+SXri+lr/vCI+7f9ew1ohPth4DanlWbt1kzttr3oy
-         PZym7yqKReLqNgi8V9SBTxsBT5k2DHTtcPXcR1yFVf7QTk7gO9XAe4C+Spaka3JJgsUD
-         mU0704ZVilJUlT32mzlxXdIUP1BDw1tq3nPW27R0Xm/rPE0xBYUebLHl+7KwxLtmOkUY
-         ASMMumFSEZKin1jlQFTv6OenpmGngzT+3k3uo0P1TuYC+MimLibQUq6OJ5fLnA3K/Pyo
-         elrg==
-X-Gm-Message-State: AOJu0YwSpIoJ60i9w2zi8kZREA4A1jvqjj2dBN+hFwxICx3PF2gPKeVE
-	iAxwZzalMnhQMttkm8lSl4U=
-X-Google-Smtp-Source: AGHT+IEUyQyYeicmT88yj9ZQjWF+5ZnzsbxcWV9NwQBfyw8mdjrtSspcwIBzY9L+4XjDdlhnLm20WQ==
-X-Received: by 2002:a17:902:f54a:b0:1d0:7535:8b94 with SMTP id h10-20020a170902f54a00b001d075358b94mr231266plf.97.1704922908844;
-        Wed, 10 Jan 2024 13:41:48 -0800 (PST)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q22-20020a170902789600b001cfcc10491fsm4121526pll.161.2024.01.10.13.41.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Jan 2024 13:41:47 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <92625821-d79d-4aba-9bef-148f154be427@roeck-us.net>
-Date: Wed, 10 Jan 2024 13:41:45 -0800
+        bh=UE7RP3C8HDn4Er6YTFEjRqxJbAFevtcwVndsQRkg/dE=;
+        b=g8Q4zBFeZuS9DmTd1wUE5Ni3bLLdfdNfQ5yW5T0xjGaL0eeUo1uEMskFqrrsq0fTsY
+         WGf6u7fJtoCHkyhnrG72XgmLvK9VRo+fAfZcO1MKou8DfDHUbLmzZcAJfPsI1tAXaFjb
+         qaf3Bb3Xrh5f4a8k4nDTDhO3i3mVpd9ScT802dDnK1KStciukuzAqjn14/gvbD/Ykf15
+         1aFWLh1kdfeQhi8YUiwgpiTSTR8DmAlV7WrfDUuXSqK8q5Ki9HOfnNPm8HstO/xF63WF
+         7yK3vexMVsdc8bwt4n57euXx4Xsw+LdUOtb0+n1DjH2f+MtCX0wF4KsMkNn4fFqJGyy5
+         Q+bA==
+X-Gm-Message-State: AOJu0YwUR7NukJ1tD65nwBvEIEwiIske4Ni+vaJNf3HLJ4V+tJhqCedG
+	/PpZ2XkJs2wEg0KR5dNL1cL8PXVcnnxv
+X-Google-Smtp-Source: AGHT+IGYDsmjlb74Cpw9MqShCp6RonR7fAVt63wWNrXhkFCn8e843x/Is+JTRvCJ6x/Cv0FCiw0qMw==
+X-Received: by 2002:a17:90b:3b45:b0:28d:bd27:f81 with SMTP id ot5-20020a17090b3b4500b0028dbd270f81mr160165pjb.15.1704923763489;
+        Wed, 10 Jan 2024 13:56:03 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id m5-20020a170902db8500b001d4c955cc00sm4110254pld.271.2024.01.10.13.56.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jan 2024 13:56:03 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: Russell King <linux@armlinux.org.uk>
+Cc: Kees Cook <keescook@chromium.org>,
+	Mark Brown <broonie@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Vladimir Murzin <vladimir.murzin@arm.com>,
+	Zhen Lei <thunder.leizhen@huawei.com>,
+	Keith Packard <keithpac@amazon.com>,
+	Haibo Li <haibo.li@mediatek.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Alexandre Mergnat <amergnat@baylibre.com>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] ARM: unwind: Add missing "Call trace:" line
+Date: Wed, 10 Jan 2024 13:56:01 -0800
+Message-Id: <20240110215554.work.460-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 7/8] tpm: tis-i2c: Add more compatible strings
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Ninad Palsule <ninad@linux.ibm.com>, Conor Dooley <conor@kernel.org>
-Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
- conor+dt@kernel.org, joel@jms.id.au, andrew@codeconstruct.com.au,
- peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, keescook@chromium.org,
- tony.luck@intel.com, gpiccoli@igalia.com, johannes.holland@infineon.com,
- broonie@kernel.org, patrick.rudolph@9elements.com, vincent@vtremblay.dev,
- peteryin.openbmc@gmail.com, lakshmiy@us.ibm.com, bhelgaas@google.com,
- naresh.solanki@9elements.com, alexander.stein@ew.tq-group.com,
- festevam@denx.de, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
- linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
- linux-hardening@vger.kernel.org, geissonator@yahoo.com
-References: <20231212164004.1683589-1-ninad@linux.ibm.com>
- <20231212164004.1683589-8-ninad@linux.ibm.com>
- <20231212-avid-grill-dbead068fac8@spud>
- <73381bb0-7fa7-4a9e-88df-ab0063058e26@roeck-us.net>
- <20231212-mouth-choice-40a83caa34ec@spud>
- <2946fbb1-2a47-4d21-83dc-8e45bf6ba5a9@roeck-us.net>
- <60c8bbdb-4e08-44f0-88d4-ab164d4843b5@linux.ibm.com>
- <20240109-pep-coerce-2a86ae88753d@spud>
- <01974929-dfbf-4989-ba39-369e521827d0@linux.ibm.com>
- <3d194e84-bf1a-48e4-a376-e5c327c6508d@linaro.org>
- <2dd37d2b-28da-4e73-9047-61ec5d64bdb5@linux.ibm.com>
- <edbefdfd-eb59-4d86-ad07-feb066a21082@linaro.org>
- <385b06e9-1daa-408a-a0ed-7b09d7d539df@linux.ibm.com>
- <d56b1e3e-72c4-427f-937d-8c8146bf5b28@linaro.org>
- <3830c26d-96be-4084-a04d-8edb9ccbab5e@roeck-us.net>
- <32d46b64-d4a5-437a-8737-c2d172608559@linaro.org>
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <32d46b64-d4a5-437a-8737-c2d172608559@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3019; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=shusvn//qeczStLMEc4sOO3Q/yQ3K0G/IIulu4uAdzA=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlnxJwth4D06xus0FK0kAp+T77TiWufHO4SgKAy
+ dJYl30Wr8OJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZZ8ScAAKCRCJcvTf3G3A
+ JjrZD/4hW/WVt5AVfKfP4x0ScGVIRwPLgBKrVNfked86KBRVaRSICfogjYkyIRX1W+681EpReWH
+ B2d1ZTmHFYjzzA9YMF906bRhHKr6zoS69ugb/7DOGEEJCSxD6nsKIH5w0Nb5ck+/Ag5xqeJuPCj
+ 85POkwuIdHGy6VNfWCAVbryKykOG7WA/V5NPflHF9oL58DJ0MZpTrbW+tBg6iAf3S8j2pTkDl5T
+ ssYyhGyXmjQl9BYjxW48wyyWnJPR6Sx0C7gn+8sOYP1ThWKFXyjRjXWNXgHyRqzZNEtXkrhg3tz
+ KNbJ+sHzhzQrXjhZ2njjUOyMy+wT8qiVa8c8jCdMdvwUmE2Jtv9SBQBTp8vj4v0WSEnBn6+S0rB
+ SqG8mwRUDAWnPZkH2YnFORrlS35nrB9GLzf1FeyRhZQrKpwH5fhcjjSwvxydgN/5f0oGm36BCWE
+ v5p2GOtW88Rwee0uUQNZXfCqeG/VV5c/FFTs6IN3ZKYItQBnPsGaz1DC0nU81Wa1ceHuX/0M39r
+ y/KoacAvpy34gGL/W6NDEsvh/a/ODUqM95bczY6vWFtfYSOJhgcUplcda1PWYsOkAGoNdfGNzx8
+ iR11aMQHMPizouz/uoSJltVLJn7D8EnuJga5y1ftxoCD5MCGNWD4RTPHXyKTfL98t7qixHmT1Ag
+ ci35/YR Vk8TZhIg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On 1/10/24 12:34, Krzysztof Kozlowski wrote:
-> On 10/01/2024 20:06, Guenter Roeck wrote:
->> On 1/10/24 09:54, Krzysztof Kozlowski wrote:
->>> On 10/01/2024 16:54, Ninad Palsule wrote:
->>>> Hello Krzysztof,
->>>>
->>>>
->>>> On 1/10/24 09:37, Krzysztof Kozlowski wrote:
->>>>> On 10/01/2024 15:31, Ninad Palsule wrote:
->>>>>> Hello Krzysztof,
->>>>>>
->>>>>>
->>>>>>
->>>>>>>>>> I have send it as a separate commit. https://lore.kernel.org/linux-kernel/20231214144954.3833998-1-ninad@linux.ibm.com/
->>>>>>>>> Why did you do that? It now just adds undocumented compatibles to the
->>>>>>>>> driver. Please, as Rob requested, work with Lukas on his series to make
->>>>>>>>> sure that these devices are documented.
->>>>>>>> I think krzysztof kozlowski suggested to send these patches separately:
->>>>>>>> https://lore.kernel.org/linux-kernel/1c5ace65-2fd8-4503-b22f-e0f564d1c83f@linaro.org/
->>>>>>>>
->>>>>>>> Did I misunderstood it? Do you guys want me to include that commit again?
->>>>>>> My comment was in DTS thread under specific DTS patch. How did you
->>>>>>> figure out it applies to driver and bindings? This does not make sense.
->>>>>> Sorry for the misunderstanding. Where do you want me to add driver
->>>>>> patch? Before all DTS patches or after all DTS patches?
->>>>> Does not matter, why do you insist on combining them with DTS? Drivers
->>>>> and bindings are going together. DTS better separate, although depending
->>>>> on the case can be together.
->>>>>
->>>> I have combined DTS and Driver because DTS was using compatibility
->>>> string which is not upstream yet hence I thought it is logical to send
->>>> it under same patchset.
->>>
->>> Sometimes yes, sometimes not. DTS must not go via driver subsystem, so
->>> sending it in the same patchset has implications on maintainers applying
->>> it. Some like it, some don't and you will be nagged for combining them.
->>>
->>
->> "DTS must not go via driver subsystem"
->>
->> I always thought the guideline was to submit separate _patches_ for dts
->> and driver changes, but as part of a single series. I didn't know that
->> there is a rule to submit separate patch _series_. I also didn't know
->> (and as far as I know no one called me on it) that I am not supposed
->> to _apply_ dts changes. So far, I typically applied dts changes together
->> with driver patches after receiving an Acked-by: or Reviewed-by:
->> from a devicetree maintainer.
-> 
-> I did not notice you applying them, but such guideline - DTS must go via
-> respective SoC tree - was always repeated by me and SoC maintainers.
-> Just like gazillion other things probably was not documented... or even
-> if it was documented, it would be so deep among hundreds of other rules
-> nobody would find it. :)
-> 
->>
->> This exchange suggests that I did it all wrong. Should I reject devicetree
->> patches submitted as part of a driver patch series going forward ?
-> 
-> I propose: just ignore them. The SoC maintainer will pick them up.
-> 
->> Should I not apply dts patches submitted as part of a patch series ?
-> 
-> No, please do not apply them.
-> 
->> If so, it would help to have some documentation I can point to to explain
->> the rationale to submitters (and myself). Also, in that case, how is the
-> 
-> Yes, it would. I can try to create something.
-> 
->> synchronization between device tree patches and driver patches supposed
->> to happen ?
-> 
-> There should not be synchronization. Just to remind: we talk about DTS
-> (so also DTSI and DTSO), thus everything being in arch/*/boot/dts/. We
-> do not talk about DT bindings, right? The bindings are obvious (and
-> documented): preferably go via driver subsystem, with fallback/special
-> cases via SoC tree and fallback to Rob.
-> 
+Every other architecture in Linux includes the line "Call trace:" before
+backtraces. In some cases ARM would print "Backtrace:", but this was
+only via 1 specific call path, and wasn't included in CPU Oops nor things
+like KASAN, UBSAN, etc that called dump_stack(). Regularize this line
+so CI systems and other things (like LKDTM) that depend on parsing
+"Call trace:" out of dmesg will see it for ARM.
 
-Sorry, misunderstanding on my side. I do not and never did apply patches
-in arch/*/boot/dts/. I referred to patches in Documentation/devicetree/
+Before this patch:
 
-Sorry, I though you also referred to bindings. My bad.
+	UBSAN: array-index-out-of-bounds in ../drivers/misc/lkdtm/bugs.c:376:16
+	index 8 is out of range for type 'char [8]'
+	CPU: 0 PID: 1402 Comm: cat Not tainted 6.7.0-rc2 #1
+	Hardware name: Generic DT based system
+	 dump_backtrace from show_stack+0x20/0x24
+	 r7:00000042 r6:00000000 r5:60070013 r4:80cf5d7c
+	 show_stack from dump_stack_lvl+0x88/0x98
+	 dump_stack_lvl from dump_stack+0x18/0x1c
+	 r7:00000042 r6:00000008 r5:00000008 r4:80fab118
+	 dump_stack from ubsan_epilogue+0x10/0x3c
+	 ubsan_epilogue from __ubsan_handle_out_of_bounds+0x80/0x84
+	...
 
-Guenter
+After this patch:
+
+	UBSAN: array-index-out-of-bounds in ../drivers/misc/lkdtm/bugs.c:376:16
+	index 8 is out of range for type 'char [8]'
+	CPU: 0 PID: 1402 Comm: cat Not tainted 6.7.0-rc2 #1
+	Hardware name: Generic DT based system
+	Call trace:
+	 dump_backtrace from show_stack+0x20/0x24
+	 r7:00000042 r6:00000000 r5:60070013 r4:80cf5d7c
+	 show_stack from dump_stack_lvl+0x88/0x98
+	 dump_stack_lvl from dump_stack+0x18/0x1c
+	 r7:00000042 r6:00000008 r5:00000008 r4:80fab118
+	 dump_stack from ubsan_epilogue+0x10/0x3c
+	 ubsan_epilogue from __ubsan_handle_out_of_bounds+0x80/0x84
+	...
+
+Reported-by: Mark Brown <broonie@kernel.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Vladimir Murzin <vladimir.murzin@arm.com>
+Cc: Zhen Lei <thunder.leizhen@huawei.com>
+Cc: Keith Packard <keithpac@amazon.com>
+Cc: Haibo Li <haibo.li@mediatek.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ arch/arm/kernel/traps.c  | 2 +-
+ arch/arm/kernel/unwind.c | 2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/kernel/traps.c b/arch/arm/kernel/traps.c
+index 3bad79db5d6e..72c82a4d63ac 100644
+--- a/arch/arm/kernel/traps.c
++++ b/arch/arm/kernel/traps.c
+@@ -220,7 +220,7 @@ void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk,
+ 	unsigned int fp, mode;
+ 	int ok = 1;
+ 
+-	printk("%sBacktrace: ", loglvl);
++	printk("%sCall trace: ", loglvl);
+ 
+ 	if (!tsk)
+ 		tsk = current;
+diff --git a/arch/arm/kernel/unwind.c b/arch/arm/kernel/unwind.c
+index 9d2192156087..f60547dadc93 100644
+--- a/arch/arm/kernel/unwind.c
++++ b/arch/arm/kernel/unwind.c
+@@ -524,6 +524,8 @@ void unwind_backtrace(struct pt_regs *regs, struct task_struct *tsk,
+ {
+ 	struct stackframe frame;
+ 
++	printk("%sCall trace: ", loglvl);
++
+ 	pr_debug("%s(regs = %p tsk = %p)\n", __func__, regs, tsk);
+ 
+ 	if (!tsk)
+-- 
+2.34.1
 
