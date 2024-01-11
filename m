@@ -1,151 +1,115 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E63A5537E6
-	for <linux-hardening@vger.kernel.org>; Thu, 11 Jan 2024 18:13:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FC0F537E4;
+	Thu, 11 Jan 2024 18:13:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="N/cO3F36"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-28b6218d102so4658374a91.0
-        for <linux-hardening@vger.kernel.org>; Thu, 11 Jan 2024 10:13:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1704996825; x=1705601625; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1Q/8Soo+wEKDq7eYPc8t+IYgpbRZAsRM2amYkmZMpzg=;
-        b=N/cO3F36YmS3aq/jRKxDFCLqmZJZnUe1iqMkts0N7drA1FZPwRWbcL5u8PoUBN/oU5
-         vwJ926//PLZAewfjwZIGo81AF00RgWu4LuWd/jyv5zxkclPoce7u7djJDVu8j6jK3k5J
-         eZ79CUqcD+Rv2pwU1NnxeudYq+9apyQXuV8N0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704996825; x=1705601625;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1Q/8Soo+wEKDq7eYPc8t+IYgpbRZAsRM2amYkmZMpzg=;
-        b=L8joS6fCmvNp48PuD+Pkup1Dm5S8f9aE3fIQhl9LtjOFco8VVKMhPSHHXW4C5aUZWT
-         coOcSfwIsMN/IMmZS7aSARE/RpgHxGQ6LJmV7C0D8rdryhAePGzhTENMlPPDqYewFKMx
-         E3TjKFVTJ355WJAUBHNYJmrKImz+bF92qYMj4fYX6yaV3yd6Z7fSHZNKaxu3rKd1QeEw
-         corJG7WLakuvaj+y8cZJptsuSn7BZNc0Aw05h1YsaguDAHrXRL98WhgMTFxA3lEBENAB
-         4WgcpPglL09yyk4zNSL3iBKRxyV4qMNkf61gTDCc7tftzjv+KafgKiN4oLw7A4lwf3B7
-         hGaQ==
-X-Gm-Message-State: AOJu0YxEV4StW6Xt3yn7Ifv5rUbQ+hpA6TROTMy0OpRt9GOEk0kRsY73
-	1NXvxEyR0UVmgrzXL+hUrum/n8IKyc67
-X-Google-Smtp-Source: AGHT+IEqA+jBHfgllqO6iXTDhDycwgIlkmEw66FVSjukl5mRD1d1Qm4e8CVvwaS1Ndd5k321Lph+1A==
-X-Received: by 2002:a17:90a:3da5:b0:28d:df02:447b with SMTP id i34-20020a17090a3da500b0028ddf02447bmr216438pjc.0.1704996825202;
-        Thu, 11 Jan 2024 10:13:45 -0800 (PST)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id jh18-20020a170903329200b001d4593a2e8fsm1465916plb.83.2024.01.11.10.13.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jan 2024 10:13:44 -0800 (PST)
-Date: Thu, 11 Jan 2024 10:13:44 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-	Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
-	linux-hardening@vger.kernel.org, error27@gmail.com,
-	gustavoars@kernel.org, Bryan Tan <bryantan@vmware.com>,
-	Vishnu Dasa <vdasa@vmware.com>,
-	VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org, vegard.nossum@oracle.com,
-	darren.kenny@oracle.com, syzkaller <syzkaller@googlegroups.com>
-Subject: Re: [PATCH v2 2/2] VMCI: Fix memcpy() run-time warning in
- dg_dispatch_as_host()
-Message-ID: <202401111001.78284D8F@keescook>
-References: <20240105164001.2129796-1-harshit.m.mogalapalli@oracle.com>
- <20240105164001.2129796-2-harshit.m.mogalapalli@oracle.com>
- <202401081430.9DAB37B46@keescook>
- <9c742547-0021-464b-b7a8-7af46b0a4afa@embeddedor.com>
- <202401101601.30ED61A1A3@keescook>
- <8e527ade-fe49-4697-8e36-589775c63354@moroto.mountain>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="h3TnEVGY"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40BHnlWw003065;
+	Thu, 11 Jan 2024 18:12:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=5GrsnRZlFbNB3pTOLVIRWt7VyKS9h1rsEc7JrRibykg=;
+ b=h3TnEVGYU13R5gSvCpKyfIpOi9kesOiuuYIKmLHvtB9UhraVmuLyQKo7WcFOTywJBMQt
+ aE6jE3C+nKox9CsSDfSfm4wPuB+aEEYa0cklQX5cuRWCVinvOQoKe89ptOu6l+J08e14
+ UjWnhX7856A64NnpcKRUG3OV/cjDdUSlX5UnHL4BozbRGUpdycBQilR8/648rxj8FiiF
+ 06Who/DbEC+D3ZPboovojll8aDvNd/W9gGnZFbagr2JMQrYF6R4T/JbO/9HldGDZ1SYY
+ +OueviXvaFM27ytDNhmR/LTqsS+Zvyv5VtU76arDcZYol/CoiYLlIEbgVac1wMkYg238 dg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vjjt04kf8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Jan 2024 18:12:58 +0000
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40BHuW8j014395;
+	Thu, 11 Jan 2024 18:12:57 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vjjt04kek-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Jan 2024 18:12:57 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40BHtl1n022952;
+	Thu, 11 Jan 2024 18:12:56 GMT
+Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vfj6nw4wc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Jan 2024 18:12:56 +0000
+Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
+	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40BICtnj50528786
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 11 Jan 2024 18:12:55 GMT
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2873958058;
+	Thu, 11 Jan 2024 18:12:55 +0000 (GMT)
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8F23358059;
+	Thu, 11 Jan 2024 18:12:54 +0000 (GMT)
+Received: from gfwa153.aus.stglabs.ibm.com (unknown [9.3.84.127])
+	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 11 Jan 2024 18:12:54 +0000 (GMT)
+From: Ninad Palsule <ninad@linux.ibm.com>
+To: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        joel@jms.id.au, andrew@codeconstruct.com.au, peterhuewe@gmx.de,
+        jarkko@kernel.org, jgg@ziepe.ca, keescook@chromium.org,
+        tony.luck@intel.com, gpiccoli@igalia.com, ninad@linux.ibm.com,
+        johannes.holland@infineon.com, linux@roeck-us.net, broonie@kernel.org,
+        andre.werner@systec-electronic.com
+Cc: patrick.rudolph@9elements.com, vincent@vtremblay.dev,
+        peteryin.openbmc@gmail.com, lakshmiy@us.ibm.com, bhelgaas@google.com,
+        naresh.solanki@9elements.com, alexander.stein@ew.tq-group.com,
+        festevam@denx.de, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-hardening@vger.kernel.org, geissonator@yahoo.com,
+        geert+renesas@glider.be, luca.ceresoli@bootlin.com
+Subject: [PATCH v3 2/3] dt-bindings: Add DPS310 as trivial device
+Date: Thu, 11 Jan 2024 12:12:50 -0600
+Message-Id: <20240111181251.1817582-3-ninad@linux.ibm.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240111181251.1817582-1-ninad@linux.ibm.com>
+References: <20240111181251.1817582-1-ninad@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8e527ade-fe49-4697-8e36-589775c63354@moroto.mountain>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: Ax5sbhhR_26vRNv4pnsI2b1N5wPCFMvZ
+X-Proofpoint-GUID: 3jF3go6aaeCUrNB7Vz_Ve8uKTTrI-d6f
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-11_09,2024-01-11_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 phishscore=0 spamscore=0 impostorscore=0 priorityscore=1501
+ clxscore=1015 mlxlogscore=999 adultscore=0 mlxscore=0 suspectscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2401110143
 
-On Thu, Jan 11, 2024 at 10:15:40AM +0300, Dan Carpenter wrote:
-> On Wed, Jan 10, 2024 at 04:03:28PM -0800, Kees Cook wrote:
-> > 
-> > Oops, yes, thanks for fixing my confusion. Right, this is a direct write
-> > across members into the flex array, not a composite destination. Yay
-> > all the corner cases. :P
-> 
-> Is there a document somewhere which explains what will trigger a runtime
-> warning?  For example, if you write across members but it's not into a
-> flex array does that cause an issue?  Or if you read across members?
+Infineon DPS310 is a barometric pressure and temperature sensor.
 
-There isn't a good place to find this. There are some code comments near
-the memcpy macros, but that's not really sufficient.
+Signed-off-by: Ninad Palsule <ninad@linux.ibm.com>
+---
+ Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-At present FORTIFY is only being pedantic about _writes_, as that's
-generally a higher priority problem. The implemented restriction is that
-the destination buffer must be a single addressable struct member. That
-destination can be a composite member (i.e. an entire substruct), but
-going beyond a single member in a single memcpy() is no longer allowed
-because the compiler cannot reason about whether such a copy is
-"intentional".
-
-> For example, this line reads from bulletin->vlan and
-> bulletin->vlan_padding.  This causes a compiler warning in Clang and
-> GCC depending on the options but does it also trigger a runtime warning?
-> https://elixir.bootlin.com/linux/latest/source/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c#L2655
-
-Right, the -Wstringop-overread and related compiler flags are doing the
-source buffer size checking.
-
-Note that for the compile-time warnings, GCC has the capacity to be much
-more strict than the FORTIFY checks because it can perform value _range_
-tracking, where as FORTIFY compile-time checks are limited to having the
-copy size being a constant expression. (i.e. GCC may produce compile
-time warnings for cases that FORTIFY will only warn about at runtime if
-the range is violated.)
-
-> (I wrote a patch for this a few months back but didn't send it because
-> of the merge window.  I forgot about it until now that we're in a merge
-> window again...  :P)
-
-			memcpy(&ivi->vlan, &bulletin->vlan, VLAN_HLEN);
-
-#define VLAN_HLEN 4
-ivi->vlan is u32
-bulletin has:
-	u16 vlan;
-	u8 vlan_padding[6];
-
-yeah, ew. Should it even be reading padding? i.e. should this be:
-
-		ivi->vlan = bulletin->vlan << 16;
-
-?
-
-Or should bulletin be:
-
-	union {
-		struct {
-			u16 vlan;
-			u8 vlan_padding[6];
-		};
-		struct {
-			u32 vlan_header;
-			u8 vlan_header_padding[4];
-		};
-	};
-
-with:
-
-		ivi->vlan = bulletin->vlan_header;
-
-?
-
-I've been finding that almost all memcpy()s and memset()s into non-array
-types are better just rewritten as a direct assignment. :P
-
+diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
+index 430a814f64a5..22b7a29876d3 100644
+--- a/Documentation/devicetree/bindings/trivial-devices.yaml
++++ b/Documentation/devicetree/bindings/trivial-devices.yaml
+@@ -133,6 +133,8 @@ properties:
+           - ibm,cffps1
+             # IBM Common Form Factor Power Supply Versions 2
+           - ibm,cffps2
++            # Infineon barometric pressure and temperature sensor
++          - infineon,dps310
+             # Infineon IR36021 digital POL buck controller
+           - infineon,ir36021
+             # Infineon IR38060 Voltage Regulator
 -- 
-Kees Cook
+2.39.2
+
