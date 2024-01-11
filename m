@@ -1,32 +1,55 @@
-Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E6D15AC3
-	for <linux-hardening@vger.kernel.org>; Thu, 11 Jan 2024 00:04:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B0D0EBF
+	for <linux-hardening@vger.kernel.org>; Thu, 11 Jan 2024 00:07:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="TPVwtBA0"
-Date: Wed, 10 Jan 2024 19:04:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1704931490;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2IQAAkxnLuUMxv9NSh6qvw4HFuvQ0QulM8iosjGYXXE=;
-	b=TPVwtBA0nNR2Dlq5cBC3uagm3udcuT1hk8dDtZXNC8HJxUYCKEXfCRCte0HOK8Sant73Md
-	bpQmLn62djM356rAQfc8yXRyh9Ct+EvdIVSTiUVCQoRqy/JY3dI1SHGfI5bMzKGc3phKX5
-	WMQU/j2liBSQUyVHU3OGj8Wbn741nH8=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Kees Cook <keescook@chromium.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
-	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Subject: Re: [GIT PULL] bcachefs updates for 6.8
-Message-ID: <6pbl6vnzkwdznjqimowfssedtpawsz2j722dgiufi432aldjg4@6vn573zspwy3>
-References: <wq27r7e3n5jz4z6pn2twwrcp2zklumcfibutcpxrw6sgaxcsl5@m5z7rwxyuh72>
- <202401101525.112E8234@keescook>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="N86QjvFN"
+Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3bc4f49a3b6so5182323b6e.1
+        for <linux-hardening@vger.kernel.org>; Wed, 10 Jan 2024 16:07:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1704931662; x=1705536462; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=TShArdENafTOCTnI/LZrgLzX+BUXpRaca4Iuv2KbFTM=;
+        b=N86QjvFNOBl6smc2FKWY7Jbopu9SnKSwBRQT9yrd6EgOSx682/a1ohT6JVQfs4m4tH
+         UfEcWeTW+VBbhtCc4UZMYKb6sahAcan6WPBcbc/hAsi772h5ch14EeDDP+m5V0wkZnFR
+         HSRMDEXO6d7dQgStFx+PjhYMwW7UnJATPydKg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704931662; x=1705536462;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TShArdENafTOCTnI/LZrgLzX+BUXpRaca4Iuv2KbFTM=;
+        b=If+bQGlM4WnG0M5XuSoymMU23/32cQo0e5b8jG0vzfSqn6fhiQBw/3aDvakKWtI5FJ
+         cBkrNLWKrD3ZK+N8LCIq6TrPvnOZL8dFMnJfD2PBF3nY/AjhJzuQaaB1WqjQQUHZ4Iid
+         n7MdrYR89UxohpO3PuP9dLFwnD4YjWN5fMBDgTqSO4pJh1sLV1/UfIFy9xfO859OWw+x
+         IBT7NOEGg41CMtrh2kZo5d3JQw+Z1nZrpHRP0OvgwnJZfvwv/riVigbI6ibdwg39SAr0
+         KdZvd/g+kQVmp8pJy6hErsB/RZ8ui3uGHju35lKG6Cc8AT0xk64ZqvKG0XXRDC2pqNQe
+         27qw==
+X-Gm-Message-State: AOJu0YxQxpRgps4wvq1xZOSu3+MvanDRTcO50n1ggTAtGp4ucQ9A7meL
+	oJyR56bw55bcQAkv8Rr161VeGjiRL5o5
+X-Google-Smtp-Source: AGHT+IF4wsWW4fsdG3n0P/pFi84A5z4SQ8M8M+ff5o1gwQ0sPG0mgKcVKIK/ayHuiVxMzj7fz7a14Q==
+X-Received: by 2002:a05:6808:3605:b0:3bd:48a1:c49f with SMTP id ct5-20020a056808360500b003bd48a1c49fmr416053oib.27.1704931662499;
+        Wed, 10 Jan 2024 16:07:42 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id g5-20020a62f945000000b006d997b5d009sm3997315pfm.69.2024.01.10.16.07.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jan 2024 16:07:41 -0800 (PST)
+Date: Wed, 10 Jan 2024 16:07:41 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Tanzir Hasan <tanzhasanwork@gmail.com>,
+	Andy Shevchenko <andy@kernel.org>, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Nick DeSaulniers <nnn@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>, llvm@lists.linux.dev
+Subject: Re: [PATCH v2 2/2] lib/string: shrink lib/string.i via IWYU
+Message-ID: <202401101606.A31647E@keescook>
+References: <20231214-libstringheader-v2-0-0f195dcff204@google.com>
+ <20231214-libstringheader-v2-2-0f195dcff204@google.com>
+ <20240109214910.oeopqq5j2gyl33dc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -35,69 +58,96 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202401101525.112E8234@keescook>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20240109214910.oeopqq5j2gyl33dc@google.com>
 
-On Wed, Jan 10, 2024 at 03:48:43PM -0800, Kees Cook wrote:
-> On Wed, Jan 10, 2024 at 02:36:30PM -0500, Kent Overstreet wrote:
-> > [...]
-> >       bcachefs: %pg is banished
+On Tue, Jan 09, 2024 at 09:49:10PM +0000, Justin Stitt wrote:
+> On Thu, Dec 14, 2023 at 09:06:13PM +0000, tanzirh@google.com wrote:
+> > This diff uses an open source tool include-what-you-use (IWYU) to modify
+> > the include list changing indirect includes to direct includes.
+> > IWYU is implemented using the IWYUScripts github repository which is a tool that is
+> > currently undergoing development. These changes seek to improve build times.
+> >
+> > This change to lib/string.c resulted in a preprocessed size of
+> > lib/string.i from 26371 lines to 5259 lines (-80%) for the x86
+> > defconfig.
+> >
 > 
-> Hi!
+> Tanzir, I wonder if you could include some of the symbol names used for
+> some of these more esoteric headers. Let me describe what I mean:
 > 
-> Not a PR blocker, but this patch re-introduces users of strlcpy() which
-> has been otherwise removed this cycle. I'll send a patch to replace
-> these new uses, but process-wise, I'd like check on how bcachefs patches
-> are reviewed.
+> Andy talks about "why <vdso/...>" and perhaps some comments (in your
+> patch message, not in the source itself) about which symbols are being
+> used from these headers would serve useful. I believe IWYU can generate
+> this information and should clear up some confusion or lead to better
+> suggestions from reviewers if we understand why a header is being
+> included.
 
-I'm happy to fix it. Perhaps the declaration could get a depracated
-warning, though?
+If there aren't any other objections, I'd like to pick this up in my
+tree after the merge window closes.
 
-> Normally I'd go find the original email that posted the patch and reply
-> there, but I couldn't find a development list where this patch was
-> posted. Where is this happening? (Being posted somewhere is supposed
-> to be a prerequisite for living in -next. E.g. quoting from the -next
-> inclusion boiler-plate: "* posted to the relevant mailing list,") It
-> looks like it was authored 5 days ago, which is cutting it awfully close
-> to the merge window opening:
 > 
-> 	AuthorDate: Fri Jan 5 11:58:50 2024 -0500
-
-I'm confident in my testing; if it was a patch that needed more soak
-time it would have waited.
-
-> Actually, it looks like you rebased onto v6.7-rc7? This is normally
-> strongly discouraged. The common merge base is -rc2.
-
-Is there something special about rc2?
-
-I reorder patches fairly often just in the normal course of backporting
-fixes, and if I have to rebase everything for a backport I'll often
-rebase onto a newer kernel so that the people who are running my tree
-are testing something more stable - it does come up.
-
-> It also seems it didn't get a run through scripts/checkpatch.pl, which
-> shows 4 warnings, 2 or which point out the strlcpy deprecation:
+> At any rate, this builds for me doing randconfigs on x86_64 with these
+> KCONFIG_SEEDs
+> 1: 0x3DD9D136
+> 2: 0xB4440EE4
+> 3: 0x98778270
+> 4: 0x8C237F26
+> 5: 0x244F8A64
+> 6: 0x5A5C5E5C
+> 7: 0xA77896BC
+> 8: 0x9B5FF0D5
+> 9: 0x24F23F6A
+> 10: 0x35C0A107
 > 
-> WARNING: Prefer strscpy over strlcpy - see: https://github.com/KSPP/linux/issues/89
-> #123: FILE: fs/bcachefs/super.c:1389:
-> +               strlcpy(c->name, name.buf, sizeof(c->name));
+> I applied your patch on top of 5db8752c3b81bd33.
 > 
-> WARNING: Prefer strscpy over strlcpy - see: https://github.com/KSPP/linux/issues/89
-> #124: FILE: fs/bcachefs/super.c:1390:
-> +       strlcpy(ca->name, name.buf, sizeof(ca->name));
-> 
-> Please make sure you're running checkpatch.pl -- it'll make integration,
-> technical debt reduction, and coding style adjustments much easier. :)
+> Tested-by: Justin Stitt <justinstitt@google.com>
 
-Well, we do have rather a lot of linters these days.
+Thanks for the testing!
 
-That's actually something I've been meaning to raise - perhaps we could
-start thinking about some pluggable way of running linters so that
-they're all run as part of a normal kernel build (and something that
-would be easy to drop new linters in to; I'd like to write some bcachefs
-specific ones).
+-Kees
 
-The current model of "I have to remember to run these 5 things, and then
-I'm going to get email nags for 3 more that I can't run" is not terribly
-scalable :)
+> > Link: https://github.com/ClangBuiltLinux/IWYUScripts
+> >
+> > Signed-off-by: Tanzir Hasan <tanzirh@google.com>
+> > ---
+> >  lib/string.c | 14 +++++++-------
+> >  1 file changed, 7 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/lib/string.c b/lib/string.c
+> > index be26623953d2..7fe1acefb1a1 100644
+> > --- a/lib/string.c
+> > +++ b/lib/string.c
+> > @@ -16,16 +16,16 @@
+> >
+> >  #define __NO_FORTIFY
+> >  #include <linux/types.h>
+> > -#include <linux/string.h>
+> > -#include <linux/ctype.h>
+> > -#include <linux/kernel.h>
+> > -#include <linux/export.h>
+> > +#include <linux/bits.h>
+> >  #include <linux/bug.h>
+> >  #include <linux/errno.h>
+> > -#include <linux/slab.h>
+> > -
+> > +#include <asm/rwonce.h>
+> > +#include <linux/linkage.h>
+> > +#include <linux/stddef.h>
+> > +#include <vdso/limits.h>
+> > +#include <linux/string.h>
+> > +#include <linux/ctype.h>
+> >  #include <asm/unaligned.h>
+> > -#include <asm/byteorder.h>
+> >  #include <asm/word-at-a-time.h>
+> >  #include <asm/page.h>
+> >
+> >
+> > --
+> > 2.43.0.472.g3155946c3a-goog
+> >
+> Thanks
+> Justin
+
+-- 
+Kees Cook
