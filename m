@@ -1,37 +1,65 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18504B5A9
-	for <linux-hardening@vger.kernel.org>; Thu, 11 Jan 2024 17:39:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E63A5537E6
+	for <linux-hardening@vger.kernel.org>; Thu, 11 Jan 2024 18:13:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HPgO+BgO"
-Date: Thu, 11 Jan 2024 12:38:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1704994741;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xtqt+XCKB8URLfIsERdpgm7zJXhhxVtHiUsa5sbp2Qs=;
-	b=HPgO+BgOiUMMuo2RZ60QxQwyLWf4P3il3GGphNXgQBouaq1OB/mIzjNhVEP3afsyDA5DAJ
-	PWpweSxttYFFzKAo9AXVddFHL4SDloJ1/QrY/HRNZAcTmNoBH0ugS47JTlcp7c8Buf6tkg
-	MlTAdsKgmHq2vm3x1pL8iY8wb25jB0Q=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Mark Brown <broonie@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Nikolai Kondrashov <spbnick@gmail.com>
-Subject: Re: [GIT PULL] bcachefs updates for 6.8
-Message-ID: <gaxigrudck7pr3iltgn3fp5cdobt3ieqjwohrnkkmmv67fctla@atcpcc4kdr3o>
-References: <wq27r7e3n5jz4z6pn2twwrcp2zklumcfibutcpxrw6sgaxcsl5@m5z7rwxyuh72>
- <202401101525.112E8234@keescook>
- <6pbl6vnzkwdznjqimowfssedtpawsz2j722dgiufi432aldjg4@6vn573zspwy3>
- <202401101625.3664EA5B@keescook>
- <xlynx7ydht5uixtbkrg6vgt7likpg5az76gsejfgluxkztukhf@eijjqp4uxnjk>
- <be2fa62f-f4d3-4b1c-984d-698088908ff3@sirena.org.uk>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="N/cO3F36"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-28b6218d102so4658374a91.0
+        for <linux-hardening@vger.kernel.org>; Thu, 11 Jan 2024 10:13:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1704996825; x=1705601625; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1Q/8Soo+wEKDq7eYPc8t+IYgpbRZAsRM2amYkmZMpzg=;
+        b=N/cO3F36YmS3aq/jRKxDFCLqmZJZnUe1iqMkts0N7drA1FZPwRWbcL5u8PoUBN/oU5
+         vwJ926//PLZAewfjwZIGo81AF00RgWu4LuWd/jyv5zxkclPoce7u7djJDVu8j6jK3k5J
+         eZ79CUqcD+Rv2pwU1NnxeudYq+9apyQXuV8N0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704996825; x=1705601625;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1Q/8Soo+wEKDq7eYPc8t+IYgpbRZAsRM2amYkmZMpzg=;
+        b=L8joS6fCmvNp48PuD+Pkup1Dm5S8f9aE3fIQhl9LtjOFco8VVKMhPSHHXW4C5aUZWT
+         coOcSfwIsMN/IMmZS7aSARE/RpgHxGQ6LJmV7C0D8rdryhAePGzhTENMlPPDqYewFKMx
+         E3TjKFVTJ355WJAUBHNYJmrKImz+bF92qYMj4fYX6yaV3yd6Z7fSHZNKaxu3rKd1QeEw
+         corJG7WLakuvaj+y8cZJptsuSn7BZNc0Aw05h1YsaguDAHrXRL98WhgMTFxA3lEBENAB
+         4WgcpPglL09yyk4zNSL3iBKRxyV4qMNkf61gTDCc7tftzjv+KafgKiN4oLw7A4lwf3B7
+         hGaQ==
+X-Gm-Message-State: AOJu0YxEV4StW6Xt3yn7Ifv5rUbQ+hpA6TROTMy0OpRt9GOEk0kRsY73
+	1NXvxEyR0UVmgrzXL+hUrum/n8IKyc67
+X-Google-Smtp-Source: AGHT+IEqA+jBHfgllqO6iXTDhDycwgIlkmEw66FVSjukl5mRD1d1Qm4e8CVvwaS1Ndd5k321Lph+1A==
+X-Received: by 2002:a17:90a:3da5:b0:28d:df02:447b with SMTP id i34-20020a17090a3da500b0028ddf02447bmr216438pjc.0.1704996825202;
+        Thu, 11 Jan 2024 10:13:45 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id jh18-20020a170903329200b001d4593a2e8fsm1465916plb.83.2024.01.11.10.13.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jan 2024 10:13:44 -0800 (PST)
+Date: Thu, 11 Jan 2024 10:13:44 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+	Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
+	linux-hardening@vger.kernel.org, error27@gmail.com,
+	gustavoars@kernel.org, Bryan Tan <bryantan@vmware.com>,
+	Vishnu Dasa <vdasa@vmware.com>,
+	VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org, vegard.nossum@oracle.com,
+	darren.kenny@oracle.com, syzkaller <syzkaller@googlegroups.com>
+Subject: Re: [PATCH v2 2/2] VMCI: Fix memcpy() run-time warning in
+ dg_dispatch_as_host()
+Message-ID: <202401111001.78284D8F@keescook>
+References: <20240105164001.2129796-1-harshit.m.mogalapalli@oracle.com>
+ <20240105164001.2129796-2-harshit.m.mogalapalli@oracle.com>
+ <202401081430.9DAB37B46@keescook>
+ <9c742547-0021-464b-b7a8-7af46b0a4afa@embeddedor.com>
+ <202401101601.30ED61A1A3@keescook>
+ <8e527ade-fe49-4697-8e36-589775c63354@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -40,76 +68,84 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <be2fa62f-f4d3-4b1c-984d-698088908ff3@sirena.org.uk>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <8e527ade-fe49-4697-8e36-589775c63354@moroto.mountain>
 
-On Thu, Jan 11, 2024 at 03:35:40PM +0000, Mark Brown wrote:
-> On Wed, Jan 10, 2024 at 07:58:20PM -0500, Kent Overstreet wrote:
-> > On Wed, Jan 10, 2024 at 04:39:22PM -0800, Kees Cook wrote:
+On Thu, Jan 11, 2024 at 10:15:40AM +0300, Dan Carpenter wrote:
+> On Wed, Jan 10, 2024 at 04:03:28PM -0800, Kees Cook wrote:
+> > 
+> > Oops, yes, thanks for fixing my confusion. Right, this is a direct write
+> > across members into the flex array, not a composite destination. Yay
+> > all the corner cases. :P
 > 
-> > > With no central CI, the best we've got is everyone running the same
-> > > "minimum set" of checks. I'm most familiar with netdev's CI which has
-> > > such things (and checkpatch.pl is included). For example see:
-> > > https://patchwork.kernel.org/project/netdevbpf/patch/20240110110451.5473-3-ptikhomirov@virtuozzo.com/
-> 
-> > Yeah, we badly need a central/common CI. I've been making noises that my
-> > own thing could be a good basis for that - e.g. it shouldn't be much
-> > work to use it for running our tests in tools/tesing/selftests. Sadly no
-> > time for that myself, but happy to talk about it if someone does start
-> > leading/coordinating that effort.
-> 
-> IME the actually running the tests bit isn't usually *so* much the
-> issue, someone making a new test runner and/or output format does mean a
-> bit of work integrating it into infrastructure but that's more usually
-> annoying than a blocker.
+> Is there a document somewhere which explains what will trigger a runtime
+> warning?  For example, if you write across members but it's not into a
+> flex array does that cause an issue?  Or if you read across members?
 
-No, the proliferation of test runners, test output formats, CI systems,
-etc. really is an issue; it means we can't have one common driver that
-anyone can run from the command line, and instead there's a bunch of
-disparate systems with patchwork integration and all the feedback is nag
-emails - after you've finished whan you were working on instead of
-moving on to the next thing - with no way to get immediate feedback.
+There isn't a good place to find this. There are some code comments near
+the memcpy macros, but that's not really sufficient.
 
-And it's because building something shiny and new is the fun part, no
-one wants to do the grungy integration work.
+At present FORTIFY is only being pedantic about _writes_, as that's
+generally a higher priority problem. The implemented restriction is that
+the destination buffer must be a single addressable struct member. That
+destination can be a composite member (i.e. an entire substruct), but
+going beyond a single member in a single memcpy() is no longer allowed
+because the compiler cannot reason about whether such a copy is
+"intentional".
 
-> Issues tend to be more around arranging to
-> drive the relevant test systems, figuring out which tests to run where
-> (including things like figuring out capacity on test devices, or how
-> long you're prepared to wait in interactive usage) and getting the
-> environment on the target devices into a state where the tests can run.
-> Plus any stability issues with the tests themselves of course, and
-> there's a bunch of costs somewhere along the line.
-> 
-> I suspect we're more likely to get traction with aggregating test
-> results and trying to do UI/reporting on top of that than with the
-> running things bit, that really would be very good to have.  I've copied
-> in Nikolai who's work on kcidb is the main thing I'm aware of there,
-> though at the minute operational issues mean it's a bit write only.
-> 
-> > example tests, example output:
-> > https://evilpiepirate.org/git/ktest.git/tree/tests/bcachefs/single_device.ktest
-> > https://evilpiepirate.org/~testdashboard/ci?branch=bcachefs-testing
-> 
-> For example looking at the sample test there it looks like it needs
-> among other things mkfs.btrfs, bcachefs, stress-ng, xfs_io, fio, mdadm,
-> rsync
+> For example, this line reads from bulletin->vlan and
+> bulletin->vlan_padding.  This causes a compiler warning in Clang and
+> GCC depending on the options but does it also trigger a runtime warning?
+> https://elixir.bootlin.com/linux/latest/source/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c#L2655
 
-Getting all that set up by the end user is one command:
-  ktest/root_image create
-and running a test is one morecommand:
-build-test-kernel run ~/ktest/tests/bcachefs/single_device.ktest
+Right, the -Wstringop-overread and related compiler flags are doing the
+source buffer size checking.
 
-> and a reasonably performant disk with 40G of space available.
-> None of that is especially unreasonable for a filesystems test but it's
-> all things that we need to get onto the system where we want to run the
-> test and there's a lot of systems where the storage requirements would
-> be unsustainable for one reason or another.  It also appears to take
-> about 33000s to run on whatever system you use which is distinctly
-> non-trivial.
+Note that for the compile-time warnings, GCC has the capacity to be much
+more strict than the FORTIFY checks because it can perform value _range_
+tracking, where as FORTIFY compile-time checks are limited to having the
+copy size being a constant expression. (i.e. GCC may produce compile
+time warnings for cases that FORTIFY will only warn about at runtime if
+the range is violated.)
 
-Getting sufficient coverage in filesystem land does take some amount of
-resources, but it's not so bad - I'm leasing 80 core ARM64 machines from
-Hetzner for $250/month and running 10 test VMs per machine, so it's
-really not that expensive. Other subsystems would probably be fine with
-less resources.
+> (I wrote a patch for this a few months back but didn't send it because
+> of the merge window.  I forgot about it until now that we're in a merge
+> window again...  :P)
+
+			memcpy(&ivi->vlan, &bulletin->vlan, VLAN_HLEN);
+
+#define VLAN_HLEN 4
+ivi->vlan is u32
+bulletin has:
+	u16 vlan;
+	u8 vlan_padding[6];
+
+yeah, ew. Should it even be reading padding? i.e. should this be:
+
+		ivi->vlan = bulletin->vlan << 16;
+
+?
+
+Or should bulletin be:
+
+	union {
+		struct {
+			u16 vlan;
+			u8 vlan_padding[6];
+		};
+		struct {
+			u32 vlan_header;
+			u8 vlan_header_padding[4];
+		};
+	};
+
+with:
+
+		ivi->vlan = bulletin->vlan_header;
+
+?
+
+I've been finding that almost all memcpy()s and memset()s into non-array
+types are better just rewritten as a direct assignment. :P
+
+-- 
+Kees Cook
