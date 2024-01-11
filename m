@@ -1,314 +1,95 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B9D1879
-	for <linux-hardening@vger.kernel.org>; Thu, 11 Jan 2024 05:20:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63967CA7B
+	for <linux-hardening@vger.kernel.org>; Thu, 11 Jan 2024 07:15:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j+M94Lc1"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-428405a0205so117621cf.1
-        for <linux-hardening@vger.kernel.org>; Wed, 10 Jan 2024 21:19:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r0e41A1v"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-40e60e13703so1589995e9.0
+        for <linux-hardening@vger.kernel.org>; Wed, 10 Jan 2024 23:15:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1704950399; x=1705555199; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UgeziysLb2J3LhlwEkz6N5kyQ2UlLlN8+orUb8FLk+4=;
-        b=j+M94Lc1to/hTbCLn85CpB12cMZuYOrgBewFxbwxb24qD7zQlY6fB0iyAsgZUkE7vf
-         a7z6sUSYXLrTC6YYgA4JBzOs6C213SCDOX5b2BLBdgUlw5ZaHg9LCisNUM4hOWu3h5uf
-         K5Fy1HskRclz8KWKRQ0vXJ7c4wW5PYOOZ0yq92c/64sZuAxrt5XwY/6qfSl6Rwq4dkmV
-         wGhBq9R4LRdU05RcGZa8K6XuaOFr6i3dU/esSNnmdSRmvEZEgh8QBHJtMo4HDejAAOop
-         Jc16jZkeozJSi3waEHvd/9+hAIVbXk8zMYKY37qxhouh3Z7Qk/ek6Q8D7ivW1zJJYls4
-         y5PQ==
+        d=linaro.org; s=google; t=1704957344; x=1705562144; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UX20rbF7hlnyWLHyXsogEXaIvZyHEjXlNvsR8Qs9blw=;
+        b=r0e41A1vUzhV8KYDP89y4Z08jMC7CEQQfR4ANirMUE83erDaIRq7WCKXYEK55Knx1G
+         WI8gHtgn9qGk7ZO91zsBAQYYZEiVki+liCxRmN6NbwKmO3K+eLc7YyzG/+zOJZUMhLzL
+         Hsl1SZ81BbGW/lh1ebS8Bi+BjY5w5isG7fyPnWTMG5kcmGkYAUwJ20EdOqWTTBNrSwcR
+         R6KIQHUUt1NEwRWfPDZxIt6P1WX+Slu5pPTlAeYaNsjiRlnfGBaXS/zdm10AkDQmtTzI
+         QC90PSoas1QVIS1LnBleqc7AHJBPhs012ATidlDsxaR1JqbD0qmskbvwYIuy+uBcB0tQ
+         Jrdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704950399; x=1705555199;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UgeziysLb2J3LhlwEkz6N5kyQ2UlLlN8+orUb8FLk+4=;
-        b=KpZxIbAtF+R4L4ru2Im7XezA6rRYPUrJL1fqOaX4Kg5K2eVqnudDZBBOCW7LNKKsR4
-         7I1udA0gKiTRKiCdHCTwwATDTKC4ddj5QLIMUzAN+1SA2MIEslimZrehdpCkHRJC46zE
-         a+FF+NwxdMLLfIPClnzeVvHcIpWgHg5lOB8VLanYkw+sBRgXcyAC6St6y8codVwAWFIe
-         A7zvvagza4bUeRH1AdGAPFAguytmXwmizvVGB6r5lvlTRfrHXYU54BfJnh71pMjrvffY
-         8UOrxG1J8oGq1Z07+9YGvL+pTDlhtL06Tm5NjYNVXCHkyZbFZehM1dp2yCFCt+fNZbDH
-         b8jg==
-X-Gm-Message-State: AOJu0YyeuGx22l58yFVPRbKrdavx+YXbYrHx+0yEGoleM1oecTIHub4v
-	cAOie/uZm2vD3GFtXZbLA2Q96PDrVBsbRJhDy89yiNS22xR1
-X-Google-Smtp-Source: AGHT+IEe8s9dpzI9ncLxh0Z+0oPzE8+94OJNpX+tnA36qrhzi0o9LTutmeb9aH99f60803+gXUvtn+zpbllNONpyBbM=
-X-Received: by 2002:a05:622a:609:b0:429:8fa1:e4c7 with SMTP id
- z9-20020a05622a060900b004298fa1e4c7mr86121qta.0.1704950398872; Wed, 10 Jan
- 2024 21:19:58 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704957344; x=1705562144;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UX20rbF7hlnyWLHyXsogEXaIvZyHEjXlNvsR8Qs9blw=;
+        b=Wtf6WoHMGMFRKnYkhFrUsjG8j6cNQSsqqDdTnU2PoPIbAUY5FiZRXBKhw8lKZUpJvb
+         6UokbxHTq26u4iBU2e+NWruB4hE2fXaCr5UZ6l30Hmoimi4cgAmg7N+DY5VdhefK4aAW
+         ysEGUjQXdO2U5lJalLx4rYcb6EgK1tCPojLZz5D655ZN/Rpl+MX6/RI5Hne7M6t2pDDa
+         GRq9uqIQzNHlCsL7R3Ss2mfisRFoRJAkaVUT1ueruGdjegdo6f1wUb0G+awu8AKLS8MS
+         orLkP5YubL+WG6Wlmd037ZwFE5p4Z/0CPUJwme1OcMg7B7XEqAf7wki4KQKu+80vG1N/
+         BNQQ==
+X-Gm-Message-State: AOJu0YyBRcU2cm7qblMa2R1fqrzLcMAP+FRAVK6iC5okfslIZsllUDMa
+	E9mjI1WQZ4r2JpeNh2Jyvp16ib6V9zmnPQ==
+X-Google-Smtp-Source: AGHT+IE3ZG9N0YdyCOamkgAPvxJPh1uuI47g4YgkEb/vAmbAgIDLHmccrGJ7hdBP693w0AFm/dM0eQ==
+X-Received: by 2002:a05:600c:428c:b0:40e:52c3:47f9 with SMTP id v12-20020a05600c428c00b0040e52c347f9mr122255wmc.67.1704957344497;
+        Wed, 10 Jan 2024 23:15:44 -0800 (PST)
+Received: from localhost ([102.140.209.237])
+        by smtp.gmail.com with ESMTPSA id t5-20020a05600c450500b0040d6d755c90sm741939wmo.42.2024.01.10.23.15.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jan 2024 23:15:44 -0800 (PST)
+Date: Thu, 11 Jan 2024 10:15:40 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+	Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
+	linux-hardening@vger.kernel.org, error27@gmail.com,
+	gustavoars@kernel.org, Bryan Tan <bryantan@vmware.com>,
+	Vishnu Dasa <vdasa@vmware.com>,
+	VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org, vegard.nossum@oracle.com,
+	darren.kenny@oracle.com, syzkaller <syzkaller@googlegroups.com>
+Subject: Re: [PATCH v2 2/2] VMCI: Fix memcpy() run-time warning in
+ dg_dispatch_as_host()
+Message-ID: <8e527ade-fe49-4697-8e36-589775c63354@moroto.mountain>
+References: <20240105164001.2129796-1-harshit.m.mogalapalli@oracle.com>
+ <20240105164001.2129796-2-harshit.m.mogalapalli@oracle.com>
+ <202401081430.9DAB37B46@keescook>
+ <9c742547-0021-464b-b7a8-7af46b0a4afa@embeddedor.com>
+ <202401101601.30ED61A1A3@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240109154547.1839886-1-jeffxu@chromium.org> <20240109154547.1839886-5-jeffxu@chromium.org>
- <e580030f-9d2e-485c-b62e-ada59f639ef7@infradead.org>
-In-Reply-To: <e580030f-9d2e-485c-b62e-ada59f639ef7@infradead.org>
-From: Jeff Xu <jeffxu@google.com>
-Date: Wed, 10 Jan 2024 21:19:21 -0800
-Message-ID: <CALmYWFsEL8bDEGh035QJO4y-UO0GLnkXeC=oKPEg+Z3yZ6td2Q@mail.gmail.com>
-Subject: Re: [RFC PATCH v5 4/4] mseal:add documentation
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: jeffxu@chromium.org, akpm@linux-foundation.org, keescook@chromium.org, 
-	jannh@google.com, sroettger@google.com, willy@infradead.org, 
-	gregkh@linuxfoundation.org, torvalds@linux-foundation.org, 
-	usama.anjum@collabora.com, jorgelo@chromium.org, groeck@chromium.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-mm@kvack.org, pedro.falcato@gmail.com, dave.hansen@intel.com, 
-	linux-hardening@vger.kernel.org, deraadt@openbsd.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202401101601.30ED61A1A3@keescook>
 
-On Wed, Jan 10, 2024 at 7:16=E2=80=AFPM Randy Dunlap <rdunlap@infradead.org=
-> wrote:
->
->
->
-> On 1/9/24 07:45, jeffxu@chromium.org wrote:
-> > From: Jeff Xu <jeffxu@chromium.org>
-> >
-> > Add documentation for mseal().
-> >
-> > Signed-off-by: Jeff Xu <jeffxu@chromium.org>
-> > ---
-> >  Documentation/userspace-api/mseal.rst | 181 ++++++++++++++++++++++++++
-> >  1 file changed, 181 insertions(+)
-> >  create mode 100644 Documentation/userspace-api/mseal.rst
-> >
-> > diff --git a/Documentation/userspace-api/mseal.rst b/Documentation/user=
-space-api/mseal.rst
-> > new file mode 100644
-> > index 000000000000..1700ce5af218
-> > --- /dev/null
-> > +++ b/Documentation/userspace-api/mseal.rst
-> > @@ -0,0 +1,181 @@
-> > +.. SPDX-License-Identifier: GPL-2.0
-> > +
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +Introduction of mseal
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +
-> > +:Author: Jeff Xu <jeffxu@chromium.org>
-> > +
-> > +Modern CPUs support memory permissions such as RW and NX bits. The mem=
-ory
-> > +permission feature improves security stance on memory corruption bugs,=
- i.e.
-> > +the attacker can=E2=80=99t just write to arbitrary memory and point th=
-e code to it,
-> > +the memory has to be marked with X bit, or else an exception will happ=
-en.
-> > +
-> > +Memory sealing additionally protects the mapping itself against
-> > +modifications. This is useful to mitigate memory corruption issues whe=
-re a
-> > +corrupted pointer is passed to a memory management system. For example=
-,
-> > +such an attacker primitive can break control-flow integrity guarantees
-> > +since read-only memory that is supposed to be trusted can become writa=
-ble
-> > +or .text pages can get remapped. Memory sealing can automatically be
-> > +applied by the runtime loader to seal .text and .rodata pages and
-> > +applications can additionally seal security critical data at runtime.
-> > +
-> > +A similar feature already exists in the XNU kernel with the
-> > +VM_FLAGS_PERMANENT flag [1] and on OpenBSD with the mimmutable syscall=
- [2].
-> > +
-> > +User API
-> > +=3D=3D=3D=3D=3D=3D=3D=3D
-> > +Two system calls are involved in virtual memory sealing, mseal() and m=
-map().
-> > +
-> > +mseal()
-> > +-----------
-> > +The mseal() syscall has following signature:
->
->                        has the following signature:
->
-> > +
-> > +``int mseal(void addr, size_t len, unsigned long flags)``
-> > +
-> > +**addr/len**: virtual memory address range.
-> > +
-> > +The address range set by ``addr``/``len`` must meet:
-> > +   - The start address must be in an allocated VMA.
-> > +   - The start address must be page aligned.
-> > +   - The end address (``addr`` + ``len``) must be in an allocated VMA.
-> > +   - no gap (unallocated memory) between start and end address.
-> > +
-> > +The ``len`` will be paged aligned implicitly by the kernel.
-> > +
-> > +**flags**: reserved for future use.
-> > +
-> > +**return values**:
-> > +
-> > +- ``0``: Success.
-> > +
-> > +- ``-EINVAL``:
-> > +    - Invalid input ``flags``.
-> > +    - The start address (``addr``) is not page aligned.
-> > +    - Address range (``addr`` + ``len``) overflow.
-> > +
-> > +- ``-ENOMEM``:
-> > +    - The start address (``addr``) is not allocated.
-> > +    - The end address (``addr`` + ``len``) is not allocated.
-> > +    - A gap (unallocated memory) between start and end address.
-> > +
-> > +- ``-EACCES``:
-> > +    - ``MAP_SEALABLE`` is not set during mmap().
-> > +
-> > +- ``-EPERM``:
-> > +    - sealing is supported only on 64 bit CPUs, 32-bit is not supporte=
-d.
->
->                                       64-bit
->
-> > +
-> > +- For above error cases, users can expect the given memory range is
-> > +  unmodified, i.e. no partial update.
-> > +
-> > +- There might be other internal errors/cases not listed here, e.g.
-> > +  error during merging/splitting VMAs, or the process reaching the max
-> > +  number of supported VMAs. In those cases, partial updates to the giv=
-en
-> > +  memory range could happen. However, those cases shall be rare.
->
-> s/shall/should/
-> unless you are predicting the future.
->
-> > +
-> > +**Blocked operations after sealing**:
-> > +    Unmapping, moving to another location, and shrinking the size,
-> > +    via munmap() and mremap(), can leave an empty space, therefore
-> > +    can be replaced with a VMA with a new set of attributes.
-> > +
-> > +    Moving or expanding a different VMA into the current location,
-> > +    via mremap().
-> > +
-> > +    Modifying a VMA via mmap(MAP_FIXED).
-> > +
-> > +    Size expansion, via mremap(), does not appear to pose any
-> > +    specific risks to sealed VMAs. It is included anyway because
-> > +    the use case is unclear. In any case, users can rely on
-> > +    merging to expand a sealed VMA.
-> > +
-> > +    mprotect() and pkey_mprotect().
-> > +
-> > +    Some destructive madvice() behaviors (e.g. MADV_DONTNEED)
-> > +    for anonymous memory, when users don't have write permission to th=
-e
-> > +    memory. Those behaviors can alter region contents by discarding pa=
-ges,
-> > +    effectively a memset(0) for anonymous memory.
-> > +
-> > +**Note**:
-> > +
-> > +- mseal() only works on 64-bit CPUs, not 32-bit CPU.
-> > +
-> > +- users can call mseal() multiple times, mseal() on an already sealed =
-memory
-> > +  is a no-action (not error).
-> > +
-> > +- munseal() is not supported.
-> > +
-> > +mmap()
-> > +----------
-> > +``void *mmap(void* addr, size_t length, int prot, int flags, int fd,
-> > +off_t offset);``
-> > +
-> > +We add two changes in ``prot`` and ``flags`` of  mmap() related to
-> > +memory sealing.
-> > +
-> > +**prot**
-> > +
-> > +The ``PROT_SEAL`` bit in ``prot`` field of mmap().
-> > +
-> > +When present, it marks the memory is sealed since creation.
-> > +
-> > +This is useful as optimization because it avoids having to make two
-> > +system calls: one for mmap() and one for mseal().
-> > +
-> > +It's worth noting that even though the sealing is set via the
-> > +``prot`` field in mmap(), it can't be set in the ``prot``
-> > +field in later mprotect(). This is unlike the ``PROT_READ``,
-> > +``PROT_WRITE``, ``PROT_EXEC`` bits, e.g. if ``PROT_WRITE`` is not set =
-in
-> > +mprotect(), it means that the region is not writable.
-> > +
-> > +Setting ``PROT_SEAL`` implies setting ``MAP_SEALABLE`` below.
-> > +
-> > +**flags**
-> > +
-> > +The ``MAP_SEALABLE`` bit in the ``flags`` field of mmap().
-> > +
-> > +When present, it marks the map as sealable. A map created
-> > +without ``MAP_SEALABLE`` will not support sealing; In other words,
->
->                                              sealing. In
->
-> > +mseal() will fail for such a map.
-> > +
-> > +
-> > +Applications that don't care about sealing will expect their
-> > +behavior unchanged. For those that need sealing support, opt-in
->
->                                                             opt in
->
-> > +by adding ``MAP_SEALABLE`` in mmap().
-> > +
-> > +Note: for a map created without ``MAP_SEALABLE`` or a map created
-> > +with ``MAP_SEALABLE`` but not sealed yet, mmap(MAP_FIXED) can
-> > +change the sealable or sealing bit.
-> > +
-> > +Use Case:
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +- glibc:
-> > +  The dynamic linker, during loading ELF executables, can apply sealin=
-g to
-> > +  non-writable memory segments.
-> > +
-> > +- Chrome browser: protect some security sensitive data-structures.
-> > +
-> > +Additional notes:
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +As Jann Horn pointed out in [3], there are still a few ways to write
-> > +to RO memory, which is, in a way, by design. Those cases are not cover=
-ed
-> > +by mseal(). If applications want to block such cases, sandbox tools (s=
-uch as
-> > +seccomp, LSM, etc) might be considered.
-> > +
-> > +Those cases are:
-> > +
-> > +- Write to read-only memory through /proc/self/mem interface.
-> > +- Write to read-only memory through ptrace (such as PTRACE_POKETEXT).
-> > +- userfaultfd.
-> > +
-> > +The idea that inspired this patch comes from Stephen R=C3=B6ttger=E2=
-=80=99s work in V8
-> > +CFI [4]. Chrome browser in ChromeOS will be the first user of this API=
-.
-> > +
-> > +Reference:
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +[1] https://github.com/apple-oss-distributions/xnu/blob/1031c584a5e37a=
-ff177559b9f69dbd3c8c3fd30a/osfmk/mach/vm_statistics.h#L274
-> > +
-> > +[2] https://man.openbsd.org/mimmutable.2
-> > +
-> > +[3] https://lore.kernel.org/lkml/CAG48ez3ShUYey+ZAFsU2i1RpQn0a5eOs2hzQ=
-426FkcgnfUGLvA@mail.gmail.com
-> > +
-> > +[4] https://docs.google.com/document/d/1O2jwK4dxI3nRcOJuPYkonhTkNQfbmw=
-dvxQMyXgeaRHo/edit#heading=3Dh.bvaojj9fu6hc
->
-Thanks. Will update in the next version.
--Jeff
+On Wed, Jan 10, 2024 at 04:03:28PM -0800, Kees Cook wrote:
+> 
+> Oops, yes, thanks for fixing my confusion. Right, this is a direct write
+> across members into the flex array, not a composite destination. Yay
+> all the corner cases. :P
 
-> --
-> #Randy
+Is there a document somewhere which explains what will trigger a runtime
+warning?  For example, if you write across members but it's not into a
+flex array does that cause an issue?  Or if you read across members?
+
+For example, this line reads from bulletin->vlan and
+bulletin->vlan_padding.  This causes a compiler warning in Clang and
+GCC depending on the options but does it also trigger a runtime warning?
+https://elixir.bootlin.com/linux/latest/source/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.c#L2655
+
+(I wrote a patch for this a few months back but didn't send it because
+of the merge window.  I forgot about it until now that we're in a merge
+window again...  :P)
+
+regards,
+dan carpenter
