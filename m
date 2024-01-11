@@ -1,127 +1,86 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from ixit.cz (ip-89-177-23-149.bb.vodafone.cz [89.177.23.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB2756741;
-	Thu, 11 Jan 2024 19:51:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19D7E26AC7;
+	Thu, 11 Jan 2024 20:16:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ixit.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ixit.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="F2NOUJ1I"
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40BJf4qh020558;
-	Thu, 11 Jan 2024 19:50:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=m/WaWO4axy/JtRTQr7uYXMu/rUmUqtk8HnB0BQW4Frs=;
- b=F2NOUJ1IKJ1mN0+QQlt6IuYNqWMxpMi4miGI+IkcsxMJyUCO2ULkRNLcFg1Kz5LJEN3j
- uHKDDPEZkkgE2IRBHvFzVNB+Jvc25hWY8AXfim/mV5mxQJvfKpzlt36xHEB5ya+D3s6L
- Pt+LZvRcHmwgIrgy5Lu19xytZVQO50VeId0Sk1Ib2pnX7e9EakbykL0BL+h8BWG2Dhwe
- lrqvyCQYsnl7Q+0YS+FJv3uavDz0lllI6/UN3Rdj1TO/giQm2QsbRuo8lRCBZrsdeCJR
- 6v635k3hGFCgZOkfin4RYCAhhvgqxuGcm35gpuuix+BzfzpCeyGgPPJl7ft+yc61/ebA Dw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vjgmxjyam-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Jan 2024 19:50:16 +0000
-Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40BJkNOO003717;
-	Thu, 11 Jan 2024 19:50:15 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vjgmxjy8y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Jan 2024 19:50:15 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40BIw03p026992;
-	Thu, 11 Jan 2024 19:50:13 GMT
-Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3vfkw2d843-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Jan 2024 19:50:13 +0000
-Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
-	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40BJoCR510289860
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 11 Jan 2024 19:50:12 GMT
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6E78B5805E;
-	Thu, 11 Jan 2024 19:50:12 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 98FCA5805D;
-	Thu, 11 Jan 2024 19:50:10 +0000 (GMT)
-Received: from [9.24.12.86] (unknown [9.24.12.86])
-	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 11 Jan 2024 19:50:10 +0000 (GMT)
-Message-ID: <f21d5e90-7da1-4f65-819d-a02bede53597@linux.ibm.com>
-Date: Thu, 11 Jan 2024 13:50:10 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/3] dt-bindings: Add DPS310 as trivial device
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, joel@jms.id.au,
-        andrew@codeconstruct.com.au, peterhuewe@gmx.de, jarkko@kernel.org,
-        jgg@ziepe.ca, keescook@chromium.org, tony.luck@intel.com,
-        gpiccoli@igalia.com, johannes.holland@infineon.com, linux@roeck-us.net,
-        broonie@kernel.org, andre.werner@systec-electronic.com
-Cc: patrick.rudolph@9elements.com, vincent@vtremblay.dev,
-        peteryin.openbmc@gmail.com, lakshmiy@us.ibm.com, bhelgaas@google.com,
-        naresh.solanki@9elements.com, alexander.stein@ew.tq-group.com,
-        festevam@denx.de, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-hardening@vger.kernel.org, geissonator@yahoo.com,
-        geert+renesas@glider.be, luca.ceresoli@bootlin.com
-References: <20240111181251.1817582-1-ninad@linux.ibm.com>
- <20240111181251.1817582-3-ninad@linux.ibm.com>
- <1cf1f0dd-c453-4733-a5f4-0d2cc22498e2@linaro.org>
-From: Ninad Palsule <ninad@linux.ibm.com>
-In-Reply-To: <1cf1f0dd-c453-4733-a5f4-0d2cc22498e2@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: gUJOibKBjrq0VnV4zYK43mC0gXX2H04W
-X-Proofpoint-ORIG-GUID: LMps6aI9GatP4j4NlnHlsUSl3zJggUgE
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b="FpRJcWwu"
+Received: from [10.0.0.200] (unknown [10.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ixit.cz (Postfix) with ESMTPSA id 0CF2D1657AF;
+	Thu, 11 Jan 2024 21:08:02 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ixit.cz; s=dkim;
+	t=1705003682;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GvjUcYLLXKLbNwRxSSCVydB/RFhpiJ6mm/XGX66hcSY=;
+	b=FpRJcWwuQTPar2Eai5aH4jQj/07Z2WhTgHa/405+UzJUOVS57CrlyTqfDSBahucZexEPTx
+	lf1+UMns5MoGVtfNDUWqNzfHcM/ZOHrcVfm2um3wncHvo8axQjY1RetJk/xUpv+nqspKJE
+	H9JcEH1QV9ug1ECXeRT0EDp5jF3l4UA=
+Message-ID: <9696e2e9-db02-4ea7-b955-785ff5d19f3f@ixit.cz>
+Date: Thu, 11 Jan 2024 21:08:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-11_11,2024-01-11_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- spamscore=0 suspectscore=0 mlxlogscore=999 clxscore=1015 adultscore=0
- malwarescore=0 bulkscore=0 lowpriorityscore=0 mlxscore=0 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2401110154
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH 2/2] arm64: defconfig: Enable PSTORE_RAM
+To: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
+ Kees Cook <keescook@chromium.org>
+Cc: kernel@collabora.com,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Arnd Bergmann <arnd@arndb.de>, Bjorn Andersson <quic_bjorande@quicinc.com>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Tony Luck <tony.luck@intel.com>,
+ Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
+ linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240110210600.787703-1-nfraprado@collabora.com>
+ <20240110210600.787703-3-nfraprado@collabora.com>
+Content-Language: en-US
+From: David <david@ixit.cz>
+In-Reply-To: <20240110210600.787703-3-nfraprado@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hello Krzysztof,
+Useful stuff!
 
-On 1/11/24 13:40, Krzysztof Kozlowski wrote:
-> On 11/01/2024 19:12, Ninad Palsule wrote:
->> Infineon DPS310 is a barometric pressure and temperature sensor.
->>
->> Signed-off-by: Ninad Palsule <ninad@linux.ibm.com>
-> This is a friendly reminder during the review process.
+Reviewed-by: David Heidelberg <david@ixit.cz>
+
+On 10/01/2024 22:05, Nícolas F. R. A. Prado wrote:
+> Enable PSTORE_RAM, that is the ramoops driver, in the defconfig, to
+> allow logging and retrieving panics and oopses to/from RAM automatically
+> for platforms that have a ramoops reserved memory node in DT.
 >
-> It looks like you received a tag and forgot to add it.
+> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
 >
-> If you do not know the process, here is a short explanation:
-> Please add Acked-by/Reviewed-by/Tested-by tags when posting new
-> versions, under or above your Signed-off-by tag. Tag is "received", when
-> provided in a message replied to you on the mailing list. Tools like b4
-> can help here. However, there's no need to repost patches *only* to add
-> the tags. The upstream maintainer will do that for tags received on the
-> version they apply.
+> ---
 >
-> https://elixir.bootlin.com/linux/v6.5-rc3/source/Documentation/process/submitting-patches.rst#L577
+>   arch/arm64/configs/defconfig | 1 +
+>   1 file changed, 1 insertion(+)
 >
-> If a tag was not added on purpose, please state why and what changed.
-
-This is a mistake from my side. Sorry about that. I will remember it 
-next time.
-
-Thanks & Regards,
-
-Ninad
-
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index d48659217bb4..0b0ef6877a12 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -1589,6 +1589,7 @@ CONFIG_HUGETLBFS=y
+>   CONFIG_CONFIGFS_FS=y
+>   CONFIG_EFIVAR_FS=y
+>   CONFIG_SQUASHFS=y
+> +CONFIG_PSTORE_RAM=m
+>   CONFIG_NFS_FS=y
+>   CONFIG_NFS_V4=y
+>   CONFIG_NFS_V4_1=y
