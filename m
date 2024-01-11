@@ -1,133 +1,89 @@
-Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D90FD38F
-	for <linux-hardening@vger.kernel.org>; Thu, 11 Jan 2024 00:58:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC04E7FC
+	for <linux-hardening@vger.kernel.org>; Thu, 11 Jan 2024 01:47:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="EhAh2ulh"
-Date: Wed, 10 Jan 2024 19:58:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1704934703;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uKlEmnKmoRwLGvbX64cWBURlwsmoJLESEdYznjpxklU=;
-	b=EhAh2ulhiwZwyUkbFXFCIAjKgwM9zUonDQAoZ1Cezpk8kL0YUw0jcm3/Hfiq1jj+AYz7m5
-	pOWRTzrHXaajh0Ma1AzAYFZZ68EAqns0GKkQqCINiewRIAbM225UpNsP0vXvBmUMoWk72m
-	VuXA+jCZPK05M0KYuu8BESyifWnD6Xc=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Kees Cook <keescook@chromium.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
-	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Subject: Re: [GIT PULL] bcachefs updates for 6.8
-Message-ID: <xlynx7ydht5uixtbkrg6vgt7likpg5az76gsejfgluxkztukhf@eijjqp4uxnjk>
-References: <wq27r7e3n5jz4z6pn2twwrcp2zklumcfibutcpxrw6sgaxcsl5@m5z7rwxyuh72>
- <202401101525.112E8234@keescook>
- <6pbl6vnzkwdznjqimowfssedtpawsz2j722dgiufi432aldjg4@6vn573zspwy3>
- <202401101625.3664EA5B@keescook>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Y03ezPx3"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-40e461c1f44so44270025e9.3
+        for <linux-hardening@vger.kernel.org>; Wed, 10 Jan 2024 17:47:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1704937659; x=1705542459; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=6u030KI6il12QBShR1lcsXxHEUIec68JdndFK14yRTA=;
+        b=Y03ezPx3xDL8foZzVl1bYb/7PAZ7EEsvaKS07R5jv/MfUeByY7xzML9ud8IcFi3cJO
+         NESzo7QMcbUtu0ssFCpMvoMCFKdOIEcR8hYUICTMDWNPv5MTzbm2kCdlEujS29iZHn94
+         MRyxZddEaC2NkBv0LLqiM2ur73ux1KzHNtlao=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704937659; x=1705542459;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6u030KI6il12QBShR1lcsXxHEUIec68JdndFK14yRTA=;
+        b=P9Bj1k1sYU5ZXknvvZuB6lejPXwWECD2L54+J7/qPaoQylGzXI8qx4vtLh3o6HBqFV
+         4CBIPavVXbU3vxoPZ86pKrQq407C2Ipu0AMg4IUosZPi3siVK79a53k+UcW8mqUtYiDG
+         O96931RSK0BnvNj6nY2l6SjXmkLJWVkUz4rh0NjHbZRiDv6JlyPO+mSsZTzMu0jm+UqZ
+         4Nw+qcodZsqiQbrNifGoI9ijRPwo5UkSdZ9MVDtgOBQOadZlbWDyDXLx4JlPFr3hP7HD
+         zDglnUIw+++jBPY87fbjElzrtRNWdKES/xSMegBqnsHz3VTbegLX/EfcT9c23/s7YSxH
+         1cFA==
+X-Gm-Message-State: AOJu0Yyy8i33Xs2Rx7ZvvBRUrQfDWyEq7OIDwDmFQ9l7J8CVY4miZuMx
+	8nabkNKo7fCdwJo8M4Q7msV51Dq/zd1Xt8qA/H25PuX59OBgYPyJ
+X-Google-Smtp-Source: AGHT+IHUOqlG98zuA32EZqnuBCyb2jcqWIvKOE+46BV+ujKwjIUN6U4hJT3j9Z03+L2BWCzH2O+cAA==
+X-Received: by 2002:a05:600c:4693:b0:40e:433e:8922 with SMTP id p19-20020a05600c469300b0040e433e8922mr149225wmo.96.1704937658762;
+        Wed, 10 Jan 2024 17:47:38 -0800 (PST)
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com. [209.85.208.42])
+        by smtp.gmail.com with ESMTPSA id mj10-20020a170906af8a00b00a26b36311ecsm9968ejb.146.2024.01.10.17.47.37
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Jan 2024 17:47:37 -0800 (PST)
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-55790581457so5068843a12.3
+        for <linux-hardening@vger.kernel.org>; Wed, 10 Jan 2024 17:47:37 -0800 (PST)
+X-Received: by 2002:a17:906:abc3:b0:a26:8ee9:9b31 with SMTP id
+ kq3-20020a170906abc300b00a268ee99b31mr175059ejb.4.1704937657031; Wed, 10 Jan
+ 2024 17:47:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202401101625.3664EA5B@keescook>
-X-Migadu-Flow: FLOW_OUT
+References: <wq27r7e3n5jz4z6pn2twwrcp2zklumcfibutcpxrw6sgaxcsl5@m5z7rwxyuh72>
+ <202401101525.112E8234@keescook> <6pbl6vnzkwdznjqimowfssedtpawsz2j722dgiufi432aldjg4@6vn573zspwy3>
+ <202401101625.3664EA5B@keescook> <xlynx7ydht5uixtbkrg6vgt7likpg5az76gsejfgluxkztukhf@eijjqp4uxnjk>
+In-Reply-To: <xlynx7ydht5uixtbkrg6vgt7likpg5az76gsejfgluxkztukhf@eijjqp4uxnjk>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 10 Jan 2024 17:47:20 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wigjbr7d0ZLo+6wbMk31bBMn8sEwHEJCYBRFuNRhzO+Kw@mail.gmail.com>
+Message-ID: <CAHk-=wigjbr7d0ZLo+6wbMk31bBMn8sEwHEJCYBRFuNRhzO+Kw@mail.gmail.com>
+Subject: Re: [GIT PULL] bcachefs updates for 6.8
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Kees Cook <keescook@chromium.org>, linux-bcachefs@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jan 10, 2024 at 04:39:22PM -0800, Kees Cook wrote:
-> On Wed, Jan 10, 2024 at 07:04:47PM -0500, Kent Overstreet wrote:
-> > On Wed, Jan 10, 2024 at 03:48:43PM -0800, Kees Cook wrote:
-> > > On Wed, Jan 10, 2024 at 02:36:30PM -0500, Kent Overstreet wrote:
-> > > > [...]
-> > > >       bcachefs: %pg is banished
-> > > 
-> > > Hi!
-> > > 
-> > > Not a PR blocker, but this patch re-introduces users of strlcpy() which
-> > > has been otherwise removed this cycle. I'll send a patch to replace
-> > > these new uses, but process-wise, I'd like check on how bcachefs patches
-> > > are reviewed.
-> > 
-> > I'm happy to fix it. Perhaps the declaration could get a depracated
-> > warning, though?
-> 
-> That's one of checkpatch.pl's purposes, seeing as how deprecation warnings
-> are ... deprecated. :P
-> https://docs.kernel.org/process/deprecated.html#id1
-> This has made treewide changes like this more difficult, but these are
-> the Rules From Linus. ;)
+On Wed, 10 Jan 2024 at 16:58, Kent Overstreet <kent.overstreet@linux.dev> wrote:
+>
+> ...And how does that make any sense? "The warnings weren't getting
+> cleaned up, so get rid of them - except not really, just move them off
+> to the side so they'll be more annoying when they do come up"...
 
-...And how does that make any sense? "The warnings weren't getting
-cleaned up, so get rid of them - except not really, just move them off
-to the side so they'll be more annoying when they do come up"...
+Honestly,the checkpatch warnings are often garbage too.
 
-Perhaps we could've just switched to deprecation warnings being on in a
-W=1 build?
+The whole deprecation warnings never worked. They don't work in
+checkpatch either.
 
-> Okay, gotcha. I personally don't care how maintainers handle rebasing; I
-> was just confused about the timing and why I couldn't find the original
-> patch on any lists. :) And to potentially warn about Linus possibly not
-> liking the rebase too.
+> Perhaps we could've just switched to deprecation warnings being on in a
+> W=1 build?
 
-*nod* If there's some other reason why it's convenient to be on rc2 I
-could possibly switch my workflow, but pushing code out quickly is the
-norm for me.
+No, because the whole idea of "let me mark something deprecated and
+then not just remove it" is GARBAGE.
 
-> > > It also seems it didn't get a run through scripts/checkpatch.pl, which
-> > > shows 4 warnings, 2 or which point out the strlcpy deprecation:
-> > > 
-> > > WARNING: Prefer strscpy over strlcpy - see: https://github.com/KSPP/linux/issues/89
-> > > #123: FILE: fs/bcachefs/super.c:1389:
-> > > +               strlcpy(c->name, name.buf, sizeof(c->name));
-> > > 
-> > > WARNING: Prefer strscpy over strlcpy - see: https://github.com/KSPP/linux/issues/89
-> > > #124: FILE: fs/bcachefs/super.c:1390:
-> > > +       strlcpy(ca->name, name.buf, sizeof(ca->name));
-> > > 
-> > > Please make sure you're running checkpatch.pl -- it'll make integration,
-> > > technical debt reduction, and coding style adjustments much easier. :)
-> > 
-> > Well, we do have rather a lot of linters these days.
-> > 
-> > That's actually something I've been meaning to raise - perhaps we could
-> > start thinking about some pluggable way of running linters so that
-> > they're all run as part of a normal kernel build (and something that
-> > would be easy to drop new linters in to; I'd like to write some bcachefs
-> > specific ones).
-> 
-> With no central CI, the best we've got is everyone running the same
-> "minimum set" of checks. I'm most familiar with netdev's CI which has
-> such things (and checkpatch.pl is included). For example see:
-> https://patchwork.kernel.org/project/netdevbpf/patch/20240110110451.5473-3-ptikhomirov@virtuozzo.com/
+If somebody wants to deprecate something, it is up to *them* to finish
+the job. Not annoy thousands of other developers with idiotic
+warnings.
 
-Yeah, we badly need a central/common CI. I've been making noises that my
-own thing could be a good basis for that - e.g. it shouldn't be much
-work to use it for running our tests in tools/tesing/selftests. Sadly no
-time for that myself, but happy to talk about it if someone does start
-leading/coordinating that effort.
-
-example tests, example output:
-https://evilpiepirate.org/git/ktest.git/tree/tests/bcachefs/single_device.ktest
-https://evilpiepirate.org/~testdashboard/ci?branch=bcachefs-testing
-
-> > The current model of "I have to remember to run these 5 things, and then
-> > I'm going to get email nags for 3 more that I can't run" is not terribly
-> > scalable :)
-> 
-> Oh, I hear you. It's positively agonizing for those of us doing treewide
-> changes. I've got at least 4 CIs I check (in addition to my own) just to
-> check everyone's various coverage tools.
-> 
-> At the very least, checkpatch.pl is the common denominator:
-> https://docs.kernel.org/process/submitting-patches.html#style-check-your-changes
-
-At one point in my career I was religious about checkpatch; since then
-the warnings it produces have seemed to me more on the naggy and less on
-the useful end of the spectrum - I like smatch better in that respect.
-But - I'll start running it again for the deprecation warnings :)
+            Linus
