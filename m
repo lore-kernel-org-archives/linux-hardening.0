@@ -1,135 +1,112 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8E87175B0;
-	Fri, 12 Jan 2024 18:26:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C73A156DF
+	for <linux-hardening@vger.kernel.org>; Fri, 12 Jan 2024 18:43:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="jEbrZzQ3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
-	s=s31663417; t=1705083982; x=1705688782; i=erick.archer@gmx.com;
-	bh=+Gybv52t9GG+h/zrvAoxV5B+3VXNY3CX5/ikX0He3fo=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-	b=jEbrZzQ3DAJzHbArawwFAvrR3181x7bOeVmyz70JTzN8gjaDzZUtwD2U8RbwN+0a
-	 Xz6YYW0D2OXBs7c4Y7ynAFvshBDL/ej7VETNM0GTfrlVzGSvwRGtnCzLS6dJaualA
-	 TSLoTKSXfcgHM2qSnhdlCoxsZ6MiMFRNeWs5QLlXEyfXIPHtXPKI7wLi6R26VZdrZ
-	 12hvSDtCme+m6/xAiZHjnX5/1BaRgHQWo7LB4H7jsQ4DcPcsNglU+oOG45JapofVU
-	 Q0KlcZAb4GIy+oiZuNnYL6nxm+uWAjv1iIJnd/Eya8s4r0gNHH9m59nj9cTqVMBX+
-	 AeUQBGIqOknavJlISQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from localhost.localdomain ([79.157.194.183]) by mail.gmx.net
- (mrgmx104 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 1MQ5rU-1rkRSf3fuq-00M3wH; Fri, 12 Jan 2024 19:26:22 +0100
-From: Erick Archer <erick.archer@gmx.com>
-To: "James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Erick Archer <erick.archer@gmx.com>,
-	Kees Cook <keescook@chromium.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] scsi: csiostor: Use kcalloc() instead of kzalloc()
-Date: Fri, 12 Jan 2024 19:26:03 +0100
-Message-Id: <20240112182603.11048-1-erick.archer@gmx.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="hoQ+h3x+"
+Received: from eig-obgw-5004a.ext.cloudfilter.net ([10.0.29.221])
+	by cmsmtp with ESMTPS
+	id OKj5raspUAxAkOMVfrYzfv; Fri, 12 Jan 2024 18:44:03 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id OMVPr2w1oKleDOMVPrczHQ; Fri, 12 Jan 2024 18:43:48 +0000
+X-Authority-Analysis: v=2.4 cv=KcbBDCUD c=1 sm=1 tr=0 ts=65a18864
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=dEuoMetlWLkA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
+ a=7YfXLusrAAAA:8 a=beM7OXizrj4IlsfoTHwA:9 a=QEXdDO2ut3YA:10
+ a=SLz71HocmBbuEhFRYD3r:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=WN5oEk254ZaRQR4Ymvk869NpqFDbzV2Pr93bBRSvIRo=; b=hoQ+h3x+imlNEWxUJKBGFHyIu4
+	uJuUL24a3DF6wvOgZf6CzqaDEXWkXBSPYMemz2IHFmFQA6c9NNFihtQVuzWgu9WgGUAtsUH5rLoYM
+	ujADmEEAizAuHZsE9vTELnINHQsXv2+TcU1sxVEyZltY/MYedr9pysc0TQDqHhYITYXWmIFO1oCE7
+	ps/6AZN0fNKItjtG3hp6bF0ylfL91caP3jxOAYGHIfu681EMAFwSmvBVb4tWfsyfxa27KkaGrKtQi
+	ApAOeFwlKNEFNjxBA2LYPN1K9Q5Cd7C9laPOHt464ah8Za8QE8z9PxOFe0+6Yign0gmFq0rRtIL9Z
+	DE77ToCQ==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:58358 helo=[192.168.15.10])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1rOMVO-003hk2-2R;
+	Fri, 12 Jan 2024 12:43:46 -0600
+Message-ID: <1a48103c-cd7a-4425-8c17-89530f394a7f@embeddedor.com>
+Date: Fri, 12 Jan 2024 12:43:23 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:VqSrX2QEK19EdjFd/yQN1WWLQ7POmZiuBsYckjEvZYo0v8/G3HX
- qVv85dL9MOxFSzsVUJBbubAuAQ4L0jePv3wpZwc3baUgn2dDWqC8tXUU2t08/r74MetNjUZ
- 3ZmF3fe/n0Is9WPmpv6bhGd/FoHp3ZpqVxMjni0QhkOl2Y6mBzRBzz3VJCWoLLzfz9y7m+x
- 0F7OSGrOna4uMSQBisglQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:gYeDrLFe1ck=;KD7kEcholIXzrSPNj27MNUcZjiV
- hy89Hnf1tkqrMmy37I0Y3eiF/8Az5bONZGq6EfvT7jTMFYnCMc08D+1ejNys8TUCJrKCqZE3I
- ypJDVqkS0c4sS2qhoLmCr94aJXmCA/3cOLEcFEMBK80eClLILo4ghKy3yvrtIOYJL0aUvzD+6
- aSZwI3rtxlG0E6iCBqAlBhD8elVhh2X5mSwa9IbdHwNIEERMX/LXVvtj7DmAKb8MQf4Ti8WS+
- hfwJQbhVV36bTvFVUD3jCLVOny/EXoz2G/Fh1ZSO/W0Y7UDK7b5Aji0rtFPXYrggMo50pbUOp
- ubJDN5guxEchE+OVtthlVuKZ1qqCTinn/J4xKe9ewBjLEFo53Adt7FhC4S8mSuNZHy1k3IUdC
- CIJy/8foyCctV1eo+1lfT7rigwliSeCfCGXFrKeFmmtb2bIiu+4q88BbCqMk+ITgTFoVOovnW
- HmX4x2Ho7PD06ekbNCJ0uBXipdsnKdbZnUUp9O3A1Oj6f3Lme8kpVTWnReYvjK/FLllBKFyM/
- LQ+eQDaieYhxyk4zK4SvuAxDDMNqTOiWHNHkirb5KiX21rHpflJXNZ5HjQ/1FGk3di1gdgaoE
- gZ/GZJAOsUueQYjtSR2a3Qe7xIYzt59EsuGA6FFwyhjtbtoYHcp0IBPxBEQUBM5B3Dog9oSZo
- fSelG2p4GknyONSeduDNoihF4oSmV0Lw86pJN+8BQgZSYL5w9WRrdqhdzhw44N1foNWGaKsQD
- HYApzDY5GXCGdUAcSaeNk43n3UuYGnsxaAPCpGPQNee+ZeM5KplKNvb7R1d2ogF7lVFMt8uc5
- zBY+ZA0n/Bgd22wugyhv/7/uaw3fs2rafepy8G1Ch0ymQ5DuO1ppsZvkhc9TKaHbAPnKuROSI
- rhMUJnXgbxQl/F+wRVntax6xyr+793O1BnY/bt6IaXuYQ0AGPxkJsBhKw1OScKig7jFiBRcJ6
- uldUNMT8v2sysQQyOISacVd6D/o=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] scsi: csiostor: Use kcalloc() instead of kzalloc()
+To: Erick Archer <erick.archer@gmx.com>,
+ "James E.J. Bottomley" <jejb@linux.ibm.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Justin Stitt <justinstitt@google.com>, linux-scsi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20240112182603.11048-1-erick.archer@gmx.com>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20240112182603.11048-1-erick.archer@gmx.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.21.192
+X-Source-L: No
+X-Exim-ID: 1rOMVO-003hk2-2R
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:58358
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfOJojukDkMYHkgu5qjNhm45TdEFRd17lkQ95n612/Rx2rAUbekhihXTaWZsPUMzMHm0XJcVKMWAIKs75CjSiB6LJnjR3TB7v4JsLgG42RE8CKiXSytHi
+ 99ZudH6uOaMiVY3dKIV6chn5tr7KzoeovegNCV32LVWCNDV18AGpL8TajPlaeU+F5XfqvvTbDIS1cwR94aDLEmVpLw+6yFgty3QLm56i3nlGrJ8OaZCvT6WD
 
-Use 2-factor multiplication argument form kcalloc() instead
-of kzalloc().
 
-Link: https://github.com/KSPP/linux/issues/162
-Signed-off-by: Erick Archer <erick.archer@gmx.com>
-=2D--
- drivers/scsi/csiostor/csio_init.c | 15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/scsi/csiostor/csio_init.c b/drivers/scsi/csiostor/csi=
-o_init.c
-index d649b7a2a879..d72892e44fd1 100644
-=2D-- a/drivers/scsi/csiostor/csio_init.c
-+++ b/drivers/scsi/csiostor/csio_init.c
-@@ -698,8 +698,7 @@ csio_lnodes_block_request(struct csio_hw *hw)
- 	struct csio_lnode **lnode_list;
- 	int cur_cnt =3D 0, ii;
+On 1/12/24 12:26, Erick Archer wrote:
+> Use 2-factor multiplication argument form kcalloc() instead
+> of kzalloc().
+> 
+> Link: https://github.com/KSPP/linux/issues/162
+> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+> ---
+>   drivers/scsi/csiostor/csio_init.c | 15 +++++----------
+>   1 file changed, 5 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/scsi/csiostor/csio_init.c b/drivers/scsi/csiostor/csio_init.c
+> index d649b7a2a879..d72892e44fd1 100644
+> --- a/drivers/scsi/csiostor/csio_init.c
+> +++ b/drivers/scsi/csiostor/csio_init.c
+> @@ -698,8 +698,7 @@ csio_lnodes_block_request(struct csio_hw *hw)
+>   	struct csio_lnode **lnode_list;
+>   	int cur_cnt = 0, ii;
+> 
+> -	lnode_list = kzalloc((sizeof(struct csio_lnode *) * hw->num_lns),
+> -			GFP_KERNEL);
+> +	lnode_list = kcalloc(hw->num_lns, sizeof(*lnode_list), GFP_KERNEL);
 
--	lnode_list =3D kzalloc((sizeof(struct csio_lnode *) * hw->num_lns),
--			GFP_KERNEL);
-+	lnode_list =3D kcalloc(hw->num_lns, sizeof(*lnode_list), GFP_KERNEL);
- 	if (!lnode_list) {
- 		csio_err(hw, "Failed to allocate lnodes_list");
- 		return;
-@@ -737,8 +736,7 @@ csio_lnodes_unblock_request(struct csio_hw *hw)
- 	struct csio_lnode **lnode_list;
- 	int cur_cnt =3D 0, ii;
+You should also mention and describe these `sizeof` changes in the changelog text.
 
--	lnode_list =3D kzalloc((sizeof(struct csio_lnode *) * hw->num_lns),
--			GFP_KERNEL);
-+	lnode_list =3D kcalloc(hw->num_lns, sizeof(*lnode_list), GFP_KERNEL);
- 	if (!lnode_list) {
- 		csio_err(hw, "Failed to allocate lnodes_list");
- 		return;
-@@ -775,8 +773,7 @@ csio_lnodes_block_by_port(struct csio_hw *hw, uint8_t =
-portid)
- 	struct csio_lnode **lnode_list;
- 	int cur_cnt =3D 0, ii;
-
--	lnode_list =3D kzalloc((sizeof(struct csio_lnode *) * hw->num_lns),
--			GFP_KERNEL);
-+	lnode_list =3D kcalloc(hw->num_lns, sizeof(*lnode_list), GFP_KERNEL);
- 	if (!lnode_list) {
- 		csio_err(hw, "Failed to allocate lnodes_list");
- 		return;
-@@ -816,8 +813,7 @@ csio_lnodes_unblock_by_port(struct csio_hw *hw, uint8_=
-t portid)
- 	struct csio_lnode **lnode_list;
- 	int cur_cnt =3D 0, ii;
-
--	lnode_list =3D kzalloc((sizeof(struct csio_lnode *) * hw->num_lns),
--			GFP_KERNEL);
-+	lnode_list =3D kcalloc(hw->num_lns, sizeof(*lnode_list), GFP_KERNEL);
- 	if (!lnode_list) {
- 		csio_err(hw, "Failed to allocate lnodes_list");
- 		return;
-@@ -855,8 +851,7 @@ csio_lnodes_exit(struct csio_hw *hw, bool npiv)
- 	struct csio_lnode **lnode_list;
- 	int cur_cnt =3D 0, ii;
-
--	lnode_list =3D kzalloc((sizeof(struct csio_lnode *) * hw->num_lns),
--			GFP_KERNEL);
-+	lnode_list =3D kcalloc(hw->num_lns, sizeof(*lnode_list), GFP_KERNEL);
- 	if (!lnode_list) {
- 		csio_err(hw, "lnodes_exit: Failed to allocate lnodes_list.\n");
- 		return;
-=2D-
-2.25.1
-
+Thanks
+--
+Gustavo
