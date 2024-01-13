@@ -1,139 +1,82 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C530EF4F5;
-	Sat, 13 Jan 2024 05:57:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FCCC6AA6
+	for <linux-hardening@vger.kernel.org>; Sat, 13 Jan 2024 19:48:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="h5M/1VGt"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=yS6I6mddaN1yhy8N4LUTGdLFHpiWXV0zrUgAi9pBpv4=; b=h5M/1VGtX+ODHUeJEoWo69qsbW
-	z6FFC22WSyh33kzA7XO2XfdN5fg60WbujwazNJUVxZC0wrH9qzw+Zd5rfqk4DpGaGyFd7651Y3pJa
-	5l0Ol3isbnzMD1khnGn/sinOaf7tsVIQGZ969EPt/zIf4PrS0MN3ce6nYiv6K+cIhSO3WSFJYWPLu
-	kMhy412zKba0Nso3hCjJw3bqc7sfCgzEiItUuinmJmWOyHQdPLgT8UfCn275137linx2xBu5aM1Vh
-	Fg634eI7ESNhLxbYXpCj+X8zTzl8GrrlP4KGg8cRWwzbiQ56xQf3OH4N1miNeVRsVU8G5oeKNG5x8
-	A+0Vr+kA==;
-Received: from [50.53.46.231] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1rOX16-004aGO-0f;
-	Sat, 13 Jan 2024 05:57:12 +0000
-Message-ID: <84df0f74-b165-4076-97bc-9f90e29410d4@infradead.org>
-Date: Fri, 12 Jan 2024 21:57:04 -0800
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TetzL6B8"
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3606dc4fdf2so41171345ab.0
+        for <linux-hardening@vger.kernel.org>; Sat, 13 Jan 2024 11:48:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1705175283; x=1705780083; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hl+nlMkUurqcw4/ZOA4GmmsYbpxPCJqe8VKEKUx1KC8=;
+        b=TetzL6B8pwhAVdT6W4a2XUlaxOOIZSewrFk2EK+au2VDRDOc92L6578aSzSqtFrnkN
+         ugn5e2STYu36w52esq3RH6UHBclrfZjqEPy3O+49qtmr+ai+xmpWmYwimr0fl7qMP3pu
+         mP24ZKYGeQX+ZzOm8t/aIUvDkTv3YM93+jkUk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705175283; x=1705780083;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hl+nlMkUurqcw4/ZOA4GmmsYbpxPCJqe8VKEKUx1KC8=;
+        b=r+Dns/ohYu7nbaK0XDkvYVaClUrYhcw14oV9UprBN0UOJwFITKGavZEoM42/yr6d0+
+         vYHWKbeJpOTwd9GI3vSuClzYchjIfd89ydinP5WHIe/DlbPH7xVbvSJCQvwhutJBFCGM
+         pJiF27DYAvD9AdgrtQ0lfkOwJ4LU5ogxMSEiwYt9zHDKZJGxSfCnF6fH5FhH4Bh81a9z
+         /MnW1X9UbHA/RyS2zmZEeMcXtVVzfcCZHzaxXEJL6XQ0DTq/59Qpn6caAad/J6PD8Cc6
+         a43KlIqI6iMk2TrjplxCV8owOPdUM+oAqOw62P8439XCXXmMBmps094uI7qvVG66NKpk
+         TfXw==
+X-Gm-Message-State: AOJu0YyHk0dv55wJjW1UJbEW8QdD8XTfkz7PjavXsfJrAC36+kCWNOZt
+	IbFDRiZT8ukbBa6VUAWMUyJXF3GTaX97
+X-Google-Smtp-Source: AGHT+IFqqbZrhxKSXD4axLOL1VZ8kwo5umP84zusMZOOcni8S84eee6aHt2ZCv8rtlaqfKQqR8xCyw==
+X-Received: by 2002:a05:6e02:c6d:b0:360:e2:bfed with SMTP id f13-20020a056e020c6d00b0036000e2bfedmr3817046ilj.61.1705175283304;
+        Sat, 13 Jan 2024 11:48:03 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id q5-20020a170902e30500b001cfb4d36eb1sm3263533plc.215.2024.01.13.11.48.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 13 Jan 2024 11:48:02 -0800 (PST)
+Date: Sat, 13 Jan 2024 11:48:01 -0800
+From: Kees Cook <keescook@chromium.org>
+To: jeffxu@chromium.org, rdunlap@infradead.org
+Cc: akpm@linux-foundation.org, jannh@google.com, sroettger@google.com,
+	willy@infradead.org, gregkh@linuxfoundation.org,
+	torvalds@linux-foundation.org, usama.anjum@collabora.com,
+	jeffxu@google.com, jorgelo@chromium.org, groeck@chromium.org,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org, pedro.falcato@gmail.com, dave.hansen@intel.com,
+	linux-hardening@vger.kernel.org, deraadt@openbsd.org
+Subject: Re: [PATCH v6 2/4] mseal: add mseal syscall
+Message-ID: <202401131146.F017DB5870@keescook>
+References: <20240111234142.2944934-1-jeffxu@chromium.org>
+ <20240111234142.2944934-3-jeffxu@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/4] Introduce mseal()
-Content-Language: en-US
-To: Jeff Xu <jeffxu@chromium.org>
-Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com,
- sroettger@google.com, willy@infradead.org, gregkh@linuxfoundation.org,
- torvalds@linux-foundation.org, usama.anjum@collabora.com, jeffxu@google.com,
- jorgelo@chromium.org, groeck@chromium.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
- pedro.falcato@gmail.com, dave.hansen@intel.com,
- linux-hardening@vger.kernel.org, deraadt@openbsd.org
-References: <20240111234142.2944934-1-jeffxu@chromium.org>
- <c65170fe-f596-4ce0-96e3-ba83f4e60eaf@infradead.org>
- <CABi2SkXt2_eBS=7QkPST0uHGaaEszRJbVLajbwM95RWJrbDXwQ@mail.gmail.com>
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <CABi2SkXt2_eBS=7QkPST0uHGaaEszRJbVLajbwM95RWJrbDXwQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240111234142.2944934-3-jeffxu@chromium.org>
 
+On Thu, Jan 11, 2024 at 11:41:39PM +0000, jeffxu@chromium.org wrote:
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index f5a97dec5169..345667583b03 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -30,6 +30,7 @@
+>  #include <linux/kasan.h>
+>  #include <linux/memremap.h>
+>  #include <linux/slab.h>
+> +#include <uapi/linux/mman.h>
 
+I think the arm64 build failure is from this include -- it's happening
+too early and some of the arm defines aren't available yet?
 
-On 1/12/24 20:53, Jeff Xu wrote:
-> On Fri, Jan 12, 2024 at 6:20 PM Randy Dunlap <rdunlap@infradead.org> wrote:
->>
->>
->>
->> On 1/11/24 15:41, jeffxu@chromium.org wrote:
->>> From: Jeff Xu <jeffxu@google.com>
->>>
->>> This patchset proposes a new mseal() syscall for the Linux kernel.
->>>
->>
->> Jeff,
->> Building arm64 defconfig, on linux-next-20240112, I get:
->>
-> I don't quite get how this is related to my change.
-> Can you please send me the steps to reproduce ?  I don't usually build arm.
-
-I don't get how it's related either, but when I build arm64 defconfig without
-your patches, it builds without errors. After applying your patches, it has
-errors... I did it 2 times just to make sure.
-
-It may just be some difference between x86_64 headers (is that what you
-build?) and arm64 headers.
-
-Install the x86_64-hosted arm64 compiler from
-https://mirrors.edge.kernel.org/pub/tools/crosstool/ in
-e.g. /opt/crosstool .
-
-
-In the kernel source tree:
-mkdir ARM64
-
-make ARCH=arm64 O=ARM64 defconfig
-make -j25 CROSS_COMPILE=/opt/crosstool/gcc-13.2.0-nolibc/aarch64-linux/bin/aarch64-linux- ARCH=arm64 O=ARM64 all 2>&1 | tee aa64defcon.lst
-
-make ARCH=arm64 O=ARM64 clean
-<apply your mseal patches>
-make -j25 CROSS_COMPILE=/opt/crosstool/gcc-13.2.0-nolibc/aarch64-linux/bin/aarch64-linux- ARCH=arm64 O=ARM64 all 2>&1 | tee aa64mseal.lst
-
-
-If that does not reproduce the problem, please let me know.
-
-(I use a script, but that's the essence of the script.)
-
-
-
->>   CC      arch/arm64/kernel/asm-offsets.s
->> In file included from ../include/uapi/linux/mman.h:5,
->>                  from ../include/linux/mm.h:33,
->>                  from ../include/linux/memblock.h:12,
->>                  from ../arch/arm64/include/asm/acpi.h:14,
->>                  from ../include/acpi/acpi_io.h:7,
->>                  from ../include/linux/acpi.h:39,
->>                  from ../include/acpi/apei.h:9,
->>                  from ../include/acpi/ghes.h:5,
->>                  from ../include/linux/arm_sdei.h:8,
->>                  from ../arch/arm64/kernel/asm-offsets.c:10:
->> ../arch/arm64/include/asm/mman.h: In function 'arch_calc_vm_prot_bits':
->> ../arch/arm64/include/asm/mman.h:15:24: error: 'VM_ARM64_BTI' undeclared (first use in this function); did you mean 'ARM64_BTI'?
->>    15 |                 ret |= VM_ARM64_BTI;
->>       |                        ^~~~~~~~~~~~
->>       |                        ARM64_BTI
->> ../arch/arm64/include/asm/mman.h:15:24: note: each undeclared identifier is reported only once for each function it appears in
->> ../arch/arm64/include/asm/mman.h:18:24: error: 'VM_MTE' undeclared (first use in this function); did you mean 'VM_MAP'?
->>    18 |                 ret |= VM_MTE;
->>       |                        ^~~~~~
->>       |                        VM_MAP
->> ../arch/arm64/include/asm/mman.h: In function 'arch_calc_vm_flag_bits':
->> ../arch/arm64/include/asm/mman.h:32:24: error: 'VM_MTE_ALLOWED' undeclared (first use in this function)
->>    32 |                 return VM_MTE_ALLOWED;
->>       |                        ^~~~~~~~~~~~~~
->> ../arch/arm64/include/asm/mman.h: In function 'arch_validate_flags':
->> ../arch/arm64/include/asm/mman.h:59:29: error: 'VM_MTE' undeclared (first use in this function); did you mean 'VM_MAP'?
->>    59 |         return !(vm_flags & VM_MTE) || (vm_flags & VM_MTE_ALLOWED);
->>       |                             ^~~~~~
->>       |                             VM_MAP
->> ../arch/arm64/include/asm/mman.h:59:52: error: 'VM_MTE_ALLOWED' undeclared (first use in this function)
->>    59 |         return !(vm_flags & VM_MTE) || (vm_flags & VM_MTE_ALLOWED);
->>       |                                                    ^~~~~~~~~~~~~~
->>
->>
->> --
->> #Randy
-> 
+-Kees
 
 -- 
-#Randy
+Kees Cook
