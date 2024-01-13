@@ -1,44 +1,28 @@
-Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C73A156DF
-	for <linux-hardening@vger.kernel.org>; Fri, 12 Jan 2024 18:43:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7844E10A04;
+	Sat, 13 Jan 2024 01:10:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="hoQ+h3x+"
-Received: from eig-obgw-5004a.ext.cloudfilter.net ([10.0.29.221])
-	by cmsmtp with ESMTPS
-	id OKj5raspUAxAkOMVfrYzfv; Fri, 12 Jan 2024 18:44:03 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id OMVPr2w1oKleDOMVPrczHQ; Fri, 12 Jan 2024 18:43:48 +0000
-X-Authority-Analysis: v=2.4 cv=KcbBDCUD c=1 sm=1 tr=0 ts=65a18864
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=dEuoMetlWLkA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
- a=7YfXLusrAAAA:8 a=beM7OXizrj4IlsfoTHwA:9 a=QEXdDO2ut3YA:10
- a=SLz71HocmBbuEhFRYD3r:22
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ue2NC0Vi"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=WN5oEk254ZaRQR4Ymvk869NpqFDbzV2Pr93bBRSvIRo=; b=hoQ+h3x+imlNEWxUJKBGFHyIu4
-	uJuUL24a3DF6wvOgZf6CzqaDEXWkXBSPYMemz2IHFmFQA6c9NNFihtQVuzWgu9WgGUAtsUH5rLoYM
-	ujADmEEAizAuHZsE9vTELnINHQsXv2+TcU1sxVEyZltY/MYedr9pysc0TQDqHhYITYXWmIFO1oCE7
-	ps/6AZN0fNKItjtG3hp6bF0ylfL91caP3jxOAYGHIfu681EMAFwSmvBVb4tWfsyfxa27KkaGrKtQi
-	ApAOeFwlKNEFNjxBA2LYPN1K9Q5Cd7C9laPOHt464ah8Za8QE8z9PxOFe0+6Yign0gmFq0rRtIL9Z
-	DE77ToCQ==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:58358 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rOMVO-003hk2-2R;
-	Fri, 12 Jan 2024 12:43:46 -0600
-Message-ID: <1a48103c-cd7a-4425-8c17-89530f394a7f@embeddedor.com>
-Date: Fri, 12 Jan 2024 12:43:23 -0600
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=07FRS5V8yga9hKrKhnvPUx1n6tTm1VY5TNI0fw/V2Jk=; b=ue2NC0VidzNtsK51pBPASyttm/
+	hKufMijxcnJs2olOQ2UH2Xpw5z0ZaVB1kjJRv+smf1Yku72CGRMoVIm97rsZfifOjVzPP+8+Q5sA5
+	ee3lSm0xVVIfN5layVfciUsaINpKF1h9kKYzfbAqbA0KP/FXG6HjzQ6OKU5hiEu4afTjhdL4fWFrt
+	0y4tJfPluBwQlBInv888QF+v4klP86TdSQlmjSfHoE1uIO2+leGufS3GMJFWXcAACwkEmbZFLFYmI
+	6z6h41V0vW7K4PGaMjuOo2UWFfQZti9w3q0LM/KaTXvlVRZLfxA9S2j+rVyZbpJ5Lk81jdfcv4rlZ
+	6aJH/+Sw==;
+Received: from [50.53.46.231] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1rOSXL-004N7g-1K;
+	Sat, 13 Jan 2024 01:10:11 +0000
+Message-ID: <8cb16dfe-993e-4c41-b1fe-63bc7ac97609@infradead.org>
+Date: Fri, 12 Jan 2024 17:10:10 -0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -46,67 +30,55 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] scsi: csiostor: Use kcalloc() instead of kzalloc()
-To: Erick Archer <erick.archer@gmx.com>,
- "James E.J. Bottomley" <jejb@linux.ibm.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Justin Stitt <justinstitt@google.com>, linux-scsi@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20240112182603.11048-1-erick.archer@gmx.com>
+Subject: Re: [PATCH v6 4/4] mseal:add documentation
+To: jeffxu@chromium.org, akpm@linux-foundation.org, keescook@chromium.org,
+ jannh@google.com, sroettger@google.com, willy@infradead.org,
+ gregkh@linuxfoundation.org, torvalds@linux-foundation.org,
+ usama.anjum@collabora.com
+Cc: jeffxu@google.com, jorgelo@chromium.org, groeck@chromium.org,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-mm@kvack.org, pedro.falcato@gmail.com, dave.hansen@intel.com,
+ linux-hardening@vger.kernel.org, deraadt@openbsd.org
+References: <20240111234142.2944934-1-jeffxu@chromium.org>
+ <20240111234142.2944934-5-jeffxu@chromium.org>
 Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240112182603.11048-1-erick.archer@gmx.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20240111234142.2944934-5-jeffxu@chromium.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1rOMVO-003hk2-2R
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:58358
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfOJojukDkMYHkgu5qjNhm45TdEFRd17lkQ95n612/Rx2rAUbekhihXTaWZsPUMzMHm0XJcVKMWAIKs75CjSiB6LJnjR3TB7v4JsLgG42RE8CKiXSytHi
- 99ZudH6uOaMiVY3dKIV6chn5tr7KzoeovegNCV32LVWCNDV18AGpL8TajPlaeU+F5XfqvvTbDIS1cwR94aDLEmVpLw+6yFgty3QLm56i3nlGrJ8OaZCvT6WD
+
+Hi Jeff,
 
 
-
-On 1/12/24 12:26, Erick Archer wrote:
-> Use 2-factor multiplication argument form kcalloc() instead
-> of kzalloc().
+On 1/11/24 15:41, jeffxu@chromium.org wrote:
+> From: Jeff Xu <jeffxu@chromium.org>
 > 
-> Link: https://github.com/KSPP/linux/issues/162
-> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+> Add documentation for mseal().
+> 
+> Signed-off-by: Jeff Xu <jeffxu@chromium.org>
 > ---
->   drivers/scsi/csiostor/csio_init.c | 15 +++++----------
->   1 file changed, 5 insertions(+), 10 deletions(-)
+>  Documentation/userspace-api/mseal.rst | 181 ++++++++++++++++++++++++++
+>  1 file changed, 181 insertions(+)
+>  create mode 100644 Documentation/userspace-api/mseal.rst
 > 
-> diff --git a/drivers/scsi/csiostor/csio_init.c b/drivers/scsi/csiostor/csio_init.c
-> index d649b7a2a879..d72892e44fd1 100644
-> --- a/drivers/scsi/csiostor/csio_init.c
-> +++ b/drivers/scsi/csiostor/csio_init.c
-> @@ -698,8 +698,7 @@ csio_lnodes_block_request(struct csio_hw *hw)
->   	struct csio_lnode **lnode_list;
->   	int cur_cnt = 0, ii;
-> 
-> -	lnode_list = kzalloc((sizeof(struct csio_lnode *) * hw->num_lns),
-> -			GFP_KERNEL);
-> +	lnode_list = kcalloc(hw->num_lns, sizeof(*lnode_list), GFP_KERNEL);
 
-You should also mention and describe these `sizeof` changes in the changelog text.
+To prevent the following documentation build warning:
 
-Thanks
---
-Gustavo
+linux-next-20240112/Documentation/userspace-api/mseal.rst: WARNING: document isn't included in any toctree
+
+please add the following to your patch 4/4:
+
+diff -- a/Documentation/userspace-api/index.rst b/Documentation/userspace-api/index.rst
+--- a/Documentation/userspace-api/index.rst
++++ b/Documentation/userspace-api/index.rst
+@@ -23,6 +23,7 @@ place where this information is gathered
+    ebpf/index
+    ELF
+    ioctl/index
++   mseal
+    iommu
+    iommufd
+    media/index
+
+-- 
+#Randy
