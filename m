@@ -1,86 +1,147 @@
-Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA8C1EEE0
-	for <linux-hardening@vger.kernel.org>; Sun, 14 Jan 2024 03:48:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30BD31FB2;
+	Sun, 14 Jan 2024 10:24:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Yqkrz5kD"
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-595ac2b6c59so4485857eaf.2
-        for <linux-hardening@vger.kernel.org>; Sat, 13 Jan 2024 19:48:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1705204138; x=1705808938; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Fi83qxC7DN9Mrs6Lcn/FzkFtPxyAqAamlzctaT7s4iw=;
-        b=Yqkrz5kDxiv7/zEltjfmZnF4yjdyjTHO5kBf6lFurdpZoic3jit7KTS9IPzHyeuPHE
-         pRSNWfPJcTIsReLo8+e2Y/QNzJZmixySqYa0mISR80xLx0mnoFY34fstVtZ1aJuD9xkg
-         B723f0RnZH1aiAru7vUAJfh2D1Q0Twx1ES2fM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705204138; x=1705808938;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Fi83qxC7DN9Mrs6Lcn/FzkFtPxyAqAamlzctaT7s4iw=;
-        b=xOQOUfn/MPGWlUe4mYpRNnY4x2ag0ZvJKpX4uAd+FGDzFgbFmsdTCvXM9v2ikAt4Q5
-         swS+kBNtkNyszGwao5+WsfsXBq8UsCcUF8jt6dcqsckxW2Ar9zqew3vfkF2GDQUak2Mz
-         5Eo0WS2SHW4DLqZ71z6YtLq4/GMvkgg6LElTShaY+VX4EFjXb02rNkPSJ7hD70nO2BNj
-         lsnLOyB28M5fCMye499P+bij073+mvB6kXGfEpColqM01oTws7axRHVZmhxnc6EL86pD
-         c1TaRHm+RcuLCGbpD8q9HWg5WfczKFvrE2xpvCc3SygXGHDG0/YWjpzpDsTW36SI7m7M
-         PdaQ==
-X-Gm-Message-State: AOJu0YyKGD42mklFFRwqYOG9lOK3hiemA0KkVdRgklOttFAk7NZBSCM2
-	6NZqOKIXHiHMrP+oGNLjKhJjmROA4h2LqTcH16KwUoZPN/bk
-X-Google-Smtp-Source: AGHT+IGxcLy79rvnuOyBki0wllFskUd2ajI6nO0d3k/tEM6ToEF/16NmjnxfE/jV0LwfK2aFzd7ESKdMigeTSVY4LKk=
-X-Received: by 2002:a05:6870:5cca:b0:202:ffc8:c6bb with SMTP id
- et10-20020a0568705cca00b00202ffc8c6bbmr5841416oab.4.1705204138403; Sat, 13
- Jan 2024 19:48:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="E/PuUshD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
+	s=s31663417; t=1705227865; x=1705832665; i=erick.archer@gmx.com;
+	bh=v7nvUPA9OesHnOY8TOQ/tEDzJPZ9C3L0VTmMHqqdqCg=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=E/PuUshD8TGQY82SBpOAPIL8fFQkIpFxpnOWu6hlgAimBDTC7j6dVeGpz7SwGooA
+	 eoCcFM19BVd+hLZ7R7/5tjB1xXYK11S8qd0G2pgP+GYQxs2tZVe/Vw1Wlvj6mcEQh
+	 Y/YbDLHAI9iQjvvdv2MPVT/04odvB6IuZAH58zbmvfFnaj9Uoq6LZErebRsNBcpGO
+	 c51o5BAYcMItEVZlMaPa4Ck2daSzv+bdtk80tI/hN/hV4NEitkcBcDeEFJFKGrxMp
+	 3vZQhDAroEebw8Rj9bt91MM+4AZnH78Px+jTGFP+kZEdTyzZxhT6Uk8f5jlv5wRVk
+	 y9a8fKE0fDUBY21N5g==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from localhost.localdomain ([79.157.194.183]) by mail.gmx.net
+ (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1N33Ed-1r1UTF4BzR-013RDI; Sun, 14 Jan 2024 11:24:25 +0100
+From: Erick Archer <erick.archer@gmx.com>
+To: "James E.J. Bottomley" <jejb@linux.ibm.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Erick Archer <erick.archer@gmx.com>,
+	Kees Cook <keescook@chromium.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2] scsi: csiostor: Use kcalloc() instead of kzalloc()
+Date: Sun, 14 Jan 2024 11:24:00 +0100
+Message-Id: <20240114102400.3816-1-erick.archer@gmx.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240111234142.2944934-1-jeffxu@chromium.org> <20240111234142.2944934-3-jeffxu@chromium.org>
- <202401131146.F017DB5870@keescook>
-In-Reply-To: <202401131146.F017DB5870@keescook>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Sat, 13 Jan 2024 19:48:46 -0800
-Message-ID: <CABi2SkXrUm-oa7bZBxFGHdL6qknAeD0OkLio2vniJw=YgDXQaA@mail.gmail.com>
-Subject: Re: [PATCH v6 2/4] mseal: add mseal syscall
-To: Kees Cook <keescook@chromium.org>
-Cc: rdunlap@infradead.org, akpm@linux-foundation.org, jannh@google.com, 
-	sroettger@google.com, willy@infradead.org, gregkh@linuxfoundation.org, 
-	torvalds@linux-foundation.org, usama.anjum@collabora.com, jeffxu@google.com, 
-	jorgelo@chromium.org, groeck@chromium.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, pedro.falcato@gmail.com, 
-	dave.hansen@intel.com, linux-hardening@vger.kernel.org, deraadt@openbsd.org
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:xJ85ZowQaVa1OldU6FzPfNXRLaX+yPPgWuef38/WNGua4RxRri6
+ OlQil9I2dzIT/+wjstr6h9LR3cm8DSnkJuNn/9kr5MqgriqGEE52TDlLGrjHpdN2wRClrFk
+ gx/J6xAu8I1bm8gH+Be0N+RmCb5Fuh/iu3awBpP03OCLZGy/wsn1xtjPbsgOcP36KrPi3/h
+ fuhJOfkttmNy14ZTcJJUg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:vNv9MwBiC54=;OJwtbY227lidkukH55eW6u+Blo4
+ 3qCTOKjT9ZwDmW76FXlvj7NkWiyCt0q3tp+1rCjBaRsykO/HHmC1GcAgVwXcXY9zbJB9syQli
+ lGqX5kDS1wsWobJBai0E96tBrWCS/fiYrgsjg6RuPXX+siG2cgYC+CQa8wDmjePYSO7D7Ufkp
+ RengseWl51czMZs+z5KtAZtEUs5TertUVLLAPFE/y/rzHou1+7jhbvlTJ8h7QggdSQvte6O6E
+ jsmmZJ6Y+t6AIN/HlV+Nt/h5020vlP36+vOwv9N0r/06ad83ITUGpe96BfTa8qTPm4MlDm6m5
+ 0TVfZIgjMLols9tz3KrA9Ag3RgM5Cg39nYdCMcqU7N11XR6IoWNZlN6mqKE5F1/pP+parnNjV
+ /sYfFzxxYYwGSLOb4FWwM83lhK7q3Kb4cyjE7xLYUnHL/oVn+kgoqRbttK6uay9tO64OJFvv3
+ a0fQcEBD4o7cNes3KdjXubWJSquwAJoY4v7Qq2IzDqnWUbK/PWIHE6EJZ3rtP7Bs69ykxXHr8
+ tO6yIiL0gAlN4NpZfDvcZpi1hJeYgNGgyFk2syQIt/aaea+PiIgSPdB21WiFjEw34dMnmHnsA
+ vJPBHsarcaPw3t982FyGKy2qAcFPqcB04GN1fRdW7wzmlYXjO/fymRYyI0Clt6obA3dTZFApY
+ DMGpsvm1RynymxFKLl23Gc3jCW6/9/pYVWB8WS5rp30D/hEpxs4a0VIgulHOcpyZ19mN37HrF
+ Y930d4QNMcBsfxc2tvvYOweHRJSwAHeZXtM3Cnd5IPmpZpejbgiFJjkgDkuKAX3ygW+X8RI7n
+ 0hytW7qJ8X4/HXJzULYFhuZAu95J5ZRTIZsglDFuN21gcbV6z1r13avJPNXTGynS8Tc0SVE74
+ uoXUmdki8cPq9+8w3AJmwP9fexqHEyUrpughz+RJu9Chka80+ArCVuOfa+MW7zMUD2hi5cPbm
+ AJ2/5Rkc5aqWF3FB0nPRhRUd/gA=
 
-On Sat, Jan 13, 2024 at 11:48=E2=80=AFAM Kees Cook <keescook@chromium.org> =
-wrote:
->
-> On Thu, Jan 11, 2024 at 11:41:39PM +0000, jeffxu@chromium.org wrote:
-> > diff --git a/include/linux/mm.h b/include/linux/mm.h
-> > index f5a97dec5169..345667583b03 100644
-> > --- a/include/linux/mm.h
-> > +++ b/include/linux/mm.h
-> > @@ -30,6 +30,7 @@
-> >  #include <linux/kasan.h>
-> >  #include <linux/memremap.h>
-> >  #include <linux/slab.h>
-> > +#include <uapi/linux/mman.h>
->
-> I think the arm64 build failure is from this include -- it's happening
-> too early and some of the arm defines aren't available yet?
->
-good point, I will try fixing it.
-Thanks!
--Jeff
+Use 2-factor multiplication argument form kcalloc() instead
+of kzalloc().
 
-> -Kees
->
-> --
-> Kees Cook
+Also, it is preferred to use sizeof(*pointer) instead of
+sizeof(type) due to the type of the variable can change and
+one needs not change the former (unlike the latter).
+
+Link: https://github.com/KSPP/linux/issues/162
+Signed-off-by: Erick Archer <erick.archer@gmx.com>
+=2D--
+Changes in v2:
+- Update the changelog text describing the sizeof()
+  changes (Gustavo A. R. Silva)
+
+Version 1:
+Link: https://lore.kernel.org/linux-hardening/20240112182603.11048-1-erick=
+.archer@gmx.com/
+=2D--
+ drivers/scsi/csiostor/csio_init.c | 15 +++++----------
+ 1 file changed, 5 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/scsi/csiostor/csio_init.c b/drivers/scsi/csiostor/csi=
+o_init.c
+index d649b7a2a879..d72892e44fd1 100644
+=2D-- a/drivers/scsi/csiostor/csio_init.c
++++ b/drivers/scsi/csiostor/csio_init.c
+@@ -698,8 +698,7 @@ csio_lnodes_block_request(struct csio_hw *hw)
+ 	struct csio_lnode **lnode_list;
+ 	int cur_cnt =3D 0, ii;
+
+-	lnode_list =3D kzalloc((sizeof(struct csio_lnode *) * hw->num_lns),
+-			GFP_KERNEL);
++	lnode_list =3D kcalloc(hw->num_lns, sizeof(*lnode_list), GFP_KERNEL);
+ 	if (!lnode_list) {
+ 		csio_err(hw, "Failed to allocate lnodes_list");
+ 		return;
+@@ -737,8 +736,7 @@ csio_lnodes_unblock_request(struct csio_hw *hw)
+ 	struct csio_lnode **lnode_list;
+ 	int cur_cnt =3D 0, ii;
+
+-	lnode_list =3D kzalloc((sizeof(struct csio_lnode *) * hw->num_lns),
+-			GFP_KERNEL);
++	lnode_list =3D kcalloc(hw->num_lns, sizeof(*lnode_list), GFP_KERNEL);
+ 	if (!lnode_list) {
+ 		csio_err(hw, "Failed to allocate lnodes_list");
+ 		return;
+@@ -775,8 +773,7 @@ csio_lnodes_block_by_port(struct csio_hw *hw, uint8_t =
+portid)
+ 	struct csio_lnode **lnode_list;
+ 	int cur_cnt =3D 0, ii;
+
+-	lnode_list =3D kzalloc((sizeof(struct csio_lnode *) * hw->num_lns),
+-			GFP_KERNEL);
++	lnode_list =3D kcalloc(hw->num_lns, sizeof(*lnode_list), GFP_KERNEL);
+ 	if (!lnode_list) {
+ 		csio_err(hw, "Failed to allocate lnodes_list");
+ 		return;
+@@ -816,8 +813,7 @@ csio_lnodes_unblock_by_port(struct csio_hw *hw, uint8_=
+t portid)
+ 	struct csio_lnode **lnode_list;
+ 	int cur_cnt =3D 0, ii;
+
+-	lnode_list =3D kzalloc((sizeof(struct csio_lnode *) * hw->num_lns),
+-			GFP_KERNEL);
++	lnode_list =3D kcalloc(hw->num_lns, sizeof(*lnode_list), GFP_KERNEL);
+ 	if (!lnode_list) {
+ 		csio_err(hw, "Failed to allocate lnodes_list");
+ 		return;
+@@ -855,8 +851,7 @@ csio_lnodes_exit(struct csio_hw *hw, bool npiv)
+ 	struct csio_lnode **lnode_list;
+ 	int cur_cnt =3D 0, ii;
+
+-	lnode_list =3D kzalloc((sizeof(struct csio_lnode *) * hw->num_lns),
+-			GFP_KERNEL);
++	lnode_list =3D kcalloc(hw->num_lns, sizeof(*lnode_list), GFP_KERNEL);
+ 	if (!lnode_list) {
+ 		csio_err(hw, "lnodes_exit: Failed to allocate lnodes_list.\n");
+ 		return;
+=2D-
+2.25.1
+
