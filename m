@@ -1,91 +1,93 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF1732C68B;
-	Mon, 15 Jan 2024 10:06:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B51F12F4;
-	Mon, 15 Jan 2024 02:07:18 -0800 (PST)
-Received: from FVFF77S0Q05N (unknown [10.57.91.116])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EC7F43F6C4;
-	Mon, 15 Jan 2024 02:06:30 -0800 (PST)
-Date: Mon, 15 Jan 2024 10:06:24 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Erick Archer <erick.archer@gmx.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] eventfs: Use kcalloc() instead of kzalloc()
-Message-ID: <ZaUDoG5qnkC8G3qx@FVFF77S0Q05N>
-References: <20240114105340.5746-1-erick.archer@gmx.com>
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.98])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A668A171B8
+	for <linux-hardening@vger.kernel.org>; Mon, 15 Jan 2024 13:31:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=horotw.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=horotw.com
+Received: from mors-relay-2501.netcup.net (localhost [127.0.0.1])
+	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4TDCZ1227kz61CQ
+	for <linux-hardening@vger.kernel.org>; Mon, 15 Jan 2024 14:25:29 +0100 (CET)
+Authentication-Results:mors-relay-2501.netcup.net; dkim=permerror (bad message/signature format)
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4TDCZ11JKdz4xMB
+	for <linux-hardening@vger.kernel.org>; Mon, 15 Jan 2024 14:25:29 +0100 (CET)
+Received: from mx2fc9.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4TDCZ058MQz8sb0
+	for <linux-hardening@vger.kernel.org>; Mon, 15 Jan 2024 14:25:28 +0100 (CET)
+Received: from webmail01.netcup.net (unknown [46.38.249.153])
+	by mx2fc9.netcup.net (Postfix) with ESMTPA id 3C590805DC
+	for <linux-hardening@vger.kernel.org>; Mon, 15 Jan 2024 14:25:24 +0100 (CET)
+Authentication-Results: mx2fc9;
+        spf=pass (sender IP is 46.38.249.153) smtp.mailfrom=mail@horotw.com smtp.helo=webmail01.netcup.net
+Received-SPF: pass (mx2fc9: connection is authenticated)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240114105340.5746-1-erick.archer@gmx.com>
+Date: Mon, 15 Jan 2024 14:25:24 +0100
+From: mail@horotw.com
+To: linux-hardening@vger.kernel.org
+Subject: Limited/Broken functionality of ASLR for Libs >= 2MB
+User-Agent: Roundcube Webmail/1.4.15
+Message-ID: <69fa6015256613ed10aee996e181ebd4@horotw.com>
+X-Sender: mail@horotw.com
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <170532512442.2091.6149408532718822696@mx2fc9.netcup.net>
+X-Rspamd-Queue-Id: 3C590805DC
+X-Rspamd-Server: rspamd-worker-8404
+X-NC-CID: xqCj4REgWOdHBw3GODjFgojjZZCAP8KOztTvIEVXbQ==
 
-On Sun, Jan 14, 2024 at 11:53:40AM +0100, Erick Archer wrote:
-> Use 2-factor multiplication argument form kcalloc() instead
-> of kzalloc().
-> 
-> Link: https://github.com/KSPP/linux/issues/162
-> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+Hey, I read that ASLR is currently (since kernel >=5.18) broken for 
+32bit libs and reduced in effectiveness for 64bit libs... (the issue 
+only arises if a lib is over 2MB).
+I confirmed this for myself but only for the 64bit case.
 
-Could you put something in the commit message explaining *why* this change
-should be made?
+I saw that this issue is being tracked by ubuntu 
+(https://bugs.launchpad.net/ubuntu-kernel-tests/+bug/1983357).
+If this is the wrong place and I should instead report it elsewhere I am 
+very sorry.
 
-I assume that this is so that overflows during multiplication can be caught and
-handled in some way, but the commit message doesn't say that, and nor does the
-linked github page.
+Sources:
+https://zolutal.github.io/aslrnt/  # the page of the original discoverer 
+of the bug - as far as I know
+https://infosec.exchange/@wdormann/111744168574317113
 
-The patch itself looks fine.
+How I checked that this issue is present (I used bat because it includes 
+libcrypto which is a lot bigger than 2MB and not on the edge of 2MB like 
+libc):
+```python
+from subprocess import check_output
 
-Thanks,
-Mark.
+def check_bit_usage(cmd):
+     res = 0x0
+     for _ in range(0, 1000):
+         out = check_output(cmd, shell=True).decode()
+         base_address = int(out.split("-")[0], 16)
+         res |= base_address
+     return hex(res)
 
-> ---
->  fs/tracefs/event_inode.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-> index fdff53d5a1f8..f8196289692c 100644
-> --- a/fs/tracefs/event_inode.c
-> +++ b/fs/tracefs/event_inode.c
-> @@ -93,7 +93,7 @@ static int eventfs_set_attr(struct mnt_idmap *idmap, struct dentry *dentry,
->  	/* Preallocate the children mode array if necessary */
->  	if (!(dentry->d_inode->i_mode & S_IFDIR)) {
->  		if (!ei->entry_attrs) {
-> -			ei->entry_attrs = kzalloc(sizeof(*ei->entry_attrs) * ei->nr_entries,
-> +			ei->entry_attrs = kcalloc(ei->nr_entries, sizeof(*ei->entry_attrs),
->  						  GFP_NOFS);
->  			if (!ei->entry_attrs) {
->  				ret = -ENOMEM;
-> @@ -874,7 +874,7 @@ struct eventfs_inode *eventfs_create_dir(const char *name, struct eventfs_inode
->  	}
-> 
->  	if (size) {
-> -		ei->d_children = kzalloc(sizeof(*ei->d_children) * size, GFP_KERNEL);
-> +		ei->d_children = kcalloc(size, sizeof(*ei->d_children), GFP_KERNEL);
->  		if (!ei->d_children) {
->  			kfree_const(ei->name);
->  			kfree(ei);
-> @@ -941,7 +941,7 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
->  		goto fail;
-> 
->  	if (size) {
-> -		ei->d_children = kzalloc(sizeof(*ei->d_children) * size, GFP_KERNEL);
-> +		ei->d_children = kcalloc(size, sizeof(*ei->d_children), GFP_KERNEL);
->  		if (!ei->d_children)
->  			goto fail;
->  	}
-> --
-> 2.25.1
-> 
-> 
+result = check_bit_usage("cat /proc/self/maps | grep ld-linux | head 
+-n1")
+print(f"Result for ld-linux (smaller than 2MB): {result}")
+
+result = check_bit_usage("bat /proc/self/maps | grep libcrypto | head 
+-n1")
+print(f"Result for libcrypto (bigger than 2MB): {result}")
+```
+
+Output:
+```
+Result for ld-linux (smaller than 2MB): 0x7ffffffff000
+Result for libcrypto (bigger than 2MB): 0x7fffffe00000
+```
+
+This is my first time reporting an issue to the kernel so if anything is 
+inappropriate please let me know.
