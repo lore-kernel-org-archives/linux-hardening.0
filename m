@@ -1,171 +1,100 @@
-Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29AF819BD7
-	for <linux-hardening@vger.kernel.org>; Mon, 15 Jan 2024 18:26:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="SVwkmh3u"
-Received: from eig-obgw-5010a.ext.cloudfilter.net ([10.0.29.199])
-	by cmsmtp with ESMTPS
-	id PMZQrt2kfCF6GPRfKrJGkM; Mon, 15 Jan 2024 18:26:30 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id PRfJrx7slbhW6PRfJrrcIk; Mon, 15 Jan 2024 18:26:30 +0000
-X-Authority-Analysis: v=2.4 cv=aLPjFJxm c=1 sm=1 tr=0 ts=65a578d6
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=dEuoMetlWLkA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
- a=7YfXLusrAAAA:8 a=VwQbUJbxAAAA:8 a=FXBTkNl2ggHGzUV_zbMA:9 a=QEXdDO2ut3YA:10
- a=SLz71HocmBbuEhFRYD3r:22 a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=WTUFVnlzT6GAPsFMxebpFESclah/dS2GM3YPYolGM+Y=; b=SVwkmh3u9th/SZ2lajgNWnqdaD
-	j+4GYFozQXuB4AiMLbMsUIVqGouSsjJJNO4ovXsh9pZHJbGtQFBTuE6Rv+zqLdQe9yXQH62KvCJCk
-	Vtsa0+knIP42lKLJONngyeyU8ZFOETJqtnxW3GvmU7uoCZxM9kzhBuqqw3m5aoNtS9rsVvpp82w2c
-	mO32tg6M6WJ9qA/+avEbtXpUQ1CS3Cc65wSvgWMjo1VUlLGew/A/6AsrFJV4G3V0L71mU6h1UYpX2
-	DGyCLN4I5Hmp8hBvzYHnE+Z0ENkPKoB82VIbbkomZPETOlps+aDl5N7rz0LzMYEPzmBjyCLKoF0yq
-	mcFKnWow==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:43136 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rPRfI-003vCX-2Y;
-	Mon, 15 Jan 2024 12:26:28 -0600
-Message-ID: <5b2bda6f-d8e7-488d-ab0c-62dfc60de9a1@embeddedor.com>
-Date: Mon, 15 Jan 2024 12:26:27 -0600
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 639F618633
+	for <linux-hardening@vger.kernel.org>; Mon, 15 Jan 2024 18:27:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=horotw.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=horotw.com
+Received: from mors-relay8204.netcup.net (localhost [127.0.0.1])
+	by mors-relay8204.netcup.net (Postfix) with ESMTPS id 4TDL7V3YB0z8ZCf;
+	Mon, 15 Jan 2024 18:21:26 +0000 (UTC)
+Authentication-Results:mors-relay8204.netcup.net; dkim=permerror (bad message/signature format)
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay8204.netcup.net (Postfix) with ESMTPS id 4TDL7V2rD0z8ZC4;
+	Mon, 15 Jan 2024 18:21:26 +0000 (UTC)
+Received: from mx2fc9.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4TDL7S3GTpz8sgK;
+	Mon, 15 Jan 2024 19:21:24 +0100 (CET)
+Received: from webmail01.netcup.net (unknown [46.38.249.153])
+	by mx2fc9.netcup.net (Postfix) with ESMTPA id D2A9480587;
+	Mon, 15 Jan 2024 19:21:19 +0100 (CET)
+Authentication-Results: mx2fc9;
+        spf=pass (sender IP is 46.38.249.153) smtp.mailfrom=mail@horotw.com smtp.helo=webmail01.netcup.net
+Received-SPF: pass (mx2fc9: connection is authenticated)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] scsi: csiostor: Use kcalloc() instead of kzalloc()
-Content-Language: en-US
-To: Erick Archer <erick.archer@gmx.com>,
- "James E.J. Bottomley" <jejb@linux.ibm.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Justin Stitt <justinstitt@google.com>, linux-scsi@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20240114102400.3816-1-erick.archer@gmx.com>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240114102400.3816-1-erick.archer@gmx.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Date: Mon, 15 Jan 2024 19:21:19 +0100
+From: mail@horotw.com
+To: Matthew Wilcox <willy@infradead.org>
+Cc: linux-hardening@vger.kernel.org, Jakub Wilk <jwilk@jwilk.net>, Salvatore
+ Bonaccorso <carnil@debian.org>, Linux Memory Management List
+ <linux-mm@kvack.org>, William Kucharski <william.kucharski@oracle.com>
+Subject: Re: Limited/Broken functionality of ASLR for Libs >= 2MB
+In-Reply-To: <ZaVi4ij0jgEz+isx@casper.infradead.org>
+References: <69fa6015256613ed10aee996e181ebd4@horotw.com>
+ <87il3ur1ik.fsf@gentoo.org> <ZaVi4ij0jgEz+isx@casper.infradead.org>
+User-Agent: Roundcube Webmail/1.4.15
+Message-ID: <07c348caaf6b4c457ab4b452f53ed048@horotw.com>
+X-Sender: mail@horotw.com
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1rPRfI-003vCX-2Y
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:43136
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 10
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfMeqFD1q6oSK2Zym7ZWGdmCDw1g4zqPf9GYQ6BSWe29ijfwwzXk62BvVwremeAlbDtd5QhnovJU4iB8qnHxFcf+wGv3shksagwp6WDXpsHDiEBZi0GY/
- PB4Ft6TIp1sPhXKFPbEf/LjxV8U8oUchi/3H8OXxdgPIFzt5gT8omPcaRLTLjhwK/gxt/EALaacPD2+johdBBbtFwsHHpNz7Vbn0GIaECZBDAPOlklGoQfZm
+X-PPP-Message-ID: <170534288009.5614.902050737944274230@mx2fc9.netcup.net>
+X-Rspamd-Queue-Id: D2A9480587
+X-Rspamd-Server: rspamd-worker-8404
+X-NC-CID: OADe2qnkK3tKCl+3U9X7DaYeKFklU6iktFcEDZP9aA==
 
+Am 15.01.2024 17:52, schrieb Matthew Wilcox:
+> On Mon, Jan 15, 2024 at 04:40:36PM +0000, Sam James wrote:
+>> mail@horotw.com writes:
+>> > Hey, I read that ASLR is currently (since kernel >=5.18) broken for
+>> > 32bit libs and reduced in effectiveness for 64bit libs... (the issue
+>> > only arises if a lib is over 2MB).
+>> > I confirmed this for myself but only for the 64bit case.
+>> >
+>> > I saw that this issue is being tracked by ubuntu
+>> > (https://bugs.launchpad.net/ubuntu-kernel-tests/+bug/1983357).
+>> > If this is the wrong place and I should instead report it elsewhere I
+>> > am very sorry.
+>> 
+>> See also https://bugs.debian.org/1024149. Unfortunately, I don't
+>> think the issue found its way upstream until now (thanks).
+>> 
+>> CCing relevant maintainers (per the Debian bug).
+> 
+> You know, my email address is all over that commit and the doofus who
+> "discovered the vulnerability" didn't even have the courtesy to let
+> me know.  I've had several private emails about this over the last few
+> days and I just don't care.  Who's running 32-bit code and cares about
+> security?  32-bit kernels are known-vulnerable to all kinds of security
+> problems, and I think this is the least of your worries.
+> 
+> This was intended to happen, it's not a surprise.
 
+Hi,
+first of all I am very sorry, I didn't realize I should have contacted 
+you
+first (I'm not the one who found the bug initially), I will do it
+differently in the future.
 
-On 1/14/24 04:24, Erick Archer wrote:
-> Use 2-factor multiplication argument form kcalloc() instead
-> of kzalloc().
-> 
-> Also, it is preferred to use sizeof(*pointer) instead of
-> sizeof(type) due to the type of the variable can change and
-> one needs not change the former (unlike the latter).
-> 
-> Link: https://github.com/KSPP/linux/issues/162
-> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+Unfortunately, my knowledge is not sufficient to judge how bad it is 
+that
+32bit effectively has no ASLR support anymore.
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+64bit is also affected, even though there are probably more than enough
+bits left there? I have since seen that both Arch and Ubuntu seem to 
+have
+"patches" in place 
+(https://gitlab.archlinux.org/archlinux/packaging/packages/linux/-/commit/3904bcb32cc58c10232fb618bf96c1b43b0bc9d7)
+in which they set the `CONFIG_ARCH_MMAP_RND_BITS=32` and
+`CONFIG_ARCH_MMAP_RND_COMPAT_BITS=16`, I'm not sure if this is a good
+result or if it will cause other problems.
 
-Thanks!
--- 
-Gustavo
-
-> ---
-> Changes in v2:
-> - Update the changelog text describing the sizeof()
->    changes (Gustavo A. R. Silva)
-> 
-> Version 1:
-> Link: https://lore.kernel.org/linux-hardening/20240112182603.11048-1-erick.archer@gmx.com/
-> ---
->   drivers/scsi/csiostor/csio_init.c | 15 +++++----------
->   1 file changed, 5 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/scsi/csiostor/csio_init.c b/drivers/scsi/csiostor/csio_init.c
-> index d649b7a2a879..d72892e44fd1 100644
-> --- a/drivers/scsi/csiostor/csio_init.c
-> +++ b/drivers/scsi/csiostor/csio_init.c
-> @@ -698,8 +698,7 @@ csio_lnodes_block_request(struct csio_hw *hw)
->   	struct csio_lnode **lnode_list;
->   	int cur_cnt = 0, ii;
-> 
-> -	lnode_list = kzalloc((sizeof(struct csio_lnode *) * hw->num_lns),
-> -			GFP_KERNEL);
-> +	lnode_list = kcalloc(hw->num_lns, sizeof(*lnode_list), GFP_KERNEL);
->   	if (!lnode_list) {
->   		csio_err(hw, "Failed to allocate lnodes_list");
->   		return;
-> @@ -737,8 +736,7 @@ csio_lnodes_unblock_request(struct csio_hw *hw)
->   	struct csio_lnode **lnode_list;
->   	int cur_cnt = 0, ii;
-> 
-> -	lnode_list = kzalloc((sizeof(struct csio_lnode *) * hw->num_lns),
-> -			GFP_KERNEL);
-> +	lnode_list = kcalloc(hw->num_lns, sizeof(*lnode_list), GFP_KERNEL);
->   	if (!lnode_list) {
->   		csio_err(hw, "Failed to allocate lnodes_list");
->   		return;
-> @@ -775,8 +773,7 @@ csio_lnodes_block_by_port(struct csio_hw *hw, uint8_t portid)
->   	struct csio_lnode **lnode_list;
->   	int cur_cnt = 0, ii;
-> 
-> -	lnode_list = kzalloc((sizeof(struct csio_lnode *) * hw->num_lns),
-> -			GFP_KERNEL);
-> +	lnode_list = kcalloc(hw->num_lns, sizeof(*lnode_list), GFP_KERNEL);
->   	if (!lnode_list) {
->   		csio_err(hw, "Failed to allocate lnodes_list");
->   		return;
-> @@ -816,8 +813,7 @@ csio_lnodes_unblock_by_port(struct csio_hw *hw, uint8_t portid)
->   	struct csio_lnode **lnode_list;
->   	int cur_cnt = 0, ii;
-> 
-> -	lnode_list = kzalloc((sizeof(struct csio_lnode *) * hw->num_lns),
-> -			GFP_KERNEL);
-> +	lnode_list = kcalloc(hw->num_lns, sizeof(*lnode_list), GFP_KERNEL);
->   	if (!lnode_list) {
->   		csio_err(hw, "Failed to allocate lnodes_list");
->   		return;
-> @@ -855,8 +851,7 @@ csio_lnodes_exit(struct csio_hw *hw, bool npiv)
->   	struct csio_lnode **lnode_list;
->   	int cur_cnt = 0, ii;
-> 
-> -	lnode_list = kzalloc((sizeof(struct csio_lnode *) * hw->num_lns),
-> -			GFP_KERNEL);
-> +	lnode_list = kcalloc(hw->num_lns, sizeof(*lnode_list), GFP_KERNEL);
->   	if (!lnode_list) {
->   		csio_err(hw, "lnodes_exit: Failed to allocate lnodes_list.\n");
->   		return;
-> --
-> 2.25.1
-> 
-> 
+Again, I apologize if I caused any inconvenience.
