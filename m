@@ -1,46 +1,91 @@
-Received: from cstnet.cn (smtp86.cstnet.cn [159.226.251.86])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC11E1396;
-	Mon, 15 Jan 2024 01:29:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iie.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iie.ac.cn
-Received: from mengjingzi$iie.ac.cn ( [111.199.65.109] ) by
- ajax-webmail-APP-16 (Coremail) ; Mon, 15 Jan 2024 09:24:22 +0800
- (GMT+08:00)
-Date: Mon, 15 Jan 2024 09:24:22 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: =?UTF-8?B?5a2f5pWs5ae/?= <mengjingzi@iie.ac.cn>
-To: "Kees Cook" <keescook@chromium.org>
-Cc: gregkh@linuxfoundation.org, gpiccoli@igalia.com, 
-	john.ogness@linutronix.de, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, pmladek@suse.com, rostedt@goodmis.org, 
-	senozhatsky@chromium.org, tony.luck@intel.com
-Subject: Re: [PATCH] cap_syslog: remove CAP_SYS_ADMIN when dmesg_restrict
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.15 build 20230921(8ad33efc)
- Copyright (c) 2002-2024 www.mailtech.cn cnic.cn
-In-Reply-To: <202401080956.7FBE02F54C@keescook>
-References: <2024010306-tweezers-skinhead-083e@gregkh>
- <20240105062007.26965-1-mengjingzi@iie.ac.cn>
- <202401080956.7FBE02F54C@keescook>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF1732C68B;
+	Mon, 15 Jan 2024 10:06:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B51F12F4;
+	Mon, 15 Jan 2024 02:07:18 -0800 (PST)
+Received: from FVFF77S0Q05N (unknown [10.57.91.116])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EC7F43F6C4;
+	Mon, 15 Jan 2024 02:06:30 -0800 (PST)
+Date: Mon, 15 Jan 2024 10:06:24 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Erick Archer <erick.archer@gmx.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] eventfs: Use kcalloc() instead of kzalloc()
+Message-ID: <ZaUDoG5qnkC8G3qx@FVFF77S0Q05N>
+References: <20240114105340.5746-1-erick.archer@gmx.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <4660f3ea.625f.18d0ab83c58.Coremail.mengjingzi@iie.ac.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:sQCowAA3f4tGiaRlDdYGAA--.12749W
-X-CM-SenderInfo: pphqwyxlqj6xo6llvhldfou0/1tbiDAcRE2Wj9+fUSAAAsD
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240114105340.5746-1-erick.archer@gmx.com>
 
-SSB0ZXN0ZWQgb24gdWJ1bnR1IDIyLjA0LjMgTFRTIGtlcm5lbCA2LjIuMTYgYW5kIEZlZG9yYSAz
-OSBrZXJuZWwgNi42LjExLAp0aGUgd2FybmluZyBpcyBnb25lLCBhbmQgQ0FQX1NZU19BRE1JTiBp
-cyBubyBsb25nZXIgYXV0aG9yaXplZCB0byBieXBhc3MgCmNoZWNrX3N5c2xvZ19wZXJtaXNzaW9u
-cygpLgoKQmVzdCByZWdhcmRzLApKaW5nemkK
+On Sun, Jan 14, 2024 at 11:53:40AM +0100, Erick Archer wrote:
+> Use 2-factor multiplication argument form kcalloc() instead
+> of kzalloc().
+> 
+> Link: https://github.com/KSPP/linux/issues/162
+> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+
+Could you put something in the commit message explaining *why* this change
+should be made?
+
+I assume that this is so that overflows during multiplication can be caught and
+handled in some way, but the commit message doesn't say that, and nor does the
+linked github page.
+
+The patch itself looks fine.
+
+Thanks,
+Mark.
+
+> ---
+>  fs/tracefs/event_inode.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+> index fdff53d5a1f8..f8196289692c 100644
+> --- a/fs/tracefs/event_inode.c
+> +++ b/fs/tracefs/event_inode.c
+> @@ -93,7 +93,7 @@ static int eventfs_set_attr(struct mnt_idmap *idmap, struct dentry *dentry,
+>  	/* Preallocate the children mode array if necessary */
+>  	if (!(dentry->d_inode->i_mode & S_IFDIR)) {
+>  		if (!ei->entry_attrs) {
+> -			ei->entry_attrs = kzalloc(sizeof(*ei->entry_attrs) * ei->nr_entries,
+> +			ei->entry_attrs = kcalloc(ei->nr_entries, sizeof(*ei->entry_attrs),
+>  						  GFP_NOFS);
+>  			if (!ei->entry_attrs) {
+>  				ret = -ENOMEM;
+> @@ -874,7 +874,7 @@ struct eventfs_inode *eventfs_create_dir(const char *name, struct eventfs_inode
+>  	}
+> 
+>  	if (size) {
+> -		ei->d_children = kzalloc(sizeof(*ei->d_children) * size, GFP_KERNEL);
+> +		ei->d_children = kcalloc(size, sizeof(*ei->d_children), GFP_KERNEL);
+>  		if (!ei->d_children) {
+>  			kfree_const(ei->name);
+>  			kfree(ei);
+> @@ -941,7 +941,7 @@ struct eventfs_inode *eventfs_create_events_dir(const char *name, struct dentry
+>  		goto fail;
+> 
+>  	if (size) {
+> -		ei->d_children = kzalloc(sizeof(*ei->d_children) * size, GFP_KERNEL);
+> +		ei->d_children = kcalloc(size, sizeof(*ei->d_children), GFP_KERNEL);
+>  		if (!ei->d_children)
+>  			goto fail;
+>  	}
+> --
+> 2.25.1
+> 
+> 
