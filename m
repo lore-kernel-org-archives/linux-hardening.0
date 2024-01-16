@@ -1,71 +1,124 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03BFE1B26E;
-	Mon, 15 Jan 2024 21:21:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9252911721;
+	Tue, 16 Jan 2024 00:13:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="rCpi704M"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=FOAsIVXR2F1MNrAEXWm5jpmFbdqxyTKKAOVodsOYntg=; b=rCpi704MO+P17OySm+1fm5KceN
-	iPhz75xGzN7N1GjQXvNGowzjMDBoYuMBieV1Ua7ZU8o9gGQorDwg6tQcBPGTgenRha6fooEpDe1wE
-	gbxrJSHfgQOdb3BOAqO16oTqwioEeCkGVZjz+ObhDAxY6aT8oqLZFZzEXz0rNAX/H4RQjF4LCGpoX
-	99z/cEgFigxREFqT8DgjRClOgmxC14PRGMgBodhqk56KC4QOE6mEakF9yiFEt/QCAJKF2neRIiPFr
-	/dJA8acQ60HBuamZHkFekSO3cymRFGEbqiVXIzggXboKGcNLSudpiN5CnRelJe5LIbO+Odz0t7XI3
-	TIlW/hNQ==;
-Received: from [191.193.161.120] (helo=[192.168.1.60])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1rPUO2-006lRW-OW; Mon, 15 Jan 2024 22:20:51 +0100
-Message-ID: <706a5008-331b-34ea-c177-bb0070375099@igalia.com>
-Date: Mon, 15 Jan 2024 18:20:45 -0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZWH7LeOv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32767C433F1;
+	Tue, 16 Jan 2024 00:13:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705364001;
+	bh=idWrMm56YQvcqy9IlfN7yiMKVfXexXgcB4t+O7sdNwY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ZWH7LeOvo8PfGj9s+ZKxG2pGKZ26RjoJEts/YyY1za7YBCu5jyHsMSFeq0zrY3sDR
+	 14jYFV2MfnpX1DiFysJMfDU0SqRoASijhRvF8aWtPY1SHhzIYt9bYPtAZ4JDzx5Naj
+	 TfW5ol+3nX7FQe9FjV1VjnbvOT4DP5pVJOvdHE4A9oFmYUQGXBKbMYYUGs2aN7ifr4
+	 wGNlM6rCXLT0Rwf8pQqBbb4YDlt8aLtNRPSS16fyWr6VaS+YVFIlHTyd+UcVD7H9Vo
+	 eQa84DeCvBDkbxNIlarkZKvM/dX/qXmsZTRN9e5wfTFabfe3ZhMoco+a/u4L1+uDbk
+	 JBEVCfCiYkscw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Dmitry Antipov <dmantipov@yandex.ru>,
+	Kees Cook <keescook@chromium.org>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+	Sasha Levin <sashal@kernel.org>,
+	rafael@kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.7 07/18] PNP: ACPI: fix fortify warning
+Date: Mon, 15 Jan 2024 19:12:49 -0500
+Message-ID: <20240116001308.212917-7-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240116001308.212917-1-sashal@kernel.org>
+References: <20240116001308.212917-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH] efi: pstore: Allow dynamic initialization based on module
- parameter
-Content-Language: en-US
-To: linux-efi@vger.kernel.org
-Cc: ardb@kernel.org, keescook@chromium.org, tony.luck@intel.com,
- linux-hardening@vger.kernel.org, kernel@gpiccoli.net, kernel-dev@igalia.com
-References: <20240103184053.226203-1-gpiccoli@igalia.com>
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <20240103184053.226203-1-gpiccoli@igalia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.7
+Content-Transfer-Encoding: 8bit
 
-On 03/01/2024 15:40, Guilherme G. Piccoli wrote:
-> The efi-pstore module parameter "pstore_disable" warrants that users
-> are able to deactivate such backend. There is also a Kconfig option
-> for the default value of this parameter. It was originally added due
-> to some bad UEFI FW implementations that could break with many variables
-> written.
-> 
-> Some distros (such as Arch Linux) set this in their config file still
-> nowadays. And once it is set, even being a writable module parameter,
-> there is effectively no way to make use of efi-pstore anymore.
-> If "pstore_disable" is set to true, the init function of the module exits
-> early and is never called again after the initcall processing.
-> 
-> Let's switch this module parameter to have a callback and perform the
-> pstore backend registration again each time it's set from Y->N (and
-> vice-versa). With this, the writable nature of the parameter starts to
-> make sense, given that users now can switch back to using efi-pstore
-> or not during runtime by writing into it.
+From: Dmitry Antipov <dmantipov@yandex.ru>
 
-Hi folks, a friendly ping - any comments on this one, suggestions?
-Thanks in advance,
+[ Upstream commit ba3f5058db437d919f8468db50483dd9028ff688 ]
 
+When compiling with gcc version 14.0.0 20231126 (experimental)
+and CONFIG_FORTIFY_SOURCE=y, I've noticed the following:
 
-Guilherme
+In file included from ./include/linux/string.h:295,
+                 from ./include/linux/bitmap.h:12,
+                 from ./include/linux/cpumask.h:12,
+                 from ./arch/x86/include/asm/paravirt.h:17,
+                 from ./arch/x86/include/asm/cpuid.h:62,
+                 from ./arch/x86/include/asm/processor.h:19,
+                 from ./arch/x86/include/asm/cpufeature.h:5,
+                 from ./arch/x86/include/asm/thread_info.h:53,
+                 from ./include/linux/thread_info.h:60,
+                 from ./arch/x86/include/asm/preempt.h:9,
+                 from ./include/linux/preempt.h:79,
+                 from ./include/linux/spinlock.h:56,
+                 from ./include/linux/mmzone.h:8,
+                 from ./include/linux/gfp.h:7,
+                 from ./include/linux/slab.h:16,
+                 from ./include/linux/resource_ext.h:11,
+                 from ./include/linux/acpi.h:13,
+                 from drivers/pnp/pnpacpi/rsparser.c:11:
+In function 'fortify_memcpy_chk',
+    inlined from 'pnpacpi_parse_allocated_vendor' at drivers/pnp/pnpacpi/rsparser.c:158:3,
+    inlined from 'pnpacpi_allocated_resource' at drivers/pnp/pnpacpi/rsparser.c:249:3:
+./include/linux/fortify-string.h:588:25: warning: call to '__read_overflow2_field'
+declared with attribute warning: detected read beyond size of field (2nd parameter);
+maybe use struct_group()? [-Wattribute-warning]
+  588 |                         __read_overflow2_field(q_size_field, size);
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+According to the comments in include/linux/fortify-string.h, 'memcpy()',
+'memmove()' and 'memset()' must not be used beyond individual struct
+members to ensure that the compiler can enforce protection against
+buffer overflows, and, IIUC, this also applies to partial copies from
+the particular member ('vendor->byte_data' in this case). So it should
+be better (and safer) to do both copies at once (and 'byte_data' of
+'struct acpi_resource_vendor_typed' seems to be a good candidate for
+'__counted_by(byte_length)' as well).
+
+Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pnp/pnpacpi/rsparser.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/pnp/pnpacpi/rsparser.c b/drivers/pnp/pnpacpi/rsparser.c
+index 4f05f610391b..c02ce0834c2c 100644
+--- a/drivers/pnp/pnpacpi/rsparser.c
++++ b/drivers/pnp/pnpacpi/rsparser.c
+@@ -151,13 +151,13 @@ static int vendor_resource_matches(struct pnp_dev *dev,
+ static void pnpacpi_parse_allocated_vendor(struct pnp_dev *dev,
+ 				    struct acpi_resource_vendor_typed *vendor)
+ {
+-	if (vendor_resource_matches(dev, vendor, &hp_ccsr_uuid, 16)) {
+-		u64 start, length;
++	struct { u64 start, length; } range;
+ 
+-		memcpy(&start, vendor->byte_data, sizeof(start));
+-		memcpy(&length, vendor->byte_data + 8, sizeof(length));
+-
+-		pnp_add_mem_resource(dev, start, start + length - 1, 0);
++	if (vendor_resource_matches(dev, vendor, &hp_ccsr_uuid,
++				    sizeof(range))) {
++		memcpy(&range, vendor->byte_data, sizeof(range));
++		pnp_add_mem_resource(dev, range.start, range.start +
++				     range.length - 1, 0);
+ 	}
+ }
+ 
+-- 
+2.43.0
+
