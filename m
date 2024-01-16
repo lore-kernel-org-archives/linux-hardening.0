@@ -1,146 +1,150 @@
-Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE44063AC
-	for <linux-hardening@vger.kernel.org>; Tue, 16 Jan 2024 16:31:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 360801CD35;
+	Tue, 16 Jan 2024 18:38:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705430321; cv=none; b=btLx5bT3IYY89DbhuDMNZhmyAejNzvFEZypu6qSRBTI1dkMy0ROIXwjk08lOM0bWTg+1BvVhAub0PhQUe9PqS/XxcQALiN//M+npV6P9kkJoeUKo3DGunJhEsbhWwDCVQY3oVIuYK37b8JznkUwjXmWhXjmwO2XB1WFkbAmYUvg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705430321; c=relaxed/simple;
+	bh=3b3B4K+23t21N5gq7HNhS1LbsXZP7ejBZ5RGkxQiu+4=;
+	h=Received:DKIM-Signature:Received:Received:Received:Received:
+	 Received:Received:Received:Received:Received:From:To:Cc:Subject:
+	 Date:Message-Id:X-Mailer:MIME-Version:Content-Transfer-Encoding:
+	 X-TM-AS-GCONF:X-Proofpoint-GUID:X-Proofpoint-ORIG-GUID:
+	 X-Proofpoint-Virus-Version:X-Proofpoint-Spam-Details; b=lKVMOcyHMYPYSu3xJEtMiV94pogWbPJWM3FVdSuZ2Fh9y/UXQdHqsRn+D12QlBSNjVsJi+Z3ZDdNJFZyte/ZpH2iAgM87l/gXAo+n3nEWBcKnxFnqe698NbaTJQFTzsYImNHTOBOnXZuu2Mn/aHo11TadKqEFiFXm7is6UYqJ/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=fXO+/Gq1; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="tAYAcu8C"
-Received: from eig-obgw-5010a.ext.cloudfilter.net ([10.0.29.199])
-	by cmsmtp with ESMTPS
-	id Pkv7r5RvD8uLRPmLSrX8Xx; Tue, 16 Jan 2024 16:31:22 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id PmLRrDu0gbhW6PmLRr7lV0; Tue, 16 Jan 2024 16:31:21 +0000
-X-Authority-Analysis: v=2.4 cv=aLPjFJxm c=1 sm=1 tr=0 ts=65a6af59
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=dEuoMetlWLkA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=NEAV23lmAAAA:8 a=7YfXLusrAAAA:8 a=6BFke60KTf7VZbaxHQkA:9 a=QEXdDO2ut3YA:10
- a=9cHFzqQdt-sA:10 a=PUnBvhIW4WwA:10 a=AjGcO6oz07-iQ99wixmX:22
- a=SLz71HocmBbuEhFRYD3r:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Q4fmzkdIu+7QBXCoPwfWZgGgksUOdwKEo3LpI0mE/EE=; b=tAYAcu8CxItk8NfrbjkrFcaCNk
-	32GQE1PGncmEr2kKSewUhIziL3jvUCeAU0JdPMryHf00II+9eHLxidsYjx5Ikh17xjYazlRv936O5
-	064U0V7ZYA2gCL7YGARQmodKnlfchx+MGlAgg4Fyw7ExQWpofiCTkbIgckLr5b8x17ekFtCRlhSXv
-	KxMMaz1mnxkUTU/VfLDXEiTq4HsIGXqxzZR89rRhmQyHoI5Zb9NWlEmlJWb32B5+9MDmLsCNo5VQf
-	hoRYixvKayCu4Z4h7kjZeJudlOfCFZhEQA3LHp6Mk4RzX3ucraGovJ/FONpQV90uWrj+REee9GPtM
-	mMvuZ3yA==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:47040 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rPmLN-00020A-35;
-	Tue, 16 Jan 2024 10:31:17 -0600
-Message-ID: <50c583d7-a6f2-450c-bbc9-965f65b91197@embeddedor.com>
-Date: Tue, 16 Jan 2024 10:30:53 -0600
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fXO+/Gq1"
+Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40GISHht008541;
+	Tue, 16 Jan 2024 18:37:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=bCTQheI7sPgCMa1U5GtlG4vJSlKRjYaGw09yKOAWZjk=;
+ b=fXO+/Gq1RLzDA3+bKr+wkYzoBkU5PukbZX/pOUF3xyNOuQ7qjYCt9pfqz6IPgN91Re9l
+ ZQWtxTe5IRI/8JLE4cI0su+1/AlbrvAloIkfP6BjZOPxJhV3NcIszpCi97HAm1kpzH8G
+ DVCxqsot/ylBqMMyw/Z23P7NXJTDEmelYv4fJK7zU0tLh3BRaclUSebPNQNP6CnGH+/i
+ O35KbOmHy9MAVIsQmPBXh+QZfFD/oQ1ydRfpWP3SGnruOc+VnWZ5tsmFy+FF4akMblTX
+ QCp2qucLdXks2HmJ7u6a73CYJogaiosvxxwPN8BkUeiys3ok9Ptngc5cmtXB6RWTpTA+ 5g== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vnxbrhyrj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 16 Jan 2024 18:37:41 +0000
+Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40GIBEXW006520;
+	Tue, 16 Jan 2024 18:37:40 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vnxbrhypf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 16 Jan 2024 18:37:40 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40GGRoUV019557;
+	Tue, 16 Jan 2024 18:37:38 GMT
+Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3vm72k02re-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 16 Jan 2024 18:37:38 +0000
+Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
+	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40GIbbZM10682882
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 16 Jan 2024 18:37:37 GMT
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6C0E85805C;
+	Tue, 16 Jan 2024 18:37:37 +0000 (GMT)
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 96A5C5805A;
+	Tue, 16 Jan 2024 18:37:36 +0000 (GMT)
+Received: from gfwa153.aus.stglabs.ibm.com (unknown [9.3.84.127])
+	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 16 Jan 2024 18:37:36 +0000 (GMT)
+From: Ninad Palsule <ninad@linux.ibm.com>
+To: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        joel@jms.id.au, andrew@codeconstruct.com.au, peterhuewe@gmx.de,
+        jarkko@kernel.org, jgg@ziepe.ca, keescook@chromium.org,
+        tony.luck@intel.com, gpiccoli@igalia.com, ninad@linux.ibm.com,
+        johannes.holland@infineon.com, linux@roeck-us.net, broonie@kernel.org,
+        andre.werner@systec-electronic.com
+Cc: patrick.rudolph@9elements.com, vincent@vtremblay.dev,
+        peteryin.openbmc@gmail.com, lakshmiy@us.ibm.com, bhelgaas@google.com,
+        naresh.solanki@9elements.com, alexander.stein@ew.tq-group.com,
+        festevam@denx.de, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-hardening@vger.kernel.org, geissonator@yahoo.com,
+        geert+renesas@glider.be, luca.ceresoli@bootlin.com
+Subject: [PATCH v4 0/3] Add device tree for IBM system1 BMC
+Date: Tue, 16 Jan 2024 12:37:31 -0600
+Message-Id: <20240116183734.3944028-1-ninad@linux.ibm.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/x86/amd/uncore: Use kcalloc*() instead of kzalloc*()
-To: Erick Archer <erick.archer@gmx.com>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, x86@kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20240116125813.3754-1-erick.archer@gmx.com>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240116125813.3754-1-erick.archer@gmx.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1rPmLN-00020A-35
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:47040
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfHMt31Y1my1DlzrHBYdHjI0muw2/W3lHZrlav0HErq59MRLLzTXnhUzsGoIGRgTZz1e24c/GfBC4dhx359Jqs9hmvkYFfFQN3gnwSSAbIegasiHy3zxz
- h2Ut5baFCrcbDoPLIM45pW5wElXisFudvxK0Zb+044zrW946GhxvuAJ2zngtirHadULCYONNq96txY+WAxkmfXw5PB4kDby54wvps7jD0bvMbuSIldKdYMeL
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: ggk-eNreeh0ff1KMsY4sRK8AOMVSuKXy
+X-Proofpoint-ORIG-GUID: t3joqvYsLCg1U1gKUgLjom73Vj2FFPGz
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-16_10,2024-01-16_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 phishscore=0 adultscore=0 mlxscore=0 lowpriorityscore=0
+ impostorscore=0 bulkscore=0 spamscore=0 clxscore=1015 mlxlogscore=999
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2401160147
 
+This patchset adds device tree for IBM system1 bmc board.
 
+Change log:
+v1:
+ - Added device binding for IBM system1-bmc
+ - Added device binding for TIS I2C devices
+ - Added device tree for IBM system1 BMC board
+ - Added i2c and muxes
+ - Added voltage regulators
+ - Added GPIO, Fan ctrl, Led
+ - Added more compatible strings for tpm_tis_i2c
+ - Added power supplies, sensors, EEPROMS, TPM and more
 
-On 1/16/24 06:58, Erick Archer wrote:
-> As noted in the "Deprecated Interfaces, Language Features, Attributes,
-> and Conventions" documentation [1], size calculations (especially
-> multiplication) should not be performed in memory allocator (or similar)
-> function arguments due to the risk of them overflowing. This could lead
-> to values wrapping around and a smaller allocation being made than the
-> caller was expecting. Using those allocations could lead to linear
-> overflows of heap memory and other misbehaviors.
-> 
-> So, use the purpose specific kcalloc*() function instead of the argument
-> size * count in the kzalloc*() function.
-> 
-> [1] https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
-> 
-> Link: https://github.com/KSPP/linux/issues/162
-> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+v2:
+ - Incorporated review comments from Conor Dooley, Jarkko Sakkinen,
+   Guenter Roeck, Rob Herring, Krzysztof Kozlowski
+ - Merge all patches into single patch.
+ - Split the trivial device patch.
+ - Cleanup commit messages.
+ - Fixed bootargs string.
+ - Fixed node names.
+ - Dropped tpm schema patch as it is covered by Lukas's patch.
+ - Dropped "tpm: tis-i2c: Add more compatible strings" patch and
+   send it as a separate patch.
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+v3:
+ - Fixed voltage-regulators names.
+ - Updated commit message about TPM compatibility string.
 
-Thanks!
+v4:
+ - Removed compatibility string "nuvoton,npct75x" from TPM
+
+Andrew Geissler (1):
+  ARM: dts: aspeed: System1: IBM system1 BMC board
+
+Ninad Palsule (2):
+  dt-bindings: arm: aspeed: add IBM system1-bmc
+  dt-bindings: Add DPS310 as trivial device
+
+ .../bindings/arm/aspeed/aspeed.yaml           |    1 +
+ .../devicetree/bindings/trivial-devices.yaml  |    2 +
+ arch/arm/boot/dts/aspeed/Makefile             |    1 +
+ .../dts/aspeed/aspeed-bmc-ibm-system1.dts     | 1623 +++++++++++++++++
+ 4 files changed, 1627 insertions(+)
+ create mode 100644 arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts
+
 -- 
-Gustavo
+2.39.2
 
-> ---
->   arch/x86/events/amd/uncore.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
-> index 5bf03c575812..9073eb0613cf 100644
-> --- a/arch/x86/events/amd/uncore.c
-> +++ b/arch/x86/events/amd/uncore.c
-> @@ -479,8 +479,8 @@ static int amd_uncore_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
->   				goto fail;
-> 
->   			curr->cpu = cpu;
-> -			curr->events = kzalloc_node(sizeof(*curr->events) *
-> -						    pmu->num_counters,
-> +			curr->events = kcalloc_node(pmu->num_counters,
-> +						    sizeof(*curr->events),
->   						    GFP_KERNEL, node);
->   			if (!curr->events) {
->   				kfree(curr);
-> @@ -928,7 +928,7 @@ int amd_uncore_umc_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
->   		uncore->num_pmus += group_num_pmus[gid];
->   	}
-> 
-> -	uncore->pmus = kzalloc(sizeof(*uncore->pmus) * uncore->num_pmus,
-> +	uncore->pmus = kcalloc(uncore->num_pmus, sizeof(*uncore->pmus),
->   			       GFP_KERNEL);
->   	if (!uncore->pmus) {
->   		uncore->num_pmus = 0;
-> --
-> 2.25.1
-> 
-> 
