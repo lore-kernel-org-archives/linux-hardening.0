@@ -1,22 +1,22 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2B1020DCD;
-	Tue, 16 Jan 2024 00:14:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3FE1225D8;
+	Tue, 16 Jan 2024 00:14:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RB5r04Hk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C71FEC433C7;
-	Tue, 16 Jan 2024 00:14:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CYZ/wlyu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82953C433B1;
+	Tue, 16 Jan 2024 00:14:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705364066;
-	bh=idWrMm56YQvcqy9IlfN7yiMKVfXexXgcB4t+O7sdNwY=;
+	s=k20201202; t=1705364087;
+	bh=dpJBmRkvN5a1m3Hw4ezVRUa5yHqdrRbbSVIB+kwRQAE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RB5r04Hk137r5L8sWA2fSeyUITj9AWyGr4Rl/xSh/GZQMkWCpKI0PNiMxVaR0F0VV
-	 NZaJb2KtIMZ7kYCtYc3/zAMeH+/3pOA5rl36L0Dl/tveMS8zmpFcICvX4WMunE+KQ/
-	 bzaHxwBZvCYSovz8ardmCJN2vZ4MkJ7Q+34pwP+V8O90tVuibOhhRKKEDCIMWpYGCj
-	 m7VcVRSdlglrZtfFtaam7BCLAWkEX04lzEgGMMDIx2zvQw1RaeQmz9Xc3GgE+uT9BU
-	 Ar4GbOTfi7F9msd7cYYpz+JDLAQPfjAIEGnQkAVT/Gi3SbgXP4WPes23f1bQgWxLyK
-	 sxAt4FQPpfGDw==
+	b=CYZ/wlyuAG/cRrgw6imHI97ofVzDpg+QByKepn29TtL3aGM2ozrW849EM+LpahQVV
+	 rEeiI6KKf0E3shqnzglE37VICwM3UAXPrYdVmJXPdE+OB8nl1BXprmE3FNGVg71j6R
+	 gGswMeoVHl0Klb2hkYfstyDFDo7xK9c3EixFeaAzjEoWlO0c3W8L/EgnMeVol0JIHQ
+	 iknATqER60rL/ohJYn1IGeNiNnhu5grFUVT1Z8COy+xNewkik5y/784+BX+SngMlD0
+	 hbKMiGI1tTbZ9FDrUQXRYB1nTbrKSraZBOZuceOB3aqIUM9X8Pq+tRTgcJyH1urtf+
+	 rB9kNg+DqG/CQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -27,12 +27,12 @@ Cc: Dmitry Antipov <dmantipov@yandex.ru>,
 	rafael@kernel.org,
 	linux-acpi@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 5/9] PNP: ACPI: fix fortify warning
-Date: Mon, 15 Jan 2024 19:14:10 -0500
-Message-ID: <20240116001418.213635-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 5/8] PNP: ACPI: fix fortify warning
+Date: Mon, 15 Jan 2024 19:14:33 -0500
+Message-ID: <20240116001439.213839-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240116001418.213635-1-sashal@kernel.org>
-References: <20240116001418.213635-1-sashal@kernel.org>
+In-Reply-To: <20240116001439.213839-1-sashal@kernel.org>
+References: <20240116001439.213839-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.73
+X-stable-base: Linux 5.15.147
 Content-Transfer-Encoding: 8bit
 
 From: Dmitry Antipov <dmantipov@yandex.ru>
@@ -96,7 +96,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/pnp/pnpacpi/rsparser.c b/drivers/pnp/pnpacpi/rsparser.c
-index 4f05f610391b..c02ce0834c2c 100644
+index da78dc77aed3..9879deb4dc0b 100644
 --- a/drivers/pnp/pnpacpi/rsparser.c
 +++ b/drivers/pnp/pnpacpi/rsparser.c
 @@ -151,13 +151,13 @@ static int vendor_resource_matches(struct pnp_dev *dev,
