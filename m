@@ -1,22 +1,22 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF1F12B9A;
-	Tue, 16 Jan 2024 00:23:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DC8D2BB10;
+	Tue, 16 Jan 2024 00:24:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mQdyb0Yp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41CB2C43601;
-	Tue, 16 Jan 2024 00:23:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LS8GDq+L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5916DC433C7;
+	Tue, 16 Jan 2024 00:24:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705364613;
+	s=k20201202; t=1705364675;
 	bh=BOcYem1Z7/qXXdzAEn6zt6OieCnjfBG4m5itEtHWuHI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mQdyb0Ypns3bvnY8QtuJ9NecdKPYeEGSoAhGVwuveq4B5yIptbeWzow2/GX+HX9O5
-	 QdirIzgO0pP78U7nQXewnjDXCS8gnxXl/9Ye4z+ziZNEf9MzsAqAaRXqYvU2IogKMw
-	 0bNLbIZLaIbL30jHpyMsziFV011NvKebAqFUJDj0GDgssbWcox4K0vJ5H4X7Q5vlhw
-	 Svh+vX5j4/wDosaVNVceITtcbZBuxIZef+VTsSXhiq72aSXFfp5FZTLxqZSNNYwClf
-	 o2kfjgSOupa2bCKBYVK53LbBixfvOQGwY7xMagHERxn1A2YNqXOEt4oMIdAPi0xVr1
-	 UiLgNaDbRVbjw==
+	b=LS8GDq+L4ZcGJ/imqbl0BQA76vWi0Zae0cjT0NvJeNSqs2Hmwlwn038JaBWw2C6P5
+	 YD6Rn993ZIhlfhrTRhky3JKh8eLCIr2C422lmkak6CVasA0TqvfE7CLk7ATZ2Qmf5k
+	 F/ozgbdrrIHXG2hSxGixSrFtCJBmt/CM6vcruKX2O08R16B26NZOnAOos9IszlGFMZ
+	 iMH9twOEuGNQrQe6ug55PFgoOJN3+v/RXHHbak0w2wHT8YZsdZWEnpub/d5WluhyfS
+	 LS4C48fNfZoAcIf/dGm+nlcNE2J9xpmuQcx/WeFpqqUu2SIqLmL8AZf/Bkv2q7Fouj
+	 X/NgvyfyWnngA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -29,12 +29,12 @@ Cc: Weichen Chen <weichen.chen@mediatek.com>,
 	linux-hardening@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.7 09/19] pstore/ram: Fix crash when setting number of cpus to an odd number
-Date: Mon, 15 Jan 2024 19:22:45 -0500
-Message-ID: <20240116002311.214705-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 09/19] pstore/ram: Fix crash when setting number of cpus to an odd number
+Date: Mon, 15 Jan 2024 19:23:44 -0500
+Message-ID: <20240116002413.215163-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240116002311.214705-1-sashal@kernel.org>
-References: <20240116002311.214705-1-sashal@kernel.org>
+In-Reply-To: <20240116002413.215163-1-sashal@kernel.org>
+References: <20240116002413.215163-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -43,7 +43,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.7
+X-stable-base: Linux 6.6.12
 Content-Transfer-Encoding: 8bit
 
 From: Weichen Chen <weichen.chen@mediatek.com>
