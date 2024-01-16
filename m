@@ -1,124 +1,146 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12E791BC21;
-	Tue, 16 Jan 2024 12:59:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE44063AC
+	for <linux-hardening@vger.kernel.org>; Tue, 16 Jan 2024 16:31:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="KZ6SaCGb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
-	s=s31663417; t=1705409915; x=1706014715; i=erick.archer@gmx.com;
-	bh=WqURBa1tPHtba6Jq6GlirP9uW1GLBR8Naqt998xfh+o=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-	b=KZ6SaCGbCecZ5uSlIPF9/YPTHk3YfLpocH2ZGLAyRJj7xYMMHPr6WklOR+5m1b4W
-	 7HrraJHKFrAPNKAaRH7O08z9KbM09bDezYLbkg6RtlEZ1yEKl76DpWv1FC620OxmN
-	 ggWiYQQmyoZjfoHrT5WQK7WD3KL+TLqTXgCgacS1iTvOzZxt7UfeZP7A4VQNvQKA4
-	 1GDeC3tT6asxikb3u0YYEPAwAgQ8YevbQxt26vGptttmeQr6Q/axIjW4Em/l11l8o
-	 RiKRl2ITlg+SVB3bksXtJH7tHhteXmzKCLmo5kYrLSzb/Zr20Hcr87Dlid6PFlC16
-	 Lv8HFjlRmHP+AkBwjA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from localhost.localdomain ([79.157.194.183]) by mail.gmx.net
- (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1MFbW0-1rLoSi2eZq-00H5tr; Tue, 16 Jan 2024 13:58:34 +0100
-From: Erick Archer <erick.archer@gmx.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	x86@kernel.org
-Cc: Erick Archer <erick.archer@gmx.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] perf/x86/amd/uncore: Use kcalloc*() instead of kzalloc*()
-Date: Tue, 16 Jan 2024 13:58:13 +0100
-Message-Id: <20240116125813.3754-1-erick.archer@gmx.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="tAYAcu8C"
+Received: from eig-obgw-5010a.ext.cloudfilter.net ([10.0.29.199])
+	by cmsmtp with ESMTPS
+	id Pkv7r5RvD8uLRPmLSrX8Xx; Tue, 16 Jan 2024 16:31:22 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id PmLRrDu0gbhW6PmLRr7lV0; Tue, 16 Jan 2024 16:31:21 +0000
+X-Authority-Analysis: v=2.4 cv=aLPjFJxm c=1 sm=1 tr=0 ts=65a6af59
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=dEuoMetlWLkA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
+ a=NEAV23lmAAAA:8 a=7YfXLusrAAAA:8 a=6BFke60KTf7VZbaxHQkA:9 a=QEXdDO2ut3YA:10
+ a=9cHFzqQdt-sA:10 a=PUnBvhIW4WwA:10 a=AjGcO6oz07-iQ99wixmX:22
+ a=SLz71HocmBbuEhFRYD3r:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=Q4fmzkdIu+7QBXCoPwfWZgGgksUOdwKEo3LpI0mE/EE=; b=tAYAcu8CxItk8NfrbjkrFcaCNk
+	32GQE1PGncmEr2kKSewUhIziL3jvUCeAU0JdPMryHf00II+9eHLxidsYjx5Ikh17xjYazlRv936O5
+	064U0V7ZYA2gCL7YGARQmodKnlfchx+MGlAgg4Fyw7ExQWpofiCTkbIgckLr5b8x17ekFtCRlhSXv
+	KxMMaz1mnxkUTU/VfLDXEiTq4HsIGXqxzZR89rRhmQyHoI5Zb9NWlEmlJWb32B5+9MDmLsCNo5VQf
+	hoRYixvKayCu4Z4h7kjZeJudlOfCFZhEQA3LHp6Mk4RzX3ucraGovJ/FONpQV90uWrj+REee9GPtM
+	mMvuZ3yA==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:47040 helo=[192.168.15.10])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1rPmLN-00020A-35;
+	Tue, 16 Jan 2024 10:31:17 -0600
+Message-ID: <50c583d7-a6f2-450c-bbc9-965f65b91197@embeddedor.com>
+Date: Tue, 16 Jan 2024 10:30:53 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:TVEwA2glfLpDSznvFi1nOPLs8BGM4B0IRF4s7tsTlwGjHIW6e4d
- girJ19eXCtnEnKLoMCOiYnHnmgUmwJs865H5HLOr6ChGXDSSOX92bbpvT9JPotMl4Vk0n7P
- 4J/7aebYWPmGzn8Jg3l80oRLsiaUXXGbgYIC3NOsCZiuewm9Mb/F0ZUXvI+cjaHZ2e/AjPI
- sBMHryAfCqlxtkZvK/Lug==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:vhga32RZi1g=;yz7ktIwQ63rJtHBJB0vyghWpQyt
- /ejawrygnkrG0gM7Fs3hT08viZFnKYKqAglIygP4TDrVsk6fPk5vqnakrdrTVmOd4DU1KCM8U
- HnyeuxtyM5nNX7Poqn3w81O9X+Ihf/CkQokyS9k3R7BV9WgS0//35I8gbxpd9HoMjohrYx5RG
- 7ro96nixmU93+A2fMsqOtm4y8wbIXKaypSwIulUz9nw6TzaTQjebmM7oSrzIPbhRZU4CBvhFI
- MioszZBetHerm0UsqFCbZ0fizqP7cY7RhhAlTiZl5ZSJEo0XrMQA9MBnzfNexBwPoxAyUGH2n
- l8K3JGdgOe6QgY7zRAXrx+zQ0kLgPkIDZXp5DQzV3NuPt9KC/Kmz+nVsOAw/GJ6sXaHoz+xRI
- 2rJuBzfn1Zfb9EA2aWxpvvxXnMX58/5LKONGH7mnVUWtQ/tGWbouyW3zkCx98xfMLOGeERgbl
- PGpNynvBwV+AF8sJNFNmyvv2Elx7vDih0OXWK6x4up4rFsN/aYeYDHCNpriygeZb1W2iY7qBI
- aVpsY4HfT4kietZw/TKRb7xVm4gp6yfKNawAT35OAtZqB5jxzKFRY4jMWu46CGe1clcPEJXUV
- Yii8i3jrdoUq2X/r3uRQVkwo1Q6EEixqcwcACt8yLDCKWe9H3nOvoQhDcZLiPSa6GmoZCybcC
- yLZaNnV+F33NPMLztMOXKuw40fMTlEhkAmtplNsOaX1yj4untxbTtGoTSEduTrtvUZvlqSBqr
- 1eT4ADORX4lt7j+RSYEZd1/5SxO/SeGM7wI/yNPhlvg9Tamp06F1ig80CWzsf6SGM29f/0SMz
- Zzb4fsNtoSSvlTurs3B4+VEepk90Q15CQ/d3gtE/EYrAQTmPTPJVe9ygOdhyfK8XKsXTs2Kcl
- 9yz06o306nDe2gNTfh5V32zSFw83o9r3HLdnp5tepZHA8SjquvDosoi5+l73aOyIzlY+iHEG1
- iUw6Hk8P6ZwgA3GfGQMWCCthyfY=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/x86/amd/uncore: Use kcalloc*() instead of kzalloc*()
+To: Erick Archer <erick.archer@gmx.com>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, x86@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20240116125813.3754-1-erick.archer@gmx.com>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20240116125813.3754-1-erick.archer@gmx.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.21.192
+X-Source-L: No
+X-Exim-ID: 1rPmLN-00020A-35
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:47040
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfHMt31Y1my1DlzrHBYdHjI0muw2/W3lHZrlav0HErq59MRLLzTXnhUzsGoIGRgTZz1e24c/GfBC4dhx359Jqs9hmvkYFfFQN3gnwSSAbIegasiHy3zxz
+ h2Ut5baFCrcbDoPLIM45pW5wElXisFudvxK0Zb+044zrW946GhxvuAJ2zngtirHadULCYONNq96txY+WAxkmfXw5PB4kDby54wvps7jD0bvMbuSIldKdYMeL
 
-As noted in the "Deprecated Interfaces, Language Features, Attributes,
-and Conventions" documentation [1], size calculations (especially
-multiplication) should not be performed in memory allocator (or similar)
-function arguments due to the risk of them overflowing. This could lead
-to values wrapping around and a smaller allocation being made than the
-caller was expecting. Using those allocations could lead to linear
-overflows of heap memory and other misbehaviors.
 
-So, use the purpose specific kcalloc*() function instead of the argument
-size * count in the kzalloc*() function.
 
-[1] https://www.kernel.org/doc/html/next/process/deprecated.html#open-code=
-d-arithmetic-in-allocator-arguments
+On 1/16/24 06:58, Erick Archer wrote:
+> As noted in the "Deprecated Interfaces, Language Features, Attributes,
+> and Conventions" documentation [1], size calculations (especially
+> multiplication) should not be performed in memory allocator (or similar)
+> function arguments due to the risk of them overflowing. This could lead
+> to values wrapping around and a smaller allocation being made than the
+> caller was expecting. Using those allocations could lead to linear
+> overflows of heap memory and other misbehaviors.
+> 
+> So, use the purpose specific kcalloc*() function instead of the argument
+> size * count in the kzalloc*() function.
+> 
+> [1] https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
+> 
+> Link: https://github.com/KSPP/linux/issues/162
+> Signed-off-by: Erick Archer <erick.archer@gmx.com>
 
-Link: https://github.com/KSPP/linux/issues/162
-Signed-off-by: Erick Archer <erick.archer@gmx.com>
-=2D--
- arch/x86/events/amd/uncore.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
-index 5bf03c575812..9073eb0613cf 100644
-=2D-- a/arch/x86/events/amd/uncore.c
-+++ b/arch/x86/events/amd/uncore.c
-@@ -479,8 +479,8 @@ static int amd_uncore_ctx_init(struct amd_uncore *unco=
-re, unsigned int cpu)
- 				goto fail;
+Thanks!
+-- 
+Gustavo
 
- 			curr->cpu =3D cpu;
--			curr->events =3D kzalloc_node(sizeof(*curr->events) *
--						    pmu->num_counters,
-+			curr->events =3D kcalloc_node(pmu->num_counters,
-+						    sizeof(*curr->events),
- 						    GFP_KERNEL, node);
- 			if (!curr->events) {
- 				kfree(curr);
-@@ -928,7 +928,7 @@ int amd_uncore_umc_ctx_init(struct amd_uncore *uncore,=
- unsigned int cpu)
- 		uncore->num_pmus +=3D group_num_pmus[gid];
- 	}
-
--	uncore->pmus =3D kzalloc(sizeof(*uncore->pmus) * uncore->num_pmus,
-+	uncore->pmus =3D kcalloc(uncore->num_pmus, sizeof(*uncore->pmus),
- 			       GFP_KERNEL);
- 	if (!uncore->pmus) {
- 		uncore->num_pmus =3D 0;
-=2D-
-2.25.1
-
+> ---
+>   arch/x86/events/amd/uncore.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+> index 5bf03c575812..9073eb0613cf 100644
+> --- a/arch/x86/events/amd/uncore.c
+> +++ b/arch/x86/events/amd/uncore.c
+> @@ -479,8 +479,8 @@ static int amd_uncore_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
+>   				goto fail;
+> 
+>   			curr->cpu = cpu;
+> -			curr->events = kzalloc_node(sizeof(*curr->events) *
+> -						    pmu->num_counters,
+> +			curr->events = kcalloc_node(pmu->num_counters,
+> +						    sizeof(*curr->events),
+>   						    GFP_KERNEL, node);
+>   			if (!curr->events) {
+>   				kfree(curr);
+> @@ -928,7 +928,7 @@ int amd_uncore_umc_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
+>   		uncore->num_pmus += group_num_pmus[gid];
+>   	}
+> 
+> -	uncore->pmus = kzalloc(sizeof(*uncore->pmus) * uncore->num_pmus,
+> +	uncore->pmus = kcalloc(uncore->num_pmus, sizeof(*uncore->pmus),
+>   			       GFP_KERNEL);
+>   	if (!uncore->pmus) {
+>   		uncore->num_pmus = 0;
+> --
+> 2.25.1
+> 
+> 
