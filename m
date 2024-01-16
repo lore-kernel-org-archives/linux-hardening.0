@@ -1,22 +1,22 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3FE1225D8;
-	Tue, 16 Jan 2024 00:14:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2146249F5;
+	Tue, 16 Jan 2024 00:15:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CYZ/wlyu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82953C433B1;
-	Tue, 16 Jan 2024 00:14:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iIEiRdGl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD46EC43390;
+	Tue, 16 Jan 2024 00:15:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705364087;
+	s=k20201202; t=1705364105;
 	bh=dpJBmRkvN5a1m3Hw4ezVRUa5yHqdrRbbSVIB+kwRQAE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CYZ/wlyuAG/cRrgw6imHI97ofVzDpg+QByKepn29TtL3aGM2ozrW849EM+LpahQVV
-	 rEeiI6KKf0E3shqnzglE37VICwM3UAXPrYdVmJXPdE+OB8nl1BXprmE3FNGVg71j6R
-	 gGswMeoVHl0Klb2hkYfstyDFDo7xK9c3EixFeaAzjEoWlO0c3W8L/EgnMeVol0JIHQ
-	 iknATqER60rL/ohJYn1IGeNiNnhu5grFUVT1Z8COy+xNewkik5y/784+BX+SngMlD0
-	 hbKMiGI1tTbZ9FDrUQXRYB1nTbrKSraZBOZuceOB3aqIUM9X8Pq+tRTgcJyH1urtf+
-	 rB9kNg+DqG/CQ==
+	b=iIEiRdGlJJw9+wZ+0G81bhGHWS1HyrWcTGdFw+W2QjT8y4tZSv5RSA2hwQCWPUu8B
+	 UGM/ltwTyVSCX8O5U+CMiGBvdGZ47oUosWzTOcRXKJ/CQiEjTjG7v5DuBrVOq2dEz6
+	 /H1Frc0x1AxZNb3HqQfcfliFv6AxI3uuuW2ZoGKI/nNFpscjWp4jjCmUKTIcrfuJy3
+	 5BTyrpo/ePEqVEXIKviC/H5QhRe7eldya8P8gl1Pd/ynTye584391QN46de62geXyJ
+	 y4ntB0998NNs4+SIJ5zisnwCT1nFPan3bxze4RPbMx4NJMBRLoCEOXcLk2Vl+p6JsL
+	 Lz4G8EJBmcFsA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -27,12 +27,12 @@ Cc: Dmitry Antipov <dmantipov@yandex.ru>,
 	rafael@kernel.org,
 	linux-acpi@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 5/8] PNP: ACPI: fix fortify warning
-Date: Mon, 15 Jan 2024 19:14:33 -0500
-Message-ID: <20240116001439.213839-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 5/8] PNP: ACPI: fix fortify warning
+Date: Mon, 15 Jan 2024 19:14:51 -0500
+Message-ID: <20240116001457.214018-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240116001439.213839-1-sashal@kernel.org>
-References: <20240116001439.213839-1-sashal@kernel.org>
+In-Reply-To: <20240116001457.214018-1-sashal@kernel.org>
+References: <20240116001457.214018-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.147
+X-stable-base: Linux 5.10.208
 Content-Transfer-Encoding: 8bit
 
 From: Dmitry Antipov <dmantipov@yandex.ru>
