@@ -1,38 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3214F28E2B;
-	Tue, 16 Jan 2024 00:15:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF1F12B9A;
+	Tue, 16 Jan 2024 00:23:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZLjGIhFa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0283BC43399;
-	Tue, 16 Jan 2024 00:15:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mQdyb0Yp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41CB2C43601;
+	Tue, 16 Jan 2024 00:23:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705364132;
-	bh=Bx/rZtX5pvyB+odRKHqkjZtw32LdaTBf0Ju9YRtk+j4=;
+	s=k20201202; t=1705364613;
+	bh=BOcYem1Z7/qXXdzAEn6zt6OieCnjfBG4m5itEtHWuHI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZLjGIhFag/IrPMpm2Bz8JjMpA8MsWv+qbWhv75p/RfmH2fe1MuRn2IYO/PvKSKKG6
-	 T3KBtm5kOiaIOfdyV8AObp6C5EKdJP7oA8EmRhtD9oi5EnbGPUjJ057A0X2aAPw0QY
-	 8keDZviuYjThGIkCaWTU89SA6sBtt7gBDmigarMQvAN1udQ4UouLCidSpP9kROGrb9
-	 0ZSG2motqnsVzT3c1pVXARhW4jUKMX7AtW0tBusCFXAZOBIjf1zpbFV7s5ykHUU9zk
-	 DSRIxeas0qpZWtJKjPofcG01oWDxhJiNzyAvsii4BMTIx83tfzI54/7kDekLa0/uir
-	 3AeH9LJPD9pyA==
+	b=mQdyb0Ypns3bvnY8QtuJ9NecdKPYeEGSoAhGVwuveq4B5yIptbeWzow2/GX+HX9O5
+	 QdirIzgO0pP78U7nQXewnjDXCS8gnxXl/9Ye4z+ziZNEf9MzsAqAaRXqYvU2IogKMw
+	 0bNLbIZLaIbL30jHpyMsziFV011NvKebAqFUJDj0GDgssbWcox4K0vJ5H4X7Q5vlhw
+	 Svh+vX5j4/wDosaVNVceITtcbZBuxIZef+VTsSXhiq72aSXFfp5FZTLxqZSNNYwClf
+	 o2kfjgSOupa2bCKBYVK53LbBixfvOQGwY7xMagHERxn1A2YNqXOEt4oMIdAPi0xVr1
+	 UiLgNaDbRVbjw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Dmitry Antipov <dmantipov@yandex.ru>,
+Cc: Weichen Chen <weichen.chen@mediatek.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
 	Kees Cook <keescook@chromium.org>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	rafael@kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 3/5] PNP: ACPI: fix fortify warning
-Date: Mon, 15 Jan 2024 19:15:23 -0500
-Message-ID: <20240116001526.214354-3-sashal@kernel.org>
+	angelogioacchino.delregno@collabora.com,
+	linux-hardening@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.7 09/19] pstore/ram: Fix crash when setting number of cpus to an odd number
+Date: Mon, 15 Jan 2024 19:22:45 -0500
+Message-ID: <20240116002311.214705-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240116001526.214354-1-sashal@kernel.org>
-References: <20240116001526.214354-1-sashal@kernel.org>
+In-Reply-To: <20240116002311.214705-1-sashal@kernel.org>
+References: <20240116002311.214705-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -41,84 +43,48 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 4.19.305
+X-stable-base: Linux 6.7
 Content-Transfer-Encoding: 8bit
 
-From: Dmitry Antipov <dmantipov@yandex.ru>
+From: Weichen Chen <weichen.chen@mediatek.com>
 
-[ Upstream commit ba3f5058db437d919f8468db50483dd9028ff688 ]
+[ Upstream commit d49270a04623ce3c0afddbf3e984cb245aa48e9c ]
 
-When compiling with gcc version 14.0.0 20231126 (experimental)
-and CONFIG_FORTIFY_SOURCE=y, I've noticed the following:
+When the number of cpu cores is adjusted to 7 or other odd numbers,
+the zone size will become an odd number.
+The address of the zone will become:
+    addr of zone0 = BASE
+    addr of zone1 = BASE + zone_size
+    addr of zone2 = BASE + zone_size*2
+    ...
+The address of zone1/3/5/7 will be mapped to non-alignment va.
+Eventually crashes will occur when accessing these va.
 
-In file included from ./include/linux/string.h:295,
-                 from ./include/linux/bitmap.h:12,
-                 from ./include/linux/cpumask.h:12,
-                 from ./arch/x86/include/asm/paravirt.h:17,
-                 from ./arch/x86/include/asm/cpuid.h:62,
-                 from ./arch/x86/include/asm/processor.h:19,
-                 from ./arch/x86/include/asm/cpufeature.h:5,
-                 from ./arch/x86/include/asm/thread_info.h:53,
-                 from ./include/linux/thread_info.h:60,
-                 from ./arch/x86/include/asm/preempt.h:9,
-                 from ./include/linux/preempt.h:79,
-                 from ./include/linux/spinlock.h:56,
-                 from ./include/linux/mmzone.h:8,
-                 from ./include/linux/gfp.h:7,
-                 from ./include/linux/slab.h:16,
-                 from ./include/linux/resource_ext.h:11,
-                 from ./include/linux/acpi.h:13,
-                 from drivers/pnp/pnpacpi/rsparser.c:11:
-In function 'fortify_memcpy_chk',
-    inlined from 'pnpacpi_parse_allocated_vendor' at drivers/pnp/pnpacpi/rsparser.c:158:3,
-    inlined from 'pnpacpi_allocated_resource' at drivers/pnp/pnpacpi/rsparser.c:249:3:
-./include/linux/fortify-string.h:588:25: warning: call to '__read_overflow2_field'
-declared with attribute warning: detected read beyond size of field (2nd parameter);
-maybe use struct_group()? [-Wattribute-warning]
-  588 |                         __read_overflow2_field(q_size_field, size);
-      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+So, use ALIGN_DOWN() to make sure the zone size is even
+to avoid this bug.
 
-According to the comments in include/linux/fortify-string.h, 'memcpy()',
-'memmove()' and 'memset()' must not be used beyond individual struct
-members to ensure that the compiler can enforce protection against
-buffer overflows, and, IIUC, this also applies to partial copies from
-the particular member ('vendor->byte_data' in this case). So it should
-be better (and safer) to do both copies at once (and 'byte_data' of
-'struct acpi_resource_vendor_typed' seems to be a good candidate for
-'__counted_by(byte_length)' as well).
-
-Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Weichen Chen <weichen.chen@mediatek.com>
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+Tested-by: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Link: https://lore.kernel.org/r/20230224023632.6840-1-weichen.chen@mediatek.com
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pnp/pnpacpi/rsparser.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ fs/pstore/ram.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pnp/pnpacpi/rsparser.c b/drivers/pnp/pnpacpi/rsparser.c
-index 43d8ed577e70..d8cee80e8df8 100644
---- a/drivers/pnp/pnpacpi/rsparser.c
-+++ b/drivers/pnp/pnpacpi/rsparser.c
-@@ -160,13 +160,13 @@ static int vendor_resource_matches(struct pnp_dev *dev,
- static void pnpacpi_parse_allocated_vendor(struct pnp_dev *dev,
- 				    struct acpi_resource_vendor_typed *vendor)
- {
--	if (vendor_resource_matches(dev, vendor, &hp_ccsr_uuid, 16)) {
--		u64 start, length;
-+	struct { u64 start, length; } range;
- 
--		memcpy(&start, vendor->byte_data, sizeof(start));
--		memcpy(&length, vendor->byte_data + 8, sizeof(length));
--
--		pnp_add_mem_resource(dev, start, start + length - 1, 0);
-+	if (vendor_resource_matches(dev, vendor, &hp_ccsr_uuid,
-+				    sizeof(range))) {
-+		memcpy(&range, vendor->byte_data, sizeof(range));
-+		pnp_add_mem_resource(dev, range.start, range.start +
-+				     range.length - 1, 0);
+diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+index d36702c7ab3c..88b34fdbf759 100644
+--- a/fs/pstore/ram.c
++++ b/fs/pstore/ram.c
+@@ -529,6 +529,7 @@ static int ramoops_init_przs(const char *name,
  	}
- }
  
+ 	zone_sz = mem_sz / *cnt;
++	zone_sz = ALIGN_DOWN(zone_sz, 2);
+ 	if (!zone_sz) {
+ 		dev_err(dev, "%s zone size == 0\n", name);
+ 		goto fail;
 -- 
 2.43.0
 
