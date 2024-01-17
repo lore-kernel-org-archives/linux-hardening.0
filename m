@@ -1,154 +1,165 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+Received: from bedivere.hansenpartnership.com (bedivere.hansenpartnership.com [96.44.175.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F748F44
-	for <linux-hardening@vger.kernel.org>; Wed, 17 Jan 2024 05:55:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19FE01D541;
+	Wed, 17 Jan 2024 13:03:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.44.175.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705470943; cv=none; b=OaTEOJ4q049EN5QUYQIy/3IhGQVlM3HH9GlQyjQ7tSeQFilX9VMq4jh+pWR5l2B8CgRwN96NCr3P0NHUOrTm8mbJY9Gf7AUu2JDVnsiTrFPfoVVpeSunzkfPLbNvQ2ZqIhkoC5DngN0yrXDkamRTIzYCJuqz4q0xt7ZlZjOiIPY=
+	t=1705496623; cv=none; b=SbP+EWe9rU02T1Jhx/ubXBAY72dfBWr4KmfdLveGvN+BDz4sss3EDICO3BAhnUBG6sZn4DbU5jI1STWnWCBHWBOv5x1UJI6XP+geGaF81FObqinm5gQKeRRO2ETYOkAQMJmrHCRyVejD6rrhgj2mZqp1aW5wukaCX4SKWXNeHRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705470943; c=relaxed/simple;
-	bh=Cajldxp5L4q+bgoRIKnlBgXzSAKMtR7sfecEvOfpwAs=;
-	h=Received:DKIM-Signature:Received:Date:From:To:Cc:Subject:
-	 Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=JsLOg7EOlRS0+XJHCZeac7L0DrcA0Pa/wGtYMQRWXzybEP6yJUsI6lEpuimBKmIOKawmxJxAWOjkGW73LuZE3aptoAUFq9nO+TUBJ/ViBAnDAA/bEGsLYrqO4nF5ywl0UBpuvvK8Z1kCXr6V2BuRC8GakObmr1gYY+qfFqF5gkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=lCTi0ygw; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+	s=arc-20240116; t=1705496623; c=relaxed/simple;
+	bh=qQ+6vp4VGyv67J/0qhk1+D+vVpToII5A/94TKdAHneM=;
+	h=DKIM-Signature:Received:Received:DKIM-Signature:Received:
+	 Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:User-Agent:MIME-Version:Content-Transfer-Encoding; b=V19nklbzauADGrz4/5tTHpgM6ySos7ho1DfZtBEVCiF5+DHgEnaFKsyxta5NJqmNIfYJ5gCGSjJeraTNGfsMiOcV1hMB0ao4QM8JIReGjWjCDK6KWx7uSYev7UzhRjtwp7Pwm+KxFz0iDk46D+qnYgZ3T8aEP13kk7djWbuXu4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=G9rI+nq+; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=G9rI+nq+; arc=none smtp.client-ip=96.44.175.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="lCTi0ygw"
-Received: from cwcc.thunk.org (pool-173-48-112-211.bstnma.fios.verizon.net [173.48.112.211])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 40H5sv3E016205
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Jan 2024 00:54:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1705470901; bh=E6Z/eQkBMXHSee05+WcpGSIz4ByCJGYdInYrVxwiAVk=;
-	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
-	b=lCTi0ygwe47zegAHZboHFyqL3Sd5496YzTJRXwjVrME86O0SGElAaUC1FFlOL73QF
-	 C2WX0qpUXggTBxcZrTHCnD+b7q4VV5CHVW5em+Tm3VCWP8B7y8bkMr2LrC/208YnUJ
-	 HByA2MwQztUOiFI+Y6tkvXLd5nFtoNgFTt87OoxpVZkV3UK36kgNaakybCEELm8L8i
-	 ebttMKfsy7qs+mqakIxV4DuOpAkRlnyigPymnoUORF2A14qORY0nwM8SDVW1yCjAoa
-	 OpJdDQZzJl+nkzuj16Lllw4DAnHaUvhCIXyBUBfIGiSbC7khdXDosihq9XwXXDBsMJ
-	 GNZLM844ywkxg==
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id 89D5315C0278; Wed, 17 Jan 2024 00:54:57 -0500 (EST)
-Date: Wed, 17 Jan 2024 00:54:57 -0500
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Greg KH <greg@kroah.com>, Mark Brown <broonie@kernel.org>,
-        Neal Gompa <neal@gompa.dev>, Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Nikolai Kondrashov <spbnick@gmail.com>,
-        Philip Li <philip.li@intel.com>, Luis Chamberlain <mcgrof@kernel.org>
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="G9rI+nq+";
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="G9rI+nq+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1705496619;
+	bh=qQ+6vp4VGyv67J/0qhk1+D+vVpToII5A/94TKdAHneM=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=G9rI+nq+tqwHZXAyV0JeLHpDJrzo6kT87Rl1hWZ5NJ1NVO5+ZFBpVL0Rwij2Ao7Su
+	 NQxKrF64t65NvHEfYNB/rrueCucvvq3FLUcdqBN5MiMiQHv8AXca7ZE8+e7fW1y+lS
+	 rXhtNfNEwAzsqYv+JfNYMWtdSzQ6ptWTaN0aSFfE=
+Received: from localhost (localhost [127.0.0.1])
+	by bedivere.hansenpartnership.com (Postfix) with ESMTP id 82C3A1281A31;
+	Wed, 17 Jan 2024 08:03:39 -0500 (EST)
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+ by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavis, port 10024)
+ with ESMTP id Br1jjjRF4HNd; Wed, 17 Jan 2024 08:03:39 -0500 (EST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1705496619;
+	bh=qQ+6vp4VGyv67J/0qhk1+D+vVpToII5A/94TKdAHneM=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=G9rI+nq+tqwHZXAyV0JeLHpDJrzo6kT87Rl1hWZ5NJ1NVO5+ZFBpVL0Rwij2Ao7Su
+	 NQxKrF64t65NvHEfYNB/rrueCucvvq3FLUcdqBN5MiMiQHv8AXca7ZE8+e7fW1y+lS
+	 rXhtNfNEwAzsqYv+JfNYMWtdSzQ6ptWTaN0aSFfE=
+Received: from [172.20.4.189] (unknown [173.211.218.201])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id BE03012808E8;
+	Wed, 17 Jan 2024 08:03:37 -0500 (EST)
+Message-ID: <5b7154f86913a0957e0518b54365a1b0fce5fbea.camel@HansenPartnership.com>
 Subject: Re: [GIT PULL] bcachefs updates for 6.8
-Message-ID: <20240117055457.GL911245@mit.edu>
-References: <xlynx7ydht5uixtbkrg6vgt7likpg5az76gsejfgluxkztukhf@eijjqp4uxnjk>
- <be2fa62f-f4d3-4b1c-984d-698088908ff3@sirena.org.uk>
- <gaxigrudck7pr3iltgn3fp5cdobt3ieqjwohrnkkmmv67fctla@atcpcc4kdr3o>
- <f8023872-662f-4c3f-9f9b-be73fd775e2c@sirena.org.uk>
- <olmilpnd7jb57yarny6poqnw6ysqfnv7vdkc27pqxefaipwbdd@4qtlfeh2jcri>
- <CAEg-Je8=RijGLavvYDvw3eOf+CtvQ_fqdLZ3DOZfoHKu34LOzQ@mail.gmail.com>
- <40bcbbe5-948e-4c92-8562-53e60fd9506d@sirena.org.uk>
- <2uh4sgj5mqqkuv7h7fjlpigwjurcxoo6mqxz7cjyzh4edvqdhv@h2y6ytnh37tj>
- <2024011532-mortician-region-8302@gregkh>
- <lr2wz4hos4pcavyrmswpvokiht5mmcww2e7eqyc2m7x5k6nbgf@6zwehwujgez3>
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+To: Theodore Ts'o <tytso@mit.edu>, Kent Overstreet
+ <kent.overstreet@linux.dev>
+Cc: Greg KH <greg@kroah.com>, Mark Brown <broonie@kernel.org>, Neal Gompa
+	 <neal@gompa.dev>, Kees Cook <keescook@chromium.org>, Linus Torvalds
+	 <torvalds@linux-foundation.org>, linux-bcachefs@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Nikolai Kondrashov <spbnick@gmail.com>, 
+	Philip Li <philip.li@intel.com>, Luis Chamberlain <mcgrof@kernel.org>
+Date: Wed, 17 Jan 2024 08:03:35 -0500
+In-Reply-To: <20240117055457.GL911245@mit.edu>
+References: 
+	<xlynx7ydht5uixtbkrg6vgt7likpg5az76gsejfgluxkztukhf@eijjqp4uxnjk>
+	 <be2fa62f-f4d3-4b1c-984d-698088908ff3@sirena.org.uk>
+	 <gaxigrudck7pr3iltgn3fp5cdobt3ieqjwohrnkkmmv67fctla@atcpcc4kdr3o>
+	 <f8023872-662f-4c3f-9f9b-be73fd775e2c@sirena.org.uk>
+	 <olmilpnd7jb57yarny6poqnw6ysqfnv7vdkc27pqxefaipwbdd@4qtlfeh2jcri>
+	 <CAEg-Je8=RijGLavvYDvw3eOf+CtvQ_fqdLZ3DOZfoHKu34LOzQ@mail.gmail.com>
+	 <40bcbbe5-948e-4c92-8562-53e60fd9506d@sirena.org.uk>
+	 <2uh4sgj5mqqkuv7h7fjlpigwjurcxoo6mqxz7cjyzh4edvqdhv@h2y6ytnh37tj>
+	 <2024011532-mortician-region-8302@gregkh>
+	 <lr2wz4hos4pcavyrmswpvokiht5mmcww2e7eqyc2m7x5k6nbgf@6zwehwujgez3>
+	 <20240117055457.GL911245@mit.edu>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.4 
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <lr2wz4hos4pcavyrmswpvokiht5mmcww2e7eqyc2m7x5k6nbgf@6zwehwujgez3>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jan 16, 2024 at 11:41:25PM -0500, Kent Overstreet wrote:
-> > > No, it's a leadership/mentorship thing.
+On Wed, 2024-01-17 at 00:54 -0500, Theodore Ts'o wrote:
+> On Tue, Jan 16, 2024 at 11:41:25PM -0500, Kent Overstreet wrote:
+> > > > No, it's a leadership/mentorship thing.
+> > > > 
+> > > > And this is something that's always been lacking in kernel
+> > > > culture. Witness the kind of general grousing that goes on at
+> > > > maintainer summits;maintainers complain about being overworked
+> > > > and people not stepping up to help with the grungy
+> > > > responsibilities, while simultaneously we still
+> 
+>      <blah blah blah>
+> 
+> > > > Tests and test infrastructure fall into the necessary but not
+> > > > fun category, so they languish.
 > > > 
-> > > And this is something that's always been lacking in kernel culture.
-> > > Witness the kind of general grousing that goes on at maintainer summits;
-> > > maintainers complain about being overworked and people not stepping up
-> > > to help with the grungy responsibilities, while simultaneously we still
+> > > No, they fall into the "no company wants to pay someone to do the
+> > > work" category, so it doesn't get done.
+> > > 
+> > > It's not a "leadership" issue, what is the "leadership" supposed
+> > > to do here, refuse to take any new changes unless someone ponys
+> > > up and does the infrastructure and testing work first?  That's
+> > > not going to fly, for valid reasons.
+> 
+> Greg is absolutely right about this.
+> 
+> > But good tools are important beacuse they affect the rate of
+> > everyday development; they're a multiplier on the money everone is
+> > spending on salaries.
+> 
+> Alas, companies don't see it that way.  They take the value that get
+> from Linux for granted, and they only care about the multipler effect
+> of their employees salaries (and sometimes not even that).  They most
+> certainly care about the salutary effects on the entire ecosyustem.
+> At least, I haven't seen any company make funding decisions on that
+> basis.
 
-     <blah blah blah>
+Actually, this is partly our fault.  Companies behave exactly like a
+selfish contributor does:
 
-> > > Tests and test infrastructure fall into the necessary but not fun
-> > > category, so they languish.
-> > 
-> > No, they fall into the "no company wants to pay someone to do the work"
-> > category, so it doesn't get done.
-> > 
-> > It's not a "leadership" issue, what is the "leadership" supposed to do
-> > here, refuse to take any new changes unless someone ponys up and does
-> > the infrastructure and testing work first?  That's not going to fly, for
-> > valid reasons.
+https://archive.fosdem.org/2020/schedule/event/selfish_contributor/
 
-Greg is absolutely right about this.
+The question they ask is "if I'm putting money into it, what am I
+getting out of it".  If the answer to that is that it benefits
+everybody, it's basically charity  to the entity being asked (and not
+even properly tax deductible at that), which goes way back behind even
+real charitable donations (which at least have a publicity benefit) and
+you don't even get to speak to anyone about it when you go calling with
+the collecting tin.  If you can say it benefits these 5 tasks your
+current employees are doing, you might have a possible case for the
+engineering budget (you might get in the door but you'll still be
+queuing behind every in-plan budget item).  The best case is if you can
+demonstrate some useful for profit contribution it makes to the actual
+line of business (or better yet could be used to spawn a new line of
+business), so when you're asking for a tool, it has to be usable
+outside the narrow confines of the kernel and you need to be able to
+articulate why it's generally useful (git is a great example, it was
+designed to solve a kernel specific problem, but not it's in use pretty
+much everywhere source control is a thing).
 
-> But good tools are important beacuse they affect the rate of everyday
-> development; they're a multiplier on the money everone is spending on
-> salaries.
+Somewhere between 2000 and now we seem to have lost our ability to
+frame the argument in the above terms, because the business quid pro
+quo argument was what got us money for stuff we needed and the Linux
+Foundation and the TAB formed, but we're not managing nearly as well
+now.  The environment has hardened against us (we're no longer the new
+shiny) but that's not the whole explanation.
 
-Alas, companies don't see it that way.  They take the value that get
-from Linux for granted, and they only care about the multipler effect
-of their employees salaries (and sometimes not even that).  They most
-certainly care about the salutary effects on the entire ecosyustem.
-At least, I haven't seen any company make funding decisions on that
-basis.
+I also have to say, that for all the complaints there's just not any
+open source pull for test tools (there's no-one who's on a mission to
+make them better).  Demanding that someone else do it is proof of this
+(if you cared enough you'd do it yourself).  That's why all our testing
+infrastructure is just some random set of scripts that mostly does what
+I want, because it's the last thing I need to prove the thing I
+actually care about works.
 
-It's easy enough for you to blame "leadership", but the problem is the
-leaders at the VP and SVP level who control the budgets, not the
-leadership of the maintainers, who are overworked, and who often
-invest in testing themselves, on their own personal time, because they
-don't get adequate support from others.
+Finally testing infrastructure is how OSDL (the precursor to the Linux
+foundation) got started and got its initial funding, so corporations
+have been putting money into it for decades with not much return (and
+pretty much nothing to show for a unified testing infrastructure ...
+ten points to the team who can actually name the test infrastructure
+OSDL produced) and have finally concluded it's not worth it, making it
+a 10x harder sell now.
 
-It's also for that reason why we try to prove that people won't just
-stick around enough for their pet feature (or in the case of ntfs,
-their pet file system) gets into the kernel --- and then disappear.
-For too often, this is what happens, either because they have their
-itch scratched, or their company reassigns them to some other project
-that is important for their company's bottom-line.
+James
 
-If that person is willing their own personal time, long after work
-hours, to steward their contribution in the absence of corporate
-support, great.  But we need to have that proven to us, or at the very
-least, make sure the feature's long-term maintenace burden is as low
-possible, to mitigate the likelihood that we won't see the new
-engineer after their feature lands upstream.
-
-> Having one common way of running all our functional VM tests, and a
-> common collection of those tests would be a huge win for productivity
-> because _way_ too many developers are still using slow ad hoc testing
-> methods, and a good test runner (ktest) gets the edit/compile/test cycle
-> down to < 1 minute, with the same tests framework for local development
-> and automated testing in the big test cloud...
-
-I'm going to call bullshit on this assertion.  The fact that we have
-multiple ways of running our tests is not the reason why testing takes
-a long time.
-
-If you are going to run stress tests, which is critical for testing
-real file systems, that's going to take at least an hour; more if you
-want to test muliple file system features.  The full regression set
-for ext4, using the common fstests testt suite, takes about 25 hours
-of VM time; and about 2.5 hours of wall clock time since I shard it
-across a dozen VM's.
-
-Yes, w could try to add some unit tests which take much less time
-running tests where fstests is creating a file system, mounting it,
-exercising the code through userspace functions, and then unmounting
-the file system and then checking the file system.  Even if that were
-an adequate replacement for some of the existing fstests, (a) it's not
-a replacement for stress testing, and (b) this would require a vast
-amount of file system specific software engineering investment, and
-where is that going from?
-
-The bottom line is that problem is that having a one common way of
-running our functional VM tests is not even *close* to root cause of
-the problem.
-
-	    	       	  	       - Ted
