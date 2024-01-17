@@ -1,203 +1,126 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB5C522635
-	for <linux-hardening@vger.kernel.org>; Wed, 17 Jan 2024 17:40:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0150422EE0;
+	Wed, 17 Jan 2024 18:19:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705513218; cv=none; b=g46LJTqOHTKKJNlLQXZehy++76LPsxKfg9nsaO8ihSPzv3ZyhuwhwStUhAXCR5uC5dsBgHefYTsJ9ASDbs4yiK+qKxfiHYwSAwGw04cUYsBfAuRsn88R70PFsx1yBmLRHsK51plJ48ktpj4P2QB157seRozvCq+wMKVgbnvKqCE=
+	t=1705515590; cv=none; b=CkqNDY2w/N9BpzN4foTzuOPDgnqvMtHoKv1fQhFtlvjb96LyxXD7XXy1gvAIfMfvXaM3gpdVxikuXZZdWi6nG3zjgAOwl/KgC+XF6g2zPltxaG3iVHK0OZMiHcVsYRhY4enB/jqhWNb+f5bBpKikGqNv6f4YrRzVkykDxchZYb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705513218; c=relaxed/simple;
-	bh=1tCHO94M8UKN08WmEP3jFP3wVBw/BzhOtvlgulB5zs4=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:Date:
-	 From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:Content-Transfer-Encoding:In-Reply-To; b=tI/dtR1gp9zRQwSbVve6BNgp0cQuVQJ/ti+eJRdyy6HIvAfZbz/q/Ru9lQEYCBMOk0AJNfgEndDgr0fVA9FOT620ewaIqy2jNknK8HDX1zLiI6mdCF5XgaQoNNJXoCfBHHSdL742atz7TvoGEH8tUp9l73Sj3C0fkkXXvF1xAqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=TVFrlaQL; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1705515590; c=relaxed/simple;
+	bh=qGlcZRV44crjqbw1JQjmrtKXLKflvsUJg8srLpQ9eco=;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To:X-Cookie; b=JPVk6j/BIC9MkBXnO1Fon03MyJMeTIuR2lr/iEgHbopUkyD0sKssYOyy4dbDNMA4mmBVsygeXrpanYgne12YVxHmnkwTP+hpV/q5Rpk7KIEz4Tkis5NlnLHaA3ULtZqseJ2jDzwo05/YA+WCbYUEaxqlbx5oB4tpN6ky+LenneM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=adFzkfSO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TVFrlaQL"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1d5f38313f9so11737875ad.1
-        for <linux-hardening@vger.kernel.org>; Wed, 17 Jan 2024 09:40:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1705513215; x=1706118015; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=HI6bavhqQV1VGnP6OfS5XotwfVqJiEyBGy8aO+1AKAU=;
-        b=TVFrlaQLQTBh/S/m5XIObvDkl/AFbyuK5O6dHyWvEFzqVqJuLslAQwFVkebyc7NqjC
-         PUd8cKPC7SmLUn2jXcijyt6dmiUzPZ/g9fF6+04K5VxGScjvqYHPUxNcKDo8T49xDm6M
-         vdV1qe2BUoxk6Z7MFYiEC+/uhEcR9lFmUWcTI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705513215; x=1706118015;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HI6bavhqQV1VGnP6OfS5XotwfVqJiEyBGy8aO+1AKAU=;
-        b=V3JsS4OneR7wg6vr725mvq5QwfYcXrUxb9eNCzegkZMNlfpyqokhI2GWtjIUEEeS4f
-         uO6Mf1UgpcLoH/1grlkdHneiij6zZK5sQ+iFoT4lKTKNqYliSljY1Zt2mhAjkT2daxVZ
-         EC8aqaZlIOVw23wqLZLQBI0tTKEoXAZSb9IYaGae8U3ww7AmUB/DE7qoH3OVd1m1QX8g
-         W2WQaW9FJ35ITfdRPlDCfiDRXATCCbs8l1P934eKA6pSxH/k5BKvK7mic3cew9XbYfjc
-         quSbN5NTlHMcbP0eKAYh1CKdil2fCuX1u8LyIVVDKPd9HvShGr7nK7Uy2M9vM3c+eA3T
-         zTfQ==
-X-Gm-Message-State: AOJu0YzkM+GsdoeGjv8NXrniFvaXDMLPh0ZJmtoyNazWEef/BwyliS/C
-	86kr82SmmwKMnaptxuefeoJ84l5BN9MNet4gFszKZhgFVw==
-X-Google-Smtp-Source: AGHT+IH52fdJN93YoHDB5xj/lRsRVa+gmw/PCGVpP5CZggqbnNav6Zj6tGn0Ox6nArT7Tv1Myn7gxQ==
-X-Received: by 2002:a17:902:e808:b0:1d5:e949:bc43 with SMTP id u8-20020a170902e80800b001d5e949bc43mr1730139plg.32.1705513215006;
-        Wed, 17 Jan 2024 09:40:15 -0800 (PST)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id t2-20020a1709028c8200b001d5d58216bdsm4615406plo.164.2024.01.17.09.40.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jan 2024 09:40:14 -0800 (PST)
-Date: Wed, 17 Jan 2024 09:40:13 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: Yang Shi <shy828301@gmail.com>, Jeffrey Vander Stoep <jeffv@google.com>,
-	Jiri Slaby <jirislaby@kernel.org>, Rik van Riel <riel@surriel.com>,
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, kernel-team@fb.com,
-	Matthew Wilcox <willy@infradead.org>,
-	Christoph Lameter <cl@linux.com>, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] mm: align larger anonymous mappings on THP boundaries
-Message-ID: <202401170925.015D300A@keescook>
-References: <20220809142457.4751229f@imladris.surriel.com>
- <d0a136a0-4a31-46bc-adf4-2db109a61672@kernel.org>
- <3193bf5b-4e22-412f-8c5b-68574942d9bc@kernel.org>
- <CAJuCfpHXLdQy1a2B6xN2d7quTYwg2OoZseYPZTRpU0eHHKD-sQ@mail.gmail.com>
- <CAHbLzkpEWYhRAabAhrr6zuQqh0rO-mh=NZupDxJJ1BidOt_uiA@mail.gmail.com>
- <CAJuCfpH5gwQc0mBzQ5LOMY9URCTh=58yUJd8pbzzynqAy8_yXw@mail.gmail.com>
- <CAHbLzkoOEEKakj_XCTYhAU8fJWu8in_EY-pHnw76B1=CfYMx1w@mail.gmail.com>
- <CAJuCfpH3SWTzGNQpYXbE0i2XZwodLc0SCRVYijDz2FPQJ2PpiA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="adFzkfSO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B03A2C433C7;
+	Wed, 17 Jan 2024 18:19:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705515589;
+	bh=qGlcZRV44crjqbw1JQjmrtKXLKflvsUJg8srLpQ9eco=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=adFzkfSOVycGp6YJDdZ0RCzxsP3syYVSeLMqqsOZ2+IuVdDJ2F8BeiEZNAE1+G4nF
+	 uwAy1cm7aUll6YGX/rBgIeKNLKAaCuI5SRH0Cz7M9HPA5oXrvwX0jXpLe3F92eTv7T
+	 Ogmf+M5bUkMIe876iFliMxq/yQ00eg0kxxKUTe9WQR8fgsEQ/jj17xF8697FV8TOeT
+	 KnfylJh+dP0/v2DiUa4OVGZ7NUKojv0MbupGpFswIpMRO2dtm+68PJS0BTDts6m6lO
+	 7A9FabHDWunu3/oDuIUv1IZW72VZpvSJeGtaBrmZ49gDYAydA3jj382NAIIRfi13lH
+	 di4hlLX2dmdHQ==
+Date: Wed, 17 Jan 2024 18:19:43 +0000
+From: Mark Brown <broonie@kernel.org>
+To: James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: Theodore Ts'o <tytso@mit.edu>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Greg KH <greg@kroah.com>, Neal Gompa <neal@gompa.dev>,
+	Kees Cook <keescook@chromium.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	Nikolai Kondrashov <spbnick@gmail.com>,
+	Philip Li <philip.li@intel.com>,
+	Luis Chamberlain <mcgrof@kernel.org>
+Subject: Re: [GIT PULL] bcachefs updates for 6.8
+Message-ID: <c69a3103-ae4d-459a-b5f4-d3bbe2af6fb2@sirena.org.uk>
+References: <gaxigrudck7pr3iltgn3fp5cdobt3ieqjwohrnkkmmv67fctla@atcpcc4kdr3o>
+ <f8023872-662f-4c3f-9f9b-be73fd775e2c@sirena.org.uk>
+ <olmilpnd7jb57yarny6poqnw6ysqfnv7vdkc27pqxefaipwbdd@4qtlfeh2jcri>
+ <CAEg-Je8=RijGLavvYDvw3eOf+CtvQ_fqdLZ3DOZfoHKu34LOzQ@mail.gmail.com>
+ <40bcbbe5-948e-4c92-8562-53e60fd9506d@sirena.org.uk>
+ <2uh4sgj5mqqkuv7h7fjlpigwjurcxoo6mqxz7cjyzh4edvqdhv@h2y6ytnh37tj>
+ <2024011532-mortician-region-8302@gregkh>
+ <lr2wz4hos4pcavyrmswpvokiht5mmcww2e7eqyc2m7x5k6nbgf@6zwehwujgez3>
+ <20240117055457.GL911245@mit.edu>
+ <5b7154f86913a0957e0518b54365a1b0fce5fbea.camel@HansenPartnership.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="7aTkAu68BodLGEOk"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJuCfpH3SWTzGNQpYXbE0i2XZwodLc0SCRVYijDz2FPQJ2PpiA@mail.gmail.com>
+In-Reply-To: <5b7154f86913a0957e0518b54365a1b0fce5fbea.camel@HansenPartnership.com>
+X-Cookie: Nostalgia isn't what it used to be.
 
-On Tue, Jan 16, 2024 at 02:30:36PM -0800, Suren Baghdasaryan wrote:
-> On Tue, Jan 16, 2024 at 2:25 PM Yang Shi <shy828301@gmail.com> wrote:
-> >
-> > On Tue, Jan 16, 2024 at 1:58 PM Suren Baghdasaryan <surenb@google.com> wrote:
-> > >
-> > > On Tue, Jan 16, 2024 at 12:56 PM Yang Shi <shy828301@gmail.com> wrote:
-> > > >
-> > > > On Tue, Jan 16, 2024 at 11:16 AM Suren Baghdasaryan <surenb@google.com> wrote:
-> > > > >
-> > > > > On Tue, Jan 16, 2024 at 4:09 AM Jiri Slaby <jirislaby@kernel.org> wrote:
-> > > > > >
-> > > > > > On 16. 01. 24, 12:53, Jiri Slaby wrote:
-> > > > > > > Hi,
-> > > > > > >
-> > > > > > > On 09. 08. 22, 20:24, Rik van Riel wrote:
-> > > > > > >> Align larger anonymous memory mappings on THP boundaries by
-> > > > > > >> going through thp_get_unmapped_area if THPs are enabled for
-> > > > > > >> the current process.
-> > > > > > >>
-> > > > > > >> With this patch, larger anonymous mappings are now THP aligned.
-> > > > > > >> When a malloc library allocates a 2MB or larger arena, that
-> > > > > > >> arena can now be mapped with THPs right from the start, which
-> > > > > > >> can result in better TLB hit rates and execution time.
-> > > > > > >
-> > > > > > > This appears to break 32bit processes on x86_64 (at least). In
-> > > > > > > particular, 32bit kernel or firefox builds in our build system.
-> > > > > > >
-> > > > > > > Reverting this on top of 6.7 makes it work again.
-> > > > > > >
-> > > > > > > Downstream report:
-> > > > > > >   https://bugzilla.suse.com/show_bug.cgi?id=1218841
-> > > > > > >
-> > > > > > > So running:
-> > > > > > > pahole -J --btf_gen_floats -j --lang_exclude=rust
-> > > > > > > --skip_encoding_btf_inconsistent_proto --btf_gen_optimized .tmp_vmlinux.btf
-> > > > > > >
-> > > > > > > crashes or errors out with some random errors:
-> > > > > > > [182671] STRUCT idr's field 'idr_next' offset=128 bit_size=0 type=181346
-> > > > > > > Error emitting field
-> > > > > > >
-> > > > > > > strace shows mmap() fails with ENOMEM right before the errors:
-> > > > > > > 1223  mmap2(NULL, 5783552, PROT_READ|PROT_WRITE,
-> > > > > > > MAP_PRIVATE|MAP_ANONYMOUS, -1, 0 <unfinished ...>
-> > > > > > > ...
-> > > > > > > 1223  <... mmap2 resumed>)              = -1 ENOMEM (Cannot allocate
-> > > > > > > memory)
-> > > > > > >
-> > > > > > > Note the .tmp_vmlinux.btf above can be arbitrary, but likely large
-> > > > > > > enough. For reference, one is available at:
-> > > > > > > https://decibel.fi.muni.cz/~xslaby/n/btf
-> > > > > > >
-> > > > > > > Any ideas?
-> > > > > >
-> > > > > > This works around the problem, of course (but is a band-aid, not a fix):
-> > > > > >
-> > > > > > --- a/mm/mmap.c
-> > > > > > +++ b/mm/mmap.c
-> > > > > > @@ -1829,7 +1829,7 @@ get_unmapped_area(struct file *file, unsigned long
-> > > > > > addr, unsigned long len,
-> > > > > >                   */
-> > > > > >                  pgoff = 0;
-> > > > > >                  get_area = shmem_get_unmapped_area;
-> > > > > > -       } else if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)) {
-> > > > > > +       } else if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE) &&
-> > > > > > !in_32bit_syscall()) {
-> > > > > >                  /* Ensures that larger anonymous mappings are THP
-> > > > > > aligned. */
-> > > > > >                  get_area = thp_get_unmapped_area;
-> > > > > >          }
-> > > > > >
-> > > > > >
-> > > > > > thp_get_unmapped_area() does not take care of the legacy stuff...
-> > > > >
-> > > > > This change also affects the entropy of allocations. With this patch
-> > > > > Android test [1] started failing and it requires only 8 bits of
-> > > > > entropy. The feedback from our security team:
-> > > > >
-> > > > > 8 bits of entropy is already embarrassingly low, but was necessary for
-> > > > > 32 bit ARM targets with low RAM at the time. It's definitely not
-> > > > > acceptable for 64 bit targets.
-> > > >
-> > > > Thanks for the report. Is it 32 bit only or 64 bit is also impacted?
-> > > > If I understand the code correctly, it expects the address allocated
-> > > > by malloc() is kind of randomized, right?
-> > >
-> > > Yes, correct, the test expects a certain level of address randomization.
-> > > The test failure was reported while running kernel_virt_x86_64 target
-> > > (Android emulator on x86), so it does impact 64bit targets.
-> >
-> > IIUC this breaks the "expectation" for randomized addresses returned
-> > by malloc(), but it doesn't break any real Android application, right?
-> > So this is a security concern instead of a real regression.
-> 
-> How is making a system move vulnerabile not a real regression?
-> 
-> >
-> > I think we can make this opt-in with a knob. Anyone who outweighs
-> > security could opt this feature out. However I'm wondering whether
-> > Android should implement a general address randomization mechanism
-> > instead of depending on "luck" if you do care about it.
-> 
-> This is not depending on luck. This is checking for possible
-> vulnerabilities in the system.
-> I admit I'm not a security expert, so I'm looping in Jeff and Kees to chime in.
 
-Hi!
+--7aTkAu68BodLGEOk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Just to chime in, but reduction in ASLR entropy is absolutely a
-regression. This is userspace visible (via /proc/sys/kernel/randomize_va_space,
-/proc/sys/vm/mmap_rnd*_bits) with expectations that it work as
-advertised. So, while 32-bit might be already ASLR-weak, we don't want
-to make things super bad nor break ASLR in compat mode under 64-bit
-systems.
+On Wed, Jan 17, 2024 at 08:03:35AM -0500, James Bottomley wrote:
 
-Having an opt-in sounds reasonable, but we need to wire it to the ASLR
-sysctls in some way so nothing lying about the ASLR entropy.
+> I also have to say, that for all the complaints there's just not any
+> open source pull for test tools (there's no-one who's on a mission to
+> make them better).  Demanding that someone else do it is proof of this
+> (if you cared enough you'd do it yourself).  That's why all our testing
+> infrastructure is just some random set of scripts that mostly does what
+> I want, because it's the last thing I need to prove the thing I
+> actually care about works.
 
--Kees
+> Finally testing infrastructure is how OSDL (the precursor to the Linux
+> foundation) got started and got its initial funding, so corporations
+> have been putting money into it for decades with not much return (and
+> pretty much nothing to show for a unified testing infrastructure ...
+> ten points to the team who can actually name the test infrastructure
+> OSDL produced) and have finally concluded it's not worth it, making it
+> a 10x harder sell now.
 
--- 
-Kees Cook
+I think that's a *bit* pessimistic, at least for some areas of the
+kernel - there is commercial stuff going on with kernel testing with
+varying degrees of community engagement (eg, off the top of my head
+Baylibre, Collabora and Linaro all have offerings of various kinds that
+I'm aware of), and some of that does turn into investments in reusable
+things rather than proprietary stuff.  I know that I look at the
+kernelci.org results for my trees, and that I've fixed issues I saw
+purely in there.  kselftest is noticably getting much better over time,
+and LTP is quite active too.  The stuff I'm aware of is more focused
+around the embedded space than the enterprise/server space but it does
+exist.  That's not to say that this is all well resourced and there's no
+problem (far from it), but it really doesn't feel like a complete dead
+loss either.
+
+Some of the issues come from the different questions that people are
+trying to answer with testing, or the very different needs of the
+tests that people want to run - for example one of the reasons
+filesystems aren't particularly well covered for the embedded cases is
+that if your local storage is SD or worse eMMC then heavy I/O suddenly
+looks a lot more demanding and media durability a real consideration.
+
+--7aTkAu68BodLGEOk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmWoGj8ACgkQJNaLcl1U
+h9BXrwf/ax2MGFfufapvl5UITLAL098Oq/M/cEtg80e2uwB7x6eMnWfzLW5If0FL
+7TaDVEb9oUXdsBZAVdETKiszFMAVH6+owpWtLGMkd1CWHbsH4OqpzuITEVsfidM0
+YogO4PuLXHCJdoPOogl32UraTyhxJKgYRqy3tr8Mv0UNnA+KpvSgfS/dX7AJOw0h
+KLFxAYjNa3JG6SbHJgS2Fw40YWY1kw1fdt193Div+CCIWgkd0SVwg+jIA7xsakb5
+YDVyHHT3WY5OpUc+5Ay/WeoDxFlFFmS91U457Dokm+/VS5WjYYJWc1eLKGkx6w+X
+otunFRoyx0Y6IoJhrDegDIRv82SVvA==
+=x1fy
+-----END PGP SIGNATURE-----
+
+--7aTkAu68BodLGEOk--
