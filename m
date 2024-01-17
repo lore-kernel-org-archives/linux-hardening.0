@@ -1,165 +1,115 @@
-Received: from bedivere.hansenpartnership.com (bedivere.hansenpartnership.com [96.44.175.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19FE01D541;
-	Wed, 17 Jan 2024 13:03:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.44.175.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C0B20DC5
+	for <linux-hardening@vger.kernel.org>; Wed, 17 Jan 2024 14:32:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705496623; cv=none; b=SbP+EWe9rU02T1Jhx/ubXBAY72dfBWr4KmfdLveGvN+BDz4sss3EDICO3BAhnUBG6sZn4DbU5jI1STWnWCBHWBOv5x1UJI6XP+geGaF81FObqinm5gQKeRRO2ETYOkAQMJmrHCRyVejD6rrhgj2mZqp1aW5wukaCX4SKWXNeHRE=
+	t=1705501966; cv=none; b=klYb+AGKIHEfB6PtEV4l0d5c5/xvoPDjDg+EJPLJZi7i/xAaS/P2SuY19cqqCf5YzlQVbZDtvJ6L0LFsDit2/1utgPpm6Ynwjq4kx7P++Ni3Pf6Q9xcTvJUMkhKQWs2yjsICcGhomXnu7qegWkK2NqHWYL+it9mcxwvz7MEjlD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705496623; c=relaxed/simple;
-	bh=qQ+6vp4VGyv67J/0qhk1+D+vVpToII5A/94TKdAHneM=;
-	h=DKIM-Signature:Received:Received:DKIM-Signature:Received:
-	 Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:User-Agent:MIME-Version:Content-Transfer-Encoding; b=V19nklbzauADGrz4/5tTHpgM6ySos7ho1DfZtBEVCiF5+DHgEnaFKsyxta5NJqmNIfYJ5gCGSjJeraTNGfsMiOcV1hMB0ao4QM8JIReGjWjCDK6KWx7uSYev7UzhRjtwp7Pwm+KxFz0iDk46D+qnYgZ3T8aEP13kk7djWbuXu4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=G9rI+nq+; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=G9rI+nq+; arc=none smtp.client-ip=96.44.175.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
+	s=arc-20240116; t=1705501966; c=relaxed/simple;
+	bh=kkzjZHd7WNS4qBwCTQwi+455aFyXB+g748QuNeAbzBo=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
+	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
+	 Content-Type:Content-Transfer-Encoding; b=FTd0bm/3u4J1L3mBMY1Qf9Wl5VqEuVmqIs85z3fZmcdIXMHKjquvI2FwNzuY0jg9kd6dNrqL5O7RDthFoCdZ6U79JLkHcUg4SxFdyUFjq7qNQuS+aNtrCDBfHGmaQjZ6BIpmlfwexWhoy4lEC/mTfJoz0iJxcwqiPU201Jxi53Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=E4kJUHOw; arc=none smtp.client-ip=209.85.167.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="G9rI+nq+";
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="G9rI+nq+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1705496619;
-	bh=qQ+6vp4VGyv67J/0qhk1+D+vVpToII5A/94TKdAHneM=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=G9rI+nq+tqwHZXAyV0JeLHpDJrzo6kT87Rl1hWZ5NJ1NVO5+ZFBpVL0Rwij2Ao7Su
-	 NQxKrF64t65NvHEfYNB/rrueCucvvq3FLUcdqBN5MiMiQHv8AXca7ZE8+e7fW1y+lS
-	 rXhtNfNEwAzsqYv+JfNYMWtdSzQ6ptWTaN0aSFfE=
-Received: from localhost (localhost [127.0.0.1])
-	by bedivere.hansenpartnership.com (Postfix) with ESMTP id 82C3A1281A31;
-	Wed, 17 Jan 2024 08:03:39 -0500 (EST)
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
- by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavis, port 10024)
- with ESMTP id Br1jjjRF4HNd; Wed, 17 Jan 2024 08:03:39 -0500 (EST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1705496619;
-	bh=qQ+6vp4VGyv67J/0qhk1+D+vVpToII5A/94TKdAHneM=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=G9rI+nq+tqwHZXAyV0JeLHpDJrzo6kT87Rl1hWZ5NJ1NVO5+ZFBpVL0Rwij2Ao7Su
-	 NQxKrF64t65NvHEfYNB/rrueCucvvq3FLUcdqBN5MiMiQHv8AXca7ZE8+e7fW1y+lS
-	 rXhtNfNEwAzsqYv+JfNYMWtdSzQ6ptWTaN0aSFfE=
-Received: from [172.20.4.189] (unknown [173.211.218.201])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id BE03012808E8;
-	Wed, 17 Jan 2024 08:03:37 -0500 (EST)
-Message-ID: <5b7154f86913a0957e0518b54365a1b0fce5fbea.camel@HansenPartnership.com>
-Subject: Re: [GIT PULL] bcachefs updates for 6.8
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
-To: Theodore Ts'o <tytso@mit.edu>, Kent Overstreet
- <kent.overstreet@linux.dev>
-Cc: Greg KH <greg@kroah.com>, Mark Brown <broonie@kernel.org>, Neal Gompa
-	 <neal@gompa.dev>, Kees Cook <keescook@chromium.org>, Linus Torvalds
-	 <torvalds@linux-foundation.org>, linux-bcachefs@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Nikolai Kondrashov <spbnick@gmail.com>, 
-	Philip Li <philip.li@intel.com>, Luis Chamberlain <mcgrof@kernel.org>
-Date: Wed, 17 Jan 2024 08:03:35 -0500
-In-Reply-To: <20240117055457.GL911245@mit.edu>
-References: 
-	<xlynx7ydht5uixtbkrg6vgt7likpg5az76gsejfgluxkztukhf@eijjqp4uxnjk>
-	 <be2fa62f-f4d3-4b1c-984d-698088908ff3@sirena.org.uk>
-	 <gaxigrudck7pr3iltgn3fp5cdobt3ieqjwohrnkkmmv67fctla@atcpcc4kdr3o>
-	 <f8023872-662f-4c3f-9f9b-be73fd775e2c@sirena.org.uk>
-	 <olmilpnd7jb57yarny6poqnw6ysqfnv7vdkc27pqxefaipwbdd@4qtlfeh2jcri>
-	 <CAEg-Je8=RijGLavvYDvw3eOf+CtvQ_fqdLZ3DOZfoHKu34LOzQ@mail.gmail.com>
-	 <40bcbbe5-948e-4c92-8562-53e60fd9506d@sirena.org.uk>
-	 <2uh4sgj5mqqkuv7h7fjlpigwjurcxoo6mqxz7cjyzh4edvqdhv@h2y6ytnh37tj>
-	 <2024011532-mortician-region-8302@gregkh>
-	 <lr2wz4hos4pcavyrmswpvokiht5mmcww2e7eqyc2m7x5k6nbgf@6zwehwujgez3>
-	 <20240117055457.GL911245@mit.edu>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="E4kJUHOw"
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3bd6581bc62so3080415b6e.2
+        for <linux-hardening@vger.kernel.org>; Wed, 17 Jan 2024 06:32:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1705501964; x=1706106764; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W8RONH//ElZU86u60opp7THU7PsxqZBvC44A1MdMu3w=;
+        b=E4kJUHOw94wgHUapWkCjecBzf7N6IwfJeqw9RBS/vVMKe2De9ae8PiSyuV0XF+uY4v
+         2F7f81ioV1hg68em+PKeGq1sYJj6Gfq9CHN1va0JxDJXficeO+1rtYETpwgL21JKMK8R
+         PkD8OJCsEAi3nNDIjZcEUiopbsEgqgMe0OtoD2K00DXy6kXg+JnHqrf9PwlfR0/V7poi
+         1+SwCiu0EknKBsUVRD9mRXjAIvWVfQ5+erTypOshe00mR/XYyN8bV+kdJO7td+jDmofz
+         ksdDQBy0sRQ1LBsJ5J4aNufvmSCMi4oJ10vGZzPU3u6RLq31z7RZi8IbQA601bjR4aoK
+         vf1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705501964; x=1706106764;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=W8RONH//ElZU86u60opp7THU7PsxqZBvC44A1MdMu3w=;
+        b=ClKaNERe21jVBDe9h7scQT5d+sG165eIImvxwo75OV9mFzz7F5jupIPs4X8z4lFebH
+         t0ulCW1uWqKdyGdelC/Zt94NYqmLqjtww94l8G2vMLt8HAFtSZ5QagUHK51d1mvQV2Xc
+         GvUDH8MBgzAP7CIv+HRVyobNvmHXRGotTgkzb9nR9hAru+EGQouXjINRfhCG4HamHANZ
+         YCc03JvUsOiDgklwI44BXgEbVLU1g1j+5mwnc2sUBKjjggSf01VLC1gM0FD03DSEMCBp
+         TBe5TrpZ0Id78sEEA1/GN6qljLRIbvC6v0DpBpWs1FpaKmzuyglz/gs4v6Ox8Bn29Rnu
+         4ydA==
+X-Gm-Message-State: AOJu0YxZfbzfLpHICvvLHSLL/W7x0rg56oNtMwYeJ3vyYl3eOwo9BlhW
+	U7pqj0Eo/SKWdzcB1nSKzvqDegcMsDHFRoWbq6bsjEmZT7o/tOcFDWjS32Q=
+X-Google-Smtp-Source: AGHT+IE87eI9wptFf+xs4U6oR2zLXgl41vrThD1gFTxI6V//8WMTGlbbkeIOJ6ozq/sUoNyyugHRJ1IDoJg3F/CGQZI=
+X-Received: by 2002:a05:6808:1290:b0:3bd:428e:744e with SMTP id
+ a16-20020a056808129000b003bd428e744emr10251437oiw.53.1705501964261; Wed, 17
+ Jan 2024 06:32:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240117014541.8887-1-yaolu@kylinos.cn>
+In-Reply-To: <20240117014541.8887-1-yaolu@kylinos.cn>
+From: Paul Moore <paul@paul-moore.com>
+Date: Wed, 17 Jan 2024 09:32:33 -0500
+Message-ID: <CAHC9VhSs6bxXFCAhw7i5cN=iZtuG3-E8xDBRjyGsop=BrhbmSw@mail.gmail.com>
+Subject: Re: [PATCH] lsm: Resolve compiling 'security.c' error
+To: Lu Yao <yaolu@kylinos.cn>, linux-hardening@vger.kernel.org
+Cc: jmorris@namei.org, serge@hallyn.com, linux-security-module@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2024-01-17 at 00:54 -0500, Theodore Ts'o wrote:
-> On Tue, Jan 16, 2024 at 11:41:25PM -0500, Kent Overstreet wrote:
-> > > > No, it's a leadership/mentorship thing.
-> > > > 
-> > > > And this is something that's always been lacking in kernel
-> > > > culture. Witness the kind of general grousing that goes on at
-> > > > maintainer summits;maintainers complain about being overworked
-> > > > and people not stepping up to help with the grungy
-> > > > responsibilities, while simultaneously we still
-> 
->      <blah blah blah>
-> 
-> > > > Tests and test infrastructure fall into the necessary but not
-> > > > fun category, so they languish.
-> > > 
-> > > No, they fall into the "no company wants to pay someone to do the
-> > > work" category, so it doesn't get done.
-> > > 
-> > > It's not a "leadership" issue, what is the "leadership" supposed
-> > > to do here, refuse to take any new changes unless someone ponys
-> > > up and does the infrastructure and testing work first?  That's
-> > > not going to fly, for valid reasons.
-> 
-> Greg is absolutely right about this.
-> 
-> > But good tools are important beacuse they affect the rate of
-> > everyday development; they're a multiplier on the money everone is
-> > spending on salaries.
-> 
-> Alas, companies don't see it that way.  They take the value that get
-> from Linux for granted, and they only care about the multipler effect
-> of their employees salaries (and sometimes not even that).  They most
-> certainly care about the salutary effects on the entire ecosyustem.
-> At least, I haven't seen any company make funding decisions on that
-> basis.
+On Tue, Jan 16, 2024 at 8:46=E2=80=AFPM Lu Yao <yaolu@kylinos.cn> wrote:
+>
+> The following error log is displayed during the current compilation
+>   > 'security/security.c:810:2: error: =E2=80=98memcpy=E2=80=99 offset 32=
+ is
+>   > out of the bounds [0, 0] [-Werror=3Darray-bounds]'
+>
+> GCC version is '10.3.0 (Ubuntu 10.3.0-1ubuntu1~18.04~1)'
+>
+> Signed-off-by: Lu Yao <yaolu@kylinos.cn>
+> ---
+>  security/security.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Actually, this is partly our fault.  Companies behave exactly like a
-selfish contributor does:
+I'm adding the linux-hardening folks to the to To: line as this has
+now come up multiple times and my best guess is that this is an issue
+with the struct_size() macro, compiler annotations, or something
+similar and I suspect they are the experts in that area.  My
+understanding is that using the struct_size() macro is preferable to
+open coding the math, as this patch does, but if we have to do
+something like this to silence the warnings, that's okay with me.
 
-https://archive.fosdem.org/2020/schedule/event/selfish_contributor/
+So linux-hardening folks, what do you say?
 
-The question they ask is "if I'm putting money into it, what am I
-getting out of it".  If the answer to that is that it benefits
-everybody, it's basically charity  to the entity being asked (and not
-even properly tax deductible at that), which goes way back behind even
-real charitable donations (which at least have a publicity benefit) and
-you don't even get to speak to anyone about it when you go calling with
-the collecting tin.  If you can say it benefits these 5 tasks your
-current employees are doing, you might have a possible case for the
-engineering budget (you might get in the door but you'll still be
-queuing behind every in-plan budget item).  The best case is if you can
-demonstrate some useful for profit contribution it makes to the actual
-line of business (or better yet could be used to spawn a new line of
-business), so when you're asking for a tool, it has to be usable
-outside the narrow confines of the kernel and you need to be able to
-articulate why it's generally useful (git is a great example, it was
-designed to solve a kernel specific problem, but not it's in use pretty
-much everywhere source control is a thing).
+> diff --git a/security/security.c b/security/security.c
+> index 0144a98d3712..37168f6bee25 100644
+> --- a/security/security.c
+> +++ b/security/security.c
+> @@ -792,7 +792,7 @@ int lsm_fill_user_ctx(struct lsm_ctx __user *uctx, si=
+ze_t *uctx_len,
+>         size_t nctx_len;
+>         int rc =3D 0;
+>
+> -       nctx_len =3D ALIGN(struct_size(nctx, ctx, val_len), sizeof(void *=
+));
+> +       nctx_len =3D ALIGN(sizeof(struct lsm_ctx) + val_len, sizeof(void =
+*));
+>         if (nctx_len > *uctx_len) {
+>                 rc =3D -E2BIG;
+>                 goto out;
+> --
+> 2.25.1
 
-Somewhere between 2000 and now we seem to have lost our ability to
-frame the argument in the above terms, because the business quid pro
-quo argument was what got us money for stuff we needed and the Linux
-Foundation and the TAB formed, but we're not managing nearly as well
-now.  The environment has hardened against us (we're no longer the new
-shiny) but that's not the whole explanation.
-
-I also have to say, that for all the complaints there's just not any
-open source pull for test tools (there's no-one who's on a mission to
-make them better).  Demanding that someone else do it is proof of this
-(if you cared enough you'd do it yourself).  That's why all our testing
-infrastructure is just some random set of scripts that mostly does what
-I want, because it's the last thing I need to prove the thing I
-actually care about works.
-
-Finally testing infrastructure is how OSDL (the precursor to the Linux
-foundation) got started and got its initial funding, so corporations
-have been putting money into it for decades with not much return (and
-pretty much nothing to show for a unified testing infrastructure ...
-ten points to the team who can actually name the test infrastructure
-OSDL produced) and have finally concluded it's not worth it, making it
-a 10x harder sell now.
-
-James
-
+--=20
+paul-moore.com
