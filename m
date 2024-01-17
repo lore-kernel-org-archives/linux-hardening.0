@@ -1,95 +1,143 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 070AF1DA4B;
-	Tue, 16 Jan 2024 22:19:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B655CBD
+	for <linux-hardening@vger.kernel.org>; Wed, 17 Jan 2024 04:41:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705443568; cv=none; b=H5QeBYv6oaKPg4ldMTjNs2jw7JXdAaWnj+PBf0jTk/CmLBSlF1lXzOmB9hE6iMN11uvZSlXmwbcdMZ9coWEHjn+q3Tl0/NrbmBdcPvC7qiy9C1R5qnmLkAdkImxjEDDLuaP62I70T+RjLCrnWzwIS1Xjh+2W+g4zEVtZ7bW6K2A=
+	t=1705466494; cv=none; b=Zxko7j7DMfZucCcVzlETiCwRSAk15tk7S3Ky8OYp5qxEzC220Ns9myGnTXTKR+6g1iJtesQA1k1uuF2hrbLO9bVyKJqbgYC9okkvlpC+mnGzIUubKOFTBHOQGRftTzg8py946cjV0ClO1/4V5ynisQBeUrV7GrwSRelFvFoRjIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705443568; c=relaxed/simple;
-	bh=ik2oY4JRBWR6rvEPEnHpEDt7BIuzwUBEczKTn6ckrrM=;
-	h=DKIM-Signature:Received:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:Content-Language:To:Cc:References:From:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding; b=U7jqotkhmzAZVId3rugjDST7f8vjHsSKVrrFDrLrnrc1xQHyrajKAimjoAgeR31nP8nqOyJbv2sYbcZvotdWS4rWWg16/YBvFn8YvPbT0DH8Cg57ywfVy8ZKY2bsV1g4mOko5aTYlYou68jQYoELJ1w9JE0/iu5wxgOWhRh95TU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=FBmMA7aF; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1705466494; c=relaxed/simple;
+	bh=Qzr9zg1+p1Bd/iMhIuiKvCHy5JjGHYMzisOT7Tym+yw=;
+	h=Date:DKIM-Signature:X-Report-Abuse:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To:X-Migadu-Flow; b=QQsxq57cnoAVU2YOJPRE2hXH7f03RLop8cFU/vA25LC8cFHj8mhONRld7HEmCTQhGu3SwIkgJK1JX8NFRZ8u4PesF//M2/Sb7DRqGinoMPEAtkusLAZLRsu5/yqfGqLyIZH5NFrAtyZHiRrxNJDBafqcePH4OZb9hBGZERvYp3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=SzNF3lQ/; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FBmMA7aF"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=gO384S22CcX+AdiDGbsRafLHAmf11EYzzlC346GiPdM=; b=FBmMA7aFfDHBS2zFkio9GGDiKl
-	ZYzNT0szbWM8hCEJuCQ+iPTwmBOafYjkpJQPMBLAJnud3AP93Bd876K5Zf6c1MGEkEIIlZDBONZ1X
-	T9BZIN44Qu+gH1bQAWgC8Fx0fr8mxnnGSPazpkheTe4P4gGJa6+DZElkjCld1yNmIG75b/IcA55SK
-	FFqzIl9KYx63A94AQ05E2xMmBfnU9tdP57Goa2T2T2hqajs4H4sLNS2WLjINPz3c1BWK2xg4CParl
-	BqMzaxTz4ReP8a9XOv2yheWr/dBlEuH2XX3XDqZoJvoFWF8ckWBrnr0wnNqdV5g102f2naP2Yv5Fi
-	ApJmfc8A==;
-Received: from [50.53.46.231] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1rPrmD-00DoD6-0D;
-	Tue, 16 Jan 2024 22:19:21 +0000
-Message-ID: <c16ff365-6d7d-40a1-b096-e4d5cc127c68@infradead.org>
-Date: Tue, 16 Jan 2024 14:19:17 -0800
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="SzNF3lQ/"
+Date: Tue, 16 Jan 2024 23:41:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1705466489;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sT2xs/iTZQyQPumh74lkYawLrjrkx0mF5IFfdjGo1zU=;
+	b=SzNF3lQ/ViYDUhvlSgoOFXyhd3+jDTorTlpocWhQR8xkbF+WF94sAuj9E2lLXMJL+39Isg
+	2tdhwB/cyNg3Y2yCuOE3rdqyWaLkjB7uKuxCJNoQd7ae/eePU+a80SCCZjvjeWtcCmXaZ8
+	Kapt/e8Acj1dfKALRwhQtgrnQh+4IB0=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Greg KH <greg@kroah.com>
+Cc: Mark Brown <broonie@kernel.org>, Neal Gompa <neal@gompa.dev>, 
+	Kees Cook <keescook@chromium.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Nikolai Kondrashov <spbnick@gmail.com>, 
+	Philip Li <philip.li@intel.com>, Luis Chamberlain <mcgrof@kernel.org>
+Subject: Re: [GIT PULL] bcachefs updates for 6.8
+Message-ID: <lr2wz4hos4pcavyrmswpvokiht5mmcww2e7eqyc2m7x5k6nbgf@6zwehwujgez3>
+References: <202401101625.3664EA5B@keescook>
+ <xlynx7ydht5uixtbkrg6vgt7likpg5az76gsejfgluxkztukhf@eijjqp4uxnjk>
+ <be2fa62f-f4d3-4b1c-984d-698088908ff3@sirena.org.uk>
+ <gaxigrudck7pr3iltgn3fp5cdobt3ieqjwohrnkkmmv67fctla@atcpcc4kdr3o>
+ <f8023872-662f-4c3f-9f9b-be73fd775e2c@sirena.org.uk>
+ <olmilpnd7jb57yarny6poqnw6ysqfnv7vdkc27pqxefaipwbdd@4qtlfeh2jcri>
+ <CAEg-Je8=RijGLavvYDvw3eOf+CtvQ_fqdLZ3DOZfoHKu34LOzQ@mail.gmail.com>
+ <40bcbbe5-948e-4c92-8562-53e60fd9506d@sirena.org.uk>
+ <2uh4sgj5mqqkuv7h7fjlpigwjurcxoo6mqxz7cjyzh4edvqdhv@h2y6ytnh37tj>
+ <2024011532-mortician-region-8302@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v4 4/4] mseal:add documentation
-Content-Language: en-US
-To: Jonathan Corbet <corbet@lwn.net>, jeffxu@chromium.org,
- akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com,
- sroettger@google.com, willy@infradead.org, gregkh@linuxfoundation.org,
- torvalds@linux-foundation.org, usama.anjum@collabora.com
-Cc: jeffxu@google.com, jorgelo@chromium.org, groeck@chromium.org,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-mm@kvack.org, pedro.falcato@gmail.com, dave.hansen@intel.com,
- linux-hardening@vger.kernel.org, deraadt@openbsd.org
-References: <20240104185138.169307-1-jeffxu@chromium.org>
- <20240104185138.169307-5-jeffxu@chromium.org> <87y1cp9gvd.fsf@meer.lwn.net>
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <87y1cp9gvd.fsf@meer.lwn.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2024011532-mortician-region-8302@gregkh>
+X-Migadu-Flow: FLOW_OUT
 
-
-
-On 1/16/24 12:13, Jonathan Corbet wrote:
-> jeffxu@chromium.org writes:
+On Mon, Jan 15, 2024 at 09:13:01PM +0100, Greg KH wrote:
+> On Mon, Jan 15, 2024 at 01:42:53PM -0500, Kent Overstreet wrote:
+> > > That sounds more like a "(reproducible) tests don't exist" complaint
+> > > which is a different thing again to people going off and NIHing fancy
+> > > frameworks.
+> > 
+> > No, it's a leadership/mentorship thing.
+> > 
+> > And this is something that's always been lacking in kernel culture.
+> > Witness the kind of general grousing that goes on at maintainer summits;
+> > maintainers complain about being overworked and people not stepping up
+> > to help with the grungy responsibilities, while simultaneously we still
+> > very much have a "fuck off if you haven't proven yourself" attitude
+> > towards newcomers. Understandable given the historical realities (this
+> > shit is hard and the penalties of fucking up are high, so there does
+> > need to be a barrier to entry), but it's left us with some real gaps.
+> > 
+> > We don't have enough a people in the senier engineer role who lay out
+> > designs and organise people to take on projects that are bigger than one
+> > single person can do, or that are necessary but not "fun".
+> > 
+> > Tests and test infrastructure fall into the necessary but not fun
+> > category, so they languish.
 > 
->> From: Jeff Xu <jeffxu@chromium.org>
->>
->> Add documentation for mseal().
->>
->> Signed-off-by: Jeff Xu <jeffxu@chromium.org>
->> ---
->>  Documentation/userspace-api/mseal.rst | 181 ++++++++++++++++++++++++++
->>  1 file changed, 181 insertions(+)
->>  create mode 100644 Documentation/userspace-api/mseal.rst
+> No, they fall into the "no company wants to pay someone to do the work"
+> category, so it doesn't get done.
 > 
-> You need to add this file to index.rst or it won't be part of the docs
-> build.  Sphinx should have warned you about that when you did your test
-> build.
+> It's not a "leadership" issue, what is the "leadership" supposed to do
+> here, refuse to take any new changes unless someone ponys up and does
+> the infrastructure and testing work first?  That's not going to fly, for
+> valid reasons.
+> 
+> And as proof of this, we have had many real features, that benefit
+> everyone, called out as "please, companies, pay for this to be done, you
+> all want it, and so do we!" and yet, no one does it.  One real example
+> is the RT work, it has a real roadmap, people to do the work, a tiny
+> price tag, yet almost no one sponsoring it.  Yes, for that specific
+> issue it's slowly getting there and better, but it is one example of how
+> you view of this might not be all that correct.
 
-Yes, I have already asked Jeff to add this to his patch:
+Well, what's so special about any of those features? What's special
+about the RT work? The list of features and enhancements we want is
+never ending.
 
-diff -- a/Documentation/userspace-api/index.rst b/Documentation/userspace-api/index.rst
---- a/Documentation/userspace-api/index.rst
-+++ b/Documentation/userspace-api/index.rst
-@@ -23,6 +23,7 @@ place where this information is gathered
-    ebpf/index
-    ELF
-    ioctl/index
-+   mseal
-    iommu
-    iommufd
-    media/index
+But good tools are important beacuse they affect the rate of everyday
+development; they're a multiplier on the money everone is spending on
+salaries.
+
+In everyday development, the rate at which we can run tests and verify
+the corectness of the code we're working on is more often than not _the_
+limiting factor on rate of development. It's a particularly big deal for
+getting new people up to speed, and for work that crosses subsystems.
 
 
--- 
-#Randy
+> And you will see that we now have the infrastructure in places for this.
+> The great kunit testing framework, the kselftest framework, and the
+> stuff tying it all together is there.  All it takes is people actually
+> using it to write their tests, which is slowly happening.
+> 
+> So maybe, the "leadership" here is working, but in a nice organic way of
+> "wouldn't it be nice if you cleaned that out-of-tree unit test framework
+> up and get it merged" type of leadership, not mandates-from-on-high that
+> just don't work.  So organic you might have missed it :)
+
+Things are moving in the right direction; the testing track at Plumber's
+was exciting to see.
+
+Kselftests is not there yet, though. Those tests could all be runnable
+with a single command - and _most_ of what's needed is there, the kernel
+config dependencies are listed out, but we're still lacking a
+testrunner.
+
+I've been trying to get someone interested in hooking them up to ktest
+(my ktest, not that other thing), so that we'd have one common
+testrunner for running anything that can be a VM test. Similarly with
+blktests, mmtests, et cetera.
+
+Having one common way of running all our functional VM tests, and a
+common collection of those tests would be a huge win for productivity
+because _way_ too many developers are still using slow ad hoc testing
+methods, and a good test runner (ktest) gets the edit/compile/test cycle
+down to < 1 minute, with the same tests framework for local development
+and automated testing in the big test cloud...
