@@ -1,184 +1,263 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E18F42263E
-	for <linux-hardening@vger.kernel.org>; Wed, 17 Jan 2024 22:03:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C27F2561F;
+	Wed, 17 Jan 2024 23:32:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705529008; cv=none; b=vD2HRKm+4W9STOMqxHsCwH8wwEZNwhEL2H5VMmREo2xHAz7L+MIf4Fbh9oHvk+2HKbw4wywwN0yMdYRi32pupCP89eF2v6qZv2YHB9CjeyptZusCbj59brElumOWQjTd4pZmYURvCbkLhjn7LNkJvuoPCl15c/rgVa3IeGRwc04=
+	t=1705534371; cv=none; b=KeD5RK3BV13kMuMBlSmZvJvCf6c7RZLRQiLWMbCugTq2Fmhr8yPps6T3NFI9Z5wWmgSNYljJMsUZLf5mrZLjjsaUYIFi6yVRimogC2pg2kzP4fURXoxUVAd7ndAzoh7df/BoJHtu8WWEgj9CVK7f0oocIhNUsndTje2t466qqX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705529008; c=relaxed/simple;
-	bh=PBN9pShU3zJZmqNMeStewdxxNrSIe59k0AmnJyQviTQ=;
+	s=arc-20240116; t=1705534371; c=relaxed/simple;
+	bh=/SejH5GPjDBEmdN0zOQMUrtZ6fJLviy5zDtIBl23uKY=;
 	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
 	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
-	 Content-Type:Content-Transfer-Encoding; b=TNOLXUmGs6gao8dq+7RVeGTDtP1mbq3GXzqbUzq7zKHFLd1Wrr/W31188vbb2zNs3lLno/rvbcd4LPoFK0+auQ0z0iDOQb+Ac0122V779ttzqsOgPtZnlRdSLdg6or82DBLgd2VOnkyT2btWohVSzVNKpAFS7QR7YbF7sjghjLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=MjzhssxY; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	 Content-Type:Content-Transfer-Encoding; b=GVsFKuCaCwV0H5gba7s09dJ6jfCRUGw6bAxrQs/HSsovxg8LzZbauH9/wuPjTUi4AnppQKPmkeANXbqEOePUulQwBeerZxeG1mphHUndxtgCa57QegWjyV0aLBHfa1Cu8pX/Wo9zoMCXzltjGmFxy6+eYxjTb5YCe7rWeMbXttI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=alQrV5ND; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="MjzhssxY"
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-dc223d20a29so2197532276.3
-        for <linux-hardening@vger.kernel.org>; Wed, 17 Jan 2024 14:03:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="alQrV5ND"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1d3eb299e2eso71051565ad.2;
+        Wed, 17 Jan 2024 15:32:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1705529006; x=1706133806; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1705534369; x=1706139169; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=r0hQzkD2lll8u98rfbgNcSgwEggBLH7G8sSLxtHhjXs=;
-        b=MjzhssxY3w6/AoyobA3dKUOVqGEP0FgD7CwbzJm+BzaCa3eBr5J7ZYJWNxwmMCJLtX
-         BZ/uHQw/nW9P7Nb8BOpoA4U1ZBBB0KZpM80DcxB50RiAKF5zzxOyuxLkwd40SZ6ZPW0N
-         IN5z8cIkzFf21FOb1ZvaDDP/cV9YCoM2KYw+WCFpiqn56lef8JTkXs1UogOW1x8PL0iA
-         myi5ylvK0ssrDAwoOz/WiFQkmVTHbYb/XAvgw/fgBe1uh/VGOR8WabOkiIj+jgEem3aG
-         9OxPWKow6NF3FVITBW71rtdqZ2xmIIpln6v5bCcKTsHv6UL/f3gjMq3pTuxtXQpve6hF
-         XBiA==
+        bh=9YfAeTmtk679tAu7dzARGO25mtGdcyY5L1KoEcIoCfE=;
+        b=alQrV5ND010icKkELwkMwWR6O3dWQKV9IQ0nmPdVldGqcfZsYT84oyrdW/n2qzU5Ga
+         ExTtbotloDHXzDlqEFgrS2uzMFAUWu1l3ihd7EUw91N+HGmC1f7Gt7THi+8M4L6MOtJS
+         f7IMj+4sm1iO4e9+A7LIAtKpIpS0pcSr5tdC+Rh4Vl+UPkt5UsZi4ggSHEoFjmA3MO3s
+         7ampRZeElITwufNzzei4iH3gUiNxBPXioaoG2uNtlJ5yqQ/GmcNaLe2Frysy/6PFWvT6
+         jFtDs1phHIoD8wjiE4Kc2eHb1svXsKq1QwSLf+0mZ3LuTmmKyrrKvay8S2s2pxBEegkM
+         t5Zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705529006; x=1706133806;
+        d=1e100.net; s=20230601; t=1705534369; x=1706139169;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=r0hQzkD2lll8u98rfbgNcSgwEggBLH7G8sSLxtHhjXs=;
-        b=PWwoG7XK0kkAJqQqbujW3qaeOYtApN4Mcc9CFF4S/oW4rXg3f31wukbNHO6kg9/C1G
-         oeh3H1NfXNMUF+pm5Nvb09WEw2YtWiphANdUUrllcquM+Nyqc0MyNTeE1oYLd/AoG/k3
-         OaQFugAfIumRndHA97fL4lQMwQj5XCMxDzVrCK5Yvv9sciNnZ/91KRZ0VOGMbl64AONR
-         oHNa46RJhjrt0GBQYJtfGfK+VyfXqSfdGxwzeQqMpY6VYNysRmjoLW3MEB1S2N5i4jnU
-         GEmgET+ZI5eamlGG8IfbUgu65IaomZxlQPAP6sCpRv6IcHb6ckdDTgWLKbK75Oi98Raq
-         bmGA==
-X-Gm-Message-State: AOJu0YzWjbFfp/nL5hMTJnCsswv1pxbeFt7pER+dAB/JO/xbcigF/sOd
-	ZbOacj0bqEX9WcJl2/dh9iq/Mh/QHqR+VzvbGTLRUlg/90Pt
-X-Google-Smtp-Source: AGHT+IHzhrY54HAom8TxcDBRSBAwDXqJzbxfS+G2gUXnllGB25H71yyUawiYc+qi2R6N99FR5nRNs8enpOHbgO0zsmQ=
-X-Received: by 2002:a25:ce8e:0:b0:dc2:3c18:7ff1 with SMTP id
- x136-20020a25ce8e000000b00dc23c187ff1mr1524558ybe.112.1705529005268; Wed, 17
- Jan 2024 14:03:25 -0800 (PST)
+        bh=9YfAeTmtk679tAu7dzARGO25mtGdcyY5L1KoEcIoCfE=;
+        b=Igpy6bNSeF+ktTJcLgZ2l9O1LyJYiNAsFoShQqh0rjGJlI7Tnzbsc+z4tkIAMORprt
+         /wIHwcmVf/1nveGXZBR+wGodB6q+BZRzApuxZADkjIzRyb1mPrYsjjOjpjL8g9JeMVJR
+         e0pvvw1ES9qxpbGDnk1hOL9nU03Vn8ldHTgZf+QSA5vRrjaZR278Vriw/naDFmBzexvZ
+         FGc7FKLVfa/4Hn+7CzNhVrCHZTFdCNh0StO4UjhzJ6aF4wZCtEWDKRqakjRHgCJjPsGC
+         jcg8bHAPFhTFD6ra96ApHurrKKv8eB7jqBLUs2jL+u0bQ5BOqGKDUmELfFHLBD429zZh
+         DOvA==
+X-Gm-Message-State: AOJu0YwZfa+SYXytq33I8/7k/OgqQkHgO1xe9Wj2MkJ3zjO2/aeJ5M+i
+	4IGIsux+P2Y0CaR8caR60kKayc+WR/roAEd8xFxCu5B49a1cQS87PfG7lFsNLgqbvLYzfTVi/gk
+	lyT7Qm17SYyMCjYWaVvazSww4EXU=
+X-Google-Smtp-Source: AGHT+IGSjjjI48LFbJbhuzvKiPU5xKL4kK9o6cxskSzYKYXU8MavbZwvXf8XIz11R03yYXPwR9d+H6HuDPPtKX52Qo0=
+X-Received: by 2002:a17:90a:a893:b0:28e:44e7:fad6 with SMTP id
+ h19-20020a17090aa89300b0028e44e7fad6mr17619pjq.90.1705534369306; Wed, 17 Jan
+ 2024 15:32:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240117014541.8887-1-yaolu@kylinos.cn> <CAHC9VhSs6bxXFCAhw7i5cN=iZtuG3-E8xDBRjyGsop=BrhbmSw@mail.gmail.com>
- <202401171236.5175FA9FA9@keescook>
-In-Reply-To: <202401171236.5175FA9FA9@keescook>
-From: Paul Moore <paul@paul-moore.com>
-Date: Wed, 17 Jan 2024 17:03:14 -0500
-Message-ID: <CAHC9VhR+d70b6QfAdtoch-M5cttM63KpMcKG-tfv5PZB9=bnSg@mail.gmail.com>
-Subject: Re: [PATCH] lsm: Resolve compiling 'security.c' error
+References: <20220809142457.4751229f@imladris.surriel.com> <d0a136a0-4a31-46bc-adf4-2db109a61672@kernel.org>
+ <3193bf5b-4e22-412f-8c5b-68574942d9bc@kernel.org> <CAJuCfpHXLdQy1a2B6xN2d7quTYwg2OoZseYPZTRpU0eHHKD-sQ@mail.gmail.com>
+ <CAHbLzkpEWYhRAabAhrr6zuQqh0rO-mh=NZupDxJJ1BidOt_uiA@mail.gmail.com>
+ <CAJuCfpH5gwQc0mBzQ5LOMY9URCTh=58yUJd8pbzzynqAy8_yXw@mail.gmail.com>
+ <CAHbLzkoOEEKakj_XCTYhAU8fJWu8in_EY-pHnw76B1=CfYMx1w@mail.gmail.com>
+ <CAJuCfpH3SWTzGNQpYXbE0i2XZwodLc0SCRVYijDz2FPQJ2PpiA@mail.gmail.com> <202401170925.015D300A@keescook>
+In-Reply-To: <202401170925.015D300A@keescook>
+From: Yang Shi <shy828301@gmail.com>
+Date: Wed, 17 Jan 2024 15:32:37 -0800
+Message-ID: <CAHbLzkoHfvLoxbeXUrKAYdEnTigDOC4EO5FU+tQQ9bL5xBrx+g@mail.gmail.com>
+Subject: Re: [PATCH v2] mm: align larger anonymous mappings on THP boundaries
 To: Kees Cook <keescook@chromium.org>
-Cc: Lu Yao <yaolu@kylinos.cn>, linux-hardening@vger.kernel.org, jmorris@namei.org, 
-	serge@hallyn.com, linux-security-module@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Cc: Suren Baghdasaryan <surenb@google.com>, Jeffrey Vander Stoep <jeffv@google.com>, 
+	Jiri Slaby <jirislaby@kernel.org>, Rik van Riel <riel@surriel.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, kernel-team@fb.com, 
+	Matthew Wilcox <willy@infradead.org>, Christoph Lameter <cl@linux.com>, linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 17, 2024 at 3:51=E2=80=AFPM Kees Cook <keescook@chromium.org> w=
+On Wed, Jan 17, 2024 at 9:40=E2=80=AFAM Kees Cook <keescook@chromium.org> w=
 rote:
-> On Wed, Jan 17, 2024 at 09:32:33AM -0500, Paul Moore wrote:
-> > On Tue, Jan 16, 2024 at 8:46=E2=80=AFPM Lu Yao <yaolu@kylinos.cn> wrote=
-:
-> > >
-> > > The following error log is displayed during the current compilation
-> > >   > 'security/security.c:810:2: error: =E2=80=98memcpy=E2=80=99 offse=
-t 32 is
-> > >   > out of the bounds [0, 0] [-Werror=3Darray-bounds]'
-> > >
-> > > GCC version is '10.3.0 (Ubuntu 10.3.0-1ubuntu1~18.04~1)'
 >
-> As an aside, Ubuntu 18.04 went out of support back in June 2023, and
-> never officially supported gcc 10:
-> https://launchpad.net/ubuntu/+source/gcc-10
->
-> That said, I still see this error with gcc 10.5 on supported Ubuntu
-> releases. I'm surprised this is the first time I've seen this error!
->
+> On Tue, Jan 16, 2024 at 02:30:36PM -0800, Suren Baghdasaryan wrote:
+> > On Tue, Jan 16, 2024 at 2:25=E2=80=AFPM Yang Shi <shy828301@gmail.com> =
+wrote:
 > > >
-> > > Signed-off-by: Lu Yao <yaolu@kylinos.cn>
-> > > ---
-> > >  security/security.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > On Tue, Jan 16, 2024 at 1:58=E2=80=AFPM Suren Baghdasaryan <surenb@go=
+ogle.com> wrote:
+> > > >
+> > > > On Tue, Jan 16, 2024 at 12:56=E2=80=AFPM Yang Shi <shy828301@gmail.=
+com> wrote:
+> > > > >
+> > > > > On Tue, Jan 16, 2024 at 11:16=E2=80=AFAM Suren Baghdasaryan <sure=
+nb@google.com> wrote:
+> > > > > >
+> > > > > > On Tue, Jan 16, 2024 at 4:09=E2=80=AFAM Jiri Slaby <jirislaby@k=
+ernel.org> wrote:
+> > > > > > >
+> > > > > > > On 16. 01. 24, 12:53, Jiri Slaby wrote:
+> > > > > > > > Hi,
+> > > > > > > >
+> > > > > > > > On 09. 08. 22, 20:24, Rik van Riel wrote:
+> > > > > > > >> Align larger anonymous memory mappings on THP boundaries b=
+y
+> > > > > > > >> going through thp_get_unmapped_area if THPs are enabled fo=
+r
+> > > > > > > >> the current process.
+> > > > > > > >>
+> > > > > > > >> With this patch, larger anonymous mappings are now THP ali=
+gned.
+> > > > > > > >> When a malloc library allocates a 2MB or larger arena, tha=
+t
+> > > > > > > >> arena can now be mapped with THPs right from the start, wh=
+ich
+> > > > > > > >> can result in better TLB hit rates and execution time.
+> > > > > > > >
+> > > > > > > > This appears to break 32bit processes on x86_64 (at least).=
+ In
+> > > > > > > > particular, 32bit kernel or firefox builds in our build sys=
+tem.
+> > > > > > > >
+> > > > > > > > Reverting this on top of 6.7 makes it work again.
+> > > > > > > >
+> > > > > > > > Downstream report:
+> > > > > > > >   https://bugzilla.suse.com/show_bug.cgi?id=3D1218841
+> > > > > > > >
+> > > > > > > > So running:
+> > > > > > > > pahole -J --btf_gen_floats -j --lang_exclude=3Drust
+> > > > > > > > --skip_encoding_btf_inconsistent_proto --btf_gen_optimized =
+.tmp_vmlinux.btf
+> > > > > > > >
+> > > > > > > > crashes or errors out with some random errors:
+> > > > > > > > [182671] STRUCT idr's field 'idr_next' offset=3D128 bit_siz=
+e=3D0 type=3D181346
+> > > > > > > > Error emitting field
+> > > > > > > >
+> > > > > > > > strace shows mmap() fails with ENOMEM right before the erro=
+rs:
+> > > > > > > > 1223  mmap2(NULL, 5783552, PROT_READ|PROT_WRITE,
+> > > > > > > > MAP_PRIVATE|MAP_ANONYMOUS, -1, 0 <unfinished ...>
+> > > > > > > > ...
+> > > > > > > > 1223  <... mmap2 resumed>)              =3D -1 ENOMEM (Cann=
+ot allocate
+> > > > > > > > memory)
+> > > > > > > >
+> > > > > > > > Note the .tmp_vmlinux.btf above can be arbitrary, but likel=
+y large
+> > > > > > > > enough. For reference, one is available at:
+> > > > > > > > https://decibel.fi.muni.cz/~xslaby/n/btf
+> > > > > > > >
+> > > > > > > > Any ideas?
+> > > > > > >
+> > > > > > > This works around the problem, of course (but is a band-aid, =
+not a fix):
+> > > > > > >
+> > > > > > > --- a/mm/mmap.c
+> > > > > > > +++ b/mm/mmap.c
+> > > > > > > @@ -1829,7 +1829,7 @@ get_unmapped_area(struct file *file, un=
+signed long
+> > > > > > > addr, unsigned long len,
+> > > > > > >                   */
+> > > > > > >                  pgoff =3D 0;
+> > > > > > >                  get_area =3D shmem_get_unmapped_area;
+> > > > > > > -       } else if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)) {
+> > > > > > > +       } else if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE) &&
+> > > > > > > !in_32bit_syscall()) {
+> > > > > > >                  /* Ensures that larger anonymous mappings ar=
+e THP
+> > > > > > > aligned. */
+> > > > > > >                  get_area =3D thp_get_unmapped_area;
+> > > > > > >          }
+> > > > > > >
+> > > > > > >
+> > > > > > > thp_get_unmapped_area() does not take care of the legacy stuf=
+f...
+> > > > > >
+> > > > > > This change also affects the entropy of allocations. With this =
+patch
+> > > > > > Android test [1] started failing and it requires only 8 bits of
+> > > > > > entropy. The feedback from our security team:
+> > > > > >
+> > > > > > 8 bits of entropy is already embarrassingly low, but was necess=
+ary for
+> > > > > > 32 bit ARM targets with low RAM at the time. It's definitely no=
+t
+> > > > > > acceptable for 64 bit targets.
+> > > > >
+> > > > > Thanks for the report. Is it 32 bit only or 64 bit is also impact=
+ed?
+> > > > > If I understand the code correctly, it expects the address alloca=
+ted
+> > > > > by malloc() is kind of randomized, right?
+> > > >
+> > > > Yes, correct, the test expects a certain level of address randomiza=
+tion.
+> > > > The test failure was reported while running kernel_virt_x86_64 targ=
+et
+> > > > (Android emulator on x86), so it does impact 64bit targets.
+> > >
+> > > IIUC this breaks the "expectation" for randomized addresses returned
+> > > by malloc(), but it doesn't break any real Android application, right=
+?
+> > > So this is a security concern instead of a real regression.
 > >
-> > I'm adding the linux-hardening folks to the to To: line as this has
-> > now come up multiple times and my best guess is that this is an issue
-> > with the struct_size() macro, compiler annotations, or something
-> > similar and I suspect they are the experts in that area.  My
-> > understanding is that using the struct_size() macro is preferable to
-> > open coding the math, as this patch does, but if we have to do
-> > something like this to silence the warnings, that's okay with me.
+> > How is making a system move vulnerabile not a real regression?
 > >
-> > So linux-hardening folks, what do you say?
->
-> This is a GCC bug -- it thinks nctx_len could be 0, so it gets mad about
-> the array bounds.
-
-Ah ha, thanks for that.
-
-> > > diff --git a/security/security.c b/security/security.c
-> > > index 0144a98d3712..37168f6bee25 100644
-> > > --- a/security/security.c
-> > > +++ b/security/security.c
-> > > @@ -792,7 +792,7 @@ int lsm_fill_user_ctx(struct lsm_ctx __user *uctx=
-, size_t *uctx_len,
-> > >         size_t nctx_len;
-> > >         int rc =3D 0;
 > > >
-> > > -       nctx_len =3D ALIGN(struct_size(nctx, ctx, val_len), sizeof(vo=
-id *));
-> > > +       nctx_len =3D ALIGN(sizeof(struct lsm_ctx) + val_len, sizeof(v=
-oid *));
-> > >         if (nctx_len > *uctx_len) {
-> > >                 rc =3D -E2BIG;
-> > >                 goto out;
+> > > I think we can make this opt-in with a knob. Anyone who outweighs
+> > > security could opt this feature out. However I'm wondering whether
+> > > Android should implement a general address randomization mechanism
+> > > instead of depending on "luck" if you do care about it.
+> >
+> > This is not depending on luck. This is checking for possible
+> > vulnerabilities in the system.
+> > I admit I'm not a security expert, so I'm looping in Jeff and Kees to c=
+hime in.
 >
-> Please don't do this -- it regresses the efforts to make sure we can
-> never wrap the math on here.
+> Hi!
+>
+> Just to chime in, but reduction in ASLR entropy is absolutely a
+> regression. This is userspace visible (via /proc/sys/kernel/randomize_va_=
+space,
+> /proc/sys/vm/mmap_rnd*_bits) with expectations that it work as
+> advertised. So, while 32-bit might be already ASLR-weak, we don't want
+> to make things super bad nor break ASLR in compat mode under 64-bit
+> systems.
+>
+> Having an opt-in sounds reasonable, but we need to wire it to the ASLR
+> sysctls in some way so nothing lying about the ASLR entropy.
 
-I didn't want to apply that change, hence my To/CC to you guys.  If
-there was no other option to silence the warning then we would
-probably have to do it, but it looks like we have options.
+Thanks for the explanation. IIUC the randomiza_va_space and
+mmap_rnd_bits randomize the mmap_base and start_brk for each exec()
+call. So the heap allocation is randomized. But it seems the formula
+doesn't take into account huge page. ARM64 adjusts the mmap_rnd_bits
+based on page size.
 
-> We need to pick one of these two diffs
-> instead. The first disables -Warray-bounds for GCC 10.* also (since we
-> keep having false positives). The latter silences this 1 particular
-> case by explicitly checking nctx_len for 0:
->
-> diff --git a/init/Kconfig b/init/Kconfig
-> index 8d4e836e1b6b..af4833430aca 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -874,7 +874,7 @@ config GCC11_NO_ARRAY_BOUNDS
->
->  config CC_NO_ARRAY_BOUNDS
->         bool
-> -       default y if CC_IS_GCC && GCC_VERSION >=3D 110000 && GCC11_NO_ARR=
-AY_BOUNDS
-> +       default y if CC_IS_GCC && GCC_VERSION >=3D 100000 && GCC11_NO_ARR=
-AY_BOUNDS
->
->  # Currently, disable -Wstringop-overflow for GCC 11, globally.
->  config GCC11_NO_STRINGOP_OVERFLOW
+I did a simple test, which conceptually does:
+1. call mmap to allocate 8M heap
+2. print out the allocated address
+3. run the program 1000 times (launch/exit/re-launch)
+4. check how many unique addresses
 
-It sounds like lsm_fill_user_ctx() is not the only one having problems
-with GCC v10 so I'm guessing you're going to submit a patch like the
-above up to Linus?  I think that's preferable to adding extra checks
-we don't really need just to silence a buggy compiler.
+With the default config on my arm64 VM (mmap_rnd_bits is 18), I saw
+134 unique addresses. Without the patch, I saw 945 unique addresses.
+So I think the test could replicate what your test does.
 
-> diff --git a/security/security.c b/security/security.c
-> index 0144a98d3712..ab403136958f 100644
-> --- a/security/security.c
-> +++ b/security/security.c
-> @@ -793,7 +793,7 @@ int lsm_fill_user_ctx(struct lsm_ctx __user *uctx, si=
-ze_t *uctx_len,
->         int rc =3D 0;
+When I increased the mmap_rnd_bits to 24, I saw 988 unique addresses
+with the patch. x86_64 should have 28 bits by default, it should
+randomize the address quite well. I don't know why you still saw this,
+or you have a different setting for mmap_rnd_bits?
+
+I'm wondering whether we should take into account huge page alignment
+for mmap_rnd_bits. And I think this is a huge page common problem, we
+have file mapping huge page aligned as well.
+
+32 bit is easy, I think I can just make thp_get_unmapped_area() a
+no-op on 32 bit system.
+
 >
->         nctx_len =3D ALIGN(struct_size(nctx, ctx, val_len), sizeof(void *=
-));
-> -       if (nctx_len > *uctx_len) {
-> +       if (nctx_len =3D=3D 0 || nctx_len > *uctx_len) {
->                 rc =3D -E2BIG;
->                 goto out;
->         }
+> -Kees
 >
 > --
 > Kees Cook
-
---=20
-paul-moore.com
