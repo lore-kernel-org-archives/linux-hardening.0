@@ -1,126 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [212.227.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0150422EE0;
-	Wed, 17 Jan 2024 18:19:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D3E424212;
+	Wed, 17 Jan 2024 20:24:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705515590; cv=none; b=CkqNDY2w/N9BpzN4foTzuOPDgnqvMtHoKv1fQhFtlvjb96LyxXD7XXy1gvAIfMfvXaM3gpdVxikuXZZdWi6nG3zjgAOwl/KgC+XF6g2zPltxaG3iVHK0OZMiHcVsYRhY4enB/jqhWNb+f5bBpKikGqNv6f4YrRzVkykDxchZYb8=
+	t=1705523097; cv=none; b=onaAigIVE2zWJkOmDENOV1RMO8Jd6eSXJh8Dbc2K3Ymu/6WDG1vhsFzpGPNuzroGQLQXl2kVsHHbF1DoZURQlUKtN8CYnfg2i9TBkGztM8EKkQp7j1wqmnJnSQeM/oEJYz+YCdCQkV9JlqGVgTKO9RHlGQGRX278zmRV8D4Qg6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705515590; c=relaxed/simple;
-	bh=qGlcZRV44crjqbw1JQjmrtKXLKflvsUJg8srLpQ9eco=;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To:X-Cookie; b=JPVk6j/BIC9MkBXnO1Fon03MyJMeTIuR2lr/iEgHbopUkyD0sKssYOyy4dbDNMA4mmBVsygeXrpanYgne12YVxHmnkwTP+hpV/q5Rpk7KIEz4Tkis5NlnLHaA3ULtZqseJ2jDzwo05/YA+WCbYUEaxqlbx5oB4tpN6ky+LenneM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=adFzkfSO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705523097; c=relaxed/simple;
+	bh=UE38ED6EpRlZY0gaxf7iQTb5dYoGYagkTxGhMebsNqE=;
+	h=DKIM-Signature:X-UI-Sender-Class:Received:Message-ID:Date:
+	 MIME-Version:User-Agent:To:Content-Language:Cc:From:Subject:
+	 Content-Type:Content-Transfer-Encoding:X-Provags-ID:X-Spam-Flag:
+	 UI-OutboundReport; b=Lq5XU7QAU0NAFiwfluLQ3/ZUDbDc3ciTxrVE/kAcVHbhUmrMgpQYWi3C9xj5MwiErpjPbfdkje2L3nqfUa4vkguduqn4d0WOfS15/PYdm/SASl34BHDs0LekwYnqZ/QO9Fut7bcdILn2l1pqJu2UL976bKmilmD2wj34mDKjw3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=AGiGBV3z; arc=none smtp.client-ip=212.227.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="adFzkfSO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B03A2C433C7;
-	Wed, 17 Jan 2024 18:19:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705515589;
-	bh=qGlcZRV44crjqbw1JQjmrtKXLKflvsUJg8srLpQ9eco=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=adFzkfSOVycGp6YJDdZ0RCzxsP3syYVSeLMqqsOZ2+IuVdDJ2F8BeiEZNAE1+G4nF
-	 uwAy1cm7aUll6YGX/rBgIeKNLKAaCuI5SRH0Cz7M9HPA5oXrvwX0jXpLe3F92eTv7T
-	 Ogmf+M5bUkMIe876iFliMxq/yQ00eg0kxxKUTe9WQR8fgsEQ/jj17xF8697FV8TOeT
-	 KnfylJh+dP0/v2DiUa4OVGZ7NUKojv0MbupGpFswIpMRO2dtm+68PJS0BTDts6m6lO
-	 7A9FabHDWunu3/oDuIUv1IZW72VZpvSJeGtaBrmZ49gDYAydA3jj382NAIIRfi13lH
-	 di4hlLX2dmdHQ==
-Date: Wed, 17 Jan 2024 18:19:43 +0000
-From: Mark Brown <broonie@kernel.org>
-To: James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc: Theodore Ts'o <tytso@mit.edu>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Greg KH <greg@kroah.com>, Neal Gompa <neal@gompa.dev>,
-	Kees Cook <keescook@chromium.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Nikolai Kondrashov <spbnick@gmail.com>,
-	Philip Li <philip.li@intel.com>,
-	Luis Chamberlain <mcgrof@kernel.org>
-Subject: Re: [GIT PULL] bcachefs updates for 6.8
-Message-ID: <c69a3103-ae4d-459a-b5f4-d3bbe2af6fb2@sirena.org.uk>
-References: <gaxigrudck7pr3iltgn3fp5cdobt3ieqjwohrnkkmmv67fctla@atcpcc4kdr3o>
- <f8023872-662f-4c3f-9f9b-be73fd775e2c@sirena.org.uk>
- <olmilpnd7jb57yarny6poqnw6ysqfnv7vdkc27pqxefaipwbdd@4qtlfeh2jcri>
- <CAEg-Je8=RijGLavvYDvw3eOf+CtvQ_fqdLZ3DOZfoHKu34LOzQ@mail.gmail.com>
- <40bcbbe5-948e-4c92-8562-53e60fd9506d@sirena.org.uk>
- <2uh4sgj5mqqkuv7h7fjlpigwjurcxoo6mqxz7cjyzh4edvqdhv@h2y6ytnh37tj>
- <2024011532-mortician-region-8302@gregkh>
- <lr2wz4hos4pcavyrmswpvokiht5mmcww2e7eqyc2m7x5k6nbgf@6zwehwujgez3>
- <20240117055457.GL911245@mit.edu>
- <5b7154f86913a0957e0518b54365a1b0fce5fbea.camel@HansenPartnership.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="AGiGBV3z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
+	t=1705523060; x=1706127860; i=markus.elfring@web.de;
+	bh=UE38ED6EpRlZY0gaxf7iQTb5dYoGYagkTxGhMebsNqE=;
+	h=X-UI-Sender-Class:Date:To:Cc:From:Subject;
+	b=AGiGBV3z1AcVzDaPaFPfPt5DrKaMz2RNGife96dNBIjckShZfAuVkkLo+TEHje4i
+	 v03fQnm7PY4gCoJGCJ/3HvCScMZ0LyV5Q8RV47c9qBI1UIHWndS1ZnORiduxi6lIo
+	 teiLfz47+xFthZ2wXf4s1zAlESQVYo/5dLg5H0DdMkHo5jtuaK0nEbIKRgrl4gKUm
+	 bbDZY9qVfy4pMgua+dIE6nKgMRjRSsVDVo3NeI1NLmkdMrOd4zGWiXa8dBRmtGigj
+	 tUv4fyF4XYLSiO/cz27Lnm8lDHYAnTdKo5FfNsuL9283yvQutKeTcFLWIVbmUzpoG
+	 7C+dO2eVEYIFQ3PRrA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.84.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MALeD-1rFzqK3fND-00BzEE; Wed, 17
+ Jan 2024 21:24:19 +0100
+Message-ID: <644f44ad-7e2b-4a1a-bbd7-ccc79d479242@web.de>
+Date: Wed, 17 Jan 2024 21:24:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="7aTkAu68BodLGEOk"
-Content-Disposition: inline
-In-Reply-To: <5b7154f86913a0957e0518b54365a1b0fce5fbea.camel@HansenPartnership.com>
-X-Cookie: Nostalgia isn't what it used to be.
+User-Agent: Mozilla Thunderbird
+To: linux-hardening@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+ Joel Fernandes <joel@joelfernandes.org>, Kees Cook <keescook@chromium.org>,
+ Tony Luck <tony.luck@intel.com>
+Content-Language: en-GB
+Cc: LKML <linux-kernel@vger.kernel.org>, =?UTF-8?B?R8O8bnRlciBSw7Zjaw==?=
+ <groeck@chromium.org>, Sai Prakash Ranjan
+ <saiprakash.ranjan@codeaurora.org>, Kunwu Chan <chentao@kylinos.cn>
+From: Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] pstore/ram: Return directly after a failed kasprintf() call
+ in ramoops_init_prz()
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:6wzOESbIb1mZ02S49ElPi5Zvo4NveBoF9p3rDTJTlzJEi0YVnI2
+ c1ZgYATqL1cTVG+KYL3CwX5YhdzThRbRFDhPMOhtw9CgcHP17D3csESEisOex7lj4FfJQHX
+ U3bZEoCEv2aA/ATG+lmudUYtw9hU54INJuho6VcirMAj5atIgPedSgxqxmBzliN+iS8SM3A
+ 0CkraKfabfS/TkCf1efQQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:7a0FsOiFKps=;AujlA2bNA0FLb56dO9Arnk6Ehd/
+ H52E4uHbwT1X6t+TIPDTZM5jukyM/UEl2kRsA9PzQRREhezlkIdEz+H7TPDIoa9ZzaGkKzSsx
+ H1WSDFOWmFd+pgNgdLRoSdT1gqTSeXXUJednLL5/hK2CRaycpL7Llvqjcq6HQ7JtqiZJCFln4
+ ef/dMVE9JF+UbaHdJlk/y+mq5F4hEu7I6Fvqv+//ZCAuVJpqxjzB+2aem5ReGFLpWvxcgl7HP
+ HkQIAgt+K31oLrIPApIZX/9K6il6s6e6oSTgu1GCuZrftKQqqbBdyMjhOswZcIUIf2P2n0fUN
+ sAAIA4e/XYDK4DAH9MD8spSnrcCltumApGI1s0CEkgmFqyAY3VM6JHoC6HRqvNuGXEItIHNMW
+ Kvk215OnIUsMO2rHPiEP/GlBfWcjVSdA5gyw1oxHVbMCHM7+33TqGhVVtSfsjnBZbwlUIQHUC
+ 162ItZnfXSZNjbkYNZDdgu1U94JHF2QXY1Dcz9E9HCkv9CpPLwQAH5nKXUWvWxt2Bdzkx/40K
+ GxI9REFPSmkzKxaMQgLQxfN9IeSDg+KugdaN6IAOeSvi1Nw5uepufdSLPPzqyIct3m/ysnC9V
+ n6IEnJuzzQ3yvD/SK72NCWa32Ub2ntytgKWVVHNTJJ3cjfeNY0iqPle9qrKpIwzSCoFuNSDmj
+ GOifNyEPupeVUfVVPYj7KGRjJk/PC7n6yvGV2pGPDQlRjwxU4wRzb6q9pPQF+xjtytJmsSzMQ
+ lMg67Q3/WXEc12Bre5JN+3RZlwyaJkb1fWs7+iwA4ZTp0exTPzKcGYTYDM+VxPXMr83i+TTbt
+ 1y00b0pt71yxE6Vc6n3Ji1RpVuy/0SWaSiJazkRVwHqw+7Elh3MoKSqhdqZsz5qXRON0yaERG
+ BkAEOfbp3v2ae0ZOuS8I4VGXHg4JlH1BC7GxSeTPIv55SsP74N0oSmce8SiikCdtW5pBmqc8d
+ +c1z0XMx0X6pPuRtGnYnbjyaGuc=
 
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Wed, 17 Jan 2024 21:09:22 +0100
 
---7aTkAu68BodLGEOk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The result from a call of the function =E2=80=9Ckasprintf=E2=80=9D was pas=
+sed to
+a subsequent function call without checking for a null pointer before
+(according to a memory allocation failure).
+This issue was detected by using the Coccinelle software.
 
-On Wed, Jan 17, 2024 at 08:03:35AM -0500, James Bottomley wrote:
+Thus return directly after a failed kasprintf() call.
 
-> I also have to say, that for all the complaints there's just not any
-> open source pull for test tools (there's no-one who's on a mission to
-> make them better).  Demanding that someone else do it is proof of this
-> (if you cared enough you'd do it yourself).  That's why all our testing
-> infrastructure is just some random set of scripts that mostly does what
-> I want, because it's the last thing I need to prove the thing I
-> actually care about works.
+Fixes: 1227daa43bce1 ("pstore/ram: Clarify resource reservation labels")
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ fs/pstore/ram.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> Finally testing infrastructure is how OSDL (the precursor to the Linux
-> foundation) got started and got its initial funding, so corporations
-> have been putting money into it for decades with not much return (and
-> pretty much nothing to show for a unified testing infrastructure ...
-> ten points to the team who can actually name the test infrastructure
-> OSDL produced) and have finally concluded it's not worth it, making it
-> a 10x harder sell now.
+diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+index 88b34fdbf759..1a673a4af17c 100644
+=2D-- a/fs/pstore/ram.c
++++ b/fs/pstore/ram.c
+@@ -595,6 +595,9 @@ static int ramoops_init_prz(const char *name,
+ 	}
 
-I think that's a *bit* pessimistic, at least for some areas of the
-kernel - there is commercial stuff going on with kernel testing with
-varying degrees of community engagement (eg, off the top of my head
-Baylibre, Collabora and Linaro all have offerings of various kinds that
-I'm aware of), and some of that does turn into investments in reusable
-things rather than proprietary stuff.  I know that I look at the
-kernelci.org results for my trees, and that I've fixed issues I saw
-purely in there.  kselftest is noticably getting much better over time,
-and LTP is quite active too.  The stuff I'm aware of is more focused
-around the embedded space than the enterprise/server space but it does
-exist.  That's not to say that this is all well resourced and there's no
-problem (far from it), but it really doesn't feel like a complete dead
-loss either.
+ 	label =3D kasprintf(GFP_KERNEL, "ramoops:%s", name);
++	if (!label)
++		return -ENOMEM;
++
+ 	*prz =3D persistent_ram_new(*paddr, sz, sig, &cxt->ecc_info,
+ 				  cxt->memtype, PRZ_FLAG_ZAP_OLD, label);
+ 	kfree(label);
+=2D-
+2.43.0
 
-Some of the issues come from the different questions that people are
-trying to answer with testing, or the very different needs of the
-tests that people want to run - for example one of the reasons
-filesystems aren't particularly well covered for the embedded cases is
-that if your local storage is SD or worse eMMC then heavy I/O suddenly
-looks a lot more demanding and media durability a real consideration.
-
---7aTkAu68BodLGEOk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmWoGj8ACgkQJNaLcl1U
-h9BXrwf/ax2MGFfufapvl5UITLAL098Oq/M/cEtg80e2uwB7x6eMnWfzLW5If0FL
-7TaDVEb9oUXdsBZAVdETKiszFMAVH6+owpWtLGMkd1CWHbsH4OqpzuITEVsfidM0
-YogO4PuLXHCJdoPOogl32UraTyhxJKgYRqy3tr8Mv0UNnA+KpvSgfS/dX7AJOw0h
-KLFxAYjNa3JG6SbHJgS2Fw40YWY1kw1fdt193Div+CCIWgkd0SVwg+jIA7xsakb5
-YDVyHHT3WY5OpUc+5Ay/WeoDxFlFFmS91U457Dokm+/VS5WjYYJWc1eLKGkx6w+X
-otunFRoyx0Y6IoJhrDegDIRv82SVvA==
-=x1fy
------END PGP SIGNATURE-----
-
---7aTkAu68BodLGEOk--
