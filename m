@@ -1,161 +1,184 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC66A2556B
-	for <linux-hardening@vger.kernel.org>; Wed, 17 Jan 2024 20:51:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E18F42263E
+	for <linux-hardening@vger.kernel.org>; Wed, 17 Jan 2024 22:03:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705524673; cv=none; b=oW2zo7F2OfM3rDHlklWlwWV8VeDImxQP+Hi5CZjeZb1qBEhJ1uXbJgolpDCrDDCaT5f/9dRfTn+XjvClmt1gpqzPjijtZmsrUbNmgC575F8iKC5MPYMO0CKsIg/2VwSTvK5yg4HxAZGcxXOzSFEO//WCVYdVlcbQOFCxmQQjPtw=
+	t=1705529008; cv=none; b=vD2HRKm+4W9STOMqxHsCwH8wwEZNwhEL2H5VMmREo2xHAz7L+MIf4Fbh9oHvk+2HKbw4wywwN0yMdYRi32pupCP89eF2v6qZv2YHB9CjeyptZusCbj59brElumOWQjTd4pZmYURvCbkLhjn7LNkJvuoPCl15c/rgVa3IeGRwc04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705524673; c=relaxed/simple;
-	bh=KEO+rHwBc2shj6H6ATYkN4mc8w4293/sNHJG3mL1qhA=;
+	s=arc-20240116; t=1705529008; c=relaxed/simple;
+	bh=PBN9pShU3zJZmqNMeStewdxxNrSIe59k0AmnJyQviTQ=;
 	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:Date:
-	 From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:Content-Transfer-Encoding:In-Reply-To; b=nLEezECdNyPj59g6IZNvwSSeRAog687eaavm1LjaWdaHo4P5dXJk+xFB1Z2ke7MWvvKdCgG92W5IfzJ2Tu0H7+34ck+8LVj+waG+UhkVSyeMzT0CKzqsooayeAxFkPLaQ3yZCyriseSfVqIxJbiMP/pwZQPomnBO5WOG/ZjUj88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=UXnHuZU1; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
+	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
+	 Content-Type:Content-Transfer-Encoding; b=TNOLXUmGs6gao8dq+7RVeGTDtP1mbq3GXzqbUzq7zKHFLd1Wrr/W31188vbb2zNs3lLno/rvbcd4LPoFK0+auQ0z0iDOQb+Ac0122V779ttzqsOgPtZnlRdSLdg6or82DBLgd2VOnkyT2btWohVSzVNKpAFS7QR7YbF7sjghjLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=MjzhssxY; arc=none smtp.client-ip=209.85.219.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UXnHuZU1"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1d40eec5e12so97335545ad.1
-        for <linux-hardening@vger.kernel.org>; Wed, 17 Jan 2024 12:51:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="MjzhssxY"
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-dc223d20a29so2197532276.3
+        for <linux-hardening@vger.kernel.org>; Wed, 17 Jan 2024 14:03:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1705524671; x=1706129471; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=kx/TANifPOtY4pPL6VukQfe4dLtrXERVJTf79pfe/6Q=;
-        b=UXnHuZU1FeBYinM64Q/OMb5UBevLFcUxkhPsMjKqsByNfezM6FioGUaCGtUV/7YNIw
-         6kAspVzNbrz6aM/w+ExFTe3FK8FpF1HDYbPzYfmGThkU4QmyDITK2kh/2yRzcVPqbKwU
-         Iibv2xBxxgBfM8bGgrs2ivA1DKc9vPHSXUong=
+        d=paul-moore.com; s=google; t=1705529006; x=1706133806; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r0hQzkD2lll8u98rfbgNcSgwEggBLH7G8sSLxtHhjXs=;
+        b=MjzhssxY3w6/AoyobA3dKUOVqGEP0FgD7CwbzJm+BzaCa3eBr5J7ZYJWNxwmMCJLtX
+         BZ/uHQw/nW9P7Nb8BOpoA4U1ZBBB0KZpM80DcxB50RiAKF5zzxOyuxLkwd40SZ6ZPW0N
+         IN5z8cIkzFf21FOb1ZvaDDP/cV9YCoM2KYw+WCFpiqn56lef8JTkXs1UogOW1x8PL0iA
+         myi5ylvK0ssrDAwoOz/WiFQkmVTHbYb/XAvgw/fgBe1uh/VGOR8WabOkiIj+jgEem3aG
+         9OxPWKow6NF3FVITBW71rtdqZ2xmIIpln6v5bCcKTsHv6UL/f3gjMq3pTuxtXQpve6hF
+         XBiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705524671; x=1706129471;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kx/TANifPOtY4pPL6VukQfe4dLtrXERVJTf79pfe/6Q=;
-        b=kCVhpCYUtCQAZR+WIGdwwng743/UyhdbsbfNdbWeFgy2cUmKqATtW1z6J4Li7Ip2GQ
-         vatQxdgildVYtGc7YgxS7NUkGffVGO0p0rfXHNCxqr9HaS7ev8vlOxa/tXMTBJMmV3uV
-         1sO4S8fha6Ewm5/0oEDFIOzDowWo/8uzPR9/IUCWoADpxlDrZ3P8f55C1/wKWHXPv4iI
-         dWFMRdEF5LSZhEsOq3Ki/SszjhGidK6k7ciKO3cTdwPnHRLkLmBN80tk36S4tHvlf80V
-         M20RW5qIZF3XQX7M3AlNCKcVFrwRwYxTQXMhanngQXXhj8Zqrzu6STJpVFDgYJyvaMnL
-         vixw==
-X-Gm-Message-State: AOJu0Yx3a+OiqiECqomteISIxjQlibq8FFyGqC+y/6PzR55SyI0EcieU
-	h2jInwwnHUCUqfU8ZqapUx8elVX3BaPo
-X-Google-Smtp-Source: AGHT+IFBazjvV2lR/bEVLRw5mnikVJ9ZApUSi3AOIFGvEer5uS7MyrKkE1kyrimbiHD2zhHX4671mA==
-X-Received: by 2002:a17:902:dacc:b0:1d4:69a5:edbb with SMTP id q12-20020a170902dacc00b001d469a5edbbmr11788701plx.48.1705524671293;
-        Wed, 17 Jan 2024 12:51:11 -0800 (PST)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id le4-20020a170902fb0400b001d6f2775570sm76695plb.209.2024.01.17.12.51.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jan 2024 12:51:10 -0800 (PST)
-Date: Wed, 17 Jan 2024 12:51:10 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Paul Moore <paul@paul-moore.com>
-Cc: Lu Yao <yaolu@kylinos.cn>, linux-hardening@vger.kernel.org,
-	jmorris@namei.org, serge@hallyn.com,
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] lsm: Resolve compiling 'security.c' error
-Message-ID: <202401171236.5175FA9FA9@keescook>
-References: <20240117014541.8887-1-yaolu@kylinos.cn>
- <CAHC9VhSs6bxXFCAhw7i5cN=iZtuG3-E8xDBRjyGsop=BrhbmSw@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1705529006; x=1706133806;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=r0hQzkD2lll8u98rfbgNcSgwEggBLH7G8sSLxtHhjXs=;
+        b=PWwoG7XK0kkAJqQqbujW3qaeOYtApN4Mcc9CFF4S/oW4rXg3f31wukbNHO6kg9/C1G
+         oeh3H1NfXNMUF+pm5Nvb09WEw2YtWiphANdUUrllcquM+Nyqc0MyNTeE1oYLd/AoG/k3
+         OaQFugAfIumRndHA97fL4lQMwQj5XCMxDzVrCK5Yvv9sciNnZ/91KRZ0VOGMbl64AONR
+         oHNa46RJhjrt0GBQYJtfGfK+VyfXqSfdGxwzeQqMpY6VYNysRmjoLW3MEB1S2N5i4jnU
+         GEmgET+ZI5eamlGG8IfbUgu65IaomZxlQPAP6sCpRv6IcHb6ckdDTgWLKbK75Oi98Raq
+         bmGA==
+X-Gm-Message-State: AOJu0YzWjbFfp/nL5hMTJnCsswv1pxbeFt7pER+dAB/JO/xbcigF/sOd
+	ZbOacj0bqEX9WcJl2/dh9iq/Mh/QHqR+VzvbGTLRUlg/90Pt
+X-Google-Smtp-Source: AGHT+IHzhrY54HAom8TxcDBRSBAwDXqJzbxfS+G2gUXnllGB25H71yyUawiYc+qi2R6N99FR5nRNs8enpOHbgO0zsmQ=
+X-Received: by 2002:a25:ce8e:0:b0:dc2:3c18:7ff1 with SMTP id
+ x136-20020a25ce8e000000b00dc23c187ff1mr1524558ybe.112.1705529005268; Wed, 17
+ Jan 2024 14:03:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHC9VhSs6bxXFCAhw7i5cN=iZtuG3-E8xDBRjyGsop=BrhbmSw@mail.gmail.com>
+References: <20240117014541.8887-1-yaolu@kylinos.cn> <CAHC9VhSs6bxXFCAhw7i5cN=iZtuG3-E8xDBRjyGsop=BrhbmSw@mail.gmail.com>
+ <202401171236.5175FA9FA9@keescook>
+In-Reply-To: <202401171236.5175FA9FA9@keescook>
+From: Paul Moore <paul@paul-moore.com>
+Date: Wed, 17 Jan 2024 17:03:14 -0500
+Message-ID: <CAHC9VhR+d70b6QfAdtoch-M5cttM63KpMcKG-tfv5PZB9=bnSg@mail.gmail.com>
+Subject: Re: [PATCH] lsm: Resolve compiling 'security.c' error
+To: Kees Cook <keescook@chromium.org>
+Cc: Lu Yao <yaolu@kylinos.cn>, linux-hardening@vger.kernel.org, jmorris@namei.org, 
+	serge@hallyn.com, linux-security-module@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 17, 2024 at 09:32:33AM -0500, Paul Moore wrote:
-> On Tue, Jan 16, 2024 at 8:46 PM Lu Yao <yaolu@kylinos.cn> wrote:
+On Wed, Jan 17, 2024 at 3:51=E2=80=AFPM Kees Cook <keescook@chromium.org> w=
+rote:
+> On Wed, Jan 17, 2024 at 09:32:33AM -0500, Paul Moore wrote:
+> > On Tue, Jan 16, 2024 at 8:46=E2=80=AFPM Lu Yao <yaolu@kylinos.cn> wrote=
+:
+> > >
+> > > The following error log is displayed during the current compilation
+> > >   > 'security/security.c:810:2: error: =E2=80=98memcpy=E2=80=99 offse=
+t 32 is
+> > >   > out of the bounds [0, 0] [-Werror=3Darray-bounds]'
+> > >
+> > > GCC version is '10.3.0 (Ubuntu 10.3.0-1ubuntu1~18.04~1)'
+>
+> As an aside, Ubuntu 18.04 went out of support back in June 2023, and
+> never officially supported gcc 10:
+> https://launchpad.net/ubuntu/+source/gcc-10
+>
+> That said, I still see this error with gcc 10.5 on supported Ubuntu
+> releases. I'm surprised this is the first time I've seen this error!
+>
+> > >
+> > > Signed-off-by: Lu Yao <yaolu@kylinos.cn>
+> > > ---
+> > >  security/security.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
 > >
-> > The following error log is displayed during the current compilation
-> >   > 'security/security.c:810:2: error: ‘memcpy’ offset 32 is
-> >   > out of the bounds [0, 0] [-Werror=array-bounds]'
+> > I'm adding the linux-hardening folks to the to To: line as this has
+> > now come up multiple times and my best guess is that this is an issue
+> > with the struct_size() macro, compiler annotations, or something
+> > similar and I suspect they are the experts in that area.  My
+> > understanding is that using the struct_size() macro is preferable to
+> > open coding the math, as this patch does, but if we have to do
+> > something like this to silence the warnings, that's okay with me.
 > >
-> > GCC version is '10.3.0 (Ubuntu 10.3.0-1ubuntu1~18.04~1)'
+> > So linux-hardening folks, what do you say?
+>
+> This is a GCC bug -- it thinks nctx_len could be 0, so it gets mad about
+> the array bounds.
 
-As an aside, Ubuntu 18.04 went out of support back in June 2023, and
-never officially supported gcc 10:
-https://launchpad.net/ubuntu/+source/gcc-10
+Ah ha, thanks for that.
 
-That said, I still see this error with gcc 10.5 on supported Ubuntu
-releases. I'm surprised this is the first time I've seen this error!
+> > > diff --git a/security/security.c b/security/security.c
+> > > index 0144a98d3712..37168f6bee25 100644
+> > > --- a/security/security.c
+> > > +++ b/security/security.c
+> > > @@ -792,7 +792,7 @@ int lsm_fill_user_ctx(struct lsm_ctx __user *uctx=
+, size_t *uctx_len,
+> > >         size_t nctx_len;
+> > >         int rc =3D 0;
+> > >
+> > > -       nctx_len =3D ALIGN(struct_size(nctx, ctx, val_len), sizeof(vo=
+id *));
+> > > +       nctx_len =3D ALIGN(sizeof(struct lsm_ctx) + val_len, sizeof(v=
+oid *));
+> > >         if (nctx_len > *uctx_len) {
+> > >                 rc =3D -E2BIG;
+> > >                 goto out;
+>
+> Please don't do this -- it regresses the efforts to make sure we can
+> never wrap the math on here.
 
-> >
-> > Signed-off-by: Lu Yao <yaolu@kylinos.cn>
-> > ---
-> >  security/security.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> I'm adding the linux-hardening folks to the to To: line as this has
-> now come up multiple times and my best guess is that this is an issue
-> with the struct_size() macro, compiler annotations, or something
-> similar and I suspect they are the experts in that area.  My
-> understanding is that using the struct_size() macro is preferable to
-> open coding the math, as this patch does, but if we have to do
-> something like this to silence the warnings, that's okay with me.
-> 
-> So linux-hardening folks, what do you say?
+I didn't want to apply that change, hence my To/CC to you guys.  If
+there was no other option to silence the warning then we would
+probably have to do it, but it looks like we have options.
 
-This is a GCC bug -- it thinks nctx_len could be 0, so it gets mad about
-the array bounds.
+> We need to pick one of these two diffs
+> instead. The first disables -Warray-bounds for GCC 10.* also (since we
+> keep having false positives). The latter silences this 1 particular
+> case by explicitly checking nctx_len for 0:
+>
+> diff --git a/init/Kconfig b/init/Kconfig
+> index 8d4e836e1b6b..af4833430aca 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -874,7 +874,7 @@ config GCC11_NO_ARRAY_BOUNDS
+>
+>  config CC_NO_ARRAY_BOUNDS
+>         bool
+> -       default y if CC_IS_GCC && GCC_VERSION >=3D 110000 && GCC11_NO_ARR=
+AY_BOUNDS
+> +       default y if CC_IS_GCC && GCC_VERSION >=3D 100000 && GCC11_NO_ARR=
+AY_BOUNDS
+>
+>  # Currently, disable -Wstringop-overflow for GCC 11, globally.
+>  config GCC11_NO_STRINGOP_OVERFLOW
 
-> 
-> > diff --git a/security/security.c b/security/security.c
-> > index 0144a98d3712..37168f6bee25 100644
-> > --- a/security/security.c
-> > +++ b/security/security.c
-> > @@ -792,7 +792,7 @@ int lsm_fill_user_ctx(struct lsm_ctx __user *uctx, size_t *uctx_len,
-> >         size_t nctx_len;
-> >         int rc = 0;
-> >
-> > -       nctx_len = ALIGN(struct_size(nctx, ctx, val_len), sizeof(void *));
-> > +       nctx_len = ALIGN(sizeof(struct lsm_ctx) + val_len, sizeof(void *));
-> >         if (nctx_len > *uctx_len) {
-> >                 rc = -E2BIG;
-> >                 goto out;
+It sounds like lsm_fill_user_ctx() is not the only one having problems
+with GCC v10 so I'm guessing you're going to submit a patch like the
+above up to Linus?  I think that's preferable to adding extra checks
+we don't really need just to silence a buggy compiler.
 
-Please don't do this -- it regresses the efforts to make sure we can
-never wrap the math on here. We need to pick one of these two diffs
-instead. The first disables -Warray-bounds for GCC 10.* also (since we
-keep having false positives). The latter silences this 1 particular
-case by explicitly checking nctx_len for 0:
+> diff --git a/security/security.c b/security/security.c
+> index 0144a98d3712..ab403136958f 100644
+> --- a/security/security.c
+> +++ b/security/security.c
+> @@ -793,7 +793,7 @@ int lsm_fill_user_ctx(struct lsm_ctx __user *uctx, si=
+ze_t *uctx_len,
+>         int rc =3D 0;
+>
+>         nctx_len =3D ALIGN(struct_size(nctx, ctx, val_len), sizeof(void *=
+));
+> -       if (nctx_len > *uctx_len) {
+> +       if (nctx_len =3D=3D 0 || nctx_len > *uctx_len) {
+>                 rc =3D -E2BIG;
+>                 goto out;
+>         }
+>
+> --
+> Kees Cook
 
-diff --git a/init/Kconfig b/init/Kconfig
-index 8d4e836e1b6b..af4833430aca 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -874,7 +874,7 @@ config GCC11_NO_ARRAY_BOUNDS
- 
- config CC_NO_ARRAY_BOUNDS
- 	bool
--	default y if CC_IS_GCC && GCC_VERSION >= 110000 && GCC11_NO_ARRAY_BOUNDS
-+	default y if CC_IS_GCC && GCC_VERSION >= 100000 && GCC11_NO_ARRAY_BOUNDS
- 
- # Currently, disable -Wstringop-overflow for GCC 11, globally.
- config GCC11_NO_STRINGOP_OVERFLOW
-
-
-
-diff --git a/security/security.c b/security/security.c
-index 0144a98d3712..ab403136958f 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -793,7 +793,7 @@ int lsm_fill_user_ctx(struct lsm_ctx __user *uctx, size_t *uctx_len,
- 	int rc = 0;
- 
- 	nctx_len = ALIGN(struct_size(nctx, ctx, val_len), sizeof(void *));
--	if (nctx_len > *uctx_len) {
-+	if (nctx_len == 0 || nctx_len > *uctx_len) {
- 		rc = -E2BIG;
- 		goto out;
- 	}
-
--- 
-Kees Cook
+--=20
+paul-moore.com
