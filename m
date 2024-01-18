@@ -1,90 +1,128 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from mout.web.de (mout.web.de [217.72.192.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9807320B0B;
-	Thu, 18 Jan 2024 10:02:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51AAB28DA0;
+	Thu, 18 Jan 2024 14:07:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705572144; cv=none; b=DoaElumEAyowmwYhDNkPblPtwCLCxfhjzKGZDSb5axC2aHvl1OCgaWXTJTS3SfShYOPMxbo6kx3XQSLaSIr6ckxWF5Lm267L1iYpjr/i/faK0VjfiMgF+DtoGR+QGwVBr6D4Myjhp0C4+Udpt944WWpIyidBLjKDp5EW5if4Y2k=
+	t=1705586859; cv=none; b=nRJbj6ZtNMubqhVBf6LYF2jwb6a5jBUKNcquyi3lFPfkGeOiV/71GsCl2nMitGISW3ivXlND4btzB+/oEfPiuMGI82HHxF8XvgH3iMOMo5ScvnfSJ3iQyuQt6K5tj98Zw06PyPWGLwoVDa/W7WcKCqLC9reyub6e70ZlZBmmPNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705572144; c=relaxed/simple;
-	bh=OB9o0jiUtNKehJapIrC/Pp6m/oKy2ANatHpFJ/5DvbM=;
-	h=X-UUID:X-CID-P-RULE:X-CID-O-INFO:X-CID-INFO:X-CID-META:X-CID-BVR:
-	 X-CID-BAS:X-CID-FACTOR:X-UUID:Received:Received:X-ns-mid:Received:
-	 From:To:Cc:Subject:Date:Message-Id:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding; b=Nq1+ivXPbDvbp3jM1d94pANy2nw6SfmtjfF0AITUo1rr8Z2P+yZ28kHVAj6Lta9dWxuHjyEGkhzqmX2xIK46rHU85XmjZrA6jpq2HQJw0k4K2rsymecLBQrYZvVUBrfcyrfzmel2idYnZJ6rlPdHzoS6UyuoCoUkYcUaH68KxhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 4d6849fc017b4a24b9e2b5ba77e007b3-20240118
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.35,REQID:1010ab24-0c46-46a6-a1be-87945ca9a23a,IP:10,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:-5
-X-CID-INFO: VERSION:1.1.35,REQID:1010ab24-0c46-46a6-a1be-87945ca9a23a,IP:10,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-5
-X-CID-META: VersionHash:5d391d7,CLOUDID:63797d7f-4f93-4875-95e7-8c66ea833d57,B
-	ulkID:240118180212MAVKV8H4,BulkQuantity:0,Recheck:0,SF:38|24|17|19|44|66|1
-	02,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,CO
-	L:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS
-X-UUID: 4d6849fc017b4a24b9e2b5ba77e007b3-20240118
-Received: from mail.kylinos.cn [(39.156.73.10)] by mailgw
-	(envelope-from <chentao@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 742518887; Thu, 18 Jan 2024 18:02:10 +0800
-Received: from mail.kylinos.cn (localhost [127.0.0.1])
-	by mail.kylinos.cn (NSMail) with SMTP id C0AA2E000EB9;
-	Thu, 18 Jan 2024 18:02:09 +0800 (CST)
-X-ns-mid: postfix-65A8F721-215790310
-Received: from kernel.. (unknown [172.20.15.234])
-	by mail.kylinos.cn (NSMail) with ESMTPA id 3D926E000EB9;
-	Thu, 18 Jan 2024 18:02:07 +0800 (CST)
-From: Kunwu Chan <chentao@kylinos.cn>
-To: keescook@chromium.org,
-	tony.luck@intel.com,
-	gpiccoli@igalia.com
-Cc: linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Kunwu Chan <chentao@kylinos.cn>
-Subject: [PATCH] pstore/zone: Add a null pointer check to the psz_kmsg_read
-Date: Thu, 18 Jan 2024 18:02:06 +0800
-Message-Id: <20240118100206.213928-1-chentao@kylinos.cn>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1705586859; c=relaxed/simple;
+	bh=z/2Bwgab96DZ5PKg8s3ghLC/ddBRjyNUGU5ig9YwyrQ=;
+	h=DKIM-Signature:X-UI-Sender-Class:Received:Message-ID:Date:
+	 MIME-Version:User-Agent:To:Content-Language:Cc:From:Subject:
+	 Content-Type:Content-Transfer-Encoding:X-Provags-ID:X-Spam-Flag:
+	 UI-OutboundReport; b=Gy8vlPDWh+kkprwJr3npdGwaamUM8LROFuD6GnXzI2Bbgeh5wMfy7KHJxvAK+h2bo5nMJRV+yR+/wTwKH0o4d9RFlNFL0U5a/aq0dsSZs2A4DA7jS3SMQWQzJkpMZ2hpRKzR4AQALRzHNRbZrXsEhEsDguqLpQPF2vcX3zE48C4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=XC6tRtmu; arc=none smtp.client-ip=217.72.192.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="XC6tRtmu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
+	t=1705586827; x=1706191627; i=markus.elfring@web.de;
+	bh=z/2Bwgab96DZ5PKg8s3ghLC/ddBRjyNUGU5ig9YwyrQ=;
+	h=X-UI-Sender-Class:Date:To:Cc:From:Subject;
+	b=XC6tRtmunKwtM100D+Ewfm+CP19mBGN08XuDCnaMsEymoQGu+u7vI9noGUs/48rY
+	 37lO6G0Z7s4rxiJBdFOdWpHLXgkm6MWomCvWn1LAVRJh6RTBnLjbBsp+1AaW3QKca
+	 j39hinGd9YSL8oQLtAEux1AKzZ6XzkIratnfA+VOGaeDJ3mSzq/V0QrVB03p346JB
+	 5SD9TFL8tmm5r82DQ9X3KVoFC0LUBcu/NyxZb5gklB1tOY4jsp5oUy4KkN4+UfVZG
+	 PWBL4HPpTsukMlZanE0H7VNrkc0VzEDJMNv4a86cxO6WM4nxKJYlhdm4HitY7iLQq
+	 o7iKj5i5hC7nnlrpzA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.91.95]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MeUXu-1qsVjz2Us8-00aRKh; Thu, 18
+ Jan 2024 15:07:07 +0100
+Message-ID: <14171fc4-8157-4919-86b8-bdec0493197d@web.de>
+Date: Thu, 18 Jan 2024 15:06:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+To: linux-hardening@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+ Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>
+Content-Language: en-GB
+Cc: LKML <linux-kernel@vger.kernel.org>, Kunwu Chan <chentao@kylinos.cn>
+From: Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] pstore/ram_core: Improve exception handling in
+ persistent_ram_new()
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Q1rClzpMoW580z9Pvdi2Z3ZRHk52p2E2Q6XVLqRrNKlPpyakmvP
+ WdtYc8MLDxlgfuZiuPwGEHQI/kjaJnFeixYPqtoMPMyJoqoY6e8MtQV2fEre9niN1hh7or4
+ s8Nr82P4exdDLiTP+N0qKILv0/L4zk7aThKqlkzvZRNByhS/hQzzihNIIIt0uYBXfUk1GlZ
+ L2br0gqeFgTPu1dbLfm8A==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:y1tJt7FpCs4=;72+dE2IeuiHLVRsnwrXAscXo/3+
+ lvUW7Cwig10uWMNkk8VoZsjoGTxhO8UkBuBLgmhNJbQQWUF4MZhVLvjFe+O45x6d8XsykU/+t
+ Zajbvk0S9m5vDTZDvONSCr+BSAbeYmZqEJijzswUGv+BNHWchFEAo7wiUULf3sCC/NBgs5u2b
+ MAq729vxCM+AA+uW3vRSEVD+epSW40GANRTa3ASQUuYI/P4ulMciw1Um5GwO7T/DLUPzQXwri
+ 3jFe6WGOiXNHrck3PozMnN2DtgFGgdHs8bUN0LN1hSBhTdPWbu7w8QE8Hpd3YSbMBVe0RIXk4
+ WJqosgBJkZlZvitPC0bbUZuwlbQ2R0P0gmx+JDjMmB8inYk/ACtrIfuv7WAEDR34/OxzcTnWh
+ xXan8ZTp3CYVvR81IFTH/2ze3HtRME4f5vZgCrf8SYacxEWMTcfudBmj4dE92NteLTFYo0UKs
+ Ydz8njlWcFwb4RhD2/wosXv5Bx6nJcp1dTO3debhxvVIROfRLYsrNOCF/DKPCW8NKCmsOzHJ5
+ HasbMgzopiHBANof97ShXv4O86FG7MgE1au11CCDvWsRRz/koRr36At3moaZwScQfYeYY2Q/l
+ ByqJXMBADHYdsAf5vE4L6yp35o5syjIQRJW5omsvy/9VqffBtOfcv+2poKy0Y/JSES9zg/2iY
+ DDhMPPsYzMFhJhc2MPGirACcfowJfOpYHuDGdrR0bSA7pcujnsOYNMOpcfsxu+kcFxRsCkjy1
+ v3xUKTfv1iD9gXNTsan/jNxruyGuh7K+WUWfxMeLa93S3oBkVuUXAmqQnSv8/A+Nf/aIDziaR
+ w4rjbwWwrDmE1EhVBvC6w/MIC1woQH2EcKIYlE2+n7fa/98AJbwa1Q/eNK1maP6+naBUZ71aq
+ 6CF8to4q7Z/arkn+R5WnPIU5ZZ4WKgKiiBkCNYwRIbkZr//5yHJra6Jw10d+9YzmtjxNzL6tU
+ EzlcPw==
 
-kasprintf() returns a pointer to dynamically allocated memory
-which can be NULL upon failure. Ensure the allocation was successful
-by checking the pointer validity.
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Thu, 18 Jan 2024 14:57:21 +0100
 
-Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
----
- fs/pstore/zone.c | 2 ++
- 1 file changed, 2 insertions(+)
+* Omit an initialisation (for the variable =E2=80=9Cret=E2=80=9D)
+  which became unnecessary with this refactoring
+  because a memory allocation failure will be directly indicated
+  by a corresponding return statement in an if branch.
 
-diff --git a/fs/pstore/zone.c b/fs/pstore/zone.c
-index 2770746bb7aa..abca117725c8 100644
---- a/fs/pstore/zone.c
-+++ b/fs/pstore/zone.c
-@@ -973,6 +973,8 @@ static ssize_t psz_kmsg_read(struct pstore_zone *zone=
-,
- 		char *buf =3D kasprintf(GFP_KERNEL, "%s: Total %d times\n",
- 				      kmsg_dump_reason_str(record->reason),
- 				      record->count);
-+		if (!buf)
-+			return -ENOMEM;
- 		hlen =3D strlen(buf);
- 		record->buf =3D krealloc(buf, hlen + size, GFP_KERNEL);
- 		if (!record->buf) {
---=20
-2.39.2
+* Move a call of the function =E2=80=9Ckstrdup=E2=80=9D before two other s=
+tatements.
+
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ fs/pstore/ram_core.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/fs/pstore/ram_core.c b/fs/pstore/ram_core.c
+index f1848cdd6d34..5047a8502e17 100644
+=2D-- a/fs/pstore/ram_core.c
++++ b/fs/pstore/ram_core.c
+@@ -586,21 +586,23 @@ struct persistent_ram_zone *persistent_ram_new(phys_=
+addr_t start, size_t size,
+ 			unsigned int memtype, u32 flags, char *label)
+ {
+ 	struct persistent_ram_zone *prz;
+-	int ret =3D -ENOMEM;
++	int ret;
+
+ 	prz =3D kzalloc(sizeof(struct persistent_ram_zone), GFP_KERNEL);
+ 	if (!prz) {
+ 		pr_err("failed to allocate persistent ram zone\n");
+-		goto err;
++		return ERR_PTR(-ENOMEM);
++	}
++
++	prz->label =3D kstrdup(label, GFP_KERNEL);
++	if (!prz->label) {
++		kfree(prz);
++		return ERR_PTR(-ENOMEM);
+ 	}
+
+ 	/* Initialize general buffer state. */
+ 	raw_spin_lock_init(&prz->buffer_lock);
+ 	prz->flags =3D flags;
+-	prz->label =3D kstrdup(label, GFP_KERNEL);
+-	if (!prz->label)
+-		goto err;
+-
+ 	ret =3D persistent_ram_buffer_map(start, size, prz, memtype);
+ 	if (ret)
+ 		goto err;
+=2D-
+2.43.0
 
