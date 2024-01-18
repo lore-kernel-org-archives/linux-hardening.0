@@ -1,160 +1,121 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9204A6104
-	for <linux-hardening@vger.kernel.org>; Thu, 18 Jan 2024 02:50:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2EED612E
+	for <linux-hardening@vger.kernel.org>; Thu, 18 Jan 2024 05:29:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705546208; cv=none; b=KD4RY20RgHxFjY5iBZPfBsyjFfifakA8Q6+Dj8NU4Mo8f/R+GHSAw5tbT+MZQU2DuB9ColD3hGveK7K8YI4HSXMpNBtfsh4/+l6uFcrH31uXyefoThR2KTVDaqR70rRhjVsVLiRDTm2nobDXSzTDD0GM5Ct1JKbmGfyg8VxRZRA=
+	t=1705555768; cv=none; b=HiIH8nNtsPQRoSE6vrb7fXp1vLYMa+ZQrkCVSa4mdh0Qas8l1g+RijUX+sCfI3Ug1Zv42hVHrtQa99BqgkSm+U0nJwi1pRook/4+2SQtp9EQeV9C0D+Dyi7d2FRFNO0pTWeFa9GFggefW2bsP9vlGXRvCtcDPU3v8F2zilQ5FZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705546208; c=relaxed/simple;
-	bh=BJg75ZFdFsMHx0IzN/znZuL4kHgdbCZHjvh8m/sP/Ic=;
-	h=Received:DKIM-Signature:Received:Date:From:To:Cc:Subject:
-	 Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=mtVgjUGh5AicFXFMbDh0HjbsNEm4QSv4iKdABZtDYQ++NgR+3Xl5+9cfjdM/KNUgMylfkWjxSZx4/wScuK/JFrRvdw0su6MR1mXmabF6QApkC4M/EfyScNh+9OsptzvAmlSlnctpyWlX5hXOdiC8XTHkX8K0eLUjVd01CzChbCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=nEZ0rDNJ; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+	s=arc-20240116; t=1705555768; c=relaxed/simple;
+	bh=SBVMA/CPQNcVCfcURUzuwVBCE1qUg3c5WG0zdMGFPQg=;
+	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:Date:
+	 From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:Content-Transfer-Encoding:In-Reply-To; b=GZlF+xO1gYpFPWm84RhKd+fJO5ZARmfQz85H951t70wo5BwxjL39sFn9GMblr9rGTVMyCWdpzMo3/EXbzl5bpg8CxXpzBuAtGj8Awq9nLi8IYIulZFjDC3aNJ7m3cNC/l9sopI/+8KJti4vsTAxrb0hN72oFtvyTOnvxxNBpf/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Bies4SxQ; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="nEZ0rDNJ"
-Received: from cwcc.thunk.org (pool-173-48-112-211.bstnma.fios.verizon.net [173.48.112.211])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 40I2nMf0019056
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Jan 2024 21:49:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1705546166; bh=QY2jieE117yh9NkMq2fzek7v348fUElM78MBn1O7k+c=;
-	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
-	b=nEZ0rDNJWDL7d1gCdVYmfFfutRKEw2G+rNE4+GDGhxboywGSJtNjBqEe+MTnpiBik
-	 yVjrGhFN+FUGGE4TXKk0mgfcA19fnasGKYpVsNbMuLqEREcvVI9545CVNmF82H4mmG
-	 dC0kCfezHq6SMV7AalXUahxeaDxPKUt0X4z/PU8tJT666bmVDF9tjAFTzvUVv2hf/F
-	 ATwbGobBtp4bFlkdlL+wqjIV+plKAZz5ntdTgt1jGs8ao5G/6smZS0yMGsaBPbIsX/
-	 9wNI4Rlqf9vk1QiE3F2yluvG4UhQrXxXoyYBffTJ86mh3Z6JdQf/GkE0v6fj8aeJtx
-	 y1GEMArcvRm8w==
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id 82EC215C0278; Wed, 17 Jan 2024 21:49:22 -0500 (EST)
-Date: Wed, 17 Jan 2024 21:49:22 -0500
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc: Kent Overstreet <kent.overstreet@linux.dev>, Greg KH <greg@kroah.com>,
-        Mark Brown <broonie@kernel.org>, Neal Gompa <neal@gompa.dev>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Nikolai Kondrashov <spbnick@gmail.com>,
-        Philip Li <philip.li@intel.com>, Luis Chamberlain <mcgrof@kernel.org>
-Subject: Re: [GIT PULL] bcachefs updates for 6.8
-Message-ID: <20240118024922.GB1353741@mit.edu>
-References: <gaxigrudck7pr3iltgn3fp5cdobt3ieqjwohrnkkmmv67fctla@atcpcc4kdr3o>
- <f8023872-662f-4c3f-9f9b-be73fd775e2c@sirena.org.uk>
- <olmilpnd7jb57yarny6poqnw6ysqfnv7vdkc27pqxefaipwbdd@4qtlfeh2jcri>
- <CAEg-Je8=RijGLavvYDvw3eOf+CtvQ_fqdLZ3DOZfoHKu34LOzQ@mail.gmail.com>
- <40bcbbe5-948e-4c92-8562-53e60fd9506d@sirena.org.uk>
- <2uh4sgj5mqqkuv7h7fjlpigwjurcxoo6mqxz7cjyzh4edvqdhv@h2y6ytnh37tj>
- <2024011532-mortician-region-8302@gregkh>
- <lr2wz4hos4pcavyrmswpvokiht5mmcww2e7eqyc2m7x5k6nbgf@6zwehwujgez3>
- <20240117055457.GL911245@mit.edu>
- <5b7154f86913a0957e0518b54365a1b0fce5fbea.camel@HansenPartnership.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bies4SxQ"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-40e72a567eeso43152975e9.0
+        for <linux-hardening@vger.kernel.org>; Wed, 17 Jan 2024 21:29:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705555764; x=1706160564; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=wWVOjE9eG7LQZ1p5rDtepmpo2WIDbMJDdYV1+1m1FBU=;
+        b=Bies4SxQOMm2y9Btq51UiXzVZwhtvjN5NVmtvQJ0eMUe5gfREJdCIWlM2FxjYkiBL3
+         viV/JtBvnRgvSaTfwEus92WDyzUb3MfLjJ5O9zlh/ZVwvyVQBv9ZeiJiF1E7DFlkoLLO
+         63j7Xl9jQkNSOsfYa7Ts9+OTe+0uab+XRsZ5WD7dEzWzmQQ+NdTwQcWCyP+4CkAEiz+r
+         ORCWpnC38A/1yZmryV8RrfSfvJ57rWs9JR8xGuX/rZYA8bP39uLvGBOE2VJtukBhe+Tc
+         C7nh4w/yN1i/HRgsTCxOEl+pkZ6R/0O2RS9YvtIv8EHNK1rY8hSfBv0GqE2qbHOeuljq
+         YHeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705555764; x=1706160564;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wWVOjE9eG7LQZ1p5rDtepmpo2WIDbMJDdYV1+1m1FBU=;
+        b=v+VtN/HB6FkOkwt/fkc6EMCrOrBNU/yBfdj6rsOB/puA0lVJozof3hpP9cYX1+JEmG
+         EuFMTfslKEdY3X/oQhJI8rjmHCKGBTcYqygi6STFYVk0u6YSWY1Cgg58ZbMjKLboK8Bi
+         hUpOYtgq6eLlnR6rjK2VYVw4t12Ap2oG+VLQsJGf1Xlp/xRWelwEenrC9Xzj1Vd7KHfc
+         tpuhgB3jP/oYKswDEG6tcmNqGpQwrC+ksV+6lWQQStlu3mgza6gKWI1u1typ8ul3r+Z4
+         j/TuD76FjU9pQ6tmpOyOqQ+QlBgAguV9/mRK/24QXouFNYJIH+0wtE1DQUhuE/mLHpuJ
+         SnEg==
+X-Gm-Message-State: AOJu0YxzgYVB9YiRcfAFAj77Ncys4MU57NCcl3Jc0lrgiLGJ8HAIEAxk
+	MUtTWrKQaM8ppr3hOtyDbYwaGHBqFjfzNjyX2EgrbVzPow4UHUB530E6Djrpw4w=
+X-Google-Smtp-Source: AGHT+IHaCjW/5P67xwqKO0g8DnWLu4YQwaK2HHCRSW+8Wlvh81P/g9nOxJOSa7NQjI8+GNuKu6R48Q==
+X-Received: by 2002:a05:600c:880e:b0:40e:4799:8a81 with SMTP id gy14-20020a05600c880e00b0040e47998a81mr66295wmb.281.1705555764049;
+        Wed, 17 Jan 2024 21:29:24 -0800 (PST)
+Received: from localhost ([102.140.209.237])
+        by smtp.gmail.com with ESMTPSA id o21-20020a05600c4fd500b0040e34ca648bsm24586127wmq.0.2024.01.17.21.29.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jan 2024 21:29:23 -0800 (PST)
+Date: Thu, 18 Jan 2024 08:29:20 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: linux-hardening@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	=?iso-8859-1?Q?G=FCnter_R=F6ck?= <groeck@chromium.org>,
+	Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+	Kunwu Chan <chentao@kylinos.cn>
+Subject: Re: [PATCH] pstore/ram: Return directly after a failed kasprintf()
+ call in ramoops_init_prz()
+Message-ID: <26759e3b-ff74-4b04-b06f-4d68fbc5f606@moroto.mountain>
+References: <644f44ad-7e2b-4a1a-bbd7-ccc79d479242@web.de>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <5b7154f86913a0957e0518b54365a1b0fce5fbea.camel@HansenPartnership.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <644f44ad-7e2b-4a1a-bbd7-ccc79d479242@web.de>
 
-On Wed, Jan 17, 2024 at 08:03:35AM -0500, James Bottomley wrote:
-> Actually, this is partly our fault.  Companies behave exactly like a
-> selfish contributor does:
+On Wed, Jan 17, 2024 at 09:24:12PM +0100, Markus Elfring wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Wed, 17 Jan 2024 21:09:22 +0100
 > 
-> https://archive.fosdem.org/2020/schedule/event/selfish_contributor/
+> The result from a call of the function “kasprintf” was passed to
+> a subsequent function call without checking for a null pointer before
+> (according to a memory allocation failure).
+> This issue was detected by using the Coccinelle software.
 > 
-> The question they ask is "if I'm putting money into it, what am I
-> getting out of it".  If the answer to that is that it benefits
-> everybody, it's basically charity  to the entity being asked (and not
-> even properly tax deductible at that), which goes way back behind even
-> real charitable donations (which at least have a publicity benefit) and
-> you don't even get to speak to anyone about it when you go calling with
-> the collecting tin.  If you can say it benefits these 5 tasks your
-> current employees are doing, you might have a possible case for the
-> engineering budget (you might get in the door but you'll still be
-> queuing behind every in-plan budget item).  The best case is if you can
-> demonstrate some useful for profit contribution it makes to the actual
-> line of business (or better yet could be used to spawn a new line of
-> business), so when you're asking for a tool, it has to be usable
-> outside the narrow confines of the kernel and you need to be able to
-> articulate why it's generally useful (git is a great example, it was
-> designed to solve a kernel specific problem, but not it's in use pretty
-> much everywhere source control is a thing).
+> Thus return directly after a failed kasprintf() call.
+> 
+> Fixes: 1227daa43bce1 ("pstore/ram: Clarify resource reservation labels")
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+> ---
+>  fs/pstore/ram.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+> index 88b34fdbf759..1a673a4af17c 100644
+> --- a/fs/pstore/ram.c
+> +++ b/fs/pstore/ram.c
+> @@ -595,6 +595,9 @@ static int ramoops_init_prz(const char *name,
+>  	}
+> 
+>  	label = kasprintf(GFP_KERNEL, "ramoops:%s", name);
+> +	if (!label)
+> +		return -ENOMEM;
+> +
+>  	*prz = persistent_ram_new(*paddr, sz, sig, &cxt->ecc_info,
+>  				  cxt->memtype, PRZ_FLAG_ZAP_OLD, label);
+>  	kfree(label);
 
-I have on occasion tried to make the "it benefits the whole ecosystem"
-argument, and that will work on the margins.  But it's a lot harder
-when it's more than a full SWE-year's worth of investment, at least
-more recently.  I *have* tried to get more test investment. with an
-eye towards benefitting not just one company, but in a much more
-general fasion ---- but multi-engineer projects are a very hard sell,
-especially recently.  If Kent wants to impugn my leadership skills,
-that's fine; I invite him to try and see if he can get SVP's cough up
-the dough.  :-)
+This patch is fine as a clean up, but I think it's useful to say that
+if you pass a NULL label to persistent_ram_new() then it will return
+an error.  It won't crash.  So this patch is a nice cleanup but it's not
+a bug fix.
 
-I've certainly had a lot more success with the "Business quid pro quo"
-argument; fscrypt and fsverity was developed for Android and Chrome;
-casefolding support benefited Android and Steam; ext4 fast commits was
-targetted at cloud-based NFS and Samba serving, etc.
+regards,
+dan carpenter
 
-My conception of a successful open source maintainer includes a strong
-aspect of a product manager whose job is to find product/market fit.
-That is, I try to be a matchmaker between some feature that I've
-wnated for my subsystem, and would benefit users, and a business case
-that is sufficientlty compelling that a company is willing to fund the
-engineering effort to make taht feature happen.  That companmy might
-be one that signs my patcheck, or might be some other company.  For
-special bonus points, if I can convince some other company to find a
-good chunk of the engineering effort, and it *also* benefits the
-company that pays my salary, that's a win-win that I can crow about at
-performance review time.  :-)
-
-> Somewhere between 2000 and now we seem to have lost our ability to
-> frame the argument in the above terms, because the business quid pro
-> quo argument was what got us money for stuff we needed and the Linux
-> Foundation and the TAB formed, but we're not managing nearly as well
-> now.  The environment has hardened against us (we're no longer the new
-> shiny) but that's not the whole explanation.
-
-There are a couple of dynamics going on here, I think.  When a company
-is just starting to invest in open source, and it is the "new shiny"
-it's a lot easier to make the pitch for big projects that are good for
-everyone.  In the early days of the IBM Linux Technolgy Center, the
-Linux SMP scalability effort, ltp, etc., were significantly funded by
-the IBM LTC.  And in some cases, efforts which didn't make it
-upstream, but which inspired the features to enter Linux (even if it
-wasn't IBM code), such as in the case of the IBM's linux thread or
-volume management, it was still considered a win by IBM management.
-
-Unfortunately, this effect fades over time.  It's a lot easier to fund
-multi-engineer projects which run for more than a year, when a company
-is just starting out, and when it's still trying to attract upstream
-developers, and it has a sizeable "investment" budget.  ("IBM will
-invest a billion dollars in Linux").  But then in later years, the
-VP's have to justify their budget, and so companies tend to become
-more and more "selfish".  After all, that's how capitalism works ---
-"think of the children^H^H^H^H^H^H^H shareholders!"
-
-I suspect we can all think of companies beyond just IBM where this
-dynamic is at play; I certainly can!
-
-The economic cycle can also make a huge difference.  Things got harder
-after the dot com imposiion; then things lossened up.  Howver,
-post-COVID, we've seen multiple companies really become much more
-focused on "how is this good for our company".  It has different names
-at different companies, such as "year of efficiency" or "sharpening
-our focus", but it often is accompanied with layoffs, and a general
-tightening of budgets.  I don't think it's an accident that
-maintainwer grumpiness has been higher than normal in the last year or
-so.
-
-	    	       	  	      	     	- Ted
