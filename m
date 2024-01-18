@@ -1,38 +1,40 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mout.web.de (mout.web.de [212.227.15.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A24B79D4;
-	Thu, 18 Jan 2024 05:35:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A772F11716;
+	Thu, 18 Jan 2024 08:39:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705556131; cv=none; b=ETgKGW8SM+XoiZmDzxT+VPqqQncqoxj2/usSM3vxbsNWO3A0/WeX2oisfbe0do81BLIPO0aCzHD3bFyrWgyGVkCvrQyn7TZvYgewVV5LbrEFPSxy0J2H3vLbX7ZPn8tM3seGuGo1t3pBDtLh94U+t1u2QGxx1z0w49ew4sh5Bf0=
+	t=1705567187; cv=none; b=ZjTo72XFW8AL9h2jBmKMkWpXW/F+Ge+KLPWxYCopIz2qwxv41i3V7PGSihnhhWUxmc2h5QAU7/btUQ7Z7OryzQ/7wCaA7wMpPrg2fzlsK9Bq14Xt8jLvxfeITNQ0C2jDw2p4cMRezw4Q830hBzF1AcNDrD4Vmf75/duWbNN6q58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705556131; c=relaxed/simple;
-	bh=LzhELx9h/U3h0sODMzPzGL+liQMJLMUOPLsau3AmHcA=;
-	h=DKIM-Signature:Received:Message-ID:Date:MIME-Version:User-Agent:
-	 Subject:Content-Language:To:Cc:References:From:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding; b=gRfXID9QmgchD2MeuHft24U/x941xut7A7r18vQ696j/1oiaV4A3VtGByjrvcx7dz6W0Ud+X0lUfIMugtZXszRRaNdYnrbNQx/AwuRXFXKhVJFW2KcomhnhQGViY7X45UTbaiGhkIHJIiWjxsnv7xkESitLYGvO1mpRR40xhXxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=MNtkIGsz; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1705567187; c=relaxed/simple;
+	bh=c5NIjA7ZVExAL8yvcmRrYUcTws8SPyenufmj2QU5Fkw=;
+	h=DKIM-Signature:X-UI-Sender-Class:Received:Message-ID:Date:
+	 MIME-Version:User-Agent:Subject:Content-Language:To:Cc:References:
+	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 X-Provags-ID:X-Spam-Flag:UI-OutboundReport; b=Saec4zebCRl8/0lq+Sr8SPE3oV5H8T4gjQK70Op9XPdzrqc6c/qkfa36aCiYve3MQp4aq1+ii6YuVfwD9F5NKcDb5UwqwWDO95bPpUn9ZjQD5HqSHkZTVLTBmqA3QOhuNhhrY6gWubfulU0VXOT7FVkDYQa8ybWuHyBMMmASC60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=k0go9khd; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MNtkIGsz"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=dH6p9SMJNPi+ukFSRBSjYz3JqljL0xzAdUNPFPGLjN8=; b=MNtkIGszG0wjyKy69ZChUe34pJ
-	I9qgJLnzNof+kFnP30VaWjvapB5VfCSGR4/ZqawI3a9cwUWnHBsZtoIagpZ4gBI/etsgnJPKy9+Z+
-	24NfymFoezA1htxrNuWZiVSWhhcShszSc4bBaFEfoyAf2PdaYtOW0myN2BRnci8bpyqikpcrMyPy4
-	o4JmwO+S6B78p6hGvGplNaift93ECgd59muZJ9qncEM4/94+iBVml1Y+fSKhD8KYx4vK2YbhHZHYV
-	O5LIcd0nJtSn+VxI9hDufL4NGkV4im3AbZlqTM7ZEik1920mShuOQxa4m/XppLvv5rc3dd7cBIlN6
-	r2CdE+0w==;
-Received: from [50.53.46.231] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1rQL3c-001iKd-19;
-	Thu, 18 Jan 2024 05:35:16 +0000
-Message-ID: <34862fc1-1cd9-47e3-b8e1-3fcce6ff7cf7@infradead.org>
-Date: Wed, 17 Jan 2024 21:35:15 -0800
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="k0go9khd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
+	t=1705567136; x=1706171936; i=markus.elfring@web.de;
+	bh=c5NIjA7ZVExAL8yvcmRrYUcTws8SPyenufmj2QU5Fkw=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=k0go9khdcMe+WBdNDa4U+Qhm6YfsiAia1sv4LWKlM55XdS/un90eRmaVWQZlnAVy
+	 vrFLLk7gsLYHHrqfifWG3w66rxpqx8ZOZ8QXH+N+LLh6PLKyVpN8F4mjhjtcHO2/j
+	 15/gDR1fDG2G3/+iQphlkQ0cgc3lBuw9mRj0inxQ0YfbYJcQwpAMCuky0OtmHQl51
+	 xFCGzl+jcmpkmBXQ/oZdJxRt8mC6WsWBYDn2juQl0QjCLeNQqGFXltnMk38JJhEkz
+	 xMA3jSAFpbSVhzPOteKEQBJ4lvx5znKbYl0O0ZRkhbfw2O/5o2LEdC4y8HrzvuR9g
+	 rQ5wykQgaPTs0WSthA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.91.95]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1McIki-1qpxiG2irM-00cfcL; Thu, 18
+ Jan 2024 09:38:56 +0100
+Message-ID: <ea4117d5-bc70-4f6d-9fe4-e70e0cc47a6c@web.de>
+Date: Thu, 18 Jan 2024 09:38:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -40,50 +42,70 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [GIT PULL] bcachefs updates for 6.8
-Content-Language: en-US
-To: James Bottomley <James.Bottomley@HansenPartnership.com>,
- Theodore Ts'o <tytso@mit.edu>, Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Greg KH <greg@kroah.com>, Mark Brown <broonie@kernel.org>,
- Neal Gompa <neal@gompa.dev>, Kees Cook <keescook@chromium.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- Nikolai Kondrashov <spbnick@gmail.com>, Philip Li <philip.li@intel.com>,
- Luis Chamberlain <mcgrof@kernel.org>
-References: <xlynx7ydht5uixtbkrg6vgt7likpg5az76gsejfgluxkztukhf@eijjqp4uxnjk>
- <be2fa62f-f4d3-4b1c-984d-698088908ff3@sirena.org.uk>
- <gaxigrudck7pr3iltgn3fp5cdobt3ieqjwohrnkkmmv67fctla@atcpcc4kdr3o>
- <f8023872-662f-4c3f-9f9b-be73fd775e2c@sirena.org.uk>
- <olmilpnd7jb57yarny6poqnw6ysqfnv7vdkc27pqxefaipwbdd@4qtlfeh2jcri>
- <CAEg-Je8=RijGLavvYDvw3eOf+CtvQ_fqdLZ3DOZfoHKu34LOzQ@mail.gmail.com>
- <40bcbbe5-948e-4c92-8562-53e60fd9506d@sirena.org.uk>
- <2uh4sgj5mqqkuv7h7fjlpigwjurcxoo6mqxz7cjyzh4edvqdhv@h2y6ytnh37tj>
- <2024011532-mortician-region-8302@gregkh>
- <lr2wz4hos4pcavyrmswpvokiht5mmcww2e7eqyc2m7x5k6nbgf@6zwehwujgez3>
- <20240117055457.GL911245@mit.edu>
- <5b7154f86913a0957e0518b54365a1b0fce5fbea.camel@HansenPartnership.com>
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <5b7154f86913a0957e0518b54365a1b0fce5fbea.camel@HansenPartnership.com>
+Subject: Re: [PATCH] pstore/ram: Return directly after a failed kasprintf()
+ call in ramoops_init_prz()
+Content-Language: en-GB
+To: Dan Carpenter <dan.carpenter@linaro.org>,
+ linux-hardening@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+ Joel Fernandes <joel@joelfernandes.org>, Kees Cook <keescook@chromium.org>,
+ Tony Luck <tony.luck@intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, =?UTF-8?B?R8O8bnRlciBSw7Zjaw==?=
+ <groeck@chromium.org>, Sai Prakash Ranjan
+ <saiprakash.ranjan@codeaurora.org>, Kunwu Chan <chentao@kylinos.cn>
+References: <644f44ad-7e2b-4a1a-bbd7-ccc79d479242@web.de>
+ <26759e3b-ff74-4b04-b06f-4d68fbc5f606@moroto.mountain>
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <26759e3b-ff74-4b04-b06f-4d68fbc5f606@moroto.mountain>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:nV3so7VARuPz+H3zgBtP5qFxp0QSibkDxt/9dkRReI3IdOgNMLU
+ BcINV1xvzIwy4ceXKDMUQttLb3561ySWFGmUxrzME9oKpCpbjwGGdcHMq2/ti/VqoHZQZi2
+ JcFEMEncuE98uc8xJvTSAwICMZlgYIoXx0znWcoaYOO4YHfiZGbHV7O3RH0pPcuP3mMahtk
+ zChUGwIwdkCgNVnJeFDEg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:mJ0dEA0NvLA=;dTB2kylOv6oJYX9V0c3EanhWlh8
+ gHXqOviPoFcDqkCtG2CguXyQsV4A0BIYg/JSHreVhLsX/e2L2NQUrVr+0my9XK2ENWXbpGGOb
+ 6x44lIAGMlJbwYCKlejIvhptLS+dHiwKt63u2uI9MmGE94u/joRE+A2NGD6WL1uUVAunozIm8
+ jTKFnD704vMciTL/j7schkkLf198LVe4oHFtqDUJdF4UzNE3Cs2X/S043T7ha8HNbAGkCM8/x
+ tINTZF8WoxBlgCMYp85TDtH9Osjc4gJPGmIgFFOCXU7kTMXKMa6R3gmqi5YujL/92aYz2qVue
+ jZYfk8me85L+iuZxGRnZr/MwZFXzj7f2ehpGae6aCZOWkEpcv6TBuyuQKoIALWz9olVGQvnu/
+ izQAqe7HvJN1pi2OsbCb5SmxjK4oq/qN+vzTr6S/wYbJnlNssX58zeKcyqaO9Rpz4xDy2XaLD
+ EI7xldmGrqUXAa8KAl2r44nN/IHQ/bb9T3Li8S9jUlTVqb7w/Cn9fJDUvuddHlEATY8ypKLIQ
+ Le+GSvaJEZssfPjUbD6bhgrZ6k4xNmcXq5YtGNUpi7tTRSjnvWnjqZV4nt6rKKPXfo1mqlafR
+ 6oHAdvDAGLEp4MAG5OeJNis/AO1NZ5bog5fWTt0qJEuG3MwbHp3UB/5KTMyKxrWbY3YfFbZPA
+ HOvvghQwygfha7Vkjcb7TVJyOkjec4xthjBB4sKGgLFwzxTsE4PqJ8ldD4Dd/lDC08aSxBbnY
+ LrDFqS7rG1tKgbBI6qXfZb6tZib/eLNyYsgpCPVbUftd9C2sEEI+xkwHLeVhFcb8qF5YzZQ5r
+ A4Y+CeAOP+B04/Pc80orfJ/ioqQMlTmo07gbmIkoIhwCAB+J3eJQRwGK0b3pXMwsC2+C7fjnO
+ p1fUvpEWfIm1gHjNna+atKro1uWFhVXXCUOZm2jzU2250YlvdJdMxMzU3gIZUfoNELVnkJJDj
+ enbmkw==
 
+>> The result from a call of the function =E2=80=9Ckasprintf=E2=80=9D was =
+passed to
+>> a subsequent function call without checking for a null pointer before
+>> (according to a memory allocation failure).
+>> This issue was detected by using the Coccinelle software.
+=E2=80=A6
+>> +++ b/fs/pstore/ram.c
+>> @@ -595,6 +595,9 @@ static int ramoops_init_prz(const char *name,
+>>  	}
+>>
+>>  	label =3D kasprintf(GFP_KERNEL, "ramoops:%s", name);
+>> +	if (!label)
+>> +		return -ENOMEM;
+>> +
+>>  	*prz =3D persistent_ram_new(*paddr, sz, sig, &cxt->ecc_info,
+>>  				  cxt->memtype, PRZ_FLAG_ZAP_OLD, label);
+>>  	kfree(label);
+>
+> This patch is fine as a clean up, but I think it's useful to say that
+> if you pass a NULL label to persistent_ram_new() then it will return
+> an error.
+=E2=80=A6
 
+Will it become helpful to annotate the corresponding function input parame=
+ter
+for null pointer tolerance anyhow?
 
-On 1/17/24 05:03, James Bottomley wrote:
-> Finally testing infrastructure is how OSDL (the precursor to the Linux
-> foundation) got started and got its initial funding, so corporations
-> have been putting money into it for decades with not much return (and
-> pretty much nothing to show for a unified testing infrastructure ...
-> ten points to the team who can actually name the test infrastructure
-> OSDL produced) and have finally concluded it's not worth it, making it
-> a 10x harder sell now.
-
-What will ten points get me?  a weak cup of coffee?
-
-Do I need a team to answer the question?
-
-Anyway, Crucible.
-
--- 
-#Randy
+Regards,
+Markus
