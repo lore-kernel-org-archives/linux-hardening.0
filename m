@@ -1,374 +1,160 @@
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A7E85395
-	for <linux-hardening@vger.kernel.org>; Thu, 18 Jan 2024 02:10:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9204A6104
+	for <linux-hardening@vger.kernel.org>; Thu, 18 Jan 2024 02:50:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705543831; cv=none; b=OyRe69e+PmuPylyyOxPxfwcnv6xPV9//xhT5mKJIfXOL3PKoq2O3UYJPq12feFgqURaI0J4GTNeDzIfr3cC1E+qrtqx2HzQnZ/X+YbsqfICtr9bYCNedUqiMfwiADas7ltlk9QKsA8Dl+0ipbn2Y7lECY0DrWij9TnSezpTsybg=
+	t=1705546208; cv=none; b=KD4RY20RgHxFjY5iBZPfBsyjFfifakA8Q6+Dj8NU4Mo8f/R+GHSAw5tbT+MZQU2DuB9ColD3hGveK7K8YI4HSXMpNBtfsh4/+l6uFcrH31uXyefoThR2KTVDaqR70rRhjVsVLiRDTm2nobDXSzTDD0GM5Ct1JKbmGfyg8VxRZRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705543831; c=relaxed/simple;
-	bh=/Wp9X6er7efyaM/KOFvjJ/aRIzEs08Ms/9JrKJL37I0=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
-	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
-	 Content-Type:Content-Transfer-Encoding; b=lEJSUkeC7LsB5tXzsuAzzc4NmM+IroLgS/yd7D84WIwy4iHNHPw5Nuy9YqclILMIrqG+BH85+Sb3vC3RnJRf7s1tZoRS7u7Wc2fwDXcH4ftU3C94BhoWoYj07oaYMfB6FrkL1Iu4G+5jd+VGJ9jJVArglMZ62tC3+qzWzYVbEFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=o8MeTa2u; arc=none smtp.client-ip=209.85.128.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1705546208; c=relaxed/simple;
+	bh=BJg75ZFdFsMHx0IzN/znZuL4kHgdbCZHjvh8m/sP/Ic=;
+	h=Received:DKIM-Signature:Received:Date:From:To:Cc:Subject:
+	 Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=mtVgjUGh5AicFXFMbDh0HjbsNEm4QSv4iKdABZtDYQ++NgR+3Xl5+9cfjdM/KNUgMylfkWjxSZx4/wScuK/JFrRvdw0su6MR1mXmabF6QApkC4M/EfyScNh+9OsptzvAmlSlnctpyWlX5hXOdiC8XTHkX8K0eLUjVd01CzChbCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=nEZ0rDNJ; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o8MeTa2u"
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-5e89ba9810aso97642107b3.2
-        for <linux-hardening@vger.kernel.org>; Wed, 17 Jan 2024 18:10:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1705543829; x=1706148629; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xyBr76gK/Clq6PkTT3F/dpMJAQNA2rfRDAOiFvk9ZXo=;
-        b=o8MeTa2ugxp7WlvHVrlVER9/O49fE24EVWgaAFC6m8KTR8AFVPd6oGU1sOrdoS0uhe
-         A5QFIVw8KGrc3DNjKLS3vM6UQjKWKEH+pBS4dYSwaim5H+Icrb63eKXb098MJb4l4bbT
-         /QpQhiorx6wGTfamq4ytiKrh8/Eivj2wl61K7pHGklpwlBQqYWtWjD808fEufav0WKTX
-         aO8dfpIbtRfRrnlDfUpPoBwMWgRlH15XZQm/UHL+uyxGhMujvsnzdIYeGR/iyGu5AzFq
-         HaZPxXKmHwzwqYQ5cZpn9hwSIBDFLaZ/EdcX9QOnYDH0jR+/5ugKDaaBbKqBJoUSuwwd
-         VTkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705543829; x=1706148629;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xyBr76gK/Clq6PkTT3F/dpMJAQNA2rfRDAOiFvk9ZXo=;
-        b=k+sPKHvCiNcYDhTmfWEhVp6W4oPgxEZMqyHFwaX4BrdvfVNMQg9liGkw330t0ghTM4
-         dqAorw81R4UxDiKEZGGAgXpGhx8X23r8xeB6JMVFfQ281yAZ8DuN2AkiER6aVWV66L9h
-         0QJCEQAZBa4763moYcN8TbL3OEQnhwGF+S3jwE23vA9gDBuQd1GMb7wxpdBkZrT88m5m
-         h4mISpgA612pFj3Z3KL3ezZaqqSlbhEz8uZjJCoruF9E5e2zQnaD7PNQAI2CIQcpayZp
-         PqvtjaBb2Ch991KRdQlTweEUGkMm7IMmFrsYimBm4LXETBSNYB7Tt7j2bykFiUrxuBF2
-         39Ng==
-X-Gm-Message-State: AOJu0Yx+0MVirdkaasvGm7hZ48/+3RKhEI2KuQL1LTEU8OczqI9Qsl2A
-	jN5h4YvEDKR3OPfauIZBmPLidbDFmtbz76aMdxZQAyE2VgE05/iM8cIKB+DD6W+QgwrWfGYtBaw
-	8bG2sVv6BHa7eLs1n4pCWVV3WrwpC7HoCW3RY
-X-Google-Smtp-Source: AGHT+IGdVeN6j6qHtHoIAhsTeueIVNsOEyoxCokeRtPUsHUhApyrNFi9AfYo45DYrqk7QnHDA5Dvu4wYaa2Md2U4GPw=
-X-Received: by 2002:a81:8584:0:b0:5ff:5dcf:44a5 with SMTP id
- v126-20020a818584000000b005ff5dcf44a5mr115505ywf.86.1705543828746; Wed, 17
- Jan 2024 18:10:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="nEZ0rDNJ"
+Received: from cwcc.thunk.org (pool-173-48-112-211.bstnma.fios.verizon.net [173.48.112.211])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 40I2nMf0019056
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Jan 2024 21:49:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
+	t=1705546166; bh=QY2jieE117yh9NkMq2fzek7v348fUElM78MBn1O7k+c=;
+	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
+	b=nEZ0rDNJWDL7d1gCdVYmfFfutRKEw2G+rNE4+GDGhxboywGSJtNjBqEe+MTnpiBik
+	 yVjrGhFN+FUGGE4TXKk0mgfcA19fnasGKYpVsNbMuLqEREcvVI9545CVNmF82H4mmG
+	 dC0kCfezHq6SMV7AalXUahxeaDxPKUt0X4z/PU8tJT666bmVDF9tjAFTzvUVv2hf/F
+	 ATwbGobBtp4bFlkdlL+wqjIV+plKAZz5ntdTgt1jGs8ao5G/6smZS0yMGsaBPbIsX/
+	 9wNI4Rlqf9vk1QiE3F2yluvG4UhQrXxXoyYBffTJ86mh3Z6JdQf/GkE0v6fj8aeJtx
+	 y1GEMArcvRm8w==
+Received: by cwcc.thunk.org (Postfix, from userid 15806)
+	id 82EC215C0278; Wed, 17 Jan 2024 21:49:22 -0500 (EST)
+Date: Wed, 17 Jan 2024 21:49:22 -0500
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: Kent Overstreet <kent.overstreet@linux.dev>, Greg KH <greg@kroah.com>,
+        Mark Brown <broonie@kernel.org>, Neal Gompa <neal@gompa.dev>,
+        Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Nikolai Kondrashov <spbnick@gmail.com>,
+        Philip Li <philip.li@intel.com>, Luis Chamberlain <mcgrof@kernel.org>
+Subject: Re: [GIT PULL] bcachefs updates for 6.8
+Message-ID: <20240118024922.GB1353741@mit.edu>
+References: <gaxigrudck7pr3iltgn3fp5cdobt3ieqjwohrnkkmmv67fctla@atcpcc4kdr3o>
+ <f8023872-662f-4c3f-9f9b-be73fd775e2c@sirena.org.uk>
+ <olmilpnd7jb57yarny6poqnw6ysqfnv7vdkc27pqxefaipwbdd@4qtlfeh2jcri>
+ <CAEg-Je8=RijGLavvYDvw3eOf+CtvQ_fqdLZ3DOZfoHKu34LOzQ@mail.gmail.com>
+ <40bcbbe5-948e-4c92-8562-53e60fd9506d@sirena.org.uk>
+ <2uh4sgj5mqqkuv7h7fjlpigwjurcxoo6mqxz7cjyzh4edvqdhv@h2y6ytnh37tj>
+ <2024011532-mortician-region-8302@gregkh>
+ <lr2wz4hos4pcavyrmswpvokiht5mmcww2e7eqyc2m7x5k6nbgf@6zwehwujgez3>
+ <20240117055457.GL911245@mit.edu>
+ <5b7154f86913a0957e0518b54365a1b0fce5fbea.camel@HansenPartnership.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20220809142457.4751229f@imladris.surriel.com> <d0a136a0-4a31-46bc-adf4-2db109a61672@kernel.org>
- <3193bf5b-4e22-412f-8c5b-68574942d9bc@kernel.org> <CAJuCfpHXLdQy1a2B6xN2d7quTYwg2OoZseYPZTRpU0eHHKD-sQ@mail.gmail.com>
- <CAHbLzkpEWYhRAabAhrr6zuQqh0rO-mh=NZupDxJJ1BidOt_uiA@mail.gmail.com>
- <CAJuCfpH5gwQc0mBzQ5LOMY9URCTh=58yUJd8pbzzynqAy8_yXw@mail.gmail.com>
- <CAHbLzkoOEEKakj_XCTYhAU8fJWu8in_EY-pHnw76B1=CfYMx1w@mail.gmail.com>
- <CAJuCfpH3SWTzGNQpYXbE0i2XZwodLc0SCRVYijDz2FPQJ2PpiA@mail.gmail.com>
- <202401170925.015D300A@keescook> <CAHbLzkoHfvLoxbeXUrKAYdEnTigDOC4EO5FU+tQQ9bL5xBrx+g@mail.gmail.com>
- <CAJuCfpGkmN0D9+PFwuOWeGhcVn2+ePdOhXDPGLAM0BTm_XBaYg@mail.gmail.com>
- <CAHbLzkoJpmtncnBQjot3YN3=gbTtWvPnw-xG-BrOpqoUsVeTwA@mail.gmail.com>
- <CAJuCfpG584eMNyi659AhVuOdZR3ooNh4ZVpXf6o_w8b=nbvjdg@mail.gmail.com> <CAJuCfpH+yUKQSh4tux=q3N3G1w92y1ggX0bv=FsaHWfvxjzMxw@mail.gmail.com>
-In-Reply-To: <CAJuCfpH+yUKQSh4tux=q3N3G1w92y1ggX0bv=FsaHWfvxjzMxw@mail.gmail.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Wed, 17 Jan 2024 18:10:16 -0800
-Message-ID: <CAJuCfpEVKwV7C8DcnyNeGWXEeACW1RFtyfj2d1N+rqoiS3b+Rg@mail.gmail.com>
-Subject: Re: [PATCH v2] mm: align larger anonymous mappings on THP boundaries
-To: Yang Shi <shy828301@gmail.com>
-Cc: Kees Cook <keescook@chromium.org>, Jeffrey Vander Stoep <jeffv@google.com>, 
-	Jiri Slaby <jirislaby@kernel.org>, Rik van Riel <riel@surriel.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, kernel-team@fb.com, 
-	Matthew Wilcox <willy@infradead.org>, Christoph Lameter <cl@linux.com>, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5b7154f86913a0957e0518b54365a1b0fce5fbea.camel@HansenPartnership.com>
 
-On Wed, Jan 17, 2024 at 5:34=E2=80=AFPM Suren Baghdasaryan <surenb@google.c=
-om> wrote:
->
-> On Wed, Jan 17, 2024 at 4:29=E2=80=AFPM Suren Baghdasaryan <surenb@google=
-.com> wrote:
-> >
-> > On Wed, Jan 17, 2024 at 4:13=E2=80=AFPM Yang Shi <shy828301@gmail.com> =
-wrote:
-> > >
-> > > On Wed, Jan 17, 2024 at 4:02=E2=80=AFPM Suren Baghdasaryan <surenb@go=
-ogle.com> wrote:
-> > > >
-> > > > On Wed, Jan 17, 2024 at 3:32=E2=80=AFPM Yang Shi <shy828301@gmail.c=
-om> wrote:
-> > > > >
-> > > > > On Wed, Jan 17, 2024 at 9:40=E2=80=AFAM Kees Cook <keescook@chrom=
-ium.org> wrote:
-> > > > > >
-> > > > > > On Tue, Jan 16, 2024 at 02:30:36PM -0800, Suren Baghdasaryan wr=
-ote:
-> > > > > > > On Tue, Jan 16, 2024 at 2:25=E2=80=AFPM Yang Shi <shy828301@g=
-mail.com> wrote:
-> > > > > > > >
-> > > > > > > > On Tue, Jan 16, 2024 at 1:58=E2=80=AFPM Suren Baghdasaryan =
-<surenb@google.com> wrote:
-> > > > > > > > >
-> > > > > > > > > On Tue, Jan 16, 2024 at 12:56=E2=80=AFPM Yang Shi <shy828=
-301@gmail.com> wrote:
-> > > > > > > > > >
-> > > > > > > > > > On Tue, Jan 16, 2024 at 11:16=E2=80=AFAM Suren Baghdasa=
-ryan <surenb@google.com> wrote:
-> > > > > > > > > > >
-> > > > > > > > > > > On Tue, Jan 16, 2024 at 4:09=E2=80=AFAM Jiri Slaby <j=
-irislaby@kernel.org> wrote:
-> > > > > > > > > > > >
-> > > > > > > > > > > > On 16. 01. 24, 12:53, Jiri Slaby wrote:
-> > > > > > > > > > > > > Hi,
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > On 09. 08. 22, 20:24, Rik van Riel wrote:
-> > > > > > > > > > > > >> Align larger anonymous memory mappings on THP bo=
-undaries by
-> > > > > > > > > > > > >> going through thp_get_unmapped_area if THPs are =
-enabled for
-> > > > > > > > > > > > >> the current process.
-> > > > > > > > > > > > >>
-> > > > > > > > > > > > >> With this patch, larger anonymous mappings are n=
-ow THP aligned.
-> > > > > > > > > > > > >> When a malloc library allocates a 2MB or larger =
-arena, that
-> > > > > > > > > > > > >> arena can now be mapped with THPs right from the=
- start, which
-> > > > > > > > > > > > >> can result in better TLB hit rates and execution=
- time.
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > This appears to break 32bit processes on x86_64 (=
-at least). In
-> > > > > > > > > > > > > particular, 32bit kernel or firefox builds in our=
- build system.
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > Reverting this on top of 6.7 makes it work again.
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > Downstream report:
-> > > > > > > > > > > > >   https://bugzilla.suse.com/show_bug.cgi?id=3D121=
-8841
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > So running:
-> > > > > > > > > > > > > pahole -J --btf_gen_floats -j --lang_exclude=3Dru=
-st
-> > > > > > > > > > > > > --skip_encoding_btf_inconsistent_proto --btf_gen_=
-optimized .tmp_vmlinux.btf
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > crashes or errors out with some random errors:
-> > > > > > > > > > > > > [182671] STRUCT idr's field 'idr_next' offset=3D1=
-28 bit_size=3D0 type=3D181346
-> > > > > > > > > > > > > Error emitting field
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > strace shows mmap() fails with ENOMEM right befor=
-e the errors:
-> > > > > > > > > > > > > 1223  mmap2(NULL, 5783552, PROT_READ|PROT_WRITE,
-> > > > > > > > > > > > > MAP_PRIVATE|MAP_ANONYMOUS, -1, 0 <unfinished ...>
-> > > > > > > > > > > > > ...
-> > > > > > > > > > > > > 1223  <... mmap2 resumed>)              =3D -1 EN=
-OMEM (Cannot allocate
-> > > > > > > > > > > > > memory)
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > Note the .tmp_vmlinux.btf above can be arbitrary,=
- but likely large
-> > > > > > > > > > > > > enough. For reference, one is available at:
-> > > > > > > > > > > > > https://decibel.fi.muni.cz/~xslaby/n/btf
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > Any ideas?
-> > > > > > > > > > > >
-> > > > > > > > > > > > This works around the problem, of course (but is a =
-band-aid, not a fix):
-> > > > > > > > > > > >
-> > > > > > > > > > > > --- a/mm/mmap.c
-> > > > > > > > > > > > +++ b/mm/mmap.c
-> > > > > > > > > > > > @@ -1829,7 +1829,7 @@ get_unmapped_area(struct file=
- *file, unsigned long
-> > > > > > > > > > > > addr, unsigned long len,
-> > > > > > > > > > > >                   */
-> > > > > > > > > > > >                  pgoff =3D 0;
-> > > > > > > > > > > >                  get_area =3D shmem_get_unmapped_ar=
-ea;
-> > > > > > > > > > > > -       } else if (IS_ENABLED(CONFIG_TRANSPARENT_HU=
-GEPAGE)) {
-> > > > > > > > > > > > +       } else if (IS_ENABLED(CONFIG_TRANSPARENT_HU=
-GEPAGE) &&
-> > > > > > > > > > > > !in_32bit_syscall()) {
-> > > > > > > > > > > >                  /* Ensures that larger anonymous m=
-appings are THP
-> > > > > > > > > > > > aligned. */
-> > > > > > > > > > > >                  get_area =3D thp_get_unmapped_area=
-;
-> > > > > > > > > > > >          }
-> > > > > > > > > > > >
-> > > > > > > > > > > >
-> > > > > > > > > > > > thp_get_unmapped_area() does not take care of the l=
-egacy stuff...
-> > > > > > > > > > >
-> > > > > > > > > > > This change also affects the entropy of allocations. =
-With this patch
-> > > > > > > > > > > Android test [1] started failing and it requires only=
- 8 bits of
-> > > > > > > > > > > entropy. The feedback from our security team:
-> > > > > > > > > > >
-> > > > > > > > > > > 8 bits of entropy is already embarrassingly low, but =
-was necessary for
-> > > > > > > > > > > 32 bit ARM targets with low RAM at the time. It's def=
-initely not
-> > > > > > > > > > > acceptable for 64 bit targets.
-> > > > > > > > > >
-> > > > > > > > > > Thanks for the report. Is it 32 bit only or 64 bit is a=
-lso impacted?
-> > > > > > > > > > If I understand the code correctly, it expects the addr=
-ess allocated
-> > > > > > > > > > by malloc() is kind of randomized, right?
-> > > > > > > > >
-> > > > > > > > > Yes, correct, the test expects a certain level of address=
- randomization.
-> > > > > > > > > The test failure was reported while running kernel_virt_x=
-86_64 target
-> > > > > > > > > (Android emulator on x86), so it does impact 64bit target=
-s.
-> > > > > > > >
-> > > > > > > > IIUC this breaks the "expectation" for randomized addresses=
- returned
-> > > > > > > > by malloc(), but it doesn't break any real Android applicat=
-ion, right?
-> > > > > > > > So this is a security concern instead of a real regression.
-> > > > > > >
-> > > > > > > How is making a system move vulnerabile not a real regression=
-?
-> > > > > > >
-> > > > > > > >
-> > > > > > > > I think we can make this opt-in with a knob. Anyone who out=
-weighs
-> > > > > > > > security could opt this feature out. However I'm wondering =
-whether
-> > > > > > > > Android should implement a general address randomization me=
-chanism
-> > > > > > > > instead of depending on "luck" if you do care about it.
-> > > > > > >
-> > > > > > > This is not depending on luck. This is checking for possible
-> > > > > > > vulnerabilities in the system.
-> > > > > > > I admit I'm not a security expert, so I'm looping in Jeff and=
- Kees to chime in.
-> > > > > >
-> > > > > > Hi!
-> > > > > >
-> > > > > > Just to chime in, but reduction in ASLR entropy is absolutely a
-> > > > > > regression. This is userspace visible (via /proc/sys/kernel/ran=
-domize_va_space,
-> > > > > > /proc/sys/vm/mmap_rnd*_bits) with expectations that it work as
-> > > > > > advertised. So, while 32-bit might be already ASLR-weak, we don=
-'t want
-> > > > > > to make things super bad nor break ASLR in compat mode under 64=
--bit
-> > > > > > systems.
-> > > > > >
-> > > > > > Having an opt-in sounds reasonable, but we need to wire it to t=
-he ASLR
-> > > > > > sysctls in some way so nothing lying about the ASLR entropy.
-> > > > >
-> > > > > Thanks for the explanation. IIUC the randomiza_va_space and
-> > > > > mmap_rnd_bits randomize the mmap_base and start_brk for each exec=
-()
-> > > > > call. So the heap allocation is randomized. But it seems the form=
-ula
-> > > > > doesn't take into account huge page. ARM64 adjusts the mmap_rnd_b=
-its
-> > > > > based on page size.
-> > > > >
-> > > > > I did a simple test, which conceptually does:
-> > > > > 1. call mmap to allocate 8M heap
-> > > > > 2. print out the allocated address
-> > > > > 3. run the program 1000 times (launch/exit/re-launch)
-> > > > > 4. check how many unique addresses
-> > > > >
-> > > > > With the default config on my arm64 VM (mmap_rnd_bits is 18), I s=
-aw
-> > > > > 134 unique addresses. Without the patch, I saw 945 unique address=
-es.
-> > > > > So I think the test could replicate what your test does.
-> > > > >
-> > > > > When I increased the mmap_rnd_bits to 24, I saw 988 unique addres=
-ses
-> > > > > with the patch. x86_64 should have 28 bits by default, it should
-> > > > > randomize the address quite well. I don't know why you still saw =
-this,
-> > > > > or you have a different setting for mmap_rnd_bits?
-> > > >
-> > > > I checked the configuration on our test harness where the test fail=
-ed:
-> > >
-> > > Thanks, Suren.
-> > >
-> > > >
-> > > > /proc/sys/vm/mmap_rnd_bits =3D 32
-> > >
-> > > It is surprising 32 bits still fail. 24 bits on arm64 works for me. O=
-r
-> > > the compat bits is used?
-> >
-> > Hmm. Let me verify to exclude that possibility.
->
-> Aha! You are correct, the test is using compat syscalls and your
-> suggestion at https://lore.kernel.org/all/CAHbLzkoL6sCDciHqVMJga288853CHd=
-OTa5thOPQ9SHKSqjGGPQ@mail.gmail.com/
-> seems to fix it. I started a complete set of presubmit tests at
-> https://android-review.googlesource.com/c/kernel/common/+/2916065 and
-> will report the results tomorrow morning but I expect them to pass
-> now.
+On Wed, Jan 17, 2024 at 08:03:35AM -0500, James Bottomley wrote:
+> Actually, this is partly our fault.  Companies behave exactly like a
+> selfish contributor does:
+> 
+> https://archive.fosdem.org/2020/schedule/event/selfish_contributor/
+> 
+> The question they ask is "if I'm putting money into it, what am I
+> getting out of it".  If the answer to that is that it benefits
+> everybody, it's basically charity  to the entity being asked (and not
+> even properly tax deductible at that), which goes way back behind even
+> real charitable donations (which at least have a publicity benefit) and
+> you don't even get to speak to anyone about it when you go calling with
+> the collecting tin.  If you can say it benefits these 5 tasks your
+> current employees are doing, you might have a possible case for the
+> engineering budget (you might get in the door but you'll still be
+> queuing behind every in-plan budget item).  The best case is if you can
+> demonstrate some useful for profit contribution it makes to the actual
+> line of business (or better yet could be used to spawn a new line of
+> business), so when you're asking for a tool, it has to be usable
+> outside the narrow confines of the kernel and you need to be able to
+> articulate why it's generally useful (git is a great example, it was
+> designed to solve a kernel specific problem, but not it's in use pretty
+> much everywhere source control is a thing).
 
-nit: You will need to #include <linux/compat.h> in your fix. Most
-configurations build fine but one failed. It has only CONFIG_COMPAT_32
-enabled:
+I have on occasion tried to make the "it benefits the whole ecosystem"
+argument, and that will work on the margins.  But it's a lot harder
+when it's more than a full SWE-year's worth of investment, at least
+more recently.  I *have* tried to get more test investment. with an
+eye towards benefitting not just one company, but in a much more
+general fasion ---- but multi-engineer projects are a very hard sell,
+especially recently.  If Kent wants to impugn my leadership skills,
+that's fine; I invite him to try and see if he can get SVP's cough up
+the dough.  :-)
 
-#
-# Binary Emulations
-#
-CONFIG_COMPAT_32=3Dy
-# end of Binary Emulations
+I've certainly had a lot more success with the "Business quid pro quo"
+argument; fscrypt and fsverity was developed for Android and Chrome;
+casefolding support benefited Android and Steam; ext4 fast commits was
+targetted at cloud-based NFS and Samba serving, etc.
 
-Adding the missing include into mm/huge_memory.c fixes the issue.
+My conception of a successful open source maintainer includes a strong
+aspect of a product manager whose job is to find product/market fit.
+That is, I try to be a matchmaker between some feature that I've
+wnated for my subsystem, and would benefit users, and a business case
+that is sufficientlty compelling that a company is willing to fund the
+engineering effort to make taht feature happen.  That companmy might
+be one that signs my patcheck, or might be some other company.  For
+special bonus points, if I can convince some other company to find a
+good chunk of the engineering effort, and it *also* benefits the
+company that pays my salary, that's a win-win that I can crow about at
+performance review time.  :-)
 
+> Somewhere between 2000 and now we seem to have lost our ability to
+> frame the argument in the above terms, because the business quid pro
+> quo argument was what got us money for stuff we needed and the Linux
+> Foundation and the TAB formed, but we're not managing nearly as well
+> now.  The environment has hardened against us (we're no longer the new
+> shiny) but that's not the whole explanation.
 
-> Thanks,
-> Suren.
->
-> >
-> > >
-> > > > /proc/sys/vm/mmap_rnd_compat_bits =3D 16
-> > > >
-> > > > The failure logs are:
-> > > >
-> > > > 10-20 14:37:52.123  7029  7029 V AslrMallocTest: 7 bits of entropy =
-for
-> > > > allocation size 8388608 (minimum 8)
-> > > > 10-20 14:37:52.123  7029  7029 E AslrMallocTest: insufficient entro=
-py
-> > > > for malloc(8388608)
-> > > >
-> > > > which come from here:
-> > > > https://cs.android.com/android/platform/superproject/main/+/main:ct=
-s/tests/aslr/src/AslrMallocTest.cpp;l=3D127
-> > > > So, the allocation size for which this test failed was 2^23.
-> > >
-> > > The patch just tries to align >=3D 2M allocations. It looks like your
-> > > test allocates 256 bytes, 64K and 8M. So just 8M is impacted.
-> >
-> > Correct.
-> >
-> > >
-> > >
-> > > >
-> > > >
-> > > > > I'm wondering whether we should take into account huge page align=
-ment
-> > > > > for mmap_rnd_bits. And I think this is a huge page common problem=
-, we
-> > > > > have file mapping huge page aligned as well.
-> > > > >
-> > > > > 32 bit is easy, I think I can just make thp_get_unmapped_area() a
-> > > > > no-op on 32 bit system.
-> > > > >
-> > > > > >
-> > > > > > -Kees
-> > > > > >
-> > > > > > --
-> > > > > > Kees Cook
+There are a couple of dynamics going on here, I think.  When a company
+is just starting to invest in open source, and it is the "new shiny"
+it's a lot easier to make the pitch for big projects that are good for
+everyone.  In the early days of the IBM Linux Technolgy Center, the
+Linux SMP scalability effort, ltp, etc., were significantly funded by
+the IBM LTC.  And in some cases, efforts which didn't make it
+upstream, but which inspired the features to enter Linux (even if it
+wasn't IBM code), such as in the case of the IBM's linux thread or
+volume management, it was still considered a win by IBM management.
+
+Unfortunately, this effect fades over time.  It's a lot easier to fund
+multi-engineer projects which run for more than a year, when a company
+is just starting out, and when it's still trying to attract upstream
+developers, and it has a sizeable "investment" budget.  ("IBM will
+invest a billion dollars in Linux").  But then in later years, the
+VP's have to justify their budget, and so companies tend to become
+more and more "selfish".  After all, that's how capitalism works ---
+"think of the children^H^H^H^H^H^H^H shareholders!"
+
+I suspect we can all think of companies beyond just IBM where this
+dynamic is at play; I certainly can!
+
+The economic cycle can also make a huge difference.  Things got harder
+after the dot com imposiion; then things lossened up.  Howver,
+post-COVID, we've seen multiple companies really become much more
+focused on "how is this good for our company".  It has different names
+at different companies, such as "year of efficiency" or "sharpening
+our focus", but it often is accompanied with layoffs, and a general
+tightening of budgets.  I don't think it's an accident that
+maintainwer grumpiness has been higher than normal in the last year or
+so.
+
+	    	       	  	      	     	- Ted
