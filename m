@@ -1,144 +1,143 @@
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92835644A
-	for <linux-hardening@vger.kernel.org>; Fri, 19 Jan 2024 17:48:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E77D656447;
+	Fri, 19 Jan 2024 18:19:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705686500; cv=none; b=SQ185so1i+RME0DSgv94zD/nbg/nwWsMOOpe6w7ue6feXt2eWTSN5CMRr8SawKb70uTEX0WSCcl4QUB+oaeVW6Ec0zqM2jr7VEoSEEHI3J6AePR48OZDwwhV3UAPUglankJh3ruIUE7Em6KHvBkny9CrNsfC20Syj/uVHkL9VG4=
+	t=1705688381; cv=none; b=ZJF7WFQnb7ydQbSxRje6b9XJr8KdO7VhLEM0x7U7fDaureLDbuLOvvKUDBbXdBKrCjIpi9s1qUjrhN0qnkfZUEullTFtpy4KcpNZkwBNgr5nYbpgYrJbRx4X6We/nxOfQk+oav8V0ktczu8J1grcaRgLBYRLcB1AfSGayIWSKZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705686500; c=relaxed/simple;
-	bh=y4LBLPPTJpu5+EwWMUKYiqKP9RM/o03Y/rjuQjCk1cM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=daLm2Q7pqQJM0wTAyR6TifYI7n0ofYTOLbquPuFsLbRXAHfqXO+KTTAoGQRfMLTLr5x4rrWbKZZOIWb9AJx4I59p9L442VhYVQS1wVuXWdmYSysYnWy2RBCR3Az775Mt2JOPjAIwJv3y2kJ5N7/y28Loxqf/n5DLZjJz86aUTJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=u6Dcez6G; arc=none smtp.client-ip=35.89.44.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1705688381; c=relaxed/simple;
+	bh=sBqFdsnrpG5B2aVYepB4f2kUIlIRBbAjsJR6pnILbSk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tBoOG6DAJ93VdQ9u3dqz4zOJEHGzESwtKZfH8GReX5J52oRBSuyTwY1+pctjInbdOImW+2rGWToAL+IMlyKeCWzdntDhN0PkU1LXD6Wf0WFmRTVp0RdGS5cOPre4eZBpk7vEAc98k3Dzjv4L6fOU0whpgSp3FGv/7UJxeiCujvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b=r+Gv4n3N; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="u6Dcez6G"
-Received: from eig-obgw-5007a.ext.cloudfilter.net ([10.0.29.141])
-	by cmsmtp with ESMTPS
-	id QgW3rjS05oMN9QsyYrXNiS; Fri, 19 Jan 2024 17:48:18 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id QsyXrxsrqPwzWQsyXr84GU; Fri, 19 Jan 2024 17:48:17 +0000
-X-Authority-Analysis: v=2.4 cv=T8yf8tGQ c=1 sm=1 tr=0 ts=65aab5e1
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=IkcTkHD0fZMA:10 a=dEuoMetlWLkA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=NEAV23lmAAAA:8 a=7YfXLusrAAAA:8 a=EIiQeHuflohXdkK9GqgA:9 a=QEXdDO2ut3YA:10
- a=9cHFzqQdt-sA:10 a=PUnBvhIW4WwA:10 a=AjGcO6oz07-iQ99wixmX:22
- a=SLz71HocmBbuEhFRYD3r:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=zGuUORij185LGbHOnPZInu2/axHj+8J4C5foPE1ZNXA=; b=u6Dcez6G4LqXN82z8mdiqJc3dJ
-	HLt0YUYlxU9me5CnBrzjwJAHIwSl4xc6v2rV4+nv7gXS1Xp8Mg2s1j4z6qkYcjmsoupnKxJwubp3Y
-	KZu1bMTPhJwkNRAQV4ddTunxw4Ps/XIa6ctcE5u4ENGYVKiozxwhheYC+J1coVoZmC1HOXhVTHDsI
-	Vo6o9W/31rkPWWXMAB0m4hNa4qMBKRlJ/fO3tpgf4aPx7pIM6klcewU49EwE0Mkt0i49kKJPIMrsQ
-	hy7k2m2m7Lg6frtM8H/VzvcslH10vkDdyeUUdXU/qN6mB3qplk6wcQ4PYSIuVd++jr+MylZ6NZg7s
-	l5YTw0kw==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:41082 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rQsyV-001HCM-1D;
-	Fri, 19 Jan 2024 11:48:15 -0600
-Message-ID: <d5cde9b6-5f20-4a10-91b1-037887ec79c2@embeddedor.com>
-Date: Fri, 19 Jan 2024 11:48:13 -0600
+	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="r+Gv4n3N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
+	s=s31663417; t=1705688362; x=1706293162; i=erick.archer@gmx.com;
+	bh=sBqFdsnrpG5B2aVYepB4f2kUIlIRBbAjsJR6pnILbSk=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=r+Gv4n3N0kqDcshWjM149MnwQbnVFG+pNKS0sAe9hXZRo2ymuTbnngBxSMvBt1pQ
+	 5bDmwnP1fSyRHCg8ib12FDEtpefdJkGyKxVa5wNi4NPNSA/heEp1V8HO+yJOdJ0Fj
+	 GdOAP35qxYYlKXTsn9eR0LNvVqbdC8qXBW17B4h3cbao8L19co0SgphZ+1jmN5d2V
+	 mKh0ATMg1qXXinsxLGbeyVV1/7xSkU/jKbypkYrsrOi6ivm8PD8joRLGZhX4OjCea
+	 V7DXBpB8puodWgzmsg0QOcZWpGGhyBzbeDt0cN5f9hFru6elOGsHCRCKxKd+pJYFW
+	 Inci3UMJ3Gs7B+6Ggg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from localhost.localdomain ([79.157.194.183]) by mail.gmx.net
+ (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1MPokD-1rmfbm3wId-00MrKt; Fri, 19 Jan 2024 19:19:22 +0100
+From: Erick Archer <erick.archer@gmx.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Michal Simek <michal.simek@amd.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Erick Archer <erick.archer@gmx.com>,
+	linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] pinctrl: pinctrl-zynqmp: Use devm_kcalloc() instead of devm_kzalloc()
+Date: Fri, 19 Jan 2024 19:19:09 +0100
+Message-Id: <20240119181909.7079-1-erick.archer@gmx.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] staging: rtl8723bs: Use kcalloc() instead of kzalloc()
-Content-Language: en-US
-To: Erick Archer <erick.archer@gmx.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Franziska Naepelt <franziska.naepelt@googlemail.com>,
- Hans de Goede <hdegoede@redhat.com>, Johannes Berg
- <johannes.berg@intel.com>, Jeff Johnson <quic_jjohnson@quicinc.com>,
- Aloka Dixit <quic_alokad@quicinc.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20240119173900.11035-1-erick.archer@gmx.com>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240119173900.11035-1-erick.archer@gmx.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1rQsyV-001HCM-1D
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:41082
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 8
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfCd1O+8WBdDHN6ukB6FKNzliQjRoL9VBWcXYzHaTzuD3K9g/hB7AR2mJbWlL5jrRLDSxknSfN2+EF9vWLQcxBgiuFQieCB64/uZbWYixNv5Um22wf16p
- fx3tlyqwUOOU1T1CHniqFr8P2XgQiys5V/izSSFJ9p+8CDlgWbYpnSwyOVXSXIIkYQT+zGFP3pFF0v9VBv4typKSO1ysQb5brakkDqAiRwC6Fd2M9yEo/7Mp
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:KENkPdNVovQVg33hH+1L5lSU0tTV7tRXp9M+P2HMwnVAPTlbIbL
+ PweBJcCplxH72i91i8mgFr5KWChN98onhXv6h0ZIbcxqjjsXvFY+rYFXe8TDQixEbV783cF
+ /JdyingxCL0j0rqQzM4f/PWAgV9PNBReQ4Rp0dGAaIBXdCzNNXwmRmJXfxfQdoHBkGFIOrG
+ A/amwTK/l8cXqaszrCxkQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:u/hSC2xNnJ4=;Le7EPSL310H42OZtCq1g0w7KJq0
+ OoKMQ1MPvTJ9XaGVPc6RO7TqvN1mqqhQCYYO50EJ4FEXFjfE3MUYymywEheZrOWSp68TtOj8l
+ sxzcHXsQYlXkpSVJ3c5Eq/sCul3W3oh5JDZo1aidunFmcoRg191IWxUVFuyq8W/5aN7SLpFWQ
+ +oEVidHQtnavFyNenPY7vZsjWWuA53nHJlZ9eAG3A/cpthPciVY8oZ7OMG/5BPRuB7Yss1v9y
+ xibpdriWNDM1XW/tMjLoeE5WiLC7tej6nuPi2KyKoAbBlLQrtHI3jBIlC8/9P1QLBT8na6mQU
+ 2Ctxs5pWuqBMZ8WdF27SexQXJFNPEHzVGrnPokDzMVIWxvHJpcfL97VeiwyD/1UbgVPq8uWK/
+ 8J5QHc4d0MeXU6YoRgEEz4PGAQY9ISBYNZek208dlC/T1ziH2vNcd65/1pCfXP7pcPafBywyo
+ GCsYE/41wi3vE1k+c1b9UXh9KVtC/Jj4Dbm3AS4PTGIHoQ09CwYa3NTlUlTpbOjz5tj98bO7M
+ tujTHUIJ/ybasx6GfGObe65n2R2PZYjnTCVrkcztiePLq9Zng4qZrTCZqPso94aQZFrl9dOM0
+ P4EcbYPgkQ4LzLYzxjuo/VXfNvnt2aEKHeSTJPyCtqtRidll/4oavaOJktMDOxB/t+gl7uvSM
+ dd1Vd2zzyxub9vGzUAfqdaXMBmNWiGjY0UFcc+IaqexxQ6v80fK2b2FYqhQ4cHhf5dR5Gf2pK
+ 1eecqAOArHVoUh+8SKp8/WDvvvJWIuk+MTdd4rA4cFYg3T4zXhnBUNhkCtV/kkd4tD3LLWxq5
+ v2cPlEnaJuDLwrXXeup7U87sgLSSlC6TFU36BIZTkyzEKFQveM/dRwLThoTqjTRnZQdOSnD7F
+ egc5kHoBTMeFHZ2t3WzNcm7tExe4woNci5M07XQz77SAy3kFi8493bZ679F3l5Y4PLlOurI/B
+ nxzqcpqKBUX+q1QjvniClAM2wiY=
 
+As noted in the "Deprecated Interfaces, Language Features, Attributes,
+and Conventions" documentation [1], size calculations (especially
+multiplication) should not be performed in memory allocator (or similar)
+function arguments due to the risk of them overflowing. This could lead
+to values wrapping around and a smaller allocation being made than the
+caller was expecting. Using those allocations could lead to linear
+overflows of heap memory and other misbehaviors.
 
+So, use the purpose specific devm_kcalloc() function instead of the
+argument size * count in the devm_kzalloc() function.
 
-On 1/19/24 11:39, Erick Archer wrote:
-> As noted in the "Deprecated Interfaces, Language Features, Attributes,
-> and Conventions" documentation [1], size calculations (especially
-> multiplication) should not be performed in memory allocator (or similar)
-> function arguments due to the risk of them overflowing. This could lead
-> to values wrapping around and a smaller allocation being made than the
-> caller was expecting. Using those allocations could lead to linear
-> overflows of heap memory and other misbehaviors.
-> 
-> So, use the purpose specific kcalloc() function instead of the argument
-> count * size in the kzalloc() function.
-> 
-> Also, it is preferred to use sizeof(*pointer) instead of sizeof(type)
-> due to the type of the variable can change and one needs not change the
-> former (unlike the latter).
-> 
-> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
-> Link: https://github.com/KSPP/linux/issues/162
-> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-co=
+ded-arithmetic-in-allocator-arguments [1]
+Link: https://github.com/KSPP/linux/issues/162
+Signed-off-by: Erick Archer <erick.archer@gmx.com>
+=2D--
+ drivers/pinctrl/pinctrl-zynqmp.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+diff --git a/drivers/pinctrl/pinctrl-zynqmp.c b/drivers/pinctrl/pinctrl-zy=
+nqmp.c
+index f2be341f73e1..5c46b7d7ebcb 100644
+=2D-- a/drivers/pinctrl/pinctrl-zynqmp.c
++++ b/drivers/pinctrl/pinctrl-zynqmp.c
+@@ -562,7 +562,7 @@ static int zynqmp_pinctrl_prepare_func_groups(struct d=
+evice *dev, u32 fid,
+ 	const char **fgroups;
+ 	int ret, index, i;
 
-Thanks!
--- 
-Gustavo
+-	fgroups =3D devm_kzalloc(dev, sizeof(*fgroups) * func->ngroups, GFP_KERN=
+EL);
++	fgroups =3D devm_kcalloc(dev, func->ngroups, sizeof(*fgroups), GFP_KERNE=
+L);
+ 	if (!fgroups)
+ 		return -ENOMEM;
 
-> ---
->   drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
-> index 1ff763c10064..65a450fcdce7 100644
-> --- a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
-> +++ b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
-> @@ -1259,8 +1259,7 @@ static int cfg80211_rtw_scan(struct wiphy *wiphy
->   		goto check_need_indicate_scan_done;
->   	}
-> 
-> -	ssid = kzalloc(RTW_SSID_SCAN_AMOUNT * sizeof(struct ndis_802_11_ssid),
-> -		       GFP_KERNEL);
-> +	ssid = kcalloc(RTW_SSID_SCAN_AMOUNT, sizeof(*ssid), GFP_KERNEL);
->   	if (!ssid) {
->   		ret = -ENOMEM;
->   		goto check_need_indicate_scan_done;
-> --
-> 2.25.1
-> 
-> 
+@@ -754,7 +754,7 @@ static int zynqmp_pinctrl_prepare_function_info(struct=
+ device *dev,
+ 	if (ret)
+ 		return ret;
+
+-	funcs =3D devm_kzalloc(dev, sizeof(*funcs) * pctrl->nfuncs, GFP_KERNEL);
++	funcs =3D devm_kcalloc(dev, pctrl->nfuncs, sizeof(*funcs), GFP_KERNEL);
+ 	if (!funcs)
+ 		return -ENOMEM;
+
+@@ -768,7 +768,7 @@ static int zynqmp_pinctrl_prepare_function_info(struct=
+ device *dev,
+ 		pctrl->ngroups +=3D funcs[i].ngroups;
+ 	}
+
+-	groups =3D devm_kzalloc(dev, sizeof(*groups) * pctrl->ngroups, GFP_KERNE=
+L);
++	groups =3D devm_kcalloc(dev, pctrl->ngroups, sizeof(*groups), GFP_KERNEL=
+);
+ 	if (!groups)
+ 		return -ENOMEM;
+
+@@ -830,7 +830,7 @@ static int zynqmp_pinctrl_prepare_pin_desc(struct devi=
+ce *dev,
+ 	if (ret)
+ 		return ret;
+
+-	pins =3D devm_kzalloc(dev, sizeof(*pins) * *npins, GFP_KERNEL);
++	pins =3D devm_kcalloc(dev, *npins, sizeof(*pins), GFP_KERNEL);
+ 	if (!pins)
+ 		return -ENOMEM;
+
+=2D-
+2.25.1
+
