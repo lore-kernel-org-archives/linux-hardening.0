@@ -1,163 +1,103 @@
-Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 566E75646C
-	for <linux-hardening@vger.kernel.org>; Fri, 19 Jan 2024 18:26:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71BB65645A
+	for <linux-hardening@vger.kernel.org>; Fri, 19 Jan 2024 19:58:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705688802; cv=none; b=SagCLcTVsa08quQVHmk0yj983YjgKY2h0yzRO2BfVopGvWOahwY1DgPeDR7dDLRML8XPRtFUAnwsLen1Em73+gdYxUvBpsa9CndIh/tYyF+VtxKAbUSq/52ZAxK8qmlqNNXwOykfqZZKkOOBmAIdaizXJ+Ans4dwimA9LAPAzho=
+	t=1705694317; cv=none; b=QuXiUz7tScRkoCWFJL8b7rIo1jo6Ke/L4fKHFOKkNi43RFh1VUpuxwNt7baPwg+i9jViGzyNzJ/J5Y8phJiNPCAK2NIRyRSJxvodF9VSvVJrw8iXtqfws5n3gvoCRs9ydzgnujYaJwr6lDuIlC+/RcZkxMrPyWi4V5Q9tdf0MBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705688802; c=relaxed/simple;
-	bh=Bsn0CtciQRUDtrRkW9gSG+XBJcqYbERCr4RziQIuVjM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ostfdCuAcdFhJyM04l/KJpZe0+fw1PE2ntIVW3c6KIFqinrNcYY2OAtPYxvfaT3AnZbXWugI2evpnLh+V12MwC9nUKUNVxsu1EiwJgujdwmTnVpeTV0MonFhgQPLH6mPC7h9T5aJm8HT7fm2so1gQR3mcDPIrJ7EvIy4yd6NDfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=LnZS/RlA; arc=none smtp.client-ip=35.89.44.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1705694317; c=relaxed/simple;
+	bh=sThutFEPey5kn1vfPaO+vlKXcAo3DAOcgLqEvPMy/Yo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iY+aCKtYgvyd/1U6f5XGL7HsdHZgVqW5YkXIFU9MqQodgFAYZC1+l1MoK7qC4tg6OXxAkEEs1l4R+hVI9YLYK4OWvnACBkUk0cjloezoUdid+MWiUg/+SGu7qy1waF4kDmtwxAH3RB2+8/XjHjC21SYo5KTWvUI8sBi/QvnYo74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=fD8vZtdK; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="LnZS/RlA"
-Received: from eig-obgw-5003a.ext.cloudfilter.net ([10.0.29.159])
-	by cmsmtp with ESMTPS
-	id QjnIrGEuGCF6GQtZfr0a6k; Fri, 19 Jan 2024 18:26:39 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id QtZerD1Lol5UwQtZfrxnwQ; Fri, 19 Jan 2024 18:26:39 +0000
-X-Authority-Analysis: v=2.4 cv=daKTYFbe c=1 sm=1 tr=0 ts=65aabedf
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=IkcTkHD0fZMA:10 a=dEuoMetlWLkA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=NEAV23lmAAAA:8 a=7YfXLusrAAAA:8 a=6BFke60KTf7VZbaxHQkA:9 a=QEXdDO2ut3YA:10
- a=9cHFzqQdt-sA:10 a=PUnBvhIW4WwA:10 a=AjGcO6oz07-iQ99wixmX:22
- a=SLz71HocmBbuEhFRYD3r:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=/mlPQHtQDJOovVjTKZhCPypwsLYuORg1138Lx/Umta0=; b=LnZS/RlAcA+J8mY3mUW9L5oRqi
-	d25JGSC3u5UcrBJi/qJrTNBVwC73rGRNtpvKaaO36thHEM1Vois2sqwaV9sZDelqYqOVhqWt8OFPr
-	f/ZvfJYE52lomb7TK6CH/lAH5WWYGA+9km3b0z9OJB90wH+rh0MO8TGgFsCiyKkYopJnw5IYCYStv
-	LAbppX3xvU0s2YUejxGbhwShBKFTpG+0tmglfB4jJizxu/orZucU45TCR+DGZayAAt2SI99+2ogca
-	iagcMsZhO2gzUkxMSM0rrKtCC3atn4aYLM7ovFLK1rJ7e59SAKyXGgF67krexe2XeItj3fvEJA38L
-	OsXntoHw==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:48556 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rQtZe-001yC5-0h;
-	Fri, 19 Jan 2024 12:26:38 -0600
-Message-ID: <b75129be-04fc-4818-a9f9-eb35dca4b689@embeddedor.com>
-Date: Fri, 19 Jan 2024 12:26:36 -0600
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fD8vZtdK"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-5cdf76cde78so823986a12.1
+        for <linux-hardening@vger.kernel.org>; Fri, 19 Jan 2024 11:58:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1705694316; x=1706299116; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=C2LfwYsyKiY2dEzfHpNnaI1FNPWRf8Tkgz7+9RYGVco=;
+        b=fD8vZtdKgPd/0l8vPCY9s3YMnHwivIPi6pgfnbxzvoLgqrXTE/gG+agMxexYr3lpX5
+         sWB4PxeV0nTdl/0FqyE2UuX0Wn9udVw/J6vAWudq/6S5Az8NzAfuU3X8i1ndYMlnvMdi
+         onmdzoxFxgWp5qfL5+j1rcqhxa+d0vI5D4+O8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705694316; x=1706299116;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=C2LfwYsyKiY2dEzfHpNnaI1FNPWRf8Tkgz7+9RYGVco=;
+        b=aZwB03AUAu4iQ0qD+YNOWbnT7Lp23YWJJBXibgMwfwBbkkMUOLW5M+jg7dUfCdG0pq
+         yQq3EaHYjJ7HwkR691pOuCYRpHVyboVzfW6wbjkuxq1oAdk8J1ozKd90ANKio6JOFLlE
+         wufeWHczHuQbphCUUcRuNXzB1x3QBXpknPeymrUNE2agQjbmU+wlBs7xcfP8TP9oL3jq
+         FIOqokbdaX6j+/gHjUnawfFjlAW5ULZDk8r61Fz1v2LN9LsUlCj6RrdLUuixwMDiNqiK
+         Ee+P3iyIJMYFeOJNL6rO/6MESfJM6W2WwurriVi0NAowiq9Q8HVnD3PbagYqp8NyBEQp
+         iDwA==
+X-Gm-Message-State: AOJu0YxXO/hXv/iMNIJxDce6xAuyQRH7iVTYTcKMurhxskMo42Doyit3
+	0m1/Iijt1Lykw9m90THq9pmeosB/KNhAG5XB682psGGlI/qUsvhJXW5WMsndJw==
+X-Google-Smtp-Source: AGHT+IEyAGGR1bIGI9NKgmfe9mJPaukqKPFviZSxGEnYb0DgSbPfYaWaF1LxDBX4BTna/x2dhOEsNw==
+X-Received: by 2002:a05:6a20:da82:b0:19a:8556:8caa with SMTP id iy2-20020a056a20da8200b0019a85568caamr486992pzb.13.1705694315821;
+        Fri, 19 Jan 2024 11:58:35 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id sm16-20020a17090b2e5000b0028dd3ac24a6sm4561644pjb.9.2024.01.19.11.58.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jan 2024 11:58:35 -0800 (PST)
+Date: Fri, 19 Jan 2024 11:58:34 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Andy Shevchenko <andy@kernel.org>,
+	Azeem Shaikh <azeemshaikh38@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
+	Dwaipayan Ray <dwaipayanray1@gmail.com>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] string: Remove strlcpy()
+Message-ID: <202401191141.F6902E74D@keescook>
+References: <20240118223301.work.079-kees@kernel.org>
+ <CAHp75VerSqay6cxRQOihC321BbpAWd_TB6aPigN8XZZ=KPXtHA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] pinctrl: pinctrl-zynqmp: Use devm_kcalloc() instead of
- devm_kzalloc()
-Content-Language: en-US
-To: Erick Archer <erick.archer@gmx.com>,
- Linus Walleij <linus.walleij@linaro.org>, Michal Simek
- <michal.simek@amd.com>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20240119181909.7079-1-erick.archer@gmx.com>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240119181909.7079-1-erick.archer@gmx.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1rQtZe-001yC5-0h
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:48556
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfHyzKcOHMMzhKZWnEyIL/gG560SKNx8zH52aWI0QKmV8jx5c8xceGfB0G3f+A8upMlN2rd4uQH7uvqEhrIk9w0CBGW83f2MPqPrsOGNecsMqLUL1Gb0R
- guxzrTg7gNBkBKems3sWuSJnh9Mjoatc6M1RtnL4MpNb9TuBWbb2hsbKJO2y7yxY2SoadeowA9UJtV3kbN0/YlKVYrXd6Wi4LnsVrT8h8NPqTNrM2L30YnLG
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75VerSqay6cxRQOihC321BbpAWd_TB6aPigN8XZZ=KPXtHA@mail.gmail.com>
 
-
-
-On 1/19/24 12:19, Erick Archer wrote:
-> As noted in the "Deprecated Interfaces, Language Features, Attributes,
-> and Conventions" documentation [1], size calculations (especially
-> multiplication) should not be performed in memory allocator (or similar)
-> function arguments due to the risk of them overflowing. This could lead
-> to values wrapping around and a smaller allocation being made than the
-> caller was expecting. Using those allocations could lead to linear
-> overflows of heap memory and other misbehaviors.
+On Fri, Jan 19, 2024 at 06:05:19PM +0200, Andy Shevchenko wrote:
+> On Fri, Jan 19, 2024 at 12:33 AM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > With all the users of strlcpy() removed[1] from the kernel, remove the
+> > API, self-tests, and other references. Leave mentions in Documentation
+> > (about its deprecation), and in checkpatch.pl (to help migrate host-only
+> > tools/ usage). Long live strscpy().
 > 
-> So, use the purpose specific devm_kcalloc() function instead of the
-> argument size * count in the devm_kzalloc() function.
+> ...
 > 
-> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
-> Link: https://github.com/KSPP/linux/issues/162
-> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+> >   * Copies at most dstsize - 1 bytes into the destination buffer.
+> > - * Unlike strlcpy the destination buffer is always padded out.
+> > + * Unlike strscpy the destination buffer is always padded out.
+> 
+> While at it, please use the strscpy() form to refer to the function.
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Oh, with the trailing "()"? Sure! Good call.
+
+-Kees
+
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
 Thanks!
--- 
-Gustavo
 
-> ---
->   drivers/pinctrl/pinctrl-zynqmp.c | 8 ++++----
->   1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/pinctrl-zynqmp.c b/drivers/pinctrl/pinctrl-zynqmp.c
-> index f2be341f73e1..5c46b7d7ebcb 100644
-> --- a/drivers/pinctrl/pinctrl-zynqmp.c
-> +++ b/drivers/pinctrl/pinctrl-zynqmp.c
-> @@ -562,7 +562,7 @@ static int zynqmp_pinctrl_prepare_func_groups(struct device *dev, u32 fid,
->   	const char **fgroups;
->   	int ret, index, i;
-> 
-> -	fgroups = devm_kzalloc(dev, sizeof(*fgroups) * func->ngroups, GFP_KERNEL);
-> +	fgroups = devm_kcalloc(dev, func->ngroups, sizeof(*fgroups), GFP_KERNEL);
->   	if (!fgroups)
->   		return -ENOMEM;
-> 
-> @@ -754,7 +754,7 @@ static int zynqmp_pinctrl_prepare_function_info(struct device *dev,
->   	if (ret)
->   		return ret;
-> 
-> -	funcs = devm_kzalloc(dev, sizeof(*funcs) * pctrl->nfuncs, GFP_KERNEL);
-> +	funcs = devm_kcalloc(dev, pctrl->nfuncs, sizeof(*funcs), GFP_KERNEL);
->   	if (!funcs)
->   		return -ENOMEM;
-> 
-> @@ -768,7 +768,7 @@ static int zynqmp_pinctrl_prepare_function_info(struct device *dev,
->   		pctrl->ngroups += funcs[i].ngroups;
->   	}
-> 
-> -	groups = devm_kzalloc(dev, sizeof(*groups) * pctrl->ngroups, GFP_KERNEL);
-> +	groups = devm_kcalloc(dev, pctrl->ngroups, sizeof(*groups), GFP_KERNEL);
->   	if (!groups)
->   		return -ENOMEM;
-> 
-> @@ -830,7 +830,7 @@ static int zynqmp_pinctrl_prepare_pin_desc(struct device *dev,
->   	if (ret)
->   		return ret;
-> 
-> -	pins = devm_kzalloc(dev, sizeof(*pins) * *npins, GFP_KERNEL);
-> +	pins = devm_kcalloc(dev, *npins, sizeof(*pins), GFP_KERNEL);
->   	if (!pins)
->   		return -ENOMEM;
-> 
-> --
-> 2.25.1
-> 
-> 
+-Kees
+
+-- 
+Kees Cook
