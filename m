@@ -1,173 +1,147 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from bg4.exmail.qq.com (bg4.exmail.qq.com [43.155.65.254])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D1271D694;
-	Thu, 18 Jan 2024 23:13:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705619642; cv=fail; b=S/QqZlISyI8Grj+Ru6R4Jls++FJWY3VDtpUn41UVowR8S7ufH2kC3ol1LNx8tVJY9rMhdzft8fX7JYyQ81H6QTtBLVr5DgtwBjSPhYkUMqCqG9zC5zRnBML+UkaP4qy02mCdcyIkTqJSnwuQm2pxBRgUBCHAc+V9b/DNiIS/yi8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705619642; c=relaxed/simple;
-	bh=dBWkPdHcCexZw3jIBekgX96JJgn+4ndr9IhWvqoE0Qw=;
-	h=To:Cc:Subject:From:Message-ID:References:Date:In-Reply-To:
-	 Content-Type:MIME-Version; b=I/xQNP5OFisIZwBEYKY8Mh4SINEDWscJRWCzbbD81aNnp0AsH0RjiHWzyTLlJbwdNP4VsmXnXtrjpelS0RLk8Ve6Jvnyxqcvrppzq40m/z4RW8nDeskpvxN6tM5BzfSHoJ76NarmvqJH7iycOPpQcS0BWSJg3EGfIBf4wh4ZXQs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=RsqxWPfb; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=SvZhrG6+; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="RsqxWPfb";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="SvZhrG6+"
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40ILTC8h026409;
-	Thu, 18 Jan 2024 23:13:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : message-id : references : date : in-reply-to : content-type :
- mime-version; s=corp-2023-11-20;
- bh=qvMKmwSt/RAHnp3IlqNtdVYhqMBYpXJZRHxAq1JKloM=;
- b=RsqxWPfbyumu2wiHlP1eFCzsP2dgdVSFHBkRavWzP7V+2ozISlfa/Af5eXzErtW8NBuf
- gQFboAQgsIM/jnmOVaxb7ezWft5E7zOiofqNAakT/qwaXIWfbO0Um8OS9hUwdbHYmp1J
- jQ1mkCMSjdgnrR0gcS+7iWAxdKcgX4Bj1MDDFg7HDwR7OURtul/eKp0p3+prlkqhOYC7
- kbLiVEHjusFhQwyUCzRFFxMvgSWa5xoHaRMLDjopfc2oWQecYTpp193dywCayjsMh7px
- 5xuyqhlwZ69VuR8bbag+Qb3gXOmYizX4vr9NyrTzFo9xHIIqnCEPrEpS5HTuQ84CQY5l Dg== 
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3vkjjemab9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 18 Jan 2024 23:13:49 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 40IN687Y005369;
-	Thu, 18 Jan 2024 23:13:49 GMT
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2169.outbound.protection.outlook.com [104.47.56.169])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3vkgyku0be-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 18 Jan 2024 23:13:48 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BjTkm4NWtybW7gs8O9kxGCV39fgRYGWvNzIHw7edBew0KbMx6mDv93Pud70V/FByBsccnN4k1ok7B+ovkOX18Wx7B5M6nssUkauzUvPv23wmRfd/YbqCjqKlVe+yYc4r52RCIBdh2gfqcMMlszCInLr2kh/NZNEAXhVjMyQu0y/jQQn455ZQqg+0q5PHAJrNnxnEULMZTtKfCAaXQm4hCVIyRkepNaJUMytXs1Qn5vFs+6/hn3TwWQgNT3kpPYmz39rAQRbaQse8aSZNwyisZSZrxbqtDyQh25AbjEVKDbWRYSDfpncpL0khWp1nxRX1f/m7FcVdi2tkR4yXol84/A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qvMKmwSt/RAHnp3IlqNtdVYhqMBYpXJZRHxAq1JKloM=;
- b=ZNYURC7Kzhtg0LMc8yH3FsrsIuO/Bq/8V+iFoNswPMaSHgymX27U+fOvEFOLk3vdG5N6GGDTtDqbtm4TUFpfiC0f70Fut1PQAvWnug56xXv5fgHyPdut7b4BzJogctBUu/UaSjm6ZX/26j2QGiSgwS7qeeV9XWf8ql3YntbAqfSndFT3VxGKt/qJDImwcXBictqsWuCkBwjmzGXNjcQv+e9H9mfJiyKLxKcp5fip8Rp0eYbMYQ/VBJhSgNoepJjY3uMfZr9oBwv9E3l0F1Bo0+2C1G+0FlKD9R6Cs5Nat9TH9ydpAJ2vdFUeB4+KfnLXD/QmN51ufRphOh08X8nniw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qvMKmwSt/RAHnp3IlqNtdVYhqMBYpXJZRHxAq1JKloM=;
- b=SvZhrG6+oKJVcRoHUmQ4/zwmuJR3shhD647+kSLjxX8uJQPCSV96+B4Sg+ISosOdOvudDCoivA2xQf0Slz8AZSo/F24kY4tT0Ns2Jw0w5a7m7h0V5SZ9OYUJL3qcxKN+242Nmv1dFYd3AnKuTFFtaTheprkcGRnofPdULh0Ef6s=
-Received: from PH0PR10MB4759.namprd10.prod.outlook.com (2603:10b6:510:3d::12)
- by SJ0PR10MB4447.namprd10.prod.outlook.com (2603:10b6:a03:2dc::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.24; Thu, 18 Jan
- 2024 23:13:46 +0000
-Received: from PH0PR10MB4759.namprd10.prod.outlook.com
- ([fe80::3676:ea76:7966:1654]) by PH0PR10MB4759.namprd10.prod.outlook.com
- ([fe80::3676:ea76:7966:1654%4]) with mapi id 15.20.7202.024; Thu, 18 Jan 2024
- 23:13:46 +0000
-To: Kees Cook <keescook@chromium.org>
-Cc: Tyrel Datwyler <turtle.in.the.kernel@gmail.com>,
-        Justin Stitt
- <justinstitt@google.com>,
-        Michael Cyr <mikecyr@linux.ibm.com>,
-        "James
- E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen"
- <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] scsi: ibmvscsi_tgt: replace deprecated strncpy with
- strscpy
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <yq1h6ja1bhs.fsf@ca-mkp.ca.oracle.com>
-References: <20231212-strncpy-drivers-scsi-ibmvscsi_tgt-ibmvscsi_tgt-c-v2-1-bdb9a7cd96c8@google.com>
-	<202312121321.E15E09BF@keescook>
-	<9f246fbc-b2e4-4585-912d-a5a00ac8cd04@gmail.com>
-	<202401181442.ABC133B203@keescook>
-Date: Thu, 18 Jan 2024 18:13:45 -0500
-In-Reply-To: <202401181442.ABC133B203@keescook> (Kees Cook's message of "Thu,
-	18 Jan 2024 14:43:16 -0800")
-Content-Type: text/plain
-X-ClientProxiedBy: BL0PR05CA0015.namprd05.prod.outlook.com
- (2603:10b6:208:91::25) To PH0PR10MB4759.namprd10.prod.outlook.com
- (2603:10b6:510:3d::12)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E424C601
+	for <linux-hardening@vger.kernel.org>; Fri, 19 Jan 2024 10:35:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=43.155.65.254
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705660542; cv=none; b=IeGOlyIjrjlhvujlQsJOMrHHL+G9dHkFDZGoVqXDbIsH97UGKGvlh93pt6+gGY5i9Klsqmme1o+DF29N+tLRo0NjEgQsx3VxHgIyGsJN0/btVPrix3M8X431atEO0WwFcgdTFo7uExd3K2ZEgHv7LXEv6JHPTRiDiZtE48xgO0I=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705660542; c=relaxed/simple;
+	bh=3dEAuadRtgX48I3fDLt441/VU2N0O2dLDz2qBeYEnCo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aIUrpLiaeFdnHUolekzfZYPuSlXz3mjnMO6cjBSaT/XL65F1VBE6xU4Q2O4gvveagrHVjlr95fwbtd6DCNhQ6aX4WAv8foqjSt6CJDIcr/Wiwx8E722RdVdZWp9epXDPcB0hKXJSpq5WBJ7GOVaIiGU5P+TRBDhwTw6qJ1MXiQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tinylab.org; spf=pass smtp.mailfrom=tinylab.org; arc=none smtp.client-ip=43.155.65.254
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tinylab.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tinylab.org
+X-QQ-mid: bizesmtp64t1705660495t7k8890j
+X-QQ-Originating-IP: kpWPaONTxxvy0nOEGrSxFq1akJ6vzcOttZF/rCEqrtY=
+Received: from [10.4.6.71] ( [58.240.82.166])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 19 Jan 2024 18:34:53 +0800 (CST)
+X-QQ-SSF: 00200000000000B0B000000A0000000
+X-QQ-FEAT: 4g9JbZ7lBbGYt5f2YVZ9RuBGDo2jTI9EeLQs3oNfXqrhUBaFQVqPrhhoJcJJ1
+	ER1ylXifWxfMxWYKz9hF5gfbKgCzQ4idJ6F796Sg96DfHuVwv6g7okYYi+PY3MIUefL3ny+
+	9RHZi5hZRA3pQ/GN1g7yOts83rk0lLNGwQMVhKkRNRAAARFiGtrC/24H5K8R8svRDKZcU10
+	60uwPXeAVoOu4bWiDTqdS4/vhXc3/BybQJS4emGBRbiEHPceo8mF7NA/ytodyM6SwDBCTQ9
+	phIiAS+OsjWTH1x2HC8xkpPzQhxfIgWnZYWy/koKv5dNXFm4dLt/0+6/RetUr2EiktDPY9B
+	06RYMgpZgJFMo3G9OEqFKKLURyFZoOmUKETKrCv78KYYkQ1GGI=
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 9538942234933522215
+Message-ID: <231AC634A34EBAF4+1a989394-a60f-4088-86ee-fe1344e7999f@tinylab.org>
+Date: Fri, 19 Jan 2024 18:34:52 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR10MB4759:EE_|SJ0PR10MB4447:EE_
-X-MS-Office365-Filtering-Correlation-Id: 54a93948-20eb-4679-da90-08dc187b1f46
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	C/p/pC2+bgP5QFP3uqZaabYx+RATYHFiEjoE2OVfJ3YzRLK81WDq3yOrkajg5wiTjUPYS9QwvtTsdu0YDarjt0/6oTGxllUmxMvTmdQHoABl1mQe3yHLx4jOCWj+vtorrmdclWLPoLQGhpnm86FpLwJPJ3psfIH4Ab0eGCjsdqceLFPNeSrG2NBCD/9X5rF44HqAExMBeOLq38HYu25HUApQUKEJqWbZ/9IQVJUDu0CoytxMfHv+yj5kl2Uuzaf6mBEhSnZQxJYXCCMlkGTB0UztOQTyE+fp2CtTGVbn2HhorqDPuBpb302L6jZpVgYDrKuNoheyNYSkPCtEOqa1Qoj+Ev80HxfK4EGGK8/IJGKzYKIEgQ6YIu/FpmMmdYF3oG005FXE78EMUgxVaoeWjFv+rXCnnt3BAsIrL+lTAEFj4BOn21z4jIXF771ssxN4O0MeeMH2YlZK5AhG8op1nJ1jcgEZ9kBAZ9HDCL+gVXNa6XXioe36F8VY4mo/8B9z1r8zsiQkrbYD2M8aXVTMYNq1AvSJ1TZmppWcLu5iP0rCzybJz1um5a6ywO8Jx23RuDDG3wWFecU6AKZOvcgykRP8k0/wZlxImZvF0SOtbtEhQn7FRN0y7foGgyfJRmBH
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB4759.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(346002)(39860400002)(136003)(376002)(396003)(230922051799003)(64100799003)(186009)(451199024)(1800799012)(26005)(6486002)(478600001)(86362001)(6512007)(316002)(2906002)(41300700001)(6506007)(36916002)(66476007)(66946007)(5660300002)(54906003)(66556008)(558084003)(6916009)(4326008)(8676002)(8936002)(38100700002)(156123004);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?kGLtEWbV1RD/StUs4rMcXkThgSEhaLUqIpe7IyzW8ZO95NIU0ijEC5Qw5+Go?=
- =?us-ascii?Q?GGkl5mhypJit0g0yJn6Y1yHZveHZ48P/VPrzu49logSVZAzOD7TFhOv7fAxQ?=
- =?us-ascii?Q?xZzJHy1gX2hdJCVe9IUJR+LXqGIdxiZbAYen77wFE1Uroqcy9V1fhYmduJYl?=
- =?us-ascii?Q?bZs8bIB4I5cB1i0IP/mWCUQSXXHxwjfK8w4TcS5eB32NqtwjQTq3uMxdYc6z?=
- =?us-ascii?Q?pOsn2WGLh+AZeoUMjeKdGHYf2wOhAvHb/C0K9BwTuWYkUKQR+73Te7lPY9N1?=
- =?us-ascii?Q?ZEIv91HRL3Wx/t9KUlgG/IzEYqptm8r+3EYywhtnV+r7CRA7rAY7Ud5S+Icr?=
- =?us-ascii?Q?g4JIpXeqKjkSAcgnXjlO8rvv6X/cIlME/HuObBBYOEGUP9IX/SmdvCwscl2s?=
- =?us-ascii?Q?aHON69RTxI2OD5LqiLLPW/Tdbajim16N2yLKwmyR2ID+fG9sn5xO0VsHewr8?=
- =?us-ascii?Q?scGiGaBmeTrhURxWPTzJHcWbAMl9jbM+V7pRJSGf235lM2cZK1bTaMcMQS3r?=
- =?us-ascii?Q?NrysfG0qEASvaP7+/GtntNK7AwSpwWoVz2B7psJiAJduN9PeWgcNwX2CFHay?=
- =?us-ascii?Q?5MCmiMW890wrB+P+a1pNER7icSj0wr1B5HHf/r+KCUo3qsXni/zNLe11A/eS?=
- =?us-ascii?Q?oCt+kjk4yyt/R54RgMjasXSwDKyvWNQcvnRDC0kpJmUb+jbu+7ZOdnn+NJys?=
- =?us-ascii?Q?0cyEgvUZZs6ZPDtadchxVAzOU22hICSND7ffqqJM+FI/QMoJ52GfoUbw9ald?=
- =?us-ascii?Q?LmFcR/nIOnKchOE9sVJ60My9i4fvqHywzEsIUJ4HN/FroNDHHF8uiZT4mMyy?=
- =?us-ascii?Q?P/D4zAbKHvX0NWw5WlXJseVQwVSzXHN2cXX5IdfZyU+tDz5tWB3KWaKzZQrQ?=
- =?us-ascii?Q?q3UkzNQGwO7MfUlAK87UuM2dcOF9wpjN9M221z0cf0MKUanQvEZRMFYd+4dw?=
- =?us-ascii?Q?e6iZXtp0pSDn3u0J0tiV0hFfhnz02Ucxc76peo4ADm1znDjlL/WbnkZnPy+A?=
- =?us-ascii?Q?XpCAyow3bzJ+PF9RohpaIadk1KPZ3f39+7V2sQeDZGPSSlukOMvW4Hd1uQ69?=
- =?us-ascii?Q?r1i3nKzzK/KM/FD/96gyjgcTt1CDZefoUkgNgUyedW2CMVBYoRuq8NA4Bcg6?=
- =?us-ascii?Q?QFVwevLMJ8OJJCDjf4QYV7JqgQ9H9agABCcvKNifHn7dDyYfOZdIeYkHUk7g?=
- =?us-ascii?Q?qrkPWksVVU0Ud4OqQskvx0mdERClfDAR3OeoDzuMT5bQFeiXlP33QyofFKnz?=
- =?us-ascii?Q?F+AzvD0t6UNOVxKF5mWBoynA1KZimH/FIKGZUSRmAx3WvOd3OkX8AF+yLNw+?=
- =?us-ascii?Q?iu3tRjOocZSh68QCMnXVCBEzjuWnG1l2QFSMliG797lTlCx19sWAxECVIRth?=
- =?us-ascii?Q?H1FlYWKWZD82GMRnPE2CzEM2N+wBCMJRv3NF8HU0C0q02eXIfDSWVkIND/X4?=
- =?us-ascii?Q?BXw/ybdFxF0oqTK0ZlOs+tMlxEnK5M6rmFOVxQVoMDfkd9AptL9l8jvQjpVq?=
- =?us-ascii?Q?rSW0japV/J/WlUIIZIt8Mu8G0vNbO4sMOGpcPUJluJ2dG1TrBpmDB1W/Y8sd?=
- =?us-ascii?Q?8iDWYFrMu/4S6GW3ZqFMXdvS0c7WwSrv+F2fJpgnNULHWKa8gdpzI7O7skO7?=
- =?us-ascii?Q?0g=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	ZESWDr7y2Iwa2MbPgaayClAM20JEUa/g3BlZXVxDSDcgihPh8jjNe6TU9vhyo34Zd0t8+JGmAQFtgzuqmXwvhRyhJsrsAVx5Cz5iLYGZJFAbEgQ7hIveqA5QzLydnn2WhrEj7HBwoIdia8iq/zNU9C76rAk5Ixp8rD+faWJpMGQ68b/Pnkltjsp6zdxhkltXfNhEA3K7IcZPcJySXBavexbL1cld/Ov2K07K7luO7OpjiRlU1obucVW7gZZVgcW3ofVElpabe02X/eG2dD0bJ8xfe9tVcU3pWklY/BBqdwF9wlEDkXIytx+kEBvTKAoGFpYslwjf9PcCXkKCU18TiwT8rdqbtRL+wTz4z1U7a+YKxha3gNEwhyQBSogD/UPsySkONnK20Z5iH6Y5ei7/e16AfOLJ/A5YVLV8/e5SqadpLySG6rerzw2fDfUJagt7+t128nA5RUnFCdr9nmpF8qb0BoCG10m1CircEpGbUGWusSDpOKWKnzRqm3UcECbuL+IQq6JuqAQePnPgt57+nAdQsr7YevTC35mLtaEXn1QFDkDHDUqNlnvm4m6EiIUQP2NJAIV5c2Cpg569i2yuvNr0/hz83rCuCP53690bP7Y=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 54a93948-20eb-4679-da90-08dc187b1f46
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB4759.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jan 2024 23:13:46.5869
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: LGeXA/k3z1J3+WiLX1ZqD0rrB3k2RQfsaVvmbUzDhM0f5iSXEcgewkOhJFNSJdN0DN5IJFO3D5e7/Ve0cfZ5yGk96gdZj0fiq8D9R8ujntI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4447
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-18_10,2024-01-17_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 phishscore=0
- suspectscore=0 malwarescore=0 spamscore=0 mlxlogscore=594 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2401180156
-X-Proofpoint-ORIG-GUID: kbNlDXhl-CQY34NuyXuJKERRpgwe7yUl
-X-Proofpoint-GUID: kbNlDXhl-CQY34NuyXuJKERRpgwe7yUl
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.0
+Subject: Re: [PATCH V2] riscv: Support RANDOMIZE_KSTACK_OFFSET
+To: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+ keescook@chromium.org, guoren@kernel.org, bjorn@rivosinc.com,
+ jszhang@kernel.org, conor.dooley@microchip.com, andy.chiu@sifive.com,
+ samitolvanen@google.com, coelacanthushex@gmail.com, dlemoal@kernel.org
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>
+References: <20231109133751.212079-1-songshuaishuai@tinylab.org>
+From: Song Shuai <songshuaishuai@tinylab.org>
+In-Reply-To: <20231109133751.212079-1-songshuaishuai@tinylab.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:tinylab.org:qybglogicsvrsz:qybglogicsvrsz4a-2
 
 
-Kees,
+Hi, palmer:
 
-> Great; thanks! Are you taking this, or should I carry it in the
-> hardening tree?
+在 2023/11/9 21:37, Song Shuai 写道:
+> Inspired from arm64's implement -- commit 70918779aec9
+> ("arm64: entry: Enable random_kstack_offset support")
+> 
+> Add support of kernel stack offset randomization while handling syscall,
+> the offset is defaultly limited by KSTACK_OFFSET_MAX() (i.e. 10 bits).
+> 
+> In order to avoid trigger stack canaries (due to __builtin_alloca) and
+> slowing down the entry path, use __no_stack_protector attribute to
+> disable stack protector for do_trap_ecall_u() at the function level.
+> 
+> Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Song Shuai <songshuaishuai@tinylab.org>
+Just a Reminder in case you miss this one.
 
-I'll pick it up now that Tyrel has reviewed it.
+> ---
+> Changes since V1:
+> https://lore.kernel.org/linux-riscv/20231101064423.1906122-1-songshuaishuai@tinylab.org/
+> - fix whitespace errors Damien pointed out
+> - add Acked-by and Reviewed-by tags
+> 
+> ---
+>   arch/riscv/Kconfig        |  1 +
+>   arch/riscv/kernel/traps.c | 17 ++++++++++++++++-
+>   2 files changed, 17 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index d607ab0f7c6d..0e843de33f0c 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -100,6 +100,7 @@ config RISCV
+>   	select HAVE_ARCH_KGDB_QXFER_PKT
+>   	select HAVE_ARCH_MMAP_RND_BITS if MMU
+>   	select HAVE_ARCH_MMAP_RND_COMPAT_BITS if COMPAT
+> +	select HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
+>   	select HAVE_ARCH_SECCOMP_FILTER
+>   	select HAVE_ARCH_THREAD_STRUCT_WHITELIST
+>   	select HAVE_ARCH_TRACEHOOK
+> diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
+> index 19807c4d3805..a1a75163fb81 100644
+> --- a/arch/riscv/kernel/traps.c
+> +++ b/arch/riscv/kernel/traps.c
+> @@ -6,6 +6,7 @@
+>   #include <linux/cpu.h>
+>   #include <linux/kernel.h>
+>   #include <linux/init.h>
+> +#include <linux/randomize_kstack.h>
+>   #include <linux/sched.h>
+>   #include <linux/sched/debug.h>
+>   #include <linux/sched/signal.h>
+> @@ -296,7 +297,8 @@ asmlinkage __visible __trap_section void do_trap_break(struct pt_regs *regs)
+>   	}
+>   }
+>   
+> -asmlinkage __visible __trap_section void do_trap_ecall_u(struct pt_regs *regs)
+> +asmlinkage __visible __trap_section  __no_stack_protector
+> +void do_trap_ecall_u(struct pt_regs *regs)
+>   {
+>   	if (user_mode(regs)) {
+>   		long syscall = regs->a7;
+> @@ -308,10 +310,23 @@ asmlinkage __visible __trap_section void do_trap_ecall_u(struct pt_regs *regs)
+>   
+>   		syscall = syscall_enter_from_user_mode(regs, syscall);
+>   
+> +		add_random_kstack_offset();
+> +
+>   		if (syscall >= 0 && syscall < NR_syscalls)
+>   			syscall_handler(regs, syscall);
+>   		else if (syscall != -1)
+>   			regs->a0 = -ENOSYS;
+> +		/*
+> +		 * Ultimately, this value will get limited by KSTACK_OFFSET_MAX(),
+> +		 * so the maximum stack offset is 1k bytes (10 bits).
+> +		 *
+> +		 * The actual entropy will be further reduced by the compiler when
+> +		 * applying stack alignment constraints: 16-byte (i.e. 4-bit) aligned
+> +		 * for RV32I or RV64I.
+> +		 *
+> +		 * The resulting 6 bits of entropy is seen in SP[9:4].
+> +		 */
+> +		choose_random_kstack_offset(get_random_u16());
+>   
+>   		syscall_exit_to_user_mode(regs);
+>   	} else {
 
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+Thanks
+Song Shuai
