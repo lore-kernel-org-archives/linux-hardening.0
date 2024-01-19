@@ -1,147 +1,94 @@
-Received: from bg4.exmail.qq.com (bg4.exmail.qq.com [43.155.65.254])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E424C601
-	for <linux-hardening@vger.kernel.org>; Fri, 19 Jan 2024 10:35:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=43.155.65.254
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C453A52F61;
+	Fri, 19 Jan 2024 16:05:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705660542; cv=none; b=IeGOlyIjrjlhvujlQsJOMrHHL+G9dHkFDZGoVqXDbIsH97UGKGvlh93pt6+gGY5i9Klsqmme1o+DF29N+tLRo0NjEgQsx3VxHgIyGsJN0/btVPrix3M8X431atEO0WwFcgdTFo7uExd3K2ZEgHv7LXEv6JHPTRiDiZtE48xgO0I=
+	t=1705680359; cv=none; b=gkixqheqZLGbQ+acXfPSMWzYsFRqo15sbUFSN10n02oviVsJzMl8YYLSf+gs/ZoMqQQbXZvuOCkLH6FeNC1w1nGuQRmkE3NklNNFSsDepMAYzNc+nevgUNv9EeFxrbj/dNYPdD3OgD17PmmIKJ8RNMnMWQ9hpeehOS6EalCPKJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705660542; c=relaxed/simple;
-	bh=3dEAuadRtgX48I3fDLt441/VU2N0O2dLDz2qBeYEnCo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aIUrpLiaeFdnHUolekzfZYPuSlXz3mjnMO6cjBSaT/XL65F1VBE6xU4Q2O4gvveagrHVjlr95fwbtd6DCNhQ6aX4WAv8foqjSt6CJDIcr/Wiwx8E722RdVdZWp9epXDPcB0hKXJSpq5WBJ7GOVaIiGU5P+TRBDhwTw6qJ1MXiQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tinylab.org; spf=pass smtp.mailfrom=tinylab.org; arc=none smtp.client-ip=43.155.65.254
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tinylab.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tinylab.org
-X-QQ-mid: bizesmtp64t1705660495t7k8890j
-X-QQ-Originating-IP: kpWPaONTxxvy0nOEGrSxFq1akJ6vzcOttZF/rCEqrtY=
-Received: from [10.4.6.71] ( [58.240.82.166])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 19 Jan 2024 18:34:53 +0800 (CST)
-X-QQ-SSF: 00200000000000B0B000000A0000000
-X-QQ-FEAT: 4g9JbZ7lBbGYt5f2YVZ9RuBGDo2jTI9EeLQs3oNfXqrhUBaFQVqPrhhoJcJJ1
-	ER1ylXifWxfMxWYKz9hF5gfbKgCzQ4idJ6F796Sg96DfHuVwv6g7okYYi+PY3MIUefL3ny+
-	9RHZi5hZRA3pQ/GN1g7yOts83rk0lLNGwQMVhKkRNRAAARFiGtrC/24H5K8R8svRDKZcU10
-	60uwPXeAVoOu4bWiDTqdS4/vhXc3/BybQJS4emGBRbiEHPceo8mF7NA/ytodyM6SwDBCTQ9
-	phIiAS+OsjWTH1x2HC8xkpPzQhxfIgWnZYWy/koKv5dNXFm4dLt/0+6/RetUr2EiktDPY9B
-	06RYMgpZgJFMo3G9OEqFKKLURyFZoOmUKETKrCv78KYYkQ1GGI=
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 9538942234933522215
-Message-ID: <231AC634A34EBAF4+1a989394-a60f-4088-86ee-fe1344e7999f@tinylab.org>
-Date: Fri, 19 Jan 2024 18:34:52 +0800
+	s=arc-20240116; t=1705680359; c=relaxed/simple;
+	bh=StoFIFphMjA+zLLOVlZeLPt3n3gO7so6YhvB6psnJb8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=raVu9Qt0hTS+uJG9Ber1vlyemVEbKKAZPJUCQpRami3x6KR4sG3AHTnU1SdfgaOBHDHWPWOAcpzhrzdacsOx/ZCihk/pZW8ECmR18QiRVlKdkBNzsKHwp+TFeq721/WGDduJHEqbK9er+Ny2mCtbYytKSVYAhakBtV0MD19cEGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y+U0Ms0d; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y+U0Ms0d"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-50e7b273352so1037103e87.1;
+        Fri, 19 Jan 2024 08:05:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705680356; x=1706285156; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nWFRTt9OPmzJxJm1lMS0J5Y2ypp6VhC0+EToiRmq/uU=;
+        b=Y+U0Ms0d2dZFOtcv+hqKNS0jueyZBv4jmf0Ipk0qmzWLk+Z0A782m2mLZ0kyzztaD5
+         5Mhr2IRjAJfumnyNKmeHsm1brrw6qJHnHdXA+P6ju5lHYJm5evYRNMw3+hMAuTjakehq
+         ovFdtSuadfJXOatLm2saQjCas2O0PHSPq4xGlNpZgjvcNw0/ddk7VdnVPGTvRf4aIzaJ
+         7aP9KCW5XjpNbaNfkvWZmxpbWA6cPMZ6wzzZdLUsIZajHCFNBZZUjN3Rc+JR4j+oprio
+         KwOzG+F/uFvPhq6YmsLf/W8SmexMx7q1uPuXU9qFx5hgwuIBt5MtT4j4E7YbVPSXTBSt
+         apAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705680356; x=1706285156;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nWFRTt9OPmzJxJm1lMS0J5Y2ypp6VhC0+EToiRmq/uU=;
+        b=dL2TfXdgGJOSDjBi0csjFJ6wLUSj8ATwKxb7X4JOFOY5Nr8cPLA09njg4Uek3q+bXJ
+         S1NjU4O6AmXFPVwhUj2eLG0e367RP4hLBq7u7TA92dvLuy3AH2T4wkeU0/pbOPWYpjeM
+         d5cmUL1lqGMIqofIMh7sW8l3utKNd1zEYycKF1wR2sdWAlazS8mg6gZHcQ22VfWHklwF
+         WJnS9zxRbLpUsLaLFKeYh04D1o/u5HSh9g+O31JrOMu69rKJ81/dd+te8AZ0PlBUBHph
+         JfWEo7tTyIXVa7sUbnydOlLEssHnNibghO3ri90Yj6zZJ7dXZ8dATDQkNzoBiJ9yIdNY
+         xemA==
+X-Gm-Message-State: AOJu0Yz3FhiXCKhBUh46RVQdtt9E/w1jNv5tyL9D+uMk4+5iGGg2jN4L
+	/QJja7zm0msGv+pHIDMhPcc/WeGr9Nxuc5jo4XSZy+fcymdIHPM6q5Dh3vBra4xirvRhSjLq44/
+	BOqVQEcoOc/heAfUE2PRVBOGOlLcot3t4O2M=
+X-Google-Smtp-Source: AGHT+IFpBsYY27JHGd7MZRAC2YvfPc5SljnKIAj/NynW2aqyFT08f/rCCGp/5/Pt87W2icvC/3/VP5zxRrWHsXRi9Xc=
+X-Received: by 2002:a05:6512:1116:b0:50e:649e:1e42 with SMTP id
+ l22-20020a056512111600b0050e649e1e42mr891199lfg.100.1705680355624; Fri, 19
+ Jan 2024 08:05:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.0
-Subject: Re: [PATCH V2] riscv: Support RANDOMIZE_KSTACK_OFFSET
-To: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
- keescook@chromium.org, guoren@kernel.org, bjorn@rivosinc.com,
- jszhang@kernel.org, conor.dooley@microchip.com, andy.chiu@sifive.com,
- samitolvanen@google.com, coelacanthushex@gmail.com, dlemoal@kernel.org
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>
-References: <20231109133751.212079-1-songshuaishuai@tinylab.org>
-From: Song Shuai <songshuaishuai@tinylab.org>
-In-Reply-To: <20231109133751.212079-1-songshuaishuai@tinylab.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:tinylab.org:qybglogicsvrsz:qybglogicsvrsz4a-2
+References: <20240118223301.work.079-kees@kernel.org>
+In-Reply-To: <20240118223301.work.079-kees@kernel.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 19 Jan 2024 18:05:19 +0200
+Message-ID: <CAHp75VerSqay6cxRQOihC321BbpAWd_TB6aPigN8XZZ=KPXtHA@mail.gmail.com>
+Subject: Re: [PATCH] string: Remove strlcpy()
+To: Kees Cook <keescook@chromium.org>
+Cc: Andy Shevchenko <andy@kernel.org>, Azeem Shaikh <azeemshaikh38@gmail.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Andy Whitcroft <apw@canonical.com>, 
+	Joe Perches <joe@perches.com>, Dwaipayan Ray <dwaipayanray1@gmail.com>, 
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Jan 19, 2024 at 12:33=E2=80=AFAM Kees Cook <keescook@chromium.org> =
+wrote:
+>
+> With all the users of strlcpy() removed[1] from the kernel, remove the
+> API, self-tests, and other references. Leave mentions in Documentation
+> (about its deprecation), and in checkpatch.pl (to help migrate host-only
+> tools/ usage). Long live strscpy().
 
-Hi, palmer:
+...
 
-在 2023/11/9 21:37, Song Shuai 写道:
-> Inspired from arm64's implement -- commit 70918779aec9
-> ("arm64: entry: Enable random_kstack_offset support")
-> 
-> Add support of kernel stack offset randomization while handling syscall,
-> the offset is defaultly limited by KSTACK_OFFSET_MAX() (i.e. 10 bits).
-> 
-> In order to avoid trigger stack canaries (due to __builtin_alloca) and
-> slowing down the entry path, use __no_stack_protector attribute to
-> disable stack protector for do_trap_ecall_u() at the function level.
-> 
-> Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Song Shuai <songshuaishuai@tinylab.org>
-Just a Reminder in case you miss this one.
+>   * Copies at most dstsize - 1 bytes into the destination buffer.
+> - * Unlike strlcpy the destination buffer is always padded out.
+> + * Unlike strscpy the destination buffer is always padded out.
 
-> ---
-> Changes since V1:
-> https://lore.kernel.org/linux-riscv/20231101064423.1906122-1-songshuaishuai@tinylab.org/
-> - fix whitespace errors Damien pointed out
-> - add Acked-by and Reviewed-by tags
-> 
-> ---
->   arch/riscv/Kconfig        |  1 +
->   arch/riscv/kernel/traps.c | 17 ++++++++++++++++-
->   2 files changed, 17 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index d607ab0f7c6d..0e843de33f0c 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -100,6 +100,7 @@ config RISCV
->   	select HAVE_ARCH_KGDB_QXFER_PKT
->   	select HAVE_ARCH_MMAP_RND_BITS if MMU
->   	select HAVE_ARCH_MMAP_RND_COMPAT_BITS if COMPAT
-> +	select HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
->   	select HAVE_ARCH_SECCOMP_FILTER
->   	select HAVE_ARCH_THREAD_STRUCT_WHITELIST
->   	select HAVE_ARCH_TRACEHOOK
-> diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
-> index 19807c4d3805..a1a75163fb81 100644
-> --- a/arch/riscv/kernel/traps.c
-> +++ b/arch/riscv/kernel/traps.c
-> @@ -6,6 +6,7 @@
->   #include <linux/cpu.h>
->   #include <linux/kernel.h>
->   #include <linux/init.h>
-> +#include <linux/randomize_kstack.h>
->   #include <linux/sched.h>
->   #include <linux/sched/debug.h>
->   #include <linux/sched/signal.h>
-> @@ -296,7 +297,8 @@ asmlinkage __visible __trap_section void do_trap_break(struct pt_regs *regs)
->   	}
->   }
->   
-> -asmlinkage __visible __trap_section void do_trap_ecall_u(struct pt_regs *regs)
-> +asmlinkage __visible __trap_section  __no_stack_protector
-> +void do_trap_ecall_u(struct pt_regs *regs)
->   {
->   	if (user_mode(regs)) {
->   		long syscall = regs->a7;
-> @@ -308,10 +310,23 @@ asmlinkage __visible __trap_section void do_trap_ecall_u(struct pt_regs *regs)
->   
->   		syscall = syscall_enter_from_user_mode(regs, syscall);
->   
-> +		add_random_kstack_offset();
-> +
->   		if (syscall >= 0 && syscall < NR_syscalls)
->   			syscall_handler(regs, syscall);
->   		else if (syscall != -1)
->   			regs->a0 = -ENOSYS;
-> +		/*
-> +		 * Ultimately, this value will get limited by KSTACK_OFFSET_MAX(),
-> +		 * so the maximum stack offset is 1k bytes (10 bits).
-> +		 *
-> +		 * The actual entropy will be further reduced by the compiler when
-> +		 * applying stack alignment constraints: 16-byte (i.e. 4-bit) aligned
-> +		 * for RV32I or RV64I.
-> +		 *
-> +		 * The resulting 6 bits of entropy is seen in SP[9:4].
-> +		 */
-> +		choose_random_kstack_offset(get_random_u16());
->   
->   		syscall_exit_to_user_mode(regs);
->   	} else {
+While at it, please use the strscpy() form to refer to the function.
 
--- 
-Thanks
-Song Shuai
+With that,
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+--=20
+With Best Regards,
+Andy Shevchenko
