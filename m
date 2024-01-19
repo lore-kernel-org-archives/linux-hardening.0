@@ -1,28 +1,28 @@
-Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
+Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53ABF56447
-	for <linux-hardening@vger.kernel.org>; Fri, 19 Jan 2024 17:44:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92835644A
+	for <linux-hardening@vger.kernel.org>; Fri, 19 Jan 2024 17:48:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705686277; cv=none; b=WeYOdxtCf8lzzVncQvnOmty8gGFM70h+DUZplbcikrBMwzPWYxw2IWyf6CZKDS5lfCcxX5Db6KZ9w+6bEgYCcC6rtaS8fgF75KzzP2qyFVfWs5ORkkDu34wkQpG8Zw2R8dAgiHoSwk09iSwJB6dBZvmM/nzENVooUgFWA3UlJUE=
+	t=1705686500; cv=none; b=SQ185so1i+RME0DSgv94zD/nbg/nwWsMOOpe6w7ue6feXt2eWTSN5CMRr8SawKb70uTEX0WSCcl4QUB+oaeVW6Ec0zqM2jr7VEoSEEHI3J6AePR48OZDwwhV3UAPUglankJh3ruIUE7Em6KHvBkny9CrNsfC20Syj/uVHkL9VG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705686277; c=relaxed/simple;
-	bh=zooS2opXWEn98q8GsmPdsk0l9I1ao/MeLC4cGyQuAZ8=;
+	s=arc-20240116; t=1705686500; c=relaxed/simple;
+	bh=y4LBLPPTJpu5+EwWMUKYiqKP9RM/o03Y/rjuQjCk1cM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fScieg38BpeJueE/Zf613tNvbzO7G2MyD9+fxJKLxhGwJKz4kXEeiaZw2Mobp+FeQYSi/MQd520aNmurxPrrJUAJI4GcFy6hpN+bXo+VCPd7xw4JCsKbACjbk3rCZrAafm0xN+wiHEmLCoNgtfg9Q8BClOhBtDi2mwNZMuUwwbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=ip6EW7jQ; arc=none smtp.client-ip=35.89.44.33
+	 In-Reply-To:Content-Type; b=daLm2Q7pqQJM0wTAyR6TifYI7n0ofYTOLbquPuFsLbRXAHfqXO+KTTAoGQRfMLTLr5x4rrWbKZZOIWb9AJx4I59p9L442VhYVQS1wVuXWdmYSysYnWy2RBCR3Az775Mt2JOPjAIwJv3y2kJ5N7/y28Loxqf/n5DLZjJz86aUTJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=u6Dcez6G; arc=none smtp.client-ip=35.89.44.37
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ip6EW7jQ"
-Received: from eig-obgw-6009a.ext.cloudfilter.net ([10.0.30.184])
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="u6Dcez6G"
+Received: from eig-obgw-5007a.ext.cloudfilter.net ([10.0.29.141])
 	by cmsmtp with ESMTPS
-	id QqEgrSduYMVQiQsusrNABP; Fri, 19 Jan 2024 17:44:30 +0000
+	id QgW3rjS05oMN9QsyYrXNiS; Fri, 19 Jan 2024 17:48:18 +0000
 Received: from gator4166.hostgator.com ([108.167.133.22])
 	by cmsmtp with ESMTPS
-	id QsurrN30AjqQkQsurrIUpD; Fri, 19 Jan 2024 17:44:29 +0000
-X-Authority-Analysis: v=2.4 cv=A7F/goaG c=1 sm=1 tr=0 ts=65aab4fd
+	id QsyXrxsrqPwzWQsyXr84GU; Fri, 19 Jan 2024 17:48:17 +0000
+X-Authority-Analysis: v=2.4 cv=T8yf8tGQ c=1 sm=1 tr=0 ts=65aab5e1
  a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
  a=IkcTkHD0fZMA:10 a=dEuoMetlWLkA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
  a=NEAV23lmAAAA:8 a=7YfXLusrAAAA:8 a=EIiQeHuflohXdkK9GqgA:9 a=QEXdDO2ut3YA:10
@@ -34,20 +34,20 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
 	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=2PP2Bc7kZyIT7D76puyC5J8empfAZst1KA6YPM0TFhA=; b=ip6EW7jQoVWo1JVahbPug93giA
-	oXDj0+2Xcrws/g2DsqoURyJcjpm7hceD9W5NxSxXXE7aw4l2LYBAcyBpR5e2ZiIhQDIUITL1WVo5l
-	PEH9XK2YJMlAhdxsEZsgf/M2m8Ey7PWlSdh6md1RU920rt4uOOnCPrBfDNZiMXVF/UOmkQxhcIAr5
-	wVonvmISl/mmqB1c/Fp+LFi+fn0GQBUvtCIkKry9QygRt+HgKA2HGMYjCYQd+5eUVHHmIvi7N4zqG
-	QwK8f/5+Kn5tznLpJn/Vu7V8DFsHEfsMZvzOj+Zgv8xF3Fm+X7jti5Gvuh7vpKs24yaM2SkdZhUQg
-	c0S9Jq9A==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:53848 helo=[192.168.15.10])
+	bh=zGuUORij185LGbHOnPZInu2/axHj+8J4C5foPE1ZNXA=; b=u6Dcez6G4LqXN82z8mdiqJc3dJ
+	HLt0YUYlxU9me5CnBrzjwJAHIwSl4xc6v2rV4+nv7gXS1Xp8Mg2s1j4z6qkYcjmsoupnKxJwubp3Y
+	KZu1bMTPhJwkNRAQV4ddTunxw4Ps/XIa6ctcE5u4ENGYVKiozxwhheYC+J1coVoZmC1HOXhVTHDsI
+	Vo6o9W/31rkPWWXMAB0m4hNa4qMBKRlJ/fO3tpgf4aPx7pIM6klcewU49EwE0Mkt0i49kKJPIMrsQ
+	hy7k2m2m7Lg6frtM8H/VzvcslH10vkDdyeUUdXU/qN6mB3qplk6wcQ4PYSIuVd++jr+MylZ6NZg7s
+	l5YTw0kw==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:41082 helo=[192.168.15.10])
 	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.96.2)
 	(envelope-from <gustavo@embeddedor.com>)
-	id 1rQsuq-001CoF-2A;
-	Fri, 19 Jan 2024 11:44:28 -0600
-Message-ID: <9294bb03-8c80-47d3-a2d7-8108392ec5d9@embeddedor.com>
-Date: Fri, 19 Jan 2024 11:44:22 -0600
+	id 1rQsyV-001HCM-1D;
+	Fri, 19 Jan 2024 11:48:15 -0600
+Message-ID: <d5cde9b6-5f20-4a10-91b1-037887ec79c2@embeddedor.com>
+Date: Fri, 19 Jan 2024 11:48:13 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -55,15 +55,20 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] wifi: iwlegacy: Use kcalloc() instead of kzalloc()
-To: Erick Archer <erick.archer@gmx.com>, Stanislaw Gruszka <stf_xl@wp.pl>,
- Kalle Valo <kvalo@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20240119171655.7740-1-erick.archer@gmx.com>
+Subject: Re: [PATCH] staging: rtl8723bs: Use kcalloc() instead of kzalloc()
 Content-Language: en-US
+To: Erick Archer <erick.archer@gmx.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Franziska Naepelt <franziska.naepelt@googlemail.com>,
+ Hans de Goede <hdegoede@redhat.com>, Johannes Berg
+ <johannes.berg@intel.com>, Jeff Johnson <quic_jjohnson@quicinc.com>,
+ Aloka Dixit <quic_alokad@quicinc.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20240119173900.11035-1-erick.archer@gmx.com>
 From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240119171655.7740-1-erick.archer@gmx.com>
+In-Reply-To: <20240119173900.11035-1-erick.archer@gmx.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
@@ -74,22 +79,22 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 187.162.21.192
 X-Source-L: No
-X-Exim-ID: 1rQsuq-001CoF-2A
+X-Exim-ID: 1rQsyV-001HCM-1D
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:53848
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:41082
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
+X-Email-Count: 8
 X-Org: HG=hgshared;ORG=hostgator;
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfEz+NqBOAtWxh93zBwfVjZVeWQNRBd71yMNhp/egybrWLRMqeE6Tnem76BTwVaraE1V2XgyawDJlIdUOMB/6NZi7GVjWn+Vmx/kbn+TIWu9kf2GyLkmh
- YiNTJyMspEPbhaIjoIGV8NpPJ3KIiE46ra8d7vCCZNwtw3FzMFE4+wbnK9GBPhrUxvWSIyJLmmD3PLj/uzudm829+N/9+S0v1w7IKfFlfoI6mJ79tXEg5Cii
+X-CMAE-Envelope: MS4xfCd1O+8WBdDHN6ukB6FKNzliQjRoL9VBWcXYzHaTzuD3K9g/hB7AR2mJbWlL5jrRLDSxknSfN2+EF9vWLQcxBgiuFQieCB64/uZbWYixNv5Um22wf16p
+ fx3tlyqwUOOU1T1CHniqFr8P2XgQiys5V/izSSFJ9p+8CDlgWbYpnSwyOVXSXIIkYQT+zGFP3pFF0v9VBv4typKSO1ysQb5brakkDqAiRwC6Fd2M9yEo/7Mp
 
 
 
-On 1/19/24 11:16, Erick Archer wrote:
+On 1/19/24 11:39, Erick Archer wrote:
 > As noted in the "Deprecated Interfaces, Language Features, Attributes,
 > and Conventions" documentation [1], size calculations (especially
 > multiplication) should not be performed in memory allocator (or similar)
@@ -99,7 +104,7 @@ On 1/19/24 11:16, Erick Archer wrote:
 > overflows of heap memory and other misbehaviors.
 > 
 > So, use the purpose specific kcalloc() function instead of the argument
-> size * count in the kzalloc() function.
+> count * size in the kzalloc() function.
 > 
 > Also, it is preferred to use sizeof(*pointer) instead of sizeof(type)
 > due to the type of the variable can change and one needs not change the
@@ -116,24 +121,23 @@ Thanks!
 Gustavo
 
 > ---
->   drivers/net/wireless/intel/iwlegacy/common.c | 4 +---
->   1 file changed, 1 insertion(+), 3 deletions(-)
+>   drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> diff --git a/drivers/net/wireless/intel/iwlegacy/common.c b/drivers/net/wireless/intel/iwlegacy/common.c
-> index 17570d62c896..9d33a66a49b5 100644
-> --- a/drivers/net/wireless/intel/iwlegacy/common.c
-> +++ b/drivers/net/wireless/intel/iwlegacy/common.c
-> @@ -3438,9 +3438,7 @@ il_init_geos(struct il_priv *il)
->   	if (!channels)
->   		return -ENOMEM;
+> diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
+> index 1ff763c10064..65a450fcdce7 100644
+> --- a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
+> +++ b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
+> @@ -1259,8 +1259,7 @@ static int cfg80211_rtw_scan(struct wiphy *wiphy
+>   		goto check_need_indicate_scan_done;
+>   	}
 > 
-> -	rates =
-> -	    kzalloc((sizeof(struct ieee80211_rate) * RATE_COUNT_LEGACY),
-> -		    GFP_KERNEL);
-> +	rates = kcalloc(RATE_COUNT_LEGACY, sizeof(*rates), GFP_KERNEL);
->   	if (!rates) {
->   		kfree(channels);
->   		return -ENOMEM;
+> -	ssid = kzalloc(RTW_SSID_SCAN_AMOUNT * sizeof(struct ndis_802_11_ssid),
+> -		       GFP_KERNEL);
+> +	ssid = kcalloc(RTW_SSID_SCAN_AMOUNT, sizeof(*ssid), GFP_KERNEL);
+>   	if (!ssid) {
+>   		ret = -ENOMEM;
+>   		goto check_need_indicate_scan_done;
 > --
 > 2.25.1
 > 
