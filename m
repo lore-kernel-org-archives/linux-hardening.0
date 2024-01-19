@@ -1,103 +1,73 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71BB65645A
-	for <linux-hardening@vger.kernel.org>; Fri, 19 Jan 2024 19:58:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDAF856465;
+	Fri, 19 Jan 2024 20:43:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705694317; cv=none; b=QuXiUz7tScRkoCWFJL8b7rIo1jo6Ke/L4fKHFOKkNi43RFh1VUpuxwNt7baPwg+i9jViGzyNzJ/J5Y8phJiNPCAK2NIRyRSJxvodF9VSvVJrw8iXtqfws5n3gvoCRs9ydzgnujYaJwr6lDuIlC+/RcZkxMrPyWi4V5Q9tdf0MBE=
+	t=1705697035; cv=none; b=RLm7+i+h3ZZ4T+O2BPIaifB5vyQY/mjMkY2vkSHBhZ65c5RKBxoZXdWgErkgM2kG8sTI6i/txHYgE/UzDnYhawTLNEDQtT/bi5PwCt9zKrjL6YvBfYrghnoZxRLinBd6sIKR/VLUjv8U5A6cT6J1lNvdOdvFxCt9NMrjZzvCR3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705694317; c=relaxed/simple;
-	bh=sThutFEPey5kn1vfPaO+vlKXcAo3DAOcgLqEvPMy/Yo=;
+	s=arc-20240116; t=1705697035; c=relaxed/simple;
+	bh=LxukKcj7E7XnJoK97Icxh0TVEc5zfCjPZPAdllnyToM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iY+aCKtYgvyd/1U6f5XGL7HsdHZgVqW5YkXIFU9MqQodgFAYZC1+l1MoK7qC4tg6OXxAkEEs1l4R+hVI9YLYK4OWvnACBkUk0cjloezoUdid+MWiUg/+SGu7qy1waF4kDmtwxAH3RB2+8/XjHjC21SYo5KTWvUI8sBi/QvnYo74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=fD8vZtdK; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=SWJ8laMjgTF25FUmg/Mpz21kfbcwbEiYonR3oO12UEhaAVez3TcdaaqGa6ZKy8/O1VlyHuRh5EYwvJ7F3QUVYwfSbVGotU9TDfV4uteajnLaxdY+BjveGuk5w+7Xl0N0neUGQ8r3xGK8TQajvcMYj8mRkWjPseNrfzvIzIfOIYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EcLBk6Rg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fD8vZtdK"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-5cdf76cde78so823986a12.1
-        for <linux-hardening@vger.kernel.org>; Fri, 19 Jan 2024 11:58:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1705694316; x=1706299116; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=C2LfwYsyKiY2dEzfHpNnaI1FNPWRf8Tkgz7+9RYGVco=;
-        b=fD8vZtdKgPd/0l8vPCY9s3YMnHwivIPi6pgfnbxzvoLgqrXTE/gG+agMxexYr3lpX5
-         sWB4PxeV0nTdl/0FqyE2UuX0Wn9udVw/J6vAWudq/6S5Az8NzAfuU3X8i1ndYMlnvMdi
-         onmdzoxFxgWp5qfL5+j1rcqhxa+d0vI5D4+O8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705694316; x=1706299116;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=C2LfwYsyKiY2dEzfHpNnaI1FNPWRf8Tkgz7+9RYGVco=;
-        b=aZwB03AUAu4iQ0qD+YNOWbnT7Lp23YWJJBXibgMwfwBbkkMUOLW5M+jg7dUfCdG0pq
-         yQq3EaHYjJ7HwkR691pOuCYRpHVyboVzfW6wbjkuxq1oAdk8J1ozKd90ANKio6JOFLlE
-         wufeWHczHuQbphCUUcRuNXzB1x3QBXpknPeymrUNE2agQjbmU+wlBs7xcfP8TP9oL3jq
-         FIOqokbdaX6j+/gHjUnawfFjlAW5ULZDk8r61Fz1v2LN9LsUlCj6RrdLUuixwMDiNqiK
-         Ee+P3iyIJMYFeOJNL6rO/6MESfJM6W2WwurriVi0NAowiq9Q8HVnD3PbagYqp8NyBEQp
-         iDwA==
-X-Gm-Message-State: AOJu0YxXO/hXv/iMNIJxDce6xAuyQRH7iVTYTcKMurhxskMo42Doyit3
-	0m1/Iijt1Lykw9m90THq9pmeosB/KNhAG5XB682psGGlI/qUsvhJXW5WMsndJw==
-X-Google-Smtp-Source: AGHT+IEyAGGR1bIGI9NKgmfe9mJPaukqKPFviZSxGEnYb0DgSbPfYaWaF1LxDBX4BTna/x2dhOEsNw==
-X-Received: by 2002:a05:6a20:da82:b0:19a:8556:8caa with SMTP id iy2-20020a056a20da8200b0019a85568caamr486992pzb.13.1705694315821;
-        Fri, 19 Jan 2024 11:58:35 -0800 (PST)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id sm16-20020a17090b2e5000b0028dd3ac24a6sm4561644pjb.9.2024.01.19.11.58.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jan 2024 11:58:35 -0800 (PST)
-Date: Fri, 19 Jan 2024 11:58:34 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Andy Shevchenko <andy@kernel.org>,
-	Azeem Shaikh <azeemshaikh38@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
-	Dwaipayan Ray <dwaipayanray1@gmail.com>,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] string: Remove strlcpy()
-Message-ID: <202401191141.F6902E74D@keescook>
-References: <20240118223301.work.079-kees@kernel.org>
- <CAHp75VerSqay6cxRQOihC321BbpAWd_TB6aPigN8XZZ=KPXtHA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EcLBk6Rg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31AC2C433C7;
+	Fri, 19 Jan 2024 20:43:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705697034;
+	bh=LxukKcj7E7XnJoK97Icxh0TVEc5zfCjPZPAdllnyToM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EcLBk6RgAVlSKSdqY7g8AzLqVIwpaYRkOyCMSIhgyDXQtQez/CqYTzk2i1h3gKG6+
+	 kYKuQPFl3UN7kmYRMWH+XXqR9WIkHw+3fpkuHL8BdkcONj29NUVG8UbMCF+VWI/Scx
+	 FPNcMxaYbl46Etqae2A7KCfomMVhak+nPthFjf6OHU+9gr4yK/11rK1qGo9aIuTHh2
+	 o9SlSObEcBpAquFiVvCVGzre3DdrxiAMAc/U6FrNks5NmDxQAXYZ9Be+R6sIOa/+Vg
+	 O8zUJQ+QfF76xhh8oe1mUUqxMkgXVl7lfLLXV8hQdNIcyAA8ds/NPjjMzWyjrMxtGT
+	 hkOdUtYLp2Cqw==
+Date: Fri, 19 Jan 2024 14:43:52 -0600
+From: Rob Herring <robh@kernel.org>
+To: Ninad Palsule <ninad@linux.ibm.com>
+Cc: krzysztof.kozlowski+dt@linaro.org, linux-arm-kernel@lists.infradead.org,
+	jarkko@kernel.org, tony.luck@intel.com, jgg@ziepe.ca,
+	naresh.solanki@9elements.com, linux-kernel@vger.kernel.org,
+	linux-integrity@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+	bhelgaas@google.com, geert+renesas@glider.be, vincent@vtremblay.dev,
+	keescook@chromium.org, peterhuewe@gmx.de, robh+dt@kernel.org,
+	joel@jms.id.au, patrick.rudolph@9elements.com,
+	peteryin.openbmc@gmail.com, luca.ceresoli@bootlin.com,
+	andrew@codeconstruct.com.au, andre.werner@systec-electronic.com,
+	conor+dt@kernel.org, linux@roeck-us.net, geissonator@yahoo.com,
+	johannes.holland@infineon.com, broonie@kernel.org,
+	devicetree@vger.kernel.org, gpiccoli@igalia.com,
+	alexander.stein@ew.tq-group.com, lakshmiy@us.ibm.com,
+	festevam@denx.de, linux-hardening@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v4 2/3] dt-bindings: Add DPS310 as trivial device
+Message-ID: <170569701502.1007352.2755613869226739924.robh@kernel.org>
+References: <20240116183734.3944028-1-ninad@linux.ibm.com>
+ <20240116183734.3944028-3-ninad@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75VerSqay6cxRQOihC321BbpAWd_TB6aPigN8XZZ=KPXtHA@mail.gmail.com>
+In-Reply-To: <20240116183734.3944028-3-ninad@linux.ibm.com>
 
-On Fri, Jan 19, 2024 at 06:05:19PM +0200, Andy Shevchenko wrote:
-> On Fri, Jan 19, 2024 at 12:33 AM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > With all the users of strlcpy() removed[1] from the kernel, remove the
-> > API, self-tests, and other references. Leave mentions in Documentation
-> > (about its deprecation), and in checkpatch.pl (to help migrate host-only
-> > tools/ usage). Long live strscpy().
+
+On Tue, 16 Jan 2024 12:37:33 -0600, Ninad Palsule wrote:
+> Infineon DPS310 is a barometric pressure and temperature sensor.
 > 
-> ...
+> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Ninad Palsule <ninad@linux.ibm.com>
+> ---
+>  Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> >   * Copies at most dstsize - 1 bytes into the destination buffer.
-> > - * Unlike strlcpy the destination buffer is always padded out.
-> > + * Unlike strscpy the destination buffer is always padded out.
-> 
-> While at it, please use the strscpy() form to refer to the function.
 
-Oh, with the trailing "()"? Sure! Good call.
+Applied, thanks!
 
--Kees
-
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-Thanks!
-
--Kees
-
--- 
-Kees Cook
