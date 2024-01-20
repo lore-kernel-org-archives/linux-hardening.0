@@ -1,49 +1,46 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88DB6320F;
-	Sat, 20 Jan 2024 12:06:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB913DF46;
+	Sat, 20 Jan 2024 12:22:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705752363; cv=none; b=MM9RkNVASByNOxx5Xh9gktDWxPpVre7x5JkVVyn4hNZ2d+AF2HaAz/DWyj+6rVaChvxi8PwhjfNAw+GztEO7gACPUDfGA/HnGgsq4QVFWh84dJrRLDYWXeGs4sJeXXNxinCUSxPC+XILeIvAKU6kTFthNEPJ9WpD9darWh4TqJo=
+	t=1705753357; cv=none; b=mqNVp4IMUpzWTK4bJnt0Fjz73tluf11JD0h7haHko92lPqwk0YRL0MwX4WrO+gqv/u6vmCifJoVse7+UXtnZyqIoYRRHyUSMr6R9unkIptC8awEfyBUny3PxOtuYClQ/cxvjYQfDrOI1BLfL+ktyuAyZXIrlU27LLZrv1eZL+X0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705752363; c=relaxed/simple;
-	bh=6WljTQzsAyyeU2bPKrlfnVK55eNKnNBym7B97HV0Oq8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tTw6U5eMFM6Q4cIiU6dEnlDDqTHnxy1fFHGwyzbkWiKjVRpYKvjVTRhFZFLVzyuJjVK/C0hhajdYmkNnlQo7c7lSdu14yfAIxmvrrhNqOjYZvvQ8DeBVvrXAd3nkbyfrBalbHLLz+93hT7PrpqBsQ/5i5fG+hBPQSSzsV54Xp34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b=BrOEHDwk; arc=none smtp.client-ip=212.227.15.15
+	s=arc-20240116; t=1705753357; c=relaxed/simple;
+	bh=9YDEUzKhTgngX2Z0iAq+z3tHuTcCnH42aT3kTNk1/bc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=fO1hI04yXQM1iaEnxeaiDtf7vp7kFqOWTdjc0xy2QSIMDsuHJTpr3q3o2Y0Mxh6/PPB8VJ2N8DnP5tr0c9M1Lb77EIVBgmzMyxRx12D2seIio1Q9x0vs36h7hQvfrL+NLDsrtXeY0kMGeJjxyuS4v7DcIh0oSDLBLFpl1CuCwO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b=XT6kwkA0; arc=none smtp.client-ip=212.227.17.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="BrOEHDwk"
+	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="XT6kwkA0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
-	s=s31663417; t=1705752347; x=1706357147; i=erick.archer@gmx.com;
-	bh=6WljTQzsAyyeU2bPKrlfnVK55eNKnNBym7B97HV0Oq8=;
+	s=s31663417; t=1705753339; x=1706358139; i=erick.archer@gmx.com;
+	bh=9YDEUzKhTgngX2Z0iAq+z3tHuTcCnH42aT3kTNk1/bc=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-	b=BrOEHDwkuzbLg79L4PnWJ5cxHqwsUPGnDQlzwnCN23SVhzi6ijC0Tv1jrg6O68I6
-	 bgKDWf2hDN1oiap2qVwhQbk08J9RJwuiYICzpZq/tC5toKmrV1c2BH3O5R/AndJ6w
-	 6lnMvuQTKXfM6ieXplXycc5ZQxDSY3j6ujnz8S7kfNEP2Zmmm+04z5/NZ967Z+oGl
-	 VBiwji4G0+8IAOO/41O3jtSCoav6fDkwyfgnVEC9YzagVt0Cgx5ip1WI0fAmkl0bU
-	 Ew9BnFALOWwVR6zbNCs2k3xAiXlVjuTtSqhEydplE8j9QbDFzXfokZf/KTg0JHYeO
-	 CO8E59t+xuXfoG+jPw==
+	b=XT6kwkA0PE4Tpu0v0Vw04kApyR5BDjRJolmWh6T7rr0mY14wECU9CP3YnL0/jNy/
+	 oOrpChMGpjlTsMFhxcilGJjhQUlS+Pm0TGj0kpWQh2QkVRvaKvMZLGh3qWJwW811l
+	 Em2hNrJhjP2cmwhA9YGGFqyLnQlAmEFIYyYEYav/gBBf7IywS2vJWp+ipeQ9fjkEh
+	 F4KKmaXw5s41KXkgwDBzMqKhBbhXftvtHXbc4L+PLY1Uoq0sWmSZyq9i+EGWkIV+u
+	 O1S9vZjbx2CKgzldYG7GwyRe9xrCEQJh7pDTLftQOpiPdIa5k10DmKJtNbSNCF+Dz
+	 57g7sHbY8VVWJY0VFA==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from localhost.localdomain ([79.157.194.183]) by mail.gmx.net
- (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1M42jK-1rRA6d0MNM-0007t9; Sat, 20 Jan 2024 13:05:47 +0100
+ (mrgmx104 [212.227.17.174]) with ESMTPSA (Nemesis) id
+ 1MA7GM-1rFZVB1eAc-00BdHt; Sat, 20 Jan 2024 13:22:19 +0100
 From: Erick Archer <erick.archer@gmx.com>
-To: Viresh Kumar <vireshk@kernel.org>,
-	Nishanth Menon <nm@ti.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <len.brown@intel.com>,
-	Pavel Machek <pavel@ucw.cz>,
+To: Alex Shi <alexs@kernel.org>,
+	Yanteng Si <siyanteng@loongson.cn>,
+	Jonathan Corbet <corbet@lwn.net>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>
 Cc: Erick Archer <erick.archer@gmx.com>,
-	linux-pm@vger.kernel.org,
+	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] Documentation: power: Use kcalloc() instead of kzalloc()
-Date: Sat, 20 Jan 2024 13:05:27 +0100
-Message-Id: <20240120120527.3866-1-erick.archer@gmx.com>
+Subject: [PATCH] docs/zh_CN/power: Use kcalloc() instead of kzalloc()
+Date: Sat, 20 Jan 2024 13:22:04 +0100
+Message-Id: <20240120122204.4287-1-erick.archer@gmx.com>
 X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -51,27 +48,28 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:MIB9rwFGn8LGmiHnZumtukOyb3RsmEdtPJtv639NvUDu4wkg9uM
- le8LXDqp2lj65dhD4DGvmd/RgkaUGRutEb5zp+iAzNeRObT2S888ysTeqpbHoA4FjZ42pLk
- 9YGTRAU8XT/RGai5CDlb93x6J5MGbpvFQt4PfhYsyWqBX84cBPsN1h1hcWmIbxJaY/vLSuE
- sGL8nyiOVW2uOmvnoWfnQ==
+X-Provags-ID: V03:K1:uvAMfo3WjxMA7hh2WCPD17d33xXJqS6azul4AHtLOu6zMVtuVZA
+ 7x60pap4O16Xd0QCb1NduUWtdD39wAv3pCFKatdFoSqj/SFR6S3vRVjrDGWYeloeWtqApR3
+ PwPJ/Q1oqc0pTT4mAhoWP1Cc/sHEwpyFnKbU/LqNz864WLUnzTnQmB7MUkcZ+2kxuFISbPt
+ anlLMtB8FGOoSnwxe5b8A==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:PsIHd0DBSB0=;22SfptT7jfkPKbSIQF/aARbTyJB
- 7CsB1+3GKQZPBMDm6m6A1cLTA+wqnNwt3jQQ+MRxgI/hDEwgHzunaygKkU2IcM0b6RQimNthH
- KP4j7g7yokE/ezd45sO2wVY4/ruxS4HHDPOx0BnYWet8oESRM/Z5yLGEeJPzKjq8/hHIrDSGv
- Fl+2Xn5f5NrsWN8loLa5I9yvgXxWmnheBtPcsGmglHtS6KpcYxjAqktBxd/WG/Jkw9KJPl+xm
- f5HFcurAHxJGCc2q0xPWU51EOtf+s3IpS4yH4JghXX9X7pzh9xdXDoD8hNgIG2NFcDDUygkDl
- UFHtBcyKKEO/FIq6rby3SrTGyOofBc3XQSsGOJXrJBZpGD0/CyDb+BoVNDBVyoGkyDjFXc1x9
- 1i8dIc7wUqoM5gfSudJKYTHVh9zRXN2IlHwhfmoteIO7xvCJd8K5Gy4tTK1Mj4J2o3mQ3B/AO
- 06eTiozOauzv4Ji8eoT5w/5hgZhtNYQPbm0J/zTNa2GSHluJcvoiCaZZiXYhEPBut+rI6vKg8
- KyhHnWCRWeymlBT7AWVACMYh21g7F+CJd5MKEgL9wMb8bzgpV6qNmk0bJGlox50UGXSg+kww2
- 4kNyLOs4k48NTPfklUjgwwSRa8fO2MOIuDmljihXo5Oe/f4WQS40f77+a8RfuCPIxTg8oPtOQ
- ktEQzdDFhlUoqoHuPe7hCzdQnzZB/+U6yprJKu/fwbH4W+J/0zlSM4w5503IR7yEJHyEeA+Oh
- Q8pLJSkXjjDzBPm8Uenw3WkViByynOwibtRixMNAOoWHgpYbYF1vymVYgBMm99v7hbO0AHg0m
- 6Gf14DocWNBTnZZo8fc4rtrLCmvXZPTdaggV/F1UAvrKC75hFvy8LL5HpsQa42hG5XUpRfUod
- Qow3M81VdaPFkn/gkXwrT+993mpPCJmTDpEowFBI5IwP8PsLywlgEY/xc8/FAykVeJlPfv4o/
- dPoRx0KepLuBZYyfTtzcSIcy11g=
+UI-OutboundReport: notjunk:1;M01:P0:h4GQL3qBzEs=;19EFmJ6zyvHSwjYb2PMIt9/mk0J
+ BUUJ+byVWqUwvJAwrNp2wncC7pkWgOt+yXkiz8N4Ul9IhulpvN3eP8BEAHI86w3FuXo9f18d6
+ wY6gcjRUTISNPgRYT2+22QRXkQZhMGtfEy57QkilIdikwnr8xVd9ZPGRZAy4UQ5XrhwaarOFe
+ QZjzt5Doh7Zly1UZRCre/bDcAEAsalm5mmKT7uogzSwtxuUhzzdnlZ9Egc50RxeLqEQt/81Jc
+ YohJYA0guKsWg1NJEZHv+EOneGb/s3oLjAFPVoPW77+7AG53OE17uWITTGQ6g+lz1FTl4r5Cn
+ m/T/jGkjN+R2cV44LsmhsHDN1Tj++t6sZxvzFMSCS0kdlzG08IFpCS94V0y5MP/+1cEUm+Gc9
+ UUDuc41siqt2NPHr8SB0rtGJtFdRZAR3/+1TcXKLQTNSsf5PKwmVm9Wr2GeOO8EZkGxf1qK9I
+ xvD3FSJ9+ewZhxec7UjsuZbaDD4P5Aj/rVFbJYlPh/jALLM+ZpVIh/6TjeoomR+0wEz7hRJVL
+ R6PhNvIYi+aDIyb335FBIA9rgi1Tq8d28BZRYNAVCmXRlX6E+iRGDocy4kJOxzOAwsL8wUGmd
+ rQc99+DDOFnTUN7A8IoQ6Cpx9i/lpReH6/PikIzBcI8cz0qC1Z5Q9o8MKxkHzLIKZHNvdHUrt
+ Ea1ZrBc6qrgFy0Hd4v45OUWMiAyZlECQOrNq/Uo9JmuN2i6ip98/kS/kIgHmaDoJf2ZcbUGge
+ ZxXO7eIQslMkXwA0fydgEMJ1Hb1XL/mjPc1c5jxjyAWSrsldI5819eZCfUQaHdncLX3HiV4uv
+ FVaZHykPmpGrVDErW1OrGX5/Metty6WrdKZJ0+N/COLekb6DhFDif8MMFMoHy/3++jE20xbQe
+ GhPPainmvySlwSxFnU5LwTUzC7IXcsa+fmjP25hBo/VZvQv7Wc5lOkQ96dHW6Vjp6VKAQVn3F
+ jj/a5EYl2w7XeKqCkzAZX8k5+m8=
 
 As noted in the "Deprecated Interfaces, Language Features, Attributes,
 and Conventions" documentation [1], size calculations (especially
@@ -89,20 +87,21 @@ ded-arithmetic-in-allocator-arguments [1]
 Link: https://github.com/KSPP/linux/issues/162
 Signed-off-by: Erick Archer <erick.archer@gmx.com>
 =2D--
- Documentation/power/opp.rst | 2 +-
+ Documentation/translations/zh_CN/power/opp.rst | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/power/opp.rst b/Documentation/power/opp.rst
-index a7c03c470980..1b7f1d854f14 100644
-=2D-- a/Documentation/power/opp.rst
-+++ b/Documentation/power/opp.rst
-@@ -305,7 +305,7 @@ dev_pm_opp_get_opp_count
+diff --git a/Documentation/translations/zh_CN/power/opp.rst b/Documentatio=
+n/translations/zh_CN/power/opp.rst
+index 8d6e3f6f6202..7470fa2d4c43 100644
+=2D-- a/Documentation/translations/zh_CN/power/opp.rst
++++ b/Documentation/translations/zh_CN/power/opp.rst
+@@ -274,7 +274,7 @@ dev_pm_opp_get_opp_count
  	 {
- 		/* Do things */
+ 		/* =E5=81=9A=E4=B8=80=E4=BA=9B=E4=BA=8B=E6=83=85 */
  		num_available =3D dev_pm_opp_get_opp_count(dev);
 -		speeds =3D kzalloc(sizeof(u32) * num_available, GFP_KERNEL);
 +		speeds =3D kcalloc(num_available, sizeof(u32), GFP_KERNEL);
- 		/* populate the table in increasing order */
+ 		/* =E6=8C=89=E5=8D=87=E5=BA=8F=E5=A1=AB=E5=85=85=E8=A1=A8 */
  		freq =3D 0;
  		while (!IS_ERR(opp =3D dev_pm_opp_find_freq_ceil(dev, &freq))) {
 =2D-
