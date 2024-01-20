@@ -1,114 +1,89 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from cvs.openbsd.org (cvs.openbsd.org [199.185.137.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E608F12E47;
-	Sat, 20 Jan 2024 15:25:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B592117;
+	Sat, 20 Jan 2024 15:30:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.185.137.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705764347; cv=none; b=DHuE42FqXB5QLoCGSughtsixekL0ATyOjZVOU5iEbJm54lUIleIfeg5H4m/V6QceyFgwmicxjv5FpC3YjF+j1w7dJg/Ky30fC6nXzAxlpToBk2a0VQDE+5tcS+d2LwSF3rAWyqRL1m0sG/IkycHDTIzqPsH+7D5QLkKab5UmK7U=
+	t=1705764627; cv=none; b=Nc0H27UbOBtNRD6xa7Ttq8WHFr0oeQ1u+5CMjjNhyO1OnGzX/E5iGts7z8RY/032Zs2lrhWgt+A2as+3UktGLEJg8SQ5bLU1FUmt3nXtx8tHR7KkOvJ2AiDq6BCfF0eAlxUk4ye3Swct3Gpbi4Q6W5Mv7CororZidT1ezQTugEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705764347; c=relaxed/simple;
-	bh=0JcJgRwF76wGIs5To2XuhDLeUD7IzHJSy+e2cc+KXys=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XZWOdEssB/ovMeQgzQMcQcVEBrpEGooJZcz0q6AZi3Df4jRNcsgzjQ5hzX6Y9AH1kqV3giJbCE2rHo93oo/j22VWbKtjrS1YOf6uqvlJeCRm9nlpAtDq+rTmE4xctJXH4/hnmguaGjhYs4aGfWrJqr97Ms9aRVZkuJJlWVrEU5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b=a+J0bbi+; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
+	s=arc-20240116; t=1705764627; c=relaxed/simple;
+	bh=4OWicOUgr4L9XOpIC8Mj/UCoeLP2NtOXMnYVddveOY0=;
+	h=From:To:cc:Subject:In-reply-to:References:MIME-Version:
+	 Content-Type:Date:Message-ID; b=LKuxatsSRw1oKV8UdKOhqyUYqQ1U6ycKBxz6ujg5nEz2EHoBiX6DrFHapaxeG5xAgo2N2xsrJy0XnOifEtEn/Sr4d8gZ4OsfxHy5SdvhYdvApf+KI1XKW4NuQATHHcm+96G/NqFokyOnJzCfQOZh/8es5JVGWPa/JWsbAsD0kkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org; spf=pass smtp.mailfrom=openbsd.org; dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b=YicnAI/Z; arc=none smtp.client-ip=199.185.137.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openbsd.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="a+J0bbi+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
-	s=s31663417; t=1705764333; x=1706369133; i=erick.archer@gmx.com;
-	bh=0JcJgRwF76wGIs5To2XuhDLeUD7IzHJSy+e2cc+KXys=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-	b=a+J0bbi+NsDjv0b0ocCwCIWY/37ZnhbzPAf5hYXMlAvFmjEPWUcDi18t0N6wUsC8
-	 QN454ULVBTCAYoj7L6G/yEWDEvuoOnNjONtkeEjqcAjbUS2h6ANeoehuqVgDLZIxU
-	 TELT/VVcdZFjhQM00WLHZtaKnq8sPvWoX9OrfcrqS/o6r4Ezqqo6R+aJmCriTlxIr
-	 XhEPiJv3Jlj3uh66h36tlKC7fdPTMxmk4zkOz3a0amhakJnKCTR8GBq2vrpLaOShA
-	 ZdD77Nf4A0XrRvB6vTb+2VHxUZR+qbhmdHg6dsXkb40AD3i/L8eF/hn0pvTqPpP1X
-	 4CZHGhyuallkx3iHcA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from localhost.localdomain ([79.157.194.183]) by mail.gmx.net
- (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1MOzOw-1rm3zl0sIe-00PLJ3; Sat, 20 Jan 2024 16:25:33 +0100
-From: Erick Archer <erick.archer@gmx.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Jeffrey Hugo <quic_jhugo@quicinc.com>,
-	Erick Archer <erick.archer@gmx.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Dan Carpenter <error27@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org,
-	mhi@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] bus: mhi: ep: Use kcalloc() instead of kzalloc()
-Date: Sat, 20 Jan 2024 16:25:18 +0100
-Message-Id: <20240120152518.13006-1-erick.archer@gmx.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b="YicnAI/Z"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=selector1; bh=4OWicOUgr4
+	L9XOpIC8Mj/UCoeLP2NtOXMnYVddveOY0=; h=date:references:in-reply-to:
+	subject:cc:to:from; d=openbsd.org; b=YicnAI/ZhxukTjaldVdclRZFxTLi4itmr
+	tNLKXPemFgAzsDYBZqrDlhF8hKj9fc6mUckUM/iyBV589tt7LViHcOyf2nf6j2zTEslzh4
+	vG/l8dNmRi+jECNxd2ZsgriACFzDRwUff3t4dg1Cw9QlDOyECEPJenw35PZGGBPCBdB7BZ
+	RGFWT8c7WkpMUT/foI2hTNF+F9uQu4ruA0PAFajE6OYwpa+NShTfzbhxK/ff0YFRxH5Hek
+	AMyJ71GI47E6Gm24f6LQryBH1ut63FSj3cg1mVvHLyfzq81KQL3IaM9V/vGpnw9rKT1fjE
+	otMZ+r4bE51rZdAr2FONDv+DyVVGw==
+Received: from cvs.openbsd.org (localhost [127.0.0.1])
+	by cvs.openbsd.org (OpenSMTPD) with ESMTP id 77142d56;
+	Sat, 20 Jan 2024 08:23:44 -0700 (MST)
+From: "Theo de Raadt" <deraadt@openbsd.org>
+To: Jeff Xu <jeffxu@chromium.org>
+cc: Linus Torvalds <torvalds@linux-foundation.org>,
+    =?UTF-8?Q?Stephen_R=C3=B6ttger?= <sroettger@google.com>,
+    Jeff Xu <jeffxu@google.com>, akpm@linux-foundation.org,
+    keescook@chromium.org, jannh@google.com, willy@infradead.org,
+    gregkh@linuxfoundation.org, jorgelo@chromium.org,
+    groeck@chromium.org, linux-kernel@vger.kernel.org,
+    linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+    pedro.falcato@gmail.com, dave.hansen@intel.com,
+    linux-hardening@vger.kernel.org
+Subject: Re: [RFC PATCH v3 11/11] mseal:add documentation
+In-reply-to: <CABi2SkUTdF6PHrudHTZZ0oWK-oU+T-5+7Eqnei4yCj2fsW2jHg@mail.gmail.com>
+References: <20231212231706.2680890-1-jeffxu@chromium.org> <20231212231706.2680890-12-jeffxu@chromium.org> <CAHk-=wgn02cpoFEDQGgS+5BUqA2z-=Ks9+PNd-pEJy8h+NOs5g@mail.gmail.com> <CALmYWFu39nzHvBmRsA326GcmV9u=eM-2aCGOvLK31rrb2R9NEw@mail.gmail.com> <CAHk-=wh_VViVZxjiQ5jtB0q=p=JtJMj2R24UAmj-fL-RNLWxNw@mail.gmail.com> <CAEAAPHZpYXHNPdca+xfj77bwYaL6PY-c_oQ54r+=wtJa6_hmCA@mail.gmail.com> <CAHk-=wiVhHmnXviy1xqStLRozC4ziSugTk=1JOc8ORWd2_0h7g@mail.gmail.com> <CABi2SkUTdF6PHrudHTZZ0oWK-oU+T-5+7Eqnei4yCj2fsW2jHg@mail.gmail.com>
+Comments: In-reply-to Jeff Xu <jeffxu@chromium.org>
+   message dated "Thu, 14 Dec 2023 14:52:58 -0800."
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:krwpxKzuxrjKJNYG65YRp+r0EkkR1wBIMU1g/OgIxutkIvqq0Oy
- mZ64rNHG3mxwru5Qg74zFseIO0kbYKg68tGcipBH3oOCo0v0eP8OfOwt60nODjBS1n4Ajj6
- h9tE/I57lr+PfQuoKDdjBiw69dpYvjtOSU1cY/JKLvuDhZucSb+0HKijrDEwdzTQI4XVfm8
- WU1YTuzwqOA1qtPUBq+Ew==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:zOxPMh2inqg=;dVBjcptvjRaTcfEepMXErcxwZ5J
- GXQ+fZoR/t5YkQ8aBHovvX/vu751QvIbidTUF018n6kJF5vcNkTZXxpV2kFGCwxCGrncHqi/H
- fUWnQPwFAWrFJq1ruZt6du8tjk5MmKvmhYZAZclNID/KtJuxA9TOr8iAJxIs2Lr8FoJCdsyYH
- BcnONdX2PValbcfleEofllWvCrfPfM8v31J5bwpeci1wGXBR0FHyOdpJLhPsfoKfpr9i5Lz4O
- VxkD53Uzco2bicd80nGcRDAR93T0VAJkG4k3Yl4FUEzr0F/oYNn/Vclrw2EvQVdEMyfUBq4My
- ZCqFlbBbt7Zq6CAJxH0e7kb+YcyZEPhZQG4hYbgZQ38TET0iJds6yITyZvMkt2UvVU1PTGryu
- 1rrArB4aKTN2y8I8LbMULpehbgZDl7YkAFX1JB/0xy5GuSOYTlQCgFo//2Rh+QotMBuCgMSzC
- 2TQmWi3Zj6UT/Z4YSaRVQf6WRNZzVNBkLV5zBgTjFq50Zf2ncJWeIWB1tBhnb+1znaUhNDw4/
- KLZlfslgsg8TXFNvMUuud+vlvfNK/eZ8AqmSucDgy4qpboQf+Aj1p7lTTYNwRyESgYQtoMzLF
- zljPYDW1v7X0Hjaco58FUx7WaMHJ4vI0KnTh42Moba3c+npDIbfLBmquV+FKclXx4Nv41+er+
- n+DxTDIQDFGrmMCNGmYRRf2n2JaSq1ET+l7uyWjpyZWh12GceurwmAaIYvvKM811oVI54QtGp
- YVA54V0Q0GBkrBeDctPYK/eVsYW3qaYmm9iguwC4lsVGTDCaGxF9P6uibznR2NroiqYa7RNy4
- tlE3eEVOdCCauwH2dh6ahnlpbRkQPkuZBEZqnlbzWLTlG5fwCnTuZYEVrisLYgGVZv3t40sd8
- FN/aUoBj8VktX+Pghmief4gH0FS0O1xnbInUUnjeIKniaC4NzSvfD0VDbydFwtYk7gnNek9SO
- 5tWhdeP5E5RqvhfAdX82TNnbm54=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <45028.1705764224.1@cvs.openbsd.org>
+Date: Sat, 20 Jan 2024 08:23:44 -0700
+Message-ID: <78111.1705764224@cvs.openbsd.org>
 
-As noted in the "Deprecated Interfaces, Language Features, Attributes,
-and Conventions" documentation [1], size calculations (especially
-multiplication) should not be performed in memory allocator (or similar)
-function arguments due to the risk of them overflowing. This could lead
-to values wrapping around and a smaller allocation being made than the
-caller was expecting. Using those allocations could lead to linear
-overflows of heap memory and other misbehaviors.
+Some notes about compatibility between mimmutable(2) and mseal().
 
-So, use the purpose specific kcalloc() function instead of the argument
-count * size in the kzalloc() function.
+This morning, the "RW -> R demotion" code in mimmutable(2) was removed.
+As described previously, that was a development crutch to solved a problem
+but we found a better way with a new ELF section which is available at
+compile time with __attribute__((section(".openbsd.mutable"))).   Which
+works great.
 
-Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-co=
-ded-arithmetic-in-allocator-arguments [1]
-Link: https://github.com/KSPP/linux/issues/162
-Signed-off-by: Erick Archer <erick.archer@gmx.com>
-=2D--
- drivers/bus/mhi/ep/main.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+I am syncronizing the madvise / msync behaviour further, we will be compatible.
+I have worried about madvise / msync for a long time, and audited vast amounts
+of the software ecosystem to come to a conclusion we can be more strict, but
+I never acted upon it.
 
-diff --git a/drivers/bus/mhi/ep/main.c b/drivers/bus/mhi/ep/main.c
-index 65fc1d738bec..8d7a4102bdb7 100644
-=2D-- a/drivers/bus/mhi/ep/main.c
-+++ b/drivers/bus/mhi/ep/main.c
-@@ -1149,8 +1149,9 @@ int mhi_ep_power_up(struct mhi_ep_cntrl *mhi_cntrl)
- 	mhi_ep_mmio_mask_interrupts(mhi_cntrl);
- 	mhi_ep_mmio_init(mhi_cntrl);
+BTW, on OpenBSD and probably other related BSD operating systems,
+MADV_DONTNEED is non-destructive.  However we have a destructive
+operation called MADV_FREE.  msync() MS_INVALIDATE is also destructive.
+But all of these operations will now be prohibited, to syncronize the
+error return value situation.
 
--	mhi_cntrl->mhi_event =3D kzalloc(mhi_cntrl->event_rings * (sizeof(*mhi_c=
-ntrl->mhi_event)),
--					GFP_KERNEL);
-+	mhi_cntrl->mhi_event =3D kcalloc(mhi_cntrl->event_rings,
-+				       sizeof(*mhi_cntrl->mhi_event),
-+				       GFP_KERNEL);
- 	if (!mhi_cntrl->mhi_event)
- 		return -ENOMEM;
+There is an one large difference remainig between mimmutable() and mseal(),
+which is how other system calls behave.
 
-=2D-
-2.25.1
+We return EPERM for failures in all the system calls that fail upon
+immutable memory (since Oct 2022).
 
+You are returning EACESS.
+
+Before it is too late, do you want to reconsider that return value, or
+do you have a justification for the choice?
+
+I think this remains the blocker which would prevent software from doing
+
+#define mimmutable(addr, len)  mseal(addr, len, 0)
