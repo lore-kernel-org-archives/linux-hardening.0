@@ -1,122 +1,110 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33A02170;
-	Sat, 20 Jan 2024 00:12:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88DB6320F;
+	Sat, 20 Jan 2024 12:06:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705709532; cv=none; b=EfSqjcpLefn+zneokLT07HOrNr4Jlxdm3gITZVHhbvmK+ufpTJFiPJHfQ6rU8lEFxmfyLmUM1Cd29GhWFVTInwwLiyC9IJAdIR6hcziTUwyeY5BSTVa7/KXhKDYzZoNUzQnuhV17L4k57mwcaIobfbNE/fPsNRNTRNUBJqIRVFg=
+	t=1705752363; cv=none; b=MM9RkNVASByNOxx5Xh9gktDWxPpVre7x5JkVVyn4hNZ2d+AF2HaAz/DWyj+6rVaChvxi8PwhjfNAw+GztEO7gACPUDfGA/HnGgsq4QVFWh84dJrRLDYWXeGs4sJeXXNxinCUSxPC+XILeIvAKU6kTFthNEPJ9WpD9darWh4TqJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705709532; c=relaxed/simple;
-	bh=t2YKQSRZhMvKZWSEbQfEKkLCPogfqfSRvplfZIxNilc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rWd9zc90LThdn5GcwweVwfR4sRtRWNrK0T9MYbJVpc/AFYuEr4rNBw7aFfxLl/xcBea55bLOgsRmRspnrShYsWxqCZEcDRwkgu2jDNmR0zPJjTdruvb1BJ+BM/y7CPyCjpOczumO51dF6HJREg83mta8udlFdRDxUybJ3JqzgjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=js/hoM1E; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1705752363; c=relaxed/simple;
+	bh=6WljTQzsAyyeU2bPKrlfnVK55eNKnNBym7B97HV0Oq8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tTw6U5eMFM6Q4cIiU6dEnlDDqTHnxy1fFHGwyzbkWiKjVRpYKvjVTRhFZFLVzyuJjVK/C0hhajdYmkNnlQo7c7lSdu14yfAIxmvrrhNqOjYZvvQ8DeBVvrXAd3nkbyfrBalbHLLz+93hT7PrpqBsQ/5i5fG+hBPQSSzsV54Xp34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b=BrOEHDwk; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="js/hoM1E"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40K05ma2031619;
-	Sat, 20 Jan 2024 00:11:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=FrqUNUAdbZExbZI/fVfv3yWEUzNTR44642+Bc6d0vy8=;
- b=js/hoM1E9NebuvFXZzPifYspl2Ik1AvIkmIk3Vmy6wThRf893PMd3sepPwGevPkAY6pe
- Djs2DZRZPpUH72oUoi+MwKWWsxiiMC1KVEa6ZMBD9OtskAUMsKU9jK3GjhUlKrh0UFiX
- +RqHGy6YzQnFFSIeQbUB2Mlw57JeG5xHdd2Z2wi0MPWQn5jvaA4+NwywarAE/Mk45vzP
- Pw9DOPbXZLg+uCRU5oLZ79cRialQXA0rDU+gVZFUdBkYMIyajVbk226q2IQM8p//FjcC
- YBuoSPmUm7bZxnNh9M4U9/9oqAJkj1AYrdLDtGozHPPRn4RhVdn1HQoC0dDpib265z5G VQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vr2wv8gnk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 20 Jan 2024 00:11:10 +0000
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40K072BR003156;
-	Sat, 20 Jan 2024 00:11:09 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vr2wv8gjh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 20 Jan 2024 00:11:09 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40JKgAW1000441;
-	Sat, 20 Jan 2024 00:06:12 GMT
-Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3vm4utcpkh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 20 Jan 2024 00:06:12 +0000
-Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
-	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40K06BbH18809420
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 20 Jan 2024 00:06:12 GMT
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8A7D058056;
-	Sat, 20 Jan 2024 00:06:11 +0000 (GMT)
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AB8B95803F;
-	Sat, 20 Jan 2024 00:06:08 +0000 (GMT)
-Received: from [9.61.126.81] (unknown [9.61.126.81])
-	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Sat, 20 Jan 2024 00:06:08 +0000 (GMT)
-Message-ID: <baeb57e5-a13e-41b3-b74c-76d1a5442821@linux.ibm.com>
-Date: Fri, 19 Jan 2024 18:06:08 -0600
+	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="BrOEHDwk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
+	s=s31663417; t=1705752347; x=1706357147; i=erick.archer@gmx.com;
+	bh=6WljTQzsAyyeU2bPKrlfnVK55eNKnNBym7B97HV0Oq8=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=BrOEHDwkuzbLg79L4PnWJ5cxHqwsUPGnDQlzwnCN23SVhzi6ijC0Tv1jrg6O68I6
+	 bgKDWf2hDN1oiap2qVwhQbk08J9RJwuiYICzpZq/tC5toKmrV1c2BH3O5R/AndJ6w
+	 6lnMvuQTKXfM6ieXplXycc5ZQxDSY3j6ujnz8S7kfNEP2Zmmm+04z5/NZ967Z+oGl
+	 VBiwji4G0+8IAOO/41O3jtSCoav6fDkwyfgnVEC9YzagVt0Cgx5ip1WI0fAmkl0bU
+	 Ew9BnFALOWwVR6zbNCs2k3xAiXlVjuTtSqhEydplE8j9QbDFzXfokZf/KTg0JHYeO
+	 CO8E59t+xuXfoG+jPw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from localhost.localdomain ([79.157.194.183]) by mail.gmx.net
+ (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1M42jK-1rRA6d0MNM-0007t9; Sat, 20 Jan 2024 13:05:47 +0100
+From: Erick Archer <erick.archer@gmx.com>
+To: Viresh Kumar <vireshk@kernel.org>,
+	Nishanth Menon <nm@ti.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <len.brown@intel.com>,
+	Pavel Machek <pavel@ucw.cz>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Erick Archer <erick.archer@gmx.com>,
+	linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] Documentation: power: Use kcalloc() instead of kzalloc()
+Date: Sat, 20 Jan 2024 13:05:27 +0100
+Message-Id: <20240120120527.3866-1-erick.archer@gmx.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/3] dt-bindings: Add DPS310 as trivial device
-To: Rob Herring <robh@kernel.org>
-Cc: krzysztof.kozlowski+dt@linaro.org, linux-arm-kernel@lists.infradead.org,
-        jarkko@kernel.org, tony.luck@intel.com, jgg@ziepe.ca,
-        naresh.solanki@9elements.com, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-        bhelgaas@google.com, geert+renesas@glider.be, vincent@vtremblay.dev,
-        keescook@chromium.org, peterhuewe@gmx.de, robh+dt@kernel.org,
-        joel@jms.id.au, patrick.rudolph@9elements.com,
-        peteryin.openbmc@gmail.com, luca.ceresoli@bootlin.com,
-        andrew@codeconstruct.com.au, andre.werner@systec-electronic.com,
-        conor+dt@kernel.org, linux@roeck-us.net, geissonator@yahoo.com,
-        johannes.holland@infineon.com, broonie@kernel.org,
-        devicetree@vger.kernel.org, gpiccoli@igalia.com,
-        alexander.stein@ew.tq-group.com, festevam@denx.de,
-        linux-hardening@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-References: <20240116183734.3944028-1-ninad@linux.ibm.com>
- <20240116183734.3944028-3-ninad@linux.ibm.com>
- <170569701502.1007352.2755613869226739924.robh@kernel.org>
-Content-Language: en-US
-From: Ninad Palsule <ninad@linux.ibm.com>
-In-Reply-To: <170569701502.1007352.2755613869226739924.robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: pwdJZ3JYFnkVn8MihU2LwPzvf_aNPGk-
-X-Proofpoint-GUID: vIj4mehuiT57tTptbXl5KJvHXJGn-UtM
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-19_12,2024-01-19_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
- spamscore=0 mlxscore=0 priorityscore=1501 impostorscore=0
- lowpriorityscore=0 mlxlogscore=999 bulkscore=0 clxscore=1011 adultscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2401190150
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:MIB9rwFGn8LGmiHnZumtukOyb3RsmEdtPJtv639NvUDu4wkg9uM
+ le8LXDqp2lj65dhD4DGvmd/RgkaUGRutEb5zp+iAzNeRObT2S888ysTeqpbHoA4FjZ42pLk
+ 9YGTRAU8XT/RGai5CDlb93x6J5MGbpvFQt4PfhYsyWqBX84cBPsN1h1hcWmIbxJaY/vLSuE
+ sGL8nyiOVW2uOmvnoWfnQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:PsIHd0DBSB0=;22SfptT7jfkPKbSIQF/aARbTyJB
+ 7CsB1+3GKQZPBMDm6m6A1cLTA+wqnNwt3jQQ+MRxgI/hDEwgHzunaygKkU2IcM0b6RQimNthH
+ KP4j7g7yokE/ezd45sO2wVY4/ruxS4HHDPOx0BnYWet8oESRM/Z5yLGEeJPzKjq8/hHIrDSGv
+ Fl+2Xn5f5NrsWN8loLa5I9yvgXxWmnheBtPcsGmglHtS6KpcYxjAqktBxd/WG/Jkw9KJPl+xm
+ f5HFcurAHxJGCc2q0xPWU51EOtf+s3IpS4yH4JghXX9X7pzh9xdXDoD8hNgIG2NFcDDUygkDl
+ UFHtBcyKKEO/FIq6rby3SrTGyOofBc3XQSsGOJXrJBZpGD0/CyDb+BoVNDBVyoGkyDjFXc1x9
+ 1i8dIc7wUqoM5gfSudJKYTHVh9zRXN2IlHwhfmoteIO7xvCJd8K5Gy4tTK1Mj4J2o3mQ3B/AO
+ 06eTiozOauzv4Ji8eoT5w/5hgZhtNYQPbm0J/zTNa2GSHluJcvoiCaZZiXYhEPBut+rI6vKg8
+ KyhHnWCRWeymlBT7AWVACMYh21g7F+CJd5MKEgL9wMb8bzgpV6qNmk0bJGlox50UGXSg+kww2
+ 4kNyLOs4k48NTPfklUjgwwSRa8fO2MOIuDmljihXo5Oe/f4WQS40f77+a8RfuCPIxTg8oPtOQ
+ ktEQzdDFhlUoqoHuPe7hCzdQnzZB/+U6yprJKu/fwbH4W+J/0zlSM4w5503IR7yEJHyEeA+Oh
+ Q8pLJSkXjjDzBPm8Uenw3WkViByynOwibtRixMNAOoWHgpYbYF1vymVYgBMm99v7hbO0AHg0m
+ 6Gf14DocWNBTnZZo8fc4rtrLCmvXZPTdaggV/F1UAvrKC75hFvy8LL5HpsQa42hG5XUpRfUod
+ Qow3M81VdaPFkn/gkXwrT+993mpPCJmTDpEowFBI5IwP8PsLywlgEY/xc8/FAykVeJlPfv4o/
+ dPoRx0KepLuBZYyfTtzcSIcy11g=
 
-Hello Rob,
-Thank you!
+As noted in the "Deprecated Interfaces, Language Features, Attributes,
+and Conventions" documentation [1], size calculations (especially
+multiplication) should not be performed in memory allocator (or similar)
+function arguments due to the risk of them overflowing. This could lead
+to values wrapping around and a smaller allocation being made than the
+caller was expecting. Using those allocations could lead to linear
+overflows of heap memory and other misbehaviors.
 
-On 1/19/24 14:43, Rob Herring wrote:
-> On Tue, 16 Jan 2024 12:37:33 -0600, Ninad Palsule wrote:
->> Infineon DPS310 is a barometric pressure and temperature sensor.
->>
->> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->> Signed-off-by: Ninad Palsule <ninad@linux.ibm.com>
->> ---
->>   Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
->>   1 file changed, 2 insertions(+)
->>
-> Applied, thanks!
->
+So, in the example code use the purpose specific kcalloc() function
+instead of the argument size * count in the kzalloc() function.
+
+Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-co=
+ded-arithmetic-in-allocator-arguments [1]
+Link: https://github.com/KSPP/linux/issues/162
+Signed-off-by: Erick Archer <erick.archer@gmx.com>
+=2D--
+ Documentation/power/opp.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/power/opp.rst b/Documentation/power/opp.rst
+index a7c03c470980..1b7f1d854f14 100644
+=2D-- a/Documentation/power/opp.rst
++++ b/Documentation/power/opp.rst
+@@ -305,7 +305,7 @@ dev_pm_opp_get_opp_count
+ 	 {
+ 		/* Do things */
+ 		num_available =3D dev_pm_opp_get_opp_count(dev);
+-		speeds =3D kzalloc(sizeof(u32) * num_available, GFP_KERNEL);
++		speeds =3D kcalloc(num_available, sizeof(u32), GFP_KERNEL);
+ 		/* populate the table in increasing order */
+ 		freq =3D 0;
+ 		while (!IS_ERR(opp =3D dev_pm_opp_find_freq_ceil(dev, &freq))) {
+=2D-
+2.25.1
+
