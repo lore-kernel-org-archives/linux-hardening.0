@@ -1,103 +1,104 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cvs.openbsd.org (cvs.openbsd.org [199.185.137.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1FCCEBF
-	for <linux-hardening@vger.kernel.org>; Sat, 20 Jan 2024 16:45:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3446FC12;
+	Sat, 20 Jan 2024 16:59:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.185.137.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705769157; cv=none; b=aZVkMBDbz2fgSLqlh1v5t4A/WY3d2hoVE8lc2t84gVQdld3imm/Apt3/m1P4Qg5/SHQJii34ufoXoIoaXQKsSLJxLhOPKoQ2TG4zsVf75BDO0xv8eusPqiJiMIL7L7Nq4l+rdhKIpCGZtQ1GRX5+98cTA2cukSrLzgyYT9hyYTw=
+	t=1705769951; cv=none; b=CkJ1wYBwf1s4be1tHBAnR1fPwdN9suDmFfxNE1VZId25uxb8Zu6jXOSv+q3/SCDRXqyLBMtQXr1OYKVZ4tfJkIvd9gV7X2exA51bHq+l3VXtmHUzRs2lxXfr5oR7IGxTDGONT0jt5Rk1MGwn5L6z3aE2hzhpNHllMdZOGqrtH+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705769157; c=relaxed/simple;
-	bh=YB/JxYQ/pIR3ToqU03uuFdu3N6gqG3VeZ/Otmp/LweM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YS2i3PGQ9CagKaErJz5c/udofz2klALe1yCQyBQAlbT0EeGoxq8cth2KOlZiryoCiKOfu0C/mgKDcuMjFvGgCN/GOKQkitk/HFhXzsB89T9QUufOBKQWopPDW2hvkc5DWERcspY55MBAWYEeOoG82uBFuIk6sFerGAt/5FzgTMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=QCD9WCo4; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1705769951; c=relaxed/simple;
+	bh=1oROoR0nKlb6+UFwWsH51B+hCVBgpFqtLuP0ReDclek=;
+	h=From:To:cc:Subject:In-reply-to:References:MIME-Version:
+	 Content-Type:Date:Message-ID; b=NBEUN/rTK8MISvbxlrnFWT96uo4uI5aX2ieB24zqqbfqdUNtbIj4AfGFkU+CXbRErZqJmPxBx3/nQFwI04PoynHr/v21Vw2TPTx5pCWwZcNb320MijB1VQYm5fA7/RpK1nWXY0DyLUcitQoKfQub1xxWHrDBym8Dv5QL7XxM93Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org; spf=pass smtp.mailfrom=openbsd.org; dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b=ZBdxT4sm; arc=none smtp.client-ip=199.185.137.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openbsd.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="QCD9WCo4"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-50e7abe4be4so2383871e87.2
-        for <linux-hardening@vger.kernel.org>; Sat, 20 Jan 2024 08:45:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1705769153; x=1706373953; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=lKz6ORL5rgrlrEyJEOMpjmvWzW5nRmmd6FHj6yauGbM=;
-        b=QCD9WCo4M45Atdqr7VIPLMODKDgBJ2lKyZRJP+5A+n7vjyCqqPymrG7Gp3VZviMpO8
-         J1PctShiGGvVyylJ1KQmfN5AXKeEONPRV8QKgq9dIlXfEJrXaL0eUwEePgtmLsieDPjN
-         ezzJFo/uLzfsbGPGeEb263RJ3tzq6q5RcxIAI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705769153; x=1706373953;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lKz6ORL5rgrlrEyJEOMpjmvWzW5nRmmd6FHj6yauGbM=;
-        b=dEFfGLjV5gr56G1Ferk2/Ai9tQqJyyU/aBS/h99sOilA6sPspzc7x3N7APn8ACFj9U
-         cqqKjDYF537QRdXwLa8uyRWkdZob7/BsJyeSNBvICOEf99Jx0a/9dF0xW3aQkxN0JgYF
-         h11DV1fe5BxPsdittdJUxOnqpsIQgF8mQjOQb6FRtZWeSgJYA1sbe/RUL1MWs5S6ULxs
-         iR0+mKenTb3jqOzevxAoNbOB+KtojjJGqYDe30sLX9k/1Eiy0CdPk9+SuyaOOnfEcm3t
-         qTjfNgs/aGRehYulLi8/X3NO2diK1/VVwuRE0nI5uAoBjxLAQkEtX2BMrllmAmkalybC
-         adTg==
-X-Gm-Message-State: AOJu0YyauVhB2v35lBcP3Hdb8qJEPLhBPSLXgZMlJXzfdjE4uu/ofeK2
-	vXZPF6l+s+kbefKKsUMk+eIrU0znoPKnkAv4PUrt/jfYcqZuD71f02A8SBRY0t1l6EgDUSMxVyr
-	TgRXcCA==
-X-Google-Smtp-Source: AGHT+IHQ1/7aC3ttb6pVJ9cZAXe2OdboQoEgbIFYhSBt/fMwU3mcEQvFDyjEXFU47EKcItwnF9GL1A==
-X-Received: by 2002:ac2:484d:0:b0:50e:b304:de88 with SMTP id 13-20020ac2484d000000b0050eb304de88mr658011lfy.3.1705769153627;
-        Sat, 20 Jan 2024 08:45:53 -0800 (PST)
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
-        by smtp.gmail.com with ESMTPSA id b16-20020ac25e90000000b0050e1bfde451sm1384151lfq.123.2024.01.20.08.45.53
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 20 Jan 2024 08:45:53 -0800 (PST)
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2cd33336b32so24058291fa.0
-        for <linux-hardening@vger.kernel.org>; Sat, 20 Jan 2024 08:45:53 -0800 (PST)
-X-Received: by 2002:a50:8d56:0:b0:558:d206:3bba with SMTP id
- t22-20020a508d56000000b00558d2063bbamr704311edt.20.1705768827089; Sat, 20 Jan
- 2024 08:40:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b="ZBdxT4sm"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=selector1; bh=1oROoR0nKl
+	b6+UFwWsH51B+hCVBgpFqtLuP0ReDclek=; h=date:references:in-reply-to:
+	subject:cc:to:from; d=openbsd.org; b=ZBdxT4smVvYsJtQ1Adk4k08ujFn06ssfD
+	pzMIYPOjC1tKV3j2+bVsOnBxn71Lxc2vl0zUnMnRcHB+Cds96zGYxDU0E4aUXN41+AY2q5
+	rBMkkB9O5IWT+3RVaYTVl3SG3GtpfVaBsPRgW97s9brjJ5pRhmQX1fkG4PZgvhkIzW4NmU
+	v3UH0nED5kIcWYnfDISQhINcSMbfynFn0WvMENDOiInSGX5ETzZmCKRaUPOUnGVXOeRspz
+	WfpZowfZ5Lo0CY+OhlDlkM8aLZr3AsmioRInyAIBhiT6bk4ptR0pk5mnJTaIwlIJvmVw8H
+	2+b79CKFwG3aw6ZKdpw/uAe9mTINg==
+Received: from cvs.openbsd.org (localhost [127.0.0.1])
+	by cvs.openbsd.org (OpenSMTPD) with ESMTP id cc644406;
+	Sat, 20 Jan 2024 09:59:07 -0700 (MST)
+From: "Theo de Raadt" <deraadt@openbsd.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+cc: Jeff Xu <jeffxu@chromium.org>,
+    =?UTF-8?Q?Stephen_R=C3=B6ttger?= <sroettger@google.com>,
+    Jeff Xu <jeffxu@google.com>, akpm@linux-foundation.org,
+    keescook@chromium.org, jannh@google.com, willy@infradead.org,
+    gregkh@linuxfoundation.org, jorgelo@chromium.org,
+    groeck@chromium.org, linux-kernel@vger.kernel.org,
+    linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+    pedro.falcato@gmail.com, dave.hansen@intel.com,
+    linux-hardening@vger.kernel.org
+Subject: Re: [RFC PATCH v3 11/11] mseal:add documentation
+In-reply-to: <CAHk-=wgdhbLeY=pEY27m4OQuDAn9xkzSLHwE9D8m1Dw8a++n=Q@mail.gmail.com>
+References: <20231212231706.2680890-1-jeffxu@chromium.org> <20231212231706.2680890-12-jeffxu@chromium.org> <CAHk-=wgn02cpoFEDQGgS+5BUqA2z-=Ks9+PNd-pEJy8h+NOs5g@mail.gmail.com> <CALmYWFu39nzHvBmRsA326GcmV9u=eM-2aCGOvLK31rrb2R9NEw@mail.gmail.com> <CAHk-=wh_VViVZxjiQ5jtB0q=p=JtJMj2R24UAmj-fL-RNLWxNw@mail.gmail.com> <CAEAAPHZpYXHNPdca+xfj77bwYaL6PY-c_oQ54r+=wtJa6_hmCA@mail.gmail.com> <CAHk-=wiVhHmnXviy1xqStLRozC4ziSugTk=1JOc8ORWd2_0h7g@mail.gmail.com> <CABi2SkUTdF6PHrudHTZZ0oWK-oU+T-5+7Eqnei4yCj2fsW2jHg@mail.gmail.com> <78111.1705764224@cvs.openbsd.org> <CAHk-=wgdhbLeY=pEY27m4OQuDAn9xkzSLHwE9D8m1Dw8a++n=Q@mail.gmail.com>
+Comments: In-reply-to Linus Torvalds <torvalds@linux-foundation.org>
+   message dated "Sat, 20 Jan 2024 08:40:09 -0800."
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231212231706.2680890-1-jeffxu@chromium.org> <20231212231706.2680890-12-jeffxu@chromium.org>
- <CAHk-=wgn02cpoFEDQGgS+5BUqA2z-=Ks9+PNd-pEJy8h+NOs5g@mail.gmail.com>
- <CALmYWFu39nzHvBmRsA326GcmV9u=eM-2aCGOvLK31rrb2R9NEw@mail.gmail.com>
- <CAHk-=wh_VViVZxjiQ5jtB0q=p=JtJMj2R24UAmj-fL-RNLWxNw@mail.gmail.com>
- <CAEAAPHZpYXHNPdca+xfj77bwYaL6PY-c_oQ54r+=wtJa6_hmCA@mail.gmail.com>
- <CAHk-=wiVhHmnXviy1xqStLRozC4ziSugTk=1JOc8ORWd2_0h7g@mail.gmail.com>
- <CABi2SkUTdF6PHrudHTZZ0oWK-oU+T-5+7Eqnei4yCj2fsW2jHg@mail.gmail.com> <78111.1705764224@cvs.openbsd.org>
-In-Reply-To: <78111.1705764224@cvs.openbsd.org>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sat, 20 Jan 2024 08:40:09 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgdhbLeY=pEY27m4OQuDAn9xkzSLHwE9D8m1Dw8a++n=Q@mail.gmail.com>
-Message-ID: <CAHk-=wgdhbLeY=pEY27m4OQuDAn9xkzSLHwE9D8m1Dw8a++n=Q@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 11/11] mseal:add documentation
-To: Theo de Raadt <deraadt@openbsd.org>
-Cc: Jeff Xu <jeffxu@chromium.org>, =?UTF-8?Q?Stephen_R=C3=B6ttger?= <sroettger@google.com>, 
-	Jeff Xu <jeffxu@google.com>, akpm@linux-foundation.org, keescook@chromium.org, 
-	jannh@google.com, willy@infradead.org, gregkh@linuxfoundation.org, 
-	jorgelo@chromium.org, groeck@chromium.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, pedro.falcato@gmail.com, 
-	dave.hansen@intel.com, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <62327.1705769947.1@cvs.openbsd.org>
+Date: Sat, 20 Jan 2024 09:59:07 -0700
+Message-ID: <80897.1705769947@cvs.openbsd.org>
 
-On Sat, 20 Jan 2024 at 07:23, Theo de Raadt <deraadt@openbsd.org> wrote:
->
-> There is an one large difference remainig between mimmutable() and mseal(),
-> which is how other system calls behave.
->
-> We return EPERM for failures in all the system calls that fail upon
-> immutable memory (since Oct 2022).
->
-> You are returning EACESS.
->
-> Before it is too late, do you want to reconsider that return value, or
-> do you have a justification for the choice?
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-I don't think there's any real reason for the difference.
+> On Sat, 20 Jan 2024 at 07:23, Theo de Raadt <deraadt@openbsd.org> wrote:
+> >
+> > There is an one large difference remainig between mimmutable() and mseal(),
+> > which is how other system calls behave.
+> >
+> > We return EPERM for failures in all the system calls that fail upon
+> > immutable memory (since Oct 2022).
+> >
+> > You are returning EACESS.
+> >
+> > Before it is too late, do you want to reconsider that return value, or
+> > do you have a justification for the choice?
+> 
+> I don't think there's any real reason for the difference.
+> 
+> Jeff - mind changing the EACESS to EPERM, and we'll have something
+> that is more-or-less compatible between Linux and OpenBSD?
 
-Jeff - mind changing the EACESS to EPERM, and we'll have something
-that is more-or-less compatible between Linux and OpenBSD?
+(I tried to remember why I chose EPERM, replaying the view from the
+German castle during kernel compiles...)
 
-             Linus
+In mmap, EACCESS already means something.
+
+     [EACCES]           The flag PROT_READ was specified as part of the prot
+                        parameter and fd was not open for reading.  The flags
+                        MAP_SHARED and PROT_WRITE were specified as part of
+                        the flags and prot parameters and fd was not open for
+                        writing.
+
+In mprotect, the situation is similar
+
+     [EACCES]           The process does not have sufficient access to the
+                        underlying memory object to provide the requested
+                        protection.
+
+immutable isn't an aspect of the underlying object, but an aspect of the
+mapping.
+
+Anyways, it is common for one errno value to have multiple causes.
+
+But this error-aliasing can make it harder to figure things out when
+studying a "system call trace" a program, and I strongly believe in
+keeping systems are simple as possible.
+
+For all the memory mapping control operations, EPERM was available and
+unambiguous.
