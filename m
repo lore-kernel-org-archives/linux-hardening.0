@@ -1,46 +1,44 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB913DF46;
-	Sat, 20 Jan 2024 12:22:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC869F4E2;
+	Sat, 20 Jan 2024 13:35:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705753357; cv=none; b=mqNVp4IMUpzWTK4bJnt0Fjz73tluf11JD0h7haHko92lPqwk0YRL0MwX4WrO+gqv/u6vmCifJoVse7+UXtnZyqIoYRRHyUSMr6R9unkIptC8awEfyBUny3PxOtuYClQ/cxvjYQfDrOI1BLfL+ktyuAyZXIrlU27LLZrv1eZL+X0=
+	t=1705757705; cv=none; b=YUtZAHOGdGEFhuZRRF4Gv+gyhJzwpcH50D+zcJxxNJaCTFVHeomuJ3LbMXFV5Y+Is+H+sLXigpARTzGdeQOrC9OPBfvxnzGbVMT1FW72pqd5wsYrNXSm5NbqXjZU80edSfrC2rkcT6ZZ8CRrH9Oh99QI7U5JnrPBRzEfv96g2Pc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705753357; c=relaxed/simple;
-	bh=9YDEUzKhTgngX2Z0iAq+z3tHuTcCnH42aT3kTNk1/bc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=fO1hI04yXQM1iaEnxeaiDtf7vp7kFqOWTdjc0xy2QSIMDsuHJTpr3q3o2Y0Mxh6/PPB8VJ2N8DnP5tr0c9M1Lb77EIVBgmzMyxRx12D2seIio1Q9x0vs36h7hQvfrL+NLDsrtXeY0kMGeJjxyuS4v7DcIh0oSDLBLFpl1CuCwO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b=XT6kwkA0; arc=none smtp.client-ip=212.227.17.21
+	s=arc-20240116; t=1705757705; c=relaxed/simple;
+	bh=HSEmP7fhfhYJi7q8y21JZnQX6pvDCIMAR2srytoMCDk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oj68e26KD9eSFwSZG2ip5fuZAJmMxr+u1rLoMmUNRcpJ3bot35dUEWeg3NKJyKshgDDCbhehswAx/6ChkIuq/lx1nqBfUJNE9tEpVIdZINJFhdxmwajoRYn0zZKoQLqqyoLr3lqeS7tq0VvmD8ws1p4xEMt6MCwdwEZX/8ylZBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b=p6QpFoD3; arc=none smtp.client-ip=212.227.15.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="XT6kwkA0"
+	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="p6QpFoD3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
-	s=s31663417; t=1705753339; x=1706358139; i=erick.archer@gmx.com;
-	bh=9YDEUzKhTgngX2Z0iAq+z3tHuTcCnH42aT3kTNk1/bc=;
+	s=s31663417; t=1705757695; x=1706362495; i=erick.archer@gmx.com;
+	bh=HSEmP7fhfhYJi7q8y21JZnQX6pvDCIMAR2srytoMCDk=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-	b=XT6kwkA0PE4Tpu0v0Vw04kApyR5BDjRJolmWh6T7rr0mY14wECU9CP3YnL0/jNy/
-	 oOrpChMGpjlTsMFhxcilGJjhQUlS+Pm0TGj0kpWQh2QkVRvaKvMZLGh3qWJwW811l
-	 Em2hNrJhjP2cmwhA9YGGFqyLnQlAmEFIYyYEYav/gBBf7IywS2vJWp+ipeQ9fjkEh
-	 F4KKmaXw5s41KXkgwDBzMqKhBbhXftvtHXbc4L+PLY1Uoq0sWmSZyq9i+EGWkIV+u
-	 O1S9vZjbx2CKgzldYG7GwyRe9xrCEQJh7pDTLftQOpiPdIa5k10DmKJtNbSNCF+Dz
-	 57g7sHbY8VVWJY0VFA==
+	b=p6QpFoD3XTH9wTkgyZW04NKN4CfYTn1T0impi1JHePIDWbFxOXykMy68D88EKdy0
+	 4apZu40PRCbiVUqKib1t93/uMiLXpRev4xP/vVe61X5dx1YJZFQNC9pTOnPuVL6yM
+	 j3XAMjw1KneXxsyVtDrYPHxvJzszAaWY12EPx+VuyVoZoO38EvQNf/msY4SIMx9WY
+	 RQ1+zFDvl+0/GTAY7QMh18IF3Eff74SqfClv+DY+qsi29+BvETPUumehEvVgqZhEL
+	 Csi5GoL85OeOvwRhKLt2m4LlLPtROzFnVV81E+B+B8lpcgosGFnU5F+1s4Z2Orko0
+	 6UUFV1CwbGXcD1AUqw==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from localhost.localdomain ([79.157.194.183]) by mail.gmx.net
- (mrgmx104 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 1MA7GM-1rFZVB1eAc-00BdHt; Sat, 20 Jan 2024 13:22:19 +0100
+ (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1M1poA-1rOyZT21jk-002KVY; Sat, 20 Jan 2024 14:34:55 +0100
 From: Erick Archer <erick.archer@gmx.com>
-To: Alex Shi <alexs@kernel.org>,
-	Yanteng Si <siyanteng@loongson.cn>,
-	Jonathan Corbet <corbet@lwn.net>,
+To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>
 Cc: Erick Archer <erick.archer@gmx.com>,
-	linux-doc@vger.kernel.org,
+	linux-mips@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] docs/zh_CN/power: Use kcalloc() instead of kzalloc()
-Date: Sat, 20 Jan 2024 13:22:04 +0100
-Message-Id: <20240120122204.4287-1-erick.archer@gmx.com>
+Subject: [PATCH] MIPS: Alchemy: Use kcalloc() instead of kzalloc()
+Date: Sat, 20 Jan 2024 14:34:43 +0100
+Message-Id: <20240120133443.4237-1-erick.archer@gmx.com>
 X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -48,28 +46,27 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:uvAMfo3WjxMA7hh2WCPD17d33xXJqS6azul4AHtLOu6zMVtuVZA
- 7x60pap4O16Xd0QCb1NduUWtdD39wAv3pCFKatdFoSqj/SFR6S3vRVjrDGWYeloeWtqApR3
- PwPJ/Q1oqc0pTT4mAhoWP1Cc/sHEwpyFnKbU/LqNz864WLUnzTnQmB7MUkcZ+2kxuFISbPt
- anlLMtB8FGOoSnwxe5b8A==
+X-Provags-ID: V03:K1:tm9Qv2O3XG7Yqd03ObckUezAjDfTzhMZozLxrK9eN9xuO+dt47v
+ Dlj/WxcudwlJl1xltGcGwgzN+4aHKobJIz+NvN35PAmtmsnarzho/SbVbyNSdJyqga5rYtx
+ CAs4p744xhtZSgMqE++zW1JtrIOWzd4+9cATvJz2QxxqrZkThjvUh4dNNfBMWqhEWJLAjeP
+ GbQRfZfUguXx9gO7GPcRQ==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:h4GQL3qBzEs=;19EFmJ6zyvHSwjYb2PMIt9/mk0J
- BUUJ+byVWqUwvJAwrNp2wncC7pkWgOt+yXkiz8N4Ul9IhulpvN3eP8BEAHI86w3FuXo9f18d6
- wY6gcjRUTISNPgRYT2+22QRXkQZhMGtfEy57QkilIdikwnr8xVd9ZPGRZAy4UQ5XrhwaarOFe
- QZjzt5Doh7Zly1UZRCre/bDcAEAsalm5mmKT7uogzSwtxuUhzzdnlZ9Egc50RxeLqEQt/81Jc
- YohJYA0guKsWg1NJEZHv+EOneGb/s3oLjAFPVoPW77+7AG53OE17uWITTGQ6g+lz1FTl4r5Cn
- m/T/jGkjN+R2cV44LsmhsHDN1Tj++t6sZxvzFMSCS0kdlzG08IFpCS94V0y5MP/+1cEUm+Gc9
- UUDuc41siqt2NPHr8SB0rtGJtFdRZAR3/+1TcXKLQTNSsf5PKwmVm9Wr2GeOO8EZkGxf1qK9I
- xvD3FSJ9+ewZhxec7UjsuZbaDD4P5Aj/rVFbJYlPh/jALLM+ZpVIh/6TjeoomR+0wEz7hRJVL
- R6PhNvIYi+aDIyb335FBIA9rgi1Tq8d28BZRYNAVCmXRlX6E+iRGDocy4kJOxzOAwsL8wUGmd
- rQc99+DDOFnTUN7A8IoQ6Cpx9i/lpReH6/PikIzBcI8cz0qC1Z5Q9o8MKxkHzLIKZHNvdHUrt
- Ea1ZrBc6qrgFy0Hd4v45OUWMiAyZlECQOrNq/Uo9JmuN2i6ip98/kS/kIgHmaDoJf2ZcbUGge
- ZxXO7eIQslMkXwA0fydgEMJ1Hb1XL/mjPc1c5jxjyAWSrsldI5819eZCfUQaHdncLX3HiV4uv
- FVaZHykPmpGrVDErW1OrGX5/Metty6WrdKZJ0+N/COLekb6DhFDif8MMFMoHy/3++jE20xbQe
- GhPPainmvySlwSxFnU5LwTUzC7IXcsa+fmjP25hBo/VZvQv7Wc5lOkQ96dHW6Vjp6VKAQVn3F
- jj/a5EYl2w7XeKqCkzAZX8k5+m8=
+UI-OutboundReport: notjunk:1;M01:P0:6b44vTJOeLM=;JvN2Rw273bbIRhm2Uk3eIZxdb8n
+ kUE7UGfv93bkax0i3bgkE6qDE/m81UtFf4FlMmylIM9+TgUDZmWyi26dfih4qZOAOvIeLQpIf
+ z4dguJohy0x/cj7HRS5OUgkUaUmLgzvcUxoorjli+Lk3MPlwgptriFr+BNQSKsYtTX6VSE8F3
+ vOsHhHMwFJGeoskm0SZtaOYoap4AyxE56nh8nYbsiM77M5QswEVtZRLf/pbo+ZpZ8bkGYt4UG
+ UCY0MOBTVQ4BXB1CdrXKD49BB3kxEVRoEmqqCIg62FHqC9BVFu5xBGl9SqfEHNARW6+v7Ad7D
+ pWnK6Lc0Cbwpv4C5e3+PMt3/dOhIVufrbB1JySq1v9ooxPw04HhXYiLtg9GrVcaqhGUVOZqaD
+ IHRX3iV3TOgojbtjmjuQuJYMAHp0Ymwga93b+5IvQp48wPr+rOq2LtQjnP48Rmk5bQcjBaOWz
+ BMdRSg179ht2ImG/W881Lvbziq+XdyF1JJeo7J3dixuTiPuSMXa08fNBRb34Dp2UxmNcJCqy9
+ 6S6hg285naBtPKY2o1/8iX6pDKr4NgZbPQQVXCybQwDx0SFGNosQ4Lavbn1ua68UolZgiojVt
+ 2L+5RCPE64+yEdmWDNwctM72KmcRI/tpDZCC+SspJqvZHldagoRvBcIjRDpZjhYE3TfyYxjge
+ DKB03mtq0VOS5BEqPHfBMCvQEfuhqsE9AuNuHAqNSK/fVvZf/yGtQCN5ZqjzO2WlO7GzdS13g
+ 7yD/eCEjSBw50ExJsuTEZnFERatJLxGNd+oT3HR5Rh8Z3jiq5QILs0EikGZ1A+sZ0ijoduhh/
+ He4fSPgBGmrv2fCIjfWKOlBwo1nMMUHr1gOyLaNarYIR/YGapnVNtKpFcigiAw/Lpq4WgfIuc
+ 4aK3bdsI0UwvzawrodOnLHwBxSRaFF0k3YIK4r4Fn3KbJ0uh675g09Dxc05+0pBaXa2rdvWnf
+ 1H+hbiwj36cpW7z+ZWwf8DNKuyQ=
 
 As noted in the "Deprecated Interfaces, Language Features, Attributes,
 and Conventions" documentation [1], size calculations (especially
@@ -79,31 +76,31 @@ to values wrapping around and a smaller allocation being made than the
 caller was expecting. Using those allocations could lead to linear
 overflows of heap memory and other misbehaviors.
 
-So, in the example code use the purpose specific kcalloc() function
-instead of the argument size * count in the kzalloc() function.
+So, use the purpose specific kcalloc() function instead of the argument
+size * count in the kzalloc() function.
 
 Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-co=
 ded-arithmetic-in-allocator-arguments [1]
 Link: https://github.com/KSPP/linux/issues/162
 Signed-off-by: Erick Archer <erick.archer@gmx.com>
 =2D--
- Documentation/translations/zh_CN/power/opp.rst | 2 +-
+ arch/mips/alchemy/common/clock.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/translations/zh_CN/power/opp.rst b/Documentatio=
-n/translations/zh_CN/power/opp.rst
-index 8d6e3f6f6202..7470fa2d4c43 100644
-=2D-- a/Documentation/translations/zh_CN/power/opp.rst
-+++ b/Documentation/translations/zh_CN/power/opp.rst
-@@ -274,7 +274,7 @@ dev_pm_opp_get_opp_count
- 	 {
- 		/* =E5=81=9A=E4=B8=80=E4=BA=9B=E4=BA=8B=E6=83=85 */
- 		num_available =3D dev_pm_opp_get_opp_count(dev);
--		speeds =3D kzalloc(sizeof(u32) * num_available, GFP_KERNEL);
-+		speeds =3D kcalloc(num_available, sizeof(u32), GFP_KERNEL);
- 		/* =E6=8C=89=E5=8D=87=E5=BA=8F=E5=A1=AB=E5=85=85=E8=A1=A8 */
- 		freq =3D 0;
- 		while (!IS_ERR(opp =3D dev_pm_opp_find_freq_ceil(dev, &freq))) {
+diff --git a/arch/mips/alchemy/common/clock.c b/arch/mips/alchemy/common/c=
+lock.c
+index c01be8c45271..6c8996e20a7d 100644
+=2D-- a/arch/mips/alchemy/common/clock.c
++++ b/arch/mips/alchemy/common/clock.c
+@@ -771,7 +771,7 @@ static int __init alchemy_clk_init_fgens(int ctype)
+ 	}
+ 	id.flags =3D CLK_SET_RATE_PARENT | CLK_GET_RATE_NOCACHE;
+
+-	a =3D kzalloc((sizeof(*a)) * 6, GFP_KERNEL);
++	a =3D kcalloc(6, sizeof(*a), GFP_KERNEL);
+ 	if (!a)
+ 		return -ENOMEM;
+
 =2D-
 2.25.1
 
