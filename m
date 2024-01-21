@@ -1,75 +1,202 @@
-Received: from cvs.openbsd.org (cvs.openbsd.org [199.185.137.3])
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB8E14AAB;
-	Sun, 21 Jan 2024 00:43:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.185.137.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC1A122622
+	for <linux-hardening@vger.kernel.org>; Sun, 21 Jan 2024 02:49:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705797815; cv=none; b=N2abBiUY7m71MNBXVi2HICiLqT5s7/IYVHh51nVw1i/BnPi5J3VFVXiHxj2FbC+vJ0VvjRypGAFgdWb2aGsn1BY2ndqDRNoYikzIOg0Dr1qXJxzg4NvQ9sZltCWEtCMtwYExnYkOHr+AphohFN/8AjS/7X2GsutR9C2MOksEoJI=
+	t=1705805366; cv=none; b=Z+8WhkDMw6K0gnaFHJEzSP4EOZdwfB/h5pNabBAf0xSYFtW+8hsa+i5VLO7BkpHkEP1eynQJN+4ainu2GcNUnqRBbQS74U88ctmCu++Mv2cQsSCkl+wQgcPqwg+N9doCKwMHXRhWllQTKqVsDtMmXahLiEmG5JVG/yIQ+NAxl2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705797815; c=relaxed/simple;
-	bh=6zClxfyv71M0RluUbCbllO0533ZG0kWqfL4wR73NjHM=;
-	h=From:To:cc:Subject:In-reply-to:References:MIME-Version:
-	 Content-Type:Date:Message-ID; b=tY2psya8QUMrKVNbFfMKW1/SjR5NNXIMlD1QVabFk9/hMCE0cM21Ir9Vxyrh1R2wGW4t8wjBYe0FGAs2U4fdyI3M4lIIFm5pVSddDm+xbcuf361J2cIy9d4XeMPJzfHUeurIowtEwtf6+wCUlT9Fr9tsZWa3Dc5iEQxJNSHWDy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org; spf=pass smtp.mailfrom=openbsd.org; dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b=xNrlzLrv; arc=none smtp.client-ip=199.185.137.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openbsd.org
+	s=arc-20240116; t=1705805366; c=relaxed/simple;
+	bh=OKa4bhq0Rio0F1E3oS/YlBqfSZWHLqMzhTTAI3gLa0I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YdSspi2bkTdWldimboVloWyOc7BPG9UzPdHiNuJ3lFjnpJdwtrY9i1eghCrYFLopFguC5tLfl4C/X+bLY7DPyjq/fh4XMV2Y3yuWygDZze5FpD+5CYNDTQ3tbnTrY5KnjsNkHl6OoKSMvuaHNf5z5CPIGGgwSTI/EnWB4iKFjPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=CEkf+9pg; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b="xNrlzLrv"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=selector1; bh=6zClxfyv71
-	M0RluUbCbllO0533ZG0kWqfL4wR73NjHM=; h=date:references:in-reply-to:
-	subject:cc:to:from; d=openbsd.org; b=xNrlzLrvdn5TiEK+r0xytg+ig0YyyOzsG
-	5h72+KeTLSNfAWSgxuoV28p6LgEBSpKPm2uXpufBZ9QJ/n/+3TV+7DPPn/2NuEmrqFcBst
-	3q9SxFEPMPkmr5ofcpN1Y4nU2IINcyvAo8zpPHQBiQMvYNKFe3+DgFPjV/Mm1y8fRq8WKK
-	bO+y+/L+iBqm1en9uyXnWDP+77ycPtFteeXzwjPFOq31DSjtchzRjeKcMZkkGWXCFazv7r
-	LHMmUTP8KfXq5K8NgRv1dNfIh05fsSBsZnHoCRFpH0J2BNMMosJtSlzpVknRPVr38/fiY3
-	M318gjyH361AmN6EuvpAvkSoNnb6g==
-Received: from cvs.openbsd.org (localhost [127.0.0.1])
-	by cvs.openbsd.org (OpenSMTPD) with ESMTP id d3cb4755;
-	Sat, 20 Jan 2024 17:43:32 -0700 (MST)
-From: "Theo de Raadt" <deraadt@openbsd.org>
-To: Jeff Xu <jeffxu@chromium.org>
-cc: Linus Torvalds <torvalds@linux-foundation.org>,
-    =?UTF-8?Q?Stephen_R=C3=B6ttger?= <sroettger@google.com>,
-    Jeff Xu <jeffxu@google.com>, akpm@linux-foundation.org,
-    keescook@chromium.org, jannh@google.com, willy@infradead.org,
-    gregkh@linuxfoundation.org, jorgelo@chromium.org,
-    groeck@chromium.org, linux-kernel@vger.kernel.org,
-    linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
-    pedro.falcato@gmail.com, dave.hansen@intel.com,
-    linux-hardening@vger.kernel.org
-Subject: Re: [RFC PATCH v3 11/11] mseal:add documentation
-In-reply-to: <CABi2SkVXgyG4r-SzkXx0-MOQ2dqhy1ewwhvfXMJLw066i1zJKw@mail.gmail.com>
-References: <20231212231706.2680890-1-jeffxu@chromium.org> <20231212231706.2680890-12-jeffxu@chromium.org> <CAHk-=wgn02cpoFEDQGgS+5BUqA2z-=Ks9+PNd-pEJy8h+NOs5g@mail.gmail.com> <CALmYWFu39nzHvBmRsA326GcmV9u=eM-2aCGOvLK31rrb2R9NEw@mail.gmail.com> <CAHk-=wh_VViVZxjiQ5jtB0q=p=JtJMj2R24UAmj-fL-RNLWxNw@mail.gmail.com> <CAEAAPHZpYXHNPdca+xfj77bwYaL6PY-c_oQ54r+=wtJa6_hmCA@mail.gmail.com> <CAHk-=wiVhHmnXviy1xqStLRozC4ziSugTk=1JOc8ORWd2_0h7g@mail.gmail.com> <CABi2SkUTdF6PHrudHTZZ0oWK-oU+T-5+7Eqnei4yCj2fsW2jHg@mail.gmail.com> <78111.1705764224@cvs.openbsd.org> <CAHk-=wgdhbLeY=pEY27m4OQuDAn9xkzSLHwE9D8m1Dw8a++n=Q@mail.gmail.com> <CABi2SkVXgyG4r-SzkXx0-MOQ2dqhy1ewwhvfXMJLw066i1zJKw@mail.gmail.com>
-Comments: In-reply-to Jeff Xu <jeffxu@chromium.org>
-   message dated "Sat, 20 Jan 2024 16:16:39 -0800."
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="CEkf+9pg"
+Date: Sat, 20 Jan 2024 21:49:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1705805362;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2MZIC47zq/tFRXBZLU7f3NuxJxn74KUJFQlCBzt+coo=;
+	b=CEkf+9pgjCbf8OZ1kGVpjLhh53FpVHbAX7uHj0jJIvQU3IGZJzoLc720zn1Z2PclQ1bhL1
+	H0NRWZVqXneE+5c/leqqQOfFoqyV8d6CZZSZFJPXuYRT5drdnuv/9So1MrovgMsn7d/Gj/
+	x51jk8HFC3Jgk/dcjl4LrD8W7EC7fjc=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: Theodore Ts'o <tytso@mit.edu>, Greg KH <greg@kroah.com>, 
+	Mark Brown <broonie@kernel.org>, Neal Gompa <neal@gompa.dev>, Kees Cook <keescook@chromium.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Nikolai Kondrashov <spbnick@gmail.com>, Philip Li <philip.li@intel.com>, 
+	Luis Chamberlain <mcgrof@kernel.org>
+Subject: Re: [GIT PULL] bcachefs updates for 6.8
+Message-ID: <dtarikpnqff7nkwoq552laovlgbvesuyy7jd2tkwd2tvie7jno@abry5epdlwcl>
+References: <gaxigrudck7pr3iltgn3fp5cdobt3ieqjwohrnkkmmv67fctla@atcpcc4kdr3o>
+ <f8023872-662f-4c3f-9f9b-be73fd775e2c@sirena.org.uk>
+ <olmilpnd7jb57yarny6poqnw6ysqfnv7vdkc27pqxefaipwbdd@4qtlfeh2jcri>
+ <CAEg-Je8=RijGLavvYDvw3eOf+CtvQ_fqdLZ3DOZfoHKu34LOzQ@mail.gmail.com>
+ <40bcbbe5-948e-4c92-8562-53e60fd9506d@sirena.org.uk>
+ <2uh4sgj5mqqkuv7h7fjlpigwjurcxoo6mqxz7cjyzh4edvqdhv@h2y6ytnh37tj>
+ <2024011532-mortician-region-8302@gregkh>
+ <lr2wz4hos4pcavyrmswpvokiht5mmcww2e7eqyc2m7x5k6nbgf@6zwehwujgez3>
+ <20240117055457.GL911245@mit.edu>
+ <5b7154f86913a0957e0518b54365a1b0fce5fbea.camel@HansenPartnership.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <98518.1705797812.1@cvs.openbsd.org>
-Date: Sat, 20 Jan 2024 17:43:32 -0700
-Message-ID: <44186.1705797812@cvs.openbsd.org>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5b7154f86913a0957e0518b54365a1b0fce5fbea.camel@HansenPartnership.com>
+X-Migadu-Flow: FLOW_OUT
 
-Jeff Xu <jeffxu@chromium.org> wrote:
+On Wed, Jan 17, 2024 at 08:03:35AM -0500, James Bottomley wrote:
+> On Wed, 2024-01-17 at 00:54 -0500, Theodore Ts'o wrote:
+> > On Tue, Jan 16, 2024 at 11:41:25PM -0500, Kent Overstreet wrote:
+> > > > > No, it's a leadership/mentorship thing.
+> > > > > 
+> > > > > And this is something that's always been lacking in kernel
+> > > > > culture. Witness the kind of general grousing that goes on at
+> > > > > maintainer summits;maintainers complain about being overworked
+> > > > > and people not stepping up to help with the grungy
+> > > > > responsibilities, while simultaneously we still
+> > 
+> >      <blah blah blah>
+> > 
+> > > > > Tests and test infrastructure fall into the necessary but not
+> > > > > fun category, so they languish.
+> > > > 
+> > > > No, they fall into the "no company wants to pay someone to do the
+> > > > work" category, so it doesn't get done.
+> > > > 
+> > > > It's not a "leadership" issue, what is the "leadership" supposed
+> > > > to do here, refuse to take any new changes unless someone ponys
+> > > > up and does the infrastructure and testing work first?  That's
+> > > > not going to fly, for valid reasons.
+> > 
+> > Greg is absolutely right about this.
+> > 
+> > > But good tools are important beacuse they affect the rate of
+> > > everyday development; they're a multiplier on the money everone is
+> > > spending on salaries.
+> > 
+> > Alas, companies don't see it that way.  They take the value that get
+> > from Linux for granted, and they only care about the multipler effect
+> > of their employees salaries (and sometimes not even that).  They most
+> > certainly care about the salutary effects on the entire ecosyustem.
+> > At least, I haven't seen any company make funding decisions on that
+> > basis.
+> 
+> Actually, this is partly our fault.  Companies behave exactly like a
+> selfish contributor does:
+> 
+> https://archive.fosdem.org/2020/schedule/event/selfish_contributor/
+> 
+> The question they ask is "if I'm putting money into it, what am I
+> getting out of it".  If the answer to that is that it benefits
+> everybody, it's basically charity  to the entity being asked (and not
+> even properly tax deductible at that), which goes way back behind even
+> real charitable donations (which at least have a publicity benefit) and
+> you don't even get to speak to anyone about it when you go calling with
+> the collecting tin.  If you can say it benefits these 5 tasks your
+> current employees are doing, you might have a possible case for the
+> engineering budget (you might get in the door but you'll still be
+> queuing behind every in-plan budget item).  The best case is if you can
+> demonstrate some useful for profit contribution it makes to the actual
+> line of business (or better yet could be used to spawn a new line of
+> business), so when you're asking for a tool, it has to be usable
+> outside the narrow confines of the kernel and you need to be able to
+> articulate why it's generally useful (git is a great example, it was
+> designed to solve a kernel specific problem, but not it's in use pretty
+> much everywhere source control is a thing).
+> 
+> Somewhere between 2000 and now we seem to have lost our ability to
+> frame the argument in the above terms, because the business quid pro
+> quo argument was what got us money for stuff we needed and the Linux
+> Foundation and the TAB formed, but we're not managing nearly as well
+> now.  The environment has hardened against us (we're no longer the new
+> shiny) but that's not the whole explanation.
 
-> > Jeff - mind changing the EACESS to EPERM, and we'll have something
-> > that is more-or-less compatible between Linux and OpenBSD?
-> >
-> Sounds Good. I will make the necessary changes in the next version.
+I think this take is closer to the mark, yeah.
 
-Thanks!  That is so awesome!
+The elephant in the room that I keep seeing is that MBA driven business
+culture in the U.S. has gotten _insane_, and we've all been stewing in
+the same pot together, collectively boiling, and not noticing or talking
+about just how bad it's gotten.
 
-On the OpenBSD side, I am close to landing our madvise / msync changes.
+Engineering culture really does matter; it's what makes the difference
+between working effectively or not. And by engineering culture I mean
+things like being able to set effective goals and deliver on them, and
+have a good balance between product based, end user focused development;
+exploratory, prototype-minded research product type stuff; and the
+"clean up your messes and eat your vegetables" type stuff that keeps
+tech debt from getting out of hand.
 
-Then we are mostly in sync.
+Culturally, we in the kernel community are quite good on the last front,
+not so good on the first two, and I think a large part of the reason is
+people being immersed in corporate culture where everything is quarterly
+OKRs, "efficiency", et cetera - and everywhere I look, it's hard to find
+senior engineering involved in setting a roadmap. Instead we have a lot
+of "initiatives" and feifdoms, and if you ask me it's a direct result of
+MBA culture run amuck.
 
-It was on my radar for a year, but delayed because I was ponderingn
-blocking the destructive madvise / msync ops on regular non-writeable
-pages.  These ops remain a page-zero gadget against regular (mutable)
-readonly pages, and it bothers me.  I've heard rumour this has been used
-in a nasty way, and I think the sloppily defined semantics could use
-a strict modernization.
+Culturally, things seem to be a lot better in Europe - I've been seeing
+a _lot_ more willingness to fund grungy difficult long term projects
+there; the silicon valley mentality of "it must have the potential for a
+massive impact (and we have to get it done as quick as possible) or it's
+not worth looking at" is, thankfully, absent there.
+
+> I also have to say, that for all the complaints there's just not any
+> open source pull for test tools (there's no-one who's on a mission to
+> make them better).  Demanding that someone else do it is proof of this
+> (if you cared enough you'd do it yourself).  That's why all our testing
+> infrastructure is just some random set of scripts that mostly does what
+> I want, because it's the last thing I need to prove the thing I
+> actually care about works.
+
+It's awkward because the people with the greatest need, and therefore
+(in theory?) the greatest understanding for what kind of tools would be
+effective, are the people with massive other responsibilities.
+
+There are things we just can't do without delegating, and delegating is
+something we seem to be consistently not great at in the kernel
+community. And I don't think it needs to be that way, because younger
+engineers would really benefit from working closely with someone more
+senior, and in my experience the way to do a lot of these tooling things
+right is _not_ to build it all at once in a year of full time SWE salary
+time - it's much better to take your time, spend a lot of time learning
+the workflows, letting ideas percolate, and gradually build things up.
+
+Yet the way these projects all seem to go is we have one or a few people
+working full time mostly writing code, building things with a lot of
+_features_... and if you ask me, ending up with something where most of
+the features were things we didn't need or ask for and just make the end
+result harder to use.
+
+Tools are hard to get right; perhaps we should be spending more of our
+bikeshedding time on the lists bikeshedding our tools, and a little bit
+less on coding style minutia.
+
+Personally, I've tried to get the ball rolling multiple times with
+various people asking them what they want and need out of their testing
+tools and how they use them, and it often feels like pulling teeth.
+
+> Finally testing infrastructure is how OSDL (the precursor to the Linux
+> foundation) got started and got its initial funding, so corporations
+> have been putting money into it for decades with not much return (and
+> pretty much nothing to show for a unified testing infrastructure ...
+> ten points to the team who can actually name the test infrastructure
+> OSDL produced) and have finally concluded it's not worth it, making it
+> a 10x harder sell now.
+
+The circle of fail continues :)
