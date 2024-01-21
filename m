@@ -1,51 +1,52 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 528383C26;
-	Sun, 21 Jan 2024 14:30:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B06D1376E4;
+	Sun, 21 Jan 2024 15:35:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705847424; cv=none; b=kYFUMDa9aFQre6xS9uJvN5CU7fQ0gfXFyl/Oxnj82rNjeKAHgcFL4E3/XtRkH7GDt+cRvykx4e3D67tHRm0/F9k8Njsw1p9uiAM28d7pJxI+g1fM6TKKBqAndAbq8ktq5BYe4s1556EZGRSS4isLb2BB4QUCDblKaWN0U5AZQCQ=
+	t=1705851334; cv=none; b=TtFIS5ImxPBdaF5IreMasKGDGA5u/L7gJgj8iKcLDEDhBo3AbKV/45RkavuUXFLWGsNomnjISmvcBL1GItN4rRVAZ1bnlzfUCOSJP6N14B6JihHY9Hk3NknyMB9YaWfVRIpeMNz8EmMxksByW3masmbceUZIGhMkjr0JLofU0R4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705847424; c=relaxed/simple;
-	bh=ROOPfL0J6ngi897r/UdZbHSKZB2DdN3Hw5gHQ/zsnqE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=K57wmqb5iGA8jstEQiMEH7zNXeS5hNpTqOby9/+1b2CzmaGmTH9joUYIXQ5WMpGUEPgVksTBBvGb6/0E8wjg3Qqp5ykgszF8cPVI8Zb4fD+ieCMF2VeQfCpSBi9iXDGRcMforHr+xMBIq7IGsyecv0SBz1clPHEQ56BEDdkwSKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b=NTxkNRpr; arc=none smtp.client-ip=212.227.15.15
+	s=arc-20240116; t=1705851334; c=relaxed/simple;
+	bh=brNXGMrVlHQm0RTaVV57rRuousVunDuYR0RflipHqy8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=s1J5kcJlFts0kWHmkpTlvyiXGJUigOuN/zvWyz9RVaTFJLFuj8XDLRrqXBJw3aab+vVOy26MDJSCySKSO+ntVhTPfGwc/TqjHwX/tW9hWgbew77BvLxwxGKD28/8tZa25DkR81eGVtKhgL6kRxeFwKpqNCSYj0hMDrazPaiviHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b=KmuHJdlQ; arc=none smtp.client-ip=212.227.17.22
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="NTxkNRpr"
+	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="KmuHJdlQ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
-	s=s31663417; t=1705847402; x=1706452202; i=erick.archer@gmx.com;
-	bh=ROOPfL0J6ngi897r/UdZbHSKZB2DdN3Hw5gHQ/zsnqE=;
+	s=s31663417; t=1705851264; x=1706456064; i=erick.archer@gmx.com;
+	bh=brNXGMrVlHQm0RTaVV57rRuousVunDuYR0RflipHqy8=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-	b=NTxkNRprs2SBv/OSvlLRcN69DfsYjo/5fl2lc1vznHqj5JbsAqtQI6LeYBEdaEjo
-	 b3s0bjvWLlXV2LY0qHXdY2xCHYOrSpEpj0VTqt36w7OWua9yyNBfVhLkpNTMg6VIC
-	 bWNaYzSoeHO5QeMf19NgHU8W5ttlPTkylPcNh9Qc6zbkdOV70SrBFOQCoECNzKqMT
-	 MP1dkSXLZ0ab7GYWe9xqSlFYXsThbWldkl5FfETm7sw35wCkp/QZdWup/IDr3lmCn
-	 VOLU/+Fub9+6oNZPEkVLT8lCNcSsnDg8T2kGfvKyla7qny/iLmYP1E5dSVdLZ6wM/
-	 Mt0E28iB6Q1hs1uA3Q==
+	b=KmuHJdlQlra8yhaAZyRVaOdPR3Ngby1Ed8ytpQ5Bq8rhobq78LiTS9ylXCMReZ3C
+	 VTfK2XjAxxNXCSejEJ4S5ZOIn6BoPueQj982qXij68RaTc1wQLUWVOYeBV1HSofPF
+	 iFH+REEXdNBDADA1BHw6JGCCkXCBTJanTTCGTODKBqOUG3h2MmadKr06kldID1gXN
+	 11g9g5r4zmKsUB6DgcSbTQC8tfll1Pqd4CJ8sogALz62VqosyFkoUTMbg9nuQ4EGo
+	 kJ4gLDi0p5iISesO5zgSq0hZiRCCK5GmdxvLWdkO6qSPm9r2CCMnDS+ExofpE9AAk
+	 VRG8eR0YtYCk8J/T6g==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from localhost.localdomain ([79.157.194.183]) by mail.gmx.net
- (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1MPGW7-1rk4E03T8H-00PcNY; Sun, 21 Jan 2024 15:30:02 +0100
+ (mrgmx105 [212.227.17.174]) with ESMTPSA (Nemesis) id
+ 1MPogF-1rnu2e2t6J-00MxT2; Sun, 21 Jan 2024 16:34:23 +0100
 From: Erick Archer <erick.archer@gmx.com>
-To: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Nick Alcock <nick.alcock@oracle.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+To: Corentin Labbe <clabbe.montjoie@gmail.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Jonathan Corbet <corbet@lwn.net>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>
 Cc: Erick Archer <erick.archer@gmx.com>,
-	linux-clk@vger.kernel.org,
+	linux-crypto@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] clk: hisilicon: Use devm_kcalloc() instead of devm_kzalloc()
-Date: Sun, 21 Jan 2024 15:29:46 +0100
-Message-Id: <20240121142946.2796-1-erick.archer@gmx.com>
+Subject: [PATCH] crypto: sun8i-ce - Use kcalloc() instead of kzalloc()
+Date: Sun, 21 Jan 2024 16:34:07 +0100
+Message-Id: <20240121153407.8348-1-erick.archer@gmx.com>
 X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -54,26 +55,26 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:mkG9QVQaqmmilRWlxaI8ilR/37NfHtuvfZE2ItkuEK0LrE0cxTc
- fe2/xScnOEf62uIBHC1DDmUsK6fnhtUjCZMRB5g0E55awQFef6PfB4QHbU/zPqQfBSOXpHK
- nho0C1EXxCkWac3hDUKh8KgD0+iaNEa3V6egzZLKIlOaWpYYITln9MPi4fHOswCCgKDtZam
- 6+DVISAH1W5JatXHyY5qQ==
+X-Provags-ID: V03:K1:AxmzJ/LffrzzgeFylniD23yWMgGbXKe9NvmRSO8/IaOF4X9WL+d
+ /DWmNgnnIDNPKn+4YvnUGRfa05XZMxDTtrOLTZgJjgupSydDlEqj1LHneFwYJcShATqBTrX
+ AivO8CM9036cwP7d1/gHCHZkAka+MjAVDEsABxE9P+/Vti5yfy01GSpBSFmD6HviAWOqLCY
+ atPFM8X8JYu1RHSQkLkcA==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:+sTATPOEqmI=;uvPCLLHlmcGb+V5VSuymptM8i7/
- kYERBUseMuCyPa/4QDzhT8zZAw1IIxtBWfnlf9kErYqEhOi8qzoPJm3S5VFqVZkS5ROUikq73
- +xiqeYQLzQQigXgmRVHzk8iAaie7Ov5fKZjQWa17sI/p+SKyt5uLPGnszBBZNdcKo1iRHiRX7
- j2pqrdNlvxIU2MfkkTBwwNYbkb7gjaGPw4rqYUd62TGZfqPfQdJU3S27MuzbK2QtW2qqk2gsF
- flYGfG2P/RfnJQJWbXTS4lVX1IGQ2Z2IUcbkdDUhwKUGgV6HR8V0QbudpFmUzDHY+kG9GN484
- usEZh/i+zvloXy/KaCelyX4xTg1lXXcsb4N8cwnLamvHUW0XQvStIwZhvtnnaBuGqonjxvcze
- YkvlmXkKkHLwVYX2yyQdRXCLn/+Z9bvqXGDWXlYfqa4DHOJBV8DBzWiScbppnCDiQqHXLkg3F
- bKeVjDmisoNESxmIO3Z55maiCY/C9JdhV2rJFdv/Z/33Wzqoeyf5sFxikCqApc1Wp/aujjLns
- 5FGYMMKzVp7IHo0mCcs3wTHYJBLyry8iHg018a450PJmQ+T8rd/VbnEf9ODIneGY26eSfyYEk
- hssiFn05anjoM0NdmWwfdEgXgB41dymEjj4rpT98xltvR13uMMoaGBB4+tqDZ74v69zV+OhU3
- vvMott3tGS4AqLLFMBIPunYVV7K0kYaRVQAjGmPMPiFcj8t/GLiL4+PYmejHKXQZyzRbLA5Rk
- m8aKDawhVbMV00umLD9WRC8VfDr8jIr84YRAMytEy1YMiUPs0/8lL07iLjpOUXxpa0vAdgo8j
- UUAtzAj2WAj9srWtidyYUZB+/BwneICMhEjDMgr+UDWK9TILIkHdV2sW0Z629lhoz2qAGP3sZ
- zUd654IjDMWB9JN48Cj6ECFE4v1wCvQNIBbd4b8hxYIAwqKkBiF6mKMzwYt8i2sVMb73EbI8v
- 7AAXy7/SgclrU4szShvSCOZCWhw=
+UI-OutboundReport: notjunk:1;M01:P0:ulWb1d2L0TE=;hYsmrUzpdwDFSW+AMoveAoIAKmi
+ hoOwXEc5Iyju+CMavqgtB57Li72O4ujobrkofQU/21lrm+3ecyxP3PAoCsUV9X1isK0whSuk2
+ 1ZnfQjLB666SFEO8aKfLunD9L139jR+d1Mf/RvvjIrkaBHpvrlgB47r1GrzBv2yN5HntIvWVz
+ ArdE3vfwOcNn4cznxYKjm1BtZalPRQ3+5m6l/OGYyogrOc7lf/9iLRfLmcsVSoKtMepyBV/g1
+ xeo+wrvKzrc4SGIIExIypk8kYqKBRPO1wLwJ/GnSmHHN+ln+Arev+U29vSVd6fO8MJBXnjlXp
+ ztjmBU4XS7Xjhm0Sa1p2FHMRtCu7hRIR1xOOl0mT2VTnpcIg3bP4CAYqPT5XSKuzCirc82Kqn
+ V796rmPSpugtqJUHQgIol56B2pxIgECyK8oTfSgHk1IRUtEJIupVGtbt9FWHTbMQcxRYzow85
+ qIPBK03qa0Oxkxtcvoy3SG1ZmCsrtSz/bs/mUL6/pE7osNX2SaNKmC9czDCLK3SttRVrHOAha
+ r6lCYBTLqsEwabEimIrHud/aqloiazTBwcXYzvtIpZWKObubkJwIy83KCEiuaIqEC4kOuDxHt
+ +E3t+JWmPuz4fyUi1gv1jrUCqrq85OKrzwnwdTnNMcsug29YlwhB43+zf2X5XNVglcRBAtrE1
+ XpUAgvDnVV4giGynv8zMI8QEKvpllBPbhPBRY83aG/zQ7zcsVdpitd1JXYFVaMbKp4enNJa/S
+ dyYzYPa/eWYQmHF7NtDhEylxY9E3kiJkf2Is84qFzvaIwJBB5KzTxopTzgW+0BRHjWTroCSYg
+ SQlxXAVIBy9H5PMuyhIOjkGJoYHLeRx4royhzG1wI/EYiTDeoTgcYrTrM5tzSQsJ7BSYphMXV
+ PlcKjj7I/2bo/HCTxkOCF5cKbPxC8QBI2OaMoEUn3Sz1/3y7WEJBAkjXuHG5MJeljVpWhmQf6
+ 6cXOOEgbvK5OW548Mp0d0hwQkCI=
 
 As noted in the "Deprecated Interfaces, Language Features, Attributes,
 and Conventions" documentation [1], size calculations (especially
@@ -83,33 +84,32 @@ to values wrapping around and a smaller allocation being made than the
 caller was expecting. Using those allocations could lead to linear
 overflows of heap memory and other misbehaviors.
 
-So, use the purpose specific devm_kcalloc() function instead of the
-argument size * count in the devm_kzalloc() function.
+So, use the purpose specific kcalloc() function instead of the argument
+size * count in the kzalloc() function.
 
 Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-co=
 ded-arithmetic-in-allocator-arguments [1]
 Link: https://github.com/KSPP/linux/issues/162
 Signed-off-by: Erick Archer <erick.archer@gmx.com>
 =2D--
- drivers/clk/hisilicon/clk-hi3559a.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/crypto/allwinner/sun8i-ce/sun8i-ce-hash.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/hisilicon/clk-hi3559a.c b/drivers/clk/hisilicon/c=
-lk-hi3559a.c
-index ff4ca0edce06..da476f940326 100644
-=2D-- a/drivers/clk/hisilicon/clk-hi3559a.c
-+++ b/drivers/clk/hisilicon/clk-hi3559a.c
-@@ -461,8 +461,7 @@ static void hisi_clk_register_pll(struct hi3559av100_p=
-ll_clock *clks,
- 	struct clk_init_data init;
- 	int i;
+diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-hash.c b/drivers/c=
+rypto/allwinner/sun8i-ce/sun8i-ce-hash.c
+index d358334e5981..ee2a28c906ed 100644
+=2D-- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-hash.c
++++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-hash.c
+@@ -362,7 +362,7 @@ int sun8i_ce_hash_run(struct crypto_engine *engine, vo=
+id *breq)
+ 		digestsize =3D SHA512_DIGEST_SIZE;
 
--	p_clk =3D devm_kzalloc(dev, sizeof(*p_clk) * nums, GFP_KERNEL);
--
-+	p_clk =3D devm_kcalloc(dev, nums, sizeof(*p_clk), GFP_KERNEL);
- 	if (!p_clk)
- 		return;
-
+ 	/* the padding could be up to two block. */
+-	buf =3D kzalloc(bs * 2, GFP_KERNEL | GFP_DMA);
++	buf =3D kcalloc(2, bs, GFP_KERNEL | GFP_DMA);
+ 	if (!buf) {
+ 		err =3D -ENOMEM;
+ 		goto theend;
 =2D-
 2.25.1
 
