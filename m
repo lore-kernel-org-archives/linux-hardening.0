@@ -1,73 +1,115 @@
-Received: from mx4.wp.pl (mx4.wp.pl [212.77.101.11])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD42374FB
-	for <linux-hardening@vger.kernel.org>; Sun, 21 Jan 2024 12:41:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.77.101.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 528383C26;
+	Sun, 21 Jan 2024 14:30:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705840922; cv=none; b=YAuWrhp2ZW7yhttTlOw7g1AY69eh1I39j7aND/1nm72xeGMwdj379H38sf2+PDp/6JsKGgen53njjZ587NiZ8VDSMAHGq5hhDRzZL35UMGplaarTtHwYKzp7neCVcDfeeudaNKDBt8q1YpDJTpaJ3EBhskVCyqssn9jj4mbgC6E=
+	t=1705847424; cv=none; b=kYFUMDa9aFQre6xS9uJvN5CU7fQ0gfXFyl/Oxnj82rNjeKAHgcFL4E3/XtRkH7GDt+cRvykx4e3D67tHRm0/F9k8Njsw1p9uiAM28d7pJxI+g1fM6TKKBqAndAbq8ktq5BYe4s1556EZGRSS4isLb2BB4QUCDblKaWN0U5AZQCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705840922; c=relaxed/simple;
-	bh=o1t6NlrqghyU9rGMUDhTLRcjKyBZkUM9u1OELKMcUQQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AYO0Z0IAmuRR4Sif83UYqKkkKpfin9SKusBSu43VgbW4b6IyVrWGc4F8theVgnF3Besg3iXzgS2tXbaE4E4+kcUBoxOnivoj3MKsCYdqu2jKG6LJMdSGH4QihkhKzKsYD4LuISPnoLCVKLpwPKFNnV8dSBRaQw0MkhRyyBT9Ve8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl; spf=pass smtp.mailfrom=wp.pl; dkim=pass (1024-bit key) header.d=wp.pl header.i=@wp.pl header.b=GakjS08x; arc=none smtp.client-ip=212.77.101.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wp.pl
+	s=arc-20240116; t=1705847424; c=relaxed/simple;
+	bh=ROOPfL0J6ngi897r/UdZbHSKZB2DdN3Hw5gHQ/zsnqE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=K57wmqb5iGA8jstEQiMEH7zNXeS5hNpTqOby9/+1b2CzmaGmTH9joUYIXQ5WMpGUEPgVksTBBvGb6/0E8wjg3Qqp5ykgszF8cPVI8Zb4fD+ieCMF2VeQfCpSBi9iXDGRcMforHr+xMBIq7IGsyecv0SBz1clPHEQ56BEDdkwSKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b=NTxkNRpr; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=wp.pl header.i=@wp.pl header.b="GakjS08x"
-Received: (wp-smtpd smtp.wp.pl 30448 invoked from network); 21 Jan 2024 13:15:17 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
-          t=1705839317; bh=xTrv3uIUbt6UuXd8Zd/SNP2Yl4s8u6K1/Z6BTJI5wkQ=;
-          h=From:To:Cc:Subject;
-          b=GakjS08xiD3ByYQHOhS491W/hV1pCZ0oyXWx5lYFdSbHZaxa0gC1shzQh0dLP9evs
-           tAOTN0CcpJ5XUc+7OkBCLF7fpV80V4MTt0vhyUO0Nq/E70irZ4m2z4EdlWr4ZWkb7g
-           jQ1R5RsThmRD4jqKpOx7Be1ogz4bE8C6p+u/YU0k=
-Received: from 89-64-3-131.dynamic.chello.pl (HELO localhost) (stf_xl@wp.pl@[89.64.3.131])
-          (envelope-sender <stf_xl@wp.pl>)
-          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <erick.archer@gmx.com>; 21 Jan 2024 13:15:17 +0100
-Date: Sun, 21 Jan 2024 13:15:17 +0100
-From: Stanislaw Gruszka <stf_xl@wp.pl>
-To: Erick Archer <erick.archer@gmx.com>
-Cc: Kalle Valo <kvalo@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="NTxkNRpr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
+	s=s31663417; t=1705847402; x=1706452202; i=erick.archer@gmx.com;
+	bh=ROOPfL0J6ngi897r/UdZbHSKZB2DdN3Hw5gHQ/zsnqE=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=NTxkNRprs2SBv/OSvlLRcN69DfsYjo/5fl2lc1vznHqj5JbsAqtQI6LeYBEdaEjo
+	 b3s0bjvWLlXV2LY0qHXdY2xCHYOrSpEpj0VTqt36w7OWua9yyNBfVhLkpNTMg6VIC
+	 bWNaYzSoeHO5QeMf19NgHU8W5ttlPTkylPcNh9Qc6zbkdOV70SrBFOQCoECNzKqMT
+	 MP1dkSXLZ0ab7GYWe9xqSlFYXsThbWldkl5FfETm7sw35wCkp/QZdWup/IDr3lmCn
+	 VOLU/+Fub9+6oNZPEkVLT8lCNcSsnDg8T2kGfvKyla7qny/iLmYP1E5dSVdLZ6wM/
+	 Mt0E28iB6Q1hs1uA3Q==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from localhost.localdomain ([79.157.194.183]) by mail.gmx.net
+ (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1MPGW7-1rk4E03T8H-00PcNY; Sun, 21 Jan 2024 15:30:02 +0100
+From: Erick Archer <erick.archer@gmx.com>
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Dinh Nguyen <dinguyen@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Nick Alcock <nick.alcock@oracle.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Erick Archer <erick.archer@gmx.com>,
+	linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] wifi: iwlegacy: Use kcalloc() instead of kzalloc()
-Message-ID: <20240121121517.GA52639@wp.pl>
-References: <20240119171655.7740-1-erick.archer@gmx.com>
+Subject: [PATCH] clk: hisilicon: Use devm_kcalloc() instead of devm_kzalloc()
+Date: Sun, 21 Jan 2024 15:29:46 +0100
+Message-Id: <20240121142946.2796-1-erick.archer@gmx.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240119171655.7740-1-erick.archer@gmx.com>
-X-WP-MailID: 7942f6e91f609b762a6db31f482acad3
-X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
-X-WP-SPAM: NO 0000000 [YQPE]                               
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:mkG9QVQaqmmilRWlxaI8ilR/37NfHtuvfZE2ItkuEK0LrE0cxTc
+ fe2/xScnOEf62uIBHC1DDmUsK6fnhtUjCZMRB5g0E55awQFef6PfB4QHbU/zPqQfBSOXpHK
+ nho0C1EXxCkWac3hDUKh8KgD0+iaNEa3V6egzZLKIlOaWpYYITln9MPi4fHOswCCgKDtZam
+ 6+DVISAH1W5JatXHyY5qQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:+sTATPOEqmI=;uvPCLLHlmcGb+V5VSuymptM8i7/
+ kYERBUseMuCyPa/4QDzhT8zZAw1IIxtBWfnlf9kErYqEhOi8qzoPJm3S5VFqVZkS5ROUikq73
+ +xiqeYQLzQQigXgmRVHzk8iAaie7Ov5fKZjQWa17sI/p+SKyt5uLPGnszBBZNdcKo1iRHiRX7
+ j2pqrdNlvxIU2MfkkTBwwNYbkb7gjaGPw4rqYUd62TGZfqPfQdJU3S27MuzbK2QtW2qqk2gsF
+ flYGfG2P/RfnJQJWbXTS4lVX1IGQ2Z2IUcbkdDUhwKUGgV6HR8V0QbudpFmUzDHY+kG9GN484
+ usEZh/i+zvloXy/KaCelyX4xTg1lXXcsb4N8cwnLamvHUW0XQvStIwZhvtnnaBuGqonjxvcze
+ YkvlmXkKkHLwVYX2yyQdRXCLn/+Z9bvqXGDWXlYfqa4DHOJBV8DBzWiScbppnCDiQqHXLkg3F
+ bKeVjDmisoNESxmIO3Z55maiCY/C9JdhV2rJFdv/Z/33Wzqoeyf5sFxikCqApc1Wp/aujjLns
+ 5FGYMMKzVp7IHo0mCcs3wTHYJBLyry8iHg018a450PJmQ+T8rd/VbnEf9ODIneGY26eSfyYEk
+ hssiFn05anjoM0NdmWwfdEgXgB41dymEjj4rpT98xltvR13uMMoaGBB4+tqDZ74v69zV+OhU3
+ vvMott3tGS4AqLLFMBIPunYVV7K0kYaRVQAjGmPMPiFcj8t/GLiL4+PYmejHKXQZyzRbLA5Rk
+ m8aKDawhVbMV00umLD9WRC8VfDr8jIr84YRAMytEy1YMiUPs0/8lL07iLjpOUXxpa0vAdgo8j
+ UUAtzAj2WAj9srWtidyYUZB+/BwneICMhEjDMgr+UDWK9TILIkHdV2sW0Z629lhoz2qAGP3sZ
+ zUd654IjDMWB9JN48Cj6ECFE4v1wCvQNIBbd4b8hxYIAwqKkBiF6mKMzwYt8i2sVMb73EbI8v
+ 7AAXy7/SgclrU4szShvSCOZCWhw=
 
-On Fri, Jan 19, 2024 at 06:16:55PM +0100, Erick Archer wrote:
-> As noted in the "Deprecated Interfaces, Language Features, Attributes,
-> and Conventions" documentation [1], size calculations (especially
-> multiplication) should not be performed in memory allocator (or similar)
-> function arguments due to the risk of them overflowing. This could lead
-> to values wrapping around and a smaller allocation being made than the
-> caller was expecting. Using those allocations could lead to linear
-> overflows of heap memory and other misbehaviors.
-> 
-> So, use the purpose specific kcalloc() function instead of the argument
-> size * count in the kzalloc() function.
-> 
-> Also, it is preferred to use sizeof(*pointer) instead of sizeof(type)
-> due to the type of the variable can change and one needs not change the
-> former (unlike the latter).
-> 
-> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
-> Link: https://github.com/KSPP/linux/issues/162
-> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+As noted in the "Deprecated Interfaces, Language Features, Attributes,
+and Conventions" documentation [1], size calculations (especially
+multiplication) should not be performed in memory allocator (or similar)
+function arguments due to the risk of them overflowing. This could lead
+to values wrapping around and a smaller allocation being made than the
+caller was expecting. Using those allocations could lead to linear
+overflows of heap memory and other misbehaviors.
 
-Acked-by: Stanislaw Gruszka <stf_xl@wp.pl>
+So, use the purpose specific devm_kcalloc() function instead of the
+argument size * count in the devm_kzalloc() function.
+
+Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-co=
+ded-arithmetic-in-allocator-arguments [1]
+Link: https://github.com/KSPP/linux/issues/162
+Signed-off-by: Erick Archer <erick.archer@gmx.com>
+=2D--
+ drivers/clk/hisilicon/clk-hi3559a.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/clk/hisilicon/clk-hi3559a.c b/drivers/clk/hisilicon/c=
+lk-hi3559a.c
+index ff4ca0edce06..da476f940326 100644
+=2D-- a/drivers/clk/hisilicon/clk-hi3559a.c
++++ b/drivers/clk/hisilicon/clk-hi3559a.c
+@@ -461,8 +461,7 @@ static void hisi_clk_register_pll(struct hi3559av100_p=
+ll_clock *clks,
+ 	struct clk_init_data init;
+ 	int i;
+
+-	p_clk =3D devm_kzalloc(dev, sizeof(*p_clk) * nums, GFP_KERNEL);
+-
++	p_clk =3D devm_kcalloc(dev, nums, sizeof(*p_clk), GFP_KERNEL);
+ 	if (!p_clk)
+ 		return;
+
+=2D-
+2.25.1
+
