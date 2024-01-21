@@ -1,121 +1,169 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B942B36114;
-	Sun, 21 Jan 2024 03:24:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF6AD2FA;
+	Sun, 21 Jan 2024 10:02:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705807456; cv=none; b=XGEpR1jFtY8vH0mW/oLr7Bcgwp9FYRrc96+Q67lAIHQ8wyxt+G+8f63JwZfaiOTK/A+cV++QctoB960XxTiSm7Nb5avKIG1/BAGTtp259BCQkY1X4TmAvscmvfE6hRSrcRmaRK9aWIKlJ1U1VtPM9AvouFPCcRNk1YWtRGcw2QI=
+	t=1705831361; cv=none; b=L4ihGjH4fZrrdSp4SsoVZ+6QeLCMLkBGxkqig5khGUMkb0afcxhZBqqSGKTTHQDHcFG2nEJy8xk34ik7u6pOUVWwVnD/yr0XFbJjce6sN8IkZcDZ/+dbzPbN2weY/9qqXP6FEZAXHMNS06Jrrr9W3CNqRmlbeKVNzMiQx3sQOEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705807456; c=relaxed/simple;
-	bh=wcmf/aOorBM5e7eQSiImvkWOPTSRCqUlnSV1FKys9QQ=;
+	s=arc-20240116; t=1705831361; c=relaxed/simple;
+	bh=FMFyYwfHVwyPvjx6pt5kG1PX507Umfc+6g7d7Tbpqmo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K+nVGh1QInGc1yvqEKnNOVojsI+CRt2w6LXBnwdl0uQ1ZRZtSUeKOIzq0McGj7/9ox/OxKDHmbH+h2DRnfXdu3kwpKdiv/kpkS+q3ik/7yYmRY/+IEvxTltQlx6EVK3pSxumkWD1rIs52XJT1Gz8L2CmZmMCI4wtJ2Pq7GU/qF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=GHwiI4R9; arc=none smtp.client-ip=95.215.58.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qr81/IwoPqZuoCNhEnvuzO024Ow624Q7OJ4uCeMD1pDC/vVClCndoQsiW12vwKI756LCEvp6xVZToGZGeiQSMwcxnZKsfdqrvx5D/czn4sex8tPa0e3VgG0SXlcPjUMSdlhPwubFA+fUgZC5AJyGjIlOje8xwqRaPevlalA+F/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b=ReGq1PgB; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="GHwiI4R9"
-Date: Sat, 20 Jan 2024 22:24:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1705807452;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jOpZnzgSpAJpw2OiDuuykdPLSgVkSPFMKVCSLSDMYA0=;
-	b=GHwiI4R9s3oMIchWXoZL1K2QaxLiHwJ45PB40kYV+CAscT3//oXAZ/GAF86O0AOVo0qKeM
-	xmA9YmJ3WHV5pINHYzj0AYFy+uj/wbQtyDZ+4fqvcddZTl5wm21gEO3JVou06KGBwplPBM
-	/Z0/M2yrFKefmw73jUgfCKHM74IvnAc=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Mark Brown <broonie@kernel.org>
-Cc: James Bottomley <James.Bottomley@hansenpartnership.com>, 
-	Theodore Ts'o <tytso@mit.edu>, Greg KH <greg@kroah.com>, Neal Gompa <neal@gompa.dev>, 
-	Kees Cook <keescook@chromium.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, Nikolai Kondrashov <spbnick@gmail.com>, 
-	Philip Li <philip.li@intel.com>, Luis Chamberlain <mcgrof@kernel.org>
-Subject: Re: [GIT PULL] bcachefs updates for 6.8
-Message-ID: <vm5fwfqtqoy5yl37meflf4yrmzotyi5aszouwthfv6q7nrtxhq@oucmld5ak4uo>
-References: <f8023872-662f-4c3f-9f9b-be73fd775e2c@sirena.org.uk>
- <olmilpnd7jb57yarny6poqnw6ysqfnv7vdkc27pqxefaipwbdd@4qtlfeh2jcri>
- <CAEg-Je8=RijGLavvYDvw3eOf+CtvQ_fqdLZ3DOZfoHKu34LOzQ@mail.gmail.com>
- <40bcbbe5-948e-4c92-8562-53e60fd9506d@sirena.org.uk>
- <2uh4sgj5mqqkuv7h7fjlpigwjurcxoo6mqxz7cjyzh4edvqdhv@h2y6ytnh37tj>
- <2024011532-mortician-region-8302@gregkh>
- <lr2wz4hos4pcavyrmswpvokiht5mmcww2e7eqyc2m7x5k6nbgf@6zwehwujgez3>
- <20240117055457.GL911245@mit.edu>
- <5b7154f86913a0957e0518b54365a1b0fce5fbea.camel@HansenPartnership.com>
- <c69a3103-ae4d-459a-b5f4-d3bbe2af6fb2@sirena.org.uk>
+	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="ReGq1PgB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
+	s=s31663417; t=1705831337; x=1706436137; i=erick.archer@gmx.com;
+	bh=FMFyYwfHVwyPvjx6pt5kG1PX507Umfc+6g7d7Tbpqmo=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:
+	 In-Reply-To;
+	b=ReGq1PgBtBmVHFl5oyVGSS7A9xIEYgi6jvCiB1UVuaMA/hiFlbH4b7HAgOtYYfEY
+	 qgTgk1XF8M7qvHihLStkDMYMiCH8rq/1VDbfKYpERl6ysXzgjBApxWJI5bcuBPLgp
+	 a2acYOMRshhn6KxJR7jj3VAiDrlbw9ym+PR9M8vIi4FswjSbozNgANhwzyttztPB3
+	 X8yiGRO7Tl6VpTtTs8wDXbKr0bmCDtFAdhqyX8B1Tqc8wY1nG+/c0MM23AWdrO+k9
+	 KXYugAd44zU/La6hpDTwgTjGLKnEjOaRknhy2dOhgFIEFVyxj64/ZiBAHMWr77YkZ
+	 KFwwddxpiUf8zK4Phw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from titan ([79.157.194.183]) by mail.gmx.net (mrgmx105
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1Mel3t-1qrKtI0Sjl-00alkP; Sun, 21
+ Jan 2024 11:02:17 +0100
+Date: Sun, 21 Jan 2024 11:02:00 +0100
+From: Erick Archer <erick.archer@gmx.com>
+To: Hu Haowen <2023002089@link.tyut.edu.cn>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: Erick Archer <erick.archer@gmx.com>, Alex Shi <alexs@kernel.org>,
+	Yanteng Si <siyanteng@loongson.cn>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] docs/zh_CN/power: Use kcalloc() instead of kzalloc()
+Message-ID: <20240121100200.GA2790@titan>
+References: <20240120122204.4287-1-erick.archer@gmx.com>
+ <a567932c-d878-44e5-836f-90fa15999ba6@link.tyut.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <c69a3103-ae4d-459a-b5f4-d3bbe2af6fb2@sirena.org.uk>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <a567932c-d878-44e5-836f-90fa15999ba6@link.tyut.edu.cn>
+X-Provags-ID: V03:K1:tmBTpr5C/7J3nUOCUFtcx1Io4AKYQYgyFXKIFHQt1S7l9VaSvqH
+ BiUnQ/5KH7dGSyCbEtHit7UM212DY+MeaD6Bd/gLESkBVxfItTBUkVm81+iNWcI+A9PZ1EH
+ CvkyiRH+JebAfBfg0Oj/UjRsR3zcLU3SKxdI5zCzGY7fUtvWYXBK6tZBqFJNNjWN7N/rdAy
+ XhXF36i7iBXMc8XSeqmsg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:+f0LBdijmAA=;RUTWIuVqfR+NAd2kYjIN1CUlEnB
+ H3InGi9HvBi0RB90KCz6DV7IZGN3GxaPBX6+uKGrmclTylNYOHIWSKAb032X+QWTZKE00sqXg
+ vBxemqr6mF1+Newxeuvu0Q9lkiVZLPMtMMvFZ/vuI3ZwBc8+JXNxvkpcV3Fe8PQ/jRZzZVPQL
+ BPOuj5fH8HiycbXQoRYFM+5Ki/MGLbgSA5zEw2nHkqNEvQTwp+46UnnDrE9ZvNq6KVxUQuc6Q
+ POr8yNhoLQDEpeRZ1B1RdFm252733DPEPGhVluJPvGeoFVqzaoQGJCiH9GTB3dNpQoQsgo1yr
+ cPNK1eW7MdLCaSWWd/oJ0Adv11eda75B2BbPPqO5FbJvOcOWHHm+47IOPToNi+aFQyIyxyp2q
+ z7rMxfkgGLyyAuroYThXl9n5CLqPC+ORiV9fsbeVBL2tFr0Varwr3cFoAG3SESFHPAcyEBKdh
+ PnGRXPzMVPyGkxFdr5kcQIJ0SrAJG1pdpcxsc5eKMgCu96ZhBc/dtQKVC+UmWQBBlULLjGuOv
+ Z9zTnmw9Vrd5EhoX2tWoKspi0p05u4IDptC+P1G8mrT7iL3YTNqwkowq5tk6wo08QCW7PHODQ
+ GESDGLHyxNyItYlEv5MGYS+V64jQZmE62PanG86B6Q3Mw/EsBnExoZk+YsR9KF8ZNHEOmaGY+
+ GMVQpXcDhPx49Ju78ewjUSx6g2jHpZgKVseYVfCbWdV0Z6cszCH9ViOxf4+fap6WqFJVIzeR4
+ NZIFpfV0reyivx1o+zi6yJwiBsrXzfurjwkv7y6aVrCsT6Gg5QqMLSX4X3DV5AvLR+1qewYGM
+ PumIJYITvNxoNo4uJTieGRLhEgzHfLsnnkm+qscLS/zh/is0cVGEtIHCCDlVUBXCxbu3/aQ+b
+ A0ceYE8kCdy+1DlXcUuUzPf7RGVJgbZ2du10tq0zRHd04LMyU2c5H/j0Utghjbn9o0f8kyfbX
+ /02jL/jzM7RO+1DgPuG+hPCzW+Y=
 
-On Wed, Jan 17, 2024 at 06:19:43PM +0000, Mark Brown wrote:
-> On Wed, Jan 17, 2024 at 08:03:35AM -0500, James Bottomley wrote:
-> 
-> > I also have to say, that for all the complaints there's just not any
-> > open source pull for test tools (there's no-one who's on a mission to
-> > make them better).  Demanding that someone else do it is proof of this
-> > (if you cared enough you'd do it yourself).  That's why all our testing
-> > infrastructure is just some random set of scripts that mostly does what
-> > I want, because it's the last thing I need to prove the thing I
-> > actually care about works.
-> 
-> > Finally testing infrastructure is how OSDL (the precursor to the Linux
-> > foundation) got started and got its initial funding, so corporations
-> > have been putting money into it for decades with not much return (and
-> > pretty much nothing to show for a unified testing infrastructure ...
-> > ten points to the team who can actually name the test infrastructure
-> > OSDL produced) and have finally concluded it's not worth it, making it
-> > a 10x harder sell now.
-> 
-> I think that's a *bit* pessimistic, at least for some areas of the
-> kernel - there is commercial stuff going on with kernel testing with
-> varying degrees of community engagement (eg, off the top of my head
-> Baylibre, Collabora and Linaro all have offerings of various kinds that
-> I'm aware of), and some of that does turn into investments in reusable
-> things rather than proprietary stuff.  I know that I look at the
-> kernelci.org results for my trees, and that I've fixed issues I saw
-> purely in there.  kselftest is noticably getting much better over time,
-> and LTP is quite active too.  The stuff I'm aware of is more focused
-> around the embedded space than the enterprise/server space but it does
-> exist.  That's not to say that this is all well resourced and there's no
-> problem (far from it), but it really doesn't feel like a complete dead
-> loss either.
+Hi Hu and Jonathan,
 
-kselftest is pretty exciting to me; "collect all our integration tests
-into one place and start to standarize on running them" is good stuff.
+On Sat, Jan 20, 2024 at 10:24:42PM +0800, Hu Haowen wrote:
+>
+> =E5=9C=A8 2024/1/20 20:22, Erick Archer =E5=86=99=E9=81=93:
+> > As noted in the "Deprecated Interfaces, Language Features, Attributes,
+> > and Conventions" documentation [1], size calculations (especially
+> > multiplication) should not be performed in memory allocator (or simila=
+r)
+> > function arguments due to the risk of them overflowing. This could lea=
+d
+> > to values wrapping around and a smaller allocation being made than the
+> > caller was expecting. Using those allocations could lead to linear
+> > overflows of heap memory and other misbehaviors.
+> >
+> > So, in the example code use the purpose specific kcalloc() function
+> > instead of the argument size * count in the kzalloc() function.
+> >
+> > Link: https://www.kernel.org/doc/html/next/process/deprecated.html#ope=
+n-coded-arithmetic-in-allocator-arguments [1]
+> > Link: https://github.com/KSPP/linux/issues/162
+> > Signed-off-by: Erick Archer <erick.archer@gmx.com>
+> > ---
+> >   Documentation/translations/zh_CN/power/opp.rst | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/translations/zh_CN/power/opp.rst b/Document=
+ation/translations/zh_CN/power/opp.rst
+> > index 8d6e3f6f6202..7470fa2d4c43 100644
+> > --- a/Documentation/translations/zh_CN/power/opp.rst
+> > +++ b/Documentation/translations/zh_CN/power/opp.rst
+> > @@ -274,7 +274,7 @@ dev_pm_opp_get_opp_count
+> >   	 {
+> >   		/* =E5=81=9A=E4=B8=80=E4=BA=9B=E4=BA=8B=E6=83=85 */
+> >   		num_available =3D dev_pm_opp_get_opp_count(dev);
+> > -		speeds =3D kzalloc(sizeof(u32) * num_available, GFP_KERNEL);
+> > +		speeds =3D kcalloc(num_available, sizeof(u32), GFP_KERNEL);
+>
+>
+> If the translated version is modified, I think the original file should
+> follow as well at Documentation/power/opp.rst line 308:
+>
+> diff --git a/Documentation/power/opp.rst b/Documentation/power/opp.rst
+> index a7c03c470980..dca35018214a 100644
+> --- a/Documentation/power/opp.rst
+> +++ b/Documentation/power/opp.rst
+> @@ -305,7 +305,7 @@ dev_pm_opp_get_opp_count
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 /* Do things */
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 num_available =3D dev_pm_opp_get_opp_count(dev);
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 speeds =3D kzalloc(sizeof(u32) * num_available, GFP_KERNEL=
+);
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 speeds =3D kcalloc(sizeof(u32) * num_available, GFP_KERNEL=
+);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 /* populate the table in increasing order */
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 freq =3D 0;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 while (!IS_ERR(opp =3D dev_pm_opp_find_freq_ceil(dev, &=
+freq)))
+> {
 
-You seem to be pretty familiar with all the various testing efforts, I
-wonder if you could talk about what you see that's interesting and
-useful in the various projects?
+As you both suggested, this change should be made if the original file is
+changed. Therefore, before this patch I already sent another one [1] that
+made the proposed changes to the original file.
 
-I think a lot of this stems from a lack of organization and a lack of
-communication; I see a lot of projects reinventing things in slightly
-different ways and failing to build off of each other.
+[1] https://lore.kernel.org/linux-hardening/20240120120527.3866-1-erick.ar=
+cher@gmx.com/
 
-> Some of the issues come from the different questions that people are
-> trying to answer with testing, or the very different needs of the
-> tests that people want to run - for example one of the reasons
-> filesystems aren't particularly well covered for the embedded cases is
-> that if your local storage is SD or worse eMMC then heavy I/O suddenly
-> looks a lot more demanding and media durability a real consideration.
+But if you prefer, I can send just one patch with the two changes.
 
-Well, for filesystem testing we (mostly) don't want to be hammering on
-an actual block device if we can help it - there are occasionally bugs
-that will only manifest when you're testing on a device with realistic
-performance characteristics, and we definitely want to be doing some
-amount of performance testing on actual devices, but most of our testing
-is best done in a VM where the scratch devices live entirely in dram on
-the host.
+Best regards,
+Erick
 
-But that's a minor detail, IMO - that doesn't prevent us from having a
-common test runner for anything that doesn't need special hardware.
+>
+> Thanks,
+> Hu Haowen
+>
+>
+> >   		/* =E6=8C=89=E5=8D=87=E5=BA=8F=E5=A1=AB=E5=85=85=E8=A1=A8 */
+> >   		freq =3D 0;
+> >   		while (!IS_ERR(opp =3D dev_pm_opp_find_freq_ceil(dev, &freq))) {
+> > --
+> > 2.25.1
+> >
+> >
+> >
