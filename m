@@ -1,116 +1,99 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CCE03B191
-	for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 08:52:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC8E639AF2
+	for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 09:48:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705913558; cv=none; b=YuHuP0oXVJkm5ctN/fB3bh1B+LBBpgu1Bv5B3HESiVAxf00tdscWjp1r14CK/SMSkoaQf319MZ11WWzmQoZBmtPUf/JENNRaiKsIpCWzHVzAR/Nv0JqmOe7qiYg59hI3iDq9VVOz3XOwFhrYeWD+ATLRFir9i3AK4xRz8D8nAC0=
+	t=1705916908; cv=none; b=NYRK5O0V03W4vOZFs7wlHYNPpQ62tG9AT0CxPvg738bQ5XYqyYqlyAQKUXBfjpsQShWC52o5Occ8eL4ZhaLSkRNZh/8T8Q6Qc6PGPRIV3MnVSPo3yxcCJPdZPW+R9nCIh9+BqE+B6Tz4tkt4mn79/hxXJ8+7VACPgwRt6yK1NXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705913558; c=relaxed/simple;
-	bh=SAvwupzHZ8fTdQG9uVBatImfaNOaWKZmEUWtiZJM6oU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FNBngRY4wZ57InsreLCvNmSKjt8OEVpltXsu0uSSjUE9prkWZClempZHF+ZLv7m7tGoXWAwLQEE1Q+RrHixiz/pj5qzfkjOgU/Xgw1dgNBmScMe1a9WQ4yMqikVIgtNxh46dLkC6KUiZLeSYFqh62g7IkB6llbgkhyHvWs8pdBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=fieyY9GM; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1705916908; c=relaxed/simple;
+	bh=nFSMEq+YJlWNxDmSP5UoykYt+A3vlhNusWRjj7vzg1U=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=CFqBB+wtT4dm2+jEC616PBgdkqsyAGBPvrjUbQ194quINhagmBPROGqJyn/gEzlUAiVrZqT4tRQfVYYcnLuVOi6mDVfNlhXvb/d/Pv+/9rVxZGA5Pk90buPjSH4AI4z2CFGqOqWed68VpeCj+LPXbr0ItlX6LO9fDxMIQb56s1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dtXfWh4c; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="fieyY9GM"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-336c8ab0b20so2907359f8f.1
-        for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 00:52:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1705913554; x=1706518354; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kDgjWNmpHGcLjhWhbYgEl2BM2gqjNGoDHZlZQG5Aexw=;
-        b=fieyY9GM76gpyRKU4xxFyfPLHAXZOr0DY4pLpF2gZ8uCKPZ/MeN8wdddDnO1pHyasE
-         mCsZBNv9V4LSQcDYxVyNjeyc+is65wuVyTKWIDBpPFgx/+5nRYnrMcq9Y6Hdf7ZKluOJ
-         mQvHgioR8T7CWspNyaQ/s3P3/EtjWMyHhHsm1t6KCP+1+sXcQwmMkiJH6gQKLDHenOzd
-         FSOCGQGqwfM4Di/Pz9B3lx7NPJRtYZ+desEFAQyLAoYoDKwX6ujAmzBDEgMa0vYy3gN1
-         cEbpRFeBbi1q3uNgiVsCkKxHMRseAdfSf+PX4SFyeogRkRpS96DNEsCzX7hmrbYmIsZg
-         YTng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705913554; x=1706518354;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kDgjWNmpHGcLjhWhbYgEl2BM2gqjNGoDHZlZQG5Aexw=;
-        b=c4uFjGuaTOmz8SR9o8cBJsVHgHRSMrmvpvifDVwuWrdXASNCCI8a2RDYbcrz3zbvYq
-         XAS59m9Vna2t7fUlwYKzKvpfeI8l9Cv73LWeq5WWP9WiCgy8bztI3qS+Dx/qEhjumIP7
-         2l2yDfGE1B56YpTsqPDvJpGNCKh/A6LnaWL8evglKXD4Q4+3poF9tfrvYimMIkyHVHx/
-         HFXLblmyylad6hHZzaLJoEKun+PIjetfr9ZukaP21P/Xp7AAQLildUMW+uotOjZrWuUG
-         9QRHv/UVqlTP3Dyzq9u+SeyR3R9jCUo0dIUz2aC1TMH9mmA04f/gBw0zZpC+HtsqODwF
-         6rXA==
-X-Gm-Message-State: AOJu0Yw/xztSEQU0NCYAXQFNE4bIqWFrT+qI4mK6tTg6bJYsQi7+2696
-	vMbo4AzhXqwKYhmHk06HxEPGrr8foFhibcwzyyfmKiYwsgYIXnU931QSAzMGZcQ=
-X-Google-Smtp-Source: AGHT+IHLi8v5vp+9OccJW5ihsH8HwK7pVU8S7xEx6MszBLdPgyWAl7kcOkj2bNJKF6wUT6V3XI5ylg==
-X-Received: by 2002:a05:6000:1191:b0:337:c0f3:962b with SMTP id g17-20020a056000119100b00337c0f3962bmr2015519wrx.113.1705913554662;
-        Mon, 22 Jan 2024 00:52:34 -0800 (PST)
-Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
-        by smtp.gmail.com with ESMTPSA id a11-20020adfe5cb000000b00337d92e8b9csm9115501wrn.109.2024.01.22.00.52.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jan 2024 00:52:34 -0800 (PST)
-Date: Mon, 22 Jan 2024 09:52:33 +0100
-From: Andrew Jones <ajones@ventanamicro.com>
-To: Erick Archer <erick.archer@gmx.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Conor Dooley <conor.dooley@microchip.com>, Evan Green <evan@rivosinc.com>, 
-	=?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>, Jisheng Zhang <jszhang@kernel.org>, 
-	Charlie Jenkins <charlie@rivosinc.com>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] riscv: Use kcalloc() instead of kzalloc()
-Message-ID: <20240122-7b031613b2ae1d7dfa1edfd7@orel>
-References: <20240120135400.4710-1-erick.archer@gmx.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dtXfWh4c"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1705916905;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7cBs2U0i3D9w9WV8+Pf0nrRzJpAUSveYB1qTpJzpZyk=;
+	b=dtXfWh4ctQd09L9caAA5eSt24HkAFFa9lAXJmyyEcSc5JZ0rStm9Z/mlxL829F4zvfgtOb
+	wRqrwHfp33NCODWJLBXU7KdRFMqAVTuJRfktQ2RlZlq4fT/ginvYLF2PKQR3i5tryhNie9
+	abC7QoTpae5vsHQVessA5/YWs/ktdWo=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-80-5xGE6WBKMtuBIw6lc2QEbw-1; Mon, 22 Jan 2024 04:48:22 -0500
+X-MC-Unique: 5xGE6WBKMtuBIw6lc2QEbw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5E48F88F5A6;
+	Mon, 22 Jan 2024 09:48:21 +0000 (UTC)
+Received: from oldenburg.str.redhat.com (unknown [10.39.193.6])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id AD3D8111E408;
+	Mon, 22 Jan 2024 09:48:19 +0000 (UTC)
+From: Florian Weimer <fweimer@redhat.com>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: mail@horotw.com,  linux-hardening@vger.kernel.org,  Jakub Wilk
+ <jwilk@jwilk.net>,  Salvatore Bonaccorso <carnil@debian.org>,  Linux
+ Memory Management List <linux-mm@kvack.org>,  William Kucharski
+ <william.kucharski@oracle.com>
+Subject: Re: Limited/Broken functionality of ASLR for Libs >= 2MB
+References: <69fa6015256613ed10aee996e181ebd4@horotw.com>
+	<87il3ur1ik.fsf@gentoo.org> <ZaVi4ij0jgEz+isx@casper.infradead.org>
+	<07c348caaf6b4c457ab4b452f53ed048@horotw.com>
+	<ZaWZqnD7XmP5HMA0@casper.infradead.org>
+Date: Mon, 22 Jan 2024 10:48:17 +0100
+In-Reply-To: <ZaWZqnD7XmP5HMA0@casper.infradead.org> (Matthew Wilcox's message
+	of "Mon, 15 Jan 2024 20:46:34 +0000")
+Message-ID: <87ede9pula.fsf@oldenburg.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.3 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240120135400.4710-1-erick.archer@gmx.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
 
-On Sat, Jan 20, 2024 at 02:54:00PM +0100, Erick Archer wrote:
-> As noted in the "Deprecated Interfaces, Language Features, Attributes,
-> and Conventions" documentation [1], size calculations (especially
-> multiplication) should not be performed in memory allocator (or similar)
-> function arguments due to the risk of them overflowing. This could lead
-> to values wrapping around and a smaller allocation being made than the
-> caller was expecting. Using those allocations could lead to linear
-> overflows of heap memory and other misbehaviors.
-> 
-> So, use the purpose specific kcalloc() function instead of the argument
-> count * size in the kzalloc() function.
-> 
-> Also, it is preferred to use sizeof(*pointer) instead of sizeof(type)
-> due to the type of the variable can change and one needs not change the
-> former (unlike the latter).
-> 
-> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
-> Link: https://github.com/KSPP/linux/issues/162
-> Signed-off-by: Erick Archer <erick.archer@gmx.com>
-> ---
->  arch/riscv/kernel/cpufeature.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
-> index 89920f84d0a3..549a76e34c4e 100644
-> --- a/arch/riscv/kernel/cpufeature.c
-> +++ b/arch/riscv/kernel/cpufeature.c
-> @@ -901,8 +901,7 @@ static int check_unaligned_access_all_cpus(void)
->  {
->  	unsigned int cpu;
->  	unsigned int cpu_count = num_possible_cpus();
-> -	struct page **bufs = kzalloc(cpu_count * sizeof(struct page *),
-> -				     GFP_KERNEL);
-> +	struct page **bufs = kcalloc(cpu_count, sizeof(*bufs), GFP_KERNEL);
-> 
->  	if (!bufs) {
->  		pr_warn("Allocation failure, not measuring misaligned performance\n");
-> --
-> 2.25.1
->
+* Matthew Wilcox:
 
-Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+> I received a suggestion off-list that we only do the PMD alignment on
+> 64-bit, which seems quite reasonable to me.  After all, I don't care
+> about performance on 32-bit just as much as I don't care about security
+> on 32-bit.
+
+Perhaps we can we repurpose MAP_DENYWRITE to disable this?
+
+For shared objects as loaded by a dynamic linker, the alignment is
+pointless in many cases even if the original mapping is quite a bit
+larger than 2 MiB because the individual LOAD segments and their
+protection settings are smaller than 2 MiB, so hugepages cannot be used
+in the end after all.  The dynamic linker knows the LOAD segments, so it
+can drop MAP_DENYWRITE if it determines that hugepages could be
+beneficial.  (Current glibc sets MAP_DENYWRITE for historic reasons.)
+On the other hand, I wouldn't object to more explicit control over mmap
+pointer alignment, either, for anonymous mappings as well.
+
+There are some binutils versions that produce 2 MiB aligned file layout
+on x86-64, but that change was reverted, presumably because kernel
+hugepage support for non-anonymous memory wasn't available.  But there
+are likely some iffy details that make these binaries unusable for
+hugepages in practice, like lack of hugepage alignment at the end of
+LOAD segments.  Unfortunately, BFD ld tends to produce approximate
+PT_LOAD and PT_GNU_RELRO and relies on the dynamic loader to round
+things up and down in somewhat questionable ways.
+
+Thanks,
+Florian
+
