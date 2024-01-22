@@ -1,52 +1,78 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AECF53611B;
-	Mon, 22 Jan 2024 07:59:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CCE03B191
+	for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 08:52:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705910353; cv=none; b=AFBTgWnsuyKbTnDlgP2B5Ukn7eJjPoucF23/GNm6pu7GSnpGotr3tkmNY61dEQLXZrRfFTzHn4Fea7XOnYLedSODsKZssMcqWvWKwIb5bYoMT6Jl1gef8h/hvsgZPgWm0EkkErYKhuPTijAmrSNTYKugf8nzxgYQNosx0LvMUhc=
+	t=1705913558; cv=none; b=YuHuP0oXVJkm5ctN/fB3bh1B+LBBpgu1Bv5B3HESiVAxf00tdscWjp1r14CK/SMSkoaQf319MZ11WWzmQoZBmtPUf/JENNRaiKsIpCWzHVzAR/Nv0JqmOe7qiYg59hI3iDq9VVOz3XOwFhrYeWD+ATLRFir9i3AK4xRz8D8nAC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705910353; c=relaxed/simple;
-	bh=pGlZ3QI3Lga899NkB9oFLprRpavbHJNhgA8T4iPQJlM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MCbGGX3d3mL7jYdEeuVGHm/yJLOrjsIXTG78rwgt6J6c1fbfmp8jy/CbXrxKpdlNudH5iSu7H3Ac/R4sd0lvSMFj/IepAnVPzvym5DamzTYFTY5o5YDbcYQ6lg01HK8FP0Nm3ZpFjdE5JWJTiFPIaFdSBKPWjuC51MXNEyBUf2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A80011BF206;
-	Mon, 22 Jan 2024 07:59:00 +0000 (UTC)
-Message-ID: <048fc58d-abbb-4696-9ed0-f5a0fadce740@ghiti.fr>
-Date: Mon, 22 Jan 2024 08:58:58 +0100
+	s=arc-20240116; t=1705913558; c=relaxed/simple;
+	bh=SAvwupzHZ8fTdQG9uVBatImfaNOaWKZmEUWtiZJM6oU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FNBngRY4wZ57InsreLCvNmSKjt8OEVpltXsu0uSSjUE9prkWZClempZHF+ZLv7m7tGoXWAwLQEE1Q+RrHixiz/pj5qzfkjOgU/Xgw1dgNBmScMe1a9WQ4yMqikVIgtNxh46dLkC6KUiZLeSYFqh62g7IkB6llbgkhyHvWs8pdBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=fieyY9GM; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="fieyY9GM"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-336c8ab0b20so2907359f8f.1
+        for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 00:52:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1705913554; x=1706518354; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=kDgjWNmpHGcLjhWhbYgEl2BM2gqjNGoDHZlZQG5Aexw=;
+        b=fieyY9GM76gpyRKU4xxFyfPLHAXZOr0DY4pLpF2gZ8uCKPZ/MeN8wdddDnO1pHyasE
+         mCsZBNv9V4LSQcDYxVyNjeyc+is65wuVyTKWIDBpPFgx/+5nRYnrMcq9Y6Hdf7ZKluOJ
+         mQvHgioR8T7CWspNyaQ/s3P3/EtjWMyHhHsm1t6KCP+1+sXcQwmMkiJH6gQKLDHenOzd
+         FSOCGQGqwfM4Di/Pz9B3lx7NPJRtYZ+desEFAQyLAoYoDKwX6ujAmzBDEgMa0vYy3gN1
+         cEbpRFeBbi1q3uNgiVsCkKxHMRseAdfSf+PX4SFyeogRkRpS96DNEsCzX7hmrbYmIsZg
+         YTng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705913554; x=1706518354;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kDgjWNmpHGcLjhWhbYgEl2BM2gqjNGoDHZlZQG5Aexw=;
+        b=c4uFjGuaTOmz8SR9o8cBJsVHgHRSMrmvpvifDVwuWrdXASNCCI8a2RDYbcrz3zbvYq
+         XAS59m9Vna2t7fUlwYKzKvpfeI8l9Cv73LWeq5WWP9WiCgy8bztI3qS+Dx/qEhjumIP7
+         2l2yDfGE1B56YpTsqPDvJpGNCKh/A6LnaWL8evglKXD4Q4+3poF9tfrvYimMIkyHVHx/
+         HFXLblmyylad6hHZzaLJoEKun+PIjetfr9ZukaP21P/Xp7AAQLildUMW+uotOjZrWuUG
+         9QRHv/UVqlTP3Dyzq9u+SeyR3R9jCUo0dIUz2aC1TMH9mmA04f/gBw0zZpC+HtsqODwF
+         6rXA==
+X-Gm-Message-State: AOJu0Yw/xztSEQU0NCYAXQFNE4bIqWFrT+qI4mK6tTg6bJYsQi7+2696
+	vMbo4AzhXqwKYhmHk06HxEPGrr8foFhibcwzyyfmKiYwsgYIXnU931QSAzMGZcQ=
+X-Google-Smtp-Source: AGHT+IHLi8v5vp+9OccJW5ihsH8HwK7pVU8S7xEx6MszBLdPgyWAl7kcOkj2bNJKF6wUT6V3XI5ylg==
+X-Received: by 2002:a05:6000:1191:b0:337:c0f3:962b with SMTP id g17-20020a056000119100b00337c0f3962bmr2015519wrx.113.1705913554662;
+        Mon, 22 Jan 2024 00:52:34 -0800 (PST)
+Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
+        by smtp.gmail.com with ESMTPSA id a11-20020adfe5cb000000b00337d92e8b9csm9115501wrn.109.2024.01.22.00.52.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jan 2024 00:52:34 -0800 (PST)
+Date: Mon, 22 Jan 2024 09:52:33 +0100
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Erick Archer <erick.archer@gmx.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Conor Dooley <conor.dooley@microchip.com>, Evan Green <evan@rivosinc.com>, 
+	=?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>, Jisheng Zhang <jszhang@kernel.org>, 
+	Charlie Jenkins <charlie@rivosinc.com>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] riscv: Use kcalloc() instead of kzalloc()
+Message-ID: <20240122-7b031613b2ae1d7dfa1edfd7@orel>
+References: <20240120135400.4710-1-erick.archer@gmx.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] riscv: Use kcalloc() instead of kzalloc()
-Content-Language: en-US
-To: Erick Archer <erick.archer@gmx.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Conor Dooley <conor.dooley@microchip.com>,
- Andrew Jones <ajones@ventanamicro.com>, Evan Green <evan@rivosinc.com>,
- =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>,
- Jisheng Zhang <jszhang@kernel.org>, Charlie Jenkins <charlie@rivosinc.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20240120135400.4710-1-erick.archer@gmx.com>
-From: Alexandre Ghiti <alex@ghiti.fr>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <20240120135400.4710-1-erick.archer@gmx.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: alex@ghiti.fr
 
-Hi Erick,
-
-On 20/01/2024 14:54, Erick Archer wrote:
+On Sat, Jan 20, 2024 at 02:54:00PM +0100, Erick Archer wrote:
 > As noted in the "Deprecated Interfaces, Language Features, Attributes,
 > and Conventions" documentation [1], size calculations (especially
 > multiplication) should not be performed in memory allocator (or similar)
@@ -54,50 +80,37 @@ On 20/01/2024 14:54, Erick Archer wrote:
 > to values wrapping around and a smaller allocation being made than the
 > caller was expecting. Using those allocations could lead to linear
 > overflows of heap memory and other misbehaviors.
->
+> 
 > So, use the purpose specific kcalloc() function instead of the argument
 > count * size in the kzalloc() function.
->
+> 
 > Also, it is preferred to use sizeof(*pointer) instead of sizeof(type)
 > due to the type of the variable can change and one needs not change the
 > former (unlike the latter).
->
+> 
 > Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
 > Link: https://github.com/KSPP/linux/issues/162
 > Signed-off-by: Erick Archer <erick.archer@gmx.com>
 > ---
->   arch/riscv/kernel/cpufeature.c | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
->
+>  arch/riscv/kernel/cpufeature.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
 > diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
 > index 89920f84d0a3..549a76e34c4e 100644
 > --- a/arch/riscv/kernel/cpufeature.c
 > +++ b/arch/riscv/kernel/cpufeature.c
 > @@ -901,8 +901,7 @@ static int check_unaligned_access_all_cpus(void)
->   {
->   	unsigned int cpu;
->   	unsigned int cpu_count = num_possible_cpus();
+>  {
+>  	unsigned int cpu;
+>  	unsigned int cpu_count = num_possible_cpus();
 > -	struct page **bufs = kzalloc(cpu_count * sizeof(struct page *),
 > -				     GFP_KERNEL);
 > +	struct page **bufs = kcalloc(cpu_count, sizeof(*bufs), GFP_KERNEL);
->
->   	if (!bufs) {
->   		pr_warn("Allocation failure, not measuring misaligned performance\n");
+> 
+>  	if (!bufs) {
+>  		pr_warn("Allocation failure, not measuring misaligned performance\n");
 > --
 > 2.25.1
 >
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
 
-
-You can add:
-
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-
-Thanks,
-
-Alex
-
+Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
