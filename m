@@ -1,152 +1,133 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from mail-m17207.xmail.ntesmail.com (mail-m17207.xmail.ntesmail.com [45.195.17.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA2B84653A;
-	Mon, 22 Jan 2024 18:17:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16BED3D3A7;
+	Mon, 22 Jan 2024 20:50:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.195.17.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705947445; cv=none; b=PtQqvQU/31MVrnsqSV+gKJP+Z9PXg5W+OQbh0Mbnvp+DkabaJy5hqkDCNtN0vlj+2YdGpf2uuqtF09p+mcmI7YC2NythethqlIXix8LVdKVO1adDMSx0n06QdfmeP+CmmyWW687GT9kMvFwCD8IQgufvRQKIw5mvwfnOgVGO8mY=
+	t=1705956653; cv=none; b=gya9l4RRfZ00NaEavug8WjTpzCSa8hYYebPide7mqTWrOSxictC7EpTnzr6PxykK0IuWwfTaz8+9J/+vf4i5QJFTISm/6aOsE2RYp2rIlp03Wjz1AvhyHBUQBBSbOUi1ePr3xTBGUod1meZH7230uTTC1Twv08u+BerhPjkDLx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705947445; c=relaxed/simple;
-	bh=cosRaykSzlaNE/xIMf6y8xZWCugy57DK7yvFXqv2wsw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=utqWGw57Erc2p1O2Thy8G2Jz8eR/AUq2i+Ty/28E+lkV24KVMcFeIeCWiP5rK9M/1CFdMjWE1ue0NC7j9Y8sG1zvPHoBXW2W+FgHfpngcu3Y5+B6IUDxp57ugGcE+wJrHgO/R8L5Nh/PIili8O1+6NbzJGXYV/XzwA/K8hjo89A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b=asFTSnUv; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="asFTSnUv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
-	s=s31663417; t=1705947426; x=1706552226; i=erick.archer@gmx.com;
-	bh=cosRaykSzlaNE/xIMf6y8xZWCugy57DK7yvFXqv2wsw=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:
-	 In-Reply-To;
-	b=asFTSnUvt7vOfO1EW2cykrwxv2DolQbZuOz3O+TJ1CwWvztMqMCQQHYkg+LttasR
-	 nubKVaZDhhSFpx3bYUtx3hBCFU4uovVSvU0V9I8RGIpbmy1IZqrwkOadY7oiFMH+K
-	 5yR8Q4VWJFOqK4Ju3tGmtBl+dSU23ghwEHGmmI/PkFfQaG22XZ2MlA8b1TtvsmDf1
-	 9Ial8Yp9p8fV7jYLfCdhtELXKqJ4UvJl8IGD5Mr6c3zmEDlzJlLoHkeKLrmra5ycu
-	 QZ5Ffuk9SeTIQUzAhQM5ZQc5vMc7eVimsHUIMOiD8Y+fcMMswpxEX+IaTMFsAc+NO
-	 4/DA6kSvT22Iyt0V/w==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from titan ([79.157.194.183]) by mail.gmx.net (mrgmx104
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1M9Fnj-1rUzfK3gxz-006Qns; Mon, 22
- Jan 2024 19:17:06 +0100
-Date: Mon, 22 Jan 2024 19:16:54 +0100
-From: Erick Archer <erick.archer@gmx.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Erick Archer <erick.archer@gmx.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Franziska Naepelt <franziska.naepelt@googlemail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Johannes Berg <johannes.berg@intel.com>,
-	Jeff Johnson <quic_jjohnson@quicinc.com>,
-	Aloka Dixit <quic_alokad@quicinc.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] staging: rtl8723bs: Use kcalloc() instead of kzalloc()
-Message-ID: <20240122181654.GA2834@titan>
-References: <20240119173900.11035-1-erick.archer@gmx.com>
- <a5d8a5f1-432d-46f0-84fe-7b5b22ff5f32@moroto.mountain>
+	s=arc-20240116; t=1705956653; c=relaxed/simple;
+	bh=iKziXW5nSbJLL99tAPoPAh//iFGA+h98wNVjisnajQ8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Dl9GIyy5hiovh0IHBjuJx2JB8BpCj/ahoLGtbq/2qrifQKQUKHHTFN2Fh5xw+AF/iNp3ohHPkepf5wgIjGn9RL6NDR66eoiLeemgxkgQ7Sv9h0ZntLSKV8HGshxsZU76Hlm0IJgp0dE75CDGCgE8QxSXGuAwDDMn2RIkF4mTUtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=link.tyut.edu.cn; spf=pass smtp.mailfrom=link.tyut.edu.cn; arc=none smtp.client-ip=45.195.17.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=link.tyut.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=link.tyut.edu.cn
+Received: from [192.168.2.76] (unknown [113.251.4.85])
+	by mail-m121145.qiye.163.com (Hmail) with ESMTPA id 3AD9F80010E;
+	Tue, 23 Jan 2024 01:11:59 +0800 (CST)
+Message-ID: <b8823223-e735-4d5a-b90e-6e2f2a6cd104@link.tyut.edu.cn>
+Date: Tue, 23 Jan 2024 01:11:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a5d8a5f1-432d-46f0-84fe-7b5b22ff5f32@moroto.mountain>
-X-Provags-ID: V03:K1:kGUntj6tvEvcPAKpBTFIgN0eg54Wxu/RZsRWwgOejcbTX86gVAE
- c+89FsizxElgdv2Q1wx7RPCiLqLqxGqic389bTiIbE09FGqxTnHjihUBgwd+KgCmrkHrQTJ
- xnbd6lmjVSHdhp80teC53hPi+Zkk3s1fbqe6MdKEg3VZo7BBll2oEGKifbZIJ8v1Is92sYx
- q9bLZOu5N8oCk7fUnzABA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:UsolengSshc=;iH0T6UGqXMqk89ahnVw5eMaTrWO
- Yr8qNqI5zZBV9KGn7C30KszUZthd3jRUXDgx/Yk0Ft28ZxlmF0LPJ9zZBPiKbjl/eFWnFSiTY
- pDf6DYxOYaDHVmeAy14wYthaFg0hmS5NoAXjaLwZkiiGf5gz0ynGqYPnSxaUTa2lNGa5AJrKF
- apOd5cRSM3aljlqXBK944RpUAkfkahXL5Fvt/NWnYuZxYCE0VcLpOZaxFjD/yQM05fI8iEhTr
- UieHEXvzpWM9PV/0eaEbfidyIMYCydIx4kXvyDtb5L8iK0H1oLCWp9CUpuNrXFq9O5BcSdI3y
- Z/WW+jYH0YWaDtJugFFkq3vl2x0boNky4ovdMh76SY5UB3rF5EDHxRt9Zji2aR28iO1d+iBJH
- jNnlP1TSn2RRopQ2HGvtKaza0/Js3b2kiOVx/+YudnwrUbO+sYjk5g3LB/H1uPVsbI2PrgLoK
- MIKhIiG9Qv8zAaKbrZYf1gToUMdEdQwA0v338Hosxx3mPvsPPKm7aQBkXKLCsNxnizttK8YDr
- O/gC5EHKGu8WVsU4P4IAMwpEZ/lJ+Wq7cGHFBC2tTBEICoaLMgSyBW51MDGi3GHUZ7X9G97ju
- LLZYQZwU74N5ZnLXwvuQ1CisU2dW3VjSSxjVGDwdIEjueT/EQ/MTtG5QTtNMEgDt67q34OXc2
- v98+a/M/cXjKk8ScPfLv3WWegKkcU5j/rovtyvQcf8vTr5qMRkmqAK0eyslxVAkmci/LwK5kx
- 6LCHU9P3iewRwGdjj4U26yL4vI8WVY0JpQI0JyoAahF20whb3SygHxHog5IPO1Mjj0Q5z1NaW
- jgtongx7dlOXwWBc4ptHU8VvNGVF6RrKpAxKOdrVZiIhgIjcu0kWgDzfuv3AJ8H5JBe08OONb
- l9joLlKR9+0zPVs9FG/yGbMHstpBPPZa0s4J02U+3PHjp8kyxSTd4HGC3Ti+Ueo2ule/3mBvM
- 8cVJZ9qfdGfWIhDO6DSux0ph4SA=
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] Documentation: power: Use kcalloc() instead of
+ kzalloc()
+Content-Language: en-US
+To: Erick Archer <erick.archer@gmx.com>, Viresh Kumar <vireshk@kernel.org>,
+ Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>,
+ Pavel Machek <pavel@ucw.cz>, Alex Shi <alexs@kernel.org>,
+ Yanteng Si <siyanteng@loongson.cn>, Jonathan Corbet <corbet@lwn.net>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20240121104344.5001-1-erick.archer@gmx.com>
+From: Hu Haowen <2023002089@link.tyut.edu.cn>
+In-Reply-To: <20240121104344.5001-1-erick.archer@gmx.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZS0pPVkhOTBkeTEoYGh5CSlUTARMWGhIXJBQOD1
+	lXWRgSC1lBWUpKSFVJTkpVT1VDTllXWRYaDxIVHRRZQVlPS0hVSkpLSEpDVUpLS1VLWQY+
+X-HM-Tid: 0a8d32285244b03akuuu3ad9f80010e
+X-HM-MType: 10
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6N0k6Eww*EDwZPg4yAU4JUS0R
+	Tg8KCzFVSlVKTEtOQk9ITklLSENLVTMWGhIXVUlLSUhLS0lLQ0I7FxIVEFUPAg4PVR4fDlUYFUVZ
+	V1kSC1lBWUpKSFVJTkpVT1VDTllXWQgBWUFPQkhINwY+
 
-Hi Dan,
 
-On Mon, Jan 22, 2024 at 09:55:11AM +0300, Dan Carpenter wrote:
-> On Fri, Jan 19, 2024 at 06:39:00PM +0100, Erick Archer wrote:
-> > As noted in the "Deprecated Interfaces, Language Features, Attributes,
-> > and Conventions" documentation [1], size calculations (especially
-> > multiplication) should not be performed in memory allocator (or simila=
-r)
-> > function arguments due to the risk of them overflowing. This could lea=
-d
-> > to values wrapping around and a smaller allocation being made than the
-> > caller was expecting. Using those allocations could lead to linear
-> > overflows of heap memory and other misbehaviors.
-> >
-> > So, use the purpose specific kcalloc() function instead of the argumen=
-t
-> > count * size in the kzalloc() function.
-> >
-> > Also, it is preferred to use sizeof(*pointer) instead of sizeof(type)
-> > due to the type of the variable can change and one needs not change th=
-e
-> > former (unlike the latter).
-> >
-> > Link: https://www.kernel.org/doc/html/next/process/deprecated.html#ope=
-n-coded-arithmetic-in-allocator-arguments [1]
-> > Link: https://github.com/KSPP/linux/issues/162
-> > Signed-off-by: Erick Archer <erick.archer@gmx.com>
+在 2024/1/21 18:43, Erick Archer 写道:
+> As noted in the "Deprecated Interfaces, Language Features, Attributes,
+> and Conventions" documentation [1], size calculations (especially
+> multiplication) should not be performed in memory allocator (or similar)
+> function arguments due to the risk of them overflowing. This could lead
+> to values wrapping around and a smaller allocation being made than the
+> caller was expecting. Using those allocations could lead to linear
+> overflows of heap memory and other misbehaviors.
 >
-> I quite often write responses to patches and then never send them.  I
-> wrote this response and debated sending it but in the end I decided to
-> send it because you have sent multiple patches.  If you had only sent
-> one patch then I wouldn't have bothered.
-
-My intention is not to bother anyone. I'm a linux kernel developer newbie
-and I try to do my best.
-
-> Generally, commit messages should say what the user visible effects of
-> a patch are.  Sometimes with these sorts of commits, it's hard to
-> determine the effect.  For example, Kees went through and changed dozens
-> or hundreds of these allocations to use safer constructs and we don't
-> necessarily expect him to audit all the code.  They should already have
-> been fine, but it's better to be safe.
+> So, in the example code use the purpose specific kcalloc() function
+> instead of the argument size * count in the kzalloc() function.
 >
-> However in this case obviously the patch is small and just by glancing
-> at it we can see that it has no effect on rutime.
+> At the same time, modify the translations accordingly.
 >
-> But if someone is reviewing patches with "git log" instead of
-> "git log -p" they aren't going to see the patch. I can almost always
-> figure out what a commit does without looking at the commit message,
-> that doesn't mean that the commit messages are unnecessary.
+> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
+> Link: https://github.com/KSPP/linux/issues/162
+> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+> ---
+> Hi,
 >
-> So I really prefer if commit message say, "This commit is just to make
-> static checkers happy and to make the code more readable.  It has no
-> effect on runtime."  The commit message you wrote is way more scary than
-> is warranted.  Here is my proposed commit message:
+> This patch is a merger of two previous ones [1] [2].
+> As Hu Haowen and Jonathan Corbet suggested, the translation change
+> only makes sense if the original file is modified. So, with this
+> v2 version the original file and the translations are modified at
+> the same time.
 >
-> "We are trying to get rid of all multiplications from allocation
-> functions to prevent integer overflows.  Here the multiplication is
-> obviously safe, but using kcalloc() is more appropriate and improves
-> readability.  This patch has no effect on runtime behavior."
+> [1] https://lore.kernel.org/linux-hardening/20240120120527.3866-1-erick.archer@gmx.com/
+> [2] https://lore.kernel.org/linux-hardening/20240120122204.4287-1-erick.archer@gmx.com/
 >
+> Thanks,
+> Erick
+> ---
+>   Documentation/power/opp.rst                    | 2 +-
+>   Documentation/translations/zh_CN/power/opp.rst | 2 +-
+>   2 files changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/power/opp.rst b/Documentation/power/opp.rst
+> index a7c03c470980..1b7f1d854f14 100644
+> --- a/Documentation/power/opp.rst
+> +++ b/Documentation/power/opp.rst
+> @@ -305,7 +305,7 @@ dev_pm_opp_get_opp_count
+>   	 {
+>   		/* Do things */
+>   		num_available = dev_pm_opp_get_opp_count(dev);
+> -		speeds = kzalloc(sizeof(u32) * num_available, GFP_KERNEL);
+> +		speeds = kcalloc(num_available, sizeof(u32), GFP_KERNEL);
+>   		/* populate the table in increasing order */
+>   		freq = 0;
+>   		while (!IS_ERR(opp = dev_pm_opp_find_freq_ceil(dev, &freq))) {
+> diff --git a/Documentation/translations/zh_CN/power/opp.rst b/Documentation/translations/zh_CN/power/opp.rst
+> index 8d6e3f6f6202..7470fa2d4c43 100644
+> --- a/Documentation/translations/zh_CN/power/opp.rst
+> +++ b/Documentation/translations/zh_CN/power/opp.rst
+> @@ -274,7 +274,7 @@ dev_pm_opp_get_opp_count
+>   	 {
+>   		/* 做一些事情 */
+>   		num_available = dev_pm_opp_get_opp_count(dev);
+> -		speeds = kzalloc(sizeof(u32) * num_available, GFP_KERNEL);
+> +		speeds = kcalloc(num_available, sizeof(u32), GFP_KERNEL);
 
-Understood. Thank you very much for your guidance and advices. I will
-change the commit message and I will send a more appropiate v2 patch.
 
-Best regards,
-Erick
+For the zh_CN translation,
 
-> regards,
-> dan carpenter
+Reviewed-by: Hu Haowen <2023002089@link.tyut.edu.cn>
+
+
+Thanks,
+
+Hu Haowen
+
+
+>   		/* 按升序填充表 */
+>   		freq = 0;
+>   		while (!IS_ERR(opp = dev_pm_opp_find_freq_ceil(dev, &freq))) {
+> --
+> 2.25.1
+>
+>
 >
