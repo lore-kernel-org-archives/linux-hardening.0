@@ -1,128 +1,148 @@
-Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC8AA53808
-	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 22:52:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2144654654
+	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 23:47:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706050355; cv=none; b=rgje954s7dyWf4jICNhemsIxadJesCSZzTRPEo1lYkTA+VLRJNuryagSqKEIGCpcY8mz/nZoynkKTSgzej2qSGf9NHuWYq+0eCeyr85P+LtWLOSgHS+OzCDU3VdRDxT3iaKOmJMEUbsbXbZXWT4SDaYkC0VotFlTHQNwVRVao4I=
+	t=1706053659; cv=none; b=LsWv6n5BnxCJbFb8Zc7303qutUeyoZ2QvuBd+rsZiX/SkavE0aa8XzP9OCjr07+XSqk+CqTfuq+vKmAL0vP8UMVrMfyXLldhMnm47Jwei0rI+670+SLzf48Pq7YncW5rgoWOpNHaCJEtbrH9LXw+y1ZOw7eGY4EO1WpD/X5wCPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706050355; c=relaxed/simple;
-	bh=cM1u6TyGETJjhtJrO6J7JSwAWml7G37TEKeViMrmnfg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=quOnSYLsFnGFPrVJC6Ej9/moOC8uqHpRB2at/VG4kObRlS7Y/nz0ZHRUJ6pUZrm6zjVymSml/BpLQ0ebWm9Ji3gAf4+vpdhUczTUoNMJkQX+FfWsEqJuDpW6MoAu10bi4QA33RrrgNl2PK5nJ19ErhB3UW9/8hGWQwz8RaFcXIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=C0NzgG/D; arc=none smtp.client-ip=209.85.161.44
+	s=arc-20240116; t=1706053659; c=relaxed/simple;
+	bh=IeM0NmFIQcW0aOz8Y2fNy6aqOUIg9hjVHd/pk89b+u4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tSCG3icHxsGEG9dkXERLwH8dNHrNFBWNQ2CDCs3e3axQynbW94aztZFI9RgzW0jhpKRS6ht0MCrert+/EWlZxYnq3AfIYzWmDcXJyvlCuxGqF67d9HkUQqggdggtYhTr8aZdYnTZMSki+va/R3KD+cpAJ+aOpxlcjW0+vXxw9Yg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=BgKIvB0k; arc=none smtp.client-ip=209.85.161.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="C0NzgG/D"
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5997665fe29so764190eaf.1
-        for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 14:52:33 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BgKIvB0k"
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-599c38cd9f5so14751eaf.1
+        for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 15:47:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1706050353; x=1706655153; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+8OzyRNimHg6MWBPPPferJ7a6OpiMFAs+H+g4XMLgls=;
-        b=C0NzgG/Dtgm+JZP1sZbWdF2MiEiKlGVX+chQ+apBliQQPqDWONqY4GsZUHsOZ/l4Tn
-         VefDp4FH0thNeBBWbqtlKuOcCaOLGBwYxYIk+IpCz8DDHVTD3a2GUMX7ciLC3Uo+Wj7K
-         h3otUX+cogjgJNcr3/aviv5gOGCdMxmi2JtKI=
+        d=chromium.org; s=google; t=1706053657; x=1706658457; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Byey+oL1IfCOxjCaYQp1J8nG8dIGW6Zh+MZe1d2CaXE=;
+        b=BgKIvB0kP8XICzMS7BlfoiQW9n+pKJTu3lCT72ATyFujZfkNyvK2FqAsBDpsnu8hqR
+         xTW28AIETzozfCR+lHVLxZzhAVa6p4SuJypS3GuDU8ekry2h1x49fvOMQ1SLENbf+gsR
+         QD0OI+MxBZXv+CDMam/9MTHMGGR5Q7iKJ+kAg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706050353; x=1706655153;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+8OzyRNimHg6MWBPPPferJ7a6OpiMFAs+H+g4XMLgls=;
-        b=FoNDullnO37MP9Iw5r4bSTpc6ikzlxsRs8T8G/jIgjC4DTMPKoKamwpngCRGfzWWb5
-         q3w8NfKaJfqYAdNHMkA/gYXIfzuMa9EV2xtjZPCidWdzfgDujxAeAcwBrMuFHh7IPOAt
-         ErIaHypTyPJQs+ksTCSKwpJXQ/4JjsKsCxOlXPUcNPv4SDXitPI6YuPKqzD5QBYi3My/
-         7U2y7xNZmkWpR6NUqsJNVRlWqF7MfFTp3YU7gW5XhZ2hpi2IJ33GnK0Qh0XyhjNnIzEH
-         vzsSEtla+rXpxhXyktjLggiabfhRXoix+g8PgLzAzzY29N2zDzYmaF77Hjlu+GZGua+t
-         CFDQ==
-X-Gm-Message-State: AOJu0YxJ1NfO9iuuI4/yxioSKwjsAf7joYOaHknqHonJa49MhXWMCwLp
-	kq1ySJFhKMQs+e0K5lLDnGeNBmwqRxcRA5FrRD1vHM2UJqoOWWm5UWjHS8QHlg==
-X-Google-Smtp-Source: AGHT+IHDl/6I1rG7FFOH5TLpxkcvik0AXWrRwPOVODwTcq5RC8mUYxoyhnLKMEDwXanwWecFPslILA==
-X-Received: by 2002:a05:6358:7e49:b0:176:3715:3c32 with SMTP id p9-20020a0563587e4900b0017637153c32mr3147609rwm.3.1706050353056;
-        Tue, 23 Jan 2024 14:52:33 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706053657; x=1706658457;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Byey+oL1IfCOxjCaYQp1J8nG8dIGW6Zh+MZe1d2CaXE=;
+        b=bNacgaTOc23nwL6XkXfkM5zSHpxuTPl+kVld9wPtZwgAZSDDb2fF42xQAgAhK01rGd
+         RAObPA5S231EsLl3cmcgP724Tpm2u7pO97GPrHyK80HszxzPS8qsYBXujfgqISt8HETy
+         BpyvLeMnbtYgraVwxMXgBbM8ezojNcaMCJTuPU0tZATNX2rtmXU/lMUdLo0pzHu31q/z
+         vErmdUzCpZ9j4CUDYJD3hSN1anj3u8ZomdFW7/WmYeZsfdqGoX9bbCvgeDEengNPqOTM
+         3Sq8ZpKdfY5C2T9FKL9itZhMECAOu4mk5DmumMPcXdRVENafpOs8CNj3kpejiwPGw85Y
+         gglQ==
+X-Gm-Message-State: AOJu0YyaVgt9kdmgwSl5rI60WROv+JXcj7NcgB/T1Fflp79LqV91hzSw
+	iwOtG/E3UBUAu8uql7KU1Zh266Lp7QSlcSx1tZPJxLwMU/KqCR8URb+IZ7HltQ==
+X-Google-Smtp-Source: AGHT+IFwLyO9rJaJWRj5fpagu/7UQJb6PJH1NhmnvMhw7EfYEMCFG/DBTGnWIv8q3a/IL8/3KNMsvw==
+X-Received: by 2002:a05:6359:45a4:b0:176:4aae:5fe8 with SMTP id no36-20020a05635945a400b001764aae5fe8mr4864506rwb.27.1706053657198;
+        Tue, 23 Jan 2024 15:47:37 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id e33-20020a631e21000000b005d0796e779bsm2079685pge.12.2024.01.23.14.52.32
+        by smtp.gmail.com with ESMTPSA id t19-20020a056a0021d300b006d9be753ac7sm12184383pfj.108.2024.01.23.15.47.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jan 2024 14:52:32 -0800 (PST)
-Date: Tue, 23 Jan 2024 14:52:31 -0800
+        Tue, 23 Jan 2024 15:47:36 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
-To: Kalle Valo <kvalo@kernel.org>
-Cc: linux-hardening@vger.kernel.org,
-	Johannes Berg <johannes.berg@intel.com>,
-	Max Chen <mxchen@codeaurora.org>, Yang Shen <shenyang39@huawei.com>,
-	linux-wireless@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+To: Steve French <sfrench@samba.org>
+Cc: Kees Cook <keescook@chromium.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Paulo Alcantara <pc@manguebit.com>,
+	Ronnie Sahlberg <ronniesahlberg@gmail.com>,
+	Shyam Prasad N <sprasad@microsoft.com>,
+	Tom Talpey <tom@talpey.com>,
+	linux-cifs@vger.kernel.org,
+	llvm@lists.linux.dev,
+	Nick Desaulniers <ndesaulniers@google.com>,
 	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 41/82] wil6210: Refactor intentional wrap-around test
-Message-ID: <202401231452.2A37D157C@keescook>
-References: <20240123002814.1396804-41-keescook@chromium.org>
- <170601063238.3962299.12030024839048269322.kvalo@kernel.org>
+	Justin Stitt <justinstitt@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] smb: Work around Clang __bdos() type confusion
+Date: Tue, 23 Jan 2024 15:47:34 -0800
+Message-Id: <20240123234731.work.358-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <170601063238.3962299.12030024839048269322.kvalo@kernel.org>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2056; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=IeM0NmFIQcW0aOz8Y2fNy6aqOUIg9hjVHd/pk89b+u4=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlsFAWkLxmekOiD6JMUP2NjwIMzfRNEuzHrOIKn
+ KJgVAqyQBOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZbBQFgAKCRCJcvTf3G3A
+ JuU0D/4r8yMRZ45F/ySlkdZZlrkq438nNjdyWMLfNMt2htoNEKNPRn09MNQuqxbSnbnts/ZfNIo
+ cnmUeq9KPtd5hVOfp5tt9k4XQgSxWmUcJ6ppjbpqthGZ3qgrSmPnbUKc6yT/t8sotWOsK/dCR45
+ Uoq9+7rgk0/Wtnak25xEEuyDhKkzg/BZ7PKc1fDE7H0FH2pURSFLHct+1Wxaw8ITTSj8IVMFM+L
+ rbtW75C4011Nx4ud1zOiqO01n9qloHWomiAWrLdtCh29hKW4WWIjaJAmrhr8sWSGlTU+303dByG
+ xjQxfD9VxFZcjkPgQjXtu2WNp5Rw53ZsDc71Z0v5/4JS6JNYb3lbTjxuM4sX7QQzjIGUCYtVcEp
+ iTrN73BalurOaP6BHceFb/h7fgzpxiYHeez+wUx2KceNnSJKZHe9cxVl450EKObYhXCe0mz252V
+ kgVlZcH00bBKy5uW3uamI1O0Yjd1z3P8wabDNB5ftOkMdoO3Bl8w494D1dMWZyw9JHlI8QpikH4
+ pEAPi3np3UmHkcO/FRCFYOXmxWVG2eGht4qL39RAcfG3r2e1MFR+rMi5zgEBr+uf6WXVWFwPDCT
+ XnpVxywkBgftxAv4RcanaHhm7gbn1w3TW3ZIAr4LvzM8eFuVQ8UOXLHbEnaOX0f/nPrYZjJQ/uf
+ DC9OTKa J6Kyq2pA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jan 23, 2024 at 11:50:34AM +0000, Kalle Valo wrote:
-> Kees Cook <keescook@chromium.org> wrote:
-> 
-> > In an effort to separate intentional arithmetic wrap-around from
-> > unexpected wrap-around, we need to refactor places that depend on this
-> > kind of math. One of the most common code patterns of this is:
-> > 
-> > 	VAR + value < VAR
-> > 
-> > Notably, this is considered "undefined behavior" for signed and pointer
-> > types, which the kernel works around by using the -fno-strict-overflow
-> > option in the build[1] (which used to just be -fwrapv). Regardless, we
-> > want to get the kernel source to the position where we can meaningfully
-> > instrument arithmetic wrap-around conditions and catch them when they
-> > are unexpected, regardless of whether they are signed[2], unsigned[3],
-> > or pointer[4] types.
-> > 
-> > Refactor open-coded wrap-around addition test to use add_would_overflow().
-> > This paves the way to enabling the wrap-around sanitizers in the future.
-> > 
-> > Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
-> > Link: https://github.com/KSPP/linux/issues/26 [2]
-> > Link: https://github.com/KSPP/linux/issues/27 [3]
-> > Link: https://github.com/KSPP/linux/issues/344 [4]
-> > Cc: Kalle Valo <kvalo@kernel.org>
-> > Cc: Johannes Berg <johannes.berg@intel.com>
-> > Cc: Max Chen <mxchen@codeaurora.org>
-> > Cc: Yang Shen <shenyang39@huawei.com>
-> > Cc: linux-wireless@vger.kernel.org
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > Acked-by: Kalle Valo <kvalo@kernel.org>
-> 
-> If you can edit before commit please add "wifi:" prefix to the wireless patches:
-> 
-> ERROR: 'wifi:' prefix missing: '[PATCH 41/82] wil6210: Refactor intentional wrap-around test'
-> ERROR: 'wifi:' prefix missing: '[PATCH 62/82] mwifiex: pcie: Refactor intentional wrap-around test'
+Recent versions of Clang gets confused about the possible size of the
+"user" allocation, and CONFIG_FORTIFY_SOURCE ends up emitting a
+warning[1]:
 
-Ah yes, thank you! I will adjust them.
+repro.c:126:4: warning: call to '__write_overflow_field' declared with 'warning' attribute: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Wattribute-warning]
+  126 |                         __write_overflow_field(p_size_field, size);
+      |                         ^
 
--Kees
+for this memset():
 
-> 
-> 2 patches set to Not Applicable.
-> 
-> 13526631 [41/82] wil6210: Refactor intentional wrap-around test
-> 13526632 [62/82] mwifiex: pcie: Refactor intentional wrap-around test
-> 
-> -- 
-> https://patchwork.kernel.org/project/linux-wireless/patch/20240123002814.1396804-41-keescook@chromium.org/
-> 
-> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-> 
+        int len;
+        __le16 *user;
+	...
+        len = ses->user_name ? strlen(ses->user_name) : 0;
+        user = kmalloc(2 + (len * 2), GFP_KERNEL);
+	...
+	if (len) {
+		...
+	} else {
+		memset(user, '\0', 2);
+	}
 
+While Clang works on this bug[2], switch to using a direct assignment,
+which avoids memset() entirely which both simplifies the code and silences
+the false positive warning. (Making "len" size_t also silences the
+warning, but the direct assignment seems better.)
+
+Reported-by: Nathan Chancellor <nathan@kernel.org>
+Closes: https://github.com/ClangBuiltLinux/linux/issues/1966 [1]
+Link: https://github.com/llvm/llvm-project/issues/77813 [2]
+Cc: Steve French <sfrench@samba.org>
+Cc: Paulo Alcantara <pc@manguebit.com>
+Cc: Ronnie Sahlberg <ronniesahlberg@gmail.com>
+Cc: Shyam Prasad N <sprasad@microsoft.com>
+Cc: Tom Talpey <tom@talpey.com>
+Cc: linux-cifs@vger.kernel.org
+Cc: llvm@lists.linux.dev
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ fs/smb/client/cifsencrypt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/smb/client/cifsencrypt.c b/fs/smb/client/cifsencrypt.c
+index ef4c2e3c9fa6..6322f0f68a17 100644
+--- a/fs/smb/client/cifsencrypt.c
++++ b/fs/smb/client/cifsencrypt.c
+@@ -572,7 +572,7 @@ static int calc_ntlmv2_hash(struct cifs_ses *ses, char *ntlmv2_hash,
+ 		len = cifs_strtoUTF16(user, ses->user_name, len, nls_cp);
+ 		UniStrupr(user);
+ 	} else {
+-		memset(user, '\0', 2);
++		*(u16 *)user = 0;
+ 	}
+ 
+ 	rc = crypto_shash_update(ses->server->secmech.hmacmd5,
 -- 
-Kees Cook
+2.34.1
+
