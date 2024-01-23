@@ -1,67 +1,69 @@
-Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C211586EE
-	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 00:28:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7D8F1586EE
+	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 00:28:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705969738; cv=none; b=F5DezBZW6nWq6kyPh80IPQ0sryft3hAVjHxGfqnfgxRYiJwHLYcEPK2lDodoeNFPqQTg19C+XG64XwbFJVEEu1LhQNyUA/znL+Bw13e+SfYsjU2XMPwk9NXsNCaTNBktmj0+QeP6ay9K6cBGIAmHfGufS2OaIJnaOxfvyP8Elfk=
+	t=1705969740; cv=none; b=Tzz4sCN6FntnY5bO3U4kFueJxXzNsmI3z3XTPplw2/W351KrlpoKJ2NRJeZuxqXy/BndQ5QAnT0cS0vjY9iicwM7ASfUioip1LFmVwtYnwlQsdMipzDabYhL47hEodOOW9a1Bjw44eqQAXBJYC6jSMI3HcFUUrEPsCfOyKjEi8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705969738; c=relaxed/simple;
-	bh=hmcJNNt4Q4VRdZF2vWAi73bsrPppPr3nSkhgxxWjJIU=;
+	s=arc-20240116; t=1705969740; c=relaxed/simple;
+	bh=JgonJZnxkTCS8vYti6xK+vM63BFoTeMVUBVyb+CU9a8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cLC4vyodZZqawuhI79USLLvLgDfrC8miKoEzkD4saj5z551lGJ1igFY72NDDCm4+M0hrEPueJM7XpFVhxOx7OinUEZRDwI69BAaVbtoRcb66BGnKQGxAzYuv8BnMtlLTptKc9zYn7d4IgYvWxEKHZ7Td4nljsnop6M3vD8Ck42k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=khxnD3rI; arc=none smtp.client-ip=209.85.161.42
+	 MIME-Version; b=hnyR9nq9lNOPsUON+/2/+fUBF8rc0vTCgORktcsD6WaOskRUokdCXMcCV3Z0Cfq6e59Ab7JjwKJYvxleX7kyVUDUx2zStacuWHMHvvU4vSk3lPQYb47hnuf0rkXfuG8z+aR3VIL3qtcZTudhGl9MNdIjNGII2lDPY/H7+pQQWkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=aH4tfvw3; arc=none smtp.client-ip=209.85.215.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="khxnD3rI"
-Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-5986cb7bb61so2114121eaf.2
-        for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 16:28:56 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aH4tfvw3"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-5d24c9b3c8eso231841a12.1
+        for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 16:28:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1705969736; x=1706574536; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1705969738; x=1706574538; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Lj0wfLNXUIfcFcpxjFCj6rC1hxMeO39B1XcxU2Z6FQQ=;
-        b=khxnD3rIeNf8wx6F/TQfF4EEXCdrUsJ4+NeWzVmT1mI1f+lo+i4Dk7LgSq+osT3SEA
-         KxgxZpCW92L3GUsZh5Jyaz2aWeyeJRR/3iIi/HwlPFThTDlD1mrZopKzTtjEKgD7QVAh
-         g71KNRZ9m20hb9ja0eqTu2qjZUyFjs032ZAKY=
+        bh=ti9Pce6Lpu2kUzlJNdDw3MDPT1cyRxs9AHo9YOvXXwc=;
+        b=aH4tfvw3xYJkOkqDFOs7n+3cdJvceqVk7JpZkM1/qFbNECn7IeL0tXqXxwUt9oPyCH
+         EnNWu62AsknRSDAIoMBL4mBXKHiUG606IYrPR6VrltQWWaNW1pZMoNtJVFs8znoNu1/y
+         yfoJuOEyHHjI6Wa95nfhkNjriVK1oVIWGC754=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705969736; x=1706574536;
+        d=1e100.net; s=20230601; t=1705969738; x=1706574538;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Lj0wfLNXUIfcFcpxjFCj6rC1hxMeO39B1XcxU2Z6FQQ=;
-        b=TYV2aQwHMdQwOgqQzLOAp2mRwWRLQuylYUvY5Zk7+3V8koOOObo0O+Ol77lBHvyvbv
-         g+ZYxXws3Rqyt0ddz6B7pRbgRhJv+qFgmOIaT55RpRhNSR9e3ZP9NaLwkwigfL70EU7T
-         1qY1x5+m4oXGTlCY6zZHReAwgl1izCzW9fSUqWjaOasmpvyX99j7Mnt8QVYz+p4sMzXj
-         MMMIj1st8J0lUEsO35w7OFORiGPlVfTAvh0MF2UXI0Q1zTdpbqjeAGzKwFpfjERNX9m2
-         6CtqFZQE5WKlYn3M+3vUBVBBKjC+yMQnjoE4sxl6DJp9MS7H13Lc+BWXYiO1AxZi7DDE
-         OjIA==
-X-Gm-Message-State: AOJu0YyHu83qXSpyvKYOwkv2O8G0hbAh3nQdugEnZEkM6eCxZ+YsL2BL
-	sNAcuXZP2sh00o+f++I6cwwQ4OS0r53RZ8NRP0sbCbnvKcdZ7SllIAuNAV+D1g==
-X-Google-Smtp-Source: AGHT+IGxMyxotbMc1Cchrsm3rFcXhbTFlmI7s6erqf4s8ue04bzsUyGWqJUWv1AxYbLOpHQJNEDrtg==
-X-Received: by 2002:a05:6358:9044:b0:171:4aa4:51 with SMTP id f4-20020a056358904400b001714aa40051mr2816637rwf.54.1705969735934;
-        Mon, 22 Jan 2024 16:28:55 -0800 (PST)
+        bh=ti9Pce6Lpu2kUzlJNdDw3MDPT1cyRxs9AHo9YOvXXwc=;
+        b=pFBw7wV6/pJijbJlEJYG14DF8n1BIBMLXMrAcRCBonWrhhLg7MR8ds5FyZCfUbPxuR
+         xnkiuCDEMn2/kb9eVlWmRIhh/XKrAmntFu2oQlZquJv6ZLrQrbZESvAbhUForoVusPU9
+         w/KRfQMe2T12+tQU1Dzuev6vOgl+0Rr2jhNFa87qNVUmYO47GnMnkEUuTDVheQUuq7hL
+         MMnBOLMkfQvH9gPI3x1HE+AbnPwE1WVO8lIdBVDH6keIzPVEFmxL5iBJ+VcAoufkpZeS
+         yhCAWrOfz9aUf2Xpo3zX8pSVYZvaHcXNhIfUvH5eqL2u/HRJRntQTQviZXEZ2WSahXFT
+         1xbA==
+X-Gm-Message-State: AOJu0Yz1LSw3z5J4qvHSLpCQtrKYFNHVdSMqL0Ud/sQ55FxEcptm95ih
+	Q+4m0j7VTSf+BHqOBXy/F6WM/JgaCzqhNIDZha658G/hKERoxFao3TugBVAKHg==
+X-Google-Smtp-Source: AGHT+IHxysOlKojjA+pzT7YKshwDp7mEoKxiFORi05Ne2gh5Z7r5EGY2fIV1rixzNAo1ByfAlcIy4A==
+X-Received: by 2002:a17:90b:3786:b0:290:666f:7be2 with SMTP id mz6-20020a17090b378600b00290666f7be2mr1543735pjb.82.1705969738187;
+        Mon, 22 Jan 2024 16:28:58 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id sv13-20020a17090b538d00b0028d8fa0171asm10226018pjb.35.2024.01.22.16.28.37
+        by smtp.gmail.com with ESMTPSA id eu7-20020a17090af94700b002902076c395sm9968033pjb.34.2024.01.22.16.28.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jan 2024 16:28:49 -0800 (PST)
+        Mon, 22 Jan 2024 16:28:46 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
 To: linux-hardening@vger.kernel.org
 Cc: Kees Cook <keescook@chromium.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org,
+	Maxime Ripard <mripard@kernel.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	dri-devel@lists.freedesktop.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 19/82] fs: Refactor intentional wrap-around calculation
-Date: Mon, 22 Jan 2024 16:26:54 -0800
-Message-Id: <20240123002814.1396804-19-keescook@chromium.org>
+Subject: [PATCH 17/82] drm/vc4: Refactor intentional wrap-around calculation
+Date: Mon, 22 Jan 2024 16:26:52 -0800
+Message-Id: <20240123002814.1396804-17-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240122235208.work.748-kees@kernel.org>
 References: <20240122235208.work.748-kees@kernel.org>
@@ -71,19 +73,19 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2642; i=keescook@chromium.org;
- h=from:subject; bh=hmcJNNt4Q4VRdZF2vWAi73bsrPppPr3nSkhgxxWjJIU=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgFKlHII6LhFKix+ewETmVbpfBbbfsybJbPD
- x+7qNyR682JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8IBQAKCRCJcvTf3G3A
- JliJD/sHf6ZqD8B/KWziPKmgyfqtW/R2omfg5NRF8ncdgxikerGRRFZGCvxzR4FW8MnjOxVf1uq
- VTlOujj9IdXmUGBNs6tlOuMkwDYDNxnpu2AhJz2L1ONpzLxW1Wo9TMy8M28suhDxJcE4bIhyVGL
- Fx2SEqEqstNDAG3Rd3j69TdEahfsyFepNOoEczntilqiJVXn+EVQfiYKnLqJOs/ClIXcT4I3UA0
- K5aspcqb7nZa9d9oLHl/gnMr+7tzhUthPyt2nmE9yXR1trn1C7UxLbzym+BovDdAEmBNHATqitV
- gowcGG8q+UqAhrey3vsLtf5HImIOfkVd+TOcmaqoeKn0pdU+2ClklkZWWuSPZ487SM0cmDnz2C1
- iGtEgxQSBrtf6GBC2d/etauF2TPzcSWLiA50TwSZMMnEv0e4ZAjBomBLGt6/oodBN4EEKFko0IC
- z7lNnU1chyMq5++BG9oppW4tU35qUGbM70e7vW5R2VenZeVNle7WRMV9PM7aoCll9FDyToggtFh
- y3nM1tyfxmnPcmhkmr6Arv/MeRImecDofJlbA8Gq1/NTHBdFh5h7VJz33oSPSRmR4KNJajQwru0
- oV6bvQm+LM2rktW39ya9RNbnqonExofCyI0arK6BQ3PYO4mcSczuAwRcMy9ABCKxBGIs9zpXCoo aXWaEhK33clY8pQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2558; i=keescook@chromium.org;
+ h=from:subject; bh=JgonJZnxkTCS8vYti6xK+vM63BFoTeMVUBVyb+CU9a8=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgFu/g3mFw6uq5pHkL3E8AN7SiAjt9KR8Xix
+ +PwApphAJCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8IBQAKCRCJcvTf3G3A
+ Jge3D/4u45AQKfLOVnFIwiv0NBxYETFmX3tUKTuc2dXJyNb2JL5HZVqwUSUaSPll1jigd0ESq+3
+ vBUnoJAMixRc0Wcmv8+S+NzuWlj/nljcpFOhIBrWsZt2Zdv0oFPuvDGXKWBwxohbLWGWqb2Otbc
+ y99plRk4kHDWrILvbtqc+mviNEDD63DUOu70L2aT0MgDBP2WJHf/KckoFqWe9Gh49tuCZQHmX0e
+ b9/uQAFad4dpfrO0Y7gWYu7QKC3HKK/EUXkvazbYav+WeTBL3JuifNiSmEE7wjLNSEod/GqFdt4
+ tnTvyCjEqXGwfLzjaX8TyuOvKZZsj+VZ6ZypG+E8d9qBmL3zZoVTvVXLyaQKv8sSLmPT87PN2tA
+ jlCMKrZYqld0WN2mSdTGlYWazdKvBvQ/wfaaeUY70H8G0dj2cWTwoC+wF/Wp/Ph1MIymiasAvIV
+ Ntw3se/q/tquahs2oNjMCDDmarRwr38iKcMtNt8Pewb9eY75hXI61eRzFQWcI7e+ksu9xOdHTgy
+ eV5ukAWCsrtg03FBRVxNX2eKCgWHTheAxQaBRGBD/XowDB712zwukECG7veQEoxDhY4DqRk3DlO
+ ts+/zz0xpt30cc8yvKxN1v+A5ldw0a38veiStkHBXthkzyl3wr9n0DChf/4UhYKH7XME3RBusVq 0W443HcucToeoOg==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
@@ -110,48 +112,43 @@ Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
 Link: https://github.com/KSPP/linux/issues/26 [2]
 Link: https://github.com/KSPP/linux/issues/27 [3]
 Link: https://github.com/KSPP/linux/issues/344 [4]
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Jan Kara <jack@suse.cz>
-Cc: linux-fsdevel@vger.kernel.org
+Cc: Maxime Ripard <mripard@kernel.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: David Airlie <airlied@gmail.com>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- fs/read_write.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/vc4/vc4_validate.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/fs/read_write.c b/fs/read_write.c
-index d4c036e82b6c..e24b94a8937d 100644
---- a/fs/read_write.c
-+++ b/fs/read_write.c
-@@ -1417,6 +1417,7 @@ static int generic_copy_file_checks(struct file *file_in, loff_t pos_in,
- 	struct inode *inode_out = file_inode(file_out);
- 	uint64_t count = *req_count;
- 	loff_t size_in;
-+	loff_t sum_in, sum_out;
- 	int ret;
+diff --git a/drivers/gpu/drm/vc4/vc4_validate.c b/drivers/gpu/drm/vc4/vc4_validate.c
+index 7dff3ca5af6b..9affba9c58b3 100644
+--- a/drivers/gpu/drm/vc4/vc4_validate.c
++++ b/drivers/gpu/drm/vc4/vc4_validate.c
+@@ -305,6 +305,7 @@ validate_gl_array_primitive(VALIDATE_ARGS)
+ 	uint32_t length = *(uint32_t *)(untrusted + 1);
+ 	uint32_t base_index = *(uint32_t *)(untrusted + 5);
+ 	uint32_t max_index;
++	uint32_t sum;
+ 	struct vc4_shader_state *shader_state;
  
- 	ret = generic_file_rw_checks(file_in, file_out);
-@@ -1451,7 +1452,8 @@ static int generic_copy_file_checks(struct file *file_in, loff_t pos_in,
- 		return -ETXTBSY;
+ 	/* Check overflow condition */
+@@ -314,11 +315,11 @@ validate_gl_array_primitive(VALIDATE_ARGS)
+ 	}
+ 	shader_state = &exec->shader_state[exec->shader_state_count - 1];
  
- 	/* Ensure offsets don't wrap. */
--	if (pos_in + count < pos_in || pos_out + count < pos_out)
-+	if (check_add_overflow(pos_in, count, &sum_in) ||
-+	    check_add_overflow(pos_out, count, &sum_out))
- 		return -EOVERFLOW;
- 
- 	/* Shorten the copy to EOF */
-@@ -1467,8 +1469,8 @@ static int generic_copy_file_checks(struct file *file_in, loff_t pos_in,
- 
- 	/* Don't allow overlapped copying within the same file. */
- 	if (inode_in == inode_out &&
--	    pos_out + count > pos_in &&
--	    pos_out < pos_in + count)
-+	    sum_out > pos_in &&
-+	    pos_out < sum_in)
+-	if (length + base_index < length) {
++	if (check_add_overflow(length, base_index, &sum)) {
+ 		DRM_DEBUG("primitive vertex count overflow\n");
  		return -EINVAL;
+ 	}
+-	max_index = length + base_index - 1;
++	max_index = sum - 1;
  
- 	*req_count = count;
+ 	if (max_index > shader_state->max_index)
+ 		shader_state->max_index = max_index;
 -- 
 2.34.1
 
