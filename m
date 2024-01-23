@@ -1,73 +1,70 @@
-Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A275A612FA
-	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 00:45:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7090612F2
+	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 00:45:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705970759; cv=none; b=uM9/9CIX6SSNPvpiT9zTpOr3RklBLsAnkAiRYtZw0Bo79lfUJsj6p2uWInEXFJleNkVG8JjkqhWOP3PZgm7jC2sZc3w0B+SJSFHvnt5Uivv0FJ4hNv2DxvfMk1Cwcup8iEPDJZoL/hKx/f+hdJBWGgz0FTmLK7nNvQ1Y9fMFE8o=
+	t=1705970759; cv=none; b=filoUkyLCqblMjTFU4riM4lGsVOtyfgA+a3YoywiddCRmjh+i/8/87PPBM5lUVToBdmMsjcHOGjv602atjNTAMqvLCYTjBT9ud7vLyJDgt5cNDss+3gEegdA3Fj5JKX6nl0kGkUdcz4mq+R+GGqKb6ifRSXY+zxv1RwFOKA/OZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705970759; c=relaxed/simple;
-	bh=jUfBRygKEob0pYY7t7xuNdNYLn6sNoLNNiaAx8Qo6NY=;
+	bh=pqahPWCtiilVxi2Cwewikz7N45reJkQJ7UJUXEGvxo0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EI3d7GsoIugLo5rjRMeenF1JCRWdqRgERWUNP3ZXxn5btAvSOAsY5V1WkpauB8ydVDuFiirqzqrTgjwvjbeEBdw1Q7VguYZiT858ZJZ/85SLGoPk5kN45e5sUE1csIuOxNEu+RhiLvtIruld2SmECXa1HAMv8vPM7FZ8K6bV780=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=dqR1af5m; arc=none smtp.client-ip=209.85.161.48
+	 MIME-Version; b=QI90Pb7AZC3DejsWondnlvQKPa7mzz+yUFGqbTbMIdPvVYp7MeOnzogQpi0u+j9h2hAKk72/ysfHrw9MQkl0n7swUfi/DnkPqqSbzp6mCE2tqePl0VCRTFg5+BgZ4wQlRlhVUu99B3WQ658+Xi0YxEZ/V1iWZ5kXT7l86Zq1iLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=QsDkKLfB; arc=none smtp.client-ip=209.85.216.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dqR1af5m"
-Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-58e256505f7so1920900eaf.3
-        for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 16:45:56 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QsDkKLfB"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-28e79182570so2858809a91.2
+        for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 16:45:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1705970756; x=1706575556; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1705970757; x=1706575557; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=E9D2RhyYqAg2d9K0ImTDYoiLNMME5NOa6lhB+xLPfvo=;
-        b=dqR1af5mzPyfLO9xXiIoQvQM+PeTnpbvEBte9mASZeEiRoM7xDXs/nRAry/7bw/30j
-         IaFSuFO1FL8njrxoNPXgL++CVOtxMga93y4Orfww3oHsJsVmrWE6oMUd1Gh5c1qLn6m7
-         R9RpQwICkmY0cJYT7WIYtId5T0TirdTRUdzjo=
+        bh=cRtEgA24maRm+G5gcEke23eL30Vj6MIdNe5RQrjo/8E=;
+        b=QsDkKLfBWO7BdvpXfam5uZ0BIQsXQUO1qqd6M4QpYpsO6sd9MIZZXJRrNzTO65Y+hQ
+         VoqSbft5M1Ckz5+NXB7r1zvru8OJj2GpsyfbuQVY0xcJkP/hmvGl+woNudrUVbPI+/EG
+         fK1awRwMQqC+OwibXTaOtxGj+3ZYu6pnwWa9M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705970756; x=1706575556;
+        d=1e100.net; s=20230601; t=1705970757; x=1706575557;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=E9D2RhyYqAg2d9K0ImTDYoiLNMME5NOa6lhB+xLPfvo=;
-        b=Lez1luy7CVgB/gAQLNtE5HcnlGRvB0L+/IugKrdQKAKRuxdB3tUm5VZdAvtstqJ/JH
-         EoctZbzQtw1GYv/bcoMWP8mTT3F0T3NrMrUyYrY5zGPexSjZ7KwqLI+jVDtT8P1wP/Tc
-         DIUaNhTMXWIUoGOo5f0oFOKTi6sj2m09grFTMMuJGGoL0TLh9oJMkmLiz9Py5ieuTn+t
-         SPHnkKEMa01G6ALVA69fBoxSdaKyJF2Vrp/Jfx5urJG5hWp60eeuwfyROmbWDsePFCta
-         IB19GusNFSwxdxAo35sVjJDbtkzrSSD86TlI+PRcypH98ZpBnMbjfZV+1oF8Lh+Q1Yvh
-         r9iQ==
-X-Gm-Message-State: AOJu0YzzHM5/AC8ULBZbGRYAovyaWEGAv8C/wbw9sn434RX9lBChhvSt
-	cicZBcwpwxTQHunFyErNMF6kSsAQ7S2QHnoA4mY1j1V1qDj9FbI2eQUhUNGW4g==
-X-Google-Smtp-Source: AGHT+IFVISzrzSXSdVQ6Q9UgTnrk65aK8T32BzTL9w9bZOjlyVv+fDCi/DNB3qZ7M7Yj6ydPIU0wGg==
-X-Received: by 2002:a05:6358:9044:b0:171:4aa4:51 with SMTP id f4-20020a056358904400b001714aa40051mr2836525rwf.54.1705970755743;
-        Mon, 22 Jan 2024 16:45:55 -0800 (PST)
+        bh=cRtEgA24maRm+G5gcEke23eL30Vj6MIdNe5RQrjo/8E=;
+        b=AeRfNizvczCaTzmwfrAvLxZkdpCMbQLgdmDhf/hEZe5WeLuGEojZOmDVJU4Z+TyCgl
+         hMr2qj4Z9SyNC0Xsfh04V3QL7I8LMWTBMBac1KYDIqDIOkf+8YOToVYJ8AxRLjDzOZgM
+         gFQtd6eE+joezcClBEEWarAu8QfzlnWIlq4Zo5Duoe7ocLuCGykBTrihe8vCF+UDgsv/
+         i3JXVQo0m1rF5rltIKjO9bXMiaazKa9RCr8Ngq4rnvoSwuBx+AOIahKmF53oyFdi6Llo
+         NuglCzjkSLtOQLm0aYEXJAB19YeoKP3GfV8pRQ/p3BJAafPbIgziudzL/qTrpR0KrWqX
+         PDLQ==
+X-Gm-Message-State: AOJu0YzVE696Sdd/NtcKh3o+nMZ29wP3nxAwaF3/UYY5Yk7YPdSaayp4
+	Oox2NrjHq1CFv53XAOvi2j5eWVuO6WykGYfE5BfTB/HzSFNZ3JxBtwtWWp5jeQ==
+X-Google-Smtp-Source: AGHT+IFciWHO78/a7euH6rqJvtMdI+gSwn5MfNBM1NW2JHf/Lhr+OJ/TN/dJXuWD57I9PPPQxJ44Rw==
+X-Received: by 2002:a17:90a:3941:b0:290:caf7:7a16 with SMTP id n1-20020a17090a394100b00290caf77a16mr435126pjf.0.1705970757093;
+        Mon, 22 Jan 2024 16:45:57 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id q24-20020aa79838000000b006dba11edc7csm9613217pfl.218.2024.01.22.16.45.54
+        by smtp.gmail.com with ESMTPSA id so18-20020a17090b1f9200b002909c6bf228sm3237373pjb.51.2024.01.22.16.45.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jan 2024 16:45:54 -0800 (PST)
+        Mon, 22 Jan 2024 16:45:55 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
 To: linux-hardening@vger.kernel.org
 Cc: Kees Cook <keescook@chromium.org>,
-	Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Eric Auger <eric.auger@redhat.com>,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
+	Steve French <sfrench@samba.org>,
+	Paulo Alcantara <pc@manguebit.com>,
+	Ronnie Sahlberg <lsahlber@redhat.com>,
+	Shyam Prasad N <sprasad@microsoft.com>,
+	Tom Talpey <tom@talpey.com>,
+	linux-cifs@vger.kernel.org,
+	samba-technical@lists.samba.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 57/82] KVM: arm64: vgic-v3: Refactor intentional wrap-around test
-Date: Mon, 22 Jan 2024 16:27:32 -0800
-Message-Id: <20240123002814.1396804-57-keescook@chromium.org>
+Subject: [PATCH 14/82] smb: client: Refactor intentional wrap-around calculation
+Date: Mon, 22 Jan 2024 16:26:49 -0800
+Message-Id: <20240123002814.1396804-14-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240122235208.work.748-kees@kernel.org>
 References: <20240122235208.work.748-kees@kernel.org>
@@ -77,19 +74,19 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2103; i=keescook@chromium.org;
- h=from:subject; bh=jUfBRygKEob0pYY7t7xuNdNYLn6sNoLNNiaAx8Qo6NY=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgK6p/l1eSrerQhSuQAXGj4NB7+sc1cNpXou
- bSA7eeLunuJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8ICgAKCRCJcvTf3G3A
- JvcVEACO/+PPMjBquDJGhsJWwJDHC0YCgObRXdZAVFrFSsIROk0VLyG5+vouD43LP2qVe5ORA5j
- bl5cVYkqVOrsAC8uQaB+9i/mDFxTvj5VHQm1TUR2xuP827NRLV0VGb2f9Fj/FPIjyevrbu0PcMA
- UcER3p5QpR/cuOZBj3R/vah7DqHmaIne4dZAW9p54Oi514wjbLYhIfwOSVCQL6DDgGIxtnATzDD
- rAetbVwGi503y+FO6LYOjI422f/21hmyOca1/u/ISsjjrgZO428LuNq+QUdmIip/pVhEsXw8ww/
- p6vIlHQPoGVgnE7c+USyPLwZ3CV0VXxY5SD2sAnDH2sBy1akaJOFxzQW/An8acwegGir2tjE+9z
- hio1KXTg8hgdaASg3zurlSyzb/NdXrjdSN6i2SO3oMHjyswNoYDG6syzHtssPhYvXSMwoORpOb6
- Nx1W3AP8puZxaKMMtXwuTZ4hJP34sZZEphdi9Zjxm+/Mp+OOxcREehtCCqhGGuy1nli8/sDthQ7
- aoQzWOoHL5ZpbGHMN/SLiNoUgBhdBSRoZmgD+1JJk9d7k+fOkPqwiHE0BWvftclmj303mH/PUoN
- 2BvnsyIvYnasZFwaeKFsyyhJujnG5CgR4qWeDlnraQiHQ9dpiPFRn6D3DgZwjPb7plAU6AHtvog iYvmKmaokbzYFnQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2356; i=keescook@chromium.org;
+ h=from:subject; bh=pqahPWCtiilVxi2Cwewikz7N45reJkQJ7UJUXEGvxo0=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgF+RrezY1R+vJeoB3MoQno65kcsaFJYE8T7
+ TFT3XWlULSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8IBQAKCRCJcvTf3G3A
+ JghND/9sxXRpGBChydX6oXKHlWt5zCT0j1qCewzIX5EZfL6bLAAMMvbrryh0Kxi9Sj4hqZGsIHg
+ LtEJVktXPEirje72RefP1RpOxo01UzeUOLmDOWUHMoB4B0z+XubPvEaAaQ93LFS0A5Cf2GSblOc
+ Hx+I37mBMNSY3YGAsN9F86amVO0lc8gZY8oppvXg0goQD2o031eriElKHB3uK26o2m9SokcDyZW
+ Q4di9IdRGvGZ4IPTbQ0R5Uc/QqdPqSBZ/tJyncI0bhVLAYKfqLdKCWvKzpFkbsxSnLFey7WJTtL
+ N6JxOZoVgb+cu14E6OubQIRM4a2MF6lWjK/TSXxKa741TuGCCZWHVWy8HfQg/nEehtsBojQR5Ke
+ n4ZK0eZDc+TVrnTYX09u87bgIwCCnlVBad9RNxR6MYfbB5PCTvmdApJodAX+eamo/22YvttIlV2
+ lHj7KOeoKn1Ybl67n+iX3eJgQ4EssmZnEZG7XmODkiw6AR1iDdWqIvIfoThRxBNs46UjYdzaIa/
+ KZn9l3Z/958uJ9DYefApgztvC4i06O+FIGSIYVn45yV+CgRlLA9VZjRlrzzgLoEgZrklYDey13J
+ IlbCxjn/tjXnvRrqNAWm/i7hglaOoYH5il7sEsia1iH8bIkOkbWmiSISrRcH/ojibVnpKp/vaxx ikviov4jRF0L/Hg==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
@@ -107,41 +104,47 @@ instrument arithmetic wrap-around conditions and catch them when they
 are unexpected, regardless of whether they are signed[2], unsigned[3],
 or pointer[4] types.
 
-Refactor open-coded wrap-around addition test to use add_would_overflow().
-This paves the way to enabling the wrap-around sanitizers in the future.
+Refactor open-coded pointer wrap-around addition test to use
+check_add_overflow(), retaining the result for later usage (which removes
+the redundant open-coded addition). This paves the way to enabling the
+wrap-around sanitizer in the future.
 
 Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
 Link: https://github.com/KSPP/linux/issues/26 [2]
 Link: https://github.com/KSPP/linux/issues/27 [3]
 Link: https://github.com/KSPP/linux/issues/344 [4]
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Oliver Upton <oliver.upton@linux.dev>
-Cc: James Morse <james.morse@arm.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Zenghui Yu <yuzenghui@huawei.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Eric Auger <eric.auger@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: kvmarm@lists.linux.dev
+Cc: Steve French <sfrench@samba.org>
+Cc: Paulo Alcantara <pc@manguebit.com>
+Cc: Ronnie Sahlberg <lsahlber@redhat.com>
+Cc: Shyam Prasad N <sprasad@microsoft.com>
+Cc: Tom Talpey <tom@talpey.com>
+Cc: linux-cifs@vger.kernel.org
+Cc: samba-technical@lists.samba.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- arch/arm64/kvm/vgic/vgic-mmio-v3.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/smb/client/readdir.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/kvm/vgic/vgic-mmio-v3.c b/arch/arm64/kvm/vgic/vgic-mmio-v3.c
-index c15ee1df036a..860b774c0c13 100644
---- a/arch/arm64/kvm/vgic/vgic-mmio-v3.c
-+++ b/arch/arm64/kvm/vgic/vgic-mmio-v3.c
-@@ -863,7 +863,7 @@ static int vgic_v3_alloc_redist_region(struct kvm *kvm, uint32_t index,
- 	int ret;
+diff --git a/fs/smb/client/readdir.c b/fs/smb/client/readdir.c
+index 94255401b38d..7715297359ab 100644
+--- a/fs/smb/client/readdir.c
++++ b/fs/smb/client/readdir.c
+@@ -467,12 +467,13 @@ static char *nxt_dir_entry(char *old_entry, char *end_of_smb, int level)
+ 				pfData->FileNameLength;
+ 	} else {
+ 		u32 next_offset = le32_to_cpu(pDirInfo->NextEntryOffset);
++		char *sum;
  
- 	/* cross the end of memory ? */
--	if (base + size < base)
-+	if (add_would_overflow(base, size))
- 		return -EINVAL;
- 
- 	if (list_empty(rd_regions)) {
+-		if (old_entry + next_offset < old_entry) {
++		if (check_add_overflow(old_entry, next_offset, &sum)) {
+ 			cifs_dbg(VFS, "Invalid offset %u\n", next_offset);
+ 			return NULL;
+ 		}
+-		new_entry = old_entry + next_offset;
++		new_entry = sum;
+ 	}
+ 	cifs_dbg(FYI, "new entry %p old entry %p\n", new_entry, old_entry);
+ 	/* validate that new_entry is not past end of SMB */
 -- 
 2.34.1
 
