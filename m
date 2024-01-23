@@ -1,122 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D02158ACE;
-	Tue, 23 Jan 2024 09:15:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FFE858ABB;
+	Tue, 23 Jan 2024 09:22:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706001322; cv=none; b=lHC61WI8NB0qJs0zhfwx7YFGtFCH5oSd5AOGwtn1fCOLZgQ2iiFdnPFr1538yzSKz0c3IU2oxfwu3SdbkZRN1oKMzuBycKRRVcEhCuv/r9vOlvIF7/xNmTVBEGG50GkTt6yo+Q8+CG6MZ90nkyc2lLB74hwPKQgJuldn1FRPhTU=
+	t=1706001782; cv=none; b=meZKR57//HU1dEJ+j8XeLPBzGAak7wArPQGq+WcoLzvE9JNWckU511DRaaImolMyYLw13isMMJJUSY2ZQl8yEaUAYRBXzVMgMXsfoDNbmLjDzMRAOrRvYBH5feEVq/zRzpJALFa+gM62EOtb/K7ysiUtBbUyb4jAchwVgEUPv9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706001322; c=relaxed/simple;
-	bh=C/q8o5kLPhhfSoji4iZJv2bCVDUdnPxN+hjpssNxaK4=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=F+skL01WoIayh77wMBaeA24nFD7+/sN9htYQ/y0gL2OOZ3tbdxpCEIx9cHl8YKWS/AWH05phFOgdpCXMC0qagIkgvUPHbjE08N29R1fnZo6gFEhK0oxQe6yBFco3t/9m1F5w5QxQZ7ASy5+kA7+U2WxDgY8B9nWiD1kvzsy9x0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ibVNWuXQ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ibVNWuXQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 646D4C43390;
-	Tue, 23 Jan 2024 09:15:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706001321;
-	bh=C/q8o5kLPhhfSoji4iZJv2bCVDUdnPxN+hjpssNxaK4=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=ibVNWuXQT2KYOYx801hv1IWlSYU1NThCA2PTo2RuwYKNESz41Xx6knxpitqpqtlpw
-	 1AYTjNv1lnCD5wawBMm6LLGV1FCvn5LMvYdNC79EEdFpxBUQdfIit5x8l4lFpaWY54
-	 8M2A/5Nc3TEbPRGW4+LnrUsi/1kM9995h3aUyP3zzWSZWFfUg5VkEVJDkHix5cUh1i
-	 rOEDrwY6ocw2WmDjMmoJInkDYej3SSX9K1GArnxZNZcWfQ5sUo4LWaRXCRXi0UUXc1
-	 PXKugZlQbCtoRCZVTmPGTFxAsSXdc09waRZeSvjzwrmW1eyULUM702YpGvuVfRnRx9
-	 5pWCYXOytk2Eg==
+	s=arc-20240116; t=1706001782; c=relaxed/simple;
+	bh=Ycn2L8knKsuG25PqceFwwkyWPC3fzjbd37VkNDIYcn4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QUNRA0xvFZAJx5CyWzTUZchggYZORnwBL6Ar7p4NgnNvQD8HPfCXp+kCYTrj1AKI5q4neK9VNVxgvGT9PPAeq49BAmUSRyUJdXhdDjDaOS0ev4Hs3aotm4GiICtugDRFQ2Tl9gReMVlZFZuqzXZYJS4uyYHZXBGA4sX9Ga3NNJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F213F1FB;
+	Tue, 23 Jan 2024 01:23:44 -0800 (PST)
+Received: from FVFF77S0Q05N (unknown [10.57.48.47])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 76FAE3F5A1;
+	Tue, 23 Jan 2024 01:22:58 -0800 (PST)
+Date: Tue, 23 Jan 2024 09:22:52 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Kees Cook <keescook@chromium.org>
+Cc: linux-hardening@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 03/82] overflow: Introduce add_wrap()
+Message-ID: <Za-FbFE7slBpwrbq@FVFF77S0Q05N>
+References: <20240122235208.work.748-kees@kernel.org>
+ <20240123002814.1396804-3-keescook@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 23 Jan 2024 09:15:16 +0000
-Message-Id: <CYLYZT8Q5YPS.BF3JHG87K4EJ@seitikki>
-Cc: "Dave Hansen" <dave.hansen@linux.intel.com>, "Thomas Gleixner"
- <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov"
- <bp@alien8.de>, <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
- <linux-sgx@vger.kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- "Bill Wendling" <morbo@google.com>, "Justin Stitt"
- <justinstitt@google.com>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 22/82] x86/sgx: Refactor intentional wrap-around
- calculation
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Kees Cook" <keescook@chromium.org>, <linux-hardening@vger.kernel.org>
-X-Mailer: aerc 0.15.2
-References: <20240122235208.work.748-kees@kernel.org>
- <20240123002814.1396804-22-keescook@chromium.org>
-In-Reply-To: <20240123002814.1396804-22-keescook@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240123002814.1396804-3-keescook@chromium.org>
 
-On Tue Jan 23, 2024 at 12:26 AM UTC, Kees Cook wrote:
-> In an effort to separate intentional arithmetic wrap-around from
-> unexpected wrap-around, we need to refactor places that depend on this
-> kind of math. One of the most common code patterns of this is:
->
-> 	VAR + value < VAR
->
-> Notably, this is considered "undefined behavior" for signed and pointer
-> types, which the kernel works around by using the -fno-strict-overflow
-> option in the build[1] (which used to just be -fwrapv). Regardless, we
-> want to get the kernel source to the position where we can meaningfully
-> instrument arithmetic wrap-around conditions and catch them when they
-> are unexpected, regardless of whether they are signed[2], unsigned[3],
-> or pointer[4] types.
->
-> Refactor open-coded unsigned wrap-around addition test to use
-> check_add_overflow(), retaining the result for later usage (which removes
-> the redundant open-coded addition). This paves the way to enabling the
-> wrap-around sanitizers in the future.
->
-> Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f185365=
-94 [1]
-> Link: https://github.com/KSPP/linux/issues/26 [2]
-> Link: https://github.com/KSPP/linux/issues/27 [3]
-> Link: https://github.com/KSPP/linux/issues/344 [4]
-> Cc: Jarkko Sakkinen <jarkko@kernel.org>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: x86@kernel.org
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: linux-sgx@vger.kernel.org
+On Mon, Jan 22, 2024 at 04:26:38PM -0800, Kees Cook wrote:
+> Provide a helper that will perform wrapping addition without tripping
+> the arithmetic wrap-around sanitizers.
+> 
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: linux-hardening@vger.kernel.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
->  arch/x86/kernel/cpu/sgx/ioctl.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/x86/kernel/cpu/sgx/ioctl.c b/arch/x86/kernel/cpu/sgx/io=
-ctl.c
-> index b65ab214bdf5..4b8f6c9f8ef5 100644
-> --- a/arch/x86/kernel/cpu/sgx/ioctl.c
-> +++ b/arch/x86/kernel/cpu/sgx/ioctl.c
-> @@ -350,16 +350,18 @@ static int sgx_validate_offset_length(struct sgx_en=
-cl *encl,
->  				      unsigned long offset,
->  				      unsigned long length)
->  {
-> +	unsigned long sum;
+>  include/linux/overflow.h | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/include/linux/overflow.h b/include/linux/overflow.h
+> index ac088f73e0fd..30779905a77a 100644
+> --- a/include/linux/overflow.h
+> +++ b/include/linux/overflow.h
+> @@ -124,6 +124,22 @@ static inline bool __must_check __must_check_overflow(bool overflow)
+>  		check_add_overflow(a, b, &__result);\
+>  	}))
+>  
+> +/**
+> + * add_wrap() - Intentionally perform a wrapping addition
+> + * @a: first addend
+> + * @b: second addend
+> + *
+> + * Return the potentially wrapped-around addition without
+> + * tripping any overflow sanitizers that may be enabled.
+> + */
+> +#define add_wrap(a, b)					\
+> +	({						\
+> +		typeof(a) __sum;			\
+> +		if (check_add_overflow(a, b, &__sum))	\
+> +			/* do nothing */;		\
+> +		__sum;					\
+> +	})
+
+It's really difficult to see the semicolon for the empty statement here; could
+we make that part:
+
+		if ((check_add_overflow(a, b, &__sum)) {	\
+			/* do nothing */			\
+		}						\
+
+... to be a little clearer (and less at risk of breakage in a refactoring)?
+
+I realise coding style says not to use braces for a single statement, but IMO
+it's far clearer in this instance with the braces.
+
+Mark.
+
 > +
->  	if (!IS_ALIGNED(offset, PAGE_SIZE))
->  		return -EINVAL;
-> =20
->  	if (!length || !IS_ALIGNED(length, PAGE_SIZE))
->  		return -EINVAL;
-> =20
-> -	if (offset + length < offset)
-> +	if (check_add_overflow(offset, length, &sum))
->  		return -EINVAL;
-> =20
-> -	if (offset + length - PAGE_SIZE >=3D encl->size)
-> +	if (sum - PAGE_SIZE >=3D encl->size)
->  		return -EINVAL;
-> =20
->  	return 0;
-
-Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
-
-BR, Jarkko
+>  /**
+>   * check_sub_overflow() - Calculate subtraction with overflow checking
+>   * @a: minuend; value to subtract from
+> -- 
+> 2.34.1
+> 
+> 
