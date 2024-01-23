@@ -1,82 +1,62 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF6C750242;
-	Tue, 23 Jan 2024 06:21:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0365524A5;
+	Tue, 23 Jan 2024 06:36:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705990913; cv=none; b=nPn+kC5cTxSJEkBCCsJ5s9kOFy6no3hUl+fw5PCpuNo8gNe3Sah5Zq1jyRUqMYLiXogKOhvXWoHcV1eNXIdoPCzllJjIuPk5NHcvUYcERa2vFAf/dv05YsleYzHy0K3FV4qE+npYI6XSiJCCF93ACq8DHkRGtPy5HKpZp79GGlo=
+	t=1705991768; cv=none; b=jH1kyNum8kTS1hDi3gP14+cKE2Sgu+qDq1jZlUZkNKhl1Uwa4SRe1+Lrx4HIcw8XAgM9YWSMNhbcaBzaTWv8va2od8c3tDAfhDSJrRogMuIOp9fjclJAvHXDq1mhJX7M7wEXIkmsWmXw/6nKB3GsC6K5O/JLLBt2e9mrYyaEnGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705990913; c=relaxed/simple;
-	bh=TNQNx0qYYSetcUCpOyMQNkCTJJsrGoFBI6YDppksKeE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IZniLwXq8qp5Kqn+6Rn2cuqITOCWdlur6REGfRpm1RbKxktvBp6QkaFvPadrHIkfhaA5e3nsmebWZLeph0CcSecxTKaCD/D1LG4YLj1YOkB/mkKB4Z+akLWvX+55StKs2iK7dIP/L8+NTiEG2NaSx3sD4sjZe1mo40ia4fhmRYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lPvcVHky; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1705991768; c=relaxed/simple;
+	bh=ukafp/8jphsufSCnQJqqiNhF57sNngiILnTZ9/2MUCM=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=fITbyQB/G3V1h2mjy4KsPlkg/nlymJ/c+JKNbDHtpp/5uzikaVK0GOhexDQWwvh0DfH9chGFpv+a8jJN2++APDgIuXdGGxFPWzVPP3JAHi2m+PZ4IAVRDWYHPQ9/Anr0jcTHJlhBiT9NaKK5EGhZMeYzkmeu5dUaD570sy1wACw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AcTUt/F4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lPvcVHky"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705990912; x=1737526912;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=TNQNx0qYYSetcUCpOyMQNkCTJJsrGoFBI6YDppksKeE=;
-  b=lPvcVHkynIh1oJozRNJxiKRYXnjYijalHNicYJ/M7z3IyGyR3XhrPM9D
-   CbIsNWZz7AWm090gAzCSXgV58Pyomu1remG83akKOpR7T3iKvc2B8gKCz
-   ytR7F5x/CfAgNGdZyhtMhXZHq33p5y7huO3Exiv4MizGv3SWMEXfzC5Xx
-   Sop/POzrbFRbL0LiT9LuGvEzedm4ypS/ZO2TBnbbOltTZ6n12VrPIvYMx
-   PaefJDWfW+hIXGlIRjiL9mr4a/c/fC1jeySrWD/dNsJrjbn2ov8gu5Rxe
-   kyOe2UjoaqnTfOgSLkjtT8wC+623fyQwEjT++ZAJxgfcnyaUfgmeizFkB
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="8539916"
-X-IronPort-AV: E=Sophos;i="6.05,213,1701158400"; 
-   d="scan'208";a="8539916"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 22:21:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,213,1701158400"; 
-   d="scan'208";a="1550933"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.57.4])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 22:21:46 -0800
-Message-ID: <dc3a7101-964b-46c5-a78b-374b68cd54fb@intel.com>
-Date: Tue, 23 Jan 2024 08:21:41 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AcTUt/F4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45237C433C7;
+	Tue, 23 Jan 2024 06:36:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705991768;
+	bh=ukafp/8jphsufSCnQJqqiNhF57sNngiILnTZ9/2MUCM=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=AcTUt/F4qkfV/qIWDhzXc2BDbdBiqbN+lyQH/Zv5qtRgRgn686G+wSEgXFB5Y5ZJl
+	 4tcOIbAL8yf3kSXNfybhtuHMzjj9bjNmm7u+OuRY7V/aDmhnanpyH26JS4bFYC3GgG
+	 yBLGwax0grx8SrooHE+SceDWq0goqKv2RDKXlljKSh8R6rwR/xACsKG7tmBZHA344e
+	 kY1IZPt5z7FsuwKtcdSP3MqRTo2AnH+516c4GCwnJma7v5L6NTw0yTBJSW6GuPjVNg
+	 VMogN/UCHUOZMAJtPkeraMKwwC6ZbkIvVUj2YUeclRChYg6MOws/oU70foVwnzUrPr
+	 Wlmc0G/k2Oidg==
+From: Kalle Valo <kvalo@kernel.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: linux-hardening@vger.kernel.org,  Johannes Berg
+ <johannes.berg@intel.com>,  Max Chen <mxchen@codeaurora.org>,  Yang Shen
+ <shenyang39@huawei.com>,  linux-wireless@vger.kernel.org,  "Gustavo A. R.
+ Silva" <gustavoars@kernel.org>,  Bill Wendling <morbo@google.com>,  Justin
+ Stitt <justinstitt@google.com>,  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 41/82] wil6210: Refactor intentional wrap-around test
+References: <20240122235208.work.748-kees@kernel.org>
+	<20240123002814.1396804-41-keescook@chromium.org>
+Date: Tue, 23 Jan 2024 08:36:04 +0200
+In-Reply-To: <20240123002814.1396804-41-keescook@chromium.org> (Kees Cook's
+	message of "Mon, 22 Jan 2024 16:27:16 -0800")
+Message-ID: <87fryoeeuj.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 69/82] perf tools: Refactor intentional wrap-around test
-To: Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, John Garry <john.garry@huawei.com>,
- Fangrui Song <maskray@google.com>, linux-perf-users@vger.kernel.org,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- linux-kernel@vger.kernel.org
-References: <20240122235208.work.748-kees@kernel.org>
- <20240123002814.1396804-69-keescook@chromium.org>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20240123002814.1396804-69-keescook@chromium.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 23/01/24 02:27, Kees Cook wrote:
+Kees Cook <keescook@chromium.org> writes:
+
 > In an effort to separate intentional arithmetic wrap-around from
 > unexpected wrap-around, we need to refactor places that depend on this
 > kind of math. One of the most common code patterns of this is:
-> 
+>
 > 	VAR + value < VAR
-> 
+>
 > Notably, this is considered "undefined behavior" for signed and pointer
 > types, which the kernel works around by using the -fno-strict-overflow
 > option in the build[1] (which used to just be -fwrapv). Regardless, we
@@ -84,46 +64,26 @@ On 23/01/24 02:27, Kees Cook wrote:
 > instrument arithmetic wrap-around conditions and catch them when they
 > are unexpected, regardless of whether they are signed[2], unsigned[3],
 > or pointer[4] types.
-> 
+>
 > Refactor open-coded wrap-around addition test to use add_would_overflow().
 > This paves the way to enabling the wrap-around sanitizers in the future.
-> 
+>
 > Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
 > Link: https://github.com/KSPP/linux/issues/26 [2]
 > Link: https://github.com/KSPP/linux/issues/27 [3]
 > Link: https://github.com/KSPP/linux/issues/344 [4]
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: John Garry <john.garry@huawei.com>
-> Cc: Fangrui Song <maskray@google.com>
-> Cc: linux-perf-users@vger.kernel.org
+> Cc: Kalle Valo <kvalo@kernel.org>
+> Cc: Johannes Berg <johannes.berg@intel.com>
+> Cc: Max Chen <mxchen@codeaurora.org>
+> Cc: Yang Shen <shenyang39@huawei.com>
+> Cc: linux-wireless@vger.kernel.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  tools/perf/util/dso.c                    | 2 +-
->  tools/perf/util/unwind-libdw.c           | 2 +-
->  tools/perf/util/unwind-libunwind-local.c | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-> index 22fd5fa806ed..470a86f1cdfd 100644
-> --- a/tools/perf/util/dso.c
-> +++ b/tools/perf/util/dso.c
-> @@ -1122,7 +1122,7 @@ static ssize_t data_read_write_offset(struct dso *dso, struct machine *machine,
->  	if (offset > dso->data.file_size)
->  		return -1;
->  
-> -	if (offset + size < offset)
-> +	if (add_would_overflow(offset, size))
 
-perf tools has separate includes to the kernel, so does not
-seem to include add_would_overflow() in any of its include
-files at this point.  Need to update
-tools/include/linux/overflow.h first.
+I assume this goes via some other tree than wireless-next so:
 
+Acked-by: Kalle Valo <kvalo@kernel.org>
+
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
