@@ -1,66 +1,66 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7D171615B5
-	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 00:36:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75FC5161B63
+	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 00:36:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705970183; cv=none; b=IWepVfquKoTeDOtHKY0wQ70H9OblV1EghcK6rDENLlKGJ2k0HkcSgGxjog/oQkxGTl8W+w6STFTX1jGs+XQXkfU8g39AZJ4q28CWzZ7VHadSbOAy5SG25f0m2tcdQAyb3EZS9nZnMVPlcRiQXZUCV2ff3Q4CLCOXXnvGeYlA3xI=
+	t=1705970185; cv=none; b=N0lIV2oPoX1cwGcronyBll+QjsC9Qm4taLXY/b2Kcfp672SQDqgXnojaLizE0E4L9nMKpE/Ljo/qn+rvkjp+DgGjazdu+T79kfnUFwdeS4jLK8Ezw1NbCPxTiS/v5gyIGOYB8GHLc45iLyAh0HUa72hg1EYQ2TQqC08NIeHmRmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705970183; c=relaxed/simple;
-	bh=LBqk/a/7XxyM37MkXdksahXfcAh3M0YpOfyluKrlFV0=;
+	s=arc-20240116; t=1705970185; c=relaxed/simple;
+	bh=TtGEKwfEht79ULnpSVJcOtpH1GzIiQlRdhb7ZdKErag=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OY2vElNJvRvdnoP9/xIVcEOiOLchkQDqxHKGeGWfWQdxU76j6mL4FE/9ssBO2Ib5KAXiBpJ24KKulqnj1QTem3cncge8tkSjGYYy3WxbiYq6bOtxHZaloSJ9VvOkhZf/1FiZkfo9QDwPwIOyVIANRTPEnehprz7y71sr/sACo18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=GCwh5Ys5; arc=none smtp.client-ip=209.85.210.173
+	 MIME-Version; b=mRie3ijnLmChFojNEXyFwENULSIl8KV5J/r2vT0ex0/LdhM5ElKxf9ArOjerJ4YAaoJkJNEoRahwUjst0kRCVL777NabOZ5NgBvn3q2QBbVyEZvkh3H6VFGnUXxNfAbz0qqMeMmO66Oz/32Y/84zWFgPn6yAzhnw8TqczDbwMaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=OPh7dFco; arc=none smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GCwh5Ys5"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6dbd07916d0so2222442b3a.0
-        for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 16:36:21 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OPh7dFco"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1d751bc0c15so13288175ad.2
+        for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 16:36:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1705970181; x=1706574981; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1705970183; x=1706574983; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XUCj35B+IoUqLMsvIqNWwmNsYz5bFEZJWHH794ML50A=;
-        b=GCwh5Ys5AreNGnJv/o5MlywdeWL+y/chxDSHj197Kcl65QXHWa/QrusK3ZOTD8lhq9
-         AoucqwVyfC2267GBWyiT9UUNs0e4MK/Fm63YrIjOfzaz6VsyUcf4aCwCac/yAqDb2vyR
-         PEKbRWcUWlhwUm7GcO+gaCdfhkCEWJy62yo5Y=
+        bh=uuAginudDA34iqBrsX+BzE2nEMittQE6YVsuxv2qKnM=;
+        b=OPh7dFcot4hsOkOMu9O6mJSAyTClh286gsa/W+PyfBaIdKcbw+VVCpwJj7yN3euPlO
+         Y2LQjVKa/eRV5AtIcJutHCKE2fLswheYhQrP7Z+ebdF02qSWsiU8RC+O++iqa6+3N/or
+         k2PPeSA0wE8D0skn2PNUtT0d+W32zUqrFdLl0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705970181; x=1706574981;
+        d=1e100.net; s=20230601; t=1705970183; x=1706574983;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XUCj35B+IoUqLMsvIqNWwmNsYz5bFEZJWHH794ML50A=;
-        b=KDuVG4blEigjCxSBQKDEmJA6AEasMN3FKsf3CZZsl25FDLmtmUUW3PI7mdC9akKT+6
-         iCHiU6JFLNWSgl9BPFiwSQzEOeErcLKE+MeE9Q8ygseDgqZb0owxus9PfA7PY5Uio4XT
-         CHIQQzuG6bDRV4hjw5la7ZmTkeYVJ3oSrCMzNzxnIba0rkKHP+AZJMc79L3ynl1w//z8
-         nJfcAfQySYGH1SapLxyor97YvUE3dIN8aRbrvtiQoKBuQrnPRiEkWdxYRN5G+szonBVP
-         CZMjMroPDSTAyQ0JdWmGpsOtX6CTKc0OwwwplZKP2/bPC/NB3zz/jH3aMkorQY8A7Q5v
-         XdHg==
-X-Gm-Message-State: AOJu0YyJnGUvooLyhDbM7RoeeyfRNbLI+V7mIt5sDm5rEg9MiLZBFpb3
-	BfdNZcGo2AJapo+whHc5oK/ru2BkrkUKa9/QbxpruHjH8SDgs3/c5QSG+Aidiw==
-X-Google-Smtp-Source: AGHT+IGHAOZ5RbrxlekwcgptdcBkTzY/+KlPMJsJzP8k7ICUY18jNvt4AfpnzbQWNGfW72d9WEsgGg==
-X-Received: by 2002:a05:6a20:72a9:b0:19c:4dca:a86 with SMTP id o41-20020a056a2072a900b0019c4dca0a86mr1877300pzk.66.1705970181377;
-        Mon, 22 Jan 2024 16:36:21 -0800 (PST)
+        bh=uuAginudDA34iqBrsX+BzE2nEMittQE6YVsuxv2qKnM=;
+        b=ZaK2ZhUDgkeK08dRpmzuSY60YhTiLGt0cQOx7BwvWpGVopFSA/c2svdxHihzu6eS/M
+         TrC0/p1I4MN8fpFcBk7m4KcX5c4JyP+M7cLTqYYJh/qtLKTsxTWkfZ3WMckwzb8FA2fn
+         yxzwSgeTxWCzG4PuZjeusHevmj5fQFPhH/PvEbUxg36SXvI8q+e6rlAm+tArydoAYZSQ
+         RFEJk4G/ed2iwZzySN9N75R9kAadxxcaFaxesessd1PcckIQd2YpuODecG8XWDLRlBXs
+         Dj8Y6RPzzHOxBXyPYIVLn4wJ5Mab46eg8gR4AQ8wI1sRVXgZjYSdeoJo68YjYrjRK+qy
+         Bisg==
+X-Gm-Message-State: AOJu0Yy/3d/PCN1OBsAumu/rKxs1rIo4zIWYJstXZC41Q3hFK64lPQk2
+	+i3K4hr51KVfAxGR+Wba/M+1gtykzUXqlK56sa6/iOAxiRTx+l9Y95Ue0y20sg==
+X-Google-Smtp-Source: AGHT+IHmJXE2ED2RuBUmR0soC9ICbU5uc/OdRD47vxh5aPLnNlxEs/5VczOR/qkUIL16NOENMz9+bA==
+X-Received: by 2002:a17:902:8216:b0:1d6:c8e3:c3dd with SMTP id x22-20020a170902821600b001d6c8e3c3ddmr4942676pln.54.1705970183007;
+        Mon, 22 Jan 2024 16:36:23 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id u20-20020aa78494000000b006dab0d09ef0sm10164283pfn.45.2024.01.22.16.36.13
+        by smtp.gmail.com with ESMTPSA id l12-20020a170902e2cc00b001d70af5be17sm7341961plc.229.2024.01.22.16.36.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 22 Jan 2024 16:36:18 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
 To: linux-hardening@vger.kernel.org
 Cc: Kees Cook <keescook@chromium.org>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-scsi@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	David Airlie <airlied@redhat.com>,
+	dri-devel@lists.freedesktop.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 72/82] scsi: sd_zbc: Refactor intentional wrap-around test
-Date: Mon, 22 Jan 2024 16:27:47 -0800
-Message-Id: <20240123002814.1396804-72-keescook@chromium.org>
+Subject: [PATCH 36/82] agp: Refactor intentional wrap-around test
+Date: Mon, 22 Jan 2024 16:27:11 -0800
+Message-Id: <20240123002814.1396804-36-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240122235208.work.748-kees@kernel.org>
 References: <20240122235208.work.748-kees@kernel.org>
@@ -70,19 +70,19 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1962; i=keescook@chromium.org;
- h=from:subject; bh=LBqk/a/7XxyM37MkXdksahXfcAh3M0YpOfyluKrlFV0=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgLEf/Cz5+23/+enVsVIkLx8QMLFJ93FtDfb
- s/ses2igzyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8ICwAKCRCJcvTf3G3A
- JpEDD/9MrWjc6bOmLUNDTK8C65JpgDJf58ljxn97yBwSxMLQcWeG03LZ2GDDyQBTzP63WppqnI7
- ikfMG8tyk4rfJg5sDwA2nSAc0ZBsSwVQFMlPTIH7bAaKqsDDw4a8GBqBMXyJIqODCBt4pT4VDsF
- cYb3ksk+uVx42hbg+85EHCyBBDtW+UgTWsJnEKTG7SYN2rdS8mxVACStdqvaijZrgDeQucGZBV0
- 5t3y06uoK9tzxx11ps0PiwZD1Eb30y/j1Puzv+wuIik8LpMUijX/QOF4spJeXn9Uf/kTrdiXrtD
- CAjxej0vsOSSdJgXMK1SdKvSfYjGaYdXkI8LiM/rUs5o0ZUUvZiZu53llRz5BRrqDAIFfUGeJP/
- bvu8LIIJHygXBw0InDKzOgSz7a9VcQOlWz7oHfbeZ8NUVwheYgIl+J4lUiBVKR7eXEg2Gi7L24O
- HyHMkzEePZv03dkGkLTu9NiV9a5Ncv4emMcauHel4wVwzEk/akthm0xu2LcJFkqvkcL/bN1ayT6
- yRwPu5VutSooWXVuKdM3Zq9Q/bn2TJJTuZAZo2zaMG6ugxX/03/6zTGuC0Mz5z17SedNM9c/6sv
- zA29mGYVnEl4G+dotIhrrvQ2UU2LJZEWJCtvONixSMW665U+C3gyac/J1KHzBgFDXuWD98EU+xD AiN7s4tQdaMO3kA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1899; i=keescook@chromium.org;
+ h=from:subject; bh=TtGEKwfEht79ULnpSVJcOtpH1GzIiQlRdhb7ZdKErag=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgH4FFulwi6BUqjbAU5ENVQabX98Dt2rrVoU
+ 8g3IEj955KJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8IBwAKCRCJcvTf3G3A
+ JnjyEACxi6nRzG/TeUzgA19psicAHgLDAObP0xBS4txCdCyuwD6vql4dHmloNCeJb8mV6QVHM+X
+ qtG2DBYHCOfOAx2qlY4HvaVOj3PS5bcfXi6Ekv9oHApUiv9VATvsHzJMWgozbnrtd+ct/kzn1a8
+ fdEqTsjCD1glzm7trq2UhSUjq7L9mf0ALUL92dfVjQVOuW3SJ9kkPuGgKtP6JPssetdPnVNENjg
+ XGHgUvZbr7FjFWIbhVzk+QWvKkDn9x87RdguxM3yRMNuIU1rIPChiFeHt65F/fM9e/r6JWSqDYJ
+ 28GyQyB9g35uGguB023JwJmsj9WljHMy92O0442XwofQsjSwDoKiP6XK1wSn7N+Ko+xF+yXuo8D
+ aGTAXPJpuMFj3tqUwX0bCJ2y/hZb9LGM68ygSkbs93I9XePUe38ehnUMIKTYBoC/PaH9cZiUO6O
+ WpdtUG+wfYRGfiUetrFcgMqg7lc0bO2mieV7z8f1+ggx/2d+E2Yn9c//8JCWB6dDf3AOuNluFkl
+ TPJTxjpslLZOCOHw60ZZVUW2p1qaNmoLXFmR7hSnVJuahaP/u15jWcSK2aizZflJKuj9uo7I/Jr
+ iZ5+yDhNuVtMJrnevFhrq9ZhFajoLgGALCe41lhJERcPe3APaldrX8Abs0cIpjFwV5xN1XNAYND z2z1RVstb0xjjDA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
@@ -107,27 +107,27 @@ Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
 Link: https://github.com/KSPP/linux/issues/26 [2]
 Link: https://github.com/KSPP/linux/issues/27 [3]
 Link: https://github.com/KSPP/linux/issues/344 [4]
-Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: linux-scsi@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: David Airlie <airlied@redhat.com>
+Cc: dri-devel@lists.freedesktop.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/scsi/sd_zbc.c | 2 +-
+ drivers/char/agp/generic.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/sd_zbc.c b/drivers/scsi/sd_zbc.c
-index 26af5ab7d7c1..2c377e4cdb2b 100644
---- a/drivers/scsi/sd_zbc.c
-+++ b/drivers/scsi/sd_zbc.c
-@@ -295,7 +295,7 @@ int sd_zbc_report_zones(struct gendisk *disk, sector_t sector,
- 			    (lba < start_lba ||
- 			     lba >= start_lba + zone_length)) ||
- 			    (zone_idx > 0 && start_lba != lba) ||
--			    start_lba + zone_length < start_lba) {
-+			    add_would_overflow(start_lba, zone_length)) {
- 				sd_printk(KERN_ERR, sdkp,
- 					  "Zone %d at LBA %llu is invalid: %llu + %llu\n",
- 					  zone_idx, lba, start_lba, zone_length);
+diff --git a/drivers/char/agp/generic.c b/drivers/char/agp/generic.c
+index 3ffbb1c80c5c..fc2d07654154 100644
+--- a/drivers/char/agp/generic.c
++++ b/drivers/char/agp/generic.c
+@@ -228,7 +228,7 @@ struct agp_memory *agp_allocate_memory(struct agp_bridge_data *bridge,
+ 
+ 	cur_memory = atomic_read(&bridge->current_memory_agp);
+ 	if ((cur_memory + page_count > bridge->max_memory_agp) ||
+-	    (cur_memory + page_count < page_count))
++	    (add_would_overflow(page_count, cur_memory)))
+ 		return NULL;
+ 
+ 	if (type >= AGP_USER_TYPES) {
 -- 
 2.34.1
 
