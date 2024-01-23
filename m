@@ -1,101 +1,129 @@
-Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDE1F4F606
-	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 06:11:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF6C750242;
+	Tue, 23 Jan 2024 06:21:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705990306; cv=none; b=avqEiM/NTV6BdIteK1AiFAAluyTmy5hRuMGDw8SXVcAPbGeyeSVB8ZaIZi3J4leNb9EinKyF2vF1+ldLDVjDn4Cb26J/ibumpPYqad4vT25h/LST7Df0nxrHkITD7UtPgEEDJpkc3GqAxoqdjf2p3G5GTFwstDtmU0AAR4A7XzU=
+	t=1705990913; cv=none; b=nPn+kC5cTxSJEkBCCsJ5s9kOFy6no3hUl+fw5PCpuNo8gNe3Sah5Zq1jyRUqMYLiXogKOhvXWoHcV1eNXIdoPCzllJjIuPk5NHcvUYcERa2vFAf/dv05YsleYzHy0K3FV4qE+npYI6XSiJCCF93ACq8DHkRGtPy5HKpZp79GGlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705990306; c=relaxed/simple;
-	bh=CN9XP3IqMW/054i/SszfD8BegSj621QjpufQVB9yQaY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qNhHkwWHAYob+07LkAu77JgnchtN7MmgQT9Q3Ds53FCqNkshaRdnM886zEl5d6Mk+/iRlWLx6bXe7X5OG1JAYWfcFsw6zoMfpw484Zp8kpv4SW4R7FwlYrcFKpqKDdM/2DGoCKk/zwcuGIOYIPsW7WbECcp6UG3JlTOtNAm7O+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mRKnHnkl; arc=none smtp.client-ip=209.85.161.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1705990913; c=relaxed/simple;
+	bh=TNQNx0qYYSetcUCpOyMQNkCTJJsrGoFBI6YDppksKeE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IZniLwXq8qp5Kqn+6Rn2cuqITOCWdlur6REGfRpm1RbKxktvBp6QkaFvPadrHIkfhaA5e3nsmebWZLeph0CcSecxTKaCD/D1LG4YLj1YOkB/mkKB4Z+akLWvX+55StKs2iK7dIP/L8+NTiEG2NaSx3sD4sjZe1mo40ia4fhmRYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lPvcVHky; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mRKnHnkl"
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5989d8decbfso2586670eaf.2
-        for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 22:11:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705990304; x=1706595104; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ohXdSRWKpjp/SSHD5uSCqu3QqGgmhGSWzWcMPZ6VRxw=;
-        b=mRKnHnklKFUemg4aOxXYjyGWTrQH/3qD8zcCSSXfoE1B2cYIvm+igDGaowY9BlUM0h
-         am0WaTWle50a5c8t/DvazxDFGQNXQf41oN3pGLly7GC58lS3LqHn2GVB2ld4efBuFpDQ
-         1iroC8oFUkLfGsazNAzGIgfUfHt4qQrECVbUZ0M+BPaxgw6K7FO8/XiR/xqbh3CZABxE
-         k9F1LaKTmxuLux0qSKBHKIwovYHjXp4z6MzAuys2Ffd7BQc9fAIROVJpchmffqd7rJ07
-         UQulMGM0YcumWXdwi2ws3cIlo5nhfIKqI/fKccPh9Xp355IUe16X3SAP53w5NmAttUIZ
-         cR4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705990304; x=1706595104;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ohXdSRWKpjp/SSHD5uSCqu3QqGgmhGSWzWcMPZ6VRxw=;
-        b=aWaUDXGevx6OvK74zWz219FnWYkYRc9asEV2R8PkURXuMWXgOC22xTCv6/VobnYpHb
-         uMuitwC5TY1JbVzoEZhTSLNzOsd8MntgBQnzd9q14CFyZpB9oM+WSGmnXiTrteBzBf0s
-         QYcTjabnKhO1uHh1TTfAR16boJKR2Cl0AFPOsyks+KSuyGbLL/lAQXk6u4k+aIBgeuu6
-         W3DV/k6vB/QHG3r/c6RDgiekyTlTd06D0rOPVRSO6o5pkWF3e2oB78IZ3BfIP47Ny+eh
-         H/VxZ18ETmms5LZyKsG4Y4CZVyjN9Y9QcBl3b3BlzJ9PfWiAd/YMQnW9u0OFr793oQzI
-         D5ug==
-X-Gm-Message-State: AOJu0YzWGtloa/WjhYJizGQDcuPlYZteLM5xLSa/v7MWyj1nDz9KFTSv
-	5w9RBDhPnnn0s6PL2PbEiXmXNTbrwQbTIB+nwFTktvFwUnof7fVmUWTEMgQ9oWs=
-X-Google-Smtp-Source: AGHT+IGqPA4W4P/ONndrUy91FyDVi6kg8yuFS7ylNJFUz04/g7/KgZtnfvrHv/8TfrRxG0FJuuas0A==
-X-Received: by 2002:a05:6358:52cc:b0:172:e227:bfd9 with SMTP id z12-20020a05635852cc00b00172e227bfd9mr3703228rwz.42.1705990303944;
-        Mon, 22 Jan 2024 22:11:43 -0800 (PST)
-Received: from localhost ([122.172.81.83])
-        by smtp.gmail.com with ESMTPSA id r11-20020a056a00216b00b006dbce4a2136sm5191749pff.142.2024.01.22.22.11.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jan 2024 22:11:43 -0800 (PST)
-Date: Tue, 23 Jan 2024 11:41:41 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Erick Archer <erick.archer@gmx.com>
-Cc: Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-	Alex Shi <alexs@kernel.org>, Yanteng Si <siyanteng@loongson.cn>,
-	Jonathan Corbet <corbet@lwn.net>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Hu Haowen <2023002089@link.tyut.edu.cn>, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] Documentation: power: Use kcalloc() instead of
- kzalloc()
-Message-ID: <20240123061141.k5wf6r6gn3w7qk24@vireshk-i7>
-References: <20240121104344.5001-1-erick.archer@gmx.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lPvcVHky"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705990912; x=1737526912;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=TNQNx0qYYSetcUCpOyMQNkCTJJsrGoFBI6YDppksKeE=;
+  b=lPvcVHkynIh1oJozRNJxiKRYXnjYijalHNicYJ/M7z3IyGyR3XhrPM9D
+   CbIsNWZz7AWm090gAzCSXgV58Pyomu1remG83akKOpR7T3iKvc2B8gKCz
+   ytR7F5x/CfAgNGdZyhtMhXZHq33p5y7huO3Exiv4MizGv3SWMEXfzC5Xx
+   Sop/POzrbFRbL0LiT9LuGvEzedm4ypS/ZO2TBnbbOltTZ6n12VrPIvYMx
+   PaefJDWfW+hIXGlIRjiL9mr4a/c/fC1jeySrWD/dNsJrjbn2ov8gu5Rxe
+   kyOe2UjoaqnTfOgSLkjtT8wC+623fyQwEjT++ZAJxgfcnyaUfgmeizFkB
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="8539916"
+X-IronPort-AV: E=Sophos;i="6.05,213,1701158400"; 
+   d="scan'208";a="8539916"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 22:21:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,213,1701158400"; 
+   d="scan'208";a="1550933"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.57.4])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 22:21:46 -0800
+Message-ID: <dc3a7101-964b-46c5-a78b-374b68cd54fb@intel.com>
+Date: Tue, 23 Jan 2024 08:21:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240121104344.5001-1-erick.archer@gmx.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 69/82] perf tools: Refactor intentional wrap-around test
+To: Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, John Garry <john.garry@huawei.com>,
+ Fangrui Song <maskray@google.com>, linux-perf-users@vger.kernel.org,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ linux-kernel@vger.kernel.org
+References: <20240122235208.work.748-kees@kernel.org>
+ <20240123002814.1396804-69-keescook@chromium.org>
+Content-Language: en-US
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20240123002814.1396804-69-keescook@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 21-01-24, 11:43, Erick Archer wrote:
-> As noted in the "Deprecated Interfaces, Language Features, Attributes,
-> and Conventions" documentation [1], size calculations (especially
-> multiplication) should not be performed in memory allocator (or similar)
-> function arguments due to the risk of them overflowing. This could lead
-> to values wrapping around and a smaller allocation being made than the
-> caller was expecting. Using those allocations could lead to linear
-> overflows of heap memory and other misbehaviors.
+On 23/01/24 02:27, Kees Cook wrote:
+> In an effort to separate intentional arithmetic wrap-around from
+> unexpected wrap-around, we need to refactor places that depend on this
+> kind of math. One of the most common code patterns of this is:
 > 
-> So, in the example code use the purpose specific kcalloc() function
-> instead of the argument size * count in the kzalloc() function.
+> 	VAR + value < VAR
 > 
-> At the same time, modify the translations accordingly.
+> Notably, this is considered "undefined behavior" for signed and pointer
+> types, which the kernel works around by using the -fno-strict-overflow
+> option in the build[1] (which used to just be -fwrapv). Regardless, we
+> want to get the kernel source to the position where we can meaningfully
+> instrument arithmetic wrap-around conditions and catch them when they
+> are unexpected, regardless of whether they are signed[2], unsigned[3],
+> or pointer[4] types.
 > 
-> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
-> Link: https://github.com/KSPP/linux/issues/162
-> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+> Refactor open-coded wrap-around addition test to use add_would_overflow().
+> This paves the way to enabling the wrap-around sanitizers in the future.
+> 
+> Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
+> Link: https://github.com/KSPP/linux/issues/26 [2]
+> Link: https://github.com/KSPP/linux/issues/27 [3]
+> Link: https://github.com/KSPP/linux/issues/344 [4]
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: John Garry <john.garry@huawei.com>
+> Cc: Fangrui Song <maskray@google.com>
+> Cc: linux-perf-users@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  tools/perf/util/dso.c                    | 2 +-
+>  tools/perf/util/unwind-libdw.c           | 2 +-
+>  tools/perf/util/unwind-libunwind-local.c | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+> index 22fd5fa806ed..470a86f1cdfd 100644
+> --- a/tools/perf/util/dso.c
+> +++ b/tools/perf/util/dso.c
+> @@ -1122,7 +1122,7 @@ static ssize_t data_read_write_offset(struct dso *dso, struct machine *machine,
+>  	if (offset > dso->data.file_size)
+>  		return -1;
+>  
+> -	if (offset + size < offset)
+> +	if (add_would_overflow(offset, size))
 
-Applied. Thanks.
+perf tools has separate includes to the kernel, so does not
+seem to include add_would_overflow() in any of its include
+files at this point.  Need to update
+tools/include/linux/overflow.h first.
 
--- 
-viresh
