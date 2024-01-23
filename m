@@ -1,168 +1,98 @@
-Received: from cvs.openbsd.org (cvs.openbsd.org [199.185.137.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62856823C6;
-	Tue, 23 Jan 2024 18:58:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.185.137.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06B917F7CC
+	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 19:00:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706036332; cv=none; b=oCzn7ZVQ23Fxs57fuC9TGRC0lwv1KBdHSZqOmLX3/aumepLsyQY1IzwiuK8D2l5DPzkwb8EIh4V8yp2wziWZc48A0+ympPbqQajBW6fkPWa0IAO8GOVeYaYK70NLsgSrQaGUr3MdUx6N0pU/wqWZKw7b89rV+Y8BmAs7p3+FDJw=
+	t=1706036428; cv=none; b=N6q6hU9eIFnCVyib6kzvZwKqEKiuSO/9Bkj2prASlb4ZrI/hqoJ5m7Sm3SPh+7MIFBNt20UKTNGQgyrWMe2yuyJpjb9bLEB51L2U1EHZ/vYjuD65QDVU2wOWVvukyYPVhQCFHJLZmMWJp85i+LgHSVuy1Zj8ieeSyAZsmks0Pl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706036332; c=relaxed/simple;
-	bh=85z1pDLNzf/l+6g12yGP+kL48gcbmAt/Exa7E4EizGU=;
-	h=From:To:Subject:In-reply-to:References:MIME-Version:Content-Type:
-	 Date:Message-ID; b=UGGTZb2XQHE1n3FPNWjsIw7rFBSmwe3tsloCu9e5xn1ykRtzyEq/78FJdwjhol95cI+nvXO+ZGsIsCPfL7IA+3xUcMHP9vCPmK96gDrLZUL598EUHnz0UDB6nLMC6UD+KinB3tcAM7W7DHG34jB/aYiWYYHrtRKBjTQVrNiH2cc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org; spf=pass smtp.mailfrom=openbsd.org; dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b=3HN6C8AJ; arc=none smtp.client-ip=199.185.137.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openbsd.org
+	s=arc-20240116; t=1706036428; c=relaxed/simple;
+	bh=QA2id3LqrmzYn8QBWvElp2X+uoIvf8x5U798DnB4uyg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kXk+8IshQhQDD8YWXZ05fWvOaPnC3JNPu/LUg8yFsvzKuHdhXG5OKNUDNFah5/5ln1vYDiKYGCujaBcjoP4qb9CwYgczhZ2F5ExD7lgAhjx+ND6ApSnKvGT99kjFKCsZPOyYo67A+QE39es9w91YD77Femh9hnopeuEadpe2NbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=GIoAAIw0; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b="3HN6C8AJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=selector1; bh=85z1pDLNzf
-	/l+6g12yGP+kL48gcbmAt/Exa7E4EizGU=; h=date:references:in-reply-to:
-	subject:to:from; d=openbsd.org; b=3HN6C8AJTcP6apML6GvYnBtUjVM7yvJM4qGN
-	fv1+L1Wt7+NSn4MNtQp6zwhhyrrCPm7inbeZioIntZNMgauhNHg8glINfZ8Bq7BevPRSNg
-	ezzIyBqUhFDpFmfuuaePpLXwlNHz8pDVc8IGXxBtGszoTQDe6t0jAOaNupiENVkH1uT7DX
-	Ej1vIXax9CpDddiomfw4zlm1DaSX/L+Z97aetWT7U/9Zo9zvquXPXyfRZ8+lt1Oj+9vqov
-	2ylBate61fs0rb5U2+LKXMd7dtPKSrdVavU1JYms6RQ8kYs4o2InmG9r3PmaOPCIEafFKQ
-	5XujUoKXxpuyzb/C11Aj8M/TGA==
-Received: from cvs.openbsd.org (localhost [127.0.0.1])
-	by cvs.openbsd.org (OpenSMTPD) with ESMTP id f1a5780b;
-	Tue, 23 Jan 2024 11:58:41 -0700 (MST)
-From: "Theo de Raadt" <deraadt@openbsd.org>
-To: "Liam R. Howlett" <Liam.Howlett@Oracle.com>,
-    Jeff Xu <jeffxu@chromium.org>, akpm@linux-foundation.org,
-    keescook@chromium.org, jannh@google.com, sroettger@google.com,
-    willy@infradead.org, gregkh@linuxfoundation.org,
-    torvalds@linux-foundation.org, usama.anjum@collabora.com,
-    rdunlap@infradead.org, jeffxu@google.com, jorgelo@chromium.org,
-    groeck@chromium.org, linux-kernel@vger.kernel.org,
-    linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
-    pedro.falcato@gmail.com, dave.hansen@intel.com,
-    linux-hardening@vger.kernel.org
-Mail-Followup-To: "Liam R. Howlett" <Liam.Howlett@Oracle.com>,
-                  Jeff Xu <jeffxu@chromium.org>,
-                  akpm@linux-foundation.org, keescook@chromium.org,
-                  jannh@google.com, sroettger@google.com,
-                  willy@infradead.org, gregkh@linuxfoundation.org,
-                  torvalds@linux-foundation.org,
-                  usama.anjum@collabora.com, rdunlap@infradead.org,
-                  jeffxu@google.com, jorgelo@chromium.org,
-                  groeck@chromium.org, linux-kernel@vger.kernel.org,
-                  linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
-                  pedro.falcato@gmail.com, dave.hansen@intel.com,
-                  linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v7 0/4] Introduce mseal()
-In-reply-to: <20240123173320.2xl3wygzbxnrei2c@revolver>
-References: <20240122152905.2220849-1-jeffxu@chromium.org> <726.1705938579@cvs.openbsd.org> <CABi2SkXrnUZsWvpqS61mHw-SqDBOodqpcfjdoTTyeeYG9tRJGA@mail.gmail.com> <86181.1705962897@cvs.openbsd.org> <20240123173320.2xl3wygzbxnrei2c@revolver>
-Comments: In-reply-to "Liam R. Howlett" <Liam.Howlett@Oracle.com>
-   message dated "Tue, 23 Jan 2024 12:33:20 -0500."
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GIoAAIw0"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1d71cb97937so27932025ad.3
+        for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 11:00:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1706036413; x=1706641213; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/9FKmxWiB2vAaSsWA6W2r8jqoqGItDODorFRWTWYx3M=;
+        b=GIoAAIw05UWSdUYUcUatVeO4/MxIT2iTCSbCVHD6OubrG91JqJiPuDMggzxlFyy4qx
+         bd7vuTTEBRrsyydNn+Xe36GcZlHdHVS2MpRb1u5BDGgMakhyd/3eK54yQ8K6luDW3wXl
+         JB3GS7XcXCt2r3IP/O5Rz4esZlvgk0YoNrHcg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706036413; x=1706641213;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/9FKmxWiB2vAaSsWA6W2r8jqoqGItDODorFRWTWYx3M=;
+        b=Saene//kB5Ygg0Kz5KTadqZBAMG+W17sI0CqukRmwDS6rVE3Z28qnB0Vs68z5fWfOq
+         b1Gauz86YZZlBtatXEM0VBKaDz4vORsijuYjJxHM/YeDQoX5oHnxVBj9vhw6eI/MDolX
+         Wq7EbxdpII7zZzxiCiHd20Pzo/9BljSPuUeAWeqPj1XnBcnaUeSlGLsmoAVbegDj6hSs
+         vTC3/I1zB6CZ1Aijbf/FnO36Y/wFIw5pwOXe8b2USb4xnZN+WVq0awNiwMujebTFeKfr
+         1uyUg73IkMe3dlAll0cejzeCMGsG4bdnEVH2DDtxWrrXiiFlUloyfZZOh2ktD9QbNxB/
+         diPw==
+X-Gm-Message-State: AOJu0Yyq1wGFn+aCiXLpx5TX0Gqn3jpuCkI6cALxG/GPxc/oyPF1tR0Q
+	QFMQTlsq7C9Ioi0R8eN03FQRkRv4JXgmsStSPylPgPzIPXORt3RANAlDlK7erQ==
+X-Google-Smtp-Source: AGHT+IFYzOSitLgL/rGq5zi5+lqRnkbBRykkzfae4VthDo4FdSuOL5OnOrjVVJKPwbxtn27UKcZ0FA==
+X-Received: by 2002:a17:902:ea0a:b0:1d7:2bd6:23e3 with SMTP id s10-20020a170902ea0a00b001d72bd623e3mr4394412plg.5.1706036413360;
+        Tue, 23 Jan 2024 11:00:13 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id mp11-20020a170902fd0b00b001d75ea44323sm2836158plb.21.2024.01.23.11.00.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jan 2024 11:00:13 -0800 (PST)
+Date: Tue, 23 Jan 2024 11:00:12 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-hardening@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Mark Brown <broonie@kernel.org>,
+	Mike Kravetz <mike.kravetz@oracle.com>,
+	Vasily Averin <vasily.averin@linux.dev>,
+	Alexander Mikhalitsyn <alexander@mihalicyn.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 34/82] ipc: Refactor intentional wrap-around calculation
+Message-ID: <202401231058.5C5248DC3@keescook>
+References: <20240122235208.work.748-kees@kernel.org>
+ <20240123002814.1396804-34-keescook@chromium.org>
+ <CAHk-=whS7FSbBoo1gxe+83twO2JeGNsUKMhAcfWymw9auqBvjg@mail.gmail.com>
+ <202401221713.3FCABC9290@keescook>
+ <CAHk-=wgMPVv-mDxA2qcywpLCRLojtaKmP13h7bVo4m=XN202xA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 23 Jan 2024 11:58:41 -0700
-Message-ID: <85359.1706036321@cvs.openbsd.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgMPVv-mDxA2qcywpLCRLojtaKmP13h7bVo4m=XN202xA@mail.gmail.com>
 
-Liam R. Howlett <Liam.Howlett@Oracle.com> wrote:
+On Tue, Jan 23, 2024 at 10:06:12AM -0800, Linus Torvalds wrote:
+> So:
+> 
+>  - get rid of that commit message that is lying garbage
+> 
+>  - fix the so-called "sanitizer".
+> 
+>  - stop calling the unsigned wrap-around a "sanitizer" and talking
+> about "undefined behavior" in the same sentence, since it's neither.
+> 
+> Do you really not see why I think that thing is actively *WRONG*?
 
-> * Theo de Raadt <deraadt@openbsd.org> [240122 17:35]:
-> > Jeff Xu <jeffxu@chromium.org> wrote:
-> >=20
-> > > On Mon, Jan 22, 2024 at 7:49=E2=80=AFAM Theo de Raadt <deraadt@openbs=
-d.org> wrote:
-> > > >
-> > > > Regarding these pieces
-> > > >
-> > > > > The PROT_SEAL bit in prot field of mmap(). When present, it marks
-> > > > > the map sealed since creation.
-> > > >
-> > > > OpenBSD won't be doing this.  I had PROT_IMMUTABLE as a draft.  In =
-my
-> > > > research I found basically zero circumstances when you userland does
-> > > > that.  The most common circumstance is you create a RW mapping, fil=
-l it,
-> > > > and then change to a more restrictve mapping, and lock it.
-> > > >
-> > > > There are a few regions in the addressspace that can be locked whil=
-e RW.
-> > > > For instance, the stack.  But the kernel does that, not userland.  I
-> > > > found regions where the kernel wants to do this to the address spac=
-e,
-> > > > but there is no need to export useless functionality to userland.
-> > > >
-> > > I have a feeling that most apps that need to use mmap() in their code
-> > > are likely using RW mappings. Adding sealing to mmap() could stop
-> > > those mappings from being executable. Of course, those apps would
-> > > need to change their code. We can't do it for them.
-> >=20
-> > I don't have a feeling about it.
-> >=20
-> > I spent a year engineering a complete system which exercises the maximum
-> > amount of memory you can lock.
-> >=20
-> > I saw nothing like what you are describing.  I had PROT_IMMUTABLE in my
-> > drafts, and saw it turning into a dangerous anti-pattern.
-> >=20
-> > > Also, I believe adding this to mmap() has no downsides, only
-> > > performance gain, as Pedro Falcato pointed out in [1].
-> > >=20
-> > > [1] https://lore.kernel.org/lkml/CAKbZUD2A+=3Dbp_sd+Q0Yif7NJqMu8p__eb=
-4yguq0agEcmLH8SDQ@mail.gmail.com/
-> >=20
-> > Are you joking?  You don't have any code doing that today.  More feelin=
-gs?
->=20
-> The 'no downside" is to combining two calls together; mmap() & mseal(),
-> at least that is how I read the linked discussion.
->=20
-> The common case (since there are no users today) of just calling
-> mmap()/munmap() will have the downside.
->=20
-> There will be a performance impact once you have can_modify_mm() doing
-> more than just returning true.  Certainly, the impact will be larger
-> in munmap where multiple VMAs may need to be checked (assuming that's
-> the plan?).
->=20
-> This will require a new and earlier walk of the vma tree while holding
-> the mmap_lock.  Since you are checking (potentially multiple) VMAs for
-> something, I don't think there is a way around holding the lock.
->=20
-> I'm not saying the cost will be large, but it will be a positive
-> non-zero number.
+Yes -- I was trying to head off the confusion about what the larger goal
+is (trapping unexpected wrap-around) so that people don't assume I'm
+talking about Undefined Behavior (we don't have any UB arithmetic in the
+kernel, very intentionally). I did not succeed! I'll rewrite it all.
 
-For future glibc changes, I predict you will have zero cases where you
-can call mmap+immutable or mprotect+immutable, I say so, because I ended
-up having none.  You always have to fill the memory.  (At first glance
-you might think it works for a new DSO's BSS, but RELRO overlaps it, and
-since RELRO mprotect happens quite late, the permission locking is quite
-delayed relative to the allocation).
-
-I think chrome also won't lock memory at allocation.  I suspect the
-generic allocator is quite seperate from the code using the allocation,
-which knows which objects can have their permissions locked and which
-objects can't.
-
-In OpenBSD, the only cases where we could set immutable at the same time
-as creating the mapping was in execve, for a new process's stack regions,
-and that is kernel code, not the userland exposed system call APIs.
-=20
-This change could skip adding PROT_MSEAL today, and add it later when
-there are facts the need.
-
-
-It's the same with MAP_MSEALABLE.  I don't get it. So now there are 3
-memory types:
-       - cannot be sealed, ever
-       - not yet sealed
-       - sealed
-
-What purpose does the first type serve?  Please explain the use case.
-
-Today, processes have control over their entire address space.
-
-What is the purpose of "permissions cannot be locked".  Please supply
-an example.  If I am wrong, I'd like to know where I went wrong.
-
+-- 
+Kees Cook
