@@ -1,134 +1,101 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B24B54C81
-	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 05:13:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDE1F4F606
+	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 06:11:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705986795; cv=none; b=hpSX7vHLqB6UrSjfAUVGwvJzCipKY29g2SycNIFvucM0v7+FdHsykIQ4FSXgoK0mW1LytZs/aFl+7ITHNIKKbDagJgueFIr5pkwIpxbzRkzKOQ0+3irK8orYiOz5SQKVMdBHbW88RffKtx4fzEE/4pXiKbWu2Yv1bUl1utrMI78=
+	t=1705990306; cv=none; b=avqEiM/NTV6BdIteK1AiFAAluyTmy5hRuMGDw8SXVcAPbGeyeSVB8ZaIZi3J4leNb9EinKyF2vF1+ldLDVjDn4Cb26J/ibumpPYqad4vT25h/LST7Df0nxrHkITD7UtPgEEDJpkc3GqAxoqdjf2p3G5GTFwstDtmU0AAR4A7XzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705986795; c=relaxed/simple;
-	bh=t/KCU56R+dFtiwauwVUeRePUW1od4vVajaPW4USQIi8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Pfga58HxbjxB+dtAkEik9QJYWqU2BO/gywkZ+s0nmPjq4/+vsK4HqsdXh1xLrFZ5QnKXINr4br6Zr+NcR9c9XY4a1JHH4rgGCFpecpmkKkBr4vIxI4ZklWQkqfJqHLtQqCN1oarnHtcF3nPtDchzx/Q9eih/feeivCpl4mSyFjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=oWXuMBV4; arc=none smtp.client-ip=95.215.58.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1705990306; c=relaxed/simple;
+	bh=CN9XP3IqMW/054i/SszfD8BegSj621QjpufQVB9yQaY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qNhHkwWHAYob+07LkAu77JgnchtN7MmgQT9Q3Ds53FCqNkshaRdnM886zEl5d6Mk+/iRlWLx6bXe7X5OG1JAYWfcFsw6zoMfpw484Zp8kpv4SW4R7FwlYrcFKpqKDdM/2DGoCKk/zwcuGIOYIPsW7WbECcp6UG3JlTOtNAm7O+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mRKnHnkl; arc=none smtp.client-ip=209.85.161.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="oWXuMBV4"
-Message-ID: <58625a60-af4e-4a90-bd65-5fb6c0822d33@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1705986791;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=T4kzbtw5h/pedHWa9T6Y5qZbauanbD5GJ6RoxeeZneA=;
-	b=oWXuMBV4FcP3nvy9Nz9ix5sFWm1QrSwt/+YGRq++nDb+lsSTSNxjyxF0fViB6xAzxCO/jK
-	Ebn0cpQcYtl4ztX1PJAM4NsHj0t64bxJUmvA8QCbeTEFHK2ZqoAHihZEdTNtNRYEDVe7Fa
-	BHyhEo3ktoe1nAXPA+0hOr9rPfjBnGY=
-Date: Mon, 22 Jan 2024 21:13:05 -0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mRKnHnkl"
+Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5989d8decbfso2586670eaf.2
+        for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 22:11:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705990304; x=1706595104; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ohXdSRWKpjp/SSHD5uSCqu3QqGgmhGSWzWcMPZ6VRxw=;
+        b=mRKnHnklKFUemg4aOxXYjyGWTrQH/3qD8zcCSSXfoE1B2cYIvm+igDGaowY9BlUM0h
+         am0WaTWle50a5c8t/DvazxDFGQNXQf41oN3pGLly7GC58lS3LqHn2GVB2ld4efBuFpDQ
+         1iroC8oFUkLfGsazNAzGIgfUfHt4qQrECVbUZ0M+BPaxgw6K7FO8/XiR/xqbh3CZABxE
+         k9F1LaKTmxuLux0qSKBHKIwovYHjXp4z6MzAuys2Ffd7BQc9fAIROVJpchmffqd7rJ07
+         UQulMGM0YcumWXdwi2ws3cIlo5nhfIKqI/fKccPh9Xp355IUe16X3SAP53w5NmAttUIZ
+         cR4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705990304; x=1706595104;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ohXdSRWKpjp/SSHD5uSCqu3QqGgmhGSWzWcMPZ6VRxw=;
+        b=aWaUDXGevx6OvK74zWz219FnWYkYRc9asEV2R8PkURXuMWXgOC22xTCv6/VobnYpHb
+         uMuitwC5TY1JbVzoEZhTSLNzOsd8MntgBQnzd9q14CFyZpB9oM+WSGmnXiTrteBzBf0s
+         QYcTjabnKhO1uHh1TTfAR16boJKR2Cl0AFPOsyks+KSuyGbLL/lAQXk6u4k+aIBgeuu6
+         W3DV/k6vB/QHG3r/c6RDgiekyTlTd06D0rOPVRSO6o5pkWF3e2oB78IZ3BfIP47Ny+eh
+         H/VxZ18ETmms5LZyKsG4Y4CZVyjN9Y9QcBl3b3BlzJ9PfWiAd/YMQnW9u0OFr793oQzI
+         D5ug==
+X-Gm-Message-State: AOJu0YzWGtloa/WjhYJizGQDcuPlYZteLM5xLSa/v7MWyj1nDz9KFTSv
+	5w9RBDhPnnn0s6PL2PbEiXmXNTbrwQbTIB+nwFTktvFwUnof7fVmUWTEMgQ9oWs=
+X-Google-Smtp-Source: AGHT+IGqPA4W4P/ONndrUy91FyDVi6kg8yuFS7ylNJFUz04/g7/KgZtnfvrHv/8TfrRxG0FJuuas0A==
+X-Received: by 2002:a05:6358:52cc:b0:172:e227:bfd9 with SMTP id z12-20020a05635852cc00b00172e227bfd9mr3703228rwz.42.1705990303944;
+        Mon, 22 Jan 2024 22:11:43 -0800 (PST)
+Received: from localhost ([122.172.81.83])
+        by smtp.gmail.com with ESMTPSA id r11-20020a056a00216b00b006dbce4a2136sm5191749pff.142.2024.01.22.22.11.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jan 2024 22:11:43 -0800 (PST)
+Date: Tue, 23 Jan 2024 11:41:41 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Erick Archer <erick.archer@gmx.com>
+Cc: Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+	Alex Shi <alexs@kernel.org>, Yanteng Si <siyanteng@loongson.cn>,
+	Jonathan Corbet <corbet@lwn.net>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Hu Haowen <2023002089@link.tyut.edu.cn>, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] Documentation: power: Use kcalloc() instead of
+ kzalloc()
+Message-ID: <20240123061141.k5wf6r6gn3w7qk24@vireshk-i7>
+References: <20240121104344.5001-1-erick.archer@gmx.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 43/82] bpf: Refactor intentional wrap-around test
-Content-Language: en-GB
-To: Kees Cook <kees@kernel.org>, Kees Cook <keescook@chromium.org>,
- linux-hardening@vger.kernel.org
-Cc: Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- John Fastabend <john.fastabend@gmail.com>,
- Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
- <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
- KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
- Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
- bpf@vger.kernel.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- linux-kernel@vger.kernel.org
-References: <20240122235208.work.748-kees@kernel.org>
- <20240123002814.1396804-43-keescook@chromium.org>
- <15d65e11-d957-4b03-bec3-0dcd58b50f97@linux.dev>
- <6CE08B7D-7E0C-45E2-8A6B-32691BE40D08@kernel.org>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yonghong Song <yonghong.song@linux.dev>
-In-Reply-To: <6CE08B7D-7E0C-45E2-8A6B-32691BE40D08@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240121104344.5001-1-erick.archer@gmx.com>
 
+On 21-01-24, 11:43, Erick Archer wrote:
+> As noted in the "Deprecated Interfaces, Language Features, Attributes,
+> and Conventions" documentation [1], size calculations (especially
+> multiplication) should not be performed in memory allocator (or similar)
+> function arguments due to the risk of them overflowing. This could lead
+> to values wrapping around and a smaller allocation being made than the
+> caller was expecting. Using those allocations could lead to linear
+> overflows of heap memory and other misbehaviors.
+> 
+> So, in the example code use the purpose specific kcalloc() function
+> instead of the argument size * count in the kzalloc() function.
+> 
+> At the same time, modify the translations accordingly.
+> 
+> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
+> Link: https://github.com/KSPP/linux/issues/162
+> Signed-off-by: Erick Archer <erick.archer@gmx.com>
 
-On 1/22/24 8:07 PM, Kees Cook wrote:
->
-> On January 22, 2024 8:00:26 PM PST, Yonghong Song <yonghong.song@linux.dev> wrote:
->> On 1/22/24 4:27 PM, Kees Cook wrote:
->>> In an effort to separate intentional arithmetic wrap-around from
->>> unexpected wrap-around, we need to refactor places that depend on this
->>> kind of math. One of the most common code patterns of this is:
->>>
->>> 	VAR + value < VAR
->>>
->>> Notably, this is considered "undefined behavior" for signed and pointer
->>> types, which the kernel works around by using the -fno-strict-overflow
->>> option in the build[1] (which used to just be -fwrapv). Regardless, we
->>> want to get the kernel source to the position where we can meaningfully
->>> instrument arithmetic wrap-around conditions and catch them when they
->>> are unexpected, regardless of whether they are signed[2], unsigned[3],
->>> or pointer[4] types.
->>>
->>> Refactor open-coded wrap-around addition test to use add_would_overflow().
->>> This paves the way to enabling the wrap-around sanitizers in the future.
->>>
->>> Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
->>> Link: https://github.com/KSPP/linux/issues/26 [2]
->>> Link: https://github.com/KSPP/linux/issues/27 [3]
->>> Link: https://github.com/KSPP/linux/issues/344 [4]
->>> Cc: Alexei Starovoitov <ast@kernel.org>
->>> Cc: Daniel Borkmann <daniel@iogearbox.net>
->>> Cc: John Fastabend <john.fastabend@gmail.com>
->>> Cc: Andrii Nakryiko <andrii@kernel.org>
->>> Cc: Martin KaFai Lau <martin.lau@linux.dev>
->>> Cc: Song Liu <song@kernel.org>
->>> Cc: Yonghong Song <yonghong.song@linux.dev>
->>> Cc: KP Singh <kpsingh@kernel.org>
->>> Cc: Stanislav Fomichev <sdf@google.com>
->>> Cc: Hao Luo <haoluo@google.com>
->>> Cc: Jiri Olsa <jolsa@kernel.org>
->>> Cc: bpf@vger.kernel.org
->>> Signed-off-by: Kees Cook <keescook@chromium.org>
->>> ---
->>>    kernel/bpf/verifier.c | 12 ++++++------
->>>    1 file changed, 6 insertions(+), 6 deletions(-)
->>>
->>> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
->>> index 65f598694d55..21e3f30c8757 100644
->>> --- a/kernel/bpf/verifier.c
->>> +++ b/kernel/bpf/verifier.c
->>> @@ -12901,8 +12901,8 @@ static int adjust_ptr_min_max_vals(struct bpf_verifier_env *env,
->>>    			dst_reg->smin_value = smin_ptr + smin_val;
->>>    			dst_reg->smax_value = smax_ptr + smax_val;
->>>    		}
->>> -		if (umin_ptr + umin_val < umin_ptr ||
->>> -		    umax_ptr + umax_val < umax_ptr) {
->>> +		if (add_would_overflow(umin_ptr, umin_val) ||
->>> +		    add_would_overflow(umax_ptr, umax_val)) {
->> Maybe you could give a reference to the definition of add_would_overflow()?
->> A link or a patch with add_would_overflow() defined cc'ed to bpf program.
-> Sure! It was earlier in the series:
-> https://lore.kernel.org/linux-hardening/20240123002814.1396804-2-keescook@chromium.org/
->
-> The cover letter also has more details:
-> https://lore.kernel.org/linux-hardening/20240122235208.work.748-kees@kernel.org/
+Applied. Thanks.
 
-Thanks for the pointer.
-
-Acked-by: Yonghong Song <yonghong.song@linux.dev>
-
->
->> The patch itselfs looks good to me.
-> Thanks!
->
-> -Kees
->
+-- 
+viresh
