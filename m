@@ -1,70 +1,71 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF1C013D51C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C93713DB8D
 	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 00:46:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705970769; cv=none; b=RY5aWgc8vbHoAUMhpBrcAwFcDeocMSjXmIofE8KhPOHEMhRa+t3VMZVb/BIwwRwdIcxXP3WjygW4nbt0FXicIjNA2ZoonwUOfVdEMyfPLyTc8AQjJlylO60eB44GaBLvYqRYgFPl/MHL0uvuXrZolUJCxYUDPtbp1jMNVaMmywo=
+	t=1705970769; cv=none; b=C9YDwUZmSmdRCgdXkIF8sbLXTnEgM+SkgRw8ITuahS+gYQjlNY1f8zuQd7ryXl/arLLafbliUmmKUsCkEyy2sZ3TDgb1/nGdJcwwcgCQ+IBSelg1rhmQTcghcOcxT3rrk3RE9lsQzAQfpF4DalmukbBUD0+uwCcfIKT+NzIN2nY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705970769; c=relaxed/simple;
-	bh=fB/vJlhvA9krznQ56xe/F9UTpDDJWr+0HII6dSIL9Rk=;
+	bh=7EjHVZinq5vMXU1+hzn38DepLpa6iDayHYypzEUYJ8I=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OklEQIUVCdDj3Fh1ged+MAgbT8Fv/8KiIQD3pXD4u8w7GpQNcDShctsVkuC/FO59uuVbSixi7BW4/iUW4xgCJgalZLXW/FipZ0bQCo7oDIpADVo5AChCz5m52LjJfDC9V7fNbKDFhqetZoqQ7Fu4cAtZEwaTTurJ8zOftxcyTG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=WNPSVRLb; arc=none smtp.client-ip=209.85.210.169
+	 MIME-Version; b=mYAAW96ytw7NrTwGeveANbGd9bhwjlicJLWm3yB93xoT199h5Wgx5myoQn8gLeMqSIwcUoVxUSig2xnHCV3bQv7xh91KvmypaAz4Lm/gqvZw2AqnGVMeKYfkYO1tjuxTwzhG1RgNVfipZyNsLvC5eEbJe+hrftu1u8RUoyghY38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=EtTIlukh; arc=none smtp.client-ip=209.85.216.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WNPSVRLb"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6db599d5cb8so2843832b3a.0
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EtTIlukh"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-29041f26e28so1827407a91.0
         for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 16:46:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google; t=1705970767; x=1706575567; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=GeFy9ObsKdupjGxJomayoIpMA4DTjdZekNe8mU5qwlA=;
-        b=WNPSVRLbGoHiG5MgcqmT7CzbjdHAV2zjOA+nWVjqgOy85P/xFgoCHnnsZXTEzfIqjT
-         xcq1Z+6hWeI+wc5ciYo9azrmeOXzJBsf10DrCSINXf84tc5LFkP3kZ79ajLuTVYfkDGt
-         LDuy1osU5QpLdRvIUJ257HMNwOgdC2lqVKjmM=
+        bh=QL2EbelNfKplPRaLFa/5pxqZ1ShWs/qPJgvqE5R3xUI=;
+        b=EtTIlukhFan/pNGUy5e9gjkv2ADBCOb8zjKv323DqiiPALFjM0EMgCLOQUEKib1nfv
+         c+1jW7qdWU7miLssL8qiDsYTFzy4RLQflCD8hdFhKwktEHiC/QIVPu3UL50a1O8j+pXA
+         p3YsKTEKT5bDRSHWx3bGOYqyDUo/rJz8Y/+iU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1705970767; x=1706575567;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=GeFy9ObsKdupjGxJomayoIpMA4DTjdZekNe8mU5qwlA=;
-        b=nDWB3sDvcGOQS0eYyCnTneLdtT452gDRFLUhpBIlSYBKVasGJxO+NszKMeGa2S66xs
-         rMqRQ2FvLdUucRi4bgin6ortR/eN6a+M34XszzH5p9FIpPbZyQMldSotagxxDp0WgbZB
-         HnikI2BpgYmMtgUJte3lv1iKZWcNC/XeLK0duqBPHvSw6teTQSxTGkL/kQwrKm7LB22W
-         +26rIi37GFL/DpIjqNBePs9HdykI7GX27cOfYjpigHVOs8TdMLUziDXFaF/MId9SCPm4
-         +XUrwcUyh69efsKICybQgPMzLng1d4AesUIAs/uxV/EH2YXTLq4eETJtZrAgnRSB07oZ
-         Dbvg==
-X-Gm-Message-State: AOJu0Ywre6/w5S7sAS1mhMwlvGCseo02ZjTV3ojku8z/369QZBQFVrnC
-	vFuvYeWFUPR1iw4JLUWEpu4mmYwHBmcetkrBYCJyfNea4Yr/cxAL2R7VoxHKcg==
-X-Google-Smtp-Source: AGHT+IHIo+QmX5SKs1eURQTgF6xjx1ivZ9dGJ20X5CSUJXxEMYCvOi1XFZ6jAhdY2cgab1CibcxQ2A==
-X-Received: by 2002:a05:6a20:e116:b0:19a:f6f1:c643 with SMTP id kr22-20020a056a20e11600b0019af6f1c643mr2625807pzb.26.1705970767073;
+        bh=QL2EbelNfKplPRaLFa/5pxqZ1ShWs/qPJgvqE5R3xUI=;
+        b=I1M8cT23mF8dQA7J9rMH0RplKUYSchK0893Tw/mtvsgmnPt5NQfT/A31oeQfKy1gsp
+         DZxwPunmqXPB/lyv1uyW5EGwOIWrO86oeC4jH3zKq40gh8Nyxo03LpCEwsKGFKmSNIJ6
+         TlXuJF20SreChJHEMW854TWWOJruoGh+qkC9VQBQrz+VuR/FIx/xqHdfHBl3FeTo2iq/
+         I3woaMXQGsngM/p0UN6y6k1FAcP8URb+N/doB1cHFeaXQcLBGbI6G0OuNF9S2ZQiAE2v
+         kDlAX8CqSWJFTZm6CrTDkvO4UFVwCoJWM+VXKm7Y2Yb/cdPM2iLJwgSdJxb+MJs/KucQ
+         0EqA==
+X-Gm-Message-State: AOJu0YwpR2/W3Iou2Hb9up3iXtO7VVjx4ubCzy+xzkiI9K1LdDcNcbAh
+	YftQ+4aslxooaU4dml4JINvojqagZ7ZcQ6zfCDxjSo9P7pcDUcSnckWVMH5QdQ==
+X-Google-Smtp-Source: AGHT+IGRFhkPzejcuLL4VRK+c8dRwaf1aYOd9GmP0Xdnbl6TsX/mwlLYTiaazDEJC80Uor5945a4rA==
+X-Received: by 2002:a17:90a:d306:b0:290:5ccf:af0 with SMTP id p6-20020a17090ad30600b002905ccf0af0mr2174216pju.60.1705970767490;
         Mon, 22 Jan 2024 16:46:07 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id kt6-20020a170903088600b001d755acec64sm2112193plb.189.2024.01.22.16.45.57
+        by smtp.gmail.com with ESMTPSA id oe11-20020a17090b394b00b00290d0459e3bsm120871pjb.47.2024.01.22.16.45.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 22 Jan 2024 16:46:03 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
 To: linux-hardening@vger.kernel.org
 Cc: Kees Cook <keescook@chromium.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Mark Brown <broonie@kernel.org>,
-	Mike Kravetz <mike.kravetz@oracle.com>,
-	Vasily Averin <vasily.averin@linux.dev>,
-	Alexander Mikhalitsyn <alexander@mihalicyn.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Paul Durrant <paul@xen.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	xen-devel@lists.xenproject.org,
+	netdev@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 34/82] ipc: Refactor intentional wrap-around calculation
-Date: Mon, 22 Jan 2024 16:27:09 -0800
-Message-Id: <20240123002814.1396804-34-keescook@chromium.org>
+Subject: [PATCH 80/82] xen-netback: Refactor intentional wrap-around test
+Date: Mon, 22 Jan 2024 16:27:55 -0800
+Message-Id: <20240123002814.1396804-80-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240122235208.work.748-kees@kernel.org>
 References: <20240122235208.work.748-kees@kernel.org>
@@ -74,19 +75,19 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2179; i=keescook@chromium.org;
- h=from:subject; bh=fB/vJlhvA9krznQ56xe/F9UTpDDJWr+0HII6dSIL9Rk=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgHUrb+Pn30CFNG/PpuZxRTSyun9OKDLc811
- y0OFWm3o9WJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8IBwAKCRCJcvTf3G3A
- JkMAD/4l1He8Fl/Q5+UzintLb5ZAHreICrIvS38FaRAsRYin9PCIVE7R4QNAOgkUyOHy6/e82p4
- /LIzbTFYbGFCrcSkmQDoUut5ugYgmTsp5Zqy/pXkVLc+mbPkf9gcurcEQosUKumAxCNc2trCrFw
- okS0qbY8OC4HEYRVGgt+l2ylO1/KJ9sOziIDJIrwB3lHcSycnJiSmpHVanMkwQfKH0yF9btCWjO
- 01oWUd4v52bx4ifqCleVxV8fbE8xrJxHjhMn0yqt7ONgPfySTR1ReOoVIaTK4SfgtQY9JkVN28C
- g2sOOOKzFYfPLr53vbfINFNulEl9mgIHMXiCo/yKFVxSnYyT9oCtEVd38MF1FhjY5+dOYug7fF3
- 6Ne60lEOpmqIU/SgsY9pEt/YhlzFczZR9TMkn9OzBToVC7/tRx5rcdaa9QSiiJU5A+im9lLphn5
- khTkun6IVSlXKgX86MlCBGpJjD/kH1X6j3ND/vLePIgaJrTZFOpiZsa6oEfibcx9D1J8IkJahQx
- xKdWe7MM28oJ4stfbWkOIV/jOaQDjvhV1PnFn7pyz2jOqL0RrMOrQaPSsmSkz1ApWVL7aAPcqy1
- AdmQPabeL/NacbRL1LzSDCOm6CP/GMNam0Qie6oUUiWEiupKHafsqBVhAlIp+rwMElFlAmtrajF 5Vc8hYcSaLxYkJA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2080; i=keescook@chromium.org;
+ h=from:subject; bh=7EjHVZinq5vMXU1+hzn38DepLpa6iDayHYypzEUYJ8I=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgMGbwjLdUBipRWV/86VXIdYYa28FnqDE8e3
+ ji0sb3+qXmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8IDAAKCRCJcvTf3G3A
+ JsN6D/9/9pZCcQMxkCKVjCzbTzXOAQTMNmntEY/KiITUeK8EZC1n44hzsCtSDO9z3x4VtvUW53Y
+ pRmydxh3JiySpsfiK4OxljXZ/xvSG+v1GEOgkMGo2iye6zXeVeadXsRCP2MY/IsaXKyM0TKUH5i
+ g4+ChtKvF7D9haRMeRaLK4ST+SPfUX52+Z0xW6LUaGrz824SDJhB6Gq9j70+OoNvQaUNHrgZjdR
+ a67Kgz/3+HnspC4bx9lGFxCUiPdmTZOz2mgatPghMoE1oX04GIjku1UTthsh6180c00i2Sk/LJI
+ 1bRchLyEexiVH65VHvz3Ge37s/qRJosLl2xW1ds7SHJKd3qfVFTBa++CN+0tvpd22m7lAAYF7cU
+ Rkfs/ZXcyHX1COeG62Bsp15wHODlwmJxEzU00q1Rl6ynr8uVniiXT4RIR9ZRxO5c25/mmUzGvmW
+ 3rnZGTP9QuvpKRY6GaVrOWKPiaKo3XhsasnsuFP3f6lkYw/WdOVxY2UUWqvlpj3eah/klmSKi1a
+ lDJR8pC8b50zoXsumq3xtz1lKSL3iETbnda7hCBHkYCfEhGJi2WPdHrfeEaXwDkde5gZEwPCzZ3
+ EJ9TGrYsYcED0KeZFlmbguqSvBeanX+PMcLQckWAXPEbi1WgzcVvFGckq6ZyPuUJHl0C9DAM8Dk 2036V40Dg9GXNKw==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
@@ -104,46 +105,38 @@ instrument arithmetic wrap-around conditions and catch them when they
 are unexpected, regardless of whether they are signed[2], unsigned[3],
 or pointer[4] types.
 
-Refactor open-coded unsigned wrap-around addition test to use
-check_add_overflow(), retaining the result for later usage (which removes
-the redundant open-coded addition). This paves the way to enabling the
-unsigned wrap-around sanitizer[2] in the future.
+Refactor open-coded wrap-around addition test to use add_would_overflow().
+This paves the way to enabling the wrap-around sanitizers in the future.
 
 Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
 Link: https://github.com/KSPP/linux/issues/26 [2]
 Link: https://github.com/KSPP/linux/issues/27 [3]
 Link: https://github.com/KSPP/linux/issues/344 [4]
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Vasily Averin <vasily.averin@linux.dev>
-Cc: Alexander Mikhalitsyn <alexander@mihalicyn.com>
+Cc: Wei Liu <wei.liu@kernel.org>
+Cc: Paul Durrant <paul@xen.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: xen-devel@lists.xenproject.org
+Cc: netdev@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- ipc/shm.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/xen-netback/hash.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/ipc/shm.c b/ipc/shm.c
-index a89f001a8bf0..227a1610628a 100644
---- a/ipc/shm.c
-+++ b/ipc/shm.c
-@@ -1650,11 +1650,13 @@ long do_shmat(int shmid, char __user *shmaddr, int shmflg,
- 	}
+diff --git a/drivers/net/xen-netback/hash.c b/drivers/net/xen-netback/hash.c
+index ff96f22648ef..69b03b4feba9 100644
+--- a/drivers/net/xen-netback/hash.c
++++ b/drivers/net/xen-netback/hash.c
+@@ -345,7 +345,7 @@ u32 xenvif_set_hash_mapping(struct xenvif *vif, u32 gref, u32 len,
+ 		.flags = GNTCOPY_source_gref
+ 	}};
  
- 	if (addr && !(shmflg & SHM_REMAP)) {
-+		unsigned long sum;
-+
- 		err = -EINVAL;
--		if (addr + size < addr)
-+		if (check_add_overflow(addr, size, &sum))
- 			goto invalid;
- 
--		if (find_vma_intersection(current->mm, addr, addr + size))
-+		if (find_vma_intersection(current->mm, addr, sum))
- 			goto invalid;
- 	}
+-	if ((off + len < off) || (off + len > vif->hash.size) ||
++	if ((add_would_overflow(off, len)) || (off + len > vif->hash.size) ||
+ 	    len > XEN_PAGE_SIZE / sizeof(*mapping))
+ 		return XEN_NETIF_CTRL_STATUS_INVALID_PARAMETER;
  
 -- 
 2.34.1
