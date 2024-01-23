@@ -1,115 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2B7A10F1;
-	Tue, 23 Jan 2024 03:29:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06A1E17CA;
+	Tue, 23 Jan 2024 04:00:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705980584; cv=none; b=KD7Fnge+T9POJvAV8qAKe6sx92HBtT8JmbeIorRg4KP7mBmGdiTT+JCIrJqT4MRxC2GiGlCqCW1H3DBGErzk2orKr3LaLYGalpQk+kJPDFgMT3nwDOd/CwbU96FlZoFLNXs6I2urnXRju2kOHr2SLaov3F9i/MeN71pfR+2WhL0=
+	t=1705982441; cv=none; b=CdHuy0E9DiXVRHiIjZMCGPzWL+6KtMmB3zeapy+Ht2elP+6MMZ6Y7lDu2YO3pI5RYet6qUyFjwQGWhWS9PtO3k3NggsQ1UiUtkwe6/WT5fQEiERB28FrMosIdWNsWKxaOzMuohNBWe6pG0Vl92zBg+rI+3MAaubOXDBIE3DJbIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705980584; c=relaxed/simple;
-	bh=U1v5qrYKbV+f+R8OtytsdZNiZAtmV31IrDUJJyID3bk=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=Q0YmV5gDg3VwcxQlxqdemhPnPEavoW7fR8gLM5xm078rlHPS7xP/tmnOZocVehg/pCwyaxkUZrpZEsLhM65GL54MzofCKmiwjqND1gVjiXb+0xdY2pL+vuEDBDSTEJFvGwDty4Jq17wiysMICq8W5OQ5Bw/45aDnVB/Ik/pHEGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wng2Ly9p; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705982441; c=relaxed/simple;
+	bh=HTux5BIIrgAHQKFYDFlexQlarUVDF1tSoVhHVafuXxk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tMq5E8A3+ovxW6CgOpEEsi8sGMdAhvwbGIoeg7eQuSAsQMMe+0JRZI5oq0W8C5z6frH9T3frdzmeVyIMZ2xxrWnhTBui9weLGnpe2VBCus6IvsveYVLQrsCk35tHZ7lAzlOdbkSP1XW9V5u7zFeG+YnAMA68e8VEQZCGbQzZYsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Bm1XLAAK; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wng2Ly9p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A2CEC433C7;
-	Tue, 23 Jan 2024 03:29:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705980583;
-	bh=U1v5qrYKbV+f+R8OtytsdZNiZAtmV31IrDUJJyID3bk=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=Wng2Ly9p0gJUrUy0fOD4sFGGZ3A/c+t4sAUY6sRcNyedhhhAQEuGsBs991gjlQhWi
-	 L9W34O7F9D6wLVxhLculzkedvobKw3ENzJv1JQTt2VBpihomaaGQWcWBbsYybwdIJF
-	 ig5KyQrCJqCLjUKrpQep0GrdUC5rmFXzYY056mFzRum+NFP1zAAHW6lCBRRBozSmzS
-	 IKrxbZ/KFH/jeSI4AjmRfZwnEkxStHujgD3WpURC8HreGp2IRC4gaNEfbGxo/7AosX
-	 j93RdCdt5BGaL7DtelBesGtRUoWStsloAYet8odRBsaEEjZhqLKLRgsDIy8/b6GhYk
-	 f7F7CMQMRIVtw==
-Date: Mon, 22 Jan 2024 19:29:42 -0800
-From: Kees Cook <kees@kernel.org>
-To: Eric Biggers <ebiggers@kernel.org>, Kees Cook <keescook@chromium.org>
-CC: linux-hardening@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
- "David S. Miller" <davem@davemloft.net>,
- Aditya Srivastava <yashsri421@gmail.com>,
- Randy Dunlap <rdunlap@infradead.org>, linux-crypto@vger.kernel.org,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 46/82] crypto: Refactor intentional wrap-around test
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20240123030745.GA1097@sol.localdomain>
-References: <20240122235208.work.748-kees@kernel.org> <20240123002814.1396804-46-keescook@chromium.org> <20240123030745.GA1097@sol.localdomain>
-Message-ID: <C9D472CD-13E1-460B-B8FF-3DD9447804B3@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Bm1XLAAK"
+Message-ID: <15d65e11-d957-4b03-bec3-0dcd58b50f97@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1705982436;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JA4VNi6lPEO0ZICt6dBnkKo/XOB/bUMthg+BctCwUxc=;
+	b=Bm1XLAAKMEvSvDemIU6gUhClAonnXT67w/fiNGxXIPcgbAVK3rp+5sv/Tnwlp63HOvjlEq
+	9Nmkzk6IKsLu1kOf1GIKubHSZTb29PHEb7qHfssHboTr8j+yCOU0Mv31PUGbUDzHlx74PD
+	boSChrGpZL96zpdtMMWcTwknaIKPGDE=
+Date: Mon, 22 Jan 2024 20:00:26 -0800
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 43/82] bpf: Refactor intentional wrap-around test
+Content-Language: en-GB
+To: Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org
+Cc: Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+ KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+ Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+ bpf@vger.kernel.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ linux-kernel@vger.kernel.org
+References: <20240122235208.work.748-kees@kernel.org>
+ <20240123002814.1396804-43-keescook@chromium.org>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yonghong Song <yonghong.song@linux.dev>
+In-Reply-To: <20240123002814.1396804-43-keescook@chromium.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
 
+On 1/22/24 4:27 PM, Kees Cook wrote:
+> In an effort to separate intentional arithmetic wrap-around from
+> unexpected wrap-around, we need to refactor places that depend on this
+> kind of math. One of the most common code patterns of this is:
+>
+> 	VAR + value < VAR
+>
+> Notably, this is considered "undefined behavior" for signed and pointer
+> types, which the kernel works around by using the -fno-strict-overflow
+> option in the build[1] (which used to just be -fwrapv). Regardless, we
+> want to get the kernel source to the position where we can meaningfully
+> instrument arithmetic wrap-around conditions and catch them when they
+> are unexpected, regardless of whether they are signed[2], unsigned[3],
+> or pointer[4] types.
+>
+> Refactor open-coded wrap-around addition test to use add_would_overflow().
+> This paves the way to enabling the wrap-around sanitizers in the future.
+>
+> Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
+> Link: https://github.com/KSPP/linux/issues/26 [2]
+> Link: https://github.com/KSPP/linux/issues/27 [3]
+> Link: https://github.com/KSPP/linux/issues/344 [4]
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Daniel Borkmann <daniel@iogearbox.net>
+> Cc: John Fastabend <john.fastabend@gmail.com>
+> Cc: Andrii Nakryiko <andrii@kernel.org>
+> Cc: Martin KaFai Lau <martin.lau@linux.dev>
+> Cc: Song Liu <song@kernel.org>
+> Cc: Yonghong Song <yonghong.song@linux.dev>
+> Cc: KP Singh <kpsingh@kernel.org>
+> Cc: Stanislav Fomichev <sdf@google.com>
+> Cc: Hao Luo <haoluo@google.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: bpf@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>   kernel/bpf/verifier.c | 12 ++++++------
+>   1 file changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+> index 65f598694d55..21e3f30c8757 100644
+> --- a/kernel/bpf/verifier.c
+> +++ b/kernel/bpf/verifier.c
+> @@ -12901,8 +12901,8 @@ static int adjust_ptr_min_max_vals(struct bpf_verifier_env *env,
+>   			dst_reg->smin_value = smin_ptr + smin_val;
+>   			dst_reg->smax_value = smax_ptr + smax_val;
+>   		}
+> -		if (umin_ptr + umin_val < umin_ptr ||
+> -		    umax_ptr + umax_val < umax_ptr) {
+> +		if (add_would_overflow(umin_ptr, umin_val) ||
+> +		    add_would_overflow(umax_ptr, umax_val)) {
 
-On January 22, 2024 7:07:45 PM PST, Eric Biggers <ebiggers@kernel=2Eorg> w=
-rote:
->Just to double check, you really intend to forbid *unsigned* integer wrap=
-around?
->This patch's commit message focuses on signed, and barely mentions unsign=
-ed=2E
->The actual code changes in this patch only deals with unsigned=2E
+Maybe you could give a reference to the definition of add_would_overflow()?
+A link or a patch with add_would_overflow() defined cc'ed to bpf program.
+The patch itselfs looks good to me.
 
-I don't mean to forbid wrap-around; we just need to annotate it=2E I can s=
-ee how this commit log didn't do a great job explaining this=2E I hope the =
-cover letter is more sensible:
-https://lore=2Ekernel=2Eorg/linux-hardening/20240122235208=2Ework=2E748-ke=
-es@kernel=2Eorg/
-
->Also, what's the motivation for addressing the 'x + y < x' case but not o=
-ther
->cases in the same file?
-
-It's a code pattern we could find easily=2E It's working from the instance=
-s found via Coccinelle earlier in the series:
-https://lore=2Ekernel=2Eorg/linux-hardening/20240123002814=2E1396804-5-kee=
-scook@chromium=2Eorg/
-
-> For example, the le128_add() function which this patch
->modifies has two other intentional wraparounds, which this patch doesn't =
-touch=2E
-
-For dedicated wrapping functions we can mark them with __unsigned_wrap:
-https://lore=2Ekernel=2Eorg/linux-hardening/20240123002814=2E1396804-6-kee=
-scook@chromium=2Eorg/
-
->Also, the le128_sub() function just below le128_add() is very similar but=
- does
->wraparound in the other direction=2E  That's 6 cases in 20 lines of code,=
- but this
->patch only addresses 1=2E  And of course, lots of other crypto code relie=
-s on
->unsigned wraparounds too, which this patch overlooks=2E =20
-
-Right -- finding these kinds of things is where a lot of time will be spen=
-t in the future, I suspect=2E :)
-
-> So I'm a bit confused
->about the point of this patch=2E  If we really wanted to explicitly annot=
-ate all
->the intentional wraparounds in a particular piece of code, so that the co=
-de can
->be run with the corresponding sanitizer enabled, wouldn't it be necessary=
- to
->actually test the code with that sanitizer enabled to find all the cases?
-
-Yes, but there's a lot of code to test -- I'm trying to get the first step=
-s done=2E And then once the sanitizers are in good shape, the fuzzers can g=
-rind=2E (I'm trying to add some parallelism to this project; this code patt=
-ern was known so I figured we could address it now=2E)
-
--Kees
-
---=20
-Kees Cook
+>   			dst_reg->umin_value = 0;
+>   			dst_reg->umax_value = U64_MAX;
+>   		} else {
+> @@ -13023,8 +13023,8 @@ static void scalar32_min_max_add(struct bpf_reg_state *dst_reg,
+>   		dst_reg->s32_min_value += smin_val;
+>   		dst_reg->s32_max_value += smax_val;
+>   	}
+> -	if (dst_reg->u32_min_value + umin_val < umin_val ||
+> -	    dst_reg->u32_max_value + umax_val < umax_val) {
+> +	if (add_would_overflow(umin_val, dst_reg->u32_min_value) ||
+> +	    add_would_overflow(umax_val, dst_reg->u32_max_value)) {
+>   		dst_reg->u32_min_value = 0;
+>   		dst_reg->u32_max_value = U32_MAX;
+>   	} else {
+> @@ -13049,8 +13049,8 @@ static void scalar_min_max_add(struct bpf_reg_state *dst_reg,
+>   		dst_reg->smin_value += smin_val;
+>   		dst_reg->smax_value += smax_val;
+>   	}
+> -	if (dst_reg->umin_value + umin_val < umin_val ||
+> -	    dst_reg->umax_value + umax_val < umax_val) {
+> +	if (add_would_overflow(umin_val, dst_reg->umin_value) ||
+> +	    add_would_overflow(umax_val, dst_reg->umax_value)) {
+>   		dst_reg->umin_value = 0;
+>   		dst_reg->umax_value = U64_MAX;
+>   	} else {
