@@ -1,122 +1,116 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74B4D1487CE
-	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 01:08:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3A323C3F
+	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 01:12:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705972082; cv=none; b=FC202qPc2xIDlU3DVd/VuvvDWPDcRB+oDoO0+3gQII6ZEN7oWviQ10d+FYreZir2VlQ5b5w6/AkP+zW7tm8Wl8WpDW/SXRlJ9QRCfwrqJ2zMZeLQ9dxrqGtCr8hHmI5Or32n9WmGt4DQPaFK+SizdoV14k2kVaAQ25/nsDl1Ymg=
+	t=1705972340; cv=none; b=CbyXweijR6VAV+10ipI5bapKjjRhAXGxkUVgrcNlx5xxYS+ez3U5m10hOqyXMNABaNqZotBq7D7IecNtDUC8u8GaeIUu94PfU49f+Pdyy116ua1QyLBaP+TP9ncf0PqUhYhMaSxtxtsg5I2RyVjVB89ukuEnf6r/ZJZ8qMBDNwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705972082; c=relaxed/simple;
-	bh=uDChScHA8/keZbVJoSWpHzwdBcCCYoYhS7GeA9recLs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CnUzc77HRBOFPhF8vLArLHSGZmntfbXNvfiCybamk1uiDYJeO6nClupTdsUAIZ8zzr7UOO5fEUmE5hNq74jM45OmuJjTWqpKJmJ5Y5rxbVJUkSwkXfVMZWPUl28CY7GVGa7eskmLWlJXKfv+XKh78Nfjdp3MB4aNHUIchpCuILc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=hyJk89p0; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1705972340; c=relaxed/simple;
+	bh=ZCXYUvRq5QkiujopZKa+oos+1nywJjGYg1IVAwcoHTU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=I5NBWUV4nfIzg+rm24NTh1hGSJituoSHO/TxSHD23lvKY7AKpbqrhYsxsYaqEr+7VCtAe5w5LqpXt/wkvQbfyTCggQpI0x53/GRKG7dI/sDtLVBqyDE0yWs6x/GVYS20E276Z+UZA7cPuVH/Uzg7y8dZU/65jTyIIrMNhnotEDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=azrXpgIF; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="hyJk89p0"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-50e759ece35so3655543e87.3
-        for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 17:08:00 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="azrXpgIF"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6dbe5014eb5so898864b3a.0
+        for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 17:12:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1705972078; x=1706576878; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=FqBTpX0vWqNsF5lS1C9n4e9u8Ca0XIeIP2mzdNVJ8OY=;
-        b=hyJk89p0lr7D4H5IFrTlLMSqx0IE3sCmggufqrn8Dc2/LW9zYTjwJxt+NIHMocrV3e
-         YtVei/DbgGr5T4XeTuBl9VUVSXTXVwvessH2G7uIgMYY2Q6EpqaR7ZKegGwEAD6ZPkXN
-         heto7ZrQk0iB8EK7mOUUgiRlvqR4LIEWayrQM=
+        d=chromium.org; s=google; t=1705972338; x=1706577138; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4qH9Rf/zd/bFfsFZBAS2bb+VGZ3TWvzsYRdk9oqlfHE=;
+        b=azrXpgIFgYmpAZoHosPXfQs6o5/SdrzwyLtUcLQGxUeLgcsnZZrRdiBvbiwfIvLEQs
+         ++Y53QfJVQxjUAGAfEGaDiMrH7HeIbn/dov+75CX7DGdpRg3WhvWrDEIRx60tU1zK7rT
+         +iJkRZrQK5CKqAPFk68AzoB//EiuzXhLcXRyo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705972078; x=1706576878;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1705972338; x=1706577138;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=FqBTpX0vWqNsF5lS1C9n4e9u8Ca0XIeIP2mzdNVJ8OY=;
-        b=T2rJNmUhxLP/42UI0rqsokTwyYNhxFuOvh/h+mKlnyTKgHbWupehyYVdaZuN3JOLa2
-         8y2zAmwZerNpl3NBdk/CWzd48k7OtYbZH3Ib2KUS3W7ksLZbjDpQnLbN+52vN6MqnuHt
-         2ipsAA5iRQ/N1O364y05+e1H5VJ1OGgfoPWh+EobhHEfKlV6OCBdyX01lMYwxIfd9V0e
-         I88KTxaRLRNH/AhBVDI/8WGVueC0gZeAw+uL/ILXvQg5cEPbULNI8hfGtz+z6jlrKHM8
-         qBmpXYXfvGUeLM3FHV68vAinGMMF4Lh9kfecfr+4ozKi0ZSJML/jHhZa4wG5WX/hHjy3
-         Wmgw==
-X-Gm-Message-State: AOJu0YxdYKFcvXbCeNsNZ7v07fnPtWgo/koiOUj3bWH8ZtNbC/ZtLXgT
-	wPETzkxErTsQ99v52tMldNSRkzApA0yM9ReHbP7T7qTFIHNk98w6o66EExFctwIffufy55ohpYT
-	4A6Thug==
-X-Google-Smtp-Source: AGHT+IG8acgP+Fe/PS8Uqi5kjukxTTBNqwtXIVvPdFJjapHn90YPSwlQBgcRVOORqubxOx9YO9tGKw==
-X-Received: by 2002:a05:6512:1304:b0:50e:d505:112f with SMTP id x4-20020a056512130400b0050ed505112fmr2415501lfu.82.1705972078301;
-        Mon, 22 Jan 2024 17:07:58 -0800 (PST)
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com. [209.85.208.44])
-        by smtp.gmail.com with ESMTPSA id fj21-20020a1709069c9500b00a2da3bbeb4esm10427694ejc.26.2024.01.22.17.07.57
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jan 2024 17:07:57 -0800 (PST)
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-559edcee47eso3179880a12.0
-        for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 17:07:57 -0800 (PST)
-X-Received: by 2002:a05:6402:14d4:b0:55a:553c:a987 with SMTP id
- f20-20020a05640214d400b0055a553ca987mr474350edx.79.1705972077074; Mon, 22 Jan
- 2024 17:07:57 -0800 (PST)
+        bh=4qH9Rf/zd/bFfsFZBAS2bb+VGZ3TWvzsYRdk9oqlfHE=;
+        b=Hk20e9sBXRcklJ8XdN+ddATFgWTARERlQL9ry/Sd077PLVZCeNSBEnMi6poGEgXG8D
+         ev3TXMlIkuYW2xdtyjmx5Ec1jUDJjWQ9GC2aouR2YV7at8D2N1CmJmisdHNwcTFNfyfL
+         j1BUBGcoE6bnRX2SLgl09uC1phf0gqrvrSZySKX++8FZ73lUa7PCwqxP6ZW16Tj/kILT
+         INzviAD20LMs2pp5ykMkQptDgxCHCoLql6iREFZZCOyC+L/uYBz36wlBi+n4b6h4Fx3F
+         QzjihQiz/944J2D2GFUmfN/uVZYRDaLr68sZLKVnkTaKbnqvivy/GGPSkDuIpj4GUi/E
+         AL1w==
+X-Gm-Message-State: AOJu0Yxrq5euuehd7udU0iDESo8swVskT03DOZZzG8wkfiSPFdLDS4fQ
+	WdvSKa6x2kDA0x0odc+7ZmD3D7VvuOiClbeqT0tIijzPgRJ4JaOgZcjY/OrYzWzlfalUsYiK567
+	cSQ==
+X-Google-Smtp-Source: AGHT+IGNrTPrac7ISZlO2e5t99w9hTwrpumEwsfIdx7bdlG3ZBChA/j7c0HGByhiNohLx2kmMirFcQ==
+X-Received: by 2002:a17:902:da91:b0:1d7:4e2:592b with SMTP id j17-20020a170902da9100b001d704e2592bmr3161029plx.103.1705972338231;
+        Mon, 22 Jan 2024 17:12:18 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id w2-20020a170902c78200b001d71f10aa42sm5968938pla.11.2024.01.22.17.12.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jan 2024 17:12:16 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+Cc: Kees Cook <keescook@chromium.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Wang Kefeng <wangkefeng.wang@huawei.com>,
+	Ben Hutchings <ben@decadent.org.uk>,
+	linux-arm-kernel@lists.infradead.org,
+	Russell King <linux@armlinux.org.uk>,
+	Hugh Dickins <hughd@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] ARM: fault: Add "cut here" line for prefetch aborts
+Date: Mon, 22 Jan 2024 17:12:15 -0800
+Message-Id: <20240123011211.work.227-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240122235208.work.748-kees@kernel.org> <20240123002814.1396804-34-keescook@chromium.org>
-In-Reply-To: <20240123002814.1396804-34-keescook@chromium.org>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 22 Jan 2024 17:07:40 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whS7FSbBoo1gxe+83twO2JeGNsUKMhAcfWymw9auqBvjg@mail.gmail.com>
-Message-ID: <CAHk-=whS7FSbBoo1gxe+83twO2JeGNsUKMhAcfWymw9auqBvjg@mail.gmail.com>
-Subject: Re: [PATCH 34/82] ipc: Refactor intentional wrap-around calculation
-To: Kees Cook <keescook@chromium.org>
-Cc: linux-hardening@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Mark Brown <broonie@kernel.org>, 
-	Mike Kravetz <mike.kravetz@oracle.com>, Vasily Averin <vasily.averin@linux.dev>, 
-	Alexander Mikhalitsyn <alexander@mihalicyn.com>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=935; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=ZCXYUvRq5QkiujopZKa+oos+1nywJjGYg1IVAwcoHTU=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrxJuxQakNaOdgA1fbKkrd9nBEjS8Bl0aB6r2y
+ 6AtqY38AQuJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8SbgAKCRCJcvTf3G3A
+ JnRTD/91aoq4t5Oh+w4+1avUipu20D+yzeP9E3R7zVZG/KmQyCAFUSLowG/5ggQFVkv7TN8Wit9
+ ZGNlfOuX8hBK0yLB6hYBGfOoHcsh1Gn7bcwBK6V5HkupzaTohUCDm28WaRM4GPvyx+Lt0sk9A6g
+ 6HAcuu0GvPgX6ZpMW3G+OYfqnrXC+oDXw1JoWSZ6ByS0H3SiQBO1/3sspw9IPDLcxcce8B5/1dz
+ 7lZ+PhKbqJ0ZUh+DmdS4UVbOrtzf9bFsdKAMO5NthlwHeeEDPtwbDYqqqRhyfikfds/k0jrcyYw
+ mj8r4Ckh93ofW3TTufuvqoiLToS0cQ4joPsbbgKTnwBLQnu/Sovm1SV+2qPeG8CSrylxToPn66c
+ VJUZjaLhI+vzE8HHhwfOqOtFIAC4d2uqY0lZu/tXbS0Jf4sWTNDr9R3DVlvsJ035PhLX7Jzfzt6
+ /yboV6QecaqFRqw2aPFwYL8F4LFLXCgrDrmms6oYk/+ibyVeOxxt0HAcZK1/C9pF1AAn5CBW+sD
+ QZP/hxPvayNBRU2hgWSFhZCrPEm6Aa4GoXsGIqiMVQHMy1peVqURo24q89XsgK4LOQ9+HVURGJk
+ WHNO5Xzhzh6evN0gwT+E+cf/LPul96AgTHVfftpVQLe/5AibJkCWT4fDM8VYAc/kgvx71nzhZEh
+ ZZiuYLDe 2RO/4pw==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Mon, 22 Jan 2024 at 16:46, Kees Cook <keescook@chromium.org> wrote:
->
-> Refactor open-coded unsigned wrap-around addition test to use
-> check_add_overflow(),
+The common pattern in arm is to emit a "8<--- cut here ---" line for
+faults, but it was missing for do_PrefetchAbort(). Add it.
 
-NAK.
+Cc: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Wang Kefeng <wangkefeng.wang@huawei.com>
+Cc: Ben Hutchings <ben@decadent.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ arch/arm/mm/fault.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-First off, none of this has anything to do with -fno-strict-overflow.
-We do that, because without it gcc ends up doing various odd and
-surprising things, the same way it does with strict-aliasing.
+diff --git a/arch/arm/mm/fault.c b/arch/arm/mm/fault.c
+index e96fb40b9cc3..e804432e905e 100644
+--- a/arch/arm/mm/fault.c
++++ b/arch/arm/mm/fault.c
+@@ -586,6 +586,7 @@ do_PrefetchAbort(unsigned long addr, unsigned int ifsr, struct pt_regs *regs)
+ 	if (!inf->fn(addr, ifsr | FSR_LNX_PF, regs))
+ 		return;
+ 
++	pr_alert("8<--- cut here ---\n");
+ 	pr_alert("Unhandled prefetch abort: %s (0x%03x) at 0x%08lx\n",
+ 		inf->name, ifsr, addr);
+ 
+-- 
+2.34.1
 
-IOW, you should think of -fno-strict-overflow as a hardening thing.
-Any optimization that depends on "this can overflow, so I can do
-anything I want" is just a dangerous optimization for the kernel.
-
-It matches -fno-strict-aliasing and -fno-delete-null-pointer-checks,
-in other words.
-
-And I do not understand why you mention it in the first place, since
-this code USES UNSIGNED INTEGER ARITHMETIC, and thus has absolutely
-nothing to do with that no-strict-overflow flag.
-
-So the commit message is actively misleading and broken. Unsigned
-arithmetic has very well-defined behavior, and the code uses that with
-a very traditional and valid test.
-
-The comment about "redundant open-coded addition" is also PURE
-GARBAGE, since the compiler will trivially do the CSE - and on the
-source code level your modified code is actively bigger and uglier.
-
-So your patch improves neither code generation or source code.
-
-And if there's some unsigned wrap-around checker that doesn't
-understand this traditional way of doing overflow checking, that piece
-of crap needs fixing.
-
-I don't want to see mindless conversion patches that work around some
-broken tooling.
-
-I want to see them even less when pretty much EVERY SINGLE WORD in the
-commit message seems to be actively misleading and irrelevant garbage.
-
-Stop making the world a worse place.
-
-                 Linus
