@@ -1,67 +1,67 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7C7915B998
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC95415CD46
 	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 00:29:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705969758; cv=none; b=NMW4Bi5hpVhIz0ODa7SYhK0MwUPib/uIvOvkYmihLX5Udx5zmv3P9ceq2wy3+jPAdFZ6XcWsoC3OG5p+HOYA/FdHoc/GxnKjoBzBTpTBsTx6fMqUjZve4tJddFgT5x7WwtPV+NVjoyoQMfgxFyDxsGV4T+gXRS43JmRoC0VIWhQ=
+	t=1705969758; cv=none; b=HNHdQhumUHCwgeSlJAkOA7tH35iwnxGEuejTS73bqYYSnQT/0WdegGiiql/BaLlOVKgfeUv5+j0RVLLaaqjmCfIlfxc9QNs9OHCOHhSffWnCXZRfS7xpX4NHBZv0h1zaB6hlTxK6KR4Uvtfdnn+LPnB223HMDbQgF6gyRsuU/rU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705969758; c=relaxed/simple;
-	bh=IXC9gHJS+Pnry0+OD6RifuKC5iruziQtcHdroYUu0NY=;
+	bh=E4fnTWRdYYjzKyqD4/S7hWZrsgLHeDrGLLUjsAQr6BY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GyMSXWnvPXvWwkkWn8e6vDJABi/Tmhc+WVV5TYQiGiIM7jebx013UILFoUrw8BebiHajvGIxZYBC8TxPoR68BDJqQ4i4PMZxnJdVJ3L2m91VSy6k4vaUdBmeQr8s6CDWSKs2FQvdTSg1+POLWmSdnm4dccHvZHVfK6jvXi3CrOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=SJQaGBFy; arc=none smtp.client-ip=209.85.210.181
+	 MIME-Version; b=DeWFqCjTKrn79MigbpyajGy5Cqsl3i4ts+8xlLlL0RXCPy8BCL7qnA6kZo4QYew9oM22qgNq+lunQNlWY3OHD43CzZYUstOz+xuP5QwqDMpQX24o41xk4IupKhCADdAyRXvT6lyT9SFJZyHyyAJW0UfGTXPjtGStyLBgn506Z5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=OEYgJ61F; arc=none smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SJQaGBFy"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6dbcdbe13e1so1649155b3a.3
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OEYgJ61F"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1d71e1d7c78so19750275ad.3
         for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 16:29:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google; t=1705969756; x=1706574556; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4R+UH41sqIFBEg2yHgSz9fASiwRmxO8UrEbFS39w0BY=;
-        b=SJQaGBFyaHQfX8ipErQPchtmgreagwEZD2Ajm7xOsT53ZYHhkdP+g1QHTIkxLJgiGo
-         2c7zlIAoka+I4U6gIDnQCLVsPEgnzUlxaHCCjq+S0sX8Ya4h9UDEd/NGrTAgqv2/cCYt
-         p6o1/RBfIP+SRbcyntIEYmRXiptwsFa5E1AoE=
+        bh=Ozg2hLXb4DmKd1HybaSf4vbbssFf/awskMowmtEYutc=;
+        b=OEYgJ61F8Nx+mz3V87A33fYK0ZzNj/GNdOOR490W+79OtdBN/Ee1TsRyeT2wWPzImY
+         T3fosuo6LOH1/fbvbzr20xqwCnTT4Rfzk05nvoOsiRDKMdD56x+zF0j4dMY0J6NG7KBq
+         +rLBWd04918N9pUYUPA10pNHGTIM+hy9wv1Bo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1705969756; x=1706574556;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4R+UH41sqIFBEg2yHgSz9fASiwRmxO8UrEbFS39w0BY=;
-        b=r7fr5IIKfifzWFnZwcOXZbv5bCxY11wqBNeWXM6P6lG04KGdM+xZIgcSjKbqJCodar
-         NergGbjXmEMBotLW4PqRVpGOiIybFhtn+jXl6V7Rq/KfkYswakccLECC7NWV/8YAhwGN
-         jS9arz00eLen0A82eLc2g7hV0DHWJyuV3fUZTWzUSlLgAPgevA/HvGEbqjpfqWzpXUac
-         hfJh+x2ryHTQ0CDg7BQSiCKyi2F0F/Ot/WVQjhHU8c0GVWENd7xqDSPZmBptq+GkMtd9
-         lGBuwoY43RrsNN89muh9OgrGWGSob/WqcZ9FPVLicPL6wslmoZob7SrJRutjUp6LP6bt
-         IO4g==
-X-Gm-Message-State: AOJu0YwnqJhBGqAkwuxox97CV2r2vtQocEChmupc7lJiO0Jpwe6UYf5w
-	8A7aGeLtEHJowHiMcF3jpYBD4swTgtAUBRmS58MJSbtstflfy26yU6CVEkJeJA==
-X-Google-Smtp-Source: AGHT+IEOQPxBrxeTVknuQ85iWItECd3oDMC0wKeLvQMG9XfT1svGRvJdDWYE3hUC2zG+qCIX3weiSw==
-X-Received: by 2002:a05:6a20:1446:b0:19c:5821:1d6b with SMTP id a6-20020a056a20144600b0019c58211d6bmr373911pzi.71.1705969756091;
+        bh=Ozg2hLXb4DmKd1HybaSf4vbbssFf/awskMowmtEYutc=;
+        b=XGM0up+rPIv1JPHnW9ARkjyKeW6PN1zuOKfQNatbsYORAxL6ZzGGwux698nxbGDn1e
+         bm4eF+1AfANMsNqBo+StfOuJ9NqaUnEn1OxmYAoxhh2NqbUGtQeGNTjLSLgCk04P0Yg/
+         A0Nj/H2bkYd40yMMWXOoPrnp4zSZH2Y9oFh5qpFWqOLDleX/RdV9ZcgWImzCxwU9ZbRW
+         AjLZO9UgLFvgTzwK1IWqTTiymYeOS3fuouHgsxdr89nSC+xYXvRT8y0v9alpbn+97a4O
+         mHvqHFwx2vJzlqPYKe7YOfEIczG9xkjp+hCUkwC3+UjDPxJkZBBMf8JMEfBYMbH1RwLD
+         1xNw==
+X-Gm-Message-State: AOJu0YytVLpJlgdumh2o+PT7tUpzNd14GiSbgSFbyGWTiQHpQHrY7y9S
+	LqzNMiT4v1XRdDxewhS+MKrqjUPdfiaZjogjnSN7421dh5dVN1ifipIG0QjrB3K7LmS21WlNtpc
+	=
+X-Google-Smtp-Source: AGHT+IH3xItkb51q9poV3e4gk9+5kLPIsnJ/D1iDYZ2E26EFuOHRpQfvl1dXLHU1JWWRAwr3q4sIyw==
+X-Received: by 2002:a17:902:da86:b0:1d7:510d:745 with SMTP id j6-20020a170902da8600b001d7510d0745mr1963425plx.86.1705969756440;
         Mon, 22 Jan 2024 16:29:16 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id s2-20020a17090302c200b001d707987ce3sm7513949plk.194.2024.01.22.16.29.00
+        by smtp.gmail.com with ESMTPSA id j2-20020a17090276c200b001d5d736d1b2sm7671556plt.261.2024.01.22.16.29.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 22 Jan 2024 16:29:08 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
 To: linux-hardening@vger.kernel.org
 Cc: Kees Cook <keescook@chromium.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>,
-	linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org,
+	Bjorn Andersson <andersson@kernel.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	linux-remoteproc@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 63/82] mm: Refactor intentional wrap-around test
-Date: Mon, 22 Jan 2024 16:27:38 -0800
-Message-Id: <20240123002814.1396804-63-keescook@chromium.org>
+Subject: [PATCH 70/82] remoteproc: Refactor intentional wrap-around test
+Date: Mon, 22 Jan 2024 16:27:45 -0800
+Message-Id: <20240123002814.1396804-70-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240122235208.work.748-kees@kernel.org>
 References: <20240122235208.work.748-kees@kernel.org>
@@ -71,19 +71,19 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4403; i=keescook@chromium.org;
- h=from:subject; bh=IXC9gHJS+Pnry0+OD6RifuKC5iruziQtcHdroYUu0NY=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgKGl7sIklkp9DpywnYDLBMy17rUJMlBDpuZ
- IF1ZnQBhjmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8ICgAKCRCJcvTf3G3A
- JiG2D/9PRn4Y/k1W4IyELDW0vMaP8RPiiJfMCcL4ThXwWsfGmaqGLqfV1zQEvJXDHSGEjV3qA6f
- 1QWoI9IwuKjfA6OfO0JlksQZDvV/d4C1mTWzdQrRY2/LthSJBzsCK5VbReL0TpTAcFMajuY0JUk
- y79Nm7lQVGIPVT5kz9GE4HegEGGPsCk202fOQjGOid1P2FXfyctaxE7AC8A1oTmzBr7B6go6pES
- ZTzR/Z2fyNRTV4EbHBr9C3U447jLgO+uGVXj5FYunn/XaHZoFkbicu5CWTluotmM8My6vrUQc+R
- OVe3VQn2KHnuQsPPgENWLrMitHmaACD3nc3KGOQ5Nq6c9iVKKDGGSDopVfAm0cnC4JZNZssedWq
- QpeBszRZxgPbM6k0GMuCe73qgQg1GJuz4XqNNsDbrPNFJfH5ZXInUZt7+xx3wQ05371PA60Z8t0
- tmCrWOgNSP9F1389si16h87Pzo/PvgvSF70Hbml6OUR4kU8xvA5OMHvggCQlwJG4zIykjLq9Ggu
- inHAl1IReCphEG4kev2pugmVlUlmGGkFAeg2uA4m/PbIKGl61suJep0mr5S3biRpHUZh/FVpWS0
- dBLSKvx/lkw1jpHcmaLhj8srWr/oF+71hPZ7pLlb7R43ZReS0qw78SWDbOAttKIb6nPhBw9l//1 jTPSgii2rrZymlQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3781; i=keescook@chromium.org;
+ h=from:subject; bh=E4fnTWRdYYjzKyqD4/S7hWZrsgLHeDrGLLUjsAQr6BY=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgL5LhyO8lbwwC9JZQAOOgJrqb3OX0EPvh6l
+ 8bugQLiKQ2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8ICwAKCRCJcvTf3G3A
+ JnhyD/47D3dgLuSjvUBevHVUX8m0J9aMINDwyLe8YOJ3pS9h4ozZClTAxPECjJJWHjtLg7OJyvy
+ xNz1BO/Z4axDLuZsrUujG5UW3sD8uYFJRWwGx0xeNzp5hLbUeLi/yJMah9zRJg9w038a3N6o53/
+ /TmiV68eAjsRlBFm3aX7XiefhKVMLDKZhTNEf6CiWF9QfNPS69ktWpDj0ZUa6ui+cDBddo9V61U
+ 8nBaGbyQHfqJtg9gJaY8hkjJB+D2yT9PKxX1Ty/L50mjkHJAMd5po+wwYKl7tkgjizogRGvsMuT
+ +vuIsRfaIQ6rcBLHGTf5vVH7rHZq1pd4CY5zUbo9L9n3uoizF0G1V60SZbG5aMW/E8CMonLRtnI
+ knnFGL334iuQo0Gw2CVpMttL4qByUtAQB6n4N1tzT5RPMdiB3T+Ra2gPKRHWQ0pvbCSF9ZdBMR/
+ CYnaCLhY5+gqCUlDxOH1w4FxQ1jT++o/5/tS3mDwe3Y4q4/SOskxXFy/lY7mXvF0mCsFY2gkdfF
+ royUCOjy+Zt4PH8x+B6LXlzHbZIk7JT57rxoZ/T1VSCghRZmXE1qagz+W1f3UvBUiuTvi4gxm/Z
+ MlAZvNbQSQN5ReZV+4nUMvwmaZhJzoKqPsXcgil6mWAuL6mKyS8mAC9pWH4z3nLENV5pftqUiJl XHm7uY9FF7gVkZw==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
@@ -108,102 +108,64 @@ Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
 Link: https://github.com/KSPP/linux/issues/26 [2]
 Link: https://github.com/KSPP/linux/issues/27 [3]
 Link: https://github.com/KSPP/linux/issues/344 [4]
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: linux-mm@kvack.org
-Cc: linux-kselftest@vger.kernel.org
+Cc: Bjorn Andersson <andersson@kernel.org>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: linux-remoteproc@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- mm/memory.c | 4 ++--
- mm/mmap.c   | 2 +-
- mm/mremap.c | 2 +-
- mm/nommu.c  | 4 ++--
- mm/util.c   | 2 +-
- 5 files changed, 7 insertions(+), 7 deletions(-)
+ drivers/remoteproc/pru_rproc.c             | 2 +-
+ drivers/remoteproc/remoteproc_elf_loader.c | 2 +-
+ drivers/remoteproc/remoteproc_virtio.c     | 4 ++--
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/mm/memory.c b/mm/memory.c
-index 7e1f4849463a..d47acdff7af3 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -2559,7 +2559,7 @@ int vm_iomap_memory(struct vm_area_struct *vma, phys_addr_t start, unsigned long
- 	unsigned long vm_len, pfn, pages;
+diff --git a/drivers/remoteproc/pru_rproc.c b/drivers/remoteproc/pru_rproc.c
+index 327f0c7ee3d6..834249ee3dd3 100644
+--- a/drivers/remoteproc/pru_rproc.c
++++ b/drivers/remoteproc/pru_rproc.c
+@@ -893,7 +893,7 @@ pru_rproc_find_interrupt_map(struct device *dev, const struct firmware *fw)
+ 			continue;
  
- 	/* Check that the physical memory area passed in looks valid */
--	if (start + len < start)
-+	if (add_would_overflow(start, len))
- 		return -EINVAL;
- 	/*
- 	 * You *really* shouldn't map things that aren't page-aligned,
-@@ -2569,7 +2569,7 @@ int vm_iomap_memory(struct vm_area_struct *vma, phys_addr_t start, unsigned long
- 	len += start & ~PAGE_MASK;
- 	pfn = start >> PAGE_SHIFT;
- 	pages = (len + ~PAGE_MASK) >> PAGE_SHIFT;
--	if (pfn + pages < pfn)
-+	if (add_would_overflow(pfn, pages))
- 		return -EINVAL;
+ 		/* make sure we have the entire irq map */
+-		if (offset + size > fw->size || offset + size < size) {
++		if (offset + size > fw->size || add_would_overflow(size, offset)) {
+ 			dev_err(dev, ".pru_irq_map section truncated\n");
+ 			return ERR_PTR(-EINVAL);
+ 		}
+diff --git a/drivers/remoteproc/remoteproc_elf_loader.c b/drivers/remoteproc/remoteproc_elf_loader.c
+index 94177e416047..b9231cf46d68 100644
+--- a/drivers/remoteproc/remoteproc_elf_loader.c
++++ b/drivers/remoteproc/remoteproc_elf_loader.c
+@@ -278,7 +278,7 @@ find_table(struct device *dev, const struct firmware *fw)
+ 		table = (struct resource_table *)(elf_data + offset);
  
- 	/* We start the mapping 'vm_pgoff' pages into the area */
-diff --git a/mm/mmap.c b/mm/mmap.c
-index b78e83d351d2..16501fcaf511 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -3023,7 +3023,7 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
- 		return ret;
+ 		/* make sure we have the entire table */
+-		if (offset + size > fw_size || offset + size < size) {
++		if (offset + size > fw_size || add_would_overflow(size, offset)) {
+ 			dev_err(dev, "resource table truncated\n");
+ 			return NULL;
+ 		}
+diff --git a/drivers/remoteproc/remoteproc_virtio.c b/drivers/remoteproc/remoteproc_virtio.c
+index 83d76915a6ad..58742c666e35 100644
+--- a/drivers/remoteproc/remoteproc_virtio.c
++++ b/drivers/remoteproc/remoteproc_virtio.c
+@@ -298,7 +298,7 @@ static void rproc_virtio_get(struct virtio_device *vdev, unsigned int offset,
+ 	rsc = (void *)rvdev->rproc->table_ptr + rvdev->rsc_offset;
+ 	cfg = &rsc->vring[rsc->num_of_vrings];
  
- 	/* Does pgoff wrap? */
--	if (pgoff + (size >> PAGE_SHIFT) < pgoff)
-+	if (add_would_overflow(pgoff, (size >> PAGE_SHIFT)))
- 		return ret;
+-	if (offset + len > rsc->config_len || offset + len < len) {
++	if (offset + len > rsc->config_len || add_would_overflow(len, offset)) {
+ 		dev_err(&vdev->dev, "rproc_virtio_get: access out of bounds\n");
+ 		return;
+ 	}
+@@ -316,7 +316,7 @@ static void rproc_virtio_set(struct virtio_device *vdev, unsigned int offset,
+ 	rsc = (void *)rvdev->rproc->table_ptr + rvdev->rsc_offset;
+ 	cfg = &rsc->vring[rsc->num_of_vrings];
  
- 	if (mmap_write_lock_killable(mm))
-diff --git a/mm/mremap.c b/mm/mremap.c
-index 38d98465f3d8..efa27019a05d 100644
---- a/mm/mremap.c
-+++ b/mm/mremap.c
-@@ -848,7 +848,7 @@ static struct vm_area_struct *vma_to_resize(unsigned long addr,
- 	/* Need to be careful about a growing mapping */
- 	pgoff = (addr - vma->vm_start) >> PAGE_SHIFT;
- 	pgoff += vma->vm_pgoff;
--	if (pgoff + (new_len >> PAGE_SHIFT) < pgoff)
-+	if (add_would_overflow(pgoff, (new_len >> PAGE_SHIFT)))
- 		return ERR_PTR(-EINVAL);
- 
- 	if (vma->vm_flags & (VM_DONTEXPAND | VM_PFNMAP))
-diff --git a/mm/nommu.c b/mm/nommu.c
-index b6dc558d3144..299bcfe19eed 100644
---- a/mm/nommu.c
-+++ b/mm/nommu.c
-@@ -202,7 +202,7 @@ EXPORT_SYMBOL(vmalloc_to_pfn);
- long vread_iter(struct iov_iter *iter, const char *addr, size_t count)
- {
- 	/* Don't allow overflow */
--	if ((unsigned long) addr + count < count)
-+	if (add_would_overflow(count, (unsigned long)addr))
- 		count = -(unsigned long) addr;
- 
- 	return copy_to_iter(addr, count, iter);
-@@ -1705,7 +1705,7 @@ int access_process_vm(struct task_struct *tsk, unsigned long addr, void *buf, in
- {
- 	struct mm_struct *mm;
- 
--	if (addr + len < addr)
-+	if (add_would_overflow(addr, len))
- 		return 0;
- 
- 	mm = get_task_mm(tsk);
-diff --git a/mm/util.c b/mm/util.c
-index 5a6a9802583b..e6beeb23b48b 100644
---- a/mm/util.c
-+++ b/mm/util.c
-@@ -567,7 +567,7 @@ unsigned long vm_mmap(struct file *file, unsigned long addr,
- 	unsigned long len, unsigned long prot,
- 	unsigned long flag, unsigned long offset)
- {
--	if (unlikely(offset + PAGE_ALIGN(len) < offset))
-+	if (unlikely(add_would_overflow(offset, PAGE_ALIGN(len))))
- 		return -EINVAL;
- 	if (unlikely(offset_in_page(offset)))
- 		return -EINVAL;
+-	if (offset + len > rsc->config_len || offset + len < len) {
++	if (offset + len > rsc->config_len || add_would_overflow(len, offset)) {
+ 		dev_err(&vdev->dev, "rproc_virtio_set: access out of bounds\n");
+ 		return;
+ 	}
 -- 
 2.34.1
 
