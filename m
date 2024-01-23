@@ -1,35 +1,41 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 420355C8E2;
-	Tue, 23 Jan 2024 09:56:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D1795BAFA;
+	Tue, 23 Jan 2024 09:58:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706003789; cv=none; b=rhT6MbEkQtXAJoThkEqRd415xbs6M+2LgMcQgnJuB66O7VCRvbWa8oH00X5R8Ndvuey9qzjokNuRmV2a/jfZ7bGvWxCeFk8QEwkGv5HOjx1TimA0T7wsIMZ0E0RpaLmGoxFa8EueI9cl5VX67/0zyKfFI3zuqAlrH/G3uhcMCEE=
+	t=1706003922; cv=none; b=VJGYIuJ3USHACscLymRcNj6juwHjyaV7B/Nk5zyC1bMUbKe3ShfukZpEaouFjqm7URqe8hFdKYPV2RauxWWMy3Pldk1qxMyIQu8gzY7u0mLLKcwwlwKnRqFH8QGjg8E9wkroVwTHM1xUDyxDLZmQTJSHwyWd5Zqf3JlWKnr7rtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706003789; c=relaxed/simple;
-	bh=M9SACN960vZSXDXbLdUBVI/WCfjWRLjA6ZN/WSkmheY=;
+	s=arc-20240116; t=1706003922; c=relaxed/simple;
+	bh=nxl7RImlPHt2woc7MH+W+qg3tN0qm3GwTQesAwY6riA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FBnl2UmJR89IM9MeyFDGJaYXENCWP8EjtkxCA96rHFVDndGH/UAm0lMbUpQp4I7btJml9WYoLBKoFjk3OtYyj1iAKqzEeAdXsnGBd80XOUez0JpSBsKBScdBwjDMRRp0+xuLGZ1q1nxctouHQyEbQdjini66qPWHiQUlclHwIic=
+	 Content-Type:Content-Disposition:In-Reply-To; b=L/hSOVu7bV0xZosvP5mWLL+ia9aCd4gNepTPhjAYKT5L65q/jt6HQVr6zUCF1Du8FEP8R/PTbhcOeaJfCFuyFEq0SS6MfimKtfHusVD1EUSseJ4/yhEUVIhbzKBmrW/beQscVgv6XQDejUXJTbwrwQSNY070+sp3QLMjQjXcNrc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 036851FB;
-	Tue, 23 Jan 2024 01:57:12 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7820A1FB;
+	Tue, 23 Jan 2024 01:59:25 -0800 (PST)
 Received: from FVFF77S0Q05N (unknown [10.57.48.47])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 472FA3F5A1;
-	Tue, 23 Jan 2024 01:56:25 -0800 (PST)
-Date: Tue, 23 Jan 2024 09:56:22 +0000
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E7C533F5A1;
+	Tue, 23 Jan 2024 01:58:37 -0800 (PST)
+Date: Tue, 23 Jan 2024 09:58:35 +0000
 From: Mark Rutland <mark.rutland@arm.com>
 To: Kees Cook <keescook@chromium.org>
-Cc: linux-hardening@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-	linux-arm-kernel@lists.infradead.org,
+Cc: linux-hardening@vger.kernel.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Kalesh Singh <kaleshsingh@google.com>,
+	Fuad Tabba <tabba@google.com>, Mark Brown <broonie@kernel.org>,
+	"Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>,
+	Marc Zyngier <maz@kernel.org>, linux-arm-kernel@lists.infradead.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 38/82] arm: 3117/1: Refactor intentional wrap-around test
-Message-ID: <Za-NRm5e_-Cfz1Nl@FVFF77S0Q05N>
+Subject: Re: [PATCH 40/82] arm64: stacktrace: Refactor intentional
+ wrap-around test
+Message-ID: <Za-NyyOP1IlQbFZg@FVFF77S0Q05N>
 References: <20240122235208.work.748-kees@kernel.org>
- <20240123002814.1396804-38-keescook@chromium.org>
+ <20240123002814.1396804-40-keescook@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -38,16 +44,9 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240123002814.1396804-38-keescook@chromium.org>
+In-Reply-To: <20240123002814.1396804-40-keescook@chromium.org>
 
-The commit title is odd here; '3117/1' is the patch tracker name for the last
-patch. The title should probably be:
-
-	arm: nwfpe: Refactor intentional wrap-around test
-
-Mark.
-
-On Mon, Jan 22, 2024 at 04:27:13PM -0800, Kees Cook wrote:
+On Mon, Jan 22, 2024 at 04:27:15PM -0800, Kees Cook wrote:
 > In an effort to separate intentional arithmetic wrap-around from
 > unexpected wrap-around, we need to refactor places that depend on this
 > kind of math. One of the most common code patterns of this is:
@@ -69,27 +68,40 @@ On Mon, Jan 22, 2024 at 04:27:13PM -0800, Kees Cook wrote:
 > Link: https://github.com/KSPP/linux/issues/26 [2]
 > Link: https://github.com/KSPP/linux/issues/27 [3]
 > Link: https://github.com/KSPP/linux/issues/344 [4]
-> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Kalesh Singh <kaleshsingh@google.com>
+> Cc: Fuad Tabba <tabba@google.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
 > Cc: linux-arm-kernel@lists.infradead.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
->  arch/arm/nwfpe/softfloat.c | 2 +-
+>  arch/arm64/include/asm/stacktrace/common.h | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm/nwfpe/softfloat.c b/arch/arm/nwfpe/softfloat.c
-> index ffa6b438786b..0635b1eda1d3 100644
-> --- a/arch/arm/nwfpe/softfloat.c
-> +++ b/arch/arm/nwfpe/softfloat.c
-> @@ -603,7 +603,7 @@ static floatx80
->      roundBits = zSig0 & roundMask;
->      if ( 0x7FFD <= (bits32) ( zExp - 1 ) ) {
->          if (    ( 0x7FFE < zExp )
-> -             || ( ( zExp == 0x7FFE ) && ( zSig0 + roundIncrement < zSig0 ) )
-> +             || ( ( zExp == 0x7FFE ) && (add_would_overflow(zSig0, roundIncrement)) )
->             ) {
->              goto overflow;
->          }
+> diff --git a/arch/arm64/include/asm/stacktrace/common.h b/arch/arm64/include/asm/stacktrace/common.h
+> index f63dc654e545..6e0cb84961f8 100644
+> --- a/arch/arm64/include/asm/stacktrace/common.h
+> +++ b/arch/arm64/include/asm/stacktrace/common.h
+> @@ -49,7 +49,7 @@ static inline bool stackinfo_on_stack(const struct stack_info *info,
+>  	if (!info->low)
+>  		return false;
+>  
+> -	if (sp < info->low || sp + size < sp || sp + size > info->high)
+> +	if (sp < info->low || add_would_overflow(sp, size) || sp + size > info->high)
+>  		return false;
+
+This looks fine to me, so FWIW:
+
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+
+Mark.
+
+>  
+>  	return true;
 > -- 
 > 2.34.1
-> 
 > 
