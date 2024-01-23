@@ -1,67 +1,66 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C2612FF73
-	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 01:03:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68917130E3B
+	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 01:03:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705971821; cv=none; b=CFWFJnx7AHgHaA/xX6wG7WoNBLZXAhchfuzGl2TczY2I2I/CAKl53tk0SY0Wt+TI+4BQNn+NDvHKhgoEalmjIjsDE3io4Q4T6d5dMqiffnZuBKo8kG1xPDlGpjYllTKZ0WMa3jdrPvzVr0/6gJszHxZtEegMxgcf4hKtdurZqXM=
+	t=1705971821; cv=none; b=q7lP7OsJSgG3vdCEcjeNzuWOG0kju8S0lOJwmEvim4bYy4YrwFtJKM1U3aiahgXuhQ0Lw4Uh21X2kYsZaK4TOc1LEon1nbxE4Y0lr0t4+tAAKIZhL/nWnv31oien2hLM7dhnkPpDY1LHb3UM/4gsNmQE6zkaOpNBudcI4DJlO5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705971821; c=relaxed/simple;
-	bh=rpDQeHt+rynn8n8QexVW4diSx8zR3w05Bt9ydWpzlak=;
+	bh=EmH/DZbTBXxe0dWdplwnDgyJ2eUGGILv5amEUByys6s=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lradk3A0p2PMUPF7EaMdtPYHmj2QW4SdwLV5qwhJ+fRv6k7YIvpquwwkt2OCdrSeDKEqigOG2ZpFmJ2ynzmsI0Fi7+eEJ3GauDUk2wm8bMoJ0d9b5ZaCJji1KkakUKKfBIO7/rs8jYBY2bi19UsjbFB5vBE62j5OxKgoraLmYJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=liWP+5dR; arc=none smtp.client-ip=209.85.214.179
+	 MIME-Version; b=bQkF+BhDaibjsF+o/eHmuHj9ZqOEKBc7MixH9JH5JqJDeFmoRr6c8orJVCbBOsOBeu7UFhrZTz0vAsKXc0k6bF/2W7Grtlu8oVtmutOOgapZcVLTanUwxTKdkSLpZXZ99//e9Q9bNYUQYDcPlgGcwvGTWnUPdL1uMrXCLDWSoYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=DBLWUALz; arc=none smtp.client-ip=209.85.210.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="liWP+5dR"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1d750660a0aso7009355ad.0
-        for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 17:03:39 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DBLWUALz"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6dd6c3c8a0eso49871b3a.3
+        for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 17:03:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1705971819; x=1706576619; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1705971820; x=1706576620; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=F152weUja9q4FQGMmlJGHPEDrqtjtzarPMH5qP0DvDA=;
-        b=liWP+5dRu8mO1SL29LCzZQQncVwPybA2VRxCtasMgDIqtS3s99IzA/Okw5U2YKq7kC
-         PY4UFynIz+BHDFIGmdFfJIhIfmHSo1HTZhIXt08DkEySulhZyNahwJTamAdYzfbVTE5q
-         TyF08JsUXY4JEBkn7Ee603UteVcnHqceGadYo=
+        bh=vLd7hWEOoj/WL0ILJU9a6Kds4Kj9qjcWAXBu30bMrQE=;
+        b=DBLWUALzzzduLFTN9Qj5HhHrhKB6NqKSzJmGUF8k6LU7y2W/VG57qYtKJNAhnNoTUo
+         SLQ3IWKJeXUsfKHdev3s3J+xKxj+RZ/1yny9A6rApVQBUpc6FlCrzeG1FiaHNu5WX+qj
+         6XfdllcTbkPJbuSo+7EBC38YQu8iTtbCBkHo8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705971819; x=1706576619;
+        d=1e100.net; s=20230601; t=1705971820; x=1706576620;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=F152weUja9q4FQGMmlJGHPEDrqtjtzarPMH5qP0DvDA=;
-        b=Qhft3Ghb8pfdq6n75jWCd7qCQNTx/hYJvaYG0MzC6kpjJpclXGMrRDOD+dipCeDU1n
-         r6uDoIImrx+gnttJ0FYsgqD7n4URD1g9o3L2TlTBHTykioUDeOQbrWbhDkET3Lo2FqbQ
-         Er7K5auJsOeUo/LzJN7LoJuU/QU0maHFBiHcj8tIUrS/TufTLu50WIHuvsnwc2THzUhO
-         fDcoUdZmmi/HA0MucreYM9x0CvD3NEsU6ZX1ZQjSKJeb3VLks5F30olA2eCUh8iBaZCd
-         CBFFxiu9ckUWcu9Qf7SPTg7fphAgRczpm4D3g1nzBVo9unGrZz3j7MXOqXtwwX9pcosm
-         9qtA==
-X-Gm-Message-State: AOJu0YweUsBbpmc1Pjba4GMwNcYEiO+ci/c0tIpaJuw7tfR5190AqEpN
-	/Js+u7b9/WIea3pDu7XYOKaK+Qi6PTRlFg1ltFGJ5zfNdTbJ0hb/P9qjgKnMww==
-X-Google-Smtp-Source: AGHT+IHKrMC4R4tlkBB0HVPBTYWpwu5nmSinWUOiPDQnbcd6H4zLw6As+CREnzYMfD/v5y6s7fSv2g==
-X-Received: by 2002:a17:902:e5c8:b0:1d7:3563:88ef with SMTP id u8-20020a170902e5c800b001d7356388efmr2226123plf.99.1705971819267;
+        bh=vLd7hWEOoj/WL0ILJU9a6Kds4Kj9qjcWAXBu30bMrQE=;
+        b=kblZ1i+Y1nfzaRBFOW4NHMu4zzXkTyT6ZRO5KE6xs/EEJ2Wqo3TJlCfvFWJK7HlX+Q
+         KUbZvZcwWEkGcL8YgVxduL95ukC4dtWoy5oOWtsJseO7+2yl9zg4D02yUR+ZKjr1w0sD
+         tQLSmTlVwT++uCrYcgj06R8PqiiUsn/ssNmGTRal6NrOiEMgzJdCHy1V+e2HRLGsxfZ3
+         66cZMS9QhIcizkSoImNJ3q7dQGNZ1ZuYpcuHKZbeNo/E5udkmnJSgFLilBqYyB+yMaQ/
+         /64DPPPj2mp5A92yMAOReLQZjkL2B02VhQFJvfJLNzrFqXh5O5UTt0qCF5FRWPis4jJ9
+         Ikwg==
+X-Gm-Message-State: AOJu0YzZRnKUXoscVDdsuFe1cEzg/DTjpPvFKETxlH6vNGJvoTA8o7Jz
+	6NCl6KTu/D7j1+4VeBhnsVnwlUGTjHQ+faBafBfYlVyJrmTePoMEMZcoVwXdDQ==
+X-Google-Smtp-Source: AGHT+IH4bCaTuK5q2oXQL/3LvOghBBeDr8MYYSdkNUAJgJVfYreLotGyY63qGusCbK0boNe459IYkg==
+X-Received: by 2002:a05:6a00:21c9:b0:6db:9e9f:6a55 with SMTP id t9-20020a056a0021c900b006db9e9f6a55mr3113822pfj.25.1705971819741;
         Mon, 22 Jan 2024 17:03:39 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id kq5-20020a170903284500b001d72df6edbfsm4407615plb.64.2024.01.22.17.03.37
+        by smtp.gmail.com with ESMTPSA id z6-20020a62d106000000b006d9b0336a27sm10655197pfg.125.2024.01.22.17.03.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 22 Jan 2024 17:03:38 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
 To: linux-hardening@vger.kernel.org
 Cc: Kees Cook <keescook@chromium.org>,
-	Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>,
-	linux-btrfs@vger.kernel.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	linux-acpi@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 44/82] btrfs: Refactor intentional wrap-around test
-Date: Mon, 22 Jan 2024 16:27:19 -0800
-Message-Id: <20240123002814.1396804-44-keescook@chromium.org>
+Subject: [PATCH 35/82] ACPI: custom_method: Refactor intentional wrap-around test
+Date: Mon, 22 Jan 2024 16:27:10 -0800
+Message-Id: <20240123002814.1396804-35-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240122235208.work.748-kees@kernel.org>
 References: <20240122235208.work.748-kees@kernel.org>
@@ -71,19 +70,19 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1822; i=keescook@chromium.org;
- h=from:subject; bh=rpDQeHt+rynn8n8QexVW4diSx8zR3w05Bt9ydWpzlak=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgIF3SUyZAUAUFUZymlnGYgNXvads8gEltU4
- lCweHT05OmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8ICAAKCRCJcvTf3G3A
- JoRpD/0eSwV1znH/V5v1Xfpt67/pUkb05v3F8q48Cf6//F/42CAYj23Ytdmx0cfwpXGt+VFMkbv
- zRJF9MjrXB4r3591E/RSQF1lHCS+Hg5gB4UJwMDNntlDeXgFlFBsmC1rh4swgRH1/63HU+ULvzH
- jSPbL4G7LX1fk61Q43I3EIuXOD9Pu3VTpjS9QKMYmjLOHCNMh+dLBAjFtDo9PISK//9+QDI8ma9
- WNPaqwXfJ5bafdFGZaZgTzI8xS92+4JUqWjATHQULDm64yY8UbnxuKuQtVOvsIiDo5wQ6/+C81c
- 0iaGWTKKgc1eJAvfA1QfbHkPe2FTXEzeAkKyY5RStYZfIAczyJQMjLaJH0knv/gui/jE34zSVoi
- wNO1h5mqbLoJJo3heDU6/5GReq+QbCewLgC/TicVoUvq0F/1uXFmkZgKPjVN3P+bK9g9GQ6x4q0
- 82Uii7IGzmSz74kvoe8Oi2vE7fOB51tWmLYEm3oRWqmq/pUEbeHIJstu0kLu3YDdlPLtfKPk4DJ
- Wsa8K7Ucf0phEF3e2luJDa6weV0X19JU2oZ0EVZJGAB/ouAN9fpbnYbwmUk91t09dWJUEsfeOr2
- +UH+Z12FhF4TJEvTo6pP+fKalx2yPK29Ew7Y7Vj+8DoPN4gftBuehK8yKjQa6SSNNVdIRzGBc8H 5wXugAOFGwhDEmw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1829; i=keescook@chromium.org;
+ h=from:subject; bh=EmH/DZbTBXxe0dWdplwnDgyJ2eUGGILv5amEUByys6s=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgHHHr/VKg/KAlcqjdcF5SYPKo1cfb9YxYbN
+ Ub5YAXr20iJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8IBwAKCRCJcvTf3G3A
+ Jm9OD/42OVFSF2SZuj2/Xm3blXVzWso1EIjDFteNwkRAzj/OhbsOveDY28YTwAprTxSc4mfzKh2
+ r7wc8fydFpA5Y8yVoR5Jq17o3YOw7xu8gZiX8GUHzRZRLiI88Bn0jOqyO96m5KRz/Oku4J9OJ1n
+ lmgM7ubTGbc02BXB8oXJyNpBdVzqIOlNwD/ECpnxos42xDCcYITE6BC+/JUaUTVtU3usc2e03+B
+ TwiHzcwD6iRnWxRxmVXnPXQPaaRaHWhyeGbhoWy30SFcvTY0EFAKqcwzZ/HggSCogQiktvuo4jw
+ yKlwoj8AIcEquL/jcpRDgr1y8ZIO9gbut1BiyYhWI4QNFcP+uDl6R36CWESOrfqtgF2FhHrxI8w
+ +YNsJz1cVkXUm4++MjtKT1gQym/CI6Yo6CEatJSvLwV7UE+LvUU9Q03t27lqUKhe9zCK5IRhOKm
+ n5j9sTlJJJdJJTul3h3jXlEbP6Incxf0zT/TPVJuwAVlmJPtH1PyZ+c0TIzPgU4F+n6SL8Pho79
+ r8x2Q0FTlvu5RWYgG4P4HsGROu/rEfLajxdjnTbMLliKam77rFXZcJohT4UHLycRLcvT+2wuTrL
+ 1Iesm634rNZPYYLnMax9FyEZwv0Q2Y1lQEFiSybEDKXGM4pheL3Dba5LCqYt2434cbDGUg0vfpk 77kzj9tRg0KuJ7Q==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
@@ -108,28 +107,27 @@ Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
 Link: https://github.com/KSPP/linux/issues/26 [2]
 Link: https://github.com/KSPP/linux/issues/27 [3]
 Link: https://github.com/KSPP/linux/issues/344 [4]
-Cc: Chris Mason <clm@fb.com>
-Cc: Josef Bacik <josef@toxicpanda.com>
-Cc: David Sterba <dsterba@suse.com>
-Cc: linux-btrfs@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Len Brown <lenb@kernel.org>
+Cc: linux-acpi@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- fs/btrfs/ordered-data.c | 2 +-
+ drivers/acpi/custom_method.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/ordered-data.c b/fs/btrfs/ordered-data.c
-index 59850dc17b22..2e0865693cee 100644
---- a/fs/btrfs/ordered-data.c
-+++ b/fs/btrfs/ordered-data.c
-@@ -813,7 +813,7 @@ int btrfs_wait_ordered_range(struct inode *inode, u64 start, u64 len)
- 	u64 orig_end;
- 	struct btrfs_ordered_extent *ordered;
+diff --git a/drivers/acpi/custom_method.c b/drivers/acpi/custom_method.c
+index d39a9b474727..0789317f4a1a 100644
+--- a/drivers/acpi/custom_method.c
++++ b/drivers/acpi/custom_method.c
+@@ -54,7 +54,7 @@ static ssize_t cm_write(struct file *file, const char __user *user_buf,
  
--	if (start + len < start) {
-+	if (add_would_overflow(start, len)) {
- 		orig_end = OFFSET_MAX;
- 	} else {
- 		orig_end = start + len - 1;
+ 	if ((*ppos > max_size) ||
+ 	    (*ppos + count > max_size) ||
+-	    (*ppos + count < count) ||
++	    (add_would_overflow(count, *ppos)) ||
+ 	    (count > uncopied_bytes)) {
+ 		kfree(buf);
+ 		buf = NULL;
 -- 
 2.34.1
 
