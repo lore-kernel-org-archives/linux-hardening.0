@@ -1,91 +1,199 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wout4-smtp.messagingengine.com (wout4-smtp.messagingengine.com [64.147.123.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A5465F54F;
-	Tue, 23 Jan 2024 13:46:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 430415F858;
+	Tue, 23 Jan 2024 14:21:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706017580; cv=none; b=gsdadTmappqF6OI9Pn1fOK7oAVb5X+hpaHhpo4GHdob1YOL7xz+AMyl1pDHKJ0kk61fKL8J9eoNmhUjLl//Yz9Lh2iAOdllqK4yUyoi2IAAblgDYSjzsA2f6xDyxDwVhhEZu9CbT40ZgVs2SvqyEPlTKBrG1j+oi8NIduZzIUTg=
+	t=1706019701; cv=none; b=OPJs9xME0cXRUlLLAhRFb+ARqA8Ewxpwat3jdiyIxavfu6qb2VoqovQZDpqg0syoqvvbb6gcrtpbm7L7w5wRrDeniihanq0vM0fsRmLlnDVKKJZyIsJgp69yzQi7NRVVC0l4+YSpMze1FzkqecV3LOxQDhvX+tkoH0kXemp5374=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706017580; c=relaxed/simple;
-	bh=HSbamuBevB4x3A9iN39lYXYaJn9eSzQgr6SOU7Zv/WM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R9SEGBXtAGJkEGRQ+NDPqE7dUxHSsqtk0TKArsWVCjwNtj5+Qz0ht5yM/L6Ml2anCIIRW5OwUtsQE7wZ23nCMn+mO3iwh6vc5mPVWsNu1doJAO3mDdSwApZE3LtDoto/Ng2L7PAftu8i82XA/Ru1PQPBxNQCNIGT5L3ioYtGdt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mWDqq0Ka; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706019701; c=relaxed/simple;
+	bh=BWxFJ6f+lO7oLYsKbxzaJnDar3I13n2vm78DWeqz9IY=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=FGurJrD2FVc2LQPBukY/6oCCxfahRa/wu+ND5YE51PM39x/do822ysbdaIDpyaGZGCKCeQY2LlsLiAVZRqBJ4lFUV4SztbjbbyH2wBGyOqY26m6eoT3Lbm+PcLHTpVHLpjld4AZk/jh6iqfMOYDuouGM6byvOX+40+fXGMYrJLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=PKayuLNr; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=iaeyMu9I; arc=none smtp.client-ip=64.147.123.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mWDqq0Ka"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1758C43601;
-	Tue, 23 Jan 2024 13:46:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706017579;
-	bh=HSbamuBevB4x3A9iN39lYXYaJn9eSzQgr6SOU7Zv/WM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=mWDqq0KaBaD1rKizM43mJuW1kUj+H3jBzBF2zu4kbtjjKUYa9ZoJsmkdyp6NTF8RL
-	 xfFLo8KZVhLkJg6bJl1+uxM1Swb8np87+uWHZNBD0WFUqGCFBLNlxvyE6EZ0HCpqWk
-	 DxdnfTogAgrPTnQmWaQ1yWz9k1YfItNoxVrWsxrubtu/hxPU9uZX9O2tTpvysDb7HV
-	 p59VlVqcFrwhRmnT7D5boacA+AhQx9Qe7sn3RWTUa7cjYgNLbG0FVitfQuEBnqeAwa
-	 yGz/43PhndOsjst9Grap296VW74/iifsN1FzDcG6dyqunA1xIyK1AFIPFsc3sosQyw
-	 B4SHV/b7/lmoQ==
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2cdfa8e69b5so47671591fa.0;
-        Tue, 23 Jan 2024 05:46:19 -0800 (PST)
-X-Gm-Message-State: AOJu0YwkQoKwi+n2ga7reLh76KLVAG++stDiu8Hs8g3sBOEc2+5Ddx7q
-	SDE/IlNDh36bk6tNqXW5hwuNfTuiOhBNF8KYXRbcF9O2otpUK8aQdDaltiUtvKID1MRTwT9H2IY
-	l8UdLLYozhdtN/j/Cr/1gXLXBhI0=
-X-Google-Smtp-Source: AGHT+IHoT+gSNr1Ag6oozYRDwsF7ziNbcgQw2rOUf0grBO/aQn5XX5uFNvEm9GCRceSTpXNoJpDOQvJw10wpGYOCOJQ=
-X-Received: by 2002:a2e:9c42:0:b0:2cd:6c0a:1882 with SMTP id
- t2-20020a2e9c42000000b002cd6c0a1882mr1760036ljj.85.1706017578067; Tue, 23 Jan
- 2024 05:46:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="PKayuLNr";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="iaeyMu9I"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailout.west.internal (Postfix) with ESMTP id F2C013200A04;
+	Tue, 23 Jan 2024 09:21:36 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Tue, 23 Jan 2024 09:21:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1706019696;
+	 x=1706106096; bh=Wb2LadyDq3EncKOixdkKXF1xf+5ToI114DbbSpnU1nY=; b=
+	PKayuLNrs/RNOnY9Pm3PTRTDtc1BuvHxlCD7DuFwY3X2d3w/3n1RTZ9LkQQmom3/
+	w6idujhcC4sf3BbCM5+B3rKAeN6o49DZxzKkXiUHhjhwBc48BWX6QQG9FBbGrESz
+	dY9isiD4klmX7hDZxIpR0XAo9bx2f3HmXbcXHrgnWu377wYBVGHNDJeydLYODUm3
+	R2v4IQChjpBjq1THZkrhojBT62tPQZhhhJX7vhM3GS1LAQ5MUjk8AsVhFsBFrQgH
+	doe9VBd2+6WHeaR4G96Yes5cYzvayqaI2fWvhDYf/ZZHo1Zb7cz6wduRTcnHpKrW
+	6kE0Ci1RccWeYTA5fc/t/A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1706019696; x=
+	1706106096; bh=Wb2LadyDq3EncKOixdkKXF1xf+5ToI114DbbSpnU1nY=; b=i
+	aeyMu9IQJm8viLVFcRG2+AfApl0inhRKl32d9bxe+ynOLxLBL2s/6xnBdR+sart7
+	wAZAjiA4uL/DTaIWBboS2/YhhyDMgMYyxOQ4f604bM7uJzQt+e/9izTFd+xJifVo
+	xQ50WHbYZD/V2ZAwYra6Pek4hm9CLQF0AsKq4BVdceSEFeVHgMY+a42IjHl2qdAC
+	3tidNdDH6brWPgcA3qtQ97S9I8mHpThso03DUhwzCMsTMvIaulq1IZgWkWvjI17h
+	qB/abhBsPAnPQnf0Ws70h0wwPbXzEqjR98NOYls5N0AIzgYtr4Y02V+Cwfh6GpX1
+	RL81i2NKrtG69Wlsq/MXA==
+X-ME-Sender: <xms:b8uvZZutZyYhjvm11xsbDHd-yctTohxrZ96EclPn7v7Uk295CAYxIA>
+    <xme:b8uvZSdJ-DzXvh4tLWbWKsloyBAkMqIGhWu0zDscTRdh84QtuWV6_vntH6OGKUGWc
+    o9tQr6gGnuPR811080>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdekkedgieduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
+    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
+    htthgvrhhnpefgkeeuleegieeghfduudeltdekfeffjeeuleehleefudettddtgfevueef
+    feeigeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivg
+    eptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:b8uvZcyHxEDFbucCwS_wdJTB7xZCjv4VpoI1kQNX4uuVdNYjj6sBQw>
+    <xmx:b8uvZQOGooI-lZsO5yozfuK-_cjQpfLDCPfU0iE3UrR2Mn2j9dL4qQ>
+    <xmx:b8uvZZ-FoQRRZFNwPBfm4zrKoG5PrhcOqTLtRYQnZkkS4F1E545I9g>
+    <xmx:cMuvZdVu3pmkvuhw0wgTNHs20QG_zyCJ2SI5aNTi4b7I7-93_VGCkA>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id C023DB6008D; Tue, 23 Jan 2024 09:21:35 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-119-ga8b98d1bd8-fm-20240108.001-ga8b98d1b
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240123011211.work.227-kees@kernel.org>
-In-Reply-To: <20240123011211.work.227-kees@kernel.org>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Tue, 23 Jan 2024 14:46:07 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXG3kqRy0KEvC_+f+RAgeZvcKRwHGKTbLNj34pr8rhzTdw@mail.gmail.com>
-Message-ID: <CAMj1kXG3kqRy0KEvC_+f+RAgeZvcKRwHGKTbLNj34pr8rhzTdw@mail.gmail.com>
-Subject: Re: [PATCH] ARM: fault: Add "cut here" line for prefetch aborts
-To: Kees Cook <keescook@chromium.org>
-Cc: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, Wang Kefeng <wangkefeng.wang@huawei.com>, 
-	Ben Hutchings <ben@decadent.org.uk>, linux-arm-kernel@lists.infradead.org, 
-	Russell King <linux@armlinux.org.uk>, Hugh Dickins <hughd@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Message-Id: <0229fa60-2d87-4b1c-b9f0-6f04c6e4dbdd@app.fastmail.com>
+In-Reply-To: <d03e90ca-8485-4d1b-5ec1-c3398e0e8da@linux-m68k.org>
+References: 
+ <CAHk-=wiB4iHTtfZKiy5pC24uOjun4fbj4kSX0=ZnGsOXadMf6g@mail.gmail.com>
+ <20240123111235.3097079-1-geert@linux-m68k.org>
+ <d03e90ca-8485-4d1b-5ec1-c3398e0e8da@linux-m68k.org>
+Date: Tue, 23 Jan 2024 15:21:14 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Geert Uytterhoeven" <geert@linux-m68k.org>, linux-kernel@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
+ sparclinux@vger.kernel.org, intel-xe@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-mtd@lists.infradead.org,
+ mpi3mr-linuxdrv.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+ "Chris Zankel" <chris@zankel.net>, "Max Filippov" <jcmvbkbc@gmail.com>,
+ linux-hardening@vger.kernel.org, qat-linux@intel.com,
+ linux-crypto@vger.kernel.org,
+ "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+ Netdev <netdev@vger.kernel.org>
+Subject: Re: Build regressions/improvements in v6.8-rc1
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 23 Jan 2024 at 02:12, Kees Cook <keescook@chromium.org> wrote:
->
-> The common pattern in arm is to emit a "8<--- cut here ---" line for
-> faults, but it was missing for do_PrefetchAbort(). Add it.
->
-> Cc: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Cc: Wang Kefeng <wangkefeng.wang@huawei.com>
-> Cc: Ben Hutchings <ben@decadent.org.uk>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+On Tue, Jan 23, 2024, at 12:45, Geert Uytterhoeven wrote:
 
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
+>> 68 error regressions:
+>
+>>  + /kisskb/src/arch/powerpc/sysdev/udbg_memcons.c: error: no previous=
+ prototype for 'memcons_getc' [-Werror=3Dmissing-prototypes]:  =3D> 80:5
+>>  + /kisskb/src/arch/powerpc/sysdev/udbg_memcons.c: error: no previous=
+ prototype for 'memcons_getc_poll' [-Werror=3Dmissing-prototypes]:  =3D>=
+ 57:5
+>>  + /kisskb/src/arch/powerpc/sysdev/udbg_memcons.c: error: no previous=
+ prototype for 'memcons_putc' [-Werror=3Dmissing-prototypes]:  =3D> 44:6
+>
+> powerpc-gcc{5,12,13}/ppc64_book3e_allmodconfig
 
-> ---
->  arch/arm/mm/fault.c | 1 +
->  1 file changed, 1 insertion(+)
+I now sent patches for powerpc booke warnings
+
+>>  + /kisskb/src/arch/sh/kernel/cpu/init.c: error: no previous prototyp=
+e for 'l2_cache_init' [-Werror=3Dmissing-prototypes]:  =3D> 99:29
 >
-> diff --git a/arch/arm/mm/fault.c b/arch/arm/mm/fault.c
-> index e96fb40b9cc3..e804432e905e 100644
-> --- a/arch/arm/mm/fault.c
-> +++ b/arch/arm/mm/fault.c
-> @@ -586,6 +586,7 @@ do_PrefetchAbort(unsigned long addr, unsigned int ifsr, struct pt_regs *regs)
->         if (!inf->fn(addr, ifsr | FSR_LNX_PF, regs))
->                 return;
+> sh4-gcc1[123]/se7{619,750}_defconfig
+> sh4-gcc1[123]/sh-{all{mod,no,yes},def}config
+> sh4-gcc11/sh-allnoconfig
+
+I assume the sh maintainers will eventually get to that
+
+>>  + /kisskb/src/arch/sparc/include/asm/floppy_64.h: error: no previous=
+ prototype for 'sparc_floppy_irq' [-Werror=3Dmissing-prototypes]:  =3D> =
+200:13
+>>  + /kisskb/src/arch/sparc/include/asm/floppy_64.h: error: no previous=
+ prototype for 'sun_pci_fd_dma_callback' [-Werror=3Dmissing-prototypes]:=
+  =3D> 437:6
 >
-> +       pr_alert("8<--- cut here ---\n");
->         pr_alert("Unhandled prefetch abort: %s (0x%03x) at 0x%08lx\n",
->                 inf->name, ifsr, addr);
+> sparc64-gcc{5,11,12,13}/sparc64-allmodconfig
+
+Andrew Morton did a patch for the sparc warnings, and Andreas Larsson
+is joining as a maintainer, so hopefully he can pick that up soon.
+> sparc64-gcc{5,1[123]}/sparc64-allmodconfig
 >
-> --
-> 2.34.1
+>>  + /kisskb/src/arch/sparc/vdso/vclock_gettime.c: error: no previous p=
+rototype for '__vdso_clock_gettime' [-Werror=3Dmissing-prototypes]:  =3D=
+> 254:1
+>>  + /kisskb/src/arch/sparc/vdso/vclock_gettime.c: error: no previous p=
+rototype for '__vdso_clock_gettime_stick' [-Werror=3Dmissing-prototypes]=
+:  =3D> 282:1
+>>  + /kisskb/src/arch/sparc/vdso/vclock_gettime.c: error: no previous p=
+rototype=20
+
+There are prototypes in include/vdso/gettime.h that should be
+used here, but unfortunately the sparc implementation does
+not match the prototypes because sparc is missing the gettime64
+support.
+
+> sparc64-gcc{5,12,13}/sparc64-{allno,def}config
+> sparc64-gcc11/sparc64-{all{mod,no},def}config
 >
+>>  + /kisskb/src/arch/x86/um/shared/sysdep/kernel-offsets.h: error: no =
+previous prototype for =E2=80=98foo=E2=80=99 [-Werror=3Dmissing-prototyp=
+es]:  =3D> 9:6
+>
+> um-x86_64-gcc12/um-{all{mod,yes},def}config
+
+I made a patch for arch/um yesterday.
+
+> sparc64-gcc1[12]/sparc64-allmodconfig
+>
+>>  + /kisskb/src/drivers/scsi/mpi3mr/mpi3mr_transport.c: error: the fra=
+me size of 1680 bytes is larger than 1536 bytes [-Werror=3Dframe-larger-=
+than=3D]:  =3D> 1818:1
+
+I sent a patch in November when the regression started, missed
+the reply about needing another change
+https://lore.kernel.org/all/CAFdVvOxH4UQjww4124E2ttuTgknzkHoPxVSFOQgLfoV=
+_dkANwQ@mail.gmail.com/
+
+>>  + {standard input}: Error: displacement to undefined symbol .L105 ov=
+erflows 8-bit field :  =3D> 590, 593
+>>  + {standard input}: Error: displacement to undefined symbol .L135 ov=
+erflows 8-bit field :  =3D> 603
+>>  + {standard input}: Error: displacement to undefined symbol .L140 ov=
+erflows 8-bit field :  =3D> 606
+>>  + {standard input}: Error: displacement to undefined symbol .L76 ove=
+rflows 12-bit field:  =3D> 591, 594
+>>  + {standard input}: Error: displacement to undefined symbol .L77 ove=
+rflows 8-bit field : 607 =3D> 607, 582, 585
+>>  + {standard input}: Error: displacement to undefined symbol .L97 ove=
+rflows 12-bit field:  =3D> 607
+>>  + {standard input}: Error: pcrel too far: 604, 590, 577, 593, 572, 5=
+69, 598, 599, 596, 610 =3D> 610, 574, 599, 569, 598, 596, 601, 590, 604,=
+ 595, 572, 577, 593
+>
+> SH ICE crickets
+
+Linus did a patch for the syscall, and I sent another one for
+arch/sh to prevent this from happening again:
+
+https://lore.kernel.org/all/CAHk-=3Dwjh6Cypo8WC-McXgSzCaou3UXccxB+7PVeSu=
+GR8AjCphg@mail.gmail.com/
+https://lore.kernel.org/all/07d8877b-d933-46f4-8ca4-c10ed602f37e@app.fas=
+tmail.com/
+
+Resent mine now.
+
+      Arnd
