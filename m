@@ -1,52 +1,82 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D1795BAFA;
-	Tue, 23 Jan 2024 09:58:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30ABE5C8ED;
+	Tue, 23 Jan 2024 10:49:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706003922; cv=none; b=VJGYIuJ3USHACscLymRcNj6juwHjyaV7B/Nk5zyC1bMUbKe3ShfukZpEaouFjqm7URqe8hFdKYPV2RauxWWMy3Pldk1qxMyIQu8gzY7u0mLLKcwwlwKnRqFH8QGjg8E9wkroVwTHM1xUDyxDLZmQTJSHwyWd5Zqf3JlWKnr7rtw=
+	t=1706006982; cv=none; b=nZAdFYUbRhhJV0eayiR15gouw9ZqBTIiNfo3A0ZruzqH3qpYDKOenMB4WuBGFKWbhPMvAC4uAwfo8o/0o5+Y1S6Wr25MEUxEeE0Sq17mkWyqmCAJBwbjPTJDlHomb6ACJuFZtiWA4W2iJxnITyQIQKSIeLhgMpXXl+HMtNUihk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706003922; c=relaxed/simple;
-	bh=nxl7RImlPHt2woc7MH+W+qg3tN0qm3GwTQesAwY6riA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L/hSOVu7bV0xZosvP5mWLL+ia9aCd4gNepTPhjAYKT5L65q/jt6HQVr6zUCF1Du8FEP8R/PTbhcOeaJfCFuyFEq0SS6MfimKtfHusVD1EUSseJ4/yhEUVIhbzKBmrW/beQscVgv6XQDejUXJTbwrwQSNY070+sp3QLMjQjXcNrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7820A1FB;
-	Tue, 23 Jan 2024 01:59:25 -0800 (PST)
-Received: from FVFF77S0Q05N (unknown [10.57.48.47])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E7C533F5A1;
-	Tue, 23 Jan 2024 01:58:37 -0800 (PST)
-Date: Tue, 23 Jan 2024 09:58:35 +0000
-From: Mark Rutland <mark.rutland@arm.com>
+	s=arc-20240116; t=1706006982; c=relaxed/simple;
+	bh=gHsDyfesb/mmGoU8vrHS9IRNcLNE0C+m0hCx7hzoAdQ=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=egQgHP6yypiumoEJ4lVvWY5KwBFha6LRMl49QvBH+fci83xURu7VR4UHQvc5tDazEb/fcObVno8HpTeVzFN9vH+rTRSO6/zb5ZTX6PnNPUwgb+8ORJc6LR7adyAhYT9ULqA7pZFet6Q6d9cs7r6jtWm/MzYDCOWh1ir8qYX0vVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GdBE0Yme; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GdBE0Yme"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BA5AC433F1;
+	Tue, 23 Jan 2024 10:49:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706006981;
+	bh=gHsDyfesb/mmGoU8vrHS9IRNcLNE0C+m0hCx7hzoAdQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=GdBE0YmeC5uAWTMFoCQ42sY/cye7y//Dnpf7rdVq4SvyjftkaLUOcNCG24K0gzTqA
+	 dFSGEvVyB2CRW293HZlNrP2XS9mb0CidVywNsPoJT+Nv0LlRsJGumd4HyqEzI/dQtC
+	 8cZZhQ8iYmFcmFDldNudf6GwUGERxsOqasJhzc2Jxuo+SMTJNy5VOU0cnM6d4aQvmO
+	 5VeqzCf31gC7IEg1x5zj45zAVrV5IbcjPxb0rENgCyuzdQi3e5q1BgqXI8C1GpfVSm
+	 0bpoCA9evozJgwCIHwkkZ6oy1u7sBKpsItgsjORTrYunPCbA6yYv8JWg616G6cR2A5
+	 voHUGbm3fS+VA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1rSELb-00Dw18-4f;
+	Tue, 23 Jan 2024 10:49:39 +0000
+Date: Tue, 23 Jan 2024 10:49:38 +0000
+Message-ID: <86o7dc8gu5.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
 To: Kees Cook <keescook@chromium.org>
 Cc: linux-hardening@vger.kernel.org,
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
 	Catalin Marinas <catalin.marinas@arm.com>,
 	Will Deacon <will@kernel.org>,
-	Kalesh Singh <kaleshsingh@google.com>,
-	Fuad Tabba <tabba@google.com>, Mark Brown <broonie@kernel.org>,
-	"Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>,
-	Marc Zyngier <maz@kernel.org>, linux-arm-kernel@lists.infradead.org,
+	Reiji Watanabe <reijiw@google.com>,
+	Eric Auger <eric.auger@redhat.com>,
+	Ricardo Koller <ricarkol@google.com>,
+	Raghavendra Rao Ananta <rananta@google.com>,
+	Quentin Perret <qperret@google.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 40/82] arm64: stacktrace: Refactor intentional
- wrap-around test
-Message-ID: <Za-NyyOP1IlQbFZg@FVFF77S0Q05N>
+	Justin Stitt <justinstitt@google.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 24/82] KVM: arm64: vgic: Refactor intentional wrap-around calculation
+In-Reply-To: <20240123002814.1396804-24-keescook@chromium.org>
 References: <20240122235208.work.748-kees@kernel.org>
- <20240123002814.1396804-40-keescook@chromium.org>
+	<20240123002814.1396804-24-keescook@chromium.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240123002814.1396804-40-keescook@chromium.org>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: keescook@chromium.org, linux-hardening@vger.kernel.org, oliver.upton@linux.dev, james.morse@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, reijiw@google.com, eric.auger@redhat.com, ricarkol@google.com, rananta@google.com, qperret@google.com, jean-philippe@linaro.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, gustavoars@kernel.org, morbo@google.com, justinstitt@google.com, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Mon, Jan 22, 2024 at 04:27:15PM -0800, Kees Cook wrote:
+On Tue, 23 Jan 2024 00:26:59 +0000,
+Kees Cook <keescook@chromium.org> wrote:
+> 
 > In an effort to separate intentional arithmetic wrap-around from
 > unexpected wrap-around, we need to refactor places that depend on this
 > kind of math. One of the most common code patterns of this is:
@@ -61,47 +91,101 @@ On Mon, Jan 22, 2024 at 04:27:15PM -0800, Kees Cook wrote:
 > are unexpected, regardless of whether they are signed[2], unsigned[3],
 > or pointer[4] types.
 > 
-> Refactor open-coded wrap-around addition test to use add_would_overflow().
-> This paves the way to enabling the wrap-around sanitizers in the future.
+> Refactor open-coded unsigned wrap-around addition test to use
+> check_add_overflow(), retaining the result for later usage (which removes
+> the redundant open-coded addition). This paves the way to enabling the
+> wrap-around sanitizers in the future.
 > 
 > Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
 > Link: https://github.com/KSPP/linux/issues/26 [2]
 > Link: https://github.com/KSPP/linux/issues/27 [3]
 > Link: https://github.com/KSPP/linux/issues/344 [4]
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Oliver Upton <oliver.upton@linux.dev>
+> Cc: James Morse <james.morse@arm.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Zenghui Yu <yuzenghui@huawei.com>
 > Cc: Catalin Marinas <catalin.marinas@arm.com>
 > Cc: Will Deacon <will@kernel.org>
-> Cc: Kalesh Singh <kaleshsingh@google.com>
-> Cc: Fuad Tabba <tabba@google.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Reiji Watanabe <reijiw@google.com>
+> Cc: Eric Auger <eric.auger@redhat.com>
+> Cc: Ricardo Koller <ricarkol@google.com>
+> Cc: Raghavendra Rao Ananta <rananta@google.com>
+> Cc: Quentin Perret <qperret@google.com>
+> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
 > Cc: linux-arm-kernel@lists.infradead.org
+> Cc: kvmarm@lists.linux.dev
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
->  arch/arm64/include/asm/stacktrace/common.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  arch/arm64/kvm/vgic/vgic-kvm-device.c |  6 ++++--
+>  arch/arm64/kvm/vgic/vgic-v2.c         | 10 ++++++----
+>  2 files changed, 10 insertions(+), 6 deletions(-)
 > 
-> diff --git a/arch/arm64/include/asm/stacktrace/common.h b/arch/arm64/include/asm/stacktrace/common.h
-> index f63dc654e545..6e0cb84961f8 100644
-> --- a/arch/arm64/include/asm/stacktrace/common.h
-> +++ b/arch/arm64/include/asm/stacktrace/common.h
-> @@ -49,7 +49,7 @@ static inline bool stackinfo_on_stack(const struct stack_info *info,
->  	if (!info->low)
+> diff --git a/arch/arm64/kvm/vgic/vgic-kvm-device.c b/arch/arm64/kvm/vgic/vgic-kvm-device.c
+> index f48b8dab8b3d..0eec5344d203 100644
+> --- a/arch/arm64/kvm/vgic/vgic-kvm-device.c
+> +++ b/arch/arm64/kvm/vgic/vgic-kvm-device.c
+> @@ -18,17 +18,19 @@ int vgic_check_iorange(struct kvm *kvm, phys_addr_t ioaddr,
+>  		       phys_addr_t addr, phys_addr_t alignment,
+>  		       phys_addr_t size)
+>  {
+> +	phys_addr_t sum;
+> +
+>  	if (!IS_VGIC_ADDR_UNDEF(ioaddr))
+>  		return -EEXIST;
+>  
+>  	if (!IS_ALIGNED(addr, alignment) || !IS_ALIGNED(size, alignment))
+>  		return -EINVAL;
+>  
+> -	if (addr + size < addr)
+> +	if (check_add_overflow(addr, size, &sum))
+>  		return -EINVAL;
+>  
+>  	if (addr & ~kvm_phys_mask(&kvm->arch.mmu) ||
+> -	    (addr + size) > kvm_phys_size(&kvm->arch.mmu))
+> +	    sum > kvm_phys_size(&kvm->arch.mmu))
+
+nit: 'sum' doesn't mean much in this context. Something like 'end'
+would be much more descriptive.
+
+>  		return -E2BIG;
+>  
+>  	return 0;
+> diff --git a/arch/arm64/kvm/vgic/vgic-v2.c b/arch/arm64/kvm/vgic/vgic-v2.c
+> index 7e9cdb78f7ce..c8d1e965d3b7 100644
+> --- a/arch/arm64/kvm/vgic/vgic-v2.c
+> +++ b/arch/arm64/kvm/vgic/vgic-v2.c
+> @@ -273,14 +273,16 @@ void vgic_v2_enable(struct kvm_vcpu *vcpu)
+>  /* check for overlapping regions and for regions crossing the end of memory */
+>  static bool vgic_v2_check_base(gpa_t dist_base, gpa_t cpu_base)
+>  {
+> -	if (dist_base + KVM_VGIC_V2_DIST_SIZE < dist_base)
+> +	gpa_t dist_sum, cpu_sum;
+
+Same here: dist_end, cpu_end.
+
+> +
+> +	if (check_add_overflow(dist_base, KVM_VGIC_V2_DIST_SIZE, &dist_sum))
+>  		return false;
+> -	if (cpu_base + KVM_VGIC_V2_CPU_SIZE < cpu_base)
+> +	if (check_add_overflow(cpu_base, KVM_VGIC_V2_CPU_SIZE, &cpu_sum))
 >  		return false;
 >  
-> -	if (sp < info->low || sp + size < sp || sp + size > info->high)
-> +	if (sp < info->low || add_would_overflow(sp, size) || sp + size > info->high)
->  		return false;
-
-This looks fine to me, so FWIW:
-
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-
-Mark.
-
+> -	if (dist_base + KVM_VGIC_V2_DIST_SIZE <= cpu_base)
+> +	if (dist_sum <= cpu_base)
+>  		return true;
+> -	if (cpu_base + KVM_VGIC_V2_CPU_SIZE <= dist_base)
+> +	if (cpu_sum <= dist_base)
+>  		return true;
 >  
->  	return true;
-> -- 
-> 2.34.1
-> 
+>  	return false;
+
+With these nits addressed, and assuming you intend to merge the whole
+series yourself:
+
+Acked-by: Marc Zyngier <maz@kernel.org>
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
