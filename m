@@ -1,90 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7A7182D68;
-	Tue, 23 Jan 2024 19:02:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 514DD38DF4
+	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 21:31:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706036548; cv=none; b=DMNZZ39ZIkaTuVYH3uO3nQvIGXpHF3aA1t3LrmocH41f7N5y2s+aer+C1N1qZn2gk+TvOXzHFw2rfkfdyRCuRM8xzaA2KJSYIyfHRfJmu+q4F7amQO1UMasm56zUEWMHcwSJec0tli2Bh5hvPhHhL8+ZzrNW5A+aNXvNsUTDxLg=
+	t=1706045474; cv=none; b=qtWnE+8kpGym5bpu47L8/M95ntYStE3yY3JD/JJf0hJ5fVywgCz3jQarnlN0744nfUjRMC31sRnnT5eboSGMc0sX2aEdTP7VKmWCFxWoX0+O+iTl4+Uw70ERwNm7WFIcH6hSc4t3XCUBXbqc+QOMLxGiXrNAu5Dl4buchvZatz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706036548; c=relaxed/simple;
-	bh=AMlDrC2WRr+dn3kpkOK/SkiOONKbAsdL0acAmBH3IjU=;
+	s=arc-20240116; t=1706045474; c=relaxed/simple;
+	bh=jP2/IW9UNkEjSgAKZeY0ax+X34XlCZzhZYmXu4icG+o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ENtregCY+vGVO4adjV4osA06lVp7WsLynR/xluEpNl37Cv1DMqMQ76BzFAaTU2vUJCZzQR/a2dA0G6BkHmMrjyAFVuOpbv6ETIWafrihXjBfoDA3XpCYtviyyGz9SfhoWROG2yijbmxfmyLZWTjtT4+6a6js/egVWxyhdLKTWVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uI+E/vQa; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=bt5u7gyag6PhZ4Q1trldtWqLo2iFa2ZV79Rf8flpGWtg0Xz9YmeZ4xSV8qY6d1HBzPwSeWeXCKBOtnS7ol+HZzy3jkEYS4XS2LnGFoVJ44/WJkTYQpQJrGELoW5KcAso7QvHCMobBhhFCr4LsKCKdCcY95h8hjS9Li3UBqUt3d4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Ad60CBuj; arc=none smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uI+E/vQa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AC7EC433F1;
-	Tue, 23 Jan 2024 19:02:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706036548;
-	bh=AMlDrC2WRr+dn3kpkOK/SkiOONKbAsdL0acAmBH3IjU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uI+E/vQarJSnVSiAoOq2dQ+lhl/3Dg9WADb6ph2o3G24rWx9PVbPPWzvKd7z2zbon
-	 fd6tZtG/0iNYSKyscM4lFRgg2/UaexicgL6rNqJYfM30JB4KsOQL5l1oWYLoYxMR97
-	 I0EncXE4ocoHnjdEM4oyR8YA19HLvXSLEdV1HW7psOzzgaAY21cO3Nb4XpYPaphHNn
-	 90li19FKkUnbA7o2ArL4OM4cyZxrKwRsWI2pHKzDLgnvpj9HC2OuX37bFZu/sQrgcS
-	 QAhXfNIsJufrQs3TEWy/D0kEWsGaZIPkiBCz3GaZNV7kzmZoCtQU76ow+j+Afkj6Pb
-	 6VmYsmdwH/FLw==
-Date: Tue, 23 Jan 2024 19:02:23 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: Russell King <linux@armlinux.org.uk>, Ard Biesheuvel <ardb@kernel.org>,
-	Wang Kefeng <wangkefeng.wang@huawei.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ben Hutchings <ben@decadent.org.uk>,
-	linux-arm-kernel@lists.infradead.org,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	Hugh Dickins <hughd@google.com>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] ARM: fault: Implement copy_from_kernel_nofault_allowed()
-Message-ID: <4d46dafe-b5bd-4395-b680-94b11814f7c6@sirena.org.uk>
-References: <20240123011238.work.301-kees@kernel.org>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ad60CBuj"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-5d42e7ab8a9so465945a12.3
+        for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 13:31:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1706045472; x=1706650272; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=cLSrHTqApY0rnoNDPNmTbGyM4UlT798vTtkhFOVuGO8=;
+        b=Ad60CBujlqu06M2IFBbPXvjYD8g/BEXRejYj+DNvOwe8wY8n5vBoew7hrTl/u+VcTX
+         Mw1Suq5x7dhwT8+Kg1UpTRVofpgjJnrHYr6gl+HBY//ZZHbqrNqMWfVbigTZJZHXagmU
+         rnCo70Rr5QxK6vUJfK1EJi4krFDpBRl+2UwKE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706045472; x=1706650272;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cLSrHTqApY0rnoNDPNmTbGyM4UlT798vTtkhFOVuGO8=;
+        b=Ft8a+yFYuv03WCt/ktqVaEYbwVAAMrtdse9mrdf/+eqXhEmfwEyGkYAvTuhZ450l4D
+         9ZkMVTxNNkGTuc9e1UE27b706AgsElLga3AP1hZijZMfN2IwtPpjrLQAhQu5rtpp6A/W
+         +wQoPanfEzm0DxtpR/P9K23P4lOgAga4e7MqypPUlUTxKcJ8R+jKK5XHzTS+sK70JLAF
+         sxke1bHuh6GhyqeHzMql2RbUKytxlAtf2yiZTmIltg74A8hUrPaehntVo+aM43MKU3fQ
+         LJazNQbz/4qzdIJpP4c5RZLFixdQE3m5kwoyF8K7j4Fz9l+EV/l/QQbQWuOwrb1zm4t4
+         KIPw==
+X-Gm-Message-State: AOJu0YxOOhwvM3Z6vYkIROxFe0Lin8kwsgUBN200WhBfEu5NLSruiywk
+	rdOFQvPSUlkVsPNYv/NM7gH2VCYMUXLJr0w90ixR+8PAU70ku07lo2rlULDxxA==
+X-Google-Smtp-Source: AGHT+IFZZEebKX2R0JqbRWEEh9em7MQ0hN72r+XKI76xsV+huWAf7uMifAtdFdhTI+U9kp5jq78zPg==
+X-Received: by 2002:a05:6a20:28a1:b0:19a:3a7f:63cd with SMTP id q33-20020a056a2028a100b0019a3a7f63cdmr3098127pzf.49.1706045472672;
+        Tue, 23 Jan 2024 13:31:12 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id kr8-20020a056a004b4800b006da73b90fe4sm12541675pfb.14.2024.01.23.13.31.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jan 2024 13:31:12 -0800 (PST)
+Date: Tue, 23 Jan 2024 13:31:11 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-hardening@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>, John Garry <john.garry@huawei.com>,
+	Fangrui Song <maskray@google.com>, linux-perf-users@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 69/82] perf tools: Refactor intentional wrap-around test
+Message-ID: <202401231330.C55D17922@keescook>
+References: <20240122235208.work.748-kees@kernel.org>
+ <20240123002814.1396804-69-keescook@chromium.org>
+ <dc3a7101-964b-46c5-a78b-374b68cd54fb@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="nyrYAyHMl+yOHan+"
-Content-Disposition: inline
-In-Reply-To: <20240123011238.work.301-kees@kernel.org>
-X-Cookie: Stay together, drag each other down.
-
-
---nyrYAyHMl+yOHan+
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <dc3a7101-964b-46c5-a78b-374b68cd54fb@intel.com>
 
-On Mon, Jan 22, 2024 at 05:12:38PM -0800, Kees Cook wrote:
-> Under PAN emulation when dumping backtraces from things like the
-> LKDTM EXEC_USERSPACE test[1], a double fault (which would hang a CPU)
-> would happen because of dump_instr() attempting to read a userspace
-> address. Make sure copy_from_kernel_nofault() does not attempt this
-> any more.
+On Tue, Jan 23, 2024 at 08:21:41AM +0200, Adrian Hunter wrote:
+> perf tools has separate includes to the kernel, so does not
+> seem to include add_would_overflow() in any of its include
+> files at this point.  Need to update
+> tools/include/linux/overflow.h first.
 
-This appears to fix the original issue:
+Oops, thank you! I will adjust this.
 
-   https://lava.sirena.org.uk/scheduler/job/497571
-
-(though so did your earlier patch) so:
-
-Tested-by: Mark Brown <broonie@kernel.org>
-
---nyrYAyHMl+yOHan+
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmWwDT4ACgkQJNaLcl1U
-h9Cz8Qf/Qy2KDqML2iyqq2XSVkt1s9bKd4G6tBipnCo95/TlOxpB5ZqdYHctfIBP
-aDHBIqLHEm9S3Czkfrl3AvoWoir3p72kVBnaIYjoREM3n/33Qlg4tyR6s3ZNP4oP
-6yVQeL13bjBKf1833x0AZ2WV6ShsyHf5BFgR5H2zCoK7wxg8IyfhHsorMGOHOTOA
-TX328+5DL39ZskOyWnAwdte3d7oXTUDN9KSPUJEKav62YHjz63FWo4QhyXDTF9Hl
-rO07Q8ky6jGtc8OCFi07Z5CLth43IyU1SGNQqxsibIYhtuyziqIU6pUeb62Oli67
-UQ/nlT/qhBrOd4Ns+kX/2VQaHTvVMg==
-=d+Ba
------END PGP SIGNATURE-----
-
---nyrYAyHMl+yOHan+--
+-- 
+Kees Cook
