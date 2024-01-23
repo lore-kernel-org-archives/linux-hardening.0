@@ -1,166 +1,117 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F58D50A9F;
-	Tue, 23 Jan 2024 01:31:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D58BA4EB56
+	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 01:38:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705973481; cv=none; b=juENGT3MAeqe/WjbSWYpFvxBOyfL87YfAtXNs+s3dWTXvNJ2t4NL3mbeQbfVpN1oR5tSpwb9Kp9M8s41xUDfnwU/m9GCyL93FX4O5+xseMVNfOXK2MOQqc3waIKA9A1XMZCCeXvi0G8m5sEDv1HQOji6M6OyMCjQqjRWH51L+fk=
+	t=1705973932; cv=none; b=DhxW1GPr1coWQR6cQ6cH+rUWUIEHoh3FW2Yzi9lUB0kH+r5ufcOkStO01Wb9KS8F4Sbzqqb9v9Laa0GeyvCGPCgyC5Z2r+Vjr+0+vIN4NMTnaKuCN8ihCjgau95Mjtuh7rnrOfCbI1HF7lLw8GVHztHk0p7PAxdOrR8OZcD5NsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705973481; c=relaxed/simple;
-	bh=6ZAxUjEYEMpmJ2rHMdcaKbu60+cOAF9UUnV39OOPUzs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VYAmJh3yPE84vhduG/8joB0kE9tgw9PU8Ll5DqFigBZMcvV5xBnh9kIkRNGfGyeyVmxBAl3TdKTZLjGd/xNmd9wvlMuw0Sn9+H8iitpIf3MJov4FAb9JM9kmO9q5hVrYlBl2h/zQbKDxws8+7d/NxS+frpZBNBd9Kybo6jBybu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [112.20.109.155])
-	by gateway (Coremail) with SMTP id _____8DxdfHhFq9lkPcDAA--.16314S3;
-	Tue, 23 Jan 2024 09:31:13 +0800 (CST)
-Received: from [192.168.100.8] (unknown [112.20.109.155])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx_c7bFq9l2kMTAA--.22118S3;
-	Tue, 23 Jan 2024 09:31:08 +0800 (CST)
-Message-ID: <0705c04e-eebd-4402-b4ed-10a8e28fde17@loongson.cn>
-Date: Tue, 23 Jan 2024 09:30:34 +0800
+	s=arc-20240116; t=1705973932; c=relaxed/simple;
+	bh=zl4aJyrUhSHsvEk27CkHExQkZaJ7tb06Sui5CDGbx34=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D/tFGbdcHdNc+C6oiJwDe4oA1mCYkbjPbOE6kVtxp0MSYlc56Mr/rj83okR0HLcVVenrVFr8uWjV8Uf7BK4M5fI9SZKmrulYgHDMQoyIFZs5LECyMvnkZKMktsIYMl5zstKoy7Y3zBazcMZEuHhYORomsm79nYK63dpWwAcEOKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=G2rhQ12B; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G2rhQ12B"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6dd6c3c8a0eso74100b3a.3
+        for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 17:38:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1705973930; x=1706578730; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=3WdGUH2BwY/NEYNguaaXC3mNHDjXcBRBu3LEUVRExTQ=;
+        b=G2rhQ12BROdNyP0zm9UWTmgqEsFjOH/uQLcqchkMOTWbfq7Pew652vPJzz5jh2m0wO
+         rI24nJUMLcv3Jb3wNB9w3xhpY3PBOmFZYv9y2hKsWYfJfL7AsvFEcnbr4C7rYkFAflOL
+         Q6cNmmZVEpP68gbzdl1c3NVIlzXOGGHPrOsrM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705973930; x=1706578730;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3WdGUH2BwY/NEYNguaaXC3mNHDjXcBRBu3LEUVRExTQ=;
+        b=rGPQ21wxc1JP0TBY8NmSxDmp9U954+19gfPs4D2YlI9ah77CMWdytsygT7cBa9zfg9
+         NzUk18bqkKOfWA9Ibzj/tUeZRVmmP/+6i/1Ro0uMPjyYastBljbMhDhFhtzSdwx4tJOO
+         xgQ8JryAFChqSiXGer4YeN4TX4hZ2jpB45V9G1rXGDkKeFagMVf4gvlnE/HC/B0sSNZ9
+         GPqTPkymrQBOy8BNakkkMliryvPt1WuT3EmfQQ5Z1UR3ElREmoc6nqU5IICQ1ISOQFLT
+         idNPTYvRW2eSfzFisoV9a+x1fZi60ttUfIMicnQNJRLuhJm4v+nPfvBXToHjoV/cUxdO
+         EQfQ==
+X-Gm-Message-State: AOJu0YyUAwzcNuIDErNiNpS2nBcZ+OlZ/gnOzVWvgvBPHfsQDSRCngna
+	swUAZOYjb+BodfQbuPrGox3peNo9cUKrSYClxQdsyO4FYhyY5tmnX84Ztpsv6A==
+X-Google-Smtp-Source: AGHT+IHQv4+ziECX82p4oiuyPHzvjMvPIEVm9TEr6afRzbnVws9fq5VlFHPtV/DhF9QjU9jJNWCzyA==
+X-Received: by 2002:a05:6a21:33a9:b0:19b:1f00:29d3 with SMTP id yy41-20020a056a2133a900b0019b1f0029d3mr3132827pzb.7.1705973930199;
+        Mon, 22 Jan 2024 17:38:50 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id w15-20020a17090ad60f00b0028dd42b115bsm10167086pju.5.2024.01.22.17.38.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jan 2024 17:38:49 -0800 (PST)
+Date: Mon, 22 Jan 2024 17:38:49 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-hardening@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Mark Brown <broonie@kernel.org>,
+	Mike Kravetz <mike.kravetz@oracle.com>,
+	Vasily Averin <vasily.averin@linux.dev>,
+	Alexander Mikhalitsyn <alexander@mihalicyn.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 34/82] ipc: Refactor intentional wrap-around calculation
+Message-ID: <202401221713.3FCABC9290@keescook>
+References: <20240122235208.work.748-kees@kernel.org>
+ <20240123002814.1396804-34-keescook@chromium.org>
+ <CAHk-=whS7FSbBoo1gxe+83twO2JeGNsUKMhAcfWymw9auqBvjg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] Documentation: power: Use kcalloc() instead of
- kzalloc()
-To: Hu Haowen <2023002089@link.tyut.edu.cn>,
- Erick Archer <erick.archer@gmx.com>, Viresh Kumar <vireshk@kernel.org>,
- Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>,
- Pavel Machek <pavel@ucw.cz>, Alex Shi <alexs@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, "Gustavo A. R. Silva"
- <gustavoars@kernel.org>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20240121104344.5001-1-erick.archer@gmx.com>
- <b8823223-e735-4d5a-b90e-6e2f2a6cd104@link.tyut.edu.cn>
-Content-Language: en-US
-From: Yanteng Si <siyanteng@loongson.cn>
-In-Reply-To: <b8823223-e735-4d5a-b90e-6e2f2a6cd104@link.tyut.edu.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8Cx_c7bFq9l2kMTAA--.22118S3
-X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxZr1kWw1UGw1kWFWUZrW5urX_yoWrJr4xpF
-	WkKF1xKF98CF1kGw1xtr1UZFy8XF4kGa17Gw1jq3W8ZwsrZrnYqr4jqryY9ry7ZrWkJF4j
-	qr1xXFyUZF12yrXCm3ZEXasCq-sJn29KB7ZKAUJUUUUf529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Eb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
-	twAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
-	kF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4U
-	MxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI
-	0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE
-	14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20x
-	vaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8
-	JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8svtJUUUUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whS7FSbBoo1gxe+83twO2JeGNsUKMhAcfWymw9auqBvjg@mail.gmail.com>
 
+On Mon, Jan 22, 2024 at 05:07:40PM -0800, Linus Torvalds wrote:
+> First off, none of this has anything to do with -fno-strict-overflow.
+> We do that, because without it gcc ends up doing various odd and
+> surprising things, the same way it does with strict-aliasing.
+> 
+> IOW, you should think of -fno-strict-overflow as a hardening thing.
+> Any optimization that depends on "this can overflow, so I can do
+> anything I want" is just a dangerous optimization for the kernel.
+> 
+> It matches -fno-strict-aliasing and -fno-delete-null-pointer-checks,
+> in other words.
+> 
+> And I do not understand why you mention it in the first place, since
+> this code USES UNSIGNED INTEGER ARITHMETIC, and thus has absolutely
+> nothing to do with that no-strict-overflow flag.
 
-在 2024/1/23 01:11, Hu Haowen 写道:
->
-> 在 2024/1/21 18:43, Erick Archer 写道:
->> As noted in the "Deprecated Interfaces, Language Features, Attributes,
->> and Conventions" documentation [1], size calculations (especially
->> multiplication) should not be performed in memory allocator (or similar)
->> function arguments due to the risk of them overflowing. This could lead
->> to values wrapping around and a smaller allocation being made than the
->> caller was expecting. Using those allocations could lead to linear
->> overflows of heap memory and other misbehaviors.
->>
->> So, in the example code use the purpose specific kcalloc() function
->> instead of the argument size * count in the kzalloc() function.
->>
->> At the same time, modify the translations accordingly.
->>
->> Link: 
->> https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments 
->> [1]
->> Link: https://github.com/KSPP/linux/issues/162
->> Signed-off-by: Erick Archer <erick.archer@gmx.com>
->> ---
->> Hi,
->>
->> This patch is a merger of two previous ones [1] [2].
->> As Hu Haowen and Jonathan Corbet suggested, the translation change
->> only makes sense if the original file is modified. So, with this
->> v2 version the original file and the translations are modified at
->> the same time.
->>
->> [1] 
->> https://lore.kernel.org/linux-hardening/20240120120527.3866-1-erick.archer@gmx.com/
->> [2] 
->> https://lore.kernel.org/linux-hardening/20240120122204.4287-1-erick.archer@gmx.com/
->>
->> Thanks,
->> Erick
->> ---
->>   Documentation/power/opp.rst                    | 2 +-
->>   Documentation/translations/zh_CN/power/opp.rst | 2 +-
->>   2 files changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/power/opp.rst b/Documentation/power/opp.rst
->> index a7c03c470980..1b7f1d854f14 100644
->> --- a/Documentation/power/opp.rst
->> +++ b/Documentation/power/opp.rst
->> @@ -305,7 +305,7 @@ dev_pm_opp_get_opp_count
->>        {
->>           /* Do things */
->>           num_available = dev_pm_opp_get_opp_count(dev);
->> -        speeds = kzalloc(sizeof(u32) * num_available, GFP_KERNEL);
->> +        speeds = kcalloc(num_available, sizeof(u32), GFP_KERNEL);
->>           /* populate the table in increasing order */
->>           freq = 0;
->>           while (!IS_ERR(opp = dev_pm_opp_find_freq_ceil(dev, &freq))) {
->> diff --git a/Documentation/translations/zh_CN/power/opp.rst 
->> b/Documentation/translations/zh_CN/power/opp.rst
->> index 8d6e3f6f6202..7470fa2d4c43 100644
->> --- a/Documentation/translations/zh_CN/power/opp.rst
->> +++ b/Documentation/translations/zh_CN/power/opp.rst
->> @@ -274,7 +274,7 @@ dev_pm_opp_get_opp_count
->>        {
->>           /* 做一些事情 */
->>           num_available = dev_pm_opp_get_opp_count(dev);
->> -        speeds = kzalloc(sizeof(u32) * num_available, GFP_KERNEL);
->> +        speeds = kcalloc(num_available, sizeof(u32), GFP_KERNEL);
->
->
-> For the zh_CN translation,
->
-> Reviewed-by: Hu Haowen <2023002089@link.tyut.edu.cn>
+I've tried to find the right balance between not enough details and too
+much. I guess I got it wrong. I go into more detail in the cover letter:
+https://lore.kernel.org/linux-hardening/20240122235208.work.748-kees@kernel.org/
 
+Basically, this isn't about -fno-strict-overflow -- that's just a wrinkle
+on the compiler side. I completely agree: we have to keep the "undefined
+behavior" junk as far away from the kernel as possible.
 
-Same here,
+This is about disambiguating the intent of C arithmetic so we can be in
+the position to instrument the kernel to catch unexpected wrap-arounds.
+We can't use C++ tricks with operator overloading and the introduction
+of wrapping vs trapping types, so we have to annotate things directly.
 
-Reviewed-by: Yanteng Si <siyanteng@loongson.cn>
+And we have sanitizers for signed, unsigned, and pointers. Hence, the
+need to adjust these open-coded wrap tests. It's not about removing UB:
+-fno-strict-overflow already does that. This is about let us trap
+unexpected wrap-around, regardless of type.
 
+> Stop making the world a worse place.
 
-Thanks,
+Rude. I'll leave that to ice storms.
 
-Yanteng
-
->
->
-> Thanks,
->
-> Hu Haowen
->
->
->>           /* 按升序填充表 */
->>           freq = 0;
->>           while (!IS_ERR(opp = dev_pm_opp_find_freq_ceil(dev, &freq))) {
->> -- 
->> 2.25.1
->>
->>
->>
-
+-- 
+Kees Cook
