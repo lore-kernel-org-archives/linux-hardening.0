@@ -1,130 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 321635C8F0;
-	Tue, 23 Jan 2024 10:50:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29AA5D8E4;
+	Tue, 23 Jan 2024 11:20:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706007009; cv=none; b=OU/uBRvgxt2cxHjHnM5qmg060AiVKkRLIxyK90Axj24jNY1btJvwjZRfIG3gXvbR2C0kvcgqx7+X4ruUi5JumOWEIiEAj7+p76/M2TgcERanhlmaG51fyIdkfcUpoktv4zxZnqeIOMkwR7EN00t1UPA2VcAHvpjzSafcKFnLFXo=
+	t=1706008831; cv=none; b=OeMmD7Lj+yJ9wqbKWKk2DDRi2BzahQEbojihDhecNK0FpU8uJKqghK5l0dQZlP/1wsLY7DiroVAJVWcU1cLFxDIqDgW+5HGKDRu8j3QI6yAQ6CoJzslAqX6Tx5eJgIxYT2aZjqoXAfNLphtxncGXGNHu+XWiUXjLn3AbHn16JBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706007009; c=relaxed/simple;
-	bh=NUoP5TWGl92ADNFhVXefbClOKJepyvGfwAUcpjPYGe0=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=c1soBC0p93zF7MmEZEXnHgahkX/tYnxzzleU691RoI8qTxRVZBuJoPZOma4Ubwqowlmbp5B4ZTm9ChC0Vwl4Hz22owde+DXn2ZkSat96MPamuZacN5p5TMHvKLd8tBsQntW/5pvEhubByz15xJv9CnCrQ3zUPjlqJTWg7js3DUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SqhZRflS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706008831; c=relaxed/simple;
+	bh=IisEDnr+p0PvkSItO7KxH/POXpdIe2NGTC+4LQBQ9ps=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WgRrQQW3TLCEq9/qHJBkonmPaadcc1zLvz3exRnNi30t5p3zhLc3QwVZCW9sTwIQaXoBDYUKaUnFlEALDHnOR7T5C3c5PB1bZtOAkY8tao1drY8tpyE1i566dcs/+XJ211bYcpHd+u8tbr0gbW/tFI4Myt+Pl+JLOjxqqy2ow4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kBijgEJP; arc=none smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SqhZRflS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05022C433F1;
-	Tue, 23 Jan 2024 10:50:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706007009;
-	bh=NUoP5TWGl92ADNFhVXefbClOKJepyvGfwAUcpjPYGe0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=SqhZRflS3o+AWzVwix/lgC2sZpWh/AIiRFB/HvgxHXTSdwTwEyuw02aSWb0t9OjGo
-	 6HJdSNQlOx9GlQmWp48UaqoRlwMiW5XjmYAvFrQD8MOuynu3v8fi6AepknKd5JYmdM
-	 cjaVsAA56G1GowgyoCjuRnmetGUQpcx6qJeKIRXsELD1ZtuxW0SUBipuI5JfrQ1JRF
-	 2nqApcfYZk7BA+9wzjzquKvSYPK1Bb0Wx3Wm9SV7do3iY+xfuVPsQW5k8NqqTZrjlW
-	 fkn7wpDrZ2svtccnvtmlVTOJlaLAeoBGiVqANUIA7e2HOVaDbnMoOCPK1qdoqGMBPV
-	 fZD+8ztB/Eniw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1rSEM2-00Dw1i-PD;
-	Tue, 23 Jan 2024 10:50:06 +0000
-Date: Tue, 23 Jan 2024 10:50:06 +0000
-Message-ID: <86mssw8gtd.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: linux-hardening@vger.kernel.org,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Eric Auger <eric.auger@redhat.com>,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 57/82] KVM: arm64: vgic-v3: Refactor intentional wrap-around test
-In-Reply-To: <20240123002814.1396804-57-keescook@chromium.org>
-References: <20240122235208.work.748-kees@kernel.org>
-	<20240123002814.1396804-57-keescook@chromium.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kBijgEJP"
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-600094c5703so16494477b3.3;
+        Tue, 23 Jan 2024 03:20:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706008829; x=1706613629; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IisEDnr+p0PvkSItO7KxH/POXpdIe2NGTC+4LQBQ9ps=;
+        b=kBijgEJPME7gdEUt34NulXDmWBhtfdubuv50n9xk8hO13j5xgZDuQcVwWq/AJfF3QC
+         wek2AoKoOqgKgQTpRFAgZytudOTE+E1LHSgy4W2HAS4zu7r2NRjcqizzFEebIammQuaD
+         l//TZc85tTAs76+PoVHs5CRZntIkk3RlGYtRHcw69dhK/BffJ6X/OY0JZ1X9SPTwdyN2
+         NixzCiXvfzE5mbNNVRXtsTX/DTJmv7lN16q6Fc0WNKtvc1BLgHYusp4qhBbmrtCNUH8r
+         lFArGNoVbr6ah+98iYgM6bX80JhxgZfLXGuleY3KtWGwsu/RcQ4DmJbUh11b8apApq4Z
+         2kGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706008829; x=1706613629;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IisEDnr+p0PvkSItO7KxH/POXpdIe2NGTC+4LQBQ9ps=;
+        b=RSZ2d6Uo5UKLulZSvKPT9nohgfBPN8a12lmUqg3hisIhYbKwatOm1yJSrsKF0fPTm2
+         q3dZkPAThkKuNoQa/jct7frk/I7n9RyXdpbKxgEgEh+gwzC9a+E7eRJvu51Z/ahtLllv
+         vuWZJrMvdJr1nxTQZTdSiIMG34wOrcS93iHd+SycR7AbaV1DyYQLSeYS2Z2w8IqETkiK
+         AeB7AXlK3OYAOHT2lBkNWaamUXyQFYTYNNVNX93tw/ZYLdAUbO5/x1ZR7g5TFkBqe9/B
+         vAqfmsGu7j24q5fWjpC2R3lq396M1EmFfArTp1LqON7s7IxacsbfeXT8In5yMCuW9RAG
+         Lw5w==
+X-Gm-Message-State: AOJu0YyGdV0IP13sn3viamDOI40hvYrFZvYxsuqkw9wvXL1jEOpCdo1D
+	CiAxrNfST7wefsRxoU1qkgIlG2zhaQxVrnpeGc7wZjZDPdOggNnqgLwgt9YgwviU1+cBvs78my/
+	dTP/OD1wZNrgoqrA98NWRRnY6T0o=
+X-Google-Smtp-Source: AGHT+IH4IQpUe/K+u333LaknVexj1p6gtLA26l3nnEZTIeJfvnH371BjAwUrxox7EyMtb6d9YE7r9aefRN/hzusUOWg=
+X-Received: by 2002:a0d:d582:0:b0:5fb:d2da:63d1 with SMTP id
+ x124-20020a0dd582000000b005fbd2da63d1mr4295362ywd.36.1706008828795; Tue, 23
+ Jan 2024 03:20:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: keescook@chromium.org, linux-hardening@vger.kernel.org, oliver.upton@linux.dev, james.morse@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, eric.auger@redhat.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, gustavoars@kernel.org, morbo@google.com, justinstitt@google.com, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+References: <20240122235208.work.748-kees@kernel.org> <20240123002814.1396804-6-keescook@chromium.org>
+ <CANiq72kWTu_1YcmSP=1sB6CmrdbQcksxFvLci6VC2u8_Bb-Exw@mail.gmail.com> <14B4D24C-4CBA-401E-8111-CF74482CA956@kernel.org>
+In-Reply-To: <14B4D24C-4CBA-401E-8111-CF74482CA956@kernel.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 23 Jan 2024 12:20:17 +0100
+Message-ID: <CANiq72=K2Ux9obd6fP3sMhRxRpRs6_ow_5VbG0kjkw8vpx75_A@mail.gmail.com>
+Subject: Re: [PATCH 06/82] overflow: Reintroduce signed and unsigned overflow sanitizers
+To: Kees Cook <kees@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org, 
+	Justin Stitt <justinstitt@google.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Marco Elver <elver@google.com>, Hao Luo <haoluo@google.com>, 
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Bill Wendling <morbo@google.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 23 Jan 2024 00:27:32 +0000,
-Kees Cook <keescook@chromium.org> wrote:
-> 
-> In an effort to separate intentional arithmetic wrap-around from
-> unexpected wrap-around, we need to refactor places that depend on this
-> kind of math. One of the most common code patterns of this is:
-> 
-> 	VAR + value < VAR
-> 
-> Notably, this is considered "undefined behavior" for signed and pointer
-> types, which the kernel works around by using the -fno-strict-overflow
-> option in the build[1] (which used to just be -fwrapv). Regardless, we
-> want to get the kernel source to the position where we can meaningfully
-> instrument arithmetic wrap-around conditions and catch them when they
-> are unexpected, regardless of whether they are signed[2], unsigned[3],
-> or pointer[4] types.
-> 
-> Refactor open-coded wrap-around addition test to use add_would_overflow().
-> This paves the way to enabling the wrap-around sanitizers in the future.
-> 
-> Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
-> Link: https://github.com/KSPP/linux/issues/26 [2]
-> Link: https://github.com/KSPP/linux/issues/27 [3]
-> Link: https://github.com/KSPP/linux/issues/344 [4]
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Oliver Upton <oliver.upton@linux.dev>
-> Cc: James Morse <james.morse@arm.com>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: Zenghui Yu <yuzenghui@huawei.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Eric Auger <eric.auger@redhat.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: kvmarm@lists.linux.dev
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  arch/arm64/kvm/vgic/vgic-mmio-v3.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/kvm/vgic/vgic-mmio-v3.c b/arch/arm64/kvm/vgic/vgic-mmio-v3.c
-> index c15ee1df036a..860b774c0c13 100644
-> --- a/arch/arm64/kvm/vgic/vgic-mmio-v3.c
-> +++ b/arch/arm64/kvm/vgic/vgic-mmio-v3.c
-> @@ -863,7 +863,7 @@ static int vgic_v3_alloc_redist_region(struct kvm *kvm, uint32_t index,
->  	int ret;
->  
->  	/* cross the end of memory ? */
-> -	if (base + size < base)
-> +	if (add_would_overflow(base, size))
->  		return -EINVAL;
->  
->  	if (list_empty(rd_regions)) {
+On Tue, Jan 23, 2024 at 5:45=E2=80=AFAM Kees Cook <kees@kernel.org> wrote:
+>
+> Yes. We removed this bad behavior by using -fno-strict-overflow, and we w=
+ill want to keep it enabled.
 
-Acked-by: Marc Zyngier <maz@kernel.org>
+Yeah, I only meant that the wording of the commit seems to say there
+is something special about the "overflowing behavior", i.e. I was
+expecting just UB with the usual implications, but given the extra
+text in the parenthesis, I wondered while reading it if there was
+something different/special going on.
 
-	M.
+> The stack usage is separate. (This may even be fixed in modern Clang; thi=
+s comes from the original version of this Kconfig.) The not booting part is=
+ separate and has not been tracked down yet.
 
--- 
-Without deviation from the norm, progress is not possible.
+I see. Thanks! In any case, if the sentence means only 32-bit x86,
+users couldn't still see it. But since this was already in the revert
+now that I take a look, I guess ignore this :)
+
+> I wondered the same -- they were this way when they were removed, so I ju=
+st restored them as they were. :)
+
+Makes sense :)
+
+Cheers,
+Miguel
