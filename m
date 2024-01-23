@@ -1,64 +1,66 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 011401474BF
-	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 00:28:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96A5E155A34
+	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 00:28:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705969719; cv=none; b=O6sL2lP9jOCCjm20F3mvtOggVqw6gVFtFdETHVhvuiNRQxNI2lYWFKElPX2pLp1UcrGdQKNuUfWlDwH4cMe9N1JurAi9Te+L3cyfUMzd3+FgXTyVZnAakolHoRdORVwYBov9I7a+b0yvs1davDTCoxCDivnOnI5L4UuetQ03ztg=
+	t=1705969722; cv=none; b=Qo6JP8urjg9QTsnaizNmd+hg3NVAgBFynCXHqYBTJs4YqNPzuS+Y0+R98R0Y202X4jWNUqGvm7XQisV7Z1ZTZl7Yy/+cTIR94nVmgLYb69e/7W5PTBknpGzsKJd4VRepMmW48HzcEJzmP8jwI0fE9BzwGnnranZ8DjBxcmeGCGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705969719; c=relaxed/simple;
-	bh=IJQ4VwF/XdURhwqKb20pArJOcqYtWwEP77l8CXMEO9A=;
+	s=arc-20240116; t=1705969722; c=relaxed/simple;
+	bh=l7HVvTdScmVUEBhzQFpCKcbiCA9potNAVoRVMmpE5Cw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KX5fs5DgKa1rEMf/sk/qopUd/7utzsfe2sQY5F396eIzcZRey8Ldce87C58sdM/GtSZQyuOJiGiGsaLwofykqouVKlg+oLyc0ZAEWiCdRz2CcU2V3dPY3J3AGgvRFcJUMyibVUMMJiu6vo0q1kmiyyErBrRvtNIYmEh6TWa5uuk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=W9rZgYk6; arc=none smtp.client-ip=209.85.214.169
+	 MIME-Version; b=IJXu3PISv8dCjUWG6vI29jmcKCYFguTxXolwnuGOSJEJs8/vHwMdegFPdC7d/4LyY6ZWmr+Dfi9iH2UK+7iXlOl0lzFzELbfcHCr2JJTOJZ4yVpMzEMR0+yT5EeMZ36F7VWjbjhfiJtGdUCmVruURSAqRQRBgn+F7MgVCC6pzdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=mSLykj4R; arc=none smtp.client-ip=209.85.161.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W9rZgYk6"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1d711d7a940so32130395ad.1
-        for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 16:28:37 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mSLykj4R"
+Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-599a5266066so48082eaf.1
+        for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 16:28:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1705969717; x=1706574517; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1705969719; x=1706574519; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+jDHEGsADozaBPzy87lyElMwpN6fXSBHhkt9/lWQvvg=;
-        b=W9rZgYk61Iqfn9prLeNiSbTv3OpvaKxT39TUkP67jd/whB29kbf6LTakGVWTEt8Wkx
-         hmAInx6f7SDsGMYO2OQsyHb8EGdPJc1dTJZZv+SyotYn+UuygCeOn3loeMhi9yy07XB0
-         xX3alspmGSmPMhqlu96sub12KM3bBEnJIw5Tc=
+        bh=+JeEyKGn0lV8WeyRQc6wAgA/9wi6Y7j/WpnhdAob6+w=;
+        b=mSLykj4R/hoz2kveKtbBhu0zXi+tfZGaVsKmdvKaMvnBiacg6+ZDXwmEQu/LbcW7aD
+         R5V86tcbaasCiHyxVpbJNfehr6hrw52j/jzETUWVJzaqFKTEB/gs4Jacvdzp+jtmYSyO
+         U462ee3VMJ5G/NyWTHO0KoyCmmmVdzWgEvhNE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705969717; x=1706574517;
+        d=1e100.net; s=20230601; t=1705969719; x=1706574519;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+jDHEGsADozaBPzy87lyElMwpN6fXSBHhkt9/lWQvvg=;
-        b=j+x6Ajr3fx9JWh1oYphAQYVC7d2mgGGE9Cd4uoEL2aOG70+aCJojv0f5sJUxaN+Oat
-         DWJk0uFFGK1xmNeyxjoRoV+T83f+gToxwUcmAaTmd13ZASrIvI9sHQeIWp9OvL7Nd9Q9
-         TvHWXVaU209+rFIH5PUudARTbmeNlrkJXGXafvG5+y+q+Nn4wPBoa+zja/ofbGiLrZGX
-         IDnC/LJlXi10SSYYUafYv+7qrJcjoY1/m5qP0uAw2aRy0nywmS4USZx+oVclCkHwzZOu
-         YRJltJc9OCFDouiw8BK+OlgZgKxgy/Oygw+WqdhZP30YJ1WfiUL5CnwSdorZdQ+PqiVi
-         JiBg==
-X-Gm-Message-State: AOJu0YwjvnwZBB9Egc2tOptGuh/kTEIwq9JB6Uqmzx4yBD485b3sdm5n
-	7fxRLdHXyPgoqX0xR2m4R8yPGn6vE2L05+U430bHpcSTr7zEWS1HTrv6A3oEguoN+E9EvPndtuw
-	=
-X-Google-Smtp-Source: AGHT+IGVvNQqP/Yfcue1CS/oyv4ugKBq3YsZQeXsJR0yi4vRWYbdC01kdPUlI/QCPnGswiLzQN7ZOw==
-X-Received: by 2002:a17:903:1ca:b0:1d7:6c58:a654 with SMTP id e10-20020a17090301ca00b001d76c58a654mr321507plh.8.1705969717309;
-        Mon, 22 Jan 2024 16:28:37 -0800 (PST)
+        bh=+JeEyKGn0lV8WeyRQc6wAgA/9wi6Y7j/WpnhdAob6+w=;
+        b=U2bgQhHK6ow5umGCv1+Iko9+Q5/PxQPeHG15RObTqqEvhui1ocuEvLtZd8SZIIA6K1
+         Jdzz0yihN2fLqokxwBXYbUPmi843GrBSWruGVoMyUnEE02m+Py5Lx/Y4zG8gGvCSxH18
+         L+Htxw3hSTTkAsbKzRDFWmGgaRKHiQ7lFFgBb+AlsQ5one5h8O1I3O1iR8OW5tS1G68w
+         Iz/bugwm5O/+T5Y07sSPQejQdM7l4ZTzK21+0hk5BIxtgRktmQweeH1nRKiVaaXb1v2A
+         3yrdB5HBfbKUkrFp07a8rYKEBXbN5JBLKFPB6OFv1HyKSUf3iPWHVkgYQISMMRJ+heC0
+         2fnQ==
+X-Gm-Message-State: AOJu0YyM6C1FkewfPpRDO/xBU6GjawM6EBfeToHVsEORGyTVWkmObYVe
+	ochf7WihrO9hQgjFl7V1z+cc7WzytF0BMlrbMPCMJOc6KGiTwTkArdnPCyb8oQ==
+X-Google-Smtp-Source: AGHT+IGXnjsVjmGefwUz4NLOYBkk1Pkgc02KLFnPxshR1dbCC7oBkGzlRDt2GgPOlPOZXTHSoOTbOQ==
+X-Received: by 2002:a05:6358:ca5:b0:176:70d4:eb64 with SMTP id o37-20020a0563580ca500b0017670d4eb64mr388585rwj.10.1705969719547;
+        Mon, 22 Jan 2024 16:28:39 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id k12-20020a170902f28c00b001d7492d9890sm2786498plc.146.2024.01.22.16.28.20
+        by smtp.gmail.com with ESMTPSA id rs14-20020a17090b2b8e00b0028c465b050asm10217097pjb.54.2024.01.22.16.28.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jan 2024 16:28:25 -0800 (PST)
+        Mon, 22 Jan 2024 16:28:37 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
 To: linux-hardening@vger.kernel.org
 Cc: Kees Cook <keescook@chromium.org>,
+	Julia Lawall <Julia.Lawall@inria.fr>,
+	Nicolas Palix <nicolas.palix@imag.fr>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>,
+	cocci@inria.fr,
+	Bill Wendling <morbo@google.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 03/82] overflow: Introduce add_wrap()
-Date: Mon, 22 Jan 2024 16:26:38 -0800
-Message-Id: <20240123002814.1396804-3-keescook@chromium.org>
+Subject: [PATCH 05/82] cocci: Refactor open-coded arithmetic wrap-around
+Date: Mon, 22 Jan 2024 16:26:40 -0800
+Message-Id: <20240123002814.1396804-5-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240122235208.work.748-kees@kernel.org>
 References: <20240122235208.work.748-kees@kernel.org>
@@ -68,59 +70,121 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1195; i=keescook@chromium.org;
- h=from:subject; bh=IJQ4VwF/XdURhwqKb20pArJOcqYtWwEP77l8CXMEO9A=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgEL8IucC9yEm2ouyrQ/hhMu5I3AUOX5/m7s
- cUy68MtvAaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8IBAAKCRCJcvTf3G3A
- JqGoD/0VbDA2K1vKkDXKw/XOmCvxckFsH1aXG4eTErag/Fyu11F/Hz71EheSTm63LgoPWiI+vwG
- vQcb3gzwgcA6Kv3ftEEWygG29jA30KCJdCnU7BgqLDouuIqhIzzubmXcqF0DF60tOIZCgObUYdW
- LboXVdtqnGzTV+ndwblWK6xc9gvy4kCGEHtQHUiTzqvKF3r0hNkAtTt/gyaIR8alh306zuznEUP
- Hy+3HE3U2/gyMkH8zjIoL7izNomyRAG+jGnzSTAQ+Y3Io/mDd4oLPhoQiGYK2gpGGj7B4xzcwGX
- ZfJsp3Ttomp+rMXKh/zDeoOy98JKGcFTIPxSR6pHgFfju/51K7XIIbJrWUYTJFCI+xGqAZoPJMA
- Z4nx57/RJXITaO74IOTE6xsVnwdW1XCDqNK8HVJcV4jcck3dqbaWeKq8G2Wn4oaUCpafB750LRo
- nG6bJ2EEORG+XgubtrKSu9fKiX5jB3Nua4vUxTjs3cpbB4Nn3+z1HECkX8puf7At08mJW7iuB9v
- eOLUNEvuugFexNTyysxKT9/pAWH+g8QUNUqvcuIpc1aKa+M51P2ektI1qunbV70+gASTfmfDtst
- 8iHp9HNo7JldQqTsDLxzi7M2oSYZTd1Xnlv809kXKLW7oMGoxgBsHwO20fGby1A7AynToyEh9vY K6n3JQaCLci7AWg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2537; i=keescook@chromium.org;
+ h=from:subject; bh=l7HVvTdScmVUEBhzQFpCKcbiCA9potNAVoRVMmpE5Cw=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgEsqMAH8qryJJXGj8e8QN0W9DMFFKrS9uda
+ cVz4Vs0YzeJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8IBAAKCRCJcvTf3G3A
+ JsTiEACd8SkTPHWAe1kX56wx0lNF5c674TcY9C2ijoqRJGl/0QtJHQVrBWgFzStTMFRvdjVmSft
+ OhisPGmKR6BjwIhxS8K5uADuSfceqnrcsSEq4gyGDysofHMym4LMXl0gyup0oUDHnTxmzDDExp8
+ axLDbZ1DRxktaofds7/FAwvtSg9Npx8Xq5Zx4tpivhC+OR8ZgYaUX0FnfXi8mzwN5bhbZAMP3qH
+ zi0ast7Pgu3OHTsqOvXYYT87SM3mnt0N24+ILjlZAdKkVKotxC/m33ndLhs9LII8dKzdCfL29Rs
+ VdZmA4MtigsvUnzrrfEjFbZIMynSrgWPIUe2gFy1mJy2dkam07GXcuXbtLldd2EeuZN7D+r7RVd
+ 4+vlNouoeK8rsf39E9wUneF9w8ZEtnDG9Td4520g5ev1+d7MN2kp8jJVnYTIJLZFYRcpFk8LygE
+ uf/9zPB/2zREBkdwxAKTln0vcFw6GHYhZi2F56FRL2tHXmxxw81CdKjM2fsB19JV5iG94WNZCGO
+ Zu2C1agT5RsXzn+z37spD9fyW0/F1jNBMeiUiXU9IW8erIHEQqyA3HieDE8casRZj64hSFICMOa
+ cLCu/yo1/gx4lr5s6qpSm4oZrC88HxZZVlZvy1WK6SRp2cGdT2tEJvOCA98bxxqAyXYYEoa1IrG FsID4fl2hSNgW1w==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Provide a helper that will perform wrapping addition without tripping
-the arithmetic wrap-around sanitizers.
+In pursuit of gaining full kernel instrumentation for signed[1],
+unsigned[2], and pointer[3] arithmetic overflow, we need to replace
+the handful of instances in the kernel where we intentionally depend on
+arithmetic wrap-around. Introduce Coccinelle script for finding these
+and replacing them with the new add_would_overflow() helper, for this
+common code pattern:
 
+	if (VAR + OFFSET < VAR) ...
+
+Link: https://github.com/KSPP/linux/issues/26 [1]
+Link: https://github.com/KSPP/linux/issues/27 [2]
+Link: https://github.com/KSPP/linux/issues/344 [3]
+Cc: Julia Lawall <Julia.Lawall@inria.fr>
+Cc: Nicolas Palix <nicolas.palix@imag.fr>
 Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-hardening@vger.kernel.org
+Cc: Justin Stitt <justinstitt@google.com>
+Cc: cocci@inria.fr
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- include/linux/overflow.h | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ .../coccinelle/misc/add_would_overflow.cocci  | 70 +++++++++++++++++++
+ 1 file changed, 70 insertions(+)
+ create mode 100644 scripts/coccinelle/misc/add_would_overflow.cocci
 
-diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-index ac088f73e0fd..30779905a77a 100644
---- a/include/linux/overflow.h
-+++ b/include/linux/overflow.h
-@@ -124,6 +124,22 @@ static inline bool __must_check __must_check_overflow(bool overflow)
- 		check_add_overflow(a, b, &__result);\
- 	}))
- 
-+/**
-+ * add_wrap() - Intentionally perform a wrapping addition
-+ * @a: first addend
-+ * @b: second addend
-+ *
-+ * Return the potentially wrapped-around addition without
-+ * tripping any overflow sanitizers that may be enabled.
-+ */
-+#define add_wrap(a, b)					\
-+	({						\
-+		typeof(a) __sum;			\
-+		if (check_add_overflow(a, b, &__sum))	\
-+			/* do nothing */;		\
-+		__sum;					\
-+	})
+diff --git a/scripts/coccinelle/misc/add_would_overflow.cocci b/scripts/coccinelle/misc/add_would_overflow.cocci
+new file mode 100644
+index 000000000000..b9b67c9c3714
+--- /dev/null
++++ b/scripts/coccinelle/misc/add_would_overflow.cocci
+@@ -0,0 +1,70 @@
++// SPDX-License-Identifier: GPL-2.0-only
++///
++/// Replace intentional wrap-around addition with calls to
++/// check_add_overflow() and add_would_overflow(), see
++/// Documentation/process/deprecated.rst
++///
++//
++// Confidence: High
++// Comments:
++// Options: --no-includes --include-headers
 +
- /**
-  * check_sub_overflow() - Calculate subtraction with overflow checking
-  * @a: minuend; value to subtract from
++virtual context
++virtual report
++virtual org
++virtual patch
++
++@report_wrap_sum depends on !patch@
++type RESULT;
++RESULT VAR;
++expression OFFSET;
++@@
++
++ {
++        RESULT sum;
++        ...
++        (
++*       VAR + OFFSET < VAR
++        )
++        ...
++        (
++        VAR + OFFSET
++        )
++        ...
++ }
++
++@wrap_sum depends on patch@
++type RESULT;
++RESULT VAR;
++expression OFFSET;
++@@
++
++ {
+++       RESULT sum;
++        ...
++        (
++-       VAR + OFFSET < VAR
+++       check_add_overflow(VAR, OFFSET, &sum)
++        )
++        ...
++        (
++-       VAR + OFFSET
+++       sum
++        )
++        ...
++ }
++
++@report_wrap depends on !patch && !report_wrap_sum@
++identifier PTR;
++expression OFFSET;
++@@
++
++*       PTR + OFFSET < PTR
++
++@patch_wrap depends on patch && !wrap_sum@
++identifier PTR;
++expression OFFSET;
++@@
++
++-       PTR + OFFSET < PTR
+++       add_would_overflow(PTR, OFFSET)
 -- 
 2.34.1
 
