@@ -1,74 +1,71 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E16EF1272D0
-	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 00:46:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C1FC13B792
+	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 00:46:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705970762; cv=none; b=j5St2Y7usGnxy0JH5fgCAVxFeoaaISa8gKNSE7s6oAwPhi5X5FM2b+I5IcV+USFuezKhdNX/JRkYaOAF3YEa7Sx39itjjqeyuo8590wG//hpf+opWbWgnrRpmzS0l2kyr4dNQuKmIjtiByveTrMz8qPpPvbIpIQ71EoAuyyBYvc=
+	t=1705970764; cv=none; b=J7PxtjJrJrwH2y3da07FADQqWCM0W0enEDOwrljNixctoz4PXlN1uRmSq2BqLVIcoB5pB72tG+wtH0mGIe4iKKMFIQogx2tK6Y9DBPP/y1UKuPjzwmn/z/vOb2FSVGTBbeqK3QavFCWh3xUiIVecQKNzJKWtucIr04qYjfJ/T9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705970762; c=relaxed/simple;
-	bh=cmItHHDJ2/yorzOokW4wLWtGAZ57hv5idzTs6y53l8w=;
+	s=arc-20240116; t=1705970764; c=relaxed/simple;
+	bh=rhiNkfwcsBY8pN0Aj3OX3M7epOQG7vcAhg9hdXLwAek=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tup38QUXfNJUY8CCT4BqIaRQ1dznjiToJPXUgQqEQPPB7FSPhis/xK2JXhvecDxMcvVvh7HuCmXZ84pY0lGiGEYoB2kLKr81M/NgaAT5OzU3geETu2h7/smCY+is7jZTsRwf1INvYN2C+M6GYyycz9ZGPgM93Ce5uBMnBa5BBfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=XGH8bbX5; arc=none smtp.client-ip=209.85.210.177
+	 MIME-Version; b=f3TuJ66tW2b8kFepQCzMsTN738jHOcurAco8WLqWUd5k3KVbVrrK/LKW7Z7/dd6VulL8FUC2mD93Tor2K1IDgEcWRKUPBzq8Ap4krtQdcisCNTbhDtNHbea7TAIhi7VsTtJAR684QYQZlHpnrTYY6zqRAF3JKQyLyL26GtzmeCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=j8KUJJgt; arc=none smtp.client-ip=209.85.210.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XGH8bbX5"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6dbd21c6466so2151061b3a.3
-        for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 16:46:00 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="j8KUJJgt"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6dc1f02090fso454405b3a.0
+        for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 16:46:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1705970760; x=1706575560; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1705970762; x=1706575562; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Qw2b3tHeJEx9a76sk3FUumHURyBJJwj65NrMowk875Q=;
-        b=XGH8bbX50dKD/LNZcdxj+jrFHSVD8nYifl2SGv+MYAtVxPyjHYryStFOrD767hbrUe
-         GtskbhS/uzdFqJ5rcTltcvGpsMf9p6fZxMuEPowXsvPGIjMGA2aBS8PwVMKN/y8W/9mK
-         Ju26un/oZVQPE9C29V0+Parje4ArmGhLc9dcQ=
+        bh=koLuWwEc6R93KvA47iKWZn4p87NyejoVGKhwRpq6uhs=;
+        b=j8KUJJgt1OC46MRP1rTSCjb3ikE3ot4TXw9Tukg8wx7H+83b6ohP4LHJ9UNddjKRl2
+         fSHxXLpJPJivZGL1FttjKFG88OY1GIfXdbJmN3+4oYrwPx/KuMNiKYcL0usJSbXDhAA/
+         pNz4tVDi9c8HBow8e9NE5hiv1GNBnowyNm78Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705970760; x=1706575560;
+        d=1e100.net; s=20230601; t=1705970762; x=1706575562;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Qw2b3tHeJEx9a76sk3FUumHURyBJJwj65NrMowk875Q=;
-        b=App+bucBUZeNOmlNdlozDkMF9xGMpCZPEESRXjvC1bWHQOCS5fRA8tSJwAejjSkw27
-         hgY7Dip3nAgIs6T0sg9gfdfxnkRQ6i5I5xgJ3pLTRq1FTXD90GFslXRusp4dVNsGoJOd
-         ncLpCpP6wE9+1nYsaxhfniMa0dqNT/6XWnbVyTly03a4aQaos6WFGmG6J+8LZPdoE1aR
-         HorXbH1hqACR9loAXqsOvjVMHJjz2TrAcvrPx8bI8KsJC4AwI4kmPd7T42PrHl+SWnic
-         lKhRXeWXpwQf1hC+sN9MY/R1vfVgeY9s/a37dg0v6jeu3Uo31ke5nnB+4bKDhZwsSMsR
-         3VkA==
-X-Gm-Message-State: AOJu0YwzcFJxTce3ezFPfj4rSjagbQuVzxf3MjZgefpeicU8ricnJ2A2
-	JWLIUU4VBMMS5UsANz0+eVL8JaXeXdQd13IpFNX7rNNKnPgcZ0b3gvUVGRXtRw==
-X-Google-Smtp-Source: AGHT+IFpnmN5NeFDZoCtNSPJnK9l8YLwar/VS6Y7pK5lbfaQcHzj8ixTBuINNoXW+BgKQQm3i/BUKQ==
-X-Received: by 2002:a05:6a20:354d:b0:199:e237:1497 with SMTP id f13-20020a056a20354d00b00199e2371497mr4858984pze.65.1705970760341;
-        Mon, 22 Jan 2024 16:46:00 -0800 (PST)
+        bh=koLuWwEc6R93KvA47iKWZn4p87NyejoVGKhwRpq6uhs=;
+        b=HGtzf7uTziYJmnAyuUMGKVvO9potrUQLNMOvioy/Frh6EwA/tbHrcEC0bN2hxIFrty
+         nLSqnlQOj88kfhb63TmouT5EBWxU8YYdo2aDS5j3jynX74I6/e4kw4AAWACbTbLLcQLa
+         ijskmd3tcx2VttxBt0TLJqBwGxScMk8ID6iDYLDgcCHZ+NjQ5FV4Y4k2oOvBEIomfvQx
+         CJsxk7qF91G5UfdIS0k0yoYkql3hgccBJ3n8A7ivAPPuqL/8e2AKQ2BxuWWI43nIoGeM
+         o3E+dVtiDq4gu85WO39o8cWBC1NiqV+UWPA4nM8pAPnDSJYZxZuSY9hDsh7FxxxxJlG9
+         55ow==
+X-Gm-Message-State: AOJu0YzfOcRVUzi/a7ECFqQxJIXqWyLB4wqC2OX4dDMuh0TnGDauYghu
+	Y0MgHNnCHQjGEGnYWnJ/j//O+yOxG4sZZaKuGEgK/ICkchf67HAyVP6MQXyOEQ==
+X-Google-Smtp-Source: AGHT+IHnnbXv7LLoQQuo5IERPmQ1aDbHfWs5esMUO9nvMTULeZpbAQsvNcJD7PAXZFLGmSXlcp3hjA==
+X-Received: by 2002:a05:6a00:1385:b0:6d9:bf50:196e with SMTP id t5-20020a056a00138500b006d9bf50196emr7531070pfg.19.1705970761998;
+        Mon, 22 Jan 2024 16:46:01 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id e9-20020aa78249000000b006dae568baedsm10164690pfn.24.2024.01.22.16.45.55
+        by smtp.gmail.com with ESMTPSA id r5-20020aa78b85000000b006dbca81cc36sm5095359pfd.188.2024.01.22.16.45.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 22 Jan 2024 16:45:57 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
 To: linux-hardening@vger.kernel.org
 Cc: Kees Cook <keescook@chromium.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Nico Boehr <nrb@linux.ibm.com>,
-	Philipp Rudo <prudo@redhat.com>,
-	Baoquan He <bhe@redhat.com>,
-	Tao Liu <ltao@redhat.com>,
-	Alexander Egorenkov <egorenar@linux.ibm.com>,
-	linux-s390@vger.kernel.org,
+	Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	rds-devel@oss.oracle.com,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 30/82] s390/kexec_file: Refactor intentional wrap-around calculation
-Date: Mon, 22 Jan 2024 16:27:05 -0800
-Message-Id: <20240123002814.1396804-30-keescook@chromium.org>
+Subject: [PATCH 29/82] rds: Refactor intentional wrap-around calculation
+Date: Mon, 22 Jan 2024 16:27:04 -0800
+Message-Id: <20240123002814.1396804-29-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240122235208.work.748-kees@kernel.org>
 References: <20240122235208.work.748-kees@kernel.org>
@@ -78,19 +75,19 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3531; i=keescook@chromium.org;
- h=from:subject; bh=cmItHHDJ2/yorzOokW4wLWtGAZ57hv5idzTs6y53l8w=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgHS1qljwX0OBc821aP1oPgrqcP/CIrbF9OK
- s6Ar47XlguJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8IBwAKCRCJcvTf3G3A
- JmY8D/4lOAfDyZzxJuod1mr8o99HqUKS7ycJ2w+BmUnwdIT7FhMHPjXYoOdI4ma1NGPbJghRMX1
- KQh4FV76MnS1guDFLwXwYDsJKWpS3LyA+nT73MbsxUuacxblqt5Hh3MLWsexvC3I5rq8UnyZ8Rz
- OxP9Q7+HCEtVVq95HnnbN4NH0ssyF02BVeyeP3cg1KVo7MMrKpR3oRkKY5uQ4ANfxACiQP8ERkC
- 45YM4DwsS1FmhsgCHCGraTPD7DYb2sV5bhvL21RPfNaXig08zMT/5ZUQ9ZjYwxIoSByFzm7Il77
- JwwfaVVgTNG7P3Rs9WKhVNOmxa3xDsgK9dTuvm72SLUQI+Zwb8997/d7vjECwWEeGWfRUiMrguP
- vBRHMDpNBBg5NNXV7zCvcPmyv++hO8F98tw3mLfrc3I/zJJ5p1F3Df0LKZ2x/4WL2WDIcolRjFz
- +AOJQe6vXf62QuIPIf5w7zvk0yyUTLqdvT3OWqxqmCnvHsze82MBf8A+ZYHr3YxF6u3exhea9t8
- b0oMGLlaiEtp+HYdg27KcvRIktdQeyqQj1+pUWLNuoSWK4xIpaTmoHwpNyigdAUI/I6sw+LKfKe
- L0szrDlREhEFJ1ygZbsZfF5wnN2NSu6FsohS1ZFZt+JaQP/V4vq/nnABS/LJxgLyTU9lzo+nMcu NTXqQzK2ZrdRSTg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2769; i=keescook@chromium.org;
+ h=from:subject; bh=rhiNkfwcsBY8pN0Aj3OX3M7epOQG7vcAhg9hdXLwAek=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgHOI22byaB9aq3JAA27hbl1bc2MNGKba4Qk
+ /4yGoiLhCWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8IBwAKCRCJcvTf3G3A
+ JrEqD/9OlGCVGN2v0bgu7DOOkBDw0dRbBn44WXpE64TTI2iaigc2NjR7rlxLD88o/toMj5HP2e8
+ +KNhHHhwpn/78Xvy5Fu7OSRDC9Srz2FSdC3GIXCLEy3jHqWqKwpl8s89sAkiyFxj+oaSSd2hp1Z
+ yyDFk5tnp4WFMby/w16JX9RJaUhf0Pac+SlpfX6LIhCtEDu16Ym3Zfy8+niKDzyKzgFnik3iBMB
+ VlX0qsJgWtq/F5TyYJsdRkzQJiC6uqDjRDOmIrgGbtONP4N3x7eTO2RPGiq6W6sD6wqCCTfno+I
+ TOyJBsebkoEC/gOponWRkhVaYuIKk76Rd+mpLbYKMeJ9sXs4c3jKafZerrydOpptCgnp1tAjfY0
+ ubJ/wJ50cALOah3qX7E1BFVlS8g/8Cqst3G86qmJ+jErESB4X+ju8cl4kzQJrDdmKNVd/8RAdsb
+ wNPuvNZwa3p4pqL+xtVz52yuC0AAOm1Ac9cbprphOD3okeaOY4R3ObpX9GV0e/990fYjXWl4bXk
+ aTpyUseDCo88l0yQhgdSuHpJyQLFga2P8uROjArZRuSEBD9HUQ3LrxEC/e8Ns++bdkQ4Yu2PgDo
+ Dty8RA9kx6885engKkChV3U1u51xbiNowBg4oJDE5G4q+gYIHu+fcsm6+5uoTqYHDGNdkR/t2tx b/RZj59k1eBK/EQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
@@ -117,68 +114,50 @@ Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
 Link: https://github.com/KSPP/linux/issues/26 [2]
 Link: https://github.com/KSPP/linux/issues/27 [3]
 Link: https://github.com/KSPP/linux/issues/344 [4]
-Cc: Heiko Carstens <hca@linux.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
-Cc: Sven Schnelle <svens@linux.ibm.com>
-Cc: Nico Boehr <nrb@linux.ibm.com>
-Cc: Philipp Rudo <prudo@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Tao Liu <ltao@redhat.com>
-Cc: Alexander Egorenkov <egorenar@linux.ibm.com>
-Cc: linux-s390@vger.kernel.org
+Cc: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-rdma@vger.kernel.org
+Cc: rds-devel@oss.oracle.com
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- arch/s390/include/asm/stacktrace.h    | 6 ++++--
- arch/s390/kernel/machine_kexec_file.c | 5 +++--
- 2 files changed, 7 insertions(+), 4 deletions(-)
+ net/rds/info.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/include/asm/stacktrace.h b/arch/s390/include/asm/stacktrace.h
-index 31ec4f545e03..3ce08d32a8ad 100644
---- a/arch/s390/include/asm/stacktrace.h
-+++ b/arch/s390/include/asm/stacktrace.h
-@@ -34,11 +34,13 @@ int get_stack_info(unsigned long sp, struct task_struct *task,
- static inline bool on_stack(struct stack_info *info,
- 			    unsigned long addr, size_t len)
- {
+diff --git a/net/rds/info.c b/net/rds/info.c
+index b6b46a8214a0..87b35d07ce04 100644
+--- a/net/rds/info.c
++++ b/net/rds/info.c
+@@ -163,6 +163,7 @@ int rds_info_getsockopt(struct socket *sock, int optname, char __user *optval,
+ 	unsigned long nr_pages = 0;
+ 	unsigned long start;
+ 	rds_info_func func;
 +	unsigned long sum;
-+
- 	if (info->type == STACK_TYPE_UNKNOWN)
- 		return false;
--	if (addr + len < addr)
-+	if (check_add_overflow(addr, len, &sum))
- 		return false;
--	return addr >= info->begin && addr + len <= info->end;
-+	return addr >= info->begin && sum <= info->end;
- }
- 
- /*
-diff --git a/arch/s390/kernel/machine_kexec_file.c b/arch/s390/kernel/machine_kexec_file.c
-index 8d207b82d9fe..e5e925423061 100644
---- a/arch/s390/kernel/machine_kexec_file.c
-+++ b/arch/s390/kernel/machine_kexec_file.c
-@@ -238,6 +238,7 @@ void *kexec_file_add_components(struct kimage *image,
- 	unsigned long max_command_line_size = LEGACY_COMMAND_LINE_SIZE;
- 	struct s390_load_data data = {0};
- 	unsigned long minsize;
-+	unsigned long sum;
+ 	struct page **pages = NULL;
  	int ret;
+ 	int len;
+@@ -175,7 +176,8 @@ int rds_info_getsockopt(struct socket *sock, int optname, char __user *optval,
  
- 	data.report = ipl_report_init(&ipl_block);
-@@ -256,10 +257,10 @@ void *kexec_file_add_components(struct kimage *image,
- 	if (data.parm->max_command_line_size)
- 		max_command_line_size = data.parm->max_command_line_size;
- 
--	if (minsize + max_command_line_size < minsize)
-+	if (check_add_overflow(minsize, max_command_line_size, &sum))
+ 	/* check for all kinds of wrapping and the like */
+ 	start = (unsigned long)optval;
+-	if (len < 0 || len > INT_MAX - PAGE_SIZE + 1 || start + len < start) {
++	if (len < 0 || len > INT_MAX - PAGE_SIZE + 1 ||
++	    check_add_overflow(start, len, &sum)) {
+ 		ret = -EINVAL;
  		goto out;
+ 	}
+@@ -184,7 +186,7 @@ int rds_info_getsockopt(struct socket *sock, int optname, char __user *optval,
+ 	if (len == 0)
+ 		goto call_func;
  
--	if (image->kernel_buf_len < minsize + max_command_line_size)
-+	if (image->kernel_buf_len < sum)
- 		goto out;
+-	nr_pages = (PAGE_ALIGN(start + len) - (start & PAGE_MASK))
++	nr_pages = (PAGE_ALIGN(sum) - (start & PAGE_MASK))
+ 			>> PAGE_SHIFT;
  
- 	if (image->cmdline_buf_len >= max_command_line_size)
+ 	pages = kmalloc_array(nr_pages, sizeof(struct page *), GFP_KERNEL);
 -- 
 2.34.1
 
