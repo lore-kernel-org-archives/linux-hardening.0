@@ -1,67 +1,66 @@
-Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2AC75FDCD
-	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 00:36:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7B645FF00
+	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 00:36:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705970168; cv=none; b=BkqVabZcXQW5j8mvj9IVUt/DZbXm09jX81L5hmPNccErzY5eTl0d2VQkAQPSG1a+RNBtEwIb0HgR2rKvpWsfkPzKloJHg5vz8DzNQAnHA7Zszm/yOIA3mkV57U+sud0q0xoruv2O9j+R8A98b1ZrFbnxKYRiOdjtA7z1K3Goavk=
+	t=1705970170; cv=none; b=O1TBDBoQcJ8Y4LR1S8/TeNlL3AwxaLidYPYPD2Mdrk1+0axOKvQvj0CvVX/F/L6UmpMUqZI6ZQ8kty/pkiLNi2qoTaaGd9olNUwk/pW9E7WuBAvJ94s7xMtYDyptx2WJ3t255u7yKDQWjlh+5ftYxHkMj6n8kKgDhJBZvZryisY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705970168; c=relaxed/simple;
-	bh=ZK9PQLCXLKqeI6EmNJVF0wuj6cnB4GzhbTbrgojBZ9E=;
+	s=arc-20240116; t=1705970170; c=relaxed/simple;
+	bh=t5NjTIyb78Owo8zdIrnO+cNPZQCmas8okHDaZcCW+8I=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=N+ZaFjb+n+o0T34M3YLrMGDR4meINTljSnVd9Pd8A39rxyk6KPkTQcQlAktMqMFHT8Bueh8zgNYe5BymU53QAORG4wKgSHf4/65r5NBuBpHQG6Qxr93yQeysoqvC3KSW2Q7w1k4L7Cd97nzhEb/eGZtfsDHt18r1YmINqLEPKM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=kfSIlFZA; arc=none smtp.client-ip=209.85.161.51
+	 MIME-Version; b=rIuzpxNqSDfbp3DJI0PVg5ppP2Db0ihLxs97K/k1AuxmWXbi/FHw+d5dFi+7JTy+ClrpGdaCe0ac/gd6Gr4yymoqLMI82aB2w9RsmPfAu6b+2SbylCJfcypO0qXrK9R9FFx/Y+L7vIV5KONGPs75I0M5IMpFNRKBVjSVErdrxzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=RAxgGIe7; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kfSIlFZA"
-Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-5994e320086so2123255eaf.3
-        for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 16:36:05 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RAxgGIe7"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1d71e1d7c78so19773055ad.3
+        for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 16:36:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1705970165; x=1706574965; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1705970168; x=1706574968; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=k6q/05jnWeDl9wgQC0c2qm9hOe5mPaDwj5Q60EimLqQ=;
-        b=kfSIlFZA6fnZU+ngo0vOwEzFDExHHTpN9Sow18ZXhBmwklUjezd2BJwZiMKy0piJTl
-         4S/GC0HoUkS+YyL+Os4PbRA3MBBX89iR5oWnbdTnM7yJzHxrTZIRFmOU53gEIPpylooi
-         prjdon2a1bSZf5Zp3sMoN16NHSNlQWhdqYDCk=
+        bh=U7ZTM5SgKNIL4BhjlzbkN6VUe2+U+pKLPfyRCBZRraY=;
+        b=RAxgGIe7WpZkyy1/QIFTkVXwi6QA8CPIs5r29T/otOrJZOPxH21Qa5Tj8m3RlYy0bs
+         3LN+MybCVhxFdCBWuEQyLGQZ/VVkh0+mpkQn2+Zf2avlmGyhq/G1RjywwWg7kgyv/4Km
+         RMGLGV/nM5b4HYjpBLnA9FUGjnX4+z+2w4Ni8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705970165; x=1706574965;
+        d=1e100.net; s=20230601; t=1705970168; x=1706574968;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=k6q/05jnWeDl9wgQC0c2qm9hOe5mPaDwj5Q60EimLqQ=;
-        b=m2dSp/aDReypOSd8loVvgltkACODcdiwz6bhEQn/F/gdpoCHO6s/g6S116pUKNmviR
-         u8tDtFJ37DG4/2jh5jFl5V0w5SyHsMKeMyOvQ407IM2qL694LD24dedRqmvNDR5iv1wK
-         JW8WFqnxlb84liCamAuDK356RyHfP4/FUelmyFaDj5ZD7E475HAnnTnh/yNq+2jag/NI
-         2woEwqc48SX3Sx3JpCOOzZBQurMPDbW3ysVNqdw6moXoJ9D4HMeqo+58DWBChKjNQ55A
-         F1NpDrlDrXtqtswWD2vOEEWW81VonyEDSjIph9aL4XFriU6dcAdt4OP8ED4Pk0xIJgjE
-         KAqA==
-X-Gm-Message-State: AOJu0YwAswHT5n3iHUCiRjH9QsfQP9P9z6pzjhHxdvbb7P89kpYtC4qS
-	jDLX53+gftb/phbW8qdyvP7OVFvUetBT8jvtYk3cB1UDjbjbfZw+IaOxScfjVg==
-X-Google-Smtp-Source: AGHT+IFKzSLUEO//rfGN7z0yklmQ5nmdIr50yIhfprlff4HJFkLJGsjAr2HPDwPu40EicdjBjXXTcQ==
-X-Received: by 2002:a05:6358:6f89:b0:170:c91a:b466 with SMTP id s9-20020a0563586f8900b00170c91ab466mr3835144rwn.23.1705970164998;
-        Mon, 22 Jan 2024 16:36:04 -0800 (PST)
+        bh=U7ZTM5SgKNIL4BhjlzbkN6VUe2+U+pKLPfyRCBZRraY=;
+        b=n15k1uPUtG5BjHp7yM6v+jbLNIbvVhzXsp7vO2q09Emw76avR2cJTvOFECNcq9E/iV
+         vqLQeyCg6rVD4/32TzFyy0kQhWadjr2yErLKC/4x4T7bf5x95c5ACB8fc+2JWWBeiD6k
+         b2csgHMknUQnC1yZiMxRqa3KMcnS9CAZ+/foCLWljt8Wy1o77VVp3ruQ/gOkl7on7ndV
+         j8Zq7C656fsZyVY394gM6DUmmVoU2EpF7mh42RlVTQIXdTNwVm43oSz1aF6wZ6D7JuwY
+         FpjoUTAv2LBuQHhSTbkecglUFJDQadpIr/wYQADoR+RvfXxctrjeITUD9N1XqCiKPRuB
+         0UGQ==
+X-Gm-Message-State: AOJu0YwhwkqyNsg1/h1rCUUODeXShzQyaCd2obYC59H+dxwHJ0HjNvtG
+	x97jJHY0c+Ur0ROSjttpfcvnjyOH3AQFUBqDWl1qGIQcbC1XRzh6Q+rN4MEHa/degBkzoA+p0AA
+	=
+X-Google-Smtp-Source: AGHT+IHma0YydFHbhFfrWsggKZl6acEMucYTfJQJ8bR7gd8MhZKLGwEpOVissYArHVSd6tQkC7YMdw==
+X-Received: by 2002:a17:902:f80d:b0:1d7:1df6:4511 with SMTP id ix13-20020a170902f80d00b001d71df64511mr2230166plb.136.1705970168258;
+        Mon, 22 Jan 2024 16:36:08 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id 8-20020a631648000000b005ccf10e73b8sm8711311pgw.91.2024.01.22.16.35.56
+        by smtp.gmail.com with ESMTPSA id bc1-20020a170902930100b001d6f33c6541sm7744955plb.285.2024.01.22.16.35.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 22 Jan 2024 16:35:59 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
 To: linux-hardening@vger.kernel.org
 Cc: Kees Cook <keescook@chromium.org>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	linux-sh@vger.kernel.org,
+	Russell King <linux@armlinux.org.uk>,
+	linux-arm-kernel@lists.infradead.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 73/82] sh: Refactor intentional wrap-around test
-Date: Mon, 22 Jan 2024 16:27:48 -0800
-Message-Id: <20240123002814.1396804-73-keescook@chromium.org>
+Subject: [PATCH 38/82] arm: 3117/1: Refactor intentional wrap-around test
+Date: Mon, 22 Jan 2024 16:27:13 -0800
+Message-Id: <20240123002814.1396804-38-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240122235208.work.748-kees@kernel.org>
 References: <20240122235208.work.748-kees@kernel.org>
@@ -71,19 +70,19 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1873; i=keescook@chromium.org;
- h=from:subject; bh=ZK9PQLCXLKqeI6EmNJVF0wuj6cnB4GzhbTbrgojBZ9E=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgLPxEAqie9ltCp6SXpHxJz4a8frf9JpRCdW
- Ks3k+P95JSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8ICwAKCRCJcvTf3G3A
- JvckEACcdyYY2SIWpI3UA8mAOkYcOxPIionsaXUa6hl6QfIhatPHcfLoS0jDS13mORx6DesE8QR
- cEMphGUFZaW309UODp7aj2yCE0TFoSPXkaVTK17BfmoRQIwhtk0f8XfbAE5ingmsTuXMtAnJOsC
- TuJCmFXEgdPGKvUH3Xb36aFDcfbo+XCAUnEJNX2SZCgGukPkeLLLbjS8PvuLCJtMMEnECnnR1B1
- G/OOQHRWemIAHGZHOxhqiqTULKLtQDEb9ah+eWfzVXVhPlSrg2dTXOvPz6UzqYDBuoGKwF5BOIt
- eXzxRTA/iyaVaOWQawo8BpS7RbJQO6ZgXrwtWcTjjEheh7JWOgHGzCIKRfW2kG45QTP3evtFpIA
- kOvZdB51R6QuF6t47RBV550QbgsF80t2UmsPYjsToEE0nPBdZ26Iq3l2lQxqDG1fxHv71r2LzjW
- DH+rai0uNuRUpzJ7IMpon9RPoW2yuFaProOmaiX21mVY9baklpdewo53p9mh/6iRCJ/vuUq/xSi
- kmUDoE7kbNyXIda7pkfffdCgpbBKQDzjA8F8iTmT9Zrw/O0z3Om2bC/qlgXNnZQLwenVATU5Qrj
- 1otM6joYjNE87mYWGpZ614abu55pynw/87WeqCPNKZuArSS6+IqDTjPVGcwDtTjK4KqNff/y6iO TlhNUzg3ntPt4Qw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1869; i=keescook@chromium.org;
+ h=from:subject; bh=t5NjTIyb78Owo8zdIrnO+cNPZQCmas8okHDaZcCW+8I=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgIgNjftYd6KqWOKIJFbI/lZsVWsVXrAIYuR
+ 7MY5dEcPb6JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8ICAAKCRCJcvTf3G3A
+ JsJMEACd02wCA8LfA0u8syRk4/Rp0JpgNpsiW+94NxRf9Xb/Oa1P5P/23a62lAN63yHc33ODE4L
+ M3ih112Dkk/GdYQYFQoseAYyd9wEwaRrK6OoELlJ0Ze4FwF5E9bPBzZBN+AToRmXDARPSePbk6Q
+ HZi6hgbD4OnzpQBqRmCSRJL0lJyo2ziVbh5BXwDaxazgKG1QvTQQhuL4CBsH8QymXeO1WoobbQk
+ 26Lf+jshILYsRLrtCn0FlcZsh6mlBSxO0KJ4CUeMdPyXb/n97DlDo9ZRsMvL5zEVKBIg+JxLLAB
+ eiERpGMH5u8wbAPvM68kknVE/5x/EhJxjD/72ZmB8fLPsBwqyfIi9/nCtDWqnxR+s8y62/FagId
+ vKwupeZJckFZhlj3FplDpT5AgCdjiYDr04S5TE2z7ZeLF88go9lfifcAgNHiaMV2wVUow1AxKoR
+ zhpXpqgauLnNTNDDvyIpLRyEB2bYOzXIbRViZ4g9pC6cZ61woUKFcXLKdlAzNydxV8+S0EGFsPY
+ LlHwmd9SZ6ywdnnVcm7iVBZb85cRIWlqIuvHSZrpSZPbpuYmgm1uUl3D6tLwHejiVVkF8Aj/osn
+ muUmAXMDNq1t61UekRGqmWwWEgZp9DdjcwBm/v9dRMK2z0ksyJYYhrFC7XUBmm6XVbRptGwp9ZQ Cpx0SvAPk2bRjTg==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
@@ -108,28 +107,26 @@ Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
 Link: https://github.com/KSPP/linux/issues/26 [2]
 Link: https://github.com/KSPP/linux/issues/27 [3]
 Link: https://github.com/KSPP/linux/issues/344 [4]
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: Rich Felker <dalias@libc.org>
-Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc: linux-sh@vger.kernel.org
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- arch/sh/kernel/sys_sh.c | 2 +-
+ arch/arm/nwfpe/softfloat.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/sh/kernel/sys_sh.c b/arch/sh/kernel/sys_sh.c
-index a5a7b33ed81a..e390caeb8c00 100644
---- a/arch/sh/kernel/sys_sh.c
-+++ b/arch/sh/kernel/sys_sh.c
-@@ -66,7 +66,7 @@ asmlinkage int sys_cacheflush(unsigned long addr, unsigned long len, int op)
- 	 * Verify that the specified address region actually belongs
- 	 * to this process.
- 	 */
--	if (addr + len < addr)
-+	if (add_would_overflow(addr, len))
- 		return -EFAULT;
- 
- 	mmap_read_lock(current->mm);
+diff --git a/arch/arm/nwfpe/softfloat.c b/arch/arm/nwfpe/softfloat.c
+index ffa6b438786b..0635b1eda1d3 100644
+--- a/arch/arm/nwfpe/softfloat.c
++++ b/arch/arm/nwfpe/softfloat.c
+@@ -603,7 +603,7 @@ static floatx80
+     roundBits = zSig0 & roundMask;
+     if ( 0x7FFD <= (bits32) ( zExp - 1 ) ) {
+         if (    ( 0x7FFE < zExp )
+-             || ( ( zExp == 0x7FFE ) && ( zSig0 + roundIncrement < zSig0 ) )
++             || ( ( zExp == 0x7FFE ) && (add_would_overflow(zSig0, roundIncrement)) )
+            ) {
+             goto overflow;
+         }
 -- 
 2.34.1
 
