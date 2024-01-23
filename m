@@ -1,72 +1,73 @@
-Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD2115AAD7
-	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 00:29:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE58115AADC
+	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 00:29:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705969752; cv=none; b=RUs5ocwdl+NQHtSlEeaSueV0FCwhNAi/6T3l9Urqz2lTjiBHgaat/N4B9oa2cUFru5GF6BTwNqi6cd/F5RXOmQhrqA/ZdqtEIyLszFDKEwxMgPwWCpYqXYkku0P4l75U/2KNWrwPbF4ZHXu/7/qf8bdZ+tTjYbIldXUsXk3PrHY=
+	t=1705969752; cv=none; b=B5i24S839JXXmGWR8pLs73XtYxRMUectzpDaJWJYWWgUXswv+h0K7emrecPxI8v1eJT5p9hlZHi+j2UXP7mw3/aWzHuw/LVkd2++Lqr8t+ksPU/Og9Gl7R6BCM746ENuM5uA3kjX+fdtCqwwaZmpSLB29G1qvw/b8vMjSK5+1T0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705969752; c=relaxed/simple;
-	bh=uRCkCvFsyXVpf/RtG8GCWMvVuyi59RVZ9Ft/3XBajpQ=;
+	bh=sfFm968ER0g+7mpUBiy9zsTjSD8V36BGzdg8Ckdsgr4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uBBOEw1jBHKS1H1ulBF0XteDsT0cvZchFA0L37XBGl0bArFtWSukddMTK/jZHN3Tkk2jn/xhpE1CFzbResNslt0TotrTp3rOzLK7z/Ag9k4zRNPmJoEo+kC4FV/cUBsgT1SZOuyjmTtgWfWuYW1TOiRfhxt82mVDXA9S4uhzpB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=HTDd9vmf; arc=none smtp.client-ip=209.85.161.54
+	 MIME-Version; b=R2Qwt8VOlDv0BktF5aFvSdEK8+vMEsmMqr7QnrTtnKb7us+WXaAkT0B4H8IzbV0WwzBgC1+dVPWyyHtcE2lzCGoXbpSRMcqfGgnQZR7KKvRw8JVLmme0oQ4fr5ePCxb1CMOozWc/PInPmdTzHoNBiVdfKsbt1Wg9qOESJ/C8vCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=LXDP5Rb/; arc=none smtp.client-ip=209.85.215.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HTDd9vmf"
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-595b208a050so2339949eaf.0
-        for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 16:29:09 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LXDP5Rb/"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-53fa455cd94so1773627a12.2
+        for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 16:29:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1705969749; x=1706574549; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1705969750; x=1706574550; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HbagvK/BQHg13GLlZBGhyNRG5sgL74HVCqkvwUtdz7s=;
-        b=HTDd9vmfMxS46oacnYCdJMd1aK63IRP3LlrUUFqEmg03ZV/vGdiTTd7LvPfz8BBW/L
-         qr9ZquIFSeKht3Xb4VOrKDkGjfVkrir3csOYYaTazijM+1pWg0U4va6TBbNZoC5aksvs
-         g15ZsvMVBstvuzMjdMpI+7xwTdA22rqtWlqQ0=
+        bh=+mLSKitlZEHkOhHFi0dPXu2bMCmR94CcgGqjj67vCaY=;
+        b=LXDP5Rb/nU/4aB5TMuWOFdFA2o4C64ikbJw3TuTi7RptJKH4zfl3RJ/OR31Vgy6uKv
+         ny7OrYLKlFNheIZqyEHQcj5u4uE36ChnU1gK1WdxNj6Q0mnvgw2y9oM62WGuEP/o3ZdX
+         NpzMGzV7/O9BRvleucSJywBcIDGPxUjhW21SY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705969749; x=1706574549;
+        d=1e100.net; s=20230601; t=1705969750; x=1706574550;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HbagvK/BQHg13GLlZBGhyNRG5sgL74HVCqkvwUtdz7s=;
-        b=oPSYFfR6/pLHIdVnbr8KgFqdj83EBLRo0ZeJjT1F3ERvYTS+ogWZyxcVK3EM9YUFts
-         w+ogETMHNxxEM4yPW2q7jsk/E+MZI8qac8HDBEaWcEYzBfKUJ5kutOU/iIxMdoFx9WqI
-         Y7XpX224AY+z21z9Au2GUhM3c4FNTzsZoxeUjBRpNS9WeBhdEz78c+8LvfnQgW6GDABL
-         ArQDEU27u7XsEoGxDTmUixzY+M+j1L0WOPVWd23rgJ9z4Dep4y69N/gIF5WjRq2N6rs1
-         jin6FsA2Fu5xnZ7LoHWhItORXMbplZFJUUJ8aevslUcEe1ya8fBrnb795j8ka2Nbqqm3
-         Fxiw==
-X-Gm-Message-State: AOJu0YxgQMtyc/rPsQapXV6m16WzoYxjc8MINGuevkTIuE887yAU8DpS
-	KaD3e1BtuzBPM7vDbfw9NBj9KtaiABlGyXPQJVxLf4+5XIry/6uF2ww2od7b4w==
-X-Google-Smtp-Source: AGHT+IE3YZZUAbSaTl6FBGOnqrae/sTpKUCuHtMEUe62rjmX2GkYQhqBolPrkv+LnabYxlrO3YWYvg==
-X-Received: by 2002:a05:6358:916:b0:176:5d73:376f with SMTP id r22-20020a056358091600b001765d73376fmr1694130rwi.48.1705969748687;
-        Mon, 22 Jan 2024 16:29:08 -0800 (PST)
+        bh=+mLSKitlZEHkOhHFi0dPXu2bMCmR94CcgGqjj67vCaY=;
+        b=SfeowXdGXco0000nj4/GYkA7K5/giHCNvmQn0dZzNTKfe7uQXa6nYy2OYEpc4K6l9u
+         xI18LG17kfVmyx6SOlj4Cee2j4960x3VgCFXLmQYOZqlwEQ1A4L+WNDgxobDZ/V+7aaZ
+         T1OPg3jgJpou567/OXDkNBjGPoziDekUTn0y7FMV2lwsKOdMwUsstclP2Mrwr6eMipdg
+         BlBKNlp6GQebMD2M9bOrxmvavIjOyceXASZmztS/6mUog1bAEeWeOq9n054gIZiTNWtu
+         3VwAOEwkXeCRar6gqS/QyVZ7xzNKVLkiFfjY/n6GuUtjXZGT4oUntqeJhsk68yr3ZnFJ
+         NTIg==
+X-Gm-Message-State: AOJu0YxucIL3t2KgR1nohP3om1xqxaDlX0bo7GwBeBT/5uRXXnqrkBZY
+	1b99CqXyyOFCvP1u0/kU+/BOfU4FDtnDZLHA+eXq0s4RHRzASJ+dfdDwyU/6tA==
+X-Google-Smtp-Source: AGHT+IGrY9MQG0ft34pGrqx+WgVWJ0LldxehDkYnLe9iXGm0anLbICr1j+vq5RPEd47+Q6ZueeEblA==
+X-Received: by 2002:a17:902:b112:b0:1d7:56c3:75f1 with SMTP id q18-20020a170902b11200b001d756c375f1mr1421910plr.122.1705969750268;
+        Mon, 22 Jan 2024 16:29:10 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id h3-20020a056a00218300b006dbd341379dsm4094216pfi.68.2024.01.22.16.28.46
+        by smtp.gmail.com with ESMTPSA id e2-20020a170902f1c200b001d7313140b1sm4196654plc.202.2024.01.22.16.29.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jan 2024 16:28:53 -0800 (PST)
+        Mon, 22 Jan 2024 16:29:08 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
 To: linux-hardening@vger.kernel.org
 Cc: Kees Cook <keescook@chromium.org>,
-	Karol Herbst <kherbst@redhat.com>,
-	Lyude Paul <lyude@redhat.com>,
-	Danilo Krummrich <dakr@redhat.com>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Dave Airlie <airlied@redhat.com>,
-	Ben Skeggs <bskeggs@redhat.com>,
-	dri-devel@lists.freedesktop.org,
-	nouveau@lists.freedesktop.org,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	Florian Westphal <fw@strlen.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org,
+	netdev@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 48/82] drm/nouveau/mmu: Refactor intentional wrap-around test
-Date: Mon, 22 Jan 2024 16:27:23 -0800
-Message-Id: <20240123002814.1396804-48-keescook@chromium.org>
+Subject: [PATCH 64/82] netfilter: Refactor intentional wrap-around test
+Date: Mon, 22 Jan 2024 16:27:39 -0800
+Message-Id: <20240123002814.1396804-64-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240122235208.work.748-kees@kernel.org>
 References: <20240122235208.work.748-kees@kernel.org>
@@ -76,19 +77,19 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2285; i=keescook@chromium.org;
- h=from:subject; bh=uRCkCvFsyXVpf/RtG8GCWMvVuyi59RVZ9Ft/3XBajpQ=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgJXxmYjo3BZJuP6sKHQxKb/M3OqOpXccNUZ
- qhhlaPYu4iJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8ICQAKCRCJcvTf3G3A
- Jh/nD/91bB80GL2rgD2Qu9VZOfFU0YicaQRtXMeoaSbnOb9C6bplAraUcHoNvH0F/nzlJcxXU25
- tdFLoL0nVtuTpAc0QwLgnxaobRa9aNgWmW3DUkrO812C5TjVwlXYjliSrA5pLSd1FCOwfEGcLUB
- OasKeE6baUkZj6ytjNign6jV35ncfvu3y/C2MxtKBkts8n1Zwzi540pe8I5UtlySd6rBQjtelTV
- w6SFBV5r1npI2fEZqGplZzZO7EajApmc7jJz1thGgwOaC77JZl1JuklmvrMC4ret/lDs/ycUAAk
- D8MK5b6uevWOPdEY7obK82UJzkJkmcTaxAOtZlX95h01L7rkYBfeFsMYiZxSkbcDNRIQoWxack0
- kuRc0oFbZDU4aaCtjbvKo6CHFYuBsv1B3qzy/dUdlEfz7Q8x7GSiUp1v2zZMHdUUy9zFSFFvHoE
- kZoHAeuRu/Gh7kJhCX7dMPQXqmh1IyQcF7QoTRKQyay+Kirq8rSRKVyOK6qdr+F/8jCxx92g3nD
- 2liBspnno23rcfzBqyJV5XbpEehmcvR0R30g5ubq4aeUy2+NIh26YpvJYBT9PIeuAR6WWh7/jm3
- dRFK6//1Q7sP6hjFLcugQJcs/LAqMyL9p1u+btGAthR59AQsdV1I6mj3Cqxb1SXG6UXNsaiPyRb lV4UD0ZObcOgDAQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2183; i=keescook@chromium.org;
+ h=from:subject; bh=sfFm968ER0g+7mpUBiy9zsTjSD8V36BGzdg8Ckdsgr4=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgKYkU8DxU6eHYCBe6vz1zpyDMyVzXW4j2c/
+ 6DTcxcBaQmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8ICgAKCRCJcvTf3G3A
+ Jp+AD/46wcCh8Srst3UxH7Lyw5MG3LkRtUVrmbc4rNc6HLYVkN5hxDPTfR5v6ZnbYvrcY3DfFpt
+ 9WMJVlg/jp44Mqk4QAkWuEYAizZjTv5lwBrLJOeC0uq3FiRv7sFMT0ulGhCS+VYVkHlA7XB7vR1
+ MmG7M2/24UnH0N9fZ+7JPMVUY+pYnS9hlrpgB4se6e1XatYdKRe2/iEGCIksdXmXkaoRwEhS4OD
+ 7E6W9aO9/1ZcsdkripFuDU6Y3ZnXOZs6n6L5M3IJPMlx9UyB8ALK41BlHPkbDbifHKGXVNmhOwb
+ HmzFCqfvx56BB+0Wh3YImRj5SPxxhVIOXJLg2SL9AnxsfGlenBYt4PsP/nINeqRoK4SriXQ1ZVx
+ A8F9g7q/0fYbNlWOGnAaB+L070tVt1AO03SkXcHssyCHMj67illZ5F11k6WXyTTH/TBv56WLUbL
+ sqDjoJJaIFkU07SIQBRNMf/0pn2aDjru0143ldKfWm6UgeWUDGzBPLBuB7yCSzZTpYK7QjmIOux
+ jZNgE79r+yrBg6Cn7T5tXCBAkoRDVLME8tHidPdZGNKe0EAfi4WXXvVEwHeYboA8DPbIal0fKFl
+ 48oFeI2TLeS8cWHi576qMGc07tAXDixqU5ocHqyWj62iBwljid0v9hV7SpV2DTd13zjC96ftjzq sT9zNmIYvbNtyUg==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
@@ -113,33 +114,39 @@ Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
 Link: https://github.com/KSPP/linux/issues/26 [2]
 Link: https://github.com/KSPP/linux/issues/27 [3]
 Link: https://github.com/KSPP/linux/issues/344 [4]
-Cc: Karol Herbst <kherbst@redhat.com>
-Cc: Lyude Paul <lyude@redhat.com>
-Cc: Danilo Krummrich <dakr@redhat.com>
-Cc: David Airlie <airlied@gmail.com>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Dave Airlie <airlied@redhat.com>
-Cc: Ben Skeggs <bskeggs@redhat.com>
-Cc: dri-devel@lists.freedesktop.org
-Cc: nouveau@lists.freedesktop.org
+Cc: Pablo Neira Ayuso <pablo@netfilter.org>
+Cc: Jozsef Kadlecsik <kadlec@netfilter.org>
+Cc: Florian Westphal <fw@strlen.de>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: netfilter-devel@vger.kernel.org
+Cc: coreteam@netfilter.org
+Cc: netdev@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/netfilter/xt_u32.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.c b/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.c
-index 6ca1a82ccbc1..87c0903be9a7 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmm.c
-@@ -1291,7 +1291,7 @@ nvkm_vmm_pfn_map(struct nvkm_vmm *vmm, u8 shift, u64 addr, u64 size, u64 *pfn)
+diff --git a/net/netfilter/xt_u32.c b/net/netfilter/xt_u32.c
+index 117d4615d668..8623fe2d97e9 100644
+--- a/net/netfilter/xt_u32.c
++++ b/net/netfilter/xt_u32.c
+@@ -58,11 +58,11 @@ static bool u32_match_it(const struct xt_u32 *data,
+ 				val >>= number;
+ 				break;
+ 			case XT_U32_AT:
+-				if (at + val < at)
++				if (add_would_overflow(at, val))
+ 					return false;
+ 				at += val;
+ 				pos = number;
+-				if (at + 4 < at || skb->len < at + 4 ||
++				if (add_would_overflow(at, 4) || skb->len < at + 4 ||
+ 				    pos > skb->len - at - 4)
+ 					return false;
  
- 	if (!page->shift || !IS_ALIGNED(addr, 1ULL << shift) ||
- 			    !IS_ALIGNED(size, 1ULL << shift) ||
--	    addr + size < addr || addr + size > vmm->limit) {
-+	    add_would_overflow(addr, size) || addr + size > vmm->limit) {
- 		VMM_DEBUG(vmm, "paged map %d %d %016llx %016llx\n",
- 			  shift, page->shift, addr, size);
- 		return -EINVAL;
 -- 
 2.34.1
 
