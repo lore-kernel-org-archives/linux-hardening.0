@@ -1,39 +1,35 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D9975A0E1;
-	Tue, 23 Jan 2024 09:53:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 420355C8E2;
+	Tue, 23 Jan 2024 09:56:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706003639; cv=none; b=OvVOB1odNxO/5IUqezOw9M7kPmhZrtKnekQ95T6WWvhhxAjEncIqPZ734JJeXfQXILKtHtN4rrb2Ike+8euv2Nz6OT1MABXRHQXUHf7r4WY9ciiOsWAJdbYVMWYJrp2asXyF93kr14PTvulN9CqlOBuFRUbktSqIWJlFUneRMVQ=
+	t=1706003789; cv=none; b=rhT6MbEkQtXAJoThkEqRd415xbs6M+2LgMcQgnJuB66O7VCRvbWa8oH00X5R8Ndvuey9qzjokNuRmV2a/jfZ7bGvWxCeFk8QEwkGv5HOjx1TimA0T7wsIMZ0E0RpaLmGoxFa8EueI9cl5VX67/0zyKfFI3zuqAlrH/G3uhcMCEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706003639; c=relaxed/simple;
-	bh=6I1RyUH8EJbIPoPIXyA3hEnC5RVsu6NE5fOFPtUVz70=;
+	s=arc-20240116; t=1706003789; c=relaxed/simple;
+	bh=M9SACN960vZSXDXbLdUBVI/WCfjWRLjA6ZN/WSkmheY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jQ6qmX1QDvlebCm/o9ZjJt70giMBhDXfWHK+SdQf9VC6WCk5iyoh419hGUabLZhbxzTsL/GogNdHl/HlUjBkJk7mRylF/Uxz8qj0t0HVTtLfBcweotXRMl3q8G0uqtmQFkVTTu2gbTpHxj5vv7hz+72w+F0MBaUyonpCLj2LRnE=
+	 Content-Type:Content-Disposition:In-Reply-To; b=FBnl2UmJR89IM9MeyFDGJaYXENCWP8EjtkxCA96rHFVDndGH/UAm0lMbUpQp4I7btJml9WYoLBKoFjk3OtYyj1iAKqzEeAdXsnGBd80XOUez0JpSBsKBScdBwjDMRRp0+xuLGZ1q1nxctouHQyEbQdjini66qPWHiQUlclHwIic=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 15AEB1FB;
-	Tue, 23 Jan 2024 01:54:41 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 036851FB;
+	Tue, 23 Jan 2024 01:57:12 -0800 (PST)
 Received: from FVFF77S0Q05N (unknown [10.57.48.47])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E68F13F5A1;
-	Tue, 23 Jan 2024 01:53:53 -0800 (PST)
-Date: Tue, 23 Jan 2024 09:53:51 +0000
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 472FA3F5A1;
+	Tue, 23 Jan 2024 01:56:25 -0800 (PST)
+Date: Tue, 23 Jan 2024 09:56:22 +0000
 From: Mark Rutland <mark.rutland@arm.com>
 To: Kees Cook <keescook@chromium.org>
-Cc: linux-hardening@vger.kernel.org, Will Deacon <will@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
+Cc: linux-hardening@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
 	linux-arm-kernel@lists.infradead.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 11/82] arm64: atomics: lse: Silence intentional wrapping
- addition
-Message-ID: <Za-Mr7YFhS9iXiPW@FVFF77S0Q05N>
+Subject: Re: [PATCH 38/82] arm: 3117/1: Refactor intentional wrap-around test
+Message-ID: <Za-NRm5e_-Cfz1Nl@FVFF77S0Q05N>
 References: <20240122235208.work.748-kees@kernel.org>
- <20240123002814.1396804-11-keescook@chromium.org>
+ <20240123002814.1396804-38-keescook@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -42,75 +38,58 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240123002814.1396804-11-keescook@chromium.org>
+In-Reply-To: <20240123002814.1396804-38-keescook@chromium.org>
 
-On Mon, Jan 22, 2024 at 04:26:46PM -0800, Kees Cook wrote:
-> Annotate atomic_add_return() and atomic_sub_return() to avoid signed
-> overflow instrumentation. They are expected to wrap around.
-> 
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Boqun Feng <boqun.feng@gmail.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  arch/arm64/include/asm/atomic_lse.h | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/atomic_lse.h b/arch/arm64/include/asm/atomic_lse.h
-> index 87f568a94e55..30572458d702 100644
-> --- a/arch/arm64/include/asm/atomic_lse.h
-> +++ b/arch/arm64/include/asm/atomic_lse.h
-> @@ -79,13 +79,13 @@ ATOMIC_FETCH_OP_SUB(        )
->  #undef ATOMIC_FETCH_OP_SUB
->  
->  #define ATOMIC_OP_ADD_SUB_RETURN(name)					\
-> -static __always_inline int						\
-> +static __always_inline __signed_wrap int				\
->  __lse_atomic_add_return##name(int i, atomic_t *v)			\
->  {									\
->  	return __lse_atomic_fetch_add##name(i, v) + i;			\
->  }									\
+The commit title is odd here; '3117/1' is the patch tracker name for the last
+patch. The title should probably be:
 
-I'd strongly prefer using add_wrap() rather than annotating the function, i.e.
-make this:
-
-  static __always_inline int						\
-  __lse_atomic_add_return##name(int i, atomic_t *v)			\
-  {									\
-  	return add_wrap(__lse_atomic_fetch_add##name(i, v), i);		\
-  }									\
-
-Likewise for the other instances below.
-
-With that, this looks fine to me.
+	arm: nwfpe: Refactor intentional wrap-around test
 
 Mark.
 
->  									\
-> -static __always_inline int						\
-> +static __always_inline __signed_wrap int				\
->  __lse_atomic_sub_return##name(int i, atomic_t *v)			\
->  {									\
->  	return __lse_atomic_fetch_sub(i, v) - i;			\
-> @@ -186,13 +186,13 @@ ATOMIC64_FETCH_OP_SUB(        )
->  #undef ATOMIC64_FETCH_OP_SUB
->  
->  #define ATOMIC64_OP_ADD_SUB_RETURN(name)				\
-> -static __always_inline long						\
-> +static __always_inline __signed_wrap long				\
->  __lse_atomic64_add_return##name(s64 i, atomic64_t *v)			\
->  {									\
->  	return __lse_atomic64_fetch_add##name(i, v) + i;		\
->  }									\
->  									\
-> -static __always_inline long						\
-> +static __always_inline __signed_wrap long				\
->  __lse_atomic64_sub_return##name(s64 i, atomic64_t *v)			\
->  {									\
->  	return __lse_atomic64_fetch_sub##name(i, v) - i;		\
+On Mon, Jan 22, 2024 at 04:27:13PM -0800, Kees Cook wrote:
+> In an effort to separate intentional arithmetic wrap-around from
+> unexpected wrap-around, we need to refactor places that depend on this
+> kind of math. One of the most common code patterns of this is:
+> 
+> 	VAR + value < VAR
+> 
+> Notably, this is considered "undefined behavior" for signed and pointer
+> types, which the kernel works around by using the -fno-strict-overflow
+> option in the build[1] (which used to just be -fwrapv). Regardless, we
+> want to get the kernel source to the position where we can meaningfully
+> instrument arithmetic wrap-around conditions and catch them when they
+> are unexpected, regardless of whether they are signed[2], unsigned[3],
+> or pointer[4] types.
+> 
+> Refactor open-coded wrap-around addition test to use add_would_overflow().
+> This paves the way to enabling the wrap-around sanitizers in the future.
+> 
+> Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
+> Link: https://github.com/KSPP/linux/issues/26 [2]
+> Link: https://github.com/KSPP/linux/issues/27 [3]
+> Link: https://github.com/KSPP/linux/issues/344 [4]
+> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  arch/arm/nwfpe/softfloat.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/nwfpe/softfloat.c b/arch/arm/nwfpe/softfloat.c
+> index ffa6b438786b..0635b1eda1d3 100644
+> --- a/arch/arm/nwfpe/softfloat.c
+> +++ b/arch/arm/nwfpe/softfloat.c
+> @@ -603,7 +603,7 @@ static floatx80
+>      roundBits = zSig0 & roundMask;
+>      if ( 0x7FFD <= (bits32) ( zExp - 1 ) ) {
+>          if (    ( 0x7FFE < zExp )
+> -             || ( ( zExp == 0x7FFE ) && ( zSig0 + roundIncrement < zSig0 ) )
+> +             || ( ( zExp == 0x7FFE ) && (add_would_overflow(zSig0, roundIncrement)) )
+>             ) {
+>              goto overflow;
+>          }
 > -- 
 > 2.34.1
+> 
 > 
