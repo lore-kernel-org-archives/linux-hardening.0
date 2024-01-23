@@ -1,70 +1,67 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F22A5FF00
-	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 00:36:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2AC75FDCD
+	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 00:36:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705970168; cv=none; b=o4JVtQ6zBMz4KTLRIAiC6NP1vkiWEwrKnEj/S7hDWHk9QTyYKQsSOfNPPj/4dKeJvmHNZoQG1BhikntlLgGJ937mWhwwdAR/6hVvj+8f1zZ3ZwHMgVttGHKeKTAZEoHLx1BCMYYGeq9/HuFLY6EM1hAs9KK0jjp7C0fvfxMdpW4=
+	t=1705970168; cv=none; b=BkqVabZcXQW5j8mvj9IVUt/DZbXm09jX81L5hmPNccErzY5eTl0d2VQkAQPSG1a+RNBtEwIb0HgR2rKvpWsfkPzKloJHg5vz8DzNQAnHA7Zszm/yOIA3mkV57U+sud0q0xoruv2O9j+R8A98b1ZrFbnxKYRiOdjtA7z1K3Goavk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705970168; c=relaxed/simple;
-	bh=08gzPVNqKaIThrka0PRUXmbx8gcHwrKCAMm1CuCF8P8=;
+	bh=ZK9PQLCXLKqeI6EmNJVF0wuj6cnB4GzhbTbrgojBZ9E=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=p9s5P26sa9O9POCmeqBQWflJzqGM7AAQ8y8FiWOkANmCML+90dlMytDjFJsEQLvlOs4i+5Qfg2/2edySYEykVTHUk/0Wef5cMofTxY3Vbj06u7Cdv854xQpnYibvYZC0WlPgRb1abtDsU1jhNh8jXmtW9LVtuts2ndnXwGEuVWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=fRT0qu1b; arc=none smtp.client-ip=209.85.214.171
+	 MIME-Version; b=N+ZaFjb+n+o0T34M3YLrMGDR4meINTljSnVd9Pd8A39rxyk6KPkTQcQlAktMqMFHT8Bueh8zgNYe5BymU53QAORG4wKgSHf4/65r5NBuBpHQG6Qxr93yQeysoqvC3KSW2Q7w1k4L7Cd97nzhEb/eGZtfsDHt18r1YmINqLEPKM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=kfSIlFZA; arc=none smtp.client-ip=209.85.161.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fRT0qu1b"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1d751bc0c15so13286625ad.2
-        for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 16:36:06 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kfSIlFZA"
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-5994e320086so2123255eaf.3
+        for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 16:36:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1705970166; x=1706574966; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1705970165; x=1706574965; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=C0IWBalbPa7nBe+7qRPGByHWNgNICkmEQCfSed9PR50=;
-        b=fRT0qu1bXS9ZtGZoXpSXONIkIFh7UtLb2IsyepAXfL2Ah8wh6fmE1Rw/ORb449ACUy
-         l+r4Qk61/jFFe+d7sn6aEOzHuwc1rlvgXkxYKqu0ue9qh1HG3yPOQbdHILED/U1EvK8a
-         eVemySHgabNAisfyG01oG9nwc9qNLUogv+eAw=
+        bh=k6q/05jnWeDl9wgQC0c2qm9hOe5mPaDwj5Q60EimLqQ=;
+        b=kfSIlFZA6fnZU+ngo0vOwEzFDExHHTpN9Sow18ZXhBmwklUjezd2BJwZiMKy0piJTl
+         4S/GC0HoUkS+YyL+Os4PbRA3MBBX89iR5oWnbdTnM7yJzHxrTZIRFmOU53gEIPpylooi
+         prjdon2a1bSZf5Zp3sMoN16NHSNlQWhdqYDCk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705970166; x=1706574966;
+        d=1e100.net; s=20230601; t=1705970165; x=1706574965;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=C0IWBalbPa7nBe+7qRPGByHWNgNICkmEQCfSed9PR50=;
-        b=XjQDa/ECXe21zXhh5VTmAU/sKG1KL8qrTtsz2B5/muiM9vfdt92uYsjVBaMO+SemM4
-         1RKV+mi68T4rw8AK4pq4kfuZBRbS8gODcj7XxIt9U31R6y9sSGASf0JtbE35YW9ozvcL
-         KGfZrNpbwCfotsD7LKx+swoAS+W8ewBuzNGNttJ9d4bdwT9h3J9QL77034UnkBW7Lsgp
-         PNNT8gGGvCxfjrBLhR+xaObDm+7ULIGB2Abd5i9laN3AnVW/9q/KQmz3OL37CKxGufyi
-         oXV8XE5z5qkxMS55u1qJGquIEx7UeObUC3hYOdAmYqZi7uxLSWQn+e6TnPvCiya2MwhN
-         QW/w==
-X-Gm-Message-State: AOJu0Yx5HJTanvjMfe6jEQ72XqM4WWPtCPm9jsS0ayolbYdVN64c2lFa
-	Z78gtIfj35uGWUkEpnJMyOGMGDKMkraddSBzzRQajXiXuV7d7sqpvOYs3NN7wLKGugHlfXEa5Tw
-	=
-X-Google-Smtp-Source: AGHT+IFAeQqI3FFXQ9+1Lb9KSwrHLPJKfBRcl5zF9RvXxq3cLLHLHaogLpM0B8iNqUxW5Y7pLSv+tw==
-X-Received: by 2002:a17:903:482:b0:1d4:79b6:101a with SMTP id jj2-20020a170903048200b001d479b6101amr4643124plb.41.1705970166511;
-        Mon, 22 Jan 2024 16:36:06 -0800 (PST)
+        bh=k6q/05jnWeDl9wgQC0c2qm9hOe5mPaDwj5Q60EimLqQ=;
+        b=m2dSp/aDReypOSd8loVvgltkACODcdiwz6bhEQn/F/gdpoCHO6s/g6S116pUKNmviR
+         u8tDtFJ37DG4/2jh5jFl5V0w5SyHsMKeMyOvQ407IM2qL694LD24dedRqmvNDR5iv1wK
+         JW8WFqnxlb84liCamAuDK356RyHfP4/FUelmyFaDj5ZD7E475HAnnTnh/yNq+2jag/NI
+         2woEwqc48SX3Sx3JpCOOzZBQurMPDbW3ysVNqdw6moXoJ9D4HMeqo+58DWBChKjNQ55A
+         F1NpDrlDrXtqtswWD2vOEEWW81VonyEDSjIph9aL4XFriU6dcAdt4OP8ED4Pk0xIJgjE
+         KAqA==
+X-Gm-Message-State: AOJu0YwAswHT5n3iHUCiRjH9QsfQP9P9z6pzjhHxdvbb7P89kpYtC4qS
+	jDLX53+gftb/phbW8qdyvP7OVFvUetBT8jvtYk3cB1UDjbjbfZw+IaOxScfjVg==
+X-Google-Smtp-Source: AGHT+IFKzSLUEO//rfGN7z0yklmQ5nmdIr50yIhfprlff4HJFkLJGsjAr2HPDwPu40EicdjBjXXTcQ==
+X-Received: by 2002:a05:6358:6f89:b0:170:c91a:b466 with SMTP id s9-20020a0563586f8900b00170c91ab466mr3835144rwn.23.1705970164998;
+        Mon, 22 Jan 2024 16:36:04 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id k17-20020a170902f29100b001d707a14316sm7490995plc.75.2024.01.22.16.35.56
+        by smtp.gmail.com with ESMTPSA id 8-20020a631648000000b005ccf10e73b8sm8711311pgw.91.2024.01.22.16.35.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 22 Jan 2024 16:35:59 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
 To: linux-hardening@vger.kernel.org
 Cc: Kees Cook <keescook@chromium.org>,
-	Jesper Nilsson <jesper.nilsson@axis.com>,
-	Lars Persson <lars.persson@axis.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	linux-arm-kernel@axis.com,
-	linux-crypto@vger.kernel.org,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	linux-sh@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 39/82] crypto: Refactor intentional wrap-around test
-Date: Mon, 22 Jan 2024 16:27:14 -0800
-Message-Id: <20240123002814.1396804-39-keescook@chromium.org>
+Subject: [PATCH 73/82] sh: Refactor intentional wrap-around test
+Date: Mon, 22 Jan 2024 16:27:48 -0800
+Message-Id: <20240123002814.1396804-73-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240122235208.work.748-kees@kernel.org>
 References: <20240122235208.work.748-kees@kernel.org>
@@ -74,19 +71,19 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2049; i=keescook@chromium.org;
- h=from:subject; bh=08gzPVNqKaIThrka0PRUXmbx8gcHwrKCAMm1CuCF8P8=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgIRQrU4z+xZKgZEZXKAJfo17xdTxqMyiWe6
- GGw7oiVmY2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8ICAAKCRCJcvTf3G3A
- JtNlD/0d9ZXpSr+O/WY+Z8RnA0WFcmb8q8dHDR+pV9DASBchjSH3T7j/DJE7/4sN+voKM6jipuP
- +b4X/XvukaDPGcJID6ZCEETKBPkMpdxZthLJ9z3AD+pID8v8vvqxW+pRFzY4po/kjeOset6zPFO
- 7YxbAUWVwSXk7QDgV3gYX/lK9QILRqXGRAhvOcubjgDREfAc2MbuJk4ItNqk2WcMnk53cEFtYji
- lJKFR1cHbwVPaSk2x/UmWTY9FIg9orR7rjJtFSCaZPayWmA4lNONN5MKTyl9QbNbB6LkGju5DJM
- Hd0T890SCjvldjd2bfSaiG9wW3fOFHydZMzdTnzla2TMofjeNAsC6odLW9rM59EO6ovdpQJ1M0y
- 4TeZl+acwIvrGJuRvXNx0Nokuls+m/qhpft8nMxOcVOmd3BVu+jgvguImnYNwmX/2gdr1tHBEEq
- uBNgF0pN3/zlUJqLU6Jaa55akZsk3vMrVRP+A2Tr00GdajqCWKlEYuwX7N2mQ+PojwYVoKRfsnA
- wgQYhoKfgkZAFdaSlsNJcKY6N951w+i8ooSo5xvTH/8LATZEBNEZ30239h/apCk/ho5GUZ/fXJM
- RLglccDfc4V+1WVhsOdPVy53he2MDI39X+mro/t056xBMjwT3L1D9ZvHF5GnpW4GVJs19uUshk+ ZHeju5Fy9h8Zijw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1873; i=keescook@chromium.org;
+ h=from:subject; bh=ZK9PQLCXLKqeI6EmNJVF0wuj6cnB4GzhbTbrgojBZ9E=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgLPxEAqie9ltCp6SXpHxJz4a8frf9JpRCdW
+ Ks3k+P95JSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8ICwAKCRCJcvTf3G3A
+ JvckEACcdyYY2SIWpI3UA8mAOkYcOxPIionsaXUa6hl6QfIhatPHcfLoS0jDS13mORx6DesE8QR
+ cEMphGUFZaW309UODp7aj2yCE0TFoSPXkaVTK17BfmoRQIwhtk0f8XfbAE5ingmsTuXMtAnJOsC
+ TuJCmFXEgdPGKvUH3Xb36aFDcfbo+XCAUnEJNX2SZCgGukPkeLLLbjS8PvuLCJtMMEnECnnR1B1
+ G/OOQHRWemIAHGZHOxhqiqTULKLtQDEb9ah+eWfzVXVhPlSrg2dTXOvPz6UzqYDBuoGKwF5BOIt
+ eXzxRTA/iyaVaOWQawo8BpS7RbJQO6ZgXrwtWcTjjEheh7JWOgHGzCIKRfW2kG45QTP3evtFpIA
+ kOvZdB51R6QuF6t47RBV550QbgsF80t2UmsPYjsToEE0nPBdZ26Iq3l2lQxqDG1fxHv71r2LzjW
+ DH+rai0uNuRUpzJ7IMpon9RPoW2yuFaProOmaiX21mVY9baklpdewo53p9mh/6iRCJ/vuUq/xSi
+ kmUDoE7kbNyXIda7pkfffdCgpbBKQDzjA8F8iTmT9Zrw/O0z3Om2bC/qlgXNnZQLwenVATU5Qrj
+ 1otM6joYjNE87mYWGpZ614abu55pynw/87WeqCPNKZuArSS6+IqDTjPVGcwDtTjK4KqNff/y6iO TlhNUzg3ntPt4Qw==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
@@ -111,30 +108,28 @@ Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
 Link: https://github.com/KSPP/linux/issues/26 [2]
 Link: https://github.com/KSPP/linux/issues/27 [3]
 Link: https://github.com/KSPP/linux/issues/344 [4]
-Cc: Jesper Nilsson <jesper.nilsson@axis.com>
-Cc: Lars Persson <lars.persson@axis.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: linux-arm-kernel@axis.com
-Cc: linux-crypto@vger.kernel.org
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: Rich Felker <dalias@libc.org>
+Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc: linux-sh@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/crypto/axis/artpec6_crypto.c | 2 +-
+ arch/sh/kernel/sys_sh.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/axis/artpec6_crypto.c b/drivers/crypto/axis/artpec6_crypto.c
-index dbc1d483f2af..cbec539f0e20 100644
---- a/drivers/crypto/axis/artpec6_crypto.c
-+++ b/drivers/crypto/axis/artpec6_crypto.c
-@@ -1190,7 +1190,7 @@ artpec6_crypto_ctr_crypt(struct skcipher_request *req, bool encrypt)
- 	 * the whole IV is a counter.  So fallback if the counter is going to
- 	 * overlow.
+diff --git a/arch/sh/kernel/sys_sh.c b/arch/sh/kernel/sys_sh.c
+index a5a7b33ed81a..e390caeb8c00 100644
+--- a/arch/sh/kernel/sys_sh.c
++++ b/arch/sh/kernel/sys_sh.c
+@@ -66,7 +66,7 @@ asmlinkage int sys_cacheflush(unsigned long addr, unsigned long len, int op)
+ 	 * Verify that the specified address region actually belongs
+ 	 * to this process.
  	 */
--	if (counter + nblks < counter) {
-+	if (add_would_overflow(counter, nblks)) {
- 		int ret;
+-	if (addr + len < addr)
++	if (add_would_overflow(addr, len))
+ 		return -EFAULT;
  
- 		pr_debug("counter %x will overflow (nblks %u), falling back\n",
+ 	mmap_read_lock(current->mm);
 -- 
 2.34.1
 
