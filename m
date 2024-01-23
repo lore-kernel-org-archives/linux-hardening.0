@@ -1,70 +1,67 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ED4356463
-	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 00:35:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AE5B5822E
+	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 00:35:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705970158; cv=none; b=T8raB0kQqYeWvTvVhXJ5e/D8bB89v9GvxIOZsNbfHz4N4ysSbczaNXcqei9XErZYML4qUyGbYWiko3zH69hNVoAZZuhTLP6wDL3iOvviHUMarx9WwvjZXH9hFpXppu1OdP5k7GsVyXgwXBHLtm428xSlVYj1Iwg1EDBASE9DOZ0=
+	t=1705970159; cv=none; b=Xfe6OU2/HzeO5UXztAsZqelYgzcuVw0K5RwQMgP9LCXsrxYUu34XocWtpsbVbWbJyG2BxQ8aAMugYUXMCwhkTawXwlFqKotN+YpgieO03CQZBDfuCpInTesKd+2PIsyoEzSgDLWNbcKkouIxe3qJ8lCOXG4BYIKTMoijNtY1XuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705970158; c=relaxed/simple;
-	bh=X+8lYZfwausQ7ppEEJSi8ujVkOr46HTxCp5e8PDYgLw=;
+	s=arc-20240116; t=1705970159; c=relaxed/simple;
+	bh=NqZesPGdhPMPIXo9vzbA31ktFf0tGVVn+vj19wjCjyg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eBN9sNGQryE0IHiHpL8s2gskH3kKDA2crUz9MJNwZC+JlLsD2wK2bGc51bJPn2PwUXwfjKBOLCdDayXlq1HeAoCTaSSsE5fTmIh7eYExEkLzgW4SAlBnULRQ2OxupH98oYi5iv+F01AI1ZeW++WiTQ7DzShTApkBs3Wcr1Xn04M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=lOwaZOn2; arc=none smtp.client-ip=209.85.216.54
+	 MIME-Version; b=mHwHmrFUXxNgxHDWjncc5lelNRPetvOlxhiUszv2P2aih+KwQa0qLcNplpiOWJoINgBwJsFm9NNEvgLo+qN6cMJ3Uws6my/04WmafgH1u6bjMqxudtpBoULn/zLZA5lpDlyxjzDKViwt25FBBqoGyzdzGX71O2PF0T8siCA1LSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Q88LuU0a; arc=none smtp.client-ip=209.85.210.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lOwaZOn2"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-290b1e19101so858464a91.0
-        for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 16:35:56 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Q88LuU0a"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6dbe5014eb5so888052b3a.0
+        for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 16:35:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1705970156; x=1706574956; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1705970158; x=1706574958; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yjn3WA13frGFh/So+bkUR88Se/B2ZjAIsqCTRdISoWQ=;
-        b=lOwaZOn20gj5kSl4RrIPb1yD6KxGoafGt4iY7aYFicxNRh08Poj5519WodLNdQiZ3F
-         gLv9FkDc7Q/lLkogJhaihWUVmKe+EQwHxPX2A3rP6y47OWkbqMNaYWqKC2kY38juSMoo
-         KtF5naYTw5aUPgF8V5h1x/1cEJcRnkq+2xRtk=
+        bh=ug/eJpZr5lllg7fGddUawSE71HAAShvEy2mnfZ3dSCI=;
+        b=Q88LuU0aCSdlMIjPCD+2vN4/TKC4zvp5U9k4fGRAOAl/oKS80yxBw8KPyg3uri24yx
+         d+4zNimaNpDjwKiC9iqJUbdfelVkQl/AlM00ynYs9RIKVP0oLp/P+6w6UVHlPSQdg34w
+         /SdaeMsd6/On8+6dUiUn9cmSOvrcLOHav46Nk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705970156; x=1706574956;
+        d=1e100.net; s=20230601; t=1705970158; x=1706574958;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yjn3WA13frGFh/So+bkUR88Se/B2ZjAIsqCTRdISoWQ=;
-        b=RRY26CQq8DPqJNbXFNPQhRx/vpCo0KI3JiKNlNLeqFZDAHnivwFiR1FprRBhkrnRl/
-         Rfc8sSkfDM1pw2n9TIicKmJ/2kDHSLWIFTpQr6HqIJyisoEbGehymbrQrrHe1HE9X5Pi
-         vFF6LK2BWsTv1if9/WJtjlWzqLQ03ozsBq9I55nNG4lLB145yXmTOIeP0SSMa+mwn8Xh
-         YG1jOvxWEqJ4Z0svI2/2fDWVGxP9JeSV3nWYsHeKaN80EDahX27rIVzOid/guYm1SId8
-         vRQ69GnDIif0Tg5G35ogUKCk5RDuFpao7got1dwgmXDodu2IRXLQtXgrtcud+UI0lPhS
-         5UlQ==
-X-Gm-Message-State: AOJu0YyaM9E2bqy5n9GxqiBF0v3QO1lQOCUbo8oAmaLhH9rxm0j5hx9Z
-	9hMWSRRKksNuKvc4agcvGLzWRmZHPEG8aJzsCAE4VAjouyrJ2MmSBtn9Xbm0Tg==
-X-Google-Smtp-Source: AGHT+IEyfTuL6aTwKFxTD2yVDhKLMQ/yhYL7MnyaB0lQ00kHUz62vvrrDFMKYyYwE3mOokyKej0s1A==
-X-Received: by 2002:a17:90a:88b:b0:290:a33c:e6d2 with SMTP id v11-20020a17090a088b00b00290a33ce6d2mr2368564pjc.49.1705970156038;
-        Mon, 22 Jan 2024 16:35:56 -0800 (PST)
+        bh=ug/eJpZr5lllg7fGddUawSE71HAAShvEy2mnfZ3dSCI=;
+        b=upCGm4FtOZsXTEatNXicZU+hU35ln1bwCsXqioCHBq3mn1H1svtv9R4N+vs/6nYZYy
+         3KgyI9T+5tUvjd0ggV09wXLQ4mEpBN156/+QwxQ5EohFEVrHq7fEbSF2zKoOX8wfVqHB
+         BasX1UwYEe9ww5DrHOiRmU7UjAhtTTRrF5d6VEPlNeLGnb5Wr2LCxh7er0TjudaplNVm
+         LUoeTnF7aGdNAqq2C6dQDe+fZF45dyzdxAKMchNhwl+RRcaajncoJikd6ytANq+9F82M
+         cJBjvCyTgxq7sENqnSevoJ8SjkgqSkAzXaSbEqND4LPK682K0Dh27l7rEHGzU9Ai7Nbk
+         kPEw==
+X-Gm-Message-State: AOJu0YzGLGH9pe8wRG5ckNZ3faxgzIhaz7xwuOCe1p3xbfL7GoY6taOu
+	rWgLMD3VpUa9cK/GHJnE282O5p6UIKLAMQXMVuraRFAAKo2Ofb6reZ6E9cC38Q==
+X-Google-Smtp-Source: AGHT+IGbHO8F/hVPNAS+cYdBXp0aETE+5zl8nFoMOWvMrZu0haS/FCh6jw4MqmTh+lKcIiTOdQpn4w==
+X-Received: by 2002:a17:903:189:b0:1d5:c77c:1bad with SMTP id z9-20020a170903018900b001d5c77c1badmr3603424plg.111.1705970157756;
+        Mon, 22 Jan 2024 16:35:57 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id gb22-20020a17090b061600b0028ae9cb6ce0sm10407877pjb.6.2024.01.22.16.35.55
+        by smtp.gmail.com with ESMTPSA id ki12-20020a170903068c00b001d739667fc3sm3599795plb.207.2024.01.22.16.35.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 22 Jan 2024 16:35:55 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
 To: linux-hardening@vger.kernel.org
 Cc: Kees Cook <keescook@chromium.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Liam Howlett <liam.howlett@oracle.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Hugh Dickins <hughd@google.com>,
-	linux-m68k@lists.linux-m68k.org,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	virtualization@lists.linux.dev,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 27/82] m68k: Refactor intentional wrap-around calculation
-Date: Mon, 22 Jan 2024 16:27:02 -0800
-Message-Id: <20240123002814.1396804-27-keescook@chromium.org>
+Subject: [PATCH 77/82] virtio: Refactor intentional wrap-around test
+Date: Mon, 22 Jan 2024 16:27:52 -0800
+Message-Id: <20240123002814.1396804-77-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240122235208.work.748-kees@kernel.org>
 References: <20240122235208.work.748-kees@kernel.org>
@@ -74,19 +71,19 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2444; i=keescook@chromium.org;
- h=from:subject; bh=X+8lYZfwausQ7ppEEJSi8ujVkOr46HTxCp5e8PDYgLw=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgGCBOFjblHeST3/ZilwfcWPfGLaZV7X8YPW
- C79tN/SYeiJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8IBgAKCRCJcvTf3G3A
- JrLrD/9imhNacUFtEeErviKwZFpQOrHjRz9qfDPETHNojaoiOgYqepLMlRb2Ro9DVU0O/SNoauJ
- XDvSMCA29L49m19UUqfBC98mMaq6pMQyS1NYL3dNN2wfigmBHbgxSG6nokdw68ERa4QFn92dDwy
- bQwrdR1ku7ltobTrb9kWZP81HzorXQ53yz5cPLqMXn5u4vNUjxoZ6WlRUSJ/tEDJ085Y0o5sge1
- LBmfMY3FImhVAZxGzzY3zyjplajEiXwl2vKYZk6BCTy8gXY+veeoOEVDOnnIN2a4KvDEPyaaxot
- HR2z07RN8UtX6TH5kmJTHOWFe84EDKOCqi2aWFqGYAyRDkFpP0wty9kY6+0AC3gehj5w1ti2iiO
- NAD8yNoNlLtKKkMtjrfR6XrpsyZ0rROiAJov2mqM1I/OL4pV/aRK6BJYWmZNDTosqLgl+L80IWY
- p8KuezBrvoHfw0WGYNrhqdeJVZbU2Wdu0pHD+Yt4QzANL7JatZjIrCkplcEqXEtd88+vkizAwgN
- GMtPKAqJ8N2iL3FYauZ/MtkWupQDFcsJCs+zJtK0/ubZyvgDoPrepWguwDHZl8EiGA060zaJtRc
- AgqRGJkK2LmpBTJ9DPQPYtCnuBZcfKAOHGS6bIVCqHi0QsU+3CTeDiscqO9J3/m/SF/x7U/Q5xH NVY94wexVhKaRdg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2234; i=keescook@chromium.org;
+ h=from:subject; bh=NqZesPGdhPMPIXo9vzbA31ktFf0tGVVn+vj19wjCjyg=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgMtLBZT/T1zFr3Pk7LIqHdfeKoLB+DZJ6nU
+ eJpFhVGy+SJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8IDAAKCRCJcvTf3G3A
+ Jr4wD/wNabBI/0k3KRp2JIInEpH4vZHXxi+YXYN1Q6ldFb4lgheY70n+09zwS5YCFmaS7Phow0q
+ sQ3NGqc/LMQu52WIyo9eugQ66X+NsHyvKquukfCdLtx9jSzToGbIYd3DB7x1EEPHipoH7lvtgRD
+ nHtsh3kq/C+p70AybGlMydqgrrPNb1DfboeLRz6rxhIfDmWVI5kH+L5Z0ZNxYR3cZC1UOdz2GsH
+ KtsEbUpmOKyh2q+iG4Y4H4OtA819vV908Jkbrzzo666no9Hz7D2Hjobm86ELfkhgFZa1vC6CEDk
+ 8U6VsHqeS46f14sFovFnBkEUS94+Z6gIjrvogisCPd9R3N9fV9/0WsPm5aNbWjXhHnCEkAV2gEB
+ aEHMvQSF+FMpizGRzlqkGgFJMIN3SlKmVZH7t/ukK0Lc4kmSKkRYvqf8JMnlbdjnpruwRJf7K+J
+ s2JFixwTZjankT9R4zLLM/lfaoqTW626q9FqA+biBMk7J+INeZZ8mXCYTmjch3KoF7TCRQW0Ix5
+ cZXEgUMIySr4lY4yafH6qxLzcfXHPLJPd5D38PR+eEu8djg/Lnn9abNdmb3uTneMPskrwx2EaH4
+ PL3NCneQumc5tifvlHneHC5q0YWKR5J4nwuLNsc3GN0YIAGrN2jiQuCqADn3NM/LbxnUwX7Jsxw lLlz7iPwOj69EMA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
@@ -104,53 +101,44 @@ instrument arithmetic wrap-around conditions and catch them when they
 are unexpected, regardless of whether they are signed[2], unsigned[3],
 or pointer[4] types.
 
-Refactor open-coded unsigned wrap-around addition test to use
-check_add_overflow(), retaining the result for later usage (which removes
-the redundant open-coded addition). This paves the way to enabling the
-unsigned wrap-around sanitizer[2] in the future.
+Refactor open-coded wrap-around addition test to use add_would_overflow().
+This paves the way to enabling the wrap-around sanitizers in the future.
 
 Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
 Link: https://github.com/KSPP/linux/issues/26 [2]
 Link: https://github.com/KSPP/linux/issues/27 [3]
 Link: https://github.com/KSPP/linux/issues/344 [4]
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Liam Howlett <liam.howlett@oracle.com>
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: linux-m68k@lists.linux-m68k.org
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+Cc: virtualization@lists.linux.dev
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- arch/m68k/kernel/sys_m68k.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/virtio/virtio_pci_modern_dev.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/m68k/kernel/sys_m68k.c b/arch/m68k/kernel/sys_m68k.c
-index 1af5e6082467..b2b9248f2566 100644
---- a/arch/m68k/kernel/sys_m68k.c
-+++ b/arch/m68k/kernel/sys_m68k.c
-@@ -391,10 +391,11 @@ sys_cacheflush (unsigned long addr, int scope, int cache, unsigned long len)
+diff --git a/drivers/virtio/virtio_pci_modern_dev.c b/drivers/virtio/virtio_pci_modern_dev.c
+index 0d3dbfaf4b23..710d3bd45b4f 100644
+--- a/drivers/virtio/virtio_pci_modern_dev.c
++++ b/drivers/virtio/virtio_pci_modern_dev.c
+@@ -59,7 +59,7 @@ vp_modern_map_capability(struct virtio_pci_modern_device *mdev, int off,
  
- 		mmap_read_lock(current->mm);
- 	} else {
-+		unsigned long sum;
- 		struct vm_area_struct *vma;
+ 	length -= start;
  
- 		/* Check for overflow.  */
--		if (addr + len < addr)
-+		if (check_add_overflow(addr, len, &sum))
- 			goto out;
+-	if (start + offset < offset) {
++	if (add_would_overflow(offset, start)) {
+ 		dev_err(&dev->dev,
+ 			"virtio_pci: map wrap-around %u+%u\n",
+ 			start, offset);
+@@ -81,7 +81,7 @@ vp_modern_map_capability(struct virtio_pci_modern_device *mdev, int off,
+ 	if (len)
+ 		*len = length;
  
- 		/*
-@@ -403,7 +404,7 @@ sys_cacheflush (unsigned long addr, int scope, int cache, unsigned long len)
- 		 */
- 		mmap_read_lock(current->mm);
- 		vma = vma_lookup(current->mm, addr);
--		if (!vma || addr + len > vma->vm_end)
-+		if (!vma || sum > vma->vm_end)
- 			goto out_unlock;
- 	}
- 
+-	if (minlen + offset < minlen ||
++	if (add_would_overflow(minlen, offset) ||
+ 	    minlen + offset > pci_resource_len(dev, bar)) {
+ 		dev_err(&dev->dev,
+ 			"virtio_pci: map virtio %zu@%u "
 -- 
 2.34.1
 
