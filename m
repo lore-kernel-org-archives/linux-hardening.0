@@ -1,69 +1,74 @@
-Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4CDB15B0EF
-	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 00:29:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CCB515B11A
+	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 00:29:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705969753; cv=none; b=e8//GpVNsBYM/aku5+fIk73cK4uZBw5ZJe5RarbnyTGWG0gfiUVX4uy2G2onKQp0fZ82XZvGsdnfqWHWIiTMttZowPtBbDFFXM9k0Z4NcfHqWv6DOJq+bVQ5Ly8UbEaXgIJct54rYj9A1lSx7zrEJ6khA5yJod96exIiH8sYjEo=
+	t=1705969754; cv=none; b=XQKHxBZfjKAPVYv1HEQrMkLzVvpF5BC/oKyelDVBZrP0dG3uY9j87T32gF9XCC896taMJhEZaHaz+OModYemhuQ3tUgF5vUATT964HRyoK8kjvNIHfL4DloSS/Jks5Q48tZQirtDVrYTwKFjGaVb+CGxGlay3JfHXSrhLVC7Q3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705969753; c=relaxed/simple;
-	bh=7JUW6Se3ttck3u03IUn6h22SlYY5f4wzvv59fMMlk7U=;
+	s=arc-20240116; t=1705969754; c=relaxed/simple;
+	bh=DQU4joanXRgd1mS+gxXcm4BfbB4iNwIjQJ9FPFqx45U=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GiifuBRsaLIFfomUfNQMwVIfBOte2w7fZrlLalDdjyJPgt//lxB6eEVzNMji4EN+BoiVD0JaK39R4ADKwqANk0wmn+AUV554AVv0dJ/uHgyRrkqJLb3CPF9pRkGWAOUftHaoqEH3LD5DqRFFXtIhZ0hSJZFEPqb9fWpFLEMFNbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Z7EUVBVk; arc=none smtp.client-ip=209.85.210.42
+	 MIME-Version; b=NFUGVGxF8VDeV6Ykcyxx692z2g6AOu3NIrhm9YWRPWTSEc8k0AfglrRet8J18SstKBir6aqU4jCfYstC4g4Pbm4g/dzQIoWuZ1gTpg7aoMAsbqk0Y7gqYz8gB66EYHGwkxGLKundDjw4POk4ZDGSamuiTKW9kI16y/d/GZkd8Ck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=U+XngC5y; arc=none smtp.client-ip=209.85.215.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z7EUVBVk"
-Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-6ddf1e88e51so2913439a34.0
-        for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 16:29:11 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="U+XngC5y"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-5cf2d73a183so3299498a12.1
+        for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 16:29:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1705969751; x=1706574551; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1705969752; x=1706574552; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ie3OTr5sznD5HalHa+6zn+LnARRkCye1/EzAPt6ehMc=;
-        b=Z7EUVBVkONDMsQtdqm0Q343HbVNgU8Ys/Z1cwQJbcFaj/ZUQG6Oz2Ld0TAwsIhtuU0
-         foBw3rYg05H3K9uYPSn7jWhi6AlCFucQAR1dmLqUUITT1cCGz0/sPecGal2vu62vlSge
-         EZHiPWRMVfxkD1BgS1wGMVtLzX16pAcvvYxDw=
+        bh=TvywcYW77f9W0/EEawC9chQVSlmM/wYw9WuZ4ujpaBk=;
+        b=U+XngC5yhwSHfcAeXyiKIAwlBnviRYdrjm9mQAGzkrE04I/qggNqJ7EXr6byRqOOHS
+         RmbMa0p+/7TquRmbrl5UNm3nscRJCeaXDVPqkkNj2ZepvzB7PK7Fmg8preYvpKu/jeVU
+         lB0rngG+suGF/wLnhpOTqz7mvo8OZO5rKUGSk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705969751; x=1706574551;
+        d=1e100.net; s=20230601; t=1705969752; x=1706574552;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Ie3OTr5sznD5HalHa+6zn+LnARRkCye1/EzAPt6ehMc=;
-        b=v7txcfBekEwJh4StgzIN15Nq7wWNAFjF5GRsXvWOe5ukgdDRJvH/v7dkneuMBX5Hki
-         36KLFLmLMxX00HV64/8BQUFRkb1r8cbbKT+6lOSAOR8Pw45pTGTHsHEJAjzoM+ZrkKUt
-         R6qB/Vmf2fw/r/M+EaMD3PSTxQ3sZsA96/3xCUtTnn6ROLxlayJzpg1PkS+14KgDBfQn
-         RQWEkDBjHUR3QhKDCNJ8txeOr14Z9BB4k+sgEs+nnWbd8qkkmvaPzYnnAucaMWFhYWMT
-         8hpysgqP/5Tmh6a/J5gnCeXtjLxE/yYZia4ZlfNqWAuNgubw3NlQRaerx9X0Xfio3+M6
-         3j7Q==
-X-Gm-Message-State: AOJu0Ywy2uJqTIiItENhtDsV3fnX+P4FDsYouVY4aIWdqq3z1b1I9IvF
-	xLggQKmGXTBS7whhte8Iy7FDb/QC0c0hfINnNcMHon+jDcb2VFsWCa3gutjuyQ==
-X-Google-Smtp-Source: AGHT+IFu1VaQEw9sFXv+HjTUE3GiTFvw/CXFMuGTa+QFdqe8mKXPpftBjYBhP/mp26Aucx61/cVbWQ==
-X-Received: by 2002:a05:6358:1804:b0:176:5d73:3778 with SMTP id u4-20020a056358180400b001765d733778mr1791008rwm.36.1705969750988;
-        Mon, 22 Jan 2024 16:29:10 -0800 (PST)
+        bh=TvywcYW77f9W0/EEawC9chQVSlmM/wYw9WuZ4ujpaBk=;
+        b=hGOimeks6XnxsPkOT/eNdXg2tTL1qbLYcMBsD1kOy9nVvZWX2ItmPUpj133OsfGiTw
+         WEkJ0juskkCLwcd0TY+1OF3YnXPWsRZ1HhrYZHttVfDA3gO2qE+igHZQrSPS4QV63T49
+         b5zT7tEBtAmC/xuT0nyoKqhYfGJdgOCxfqqRvM4xiLSxg8H0zBZk45j5IjZwjYsnapZ1
+         qqLyHruCYhTYMKVGf/bUPKz91ViaDSdzAZ+MTnCzTde+37Ikky77Z+cJiBC5uyfwa7dn
+         gMsQPaEGX+JTMaJQgJLcl9VChZQ2ZTtfZhf2vPUMCX1iyUHmBCiZ3W3/jQ/NOGoMbvHF
+         pgkw==
+X-Gm-Message-State: AOJu0YxldhvaY3M8Lr/TmejmKsOpSrSmy23dfWYyZxjT3dIzNwitDw8s
+	S1g8ZwmZVoShsahiFbbffi3JnRuah0aCqWYLaRE0CRu3lxXeaazpjw4R5FVkPw==
+X-Google-Smtp-Source: AGHT+IFj6nXDFRwAngJViBctccMejN1t3BelBA34ipms9cwPh9gV9+T4jqVADGchm5OGinfbn3pAmw==
+X-Received: by 2002:a17:90b:607:b0:290:5246:beb3 with SMTP id gb7-20020a17090b060700b002905246beb3mr7402551pjb.37.1705969752595;
+        Mon, 22 Jan 2024 16:29:12 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id v6-20020aa78086000000b006dbda1b19f7sm3156587pff.159.2024.01.22.16.28.58
+        by smtp.gmail.com with ESMTPSA id 4-20020a170902e9c400b001d706e373a9sm7559865plk.292.2024.01.22.16.28.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jan 2024 16:29:06 -0800 (PST)
+        Mon, 22 Jan 2024 16:29:02 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
 To: linux-hardening@vger.kernel.org
 Cc: Kees Cook <keescook@chromium.org>,
-	Brian Norris <briannorris@chromium.org>,
-	Kalle Valo <kvalo@kernel.org>,
-	=?UTF-8?q?Jonas=20Dre=C3=9Fler?= <verdre@v0yd.nl>,
-	Dmitry Antipov <dmantipov@yandex.ru>,
-	Tsuchiya Yuto <kitakar@gmail.com>,
-	linux-wireless@vger.kernel.org,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Janosch Frank <frankja@linux.ibm.com>,
+	Claudio Imbrenda <imbrenda@linux.ibm.com>,
+	David Hildenbrand <david@redhat.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	kvm@vger.kernel.org,
+	linux-s390@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 62/82] mwifiex: pcie: Refactor intentional wrap-around test
-Date: Mon, 22 Jan 2024 16:27:37 -0800
-Message-Id: <20240123002814.1396804-62-keescook@chromium.org>
+Subject: [PATCH 58/82] s390/mm: Refactor intentional wrap-around test
+Date: Mon, 22 Jan 2024 16:27:33 -0800
+Message-Id: <20240123002814.1396804-58-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240122235208.work.748-kees@kernel.org>
 References: <20240122235208.work.748-kees@kernel.org>
@@ -73,20 +78,19 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2776; i=keescook@chromium.org;
- h=from:subject; bh=7JUW6Se3ttck3u03IUn6h22SlYY5f4wzvv59fMMlk7U=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgKEfuOUm8gdUPZ8vO/KuClWsfQ2f3pzbTem
- aIxnbAM+fGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8ICgAKCRCJcvTf3G3A
- JonQD/9WVyaa9kGcf/DTeFmgfzqdX7xnM18yRtPWxEh32TPyVUA9IygNLB2Mzz7Mzf/1z1oLx5q
- y6Uf/vyz4gMUfg0RBu4V8FJXTNaL+fZtfonFGhqdJJClaBBDFVd+vTLW4YjC2SBU3KoLfkXXOq2
- 7bkrtOFIv7f20UQSh0t9WqD3TpID+zmHpIZvvP9d1x9ZqTkzcibWw0o5ZMuGl0KUOlFccvvXP+o
- t5jfiwQoOn9vESyzTRCcdLFh+EvH3+0EqK2qvNuTBuuHD2rKuFauD7WFvMSJHXrvqzrig23cJRh
- 2zz4ePXncay641mG9MIX2AghTvd0BXeUoNdMT2XoIc/G4FPNL62a0r04JF25hoDFE9uYhE7HOUr
- py+wlbBwWORaTtcW5nC4dkTB8JgNhmBvm17GrHAPIu6mqlZHRb7dzU/INOEZaMNSwDAhXjjrRjO
- NSmZSSPrUmkcJLxcAk3hFfbiT62Ad8EBnkaTXnMfLammAc/mmAlnOtABI64GIfFYBXc359RDmbq
- T/ikhjpd19tZo9mFB6ePKrrqeXpNz6UJO8M1WUi7y+9calE0yGanCbvnXGPAgnq51BkvTXMU44k
- iFtizJzAsxk+HlRrziOXDHeWih6lFTrScEFVxBGE/7wFBi4xSw5Te7dWdKwU8Olt009JASnOl+g iafvZ3vYcSNfmBw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2557; i=keescook@chromium.org;
+ h=from:subject; bh=DQU4joanXRgd1mS+gxXcm4BfbB4iNwIjQJ9FPFqx45U=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgKR1fdbTlXCSNHaLsraY4kCN0NXjk4wrN/9
+ ptrTecUkUCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8ICgAKCRCJcvTf3G3A
+ Juo/D/0Rijh7xs7t+z0k5sUC01Phuw7CfMgDm7ealxIpjEnqcPeKLdz3mD2xMlnLAWp8AQgMX7x
+ UsVZepQBCW+mbZNcyaU8P17kkR/DVc7kuurh6A9/qg0Doo0FWrmPWygvxpM4QDhE0BWg+HnMgku
+ n6+MLAW3qZ38qFK2TNKcR1VOhVuLWxTkckPN8Nec/7/x4EA/IrvviqK5ppVmcCCP1kkU6yqRS9V
+ GLUxRZfvGVuFMMnb0GKhKAWo7DZdHEZR5LzYBFF10XJes46hmqVlAymMFxiN7EIxv0ywKkw+/jo
+ nLiBSpXgpdEeNMvEbekQ9g18cBvZowM9RckCdGzvVuhqEE8wlYliS3Cl6xZFQKeDcLXNaS5Iddd
+ l6LypkhXu8RsRGFMSTTeST3NLd2MV50Ak5N7MwlYwztrZhji/SUmMGdL6wI/FRsTLYy80nbrjy8
+ fyZyR3PPt/w66FT/FbS1YpSxHVHI4lBm2rBauWi2Lt61XzIBNU5xedEqaQEl1dEb4INlRI7CV64
+ nbqMv8Q+wAg8JFTpkVL0iRqSD8sKKxtAw4q49K9wuS9FmVtOcyDAcXkG7QMZPbW6fnyVYVPSPbY
+ tEhStv2vcp7DGK/BOSTiwcIMprY0XAIyqKXaQ77rYBqq5JxZIOFNPSPAu/upxkCHl+TQQK0n5j7 tszHYawERVCbBMA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
@@ -111,48 +115,44 @@ Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
 Link: https://github.com/KSPP/linux/issues/26 [2]
 Link: https://github.com/KSPP/linux/issues/27 [3]
 Link: https://github.com/KSPP/linux/issues/344 [4]
-Cc: Brian Norris <briannorris@chromium.org>
-Cc: Kalle Valo <kvalo@kernel.org>
-Cc: "Jonas Dreßler" <verdre@v0yd.nl>
-Cc: Dmitry Antipov <dmantipov@yandex.ru>
-Cc: Tsuchiya Yuto <kitakar@gmail.com>
-Cc: linux-wireless@vger.kernel.org
+Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
+Cc: Janosch Frank <frankja@linux.ibm.com>
+Cc: Claudio Imbrenda <imbrenda@linux.ibm.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>
+Cc: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+Cc: Heiko Carstens <hca@linux.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Sven Schnelle <svens@linux.ibm.com>
+Cc: kvm@vger.kernel.org
+Cc: linux-s390@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/net/wireless/marvell/mwifiex/pcie.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/s390/mm/gmap.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/pcie.c b/drivers/net/wireless/marvell/mwifiex/pcie.c
-index 5f997becdbaa..e69347e65f0e 100644
---- a/drivers/net/wireless/marvell/mwifiex/pcie.c
-+++ b/drivers/net/wireless/marvell/mwifiex/pcie.c
-@@ -2086,7 +2086,7 @@ static int mwifiex_extract_wifi_fw(struct mwifiex_adapter *adapter,
+diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
+index 6f96b5a71c63..977b61ab59f2 100644
+--- a/arch/s390/mm/gmap.c
++++ b/arch/s390/mm/gmap.c
+@@ -411,7 +411,7 @@ int gmap_unmap_segment(struct gmap *gmap, unsigned long to, unsigned long len)
+ 	BUG_ON(gmap_is_shadow(gmap));
+ 	if ((to | len) & (PMD_SIZE - 1))
+ 		return -EINVAL;
+-	if (len == 0 || to + len < to)
++	if (len == 0 || add_would_overflow(to, len))
+ 		return -EINVAL;
  
- 		switch (dnld_cmd) {
- 		case MWIFIEX_FW_DNLD_CMD_1:
--			if (offset + data_len < data_len) {
-+			if (add_would_overflow(data_len, offset)) {
- 				mwifiex_dbg(adapter, ERROR, "bad FW parse\n");
- 				ret = -1;
- 				goto done;
-@@ -2110,7 +2110,7 @@ static int mwifiex_extract_wifi_fw(struct mwifiex_adapter *adapter,
- 		case MWIFIEX_FW_DNLD_CMD_5:
- 			first_cmd = true;
- 			/* Check for integer overflow */
--			if (offset + data_len < data_len) {
-+			if (add_would_overflow(data_len, offset)) {
- 				mwifiex_dbg(adapter, ERROR, "bad FW parse\n");
- 				ret = -1;
- 				goto done;
-@@ -2120,7 +2120,7 @@ static int mwifiex_extract_wifi_fw(struct mwifiex_adapter *adapter,
- 		case MWIFIEX_FW_DNLD_CMD_6:
- 			first_cmd = true;
- 			/* Check for integer overflow */
--			if (offset + data_len < data_len) {
-+			if (add_would_overflow(data_len, offset)) {
- 				mwifiex_dbg(adapter, ERROR, "bad FW parse\n");
- 				ret = -1;
- 				goto done;
+ 	flush = 0;
+@@ -443,7 +443,7 @@ int gmap_map_segment(struct gmap *gmap, unsigned long from,
+ 	BUG_ON(gmap_is_shadow(gmap));
+ 	if ((from | to | len) & (PMD_SIZE - 1))
+ 		return -EINVAL;
+-	if (len == 0 || from + len < from || to + len < to ||
++	if (len == 0 || add_would_overflow(from, len) || add_would_overflow(to, len) ||
+ 	    from + len - 1 > TASK_SIZE_MAX || to + len - 1 > gmap->asce_end)
+ 		return -EINVAL;
+ 
 -- 
 2.34.1
 
