@@ -1,65 +1,66 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4622D3A8F5
-	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 22:42:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC8AA53808
+	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 22:52:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706049722; cv=none; b=FGld4jP4WLSn1gT8zfHAFGZdc4PBMzTMcUIG0AkCeOhxSRAzAQfz8iADUtIDxpMO4LUVXgwtPGSIfX5Yh77WETvL0WTRCsGcGgye+pxkxKBusy9VEd6wlX56/aE6NGumswnpzzsONsyUXTUgJsEUuEfcpg4YIwe+UH9hN1fLLlU=
+	t=1706050355; cv=none; b=rgje954s7dyWf4jICNhemsIxadJesCSZzTRPEo1lYkTA+VLRJNuryagSqKEIGCpcY8mz/nZoynkKTSgzej2qSGf9NHuWYq+0eCeyr85P+LtWLOSgHS+OzCDU3VdRDxT3iaKOmJMEUbsbXbZXWT4SDaYkC0VotFlTHQNwVRVao4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706049722; c=relaxed/simple;
-	bh=zKrh9Cm8LBMdmMkZwJbUhPVyyd35s47X76PNGXAhQBo=;
+	s=arc-20240116; t=1706050355; c=relaxed/simple;
+	bh=cM1u6TyGETJjhtJrO6J7JSwAWml7G37TEKeViMrmnfg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZaMqNEx7K3fShSBUtJr1MO/4a34J//Sp7tBNkn0zgNubKUC2JTkzZxhyuPJMimyfrkfF/DxN1H/eT5WvzeQUoN69Bu7MCTn0gbuUrhLEhwP9KeT/4CUK/fGhYKgTpTxMxQxuyQ1It92BqOdvpNaE7/qD8gdpiFANTidGmlc965c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=A7C2args; arc=none smtp.client-ip=209.85.210.170
+	 Content-Type:Content-Disposition:In-Reply-To; b=quOnSYLsFnGFPrVJC6Ej9/moOC8uqHpRB2at/VG4kObRlS7Y/nz0ZHRUJ6pUZrm6zjVymSml/BpLQ0ebWm9Ji3gAf4+vpdhUczTUoNMJkQX+FfWsEqJuDpW6MoAu10bi4QA33RrrgNl2PK5nJ19ErhB3UW9/8hGWQwz8RaFcXIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=C0NzgG/D; arc=none smtp.client-ip=209.85.161.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="A7C2args"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6dd7c5437b0so1007009b3a.3
-        for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 14:42:01 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="C0NzgG/D"
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5997665fe29so764190eaf.1
+        for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 14:52:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1706049720; x=1706654520; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1706050353; x=1706655153; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NLP204yME76cKWvSKqR4QvH8/WxYNOPL78/EyvH5yzk=;
-        b=A7C2argsd3w1FTAqLxve7TteXsyWVG+pgmxReCn2t0rVKKDeQI8i0DZxUyQUulG//H
-         7NXwjNUhMY/+uLxTo+BvibNxtnB1+tuMjREgkpQvI1twX5dYst7kqTkEeReA0gVAmeOg
-         VD0WojfvS6MrngQ7AAduFdFv3hPiiG957MXps=
+        bh=+8OzyRNimHg6MWBPPPferJ7a6OpiMFAs+H+g4XMLgls=;
+        b=C0NzgG/Dtgm+JZP1sZbWdF2MiEiKlGVX+chQ+apBliQQPqDWONqY4GsZUHsOZ/l4Tn
+         VefDp4FH0thNeBBWbqtlKuOcCaOLGBwYxYIk+IpCz8DDHVTD3a2GUMX7ciLC3Uo+Wj7K
+         h3otUX+cogjgJNcr3/aviv5gOGCdMxmi2JtKI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706049720; x=1706654520;
+        d=1e100.net; s=20230601; t=1706050353; x=1706655153;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NLP204yME76cKWvSKqR4QvH8/WxYNOPL78/EyvH5yzk=;
-        b=nIYzJJl7Yo79N2Ta2ZVtnnemiMKB18J5sSTrosWjQcj5Ww+H5pI4MnHpX+/pO+VOS2
-         6qLUGH1+WRqdVJpn2Rn6bOsc3HKZeUm1zWWYLTzHOr3u6QmWZUBxxyAAYPxqTrZ1zs12
-         iTzAnCabZ3dtHKzKjOwN29NVnjw/aNklu5Y7DR66t9w4T5khXFGTBMLbfF+LqZUdspms
-         Zvkeyo2LCedFU3RovKMqcPjMK9FfWYlPpP/H1MRZ3NMYP6uDsAtkKllaexxPSbj54oob
-         yJxNexmBbltHJKAz/TocvYe5HVFz4n3KIKdtyyufaUJjwLpbdVyEe9OrU5L9cvhok31I
-         pD8g==
-X-Gm-Message-State: AOJu0YydCR8ejgvHUTL6fAijAl6BtQ67e68vRrZ2pOdjYB01LdB71TWl
-	iYykYx/zr8pq1Cxn/Como/VgQADs3gKwMhILKtx1Hws5VOsHA89rl51ZIoLh+A==
-X-Google-Smtp-Source: AGHT+IHwpTHhUNklJYwoOZzlpbiuoqmorVbDQt+RpuA3sITy6NnTDgE24fxse09JSEmVMJKrdG/Alg==
-X-Received: by 2002:aa7:9f4d:0:b0:6dd:81e6:e93c with SMTP id h13-20020aa79f4d000000b006dd81e6e93cmr1032305pfr.63.1706049720687;
-        Tue, 23 Jan 2024 14:42:00 -0800 (PST)
+        bh=+8OzyRNimHg6MWBPPPferJ7a6OpiMFAs+H+g4XMLgls=;
+        b=FoNDullnO37MP9Iw5r4bSTpc6ikzlxsRs8T8G/jIgjC4DTMPKoKamwpngCRGfzWWb5
+         q3w8NfKaJfqYAdNHMkA/gYXIfzuMa9EV2xtjZPCidWdzfgDujxAeAcwBrMuFHh7IPOAt
+         ErIaHypTyPJQs+ksTCSKwpJXQ/4JjsKsCxOlXPUcNPv4SDXitPI6YuPKqzD5QBYi3My/
+         7U2y7xNZmkWpR6NUqsJNVRlWqF7MfFTp3YU7gW5XhZ2hpi2IJ33GnK0Qh0XyhjNnIzEH
+         vzsSEtla+rXpxhXyktjLggiabfhRXoix+g8PgLzAzzY29N2zDzYmaF77Hjlu+GZGua+t
+         CFDQ==
+X-Gm-Message-State: AOJu0YxJ1NfO9iuuI4/yxioSKwjsAf7joYOaHknqHonJa49MhXWMCwLp
+	kq1ySJFhKMQs+e0K5lLDnGeNBmwqRxcRA5FrRD1vHM2UJqoOWWm5UWjHS8QHlg==
+X-Google-Smtp-Source: AGHT+IHDl/6I1rG7FFOH5TLpxkcvik0AXWrRwPOVODwTcq5RC8mUYxoyhnLKMEDwXanwWecFPslILA==
+X-Received: by 2002:a05:6358:7e49:b0:176:3715:3c32 with SMTP id p9-20020a0563587e4900b0017637153c32mr3147609rwm.3.1706050353056;
+        Tue, 23 Jan 2024 14:52:33 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id hq15-20020a056a00680f00b006dbd2231184sm6411616pfb.70.2024.01.23.14.42.00
+        by smtp.gmail.com with ESMTPSA id e33-20020a631e21000000b005d0796e779bsm2079685pge.12.2024.01.23.14.52.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jan 2024 14:42:00 -0800 (PST)
-Date: Tue, 23 Jan 2024 14:41:59 -0800
+        Tue, 23 Jan 2024 14:52:32 -0800 (PST)
+Date: Tue, 23 Jan 2024 14:52:31 -0800
 From: Kees Cook <keescook@chromium.org>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-hardening@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-	linux-arm-kernel@lists.infradead.org,
+To: Kalle Valo <kvalo@kernel.org>
+Cc: linux-hardening@vger.kernel.org,
+	Johannes Berg <johannes.berg@intel.com>,
+	Max Chen <mxchen@codeaurora.org>, Yang Shen <shenyang39@huawei.com>,
+	linux-wireless@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 38/82] arm: 3117/1: Refactor intentional wrap-around test
-Message-ID: <202401231441.7A15A53419@keescook>
-References: <20240122235208.work.748-kees@kernel.org>
- <20240123002814.1396804-38-keescook@chromium.org>
- <Za-NRm5e_-Cfz1Nl@FVFF77S0Q05N>
+Subject: Re: [PATCH 41/82] wil6210: Refactor intentional wrap-around test
+Message-ID: <202401231452.2A37D157C@keescook>
+References: <20240123002814.1396804-41-keescook@chromium.org>
+ <170601063238.3962299.12030024839048269322.kvalo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -68,23 +69,11 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Za-NRm5e_-Cfz1Nl@FVFF77S0Q05N>
+In-Reply-To: <170601063238.3962299.12030024839048269322.kvalo@kernel.org>
 
-On Tue, Jan 23, 2024 at 09:56:22AM +0000, Mark Rutland wrote:
-> The commit title is odd here; '3117/1' is the patch tracker name for the last
-> patch. The title should probably be:
+On Tue, Jan 23, 2024 at 11:50:34AM +0000, Kalle Valo wrote:
+> Kees Cook <keescook@chromium.org> wrote:
 > 
-> 	arm: nwfpe: Refactor intentional wrap-around test
-
-Whoops, yes. I need to teach my prefix-guessing script to drop the ARM
-patch tracker numbers...
-
--Kees
-
-> 
-> Mark.
-> 
-> On Mon, Jan 22, 2024 at 04:27:13PM -0800, Kees Cook wrote:
 > > In an effort to separate intentional arithmetic wrap-around from
 > > unexpected wrap-around, we need to refactor places that depend on this
 > > kind of math. One of the most common code patterns of this is:
@@ -106,30 +95,34 @@ patch tracker numbers...
 > > Link: https://github.com/KSPP/linux/issues/26 [2]
 > > Link: https://github.com/KSPP/linux/issues/27 [3]
 > > Link: https://github.com/KSPP/linux/issues/344 [4]
-> > Cc: Russell King <linux@armlinux.org.uk>
-> > Cc: linux-arm-kernel@lists.infradead.org
+> > Cc: Kalle Valo <kvalo@kernel.org>
+> > Cc: Johannes Berg <johannes.berg@intel.com>
+> > Cc: Max Chen <mxchen@codeaurora.org>
+> > Cc: Yang Shen <shenyang39@huawei.com>
+> > Cc: linux-wireless@vger.kernel.org
 > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  arch/arm/nwfpe/softfloat.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/arm/nwfpe/softfloat.c b/arch/arm/nwfpe/softfloat.c
-> > index ffa6b438786b..0635b1eda1d3 100644
-> > --- a/arch/arm/nwfpe/softfloat.c
-> > +++ b/arch/arm/nwfpe/softfloat.c
-> > @@ -603,7 +603,7 @@ static floatx80
-> >      roundBits = zSig0 & roundMask;
-> >      if ( 0x7FFD <= (bits32) ( zExp - 1 ) ) {
-> >          if (    ( 0x7FFE < zExp )
-> > -             || ( ( zExp == 0x7FFE ) && ( zSig0 + roundIncrement < zSig0 ) )
-> > +             || ( ( zExp == 0x7FFE ) && (add_would_overflow(zSig0, roundIncrement)) )
-> >             ) {
-> >              goto overflow;
-> >          }
-> > -- 
-> > 2.34.1
-> > 
-> > 
+> > Acked-by: Kalle Valo <kvalo@kernel.org>
+> 
+> If you can edit before commit please add "wifi:" prefix to the wireless patches:
+> 
+> ERROR: 'wifi:' prefix missing: '[PATCH 41/82] wil6210: Refactor intentional wrap-around test'
+> ERROR: 'wifi:' prefix missing: '[PATCH 62/82] mwifiex: pcie: Refactor intentional wrap-around test'
+
+Ah yes, thank you! I will adjust them.
+
+-Kees
+
+> 
+> 2 patches set to Not Applicable.
+> 
+> 13526631 [41/82] wil6210: Refactor intentional wrap-around test
+> 13526632 [62/82] mwifiex: pcie: Refactor intentional wrap-around test
+> 
+> -- 
+> https://patchwork.kernel.org/project/linux-wireless/patch/20240123002814.1396804-41-keescook@chromium.org/
+> 
+> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+> 
 
 -- 
 Kees Cook
