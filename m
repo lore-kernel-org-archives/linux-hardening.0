@@ -1,70 +1,65 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7090612F2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F92C6167D
 	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 00:45:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705970759; cv=none; b=filoUkyLCqblMjTFU4riM4lGsVOtyfgA+a3YoywiddCRmjh+i/8/87PPBM5lUVToBdmMsjcHOGjv602atjNTAMqvLCYTjBT9ud7vLyJDgt5cNDss+3gEegdA3Fj5JKX6nl0kGkUdcz4mq+R+GGqKb6ifRSXY+zxv1RwFOKA/OZE=
+	t=1705970759; cv=none; b=psCARoyktFFs7xePhv8/BQ4q86/zVnLiguiRWwyxMNt+0R4w2iJK+pbhxv+8iMF7SfW8ht5UyWKwm6FqLRu9EmmlRjQdgf9t47GlEObUHgTRZPPQsAnjBQI0LnipTfPnVAt3CPiIRxwqbvr8fHCoTS/ZB/l4Y8ixXyLfkCcoJtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705970759; c=relaxed/simple;
-	bh=pqahPWCtiilVxi2Cwewikz7N45reJkQJ7UJUXEGvxo0=;
+	bh=7SK+CeaptbBP/v+CP2JEux9OatqqjJKzGmyq2Voqx04=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QI90Pb7AZC3DejsWondnlvQKPa7mzz+yUFGqbTbMIdPvVYp7MeOnzogQpi0u+j9h2hAKk72/ysfHrw9MQkl0n7swUfi/DnkPqqSbzp6mCE2tqePl0VCRTFg5+BgZ4wQlRlhVUu99B3WQ658+Xi0YxEZ/V1iWZ5kXT7l86Zq1iLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=QsDkKLfB; arc=none smtp.client-ip=209.85.216.46
+	 MIME-Version; b=RoxGkoKvrkbjTU0M/kq9K+c0awSphaK5DJc7+9d0M3SwdyMaQV2tEQ5wvf4b98W7XaRaXvJ4E8LZaKs1UbiI4C+UvB8htC8CEuOXw3u8bPAEqbI9338q5EyAF6zL2aYC48/3zv1BS9d1j23KrDv/kwudItoDeiHSfroopryw/hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=NdcyDFzU; arc=none smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QsDkKLfB"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-28e79182570so2858809a91.2
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NdcyDFzU"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1d730b6943bso6729985ad.2
         for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 16:45:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google; t=1705970757; x=1706575557; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cRtEgA24maRm+G5gcEke23eL30Vj6MIdNe5RQrjo/8E=;
-        b=QsDkKLfBWO7BdvpXfam5uZ0BIQsXQUO1qqd6M4QpYpsO6sd9MIZZXJRrNzTO65Y+hQ
-         VoqSbft5M1Ckz5+NXB7r1zvru8OJj2GpsyfbuQVY0xcJkP/hmvGl+woNudrUVbPI+/EG
-         fK1awRwMQqC+OwibXTaOtxGj+3ZYu6pnwWa9M=
+        bh=iBzwhtxHV7+0pkueVEdOMj16Ew6MX43q2RtCRgBYnfE=;
+        b=NdcyDFzUhvzwX4yoUH4hoUPRRbxPVswsvgSrjYNQ54x5uzW9pV54KelUvXlN97GcLf
+         LKSb1v1TQQEQ1HC134EB+87lJrhokCugQ1IC/LJwPjt0ndO4rBR7kCnNeaKMXfItHDYK
+         HyNNFIBlgVVW+LRphKpcKBrr6QAdLpoZz+XIs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1705970757; x=1706575557;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=cRtEgA24maRm+G5gcEke23eL30Vj6MIdNe5RQrjo/8E=;
-        b=AeRfNizvczCaTzmwfrAvLxZkdpCMbQLgdmDhf/hEZe5WeLuGEojZOmDVJU4Z+TyCgl
-         hMr2qj4Z9SyNC0Xsfh04V3QL7I8LMWTBMBac1KYDIqDIOkf+8YOToVYJ8AxRLjDzOZgM
-         gFQtd6eE+joezcClBEEWarAu8QfzlnWIlq4Zo5Duoe7ocLuCGykBTrihe8vCF+UDgsv/
-         i3JXVQo0m1rF5rltIKjO9bXMiaazKa9RCr8Ngq4rnvoSwuBx+AOIahKmF53oyFdi6Llo
-         NuglCzjkSLtOQLm0aYEXJAB19YeoKP3GfV8pRQ/p3BJAafPbIgziudzL/qTrpR0KrWqX
-         PDLQ==
-X-Gm-Message-State: AOJu0YzVE696Sdd/NtcKh3o+nMZ29wP3nxAwaF3/UYY5Yk7YPdSaayp4
-	Oox2NrjHq1CFv53XAOvi2j5eWVuO6WykGYfE5BfTB/HzSFNZ3JxBtwtWWp5jeQ==
-X-Google-Smtp-Source: AGHT+IFciWHO78/a7euH6rqJvtMdI+gSwn5MfNBM1NW2JHf/Lhr+OJ/TN/dJXuWD57I9PPPQxJ44Rw==
-X-Received: by 2002:a17:90a:3941:b0:290:caf7:7a16 with SMTP id n1-20020a17090a394100b00290caf77a16mr435126pjf.0.1705970757093;
+        bh=iBzwhtxHV7+0pkueVEdOMj16Ew6MX43q2RtCRgBYnfE=;
+        b=KXoE9C+OPmSqfIQ8SClZnHSmzyGVVaa/ntoGg3armq2kfVgD78KmXmccmfMLHG8cgV
+         Gj8RrhUt1moqrDJRLXsw6epCSaKyaKtteKQelEvv06+gzCHGBShbkawd6ACkCG6fgYBT
+         514TCg3fxwFoba2mdoLdtHIA1Q57yr9XpsUVKJm83oayvP7+LqGYYbaHmIWC+aAPz8N0
+         SZAcnEEtSC3CyOn1XDqFstVoxB1D0+wjKApiuuJL3giWIOUkVD1t4enwifCNsKTmHmzm
+         tif77as8l6Hf8YamD03yuZlzwWkAxaT8sUHZQD7/AhfQ/uJpqE5VLy54ISBezgqkZ0mb
+         +aaw==
+X-Gm-Message-State: AOJu0YyfYaxXfL56RZa2ovMG+gTS0GDIXjHo70fvTVTK4hCjXHoTXnsp
+	QwyLY/dLa4YH5CaUPEEBzpZkLF98Z9EbvFlYFzrW24na2h3ftrWFQqC1AaNIEA==
+X-Google-Smtp-Source: AGHT+IF8yhCmkJNt7Ij2XpjUMJOmTKGRgOFOqqmGAHzjTF1WQ4RIpNJnjNIqKXh4JiYJsFhdhzQmyQ==
+X-Received: by 2002:a17:903:249:b0:1d7:4f6:931b with SMTP id j9-20020a170903024900b001d704f6931bmr2578303plh.18.1705970757393;
         Mon, 22 Jan 2024 16:45:57 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id so18-20020a17090b1f9200b002909c6bf228sm3237373pjb.51.2024.01.22.16.45.54
+        by smtp.gmail.com with ESMTPSA id e6-20020a170902784600b001d66b134f53sm8013882pln.233.2024.01.22.16.45.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 22 Jan 2024 16:45:55 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
 To: linux-hardening@vger.kernel.org
 Cc: Kees Cook <keescook@chromium.org>,
-	Steve French <sfrench@samba.org>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Ronnie Sahlberg <lsahlber@redhat.com>,
-	Shyam Prasad N <sprasad@microsoft.com>,
-	Tom Talpey <tom@talpey.com>,
-	linux-cifs@vger.kernel.org,
-	samba-technical@lists.samba.org,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	kvm@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 14/82] smb: client: Refactor intentional wrap-around calculation
-Date: Mon, 22 Jan 2024 16:26:49 -0800
-Message-Id: <20240123002814.1396804-14-keescook@chromium.org>
+Subject: [PATCH 23/82] KVM: Refactor intentional wrap-around calculation
+Date: Mon, 22 Jan 2024 16:26:58 -0800
+Message-Id: <20240123002814.1396804-23-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240122235208.work.748-kees@kernel.org>
 References: <20240122235208.work.748-kees@kernel.org>
@@ -74,19 +69,19 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2356; i=keescook@chromium.org;
- h=from:subject; bh=pqahPWCtiilVxi2Cwewikz7N45reJkQJ7UJUXEGvxo0=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgF+RrezY1R+vJeoB3MoQno65kcsaFJYE8T7
- TFT3XWlULSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8IBQAKCRCJcvTf3G3A
- JghND/9sxXRpGBChydX6oXKHlWt5zCT0j1qCewzIX5EZfL6bLAAMMvbrryh0Kxi9Sj4hqZGsIHg
- LtEJVktXPEirje72RefP1RpOxo01UzeUOLmDOWUHMoB4B0z+XubPvEaAaQ93LFS0A5Cf2GSblOc
- Hx+I37mBMNSY3YGAsN9F86amVO0lc8gZY8oppvXg0goQD2o031eriElKHB3uK26o2m9SokcDyZW
- Q4di9IdRGvGZ4IPTbQ0R5Uc/QqdPqSBZ/tJyncI0bhVLAYKfqLdKCWvKzpFkbsxSnLFey7WJTtL
- N6JxOZoVgb+cu14E6OubQIRM4a2MF6lWjK/TSXxKa741TuGCCZWHVWy8HfQg/nEehtsBojQR5Ke
- n4ZK0eZDc+TVrnTYX09u87bgIwCCnlVBad9RNxR6MYfbB5PCTvmdApJodAX+eamo/22YvttIlV2
- lHj7KOeoKn1Ybl67n+iX3eJgQ4EssmZnEZG7XmODkiw6AR1iDdWqIvIfoThRxBNs46UjYdzaIa/
- KZn9l3Z/958uJ9DYefApgztvC4i06O+FIGSIYVn45yV+CgRlLA9VZjRlrzzgLoEgZrklYDey13J
- IlbCxjn/tjXnvRrqNAWm/i7hglaOoYH5il7sEsia1iH8bIkOkbWmiSISrRcH/ojibVnpKp/vaxx ikviov4jRF0L/Hg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2091; i=keescook@chromium.org;
+ h=from:subject; bh=7SK+CeaptbBP/v+CP2JEux9OatqqjJKzGmyq2Voqx04=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgGMUghWI+PGsPguK5zp1jJTO9Udx8kDt3JM
+ m98iBkuTfCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8IBgAKCRCJcvTf3G3A
+ JsIxEACt5a2RN2oZ+4JYd2ymbmpv5B6nOsrUIqOPauBUQY+OHeVN8nMnsBdASH58oAT8jCD9WVQ
+ 7HAb+2ANB08IYc8/R0h6xkBqa2lCZk/3c5dpFUtpIlCTzY+hAfPnj3l7atArhXefRspVNbsJft8
+ hYD5qHs7sMR4xnQPCwbKLBjLn46735BXMxnSYAn9JYVGEL740vCDkxpqmQgFiSX23MaRZDi2p8U
+ v1qhycBB3BSMK6Lo8r85YYSK2XJ9x47dytKFlfuqi371X3bi2J4T1Zmf1zmU0ALDy4G3/NJIlX2
+ JhbQiOfH98N9+MtqcBMq3RWtHRqVRJsqM4nPVlbzO4D0Z5EKX7HzxzAg+wZOWXOJqZBUflBMu00
+ jbo8OBTZLfp9yRmymYTGlNNuanwYU4YZpdO9MQx9rvC1YQM+HdtO9YWpu+++sAgjyvdln94rlUO
+ sMJ9ZmFXRxInaysdaafEyQBh06ugVvFdamYsCf6FILZP9XmKMUKSGcyiRVCG0f2brI9Fuyw3SRn
+ cbpJzb9ATyxDFZyuhMI/7g3fuPMKee7yNNoMul1dOGNFcLCtwSAgsgOVJEGFdCgdgXj7MmvUulL
+ ZBQpjnBa8JFB3UeWkmEc5ex6AaaLMKyDaTl9rbXMZXXt2w178+78kcYV5TBWH9Pt2AyakcqiqaQ C0S0f0g8Orqog+w==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
@@ -96,55 +91,54 @@ kind of math. One of the most common code patterns of this is:
 
 	VAR + value < VAR
 
-Notably, this is considered "undefined behavior" for signed and pointer
+Notable, this is considered "undefined behavior" for signed and pointer
 types, which the kernel works around by using the -fno-strict-overflow
 option in the build[1] (which used to just be -fwrapv). Regardless, we
 want to get the kernel source to the position where we can meaningfully
 instrument arithmetic wrap-around conditions and catch them when they
-are unexpected, regardless of whether they are signed[2], unsigned[3],
-or pointer[4] types.
+are unexpected, regardless of whether they are signed, unsigned, or
+pointer types.
 
-Refactor open-coded pointer wrap-around addition test to use
+Refactor open-coded unsigned wrap-around addition test to use
 check_add_overflow(), retaining the result for later usage (which removes
 the redundant open-coded addition). This paves the way to enabling the
-wrap-around sanitizer in the future.
+unsigned wrap-around sanitizer[2] in the future.
 
 Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
-Link: https://github.com/KSPP/linux/issues/26 [2]
-Link: https://github.com/KSPP/linux/issues/27 [3]
-Link: https://github.com/KSPP/linux/issues/344 [4]
-Cc: Steve French <sfrench@samba.org>
-Cc: Paulo Alcantara <pc@manguebit.com>
-Cc: Ronnie Sahlberg <lsahlber@redhat.com>
-Cc: Shyam Prasad N <sprasad@microsoft.com>
-Cc: Tom Talpey <tom@talpey.com>
-Cc: linux-cifs@vger.kernel.org
-Cc: samba-technical@lists.samba.org
+Link: https://github.com/KSPP/linux/issues/27 [2]
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- fs/smb/client/readdir.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ virt/kvm/coalesced_mmio.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/fs/smb/client/readdir.c b/fs/smb/client/readdir.c
-index 94255401b38d..7715297359ab 100644
---- a/fs/smb/client/readdir.c
-+++ b/fs/smb/client/readdir.c
-@@ -467,12 +467,13 @@ static char *nxt_dir_entry(char *old_entry, char *end_of_smb, int level)
- 				pfData->FileNameLength;
- 	} else {
- 		u32 next_offset = le32_to_cpu(pDirInfo->NextEntryOffset);
-+		char *sum;
- 
--		if (old_entry + next_offset < old_entry) {
-+		if (check_add_overflow(old_entry, next_offset, &sum)) {
- 			cifs_dbg(VFS, "Invalid offset %u\n", next_offset);
- 			return NULL;
- 		}
--		new_entry = old_entry + next_offset;
-+		new_entry = sum;
- 	}
- 	cifs_dbg(FYI, "new entry %p old entry %p\n", new_entry, old_entry);
- 	/* validate that new_entry is not past end of SMB */
+diff --git a/virt/kvm/coalesced_mmio.c b/virt/kvm/coalesced_mmio.c
+index 1b90acb6e3fe..0a3b706fbf4c 100644
+--- a/virt/kvm/coalesced_mmio.c
++++ b/virt/kvm/coalesced_mmio.c
+@@ -25,17 +25,19 @@ static inline struct kvm_coalesced_mmio_dev *to_mmio(struct kvm_io_device *dev)
+ static int coalesced_mmio_in_range(struct kvm_coalesced_mmio_dev *dev,
+ 				   gpa_t addr, int len)
+ {
++	gpa_t sum;
++
+ 	/* is it in a batchable area ?
+ 	 * (addr,len) is fully included in
+ 	 * (zone->addr, zone->size)
+ 	 */
+ 	if (len < 0)
+ 		return 0;
+-	if (addr + len < addr)
++	if (check_add_overflow(addr, len, &sum))
+ 		return 0;
+ 	if (addr < dev->zone.addr)
+ 		return 0;
+-	if (addr + len > dev->zone.addr + dev->zone.size)
++	if (sum > dev->zone.addr + dev->zone.size)
+ 		return 0;
+ 	return 1;
+ }
 -- 
 2.34.1
 
