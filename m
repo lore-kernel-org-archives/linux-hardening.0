@@ -1,88 +1,41 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4ECD5C908;
-	Tue, 23 Jan 2024 01:46:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C8BA525A;
+	Tue, 23 Jan 2024 02:22:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705974375; cv=none; b=ZZHJpjgyW2OGIfUyeASihh4rgYXy+nsviqRXFQcfLaLjRNUswBA+Oq0EEfJz4AkXXHY6EcSAp0r0hNVMmO3mLcdB9rE4BLmWZ/DHGayrGvtE6KRvZJs5BZELwQQ0pdgk2TLNn4SHYhgekEnkvAASocMlHnzyO1iECmiKJVj7MvI=
+	t=1705976540; cv=none; b=d/J0dWmWaIogFvVp6cwXpwE0SmJChac4KItL+B3NQWGRQ3bnApNZHdyFh97LJNRjOrtufgojaMVNaLQnFC7y6cc3EZGloSWb8VL1IXxOBwpSiiLMKFt8AnafpIfDJEp5d8sfuk0m+FU4fai826V6/LjWVo8iwxYqPHCENM0vUJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705974375; c=relaxed/simple;
-	bh=Cr3vXVGJzQNTBQ/AT8VbtlhWbetssrpxmltQSTV8bFA=;
+	s=arc-20240116; t=1705976540; c=relaxed/simple;
+	bh=bZQqGV+tVhTYkP1ZSDB5Uu7PAmM00usg2bGknYPkfhA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dqia53ea1rcqXnoq+FSuvQJh1C7Q5NNXmP5zPjKwStdAFDOjnzGo3AfDKFB/Cjo4khWEErweqX/HIzHA7O5tq7NdxQk0Si04EzPcQ9pXQ9+zVnwUu4a9OuzijqPl03lc4kLR6lhzugFIIul8U4TmWS2btOPROQSWTtWiu9d1E8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=JneVXpy2; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=xGTGI0bW; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=cSGzfJsr; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=nv80j5S2; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=usAIOGkGnSjgPWd5SPUHZsMtTvqitHK6w+/r4y2A+7/jxrHN6noGwMi0jRYMeCfJHHaeTl8Rzqcb+ADBvJis1oEf4aMFBJh0RlLTROOlUU/LNDpgpFypSByqTiv3eD17rZdGHNxPqN/Km+ALjVLjnJKSogmy9Kxk6HHWl+gxRDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xK++tvpq; arc=none smtp.client-ip=95.215.58.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="JneVXpy2";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="xGTGI0bW";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="cSGzfJsr";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="nv80j5S2"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id CE9BB1F441;
-	Tue, 23 Jan 2024 01:46:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1705974371;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xK++tvpq"
+Date: Mon, 22 Jan 2024 21:22:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1705976536;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=kn0TR7tjK3IyZ6RoFJ/9OaPFrdgAA8FH9d3xYVGNY1o=;
-	b=JneVXpy2GoJd+Ccj0gMjzwnpyL1oG9+5PhoxuiDbV1nXMdJJwWoj32H7ywXpibn7ObECuz
-	JO09xVO8G4F+Lin6mig0xtxDaNLbCy01TKy5H9fRzq3Tc5qPXpT/PpWIrJzShMP4YSn+Bb
-	BBETHmDiwNJFgTMEOVDyv0ZvjdCrxDQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1705974371;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kn0TR7tjK3IyZ6RoFJ/9OaPFrdgAA8FH9d3xYVGNY1o=;
-	b=xGTGI0bWotzaT+lUotadC9FHxpKU3OQ8dCjHE03D03lIqOoEipV0ONjW2ZoVt6+dDuRA9k
-	QjQ2/FSZzLusL6Dw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1705974370;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kn0TR7tjK3IyZ6RoFJ/9OaPFrdgAA8FH9d3xYVGNY1o=;
-	b=cSGzfJsr4LX3IHiP70HWZlLbd8VW+bKJ/r8KOsw7/JfGOvpOvcfJTvQo69MUsVqQxORXy0
-	PNNSL2wISO7svkzKB6PImkrgHJceSWGYSABuqBRIaxChHhbbMdE62fSNMOYUhPkq6mWigl
-	tmjGtYL9Azlmij4cjN9M0H6vE3dO/Bk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1705974370;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kn0TR7tjK3IyZ6RoFJ/9OaPFrdgAA8FH9d3xYVGNY1o=;
-	b=nv80j5S2LBjihXZ4BzOqCq+Hgxn998l/BwVPdTWJAgLTgIg/w0N5YG1PIyGJkY9qiSHk/R
-	1aEiqlXV+Zh9z9Ag==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 9503A13465;
-	Tue, 23 Jan 2024 01:46:10 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id LIBpI2Iar2UGHwAAn2gu4w
-	(envelope-from <dsterba@suse.cz>); Tue, 23 Jan 2024 01:46:10 +0000
-Date: Tue, 23 Jan 2024 02:45:45 +0100
-From: David Sterba <dsterba@suse.cz>
+	bh=CZnREvVNBc8M76lu16TSPPTvEq0KborxNGxOPOEyHDU=;
+	b=xK++tvpqch9wd7Rfu8Ts7SrVgbzEQgygY3sLnhCtdGH7aYI/28H9t/wPltEqTz3xXfZz+s
+	1xddsnZpsmHTw6KitJbw+dKXL9vCQhXg/5CYgxnJb89NFxV10tLbSmLs17Kv+GW4BEXzKs
+	/zWGDLpgA01M3CGpQrVNeUv0jVRNeeQ=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
 To: Kees Cook <keescook@chromium.org>
-Cc: linux-hardening@vger.kernel.org, Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-	linux-btrfs@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Bill Wendling <morbo@google.com>,
+Cc: linux-hardening@vger.kernel.org, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Bill Wendling <morbo@google.com>, 
 	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 13/82] btrfs: Refactor intentional wrap-around calculation
-Message-ID: <20240123014545.GH31555@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
+Subject: Re: [PATCH 00/82] overflow: Refactor open-coded arithmetic
+ wrap-around
+Message-ID: <337u2jcp3s2vrvotj4jppgpr7zas5fod6k3mhe263ghpux7s5x@knz6eibm2jis>
 References: <20240122235208.work.748-kees@kernel.org>
- <20240123002814.1396804-13-keescook@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -91,60 +44,64 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240123002814.1396804-13-keescook@chromium.org>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spamd-Result: default: False [-0.07 / 50.00];
-	 ARC_NA(0.00)[];
-	 HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 REPLYTO_ADDR_EQ_FROM(0.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 RCPT_COUNT_SEVEN(0.00)[10];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[chromium.org:email,suse.com:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.27)[74.10%]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -0.07
+In-Reply-To: <20240122235208.work.748-kees@kernel.org>
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Jan 22, 2024 at 04:26:48PM -0800, Kees Cook wrote:
-> In an effort to separate intentional arithmetic wrap-around from
-> unexpected wrap-around, we need to refactor places that depend on this
-> kind of math. One of the most common code patterns of this is:
+On Mon, Jan 22, 2024 at 04:26:35PM -0800, Kees Cook wrote:
+> Hi,
 > 
-> 	VAR + value < VAR
+> In our continuing effort to eliminate root causes of flaws in the kernel,
+> this series is the start to providing a way to have sensible coverage
+> for catching unexpected arithmetic wrap-around.
 > 
-> Notably, this is considered "undefined behavior" for signed and pointer
-> types, which the kernel works around by using the -fno-strict-overflow
-> option in the build[1] (which used to just be -fwrapv). Regardless, we
-> want to get the kernel source to the position where we can meaningfully
-> instrument arithmetic wrap-around conditions and catch them when they
-> are unexpected, regardless of whether they are signed[2], unsigned[3],
-> or pointer[4] types.
+> A quick word on language: while discussing[1] the finer details of
+> the C standard's view on arithmetic, I was disabused of using the term
+> "overflow" when what I really mean is "wrap-around". When describing
+> security vulnerabilities, "overflow" is the common term and often used
+> interchangeably with "wrap-around". Strictly speaking, though, "overflow"
+> applies only to signed[2] and pointer[3] types, and "wrap-around" is for
+> unsigned[4]. An arithmetic "overflow" is considered undefined behavior,
+> which has caused our builds pain in the past, since "impossible"
+> conditions might get elided by the compiler. As a result, we build
+> with -fno-strict-overflow which coverts all "overflow" conditions into
+> "wrap-around" (i.e. 2s complement), regardless of type.
 > 
-> Refactor open-coded unsigned wrap-around addition test to use
-> check_add_overflow(), retaining the result for later usage (which removes
-> the redundant open-coded addition). This paves the way to enabling the
-> wrap-around sanitizer in the future.
+> All this is to say I am discussing arithmetic wrap-around, which is
+> the condition where the value exceeds a type's maximum value (or goes
+> below its minimum value) and wraps around. I'm not interested in the
+> narrow definition of "undefined behavior" -- we need to stamp out the
+> _unexpected_ behavior, where the kernel operates on a pathological value
+> that wrapped around without the code author's intent.
 > 
-> Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
-> Link: https://github.com/KSPP/linux/issues/26 [2]
-> Link: https://github.com/KSPP/linux/issues/27 [3]
-> Link: https://github.com/KSPP/linux/issues/344 [4]
-> Cc: Chris Mason <clm@fb.com>
-> Cc: Josef Bacik <josef@toxicpanda.com>
-> Cc: David Sterba <dsterba@suse.com>
-> Cc: linux-btrfs@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> As always, this is about being able disambiguate the intent of arithmetic
+> in the kernel. We intentionally use wrapping arithmetic in all kinds of
+> places, but we need to be able to annotate it as such going forward so
+> the compiler can distinguish when it needs to perform instrumentation
+> (when such instrumentation is enabled).
+> 
+> Getting back to my earlier mention of -fno-strict-overflow, the bulk of
+> the series is refactoring for a common code pattern in the kernel where
+> to test for potentially overflowing addition, the addition is performed,
+> and wrap-around is tested for. This is what originally[5] caused us to
+> enable -fno-strict-overflow:
+> 
+> 	var + offset < var
+> 
+> For these cases we can use either check_add_overflow() or
+> add_would_overflow(). These helpers will not trip the wrap-around
+> instrumentation, and do not depend on the whims of the compiler options.
+> (Note that I have no intention of removing -fno-strict-overflow any
+> time soon, if ever. As with all these kinds of changes, we need to
+> evolve our support for it, and we can't introduce undefined behavior
+> into the kernel.)
+> 
+> This series is mainly 3 parts:
 
-Acked-by: David Sterba <dsterba@suse.com>
+This all seems fine, but... Rust already has this at the type system
+level....
+
+I know you're not one of the people bringing bickering into the Rust
+threads, so I'm wondering if perhaps your secret plan is to annoy the
+die hard "I want everything to be fast with razor blades everywhere" C
+programmers enough to finally get onboard the "let's just switch to a
+language with less razor wire" train.
