@@ -1,98 +1,90 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06B917F7CC
-	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 19:00:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7A7182D68;
+	Tue, 23 Jan 2024 19:02:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706036428; cv=none; b=N6q6hU9eIFnCVyib6kzvZwKqEKiuSO/9Bkj2prASlb4ZrI/hqoJ5m7Sm3SPh+7MIFBNt20UKTNGQgyrWMe2yuyJpjb9bLEB51L2U1EHZ/vYjuD65QDVU2wOWVvukyYPVhQCFHJLZmMWJp85i+LgHSVuy1Zj8ieeSyAZsmks0Pl0=
+	t=1706036548; cv=none; b=DMNZZ39ZIkaTuVYH3uO3nQvIGXpHF3aA1t3LrmocH41f7N5y2s+aer+C1N1qZn2gk+TvOXzHFw2rfkfdyRCuRM8xzaA2KJSYIyfHRfJmu+q4F7amQO1UMasm56zUEWMHcwSJec0tli2Bh5hvPhHhL8+ZzrNW5A+aNXvNsUTDxLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706036428; c=relaxed/simple;
-	bh=QA2id3LqrmzYn8QBWvElp2X+uoIvf8x5U798DnB4uyg=;
+	s=arc-20240116; t=1706036548; c=relaxed/simple;
+	bh=AMlDrC2WRr+dn3kpkOK/SkiOONKbAsdL0acAmBH3IjU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kXk+8IshQhQDD8YWXZ05fWvOaPnC3JNPu/LUg8yFsvzKuHdhXG5OKNUDNFah5/5ln1vYDiKYGCujaBcjoP4qb9CwYgczhZ2F5ExD7lgAhjx+ND6ApSnKvGT99kjFKCsZPOyYo67A+QE39es9w91YD77Femh9hnopeuEadpe2NbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=GIoAAIw0; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=ENtregCY+vGVO4adjV4osA06lVp7WsLynR/xluEpNl37Cv1DMqMQ76BzFAaTU2vUJCZzQR/a2dA0G6BkHmMrjyAFVuOpbv6ETIWafrihXjBfoDA3XpCYtviyyGz9SfhoWROG2yijbmxfmyLZWTjtT4+6a6js/egVWxyhdLKTWVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uI+E/vQa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GIoAAIw0"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1d71cb97937so27932025ad.3
-        for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 11:00:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1706036413; x=1706641213; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/9FKmxWiB2vAaSsWA6W2r8jqoqGItDODorFRWTWYx3M=;
-        b=GIoAAIw05UWSdUYUcUatVeO4/MxIT2iTCSbCVHD6OubrG91JqJiPuDMggzxlFyy4qx
-         bd7vuTTEBRrsyydNn+Xe36GcZlHdHVS2MpRb1u5BDGgMakhyd/3eK54yQ8K6luDW3wXl
-         JB3GS7XcXCt2r3IP/O5Rz4esZlvgk0YoNrHcg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706036413; x=1706641213;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/9FKmxWiB2vAaSsWA6W2r8jqoqGItDODorFRWTWYx3M=;
-        b=Saene//kB5Ygg0Kz5KTadqZBAMG+W17sI0CqukRmwDS6rVE3Z28qnB0Vs68z5fWfOq
-         b1Gauz86YZZlBtatXEM0VBKaDz4vORsijuYjJxHM/YeDQoX5oHnxVBj9vhw6eI/MDolX
-         Wq7EbxdpII7zZzxiCiHd20Pzo/9BljSPuUeAWeqPj1XnBcnaUeSlGLsmoAVbegDj6hSs
-         vTC3/I1zB6CZ1Aijbf/FnO36Y/wFIw5pwOXe8b2USb4xnZN+WVq0awNiwMujebTFeKfr
-         1uyUg73IkMe3dlAll0cejzeCMGsG4bdnEVH2DDtxWrrXiiFlUloyfZZOh2ktD9QbNxB/
-         diPw==
-X-Gm-Message-State: AOJu0Yyq1wGFn+aCiXLpx5TX0Gqn3jpuCkI6cALxG/GPxc/oyPF1tR0Q
-	QFMQTlsq7C9Ioi0R8eN03FQRkRv4JXgmsStSPylPgPzIPXORt3RANAlDlK7erQ==
-X-Google-Smtp-Source: AGHT+IFYzOSitLgL/rGq5zi5+lqRnkbBRykkzfae4VthDo4FdSuOL5OnOrjVVJKPwbxtn27UKcZ0FA==
-X-Received: by 2002:a17:902:ea0a:b0:1d7:2bd6:23e3 with SMTP id s10-20020a170902ea0a00b001d72bd623e3mr4394412plg.5.1706036413360;
-        Tue, 23 Jan 2024 11:00:13 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id mp11-20020a170902fd0b00b001d75ea44323sm2836158plb.21.2024.01.23.11.00.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jan 2024 11:00:13 -0800 (PST)
-Date: Tue, 23 Jan 2024 11:00:12 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-hardening@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uI+E/vQa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AC7EC433F1;
+	Tue, 23 Jan 2024 19:02:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706036548;
+	bh=AMlDrC2WRr+dn3kpkOK/SkiOONKbAsdL0acAmBH3IjU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uI+E/vQarJSnVSiAoOq2dQ+lhl/3Dg9WADb6ph2o3G24rWx9PVbPPWzvKd7z2zbon
+	 fd6tZtG/0iNYSKyscM4lFRgg2/UaexicgL6rNqJYfM30JB4KsOQL5l1oWYLoYxMR97
+	 I0EncXE4ocoHnjdEM4oyR8YA19HLvXSLEdV1HW7psOzzgaAY21cO3Nb4XpYPaphHNn
+	 90li19FKkUnbA7o2ArL4OM4cyZxrKwRsWI2pHKzDLgnvpj9HC2OuX37bFZu/sQrgcS
+	 QAhXfNIsJufrQs3TEWy/D0kEWsGaZIPkiBCz3GaZNV7kzmZoCtQU76ow+j+Afkj6Pb
+	 6VmYsmdwH/FLw==
+Date: Tue, 23 Jan 2024 19:02:23 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: Russell King <linux@armlinux.org.uk>, Ard Biesheuvel <ardb@kernel.org>,
+	Wang Kefeng <wangkefeng.wang@huawei.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Mark Brown <broonie@kernel.org>,
-	Mike Kravetz <mike.kravetz@oracle.com>,
-	Vasily Averin <vasily.averin@linux.dev>,
-	Alexander Mikhalitsyn <alexander@mihalicyn.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 34/82] ipc: Refactor intentional wrap-around calculation
-Message-ID: <202401231058.5C5248DC3@keescook>
-References: <20240122235208.work.748-kees@kernel.org>
- <20240123002814.1396804-34-keescook@chromium.org>
- <CAHk-=whS7FSbBoo1gxe+83twO2JeGNsUKMhAcfWymw9auqBvjg@mail.gmail.com>
- <202401221713.3FCABC9290@keescook>
- <CAHk-=wgMPVv-mDxA2qcywpLCRLojtaKmP13h7bVo4m=XN202xA@mail.gmail.com>
+	Ben Hutchings <ben@decadent.org.uk>,
+	linux-arm-kernel@lists.infradead.org,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	Hugh Dickins <hughd@google.com>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] ARM: fault: Implement copy_from_kernel_nofault_allowed()
+Message-ID: <4d46dafe-b5bd-4395-b680-94b11814f7c6@sirena.org.uk>
+References: <20240123011238.work.301-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="nyrYAyHMl+yOHan+"
+Content-Disposition: inline
+In-Reply-To: <20240123011238.work.301-kees@kernel.org>
+X-Cookie: Stay together, drag each other down.
+
+
+--nyrYAyHMl+yOHan+
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wgMPVv-mDxA2qcywpLCRLojtaKmP13h7bVo4m=XN202xA@mail.gmail.com>
 
-On Tue, Jan 23, 2024 at 10:06:12AM -0800, Linus Torvalds wrote:
-> So:
-> 
->  - get rid of that commit message that is lying garbage
-> 
->  - fix the so-called "sanitizer".
-> 
->  - stop calling the unsigned wrap-around a "sanitizer" and talking
-> about "undefined behavior" in the same sentence, since it's neither.
-> 
-> Do you really not see why I think that thing is actively *WRONG*?
+On Mon, Jan 22, 2024 at 05:12:38PM -0800, Kees Cook wrote:
+> Under PAN emulation when dumping backtraces from things like the
+> LKDTM EXEC_USERSPACE test[1], a double fault (which would hang a CPU)
+> would happen because of dump_instr() attempting to read a userspace
+> address. Make sure copy_from_kernel_nofault() does not attempt this
+> any more.
 
-Yes -- I was trying to head off the confusion about what the larger goal
-is (trapping unexpected wrap-around) so that people don't assume I'm
-talking about Undefined Behavior (we don't have any UB arithmetic in the
-kernel, very intentionally). I did not succeed! I'll rewrite it all.
+This appears to fix the original issue:
 
--- 
-Kees Cook
+   https://lava.sirena.org.uk/scheduler/job/497571
+
+(though so did your earlier patch) so:
+
+Tested-by: Mark Brown <broonie@kernel.org>
+
+--nyrYAyHMl+yOHan+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmWwDT4ACgkQJNaLcl1U
+h9Cz8Qf/Qy2KDqML2iyqq2XSVkt1s9bKd4G6tBipnCo95/TlOxpB5ZqdYHctfIBP
+aDHBIqLHEm9S3Czkfrl3AvoWoir3p72kVBnaIYjoREM3n/33Qlg4tyR6s3ZNP4oP
+6yVQeL13bjBKf1833x0AZ2WV6ShsyHf5BFgR5H2zCoK7wxg8IyfhHsorMGOHOTOA
+TX328+5DL39ZskOyWnAwdte3d7oXTUDN9KSPUJEKav62YHjz63FWo4QhyXDTF9Hl
+rO07Q8ky6jGtc8OCFi07Z5CLth43IyU1SGNQqxsibIYhtuyziqIU6pUeb62Oli67
+UQ/nlT/qhBrOd4Ns+kX/2VQaHTvVMg==
+=d+Ba
+-----END PGP SIGNATURE-----
+
+--nyrYAyHMl+yOHan+--
