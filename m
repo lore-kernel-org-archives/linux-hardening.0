@@ -1,78 +1,71 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9217813D4F4
-	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 00:46:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 610A313D4EA
+	for <linux-hardening@vger.kernel.org>; Tue, 23 Jan 2024 00:46:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705970770; cv=none; b=YuHMxmKL12cW5awLBdRAZsgE9tuLADGbnF+l7EZdTJGPSO/U+k5+tWCNYwUomr/FeWpeN4bcBNPKhcx8iyE2LH9DeA2/+lctPK6cubyMulLJsiCa0ZLIVp45wQSDspKunEOYTZn4Syxu3YQkyleIPY+AzmAQXe6YIB+Rv49GBAg=
+	t=1705970770; cv=none; b=bb3InXnoYyfsWbht9cM+mli65omFhOsF5vDEs9VdYuhuXqqMWC3HHZptVXj4xDQmKQwYv6vW9lvwesZy+J+qLya5CdfUKins1pBxh/BxObvuLQsbZ/w7wWf69YwIZ3aEr/gNDoPD/hX8i3kAh2h6w0vubVvNp9tcqr/Ldlcllyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705970770; c=relaxed/simple;
-	bh=GddXUjJuZ+2bGLFR1fNATJcBu0uRqs+B42yjt68FCHs=;
+	bh=4HPvynPR3Ko1dXfNMJBApuVlt9+5UyaMefuvQ347bXs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QJutf7ZOSVgGWjQnfgXUnsDCoR2inXKL6Q+9npEQ7Uri1dP/xC8pAH7SxN34/whJVJPU+EyXIwMn58VIPE5xbfwaY6KA+kk77fiwWqdBOzz9ljAdwBMQL2fxiyumDq6e9enD9AqpSclSgdsUj8YsMoHK5Jtlcih7zuMkOYKP+fY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=jP8trZ5U; arc=none smtp.client-ip=209.85.214.177
+	 MIME-Version; b=WZaQeEuxLDEZz5w47Eljq1NTJCUEYnosI1loOd9nvlGZn+7OLQeScCf+oOiyKs1ZW/AWN7lCtg0wZnGiWPAMBClZbcXIDTUmQ58oYUMMFTNkj3WzuvLA87P0XNAbchsglOHbqMguZCNaQ8guqLDWk0HoOJCgjveMJPAPRcQYeNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=kqm0YraK; arc=none smtp.client-ip=209.85.210.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jP8trZ5U"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1d70b0e521eso27329065ad.1
-        for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 16:46:08 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kqm0YraK"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6d9bbf71bc8so2216740b3a.1
+        for <linux-hardening@vger.kernel.org>; Mon, 22 Jan 2024 16:46:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1705970768; x=1706575568; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1705970769; x=1706575569; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=F9VeAC0n6GMx4wPi40NMz4SGPTTQe2yHzPs1JgVwamw=;
-        b=jP8trZ5Ux+surP57gcV9Qyxvx1cm3ehCLnwyPfzBh2K4bFN9S8sokZw3r9k97AcmkV
-         g4DPgW3nd1dl2JWmvtq1SlyODXfbLIQitNsVCH4kWzomz1OzQuriYTYT7J1prHGARub2
-         cu1YO2TejonQI2uWYkBZ0ON7ury4q/z4b2j1w=
+        bh=Sy3Mn0T2j/xVq+cywviUlH77t9Sq4eXs+6SMvLbadC8=;
+        b=kqm0YraKJjzpYJ0YwLvcUV9muskZYih0/OWTiUjwU0iTPpX4+z/HD1HqdE0ll8XXQo
+         3alVEQPZs49egUMpsaZItiIygz+MgfGy/mQ5mVJQ0Kopo82IFuX0A3Y47OOL/n4iAo5u
+         opxu+BKRp50NVXte6m2zV2mcumq2XjSUDKdBs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705970768; x=1706575568;
+        d=1e100.net; s=20230601; t=1705970769; x=1706575569;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=F9VeAC0n6GMx4wPi40NMz4SGPTTQe2yHzPs1JgVwamw=;
-        b=uPvRus6xKf+uDnlpSUAxnU3Kqq/lXOSzGJGXDNhnvjbsJCZ/ncj3INX5aN5Vm3vAy4
-         Mr/aUivKX60jRWFQ1/p83ZRHAw6rdTBPbWfizN+tL/msbUKPmShDNVNWF2GEimd2qX4n
-         L9UPNd8dRBC7PYwLkpQWtJSlaoNitRSjZfMxbUu7VFiNK0UMk+fLxu97uWreE20fJYe+
-         mawXTpJbSdeqpWbHG/2HSttMDdTR9QpXqkvTslAa7DTqIbRPzPsojrXWGUaAL3FuJ/p7
-         CISYRdtNDMXuJoekXhqxNkd+seDYpumlnIlFp76m2OOZP2Y4iY13K/Dwce34PWU3Vpt3
-         8FZw==
-X-Gm-Message-State: AOJu0YzyBT7bq/+NPGeLaUNQqFBevveWpu/A2a4bXDAE4uk0toZc0gcC
-	+k+KaOLEE3nHt3SkymhMbhLtANOe9uXq3fPnZASu4nhR6O3uZ4DTfClHV2QbXQ==
-X-Google-Smtp-Source: AGHT+IFeI6YycjKnBoqLRaEce0XOlcWb1lhT+14MzKScGnQ0O8QUPwnivDqc4t/MzboWs6mmtDCiSA==
-X-Received: by 2002:a17:903:2348:b0:1d7:6060:c1fd with SMTP id c8-20020a170903234800b001d76060c1fdmr1485888plh.83.1705970768081;
+        bh=Sy3Mn0T2j/xVq+cywviUlH77t9Sq4eXs+6SMvLbadC8=;
+        b=L8fM5IVw1G7fqA4d3SihoOoLJUXjRvBY/7PuDh3jJWxKgh6SAlyD4YxkOmFPZzlWdy
+         nykM0WQeoIGHDz/sQn7ewoejDfOXKMBcqSg6/qGG2FC8TcP9uGecdQ8+EBD4yGde/5c2
+         geMXX51qzP9luwELWsGv27/cG2l76MxORLJJkkKPJ8+qF3OHgCEMmItFZ7Ihv+11Bj92
+         C2oKEYevuTlOQgId6WWPn2j2aOv+vGccHQ8hsSm+r73UBD//3EuNZtlWwoKy13Y4nA6C
+         aV4n5mWcoPAvOju/mpuMIfbZ2zAbaITV8h4WSbtYnhi91TObE2GSbWzwKHIStuS3diXp
+         4yJQ==
+X-Gm-Message-State: AOJu0YzCwijsHSSnq2YSZyNxofM49FHbt64YoGLjHdrn7lpecqj23Cjo
+	g7nN77BVGPnT1ThXIpU4ayqK9h3ADJBX4KswBDwWjvfdJHvZXyBNYRjprXbAWarmT90WwNRyezV
+	99A==
+X-Google-Smtp-Source: AGHT+IEUqe5dx8QwlTdc0Hf1S1rf52LAuqKi2r9NnTuHQLNKc8Ev2tu0ODkf4nLiv9kWyuVYwBzGmw==
+X-Received: by 2002:a62:d444:0:b0:6da:63a5:3f32 with SMTP id u4-20020a62d444000000b006da63a53f32mr2087437pfl.66.1705970768640;
         Mon, 22 Jan 2024 16:46:08 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id mj11-20020a1709032b8b00b001d73a2acc2bsm3598712plb.142.2024.01.22.16.45.59
+        by smtp.gmail.com with ESMTPSA id y4-20020a62ce04000000b006dbd9fd2bebsm3352305pfg.163.2024.01.22.16.46.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 22 Jan 2024 16:46:05 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
 To: linux-hardening@vger.kernel.org
 Cc: Kees Cook <keescook@chromium.org>,
-	Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Reiji Watanabe <reijiw@google.com>,
-	Eric Auger <eric.auger@redhat.com>,
-	Ricardo Koller <ricarkol@google.com>,
-	Raghavendra Rao Ananta <rananta@google.com>,
-	Quentin Perret <qperret@google.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Du Cheng <ducheng2@gmail.com>,
+	netdev@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 24/82] KVM: arm64: vgic: Refactor intentional wrap-around calculation
-Date: Mon, 22 Jan 2024 16:26:59 -0800
-Message-Id: <20240123002814.1396804-24-keescook@chromium.org>
+Subject: [PATCH 28/82] niu: Refactor intentional wrap-around calculation
+Date: Mon, 22 Jan 2024 16:27:03 -0800
+Message-Id: <20240123002814.1396804-28-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240122235208.work.748-kees@kernel.org>
 References: <20240122235208.work.748-kees@kernel.org>
@@ -82,19 +75,19 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3802; i=keescook@chromium.org;
- h=from:subject; bh=GddXUjJuZ+2bGLFR1fNATJcBu0uRqs+B42yjt68FCHs=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgGWO9y3Y/zEJG45Jiuj5PhDwKbjJDqkH4IS
- kNGsePCJRqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8IBgAKCRCJcvTf3G3A
- JqBCD/9v7CKsi/Hp5MouKCy7vLngZngkzYEdtOtxvOJgkUFMmGHIkK2gyz3sJe4U7qqfIEZ0SIH
- byjwpGGQ+Wkbvqgus0jhOeC7XosIpO5nK83FNGAUV+4MfxCBW9saxE0quwl3Ie+gR1zNXAXEqta
- HtaMpPyFf4WXUs4KsfbCtnxQHKhYiU+B/tB6lN1SBzRm60x/3cVJuQ20JZ/i/kmandUheqFP0bj
- A3H9hdaRlfvsDgWjIHJ8Eo1A6vVgRhkgrXPhd4/FenNP/Jz2IdwVDxNxU1ConcuKOt/aA8eavFW
- 5rnNaKwaIgWZpM9B34AoDY07DSYmMlbC5jIIcFQCG22pmVItHkejUwE8DpLPrBjJWqpd75CkQvm
- VYPa4oC24OVpGUmyN6LyxhIjaVDqr5Y8WP2GqhwhOFLeq4ndz3iUyyeo+NCs9kbLiCIn+i/8UQd
- aTUuW4NzKzChhyeYxkQ3DSQ1oglFaVSoG+DZVG9LGK3pG2aGtPMupHfwxlyuGXB/0reNaDiCV4O
- th9KxB/tcrzhzWw7YGwOeUyw6UHIF8CUu/ecKm8CE8HiwxAxveX29SzicfeLz45rTrGItmaz6Zb
- 19dbQNQyeeGBES1P35IUEbY7CsxIA6muFz7htulmypE1jgwHu2k/Dv0H0r5e4CdMI5J9gkBbRHw +10i2uWcrpKRsjg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2297; i=keescook@chromium.org;
+ h=from:subject; bh=4HPvynPR3Ko1dXfNMJBApuVlt9+5UyaMefuvQ347bXs=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgGajy61mavJLiiKlUcTrC+GpKwlQS32yLps
+ eqkOZGrbz6JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8IBgAKCRCJcvTf3G3A
+ JjxnD/wLi8HDy6bvcWJHrheHwblvygg/rt1qDMgmueTdsD10P2P5hSQT9cDWcxBgYmPx3QSgkoN
+ DI0zgPvjfV2y+4HKJvovXZDLUygnMhtUsoRYA/UNHeRo3fxPyLYLjfrT2mt9AgGEuctdamOfJfN
+ Nyhy8b3RuJcDOH2afROIUlXeKQW8YrioLMJjJ0wJ/IcOJ96RyjCKSL3bkl5xvm5M44pX1p1msMI
+ VeP+/9xS/uFDWzWbIxGAMyJmSE3mvm/7oqHlESxAcrq95OyuSOQELRAZh8vKFCW/rqedozh4HdH
+ sVJlLxUPr3Yn2lJrlHD6tPKkVqGzcoeWyHjT+l5gX7BV+4bdXdkPJWwtqzIqi2rDJbgdC0K3nel
+ nWwtV2xdyauZ1lhOAg26PgxW9+keBeEYI+M5ce14tRu5NjyjSKkqzT1oC3bjhXpmHDTXuyC5ncX
+ z1CeOGSLxClD7kcLVWxPWNO37GNJpnVjy8Pbb0Ee7csz9cJOwmCKgjZeyqwkLvq5RHTlC4u0veZ
+ DTaVGQArMh2rZAOiKSyag3NbemYIb6c2JHe451VJ8Pt0UjaPUxF3vXUs5NGPRXIcDYxNemUTxCv
+ 2Lsl/k243rDBq1Z/j3U8smcznTLGYwtCbkuYBOQGSX52s6/i5Xih21gZ/wq1SKE9OyNhm+9EgFl xjTJBfyCGFJiWDA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
@@ -115,84 +108,47 @@ or pointer[4] types.
 Refactor open-coded unsigned wrap-around addition test to use
 check_add_overflow(), retaining the result for later usage (which removes
 the redundant open-coded addition). This paves the way to enabling the
-wrap-around sanitizers in the future.
+unsigned wrap-around sanitizer[2] in the future.
 
 Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
 Link: https://github.com/KSPP/linux/issues/26 [2]
 Link: https://github.com/KSPP/linux/issues/27 [3]
 Link: https://github.com/KSPP/linux/issues/344 [4]
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Oliver Upton <oliver.upton@linux.dev>
-Cc: James Morse <james.morse@arm.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Zenghui Yu <yuzenghui@huawei.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Reiji Watanabe <reijiw@google.com>
-Cc: Eric Auger <eric.auger@redhat.com>
-Cc: Ricardo Koller <ricarkol@google.com>
-Cc: Raghavendra Rao Ananta <rananta@google.com>
-Cc: Quentin Perret <qperret@google.com>
-Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: kvmarm@lists.linux.dev
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: Simon Horman <horms@kernel.org>
+Cc: Du Cheng <ducheng2@gmail.com>
+Cc: netdev@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- arch/arm64/kvm/vgic/vgic-kvm-device.c |  6 ++++--
- arch/arm64/kvm/vgic/vgic-v2.c         | 10 ++++++----
- 2 files changed, 10 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/sun/niu.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/kvm/vgic/vgic-kvm-device.c b/arch/arm64/kvm/vgic/vgic-kvm-device.c
-index f48b8dab8b3d..0eec5344d203 100644
---- a/arch/arm64/kvm/vgic/vgic-kvm-device.c
-+++ b/arch/arm64/kvm/vgic/vgic-kvm-device.c
-@@ -18,17 +18,19 @@ int vgic_check_iorange(struct kvm *kvm, phys_addr_t ioaddr,
- 		       phys_addr_t addr, phys_addr_t alignment,
- 		       phys_addr_t size)
+diff --git a/drivers/net/ethernet/sun/niu.c b/drivers/net/ethernet/sun/niu.c
+index 21431f43e4c2..a4de07c6e618 100644
+--- a/drivers/net/ethernet/sun/niu.c
++++ b/drivers/net/ethernet/sun/niu.c
+@@ -6877,15 +6877,16 @@ static int niu_get_eeprom(struct net_device *dev,
  {
-+	phys_addr_t sum;
-+
- 	if (!IS_VGIC_ADDR_UNDEF(ioaddr))
- 		return -EEXIST;
+ 	struct niu *np = netdev_priv(dev);
+ 	u32 offset, len, val;
++	u32 sum;
  
- 	if (!IS_ALIGNED(addr, alignment) || !IS_ALIGNED(size, alignment))
+ 	offset = eeprom->offset;
+ 	len = eeprom->len;
+ 
+-	if (offset + len < offset)
++	if (check_add_overflow(offset, len, &sum))
  		return -EINVAL;
- 
--	if (addr + size < addr)
-+	if (check_add_overflow(addr, size, &sum))
+ 	if (offset >= np->eeprom_len)
  		return -EINVAL;
+-	if (offset + len > np->eeprom_len)
++	if (sum > np->eeprom_len)
+ 		len = eeprom->len = np->eeprom_len - offset;
  
- 	if (addr & ~kvm_phys_mask(&kvm->arch.mmu) ||
--	    (addr + size) > kvm_phys_size(&kvm->arch.mmu))
-+	    sum > kvm_phys_size(&kvm->arch.mmu))
- 		return -E2BIG;
- 
- 	return 0;
-diff --git a/arch/arm64/kvm/vgic/vgic-v2.c b/arch/arm64/kvm/vgic/vgic-v2.c
-index 7e9cdb78f7ce..c8d1e965d3b7 100644
---- a/arch/arm64/kvm/vgic/vgic-v2.c
-+++ b/arch/arm64/kvm/vgic/vgic-v2.c
-@@ -273,14 +273,16 @@ void vgic_v2_enable(struct kvm_vcpu *vcpu)
- /* check for overlapping regions and for regions crossing the end of memory */
- static bool vgic_v2_check_base(gpa_t dist_base, gpa_t cpu_base)
- {
--	if (dist_base + KVM_VGIC_V2_DIST_SIZE < dist_base)
-+	gpa_t dist_sum, cpu_sum;
-+
-+	if (check_add_overflow(dist_base, KVM_VGIC_V2_DIST_SIZE, &dist_sum))
- 		return false;
--	if (cpu_base + KVM_VGIC_V2_CPU_SIZE < cpu_base)
-+	if (check_add_overflow(cpu_base, KVM_VGIC_V2_CPU_SIZE, &cpu_sum))
- 		return false;
- 
--	if (dist_base + KVM_VGIC_V2_DIST_SIZE <= cpu_base)
-+	if (dist_sum <= cpu_base)
- 		return true;
--	if (cpu_base + KVM_VGIC_V2_CPU_SIZE <= dist_base)
-+	if (cpu_sum <= dist_base)
- 		return true;
- 
- 	return false;
+ 	if (offset & 3) {
 -- 
 2.34.1
 
