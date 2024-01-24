@@ -1,135 +1,144 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80E417C09A
-	for <linux-hardening@vger.kernel.org>; Wed, 24 Jan 2024 16:08:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 302117CF03
+	for <linux-hardening@vger.kernel.org>; Wed, 24 Jan 2024 16:15:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706112512; cv=none; b=hXgmktEIwN2OKkn+okNL7FUATewfMCzewzg1yX69zH5jp9QJ7vWnAx9G1Qrlxrw0bXzmtZ5rnjfMwlXQd+BO+yHgDDjRRa83y/hPuYlvxYIHxgagNhmxefhv+vtQKcHjABJeGg2x2pGZqDq8khnfcK0HAY27yo0M4VnwGE8vQj0=
+	t=1706112919; cv=none; b=t9mwxy0C3140qq30LNzu5UKULVffEouv2rkm9ju5MNLhn8o0IMwc99Okt6R8oO5qVKw2qnIz5bHtKny/BFvb91WAkrtfrKj1BQMddwhdorcHEF/Drfi7fu7wlCt4Qkov9UF31IAVWHVS3dsxb/zZjck7DMwytk2z+DmuqTEn99I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706112512; c=relaxed/simple;
-	bh=P8x3AO2a8scV6woW1e3Y4EcwMFtwUqE7IRH31eTIO1g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jzv0wmy5nu2Mr05lhfTCI+ZprO+hgiIf2MRTsx2kOIARED6lmGRnfsNStoYe7efSByut9FplWDyCn/rQuW5kzE2ZjH2XoKLFEBh5KJaKSPqE4ZKeS6h0CHWTjhdcWlg8XsnFq+DpwrKUxmR7Ff+IV5Ok79+uydBbaVNuZsjI584=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=H3/+W0YM; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1706112919; c=relaxed/simple;
+	bh=RvfyWPN0/pDbmTb/g0GVVom9vXJvmbkAO74qsKrres4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=mubWBi5vrrm2rosf8niTDAaS4bXMtCNA1hOqjSLi631PSbjpRogL1QIbqQyCW1LV7dYv2ZrfHgkQofxN0ngjxZh/EiibrKYJ6NyVMCBsH+qHli0IkEo52mmP+NJhWEEvE4ktFSV2DJfJkr29GgWzlpaV8HUOiJg7ZT+FysPzgTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=N9AqOEFK; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H3/+W0YM"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1d70b0e521eso41380445ad.1
-        for <linux-hardening@vger.kernel.org>; Wed, 24 Jan 2024 08:08:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N9AqOEFK"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-5ff82dc16e0so68066407b3.2
+        for <linux-hardening@vger.kernel.org>; Wed, 24 Jan 2024 08:15:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1706112510; x=1706717310; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=uwpskAl9LsN0AXCbwXO1lfWjVtroeO2kOOid+4UlMDA=;
-        b=H3/+W0YMVWgxEwiDPd/KJ/yN4Bdv8swY5s7ywuxfefsU6zutp0YSD3vjcTdzkewrXO
-         6ysQ8aPdahQqDmsMjt+Z8rw1ISYIEK87p9idEumhHusd1zsH6xyEcWUJLnNTvdvZ6TZz
-         zkCTz289KG20q07RN+/ZnglMhF/7Ml5hdv5xI=
+        d=google.com; s=20230601; t=1706112915; x=1706717715; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=DScpWxX4P0NW45UuZVlmkL6cF3+1DTwlqBdTnasMemw=;
+        b=N9AqOEFKObdczq+6DdcfWjisDlehSMSZ38vgNr0eHmGPEFfdgQCUiSa8jE5puBhaL7
+         ry4ZXRNoj7geN+c5tmSsqC9Q7kPz0npTZgTVntYzB/SeTMRTtFoc2XUC7EPnoE/rXTEe
+         lP3EkUSQfsTNfQmXmdQPIYAdhYERpr88th6c+6GXKdwcWsIdEcT9UwHkw7kn3G/+ULso
+         UMg0WzVF4QA0/2RWw24Eq1NuiHBOy6/vIDJM5R9c9tT2mmkgS2E9rAefL7iAoeWvpkPQ
+         jMTg2dAS7xCUBvOkxgXi51/gWTDv/mez+Y07itlf8PtTgqZxXjNYvMCME2PjXY05cwWG
+         TY+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706112510; x=1706717310;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uwpskAl9LsN0AXCbwXO1lfWjVtroeO2kOOid+4UlMDA=;
-        b=OURPyg/5ejR7g59T+4g2KGPomdrg9U1spSoYNSPa2cLVkU3cBKaTdAzD4OrKYRwq19
-         PdTOK+EFwT31SZcAV3W/E5lYGLME1uopRu1tgpGv9X3ZJJyGjDYQRNXacqI4q0JCs9Ps
-         abjljxasIjy7V3J9qBA9s42bbuovSkVAHEOUg1FYgMCLFF6gi7KuquNaWk3QuBpxpItw
-         CFBDjqGJZZMmI9hP8794TP2s79TBd+WCo6i+CSuiieOyP7gexGLUnUrnMHaqlWcr3yQU
-         9QHqPofeM57w0VD72TZb8ctTSYFjqYZ8DI/HyhFm56c1bxidD8Q7WZ/Ab7Ap0jc12iPv
-         Gw8A==
-X-Gm-Message-State: AOJu0YweQ45nMC+qnZr604CUb9ynIgDr3RTUVL0FftvfKFK2EVZQTiYq
-	d0F4OA7dYP28r40eSorwa7xz9EjxIEodsjcPXiFsmWA8GVKLHQRQFIfdNbYm0g==
-X-Google-Smtp-Source: AGHT+IGqSafzwgjxpg5Yxg1Ud2WtYZsnhytXHIISl8WrkHaH3dJ1Txa9c/422e4HCjPEJaoWbtbd+w==
-X-Received: by 2002:a17:902:db07:b0:1d7:57bf:259 with SMTP id m7-20020a170902db0700b001d757bf0259mr1003726plx.121.1706112509796;
-        Wed, 24 Jan 2024 08:08:29 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id i10-20020a17090320ca00b001d737d51411sm6630106plb.227.2024.01.24.08.08.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jan 2024 08:08:29 -0800 (PST)
-Date: Wed, 24 Jan 2024 08:08:28 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Yang Shi <shy828301@gmail.com>
-Cc: Ard Biesheuvel <ardb@kernel.org>, Matthew Wilcox <willy@infradead.org>,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, mail@horotw.com,
-	linux-hardening@vger.kernel.org, Jakub Wilk <jwilk@jwilk.net>,
-	Salvatore Bonaccorso <carnil@debian.org>,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	William Kucharski <william.kucharski@oracle.com>
-Subject: Re: Limited/Broken functionality of ASLR for Libs >= 2MB
-Message-ID: <202401240808.F5659B75@keescook>
-References: <69fa6015256613ed10aee996e181ebd4@horotw.com>
- <87il3ur1ik.fsf@gentoo.org>
- <ZaVi4ij0jgEz+isx@casper.infradead.org>
- <07c348caaf6b4c457ab4b452f53ed048@horotw.com>
- <ZaWZqnD7XmP5HMA0@casper.infradead.org>
- <CAMj1kXGMPeFE_JAKBhAkh9eqmvEJjucsXru2bjc6oa35oyK4=A@mail.gmail.com>
- <202401231433.FB2D7FBD@keescook>
- <CAHbLzkqmuD-YWxW6oixsFbO9EmDMWKcJ01TMzZxUmO6=CUwrVw@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1706112915; x=1706717715;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DScpWxX4P0NW45UuZVlmkL6cF3+1DTwlqBdTnasMemw=;
+        b=OOlG4sQJyoe0t+L7pk83BSizFRHpBcGJLtYyKAkfsDbHo4BQ7htMh2Kz8XR72CSLgB
+         lEuf5GZAH3AZnc0C6SVKbJw0tob5EZGl4fKAmvz/uhNS3Ph8udQdzUH1Oa6KuesBus1/
+         Hd+B4jSZNMn/+rtWWWh0zWSOX7YjUk7Eku1F20pAT7mPJ0lYtUiWTWhDif8hUbwO9zm/
+         xAVtZYM4dyiAVxih/N7mb+nfumm/C5EoHLvZAxxRvdRasZzUQY644ZZWXw91maDp48XX
+         48P42qbxN2+g2eXacannalO0q7cvhdfJuEEG44s9E2gfVFwLBk009AfBSf48Zesa37nu
+         b04w==
+X-Gm-Message-State: AOJu0YyLPmTzNJ5DDGKPkWo17//+OHoMQNO/ZbhLZVkjl92H99K2VWVv
+	S61xEeObDXPUc8VVtrc1leTm3hef7llCenV886r2mjKVs2HU1Id8IOaK52ntuH/rcsmyk/dhFbG
+	kCA==
+X-Google-Smtp-Source: AGHT+IHugFCA1MsFbxTlJk6F3wFNy0Bmcnzj0q7iNmFt3wGOlc6Mlj+zbpXGNq5Bn6FE8++AUc/nRsQatQ0=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a25:b949:0:b0:dc2:3247:89d5 with SMTP id
+ s9-20020a25b949000000b00dc2324789d5mr51217ybm.4.1706112915268; Wed, 24 Jan
+ 2024 08:15:15 -0800 (PST)
+Date: Wed, 24 Jan 2024 08:15:13 -0800
+In-Reply-To: <20240123002814.1396804-25-keescook@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHbLzkqmuD-YWxW6oixsFbO9EmDMWKcJ01TMzZxUmO6=CUwrVw@mail.gmail.com>
+Mime-Version: 1.0
+References: <20240122235208.work.748-kees@kernel.org> <20240123002814.1396804-25-keescook@chromium.org>
+Message-ID: <ZbE3kacV0GbtK5zA@google.com>
+Subject: Re: [PATCH 25/82] KVM: SVM: Refactor intentional wrap-around calculation
+From: Sean Christopherson <seanjc@google.com>
+To: Kees Cook <keescook@chromium.org>
+Cc: linux-hardening@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, kvm@vger.kernel.org, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On Tue, Jan 23, 2024 at 05:04:22PM -0800, Yang Shi wrote:
-> On Tue, Jan 23, 2024 at 2:37 PM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > On Tue, Jan 16, 2024 at 09:09:45AM +0100, Ard Biesheuvel wrote:
-> > > (cc Kees, LAKML)
-> > >
-> > > https://lkml.kernel.org/r/69fa6015256613ed10aee996e181ebd4%40horotw.com
-> > >
-> > > On Mon, 15 Jan 2024 at 21:46, Matthew Wilcox <willy@infradead.org> wrote:
-> > > >
-> > > ...
-> > > > Yeah, I don't know either.  Outside my scope of expertise.
-> > > >
-> > > > I received a suggestion off-list that we only do the PMD alignment on
-> > > > 64-bit, which seems quite reasonable to me.  After all, I don't care
-> > > > about performance on 32-bit just as much as I don't care about security
-> > > > on 32-bit.
-> > > >
-> > >
-> > > For context, the culprit is
-> > >
-> > > commit 1854bc6e2420472676c5c90d3d6b15f6cd640e40
-> > > Author: William Kucharski <william.kucharski@oracle.com>
-> > > Date:   Sun Sep 22 08:43:15 2019 -0400
-> > >
-> > >     mm/readahead: Align file mappings for non-DAX
-> > >
-> > >     When we have the opportunity to use PMDs to map a file, we want to follow
-> > >     the same rules as DAX.
-> > >
-> > >     Signed-off-by: William Kucharski <william.kucharski@oracle.com>
-> > >     Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> > >
-> > > which affects *all* 32-bit architectures not just i686. 32-bit ARM
-> > > user space is still being deployed widely, even on arm64 Chromebooks
-> > > running 64-bit kernels (at least up until recently) so unfortunately,
-> > > we're not quite at the point yet where we can just let it rot.
-> >
-> > Is this related at all to this thread as well?
-> > https://lore.kernel.org/lkml/20220809142457.4751229f@imladris.surriel.com/
+On Mon, Jan 22, 2024, Kees Cook wrote:
+> In an effort to separate intentional arithmetic wrap-around from
+> unexpected wrap-around, we need to refactor places that depend on this
+> kind of math. One of the most common code patterns of this is:
 > 
-> Yes
+> 	VAR + value < VAR
 > 
-> >
-> > Can we avoid this on 32-bit or at least not mislead userspace about the
-> > available entropy visible in /proc/sys/vm/mmap_rnd*_bits ?
+> Notably, this is considered "undefined behavior" for signed and pointer
+> types, which the kernel works around by using the -fno-strict-overflow
+> option in the build[1] (which used to just be -fwrapv). Regardless, we
+> want to get the kernel source to the position where we can meaningfully
+> instrument arithmetic wrap-around conditions and catch them when they
+> are unexpected, regardless of whether they are signed[2], unsigned[3],
+> or pointer[4] types.
 > 
-> https://lore.kernel.org/linux-mm/20240118133504.2910955-1-shy828301@gmail.com/
-> 
-> This patch basically made thp_get_unmapped_area no-op on 32 bit.
+> Refactor open-coded unsigned wrap-around addition test to use
+> check_add_overflow(), retaining the result for later usage (which removes
+> the redundant open-coded addition). This paves the way to enabling the
+> wrap-around sanitizers in the future.
 
-Ah-ha! Okay, thanks very much. I missed this landing. :)
+IIUC, the plan is to get UBSAN to detect unexpected overflow, at which point an
+explicit annotation will be needed to avoid false positives.  If that's correct,
+can you put something like that in these changelogs?  Nothing in the changelog
+actually says _why_ open coded wrap-around checks will be problematic.
 
--- 
-Kees Cook
+> Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
+> Link: https://github.com/KSPP/linux/issues/26 [2]
+> Link: https://github.com/KSPP/linux/issues/27 [3]
+> Link: https://github.com/KSPP/linux/issues/344 [4]
+> Cc: Sean Christopherson <seanjc@google.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: x86@kernel.org
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: kvm@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  arch/x86/kvm/svm/sev.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+> index f760106c31f8..12a6a2b1ac81 100644
+> --- a/arch/x86/kvm/svm/sev.c
+> +++ b/arch/x86/kvm/svm/sev.c
+> @@ -400,16 +400,17 @@ static struct page **sev_pin_memory(struct kvm *kvm, unsigned long uaddr,
+>  	unsigned long locked, lock_limit;
+>  	struct page **pages;
+>  	unsigned long first, last;
+> +	unsigned long sum;
+
+Similar to Marc's comments, I would much prefer to call this uaddr_last.
+
+>  	int ret;
+>  
+>  	lockdep_assert_held(&kvm->lock);
+>  
+> -	if (ulen == 0 || uaddr + ulen < uaddr)
+> +	if (ulen == 0 || check_add_overflow(uaddr, ulen, &sum))
+>  		return ERR_PTR(-EINVAL);
+>  
+>  	/* Calculate number of pages. */
+>  	first = (uaddr & PAGE_MASK) >> PAGE_SHIFT;
+> -	last = ((uaddr + ulen - 1) & PAGE_MASK) >> PAGE_SHIFT;
+> +	last = ((sum - 1) & PAGE_MASK) >> PAGE_SHIFT;
+>  	npages = (last - first + 1);
+>  
+>  	locked = sev->pages_locked + npages;
+> -- 
+> 2.34.1
+> 
