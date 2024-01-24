@@ -1,87 +1,87 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from vulcan.kevinlocke.name (vulcan.kevinlocke.name [107.191.43.88])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EDBA132C20;
-	Wed, 24 Jan 2024 19:34:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 545497CF3F;
+	Wed, 24 Jan 2024 19:39:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=107.191.43.88
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706124855; cv=none; b=bNgNtQmlC8NH61F6KULXbTmJX5ySsmUnJxN9aB6Z2n5jCWktJN1oXM3drTwi+hyFzJ9yYtjofupGboONCDyv50H6zEOUzili9Ks8va0RIHl6CFAnBk48gKjkx821kSaarFnBTSIedM77eZVI6Eq1fesPM4yb8lm3Uio5gQcuIH4=
+	t=1706125187; cv=none; b=g64xYSi6d8j92GNnFgedfxMxU9t/GiHJ10SDqWeKZ9weBxJoLGog5vE0RzYiDSYmYudm3oXi6P/ifU9QGo5VFpHxsBSJElrnrXUheH7LbY5ZM81IW+A6dhQRG1PNvY8c1KoIzJ49icbmqNBetPyrc04d5JxbU8m6QkcBlI/Se7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706124855; c=relaxed/simple;
-	bh=GYJFXfXsIOPeYbximf1oUJWFqHQl+GwEjV9Ni5wP+aI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Dreadp43JZc57WBVTqDUKPyRn6+h/Uoh/h78RJotFdxPJHiaAnx2LioujTTnThGtF/lX7/Hu6qBXdFCm9Vck8ILlTpHCa0SF6tSczXhrj5EA/7LuHe2npSwnMoj3sL8pdEx9rjPig0vu8wxDCOavqygfborik2Sx8G8upvUCizI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0J7DdVlj; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=58F68lhJ; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0J7DdVlj";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="58F68lhJ"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1706124852;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FAg534iwdS91fkdcXs5EMfhsi34lrsD1PSWyXPhB5Ok=;
-	b=0J7DdVljP8JzWt5Vt3UVPXhNxvShFJTnmQ+om8AydJjMB1tBLUj5foOh9xkkOjWVUnnRk0
-	HAGF0VndthdlWYK3fYrehQhRpGC9gCF+g4PPbsx0cGMHrRK9mPfvlP763tf86ZYqM9wmaY
-	fFMivweskdhGOFmlrASRLLhc2XEv7DCGl9xBse+GyGPc4yXXPkttctqjAm7GcnH06Pzszf
-	cNCqGAPnXcS/nZI35xTK+zFiioFXZiDwamSOfoSyQOub6GPEZgjnkA13vllMdmKIwJ6D+e
-	9tDfRJ3610hqVmE78wRZRa1ZS6QbDvCsoIMQTd4He0JbNqw7LJxuugQ9yHBvEQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1706124852;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FAg534iwdS91fkdcXs5EMfhsi34lrsD1PSWyXPhB5Ok=;
-	b=58F68lhJ9TrKiArwgXOJMl6V5qF2nE+HAOpa9PicsDQDPZiMMfTSX2bUtRXbIIAADOMM8v
-	PFQnYw/vtKQnjWCA==
-To: Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org
-Cc: Kees Cook <keescook@chromium.org>, John Stultz <jstultz@google.com>,
- Stephen Boyd <sboyd@kernel.org>, "Gustavo A. R. Silva"
- <gustavoars@kernel.org>, Bill Wendling <morbo@google.com>, Justin Stitt
- <justinstitt@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 75/82] timekeeping: Refactor intentional wrap-around test
-In-Reply-To: <20240123002814.1396804-75-keescook@chromium.org>
-References: <20240122235208.work.748-kees@kernel.org>
- <20240123002814.1396804-75-keescook@chromium.org>
-Date: Wed, 24 Jan 2024 20:34:11 +0100
-Message-ID: <87sf2mjzkc.ffs@tglx>
+	s=arc-20240116; t=1706125187; c=relaxed/simple;
+	bh=Dn4eBbVr9QVOAUz7Avvf+TmQNYzWT6GQxAJUnj39vkY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K75a5a7AD+Y71NWrcCk2KA6t8C1yrOncW0yf1HN9G/scKR5pobPF3mw9dFK680rIh5ot/zOiLWtNoIOSRmGARID+V/2fGZQcuwqXPm9j1d4wjkTV5fTu/9Fnl5mai1S63xm5HcXuaibSw0Lo71pM8mk/hDaKAryuVoWjPOI6elA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kevinlocke.name; spf=pass smtp.mailfrom=kevinlocke.name; arc=none smtp.client-ip=107.191.43.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kevinlocke.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kevinlocke.name
+Received: from kevinolos.kevinlocke.name (2600-6c67-5000-0a52-00e4-35b0-b82a-0c08.res6.spectrum.com [IPv6:2600:6c67:5000:a52:e4:35b0:b82a:c08])
+	(Authenticated sender: kevin@kevinlocke.name)
+	by vulcan.kevinlocke.name (Postfix) with ESMTPSA id 86E254143C5F;
+	Wed, 24 Jan 2024 19:39:41 +0000 (UTC)
+Received: by kevinolos.kevinlocke.name (Postfix, from userid 1000)
+	id D511C1300145; Wed, 24 Jan 2024 12:39:38 -0700 (MST)
+Date: Wed, 24 Jan 2024 12:39:38 -0700
+From: Kevin Locke <kevin@kevinlocke.name>
+To: Kees Cook <keescook@chromium.org>
+Cc: Josh Triplett <josh@joshtriplett.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	John Johansen <john.johansen@canonical.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Kentaro Takeda <takedakn@nttdata.co.jp>,
+	Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+	apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] exec: Check __FMODE_EXEC instead of in_execve for LSMs
+Message-ID: <ZbFneq3URF5lLAT7@kevinlocke.name>
+Mail-Followup-To: Kevin Locke <kevin@kevinlocke.name>,
+	Kees Cook <keescook@chromium.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	John Johansen <john.johansen@canonical.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Kentaro Takeda <takedakn@nttdata.co.jp>,
+	Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+	apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20240124192228.work.788-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240124192228.work.788-kees@kernel.org>
 
-On Mon, Jan 22 2024 at 16:27, Kees Cook wrote:
+On Wed, 2024-01-24 at 11:22 -0800, Kees Cook wrote:
+> After commit 978ffcbf00d8 ("execve: open the executable file before
+> doing anything else"), current->in_execve was no longer in sync with the
+> open(). This broke AppArmor and TOMOYO which depend on this flag to
+> distinguish "open" operations from being "exec" operations.
+> 
+> Instead of moving around in_execve, switch to using __FMODE_EXEC, which
+> is where the "is this an exec?" intent is stored. Note that TOMOYO still
+> uses in_execve around cred handling.
 
-> In an effort to separate intentional arithmetic wrap-around from
-> unexpected wrap-around, we need to refactor places that depend on this
-> kind of math. One of the most common code patterns of this is:
->
-> 	VAR + value < VAR
->
-> Notably, this is considered "undefined behavior" for signed and pointer
-> types, which the kernel works around by using the -fno-strict-overflow
-> option in the build[1] (which used to just be -fwrapv). Regardless, we
-> want to get the kernel source to the position where we can meaningfully
-> instrument arithmetic wrap-around conditions and catch them when they
-> are unexpected, regardless of whether they are signed[2], unsigned[3],
-> or pointer[4] types.
->
-> Refactor open-coded wrap-around addition test to use add_would_overflow().
-> This paves the way to enabling the wrap-around sanitizers in the future.
->
-> Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
-> Link: https://github.com/KSPP/linux/issues/26 [2]
-> Link: https://github.com/KSPP/linux/issues/27 [3]
-> Link: https://github.com/KSPP/linux/issues/344 [4]
-> Cc: John Stultz <jstultz@google.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+It solves the AppArmor issue I was experiencing and I don't notice any
+other issues.
 
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Kevin Locke <kevin@kevinlocke.name>
+
+Thanks!
+Kevin
