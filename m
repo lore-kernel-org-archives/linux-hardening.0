@@ -1,72 +1,69 @@
 Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 302117CF03
-	for <linux-hardening@vger.kernel.org>; Wed, 24 Jan 2024 16:15:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF597C0AE
+	for <linux-hardening@vger.kernel.org>; Wed, 24 Jan 2024 16:25:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706112919; cv=none; b=t9mwxy0C3140qq30LNzu5UKULVffEouv2rkm9ju5MNLhn8o0IMwc99Okt6R8oO5qVKw2qnIz5bHtKny/BFvb91WAkrtfrKj1BQMddwhdorcHEF/Drfi7fu7wlCt4Qkov9UF31IAVWHVS3dsxb/zZjck7DMwytk2z+DmuqTEn99I=
+	t=1706113522; cv=none; b=g3OkAcmwNHF5buwuGQkpS5+KA5LAg/AsLGIWlfhqGmmwbe+y3zZxsfvXKk28djmRzzYur3A99sNZLqUiY6W86oZls9yrFXraqiHN8vxV824QLu1MAr9ept+TUEQIHwxQ0E86HkkIk2FGWNFNLVguL75yEgOVAtoFq59v/AWIjPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706112919; c=relaxed/simple;
-	bh=RvfyWPN0/pDbmTb/g0GVVom9vXJvmbkAO74qsKrres4=;
+	s=arc-20240116; t=1706113522; c=relaxed/simple;
+	bh=V8c2cPcx8qXCwYKsBCzYFb0VJkAo5lBKil3rUqnEWMM=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=mubWBi5vrrm2rosf8niTDAaS4bXMtCNA1hOqjSLi631PSbjpRogL1QIbqQyCW1LV7dYv2ZrfHgkQofxN0ngjxZh/EiibrKYJ6NyVMCBsH+qHli0IkEo52mmP+NJhWEEvE4ktFSV2DJfJkr29GgWzlpaV8HUOiJg7ZT+FysPzgTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=N9AqOEFK; arc=none smtp.client-ip=209.85.128.202
+	 To:Cc:Content-Type; b=C8r9fIfKnemGun0rLnbf8gwqCjjcYYisxXsGh0/xX4oakOeYe8AXOAsopIddcAY0kugKjGe1gaTJRrKbd3AkqgGToN7JnR8c7PClfznmzzD2dmELALtmfMcJaeZvshnzb+krIszQto4qPPOi2w4ANyHFHSmMlyt7R/aa4PT5rlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kyUHQEMO; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N9AqOEFK"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-5ff82dc16e0so68066407b3.2
-        for <linux-hardening@vger.kernel.org>; Wed, 24 Jan 2024 08:15:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kyUHQEMO"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-5ff908a0247so63993077b3.2
+        for <linux-hardening@vger.kernel.org>; Wed, 24 Jan 2024 08:25:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706112915; x=1706717715; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1706113519; x=1706718319; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DScpWxX4P0NW45UuZVlmkL6cF3+1DTwlqBdTnasMemw=;
-        b=N9AqOEFKObdczq+6DdcfWjisDlehSMSZ38vgNr0eHmGPEFfdgQCUiSa8jE5puBhaL7
-         ry4ZXRNoj7geN+c5tmSsqC9Q7kPz0npTZgTVntYzB/SeTMRTtFoc2XUC7EPnoE/rXTEe
-         lP3EkUSQfsTNfQmXmdQPIYAdhYERpr88th6c+6GXKdwcWsIdEcT9UwHkw7kn3G/+ULso
-         UMg0WzVF4QA0/2RWw24Eq1NuiHBOy6/vIDJM5R9c9tT2mmkgS2E9rAefL7iAoeWvpkPQ
-         jMTg2dAS7xCUBvOkxgXi51/gWTDv/mez+Y07itlf8PtTgqZxXjNYvMCME2PjXY05cwWG
-         TY+g==
+        bh=0CB9g0UuS73iITu6tgKIcBT+b0p2dqCHOybX6/OUmJA=;
+        b=kyUHQEMOV/wR1EpynmH7BVnL1Rw+Yzq9mQzH//pfaBbRpfe2hYYxppGHM/t6CqebA+
+         I8YOVL+a4A1HIwiNu5u2MNGhtvxlbVhhavIuoY0UxZuFf7A9lYZ4i1jBFdYrGdtlRX0V
+         tn94O8LuSOJF4POXyprE+fatIBQUoNVOTL4WIIfDDn1BbtjnF6i6NqX4FgczZC+47LQP
+         H/rPQQg2kSh9dhlux7qR6/uUffv8TKeZ+4FZ1PWvZFh/3iwefLaxl9SQjWlBz5lvnJr4
+         XbScWzxptsTKZOnyantKW+8LZc2neF2kNriab6AAL8xNVGshChqVNqRvIGrUz6vgDVG3
+         Xx5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706112915; x=1706717715;
+        d=1e100.net; s=20230601; t=1706113519; x=1706718319;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DScpWxX4P0NW45UuZVlmkL6cF3+1DTwlqBdTnasMemw=;
-        b=OOlG4sQJyoe0t+L7pk83BSizFRHpBcGJLtYyKAkfsDbHo4BQ7htMh2Kz8XR72CSLgB
-         lEuf5GZAH3AZnc0C6SVKbJw0tob5EZGl4fKAmvz/uhNS3Ph8udQdzUH1Oa6KuesBus1/
-         Hd+B4jSZNMn/+rtWWWh0zWSOX7YjUk7Eku1F20pAT7mPJ0lYtUiWTWhDif8hUbwO9zm/
-         xAVtZYM4dyiAVxih/N7mb+nfumm/C5EoHLvZAxxRvdRasZzUQY644ZZWXw91maDp48XX
-         48P42qbxN2+g2eXacannalO0q7cvhdfJuEEG44s9E2gfVFwLBk009AfBSf48Zesa37nu
-         b04w==
-X-Gm-Message-State: AOJu0YyLPmTzNJ5DDGKPkWo17//+OHoMQNO/ZbhLZVkjl92H99K2VWVv
-	S61xEeObDXPUc8VVtrc1leTm3hef7llCenV886r2mjKVs2HU1Id8IOaK52ntuH/rcsmyk/dhFbG
-	kCA==
-X-Google-Smtp-Source: AGHT+IHugFCA1MsFbxTlJk6F3wFNy0Bmcnzj0q7iNmFt3wGOlc6Mlj+zbpXGNq5Bn6FE8++AUc/nRsQatQ0=
+        bh=0CB9g0UuS73iITu6tgKIcBT+b0p2dqCHOybX6/OUmJA=;
+        b=rGzYm+TBs8in7M7YUEYISMdKo+g0M40Y4ER5kxtaKC8m5cRMPP2+yhIh30jiMTw4Qm
+         bcP3Q79/ZIXyKBDdrIcSJR8EyBOACuyeXHjEUEVRWAq7TKmGhXfX8KyMH6XKMTh9uAGE
+         vnLGIEUREvyzAa30yQn0VYiT5wUomxlQm/brqvlCAeCKeXfrWPiZ1DlK6mFSkHKwYcLm
+         aao6w1f9oFGAuJyM/Wic1LDdk5FlBk7gS3UrKL1f61ixT5Ru9XymL3pwd+WLZ/lEUKfQ
+         /1Nztl59xu1K6VEPB6Wd2A4Ynlpz56+1hzB2CLXfxqHCk2kuxjsjaO4902q+LB72ZEkU
+         CUyw==
+X-Gm-Message-State: AOJu0YxfctMmEqjq7lx4OqCRQk0vXtRWiKUN3wGkQ1ifetGd1DlIf8ub
+	ZlGqbio8NEm/25dxAbe5GR9Iw8JWMZVvxzeR91HfI3JO3Diqc0NSe3EOfvvGnqg6/R7dD5G9lUk
+	xtg==
+X-Google-Smtp-Source: AGHT+IGr252szjH4g93wKVz1RH9JVWutpvTNlX80OC1R2PWsKKKTzftdwudbTd4do344yYpgughZEK+Q9gk=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a25:b949:0:b0:dc2:3247:89d5 with SMTP id
- s9-20020a25b949000000b00dc2324789d5mr51217ybm.4.1706112915268; Wed, 24 Jan
- 2024 08:15:15 -0800 (PST)
-Date: Wed, 24 Jan 2024 08:15:13 -0800
-In-Reply-To: <20240123002814.1396804-25-keescook@chromium.org>
+ (user=seanjc job=sendgmr) by 2002:a25:ab4e:0:b0:dc2:4921:cc0 with SMTP id
+ u72-20020a25ab4e000000b00dc249210cc0mr48970ybi.5.1706113519660; Wed, 24 Jan
+ 2024 08:25:19 -0800 (PST)
+Date: Wed, 24 Jan 2024 08:25:18 -0800
+In-Reply-To: <20240123002814.1396804-23-keescook@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20240122235208.work.748-kees@kernel.org> <20240123002814.1396804-25-keescook@chromium.org>
-Message-ID: <ZbE3kacV0GbtK5zA@google.com>
-Subject: Re: [PATCH 25/82] KVM: SVM: Refactor intentional wrap-around calculation
+References: <20240122235208.work.748-kees@kernel.org> <20240123002814.1396804-23-keescook@chromium.org>
+Message-ID: <ZbE57k4gCYZb9h0H@google.com>
+Subject: Re: [PATCH 23/82] KVM: Refactor intentional wrap-around calculation
 From: Sean Christopherson <seanjc@google.com>
 To: Kees Cook <keescook@chromium.org>
 Cc: linux-hardening@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, kvm@vger.kernel.org, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
+	kvm@vger.kernel.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="us-ascii"
 
 On Mon, Jan 22, 2024, Kees Cook wrote:
@@ -76,69 +73,75 @@ On Mon, Jan 22, 2024, Kees Cook wrote:
 > 
 > 	VAR + value < VAR
 > 
-> Notably, this is considered "undefined behavior" for signed and pointer
+> Notable, this is considered "undefined behavior" for signed and pointer
 > types, which the kernel works around by using the -fno-strict-overflow
 > option in the build[1] (which used to just be -fwrapv). Regardless, we
 > want to get the kernel source to the position where we can meaningfully
 > instrument arithmetic wrap-around conditions and catch them when they
-> are unexpected, regardless of whether they are signed[2], unsigned[3],
-> or pointer[4] types.
+> are unexpected, regardless of whether they are signed, unsigned, or
+> pointer types.
 > 
 > Refactor open-coded unsigned wrap-around addition test to use
 > check_add_overflow(), retaining the result for later usage (which removes
 > the redundant open-coded addition). This paves the way to enabling the
-> wrap-around sanitizers in the future.
-
-IIUC, the plan is to get UBSAN to detect unexpected overflow, at which point an
-explicit annotation will be needed to avoid false positives.  If that's correct,
-can you put something like that in these changelogs?  Nothing in the changelog
-actually says _why_ open coded wrap-around checks will be problematic.
-
+> unsigned wrap-around sanitizer[2] in the future.
+> 
 > Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
-> Link: https://github.com/KSPP/linux/issues/26 [2]
-> Link: https://github.com/KSPP/linux/issues/27 [3]
-> Link: https://github.com/KSPP/linux/issues/344 [4]
-> Cc: Sean Christopherson <seanjc@google.com>
+> Link: https://github.com/KSPP/linux/issues/27 [2]
 > Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: x86@kernel.org
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
 > Cc: kvm@vger.kernel.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
->  arch/x86/kvm/svm/sev.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  virt/kvm/coalesced_mmio.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 > 
-> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-> index f760106c31f8..12a6a2b1ac81 100644
-> --- a/arch/x86/kvm/svm/sev.c
-> +++ b/arch/x86/kvm/svm/sev.c
-> @@ -400,16 +400,17 @@ static struct page **sev_pin_memory(struct kvm *kvm, unsigned long uaddr,
->  	unsigned long locked, lock_limit;
->  	struct page **pages;
->  	unsigned long first, last;
-> +	unsigned long sum;
+> diff --git a/virt/kvm/coalesced_mmio.c b/virt/kvm/coalesced_mmio.c
+> index 1b90acb6e3fe..0a3b706fbf4c 100644
+> --- a/virt/kvm/coalesced_mmio.c
+> +++ b/virt/kvm/coalesced_mmio.c
+> @@ -25,17 +25,19 @@ static inline struct kvm_coalesced_mmio_dev *to_mmio(struct kvm_io_device *dev)
+>  static int coalesced_mmio_in_range(struct kvm_coalesced_mmio_dev *dev,
+>  				   gpa_t addr, int len)
+>  {
+> +	gpa_t sum;
 
-Similar to Marc's comments, I would much prefer to call this uaddr_last.
+s/sum/end?
 
->  	int ret;
->  
->  	lockdep_assert_held(&kvm->lock);
->  
-> -	if (ulen == 0 || uaddr + ulen < uaddr)
-> +	if (ulen == 0 || check_add_overflow(uaddr, ulen, &sum))
->  		return ERR_PTR(-EINVAL);
->  
->  	/* Calculate number of pages. */
->  	first = (uaddr & PAGE_MASK) >> PAGE_SHIFT;
-> -	last = ((uaddr + ulen - 1) & PAGE_MASK) >> PAGE_SHIFT;
-> +	last = ((sum - 1) & PAGE_MASK) >> PAGE_SHIFT;
->  	npages = (last - first + 1);
->  
->  	locked = sev->pages_locked + npages;
+Also, given that your're fixing a gpa_t, which is a u64, presumably that means
+that this code in __kvm_set_memory_region() also needs to be fixed:
+
+	if (mem->guest_phys_addr + mem->memory_size < mem->guest_phys_addr)
+		return -EINVAL; 
+
+and for that one I'd really like to avoid an ignored output parameter (KVM
+converts the incoming mem->memory_size to pages, so the "sum" is never used
+directly).
+
+Would it make sense to add an API that feeds a dummy "sum" value?  I assume UBSAN
+won't fire on the usage of the known good value, i.e. using the output parameter
+isn't necessary for functional correctness.  Having an API that does just the
+check would trim down the size of many of these patches and avoid having to come
+up with names for the local variables.  And IMO, the existing code is a wee bit
+more intuitive, it'd be nice to give developers the flexibility to choose which
+flavor yields the "best" code on a case-by-case basis.
+
+> +
+>  	/* is it in a batchable area ?
+>  	 * (addr,len) is fully included in
+>  	 * (zone->addr, zone->size)
+>  	 */
+>  	if (len < 0)
+>  		return 0;
+> -	if (addr + len < addr)
+> +	if (check_add_overflow(addr, len, &sum))
+>  		return 0;
+>  	if (addr < dev->zone.addr)
+>  		return 0;
+> -	if (addr + len > dev->zone.addr + dev->zone.size)
+> +	if (sum > dev->zone.addr + dev->zone.size)
+>  		return 0;
+>  	return 1;
+>  }
 > -- 
 > 2.34.1
 > 
