@@ -1,117 +1,104 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cvs.openbsd.org (cvs.openbsd.org [199.185.137.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261AE133431
-	for <linux-hardening@vger.kernel.org>; Wed, 24 Jan 2024 20:16:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F09613341F;
+	Wed, 24 Jan 2024 20:37:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.185.137.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706127371; cv=none; b=CWYDJYReGDteqTzwVj3Bf4lQoideZEYXX52BvxE2ELKYl0OdhJbCl07Y5w3r7B2qM3/J2MCKf8OPszkCrl9a9kmU1Htn1/Ea1VuAMZbJqqYS0fCOh/0S1vBBGHQpW3gI97wLeq1eEpZX2VU3BUYmuALDhPO391+eBqI4JiM1eCo=
+	t=1706128624; cv=none; b=YozqtUEClP0s8706fT6srqV0ncu3sHGPB2XAXw3A+udL71L5/IS9G+TXT+cX7SA31XmdSt0q85KjDHq14OI4oNbqJGgU4AKeKt+1pDXTHt6CQKUhq5wU2/mloeWS6c80AQHo3XX4isY6r3L0G+bG1JL+l0NMD7Ds3Ud/ooM82Tk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706127371; c=relaxed/simple;
-	bh=AXDCwXx73owg7wj63GSw7ngnDK8Hm+d9fCiD3naBQM8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rtF3RWO+JYV6j1Sz89FyXYXJLikhW9NQkJxuxokfnVkjcNLPb7IeVQOw62gCpIjy5Qqv/Y2l9E8NSlg0BpoqBbKzR23XWsY5QXHtlXDqqIFaRbsyZ+VtnYzFY0u28Cez3zeYbYjJz4J/qXaGWoc0zo7+OB0xV2ElATvg2hEG3Cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ak4Ozkqu; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1706128624; c=relaxed/simple;
+	bh=qAbil4CI0GaxYPzRWGXFLvmaTeTW+0u/q2km4lPInBk=;
+	h=From:To:Subject:In-reply-to:References:MIME-Version:Content-Type:
+	 Date:Message-ID; b=Z68Hrty6OC8nL/Bhsw16jpD4SW5EIEVVPwF+6hzyqXwCtfNRWxcUyVW7VdLyf947DnEIj9KEQozn8q2eR0oq5AE+nb5YJZvtEvpxKE4YznBQYnHmkZreftELPpV8xPztbsJV4R4p+2wcdXORjxa4mz6fVTQmBzwcTu4cPsZPgnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org; spf=pass smtp.mailfrom=openbsd.org; dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b=0o7fBzG7; arc=none smtp.client-ip=199.185.137.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openbsd.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ak4Ozkqu"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-53fbf2c42bfso4198570a12.3
-        for <linux-hardening@vger.kernel.org>; Wed, 24 Jan 2024 12:16:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1706127369; x=1706732169; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=M9ZXapP4CBzb1A7zLIfbhm/sqmLOdGM3rVISnRAyWrU=;
-        b=ak4OzkqudJOZiRpN3nm/SZuMEENLUmjgNOFhpt5rgM2ASt6P0HxiqdOf7Q3puiLZj2
-         JD3Hmyr21NO1KbWXRub9TD0xkfOvPibPJts3HtAp0sVsDoQniqzRp5QT/5uMIwCV5gt4
-         jDNhY1emRTtWGv+h40IibHV5FOdcXh9t1R1u4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706127369; x=1706732169;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=M9ZXapP4CBzb1A7zLIfbhm/sqmLOdGM3rVISnRAyWrU=;
-        b=MfdSIyVHDvz40ir0JNCMIpzN2Rdir1EJrPv2qxbVMWkmr/wKgQFWU17GXfesCDwyDZ
-         EQsc4zRcYHNkwIcaHgmLEKhph74H6QroQvCCgt+pTPFIdd7J7OM5zsbVCvSjihqys3AM
-         FUu3mGcUQFPT+t89iWiTNC88GiH8/hVwgC062lCCmiKr4Pg3hxYYmK8QeVht7c5bkduT
-         LIujEqqfQA1xGtxYX9P1mxuKcaEwOzcHlL+ZGek9YedTYAWfq6gsE6WBHIZ46ugt41bA
-         IR9TY5fNZp7/GZ0T9NJLim6b1s7a2kWUB6RQk3N9TZCeBZaFZ01jrqFL4dO1yg+l8wrW
-         8gYg==
-X-Gm-Message-State: AOJu0YwCkUjRJ1SYwcPbPAioPyGK/zYbrdnyviS72AbIT7DsnkkgizqI
-	UIZ40dKJ5iQKw+mp3F/QrfA59SZT1Ke0qXIssaX1Gn14GvSh1AQD4mNKOwV3og==
-X-Google-Smtp-Source: AGHT+IGHchkhtFJWS8YRr7A4F/OJ0bBqhApewB8XUKYtacaZB9fZnHw7eK4j5Pe/5pPgkaOZuifTkA==
-X-Received: by 2002:a17:90a:9417:b0:28d:6230:c1a2 with SMTP id r23-20020a17090a941700b0028d6230c1a2mr87254pjo.50.1706127369470;
-        Wed, 24 Jan 2024 12:16:09 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id f18-20020a17090aa79200b00290ffbe5ca3sm44874pjq.55.2024.01.24.12.16.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jan 2024 12:16:08 -0800 (PST)
-Date: Wed, 24 Jan 2024 12:16:08 -0800
-From: Kees Cook <keescook@chromium.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: linux-hardening@vger.kernel.org, Len Brown <lenb@kernel.org>,
-	linux-acpi@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 35/82] ACPI: custom_method: Refactor intentional
- wrap-around test
-Message-ID: <202401241215.32C7B45EF@keescook>
-References: <20240122235208.work.748-kees@kernel.org>
- <20240123002814.1396804-35-keescook@chromium.org>
- <CAJZ5v0gLr69vzLr_+yhP4z96nzFZjDfaPR-sTdkiv08vHbBe7w@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b="0o7fBzG7"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=selector1; bh=qAbil4CI0G
+	axYPzRWGXFLvmaTeTW+0u/q2km4lPInBk=; h=date:references:in-reply-to:
+	subject:to:from; d=openbsd.org; b=0o7fBzG7svwTo7Kh/7vEMdx4zsLVBwfhUjx7
+	LzKHCLemDhJUdJ7kBZaqq01ZZ6mlhV0jWW06VsG6SUsO7zj0FeYsoxnPL9UtPen++V47RQ
+	ErfXssKrPcoH8QLd+hU+jukqcPmjimWifKkdopTDURMn9dO7cqzVoKyFukCGefgWOYXTio
+	xURM/Wusq1CJvrg1T+Azs3147HZSSvjL+B5MXaUTyh8ZOw3ldi6leFFdbZoK66gbnu2Eg3
+	///ySdBAMqzJCTTXtIrNNoQccj9/O8GFah537gVUnEWwIe/8wXXjb5KYV0+qI/7G4QlCcH
+	GnAgpHEqv2ufgXUk2hJGztMgSA==
+Received: from cvs.openbsd.org (localhost [127.0.0.1])
+	by cvs.openbsd.org (OpenSMTPD) with ESMTP id 065cb52c;
+	Wed, 24 Jan 2024 13:37:01 -0700 (MST)
+From: "Theo de Raadt" <deraadt@openbsd.org>
+To: "Liam R. Howlett" <Liam.Howlett@Oracle.com>,
+    Jeff Xu <jeffxu@chromium.org>, akpm@linux-foundation.org,
+    keescook@chromium.org, jannh@google.com, sroettger@google.com,
+    willy@infradead.org, gregkh@linuxfoundation.org,
+    torvalds@linux-foundation.org, usama.anjum@collabora.com,
+    rdunlap@infradead.org, jeffxu@google.com, jorgelo@chromium.org,
+    groeck@chromium.org, linux-kernel@vger.kernel.org,
+    linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+    pedro.falcato@gmail.com, dave.hansen@intel.com,
+    linux-hardening@vger.kernel.org
+Mail-Followup-To: "Liam R. Howlett" <Liam.Howlett@Oracle.com>,
+                  Jeff Xu <jeffxu@chromium.org>,
+                  akpm@linux-foundation.org, keescook@chromium.org,
+                  jannh@google.com, sroettger@google.com,
+                  willy@infradead.org, gregkh@linuxfoundation.org,
+                  torvalds@linux-foundation.org,
+                  usama.anjum@collabora.com, rdunlap@infradead.org,
+                  jeffxu@google.com, jorgelo@chromium.org,
+                  groeck@chromium.org, linux-kernel@vger.kernel.org,
+                  linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+                  pedro.falcato@gmail.com, dave.hansen@intel.com,
+                  linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v7 2/4] mseal: add mseal syscall
+In-reply-to: <20240124200628.ti327diy7arb7byb@revolver>
+References: <20240122152905.2220849-1-jeffxu@chromium.org> <20240122152905.2220849-3-jeffxu@chromium.org> <20240123181457.idckaydk7dt7q2qy@revolver> <CABi2SkX=wKnHmooxXzBnJxxmtfSjvfgYabN1Wh1LxFYjtFoFaQ@mail.gmail.com> <20240124200628.ti327diy7arb7byb@revolver>
+Comments: In-reply-to "Liam R. Howlett" <Liam.Howlett@Oracle.com>
+   message dated "Wed, 24 Jan 2024 15:06:28 -0500."
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0gLr69vzLr_+yhP4z96nzFZjDfaPR-sTdkiv08vHbBe7w@mail.gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <54058.1706128621.1@cvs.openbsd.org>
+Date: Wed, 24 Jan 2024 13:37:01 -0700
+Message-ID: <98656.1706128621@cvs.openbsd.org>
 
-On Wed, Jan 24, 2024 at 08:52:48PM +0100, Rafael J. Wysocki wrote:
-> On Tue, Jan 23, 2024 at 2:03 AM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > In an effort to separate intentional arithmetic wrap-around from
-> > unexpected wrap-around, we need to refactor places that depend on this
-> > kind of math. One of the most common code patterns of this is:
-> >
-> >         VAR + value < VAR
-> >
-> > Notably, this is considered "undefined behavior" for signed and pointer
-> > types, which the kernel works around by using the -fno-strict-overflow
-> > option in the build[1] (which used to just be -fwrapv). Regardless, we
-> > want to get the kernel source to the position where we can meaningfully
-> > instrument arithmetic wrap-around conditions and catch them when they
-> > are unexpected, regardless of whether they are signed[2], unsigned[3],
-> > or pointer[4] types.
-> >
-> > Refactor open-coded wrap-around addition test to use add_would_overflow().
-> > This paves the way to enabling the wrap-around sanitizers in the future.
-> >
-> > Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
-> > Link: https://github.com/KSPP/linux/issues/26 [2]
-> > Link: https://github.com/KSPP/linux/issues/27 [3]
-> > Link: https://github.com/KSPP/linux/issues/344 [4]
-> > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> > Cc: Len Brown <lenb@kernel.org>
-> > Cc: linux-acpi@vger.kernel.org
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  drivers/acpi/custom_method.c | 2 +-
-> 
-> I may attempt to drop custom_method.c in this cycle, is there a
-> problem if I take this into my tree for now?
+Liam R. Howlett <Liam.Howlett@Oracle.com> wrote:
 
-The helper doesn't exist in tree yet, but it may be a bit before these
-refactors land, so if custom_method vanishes before then, that's great!
-:)
+> > Adding mseal() into picture, however, the heap is then sealed
+> > partially, user can still free it, but the memory remains to be RO,
+> > and the result of brk-shrink is nondeterministic, depending on if
+> > munmap() will try to free the sealed memory.(brk uses munmap to shrink
+> > the heap).
 
--Kees
+"You are holding it wrong".
 
--- 
-Kees Cook
+> > [...]. We could document above mentioned limitations so devs are
+> > more careful at the time to choose what memory to seal.
+
+You mean like they need to be careful what memory they map, careful
+what memory they unmap, careful what they do with mprotect, careful
+about not writing or reading out of bounds, etc.  They need to be
+careful about everything.
+
+Programmers have complete control over the address space in a program.
+This is Linux we are talking about, it still doesn't have strict policy
+on W | X memory, but misuse of mseal is suddenly a developer crisis?
+
+Why is this memory attribute different, and how does it actually help?
+
+When they use mseal on objects with unproven future, the program will
+crash later, beautifully demonstrating that they held it wrong.  Then
+they can fix their abusive incorrect code.
+
+This discussion about the malloc heap is ridiculous.  Obviously it is
+programmer error to lock the permissions on memory you will free for
+reuse.  But you can't fix this problem with malloc(), without breaking
+other extremely common circumstances where the allocation of memory
+and PERMANENT-USE-WITHOUT-RELEASE of such memory are seperated over a
+memory boundary, unless you start telling all open source library authors
+to always use MAP_SEALABLE in their mmap() calls.
+
