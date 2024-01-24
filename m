@@ -1,113 +1,94 @@
-Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A51C67A721;
-	Wed, 24 Jan 2024 19:53:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0B13132C1B
+	for <linux-hardening@vger.kernel.org>; Wed, 24 Jan 2024 19:59:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706125983; cv=none; b=ZzL5W25qHMk0g5RtbIxs5gWEEw9VtiwjY1CpW+AIC2jcLaqE/cJPxzs3PHOXV+eJv82rb+M0emqpLzw3HNXbHdXtQqfhKd0JP4UOm44dtam6eqa8z/L11Y4FmQv2DRruKXsWQLwxm1cESVeTZn0bUkeh9D3KTXSvH83NSCE5sXk=
+	t=1706126375; cv=none; b=VdQOYhUx3Fff5VLAiUWrAvV4HNb6jYVOkAId2QA1p0UE35adBNINBr6sEMAADmem/tEQQKnyj1Lzh3vdPekLAUedY7H1tPRAV7g/h72rgIcMPbKljxApiz4CJ/z+qp5DszB4e2Qkv6ASNudnA0WTD/Rw6J5jmtKckckkoXnQR9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706125983; c=relaxed/simple;
-	bh=aadZZEOGkkUEm30g9/XpD6S08ZVXC+3z9qo9Z7Hqwto=;
+	s=arc-20240116; t=1706126375; c=relaxed/simple;
+	bh=IbNRc2tTI3uRJ4hOoUG/LLCmL8sxwzKLKOM6UpHlIBE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=enJ8HoVDqijQI5+9ll5LXcX/QZGzSgJ23W8U9Z+G+P5LGVSZG0CG12j3PO/uA6OTey5N0BBoDsNv+o7FCBZxPjbkXEXSktlMlR/51ZQNpYSt0ors1huGwHxBMNk1njIhlfHGOrNchfNaKukn6Xk5LH//3Pix57eTTE1xj4fMzSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-598afd970e4so722621eaf.0;
-        Wed, 24 Jan 2024 11:53:01 -0800 (PST)
+	 To:Cc:Content-Type; b=OW5mdQ5KNESjaJtQX2gNw5iQ3v+hNizSq89wToS8F5Al9yom5bhvEHQ1rJqOR+r2CWxbQKOL6H0JVRovLyQW6+pcUnhdJtrSIiR9BMLTNwcg/s+6zRPzOmmhZZl21SWwjlAQfDtjTQ3hCnfnVrk2hiFg4MaAcYsx4KQFSMn88lk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KkjH7Wly; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KkjH7Wly"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-55818b7053eso3530a12.0
+        for <linux-hardening@vger.kernel.org>; Wed, 24 Jan 2024 11:59:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706126372; x=1706731172; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IbNRc2tTI3uRJ4hOoUG/LLCmL8sxwzKLKOM6UpHlIBE=;
+        b=KkjH7Wly2be5bPpQh5/K+TpoIusUptoVc5hnVxbHKO89GQfrfwb+3t7RFDGtuAWXIj
+         BYAH7Obe4FPxuW4m4u1eIvAJSCROmAD0CF3zIwjKHWKHQ0UE+y6qCi4n9Z1PqQlrYMyv
+         vcKrU2tryisDF6PetjKM3JZVOSq7G39AHeA/B9F3BiHg5gMLB/nX0BiaP90ivp3l08XZ
+         Ky642hhJpdnbm6jDuePdMl8nuUaSYx840Q/TbTjDcChYoW1L7YKE+RVeCL+qPfvEq4KT
+         7366EW/bODPQiBOWVdlz3TtM9Ag29CU69UWePfmI6pXlgWG2g8LyeD9p+YgG4UEcnw22
+         rxCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706125980; x=1706730780;
+        d=1e100.net; s=20230601; t=1706126372; x=1706731172;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=SRoNhJ3/05j9Tlj5YG8Cl0Gw7tHLoeZYDuNeT2OREZs=;
-        b=aLrr+1xEmEqBHfqxKwqo0yoWF3iw+7hRphaAzLB74OM1iGb26A6NAoAvz4NEYK8hHm
-         NczXyOUJ5WRdGyXbnf9YjEj8gryX1F1zz1wcbMIO4r/cXuyWAq4VortZD+b9FEuuPN7n
-         +rntXiZpd83WMmyLcy9nKGN7JFL801J7swOEgGj/J+iqfHoNARtVRLskCbIPJyec8oyL
-         OXt4hlj3iRWEtmnsgcX2sCfGJjH9UjmqM1EhNGHgw2p+4UPWbB/lkmg32yPmVOA+BTQr
-         2lsutLcL8jQwNdf3HeyURgc/SaSvy4CGBi96lzmqb+ls3mHFF2Kwn4gD1hkgSwbh8Hqj
-         emUA==
-X-Gm-Message-State: AOJu0Yxu1kD7SbgvOwbgdr+Ov5yjrGRVBbPoj38MIomNA5pQtVDrIymj
-	qfo/v/39TA6jiXaaOZXkhr+0EASKcgP80nXAeVL4WrgemOzXajGNo2ZW1H3NTqDx2c7H27p5TZF
-	D/CoK1Kw7H0Tai6VGH5WnC+tZQ6g=
-X-Google-Smtp-Source: AGHT+IHkHJAffORh/fW3JTP82vIu6+jz/+0vhRELYfwxdDzNLlmrBuVUB//vF1C2NY1AK6LLpbrHXW9egpFdPauocUA=
-X-Received: by 2002:a4a:bd89:0:b0:599:2b86:993 with SMTP id
- k9-20020a4abd89000000b005992b860993mr3258671oop.0.1706125980540; Wed, 24 Jan
- 2024 11:53:00 -0800 (PST)
+        bh=IbNRc2tTI3uRJ4hOoUG/LLCmL8sxwzKLKOM6UpHlIBE=;
+        b=NIXsTDtImkV9lDLz4OeNwGzcYPRJDA7m3IHEsv4Ozx1TvFWVZBK5DNTlcUyLniRz17
+         tKkm9lfWvSf31touilNCI/hrnZbzfN7HF1gD/8CZb7pRxA2+NVRXacEjFvxUa1M21+AC
+         1daSjdYZzwGwq5v4LobuNJEI1u0XsJ0xduoXU82FKXrD+cQoeBYkGO18FamKEaIPyVOb
+         33CDWYaIJkmLii74Sy36OQRAIjDIyuTttxKRnHjPAPOUavlINiqMuqlWzISyP7xpQYm/
+         1kuxumhhNE7Vga1GBQvNhLU7kKeH4dDoZ1XtKEsqMl2FO6hSA+bEO+uf5FoQ+40k4Atl
+         CybQ==
+X-Gm-Message-State: AOJu0YwJjQQQcEmZA5fEG8bW7OeOeIBaUZxRXMzPWLEvrgsKm0E6QEwb
+	a3bsIIwjgrolcZCRqszPiWLtcDD5xDsESfJoljZHRGU6Ok/HnMINcqTAm+zqWavsb0viLSggjHR
+	PhHJeCbumz5QM9XEzmXNhVyWbVhS3aI9f2tL8
+X-Google-Smtp-Source: AGHT+IHnF4f0O7cgArzhqXohHk8DKWdbCZVXNqyko/Yg6gnRAIJ7ffyT6vZhUBC9TtgW0kqc22Osp9E7+o4qEnIEp44=
+X-Received: by 2002:a05:6402:1bc9:b0:55c:8eda:6e19 with SMTP id
+ ch9-20020a0564021bc900b0055c8eda6e19mr34873edb.2.1706126371819; Wed, 24 Jan
+ 2024 11:59:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240122235208.work.748-kees@kernel.org> <20240123002814.1396804-35-keescook@chromium.org>
-In-Reply-To: <20240123002814.1396804-35-keescook@chromium.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 24 Jan 2024 20:52:48 +0100
-Message-ID: <CAJZ5v0gLr69vzLr_+yhP4z96nzFZjDfaPR-sTdkiv08vHbBe7w@mail.gmail.com>
-Subject: Re: [PATCH 35/82] ACPI: custom_method: Refactor intentional
- wrap-around test
+References: <20240124192228.work.788-kees@kernel.org>
+In-Reply-To: <20240124192228.work.788-kees@kernel.org>
+From: Jann Horn <jannh@google.com>
+Date: Wed, 24 Jan 2024 20:58:55 +0100
+Message-ID: <CAG48ez017tTwxXbxdZ4joVDv5i8FLWEjk=K_z1Vf=pf0v1=cTg@mail.gmail.com>
+Subject: Re: [PATCH] exec: Check __FMODE_EXEC instead of in_execve for LSMs
 To: Kees Cook <keescook@chromium.org>
-Cc: linux-hardening@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
+Cc: Josh Triplett <josh@joshtriplett.org>, Kevin Locke <kevin@kevinlocke.name>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, John Johansen <john.johansen@canonical.com>, 
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
+	"Serge E. Hallyn" <serge@hallyn.com>, Kentaro Takeda <takedakn@nttdata.co.jp>, 
+	Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 23, 2024 at 2:03=E2=80=AFAM Kees Cook <keescook@chromium.org> w=
+On Wed, Jan 24, 2024 at 8:22=E2=80=AFPM Kees Cook <keescook@chromium.org> w=
 rote:
+> After commit 978ffcbf00d8 ("execve: open the executable file before
+> doing anything else"), current->in_execve was no longer in sync with the
+> open(). This broke AppArmor and TOMOYO which depend on this flag to
+> distinguish "open" operations from being "exec" operations.
 >
-> In an effort to separate intentional arithmetic wrap-around from
-> unexpected wrap-around, we need to refactor places that depend on this
-> kind of math. One of the most common code patterns of this is:
->
->         VAR + value < VAR
->
-> Notably, this is considered "undefined behavior" for signed and pointer
-> types, which the kernel works around by using the -fno-strict-overflow
-> option in the build[1] (which used to just be -fwrapv). Regardless, we
-> want to get the kernel source to the position where we can meaningfully
-> instrument arithmetic wrap-around conditions and catch them when they
-> are unexpected, regardless of whether they are signed[2], unsigned[3],
-> or pointer[4] types.
->
-> Refactor open-coded wrap-around addition test to use add_would_overflow()=
-.
-> This paves the way to enabling the wrap-around sanitizers in the future.
->
-> Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f185365=
-94 [1]
-> Link: https://github.com/KSPP/linux/issues/26 [2]
-> Link: https://github.com/KSPP/linux/issues/27 [3]
-> Link: https://github.com/KSPP/linux/issues/344 [4]
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Len Brown <lenb@kernel.org>
-> Cc: linux-acpi@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  drivers/acpi/custom_method.c | 2 +-
+> Instead of moving around in_execve, switch to using __FMODE_EXEC, which
+> is where the "is this an exec?" intent is stored. Note that TOMOYO still
+> uses in_execve around cred handling.
 
-I may attempt to drop custom_method.c in this cycle, is there a
-problem if I take this into my tree for now?
+I think this is wrong. When CONFIG_USELIB is enabled, the uselib()
+syscall will open a file with __FMODE_EXEC but without going through
+execve(). From what I can tell, there are no bprm hooks on this path.
 
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/acpi/custom_method.c b/drivers/acpi/custom_method.c
-> index d39a9b474727..0789317f4a1a 100644
-> --- a/drivers/acpi/custom_method.c
-> +++ b/drivers/acpi/custom_method.c
-> @@ -54,7 +54,7 @@ static ssize_t cm_write(struct file *file, const char _=
-_user *user_buf,
->
->         if ((*ppos > max_size) ||
->             (*ppos + count > max_size) ||
-> -           (*ppos + count < count) ||
-> +           (add_would_overflow(count, *ppos)) ||
->             (count > uncopied_bytes)) {
->                 kfree(buf);
->                 buf =3D NULL;
-> --
-> 2.34.1
->
+I don't know if it _matters_ much, given that it'll only let you
+read/execute stuff from files with valid ELF headers, but still.
