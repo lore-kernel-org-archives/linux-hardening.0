@@ -1,129 +1,148 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 382E27CF0D
-	for <linux-hardening@vger.kernel.org>; Wed, 24 Jan 2024 14:48:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 445FF7C082
+	for <linux-hardening@vger.kernel.org>; Wed, 24 Jan 2024 15:12:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706107741; cv=none; b=W+4Q9vKlJ5URogEQmoAIgidoP6fzF4MzSGE6FhGWjCendnZQtzAy2ysG0JniSjBhpPSqpf/0/vIX2sdo/ZUkq0OHiwTWlJFSlHF/Bpj0vqP+si8e6R6KT6hKIpsb+jwgNJqq8XIknMneyP5zJAKDNuW9+nBoDRXCkfrry7mlAhI=
+	t=1706109167; cv=none; b=STrme1ykoldhBIP1bnYBdD/65VltuqjSpuOeJmWdLT1GvVayu2EYj5imjh02NBhH6fdPxHhsrlFJxif7HCKrFWQbnR5WP0SmWW3OKJOXGT90mHxFBbWvKMsYjK3l0UwdQtzR1wDvpzrV5jD5o7bxpzVpK66gZuerhz8z39O/5IM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706107741; c=relaxed/simple;
-	bh=eDTJ2mw+CpW7gkWAtFI6KtiT1a32SBUN715ePecnFk4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O01Ds1YuI5jtwfy3L8aoTxyrPJJMEtmj0m3JkwrWHz1s21CPQsJLxWgMzAh//3cShtKfDY5MK3Dv6jxkhjaLue5+4tdUr1NEc1VtPcwYy3iCmpCcNVJy8J/Dgnw42zEtVp9d5Y7Cv1YItUrQylcNBLTx77e5+vm4q0rnsyGtp/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DrHs2dU9; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706109167; c=relaxed/simple;
+	bh=wSUcVORR/B8/hFASvmkzEW/qWMh/vNxVvV+IJjMASVA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h2oK/0OmQM9vga31VASemVQ24ciokeSQ0R4YUuURVZa1qPujaAXgQt5mBVnm7euMZUDzxtjfx+Zc+mlExo9qQ+KgOx8mI9M/qjesdpq3oC4vVeRO12j326WfBzUo7C8KzyolaRm6jPvS6+2xmM/Npw4Ewahe0ie6KbVutLZ27es=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aVf+utJV; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DrHs2dU9"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3392d417a9fso2455253f8f.1
-        for <linux-hardening@vger.kernel.org>; Wed, 24 Jan 2024 06:48:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706107737; x=1706712537; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QODSxkvFxPjK1+hRtzc6D4olCOqkz85HGYaIxMx2/lg=;
-        b=DrHs2dU9N8rU86NeDOqnozLug87QeW55jOr17SIzXqSQWnVYMREUi74QlCNyIOfNf1
-         9yVxesRCpS5Y+qv4WflZqyFuuRZVvweiy8lQ4jKalIlJfBnRdtV+pEvPaBWuoXtqv8xo
-         fxj6PW1Li6Roo29Dq/5o61z4RRMQiqeTzWz8poT73OeUbfEGPLcbHid1dEsrMYeNQ4E4
-         p4+UpAuxEkk+yqiYsUYBwUMAzJyMb/QKQubdkwRUunrPEGIlx3e2H/qof0Gj69N42mEX
-         7GIcBEXZOT6Uk25rnUl90A/O80vxZzHGrNHBqJI+Ec9koN6PBbjHOLpx3kvqywfyjshj
-         GYXA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aVf+utJV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706109165;
+	h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=g9OCrAN+UT6ymJtmxhV/6yB5yqd39wFue7pD1+4bFjs=;
+	b=aVf+utJVDkEDIC7/BOKFhyTqYlpaJoPfvlmIJFdJBHPIH7jPBNa4O81RnWvdEdPlAzyBtS
+	cnSBVQRHLm/8JVxOy8rOr3gqkTcLpIv+Brnd3qflhvYdwqpAnwL8fNVMWbRNmqYw/Jbk4+
+	Q3cpHyaiJWMHycx8idXJo6TkvAOJsyc=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-629-VvwMLtMPPoa1zp2Es6Qgug-1; Wed, 24 Jan 2024 10:12:39 -0500
+X-MC-Unique: VvwMLtMPPoa1zp2Es6Qgug-1
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7816e45f957so860750885a.1
+        for <linux-hardening@vger.kernel.org>; Wed, 24 Jan 2024 07:12:39 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706107737; x=1706712537;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QODSxkvFxPjK1+hRtzc6D4olCOqkz85HGYaIxMx2/lg=;
-        b=bIfQmVXQI6bjoZJ8qZ0CTKYLifdmNWID6c4OWHxQ/HftW1kmMtj939Y8NFmikssbvj
-         yuh6vA+NaAtVNirkU+lZElL8Hm8kvriOnMsmjnMoH3Qu123ML7HdpHDc038PmBiFG0PU
-         Gq2wAndgXmr99ztuMo/v6czjFc6u9QbHxGgd5cMNV0wuRarsD2cOgFQzsQfAXPN3e0Ly
-         nUJOXkXeHYJO9KlGiK72UGppcLXLhBG3ggd5dnfS6tK/FRRyxvdOr3f5lrEVMsYmvlXd
-         H4oOrv+LLla9OCVzWgwPOwzv1thOa4/4EUPnKEKSEDoY4IzYbjrBWC2ljfOz55XNnZfj
-         mh3g==
-X-Gm-Message-State: AOJu0YwIvpbJaXw8grb25eQnytwtrvCiTfZmc6VVZDiwXOA5207jP0Qn
-	mOpiHsgGwMKbxCHSoYl/e55C1lkrMJolA9xFoGmmJ4rl6zmMIlXD7FaoqQHoQU4=
-X-Google-Smtp-Source: AGHT+IFlnXFany3DKmq0AiSNyBmdVgJ6QzzzZkSRSQk+Q3fvZ3Km2AgLj9J8hM5gTwv7eyESMIN6Yg==
-X-Received: by 2002:a5d:560d:0:b0:337:9b30:36f0 with SMTP id l13-20020a5d560d000000b003379b3036f0mr686579wrv.67.1706107737388;
-        Wed, 24 Jan 2024 06:48:57 -0800 (PST)
-Received: from localhost ([102.140.209.237])
-        by smtp.gmail.com with ESMTPSA id l6-20020a5d5606000000b0033922468707sm13522422wrv.83.2024.01.24.06.48.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jan 2024 06:48:56 -0800 (PST)
-Date: Wed, 24 Jan 2024 17:48:52 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Erick Archer <erick.archer@gmx.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Franziska Naepelt <franziska.naepelt@googlemail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Johannes Berg <johannes.berg@intel.com>,
-	Jeff Johnson <quic_jjohnson@quicinc.com>,
-	Aloka Dixit <quic_alokad@quicinc.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] staging: rtl8723bs: Use kcalloc() instead of kzalloc()
-Message-ID: <b40e12f6-176a-4bf6-8ab0-d1cf783033a0@moroto.mountain>
-References: <20240119173900.11035-1-erick.archer@gmx.com>
- <a5d8a5f1-432d-46f0-84fe-7b5b22ff5f32@moroto.mountain>
- <20240122181654.GA2834@titan>
+        d=1e100.net; s=20230601; t=1706109159; x=1706713959;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:reply-to:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=g9OCrAN+UT6ymJtmxhV/6yB5yqd39wFue7pD1+4bFjs=;
+        b=FmAfHAxMo1x7r3nkIDHRIcfnUX71tNozHENpdncJtpx9bgKlqPZ13NqOUmBsORHnXT
+         oGBeBMm1D56xlwObTYGA9HfvS7tsxp1AqVU3b8ks/dugzo3N8Dy1kNAzifM/I57UmpZo
+         TTFXpHgdLU9AOKKdUKcjlzFYUu4n9StCvrWvHTh0Jx0ATCso5F7GULShbsQM7aTXRMZE
+         XyD+OTKvUzPRss7GcXTqhK6vctWV6ak8nGNb7WJEM7v/+jdlJS0aw1zrYQ6V44yntjdc
+         Ha9EGhu7HISOhavp51YSG1q1MZ2U7UClMFTpVwYVJax3mwWT+/8jxC+GQuw2LpxZFL2L
+         Kk4g==
+X-Gm-Message-State: AOJu0Ywad6qsMIGHpR2zCHnEfWNbIk9jqu0qNyC0PabBS94zTsSjyIuG
+	soIBu28/cRcWQdLDpx9si3rtgFODpiDCvV3+bziiaK272/YWyUtZldWC2aYzOSkGx2STt8GZzWO
+	fTTsHK/ejyEAAM0mmUqXYpYa1wiiiJRrSFOPajvp+51TnyFBY7ltDxyEZLiXF2LXKGA==
+X-Received: by 2002:a0c:e18b:0:b0:680:b7fd:e3c0 with SMTP id p11-20020a0ce18b000000b00680b7fde3c0mr2602207qvl.130.1706109159390;
+        Wed, 24 Jan 2024 07:12:39 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IE4YjMHgP4yQO1A1mLPxyYWjKYZXB3p75FsIdtm86FMAXD3LcuTiRkAWk2NCbxXvKHRbEkVxg==
+X-Received: by 2002:a0c:e18b:0:b0:680:b7fd:e3c0 with SMTP id p11-20020a0ce18b000000b00680b7fde3c0mr2602197qvl.130.1706109159137;
+        Wed, 24 Jan 2024 07:12:39 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:59e:9d80:527b:9dff:feef:3874? ([2a01:e0a:59e:9d80:527b:9dff:feef:3874])
+        by smtp.gmail.com with ESMTPSA id z15-20020a0cfc0f000000b0067f2559fd5esm4562012qvo.34.2024.01.24.07.12.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Jan 2024 07:12:38 -0800 (PST)
+Message-ID: <6efb0e40-a1e8-45d8-8b59-c3e5a90daa4a@redhat.com>
+Date: Wed, 24 Jan 2024 16:12:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240122181654.GA2834@titan>
+User-Agent: Mozilla Thunderbird
+Reply-To: eric.auger@redhat.com
+Subject: Re: [PATCH 57/82] KVM: arm64: vgic-v3: Refactor intentional
+ wrap-around test
+To: Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+ James Morse <james.morse@arm.com>, Suzuki K Poulose
+ <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ linux-kernel@vger.kernel.org
+References: <20240122235208.work.748-kees@kernel.org>
+ <20240123002814.1396804-57-keescook@chromium.org>
+From: Eric Auger <eric.auger@redhat.com>
+In-Reply-To: <20240123002814.1396804-57-keescook@chromium.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jan 22, 2024 at 07:16:54PM +0100, Erick Archer wrote:
-> Hi Dan,
-> 
-> On Mon, Jan 22, 2024 at 09:55:11AM +0300, Dan Carpenter wrote:
-> > On Fri, Jan 19, 2024 at 06:39:00PM +0100, Erick Archer wrote:
-> > > As noted in the "Deprecated Interfaces, Language Features, Attributes,
-> > > and Conventions" documentation [1], size calculations (especially
-> > > multiplication) should not be performed in memory allocator (or similar)
-> > > function arguments due to the risk of them overflowing. This could lead
-> > > to values wrapping around and a smaller allocation being made than the
-> > > caller was expecting. Using those allocations could lead to linear
-> > > overflows of heap memory and other misbehaviors.
-> > >
-> > > So, use the purpose specific kcalloc() function instead of the argument
-> > > count * size in the kzalloc() function.
-> > >
-> > > Also, it is preferred to use sizeof(*pointer) instead of sizeof(type)
-> > > due to the type of the variable can change and one needs not change the
-> > > former (unlike the latter).
-> > >
-> > > Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
-> > > Link: https://github.com/KSPP/linux/issues/162
-> > > Signed-off-by: Erick Archer <erick.archer@gmx.com>
-> >
-> > I quite often write responses to patches and then never send them.  I
-> > wrote this response and debated sending it but in the end I decided to
-> > send it because you have sent multiple patches.  If you had only sent
-> > one patch then I wouldn't have bothered.
-> 
-> My intention is not to bother anyone. I'm a linux kernel developer newbie
-> and I try to do my best.
-> 
 
-Yeah.  It's not a problem, we all started as newbies.  I guess what I
-was trying to say is that if you're going to be sending a lot of patches
-then it's worth explaining this but if you're only sending one then I
-wouldn't bother.
 
-I don't really expect people to figure out all the code, it's just that
-if you can see the effect of a patch right away then, please, include
-that in the patch.  Even when it's like in this case, "This patch should
-have no effect on runtime."  That sort of information is still useful.
+On 1/23/24 01:27, Kees Cook wrote:
+> In an effort to separate intentional arithmetic wrap-around from
+> unexpected wrap-around, we need to refactor places that depend on this
+> kind of math. One of the most common code patterns of this is:
+>
+> 	VAR + value < VAR
+>
+> Notably, this is considered "undefined behavior" for signed and pointer
+> types, which the kernel works around by using the -fno-strict-overflow
+> option in the build[1] (which used to just be -fwrapv). Regardless, we
+> want to get the kernel source to the position where we can meaningfully
+> instrument arithmetic wrap-around conditions and catch them when they
+> are unexpected, regardless of whether they are signed[2], unsigned[3],
+> or pointer[4] types.
+>
+> Refactor open-coded wrap-around addition test to use add_would_overflow().
+> This paves the way to enabling the wrap-around sanitizers in the future.
+>
+> Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
+> Link: https://github.com/KSPP/linux/issues/26 [2]
+> Link: https://github.com/KSPP/linux/issues/27 [3]
+> Link: https://github.com/KSPP/linux/issues/344 [4]
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Oliver Upton <oliver.upton@linux.dev>
+> Cc: James Morse <james.morse@arm.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Zenghui Yu <yuzenghui@huawei.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Eric Auger <eric.auger@redhat.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: kvmarm@lists.linux.dev
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
 
-Or if you can't figure out the implications that's also useful
-information to me as a reviewer.  Just put those I don't know comments
-under the --- cut off.
-
-regards,
-dan carpenter
+Eric
+> ---
+>  arch/arm64/kvm/vgic/vgic-mmio-v3.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/kvm/vgic/vgic-mmio-v3.c b/arch/arm64/kvm/vgic/vgic-mmio-v3.c
+> index c15ee1df036a..860b774c0c13 100644
+> --- a/arch/arm64/kvm/vgic/vgic-mmio-v3.c
+> +++ b/arch/arm64/kvm/vgic/vgic-mmio-v3.c
+> @@ -863,7 +863,7 @@ static int vgic_v3_alloc_redist_region(struct kvm *kvm, uint32_t index,
+>  	int ret;
+>  
+>  	/* cross the end of memory ? */
+> -	if (base + size < base)
+> +	if (add_would_overflow(base, size))
+>  		return -EINVAL;
+>  
+>  	if (list_empty(rd_regions)) {
 
