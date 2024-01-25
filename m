@@ -1,156 +1,78 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3562832C60;
-	Thu, 25 Jan 2024 10:36:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31DEA286BC;
+	Thu, 25 Jan 2024 10:38:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706178991; cv=none; b=jLdqIqnxLqCoEwDypuOOt2vGlqHs480tgNc51S/53Jkc2zMBqzSGqzIk4pabxmOkBCaDJMeCXzv1GhWG55cb8xEASiBn2xh8gCmMx3mV12RCGHHcSHu+Sf+NHFEeSvuMPVQ8Jzj1esOqWgCinD/MJWg9+OyWYEiQhcHAbR2DI5U=
+	t=1706179109; cv=none; b=EeeUyPoV1UBMWb5mTcUd2xs+t+YqT3ejQfeIb5ao4/6sNp4y8uQz6xlC+lR9nDx4hxf6u8+lNXJKR4LEJtSqi4Cf65F018ZtWjo00n/kXjdnT3iJEslkeChyZtxQWqgAEdAHcSRuNjk38LXza0V6++ChjO66qUbDpv12khIj8JE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706178991; c=relaxed/simple;
-	bh=RYngMZoEzsFVQfzATY40EOP/Ghyf3Ecc4V9vxdhnAHg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sr+N68TvW/KMP3KWuvYwGEBtUYwR9apRRHkFK08gKh6dY0B5cs+iQp7bivhG5tr2JuN2KzFFN9K+EIz8xubg46VjwEwDIaIURXlgzbPufLyszQ5jhhLyOGrs0RInYmq+QW088qBP0UEPPvDruDJbOc3YE2zoCQoYZslcCB+9kKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jkEu5Tph; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706179109; c=relaxed/simple;
+	bh=N1jVOSNlM0yJonXxmcq0nNV6L21AE9zFYCH/FyRsngg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RbuJtKmqWCjyJnGUK2wa8TSAUzO0gWWvdxkASbctc0CvLKSdoZkqFIexbHE+QAVF4XtKP2kIDNgCPo0WLDMLBtayPIokHUIPySoTFJhtxKUZTacVu19tuaV7UhHPFGzZX74hcgZvFud9eQs1f1q09cQS6OsbBAiw87rdltVjRWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jPmG+InE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jkEu5Tph"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2E9BC433F1;
-	Thu, 25 Jan 2024 10:36:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jPmG+InE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00E34C433F1;
+	Thu, 25 Jan 2024 10:38:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706178990;
-	bh=RYngMZoEzsFVQfzATY40EOP/Ghyf3Ecc4V9vxdhnAHg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jkEu5TphxlQN5VjN5SBeWzbjSDdHcvImdqX3TSsEbYaxEWiyswL609etipf9SWqHp
-	 r/WkdtU6/oce5njRbuD3cuKINHRMa9ifraLwB0iHnn4/nW5SXm02hHzCEsBja1q2YS
-	 dPg2fONSG9kbr3YzNjssF0HcFOnbceSJmXrgQORtIUkGfSVIrVFLFT+9C863fMF+kM
-	 qRbBaYDbie6t0ZHOeCQAJkUX/zx7FqnYBzro4HZJHriUJ7BARMtfCcps+dgIKHEwhB
-	 hpulw473CjrObtAoT0Dri0fPfmAZ5MnSVtpvbsnq2pC/iTMEiYeegQFhpIET4ZTYPk
-	 Tjeq7paTfb0Vg==
-Date: Thu, 25 Jan 2024 10:36:24 +0000
-From: Lee Jones <lee@kernel.org>
-To: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Crutcher Dunnavant <crutcher+kernel@datastacks.com>,
-	Juergen Quade <quade@hsnr.de>
-Subject: Re: [PATCH 1/1] lib/vsprintf: Implement ssprintf() to catch
- truncated strings
-Message-ID: <20240125103624.GC74950@google.com>
-References: <20240125083921.1312709-1-lee@kernel.org>
- <a37e8071-32ac-4f5d-95e8-ddd2eb21edcd@rasmusvillemoes.dk>
+	s=k20201202; t=1706179108;
+	bh=N1jVOSNlM0yJonXxmcq0nNV6L21AE9zFYCH/FyRsngg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=jPmG+InE//r1LeUk0J19ONKWSo9DOVR9btHeiHWdm3aMkvVl5kYe1wSfLMkLgB+8k
+	 J6GpV7LFkvD2lQD7w6N6vZjhDybYSIGzUVjwg3EL64pXBiHDsVNWL5jX5/Vb4g3D7L
+	 CJr+NylKuGWziuoVs32/vABe0pbA4eqLiuyA5QEutf0P7sw7QANYRLxo0kKT28YnzV
+	 6sR5w7oDg7oK+gqAM2xRY5plyMojpzN5QDkXwUMn9RdIb2zIlml/qUg83kBc5ggitG
+	 gQOoqD3g2PWnUKvqFXaU532MdiAVFsEMkYpo11K5jJp49QqwVeROhI0J4Cyft0rzWd
+	 K/KI/oDQki59w==
+Message-ID: <c83b757c-5cb6-4dbb-a513-754a7cda0ca5@kernel.org>
+Date: Thu, 25 Jan 2024 12:38:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a37e8071-32ac-4f5d-95e8-ddd2eb21edcd@rasmusvillemoes.dk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] accel/habanalabs: use kcalloc() instead of kzalloc()
+Content-Language: en-US
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+ Erick Archer <erick.archer@gmx.com>, Marco Pagani <marpagan@redhat.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20240120151028.11092-1-erick.archer@gmx.com>
+ <91e87233-3a10-43d6-b850-9cac083913e0@embeddedor.com>
+From: Oded Gabbay <ogabbay@kernel.org>
+In-Reply-To: <91e87233-3a10-43d6-b850-9cac083913e0@embeddedor.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, 25 Jan 2024, Rasmus Villemoes wrote:
-
-> On 25/01/2024 09.39, Lee Jones wrote:
-> > There is an ongoing effort to replace the use of {v}snprintf() variants
-> > with safer alternatives - for a more in depth view, see Jon's write-up
-> > on LWN [0] and/or Alex's on the Kernel Self Protection Project [1].
-> > 
-> > Whist executing the task, it quickly became apparent that the initial
-> > thought of simply s/snprintf/scnprintf/ wasn't going to be adequate for
-> > a number of cases.  Specifically ones where the caller needs to know
-> > whether the given string ends up being truncated.  This is where
-> > ssprintf() [based on similar semantics of strscpy()] comes in, since it
-> > takes the best parts of both of the aforementioned variants.  It has the
-> > testability of truncation of snprintf() and returns the number of Bytes
-> > *actually* written, similar to scnprintf(), making it a very programmer
-> > friendly alternative.
-> > 
-> > Here's some examples to show the differences:
-> > 
-> >   Success: No truncation - all 9 Bytes successfully written to the buffer
-> > 
-> >     ret = snprintf (buf, 10, "%s", "123456789");  // ret = 9
-> >     ret = scnprintf(buf, 10, "%s", "123456789");  // ret = 9
-> >     ret = ssprintf (buf, 10, "%s", "123456789");  // ret = 9
-> > 
-> >   Failure: Truncation - only 9 of 10 Bytes written; '-' is truncated
-> > 
-> >     ret = snprintf (buf, 10, "%s", "123456789-"); // ret = 10
-> > 
-> >       Reports: "10 Bytes would have been written if buf was large enough"
-> >       Issue: Programmers need to know/remember to check ret against "10"
+On 22/01/2024 18:45, Gustavo A. R. Silva wrote:
 > 
-> Yeah, so I'm not at all sure we need yet-another-wrapper with
-> yet-another-hard-to-read-prefix when people can just RTFM and learn how
-> to check for truncation or whatnot. But if you do this:
-
-As wonderful as it would be for people to "just RTFM", we're seeing a
-large number of cases where this isn't happening.  Providing a more
-programmer friendly way is thought, by people way smarter than me, to be
-a solid means to solve this issue.  Please also see Kees Cook's related
-work to remove strlcpy() use.
-
-> > +/**
-> > + * vssprintf - Format a string and place it in a buffer
-> > + * @buf: The buffer to place the result into
-> > + * @size: The size of the buffer, including the trailing null space
-> > + * @fmt: The format string to use
-> > + * @args: Arguments for the format string
-> > + *
-> > + * The return value is the number of characters which have been written into
-> > + * the @buf not including the trailing '\0' or -E2BIG if the string was
-> > + * truncated. If @size is == 0 the function returns 0.
-> > + *
-> > + * If you're not already dealing with a va_list consider using ssprintf().
-> > + *
-> > + * See the vsnprintf() documentation for format string extensions over C99.
-> > + */
-> > +int vssprintf(char *buf, size_t size, const char *fmt, va_list args)
-> > +{
-> > +	int i;
-> > +
-> > +	if (unlikely(!size))
-> > +		return 0;
 > 
-> No, don't special-case size 0 here. Passing size==0 should just
-> guarantee -E2BIG because that's essentially a programmer error, and the
-> calling code is then at least much more likely to not believe that buf
-> now contains a nul-terminated (empty) string.
+> On 1/20/24 09:10, Erick Archer wrote:
+>> As noted in the "Deprecated Interfaces, Language Features, Attributes,
+>> and Conventions" documentation [1], size calculations (especially
+>> multiplication) should not be performed in memory allocator (or similar)
+>> function arguments due to the risk of them overflowing. This could lead
+>> to values wrapping around and a smaller allocation being made than the
+>> caller was expecting. Using those allocations could lead to linear
+>> overflows of heap memory and other misbehaviors.
+>>
+>> So, use the purpose specific kcalloc() function instead of the argument
+>> size * count in the kzalloc() function.
+>>
+>> Link: 
+>> https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
+>> Link: https://github.com/KSPP/linux/issues/162
+>>
+>> Signed-off-by: Erick Archer <erick.archer@gmx.com>
 > 
-> And since it's essentially a bug, there's no need to special-case size 0
-> to avoid calling vsnprintf(), just let it be caught by the i >= size check.
-
-Agree.  Thanks for the feedback.  I will change this.
-
-> > +	i = vsnprintf(buf, size, fmt, args);
-> > +
-> > +	if (unlikely(i >= size))
-> > +		return -E2BIG;
-> > +
-> > +	if (likely(i < size))
-> > +		return i;
+> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > 
-> Those two ifs are mutually exclusive, so why the second if() and not
-> just a direct "return i"? That final "return size-1" is unreachable, and
-> confusing.
-
-That's true.  The last line of vscnprintf() essentially means that the
-data was truncated, which is caught by the new check.  So it should be
-reworked to look like this:
-
-```
-  if (likely(i < size))
-          return i;
-
-  return -E2BIG;
-```
-
-Thanks again.  That's very helpful.
-
--- 
-Lee Jones [李琼斯]
+> Thanks!
+Applied to -next.
+Thanks,
+Oded
