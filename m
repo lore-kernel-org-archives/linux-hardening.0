@@ -1,81 +1,35 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2322B45951;
-	Thu, 25 Jan 2024 21:25:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1570313AA22;
+	Thu, 25 Jan 2024 21:30:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706217933; cv=none; b=uW03jmhwM6p/3UUTTfYjxJtqgolnMj9QTzbSYqNpyYQFeovvBc4uqyIFVsr14xEMmnaSHYRJzslsDDo5pyR434WDqKF5r2ffCBNviR7v0baU+Np1dlXgVoeifAl4539eV0XjdkMGjHgNVpVnekrvMEDcptXtpeDkcMx07rL+RGs=
+	t=1706218230; cv=none; b=ZRjCME1jedsiZnjiA1P7ggUEHO3ASjMny19Bx3UK66tAnVEKDP/UO1vuinL7k0FaIske47tu8flCmauIPb2bmf/yZz3X4YAefz74+YogittFoXbzDYiRgMeYnZ7QIYAweOqx1xAVF9FUT4UYdaqHs6h17cxK+K0Vk4gz5C/IyYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706217933; c=relaxed/simple;
-	bh=+1rzo44MVhdG1twaPoxAFs/i5CPmmmD3ebkTckAOXgQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FrFqjRPxvrCbLcwrEDtt8JGT9ktSaTQqCvX2Fp3dqa+Pk3Wjb/2VkjDeQ6eNNOYtBcd9Rx1Gnvfh2b33fjbdU2+RglTUG2uzR9+xdOxDO2NIlARga9mB96HQw2TipJBs8R7wznql4QxxayRNRgAL6xofqOl1ScqcxQNupg4bB/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ZDEztOj4; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1706218230; c=relaxed/simple;
+	bh=X2mNprfouPEmvBoKw8baKQx7oOuTfhqFfvOx4U8Q8wU=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=iKF5dFXclga5g+HpFVTztzfP7nEuLSEPZ4hOrRo4EPtK79/HgcmeGOmUF7olTBn2QKyPfs6pbG014B0c5XPCYMiooSZjnP09n9S5fm2rb98Im6ctv/DVLkBgYE/AJSh7SKxrB7J2zC6BWarh6zYWJWDYWmOPll6aysJiC9/V1+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XQvcmpdN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ZDEztOj4"
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40PKrCkj028747;
-	Thu, 25 Jan 2024 21:24:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=TFZLj+iicDe+vF0MlXRj2JagqhpN0qB/SfThMG1aMUg=;
- b=ZDEztOj4agiJQ17j2f9Af8WlWqTH6pFrMi/3nBfhC8ZQmmaOX/HuNs6zoWkUXbH2vjUX
- pqAwyyczjCG6x86Hgz1b5A4ckJngo33vQOLdS6hY6uIlfZmsw6gNhNR7a6CB/vRflhij
- ItvVduz80fiXIB2NS2TmUkTi0xKOBY9ptBTi2EbfSJvmyijnVGkXcTH7l5b5EiXw6nrj
- fne0PhIN56q9axeA853ev+7UPyxAJ6jPJUidNvhtybefk+1xB8RA7W2wGYTGvzA0vZNq
- syaTIXw0XR4D+BRKnEH+1Am1wDPtsREvCiyITKsg0ehI+XKxN8Vo3C+Nt0QZj/N1E9/O Yg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vuy2srs0v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Jan 2024 21:24:40 +0000
-Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40PLLcEj028686;
-	Thu, 25 Jan 2024 21:24:38 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vuy2srraf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Jan 2024 21:24:38 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40PKe4u3026485;
-	Thu, 25 Jan 2024 21:22:00 GMT
-Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3vrrgtq1md-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Jan 2024 21:22:00 +0000
-Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
-	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40PLLxq427918698
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 25 Jan 2024 21:21:59 GMT
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 28EFA5805C;
-	Thu, 25 Jan 2024 21:21:59 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5370658058;
-	Thu, 25 Jan 2024 21:21:57 +0000 (GMT)
-Received: from gfwa153.aus.stglabs.ibm.com (unknown [9.3.84.127])
-	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 25 Jan 2024 21:21:57 +0000 (GMT)
-From: Ninad Palsule <ninad@linux.ibm.com>
-To: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        joel@jms.id.au, andrew@codeconstruct.com.au, peterhuewe@gmx.de,
-        jarkko@kernel.org, jgg@ziepe.ca, keescook@chromium.org,
-        tony.luck@intel.com, gpiccoli@igalia.com, ninad@linux.ibm.com,
-        johannes.holland@infineon.com, linux@roeck-us.net, broonie@kernel.org,
-        andre.werner@systec-electronic.com
-Cc: patrick.rudolph@9elements.com, vincent@vtremblay.dev,
-        peteryin.openbmc@gmail.com, lakshmiy@us.ibm.com, bhelgaas@google.com,
-        naresh.solanki@9elements.com, alexander.stein@ew.tq-group.com,
-        festevam@denx.de, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-hardening@vger.kernel.org, geissonator@yahoo.com,
-        geert+renesas@glider.be, luca.ceresoli@bootlin.com
-Subject: [PATCH v5 0/2] Add device tree for IBM system1 BMC
-Date: Thu, 25 Jan 2024 15:21:52 -0600
-Message-Id: <20240125212154.4028640-1-ninad@linux.ibm.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XQvcmpdN"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 70F08C43601;
+	Thu, 25 Jan 2024 21:30:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706218229;
+	bh=X2mNprfouPEmvBoKw8baKQx7oOuTfhqFfvOx4U8Q8wU=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=XQvcmpdNzt0ETY1MUWWfaBPOe9ZLr+MHgLnmCec4ax5XDwFNheBmLQQiAa7dNpbnR
+	 A8ErelEO4mNiAHDgU5lSz3NJKX8mtlEH2i4QNJVcdMoe3wVt+HVdIFrKWXme8krD8V
+	 /cRzq0f+AOYf4fUypSykgJYIqQ5vB++Bqnl++GKZjmgBE0d0PaVaQpD3TethO7rX2j
+	 z/kmGB5QoXDmC6OY8mbQ2JWWE9urYtmoYh+BPE+h2cB5rW+cu0eep+qilNpEDsOZ7R
+	 EUjLFNLBLx/vuLwYRBwNkUxRnix2NHnvLllsEFOloLdESJyuEAvPm6jhLf2BQDHuoB
+	 0Yqn2vdq1RIJA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 5CFCDDC9A06;
+	Thu, 25 Jan 2024 21:30:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -83,67 +37,46 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: GysTMrm6-mcL-m8x12davFsbB12pYHLf
-X-Proofpoint-ORIG-GUID: _vbxIRZNqiN081HErlJ-GrANPNmq_t_E
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-25_14,2024-01-25_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
- lowpriorityscore=0 priorityscore=1501 spamscore=0 mlxscore=0
- mlxlogscore=999 suspectscore=0 phishscore=0 impostorscore=0 malwarescore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2401250154
+Subject: Re: [PATCH V2] riscv: Support RANDOMIZE_KSTACK_OFFSET
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id: 
+ <170621822937.6239.4360145858676634125.git-patchwork-notify@kernel.org>
+Date: Thu, 25 Jan 2024 21:30:29 +0000
+References: <20231109133751.212079-1-songshuaishuai@tinylab.org>
+In-Reply-To: <20231109133751.212079-1-songshuaishuai@tinylab.org>
+To: Song Shuai <songshuaishuai@tinylab.org>
+Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, keescook@chromium.org,
+ guoren@kernel.org, bjorn@rivosinc.com, jszhang@kernel.org,
+ conor.dooley@microchip.com, andy.chiu@sifive.com, samitolvanen@google.com,
+ coelacanthushex@gmail.com, dlemoal@kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, palmer@rivosinc.com
 
-This patchset adds device tree for IBM system1 bmc board.
+Hello:
 
-Change log:
-v1:
- - Added device binding for IBM system1-bmc
- - Added device binding for TIS I2C devices
- - Added device tree for IBM system1 BMC board 
- - Added i2c and muxes
- - Added voltage regulators
- - Added GPIO, Fan ctrl, Led
- - Added more compatible strings for tpm_tis_i2c
- - Added power supplies, sensors, EEPROMS, TPM and more
+This patch was applied to riscv/linux.git (for-next)
+by Palmer Dabbelt <palmer@rivosinc.com>:
 
-v2:
- - Incorporated review comments from Conor Dooley, Jarkko Sakkinen,
-   Guenter Roeck, Rob Herring, Krzysztof Kozlowski
- - Merge all patches into single patch.
- - Split the trivial device patch.
- - Cleanup commit messages.
- - Fixed bootargs string.
- - Fixed node names.
- - Dropped tpm schema patch as it is covered by Lukas's patch.
- - Dropped "tpm: tis-i2c: Add more compatible strings" patch and
-   send it as a separate patch.
+On Thu,  9 Nov 2023 21:37:51 +0800 you wrote:
+> Inspired from arm64's implement -- commit 70918779aec9
+> ("arm64: entry: Enable random_kstack_offset support")
+> 
+> Add support of kernel stack offset randomization while handling syscall,
+> the offset is defaultly limited by KSTACK_OFFSET_MAX() (i.e. 10 bits).
+> 
+> In order to avoid trigger stack canaries (due to __builtin_alloca) and
+> slowing down the entry path, use __no_stack_protector attribute to
+> disable stack protector for do_trap_ecall_u() at the function level.
+> 
+> [...]
 
-v3:
- - Fixed voltage-regulators names.
- - Updated commit message about TPM compatibility string.
+Here is the summary with links:
+  - [V2] riscv: Support RANDOMIZE_KSTACK_OFFSET
+    https://git.kernel.org/riscv/c/05d450aabd73
 
-v4:
- - Removed compatibility string "nuvoton,npct75x" from TPM
-
-v5:
-  - Fixed commit message as per reeview comment by Bjorn
-  - Dropped following commit from patchset as it is already merged.
-    -> dt-bindings-Add-DPS310-as-trivial-device.patch
-
-Andrew Geissler (1):
-  ARM: dts: aspeed: System1: IBM system1 BMC board
-
-Ninad Palsule (1):
-  dt-bindings: arm: aspeed: add IBM system1-bmc
-
- .../bindings/arm/aspeed/aspeed.yaml           |    1 +
- arch/arm/boot/dts/aspeed/Makefile             |    1 +
- .../dts/aspeed/aspeed-bmc-ibm-system1.dts     | 1623 +++++++++++++++++
- 3 files changed, 1625 insertions(+)
- create mode 100644 arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dts
-
+You are awesome, thank you!
 -- 
-2.39.2
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
