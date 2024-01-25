@@ -1,145 +1,141 @@
-Received: from smtp-bc0a.mail.infomaniak.ch (smtp-bc0a.mail.infomaniak.ch [45.157.188.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6C0212BF0F
-	for <linux-hardening@vger.kernel.org>; Thu, 25 Jan 2024 16:39:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AD67131E45
+	for <linux-hardening@vger.kernel.org>; Thu, 25 Jan 2024 18:00:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706200755; cv=none; b=WlNkmwQc9MtjsEjvODILOUXwoa+hDamNv5548I9WfvCUdTzA16Hft5Jgb+9gKgcgtnn+FCquCikWi747bJ/O+Y0LE0XdBSYH87n8lE3opSyv6Up2WEBdb2xVRR5Az8b3T1PbQmEQnAW95OCoFOA6mMUdrqbk7e/DVmdxLNkQS9o=
+	t=1706205620; cv=none; b=W1RzdbVLwQ9K4S7Rf4i5TPziHZSwMIa6+Qh+YD+8L3tJ4a6OTvCz9jfGq9zPGv75N+esdJBkTkpIEFEy8KTDjClKqWCTZ6/V/vPFrrG9kzWz5DXvhnqZk08yW1431QMYbRV6MG4AEoVhOlLUL9WQtbstpvR7IXLoBUWXXznXECY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706200755; c=relaxed/simple;
-	bh=du31PmGw/fTX+38J7um3nXoKGi9MdQjFP4Xk4imtbeU=;
+	s=arc-20240116; t=1706205620; c=relaxed/simple;
+	bh=mT3YLkbrBaeTvDcmwOHl1CS/WsjvlqLYlUMs+sUIjqo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dzt+7eiE2OBEiG9McdR+mH0MwsRP2+LfiZIImXAFmzxYseMPUKdQ0cTs6rNl4NqdUyJU/DbXA0Auguj+8fSVb6/sPaEE4x7oCXPMZrM1XUvlte6/fl1Eeh2pyuBRR3vRxIZMmPzsEvVaj7ZhknRbAoNivMWEXGshbo7EqTRJUhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=DO8PBK/6; arc=none smtp.client-ip=45.157.188.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=MoxVc/pa4zdpFzYdtstidrTzJNlUtIC8cFZa8emHnKw4KmiuWcV7lOv6U8z0RsB9s0/5m3qSdQE2/daBL9t78qYTfwDe1O8XM0z7oN3P2b3PBCoyeD1IOH1LdzshCL0PfhzB1dl6DF+hQpPy8cA0cC5/MI18xJ6MNt5lGeSwgXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=aeeurj5v; arc=none smtp.client-ip=209.85.166.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="DO8PBK/6"
-Received: from smtp-3-0000.mail.infomaniak.ch (unknown [10.4.36.107])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4TLRNh6dy5zMqbBv;
-	Thu, 25 Jan 2024 17:39:00 +0100 (CET)
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4TLRNd3PKVz3f;
-	Thu, 25 Jan 2024 17:38:57 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1706200740;
-	bh=du31PmGw/fTX+38J7um3nXoKGi9MdQjFP4Xk4imtbeU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DO8PBK/6IihpHWk1hJ0RnfwFUiEI5PVdOR0kOr5uSXu696eAYNVKL8OoG3hr3ZBqO
-	 7NLJ7YfkSQETMHL9do9sD+BxXeEVD0vF42DMEasjGMEl5UxF22smEjqqzNtUjAU2ww
-	 o3XlB60Dumm/C8JlxtzDsXde456a7Bm2+fmY5HgU=
-Date: Thu, 25 Jan 2024 17:38:53 +0100
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Kees Cook <keescook@chromium.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
-	Jann Horn <jannh@google.com>, Josh Triplett <josh@joshtriplett.org>, 
-	Kevin Locke <kevin@kevinlocke.name>, John Johansen <john.johansen@canonical.com>, 
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, Kentaro Takeda <takedakn@nttdata.co.jp>, 
-	Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Eric Biederman <ebiederm@xmission.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, apparmor@lists.ubuntu.com, 
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: Re: [PATCH] exec: Check __FMODE_EXEC instead of in_execve for
- LSMs
-Message-ID: <20240125.bais0ieKahz7@digikod.net>
-References: <20240124192228.work.788-kees@kernel.org>
- <CAG48ez017tTwxXbxdZ4joVDv5i8FLWEjk=K_z1Vf=pf0v1=cTg@mail.gmail.com>
- <202401241206.031E2C75B@keescook>
- <CAHk-=wiUwRG7LuR=z5sbkFVGQh+7qVB6_1NM0Ny9SVNL1Un4Sw@mail.gmail.com>
- <202401241310.0A158998@keescook>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aeeurj5v"
+Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-7beefdfe71eso294570439f.0
+        for <linux-hardening@vger.kernel.org>; Thu, 25 Jan 2024 10:00:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1706205618; x=1706810418; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ASf7ytaMtxVk0xSdSw9HpPo51B0EyC7CmU5TJyjG/94=;
+        b=aeeurj5vUhzBjQCv2FWqw7xbsQXbYPNAe8V6krXVa2WoocWpvlAs/wNMb+qQeFKCv8
+         MzdG1rxN5fRQ/nSIAsoZ0QXGCtkF4zMAMw79Dv+OmKp5dVtqWQUtdkiR8HKxTRQSqBJR
+         Wdk7/Ygo4OO3jG9IMkZdmLUd5falLLTdrQpCk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706205618; x=1706810418;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ASf7ytaMtxVk0xSdSw9HpPo51B0EyC7CmU5TJyjG/94=;
+        b=Cq8wFZtuCbHLmuxBpCIEqM5HF7aYigTnfE6ioZGdj1kIMJqcVZYLtZ4xyUFBX/r8c6
+         a03iTjjcDfZndj3jwqvRy/NhXpr3KZGCnW07FgpDco48nBIAZHaDu0flpzZ49rlsE3vv
+         mKG1GNDafi6bm9FW0B69gCodGP4k/mwnrTUOr04jUBhYZD3WlAPGiBiVBeamJUuHO9O+
+         i02w0+4XbVb6djO/4DVydBLoOK2Yi2dKs35HXx/k2hcBh644pQpFrhOyskdKUSqvhZfP
+         mkeOUFhI2VDtxFh6cHhSHwELjszfGPKVEVVncKm7bn/d1QAnJCkX5tk556wSJGgOs0sK
+         cmyg==
+X-Gm-Message-State: AOJu0Yyf6T3H3XFNWMLafcgZyWZKpKinDEOu0UHBLLRS+j3qVDJ4UmTg
+	WKzyK+oeKYkR0fWZ4ssM+PldiX5LR0umLgdjn2Opt1M3Ud+NRqoTJa60y8whOA==
+X-Google-Smtp-Source: AGHT+IGPddlDJxd6qVGArdVFf9Nrta2FGnNCUo/WGULBp9ke0+atvbxuIdfHfuqucOPAMPk2QtvD5Q==
+X-Received: by 2002:a05:6e02:1a6e:b0:35f:ef30:d665 with SMTP id w14-20020a056e021a6e00b0035fef30d665mr115219ilv.41.1706205617791;
+        Thu, 25 Jan 2024 10:00:17 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id 73-20020a63004c000000b005cd835182c5sm13721878pga.79.2024.01.25.10.00.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jan 2024 10:00:17 -0800 (PST)
+Date: Thu, 25 Jan 2024 10:00:16 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Steve French <sfrench@samba.org>, Nathan Chancellor <nathan@kernel.org>,
+	Paulo Alcantara <pc@manguebit.com>,
+	Ronnie Sahlberg <ronniesahlberg@gmail.com>,
+	Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
+	linux-cifs@vger.kernel.org, llvm@lists.linux.dev,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] smb: Work around Clang __bdos() type confusion
+Message-ID: <202401250958.11B29BE48@keescook>
+References: <20240123234731.work.358-kees@kernel.org>
+ <CAMj1kXGcKBPnHOm6PtsrxePdv5a6AokB=qvMrwvGmPh_Uk6vsA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202401241310.0A158998@keescook>
-X-Infomaniak-Routing: alpha
+In-Reply-To: <CAMj1kXGcKBPnHOm6PtsrxePdv5a6AokB=qvMrwvGmPh_Uk6vsA@mail.gmail.com>
 
-On Wed, Jan 24, 2024 at 01:32:02PM -0800, Kees Cook wrote:
-> On Wed, Jan 24, 2024 at 12:47:34PM -0800, Linus Torvalds wrote:
-> > On Wed, 24 Jan 2024 at 12:15, Kees Cook <keescook@chromium.org> wrote:
-> > >
-> > > Hmpf, and frustratingly Ubuntu (and Debian) still builds with
-> > > CONFIG_USELIB, even though it was reported[2] to them almost 4 years ago.
+On Thu, Jan 25, 2024 at 01:19:19PM +0100, Ard Biesheuvel wrote:
+> On Wed, 24 Jan 2024 at 00:47, Kees Cook <keescook@chromium.org> wrote:
+> >
+> > Recent versions of Clang gets confused about the possible size of the
+> > "user" allocation, and CONFIG_FORTIFY_SOURCE ends up emitting a
+> > warning[1]:
+> >
+> > repro.c:126:4: warning: call to '__write_overflow_field' declared with 'warning' attribute: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Wattribute-warning]
+> >   126 |                         __write_overflow_field(p_size_field, size);
+> >       |                         ^
+> >
+> > for this memset():
+> >
+> >         int len;
+> >         __le16 *user;
+> >         ...
+> >         len = ses->user_name ? strlen(ses->user_name) : 0;
+> >         user = kmalloc(2 + (len * 2), GFP_KERNEL);
+> >         ...
+> >         if (len) {
+> >                 ...
+> >         } else {
+> >                 memset(user, '\0', 2);
+> >         }
+> >
+> > While Clang works on this bug[2], switch to using a direct assignment,
+> > which avoids memset() entirely which both simplifies the code and silences
+> > the false positive warning. (Making "len" size_t also silences the
+> > warning, but the direct assignment seems better.)
+> >
+> > Reported-by: Nathan Chancellor <nathan@kernel.org>
+> > Closes: https://github.com/ClangBuiltLinux/linux/issues/1966 [1]
+> > Link: https://github.com/llvm/llvm-project/issues/77813 [2]
+> > Cc: Steve French <sfrench@samba.org>
+> > Cc: Paulo Alcantara <pc@manguebit.com>
+> > Cc: Ronnie Sahlberg <ronniesahlberg@gmail.com>
+> > Cc: Shyam Prasad N <sprasad@microsoft.com>
+> > Cc: Tom Talpey <tom@talpey.com>
+> > Cc: linux-cifs@vger.kernel.org
+> > Cc: llvm@lists.linux.dev
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  fs/smb/client/cifsencrypt.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/fs/smb/client/cifsencrypt.c b/fs/smb/client/cifsencrypt.c
+> > index ef4c2e3c9fa6..6322f0f68a17 100644
+> > --- a/fs/smb/client/cifsencrypt.c
+> > +++ b/fs/smb/client/cifsencrypt.c
+> > @@ -572,7 +572,7 @@ static int calc_ntlmv2_hash(struct cifs_ses *ses, char *ntlmv2_hash,
+> >                 len = cifs_strtoUTF16(user, ses->user_name, len, nls_cp);
+> >                 UniStrupr(user);
+> >         } else {
+> > -               memset(user, '\0', 2);
+> > +               *(u16 *)user = 0;
 > 
-> For completeness, Fedora hasn't had CONFIG_USELIB for a while now.
-> 
-> > Well, we could just remove the __FMODE_EXEC from uselib.
-> > 
-> > It's kind of wrong anyway.
-> 
-> Yeah.
-> 
-> > So I think just removing __FMODE_EXEC would just do the
-> > RightThing(tm), and changes nothing for any sane situation.
-> 
-> Agreed about these:
-> 
-> - fs/fcntl.c is just doing a bitfield sanity check.
-> 
-> - nfs_open_permission_mask(), as you say, is only checking for
->   unreadable case.
-> 
-> - fsnotify would also see uselib() as a read, but afaict,
->   that's what it would see for an mmap(), so this should
->   be functionally safe.
-> 
-> This one, though, I need some more time to examine:
-> 
-> - AppArmor, TOMOYO, and LandLock will see uselib() as an
->   open-for-read, so that might still be a problem? As you
->   say, it's more of a mmap() call, but that would mean
->   adding something a call like security_mmap_file() into
->   uselib()...
+> Is 'user' guaranteed to be 16-bit aligned?
 
-If user space can emulate uselib() without opening a file with
-__FMODE_EXEC, then there is no security reason to keep __FMODE_EXEC for
-uselib().
+It's the first two bytes of a kmalloced address range, which I'm nearly
+certain will be sanely aligned, as those allocs are commonly used for
+holding structs, etc.
 
-Removing __FMODE_EXEC from uselib() looks OK for Landlock.  We use
-__FMODE_EXEC to infer if a file is being open for execution i.e., by
-execve(2).
+-Kees
 
-If __FMODE_EXEC is removed from uselib(), I think it should also be
-backported to all stable kernels for consistency though.
-
-
-> 
-> The issue isn't an insane "support uselib() under AppArmor" case, but
-> rather "Can uselib() be used to bypass exec/mmap checks?"
-> 
-> This totally untested patch might give appropriate coverage:
-> 
-> diff --git a/fs/exec.c b/fs/exec.c
-> index d179abb78a1c..0c9265312c8d 100644
-> --- a/fs/exec.c
-> +++ b/fs/exec.c
-> @@ -143,6 +143,10 @@ SYSCALL_DEFINE1(uselib, const char __user *, library)
->  	if (IS_ERR(file))
->  		goto out;
->  
-> +	error = security_mmap_file(file, PROT_READ | PROT_EXEC, MAP_FIXED | MAP_SHARED);
-> +	if (error)
-> +		goto exit;
-> +
->  	/*
->  	 * may_open() has already checked for this, so it should be
->  	 * impossible to trip now. But we need to be extra cautious
-> 
-> > Of course, as you say, not having CONFIG_USELIB enabled at all is the
-> > _truly_ sane thing, but the only thing that used the FMODE_EXEC bit
-> > were landlock and some special-case nfs stuff.
-> 
-> Do we want to attempt deprecation again? This was suggested last time:
-> https://lore.kernel.org/lkml/20200518130251.zih2s32q2rxhxg6f@wittgenstein/
-> 
-> -Kees
-> 
-> -- 
-> Kees Cook
-> 
+-- 
+Kees Cook
