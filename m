@@ -1,148 +1,164 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFBE717BBD;
-	Thu, 25 Jan 2024 22:35:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF59B111B5;
+	Thu, 25 Jan 2024 22:56:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706222145; cv=none; b=KLZ9lM9mV9vlGeOzb3yBi/Fl5jGnsmM8T7Q58mKL5Gkf47GTHMTYhj3YzwK3ZyvFbzSUHsVfWfo3ddDq61ZxgFGSmZKxPiL4RoLiIxX7Qp/gyWhSEwCoimmjYqe7X9Te0Vm8N9EaG4/2wBFZH2ya8XT5hVLrMzRgaq/HzAbyD0w=
+	t=1706223361; cv=none; b=UqO2GpD01VDcP5SP6ZPSLfIBxJJG5BaMqrtYarPYF5xRcu0+kaYTclovkd1vJBcdLhGhZpDWp/Pwdrv2Z81ljxPggKOgYhRyNPiXf+yzeM0vbjy7DwqCPvK+gHkcXHGCmOmuCKPtsVgx7rTbQrPtwA5HGl6zjKKkVa0e009dA6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706222145; c=relaxed/simple;
-	bh=ex8mhBFlVK+qlM04iw6etLe9+Jq4rqLuEQofIRhu8RA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b2Rgbqefy3snkCC2ySC6ovN7w6igYOyFuok9KftvSpI7QyBE01YI3jeyc5qfuMtEbILazUmN3rSJQaq3d2DiwsSuDICVuKN9Brf30wKvPxv9R3aynW3103kOzP48nhpjdJ1uVkJEpivTR9HkWVmUqrG4v2EdiFBlrCrKvJHGts8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tbz0wiCT; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706223361; c=relaxed/simple;
+	bh=Bx1oIdTdd86nzue6xvhtwCp4wPQwGjG0ILCqZqgINO8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=kSoRrWNmQfWh/h89qFtjQSj8aiImRxfwfyajmwe5wCWMDa1tOuW6DkSAzQrYBwivV9HOoBIsML57mxHToLNm2jZwFych6HuDBorQ1OBKwOeJ418DA9LTuHvcKZfVOAuzxrPUr8iqgKAtXZIjvMwV52Dbe+16MAkBcPtkgPkmvsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u/k5uY+I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tbz0wiCT"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-33922b66bd7so4953008f8f.2;
-        Thu, 25 Jan 2024 14:35:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706222142; x=1706826942; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FMyr1t75aVIHFmn0P1+tdWxst8vu4zQ4wyJGjRe6tPg=;
-        b=Tbz0wiCTlqTU6V8V4e1pfdbmDodkUOW4z3HndnO6Celr9Hmn9XactWH9z3dvvf4dCg
-         toeJnLOcP+EL+XfvoRRnxupWGxBYmBtysbHANeJBupbs7bOw+XxaGsiuRQ2p3641e0f7
-         EAf1pCWvM2JmA4AeD5wDmMg2umz3/jZLS9Yif9DQAzw6X0VwmD7Sa55efvuQmIG2p6e+
-         TGdxH+t9kQ7RhNeS7BHiW9uonOEjF5bi3uCVCTbHtWz9oFrzR3on5bCo46ClkIBGcyeS
-         CeqKpKLfplxTdAYWhEdmq/oEVXv20W9k0jTuDNEgtVqfTKJEGi0vOx7uHFmF7Mg8vbco
-         PVPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706222142; x=1706826942;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FMyr1t75aVIHFmn0P1+tdWxst8vu4zQ4wyJGjRe6tPg=;
-        b=rOiWVVH1tv6AY/Fm3OxeTeZV6e8VuEV3QBAiOLaj1SZpVXqe8cAR+qov0q1CWMNKWo
-         5TyeB//mkdOpR4eZN+t40YpdqTlH1ZYRWbf0+dHUIEqJRjOFMxT5GjsNzkuib/aEm0+S
-         m1IwEMrM/MWxnC4K+QdVBtfIgcz3CItDkAndKgZy1kbFC2bG00Q9j1fQUFkyjX4PBDx/
-         5lHEHl05v+zYA/UWmEcblrwz3AP72Jgab7Ck6BRuAY7kWo+zb6qQOS4qgWLoahO3CyIP
-         AluD1NNVfe7snhHCC1b/cAwXDYWcn9RIIHmL9PDiZSzEV9DNPOW1VKhfjlbwY6k4HEUH
-         RQMg==
-X-Gm-Message-State: AOJu0YxnlCcPVcG6nVjKxaUei7+z5LQLVduclrYT9Vtu9TEBmPgu4cBJ
-	u7mwo/qfJakvj54rCQzBro+wd8hyw9SVo3+n7jTJoOTKz4uWpgWsxuQgMeTX2lVztXtXZ316vP0
-	yepthWeqvqwhvaYRpy06L63i1nY0=
-X-Google-Smtp-Source: AGHT+IGhVj/6x7OyXp2FMLV7vv0nMhRTznm1M7um663p1SrHbtCiDFQuWt+g/3+DqsAxqMIiV+hSSlsuJcbPhCj6d6U=
-X-Received: by 2002:adf:e350:0:b0:339:2b28:32dc with SMTP id
- n16-20020adfe350000000b003392b2832dcmr314421wrj.53.1706222141699; Thu, 25 Jan
- 2024 14:35:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u/k5uY+I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7DA3C433F1;
+	Thu, 25 Jan 2024 22:55:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706223360;
+	bh=Bx1oIdTdd86nzue6xvhtwCp4wPQwGjG0ILCqZqgINO8=;
+	h=From:Subject:Date:To:Cc:From;
+	b=u/k5uY+I+ALGKvsZhJOKy+elEEMTuGK4js+9E2aa8C+jdW7zCUmcFB09uzv+3CoZu
+	 FWBWHBaHi7qqt5eN22oRGai4acZwbSD7+wTeYGd4bp/1BTWPKdzypKh5/upZuxCBTI
+	 DwwCb0OmIwH8ErHvyqJ9tF2AwVh/f9Tc6jYY5uvefvVeofbszLGkSgD9Psw/Y/fOqO
+	 4JubQhTEYhKN/h+N4+luvLNiDNT38sywwwjB3NkWClFOXDzTsmqYGb6NEb82khEZvP
+	 LyqTCcJ5Mv1GCoc5ko76xtnLjFlNccOpbLWrEyB9x/zp7+IcLe5lDiJ5iq6cetYBpb
+	 6LFQ6NVeleKSA==
+From: Nathan Chancellor <nathan@kernel.org>
+Subject: [PATCH 00/11] Bump the minimum supported version of LLVM to 13.0.1
+Date: Thu, 25 Jan 2024 15:55:06 -0700
+Message-Id: <20240125-bump-min-llvm-ver-to-13-0-1-v1-0-f5ff9bda41c5@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240122235208.work.748-kees@kernel.org> <20240123002814.1396804-55-keescook@chromium.org>
-In-Reply-To: <20240123002814.1396804-55-keescook@chromium.org>
-From: Andrey Konovalov <andreyknvl@gmail.com>
-Date: Thu, 25 Jan 2024 23:35:30 +0100
-Message-ID: <CA+fCnZdiLCDTcOmc7x_eHV9oNQhNq_sU1_w+rafoBA1FVEbwrA@mail.gmail.com>
-Subject: Re: [PATCH 55/82] kasan: Refactor intentional wrap-around test
-To: Kees Cook <keescook@chromium.org>
-Cc: linux-hardening@vger.kernel.org, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
-	Alexander Potapenko <glider@google.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Vincenzo Frascino <vincenzo.frascino@arm.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	kasan-dev@googlegroups.com, linux-mm@kvack.org, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMrmsmUC/x3MQQqDMBAF0KvIrPshkwSpvUrpojajHTBREhsK4
+ t0bunybd1CRrFLo1h2UpWrRNTXwpaPX+5lmgYZmssZ6w9Zj/MQNUROWpUZUydhXsIMBww3T1Yf
+ g+pEHasOWZdLvf78/zvMHzVeZdG0AAAA=
+To: akpm@linux-foundation.org, masahiroy@kernel.org
+Cc: nicolas@fjasle.eu, linux-kbuild@vger.kernel.org, llvm@lists.linux.dev, 
+ patches@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ Nathan Chancellor <nathan@kernel.org>, tglx@linutronix.de, mingo@redhat.com, 
+ bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
+ linux@armlinux.org.uk, ardb@kernel.org, 
+ linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com, 
+ will@kernel.org, mark.rutland@arm.com, mpe@ellerman.id.au, 
+ npiggin@gmail.com, aneesh.kumar@kernel.org, naveen.n.rao@linux.ibm.com, 
+ linuxppc-dev@lists.ozlabs.org, paul.walmsley@sifive.com, palmer@dabbelt.com, 
+ aou@eecs.berkeley.edu, conor@kernel.org, linux-riscv@lists.infradead.org, 
+ keescook@chromium.org, linux-hardening@vger.kernel.org
+X-Mailer: b4 0.13-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5041; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=Bx1oIdTdd86nzue6xvhtwCp4wPQwGjG0ILCqZqgINO8=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDKmbnv0VWied95P5q0eXfkzlxrZNofbTU+K5bbiVjef9U
+ LF9Lp/YUcrCIMbFICumyFL9WPW4oeGcs4w3Tk2CmcPKBDKEgYtTACbyoJSRYdfLJeuavmdyeR6u
+ +xn7PM6bZ9E7RT/WZzFKl4VUYs0DHjEyPAwMYX+6+56b/awFIlsKOvdcOn9vr4jAiuMznF5/qmc
+ T5wMA
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-On Tue, Jan 23, 2024 at 1:29=E2=80=AFAM Kees Cook <keescook@chromium.org> w=
-rote:
->
-> In an effort to separate intentional arithmetic wrap-around from
-> unexpected wrap-around, we need to refactor places that depend on this
-> kind of math. One of the most common code patterns of this is:
->
->         VAR + value < VAR
->
-> Notably, this is considered "undefined behavior" for signed and pointer
-> types, which the kernel works around by using the -fno-strict-overflow
-> option in the build[1] (which used to just be -fwrapv). Regardless, we
-> want to get the kernel source to the position where we can meaningfully
-> instrument arithmetic wrap-around conditions and catch them when they
-> are unexpected, regardless of whether they are signed[2], unsigned[3],
-> or pointer[4] types.
->
-> Refactor open-coded wrap-around addition test to use add_would_overflow()=
-.
-> This paves the way to enabling the wrap-around sanitizers in the future.
->
-> Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f185365=
-94 [1]
-> Link: https://github.com/KSPP/linux/issues/26 [2]
-> Link: https://github.com/KSPP/linux/issues/27 [3]
-> Link: https://github.com/KSPP/linux/issues/344 [4]
-> Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-> Cc: Alexander Potapenko <glider@google.com>
-> Cc: Andrey Konovalov <andreyknvl@gmail.com>
-> Cc: Dmitry Vyukov <dvyukov@google.com>
-> Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: kasan-dev@googlegroups.com
-> Cc: linux-mm@kvack.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  mm/kasan/generic.c | 2 +-
->  mm/kasan/sw_tags.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
-> index df6627f62402..f9bc29ae09bd 100644
-> --- a/mm/kasan/generic.c
-> +++ b/mm/kasan/generic.c
-> @@ -171,7 +171,7 @@ static __always_inline bool check_region_inline(const=
- void *addr,
->         if (unlikely(size =3D=3D 0))
->                 return true;
->
-> -       if (unlikely(addr + size < addr))
-> +       if (unlikely(add_would_overflow(addr, size)))
->                 return !kasan_report(addr, size, write, ret_ip);
->
->         if (unlikely(!addr_has_metadata(addr)))
-> diff --git a/mm/kasan/sw_tags.c b/mm/kasan/sw_tags.c
-> index 220b5d4c6876..79a3bbd66c32 100644
-> --- a/mm/kasan/sw_tags.c
-> +++ b/mm/kasan/sw_tags.c
-> @@ -80,7 +80,7 @@ bool kasan_check_range(const void *addr, size_t size, b=
-ool write,
->         if (unlikely(size =3D=3D 0))
->                 return true;
->
-> -       if (unlikely(addr + size < addr))
-> +       if (unlikely(add_would_overflow(addr, size)))
->                 return !kasan_report(addr, size, write, ret_ip);
->
->         tag =3D get_tag((const void *)addr);
-> --
-> 2.34.1
->
+Hi all,
 
-Acked-by: Andrey Konovalov <andreyknvl@gmail.com>
+This series bumps the minimum supported version of LLVM for building the
+kernel to 13.0.1. The first patch does the bump and all subsequent
+patches clean up all the various workarounds and checks for earlier
+versions.
 
-Thanks!
+Quoting the first patch's commit message for those that were only on CC
+for the clean ups:
+
+  When __builtin_mul_overflow() has arguments that differ in terms of
+  signedness and width, LLVM may generate a libcall to __muloti4 because
+  it performs the checks in terms of 65-bit multiplication. This issue
+  becomes harder to hit (but still possible) after LLVM 12.0.0, which
+  includes a special case for matching widths but different signs.
+
+  To gain access to this special case, which the kernel can take advantage
+  of when calls to __muloti4 appear, bump the minimum supported version of
+  LLVM for building the kernel to 13.0.1. 13.0.1 was chosen because there
+  is minimal impact to distribution support while allowing a few more
+  workarounds to be dropped in the kernel source than if 12.0.0 were
+  chosen. Looking at container images of up to date distribution versions:
+
+    archlinux:latest              clang version 16.0.6
+    debian:oldoldstable-slim      clang version 7.0.1-8+deb10u2 (tags/RELEASE_701/final)
+    debian:oldstable-slim         Debian clang version 11.0.1-2
+    debian:stable-slim            Debian clang version 14.0.6
+    debian:testing-slim           Debian clang version 16.0.6 (19)
+    debian:unstable-slim          Debian clang version 16.0.6 (19)
+    fedora:38                     clang version 16.0.6 (Fedora 16.0.6-3.fc38)
+    fedora:latest                 clang version 17.0.6 (Fedora 17.0.6-1.fc39)
+    fedora:rawhide                clang version 17.0.6 (Fedora 17.0.6-1.fc40)
+    opensuse/leap:latest          clang version 15.0.7
+    opensuse/tumbleweed:latest    clang version 17.0.6
+    ubuntu:focal                  clang version 10.0.0-4ubuntu1
+    ubuntu:latest                 Ubuntu clang version 14.0.0-1ubuntu1.1
+    ubuntu:rolling                Ubuntu clang version 16.0.6 (15)
+    ubuntu:devel                  Ubuntu clang version 17.0.6 (3)
+
+  The only distribution that gets left behind is Debian Bullseye, as the
+  default version is 11.0.1; other distributions either have a newer
+  version than 13.0.1 or one older than the current minimum of 11.0.0.
+  Debian has easy access to more recent LLVM versions through
+  apt.llvm.org, so this is not as much of a concern. There are also the
+  kernel.org LLVM toolchains, which should work with distributions with
+  glibc 2.28 and newer.
+
+  Another benefit of slimming up the number of supported versions of LLVM
+  for building the kernel is reducing the build capacity needed to support
+  a matrix that builds with each supported version, which allows a matrix
+  to reallocate the freed up build capacity towards something else, such
+  as more configuration combinations.
+
+This passes my build matrix with all supported versions.
+
+This is based on Andrew's mm-nonmm-unstable to avoid trivial conflicts
+with my series to update the LLVM links across the repository [1] but I
+can easily rebase it to linux-kbuild if Masahiro would rather these
+patches go through there (and defer the conflict resolution to the merge
+window).
+
+[1]: https://lore.kernel.org/20240109-update-llvm-links-v1-0-eb09b59db071@kernel.org/
+
+---
+Nathan Chancellor (11):
+      kbuild: Raise the minimum supported version of LLVM to 13.0.1
+      Makefile: Drop warn-stack-size plugin opt
+      x86: Drop stack-alignment plugin opt
+      ARM: Remove Thumb2 __builtin_thread_pointer workaround for Clang
+      arm64: Kconfig: Clean up tautological LLVM version checks
+      powerpc: Kconfig: Remove tautology in CONFIG_COMPAT
+      riscv: Remove MCOUNT_NAME workaround
+      riscv: Kconfig: Remove version dependency from CONFIG_CLANG_SUPPORTS_DYNAMIC_FTRACE
+      fortify: Drop Clang version check for 12.0.1 or newer
+      lib/Kconfig.debug: Update Clang version check in CONFIG_KCOV
+      compiler-clang.h: Update __diag_clang() macros for minimum version bump
+
+ Documentation/process/changes.rst |  2 +-
+ Makefile                          |  8 --------
+ arch/arm/include/asm/current.h    |  8 +-------
+ arch/arm64/Kconfig                |  5 +----
+ arch/powerpc/Kconfig              |  1 -
+ arch/riscv/Kconfig                |  2 --
+ arch/riscv/include/asm/ftrace.h   | 14 ++------------
+ arch/riscv/kernel/mcount.S        | 10 +++++-----
+ arch/x86/Makefile                 |  6 ------
+ include/linux/compiler-clang.h    |  8 ++------
+ lib/Kconfig.debug                 |  2 +-
+ scripts/min-tool-version.sh       |  2 +-
+ scripts/recordmcount.pl           |  2 +-
+ security/Kconfig                  |  2 --
+ 14 files changed, 15 insertions(+), 57 deletions(-)
+---
+base-commit: 979741ebd48f75ed6d101c7290e3325340d361ff
+change-id: 20240124-bump-min-llvm-ver-to-13-0-1-39f84dd36b19
+
+Best regards,
+-- 
+Nathan Chancellor <nathan@kernel.org>
+
