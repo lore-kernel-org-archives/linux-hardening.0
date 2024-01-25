@@ -1,107 +1,145 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-bc0a.mail.infomaniak.ch (smtp-bc0a.mail.infomaniak.ch [45.157.188.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FF3F6EB58
-	for <linux-hardening@vger.kernel.org>; Thu, 25 Jan 2024 14:59:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6C0212BF0F
+	for <linux-hardening@vger.kernel.org>; Thu, 25 Jan 2024 16:39:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706194798; cv=none; b=slPXMfqmlTXNPhNM/VO1IimOaQcqlqkBcZfThMBO2vqjsnEo9GRoMPlDQUrXjbn5y0XaVWW3mrBbEc38EvbZl37cCWoE9gRt4Xw8vNxOXfAJYpk+MscsOMLHkwxn7iKSds3yLmsjt6wODyGEEEOAO0vH5ZY8nQRVeyHsh768Nds=
+	t=1706200755; cv=none; b=WlNkmwQc9MtjsEjvODILOUXwoa+hDamNv5548I9WfvCUdTzA16Hft5Jgb+9gKgcgtnn+FCquCikWi747bJ/O+Y0LE0XdBSYH87n8lE3opSyv6Up2WEBdb2xVRR5Az8b3T1PbQmEQnAW95OCoFOA6mMUdrqbk7e/DVmdxLNkQS9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706194798; c=relaxed/simple;
-	bh=NVvEtQm6kIc5iJVLjWQ7WGuCykEqscCeR/8JE5EYsvU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PTRNOnpHABuNvmp7WBCoqYnrtTtP5LXrNgQuTawRNMksCTx2MVzA9kYSqB+TkACdKrqAb9p+3xD1Q/dWl5NJNLOkZwHSdBhYfo2yZxJFWErw7K6+Vx0qFrJKt5peauz5oAP6RT0AzyqzQtJewuffaHK03LnyGHJ6ra9xVTUbaKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ywe7DKeV; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1706200755; c=relaxed/simple;
+	bh=du31PmGw/fTX+38J7um3nXoKGi9MdQjFP4Xk4imtbeU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dzt+7eiE2OBEiG9McdR+mH0MwsRP2+LfiZIImXAFmzxYseMPUKdQ0cTs6rNl4NqdUyJU/DbXA0Auguj+8fSVb6/sPaEE4x7oCXPMZrM1XUvlte6/fl1Eeh2pyuBRR3vRxIZMmPzsEvVaj7ZhknRbAoNivMWEXGshbo7EqTRJUhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=DO8PBK/6; arc=none smtp.client-ip=45.157.188.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ywe7DKeV"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-55d1d32d781so473a12.1
-        for <linux-hardening@vger.kernel.org>; Thu, 25 Jan 2024 06:59:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706194795; x=1706799595; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NVvEtQm6kIc5iJVLjWQ7WGuCykEqscCeR/8JE5EYsvU=;
-        b=ywe7DKeVLgmbEvuvIhAhxDlugmvDF0137qywdlLrLQAVIsCRrVwDfMXqQXzEq36zjN
-         duhRuPbxnbbVBkSA6B34HESH1+ZU+cq+/bn3WVjJLv1QCeqU3mLoHKvlcQ1wk3g5Nkb7
-         fJ5nv4lzoysO7zQrUYZ1zwOgr9d94il9rv2tVJNh15J3p1NGivQZ8FE03orEoGVUp8eT
-         1ZFkjzC8V+ijBNBGX/b6Jj3hWCSYoA5hxYJmPMib8ghWY3Hx4v2hphFR9R1Gav146njq
-         5m6TnU35zJc5pSUcnhIbdGXptRXalwJkv3HxfSGhnq12zuUcmpdv6jzVJBuWhNx2yIid
-         +npA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706194795; x=1706799595;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NVvEtQm6kIc5iJVLjWQ7WGuCykEqscCeR/8JE5EYsvU=;
-        b=ph39zpzy/YmEWI+1spYVntmBcctr5HnJ/Zuyoy+xMKmeCMj3kKbUGH6cwOep0deWlY
-         vyJ0siL4hOu35akE3mCqh/leNwBw4AyFlm5gFOiP07HO1pAMHnANDEHJXlRbXkh57YrJ
-         EboUwMdgEd3O1oY0iGK7xzx8XWisyWM+WsoEADwz01cXK6ots+YwhbX2BdcrHL7qd8cK
-         lg0ztn7drY6v/wpezYQjOH5phoqYTLz7FYCkgHwJRkMJgfNjoTLQnrRvf0SSlf2A2hQA
-         qwpI4k5GTSpiPtp2USRiTPAsWVpaZvRqe1mIWosZTntoC5F/y+oJl1uLk36gL4pBiFCx
-         6G9g==
-X-Gm-Message-State: AOJu0YwAxgfaRZdd69OH/a9j1gMD9xgYBhg3Cg4aUdZC1QkASQAzY44G
-	jFXTR721hNFbKhU1oRWMs3kqQW5RFZnRHECdLMQzAhnxd1ZkVH1oqXFPcg0Zl7FnomCsth3mXOA
-	EG3vD5xdQLkeO8ieOTnycVUqMLPh6SC6E05lZ
-X-Google-Smtp-Source: AGHT+IGIh91e+GUrEWI2VlgkJRJgEwPq3pQit/1u6pod8dk+ZSjuV2o1xzEEvMsVGi6ZGj+bb5Hul2/ERa0C1CI5xvw=
-X-Received: by 2002:a05:6402:c08:b0:55c:e50c:c66 with SMTP id
- co8-20020a0564020c0800b0055ce50c0c66mr233529edb.0.1706194795113; Thu, 25 Jan
- 2024 06:59:55 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="DO8PBK/6"
+Received: from smtp-3-0000.mail.infomaniak.ch (unknown [10.4.36.107])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4TLRNh6dy5zMqbBv;
+	Thu, 25 Jan 2024 17:39:00 +0100 (CET)
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4TLRNd3PKVz3f;
+	Thu, 25 Jan 2024 17:38:57 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
+	s=20191114; t=1706200740;
+	bh=du31PmGw/fTX+38J7um3nXoKGi9MdQjFP4Xk4imtbeU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DO8PBK/6IihpHWk1hJ0RnfwFUiEI5PVdOR0kOr5uSXu696eAYNVKL8OoG3hr3ZBqO
+	 7NLJ7YfkSQETMHL9do9sD+BxXeEVD0vF42DMEasjGMEl5UxF22smEjqqzNtUjAU2ww
+	 o3XlB60Dumm/C8JlxtzDsXde456a7Bm2+fmY5HgU=
+Date: Thu, 25 Jan 2024 17:38:53 +0100
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Kees Cook <keescook@chromium.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
+	Jann Horn <jannh@google.com>, Josh Triplett <josh@joshtriplett.org>, 
+	Kevin Locke <kevin@kevinlocke.name>, John Johansen <john.johansen@canonical.com>, 
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
+	"Serge E. Hallyn" <serge@hallyn.com>, Kentaro Takeda <takedakn@nttdata.co.jp>, 
+	Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Eric Biederman <ebiederm@xmission.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, apparmor@lists.ubuntu.com, 
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: Re: [PATCH] exec: Check __FMODE_EXEC instead of in_execve for
+ LSMs
+Message-ID: <20240125.bais0ieKahz7@digikod.net>
+References: <20240124192228.work.788-kees@kernel.org>
+ <CAG48ez017tTwxXbxdZ4joVDv5i8FLWEjk=K_z1Vf=pf0v1=cTg@mail.gmail.com>
+ <202401241206.031E2C75B@keescook>
+ <CAHk-=wiUwRG7LuR=z5sbkFVGQh+7qVB6_1NM0Ny9SVNL1Un4Sw@mail.gmail.com>
+ <202401241310.0A158998@keescook>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240124192228.work.788-kees@kernel.org> <CAG48ez017tTwxXbxdZ4joVDv5i8FLWEjk=K_z1Vf=pf0v1=cTg@mail.gmail.com>
- <202401241206.031E2C75B@keescook> <CAHk-=wiUwRG7LuR=z5sbkFVGQh+7qVB6_1NM0Ny9SVNL1Un4Sw@mail.gmail.com>
- <202401241310.0A158998@keescook> <CAG48ez1tcxtEwWgxSUqLDcYbrkY=UM3hz22A0BTvTYq4BGpM8A@mail.gmail.com>
- <202401241348.1A2860EB58@keescook> <62d1c43c-18e5-4ddf-ad85-c47e5c58d79a@I-love.SAKURA.ne.jp>
-In-Reply-To: <62d1c43c-18e5-4ddf-ad85-c47e5c58d79a@I-love.SAKURA.ne.jp>
-From: Jann Horn <jannh@google.com>
-Date: Thu, 25 Jan 2024 15:59:18 +0100
-Message-ID: <CAG48ez1BwRBy67=c7bgsNCoGHaw82tyU0O_QJjbFvQYVd9Aukg@mail.gmail.com>
-Subject: Re: [PATCH] exec: Check __FMODE_EXEC instead of in_execve for LSMs
-To: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc: Kees Cook <keescook@chromium.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Josh Triplett <josh@joshtriplett.org>, Kevin Locke <kevin@kevinlocke.name>, 
-	John Johansen <john.johansen@canonical.com>, Paul Moore <paul@paul-moore.com>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
-	Kentaro Takeda <takedakn@nttdata.co.jp>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <202401241310.0A158998@keescook>
+X-Infomaniak-Routing: alpha
 
-On Thu, Jan 25, 2024 at 3:35=E2=80=AFPM Tetsuo Handa
-<penguin-kernel@i-love.sakura.ne.jp> wrote:
->
-> On 2024/01/25 6:50, Kees Cook wrote:
-> > Yeah, I was just noticing this. I was over thinking. :) It does look
-> > like all that is needed is to remove __FMODE_EXEC.
->
-> I worry that some out-of-tree kernel code continues using __FMODE_EXEC fo=
-r
-> opening for non-execve() purpose. If that happened, TOMOYO will be fooled=
-...
+On Wed, Jan 24, 2024 at 01:32:02PM -0800, Kees Cook wrote:
+> On Wed, Jan 24, 2024 at 12:47:34PM -0800, Linus Torvalds wrote:
+> > On Wed, 24 Jan 2024 at 12:15, Kees Cook <keescook@chromium.org> wrote:
+> > >
+> > > Hmpf, and frustratingly Ubuntu (and Debian) still builds with
+> > > CONFIG_USELIB, even though it was reported[2] to them almost 4 years ago.
+> 
+> For completeness, Fedora hasn't had CONFIG_USELIB for a while now.
+> 
+> > Well, we could just remove the __FMODE_EXEC from uselib.
+> > 
+> > It's kind of wrong anyway.
+> 
+> Yeah.
+> 
+> > So I think just removing __FMODE_EXEC would just do the
+> > RightThing(tm), and changes nothing for any sane situation.
+> 
+> Agreed about these:
+> 
+> - fs/fcntl.c is just doing a bitfield sanity check.
+> 
+> - nfs_open_permission_mask(), as you say, is only checking for
+>   unreadable case.
+> 
+> - fsnotify would also see uselib() as a read, but afaict,
+>   that's what it would see for an mmap(), so this should
+>   be functionally safe.
+> 
+> This one, though, I need some more time to examine:
+> 
+> - AppArmor, TOMOYO, and LandLock will see uselib() as an
+>   open-for-read, so that might still be a problem? As you
+>   say, it's more of a mmap() call, but that would mean
+>   adding something a call like security_mmap_file() into
+>   uselib()...
 
-I just scrolled through the Github code search results for the query
-"__FMODE_EXEC -path:fs/exec.c -path:fs/fcntl.c -path:fs/nfs/
--path:security/tomoyo/ -path:security/apparmor/
--path:include/linux/fsnotify.h -path:nfs/dir.c
--path:include/linux/fs.h -path:security/landlock/", and the only place
-I saw in there that sets __FMODE_EXEC, other than copies of core
-kernel code in weirdly named files, was this one hit in a patch for
-the 2.6.39 kernel to add plan9 syscalls:
+If user space can emulate uselib() without opening a file with
+__FMODE_EXEC, then there is no security reason to keep __FMODE_EXEC for
+uselib().
 
-https://github.com/longlene/clx/blob/fdf996e0c2a7835d61ee827a82146723de76a3=
-64/sys-kernel/glendix-sources/files/glendix_2.6.39.patch#L2833
+Removing __FMODE_EXEC from uselib() looks OK for Landlock.  We use
+__FMODE_EXEC to infer if a file is being open for execution i.e., by
+execve(2).
 
-Debian codesearch also doesn't show anything relevant.
+If __FMODE_EXEC is removed from uselib(), I think it should also be
+backported to all stable kernels for consistency though.
 
-So I don't think we have to be particularly worried about that.
+
+> 
+> The issue isn't an insane "support uselib() under AppArmor" case, but
+> rather "Can uselib() be used to bypass exec/mmap checks?"
+> 
+> This totally untested patch might give appropriate coverage:
+> 
+> diff --git a/fs/exec.c b/fs/exec.c
+> index d179abb78a1c..0c9265312c8d 100644
+> --- a/fs/exec.c
+> +++ b/fs/exec.c
+> @@ -143,6 +143,10 @@ SYSCALL_DEFINE1(uselib, const char __user *, library)
+>  	if (IS_ERR(file))
+>  		goto out;
+>  
+> +	error = security_mmap_file(file, PROT_READ | PROT_EXEC, MAP_FIXED | MAP_SHARED);
+> +	if (error)
+> +		goto exit;
+> +
+>  	/*
+>  	 * may_open() has already checked for this, so it should be
+>  	 * impossible to trip now. But we need to be extra cautious
+> 
+> > Of course, as you say, not having CONFIG_USELIB enabled at all is the
+> > _truly_ sane thing, but the only thing that used the FMODE_EXEC bit
+> > were landlock and some special-case nfs stuff.
+> 
+> Do we want to attempt deprecation again? This was suggested last time:
+> https://lore.kernel.org/lkml/20200518130251.zih2s32q2rxhxg6f@wittgenstein/
+> 
+> -Kees
+> 
+> -- 
+> Kees Cook
+> 
