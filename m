@@ -1,88 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 168F51B81E;
-	Thu, 25 Jan 2024 22:56:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0E8F12B60
+	for <linux-hardening@vger.kernel.org>; Thu, 25 Jan 2024 23:09:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706223368; cv=none; b=skBISUudfRQXoftObNAqEfF4MQijM1APV6dykFOPU+RAoX49wlGnO7tWOTznNQY6RGMZSXxBOqs+zA21GGhYwmPWva+2DOpr9uWwgjoIHFG9Z0Al6ty+3xmN61lUZQbN3XN/zumWMuCkVu08FTSpVncuYBFhuC/IMU9fuqFAEfA=
+	t=1706224175; cv=none; b=pQl2NwjUcKaPs3b/fUUbFQ2rqvhnXoRhZ6Nhd6PAxlEuFX+nTERvRccOBYz0X6MfqMdEQy9K49KdsxilKrXoS8sIFo7uim41ojIUSSqYbOKiAzQtlDfP8CdQ4WzWhG8FKusMbO3Vju1aeUVo02KRgyngBVCy3UuybqK9pHBKePE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706223368; c=relaxed/simple;
-	bh=bT1Kw/x60kOitlZMWNafPmdLsoWMItemWBhie7YD9XI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VG4nyuMnox7IpZvoXmLJaGLAzrctrpDwrcDPfJ7zIn4xQEz7rRkHmMZM37xk355PhGrHsTf6d4rMPN9fW8i/7jleHIBGtUSvWiFHGvit071WEo8R02+4NRumVfU2k0kxJwDilzPXE6sfib1O7j4LsN3ixwb5Zx6/baXwPBgyk3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vm9XhisI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706224175; c=relaxed/simple;
+	bh=ePte//PcvI+POPvm5pOf9eY2yfLLJls6I8UsfkKqq8I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EELr76yZlyf0j5ZNMEdNRXZmL4X5/U4bhREzblQnTsUGI1AY1WIh1x57VAjGnXTbpvrGpv+EFvdtNUrfhtcoiIrj41e0FSbuQMj2aPHzbpxVYH8HpHi8H1rpu20G0JFr5TTKmKxhfZCrfgMuTDOmL/t6Nq4ipZ4R51ivooOUp84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Sc1LdxnK; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vm9XhisI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10818C43399;
-	Thu, 25 Jan 2024 22:56:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706223367;
-	bh=bT1Kw/x60kOitlZMWNafPmdLsoWMItemWBhie7YD9XI=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Vm9XhisI0+r01AtDM7hT6Qlf+/72BmdUJfjk7HzpkQqfo+6q6UAUrGk2wEX1mnGq+
-	 AifZ6OrufCEJmyH1mVG6+NuPL+yN3bn3pNYRWmm8HAhlgkL+tqL4ceufEZOm0OyrY3
-	 lnjhEEfCUYl8RoJ7UVoOpMW/JsNby6WAAkC/64kRL1Nm9m0i8OwKZZRTc2YSfuLayd
-	 /96/mE/alkmHGuux4DqHH5rS50bMzj0+9DgRxAyGRdoS2KSFIXPoG5WtIMUiZAX8oX
-	 he7GgenQWajMSh+FbcMbNwL86iz3lHCcMyusNj2PoNlqRUtNbVx0uyzr9EsrMjneUW
-	 +VPWnodIzPPoQ==
-From: Nathan Chancellor <nathan@kernel.org>
-Date: Thu, 25 Jan 2024 15:55:15 -0700
-Subject: [PATCH 09/11] fortify: Drop Clang version check for 12.0.1 or
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Sc1LdxnK"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6da202aa138so40366b3a.2
+        for <linux-hardening@vger.kernel.org>; Thu, 25 Jan 2024 15:09:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1706224173; x=1706828973; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NNidztSseW3f6ox0VaVwn+MmYmXjLmRwN6RuC1S6ZnI=;
+        b=Sc1LdxnKDEn2FUa7jyeJmOK2uxPNAJtUNZ/lP0ZinbliSf5uNrZrpDjZYKSn6ia5z/
+         uJ5bsNh51b3g6TcZpf5adCBpke/Fe/rX1kCUfmIBlcuNgtyxQ13JjKyzGbI/CqVgxhj4
+         zRJmXZxPyfE5KbS9d6cuxhcFaQBnjBhcoET08=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706224173; x=1706828973;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NNidztSseW3f6ox0VaVwn+MmYmXjLmRwN6RuC1S6ZnI=;
+        b=qsXyOhMXyLVOIDKLz1SNvsSXaEGq3Miokzn06h7pSKHqXOvdP2xfdRzaDcyZ12SiyA
+         rQoWd6Y+RwJuOwGCZ7pKnJvLLeswBZ29TKLpc9z7HgXEgZoQ8KMmzIx0Sh3E5sdZL6RM
+         6HjpTNGxR+nS7pApDA7IpSUXMnSwklJnNeyWLjMoEC5mFU9ylBlkod4gQ4dF9V8OlV58
+         J79L+Zp2J31comuK65HlHyuwNSRMsHX6neV8G4a4a/yVjq+wKK2GZRf7iOJk1ylhyhxK
+         yzMK/Ue/da2vf/2KzMeYAQMd8RnSxi0wTiYN96enwScB/aNgfmzYbYx22gjU/BJEjjV9
+         Wttg==
+X-Gm-Message-State: AOJu0YxPvraUlrJFAi3PCqaao/jPpfdGYZBjTui4o4tGo9Jg2vljWYZx
+	QVycxFU7u/N+Au+SnI8lpvwMQHo+YWwTNL+3GiEUZ5oZ/pPAop/3hI/A2iHV4pmneW+me1KHsco
+	=
+X-Google-Smtp-Source: AGHT+IH4wMIY5onoDuNtmQW2qW/oiyEguJjb8r1Cdunh6LBtNU0O2EKFQ/LepjR7KIf8EtqHsgZMQA==
+X-Received: by 2002:a05:6a20:1616:b0:19b:5cf9:45ac with SMTP id l22-20020a056a20161600b0019b5cf945acmr452465pzj.81.1706224173278;
+        Thu, 25 Jan 2024 15:09:33 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id m66-20020a633f45000000b005cdfb0a11e1sm27205pga.88.2024.01.25.15.09.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jan 2024 15:09:32 -0800 (PST)
+Date: Thu, 25 Jan 2024 15:09:20 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: akpm@linux-foundation.org, masahiroy@kernel.org, nicolas@fjasle.eu,
+	linux-kbuild@vger.kernel.org, llvm@lists.linux.dev,
+	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 09/11] fortify: Drop Clang version check for 12.0.1 or
  newer
+Message-ID: <202401251509.70789B5D@keescook>
+References: <20240125-bump-min-llvm-ver-to-13-0-1-v1-0-f5ff9bda41c5@kernel.org>
+ <20240125-bump-min-llvm-ver-to-13-0-1-v1-9-f5ff9bda41c5@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240125-bump-min-llvm-ver-to-13-0-1-v1-9-f5ff9bda41c5@kernel.org>
-References: <20240125-bump-min-llvm-ver-to-13-0-1-v1-0-f5ff9bda41c5@kernel.org>
-In-Reply-To: <20240125-bump-min-llvm-ver-to-13-0-1-v1-0-f5ff9bda41c5@kernel.org>
-To: akpm@linux-foundation.org, masahiroy@kernel.org
-Cc: nicolas@fjasle.eu, linux-kbuild@vger.kernel.org, llvm@lists.linux.dev, 
- patches@lists.linux.dev, linux-kernel@vger.kernel.org, 
- Nathan Chancellor <nathan@kernel.org>, keescook@chromium.org, 
- linux-hardening@vger.kernel.org
-X-Mailer: b4 0.13-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=928; i=nathan@kernel.org;
- h=from:subject:message-id; bh=bT1Kw/x60kOitlZMWNafPmdLsoWMItemWBhie7YD9XI=;
- b=owGbwMvMwCUmm602sfCA1DTG02pJDKmbnv27eWPvnV7twFfRCac5NVSbV+yKyDO4WymklMN+1
- NaUwdC5o5SFQYyLQVZMkaX6sepxQ8M5ZxlvnJoEM4eVCWQIAxenAEyEayMjw9ZnpT/ionb+e3hY
- VUjldLWuGJNh5JL9089X7Dgxr8uJ9SYjQ9eP2Tqnnmccu3yrMU3w9v+eWaoWztvr+MJVb3woyVr
- xgQEA
-X-Developer-Key: i=nathan@kernel.org; a=openpgp;
- fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240125-bump-min-llvm-ver-to-13-0-1-v1-9-f5ff9bda41c5@kernel.org>
 
-Now that the minimum supported version of LLVM for building the kernel
-has been bumped to 13.0.1, this condition is always true, as the build
-will fail during the configuration stage for older LLVM versions. Remove
-it.
+On Thu, Jan 25, 2024 at 03:55:15PM -0700, Nathan Chancellor wrote:
+> Now that the minimum supported version of LLVM for building the kernel
+> has been bumped to 13.0.1, this condition is always true, as the build
+> will fail during the configuration stage for older LLVM versions. Remove
+> it.
+> 
+> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
 
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
----
-Cc: keescook@chromium.org
-Cc: linux-hardening@vger.kernel.org
----
- security/Kconfig | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/security/Kconfig b/security/Kconfig
-index 606a87c29a01..412e76f1575d 100644
---- a/security/Kconfig
-+++ b/security/Kconfig
-@@ -142,8 +142,6 @@ config HARDENED_USERCOPY
- config FORTIFY_SOURCE
- 	bool "Harden common str/mem functions against buffer overflows"
- 	depends on ARCH_HAS_FORTIFY_SOURCE
--	# https://llvm.org/pr41459
--	depends on !CC_IS_CLANG || CLANG_VERSION >= 120001
- 	# https://github.com/llvm/llvm-project/issues/53645
- 	depends on !CC_IS_CLANG || !X86_32
- 	help
+Acked-by: Kees Cook <keescook@chromium.org>
 
 -- 
-2.43.0
-
+Kees Cook
