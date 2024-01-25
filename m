@@ -1,172 +1,123 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8FDF3B19D
-	for <linux-hardening@vger.kernel.org>; Thu, 25 Jan 2024 12:11:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D560336B10;
+	Thu, 25 Jan 2024 12:19:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706184669; cv=none; b=dcqOxDniT7RMirOVum0khOzKN3vZ2pCSo0QVf4K5e3XOgjGsKUiQOmaTrPi8EZDL7Sx/P5Joa7ouEnAEi3kDQhHXxEfrdbU0ZU54GmIHc3Iw/ANyVxw9Bv80atY/KXSBNglGabd0AibRP438gjFRqluDA6MuxSS0AZf4NVABLYA=
+	t=1706185172; cv=none; b=rb/NCgt05+ppoLc0f3dvLGUwNOr4Yk3JhL35P60cbkSIHgzW0nWJdUAW0wvShDUPWFPUW18Iz5Ud7T39l8Jpl+dDLAE24o+619aoClMVZPo/5FIAMJjeJGzjYXrVdJvF7XTltKFHwlAS4B2LxjVaI6Q5qG/6flnw3Q/XrDaDqAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706184669; c=relaxed/simple;
-	bh=ndnj3SAeIJE9BN8JuRaL8lyalmHKP0Y19+AO9kO8vuk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JavADt4sV9UCIDac/x7DLW7Gm/Phwckf/foOZ3iknxTPda13uOxh/O8p6+UpqkjVWfe8cKC1tcXviWcd8A/rkLXwd6zjpqym+1Eb+SNMnewXuX122ZyXyMm2cp83nG30zlvWXZbutSFJajWJnbgiK73vMjXeTcrEqwnlK6bH994=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rSyZS-0004fa-7L; Thu, 25 Jan 2024 13:11:02 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rSyZQ-002HVd-Qq; Thu, 25 Jan 2024 13:11:00 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rSyZQ-007n5P-2Q;
-	Thu, 25 Jan 2024 13:11:00 +0100
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Kees Cook <keescook@chromium.org>,
-	linux-pwm@vger.kernel.org
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	kernel@pengutronix.de,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v5 108/111] pwm: Ensure a struct pwm has the same lifetime as its pwm_chip
-Date: Thu, 25 Jan 2024 13:10:10 +0100
-Message-ID:  <db65cd276a6fc81722d57a9a215304c2cd9e085c.1706182805.git.u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1706182805.git.u.kleine-koenig@pengutronix.de>
-References: <cover.1706182805.git.u.kleine-koenig@pengutronix.de>
+	s=arc-20240116; t=1706185172; c=relaxed/simple;
+	bh=zfYp4IY/7X/+LaY5xSNFJhQT56Y8mXFU7V7bnUDoJjI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=e/wCVAsC9jRzD+UgA51YTMaVkYKYTPWj/CdYm/nlFDH2dTGL/l4mBhUwhDKZnswn41NgxZxmhqB2O3+sXnrknrm/27pfB68hFbx+lFdjIbXcHsS/lwj9laZn2etfBYc9fY3PtjbAPRc4+b8aM3Y1ZEN+hmbSkjg08CgHSgtG7/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oEcmHnK8; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oEcmHnK8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51006C43390;
+	Thu, 25 Jan 2024 12:19:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706185172;
+	bh=zfYp4IY/7X/+LaY5xSNFJhQT56Y8mXFU7V7bnUDoJjI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=oEcmHnK818I/Jm5CIXPiXFRUVUEYppaXM9myPO1toFGfuJwKcHJFeNfruu/o4VNH7
+	 mG5lnXC/ogO/j3r8AWdOzk1rEjQ6CpXLoTlLn0g4Ghmlg9LxTy7GN7qpl2Rd65wuID
+	 vAIoOp5UL9HsZwrZRVwigOzTPHk5tEv6m0XHjEzTHa+U0oomwBAaS3WwLb1+DyEmI3
+	 5HGyspNEW+lOfq4NzmbgDy/FlFw2lCnTEper9YWLPwq1bpkV2SJ60dGJ6TT0MhdXeV
+	 LD70rg68/nxLe0fH/QlHKshy3vLyCqqPOUWf1UZyUDO94iMSRorQDmDwxCptZySMg8
+	 xFgBo8GhurSjQ==
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2cf354613easo7720421fa.1;
+        Thu, 25 Jan 2024 04:19:32 -0800 (PST)
+X-Gm-Message-State: AOJu0Yz6ylV7viiRwEYrBzfr2n+XsPXPuakECkNGnIMlqiXZAzDfuYPy
+	jN+N9NieEkwzllFDlg6t5KAgVM8kr3HpnpT/XzEXIpGHEAA2eGiBwqxpdU3Gir3Y9jXbarHy6O0
+	oMwy7MpaP6W5MfvVJLnCok4h4V5I=
+X-Google-Smtp-Source: AGHT+IE8X5NPhlKrP0UhMcQQq+MZ5eT7JN3M8CYIYwk0DIMhpjZasu6rhPJKWZjXj4l33/9dJOZOjkHZn/BkUxXAkqs=
+X-Received: by 2002:ac2:5f77:0:b0:50f:15fe:f91a with SMTP id
+ c23-20020ac25f77000000b0050f15fef91amr417674lfc.88.1706185170550; Thu, 25 Jan
+ 2024 04:19:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3366; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=ndnj3SAeIJE9BN8JuRaL8lyalmHKP0Y19+AO9kO8vuk=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlsk+4CFrJnmP7FJh3PMl9GSwLT6SKwhsKe6eIK fzj6m6pkVyJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZbJPuAAKCRCPgPtYfRL+ ThF1B/9LY6VXpJAu7mHYlwsFpW4mCNyHCCiyWMw9A+Q/hnJ5/fuf80IkpSeYV9axIoBFi8Sv9/C QeQeAvvKp8urMDVcsol/VO+Tnvpvv4LCmHnzSQgdi+OWf9YZ0HdosPX30xgxl2NzS79xUB1ZRF2 +WtUkq4SU6ZG4mA1/W/xLN1Ma9jte0LADuEfHTlFNHr4ANdFPHnyYWWWd47vLKzJgc5K0puLH3E Ai610iFjI3VwiB1Aleqn9V/VGmoK3l2pzh9P3/YWfQlx5roa8f9WHFuZhsOxveMv2Oqtz9Etol5 /Wo0T6dPunm4513zTHaC8k/+rzGVY/mV5gNZGdPTJtBzEbYv
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-hardening@vger.kernel.org
+References: <20240123234731.work.358-kees@kernel.org>
+In-Reply-To: <20240123234731.work.358-kees@kernel.org>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Thu, 25 Jan 2024 13:19:19 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXGcKBPnHOm6PtsrxePdv5a6AokB=qvMrwvGmPh_Uk6vsA@mail.gmail.com>
+Message-ID: <CAMj1kXGcKBPnHOm6PtsrxePdv5a6AokB=qvMrwvGmPh_Uk6vsA@mail.gmail.com>
+Subject: Re: [PATCH] smb: Work around Clang __bdos() type confusion
+To: Kees Cook <keescook@chromium.org>
+Cc: Steve French <sfrench@samba.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Paulo Alcantara <pc@manguebit.com>, Ronnie Sahlberg <ronniesahlberg@gmail.com>, 
+	Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, linux-cifs@vger.kernel.org, 
+	llvm@lists.linux.dev, Nick Desaulniers <ndesaulniers@google.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-It's required to not free the memory underlying a requested PWM
-while a consumer still has a reference to it. While currently a pwm_chip
-doesn't life long enough in all cases, linking the struct pwm to the
-pwm_chip results in the right lifetime as soon as the pwmchip is living
-long enough. This happens with the following commits.
+On Wed, 24 Jan 2024 at 00:47, Kees Cook <keescook@chromium.org> wrote:
+>
+> Recent versions of Clang gets confused about the possible size of the
+> "user" allocation, and CONFIG_FORTIFY_SOURCE ends up emitting a
+> warning[1]:
+>
+> repro.c:126:4: warning: call to '__write_overflow_field' declared with 'warning' attribute: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Wattribute-warning]
+>   126 |                         __write_overflow_field(p_size_field, size);
+>       |                         ^
+>
+> for this memset():
+>
+>         int len;
+>         __le16 *user;
+>         ...
+>         len = ses->user_name ? strlen(ses->user_name) : 0;
+>         user = kmalloc(2 + (len * 2), GFP_KERNEL);
+>         ...
+>         if (len) {
+>                 ...
+>         } else {
+>                 memset(user, '\0', 2);
+>         }
+>
+> While Clang works on this bug[2], switch to using a direct assignment,
+> which avoids memset() entirely which both simplifies the code and silences
+> the false positive warning. (Making "len" size_t also silences the
+> warning, but the direct assignment seems better.)
+>
+> Reported-by: Nathan Chancellor <nathan@kernel.org>
+> Closes: https://github.com/ClangBuiltLinux/linux/issues/1966 [1]
+> Link: https://github.com/llvm/llvm-project/issues/77813 [2]
+> Cc: Steve French <sfrench@samba.org>
+> Cc: Paulo Alcantara <pc@manguebit.com>
+> Cc: Ronnie Sahlberg <ronniesahlberg@gmail.com>
+> Cc: Shyam Prasad N <sprasad@microsoft.com>
+> Cc: Tom Talpey <tom@talpey.com>
+> Cc: linux-cifs@vger.kernel.org
+> Cc: llvm@lists.linux.dev
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  fs/smb/client/cifsencrypt.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/fs/smb/client/cifsencrypt.c b/fs/smb/client/cifsencrypt.c
+> index ef4c2e3c9fa6..6322f0f68a17 100644
+> --- a/fs/smb/client/cifsencrypt.c
+> +++ b/fs/smb/client/cifsencrypt.c
+> @@ -572,7 +572,7 @@ static int calc_ntlmv2_hash(struct cifs_ses *ses, char *ntlmv2_hash,
+>                 len = cifs_strtoUTF16(user, ses->user_name, len, nls_cp);
+>                 UniStrupr(user);
+>         } else {
+> -               memset(user, '\0', 2);
+> +               *(u16 *)user = 0;
 
-Note this is a breaking change for all pwm drivers that don't use
-pwmchip_alloc().
+Is 'user' guaranteed to be 16-bit aligned?
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org> # for struct_size() and __counted_by()
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/pwm/core.c  | 27 ++++++++++-----------------
- include/linux/pwm.h |  2 +-
- 2 files changed, 11 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index 80acae5fed11..e5024dff56b3 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -456,15 +456,16 @@ EXPORT_SYMBOL_GPL(of_pwm_single_xlate);
- 
- static void *pwmchip_priv(struct pwm_chip *chip)
- {
--	return (void *)chip + sizeof(*chip);
-+	return (void *)chip + struct_size(chip, pwms, chip->npwm);
- }
- 
- struct pwm_chip *devm_pwmchip_alloc(struct device *parent, unsigned int npwm, size_t sizeof_priv)
- {
- 	struct pwm_chip *chip;
- 	size_t alloc_size;
-+	unsigned int i;
- 
--	alloc_size = size_add(sizeof(*chip), sizeof_priv);
-+	alloc_size = size_add(struct_size(chip, pwms, npwm), sizeof_priv);
- 
- 	chip = devm_kzalloc(parent, alloc_size, GFP_KERNEL);
- 	if (!chip)
-@@ -476,6 +477,13 @@ struct pwm_chip *devm_pwmchip_alloc(struct device *parent, unsigned int npwm, si
- 
- 	pwmchip_set_drvdata(chip, pwmchip_priv(chip));
- 
-+	for (i = 0; i < chip->npwm; i++) {
-+		struct pwm_device *pwm = &chip->pwms[i];
-+
-+		pwm->chip = chip;
-+		pwm->hwpwm = i;
-+	}
-+
- 	return chip;
- }
- EXPORT_SYMBOL_GPL(devm_pwmchip_alloc);
-@@ -523,7 +531,6 @@ static bool pwm_ops_check(const struct pwm_chip *chip)
-  */
- int __pwmchip_add(struct pwm_chip *chip, struct module *owner)
- {
--	unsigned int i;
- 	int ret;
- 
- 	if (!chip || !chip->dev || !chip->ops || !chip->npwm)
-@@ -543,28 +550,16 @@ int __pwmchip_add(struct pwm_chip *chip, struct module *owner)
- 
- 	chip->owner = owner;
- 
--	chip->pwms = kcalloc(chip->npwm, sizeof(*chip->pwms), GFP_KERNEL);
--	if (!chip->pwms)
--		return -ENOMEM;
--
- 	mutex_lock(&pwm_lock);
- 
- 	ret = idr_alloc(&pwm_chips, chip, 0, 0, GFP_KERNEL);
- 	if (ret < 0) {
- 		mutex_unlock(&pwm_lock);
--		kfree(chip->pwms);
- 		return ret;
- 	}
- 
- 	chip->id = ret;
- 
--	for (i = 0; i < chip->npwm; i++) {
--		struct pwm_device *pwm = &chip->pwms[i];
--
--		pwm->chip = chip;
--		pwm->hwpwm = i;
--	}
--
- 	mutex_unlock(&pwm_lock);
- 
- 	if (IS_ENABLED(CONFIG_OF))
-@@ -594,8 +589,6 @@ void pwmchip_remove(struct pwm_chip *chip)
- 	idr_remove(&pwm_chips, chip->id);
- 
- 	mutex_unlock(&pwm_lock);
--
--	kfree(chip->pwms);
- }
- EXPORT_SYMBOL_GPL(pwmchip_remove);
- 
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index 1620a1eef165..d505400f8573 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -290,7 +290,7 @@ struct pwm_chip {
- 	/* only used internally by the PWM framework */
- 	bool uses_pwmchip_alloc;
- 	void *driver_data;
--	struct pwm_device *pwms;
-+	struct pwm_device pwms[] __counted_by(npwm);
- };
- 
- static inline struct device *pwmchip_parent(struct pwm_chip *chip)
--- 
-2.43.0
-
+>         }
+>
+>         rc = crypto_shash_update(ses->server->secmech.hmacmd5,
+> --
+> 2.34.1
+>
+>
