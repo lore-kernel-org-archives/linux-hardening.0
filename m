@@ -1,110 +1,147 @@
-Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B96FD250EE
-	for <linux-hardening@vger.kernel.org>; Fri, 26 Jan 2024 22:24:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D8460269
+	for <linux-hardening@vger.kernel.org>; Fri, 26 Jan 2024 22:31:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706307849; cv=none; b=Xeeia3GwVbxs9Rui9SFZ2lIKjmBvDE2BEpegBSUIwPfJMbCLvKGPr5L09OGMUKePplUD8jrIcvHKwMsOsCdeAY7vs+i1xsgR+uxHeVOrXpDT/gLgjP61oQqKEvtxonLXHyRO33Fwm6vk+JzV6IqSHKyzy/+wFQCn/srxzoFl92g=
+	t=1706308319; cv=none; b=lTYGEWqgG3fyiapIHLxLcBY1fQ+vUctvgrAWukW3hSz8sJdl/sYfuZaWWM11yieWQBi5+xmZbylPOurK+J4Qe860N5MmFtnZjPmuxEpVJ6ykVT2TpMxhr17+RIKcOl0e1CKRG6HeZrbmVp2pxOhoaMFKgAOiQ+Vgd5Zwfqleksk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706307849; c=relaxed/simple;
-	bh=SsDgh1/qxxOxnOUHCoY8liFdv/cFob22r3vkkHPCNeU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZdR/8aEj14a6rPB5lE/5KAdueKqJwdebFyD6WXfXlgsG1LvumVorUZqOG2VWtxJu5p8DAr8eZAI/Yad2xizAR9XX4sPQhxhYDm+4e0wLse6rwbYJ+xoHEvNs2rraWjxfmbAcsAejHjXljpD02zmFwKgEM57fitc27qzYt9nwhmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Kt96DcjK; arc=none smtp.client-ip=209.85.161.44
+	s=arc-20240116; t=1706308319; c=relaxed/simple;
+	bh=rPkXTYFkEXl5V+Jd/DTvLkzH6fCDzYI0Hu4sIr2JZLw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bz18bKXmqbkpIhopIOEcvOMtjkhALOgI+8G8rITcqPIFPINZaZTbeM1E9dgdexH08+x4SLGt+EprTEuL9mJ5UuX5dznaBN35LwSObcbBMV8Th5JGM4yIqByATlQdGoBOoh1GXPghWcdws8AFfmu269jf0zF601mAKsbK3TDiUEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=SNuR4lcU; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Kt96DcjK"
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5955a4a9b23so522505eaf.1
-        for <linux-hardening@vger.kernel.org>; Fri, 26 Jan 2024 14:24:07 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SNuR4lcU"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1d89518d3b1so5733695ad.0
+        for <linux-hardening@vger.kernel.org>; Fri, 26 Jan 2024 14:31:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1706307847; x=1706912647; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YNjTDm/3nOOc9T42E39x/f5ugwNL2q1NFWZyO0YlL50=;
-        b=Kt96DcjK3cfx8NVJMZSKaS2+OmVa3OLMqxLSpQPJXFc5+eG5lbFEHgHJRH5OIX5hYg
-         hhVTCs4Tn7K51YboRGX+6cdlTc3zAnfcoPK44BSQ9C/hyy3T5VZjBhmAI2mD3ShAuyFq
-         ebT29hesbCSJnfbJy0Ii5IJIfroKF04a6oTRM=
+        d=chromium.org; s=google; t=1706308316; x=1706913116; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=iU2Wtc2AukuXqcfYq4BIdUdSO+0wlIbEGbfXdoUnxgE=;
+        b=SNuR4lcUHxREP2CV2muFhaSVui06s5ZPzFVFFRln/mT5bdaryCL8VQFVErrO1ozimD
+         U7FDwXE6xtYpFe6N+MYEqcYBKqk0xCFO1+fCA11PeZGKnoBwkBoyN9uKxCFzHv83h3+Q
+         UANKgTx+CppOGeqAWJyjwj/kSA0bRGYRcZz6A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706307847; x=1706912647;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YNjTDm/3nOOc9T42E39x/f5ugwNL2q1NFWZyO0YlL50=;
-        b=EMa4hHHf+mAcRKvgWtUmww844cLflLl+HSGwpcOciz281fQVsQzqRj8KOHeWeoU0sU
-         ZtRaU8hvpPmoIZbEhjvUf0m6rhkyXcDj1cRN+uEMy1lQqiVXfwaL2uEEGtYQi9iVWZ64
-         byIplBdBpR/FjktfpFWo+KD3WE0sLGTsHcqql1eXlpbsKRY4SCfuLSGsSvSKVTszVN29
-         4nO7e4b+05MlNNOEbfqguCTe23zFnc0f2063vLtfcTQ1b1p5A3OYgqkzU+bKoVmbJ5ZQ
-         6L6j19ewjQ3Ii3cnCmBM9dmmZlOQy7Oq58JP0SwqnOmAkfFnS+6fOOm+wgb6mrrnnTUp
-         mWFA==
-X-Gm-Message-State: AOJu0YzjhNd3et8JrOXEz0Z3DMynFQhGd3nfdjdMzD0Yt5Nx9mgsExjW
-	jeWVjMEW+sv8IX/EqhkMteOLUGolaZR9hpQHCK799IpHh3mM+pmsB/tbXrml5A==
-X-Google-Smtp-Source: AGHT+IGEnDcQTS7SnNR20li28GjLAf5EqupkVycmod63G3cSQkdng4abOodjIVFtLG7ZlpnwuWu1PQ==
-X-Received: by 2002:a05:6358:52c9:b0:176:cdb1:4414 with SMTP id z9-20020a05635852c900b00176cdb14414mr453949rwz.18.1706307846694;
-        Fri, 26 Jan 2024 14:24:06 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706308316; x=1706913116;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iU2Wtc2AukuXqcfYq4BIdUdSO+0wlIbEGbfXdoUnxgE=;
+        b=ScTdjUyy/yFlZMbsRQjI1yKm/9gcDKfZctj/hEXYHwHqT18jm84M4rElGtlO1k/SWA
+         L1dNXq9fVm/y/lza9kQvyVnBfoOGEWb8Y16pxuzxL1PkOKrUBUj3hcl3+gJH8BQzK9pW
+         XttMDsV+8aU8sROWaZilwnXvd4I7MDh5MBNBzvaXw1Fc8SCDSkwumlz4r61Qt0QTRWH9
+         YitISs9IJqm4NRCs7+H9tSVKhmU2IPDRoOGNYlqiVrloUEFk/D/6W+5+ch+ETiUFfpSx
+         ZWk/LfCmxtcMdT5fe0lgmHNv+gf8SxEnJewCK1KGIaATm2Lothmnfq2CDv/Gh5WUW9o8
+         ByaA==
+X-Gm-Message-State: AOJu0YxDx3Gk1jRXB6Pf7uM4V9nYHVsGehsk2SF+2pW/wqClVqnXG7v+
+	gEjBJmwYOzAZYcqN5IgBhqzW3d/hiSKgu6ya3BOhhIdMOs/gceAsufhISjFujg==
+X-Google-Smtp-Source: AGHT+IEdcjuVt71xGs4RaBAcyX//r1TrZHWYWdyRc/uuLuFjWBS2APfbkQb4tv5rh/eFxdoFKxohow==
+X-Received: by 2002:a17:903:24e:b0:1d7:1a90:65ba with SMTP id j14-20020a170903024e00b001d71a9065bamr524703plh.25.1706308316193;
+        Fri, 26 Jan 2024 14:31:56 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id p17-20020a056a0026d100b006d9accac5c4sm1602142pfw.35.2024.01.26.14.24.06
+        by smtp.gmail.com with ESMTPSA id n2-20020a170902d2c200b001d72f71e83bsm1393843plc.73.2024.01.26.14.31.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jan 2024 14:24:06 -0800 (PST)
-Date: Fri, 26 Jan 2024 14:24:05 -0800
+        Fri, 26 Jan 2024 14:31:55 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+To: Arend van Spriel <aspriel@gmail.com>
+Cc: Kees Cook <keescook@chromium.org>,
+	Franky Lin <franky.lin@broadcom.com>,
+	Hante Meuleman <hante.meuleman@broadcom.com>,
+	Kalle Valo <kvalo@kernel.org>,
+	Chi-hsien Lin <chi-hsien.lin@infineon.com>,
+	Ian Lin <ian.lin@infineon.com>,
+	Johannes Berg <johannes.berg@intel.com>,
+	Wright Feng <wright.feng@cypress.com>,
+	Hector Martin <marcan@marcan.st>,
+	linux-wireless@vger.kernel.org,
+	brcm80211-dev-list.pdl@broadcom.com,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] Enable -Wstringop-overflow globally
-Message-ID: <202401261423.7AF702239@keescook>
-References: <Za6JwRpknVIlfhPF@work>
- <CAHk-=wjG4jdE19-vWWhAX3ByfbNr4DJS-pwiN9oY38WkhMZ57g@mail.gmail.com>
- <4907a7a3-8533-480a-bc3c-488573e18e66@embeddedor.com>
+	Linus Walleij <linus.walleij@linaro.org>,
+	Jisoo Jang <jisoo.jang@yonsei.ac.kr>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Aloka Dixit <quic_alokad@quicinc.com>,
+	John Keeping <john@keeping.me.uk>,
+	Jeff Johnson <quic_jjohnson@quicinc.com>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] wifi: brcmfmac: Adjust n_channels usage for __counted_by
+Date: Fri, 26 Jan 2024 14:31:53 -0800
+Message-Id: <20240126223150.work.548-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4907a7a3-8533-480a-bc3c-488573e18e66@embeddedor.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2264; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=rPkXTYFkEXl5V+Jd/DTvLkzH6fCDzYI0Hu4sIr2JZLw=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBltDLZh4vPxZxe6NQZX8zlgNerfj/phD+H1Ha2N
+ cQmUuitlgOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZbQy2QAKCRCJcvTf3G3A
+ JtEVEACrslEiVziNzo1uYwZtisz+U3jKRB4W/CDxbqJsoXwjo/mvP1b0zYQdr81jwPkfRwJn+vf
+ MWandtFqacMULVgDY6wwKWOPMW8a3QBMa4RnnWkjJaR9ZA5I7jSWN2AP/sDci2NeA2RgfwBnP9c
+ 6UM7UQBPAX10TMBCKcW9Pqui2xwEyDyOlMBCjNhOSmwumyU1ddU04+HPMw79bOqVIpzq52Y9nda
+ 04btQl7VIHWXaMqR3hfjzdtrFk6AG+VvqdRXHxWSh8CQ02WoMFx+x5UuWGNgE7ofBXIuQefTkeY
+ pGuVyaKTk7nKGrPQF+434Sj3nm41C+8CcZWw6VaSxW7W5FgZD5G0Xrts/oxOSkibaPKAojlqg2v
+ 2lyvkcLm5uGKUP1pWijmeEbA3+zqL8j2+Ok4TurGi9NgTu2dF339TQh0q4vQey1Ofx7mCdXuOnD
+ Rl2F6dEMABMXGrijocbNXbzGyYL++Hb3rpaZYWKveVFLrOgdsbDiY73WCvFsfUCAgf6PSZ6WUQy
+ VSO5msytsN3qpfu/4PFc11nTR5FslBUGjLFaLkVHugDRrRx43e6Ela9bBK6YULN7sAJl4F+hRac
+ jMhYLmvXsBtCh2lR1ckf/Bef7vr8KVgqW4JWIbFgOA9KpvOaE5DrBn220v1kPmW42GyZv/LKdHq
+ nkKsHXV i3vN9orA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jan 26, 2024 at 03:30:20PM -0600, Gustavo A. R. Silva wrote:
-> 
-> 
-> On 1/26/24 15:22, Linus Torvalds wrote:
-> > On Mon, 22 Jan 2024 at 07:29, Gustavo A. R. Silva <gustavoars@kernel.org> wrote:
-> > > 
-> > > Enable -Wstringop-overflow globally
-> > 
-> > I suspect I'll have to revert this.
-> > 
-> > On arm64, I get a "writing 16 bytes into a region of size 0" in the Xe driver
-> > 
-> >     drivers/gpu/drm/xe/xe_gt_pagefault.c:340
-> > 
-> > but I haven't looked into it much yet.
-> > 
-> > It's not some gcc-11 issue, though, this is with gcc version 13.2.1
-> > 
-> > It looks like the kernel test robot reported this too (for s390), at
-> > 
-> >      https://lore.kernel.org/all/202401161031.hjGJHMiJ-lkp@intel.com/T/
-> > 
-> > and in that case it was gcc-13.2.0.
-> > 
-> > So I don't think the issue is about gcc-11 at all, but about other
-> > random details.
-> 
-> Let me take a look.
+After commit e3eac9f32ec0 ("wifi: cfg80211: Annotate struct
+cfg80211_scan_request with __counted_by"), the compiler may enforce
+dynamic array indexing of req->channels to stay below n_channels. As a
+result, n_channels needs to be increased _before_ accessing the newly
+added array index. Increment it first, then use "i" for the prior index.
+Solves this warning in the coming GCC that has __counted_by support:
 
-I think xe has some other weird problems too. This may be related (under
-allocating):
+../drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c: In function 'brcmf_internal_escan_add_info':
+../drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c:3783:46: warning: operation on 'req->
+n_channels' may be undefined [-Wsequence-point]
+ 3783 |                 req->channels[req->n_channels++] = chan;
+      |                               ~~~~~~~~~~~~~~~^~
 
-../drivers/gpu/drm/xe/xe_vm.c: In function 'xe_vma_create':
-../drivers/gpu/drm/xe/xe_vm.c:806:21: warning: allocation of insufficient size '224' for type 'struct xe_vma' with size '368' [-Walloc-size]
-  806 |                 vma = kzalloc(sizeof(*vma) - sizeof(struct xe_userptr),
-      |                     ^
+Fixes: e3eac9f32ec0 ("wifi: cfg80211: Annotate struct cfg80211_scan_request with __counted_by")
+Cc: Arend van Spriel <aspriel@gmail.com>
+Cc: Franky Lin <franky.lin@broadcom.com>
+Cc: Hante Meuleman <hante.meuleman@broadcom.com>
+Cc: Kalle Valo <kvalo@kernel.org>
+Cc: Chi-hsien Lin <chi-hsien.lin@infineon.com>
+Cc: Ian Lin <ian.lin@infineon.com>
+Cc: Johannes Berg <johannes.berg@intel.com>
+Cc: Wright Feng <wright.feng@cypress.com>
+Cc: Hector Martin <marcan@marcan.st>
+Cc: linux-wireless@vger.kernel.org
+Cc: brcm80211-dev-list.pdl@broadcom.com
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+index 133c5ea6429c..28d6a30cc010 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+@@ -3779,8 +3779,10 @@ static int brcmf_internal_escan_add_info(struct cfg80211_scan_request *req,
+ 		if (req->channels[i] == chan)
+ 			break;
+ 	}
+-	if (i == req->n_channels)
+-		req->channels[req->n_channels++] = chan;
++	if (i == req->n_channels) {
++		req->n_channels++;
++		req->channels[i] = chan;
++	}
+ 
+ 	for (i = 0; i < req->n_ssids; i++) {
+ 		if (req->ssids[i].ssid_len == ssid_len &&
 -- 
-Kees Cook
+2.34.1
+
