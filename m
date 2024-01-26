@@ -1,119 +1,110 @@
-Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4347D249F7
-	for <linux-hardening@vger.kernel.org>; Fri, 26 Jan 2024 21:30:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B96FD250EE
+	for <linux-hardening@vger.kernel.org>; Fri, 26 Jan 2024 22:24:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706304637; cv=none; b=mSUfbvR1DR1+4l/ERgU8VifEG07aLD2t5ZDp+jHPwz0++gHdZ/aIPA4PodC3AuOxX7+B11eG/q/NxR/gd8uY3IUphXcvfnyDxgPRsDWqK6gbPlY7I9wHZufXu7/+St71vBVHgm7npkePZaBKdO5zFuO/u7nX5P/rYOsi3piipM8=
+	t=1706307849; cv=none; b=Xeeia3GwVbxs9Rui9SFZ2lIKjmBvDE2BEpegBSUIwPfJMbCLvKGPr5L09OGMUKePplUD8jrIcvHKwMsOsCdeAY7vs+i1xsgR+uxHeVOrXpDT/gLgjP61oQqKEvtxonLXHyRO33Fwm6vk+JzV6IqSHKyzy/+wFQCn/srxzoFl92g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706304637; c=relaxed/simple;
-	bh=fnFSbqC73BjDiRJQDKm25AQEt8LU69o6DM+yCe6wRZQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jrp7sZET/XRNZyfZNop44iW81bNDpBvl9Iob1eujCFpXS6jKB+Le3ddQ65APJblUtL6cuiC/EzRrsSsO6V0KP+M7W4HmF7PyebW6mBwc0QBjT+rvEw9pMHEjDECBdvuZfwtpotCN6gj0oiZbWvd+y/F4OlkU4w4c0U/gyDItUr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=Uph02T/k; arc=none smtp.client-ip=35.89.44.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1706307849; c=relaxed/simple;
+	bh=SsDgh1/qxxOxnOUHCoY8liFdv/cFob22r3vkkHPCNeU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZdR/8aEj14a6rPB5lE/5KAdueKqJwdebFyD6WXfXlgsG1LvumVorUZqOG2VWtxJu5p8DAr8eZAI/Yad2xizAR9XX4sPQhxhYDm+4e0wLse6rwbYJ+xoHEvNs2rraWjxfmbAcsAejHjXljpD02zmFwKgEM57fitc27qzYt9nwhmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Kt96DcjK; arc=none smtp.client-ip=209.85.161.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Uph02T/k"
-Received: from eig-obgw-5008a.ext.cloudfilter.net ([10.0.29.246])
-	by cmsmtp with ESMTPS
-	id TQUlrv9PmCF6GTTmPr3mHf; Fri, 26 Jan 2024 21:30:29 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id TTmOrrnpBL3AmTTmOr8Y0o; Fri, 26 Jan 2024 21:30:29 +0000
-X-Authority-Analysis: v=2.4 cv=Sdrky9du c=1 sm=1 tr=0 ts=65b42475
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=IkcTkHD0fZMA:10 a=dEuoMetlWLkA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=QyXUC8HyAAAA:8 a=Gc1-N3_vkRdohSFN-fAA:9 a=QEXdDO2ut3YA:10
- a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=gtdu07UB76ceLZHCruNCNqNVA0XFxMCp0HAaC2jM0KY=; b=Uph02T/kShK7aMSLjSTStLHeXR
-	R4KR68vHbu7KdyJ+qr9MKZ9UZWUaB39jPFkO4XzFZUIvKcMQNmG5zwUy6SrXT//vjZ3skiaoMwFpJ
-	ikRshOEPOALsroWwcuh3Z27p8V1rWpB455/CMP6u8lXPEBwryLy9LHey4h8mfU8P3IbuheahCTUMD
-	le08p352EdkOiFbdS8wdkl+ezhqZ8E1c46am1dScJQm4TQj5DqdAUL9cjNG0CpoO7KIB2c4qTZGvc
-	sy6QrLxIG00c7KvweUDexF3eb+FFrJLvJ8xnbLYyI8pJgRKus/Jw7IFSiepB/SXG0CQAeFGPH7DJP
-	WbXiuA4g==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:48192 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rTTmO-003Zp9-0G;
-	Fri, 26 Jan 2024 15:30:28 -0600
-Message-ID: <4907a7a3-8533-480a-bc3c-488573e18e66@embeddedor.com>
-Date: Fri, 26 Jan 2024 15:30:20 -0600
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Kt96DcjK"
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5955a4a9b23so522505eaf.1
+        for <linux-hardening@vger.kernel.org>; Fri, 26 Jan 2024 14:24:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1706307847; x=1706912647; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YNjTDm/3nOOc9T42E39x/f5ugwNL2q1NFWZyO0YlL50=;
+        b=Kt96DcjK3cfx8NVJMZSKaS2+OmVa3OLMqxLSpQPJXFc5+eG5lbFEHgHJRH5OIX5hYg
+         hhVTCs4Tn7K51YboRGX+6cdlTc3zAnfcoPK44BSQ9C/hyy3T5VZjBhmAI2mD3ShAuyFq
+         ebT29hesbCSJnfbJy0Ii5IJIfroKF04a6oTRM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706307847; x=1706912647;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YNjTDm/3nOOc9T42E39x/f5ugwNL2q1NFWZyO0YlL50=;
+        b=EMa4hHHf+mAcRKvgWtUmww844cLflLl+HSGwpcOciz281fQVsQzqRj8KOHeWeoU0sU
+         ZtRaU8hvpPmoIZbEhjvUf0m6rhkyXcDj1cRN+uEMy1lQqiVXfwaL2uEEGtYQi9iVWZ64
+         byIplBdBpR/FjktfpFWo+KD3WE0sLGTsHcqql1eXlpbsKRY4SCfuLSGsSvSKVTszVN29
+         4nO7e4b+05MlNNOEbfqguCTe23zFnc0f2063vLtfcTQ1b1p5A3OYgqkzU+bKoVmbJ5ZQ
+         6L6j19ewjQ3Ii3cnCmBM9dmmZlOQy7Oq58JP0SwqnOmAkfFnS+6fOOm+wgb6mrrnnTUp
+         mWFA==
+X-Gm-Message-State: AOJu0YzjhNd3et8JrOXEz0Z3DMynFQhGd3nfdjdMzD0Yt5Nx9mgsExjW
+	jeWVjMEW+sv8IX/EqhkMteOLUGolaZR9hpQHCK799IpHh3mM+pmsB/tbXrml5A==
+X-Google-Smtp-Source: AGHT+IGEnDcQTS7SnNR20li28GjLAf5EqupkVycmod63G3cSQkdng4abOodjIVFtLG7ZlpnwuWu1PQ==
+X-Received: by 2002:a05:6358:52c9:b0:176:cdb1:4414 with SMTP id z9-20020a05635852c900b00176cdb14414mr453949rwz.18.1706307846694;
+        Fri, 26 Jan 2024 14:24:06 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id p17-20020a056a0026d100b006d9accac5c4sm1602142pfw.35.2024.01.26.14.24.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jan 2024 14:24:06 -0800 (PST)
+Date: Fri, 26 Jan 2024 14:24:05 -0800
+From: Kees Cook <keescook@chromium.org>
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] Enable -Wstringop-overflow globally
+Message-ID: <202401261423.7AF702239@keescook>
+References: <Za6JwRpknVIlfhPF@work>
+ <CAHk-=wjG4jdE19-vWWhAX3ByfbNr4DJS-pwiN9oY38WkhMZ57g@mail.gmail.com>
+ <4907a7a3-8533-480a-bc3c-488573e18e66@embeddedor.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [GIT PULL] Enable -Wstringop-overflow globally
-To: Linus Torvalds <torvalds@linux-foundation.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <Za6JwRpknVIlfhPF@work>
- <CAHk-=wjG4jdE19-vWWhAX3ByfbNr4DJS-pwiN9oY38WkhMZ57g@mail.gmail.com>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <CAHk-=wjG4jdE19-vWWhAX3ByfbNr4DJS-pwiN9oY38WkhMZ57g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1rTTmO-003Zp9-0G
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:48192
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 2
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfLtwuml11NBETn947nwXZao9LHA5B9a2kKz2Qit3YazpNaF2VCBqkjVdv5bozT+0STAtAfrVVu1CywrWadkpteLynsAXXD/nR0PRPpomP/dk4bGyJmMr
- 4MYCeIs4KDsW/pvJMAhBPEId5DiZFsLsiuVmPWN+wmp6HDlfP6GuXXc99xwS9t1Mm0+9UyeiXoQH8qOmBbj1E9enBbtgPw6H4KWwbBCWqGhsRDn84QOTAsUB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4907a7a3-8533-480a-bc3c-488573e18e66@embeddedor.com>
+
+On Fri, Jan 26, 2024 at 03:30:20PM -0600, Gustavo A. R. Silva wrote:
+> 
+> 
+> On 1/26/24 15:22, Linus Torvalds wrote:
+> > On Mon, 22 Jan 2024 at 07:29, Gustavo A. R. Silva <gustavoars@kernel.org> wrote:
+> > > 
+> > > Enable -Wstringop-overflow globally
+> > 
+> > I suspect I'll have to revert this.
+> > 
+> > On arm64, I get a "writing 16 bytes into a region of size 0" in the Xe driver
+> > 
+> >     drivers/gpu/drm/xe/xe_gt_pagefault.c:340
+> > 
+> > but I haven't looked into it much yet.
+> > 
+> > It's not some gcc-11 issue, though, this is with gcc version 13.2.1
+> > 
+> > It looks like the kernel test robot reported this too (for s390), at
+> > 
+> >      https://lore.kernel.org/all/202401161031.hjGJHMiJ-lkp@intel.com/T/
+> > 
+> > and in that case it was gcc-13.2.0.
+> > 
+> > So I don't think the issue is about gcc-11 at all, but about other
+> > random details.
+> 
+> Let me take a look.
+
+I think xe has some other weird problems too. This may be related (under
+allocating):
+
+../drivers/gpu/drm/xe/xe_vm.c: In function 'xe_vma_create':
+../drivers/gpu/drm/xe/xe_vm.c:806:21: warning: allocation of insufficient size '224' for type 'struct xe_vma' with size '368' [-Walloc-size]
+  806 |                 vma = kzalloc(sizeof(*vma) - sizeof(struct xe_userptr),
+      |                     ^
 
 
-
-On 1/26/24 15:22, Linus Torvalds wrote:
-> On Mon, 22 Jan 2024 at 07:29, Gustavo A. R. Silva <gustavoars@kernel.org> wrote:
->>
->> Enable -Wstringop-overflow globally
-> 
-> I suspect I'll have to revert this.
-> 
-> On arm64, I get a "writing 16 bytes into a region of size 0" in the Xe driver
-> 
->     drivers/gpu/drm/xe/xe_gt_pagefault.c:340
-> 
-> but I haven't looked into it much yet.
-> 
-> It's not some gcc-11 issue, though, this is with gcc version 13.2.1
-> 
-> It looks like the kernel test robot reported this too (for s390), at
-> 
->      https://lore.kernel.org/all/202401161031.hjGJHMiJ-lkp@intel.com/T/
-> 
-> and in that case it was gcc-13.2.0.
-> 
-> So I don't think the issue is about gcc-11 at all, but about other
-> random details.
-
-Let me take a look.
-
---
-Gustavo
+-- 
+Kees Cook
