@@ -1,185 +1,168 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79AF013AC9;
-	Fri, 26 Jan 2024 10:47:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 226E0224DD
+	for <linux-hardening@vger.kernel.org>; Fri, 26 Jan 2024 19:31:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706266059; cv=none; b=EbR05zPehTSUHJul/26rSq1awCVGVmk9Ut0PfnjX8/kbQzwzLnpFG/i/usVotiq0JjDCnbzwJZ2EtkuP0idRfRIABZ4EaFu1R4LFg6sMSkpKtgHBV+ujanxax9obsHCQIfydhSPLfsj9OH/5KVXPI4k7yMk6/bRSOleDqWx3Feg=
+	t=1706297506; cv=none; b=tNnMkRXTSF1Rr/vzTDLN1q0c9QKMaKhaKqj4+n/P2kvVZAyZ6Z8bzR9Zzak0T7DhozFTNHNGLFb0KruDBcnyz03RP8szVD+8JlAFgFY23jHf+u4IurLW6welu50GfxWIdE26i3+pIQjlLyZHoTs9JS4cMJ6iFIs9gQ+WfP2ojsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706266059; c=relaxed/simple;
-	bh=kw330Rj+dvXFrcyOh21QF428FI3QNljIFnkqOGrlr70=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b/m6552Yhz7AgZbci6KXNpFxoa78XHKBJrDb0VT+hCaYVlkGylfZ3Dn8iWDJWFBsABDDpTWIJFi1bcO/7XHLpI7jsy3wLCZ2pkschDB4V5Rl9m4SkfWr7snq2dVyj4Ae1iUP9Qp2sl92+MDc/2EC20kXMOtBAcFlalKj0oYNUa0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=uFWV5/6c; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=4nrJbFly; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=oCRuZGtD; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=neMnI5wB; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1706297506; c=relaxed/simple;
+	bh=QJ9CAa5A/yNS1CZvD8wdvEiJQuGv9F0gPuW/DiBsYxo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CCjv/o4psZRU1RLcU0Ny+t7E8D3Lxoyz1oMGsIqEVMsIBl8vxfp0PiaSTktLbHAg/xP2VjPZg8e7ia3SHGPt89RefqEcUzeGIjPtf0Kvo8EmRMO+k+dQEQ5Nyaia8q27YAb18iGbtdKAsHMIHxfCHX/P6JcUibPohUVDoPLE0/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TT9BWieN; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="uFWV5/6c";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="4nrJbFly";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="oCRuZGtD";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="neMnI5wB"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 719F721FDE;
-	Fri, 26 Jan 2024 10:47:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1706266049; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TT9BWieN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706297503;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=dfDYD1hkMdAR4BGYjFkj7xOSPN6n4QHzvjQQXC87In8=;
-	b=uFWV5/6c1EHGaUvzBag7+ZrIXQIiggCVI2OolOmkzhvhsKhHpuC8eOCy/0GD1Scy6wZiTx
-	ciDKNFJOeCcQudtyS0ASxoIhiOIfZUrHYcgyZ/I7l2/EkGXSJms0CTaGIe/1P5/9LLf7mm
-	JQk2IeeNtVKINRc7CutKAnonn9kB0vw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1706266049;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dfDYD1hkMdAR4BGYjFkj7xOSPN6n4QHzvjQQXC87In8=;
-	b=4nrJbFlyFc+tJTX0x97F2K5qP2hAJmeItCpQm/f4Vr+GeD/keeAnPKeddWhJ8xmpuhOfUe
-	6l9z5dZV7gbF3DDA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1706266048; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dfDYD1hkMdAR4BGYjFkj7xOSPN6n4QHzvjQQXC87In8=;
-	b=oCRuZGtDEaDojXKk77W9K6978xYhXrjBJWvilZKTV+D+mt42MLESnbDy6524QGR3rrwCJF
-	fzmDqEWIPw4O+d5/Xf3RcI3t8dAG/jQAs4zHgkzZ+3Z9hdDHg1V98phCl8aYqHA7L4PEVD
-	by1gdxoerrrY0rSD9JwVHg3smsUvpQE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1706266048;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dfDYD1hkMdAR4BGYjFkj7xOSPN6n4QHzvjQQXC87In8=;
-	b=neMnI5wBWr2bdJwNDjgxzyXSCEH8TQu/eSWTUjVZjYV7nJGDPiYlLpiH9Ruo+EPNO/P2ej
-	CFUDoNVRiYLjnbDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 58C1513A22;
-	Fri, 26 Jan 2024 10:47:28 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id YQKiFcCNs2V9JwAAD6G6ig
-	(envelope-from <jack@suse.cz>); Fri, 26 Jan 2024 10:47:28 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 2F462A0805; Fri, 26 Jan 2024 11:47:27 +0100 (CET)
-Date: Fri, 26 Jan 2024 11:47:27 +0100
-From: Jan Kara <jack@suse.cz>
-To: Kees Cook <keescook@chromium.org>
-Cc: Kevin Locke <kevin@kevinlocke.name>, Jann Horn <jannh@google.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	Matthew Bobrowski <mbobrowski@mbobrowski.org>, amir73il@gmail.com,
-	Steve Grubb <sgrubb@redhat.com>
-Subject: Re: [PATCH] exec: Remove __FMODE_EXEC from uselib()
-Message-ID: <20240126104727.rzksht5mjkanvo5n@quack3>
-References: <20240124220619.work.227-kees@kernel.org>
+	bh=8O4KZiKHB/hwZHbW9Vu9NJR3ZSgU5Japxu+5xbR0p5w=;
+	b=TT9BWieNHRXN2ezqmV+/toEUjF5FC60yUOHwjIvblQlx8HIp2LFkgo3KlGjsqDDetCf4P7
+	heh3zTc+ZQyMZZbbO4PRIQil0PhPyCBhIrYXUF+RPXR0SEsg/kygPuHuX8rFA/wqpG2ZHA
+	J0a5T2GB9Nl1Q/4q9QjzJEeOOjuzJrw=
+Received: from mail-yw1-f198.google.com (mail-yw1-f198.google.com
+ [209.85.128.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-147-n8mr2wFDO2K74ZCNIeDBMQ-1; Fri, 26 Jan 2024 14:31:41 -0500
+X-MC-Unique: n8mr2wFDO2K74ZCNIeDBMQ-1
+Received: by mail-yw1-f198.google.com with SMTP id 00721157ae682-6029c85922dso13262977b3.3
+        for <linux-hardening@vger.kernel.org>; Fri, 26 Jan 2024 11:31:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706297501; x=1706902301;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8O4KZiKHB/hwZHbW9Vu9NJR3ZSgU5Japxu+5xbR0p5w=;
+        b=Kpmmvlo/2rveSUVVEpLd2/Jg72LElqI5tkmGKck8WUXsSAFHL5Nk+RRFY+avBGUUvX
+         h37xQSvEvZa4XmPdvX89f7utFOpgFpyNDtIjiNTRwTLz/l6k9GtXlrpUbXdwqvqQitWj
+         p02EF0pomSjxBiPAvI2V2siSmEx2fwRgS+6bydqYi6ApgqxnDiXfenxvhFZEw4vE+Udj
+         GNDyFKy5T0ijaaMwQfMTyNjlj5Mp8gDIew94h4XxDxv/uX4c0Ou7F7C0nnzRVBuSJieP
+         aRa9a/vhDT9cyjN8IAEsoc93FbyLw2qcphNjmU93nP3vT8vFqX3dLkTcDcNPSlx2dlBj
+         aWrg==
+X-Gm-Message-State: AOJu0YzfWGCoIAgLsvj+Lo0j4tDVqo5uuQwQIftsUinVkAzbddNV/qrX
+	4uOWYiQ7RicT9+t+uAyb9S7IgfOduvv8jul8X7mMHgVYkNAFc9A4VTP6xh8HTMQOWyZNJC9ipL0
+	/I1nsajJKyQfk5LLeWNAZe0I7xWWA+gi9b1O4YuMVHiRD3fAFvJ/wdupOym2jwFCDRim2pS1Gaw
+	F+K2mcrP03wR1dHPwEJFzmiyp4MDGgOxWHt4TFEgzp
+X-Received: by 2002:a81:4cce:0:b0:602:c7e7:4721 with SMTP id z197-20020a814cce000000b00602c7e74721mr291685ywa.98.1706297501185;
+        Fri, 26 Jan 2024 11:31:41 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IE0RByXyJ/rysgPkfpq/s7XLE5JytXnsA6kZpBjPROqnD6sbZsuB+j2dxLKBC6MlOZRhXkfdAdA9aE4HMKjgVA=
+X-Received: by 2002:a81:4cce:0:b0:602:c7e7:4721 with SMTP id
+ z197-20020a814cce000000b00602c7e74721mr291681ywa.98.1706297500954; Fri, 26
+ Jan 2024 11:31:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240124220619.work.227-kees@kernel.org>
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spamd-Result: default: False [-2.60 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 RCPT_COUNT_TWELVE(0.00)[15];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,linux-foundation.org:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 FREEMAIL_CC(0.00)[kevinlocke.name,google.com,linux-foundation.org,xmission.com,zeniv.linux.org.uk,kernel.org,suse.cz,kvack.org,vger.kernel.org,mbobrowski.org,gmail.com,redhat.com];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -2.60
+References: <20240122235208.work.748-kees@kernel.org> <20240123002814.1396804-32-keescook@chromium.org>
+In-Reply-To: <20240123002814.1396804-32-keescook@chromium.org>
+From: Eugenio Perez Martin <eperezma@redhat.com>
+Date: Fri, 26 Jan 2024 20:31:04 +0100
+Message-ID: <CAJaqyWdGAb088DxKq4ELBeir=PGrqkRuQ0FYkTBwKkfJa4SWbQ@mail.gmail.com>
+Subject: Re: [PATCH 32/82] vringh: Refactor intentional wrap-around calculation
+To: Kees Cook <keescook@chromium.org>
+Cc: linux-hardening@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org, virtualization@lists.linux.dev, 
+	netdev@vger.kernel.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed 24-01-24 14:06:23, Kees Cook wrote:
-> Path-based LSMs will bypass uselib() "open" checks since commit
-> 4759ff71f23e ("exec: Check __FMODE_EXEC instead of in_execve for LSMs"),
-> so don't set __FMODE_EXEC during uselib(). The LSM "open" and eventual
-> "mmap" hooks will be restored. (uselib() never set current->in_execve.)
-> 
-> Other things that checked __FMODE_EXEC:
-> 
-> - fs/fcntl.c is just doing a bitfield sanity check.
-> 
-> - nfs_open_permission_mask() is only checking for the
->   "unreadable exec" case, which is not an issue for uselib(),
->   which sets MAY_READ, unlike execve().
-> 
-> - fsnotify would no longer see uselib() as FS_OPEN_EXEC_PERM, but
->   rather as FS_OPEN_PERM, but this is likely a bug fix, as uselib() isn't
->   an exec: it's more like mmap(), which fsnotify doesn't intercept.
-
-OK, I went back to the original discussion with Steve Grubb and Matthew
-Bobrowski who asked for FS_OPEN_EXEC_PERM and AFAICT this change in
-uselib() should be fine wrt usescases we discussed. That doesn't mean there
-cannot be some userspace which will get broken by this (in which case we'd
-have to revert or find some other solution) but I'm willing to try. I'm
-also CCing Steve & Matthew for input but from my side feel free to add:
-
-Acked-by: Jan Kara <jack@suse.cz>
-
-								Honza
-
-> 
-> Reported-by: Jann Horn <jannh@google.com>
-> Closes: https://lore.kernel.org/lkml/CAG48ez017tTwxXbxdZ4joVDv5i8FLWEjk=K_z1Vf=pf0v1=cTg@mail.gmail.com/
-> Fixes: 4759ff71f23e ("exec: Check __FMODE_EXEC instead of in_execve for LSMs")
-> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: Kevin Locke <kevin@kevinlocke.name>
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> Cc: Christian Brauner <brauner@kernel.org>
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: linux-mm@kvack.org
-> Cc: linux-fsdevel@vger.kernel.org
+On Tue, Jan 23, 2024 at 2:42=E2=80=AFAM Kees Cook <keescook@chromium.org> w=
+rote:
+>
+> In an effort to separate intentional arithmetic wrap-around from
+> unexpected wrap-around, we need to refactor places that depend on this
+> kind of math. One of the most common code patterns of this is:
+>
+>         VAR + value < VAR
+>
+> Notably, this is considered "undefined behavior" for signed and pointer
+> types, which the kernel works around by using the -fno-strict-overflow
+> option in the build[1] (which used to just be -fwrapv). Regardless, we
+> want to get the kernel source to the position where we can meaningfully
+> instrument arithmetic wrap-around conditions and catch them when they
+> are unexpected, regardless of whether they are signed[2], unsigned[3],
+> or pointer[4] types.
+>
+> Refactor open-coded unsigned wrap-around addition test to use
+> check_add_overflow(), retaining the result for later usage (which removes
+> the redundant open-coded addition). This paves the way to enabling the
+> unsigned wrap-around sanitizer[2] in the future.
+>
+> Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f185365=
+94 [1]
+> Link: https://github.com/KSPP/linux/issues/26 [2]
+> Link: https://github.com/KSPP/linux/issues/27 [3]
+> Link: https://github.com/KSPP/linux/issues/344 [4]
+> Cc: "Michael S. Tsirkin" <mst@redhat.com>
+> Cc: Jason Wang <jasowang@redhat.com>
+> Cc: kvm@vger.kernel.org
+> Cc: virtualization@lists.linux.dev
+> Cc: netdev@vger.kernel.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
->  fs/exec.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/exec.c b/fs/exec.c
-> index d179abb78a1c..af4fbb61cd53 100644
-> --- a/fs/exec.c
-> +++ b/fs/exec.c
-> @@ -128,7 +128,7 @@ SYSCALL_DEFINE1(uselib, const char __user *, library)
->  	struct filename *tmp = getname(library);
->  	int error = PTR_ERR(tmp);
->  	static const struct open_flags uselib_flags = {
-> -		.open_flag = O_LARGEFILE | O_RDONLY | __FMODE_EXEC,
-> +		.open_flag = O_LARGEFILE | O_RDONLY,
->  		.acc_mode = MAY_READ | MAY_EXEC,
->  		.intent = LOOKUP_OPEN,
->  		.lookup_flags = LOOKUP_FOLLOW,
-> -- 
+>  drivers/vhost/vringh.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/vhost/vringh.c b/drivers/vhost/vringh.c
+> index 7b8fd977f71c..07442f0a52bd 100644
+> --- a/drivers/vhost/vringh.c
+> +++ b/drivers/vhost/vringh.c
+> @@ -145,6 +145,8 @@ static inline bool range_check(struct vringh *vrh, u6=
+4 addr, size_t *len,
+>                                bool (*getrange)(struct vringh *,
+>                                                 u64, struct vringh_range =
+*))
+>  {
+> +       u64 sum;
+
+I understand this is part of a bulk change so little time to think
+about names :). But what about "end" or similar?
+
+Either way,
+Acked-by: Eugenio P=C3=A9rez <eperezma@redhat.com>
+
+> +
+>         if (addr < range->start || addr > range->end_incl) {
+>                 if (!getrange(vrh, addr, range))
+>                         return false;
+> @@ -152,20 +154,20 @@ static inline bool range_check(struct vringh *vrh, =
+u64 addr, size_t *len,
+>         BUG_ON(addr < range->start || addr > range->end_incl);
+>
+>         /* To end of memory? */
+> -       if (unlikely(addr + *len =3D=3D 0)) {
+> +       if (unlikely(U64_MAX - addr =3D=3D *len)) {
+>                 if (range->end_incl =3D=3D -1ULL)
+>                         return true;
+>                 goto truncate;
+>         }
+>
+>         /* Otherwise, don't wrap. */
+> -       if (addr + *len < addr) {
+> +       if (check_add_overflow(addr, *len, &sum)) {
+>                 vringh_bad("Wrapping descriptor %zu@0x%llx",
+>                            *len, (unsigned long long)addr);
+>                 return false;
+>         }
+>
+> -       if (unlikely(addr + *len - 1 > range->end_incl))
+> +       if (unlikely(sum - 1 > range->end_incl))
+>                 goto truncate;
+>         return true;
+>
+> --
 > 2.34.1
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+>
+>
+
