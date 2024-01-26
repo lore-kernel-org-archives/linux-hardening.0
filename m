@@ -1,218 +1,71 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42954B654
-	for <linux-hardening@vger.kernel.org>; Fri, 26 Jan 2024 04:10:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 054B314019;
+	Fri, 26 Jan 2024 09:06:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706242252; cv=none; b=hgsJFg/RmWovPbb3qlVT0zic4Z9M3i8RKvhTte9T8S2295DYRQPJ0NbEsuf8TplYkXLsNAW81bSHRyMGlzB1BiadTyGUH7pq61t9kiO3cXMCbxOxKZD8c7K32G+gm/9vCCbbiKtf/05Sz1wSYWNyXJASiFRN7DSmb6ZaL46LzGo=
+	t=1706260007; cv=none; b=F9xhDXgC+o0QxMJ0hqK7HHUf1Rxja8ytsOnOsowVxoOMJb1OdgkO+WROw4WuTnXfS/y3NR9oJgyP/uozAEy12Ra7hV9MlBfsulU9FWF0iFDxMXQvf0hCIPG3T3BE9LAfnVXok9nJcChVlXRMFsE7C8+BlqplKlNgButjDTa+eLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706242252; c=relaxed/simple;
-	bh=4W7SncTE5nlYZ6yVmwW0fgvVI6EKAy6c0i/7v898CBs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mWR92cwctQ1VEoMIoqzWchoVF716dtuYCi/mVFoIeFPsatgjTki+NEDzNNw/03N04CuOB+ylFFuPGbtik+QOJLdOV53OiziWu1tYRx3XKqpZZOlCF5z5TZxBGKHRHS59UrShs/eqE4lgVmomAjcpig2EkpgnxfDCOJYsb1LqB5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=BT/lZ8WD; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BT/lZ8WD"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1d750660a0aso28608055ad.0
-        for <linux-hardening@vger.kernel.org>; Thu, 25 Jan 2024 20:10:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1706242250; x=1706847050; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=v5dCLh7jF+475pXd7scOrhGTGo8G6O3hfrwh69idnc8=;
-        b=BT/lZ8WDD3Iap0FNctBWEtpEAoQldHlpB+5vTZDoa6lq6UZZNyWu4wVEsj9Y4PnOZS
-         /+ajPN8zrZ9FXJk/UMMj7T9osb0l5IOf7nfO3PLNdGMMfHIqsDPSIi7JX/ZViBgOwhvB
-         LMknfLWWqVhc2YMwjdncYy/SJFJ85DGqJhpmQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706242250; x=1706847050;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=v5dCLh7jF+475pXd7scOrhGTGo8G6O3hfrwh69idnc8=;
-        b=cmYrgd+28R/eGgyJafBUGumGQOXB6Rms6sCcgW6ztsgsVxlBYYWZwf27dm6ozqPjHJ
-         xznYNRVEARCwxyKImNVUbqvn9ZKfeQgdOqxXWDDBuiSt9Vg70MrJTcL1n77MWHwC9fg8
-         dTkQVxCa3/3jJzPBdxJwhrnJhUZSKMQjJ6XTAd37pYap7tY54RNcIawa6yEM8/UAsCkg
-         GtOiTDb5C2NCwQQt3IKYXg4zNqoz9tAM62r3Qyk18TwuQOXhO+rHaeBL0xc3G8S0rwW+
-         aguERYXMDBU5FOZLVZkDdJmZxJ3uvK24cYYDmgPWex+zAmD+dbNjCPWWF5C52h+kjce5
-         88ow==
-X-Gm-Message-State: AOJu0YwHFRw1914hR84RMGWtggWKViCTy1b9XgzK2CJcOiO4uGIG7Lhh
-	bEhgv5RYbBQ5KOBOwfES1bYc89goklclQTDJn8CzY1s01RUM2zhW/wsr/Mgw5Q==
-X-Google-Smtp-Source: AGHT+IG6P7+//dziV1Qhm9ExMtehYhok6tv2sQQKaffVL017ZSrUaivyJsmM4cXCEkIXw/zycWc8pw==
-X-Received: by 2002:a17:903:247:b0:1d7:5b9a:c125 with SMTP id j7-20020a170903024700b001d75b9ac125mr1201243plh.36.1706242250560;
-        Thu, 25 Jan 2024 20:10:50 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id h15-20020a170902f7cf00b001d720a6a4b0sm264334plw.24.2024.01.25.20.10.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jan 2024 20:10:50 -0800 (PST)
-From: Kees Cook <keescook@chromium.org>
-To: Ariel Elior <aelior@marvell.com>
-Cc: Kees Cook <keescook@chromium.org>,
-	kernel test robot <lkp@intel.com>,
-	Sudarsana Kalluru <skalluru@marvell.com>,
-	Manish Chopra <manishc@marvell.com>,
+	s=arc-20240116; t=1706260007; c=relaxed/simple;
+	bh=9TdjaTUeIdEneZuhIQO/f8S3DH/zxaQ0JHSf+TTrUB0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UNcUVsCVy3qrI4rz8jO2eF0Hn8QGJ04lsyfspeP7Y63AM8CHiTDsqqdK9BbAg79Kg+ZD9Pgax1lgGzSwLNGqqDBoJo2l+yxDtVF0Z0W9min8MugGIXzo5DzV1H2NrJQwJmo5v5B2p1xhw+XwfPU8cRa++AoQTYAulNa+CQFtBiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
+	id 1rTIAQ-006EuX-Rm; Fri, 26 Jan 2024 17:06:31 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 26 Jan 2024 17:06:43 +0800
+Date: Fri, 26 Jan 2024 17:06:43 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Erick Archer <erick.archer@gmx.com>
+Cc: Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
 	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
+	Tero Kristo <tero.kristo@linux.intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Damian Muszynski <damian.muszynski@intel.com>,
+	Shashank Gupta <shashank.gupta@intel.com>,
+	Tom Zanussi <tom.zanussi@linux.intel.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, qat-linux@intel.com,
+	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH] bnx2x: Fix firmware version string character counts
-Date: Thu, 25 Jan 2024 20:10:48 -0800
-Message-Id: <20240126041044.work.220-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+Subject: Re: [PATCH] crypto: qat - use kcalloc_node() instead of
+ kzalloc_node()
+Message-ID: <ZbN2I9+HLRcjdDK+@gondor.apana.org.au>
+References: <20240121164043.11222-1-erick.archer@gmx.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5209; i=keescook@chromium.org;
- h=from:subject:message-id; bh=4W7SncTE5nlYZ6yVmwW0fgvVI6EKAy6c0i/7v898CBs=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlszDIbDQxUzki+ZpnvH4QAMs2eowRffpkj87tq
- 1MnSyr9ueCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZbMwyAAKCRCJcvTf3G3A
- Jh1ZEACa3bz3ymSQNMT5ODTsbqtWTbInqwWyg7804CWMJxczE8w8u2zoR5Xar/xIKq6fYa5I2B3
- zmrLMFM75+g22xPJGTtRfPPBYA0VBZGqT95u3OLu7wKvBX4wvkVZrVg98cGwtfftGVrQQLuhJ/D
- yNMFrC2rjwo84j+LYX9kkwMl9QPyhgVb7XaDnytZuhbdwLY1MXJJHlu7IRBemS5mqRi3dUyg2qH
- WSc97xzgLCgpiA10YCzYRxkGH/Ggop94/B22bXKa6weKH8jSSzh4l/Gjt4DPDS97FUQ3L6ui7La
- DithhZm47y9yXVCa0NCIkz/1BozwUZ/0I1tfLUjNCCCKKR5zmNG1fnwiNHvEuJQJw91qjYFoiaV
- sLt5lntQ9O3LALKqTZ9ch3aPjS0hT42/gzRo9N4BudCiX3hcNHY+NtB/gpejU3u4Ba0e+30f/5V
- aXBwZ2YNgots+P5ZEKc9xwIoS2lcaCH4NjbsZ+O9wLOJuOXEh0EjQVHMRpkcQfXM5Us/6tdXAg7
- RIIG8e9N1u5vxLYO/6gOABju+V+5StpBehpydIAETTyeMItblCkYgPb5z7sPWQFHyFZE0erALGj
- 1Wx0qHJv/WtmvUmW198wof4KOyT6eb52SDxnBC72p7g7Mf8SyyN5NP7oj2u0mEQhrWVoyORCsqg
- mkDCsUf b/uNkOVg==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240121164043.11222-1-erick.archer@gmx.com>
 
-A potential string truncation was reported in bnx2x_fill_fw_str(),
-when a long bp->fw_ver and a long phy_fw_ver might coexist, but seems
-unlikely with real-world hardware.
+On Sun, Jan 21, 2024 at 05:40:43PM +0100, Erick Archer wrote:
+> As noted in the "Deprecated Interfaces, Language Features, Attributes,
+> and Conventions" documentation [1], size calculations (especially
+> multiplication) should not be performed in memory allocator (or similar)
+> function arguments due to the risk of them overflowing. This could lead
+> to values wrapping around and a smaller allocation being made than the
+> caller was expecting. Using those allocations could lead to linear
+> overflows of heap memory and other misbehaviors.
+> 
+> So, use the purpose specific kcalloc_node() function instead of the
+> argument count * size in the kzalloc_node() function.
+> 
+> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
+> Link: https://github.com/KSPP/linux/issues/162
+> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+> ---
+>  drivers/crypto/intel/qat/qat_common/adf_isr.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Use scnprintf() to indicate the intent that truncations are tolerated.
-
-While reading this code, I found a collection of various buffer size
-counting issues. None looked like they might lead to a buffer overflow
-with current code (the small buffers are 20 bytes and might only ever
-consume 10 bytes twice with a trailing %NUL). However, early truncation
-(due to a %NUL in the middle of the string) might be happening under
-likely rare conditions. Regardless fix the formatters and related
-functions:
-
-- Switch from a separate strscpy() to just adding an additional "%s" to
-  the format string that immediately follows it in bnx2x_fill_fw_str().
-- Use sizeof() universally instead of using unbound defines.
-- Fix bnx2x_7101_format_ver() and bnx2x_null_format_ver() to report the
-  number of characters written, not including the trailing %NUL (as
-  already done with the other firmware formatting functions).
-- Require space for at least 1 byte in bnx2x_get_ext_phy_fw_version()
-  for the trailing %NUL.
-- Correct the needed buffer size in bnx2x_3_seq_format_ver().
-
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202401260858.jZN6vD1k-lkp@intel.com/
-Cc: Ariel Elior <aelior@marvell.com>
-Cc: Sudarsana Kalluru <skalluru@marvell.com>
-Cc: Manish Chopra <manishc@marvell.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c    |  9 +++++----
- .../net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c    |  2 +-
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.c   | 14 +++++++-------
- 3 files changed, 13 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
-index e9c1e1bb5580..528441b28c4e 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
-@@ -147,10 +147,11 @@ void bnx2x_fill_fw_str(struct bnx2x *bp, char *buf, size_t buf_len)
- 
- 		phy_fw_ver[0] = '\0';
- 		bnx2x_get_ext_phy_fw_version(&bp->link_params,
--					     phy_fw_ver, PHY_FW_VER_LEN);
--		strscpy(buf, bp->fw_ver, buf_len);
--		snprintf(buf + strlen(bp->fw_ver), 32 - strlen(bp->fw_ver),
--			 "bc %d.%d.%d%s%s",
-+					     phy_fw_ver, sizeof(phy_fw_ver));
-+		/* This may become truncated. */
-+		scnprintf(buf, buf_len,
-+			 "%sbc %d.%d.%d%s%s",
-+			 bp->fw_ver,
- 			 (bp->common.bc_ver & 0xff0000) >> 16,
- 			 (bp->common.bc_ver & 0xff00) >> 8,
- 			 (bp->common.bc_ver & 0xff),
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
-index 81d232e6d05f..0bc7690cdee1 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
-@@ -1132,7 +1132,7 @@ static void bnx2x_get_drvinfo(struct net_device *dev,
- 	}
- 
- 	memset(version, 0, sizeof(version));
--	bnx2x_fill_fw_str(bp, version, ETHTOOL_FWVERS_LEN);
-+	bnx2x_fill_fw_str(bp, version, sizeof(version));
- 	strlcat(info->fw_version, version, sizeof(info->fw_version));
- 
- 	strscpy(info->bus_info, pci_name(bp->pdev), sizeof(info->bus_info));
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.c
-index 02808513ffe4..ea310057fe3a 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.c
-@@ -6163,8 +6163,8 @@ static void bnx2x_link_int_ack(struct link_params *params,
- 
- static int bnx2x_null_format_ver(u32 spirom_ver, u8 *str, u16 *len)
- {
--	str[0] = '\0';
--	(*len)--;
-+	if (*len)
-+		str[0] = '\0';
- 	return 0;
- }
- 
-@@ -6173,7 +6173,7 @@ static int bnx2x_format_ver(u32 num, u8 *str, u16 *len)
- 	u16 ret;
- 
- 	if (*len < 10) {
--		/* Need more than 10chars for this format */
-+		/* Need more than 10 chars for this format */
- 		bnx2x_null_format_ver(num, str, len);
- 		return -EINVAL;
- 	}
-@@ -6188,8 +6188,8 @@ static int bnx2x_3_seq_format_ver(u32 num, u8 *str, u16 *len)
- {
- 	u16 ret;
- 
--	if (*len < 10) {
--		/* Need more than 10chars for this format */
-+	if (*len < 9) {
-+		/* Need more than 9 chars for this format */
- 		bnx2x_null_format_ver(num, str, len);
- 		return -EINVAL;
- 	}
-@@ -6208,7 +6208,7 @@ int bnx2x_get_ext_phy_fw_version(struct link_params *params, u8 *version,
- 	int status = 0;
- 	u8 *ver_p = version;
- 	u16 remain_len = len;
--	if (version == NULL || params == NULL)
-+	if (version == NULL || params == NULL || len == 0)
- 		return -EINVAL;
- 	bp = params->bp;
- 
-@@ -11546,7 +11546,7 @@ static int bnx2x_7101_format_ver(u32 spirom_ver, u8 *str, u16 *len)
- 	str[2] = (spirom_ver & 0xFF0000) >> 16;
- 	str[3] = (spirom_ver & 0xFF000000) >> 24;
- 	str[4] = '\0';
--	*len -= 5;
-+	*len -= 4;
- 	return 0;
- }
- 
+Patch applied.  Thanks.
 -- 
-2.34.1
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
