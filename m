@@ -1,187 +1,218 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8A7B134A0
-	for <linux-hardening@vger.kernel.org>; Thu, 25 Jan 2024 23:10:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42954B654
+	for <linux-hardening@vger.kernel.org>; Fri, 26 Jan 2024 04:10:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706224227; cv=none; b=gnFsBW0fucAG7CJgo7brXTG5bzzCaeXZ1sVeaG4SliqJpAi1q/rXxIUFymKO1g98SjLsTERAsJekeWQvx28EnFFiu0CABwmoaF34duutyM5R2/mfS5DUC/9JcD2TBEn0aFYcbV74tEjGYhNQuCzoSRcN7VPOcE4dAfTEr5quR8c=
+	t=1706242252; cv=none; b=hgsJFg/RmWovPbb3qlVT0zic4Z9M3i8RKvhTte9T8S2295DYRQPJ0NbEsuf8TplYkXLsNAW81bSHRyMGlzB1BiadTyGUH7pq61t9kiO3cXMCbxOxKZD8c7K32G+gm/9vCCbbiKtf/05Sz1wSYWNyXJASiFRN7DSmb6ZaL46LzGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706224227; c=relaxed/simple;
-	bh=F0JsRt97ajucsfaFS27RF2bTkUl+vXZuPR7I3vO2DBI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=swPkGtAZv23rkrbeytAEr1U0Gu3lqCdi09SV3oOiik6EeggpDdI+RZLGTMP7UgZvUl344/n00yf6TvWy/9WKliGDwT0FuF9d6Wmp+bPFf4jwuI2f0S9wv4IxYwPr1TKTR/FCfv4kB2iTC2mcxr/wNrQIC7fYwi+Modn2XJ52nV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=hB1IOmye; arc=none smtp.client-ip=209.85.210.178
+	s=arc-20240116; t=1706242252; c=relaxed/simple;
+	bh=4W7SncTE5nlYZ6yVmwW0fgvVI6EKAy6c0i/7v898CBs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mWR92cwctQ1VEoMIoqzWchoVF716dtuYCi/mVFoIeFPsatgjTki+NEDzNNw/03N04CuOB+ylFFuPGbtik+QOJLdOV53OiziWu1tYRx3XKqpZZOlCF5z5TZxBGKHRHS59UrShs/eqE4lgVmomAjcpig2EkpgnxfDCOJYsb1LqB5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=BT/lZ8WD; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hB1IOmye"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6ddc5faeb7fso1441616b3a.3
-        for <linux-hardening@vger.kernel.org>; Thu, 25 Jan 2024 15:10:25 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BT/lZ8WD"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1d750660a0aso28608055ad.0
+        for <linux-hardening@vger.kernel.org>; Thu, 25 Jan 2024 20:10:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1706224225; x=1706829025; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YSh2SMxpzeSY8suanJAp4xUOQNbTcnMt4h+uTiF67+U=;
-        b=hB1IOmyetbWwotASdRTxL7lWxWRCY3uyOJKX8XILx+0fK1XWZ6UEdXlMqneLSagPHv
-         6HEU+3IB0niuluTg4U72f75VdQVkrZc7Ti8dDkVkl2Dt6p1HO6+Np2MTv37W/NM+rLkl
-         rkpNosdNdmVHk5JEIbI+OocCBZOGNUPnnwtaQ=
+        d=chromium.org; s=google; t=1706242250; x=1706847050; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=v5dCLh7jF+475pXd7scOrhGTGo8G6O3hfrwh69idnc8=;
+        b=BT/lZ8WDD3Iap0FNctBWEtpEAoQldHlpB+5vTZDoa6lq6UZZNyWu4wVEsj9Y4PnOZS
+         /+ajPN8zrZ9FXJk/UMMj7T9osb0l5IOf7nfO3PLNdGMMfHIqsDPSIi7JX/ZViBgOwhvB
+         LMknfLWWqVhc2YMwjdncYy/SJFJ85DGqJhpmQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706224225; x=1706829025;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YSh2SMxpzeSY8suanJAp4xUOQNbTcnMt4h+uTiF67+U=;
-        b=NjDklOtVJTAn7JG7mBeq0/71SQFHRFiizO84x/otDs8XUEvRnrMWGvcXK+tCRi+1jW
-         Wo4xr1ziOzs26Z2Pyj1QSBOBUcBb1+wUT2+TWDrVq4vrCSmLGC3P947jvF/Dm/1jQ14r
-         IsaKNAp5+xN4HHvr5yBCMQQseGKlR6CXridnJDowFAizWvq+a3f6Ff/w0xAelncWFtC5
-         QfWnVlyx7HkvFBP5l3EA67e5UdwzGc/9fzaI+UpC25eOv/u3997XnWSxkEg8vAkitMxz
-         ZyhnH2ZA/vaZx+fEp0Js6XeDzqHQ+iU06PRUIf6hgbNMBoCznZ9mBHV2MbpbV30IORFu
-         IvsA==
-X-Gm-Message-State: AOJu0Yx0055JV7PEqjFL6fUdsTuLXQRzrbC3gLdHMvQIhlsqtEvVsLut
-	t3Nrw+yel3Zq1N15hGqLAOXlC8BQQ7s+Nwj9lq/BDbVa2LTFvdmRGLjUJz2L8w==
-X-Google-Smtp-Source: AGHT+IH31m5NlnF2FWv8Czpe2vRmKzes75Mmfn8IuhBbVPoTR04pbzWQk7GFedHzNU9HrXMbCT/lvQ==
-X-Received: by 2002:a05:6a21:338d:b0:19a:e2aa:ff23 with SMTP id yy13-20020a056a21338d00b0019ae2aaff23mr509971pzb.9.1706224225137;
-        Thu, 25 Jan 2024 15:10:25 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706242250; x=1706847050;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=v5dCLh7jF+475pXd7scOrhGTGo8G6O3hfrwh69idnc8=;
+        b=cmYrgd+28R/eGgyJafBUGumGQOXB6Rms6sCcgW6ztsgsVxlBYYWZwf27dm6ozqPjHJ
+         xznYNRVEARCwxyKImNVUbqvn9ZKfeQgdOqxXWDDBuiSt9Vg70MrJTcL1n77MWHwC9fg8
+         dTkQVxCa3/3jJzPBdxJwhrnJhUZSKMQjJ6XTAd37pYap7tY54RNcIawa6yEM8/UAsCkg
+         GtOiTDb5C2NCwQQt3IKYXg4zNqoz9tAM62r3Qyk18TwuQOXhO+rHaeBL0xc3G8S0rwW+
+         aguERYXMDBU5FOZLVZkDdJmZxJ3uvK24cYYDmgPWex+zAmD+dbNjCPWWF5C52h+kjce5
+         88ow==
+X-Gm-Message-State: AOJu0YwHFRw1914hR84RMGWtggWKViCTy1b9XgzK2CJcOiO4uGIG7Lhh
+	bEhgv5RYbBQ5KOBOwfES1bYc89goklclQTDJn8CzY1s01RUM2zhW/wsr/Mgw5Q==
+X-Google-Smtp-Source: AGHT+IG6P7+//dziV1Qhm9ExMtehYhok6tv2sQQKaffVL017ZSrUaivyJsmM4cXCEkIXw/zycWc8pw==
+X-Received: by 2002:a17:903:247:b0:1d7:5b9a:c125 with SMTP id j7-20020a170903024700b001d75b9ac125mr1201243plh.36.1706242250560;
+        Thu, 25 Jan 2024 20:10:50 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id s22-20020a635256000000b005ca0ae17983sm33642pgl.8.2024.01.25.15.10.24
+        by smtp.gmail.com with ESMTPSA id h15-20020a170902f7cf00b001d720a6a4b0sm264334plw.24.2024.01.25.20.10.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jan 2024 15:10:24 -0800 (PST)
-Date: Thu, 25 Jan 2024 15:10:24 -0800
+        Thu, 25 Jan 2024 20:10:50 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: akpm@linux-foundation.org, masahiroy@kernel.org, nicolas@fjasle.eu,
-	linux-kbuild@vger.kernel.org, llvm@lists.linux.dev,
-	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, linux@armlinux.org.uk,
-	ardb@kernel.org, linux-arm-kernel@lists.infradead.org,
-	catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
-	mpe@ellerman.id.au, npiggin@gmail.com, aneesh.kumar@kernel.org,
-	naveen.n.rao@linux.ibm.com, linuxppc-dev@lists.ozlabs.org,
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-	conor@kernel.org, linux-riscv@lists.infradead.org,
+To: Ariel Elior <aelior@marvell.com>
+Cc: Kees Cook <keescook@chromium.org>,
+	kernel test robot <lkp@intel.com>,
+	Sudarsana Kalluru <skalluru@marvell.com>,
+	Manish Chopra <manishc@marvell.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 00/11] Bump the minimum supported version of LLVM to
- 13.0.1
-Message-ID: <202401251509.17795F434@keescook>
-References: <20240125-bump-min-llvm-ver-to-13-0-1-v1-0-f5ff9bda41c5@kernel.org>
+Subject: [PATCH] bnx2x: Fix firmware version string character counts
+Date: Thu, 25 Jan 2024 20:10:48 -0800
+Message-Id: <20240126041044.work.220-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240125-bump-min-llvm-ver-to-13-0-1-v1-0-f5ff9bda41c5@kernel.org>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5209; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=4W7SncTE5nlYZ6yVmwW0fgvVI6EKAy6c0i/7v898CBs=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlszDIbDQxUzki+ZpnvH4QAMs2eowRffpkj87tq
+ 1MnSyr9ueCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZbMwyAAKCRCJcvTf3G3A
+ Jh1ZEACa3bz3ymSQNMT5ODTsbqtWTbInqwWyg7804CWMJxczE8w8u2zoR5Xar/xIKq6fYa5I2B3
+ zmrLMFM75+g22xPJGTtRfPPBYA0VBZGqT95u3OLu7wKvBX4wvkVZrVg98cGwtfftGVrQQLuhJ/D
+ yNMFrC2rjwo84j+LYX9kkwMl9QPyhgVb7XaDnytZuhbdwLY1MXJJHlu7IRBemS5mqRi3dUyg2qH
+ WSc97xzgLCgpiA10YCzYRxkGH/Ggop94/B22bXKa6weKH8jSSzh4l/Gjt4DPDS97FUQ3L6ui7La
+ DithhZm47y9yXVCa0NCIkz/1BozwUZ/0I1tfLUjNCCCKKR5zmNG1fnwiNHvEuJQJw91qjYFoiaV
+ sLt5lntQ9O3LALKqTZ9ch3aPjS0hT42/gzRo9N4BudCiX3hcNHY+NtB/gpejU3u4Ba0e+30f/5V
+ aXBwZ2YNgots+P5ZEKc9xwIoS2lcaCH4NjbsZ+O9wLOJuOXEh0EjQVHMRpkcQfXM5Us/6tdXAg7
+ RIIG8e9N1u5vxLYO/6gOABju+V+5StpBehpydIAETTyeMItblCkYgPb5z7sPWQFHyFZE0erALGj
+ 1Wx0qHJv/WtmvUmW198wof4KOyT6eb52SDxnBC72p7g7Mf8SyyN5NP7oj2u0mEQhrWVoyORCsqg
+ mkDCsUf b/uNkOVg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 25, 2024 at 03:55:06PM -0700, Nathan Chancellor wrote:
-> Hi all,
-> 
-> This series bumps the minimum supported version of LLVM for building the
-> kernel to 13.0.1. The first patch does the bump and all subsequent
-> patches clean up all the various workarounds and checks for earlier
-> versions.
-> 
-> Quoting the first patch's commit message for those that were only on CC
-> for the clean ups:
-> 
->   When __builtin_mul_overflow() has arguments that differ in terms of
->   signedness and width, LLVM may generate a libcall to __muloti4 because
->   it performs the checks in terms of 65-bit multiplication. This issue
->   becomes harder to hit (but still possible) after LLVM 12.0.0, which
->   includes a special case for matching widths but different signs.
-> 
->   To gain access to this special case, which the kernel can take advantage
->   of when calls to __muloti4 appear, bump the minimum supported version of
->   LLVM for building the kernel to 13.0.1. 13.0.1 was chosen because there
->   is minimal impact to distribution support while allowing a few more
->   workarounds to be dropped in the kernel source than if 12.0.0 were
->   chosen. Looking at container images of up to date distribution versions:
-> 
->     archlinux:latest              clang version 16.0.6
->     debian:oldoldstable-slim      clang version 7.0.1-8+deb10u2 (tags/RELEASE_701/final)
->     debian:oldstable-slim         Debian clang version 11.0.1-2
->     debian:stable-slim            Debian clang version 14.0.6
->     debian:testing-slim           Debian clang version 16.0.6 (19)
->     debian:unstable-slim          Debian clang version 16.0.6 (19)
->     fedora:38                     clang version 16.0.6 (Fedora 16.0.6-3.fc38)
->     fedora:latest                 clang version 17.0.6 (Fedora 17.0.6-1.fc39)
->     fedora:rawhide                clang version 17.0.6 (Fedora 17.0.6-1.fc40)
->     opensuse/leap:latest          clang version 15.0.7
->     opensuse/tumbleweed:latest    clang version 17.0.6
->     ubuntu:focal                  clang version 10.0.0-4ubuntu1
->     ubuntu:latest                 Ubuntu clang version 14.0.0-1ubuntu1.1
->     ubuntu:rolling                Ubuntu clang version 16.0.6 (15)
->     ubuntu:devel                  Ubuntu clang version 17.0.6 (3)
-> 
->   The only distribution that gets left behind is Debian Bullseye, as the
->   default version is 11.0.1; other distributions either have a newer
->   version than 13.0.1 or one older than the current minimum of 11.0.0.
->   Debian has easy access to more recent LLVM versions through
->   apt.llvm.org, so this is not as much of a concern. There are also the
->   kernel.org LLVM toolchains, which should work with distributions with
->   glibc 2.28 and newer.
-> 
->   Another benefit of slimming up the number of supported versions of LLVM
->   for building the kernel is reducing the build capacity needed to support
->   a matrix that builds with each supported version, which allows a matrix
->   to reallocate the freed up build capacity towards something else, such
->   as more configuration combinations.
-> 
-> This passes my build matrix with all supported versions.
-> 
-> This is based on Andrew's mm-nonmm-unstable to avoid trivial conflicts
-> with my series to update the LLVM links across the repository [1] but I
-> can easily rebase it to linux-kbuild if Masahiro would rather these
-> patches go through there (and defer the conflict resolution to the merge
-> window).
-> 
-> [1]: https://lore.kernel.org/20240109-update-llvm-links-v1-0-eb09b59db071@kernel.org/
-> 
-> ---
-> Nathan Chancellor (11):
->       kbuild: Raise the minimum supported version of LLVM to 13.0.1
->       Makefile: Drop warn-stack-size plugin opt
->       x86: Drop stack-alignment plugin opt
->       ARM: Remove Thumb2 __builtin_thread_pointer workaround for Clang
->       arm64: Kconfig: Clean up tautological LLVM version checks
->       powerpc: Kconfig: Remove tautology in CONFIG_COMPAT
->       riscv: Remove MCOUNT_NAME workaround
->       riscv: Kconfig: Remove version dependency from CONFIG_CLANG_SUPPORTS_DYNAMIC_FTRACE
->       fortify: Drop Clang version check for 12.0.1 or newer
->       lib/Kconfig.debug: Update Clang version check in CONFIG_KCOV
->       compiler-clang.h: Update __diag_clang() macros for minimum version bump
-> 
->  Documentation/process/changes.rst |  2 +-
->  Makefile                          |  8 --------
->  arch/arm/include/asm/current.h    |  8 +-------
->  arch/arm64/Kconfig                |  5 +----
->  arch/powerpc/Kconfig              |  1 -
->  arch/riscv/Kconfig                |  2 --
->  arch/riscv/include/asm/ftrace.h   | 14 ++------------
->  arch/riscv/kernel/mcount.S        | 10 +++++-----
->  arch/x86/Makefile                 |  6 ------
->  include/linux/compiler-clang.h    |  8 ++------
->  lib/Kconfig.debug                 |  2 +-
->  scripts/min-tool-version.sh       |  2 +-
->  scripts/recordmcount.pl           |  2 +-
->  security/Kconfig                  |  2 --
->  14 files changed, 15 insertions(+), 57 deletions(-)
-> ---
-> base-commit: 979741ebd48f75ed6d101c7290e3325340d361ff
-> change-id: 20240124-bump-min-llvm-ver-to-13-0-1-39f84dd36b19
-> 
-> Best regards,
-> -- 
-> Nathan Chancellor <nathan@kernel.org>
-> 
+A potential string truncation was reported in bnx2x_fill_fw_str(),
+when a long bp->fw_ver and a long phy_fw_ver might coexist, but seems
+unlikely with real-world hardware.
 
-Yes, please. :) This looks reasonable -- I appreciate the review of
-default Clang versions across distros!
+Use scnprintf() to indicate the intent that truncations are tolerated.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+While reading this code, I found a collection of various buffer size
+counting issues. None looked like they might lead to a buffer overflow
+with current code (the small buffers are 20 bytes and might only ever
+consume 10 bytes twice with a trailing %NUL). However, early truncation
+(due to a %NUL in the middle of the string) might be happening under
+likely rare conditions. Regardless fix the formatters and related
+functions:
 
+- Switch from a separate strscpy() to just adding an additional "%s" to
+  the format string that immediately follows it in bnx2x_fill_fw_str().
+- Use sizeof() universally instead of using unbound defines.
+- Fix bnx2x_7101_format_ver() and bnx2x_null_format_ver() to report the
+  number of characters written, not including the trailing %NUL (as
+  already done with the other firmware formatting functions).
+- Require space for at least 1 byte in bnx2x_get_ext_phy_fw_version()
+  for the trailing %NUL.
+- Correct the needed buffer size in bnx2x_3_seq_format_ver().
+
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202401260858.jZN6vD1k-lkp@intel.com/
+Cc: Ariel Elior <aelior@marvell.com>
+Cc: Sudarsana Kalluru <skalluru@marvell.com>
+Cc: Manish Chopra <manishc@marvell.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c    |  9 +++++----
+ .../net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c    |  2 +-
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.c   | 14 +++++++-------
+ 3 files changed, 13 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
+index e9c1e1bb5580..528441b28c4e 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
+@@ -147,10 +147,11 @@ void bnx2x_fill_fw_str(struct bnx2x *bp, char *buf, size_t buf_len)
+ 
+ 		phy_fw_ver[0] = '\0';
+ 		bnx2x_get_ext_phy_fw_version(&bp->link_params,
+-					     phy_fw_ver, PHY_FW_VER_LEN);
+-		strscpy(buf, bp->fw_ver, buf_len);
+-		snprintf(buf + strlen(bp->fw_ver), 32 - strlen(bp->fw_ver),
+-			 "bc %d.%d.%d%s%s",
++					     phy_fw_ver, sizeof(phy_fw_ver));
++		/* This may become truncated. */
++		scnprintf(buf, buf_len,
++			 "%sbc %d.%d.%d%s%s",
++			 bp->fw_ver,
+ 			 (bp->common.bc_ver & 0xff0000) >> 16,
+ 			 (bp->common.bc_ver & 0xff00) >> 8,
+ 			 (bp->common.bc_ver & 0xff),
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
+index 81d232e6d05f..0bc7690cdee1 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_ethtool.c
+@@ -1132,7 +1132,7 @@ static void bnx2x_get_drvinfo(struct net_device *dev,
+ 	}
+ 
+ 	memset(version, 0, sizeof(version));
+-	bnx2x_fill_fw_str(bp, version, ETHTOOL_FWVERS_LEN);
++	bnx2x_fill_fw_str(bp, version, sizeof(version));
+ 	strlcat(info->fw_version, version, sizeof(info->fw_version));
+ 
+ 	strscpy(info->bus_info, pci_name(bp->pdev), sizeof(info->bus_info));
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.c
+index 02808513ffe4..ea310057fe3a 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.c
+@@ -6163,8 +6163,8 @@ static void bnx2x_link_int_ack(struct link_params *params,
+ 
+ static int bnx2x_null_format_ver(u32 spirom_ver, u8 *str, u16 *len)
+ {
+-	str[0] = '\0';
+-	(*len)--;
++	if (*len)
++		str[0] = '\0';
+ 	return 0;
+ }
+ 
+@@ -6173,7 +6173,7 @@ static int bnx2x_format_ver(u32 num, u8 *str, u16 *len)
+ 	u16 ret;
+ 
+ 	if (*len < 10) {
+-		/* Need more than 10chars for this format */
++		/* Need more than 10 chars for this format */
+ 		bnx2x_null_format_ver(num, str, len);
+ 		return -EINVAL;
+ 	}
+@@ -6188,8 +6188,8 @@ static int bnx2x_3_seq_format_ver(u32 num, u8 *str, u16 *len)
+ {
+ 	u16 ret;
+ 
+-	if (*len < 10) {
+-		/* Need more than 10chars for this format */
++	if (*len < 9) {
++		/* Need more than 9 chars for this format */
+ 		bnx2x_null_format_ver(num, str, len);
+ 		return -EINVAL;
+ 	}
+@@ -6208,7 +6208,7 @@ int bnx2x_get_ext_phy_fw_version(struct link_params *params, u8 *version,
+ 	int status = 0;
+ 	u8 *ver_p = version;
+ 	u16 remain_len = len;
+-	if (version == NULL || params == NULL)
++	if (version == NULL || params == NULL || len == 0)
+ 		return -EINVAL;
+ 	bp = params->bp;
+ 
+@@ -11546,7 +11546,7 @@ static int bnx2x_7101_format_ver(u32 spirom_ver, u8 *str, u16 *len)
+ 	str[2] = (spirom_ver & 0xFF0000) >> 16;
+ 	str[3] = (spirom_ver & 0xFF000000) >> 24;
+ 	str[4] = '\0';
+-	*len -= 5;
++	*len -= 4;
+ 	return 0;
+ }
+ 
 -- 
-Kees Cook
+2.34.1
+
