@@ -1,98 +1,370 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6664454BD0
-	for <linux-hardening@vger.kernel.org>; Fri, 26 Jan 2024 22:36:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E38A425572
+	for <linux-hardening@vger.kernel.org>; Fri, 26 Jan 2024 22:53:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706308594; cv=none; b=G1AG4orijCFEcOXKcz4v+oHUjsyXEJh/9uo9Uk3K0rJZUda27sEmgzHqKjY/0EUFFULOeHBfW7zD9BpD0Gc/IH1B8X/K9ICKf+xsVgFRRpuyRqfkrmAwA9Ik3zgAszKEWvMqkxvWs1PrwEHPCialEYzKLRYa5frsWotK5+N5Lyw=
+	t=1706309585; cv=none; b=hm2wUlNBtMDgFEISmuh2yiy94PnVzODyIYU+lqjMlA0Fddq4+DclNFpgzMK+Ldka9EuKhnke08l5TQzmtE5JihQ1/We87YkKHY5DU+GRqQkAQ9uLJMi5gHJ+AdBMmFU4A02qMerwFxz7f8W2L/+GsOoaYC2niaazD1vccYPSjjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706308594; c=relaxed/simple;
-	bh=TuLldHRMoPdhbvg4tAmasRPjnDmfBZBh2qMiSNy3aIk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kOuCQ/BOHc/eFbrPMMwEPEkypK6PhMdCCE7c4qa1r88eT/UmHn9HulNvzDl3nIXETgcwATnlnfQZ171grh/buDJVwnvTJ11IQ8V1qm56hsSWsl6R2pVVFJwSljZSg4YeCErg1it3AoKm9xk0IRYyXgbNqA9MV2khIdohQa3JlCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=PpQnaLrF; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1706309585; c=relaxed/simple;
+	bh=44H58IoQpiv+yLvW7vreVRuB+tW5WFPbunVdWDk0Gk8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eNfGJ2LDL2g+kEmjgqkVQkv7pGrKPRfnxAnEFtktQyVxMHEoRxl1TdgzRgrWTEwWeuwPeLaTA/JV1Cs5SFEy1VUI7Fp1HLQVboZOXgEeECAjzln+CCw66T/J7TRjxUNN5yhdrfy5Ri7wuSbexSXkI7qU3bBU6ic1AV3qJPR49bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=l+FgHu//; arc=none smtp.client-ip=209.85.166.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="PpQnaLrF"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-40e76626170so14716195e9.2
-        for <linux-hardening@vger.kernel.org>; Fri, 26 Jan 2024 14:36:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l+FgHu//"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3606ad581a5so1876135ab.1
+        for <linux-hardening@vger.kernel.org>; Fri, 26 Jan 2024 14:53:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1706308590; x=1706913390; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=3vb86YnCobjeOJ1buOfJZ8O/sRnmqyBtak+zDHciKpI=;
-        b=PpQnaLrFhwvHKLjwPrX3w0S0GFitSutYIKMHGe/Xb8n5kUgWcriDKfDrSqnRoAlenP
-         R++3lIhpFDBg0KWd1NjPC3wQHlwHNbEllaz1KLctTAiQ6gJ9svUHyX+iZsBspI+JwlcV
-         m1/N2pIqc4GuNq8hn9FaaL1QWmvgrjWo37P5w=
+        d=google.com; s=20230601; t=1706309583; x=1706914383; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=hQRFSvbhKcNzR7WD2Hs/Sj9NUJI0s3BltoLyeof5Fi0=;
+        b=l+FgHu//oMnvP6sAs6iwiYvgocxppLPZsZePxL6my3nIqXrUPFWBF+IS8uCCV1WbGO
+         MNbclVWd11QGkJuCoSmSRgZDhegtzC4HGGss38owUIcynsVTufVdaTJxV+ciw6dRyclf
+         u324//1+TNhfHcLUCIbSXq1WXIYGciat9P2BZw3U6kClcRrYqoRkxy6ciF5Odz8cB7yx
+         /E29IRyRB740EI9NeULe4oWeNW5DHxpuw7erbF4Moz16aqmiEYgUARxrw/e45FepO1aD
+         V+DV81nDMtnPDVny6FqN5qBAq3byG2+EZP7KD1UB1QPKs5KZYIJjWg8tIbT7Ydfy2K3Z
+         wBkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706308590; x=1706913390;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3vb86YnCobjeOJ1buOfJZ8O/sRnmqyBtak+zDHciKpI=;
-        b=kPXd+T/U89ou4hedVWrjeKjix1/2+4BTHQyOZvzdU6cZrKJvk7EFpdaykGD6yYlJ9+
-         RWyLEHa38pDERoA0Ah0eQ9+QqrmPD2qDGJ+OPYJ3zBwa1B8C9sQ/4yAQIIWQ8r2EZ4Hr
-         23r81E9imhhsyb0FPdNsKrLVlpp4WDjbYYV6z26ytoO/eV9goKtsr5FL9r8eoEWSbjEi
-         kpnlcROBk6/SVkld2U+aTboc1Tdj9TtIlPeqk0XDSf/bDmDfIEBJwQ0+Mu1iF4RY2I9H
-         liVUlAEvfZhwpXw2Iox3pymQWQuP9me8X28EINjVKf0y820u1b/j2tzUl39Av333reYN
-         iU5w==
-X-Gm-Message-State: AOJu0YwS+cmLFxprNKjfEw72pFkQpoVmZly+ifZYEOYaHudTsus7cZVA
-	UEoclO72o/CW+/Ho+Bh9joM3UI5msGGglL1BAs3KykGdxGMP9EHH6CfAmLSEl1c9B9HtIcQWR8A
-	SNt7LEg==
-X-Google-Smtp-Source: AGHT+IHWkxSKELXVjY5qD9uZXHxBZvRrAiQe13wI0iC6/CNyzJYXxkFT+L7cC/gKMXRZ0ooTHob99A==
-X-Received: by 2002:a05:600c:a3a5:b0:40e:59c9:e603 with SMTP id hn37-20020a05600ca3a500b0040e59c9e603mr369160wmb.135.1706308590355;
-        Fri, 26 Jan 2024 14:36:30 -0800 (PST)
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com. [209.85.208.50])
-        by smtp.gmail.com with ESMTPSA id ek22-20020a056402371600b0055ca93f3930sm1048843edb.0.2024.01.26.14.36.29
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Jan 2024 14:36:30 -0800 (PST)
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-55a8fb31fc2so744622a12.0
-        for <linux-hardening@vger.kernel.org>; Fri, 26 Jan 2024 14:36:29 -0800 (PST)
-X-Received: by 2002:a05:6402:180f:b0:55e:825b:724a with SMTP id
- g15-20020a056402180f00b0055e825b724amr263564edy.16.1706308589610; Fri, 26 Jan
- 2024 14:36:29 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706309583; x=1706914383;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hQRFSvbhKcNzR7WD2Hs/Sj9NUJI0s3BltoLyeof5Fi0=;
+        b=GVraMi4O1LnOyiivTEe7cnzmfEhn0YFF2vpRrMJ/0xS93z3vSvAh+vnmee9P0hKv81
+         zFmnXHzCZnuYmB8e+tmvzLtbzCTOM9woqiIq5sfsNnb4HywnBgPzpUQjSJNIg3oNA76r
+         d9mq24V3OD/Yv3PJa4crKGe1EYJmqD0XZS9JV3lCZUvT3FrcQ360x7j+Fp/5rTFOF5yH
+         GuozautPNJxUnYqy77YEPZXgg0olRpJKzOoccaRXSSVNMeUbTyTVKzoPdnKdIyxgf9yY
+         pxP+hWXvRYyy31orZ94yiPExwMo7E1YaKHpBoAn8O1mhaoQInusDPvbEbT9i/hd+I35y
+         6jnQ==
+X-Gm-Message-State: AOJu0YzSKEIPoJFqBkkS25dHbavKrUtxYnjDWQc9LvjhcfnmHNahg58y
+	dJLtGsm+9dZtBStdo8gdUOyj0DFyhx5aDuQ0xrYh9+FuZc/bQld6c/deoyS5cg==
+X-Google-Smtp-Source: AGHT+IHid4fkQI8CL7RCGjgoERAK7pu57eCVx5/+xS2a+6+b54sf/tw9SBbw8NGVYDSEra6l71ZY9w==
+X-Received: by 2002:a05:6e02:5b0:b0:361:ac4c:8c39 with SMTP id k16-20020a056e0205b000b00361ac4c8c39mr616384ils.23.1706309582956;
+        Fri, 26 Jan 2024 14:53:02 -0800 (PST)
+Received: from google.com (20.10.132.34.bc.googleusercontent.com. [34.132.10.20])
+        by smtp.gmail.com with ESMTPSA id bs18-20020a056e02241200b003627dd3822bsm584899ilb.77.2024.01.26.14.53.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jan 2024 14:53:02 -0800 (PST)
+Date: Fri, 26 Jan 2024 22:52:57 +0000
+From: Justin Stitt <justinstitt@google.com>
+To: Kees Cook <keescook@chromium.org>
+Cc: linux-hardening@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>, llvm@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/82] overflow: Expand check_add_overflow() for pointer
+ addition
+Message-ID: <20240126225257.lfgeom4rhjzx2wrf@google.com>
+References: <20240122235208.work.748-kees@kernel.org>
+ <20240123002814.1396804-1-keescook@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Za6JwRpknVIlfhPF@work> <CAHk-=wjG4jdE19-vWWhAX3ByfbNr4DJS-pwiN9oY38WkhMZ57g@mail.gmail.com>
- <4907a7a3-8533-480a-bc3c-488573e18e66@embeddedor.com> <202401261423.7AF702239@keescook>
-In-Reply-To: <202401261423.7AF702239@keescook>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Fri, 26 Jan 2024 14:36:13 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wiaaCatzmF6GXxP97pa8oEX7e4rBpd4JgsbKex3Ek1_9A@mail.gmail.com>
-Message-ID: <CAHk-=wiaaCatzmF6GXxP97pa8oEX7e4rBpd4JgsbKex3Ek1_9A@mail.gmail.com>
-Subject: Re: [GIT PULL] Enable -Wstringop-overflow globally
-To: Kees Cook <keescook@chromium.org>
-Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240123002814.1396804-1-keescook@chromium.org>
 
-On Fri, 26 Jan 2024 at 14:24, Kees Cook <keescook@chromium.org> wrote:
+Hi,
+
+On Mon, Jan 22, 2024 at 04:26:36PM -0800, Kees Cook wrote:
+> The check_add_overflow() helper is mostly a wrapper around
+> __builtin_add_overflow(), but GCC and Clang refuse to operate on pointer
+> arguments that would normally be allowed if the addition were open-coded.
 >
-> I think xe has some other weird problems too. This may be related (under
-> allocating):
+> For example, we have many places where pointer overflow is tested:
 >
-> ../drivers/gpu/drm/xe/xe_vm.c: In function 'xe_vma_create':
-> ../drivers/gpu/drm/xe/xe_vm.c:806:21: warning: allocation of insufficient size '224' for type 'struct xe_vma' with size '368' [-Walloc-size]
->   806 |                 vma = kzalloc(sizeof(*vma) - sizeof(struct xe_userptr),
->       |                     ^
+> 	struct foo *ptr;
+> 	...
+> 	/* Check for overflow */
+> 	if (ptr + count < ptr) ...
+>
+> And in order to avoid running into the overflow sanitizers in the
+> future, we need to rewrite these "intended" overflow checks:
+>
+> 	if (check_add_overflow(ptr, count, &result)) ...
+>
+> Frustratingly the argument type validation for __builtin_add_overflow()
+> is done before evaluating __builtin_choose_expr(), so for arguments to
+> be valid simultaneously for sizeof(*p) (when p may not be a pointer),
+> and __builtin_add_overflow(a, ...) (when a may be a pointer), we must
+> introduce wrappers that always produce a specific type (but they are
+> only used in the places where the bogus arguments will be ignored).
+>
+> To test whether a variable is a pointer or not, introduce the __is_ptr()
+> helper, which uses __builtin_classify_type() to find arrays and pointers
+> (via the new __is_ptr_or_array() helper), and then decays arrays into
+> pointers (via the new __decay() helper), to distinguish pointers from
+> arrays.
+>
+> Additionally update the unit tests to cover pointer addition.
+>
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Nathan Chancellor <nathan@kernel.org>
+> Cc: Nick Desaulniers <ndesaulniers@google.com>
+> Cc: Bill Wendling <morbo@google.com>
+> Cc: Justin Stitt <justinstitt@google.com>
+> Cc: llvm@lists.linux.dev
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  include/linux/compiler_types.h | 10 +++++
+>  include/linux/overflow.h       | 44 ++++++++++++++++++-
+>  lib/overflow_kunit.c           | 77 ++++++++++++++++++++++++++++++----
+>  3 files changed, 121 insertions(+), 10 deletions(-)
+>
+> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+> index 6f1ca49306d2..d27b58fddfaa 100644
+> --- a/include/linux/compiler_types.h
+> +++ b/include/linux/compiler_types.h
+> @@ -375,6 +375,16 @@ struct ftrace_likely_data {
+>  /* Are two types/vars the same type (ignoring qualifiers)? */
+>  #define __same_type(a, b) __builtin_types_compatible_p(typeof(a), typeof(b))
+>
+> +/* Is variable addressable? */
+> +#define __is_ptr_or_array(p)	(__builtin_classify_type(p) == 5)
+> +
+> +/* Return an array decayed to a pointer. */
+> +#define __decay(p)		\
+> +	(&*__builtin_choose_expr(__is_ptr_or_array(p), p, NULL))
 
-That code is indeed odd, but there's a comment in the xe_vma definition
+Initially, I thought this __decay could dereference a NULL which would
+be UB.
 
-        /**
-         * @userptr: user pointer state, only allocated for VMAs that are
-         * user pointers
-         */
-        struct xe_userptr userptr;
+According to the C std 6.5.3.2 (4):
+| The unary * operator denotes indirection. If the operand points to a
+| function, the result is a function designator; if it points to an
+| object, the result is an lvalue designating the object. If the operand
+| has type ‘‘pointer to type’’, the result has type ‘‘type’’. If an
+| invalid value has been assigned to the pointer, the behavior of the
+| unary * operator is undefined^(84)
 
-although I agree that it should probably simply be made a final
-variably-sized array instead (and then you make that array size be
-0/1).
+With footnote 84 mentioning NULL:
+| Among the invalid values for dereferencing a pointer by the unary *
+| operator are a null pointer, an address inappropriately aligned for the
+| type of object pointed to, and the address of an object after the end of
+| its lifetime.
 
-               Linus
+However, in this very same footnote it mentions:
+| &*E is equivalent to E (even if E is a null pointer)
+
+So, yeah this is OK ( and new to me :>] )
+
+> +
+> +/* Report if variable is a pointer type. */
+> +#define __is_ptr(p)		__same_type(p, __decay(p))
+> +
+>  /*
+>   * __unqual_scalar_typeof(x) - Declare an unqualified scalar type, leaving
+>   *			       non-scalar types unchanged.
+> diff --git a/include/linux/overflow.h b/include/linux/overflow.h
+> index 7b5cf4a5cd19..099f2e559aa8 100644
+> --- a/include/linux/overflow.h
+> +++ b/include/linux/overflow.h
+> @@ -51,6 +51,45 @@ static inline bool __must_check __must_check_overflow(bool overflow)
+>  	return unlikely(overflow);
+>  }
+>
+> +/* Always produce an integral variable expression. */
+> +#define __filter_integral(x)		\
+> +	__builtin_choose_expr(!__is_ptr(x), (x), 0)
+> +
+> +/* Always produce a pointer value. */
+> +#define __filter_ptr(x)			\
+> +	__builtin_choose_expr(__is_ptr(x), (x), NULL)
+> +
+> +/* Always produce a pointer to an integral value. */
+> +#define __filter_ptrint(x)		\
+> +	__builtin_choose_expr(!__is_ptr(*(x)), x, &(int){ 0 })
+> +
+> +/**
+> + * __check_ptr_add_overflow() - Calculate pointer addition with overflow checking
+> + * @a: pointer addend
+> + * @b: numeric addend
+> + * @d: pointer to store sum
+> + *
+> + * Returns 0 on success.
+> + *
+> + * Do not use this function directly, use check_add_overflow() instead.
+> + *
+> + * *@d holds the results of the attempted addition, but is not considered
+> + * "safe for use" on a non-zero return value, which indicates that the
+> + * sum has overflowed or been truncated.
+> + */
+> +#define __check_ptr_add_overflow(a, b, d)		\
+> +	({						\
+> +		typeof(a) __a = (a);			\
+> +		typeof(b) __b = (b);			\
+> +		size_t __bytes;				\
+> +		bool __overflow;			\
+> +							\
+> +		/* we want to perform the wrap-around, but retain the result */ \
+> +		__overflow = __builtin_mul_overflow(sizeof(*(__a)), __b, &__bytes); \
+> +		__builtin_add_overflow((unsigned long)(__a), __bytes, (unsigned long *)(d)) || \
+> +		__overflow;				\
+> +	})
+> +
+>  /**
+>   * check_add_overflow() - Calculate addition with overflow checking
+>   * @a: first addend
+> @@ -64,7 +103,10 @@ static inline bool __must_check __must_check_overflow(bool overflow)
+>   * sum has overflowed or been truncated.
+>   */
+>  #define check_add_overflow(a, b, d)	\
+> -	__must_check_overflow(__builtin_add_overflow(a, b, d))
+> +	__must_check_overflow(__builtin_choose_expr(__is_ptr(a),	\
+> +		__check_ptr_add_overflow(__filter_ptr(a), b, d),	\
+> +		__builtin_add_overflow(__filter_integral(a), b,		\
+> +				       __filter_ptrint(d))))
+>
+>  /**
+>   * check_sub_overflow() - Calculate subtraction with overflow checking
+
+Does check_sub_overflow() deserve some more love in the future? I
+imagine "under"-flowing pointers is not at all common, though.
+
+Nonetheless, this all looks good to me.
+
+Reviewed-by: Justin Stitt <justinstitt@google.com>
+
+> diff --git a/lib/overflow_kunit.c b/lib/overflow_kunit.c
+> index c527f6b75789..2d106e880956 100644
+> --- a/lib/overflow_kunit.c
+> +++ b/lib/overflow_kunit.c
+> @@ -45,13 +45,18 @@
+>  # define SKIP_64_ON_32(t)	do { } while (0)
+>  #endif
+>
+> -#define DEFINE_TEST_ARRAY_TYPED(t1, t2, t)			\
+> -	static const struct test_ ## t1 ## _ ## t2 ## __ ## t {	\
+> +#define DEFINE_TEST_ARRAY_NAMED_TYPED(n1, n2, n, t1, t2, t)	\
+> +	static const struct test_ ## n1 ## _ ## n2 ## __ ## n {	\
+>  		t1 a;						\
+>  		t2 b;						\
+> -		t sum, diff, prod;				\
+> +		t sum;						\
+> +		t diff;						\
+> +		t prod;						\
+>  		bool s_of, d_of, p_of;				\
+> -	} t1 ## _ ## t2 ## __ ## t ## _tests[]
+> +	} n1 ## _ ## n2 ## __ ## n ## _tests[]
+> +
+> +#define DEFINE_TEST_ARRAY_TYPED(t1, t2, t)			\
+> +	DEFINE_TEST_ARRAY_NAMED_TYPED(t1, t2, t, t1, t2, t)
+>
+>  #define DEFINE_TEST_ARRAY(t)	DEFINE_TEST_ARRAY_TYPED(t, t, t)
+>
+> @@ -251,8 +256,10 @@ DEFINE_TEST_ARRAY(s64) = {
+>  };
+>
+>  #define check_one_op(t, fmt, op, sym, a, b, r, of) do {			\
+> -	int _a_orig = a, _a_bump = a + 1;				\
+> -	int _b_orig = b, _b_bump = b + 1;				\
+> +	typeof(a + 0) _a_orig = a;					\
+> +	typeof(a + 0) _a_bump = a + 1;					\
+> +	typeof(b + 0) _b_orig = b;					\
+> +	typeof(b + 0) _b_bump = b + 1;					\
+>  	bool _of;							\
+>  	t _r;								\
+>  									\
+> @@ -260,13 +267,13 @@ DEFINE_TEST_ARRAY(s64) = {
+>  	KUNIT_EXPECT_EQ_MSG(test, _of, of,				\
+>  		"expected "fmt" "sym" "fmt" to%s overflow (type %s)\n",	\
+>  		a, b, of ? "" : " not", #t);				\
+> -	KUNIT_EXPECT_EQ_MSG(test, _r, r,				\
+> +	KUNIT_EXPECT_TRUE_MSG(test, _r == r,				\
+>  		"expected "fmt" "sym" "fmt" == "fmt", got "fmt" (type %s)\n", \
+>  		a, b, r, _r, #t);					\
+>  	/* Check for internal macro side-effects. */			\
+>  	_of = check_ ## op ## _overflow(_a_orig++, _b_orig++, &_r);	\
+> -	KUNIT_EXPECT_EQ_MSG(test, _a_orig, _a_bump, "Unexpected " #op " macro side-effect!\n"); \
+> -	KUNIT_EXPECT_EQ_MSG(test, _b_orig, _b_bump, "Unexpected " #op " macro side-effect!\n"); \
+> +	KUNIT_EXPECT_TRUE_MSG(test, _a_orig == _a_bump, "Unexpected " #op " macro side-effect!\n"); \
+> +	KUNIT_EXPECT_TRUE_MSG(test, _b_orig == _b_bump, "Unexpected " #op " macro side-effect!\n"); \
+>  } while (0)
+>
+>  #define DEFINE_TEST_FUNC_TYPED(n, t, fmt)				\
+> @@ -333,6 +340,55 @@ DEFINE_TEST_ARRAY_TYPED(int, int, u8) = {
+>  };
+>  DEFINE_TEST_FUNC_TYPED(int_int__u8, u8, "%d");
+>
+> +#define DEFINE_TEST_PTR_FUNC_TYPED(n, t, fmt)				\
+> +static void do_ptr_test_ ## n(struct kunit *test, const struct test_ ## n *p) \
+> +{									\
+> +	/* we're only doing single-direction sums, no product or division */ \
+> +	check_one_op(t, fmt, add, "+", p->a, p->b, p->sum, p->s_of);\
+> +}									\
+> +									\
+> +static void n ## _overflow_test(struct kunit *test) {			\
+> +	unsigned i;							\
+> +									\
+> +	for (i = 0; i < ARRAY_SIZE(n ## _tests); ++i)			\
+> +		do_ptr_test_ ## n(test, &n ## _tests[i]);		\
+> +	kunit_info(test, "%zu %s arithmetic tests finished\n",		\
+> +		ARRAY_SIZE(n ## _tests), #n);				\
+> +}
+> +
+> +DEFINE_TEST_ARRAY_NAMED_TYPED(void, int, void, void *, int, void *) = {
+> +	{NULL, 0, NULL, NULL, NULL, false, false, false},
+> +	{(void *)0x30, 0x10, (void *)0x40, NULL, NULL, false, false, false},
+> +	{(void *)ULONG_MAX, 0, (void *)ULONG_MAX, NULL, NULL, false, false, false},
+> +	{(void *)ULONG_MAX, 1, NULL, NULL, NULL, true, false, false},
+> +	{(void *)ULONG_MAX, INT_MAX, (void *)(INT_MAX - 1), NULL, NULL, true, false, false},
+> +};
+> +DEFINE_TEST_PTR_FUNC_TYPED(void_int__void, void *, "%lx");
+> +
+> +struct _sized {
+> +	int a;
+> +	char b;
+> +};
+> +
+> +DEFINE_TEST_ARRAY_NAMED_TYPED(sized, int, sized, struct _sized *, int, struct _sized *) = {
+> +	{NULL, 0, NULL, NULL, NULL, false, false, false},
+> +	{NULL, 1, (struct _sized *)(sizeof(struct _sized)), NULL, NULL, false, false, false},
+> +	{NULL, 0x10, (struct _sized *)(sizeof(struct _sized) * 0x10), NULL, NULL, false, false, false},
+> +	{(void *)(ULONG_MAX - sizeof(struct _sized)), 1, (struct _sized *)ULONG_MAX, NULL, NULL, false, false, false},
+> +	{(void *)(ULONG_MAX - sizeof(struct _sized) + 1), 1, NULL, NULL, NULL, true, false, false},
+> +	{(void *)(ULONG_MAX - sizeof(struct _sized) + 1), 2, (struct _sized *)(sizeof(struct _sized)), NULL, NULL, true, false, false},
+> +	{(void *)(ULONG_MAX - sizeof(struct _sized) + 1), 3, (struct _sized *)(sizeof(struct _sized) * 2), NULL, NULL, true, false, false},
+> +};
+> +DEFINE_TEST_PTR_FUNC_TYPED(sized_int__sized, struct _sized *, "%lx");
+> +
+> +DEFINE_TEST_ARRAY_NAMED_TYPED(sized, size_t, sized, struct _sized *, size_t, struct _sized *) = {
+> +	{NULL, 0, NULL, NULL, NULL, false, false, false},
+> +	{NULL, 1, (struct _sized *)(sizeof(struct _sized)), NULL, NULL, false, false, false},
+> +	{NULL, 0x10, (struct _sized *)(sizeof(struct _sized) * 0x10), NULL, NULL, false, false, false},
+> +	{NULL, SIZE_MAX - 10, (struct _sized *)18446744073709551528UL, NULL, NULL, true, false, false},
+> +};
+> +DEFINE_TEST_PTR_FUNC_TYPED(sized_size_t__sized, struct _sized *, "%zu");
+> +
+>  /* Args are: value, shift, type, expected result, overflow expected */
+>  #define TEST_ONE_SHIFT(a, s, t, expect, of)	do {			\
+>  	typeof(a) __a = (a);						\
+> @@ -1122,6 +1178,9 @@ static struct kunit_case overflow_test_cases[] = {
+>  	KUNIT_CASE(s32_s32__s32_overflow_test),
+>  	KUNIT_CASE(u64_u64__u64_overflow_test),
+>  	KUNIT_CASE(s64_s64__s64_overflow_test),
+> +	KUNIT_CASE(void_int__void_overflow_test),
+> +	KUNIT_CASE(sized_int__sized_overflow_test),
+> +	KUNIT_CASE(sized_size_t__sized_overflow_test),
+>  	KUNIT_CASE(u32_u32__int_overflow_test),
+>  	KUNIT_CASE(u32_u32__u8_overflow_test),
+>  	KUNIT_CASE(u8_u8__int_overflow_test),
+> --
+> 2.34.1
+>
+Thanks
+Justin
