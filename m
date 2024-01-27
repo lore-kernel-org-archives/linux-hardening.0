@@ -1,89 +1,92 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CDB728DBD
-	for <linux-hardening@vger.kernel.org>; Sat, 27 Jan 2024 15:11:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 129342562A
+	for <linux-hardening@vger.kernel.org>; Sat, 27 Jan 2024 16:37:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706368295; cv=none; b=kKjVKNhdNINw0k19BFu6VmuUwQXMKAAv5t+rlC+d6T+1UZmu5IUQgjkr/r2KMDp0P4qV8fHsnuS312SUzBR7vHlolfDb6j5PIdww1E6VzN6C7M4/OPmPte7w4H3sRGMdledK74mixBdfGssI+AWvrIS4ZCR/C9EzNbXUAoxslqw=
+	t=1706373475; cv=none; b=JlI7aMC7hppbYwi/Ae6/hm3KCnL2Gi852v5aBfRCOshnk7bQF9b0vOJtmDCZeK0/f3M+L/Nr7flD8etWb2+o2ksgd42ubKrDyWZLKRTmOWsAOlr68LlYGy6QVDhCuG0BOIhbzzhNIWF224l7IvWYycSVfWp4YBJuqfGZhJTV0k0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706368295; c=relaxed/simple;
-	bh=qPQLddFg1VKJakANQS/CI60niMgi+hg3nsQbsO6CWtg=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=OThiCb2zjQNLQ/EKWTG30Y9K1B8ePuIQG9+EvY359CkSNdLrGlXhimvSGzXzQz4a9gUd6Hg2zMFvH+OJNHZaVKOdvKOoASwmXPiVLNKRMfe+rKDrs65WzuhwR4UQC5sU9qGaaMlC5wKBU2wzfn4mslkg1GazFzuQ4WNzvYWYeWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-310-SCilWEytP4u2p2i3FRz1dw-1; Sat, 27 Jan 2024 15:11:30 +0000
-X-MC-Unique: SCilWEytP4u2p2i3FRz1dw-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Sat, 27 Jan
- 2024 15:11:11 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Sat, 27 Jan 2024 15:11:11 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Linus Torvalds' <torvalds@linux-foundation.org>, Kees Cook
-	<keescook@chromium.org>
-CC: "Gustavo A. R. Silva" <gustavo@embeddedor.com>, "Gustavo A. R. Silva"
-	<gustavoars@kernel.org>, "linux-hardening@vger.kernel.org"
-	<linux-hardening@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [GIT PULL] Enable -Wstringop-overflow globally
-Thread-Topic: [GIT PULL] Enable -Wstringop-overflow globally
-Thread-Index: AQHaUKg1nGzb4cAoNk2Qdc8/rj/X/LDtw4CA
-Date: Sat, 27 Jan 2024 15:11:11 +0000
-Message-ID: <f00e15fcba05497a87e91182a33c888f@AcuMS.aculab.com>
-References: <Za6JwRpknVIlfhPF@work>
- <CAHk-=wjG4jdE19-vWWhAX3ByfbNr4DJS-pwiN9oY38WkhMZ57g@mail.gmail.com>
- <4907a7a3-8533-480a-bc3c-488573e18e66@embeddedor.com>
- <202401261423.7AF702239@keescook>
- <CAHk-=wiaaCatzmF6GXxP97pa8oEX7e4rBpd4JgsbKex3Ek1_9A@mail.gmail.com>
-In-Reply-To: <CAHk-=wiaaCatzmF6GXxP97pa8oEX7e4rBpd4JgsbKex3Ek1_9A@mail.gmail.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1706373475; c=relaxed/simple;
+	bh=52EY/SemdzO86LZW+X24P5o9GxO2ePPo7tueqcrByxo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hddcifbUfw6kNQRNGRqE29Yis1xyZxCWU39r4R7A1HnMbLUSAypXvfUUJm/TefwHpZz5DN9k9LM8gNY8j7dwF+4/HZQScprz1tGPp8SjmuYqa9nfgB1L6IL9w6+vZC341+Z2f9hziVRO7SPGNdshL/hxgEi4QfHW//1VBYtci18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vKlss4he; arc=none smtp.client-ip=209.85.219.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vKlss4he"
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-dbed0710c74so1497077276.1
+        for <linux-hardening@vger.kernel.org>; Sat, 27 Jan 2024 08:37:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706373473; x=1706978273; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=52EY/SemdzO86LZW+X24P5o9GxO2ePPo7tueqcrByxo=;
+        b=vKlss4he7FarMg/PdNMJ5UXiiR9iT4LtdMH2jlHxI4bQx3PApbu0nXjCCgyo8RK1uA
+         MZADbYTMSOgm/JzSRIoMFLO9LT7iHdDjCOaySeugXJyjTUaLRIUpqlbRTTdA0IsaLI1i
+         owU1CG0cqi+lZOmCaGGV5TL0wNv9flW2URzsuZwvvb9f7VutX4FYnJRn1rlyPAMGw/NY
+         z+aBE8X2qyNx1AcapLR4mBIp0X5FwmqVXYIyQr4VIN5vgeL0YCX5AELBVOAS4mLvcMSZ
+         9KGqm9M/sqviyEO5gR0TE3q7/EJjko4qvL8xdTO1FXyCH9FPZE0LCTrLgryRAv+VtLdk
+         wPHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706373473; x=1706978273;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=52EY/SemdzO86LZW+X24P5o9GxO2ePPo7tueqcrByxo=;
+        b=p0h76f6BGbrRwOdtJQCAj2qOrwmYVBTxdecEaVW0JCdD1+vJIK3YKqHzve0orV2rFx
+         BsgrgWLRrzOThW+LKmAzrkd++IlMGxY1nn8N5o8aiRAGyMFaaQUb05KQNrhSx7G30L2p
+         9Xo6EvDD7xpOVUJbCrDVW9haVPez33Rft9s/rkUNLMgjaqg0iXPMnF7BUVNXmjzS8LNN
+         fRa4clBUlSnGtpRqNzx8GW2geV0sy2WdvLD87FLG7dAvQpg4EBEvsQ+ZcSVUyOy4P3Yh
+         57xctnFPPwBmL4K4VjYlXBLFISZ3GgVep+wBRv64EqN3w/wAgnIxKOxb4cMlId0dajFO
+         k5wg==
+X-Gm-Message-State: AOJu0YxuPtGnbKAatpUhPTQMGWmQe9eMTS/1rbCo1j6nqsmRpLRwYBLW
+	he5g3BhHqMhdxZfmWmVjD0Nvu2v2o/3fzk97p/XiSCCGKne2OxcqwfCJCSmTgvOfqWCFyjDb9NO
+	GroF51vwd5g5P7tuhOcvnr1NBEEYNjkFRgLsICg==
+X-Google-Smtp-Source: AGHT+IH6HdQ44ye/NMuXOgVUS/M7BGq7rU9eYNVXXNby5gNVSNwzfvRR0haZYsZfH2tla5inOMuU4vBcMP+4+MEWckk=
+X-Received: by 2002:a25:848d:0:b0:dc5:f51e:6a60 with SMTP id
+ v13-20020a25848d000000b00dc5f51e6a60mr1838267ybk.6.1706373456517; Sat, 27 Jan
+ 2024 08:37:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+References: <20240126223150.work.548-kees@kernel.org>
+In-Reply-To: <20240126223150.work.548-kees@kernel.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Sat, 27 Jan 2024 17:37:25 +0100
+Message-ID: <CACRpkdbpQNoh_ESB=CcUcP0_pcvDYCs9FeJ_wY74a7WJ77sLBg@mail.gmail.com>
+Subject: Re: [PATCH] wifi: brcmfmac: Adjust n_channels usage for __counted_by
+To: Kees Cook <keescook@chromium.org>
+Cc: Arend van Spriel <aspriel@gmail.com>, Franky Lin <franky.lin@broadcom.com>, 
+	Hante Meuleman <hante.meuleman@broadcom.com>, Kalle Valo <kvalo@kernel.org>, 
+	Chi-hsien Lin <chi-hsien.lin@infineon.com>, Ian Lin <ian.lin@infineon.com>, 
+	Johannes Berg <johannes.berg@intel.com>, Wright Feng <wright.feng@cypress.com>, 
+	Hector Martin <marcan@marcan.st>, linux-wireless@vger.kernel.org, 
+	brcm80211-dev-list.pdl@broadcom.com, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Jisoo Jang <jisoo.jang@yonsei.ac.kr>, 
+	Hans de Goede <hdegoede@redhat.com>, Aloka Dixit <quic_alokad@quicinc.com>, 
+	John Keeping <john@keeping.me.uk>, Jeff Johnson <quic_jjohnson@quicinc.com>, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-RnJvbTogTGludXMgVG9ydmFsZHMNCj4gU2VudDogMjYgSmFudWFyeSAyMDI0IDIyOjM2DQo+IA0K
-PiBPbiBGcmksIDI2IEphbiAyMDI0IGF0IDE0OjI0LCBLZWVzIENvb2sgPGtlZXNjb29rQGNocm9t
-aXVtLm9yZz4gd3JvdGU6DQo+ID4NCj4gPiBJIHRoaW5rIHhlIGhhcyBzb21lIG90aGVyIHdlaXJk
-IHByb2JsZW1zIHRvby4gVGhpcyBtYXkgYmUgcmVsYXRlZCAodW5kZXINCj4gPiBhbGxvY2F0aW5n
-KToNCj4gPg0KPiA+IC4uL2RyaXZlcnMvZ3B1L2RybS94ZS94ZV92bS5jOiBJbiBmdW5jdGlvbiAn
-eGVfdm1hX2NyZWF0ZSc6DQo+ID4gLi4vZHJpdmVycy9ncHUvZHJtL3hlL3hlX3ZtLmM6ODA2OjIx
-OiB3YXJuaW5nOiBhbGxvY2F0aW9uIG9mIGluc3VmZmljaWVudCBzaXplICcyMjQnIGZvciB0eXBl
-DQo+ICdzdHJ1Y3QgeGVfdm1hJyB3aXRoIHNpemUgJzM2OCcgWy1XYWxsb2Mtc2l6ZV0NCj4gPiAg
-IDgwNiB8ICAgICAgICAgICAgICAgICB2bWEgPSBremFsbG9jKHNpemVvZigqdm1hKSAtIHNpemVv
-ZihzdHJ1Y3QgeGVfdXNlcnB0ciksDQo+ID4gICAgICAgfCAgICAgICAgICAgICAgICAgICAgIF4N
-Cj4gDQo+IFRoYXQgY29kZSBpcyBpbmRlZWQgb2RkLCBidXQgdGhlcmUncyBhIGNvbW1lbnQgaW4g
-dGhlIHhlX3ZtYSBkZWZpbml0aW9uDQo+IA0KPiAgICAgICAgIC8qKg0KPiAgICAgICAgICAqIEB1
-c2VycHRyOiB1c2VyIHBvaW50ZXIgc3RhdGUsIG9ubHkgYWxsb2NhdGVkIGZvciBWTUFzIHRoYXQg
-YXJlDQo+ICAgICAgICAgICogdXNlciBwb2ludGVycw0KPiAgICAgICAgICAqLw0KPiAgICAgICAg
-IHN0cnVjdCB4ZV91c2VycHRyIHVzZXJwdHI7DQo+IA0KPiBhbHRob3VnaCBJIGFncmVlIHRoYXQg
-aXQgc2hvdWxkIHByb2JhYmx5IHNpbXBseSBiZSBtYWRlIGEgZmluYWwNCj4gdmFyaWFibHktc2l6
-ZWQgYXJyYXkgaW5zdGVhZCAoYW5kIHRoZW4geW91IG1ha2UgdGhhdCBhcnJheSBzaXplIGJlDQo+
-IDAvMSkuDQoNClRoYXQgZW50aXJlIGNvZGUgaXMgb2RkLg0KSXQgaXNuJ3Qgb2J2aW91cyB0aGF0
-IHRoZSBmbGFnIHZhbHVlcyB0aGF0IGNhdXNlIHRoZSBzaG9ydCBhbGxvY2F0ZQ0KYXJlIHRoZSBz
-YW1lIG9uZXMgdGhhdCBjb250cm9sIHdoZXRoZXIgdGhlIGV4dHJhIGRhdGEgaXMgYWNjZXNzZWQu
-DQoNCk5ldmVyIG1pbmQgdGhlIG9kZGl0aWVzIHdpdGggdGhlICdmbGFncyB8PSAnIGFzc2lnbm1l
-bnRzIGludCB0aGUNCidyZW1hcCBuZXh0JyBwYXRoLg0KDQpBbnlvbmUga25vdyBob3cgbWFueSBv
-ZiB0aGVzZSBhY3R1YWxseSBnZXQgYWxsb2NhdGVkIChhbmQgdGhlaXINCmxpZmV0aW1lcyk/DQpI
-b3cgbXVjaCBkaWZmZXJlbmNlIHdvdWxkIGl0IG1ha2UgdG8gYWxsb2NhdGUgMzY4IChtYXliZSAz
-ODQ/KQ0KYnl0ZXMgaW5zdGVhZCBvZiAyMjQgKGxpa2VseSAyNTYpLg0KDQoJRGF2aWQNCg0KLQ0K
-UmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1p
-bHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVz
-KQ0K
+On Fri, Jan 26, 2024 at 11:31=E2=80=AFPM Kees Cook <keescook@chromium.org> =
+wrote:
 
+> After commit e3eac9f32ec0 ("wifi: cfg80211: Annotate struct
+> cfg80211_scan_request with __counted_by"), the compiler may enforce
+> dynamic array indexing of req->channels to stay below n_channels. As a
+> result, n_channels needs to be increased _before_ accessing the newly
+> added array index. Increment it first, then use "i" for the prior index.
+> Solves this warning in the coming GCC that has __counted_by support:
+
+Makes perfect sense.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
