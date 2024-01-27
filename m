@@ -1,152 +1,115 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 546FA25576
-	for <linux-hardening@vger.kernel.org>; Sat, 27 Jan 2024 13:15:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF1825614
+	for <linux-hardening@vger.kernel.org>; Sat, 27 Jan 2024 14:32:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706361318; cv=none; b=FBmtcEGBimYbXC3UtJOgPhrIS8Ko913R2S4dTLIZ29BFt0djoF7aXo9O/MUZ1oIJ6tsqXELhFxsFaUvTKIWQ6hl4J8JKG/m9VZeLzX6XjB1F71qVnX9BLuYOciTIyLFYtys9k3mS9z4+pngVHaq1hIUQQfj/pnBU4xj3hWMGMiA=
+	t=1706365973; cv=none; b=Y7tK+h/KSFkolD3dDcC1fQRsrQ4JRmxjSzm0Bx/Cy1gUYSIycqL/2VpYUNfxu7DxGRkLEhVxVIZBjnqg454xmUSXccdpuQ48lOrDxvXmY/I8bXXW7qioS+JqRxku/LLaQ/a1VX/AGo4dLsVVgN1InYFpwX2M6kF+67zERZEbFO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706361318; c=relaxed/simple;
-	bh=Dqdc0+GiMMU9oBgocmuzdAz+2RL5EmpPsPfk0dVDRO0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AXvmDUU2gr6Z0VslIkK0Et0mfEupzyW2OXt1Z8H5pGhZbsBUC7NsmNT1hhOJbUZ4Kv87PfW5PW2s8omcAxkQluWRdvLbEh30wW8NNqJLjB1RTBYV8+8Ik4rc/RvFDmW9aOO6CCBIHkJAe4BKQsd9jEu4P1xyD0zjA5FzCrhBYUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U79BX+bO; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U79BX+bO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706361315;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZrazDqdbD6oanZQGLU+I+Chea6nbXarN1I/pTzbmfG4=;
-	b=U79BX+bOtnw4mpLk47nGVj9Qnk56vKB2pU6qwHQd1nR45/XflIH/PWkg8I/hv5fEp5rtbl
-	GOCZHSgTIDRSJALGEUthsNUllBXiwubQLaQHXzeQhN2zFv9dUaHMG7Zq4MrzG5Fwmdq60+
-	rx2fvhmPyfvlHMoyD+OdhKtSDQCud5g=
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
- [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-383-qxYNBZUONqK-u2rsIEdzFQ-1; Sat, 27 Jan 2024 08:15:13 -0500
-X-MC-Unique: qxYNBZUONqK-u2rsIEdzFQ-1
-Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-51032b2fb9fso140122e87.1
-        for <linux-hardening@vger.kernel.org>; Sat, 27 Jan 2024 05:15:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706361312; x=1706966112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZrazDqdbD6oanZQGLU+I+Chea6nbXarN1I/pTzbmfG4=;
-        b=EWG1TqPSzpgnmDx0hs+vgWG6e9ug/AHHnbE84My32RBy6AkL90AjONyQpapgk1C/jL
-         nF/qKMe/wxvr9y9QBEckuwN2ip2x7SIb7U0Rtrrjbrt88gcghrRom06FOmHshNHer9nY
-         wXug8zqirwWCPfCvEnieVwEKyZflxWFyrLUkoKMGzeWugk++Dgx9/HzKmJrqft9EFqNh
-         v++ikUECU6ulFIxa/dNPgy0TkWcSy7Piv6UfTgoi7ibIU2Tvt8Lp7dY/2MfRvS/I711a
-         dSzbewdz7CYUenAU+55/UUPHCNWo8DyyH5ZAWw6cxvgm1aiXJQtjPmp8Z48bXQy8Nm9j
-         gHxA==
-X-Gm-Message-State: AOJu0YwgjJjTnKS/fHS1GEY+vsSFbl2fXs6R/03WBvDVNR7ObgakCu1V
-	Ns+f3GCJENVbYYNqwlD3Cru2NhEtXxJxtvrmj0iQ0Kt3fyd/NRyeDvz0JagBunRqdjlWrCXai+6
-	/B1rWJbLNm0ntanjjzUGjwvMN8b+qh8fIWbdhc8Qt0NuH2pAeUpLI8AUXGhj/8p+YWQ==
-X-Received: by 2002:ac2:4651:0:b0:50e:6a19:7a38 with SMTP id s17-20020ac24651000000b0050e6a197a38mr840739lfo.20.1706361312459;
-        Sat, 27 Jan 2024 05:15:12 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF/8eFrsRRCO0DBjR/ei2z8ocfhn93MBtESzm9v5YMp5FsQgPdgqxDov+zEfayAXv6aGPZLtw==
-X-Received: by 2002:ac2:4651:0:b0:50e:6a19:7a38 with SMTP id s17-20020ac24651000000b0050e6a197a38mr840727lfo.20.1706361312120;
-        Sat, 27 Jan 2024 05:15:12 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id hd11-20020a170907968b00b00a31906f280asm1738295ejc.193.2024.01.27.05.15.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 27 Jan 2024 05:15:11 -0800 (PST)
-Message-ID: <8f225be1-647b-4421-b6b5-a2098f807d05@redhat.com>
-Date: Sat, 27 Jan 2024 14:15:10 +0100
+	s=arc-20240116; t=1706365973; c=relaxed/simple;
+	bh=uoG4wqLPKU0xmRMHAJDwi4nyNh2pi3z2SytMACzUiiE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=AFrHdhl41adoRzRLXgin1UuBXuossfsSsMq05xUlykq1xdDGVJiU0yy40sUWj7h63H6FwjCWGaXZcQquDYnTMH95+me7ZvtPlpYZvBcL8AtNidBscaxaXT4BLioYzBF8yD22R70ilk4bMlFlp7Kw/99gyYh4uRdQg7vYxxW0yL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-42-K5Ny_hd0OVOELPLriuF_ng-1; Sat, 27 Jan 2024 14:32:43 +0000
+X-MC-Unique: K5Ny_hd0OVOELPLriuF_ng-1
+Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
+ (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Sat, 27 Jan
+ 2024 14:32:23 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Sat, 27 Jan 2024 14:32:23 +0000
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Lee Jones' <lee@kernel.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>, "Andrew
+ Morton" <akpm@linux-foundation.org>, Petr Mladek <pmladek@suse.com>, "Steven
+ Rostedt" <rostedt@goodmis.org>, Andy Shevchenko
+	<andriy.shevchenko@linux.intel.com>, Sergey Senozhatsky
+	<senozhatsky@chromium.org>, Crutcher Dunnavant
+	<crutcher+kernel@datastacks.com>, Juergen Quade <quade@hsnr.de>
+Subject: RE: [PATCH 1/1] lib/vsprintf: Implement ssprintf() to catch truncated
+ strings
+Thread-Topic: [PATCH 1/1] lib/vsprintf: Implement ssprintf() to catch
+ truncated strings
+Thread-Index: AQHaT3pqpS+sRHqV5U2M6pwWmFnMHbDtupAw
+Date: Sat, 27 Jan 2024 14:32:23 +0000
+Message-ID: <54e518b6dd9647c1add38b706eccbb4b@AcuMS.aculab.com>
+References: <20240125083921.1312709-1-lee@kernel.org>
+ <a37e8071-32ac-4f5d-95e8-ddd2eb21edcd@rasmusvillemoes.dk>
+ <20240125103624.GC74950@google.com>
+In-Reply-To: <20240125103624.GC74950@google.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] wifi: brcmfmac: Adjust n_channels usage for __counted_by
-To: Kees Cook <keescook@chromium.org>, Arend van Spriel <aspriel@gmail.com>
-Cc: Franky Lin <franky.lin@broadcom.com>,
- Hante Meuleman <hante.meuleman@broadcom.com>, Kalle Valo <kvalo@kernel.org>,
- Chi-hsien Lin <chi-hsien.lin@infineon.com>, Ian Lin <ian.lin@infineon.com>,
- Johannes Berg <johannes.berg@intel.com>,
- Wright Feng <wright.feng@cypress.com>, Hector Martin <marcan@marcan.st>,
- linux-wireless@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>,
- Jisoo Jang <jisoo.jang@yonsei.ac.kr>, Aloka Dixit <quic_alokad@quicinc.com>,
- John Keeping <john@keeping.me.uk>, Jeff Johnson <quic_jjohnson@quicinc.com>,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20240126223150.work.548-kees@kernel.org>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240126223150.work.548-kees@kernel.org>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US, nl
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
 
-Hi,
-
-On 1/26/24 23:31, Kees Cook wrote:
-> After commit e3eac9f32ec0 ("wifi: cfg80211: Annotate struct
-> cfg80211_scan_request with __counted_by"), the compiler may enforce
-> dynamic array indexing of req->channels to stay below n_channels. As a
-> result, n_channels needs to be increased _before_ accessing the newly
-> added array index. Increment it first, then use "i" for the prior index.
-> Solves this warning in the coming GCC that has __counted_by support:
-> 
-> ../drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c: In function 'brcmf_internal_escan_add_info':
-> ../drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c:3783:46: warning: operation on 'req->
-> n_channels' may be undefined [-Wsequence-point]
->  3783 |                 req->channels[req->n_channels++] = chan;
->       |                               ~~~~~~~~~~~~~~~^~
-> 
-> Fixes: e3eac9f32ec0 ("wifi: cfg80211: Annotate struct cfg80211_scan_request with __counted_by")
-> Cc: Arend van Spriel <aspriel@gmail.com>
-> Cc: Franky Lin <franky.lin@broadcom.com>
-> Cc: Hante Meuleman <hante.meuleman@broadcom.com>
-> Cc: Kalle Valo <kvalo@kernel.org>
-> Cc: Chi-hsien Lin <chi-hsien.lin@infineon.com>
-> Cc: Ian Lin <ian.lin@infineon.com>
-> Cc: Johannes Berg <johannes.berg@intel.com>
-> Cc: Wright Feng <wright.feng@cypress.com>
-> Cc: Hector Martin <marcan@marcan.st>
-> Cc: linux-wireless@vger.kernel.org
-> Cc: brcm80211-dev-list.pdl@broadcom.com
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-
-Thanks, patch looks good to me:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
-
-
-
-> ---
->  drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-> index 133c5ea6429c..28d6a30cc010 100644
-> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-> @@ -3779,8 +3779,10 @@ static int brcmf_internal_escan_add_info(struct cfg80211_scan_request *req,
->  		if (req->channels[i] == chan)
->  			break;
->  	}
-> -	if (i == req->n_channels)
-> -		req->channels[req->n_channels++] = chan;
-> +	if (i == req->n_channels) {
-> +		req->n_channels++;
-> +		req->channels[i] = chan;
-> +	}
->  
->  	for (i = 0; i < req->n_ssids; i++) {
->  		if (req->ssids[i].ssid_len == ssid_len &&
+RnJvbTogTGVlIEpvbmVzDQo+IFNlbnQ6IDI1IEphbnVhcnkgMjAyNCAxMDozNg0KPiBPbiBUaHUs
+IDI1IEphbiAyMDI0LCBSYXNtdXMgVmlsbGVtb2VzIHdyb3RlOg0KPiANCj4gPiBPbiAyNS8wMS8y
+MDI0IDA5LjM5LCBMZWUgSm9uZXMgd3JvdGU6DQo+ID4gPiBUaGVyZSBpcyBhbiBvbmdvaW5nIGVm
+Zm9ydCB0byByZXBsYWNlIHRoZSB1c2Ugb2Yge3Z9c25wcmludGYoKSB2YXJpYW50cw0KPiA+ID4g
+d2l0aCBzYWZlciBhbHRlcm5hdGl2ZXMgLSBmb3IgYSBtb3JlIGluIGRlcHRoIHZpZXcsIHNlZSBK
+b24ncyB3cml0ZS11cA0KPiA+ID4gb24gTFdOIFswXSBhbmQvb3IgQWxleCdzIG9uIHRoZSBLZXJu
+ZWwgU2VsZiBQcm90ZWN0aW9uIFByb2plY3QgWzFdLg0KPiA+ID4NCj4gPiA+IFdoaXN0IGV4ZWN1
+dGluZyB0aGUgdGFzaywgaXQgcXVpY2tseSBiZWNhbWUgYXBwYXJlbnQgdGhhdCB0aGUgaW5pdGlh
+bA0KPiA+ID4gdGhvdWdodCBvZiBzaW1wbHkgcy9zbnByaW50Zi9zY25wcmludGYvIHdhc24ndCBn
+b2luZyB0byBiZSBhZGVxdWF0ZSBmb3INCj4gPiA+IGEgbnVtYmVyIG9mIGNhc2VzLiAgU3BlY2lm
+aWNhbGx5IG9uZXMgd2hlcmUgdGhlIGNhbGxlciBuZWVkcyB0byBrbm93DQo+ID4gPiB3aGV0aGVy
+IHRoZSBnaXZlbiBzdHJpbmcgZW5kcyB1cCBiZWluZyB0cnVuY2F0ZWQuICBUaGlzIGlzIHdoZXJl
+DQo+ID4gPiBzc3ByaW50ZigpIFtiYXNlZCBvbiBzaW1pbGFyIHNlbWFudGljcyBvZiBzdHJzY3B5
+KCldIGNvbWVzIGluLCBzaW5jZSBpdA0KPiA+ID4gdGFrZXMgdGhlIGJlc3QgcGFydHMgb2YgYm90
+aCBvZiB0aGUgYWZvcmVtZW50aW9uZWQgdmFyaWFudHMuICBJdCBoYXMgdGhlDQo+ID4gPiB0ZXN0
+YWJpbGl0eSBvZiB0cnVuY2F0aW9uIG9mIHNucHJpbnRmKCkgYW5kIHJldHVybnMgdGhlIG51bWJl
+ciBvZiBCeXRlcw0KPiA+ID4gKmFjdHVhbGx5KiB3cml0dGVuLCBzaW1pbGFyIHRvIHNjbnByaW50
+ZigpLCBtYWtpbmcgaXQgYSB2ZXJ5IHByb2dyYW1tZXINCj4gPiA+IGZyaWVuZGx5IGFsdGVybmF0
+aXZlLg0KPiA+ID4NCj4gPiA+IEhlcmUncyBzb21lIGV4YW1wbGVzIHRvIHNob3cgdGhlIGRpZmZl
+cmVuY2VzOg0KPiA+ID4NCj4gPiA+ICAgU3VjY2VzczogTm8gdHJ1bmNhdGlvbiAtIGFsbCA5IEJ5
+dGVzIHN1Y2Nlc3NmdWxseSB3cml0dGVuIHRvIHRoZSBidWZmZXINCj4gPiA+DQo+ID4gPiAgICAg
+cmV0ID0gc25wcmludGYgKGJ1ZiwgMTAsICIlcyIsICIxMjM0NTY3ODkiKTsgIC8vIHJldCA9IDkN
+Cj4gPiA+ICAgICByZXQgPSBzY25wcmludGYoYnVmLCAxMCwgIiVzIiwgIjEyMzQ1Njc4OSIpOyAg
+Ly8gcmV0ID0gOQ0KPiA+ID4gICAgIHJldCA9IHNzcHJpbnRmIChidWYsIDEwLCAiJXMiLCAiMTIz
+NDU2Nzg5Iik7ICAvLyByZXQgPSA5DQo+ID4gPg0KPiA+ID4gICBGYWlsdXJlOiBUcnVuY2F0aW9u
+IC0gb25seSA5IG9mIDEwIEJ5dGVzIHdyaXR0ZW47ICctJyBpcyB0cnVuY2F0ZWQNCj4gPiA+DQo+
+ID4gPiAgICAgcmV0ID0gc25wcmludGYgKGJ1ZiwgMTAsICIlcyIsICIxMjM0NTY3ODktIik7IC8v
+IHJldCA9IDEwDQo+ID4gPg0KPiA+ID4gICAgICAgUmVwb3J0czogIjEwIEJ5dGVzIHdvdWxkIGhh
+dmUgYmVlbiB3cml0dGVuIGlmIGJ1ZiB3YXMgbGFyZ2UgZW5vdWdoIg0KPiA+ID4gICAgICAgSXNz
+dWU6IFByb2dyYW1tZXJzIG5lZWQgdG8ga25vdy9yZW1lbWJlciB0byBjaGVjayByZXQgYWdhaW5z
+dCAiMTAiDQo+ID4NCj4gPiBZZWFoLCBzbyBJJ20gbm90IGF0IGFsbCBzdXJlIHdlIG5lZWQgeWV0
+LWFub3RoZXItd3JhcHBlciB3aXRoDQo+ID4geWV0LWFub3RoZXItaGFyZC10by1yZWFkLXByZWZp
+eCB3aGVuIHBlb3BsZSBjYW4ganVzdCBSVEZNIGFuZCBsZWFybiBob3cNCj4gPiB0byBjaGVjayBm
+b3IgdHJ1bmNhdGlvbiBvciB3aGF0bm90LiBCdXQgaWYgeW91IGRvIHRoaXM6DQo+IA0KPiBBcyB3
+b25kZXJmdWwgYXMgaXQgd291bGQgYmUgZm9yIHBlb3BsZSB0byAianVzdCBSVEZNIiwgd2UncmUg
+c2VlaW5nIGENCj4gbGFyZ2UgbnVtYmVyIG9mIGNhc2VzIHdoZXJlIHRoaXMgaXNuJ3QgaGFwcGVu
+aW5nLiAgUHJvdmlkaW5nIGEgbW9yZQ0KPiBwcm9ncmFtbWVyIGZyaWVuZGx5IHdheSBpcyB0aG91
+Z2h0LCBieSBwZW9wbGUgd2F5IHNtYXJ0ZXIgdGhhbiBtZSwgdG8gYmUNCj4gYSBzb2xpZCBtZWFu
+cyB0byBzb2x2ZSB0aGlzIGlzc3VlLiAgUGxlYXNlIGFsc28gc2VlIEtlZXMgQ29vaydzIHJlbGF0
+ZWQNCj4gd29yayB0byByZW1vdmUgc3RybGNweSgpIHVzZS4NCg0KTXkgd29ycnkgaXMgdGhhdCBw
+ZW9wbGUgd2lsbCBiZWxpZXZlIHRoZSBsZW5ndGggYW5kIGZvcmdldCB0aGF0DQppdCBtaWdodCBi
+ZSBhbiBlcnJvciBjb2RlLg0KDQpTbyB5b3UgcmVwbGFjZSBvbmUgc2V0IG9mIGVycm9ycyAodHJ1
+bmNhdGVkIGRhdGEpLCB3aXRoIGFub3RoZXINCndvcnNlIHNldCAoZWcgd3JpdGUgYmVmb3JlIHN0
+YXJ0IG9mIGJ1ZmZlcikuDQoNCkknbSBzdXJlIHRoYXQgdGhlIHNhZmVzdCByZXR1cm4gZm9yICd0
+cnVuY2F0ZWQnIGlzIHRoZSBidWZmZXIgbGVuZ3RoLg0KVGhlIGEgc2VyaWVzIG9mIHN0YXRlbWVu
+dHMgbGlrZToNCglidWYgKz0geHh4KGJ1ZiwgYnVmX2VuZCAtIGJ1ZiwgLi4uLi4pOw0KY2FuIGFs
+bCBiZSBjYWxsZWQgd2l0aCBhIHNpbmdsZSBvdmVyZmxvdyBjaGVjayBhdCB0aGUgZW5kLg0KDQpG
+b3JnZXQgdGhlIGNoZWNrLCBhbmQgdGhlIGxlbmd0aCBqdXN0IGNvbnRhaW5zIGEgdHJhaWxpbmcg
+J1wwJw0Kd2hpY2ggbWlnaHQgY2F1c2UgY29uZnVzaW9uIGJ1dCBpc24ndCBnb2luZyB0byBpbW1l
+ZGlhdGVseQ0KYnJlYWsgdGhlIHdvcmxkLg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRy
+ZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1L
+MSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
 
