@@ -1,54 +1,51 @@
 Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 752452D051
-	for <linux-hardening@vger.kernel.org>; Sat, 27 Jan 2024 17:00:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3FD72E62B
+	for <linux-hardening@vger.kernel.org>; Sat, 27 Jan 2024 19:53:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706374829; cv=none; b=FX65HO8n64eAqSBSW99M92YtajYLLo4xhbVSZXMc8SFr4oxneoL/lVbZ8hYgzP/Iqd9yycb+caSJBu7vMZ1KEomk/ocQafS4GDRjkjgye3JZ5LtZCpCa2PhpwlBNGpkn8LLNOKybQ/bZIddiXgDIQp0c+5s6mXFQf6nMuSUBtB8=
+	t=1706385189; cv=none; b=BiO8UJrWf3TahTyO+GNqOOLBKvX0MmaU1te/KzPgE+Pd9K/ogz+eCX07BIWJYC8VFL5EcXP49iK7o+Y9LkRcerPmHQlXVNyYbveDRIsaMpQOb/lyWZSJ78O2vhgghZx02vlLzLb4O2HVGplLKBmdH4xbrufcMVvUv1ySUrLQf4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706374829; c=relaxed/simple;
-	bh=fYD10lnewaXrNOHS91XQvwCssa62UEr3pHz9A1pAV3w=;
+	s=arc-20240116; t=1706385189; c=relaxed/simple;
+	bh=FZmVXFIdapL7iu8nX4400qTZyydoADV9EaSrJyaqFfk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sN7bRcBxUFlUmfjK8UQICMRaEcsh66TeimRWAGyuOstkiDV/0yGGnKq+PMiMD0HMbhvo9mcv+gIj28Ta64nJm1rUjy1Lg4o/IxJdIkmBFlCemaTEO1oCYhYvOicq9F7It131X+qUqjI2ivl2rzDlA1IBhzDOng461n5UVdi6kZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=DqTH99eK; arc=none smtp.client-ip=35.89.44.33
+	 In-Reply-To:Content-Type; b=YSBYXaoMmF1xLdlTD5+qHflC0m+IkxhSEHjU4QXQyKtiUgPLj3tbHpZcTccA8PDIjEtHYYepi+NFxCfhfczh97kl20RcF1HX5RwYXm4TkApA2FQZyFlhwKBTufcX2ozmzl4OrjqsMY1pdcMRWI4gv626QVhhKPZSf5TGlyqU6jA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=dwg4EtIm; arc=none smtp.client-ip=35.89.44.33
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="DqTH99eK"
-Received: from eig-obgw-6005a.ext.cloudfilter.net ([10.0.30.201])
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="dwg4EtIm"
+Received: from eig-obgw-5010a.ext.cloudfilter.net ([10.0.29.199])
 	by cmsmtp with ESMTPS
-	id TlscrBWS3MVQiTm2XrX2VI; Sat, 27 Jan 2024 17:00:21 +0000
+	id Te4ir9xpJMVQiTojirXuHZ; Sat, 27 Jan 2024 19:53:06 +0000
 Received: from gator4166.hostgator.com ([108.167.133.22])
 	by cmsmtp with ESMTPS
-	id Tm2UrdEpp1UTRTm2VrJB4g; Sat, 27 Jan 2024 17:00:19 +0000
-X-Authority-Analysis: v=2.4 cv=ZOXEJF3b c=1 sm=1 tr=0 ts=65b536a4
+	id Tojgru9GHbhW6TojhrTmuz; Sat, 27 Jan 2024 19:53:05 +0000
+X-Authority-Analysis: v=2.4 cv=aLPjFJxm c=1 sm=1 tr=0 ts=65b55f21
  a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=IkcTkHD0fZMA:10 a=dEuoMetlWLkA:10 a=wYkD_t78qR0A:10 a=pGLkceISAAAA:8
- a=Q-fNiiVtAAAA:8 a=VwQbUJbxAAAA:8 a=bUQKSiCPAAAA:8 a=QyXUC8HyAAAA:8
- a=PW-KNzBFAAAA:8 a=cm27Pg_UAAAA:8 a=6yXzRheOZm4xIp2CHuAA:9 a=QEXdDO2ut3YA:10
- a=Fp8MccfUoT0GBdDC_Lng:22 a=AjGcO6oz07-iQ99wixmX:22 a=-fHZXUhsFbuwFN3fwQAr:22
- a=84zbTXrhsdUYOv-GFPQN:22 a=xmb-EsYY8bH0VWELuYED:22
+ a=IkcTkHD0fZMA:10 a=dEuoMetlWLkA:10 a=wYkD_t78qR0A:10 a=cm27Pg_UAAAA:8
+ a=P8i5SpKGxzEw1qT2wqIA:9 a=QEXdDO2ut3YA:10 a=xmb-EsYY8bH0VWELuYED:22
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
 	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
 	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
 	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=9Zbt/e+APJP7cVqXJui/sSNmCdYs0CvPuBfHjlhyExs=; b=DqTH99eKql8bHd8s9fzjBRlgqQ
-	u5EzTJ+TQ3woLGulNCBKdYCKfkbZnCp4qgKUnjdzM37BM+GxBuLAdbof/Rj1W3Pwbh0PfG1S/eU0o
-	D8EgyT3OTSmKjZzbWr+1IBJRs+nxwIKd0jstmbqyh5QEJ7fiYfeoRvnr0suVWRv6U0BDDRiSwVpQL
-	Mx5zdLoxWdbYjlvcDHe+8tlzj0ripS9sRJlLgNGXKnnh2ShInfSHERao+YUxniaqTozAQXj3ceD+v
-	sDl93PgB+QQc1O9PwDOE00CRGMpOfot4mmMNbntzJ+ZKNQkDdooddNwZNTbw/OqFMZaS5jPbUM0v8
-	h99djU6A==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:48528 helo=[192.168.15.10])
+	bh=UvcAktpMm8n8yFtE4REBgJw4NqtWj+ffqzp2qlJjMOk=; b=dwg4EtImrINVyEC5ecBDCGzcHH
+	7KCOgo/sxT2xCao0cEZ5/Ifd0abNu+vvHDWXTp1EMSxNcJd7q0LoysTtJhvZqKWMJnplmr+iYykbC
+	t8fYtJ17TjSdHKmC/Yz/FX6B9vV7aoJMESVvCfPzwF1fWfZLuNqRsdts4TxRfPoNA6NACEwGQaXnK
+	xfuObyWFatqjiliDF3VG99+DvBVDo+Tp7bSeazW7pGfFL7pGp6Hdmcf26ZuMx3UJZ5sBXSULo7eLj
+	Ft9CMYbYK4Om97s58eLa2IQq5DyfLQdR64whNUSnJ+IcJHfyL06RSotRf6UHLljAy/xg0KFiOmT8H
+	tn07v0JA==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:55292 helo=[192.168.15.10])
 	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.96.2)
 	(envelope-from <gustavo@embeddedor.com>)
-	id 1rTm2R-001sE1-0h;
-	Sat, 27 Jan 2024 11:00:15 -0600
-Message-ID: <380ac5df-017b-47cf-a039-c60eb4eba39d@embeddedor.com>
-Date: Sat, 27 Jan 2024 11:00:12 -0600
+	id 1rToje-000TwO-2q;
+	Sat, 27 Jan 2024 13:53:02 -0600
+Message-ID: <0c4cc1a7-f409-4597-b110-81f9e45d1ffe@embeddedor.com>
+Date: Sat, 27 Jan 2024 13:53:00 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -56,24 +53,28 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] wifi: brcmfmac: Adjust n_channels usage for __counted_by
+Subject: Re: [GIT PULL] Enable -Wstringop-overflow globally
 Content-Language: en-US
-To: Kees Cook <keescook@chromium.org>, Arend van Spriel <aspriel@gmail.com>
-Cc: Franky Lin <franky.lin@broadcom.com>,
- Hante Meuleman <hante.meuleman@broadcom.com>, Kalle Valo <kvalo@kernel.org>,
- Chi-hsien Lin <chi-hsien.lin@infineon.com>, Ian Lin <ian.lin@infineon.com>,
- Johannes Berg <johannes.berg@intel.com>,
- Wright Feng <wright.feng@cypress.com>, Hector Martin <marcan@marcan.st>,
- linux-wireless@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>,
- Jisoo Jang <jisoo.jang@yonsei.ac.kr>, Hans de Goede <hdegoede@redhat.com>,
- Aloka Dixit <quic_alokad@quicinc.com>, John Keeping <john@keeping.me.uk>,
- Jeff Johnson <quic_jjohnson@quicinc.com>, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20240126223150.work.548-kees@kernel.org>
+To: David Laight <David.Laight@ACULAB.COM>,
+ 'Linus Torvalds' <torvalds@linux-foundation.org>,
+ Kees Cook <keescook@chromium.org>, Lucas De Marchi
+ <lucas.demarchi@intel.com>, Oded Gabbay <ogabbay@kernel.org>,
+ =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ intel-xe@lists.freedesktop.org,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+References: <Za6JwRpknVIlfhPF@work>
+ <CAHk-=wjG4jdE19-vWWhAX3ByfbNr4DJS-pwiN9oY38WkhMZ57g@mail.gmail.com>
+ <4907a7a3-8533-480a-bc3c-488573e18e66@embeddedor.com>
+ <202401261423.7AF702239@keescook>
+ <CAHk-=wiaaCatzmF6GXxP97pa8oEX7e4rBpd4JgsbKex3Ek1_9A@mail.gmail.com>
+ <f00e15fcba05497a87e91182a33c888f@AcuMS.aculab.com>
 From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20240126223150.work.548-kees@kernel.org>
+In-Reply-To: <f00e15fcba05497a87e91182a33c888f@AcuMS.aculab.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
@@ -84,73 +85,70 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 187.162.21.192
 X-Source-L: No
-X-Exim-ID: 1rTm2R-001sE1-0h
+X-Exim-ID: 1rToje-000TwO-2q
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:48528
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:55292
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
+X-Email-Count: 4
 X-Org: HG=hgshared;ORG=hostgator;
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfLcNGDuQ4HaNepaA7rJRKF0uRbCAiYNSxQjN5850vI9ZsScGcBX36/cYAmkRtJuvhYk9pvEhLy7wOj4FBKgArLVMxIlYR2xDY+f3d5/Iv8QvipB4voD9
- EO6WyawDAdRfTP7yzPHA65h3DrZ4OTcyHVVDArC28bvuF8JQ5hg6ILmNnL9GWU4p1+Kl1MflFFp62OrXsAv9+VCc9pN3rNhKfY4SyQqjoWM37XGURGoYTV/o
+X-CMAE-Envelope: MS4xfO3U3F1w2xDVHNCBa/7Oihr9yeT6JP193dydAQ7yTnygu/l/kYb59p4wfH22o5pqzfi3F1fwR0tseZUMc2wRD8l1WUsm90zO8XODbuQkYfyM7KfbWOXo
+ iUzDKzUjUyb/i3Z30ySyW8GB08tnZpSwloScdWeVpT3skSiLbQyH6sY1ey9NfmGJCOS8U3ocn94FAEC2M4Gkjfrb/z3PCGD53hWPV3Qvk9cF8bGqjHx+wR68
 
 
 
-On 1/26/24 16:31, Kees Cook wrote:
-> After commit e3eac9f32ec0 ("wifi: cfg80211: Annotate struct
-> cfg80211_scan_request with __counted_by"), the compiler may enforce
-> dynamic array indexing of req->channels to stay below n_channels. As a
-> result, n_channels needs to be increased _before_ accessing the newly
-> added array index. Increment it first, then use "i" for the prior index.
-> Solves this warning in the coming GCC that has __counted_by support:
+On 1/27/24 09:11, David Laight wrote:
+> From: Linus Torvalds
+>> Sent: 26 January 2024 22:36
+>>
+>> On Fri, 26 Jan 2024 at 14:24, Kees Cook <keescook@chromium.org> wrote:
+>>>
+>>> I think xe has some other weird problems too. This may be related (under
+>>> allocating):
+>>>
+>>> ../drivers/gpu/drm/xe/xe_vm.c: In function 'xe_vma_create':
+>>> ../drivers/gpu/drm/xe/xe_vm.c:806:21: warning: allocation of insufficient size '224' for type
+>> 'struct xe_vma' with size '368' [-Walloc-size]
+>>>    806 |                 vma = kzalloc(sizeof(*vma) - sizeof(struct xe_userptr),
+>>>        |                     ^
+>>
+>> That code is indeed odd, but there's a comment in the xe_vma definition
+>>
+>>          /**
+>>           * @userptr: user pointer state, only allocated for VMAs that are
+>>           * user pointers
+>>           */
+>>          struct xe_userptr userptr;
+>>
+>> although I agree that it should probably simply be made a final
+>> variably-sized array instead (and then you make that array size be
+>> 0/1).
 > 
-> ../drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c: In function 'brcmf_internal_escan_add_info':
-> ../drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c:3783:46: warning: operation on 'req->
-> n_channels' may be undefined [-Wsequence-point]
->   3783 |                 req->channels[req->n_channels++] = chan;
->        |                               ~~~~~~~~~~~~~~~^~
+> That entire code is odd.
+> It isn't obvious that the flag values that cause the short allocate
+> are the same ones that control whether the extra data is accessed.
 > 
-> Fixes: e3eac9f32ec0 ("wifi: cfg80211: Annotate struct cfg80211_scan_request with __counted_by")
-> Cc: Arend van Spriel <aspriel@gmail.com>
-> Cc: Franky Lin <franky.lin@broadcom.com>
-> Cc: Hante Meuleman <hante.meuleman@broadcom.com>
-> Cc: Kalle Valo <kvalo@kernel.org>
-> Cc: Chi-hsien Lin <chi-hsien.lin@infineon.com>
-> Cc: Ian Lin <ian.lin@infineon.com>
-> Cc: Johannes Berg <johannes.berg@intel.com>
-> Cc: Wright Feng <wright.feng@cypress.com>
-> Cc: Hector Martin <marcan@marcan.st>
-> Cc: linux-wireless@vger.kernel.org
-> Cc: brcm80211-dev-list.pdl@broadcom.com
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Never mind the oddities with the 'flags |= ' assignments int the
+> 'remap next' path.
+> 
+> Anyone know how many of these actually get allocated (and their
+> lifetimes)?
+> How much difference would it make to allocate 368 (maybe 384?)
+> bytes instead of 224 (likely 256).
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+[CC+ xen list and maintainers]
 
-Thanks!
--- 
+Probably the xen maintainer can help us out here.
+
+--
 Gustavo
 
-> ---
->   drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c | 6 ++++--
->   1 file changed, 4 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-> index 133c5ea6429c..28d6a30cc010 100644
-> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-> @@ -3779,8 +3779,10 @@ static int brcmf_internal_escan_add_info(struct cfg80211_scan_request *req,
->   		if (req->channels[i] == chan)
->   			break;
->   	}
-> -	if (i == req->n_channels)
-> -		req->channels[req->n_channels++] = chan;
-> +	if (i == req->n_channels) {
-> +		req->n_channels++;
-> +		req->channels[i] = chan;
-> +	}
->   
->   	for (i = 0; i < req->n_ssids; i++) {
->   		if (req->ssids[i].ssid_len == ssid_len &&
+> 	David
+> 
+> -
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+> Registration No: 1397386 (Wales)
