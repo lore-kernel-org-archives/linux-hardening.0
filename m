@@ -1,154 +1,93 @@
-Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3FD72E62B
-	for <linux-hardening@vger.kernel.org>; Sat, 27 Jan 2024 19:53:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A21EB645
+	for <linux-hardening@vger.kernel.org>; Sun, 28 Jan 2024 00:18:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706385189; cv=none; b=BiO8UJrWf3TahTyO+GNqOOLBKvX0MmaU1te/KzPgE+Pd9K/ogz+eCX07BIWJYC8VFL5EcXP49iK7o+Y9LkRcerPmHQlXVNyYbveDRIsaMpQOb/lyWZSJ78O2vhgghZx02vlLzLb4O2HVGplLKBmdH4xbrufcMVvUv1ySUrLQf4w=
+	t=1706401088; cv=none; b=BXbF8U+YPBMD9+hDAUez5Ec8ApAcM2SxBNGGpsTFVocKK+MykaaUqhvFFGDsR2ig+Ezj53GhIYBHBoOz/mVuheIZBKSVER/6Vm8KG4I5FCczIz9ifRub46btXTGISlF4rav5dKpcqu2encr+DDq0ONmBKX9Wx7yaqgCCiuFtL7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706385189; c=relaxed/simple;
-	bh=FZmVXFIdapL7iu8nX4400qTZyydoADV9EaSrJyaqFfk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YSBYXaoMmF1xLdlTD5+qHflC0m+IkxhSEHjU4QXQyKtiUgPLj3tbHpZcTccA8PDIjEtHYYepi+NFxCfhfczh97kl20RcF1HX5RwYXm4TkApA2FQZyFlhwKBTufcX2ozmzl4OrjqsMY1pdcMRWI4gv626QVhhKPZSf5TGlyqU6jA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=dwg4EtIm; arc=none smtp.client-ip=35.89.44.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1706401088; c=relaxed/simple;
+	bh=j5U43ZFbCsJb6lHwAcl1F4qcbBRnNSRS/V/qvHROetk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=g8x7xYcLwcUH8dlNRIlzJE8uulVG0Xs/Ef1dlbmh9sJ92iFCPNQTbHrlMcrg0zwZNOZ5CMxTNU1gIrZggsxKqcgHDOXA+x+efEYZjLrYiecYL7KWuQ7GbSiiKco9EnbgWIdujIDHYxeDzSCTPIWyV/cLk5nIRK0vVGEWq+9dd6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JPsBH+Bc; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="dwg4EtIm"
-Received: from eig-obgw-5010a.ext.cloudfilter.net ([10.0.29.199])
-	by cmsmtp with ESMTPS
-	id Te4ir9xpJMVQiTojirXuHZ; Sat, 27 Jan 2024 19:53:06 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id Tojgru9GHbhW6TojhrTmuz; Sat, 27 Jan 2024 19:53:05 +0000
-X-Authority-Analysis: v=2.4 cv=aLPjFJxm c=1 sm=1 tr=0 ts=65b55f21
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=IkcTkHD0fZMA:10 a=dEuoMetlWLkA:10 a=wYkD_t78qR0A:10 a=cm27Pg_UAAAA:8
- a=P8i5SpKGxzEw1qT2wqIA:9 a=QEXdDO2ut3YA:10 a=xmb-EsYY8bH0VWELuYED:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=UvcAktpMm8n8yFtE4REBgJw4NqtWj+ffqzp2qlJjMOk=; b=dwg4EtImrINVyEC5ecBDCGzcHH
-	7KCOgo/sxT2xCao0cEZ5/Ifd0abNu+vvHDWXTp1EMSxNcJd7q0LoysTtJhvZqKWMJnplmr+iYykbC
-	t8fYtJ17TjSdHKmC/Yz/FX6B9vV7aoJMESVvCfPzwF1fWfZLuNqRsdts4TxRfPoNA6NACEwGQaXnK
-	xfuObyWFatqjiliDF3VG99+DvBVDo+Tp7bSeazW7pGfFL7pGp6Hdmcf26ZuMx3UJZ5sBXSULo7eLj
-	Ft9CMYbYK4Om97s58eLa2IQq5DyfLQdR64whNUSnJ+IcJHfyL06RSotRf6UHLljAy/xg0KFiOmT8H
-	tn07v0JA==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:55292 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rToje-000TwO-2q;
-	Sat, 27 Jan 2024 13:53:02 -0600
-Message-ID: <0c4cc1a7-f409-4597-b110-81f9e45d1ffe@embeddedor.com>
-Date: Sat, 27 Jan 2024 13:53:00 -0600
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JPsBH+Bc"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-5ffe7e7b7b3so15189607b3.3
+        for <linux-hardening@vger.kernel.org>; Sat, 27 Jan 2024 16:18:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706401085; x=1707005885; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=j5U43ZFbCsJb6lHwAcl1F4qcbBRnNSRS/V/qvHROetk=;
+        b=JPsBH+Bc4/47Z68FUI6jiqsHxV1njVROINNaI1NehFG1rl3cqvLilZP4eGMPS5umSo
+         UIcXlJ787OJVMZBI9tDkRKkY+e7Jn5HQp3cngQrfkT75uNBbC86BgjSxdO64znnEJaXP
+         6S5XI6DfmAaM5gnUPz2VUpXeCY8ohE8HGISUaUddTCWvo9ewy+xfN6jzKsiI2v+wKZm2
+         OZ0x1FlKBMDUQKDsL2EWFQWT7kk78gSjYXH9UitPp2JwLpZWZ18MGLaRhUuI+QWNNCKU
+         Khbroirwv+pfui/m21yKITAxx3qEFoCMk4zNBvAhnxldFwdUH/5GsuJILsJaOiVULiSp
+         ztNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706401085; x=1707005885;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=j5U43ZFbCsJb6lHwAcl1F4qcbBRnNSRS/V/qvHROetk=;
+        b=HrXw28etxT22yX5XiwBTH+diocEbptDt5iLOaioCSd7r9Q3/kmWPxYeFsAmT3R+ZoT
+         CMbQBoSsHAjNoa6vMZhfNQQDbHuK3TXr/8sZl9NK5kGz4c1xWOnm1z7AKAzrcMRDWK0I
+         9Vhn1VnlTZplstVuFice5u7B+KmijAYzn03t0gy5jw45oXCb1qrNKWxGaA22ZgVm6PBy
+         fBZR2PXsAIKUSMRXlvnTpa5LFE4KXsHYYXIM5HxXheZYtX9+PvRRAE7svP0t+rkJrZmt
+         op/0J7Vqd8anwFiDEANUhWjIlepSh2cNgInAMLUjCkv6LG2zUAh+/Fqk5pxJl3wzoUW8
+         T1bQ==
+X-Gm-Message-State: AOJu0YwAsF5VjsFxRlDdSajAZLQdt6Jc6hkBP+etS09DTwFgJa+h2BRt
+	UVMP2s/U2zbiu747hw22ZCEI//9Zf21Zsm2Cu8vumDoJTdhjmtq6l5QNikELPsXPQeCPsVapoMb
+	NJCnklpLoWINtqO/3qKFCdxjYTddamFnkdTWMAw==
+X-Google-Smtp-Source: AGHT+IH8cZ3Ct9kEcx0+uVZJo7csWTgzm3s0Y94pW37sweJX/O3Hp57cxCEs9DZdU0aHUa91xmfqMSQTphzmO4zwC2k=
+X-Received: by 2002:a81:a784:0:b0:5ff:95a8:953 with SMTP id
+ e126-20020a81a784000000b005ff95a80953mr1717410ywh.75.1706401085482; Sat, 27
+ Jan 2024 16:18:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [GIT PULL] Enable -Wstringop-overflow globally
-Content-Language: en-US
-To: David Laight <David.Laight@ACULAB.COM>,
- 'Linus Torvalds' <torvalds@linux-foundation.org>,
- Kees Cook <keescook@chromium.org>, Lucas De Marchi
- <lucas.demarchi@intel.com>, Oded Gabbay <ogabbay@kernel.org>,
- =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- intel-xe@lists.freedesktop.org,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-References: <Za6JwRpknVIlfhPF@work>
- <CAHk-=wjG4jdE19-vWWhAX3ByfbNr4DJS-pwiN9oY38WkhMZ57g@mail.gmail.com>
- <4907a7a3-8533-480a-bc3c-488573e18e66@embeddedor.com>
- <202401261423.7AF702239@keescook>
- <CAHk-=wiaaCatzmF6GXxP97pa8oEX7e4rBpd4JgsbKex3Ek1_9A@mail.gmail.com>
- <f00e15fcba05497a87e91182a33c888f@AcuMS.aculab.com>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <f00e15fcba05497a87e91182a33c888f@AcuMS.aculab.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1rToje-000TwO-2q
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:55292
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 4
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfO3U3F1w2xDVHNCBa/7Oihr9yeT6JP193dydAQ7yTnygu/l/kYb59p4wfH22o5pqzfi3F1fwR0tseZUMc2wRD8l1WUsm90zO8XODbuQkYfyM7KfbWOXo
- iUzDKzUjUyb/i3Z30ySyW8GB08tnZpSwloScdWeVpT3skSiLbQyH6sY1ey9NfmGJCOS8U3ocn94FAEC2M4Gkjfrb/z3PCGD53hWPV3Qvk9cF8bGqjHx+wR68
+References: <20240119181909.7079-1-erick.archer@gmx.com>
+In-Reply-To: <20240119181909.7079-1-erick.archer@gmx.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Sun, 28 Jan 2024 01:17:54 +0100
+Message-ID: <CACRpkdaDyF-ujRfsKWvbXrs695yTStpmFm=QovU1bnONyOCn9g@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: pinctrl-zynqmp: Use devm_kcalloc() instead of devm_kzalloc()
+To: Erick Archer <erick.archer@gmx.com>
+Cc: Michal Simek <michal.simek@amd.com>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Jan 19, 2024 at 7:19=E2=80=AFPM Erick Archer <erick.archer@gmx.com>=
+ wrote:
 
+> As noted in the "Deprecated Interfaces, Language Features, Attributes,
+> and Conventions" documentation [1], size calculations (especially
+> multiplication) should not be performed in memory allocator (or similar)
+> function arguments due to the risk of them overflowing. This could lead
+> to values wrapping around and a smaller allocation being made than the
+> caller was expecting. Using those allocations could lead to linear
+> overflows of heap memory and other misbehaviors.
+>
+> So, use the purpose specific devm_kcalloc() function instead of the
+> argument size * count in the devm_kzalloc() function.
+>
+> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-c=
+oded-arithmetic-in-allocator-arguments [1]
+> Link: https://github.com/KSPP/linux/issues/162
+> Signed-off-by: Erick Archer <erick.archer@gmx.com>
 
-On 1/27/24 09:11, David Laight wrote:
-> From: Linus Torvalds
->> Sent: 26 January 2024 22:36
->>
->> On Fri, 26 Jan 2024 at 14:24, Kees Cook <keescook@chromium.org> wrote:
->>>
->>> I think xe has some other weird problems too. This may be related (under
->>> allocating):
->>>
->>> ../drivers/gpu/drm/xe/xe_vm.c: In function 'xe_vma_create':
->>> ../drivers/gpu/drm/xe/xe_vm.c:806:21: warning: allocation of insufficient size '224' for type
->> 'struct xe_vma' with size '368' [-Walloc-size]
->>>    806 |                 vma = kzalloc(sizeof(*vma) - sizeof(struct xe_userptr),
->>>        |                     ^
->>
->> That code is indeed odd, but there's a comment in the xe_vma definition
->>
->>          /**
->>           * @userptr: user pointer state, only allocated for VMAs that are
->>           * user pointers
->>           */
->>          struct xe_userptr userptr;
->>
->> although I agree that it should probably simply be made a final
->> variably-sized array instead (and then you make that array size be
->> 0/1).
-> 
-> That entire code is odd.
-> It isn't obvious that the flag values that cause the short allocate
-> are the same ones that control whether the extra data is accessed.
-> 
-> Never mind the oddities with the 'flags |= ' assignments int the
-> 'remap next' path.
-> 
-> Anyone know how many of these actually get allocated (and their
-> lifetimes)?
-> How much difference would it make to allocate 368 (maybe 384?)
-> bytes instead of 224 (likely 256).
+Patch applied!
 
-[CC+ xen list and maintainers]
-
-Probably the xen maintainer can help us out here.
-
---
-Gustavo
-
-> 
-> 	David
-> 
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-> Registration No: 1397386 (Wales)
+Yours,
+Linus Walleij
