@@ -1,93 +1,184 @@
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A21EB645
-	for <linux-hardening@vger.kernel.org>; Sun, 28 Jan 2024 00:18:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7EF11EB23;
+	Sun, 28 Jan 2024 10:29:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706401088; cv=none; b=BXbF8U+YPBMD9+hDAUez5Ec8ApAcM2SxBNGGpsTFVocKK+MykaaUqhvFFGDsR2ig+Ezj53GhIYBHBoOz/mVuheIZBKSVER/6Vm8KG4I5FCczIz9ifRub46btXTGISlF4rav5dKpcqu2encr+DDq0ONmBKX9Wx7yaqgCCiuFtL7A=
+	t=1706437799; cv=none; b=EZp/1cRZ8PkraJrgndb3/iNqDofcBF57TyZi+4DLauS7gsETprNI6YM9K4zHtJqYmhbmQFB1oZpcCNY92DGCpAAAYcRNHxVXzUi4I16GnvQMFoQf/0yFkaes1r4v/W02D0G4DTmPG0h/mfksInWbPkEhKL1H3Nsqv9Yx6DtXHFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706401088; c=relaxed/simple;
-	bh=j5U43ZFbCsJb6lHwAcl1F4qcbBRnNSRS/V/qvHROetk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=g8x7xYcLwcUH8dlNRIlzJE8uulVG0Xs/Ef1dlbmh9sJ92iFCPNQTbHrlMcrg0zwZNOZ5CMxTNU1gIrZggsxKqcgHDOXA+x+efEYZjLrYiecYL7KWuQ7GbSiiKco9EnbgWIdujIDHYxeDzSCTPIWyV/cLk5nIRK0vVGEWq+9dd6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JPsBH+Bc; arc=none smtp.client-ip=209.85.128.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706437799; c=relaxed/simple;
+	bh=5rF8LoO+tyQ83knbEjawZi7tXkhPE9yqcUuV6GRhvZY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cblTGd0kWU8Gk8NbmoU8D+8KcR6EGX8/HXEaTK+/fViOE9Uf1wceV5I8mdk45YPOpp3zsCc9mwOjGOxZonGK5tYByNqha5eO2F4rB4UPCwDNDjcTjZ+5bzQdgK+YdJzksqLRS81yw8hctW3sRDVZc9HK46NehQWr2b+n0jZiCLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b=f5LNqP6m; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JPsBH+Bc"
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-5ffe7e7b7b3so15189607b3.3
-        for <linux-hardening@vger.kernel.org>; Sat, 27 Jan 2024 16:18:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706401085; x=1707005885; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=j5U43ZFbCsJb6lHwAcl1F4qcbBRnNSRS/V/qvHROetk=;
-        b=JPsBH+Bc4/47Z68FUI6jiqsHxV1njVROINNaI1NehFG1rl3cqvLilZP4eGMPS5umSo
-         UIcXlJ787OJVMZBI9tDkRKkY+e7Jn5HQp3cngQrfkT75uNBbC86BgjSxdO64znnEJaXP
-         6S5XI6DfmAaM5gnUPz2VUpXeCY8ohE8HGISUaUddTCWvo9ewy+xfN6jzKsiI2v+wKZm2
-         OZ0x1FlKBMDUQKDsL2EWFQWT7kk78gSjYXH9UitPp2JwLpZWZ18MGLaRhUuI+QWNNCKU
-         Khbroirwv+pfui/m21yKITAxx3qEFoCMk4zNBvAhnxldFwdUH/5GsuJILsJaOiVULiSp
-         ztNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706401085; x=1707005885;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=j5U43ZFbCsJb6lHwAcl1F4qcbBRnNSRS/V/qvHROetk=;
-        b=HrXw28etxT22yX5XiwBTH+diocEbptDt5iLOaioCSd7r9Q3/kmWPxYeFsAmT3R+ZoT
-         CMbQBoSsHAjNoa6vMZhfNQQDbHuK3TXr/8sZl9NK5kGz4c1xWOnm1z7AKAzrcMRDWK0I
-         9Vhn1VnlTZplstVuFice5u7B+KmijAYzn03t0gy5jw45oXCb1qrNKWxGaA22ZgVm6PBy
-         fBZR2PXsAIKUSMRXlvnTpa5LFE4KXsHYYXIM5HxXheZYtX9+PvRRAE7svP0t+rkJrZmt
-         op/0J7Vqd8anwFiDEANUhWjIlepSh2cNgInAMLUjCkv6LG2zUAh+/Fqk5pxJl3wzoUW8
-         T1bQ==
-X-Gm-Message-State: AOJu0YwAsF5VjsFxRlDdSajAZLQdt6Jc6hkBP+etS09DTwFgJa+h2BRt
-	UVMP2s/U2zbiu747hw22ZCEI//9Zf21Zsm2Cu8vumDoJTdhjmtq6l5QNikELPsXPQeCPsVapoMb
-	NJCnklpLoWINtqO/3qKFCdxjYTddamFnkdTWMAw==
-X-Google-Smtp-Source: AGHT+IH8cZ3Ct9kEcx0+uVZJo7csWTgzm3s0Y94pW37sweJX/O3Hp57cxCEs9DZdU0aHUa91xmfqMSQTphzmO4zwC2k=
-X-Received: by 2002:a81:a784:0:b0:5ff:95a8:953 with SMTP id
- e126-20020a81a784000000b005ff95a80953mr1717410ywh.75.1706401085482; Sat, 27
- Jan 2024 16:18:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="f5LNqP6m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
+	s=s31663417; t=1706437785; x=1707042585; i=erick.archer@gmx.com;
+	bh=5rF8LoO+tyQ83knbEjawZi7tXkhPE9yqcUuV6GRhvZY=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:
+	 In-Reply-To;
+	b=f5LNqP6mmxF9MfqjweX5YmzCesuLn7rawarp/tHROWZdBgS5wxQlScV5+Tp/kxDa
+	 Dphkd0ecmogABQqACYLrejBlRNL9WcdrLg02Mr0rj4W7GHgsVKzO7k84TdK/0oq2L
+	 1wxvqKRXlymwZsuv689TSVF5bNuHSUdEDFjtdk1B0MYoVH1IMnOw8zuCWOJjVsamZ
+	 BFbpPBggCDkGs8jOXIFA6r38mwzt+NCWV6vi4zcNwqB33R8bR7fXfdi51H/Bov+GH
+	 3sV+bURw771/Y3UOCzLxyqn5/njXzMEtyNncfQZaHgUYETHF6jXLbEIGhuvtp5rRN
+	 IXxAoj0kxndnww+W4A==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from titan ([79.157.194.183]) by mail.gmx.net (mrgmx104
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1N6bfq-1qzy583tTq-01807N; Sun, 28
+ Jan 2024 11:29:45 +0100
+Date: Sun, 28 Jan 2024 11:29:33 +0100
+From: Erick Archer <erick.archer@gmx.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Erick Archer <erick.archer@gmx.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Jeffrey Hugo <quic_jhugo@quicinc.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] bus: mhi: ep: Use kcalloc() instead of kzalloc()
+Message-ID: <20240128102933.GA2800@titan>
+References: <20240120152518.13006-1-erick.archer@gmx.com>
+ <43614a09-d520-4111-873a-b352bd93ea07@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240119181909.7079-1-erick.archer@gmx.com>
-In-Reply-To: <20240119181909.7079-1-erick.archer@gmx.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Sun, 28 Jan 2024 01:17:54 +0100
-Message-ID: <CACRpkdaDyF-ujRfsKWvbXrs695yTStpmFm=QovU1bnONyOCn9g@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: pinctrl-zynqmp: Use devm_kcalloc() instead of devm_kzalloc()
-To: Erick Archer <erick.archer@gmx.com>
-Cc: Michal Simek <michal.simek@amd.com>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <43614a09-d520-4111-873a-b352bd93ea07@moroto.mountain>
+X-Provags-ID: V03:K1:ZdbxvZ0Mn/OkNmxnpyI6tcO9iODEyBjoc6VyPzhHpVtBsH0+gWL
+ poErAPG+L3g1f8DvFqBDN2C34AT4y/5so3j0v5hP7DxYI06IqzdnsfMFRShvwNkUTOJa0iC
+ hBBXf/WIB9/ViwDVwNwymW5trSxc8B3W/Rn7ikuxSE2hIrafzDdwyaFS1/MrKTMzeeTyrWi
+ E4CiV7w+uG0U83JwT6xZg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Q3/bpQWk/cw=;zveX/XHwfQYoL9WZ3UioPfEM/Tp
+ xxGX7AUHZW34Nn5+GSKI2ZfBTKf2YuizqDv6nVRiXN2GNmGtHWWkS/gP1ir4rdJjBVwdFOpBn
+ 2f2k4dODbfk1Fo9nZZ8ieql2sT8R6UDeAM0y4uio8l7y50ozF+u+PHHn86s/SD60LBra8e451
+ mEWXLXg5TIjLmegrad/WA3GHwhRfE7YbVc+JBOGWUV/owimFMKhG+Jo6VHhVwPomewB/VFxfG
+ kS4BKioeuOu04B7Ohv0Ucoa7GZqrQSGsUR0zEIaRKiZkJ706SNc5GcjTVNvBcdX8F7gcVXXTZ
+ VwkxMx5nwq0t0fpz7i2zB0GGKh8/7kF/6Xtb9SGdypQFaNQgE+ohqzw7XlcUQIBTi25hcI4NA
+ xms4Owvs0ygrwcmyE05+w88S1JJzo7bTTtYbrtyP7GYPNEsP/qKXNM+eozJI5j+dOM0q0671I
+ Ju6+25h/rPgb8CKzmIEphJ5C/z5SgrjNLmHCxxJ0ZLlbRMwh4q7N6dizJ/TJlPNITz6JB5krO
+ lYqeztCIwqFCNeEUCTbE5zOs/RDalgvuJpXrEkNsrZfH/dR/Z0BxFFduYOOWqVH0yMWSmK/K6
+ ddWdfn9r43HsUCw2+GciMObPVdFZyvVJy+ps3XtCQYJ1MWx4xt4wOMl3MeHNB+cTqt3LP1vNj
+ OkPcFnreI49ZxTHpF1nvI0/R9VnAUdmVyv4vPkWfshXREI2x3FdAe4vydVTrkDHShvgGso8SD
+ pESWEy0MmV4M92JHnwcZZyQQ3FLBe6LKeQ3hXim/a2aUP4uowCQEi0YLSWssngQMl30abNzLH
+ 4+Ov52ORPtWYqtdpuO6n5zib60YwE1uebRMQfYU/8PD1yDHCXSsivloxaArNfaGFj856Lqs3t
+ 9O4lbzPWHDSm0GNFTeMC9Hi6OIxMg9x0pqXjSexC5e2eci+0xwac3kBHhstBY7+UHEXuOdSbO
+ bw368zUr7Vc17rT6x2+0vQ0lTY4=
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 19, 2024 at 7:19=E2=80=AFPM Erick Archer <erick.archer@gmx.com>=
- wrote:
+Hi Dan,
 
-> As noted in the "Deprecated Interfaces, Language Features, Attributes,
-> and Conventions" documentation [1], size calculations (especially
-> multiplication) should not be performed in memory allocator (or similar)
-> function arguments due to the risk of them overflowing. This could lead
-> to values wrapping around and a smaller allocation being made than the
-> caller was expecting. Using those allocations could lead to linear
-> overflows of heap memory and other misbehaviors.
+On Mon, Jan 22, 2024 at 10:15:20AM +0300, Dan Carpenter wrote:
+> This code does not have an integer overflow, but it might have a
+> different memory corruption bug.
+
+I don't see this possible memory corruption bug. More info below.
+
+> On Sat, Jan 20, 2024 at 04:25:18PM +0100, Erick Archer wrote:
+> > As noted in the "Deprecated Interfaces, Language Features, Attributes,
+> > and Conventions" documentation [1], size calculations (especially
+> > multiplication) should not be performed in memory allocator (or simila=
+r)
+> > function arguments due to the risk of them overflowing. This could lea=
+d
+> > to values wrapping around and a smaller allocation being made than the
+> > caller was expecting. Using those allocations could lead to linear
+> > overflows of heap memory and other misbehaviors.
+> >
+> > So, use the purpose specific kcalloc() function instead of the argumen=
+t
+> > count * size in the kzalloc() function.
+> >
 >
-> So, use the purpose specific devm_kcalloc() function instead of the
-> argument size * count in the devm_kzalloc() function.
+> This one is more complicated to analyze.  I have built a Smatch cross
+> function database so it's easy for me and I will help you.
 >
-> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-c=
-oded-arithmetic-in-allocator-arguments [1]
-> Link: https://github.com/KSPP/linux/issues/162
-> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+> $ smbd.py where mhi_ep_cntrl event_rings
+> drivers/pci/endpoint/functions/pci-epf-mhi.c | pci_epf_mhi_probe        =
+      | (struct mhi_ep_cntrl)->event_rings | 0
+> drivers/bus/mhi/ep/main.c      | mhi_ep_irq                     | (struc=
+t mhi_ep_cntrl)->event_rings | min-max
+> drivers/bus/mhi/ep/mmio.c      | mhi_ep_mmio_init               | (struc=
+t mhi_ep_cntrl)->event_rings | 0-255
+> drivers/bus/mhi/ep/mmio.c      | mhi_ep_mmio_update_ner         | (struc=
+t mhi_ep_cntrl)->event_rings | 0-255
+>
+> The other way to figure this stuff out would be to do:
+>
+> $ grep -Rn "event_rings =3D " drivers/bus/mhi/ep/
+> drivers/bus/mhi/ep/mmio.c:260:  mhi_cntrl->event_rings =3D FIELD_GET(MHI=
+CFG_NER_MASK, regval);
+> drivers/bus/mhi/ep/mmio.c:261:  mhi_cntrl->hw_event_rings =3D FIELD_GET(=
+MHICFG_NHWER_MASK, regval);
+> drivers/bus/mhi/ep/mmio.c:271:  mhi_cntrl->event_rings =3D FIELD_GET(MHI=
+CFG_NER_MASK, regval);
+> drivers/bus/mhi/ep/mmio.c:272:  mhi_cntrl->hw_event_rings =3D FIELD_GET(=
+MHICFG_NHWER_MASK, regval);
+>
+> That means that this multiplication can never overflow so the patch
+> has no effect on runtime.  The patch is still useful because we don't
+> want every single person to have to do this analysis.  The kcalloc()
+> function is just safer and more obviously correct.
 
-Patch applied!
+Ok, I will send a v2 patch with more info in the commit message.
 
-Yours,
-Linus Walleij
+> It's a bit concerning that ->event_rings is set multiple times, but only
+> allocated one time.  It's either unnecessary or there is a potential
+> memory corruption bug.  If it's really necessary then there should be a
+> check that the new size is <=3D the size of the original buffer that we
+> allocated.
+
+The ->event_rings is set twice. In the mhi_ep_mmio_init function and in
+the mhi_ep_mmio_update_ner function.
+
+void mhi_ep_mmio_init(struct mhi_ep_cntrl *mhi_cntrl)
+{
+	[...]
+	mhi_cntrl->event_rings =3D FIELD_GET(MHICFG_NER_MASK, regval);
+	[...]
+}
+
+void mhi_ep_mmio_update_ner(struct mhi_ep_cntrl *mhi_cntrl)
+{
+	[...]
+	mhi_cntrl->event_rings =3D FIELD_GET(MHICFG_NER_MASK, regval);
+	[...]
+}
+
+But ->event_rings does not need to be allocated because the type is a u32.
+
+struct mhi_ep_cntrl {
+	[...]
+	u32 event_rings;
+	[...]
+};
+
+So, I don't know what you are trying to explain to me. I'm sorry.
+
+> I work in static analysis and I understand the struggle of trying to
+> understand code to see if static checker warnings are a real bug or not.
+> I'm not going to insist that you figure everything out, but I am asking
+> that you at least try.  If after spending ten minutes reading the code
+> you can't figure it out, then it's fine to write something like, "I
+> don't know whether this multiply can really overflow or not, but let's
+> make it safer by using kcalloc()."  You can put that sort of "I don't
+> know information" under the --- cut off line inf you want.
+
+Thanks a lot for the advices.
+
+Regards,
+Erick
+
+> regards,
+> dan carpenter
