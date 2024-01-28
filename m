@@ -1,50 +1,44 @@
 Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C4671EB3F;
-	Sun, 28 Jan 2024 11:27:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B17F623745;
+	Sun, 28 Jan 2024 11:52:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706441273; cv=none; b=KvfPPl1qV/2AxC9BdjdACC+mRbCTA51CbClIrKF87KcsLCk29qMhWvAr6tOG1IRCaXKGSN6JpBPTMO7N4v7Cnb3xSrKC2Ky1j9c346JQknOl0it4PFDrBnEoPoFzK6ceTOMtCfiryFSvX3bvYLMj1CBMvdslKtVEky3OXEvMFXM=
+	t=1706442779; cv=none; b=IHeN9//OB3QYHgFs1UEfz3syPJZBzVC5cK4SvACc7lScHxpIwvqXu29j1e143RLou4PoBTRvN59aAI9/axlJkUN0zOo1pIGEbHaZyUgMryM/xNv5aCpyXKNslleBAAY53BSzUdvkKGQ9ny4a3PF4SuCFHMMwS0WamH5263V+LOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706441273; c=relaxed/simple;
-	bh=0GN2Bv/A+IeP+4/5GEgM6WZAwRH4zVNjGdeSFF0auzQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mGRBcQd76tqU7FF81ANqFH3X1WSGDAEMkEbP/BPKbSpLdetVPXsJ1qdRjESTt2zSNSr/m7iUc+YfKhNCPrDOCcig9JzrpK1U/YwLgJ7Aczj4uKwHMCwZS+KfoZ4yxzDGHfRrP6QDLtuGWc9wCLNyQNXyGQmTeY9+De1ykgs96Mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b=G4Olv8bM; arc=none smtp.client-ip=212.227.15.15
+	s=arc-20240116; t=1706442779; c=relaxed/simple;
+	bh=8qgAYxoJEnz0fBm9iJvQjJPfTW90lqM8TrpQVaYANAU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iT011zMy6eRPGRvh4NAW6AAln1aAgEIIXvxr5UbNV2wZdXz2afuxzkwjgHvQdtp/VKG8UmsKl52GXgz3NuZBoXvhQkHrz9VvGxR5JbsDRcf3xXDD3Fnw1mpeBjCauuuO0Kb5suLdlxGQYGZ6ePGnYPZMOMrx/mjNvpFQCi/ij1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b=nVl1GD4e; arc=none smtp.client-ip=212.227.15.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="G4Olv8bM"
+	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="nVl1GD4e"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
-	s=s31663417; t=1706441260; x=1707046060; i=erick.archer@gmx.com;
-	bh=0GN2Bv/A+IeP+4/5GEgM6WZAwRH4zVNjGdeSFF0auzQ=;
+	s=s31663417; t=1706442770; x=1707047570; i=erick.archer@gmx.com;
+	bh=8qgAYxoJEnz0fBm9iJvQjJPfTW90lqM8TrpQVaYANAU=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-	b=G4Olv8bM0Zi01S4TiGpnwHeE0U5XBriX3S3E/Shuw47w/Qvj2/yGHhzXf8CTa/Gl
-	 mp+OqfWSRI2hSmBNBg+EF/2Vwq2EaXRBNm7qpLSAMMIKkPeSRuCjC5GjR8XGiWrzL
-	 V5ld8U8JsAvGsPHf6qpjTkCcczdZAdlQgKqqc6Fsz/at5JKHGaXXoJkUTb7d5ApDd
-	 N7SJ7vPn4eUEJUadomwcHHQQFesdj3YdgQzq5PqM9/bZK5zhpc3aB+T1gfG1qhVh4
-	 edrKSUnZ1A8B/jMsJW5+cvs/1spkiN6d8fAhs7kO6NXCYQyA6MUkNQ9PSNsz3t7Pi
-	 YdEjn3T4A2vlh5s33Q==
+	b=nVl1GD4eYpC6MnLtFA0UzYbsxUtHCpP4SFQ1CJzTGpfUzyEHjN2LB7T5RBvAhv6E
+	 9RvvjVO+Lj8jkkSOrMC8OyWRn1rnPZgEXqlqiULjQA2WqB7m0eIeLdvIw01U55+hZ
+	 1nEyHxiLWLSG7VJEywQgXu2102QMPYoOD5+2s9zN2sU6Kh4EZexqLQAxkgLfxRk4Q
+	 Lt+dNk82L3IBmop+fEiiGRLpqk0fIyFudgajxqkzG1dCgDI48r1uuR9gqnpgCJA5j
+	 DCgWrDNpSmxV6fy7xWZefyzG0zo0D44U1Y+9yaALoOkHVsE2fyNTHw4EgzkIjcXGa
+	 GJlznFKSGIXxosN7Mg==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from localhost.localdomain ([79.157.194.183]) by mail.gmx.net
- (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1MK3W0-1rmGQc12cQ-00LXk4; Sun, 28 Jan 2024 12:27:40 +0100
+ (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1MA7GS-1rMxFg0ZEw-00BeIA; Sun, 28 Jan 2024 12:52:50 +0100
 From: Erick Archer <erick.archer@gmx.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Jeffrey Hugo <quic_jhugo@quicinc.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Dan Carpenter <error27@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Alex Elder <elder@linaro.org>,
+To: Vinod Koul <vkoul@kernel.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>
 Cc: Erick Archer <erick.archer@gmx.com>,
-	linux-arm-msm@vger.kernel.org,
-	mhi@lists.linux.dev,
+	dmaengine@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v2] bus: mhi: ep: Use kcalloc() instead of kzalloc()
-Date: Sun, 28 Jan 2024 12:27:22 +0100
-Message-Id: <20240128112722.4334-1-erick.archer@gmx.com>
+Subject: [PATCH] dmaengine: pl08x: Use kcalloc() instead of kzalloc()
+Date: Sun, 28 Jan 2024 12:52:36 +0100
+Message-Id: <20240128115236.4791-1-erick.archer@gmx.com>
 X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -53,39 +47,57 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:EQoWUExa/DIBgOI20JFy4vw9y0S152bCMrw7Ds5pWGwDK66l/Vj
- f9UkZeFwkKUqiv4QVkTtx9qyixY68fZn6aE/SuEexl/57uXeVm9s/sxi3GpkfA1bPLR4tXt
- 9hEcQ801VXlcYJyOPtBsrU39GCI8Kp+rSOV24zdPPYu2RpBSlZM5+1rFkVblS6P5QMMu7j0
- lpHJ1dACELKUZ3Ue6sfZg==
+X-Provags-ID: V03:K1:RzKISSY/CLtSCejfdxskHKGt4rJ30dy5Yk/kNZCNg7MRaPI3vlW
+ Nv5dbh5aUMKwYCD7ONlvAabEiHNdT3bBzs8znGkP/YKzHZWTg5zc/xBdx9ufsPuPzKm0Em9
+ W6446vGNg0Y8Bxw5OCcPNCMjsXrVi4urUSEA/Vztze8EmhnzlP+ORc/IhLqnLRy3bYhXAoQ
+ R9OokhH7JTaC0q4SHbbrQ==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:QpCG4lROFyc=;IQKTYInMl7RWTyOg1TIUJUrtwut
- 460V792KEUzvomGrMCI4hki5D65XiZ4VSTNd/xXmS/6WZGyi7xIiPS+l8V7kXmjGosUEguvmS
- IqsrSCmaAJUBidKc90XsPldsPcIF50k92K0WzzGbyMQlttOr09KILnWRNiQ2klVEk4qPbsI1h
- tZ1/D54a7sKEyjXr0QnzE08/zE3cS/fE40SwWFq2ESHe5UCWVN7WFsOtye/QyzoUFI4fqzTHe
- DEKgkVRzpLzA1IaxxntC/xxEaGsXU59EIcuZGu9D/tXAKrDilVxJ8sC+JMPQhqA+yUTl3DhQ1
- OOEJvOoU3JpEVsXvCKaaiS3n3dTVo8zkwKkXrpmdJNpMlcSr/XbcdX+ggLvSGhVtbjWUA+Yrr
- 9Hs1DfLTGWjkMMMZ+MIGwu1c9iBdTDtU66eOOSfDqZFJFtmn+HAL2SwhhsXkbeaEbbEot9UE6
- UWUxPjNXIuOPRYjqrd3B1VxggeM/wWeeIO8b0txgqDtOs3N8kzSLVDmgsPDNQxujWK7fGRyG8
- 9gDUIN2XHEI7Si13HEKe1F2+NRmbF4HLQWlt9j2mUW+hBiHnHfnIjXnmXvoYo5Sn5YRbVp52j
- OR5MTNslL0MHdmq31rqDeqwblw2GFVzGUzq55J0M1tr9FY+m2zcHr/fn1q0p6BQ0mqlWNMdC8
- 02vR7F1hKgpdZWscnVeeEEN3tMM/iw+k5fErwHScoD2AMggRV0M+O+aJB0eEeCG1rMRStt+rp
- Z57ccqRvPTMyXsAukU2eLr8Kx696xZ63inmz91gzKk5FlV6qLIAgb6IYRqLT9AihhvVv2Ifjo
- dd/ZFN7ytTn9yjQYgNXaZRm5U8CXBstZA8IPuh+pMmi4miAE50PhPmk5qQrhMySCH7MfAABRd
- PnSSsvOgE0MKTfJdiX3Vwf5N+x9M5YvKy6eYiQOVZ/3uWBREnbDjJujMuMJGzYQDFfDMFESJ5
- yjsDpTnkYiRjc3tP4IT4ApFgeRM=
+UI-OutboundReport: notjunk:1;M01:P0:NqWDpYotzqo=;YRCXAJOFtmujiztYMgzyJerwsJ2
+ /VNB6fVwkBl5evt3pnh9L91ilk14Ne7edFPWUOJ4RX73VcxLPD9AjKqEG5usCnfLyykIMfZah
+ L4qdB4Op1PvYUWK1Ro+lt/Qu2+uS6q1i3uJ6M+4pOjZRQ5/TltA5H6pDkjFYM2Or0yw3k/i3F
+ bEpNSfCOabKffmwE13OCnNuQaV3MARhfwCPV7LNSqvR3aeyzuzSW7Y/ibLZEIzMUieVqA/nZ7
+ BksZZnmMOAmiqDJxCKum3WKpGHC48dzh5hm6txYIUbhdZ3JK1a8PuSN/yG1GaFgIWjYMd7X8u
+ ljVqvPrcIUzs8G2Io1oulc/XzRdx5j9pXIZCgphpHN7iHmYM0QWZ5PeRyJFpv5Iln9rTILm+H
+ K1ZyNjAUyAM/WilEgE3sqLjZmTPo3tRijA+1pITz8Pk3HW7BivG47IfXu87/JOFZD/PQwaJEl
+ KlvO7/UvFuxz4xAHOVX4JTkNRz2AmyVrdN97z4gUX3hV9SPj3wcVq8O4O84XBnOcvfgHckJQi
+ SuGP8ez8oLMfHnewSQfpqSe1ss1D0lAIJSAcHjVEQ3x+dUTra36/6mb0WNKzJo5OuImr6gd2U
+ gS5enXim+kJMv8FQAt4aMgFO3yBucLEuAdplCpIOB6l4RCxgDOWpBC1wguykKVCrmI5l8RCcf
+ SR5tO8dAQfyrR435pJrKdKGIsb0TtMhEtVIKek7w3/6tV+R4S/uge0cp46lUfpxDwhkWhssot
+ FLjR8VxSgNYk9Ctxk/lYJyhWaQY8SCXeowqf3cV/M0pmKboqJf0VmijKmHQx+38GFbJhI5n86
+ epx6wOTa5eRHN5dc/Z3Hi1+F42rW+5W5tuXPaSvZ5FPU40PFcNic7XxQgTU1iNoQ2tiFJYjjO
+ 8KisukA11HOlrSnOz6C/svPsobWntEUOePplcuzq8jqgfEUtSId3DBoYqWcLM9W89w+9CNSG+
+ 1Xww/wifeRY2UF0NVIqEIOzLDyg=
 
 This is an effort to get rid of all multiplications from allocation
 functions in order to prevent integer overflows [1].
 
-Here the multiplication is obviously safe because the "event_rings"
-member never can have a value greater than 255 (8 bits). This member
-is set twice using always FIELD_GET:
+Here the multiplication is obviously safe because the "channels"
+member can only be 8 or 2. This value is set when the "vendor_data"
+structs are initialized.
 
-mhi_cntrl->event_rings =3D FIELD_GET(MHICFG_NER_MASK, regval);
-mhi_cntrl->event_rings =3D FIELD_GET(MHICFG_NER_MASK, regval);
+static struct vendor_data vendor_pl080 =3D {
+	[...]
+	.channels =3D 8,
+	[...]
+};
 
-And the MHICFG_NER_MASK macro defines the 8 bits mask that guarantees
-a maximum value of 255.
+static struct vendor_data vendor_nomadik =3D {
+	[...]
+	.channels =3D 8,
+	[...]
+};
+
+static struct vendor_data vendor_pl080s =3D {
+	[...]
+	.channels =3D 8,
+	[...]
+};
+
+static struct vendor_data vendor_pl081 =3D {
+	[...]
+	.channels =3D 2,
+	[...]
+};
 
 However, using kcalloc() is more appropriate [1] and improves
 readability. This patch has no effect on runtime behavior.
@@ -93,38 +105,27 @@ readability. This patch has no effect on runtime behavior.
 Link: https://github.com/KSPP/linux/issues/162 [1]
 Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-co=
 ded-arithmetic-in-allocator-arguments [1]
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 Signed-off-by: Erick Archer <erick.archer@gmx.com>
 =2D--
-Changes in v2:
-- Add more info in the commit message to better explain the change.
-  (Dan Carpenter)
-- Add the "Reviewed-by:" tag.
+ drivers/dma/amba-pl08x.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Previous versions:
-v1 - https://lore.kernel.org/linux-hardening/20240120152518.13006-1-erick.=
-archer@gmx.com/
-=2D--
- drivers/bus/mhi/ep/main.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+diff --git a/drivers/dma/amba-pl08x.c b/drivers/dma/amba-pl08x.c
+index eea8bd33b4b7..e40766108787 100644
+=2D-- a/drivers/dma/amba-pl08x.c
++++ b/drivers/dma/amba-pl08x.c
+@@ -2855,8 +2855,8 @@ static int pl08x_probe(struct amba_device *adev, con=
+st struct amba_id *id)
+ 	}
 
-diff --git a/drivers/bus/mhi/ep/main.c b/drivers/bus/mhi/ep/main.c
-index 65fc1d738bec..8d7a4102bdb7 100644
-=2D-- a/drivers/bus/mhi/ep/main.c
-+++ b/drivers/bus/mhi/ep/main.c
-@@ -1149,8 +1149,9 @@ int mhi_ep_power_up(struct mhi_ep_cntrl *mhi_cntrl)
- 	mhi_ep_mmio_mask_interrupts(mhi_cntrl);
- 	mhi_ep_mmio_init(mhi_cntrl);
-
--	mhi_cntrl->mhi_event =3D kzalloc(mhi_cntrl->event_rings * (sizeof(*mhi_c=
-ntrl->mhi_event)),
--					GFP_KERNEL);
-+	mhi_cntrl->mhi_event =3D kcalloc(mhi_cntrl->event_rings,
-+				       sizeof(*mhi_cntrl->mhi_event),
-+				       GFP_KERNEL);
- 	if (!mhi_cntrl->mhi_event)
- 		return -ENOMEM;
-
+ 	/* Initialize physical channels */
+-	pl08x->phy_chans =3D kzalloc((vd->channels * sizeof(*pl08x->phy_chans)),
+-			GFP_KERNEL);
++	pl08x->phy_chans =3D kcalloc(vd->channels, sizeof(*pl08x->phy_chans),
++				   GFP_KERNEL);
+ 	if (!pl08x->phy_chans) {
+ 		ret =3D -ENOMEM;
+ 		goto out_no_phychans;
 =2D-
 2.25.1
 
