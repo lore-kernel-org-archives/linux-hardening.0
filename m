@@ -1,189 +1,155 @@
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2125.outbound.protection.outlook.com [40.107.6.125])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B740C76037;
-	Mon, 29 Jan 2024 20:16:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.125
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706559404; cv=fail; b=IhY1imyIiA1AUyeGbgr9CGu0axBYTbyv05BYYN4f4MRPmlT8khIreLLXODODlseY5CJzQZuRaolkUEN41NLDGGsKlVtl74w3SczmSXsdIhKfXCxVva9R5kluN2wafjAr9fDHo7LwTyINPO4sPI0J4TJ/yEVdoEW6is8js9JRnmc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706559404; c=relaxed/simple;
-	bh=XS4fGporXJGlnLFxdAC+duY31ksSwbiWw7w9fUQr2ok=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=h71UE14so3N2dvuRaZ6OfVYsg/U/yNMgx8TtsCEPyJl5YYl+oTwvmXzH4K4hFw4hE5T7Ru69yzZQpwcdOGhUprw0UnO0Mf7oYIm7bo9R7gDZwfI4oQEf+avUXIr5wXWydF16jwpNbHaDf39drJcQjOHINtkM0FOzUdtvWH7QlgE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prevas.dk; spf=pass smtp.mailfrom=prevas.dk; dkim=pass (1024-bit key) header.d=prevas.dk header.i=@prevas.dk header.b=emp6LSgH; arc=fail smtp.client-ip=40.107.6.125
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prevas.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prevas.dk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29DA776031
+	for <linux-hardening@vger.kernel.org>; Mon, 29 Jan 2024 20:22:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706559764; cv=none; b=PtsEqiog0MzCvHkq7tc5GXZjYwfGcn8bMk/WdMX3K2Qj1sK3IziZh/IUETlg/zXz4THZ2QdMAm+sY5NpqwH0cocg7X4wWfCLpB/o1h+0iZcDUMaxffIcZvjLcrnyV+0iFPVaBkfVB952xxOrCKG5cKmhyWhb4vwNbwG/qEgtFgY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706559764; c=relaxed/simple;
+	bh=o/NbrqV2S97L+H13EY/x2OcLCIh6zJNlJHIhIlry7AA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lL/3TW7CfwwdV9v7lsLGUfdug/0Y9Ev3+GWZYQdCCfd/O4T729znRL2h5GupVW2xH9f9db7fYyec+M7Hc9hU1aCJKplY57ewQu/3W28H+9jADjGkg9ryitLzMcVnLhc/ratShxPbcFgbzksgUbOqIICcuseCNz9J91FgRahUxwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=l6n3sbA8; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=prevas.dk header.i=@prevas.dk header.b="emp6LSgH"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LOt4kmeIn5KoWQTzTSqRNQTPGFEMl6FlyeJxJ2hXvAxoNCgAzePwMSrAB+UN31YfMiW/a1chUox6w3ryh1TYPgiYpdfk8dzdrXKxkC7dESZTkrfNNXYNIkukeACPXXS6AJ1SQjV4lCkACEx26PJxQ8CIBZ/GCJUBZCyLlxzyBM/70hN7pTBQKTZsyzZJa2evvezPe09KcohleZSRqrs40iCAiNHCxWWa8FFkcZ+rr49k7FBbyCG+UC1mecj9faAhaG7H/CW69uSUjNmm8OlSSGqcHqVvrz5MUHeeGrWfTLodd+YhPpZig8XOl70KMG5ulhOVZp6Ch7bde2Av+aYkpA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=STATidvgRcl4kE44tZzQyGWVeYrnKC+Z5eAvDBYkx7w=;
- b=eFeR/RbHXX/SwcAB2JKe7rwo6C0SG/D5jMo4sHNiG+JpetYjLrOYFd1WcEXS/4iIdkY4k8ONKgnOh7jsw0B0hOaq+qSJzihqTsqIMDXM66OHgIIPQl3aPMzApPMlhthmP31tPMovGCRUBiUP8xZ0FOzO0l2rMH/dzJwJD40k+bQcoZMeNyGVRxhK/JXffAbYX0JVpwxwkfg18isdiixgLQocK3AuoP+JPyQkeTKJjUmLlVCdEpVkX+O+2lCU95JyVnBMkqt4v9AeC7X4GqIP/OcTHA7qIRTXKwqTnXf2wNVAEaoaMtAqtlm8BQbIQech2+jUi98NvFz5SuKjHn8VNg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=prevas.dk; dmarc=pass action=none header.from=prevas.dk;
- dkim=pass header.d=prevas.dk; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.dk;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=STATidvgRcl4kE44tZzQyGWVeYrnKC+Z5eAvDBYkx7w=;
- b=emp6LSgHJD0liZtzqOCZ+UYvldeaB33RfRzg/4hq450NGfhmvvyMfRv8hz53hfdY78dvLvh/k1PiMxTLpKvGf/cOAlM0UtepeovQWOKW0ml/yxusWPpVr76rhaXxlZR+oFWJCWfT6SLCzUwpydxNuq3MTjnW/XJLuaZrsmsw53E=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=prevas.dk;
-Received: from DB9PR10MB7100.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:45a::14)
- by AS8PR10MB6770.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:5bc::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.32; Mon, 29 Jan
- 2024 20:16:39 +0000
-Received: from DB9PR10MB7100.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::f059:23ad:b039:15de]) by DB9PR10MB7100.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::f059:23ad:b039:15de%7]) with mapi id 15.20.7228.029; Mon, 29 Jan 2024
- 20:16:38 +0000
-Message-ID: <33dcfa96-e584-404e-a9e5-afeca9105818@prevas.dk>
-Date: Mon, 29 Jan 2024 21:16:36 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/5] overflow: Introduce inc_wrap() and dec_wrap()
-Content-Language: en-US, da
-To: Kees Cook <keescook@chromium.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- linux-hardening@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Miguel Ojeda <ojeda@kernel.org>, Marco Elver <elver@google.com>,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-References: <20240129182845.work.694-kees@kernel.org>
- <20240129183411.3791340-5-keescook@chromium.org>
-From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-In-Reply-To: <20240129183411.3791340-5-keescook@chromium.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MM0P280CA0117.SWEP280.PROD.OUTLOOK.COM
- (2603:10a6:190:9::32) To DB9PR10MB7100.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:10:45a::14)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="l6n3sbA8"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2906855ac5fso1372868a91.3
+        for <linux-hardening@vger.kernel.org>; Mon, 29 Jan 2024 12:22:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1706559761; x=1707164561; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z42ayviXl00pFftEywfCdZI1FjhKV2PnUlVfJ3EkjmY=;
+        b=l6n3sbA8UIfAPfLgTY/02EhFrd04r8IE4ZzFBTKec+N1FZFBcjJ4x4/q4wFUtJCItD
+         a3Wf6gUMbrZJQhe1u7fEWHbMMfQuFeFxYXl9+u4GB7gQLPG/kf/a+/jy/ECMIXLLMC2g
+         XriZkhjdu3eeTbRRrpgq/KcSgMK9dijIsXufg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706559761; x=1707164561;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Z42ayviXl00pFftEywfCdZI1FjhKV2PnUlVfJ3EkjmY=;
+        b=Z+mb6k43+1PO2+mucUOlws3ktR0tgjTDSPTNBH7UDaOxYyWEAZZJklKOgU0d+cpcoB
+         X1d8ZZoqf5bBlYQQAXZ5iNLldwdX3d/FGnvxBEu3zb2R5cmqLO5fh5JvaaJnHPz9g0ER
+         KcpE7FyTwc20JaoOXeqGzzzpktcA9nmUCNFBUAZHyfImKT4Vl3NPcdbv6yRH+zwOfVuq
+         KtfbbumBI8J2tZpe6l/PPH40KRRmNThqbA7TOjZYHhG6/MMTOwL+v9gnnjt0TEbE7zPm
+         LqIg+CaPLT/28EMtw6nCTs334unvzzM2+Abto9eBlWAShJY5ms3spHdAEvA+huczSE+M
+         kpcA==
+X-Gm-Message-State: AOJu0Yw6AC+97ThmmYSyU02wZo98QQ547boVmUdq4N7Ta5dGgT3lPSar
+	rTWjRM4a/PBIFMUUFVZs87XOASBLA4fpx6SAJtRiUVOT/IccCyBOVO/pyw1T5A==
+X-Google-Smtp-Source: AGHT+IHKFFpzQdzMeVVxTYSKwO60dgMxA8EJGc7W4MEDm2qbbjGDlc81pU8+CdO3BRwKTHCRTbIyDw==
+X-Received: by 2002:a17:90a:b013:b0:290:121a:c382 with SMTP id x19-20020a17090ab01300b00290121ac382mr2629214pjq.24.1706559761292;
+        Mon, 29 Jan 2024 12:22:41 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id d15-20020a17090a498f00b00291000d8210sm8568534pjh.19.2024.01.29.12.22.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jan 2024 12:22:40 -0800 (PST)
+Date: Mon, 29 Jan 2024 12:22:40 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Marco Elver <elver@google.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Peter Zijlstra <peterz@infradead.org>, Hao Luo <haoluo@google.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Fangrui Song <maskray@google.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 2/6] ubsan: Reintroduce signed and unsigned overflow
+ sanitizers
+Message-ID: <202401291221.99D8568D0@keescook>
+References: <20240129175033.work.813-kees@kernel.org>
+ <20240129180046.3774731-2-keescook@chromium.org>
+ <20240129195418.hftkcdksptmpfv3i@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB9PR10MB7100:EE_|AS8PR10MB6770:EE_
-X-MS-Office365-Filtering-Correlation-Id: 95b3dcd3-d57a-4845-6611-08dc2107333f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	wEWjHIFVbNtOpVHhv83nyjuwGexp1BwTZFEPV1tXpT4VM9VUciaXtEILGl1K1UP1Im8hmnYzzataX+fBL2uCDQ+vHOmziwwnm7g5kLbS7SFBncCbcV3wCfuJFReqUuM7ZNu5DcraIxnvqyikcgEcIQNNrjIMbWR9NoLTaUbeSJgFp84HZ6uQm0z5MbbQEoPU9PU4jivMNNINPyQf1SFxNu62+PuSicfQuF8in+YXkqwHJsNp57aooDVvxl9BmGvA4OOwsQoB9bp7A/S0r+M9LLRsOTPdL4Q17fSuo3m9swmBe9l7lhvXgGI3KDE+HgUuAT+7iPWsiNf8lgP8+GreiFNNQTj4wdL3YchoCrTVF+t/FP+eh/ZInrOYqu3bnoo9cJOimpTQ6OFdUawC++ihHyryTgjTbtithtj51RuKGvHHCW8lpDBWh5sIY3K106IKyS3LWBLO2QNHxeLvB+DVOg4QXE84Sl+qkHCmpeIlpULB3jF+pp0EdXcEmk8pigK7elDbC8q+KX5u05seqsHpvZuwym0iS9XQoTk0O5cT+JEYyWPAf2JhPj6fQPO3J+AowJ1lVPCV0Chw4TA+BnfVwLElBwDnfnJBAOkTBHzjHiRZ2d70YGDWIlG+YGPr7nkLX7z+stwC52zCV2PFmRFYXA==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR10MB7100.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(136003)(346002)(376002)(366004)(39850400004)(396003)(230922051799003)(64100799003)(186009)(451199024)(1800799012)(26005)(31686004)(6512007)(6506007)(36756003)(31696002)(86362001)(44832011)(8676002)(8936002)(41300700001)(4326008)(5660300002)(66946007)(8976002)(478600001)(38100700002)(316002)(66476007)(6916009)(54906003)(66556008)(7416002)(6486002)(2616005)(2906002)(45980500001)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TTZYTWkramlSS3hpM0FTZGluSWVRK3hHTlZabGZiNlhRdFhYdEJTWnc1ZEt1?=
- =?utf-8?B?NmFuZlEwVWlTMmpOYU5Xcmt0TUpOdVVlZlloOURDYmJzeEFCdjl4dTVVWnpq?=
- =?utf-8?B?bVNqNEk5akIwN0ZqWFAwVnhOcGpybmdwZWxNN1ZBUnFIR1I2NStuYVNvVGFG?=
- =?utf-8?B?TTZRd0grZFhqdzlGNjg1QzZQL0JFUm44SXU2VnNobmFsSmR6Nmdrem5pQ0hs?=
- =?utf-8?B?SjhRRWtWVnFHYmwzejVoQzRJSis0ZGEvNjFOcDVJajlCRUY0VSsyRjBVODUr?=
- =?utf-8?B?UVJQQUgyY3ovWUdkNXA0UnJza3NNRXJ3Tk5ORUt3WUVYaUgwRW9DeEluL2F1?=
- =?utf-8?B?RjdORms1TU9FeHVJemdFNExNYTB2WHE0WTd6TjZXU29TRXNwM3Vielo4emJu?=
- =?utf-8?B?cUlFcm92Zm10c3VTcHNXSjdjUE5kZEVTUnJYN1pyOGk0SXVaWkdja2NidVZS?=
- =?utf-8?B?T2JZU0xUMEZuMjh1QnZJbWV4cllZcEErSWdTREJhU3krbFg4bzBqWVN6a2Rx?=
- =?utf-8?B?NmdqNjdnZC9LMGJpL3J0UjVGZTZPcFNoekxqdEF5bmd2L3hkKzltRXBPL0d5?=
- =?utf-8?B?TVI0TEhlR2VUU25PSXI0QkhLeEJNYUl4LzY2UEJwTkNnS2g3RnRHTjdYOXhD?=
- =?utf-8?B?eko4OWhkMzRVSUR0MHRLSlFBcHVmdXFpUnVjbHJmLzdKdmtjeTRORjUrY29B?=
- =?utf-8?B?azk1cU1RZlE0TG8zVlV4SkRObnRUdlBVQjY1L1NuTExkL1hld1pPQkp6RUxW?=
- =?utf-8?B?NlE5TnQ5UWZmQTM3SWNxZU5oVEg3WGtIQm1iOWQ2K3YrU1pDeDM0VmtQQ3RF?=
- =?utf-8?B?Y3U2RVF2dkFuN1JGT2FNWUMvMkVCdDJwSVpHdWxUWDlGcyt5TXBzQ21MNzFJ?=
- =?utf-8?B?bGJZMllsbWF6Z2pSdmhCR1ZjQVFWY3phY01zQXlJSUpwMUhHeitFZHVZMzhB?=
- =?utf-8?B?UTJLN2RXQmU1VzJvcldpd3kyQjU0MWxHbHdwanowTnJPTlcvaUdNSEtoUnVx?=
- =?utf-8?B?RGJMY0ZhK2grc1ZDcnlEL3c3THhSUm52aEgzWFR3OC9rNElHaGQ5ZUNrWXky?=
- =?utf-8?B?d2NXK0Jua0ZLYjlWVWgxYVJkKy8ya2tXbXQ1L0c2blVOUkUwQTlITmZRSzd6?=
- =?utf-8?B?SlRQVFlDTE9QYUFzUXBhM0JBSTJFdC9lQW9ueFNOR21ydXNWckNSTzNnYklG?=
- =?utf-8?B?VVlxdmRKTmdyeGN5NVNtTGZUd2oxeTdiOWFhbjA3VzNhWlVrcjNHSG9vemZW?=
- =?utf-8?B?YjdvZk9tM2ZJS1Bqb1hzYWdkaVcvOGJwbmpXclV3Wk9jRERIY3JFTm96QWN5?=
- =?utf-8?B?ZFlwRWY2SFkzRXh5bVUzWG5uT0MrTk9YbjJmekthK0FBcEQ1OGUwQmd0Umsy?=
- =?utf-8?B?SlJ3OWg0WGZlSnFXaGhMUDVTU3dJSWcvUFFwVUV1bkRTSTkzcG1IYXNGTDMz?=
- =?utf-8?B?TXVqTm11Tks1em1Da2VnNnBVVmVJRkNMcHBTbnZmVGhBQkdQNHoxcGViemo3?=
- =?utf-8?B?bVRHaVdKOUdCR1NieUlJOFhIRVQ3dXd5dlFvSHNHVFBQdzJOZ0tIQlNPbGtJ?=
- =?utf-8?B?V3pTaXgwc0ZUVXhCR2hMWTRUdk1MRFgzK2VjdmovSEw2bFJYcmQ3T0o2UnV2?=
- =?utf-8?B?VkdtRmtiSkJ6eWhwd0EvODJVRmVkRk9FaEpCL0FaMjFHKzlrTUllUHNpdDdI?=
- =?utf-8?B?WkFsdEtKc3J6cGdLeHh3akdKMG9wM1JMOW04anlPM1FwZXRHbDM0d29mQ3hp?=
- =?utf-8?B?ZjlENE9MSks4RnNhZ1g3WnFJMmp0S1FJMEFUQ2Z2Wm5XWnB2V0RlVWsvN1Vy?=
- =?utf-8?B?RXppeWZyekZGL3RuWEJnMkdPTU1sSkJQMFoxVk5XazgxNG9uVUg2VDZETWFB?=
- =?utf-8?B?U1cyL01LclJ4T2dKYzlYQ3B6WjJSMFdkVURsajJaUG5IVG1PWUFVUjBhUFBE?=
- =?utf-8?B?YlNqbHVybEk4OFB2QUtma3MvNERWbzE5Wmptdy9PcTFMbS9hZFpLR3JZTjdO?=
- =?utf-8?B?R29zU3oraUpXeSt6eFpqVDFPUFREOTc0cFh1ZzlMOWk2aGhqU2l3dE5hYlVi?=
- =?utf-8?B?MDRkQ0RJVGptejJ4ck1vMWhUbENja08zbWRBc2ZuSjdNWGNlVUxEa3krcWU1?=
- =?utf-8?B?eWtqTDJGZUh6VFMzRVl4ZFhhYkRtbzFlS1MrNkZReGFvbE9mdFFkL0RiekR2?=
- =?utf-8?B?YXc9PQ==?=
-X-OriginatorOrg: prevas.dk
-X-MS-Exchange-CrossTenant-Network-Message-Id: 95b3dcd3-d57a-4845-6611-08dc2107333f
-X-MS-Exchange-CrossTenant-AuthSource: DB9PR10MB7100.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2024 20:16:38.9138
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: d350cf71-778d-4780-88f5-071a4cb1ed61
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: j9jUUikgWXNxLGzOGKrInZLFxDEgmVOXgthrKLVb+a9jbm/ipeCaSFlQ0JVBywRaRB1GfLSNThx8RHXsGTNuq90jN4Jta1D8XT4Y2vG1X+w=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR10MB6770
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240129195418.hftkcdksptmpfv3i@google.com>
 
-On 29/01/2024 19.34, Kees Cook wrote:
-> This allows replacements of the idioms "var += offset" and "var -= offset"
-> with the inc_wrap() and dec_wrap() helpers respectively. They will avoid
-> wrap-around sanitizer instrumentation.
+On Mon, Jan 29, 2024 at 07:54:18PM +0000, Justin Stitt wrote:
+> Hi,
 > 
-> Cc: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  include/linux/overflow.h | 32 ++++++++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
+> On Mon, Jan 29, 2024 at 10:00:39AM -0800, Kees Cook wrote:
+> > Effectively revert commit 6aaa31aeb9cf ("ubsan: remove overflow
+> > checks"), to allow the kernel to be built with the "overflow"
+> > sanitizers again. This gives developers a chance to experiment[1][2][3]
+> > with the instrumentation again, while compilers adjust their sanitizers
+> > to deal with the impact of -fno-strict-oveflow (i.e. moving from
+> > "overflow" checking to "wrap-around" checking).
+> >
+> > Notably, the naming of the options is adjusted to use the name "WRAP"
+> > instead of "OVERFLOW". In the strictest sense, arithmetic "overflow"
+> > happens when a result exceeds the storage of the type, and is considered
+> > by the C standard and compilers to be undefined behavior for signed
+> > and pointer types (without -fno-strict-overflow). Unsigned arithmetic
+> > overflow is defined as always wrapping around.
+> >
+> > Because the kernel is built with -fno-strict-overflow, signed and pointer
+> > arithmetic is defined to always wrap around instead of "overflowing"
+> > (which could either be elided due to being undefined behavior or would
+> > wrap around, which led to very weird bugs in the kernel).
+> >
+> > So, the config options are added back as CONFIG_UBSAN_SIGNED_WRAP and
+> > CONFIG_UBSAN_UNSIGNED_WRAP. Since the kernel has several places that
+> > explicitly depend on wrap-around behavior (e.g. counters, atomics, crypto,
+> > etc), also introduce the __signed_wrap and __unsigned_wrap function
+> > attributes for annotating functions where wrapping is expected and should
+> > not be instrumented. This will allow us to distinguish in the kernel
+> > between intentional and unintentional cases of arithmetic wrap-around.
+> >
+> > Additionally keep these disabled under CONFIG_COMPILE_TEST for now.
 > 
-> diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-> index 4f945e9e7881..080b18b84498 100644
-> --- a/include/linux/overflow.h
-> +++ b/include/linux/overflow.h
-> @@ -138,6 +138,22 @@ static inline bool __must_check __must_check_overflow(bool overflow)
->  		__sum;					\
->  	})
->  
-> +/**
-> + * add_wrap() - Intentionally perform a wrapping increment
+> This is present in the patch but perhaps its worth noting here that x86
+> has trouble booting with the unsigned-integer-overflow sanitizer on.
 
-inc_wrap
+Yeah, though this is fixed later in the series.
 
-> + * @a: variable to be incremented
-> + * @b: amount to add
-> + *
-> + * Increments @a by @b with wrap-around. Returns the resulting
-> + * value of @a. Will not trip any wrap-around sanitizers.
-> + */
-> +#define inc_wrap(var, offset)					\
-> +	({							\
-> +		if (check_add_overflow(var, offset, &var)) {	\
-> +			/* do nothing */			\
-> +		}						\
-> +		var;						\
+> 
+> >
+> > Link: https://github.com/KSPP/linux/issues/26 [1]
+> > Link: https://github.com/KSPP/linux/issues/27 [2]
+> > Link: https://github.com/KSPP/linux/issues/344 [3]
+> > Cc: Justin Stitt <justinstitt@google.com>
+> > Cc: Miguel Ojeda <ojeda@kernel.org>
+> > Cc: Nathan Chancellor <nathan@kernel.org>
+> > Cc: Nick Desaulniers <ndesaulniers@google.com>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Marco Elver <elver@google.com>
+> > Cc: Hao Luo <haoluo@google.com>
+> > Cc: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> 
+> 
+> This patch adheres to the language semantics as I understand them.
+> Moreover, we would've had to send a patch similar to this once we land
+> some better sanitizer + -fno-strict-oveflow support in the compilers.
+> 
+> Currently, though, -fsanitize=signed-integer-overflow instruments very
+> little (if anything at all) due to compiler optimizations in conjunction
+> with -fno-strict-oveflow. I am working on a new
+> -fsanitize=signed-integer-wrap in Clang which will instrument more
+> arithmetic even under -fno-strict-oveflow.
 
-Hm. I wonder if multiple evaluations of var could be a problem.
-Obviously never if var is actually some automatic variable, nor if it is
-some simple foo->bar expression. But nothing really prevents var from
-being, say, foo[gimme_an_index()] or something similarly convoluted.
+Agreed -- I'm mainly getting these back into the kernel so folks working
+on this have a common base to work from.
 
-Does the compiler generate ok code if one does
+> Reviewed-by: Justin Stitt <justinstitt@google.com>
 
-  typeof(var) *__pvar = &(var);
-  if (check_add_overflow(*__pvar, offset, __pvar)) {}
-  *__pvar;
+Thanks!
 
-[in fact, does it even generate code, i.e. does it compile?]
+-Kees
 
-I dunno, maybe it's overkill to worry about.
-
-Rasmus
-
+-- 
+Kees Cook
