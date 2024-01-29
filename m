@@ -1,64 +1,63 @@
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 535056166D;
-	Mon, 29 Jan 2024 12:57:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F066B76C70
+	for <linux-hardening@vger.kernel.org>; Mon, 29 Jan 2024 17:38:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706533056; cv=none; b=RdsvLInHso8YEbSLS4CLY1hViypu9O4ZuhbcPzOsMeR8+iEqkbdgNXh0X46lgtsVag3eSE5LDkMStFi/lDkSQargzAppTRZx4O8enmbArp50PLe36fEWmEiLuoLrVY/EORSjK/YXAtyaLBnaFoHodLGRiebho33FpjVYCZ/69/w=
+	t=1706549902; cv=none; b=L/CqtKvJSSTKXikx3jlMUUSdSbmErHmmm++uja4hqexiQaCj6IjTy7BPXraBeUBp1i+XD3Que+WQMmkEQLWn20xNswHNjN+Jd6x/ZayzV75s9My4W+xxnAxX5r964W4jKDBBzDtFGHGTp5wgmxzj6KCKYG3Ppzk88b4kItdfM1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706533056; c=relaxed/simple;
-	bh=uQ/Xzy1t1vgnWJ/4O5irvMHl8vFPdVlozjit+qHy3vw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=nFBZI1hoL6Q3C6fmASR3ApmctQ438UsrqBj/Diz1yvmGLqOg7+qKTXBuyT/IaLrZbDPgt4ZmEIbrRF6y5n7pRRXgWCmsROQ0mxE9aGrEX+VSG3Mt1uIQLuj03IiTGwuaYxahY05S2aM5Cnw0dtyIvX9XXo14KDjfs2KwPcIl3Cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AQ8jbGBV; arc=none smtp.client-ip=209.85.128.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706549902; c=relaxed/simple;
+	bh=9sPOI7F0uESoYaMUP2XYpFpXLkXAUQ0RykDgDDMeD2A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CNsRdD1h8Wb8sNEV8OHLv5hh7/Rj5hVUpF5Thr4dya6+mMo1s/OdeCU69xrnPGDVrIqV4m7L9yuDKVtHGBxRymJNeWxY2bPMN/FEvaMcqaDzhcHZ84yB+IhtYsTb8l/Xgd/dh4QnKeG6SvmvNEsq11DKxkKX2k2yYgfnRK1GkUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PL+NSHgi; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AQ8jbGBV"
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-6001449a2beso17037007b3.3;
-        Mon, 29 Jan 2024 04:57:31 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PL+NSHgi"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1d8d747a3bcso8979555ad.0
+        for <linux-hardening@vger.kernel.org>; Mon, 29 Jan 2024 09:38:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706533050; x=1707137850; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Q7MRtgQq1559VqTtq0fV0eOYg6mrlq7EbBFuJ58DRMI=;
-        b=AQ8jbGBVOFd6xGwO0CItRemwVgIIWS0L8O0IVV/eR7Ic1oMicAUU/HgFHfAVX7zuDd
-         6Kxfc8C28ZtOHC35cHmKwUBXmPkE4onDQTPGEXYrXwwsqj/9zBkkQ1G5+knLDGqlWeky
-         sAPVkDEGajz+D5h1dDV3sHHlgSTlV60yhHxwjLMNdgd3+1kVIToCPEuYnvRQ7+pWoOa5
-         x2r4gi0bgOQQdhQaCO8xCYfgbdsgmN/RqDOefGsmLPsZVMe8Wt0B+tBeiMcNZ0CdSLeP
-         ET/x7aUnZvfeA5jhAlj1O2chu9KGSeTKBZFqXzemTa/PWD0zGjgZLbVJA2PU9Wp3b2yN
-         8XWA==
+        d=chromium.org; s=google; t=1706549900; x=1707154700; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=skReZXUWO+4CpZviMCdM9d0PhWwWTcjjV6026UZTL50=;
+        b=PL+NSHgif1nUJUrnXJMKMA1Di1VXW42KPBIPPe81fwdj67MCRki8/zLqukKiRClui/
+         s5USEBuO6T42wrlSofUws7WH6t5mwyprtVLUF3NNnu5pchF5dcEBsCFyCp+2ilHvUvXj
+         izs3Mp/Vmobgrd9yg3/K7S3Yk4cOqxReoKqvg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706533050; x=1707137850;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q7MRtgQq1559VqTtq0fV0eOYg6mrlq7EbBFuJ58DRMI=;
-        b=KM00yC+n8uI0pM+7FACzj+ERLjmqW9niV8a0NBRS53F29feicOtB0HJJU6HsTOkZ/5
-         xVKeLdyyj3/VjanGBhbSGvEo2eHevZ+lLrlQA97CmQcmuoxdDYeqsvM5Pl3KppyxWrav
-         Wcd5hUV+U9BkOEclEzHaPia/50iusJF5bkcSV2ydEDvBE+LizbezKPJVVnkh9ojs1iej
-         PfmQ6LXfh1iPa4VHtcQAJB8x/ZJhNfQUOd9oB71UoR2e0+uVuu3xu716gtEOfn1/44Zp
-         dSDsTNryu9Ii/sgW6JQDPAsDUWL2cFCd1o3fJ+QuLUrdzGjBAp0mm+SmauwbQugd+Nj1
-         /HCw==
-X-Gm-Message-State: AOJu0YzsVBCSTeVKuiC2xZHb3PKO+yBTuYi01vYTDdJDt+SEiV9TaFJP
-	M0HUeyjj3kpSAgIi6Jv+PQKaEWnmP8YKs0ccfsgXrnJDDowkDXg=
-X-Google-Smtp-Source: AGHT+IEEzC5ixYHXvoggCQs5qrvbv9IqQr5jYpj6wOIk6jV/fBwm69ksRVsje5mHZpNEaplLRhBK2Q==
-X-Received: by 2002:a0d:d793:0:b0:602:ac0e:697f with SMTP id z141-20020a0dd793000000b00602ac0e697fmr3722989ywd.51.1706533050102;
-        Mon, 29 Jan 2024 04:57:30 -0800 (PST)
-Received: from localhost ([207.181.197.26])
-        by smtp.gmail.com with ESMTPSA id v7-20020a05620a0f0700b00783b6da58a9sm3077939qkl.39.2024.01.29.04.57.28
+        d=1e100.net; s=20230601; t=1706549900; x=1707154700;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=skReZXUWO+4CpZviMCdM9d0PhWwWTcjjV6026UZTL50=;
+        b=sxVleL8OyYAZCqlVLf6/rDScoUVrq+1iq643JPqH7qwMQrEDuT2gxjfT3SKWMtgo8k
+         lX6xZ+kyLYfFLgt+Il1hTtClrCOOXI2q4OCDSPzU3FVYDApYC684rz/CtYu6v1o7a64/
+         toqzXx2J7O0De3evdTLiDyF4A2hn1M7ZAMs2cfeAB9M5pObNWXXgjQGEK1FfjWY/+UC9
+         d5DaHuK73HmYrTzQwsNOby8/Pj5byEwxLMUigw1svBC23RopRxrItryu+iVJsxWQyMVy
+         4GhmS9+6fZtmPXtMcNPD55ufgFYNHCDYkCUrXnSI3TM/vl4E9RPdz+11VJ52DWO7FZxt
+         Bdtg==
+X-Gm-Message-State: AOJu0YwiHbDa28erOPeKVPmQIcPh2X6V4zy6HmyJK+OGDVcfjIMjjwQp
+	wZqn1+6EIsf8m/DV2MBZSNXqs/g41BjDKSZUUbjvvtYZliV85mzBrxt2ocuLEA==
+X-Google-Smtp-Source: AGHT+IGScTnnfRj1AdnqDlkNR1TKhTfrfYJdP2Uh+sgvWCJpqWThh0OktY3I9Y7NvrLzGWoWI9rmAA==
+X-Received: by 2002:a17:902:d68b:b0:1d8:ef97:229e with SMTP id v11-20020a170902d68b00b001d8ef97229emr1696645ply.33.1706549900213;
+        Mon, 29 Jan 2024 09:38:20 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id i5-20020a170902eb4500b001d8d1f78845sm2743531pli.123.2024.01.29.09.38.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jan 2024 04:57:29 -0800 (PST)
-Date: Mon, 29 Jan 2024 06:57:28 -0600
-From: Lenko Donchev <lenko.donchev@gmail.com>
-To: Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: qat-linux@intel.com, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] crypto: qat - use kcalloc() instead of kzalloc()
-Message-ID: <ZbeguDTmVrP9SnDr@nixos>
+        Mon, 29 Jan 2024 09:38:19 -0800 (PST)
+Date: Mon, 29 Jan 2024 09:38:19 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: "Behme Dirk (CM/ESO2)" <dirk.behme@de.bosch.com>,
+	Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	linux-hardening@vger.kernel.org
+Subject: Re: rcar-dmac.c: race condition regarding cookie handling?
+Message-ID: <202401290926.67193AB2B@keescook>
+References: <12ff20eb-d4b5-41f4-a494-cfb6b7abe617@de.bosch.com>
+ <CAMuHMdW=igXesjxvNk=+in62neW=kipnFW2BUH3P7sfDnqXzEQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -67,33 +66,54 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <CAMuHMdW=igXesjxvNk=+in62neW=kipnFW2BUH3P7sfDnqXzEQ@mail.gmail.com>
 
-We are trying to get rid of all multiplications from allocation
-functions to prevent integer overflows[1]. Here the multiplication is
-obviously safe, but using kcalloc() is more appropriate and improves
-readability. This patch has no effect on runtime behavior.
+On Mon, Jan 29, 2024 at 10:57:40AM +0100, Geert Uytterhoeven wrote:
+> Hi Dirk,
+> 
+> CC Kees (for the wrap-around in dma_cookie_assign() not handled in [A])
+> [...]
+> Was the system running for a very long time?
+> dma_cookie_assign() relies on 2-complement signed wrap-around:
+> 
+>         cookie = chan->cookie + 1;
+>         if (cookie < DMA_MIN_COOKIE)
+>                 cookie = DMA_MIN_COOKIE;
+> 
+> but given the kernel is compiled with -fno-strict-overflow (which
+> implies -fwrapv) that should work.
 
-Link: https://github.com/KSPP/linux/issues/162 [1]
-Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [2]
+For my own reference:
 
-Signed-off-by: Lenko Donchev <lenko.donchev@gmail.com>
----
- drivers/crypto/intel/qat/qat_common/adf_isr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+typedef s32 dma_cookie_t;
+#define DMA_MIN_COOKIE  1
 
-diff --git a/drivers/crypto/intel/qat/qat_common/adf_isr.c b/drivers/crypto/intel/qat/qat_common/adf_isr.c
-index 3557a0d6dea2..a13d9885d60f 100644
---- a/drivers/crypto/intel/qat/qat_common/adf_isr.c
-+++ b/drivers/crypto/intel/qat/qat_common/adf_isr.c
-@@ -272,7 +272,7 @@ static int adf_isr_alloc_msix_vectors_data(struct adf_accel_dev *accel_dev)
- 	if (!accel_dev->pf.vf_info)
- 		msix_num_entries += hw_data->num_banks;
- 
--	irqs = kzalloc_node(msix_num_entries * sizeof(*irqs),
-+	irqs = kcalloc_node(msix_num_entries, sizeof(*irqs),
- 			    GFP_KERNEL, dev_to_node(&GET_DEV(accel_dev)));
- 	if (!irqs)
- 		return -ENOMEM;
+struct dma_chan {
+	...
+        dma_cookie_t cookie;
+
+Correct, as you say, with -fno-strict-overflow this is well defined, and
+will wrap the value around negative if chan->cookie was S32_MAX.
+
+In the future, when the signed integer wrap-around sanitizer works
+again, we'll want to change the math to something like:
+
+	cookie = add_wrap(typeof(cookie), chan->cookie, 1);
+
+But that will be an ongoing conversion once folks have agreed on the
+semantics of the wrapping helpers, which is not settled yet.
+
+If you want to handle this today without depending on wrap-around,
+it's a little bit more involved to do it open coded, but it's possible:
+
+	if (chan->cookie == type_max(typeof(chan->cookie)))
+		cookie = DMA_MIN_COOKIE;
+	else
+		cookie = chan->cookie + 1;
+
+the "type_max(...)" part could also just be written as S32_MAX.
+
+-Kees
+
 -- 
-2.43.0
-
+Kees Cook
