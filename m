@@ -1,77 +1,107 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BAD73DB9B;
-	Mon, 29 Jan 2024 22:37:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61F3953E07;
+	Mon, 29 Jan 2024 23:27:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706567827; cv=none; b=igr0bdk/AsCDRyvJEzMP/NayUCvfvCRg1NsDtTKAbG84+nc74MHAgmiMC2LsgDo4hep1DC0dVCxvmflVsvJysyLJWDEeiBdMaZg43wmCSrRMbQg+JVNIDZILsOg5ooUhixiUlZGCpuaGPz/zpgr6MuiQZNB+MzwznNDiDCd+5Y4=
+	t=1706570875; cv=none; b=LgBzN4yKbMIXu09mkZWjoT4P4nYfwM0XXaYVUkzTCm2uwNL4BbukWWt7IzGOd7VnRbMh6IbfS3o/hmPLvTwis8VchfJfbdb5SSvvcVfmd1P2fWY7XeHd47ly0efM4BI9BEFGbpfsldg13pP8wza22b/927OaxgRY8NAiamrPjsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706567827; c=relaxed/simple;
-	bh=wUepOEIuKF+pt+mzZ2cf9etKM0arZg3q5iaJxXS0bzo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=c6xjihqPNaftBxYhcTnj0HK4gY+Obt5HH8z2NpilaB0vEDvPHB9RZOijztBgh9eLwtusNSkDw9umFUf6HG4DlLJaxTd3ffc40mgpKMDgKR7ECK9FQbTTHKEspNZ2p8dFPxHRbzNAg7ZUVSME1VR1wGGdrConuwgsO2qDn4zWDLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=cf1MSkKV; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1706570875; c=relaxed/simple;
+	bh=3Pt714EDmayM4zkRpb5UifHBwFnv78h5YDgjEbc+yA0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LUKLZ9wIAibgivDrmA3f3cCl4OqupoC3FqGpegmxMT9qHIOJdtXA0xEuBMvIsyT4ozSPwdq0XQKboZf6/nf5GXquV/Iv/YKI8zGEUarwKdMiC/hbT/n6k2oRn5n1SaSBxAknMKomeUlf9wPLepaaDWogZ/LdNpcAvLAZPhNWDNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eA99iofV; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="cf1MSkKV"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 3240145ACB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1706567819; bh=yAQLX1Us/QviIhk0kzQZyMSxjm5vzw6rQEyBltA/iOM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=cf1MSkKVSY/OCJo9th/8LlckbTbMMN2vX+Va6XC28KEHxn2wQ+7vhiRCkeE2tbUAX
-	 wz/3LWvvkxUbuF3Ng4gg4PTrMqIa3CVMUj2qRrpmRxWELO6bi8a1St8oGfQhk1mD2a
-	 AuSKk2U124EDipQwFM8kG5/Q/rC+2254pIn+A7Ky6SC1y//6BE+0NfMA6cbtsQPcJr
-	 B1oYQRjJXaRX6ppsqE20RM6u7zudzYsojUlRW5rLTAB0PaxuO4eUSnHtaMxCEe10MG
-	 0BTo8rYazwWruk4gOc9g+dSLsDhEyBovIWdrvSMKLiGmzM0lKfW3zwpsZ+W1X1M/eU
-	 rhUAYLY4uTGrw==
-Received: from localhost (unknown [IPv6:2601:280:5e00:7e19::646])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 3240145ACB;
-	Mon, 29 Jan 2024 22:36:59 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: jeffxu@chromium.org, akpm@linux-foundation.org, keescook@chromium.org,
- jannh@google.com, sroettger@google.com, willy@infradead.org,
- gregkh@linuxfoundation.org, torvalds@linux-foundation.org,
- usama.anjum@collabora.com, rdunlap@infradead.org
-Cc: jeffxu@google.com, jorgelo@chromium.org, groeck@chromium.org,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-mm@kvack.org, pedro.falcato@gmail.com, dave.hansen@intel.com,
- linux-hardening@vger.kernel.org, deraadt@openbsd.org, Jeff Xu
- <jeffxu@chromium.org>
-Subject: Re: [PATCH v7 0/4] Introduce mseal()
-In-Reply-To: <20240122152905.2220849-1-jeffxu@chromium.org>
-References: <20240122152905.2220849-1-jeffxu@chromium.org>
-Date: Mon, 29 Jan 2024 15:36:58 -0700
-Message-ID: <87a5ong41h.fsf@meer.lwn.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eA99iofV"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-55f19a3ca7aso1745756a12.1;
+        Mon, 29 Jan 2024 15:27:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706570871; x=1707175671; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JAI+JSpOXFqVCsrvmgOXq5QLcioKgV/OWGsLJV6sfpk=;
+        b=eA99iofVubPc5ABYE8BSdQgzzhixm9C1BY2UvSvUpPXSTEYWi2ca3+uEWyNMX5XuxI
+         TWTjM2zuduEIe6883yCSXU3uKATA2yUhwK/z1hmVG2Bmjn7N3PazawR6jisWADydmzg1
+         IfoqOkExPsb2vIJ9t+urC59BV3eBbO+OklRA3rXZSExfaXSO72hsMFZFie1rE6zO7+r2
+         naJQ4yiu8fxazWxyo40+3GDjXi7hkAO3BLnZCHjOsJP6bdP1hOBE7ogK72xVn1JpX0SZ
+         KZqyMkHDUmt+P95WSONvBjKJAhYV0bv+kAsXiThMgE8hCTsoxnqOrLvgSOqe6P5vRuZW
+         vLYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706570871; x=1707175671;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JAI+JSpOXFqVCsrvmgOXq5QLcioKgV/OWGsLJV6sfpk=;
+        b=RsI1JSngc7YhB+7kKnXdU6bqrr8yNwVutghfE8O5zEGsxQfe211WZJu80PmbGt6zVv
+         17QeKuqdR+DhQgtwmiEnvh2T4d2UIksBaZXg9HI1zwGk+TGGleItT/WJ9/g3/KWdSRIy
+         fF5MGUST5X5vY1swYYkSkrlykFFxCN6OJN1W6Le8Q8U26TCKpowIbXZKCKkYSlyehf9u
+         Qq9vVwvVISc01mIFS3VXtXaFE2YdYdWhJsGb0IfYPrbVOJnh8DqiKhA+1fikrGzuBKEq
+         R1XqGnl4Dkaklnled3m5mrE8lOwzzBM8aKmriC7s18n0WERHTwWDMvQJXSjl9w3MhgwT
+         VTpg==
+X-Gm-Message-State: AOJu0Yxjg//oAceqCTKBRbfQBNId5VxZ4IQxA6eYQw1yqXfQklBHF9hC
+	iG+EnSPq4DFgavHCVOk+vHy0Jpv/ZvBIdqfMlWdUxT6aUARzXXN8MfqpDJO6DoN/WaJiK57oPTt
+	PwNMUZQLsPl1P/HMmWFJOtLDyHyg=
+X-Google-Smtp-Source: AGHT+IFFPqMyjENNeSUz1jQ9nFYpfkJ5coLhQ0OTwVYnTDYpL7xBJaq+dz9oraLl18FWdogovYmEV6qKsbB2KHq3ryg=
+X-Received: by 2002:a17:907:a4c1:b0:a35:bd6a:60bf with SMTP id
+ vq1-20020a170907a4c100b00a35bd6a60bfmr44153ejc.17.1706570871376; Mon, 29 Jan
+ 2024 15:27:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20240129202901.work.282-kees@kernel.org> <20240129215525.4uxchtrywzzsrauc@google.com>
+ <202401291357.DAA9670F3@keescook>
+In-Reply-To: <202401291357.DAA9670F3@keescook>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 30 Jan 2024 01:27:14 +0200
+Message-ID: <CAHp75VfgmLoACfjphHi30hSkL0Sa1AueFeG=qGQvwnewqyjrRg@mail.gmail.com>
+Subject: Re: [RFC] string: Allow 2-argument strscpy()
+To: Kees Cook <keescook@chromium.org>
+Cc: Justin Stitt <justinstitt@google.com>, Andy Shevchenko <andy@kernel.org>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-jeffxu@chromium.org writes:
+On Tue, Jan 30, 2024 at 12:03=E2=80=AFAM Kees Cook <keescook@chromium.org> =
+wrote:
+> On Mon, Jan 29, 2024 at 09:55:25PM +0000, Justin Stitt wrote:
+> > On Mon, Jan 29, 2024 at 12:29:04PM -0800, Kees Cook wrote:
 
-> Although the initial version of this patch series is targeting the
-> Chrome browser as its first user, it became evident during upstream
-> discussions that we would also want to ensure that the patch set
-> eventually is a complete solution for memory sealing and compatible
-> with other use cases. The specific scenario currently in mind is
-> glibc's use case of loading and sealing ELF executables. To this end,
-> Stephen is working on a change to glibc to add sealing support to the
-> dynamic linker, which will seal all non-writable segments at startup.
-> Once this work is completed, all applications will be able to
-> automatically benefit from these new protections.
+...
 
-Is this work posted somewhere?  Having a second - and more generally
-useful - user for this API would do a lot to show that the design is, in
-fact, right and useful beyond the Chrome browser.
+> > BTW, this hack for function overloading is insane. Never really looked =
+into
+> > it before.
+>
+> It very much is. :P Hence the RFC nature of this patch. I don't think we
+> any any other API in the kernel that does this (though there are plenty
+> of wild macro wrappers to do similar tricks, like the syscall wrappers).
 
-Thanks,
+PCI has a couple of such.
 
-jon
+> > I like this, though, should you include documentation changes/additions=
+?
+>
+> Yeah, though I'm not sure how to do this -- kerndoc expects a fixed
+> number of arguments. :P Maybe I can just do something like add
+> "optional" to @size:
+
+Use ... See again PCI header (pci.h). One of the macros there has a
+valid kernel-doc.
+
+>  * strscpy - Copy a C-string into a sized buffer
+>  * @p: Where to copy the string to
+>  * @q: Where to copy the string from
+>  * @size: Size of destination buffer (optional)
+
+
+--=20
+With Best Regards,
+Andy Shevchenko
