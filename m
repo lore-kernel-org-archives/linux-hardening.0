@@ -1,101 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B43E55821C;
-	Mon, 29 Jan 2024 09:52:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 535056166D;
+	Mon, 29 Jan 2024 12:57:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706521962; cv=none; b=KT9wSH6/6OwDJu3GhV07Hn0NYz5/H6oLKNMrHNaz3FolbvzkVyrufiZABwVsJlnS33ZXkyKRkfriWZz1JToLQOk6Ib5K0jEEDE4L6PnGiw5FyNNzzEDJK8iQQX4NXaitGvSnMmKuWMy7/RbkSlkRShKAsr6jAS8ar8TAPEg7ObE=
+	t=1706533056; cv=none; b=RdsvLInHso8YEbSLS4CLY1hViypu9O4ZuhbcPzOsMeR8+iEqkbdgNXh0X46lgtsVag3eSE5LDkMStFi/lDkSQargzAppTRZx4O8enmbArp50PLe36fEWmEiLuoLrVY/EORSjK/YXAtyaLBnaFoHodLGRiebho33FpjVYCZ/69/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706521962; c=relaxed/simple;
-	bh=F761W1UopTbjLyj6oTvDG2L2LbG+NdNFiuf1Z57ZfvU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D9KJBkYrzdd3YWbR4IbZoKLPqkb8rm7jsVScBrBygC3rlAaFg8Gfb4wyNCtWb8+ebHyGVAx7vO/XBGKyuPJf0RHeXgl5q71a4TbPTXsDrvSlgVJiFObYmZvk+KfV70OGqdSz6Vp16DhbodUPbrpht4pg+CpYhd39BUkyc4qyGAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=COgUzsam; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706533056; c=relaxed/simple;
+	bh=uQ/Xzy1t1vgnWJ/4O5irvMHl8vFPdVlozjit+qHy3vw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=nFBZI1hoL6Q3C6fmASR3ApmctQ438UsrqBj/Diz1yvmGLqOg7+qKTXBuyT/IaLrZbDPgt4ZmEIbrRF6y5n7pRRXgWCmsROQ0mxE9aGrEX+VSG3Mt1uIQLuj03IiTGwuaYxahY05S2aM5Cnw0dtyIvX9XXo14KDjfs2KwPcIl3Cs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AQ8jbGBV; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="COgUzsam"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0704BC43394;
-	Mon, 29 Jan 2024 09:52:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706521962;
-	bh=F761W1UopTbjLyj6oTvDG2L2LbG+NdNFiuf1Z57ZfvU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=COgUzsamxI5JaoiIBz2Ywypnk2v0IKL0/dnBkQZSS+JflQx2RfdnF4kKBrFx0pQ5Y
-	 RBWfoeyETfyEfN0ADn7dY7AOv0qD1cTUwncEY6BN350gATWMnXZF9LlsSOaSIOV+2c
-	 ec2BH//MA8DKdupmzbAy71FuWJrtgHvPby6oxnvJPFuTsJzw8AS0LqV+laEOggQRow
-	 Gy5lVU+ySllOabDXJO2jNyEIuZMQ1MpSsP6WT+B7gF5UOIr6UtsOidSsMwGXzqo8KY
-	 G3y8Y9GAA8D7XmFUs5rvzq7kom2Inez1SbixEQyp1qfM5Cnbf6qeIGRzIBK6Dm37Ya
-	 08SrNsgMN3QwA==
-Date: Mon, 29 Jan 2024 09:52:37 +0000
-From: Lee Jones <lee@kernel.org>
-To: David Laight <David.Laight@aculab.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Crutcher Dunnavant <crutcher+kernel@datastacks.com>,
-	Juergen Quade <quade@hsnr.de>
-Subject: Re: [PATCH 1/1] lib/vsprintf: Implement ssprintf() to catch
- truncated strings
-Message-ID: <20240129095237.GC1708181@google.com>
-References: <20240125083921.1312709-1-lee@kernel.org>
- <a37e8071-32ac-4f5d-95e8-ddd2eb21edcd@rasmusvillemoes.dk>
- <20240125103624.GC74950@google.com>
- <54e518b6dd9647c1add38b706eccbb4b@AcuMS.aculab.com>
- <20240129092440.GA1708181@google.com>
- <7054dcbfb7214665afedaea93ce4dbad@AcuMS.aculab.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AQ8jbGBV"
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-6001449a2beso17037007b3.3;
+        Mon, 29 Jan 2024 04:57:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706533050; x=1707137850; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Q7MRtgQq1559VqTtq0fV0eOYg6mrlq7EbBFuJ58DRMI=;
+        b=AQ8jbGBVOFd6xGwO0CItRemwVgIIWS0L8O0IVV/eR7Ic1oMicAUU/HgFHfAVX7zuDd
+         6Kxfc8C28ZtOHC35cHmKwUBXmPkE4onDQTPGEXYrXwwsqj/9zBkkQ1G5+knLDGqlWeky
+         sAPVkDEGajz+D5h1dDV3sHHlgSTlV60yhHxwjLMNdgd3+1kVIToCPEuYnvRQ7+pWoOa5
+         x2r4gi0bgOQQdhQaCO8xCYfgbdsgmN/RqDOefGsmLPsZVMe8Wt0B+tBeiMcNZ0CdSLeP
+         ET/x7aUnZvfeA5jhAlj1O2chu9KGSeTKBZFqXzemTa/PWD0zGjgZLbVJA2PU9Wp3b2yN
+         8XWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706533050; x=1707137850;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q7MRtgQq1559VqTtq0fV0eOYg6mrlq7EbBFuJ58DRMI=;
+        b=KM00yC+n8uI0pM+7FACzj+ERLjmqW9niV8a0NBRS53F29feicOtB0HJJU6HsTOkZ/5
+         xVKeLdyyj3/VjanGBhbSGvEo2eHevZ+lLrlQA97CmQcmuoxdDYeqsvM5Pl3KppyxWrav
+         Wcd5hUV+U9BkOEclEzHaPia/50iusJF5bkcSV2ydEDvBE+LizbezKPJVVnkh9ojs1iej
+         PfmQ6LXfh1iPa4VHtcQAJB8x/ZJhNfQUOd9oB71UoR2e0+uVuu3xu716gtEOfn1/44Zp
+         dSDsTNryu9Ii/sgW6JQDPAsDUWL2cFCd1o3fJ+QuLUrdzGjBAp0mm+SmauwbQugd+Nj1
+         /HCw==
+X-Gm-Message-State: AOJu0YzsVBCSTeVKuiC2xZHb3PKO+yBTuYi01vYTDdJDt+SEiV9TaFJP
+	M0HUeyjj3kpSAgIi6Jv+PQKaEWnmP8YKs0ccfsgXrnJDDowkDXg=
+X-Google-Smtp-Source: AGHT+IEEzC5ixYHXvoggCQs5qrvbv9IqQr5jYpj6wOIk6jV/fBwm69ksRVsje5mHZpNEaplLRhBK2Q==
+X-Received: by 2002:a0d:d793:0:b0:602:ac0e:697f with SMTP id z141-20020a0dd793000000b00602ac0e697fmr3722989ywd.51.1706533050102;
+        Mon, 29 Jan 2024 04:57:30 -0800 (PST)
+Received: from localhost ([207.181.197.26])
+        by smtp.gmail.com with ESMTPSA id v7-20020a05620a0f0700b00783b6da58a9sm3077939qkl.39.2024.01.29.04.57.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jan 2024 04:57:29 -0800 (PST)
+Date: Mon, 29 Jan 2024 06:57:28 -0600
+From: Lenko Donchev <lenko.donchev@gmail.com>
+To: Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: qat-linux@intel.com, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] crypto: qat - use kcalloc() instead of kzalloc()
+Message-ID: <ZbeguDTmVrP9SnDr@nixos>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7054dcbfb7214665afedaea93ce4dbad@AcuMS.aculab.com>
 
-On Mon, 29 Jan 2024, David Laight wrote:
+We are trying to get rid of all multiplications from allocation
+functions to prevent integer overflows[1]. Here the multiplication is
+obviously safe, but using kcalloc() is more appropriate and improves
+readability. This patch has no effect on runtime behavior.
 
-> ...
-> > > I'm sure that the safest return for 'truncated' is the buffer length.
-> > > The a series of statements like:
-> > > 	buf += xxx(buf, buf_end - buf, .....);
-> > > can all be called with a single overflow check at the end.
-> > >
-> > > Forget the check, and the length just contains a trailing '\0'
-> > > which might cause confusion but isn't going to immediately
-> > > break the world.
-> > 
-> > snprintf() does this and has been proven to cause buffer-overflows.
-> > There have been multiple articles authored describing why using
-> > snprintf() is not generally a good idea for the masses including the 2
-> > linked in the commit message:
-> 
-> snprintf() returns the number of bytes that would have been output [1].
-> I'm not suggesting that, or not terminating the buffer.
-> Just returning the length including the '\0' (unless length was zero).
-> This still lets the code check for overflow but isn't going to
-> generate a pointer outside the buffer if used to update a pointer.
+Link: https://github.com/KSPP/linux/issues/162 [1]
+Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [2]
 
-I see.  Well I'm not married to my solution.  However, I am convinced
-that the 2 solutions currently offered can be improved upon.  If you or
-anyone else has a better solution, I'd be more than happy to implement
-and switch to it.
+Signed-off-by: Lenko Donchev <lenko.donchev@gmail.com>
+---
+ drivers/crypto/intel/qat/qat_common/adf_isr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Let me have a think about the solution you suggest and get back to you.
-
-> [1] I'm pretty certain this is because the original libc version
-> of sprintf() allocated a FILE structure on stack (fully buffered)
-> and called fprintf().
-> snprintf() would have been done the same way but with something
-> to stop the buffer being flushed.
-
-Interesting.  Thanks for the background.
-
+diff --git a/drivers/crypto/intel/qat/qat_common/adf_isr.c b/drivers/crypto/intel/qat/qat_common/adf_isr.c
+index 3557a0d6dea2..a13d9885d60f 100644
+--- a/drivers/crypto/intel/qat/qat_common/adf_isr.c
++++ b/drivers/crypto/intel/qat/qat_common/adf_isr.c
+@@ -272,7 +272,7 @@ static int adf_isr_alloc_msix_vectors_data(struct adf_accel_dev *accel_dev)
+ 	if (!accel_dev->pf.vf_info)
+ 		msix_num_entries += hw_data->num_banks;
+ 
+-	irqs = kzalloc_node(msix_num_entries * sizeof(*irqs),
++	irqs = kcalloc_node(msix_num_entries, sizeof(*irqs),
+ 			    GFP_KERNEL, dev_to_node(&GET_DEV(accel_dev)));
+ 	if (!irqs)
+ 		return -ENOMEM;
 -- 
-Lee Jones [李琼斯]
+2.43.0
+
