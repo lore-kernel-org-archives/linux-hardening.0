@@ -1,90 +1,101 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD83455E4A
-	for <linux-hardening@vger.kernel.org>; Mon, 29 Jan 2024 09:39:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B43E55821C;
+	Mon, 29 Jan 2024 09:52:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706521199; cv=none; b=cow9kCPnKL7QHdrBfic/xbFSK0sZUsIihUJIjho7fAMm/7mmlrjry3qj9g1BQ317G4+ZuDpqz2jYU3oj9y2t10w1agHc5z/Kb7zdd4xJpAN3zst97fF3NaHJ5WiR1p3/FBjIToWNZ3+Ez6czqiGaK6EtzZNbmtRu8lcHJErqiEQ=
+	t=1706521962; cv=none; b=KT9wSH6/6OwDJu3GhV07Hn0NYz5/H6oLKNMrHNaz3FolbvzkVyrufiZABwVsJlnS33ZXkyKRkfriWZz1JToLQOk6Ib5K0jEEDE4L6PnGiw5FyNNzzEDJK8iQQX4NXaitGvSnMmKuWMy7/RbkSlkRShKAsr6jAS8ar8TAPEg7ObE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706521199; c=relaxed/simple;
-	bh=xaq6GMMiSWKpV3vfwhO/Qauwj30MaFSJQmTvX2vGZKs=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=kLug6Mg09pE5lz2DeWhHCrJEStBRfNuNzqTw6XFzr5mT+U8SJNE7BIBDij3R1YqPs0Nl2h4r4jtEhD8ppUGjUlyVjEPjv8jyVQiAFeJlLfFsAlj0wqHJlAgp0JyCDasyuxsI3byPLXuiO5jui5jqKVbemiM4zdP++XkN7ruLdn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-55-ICbmqgjGPH61LlJx9jyMGA-1; Mon, 29 Jan 2024 09:39:55 +0000
-X-MC-Unique: ICbmqgjGPH61LlJx9jyMGA-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Mon, 29 Jan
- 2024 09:39:28 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Mon, 29 Jan 2024 09:39:28 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Lee Jones' <lee@kernel.org>
-CC: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	s=arc-20240116; t=1706521962; c=relaxed/simple;
+	bh=F761W1UopTbjLyj6oTvDG2L2LbG+NdNFiuf1Z57ZfvU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D9KJBkYrzdd3YWbR4IbZoKLPqkb8rm7jsVScBrBygC3rlAaFg8Gfb4wyNCtWb8+ebHyGVAx7vO/XBGKyuPJf0RHeXgl5q71a4TbPTXsDrvSlgVJiFObYmZvk+KfV70OGqdSz6Vp16DhbodUPbrpht4pg+CpYhd39BUkyc4qyGAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=COgUzsam; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="COgUzsam"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0704BC43394;
+	Mon, 29 Jan 2024 09:52:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706521962;
+	bh=F761W1UopTbjLyj6oTvDG2L2LbG+NdNFiuf1Z57ZfvU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=COgUzsamxI5JaoiIBz2Ywypnk2v0IKL0/dnBkQZSS+JflQx2RfdnF4kKBrFx0pQ5Y
+	 RBWfoeyETfyEfN0ADn7dY7AOv0qD1cTUwncEY6BN350gATWMnXZF9LlsSOaSIOV+2c
+	 ec2BH//MA8DKdupmzbAy71FuWJrtgHvPby6oxnvJPFuTsJzw8AS0LqV+laEOggQRow
+	 Gy5lVU+ySllOabDXJO2jNyEIuZMQ1MpSsP6WT+B7gF5UOIr6UtsOidSsMwGXzqo8KY
+	 G3y8Y9GAA8D7XmFUs5rvzq7kom2Inez1SbixEQyp1qfM5Cnbf6qeIGRzIBK6Dm37Ya
+	 08SrNsgMN3QwA==
+Date: Mon, 29 Jan 2024 09:52:37 +0000
+From: Lee Jones <lee@kernel.org>
+To: David Laight <David.Laight@aculab.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
 	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>, "Andrew
- Morton" <akpm@linux-foundation.org>, Petr Mladek <pmladek@suse.com>, "Steven
- Rostedt" <rostedt@goodmis.org>, Andy Shevchenko
-	<andriy.shevchenko@linux.intel.com>, Sergey Senozhatsky
-	<senozhatsky@chromium.org>, Crutcher Dunnavant
-	<crutcher+kernel@datastacks.com>, Juergen Quade <quade@hsnr.de>
-Subject: RE: [PATCH 1/1] lib/vsprintf: Implement ssprintf() to catch truncated
- strings
-Thread-Topic: [PATCH 1/1] lib/vsprintf: Implement ssprintf() to catch
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Crutcher Dunnavant <crutcher+kernel@datastacks.com>,
+	Juergen Quade <quade@hsnr.de>
+Subject: Re: [PATCH 1/1] lib/vsprintf: Implement ssprintf() to catch
  truncated strings
-Thread-Index: AQHaT3pqpS+sRHqV5U2M6pwWmFnMHbDtupAwgALQcwCAAAFuYA==
-Date: Mon, 29 Jan 2024 09:39:28 +0000
-Message-ID: <7054dcbfb7214665afedaea93ce4dbad@AcuMS.aculab.com>
+Message-ID: <20240129095237.GC1708181@google.com>
 References: <20240125083921.1312709-1-lee@kernel.org>
  <a37e8071-32ac-4f5d-95e8-ddd2eb21edcd@rasmusvillemoes.dk>
  <20240125103624.GC74950@google.com>
  <54e518b6dd9647c1add38b706eccbb4b@AcuMS.aculab.com>
  <20240129092440.GA1708181@google.com>
-In-Reply-To: <20240129092440.GA1708181@google.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+ <7054dcbfb7214665afedaea93ce4dbad@AcuMS.aculab.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7054dcbfb7214665afedaea93ce4dbad@AcuMS.aculab.com>
 
-Li4uDQo+ID4gSSdtIHN1cmUgdGhhdCB0aGUgc2FmZXN0IHJldHVybiBmb3IgJ3RydW5jYXRlZCcg
-aXMgdGhlIGJ1ZmZlciBsZW5ndGguDQo+ID4gVGhlIGEgc2VyaWVzIG9mIHN0YXRlbWVudHMgbGlr
-ZToNCj4gPiAJYnVmICs9IHh4eChidWYsIGJ1Zl9lbmQgLSBidWYsIC4uLi4uKTsNCj4gPiBjYW4g
-YWxsIGJlIGNhbGxlZCB3aXRoIGEgc2luZ2xlIG92ZXJmbG93IGNoZWNrIGF0IHRoZSBlbmQuDQo+
-ID4NCj4gPiBGb3JnZXQgdGhlIGNoZWNrLCBhbmQgdGhlIGxlbmd0aCBqdXN0IGNvbnRhaW5zIGEg
-dHJhaWxpbmcgJ1wwJw0KPiA+IHdoaWNoIG1pZ2h0IGNhdXNlIGNvbmZ1c2lvbiBidXQgaXNuJ3Qg
-Z29pbmcgdG8gaW1tZWRpYXRlbHkNCj4gPiBicmVhayB0aGUgd29ybGQuDQo+IA0KPiBzbnByaW50
-ZigpIGRvZXMgdGhpcyBhbmQgaGFzIGJlZW4gcHJvdmVuIHRvIGNhdXNlIGJ1ZmZlci1vdmVyZmxv
-d3MuDQo+IFRoZXJlIGhhdmUgYmVlbiBtdWx0aXBsZSBhcnRpY2xlcyBhdXRob3JlZCBkZXNjcmli
-aW5nIHdoeSB1c2luZw0KPiBzbnByaW50ZigpIGlzIG5vdCBnZW5lcmFsbHkgYSBnb29kIGlkZWEg
-Zm9yIHRoZSBtYXNzZXMgaW5jbHVkaW5nIHRoZSAyDQo+IGxpbmtlZCBpbiB0aGUgY29tbWl0IG1l
-c3NhZ2U6DQoNCnNucHJpbnRmKCkgcmV0dXJucyB0aGUgbnVtYmVyIG9mIGJ5dGVzIHRoYXQgd291
-bGQgaGF2ZSBiZWVuIG91dHB1dCBbMV0uDQpJJ20gbm90IHN1Z2dlc3RpbmcgdGhhdCwgb3Igbm90
-IHRlcm1pbmF0aW5nIHRoZSBidWZmZXIuDQpKdXN0IHJldHVybmluZyB0aGUgbGVuZ3RoIGluY2x1
-ZGluZyB0aGUgJ1wwJyAodW5sZXNzIGxlbmd0aCB3YXMgemVybykuDQpUaGlzIHN0aWxsIGxldHMg
-dGhlIGNvZGUgY2hlY2sgZm9yIG92ZXJmbG93IGJ1dCBpc24ndCBnb2luZyB0bw0KZ2VuZXJhdGUg
-YSBwb2ludGVyIG91dHNpZGUgdGhlIGJ1ZmZlciBpZiB1c2VkIHRvIHVwZGF0ZSBhIHBvaW50ZXIu
-DQoNClsxXSBJJ20gcHJldHR5IGNlcnRhaW4gdGhpcyBpcyBiZWNhdXNlIHRoZSBvcmlnaW5hbCBs
-aWJjIHZlcnNpb24NCm9mIHNwcmludGYoKSBhbGxvY2F0ZWQgYSBGSUxFIHN0cnVjdHVyZSBvbiBz
-dGFjayAoZnVsbHkgYnVmZmVyZWQpDQphbmQgY2FsbGVkIGZwcmludGYoKS4NCnNucHJpbnRmKCkg
-d291bGQgaGF2ZSBiZWVuIGRvbmUgdGhlIHNhbWUgd2F5IGJ1dCB3aXRoIHNvbWV0aGluZw0KdG8g
-c3RvcCB0aGUgYnVmZmVyIGJlaW5nIGZsdXNoZWQuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVk
-IEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5l
-cywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+On Mon, 29 Jan 2024, David Laight wrote:
 
+> ...
+> > > I'm sure that the safest return for 'truncated' is the buffer length.
+> > > The a series of statements like:
+> > > 	buf += xxx(buf, buf_end - buf, .....);
+> > > can all be called with a single overflow check at the end.
+> > >
+> > > Forget the check, and the length just contains a trailing '\0'
+> > > which might cause confusion but isn't going to immediately
+> > > break the world.
+> > 
+> > snprintf() does this and has been proven to cause buffer-overflows.
+> > There have been multiple articles authored describing why using
+> > snprintf() is not generally a good idea for the masses including the 2
+> > linked in the commit message:
+> 
+> snprintf() returns the number of bytes that would have been output [1].
+> I'm not suggesting that, or not terminating the buffer.
+> Just returning the length including the '\0' (unless length was zero).
+> This still lets the code check for overflow but isn't going to
+> generate a pointer outside the buffer if used to update a pointer.
+
+I see.  Well I'm not married to my solution.  However, I am convinced
+that the 2 solutions currently offered can be improved upon.  If you or
+anyone else has a better solution, I'd be more than happy to implement
+and switch to it.
+
+Let me have a think about the solution you suggest and get back to you.
+
+> [1] I'm pretty certain this is because the original libc version
+> of sprintf() allocated a FILE structure on stack (fully buffered)
+> and called fprintf().
+> snprintf() would have been done the same way but with something
+> to stop the buffer being flushed.
+
+Interesting.  Thanks for the background.
+
+-- 
+Lee Jones [李琼斯]
