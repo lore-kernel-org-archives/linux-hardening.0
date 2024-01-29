@@ -1,73 +1,68 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29DA776031
-	for <linux-hardening@vger.kernel.org>; Mon, 29 Jan 2024 20:22:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B33977604A
+	for <linux-hardening@vger.kernel.org>; Mon, 29 Jan 2024 20:26:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706559764; cv=none; b=PtsEqiog0MzCvHkq7tc5GXZjYwfGcn8bMk/WdMX3K2Qj1sK3IziZh/IUETlg/zXz4THZ2QdMAm+sY5NpqwH0cocg7X4wWfCLpB/o1h+0iZcDUMaxffIcZvjLcrnyV+0iFPVaBkfVB952xxOrCKG5cKmhyWhb4vwNbwG/qEgtFgY=
+	t=1706559987; cv=none; b=rsHOlTZ/dH+4AueXb6yOePF6obHEZYZKZWUqFDkG+ga+vTN6KC3MPGdNQnOsKN04zN1PaHlyzI2+r6fdmxG4KO91lrsyyzKJ/w4hnb5EjtJet65HbS9tZlTsqbSGZ4R7Z38F2RthKSmTC8tgzcnIxCUasGpZiHn6ahYqG24pP44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706559764; c=relaxed/simple;
-	bh=o/NbrqV2S97L+H13EY/x2OcLCIh6zJNlJHIhIlry7AA=;
+	s=arc-20240116; t=1706559987; c=relaxed/simple;
+	bh=SMrAnU030wuDhlboOt55byceqkItemYdSY9Vo59Y2yw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lL/3TW7CfwwdV9v7lsLGUfdug/0Y9Ev3+GWZYQdCCfd/O4T729znRL2h5GupVW2xH9f9db7fYyec+M7Hc9hU1aCJKplY57ewQu/3W28H+9jADjGkg9ryitLzMcVnLhc/ratShxPbcFgbzksgUbOqIICcuseCNz9J91FgRahUxwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=l6n3sbA8; arc=none smtp.client-ip=209.85.216.43
+	 Content-Type:Content-Disposition:In-Reply-To; b=AOcsliQ4DDBwt6JxxOCWhWWjj7STclUUNKzC2cWIBUWQkdyo/TAGKDAlUcSFlWfuHwgyXalibwK+iQWKa4hCRp8tg7/uFTocLRzSEES9PCkKBStsNHT6ad3ejQtk5nnp/idFjFejx8X8ngdZoIMzXZGLFQCWDUHdkjy135lcSU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=C+R5wmvj; arc=none smtp.client-ip=209.85.210.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="l6n3sbA8"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2906855ac5fso1372868a91.3
-        for <linux-hardening@vger.kernel.org>; Mon, 29 Jan 2024 12:22:41 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="C+R5wmvj"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6de029f88d8so2305850b3a.3
+        for <linux-hardening@vger.kernel.org>; Mon, 29 Jan 2024 12:26:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1706559761; x=1707164561; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1706559985; x=1707164785; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z42ayviXl00pFftEywfCdZI1FjhKV2PnUlVfJ3EkjmY=;
-        b=l6n3sbA8UIfAPfLgTY/02EhFrd04r8IE4ZzFBTKec+N1FZFBcjJ4x4/q4wFUtJCItD
-         a3Wf6gUMbrZJQhe1u7fEWHbMMfQuFeFxYXl9+u4GB7gQLPG/kf/a+/jy/ECMIXLLMC2g
-         XriZkhjdu3eeTbRRrpgq/KcSgMK9dijIsXufg=
+        bh=6E+CSDDSvT91f9Viy+M6uu4Auu69C79V+Tns03Gp4VA=;
+        b=C+R5wmvjfctGYZ9SDDMSVdhjyUSByuz1xutV7NvLPV+DijWDZeL0ByHkiMBD9nuV42
+         cUMhqHqVCk9SaqAvZ09kpnC7D/IFzz2OjBu1Th9eqTBS2gWlDRpmew+m+G0g9QDSQJk8
+         hgt7tmGFi3bGZp1p+rPFWDyzoPpr8I4X1fysM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706559761; x=1707164561;
+        d=1e100.net; s=20230601; t=1706559985; x=1707164785;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Z42ayviXl00pFftEywfCdZI1FjhKV2PnUlVfJ3EkjmY=;
-        b=Z+mb6k43+1PO2+mucUOlws3ktR0tgjTDSPTNBH7UDaOxYyWEAZZJklKOgU0d+cpcoB
-         X1d8ZZoqf5bBlYQQAXZ5iNLldwdX3d/FGnvxBEu3zb2R5cmqLO5fh5JvaaJnHPz9g0ER
-         KcpE7FyTwc20JaoOXeqGzzzpktcA9nmUCNFBUAZHyfImKT4Vl3NPcdbv6yRH+zwOfVuq
-         KtfbbumBI8J2tZpe6l/PPH40KRRmNThqbA7TOjZYHhG6/MMTOwL+v9gnnjt0TEbE7zPm
-         LqIg+CaPLT/28EMtw6nCTs334unvzzM2+Abto9eBlWAShJY5ms3spHdAEvA+huczSE+M
-         kpcA==
-X-Gm-Message-State: AOJu0Yw6AC+97ThmmYSyU02wZo98QQ547boVmUdq4N7Ta5dGgT3lPSar
-	rTWjRM4a/PBIFMUUFVZs87XOASBLA4fpx6SAJtRiUVOT/IccCyBOVO/pyw1T5A==
-X-Google-Smtp-Source: AGHT+IHKFFpzQdzMeVVxTYSKwO60dgMxA8EJGc7W4MEDm2qbbjGDlc81pU8+CdO3BRwKTHCRTbIyDw==
-X-Received: by 2002:a17:90a:b013:b0:290:121a:c382 with SMTP id x19-20020a17090ab01300b00290121ac382mr2629214pjq.24.1706559761292;
-        Mon, 29 Jan 2024 12:22:41 -0800 (PST)
+        bh=6E+CSDDSvT91f9Viy+M6uu4Auu69C79V+Tns03Gp4VA=;
+        b=LEaKBbMg8LmFQ0mLHYaTe24nUObTGA7JAiVMWo7MRSSq6Ch/BBDUvUYXhQHSnl7JE2
+         h8hiS8VZSFXV82GoxfVZDiuZGSRJWYjULLzwklxz5cc5/uTOeBlKql2o2l5uBlECx1th
+         tOv5NSo8W+NhbhhuBj6dGvw136jFROik2uwlKIp63Yu+R40eMUIpqlWP2xE2jNiTPdtj
+         Hk6S72ovPHMPGRCWUN+T/tRpnKlRnRLFxxKdntsoF5NhNgt25O3zCDnHCLNlx7+rJtdU
+         F1qEGmrEcAyQslZ+j78Z5IN2GTSAKwrrrPsUZ0bE6lBhPj7yXqHsH6GsM6fUO0Mrfpl4
+         s4ew==
+X-Gm-Message-State: AOJu0YwhTo9lBNCCO7JjYvpfQVrFEDkbu4qL84hxHnKte8BBmzsxqcy0
+	JM49+j459WlKY7IxW9xhHq0Xg7GQEDt2JSQ8ay7VipQSfIrpnBVaLpbqxxw5kA==
+X-Google-Smtp-Source: AGHT+IEljCTSge/PCk3xrZvAhS+vec3Iv/hm4f2dPqTNvAEMD81HKYx4c8Hh7l8Y79fYPZE4uKvCYQ==
+X-Received: by 2002:a05:6a00:d74:b0:6dd:8a25:e167 with SMTP id n52-20020a056a000d7400b006dd8a25e167mr4255359pfv.34.1706559985074;
+        Mon, 29 Jan 2024 12:26:25 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id d15-20020a17090a498f00b00291000d8210sm8568534pjh.19.2024.01.29.12.22.40
+        by smtp.gmail.com with ESMTPSA id a15-20020aa78e8f000000b006ddc3794de7sm6239422pfr.134.2024.01.29.12.26.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jan 2024 12:22:40 -0800 (PST)
-Date: Mon, 29 Jan 2024 12:22:40 -0800
+        Mon, 29 Jan 2024 12:26:24 -0800 (PST)
+Date: Mon, 29 Jan 2024 12:26:23 -0800
 From: Kees Cook <keescook@chromium.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Marco Elver <elver@google.com>, Miguel Ojeda <ojeda@kernel.org>,
+To: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-hardening@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Peter Zijlstra <peterz@infradead.org>, Hao Luo <haoluo@google.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Fangrui Song <maskray@google.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
 	Bill Wendling <morbo@google.com>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-	llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 2/6] ubsan: Reintroduce signed and unsigned overflow
- sanitizers
-Message-ID: <202401291221.99D8568D0@keescook>
-References: <20240129175033.work.813-kees@kernel.org>
- <20240129180046.3774731-2-keescook@chromium.org>
- <20240129195418.hftkcdksptmpfv3i@google.com>
+	Justin Stitt <justinstitt@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>, Marco Elver <elver@google.com>,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH 4/5] overflow: Introduce add_wrap(), sub_wrap(), and
+ mul_wrap()
+Message-ID: <202401291224.53CA9C17E0@keescook>
+References: <20240129182845.work.694-kees@kernel.org>
+ <20240129183411.3791340-4-keescook@chromium.org>
+ <8dead2fb-d522-492b-89f2-1358198c1cdf@prevas.dk>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -76,80 +71,69 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240129195418.hftkcdksptmpfv3i@google.com>
+In-Reply-To: <8dead2fb-d522-492b-89f2-1358198c1cdf@prevas.dk>
 
-On Mon, Jan 29, 2024 at 07:54:18PM +0000, Justin Stitt wrote:
-> Hi,
+On Mon, Jan 29, 2024 at 09:08:43PM +0100, Rasmus Villemoes wrote:
+> On 29/01/2024 19.34, Kees Cook wrote:
+> > Provide helpers that will perform wrapping addition, subtraction, or
+> > multiplication without tripping the arithmetic wrap-around sanitizers. The
+> > first argument is the type under which the wrap-around should happen
+> > with. In other words, these two calls will get very different results:
+> > 
+> > 	add_wrap(int, 50, 50) == 2500
+> > 	add_wrap(u8,  50, 50) ==  196
 > 
-> On Mon, Jan 29, 2024 at 10:00:39AM -0800, Kees Cook wrote:
-> > Effectively revert commit 6aaa31aeb9cf ("ubsan: remove overflow
-> > checks"), to allow the kernel to be built with the "overflow"
-> > sanitizers again. This gives developers a chance to experiment[1][2][3]
-> > with the instrumentation again, while compilers adjust their sanitizers
-> > to deal with the impact of -fno-strict-oveflow (i.e. moving from
-> > "overflow" checking to "wrap-around" checking).
-> >
-> > Notably, the naming of the options is adjusted to use the name "WRAP"
-> > instead of "OVERFLOW". In the strictest sense, arithmetic "overflow"
-> > happens when a result exceeds the storage of the type, and is considered
-> > by the C standard and compilers to be undefined behavior for signed
-> > and pointer types (without -fno-strict-overflow). Unsigned arithmetic
-> > overflow is defined as always wrapping around.
-> >
-> > Because the kernel is built with -fno-strict-overflow, signed and pointer
-> > arithmetic is defined to always wrap around instead of "overflowing"
-> > (which could either be elided due to being undefined behavior or would
-> > wrap around, which led to very weird bugs in the kernel).
-> >
-> > So, the config options are added back as CONFIG_UBSAN_SIGNED_WRAP and
-> > CONFIG_UBSAN_UNSIGNED_WRAP. Since the kernel has several places that
-> > explicitly depend on wrap-around behavior (e.g. counters, atomics, crypto,
-> > etc), also introduce the __signed_wrap and __unsigned_wrap function
-> > attributes for annotating functions where wrapping is expected and should
-> > not be instrumented. This will allow us to distinguish in the kernel
-> > between intentional and unintentional cases of arithmetic wrap-around.
-> >
-> > Additionally keep these disabled under CONFIG_COMPILE_TEST for now.
-> 
-> This is present in the patch but perhaps its worth noting here that x86
-> has trouble booting with the unsigned-integer-overflow sanitizer on.
+> s/add/mul/g I suppose.
 
-Yeah, though this is fixed later in the series.
+Oops, yes.
 
-> 
-> >
-> > Link: https://github.com/KSPP/linux/issues/26 [1]
-> > Link: https://github.com/KSPP/linux/issues/27 [2]
-> > Link: https://github.com/KSPP/linux/issues/344 [3]
-> > Cc: Justin Stitt <justinstitt@google.com>
-> > Cc: Miguel Ojeda <ojeda@kernel.org>
-> > Cc: Nathan Chancellor <nathan@kernel.org>
-> > Cc: Nick Desaulniers <ndesaulniers@google.com>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Marco Elver <elver@google.com>
-> > Cc: Hao Luo <haoluo@google.com>
-> > Cc: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+> > Cc: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: linux-hardening@vger.kernel.org
 > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  include/linux/overflow.h | 54 ++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 54 insertions(+)
+> > 
+> > diff --git a/include/linux/overflow.h b/include/linux/overflow.h
+> > index 3c46c648d2e8..4f945e9e7881 100644
+> > --- a/include/linux/overflow.h
+> > +++ b/include/linux/overflow.h
+> > @@ -120,6 +120,24 @@ static inline bool __must_check __must_check_overflow(bool overflow)
+> >  		check_add_overflow(var, offset, &__result);	\
+> >  	}))
+> >  
+> > +/**
+> > + * add_wrap() - Intentionally perform a wrapping addition
+> > + * @type: type to check overflow against
 > 
-> 
-> This patch adheres to the language semantics as I understand them.
-> Moreover, we would've had to send a patch similar to this once we land
-> some better sanitizer + -fno-strict-oveflow support in the compilers.
-> 
-> Currently, though, -fsanitize=signed-integer-overflow instruments very
-> little (if anything at all) due to compiler optimizations in conjunction
-> with -fno-strict-oveflow. I am working on a new
-> -fsanitize=signed-integer-wrap in Clang which will instrument more
-> arithmetic even under -fno-strict-oveflow.
+> Well, nothing is "checked", so why not just say "type of result"?
 
-Agreed -- I'm mainly getting these back into the kernel so folks working
-on this have a common base to work from.
+Yeah, that's better. I was trying to describe that @type will affect the
+value of the result.
 
-> Reviewed-by: Justin Stitt <justinstitt@google.com>
+> > +/**
+> > + * sub_wrap() - Intentionally perform a wrapping subtraction
+> > + * @type: type to check underflow against
+> 
+> The terminology becomes muddy, is (INT_MAX) - (-1) an underflow or
+> overflow? Anyway, see above.
+
+Right, I should explicitly say "wrap-around".
+
+> 
+> >  
+> > +/**
+> > + * mul_wrap() - Intentionally perform a wrapping multiplication
+> > + * @type: type to check underflow against
+> 
+> And here there's definitely a copy-pasto.
+
+Ek, yes.
+
+> The code itself looks fine.
 
 Thanks!
-
--Kees
 
 -- 
 Kees Cook
