@@ -1,30 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83E895786C;
-	Mon, 29 Jan 2024 09:27:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCB0555C3D;
+	Mon, 29 Jan 2024 09:29:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706520434; cv=none; b=bXNebr89YDad8Th8wbhx093W8rV/totDeHWIqzFnDLxqSLj4exF4KFZrz3KrMAmo7hfDxMZy46lIL7kYjpLuBVnzp9RMXcLQDyEGth+rcx6ekxr1KVdnE/PT+VethEvhZw13A3xukXdRqTKlASYJU3qoeH6xaL+mL8D68t6DVu4=
+	t=1706520599; cv=none; b=Nr46yAkAyPlDKzQk2hNUZdgnOtC7qtWYze59Y7Qmc8UzPvrxSb6JLiNsyPi133/URlHcJtcGbp6br3zVgoM8L4d/P4heCycidRpEDN12Nh/zwN9XceQh41d3bpOzHj/fGDBRtGdyIkS4Yi9ZT4bGvPpF1OP59wRynkXWWmjqc9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706520434; c=relaxed/simple;
+	s=arc-20240116; t=1706520599; c=relaxed/simple;
 	bh=FOtCAJxhqeqAJLlTKWeIWwK177ZkAY+IT7ykxd5EE7Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IOdN5vr0iUVXhDWPfpXZKIRoW8RtyEwQZU7TJ9R5In0HKmOupOD1n2csXrc3IqJDRVJU97njyw2DYmQp/V4Sl+2FLlSPndzpDRuvFiAba+aepZApQqRgtikQm2f/SD/yzgjo833PCbjwx3rzaai+U3MlxXw54ImzAlny7ItADBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q+av6ih5; arc=none smtp.client-ip=10.30.226.201
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Mta4I1MaEw6jzeoWAJbI77sGyLHCIon7JAQXzwmeMD4wZvWpR6zc3z+ApRRZGhvpYTuVNNj8ojztl18ie/nhpdjMoUkGTiuXANAHzVCq5Zl7E9n5eqnbuReit7qJZY7b0/Cr5eC2r3XBIkbAPcgRybXQvn8K5l49N2mhXyP6EBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dTEbrwvs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q+av6ih5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0044C433F1;
-	Mon, 29 Jan 2024 09:27:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dTEbrwvs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFE6FC433C7;
+	Mon, 29 Jan 2024 09:29:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706520434;
+	s=k20201202; t=1706520599;
 	bh=FOtCAJxhqeqAJLlTKWeIWwK177ZkAY+IT7ykxd5EE7Y=;
 	h=From:To:Cc:Subject:Date:From;
-	b=q+av6ih54ZLZDWN/dwHNNzDzJzLwXQc2Gr8JNYTfEfI9wKkF3L2DzZCDUUv7kyC54
-	 HCosYi4MN+4aI6Rd2q0jLyLRH1QcnkngpAEwvdwuOvXQMnxnDHKQdfjw5lBTas/5l4
-	 gpWAyhpCNan8gz07BLcZN2bRGih6qpjczrSpiaQz1vmVoNei89yGAs5745H+XKyCF4
-	 DDeBlA35F0jWAmhb13+7n4Jwf+cQ87e0EyenKpsf5PzG1JTE21LXMFqUglx+sdQQDh
-	 G1HDYVbwprBNn+hLIdpmmKPcavfs+bnNI77Nii9PDQanYmP6848vahI/Dy/g6S/zVr
-	 o44X7sPwEKo6w==
+	b=dTEbrwvsPV7z6s9KHhBScmxDK3HquF62ChUtssgNFZJqZ0j7nnoKoVsAneaQzLnc/
+	 0iUrwrEWVe1q4TGfthBkIdRVanYruzqoVwu/jiZ33hYbV/tga0lB8DevRNgqu69eSM
+	 FImm57SNIuBWSZxXt2AzqOrBi79kBK6+qiMq/gEqw7idxInrBG11UdBoZoXtX1ezpX
+	 gZhcpXFQtIwayp2mbxuh5BpZpWuH38dtE/5IgSQeMhKteFCGsxWElx8tvXTBi/e0KL
+	 BjGgixHzA00j5Hx2Jknlkm++umMyA8UUyWGlsWRM1Y3UB5fx6KZ9U7RQjm9Aa8TTi0
+	 FFVO6T5GQC97Q==
 From: Lee Jones <lee@kernel.org>
 To: lee@kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -38,9 +38,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Crutcher Dunnavant <crutcher+kernel@datastacks.com>,
 	Juergen Quade <quade@hsnr.de>,
 	David Laight <David.Laight@aculab.com>
-Subject: [PATCH 1/1] lib/vsprintf: Implement ssprintf() to catch truncated strings
-Date: Mon, 29 Jan 2024 09:27:05 +0000
-Message-ID: <20240129092705.1978653-1-lee@kernel.org>
+Subject: [PATCH v2 1/1] lib/vsprintf: Implement ssprintf() to catch truncated strings
+Date: Mon, 29 Jan 2024 09:29:52 +0000
+Message-ID: <20240129092952.1980246-1-lee@kernel.org>
 X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
