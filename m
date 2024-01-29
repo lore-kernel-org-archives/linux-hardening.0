@@ -1,71 +1,70 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA7F576044
-	for <linux-hardening@vger.kernel.org>; Mon, 29 Jan 2024 18:00:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6268A7605C
+	for <linux-hardening@vger.kernel.org>; Mon, 29 Jan 2024 18:00:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706551253; cv=none; b=CkwxSRcvQoFssa1GO6UYercPkihKlEnjfKr/IvBXhuSO5cSqMFA59hxFlWBnr0HIjhbK5XUXCuPQnzJ5diHNehl9gp4I1WfGzI9ORQ2TGFWYXrGNen5nRaVTy9VjrbuZIKr1RslNh2UAkIKAaE0SuIn94gNmTN3og60b8skcleI=
+	t=1706551254; cv=none; b=LFTawC4qdKmphyGYkpqkh3bclyjG21/GhFXwtWRPylvL52SELZz/KMYRPWdkSj8WWb/9STcFC4eZoWPIH7dyoh2Lkbj/XnxJRIwMxB2yUp9zGFWisTXgYJooeLF9yf8mFeu0z2mtzn2GBm34ZH4724+FhJhS8U1xmgFk3SHDVVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706551253; c=relaxed/simple;
-	bh=ChqR4pwLOMRrvI2mwMAhvrmBk7bFBrYJU+84/NDgMjc=;
+	s=arc-20240116; t=1706551254; c=relaxed/simple;
+	bh=vyr6Rwi/L4pPWBag7CWmhgakv5Jllyh1RjY3A2J+kW0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=s8UUq3laLIbVKz/AAebGKAmqDkI8wXxSJg/mzrk06WYos15ihVBIo7iYvbSqF7gz7LhW9uM5Im799JWp48R94vRXYhea0PNzJOhwTOKnWAhZHDi2OT6NzujKkOk1O/bJ1ucblPT7gTsxN/AHzclKxMWtCWAyWMlJPPvMTIEqu9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=eVdL6wUQ; arc=none smtp.client-ip=209.85.216.49
+	 MIME-Version; b=TKdk2dqnkm9RFWv5ry7w7Ft1y/zfOEJ51lpj6/DjjAUIl9XrQUyJu6CMvfYd00bURXGq68LZF5XT5Z9uVON8krcF8KnMaxB6FjrceUuMQm9zI9SHu1y2NFTyhE3BQ12JvT47L3Ze/eAnOa1/74H80XxtRztuWVxdgmA7tbO57hE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=hqPNbxNn; arc=none smtp.client-ip=209.85.210.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eVdL6wUQ"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-295a3911af8so123893a91.1
-        for <linux-hardening@vger.kernel.org>; Mon, 29 Jan 2024 10:00:50 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hqPNbxNn"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6ddc2a78829so1101321b3a.3
+        for <linux-hardening@vger.kernel.org>; Mon, 29 Jan 2024 10:00:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1706551250; x=1707156050; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1706551252; x=1707156052; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MZoPcgm2ExbWiklFnpgC7jG0zZ989QvpgVdI0GYP0N0=;
-        b=eVdL6wUQn1OrJpjdli/1aJZg9sQIJTVlcOSwa8vWcj3jYynkilFbnin8s3lXHtE3wg
-         lHTvnOZxXABCsUM5olGw7z7AgrbxHbndgBjcEvmZTmvs3/i9jecaglDPolVQfOxoUI/A
-         j7Rpk4lKC3Wcmt8YjQLYwNzkmJoajH2u98Wp0=
+        bh=OCmwNzG0gnTrnb9QgYxmIVbsupAP31DOfmkmHJeY0ek=;
+        b=hqPNbxNndTfhQPefx6pHq3mYjF2fPySoDhhRhZvRn7OgRllIc7hLycb5b+KMyPPA1H
+         cw9FHa0yHXRRdp5OGGXlHWMtcdYB4Yom5oYray26qKj8Ejq3ZmrKhG0FZdqPNMRZfxyT
+         5DBLISuER+7YuJ0mP8g1N5CHs84/2uOrTv9No=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706551250; x=1707156050;
+        d=1e100.net; s=20230601; t=1706551252; x=1707156052;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MZoPcgm2ExbWiklFnpgC7jG0zZ989QvpgVdI0GYP0N0=;
-        b=Da1siAoKsR9gWhXT1QmJ8zvdQcas+RA5PZGcXBHc6cLt/WSe36qw2dj1EvesZOtHtM
-         ONAHiKiFneiWZs0BQm7QR78Y+x8kMi8h2qlb7TvaPuFdJEZnboGmu5M3kzyyKc0j2F3+
-         yM25g9eytEoOebZW7WBJ2UxtVnLpWzBnYfZEI/GypJhsz+LlbAl5M8wniynbfqL+waqi
-         uPcUTfVNFjiQvldq0pqqM2UwCAnnlubk8q+PpLyTU3YEL9rounc1fR54KBgoS/ZlPNvA
-         UDDwWGcZxT5CKHZeGFlSqQxDKWsAQfya2Lc/Y4Hu89LVsYb9mKXwUCBnPh7zFUSXcX9C
-         dH8w==
-X-Gm-Message-State: AOJu0YwciTJQVFEc1B7VRKbnYLdYkqogF/LYJLEgwGbBQnty7bA1XvN2
-	J+2OR/pouanNcpVNtqz3G7yNpGquyKmXYhucR+0HC9o1xCWtJpqcC7pWuMXFzA==
-X-Google-Smtp-Source: AGHT+IFJF0hBnKPnC2NvGE/ASBC2G7DOqChpIyY5M1CvIMsaqLsisQe6MdkRA14bizZntAf3cxjpUA==
-X-Received: by 2002:a17:90b:fd4:b0:294:bd32:6ddf with SMTP id gd20-20020a17090b0fd400b00294bd326ddfmr2604323pjb.38.1706551249916;
-        Mon, 29 Jan 2024 10:00:49 -0800 (PST)
+        bh=OCmwNzG0gnTrnb9QgYxmIVbsupAP31DOfmkmHJeY0ek=;
+        b=XGDyttMXfwdno8siks/8jGnWfbhWvby1NPnIaGi4Gyv4fpZ7L+oTaMTuhGHmjxqK/J
+         7nvzS7wA6eWmCbO8KuGP2hfkMNIP0WzIwyB1AR+qAJABvM9mc+WUW6yJgnTH/A/BSzMl
+         wOMp4tGgpimZ3ozqef2h6y3SF3zR79elSdRyIuBq6Diz+QO7Zm6FIzxX8KLbCKZdLOk4
+         8/lJLdAK0DEtAcv4iNQplUsyI4qmUsjQAkBOK0Mj2BB1Kmu3GmYbKbksXAi5LAtw8W+q
+         D8dB3Bh7mbQtGphosQvZjDA8Jj9ZtJ4y6gRKkXLeyfU635zkLswTzdK0uF/Tk2Tp2yhN
+         LVCA==
+X-Gm-Message-State: AOJu0YwnnbV6Eq/JWKPuOoq/2Te0Auw1CacIPJTI9mqpSW6g/MzvjTKm
+	FEgXAoYK3vBzorp2ScPSzS0itu7GSfZBFtf8Oj4vsi6uUQ4sP5OOL7KyJesHyg==
+X-Google-Smtp-Source: AGHT+IGVjbfx+dgJA2wbD9MRyfwRvwDaPUuZ8EQ54JR12VYQ5TreN5Z+GN2o1FR+hWh1xxRLAdwFNQ==
+X-Received: by 2002:a05:6a00:4b84:b0:6de:144e:5adb with SMTP id ks4-20020a056a004b8400b006de144e5adbmr2032890pfb.9.1706551251690;
+        Mon, 29 Jan 2024 10:00:51 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id c92-20020a17090a496500b0029102d936casm9508441pjh.47.2024.01.29.10.00.47
+        by smtp.gmail.com with ESMTPSA id ld10-20020a056a004f8a00b006ddce8e110bsm6145946pfb.128.2024.01.29.10.00.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jan 2024 10:00:47 -0800 (PST)
+        Mon, 29 Jan 2024 10:00:51 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
 To: Marco Elver <elver@google.com>
 Cc: Kees Cook <keescook@chromium.org>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	linux-doc@vger.kernel.org,
-	linux-kbuild@vger.kernel.org,
 	Justin Stitt <justinstitt@google.com>,
 	Fangrui Song <maskray@google.com>,
 	Nathan Chancellor <nathan@kernel.org>,
 	Masahiro Yamada <masahiroy@kernel.org>,
 	Bill Wendling <morbo@google.com>,
 	Nicolas Schier <nicolas@fjasle.eu>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
 	linux-kernel@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
 	llvm@lists.linux.dev,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH 4/6] ubsan: Remove CONFIG_UBSAN_SANITIZE_ALL
-Date: Mon, 29 Jan 2024 10:00:41 -0800
-Message-Id: <20240129180046.3774731-4-keescook@chromium.org>
+Subject: [PATCH 6/6] ubsan: Get x86_64 booting with unsigned wrap-around sanitizer
+Date: Mon, 29 Jan 2024 10:00:43 -0800
+Message-Id: <20240129180046.3774731-6-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240129175033.work.813-kees@kernel.org>
 References: <20240129175033.work.813-kees@kernel.org>
@@ -75,239 +74,278 @@ List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7713; i=keescook@chromium.org;
- h=from:subject; bh=ChqR4pwLOMRrvI2mwMAhvrmBk7bFBrYJU+84/NDgMjc=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlt+fKFqznRoc47f8x3QBqsx9X6BtCiDiZKmRIR
- 0EaK8ZbstmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZbfnygAKCRCJcvTf3G3A
- Jg4gEAChu+riNsR4c9zKObZSyCQUUAbASyVvN0lCOoFA0sP6wed+rAC2TyDu+UQ9leLyPsbImoA
- f5T1X+cih9rKYfmgsh4qZjlfZyKxDq8h7boBYb4ViPcPI6gjaK/nmcKd1p9D3kuQrosXQTOOBb0
- 2A9JQAchDgi8bYBAUx4bbQDrE2PN9IlNfpNOOXIEbyMaLI2tXTmLSXkHsY7Dv0j57/D5LasGpXJ
- dnPe7wiyx7ScZiqIXARLDMEEUmRrjXoX8M79qvy6HFDxmn6DCcaOB6lDzjfYRZk+isVvloD+JsT
- aTi5iL9rwJ5QyukDAL2YcLpWdugTz6w1QDIQLTtMMiPoCxSzIQrWEquf9jvKZ4YIy8/zQxtO373
- 24CyKH2XRFk2se/59wIyQrQEzaOK5LGmgKUhrLaXTTvvs2DISeeeQjyb0nmZsn9aI/nb+/1i8lM
- lMxAI6TWYY8qCyCmL+jrNeb9uxXrLKvk3jScplihgdGqY4K/5+vBbFOK1MCW96hJZy/gfzsXiJ0
- Jpy1pdy3hgyvKS+DJ967EltatLdjLYjIGBEPtG3Y6ERhC+8otnnJnwR5B6aZjyvVSX8rtD5Rfwz
- f2SLNwQcz+SJtiDV0bohAza2wbBe7E3/+4OpLDaTRaHYrr6RCKdJD2gXQwAFautWLmw5gYdanNc ZwzHb2t7GGez9gQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8826; i=keescook@chromium.org;
+ h=from:subject; bh=vyr6Rwi/L4pPWBag7CWmhgakv5Jllyh1RjY3A2J+kW0=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlt+fL+5j6RyjG7DFwNYFk5rjZHC5PVhYr7Nsno
+ 6c43/+/XJuJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZbfnywAKCRCJcvTf3G3A
+ JoneD/4yJSut/tjh9xof+uxlmfu6lhp6Y/pPhiztmsHBZs6eoYUT5ZgHTVbbmBCR9BsSXIWNSjP
+ qQRttiPvGPUoWvplm6FkkD5jsTkUKrBbE+k8sSQzgTn8JGKu/zUBie2nr0Med5fXmSe/vN08qsi
+ 6NK61jypgUeb2pM9WTX0jaw6pcbBEn4lF6k7J9JsC0x3zwePDBCvuYQnTOfPiOli9MH8sE2m7Ux
+ CO4MSJi9o4ougznPuSqbbGqU1E66GOz7koREFMXIb1hxsiwxDRRr19kak0MRMzx3n9jgCYWfBRF
+ vah4SUGIyPSJcpltYbg1tl1kIS0OOKXP5p26TmxyfdfDKDruPJm9VEd6FtHAPwdS/eSJxkJcuCD
+ mVgoUmh/5fFvP0DwsamhMn+6bc9vqdGWZ/pusIr7JG/nw3jJUMeFUXwryR9STu2HBsYm8DB5lQR
+ 4zpO3NtQnHldS7UYyRvT3efNH9qZP/0umPzlasK6u7ZfHCWAHDUV5Eed5rMtTxywEAzhyJsrLC8
+ y/7vEA/t4Dv/JlU0RJLd6INlXGEjCUXhx0A/U0AfUoiAm6c/JxqoU4rxP25AB28e1zYVIVpZeTV
+ cxTMOVYc5CXqZpPKWtOY2c9MNUgfQJrWGICCS4DqqTzbGmHoULukYpOnlGBqwm07O83s0pTGgX/ lBYuk1BRX+RxxrA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-For simplicity in splitting out UBSan options into separate rules,
-remove CONFIG_UBSAN_SANITIZE_ALL, effectively defaulting to "y", which
-is how it is generally used anyway. (There are no ":= y" cases beyond
-where a specific file is enabled when a top-level ":= n" is in effect.)
+In order to get x86_64 booting with the unsigned wrap-around sanitizer,
+several kernel areas that depend heavily on unsigned wrap-around need to
+be disabled entirely (with "UBSAN_UNSIGNED_WRAP := n"). As we fine-tune
+the sanitizer, we can revisit these and perform finer grain annotations.
 
-Cc: Andrey Konovalov <andreyknvl@gmail.com>
-Cc: Marco Elver <elver@google.com>
-Cc: linux-doc@vger.kernel.org
-Cc: linux-kbuild@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- Documentation/dev-tools/ubsan.rst | 28 ++++++++--------------------
- arch/arm/Kconfig                  |  2 +-
- arch/arm64/Kconfig                |  2 +-
- arch/mips/Kconfig                 |  2 +-
- arch/parisc/Kconfig               |  2 +-
- arch/powerpc/Kconfig              |  2 +-
- arch/riscv/Kconfig                |  2 +-
- arch/s390/Kconfig                 |  2 +-
- arch/x86/Kconfig                  |  2 +-
- lib/Kconfig.ubsan                 | 13 +------------
- scripts/Makefile.lib              |  2 +-
- 11 files changed, 18 insertions(+), 41 deletions(-)
+ arch/x86/kernel/Makefile      | 1 +
+ arch/x86/kernel/apic/Makefile | 1 +
+ arch/x86/mm/Makefile          | 1 +
+ arch/x86/mm/pat/Makefile      | 1 +
+ crypto/Makefile               | 1 +
+ drivers/acpi/Makefile         | 1 +
+ kernel/Makefile               | 1 +
+ kernel/locking/Makefile       | 1 +
+ kernel/rcu/Makefile           | 1 +
+ kernel/sched/Makefile         | 1 +
+ lib/Kconfig.ubsan             | 5 +++--
+ lib/Makefile                  | 1 +
+ lib/crypto/Makefile           | 1 +
+ lib/crypto/mpi/Makefile       | 1 +
+ lib/zlib_deflate/Makefile     | 1 +
+ lib/zstd/Makefile             | 2 ++
+ mm/Makefile                   | 1 +
+ net/core/Makefile             | 1 +
+ net/ipv4/Makefile             | 1 +
+ 19 files changed, 22 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/dev-tools/ubsan.rst b/Documentation/dev-tools/ubsan.rst
-index 2de7c63415da..e3591f8e9d5b 100644
---- a/Documentation/dev-tools/ubsan.rst
-+++ b/Documentation/dev-tools/ubsan.rst
-@@ -49,34 +49,22 @@ Report example
- Usage
- -----
+diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+index 0000325ab98f..de93f8b8a149 100644
+--- a/arch/x86/kernel/Makefile
++++ b/arch/x86/kernel/Makefile
+@@ -30,6 +30,7 @@ KASAN_SANITIZE_sev.o					:= n
  
--To enable UBSAN configure kernel with::
-+To enable UBSAN, configure the kernel with::
+ # With some compiler versions the generated code results in boot hangs, caused
+ # by several compilation units. To be safe, disable all instrumentation.
++UBSAN_WRAP_UNSIGNED := n
+ KCSAN_SANITIZE := n
+ KMSAN_SANITIZE_head$(BITS).o				:= n
+ KMSAN_SANITIZE_nmi.o					:= n
+diff --git a/arch/x86/kernel/apic/Makefile b/arch/x86/kernel/apic/Makefile
+index 3bf0487cf3b7..aa97b5830b64 100644
+--- a/arch/x86/kernel/apic/Makefile
++++ b/arch/x86/kernel/apic/Makefile
+@@ -6,6 +6,7 @@
+ # Leads to non-deterministic coverage that is not a function of syscall inputs.
+ # In particular, smp_apic_timer_interrupt() is called in random places.
+ KCOV_INSTRUMENT		:= n
++UBSAN_WRAP_UNSIGNED	:= n
  
--	CONFIG_UBSAN=y
-+  CONFIG_UBSAN=y
+ obj-$(CONFIG_X86_LOCAL_APIC)	+= apic.o apic_common.o apic_noop.o ipi.o vector.o init.o
+ obj-y				+= hw_nmi.o
+diff --git a/arch/x86/mm/Makefile b/arch/x86/mm/Makefile
+index c80febc44cd2..7a43466d4581 100644
+--- a/arch/x86/mm/Makefile
++++ b/arch/x86/mm/Makefile
+@@ -1,5 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # Kernel does not boot with instrumentation of tlb.c and mem_encrypt*.c
++UBSAN_WRAP_UNSIGNED := n
+ KCOV_INSTRUMENT_tlb.o			:= n
+ KCOV_INSTRUMENT_mem_encrypt.o		:= n
+ KCOV_INSTRUMENT_mem_encrypt_amd.o	:= n
+diff --git a/arch/x86/mm/pat/Makefile b/arch/x86/mm/pat/Makefile
+index ea464c995161..281a5786c5ea 100644
+--- a/arch/x86/mm/pat/Makefile
++++ b/arch/x86/mm/pat/Makefile
+@@ -1,4 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
++UBSAN_WRAP_UNSIGNED := n
  
--and to check the entire kernel::
--
--        CONFIG_UBSAN_SANITIZE_ALL=y
--
--To enable instrumentation for specific files or directories, add a line
--similar to the following to the respective kernel Makefile:
--
--- For a single file (e.g. main.o)::
--
--    UBSAN_SANITIZE_main.o := y
--
--- For all files in one directory::
--
--    UBSAN_SANITIZE := y
--
--To exclude files from being instrumented even if
--``CONFIG_UBSAN_SANITIZE_ALL=y``, use::
-+To exclude files from being instrumented use::
+ obj-y				:= set_memory.o memtype.o
  
-   UBSAN_SANITIZE_main.o := n
+diff --git a/crypto/Makefile b/crypto/Makefile
+index 408f0a1f9ab9..c7b23d99e715 100644
+--- a/crypto/Makefile
++++ b/crypto/Makefile
+@@ -2,6 +2,7 @@
+ #
+ # Cryptographic API
+ #
++UBSAN_WRAP_UNSIGNED := n
  
--and::
-+and to exclude all targets in one directory use::
+ obj-$(CONFIG_CRYPTO) += crypto.o
+ crypto-y := api.o cipher.o compress.o
+diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
+index 12ef8180d272..92a8e8563b1b 100644
+--- a/drivers/acpi/Makefile
++++ b/drivers/acpi/Makefile
+@@ -2,6 +2,7 @@
+ #
+ # Makefile for the Linux ACPI interpreter
+ #
++UBSAN_WRAP_UNSIGNED := n
  
-   UBSAN_SANITIZE := n
+ ccflags-$(CONFIG_ACPI_DEBUG)	+= -DACPI_DEBUG_OUTPUT
  
-+When disabled for all targets, specific files can be enabled using::
-+
-+  UBSAN_SANITIZE_main.o := y
-+
- Detection of unaligned accesses controlled through the separate option -
- CONFIG_UBSAN_ALIGNMENT. It's off by default on architectures that support
- unaligned accesses (CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS=y). One could
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 0af6709570d1..287e62522064 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -29,7 +29,7 @@ config ARM
- 	select ARCH_HAVE_NMI_SAFE_CMPXCHG if CPU_V7 || CPU_V7M || CPU_V6K
- 	select ARCH_HAS_GCOV_PROFILE_ALL
- 	select ARCH_KEEP_MEMBLOCK
--	select ARCH_HAS_UBSAN_SANITIZE_ALL
-+	select ARCH_HAS_UBSAN
- 	select ARCH_MIGHT_HAVE_PC_PARPORT
- 	select ARCH_OPTIONAL_KERNEL_RWX if ARCH_HAS_STRICT_KERNEL_RWX
- 	select ARCH_OPTIONAL_KERNEL_RWX_DEFAULT if CPU_V7
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index aa7c1d435139..78533d1b7f35 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -107,7 +107,7 @@ config ARM64
- 	select ARCH_WANT_LD_ORPHAN_WARN
- 	select ARCH_WANTS_NO_INSTR
- 	select ARCH_WANTS_THP_SWAP if ARM64_4K_PAGES
--	select ARCH_HAS_UBSAN_SANITIZE_ALL
-+	select ARCH_HAS_UBSAN
- 	select ARM_AMBA
- 	select ARM_ARCH_TIMER
- 	select ARM_GIC
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 797ae590ebdb..9750ce3e40d5 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -14,7 +14,7 @@ config MIPS
- 	select ARCH_HAS_STRNCPY_FROM_USER
- 	select ARCH_HAS_STRNLEN_USER
- 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
--	select ARCH_HAS_UBSAN_SANITIZE_ALL
-+	select ARCH_HAS_UBSAN
- 	select ARCH_HAS_GCOV_PROFILE_ALL
- 	select ARCH_KEEP_MEMBLOCK
- 	select ARCH_USE_BUILTIN_BSWAP
-diff --git a/arch/parisc/Kconfig b/arch/parisc/Kconfig
-index d14ccc948a29..dbc9027ea2f4 100644
---- a/arch/parisc/Kconfig
-+++ b/arch/parisc/Kconfig
-@@ -12,7 +12,7 @@ config PARISC
- 	select ARCH_HAS_ELF_RANDOMIZE
- 	select ARCH_HAS_STRICT_KERNEL_RWX
- 	select ARCH_HAS_STRICT_MODULE_RWX
--	select ARCH_HAS_UBSAN_SANITIZE_ALL
-+	select ARCH_HAS_UBSAN
- 	select ARCH_HAS_PTE_SPECIAL
- 	select ARCH_NO_SG_CHAIN
- 	select ARCH_SUPPORTS_HUGETLBFS if PA20
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index b9fc064d38d2..2065973e09d2 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -154,7 +154,7 @@ config PPC
- 	select ARCH_HAS_SYSCALL_WRAPPER		if !SPU_BASE && !COMPAT
- 	select ARCH_HAS_TICK_BROADCAST		if GENERIC_CLOCKEVENTS_BROADCAST
- 	select ARCH_HAS_UACCESS_FLUSHCACHE
--	select ARCH_HAS_UBSAN_SANITIZE_ALL
-+	select ARCH_HAS_UBSAN
- 	select ARCH_HAVE_NMI_SAFE_CMPXCHG
- 	select ARCH_KEEP_MEMBLOCK
- 	select ARCH_MHP_MEMMAP_ON_MEMORY_ENABLE	if PPC_RADIX_MMU
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index bffbd869a068..d824d113a02d 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -37,7 +37,7 @@ config RISCV
- 	select ARCH_HAS_STRICT_MODULE_RWX if MMU && !XIP_KERNEL
- 	select ARCH_HAS_SYSCALL_WRAPPER
- 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
--	select ARCH_HAS_UBSAN_SANITIZE_ALL
-+	select ARCH_HAS_UBSAN
- 	select ARCH_HAS_VDSO_DATA
- 	select ARCH_KEEP_MEMBLOCK if ACPI
- 	select ARCH_OPTIONAL_KERNEL_RWX if ARCH_HAS_STRICT_KERNEL_RWX
-diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-index fe565f3a3a91..97dd25521617 100644
---- a/arch/s390/Kconfig
-+++ b/arch/s390/Kconfig
-@@ -82,7 +82,7 @@ config S390
- 	select ARCH_HAS_STRICT_KERNEL_RWX
- 	select ARCH_HAS_STRICT_MODULE_RWX
- 	select ARCH_HAS_SYSCALL_WRAPPER
--	select ARCH_HAS_UBSAN_SANITIZE_ALL
-+	select ARCH_HAS_UBSAN
- 	select ARCH_HAS_VDSO_DATA
- 	select ARCH_HAVE_NMI_SAFE_CMPXCHG
- 	select ARCH_INLINE_READ_LOCK
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 5edec175b9bf..1c4c326a3640 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -100,7 +100,7 @@ config X86
- 	select ARCH_HAS_STRICT_MODULE_RWX
- 	select ARCH_HAS_SYNC_CORE_BEFORE_USERMODE
- 	select ARCH_HAS_SYSCALL_WRAPPER
--	select ARCH_HAS_UBSAN_SANITIZE_ALL
-+	select ARCH_HAS_UBSAN
- 	select ARCH_HAS_DEBUG_WX
- 	select ARCH_HAS_ZONE_DMA_SET if EXPERT
- 	select ARCH_HAVE_NMI_SAFE_CMPXCHG
+diff --git a/kernel/Makefile b/kernel/Makefile
+index ce105a5558fc..1b31aa19b4fb 100644
+--- a/kernel/Makefile
++++ b/kernel/Makefile
+@@ -2,6 +2,7 @@
+ #
+ # Makefile for the linux kernel.
+ #
++UBSAN_WRAP_UNSIGNED := n
+ 
+ obj-y     = fork.o exec_domain.o panic.o \
+ 	    cpu.o exit.o softirq.o resource.o \
+diff --git a/kernel/locking/Makefile b/kernel/locking/Makefile
+index 0db4093d17b8..dd6492509596 100644
+--- a/kernel/locking/Makefile
++++ b/kernel/locking/Makefile
+@@ -2,6 +2,7 @@
+ # Any varying coverage in these files is non-deterministic
+ # and is generally not a function of system call inputs.
+ KCOV_INSTRUMENT		:= n
++UBSAN_WRAP_UNSIGNED	:= n
+ 
+ obj-y += mutex.o semaphore.o rwsem.o percpu-rwsem.o
+ 
+diff --git a/kernel/rcu/Makefile b/kernel/rcu/Makefile
+index 0cfb009a99b9..305c13042633 100644
+--- a/kernel/rcu/Makefile
++++ b/kernel/rcu/Makefile
+@@ -2,6 +2,7 @@
+ # Any varying coverage in these files is non-deterministic
+ # and is generally not a function of system call inputs.
+ KCOV_INSTRUMENT := n
++UBSAN_WRAP_UNSIGNED := n
+ 
+ ifeq ($(CONFIG_KCSAN),y)
+ KBUILD_CFLAGS += -g -fno-omit-frame-pointer
+diff --git a/kernel/sched/Makefile b/kernel/sched/Makefile
+index 976092b7bd45..e487b0e86c2e 100644
+--- a/kernel/sched/Makefile
++++ b/kernel/sched/Makefile
+@@ -7,6 +7,7 @@ ccflags-y += $(call cc-disable-warning, unused-but-set-variable)
+ # These files are disabled because they produce non-interesting flaky coverage
+ # that is not a function of syscall inputs. E.g. involuntary context switches.
+ KCOV_INSTRUMENT := n
++UBSAN_WRAP_UNSIGNED := n
+ 
+ # Disable KCSAN to avoid excessive noise and performance degradation. To avoid
+ # false positives ensure barriers implied by sched functions are instrumented.
 diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
-index 04222a6d7fd9..0611120036eb 100644
+index 0611120036eb..54981e717355 100644
 --- a/lib/Kconfig.ubsan
 +++ b/lib/Kconfig.ubsan
-@@ -1,5 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0-only
--config ARCH_HAS_UBSAN_SANITIZE_ALL
-+config ARCH_HAS_UBSAN
- 	bool
+@@ -132,8 +132,9 @@ config UBSAN_UNSIGNED_WRAP
+ 	depends on !COMPILE_TEST
+ 	help
+ 	  This option enables -fsanitize=unsigned-integer-overflow which checks
+-	  for wrap-around of any arithmetic operations with unsigned integers. This
+-	  currently causes x86 to fail to boot.
++	  for wrap-around of any arithmetic operations with unsigned integers.
++	  Given the history of C and the many common code patterns involving
++	  unsigned wrap-around, this is a very noisy option right now.
  
- menuconfig UBSAN
-@@ -169,17 +169,6 @@ config UBSAN_ALIGNMENT
- 	  Enabling this option on architectures that support unaligned
- 	  accesses may produce a lot of false positives.
+ config UBSAN_POINTER_WRAP
+ 	bool "Perform checking for pointer arithmetic wrap-around"
+diff --git a/lib/Makefile b/lib/Makefile
+index 6b09731d8e61..2b7c36e9291f 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -2,6 +2,7 @@
+ #
+ # Makefile for some libs needed in the kernel.
+ #
++UBSAN_WRAP_UNSIGNED := n
  
--config UBSAN_SANITIZE_ALL
--	bool "Enable instrumentation for the entire kernel"
--	depends on ARCH_HAS_UBSAN_SANITIZE_ALL
--	default y
--	help
--	  This option activates instrumentation for the entire kernel.
--	  If you don't enable this option, you have to explicitly specify
--	  UBSAN_SANITIZE := y for the files/directories you want to check for UB.
--	  Enabling this option will get kernel image size increased
--	  significantly.
--
- config TEST_UBSAN
- 	tristate "Module for testing for undefined behavior detection"
- 	depends on m
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index cd5b181060f1..52efc520ae4f 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -175,7 +175,7 @@ endif
+ ccflags-remove-$(CONFIG_FUNCTION_TRACER) += $(CC_FLAGS_FTRACE)
  
- ifeq ($(CONFIG_UBSAN),y)
- _c_flags += $(if $(patsubst n%,, \
--		$(UBSAN_SANITIZE_$(basetarget).o)$(UBSAN_SANITIZE)$(CONFIG_UBSAN_SANITIZE_ALL)), \
-+		$(UBSAN_SANITIZE_$(basetarget).o)$(UBSAN_SANITIZE)y), \
- 		$(CFLAGS_UBSAN))
- endif
+diff --git a/lib/crypto/Makefile b/lib/crypto/Makefile
+index 8d1446c2be71..fce88a337a53 100644
+--- a/lib/crypto/Makefile
++++ b/lib/crypto/Makefile
+@@ -1,4 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
++UBSAN_WRAP_UNSIGNED := n
  
+ obj-$(CONFIG_CRYPTO_LIB_UTILS)			+= libcryptoutils.o
+ libcryptoutils-y				:= memneq.o utils.o
+diff --git a/lib/crypto/mpi/Makefile b/lib/crypto/mpi/Makefile
+index 6e6ef9a34fe1..ce95653915b1 100644
+--- a/lib/crypto/mpi/Makefile
++++ b/lib/crypto/mpi/Makefile
+@@ -2,6 +2,7 @@
+ #
+ # MPI multiprecision maths library (from gpg)
+ #
++UBSAN_WRAP_UNSIGNED := n
+ 
+ obj-$(CONFIG_MPILIB) = mpi.o
+ 
+diff --git a/lib/zlib_deflate/Makefile b/lib/zlib_deflate/Makefile
+index 2622e03c0b94..5d71690554bb 100644
+--- a/lib/zlib_deflate/Makefile
++++ b/lib/zlib_deflate/Makefile
+@@ -6,6 +6,7 @@
+ # This is the compression code, see zlib_inflate for the
+ # decompression code.
+ #
++UBSAN_WRAP_UNSIGNED := n
+ 
+ obj-$(CONFIG_ZLIB_DEFLATE) += zlib_deflate.o
+ 
+diff --git a/lib/zstd/Makefile b/lib/zstd/Makefile
+index 20f08c644b71..7a187cb08c1f 100644
+--- a/lib/zstd/Makefile
++++ b/lib/zstd/Makefile
+@@ -8,6 +8,8 @@
+ # in the COPYING file in the root directory of this source tree).
+ # You may select, at your option, one of the above-listed licenses.
+ # ################################################################
++UBSAN_WRAP_UNSIGNED := n
++
+ obj-$(CONFIG_ZSTD_COMPRESS) += zstd_compress.o
+ obj-$(CONFIG_ZSTD_DECOMPRESS) += zstd_decompress.o
+ obj-$(CONFIG_ZSTD_COMMON) += zstd_common.o
+diff --git a/mm/Makefile b/mm/Makefile
+index e4b5b75aaec9..cacbdd1a2d40 100644
+--- a/mm/Makefile
++++ b/mm/Makefile
+@@ -2,6 +2,7 @@
+ #
+ # Makefile for the linux memory manager.
+ #
++UBSAN_WRAP_UNSIGNED := n
+ 
+ KASAN_SANITIZE_slab_common.o := n
+ KASAN_SANITIZE_slub.o := n
+diff --git a/net/core/Makefile b/net/core/Makefile
+index 821aec06abf1..501d7300da83 100644
+--- a/net/core/Makefile
++++ b/net/core/Makefile
+@@ -2,6 +2,7 @@
+ #
+ # Makefile for the Linux networking core.
+ #
++UBSAN_WRAP_UNSIGNED := n
+ 
+ obj-y := sock.o request_sock.o skbuff.o datagram.o stream.o scm.o \
+ 	 gen_stats.o gen_estimator.o net_namespace.o secure_seq.o \
+diff --git a/net/ipv4/Makefile b/net/ipv4/Makefile
+index ec36d2ec059e..c738d463bb7e 100644
+--- a/net/ipv4/Makefile
++++ b/net/ipv4/Makefile
+@@ -2,6 +2,7 @@
+ #
+ # Makefile for the Linux TCP/IP (INET) layer.
+ #
++UBSAN_WRAP_UNSIGNED := n
+ 
+ obj-y     := route.o inetpeer.o protocol.o \
+ 	     ip_input.o ip_fragment.o ip_forward.o ip_options.o \
 -- 
 2.34.1
 
