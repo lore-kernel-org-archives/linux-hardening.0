@@ -1,70 +1,64 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62AF142061
-	for <linux-hardening@vger.kernel.org>; Mon, 29 Jan 2024 05:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F9CD4C3BC
+	for <linux-hardening@vger.kernel.org>; Mon, 29 Jan 2024 06:27:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706505634; cv=none; b=BAq4pgwnpm5AVfGEelXxDDXuFnzJV0gXVbRbE5c1orXYop51KEIP4PBxWWccAdJf5eo22sLUaGw+UdX+bRHOBfQePXKozKmHSWo/Pc+pcIFQD+dERCoMbJC3O7EKd9LOgy5IJtkY4gkgHof0j+osPyAmdjl/n5bSLxW8dTafXMs=
+	t=1706509653; cv=none; b=WHnDrlktkxP8RRbkoXfr6UcpPXuWyxGLbKcEZ4E7HW6C+KOWT+rgl13R/XvGXVbv4dhuMy2EcUAKMl3TGUQc8D1WtKqrq/hmE8hmrD3e7yP5TK+U2TFD+xvF1qODoHrZLKelgmEgo2jdum8Hl6tbMlVxENfC2uSlGwruP4msMCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706505634; c=relaxed/simple;
-	bh=VNfQNXcwaj9L7sBzly9Yd2YYDACh1h3l8Zw6n6MrGnc=;
+	s=arc-20240116; t=1706509653; c=relaxed/simple;
+	bh=hcGmZ7/kauprUFA9fmX+rybUuwydMTeCbv3H/HMqJrE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LLRunkEnoreFBRvJ0H7XUs55ix0ultihdGOduLaXE0BSpvMamucJlC4B0HWxmicB46XAEJv0WDQ99jioD7GvxT/kyRBV8eLZ21dk4o9xkc6YNc7rJ5huPD5cwfua3tf/qlCs7BCmVETGQymZiidc4734kwORtAMHNJ6J1TrqC/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DCjJnoCN; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=h3+kD0GpvujPKwfCJnQfIv5h2NSbVe/oDYls7lxZXKPKKyLpaHQr+RAsznMmZtXZX8aWudgjMO3sW049zSk16guFbwBcpzL/anWCf+7Pj82mDt0/ZYQdhlvkY/h2/2hwxDqAsCS8B7Ds1YFTul+jj0S3LhD+J0DkuJnbrv817RM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=kRB61PCh; arc=none smtp.client-ip=209.85.210.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DCjJnoCN"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-40ef6bbb61fso4547575e9.1
-        for <linux-hardening@vger.kernel.org>; Sun, 28 Jan 2024 21:20:32 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kRB61PCh"
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-6dde5d308c6so1709967a34.0
+        for <linux-hardening@vger.kernel.org>; Sun, 28 Jan 2024 22:27:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706505630; x=1707110430; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1706509651; x=1707114451; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TG0As8Zf+jaNpWP1oUZ8aP25VHp9LmLOVgXQ/rkSlDI=;
-        b=DCjJnoCNZXrn8YeV6BulpW5DIwpuHFJLzrqSbvk0inZN2vwDC1n32YzAv1+URqzTsY
-         whbQSu1NtxPHe+UlPPTRpbHyAUu6XhROJyCdKlGqAi7aaiD+ag3xL3iX2q4OeB92jR3Q
-         NB+8mnm1it0tPUhK+ET9BRBDx16ZdLIDkkzNCCSK2pnHSMLXa11Pl4+HP427096wxNqc
-         dMYDpAxFia/pNShOuJgNURQ0lZ7TgZ1aMsf3jc27be6TWw9mB+jlJ2I7BtL/9IyGQPEC
-         LvtUWCl1NnWDpJGNJdp0sLqPenANJF5KQ3D3vqC2CEubxdRPEPOsi+Z6RVDa9mi9s6Tg
-         UqCA==
+        bh=EDxbu0PKWqjMPM0OtvTRKUw3nFg/Z8Lcou0xHo9uBJI=;
+        b=kRB61PCh7hYyHcU3H3T9Cc2M8+gK0s5S7ysQrxdg7XtafaxO4gLJgXWEjIgrKzBC3d
+         /BbHwnovt37dPfmzlHf3t+t7rxd7gtELskay3kMcbTuaYEUvwxLx76sCS9G5exzI3g/J
+         FHnEvCjNpl7SJmQyybwJOtZO40DBPMGuJ/nQk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706505630; x=1707110430;
+        d=1e100.net; s=20230601; t=1706509651; x=1707114451;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TG0As8Zf+jaNpWP1oUZ8aP25VHp9LmLOVgXQ/rkSlDI=;
-        b=dvWiEdW6fy2mMYyfOGe4gY39Q7ZitMEar2g12Ib98Bh6Wu5AYlmWmwSWBWoQoGPZAI
-         Ub07Sl1R11ez/QK8BT11ry8P9x2xw9NMjoNUxW1kzHUmrFephjUT3wPeXBhlgrRA8C7p
-         xh9ZrGM3SmrgyaCL7KtVJhW69eXA8INdY/sUt4MKHu2xHxziNackui5D3+nQETAzzzQr
-         L1ZXfNURpQ20t4CNl5VvjNF94kUXztYB4yblg4wqbMmgpGjwQsoKpO/APiimBBiTzVxP
-         5AC7N2Qble0VeXjSAz9G77ClG4MGGSA+g0ZMOu6f2oCZYXkWs2k/RHZscWavp4LIJfyA
-         pznw==
-X-Gm-Message-State: AOJu0YxDAlex433fl1vUk2THghl/3ZzQutgwTW1PCnd2bOGi65l0DOZG
-	kCLLx10aalRoXfEI+vTRnPjax/5o4sgTM8Lc1zCh6Bgbaos8Q6hQxcHLa0gMykg=
-X-Google-Smtp-Source: AGHT+IEfoXxJ+z+aVz9Hl5jSUOADUMdycEW6ZCPWSS5N4L7GhwgTKNyeWxDzwUUJNPQ0Lx23qnWpKw==
-X-Received: by 2002:a05:600c:ad0:b0:40e:779f:416 with SMTP id c16-20020a05600c0ad000b0040e779f0416mr4554158wmr.2.1706505630593;
-        Sun, 28 Jan 2024 21:20:30 -0800 (PST)
-Received: from localhost ([102.140.209.237])
-        by smtp.gmail.com with ESMTPSA id m5-20020a05600c4f4500b0040ec8330c8asm12823044wmq.39.2024.01.28.21.20.29
+        bh=EDxbu0PKWqjMPM0OtvTRKUw3nFg/Z8Lcou0xHo9uBJI=;
+        b=teLqk0OJlMpw1VHqv8+86lTVEC1FyQvWLS1lnXUdtvVXz/AKtUB+gsUmQZYIBCwXIk
+         l7ZV9iVk4xQ5tv0HrDncjOvRVYpN6kdIaQJxIU4dqL/gzXp7w6JQlPCUDWA4QCqtVMj2
+         rjzo/4VJ3hH6wouBFWYGjYSoPK8E5ilKjvn/wB6XUHZ7lLuZxatrp/RLM4r6tpUY9Y4A
+         QwCm60uRgHCnSPTm0U6mUe7D7Jxs+/2zaJf8eZZHyij/3ZXfY5MNy+fG3Sla8fLo0Ry3
+         AcaSiYyO4UbDCEz/1G2oNIBLmCBF3+bD76f5v9GGjn8flv0bgSKwAjpMs+TjpAu5AZp3
+         +idw==
+X-Gm-Message-State: AOJu0Yx3tVcM3HKZVYq23i2EAAAyenFRNtu2R2AcbhH4tFIBTts5gPDe
+	zKeMPldDsNP3LuLfkoGBzmjc1BR4LUDx74mb/6ewKd5e7sDNVr0stsoo/W2JNQ==
+X-Google-Smtp-Source: AGHT+IHR0VdJI7aAKAeSSYv8772Arwr20uBiO19FH978QHyj5alwAO2XhzCftoYqEsMh8OmLG+g4GQ==
+X-Received: by 2002:a05:6358:7581:b0:176:544a:4ffe with SMTP id x1-20020a056358758100b00176544a4ffemr1998434rwf.13.1706509651420;
+        Sun, 28 Jan 2024 22:27:31 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id r20-20020aa78b94000000b006ddddc7701fsm5063741pfd.4.2024.01.28.22.27.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jan 2024 21:20:30 -0800 (PST)
-Date: Mon, 29 Jan 2024 08:20:26 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Erick Archer <erick.archer@gmx.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Jeffrey Hugo <quic_jhugo@quicinc.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sun, 28 Jan 2024 22:27:30 -0800 (PST)
+Date: Sun, 28 Jan 2024 22:27:29 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-hardening@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] bus: mhi: ep: Use kcalloc() instead of kzalloc()
-Message-ID: <3b175cb6-fcbe-4521-b6ac-442c8a11c297@moroto.mountain>
-References: <20240120152518.13006-1-erick.archer@gmx.com>
- <43614a09-d520-4111-873a-b352bd93ea07@moroto.mountain>
- <20240128102933.GA2800@titan>
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/82] overflow: Refactor open-coded arithmetic
+ wrap-around
+Message-ID: <202401282226.A4C1153769@keescook>
+References: <20240122235208.work.748-kees@kernel.org>
+ <Za-K-3aSBULf4NWE@FVFF77S0Q05N>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -73,44 +67,18 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240128102933.GA2800@titan>
+In-Reply-To: <Za-K-3aSBULf4NWE@FVFF77S0Q05N>
 
-On Sun, Jan 28, 2024 at 11:29:33AM +0100, Erick Archer wrote:
-> > It's a bit concerning that ->event_rings is set multiple times, but only
-> > allocated one time.  It's either unnecessary or there is a potential
-> > memory corruption bug.  If it's really necessary then there should be a
-> > check that the new size is <= the size of the original buffer that we
-> > allocated.
-> 
-> The ->event_rings is set twice. In the mhi_ep_mmio_init function and in
-> the mhi_ep_mmio_update_ner function.
-> 
+On Tue, Jan 23, 2024 at 09:46:35AM +0000, Mark Rutland wrote:
+> This also misses the include/linux/atomic/atomic-arch-fallback.h
+> implementations. Those are generated from the scripts/atomic/fallbacks/*
+> templates, and you'll need to adjust at least fetch_add_unless and
+> inc_unless_negative. As noted on other patches, my preference is to use
+> add_wrap() in those.
 
-It's not about the type.
+How do I regenerate the header files using the templates? I found a
+script, but its use eluded me, and it doesn't seem wired up to the
+top-level Makefile? Maybe I missed something obvious...
 
-The event_rings struct member is the number of elements in the
-mhi_cntrl->mhi_event array.  However, we ->event_rings without
-re-allocating mhi_cntrl->mhi_event so those are not in sync any more.
-So since we don't know the number of elements in the mhi_cntrl->mhi_event
-array leading to memory corruption.
-
-> void mhi_ep_mmio_init(struct mhi_ep_cntrl *mhi_cntrl)
-> {
-> 	[...]
-> 	mhi_cntrl->event_rings = FIELD_GET(MHICFG_NER_MASK, regval);
-> 	[...]
-> }
-> 
-> void mhi_ep_mmio_update_ner(struct mhi_ep_cntrl *mhi_cntrl)
-> {
-> 	[...]
-> 	mhi_cntrl->event_rings = FIELD_GET(MHICFG_NER_MASK, regval);
-> 	[...]
-> }
-
-These ->event_rings assignments look exactly the same.  It depends on
-regval.  So possibly one could be deleted.
-
-regards,
-dan carpenter
-
+-- 
+Kees Cook
