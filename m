@@ -1,127 +1,134 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BC3214A82
-	for <linux-hardening@vger.kernel.org>; Mon, 29 Jan 2024 19:00:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0A052E834;
+	Mon, 29 Jan 2024 19:08:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706554827; cv=none; b=cwkeTcrfDeBOuDfh3oxYBMyhw6Miwca/KtqGLEdW/uzrqwF/wy0yzLQvlW81aqsFNpGhRtqaarP8BA6w90ZyP5zPZwHUeIo4dhLdDeNDtwpvA6fuolyeUGAdcEvCDd6I7GZnU7MwjPraosdm5sgSt2mRvu5nK25ktwqgVBEMJwU=
+	t=1706555323; cv=none; b=pJ7vBiUhKLFptIQxH9mezXMhZ9DSRj6u5UKE1WGs7rVWOscdAVDyAWRMIUu3xgkzjV9o0FVKjtl6GSQSTtVVWdqye86jdH8R1l7uHN0ak7ZSSqaqzyyGGXlchOlH4etRqnYdRs9sbYV7yFMlUencFypVewAy9TltZlNKcubAOIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706554827; c=relaxed/simple;
-	bh=ssMtgarRnRs+LWFQuEr18d3XaNBa10XeJKStTgVMzZw=;
+	s=arc-20240116; t=1706555323; c=relaxed/simple;
+	bh=vDDhsRzXZOn2fNYB7oE/A5QKtX16c846U4Iz8WvAq0g=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=URTzA1aKOUdeyGvnVphWRixbJSkrCE+3ItBcKoB3ZyBVFUpOQUl9SiveJ8Resqdh8F25LSOnfVSLH83V9ZLjp35D7duxeZcgnPn5X6fzboYEwKQIBarDN2mQ9tmu1ku4Fszlq/7Zv2nFz2G14/Db0r9t9XU6ihmt5htOUgPSzf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Zfeerdiw; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Zfeerdiw"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-40eb95cbe52so6505e9.1
-        for <linux-hardening@vger.kernel.org>; Mon, 29 Jan 2024 11:00:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706554810; x=1707159610; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YYJPquRBqD9Q7jzpQNCrCFu5Gx3v6qV+tI8wEy5zyow=;
-        b=ZfeerdiwfxWViMskYXJhB+YweyCBokktAl4Zyr9iMcfE7BpBFSGXKdo1O0zSn1V9gv
-         ufODj1TKQLdH4T7l2Lll6fPA+bmKijB930YahEfHDIqJnB/24Nt+96Id7kywbe/eJ2Q1
-         M3xvL0T/xWV/Fjk8g8e+/ADMXDPeg0ZqXjCU1fz788w0mpdXlyuBgN76hTkCgsrg8TY+
-         y6K85VlVkiWgTSm1HjrX9p0RN3RewVKeiG1+2yXqh9Cg+jpwyHieHEa1aJU/gqmsCXUe
-         v0lkDrm+jh3jw8aWyuEgvLtrv3I3DA1E3VxraSdXbLPeVc7LI/0rn7UD2BehOkkGQRyf
-         Enjw==
+	 To:Cc:Content-Type; b=r5xAK0IGYQLYJB3Ky9hGdMDCBUw10rEp8zmMh3PWHDxIVFEH7oj304NaKweowCKSiNcPpRIZMWhmMaSLNzG6GhHRdZiIq1HR7tjeuXMFnUeHLuHFrfWFYKMW4j9eXBaAkBmDZTefnHCN6Li5iNBvodivO9ug92VJkPcChiksPPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dbed0710c74so3340034276.1;
+        Mon, 29 Jan 2024 11:08:41 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706554810; x=1707159610;
+        d=1e100.net; s=20230601; t=1706555320; x=1707160120;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=YYJPquRBqD9Q7jzpQNCrCFu5Gx3v6qV+tI8wEy5zyow=;
-        b=IAYk4Ha4SUtdXTnF0Vd/iQ8qX1FSGnfIWT61MwoVBOxx1O3hUwwmhknGlv0Ynu+e3Q
-         RZSxvgUzpXXZYp6lHAqVHWfJQKZ4CJH87W0obYFyclJrCeHayn7ItSQy84F6pjtHWgJx
-         qk0kCkXQFTX6awozqYoMkqYexi0TybzrmAtI/GvvPlmlCs4UzJCtO2jCwGpWPTg9Zc8M
-         AUy6BojZu/SQnegs/8PPuclWVtZMEtBqpFkB9BJNbVqQKZrAfr6c7AStKDOu5GMyYflq
-         29iy5kLND4rQzw6U1nrBXkfS8lBCGzZSKDXvBbWcrLwlo3S/3roLAi1Toh4KSHk9+1c+
-         4qlA==
-X-Gm-Message-State: AOJu0Yx0dL3FXf12HLFfAQkHSeo0Rhfbl5tbBmqQruXcCnqz3b7KFygJ
-	QKdQelDNLhbLMnUOto8CEuudjU1YynRyJO2JsXpo1mork0nHT8L7wLLtyAwynpM5Pt3QfyvKFhg
-	n5/GT7aK6cyPKzdT+yHRqbJxksKywk3rVi/IW
-X-Google-Smtp-Source: AGHT+IEFMiDR4T+Az5QhHWjBGq7ivQjiq8VZP7xtdBES4S/LvDRFYd/o733yPgW6mWJ0oHxcB5Iolmk0/4LYRKcEnzI=
-X-Received: by 2002:a05:600c:c12:b0:40d:839b:7844 with SMTP id
- fm18-20020a05600c0c1200b0040d839b7844mr14670wmb.6.1706554809639; Mon, 29 Jan
- 2024 11:00:09 -0800 (PST)
+        bh=Nqme3WSvUJoFsu41T9Ti9OswToo2LcvshW4LgZ3dA34=;
+        b=fashwmx3exG/SS09ctDfOdAihHWMd9YRBk+Bl8emc/Y7452fNUCZym0AZIFw9MclJS
+         jnvcEvYTkSU9rC6FASCt9+frLlBssmPBRN0up3bgLIF+wb9hfb26OY0BvkC+c3U18zjR
+         CAddNnTaScYKAKxL0iAW/G8/+DvUixO8kemqIP9pHmLYlblsMQDctpaav8Yd7/oAE/CS
+         3gHvGVuDDOdeYsTSfaFvxVm59puM2aDvuKMdnfCytipaCnCzkSiKMVQ8HXMvs4MrOZB3
+         gsSG3I4gs3A5EYu7zFPa5dQLD1wJNwhhgE8obHHHuwKAs/f5LaVUxcz3hxheVzxwPpTw
+         0EDw==
+X-Gm-Message-State: AOJu0Yx9XKdmeXsm/ZvrmldrYkyMUWYGbkaPhpY0OLtLcKMMj2KJOkB3
+	5gBBgDevDpCKeTYTKG0YVCbsskkUxeC4kJVrGvXKCIgW0hMKsNziY+U/ClmeB8g=
+X-Google-Smtp-Source: AGHT+IHpEJYTq2c4FEFZV41f+o09xLXgYzyqjtB/Y0bZ0qVYIUBu0/YXTegeNkttDjsSl0KSIuph8Q==
+X-Received: by 2002:a25:ab2b:0:b0:dbd:e651:a32f with SMTP id u40-20020a25ab2b000000b00dbde651a32fmr5193875ybi.114.1706555320416;
+        Mon, 29 Jan 2024 11:08:40 -0800 (PST)
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com. [209.85.219.182])
+        by smtp.gmail.com with ESMTPSA id h16-20020a25be10000000b00dc2537d4275sm2354530ybk.64.2024.01.29.11.08.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jan 2024 11:08:40 -0800 (PST)
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-dbed0710c74so3340019276.1;
+        Mon, 29 Jan 2024 11:08:40 -0800 (PST)
+X-Received: by 2002:a25:9781:0:b0:dc6:978:199d with SMTP id
+ i1-20020a259781000000b00dc60978199dmr4546789ybo.115.1706555320023; Mon, 29
+ Jan 2024 11:08:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240129175033.work.813-kees@kernel.org> <20240129180046.3774731-1-keescook@chromium.org>
-In-Reply-To: <20240129180046.3774731-1-keescook@chromium.org>
-From: Fangrui Song <maskray@google.com>
-Date: Mon, 29 Jan 2024 10:59:55 -0800
-Message-ID: <CAFP8O3LhmXqqKKf1fOw1_0zGYOyN7ivm2yYSQJqSQr_megOq8Q@mail.gmail.com>
-Subject: Re: [PATCH 1/6] ubsan: Use Clang's -fsanitize-trap=undefined option
+References: <12ff20eb-d4b5-41f4-a494-cfb6b7abe617@de.bosch.com>
+ <CAMuHMdW=igXesjxvNk=+in62neW=kipnFW2BUH3P7sfDnqXzEQ@mail.gmail.com> <202401290926.67193AB2B@keescook>
+In-Reply-To: <202401290926.67193AB2B@keescook>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 29 Jan 2024 20:08:28 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWjjjDbVRT6Dz0gnnNpTk2f4nKDBPKZr1GoDOhgAdEpJg@mail.gmail.com>
+Message-ID: <CAMuHMdWjjjDbVRT6Dz0gnnNpTk2f4nKDBPKZr1GoDOhgAdEpJg@mail.gmail.com>
+Subject: Re: rcar-dmac.c: race condition regarding cookie handling?
 To: Kees Cook <keescook@chromium.org>
-Cc: Marco Elver <elver@google.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, linux-kbuild@vger.kernel.org, llvm@lists.linux.dev, 
-	Andrey Konovalov <andreyknvl@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
+Cc: "Behme Dirk (CM/ESO2)" <dirk.behme@de.bosch.com>, 
+	Linux-Renesas <linux-renesas-soc@vger.kernel.org>, 
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 29, 2024 at 10:00=E2=80=AFAM Kees Cook <keescook@chromium.org> =
-wrote:
+Hi Kees,
+
+On Mon, Jan 29, 2024 at 6:38=E2=80=AFPM Kees Cook <keescook@chromium.org> w=
+rote>
+> On Mon, Jan 29, 2024 at 10:57:40AM +0100, Geert Uytterhoeven wrote:
+> > CC Kees (for the wrap-around in dma_cookie_assign() not handled in [A])
+> > [...]
+> > Was the system running for a very long time?
+> > dma_cookie_assign() relies on 2-complement signed wrap-around:
+> >
+> >         cookie =3D chan->cookie + 1;
+> >         if (cookie < DMA_MIN_COOKIE)
+> >                 cookie =3D DMA_MIN_COOKIE;
+> >
+> > but given the kernel is compiled with -fno-strict-overflow (which
+> > implies -fwrapv) that should work.
 >
-> Clang changed the way it enables UBSan trapping mode. Update the Makefile
-> logic to discover it.
+> For my own reference:
 >
-> Suggested-by: Fangrui Song <maskray@google.com>
-> Link: https://lore.kernel.org/lkml/CAFP8O3JivZh+AAV7N90Nk7U2BHRNST6MRP0zH=
-tfQ-Vj0m4+pDA@mail.gmail.com/
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Cc: Nicolas Schier <nicolas@fjasle.eu>
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: Bill Wendling <morbo@google.com>
-> Cc: Justin Stitt <justinstitt@google.com>
-> Cc: linux-kbuild@vger.kernel.org
-> Cc: llvm@lists.linux.dev
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  scripts/Makefile.ubsan | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> typedef s32 dma_cookie_t;
+> #define DMA_MIN_COOKIE  1
 >
-> diff --git a/scripts/Makefile.ubsan b/scripts/Makefile.ubsan
-> index 4749865c1b2c..7cf42231042b 100644
-> --- a/scripts/Makefile.ubsan
-> +++ b/scripts/Makefile.ubsan
-> @@ -10,6 +10,6 @@ ubsan-cflags-$(CONFIG_UBSAN_DIV_ZERO)         +=3D -fsa=
-nitize=3Dinteger-divide-by-zero
->  ubsan-cflags-$(CONFIG_UBSAN_UNREACHABLE)       +=3D -fsanitize=3Dunreach=
-able
->  ubsan-cflags-$(CONFIG_UBSAN_BOOL)              +=3D -fsanitize=3Dbool
->  ubsan-cflags-$(CONFIG_UBSAN_ENUM)              +=3D -fsanitize=3Denum
-> -ubsan-cflags-$(CONFIG_UBSAN_TRAP)              +=3D -fsanitize-undefined=
--trap-on-error
-> +ubsan-cflags-$(CONFIG_UBSAN_TRAP)              +=3D $(call cc-option,-fs=
-anitize-trap=3Dundefined,-fsanitize-undefined-trap-on-error)
+> struct dma_chan {
+>         ...
+>         dma_cookie_t cookie;
 >
->  export CFLAGS_UBSAN :=3D $(ubsan-cflags-y)
-> --
-> 2.34.1
+> Correct, as you say, with -fno-strict-overflow this is well defined, and
+> will wrap the value around negative if chan->cookie was S32_MAX.
+>
+> In the future, when the signed integer wrap-around sanitizer works
+> again, we'll want to change the math to something like:
+>
+>         cookie =3D add_wrap(typeof(cookie), chan->cookie, 1);
+>
+> But that will be an ongoing conversion once folks have agreed on the
+> semantics of the wrapping helpers, which is not settled yet.
+>
+> If you want to handle this today without depending on wrap-around,
+> it's a little bit more involved to do it open coded, but it's possible:
+>
+>         if (chan->cookie =3D=3D type_max(typeof(chan->cookie)))
+>                 cookie =3D DMA_MIN_COOKIE;
+>         else
+>                 cookie =3D chan->cookie + 1;
+>
+> the "type_max(...)" part could also just be written as S32_MAX.
 
-Thanks for the patch. Clang has had -fsanitize-trap=3D since 2015.
-GCC added -fsanitize-trap=3Dundefined in 2022
-(https://gcc.gnu.org/git/gitweb.cgi?p=3Dgcc.git;h=3D2c7cfc7b418564 ;
-milestone: 13.1), so we cannot use -fsanitize-trap=3Dundefined
-unconditionally.
+It's actually more complicated: this code is also used to make sure
+any other values outside the valid range (e.g. initial zero are
+converted to DMA_MIN_COOKIE.  So the above would not be correct
+replacements for the current logic.
 
-Reviewed-by: Fangrui Song <maskray@google.com>
+DMA cookies can also contain negative error values, hence the signed
+type. However, I don't think that can be the case for the chan->cookie
+counter, only for cookies stored in descriptors.
 
+Gr{oetje,eeting}s,
 
+                        Geert
 
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
---
-=E5=AE=8B=E6=96=B9=E7=9D=BF
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
