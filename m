@@ -1,349 +1,122 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52DF014A82
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFD6923754
 	for <linux-hardening@vger.kernel.org>; Mon, 29 Jan 2024 18:34:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706553256; cv=none; b=txhF1OJgMh0UDNbw9ENB/ObHgMezNwS/Sc0FnohtxCYMw6CEnYPIKFgXYA1wsx+qkjf4HwYl/KOkc3njbFROZ6x/+0I7fl2WCj0whDZGhVIpGcOM1mqZu8T9ioiB0lpPT6f+bsTBE5s/YErEvogyWMfP8UR+MDghiJFuBEeTF2E=
+	t=1706553256; cv=none; b=aJUI0z3/9MEseeGZXQ3drBC3pY5pwXV8+MXRd+pjBz27QRjke3to0ShS1MoDi1JKtzKvd/CZdg1yLsqLCd6j2AKPBu59qPDT+jDyqgW/o884pFZxQjcSBbnK4otPdNRAAZUmlEhyX96y/qhZ+AgEiUIevAUA6XGpAtleHWJq7OI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706553256; c=relaxed/simple;
-	bh=wU5wiWooVyd2eqSdpoTBHd90qKwM9wZ/F9mLDiaQmqs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OX/4S0SgTOMy+c24OmI74ATBAvWKZea8Dzvgaa2K7Y1TPw0+zrB3nG00YTREoPjKOgc4yGATIFI2lQilfXs622rzuEo/K4a7GC8tXQwm0J4ZfbWg6ESEdhRP7m/WzXF9aJAppBT7jYgEDecH8hlrEfU2t4+f744MsKaooIlgKHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=nKpRiEVI; arc=none smtp.client-ip=209.85.214.179
+	bh=sykIKnnrM/Tq4GsiYgDxejFBimKJxMarhf8XS35G4kY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=urZLRCGl6BhGMIFwLJCwLaSB9wg3H5KUfVxJ+AqqLnkRsEzinri7BXG9jLHhabrFGa+gIpAMXi41xGPY2CGcRYTavip9nnp8jEqdb/m/Wts6n9jwQlXhQQDupYfLpZ+rZTgKvCDa+UvrcL25h9m3NGNglwbQgCl1kEaYVWMTvus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=N/+623SB; arc=none smtp.client-ip=209.85.210.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nKpRiEVI"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1d50d0c98c3so34058915ad.1
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="N/+623SB"
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-6e0f43074edso1634364a34.1
         for <linux-hardening@vger.kernel.org>; Mon, 29 Jan 2024 10:34:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1706553253; x=1707158053; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kLoyWv8OtbHjtjHwspyJBOM+KJjmRvPEg1tZQlUAAzg=;
-        b=nKpRiEVImw6NMmMvz63DF5v/sZ9K1rE1huSEYQgzv6J9ej7sIFp2Gg82PHrr3w/NkA
-         S66fQlq3A+hd0HnslqpX+pqNOyXY///cRCkNvHCQmhlT/nLk3wSVWOBijaSSMkI8HWav
-         SRICVkL87LBGjUYyZKz06PpOkgR7w6nP7T11Q=
+        d=chromium.org; s=google; t=1706553254; x=1707158054; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tQZMalWykTk3vgtbbEE7gYZKbUCrVNjRysAePpbg1wY=;
+        b=N/+623SB7aluoP8pSVtnMQcYXPZ9EUOAxT1uLt5wTwP+BDJzBIb4pWZMm8kPOUxuCO
+         4KxDO1JkR41FzeeUjQd3cDeHt2i+KyNaHpPW01fm5YYlGIRMLCW2aNOGcm+IzhHvD7TP
+         kjOxyPZXq6nu63d6IRBmACDmIXbn+bkx/HjAQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706553253; x=1707158053;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kLoyWv8OtbHjtjHwspyJBOM+KJjmRvPEg1tZQlUAAzg=;
-        b=t/oSpYbtZGBMCSGPH28GBH93DI3wiRgOYJm1T/qekGcPVGX5IcvY/n2ECRyxaw5yXM
-         Dve4blm9O+F66PVIpXLfBKUDFA2ZvCkCk9b6OX78YVntVPwdmq0BdBSYvwThGBSITKir
-         uBsqydyhU72tb2xZYzj6EUoQsBUh+0hpRdvS9oLwCyWD7BJQa9vP9VY2W9gU9dK93naQ
-         s08D3tKq/7o0G/NEYEDP7b0u7hclhWHTijnQ6ZaKO4kNJkywxxNt7QSLHUwJtm+gK7JU
-         SopvJyeNyLgmPmuDIIp9kh08evs+zFe4NZaukDKtVfTtvCzUKTwvreuyHdfi5FU1GDbo
-         WKXA==
-X-Gm-Message-State: AOJu0YxAdjE+Hhj2QXtz5mn4OUR1mIhpPTC/FRtyvGOU6Efe9gZ04R6B
-	Hr7uuCLN+bWxnGf+Y69JuIHDWpWYqnyz8G1YiuS4vheg7oOnXGtAxDeTtmlFsA==
-X-Google-Smtp-Source: AGHT+IEtZun+s6fgm7zz06w28zAsAVRtjQwAiJs7DujINPla24nIanKkgDFDBEVCmPrBFkc5WJrlow==
-X-Received: by 2002:a17:90a:c593:b0:290:8eb8:aca8 with SMTP id l19-20020a17090ac59300b002908eb8aca8mr6012937pjt.21.1706553253540;
+        d=1e100.net; s=20230601; t=1706553254; x=1707158054;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tQZMalWykTk3vgtbbEE7gYZKbUCrVNjRysAePpbg1wY=;
+        b=hnODXJ+5J0QPFsLEJNzcVIe1Ni58P+NczYi4kBo/LosmlSyLuk0IqGQmB8erblE5Lk
+         fohg2X6rG+O/c1OLqxslEaWk1Y550ZF6IWqGt5xej4snrgU3A6PxhsfhPiSx/Z5KK/4d
+         UPlCWQW94KS3IpLrzf8AzqloRyW97o4f4QUiJsRAWXAkYet2YOeEk9kRYJ3/E5iDWJHu
+         vNJ1pqsNN6ZYppDjfPQG2ZOskWD8nth7uwS5NbelvCRQAoLX+SEmOmStWr16BId1xvZf
+         p9E0OLjg732e/0k+DqIj7MGkXZHIrWqiesjBiu9fqd5Ng1klQoV5/ZPTJwSoh4QyO5k1
+         9zIw==
+X-Gm-Message-State: AOJu0YyDjaCdp5uyGwuBR5rtwr+rg8rieQC+SMHhOt+ukPcDL6jNWgdE
+	I9YN6NZHsPiTdxIgdaTOy4hLaFnJTv0m4ncxCH3CdsVLRtno1/Wl6OVSRpDOsQ==
+X-Google-Smtp-Source: AGHT+IECBsbS7u7XFHZmnkWqyadB34otpS52vGei0xLV1m4FuHE8ysocX+XH291pfSc1gBPJjyrtDg==
+X-Received: by 2002:a05:6830:4c2:b0:6e1:1501:58a5 with SMTP id s2-20020a05683004c200b006e1150158a5mr2470636otd.13.1706553253796;
         Mon, 29 Jan 2024 10:34:13 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id v15-20020a17090a088f00b002902076c395sm8502122pjc.34.2024.01.29.10.34.11
+        by smtp.gmail.com with ESMTPSA id u13-20020a63454d000000b005cd86cd9055sm6444096pgk.1.2024.01.29.10.34.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 29 Jan 2024 10:34:11 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
 To: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
 Cc: Kees Cook <keescook@chromium.org>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
 	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
 	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>,
-	llvm@lists.linux.dev,
-	linux-hardening@vger.kernel.org,
 	Mark Rutland <mark.rutland@arm.com>,
 	Miguel Ojeda <ojeda@kernel.org>,
 	Marco Elver <elver@google.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/5] overflow: Expand check_add_overflow() for pointer addition
-Date: Mon, 29 Jan 2024 10:34:06 -0800
-Message-Id: <20240129183411.3791340-2-keescook@chromium.org>
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH 0/5] overflow: Introduce wrapping helpers
+Date: Mon, 29 Jan 2024 10:34:04 -0800
+Message-Id: <20240129182845.work.694-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240129182845.work.694-kees@kernel.org>
-References: <20240129182845.work.694-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=10664; i=keescook@chromium.org;
- h=from:subject; bh=wU5wiWooVyd2eqSdpoTBHd90qKwM9wZ/F9mLDiaQmqs=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlt++hOmJWNChP5gjc4TpxLGURO5jKzEEgWMbHO
- GpeBzggvUWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZbfvoQAKCRCJcvTf3G3A
- JshUD/4mfIxZHN04yZHdDDv+6B1mABxoQcm8MH8k5+dd+1Cg2mWb2V4dyLaHGOAXy0VSNJfF/EP
- O+vimDvJMsIZdST6MlKaXVJlZf+eFfG6AafkEtRLoBtBpXCj+FXSXt+dDhCCaW/iLHhdEDk3KYa
- DmmGSN8Adg1hdRFmVDiUXRefTS62WOY/jaZVomk9moOg8doMlKC3812t7dtp3qoeaWIRBIr/bMM
- wV43sD2nLqxSItSJD61I5sBZVOENslq1ibBg8BEQNkGV2VlR1mW57dYhFqIki2dZzU8cyPTi5bo
- 1lkHC9FI/xA6xEZ/xk/X2FM1Z7/QY1Cnt3C3HcjsEuq9v/XkP4bJRzyybEHSHRUfDS7AYD3QodD
- pH53rdjtqpYXmCXu77+XnR3e1r06vIWqhEHC+OCfhUruHhRUnh80seJbjLf9JT0vBBy/pYKNj2d
- Si0NuZy4FAN5ZtqOOSMV0FBWt3trfnSrfdg08H8FnJZ4ArlNcxD4+8DteNXDLYShnJCUN0tIfKr
- PBnqZGcPOGapoFOOA2GY+lSZPS3tKYH6hsfAfm4Y9e1XxIT3AG/9bv6GBhLRDm4Fh84ksGdEXVK
- 1wOrPvVNg2y8tgCPDXr41Tzuces9sa6QPztqCxgKFVZ1OL+o98SdArPyOeP+aQt2aRXa/wk0KQI jSPhzQFtz2fupRQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1333; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=sykIKnnrM/Tq4GsiYgDxejFBimKJxMarhf8XS35G4kY=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlt++hEJVKpFdvCiAx8Q/mObx1CgrX0Lw0G78CF
+ DG+RYHob8mJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZbfvoQAKCRCJcvTf3G3A
+ JubpD/4uRX6VWoyTmO/bqAhPykYcb0ySLPFMApmFO5Iaubx5mG2oUdJM668VghQpIv/0cjKMfSo
+ RUxnR+dWYSUgf9EzEIhvSKIB65MD9SLIOfri4IUimE/NZg0sYPPCG/9gSGwrFh2GA1sPMCZ9U+i
+ 9yw/YXFoX0NIc13TV2nr5aDk20+AyGKA7kujacCfZUNsGD/eg8gXb8t+79xoeYJyL/itFh3DsCE
+ v4wmBQCihgO/HmtxsfSgzhLGzEC/m/UqIzgcZnWcqEWyKsJefKsBC4YHayOr6zsiozCxmJkEKtq
+ vtNagEbkVgUvp72KgRGjXaRuFPW1Bcx6B+XGXgUT9UpQXB7jz/gFlTsexIGI9I9ptNVDGOOK8K6
+ 5Y34FNYRVpUPpeG4WZ8IWFxwc0r07D5yp5tYmrpIWBmuEIBo6K2Uc1Pp36Zz2m8yGba8RjxXdCP
+ 9JZZIbqTUYUpQwxdykmFu/cjCLRtuH7RX+R6c7JBqumO7a44/wfuU4zx1JpGy8Hgy24WXCYn204
+ WYkbECDYnf1VQhOINJuJPoR6qziknXMfdbew6RlPR6ZSNkBFk8ngRo29gcSd2Y7++1WiJ7zllT6
+ REpmSDuaq54hmvH2OixfMppYMymkGJI9rEn8QKfSnNORdL1ja4V6wnGCTOwfRpKT7vRZJ/NCvM7
+ ObdqLaG AqGQSPDg==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-The check_add_overflow() helper is mostly a wrapper around
-__builtin_add_overflow(), but GCC and Clang refuse to operate on pointer
-arguments that would normally be allowed if the addition were open-coded.
+Hi,
 
-For example, we have many places where pointer overflow is tested:
+In preparation for gaining instrumentation for signed[1], unsigned[2], and
+pointer[3] wrap-around, expand the overflow header to include wrap-around
+helpers that can be used to annotate arithmetic where wrapped calculations
+are expected (e.g. atomics).
 
-	struct foo *ptr;
-	...
-	/* Check for overflow */
-	if (ptr + count < ptr) ...
+After spending time getting the unsigned integer wrap-around sanitizer
+running warning-free on a basic x86_64 boot[4], I think the *_wrap()
+helpers first argument being the output type makes the most sense (as
+suggested by Rasmus).
 
-And in order to avoid running into the overflow sanitizers in the
-future, we need to rewrite these "intended" overflow checks:
+-Kees
 
-	if (check_add_overflow(ptr, count, &result)) ...
+Link: https://github.com/KSPP/linux/issues/26 [1]
+Link: https://github.com/KSPP/linux/issues/27 [2]
+Link: https://github.com/KSPP/linux/issues/344 [3]
+Link: https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=devel/overflow/enable-unsigned-sanitizer [4]
 
-Frustratingly the argument type validation for __builtin_add_overflow()
-is done before evaluating __builtin_choose_expr(), so for arguments to
-be valid simultaneously for sizeof(*p) (when p may not be a pointer),
-and __builtin_add_overflow(a, ...) (when a may be a pointer), we must
-introduce wrappers that always produce a specific type (but they are
-only used in the places where the bogus arguments will be ignored).
+Kees Cook (5):
+  overflow: Adjust check_*_overflow() kern-doc to reflect results
+  overflow: Expand check_add_overflow() for pointer addition
+  overflow: Introduce add_would_overflow()
+  overflow: Introduce add_wrap(), sub_wrap(), and mul_wrap()
+  overflow: Introduce inc_wrap() and dec_wrap()
 
-To test whether a variable is a pointer or not, introduce the __is_ptr()
-helper, which uses __builtin_classify_type() to find arrays and pointers
-(via the new __is_ptr_or_array() helper), and then decays arrays into
-pointers (via the new __decay() helper), to distinguish pointers from
-arrays.
+ include/linux/compiler_types.h |  10 ++
+ include/linux/overflow.h       | 164 ++++++++++++++++++++++++++++++---
+ lib/overflow_kunit.c           |  77 ++++++++++++++--
+ 3 files changed, 228 insertions(+), 23 deletions(-)
 
-Additionally update the unit tests to cover pointer addition.
-
-Cc: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Bill Wendling <morbo@google.com>
-Cc: Justin Stitt <justinstitt@google.com>
-Cc: llvm@lists.linux.dev
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- include/linux/compiler_types.h | 10 +++++
- include/linux/overflow.h       | 44 ++++++++++++++++++-
- lib/overflow_kunit.c           | 77 ++++++++++++++++++++++++++++++----
- 3 files changed, 120 insertions(+), 11 deletions(-)
-
-diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-index 6f1ca49306d2..d27b58fddfaa 100644
---- a/include/linux/compiler_types.h
-+++ b/include/linux/compiler_types.h
-@@ -375,6 +375,16 @@ struct ftrace_likely_data {
- /* Are two types/vars the same type (ignoring qualifiers)? */
- #define __same_type(a, b) __builtin_types_compatible_p(typeof(a), typeof(b))
- 
-+/* Is variable addressable? */
-+#define __is_ptr_or_array(p)	(__builtin_classify_type(p) == 5)
-+
-+/* Return an array decayed to a pointer. */
-+#define __decay(p)		\
-+	(&*__builtin_choose_expr(__is_ptr_or_array(p), p, NULL))
-+
-+/* Report if variable is a pointer type. */
-+#define __is_ptr(p)		__same_type(p, __decay(p))
-+
- /*
-  * __unqual_scalar_typeof(x) - Declare an unqualified scalar type, leaving
-  *			       non-scalar types unchanged.
-diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-index 4e741ebb8005..210e5602e89b 100644
---- a/include/linux/overflow.h
-+++ b/include/linux/overflow.h
-@@ -51,6 +51,43 @@ static inline bool __must_check __must_check_overflow(bool overflow)
- 	return unlikely(overflow);
- }
- 
-+/* Always produce an integral variable expression. */
-+#define __filter_integral(x)		\
-+	__builtin_choose_expr(!__is_ptr(x), (x), 0)
-+
-+/* Always produce a pointer value. */
-+#define __filter_ptr(x)			\
-+	__builtin_choose_expr(__is_ptr(x), (x), NULL)
-+
-+/* Always produce a pointer to an integral value. */
-+#define __filter_ptrint(x)		\
-+	__builtin_choose_expr(!__is_ptr(*(x)), x, &(int){ 0 })
-+
-+/**
-+ * __check_ptr_add_overflow() - Calculate pointer addition with overflow checking
-+ * @a: pointer addend
-+ * @b: numeric addend
-+ * @d: pointer to store sum
-+ *
-+ * Returns 0 on success, 1 on wrap-around.
-+ *
-+ * Do not use this function directly, use check_add_overflow() instead.
-+ *
-+ * *@d holds the results of the attempted addition, which may wrap-around.
-+ */
-+#define __check_ptr_add_overflow(a, b, d)		\
-+	({						\
-+		typeof(a) __a = (a);			\
-+		typeof(b) __b = (b);			\
-+		size_t __bytes;				\
-+		bool __overflow;			\
-+							\
-+		/* we want to perform the wrap-around, but retain the result */ \
-+		__overflow = __builtin_mul_overflow(sizeof(*(__a)), __b, &__bytes); \
-+		__builtin_add_overflow((unsigned long)(__a), __bytes, (unsigned long *)(d)) || \
-+		__overflow;				\
-+	})
-+
- /**
-  * check_add_overflow() - Calculate addition with overflow checking
-  * @a: first addend
-@@ -61,8 +98,11 @@ static inline bool __must_check __must_check_overflow(bool overflow)
-  *
-  * *@d holds the results of the attempted addition, which may wrap-around.
-  */
--#define check_add_overflow(a, b, d)	\
--	__must_check_overflow(__builtin_add_overflow(a, b, d))
-+#define check_add_overflow(a, b, d)					\
-+	__must_check_overflow(__builtin_choose_expr(__is_ptr(a),	\
-+		__check_ptr_add_overflow(__filter_ptr(a), b, d),	\
-+		__builtin_add_overflow(__filter_integral(a), b,		\
-+				       __filter_ptrint(d))))
- 
- /**
-  * check_sub_overflow() - Calculate subtraction with overflow checking
-diff --git a/lib/overflow_kunit.c b/lib/overflow_kunit.c
-index c527f6b75789..2d106e880956 100644
---- a/lib/overflow_kunit.c
-+++ b/lib/overflow_kunit.c
-@@ -45,13 +45,18 @@
- # define SKIP_64_ON_32(t)	do { } while (0)
- #endif
- 
--#define DEFINE_TEST_ARRAY_TYPED(t1, t2, t)			\
--	static const struct test_ ## t1 ## _ ## t2 ## __ ## t {	\
-+#define DEFINE_TEST_ARRAY_NAMED_TYPED(n1, n2, n, t1, t2, t)	\
-+	static const struct test_ ## n1 ## _ ## n2 ## __ ## n {	\
- 		t1 a;						\
- 		t2 b;						\
--		t sum, diff, prod;				\
-+		t sum;						\
-+		t diff;						\
-+		t prod;						\
- 		bool s_of, d_of, p_of;				\
--	} t1 ## _ ## t2 ## __ ## t ## _tests[]
-+	} n1 ## _ ## n2 ## __ ## n ## _tests[]
-+
-+#define DEFINE_TEST_ARRAY_TYPED(t1, t2, t)			\
-+	DEFINE_TEST_ARRAY_NAMED_TYPED(t1, t2, t, t1, t2, t)
- 
- #define DEFINE_TEST_ARRAY(t)	DEFINE_TEST_ARRAY_TYPED(t, t, t)
- 
-@@ -251,8 +256,10 @@ DEFINE_TEST_ARRAY(s64) = {
- };
- 
- #define check_one_op(t, fmt, op, sym, a, b, r, of) do {			\
--	int _a_orig = a, _a_bump = a + 1;				\
--	int _b_orig = b, _b_bump = b + 1;				\
-+	typeof(a + 0) _a_orig = a;					\
-+	typeof(a + 0) _a_bump = a + 1;					\
-+	typeof(b + 0) _b_orig = b;					\
-+	typeof(b + 0) _b_bump = b + 1;					\
- 	bool _of;							\
- 	t _r;								\
- 									\
-@@ -260,13 +267,13 @@ DEFINE_TEST_ARRAY(s64) = {
- 	KUNIT_EXPECT_EQ_MSG(test, _of, of,				\
- 		"expected "fmt" "sym" "fmt" to%s overflow (type %s)\n",	\
- 		a, b, of ? "" : " not", #t);				\
--	KUNIT_EXPECT_EQ_MSG(test, _r, r,				\
-+	KUNIT_EXPECT_TRUE_MSG(test, _r == r,				\
- 		"expected "fmt" "sym" "fmt" == "fmt", got "fmt" (type %s)\n", \
- 		a, b, r, _r, #t);					\
- 	/* Check for internal macro side-effects. */			\
- 	_of = check_ ## op ## _overflow(_a_orig++, _b_orig++, &_r);	\
--	KUNIT_EXPECT_EQ_MSG(test, _a_orig, _a_bump, "Unexpected " #op " macro side-effect!\n"); \
--	KUNIT_EXPECT_EQ_MSG(test, _b_orig, _b_bump, "Unexpected " #op " macro side-effect!\n"); \
-+	KUNIT_EXPECT_TRUE_MSG(test, _a_orig == _a_bump, "Unexpected " #op " macro side-effect!\n"); \
-+	KUNIT_EXPECT_TRUE_MSG(test, _b_orig == _b_bump, "Unexpected " #op " macro side-effect!\n"); \
- } while (0)
- 
- #define DEFINE_TEST_FUNC_TYPED(n, t, fmt)				\
-@@ -333,6 +340,55 @@ DEFINE_TEST_ARRAY_TYPED(int, int, u8) = {
- };
- DEFINE_TEST_FUNC_TYPED(int_int__u8, u8, "%d");
- 
-+#define DEFINE_TEST_PTR_FUNC_TYPED(n, t, fmt)				\
-+static void do_ptr_test_ ## n(struct kunit *test, const struct test_ ## n *p) \
-+{									\
-+	/* we're only doing single-direction sums, no product or division */ \
-+	check_one_op(t, fmt, add, "+", p->a, p->b, p->sum, p->s_of);\
-+}									\
-+									\
-+static void n ## _overflow_test(struct kunit *test) {			\
-+	unsigned i;							\
-+									\
-+	for (i = 0; i < ARRAY_SIZE(n ## _tests); ++i)			\
-+		do_ptr_test_ ## n(test, &n ## _tests[i]);		\
-+	kunit_info(test, "%zu %s arithmetic tests finished\n",		\
-+		ARRAY_SIZE(n ## _tests), #n);				\
-+}
-+
-+DEFINE_TEST_ARRAY_NAMED_TYPED(void, int, void, void *, int, void *) = {
-+	{NULL, 0, NULL, NULL, NULL, false, false, false},
-+	{(void *)0x30, 0x10, (void *)0x40, NULL, NULL, false, false, false},
-+	{(void *)ULONG_MAX, 0, (void *)ULONG_MAX, NULL, NULL, false, false, false},
-+	{(void *)ULONG_MAX, 1, NULL, NULL, NULL, true, false, false},
-+	{(void *)ULONG_MAX, INT_MAX, (void *)(INT_MAX - 1), NULL, NULL, true, false, false},
-+};
-+DEFINE_TEST_PTR_FUNC_TYPED(void_int__void, void *, "%lx");
-+
-+struct _sized {
-+	int a;
-+	char b;
-+};
-+
-+DEFINE_TEST_ARRAY_NAMED_TYPED(sized, int, sized, struct _sized *, int, struct _sized *) = {
-+	{NULL, 0, NULL, NULL, NULL, false, false, false},
-+	{NULL, 1, (struct _sized *)(sizeof(struct _sized)), NULL, NULL, false, false, false},
-+	{NULL, 0x10, (struct _sized *)(sizeof(struct _sized) * 0x10), NULL, NULL, false, false, false},
-+	{(void *)(ULONG_MAX - sizeof(struct _sized)), 1, (struct _sized *)ULONG_MAX, NULL, NULL, false, false, false},
-+	{(void *)(ULONG_MAX - sizeof(struct _sized) + 1), 1, NULL, NULL, NULL, true, false, false},
-+	{(void *)(ULONG_MAX - sizeof(struct _sized) + 1), 2, (struct _sized *)(sizeof(struct _sized)), NULL, NULL, true, false, false},
-+	{(void *)(ULONG_MAX - sizeof(struct _sized) + 1), 3, (struct _sized *)(sizeof(struct _sized) * 2), NULL, NULL, true, false, false},
-+};
-+DEFINE_TEST_PTR_FUNC_TYPED(sized_int__sized, struct _sized *, "%lx");
-+
-+DEFINE_TEST_ARRAY_NAMED_TYPED(sized, size_t, sized, struct _sized *, size_t, struct _sized *) = {
-+	{NULL, 0, NULL, NULL, NULL, false, false, false},
-+	{NULL, 1, (struct _sized *)(sizeof(struct _sized)), NULL, NULL, false, false, false},
-+	{NULL, 0x10, (struct _sized *)(sizeof(struct _sized) * 0x10), NULL, NULL, false, false, false},
-+	{NULL, SIZE_MAX - 10, (struct _sized *)18446744073709551528UL, NULL, NULL, true, false, false},
-+};
-+DEFINE_TEST_PTR_FUNC_TYPED(sized_size_t__sized, struct _sized *, "%zu");
-+
- /* Args are: value, shift, type, expected result, overflow expected */
- #define TEST_ONE_SHIFT(a, s, t, expect, of)	do {			\
- 	typeof(a) __a = (a);						\
-@@ -1122,6 +1178,9 @@ static struct kunit_case overflow_test_cases[] = {
- 	KUNIT_CASE(s32_s32__s32_overflow_test),
- 	KUNIT_CASE(u64_u64__u64_overflow_test),
- 	KUNIT_CASE(s64_s64__s64_overflow_test),
-+	KUNIT_CASE(void_int__void_overflow_test),
-+	KUNIT_CASE(sized_int__sized_overflow_test),
-+	KUNIT_CASE(sized_size_t__sized_overflow_test),
- 	KUNIT_CASE(u32_u32__int_overflow_test),
- 	KUNIT_CASE(u32_u32__u8_overflow_test),
- 	KUNIT_CASE(u8_u8__int_overflow_test),
 -- 
 2.34.1
 
