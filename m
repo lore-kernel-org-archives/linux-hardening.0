@@ -1,127 +1,144 @@
-Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2729869DE4
-	for <linux-hardening@vger.kernel.org>; Tue, 30 Jan 2024 18:35:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 435B169970;
+	Tue, 30 Jan 2024 18:56:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706639753; cv=none; b=F6HaViWFfEue0JKLPIRdJa2YTgxkr1f6goF9b0TbpnE65ntd31VofOpuWTvEbjU9Ide+u6ye3ervzXagVnXspyO/k+hG4Et3Dni0DjmlwDmSYxlJM4+paHJYi8mWwgn1suPxc0lFsWgOxexb6AVOt8+ZhmPfwvd8Z4eP4L/8Tpw=
+	t=1706640962; cv=none; b=hiKM5wrqJmwiMJbCvb26VAJYFJINSLNK+p3SAUb5Yt8vOjwGb+MiSnMR24yiD8EV/wJJM2ITvbtbjZrGIa+e8SoVWUVTuQbD2zeWVuB1zDSKvw05QVG0CzrADtK0k8Le3ILiVfraJERk7LdWdlXMy9DuVhwmA2zObVTCaJmKOes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706639753; c=relaxed/simple;
-	bh=ljrTZE5AmzIYm4c77wtw2sTbgaocYOzftgKfOXOUR7w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fOcJV95NjYLsaUt0rw5bLPRFqcMObGOC3gf68Wmf86PxZfjL2gxPUCWqGtcAcEppzNLVGo1N2NwOy35AJJZNhrjaEvU5I2cPyT9I9PwXIBX487s8K/hQBv7Etd3dyIhmQXoxMY8C5Do8GZ2DF0g+Ppg92+ftNygCCxhD3qsGsJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=luNCQkVg; arc=none smtp.client-ip=35.89.44.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1706640962; c=relaxed/simple;
+	bh=IajRvK6xa6zcMigXZ81oaSzwCBJjNYkNXX/iLH/F7VE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CeNnVQlZlyX9TNbI7VrppEqhQ8CU7LKGp5m3mFfNUx+YENsOv5JDKNgc0mQ3cMdZrT9J/xtHS8uBvaYCObPXJotub41dwaW4F3AakscWtwsw9zSRv32MdHrN/aWR2mYQ8kKyu3KiH0GPU3WKQsuZrDYTS4i7U85aGr4Cs311Lro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jgOmOP7E; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="luNCQkVg"
-Received: from eig-obgw-5009a.ext.cloudfilter.net ([10.0.29.176])
-	by cmsmtp with ESMTPS
-	id Uj0crbMb280oiUsxbrkPO5; Tue, 30 Jan 2024 18:35:51 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id UsxarstIjV9xYUsxbri5F0; Tue, 30 Jan 2024 18:35:51 +0000
-X-Authority-Analysis: v=2.4 cv=NfP1akP4 c=1 sm=1 tr=0 ts=65b94187
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=IkcTkHD0fZMA:10 a=dEuoMetlWLkA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
- a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=_McAEue1L0tuIqTs_I4A:9 a=QEXdDO2ut3YA:10
- a=9cHFzqQdt-sA:10 a=PUnBvhIW4WwA:10 a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=HeXgS6V1eXcqJmrlxF09S/iG95SP1OD907y8w1At448=; b=luNCQkVg23fduAzTeH1EX1W3Fw
-	6jGZnpHa10iChrPqw0lKPgraFjs6cZKIEP3VfWqkFhdwU9G7la6FGBNM5fqYRQ9CpQGKGkL4M5sX+
-	aN4nb7Sub9nFixAxIvtUwC/EQgxKLOXCuQRzljufe+TVBG1zeYZmFe1GVqxu12uCSUB3WMnDoNWoR
-	mzKRdGb75g1LICkxzbMbAoOUSBx4mgurlJJbkkw9u6QU2NVrkSia26qGNWzpfy2PYmQIGAMtIQjR8
-	lyCYZnppQd3HffDm9xDx+DHLhrF17kgyRjWlqXv7xqCQCKAyjAi/sjW/+uU4poGLzHzX9cubEpHMO
-	XtnJhH3w==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:58618 helo=[192.168.15.10])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1rUsxa-00320p-0B;
-	Tue, 30 Jan 2024 12:35:50 -0600
-Message-ID: <4fc7ea97-f732-495f-a728-ecebc0451c85@embeddedor.com>
-Date: Tue, 30 Jan 2024 12:35:48 -0600
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jgOmOP7E"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5102e2ab56eso3929331e87.2;
+        Tue, 30 Jan 2024 10:56:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706640959; x=1707245759; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=m5T7oVWNTbzcJm5kGNb2xtTeTLeD9NEFmJv4kRyhpmo=;
+        b=jgOmOP7EsVZFqIcsxGNr5rK0GjGNLXnj+GlZ9QXS7EARwkxDHy9oqcSqKbFwPSF11H
+         G+xulzovmbFkKzPp3xdfbdI00jDLT987VxpR8icGt9U1bXh0nitfFZ/CtUSjtjR6Qnpl
+         prJTKH/YfQYbBjY3HZh+bX9uIewnYdtm+TP8vBZxUb5UEWumVT57k71dJHL8SfzMRx1i
+         uv18rky01Mb5ZMBfAhLhccNGMqEeZiERynZo1/52+btlzrvDrM6aeNH6MZtU9GT5phtd
+         RldDUp1McEUmnRVQSOob3Q6XYZaZCyWFSUowONQ9aiLBx7YVEVPLtOrGPT2H/gUcwVXw
+         FkVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706640959; x=1707245759;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=m5T7oVWNTbzcJm5kGNb2xtTeTLeD9NEFmJv4kRyhpmo=;
+        b=TdeAxUvxbd7TpZxd/6XC2fNI1lgFb9a/EVhhh/OjOez1V/dxt4g2I4lJz2K3x6IJ1r
+         NxpQ+AJaJ3utVzdKXfTodRwzm3RwRaXOmoqyyk11UDoBK8OJ5FUFWr8IMDdGJEyU3ksO
+         3ZWY+3HgxT1C/+3NZzA9gUddj+uUKTQzZy4yvQXuP89cAdXfFiV4o2N9lqqG6jYKW2z7
+         kLcli06kLawWZs3g84ibNgjXRI3T9EqN9w1Rwn8V5+RDADGDx8BiocTLFCdS5FYlGE5M
+         2pIsK7toKcCrMH0spcmtUK999YlkKeCUqh16PhZbPkEEKL8LMvt5zVAINU63LrCgaD81
+         6ztw==
+X-Gm-Message-State: AOJu0Yyo6ER8jP2IS+GzhMec+Hjn0fe6ijmpVVWRFcnz0mUjl3ndYPAU
+	44YBr8Ef2V923pOQxtIK5durMUjHZbbIVoeTgkx/NTkp3vnR5viJ
+X-Google-Smtp-Source: AGHT+IHHN9DiBk7/w48kKNwAmCfjXzBDMBPMseu8RFO/EHjOhrDkATiEM32qj1bBwtRAibpOMfBYcQ==
+X-Received: by 2002:ac2:4208:0:b0:510:293e:83b with SMTP id y8-20020ac24208000000b00510293e083bmr5855937lfh.18.1706640959128;
+        Tue, 30 Jan 2024 10:55:59 -0800 (PST)
+Received: from localhost ([2a00:23cc:d20f:ba01:bb66:f8b2:a0e8:6447])
+        by smtp.gmail.com with ESMTPSA id t20-20020a05600c199400b0040ef5f22710sm7708532wmq.4.2024.01.30.10.55.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jan 2024 10:55:58 -0800 (PST)
+Date: Tue, 30 Jan 2024 18:55:57 +0000
+From: Lorenzo Stoakes <lstoakes@gmail.com>
+To: Kees Cook <keescook@chromium.org>
+Cc: linux-hardening@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Christoph Hellwig <hch@infradead.org>, linux-mm@kvack.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 33/82] mm/vmalloc: Refactor intentional wrap-around
+ calculation
+Message-ID: <24526e13-2df6-47ea-865f-b5a5594bc024@lucifer.local>
+References: <20240122235208.work.748-kees@kernel.org>
+ <20240123002814.1396804-33-keescook@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] crypto: qat - use kcalloc() instead of kzalloc()
-Content-Language: en-US
-To: Lenko Donchev <lenko.donchev@gmail.com>,
- Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
- Herbert Xu <herbert@gondor.apana.org.au>,
- "David S. Miller" <davem@davemloft.net>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: qat-linux@intel.com, linux-crypto@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <ZbeguDTmVrP9SnDr@nixos>
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <ZbeguDTmVrP9SnDr@nixos>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1rUsxa-00320p-0B
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:58618
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 7
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfLCvmNwS37MxcXLMhlSiTWyVwjTo87QS7fUjqsjr7VO2NUTKX83XxxRxh8oYzq+kLzbxd6h+ird+1Rij3xImiJogYtVXZWtbt6C+954Q3Ykxo6maMZ3r
- XfRoNwPLjotZo39ouReUxrDNMxvglsaGpV2Oqr7uG05MAiVbG0ZllYP7KBxLlxZIV2Ghuc1DsZb5LmUN6Do07XfUj7IKCplhUDmuXbRGs8i5THYltwDiTl5R
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240123002814.1396804-33-keescook@chromium.org>
 
-
-
-On 1/29/24 06:57, Lenko Donchev wrote:
-> We are trying to get rid of all multiplications from allocation
-> functions to prevent integer overflows[1]. Here the multiplication is
-> obviously safe, but using kcalloc() is more appropriate and improves
-> readability. This patch has no effect on runtime behavior.
-> 
-> Link: https://github.com/KSPP/linux/issues/162 [1]
-> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [2]
-> 
-> Signed-off-by: Lenko Donchev <lenko.donchev@gmail.com>
-
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Thanks!
--- 
-Gustavo
-
+On Mon, Jan 22, 2024 at 04:27:08PM -0800, Kees Cook wrote:
+> In an effort to separate intentional arithmetic wrap-around from
+> unexpected wrap-around, we need to refactor places that depend on this
+> kind of math. One of the most common code patterns of this is:
+>
+> 	VAR + value < VAR
+>
+> Notably, this is considered "undefined behavior" for signed and pointer
+> types, which the kernel works around by using the -fno-strict-overflow
+> option in the build[1] (which used to just be -fwrapv). Regardless, we
+> want to get the kernel source to the position where we can meaningfully
+> instrument arithmetic wrap-around conditions and catch them when they
+> are unexpected, regardless of whether they are signed[2], unsigned[3],
+> or pointer[4] types.
+>
+> Refactor open-coded unsigned wrap-around addition test to use
+> check_add_overflow(), retaining the result for later usage (which removes
+> the redundant open-coded addition). This paves the way to enabling the
+> unsigned wrap-around sanitizer[2] in the future.
+>
+> Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
+> Link: https://github.com/KSPP/linux/issues/26 [2]
+> Link: https://github.com/KSPP/linux/issues/27 [3]
+> Link: https://github.com/KSPP/linux/issues/344 [4]
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Uladzislau Rezki <urezki@gmail.com>
+> Cc: Christoph Hellwig <hch@infradead.org>
+> Cc: Lorenzo Stoakes <lstoakes@gmail.com>
+> Cc: linux-mm@kvack.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
->   drivers/crypto/intel/qat/qat_common/adf_isr.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/crypto/intel/qat/qat_common/adf_isr.c b/drivers/crypto/intel/qat/qat_common/adf_isr.c
-> index 3557a0d6dea2..a13d9885d60f 100644
-> --- a/drivers/crypto/intel/qat/qat_common/adf_isr.c
-> +++ b/drivers/crypto/intel/qat/qat_common/adf_isr.c
-> @@ -272,7 +272,7 @@ static int adf_isr_alloc_msix_vectors_data(struct adf_accel_dev *accel_dev)
->   	if (!accel_dev->pf.vf_info)
->   		msix_num_entries += hw_data->num_banks;
->   
-> -	irqs = kzalloc_node(msix_num_entries * sizeof(*irqs),
-> +	irqs = kcalloc_node(msix_num_entries, sizeof(*irqs),
->   			    GFP_KERNEL, dev_to_node(&GET_DEV(accel_dev)));
->   	if (!irqs)
->   		return -ENOMEM;
+>  mm/vmalloc.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index d12a17fc0c17..7932ac99e9d3 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -1223,6 +1223,7 @@ is_within_this_va(struct vmap_area *va, unsigned long size,
+>  	unsigned long align, unsigned long vstart)
+>  {
+>  	unsigned long nva_start_addr;
+> +	unsigned long sum;
+>
+>  	if (va->va_start > vstart)
+>  		nva_start_addr = ALIGN(va->va_start, align);
+> @@ -1230,11 +1231,11 @@ is_within_this_va(struct vmap_area *va, unsigned long size,
+>  		nva_start_addr = ALIGN(vstart, align);
+>
+>  	/* Can be overflowed due to big size or alignment. */
+> -	if (nva_start_addr + size < nva_start_addr ||
+> +	if (check_add_overflow(nva_start_addr, size, &sum) ||
+>  			nva_start_addr < vstart)
+>  		return false;
+>
+> -	return (nva_start_addr + size <= va->va_end);
+> +	return (sum <= va->va_end);
+>  }
+>
+>  /*
+> --
+> 2.34.1
+>
+
+Looks good to me,
+
+Reviewed-by: Lorenzo Stoakes <lstoakes@gmail.com>
