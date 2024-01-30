@@ -1,44 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F3B860B81;
-	Tue, 30 Jan 2024 09:46:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC1D560BB0;
+	Tue, 30 Jan 2024 09:49:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706608010; cv=none; b=C1z1Z4HcaBhIEmx30duYdige24KRN6UV4UcL+3wpPlBgPxn9xWRRAlkv3IzgWQAG8hFSrqiRtzim6Q0HluT83lwBAvcxD4mqwKony+/apo7Qh8AzKaFvZiF3Yi60cEqaz6jSXzwVN5i5iamY4+Um9aIJ/6Z7r9oc7Khwv1fJzUY=
+	t=1706608160; cv=none; b=j+ySPIZfshI6WGRSCulujXO4T9sEVUbrbIOucWM9PRfl8JlnASmZ562eG/Chhq23g8EKabTf38c1vYu70sU/E2mmGHe0OtOQH19Taq5shxqtvI1/rrhnV7KYZ4RoNsoFReeODnu+3eABkEhLDhYu02hzJ3BKZda5waBxvYJWp5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706608010; c=relaxed/simple;
-	bh=ZqPxrlZ2qFmSLhlJK+pFXtWobfegdINoLA1VE1bjxvc=;
+	s=arc-20240116; t=1706608160; c=relaxed/simple;
+	bh=9EEwbvIMGEnEj9No9CAfp/4Tfeu1tehss7c6XJeh6nY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PDnTWIciTYYvDCmKlVVJsViYptUCeJ05n3MsG+r3SILfMr2VckTtYuQWuhHwNkbgyzwE6bGwQwChAFAmJG/1z5WJ0RTKuXViKrfnKPhotvFx124DdwhauqazLoScMGANLP/QJLryEIyV1AU4Eb/9k3ahURawjr+QFYPZX+1Nvoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=po3eGOF1; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=K8tBoNCYSe69GOr2MzP53ILr+FzJCeDLNJvsK/Rm4Xj6QlsoN62sBkADPdZ4m86pi57Uo9N4DQ6bxXVQyKBRYbLL9wcZDuz4ynu+IO436xswxTKOJ/t3iZ8Ixr1lNpyqGKWCwWjuQsVqkXbmVJVnV81qWtB4gvYVBol4jpTyEuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XisrWEuS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="po3eGOF1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDA58C433F1;
-	Tue, 30 Jan 2024 09:46:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XisrWEuS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90182C433F1;
+	Tue, 30 Jan 2024 09:49:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706608009;
-	bh=ZqPxrlZ2qFmSLhlJK+pFXtWobfegdINoLA1VE1bjxvc=;
+	s=k20201202; t=1706608159;
+	bh=9EEwbvIMGEnEj9No9CAfp/4Tfeu1tehss7c6XJeh6nY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=po3eGOF1yNw3Te3hIZzs7AwImuUzo2MHQpXMPAowEAna6vCcrrxfM0LyK8qGaBhmf
-	 dLBZWzN+d++8hSNCFD6cncw9KjoJOn8xRMhzmnf3T6M2wTKbQmgZtxpBpEYNqFo9Z3
-	 3yrcav4theveeugvkpD9uElChKX83Y9N389q1ZcsC+11eoaB/O3VkzqZ7q6xFudIQ3
-	 7XLAOKDJwZ3carHABhsI38wYTsy/OWlRiIYtu2mlIYj4DFpEXikvkmAcy5Pso3faaC
-	 1aWmKRAEIWFYnY43phLhe8ZBvZvp99haQwSYnvKUhle/VdxRRjdXWF3whi/6EaZWWw
-	 0RKoJ7kq6VpbQ==
+	b=XisrWEuSi4MvUDAjSC37EjVj1CPda7zNWR9GS72XK5rEmXbjy1u1wrSPe3ub4mS4S
+	 AemgWhjfkCTYXNxrionkITzJzlsLClotn6mqhRlB7K7s1zlCPRADTHeUV7ffGSO/Tx
+	 Ipc3tFusQuehtq5MjQq8GELpq489dCIhhGg7t4hkGunI5uW3ITuFnKsvsMD70VoB+F
+	 d9Ry/R9kyA3wKUehh34DjGmeZR7ku/q3NA0j33uzvJem3LFqIzX30/J/iu2FbUu3TY
+	 l6ewkwjpQUdX0ztd0lS+V8eTskENGID2umhDOEWfCYJjXifaA/ZhuH19HwuhorWYoG
+	 x6c428R5T1Aag==
 From: Christian Brauner <brauner@kernel.org>
 To: Kees Cook <keescook@chromium.org>
 Cc: Christian Brauner <brauner@kernel.org>,
 	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Andrew Morton <akpm@linux-foundation.org>,
+	Jan Kara <jack@suse.cz>,
+	linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] iov_iter: Avoid wrap-around instrumentation in copy_compat_iovec_from_user()
-Date: Tue, 30 Jan 2024 10:46:38 +0100
-Message-ID: <20240130-eintopf-bezug-5e4722dd363e@brauner>
+Subject: Re: [PATCH] select: Avoid wrap-around instrumentation in do_sys_poll()
+Date: Tue, 30 Jan 2024 10:49:10 +0100
+Message-ID: <20240130-galant-messlatte-0a81f7a91b11@brauner>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240129183729.work.991-kees@kernel.org>
-References: <20240129183729.work.991-kees@kernel.org>
+In-Reply-To: <20240129184014.work.593-kees@kernel.org>
+References: <20240129184014.work.593-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -46,18 +47,18 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1313; i=brauner@kernel.org; h=from:subject:message-id; bh=ZqPxrlZ2qFmSLhlJK+pFXtWobfegdINoLA1VE1bjxvc=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaTuONp4d+GcWsmltf9FW14y5DxeqPm4vi2v8Z7uPLU2d mPLlBl7O0pZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACYy8w3DX6HpGp+OnRZRKmT+ 075Ldv+2W8ZV/Xca+2dbcUr5LuWeepqR4WJynVtr44RPc4xLm/SYrJhOlzyb4Ps4i+ePzZqUgsW z2AE=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1292; i=brauner@kernel.org; h=from:subject:message-id; bh=9EEwbvIMGEnEj9No9CAfp/4Tfeu1tehss7c6XJeh6nY=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaTuOCbx1uDg853yZcJS/Mziaz0mSDf84tN59sfe5vu29 t0zf/jv6ShlYRDjYpAVU2RxaDcJl1vOU7HZKFMDZg4rE8gQBi5OAZjI5wZGhh3WauwrZTVful/L W/y+c/eUWKO7gpPz276ecI7kWxvzPpeRYWWag8G72q27VhvLPV0/Y4PRDQmtlbu4N97UE9a+dJO 7hgkA
 X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 
-On Mon, 29 Jan 2024 10:37:29 -0800, Kees Cook wrote:
-> The loop counter "i" in copy_compat_iovec_from_user() is an int, but
-> because the nr_segs argument is unsigned long, the signed overflow
-> sanitizer got worried "i" could wrap around. Instead of making "i" an
-> unsigned long (which may enlarge the type size), switch both nr_segs
-> and i to u32. There is no truncation with nr_segs since it is never
-> larger than UIO_MAXIOV anyway. This keeps sanitizer instrumentation[1]
-> out of a UACCESS path:
+On Mon, 29 Jan 2024 10:40:15 -0800, Kees Cook wrote:
+> The mix of int, unsigned int, and unsigned long used by struct
+> poll_list::len, todo, len, and j meant that the signed overflow
+> sanitizer got worried it needed to instrument several places where
+> arithmetic happens between these variables. Since all of the variables
+> are always positive and bounded by unsigned int, use a single type in
+> all places. Additionally expand the zero-test into an explicit range
+> check before updating "todo".
 > 
 > [...]
 
@@ -76,5 +77,5 @@ trailer updates or similar. If in doubt, please check the listed branch.
 tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
 branch: vfs.misc
 
-[1/1] iov_iter: Avoid wrap-around instrumentation in copy_compat_iovec_from_user()
-      https://git.kernel.org/vfs/vfs/c/2d5099585c5b
+[1/1] select: Avoid wrap-around instrumentation in do_sys_poll()
+      https://git.kernel.org/vfs/vfs/c/ecd1f34f1242
