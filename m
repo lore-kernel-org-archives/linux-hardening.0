@@ -1,152 +1,133 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BBA182D93;
-	Tue, 30 Jan 2024 14:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3BB87E761;
+	Tue, 30 Jan 2024 15:07:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706626361; cv=none; b=PFbOzvprX/49qSV2n/Y9XcANeO6nWUccQSkWforrAljVRWeXhTgpysa9l+l9pQ3JEwz4L2tpocn+7MfCp8RgjCu4UrUm+gZJhwrN1VN5HFuqXzMwESr+Nfd0zPokQH7JLQoJc1n+qeIDeMoDTx9aYr4Qp4mq7x0MxcagqKJrIy8=
+	t=1706627247; cv=none; b=goxWfljTfmtlFi7AmqcmSIb98/kAAE9RYL1YzZ+Ccci3R0hgLmlKktlA58veowpYLw5yQn8JRA4Vu2/vncwHXm0frWDvpxgCtQFMCBcvTteGB8MCnbBIfNxGCccBw7HAVXzjJ0jzsC3I/qwvLvySVgckpLq5XL0v0FflotcN+kM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706626361; c=relaxed/simple;
-	bh=luIPTT9ucV8TGKHJ9MflOF0EHUFroE6No1+xpuWNnbM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tStatmvrVHQBKQvild28eshli6FT6roco+yd1H9xZCJFd0Acl8saPoLERB/mVJjz84uDeE2eOrRXQMYPBhtudglD2ULGoHdZOPh4J3dkVUqagzUlLAL7fYsQamJhKH1smrHw6VW/bhpmM1fZi7EcLrYZoNKDFMOXJWohKEi2lDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LN0qj8HA; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706627247; c=relaxed/simple;
+	bh=sXZB4BUwJD78nnuO2sH8rY6iShJKvwQE0A/35/RmFvU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ttzKq9wcasR9Uo4AJ4lsNBNBNpVdBGKdsopF9C8UVA1dEANXB2wWV7cOp2f44sr657bqSQH/h2G94ySh1GnACBF8YSZTnlf/1Q6SwZtszPBm2E3kMtB1H18NMb2w685+NFZndIbr2vcd5+40YQq07lYcZ1juLiUl3dxQ3jyx0CQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HetWeDur; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LN0qj8HA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706626359; x=1738162359;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=luIPTT9ucV8TGKHJ9MflOF0EHUFroE6No1+xpuWNnbM=;
-  b=LN0qj8HAMcBBv5cJ9j1Uf1v0ZN1yeh3M8Igb544+AOpi2dO+iEHxai+7
-   arKWtWB9+5hX6dFLl6CNujSHMPH46tO78675udOeoLPPUx1VL49PHtcFP
-   6XGVAK1kv2U/FuIR79NP/caMgGwyU05g2i5U5jUW8M6McaJ1+zs4gtgaF
-   E5XEc4W88oViC2Y8zs+8DGyI8/003DJsG0FIQwjY1OXttwuLt3lD7woOU
-   cpx3y1jfzRB+cifCixgOSj5VafPjSyp+rx4XmIPEEMa3LPKrRgnx81hq8
-   OxO7t/xQ7RT8r3HhlOkQXsZpMaTW8gTKS5H69la6ZtZhDwn+E5/F8LqYI
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10968"; a="3149927"
-X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="3149927"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 06:52:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,707,1701158400"; 
-   d="scan'208";a="30180161"
-Received: from skofoed-mobl.ger.corp.intel.com (HELO [10.249.254.21]) ([10.249.254.21])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 06:52:34 -0800
-Message-ID: <90b41ce3-0eca-4bc9-bc04-ad68ba91d7ee@linux.intel.com>
-Date: Tue, 30 Jan 2024 15:52:32 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HetWeDur"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10FF0C433F1;
+	Tue, 30 Jan 2024 15:07:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706627247;
+	bh=sXZB4BUwJD78nnuO2sH8rY6iShJKvwQE0A/35/RmFvU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HetWeDuroFc2r1ZPggJiNdtdOohvM/NHBXpVqRMhe/PNNgJPM0G07yGCxHS0/ZTha
+	 L48gb1+oAUsw+9Km1tfN9fVHlQpdZN+SV+vleoKV+JBwyBt+Q4AuLIWbcZgYvjQSZO
+	 HRcXhnwNsS/Oc2jiP5bEipWfm6jZQBinYRjO8Wy61EaQlDw48r8u0S+uxJzuFfupCb
+	 RlkpizrjCMV10O6L7umq7k1FOiBCf0ueMtZ7hcM9m7foMFxFrw7YxuxRad17Ytep4z
+	 NXjnQ+F4dn8CaZuYuPd8Bmhb5mxrgNG46vEhlaLLggyeh5J9D3SmcyuV425t5VRZgv
+	 PJ9c6X2v5RJKQ==
+Date: Tue, 30 Jan 2024 15:07:21 +0000
+From: Lee Jones <lee@kernel.org>
+To: David Laight <David.Laight@aculab.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Crutcher Dunnavant <crutcher+kernel@datastacks.com>,
+	Juergen Quade <quade@hsnr.de>
+Subject: Re: [PATCH 1/1] lib/vsprintf: Implement ssprintf() to catch
+ truncated strings
+Message-ID: <20240130150721.GA692144@google.com>
+References: <20240125083921.1312709-1-lee@kernel.org>
+ <a37e8071-32ac-4f5d-95e8-ddd2eb21edcd@rasmusvillemoes.dk>
+ <20240125103624.GC74950@google.com>
+ <54e518b6dd9647c1add38b706eccbb4b@AcuMS.aculab.com>
+ <20240129092440.GA1708181@google.com>
+ <7054dcbfb7214665afedaea93ce4dbad@AcuMS.aculab.com>
+ <20240129095237.GC1708181@google.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [GIT PULL] Enable -Wstringop-overflow globally
-Content-Language: en-US
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
- David Laight <David.Laight@ACULAB.COM>,
- 'Linus Torvalds' <torvalds@linux-foundation.org>,
- Kees Cook <keescook@chromium.org>, Lucas De Marchi
- <lucas.demarchi@intel.com>, Oded Gabbay <ogabbay@kernel.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- intel-xe@lists.freedesktop.org,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-References: <Za6JwRpknVIlfhPF@work>
- <CAHk-=wjG4jdE19-vWWhAX3ByfbNr4DJS-pwiN9oY38WkhMZ57g@mail.gmail.com>
- <4907a7a3-8533-480a-bc3c-488573e18e66@embeddedor.com>
- <202401261423.7AF702239@keescook>
- <CAHk-=wiaaCatzmF6GXxP97pa8oEX7e4rBpd4JgsbKex3Ek1_9A@mail.gmail.com>
- <f00e15fcba05497a87e91182a33c888f@AcuMS.aculab.com>
- <0c4cc1a7-f409-4597-b110-81f9e45d1ffe@embeddedor.com>
-From: =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>
-In-Reply-To: <0c4cc1a7-f409-4597-b110-81f9e45d1ffe@embeddedor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240129095237.GC1708181@google.com>
 
-Hi,
+On Mon, 29 Jan 2024, Lee Jones wrote:
 
-On 1/27/24 20:53, Gustavo A. R. Silva wrote:
->
->
-> On 1/27/24 09:11, David Laight wrote:
->> From: Linus Torvalds
->>> Sent: 26 January 2024 22:36
->>>
->>> On Fri, 26 Jan 2024 at 14:24, Kees Cook <keescook@chromium.org> wrote:
->>>>
->>>> I think xe has some other weird problems too. This may be related 
->>>> (under
->>>> allocating):
->>>>
->>>> ../drivers/gpu/drm/xe/xe_vm.c: In function 'xe_vma_create':
->>>> ../drivers/gpu/drm/xe/xe_vm.c:806:21: warning: allocation of 
->>>> insufficient size '224' for type
->>> 'struct xe_vma' with size '368' [-Walloc-size]
->>>>    806 |                 vma = kzalloc(sizeof(*vma) - sizeof(struct 
->>>> xe_userptr),
->>>>        |                     ^
->>>
->>> That code is indeed odd, but there's a comment in the xe_vma definition
->>>
->>>          /**
->>>           * @userptr: user pointer state, only allocated for VMAs 
->>> that are
->>>           * user pointers
->>>           */
->>>          struct xe_userptr userptr;
->>>
->>> although I agree that it should probably simply be made a final
->>> variably-sized array instead (and then you make that array size be
->>> 0/1).
->>
->> That entire code is odd.
->> It isn't obvious that the flag values that cause the short allocate
->> are the same ones that control whether the extra data is accessed.
->>
->> Never mind the oddities with the 'flags |= ' assignments int the
->> 'remap next' path.
->>
->> Anyone know how many of these actually get allocated (and their
->> lifetimes)?
->> How much difference would it make to allocate 368 (maybe 384?)
->> bytes instead of 224 (likely 256).
->
-> [CC+ xen list and maintainers]
->
-> Probably the xen maintainer can help us out here.
+> On Mon, 29 Jan 2024, David Laight wrote:
+> 
+> > ...
+> > > > I'm sure that the safest return for 'truncated' is the buffer length.
+> > > > The a series of statements like:
+> > > > 	buf += xxx(buf, buf_end - buf, .....);
+> > > > can all be called with a single overflow check at the end.
+> > > >
+> > > > Forget the check, and the length just contains a trailing '\0'
+> > > > which might cause confusion but isn't going to immediately
+> > > > break the world.
+> > > 
+> > > snprintf() does this and has been proven to cause buffer-overflows.
+> > > There have been multiple articles authored describing why using
+> > > snprintf() is not generally a good idea for the masses including the 2
+> > > linked in the commit message:
+> > 
+> > snprintf() returns the number of bytes that would have been output [1].
+> > I'm not suggesting that, or not terminating the buffer.
+> > Just returning the length including the '\0' (unless length was zero).
+> > This still lets the code check for overflow but isn't going to
+> > generate a pointer outside the buffer if used to update a pointer.
+> 
+> I see.  Well I'm not married to my solution.  However, I am convinced
+> that the 2 solutions currently offered can be improved upon.  If you or
+> anyone else has a better solution, I'd be more than happy to implement
+> and switch to it.
+> 
+> Let me have a think about the solution you suggest and get back to you.
 
-Unfortunately the number of these can be quite large, and with a long 
-lifetime which I guess was the reason that size optimization was done in 
-the first place.
+Okay, I've written a bunch of simple test cases and results are
+positive.  It seems to achieve my aim whilst minimising any potential
+pitfalls.
 
-Ideally IMO this should've been subclassed to an xe_userptr_vma, but 
-until we have a chance to clean that up, We can look at the 
-variable-sized array or simply allocate the full size until we get to that.
+ - Success returns Bytes actually written - no functional change
+ - Overflow returns the size of the buffer - which makes the result
+   a) testable for overflow
+   b) non-catastrophic if accidentally used to manipulate later sizes
 
-Thanks,
+    int size = 10;
+    char buf[size];
+    char *b = buf;
 
-Thomas
+    ret = spprintf(b, size, "1234");
+    size -= ret;
+    b += ret;
+    // ret = 4  size = 6  buf = "1234\0"
 
+    ret = spprintf(b, size, "5678");
+    size -= ret;
+    b += ret;
+    // ret = 4  size = 2  buf = "12345678\0"
 
->
-> -- 
-> Gustavo
->
->>
->>     David
->>
->> -
->> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, 
->> MK1 1PT, UK
->> Registration No: 1397386 (Wales)
+    ret = spprintf(b, size, "9***");
+    size -= ret;
+    b += ret;
+    // ret = 2  size = 0  buf = "123456789\0"
+
+Since size is now 0, further calls result in no changes of state.
+
+    ret = spprintf(b, size, "----");
+    size -= ret;
+    b += ret;
+    // ret = 0  size = 0  buf = "123456789\0"
+
+I'll knock this up and submit a patch.
+
+-- 
+Lee Jones [李琼斯]
