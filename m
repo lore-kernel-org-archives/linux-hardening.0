@@ -1,213 +1,136 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB5167E6D;
-	Tue, 30 Jan 2024 11:15:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FEDE66B2A
+	for <linux-hardening@vger.kernel.org>; Tue, 30 Jan 2024 11:24:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706613360; cv=none; b=Fevby1YP+Svta5sLPyMwyTLODKLUebC7LGSJJeQC5EWMKgcDdfOtGSNrtq55TxDg3NxnhzpBlUrGOmz8OowwbFv5MBudQPEvh+m5g7MhPVv88GbCNe+Rby7Dzia8iCuR0ehtU5zTgiiacAHIX77EZ0ZhoajvxDa5ZWI29RmVMIc=
+	t=1706613842; cv=none; b=rIsNo804FmCYQLJcHr8lfjWvAPb/m3j0Q75bJmN0ldMAGO4jEKbj3Abs8R7aWLfWAVAeRUBP3XdimrKvRJJEDt2zbJ/bvpGwVkucCzMXEIjwo7zA8bY/1JwA6R040P9vy11w69jW7dHR0j9Yd7B8QBxvHNoXBZ7iqxTqgbgJcqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706613360; c=relaxed/simple;
-	bh=1u4ISiGKciq/te4aoqonTD2lmefQOKlXtD+Z/JlW8Xs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r/c9p9w2nwHIoGko6MNNVS7DJlZk6Yb25TDfmDWIuZ/MyWxjKqGeC7lVzwft0vbqj8WlsiEL6NEevz29YShxQZdLDgpbSmbf5S/sMC65zNc1B+sghDfqWj9oBufHCWdh5hVnVfASqVmhznok8arWdVkxPbS4NLU62f9nhTt9yhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=wnSKfYN+; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=J1gPgPNr; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=iGTFcS83; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Y46nuuz/; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1706613842; c=relaxed/simple;
+	bh=lv43hevcTa+64J0GxwrbWW7IYyzTy2+TvNR2spRRFog=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SWHHJPOnUMz4BuJZ/1wJesJ3OkE4pf26E5UNgFvtfPf9a4PzzOdi6kDr9RfDUpFU6Kh/7iXgZPBH/H7ysskNSKVjY+/nT1oFD4sD7NxNRHzr+RhJwHIjFrQkWeSn4Mmv74cyPCsKhlvtMh/yqPC5cAyO10YypIIXTg74STSt2ME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mPQJOgpy; arc=none smtp.client-ip=209.85.166.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="wnSKfYN+";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="J1gPgPNr";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="iGTFcS83";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Y46nuuz/"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id DAA4C1F846;
-	Tue, 30 Jan 2024 11:15:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1706613355; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+OQ1bCF/HA8s2JUmEwbhXiDyJh9rd41WXFOaLCe3q/U=;
-	b=wnSKfYN+XJOFJdv+dIeQpzY4JIiNbrGSw4Y7TNl6Md/2JxugJt0tqDrgMEdVfeF3AY3k8Q
-	J5IzIe8sB/hN1tq18WdTy2tOTlXSR96u3t9Fp5HQGw+B4ryGR3LqcO/eLmsSUj2+iP8cVF
-	08RrIjWoPRQvPz08P5U8xLawh3WQJwA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1706613355;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+OQ1bCF/HA8s2JUmEwbhXiDyJh9rd41WXFOaLCe3q/U=;
-	b=J1gPgPNr+S4rVl9Ov63My5ktcVTtV6BiCeTHyd/ovTVtlf8nAxDqdR+bw5WTSRF4Smc09z
-	RB6XFKAyCxGUO6DQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1706613353; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+OQ1bCF/HA8s2JUmEwbhXiDyJh9rd41WXFOaLCe3q/U=;
-	b=iGTFcS83zowJfNaToC+rm0tIl5H77AwpQNLp7kSNLyudQ/GATEhEzPkRUiqbaNDvaJ9oSr
-	DFHQfu237sJf/VAHMkrOuV55laaylOvgIbg+OMOitUX12LI9GA8d67LLxVSoQUebXMylrK
-	ZR69Eh2ifP668eRisCIHdqyB2FHwehw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1706613353;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+OQ1bCF/HA8s2JUmEwbhXiDyJh9rd41WXFOaLCe3q/U=;
-	b=Y46nuuz/iBKzdbyJIaAipdLauaXAHfII8sF5/k+jxsw4JEJccNJu+RU7WASk6pd9PeHNpN
-	WNnTPyPQ0WdmL/Bg==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id CD97B13212;
-	Tue, 30 Jan 2024 11:15:53 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id f9oqMmnauGVlCwAAn2gu4w
-	(envelope-from <jack@suse.cz>); Tue, 30 Jan 2024 11:15:53 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 5C9E7A0807; Tue, 30 Jan 2024 12:15:53 +0100 (CET)
-Date: Tue, 30 Jan 2024 12:15:53 +0100
-From: Jan Kara <jack@suse.cz>
-To: Kees Cook <keescook@chromium.org>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] select: Avoid wrap-around instrumentation in
- do_sys_poll()
-Message-ID: <20240130111553.yxm74p5q64pyuurs@quack3>
-References: <20240129184014.work.593-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mPQJOgpy"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-36379bc5d93so5653455ab.1
+        for <linux-hardening@vger.kernel.org>; Tue, 30 Jan 2024 03:24:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706613840; x=1707218640; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1F5K1w5ptPpWVbrzL69kxVWikdQT589qSufOOrLNvyk=;
+        b=mPQJOgpy+wTYbwtDum+aQq7oz33hTL0GIglFPB5vs6lUOtuhGEcrHVMimZokGK8tBx
+         KF0JU3vrYL5ATdAjFhbZ+IO82dHUMseNkIGO00lfVnBIrNQRBNHQ5NN8FOe/2bk5Cprz
+         8iwK0Zc074HVHEjE7jHvWpxD4X8tpr9VxKPi9BvHSK5ty1WzgXsLOMmcx/SDXOOC3+P+
+         ljMpkur++avK9FnO7/9lIjR/UzaBh1A+dxNErNA4XwxnIQLT16p6/stsM2KsszYa791c
+         WciaTYjFxQ3uJDHRe2+N2clevGyAP6aHS1qiIR9Rh4STySrbCbkrGg2N0qTz12Yq258N
+         X8dQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706613840; x=1707218640;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1F5K1w5ptPpWVbrzL69kxVWikdQT589qSufOOrLNvyk=;
+        b=WWtklNrSqcz00FdxNH3zkVvCR4LZKfALo5I4FxukIVGTWnKiRy7f4+TEzadcjFzYBg
+         o1ofQ1yNpuWq6I7KB4S+riK+VNgD56NoiYA+/++9o8oBUTLXMwahj7YUzMUcIC98zEI8
+         6Pzjw7WqstUhqDwA6/MnBEAkmHU9T6i6MAMCCUCT7onPGPXZcEFlc/86lsP3suLEjCD+
+         FRXXH6diZljan4DeU+bwKggKNI+pAVOpYaChtaKBwF6e2WycVdcMUiSiHQBG8bdiJHW9
+         /kXH70B4wIpaxl4SWJUazCGOV+0mo126zzsjTGVU8PE14QqESlWWKpLMS4nwkjmJUQIN
+         /k0g==
+X-Gm-Message-State: AOJu0YzIsFVjHvUueYQezTe8e6j0BIls2F8rl/9eRA6GUjeAOplQyxZB
+	FG7Vr1IURzhXo07oPnaju8/mU2NIoPNF9yneJAXR9szpx7aMklHlk2a5sNCf2kI=
+X-Google-Smtp-Source: AGHT+IHKdQCanZI5XXVDCMtb7vhvgINd+abU2YHqtb5E0Q9PMHdFUkLdkHUE23F69+B0bNtzNBk0pg==
+X-Received: by 2002:a92:c14b:0:b0:363:8559:edf with SMTP id b11-20020a92c14b000000b0036385590edfmr3200068ilh.1.1706613840424;
+        Tue, 30 Jan 2024 03:24:00 -0800 (PST)
+Received: from [172.22.22.28] (c-98-61-227-136.hsd1.mn.comcast.net. [98.61.227.136])
+        by smtp.gmail.com with ESMTPSA id e16-20020a92d750000000b00362902d6818sm2787085ilq.62.2024.01.30.03.23.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Jan 2024 03:23:59 -0800 (PST)
+Message-ID: <b5ae6fd2-1dee-47e4-b7e4-ebd8a2aea472@linaro.org>
+Date: Tue, 30 Jan 2024 05:23:58 -0600
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240129184014.work.593-kees@kernel.org>
-X-Spam-Level: 
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=iGTFcS83;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b="Y46nuuz/"
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-5.51 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:98:from];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCVD_DKIM_ARC_DNSWL_HI(-1.00)[];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.cz:+];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_SEVEN(0.00)[7];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[linux.org.uk:email,chromium.org:email,suse.com:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_IN_DNSWL_HI(-0.50)[2a07:de40:b281:104:10:150:64:98:from];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%]
-X-Spam-Score: -5.51
-X-Rspamd-Queue-Id: DAA4C1F846
-X-Spam-Flag: NO
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] bus: mhi: ep: Use kcalloc() instead of kzalloc()
+To: Erick Archer <erick.archer@gmx.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Jeffrey Hugo <quic_jhugo@quicinc.com>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Dan Carpenter <error27@gmail.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20240128112722.4334-1-erick.archer@gmx.com>
+Content-Language: en-US
+From: Alex Elder <elder@linaro.org>
+In-Reply-To: <20240128112722.4334-1-erick.archer@gmx.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon 29-01-24 10:40:15, Kees Cook wrote:
-> The mix of int, unsigned int, and unsigned long used by struct
-> poll_list::len, todo, len, and j meant that the signed overflow
-> sanitizer got worried it needed to instrument several places where
-> arithmetic happens between these variables. Since all of the variables
-> are always positive and bounded by unsigned int, use a single type in
-> all places. Additionally expand the zero-test into an explicit range
-> check before updating "todo".
+On 1/28/24 5:27 AM, Erick Archer wrote:
+> This is an effort to get rid of all multiplications from allocation
+> functions in order to prevent integer overflows [1].
 > 
-> This keeps sanitizer instrumentation[1] out of a UACCESS path:
+> Here the multiplication is obviously safe because the "event_rings"
+> member never can have a value greater than 255 (8 bits). This member
+> is set twice using always FIELD_GET:
 > 
-> vmlinux.o: warning: objtool: do_sys_poll+0x285: call to __ubsan_handle_sub_overflow() with UACCESS enabled
+> mhi_cntrl->event_rings = FIELD_GET(MHICFG_NER_MASK, regval);
+> mhi_cntrl->event_rings = FIELD_GET(MHICFG_NER_MASK, regval);
 > 
-> Link: https://github.com/KSPP/linux/issues/26 [1]
-> Cc: Christian Brauner <brauner@kernel.org>
-> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: linux-fsdevel@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-
-Yeah, good cleanup. Feel free to add:
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-								Honza
-
+> And the MHICFG_NER_MASK macro defines the 8 bits mask that guarantees
+> a maximum value of 255.
+> 
+> However, using kcalloc() is more appropriate [1] and improves
+> readability. This patch has no effect on runtime behavior.
+> 
+> Link: https://github.com/KSPP/linux/issues/162 [1]
+> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
+> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Signed-off-by: Erick Archer <erick.archer@gmx.com>
 > ---
->  fs/select.c | 13 +++++++------
->  1 file changed, 7 insertions(+), 6 deletions(-)
+> Changes in v2:
+> - Add more info in the commit message to better explain the change.
+>    (Dan Carpenter)
+> - Add the "Reviewed-by:" tag.
+
+Looks good.
+
+Reviewed-by: Alex Elder <elder@linaro.org>
+
 > 
-> diff --git a/fs/select.c b/fs/select.c
-> index 0ee55af1a55c..11a3b1312abe 100644
-> --- a/fs/select.c
-> +++ b/fs/select.c
-> @@ -839,7 +839,7 @@ SYSCALL_DEFINE1(old_select, struct sel_arg_struct __user *, arg)
->  
->  struct poll_list {
->  	struct poll_list *next;
-> -	int len;
-> +	unsigned int len;
->  	struct pollfd entries[];
->  };
->  
-> @@ -975,14 +975,15 @@ static int do_sys_poll(struct pollfd __user *ufds, unsigned int nfds,
->  		struct timespec64 *end_time)
->  {
->  	struct poll_wqueues table;
-> -	int err = -EFAULT, fdcount, len;
-> +	int err = -EFAULT, fdcount;
->  	/* Allocate small arguments on the stack to save memory and be
->  	   faster - use long to make sure the buffer is aligned properly
->  	   on 64 bit archs to avoid unaligned access */
->  	long stack_pps[POLL_STACK_ALLOC/sizeof(long)];
->  	struct poll_list *const head = (struct poll_list *)stack_pps;
->   	struct poll_list *walk = head;
-> - 	unsigned long todo = nfds;
-> +	unsigned int todo = nfds;
-> +	unsigned int len;
->  
->  	if (nfds > rlimit(RLIMIT_NOFILE))
->  		return -EINVAL;
-> @@ -998,9 +999,9 @@ static int do_sys_poll(struct pollfd __user *ufds, unsigned int nfds,
->  					sizeof(struct pollfd) * walk->len))
->  			goto out_fds;
->  
-> -		todo -= walk->len;
-> -		if (!todo)
-> +		if (walk->len >= todo)
->  			break;
-> +		todo -= walk->len;
->  
->  		len = min(todo, POLLFD_PER_PAGE);
->  		walk = walk->next = kmalloc(struct_size(walk, entries, len),
-> @@ -1020,7 +1021,7 @@ static int do_sys_poll(struct pollfd __user *ufds, unsigned int nfds,
->  
->  	for (walk = head; walk; walk = walk->next) {
->  		struct pollfd *fds = walk->entries;
-> -		int j;
-> +		unsigned int j;
->  
->  		for (j = walk->len; j; fds++, ufds++, j--)
->  			unsafe_put_user(fds->revents, &ufds->revents, Efault);
-> -- 
-> 2.34.1
+> Previous versions:
+> v1 - https://lore.kernel.org/linux-hardening/20240120152518.13006-1-erick.archer@gmx.com/
+> ---
+>   drivers/bus/mhi/ep/main.c | 5 +++--
+>   1 file changed, 3 insertions(+), 2 deletions(-)
 > 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> diff --git a/drivers/bus/mhi/ep/main.c b/drivers/bus/mhi/ep/main.c
+> index 65fc1d738bec..8d7a4102bdb7 100644
+> --- a/drivers/bus/mhi/ep/main.c
+> +++ b/drivers/bus/mhi/ep/main.c
+> @@ -1149,8 +1149,9 @@ int mhi_ep_power_up(struct mhi_ep_cntrl *mhi_cntrl)
+>   	mhi_ep_mmio_mask_interrupts(mhi_cntrl);
+>   	mhi_ep_mmio_init(mhi_cntrl);
+> 
+> -	mhi_cntrl->mhi_event = kzalloc(mhi_cntrl->event_rings * (sizeof(*mhi_cntrl->mhi_event)),
+> -					GFP_KERNEL);
+> +	mhi_cntrl->mhi_event = kcalloc(mhi_cntrl->event_rings,
+> +				       sizeof(*mhi_cntrl->mhi_event),
+> +				       GFP_KERNEL);
+>   	if (!mhi_cntrl->mhi_event)
+>   		return -ENOMEM;
+> 
+> --
+> 2.25.1
+> 
+
