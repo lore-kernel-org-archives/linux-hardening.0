@@ -1,98 +1,95 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09E5B36AF3;
-	Tue, 30 Jan 2024 02:27:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ACEE54FA9;
+	Tue, 30 Jan 2024 08:05:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706581664; cv=none; b=n9AmRS1C4jMuX9mniCL7tNOjOdyjWk6+UkfEPtLXRIcIjzd/Ka6d/xOKFkpbgbFPn/FPKKrGEgMK5LO+1KSQKQBIqnXRcragCITcgJ66eAmJWXWwbtRD61N5vndeSOSe65TyqJVbmqMeMV5Y874jlOIN0TJ+pyEbA6cVWXG4FDE=
+	t=1706601921; cv=none; b=LcVieBIa43nY2YRHtDlv5sMbEefFwiZi0QpEBInE4+yTjs+ewvuCcIuorOb5UoU/oS8Fikot8/0HTNrC01JyV6vD/Pq0F8JZmTrwFxaqkjHYzgFnBGdiFPhWIrvLvO9cuLjONDbgOw2YXkqO/cH3GuZ87Kew0bj2YpFvBltP65U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706581664; c=relaxed/simple;
-	bh=DcZbNDcRyfD1PFFqJcfdzNCC3Rd7V20GbucIcdpbFAw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=szOaXJo8597BD1mIDhpRzRZxF3+2CtphNywv29eaCC314HKG4NsU9e2UncLFlSQxCmYsk7o0XwI8+ABsTrLy8QPYHi7wRFBt3WQPiDOQHpAMvdlAdat/5XHJSQ9J3JXJx0PDtQkkOKpRnrYV/MJ63i2X/PaWi88+rCX1A2NuPVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=jlGDAfbK; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jlGDAfbK"
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40TJiTHe004454;
-	Tue, 30 Jan 2024 02:27:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2023-11-20;
- bh=DFvxi9sXd7yUeQQ7cAsAMh+nLiPjL4kr+2ahLfMyB7k=;
- b=jlGDAfbKXSlAGhHjBrdCil7uTWTCjDoF9GB4UHigRZWtJFSjpgFtzqrfRWbRnSi1VxGA
- r5POhDKY4MTKKN6KR49z78CDcQdXPPu9qaZsWHWqzZ5+BmsQkrMse8aNGGFQt/DMd4jV
- U+QwZA9dIv3z/wzs6XeJWkjvAGbAABgoSNkKnPy0Vp5+XcrleuGwj9U5PJ8EITc6bZLq
- ajJUuVSKiF5eGI8Xo0qB152UpwHdPov21NpNl5VzWy+/AUKrHkwpR4zPiw1O2tRDQmYV
- 6Bawov2D1AJWeAnBy6+lbNpbloCy6AQKvDXt+tj338TfuaLtMCo1iWEHJG/lwAYu/r5n ug== 
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3vvsqawf7u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 30 Jan 2024 02:27:36 +0000
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 40U00ORM014480;
-	Tue, 30 Jan 2024 02:27:36 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3vvr96g521-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 30 Jan 2024 02:27:36 +0000
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40U2RPxs040916;
-	Tue, 30 Jan 2024 02:27:35 GMT
-Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3vvr96g4y7-8;
-	Tue, 30 Jan 2024 02:27:35 +0000
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-To: Michael Cyr <mikecyr@linux.ibm.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Justin Stitt <justinstitt@google.com>
-Cc: "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] scsi: ibmvscsi_tgt: replace deprecated strncpy with strscpy
-Date: Mon, 29 Jan 2024 21:27:04 -0500
-Message-ID: <170657812678.784857.8463618815406692584.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.42.1
-In-Reply-To: <20231212-strncpy-drivers-scsi-ibmvscsi_tgt-ibmvscsi_tgt-c-v2-1-bdb9a7cd96c8@google.com>
-References: <20231212-strncpy-drivers-scsi-ibmvscsi_tgt-ibmvscsi_tgt-c-v2-1-bdb9a7cd96c8@google.com>
+	s=arc-20240116; t=1706601921; c=relaxed/simple;
+	bh=v35Nb17IxnLBqjE0Q360VOmx1We6fXnnoq/2yVY6DXs=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 MIME-Version:Content-Type; b=HG9QMXYe9tYHwT01LfOvg2UuBXZWM11rusL4HOjeDqjI8clb/cx5Rzbwx3QIgUwMNmEsSRrzAA/jdYwiAZ6dGbW2j+aOXjQyc77eJ8OOgLOVglWd33UwfGK2VTwLLq2zU1zGO2CY6kTkYKtOi7Ilw+aNXg4FVGxeHyXGbrUK9kA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+References: <CAHk-=wgxzm+Oc1ywuNGxb1R1=ZEC85LJi776R2QEpk6=_2Qfdw@mail.gmail.com>
+ <20240129104954.1778339-1-geert@linux-m68k.org>
+ <8ea40b3-adde-acb5-5e46-fe1fd395daf@linux-m68k.org>
+ <56b9c222-4e97-4eda-89af-3e0d0c39acb2@roeck-us.net>
+ <90cd0f1a-29c0-4c6f-9efd-92b69da194c0@gmx.de>
+User-agent: mu4e 1.10.8; emacs 30.0.50
+From: Sam James <sam@gentoo.org>
+To: Helge Deller <deller@gmx.de>
+Cc: Guenter Roeck <linux@roeck-us.net>, Geert Uytterhoeven
+ <geert@linux-m68k.org>, linux-kernel@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, intel-xe@lists.freedesktop.org,
+ "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Subject: Re: Build regressions/improvements in v6.8-rc2
+Date: Tue, 30 Jan 2024 08:02:45 +0000
+Organization: Gentoo
+In-reply-to: <90cd0f1a-29c0-4c6f-9efd-92b69da194c0@gmx.de>
+Message-ID: <87plxj8cwb.fsf@gentoo.org>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-29_15,2024-01-29_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 malwarescore=0
- suspectscore=0 phishscore=0 mlxscore=0 mlxlogscore=938 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2401300015
-X-Proofpoint-GUID: OEDyQH4gE1XU6RBa9JOzZMPSOIgpiK0M
-X-Proofpoint-ORIG-GUID: OEDyQH4gE1XU6RBa9JOzZMPSOIgpiK0M
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 12 Dec 2023 01:20:20 +0000, Justin Stitt wrote:
 
-> strncpy() is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
-> 
-> We don't need the NUL-padding behavior that strncpy() provides as vscsi
-> is NUL-allocated in ibmvscsis_probe() which proceeds to call
-> ibmvscsis_adapter_info():
-> |       vscsi = kzalloc(sizeof(*vscsi), GFP_KERNEL);
-> 
-> [...]
+Helge Deller <deller@gmx.de> writes:
 
-Applied to 6.9/scsi-queue, thanks!
+> On 1/29/24 15:58, Guenter Roeck wrote:
+>> On 1/29/24 03:06, Geert Uytterhoeven wrote:
+>> [ ... ]
+>>> parisc-gcc1[23]/parisc-{allmod,def}config
+>>>
+>>> =C2=A0=C2=A0 + /kisskb/src/drivers/hwmon/pc87360.c: error: writing 1 by=
+te into a region of size 0 [-Werror=3Dstringop-overflow=3D]:=C2=A0 =3D> 383=
+:51
+>>>
+>>
+>> The "fix" for this problem would be similar to commit 4265eb062a73 ("hwm=
+on: (pc87360)
+>> Bounds check data->innr usage"). The change would be something like
+>>
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 for (i =3D 0; i < data->tempnr; i++) {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 for (i =3D 0; i < min(data->tempnr, ARRAY_SIZE(data->temp_m=
+ax)); i++) {
+>>
+>> but that would be purely random because the loop accesses several arrays
+>> indexed with i, and tempnr is never >=3D ARRAY_SIZE(data->temp_max).
+>> I kind of resist making such changes to the code just because the compil=
+er
+>> is clueless.
+>
+> I agree with your analysis.
+> But I'm wondering why this warning just seem to appear on parisc.
+> I would expect gcc on other platforms to complain as well ?!?
 
-[1/1] scsi: ibmvscsi_tgt: replace deprecated strncpy with strscpy
-      https://git.kernel.org/mkp/scsi/c/165470fb2600
+-Wstringop-overflow and -Wstringop-truncation are known noisy warnings
+because they're implemented in GCC's "middle-end". Whether or not they
+fire depends on other optimisations.
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+See also https://lore.kernel.org/linux-hardening/CAHk-=3DwjG4jdE19-vWWhAX3B=
+yfbNr4DJS-pwiN9oY38WkhMZ57g@mail.gmail.com/.
+
+>
+> Helge
+>
+>> Are we sprinkling the kernel code with code like this to make the compil=
+er happy ?
+>>
+>> Guenter
+>>
+>>
+
+thanks,
+sam
