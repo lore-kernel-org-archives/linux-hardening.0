@@ -1,37 +1,47 @@
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ACEE54FA9;
-	Tue, 30 Jan 2024 08:05:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B0312E4D;
+	Tue, 30 Jan 2024 08:34:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706601921; cv=none; b=LcVieBIa43nY2YRHtDlv5sMbEefFwiZi0QpEBInE4+yTjs+ewvuCcIuorOb5UoU/oS8Fikot8/0HTNrC01JyV6vD/Pq0F8JZmTrwFxaqkjHYzgFnBGdiFPhWIrvLvO9cuLjONDbgOw2YXkqO/cH3GuZ87Kew0bj2YpFvBltP65U=
+	t=1706603688; cv=none; b=ErM3ioUkRFMpD9QcERr68pOLWvxEEdMYnAr8zRPh0+fcqA6pNZ+PiK2uWgPhFMlo4g6JK4PwHjGuTbubqHYgzgKMOdL2YqVQJCYIAxRpw6PI/OOCUNOBC5vKPWZDXS2M2OCxdqTINCh0Z/EGhl18SJ9LcMn83gSLrBgvn53mIK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706601921; c=relaxed/simple;
-	bh=v35Nb17IxnLBqjE0Q360VOmx1We6fXnnoq/2yVY6DXs=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=HG9QMXYe9tYHwT01LfOvg2UuBXZWM11rusL4HOjeDqjI8clb/cx5Rzbwx3QIgUwMNmEsSRrzAA/jdYwiAZ6dGbW2j+aOXjQyc77eJ8OOgLOVglWd33UwfGK2VTwLLq2zU1zGO2CY6kTkYKtOi7Ilw+aNXg4FVGxeHyXGbrUK9kA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-References: <CAHk-=wgxzm+Oc1ywuNGxb1R1=ZEC85LJi776R2QEpk6=_2Qfdw@mail.gmail.com>
- <20240129104954.1778339-1-geert@linux-m68k.org>
- <8ea40b3-adde-acb5-5e46-fe1fd395daf@linux-m68k.org>
- <56b9c222-4e97-4eda-89af-3e0d0c39acb2@roeck-us.net>
- <90cd0f1a-29c0-4c6f-9efd-92b69da194c0@gmx.de>
-User-agent: mu4e 1.10.8; emacs 30.0.50
-From: Sam James <sam@gentoo.org>
-To: Helge Deller <deller@gmx.de>
-Cc: Guenter Roeck <linux@roeck-us.net>, Geert Uytterhoeven
- <geert@linux-m68k.org>, linux-kernel@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-parisc@vger.kernel.org,
- linux-hwmon@vger.kernel.org, intel-xe@lists.freedesktop.org,
- "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: Re: Build regressions/improvements in v6.8-rc2
-Date: Tue, 30 Jan 2024 08:02:45 +0000
-Organization: Gentoo
-In-reply-to: <90cd0f1a-29c0-4c6f-9efd-92b69da194c0@gmx.de>
-Message-ID: <87plxj8cwb.fsf@gentoo.org>
+	s=arc-20240116; t=1706603688; c=relaxed/simple;
+	bh=PDBalufe/OZxGpAG/naTR/fooOv/KA48jowWnj1HpOI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i00bS+mf0BvB81r6qaDJis9yrMD04hM6EINwBWe4sCbKI+mPGj7C0WKeTKvZJKayteWFunQAp9WlKTTxMmX/ombUYsr2h7GGpeoTS0d8ESZ/UkKECEP3m2P1jqWhdRUg6L4w1iqBYFvsnG8+WYBfBZ66ezp3hPm9C9lKLfOxg44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fz8Jl9Mj; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fz8Jl9Mj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4784CC433C7;
+	Tue, 30 Jan 2024 08:34:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706603687;
+	bh=PDBalufe/OZxGpAG/naTR/fooOv/KA48jowWnj1HpOI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fz8Jl9MjAfgIKJeEbtyvr73lL20xJkHm+iy0ge/8TgeDpUF4MsFPoq+h89DdsflZH
+	 1/mO8u6Yc4OxRFzPOsiOznTCtdEt3j5Un4bRezPuu5h+5ONHwCrY82Iz8as1FLc4g9
+	 K6s+sEaK4GiSyMlOHz5dOsJbEIq3Ckp7RJiOUWK1IdBQp5QVzp2Ci8PuqFVwhmrtO6
+	 R0Twc6fzF3xp6l3v+y9DBaHgDtupj8FNvNjYvDvLG8jzqac7Bh2kTpHalW7TPYnMqJ
+	 5tzopcL3NcKRS1ocE8jtG78th8PAKD5YyoPvb6i0RTPiW73IEdWi2byr2wp5vqcblE
+	 dtsbkE326Mx2A==
+Date: Tue, 30 Jan 2024 14:04:38 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Erick Archer <erick.archer@gmx.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Jeffrey Hugo <quic_jhugo@quicinc.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Dan Carpenter <error27@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-arm-msm@vger.kernel.org, mhi@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] bus: mhi: ep: Use kcalloc() instead of kzalloc()
+Message-ID: <20240130083438.GM32821@thinkpad>
+References: <20240120152518.13006-1-erick.archer@gmx.com>
+ <43614a09-d520-4111-873a-b352bd93ea07@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -39,57 +49,68 @@ List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <43614a09-d520-4111-873a-b352bd93ea07@moroto.mountain>
 
+On Mon, Jan 22, 2024 at 10:15:20AM +0300, Dan Carpenter wrote:
+> This code does not have an integer overflow, but it might have a
+> different memory corruption bug.
+> 
+> On Sat, Jan 20, 2024 at 04:25:18PM +0100, Erick Archer wrote:
+> > As noted in the "Deprecated Interfaces, Language Features, Attributes,
+> > and Conventions" documentation [1], size calculations (especially
+> > multiplication) should not be performed in memory allocator (or similar)
+> > function arguments due to the risk of them overflowing. This could lead
+> > to values wrapping around and a smaller allocation being made than the
+> > caller was expecting. Using those allocations could lead to linear
+> > overflows of heap memory and other misbehaviors.
+> > 
+> > So, use the purpose specific kcalloc() function instead of the argument
+> > count * size in the kzalloc() function.
+> > 
+> 
+> This one is more complicated to analyze.  I have built a Smatch cross
+> function database so it's easy for me and I will help you.
+> 
+> $ smbd.py where mhi_ep_cntrl event_rings
+> drivers/pci/endpoint/functions/pci-epf-mhi.c | pci_epf_mhi_probe              | (struct mhi_ep_cntrl)->event_rings | 0
+> drivers/bus/mhi/ep/main.c      | mhi_ep_irq                     | (struct mhi_ep_cntrl)->event_rings | min-max
+> drivers/bus/mhi/ep/mmio.c      | mhi_ep_mmio_init               | (struct mhi_ep_cntrl)->event_rings | 0-255
+> drivers/bus/mhi/ep/mmio.c      | mhi_ep_mmio_update_ner         | (struct mhi_ep_cntrl)->event_rings | 0-255
+> 
+> The other way to figure this stuff out would be to do:
+> 
+> $ grep -Rn "event_rings = " drivers/bus/mhi/ep/
+> drivers/bus/mhi/ep/mmio.c:260:  mhi_cntrl->event_rings = FIELD_GET(MHICFG_NER_MASK, regval);
+> drivers/bus/mhi/ep/mmio.c:261:  mhi_cntrl->hw_event_rings = FIELD_GET(MHICFG_NHWER_MASK, regval);
+> drivers/bus/mhi/ep/mmio.c:271:  mhi_cntrl->event_rings = FIELD_GET(MHICFG_NER_MASK, regval);
+> drivers/bus/mhi/ep/mmio.c:272:  mhi_cntrl->hw_event_rings = FIELD_GET(MHICFG_NHWER_MASK, regval);
+> 
+> That means that this multiplication can never overflow so the patch
+> has no effect on runtime.  The patch is still useful because we don't
+> want every single person to have to do this analysis.  The kcalloc()
+> function is just safer and more obviously correct.
+> 
 
-Helge Deller <deller@gmx.de> writes:
+Agree.
 
-> On 1/29/24 15:58, Guenter Roeck wrote:
->> On 1/29/24 03:06, Geert Uytterhoeven wrote:
->> [ ... ]
->>> parisc-gcc1[23]/parisc-{allmod,def}config
->>>
->>> =C2=A0=C2=A0 + /kisskb/src/drivers/hwmon/pc87360.c: error: writing 1 by=
-te into a region of size 0 [-Werror=3Dstringop-overflow=3D]:=C2=A0 =3D> 383=
-:51
->>>
->>
->> The "fix" for this problem would be similar to commit 4265eb062a73 ("hwm=
-on: (pc87360)
->> Bounds check data->innr usage"). The change would be something like
->>
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 for (i =3D 0; i < data->tempnr; i++) {
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 for (i =3D 0; i < min(data->tempnr, ARRAY_SIZE(data->temp_m=
-ax)); i++) {
->>
->> but that would be purely random because the loop accesses several arrays
->> indexed with i, and tempnr is never >=3D ARRAY_SIZE(data->temp_max).
->> I kind of resist making such changes to the code just because the compil=
-er
->> is clueless.
->
-> I agree with your analysis.
-> But I'm wondering why this warning just seem to appear on parisc.
-> I would expect gcc on other platforms to complain as well ?!?
+> It's a bit concerning that ->event_rings is set multiple times, but only
+> allocated one time.  It's either unnecessary or there is a potential
+> memory corruption bug.  If it's really necessary then there should be a
+> check that the new size is <= the size of the original buffer that we
+> allocated.
 
--Wstringop-overflow and -Wstringop-truncation are known noisy warnings
-because they're implemented in GCC's "middle-end". Whether or not they
-fire depends on other optimisations.
+Agree, the dual assignment could be avoided. I added it initially to have all
+the memory allocations in one place, and also there is a guarantee from the spec
+that the MHICFG_NER_MASK will always be initialized to hw max value.
 
-See also https://lore.kernel.org/linux-hardening/CAHk-=3DwjG4jdE19-vWWhAX3B=
-yfbNr4DJS-pwiN9oY38WkhMZ57g@mail.gmail.com/.
+But looking at it again, it seems redundant. So I will drop the assignment from
+mhi_ep_mmio_init().
 
->
-> Helge
->
->> Are we sprinkling the kernel code with code like this to make the compil=
-er happy ?
->>
->> Guenter
->>
->>
+Thanks for spotting!
 
-thanks,
-sam
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
