@@ -1,54 +1,72 @@
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176FB7993B
-	for <linux-hardening@vger.kernel.org>; Tue, 30 Jan 2024 18:58:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9DD524214;
+	Tue, 30 Jan 2024 19:54:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706641122; cv=none; b=cydHrqMKAbUU08U+onS3PNc+UFZ+AlRWzg1jCog6aWvkZ55CqfgPtF3f83/gqYU6PIp5LQVhmVZKLFo9A3KpV+9+QsKrTy5cFxq8NCXwLIdaG1GhZTdl6kJ3hQQORD1O79ZSoU1+aywmCRb1BjXz6RBo8JtdGlUD+WcH6VJq6Hg=
+	t=1706644447; cv=none; b=tGvJ4ufqYuvB73o646Ltsd4GN1zRZmf1/5NSIzIZ/NQvdKQiwW+4twKEv9I9krOJJTR/MzQktYegwDIDDdnh1NVbYDK8WzyA1VIZC5zCxlmyeh+tx7OKC2rvtm+or5KEnokSNHeFxz4k9pYDJ5OF700fGxfn+PC5A3Yej1JMmjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706641122; c=relaxed/simple;
-	bh=feOlOVjVoDFlYhJijI29hyyTBq3VHkJbnIkbQHkWo+M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bOIOpdav2sWj0GSXYVFZ5pkx7608QHEGirS3+Hfv00p830jk2jHZGbDA9bhU+5G03xAjl0egP1eIFKFuXsJZTX+PrSN9mkxipMEyuC2NTuGZj7Ft/6I4sh70Tnda5Lh8acG+aPE7B49K5jt9oHDJaaWFyxmbnXsD+tIAWUNQWKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=redhat.com; arc=none smtp.client-ip=209.85.219.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-68c41c070efso886016d6.0
-        for <linux-hardening@vger.kernel.org>; Tue, 30 Jan 2024 10:58:40 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706641120; x=1707245920;
+	s=arc-20240116; t=1706644447; c=relaxed/simple;
+	bh=QRuAGiKg2Gt5kMYsmgpV2NrhDQiqSPKbxLU+UZ+R/wM=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L63Knv+2bNPJcJWEbf6FrMVbUoxvIPsLKZod9L5X5hNsXlkU4eg2Ps9lEVmXrpNyj4zUDZBUYX2dspDjcAaFg1Ulf5v7fu0NUzE+qvE+ng4TVWIpiZ5PPcn6dAT1TiN2RNPf8TFW5ylEwEyybes5n+0QxLFpyH+Z9bWDXnOOct0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=noxo0Dsr; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="noxo0Dsr"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-51117bfd452so2431399e87.3;
+        Tue, 30 Jan 2024 11:54:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706644444; x=1707249244; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=D3wO7BFSthurTRKjqrvhcV7JSVxdDru5aDJKbt2OZqE=;
+        b=noxo0DsrXM6VaKBORQBxYCIv5b8JEmp/U31qMY9ZPAtgFQSoJL4F8/82tPStMXi5ta
+         e8bjrNy6Byg+rASM6X2g2cF9GJTAoaFtjoB53kNyelZu5CRzRQUi9XaQ+a5Nj+cAsgyh
+         MlZKYgtZ+CKvgXVZXWASMx6S9fg26XZ1x2kGqXUmmbskT9q8hmlmAGUg8dw0fgqIQPNn
+         XYX4cgYFX3H57KI/5/LDbjy4GL/95eZYbA0/6XHLuFCxEHDKHk4iwaioZ2kA3TWzxspR
+         7AN+DPmBv6ieZK87XS+R/GYGNCDqeFTpcDVsNsG2kfyGklhcCVEv7l9/h5AW29XFvTD5
+         3zyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706644444; x=1707249244;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=sQQdl1Z7hWzrJNQVbHBRvsLI1/jbn0qd6qXGr4XoIGk=;
-        b=b+x6MIiLPLoEtODIWxuUK2nnL70HBXqsSGP1nxL46oNm0irmzSUBVOQbs/YkGSsitv
-         8YKGPp0sjTv+hTm65JIMlRoivd84SVN39YNcqUl9K08iKXFNZfHuG4um2YKp/0swCbPI
-         DYaD2do5CvMcBGT46AXWcRVmesTYr5K/l+MJfKebtGIPMqBherp/ZeJPPNvAbJ5Y8WKx
-         5PDnYlNJwTxVpl49EJW5y2U3VQro/6ajTJCISxtdCwPZwadLyk0Hw3sF7gYyIgJZzgNP
-         GEdTPJF0l/NEQEn68FeDAe3izCKQQX8mlbhccl9ScoNFyP2ctJ3E8uQlvvCOv9sGWIDj
-         t39w==
-X-Gm-Message-State: AOJu0YxDk/UVyudoSlWxye9W+1vs2I1NwWo/YeCQNNywB0n+DZvEni3V
-	RFX18w2utuAvkM+a7UUjuPE8XPnvpYSTnRWfpVdHciBy3/FTCOiekB3cJpmApw==
-X-Google-Smtp-Source: AGHT+IFAvIv3XblWdgdQ8RQaDq6JHCKiCsKus1Crsy6Zo4z9JO1wUINYuy/SufWB3UTtR+pOQa194Q==
-X-Received: by 2002:ad4:4353:0:b0:68c:4b59:d4ee with SMTP id q19-20020ad44353000000b0068c4b59d4eemr1868859qvs.21.1706641120069;
-        Tue, 30 Jan 2024 10:58:40 -0800 (PST)
-Received: from localhost (pool-68-160-141-91.bstnma.fios.verizon.net. [68.160.141.91])
-        by smtp.gmail.com with ESMTPSA id or32-20020a05621446a000b0068189e9d3a3sm4322738qvb.112.2024.01.30.10.58.39
+        bh=D3wO7BFSthurTRKjqrvhcV7JSVxdDru5aDJKbt2OZqE=;
+        b=RBAnfEPdicdsrgxhELy0TuT1DTULHUiKXlHCTmKeDe0xj7naGNbIpYQ26JChleFJAL
+         Yl9tCR2AwYfPcGBnhLIdjJx9n8SLAbBltR01NJUQve22BjGv7SsnsQjZdE4m7apdfRJG
+         S0++lqoRQggmkWE97U5r1EHsUu9q64e4Q8XCQvqvFPb3fS33M+wpDfUYFnb8MOx6C9/D
+         vFu+qnDDs8weNrQkx/1MokITF36vCE75Ieh1LW9BjmqdTd3GEit/cpP0yN1CGBPaI6XY
+         qI32j31R4FFujhkAkKRIlfega5zDGqi3qddeAG4iA+xX/7jfuudNrR12xeZvpqnqzYb9
+         fb5Q==
+X-Gm-Message-State: AOJu0Yw7AkxyUfUz6E91ObjOuHJglluLSYNUThtUcKutJQS32o9EvjHo
+	jTKn1MoSW+gE+le+s9Ok9jyrtFEPYWPiM+93zZgS+sSzc4+VD+7D
+X-Google-Smtp-Source: AGHT+IFEQrZhBM8T+DeRxci0XROcHTplnv/b6ZUuxFUOtUSJIq+cU8fmycOszrb5TMPUF77QkIkzjg==
+X-Received: by 2002:ac2:55a8:0:b0:510:27a7:cccd with SMTP id y8-20020ac255a8000000b0051027a7cccdmr7129548lfg.2.1706644443488;
+        Tue, 30 Jan 2024 11:54:03 -0800 (PST)
+Received: from pc636 (host-185-121-47-193.sydskane.nu. [185.121.47.193])
+        by smtp.gmail.com with ESMTPSA id h5-20020a197005000000b0051120a8eb3fsm148533lfc.10.2024.01.30.11.54.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jan 2024 10:58:39 -0800 (PST)
-Date: Tue, 30 Jan 2024 13:58:38 -0500
-From: Mike Snitzer <snitzer@kernel.org>
-To: Kees Cook <keescook@chromium.org>
-Cc: linux-hardening@vger.kernel.org, Alasdair Kergon <agk@redhat.com>,
-	Mikulas Patocka <mpatocka@redhat.com>, dm-devel@lists.linux.dev,
+        Tue, 30 Jan 2024 11:54:03 -0800 (PST)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Tue, 30 Jan 2024 20:54:00 +0100
+To: Lorenzo Stoakes <lstoakes@gmail.com>, Kees Cook <keescook@chromium.org>
+Cc: Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Christoph Hellwig <hch@infradead.org>, linux-mm@kvack.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 47/82] dm verity: Refactor intentional wrap-around test
-Message-ID: <ZblG3sBtxv68aRyH@redhat.com>
+Subject: Re: [PATCH 33/82] mm/vmalloc: Refactor intentional wrap-around
+ calculation
+Message-ID: <ZblT2OjkPcZQEw7A@pc636>
 References: <20240122235208.work.748-kees@kernel.org>
- <20240123002814.1396804-47-keescook@chromium.org>
+ <20240123002814.1396804-33-keescook@chromium.org>
+ <24526e13-2df6-47ea-865f-b5a5594bc024@lucifer.local>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
@@ -57,39 +75,81 @@ List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240123002814.1396804-47-keescook@chromium.org>
+In-Reply-To: <24526e13-2df6-47ea-865f-b5a5594bc024@lucifer.local>
 
-On Mon, Jan 22 2024 at  7:27P -0500,
-Kees Cook <keescook@chromium.org> wrote:
+On Tue, Jan 30, 2024 at 06:55:57PM +0000, Lorenzo Stoakes wrote:
+> On Mon, Jan 22, 2024 at 04:27:08PM -0800, Kees Cook wrote:
+> > In an effort to separate intentional arithmetic wrap-around from
+> > unexpected wrap-around, we need to refactor places that depend on this
+> > kind of math. One of the most common code patterns of this is:
+> >
+> > 	VAR + value < VAR
+> >
+> > Notably, this is considered "undefined behavior" for signed and pointer
+> > types, which the kernel works around by using the -fno-strict-overflow
+> > option in the build[1] (which used to just be -fwrapv). Regardless, we
+> > want to get the kernel source to the position where we can meaningfully
+> > instrument arithmetic wrap-around conditions and catch them when they
+> > are unexpected, regardless of whether they are signed[2], unsigned[3],
+> > or pointer[4] types.
+> >
+> > Refactor open-coded unsigned wrap-around addition test to use
+> > check_add_overflow(), retaining the result for later usage (which removes
+> > the redundant open-coded addition). This paves the way to enabling the
+> > unsigned wrap-around sanitizer[2] in the future.
+> >
+> > Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
+> > Link: https://github.com/KSPP/linux/issues/26 [2]
+> > Link: https://github.com/KSPP/linux/issues/27 [3]
+> > Link: https://github.com/KSPP/linux/issues/344 [4]
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Uladzislau Rezki <urezki@gmail.com>
+> > Cc: Christoph Hellwig <hch@infradead.org>
+> > Cc: Lorenzo Stoakes <lstoakes@gmail.com>
+> > Cc: linux-mm@kvack.org
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  mm/vmalloc.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> > index d12a17fc0c17..7932ac99e9d3 100644
+> > --- a/mm/vmalloc.c
+> > +++ b/mm/vmalloc.c
+> > @@ -1223,6 +1223,7 @@ is_within_this_va(struct vmap_area *va, unsigned long size,
+> >  	unsigned long align, unsigned long vstart)
+> >  {
+> >  	unsigned long nva_start_addr;
+> > +	unsigned long sum;
+> >
+> >  	if (va->va_start > vstart)
+> >  		nva_start_addr = ALIGN(va->va_start, align);
+> > @@ -1230,11 +1231,11 @@ is_within_this_va(struct vmap_area *va, unsigned long size,
+> >  		nva_start_addr = ALIGN(vstart, align);
+> >
+> >  	/* Can be overflowed due to big size or alignment. */
+> > -	if (nva_start_addr + size < nva_start_addr ||
+> > +	if (check_add_overflow(nva_start_addr, size, &sum) ||
+> >  			nva_start_addr < vstart)
+> >  		return false;
+> >
+> > -	return (nva_start_addr + size <= va->va_end);
+> > +	return (sum <= va->va_end);
+> >  }
+> >
+> >  /*
+> > --
+> > 2.34.1
+> >
+> 
+> Looks good to me,
+> 
+> Reviewed-by: Lorenzo Stoakes <lstoakes@gmail.com>
+>
+Same here. One small nit though. The "sum" variable is not something
+that it suits for. IMO, we should use a better name and replace it:
 
-> In an effort to separate intentional arithmetic wrap-around from
-> unexpected wrap-around, we need to refactor places that depend on this
-> kind of math. One of the most common code patterns of this is:
-> 
-> 	VAR + value < VAR
-> 
-> Notably, this is considered "undefined behavior" for signed and pointer
-> types, which the kernel works around by using the -fno-strict-overflow
-> option in the build[1] (which used to just be -fwrapv). Regardless, we
-> want to get the kernel source to the position where we can meaningfully
-> instrument arithmetic wrap-around conditions and catch them when they
-> are unexpected, regardless of whether they are signed[2], unsigned[3],
-> or pointer[4] types.
-> 
-> Refactor open-coded wrap-around addition test to use add_would_overflow().
-> This paves the way to enabling the wrap-around sanitizers in the future.
-> 
-> Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
-> Link: https://github.com/KSPP/linux/issues/26 [2]
-> Link: https://github.com/KSPP/linux/issues/27 [3]
-> Link: https://github.com/KSPP/linux/issues/344 [4]
-> Cc: Alasdair Kergon <agk@redhat.com>
-> Cc: Mike Snitzer <snitzer@kernel.org>
-> Cc: Mikulas Patocka <mpatocka@redhat.com>
-> Cc: dm-devel@lists.linux.dev
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+"nva_offset"?
 
-Please change subject to:
-"dm: Refactor intentional wrap-around test in a few targets"
-
-Reviewed-by: Mike Snitzer <snitzer@kernel.org>
+--
+Uladzislau Rezki
