@@ -1,126 +1,103 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE048288D;
-	Wed, 31 Jan 2024 14:40:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F7686AE7;
+	Wed, 31 Jan 2024 15:28:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706712041; cv=none; b=BY+qbsrdWteNoDJoNd+UAL9f05BeA1YMOMOYwwKr2iRjCN0Q+FzNBkSv4monQOKHPugOxzjEQR07a8TRfrGA4/vwVnvG01OeiVmRJTi4uQI7PlSLeaUShUEt+OiXRS0EBBEZ72v4KGmgQcOCpD6KH7p3CdFyNaEvks8V3Fw1Dmk=
+	t=1706714934; cv=none; b=F+lBsPGKB5BCFvct6vJWalgNjISlzcMuhM5XxbhYHPTmEv1lW/0GvAEuHUYeXeZo2aO6jRmeIP3QDZ50SPz7x+q1OCdyv/3RXgoxXIllogTvqiZcm7jGVOxlV0d4Nf/TiZ5ceUBGhBMmqyBqIiBRHUElHYUMP9IAV+XVKt8h/oU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706712041; c=relaxed/simple;
-	bh=cf0o7pUczT+SwyHF1r0Vl8rD7xbhYCtgfD5FzmAA0zY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=YxF3FXmicsq6NM7G+rbcCxsIhZdyDAGDINUa34wgvWzZUCts+RZO/ng/YfK7BwIR67x3OqefV6j2AVk9XaloSLee/bJEjz5bu5wCsPLFnBIAdFY2bnAR/2y1cB4HsZbInc5zG+HXB17+Uw0tPIVDZu+Kje0eeh6WcPPwjH2TtPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=bdT6UCsp; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1706714934; c=relaxed/simple;
+	bh=GZeYPTgLLW3nuyk0bMnjWwMTvzrJyNThCEoPaW35O9c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OMm9KO6hKl6N50Hu1sQzoAP5v+LN92CeWUZDDA8K89q9u/fsTgk5LUd98eXOuSQhta5iEgj9HDh9q7e0p6FJEQ02oY8q5FjL3rr2fqehUt1hY1TFkCpNLM1N7tqHuyk4fsTkHuHnMcRXl6ticSlMIYlQtHUEOQVQ9r+iJ8O88J8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TqaceoEM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="bdT6UCsp"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40VE03pQ004366;
-	Wed, 31 Jan 2024 14:40:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : in-reply-to : references : date : message-id : mime-version :
- content-type; s=pp1; bh=CAbY6nnqiJsCB4h73B1JxMOVqr/ABqqEHndIpIGtNWg=;
- b=bdT6UCspzxb9Mkz6mMk0ZRpO/455IgBHJ3YjoaAylVTbLnsfvonqCqN3AZKwFE6Vq0hL
- mvR8Mb47xxHDKdoV/9I0jOTk6eObXEp+/3DTvsploZ025CrJvJ+LwsLrIjBpS+7SwXbg
- VB9dLmySOfrFJ4qAmppcT893z38Y04Qwue1K0k/nWv5jXn6Ceqo6NUqaHdIuzJfhWhDY
- rmRELF0Q84z4nk67p5Q1ET6LXtCgC0quWJogvIBjh2d1WNidY97DXMr37xfP4fUXfqBj
- bNYxVuOUOq+jKm29vBvkwqr0rmQsKIq/0JYpJrxdeUmg8v/Mfa0/7C3VRJhCWtl2t8aA /Q== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vyp9y30ck-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 31 Jan 2024 14:40:37 +0000
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40VEP4Yg020970;
-	Wed, 31 Jan 2024 14:40:36 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vyp9y30bn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 31 Jan 2024 14:40:36 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40VDXUsC007200;
-	Wed, 31 Jan 2024 14:40:35 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3vwev2dh10-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 31 Jan 2024 14:40:35 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40VEeWkX13042418
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 31 Jan 2024 14:40:32 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 98D722004B;
-	Wed, 31 Jan 2024 14:40:32 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1BEF22004D;
-	Wed, 31 Jan 2024 14:40:32 +0000 (GMT)
-Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 31 Jan 2024 14:40:32 +0000 (GMT)
-From: Sven Schnelle <svens@linux.ibm.com>
-To: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Nico Boehr
- <nrb@linux.ibm.com>, Philipp Rudo <prudo@redhat.com>,
-        Baoquan He
- <bhe@redhat.com>, Tao Liu <ltao@redhat.com>,
-        Alexander Egorenkov
- <egorenar@linux.ibm.com>,
-        linux-s390@vger.kernel.org,
-        "Gustavo A. R.
- Silva" <gustavoars@kernel.org>,
-        Bill Wendling <morbo@google.com>,
-        Justin
- Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 30/82] s390/kexec_file: Refactor intentional wrap-around
- calculation
-In-Reply-To: <ZbpXieRZz3BQ6jBH@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-	(Alexander Gordeev's message of "Wed, 31 Jan 2024 15:22:01 +0100")
-References: <20240122235208.work.748-kees@kernel.org>
-	<20240123002814.1396804-30-keescook@chromium.org>
-	<ZbpXieRZz3BQ6jBH@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-Date: Wed, 31 Jan 2024 15:40:31 +0100
-Message-ID: <yt9d4jetmuqo.fsf@linux.ibm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TqaceoEM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D714DC43390;
+	Wed, 31 Jan 2024 15:28:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706714934;
+	bh=GZeYPTgLLW3nuyk0bMnjWwMTvzrJyNThCEoPaW35O9c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TqaceoEM/jWYvScv0/8jEqOfV9SI/68cRQTue5W7+ihQvqVWuKt2M7COhC8knJI0v
+	 L3YHz3q3jA1oP+XRrQlAXbfU5DijlGMhBQt0q2RUWTsV5wOSXPRtsVOn+gKVZZVOLH
+	 iJd0nscqUY1EwSafI2Ou6XkWL2mIajQERbz66/9XA8nmNrSuaHuxA9j3GtutPhNQAO
+	 u1rYlD2doRl5ISd7aUtwa2qr8GnOT/2pAPCFBpoKryrXck6rUJHlU5DwOx1ON6bQD8
+	 JRAwjFAEw3OoQrGrxYulB3qmRYjt6MMqWsAu1JqDAu0uSBNkpDTuTIsmrESyB2rMob
+	 GsHBHdWJVEoZQ==
+Date: Wed, 31 Jan 2024 15:28:49 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Svyatoslav Ryhel <clamor95@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Kees Cook <keescook@chromium.org>,
+	Maxim Schwalm <maxim.schwalm@gmail.com>, devicetree@vger.kernel.org,
+	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v1 1/4] dt-bindings: vendor-prefixes: add LG Electronics,
+ Inc. prefix
+Message-ID: <20240131-elderly-passover-341b89f65189@spud>
+References: <20240131105153.8070-1-clamor95@gmail.com>
+ <20240131105153.8070-2-clamor95@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-hardening@vger.kernel.org
 List-Id: <linux-hardening.vger.kernel.org>
 List-Subscribe: <mailto:linux-hardening+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-hardening+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: hi5JB6CrT1YccCS8U5iW7QtK_X6slFsm
-X-Proofpoint-ORIG-GUID: ZPRMgtNbIfwvBkgv-v1cJY0vDW_eM9Fd
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-31_08,2024-01-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- mlxlogscore=848 adultscore=0 impostorscore=0 suspectscore=0
- priorityscore=1501 malwarescore=0 mlxscore=0 phishscore=0 spamscore=0
- clxscore=1011 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2401310112
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ff9R7WnZ74Ln9dDx"
+Content-Disposition: inline
+In-Reply-To: <20240131105153.8070-2-clamor95@gmail.com>
 
-Alexander Gordeev <agordeev@linux.ibm.com> writes:
 
-> On Mon, Jan 22, 2024 at 04:27:05PM -0800, Kees Cook wrote:
->> diff --git a/arch/s390/kernel/machine_kexec_file.c b/arch/s390/kernel/machine_kexec_file.c
->> index 8d207b82d9fe..e5e925423061 100644
->> --- a/arch/s390/kernel/machine_kexec_file.c
->> +++ b/arch/s390/kernel/machine_kexec_file.c
->> @@ -238,6 +238,7 @@ void *kexec_file_add_components(struct kimage *image,
->>  	unsigned long max_command_line_size = LEGACY_COMMAND_LINE_SIZE;
->>  	struct s390_load_data data = {0};
->>  	unsigned long minsize;
->> +	unsigned long sum;
->
-> Please, use min_kernel_buf_len instead of sum.
->
-> @Sven, could you please correct me if (minsize + max_command_line_size)
-> means something else.
+--ff9R7WnZ74Ln9dDx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Your understanding is correct, minsize + max_command_line_size is the
-minimum required size of the kernel image.
+On Wed, Jan 31, 2024 at 12:51:50PM +0200, Svyatoslav Ryhel wrote:
+> Add missing LG Electronics, Inc. prefix used by some older devices.
+
+Is it? You're only adding these devices now as far as I can see.
+
+>=20
+> Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Doc=
+umentation/devicetree/bindings/vendor-prefixes.yaml
+> index 309b94c328c8..b94ac977acb5 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -767,6 +767,8 @@ patternProperties:
+>      description: LG Corporation
+>    "^lgphilips,.*":
+>      description: LG Display
+> +  "^lge,.*":
+> +    description: LG Electronics, Inc.
+>    "^libretech,.*":
+>      description: Shenzhen Libre Technology Co., Ltd
+>    "^licheepi,.*":
+> --=20
+> 2.40.1
+>=20
+
+--ff9R7WnZ74Ln9dDx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZbpnMQAKCRB4tDGHoIJi
+0gXoAQDBQjeZqnVsP26PtC6fdOMh7Ttn8q1muLU+rSCjPpicUwD+O1fO+s18HIio
+l0LDxWECZ3nZFjSyesMeJlJu0ZTs/wc=
+=BTyo
+-----END PGP SIGNATURE-----
+
+--ff9R7WnZ74Ln9dDx--
